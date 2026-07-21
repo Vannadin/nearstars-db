@@ -1,5 +1,5 @@
 <!-- 천체의 구-대비 변형(자전 편평 J2 + 조석고정 triaxial C22)을 근거화 계산해 Principia 중력모델에 채우는 방법 -->
-# Body figure grounding — rotational oblateness (J₂) and tidal triaxiality (C₂₂)
+# Body figure grounding: rotational oblateness (J₂) and tidal triaxiality (C₂₂)
 
 Method reference for the degree-2 **figure** of every NearStars body: how far it
 departs from a sphere, and which gravity coefficients capture that. Two physical
@@ -12,17 +12,17 @@ causes, two coefficients:
 This is the canonical home for the **method**. The *data + cfg-form* companion is
 [`principia-geopotential-data.md`](principia-geopotential-data.md), which holds the
 verbatim Solar-System coefficients, the normalization rules (J₂ = −√5·C̄₂₀,
-J₂ = 10⁄3·C̄₂₂), and the proto↔KSP-cfg mapping — that document already works the
+J₂ = 10⁄3·C̄₂₂), and the proto↔KSP-cfg mapping. That document already works the
 **Polyphemus** giant J₂ in full; this one generalizes the recipe across body types
 and grounds the tidal C₂₂. J₂/C₂₂ is a **derived emit**, not an art-direction choice:
 it follows deterministically from rotation + mass + radius + central condensation, so
 it is computed per body like a unit conversion. Why it matters in-game: J₂ is the
 dominant non-Keplerian perturbation on **artificial satellites** (nodal regression +
 apsidal precession ∝ (R/a)²·cos i), and Principia integrates vessels in the full
-geopotential — so it shapes every orbit a player flies around a body.
+geopotential, so it shapes every orbit a player flies around a body.
 
 > Discipline. The figure follows from the **hydrostatic equilibrium** relations
-> (Radau–Darwin, Maclaurin, the synchronous-satellite figure) — textbook results, the
+> (Radau–Darwin, Maclaurin, the synchronous-satellite figure): textbook results, the
 > allowed exception to "derived values must be paper-grounded." What still gets cited:
 > the **calibration anchors** (measured Solar-System J₂/C₂₂) and the moment-of-inertia
 > bounds, resolved against NASA ADS.
@@ -36,11 +36,11 @@ self-gravitational acceleration at the surface:
 
 For a **non-locked** body ω is its sidereal spin rate. For a **synchronously locked**
 body ω = n, the orbital mean motion, and the *static tide* from the primary adds a
-term of the same order — because for a synchronous circular orbit
+term of the same order, because for a synchronous circular orbit
 n²R³/(GM_body) = (M_primary/M_body)(R/a)³ to leading order, i.e. the rotational and
 tidal parameters are comparable. We write the locked case as q_s = n²R³/(GM).
 
-## 2. Rotational figure — Maclaurin vs Radau–Darwin
+## 2. Rotational figure: Maclaurin vs Radau–Darwin
 
 To first order in q, the flattening f = (R_eq − R_pol)/R_eq and J₂ obey the
 hydrostatic relation
@@ -73,10 +73,10 @@ of inertia NMoI = C/(M R²) (0.4 = uniform sphere; smaller = more condensed):
 
 \*Mars carries a Tharsis non-hydrostatic excess; its *hydrostatic* J₂ is lower. The
 giant calibration reproduces Jupiter to −0 % and Saturn to −10 % (first-order
-truncation, grows with q) — so for a **fast rotator (large q) the first-order value
+truncation, grows with q), so for a **fast rotator (large q) the first-order value
 under-predicts** the true J₂ by ~10–20 %. Stars sit at the condensed extreme: even
 the Sun's slow spin gives J₂ ≈ 2×10⁻⁷ (one of the roundest bodies known). **The
-Sun row is the *measured* value** — the Radau–Darwin inversion is only valid for
+Sun row is the *measured* value**: the Radau–Darwin inversion is only valid for
 NMoI ≳ 0.13 and returns a spurious (negative) J₂ at stellar central condensation
 (NMoI ~0.05–0.08), so stars are not run through it. Instead stars use
 **solar-anchored q-scaling**:
@@ -86,30 +86,30 @@ NMoI ≳ 0.13 and returns a spurious (negative) J₂ at stellar central condensa
 with the helioseismic J₂☉ = (2.18 ± 0.06)×10⁻⁷ (Pijpers 1998) as the measured
 anchor. Valid for FGK dwarfs of solar-like condensation. **Fully convective M
 dwarfs are the exception that goes back through Radau–Darwin**: an n = 3/2
-polytrope has NMoI ≈ 0.205 (Chandrasekhar 1939) — inside the relation's validity
-range — giving J₂/q ≈ 0.084 at that NMoI (≈8× the solar ratio: less condensed, so
+polytrope has NMoI ≈ 0.205 (Chandrasekhar 1939), inside the relation's validity
+range, giving J₂/q ≈ 0.084 at that NMoI (≈8× the solar ratio: less condensed, so
 more flattening per unit q). **White dwarfs ride the same branch**: a
 non-relativistic degenerate star is ≈ an n = 3/2 polytrope, so NMoI ≈ 0.205 and
 Radau–Darwin applies (relativistic corrections condense the core somewhat, so this
-mildly overestimates J₂). WD rotation is usually unmeasured — outside the ZZ Ceti
-strip there is no asteroseismology — so the Kepler asteroseismic sample median
+mildly overestimates J₂). WD rotation is usually unmeasured, outside the ZZ Ceti
+strip there is no asteroseismology, so the Kepler asteroseismic sample median
 P ≈ 35 h (Hermes et al. 2017) serves as the documented statistical input
 (documented-divergence on the board). **Early-type stars use the apsidal-motion
 route directly**: the general relation behind all these branches is
 
     J₂(star) = (2/3) · k₂ · q        (k₂ = apsidal-motion constant, Sterne 1939)
 
-— the FGK anchor is just its empirical-solar instance (k₂☉ = 0.0158 from inverting
+: the FGK anchor is just its empirical-solar instance (k₂☉ = 0.0158 from inverting
 the helioseismic J₂/q), and the polytrope branch its NMoI-0.205 instance. For A
 stars take k₂ from the Claret 2004 grids (Claret 2019 consistent), carrying the
 ~±25 % model systematic quantified by the grid's own solar offset
 (theoretical k₂☉ ≈ 0.020 vs empirical 0.0158). Worked grounding for Fomalhaut A:
 `phase4/figure/fomalhaut-j2-research.md`.
 **Owner policy (2026-07-12): stellar J₂ is always computed and emitted, never
-recorded as "negligible"** — Principia integrates the term, and the owner wants it
+recorded as "negligible"**. Principia integrates the term, and the owner wants it
 present regardless of magnitude.
 
-## 3. Tidal triaxiality — synchronously locked bodies
+## 3. Tidal triaxiality: synchronously locked bodies
 
 A locked body in a (near-)circular orbit raises a **permanent** tidal bulge toward
 its primary. Its degree-2 figure is then **triaxial** (semi-axes a > b > c, with a
@@ -126,12 +126,12 @@ unmeasurable. The magnitude is calibrated on those same bodies:
     J₂  ≈  (0.9–1.1)·q_s     for differentiated rocky/icy synchronous bodies
     C̄₂₂ ≈ 0.30·J₂
 
-(Io J₂/q_s ≈ 1.08, Europa ≈ 0.88 — the spread is internal structure.) So unlike a
+(Io J₂/q_s ≈ 1.08, Europa ≈ 0.88, the spread is internal structure.) So unlike a
 slow *free* rotator, a close-in locked body has a J₂ comparable to q_s itself,
 because rotation and tide add.
 
 > **Fossil-bulge caveat.** The Moon (J₂/C₂₂ ≈ 9, far from 10/3) and Mercury are **not**
-> hydrostatic — their bulges are frozen-in records of an earlier, faster/closer state.
+> hydrostatic: their bulges are frozen-in records of an earlier, faster/closer state.
 > We assume **hydrostatic** for our synchronous bodies (no history to fossilize a
 > different figure) unless a body's lore implies one; the option is flagged where it
 > could matter.
@@ -139,12 +139,12 @@ because rotation and tide add.
 **Near–far asymmetry (octupole / teardrop).** The two tidal bulges are equal only at
 degree 2 (C̄₂₂, an even P₂ deformation). The next tidal term is the **odd P₃ octupole**:
 the primary's pull is stronger on the near side, so the **sub-primary bulge is slightly
-larger than the anti-primary one** — a faint teardrop/pear shape (pointier toward the
+larger than the anti-primary one**, a faint teardrop/pear shape (pointier toward the
 primary). The asymmetry scales as ≈ **R/a** (body radius / orbital distance) times the
-quadrupole bulge — sub-percent here (Dante R/a ≈ 0.8 %, Hades ≈ 0.5 %), so it is
+quadrupole bulge, sub-percent here (Dante R/a ≈ 0.8 %, Hades ≈ 0.5 %), so it is
 **recorded, not emitted by default**. Notes: (1) gravity-side it is a **degree-3** term,
 dynamically negligible; (2) it is **not representable by the symmetric `CustomEllipsoid`**
-mesh — a visual teardrop would need a small degree-3 **heightmap** bump at the terrain pass.
+mesh: a visual teardrop would need a small degree-3 **heightmap** bump at the terrain pass.
 Real echo: the Moon's center of figure is offset toward Earth.
 
 ## 4. Regimes by body type
@@ -154,24 +154,24 @@ Real echo: the Moon's center of figure is offset toward Earth.
 | **gas giant / fast free rotator** | fast, free | large oblate | scalar **J₂** (+ J₄ ≈ −4 % J₂, J₆), no tesseral |
 | **free rocky** (rare; fast, non-locked) | P_rot | oblate, J₂ ∝ q | scalar **J₂** (tesseral unmeasurable → omit) |
 | **synchronous rocky/icy** (much of the roster) | ω = n | **triaxial** | degree-2 full: **C̄₂₀ + C̄₂₂** (J₂ = 10⁄3·C₂₂) |
-| **star** | usually slow | nearly round | scalar **J₂** — always emitted (solar-anchored 0.0105·q; owner policy 2026-07-12) |
+| **star** | usually slow | nearly round | scalar **J₂**: always emitted (solar-anchored 0.0105·q; owner policy 2026-07-12) |
 
-`reference_radius` (the radius the coefficients are scaled to — the **equatorial**
+`reference_radius` (the radius the coefficients are scaled to, the **equatorial**
 radius for a rotational figure) is mandatory whenever any J₂/geopotential is emitted.
 The cfg forms (scalar `j2`, zonal `geopotential_row`, full cos/sin) are tabulated in
 [`principia-geopotential-data.md`](principia-geopotential-data.md).
 
-## 5. High-degree geoid for rocky bodies — synthetic now, heightmap later
+## 5. High-degree geoid for rocky bodies: synthetic now, heightmap later
 
 §2–§3 fix the **degree-2** figure (rotation + tide) deterministically. Real rocky
-bodies also carry a *lumpy* degree-3+ field — the gravitational fingerprint of their
+bodies also carry a *lumpy* degree-3+ field: the gravitational fingerprint of their
 unique interior density anomalies and topography (Earth's, the Moon's mascons, Mars's
 Tharsis). A fictional body has no such measured fingerprint, and only **four** Solar-
 System bodies even have a rich high-degree field to imitate (Earth deg 2159, Moon 900,
 Mars 120, Venus 180; the Galilean moons, Titan and Enceladus are effectively degree-2
 only). So a complex geoid must be **synthesized**, not looked up. Two stages:
 
-**Stage A — Kaula-spectrum synthetic field (now).** Real planetary gravity spectra obey
+**Stage A: Kaula-spectrum synthetic field (now).** Real planetary gravity spectra obey
 **Kaula's rule** (Kaula 1966): the per-coefficient RMS of the fully-normalized harmonics
 falls as a power law,
 
@@ -179,26 +179,26 @@ falls as a power law,
 
 → degree variance σ²ₙ = (2n+1)·s²ₙ ∝ 1/n³. To synthesize a body's geoid:
 
-1. **Keep degree 2 from §2–§3** — J̄₂₀ = −J₂/√5 (and C̄₂₂ for locked bodies) stay the
+1. **Keep degree 2 from §2–§3**: J̄₂₀ = −J₂/√5 (and C̄₂₂ for locked bodies) stay the
    grounded rotational/tidal values; only degree ≥ 3 is synthesized.
 2. For each n = 3…N_max, m = 0…n, draw C̄ₙₘ, S̄ₙₘ ~ Gaussian(0, s_n), s_n = K/n².
-3. **Seed the RNG deterministically per body** (name hash) — same body → same field,
+3. **Seed the RNG deterministically per body** (name hash): same body → same field,
    preserving the reproducibility invariant; flag it `synthetic` in the curated layer.
 4. **Calibrate K to the body class.** Earth (active tectonics) ≈ 1×10⁻⁵; airless,
    uneroded, mascon-rich bodies (Moon/Mercury-like) are *rougher* → larger K (the GRAIL
    team applies the Moon its own Kaula constraint); small differentiated/icy bodies fall
    off faster. K is the one tunable; state it.
-5. **N_max ≈ 8–10** — enough for realistic low-orbit perturbation (Principia's bundled
+5. **N_max ≈ 8–10**: enough for realistic low-orbit perturbation (Principia's bundled
    Earth is truncated at degree 10); higher degrees are dynamically irrelevant except at
    the surface. Emit as full cos/sin `geopotential_row`, `reference_radius` = R_eq.
 
-This gives statistically Earth-like lumpiness — and the mascon-like low-orbit dynamics
-(unstable / frozen low orbits over airless bodies) that make it worth doing — while being
+This gives statistically Earth-like lumpiness, and the mascon-like low-orbit dynamics
+(unstable / frozen low orbits over airless bodies) that make it worth doing, while being
 honestly **synthesis-grade**: not tied to anything visible.
 
-**Stage B — heightmap-derived field (at the terrain pass).** Once a body's terrain
+**Stage B: heightmap-derived field (at the terrain pass).** Once a body's terrain
 (PQS/Parallax heightmap) exists, the degree-3+ field is *recomputed* from the topography
-under Airy/Pratt isostatic compensation (gravity-topography admittance — Wieczorek's
+under Airy/Pratt isostatic compensation (gravity-topography admittance, Wieczorek's
 Treatise method, standard practice; EGM2008 itself fills data-poor regions this way). The
 result is **self-consistent with the visible mountains/basins** and **replaces** the Kaula
 placeholder. Degree 2 (rotation/tide) is unchanged across both stages. Roadmap:
@@ -210,17 +210,17 @@ MIT) renders a body as an oblate/triaxial ellipsoid via `oblateMode = CustomElli
 a:b:c ratios. From the degree-2 figure, normalized to the polar axis (c = 1): a triaxial
 (synchronous, hydrostatic 4:1) body → a/R = 1 + 7J₂/3, b/R = 1 − 2J₂/3, c/R = 1 − 5J₂/3
 (then ÷c); a free oblate rotator → a = b, c = R(1 − f). `scripts/refs/body_figure.py` →
-`ellipsoid_ratios()` emits them — so one figure drives both the gravity and the visual,
-automatically consistent. **Volume must be conserved** — the physical figure bulges one axis
+`ellipsoid_ratios()` emits them, so one figure drives both the gravity and the visual,
+automatically consistent. **Volume must be conserved**: the physical figure bulges one axis
 while the others *contract* (Σ deviations ≈ 0). Two distinct radii are in play, exactly as
 Principia's giants show (Jupiter `mean_radius` 69911 km vs `reference_radius` 71492 km; Saturn
-58232 vs 60330): (1) the **Principia gravity** uses `mean_radius` (volumetric — sets the body's
-volume) + `reference_radius` (equatorial — only scales J₂); oblateness lives in the dimensionless
+58232 vs 60330): (1) the **Principia gravity** uses `mean_radius` (volumetric: sets the body's
+volume) + `reference_radius` (equatorial: only scales J₂); oblateness lives in the dimensionless
 J₂, so there is **no inflation**. (2) The **VertexHeightOblateAdvanced visual** scales a base
 sphere by the a:b:c (all ≥ 1), which inflates the body by a·b·c (Dante ×1.22) unless the
 **Kopernicus PQS `radius` (the base sphere) is set to the polar radius** (= mean × c_physical);
 then the ≥ 1 ratios reproduce the true volume-preserving shape. (Real giants sidestep the visual
-case — they are rendered as spheres, oblateness only in J₂.) **Hard dependency** (a body using the node
+case: they are rendered as spheres, oblateness only in J₂.) **Hard dependency** (a body using the node
 won't render its shape without the plugin), pulled in only by the bodies that emit a visible
 figure (a/c ≳ 1.02); the cfg node + schema live in the `kopernicus-cfg` skill (filled at the emit stage).
 
@@ -231,37 +231,37 @@ Inputs are the curated mass / radius / rotation; lock state from the
 
 | body | class | ω source | q (or q_s) | J₂ | C̄₂₂ | note |
 |---|---|---|---|---|---|---|
-| **Erid** (40 Eri A b) | free rocky | P_rot 5.1 h | **0.056** | **~0.017–0.019** | — | the roster's most oblate rocky body — f ≈ 5 %, an equatorial bulge visible in-game; first-order under-predicts (large q) |
-| **Polyphemus** (α Cen A b) | gas giant | P_rot ~10 h | 0.19 | **~0.023–0.026** | — | worked in full in geopotential-data.md (NMoI ~0.23) |
+| **Erid** (40 Eri A b) | free rocky | P_rot 5.1 h | **0.056** | **~0.017–0.019** | – | the roster's most oblate rocky body: f ≈ 5 %, an equatorial bulge visible in-game; first-order under-predicts (large q) |
+| **Polyphemus** (α Cen A b) | gas giant | P_rot ~10 h | 0.19 | **~0.023–0.026** | – | worked in full in geopotential-data.md (NMoI ~0.23) |
 | **TRAPPIST-1 b** | sync. rocky | n (P 1.51 d) | 1.5e-3 | ~1.5e-3 | **~4.6e-4** | close-in lock → real permanent tidal bulge, J₂ ≈ Earth's |
 | **Proxima b** | sync. rocky | n (P 11.2 d) | 2.8e-5 | ~2.8e-5 | ~8e-6 | far enough that the figure is tiny (record; C₂₂ likely below emit threshold) |
-| **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | — | solar-anchored scaling (0.0105·q); ±~30 % from P_rot ±3 d — first star rows emitted under the always-emit policy |
-| **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | — | same method, ±~15 % |
-| **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | — | fully convective → Radau–Darwin at polytropic NMoI 0.205 (J₂/q 0.084); ±~25 % (radius-dominated) |
-| **TRAPPIST-1** | star (M8V) | P_rot 3.295 d (Vida 2017, K2) | 2.3e-5 | **2.0e-6** | — | same polytrope branch as Proxima; fast spin on a Jupiter-sized star → the roster's largest M-dwarf J₂; well-measured inputs (Agol 2021 M/R), ±~25 % (NMoI-dominated) |
-| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (Shan 2024, grade D) | 1.9e-5 | **1.6e-6** | — | largest M-dwarf J₂ until TRAPPIST-1 — fast-spinning flare star. Input curated 2026-07-20: the formerly rejected Shan 2024 period is independently corroborated by Pass 2023 v sin i (1.7 km/s → P/sin i 8.2 d), so the documented-divergence flag is retired |
-| **40 Eri B** | star (DA WD) | P ≈ 35 h (statistical) | 2.5e-8 | **2.1e-9** | — | white dwarf on the same n = 3/2 polytrope branch; rotation = Kepler sample median (Hermes 2017), documented-divergence |
-| **Fomalhaut A** | star (A4V) | P_rot ≈ 24 h (derived: v sin i 93 + measured i★ 90°) | 0.044 | **1.0e-4** (band 0.8–1.3e-4) | — | roster's largest stellar J₂ by far — apsidal route, k₂ = 0.0036 (Claret 2004, ±25 % systematic); f ≈ 0.022 matches the board's visual oblateness; spin axis fully measured in 3-D (Hadjara 2014 i★ 90°±9°, PA 65.6° ⊥ disk) |
+| **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | – | solar-anchored scaling (0.0105·q); ±~30 % from P_rot ±3 d, first star rows emitted under the always-emit policy |
+| **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | – | same method, ±~15 % |
+| **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | – | fully convective → Radau–Darwin at polytropic NMoI 0.205 (J₂/q 0.084); ±~25 % (radius-dominated) |
+| **TRAPPIST-1** | star (M8V) | P_rot 3.295 d (Vida 2017, K2) | 2.3e-5 | **2.0e-6** | – | same polytrope branch as Proxima; fast spin on a Jupiter-sized star → the roster's largest M-dwarf J₂; well-measured inputs (Agol 2021 M/R), ±~25 % (NMoI-dominated) |
+| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (Shan 2024, grade D) | 1.9e-5 | **1.6e-6** | – | largest M-dwarf J₂ until TRAPPIST-1. Fast-spinning flare star. Input curated 2026-07-20: the formerly rejected Shan 2024 period is independently corroborated by Pass 2023 v sin i (1.7 km/s → P/sin i 8.2 d), so the documented-divergence flag is retired |
+| **40 Eri B** | star (DA WD) | P ≈ 35 h (statistical) | 2.5e-8 | **2.1e-9** | – | white dwarf on the same n = 3/2 polytrope branch; rotation = Kepler sample median (Hermes 2017), documented-divergence |
+| **Fomalhaut A** | star (A4V) | P_rot ≈ 24 h (derived: v sin i 93 + measured i★ 90°) | 0.044 | **1.0e-4** (band 0.8–1.3e-4) | – | roster's largest stellar J₂ by far: apsidal route, k₂ = 0.0036 (Claret 2004, ±25 % systematic); f ≈ 0.022 matches the board's visual oblateness; spin axis fully measured in 3-D (Hadjara 2014 i★ 90°±9°, PA 65.6° ⊥ disk) |
 
 The headline contrast: **Erid** (fast, free, hot super-Earth) is genuinely flattened,
 while the locked habitable-zone rockies are nearly round except for a small permanent
 tidal C₂₂ that grows sharply the closer the lock (TRAPPIST-1 b ≫ Proxima b). Stars are
 dynamically tiny at the orbital distances that matter, but per the 2026-07-12 owner
-policy their J₂ is computed and emitted anyway — Principia carries the term.
+policy their J₂ is computed and emitted anyway. Principia carries the term.
 
 ## 7. Procedure (per body)
 
 1. Determine lock state (tidal-locking-timescale method) → free or synchronous.
 2. Compute q (free: P_rot) or q_s (locked: orbital n), using the **mean** radius
    (Helled+2011 convention; the emit `reference_radius` is the equatorial radius).
-3. Pick NMoI from the body class (giant 0.20–0.26; rocky 0.30–0.36; star 0.05–0.08) —
+3. Pick NMoI from the body class (giant 0.20–0.26; rocky 0.30–0.36; star 0.05–0.08):
    state the assumption + range.
 4. Free rotator → J₂ via Radau–Darwin (Maclaurin q/2 as the homogeneous bound).
    Synchronous → J₂ ≈ (0.9–1.1)·q_s, C̄₂₂ = 0.3·J₂ (hydrostatic).
 5. **Rocky body wanting a complex geoid** → synthesize degree 3+ via Kaula (§5), seeded
    per body + flagged `synthetic`; keep the degree-2 from steps 4. Replace at the terrain pass.
 6. Emit threshold: skip C₂₂ below ~1×10⁻⁶ (record the value, omit the row). **J₂ is
-   exempt — always emit the computed value regardless of magnitude (owner policy
+   exempt: always emit the computed value regardless of magnitude (owner policy
    2026-07-12; Principia carries the term).** Set `reference_radius` = equatorial radius.
 7. Write through the **curated source layer**, not `db/systems/*` directly; rebuild.
 
@@ -270,58 +270,58 @@ policy their J₂ is computed and emitted anyway — Principia carries the term.
 All bibcodes verified against NASA ADS.
 
 - **Helled, Anderson, Schubert & Stevenson 2011**, Icarus 216, 440 (`2011Icar..216..440H`,
-  arXiv **[1109.1627](https://arxiv.org/abs/1109.1627)**) — the Radau–Darwin NMoI ↔ J₂ relation used for the giants; the
+  arXiv **[1109.1627](https://arxiv.org/abs/1109.1627)**): the Radau–Darwin NMoI ↔ J₂ relation used for the giants; the
   inversion form in §2. Pinned in `principia-geopotential-data.md`.
-- **Murray & Dermott 1999**, *Solar System Dynamics* (`1999ssd..book.....M`) §4 — the
+- **Murray & Dermott 1999**, *Solar System Dynamics* (`1999ssd..book.....M`) §4: the
   hydrostatic figure of rotating and synchronous bodies; the textbook home of the chain.
-- **Tricarico 2014**, ApJ 782, 99 (`2014ApJ...782...99T`) — modern rigorous statement of
+- **Tricarico 2014**, ApJ 782, 99 (`2014ApJ...782...99T`), modern rigorous statement of
   the synchronous figure: J₂/C₂₂ ≈ 10⁄3 and (b−c)/(a−c) ≈ 1⁄4, with the higher-order
   Ω²/(πGρ) corrections. Paired with **Dermott 1979**, Icarus 37, 575 (`1979Icar...37..575D`),
   the classic derivation of satellite shapes and gravitational moments.
-- **Pijpers 1998**, MNRAS 297, L76 (`1998MNRAS.297L..76P`) — helioseismic solar
+- **Pijpers 1998**, MNRAS 297, L76 (`1998MNRAS.297L..76P`): helioseismic solar
   J₂ = (2.18 ± 0.06)×10⁻⁷; the measured anchor of the stellar solar-anchored q-scaling
   (FGK stars bypass Radau–Darwin, §2).
 - **Chandrasekhar 1939**, *An Introduction to the Study of Stellar Structure*
-  (`1939isss.book.....C`) — polytrope moments of inertia; n = 3/2 (fully convective
+  (`1939isss.book.....C`): polytrope moments of inertia; n = 3/2 (fully convective
   M dwarf, non-relativistic white dwarf) NMoI ≈ 0.205, which puts both back inside
   Radau–Darwin validity (§2).
-- **Hermes et al. 2017**, ApJS 232, 23 (`2017ApJS..232...23H`) — asteroseismic white
+- **Hermes et al. 2017**, ApJS 232, 23 (`2017ApJS..232...23H`): asteroseismic white
   dwarf rotation distribution; the sample median P ≈ 35 h is the documented
   statistical input for WDs with no measured rotation (§2).
-- **Sterne 1939**, MNRAS 99, 451 (`1939MNRAS..99..451S`) — apsidal-motion /
+- **Sterne 1939**, MNRAS 99, 451 (`1939MNRAS..99..451S`): apsidal-motion /
   internal-structure constants; origin of J₂ = (2/3)k₂q (§2). Modern Love-number
   form: **Ragozzine & Wolf 2009** (`2009ApJ...698.1778R`).
 - **Claret 2004**, A&A 424, 919 (`2004A&A...424..919C`; latest grids Claret 2019
-  `2019A&A...628A..29C`) — theoretical k₂ grids; the A-star coefficient source, with
+  `2019A&A...628A..29C`): theoretical k₂ grids; the A-star coefficient source, with
   the solar theoretical-vs-empirical offset (~1.27×) as the quantified systematic.
-- **Hadjara et al. 2014**, A&A 569, A45 (`2014A&A...569A..45H`) — Fomalhaut's first
+- **Hadjara et al. 2014**, A&A 569, A45 (`2014A&A...569A..45H`): Fomalhaut's first
   full 3-D rotation solution (i★ = 90°±9°, V_eq sin i = 93±16 km/s, PA 65.6°); with
   Le Bouquin 2009 (PA ⊥ disk) the only fully measured stellar pole in the roster.
-- **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`) —
+- **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`):
   Maclaurin spheroids (homogeneous rotational limit, f = 5q/4).
 - **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* (`1978ppi..book.....Z`);
-  **Hubbard 1984**, *Planetary Interiors* (`1984plin.book.....H`) — theory of figures, the
+  **Hubbard 1984**, *Planetary Interiors* (`1984plin.book.....H`): theory of figures, the
   q–f–J₂–NMoI chain.
-- **Measured synchronous-figure anchors** (the J₂ = 10⁄3·C₂₂ calibration): Io — Anderson
+- **Measured synchronous-figure anchors** (the J₂ = 10⁄3·C₂₂ calibration): Io: Anderson
   et al. 2001 (`2001JGR...10632963A`; figure axes a−c = 14.4 km, b−c = 3.6 km → 4:1,
-  C/MR² = 0.3769); Europa — Anderson et al. 1998 *Science* four-encounter
-  (`1998Sci...281.2019A`); Ganymede — Anderson et al. 1996 (`1996Natur.384..541A`, J₂ & C₂₂
-  reported directly); Titan — Iess et al. 2010 *Science* (`2010Sci...327.1367I`; a−c = 410 m,
+  C/MR² = 0.3769); Europa: Anderson et al. 1998 *Science* four-encounter
+  (`1998Sci...281.2019A`); Ganymede: Anderson et al. 1996 (`1996Natur.384..541A`, J₂ & C₂₂
+  reported directly); Titan: Iess et al. 2010 *Science* (`2010Sci...327.1367I`; a−c = 410 m,
   b−c = 103 m → ratio 3.98 ≈ 4:1, C/MR² ≈ 0.34). All give J₂/C₂₂ ≈ 10⁄3.
-- **Moon — non-hydrostatic / fossil bulge**: GRAIL gravity field, Zuber et al. 2013 *Science*
+- **Moon (non-hydrostatic / fossil bulge)**: GRAIL gravity field, Zuber et al. 2013 *Science*
   (`2013Sci...339..668Z`); the J₂/C₂₂-derived moment of inertia + interior interpretation,
   Williams et al. 2014 (`2014JGRE..119.1546W`, I_s/MR² = 0.392728). J₂/C₂₂ ≈ 9 ≠ 10⁄3.
-- **Fomalhaut A spin axis** — Le Bouquin et al. 2009, A&A 498, L41 (`2009A&A...498L..41L`,
-  VLTI/AMBER): A4V, spin-axis PA 65° ⊥ the disk — confirms it is a fast rotator with a
+- **Fomalhaut A spin axis**, Le Bouquin et al. 2009, A&A 498, L41 (`2009A&A...498L..41L`,
+  VLTI/AMBER): A4V, spin-axis PA 65° ⊥ the disk, which confirms it is a fast rotator with a
   measured pole, though no oblateness figure is published (see §6 note).
 - **Synthetic high-degree field (§5)**: Kaula 1966, *Theory of Satellite Geodesy*
-  (`1966tsga.book.....K`) — the degree-variance power law (Earth RMS ≈ 1×10⁻⁵/n²); GRAIL
+  (`1966tsga.book.....K`): the degree-variance power law (Earth RMS ≈ 1×10⁻⁵/n²); GRAIL
   applies the Moon its own Kaula constraint (Lemoine et al. 2013, `2013JGRE..118.1676L`),
   confirming per-body recalibration. Heightmap→gravity (Stage B): Wieczorek, *Gravity and
   Topography of the Terrestrial Planets*, Treatise on Geophysics (`2015trge.book..153W`;
-  orig. `2007plmo.book..165W`) — Airy/Pratt isostasy + gravity-topography admittance.
+  orig. `2007plmo.book..165W`): Airy/Pratt isostasy + gravity-topography admittance.
 
-## Appendix — measured Solar-System gravity fields (analogs)
+## Appendix: measured Solar-System gravity fields (analogs)
 
 Reference anchors for the figure recipe and the Kaula calibration. "deg" = max recovered
 spherical-harmonic degree; only Earth/Moon/Mars/Venus carry a genuinely *rich* high-degree
@@ -345,10 +345,10 @@ field (everything else is degree-2 to low-degree, recovered from flybys).
 
 ## Related
 
-- [`principia-geopotential-data.md`](principia-geopotential-data.md) — verbatim
+- [`principia-geopotential-data.md`](principia-geopotential-data.md): verbatim
   Solar-System coefficients, normalization, cfg forms, the Polyphemus giant worked example.
-- [`principia-cfg-reference.md`](principia-cfg-reference.md) — the cfg schema (node syntax, units).
-- [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md) — lock state (the figure's spin input).
-- [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md) — consumes J₂ + C̄₂₂ (§3) as the spin precession constant to get the equilibrium obliquity.
-- [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md) — the radius input.
-- [`methodology-index.md`](methodology-index.md) — the full methodology index.
+- [`principia-cfg-reference.md`](principia-cfg-reference.md): the cfg schema (node syntax, units).
+- [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md): lock state (the figure's spin input).
+- [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md): consumes J₂ + C̄₂₂ (§3) as the spin precession constant to get the equilibrium obliquity.
+- [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md): the radius input.
+- [`methodology-index.md`](methodology-index.md): the full methodology index.

@@ -1,5 +1,5 @@
 <!-- NS의 논문-근거화 derived-value 방법론 문서 전체 인덱스 (Phase 3/4가 도출에 사용) -->
-# 방법론 인덱스 — 논문-근거화 도출값 레시피
+# 방법론 인덱스: 논문-근거화 도출값 레시피
 
 NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체의 색, 자기장, 대기, 내부열 등이 그렇습니다.
 이런 값마다 전용 **방법론 레퍼런스**가 있고, 각각 ADS로 검증한 레시피(관계식 + 적용영역 + 워크드 예시 +
@@ -8,7 +8,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 이 문서는 그 레시피들의 단일 인덱스입니다. Phase 3가 이 방법론들로 cfg-ready 값을 도출하고, Phase 4가
 오너 아트디렉션을 이 게이트에 대고 검증합니다. 모든 방법론 문서는 `ko/docs/reference/`에 한글 미러가 있습니다.
 
-> 규율 — 인용은 ad-hoc 웹검색이 아니라 NASA ADS(등록 API 토큰)로 해소하고, arXiv id가 있으면 그것을,
+> 규율: 인용은 ad-hoc 웹검색이 아니라 NASA ADS(등록 API 토큰)로 해소하고, arXiv id가 있으면 그것을,
 > 없으면 권위 있는 ADS bibcode를 씁니다. 교과서 관계식(Darwin–Radau, Planck 함수 등)은 "도출값은
 > 논문 근거화" 원칙의 허용된 예외입니다.
 
@@ -45,14 +45,14 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 
 ## 검증 (도출이 아니라 Phase-4 게이트)
 
-- **궤도/안정성 시뮬레이션** — `phase3/stability-sim/`의 REBOUND N-body(WHFast / TRACE / IAS15) +
+- **궤도/안정성 시뮬레이션**: `phase3/stability-sim/`의 REBOUND N-body(WHFast / TRACE / IAS15) +
   MEGNO 카오스 지표 + Hill 안정성 + 공명 분석. Phase-4 궤도를 확정하기 전, 시스템 배치가 살아남는지
   (이심률 갇힘·이탈 없음) 확인합니다.
-- [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md) — n-body 중력모델(J2/geopotential) cfg 규약.
-- [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md) — Principia 포크의 far-field 중력 절단 floor `a_floor` + 스위칭-셸 비율을 문헌으로 근거화. Folkner 2014 / Park 2021(에페메리스 섭동체 선정), Chesley 2014(Yarkovsky 검출 한계), Jiang & Tremaine 2010(Jacobi 반경), Rein & Spiegel 2015(힘-오차 예산).
-- [binary-epoch-pipeline](binary-epoch-pipeline.md) — 다성계 Keplerian → ICRS 에포크 전파.
+- [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md): n-body 중력모델(J2/geopotential) cfg 규약.
+- [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md): Principia 포크의 far-field 중력 절단 floor `a_floor` + 스위칭-셸 비율을 문헌으로 근거화. Folkner 2014 / Park 2021(에페메리스 섭동체 선정), Chesley 2014(Yarkovsky 검출 한계), Jiang & Tremaine 2010(Jacobi 반경), Rein & Spiegel 2015(힘-오차 예산).
+- [binary-epoch-pipeline](binary-epoch-pipeline.md): 다성계 Keplerian → ICRS 에포크 전파.
 
 ## 관련 문서
 
-- [methodology](methodology.md) — 이 레시피들이 먹여주는 상류 DB-빌드 워크플로우(Phase 1–3 데이터 파이프라인).
-- [tools](tools.md) — 도구/스크립트 인덱스.
+- [methodology](methodology.md): 이 레시피들이 먹여주는 상류 DB-빌드 워크플로우(Phase 1–3 데이터 파이프라인).
+- [tools](tools.md): 도구/스크립트 인덱스.

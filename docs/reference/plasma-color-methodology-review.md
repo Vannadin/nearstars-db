@@ -15,8 +15,8 @@ from Saha (ionization) + Boltzmann (excitation) + Σ nᵤ·A·hν line emission 
 folding it through CIE 1931 is exactly the method used in calibration-free LIBS
 and astrophysical synthetic spectra. The documented non-LTE caveats (reentry
 blue, auroral forbidden lines) are all **correct**. The real weaknesses are
-known omissions — continuum emission, the additive-vs-slab combination, and the
-band-as-head molecular approximation — none of which invalidate the approach,
+known omissions (continuum emission, the additive-vs-slab combination, and the
+band-as-head molecular approximation), none of which invalidate the approach,
 all of which have clear fixes.
 
 ## Verdicts by dimension
@@ -44,10 +44,10 @@ all of which have clear fixes.
   confirms local Saha–Boltzmann equilibrium in dense laser plasma
   (`2014AcSpB..96...61M`).
 - **The colorimetry is the textbook path** and correctly treats the emission
-  spectrum directly as the SPD (no illuminant division — the most common
+  spectrum directly as the SPD (no illuminant division: the most common
   spectrum-to-color bug, which we avoided). Wyman–Sloan–Shirley (2013) CMF fit is
-  accurate to a few % — ample for hue.
-- **Dissociation K(T) is textbook-correct** — (2πμkT/h²)³ᐟ² · (U_A U_B/U_AB) ·
+  accurate to a few %, ample for hue.
+- **Dissociation K(T) is textbook-correct**: (2πμkT/h²)³ᐟ² · (U_A U_B/U_AB) ·
   exp(−D₀/kT), right sign, right prefactor, σ symmetry number.
 - **The non-LTE caveats are right.** Reentry shock-layer radiation is modeled as
   thermochemical/radiative *non-equilibrium* (`1994ntrs.rept23568C` et al.);
@@ -55,7 +55,7 @@ all of which have clear fixes.
   not thermal. Auroral O I 557.7/630 nm are forbidden metastable lines excited by
   electron precipitation / dissociative recombination and quenched at high
   density (`1989RSPSA.424....1S`, `1990AdSpR..10e..31F`, `1960JChPh..32..607Y`).
-  C₂ Swan (upper state ~2.5 eV) **is** thermally accessible — so the carbon-plasma
+  C₂ Swan (upper state ~2.5 eV) **is** thermally accessible, so the carbon-plasma
   green is a legitimate LTE result while the N₂ blue is not. Confirmed.
 
 ## Key actionable findings (ranked)
@@ -71,7 +71,7 @@ all of which have clear fixes.
    over-saturation. → done: caption/headers now say "incandescence stand-in".
 2. **The slab was abandoned for a units bug, not a physics failure (moderate).**
    The earlier `I=B(1−e^{−τ})` with κ=j/B blew up only because of bad unit
-   bookkeeping — B cancels analytically (I=B(1−exp(−(Σj·L)/B))). Computing
+   bookkeeping: B cancels analytically (I=B(1−exp(−(Σj·L)/B))). Computing
    τ_λ=(Σj·L)/B in log space is stable. The slab is the correct physics: it
    unifies thermal+emission **without GAIN**, caps strong resonance lines at B_λ
    (fixing self-absorption hue bias), reduces to the additive sum in the thin
@@ -84,7 +84,7 @@ all of which have clear fixes.
    centroids*, weighted by g_e × band strength (not bare exp(−hc·T_e/kT)),
    cross-checked once against a LIFBASE/SPECAIR synthesis. Real diagnostics fit
    the full rotational envelope (`2002JAP....91.8955C`).
-4. **Ion-line emission was missing (moderate at high T) — FIXED.** Added first-ion
+4. **Ion-line emission was missing (moderate at high T): FIXED.** Added first-ion
    (X II) emission to the per-element table; high-T colors now show ion spectra
    (Ba II violet, etc.) instead of fading to continuum.
 5. **Self-absorption (minor→moderate).** Optically-thin over-counts strong
@@ -102,7 +102,7 @@ all of which have clear fixes.
    under per-channel normalization (no hue effect; only a 2nd-order Saha effect);
    fixed line width + top-80 cap are color-neutral. The intensity-mix fallback
    (A-less spectra) carries a green-yellow skew (eye/photographic intensity
-   scale) — flag the *direction*, not just "low confidence".
+   scale). Flag the *direction*, not just "low confidence".
 
 ## Sources
 
@@ -112,10 +112,10 @@ ADS: `2010AcSpB..65...86C`, `2014AcSpB..96...61M`, `2023ApPhB.129..136L`,
 `1989RSPSA.424....1S`, `1990AdSpR..10e..31F`, `1994ntrs.rept23568C`,
 `1990STIN...9025290H`. Web: CIE 1931 color space (Wikipedia); Wyman, Sloan &
 Shirley 2013 (JCGT) analytic CMF; flame-test molecular bands CaO/SrO (RSC /
-LibreTexts). ADS is astrophysics/planetary-centric — color science and analytical
+LibreTexts). ADS is astrophysics/planetary-centric: color science and analytical
 chemistry are under-indexed there (use Semantic Scholar / Crossref for those).
 
-## Further literature — non-LTE reentry & aurora (researched)
+## Further literature: non-LTE reentry & aurora (researched)
 
 Beyond the LTE-verification sources above, the non-LTE work (the reentry blue,
 the 2-temperature mode, and the aurora table) drew on:
@@ -125,10 +125,10 @@ the 2-temperature mode, and the aurora table) drew on:
 `2026arXiv260411856Z` (RAPRAL line-by-line + ray-tracing), `2011PhDT` (Monte
 Carlo hypersonic radiation), `2001PhDT` (ionizational non-equilibrium recombining
 air), `1994ntrs.rept23568C` (non-equilibrium reentry radiation). The N₂⁺ 1NG blue
-is electron-impact (Park two-temperature) — the basis of saha_boltzmann's `t_elec`
+is electron-impact (Park two-temperature): the basis of saha_boltzmann's `t_elec`
 mode.
 
-**CR data availability** (verified, correcting an earlier overstatement — data
+**CR data availability** (verified, correcting an earlier overstatement: data
 exists for major atmospheres): LXCat electron-scattering cross-section database
 (Pitchford et al. 2017, *Plasma Processes & Polymers*) covers 42 species incl.
 N₂/O₂/CO₂/CH₄/H₂/CO/NO/SO₂; CoRaM-AIR two-temperature CR (829 electronic states);
@@ -150,16 +150,16 @@ compositions), the engine's band DB was extended beyond the original
 N2/N2+/C2/CH/NH/OH: **CN** violet (B²Σ⁺–X²Σ⁺, 388/421 nm), **CO** Ångström
 (B¹Σ⁺–A¹Π blue-green; high upper state → faint in LTE), and the metal oxides
 **TiO** (γ A³Φ–X³Δ red, 705 nm), **VO** (C⁴Σ⁻–X⁴Σ⁻ ~574 nm), **FeO** (orange
-D⁵Δ–X⁵Δ, 580–626 nm), **MgO** (B¹Σ⁺–X¹Σ⁺ green ~500 nm) — with Mg/Ti/V/Fe added
+D⁵Δ–X⁵Δ, 580–626 nm), **MgO** (B¹Σ⁺–X¹Σ⁺ green ~500 nm), with Mg/Ti/V/Fe added
 to the atomic DB so each oxide shows the correct low-T band → dissociation →
 metal-atomic → ionic march. Ground-state constants are Huber & Herzberg; band
 heads / term values are sourced (TiO `2110.01908`/`1612.08298`; VO ExoMol XVIII
 `1609.06120`; FeO Evans 2010 GRL Odin/OSIRIS airglow; MgO ExoMol XXXII
 `1904.12155`). Species whose visible bands are UV-dominant or uncertain (O2, NO,
-S2, SO, SiO, HCl, HF) were deliberately NOT modeled — they fall back to
+S2, SO, SiO, HCl, HF) were deliberately NOT modeled. They fall back to
 atomic/thermal color rather than fabricated band heads.
 
 ## Related
-- [tools.md](tools.md) — the build scripts + DBs
+- [tools.md](tools.md): the build scripts + DBs
 - engine: `scripts/refs/saha_boltzmann.py`, `build_element_temperature_colors.py`
 - design log: `.agents/skills/firefly-cfg-workspace/saha-boltzmann/context-notes.md`

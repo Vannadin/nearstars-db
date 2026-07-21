@@ -1,5 +1,5 @@
 <!-- 암석형 외계행성 대기 표면기압·평균분자량·스케일높이 결정 방법론 레퍼런스 -->
-# Rocky-Exoplanet Atmosphere Methodology — Surface Pressure & Scale Height
+# Rocky-Exoplanet Atmosphere Methodology: Surface Pressure & Scale Height
 
 > Source: synthesis of the rocky-exoplanet atmosphere-retention and outgassing
 > literature (Zahnle & Catling 2017, Owen 2019, Lopez 2017, Dong+ 2017/2018,
@@ -12,14 +12,14 @@
 > mean molecular weight, and atmospheric scale height of rocky NearStars targets
 > (Proxima b, the TRAPPIST-1 worlds, etc.), and for mapping those onto KSP/
 > Kopernicus pressure curves at emit.
-> This is a working reference, not a textbook — see §8 for the verified citations.
+> This is a working reference, not a textbook. See §8 for the verified citations.
 
 ## Table of Contents
 
 1. [Why Surface Pressure Is (Almost) Unconstrained](#1-why-surface-pressure-is-almost-unconstrained)
-2. [Gate 1 — Retention (the Cosmic Shoreline)](#2-gate-1--retention-the-cosmic-shoreline)
-3. [Gate 2 — M-Dwarf / Flare Stripping](#3-gate-2--m-dwarf--flare-stripping)
-4. [Gate 3 — Supply (Outgassing), Composition & Redox](#4-gate-3--supply-outgassing-composition--redox)
+2. [Gate 1: Retention (the Cosmic Shoreline)](#2-gate-1-retention-the-cosmic-shoreline)
+3. [Gate 2: M-Dwarf / Flare Stripping](#3-gate-2-m-dwarf--flare-stripping)
+4. [Gate 3: Supply (Outgassing), Composition & Redox](#4-gate-3-supply-outgassing-composition--redox)
 5. [Choosing the Pressure Value](#5-choosing-the-pressure-value)
 6. [Mean Molecular Weight (μ) & Scale Height](#6-mean-molecular-weight-μ--scale-height)
 7. [How NearStars Applies This](#7-how-nearstars-applies-this)
@@ -43,7 +43,7 @@ What the data actually constrains, by target type:
 
 - **Transiting planets** (the TRAPPIST-1 worlds, GJ 1132 b, …): transmission and
   thermal-emission spectroscopy can sometimes **detect or rule out the *presence***
-  of a substantial atmosphere — but not pin a surface pressure. JWST thermal
+  of a substantial atmosphere, but not pin a surface pressure. JWST thermal
   emission of TRAPPIST-1 b is consistent with a **bare rock / no thick atmosphere**
   (Greene+ 2023), and TRAPPIST-1 b shows **no thick CO₂ atmosphere** (Zieba+ 2023).
   These are existence bounds ("thick atmosphere? yes/no/unlikely"), not pressure
@@ -56,11 +56,11 @@ choice** of the value within the surviving band. The gates are physics; the fina
 number is a tie-break recorded on the Phase 4 board with its justification.
 
 The canonical review for this whole picture is **Wordsworth & Kreidberg 2022**
-(*ARA&A*) — read it first if you read only one reference here.
+(*ARA&A*): read it first if you read only one reference here.
 
 ---
 
-## 2. Gate 1 — Retention (the Cosmic Shoreline)
+## 2. Gate 1: Retention (the Cosmic Shoreline)
 
 The first question is not *how much* atmosphere but *whether any survives at all*.
 That is set by a competition between the planet's gravity (escape velocity) and the
@@ -79,14 +79,14 @@ space, roughly `v_esc ∝ I_XUV^(1/4)`. It is empirical and remarkably sharp.
 
 Two supporting results sharpen the gate:
 
-- **Owen 2019** (*ARA&A* review) lays out the escape *mechanisms* — XUV-driven
-  photoevaporation and core-powered mass loss — that move a planet across the
+- **Owen 2019** (*ARA&A* review) lays out the escape *mechanisms* (XUV-driven
+  photoevaporation and core-powered mass loss) that move a planet across the
   shoreline over time. The early phase, when the host is XUV-bright, does most of
   the stripping.
 - **Lopez 2017** (and the wider radius-valley work) shows escape sculpts the
   rocky/sub-Neptune boundary: planets that keep a thick H/He envelope sit above the
   **radius valley** (~1.8 R⊕), while stripped cores fall below it. A body small
-  enough to be rocky has, almost by definition, already lost any primordial H/He —
+  enough to be rocky has, almost by definition, already lost any primordial H/He,
   so its atmosphere (if any) is a **secondary, outgassed** one, which is what Gate 3
   is about.
 
@@ -95,33 +95,33 @@ rock, no pressure curve needed."
 
 ---
 
-## 3. Gate 2 — M-Dwarf / Flare Stripping
+## 3. Gate 2: M-Dwarf / Flare Stripping
 
 Most NearStars terrestrial targets orbit **M dwarfs**, and that makes Gate 1 much
 less forgiving than the solar-system shoreline alone suggests. M dwarfs stay
 XUV-bright for hundreds of Myr to Gyr, flare violently, and drive dense stellar
-winds — all of which erode atmospheres on the close-in (and therefore tidally
+winds, all of which erode atmospheres on the close-in (and therefore tidally
 locked) habitable-zone planets. The habitable zone of an M dwarf sits **right on or
 just inside the shoreline**, so "has an atmosphere" is frequently a genuine
 tie-break rather than a settled fact.
 
 The Proxima/TRAPPIST literature maps this in detail:
 
-- **Ribas+ 2016** — the irradiation environment of Proxima b: the XUV and
+- **Ribas+ 2016**: the irradiation environment of Proxima b: the XUV and
   particle dose the planet integrates over the star's long active lifetime. This is
   the input to every stripping estimate.
-- **Dong+ 2017** — stellar-wind-driven ion escape from Proxima b. For plausible
+- **Dong+ 2017**: stellar-wind-driven ion escape from Proxima b. For plausible
   wind pressures the atmosphere can be eroded on geologically short timescales
   unless continually replenished; the planet sits on the knife-edge.
-- **Dong+ 2018** — the same stellar-wind escape modeling extended to the
+- **Dong+ 2018**: the same stellar-wind escape modeling extended to the
   **TRAPPIST-1** planets, with implications for which (if any) can hold an
   atmosphere against the wind.
-- **Garraffo+ 2016** — the **space weather** of Proxima b: a strong, ordered
+- **Garraffo+ 2016**: the **space weather** of Proxima b: a strong, ordered
   *planetary* magnetic field can shield the atmosphere from the wind, but the
   required field strength and the wind variability make protection uncertain
   rather than guaranteed. (There is no separate Garraffo Proxima *journal* paper in
-  2017 — only a conference abstract — so cite the 2016 *ApJL* for this point.)
-- **Meadows+ 2018** — enumerates the plausible **environmental/atmospheric states**
+  2017, only a conference abstract, so cite the 2016 *ApJL* for this point.)
+- **Meadows+ 2018**: enumerates the plausible **environmental/atmospheric states**
   of Proxima b (desiccated O₂-dominated, CO₂, Venus-like, habitable, …) that
   follow from different escape and evolution histories. This is the explicit
   "branching set of outcomes" that a tie-break must choose among.
@@ -134,23 +134,23 @@ and why.
 
 ---
 
-## 4. Gate 3 — Supply (Outgassing), Composition & Redox
+## 4. Gate 3: Supply (Outgassing), Composition & Redox
 
 If a planet clears retention, the pressure that actually exists is set by a balance
 between **outgassing supply** (volcanism degassing the interior) and the **escape
 sink** of Gate 2. Outgassing does double duty: it sets *how much* gas there is and
-*what kind* — the redox state of the released volatiles, which determines whether
+*what kind*: the redox state of the released volatiles, which determines whether
 the atmosphere is oxidized (CO₂ / N₂ / H₂O) or reduced (CH₄ / H₂ / CO).
 
 - **Schaefer+ 2017** (Schaefer, Redox States of Initial Atmospheres Outgassed on
-  Rocky Planets; *ApJ* 843, 120 — **no arXiv**) computes the initial atmosphere
+  Rocky Planets; *ApJ* 843, 120, **no arXiv**) computes the initial atmosphere
   redox from the oxidation state of the outgassing material. A more oxidized mantle
   → CO₂/H₂O-dominated; a more reduced one → CH₄/H₂/CO-dominated. This is the link
   from interior composition to the μ that Gate-6 needs.
-- **Herbort+ 2020** — chemical equilibrium between common crustal rock types and an
+- **Herbort+ 2020**: chemical equilibrium between common crustal rock types and an
   outgassed atmosphere, predicting the resulting gas inventory for a range of
   rock compositions. The practical "what gases does this crust give you" table.
-- **Wogan+ 2020** — shows that volcanism on a reduced rocky planet can sustain an
+- **Wogan+ 2020**: shows that volcanism on a reduced rocky planet can sustain an
   **abundant CH₄** atmosphere (a reduced-redox endmember), the methane counterpart
   to the oxidized CO₂/N₂ default.
 
@@ -166,7 +166,7 @@ With the gates cleared, the surface pressure is a **documented choice within a
 physically bounded band**. The procedure:
 
 1. **Confirm retention.** Run the body through Gates 1–2. If it falls below the
-   shoreline or is a stripped M-dwarf inner-HZ world, stop — it is a bare rock, and
+   shoreline or is a stripped M-dwarf inner-HZ world, stop: it is a bare rock, and
    the surface pressure is ~0.
 
 2. **Take a band from solar-system analogs + outgassing expectations.** Rocky
@@ -187,7 +187,7 @@ physically bounded band**. The procedure:
    it (don't put a thick atmosphere where JWST rules one out). For a non-transiting
    body the value is a **tie-break**, chosen for physical plausibility and
    gameplay, and **recorded on the Phase 4 board together with its retention-gate
-   justification** — never an unstated default.
+   justification**, never an unstated default.
 
 The output of §5 is a single chosen surface pressure (in pascals for Kopernicus)
 plus the composition from Gate 3. Both feed §6.
@@ -196,7 +196,7 @@ plus the composition from Gate 3. Both feed §6.
 
 ## 6. Mean Molecular Weight (μ) & Scale Height
 
-The scale height `H` is the e-folding height of pressure with altitude — it sets
+The scale height `H` is the e-folding height of pressure with altitude: it sets
 how fast the atmosphere thins out, and therefore the **shape** of the Kopernicus
 `pressureCurve` (the chosen surface pressure sets its *height*).
 
@@ -228,7 +228,7 @@ For a **mixture**, weight by mole fraction `xᵢ` (not mass fraction):
 
 So a 97% N₂ + 3% CO₂ atmosphere is `0.97·28.01 + 0.03·44.01 ≈ 28.5 g/mol`.
 
-**Worked example — Proxima b lake-world.** Composition N₂ + ~3% CO₂ (the Turbet/
+**Worked example: Proxima b lake-world.** Composition N₂ + ~3% CO₂ (the Turbet/
 Boutle ~1-bar habitable case), so μ ≈ 28.5 g/mol = 0.0285 kg/mol. Surface gravity
 g ≈ 10.5 m/s² (≈ 1.07 g for the ~1.07–1.3 M⊕ / ~1.1 R⊕ body). Temperature T in the
 substellar-to-mean range 250–290 K:
@@ -238,7 +238,7 @@ H = R·T/(μ·g) = 8.314 · 270 / (0.0285 · 10.5) ≈ 7.5 km
 ```
 
 giving **H ≈ 7–8 km** across the 250–290 K range. This **corrects an earlier ad-hoc
-"9–11 km" estimate**: the table-plus-formula route is the point — μ ≈ 28.5 (not a
+"9–11 km" estimate**: the table-plus-formula route is the point, μ ≈ 28.5 (not a
 guessed lighter value) and g ≈ 10.5 pin H firmly in the 7–8 km band. Always derive
 H from a stated μ (mole-fraction-weighted from the Gate-3 composition) and the
 body's actual g, never by analogy.
@@ -251,7 +251,7 @@ The chosen pressure and composition map directly onto the Kopernicus atmosphere
 model:
 
 - **Chosen surface pressure → `staticPressureASL`** (the sea-level pressure, in kPa
-  in the Kopernicus convention — convert from the pascals of §5).
+  in the Kopernicus convention, convert from the pascals of §5).
 
 - **Composition → μ → H → the `pressureCurve` falloff.** The surface pressure sets
   the curve's value at altitude 0; the scale height `H` from §6 sets the e-folding
@@ -264,7 +264,7 @@ model:
   board.** The board entry must state the chosen surface pressure, the composition
   (hence μ and H), and *which gate reasoning* supports keeping an atmosphere at all
   (shoreline clearance, M-dwarf stripping verdict, outgassing supply). Where the
-  value is unconstrained, it is flagged as a documented tie-break — not a silent
+  value is unconstrained, it is flagged as a documented tie-break, not a silent
   default.
 
 This keeps the emit deterministic and reproducible: every pressure curve traces
@@ -278,79 +278,79 @@ argument.
 Each entry: authors, year, journal, **verified** arXiv id (or a flag where none
 exists), and one line on what it contributes.
 
-- **Zahnle, K. J. & Catling, D. C. (2017)** — *ApJ* 843, 122. **[arXiv:1702.03386](https://arxiv.org/abs/1702.03386).**
+- **Zahnle, K. J. & Catling, D. C. (2017)**: *ApJ* 843, 122. **[arXiv:1702.03386](https://arxiv.org/abs/1702.03386).**
   Defines the **cosmic shoreline**: escape velocity vs cumulative XUV separates
   atmosphere-bearing from airless bodies. Gate 1.
 
-- **Owen, J. E. (2019)** — *Annual Review of Earth and Planetary Sciences* 47, 67.
+- **Owen, J. E. (2019)**: *Annual Review of Earth and Planetary Sciences* 47, 67.
   **[arXiv:1807.07609](https://arxiv.org/abs/1807.07609).** Review of atmospheric-escape mechanisms (photoevaporation,
   core-powered mass loss) driving close-in planet evolution. Gate 1 mechanism.
 
-- **Lopez, E. D. (2017)** — *MNRAS* 472, 245. **[arXiv:1610.01170](https://arxiv.org/abs/1610.01170).** "Born dry in the
+- **Lopez, E. D. (2017)**: *MNRAS* 472, 245. **[arXiv:1610.01170](https://arxiv.org/abs/1610.01170).** "Born dry in the
   photoevaporation desert": escape sculpts the rocky/sub-Neptune boundary, so small
   rocky planets have lost primordial H/He and carry only secondary atmospheres.
   (The "born rocky vs stripped sub-Neptune" framing; companion to Lopez & Fortney
   2014, *ApJ* 792, 1, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329), the radius-valley mass-radius work.)
 
-- **Ribas, I. et al. (2016)** — *A&A* 596, A111. **[arXiv:1608.06813](https://arxiv.org/abs/1608.06813).** The
-  irradiation, rotation and volatile inventory of Proxima b — the XUV/particle dose
+- **Ribas, I. et al. (2016)**: *A&A* 596, A111. **[arXiv:1608.06813](https://arxiv.org/abs/1608.06813).** The
+  irradiation, rotation and volatile inventory of Proxima b: the XUV/particle dose
   input to every stripping estimate. Gate 2.
 
-- **Dong, C. et al. (2017)** — *ApJ Letters* 837, L26. **[arXiv:1702.04089](https://arxiv.org/abs/1702.04089).**
+- **Dong, C. et al. (2017)**: *ApJ Letters* 837, L26. **[arXiv:1702.04089](https://arxiv.org/abs/1702.04089).**
   Stellar-wind-driven atmospheric ion escape from Proxima b; the atmosphere can be
   stripped on short timescales unless replenished. Gate 2.
 
-- **Dong, C. et al. (2018)** — *PNAS* 115, 260. **[arXiv:1705.05535](https://arxiv.org/abs/1705.05535).** The same
+- **Dong, C. et al. (2018)**: *PNAS* 115, 260. **[arXiv:1705.05535](https://arxiv.org/abs/1705.05535).** The same
   stellar-wind escape modeling for the **TRAPPIST-1** planets. Gate 2.
 
-- **Garraffo, C. et al. (2016)** — *ApJ Letters* 833, L4. **[arXiv:1609.09076](https://arxiv.org/abs/1609.09076).** The
+- **Garraffo, C. et al. (2016)**: *ApJ Letters* 833, L4. **[arXiv:1609.09076](https://arxiv.org/abs/1609.09076).** The
   space weather of Proxima b; a strong ordered planetary magnetic field could
   shield the atmosphere, but protection is uncertain. (No separate 2017 Proxima
-  journal paper exists — only a conference abstract.) Gate 2.
+  journal paper exists, only a conference abstract.) Gate 2.
 
-- **Meadows, V. S. et al. (2018)** — *Astrobiology* 18, 133. **[arXiv:1608.08620](https://arxiv.org/abs/1608.08620).**
+- **Meadows, V. S. et al. (2018)**: *Astrobiology* 18, 133. **[arXiv:1608.08620](https://arxiv.org/abs/1608.08620).**
   Enumerates the plausible environmental/atmospheric end-states of Proxima b
-  (desiccated, CO₂, Venus-like, habitable) — the branching set a tie-break selects
+  (desiccated, CO₂, Venus-like, habitable): the branching set a tie-break selects
   among. Gate 2.
 
-- **Schaefer, L. et al. (2017)** — *ApJ* 843, 120. **No arXiv preprint found.**
+- **Schaefer, L. et al. (2017)**: *ApJ* 843, 120. **No arXiv preprint found.**
   "Redox States of Initial Atmospheres Outgassed on Rocky Planets": initial
   atmosphere redox (oxidized CO₂/H₂O vs reduced CH₄/H₂/CO) from the outgassing
   material's oxidation state. Gate 3, sets composition → μ.
 
-- **Herbort, O. et al. (2020)** — *A&A* 636, A71. **[arXiv:2003.03628](https://arxiv.org/abs/2003.03628).** "The
+- **Herbort, O. et al. (2020)**: *A&A* 636, A71. **[arXiv:2003.03628](https://arxiv.org/abs/2003.03628).** "The
   atmospheres of rocky exoplanets. I": chemical equilibrium between crustal rock
-  types and the outgassed atmosphere — the gas inventory a given crust yields.
+  types and the outgassed atmosphere: the gas inventory a given crust yields.
   Gate 3.
 
-- **Wogan, N. et al. (2020)** — *PSJ* 1, 58. **[arXiv:2009.07761](https://arxiv.org/abs/2009.07761).** Volcanism on a
-  reduced rocky planet can sustain an **abundant CH₄** atmosphere — the reduced-
+- **Wogan, N. et al. (2020)**: *PSJ* 1, 58. **[arXiv:2009.07761](https://arxiv.org/abs/2009.07761).** Volcanism on a
+  reduced rocky planet can sustain an **abundant CH₄** atmosphere: the reduced-
   redox endmember opposite the CO₂/N₂ default. Gate 3.
 
-- **Wordsworth, R. & Kreidberg, L. (2022)** — *Annual Review of Astronomy &
+- **Wordsworth, R. & Kreidberg, L. (2022)**: *Annual Review of Astronomy &
   Astrophysics* 60, 159. **[arXiv:2112.04663](https://arxiv.org/abs/2112.04663).** The canonical review of rocky-
   exoplanet atmospheres: retention, escape, outgassing, observability. Read first.
 
-- **Greene, T. P. et al. (2023)** — *Nature* 618, 39. **[arXiv:2303.14849](https://arxiv.org/abs/2303.14849).** JWST
+- **Greene, T. P. et al. (2023)**: *Nature* 618, 39. **[arXiv:2303.14849](https://arxiv.org/abs/2303.14849).** JWST
   thermal emission of TRAPPIST-1 b consistent with a **bare rock / no thick
-  atmosphere** — empirical confirmation that M-dwarf inner-HZ worlds can be
+  atmosphere**: empirical confirmation that M-dwarf inner-HZ worlds can be
   stripped. The "existence bound, not pressure measurement" of §1.
 
-- **Zieba, S. et al. (2023)** — *Nature* 620, 746. **[arXiv:2306.10150](https://arxiv.org/abs/2306.10150).** **No thick
-  CO₂ atmosphere** on TRAPPIST-1 b from JWST — a presence/absence bound, again not
+- **Zieba, S. et al. (2023)**: *Nature* 620, 746. **[arXiv:2306.10150](https://arxiv.org/abs/2306.10150).** **No thick
+  CO₂ atmosphere** on TRAPPIST-1 b from JWST: a presence/absence bound, again not
   a surface-pressure measurement.
 
 ---
 
 ## Related
 
-- `docs/reference/tidally-locked-temperature-methodology.md` — the sibling recipe
+- `docs/reference/tidally-locked-temperature-methodology.md`: the sibling recipe
   for the temperature `T` that enters the scale-height formula here (§6); the
   Proxima b ~250–290 K range used in the worked example comes from its Layer-3 GCM
   anchors (Turbet+ 2016, Boutle+ 2017).
-- `docs/reference/solar-system-external-observer.md` — the Teq-blind-to-greenhouse
+- `docs/reference/solar-system-external-observer.md`: the Teq-blind-to-greenhouse
   calibration that motivates the "we don't measure the atmosphere" caution in §1
   (Venus' surface conditions are invisible to the kind of data we have here).
-- Phase 3 synthesis skill (`nearstars-phase3`) — where the chosen surface pressure,
+- Phase 3 synthesis skill (`nearstars-phase3`): where the chosen surface pressure,
   composition, μ and H are recorded per planet and the retention-gate justification
   is pinned to the Phase 4 board.

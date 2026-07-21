@@ -1,9 +1,9 @@
 <!-- NS의 논문-근거화 derived-value 방법론 문서 전체 인덱스 (Phase 3/4가 도출에 사용) -->
-# Methodology Index — Paper-Grounded Derived-Value Recipes
+# Methodology Index: Paper-Grounded Derived-Value Recipes
 
 NearStars assigns many physical values that are **derived, not measured**: a body's
 color, magnetic field, atmosphere, internal heat, and so on. Each such value has a
-dedicated **methodology reference** — an ADS-verified recipe (relation + regimes +
+dedicated **methodology reference**: an ADS-verified recipe (relation + regimes +
 worked examples + an annotated, citation-checked bibliography), modeled on the
 `planetary-dynamo-scaling.md` gold standard.
 
@@ -50,15 +50,15 @@ XYZ → IEC 61966-2-1 sRGB), owned by the reflected-color doc.
 
 ## Validation (not derivation, but Phase-4 gates)
 
-- **Orbital/stability simulation** — REBOUND N-body (WHFast / TRACE / IAS15) + MEGNO
+- **Orbital/stability simulation**: REBOUND N-body (WHFast / TRACE / IAS15) + MEGNO
   chaos indicator + Hill-stability + resonance analysis, under `phase3/stability-sim/`.
   Confirms a system architecture survives (bounded eccentricities, no ejections) before
   a Phase-4 orbit is locked.
-- [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md) — n-body gravity-model (J2/geopotential) cfg conventions.
-- [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md) — literature grounding for the far-field gravity-truncation floor `a_floor` + switching-shell ratio (Principia fork). Folkner 2014 / Park 2021 (ephemeris perturber selection); Chesley 2014 (Yarkovsky detectability); Jiang & Tremaine 2010 (Jacobi radius); Rein & Spiegel 2015 (force-error budgets).
-- [binary-epoch-pipeline](binary-epoch-pipeline.md) — multi-star Keplerian → ICRS epoch propagation.
+- [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md): n-body gravity-model (J2/geopotential) cfg conventions.
+- [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md): literature grounding for the far-field gravity-truncation floor `a_floor` + switching-shell ratio (Principia fork). Folkner 2014 / Park 2021 (ephemeris perturber selection); Chesley 2014 (Yarkovsky detectability); Jiang & Tremaine 2010 (Jacobi radius); Rein & Spiegel 2015 (force-error budgets).
+- [binary-epoch-pipeline](binary-epoch-pipeline.md): multi-star Keplerian → ICRS epoch propagation.
 
 ## Related
 
-- [methodology](methodology.md) — the upstream DB-building workflow (Phase 1–3 data pipeline) these recipes feed.
-- [tools](tools.md) — the tool/script index.
+- [methodology](methodology.md): the upstream DB-building workflow (Phase 1–3 data pipeline) these recipes feed.
+- [tools](tools.md): the tool/script index.

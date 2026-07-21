@@ -1,9 +1,9 @@
 <!-- 조석 감쇠된 천체의 평형 자전축 기울기(Cassini state obliquity)를 근거화 계산해 "고정=obliquity 0" 가정을 실제 평형값으로 대체하는 방법 -->
-# Cassini-state obliquity — equilibrium spin-axis tilt of a damped body
+# Cassini-state obliquity: equilibrium spin-axis tilt of a damped body
 
 Method reference for the **equilibrium obliquity ε** of a body whose spin has been
 tidally damped into a **Cassini state**. It replaces the lazy "tidally locked ⟹
-obliquity = 0 exactly" assumption with the true Cassini-state value — which is
+obliquity = 0 exactly" assumption with the true Cassini-state value, which is
 **small but non-zero** for every well-measured synchronous body, and can be
 *large* when a secular spin–orbit resonance intervenes.
 
@@ -14,8 +14,8 @@ the figure coefficients J₂, C̄₂₂) and
 
 > Discipline. The Cassini framework is textbook celestial mechanics
 > (Colombo–Peale–Ward), stated as such and cited to the standard reference. What
-> gets grounded on ADS: the **calibration anchors** (measured Cassini obliquities
-> — Mercury, Titan, the Galileans) and the precession-constant coefficient for the
+> gets grounded on ADS: the **calibration anchors** (measured Cassini obliquities:
+> Mercury, Titan, the Galileans) and the precession-constant coefficient for the
 > synchronous case. Two coefficients are carried with an explicit uncertainty flag
 > (§3, §6) rather than over-claimed.
 
@@ -32,11 +32,11 @@ is the equilibrium in the frame co-precessing with the orbit: ŝ, n̂, k̂ stay
 
 There are up to **four** states (Peale 1969):
 
-- **State 1** — low obliquity, ŝ near n̂. The branch a quietly tidally-damped body
+- **State 1**: low obliquity, ŝ near n̂. The branch a quietly tidally-damped body
   reaches. **This is the NearStars default for a locked body.**
-- **State 2** — obliquity on the far side of the Laplace pole; **can be large**
+- **State 2**: obliquity on the far side of the Laplace pole; **can be large**
   (tens of degrees); the other stable end-state.
-- **States 3 & 4** — unstable.
+- **States 3 & 4**: unstable.
 
 Under dissipation only **states 1 and 2 are attractors** (Ward 1975
 `1975AJ.....80...64W`). A body damped from near ε = 0 lands in **state 1**; a body
@@ -59,7 +59,7 @@ satisfy (Peale 1969 `1969AJ.....74..483P`; Ward & Hamilton 2004 `2004AJ....128.2
 |g|/α < crit → 4 roots (states 1–4); |g|/α > crit → 2 roots (states 2 & 3), state 1
 having merged with state 4 and vanished. In the small-I limit (2) reduces to
 |g|/α ≈ 1. *(The exact exponent grouping of (2) was an image in the cached source;
-for the resonance flag the small-I form |g|/α ≈ 1 is all we need — verify the full
+for the resonance flag the small-I form |g|/α ≈ 1 is all we need. Verify the full
 expression in Ward & Hamilton 2004 before quoting it.)*
 
 **Small-angle State-1 solution** (ε, I small; Ward 1975; Fabrycky+ 2007
@@ -70,7 +70,7 @@ expression in Ward & Hamilton 2004 before quoting it.)*
 
 **(4) is the key result for locked bodies**: when the bulge-driven spin precession
 α greatly exceeds the orbital nodal rate |g|, the equilibrium obliquity is
-suppressed to a *small but non-zero* value ≈ (|g|/α)·sin I — **not exactly zero**.
+suppressed to a *small but non-zero* value ≈ (|g|/α)·sin I, **not exactly zero**.
 It becomes large only near the resonance |g|/α ~ 1 (state 2).
 
 ## 3. The precession constant α
@@ -84,7 +84,7 @@ Sanity check: Earth's solar-torque α from (5) (J₂ = 1.08e-3, C/MR² = 0.331,
 ω = 2π/day, n = 2π/yr) ≈ 17″/yr, matching the known ~16″/yr solar contribution to
 lunisolar precession.
 
-**Synchronously locked body** (ω = n) — **the case NearStars needs**. The body is
+**Synchronously locked body** (ω = n): **the case NearStars needs**. The body is
 triaxial (A < B < C); with hydrostatic figure coefficients J₂ and C̄₂₂ and
 normalized MoI C̃ ≡ C/MR², the satellite literature (Bills 2005
 `2005Icar..175..233B`; Baland+ 2011 `2011A&A...530A.141B`) uses:
@@ -93,8 +93,8 @@ normalized MoI C̃ ≡ C/MR², the satellite literature (Bills 2005
 
 > **Coefficient caveat.** The rigid polar combination is (C−A)/C = (J₂ + 2C̄₂₂)/C̃;
 > the benchmarked satellite-obliquity papers use (J₂ + C̄₂₂)/C̃ (6). For a
-> hydrostatic synchronous body C̄₂₂ = 0.3·J₂, so the two differ by 1.3 J₂ vs 1.6 J₂
-> — a ~20 % spread in α, hence ~20 % in ε. **Adopt (6) (Baland/Bills)** since those
+> hydrostatic synchronous body C̄₂₂ = 0.3·J₂, so the two differ by 1.3 J₂ vs 1.6 J₂,
+> a ~20 % spread in α, hence ~20 % in ε. **Adopt (6) (Baland/Bills)** since those
 > are calibrated on measured moons; carry the ±20 % as a modeling systematic, and
 > confirm the exact coefficient in `2011A&A...530A.141B` / `2005Icar..175..233B`
 > at point of use.
@@ -102,11 +102,11 @@ normalized MoI C̃ ≡ C/MR², the satellite literature (Bills 2005
 Because ω = n makes n²/ω = n, the locked α is far smaller than a fast rotator's,
 and scales with (J₂ + C̄₂₂), which for a locked body *grows* as the orbit tightens
 (figure doc §3: J₂ ≈ q_s, C̄₂₂ ≈ 0.3 J₂). So **the tightest locks are the
-roundest-spun → smallest ε₁** — unless a resonance intervenes.
+roundest-spun → smallest ε₁**, unless a resonance intervenes.
 
 ## 4. Getting the orbital nodal rate g
 
-**(a) Planet in a multi-planet system — Laplace–Lagrange secular theory**
+**(a) Planet in a multi-planet system: Laplace–Lagrange secular theory**
 (Murray & Dermott 1999 `1999ssd..book.....M`, ch. 7). The nodal frequencies {g_i}
 are eigenvalues of the inclination interaction matrix B; leading order:
 
@@ -119,7 +119,7 @@ dominant mode's {g, I}. **For resonant chains** (e.g. TRAPPIST-1) Laplace–Lagr
 breaks down → use direct **N-body nodal frequency analysis** (Millholland+ 2024
 `2024ApJ...961..203M`, [arXiv:2311.17908](https://arxiv.org/abs/2311.17908)).
 
-**(b) Close-in moon — driven by the planet's oblateness J₂** (Murray & Dermott 1999):
+**(b) Close-in moon: driven by the planet's oblateness J₂** (Murray & Dermott 1999):
 
     |g| = |Ω̇| ≈ (3/2) · J₂,planet · (R_planet/a)² · n · cos i     (7)
 
@@ -131,14 +131,14 @@ orbit about the star. **Inputs**: planet J₂, R_planet, moon a and n, other moo
 
 | body | state | measured obliquity | source | hydrostatic recipe reproduces? |
 |---|---|---|---|---|
-| **Mercury** (3:2) | 1 | **2.11 ± 0.1 arcmin** (0.035°) | `2007Sci...316..710M` Margot+ 2007 | **Yes** — Cassini relation + measured ε is *how* C/MR² is inferred; self-consistent with J₂, C₂₂ (`2009CeMDA.105..329M`). |
-| **Moon** | **2** | 6.7° to ecliptic (≈1.54° to Laplace plane) | `1975Sci...189..377W` Ward 1975 | Framework **yes**, figure **no** — genuine state-2 value from a Cassini-state transition, but the Moon's **fossil bulge** (J₂/C₂₂≈9≠10/3) breaks the hydrostatic α. Fossil flag. |
-| **Titan** | 1 | ≈0.3° | `2010AJ....139..311S` Stiles+ 2010 | **No** — rigid Titan under-predicts ~2–3×; the value needs a **subsurface ocean** (Cassini-state resonance of the shell), Baland+ 2011 `2011A&A...530A.141B`. Non-rigid flag. |
+| **Mercury** (3:2) | 1 | **2.11 ± 0.1 arcmin** (0.035°) | `2007Sci...316..710M` Margot+ 2007 | **Yes**: Cassini relation + measured ε is *how* C/MR² is inferred; self-consistent with J₂, C₂₂ (`2009CeMDA.105..329M`). |
+| **Moon** | **2** | 6.7° to ecliptic (≈1.54° to Laplace plane) | `1975Sci...189..377W` Ward 1975 | Framework **yes**, figure **no**: genuine state-2 value from a Cassini-state transition, but the Moon's **fossil bulge** (J₂/C₂₂≈9≠10/3) breaks the hydrostatic α. Fossil flag. |
+| **Titan** | 1 | ≈0.3° | `2010AJ....139..311S` Stiles+ 2010 | **No**: rigid Titan under-predicts ~2–3×; the value needs a **subsurface ocean** (Cassini-state resonance of the shell), Baland+ 2011 `2011A&A...530A.141B`. Non-rigid flag. |
 | **Io–Callisto** | 1 | ≈10⁻³–10⁻² deg (small, non-zero) | `2005Icar..175..233B` Bills 2005 | **Yes** (rigid); a liquid layer shifts them (`2012Icar..220..435B`). Confirms **locked ≠ 0**. |
 | **Enceladus** | 1 | ≈0.0015° (rigid) | `2016Icar..268...12B` Baland+ 2016 | **Yes**; stays ≪ 0.05° even with an ocean (`2011Icar..214..779C`). |
 
 **Headline**: every well-measured synchronous body sits in a *non-zero* Cassini
-state 1 (Mercury 0.035°, Galileans 10⁻³–10⁻² deg, Titan 0.3° with ocean) —
+state 1 (Mercury 0.035°, Galileans 10⁻³–10⁻² deg, Titan 0.3° with ocean),
 **"exactly 0" is never right**, but the magnitude is sub-degree unless a resonance
 (Moon = state 2) or a decoupled ocean (Titan) intervenes.
 
@@ -152,7 +152,7 @@ state 1 (Mercury 0.035°, Galileans 10⁻³–10⁻² deg, Titan 0.3° with ocea
 - **Resonance-enhanced state 2 is real.** Guerrero+ 2024 `2024ApJ...975..256G`: of
   280 known M-dwarf multiplanet systems, **~75 % of planets *could* be captured
   into a stable high-obliquity state 2**, breaking effective locking and giving a
-  real day/night cycle — a *gameplay-interesting* (interesting-first) branch. Flag
+  real day/night cycle, a *gameplay-interesting* (interesting-first) branch. Flag
   per body whether |g|/α is near crit (2); if so a documented ε of tens of degrees
   is defensible.
 - **Close-in ice moon, a ~ 4 R_p from a mini-Neptune (~950 km body)**: g from the
@@ -178,26 +178,26 @@ state-2 solution exists.
 
 ## 8. Caveats (honest)
 
-1. **Synchronous α coefficient** — (6) (J₂+C̄₂₂)/C̃ per Baland/Bills vs rigid
+1. **Synchronous α coefficient**: (6) (J₂+C̄₂₂)/C̃ per Baland/Bills vs rigid
    (J₂+2C̄₂₂)/C̃: ~20 % spread; adopt Baland/Bills, carry the systematic.
-2. **Critical-ratio (2) exact form** — small-I limit |g|/α ≈ 1 is robust; verify the
+2. **Critical-ratio (2) exact form**: small-I limit |g|/α ≈ 1 is robust; verify the
    full expression in Ward & Hamilton 2004 before quoting.
-3. **Fossil bulges** (Moon, Mercury figure) — hydrostatic α is wrong when the figure
+3. **Fossil bulges** (Moon, Mercury figure): hydrostatic α is wrong when the figure
    is frozen; reuse the figure doc's fossil-bulge flag.
-4. **Non-rigid amplification** (Titan) — a subsurface ocean can multiply ε by 2–3×;
+4. **Non-rigid amplification** (Titan): a subsurface ocean can multiply ε by 2–3×;
    a documented option, not the default.
-5. **Unknown g** — a poorly-constrained companion set leaves g (and ε) uncertain;
+5. **Unknown g**: a poorly-constrained companion set leaves g (and ε) uncertain;
    state the assumed neighbors. Resonant chains *require* N-body frequency analysis.
-6. **State 1 vs 2 is history-dependent** — dissipation selects state 1 by default,
+6. **State 1 vs 2 is history-dependent**: dissipation selects state 1 by default,
    but resonance/migration capture into state 2 is plausible for ~75 % of M-dwarf
-   planets (Guerrero 2024) — an interesting-first branch worth offering at Phase 4.
+   planets (Guerrero 2024), an interesting-first branch worth offering at Phase 4.
 
 ## Related
 
-- [`body-figure-methodology.md`](body-figure-methodology.md) — §3 supplies J₂ and
+- [`body-figure-methodology.md`](body-figure-methodology.md): §3 supplies J₂ and
   the tidal C̄₂₂ that feed the precession constant (6).
-- [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md)
-  — whether the body is locked (a Cassini candidate) at all.
-- [`principia-geopotential-data.md`](principia-geopotential-data.md) — the cfg form
+- [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md):
+  whether the body is locked (a Cassini candidate) at all.
+- [`principia-geopotential-data.md`](principia-geopotential-data.md): the cfg form
   of J₂/C₂₂; spin-axis orientation feeds the Principia/Kopernicus pole.
-- [`methodology-index.md`](methodology-index.md) — the full methodology index.
+- [`methodology-index.md`](methodology-index.md): the full methodology index.

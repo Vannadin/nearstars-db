@@ -11,14 +11,14 @@
 > global-mean surface temperatures of synchronously-rotating rocky planets in the
 > NearStars roster (Proxima b, the seven TRAPPIST-1 planets, etc.), and for
 > mapping the result onto KSP/Kopernicus temperature curves at emit.
-> This is a working reference, not a textbook — see §7 for the verified citations.
+> This is a working reference, not a textbook. See §7 for the verified citations.
 
 ## Table of Contents
 
 1. [Why Tidally-Locked Planets Need Special Treatment](#1-why-tidally-locked-planets-need-special-treatment)
-2. [Layer 1 — Equilibrium Temperature (Closed-Form)](#2-layer-1--equilibrium-temperature-closed-form)
-3. [Layer 2 — Substellar Ceiling & Day-Night Contrast (Analytic Scaling)](#3-layer-2--substellar-ceiling--day-night-contrast-analytic-scaling)
-4. [Layer 3 — Body-Specific GCMs (Anchor Values)](#4-layer-3--body-specific-gcms-anchor-values)
+2. [Layer 1: Equilibrium Temperature (Closed-Form)](#2-layer-1-equilibrium-temperature-closed-form)
+3. [Layer 2: Substellar Ceiling & Day-Night Contrast (Analytic Scaling)](#3-layer-2-substellar-ceiling-day-night-contrast-analytic-scaling)
+4. [Layer 3: Body-Specific GCMs (Anchor Values)](#4-layer-3-body-specific-gcms-anchor-values)
 5. [Climate-State Taxonomy](#5-climate-state-taxonomy)
 6. [How NearStars Applies This](#6-how-nearstars-applies-this)
 7. [Annotated Bibliography](#7-annotated-bibliography)
@@ -30,7 +30,7 @@
 
 A synchronously-rotating planet keeps one hemisphere facing its star forever. The
 substellar point receives steady, perpendicular insolation while the antistellar
-hemisphere sees no starlight at all — a permanent day side and a permanent night
+hemisphere sees no starlight at all: a permanent day side and a permanent night
 side, with a fixed terminator ring between them. This is the generic state for
 rocky planets in the habitable zones of M dwarfs (the orbits are close enough
 that tidal locking happens within the system age), which is exactly the regime
@@ -42,7 +42,7 @@ Two consequences follow that make the usual one-number "temperature" misleading:
   globally-averaged radiative-balance number that assumes the absorbed flux is
   spread evenly over the whole planet. A locked planet does not heat evenly. The
   real surface field is a steep gradient from a hot substellar point to a cold
-  antistellar point — Teq lands somewhere in between and describes neither.
+  antistellar point. Teq lands somewhere in between and describes neither.
 
 - **The day-night contrast is set by the atmosphere, not the orbit.** With no
   atmosphere (or a very thin one) the day side bakes and the night side
@@ -52,13 +52,13 @@ Two consequences follow that make the usual one-number "temperature" misleading:
   the same orbit can yield wildly different surface temperatures depending on the
   atmospheric inventory.
 
-The recipe below therefore produces **three** numbers — substellar, nightside,
-global mean — and treats the spread between them as the quantity that depends on
+The recipe below therefore produces **three** numbers (substellar, nightside,
+global mean) and treats the spread between them as the quantity that depends on
 atmosphere thickness and heat transport.
 
 ---
 
-## 2. Layer 1 — Equilibrium Temperature (Closed-Form)
+## 2. Layer 1: Equilibrium Temperature (Closed-Form)
 
 The cheap, always-available anchor. From global radiative balance with stellar
 flux `S` (incident at the planet's orbit), Bond albedo `A`, and the factor of 4
@@ -77,7 +77,7 @@ Teq = Teff · sqrt(R* / 2a) · (1 − A)^(1/4)
 
 (the two forms are identical once `S = σ Teff⁴ · (R*/a)²` is substituted).
 
-**Worked example — Proxima b.** With `S ≈ 0.66 S⊕` and `A ≈ 0.2`,
+**Worked example: Proxima b.** With `S ≈ 0.66 S⊕` and `A ≈ 0.2`,
 
 ```
 Teq ≈ 230 K   (literature range 226–251 K depending on the exact S, albedo,
@@ -85,7 +85,7 @@ Teq ≈ 230 K   (literature range 226–251 K depending on the exact S, albedo,
 ```
 
 **Caveat that motivates Layer 2:** the factor of 4 bakes in **efficient global
-redistribution** — it assumes the absorbed energy is shared over the entire
+redistribution**. It assumes the absorbed energy is shared over the entire
 sphere before re-emission. That is an idealization. For a locked planet it is the
 *best-case* (thick-atmosphere) limit, not the actual surface temperature. Teq is
 the right anchor for "how much energy is in the system," but on its own it
@@ -93,7 +93,7 @@ silently assumes the most heat-transport-efficient atmosphere possible.
 
 ---
 
-## 3. Layer 2 — Substellar Ceiling & Day-Night Contrast (Analytic Scaling)
+## 3. Layer 2: Substellar Ceiling & Day-Night Contrast (Analytic Scaling)
 
 Layer 2 brackets the problem: an upper bound on the day side, plus an estimate of
 how much the atmosphere closes the day-night gap.
@@ -108,7 +108,7 @@ point the star is overhead, so the geometry factor is 1 (not 1/4):
 T_ss = [ S (1 − A) / σ ]^(1/4)   =   Teq · 4^(1/4)   ≈   1.19 · Teq
 ```
 
-**Proxima b (A = 0.2): T_ss ≈ 336 K.** This is the **ceiling** — no atmosphere can
+**Proxima b (A = 0.2): T_ss ≈ 336 K.** This is the **ceiling**: no atmosphere can
 make the substellar point hotter than the airless local-balance value (greenhouse
 warming aside, which a thin atmosphere supplies only modestly). The real
 substellar temperature sits *below* this once any redistribution carries heat
@@ -119,46 +119,46 @@ away.
 Between the Teq floor (perfect redistribution) and the T_ss ceiling (zero
 redistribution), the controlling balance is **how fast the atmosphere moves heat
 from day to night (advection) versus how fast it radiates that heat to space
-(radiative cooling)** — a competition of timescales. Thicker atmospheres have
+(radiative cooling)**, a competition of timescales. Thicker atmospheres have
 more mass and more momentum to advect heat and a longer radiative timescale, so
 they redistribute more efficiently and the day-night contrast shrinks.
 
 Key results, in order of how to use them:
 
-- **Joshi, Haberle & Reynolds 1997** — the foundational GCM result that a modest
+- **Joshi, Haberle & Reynolds 1997**: the foundational GCM result that a modest
   atmosphere (≳ 0.1–0.3 bar of a CO₂-rich gas) transports enough heat to keep the
   night side from collapsing (i.e. from freezing out the atmosphere). Below that,
   the night side cools until the atmosphere condenses and the gas pressure runs
   away to collapse.
 
-- **Wordsworth 2015** — develops the redistribution-vs-collapse theory and gives
+- **Wordsworth 2015**: develops the redistribution-vs-collapse theory and gives
   scaling expressions for the day-night temperature difference and the surface
   wind speeds. Identifies the atmospheric boundary layer as the key control on
   energy balance, and maps the parameter regime where atmospheric collapse occurs.
 
-- **Koll & Abbot 2016** — treats the circulation as a planetary heat engine under
+- **Koll & Abbot 2016**: treats the circulation as a planetary heat engine under
   the weak-temperature-gradient (WTG) approximation, yielding the day-night
   temperature structure and an upper bound on large-scale wind speeds for dry,
   tidally-locked rocky atmospheres.
 
-- **Koll 2022** — the practical one. A **pressure-dependent day-night contrast
+- **Koll 2022**: the practical one. A **pressure-dependent day-night contrast
   scaling** that interpolates smoothly between the thin-atmosphere (large contrast)
   and thick-atmosphere (small contrast) limits, usable **without running a full
   GCM**. This is the tool that turns "0.7–1 bar" into an actual contrast estimate
   for a body that has no published GCM.
 
-- **Haqq-Misra+ 2018** — demarcates the **circulation regime** (slow-rotator /
+- **Haqq-Misra+ 2018**: demarcates the **circulation regime** (slow-rotator /
   Rhines-rotator / fast-rotator) from the planet's rotation rate and size. The
   regime governs *how* heat is carried (a single substellar cell vs. banded jets),
-  so it sets the shape of the day-night field, not just its amplitude — fix the
+  so it sets the shape of the day-night field, not just its amplitude. Fix the
   regime before reading the contrast off Koll 2022.
 
-- **Hammond+ 2022** — an **energy-balance model** for rapidly/synchronously
+- **Hammond+ 2022**: an **energy-balance model** for rapidly/synchronously
   rotating planets: a lightweight analytic alternative to a GCM that returns the
   full surface temperature field, useful as an independent cross-check on the
   Koll scaling.
 
-- **Kite, Gaidos & Manga 2011** — maps the **instability/collapse** feedbacks; a
+- **Kite, Gaidos & Manga 2011**: maps the **instability/collapse** feedbacks; a
   reminder that the thin end of the pressure range is not just "more contrast" but
   can tip into runaway atmospheric collapse (the hard floor on Layer 2).
 
@@ -174,10 +174,10 @@ the night side).
 
 ---
 
-## 4. Layer 3 — Body-Specific GCMs (Anchor Values)
+## 4. Layer 3: Body-Specific GCMs (Anchor Values)
 
 When a target has a **published 3-D general circulation model**, adopt those
-numbers — they supersede Layers 1 and 2 for that body, and they calibrate the
+numbers: they supersede Layers 1 and 2 for that body, and they calibrate the
 Layer-2 scaling for neighbours.
 
 **Proxima b** is the best-anchored roster target:
@@ -215,11 +215,11 @@ liquid (if any) sits.
 | **Eyeball Earth** | Moderate water + weak transport: a circular open-ocean pool at the substellar point, ice everywhere else. The canonical locked-ocean state. | Pierrehumbert 2011 |
 | **Lobster / asymmetric eyeball** | As eyeball, but **ocean** heat transport drags the warm pool downwind (eastward), distorting the circle into a lobster shape. | Hu & Yang 2014 |
 | **Waterbelt / ice-covered ocean** | Stronger cooling: the substellar pool shrinks; open water survives only as a thin equatorial/terminator belt over an otherwise ice-covered ocean. | Yang+ 2013 (adjacent) |
-| **Snowball** | Transport + albedo feedback freeze the whole surface, including the substellar point; globally ice-covered. **Caveat: a fully-locked *ocean* planet resists this** — the substellar melt pool persists (Checlair+ 2017), so true global snowball needs land at the substellar point or a very thin atmosphere. | Pierrehumbert 2011; Checlair+ 2017 |
+| **Snowball** | Transport + albedo feedback freeze the whole surface, including the substellar point; globally ice-covered. **Caveat: a fully-locked *ocean* planet resists this**: the substellar melt pool persists (Checlair+ 2017), so true global snowball needs land at the substellar point or a very thin atmosphere. | Pierrehumbert 2011; Checlair+ 2017 |
 | **Thick-atmosphere global ocean** | Massive atmosphere (or deep ocean) redistributes heat so efficiently that liquid water covers the planet day and night; small day-night contrast. | Yang+ 2013 |
 | **Dune / land planet** | **Low water inventory** (arid, desert world): little water to freeze out or run away, so the habitable zone widens and the surface stays warm and dry rather than icing over. | Abe+ 2011 |
 | **Terminator-ring habitability** | Day side too hot, night side frozen, but the ring at the day-night boundary holds moderate, potentially habitable temperatures. | Wordsworth 2015 (adjacent) |
-| **Subsurface ocean under ice** | Surface frozen, but geothermal/tidal heat (or a thin insulating ice shell) sustains liquid water *beneath* the ice — a Europa-like reading. | Pierrehumbert 2011 (Super-Europa) |
+| **Subsurface ocean under ice** | Surface frozen, but geothermal/tidal heat (or a thin insulating ice shell) sustains liquid water *beneath* the ice, a Europa-like reading. | Pierrehumbert 2011 (Super-Europa) |
 
 ---
 
@@ -233,12 +233,12 @@ The three-layer output maps directly onto the KSP/Kopernicus thermal model:
   **substellar/nightside split sets the longitude-offset amplitude** (the
   day-night swing on a locked body shows up as a longitude dependence, since the
   substellar point is fixed). The amplitude itself comes from the lock plus the
-  atmosphere — i.e. from the Layer-2/Layer-3 contrast, not from anything KSP
+  atmosphere, i.e. from the Layer-2/Layer-3 contrast, not from anything KSP
   computes on its own.
 
 - **Record the chosen climate state and its parameters in the Phase 4 board.**
   The board entry must name the climate state (§5) and pin its controlling
-  parameters — **albedo `A`, surface pressure, CO₂ fraction**, water inventory.
+  parameters: **albedo `A`, surface pressure, CO₂ fraction**, water inventory.
   These are art-direction choices gated by the literature, per the Phase 4 facet
   policy.
 
@@ -259,82 +259,82 @@ body traces back to a stated albedo/pressure/CO₂ choice and a cited scaling or
 Each entry: authors, year, journal, **verified** arXiv id (or a flag where none
 exists), and one line on what it contributes.
 
-- **Joshi, M. M., Haberle, R. M. & Reynolds, R. T. (1997)** — *Icarus* 129, 450.
+- **Joshi, M. M., Haberle, R. M. & Reynolds, R. T. (1997)**: *Icarus* 129, 450.
   **No arXiv (pre-arXiv-astro-ph-era planetary paper).** Foundational GCM result:
   a modest atmosphere prevents nightside atmospheric collapse on a locked planet.
 
-- **Pierrehumbert, R. T. (2011)** — *ApJ Letters* 726, L8. No arXiv preprint;
+- **Pierrehumbert, R. T. (2011)**: *ApJ Letters* 726, L8. No arXiv preprint;
   cite by ADS bibcode **2011ApJ...726L...8P** (the previously-circulated id
-  1010.5052 is an unrelated mathematics paper — do not use it). "A Palette of
+  1010.5052 is an unrelated mathematics paper: do not use it). "A Palette of
   Climates for Gliese 581g": defines the eyeball / snowball / Super-Europa
   climate states for a tidally-locked world.
 
-- **Yang, J., Cowan, N. B. & Abbot, D. S. (2013)** — *ApJ Letters* 771, L45.
+- **Yang, J., Cowan, N. B. & Abbot, D. S. (2013)**: *ApJ Letters* 771, L45.
   **[arXiv:1307.0515](https://arxiv.org/abs/1307.0515).** Stabilizing substellar cloud feedback expands the inner
   habitable zone; supports the thick-atmosphere / waterbelt readings.
 
-- **Hu, Y. & Yang, J. (2014)** — *PNAS* 111, 629. No arXiv preprint; cite by ADS
+- **Hu, Y. & Yang, J. (2014)**: *PNAS* 111, 629. No arXiv preprint; cite by ADS
   bibcode **2014PNAS..111..629H** (the previously-circulated id [1312.3337](https://arxiv.org/abs/1312.3337) is
-  Leconte+ 2013 on runaway greenhouse — do not use it). Ocean heat transport
+  Leconte+ 2013 on runaway greenhouse: do not use it). Ocean heat transport
   shifts the eyeball pool downwind: the "lobster" / asymmetric-eyeball state.
 
-- **Kite, E. S., Gaidos, E. & Manga, M. (2011)** — *ApJ* 743, 41.
-  **[arXiv:1109.2668](https://arxiv.org/abs/1109.2668).** Climate instability on tidally-locked planets — the
+- **Kite, E. S., Gaidos, E. & Manga, M. (2011)**: *ApJ* 743, 41.
+  **[arXiv:1109.2668](https://arxiv.org/abs/1109.2668).** Climate instability on tidally-locked planets: the
   feedbacks that can tip a locked atmosphere toward collapse (Layer-2 context).
 
-- **Kopparapu, R. K. et al. (2016)** — *ApJ* 819, 84. **[arXiv:1602.05176](https://arxiv.org/abs/1602.05176).** Inner
-  edge of the habitable zone for *synchronously rotating* planets — the
+- **Kopparapu, R. K. et al. (2016)**: *ApJ* 819, 84. **[arXiv:1602.05176](https://arxiv.org/abs/1602.05176).** Inner
+  edge of the habitable zone for *synchronously rotating* planets: the
   locked-specific flux/HZ framing (more on-topic than the 2013 general HZ paper).
 
-- **Haqq-Misra, J. et al. (2018)** — *ApJ* 852, 67. **[arXiv:1710.00435](https://arxiv.org/abs/1710.00435).**
+- **Haqq-Misra, J. et al. (2018)**: *ApJ* 852, 67. **[arXiv:1710.00435](https://arxiv.org/abs/1710.00435).**
   Demarcates the circulation regimes (slow-rotator / Rhines-rotator / fast-rotator)
-  of synchronously rotating planets — the regime sets the day-night contrast
+  of synchronously rotating planets: the regime sets the day-night contrast
   structure, a direct Layer-2 input.
 
-- **Checlair, J., Menou, K. & Abbot, D. S. (2017)** — *ApJ* 845, 132.
+- **Checlair, J., Menou, K. & Abbot, D. S. (2017)**: *ApJ* 845, 132.
   **[arXiv:1705.08904](https://arxiv.org/abs/1705.08904).** "No Snowball on Habitable Tidally Locked Planets": the
   substellar melt region persists, so a fully-locked ocean planet resists global
-  glaciation — nuances the Snowball row in §5.
+  glaciation. This nuances the Snowball row in §5.
 
-- **Yang, J. et al. (2019)** — *ApJ* 871, 29. **[arXiv:1902.02103](https://arxiv.org/abs/1902.02103).** Ocean dynamics
-  and the inner edge of the habitable zone — ocean heat transport's role in the
+- **Yang, J. et al. (2019)**: *ApJ* 871, 29. **[arXiv:1902.02103](https://arxiv.org/abs/1902.02103).** Ocean dynamics
+  and the inner edge of the habitable zone: ocean heat transport's role in the
   eyeball/lobster surface temperature field.
 
-- **Hammond, M. et al. (2022)** — *PSJ* 3, 32. **[arXiv:2201.02685](https://arxiv.org/abs/2201.02685).** An energy
-  balance model for rapidly and synchronously rotating planets — a lightweight
+- **Hammond, M. et al. (2022)**: *PSJ* 3, 32. **[arXiv:2201.02685](https://arxiv.org/abs/2201.02685).** An energy
+  balance model for rapidly and synchronously rotating planets, a lightweight
   analytic alternative to a full GCM for the day-night temperature field.
 
-- **Abe, Y., Abe-Ouchi, A., Sleep, N. H. & Zahnle, K. J. (2011)** — *Astrobiology*
+- **Abe, Y., Abe-Ouchi, A., Sleep, N. H. & Zahnle, K. J. (2011)**: *Astrobiology*
   11, 443. **No arXiv preprint found.** "Habitable zone limits for dry planets":
   low-water-inventory land/dune worlds have a wider habitable zone than aqua
   planets.
 
-- **Wordsworth, R. (2015)** — *ApJ* 806, 180. **[arXiv:1412.5575](https://arxiv.org/abs/1412.5575)** (the
+- **Wordsworth, R. (2015)**: *ApJ* 806, 180. **[arXiv:1412.5575](https://arxiv.org/abs/1412.5575)** (the
   previously-circulated id 1505.07087 is incorrect). Atmospheric heat
   redistribution and collapse theory; scaling for day-night ΔT and surface winds.
 
-- **Koll, D. D. B. & Abbot, D. S. (2016)** — *ApJ* 825, 99. **[arXiv:1605.01066](https://arxiv.org/abs/1605.01066)**
+- **Koll, D. D. B. & Abbot, D. S. (2016)**: *ApJ* 825, 99. **[arXiv:1605.01066](https://arxiv.org/abs/1605.01066)**
   (the previously-circulated id 1603.05229 is incorrect). WTG + heat-engine model
   of the day-night temperature structure and wind speeds for dry locked rocky
   atmospheres.
 
-- **Koll, D. D. B. (2022)** — *ApJ* 924, 134. **[arXiv:1907.13145](https://arxiv.org/abs/1907.13145).** Pressure-
+- **Koll, D. D. B. (2022)**: *ApJ* 924, 134. **[arXiv:1907.13145](https://arxiv.org/abs/1907.13145).** Pressure-
   dependent day-night contrast scaling usable without a full GCM (thicker
   atmosphere → smaller contrast). The Layer-2 workhorse.
 
-- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **[arXiv:1608.06827](https://arxiv.org/abs/1608.06827).** LMD GCM
+- **Turbet, M. et al. (2016)**: *A&A* 596, A112. **[arXiv:1608.06827](https://arxiv.org/abs/1608.06827).** LMD GCM
   of Proxima b; substellar ~290 K / nightside ~150 K / mean ~250 K for ~1 bar
   N₂+CO₂. Layer-3 anchor.
 
-- **Boutle, I. A. et al. (2017)** — *A&A* 601, A120. **[arXiv:1702.08463](https://arxiv.org/abs/1702.08463).** UK Met
+- **Boutle, I. A. et al. (2017)**: *A&A* 601, A120. **[arXiv:1702.08463](https://arxiv.org/abs/1702.08463).** UK Met
   Office Unified Model of Proxima b; independent confirmation of the Turbet+ 2016
   temperature structure. Layer-3 anchor.
 
-- **Kopparapu, R. K. et al. (2013)** — *ApJ* 765, 131 (erratum *ApJ* 770, 82).
+- **Kopparapu, R. K. et al. (2013)**: *ApJ* 765, 131 (erratum *ApJ* 770, 82).
   **[arXiv:1301.6674](https://arxiv.org/abs/1301.6674).** Habitable-zone boundary estimates; sets the flux context
   (`S`) and inner/outer-edge framing used in Layer 1.
 
-- **Ho, S. & Turner, E. L. (2011)** — *ApJ* 739, 26. **[arXiv:1007.0245](https://arxiv.org/abs/1007.0245).** Related
+- **Ho, S. & Turner, E. L. (2011)**: *ApJ* 739, 26. **[arXiv:1007.0245](https://arxiv.org/abs/1007.0245).** Related
   (not climate): the statistical RV minimum-mass → true-mass deprojection method,
   used elsewhere in the pipeline to turn `m sin i` into a mass for these planets.
 
@@ -342,13 +342,13 @@ exists), and one line on what it contributes.
 
 ## Related
 
-- `docs/reference/exoplanet-atmosphere-methodology.md` — the sibling recipe for
+- `docs/reference/exoplanet-atmosphere-methodology.md`: the sibling recipe for
   the surface pressure, mean molecular weight (μ) and scale height of the same
   rocky atmospheres; the temperature `T` from here feeds its scale-height formula.
-- `docs/reference/binary-epoch-pipeline.md` — epoch/state-vector handling for
+- `docs/reference/binary-epoch-pipeline.md`: epoch/state-vector handling for
   multiple-star hosts (Proxima orbits α Cen AB).
-- `docs/reference/solar-system-external-observer.md` — the Teq-blind-to-greenhouse
+- `docs/reference/solar-system-external-observer.md`: the Teq-blind-to-greenhouse
   calibration benchmark (Venus: Teq 227–299 K vs actual 737 K) that motivates the
   "Teq ≠ surface T" warning in §1.
-- Phase 3 synthesis skill (`nearstars-phase3`) — where the chosen albedo /
+- Phase 3 synthesis skill (`nearstars-phase3`): where the chosen albedo /
   pressure / CO₂ fraction and the emit temperature numbers are recorded per planet.
