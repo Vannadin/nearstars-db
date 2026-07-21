@@ -88,6 +88,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__principia-cfg-reference.html">Principia CFG Technical Reference</a>
 <a class="nav-i" href="reference__principia-geopotential-data.html">Principia Geopotential Data — Solar System Bodies (verbatim)</a>
 <a class="nav-i" href="reference__rex-data-comparison.html">REX vs NearStars Data Comparison</a>
+<a class="nav-i" href="reference__rocky-planet-dynamo-methodology.html">Rocky-planet magnetic-field grounding: internal-structure + OC06 dynamo scaling</a>
 <a class="nav-i" href="reference__science-system.html">KSP Science System — Reference for NearStars body authoring</a>
 <a class="nav-i" href="reference__solar-system-external-observer.html">The Solar System as an External Observer Would See It</a>
 <a class="nav-i" href="reference__stellar-photospheric-color-methodology.html">Stellar Photospheric-Color Methodology: Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB</a>
@@ -114,6 +115,33 @@ body { margin: 0; background: #fff; color: #1f2328;
 
 Hand-off doc for a clean session. Self-contained: it recaps what the viewer does and
 lays out a prioritized optimization plan to execute + verify.
+
+## Status (2026-07-21) — cross-surface nav + field payload
+
+- **Cross-surface navigation — DONE.** The four doc surfaces (DB `index.html`,
+  3D `starmap.html`, `reports.html`, `firefly-colors.html`) now share one nav bar
+  linking each other plus the GitHub Wiki. `firefly-colors.html` was orphaned (nothing
+  linked in) and is now reachable. Wiki link is top-bar only (owner choice). Injected per
+  surface: `index.html` directly, plus the `build_reports_index` / `render_color_visualizer`
+  / `starmap_template` generators.
+- **Field-layer payload — DONE (partial).** The 1314-star field layer shipped
+  `id`/`is_field`/`distance_pc`/`distance_ly`/`beyond_50ly` on every entry, all derivable
+  or constant; dropped in the builder and reconstructed in the viewer at load. Field
+  494→373 KB, payload 1241→1120 KB, file 1379→1258 KB.
+- **Remaining optimization (flagged, not done — riskier viewer surgery):**
+  - **Field `components` (~214 KB).** Each field star carries a full component object
+    (name=label, rgb=rep_rgb, is_primary=true, offset_au=[0,0,0], radius_rsun=class proxy,
+    plus spectype/spec_class/teff_k/vmag_v). Only spectype/spec_class/teff_k are real
+    info (shown in the detail panel, line ~1135) and the AU-scale star mesh reads it
+    (line ~779). Slimming needs viewer defaults at BOTH paths — do it carefully with a
+    browser smoke. Biggest remaining win.
+  - **`planets:[]` per field entry (~18 KB)** — droppable if the viewer defaults `c.planets`.
+  - **stability 287 KB** — regrew past the 2026-06-16 215 KB (more systems have runs now);
+    audit the per-variant cap + stray-float rounding.
+- **Verification done this round:** self-check (157→143 clusters, 237 planets), module
+  `node --check`, reproducible build (identical md5), dead-link + freshness gates green.
+  **Visual browser smoke still recommended** for the field-derive change (1314 markers +
+  detail panel + distance gate).
 
 ## Status (2026-06-16)
 - **P1 — payload — DONE.** Stability series downsampled to ≤100 snapshots/variant
@@ -234,6 +262,30 @@ and `node --check`.
 
 깨끗한 세션으로 넘기기 위한 인계 문서다. 자체 완결형이며, 뷰어가 하는 일을 정리하고
 실행 + 검증할 우선순위별 최적화 계획을 제시한다.
+
+## 상태 (2026-07-21) — surface 간 내비게이션 + field 페이로드
+
+- **surface 간 내비게이션 — 완료.** 문서 surface 네 개(DB `index.html`, 3D `starmap.html`,
+  `reports.html`, `firefly-colors.html`)가 서로와 GitHub 위키를 잇는 공용 내비바를 갖게
+  됐습니다. `firefly-colors.html`은 들어오는 링크가 없어 고아였는데 이제 도달 가능합니다.
+  위키 링크는 상단바만(오너 선택). 주입 위치는 surface별로 다릅니다. `index.html`은 직접,
+  나머지는 `build_reports_index` / `render_color_visualizer` / `starmap_template` 생성기.
+- **field 레이어 페이로드 — 부분 완료.** 1314개 field 별이 항목마다
+  `id`/`is_field`/`distance_pc`/`distance_ly`/`beyond_50ly`를 실었는데 전부 유도 가능하거나
+  상수라, 빌더에서 빼고 뷰어가 로드 시 복원하게 했습니다. field 494→373 KB,
+  페이로드 1241→1120 KB, 파일 1379→1258 KB.
+- **남은 최적화 (플래그, 미완 — 뷰어 수술이 더 위험):**
+  - **field `components` (~214 KB).** field 별마다 전체 컴포넌트 객체를 실음
+    (name=label, rgb=rep_rgb, is_primary=true, offset_au=[0,0,0], radius_rsun=클래스 프록시,
+    그리고 spectype/spec_class/teff_k/vmag_v). 실제 정보는 spectype/spec_class/teff_k뿐이고
+    상세 패널(약 1135행)과 AU 스케일 별 메시(약 779행)가 읽습니다. 슬리밍하려면 두 경로 모두에
+    뷰어 기본값이 필요하니 브라우저 스모크와 함께 신중히. 남은 최대 절감처.
+  - **field 항목마다 `planets:[]` (~18 KB)** — 뷰어가 `c.planets`를 기본값 처리하면 제거 가능.
+  - **stability 287 KB** — 2026-06-16의 215 KB보다 다시 커짐(안정성 런을 가진 시스템 증가).
+    변형별 캡 + 잔여 부동소수 반올림 재점검.
+- **이번 라운드 검증:** 자체검증(157→143 클러스터, 237 행성), 모듈 `node --check`,
+  재현성 빌드(md5 동일), dead-link·신선도 게이트 통과. **field 유도 변경에 대한 시각적
+  브라우저 스모크는 아직 권장**(마커 1314개 + 상세 패널 + 거리 게이트).
 
 ## 상태 (2026-06-16)
 - **P1 — payload — 완료.** 안정성 시계열을 variant당 ≤100 스냅샷으로 다운샘플

@@ -88,6 +88,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__principia-cfg-reference.html">Principia CFG Technical Reference</a>
 <a class="nav-i" href="reference__principia-geopotential-data.html">Principia Geopotential Data — Solar System Bodies (verbatim)</a>
 <a class="nav-i" href="reference__rex-data-comparison.html">REX vs NearStars Data Comparison</a>
+<a class="nav-i" href="reference__rocky-planet-dynamo-methodology.html">Rocky-planet magnetic-field grounding: internal-structure + OC06 dynamo scaling</a>
 <a class="nav-i" href="reference__science-system.html">KSP Science System — Reference for NearStars body authoring</a>
 <a class="nav-i" href="reference__solar-system-external-observer.html">The Solar System as an External Observer Would See It</a>
 <a class="nav-i" href="reference__stellar-photospheric-color-methodology.html">Stellar Photospheric-Color Methodology: Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB</a>
@@ -121,8 +122,8 @@ resolved Zeeman signal), so the curated value must come from a grounded scaling
 law, not from "scale Jupiter by mass", which is physically wrong (see below).
 
 This is the canonical home for the giant/substellar dynamo method; the rocky-planet
-field method (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) lives in the
-TRAPPIST-1 family decisions and the Phase 3 skill's `mod-grounded-fields.md`.
+field method (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) has its own canonical
+home in [`rocky-planet-dynamo-methodology.md`](reference__rocky-planet-dynamo-methodology.html).
 
 ## The law
 
@@ -257,6 +258,13 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
   He-separation caveat).
 - **Rodríguez-Mozos & Moya 2022** (RM22), `2203.01065`: rocky-planet field scaling
   (cached). Used for AU Mic d, not the giants.
+
+## Related
+
+- [`rocky-planet-dynamo-methodology.md`](reference__rocky-planet-dynamo-methodology.html) — the
+  rocky (Earth/super-Earth) counterpart; the two methods split at the rocky ↔
+  sub-Neptune boundary and must not be cross-applied.
+- `methodology-index.md` — the living index of all derived-value recipes.
 </script>
 <script type="text/markdown" id="md-ko"><!-- 거대행성·아성단 자기장을 에너지플럭스 dynamo 스케일링으로 도출하는 방법(논문 근거) -->
 # 행성/아성단 자기장 근거: 에너지플럭스 다이나모 스케일링
@@ -269,8 +277,9 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
 질량으로 스케일한다" 는 식이 아니다. 그것은 물리적으로 틀렸다 (아래 참고).
 
 이 문서가 거대 행성/아성단 다이나모 방법의 canonical 거처다. 암석 행성 자기장
-방법 (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) 은 TRAPPIST-1 계열
-decisions 와 Phase 3 스킬의 `mod-grounded-fields.md` 에 있다.
+방법 (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) 은
+[`rocky-planet-dynamo-methodology.md`](reference__rocky-planet-dynamo-methodology.html) 에
+자체 canonical 거처를 둔다.
 
 ## 법칙
 
@@ -402,6 +411,13 @@ Notes:
   영역 아래로 내려가는 하향 외삽으로 사용했다 (sub-Saturn He 분리 caveat 포함).
 - **Rodríguez-Mozos & Moya 2022** (RM22), `2203.01065`: 암석 행성 자기장
   스케일링 (cached). 거대 행성이 아니라 AU Mic d 에 사용.
+
+## Related
+
+- [`rocky-planet-dynamo-methodology.md`](reference__rocky-planet-dynamo-methodology.html) — 암석형
+  (지구/슈퍼지구) 상대편 방법. 두 방법은 암석형 ↔ sub-Neptune 경계에서 갈리며 교차
+  적용해서는 안 된다.
+- `methodology-index.md` — 모든 도출값 레시피의 살아있는 인덱스.
 </script>
 <script>
 const srcs = {};
