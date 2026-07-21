@@ -1851,19 +1851,19 @@ decisions:
     status: gated
     driver: [physics, canon]
     narrative: >
-      Strong intrinsic dipole (Earth-class, ~tens of µT) — a tidally driven convecting Fe-core dynamo. Unusually strong for a moon.
+      Strong intrinsic dipole (Earth-class, 140 µT surface) — a tidally driven convecting Fe-core dynamo. Unusually strong for a moon.
       [Downstream report seed] a nuance of "seemingly able to mine what seems unminable" — leak the unexplained mechanism of the floating mountains/flux vortex
       into the report as a mystery/easter-egg without physical assertion (only hinting at unobtanium). Make the high-field zone
       (flux vortex = the floating-mountains area) a separate Pandora biome — magnetic-anomaly/instrument-disturbance science + floating-mountain terrain.
       Included in the formal biome list in the gameplay/biome facet (a high-field region biome).
     narrative_ko: >
-      강한 고유 dipole (지구급, ~수십 µT) — 조석-구동 대류 Fe 핵 dynamo. 위성 치고 이례적으로 강함.
+      강한 고유 dipole (지구급, 표면 140 µT) — 조석-구동 대류 Fe 핵 dynamo. 위성 치고 이례적으로 강함.
       [후행 레포트 씨앗] "채굴 불가능할 것 같은 물질을 채굴할 수 있을 듯한" 뉘앙스 — 부유산/플럭스 볼텍스의
       미설명 메커니즘을 물리 단언 없이 미스터리/이스터에그로 레포트에 흘릴 것(언옵타늄을 암시만). 고 자기장 구역
       (플럭스 볼텍스 = 부유산 일대)을 Pandora 별도 바이옴으로 — 자기 이상/계기 교란 과학 + 부유산 지형.
       gameplay/biome facet서 정식 바이옴 목록에 포함(고자기장 region 바이옴).
     fields:
-      - { name: magnetic_field, value: "강한 고유 dipole (지구급, ~수십 µT), 조석-구동 Fe 핵 dynamo", op: set }
+      - { name: magnetic_field, value: "140 µT (지구급 고유 dipole, 조석-구동 Fe 핵 dynamo)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     gate:
       criterion: [canon-consistency, physics]
