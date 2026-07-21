@@ -155,7 +155,7 @@ main { max-width: 980px }
 
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb"><a href="index.html" data-i18n="back_db"></a></div>
+  <div class="crumb"><a href="index.html">DB</a> · <a href="starmap.html">3D Map</a> · <span>Reports</span> · <a href="firefly-colors.html">Colors</a> · <a href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">Wiki ↗</a></div>
   <div class="seg lang-toggle" id="lang-seg">
     <button class="on" data-lang="ko">한</button>
     <button data-lang="en">EN</button>

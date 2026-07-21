@@ -206,7 +206,10 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="hoverLabel" class="label" style="display:none"></div>
 
 <div id="topbar">
-  <a href="index.html" class="btn" id="backDb" title="NearStars DB">← DB</a>
+  <a href="index.html" class="btn" id="backDb" title="NearStars DB">DB</a>
+  <a href="reports.html" class="btn" title="Curation reports">Reports</a>
+  <a href="firefly-colors.html" class="btn" title="Plasma colors">Colors</a>
+  <a href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener" class="btn" title="Project wiki">Wiki ↗</a>
   <div id="brand">NearStars<span class="sub" data-i18n="subtitle">근방 항성계 3D 지도</span></div>
   <div class="spacer"></div>
   <button class="btn" id="toggleLabels"><span class="dot"></span><span data-i18n="allLabels">모든 라벨</span></button>
@@ -656,7 +659,14 @@ function moonOrbitPts(ctr,a,e,iD,Om,om){ const p=[]; for(let k=0;k<=96;k++) p.pu
 const glowSprites=[];
 // curated systems + the uncurated 50-ly field stars (rendered the same; is_field gates
 // out spin axis / heliosphere / motion / planets, which they don't have).
-(DATA.field ? DATA.clusters.concat(DATA.field) : DATA.clusters).forEach(c=>{
+// field stars ship a slim shape {label,pos,rep_rgb,rep_radius,components}; derive the
+// rest here (is_field const, distance_ly/pc from |pos|) so the payload stays small.
+const _fieldStars=(DATA.field||[]).map(c=>{
+  const d=Math.hypot(c.pos[0],c.pos[1],c.pos[2]);
+  c.is_field=true; c.distance_ly=+d.toFixed(3); c.distance_pc=+(d/3.261563).toFixed(3);
+  return c;
+});
+DATA.clusters.concat(_fieldStars).forEach(c=>{
   const node=new THREE.Group();
   node.position.copy(lyToScene(new THREE.Vector3(c.pos[0],c.pos[1],c.pos[2])));
   scene.add(node);

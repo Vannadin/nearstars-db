@@ -1095,12 +1095,12 @@ def field_clusters():
         cls = spec_class(s["spectype"]) if s.get("spectype") else teff_class(teff)
         rgb = teff_to_rgb(teff) if teff else "#9aa3b4"
         rr = marker_radius(None, cls)
-        # slim shape: only the keys the viewer reads for a planetless primary marker;
-        # absent keys read as undefined (treated like null/false by the viewer).
+        # slim shape: only the keys the viewer cannot derive. is_field (const true),
+        # distance_ly / distance_pc (= |pos|), id (= index), and beyond_50ly (always
+        # false for the <50 ly layer) are reconstructed in the viewer at load, so they
+        # are dropped here to keep the field payload small.
         out.append({
-            "id": f"field-{i}", "label": s["name"], "pos": pos,
-            "distance_pc": round(dpc, 3), "distance_ly": round(dly, 3),
-            "is_field": True, "beyond_50ly": dly > 50,
+            "label": s["name"], "pos": pos,
             "rep_rgb": rgb, "rep_radius": rr,
             "components": [{
                 "name": s["name"], "spectype": s.get("spectype"), "spec_class": cls,
