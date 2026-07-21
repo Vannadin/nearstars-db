@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NearStars — mod title (Latin motto) candidates · NearStars docs</title>
+<title>Body-Tree Spec — Sun-rooted, stars as direct children · NearStars docs</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css">
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
@@ -60,7 +60,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__atmosphere-reflected-color-methodology.html">Atmosphere Reflected-Color Methodology: Composition → Spectrum → sRGB</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
 <a class="nav-i" href="reference__body-figure-methodology.html">Body figure grounding: rotational oblateness (J₂) and tidal triaxiality (C₂₂)</a>
-<a class="nav-i" href="reference__body-tree-spec.html">Body-Tree Spec — Sun-rooted, stars as direct children</a>
+<a class="nav-i on" href="reference__body-tree-spec.html">Body-Tree Spec — Sun-rooted, stars as direct children</a>
 <a class="nav-i" href="reference__cassini-state-obliquity-methodology.html">Cassini-state obliquity: equilibrium spin-axis tilt of a damped body</a>
 <a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
@@ -78,7 +78,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__methodology.html">Stellar System Data Research Methodology</a>
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
-<a class="nav-i on" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
 <a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
@@ -105,104 +105,44 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="plans__viewer-optimization.html">3D Star-Map Viewer — recap + optimization plan</a>
 </nav>
 <div class="content-wrap">
-  <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
+  <div class="topbar"><span class="lang-only">EN only</span></div>
   <article class="markdown-body" id="content"></article>
 </div>
 </div>
-<script type="text/markdown" id="md-en"><!-- Latin motto candidates for the mod title — brainstorm record, decision deferred -->
-# NearStars — mod title (Latin motto) candidates
+<script type="text/markdown" id="md-en"># Body-Tree Spec — Sun-rooted, stars as direct children
 
-Brainstorm record (2026-06-01; moved into docs/reference 2026-06-11).
-All 8 candidates below are grammar-checked and verified unclaimed as mottos.
-**Decision: deferred until release prep.** Two finalists are live.
+> Status: **SPEC** (owner-approved 2026-07-18, s25 proposal R6/M-F). Records the
+> de-facto shape the pipeline already emits; new emitters and Principia-side code
+> may rely on it.
 
-## Finalists (the last two standing)
+**The spec.** The NearStars body tree is **single-rooted at the stock `Sun`**, with
+every star (or barycenter standing in for a close binary) a **direct child of
+`Sun`** (`referenceBody = Sun`); planets/moons/disks parent to their star or
+barycenter as usual. Interstellar space is therefore, in stock terms, the Sun's
+SOI. Each star carries a **stock Keplerian placeholder orbit** around Sun — a
+representational slot so KSP/Kopernicus can build the tree, never a physical
+claim — while the **real state is Principia-Cartesian** (`principia_initial_state`
+per body); under Principia management the placeholder and stock SOI mechanics in
+the void are irrelevant. Stock SOI/orbit semantics matter only in the windows
+where a vessel is *released* from Principia management — chiefly the WS4 warp
+cruise, whose re-adoption step ("set the destination stock orbit around the
+destination star") assumes exactly this single-rooted tree with stars as stock
+bodies.
 
-| Phrase | Literal | Closing note / texture |
-|---|---|---|
-| **Per vasta ad infinitum** | Across the vast void, toward infinity | Closes soaring into *infinity*. Vast + infinite share the same "immense emptiness" register — grand but slightly homogeneous |
-| **Per aspera ad mira** | Through hardships, toward wonders | Closes on *wonder* (emotion). A hardship→wonder contrast arc; `mira` sounds clean with no stray associations |
+**Grounding (verified 2026-07-18):**
 
-## Earlier candidates
+- Emitter: `.claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py` emits
+  `referenceBody = Sun` for every star Body node (line ~857).
+- Live test config: `test-configs/ws5-principia-probe/GameData/NearStars-Configs/`
+  (`NearStars-Stars-Kopernicus.cfg` + `NearStars-StockKeplerian-Orbits.cfg`) —
+  the configs the in-game WS5/WS5-C gates ran on.
+- This is also the standard Kopernicus interstellar-pack shape, so third-party
+  tooling expectations match.
 
-| Phrase | Literal | Closing note | Notes |
-|---|---|---|---|
-| **Ad astra, et ultra** | To the stars, and beyond | Closes on *beyond* | Early candidate; shelved — `ultra` felt childish |
-| **Ad infinitum, et ultra** | To infinity, and beyond | Closes on *beyond* | The Buzz Lightyear line in Latin; same `ultra` issue |
-| **Per aspera ad infinitum** | Through hardships, toward infinity | Closes on *infinity* | The classic skeleton (= ad astra per aspera). But `ad infinitum` can read as "endless toil" |
-| **Ad infinitum per aspera** | Toward infinity, through hardships | Closes on *hardship* | Word-order inversion of the above. Resolute, stoic tone; more motto-like |
-| **Plus ultra ad infinitum** | Further beyond, toward infinity | Closes on *infinity* | Aggressive. But beyond+infinity is tautological + evokes My Hero Academia |
-| **Per aspera plus ultra** | Through hardships, further beyond | Closes on *beyond* | Fusion of two real mottos, strongest rhythm. But zero celestial vocabulary |
-
-## Grouped by closing flavor
-
-- **Closing on infinity** (grand, cosmic) → Per vasta ad infinitum / Per aspera ad infinitum / Plus ultra ad infinitum
-- **Closing on wonder** (emotional, sublime) → Per aspera ad mira
-- **Closing on beyond** (momentum, breakthrough) → Per aspera plus ultra / Ad astra et ultra
-- **Closing on hardship** (resolute, stoic) → Ad infinitum per aspera
-
-## Reference — preempted mottos (must not be used as-is)
-
-- Per aspera ad astra — state motto of Kansas
-- Per ardua ad astra — Royal Air Force motto
-- Plus ultra (alone) — national motto of Spain + My Hero Academia
-- Per tenebras ad lucem — used by various knightly orders
-
-(All 8 candidates above steer clear of these.)
-
-## Parts palette (for further variations)
-
-- Path `per` + accusative: aspera (hardships) / ardua (steeps)⚠ / tenebras (darkness) / noctem (night) / ignes (fires) / inane (the void)⭐ / umbras (shadows) / silentium (silence)⭐ / vasta (the vast)
-- Destination `ad` + accusative: astra (stars)⚠ / sidera (stars, poetic) / caelum (sky) / aethera (the heavens) / lucem (light) / infinitum (infinity) / mira (wonders)⭐ / arcana (mysteries)⭐ / mundos (worlds)⭐ / orbes (celestial bodies) / ultima (the ends)
-- Momentum adverbs: plus ultra (further beyond)⚠ / ulterius (farther) / ulteriusque (and farther) / semper ultra (ever beyond) / in aeternum (forever)
+**Out of scope here:** the warp watchdog (timing/ownership still an open owner
+call, deferred to a separate discussion — not decided by this spec).
 </script>
-<script type="text/markdown" id="md-ko"><!-- 모드 제목용 라틴어 표어 후보 — 브레인스토밍 기록, 결정은 보류 -->
-# NearStars — 모드 제목(라틴어 표어) 후보
 
-브레인스토밍 기록 (2026-06-01 작성, 2026-06-11 docs/reference 로 이동).
-아래 8개 전부 문법 검증 완료, 선점된 표어 아님.
-**결정: 릴리스 준비 시점까지 보류.** 본선 2개가 살아 있습니다.
-
-## 본선 (마지막에 고른 둘)
-
-| 문구 | 직역 | 끝맛 / 결 |
-|---|---|---|
-| **Per vasta ad infinitum** | 광막한 공허를 가로질러, 무한으로 | 무한으로 솟구치며 닫힘. 광막+무한이 같은 "거대·공허" 결이라 웅장하지만 살짝 동질적 |
-| **Per aspera ad mira** | 역경을 거쳐, 경이를 향해 | 경이(감정)로 닫힘. 고난→경이의 대비 아크. `mira`는 소리 깔끔·연상 무결 |
-
-## 이전에 직접 올렸던 후보들
-
-| 문구 | 직역 | 끝맛 / 결 | 비고 |
-|---|---|---|---|
-| **Ad astra, et ultra** | 별들로, 그 너머로 | 너머로 닫힘 | 초기 후보. `ultra`가 유치하다고 보류 |
-| **Ad infinitum, et ultra** | 무한으로, 그 너머로 | 너머로 닫힘 | 버즈 라이트이어 라틴역. 같은 `ultra` 이슈 |
-| **Per aspera ad infinitum** | 역경을 거쳐, 무한으로 | 무한으로 닫힘 | 정석 골격(=ad astra per aspera). 단 `ad infinitum`엔 "끝없는 고생" 중의 가능 |
-| **Ad infinitum per aspera** | 무한으로, 역경을 거쳐 | 역경으로 닫힘 | 위 어순 반전. 결연·스토아 톤, 모토다움↑ |
-| **Plus ultra ad infinitum** | 더욱 너머로, 무한으로 | 무한으로 닫힘 | 저돌적. 단 너머+무한 동어반복 + 나의 히어로 아카데미아 연상 |
-| **Per aspera plus ultra** | 역경을 거쳐, 더욱 너머로 | 너머로 닫힘 | 두 진짜 모토 융합, 리듬 최강. 단 천체 단어 전무 |
-
-## 끝맛별 갈래
-
-- **무한으로 닫힘** (웅장·코스믹) → Per vasta ad infinitum / Per aspera ad infinitum / Plus ultra ad infinitum
-- **경이로 닫힘** (감정·숭고) → Per aspera ad mira
-- **너머로 닫힘** (기세·돌파) → Per aspera plus ultra / Ad astra et ultra
-- **역경으로 닫힘** (결연·스토아) → Ad infinitum per aspera
-
-## 참고 — 선점된 표어 (오리지널로 쓰면 안 됨)
-
-- Per aspera ad astra — 캔자스 주 표어
-- Per ardua ad astra — 영국 공군(RAF) 표어
-- Plus ultra (단독) — 스페인 국가 표어 + 나의 히어로 아카데미아
-- Per tenebras ad lucem — 여러 단체 기사용
-
-(위 본선/후보 8개는 이들과 다 비켜감)
-
-## 부품 팔레트 (변주용)
-
-- 길 `per`+대격: aspera(역경) / ardua(험준)⚠ / tenebras(어둠) / noctem(밤) / ignes(불길) / inane(허공)⭐ / umbras(그림자) / silentium(침묵)⭐ / vasta(광막)
-- 목적지 `ad`+대격: astra(별)⚠ / sidera(별·시적) / caelum(천공) / aethera(창공) / lucem(빛) / infinitum(무한) / mira(경이)⭐ / arcana(신비)⭐ / mundos(세계)⭐ / orbes(천체) / ultima(끝)
-- 추진력 부사: plus ultra(더 너머)⚠ / ulterius(더 멀리) / ulteriusque(그리고 더 멀리) / semper ultra(늘 너머) / in aeternum(영원히)
-</script>
 <script>
 const srcs = {};
 const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
