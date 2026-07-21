@@ -93,7 +93,7 @@ Proxima superflare 동안 잦은 aurora.** 42 cfg 픽. 31 canonical-aligned,
 | `surface_tint_rgb_hex_accent` | `#7a4a30` (terminator 압력 ridge 꼭대기의 노출된 bedrock) | low | Tie-break. 고압 ridge 축에 subglacial 암석을 노출시키는 ice-flow 지오메트리 |
 | `surface_morphology` | substellar 액체 ocean 디스크, sea-ice + slush 전이 환, 그 외에는 동결 ocean 위 빙하 ice, terminator ridge 의 노출된 bedrock | medium | eyeball-Earth 지오메트리에 대한 Boutle / Del Genio / Sergeev 컨센서스 |
 | `magnetic_field_present` | true (적당) | medium | Tie-break. Zuluaga 2018 하한이 쌍극자 지지. 실제 값에 큰 불확실. interesting-first 가 aurora 시각을 위해 present 선택 |
-| `magnetic_dipole_moment_normalized_earth` | 0.1 | medium | Tie-break. Zuluaga 2018 plausibility 범위 0.01–1.0. 부분 차폐 regime 을 위해 0.1 선택 |
+| `magnetic_dipole_moment_normalized_earth` | 0.1 | medium | Tie-break. Zuluaga 2018 plausibility 범위 0.01–1.0. 부분 차폐 regime 을 위해 0.1 선택. 암석형 다이나모 사다리([rocky-planet-dynamo-methodology.md](../reference/rocky-planet-dynamo-methodology.md), RM22)가 이를 보강한다. 지구질량 코어는 살아있지만 11.18일의 느린 조석고정 자전이 다극 regime 쪽으로 밀어 중심값은 ~0.06 M⊕ — 즉 0.1 선택값의 하위 절반에 해당한다 |
 | `magnetic_dipole_tilt_deg` | 15 | low | Tie-break. 구분되는 aurora-cap 지오메트리. 문헌이 Proxima b 의 쌍극자 tilt 에 침묵 |
 | `magnetosphere_standoff_planet_radii` | 3–11 | high | Garraffo 2022 — magnetopause standoff 가 궤도 위상에 따라 3–11 R_p 로 변동 (표면 자기장 0.1 G). super-Alfvénic transit 때 하단으로 압축 |
 | `radiation_belt_present` | false | medium | Garraffo 2022 + Atri 2020 — 무거운 CME 압축이 안정한 갇힌 입자 population 을 막음 |

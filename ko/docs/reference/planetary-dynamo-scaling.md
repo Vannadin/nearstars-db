@@ -9,8 +9,9 @@
 질량으로 스케일한다" 는 식이 아니다. 그것은 물리적으로 틀렸다 (아래 참고).
 
 이 문서가 거대 행성/아성단 다이나모 방법의 canonical 거처다. 암석 행성 자기장
-방법 (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) 은 TRAPPIST-1 계열
-decisions 와 Phase 3 스킬의 `mod-grounded-fields.md` 에 있다.
+방법 (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) 은
+[`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) 에
+자체 canonical 거처를 둔다.
 
 ## 법칙
 
@@ -142,3 +143,10 @@ Notes:
   영역 아래로 내려가는 하향 외삽으로 사용했다 (sub-Saturn He 분리 caveat 포함).
 - **Rodríguez-Mozos & Moya 2022** (RM22), `2203.01065`: 암석 행성 자기장
   스케일링 (cached). 거대 행성이 아니라 AU Mic d 에 사용.
+
+## Related
+
+- [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — 암석형
+  (지구/슈퍼지구) 상대편 방법. 두 방법은 암석형 ↔ sub-Neptune 경계에서 갈리며 교차
+  적용해서는 안 된다.
+- `methodology-index.md` — 모든 도출값 레시피의 살아있는 인덱스.
