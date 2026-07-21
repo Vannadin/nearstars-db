@@ -82,7 +82,7 @@ emit 궤도는 게임 태양계 에포크 **JD 2433282.5 = 1950.0**(Sol-Configs 
 `scripts/check_phase4_gate.py`로 검증합니다.
 
 Step 1–3을 구현하는 툴은
-[`phase3/stability-sim/scripts/scan_pa_match.py`](../../phase3/stability-sim/scripts/scan_pa_match.py)
+[`phase3/stability-sim/scripts/scan_pa_match.py`](../../../phase3/stability-sim/scripts/scan_pa_match.py)
 입니다(Alpha Cen A b 템플릿).
 
 ## 검증: Alpha Centauri A b (Polyphemus)
