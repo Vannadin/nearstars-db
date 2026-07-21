@@ -122,3 +122,11 @@ much cooler late-T/Y dwarfs, not at L7.5 (see Open items).
   would refine the rendered size.
 - **A's rotation is unconfirmed** (~5–8 hr). A dedicated period would let the
   spin be set at higher confidence.
+
+## Related
+
+- [luhman-16-b](luhman-16-b.md) — the T0.5 companion; the pair shares a ~3.5 AU orbit and is curated as a resolved brown-dwarf binary.
+- [eps-ind-a](eps-ind-a.md) — the other curated substellar host in the roster (T-dwarf companion eps Ind B), for cross-comparing field brown-dwarf rendering.
+- [stellar-photospheric-color-methodology](../reference/stellar-photospheric-color-methodology.md) — grounds the photospheric tint used for this L dwarf.
+- [methodology-index](../reference/methodology-index.md) — the derived-value recipe index (color, internal heat, rotation) behind these decisions.
+- [methodology](../reference/methodology.md) — schema source for the Decisions table.

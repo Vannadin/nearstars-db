@@ -113,3 +113,11 @@ periodogram의 약한 6.94 hr 봉우리가 A의 것이라 *추정*하고, Mancin
   크기를 정밀화할 수 있습니다.
 - **A의 자전은 미확정입니다**(~5–8 hr). 전용 주기 측정이 있으면 스핀을 더 높은
   신뢰도로 설정할 수 있습니다.
+
+## Related
+
+- [luhman-16-b](luhman-16-b.md) — T0.5 동반성. 둘은 ~3.5 AU 궤도를 공유하며 분해된 갈색왜성 쌍으로 큐레이션됩니다.
+- [eps-ind-a](eps-ind-a.md) — 로스터의 또 다른 준항성 호스트(T형 동반성 eps Ind B). 필드 갈색왜성 렌더링 선택을 비교할 때 참고합니다.
+- [stellar-photospheric-color-methodology](../reference/stellar-photospheric-color-methodology.md) — 이 L형 왜성의 광구색 도출 근거입니다.
+- [methodology-index](../reference/methodology-index.md) — 이 결정들이 기대는 도출값 레시피 인덱스(색·내부열·자전).
+- [methodology](../reference/methodology.md) — Decisions 표의 스키마 출처입니다.

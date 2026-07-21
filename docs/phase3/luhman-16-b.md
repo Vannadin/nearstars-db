@@ -122,3 +122,11 @@ items). Illumination color is set to the 1280 K temperature.
 - **Cloud map is a snapshot.** B's weather genuinely evolves; any fixed cloud
   texture is a time-average. The dynamic, banded, fast-evolving character is the
   faithful choice over a static map.
+
+## Related
+
+- [luhman-16-a](luhman-16-a.md) — the L7.5 primary; the pair shares a ~3.5 AU orbit and is curated as a resolved brown-dwarf binary.
+- [eps-ind-a](eps-ind-a.md) — the other curated substellar host in the roster (T-dwarf companion eps Ind B), for cross-comparing field brown-dwarf rendering.
+- [stellar-photospheric-color-methodology](../reference/stellar-photospheric-color-methodology.md) — grounds the photospheric tint across the L/T transition.
+- [methodology-index](../reference/methodology-index.md) — the derived-value recipe index (color, internal heat, rotation) behind these decisions.
+- [methodology](../reference/methodology.md) — schema source for the Decisions table.

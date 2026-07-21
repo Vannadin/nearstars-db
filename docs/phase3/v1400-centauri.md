@@ -153,3 +153,10 @@ conservative position.
 - **Companion mass** spans an order of magnitude (8–100 M_Jup) — the photometric and dynamical estimates disagree.
 - **Orbit / period** unconfirmed (~13–17 yr range); the free-floating alternative would dissolve the orbit entirely.
 - **Ring colour** is a pure tie-break; no photometric colour of the ring material exists.
+
+## Related
+
+- [psr-j0108-1431](psr-j0108-1431.md) — the other beyond-implementation-range curation in the roster (the nearest known pulsar).
+- [debris-disk-color-methodology](../reference/debris-disk-color-methodology.md) — the Mie-scattering method behind the ring-colour tie-break.
+- [methodology-index](../reference/methodology-index.md) — the derived-value recipe index behind these decisions.
+- [methodology](../reference/methodology.md) — schema source for the Decisions table.
