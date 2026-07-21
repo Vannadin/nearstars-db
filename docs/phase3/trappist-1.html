@@ -82,7 +82,7 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb"><a href="../index.html" data-i18n="back_db"></a> · <a href="../reports.html" data-i18n="reports_index"></a></div>
+  <div class="crumb"><a href="../index.html" data-i18n="back_db"></a> · <a href="../reports.html" data-i18n="reports_index"></a> · <a href="../wiki/reference__methodology-index.html" data-i18n="methodology_index"></a></div>
   <div class="seg lang-toggle" id="lang-seg">
     <button class="on" data-lang="ko">한</button>
     <button data-lang="en">EN</button>
@@ -404,7 +404,7 @@ const T = {
   "td_86":"<code>figure_j2</code>",
   "td_87":"2.0×10⁻⁶",
   "td_88":"medium",
-  "td_89":"Radau–Darwin polytrope branch (NMoI 0.205, J₂/q = 0.084) at q = 2.33×10⁻⁵ from the fast 3.295-d spin; per the always-emit stellar-J₂ policy (<a href=\"../reference/body-figure-methodology.md\">body-figure-methodology</a>)",
+  "td_89":"Radau–Darwin polytrope branch (NMoI 0.205, J₂/q = 0.084) at q = 2.33×10⁻⁵ from the fast 3.295-d spin; per the always-emit stellar-J₂ policy (<a href=\"../wiki/reference__body-figure-methodology.html\">body-figure-methodology</a>)",
   "h2_90":"Surface synthesis",
   "p_91":"The photosphere is a 2566 K molecular atmosphere — TiO/VO bands gate the optical flux and H₂O the near-IR, which is why the photospheric color pipeline uses a real Pickles SED rather than a blackbody (a 2566 K blackbody renders <span class=\"hex-chip\" style=\"background:#ffa94f\"></span><code>#ffa94f</code>, noticeably redder than the band-structured truth). The star is also measurably <i>inflated</i>: <a href=\"https://arxiv.org/abs/1706.02018\">Burgasser &amp; Mamajek 2017</a> note the radius runs 8–14% above solar-metallicity evolutionary models, the classic signature of magnetic suppression of convection in active M dwarfs.",
   "p_92":"<b>Spots exist, but the contrast is subtle.</b> Kepler/K2 confirmed cool, stable spots (Luger 2017; Vida 2017), and JWST transmission spectra of the planets are contaminated at the 100–500 ppm level by a spot-dominated heterogeneous photosphere (<a href=\"https://arxiv.org/abs/2409.19333\">Radica 2024</a>). The best direct temperature measurement comes from <a href=\"https://arxiv.org/abs/2508.04793\">Vasilyev et al. 2025</a>, who watched individual magnetic features vanish during flares: the features fit 2350–2550 K — a few hundred kelvin of contrast at most, with per-feature projected areas of 0.06% (if fully black) to 1.5% (if penumbra-like) of the visible disk. The rendering consequence is a <i>dappled</i> disk: slightly darker, slightly redder patches drifting with the 3.295-day rotation, never the hard black naevi of a classical spotted-star texture.",
@@ -455,14 +455,16 @@ const T = {
   "li_137":"<b>Spot covering fraction is per-feature, not global.</b> Vasilyev 2025 measures individual vanished features (0.06–1.5% of disk); the global spot fraction remains retrieval-degenerate (Radica&#x27;s 0–50% prior). The low-contrast rendering rule is robust to this; a global fraction row is not currently supportable.",
   "li_138":"<b>Activity cycle unknown.</b> No cycle period exists for TRAPPIST-1 (flare monitoring baselines are too short); no <code>activity_cycle_years</code> row is emitted, unlike α Cen A/B.",
   "h2_139":"Related",
-  "li_140":"<a href=\"trappist-1-b.md\">trappist-1-b</a> … <a href=\"trappist-1-h.md\">trappist-1-h</a> — the seven planet syntheses this host report anchors",
-  "li_141":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — stellar synthesis structural template (G2V counterpart)",
-  "li_142":"<a href=\"../reference/stellar-photospheric-color-methodology.md\">stellar-photospheric-color-methodology</a> — the <span class=\"hex-chip\" style=\"background:#ffcc70\"></span><code>#ffcc70</code> derivation path (Pickles real-SED ladder)",
-  "li_143":"<a href=\"../reference/body-figure-methodology.md\">body-figure-methodology</a> — stellar J₂ always-emit policy + the polytrope branch used here",
-  "li_144":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
+  "li_140":"<a href=\"trappist-1-b.html\">trappist-1-b</a> … <a href=\"trappist-1-h.html\">trappist-1-h</a> — the seven planet syntheses this host report anchors",
+  "li_141":"<a href=\"alpha-centauri-a.html\">alpha-centauri-a</a> — stellar synthesis structural template (G2V counterpart)",
+  "li_142":"<a href=\"../wiki/reference__stellar-photospheric-color-methodology.html\">stellar-photospheric-color-methodology</a> — the <span class=\"hex-chip\" style=\"background:#ffcc70\"></span><code>#ffcc70</code> derivation path (Pickles real-SED ladder)",
+  "li_143":"<a href=\"../wiki/reference__body-figure-methodology.html\">body-figure-methodology</a> — stellar J₂ always-emit policy + the polytrope branch used here",
+  "li_144":"<a href=\"../wiki/reference__methodology.html\">methodology</a> — Decisions schema",
   "title":"TRAPPIST-1 — Phase 3 Synthesis (host star)",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
+  "methodology_index": "Methodology",
+  "phase4_board": "Phase 4 board ↗",
   "footer_note": "NearStars · Phase 3 synthesis report · autogenerated from trappist-1.md + ko/ mirror"
   },
   ko: {
@@ -554,7 +556,7 @@ const T = {
   "td_86":"<code>figure_j2</code>",
   "td_87":"2.0×10⁻⁶",
   "td_88":"medium",
-  "td_89":"빠른 3.295-d 자전에서 나온 q = 2.33×10⁻⁵ 에 Radau–Darwin 폴리트로프 분기 (NMoI 0.205, J₂/q = 0.084). 상시-emit 항성 J₂ 정책에 따름 (<a href=\"../reference/body-figure-methodology.md\">body-figure-methodology</a>)",
+  "td_89":"빠른 3.295-d 자전에서 나온 q = 2.33×10⁻⁵ 에 Radau–Darwin 폴리트로프 분기 (NMoI 0.205, J₂/q = 0.084). 상시-emit 항성 J₂ 정책에 따름 (<a href=\"../wiki/reference__body-figure-methodology.html\">body-figure-methodology</a>)",
   "h2_90":"Surface synthesis",
   "p_91":"광구는 2566 K 분자 대기입니다 — TiO/VO 밴드가 광학 플럭스를, H₂O 가 근적외선을 게이트하는데, 광구 색 파이프라인이 흑체 대신 실제 Pickles SED 를 쓰는 이유가 여기 있습니다 (2566 K 흑체는 <span class=\"hex-chip\" style=\"background:#ffa94f\"></span><code>#ffa94f</code> 로 렌더되어 밴드 구조를 반영한 실제값보다 눈에 띄게 붉습니다). 이 별은 또한 측정 가능한 수준으로 <i>팽창</i>해 있습니다. <a href=\"https://arxiv.org/abs/1706.02018\">Burgasser &amp; Mamajek 2017</a> 은 반지름이 태양 금속도 진화 모델보다 8–14% 크다고 지적하는데, 활동적 M 왜성에서 자기장이 대류를 억제하는 전형적 신호입니다.",
   "p_92":"<b>반점은 존재하지만 대비가 은은합니다.</b> Kepler/K2 는 차갑고 안정한 반점을 확인했으며 (Luger 2017; Vida 2017), 행성들의 JWST 투과 스펙트럼은 반점 지배적 비균질 광구 때문에 100–500 ppm 수준으로 오염됩니다 (<a href=\"https://arxiv.org/abs/2409.19333\">Radica 2024</a>). 가장 좋은 직접 온도 측정은 <a href=\"https://arxiv.org/abs/2508.04793\">Vasilyev et al. 2025</a> 에서 나오는데, 이들은 플레어 동안 개별 자기 피처가 사라지는 것을 관측했습니다. 피처는 2350–2550 K 로 fit 되어 — 기껏해야 수백 켈빈의 대비이며, 피처당 투영 면적은 가시 디스크의 0.06% (완전히 검을 경우) 부터 1.5% (반영 유사 일 경우) 입니다. 렌더링 귀결은 <i>얼룩진</i> 디스크입니다. 3.295 일 자전과 함께 떠도는, 살짝 더 어둡고 살짝 더 붉은 패치이지, 고전적 반점 항성 텍스처의 딱딱한 검은 모반이 결코 아닙니다.",
@@ -605,14 +607,16 @@ const T = {
   "li_137":"<b>반점 덮힘 분율은 피처당, 전역 아님.</b> Vasilyev 2025 는 개별 사라진 피처를 측정 (디스크의 0.06–1.5%). 전역 반점 분율은 retrieval 축퇴로 남아 있습니다 (Radica 의 0–50% prior). 저대비 렌더링 규칙은 이에 견고하며, 전역 분율 행은 현재 지지할 수 없습니다.",
   "li_138":"<b>활동 사이클 미지.</b> TRAPPIST-1 에는 사이클 주기가 존재하지 않습니다 (플레어 모니터링 기저선이 너무 짧음). α Cen A/B 와 달리 <code>activity_cycle_years</code> 행은 emit 하지 않습니다.",
   "h2_139":"Related",
-  "li_140":"<a href=\"trappist-1-b.md\">trappist-1-b</a> … <a href=\"trappist-1-h.md\">trappist-1-h</a> — 이 호스트 리포트가 앵커링하는 일곱 행성 합성",
-  "li_141":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — 항성 합성 구조 템플릿 (G2V 대응물)",
-  "li_142":"<a href=\"../reference/stellar-photospheric-color-methodology.md\">stellar-photospheric-color-methodology</a> — <span class=\"hex-chip\" style=\"background:#ffcc70\"></span><code>#ffcc70</code> 유도 경로 (Pickles real-SED 사다리)",
-  "li_143":"<a href=\"../reference/body-figure-methodology.md\">body-figure-methodology</a> — 항성 J₂ 상시-emit 정책 + 여기 사용된 폴리트로프 분기",
-  "li_144":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마",
+  "li_140":"<a href=\"trappist-1-b.html\">trappist-1-b</a> … <a href=\"trappist-1-h.html\">trappist-1-h</a> — 이 호스트 리포트가 앵커링하는 일곱 행성 합성",
+  "li_141":"<a href=\"alpha-centauri-a.html\">alpha-centauri-a</a> — 항성 합성 구조 템플릿 (G2V 대응물)",
+  "li_142":"<a href=\"../wiki/reference__stellar-photospheric-color-methodology.html\">stellar-photospheric-color-methodology</a> — <span class=\"hex-chip\" style=\"background:#ffcc70\"></span><code>#ffcc70</code> 유도 경로 (Pickles real-SED 사다리)",
+  "li_143":"<a href=\"../wiki/reference__body-figure-methodology.html\">body-figure-methodology</a> — 항성 J₂ 상시-emit 정책 + 여기 사용된 폴리트로프 분기",
+  "li_144":"<a href=\"../wiki/reference__methodology.html\">methodology</a> — Decisions 스키마",
   "title":"TRAPPIST-1 — Phase 3 Synthesis (host star)",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",
+  "methodology_index": "방법론",
+  "phase4_board": "Phase 4 보드 ↗",
   "footer_note": "NearStars · Phase 3 합성 보고서 · trappist-1.md + ko/ 미러에서 자동 생성"
   }
 };

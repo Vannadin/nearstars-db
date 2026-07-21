@@ -6,23 +6,36 @@
       "b": "phase3/40-eridani-a-b.html",
       "c": "phase3/40-eridani-a-c.html",
       "d": "phase3/40-eridani-a-d.html"
+    },
+    "phase4": {
+      "★": "phase4/40-eridani/40-eridani-a.html",
+      "b": "phase4/40-eridani/40-eridani-a-b.html",
+      "c": "phase4/40-eridani/40-eridani-a-c.html",
+      "d": "phase4/40-eridani/40-eridani-a-d.html"
     }
   },
   "40 Eridani B": {
     "phase2": "phase2/40-eridani-b.html",
     "phase3": {
       "★": "phase3/40-eridani-b.html"
+    },
+    "phase4": {
+      "★": "phase4/40-eridani/40-eridani-b.html"
     }
   },
   "40 Eridani C": {
     "phase2": "phase2/40-eridani-c.html",
     "phase3": {
       "★": "phase3/40-eridani-c.html"
+    },
+    "phase4": {
+      "★": "phase4/40-eridani/40-eridani-c.html"
     }
   },
   "47 UMa": {
     "phase2": "phase2/47-uma.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "55 Cnc": {
     "phase2": "phase2/55-cnc.html",
@@ -33,15 +46,18 @@
       "d": "phase3/55-cnc-d.html",
       "e": "phase3/55-cnc-e.html",
       "f": "phase3/55-cnc-f.html"
-    }
+    },
+    "phase4": {}
   },
   "61 Cygni A": {
     "phase2": "phase2/61-cygni-a.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "61 Cygni B": {
     "phase2": "phase2/61-cygni-b.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "61 Vir": {
     "phase2": "phase2/61-vir.html",
@@ -50,36 +66,48 @@
       "b": "phase3/61-vir-b.html",
       "c": "phase3/61-vir-c.html",
       "d": "phase3/61-vir-d.html"
-    }
+    },
+    "phase4": {}
   },
   "70 Ophiuchi A": {
     "phase2": "phase2/70-ophiuchi-a.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "70 Ophiuchi B": {
     "phase2": "phase2/70-ophiuchi-b.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Alpha Centauri A": {
     "phase2": "phase2/alpha-centauri-a.html",
     "phase3": {
       "★": "phase3/alpha-centauri-a.html",
       "b": "phase3/alpha-centauri-a-b.html"
+    },
+    "phase4": {
+      "★": "phase4/alpha-centauri/alpha-centauri-a.html",
+      "b": "phase4/alpha-centauri/alpha-centauri-a-b.html"
     }
   },
   "Alpha Centauri B": {
     "phase2": "phase2/alpha-centauri-b.html",
     "phase3": {
       "★": "phase3/alpha-centauri-b.html"
+    },
+    "phase4": {
+      "★": "phase4/alpha-centauri/alpha-centauri-b.html"
     }
   },
   "Altair": {
     "phase2": "phase2/altair.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Arcturus": {
     "phase2": "phase2/arcturus.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "AU Mic": {
     "phase2": "phase2/au-mic.html",
@@ -89,7 +117,8 @@
       "c": "phase3/au-mic-c.html",
       "d": "phase3/au-mic-d.html",
       "e": "phase3/au-mic-e.html"
-    }
+    },
+    "phase4": {}
   },
   "Barnard's star": {
     "phase2": "phase2/barnards-star.html",
@@ -99,179 +128,223 @@
       "c": "phase3/barnards-star-c.html",
       "d": "phase3/barnards-star-d.html",
       "e": "phase3/barnards-star-e.html"
+    },
+    "phase4": {
+      "★": "phase4/barnards-star/barnards-star.html"
     }
   },
   "Capella": {
     "phase2": "phase2/capella.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "CD Cet": {
     "phase2": "phase2/cd-cet.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "CWISEP J193518.59-154620.3": {
     "phase2": "phase2/cwisep-j193518-59-154620-3.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Delta Pavonis": {
     "phase2": "phase2/delta-pavonis.html",
     "phase3": {
       "★": "phase3/delta-pavonis.html"
-    }
+    },
+    "phase4": {}
   },
   "eps Eri": {
     "phase2": "phase2/eps-eri.html",
     "phase3": {
       "★": "phase3/eps-eri.html",
       "b": "phase3/eps-eri-b.html"
-    }
+    },
+    "phase4": {}
   },
   "eps Ind A": {
     "phase2": "phase2/eps-ind-a.html",
     "phase3": {
       "★": "phase3/eps-ind-a.html",
       "b": "phase3/eps-ind-a-b.html"
-    }
+    },
+    "phase4": {}
   },
   "eps Ind Ba": {
     "phase2": "phase2/eps-ind-ba.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "eps Ind Bb": {
     "phase2": "phase2/eps-ind-bb.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Eta Cassiopeiae A": {
     "phase2": "phase2/eta-cassiopeiae-a.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Fomalhaut": {
     "phase2": "phase2/fomalhaut.html",
     "phase3": {
       "★": "phase3/fomalhaut.html"
+    },
+    "phase4": {
+      "★": "phase4/fomalhaut/fomalhaut.html"
     }
   },
   "G 192-15": {
     "phase2": "phase2/g-192-15.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "G 261-6": {
     "phase2": "phase2/g-261-6.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "gam Cep": {
     "phase2": "phase2/gam-cep.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1002": {
     "phase2": "phase2/gj-1002.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1061": {
     "phase2": "phase2/gj-1061.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1132": {
     "phase2": "phase2/gj-1132.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1148": {
     "phase2": "phase2/gj-1148.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1151": {
     "phase2": "phase2/gj-1151.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1214": {
     "phase2": "phase2/gj-1214.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1265": {
     "phase2": "phase2/gj-1265.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 1289": {
     "phase2": "phase2/gj-1289.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 15 A": {
     "phase2": "phase2/gj-15-a.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 179": {
     "phase2": "phase2/gj-179.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 180": {
     "phase2": "phase2/gj-180.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 229": {
     "phase2": "phase2/gj-229.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 238": {
     "phase2": "phase2/gj-238.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 251": {
     "phase2": "phase2/gj-251.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 273": {
     "phase2": "phase2/gj-273.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 3323": {
     "phase2": "phase2/gj-3323.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 411": {
     "phase2": "phase2/gj-411.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 436": {
     "phase2": "phase2/gj-436.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 581": {
     "phase2": "phase2/gj-581.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 667 C": {
     "phase2": "phase2/gj-667-c.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 876": {
     "phase2": "phase2/gj-876.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 887": {
     "phase2": "phase2/gj-887.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "GJ 896 A": {
     "phase2": "phase2/gj-896-a.html",
     "phase3": {
       "★": "phase3/gj-896-a.html",
       "b": "phase3/gj-896-a-b.html"
-    }
+    },
+    "phase4": {}
   },
   "GJ 9066": {
     "phase2": "phase2/gj-9066.html",
     "phase3": {
       "★": "phase3/gj-9066.html",
       "c": "phase3/gj-9066-c.html"
-    }
+    },
+    "phase4": {}
   },
   "HD 192310": {
     "phase2": "phase2/hd-192310.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "HD 20794": {
     "phase2": "phase2/hd-20794.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "HD 219134": {
     "phase2": "phase2/hd-219134.html",
@@ -283,7 +356,8 @@
       "f": "phase3/hd-219134-f.html",
       "g": "phase3/hd-219134-g.html",
       "h": "phase3/hd-219134-h.html"
-    }
+    },
+    "phase4": {}
   },
   "HD 69830": {
     "phase2": "phase2/hd-69830.html",
@@ -292,39 +366,47 @@
       "b": "phase3/hd-69830-b.html",
       "c": "phase3/hd-69830-c.html",
       "d": "phase3/hd-69830-d.html"
-    }
+    },
+    "phase4": {}
   },
   "Kapteyn": {
     "phase2": "phase2/kapteyn.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "L 98-59": {
     "phase2": "phase2/l-98-59.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "LHS 1140": {
     "phase2": "phase2/lhs-1140.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Luhman 16 A": {
     "phase2": "phase2/luhman-16-a.html",
     "phase3": {
       "★": "phase3/luhman-16-a.html"
-    }
+    },
+    "phase4": {}
   },
   "Luhman 16 B": {
     "phase2": "phase2/luhman-16-b.html",
     "phase3": {
       "★": "phase3/luhman-16-b.html"
-    }
+    },
+    "phase4": {}
   },
   "Procyon A": {
     "phase2": "phase2/procyon-a.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Procyon B": {
     "phase2": "phase2/procyon-b.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Proxima Cen": {
     "phase2": "phase2/proxima-cen.html",
@@ -333,19 +415,28 @@
       "b": "phase3/proxima-cen-b.html",
       "c": "phase3/proxima-cen-c.html",
       "d": "phase3/proxima-cen-d.html"
+    },
+    "phase4": {
+      "★": "phase4/proxima-cen/proxima-cen.html",
+      "b": "phase4/proxima-cen/proxima-cen-b.html",
+      "c": "phase4/proxima-cen/proxima-cen-c.html",
+      "d": "phase4/proxima-cen/proxima-cen-d.html"
     }
   },
   "Ross 128": {
     "phase2": "phase2/ross-128.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Sirius A": {
     "phase2": "phase2/sirius-a.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Sirius B": {
     "phase2": "phase2/sirius-b.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "tau Cet": {
     "phase2": "phase2/tau-cet.html",
@@ -355,6 +446,9 @@
       "f": "phase3/tau-cet-f.html",
       "g": "phase3/tau-cet-g.html",
       "h": "phase3/tau-cet-h.html"
+    },
+    "phase4": {
+      "★": "phase4/tau-cet/tau-cet.html"
     }
   },
   "Teegarden's Star": {
@@ -364,7 +458,8 @@
       "b": "phase3/teegardens-star-b.html",
       "c": "phase3/teegardens-star-c.html",
       "d": "phase3/teegardens-star-d.html"
-    }
+    },
+    "phase4": {}
   },
   "TRAPPIST-1": {
     "phase2": "phase2/trappist-1.html",
@@ -377,31 +472,37 @@
       "f": "phase3/trappist-1-f.html",
       "g": "phase3/trappist-1-g.html",
       "h": "phase3/trappist-1-h.html"
-    }
+    },
+    "phase4": {}
   },
   "ups And": {
     "phase2": "phase2/ups-and.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "V1400 Centauri": {
     "phase2": "phase2/v1400-centauri.html",
     "phase3": {
       "★": "phase3/v1400-centauri.html"
-    }
+    },
+    "phase4": {}
   },
   "Van Maanen's Star": {
     "phase2": "phase2/van-maanens-star.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "Vega": {
     "phase2": "phase2/vega.html",
     "phase3": {
       "★": "phase3/vega.html"
-    }
+    },
+    "phase4": {}
   },
   "Wolf 359": {
     "phase2": "phase2/wolf-359.html",
-    "phase3": {}
+    "phase3": {},
+    "phase4": {}
   },
   "YZ Cet": {
     "phase2": "phase2/yz-cet.html",
@@ -410,12 +511,14 @@
       "b": "phase3/yz-cet-b.html",
       "c": "phase3/yz-cet-c.html",
       "d": "phase3/yz-cet-d.html"
-    }
+    },
+    "phase4": {}
   },
   "PSR J0108-1431": {
     "phase2": null,
     "phase3": {
       "★": "phase3/psr-j0108-1431.html"
-    }
+    },
+    "phase4": {}
   }
 }

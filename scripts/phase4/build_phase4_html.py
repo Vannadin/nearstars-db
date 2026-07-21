@@ -235,10 +235,22 @@ def render_body(system, body, rows, alias, prev_link, next_link):
     nav_html = f'<div class="bodynav">{"".join(nav)}</div>' if nav else ""
     alias_html = f' <span class="alias">{esc(alias)}</span>' if alias else ""
 
+    # Back-link to the Phase 3 synthesis for this body, when one exists. Board
+    # body-slugs equal Phase 3 slugs (art-name-only bodies have no synthesis),
+    # so a source-file check is authoritative.
+    p3_slug = body_slug(body)
+    p3_link = (
+        f' · <a href="../../phase3/{p3_slug}.html">'
+        f'<span data-i18n>Phase 3 합성 ↗</span><span data-en hidden>Phase 3 synthesis ↗</span></a>'
+        if (REPO / "docs" / "phase3" / f"{p3_slug}.md").exists() else ""
+    )
+
     content = f"""<nav class="crumb">
-  <a href="index.html"><span data-i18n>Phase 4</span></a> ·
-  <a href="index.html"><span class="sys">{esc(system)}</span></a> ·
-  <span class="here">{esc(body)}</span>
+  <a href="../../index.html">NearStars</a> ·
+  <a href="../../reports.html"><span data-i18n>보고서</span><span data-en hidden>Reports</span></a> ·
+  <a href="../../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
+  <a href="index.html">Phase 4 · <span class="sys">{esc(system)}</span></a> ·
+  <span class="here">{esc(body)}</span>{p3_link}
 </nav>
 <header>
   <h1>{esc(body)}{alias_html}</h1>
@@ -275,8 +287,10 @@ def render_index(system, order, bodies, aliases):
   <div class="bc-badges">{"".join(badges)}</div>
 </a>""")
     content = f"""<nav class="crumb">
-  <a href="../../index.html"><span data-i18n>NearStars</span></a> ·
-  <span class="here"><span data-i18n>Phase 4</span> · <span class="sys">{esc(system)}</span></span>
+  <a href="../../index.html">NearStars</a> ·
+  <a href="../../reports.html"><span data-i18n>보고서</span><span data-en hidden>Reports</span></a> ·
+  <a href="../../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
+  <span class="here">Phase 4 · <span class="sys">{esc(system)}</span></span>
 </nav>
 <header>
   <h1><span data-i18n>Phase 4 결정 보드</span><span data-en hidden>Phase 4 decision board</span> · <span class="sys">{esc(system)}</span></h1>

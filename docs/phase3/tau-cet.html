@@ -82,7 +82,7 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb"><a href="../index.html" data-i18n="back_db"></a> · <a href="../reports.html" data-i18n="reports_index"></a></div>
+  <div class="crumb"><a href="../index.html" data-i18n="back_db"></a> · <a href="../reports.html" data-i18n="reports_index"></a> · <a href="../wiki/reference__methodology-index.html" data-i18n="methodology_index"></a> · <a href="../phase4/tau-cet/tau-cet.html" data-i18n="phase4_board"></a></div>
   <div class="seg lang-toggle" id="lang-seg">
     <button class="on" data-lang="ko">한</button>
     <button data-lang="en">EN</button>
@@ -583,19 +583,21 @@ const T = {
   "td_186":"6D astrometry vs LIC; <b>plugin-only</b>",
   "h2_187":"Open items for follow-up",
   "li_188":"<b>Phase 2 disk_measurements + planet measurements re-ingest.</b> The DB Phase 2 currently has no <code>disk_measurements</code> block for τ Ceti — Greaves 2004 and MacGregor 2016 are cited only via this Phase 3 synthesis. A future DB schema migration should add a <code>disk_measurements: []</code> array under each star with appropriate entries from MacGregor 2016 (inner/outer radius, dust mass, resolved imaging flag). Similarly, the planet f / g / h curated entries currently lack physical parameters beyond Msini — radius columns from Feng 2017 should be re-verified against the original paper.",
-  "li_189":"<b>τ Ceti e curation revisit.</b> The <a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> §6 documents that NearStars stores planets f, g, h from Feng 2017 but omits e, despite all four having the same <code>pl_controv_flag</code> in the source. Either deliberately dropped (e was the most disputed of the four detections — Feng 2017 §6 cautions about its inferior amplitude-to-noise ratio) or an oversight in the Phase 2 ingest. Should be documented in <code>db/systems/tau_cet.json::meta.notes</code> either way, and the follow-up Phase 3 planet workspace should decide whether to include e or formally drop it with cited justification.",
+  "li_189":"<b>τ Ceti e curation revisit.</b> The <a href=\"../wiki/reference__rex-data-comparison.html\">rex-data-comparison</a> §6 documents that NearStars stores planets f, g, h from Feng 2017 but omits e, despite all four having the same <code>pl_controv_flag</code> in the source. Either deliberately dropped (e was the most disputed of the four detections — Feng 2017 §6 cautions about its inferior amplitude-to-noise ratio) or an oversight in the Phase 2 ingest. Should be documented in <code>db/systems/tau_cet.json::meta.notes</code> either way, and the follow-up Phase 3 planet workspace should decide whether to include e or formally drop it with cited justification.",
   "li_190":"<b>Planet f / g / h Phase 3 follow-up workspace.</b> This stellar-only synthesis defers the planet system to a separate Phase 3 workspace. Required inputs: Feng 2017 mass / period / semi-major axis (already in DB), plus literature-direct radius and equilibrium-temperature estimates that the DB does not yet carry. Once Phase 2 planet measurements are re-ingested per the first item, the planet workspace can proceed.",
   "li_191":"<b>τ Ceti age precision.</b> The adopted 7.0 ± 1.5 Gyr spans both Pavlenko 2012&#x27;s super-population kinematic estimate and Mamajek 2008&#x27;s gyrochronological estimate. A future Gaia DR4 or future asteroseismic-evolutionary modeling campaign (Joyce &amp; Chaboyer 2018 methodology applied to τ Ceti&#x27;s HARPS p-modes) could tighten this to ±0.5 Gyr, which would affect the habitability-history modeling for any planet f / g / h follow-up.",
   "li_192":"<b>Disk inner-edge fine structure.</b> MacGregor 2016 ALMA imaging is consistent with a clean inner edge at ~6 AU but does not rule out a faint inner extension or a shepherding feature beyond the noise floor. A future deeper ALMA campaign or JWST/MIRI direct imaging could detect inner-belt dust that the current cfg ignores; a subsequent Phase 3 revision could add a second inner-belt Decisions row if needed.",
   "h2_193":"Related",
-  "li_194":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — nearest single G2V (metal-rich, +0.24 dex); structural template for this synthesis",
-  "li_195":"<a href=\"proxima-cen.md\">proxima-cen</a> — nearest M dwarf, sharp contrast in activity and visual styling",
-  "li_196":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
-  "li_197":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §6 documents the τ Ceti e curation gap that this synthesis logs as an Open item",
+  "li_194":"<a href=\"alpha-centauri-a.html\">alpha-centauri-a</a> — nearest single G2V (metal-rich, +0.24 dex); structural template for this synthesis",
+  "li_195":"<a href=\"proxima-cen.html\">proxima-cen</a> — nearest M dwarf, sharp contrast in activity and visual styling",
+  "li_196":"<a href=\"../wiki/reference__methodology.html\">methodology</a> — schema source for the Decisions table",
+  "li_197":"<a href=\"../wiki/reference__rex-data-comparison.html\">rex-data-comparison</a> — §6 documents the τ Ceti e curation gap that this synthesis logs as an Open item",
   "li_198":"entity pages in <code>docs/phase3/*.md</code> — sibling Phase 3 syntheses",
   "title":"τ Ceti — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
+  "methodology_index": "Methodology",
+  "phase4_board": "Phase 4 board ↗",
   "footer_note": "NearStars · Phase 3 synthesis report · autogenerated from tau-cet.md + ko/ mirror"
   },
   ko: {
@@ -787,19 +789,21 @@ const T = {
   "td_186":"6D astrometry 대 LIC. <b>plugin-only</b>",
   "h2_187":"Open items for follow-up",
   "li_188":"<b>Phase 2 disk_measurements + 행성 측정치 재수집.</b> DB Phase 2 는 현재 τ Ceti 에 대한 <code>disk_measurements</code> 블록이 없습니다. Greaves 2004 와 MacGregor 2016 는 이 Phase 3 합성을 통해서만 인용되는 상태입니다. 향후 DB 스키마 마이그레이션에서 별 단위로 <code>disk_measurements: []</code> 배열을 추가하고 MacGregor 2016 의 적절한 엔트리 (안쪽/바깥쪽 반경, 먼지 질량, 분해 영상 플래그) 를 넣어야 합니다. 마찬가지로 행성 f / g / h curated 엔트리는 현재 Msini 외의 물리 파라미터가 비어 있어, Feng 2017 원논문 대비 반지름 컬럼을 재검증해야 합니다.",
-  "li_189":"<b>τ Ceti e 큐레이션 재방문.</b> <a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> §6 은 NearStars 가 Feng 2017 의 행성 f, g, h 를 저장하면서 e 는 누락 한다고 문서화합니다. 원본에서 네 행성 모두 동일한 <code>pl_controv_flag</code> 를 받았는데도 그렇습니다. 의도적으로 제외했거나 (e 는 네 검출 중 가장 논란이 컸음 — Feng 2017 §6 은 amplitude-to- noise 비율이 떨어진다고 경고) Phase 2 ingest 의 누락일 수 있습니다. 어느 쪽이든 <code>db/systems/tau_cet.json::meta.notes</code> 에 문서화해야 하며, follow-up Phase 3 행성 워크스페이스에서 e 를 포함할지 인용 근거로 정식 제외할지 결정해야 합니다.",
+  "li_189":"<b>τ Ceti e 큐레이션 재방문.</b> <a href=\"../wiki/reference__rex-data-comparison.html\">rex-data-comparison</a> §6 은 NearStars 가 Feng 2017 의 행성 f, g, h 를 저장하면서 e 는 누락 한다고 문서화합니다. 원본에서 네 행성 모두 동일한 <code>pl_controv_flag</code> 를 받았는데도 그렇습니다. 의도적으로 제외했거나 (e 는 네 검출 중 가장 논란이 컸음 — Feng 2017 §6 은 amplitude-to- noise 비율이 떨어진다고 경고) Phase 2 ingest 의 누락일 수 있습니다. 어느 쪽이든 <code>db/systems/tau_cet.json::meta.notes</code> 에 문서화해야 하며, follow-up Phase 3 행성 워크스페이스에서 e 를 포함할지 인용 근거로 정식 제외할지 결정해야 합니다.",
   "li_190":"<b>행성 f / g / h Phase 3 follow-up 워크스페이스.</b> 이 항성 전용 합성은 행성계를 별도의 Phase 3 워크스페이스로 미룹니다. 필요한 입력은 Feng 2017 의 질량 / 주기 / 장반경 (DB 에 이미 있음) 과 DB 가 아직 담고 있지 않은 문헌-직접 반지름 및 평형온도 추정입니다. 첫 번째 항목에 따라 행성 Phase 2 측정치가 재수집되면 행성 워크스페이스가 진행될 수 있습니다.",
   "li_191":"<b>τ Ceti 나이 정밀도.</b> 채택한 7.0 ± 1.5 Gyr 는 Pavlenko 2012 의 super-population 운동학 추정과 Mamajek 2008 의 gyrochronology 추정을 모두 포괄합니다. 미래의 Gaia DR4 또는 τ Ceti 의 HARPS p-mode 에 Joyce &amp; Chaboyer 2018 방법론을 적용한 asteroseismic- evolutionary 모델링 캠페인이 이를 ±0.5 Gyr 수준으로 좁힐 수 있으며, 이는 행성 f / g / h follow-up 의 거주가능성-역사 모델링 에 영향을 미칩니다.",
   "li_192":"<b>원반 안쪽 가장자리 미세 구조.</b> MacGregor 2016 ALMA 영상은 ~6 AU 의 깨끗한 안쪽 가장자리와 일관되지만, 잡음 임계값 너머의 희미한 안쪽 확장이나 shepherding 피처를 배제하지는 않습니다. 미래의 더 깊은 ALMA 캠페인이나 JWST/MIRI 직접 영상이 현재 cfg 가 무시하는 안쪽 벨트 먼지를 검출할 수 있고, 후속 Phase 3 개정에서 필요시 두 번째 안쪽 벨트 Decisions 행을 추가할 수 있습니다.",
   "h2_193":"Related",
-  "li_194":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — 가장 가까운 단독 G2V (metal-rich, +0.24 dex). 이 합성의 구조 템플릿",
-  "li_195":"<a href=\"proxima-cen.md\">proxima-cen</a> — 가장 가까운 M 왜성. 활동도와 시각 스타일링에서 뚜렷한 대비",
-  "li_196":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 테이블의 스키마 출처",
-  "li_197":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §6 이 이 합성이 Open item 으로 남긴 τ Ceti e 큐레이션 갭을 문서화",
+  "li_194":"<a href=\"alpha-centauri-a.html\">alpha-centauri-a</a> — 가장 가까운 단독 G2V (metal-rich, +0.24 dex). 이 합성의 구조 템플릿",
+  "li_195":"<a href=\"proxima-cen.html\">proxima-cen</a> — 가장 가까운 M 왜성. 활동도와 시각 스타일링에서 뚜렷한 대비",
+  "li_196":"<a href=\"../wiki/reference__methodology.html\">methodology</a> — Decisions 테이블의 스키마 출처",
+  "li_197":"<a href=\"../wiki/reference__rex-data-comparison.html\">rex-data-comparison</a> — §6 이 이 합성이 Open item 으로 남긴 τ Ceti e 큐레이션 갭을 문서화",
   "li_198":"<code>docs/phase3/*.md</code> 의 다른 entity 페이지 — 자매 Phase 3 합성들",
   "title":"τ Ceti — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",
+  "methodology_index": "방법론",
+  "phase4_board": "Phase 4 보드 ↗",
   "footer_note": "NearStars · Phase 3 합성 보고서 · tau-cet.md + ko/ 미러에서 자동 생성"
   }
 };
