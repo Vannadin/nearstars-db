@@ -9,8 +9,8 @@ resolved Zeeman signal), so the curated value must come from a grounded scaling
 law, not from "scale Jupiter by mass", which is physically wrong (see below).
 
 This is the canonical home for the giant/substellar dynamo method; the rocky-planet
-field method (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) lives in the
-TRAPPIST-1 family decisions and the Phase 3 skill's `mod-grounded-fields.md`.
+field method (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) has its own canonical
+home in [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md).
 
 ## The law
 
@@ -145,3 +145,10 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
   He-separation caveat).
 - **Rodríguez-Mozos & Moya 2022** (RM22), `2203.01065`: rocky-planet field scaling
   (cached). Used for AU Mic d, not the giants.
+
+## Related
+
+- [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — the
+  rocky (Earth/super-Earth) counterpart; the two methods split at the rocky ↔
+  sub-Neptune boundary and must not be cross-applied.
+- `methodology-index.md` — the living index of all derived-value recipes.

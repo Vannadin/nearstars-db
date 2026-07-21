@@ -40,7 +40,9 @@ Source priority order:
      [docs/reference/planetary-dynamo-scaling.md]. Do NOT scale Jupiter
      by mass — energy flux (luminosity), so young giants are stronger.
    - **Rocky** → RM22 (Rodríguez-Mozos & Moya 2022 `2203.01065`) +
-     tidal-locking penalty + Garraffo 2017; Driscoll & Olson 2011.
+     regime gate + Garraffo 2017; Driscoll & Olson 2011. Worked method +
+     decision ladder + Solar-System validation + surface-field closing
+     relation in [docs/reference/rocky-planet-dynamo-methodology.md].
    - **Sub-Neptune / Neptune-mass** is BELOW the validated giant domain
      (He separation) — use a Neptune/Uranus analog, flag low-conf.
 4. Confidence=low aesthetic guess per interesting-first rule
