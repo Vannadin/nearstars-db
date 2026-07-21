@@ -124,6 +124,17 @@ Korean mirror under `ko/<same-path>`.
   (avoids drift).
 - AI agents: when you create or substantively edit a mirrored doc,
   also create or update the `ko/` counterpart in the same change.
+- Mirror the *whole* edit, not just flowing prose. A new index-table
+  row, a new `## section`, or a `## Related` cross-link added to an
+  English doc must be added to its `ko/` counterpart in the same
+  commit. Registering a new doc in `methodology-index.md` (or linking
+  it from another doc) counts as a substantive edit.
+- Relative-link depth differs by one between the trees: `ko/docs/…`
+  sits one directory deeper than `docs/…`, so a link to a repo-root
+  path (`phase3/…`, `scripts/…`, `db/…`) needs one **extra** `../` in
+  the Korean mirror (`../../../phase3/…` where the English used
+  `../../phase3/…`). `scripts/check.sh`'s dead-link gate catches the
+  miss.
 - Human contributors who do not write Korean: create the English
   version only and note in the PR description that the Korean mirror
   is pending. The repo owner regenerates Korean mirrors separately.

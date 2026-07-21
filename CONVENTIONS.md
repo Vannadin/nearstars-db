@@ -62,6 +62,16 @@
 
 ---
 
+### 1.10 No em-dashes in prose
+**Rule:** Do not use em-dashes (the U+2014 character) in any `.md` document, English source or Korean mirror. Replace each with the punctuation that fits the logic: a colon when what follows explains or specifies, a comma for a light aside, a period to split into two sentences, or parentheses for a wrapped parenthetical.
+**Why:** Owner style directive (2026-07-21). The em-dash reads as an LLM tell and clutters the prose.
+**Details:**
+- En-dashes (–, U+2013) in numeric ranges (`227–299 K`) and compound names (`Radau–Darwin`) are correct and stay untouched.
+- A lone "no data" em-dash cell in a table becomes an en-dash (`–`).
+- A heading that used an em-dash takes a colon; update any in-page TOC anchor to match the new slug so no link breaks.
+- The GitHub Wiki and the 18 methodology docs are already clean; other reference docs are converted on touch.
+**Source:** owner directive 2026-07-21.
+
 ## 2. Workflow & Autonomy — PORTABLE
 
 ### 2.1 Autonomous execution
