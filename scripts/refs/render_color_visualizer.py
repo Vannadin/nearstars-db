@@ -292,7 +292,7 @@ def render_plasma_temp_grid() -> str:
 
     bb = data["_blackbody"]                       # cap the strip to the data range
     bb_cells = "".join(
-        f'<div style="{cell};background:{bb[t]["hex"]};color:{text_on(bb[t]["hex"])}" '
+        f'<div class="cswatch" data-hex="{bb[t]["hex"]}" style="{cell};background:{bb[t]["hex"]};color:{text_on(bb[t]["hex"])}" '
         f'title="{t}K · {bb[t]["hex"]} · {bb[t].get("note","")}">'
         f'{(str(t//1000)+"k") if t % 1000 == 0 else ""}</div>'
         for t in temps
@@ -314,7 +314,7 @@ def render_plasma_temp_grid() -> str:
             tip = (f'{t}K · {hx} · {c["dominant"]} · '
                    f'ionz={c["ionization_fraction"]} mol={c["molecular_fraction"]} '
                    f'emis={c["emission_fraction"]}')
-            cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
+            cells += (f'<div class="cswatch" data-hex="{hx}" style="{cell};background:{hx};color:{text_on(hx)}" '
                       f'title="{tip}"></div>')
         rows.append(f'<div style="{row}"><div style="{lab}" data-i18n="ptc_{k}"></div>'
                     f'<div>{cells}</div></div>')
@@ -342,7 +342,7 @@ def render_element_temp_grid() -> str:
     temps = sorted(next(iter(elems.values()))["colors"].keys())
     bb = data["_blackbody"]
     bb_cells = "".join(
-        f'<div style="{cell};background:{bb[t]["hex"]};color:{text_on(bb[t]["hex"])}" '
+        f'<div class="cswatch" data-hex="{bb[t]["hex"]}" style="{cell};background:{bb[t]["hex"]};color:{text_on(bb[t]["hex"])}" '
         f'title="{t}K · {bb[t]["hex"]} · {bb[t].get("note","")}">'
         f'{(t//1000) if t % 1000 == 0 else ""}</div>'
         for t in temps)
@@ -361,7 +361,7 @@ def render_element_temp_grid() -> str:
             c = e["colors"][t]
             hx = c["hex"]
             tip = f'{e["name"]} ({sym}) · {t}K · {hx} · ionized {c["ionization_fraction"]}'
-            cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
+            cells += (f'<div class="cswatch" data-hex="{hx}" style="{cell};background:{hx};color:{text_on(hx)}" '
                       f'title="{tip}"></div>')
         rows.append(f'<div style="{row}"><div style="{lab}">{e["z"]} {sym}</div>'
                     f'<div>{cells}</div></div>')
@@ -699,6 +699,28 @@ def render_body_card(body: dict) -> str:
     )
 
 
+def render_references() -> str:
+    ads = "https://ui.adsabs.harvard.edu/abs/"
+    return (
+        '<p class="muted" data-i18n="references_caption" style="font-size:12px;margin:4px 0 10px"></p>'
+        '<div class="refs-list">'
+        '<h4 data-i18n="ref_h_method"></h4><ul>'
+        '<li><a href="reference/element-plasma-colors.md">element-plasma-colors.md</a> — element emission / flame colors (NIST ASD + chemistry literature)</li>'
+        '<li><a href="reference/plasma-color-methodology-review.md">plasma-color-methodology-review.md</a> — literature-grounded adversarial review; full per-dimension ADS bibliography</li>'
+        '<li><a href="reference/atmosphere-reflected-color-methodology.md">atmosphere-reflected-color-methodology.md</a> — shared CIE 1931 → sRGB colorimetry engine</li>'
+        '<li><a href="reference/methodology-index.md">methodology-index.md</a> — NearStars methodology index</li>'
+        '</ul>'
+        '<h4 data-i18n="ref_h_sources"></h4><ul>'
+        '<li><a href="https://physics.nist.gov/asd">NIST Atomic Spectra Database</a> — line wavelengths &amp; transition probabilities (A-values)</li>'
+        f'<li>Saha–Boltzmann LTE emission — Cristoforetti et al. 2010 (<a href="{ads}2010AcSpB..65...86C">2010AcSpB..65...86C</a>); Allard &amp; Hauschildt 1995 (<a href="{ads}1995ApJ...445..433A">1995ApJ...445..433A</a>)</li>'
+        '<li>Colorimetry — CIE 1931 CMF → XYZ → sRGB (IEC 61966-2-1); analytic CMF fit: Wyman, Sloan &amp; Shirley 2013 (JCGT)</li>'
+        '<li>Molecular constants — Huber &amp; Herzberg (diatomic constants); Pearse &amp; Gaydon, <em>Identification of Molecular Spectra</em></li>'
+        f'<li>Non-LTE reentry — Park two-temperature model; N₂⁺ 391 nm electron-impact (<a href="{ads}1994ntrs.rept23568C">1994ntrs.rept23568C</a>)</li>'
+        f'<li>Aurora forbidden-line quenching — <a href="{ads}1989RSPSA.424....1S">1989RSPSA.424....1S</a>, <a href="{ads}1990AdSpR..10e..31F">1990AdSpR..10e..31F</a></li>'
+        '</ul></div>'
+    )
+
+
 def build_t(palettes):
     t_en = {
         "title": "Plasma & reentry color reference",
@@ -751,6 +773,10 @@ def build_t(palettes):
         "body_streak_lbl":   "streak:",
         "legend_visible":    "visible",
         "legend_no_data":    "no data / dim / dissociated",
+        "h_references":      "Methodology &amp; sources",
+        "references_caption": "The engine, data, and literature this page is built on. The full per-dimension bibliography lives in the methodology-review doc.",
+        "ref_h_method":      "NearStars methodology &amp; provenance",
+        "ref_h_sources":     "Physics, data &amp; standards",
     }
     t_ko = {
         "title": "플라즈마 & 재진입 색 레퍼런스",
@@ -803,6 +829,10 @@ def build_t(palettes):
         "body_streak_lbl":   "streak:",
         "legend_visible":    "관측 가능",
         "legend_no_data":    "자료 없음 / 너무 어두움 / 해리됨",
+        "h_references":      "방법론 · 근거",
+        "references_caption": "이 페이지가 근거로 삼은 엔진·데이터·문헌입니다. 차원별 전체 서지는 methodology-review 문서에 있습니다.",
+        "ref_h_method":      "NearStars 방법론 · 출처",
+        "ref_h_sources":     "물리 · 데이터 · 표준",
     }
     for name in palettes:
         desc_en, desc_ko = PALETTE_DESCRIPTORS[name]
@@ -880,6 +910,25 @@ html, body {{ overflow-x: clip; }}
   .el-cell .sym {{ font-size: 12px }}
   .el-cell .name {{ display: none }}
 }}
+.el-cell.visible {{ cursor: pointer }}
+.cswatch {{ cursor: pointer; transition: outline 0.08s ease }}
+.cswatch:hover {{ outline: 2px solid rgba(255,255,255,0.85); outline-offset: -2px; position: relative; z-index: 2 }}
+#copy-pop {{
+  position: fixed; z-index: 9999; pointer-events: none; display: none;
+  background: #14121f; border: 1px solid rgba(255,255,255,0.18); border-radius: 6px;
+  padding: 6px 9px; box-shadow: 0 4px 16px rgba(0,0,0,0.55);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap;
+}}
+#copy-pop .pop-sw {{ display: inline-block; width: 22px; height: 22px; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.3); vertical-align: middle; margin-right: 7px }}
+#copy-pop .pop-hex {{ vertical-align: middle; font-weight: bold; font-size: 13px; color: #eef; letter-spacing: 0.5px }}
+#copy-pop .pop-hint {{ display: block; font-size: 10px; opacity: 0.6; margin-top: 3px;
+  font-family: system-ui, sans-serif }}
+#copy-pop.copied {{ border-color: #4ad07a }}
+#copy-pop.copied .pop-hint {{ opacity: 0.95; color: #7fe6a3 }}
+.refs-list a {{ color: #9bb8ff }}
+.refs-list li {{ margin: 3px 0; font-size: 12px; line-height: 1.55 }}
+.refs-list h4 {{ margin: 12px 0 4px; font-size: 12px; color: #aab2c8 }}
 
 .molecular-panel {{
   display: grid;
@@ -1074,6 +1123,12 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 </div>
 </section>
 
+<!-- References / grounding -->
+<section>
+<h2 data-i18n="h_references"></h2>
+{references_section}
+</section>
+
 </main>
 
 <script>
@@ -1114,8 +1169,10 @@ function applyTemp(t) {{
       cell.classList.add('visible');
       cell.style.background = c.hex;
       cell.style.color = textOn(c.hex);
+      cell.dataset.hex = c.hex;
       cell.title = `${{data.name}} (${{sym}}, Z=${{data.z}}) @ ${{t}}K — ${{T[lang].tip_ionz}} ${{Math.round((c.ion||0)*100)}}%`;
     }} else {{
+      delete cell.dataset.hex;
       chip.textContent = T[lang].tip_nodata;
       cell.title = data ? `${{data.name}} (${{sym}}, Z=${{data.z}}) — ${{T[lang].tip_nocolor}}`
                         : `${{sym}} — ${{T[lang].tip_nodata}}`;
@@ -1217,6 +1274,43 @@ densitySlider.addEventListener('input', e => {{
   applyDensity(density);
 }});
 
+// ── hover color palette + click-to-copy hex ─────────────────────────
+const COPY_SEL = '.cswatch, .el-cell.visible';
+const pop = document.createElement('div');
+pop.id = 'copy-pop';
+document.body.appendChild(pop);
+let popHex = null;
+function renderPop(hex, hint, copied) {{
+  pop.classList.toggle('copied', !!copied);
+  pop.innerHTML = `<span class="pop-sw" style="background:${{hex}}"></span>`
+    + `<span class="pop-hex">${{hex}}</span><span class="pop-hint">${{hint}}</span>`;
+}}
+function placePop(x, y) {{
+  pop.style.display = 'block';
+  pop.style.left = Math.min(x + 14, window.innerWidth - pop.offsetWidth - 8) + 'px';
+  pop.style.top  = Math.min(y + 16, window.innerHeight - pop.offsetHeight - 8) + 'px';
+}}
+document.addEventListener('mousemove', e => {{
+  const el = e.target.closest && e.target.closest(COPY_SEL);
+  const hex = el && el.dataset.hex ? el.dataset.hex.toUpperCase() : null;
+  if (!hex) {{ pop.style.display = 'none'; popHex = null; return; }}
+  if (hex !== popHex) {{
+    popHex = hex;
+    renderPop(hex, lang === 'ko' ? '클릭하여 복사' : 'click to copy', false);
+  }}
+  placePop(e.clientX, e.clientY);
+}});
+document.addEventListener('click', e => {{
+  const el = e.target.closest && e.target.closest(COPY_SEL);
+  if (!el || !el.dataset.hex || !navigator.clipboard) return;
+  const hex = el.dataset.hex.toUpperCase();
+  navigator.clipboard.writeText(hex).then(() => {{
+    renderPop(hex, lang === 'ko' ? '✓ 복사됨' : '✓ copied', true);
+    placePop(e.clientX, e.clientY);
+    popHex = null;   // force re-render of hint on next hover move
+  }});
+}});
+
 applyLang();
 applyTemp(temp);
 applyDensity(density);
@@ -1278,6 +1372,7 @@ def main() -> int:
         aurora_emitters=aurora_emitters,
         sol_comparison=sol_comparison,
         bodies_section=bodies_section,
+        references_section=render_references(),
         t_json=t_json,
         element_temp_json=element_temp_json,
         molecule_temp_json=molecule_temp_json,
