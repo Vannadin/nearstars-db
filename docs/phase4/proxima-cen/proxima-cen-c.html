@@ -169,7 +169,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">semi_major_axis_au</td><td class="v">1.5 <span class="u">AU</span><div class="fnote">P≈1900d (~5.2yr); Damasso2020 측정</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">eccentricity</td><td class="v">0.04<div class="fnote">Damasso2020 측정</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">tidal_lock</td><td class="v">none (비조석고정, 1.5 AU → τ_lock ≫ 나이); 경사각·절대 배향 자유 emit</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> rationale: 오너 결정 2026-06-23 (a) — 진질량 등방중앙 8 M⊕ 채택. Kervella&amp;Damasso2020(arXiv:2003.13106) 천체측정 경사각/질량은 **논쟁적**(신호 후속 반박)이라 비채택, caveat 병기. c 존재 자체가 disputed candidate라 &quot;있다는 가정 하&quot; 진행. 자전주기 ~27h는 미구속 자유자전의 오너 art 선택(해왕성형보다 약간 느림). 1.5 AU 비잠김은 locking 문서 a⁶로 확정.<br>paper: 진질량 등방 = Ho&amp;Turner2011(1007.0245). 경사각 논쟁 = Kervella&amp;Damasso2020(2003.13106). 비잠김 = tidal-locking-timescale-methodology.md(a⁶).<br></div>
-  <div class="refs"><a class="ref" href="https://arxiv.org/abs/2003.13106" target="_blank" rel="noopener">2003.13106</a><a class="ref" href="https://arxiv.org/abs/1007.0245" target="_blank" rel="noopener">1007.0245</a></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2020SciA....6.7467D" target="_blank" rel="noopener">2020SciA....6.7467D</a><a class="ref" href="https://arxiv.org/abs/2003.13106" target="_blank" rel="noopener">2003.13106</a><a class="ref" href="https://arxiv.org/abs/1007.0245" target="_blank" rel="noopener">1007.0245</a></div>
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
@@ -213,7 +213,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">base_color</td><td class="v"><span class="chip" style="background:#c4d0d8"></span><span class="hx">#c4d0d8</span> (창백 회청/회백; 거의 중성 + 약한 Rayleigh 청)</td><td class="o"></td></tr><tr><td class="k">clouds</td><td class="v">H/He + 고층 얼음·haze (해왕성처럼 파랗지 않음 — CH₄ 응결로 진청 메커니즘 약함)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> rationale: &quot;차가운 mini-Neptune은 덜 파랑&quot;은 grounded — CH₄ 응결(&lt;90K)로 기체 CH₄ 빨강흡수 사라짐(해왕성 72K 대비). 색=대기 반사색 문서 §6 엔진(H/He Rayleigh + 약 흡수, 얼음 haze). G4서 미룬 색 디테일을 여기서 확정. 내부열 effective ~50–60K도 CH₄ 동결 유지라 결론 불변(internal-heat 문서).<br>brightness_note: **절대 dimness(1.5 AU·M5.5)는 cfg 비인자** — KSP/Kopernicus는 바디를 normalize해 가시 렌더하므로 실세계 어두움은 인게임에 안 반영됨. 외형 결정의 본질 = **색(창백 회백)**이지 밝기 아님. dimness는 실세계 trivia로만 기록.<br>paper: 색=docs/reference/atmosphere-reflected-color-methodology.md(Rayleigh+haze). 온도=tidally-locked-temperature + internal-heat-luminosity 문서(Teq 40K, T_eff ~50–60K). 시각 standout=고리(G9, 밝은 얼음).<br></div>
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/docs%2Freference%2Fatmosphere-reflected-color-methodology.md" target="_blank" rel="noopener">docs/reference/atmosphere-reflected-color-methodology.md</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
@@ -224,7 +224,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~0.1–0.5 G (빙거성 아날로그, 비쌍극·tilted ~47–59°); conf low</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> note: dynamo 문서 regime 3 — sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog 차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23.<br>paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).<br></div>
-  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C" target="_blank" rel="noopener">2009Natur.457..167C</a><a class="ref" href="https://arxiv.org/abs/1007.1514" target="_blank" rel="noopener">1007.1514</a></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/docs%2Freference%2Fplanetary-dynamo-scaling.md" target="_blank" rel="noopener">docs/reference/planetary-dynamo-scaling.md</a></div>
 </article>
 <article class="dec" id="environment">
   <div class="dec-head">

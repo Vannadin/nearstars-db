@@ -169,7 +169,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">0.1221 <span class="u">M_sun</span><div class="fnote">±0.0022 (SM2025 진화모델)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radius</td><td class="v">0.141 <span class="u">R_sun</span><div class="fnote">±0.011 (Demory2009 VLTI)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">gravity</td><td class="v">1684 <span class="u">m/s2</span><div class="fnote p3">Phase 3: GM/R² 파생 에코</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flattening</td><td class="v">2.8e-08<div class="fnote">= (3J₂+q)/2 파생 에코 (J₂ 3.7e-9, q 4.4e-8) — 시각 oblate 슬롯</div></td><td class="o"></td></tr><tr><td class="k">rotation_period</td><td class="v">83.5 <span class="u">d</span><div class="fnote">DB recommended — bulk.geopotential_j2 행과 동일 입력</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">intrinsic_luminosity</td><td class="v">0.00157 <span class="u">L_sun</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">age</td><td class="v">4.85 <span class="u">Gyr</span><div class="fnote">±0.5 (kinematic; 포획 vs 동시생성 미정). Teff 2904±51K (Passegger2019)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S" target="_blank" rel="noopener">2025A&amp;A...700A..11S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009A%26A...505..205D" target="_blank" rel="noopener">2009A&amp;A...505..205D</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2019A%26A...627A.161P" target="_blank" rel="noopener">2019A&amp;A...627A.161P</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B" target="_blank" rel="noopener">2012ApJ...757..112B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998AJ....116..429B" target="_blank" rel="noopener">1998AJ....116..429B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2017A%26A...598L...7K" target="_blank" rel="noopener">2017A&amp;A...598L...7K</a></div>
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -180,7 +180,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffcc75"></span><span class="hx">#ffcc75</span><div class="fnote">M5.5V 물리색, 실측 Pickles SED→CIE</div><div class="fnote p3">Phase 3: #c54c2a (심적색, 광도/색조 혼동 render 짐작 → 폐기)</div></td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.4<div class="fnote">α~0.4 (Claret2018 M-dwarf 보간, tie-break)</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">~3–5% (보통~다소 많음; 83d 자전 변조 검출)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v"><span class="chip" style="background:#ff5e2a"></span><span class="hx">#ff5e2a</span> (Hα, 참조용 — 동적 플레어 cfg 렌더 불가, visual passthrough)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 색 정정 2026-06-24 — 물리색 #ffcc75(실측 Pickles SED→CIE), 옛 #c54c2a 폐기. limb=tie-break passthrough. 흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인).<br></div>
-  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998PASP..110..863P" target="_blank" rel="noopener">1998PASP..110..863P</a><a class="ref" href="https://arxiv.org/abs/1303.5632" target="_blank" rel="noopener">1303.5632</a></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/docs%2Freference%2Fstellar-photospheric-color-methodology.md" target="_blank" rel="noopener">docs/reference/stellar-photospheric-color-methodology.md</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
@@ -191,7 +191,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">0.6 <span class="u">kG</span><div class="fnote">평균 표면장 (Reiners&amp;Basri2008/Reiners2022 CARMENES); 대규모 dipole 0.135 kG (Klein2021 ZDI, 주로 poloidal); spin incl 47°±7°</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2008ApJ...684.1390R" target="_blank" rel="noopener">2008ApJ...684.1390R</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021MNRAS.500.1844K" target="_blank" rel="noopener">2021MNRAS.500.1844K</a></div>
 </article>
 <article class="dec" id="environment.activity">
   <div class="dec-head">
@@ -202,7 +202,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">P_rot 83.5±0.5d (Benedict1998 HST), 7년 사이클 (Wargelin2017), log R&#x27;HK −5.65±0.17</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flares</td><td class="v">1.49회/일 (Vida2019 TESS); 슈퍼플레어 ≥10³³erg ~3회/년, ultra ~0.5회/년; X선 log Lx ~27.0 정온→28.5 피크</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998AJ....116..429B" target="_blank" rel="noopener">1998AJ....116..429B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2017MNRAS.464.3281W" target="_blank" rel="noopener">2017MNRAS.464.3281W</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016MNRAS.459.3565S" target="_blank" rel="noopener">2016MNRAS.459.3565S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2004A%26A...417..651S" target="_blank" rel="noopener">2004A&amp;A...417..651S</a></div>
 </article>
 <article class="dec" id="environment.stellar_wind">
   <div class="dec-head">
@@ -213,7 +213,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">0.2 <span class="u">Mdot_sun</span><div class="fnote">≤0.2 (Wood2001 astrospheric Lyα 상한). 플레어-지배 환경, 절대 풍 약함</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2001ApJ...547L..49W" target="_blank" rel="noopener">2001ApJ...547L..49W</a></div>
 </article>
 <article class="dec" id="environment.heliosphere">
   <div class="dec-head">
@@ -224,7 +224,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">heliosphere</td><td class="v">astrosphere standoff ≲55 AU (Wood2001); ISM 유입 ~25 km/s (Wood2005, α Cen AB와 동일 G-cloud)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2001ApJ...547L..49W" target="_blank" rel="noopener">2001ApJ...547L..49W</a></div>
 </article>
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
@@ -235,7 +235,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 47°±7° (LOS 기준, 측정) · PA 자유, ICRS 변환 at emit</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> ZDI 측정값 그대로 채택(47°±7°, recommended). 가정은 극 방위각뿐. 행성 궤도 경사 미측정이라 정렬 주장 없음.<br></div>
-  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2020MNRAS.500.1844K" target="_blank" rel="noopener">2020MNRAS.500.1844K</a></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021MNRAS.500.1844K" target="_blank" rel="noopener">2021MNRAS.500.1844K</a></div>
 </article>
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
@@ -246,7 +246,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">3.7e-09</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">9.809e7 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 느린 자전(83.5d)+작은 반지름이라 q 자체가 태양의 ~1/470 — 로스터 최소 J2. 그래도 오너 정책 (항성 J2 무시가능 처리 금지, Principia 플레이 중요)대로 계산값 emit. 태양 비율(0.0105) 대신 M왜성 폴리트로프 계수(0.084)를 쓴 것은 응집도 차이의 물리적 귀결.<br></div>
-  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939isss.book.....C" target="_blank" rel="noopener">1939isss.book.....C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009A%26A...505..205D" target="_blank" rel="noopener">2009A&amp;A...505..205D</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998AJ....116..429B" target="_blank" rel="noopener">1998AJ....116..429B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S" target="_blank" rel="noopener">2025A&amp;A...700A..11S</a></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/docs%2Freference%2Fbody-figure-methodology.md" target="_blank" rel="noopener">docs/reference/body-figure-methodology.md</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="proxima-cen-b.html">Proxima Cen b →</a></div>
 </div>

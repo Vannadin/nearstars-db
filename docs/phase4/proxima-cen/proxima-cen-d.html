@@ -169,7 +169,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">semi_major_axis_au</td><td class="v">0.02885 <span class="u">AU</span><div class="fnote">P=5.122d</div></td><td class="o"></td></tr><tr><td class="k">eccentricity</td><td class="v">0<div class="fnote">물리 floor e≈0 (0.029AU 강조석 원형화). 미측정이라 emit시 de-perfect seed (상한 ≲0.05); 구체값은 per-system seed로 emit 생성·보드 미기록 (synthetic-orbit-noise 정책 rule 2). NOT baked</div><div class="fnote p3">Phase 3: e≈0 (Faria2022 저진폭 RV, 미구속 가정)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">tidal_lock</td><td class="v">1:1 (a⁶ 게이트 초고속); Ω/ω/M 자유 emit</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> rationale: 관측 e 미구속 → [[project_nearstars_synthetic_eccentricity]] 정책으로 emit시 seeded e ≲0.05 상한 (구체값은 per-system seed로 emit 생성, 보드엔 의도만 — 정책 rule 2). 0.029 AU는 조석 원형화 즉각이라 물리 기본은 e≈0이나, 미측정이므로 realism/다양성용 small seed를 emit서 부여. ω_eq/n≈1.015 → 1:1 유지. 수성 e=0.2는 기각(0.029 AU 강조석+공명 부재로 비현실; 오너 결정 2026-06-23). **emit시 다행성계 stability-sim 검증 필요.**<br>paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).<br></div>
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S" target="_blank" rel="noopener">2025A&amp;A...700A..11S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F" target="_blank" rel="noopener">2022A&amp;A...658A.115F</a></div>
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
@@ -202,7 +202,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">bare rock (어두운 현무암, 2-tone: 밝은 중위도 ↔ 어두운 자기극관)</td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">450 <span class="u">K</span><div class="fnote">직하 (Teq~317K ×√2, 무재분배); 극냉 야간 (고유색은 cfg_colors_intrinsic)</div></td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.11<div class="fnote">Bond, 무자기장 수성(~0.088)보다 높음 — 자기권 sputtering 차폐로 우주풍화(npFe⁰) 감소; 자기극관 국소 저albedo</div></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> rationale: cascade(G7 ~16 G): 자기권이 솔라윈드 sputtering 차폐 → 우주풍화 줄어 무자기장 수성보다 신선·고albedo쪽. 미세운석 풍화는 잔존(자기권 무관). phase-lock 플레어(Zapatero Osorio2026)는 자기극 채널 → 극 풍화 비대칭. 무산소·무생물 이라 Fe³⁺ 적색 슬로프 무관(애초 무대기). 색조=interesting-first.<br>paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000 — 자기권 차폐로 감소). 자기장=G7(Zapatero Osorio2026). Teq=온도 문서.<br></div>
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/docs%2Freference%2Fsurface-color-albedo-methodology.md" target="_blank" rel="noopener">docs/reference/surface-color-albedo-methodology.md</a></div>
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -213,7 +213,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">base_color</td><td class="v"><span class="chip" style="background:#34302c"></span><span class="hx">#34302c</span> → Proxima-lit ~<span class="chip" style="background:#36281a"></span><span class="hx">#36281a</span> (어두운 따뜻한 회갈; 크레이터·풍화 줄무늬)</td><td class="o"></td></tr><tr><td class="k">aurora</td><td class="v">none (무대기 — ~16 G 자기장 존재하나 발광 매질 없어 불가)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 표시색=고유색×Proxima SED(§6 엔진, emit 정밀화). 무대기라 구름·haze 없음, 순수 표면.</div>
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/docs%2Freference%2Fsurface-color-albedo-methodology.md" target="_blank" rel="noopener">docs/reference/surface-color-albedo-methodology.md</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">

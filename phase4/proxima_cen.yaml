@@ -34,6 +34,7 @@ decisions:
 
   - body: Proxima Cen
     axis: bulk                        # §3.2 템플릿 앵커 — 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    refs: ["2025A&A...700A..11S", "2009A&A...505..205D", "2019A&A...627A.161P", "2012ApJ...757..112B", "1998AJ....116..429B", "2017A&A...598L...7K"]
     body_class: star
     status: passthrough
     driver: [passthrough]
@@ -107,10 +108,11 @@ decisions:
       evidence: >
         색 정정 2026-06-24 — 물리색 #ffcc75(실측 Pickles SED→CIE), 옛 #c54c2a 폐기. limb=tie-break passthrough.
         흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인).
-    refs: ["1998PASP..110..863P", "1303.5632"]
+    refs: ["docs/reference/stellar-photospheric-color-methodology.md"]
 
   - body: Proxima Cen
     axis: magnetism.magnetic_field    # 측정
+    refs: ["2008ApJ...684.1390R", "2021MNRAS.500.1844K"]
     status: passthrough
     driver: [passthrough]
     narrative: >
@@ -125,6 +127,7 @@ decisions:
 
   - body: Proxima Cen
     axis: environment.activity        # 플레어 별 핵심 — 측정
+    refs: ["1998AJ....116..429B", "2017MNRAS.464.3281W", "2016MNRAS.459.3565S", "2004A&A...417..651S"]
     status: passthrough
     driver: [passthrough]
     narrative: >
@@ -143,6 +146,7 @@ decisions:
 
   - body: Proxima Cen
     axis: environment.stellar_wind    # 측정
+    refs: ["2001ApJ...547L..49W"]
     status: passthrough
     driver: [passthrough]
     narrative: >
@@ -156,6 +160,7 @@ decisions:
 
   - body: Proxima Cen
     axis: environment.heliosphere     # SHARED 시스템 대표
+    refs: ["2001ApJ...547L..49W"]
     status: passthrough
     driver: [passthrough]
     narrative: >
@@ -182,7 +187,7 @@ decisions:
       evidence: >
         ZDI 측정값 그대로 채택(47°±7°, recommended). 가정은 극 방위각뿐. 행성 궤도 경사 미측정이라
         정렬 주장 없음.
-    refs: [2020MNRAS.500.1844K]
+    refs: ["2021MNRAS.500.1844K"]
 
   - body: Proxima Cen
     axis: bulk.geopotential_j2
@@ -204,7 +209,7 @@ decisions:
         느린 자전(83.5d)+작은 반지름이라 q 자체가 태양의 ~1/470 — 로스터 최소 J2. 그래도 오너 정책
         (항성 J2 무시가능 처리 금지, Principia 플레이 중요)대로 계산값 emit. 태양 비율(0.0105) 대신
         M왜성 폴리트로프 계수(0.084)를 쓴 것은 응집도 차이의 물리적 귀결.
-    refs: [1939isss.book.....C, 2009A&A...505..205D, 1998AJ....116..429B, 2025A&A...700A..11S]
+    refs: ["docs/reference/body-figure-methodology.md"]
 
   # ── 행성 b (대륙형 호수 세계, 무생물) — facet-walk 2026-06-23 ──────────
   - body: Proxima Cen b
@@ -234,6 +239,7 @@ decisions:
 
   - body: Proxima Cen b
     axis: orbit                       # a/e/inc/lock = 측정 passthrough
+    refs: ["2025A&A...700A..11S", "2016Natur.536..437A", "2022A&A...658A.115F"]
     status: passthrough
     driver: [passthrough]
     narrative: >
@@ -396,6 +402,7 @@ decisions:
 
   - body: Proxima Cen b
     axis: surface                     # G5 — 대륙형 호수 세계 표면; 색=표면색 문서, A=Bond cascade
+    refs: ["docs/reference/surface-color-albedo-methodology.md"]
     status: gated
     driver: [classification, visual]
     narrative: >
@@ -641,6 +648,7 @@ decisions:
 
   - body: Proxima Cen d
     axis: orbit
+    refs: ["2025A&A...700A..11S", "2022A&A...658A.115F"]
     status: gated
     driver: [window-selection, observation]
     narrative: >
@@ -773,6 +781,7 @@ decisions:
 
   - body: Proxima Cen d
     axis: surface
+    refs: ["docs/reference/surface-color-albedo-methodology.md"]
     status: gated
     driver: [classification, visual]
     narrative: >
@@ -813,6 +822,7 @@ decisions:
 
   - body: Proxima Cen d
     axis: appearance
+    refs: ["docs/reference/surface-color-albedo-methodology.md"]
     status: gated
     driver: [visual, observation]
     narrative: >
@@ -1006,7 +1016,7 @@ decisions:
 
         paper: 진질량 등방 = Ho&Turner2011(1007.0245). 경사각 논쟁 = Kervella&Damasso2020(2003.13106). 비잠김 =
         tidal-locking-timescale-methodology.md(a⁶).
-    refs: ["2003.13106", "1007.0245"]
+    refs: ["2020SciA....6.7467D", "2003.13106", "1007.0245"]
 
   - body: Proxima Cen c
     axis: bulk                        # §3.2 템플릿 앵커
@@ -1132,6 +1142,7 @@ decisions:
 
   - body: Proxima Cen c
     axis: appearance
+    refs: ["docs/reference/atmosphere-reflected-color-methodology.md"]
     status: gated
     driver: [visual, classification]
     narrative: >
@@ -1181,7 +1192,7 @@ decisions:
         차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23.
 
         paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).
-    refs: ["2009Natur.457..167C", "1007.1514"]
+    refs: ["docs/reference/planetary-dynamo-scaling.md"]
 
   - body: Proxima Cen c
     axis: environment
@@ -1453,6 +1464,7 @@ decisions:
 
   - body: Proxima Cen c I
     axis: surface
+    refs: ["docs/reference/surface-color-albedo-methodology.md"]
     status: gated
     driver: [classification, visual]
     # MIGRATION-FLAG: 표면 hex 색(#dcd6c6/#6e4632/#e8eef0)은 narrative 원문에 보존, typed 색필드 미분해 (emit 말미 art-pass).
@@ -1483,6 +1495,7 @@ decisions:
 
   - body: Proxima Cen c I
     axis: appearance
+    refs: ["docs/reference/surface-color-albedo-methodology.md"]
     status: gated
     driver: [visual]
     narrative: >
