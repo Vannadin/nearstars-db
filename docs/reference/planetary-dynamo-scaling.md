@@ -151,4 +151,6 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
 - [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — the
   rocky (Earth/super-Earth) counterpart; the two methods split at the rocky ↔
   sub-Neptune boundary and must not be cross-applied.
+- [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md) —
+  consumes this method's `B_eq` to size the magnetosphere + belts (→ Kerbalism).
 - `methodology-index.md` — the living index of all derived-value recipes.

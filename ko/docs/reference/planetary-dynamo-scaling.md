@@ -149,4 +149,6 @@ Notes:
 - [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — 암석형
   (지구/슈퍼지구) 상대편 방법. 두 방법은 암석형 ↔ sub-Neptune 경계에서 갈리며 교차
   적용해서는 안 된다.
+- [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md) —
+  이 방법의 `B_eq`를 받아 자기권·방사선대 크기를 도출(→ Kerbalism).
 - `methodology-index.md` — 모든 도출값 레시피의 살아있는 인덱스.

@@ -165,4 +165,6 @@ RM22의 격자는 0.1–48 M⊕이지만 물리는 급격히 분기합니다.
   내부구조 단계를 시드하는 M ↔ R ↔ 밀도 tie-break 공급.
 - [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md) —
   이 방법의 regime 게이트에 넣을 자전상태를 결정.
+- [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md) —
+  이 방법의 `B_eq`를 받아 자기권·방사선대 크기를 도출(→ Kerbalism).
 - `methodology-index.md` — 모든 도출값 레시피의 살아있는 인덱스.

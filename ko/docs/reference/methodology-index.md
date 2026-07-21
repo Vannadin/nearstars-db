@@ -18,6 +18,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 |---|---|---|
 | [planetary-dynamo-scaling](planetary-dynamo-scaling.md) | 거대행성/갈색왜성 자기장 세기 (에너지플럭스) | Christensen 2009; Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)); Yadav & Thorngren 2017 |
 | [rocky-planet-dynamo-methodology](rocky-planet-dynamo-methodology.md) | 암석형(지구/슈퍼지구) 자기모멘트 + 표면장 | Rodríguez-Mozos & Moya 2022 ([arXiv:2203.01065](https://arxiv.org/abs/2203.01065)); Olson & Christensen 2006; Gaidos 2010; Driscoll & Olson 2011 |
+| [planetary-magnetosphere-geometry-methodology](planetary-magnetosphere-geometry-methodology.md) | 자기장에서 자기권 standoff + 방사선대 크기/강도 도출 (→ Kerbalism) | Chapman & Ferraro 1931; Shue 1997/98; Kennel & Petschek 1966; Schulz & Lanzerotti 1974; Thorne 2010 |
 | [mass-radius-relation-methodology](mass-radius-relation-methodology.md) | 질량 ↔ 반경 ↔ 밀도 tie-break | Seager 2007; Zeng 2016; Fortney 2007; Chen & Kipping 2017 |
 | [tidal-locking-timescale-methodology](tidal-locking-timescale-methodology.md) | 자전 상태 / 동기화 타임스케일 | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
 | [tidal-heating-methodology](tidal-heating-methodology.md) | 조석가열 플럭스 (Io/Enceladus 캘리브레이션) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
