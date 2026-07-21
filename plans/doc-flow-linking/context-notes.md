@@ -40,3 +40,23 @@ non-existent same-dir `.html`.
 uncommitted in-progress work (swatch click-to-copy-hex). Left untouched. The
 firefly-colors <- element-plasma direction is DEFERRED; only the element-plasma
 doc -> firefly viewer direction is done this turn.
+
+## 2026-07-21 - execution outcome + parallel-session interference
+
+Committed in 4 units: 5f10973 (doc-hub rebuild, prereq), 29618f8 (builder spine),
+e56ae31 (4 Related backfills), 3146679 (methodology + color cross-links).
+
+Parallel session was committing to shared main concurrently (color-viewer
+6c89884/d207768; new doc planetary-magnetosphere-geometry 6c83894 which also
+added the doc to methodology-index; and it reverted Pandora field 140->75 uT in
+85a7122). Guard applied: reverted the delegated agent's edit to the magnetosphere
+source (parallel-owned), committed only its generated hub page to fix the dangling
+sidebar links my hub rebuild introduced. Never staged the parallel color files.
+
+ko firefly-viewer link: the dead-link gate resolves ko links from the ko file's
+real dir (ko/docs/reference/), not the mirror root, and the viewer has no ko
+mirror -> `../firefly-colors.html` 404'd. Fixed to `../../../docs/firefly-colors.html`
+(gate-correct + preview-md.sh-correct). Known minor trade-off: in the doc-hub
+render (docs/wiki/) the ko-toggle firefly link is off by directory depth, because
+the hub flattens both languages to one location. If that matters later, teach
+build_docs `_rewrite_links` to normalize `.html` depth per source language.

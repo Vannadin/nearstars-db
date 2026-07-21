@@ -23,21 +23,32 @@ by slug match), so the 80 phase-3 docs are not hand-edited.
 - [x] `## Related` in the 4 phase-3 docs missing it (en + ko):
       luhman-16-a, luhman-16-b, psr-j0108-1431, v1400-centauri.
 
-## Cross-domain
-- [ ] methodology docs `## Related`: make sibling links clickable + add a
-      clickable back-link to methodology-index. Fix the inconsistent ones
-      (rocky-dynamo plain-text index, tidal-heating backtick+no index,
-      surface-color backtick+no index; audit the rest).
-- [ ] color-materials.md: add a `## Related` section (+ ko).
-- [ ] element-plasma-colors.md: `## Related` -> link the live firefly-colors viewer (+ ko).
-- [ ] (DEFERRED) firefly-colors.html <- element-plasma doc: needs
-      render_color_visualizer.py, which has uncommitted parallel-session work
-      (copy-hex feature). Do NOT touch this turn.
+## Cross-domain — DONE (commit 3146679)
+- [x] methodology docs `## Related`: sibling links clickable + clickable
+      back-link to methodology-index (14 recipe docs + color-materials, en+ko).
+- [x] color-materials.md: `## Related` added (+ ko).
+- [x] element-plasma-colors.md: `## Related` -> live firefly-colors viewer (+ ko;
+      ko path is repo-root-relative `../../../docs/firefly-colors.html` since the
+      viewer has no ko mirror — matches AGENTS.md 2.1).
+- [ ] (DEFERRED) firefly-colors.html <- element-plasma doc: render_color_visualizer.py
+      is owned by the parallel color-viewer session (committed as 6c89884/d207768).
+      One-directional link only this turn.
+- [ ] (DEFERRED) planetary-magnetosphere-geometry-methodology.md Related: parallel
+      session actively developing it on main (6c83894); left its source untouched,
+      only committed its generated hub page. Normalize on a future clean pass.
 
-## Verify
-- [ ] rebuild all three surfaces; `./scripts/check.sh` green (dead-link gate).
-- [ ] spot-check a rendered Phase 3 page: sibling + reference links resolve to
-      `.html`, Phase 4 forward link present where a board exists.
-- [ ] spot-check a Phase 4 body page: Phase 3 back-link present where a synthesis exists.
-- [ ] reports.html shows P2 -> P3 -> P4 chain.
-- [ ] check-mirrors.sh: ko parity for the edited .md docs.
+## Verify — DONE
+- [x] all three surfaces rebuilt; dead-link gate green (580 md files).
+- [x] internal .html targets resolve: phase3 1074, phase4 201, wiki 2754, 0 missing.
+- [x] Phase 3 page: sibling/reference links resolve to `.html`; Phase 4 forward
+      link present where a board exists (alpha-centauri-a yes, trappist-1-e no).
+- [x] Phase 4 body page: Phase 3 back-link present where synthesis exists
+      (alpha-centauri-a yes, pandora/art-name no).
+- [x] reports.html shows P2 -> P3 -> P4 chain (40 Eri A: P2 + P3 ★/b/c/d + P4 ★/b/c/d).
+- [x] check-mirrors.sh: no edited doc flagged stale (ko parity holds).
+
+## Not done (out of scope by owner choice)
+- Full-roster sibling standardization across all 80 phase-3 docs (owner: backfill 4 only).
+- In-content body-to-body prose flow (owner scoped body-to-body to Related backfill).
+- gate-9 empty-dir FAIL (phase3/stability-sim/.venv/include) is a pre-existing venv
+  artifact, unrelated to this work.
