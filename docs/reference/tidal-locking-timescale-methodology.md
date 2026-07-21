@@ -435,19 +435,20 @@ bounded by argument, not cited.
 
 ## Related
 
-- `docs/reference/tidal-heating-methodology.md`: the sibling that **assumes the lock
+- [tidal-heating-methodology](tidal-heating-methodology.md): the sibling that **assumes the lock
   this doc establishes**: it applies the `(21/2)e²` synchronous heating form to close-in
   bodies, which is valid precisely because their `τ_lock ≪ age` here. The two share the
   same `Q/k₂` interior unknown (inverted: heating uses `k₂/Q`, locking uses `Q/k₂`) and
   the same "steep power of `a` makes the call robust" lesson (`a⁻⁷·⁵` there, `a⁶` here).
-- `docs/reference/tidally-locked-temperature-methodology.md`: its substellar-point
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): its substellar-point
   geometry assumes the **1:1 state this doc confirms**; the eccentric pseudo-synchronous
   / 3:2 cases (§4) and the thermal-tide exception (§5) **complicate** that geometry (a
   moving or circulating substellar point), so check the rotation state before applying it.
-- `docs/reference/exoplanet-atmosphere-methodology.md`: the **thermal-tide exception
+- [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): the **thermal-tide exception
   (§5) couples to atmosphere thickness**: a thick atmosphere can prevent 1:1 locking, so
   the final rotation state of an HZ planet cannot be decided from `τ_lock` alone.
-- `docs/reference/mass-radius-relation-methodology.md`: `R` (and `m`, via `I`) enter the
+- [mass-radius-relation-methodology](mass-radius-relation-methodology.md): `R` (and `m`, via `I`) enter the
   despin timescale; for non-transiting / mass-only bodies the radius comes from here.
-- `docs/reference/planetary-dynamo-scaling.md`: the gold-standard sibling scaling-law
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the gold-standard sibling scaling-law
   doc (law + calibration + domain-of-validity + worked examples) this doc is modelled on.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

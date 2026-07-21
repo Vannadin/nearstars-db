@@ -306,13 +306,14 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
 
 ## 관련 문서
 
-- `docs/reference/exoplanet-atmosphere-methodology.md`: 같은 암석형 대기의
+- [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): 같은 암석형 대기의
   표면기압·평균분자량(μ)·스케일높이를 정하는 자매 레시피. 여기서 나온 온도 `T`가 그
   스케일높이 공식에 들어간다.
-- `docs/reference/binary-epoch-pipeline.md`: 다중성 호스트의 에포크/상태벡터 처리
+- [binary-epoch-pipeline](binary-epoch-pipeline.md): 다중성 호스트의 에포크/상태벡터 처리
   (Proxima는 α Cen AB를 공전한다).
-- `docs/reference/solar-system-external-observer.md`: Teq가 온실을 못 보는 것을 보인
+- [solar-system-external-observer](solar-system-external-observer.md): Teq가 온실을 못 보는 것을 보인
   보정 벤치마크(금성: Teq 227–299 K 대 실제 737 K). §1의 "Teq ≠ 표면온도" 경고의
   근거다.
 - Phase 3 합성 스킬(`nearstars-phase3`): 선택한 알베도 / 압력 / CO₂ 분율과 emit 온도
   값을 행성별로 기록하는 곳이다.
+- [methodology-index](methodology-index.md) — 모든 도출값 방법론 레시피의 인덱스입니다.

@@ -84,6 +84,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
 <a class="nav-i" href="reference__planetary-dynamo-scaling.html">Planetary / substellar magnetic-field grounding: energy-flux dynamo scaling</a>
+<a class="nav-i" href="reference__planetary-magnetosphere-geometry-methodology.html">Planetary magnetosphere geometry grounding: standoff, belts, and Kerbalism mapping</a>
 <a class="nav-i" href="reference__plasma-color-methodology-review.html">Plasma-color methodology review</a>
 <a class="nav-i" href="reference__principia-cfg-reference.html">Principia CFG Technical Reference</a>
 <a class="nav-i" href="reference__principia-geopotential-data.html">Principia Geopotential Data — Solar System Bodies (verbatim)</a>
@@ -570,22 +571,23 @@ bands) has a clear high-citation canonical work, listed above.
 
 ## Related
 
-- `atmosphere-reflected-color-methodology.md`: **owns the CIE 1931 → XYZ → sRGB
+- [atmosphere-reflected-color-methodology](reference__atmosphere-reflected-color-methodology.html): **owns the CIE 1931 → XYZ → sRGB
   colorimetry engine** (its §6, including the matrix and gamma). This doc references
   that engine; the only difference is the input SED is the star's own emission, not a
   reflected spectrum, and the star is its own illuminant (no external white point).
-- `color-materials.md`: the heuristic stellar-tint guidance this doc **grounds and
+- [color-materials](reference__color-materials.html): the heuristic stellar-tint guidance this doc **grounds and
   supersedes** (for the stellar incandescent tint specifically); it remains the
   general justification tool for *planetary* surface/atmosphere material color.
-- `internal-heat-luminosity-methodology.md`: the sibling recipe for Teff/luminosity
+- [internal-heat-luminosity-methodology](reference__internal-heat-luminosity-methodology.html): the sibling recipe for Teff/luminosity
   of planets and brown dwarfs; the Teff that feeds *this* color method comes from the
   same Phase 2 curation discipline.
-- `planetary-dynamo-scaling.md`: the gold-standard "relation + regimes + worked
+- [planetary-dynamo-scaling](reference__planetary-dynamo-scaling.html): the gold-standard "relation + regimes + worked
   examples + citation-flagged bibliography" rigor model this doc follows.
 - **Emission / plasma color** (stellar chromospheric lines, reentry glow, airglow,
-  aurora) lives in the `firefly-cfg` skill and `element-plasma-colors.md`: line/band
+  aurora) lives in the `firefly-cfg` skill and [element-plasma-colors](reference__element-plasma-colors.html): line/band
   *emission* from discrete species, a different mechanism from the thermal-continuum
   photospheric color derived here.
+- [methodology-index](reference__methodology-index.html) — the index of all derived-value methodology recipes.
 </script>
 <script type="text/markdown" id="md-ko"><!-- 항성 Teff(+금속함량, M왜성 TiO/VO 분자밴드)에서 광구 가시색(sRGB)을 도출하는 방법론 레퍼런스 -->
 # 항성 광구색 방법론: Teff (+ [Fe/H], M왜성 분자밴드) → sRGB
@@ -985,19 +987,20 @@ Eri C `#ffd587`)을 보이는 워크드 증명이다.
 
 ## 관련 문서
 
-- `atmosphere-reflected-color-methodology.md`: **CIE 1931 → XYZ → sRGB 색측정 엔진을
+- [atmosphere-reflected-color-methodology](reference__atmosphere-reflected-color-methodology.html): **CIE 1931 → XYZ → sRGB 색측정 엔진을
   소유한다**(그 §6, 행렬과 감마 포함). 이 문서는 그 엔진을 참조하며, 유일한 차이는 입력 SED가
   반사 스펙트럼이 아니라 별 자신의 방출이고 별이 자기 자신의 광원(외부 백색점 없음)이라는
   점이다.
-- `color-materials.md`: 이 문서가 (항성 백열 색조에 한해) **근거짓고 대체하는** 항성 색조
+- [color-materials](reference__color-materials.html): 이 문서가 (항성 백열 색조에 한해) **근거짓고 대체하는** 항성 색조
   휴리스틱 지침. *행성* 표면/대기 물질색의 일반 정당화 도구로는 남는다.
-- `internal-heat-luminosity-methodology.md`: 행성과 갈색왜성의 Teff/광도 자매 레시피. *이*
+- [internal-heat-luminosity-methodology](reference__internal-heat-luminosity-methodology.html): 행성과 갈색왜성의 Teff/광도 자매 레시피. *이*
   색 방법에 들어가는 Teff는 같은 Phase 2 큐레이션 규율에서 나온다.
-- `planetary-dynamo-scaling.md`: 이 문서가 따르는 "관계 + 영역 + 워크드 예제 + 인용 플래그된
+- [planetary-dynamo-scaling](reference__planetary-dynamo-scaling.html): 이 문서가 따르는 "관계 + 영역 + 워크드 예제 + 인용 플래그된
   참고문헌"의 황금 표준 엄밀성 모델.
 - **발광 / 플라스마 색**(항성 채층선, 재진입 발광, 기광, 오로라)은 `firefly-cfg` 스킬과
-  `element-plasma-colors.md`에 산다: 개별 종에서 나오는 선/띠 *발광*이며, 여기서 도출한
+  [element-plasma-colors](reference__element-plasma-colors.html)에 산다: 개별 종에서 나오는 선/띠 *발광*이며, 여기서 도출한
   열적 연속체 광구색과는 메커니즘이 다르다.
+- [methodology-index](reference__methodology-index.html) — 모든 도출값 방법론 레시피의 인덱스입니다.
 </script>
 <script>
 const srcs = {};

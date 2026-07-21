@@ -300,11 +300,12 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
 
 ## 관련 문서
 
-- `docs/reference/tidally-locked-temperature-methodology.md`: 여기 §6 스케일높이
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): 여기 §6 스케일높이
   공식에 들어가는 온도 `T`를 정하는 자매 레시피. 워크드 예제에 쓴 Proxima b ~250–290 K
   범위는 그 문서의 Layer 3 GCM 앵커(Turbet+ 2016, Boutle+ 2017)에서 나온다.
-- `docs/reference/solar-system-external-observer.md`: §1의 "우리는 대기를 측정하지
+- [solar-system-external-observer](solar-system-external-observer.md): §1의 "우리는 대기를 측정하지
   못한다"는 경고의 근거가 되는, Teq의 온실효과 블라인드 캘리브레이션(금성 표면 환경은
   여기서 다루는 종류의 데이터에 보이지 않는다).
 - Phase 3 합성 스킬(`nearstars-phase3`): 고른 표면기압·조성·μ·H를 행성별로 기록하고
   유지 관문 정당화를 Phase 4 보드에 핀하는 곳.
+- [methodology-index](methodology-index.md) — 모든 도출값 방법론 레시피의 인덱스입니다.

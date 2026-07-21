@@ -452,17 +452,17 @@ standard. All astronomy citations above were confirmed by direct ADS bibcode/arX
 
 ## Related
 
-- `docs/reference/atmosphere-reflected-color-methodology.md`: the **sibling** that
+- [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md): the **sibling** that
   owns the **colorimetry engine** (§6: spectrum → XYZ → sRGB with the host-star SED)
   reused here, and the **refractiveindex.info portal** (Polyanskiy 2024; gas-phase
   there, solid/ice-phase here). Atmosphere reflected color is a *different* observable
   from disk scattered light. Don't conflate them.
-- `docs/reference/surface-color-albedo-methodology.md`: the **sibling** for solid
+- [surface-color-albedo-methodology](surface-color-albedo-methodology.md): the **sibling** for solid
   surfaces; its grain optical constants **overlap** with the disk grain materials here
   (water ice = Warren & Brandt 2008, tholin = Khare-type, silicate). A circum*planetary*
   ring of cm–m boulders is closer to that doc (geometric optics) than to this one (µm
   Mie regime).
-- `docs/reference/planetary-dynamo-scaling.md`: the **gold-standard sibling for
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the **gold-standard sibling for
   citation rigor** and domain-of-validity honesty (no-arXiv flagging, regime caveats);
   this doc mirrors its bibliography discipline.
 - **Tool:** `scripts/phase3/disk_color_mie.py`: the implementation (Mie `bhmie`,
@@ -475,3 +475,4 @@ standard. All astronomy citations above were confirmed by direct ADS bibcode/arX
 - `db/disks_curated.json` stores disk **geometry only** (radius, width, inclination,
   aspect ratio), **not** the tint; the color provenance is in the tool/Phase 3 report,
   not the DB (the JSON round-trip was not clean). See `project-nearstars-ring-fabrication`.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

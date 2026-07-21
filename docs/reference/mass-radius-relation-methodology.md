@@ -357,20 +357,21 @@ exists), citation count (ADS, at survey time), and one line on what it contribut
 
 ## Related
 
-- `docs/reference/tidally-locked-temperature-methodology.md`: the temperature
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the temperature
   `T` that, with the surface gravity `g` this doc assigns, sets the scale height in
   the atmosphere doc; rocky-vs-volatile classification (§5) decides which
   temperature/atmosphere branch applies.
-- `docs/reference/exoplanet-atmosphere-methodology.md`: radius → surface gravity
+- [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): radius → surface gravity
   → scale height; the §5 radius-valley gate is the same rocky-vs-sub-Neptune
   boundary that gate-keeps whether the atmosphere is a thin outgassed one or a
   primordial H/He envelope.
-- `docs/reference/surface-color-albedo-methodology.md`: the rocky-vs-volatile
+- [surface-color-albedo-methodology](surface-color-albedo-methodology.md): the rocky-vs-volatile
   classification and bulk density here constrain the surface/cloud regime that
   color and albedo are assigned from.
-- `docs/reference/tidal-heating-methodology.md`: the tidal-heating rate goes as
+- [tidal-heating-methodology](tidal-heating-methodology.md): the tidal-heating rate goes as
   R⁵, so the radius assigned here is **high-leverage** for heating; a non-transiting
   body's radius tie-break propagates strongly into its tidal energy budget.
-- `docs/reference/planetary-dynamo-scaling.md`: the giant-dynamo law
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the giant-dynamo law
   B ∝ (M·L²/R⁷)^(1/6) **needs R**; for every non-transiting giant the
   flat-degenerate radius assigned in §3/§7 here is the R that doc consumes.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

@@ -344,13 +344,14 @@ exists), and one line on what it contributes.
 
 ## Related
 
-- `docs/reference/tidally-locked-temperature-methodology.md`: the sibling recipe
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the sibling recipe
   for the temperature `T` that enters the scale-height formula here (§6); the
   Proxima b ~250–290 K range used in the worked example comes from its Layer-3 GCM
   anchors (Turbet+ 2016, Boutle+ 2017).
-- `docs/reference/solar-system-external-observer.md`: the Teq-blind-to-greenhouse
+- [solar-system-external-observer](solar-system-external-observer.md): the Teq-blind-to-greenhouse
   calibration that motivates the "we don't measure the atmosphere" caution in §1
   (Venus' surface conditions are invisible to the kind of data we have here).
 - Phase 3 synthesis skill (`nearstars-phase3`): where the chosen surface pressure,
   composition, μ and H are recorded per planet and the retention-gate justification
   is pinned to the Phase 4 board.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

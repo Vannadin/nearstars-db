@@ -164,3 +164,4 @@ Emitted orbit (AB-plane frame, epoch 1950.0): a = 1.6034 AU, e = 0.1024, i_mut =
 - `phase3/stability-sim/`: the N-body harness this recipe runs inside; see the orbit
   stability-validation standard.
 - `nearstars-phase4`: gates the emitted phase and records it in `phase4/<system>.yaml`.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

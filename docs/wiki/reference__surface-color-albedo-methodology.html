@@ -84,6 +84,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
 <a class="nav-i" href="reference__planetary-dynamo-scaling.html">Planetary / substellar magnetic-field grounding: energy-flux dynamo scaling</a>
+<a class="nav-i" href="reference__planetary-magnetosphere-geometry-methodology.html">Planetary magnetosphere geometry grounding: standoff, belts, and Kerbalism mapping</a>
 <a class="nav-i" href="reference__plasma-color-methodology-review.html">Plasma-color methodology review</a>
 <a class="nav-i" href="reference__principia-cfg-reference.html">Principia CFG Technical Reference</a>
 <a class="nav-i" href="reference__principia-geopotential-data.html">Principia Geopotential Data — Solar System Bodies (verbatim)</a>
@@ -590,18 +591,18 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## Related
 
-- `docs/reference/atmosphere-reflected-color-methodology.md`: the **sibling** that
+- [atmosphere-reflected-color-methodology](reference__atmosphere-reflected-color-methodology.html): the **sibling** that
   owns the **colorimetry engine** (§6: spectrum → XYZ → sRGB with the host-star SED)
   reused here, and the **refractiveindex.info portal** (Polyanskiy 2024; gas-phase
   there, solid/liquid-phase here). The atmosphere's reflected color sits **on top of**
   the surface color this doc derives; for thick decks the surface is hidden.
-- `docs/reference/tidally-locked-temperature-methodology.md`: **consumes the Bond
+- [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html): **consumes the Bond
   albedo `A`** from §6 in `T_eq = [S(1−A)/4σ]^¼`. A surface choice propagates into
   temperature through `(1−A)^¼`.
-- `docs/reference/tidal-heating-methodology.md`: the other side of a body's energy
+- [tidal-heating-methodology](reference__tidal-heating-methodology.html): the other side of a body's energy
   budget (internal heating), which together with the absorbed-stellar term (this `A`)
   sets the surface temperature.
-- `docs/reference/planetary-dynamo-scaling.md`: the gold-standard sibling for citation
+- [planetary-dynamo-scaling](reference__planetary-dynamo-scaling.html): the gold-standard sibling for citation
   rigor and domain-of-validity honesty (no-arXiv flagging, regime caveats).
 - **Emission color** (reentry plasma, airglow, aurora, lava thermal glow) lives in the
   `firefly-cfg` skill and `composition-color.md`: a different mechanism (emission, not
@@ -609,6 +610,7 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 - Phase 3 synthesis skill (`nearstars-phase3`): where the chosen surface color, the
   assumed surface state, and the Bond albedo are recorded per body before they feed the
   cfg writer (Kopernicus surface color / Scatterer) and the temperature calc downstream.
+- [methodology-index](reference__methodology-index.html) — the index of all derived-value methodology recipes.
 </script>
 <script type="text/markdown" id="md-ko"><!-- 고체 표면(암석·레골리스·얼음) 조성에서 가시광 색과 Bond/기하 알베도를 도출하는 방법론 레퍼런스 -->
 # 표면색·알베도 방법론: 조성 → 반사율 → sRGB + Bond 알베도
@@ -1038,17 +1040,17 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## 관련 문서
 
-- `docs/reference/atmosphere-reflected-color-methodology.md`: 여기서 재사용하는
+- [atmosphere-reflected-color-methodology](reference__atmosphere-reflected-color-methodology.html): 여기서 재사용하는
   **색측정 엔진**(§6: 스펙트럼 → XYZ → sRGB, 광원은 모항성 SED)과
   **refractiveindex.info 포털**(Polyanskiy 2024; 거기서는 기체상, 여기서는 고체·액체상)을
   소유한 **자매** 문서다. 대기의 반사색은 이 문서가 도출한 표면색 **위에** 얹힌다.
   두꺼운 덱에서는 표면이 가려진다.
-- `docs/reference/tidally-locked-temperature-methodology.md`: §6의 **Bond 알베도
+- [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html): §6의 **Bond 알베도
   `A`를** `T_eq = [S(1−A)/4σ]^¼`에서 **소비한다**. 표면 선택은 `(1−A)^¼`를 통해 온도로
   전파된다.
-- `docs/reference/tidal-heating-methodology.md`: 바디 에너지 수지의 다른 쪽(내부
+- [tidal-heating-methodology](reference__tidal-heating-methodology.html): 바디 에너지 수지의 다른 쪽(내부
   가열)으로, 흡수된 항성 항(이 `A`)과 함께 표면 온도를 정한다.
-- `docs/reference/planetary-dynamo-scaling.md`: 인용 엄밀성과 유효 영역 정직성의 금본위
+- [planetary-dynamo-scaling](reference__planetary-dynamo-scaling.html): 인용 엄밀성과 유효 영역 정직성의 금본위
   자매 문서다(no-arXiv 표시, 영역 경계 단서).
 - **발광 색**(재진입 플라스마, 기광, 오로라, 용암 열복사)은 `firefly-cfg` 스킬과
   `composition-color.md`에 산다: 다른 메커니즘(반사가 아니라 발광)이다. 여기의 반사
@@ -1056,6 +1058,7 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 - Phase 3 합성 스킬(`nearstars-phase3`): 고른 표면색과 가정한 표면 상태, Bond 알베도가
   하류의 cfg 라이터(Kopernicus 표면색 / Scatterer)와 온도 계산으로 들어가기 전에
   바디별로 기록되는 곳이다.
+- [methodology-index](reference__methodology-index.html) — 모든 도출값 방법론 레시피의 인덱스입니다.
 </script>
 <script>
 const srcs = {};

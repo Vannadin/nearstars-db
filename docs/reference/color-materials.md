@@ -501,3 +501,11 @@ dark basaltic/ultramafic bare-rock surface tint, no sky.
   `## Color` proposal section) is pending the idea-#2 architecture decision
   (Phase 3 extension vs Phase 4). This doc is the architecture-neutral
   foundation both would use.
+
+## Related
+
+- [surface-color-albedo-methodology](surface-color-albedo-methodology.md) — the surface mineral color + Bond albedo recipe this catalog supports.
+- [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md) — sky/cloud reflected color; owns the shared CIE 1931 → sRGB engine.
+- [debris-disk-color-methodology](debris-disk-color-methodology.md) — the Mie dust-scattering color path for belts.
+- [element-plasma-colors](element-plasma-colors.md) — emission/plasma color (aurora, reentry, lines).
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

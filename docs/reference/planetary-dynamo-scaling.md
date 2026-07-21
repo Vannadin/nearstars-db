@@ -153,4 +153,4 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
   sub-Neptune boundary and must not be cross-applied.
 - [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md) —
   consumes this method's `B_eq` to size the magnetosphere + belts (→ Kerbalism).
-- `methodology-index.md` — the living index of all derived-value recipes.
+- [methodology-index](methodology-index.md) — the living index of all derived-value recipes.

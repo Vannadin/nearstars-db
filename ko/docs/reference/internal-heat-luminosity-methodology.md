@@ -402,14 +402,15 @@ anchors instead.
 
 ## 관련 문서
 
-- `docs/reference/tidal-heating-methodology.md`: **자매 내부 열원**(조석 소산)이다. 이 문서는 *비-조석*
+- [tidal-heating-methodology](tidal-heating-methodology.md): **자매 내부 열원**(조석 소산)이다. 이 문서는 *비-조석*
   항(잔여 + Kelvin–Helmholtz + 방사성 + 헬륨 비 + 중수소 연소)을 다룬다. 조석 플럭스가 무시할 수 없을 때(가까운
   이심 궤도 바디)는 그 값을 `T_int`에 더한다. 둘은 같은 §1 관계식으로 결합된다.
-- `docs/reference/tidally-locked-temperature-methodology.md`: 여기서 `T_int`와 `T_eff⁴ = T_eq⁴ + T_int⁴`로
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): 여기서 `T_int`와 `T_eff⁴ = T_eq⁴ + T_int⁴`로
   결합되는 **`T_eq` 항**이다. 그 문서는 복사 쪽을, 이 문서는 내부 쪽을 전달한다.
-- `docs/reference/planetary-dynamo-scaling.md`: 모범이 되는 자매 스케일링-법칙 문서이자, 자기장을 정하는 데
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): 모범이 되는 자매 스케일링-법칙 문서이자, 자기장을 정하는 데
   **같은 냉각 광도 `L_int(M, age)`**를 쓰는 곳이다(`B ∝ L^(1/6)`). 하나의 광도, 두 가지 결과로, 여기서는 열복사,
   그쪽에서는 다이나모 자기장이다. 젊은 거대행성이 같은 이유로 *더 밝고* *더 자기적*이다.
-- `docs/reference/mass-radius-relation-methodology.md`: 내부열은 **반경을 부풀린다**. 젊고 뜨거운 거대행성은
+- [mass-radius-relation-methodology](mass-radius-relation-methodology.md): 내부열은 **반경을 부풀린다**. 젊고 뜨거운 거대행성은
   물리적으로 더 크므로(Fortney+ 2007이 `L_int`와 `R`을 결합), `T_int = (L_int/4πR²σ)^(1/4)`에 쓰는 반경 자체가
   나이에 의존한다.
+- [methodology-index](methodology-index.md) — 모든 도출값 방법론 레시피의 인덱스입니다.

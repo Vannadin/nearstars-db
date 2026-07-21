@@ -342,13 +342,14 @@ exists), and one line on what it contributes.
 
 ## Related
 
-- `docs/reference/exoplanet-atmosphere-methodology.md`: the sibling recipe for
+- [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): the sibling recipe for
   the surface pressure, mean molecular weight (μ) and scale height of the same
   rocky atmospheres; the temperature `T` from here feeds its scale-height formula.
-- `docs/reference/binary-epoch-pipeline.md`: epoch/state-vector handling for
+- [binary-epoch-pipeline](binary-epoch-pipeline.md): epoch/state-vector handling for
   multiple-star hosts (Proxima orbits α Cen AB).
-- `docs/reference/solar-system-external-observer.md`: the Teq-blind-to-greenhouse
+- [solar-system-external-observer](solar-system-external-observer.md): the Teq-blind-to-greenhouse
   calibration benchmark (Venus: Teq 227–299 K vs actual 737 K) that motivates the
   "Teq ≠ surface T" warning in §1.
 - Phase 3 synthesis skill (`nearstars-phase3`): where the chosen albedo /
   pressure / CO₂ fraction and the emit temperature numbers are recorded per planet.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

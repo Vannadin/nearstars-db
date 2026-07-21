@@ -150,3 +150,4 @@ emit된 궤도(AB-평면 프레임, 에포크 1950.0): a = 1.6034 AU, e = 0.1024
 - `phase3/stability-sim/`: 이 레시피가 그 안에서 돌아가는 N-body 하니스, 궤도
   안정성-검증 표준을 참조하십시오.
 - `nearstars-phase4`: emit된 위상을 게이팅하고 `phase4/<system>.yaml`에 기록합니다.
+- [methodology-index](methodology-index.md) — 모든 도출값 방법론 레시피의 인덱스입니다.

@@ -477,18 +477,18 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## Related
 
-- `docs/reference/atmosphere-reflected-color-methodology.md`: the **sibling** that
+- [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md): the **sibling** that
   owns the **colorimetry engine** (§6: spectrum → XYZ → sRGB with the host-star SED)
   reused here, and the **refractiveindex.info portal** (Polyanskiy 2024; gas-phase
   there, solid/liquid-phase here). The atmosphere's reflected color sits **on top of**
   the surface color this doc derives; for thick decks the surface is hidden.
-- `docs/reference/tidally-locked-temperature-methodology.md`: **consumes the Bond
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): **consumes the Bond
   albedo `A`** from §6 in `T_eq = [S(1−A)/4σ]^¼`. A surface choice propagates into
   temperature through `(1−A)^¼`.
-- `docs/reference/tidal-heating-methodology.md`: the other side of a body's energy
+- [tidal-heating-methodology](tidal-heating-methodology.md): the other side of a body's energy
   budget (internal heating), which together with the absorbed-stellar term (this `A`)
   sets the surface temperature.
-- `docs/reference/planetary-dynamo-scaling.md`: the gold-standard sibling for citation
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the gold-standard sibling for citation
   rigor and domain-of-validity honesty (no-arXiv flagging, regime caveats).
 - **Emission color** (reentry plasma, airglow, aurora, lava thermal glow) lives in the
   `firefly-cfg` skill and `composition-color.md`: a different mechanism (emission, not
@@ -496,3 +496,4 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 - Phase 3 synthesis skill (`nearstars-phase3`): where the chosen surface color, the
   assumed surface state, and the Bond albedo are recorded per body before they feed the
   cfg writer (Kopernicus surface color / Scatterer) and the temperature calc downstream.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

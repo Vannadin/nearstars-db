@@ -457,19 +457,20 @@ bands) has a clear high-citation canonical work, listed above.
 
 ## Related
 
-- `atmosphere-reflected-color-methodology.md`: **owns the CIE 1931 → XYZ → sRGB
+- [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md): **owns the CIE 1931 → XYZ → sRGB
   colorimetry engine** (its §6, including the matrix and gamma). This doc references
   that engine; the only difference is the input SED is the star's own emission, not a
   reflected spectrum, and the star is its own illuminant (no external white point).
-- `color-materials.md`: the heuristic stellar-tint guidance this doc **grounds and
+- [color-materials](color-materials.md): the heuristic stellar-tint guidance this doc **grounds and
   supersedes** (for the stellar incandescent tint specifically); it remains the
   general justification tool for *planetary* surface/atmosphere material color.
-- `internal-heat-luminosity-methodology.md`: the sibling recipe for Teff/luminosity
+- [internal-heat-luminosity-methodology](internal-heat-luminosity-methodology.md): the sibling recipe for Teff/luminosity
   of planets and brown dwarfs; the Teff that feeds *this* color method comes from the
   same Phase 2 curation discipline.
-- `planetary-dynamo-scaling.md`: the gold-standard "relation + regimes + worked
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the gold-standard "relation + regimes + worked
   examples + citation-flagged bibliography" rigor model this doc follows.
 - **Emission / plasma color** (stellar chromospheric lines, reentry glow, airglow,
-  aurora) lives in the `firefly-cfg` skill and `element-plasma-colors.md`: line/band
+  aurora) lives in the `firefly-cfg` skill and [element-plasma-colors](element-plasma-colors.md): line/band
   *emission* from discrete species, a different mechanism from the thermal-continuum
   photospheric color derived here.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

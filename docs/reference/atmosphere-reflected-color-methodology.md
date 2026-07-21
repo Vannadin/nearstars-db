@@ -430,10 +430,10 @@ canonical work.
 
 ## Related
 
-- `docs/reference/tidally-locked-temperature-methodology.md`: the sibling recipe
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the sibling recipe
   for the temperature that decides which Sudarsky class / condensate deck a giant
   falls into (the ~225 K Class-II anchor for the Polyphemus example).
-- `docs/reference/exoplanet-atmosphere-methodology.md`: the sibling recipe for the
+- [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): the sibling recipe for the
   *composition* (pressure, μ, redox) that feeds the Rayleigh baseline and the set of
   available chromophores here.
 - **Emission color** (reentry plasma, airglow, aurora) lives in the `firefly-cfg`
@@ -445,3 +445,4 @@ canonical work.
 - Phase 3 synthesis skill (`nearstars-phase3`): where the chosen atmosphere color
   (and the assumed chromophore) is recorded per body before it feeds the Scatterer
   cfg writer downstream.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

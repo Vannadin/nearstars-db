@@ -426,17 +426,17 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## 관련 문서
 
-- `docs/reference/atmosphere-reflected-color-methodology.md`: 여기서 재사용하는
+- [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md): 여기서 재사용하는
   **색측정 엔진**(§6: 스펙트럼 → XYZ → sRGB, 광원은 모항성 SED)과
   **refractiveindex.info 포털**(Polyanskiy 2024; 거기서는 기체상, 여기서는 고체·액체상)을
   소유한 **자매** 문서다. 대기의 반사색은 이 문서가 도출한 표면색 **위에** 얹힌다.
   두꺼운 덱에서는 표면이 가려진다.
-- `docs/reference/tidally-locked-temperature-methodology.md`: §6의 **Bond 알베도
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): §6의 **Bond 알베도
   `A`를** `T_eq = [S(1−A)/4σ]^¼`에서 **소비한다**. 표면 선택은 `(1−A)^¼`를 통해 온도로
   전파된다.
-- `docs/reference/tidal-heating-methodology.md`: 바디 에너지 수지의 다른 쪽(내부
+- [tidal-heating-methodology](tidal-heating-methodology.md): 바디 에너지 수지의 다른 쪽(내부
   가열)으로, 흡수된 항성 항(이 `A`)과 함께 표면 온도를 정한다.
-- `docs/reference/planetary-dynamo-scaling.md`: 인용 엄밀성과 유효 영역 정직성의 금본위
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): 인용 엄밀성과 유효 영역 정직성의 금본위
   자매 문서다(no-arXiv 표시, 영역 경계 단서).
 - **발광 색**(재진입 플라스마, 기광, 오로라, 용암 열복사)은 `firefly-cfg` 스킬과
   `composition-color.md`에 산다: 다른 메커니즘(반사가 아니라 발광)이다. 여기의 반사
@@ -444,3 +444,4 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 - Phase 3 합성 스킬(`nearstars-phase3`): 고른 표면색과 가정한 표면 상태, Bond 알베도가
   하류의 cfg 라이터(Kopernicus 표면색 / Scatterer)와 온도 계산으로 들어가기 전에
   바디별로 기록되는 곳이다.
+- [methodology-index](methodology-index.md) — 모든 도출값 방법론 레시피의 인덱스입니다.

@@ -462,18 +462,19 @@ anchors instead.
 
 ## Related
 
-- `docs/reference/tidal-heating-methodology.md`: the **sibling internal-heat source**
+- [tidal-heating-methodology](tidal-heating-methodology.md): the **sibling internal-heat source**
   (tidal dissipation). This doc covers the *non-tidal* terms (residual + Kelvin–Helmholtz +
   radiogenic + helium rain + deuterium burning); add the tidal flux into `T_int` when it is
   non-negligible (close-in eccentric bodies). They combine via the same §1 relation.
-- `docs/reference/tidally-locked-temperature-methodology.md`: the **`T_eq` term** that
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the **`T_eq` term** that
   combines with `T_int` here through `T_eff⁴ = T_eq⁴ + T_int⁴`. That doc delivers the
   irradiation side; this doc delivers the internal side.
-- `docs/reference/planetary-dynamo-scaling.md`: the gold-standard sibling scaling-law doc,
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the gold-standard sibling scaling-law doc,
   and the place that uses the **same cooling luminosity `L_int(M, age)`** to set the
   magnetic field (`B ∝ L^(1/6)`). One luminosity, two consequences: thermal emission here,
   dynamo field there, a young giant is both brighter *and* more magnetic for the same
   reason.
-- `docs/reference/mass-radius-relation-methodology.md`: internal heat **inflates the
+- [mass-radius-relation-methodology](mass-radius-relation-methodology.md): internal heat **inflates the
   radius**: a young/hot giant is physically larger (Fortney+ 2007 couples `L_int` and `R`),
   so the radius used in `T_int = (L_int/4πR²σ)^(1/4)` is itself age-dependent.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

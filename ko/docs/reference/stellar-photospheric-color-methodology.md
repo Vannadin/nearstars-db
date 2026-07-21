@@ -396,16 +396,17 @@ Eri C `#ffd587`)을 보이는 워크드 증명이다.
 
 ## 관련 문서
 
-- `atmosphere-reflected-color-methodology.md`: **CIE 1931 → XYZ → sRGB 색측정 엔진을
+- [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md): **CIE 1931 → XYZ → sRGB 색측정 엔진을
   소유한다**(그 §6, 행렬과 감마 포함). 이 문서는 그 엔진을 참조하며, 유일한 차이는 입력 SED가
   반사 스펙트럼이 아니라 별 자신의 방출이고 별이 자기 자신의 광원(외부 백색점 없음)이라는
   점이다.
-- `color-materials.md`: 이 문서가 (항성 백열 색조에 한해) **근거짓고 대체하는** 항성 색조
+- [color-materials](color-materials.md): 이 문서가 (항성 백열 색조에 한해) **근거짓고 대체하는** 항성 색조
   휴리스틱 지침. *행성* 표면/대기 물질색의 일반 정당화 도구로는 남는다.
-- `internal-heat-luminosity-methodology.md`: 행성과 갈색왜성의 Teff/광도 자매 레시피. *이*
+- [internal-heat-luminosity-methodology](internal-heat-luminosity-methodology.md): 행성과 갈색왜성의 Teff/광도 자매 레시피. *이*
   색 방법에 들어가는 Teff는 같은 Phase 2 큐레이션 규율에서 나온다.
-- `planetary-dynamo-scaling.md`: 이 문서가 따르는 "관계 + 영역 + 워크드 예제 + 인용 플래그된
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): 이 문서가 따르는 "관계 + 영역 + 워크드 예제 + 인용 플래그된
   참고문헌"의 황금 표준 엄밀성 모델.
 - **발광 / 플라스마 색**(항성 채층선, 재진입 발광, 기광, 오로라)은 `firefly-cfg` 스킬과
-  `element-plasma-colors.md`에 산다: 개별 종에서 나오는 선/띠 *발광*이며, 여기서 도출한
+  [element-plasma-colors](element-plasma-colors.md)에 산다: 개별 종에서 나오는 선/띠 *발광*이며, 여기서 도출한
   열적 연속체 광구색과는 메커니즘이 다르다.
+- [methodology-index](methodology-index.md) — 모든 도출값 방법론 레시피의 인덱스입니다.

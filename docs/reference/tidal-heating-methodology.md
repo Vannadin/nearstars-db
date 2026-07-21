@@ -384,12 +384,12 @@ derived law.
 
 ## Related
 
-- `docs/reference/tidally-locked-temperature-methodology.md`: sibling recipe for the
+- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): sibling recipe for the
   surface/equilibrium temperature of synchronous bodies; tidal heating here is an
   *additional* internal heat source layered on top of the irradiation that doc treats.
-- `docs/reference/exoplanet-atmosphere-methodology.md`: for the gate-then-document
+- [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): for the gate-then-document
   framing and the "principled choice within bounds" honesty convention mirrored here.
-- `docs/reference/planetary-dynamo-scaling.md`: the gold-standard sibling
+- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the gold-standard sibling
   scaling-law doc (law + calibration table + domain-of-validity + worked examples)
   this doc is modelled on; note Driscoll & Barnes 2015 links tidal heating to the
   magnetic evolution that doc derives.
@@ -397,3 +397,4 @@ derived law.
   doc**. Locking (does the body rotate synchronously?) is a *separate* question from
   heating (how much power is dissipated). This doc assumes synchronous rotation; do
   not conflate the two.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.

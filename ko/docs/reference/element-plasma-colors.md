@@ -184,3 +184,5 @@
 
 - [composition-color (firefly-cfg 스킬)](../../../.claude/skills/firefly-cfg/references/composition-color.md): 재진입 plasma bulk gas 팔레트 (다른 물리 영역)
 - [phase3-mapping (firefly-cfg 스킬)](../../../.claude/skills/firefly-cfg/references/phase3-mapping.md): Phase 3 → Firefly 필드 매핑
+- [원소·플라스마 색 시각화](../../../docs/firefly-colors.html) — 이 발광색들을 렌더링하는 라이브 인터랙티브 그리드입니다.
+- [methodology-index](methodology-index.md) — 모든 도출값 방법론 레시피의 인덱스입니다.

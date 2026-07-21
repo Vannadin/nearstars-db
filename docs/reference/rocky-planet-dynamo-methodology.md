@@ -186,4 +186,4 @@ regime gate, so a locked planet with an active core can still hold a modest fiel
   decides the rotation state that feeds this method's regime gate.
 - [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md) —
   consumes this method's `B_eq` to size the magnetosphere + belts (→ Kerbalism).
-- `methodology-index.md` — the living index of all derived-value recipes.
+- [methodology-index](methodology-index.md) — the living index of all derived-value recipes.

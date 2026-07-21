@@ -184,3 +184,5 @@ Reentry plasma at 8,000–15,000 K differs from atomic flame emission: molecular
 
 - [composition-color (firefly-cfg skill)](../../.claude/skills/firefly-cfg/references/composition-color.md): bulk-gas reentry plasma palette (different physics regime)
 - [phase3-mapping (firefly-cfg skill)](../../.claude/skills/firefly-cfg/references/phase3-mapping.md): Phase 3 → Firefly field map
+- [Element & plasma color visualizer](../firefly-colors.html) — the live interactive grid rendering these emission colors.
+- [methodology-index](methodology-index.md) — the index of all derived-value methodology recipes.
