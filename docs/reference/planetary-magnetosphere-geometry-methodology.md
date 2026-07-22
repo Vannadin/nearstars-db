@@ -138,9 +138,13 @@ Three facts this settles for NearStars:
    Neptune −0.007) — confirms it is a small body-independent term, not a shield
    magnitude. (Pandora's −0.01 is right.)
 2. **Gas giant → concentric, rocky → separated** is real-body, not just stock KSP.
-3. **A ringed / heavily-mooned giant loses its inner belt** — Saturn is modeled with
-   *outer only, no inner*, the ring-absorption loss (Part D) baked straight into the
-   cfg. **So Saturn, not Jupiter, is the template for Polyphemus** (ring + five moons).
+3. **Ring-loss vs volcanic-source is a competition** — Saturn is modeled *outer only,
+   no inner* because ring absorption (Part D loss) wins and guts the inner belt; Jupiter
+   keeps an intense inner belt because Io's plasma source (Part D source) wins. A ringed
+   giant can go either way. **Polyphemus follows Jupiter, not Saturn:** its volcanic inner
+   moon Dante (~820× Io) is an overwhelming source that dominates any ring sweeping →
+   an *intensified* inner belt, which the strong intrinsic field of the habitable moon
+   Pandora then shields against (the design's central drama).
    `geomagnetic_offset` (Uranus 0.3, Neptune 0.55) is the handle for the offset/
    multipolar dipoles of ice giants like Proxima c.
 
@@ -231,11 +235,13 @@ belt it makes.
 - **Polyphemus**: 170 µT → R_mp ≈ 22 R_p; **all five moons orbit inside the
   magnetosphere**. Belt intensity is a *source − loss* story, not a field readout:
   Dante's extreme volcanism (~820× Io) feeds an intense inner belt (source), while
-  the ring + five moons sweep particles (loss). Because of that ring, the Kerbalism
-  template is **Saturn (RSS), not Jupiter**: a strong *outer* belt (`radiation_outer` ~150,
-  Saturn's value) with the inner belt suppressed/absent (ring-swept), a large `pause_radius`,
-  and the small stock-scale `radiation_pause` (~−0.01). Dante's volcanism still feeds an
-  inner plasma torus locally, so a reduced inner belt (not fully zero) is defensible.
+  the ring + five moons sweep particles (loss) — but Dante's volcanism (~820× Io) is the
+  far bigger term, so Polyphemus is **source-dominated like Jupiter, not ring-swept like
+  Saturn**. The Kerbalism template is Jupiter (RSS): a strong Dante-fed *inner* belt
+  (`radiation_inner` ~300, Jupiter's value, or higher), a lesser outer belt, a large
+  `pause_radius`, and the small stock-scale `radiation_pause` (~−0.01). The design's core
+  is exactly this: an intensified inner belt bakes the inner moons (Dante >4500 rem/day),
+  while habitable Pandora survives in a gap on its own strong-field shielding.
 - **Pandora** (embedded, Ganymede analog): own 75 µT dipole → a mini-magnetosphere
   at 3.53 R_p *inside* Polyphemus's field. It sits in the **gap between Polyphemus's
   two belts** and its own field adds shielding → the physical basis for habitability.
