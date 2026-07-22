@@ -106,6 +106,30 @@ inner+outer이며, NearStars에서 반복된 "동심이냐 분리냐"는 별개 
   비례하는 큰 차폐항이 아닙니다. (이전 Pandora 초안의 −3.8은 Promised Worlds 팩 튜닝값 → ~−0.01 스톡 스케일로 재앵커.)
 - 지구식 기울기 바디의 `geomagnetic_pole_lat ≈ 80`은 스톡 Kerbin(80.37)과 일치.
 
+### Sol / RSS 앵커 (NearStars는 Sol 기반 — 스톡보다 이걸 우선)
+
+NearStars는 Sol 실스케일이라 스톡 Kerbin/Jool보다 **ROKerbalism / RSS** 방사선 cfg가 더
+정확한 앵커입니다(ROKerbalism `KerbalismConfig/System/Radiation.cfg` + KerbalismConfig
+`Support/RSS.cfg`).
+
+| 바디 | 지오메트리(R_body) | `radiation_inner / outer / pause` | 비고 |
+|---|---|---|---|
+| 태양 | heliopause, `pause_radius` 1000 | surface 46.5, cycle 11 yr | 선량원 + GCR 차폐 |
+| 지구 | inner 0.81/0.70, outer 2.63/2.48, pause 15 | 10.4 / 2.2 / **−0.010**, pole 80.4 | **분리** 벨트 |
+| 목성 | inner 6.0/1.0, outer 6.5/6.5, pause 60 | 300 / 50 / **−0.010**, pole −81 | **동심**(inner이 outer 셸 안쪽 가장자리에) |
+| 토성 | outer 7/7만(**inner 없음**), pause 20 | — / 150 / **−0.011** | 내대 없음 — **고리가 쓸어냄**(Cooper 1983) |
+| 천왕성 | offset 쌍극 | 75 / 4 / −0.010, pole 31, `geomagnetic_offset` 0.3 | 기울기/offset |
+| 해왕성 | offset 쌍극 | 39 / 2.5 / −0.007, pole 43, `geomagnetic_offset` 0.55 | 강한 offset |
+
+NearStars에 대해 이게 확정하는 3가지.
+1. **`radiation_pause`가 모든 바디에서 ≈ −0.01**(지구/목성 −0.010, 토성 −0.011, 해왕성
+   −0.007) — 작고 바디무관한 항이지 차폐 크기가 아님 확정. (Pandora −0.01이 맞음.)
+2. **가스자이언트 → 동심, 암석 → 분리**가 스톡뿐 아니라 실제 바디에서도 성립.
+3. **고리/위성 많은 자이언트는 내대를 잃음** — 토성이 *outer만, inner 없음*으로 모델링돼
+   고리 흡수 손실(Part D)이 cfg에 그대로 반영됨. **따라서 Polyphemus(고리 + 5위성)의 템플릿은
+   목성이 아니라 토성**. `geomagnetic_offset`(천왕성 0.3, 해왕성 0.55)은 Proxima c 같은
+   빙거성의 offset/다극 쌍극을 다루는 핸들.
+
 ## Part D — 위성 ↔ 모행성 상호작용 (임베디드 자기권)
 
 거대행성 자기권 *안*을 도는 위성은 NearStars에서 흔한 경우입니다(Polyphemus 위성 전부).
@@ -177,8 +201,10 @@ inner+outer이며, NearStars에서 반복된 "동심이냐 분리냐"는 별개 
 - **Polyphemus**: 170 µT → R_mp ≈ 22 R_p. **5개 위성 전부 자기권 안**에서 공전. 벨트
   강도는 場 읽기가 아니라 *공급원 − 손실* 이야기입니다. Dante의 극단적 화산(~820× Io)이
   강한 내부벨트를 먹이고(공급원), 고리 + 5위성이 입자를 쓸어냅니다(손실, 토성 참조).
-  Kerbalism은 `giant` 동심 벨트 지오메트리 + 큰 `pause_radius`, 높은 내부벨트 `radiation_inner`
-  (Jool 스톡 200이 템플릿), 작은 스톡 스케일 `radiation_pause`(~−0.01)를 받습니다.
+  그 고리 때문에 Kerbalism 템플릿은 **목성이 아니라 토성(RSS)**: 강한 *외대*(`radiation_outer`
+  ~150, 토성 값) + 내대 억제/부재(고리에 쓸림), 큰 `pause_radius`, 작은 스톡 스케일
+  `radiation_pause`(~−0.01). 단 Dante 화산이 국소로 내측 플라스마 토러스를 먹이므로 약화된
+  내대(완전 0은 아님)도 정당합니다.
 - **Pandora**(임베디드, 가니메데 아날로그): 자체 75 µT 쌍극 → Polyphemus 場 *안* 3.53 R_p
   에 미니자기권. **Polyphemus 두 벨트 사이 gap**에 위치하고 자체 場이 차폐를 더함 →
   거주가능의 물리 근거. standoff는 항성풍이 아니라 Polyphemus 국소 플라스마에 대해 계산.

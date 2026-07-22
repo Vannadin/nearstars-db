@@ -118,6 +118,32 @@ Two stock-anchored facts that correct earlier NearStars drafts:
   −3.8, a Promised-Worlds pack tuning; regrounded to the ~−0.01 stock scale.)
 - `geomagnetic_pole_lat ≈ 80` for an Earth-tilt body matches stock Kerbin (80.37).
 
+### Sol / RSS anchors (NearStars is Sol-based — prefer these over stock)
+
+NearStars runs at Sol real-scale, so the **ROKerbalism / RSS** radiation config is the
+better anchor than stock Kerbin/Jool (ROKerbalism `KerbalismConfig/System/Radiation.cfg`
++ KerbalismConfig `Support/RSS.cfg`):
+
+| Body | geometry (R_body) | `radiation_inner / outer / pause` | note |
+|---|---|---|---|
+| Sun | heliopause, `pause_radius` 1000 | surface 46.5, cycle 11 yr | dose source + GCR shield |
+| Earth | inner 0.81/0.70, outer 2.63/2.48, pause 15 | 10.4 / 2.2 / **−0.010**, pole 80.4 | **separated** belts |
+| Jupiter | inner 6.0/1.0, outer 6.5/6.5, pause 60 | 300 / 50 / **−0.010**, pole −81 | **concentric** (inner at the outer shell's inner edge) |
+| Saturn | outer 7/7 only (**no inner**), pause 20 | — / 150 / **−0.011** | inner belt absent — **rings sweep it** (Cooper 1983) |
+| Uranus | offset dipole | 75 / 4 / −0.010, pole 31, `geomagnetic_offset` 0.3 | tilted/offset |
+| Neptune | offset dipole | 39 / 2.5 / −0.007, pole 43, `geomagnetic_offset` 0.55 | strongly offset |
+
+Three facts this settles for NearStars:
+1. **`radiation_pause` ≈ −0.01 for every body** (Earth/Jupiter −0.010, Saturn −0.011,
+   Neptune −0.007) — confirms it is a small body-independent term, not a shield
+   magnitude. (Pandora's −0.01 is right.)
+2. **Gas giant → concentric, rocky → separated** is real-body, not just stock KSP.
+3. **A ringed / heavily-mooned giant loses its inner belt** — Saturn is modeled with
+   *outer only, no inner*, the ring-absorption loss (Part D) baked straight into the
+   cfg. **So Saturn, not Jupiter, is the template for Polyphemus** (ring + five moons).
+   `geomagnetic_offset` (Uranus 0.3, Neptune 0.55) is the handle for the offset/
+   multipolar dipoles of ice giants like Proxima c.
+
 ## Part D — moon ↔ parent interaction (embedded magnetospheres)
 
 A moon orbiting *inside* a giant's magnetosphere is a common NearStars case (every
@@ -205,9 +231,11 @@ belt it makes.
 - **Polyphemus**: 170 µT → R_mp ≈ 22 R_p; **all five moons orbit inside the
   magnetosphere**. Belt intensity is a *source − loss* story, not a field readout:
   Dante's extreme volcanism (~820× Io) feeds an intense inner belt (source), while
-  the ring + five moons sweep particles (loss, cf. Saturn). Kerbalism gets the `giant`
-  concentric-belt geometry with a large `pause_radius`, a high inner-belt `radiation_inner`
-  (Jool's stock 200 is the template), and the small stock-scale `radiation_pause` (~−0.01).
+  the ring + five moons sweep particles (loss). Because of that ring, the Kerbalism
+  template is **Saturn (RSS), not Jupiter**: a strong *outer* belt (`radiation_outer` ~150,
+  Saturn's value) with the inner belt suppressed/absent (ring-swept), a large `pause_radius`,
+  and the small stock-scale `radiation_pause` (~−0.01). Dante's volcanism still feeds an
+  inner plasma torus locally, so a reduced inner belt (not fully zero) is defensible.
 - **Pandora** (embedded, Ganymede analog): own 75 µT dipole → a mini-magnetosphere
   at 3.53 R_p *inside* Polyphemus's field. It sits in the **gap between Polyphemus's
   two belts** and its own field adds shielding → the physical basis for habitability.
