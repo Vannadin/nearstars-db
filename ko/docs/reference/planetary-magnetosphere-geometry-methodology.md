@@ -72,11 +72,39 @@
 | 물리량 | Kerbalism 필드 | 도출 |
 |---|---|---|
 | 자기권계면 standoff | `pause_radius` (+ `has_pause`) | Part A의 R_mp/R_p |
-| 차폐 품질(GCR) | `radiation_pause` (음수) | 깊은 standoff → 강한 차폐 |
-| 벨트 범위 | `radiation_inner`/`outer` 벨트 반경 (DB `..._belt_radius_planet_radii`) | Part A 경계 |
+| 자기권계면 차폐 | `radiation_pause` (작은 음수) | 차폐는 `pause_radius`에 pause가 *있다는 것*에서 나옴. 값 자체는 작고 스톡 균일(~−0.01)이며 standoff에 비례하지 않음 |
+| 벨트 범위 | `inner_dist`/`inner_radius`, `outer_dist`/`outer_radius` (바디 반경 단위) | Part A 경계 |
 | 벨트 강도(rad/h) | `radiation_inner`/`radiation_outer` | Part B regime: 공급원 − 손실, K–P 캡 — **B가 아니라 명시된 공급원/손실에서** |
 | 쌍극축 방향 | `geomagnetic_pole_lat`/`lon` | = `magnetic_dipole_tilt_deg` |
 | 벨트 존재 게이트 | (벨트가 아예 있나) | `B_eq ≳ 0.1× 지구`. 이하면 안정 포획 없음 |
+
+### RadiationModel 지오메트리 (Kerbalism 소스 근거)
+
+Kerbalism은 각 field를 signed-distance 형상으로 모델링하며 길이는 전부 **바디 반경 단위**
+입니다([Kerbalism 모딩 문서](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html);
+스톡 값은 `KerbalismConfig/System/Radiation.cfg`).
+
+- **내대(inner)** = 토러스: `inner_dist`(장반경=고리 중심 거리) + `inner_radius`(단면 반경).
+- **외대(outer)** = 속 빈 셸(토러스에서 약간 작은 토러스를 뺌, `outer_border_start/end`로 페이드): `outer_dist` + `outer_radius`.
+- **자기권계면(pause)** = 구 `pause_radius`, 별 방향 압축(`*_compression`)·꼬리 방향 신장(`*_extension`) 가능. `*_deform`/`*_quality`는 렌더용.
+- 강도·축은 `RadiationBody`에: `radiation_inner/outer/pause`(rad/h, pause 음수), `geomagnetic_pole_lat/lon`.
+
+**`inner`과 `outer`는 항상 `inner_dist < outer_dist`인 두 토러스**입니다 — 다만 이게 분리된
+밴 앨런 두 벨트로 *보이는지*, 하나의 동심 구조로 보이는지는 단면반경 대 간격 비가 결정합니다.
+
+| 스톡 모델 | inner `dist / radius` | outer `dist / radius` | `pause_radius` | `radiation_inner / outer / pause` | 외형 |
+|---|---|---|---|---|---|
+| **earth**(Kerbin) | 0.81 / 0.70 | 2.63 / 2.48 | 13.65 | 10.4 / 2.2 / −0.011 | 분리된 두 벨트 |
+| **giant**(Jool) | 2.2 / 1.0 | 6.0 / 6.0 | 60 | 200 / 11 / −0.012 | outer 단면=반경이라 구멍이 닫혀 inner를 감싸는 **동심** 외형 |
+
+즉 바디 클래스 선택은: **암석/지구형 → `earth` 스타일(뚜렷한 두 토러스, 분리 벨트),
+자이언트 → `giant` 스타일(뚱뚱한 겹치는 토러스, 동심 외형).** 둘 다 `dist/radius` 비만 다른
+inner+outer이며, NearStars에서 반복된 "동심이냐 분리냐"는 별개 메커니즘이 아니라 렌더 결과입니다.
+
+이전 NearStars 초안을 정정하는 스톡 근거 2가지.
+- `radiation_pause`는 **스톡에서 작고 바디에 거의 무관**(Kerbin −0.011, Jool −0.012) — standoff에
+  비례하는 큰 차폐항이 아닙니다. (이전 Pandora 초안의 −3.8은 Promised Worlds 팩 튜닝값 → ~−0.01 스톡 스케일로 재앵커.)
+- 지구식 기울기 바디의 `geomagnetic_pole_lat ≈ 80`은 스톡 Kerbin(80.37)과 일치.
 
 ## Part D — 위성 ↔ 모행성 상호작용 (임베디드 자기권)
 
@@ -112,13 +140,13 @@
      먹입니다. 고유 위성 자기장은 위협이 아니라 보호입니다.
 
 **Kerbalism 매핑(임베디드 위성):** 위성에 자체 소형 `RadiationModel`(위성 반지름 단위의 작은
-`pause_radius`, 단일 좁은 벨트) + `RadiationBody`(약한 `radiation_inner`(공급원 기아) + 강한
-음수 `radiation_pause`(차폐))을 줍니다. 위성 순 표면 선량 = 그 L-shell의 모행성 벨트를 자체
-pause로 감쇠한 값.
+`pause_radius`, 단일 좁은 벨트) + `RadiationBody`(약한 `radiation_inner`(공급원 기아) + 작은
+스톡 스케일 `radiation_pause`(~−0.01. 차폐는 `pause_radius`에 pause가 *있다는 것*이지 큰 값이
+아님))을 줍니다. 위성 순 표면 선량 = 그 L-shell의 모행성 벨트를 자체 pause로 감쇠한 값.
 
 **워크드(Pandora vs 가니메데):** Pandora(75 µT, 3.53 R_p, Polyphemus 벨트 gap) → 국소 모행성
 場의 ~19배 → standoff ~2.5 R_p, 약한 단일 벨트(`radiation_inner ≈ 2` rad/h, gap 기아라
-지구형의 ~0.4배), 강한 차폐(`radiation_pause ≈ −3.8`). 가니메데(0.72 µT, 국소 목성 場의 ~6배)
+스톡 Kerbin 10.4의 ~0.2배), `radiation_pause ≈ −0.01`(스톡 스케일). 가니메데(0.72 µT, 국소 목성 場의 ~6배)
 → standoff ~2 R_G, 무시할 만한 자체 벨트. Pandora 미니자기권이 둘 중 더 튼튼하지만, 그
 거주가능성은 자체 벨트가 아니라 *차폐*에 기댑니다.
 
@@ -149,7 +177,8 @@ pause로 감쇠한 값.
 - **Polyphemus**: 170 µT → R_mp ≈ 22 R_p. **5개 위성 전부 자기권 안**에서 공전. 벨트
   강도는 場 읽기가 아니라 *공급원 − 손실* 이야기입니다. Dante의 극단적 화산(~820× Io)이
   강한 내부벨트를 먹이고(공급원), 고리 + 5위성이 입자를 쓸어냅니다(손실, 토성 참조).
-  Kerbalism은 큰 `pause_radius`, 높은 내부벨트 `radiation_inner`, 강한 음수 `radiation_pause`.
+  Kerbalism은 `giant` 동심 벨트 지오메트리 + 큰 `pause_radius`, 높은 내부벨트 `radiation_inner`
+  (Jool 스톡 200이 템플릿), 작은 스톡 스케일 `radiation_pause`(~−0.01)를 받습니다.
 - **Pandora**(임베디드, 가니메데 아날로그): 자체 75 µT 쌍극 → Polyphemus 場 *안* 3.53 R_p
   에 미니자기권. **Polyphemus 두 벨트 사이 gap**에 위치하고 자체 場이 차폐를 더함 →
   거주가능의 물리 근거. standoff는 항성풍이 아니라 Polyphemus 국소 플라스마에 대해 계산.

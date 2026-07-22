@@ -16,6 +16,17 @@ Kerbalism uses the planet's magnetic dipole + atmospheric column to
 compute crew radiation exposure inside its KSP-side cfg. Source data
 goes in the Phase 3 Decisions table; the cfg writer reads from there.
 
+**Kerbalism RadiationModel/RadiationBody schema + stock anchors** are grounded in
+[docs/reference/planetary-magnetosphere-geometry-methodology.md](../../../../docs/reference/planetary-magnetosphere-geometry-methodology.md)
+Part C (from `KerbalismConfig/System/Radiation.cfg` + the Kerbalism modding docs). Key
+facts the writer needs: the model geometry is `inner_dist/inner_radius` (torus) +
+`outer_dist/outer_radius` (shell) + `pause_radius` (sphere), all in body radii; `inner`
+and `outer` are always two tori (`inner_dist < outer_dist`) — separated-belt look
+(rocky, `earth` model: Kerbin inner 0.81/outer 2.63) vs concentric look (giant, `giant`
+model: Jool inner 2.2/outer 6.0). Intensities: stock Kerbin `radiation_inner 10.4 /
+outer 2.2 / pause −0.011`; Jool `200 / 11 / −0.012`. **`radiation_pause` is small and
+body-independent (~−0.01) in stock — not a standoff-scaled shield.**
+
 | Field | Unit | Range typical | Notes |
 |---|---|---|---|
 | `magnetic_field_strength_microtesla_equator` | μT | 0–60 (rocky) | Earth ≈ 30 μT at equator; M-dwarf tidal-lock planets usually 0–10 μT. **Gas giants are off this scale: 400–3000+ μT** — derive via energy-flux dynamo scaling, not this rocky range (see below) |

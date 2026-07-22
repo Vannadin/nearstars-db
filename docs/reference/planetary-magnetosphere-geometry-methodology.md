@@ -81,11 +81,42 @@ source and loss**, not a formula output.
 | Physical quantity | Kerbalism field | Derivation |
 |---|---|---|
 | Magnetopause standoff | `pause_radius` (+ `has_pause`) | R_mp/R_p from Part A |
-| Shield quality (GCR) | `radiation_pause` (negative) | deeper standoff → stronger shield |
-| Belt extent | `radiation_inner`/`outer` belt radii (DB `..._belt_radius_planet_radii`) | Part A bounds |
+| Magnetopause shield | `radiation_pause` (small negative) | the shield comes from *having* a pause at `pause_radius`; the value itself is small and stock-uniform (~−0.01), NOT scaled to standoff |
+| Belt extent | `inner_dist`/`inner_radius`, `outer_dist`/`outer_radius` (body radii) | Part A bounds |
 | Belt intensity (rad/h) | `radiation_inner`/`radiation_outer` | Part B regime: source − loss, K–P-capped — **set from the stated source/loss, not from B** |
 | Dipole-axis direction | `geomagnetic_pole_lat`/`lon` | = `magnetic_dipole_tilt_deg` |
 | Belt existence gate | (belts present at all) | `B_eq ≳ 0.1× Earth`; below this no stable trapping |
+
+### The RadiationModel geometry (grounded in Kerbalism source)
+
+Kerbalism models each field as a signed-distance shape, all lengths **in body radii**
+([Kerbalism modding docs](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html);
+stock values from `KerbalismConfig/System/Radiation.cfg`):
+
+- **inner belt** = a torus: `inner_dist` (major radius = ring-center distance) + `inner_radius` (section radius).
+- **outer belt** = a hollow shell (a torus minus a slightly smaller one, faded by `outer_border_start/end`): `outer_dist` + `outer_radius`.
+- **magnetopause** = a sphere `pause_radius`, deformable toward the star (`*_compression`) and into a tail (`*_extension`); `*_deform`/`*_quality` are cosmetic.
+- Intensities + axis live on the `RadiationBody`: `radiation_inner/outer/pause` (rad/h, pause negative), `geomagnetic_pole_lat/lon`.
+
+**`inner` and `outer` are always two tori with `inner_dist < outer_dist`** — but whether
+they *look* like two separated Van Allen belts or one nested/concentric structure is set
+by the section-radius-vs-spacing ratio:
+
+| Stock model | inner `dist / radius` | outer `dist / radius` | `pause_radius` | `radiation_inner / outer / pause` | look |
+|---|---|---|---|---|---|
+| **earth** (Kerbin) | 0.81 / 0.70 | 2.63 / 2.48 | 13.65 | 10.4 / 2.2 / −0.011 | two **separated** belts |
+| **giant** (Jool) | 2.2 / 1.0 | 6.0 / 6.0 | 60 | 200 / 11 / −0.012 | outer section = its radius → hole closes → **concentric** look enclosing the inner |
+
+So the body-class choice is: **rocky / Earth-like → `earth`-style (distinct tori, separated
+belts); giant → `giant`-style (fat overlapping tori, concentric look).** Both are just
+inner+outer with different `dist/radius` ratios — the "concentric vs separated" question that
+recurs in NearStars is a rendering consequence, not two different mechanisms.
+
+Two stock-anchored facts that correct earlier NearStars drafts:
+- `radiation_pause` is **small and roughly body-independent in stock** (Kerbin −0.011, Jool
+  −0.012) — it is *not* a large standoff-scaled shield term. (An earlier Pandora draft used
+  −3.8, a Promised-Worlds pack tuning; regrounded to the ~−0.01 stock scale.)
+- `geomagnetic_pole_lat ≈ 80` for an Earth-tilt body matches stock Kerbin (80.37).
 
 ## Part D — moon ↔ parent interaction (embedded magnetospheres)
 
@@ -132,14 +163,14 @@ radiation-relevant, and the moon's *own* field is a minor player.
 
 **Kerbalism mapping (embedded moon):** give the moon its own compact `RadiationModel`
 (small `pause_radius` in moon radii; a single narrow belt) + a `RadiationBody` with a
-*weak* `radiation_inner` (source-starved) and a *strong negative* `radiation_pause`
-(the shield). The moon's net surface dose = the parent's belt at its L-shell, reduced
-by its own pause.
+*weak* `radiation_inner` (source-starved) and a small stock-scale `radiation_pause`
+(~−0.01; the shield is the *presence* of a pause at `pause_radius`, not a big value).
+The moon's net surface dose = the parent's belt at its L-shell, reduced by its own pause.
 
 **Worked (Pandora vs Ganymede):** Pandora (75 µT, 3.53 R_p, in Polyphemus's belt gap)
 → field ~19× the local parent field → standoff ~2.5 R_p, one weak belt
-(`radiation_inner ≈ 2` rad/h, ~0.4× an Earth-analog because it is gap-starved),
-strong shield (`radiation_pause ≈ −3.8`). Ganymede (0.72 µT, ~6× local Jovian) →
+(`radiation_inner ≈ 2` rad/h, ~0.2× stock Kerbin's 10.4 because it is gap-starved),
+`radiation_pause ≈ −0.01` (stock scale). Ganymede (0.72 µT, ~6× local Jovian) →
 standoff ~2 R_G, a negligible own belt. Pandora's mini-magnetosphere is the more
 robust of the two, yet its habitability still rests on the *shield*, not on any
 belt it makes.
@@ -174,9 +205,9 @@ belt it makes.
 - **Polyphemus**: 170 µT → R_mp ≈ 22 R_p; **all five moons orbit inside the
   magnetosphere**. Belt intensity is a *source − loss* story, not a field readout:
   Dante's extreme volcanism (~820× Io) feeds an intense inner belt (source), while
-  the ring + five moons sweep particles (loss, cf. Saturn). Kerbalism gets a large
-  `pause_radius`, a high inner-belt `radiation_inner`, and a strong negative
-  `radiation_pause`.
+  the ring + five moons sweep particles (loss, cf. Saturn). Kerbalism gets the `giant`
+  concentric-belt geometry with a large `pause_radius`, a high inner-belt `radiation_inner`
+  (Jool's stock 200 is the template), and the small stock-scale `radiation_pause` (~−0.01).
 - **Pandora** (embedded, Ganymede analog): own 75 µT dipole → a mini-magnetosphere
   at 3.53 R_p *inside* Polyphemus's field. It sits in the **gap between Polyphemus's
   two belts** and its own field adds shielding → the physical basis for habitability.
