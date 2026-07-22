@@ -87,6 +87,63 @@ source and loss**, not a formula output.
 | Dipole-axis direction | `geomagnetic_pole_lat`/`lon` | = `magnetic_dipole_tilt_deg` |
 | Belt existence gate | (belts present at all) | `B_eq ≳ 0.1× Earth`; below this no stable trapping |
 
+## Part D — moon ↔ parent interaction (embedded magnetospheres)
+
+A moon orbiting *inside* a giant's magnetosphere is a common NearStars case (every
+Polyphemus moon). It is not a scaled-down planet: three couplings dominate, all
+radiation-relevant, and the moon's *own* field is a minor player.
+
+1. **The moon lives inside the parent's belt.** The radiation the moon's surface
+   sees is overwhelmingly the *parent's* trapped flux at the moon's L-shell — not
+   anything the moon generates. So the first question is always *where in the
+   parent's belt does the moon sit* (orbital distance in R_parent, bounded by the
+   parent standoff from Part A): a moon deep in the belt is baked (Io; Dante,
+   1.54 R_p), a moon in a belt gap is spared (Pandora, 3.53 R_p). The moon's own
+   field only *modulates* this ambient dose by shielding.
+
+2. **The moon is a loss (or source) term for the parent's belt.** A solid moon or
+   ring **absorbs** trapped particles sweeping past it, carving depletion corridors
+   and, for a whole moon+ring system, pulling the parent's belt well *below* its
+   Kennel–Petschek ceiling (Cooper 1983 — Saturn is the archetype, its rings and
+   moons gut its belts). This is why a heavily-mooned giant is **not** automatically
+   Jupiter-class: the moons + ring are a large distributed sink. Conversely a
+   volcanic moon is a **source** — Io / Dante feed a plasma torus that drives the
+   belt up toward the ceiling (Bagenal 1994). The same moon can be both: Dante
+   feeds the torus globally while sweeping particles locally.
+
+3. **The moon's own mini-magnetosphere** (only if it has an intrinsic dynamo).
+   Its standoff balances the moon's field against the **parent's co-rotating
+   magnetospheric plasma**, not the stellar wind — Part A with `P_ram` = the parent
+   plasma. Ganymede is the sole Solar-System example (Kivelson 1996). Properties:
+   - **Small and partly open.** The parent's field threads the moon; where the
+     moon's field is only a few× the local parent field, field lines reconnect and
+     the magnetosphere leaks at the poles (Ganymede: ~6× local Jovian field →
+     standoff ~2 R_G, open polar caps). A stronger moon field → a larger, less-leaky
+     mini-magnetosphere.
+   - **Own belt is weak and source-starved.** The closed-field trapping volume is
+     tiny and the only sources are inward diffusion from the parent's belt (low if
+     the moon is in a gap) + CRAND from any atmosphere. The own belt therefore rarely
+     reaches its K–P ceiling — it is **source-limited, not field-limited**, and is a
+     single narrow belt (no room for Earth's two).
+   - **Net role = shield, not generator.** The mini-magnetosphere's main effect on
+     surface habitability is deflecting the *parent's* belt flux; the particles it
+     does trap and precipitate feed aurorae rather than baking the ground. An
+     intrinsic moon field is protective, not a self-inflicted hazard.
+
+**Kerbalism mapping (embedded moon):** give the moon its own compact `RadiationModel`
+(small `pause_radius` in moon radii; a single narrow belt) + a `RadiationBody` with a
+*weak* `radiation_inner` (source-starved) and a *strong negative* `radiation_pause`
+(the shield). The moon's net surface dose = the parent's belt at its L-shell, reduced
+by its own pause.
+
+**Worked (Pandora vs Ganymede):** Pandora (75 µT, 3.53 R_p, in Polyphemus's belt gap)
+→ field ~19× the local parent field → standoff ~2.5 R_p, one weak belt
+(`radiation_inner ≈ 2` rad/h, ~0.4× an Earth-analog because it is gap-starved),
+strong shield (`radiation_pause ≈ −3.8`). Ganymede (0.72 µT, ~6× local Jovian) →
+standoff ~2 R_G, a negligible own belt. Pandora's mini-magnetosphere is the more
+robust of the two, yet its habitability still rests on the *shield*, not on any
+belt it makes.
+
 ## Validation
 
 - **Earth**: B_eq = 31 µT, solar-wind P_ram ≈ 2 nPa → R_mp/R_p = [2²·(3.1e-5)²/(2μ₀·2e-9)]^(1/6) ≈ **9.6** — matches the observed ~10 R_E sub-solar magnetopause. Inner belt ~1.2 R_E (CRAND protons), outer ~3–7 R_E (diffusion + chorus), intensity near the K–P ceiling. ✓

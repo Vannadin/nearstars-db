@@ -201,6 +201,63 @@ source and loss**, not a formula output.
 | Dipole-axis direction | `geomagnetic_pole_lat`/`lon` | = `magnetic_dipole_tilt_deg` |
 | Belt existence gate | (belts present at all) | `B_eq ≳ 0.1× Earth`; below this no stable trapping |
 
+## Part D — moon ↔ parent interaction (embedded magnetospheres)
+
+A moon orbiting *inside* a giant's magnetosphere is a common NearStars case (every
+Polyphemus moon). It is not a scaled-down planet: three couplings dominate, all
+radiation-relevant, and the moon's *own* field is a minor player.
+
+1. **The moon lives inside the parent's belt.** The radiation the moon's surface
+   sees is overwhelmingly the *parent's* trapped flux at the moon's L-shell — not
+   anything the moon generates. So the first question is always *where in the
+   parent's belt does the moon sit* (orbital distance in R_parent, bounded by the
+   parent standoff from Part A): a moon deep in the belt is baked (Io; Dante,
+   1.54 R_p), a moon in a belt gap is spared (Pandora, 3.53 R_p). The moon's own
+   field only *modulates* this ambient dose by shielding.
+
+2. **The moon is a loss (or source) term for the parent's belt.** A solid moon or
+   ring **absorbs** trapped particles sweeping past it, carving depletion corridors
+   and, for a whole moon+ring system, pulling the parent's belt well *below* its
+   Kennel–Petschek ceiling (Cooper 1983 — Saturn is the archetype, its rings and
+   moons gut its belts). This is why a heavily-mooned giant is **not** automatically
+   Jupiter-class: the moons + ring are a large distributed sink. Conversely a
+   volcanic moon is a **source** — Io / Dante feed a plasma torus that drives the
+   belt up toward the ceiling (Bagenal 1994). The same moon can be both: Dante
+   feeds the torus globally while sweeping particles locally.
+
+3. **The moon's own mini-magnetosphere** (only if it has an intrinsic dynamo).
+   Its standoff balances the moon's field against the **parent's co-rotating
+   magnetospheric plasma**, not the stellar wind — Part A with `P_ram` = the parent
+   plasma. Ganymede is the sole Solar-System example (Kivelson 1996). Properties:
+   - **Small and partly open.** The parent's field threads the moon; where the
+     moon's field is only a few× the local parent field, field lines reconnect and
+     the magnetosphere leaks at the poles (Ganymede: ~6× local Jovian field →
+     standoff ~2 R_G, open polar caps). A stronger moon field → a larger, less-leaky
+     mini-magnetosphere.
+   - **Own belt is weak and source-starved.** The closed-field trapping volume is
+     tiny and the only sources are inward diffusion from the parent's belt (low if
+     the moon is in a gap) + CRAND from any atmosphere. The own belt therefore rarely
+     reaches its K–P ceiling — it is **source-limited, not field-limited**, and is a
+     single narrow belt (no room for Earth's two).
+   - **Net role = shield, not generator.** The mini-magnetosphere's main effect on
+     surface habitability is deflecting the *parent's* belt flux; the particles it
+     does trap and precipitate feed aurorae rather than baking the ground. An
+     intrinsic moon field is protective, not a self-inflicted hazard.
+
+**Kerbalism mapping (embedded moon):** give the moon its own compact `RadiationModel`
+(small `pause_radius` in moon radii; a single narrow belt) + a `RadiationBody` with a
+*weak* `radiation_inner` (source-starved) and a *strong negative* `radiation_pause`
+(the shield). The moon's net surface dose = the parent's belt at its L-shell, reduced
+by its own pause.
+
+**Worked (Pandora vs Ganymede):** Pandora (75 µT, 3.53 R_p, in Polyphemus's belt gap)
+→ field ~19× the local parent field → standoff ~2.5 R_p, one weak belt
+(`radiation_inner ≈ 2` rad/h, ~0.4× an Earth-analog because it is gap-starved),
+strong shield (`radiation_pause ≈ −3.8`). Ganymede (0.72 µT, ~6× local Jovian) →
+standoff ~2 R_G, a negligible own belt. Pandora's mini-magnetosphere is the more
+robust of the two, yet its habitability still rests on the *shield*, not on any
+belt it makes.
+
 ## Validation
 
 - **Earth**: B_eq = 31 µT, solar-wind P_ram ≈ 2 nPa → R_mp/R_p = [2²·(3.1e-5)²/(2μ₀·2e-9)]^(1/6) ≈ **9.6** — matches the observed ~10 R_E sub-solar magnetopause. Inner belt ~1.2 R_E (CRAND protons), outer ~3–7 R_E (diffusion + chorus), intensity near the K–P ceiling. ✓
@@ -361,6 +418,50 @@ a documented regime call rather than a computed number.
 | 벨트 강도(rad/h) | `radiation_inner`/`radiation_outer` | Part B regime: 공급원 − 손실, K–P 캡 — **B가 아니라 명시된 공급원/손실에서** |
 | 쌍극축 방향 | `geomagnetic_pole_lat`/`lon` | = `magnetic_dipole_tilt_deg` |
 | 벨트 존재 게이트 | (벨트가 아예 있나) | `B_eq ≳ 0.1× 지구`. 이하면 안정 포획 없음 |
+
+## Part D — 위성 ↔ 모행성 상호작용 (임베디드 자기권)
+
+거대행성 자기권 *안*을 도는 위성은 NearStars에서 흔한 경우입니다(Polyphemus 위성 전부).
+축소판 행성이 아닙니다. 세 가지 커플링이 지배하며 모두 방사선과 직결되고, 위성 *자체*
+자기장은 조연입니다.
+
+1. **위성은 모행성 벨트 안에 산다.** 위성 표면이 받는 방사선은 압도적으로 위성이 만드는 게
+   아니라 그 L-shell에서의 *모행성* 포획 플럭스입니다. 그래서 첫 질문은 늘 *위성이 모행성
+   벨트의 어디에 있나*(R_parent 단위 궤도거리, Part A의 모행성 standoff에 갇힘)입니다. 벨트
+   한복판이면 구워지고(Io. Dante 1.54 R_p), 벨트 gap이면 살 만합니다(Pandora 3.53 R_p).
+   위성 자체 장은 이 주변 선량을 차폐로 *조절*할 뿐입니다.
+
+2. **위성은 모행성 벨트의 손실(또는 공급)항이다.** 고체 위성·고리는 스쳐가는 포획 입자를
+   **흡수**해 고갈 통로를 파고, 위성+고리 계 전체로는 모행성 벨트를 Kennel–Petschek 천장
+   *아래로* 끌어내립니다(Cooper 1983 — 토성이 원형, 고리·위성이 벨트를 도려냄). 위성이 많은
+   거대행성이 자동으로 목성급이 **아닌** 이유입니다 — 위성+고리가 큰 분산 sink입니다. 반대로
+   화산 위성은 **공급원** — Io / Dante가 플라스마 토러스를 먹여 벨트를 천장 쪽으로 밀어올립니다
+   (Bagenal 1994). 한 위성이 둘 다일 수 있습니다: Dante는 전역으로 토러스를 먹이면서 국소로는
+   입자를 쓸어냅니다.
+
+3. **위성 자체 미니자기권** (고유 다이나모가 있을 때만). standoff는 위성 場을 항성풍이 아니라
+   **모행성의 공회전 자기권 플라스마**에 대해 잡습니다 — Part A에서 `P_ram` = 모행성 플라스마.
+   태양계 유일 사례가 가니메데입니다(Kivelson 1996). 특성.
+   - **작고 부분적으로 열림.** 모행성 場이 위성을 관통하고, 위성 場이 국소 모행성 場의 몇 배
+     정도인 곳에서 자기력선이 재결합해 극에서 샙니다(가니메데: 국소 목성 場의 ~6배 → standoff
+     ~2 R_G, 열린 극관). 위성 場이 강할수록 더 크고 덜 새는 미니자기권.
+   - **자체 벨트는 약하고 공급원 기아.** 폐쇄 포획 부피가 작고, 공급원은 모행성 벨트로부터의
+     안쪽 확산(gap에 있으면 빈약) + 대기 CRAND뿐. 그래서 자체 벨트는 K–P 천장에 거의 못
+     닿습니다 — **場-한계가 아니라 공급원-한계**이며, 단일 좁은 벨트입니다(지구식 2벨트 불가).
+   - **주역할 = 발생기 아닌 차폐.** 미니자기권이 표면 거주가능성에 미치는 주효과는 *모행성*
+     벨트 플럭스를 막는 것이고, 실제로 가두고 정출시키는 입자는 지표를 굽기보다 오로라를
+     먹입니다. 고유 위성 자기장은 위협이 아니라 보호입니다.
+
+**Kerbalism 매핑(임베디드 위성):** 위성에 자체 소형 `RadiationModel`(위성 반지름 단위의 작은
+`pause_radius`, 단일 좁은 벨트) + `RadiationBody`(약한 `radiation_inner`(공급원 기아) + 강한
+음수 `radiation_pause`(차폐))을 줍니다. 위성 순 표면 선량 = 그 L-shell의 모행성 벨트를 자체
+pause로 감쇠한 값.
+
+**워크드(Pandora vs 가니메데):** Pandora(75 µT, 3.53 R_p, Polyphemus 벨트 gap) → 국소 모행성
+場의 ~19배 → standoff ~2.5 R_p, 약한 단일 벨트(`radiation_inner ≈ 2` rad/h, gap 기아라
+지구형의 ~0.4배), 강한 차폐(`radiation_pause ≈ −3.8`). 가니메데(0.72 µT, 국소 목성 場의 ~6배)
+→ standoff ~2 R_G, 무시할 만한 자체 벨트. Pandora 미니자기권이 둘 중 더 튼튼하지만, 그
+거주가능성은 자체 벨트가 아니라 *차폐*에 기댑니다.
 
 ## 검증
 
