@@ -34,15 +34,32 @@ that to Kerbalism's `solar_cycle`/storm state gives a magnetopause that visibly
 
 ## Implementation sketch
 
+**Closed-tail requirement (owner, 2026-07-23).** In KSP the pause volume is a
+*radiation* region, not a field region: inside it Kerbalism applies a uniform
+benefit (GCR shield saturates 0.133 R inside the boundary via
+`Lib.Clamp(D / −0.1332f, …)`, plus storm protection and the `Magnetosphere`
+virtual biome). An open Shue tail would be an infinite safe corridor. And Shue
+is *intrinsically* open — for any `α > 0`, `r` diverges as θ→180° (α < 0.5 only
+pinches the radius at infinite distance), so closure must be explicit, not an
+α choice. Closing the surface at a finite tail length encodes "influence fades
+tailward" with zero extra dose logic — physically defensible too (Earth lobe
+field ~10 nT by ~100 R_E, GCR-irrelevant). Same trick as the belt borders:
+
+    D = max( D_shue(p), |p − tail_center| − pause_tail )     // CSG intersection
+
 - New `RadiationModel` fields: `pause_shue = true`, `pause_nose` (r0), `pause_alpha`
-  (default 0.58). Backward compatible: absent → legacy sphere path.
-- `Pause_func`: radial difference `D = |p| − r0·(2/(1+cosθ))^α`, `θ = acos(p.x/|p|)`.
-  Not a true Euclidean SDF, but Kerbalism only uses D for the mesh isosurface and
-  the thin boundary band (`Lib.Clamp(D / −0.1332f, …)`) — radial difference suffices.
-  Clamp θ (~150°) or cap r to bound the open tail. `pause_height_scale` still composes.
+  (default 0.58), `pause_tail` (closure length, body radii). Backward compatible:
+  absent → legacy sphere path.
+- `Pause_func`: radial difference `D = |p| − r0·(2/(1+cosθ))^α`, `θ = acos(p.x/|p|)`,
+  intersected with the tail end-cap sphere per the max() above. Not a true
+  Euclidean SDF, but Kerbalism only uses D for the mesh isosurface and the thin
+  boundary band — radial difference suffices. `pause_height_scale` still composes.
 - Rendering is free: `ParticleMesh` accepts any `dist_func`.
 - Storm hook (stretch goal): drive `r0`, `α` from the Shue 98 Dp/Bz fits mapped onto
   storm/CME state.
+- Giant-planet variant (stretch goal): plasma-loaded magnetospheres compress
+  differently (Joy 2002 Jupiter / Kanani 2010 Saturn) — relevant to Polyphemus
+  (Dante mass-loading). Cusp indentation (Lin 2010) only if aurora funnels ship.
 
 ## TODO before it ships
 
