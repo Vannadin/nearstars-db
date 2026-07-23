@@ -141,7 +141,11 @@ Two execution rules:
 
 - **Pin every claim**: arXiv id where one exists, else the ADS bibcode.
   Note explicitly when a paper has no preprint (e.g. Nature letters) and is
-  therefore verified by bibcode only.
+  therefore verified by bibcode only. **Every citation in doc prose is a
+  clickable markdown link** (CONVENTIONS.md §3.3) — bibcode →
+  `[2018Icar..305..262I](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262I)`,
+  arXiv → `[1007.1514](https://arxiv.org/abs/1007.1514)` (`&` → `%26` in the URL).
+  Bare ids stay only in machine fields / code blocks.
 
 - **Source outside ADS's scope?** The discipline's point is verifiability
   and anti-fabrication, not the index itself. Fall back in order:
