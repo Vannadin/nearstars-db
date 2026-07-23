@@ -45,28 +45,45 @@ pinches the radius at infinite distance), so closure must be explicit, not an
 tailward" with zero extra dose logic — physically defensible too (Earth lobe
 field ~10 nT by ~100 R_E, GCR-irrelevant).
 
-**How to close (owner caught the trap, 2026-07-23):** a naive CSG intersection
-`max(D_shue, |p−c| − L)` leaves a crease ring + dome — the tail reads as
-*amputated*, not *fading*. Two better closures:
+**How to close — adopted: the softened Shue (owner iteration, 2026-07-23).**
+Two rejected attempts first: a naive CSG cap `max(D_shue, |p−c|−L)` leaves a
+crease ring + dome (*amputated*); a teardrop hybrid (Shue dayside + ellipsoid
+tail joined at the terminator) is C0 only — a visible slope kink at the join.
+The owner required a natural gradient with **no joins anywhere**, which the
+softened form delivers as a single analytic C∞ closed curve:
 
-- **(a) smooth-max** — polynomial smooth-boolean instead of `max`; one-liner,
-  rounds the crease, but the end stays dome-blunt. Fallback option.
-- **(b) teardrop hybrid (preferred)** — Shue for the dayside + flanks (the
-  observationally constrained, visually characteristic part), and for the
-  nightside reuse Kerbalism's **existing stretched-ellipsoid tail** (the legacy
-  `pause_extension` code path). Continuity is free: the Shue flank at θ=90° is
-  `r0·2^α`, so set the tail ellipsoid's cross-section radius to that value at
-  the terminator → C0 join, smooth pinch-off at the configured tail length.
-  Any finite closure is an artistic compromise anyway — the taper is the one
-  that *reads* as fading, and it reuses a proven code path (good for the PR).
+    r(θ) = r0 · [ (1+ε) / (ε + cos^{2m}(θ/2)) ]^{α/m}
+    ε    = 1 / ( (L/r0)^{m/α} − 1 )
 
-- New `RadiationModel` fields: `pause_shue = true`, `pause_nose` (r0), `pause_alpha`
-  (default 0.58), `pause_tail` (closure length, body radii). Backward compatible:
-  absent → legacy sphere path.
-- `Pause_func`: dayside/flank = radial difference `D = |p| − r0·(2/(1+cosθ))^α`,
-  `θ = acos(p.x/|p|)`; nightside = legacy ellipsoid with flank-radius continuity,
-  blended per (b). Not a true Euclidean SDF, but Kerbalism only uses D for the
-  mesh isosurface and the thin boundary band — radial difference suffices.
+- `ε → 0` recovers exact Shue (since `2/(1+cosθ) = 1/cos²(θ/2)`).
+- `ε > 0` closes the tail at exactly `r(180°) = L`, with `dr/dθ = 0` there
+  (rounded tip); smooth everywhere, no crease, no join.
+- `m` concentrates the softening tailward. **Fixed in code at m = 2** (dayside
+  within ~1% of true Shue on Earth-like numbers: θ=45° −0.1%, flank −1.1%) —
+  a shape-tuning constant, not a physics parameter; do NOT expose it in cfg
+  (owner, 2026-07-23). Verified numerically 2026-07-23 (viewer + node check).
+
+**Field set (owner-confirmed): `(r0, α, L)` — three orthogonal fields.** α alone
+cannot replace `pause_radius`: it is a dimensionless flank/nose ratio (`2^α`) and
+needs the scale anchor r0. Legacy mapping (free backward-compat conversion):
+
+| legacy | Shue-native | relation |
+|---|---|---|
+| `pause_compression` | `pause_alpha` | `α = log₂(comp)` (ROK Earth 1.5 → 0.585 ✓) |
+| `pause_radius` | *(derived)* | flank = `r0·2^α`; `r0 = radius/comp` |
+| `pause_extension` | `pause_tail` (L) | `L = radius/ext` (ROK Earth → 200 R_E) |
+| `pause_height_scale`, `pause_deform` | kept (optional) | compose unchanged |
+
+Caveat: the conversion is shape-faithful for earth-style configs; RSS Jupiter
+(comp 1.05 → α 0.07, unphysically spherical dayside) shows giants never used
+the comp trick — re-tune α per giant after conversion.
+
+- New `RadiationModel` fields: `pause_shue = true`, `pause_nose` (r0),
+  `pause_alpha` (default 0.58), `pause_tail` (L, body radii). Backward
+  compatible: absent → legacy sphere path.
+- `Pause_func`: radial difference `D = |p| − r(θ)` with the softened form,
+  `θ = acos(p.x/|p|)`. Not a true Euclidean SDF, but Kerbalism only uses D for
+  the mesh isosurface and the thin boundary band — radial difference suffices.
   `pause_height_scale` still composes.
 - Rendering is free: `ParticleMesh` accepts any `dist_func`.
 - Storm hook (stretch goal): drive `r0`, `α` from the Shue 98 Dp/Bz fits mapped onto
