@@ -140,8 +140,8 @@ D-cut과 magnetodisc 평탄화를 둘 다 뺍니다.
 | open caps | — | **poleward of 30–45°** (leaky) | Pappalardo 1998 `1998DPS....30.5401P` |
 | net role | — | **shield −50–60%** of ambient | Allioux 2013 |
 
-**현실의 약장 임베디드 위성** — NearStars의 Pandora(강장 임베디드, 지오메트리 방법론의
-sub-regime 3b)와 정반대 대조입니다. 가니메데의 719 nT는 국소 목성 場을 살짝 넘길 뿐이라 →
+태양계 유일의 **약장 임베디드 위성** — 거대행성 자기권 안의 다이나모입니다(지오메트리
+방법론의 약장 sub-regime). 가니메데의 719 nT는 국소 목성 場을 살짝 넘길 뿐이라 →
 작은 ~2 R_G standoff, **열린 극관**(목성과의 재결합), bow shock 없음(sub-Alfvénic → Alfvén
 wings. Saur 2018 `2018ASSL..448..153S`). <~100 keV 이온만 얇은 벨트로 빚어냅니다. 지배적인
 선량은 ~15 R_J의 목성 주변 벨트이고, 가니메데의 場은 저궤도 비행체에 대해 그걸 ~50–60%

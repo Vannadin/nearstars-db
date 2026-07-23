@@ -150,8 +150,8 @@ vs the physical 1.45.
 | open caps | — | **poleward of 30–45°** (leaky) | Pappalardo 1998 `1998DPS....30.5401P` |
 | net role | — | **shield −50–60%** of ambient | Allioux 2013 |
 
-The **real-world weak-field embedded moon** — the direct contrast to NearStars Pandora
-(strong-field embedded, sub-regime 3b in the geometry methodology). Ganymede's 719 nT
+The Solar System's only **weak-field embedded moon** — a dynamo inside a giant's
+magnetosphere (the weak-field sub-regime of the geometry methodology). Ganymede's 719 nT
 only modestly exceeds the local Jovian field → small ~2 R_G standoff, **open polar caps**
 (reconnection with Jupiter), no bow shock (sub-Alfvénic → Alfvén wings; Saur 2018
 `2018ASSL..448..153S`). It molds only <~100 keV ions into thin belts; the dominant dose
