@@ -52,16 +52,18 @@ tail joined at the terminator) is C0 only — a visible slope kink at the join.
 The owner required a natural gradient with **no joins anywhere**, which the
 softened form delivers as a single analytic C∞ closed curve:
 
-    r(θ) = r0 · [ (1+ε) / (ε + cos^{2m}(θ/2)) ]^{α/m}
-    ε    = 1 / ( (L/r0)^{m/α} − 1 )
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α
+    ε    = 1 / ( (L/r0)^{1/α} − 1 )
 
 - `ε → 0` recovers exact Shue (since `2/(1+cosθ) = 1/cos²(θ/2)`).
 - `ε > 0` closes the tail at exactly `r(180°) = L`, with `dr/dθ = 0` there
   (rounded tip); smooth everywhere, no crease, no join.
-- `m` concentrates the softening tailward. **Fixed in code at m = 2** (dayside
-  within ~1% of true Shue on Earth-like numbers: θ=45° −0.1%, flank −1.1%) —
-  a shape-tuning constant, not a physics parameter; do NOT expose it in cfg
-  (owner, 2026-07-23). Verified numerically 2026-07-23 (viewer + node check).
+- **Taper is always zero** (owner, 2026-07-23): the generalized form carried a
+  tail-concentration exponent `m` (`cos^{2m}`, `α/m`); it is pinned to the base
+  form `m = 1` — no extra taper, no knob, not a cfg field. (`m = 0` literally
+  degenerates to a sphere, so "zero taper" = the base form.) Cost is nil at
+  game-scale tails: with L linked to the Kerbalism tail (Earth L = 200 R_E),
+  dayside deviation from true Shue is ≤0.33% at the flank (verified 2026-07-23).
 
 **Field set (owner-confirmed): `(r0, α, L)` — three orthogonal fields.** α alone
 cannot replace `pause_radius`: it is a dimensionless flank/nose ratio (`2^α`) and
