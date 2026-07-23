@@ -49,11 +49,15 @@ BODIES={
  'mercury_phys':{'title':'Mercury — physical','sub':'no stable belt; mp 1.45 R_M, offset 0.20 north, tilt <3°','R':3,'tilt':2,'offset':0.20,
    'pause':{'radiation':-0.001,'rad':1.45,'comp':1.4,'ext':0.05,'hscale':1.0}},
 
- # ---- EARTH: 기준 (완료) ----
- 'earth':{'title':'Earth — reference','sub':'ROKerbalism earth model','R':7,'tilt':11,
+ # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----
+ 'earth_stock':{'title':'Earth — stock (ROKerbalism)','sub':'inner 0.81/0.70 (D), outer 2.63/2.48 (O), pause 15','R':8,'tilt':11,
    'inner':{'radiation':10.376,'grad':3.3,'dist':0.813,'rad':0.70,'dxy':0.572,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':0.915,'bdxy':0.5},
    'outer':{'radiation':2.214,'grad':2.2,'dist':2.6338,'rad':2.48,'dxy':0.7225,'comp':1.01,'ext':1.0,'bdist':1.4412,'brad':1.4875,'bdxy':0.7225},
    'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},
+ 'earth_phys':{'title':'Earth — physical','sub':'inner peak L~1.5, slot L2-3, outer heart L~4.5, standoff 10','R':8,'tilt':11,
+   'inner':{'radiation':10.376,'grad':3.3,'dist':1.5,'rad':0.55,'dxy':0.6,'comp':1.02,'ext':1.0,'bdist':1e-4,'brad':1.1,'bdxy':0.5},
+   'outer':{'radiation':2.214,'grad':2.2,'dist':5.0,'rad':2.0,'dxy':0.72,'comp':1.02,'ext':1.0},
+   'pause':{'radiation':-0.01,'rad':10,'comp':1.5,'ext':0.075,'hscale':1.1}},
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  'ganymede_stock':{'title':'Ganymede — stock (ROKerbalism)','sub':'inner 0.8/0.6, no pause defined','R':4,'tilt':4,

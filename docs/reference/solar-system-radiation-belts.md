@@ -52,12 +52,22 @@ rings occupy and absorb the inner-belt zone.
 Each block gives the stock `RadiationBody`/`RadiationModel` (ROKerbalism `System/
 Radiation.cfg` + RSS anchors), the physical values with ADS pins, and the delta.
 
-### Earth (anchor — stock = physical)
-Stock `earth`: inner 0.813/0.70 (border 0.915 → **D-cut**), outer 2.63/2.48 (border
-1.44 → **hollow O**), pause 15, `radiation_inner` 10.376 / `radiation_outer` 2.214 /
-pause −0.010, `geomagnetic_pole_lat` 80.37, offset 0.07. This is the calibration
-anchor; belt dose ~10.4 rad/h at the inner peak matches the observed inner-belt
-proton peak order. No change.
+### Earth (calibration anchor — but not stock = physical)
+| Field | Stock (`earth`) | Physical | Source |
+|---|---|---|---|
+| pause_radius | 15 | **~10 R_E** (sub-solar) | Shue 1997 [`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S), Fairfield 1971 [`1971JGR....76.6700F`](https://ui.adsabs.harvard.edu/abs/1971JGR....76.6700F) |
+| inner belt | 0.813/0.70, border 0.915 (D-cut) | peak **L≈1.5**, ~1.1–2 R_E | (AP9; Ripoll 2016) |
+| outer belt | 2.63/2.48 (peak ~2.6 R_E) | **heart L≈4–5**, L 3–7 | Reeves 2013 [`2013Sci...341..991R`](https://ui.adsabs.harvard.edu/abs/2013Sci...341..991R), Thorne 2013 [`2013Natur.504..411T`](https://ui.adsabs.harvard.edu/abs/2013Natur.504..411T) |
+| slot region | (the D-cut gap) | **L≈2–3** (hiss-cleared) | Ripoll 2016 [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R) |
+| radiation_inner/outer | 10.376 / 2.214 | order-consistent | — |
+| geomagnetic_pole_lat / offset | 80.37 (tilt 9.6°) / 0.07 | tilt ~11° / ~0.08 R_E | IGRF (accurate) |
+
+The anchor is *good on character* — D-cut inner belt, hollow outer belt, an accurate
+dipole tilt/offset, and inner-belt dose ~10.4 rad/h matching the observed proton peak.
+But two **positions drift**: the magnetopause is ~1.5× generous (15 vs ~10 R_E), and the
+outer belt is centred ~2.6 R_E, inward of the real outer-belt heart at L≈4–5 — physically
+the belts sit at L≈1.5 and L≈4–5, split by the slot (L≈2–3). So even Earth, the
+calibration anchor, is not a clean stock = physical.
 
 ### Jupiter
 | Field | Stock (RSS `jupiter`) | Physical | Source |
