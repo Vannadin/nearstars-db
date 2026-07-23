@@ -119,21 +119,30 @@ def diag_png(spec, params, path, extent=None, size=480):
 
 TARGETS = {
     # Earth: inner proton belt L~1.1-2 (peak 1.5), outer electron belt L~3-7 (heart 4-5)
-    'earth_inner':   {'L': (1.1, 2.0), 'rcut': 1.02},
+    # inner rcut = 1000 km altitude (r~1.16): the inner-belt lower boundary, not the
+    # atmosphere top -- trapped flux below ~1000 km is loss-cone-depleted (AP9 picture;
+    # the offset dipole dips it to ~200 km only in the SAA, which geomagnetic_offset carries)
+    'earth_inner':   {'L': (1.1, 2.0), 'rcut': 1.157},
     'earth_outer':   {'L': (3.0, 7.0), 'rcut': 1.05},
-    # Jupiter: dipolar inner belt peak ~1.5-2 R_J; outer = flat magnetodisc
+    # Jupiter: dipolar inner belt peak ~1.5-2 R_J; outer = flat magnetodisc.
+    # Disc half-thickness 3.0 (Khurana 1989 canonical ~3-3.5); radial 3-16 is a
+    # frame truncation -- the physical disc extends past 50 R_J.
     'jupiter_inner': {'L': (1.2, 3.0), 'rcut': 1.03},
-    'jupiter_disc':  {'slab': (3.0, 16.0, 2.5)},
-    # Saturn: rings absorb inside ~2.3 R_S; weak CRAND belt out to ~6
+    'jupiter_disc':  {'slab': (3.0, 16.0, 3.0)},
+    # Saturn: rings absorb inside ~2.3 R_S; weak CRAND belt out to ~6 (Dione filter)
     'saturn_outer':  {'L': (2.3, 6.0), 'rcut': 1.05},
-    # Uranus: inner/outer split per Krimigis 1986 reading (doc anchors)
-    'uranus_inner':  {'L': (1.5, 3.0), 'rcut': 1.05},
-    'uranus_outer':  {'L': (3.0, 7.0), 'rcut': 1.05},
+    # Uranus: structural boundaries are the moon L-shells (Krimigis 1986 "except
+    # inside the orbit of Miranda"; Cheng 1987 electron minima at Miranda/Ariel/
+    # Umbriel L = 5.1/7.5/10.4, broad maxima between): inner = inside Miranda,
+    # outer = Miranda..Umbriel. Detectable trapping reaches Titania (~L 17).
+    'uranus_inner':  {'L': (1.5, 5.0), 'rcut': 1.05},
+    'uranus_outer':  {'L': (5.0, 10.0), 'rcut': 1.05},
     # Neptune: peak L~7, hard Triton cut ~14
     'neptune_inner': {'L': (1.5, 5.0), 'rcut': 1.05},
     'neptune_outer': {'L': (5.0, 14.0), 'rcut': 1.05},
-    # Ganymede: single weak belt on closed lines inside ~2 R_G standoff
-    'ganymede_belt': {'L': (1.1, 1.9), 'rcut': 1.02},
+    # Ganymede: single weak belt on closed lines inside ~2 R_G standoff.
+    # rcut = 1.0: no atmosphere -- particles absorb at the surface itself.
+    'ganymede_belt': {'L': (1.1, 1.9), 'rcut': 1.0},
 }
 
 if __name__ == '__main__':

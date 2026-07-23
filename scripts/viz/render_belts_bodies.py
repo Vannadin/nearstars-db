@@ -11,9 +11,9 @@ BODIES={
    'outer':{'radiation':50,'grad':2.2,'dist':6.5,'rad':6.5,'comp':1.05,'ext':0.85},
    'pause':{'radiation':-0.01,'rad':60,'comp':1.05,'ext':0.01,'hscale':1.02}},
  # phys 지오메트리 = fit_belts.py 수치 피팅(쌍극자 L-셸 타깃, IoU 명기). pause는 nose=rad/comp 의미론으로 계산.
- 'jupiter_phys':{'title':'Jupiter — physical (SDF fit)','sub':'dipolar inner L 1.2-3 (IoU .98) + magnetodisc slab 3-16 (IoU .87)','R':18,'tilt':10.3,'offset':0.1,
+ 'jupiter_phys':{'title':'Jupiter — physical (SDF fit)','sub':'dipolar inner L 1.2-3 (IoU .98) + magnetodisc slab 3-16 × ±3 (IoU .87)','R':18,'tilt':10.3,'offset':0.1,
    'inner':{'radiation':1500,'grad':3.3,'dist':1.3435,'rad':1.159,'dxy':0.693,'comp':1.05,'ext':0.9,'bdist':3e-4,'brad':0.8889,'bdxy':0.5866},
-   'outer':{'radiation':150,'grad':2.2,'dist':2.7525,'rad':2.6703,'dxy':0.1046,'comp':1.05,'ext':0.9,'bdist':1e-4,'brad':3.6874,'bdxy':1.4559},  # 자기원반=적도 전류시트(렌즈형)
+   'outer':{'radiation':150,'grad':2.2,'dist':3.2565,'rad':3.2269,'dxy':0.1483,'comp':1.05,'ext':0.9,'bdist':1e-4,'brad':4.238,'bdxy':1.85},  # 자기원반=적도 전류시트(렌즈형, 반두께 3=Khurana; 3-16은 프레임 절단)
    'pause':{'radiation':-0.01,'rad':75.6,'comp':1.2,'ext':0.05,'hscale':1.15}},  # nose 63 R_J (Joy 2002)
 
  # ---- SATURN: 스톡=외대만, 물리=고리가 내대 소거→외대만(축대칭), CRAND 약함 ----
@@ -30,9 +30,10 @@ BODIES={
  'uranus_stock':{'title':'Uranus — stock (ROKerbalism RSS.cfg)','sub':'generic saturn model: outer 7/7, pause 20; pole_lat 31.4, offset 0.3','R':16,'tilt':58.6,'offset':0.3,
    'outer':{'radiation':4,'grad':2.2,'dist':7.0,'rad':7.0,'comp':1.05,'ext':0.95},
    'pause':{'radiation':-0.010,'rad':20,'comp':1.02,'ext':0.1,'hscale':1.0}},
- 'uranus_phys':{'title':'Uranus — physical (SDF fit)','sub':'tilt 59°, offset 0.3 R_U; shells L 1.5-3 / L 3-7 (IoU .97/.98)','R':16,'tilt':59,'offset':0.3,
-   'inner':{'radiation':40,'grad':3.3,'dist':1.3456,'rad':1.1589,'dxy':0.6952,'comp':1.02,'ext':1.0,'bdist':0.371,'brad':0.6916,'bdxy':0.5021},
-   'outer':{'radiation':8,'grad':2.2,'dist':3.0123,'rad':2.7018,'dxy':0.662,'comp':1.02,'ext':0.95,'bdist':1.3175,'brad':1.1596,'bdxy':0.6748},
+ # 벨트 구조 경계=위성 L-셸 (Krimigis 1986 Miranda 안쪽 예외역 + Cheng 1987 전자 극소: Miranda 5.1/Ariel 7.5/Umbriel 10.4)
+ 'uranus_phys':{'title':'Uranus — physical (SDF fit)','sub':'tilt 59°, offset 0.3; L 1.5-5 / 5-10 Miranda·Umbriel cut (IoU .98/.97)','R':16,'tilt':59,'offset':0.3,
+   'inner':{'radiation':40,'grad':3.3,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.02,'ext':1.0,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
+   'outer':{'radiation':8,'grad':2.2,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.02,'ext':0.95,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
    'pause':{'radiation':-0.010,'rad':21.6,'comp':1.2,'ext':0.1,'hscale':1.1}},  # nose 18 R_U (Ness 1986)
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
@@ -56,16 +57,16 @@ BODIES={
    'inner':{'radiation':10.376,'grad':3.3,'dist':0.813,'rad':0.70,'dxy':0.572,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':0.915,'bdxy':0.5},
    'outer':{'radiation':2.214,'grad':2.2,'dist':2.6338,'rad':2.48,'dxy':0.7225,'comp':1.01,'ext':1.0,'bdist':1.4412,'brad':1.4875,'bdxy':0.7225},
    'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},
- 'earth_phys':{'title':'Earth — physical (SDF fit)','sub':'shells L 1.1-2 / L 3-7, slot between (IoU .98/.98); mp nose 10','R':8,'tilt':11,
-   'inner':{'radiation':10.376,'grad':3.3,'dist':0.9104,'rad':0.7714,'dxy':0.7041,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':0.9596,'bdxy':0.8327},
+ 'earth_phys':{'title':'Earth — physical (SDF fit)','sub':'shells L 1.1-2 (>1000 km) / L 3-7, slot between (IoU .99/.98); mp nose 10','R':8,'tilt':11,
+   'inner':{'radiation':10.376,'grad':3.3,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':1.1836,'bdxy':1.0505},  # 내대 하한=1000km(loss-cone 고갈 경계)
    'outer':{'radiation':2.214,'grad':2.2,'dist':3.0123,'rad':2.7018,'dxy':0.662,'comp':1.01,'ext':1.0,'bdist':1.3175,'brad':1.1596,'bdxy':0.6748},  # L3-7, 보더 카브=슬롯
    'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  'ganymede_stock':{'title':'Ganymede — stock (ROKerbalism)','sub':'inner 0.8/0.6, no pause defined','R':4,'tilt':4,
    'inner':{'radiation':0.33,'grad':3.3,'dist':0.8,'rad':0.6}},
- 'ganymede_phys':{'title':'Ganymede — physical (SDF fit)','sub':'719 nT dipole; closed-line belt L 1.1-1.9 (IoU .96); mp nose 2, width 5.5','R':4,'tilt':4,
-   'inner':{'radiation':0.33,'grad':3.3,'dist':0.9573,'rad':0.7293,'dxy':0.7903,'comp':1.05,'ext':0.9,'bdist':0.086,'brad':0.8615,'bdxy':0.7791},
+ 'ganymede_phys':{'title':'Ganymede — physical (SDF fit)','sub':'719 nT dipole; closed-line belt L 1.1-1.9, surface-absorbed (IoU .97); mp nose 2, width 5.5','R':4,'tilt':4,
+   'inner':{'radiation':0.33,'grad':3.3,'dist':0.8758,'rad':0.7327,'dxy':0.715,'comp':1.05,'ext':0.9,'bdist':0.0222,'brad':0.9408,'bdxy':0.8693},  # 무대기 → 컷=표면(r=1.0)
    'pause':{'radiation':-0.01,'rad':2.75,'comp':1.375,'ext':0.7,'hscale':1.0}},  # nose 2.0 / 폭 5.5 R_G (Kivelson 1998)
 }
 

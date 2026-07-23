@@ -87,7 +87,7 @@ Radiation.cfg` + RSS anchors), the physical values with ADS pins, and the delta.
 | Field | Stock (`earth`) | Physical | Source |
 |---|---|---|---|
 | pause | 15 / comp 1.5 → **nose 10 R_E** | ~10 R_E sub-solar ✓ | Shue 1997 [`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S), Fairfield 1971 [`1971JGR....76.6700F`](https://ui.adsabs.harvard.edu/abs/1971JGR....76.6700F) |
-| inner belt | 0.813/0.70 dxy 0.572, border 0.915 → equator **1.29–2.0 R_E** | peak **L≈1.5**, ~1.1–2 R_E ✓ | (AP9; Ripoll 2016) |
+| inner belt | 0.813/0.70 dxy 0.572, border 0.915 → equator **1.29–2.0 R_E** | peak **L≈1.5**, ~1.1–2 R_E, lower edge ~1000 km (loss-cone-depleted below; SAA dips to ~200 km via the dipole offset) ✓ | (AP9; Ripoll 2016) |
 | outer belt | 2.63/2.48 dxy 0.7225, border carve → equator **3.45–6.0 R_E** | **heart L≈4–5**, L 3–7 (≈; edge 6 vs 7) | Reeves 2013 [`2013Sci...341..991R`](https://ui.adsabs.harvard.edu/abs/2013Sci...341..991R), Thorne 2013 [`2013Natur.504..411T`](https://ui.adsabs.harvard.edu/abs/2013Natur.504..411T) |
 | slot region | the gap 2.0–3.45 R_E ✓ | **L≈2–3** (hiss-cleared) | Ripoll 2016 [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R) |
 | radiation_inner/outer | 10.376 / 2.214 | order-consistent | — |
@@ -98,15 +98,19 @@ position**: D-cut inner belt at 1.29–2.0 R_E, slot, hollow outer at 3.45–6.0
 nose exactly 10 R_E, accurate tilt/offset, inner dose ~10.4 rad/h at the observed proton
 peak. (An earlier revision of this doc claimed the pause was 1.5× generous and the outer
 belt 2× inward — both were the cfg-reading traps above; retracted.) The physical render
-refits the exact L-shells (inner L 1.1–2, outer L 3–7: IoU 0.98/0.98); the visible deltas
-vs stock are small — outer edge 7 vs 6 R_E and a slightly thicker inner crescent.
+refits the exact L-shells (inner L 1.1–2 with the ~1000 km lower boundary, outer L 3–7:
+IoU 0.99/0.98); the visible deltas vs stock are small — outer edge 7 vs 6 R_E and a
+slightly thicker inner crescent. The outer-belt horns keep a low (~300 km) cut — unlike
+the inner belt, outer-zone electrons routinely precipitate into the bounce/drift loss
+cone at low altitude (POES observations; Liu 2024
+[`2024JGRA..12932171L`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932171L)).
 
 ### Jupiter
 | Field | Stock (RSS `jupiter`) | Physical | Source |
 |---|---|---|---|
 | inner belt | 6.0/1.0 (no dxy) → equator **5–7 R_J** | dipolar shell **L 1.2–3** (peak ~1.5–2 R_J; fit IoU .98) | Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D) |
 | inner border | (none) | loss-cone D-cut at the atmosphere | (belt physics) |
-| outer belt | 6.5/6.5 (concentric blob) | **magnetodisc slab 3–16 R_J × ±2.5** (fit IoU .87 — torus ceiling) | Khurana 1989 [`1989JGR....9411791K`](https://ui.adsabs.harvard.edu/abs/1989JGR....9411791K) |
+| outer belt | 6.5/6.5 (concentric blob) | **magnetodisc slab 3–16 R_J × ±3** (half-width ~3–3.5 R_J canonical; 3–16 is a frame truncation of a disc extending past 50 R_J) (fit IoU .87 — torus ceiling) | Khurana 1989 [`1989JGR....9411791K`](https://ui.adsabs.harvard.edu/abs/1989JGR....9411791K) |
 | pause | 60 / comp 1.05 → nose 57 | nose **63** (compressed; 92 expanded) | Joy 2002 [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J) |
 | radiation_inner | 300 | **~1500** (order 10³–10⁴; conf low) | Divine & Garrett 1983 |
 | geomagnetic_pole_lat | −81.4 | **−80** (tilt 10.3°, reversed) | Connerney 2022 JRM33 [`2022JGRE..12707055C`](https://ui.adsabs.harvard.edu/abs/2022JGRE..12707055C) |
@@ -143,7 +147,7 @@ near-perfectly axisymmetric (Cao 2020), so tilt ≈ 0.
 | geomagnetic tilt | pole_lat 31.4 (=58.6°) | **59–60°** ✓ | Ness 1986 [`1986Sci...233...85N`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...85N) |
 | geomagnetic_offset | 0.3 | **0.3 R_U** ✓ | Ness 1986 |
 | pause | 20 / comp 1.02 → nose 19.6 | nose **18.0 R_U** (bow shock 23.7) | Ness 1986 |
-| belts | generic outer 7/7 blob (0–14 R_U); **radiation_inner 75 is dead cfg** (`has_inner = false`) | two shells **L 1.5–3 / L 3–7** (fit IoU .97/.98), field peak 413 nT at 4.19 R_U | Ness 1986 |
+| belts | generic outer 7/7 blob (0–14 R_U); **radiation_inner 75 is dead cfg** (`has_inner = false`) | two shells **L 1.5–5 / L 5–10** bounded by moon sweeping — Miranda L 5.1 ("except inside the orbit of Miranda"), electron minima at Miranda/Ariel/Umbriel L 5.1/7.5/10.4 with broad maxima between; trapping detectable to Titania ~L 17 (fit IoU .98/.97) | Krimigis 1986, Cheng 1987 [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C) |
 | radiation_inner | 75 (unused) | e⁻ ≥1.2 MeV, p ≥4 MeV | Krimigis 1986 [`1986Sci...233...97K`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...97K) |
 | quadrupole | — | large (Q3 model) | Connerney 1987 [`1987JGR....9215329C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215329C) |
 
@@ -194,7 +198,7 @@ pause_radius as the standoff) had it.
 |---|---|---|---|
 | surface dipole | (implicit) | **719 nT eq** (tilt 176°) | Kivelson 2002 [`2002Icar..157..507K`](https://ui.adsabs.harvard.edu/abs/2002Icar..157..507K) |
 | has_pause | (none) | **~2 R_G upstream** (5.5 across) | Kivelson 1998 [`1998JGR...10319963K`](https://ui.adsabs.harvard.edu/abs/1998JGR...10319963K) |
-| inner belt | 0.8/0.6, rad 0.33 | single weak closed-line belt **L 1.1–1.9** (fit IoU .96), source-starved | Allioux 2013 [`2013AdSpR..51.1204A`](https://ui.adsabs.harvard.edu/abs/2013AdSpR..51.1204A) |
+| inner belt | 0.8/0.6, rad 0.33 | single weak closed-line belt **L 1.1–1.9**, absorbed at the surface itself (airless — no altitude cut) (fit IoU .97), source-starved | Allioux 2013 [`2013AdSpR..51.1204A`](https://ui.adsabs.harvard.edu/abs/2013AdSpR..51.1204A) |
 | open caps | — | **poleward of 30–45°** (leaky) | Pappalardo 1998 [`1998DPS....30.5401P`](https://ui.adsabs.harvard.edu/abs/1998DPS....30.5401P) |
 | net role | — | **shield −50–60%** of ambient | Allioux 2013 |
 
@@ -231,7 +235,7 @@ a low orbiter. **Stock omits the pause entirely** — a fix worth adding.
   Kollmann 2013 [`2013Icar..222..323K`](https://ui.adsabs.harvard.edu/abs/2013Icar..222..323K); Kollmann 2017 [`2017NatAs...1..872K`](https://ui.adsabs.harvard.edu/abs/2017NatAs...1..872K); Roussos 2007
   [`2007JGRA..112.6214R`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.6214R); Roussos 2018 [`2018Sci...362.1962R`](https://ui.adsabs.harvard.edu/abs/2018Sci...362.1962R); Cao 2020 [`2020Icar..34413541C`](https://ui.adsabs.harvard.edu/abs/2020Icar..34413541C).
 - **Uranus**: Ness 1986 [`1986Sci...233...85N`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...85N); Krimigis 1986 [`1986Sci...233...97K`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...97K); Stone
-  1986 [`1986Sci...233...93S`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...93S); Connerney 1987 [`1987JGR....9215329C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215329C); Behannon 1987
+  1986 [`1986Sci...233...93S`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...93S); Cheng 1987 [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C); Connerney 1987 [`1987JGR....9215329C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215329C); Behannon 1987
   [`1987JGR....9215354B`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215354B).
 - **Neptune**: Ness 1989 [`1989Sci...246.1473N`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1473N); Krimigis 1989 [`1989Sci...246.1483K`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1483K); Stone
   1989 [`1989Sci...246.1489S`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1489S); Connerney 1991 [`1991JGR....9619023C`](https://ui.adsabs.harvard.edu/abs/1991JGR....9619023C); Paranicas 1991

@@ -69,6 +69,45 @@ saturn_outer .981, uranus_inner .972, uranus_outer .980, neptune_inner .980,
 neptune_outer .970, ganymede_belt .964. uranus_outer ≡ earth_outer (same L 3–7
 target) — expected, the fit is deterministic in the target.
 
+## Owner review round (2026-07-24, post-push)
+
+- Owner caught the Earth inner belt hugging the surface in the physical render.
+  Root cause: target rcut 1.02 was "top of atmosphere", but the real inner-belt
+  lower boundary is ~1000 km altitude (loss-cone depletion below; the SAA dip to
+  ~200 km is the offset-dipole effect, which geomagnetic_offset already carries).
+  Refit with rcut 1.157 → IoU 0.994, D-cut face lands at the 1000 km boundary.
+  Notably stock's D-cut (equator 1.29 R_E) had respected this gap all along.
+- That correctly shook confidence in the other assumed target params. Triage:
+  anchor-pinned = Earth L-windows/slot, Saturn 2.3–6, Neptune peak L7 + Triton
+  cut 14, Jupiter inner peak. Assumed = all other low-altitude cuts (1.03/1.05),
+  Uranus L-windows (inherited from prev session; the "4.19 R_U" doc anchor is a
+  magnetometer reading, not a belt), Neptune inner window, Jupiter disc slab
+  numbers. Ganymede rcut 1.02 corrected to 1.0 immediately (airless — surface
+  absorbs). Literature verification of the rest delegated to a solo ADS agent;
+  wiki push held until the audit lands.
+
+## ADS audit of all target params (2026-07-24, solo agent)
+
+Verdicts on the 7 open items: 5 supported with firmer grounding, 2 adjusted.
+- **Uranus corrected** (the one real error): the L=3 split was arbitrary and the
+  "413 nT @ 4.19 R_U" doc anchor was a magnetometer reading, not a belt. Real
+  structural boundaries are the moon L-shells — Krimigis 1986 "except inside the
+  orbit of Miranda" + Cheng 1987 (1987JGR....9215315C, newly pinned) electron
+  minima at Miranda/Ariel/Umbriel L 5.1/7.5/10.4 with broad maxima between.
+  New windows: inner L 1.5–5 (inside Miranda), outer L 5–10 (Miranda→Umbriel);
+  trapping detectable to Titania ~L 17. Refit IoU .98/.97.
+- **Jupiter disc** half-thickness 2.5 → 3.0 R_J (Khurana canonical ~3–3.5);
+  radial 3–16 documented as a frame truncation (real disc extends past 50 R_J).
+- Supported: Jupiter inner (D&G continuous to atmosphere; synchrotron pin not
+  found via ADS abstracts — grounded through D&G/Santos-Costa, conf medium),
+  Saturn horns (bounce population fills field lines — a latitude bound would be
+  wrong), Neptune windows (Proteus L 4.75 divider; Triton 14.4), Earth outer
+  rcut 1.05 (outer electrons precipitate into the loss cone at low altitude —
+  Liu 2024, 2024JGRA..12932171L, newly pinned), Ganymede L 1.1–1.9 with
+  rcut 1.0 (airless, surface-absorbed; refit IoU .967).
+- Paper cache relocated to canonical docs/phase3/_papers/ (agent had created a
+  root _papers/ by mistake — my prompt's fault).
+
 ## Decisions
 
 - Working dir under `plans/` (not phase2/): viz tooling, not curation.
