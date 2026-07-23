@@ -426,6 +426,15 @@ Principia discovers bodies from `FlightGlobals.Bodies` (populated by Kopernicus)
 - `principia_gravity_model` is optional; supplements CelestialBody data
 - `gravitational_parameter` optional (defaults to `body.gravParameter`)
 - Mode: stock KSP, fictional planet packs
+- **Interstellar bodies = Cartesian only — never Keplerian.** The adapter passes
+  the orbit's *mean motion* (KSP period, computed with the stock parent-only μ),
+  and Principia's Jacobi initialization re-derives the semimajor axis with
+  μ_eff = Σ(inner chain) + own body. A body whose mass is not negligible next to
+  its primary (a star around a star) silently inflates its orbit by
+  (μ_eff/μ_parent)^(1/3) — measured ~6.3× for NearStars (2026-07-19, the "TS
+  displacement" incident). The fork logs a warning when the inflation exceeds 1%
+  (commit `9b2167ec7`); the fix is a `principia_initial_state` Cartesian patch
+  for any system containing stellar-mass satellites.
 
 ### Stock KSP Jool system stabilization
 
