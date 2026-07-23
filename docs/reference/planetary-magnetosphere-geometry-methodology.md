@@ -191,19 +191,65 @@ radiation-relevant, and the moon's *own* field is a minor player.
      does trap and precipitate feed aurorae rather than baking the ground. An
      intrinsic moon field is protective, not a self-inflicted hazard.
 
+**Strong-field embedded moon (a distinct sub-regime — the Ganymede analogy breaks).**
+The bullets above assume a *weak* moon field (Ganymede, ~6× local → leaky, negligible
+own belt). A moon with an intrinsically **planet-class dynamo** — Earth-class or stronger
+in *absolute* terms, not merely a few× the local parent field — is a qualitatively
+different case that must **not** be forced onto the Ganymede template:
+
+- **Small size, opposite cause.** In isolation such a moon would carry an *Earth-plus*
+  magnetosphere (its standalone standoff, moon field vs stellar-wind ram, exceeds
+  Earth's). Embedding then compresses it, because the external pressure is now the
+  parent's **local magnetic pressure** `B_parent²/2μ₀`, which deep in a giant's field
+  is *orders of magnitude* above the stellar-wind ram — so the standoff collapses to a
+  few moon-radii **regardless of how strong the moon's field is**. The compact size is
+  *imposed by the high-pressure environment*, not by a weak field. The field-crossover
+  standoff is `R_mp/R_moon ≈ (B_eq^moon / B_parent^local)^(1/3)` (the radius where the
+  moon's dipole magnitude equals the ambient parent field); the co-rotating plasma ram
+  trims it slightly further.
+- **Belt is Earth-*kind*, not Ganymede-negligible.** A high dominance ratio (≳15–20×)
+  gives *mostly closed* field lines — small polar cusps, little reconnection leak — so a
+  genuine closed trapping volume exists; and a **thick atmosphere supplies CRAND**
+  (Lenchek 1961), the same internal proton source that fills Earth's inner belt. A real
+  inner belt therefore forms, unlike Ganymede's. Two parent effects still *moderate* it:
+  the parent magnetosphere **screens galactic cosmic rays**, throttling the CRAND driver,
+  and a belt-gap orbit starves radial diffusion. Net intensity is **modest but
+  non-negligible** — well below an unshielded Earth, well above Ganymede. Still one belt
+  (the compressed volume has no room for Earth's two).
+- **Net role = strong shield + a real orbital-altitude belt.** The large dominance ratio
+  makes the shield robust (surface dose ≈ the ambient parent flux at the moon's L-shell,
+  heavily reduced); the CRAND belt it sustains is a hazard for *orbiting* craft, not the
+  surface, and its precipitation drives a genuine auroral oval. Heller & Zuluaga 2013
+  (`2013ApJ...776L..33H`, arXiv 1309.0811) frame exactly this shield-vs-belt tension for
+  exomoons — and note that formation models make an Earth-mass, strong-field moon
+  *unlikely*, so this sub-regime is physically coherent but **observationally
+  unprecedented** (a fiction-premise regime; flag confidence low, and never claim a
+  Solar-System exemplar — Ganymede is the only real intrinsic-dynamo moon and it is weak).
+
 **Kerbalism mapping (embedded moon):** give the moon its own compact `RadiationModel`
 (small `pause_radius` in moon radii; a single narrow belt) + a `RadiationBody` with a
-*weak* `radiation_inner` (source-starved) and a small stock-scale `radiation_pause`
-(~−0.01; the shield is the *presence* of a pause at `pause_radius`, not a big value).
-The moon's net surface dose = the parent's belt at its L-shell, reduced by its own pause.
+small stock-scale `radiation_pause` (~−0.01; the shield is the *presence* of a pause at
+`pause_radius`, not a big value). The moon's net surface dose = the parent's belt at its
+L-shell, reduced by its own pause. For `radiation_inner`, split by sub-regime: a
+**weak-field** moon (Ganymede) is source-starved → *weak* (~0.2× stock Kerbin); a
+**strong-field** moon (Pandora) sustains a real CRAND belt → *modest* (~0.3–0.5× Kerbin),
+GCR-screened below Earth but well above the Ganymede-negligible value. Neither is a field
+readout (Part B); both are the source–loss regime call.
 
-**Worked (Pandora vs Ganymede):** Pandora (75 µT, 3.53 R_p, in Polyphemus's belt gap)
-→ field ~19× the local parent field → standoff ~2.5 R_p, one weak belt
-(`radiation_inner ≈ 2` rad/h, ~0.2× stock Kerbin's 10.4 because it is gap-starved),
-`radiation_pause ≈ −0.01` (stock scale). Ganymede (0.72 µT, ~6× local Jovian) →
-standoff ~2 R_G, a negligible own belt. Pandora's mini-magnetosphere is the more
-robust of the two, yet its habitability still rests on the *shield*, not on any
-belt it makes.
+**Worked (Pandora = strong-field, vs Ganymede = weak-field):** Pandora (75 µT eq,
+3.53 R_p, in Polyphemus's belt gap) → field ~19× the 3.9 µT local parent field. In
+isolation it would carry a magnetosphere *bigger than Earth's* (standalone standoff
+~17 R_moon vs Polyphemus's stellar-wind ram); embedded, the parent's local magnetic
+pressure (~6 µPa, ~3000× a solar-wind ram) compresses it ~7× to a field-crossover
+standoff `(75/3.9)^(1/3) ≈ 2.6 R_moon`. The high 19× dominance keeps it mostly closed,
+so its thick habitable atmosphere sustains a **real CRAND inner belt**, not a
+Ganymede-negligible one — `radiation_inner ≈ 4` rad/h (~0.4× stock Kerbin's 10.4:
+GCR-screened by Polyphemus + gap-starved, but a genuine Earth-*kind* belt),
+`radiation_pause ≈ −0.01`. Ganymede (0.72 µT, ~6× local Jovian, no atmosphere) →
+standoff ~2 R_G, open polar caps, a negligible own belt. **Both are shields, not
+generators for the surface**: Pandora's habitability rests on the (gap + shield)
+ambient reduction, and its CRAND belt is an orbital-altitude hazard that feeds the
+aurora — not a surface one.
 
 ## Validation
 
@@ -220,11 +266,18 @@ belt it makes.
    an offset auroral oval. The standoff formula is only approximate, and here the
    **polar-to-equatorial ratio ≠ 2** genuinely encodes the multipole content —
    the one case where carrying both fields is informative rather than redundant.
-3. **Embedded moon** (a moon inside a giant's magnetosphere; **Pandora = Ganymede
-   analog**, Kivelson 1996 `1996Natur.384..537K`): the standoff balances against the
-   **parent's co-rotating magnetospheric plasma**, not the stellar wind; the result
-   is a mini-magnetosphere. Belt dose at the moon is set by the *parent's* belt at
-   that L-shell (a loss/source term for the parent), plus the moon's own shielding.
+3. **Embedded moon** (a moon inside a giant's magnetosphere): the standoff balances
+   against the **parent's co-rotating magnetospheric plasma / field**, not the stellar
+   wind; the result is a mini-magnetosphere. Belt dose at the moon is set by the
+   *parent's* belt at that L-shell (a loss/source term for the parent), plus the moon's
+   own shielding. Two sub-regimes (see Part D):
+   - **3a weak-field** (Ganymede, Kivelson 1996 `1996Natur.384..537K`): a few× local →
+     leaky, open polar caps, a negligible own belt. Pure shield.
+   - **3b strong-field** (planet-class dynamo, e.g. Pandora; Heller & Zuluaga 2013
+     `2013ApJ...776L..33H`): intrinsically Earth-plus but compressed by the parent's
+     magnetic pressure to a few R_moon; ≳15–20× dominance → mostly closed → a real
+     CRAND belt (if it has an atmosphere), moderated by parent GCR-screening. Strong
+     shield **plus** a genuine orbital-altitude belt. No Solar-System exemplar (low conf).
 4. **Induced / no dynamo** (Venus, Io, a dead rocky planet): no intrinsic trapping,
    no belts; the interaction is ionospheric/induced and the surface dose is the
    direct wind + GCR flux.
@@ -242,10 +295,13 @@ belt it makes.
   `pause_radius`, and the small stock-scale `radiation_pause` (~−0.01). The design's core
   is exactly this: an intensified inner belt bakes the inner moons (Dante >4500 rem/day),
   while habitable Pandora survives in a gap on its own strong-field shielding.
-- **Pandora** (embedded, Ganymede analog): own 75 µT dipole → a mini-magnetosphere
-  at 3.53 R_p *inside* Polyphemus's field. It sits in the **gap between Polyphemus's
-  two belts** and its own field adds shielding → the physical basis for habitability.
-  Standoff is computed against Polyphemus's local plasma, not the stellar wind.
+- **Pandora** (embedded, **strong-field** sub-regime 3b — *not* a Ganymede analog):
+  own 75 µT dipole → intrinsically an Earth-plus magnetosphere (standalone ~17 R_moon),
+  compressed ~7× to a ~2.6 R_moon mini-magnetosphere *inside* Polyphemus's field. It
+  sits in the **gap between Polyphemus's two belts** and its own field adds shielding →
+  the physical basis for habitability. The high 19× dominance + thick atmosphere sustain
+  a real CRAND belt (`radiation_inner ≈ 4` rad/h, an orbital hazard feeding the aurora,
+  not a surface one). Standoff is set against Polyphemus's local field, not the stellar wind.
 - **Proxima b** (weak dipole ~0.06–0.1 ℳ⊕): a small magnetosphere, standoff only a
   few R_p; belts marginal; surface dose dominated by the direct M-dwarf wind + flares.
 - **Proxima c** (ice-giant, offset/tilted multipolar): asymmetric belts, offset oval;
@@ -276,7 +332,12 @@ a documented regime call rather than a computed number.
 - **Cooper 1983**, JGR 88, 3945 (`1983JGR....88.3945C`). Ring/moon absorption as a
   belt loss — the Polyphemus ring + moons case.
 - **Kivelson et al. 1996**, Nature 384, 537 (`1996Natur.384..537K`). Ganymede's
-  embedded magnetosphere — the Pandora analog.
+  embedded magnetosphere — the weak-field embedded-moon (sub-regime 3a) exemplar.
+- **Heller & Zuluaga 2013**, ApJ 776, L33 (`2013ApJ...776L..33H`, arXiv
+  **[1309.0811](https://arxiv.org/abs/1309.0811)**). Exomoon magnetic shielding within a
+  giant planet's magnetosphere — the shield-vs-radiation-belt tension, and the note that
+  Earth-mass strong-field moons are formation-unlikely. Grounds the strong-field
+  embedded-moon (sub-regime 3b) as coherent-but-unprecedented (fiction-premise).
 - **Griessmeier et al. 2004**, A&A 425, 753 (`2004A&A...425..753G`); **Vidotto et al.
   2013**, A&A 557, A67 (`2013A&A...557A..67V`). Exoplanet magnetosphere size vs
   stellar wind / tidal locking — the close-in-planet standoff application.
