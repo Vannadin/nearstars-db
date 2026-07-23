@@ -88,3 +88,4 @@ phase3/stability-sim/results/*_ckpt.bin
 
 # Audit intermediate scratch (harvest/triage JSON) — local-only trail (AGENTS.md §2.4)
 phase3/_audit/_scratch/
+scripts/viz/wiki-img/

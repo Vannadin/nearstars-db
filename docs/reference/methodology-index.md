@@ -65,6 +65,7 @@ XYZ → IEC 61966-2-1 sRGB), owned by the reflected-color doc.
 - [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md): n-body gravity-model (J2/geopotential) cfg conventions.
 - [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md): literature grounding for the far-field gravity-truncation floor `a_floor` + switching-shell ratio (Principia fork). Folkner 2014 / Park 2021 (ephemeris perturber selection); Chesley 2014 (Yarkovsky detectability); Jiang & Tremaine 2010 (Jacobi radius); Rein & Spiegel 2015 (force-error budgets).
 - [binary-epoch-pipeline](binary-epoch-pipeline.md): multi-star Keplerian → ICRS epoch propagation.
+- [solar-system-radiation-belts](solar-system-radiation-belts.md): stock Kerbalism cfg vs ADS-grounded physics for all 7 magnetized Solar-System bodies (Earth/Jupiter/Saturn/Uranus/Neptune/Mercury/Ganymede) — calibrates the magnetosphere-geometry recipe; in-game SDF cross-section renders on the [wiki](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts). Joy 2002; Cooper 1983; Ness 1986/1989; Winslow 2013; Kivelson 2002; +18 more.
 
 ## Related
 
