@@ -41,6 +41,32 @@ head가 이동했다면 심볼 이름으로 다시 앵커를 잡으세요(함수
 **WS3는 독립적**이라 병렬 진행이 가능합니다. 트리의 서로 겹치지 않는 부분
 (`ksp_plugin/pile_up`, `manœuvre`, adapter)만 건드립니다.
 
+## void regime (cross-cutting)
+
+어떤 subsystem에도 속하지 않는 vessel — 성간 void 깊숙한 곳에 있는 경우 — 은
+특정 workstream 하나의 예외 상황이 아니라 그 자체로 1급 regime입니다. 이
+regime은 네 가지 측면을 가지며, 각각 다음이 처리합니다.
+
+- **정밀도**: 모든 anchor에서 멀리 떨어져 있으면 절대 좌표가 성간 규모의
+  크기를 그대로 담습니다. subsystem 분할(WS1/R5)이 적분을 정확하게 유지하고,
+  sector/anchor 메커니즘(WS6)이 *렌더링과 scene 배치*를 정확하게 유지합니다.
+  void에 있는 vessel 자체의 동역학은 far-field-damped, force-free이기 때문에
+  자명하게 매끈합니다.
+- **도킹 / 근접 접근**: void에 있는 두 vessel이 일관되게 상호작용하려면
+  anchor를 공유해야 합니다(RT-1, 해결됨 — 접근 시 co-anchoring).
+- **로드된 파트**: void나 별에서 생성/분리된 vessel의 scene 측 일관성
+  (WS5-C/C2 — 채택 시점의 일관성. PQS 없는 천체에서는 착륙/지면 접촉 상태
+  자체가 불가능하며, 이는 InterstellarFluxFix가 ecosystem 측에서 강제합니다).
+- **Rebase 정책**: void를 coast하던 vessel이 새 계에 접근하면 dominance +
+  hysteresis(#4, 질량 기반, k=3 마진)가 subsystem handoff를 결정합니다. 이
+  band는 어떤 합리적인 Hill sphere보다도 바깥에 있어 bound orbit이 flapping
+  하지 않습니다.
+
+subsystem이 없는 vessel과 관련된 새로운 작업은 무엇이든 먼저 이 목록부터
+확인하고 시작하세요 — 이 네 가지 측면은 이미 핵심 기반이고 각각 담당이
+정해져 있으므로, 새로운 void 관련 작업은 이를 다시 도출하는 대신 확장해야
+합니다.
+
 ## 2. 핵심 종합 결정 — WS1의 subsystem partition이 곧 WS2의 group 구조
 
 R1은 `subsystem_of_body_`(별별 partition, origin 지역화 목적)를 도입합니다.

@@ -59,6 +59,26 @@
 
 ---
 
+## Time-Warp & Relativity (interstellar-play 세트) — Principia-fork 호환성 (2026-07-18 검증)
+
+sub-light 성간 플레이는 스톡을 훨씬 넘어서는 warp 배율이 필요합니다 (0.1c 로 40 ly 는
+400 년이며, 스톡 100,000배에서는 실시간 35시간이 걸립니다). 그래서 이 두 모드는
+Principia fork 와 함께 다닙니다. 호환성은 upstream FAQ 의 규칙 — "엔진을 사용하지 않고
+(1) vessel 을 움직이거나 궤도를 바꾸는가, 또는 (2) time warp 중에 그렇게 하는가" 를
+기준으로 비호환을 판단 — 에 두 모드의 소스 코드를 직접 읽고 대조해 평가했습니다.
+
+| 모드 | 판정 | GitHub |
+|-----|------|--------|
+| **BetterTimeWarpContinued** | 호환 (rate-table 모드로 vessel 을 전혀 움직이지 않음). Upstream 측정치. 100,000배에서는 매끄럽고, 1,000,000배에서는 "덜컹거림"(정합성이 아닌 CPU 문제), vessel 이 없으면 6,000,000배에서도 매끄러움. 지속적인 ultra-warp 의 실질적 한계는 Principia 의 CPU + **RAM 증가**(우리 PR 이 겨냥하는 upstream eviction 이슈)이며, 인게임 kit 의 장거리 순항 시나리오로 측정해야 합니다. physics warp 보다는 rails warp 를 우선하세요. physics warp 를 부스트해도 unpacked integration 부하만 곱해질 뿐입니다. fork 의 WS4 dead-man switch 는 설계상 warp 배율과 무관하고, WS3 burn integration 은 임의의 Δt 청크를 받아들입니다. | [linuxgurugamer/BetterTimeWarpContinued](https://github.com/linuxgurugamer/BetterTimeWarpContinued) |
+| **Relativity** (Vannadin) | 설계상 일반(unpacked) 비행에서 호환. γ³ 추력 억제가 Principia 의 TimingManager 읽기보다 앞서 보정용 part-force 로 주입되며, 이는 Principia force profile 로 인게임에서 검증되었습니다. proper-time ledger 는 로드/언로드 vessel 모두에서 매 FixedUpdate 마다 틱합니다(time-warp 에서도 유효). "warp guard" 는 time warp 가 아니라 FTL-drive Provider 훅입니다. **알려진 공백. fork 의 WS3 on-rails burn 은 γ³ 보정을 전혀 받지 않습니다** — burn harvest 가 엔진 모듈 데이터(maxThrust × throttle × 진공 Isp)로 추력을 합성하는데, 보정용 force 는 (packed-idle 상태의) part-force 채널에만 존재합니다. 그 결과 c 근처에서 warp-burning 하면 Newtonian 추력이 그대로 적분되어 c 를 넘을 수 있습니다. 해법의 형태. WS3 harvest 가 Relativity 에게 1/γ³ 배율을 질의하도록 만듭니다(reflection, present-guarded, Relativity 의 Kerbalism adapter 와 같은 패턴). 질량 유량은 그대로 둡니다(Relativity 의 설계와 일치). Principia-fork 쪽에서 추적 중입니다. | [Vannadin/Relativity](https://github.com/Vannadin/Relativity) |
+
+또한 참고. upstream 은 **Blueshift**(warp drive)를 비호환으로 분류하는데, fork 의
+WS4 release channel (`PrincipiaWarpStatus.warpEngaged`) 은 정확히 그 비호환 부류를
+해소하기 위해 존재합니다 — warp 모드가 vessel 을 Principia 관리에서 풀어주고
+도착 시 재편입시킵니다. warp 중 궤도를 직접 편집하는 non-standard 추진
+(Persistent-Thrust 방식) 은 WS3 를 경유하지 않는 한 upstream 규칙상 여전히
+비호환입니다 (표준 `ModuleEngines` 상속 모듈이 WS3 harvest 가 읽는 대상입니다).
+
 ## 참고 저장소 (다른 행성 팩 예시)
 
 | 저장소 | 용도 |
