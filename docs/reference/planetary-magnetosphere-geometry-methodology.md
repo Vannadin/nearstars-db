@@ -80,7 +80,7 @@ source and loss**, not a formula output.
 
 | Physical quantity | Kerbalism field | Derivation |
 |---|---|---|
-| Magnetopause standoff | `pause_radius` (+ `has_pause`) | R_mp/R_p from Part A |
+| Magnetopause standoff | `pause_radius` (+ `has_pause`) | **`pause_radius = R_mp × pause_compression`** — dayside x is compressed before the sphere test, so the sub-solar nose sits at `pause_radius/pause_compression` (flank = `pause_radius`). R_mp from Part A is the *nose* |
 | Magnetopause shield | `radiation_pause` (small negative) | the shield comes from *having* a pause at `pause_radius`; the value itself is small and stock-uniform (~−0.01), NOT scaled to standoff |
 | Belt extent | `inner_dist`/`inner_radius`, `outer_dist`/`outer_radius` (body radii) | Part A bounds |
 | Belt intensity (rad/h) | `radiation_inner`/`radiation_outer` | Part B regime: source − loss, K–P-capped — **set from the stated source/loss, not from B** |
@@ -93,8 +93,13 @@ Kerbalism models each field as a signed-distance shape, all lengths **in body ra
 ([Kerbalism modding docs](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html);
 stock values from `KerbalismConfig/System/Radiation.cfg`):
 
-- **inner belt** = a torus: `inner_dist` (major radius = ring-center distance) + `inner_radius` (section radius).
-- **outer belt** = a hollow shell (a torus minus a slightly smaller one, faded by `outer_border_start/end`): `outer_dist` + `outer_radius`.
+- **inner belt** = a torus minus a border torus: `inner_dist` (major radius) +
+  `inner_radius` (section radius), carved by `inner_border_dist/radius/deform_xy`
+  (a border with `border_dist ≈ 0` is a sphere cut — the loss-cone D-shape). All in
+  `deform_xy`-squashed coordinates: equatorial extent = `(dist ± radius)/√deform_xy`.
+  (`*_border_start/end`, still present in some shipped cfgs, are legacy — the current
+  parser reads only `border_dist/radius/deform_xy`.)
+- **outer belt** = same construction: `outer_dist` + `outer_radius` minus its border.
 - **magnetopause** = a sphere `pause_radius`, deformable toward the star (`*_compression`) and into a tail (`*_extension`); `*_deform`/`*_quality` are cosmetic.
 - Intensities + axis live on the `RadiationBody`: `radiation_inner/outer/pause` (rad/h, pause negative), `geomagnetic_pole_lat/lon`.
 

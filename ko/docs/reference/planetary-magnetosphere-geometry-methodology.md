@@ -71,7 +71,7 @@
 
 | 물리량 | Kerbalism 필드 | 도출 |
 |---|---|---|
-| 자기권계면 standoff | `pause_radius` (+ `has_pause`) | Part A의 R_mp/R_p |
+| 자기권계면 standoff | `pause_radius` (+ `has_pause`) | **`pause_radius = R_mp × pause_compression`** — 주간측 x는 구 검사 전에 압축되므로 sub-solar 코는 `pause_radius/pause_compression`에 놓임(옆구리 = `pause_radius`). Part A의 R_mp가 *코* |
 | 자기권계면 차폐 | `radiation_pause` (작은 음수) | 차폐는 `pause_radius`에 pause가 *있다는 것*에서 나옴. 값 자체는 작고 스톡 균일(~−0.01)이며 standoff에 비례하지 않음 |
 | 벨트 범위 | `inner_dist`/`inner_radius`, `outer_dist`/`outer_radius` (바디 반경 단위) | Part A 경계 |
 | 벨트 강도(rad/h) | `radiation_inner`/`radiation_outer` | Part B regime: 공급원 − 손실, K–P 캡 — **B가 아니라 명시된 공급원/손실에서** |
@@ -84,8 +84,12 @@ Kerbalism은 각 field를 signed-distance 형상으로 모델링하며 길이는
 입니다([Kerbalism 모딩 문서](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html);
 스톡 값은 `KerbalismConfig/System/Radiation.cfg`).
 
-- **내대(inner)** = 토러스: `inner_dist`(장반경=고리 중심 거리) + `inner_radius`(단면 반경).
-- **외대(outer)** = 속 빈 셸(토러스에서 약간 작은 토러스를 뺌, `outer_border_start/end`로 페이드): `outer_dist` + `outer_radius`.
+- **내대(inner)** = 토러스에서 border 토러스를 뺀 것. `inner_dist`(장반경) + `inner_radius`
+  (단면 반경)를 `inner_border_dist/radius/deform_xy`로 도려냅니다(`border_dist ≈ 0`인 border는
+  구 컷 — loss-cone D 모양). 전부 `deform_xy`로 눌린 좌표계입니다. 적도 범위 =
+  `(dist ± radius)/√deform_xy`. (`*_border_start/end`는 일부 출하 cfg에 아직 남아 있지만 레거시
+  입니다 — 현재 파서는 `border_dist/radius/deform_xy`만 읽습니다.)
+- **외대(outer)** = 같은 구조. `outer_dist` + `outer_radius`에서 그 border를 뺍니다.
 - **자기권계면(pause)** = 구 `pause_radius`, 별 방향 압축(`*_compression`)·꼬리 방향 신장(`*_extension`) 가능. `*_deform`/`*_quality`는 렌더용.
 - 강도·축은 `RadiationBody`에: `radiation_inner/outer/pause`(rad/h, pause 음수), `geomagnetic_pole_lat/lon`.
 
