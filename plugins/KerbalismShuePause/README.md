@@ -58,12 +58,13 @@ softened form delivers as a single analytic C∞ closed curve:
 - `ε → 0` recovers exact Shue (since `2/(1+cosθ) = 1/cos²(θ/2)`).
 - `ε > 0` closes the tail at exactly `r(180°) = L`, with `dr/dθ = 0` there
   (rounded tip); smooth everywhere, no crease, no join.
-- **Taper is always zero** (owner, 2026-07-23): the generalized form carried a
+- **Taper fixed at m = 1** (owner, 2026-07-23): the generalized form carried a
   tail-concentration exponent `m` (`cos^{2m}`, `α/m`); it is pinned to the base
-  form `m = 1` — no extra taper, no knob, not a cfg field. (`m = 0` literally
-  degenerates to a sphere, so "zero taper" = the base form.) Cost is nil at
-  game-scale tails: with L linked to the Kerbalism tail (Earth L = 200 R_E),
-  dayside deviation from true Shue is ≤0.33% at the flank (verified 2026-07-23).
+  form `m = 1` — no extra taper, no knob, not a cfg field. (An initial "zero
+  taper" was corrected to 1: `m = 0` degenerates to a sphere, so the base
+  no-extra-taper form is `m = 1`.) Cost is nil at game-scale tails: with L
+  linked to the Kerbalism tail (Earth L = 200 R_E), dayside deviation from true
+  Shue is ≤0.33% at the flank (verified 2026-07-23).
 
 **Field set (owner-confirmed): `(r0, α, L)` — three orthogonal fields.** α alone
 cannot replace `pause_radius`: it is a dimensionless flank/nose ratio (`2^α`) and
