@@ -6,9 +6,14 @@
 NearStars의 자기권 지오메트리 레시피가 가상 천체용 벨트를 뽑아내기 전에 실제 바디로 먼저
 보정하고, 스톡 모델이 러프한 자리채움에 그친 곳에는 물리 정확 cfg 값을 되먹이려고 존재합니다.
 
-단면 시각화(인게임 `RadiationModel` SDF를 그대로 렌더)는 위키에 있습니다.
-**[Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)**.
-렌더러는 `scripts/viz/render_belts.py`이며 [`Radiation.cs`](https://github.com/Kerbalism/Kerbalism/blob/master/src/Kerbalism/Radiation/Radiation.cs)의 SDF 알고리즘을 재현합니다(출처 [Kerbalism](https://github.com/Kerbalism/Kerbalism), [Unlicense](https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE)·퍼블릭 도메인). 場 모양 스키마는
+단면 시각화는 위키에 있습니다.
+**[Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)** —
+바디마다 두 가지 렌더입니다. **스톡** 단면은 인게임 `RadiationModel` 부호거리장을 그대로
+렌더한 납작한 **토러스**이고, **물리** 단면은 실제 **쌍극 자기력선** 벨트(L-shell `r = L·cos²λ`)로
+필드라인을 감싸며 극으로 가늘어지는 초승달 — 교과서적 밴 앨런 형태입니다. 둘의 차이가 *곧
+발견*입니다. 게임의 토러스는 필드라인을 못 따라갑니다. 렌더러는 `scripts/viz/render_belts.py`,
+스톡 SDF는 [`Radiation.cs`](https://github.com/Kerbalism/Kerbalism/blob/master/src/Kerbalism/Radiation/Radiation.cs)
+재현(출처 [Kerbalism](https://github.com/Kerbalism/Kerbalism), [Unlicense](https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE)·퍼블릭 도메인). 場 모양 스키마는
 [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md)
 를 보세요.
 

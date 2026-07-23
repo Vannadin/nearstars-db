@@ -8,12 +8,16 @@ calibrate the NearStars magnetosphere-geometry recipe against real bodies before
 that recipe emits belts for fictional ones, and to feed the physics-accurate cfg
 values back where the stock model is a rough placeholder.
 
-Cross-section visualizations (in-game `RadiationModel` SDF rendered exactly) are on
-the wiki: **[Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)**.
-The renderer is `scripts/viz/render_belts.py` (+ `render_belts_bodies.py` driver). It
-reproduces the SDF algorithm from [`src/Kerbalism/Radiation/Radiation.cs`](https://github.com/Kerbalism/Kerbalism/blob/master/src/Kerbalism/Radiation/Radiation.cs)
-([Kerbalism](https://github.com/Kerbalism/Kerbalism), released to the public domain under
-the [Unlicense](https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE)); see
+Cross-section visualizations are on the wiki:
+**[Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)** —
+two renders per body. The **stock** cross-section is the in-game `RadiationModel`
+signed-distance field rendered exactly (a flattened **torus**); the **physical** one is
+the true **dipole field-line** belt (L-shell `r = L·cos²λ`, a crescent hugging field
+lines and tapering to the poles — the canonical Van Allen shape). Their divergence *is
+the finding*: the game's torus cannot follow field lines. The renderer is
+`scripts/viz/render_belts.py` (+ `render_belts_bodies.py` driver); the stock SDF is
+reproduced from [`src/Kerbalism/Radiation/Radiation.cs`](https://github.com/Kerbalism/Kerbalism/blob/master/src/Kerbalism/Radiation/Radiation.cs)
+([Kerbalism](https://github.com/Kerbalism/Kerbalism), public domain / [Unlicense](https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE)); see
 [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md)
 for the field-shape schema.
 

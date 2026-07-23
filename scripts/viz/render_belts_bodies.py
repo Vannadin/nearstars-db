@@ -10,17 +10,17 @@ BODIES={
    'inner':{'radiation':300,'grad':3.3,'dist':6.0,'rad':1.0,'comp':1.05,'ext':0.9},
    'outer':{'radiation':50,'grad':2.2,'dist':6.5,'rad':6.5,'comp':1.05,'ext':0.85},
    'pause':{'radiation':-0.01,'rad':60,'comp':1.05,'ext':0.01,'hscale':1.02}},
- 'jupiter_phys':{'title':'Jupiter — physical','sub':'D-cut dipolar inner + flat magnetodisc outer','R':18,'tilt':10.3,'offset':0.1,
-   'inner':{'radiation':1500,'grad':3.3,'dist':2.0,'rad':2.0,'bdist':1e-4,'brad':1.3},
-   'outer':{'radiation':150,'grad':2.2,'dist':4.17,'rad':2.5,'dxy':0.174,'comp':1.05,'ext':0.9},
+ 'jupiter_phys':{'title':'Jupiter — physical','sub':'dipolar inner belt (field-line) + flat magnetodisc outer','R':18,'tilt':10.3,'offset':0.1,
+   'inner':{'radiation':1500,'lshell':[1.3,3.0]},                                  # 필드라인 초승달
+   'outer':{'radiation':150,'grad':2.2,'dist':4.17,'rad':2.5,'dxy':0.174,'comp':1.05,'ext':0.9},  # 자기원반=적도 전류시트(초승달 아님)
    'pause':{'radiation':-0.01,'rad':63,'comp':1.2,'ext':0.05,'hscale':1.15}},
 
  # ---- SATURN: 스톡=외대만, 물리=고리가 내대 소거→외대만(축대칭), CRAND 약함 ----
  'saturn_stock':{'title':'Saturn — stock (RSS anchor)','sub':'outer 7/7 only, no inner (rings sweep)','R':12,'tilt':0,
    'outer':{'radiation':150,'grad':2.2,'dist':4.5,'rad':3.0,'comp':1.02,'ext':0.9},
    'pause':{'radiation':-0.011,'rad':20,'comp':1.1,'ext':0.05,'hscale':1.05}},
- 'saturn_phys':{'title':'Saturn — physical','sub':'rings absorb inner belt; weak CRAND outer; ~0° tilt','R':12,'tilt':0.01,
-   'outer':{'radiation':10,'grad':2.2,'dist':4.0,'rad':1.8,'dxy':0.5,'comp':1.05,'ext':0.85},
+ 'saturn_phys':{'title':'Saturn — physical','sub':'rings absorb inner belt; weak CRAND outer (field-line); ~0° tilt','R':12,'tilt':0.01,
+   'outer':{'radiation':10,'lshell':[2.3,6.0]},                                    # 고리 바깥 단일 초승달, CRAND 약함
    'pause':{'radiation':-0.011,'rad':24,'comp':1.2,'ext':0.05,'hscale':1.1}},
 
  # ---- URANUS: 극단 tilt 59° + offset 0.3 ----
@@ -28,9 +28,9 @@ BODIES={
    'inner':{'radiation':75,'grad':3.3,'dist':0.81,'rad':0.7,'bdist':1e-4,'brad':0.9},
    'outer':{'radiation':4,'grad':2.2,'dist':2.6,'rad':2.4,'comp':1.01,'ext':1.0},
    'pause':{'radiation':-0.010,'rad':18,'comp':1.3,'ext':0.1,'hscale':1.1}},
- 'uranus_phys':{'title':'Uranus — physical','sub':'tilt 59°, offset 0.3 R_U, mp 18, belt peak ~4.2 R_U','R':10,'tilt':59,'offset':0.3,
-   'inner':{'radiation':40,'grad':3.3,'dist':2.0,'rad':1.2,'bdist':1e-4,'brad':1.3},
-   'outer':{'radiation':8,'grad':2.2,'dist':4.2,'rad':2.5,'comp':1.05,'ext':0.9},
+ 'uranus_phys':{'title':'Uranus — physical','sub':'tilt 59°, offset 0.3 R_U, mp 18, belt peak ~4.2 R_U (field-line)','R':10,'tilt':59,'offset':0.3,
+   'inner':{'radiation':40,'lshell':[1.3,2.8]},
+   'outer':{'radiation':8,'lshell':[3.0,8.0]},
    'pause':{'radiation':-0.010,'rad':18,'comp':1.2,'ext':0.1,'hscale':1.1}},
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
@@ -38,9 +38,9 @@ BODIES={
    'inner':{'radiation':39,'grad':3.3,'dist':0.81,'rad':0.7,'bdist':1e-4,'brad':0.9},
    'outer':{'radiation':2.5,'grad':2.2,'dist':2.6,'rad':2.4,'comp':1.01,'ext':1.0},
    'pause':{'radiation':-0.007,'rad':26.5,'comp':1.3,'ext':0.1,'hscale':1.1}},
- 'neptune_phys':{'title':'Neptune — physical','sub':'tilt 47°, offset 0.55 R_N, peak L~7, Triton cut ~14','R':16,'tilt':47,'offset':0.55,
-   'inner':{'radiation':30,'grad':3.3,'dist':3.0,'rad':1.5,'bdist':1e-4,'brad':1.3},
-   'outer':{'radiation':6,'grad':2.2,'dist':7.0,'rad':4.0,'comp':1.05,'ext':0.9},
+ 'neptune_phys':{'title':'Neptune — physical','sub':'tilt 47°, offset 0.55 R_N, peak L~7, Triton cut ~14 (field-line)','R':16,'tilt':47,'offset':0.55,
+   'inner':{'radiation':30,'lshell':[1.5,4.0]},
+   'outer':{'radiation':6,'lshell':[4.0,14.0]},                                    # Triton서 딱 잘림
    'pause':{'radiation':-0.007,'rad':26.5,'comp':1.2,'ext':0.08,'hscale':1.1}},
 
  # ---- MERCURY: 벨트 없음, 초소형 offset 자기권 (표면 직격) ----
@@ -54,16 +54,16 @@ BODIES={
    'inner':{'radiation':10.376,'grad':3.3,'dist':0.813,'rad':0.70,'dxy':0.572,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':0.915,'bdxy':0.5},
    'outer':{'radiation':2.214,'grad':2.2,'dist':2.6338,'rad':2.48,'dxy':0.7225,'comp':1.01,'ext':1.0,'bdist':1.4412,'brad':1.4875,'bdxy':0.7225},
    'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},
- 'earth_phys':{'title':'Earth — physical','sub':'inner peak L~1.5, slot L2-3, outer heart L~4.5, standoff 10','R':8,'tilt':11,
-   'inner':{'radiation':10.376,'grad':3.3,'dist':1.5,'rad':0.55,'dxy':0.6,'comp':1.02,'ext':1.0,'bdist':1e-4,'brad':1.1,'bdxy':0.5},
-   'outer':{'radiation':2.214,'grad':2.2,'dist':5.0,'rad':2.0,'dxy':0.72,'comp':1.02,'ext':1.0},
+ 'earth_phys':{'title':'Earth — physical','sub':'inner peak L~1.5, slot L2-3, outer heart L~4.5, standoff 10 (field-line)','R':8,'tilt':11,
+   'inner':{'radiation':10.376,'lshell':[1.1,2.0]},
+   'outer':{'radiation':2.214,'lshell':[3.0,7.0]},                                 # 슬롯 L2-3이 두 초승달 사이 간극
    'pause':{'radiation':-0.01,'rad':10,'comp':1.5,'ext':0.075,'hscale':1.1}},
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  'ganymede_stock':{'title':'Ganymede — stock (ROKerbalism)','sub':'inner 0.8/0.6, no pause defined','R':4,'tilt':4,
    'inner':{'radiation':0.33,'grad':3.3,'dist':0.8,'rad':0.6}},
- 'ganymede_phys':{'title':'Ganymede — physical','sub':'719 nT dipole, standoff ~2 R_G, single weak belt, open caps','R':4,'tilt':4,
-   'inner':{'radiation':0.33,'grad':3.3,'dist':1.3,'rad':0.4,'bdist':1e-4,'brad':1.05},
+ 'ganymede_phys':{'title':'Ganymede — physical','sub':'719 nT dipole, standoff ~2 R_G, single weak belt, open caps (field-line)','R':4,'tilt':4,
+   'inner':{'radiation':0.33,'lshell':[1.05,1.8]},
    'pause':{'radiation':-0.01,'rad':2.0,'comp':1.15,'ext':0.7,'hscale':1.0}},
 }
 
