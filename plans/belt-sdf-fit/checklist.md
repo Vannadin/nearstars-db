@@ -19,6 +19,7 @@ torus placement). Deliverable = visualization (wiki PNGs + doc), NOT cfg emit.
 - [x] Re-render wiki PNGs, eyeball against target overlays
 - [x] Correct the doc's misread stock-vs-physical deltas
       (Earth outer belt position, pause_radius vs nose) — en done; ko delegated
-- [ ] ko mirrors synced (agent)
-- [ ] check.sh green
-- [ ] Wiki PNGs re-uploaded to the GitHub wiki (owner or gh — images are gitignored)
+- [x] ko mirrors synced (agent)
+- [x] check.sh green
+- [x] Wiki updated: 14 PNGs + Radiation-Belts en/ko page text (owner-approved push,
+      wiki commit f7ca508; old single earth.png superseded by stock/phys pair)
