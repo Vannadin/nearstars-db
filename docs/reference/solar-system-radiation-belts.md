@@ -10,8 +10,10 @@ values back where the stock model is a rough placeholder.
 
 Cross-section visualizations (in-game `RadiationModel` SDF rendered exactly) are on
 the wiki: **[Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)**.
-The renderer is `scripts/viz/render_belts.py` (+ `render_belts_bodies.py` driver;
-reproduces `Radiation.cs` SDFs), see
+The renderer is `scripts/viz/render_belts.py` (+ `render_belts_bodies.py` driver). It
+reproduces the SDF algorithm from [`src/Kerbalism/Radiation/Radiation.cs`](https://github.com/Kerbalism/Kerbalism/blob/master/src/Kerbalism/Radiation/Radiation.cs)
+([Kerbalism](https://github.com/Kerbalism/Kerbalism), released to the public domain under
+the [Unlicense](https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE)); see
 [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md)
 for the field-shape schema.
 

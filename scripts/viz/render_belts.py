@@ -1,4 +1,6 @@
 # 태양계 천체 방사선대 단면(스톡 vs 물리) PNG 렌더러 — 인게임 Kerbalism SDF 그대로 (위키 업로드용)
+# SDF 알고리즘 출처: Kerbalism (github.com/Kerbalism/Kerbalism), src/Kerbalism/Radiation/Radiation.cs.
+# 라이선스: Unlicense (퍼블릭 도메인) — 저작권 주장 없음, 출처 표기는 예의상.
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import os
