@@ -43,17 +43,31 @@ is *intrinsically* open — for any `α > 0`, `r` diverges as θ→180° (α < 0
 pinches the radius at infinite distance), so closure must be explicit, not an
 α choice. Closing the surface at a finite tail length encodes "influence fades
 tailward" with zero extra dose logic — physically defensible too (Earth lobe
-field ~10 nT by ~100 R_E, GCR-irrelevant). Same trick as the belt borders:
+field ~10 nT by ~100 R_E, GCR-irrelevant).
 
-    D = max( D_shue(p), |p − tail_center| − pause_tail )     // CSG intersection
+**How to close (owner caught the trap, 2026-07-23):** a naive CSG intersection
+`max(D_shue, |p−c| − L)` leaves a crease ring + dome — the tail reads as
+*amputated*, not *fading*. Two better closures:
+
+- **(a) smooth-max** — polynomial smooth-boolean instead of `max`; one-liner,
+  rounds the crease, but the end stays dome-blunt. Fallback option.
+- **(b) teardrop hybrid (preferred)** — Shue for the dayside + flanks (the
+  observationally constrained, visually characteristic part), and for the
+  nightside reuse Kerbalism's **existing stretched-ellipsoid tail** (the legacy
+  `pause_extension` code path). Continuity is free: the Shue flank at θ=90° is
+  `r0·2^α`, so set the tail ellipsoid's cross-section radius to that value at
+  the terminator → C0 join, smooth pinch-off at the configured tail length.
+  Any finite closure is an artistic compromise anyway — the taper is the one
+  that *reads* as fading, and it reuses a proven code path (good for the PR).
 
 - New `RadiationModel` fields: `pause_shue = true`, `pause_nose` (r0), `pause_alpha`
   (default 0.58), `pause_tail` (closure length, body radii). Backward compatible:
   absent → legacy sphere path.
-- `Pause_func`: radial difference `D = |p| − r0·(2/(1+cosθ))^α`, `θ = acos(p.x/|p|)`,
-  intersected with the tail end-cap sphere per the max() above. Not a true
-  Euclidean SDF, but Kerbalism only uses D for the mesh isosurface and the thin
-  boundary band — radial difference suffices. `pause_height_scale` still composes.
+- `Pause_func`: dayside/flank = radial difference `D = |p| − r0·(2/(1+cosθ))^α`,
+  `θ = acos(p.x/|p|)`; nightside = legacy ellipsoid with flank-radius continuity,
+  blended per (b). Not a true Euclidean SDF, but Kerbalism only uses D for the
+  mesh isosurface and the thin boundary band — radial difference suffices.
+  `pause_height_scale` still composes.
 - Rendering is free: `ParticleMesh` accepts any `dist_func`.
 - Storm hook (stretch goal): drive `r0`, `α` from the Shue 98 Dp/Bz fits mapped onto
   storm/CME state.
