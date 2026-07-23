@@ -76,6 +76,18 @@ def render(body, out, size=560, z=0.0):
     dr.text((10,8),body['title'],fill=(230,235,245),font=fbig)
     dr.text((10,30),body.get('sub',''),fill=(140,160,190),font=fnt)
     dr.text((size-96,size-20),"☀ star →",fill=(255,154,82),font=fnt)
+    # 절대 강도 컬러바 (색은 이 바디 peak 기준 정규화 — 바디끼리 절대 비교하려면 이 숫자를 볼 것)
+    def g(v): return f"{v:.0f}" if abs(v)>=10 else f"{v:.2f}".rstrip('0').rstrip('.')
+    bx,by,bw,bh=10,size-46,150,9
+    for i in range(bw):
+        cr=inferno(i/(bw-1)); dr.line([(bx+i,by),(bx+i,by+bh)],fill=(int(cr[0]),int(cr[1]),int(cr[2])))
+    dr.rectangle([bx,by,bx+bw,by+bh],outline=(120,120,120))
+    dr.text((bx,by-13),"dose 0",fill=(150,160,175),font=fnt)
+    dr.text((bx+bw-46,by-13),f"{g(maxI)} rad/h",fill=(247,209,61),font=fnt)
+    parts=[]
+    if inner and inner.get('on',True): parts.append(f"inner {g(inner['radiation'])}")
+    if outer and outer.get('on',True): parts.append(f"outer {g(outer['radiation'])}")
+    dr.text((bx,by+bh+2),("peak "+" · ".join(parts)+" rad/h" if parts else "no belt"),fill=(150,160,175),font=fnt)
     im.save(out); print("wrote",out)
     return out
 
