@@ -28,21 +28,6 @@ def pause_sdf(x,y,z,P):
     px = x*np.where(x<0,P.get('ext',1),P.get('comp',1)); py = y*P.get('hscale',1)
     return np.sqrt(px*px+py*py+z*z)-P['rad']
 
-def lshell_dose(x,y,z,B):
-    """실제 쌍극 방사선대: 자기력선(L=r/cos²λ)을 따라 극으로 휘는 초승달. dose는
-    중심 L-shell서 최대, 가장자리·극으로 감쇠. B['lshell']=[Lmin,Lmax] (magnetic frame은
-    render()에서 이미 tilt 적용됨). 실제 밴앨런 단면 모양 — 토러스 근사가 아님."""
-    Lmin,Lmax = B['lshell']; r = np.sqrt(x*x+y*y+z*z)
-    lam = np.arcsin(np.clip(y/np.maximum(r,1e-9),-1,1))   # y = dipole axis (tilt는 상위서 적용)
-    cl = np.cos(lam)
-    L = r/np.maximum(cl*cl,1e-6)
-    Lc = 0.5*(Lmin+Lmax); half = 0.5*(Lmax-Lmin)
-    radial = 1-np.abs(L-Lc)/half                          # 중심 1 → 가장자리 0
-    polar = np.clip(cl,0,1)**3                             # 적도서 최대, 극서 감쇠
-    d = np.clip(radial,0,1)*polar
-    d[(L<Lmin)|(L>Lmax)|(r<1.0)] = 0                       # 벨트 밖·지표 밑 제외
-    return d
-
 def render(body, out, size=560, z=0.0):
     """body: {title, sub, R(halfwidth), tilt, inner{}, outer{}, pause{}}"""
     R = body['R']; tilt = np.radians(body.get('tilt',0))
@@ -61,11 +46,8 @@ def render(body, out, size=560, z=0.0):
     dose = np.zeros_like(X)
     for B,gdef in ((inner,3.3),(outer,2.2)):
         if not (B and B.get('on',True)): continue
-        if 'lshell' in B:                                 # 실제 필드라인 초승달
-            dose += lshell_dose(Xr,Yr,Z,B)*B['radiation']
-        else:                                             # Kerbalism 토러스 SDF
-            d = torus_sdf(Xr,Yr,Z,B); m=d<0
-            dose[m]+=np.clip(B.get('grad',gdef)*(-d[m])/B['rad'],0,1)*B['radiation']
+        d = torus_sdf(Xr,Yr,Z,B); m=d<0
+        dose[m]+=np.clip(B.get('grad',gdef)*(-d[m])/B['rad'],0,1)*B['radiation']
     img = np.zeros((size,size,3),float); img[:]=(5,7,13)
     if pause and pause.get('on',True):
         pd = pause_sdf(Xr,Yr,Z,pause)
