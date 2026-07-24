@@ -7,8 +7,7 @@
 ## 1. Communication & Language — PORTABLE
 
 ### 1.1 Korean speech level
-**Rule:** Always use formal Korean (존댓말/합쇼체 or 해요체) in all responses to the user.
-**Why:** User explicitly requested it.
+Always reply in formal Korean (존댓말). Full rule: `CLAUDE.md` §5 + §12 essentials.
 **Source:** `feedback_speech_level.md`
 
 ### 1.2 Markdown source-of-truth language
@@ -75,9 +74,7 @@
 ## 2. Workflow & Autonomy — PORTABLE
 
 ### 2.1 Autonomous execution
-**Rule:** Once a direction is agreed, execute to completion without pausing for step-by-step approval. Only stop for genuinely irreversible actions (file deletion, destructive git operations) not covered by the original scope.
-**Why:** Repeated "may I proceed?" breaks flow. Clear task direction makes intermediate steps safe.
-**Details:** File writes, script runs, data transforms—proceed without confirmation. But judgment applies: read first before modifying, always confirm before deleting.
+Full rule: `CLAUDE.md` §11 (execute once direction is agreed; read before modifying, confirm before deleting).
 **Source:** `feedback_autonomy.md`
 
 ### 2.2 Subagent delegation for token economy
