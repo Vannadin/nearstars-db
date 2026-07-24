@@ -278,6 +278,14 @@ decisions:
 - Every emit number lives in a typed field (`value` + `unit`/`op`), never only in prose.
 - The gate block uses the schema keys **`evidence`** and **`divergence_note`** — not
   `note`/`paper`/`rationale`. Source citations go in `refs` (machine-readable), not prose.
+- **Prose readability contract** (owner feedback 2026-07-24). The two prose slots answer
+  different questions and must not blur or retell each other:
+  - `narrative` = the **owner-facing story** — what was decided, why, and which
+    alternatives were declined. ≤6 sentences. **No bibcodes, file paths, equations, or
+    parameter dumps** — inline citations are what makes boards unreadable; the refs live
+    in `refs[]`, the numbers in `fields[]`.
+  - gate `evidence` = the **verification trail** — method, tool + fit quality, formulas,
+    checks, encodings. Technical shorthand is fine here; storytelling is not.
 - `verdict: partial` is **illegal** — split into a `pass-in-window` field and a
   `documented-divergence` field (each with its own note).
 - `divergence_note` is required (non-null) wherever a verdict is `documented-divergence`,

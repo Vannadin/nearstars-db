@@ -159,6 +159,11 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
 
 - Prose reasoning → `narrative:`. **Every emit number → a typed `fields[]`
   entry** (`name`, `value`, `unit`, `op`) — never buried in prose.
+- **Prose readability contract** (SPEC §3.1; owner feedback 2026-07-24):
+  `narrative` = owner-facing story (decision, why, declined alternatives),
+  ≤6 sentences, **no bibcodes / file paths / equations / parameter dumps**;
+  the gate `evidence` = the verification trail (tool, fit quality, formulas,
+  checks) and must not retell the narrative. Citations only in `refs[]`.
 - Gate block keys are exactly `criterion` / `verdict` / `evidence` /
   `divergence_note`. Source citations → a machine-readable `refs:` list (bibcodes
   / arXiv ids only). Do **not** use `note`/`paper`/`rationale`.
