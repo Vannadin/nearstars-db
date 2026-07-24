@@ -1996,20 +1996,16 @@ decisions:
     status: gated
     driver: [physics, canon]
     narrative: >
-      Pandora carries a field roughly twice Earth's, nearly unheard-of for a moon. The same tidal kneading that
-      fuels its volcanoes keeps the iron core churning, and the brisk 32-hour spin keeps that churn organized into
-      a clean dipole; the owner took the top of the physically defensible range, in the interesting-first spirit.
-      The field is honest physics with no unobtanium boost, and it is nowhere near enough to levitate mountains.
-      That mystery is deliberately left unexplained, leaking into science reports only as hints. The magnetic
-      anomaly around the floating mountains, the "flux vortex", becomes its own biome with anomaly science and a
-      local aurora of its own.
+      Pandora carries a field roughly twice Earth's, nearly unheard-of for a moon. The same tidal heat that
+      fuels its volcanoes keeps the iron core churning, and the brisk 32-hour spin organizes that churn into a
+      clean dipole. The field is honest physics, with no boost from unobtanium (the film Avatar's fictional
+      element), nowhere near enough to levitate mountains. Around the floating mountains the field spikes into a
+      "flux vortex", a place apart with a local aurora of its own.
     narrative_ko: >
-      Pandora는 지구의 대략 두 배 자기장을 두른다. 위성으로서는 거의 전례가 없는 세기다. 화산을 먹이는 것과
-      같은 조석 반죽이 철핵을 계속 휘젓고, 경쾌한 32시간 자전이 그 휘저음을 깔끔한 쌍극으로 정돈한다. 오너는
-      물리적으로 변호 가능한 범위의 꼭대기를 골랐다. interesting-first 정신 그대로다. 이 자기장은 언옵타늄
-      부스트 없는 정직한 물리이고, 산을 띄우기에는 어림도 없다. 그 미스터리는 일부러 설명하지 않은 채 과학
-      레포트에 힌트로만 흘린다. 부유산 일대의 자기 이상, "플럭스 볼텍스"는 자기 이상 과학과 제 몫의 국소
-      오로라를 갖는 독자 바이옴이 된다.
+      Pandora는 지구의 대략 두 배 자기장을 두른다. 위성으로서는 거의 전례가 없는 세기다. 화산을 지피는 것과
+      같은 조석열이 철핵을 쉼 없이 휘젓고, 경쾌한 32시간 자전이 그 소용돌이를 깔끔한 쌍극으로 정돈한다. 영화의
+      가상 설정인 언옵타늄과 같은 부스트 없이 나온 정직한 물리라, 산을 띄우기에는 어림도 없다. 부유산 일대에서 자기장이 치솟는 "플럭스 볼텍스"는
+      제 몫의 국소 오로라를 거느린 특별한 구역이다.
     fields:
       - { name: magnetic_field, value: "75 µT (~1.8× 지구; rocky-dynamo ℳ⁺ 상한, 조석-구동 Fe 핵 dynamo, 32h 자전 쌍극)", op: set }
       - { name: magnetic_field_polar, value: 150, unit: uT, op: set }
