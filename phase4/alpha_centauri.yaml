@@ -18,8 +18,8 @@ decisions:
       keeps its Avatar name as a cultural label over the formal designation Alpha Centauri A b.
     narrative_ko: >
       Polyphemus는 이 계의 간판이다. 수소·헬륨으로 이루어진 온화한 토성급 가스자이언트로, 지구 질량 120배에
-      물구름이 뜰 만큼 서늘하다. 실제 직접촬영 후보로서 Alpha Centauri A를 돌며, 공식 표기 Alpha Centauri A b
-      위에 아바타 이름을 문화명으로 유지한다.
+      물구름이 뜰 만큼 서늘하다. 실제 직접촬영 후보로서 Alpha Centauri A를 돌고, 공식 명칭은 Alpha Centauri A b이지만
+      아바타의 이름을 문화명으로 함께 쓴다.
     fields:
       - { name: body_type, value: "temperate Saturn (H₂/He gas giant, 120 M⊕, Teq 225K, Class I/II water clouds)", op: set }
       - { name: designation, value: "Alpha Centauri A b", op: set }
@@ -97,7 +97,7 @@ decisions:
       행성은 쌍성면에서 16° 기울어, 두 별이 도는 것과 같은 방향으로 돈다. 관측이 가리키는 ~50°·~130° 해는
       동반성이 궤도를 비틀어 찢어 놓는 값이라, 보드는 대신 안정 범위의 한가운데를 잡았고, 낮은 순행 가지를
       고르면서 관측의 양갈래 모호성도 하나의 답으로 정리된다. 구속되는 것은 이 16° 상호경사뿐이고, 계 전체가
-      게임 하늘을 어떻게 향할지는 자유 배향으로 orbit 행에서 정한다.
+      게임 속에서 어느 방향을 바라볼지는 자유롭게 배향해 orbit 행에서 정한다.
     fields:
       - { name: inclination_deg, value: 16, unit: deg, op: set, phase3_default: "mutual_inclination_deg=16 (안정창 0–35°의 중앙); 관측 ~50°/~130°는 Kozai-불안정이라 미채택" }
     gate:
@@ -134,7 +134,7 @@ decisions:
       Polyphemus는 2024년 8월에 JWST가 검출한 방향에 서도록 배치되고, 그 상태가 게임 시작 에포크인 1950년으로
       되감긴다. 재현되는 것은 관측 방향뿐이다. 그 시선을 따라 안정성용으로 고른 궤도는 관측된 분리의 절반에도
       못 미치는데, 이는 관측 기하가 아니라 안정성에 맞춘 궤도의 본질적 한계다. 행성은 약 10시간 주기로 자유
-      자전하며(이 거리의 거인은 조석고정되지 않는다) 영화의 라그랑주점 공궤도 planetoid는 존재하지 않는다.
+      자전하며(이 거리의 거대 가스행성은 조석고정되지 않는다) 영화의 라그랑주점 공궤도 planetoid는 존재하지 않는다.
       시작 궤도요소는 검증된 안정성 런의 스냅샷이라, 계가 딱 떨어지는 설계값이 아니라 진화 중인 상태에서 시작한다.
     fields:
       - { name: longitude_ascending_node, value: 273.10, unit: deg, op: set, note: "관측-방향 정합값(AB면 프레임). PA 83.5° 매칭 상태 → 1950 에포크. 제약은 AB면 대비 16° mutual(매칭 15.88°)" }
@@ -175,7 +175,7 @@ decisions:
         results/_snapshot500/elements.log, 프레임 AB면·x축=t=500의 A→B, 스냅샷 mutual 16.127°); 16° mutual만
         보존하면 어떤 값으로 바꿔도 합법; 스냅샷 a/e(1.5936 AU/0.0756)는 a/e/inc 행이 유지하는 설계 앵커 주위의
         진동값. epoch=0(게임 epoch, Sol-Configs 관행). 캐비엇: 궤도면 요소는 t*≈1957 osculating(1950까지 세차
-        ~0.1°, 무시가능), 되감기는 인게임 주기 1.9307년 전제. 1.6 AU 거인은 5 Gyr에도 미잠김 → free rotator.
+        ~0.1°, 무시가능), 되감기는 인게임 주기 1.9307년 전제. 1.6 AU의 거대 가스행성은 5 Gyr에도 미잠김 → free rotator.
         캐넌 Poly-L4/L5 공궤도 planetoid(337/611km)는 제외(불필요, binary 트로이 안정성 미검증).
     refs: ["2508.03814", "2508.03812", "phase3/stability-sim/STABILITY_REPORT.md"]
 
@@ -229,7 +229,7 @@ decisions:
       simulation, the bulge reshapes the satellite layout, keeping the adopted spacing stable while the
       once-favored resonance lock falls apart. An independent figure pass reached the same numbers.
     narrative_ko: >
-      10시간짜리 하루가 이 푸석한 거인을 눈에 띄게 납작한 구체로 만든다. 팽대는 자전 속도와 "토성과 목성 사이"로
+      10시간짜리 하루가 이 부푼 거대 가스행성을 눈에 띄게 납작한 구체로 만든다. 팽대는 자전 속도와 "토성과 목성 사이"로
       가정한 내부 질량 집중도에서 교과서 표준 관계식으로 계산되며, 이 식은 두 행성을 잘 재현한다. 단순 겉모습이
       아니다. 위성 시뮬레이션에 넣으면 팽대가 위성 배치를 바꿔, 채택한 간격 배치는 팽대를 포함해도 안정한 반면
       한때 유력했던 공명 락은 무너진다. 독립적으로 수행한 figure 패스도 같은 수치에 도달했다.
@@ -283,7 +283,7 @@ decisions:
       works the geometry.
     narrative_ko: >
       자전축은 공전면에서 딱 5° 기운다. 토성 같은 27°는 오직 고리를 그림 좋게 기울이는 데나 쓸모가 있는데, 고리는
-      그 대신 Chaos 궤도면에 놓이므로 축은 거의 곧게 선다. 세 기울기가 서로 독립적으로 산다. 5° 자전축, 공통
+      그 대신 Chaos 궤도면에 놓이므로 축은 거의 곧게 선다. 세 기울기는 서로 따로 논다. 5° 자전축, 공통
       노드선을 타고 공전면 위 ~10°를 도는 위성들, 그리고 Chaos를 따라가는 고리. 위성계는 이 기울기에서 안정하고,
       작은 기울기가 마침 Pandora의 일식을 더 잦게 만들어 동반성이 기하를 흔드는 대로 "일식 시즌"이 자연 발생한다.
     fields:
@@ -321,7 +321,7 @@ decisions:
       far out never tidally locks, and the fast spin is what powers the pronounced equatorial bulge recorded in
       the figure rows.
     narrative_ko: >
-      하루는 10.35시간, 아바타 게임 캐넌이 명시한 자전 범위의 중간값이다. 이 거리의 거인은 조석고정되지 않으며,
+      하루는 10.35시간, 아바타 게임 캐넌이 명시한 자전 범위의 중간값이다. 이 거리의 거대 가스행성은 조석고정되지 않으며,
       빠른 자전이야말로 figure 행들에 기록된 뚜렷한 적도팽대의 동력이다.
     fields:
       - { name: rotation_period, value: 10.35, unit: h, op: set, phase3_default: "10 h (구 오귀속: 목성/토성 유추 conf low)" }
@@ -346,8 +346,8 @@ decisions:
     narrative_ko: >
       남은 벌크 사실들을 한자리에 모았다. 행성은 지구 질량 120배이고, 별에게서 53억 년 나이를 물려받았으며,
       내부의 불이 아니라 햇빛으로 산다. 자발광하는 eps Ind A b의 정반대다. 다만 희미하게 남은 내부 온기도
-      띠와 날씨를 젓는 데는 한몫한다. 하나 남은 자유 손잡이인 기운 자전축의 방위는, Pandora의 일식이 잦게
-      유지되는 범위 안에서 emit 단계로 넘긴다.
+      띠와 날씨를 젓는 데는 한몫한다. 자유롭게 정할 수 있는 값은 기운 자전축의 방위 하나뿐인데, Pandora의
+      일식이 잦게 유지되는 범위 안에서 emit 단계에 정한다.
     fields:
       - { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }
       - { name: gravity, value: 9.36, unit: m/s2, op: set, phase3_default: "GM/R² 파생 에코 (1-bar 반경 71492 km 기준)" }
@@ -388,7 +388,7 @@ decisions:
     narrative_ko: >
       대기는 수소와 헬륨이고, 토성급 행성답게 무거운 원소가 적당히 농축되어 있으며, 눈에 보이는 덱은 물과
       황화수소암모늄 구름이다. 암모니아가 제 구름으로 얼어붙지 못할 만큼만 따뜻한데, 이 사실이 행성의 인상
-      전체를 조용히 결정한다. 보드는 구름덱을 225 K·1 bar에 앵커한다. 여기서 숨 쉴 수는 없고 대기가 달아나지도
+      전체를 조용히 결정한다. 보드는 구름층을 225 K·1 bar에 앵커한다. 여기서 숨 쉴 수는 없고 대기가 달아나지도
       않으며, 표면이 없으니 온실이 끌어올릴 것도 없다. 깊은 내부는 뜨겁지만 렌더되지 않는다. 온도·기압의 전체
       프로파일은 emit 때 표준 cool-giant 모델 격자로 생성되고, 찌그러진 궤도가 대계절 순환을 합법적으로
       구동한다. 225 K 앵커는 무난한 알베도 가정값이라 실제 물구름이 더 밝으면 더 차가울 수 있지만 분류는
@@ -396,7 +396,7 @@ decisions:
     fields:
       - { name: composition, value: "H₂/He bulk, [M/H]+0.5~1.0, clouds H₂O·NH₄SH (NH₃ 비응결), C/O 2.5×", op: set }
       - { name: pressure, value: 1, unit: bar, op: set, phase3_default: "1 bar 기준 앵커" }
-      - { name: temperature, value: 225, unit: K, op: set, phase3_default: "구름덱 225K 앵커 (A_B=0.3 가정)" }
+      - { name: temperature, value: 225, unit: K, op: set, phase3_default: "구름층 225K 앵커 (A_B=0.3 가정)" }
       - { name: scale_height, value: "프로파일서 도출", op: set }
       - { name: breathability, value: false, op: set }
       - { name: greenhouse, value: "none (표면 없어 surface-lift 없음)", op: set }
@@ -421,11 +421,11 @@ decisions:
         구름종 H₂O·NH₄SH: 225K서 skin T≈189K가 NH₃ 응결점 150K에 못 닿아 기체 잔류(appearance.banding 정합);
         C/O 2.5×(§5.2). temperature/pressure는 스칼라 아님: emit서 cool-giant 복사대류 격자(Sonora Bobcat
         2107.07434 / Fortney2007 astro-ph/0612671, _bib/gas-giant-atmosphere.yaml)로
-        temperatureCurve+pressureCurve 생성, 앵커=구름덱 225K/1 bar; great-season은
+        temperatureCurve+pressureCurve 생성, 앵커=구름층 225K/1 bar; great-season은
         temperatureEccentricityBiasCurve(e=0.1>임계, divide-by-zero 가드 통과). 분류 Class II 물구름
         (Sudarsky2003). Teq 225K는 A_B=0.3 가정: Class II 알베도 0.5–0.8이면 더 차가울 여지(여전히 Class II,
         보수적 채택). breathability 불가(atmosphereContainsOxygen=false); escape 무시(거대질량); greenhouse:
-        surface-lift 없음(구름덱=복사층, 깊은 곳은 단열선으로 뜨겁되 미렌더); scale_height는 프로파일서 도출.
+        surface-lift 없음(구름층=복사층, 깊은 곳은 단열선으로 뜨겁되 미렌더); scale_height는 프로파일서 도출.
     refs: ["2107.07434", "astro-ph/0612671"]
 
   # ── 외형 (banding/haze/aurora 4b 게이트 완료 2026-06-22) ─────────────────────
@@ -543,7 +543,7 @@ decisions:
       divergence. Coverage stays at the Phase 3 value, the colors live in the banding row, and the shapes are
       painted onto cloud textures at emit.
     narrative_ko: >
-      구름덱은 목성처럼 끓는다. band 경계마다 소용돌이와 festoon이 일고, 중위도에 큰 폭풍 하나(가라앉은 파란
+      구름층은 목성처럼 끓는다. band 경계마다 소용돌이와 festoon이 일고, 중위도에 큰 폭풍 하나(가라앉은 파란
       눈)가 돈다. 내부열이 이 정도로 적은 행성이라면 얌전한 토성 쪽이 더 자연스러우니, 난류는 시각적 드라마를
       위한 의도적 선택이며 명시적 일탈로 기록한다. 덮임률은 Phase 3 값을 그대로 쓰고, 색은 banding 행에 있으며,
       형태는 emit 때 구름 텍스처로 그려진다.
@@ -581,7 +581,7 @@ decisions:
     narrative_ko: >
       극지방이 rose-magenta로 빛난다. Pandora의 청록 생물발광과 의도적으로 운을 맞춘 색이다. 행성은 분홍, 달은
       청록. 색조 자체는 선택이 아니다. 수소-헬륨 하늘은 수소의 적색과 보라로만 빛날 수 있고, 원자 산소가 없어
-      지구식 초록은 나올 수 없다. 정직한 일탈은 가시성이다. 조용한 별은 밝은 오로라를 피울 플라스마를 대주지
+      지구식 초록은 나올 수 없다. 실제로 벗어난 부분은 가시성이다. 조용한 별은 밝은 오로라를 피울 플라스마를 대주지
       못해 Phase 3는 "없음"이라 했지만, Phase 4는 화면에서 대비가 읽히도록 희미한 오로라를 연출한다.
     fields:
       - { name: aurora, value: "극 rose-magenta (H Balmer-α 적색 + H2 Fulcher/Balmer-β/γ 보라)", op: set, phase3_default: "aurora_present=false (medium)" }
@@ -618,7 +618,7 @@ decisions:
     narrative_ko: >
       다이나모가 적도 기준 약 170마이크로테슬라의 자기장을 만든다. 토성의 8배, 목성의 40%, 둘 사이에서 목성
       쪽으로 기운 값이다. 숫자는 프로젝트 표준 다이나모 스케일링 레시피에 행성의 질량과 나이를 넣어 얻었고,
-      같은 식이 목성으로 검산된다. 정직한 단서 하나. 이 질량은 거인 영역의 바닥 언저리라, 토성처럼 헬륨
+      같은 식이 목성으로 검산된다. 다만 한 가지 유의점. 이 질량은 거대행성 영역의 하한 언저리라, 토성처럼 헬륨
       성층화가 진행됐다면 실제 자기장은 몇 배 약할 수 있다. 그 조용한 대안은 접고 강한 읽기를 택했으며,
       오로라와 방사선대를 떠받치는 것이 바로 이 자기장이다.
     fields:
@@ -698,7 +698,7 @@ decisions:
       걸쳐 Cassandra를 잠기게 해 그 "intermediate" 방사선을 만든다(외대를 Cassandra에서 끊는 대안은 기록된
       선택지). Chaos(21 R_p)는 벨트 밖·자기권계면 안을 난다. 벨트 모양은 이 드리프트 셸에 인게임 모델을 수치 피팅한 것이고,
       강도는 지구·목성 선량 앵커 사이에서 보정한 뒤 계산된 Kennel–Petschek 상한으로 검산했다. 목성(~1500 rad/h)보다 약한
-      이유는 Polyphemus의 다이나모 자기장이 목성의 ~40%라서다(더 작고 식은 거인은 덜 가두고 덜 가속한다). 그래도 지구
+      이유는 Polyphemus의 다이나모 자기장이 목성의 ~40%라서다(더 작고 식은 거대행성은 덜 가두고 덜 가속한다). 그래도 지구
       벨트 피크의 ~29배다. 쌍극 기울기는 아직 정하지 않아 당분간 목성형 ~10°를 가정하고, 그 축이 게이트되면 이
       행이 따라간다.
     fields:
@@ -769,7 +769,7 @@ decisions:
       Earth-class field, no unobtanium required, just a good dynamo. The per-moon grades: Dante extreme
       (>4,500 rem/day), Hades severe, Pandora moderate and habitable, Cassandra low, Chaos low and variable.
     narrative_ko: >
-      위성마다 방사선 자리가 정해진다. 재미있는 화해는 자기장만으로는 캐넌의 흉악한 수치가 안 나온다는 점이다. Io의 수백 배로
+      위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 캐넌의 가혹한 수치가 나오지 않는다는 것이다. Io의 수백 배로
       끓는 Dante의 화산이 황 플라스마를 벨트에 퍼부어, 자기장을 부풀리지 않고도 안쪽 지대를 그렇게 치명적으로
       만든다. Pandora는 캐넌 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 자기만의 지구급 자기장으로 표면을
       가린다. 언옵타늄은 필요 없고, 좋은 다이나모면 된다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
@@ -825,7 +825,7 @@ decisions:
       icy body.
     narrative_ko: >
       Polyphemus는 고리를 지키되 유령으로 만든다. 캐넌의 "고리 없음"을 거의 존중할 만큼 흐릿한 청백색 얼음-먼지
-      E고리인데, 이미징이 요구한 여분의 밝기는 그대로 공급한다. 구조는 위성들에서 읽힌다. 얼음체 Chaos가
+      E고리인데, 이미징이 요구한 여분의 밝기는 그대로 채운다. 구조는 위성 배치가 정한다. 얼음체 Chaos가
       엔셀라두스가 토성 E고리를 먹이듯 cryovolcanic 플룸으로 고리를 먹이고, Cassandra가 안쪽 가장자리를 친다.
       고리는 두 환형으로 갈라지고 그 사이 간극을 Chaos가 돈다. 물리적으로 이 작은 달은 제 길을 비울 수 없지만,
       정적인 고리가 기운 달의 경로를 관통해 매 공전마다 화면이 깨져 보이므로 그 궤도를 비우는 간극을 둔다.
@@ -2692,7 +2692,7 @@ decisions:
       blocks.
     narrative_ko: >
       다섯 명명 위성이 Polyphemus를 돈다(Dante·Hades·Pandora·Cassandra·Chaos). 영화의 배역들을 동역학적으로
-      정직하게 다시 세운 것이다. 이 캠페인의 핵심 발견 하나. 캐넌의 "Hades가 Dante를 스친다"를 글자 그대로
+      앞뒤가 맞게 다시 세운 것이다. 이 캠페인의 핵심 발견 하나. 캐넌의 "Hades가 Dante를 스친다"를 글자 그대로
       읽으면 Hades가 백 년 안에 튕겨 나간다. 그래서 그 드라마는 Io가 타는 방식과 같은, 유지되는 약한 이심률 +
       작은 moonlet들로 다시 캐스팅됐다. 각 위성의 신상명세와 시작 궤도는 아래 구조화된 목록에 있고, 스캔과
       번복과 최종 배치로 이어진 긴 궤적은 stability_scans와 결정 블록들에 남아 있다.
