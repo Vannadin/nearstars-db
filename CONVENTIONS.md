@@ -104,6 +104,10 @@
 **Details:** EA-derived documents stay in `.claude/skills/*/references/` (English-only, gitignored). Public knowledge goes to docs/reference first.
 **Source:** `feedback_reference_doc_location.md`
 
+### 2.6 Subagent fan-outs run on Opus
+Audit/review/bulk-delegation subagents run with `model: "opus"`, not the session model (which may be Fable). `subagent_type: "fork"` ignores the override, so use a non-fork agent when it matters.
+**Source:** `feedback_agent_model_opus.md`
+
 ---
 
 ## 3. Papers, Data Grounding & Discipline — PORTABLE + NEARSTARS-SPECIFIC
@@ -137,7 +141,8 @@ docs; bare bibcodes force a manual ADS round-trip.
 **Details:** applies to `docs/`, `plans/`, `phase2–4/*.md` narrative text + their ko
 mirrors. Existing docs are being retrofitted by script (pipeline-flow-program WP6);
 new writing complies immediately.
-**Source:** owner directive 2026-07-20 (pipeline-flow-program).
+Applies everywhere a citation surfaces, including the GitHub Wiki and generated artifacts (emitted cfg comments); plain-text artifacts get the full `https://ui.adsabs.harvard.edu/abs/<bibcode>` URL.
+**Source:** `feedback_citation_links.md`, `feedback_derived_value_grounding.md`.
 
 ### 3.4 Generalize over hardcode (PORTABLE)
 **Rule:** New features must work for any case via **data-driven config**, not hardcoded for one instance. First case is first consumer of the general path.
@@ -247,36 +252,10 @@ new writing complies immediately.
 
 ---
 
-## Cross-Memo Observations & Potential Gaps
+## Reconciliations
 
-### Overlaps & Reinforcements
-- **Autonomy family:** [[feedback_autonomy]] (do the work) + [[feedback_agent_token_saving]] (delegate heavy reads) + [[feedback_star_addition]] (pre-delegated rules) form a coherent autonomy philosophy.
-- **Paper discipline:** [[feedback_derived_value_grounding]] + [[feedback_ads_paper_discipline]] both enforce frozen-cache, avoid web re-search.
-- **Curation depth:** [[feedback_planet_curation]] (two-tier) + [[feedback_skip_metallicity]] (impact-driven prioritization) together shape resource allocation.
-- **Interesting-first loop:** [[feedback_interesting_first_cascade]] (cascade values) ↔ [[feedback_gameplay_variety]] (bias toward richness) ↔ [[feedback_phase4_facet_choices]] (owner drives options).
+Where two rules seem to pull apart, the resolution:
 
-### Potential Conflicts or Clarifications Needed
-1. **Subagent cost vs. value-check:** [[feedback_agent_token_saving]] trusts subagents with frozen cache. [[feedback_audit_cost_discipline]] warns against per-finding fan-out. These are compatible (use frozen cache + batch per report), but the transition point (when to use agents vs. main-thread check.sh) could be clearer for future sessions.
-
-2. **Interesting-first theory override:** [[feedback_interesting_first_cascade]] says "observation/theory still wins" but [[feedback_gameplay_variety]] says "bias toward richness unless must-not-exist." Both are true: interesting-first picks a *supported* reading, not an unsupported one. Theory-ruled-out is the only hard constraint; borderline/marginal cases lean toward gameplay.
-
-3. **Metadata in derived values:** [[project_nearstars_db_principle]] says no defaults in derived; [[feedback_derived_value_grounding]] says cite method. These don't conflict but could be clearer: curated entries have source citations (in sources_extra); derived just transforms them without re-justifying.
-
-### Recommendations for Formalization
-- **High priority (formalize to CLAUDE.md or CONVENTIONS.md soon):**
-  - Sections 1.1–1.9 (Communication & Language) are broadly applicable + stable
-  - Sections 2.1–2.5 (Autonomy & Workflow) are portable and well-tested
-  - Sections 3.1–3.3 (Grounding & Papers) are portable and reduce recurring errors
-
-- **Medium priority (document in project README or nearstars-specific doc):**
-  - Sections 4.1–4.6 (NearStars curation). These are good but NearStars-specific; could graduate to `NEARSTARS-CONVENTIONS.md` or live in skill SKILL.md files.
-
-- **Lower priority (keep as memory, reference as-needed):**
-  - Sections 5 (Database & Pipeline). These are architectural and rarely change; memory references (and code comments in the builders) may be sufficient.
-  - Section 6 (Rolled-back patterns). These are warnings to future sessions; valuable as persistent memory to prevent re-proposing.
-
----
-
-**Draft completed:** 2026-07-01  
-**Consolidation scope:** 21 feedback_*.md files + 5 project_*.md files + 2 rolled-back patterns  
-**Word count:** ~3,500 words
+- **Subagent use vs. cost:** delegate heavy reads to subagents on a frozen cache (§2.2), but batch verification per report, not per finding (§2.3). Agents read; the main thread runs `check.sh` + parity.
+- **Interesting-first vs. theory:** §4.4 picks a *supported* interesting reading; §4.5 biases toward richness. Theory-ruled-out is the only hard stop; borderline cases lean to gameplay.
+- **Derived vs. grounding:** §5.1 bans defaults in `derived`; §3.1 requires cited methods. No conflict: curated entries carry the citations, `derived` only transforms them.
