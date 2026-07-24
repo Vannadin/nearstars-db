@@ -1910,19 +1910,17 @@ decisions:
     driver: [canon, physics]
     narrative: >
       The air is the canon's, kept faithfully: mostly nitrogen with oxygen, a heavy dose of carbon dioxide, a
-      strange xenon richness, and toxic traces. At the surface the air runs about a tenth denser than Earth's. Raw
+      strange xenon richness, and toxic traces. At the surface it runs about a tenth denser than Earth's. Raw
       sunlight out here would leave the moon frozen; it is the thick CO₂ greenhouse, a mild cousin of the Venus
       mechanism, that lifts the surface to livable warmth, with a gentle great-season swing as the parent planet
-      rides its eccentric orbit. So the habitability is honestly earned by the atmosphere, not by tides or a convenient star.
-      Kerbals can breathe it (the game does not model toxicity) while the human-lethal chemistry survives as
-      Kerbalism report lore. Full altitude profiles are generated at emit.
+      rides its eccentric orbit. So the habitability is honestly earned by the atmosphere, not by tides or a
+      convenient star. You could breathe it, and yet the same air is slowly lethal to a human.
     narrative_ko: >
-      대기는 캐넌 그대로 충실히 지켰다. 질소가 주성분에 산소가 있고, 이산화탄소가 듬뿍, 기묘하게 제논이 풍부하며,
-      독성 미량 성분이 섞여 있다. 지표 기압은 지구보다 십분의 일쯤 높다. 이 거리의 맨 햇빛으로는 얼어붙을
-      운명이지만, 두터운 CO₂ 온실(금성 메커니즘의 온건한 사촌)이 지표를 살 만한 온도까지 끌어올리고, 모행성이
-      찌그러진 궤도를 도는 대로 대계절이 잔잔하게 오간다. 그러니 거주가능성은 조석이나 편리한 별이 아니라 대기가
-      정직하게 벌어 온 것이다. Kerbal은 이 공기를 숨 쉴 수 있다(게임은 독성을 모델링하지 않는다). 인간에게
-      치명적인 화학은 Kerbalism 레포트 lore로 살아남는다. 고도별 전체 프로파일은 emit 때 생성된다.
+      대기는 캐넌 설정을 충실히 따랐다. 질소가 주성분이고 산소가 있으며, 이산화탄소가 듬뿍에 제논이 유난히
+      풍부하고, 독성 미량 성분까지 섞여 있다. 지표 기압은 지구보다 십분의 일쯤 높다. 이 거리의 맨 햇빛만으로는
+      얼어붙겠지만, 두터운 CO₂ 온실(금성 메커니즘의 온건한 사촌)이 지표를 살 만한 온도로 끌어올리고, 모행성이
+      찌그러진 궤도를 도는 리듬에 맞춰 대계절이 잔잔하게 오간다. 그러니 이 거주가능성은 조석이나 운 좋은 별이
+      아니라 대기가 정직하게 벌어들인 것이다. 숨은 쉴 수 있어도, 같은 공기가 사람에게는 서서히 치명적이다.
     fields:
       - { name: composition, value: "N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon)", op: set }
       - { name: pressure, value: 1.1, unit: atm, op: set, note: "canon ~20% 빽빽" }
@@ -1931,6 +1929,7 @@ decisions:
       - { name: scale_height, value: "도출 (무거운 CO₂+0.8g)", op: set }
       - { name: escape, value: "안정 (지구형 0.8g)", op: set }
       - { name: breathability, value: true, op: set, note: "O₂ 존재 but lore-독성; stock atmosphereContainsOxygen=true" }
+    refs: ["docs/reference/tidally-locked-temperature-methodology.md", "docs/reference/exoplanet-atmosphere-methodology.md"]
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
