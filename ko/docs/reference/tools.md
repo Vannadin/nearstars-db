@@ -280,6 +280,10 @@
   `dist/.../Patches/Kerbalism/NearStars-SolarSystemRadiation.cfg` 방출(RadiationModel +
   RadiationBody 재바인드, 7바디, 클릭 가능한 ADS 출처 주석, 라운드트립 자가검증).
   Kerbalism/ROKerbalism 메인테이너 업스트림 제안용.
+- `scripts/viz/build_belt_viewer.py` (+ `belt_viewer_template.html`) —
+  `docs/belt-viewer.html` 빌드. 브라우저 인터랙티브 뷰어(실시간 SDF 단면 + 3D
+  레이마칭, 필드별 슬라이더, `render_belts_bodies.BODIES`에서 주입한 17개 프리셋,
+  Shue 오버레이, 원클릭 cfg 내보내기). 위키 Radiation-Belts 페이지에서 링크.
 
 ## 스킬 디렉터리 배치
 

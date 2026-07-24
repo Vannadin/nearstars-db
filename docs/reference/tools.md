@@ -280,6 +280,10 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   `dist/.../Patches/Kerbalism/NearStars-SolarSystemRadiation.cfg` (RadiationModel +
   RadiationBody rebinds, 7 bodies, clickable ADS provenance comments, round-trip
   self-check); intended as an upstream proposal to the Kerbalism/ROKerbalism maintainers
+- `scripts/viz/build_belt_viewer.py` (+ `belt_viewer_template.html`) — builds
+  `docs/belt-viewer.html`, the interactive in-browser viewer (live SDF cross-section +
+  3D raymarch, per-field sliders, 17 presets injected from `render_belts_bodies.BODIES`,
+  Shue overlay, one-click cfg export); linked from the wiki Radiation-Belts page
 
 ## Skills directory layout
 

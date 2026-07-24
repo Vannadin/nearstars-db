@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kerbalism 방사선대 단면 뷰어</title>
+<!-- Generated from scripts/viz/belt_viewer_template.html by build_belt_viewer.py -->
+</head>
+<body>
+<style>
+  :root{
+    --bg:#0b0e15; --panel:#141b28; --panel-2:#1b2434; --line:#2a3547;
+    --text:#e3e9f2; --muted:#8b98ad; --accent:#39cfd9; --accent-warm:#ff9a52;
+    --screen:#05070d; --pause:#39cfd9;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:light){
+    :root{ --bg:#e9edf4; --panel:#ffffff; --panel-2:#f1f4fa; --line:#d5dce8;
+           --text:#182233; --muted:#5b6779; }
+  }
+  :root[data-theme="dark"]{ --bg:#0b0e15; --panel:#141b28; --panel-2:#1b2434; --line:#2a3547; --text:#e3e9f2; --muted:#8b98ad; }
+  :root[data-theme="light"]{ --bg:#e9edf4; --panel:#ffffff; --panel-2:#f1f4fa; --line:#d5dce8; --text:#182233; --muted:#5b6779; }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+       line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 18px 40px}
+  header h1{font-size:20px;margin:0 0 3px;letter-spacing:-.01em;text-wrap:balance}
+  header p{margin:0;color:var(--muted);font-size:13px}
+  header code{font-family:var(--mono);font-size:12px;color:var(--accent)}
+
+  .presets{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 4px}
+  .presets button{font-family:var(--sans);font-size:12.5px;font-weight:600;
+    color:var(--text);background:var(--panel-2);border:1px solid var(--line);
+    padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s}
+  .presets button:hover{border-color:var(--accent);color:var(--accent)}
+  .presets button.on{background:var(--accent);border-color:var(--accent);color:#04222a}
+  .presets button.copy{border-color:var(--accent-warm);color:var(--accent-warm)}
+  .presets button.copy:hover{background:var(--accent-warm);color:#2a1400;border-color:var(--accent-warm)}
+  .presets button.copy.done{background:#4caf7d;border-color:#4caf7d;color:#04240f}
+  .presets .sep{flex:1}
+
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;margin-top:14px;align-items:start}
+  @media (max-width:820px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .screen{position:relative;background:var(--screen);aspect-ratio:1/1}
+  canvas{display:block;width:100%;height:100%;image-rendering:auto}
+  .readout{position:absolute;top:10px;left:12px;font-family:var(--mono);font-size:11.5px;
+    color:#cfe;background:rgba(5,7,13,.55);border:1px solid #ffffff18;border-radius:8px;
+    padding:7px 10px;pointer-events:none;line-height:1.65;backdrop-filter:blur(2px)}
+  .readout b{color:var(--accent);font-weight:600}
+  .readout .z{color:var(--accent-warm)}
+  .sun{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:11px;
+    color:var(--accent-warm);background:rgba(5,7,13,.5);border-radius:8px;padding:5px 9px;pointer-events:none}
+  .mode{position:absolute;bottom:10px;right:12px;display:flex;border:1px solid var(--line);
+    border-radius:8px;overflow:hidden;background:rgba(5,7,13,.55);backdrop-filter:blur(2px)}
+  .mode button{font-family:var(--sans);font-size:11.5px;font-weight:600;padding:5px 12px;
+    border:none;cursor:pointer;background:transparent;color:#9fb0c8}
+  .mode button.on{background:var(--accent);color:#04222a}
+  .legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 14px;
+    border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .bar{height:10px;width:130px;border-radius:3px;
+    background:linear-gradient(90deg,#000004,#1b0c41,#4a0c6b,#781c6d,#a52c60,#cf4446,#ed6925,#fb9b06,#f7d13d,#fcffa4)}
+  .legend .k{display:inline-flex;align-items:center;gap:5px}
+  .swatch{width:14px;height:3px;border-radius:2px;background:var(--pause)}
+  .swatch.body{width:11px;height:11px;border-radius:50%;background:#4a5566}
+
+  .controls{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:6px 4px;max-height:none}
+  details{border-bottom:1px solid var(--line)}
+  details:last-child{border-bottom:none}
+  summary{list-style:none;cursor:pointer;padding:11px 14px;font-weight:600;font-size:13px;
+    display:flex;align-items:center;gap:8px;user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary .tri{color:var(--muted);font-size:10px;transition:.15s;margin-left:auto}
+  details[open] summary .tri{transform:rotate(90deg)}
+  summary .dot{width:9px;height:9px;border-radius:50%}
+  .g-inner .dot{background:#ed6925}.g-outer .dot{background:#8a5cff}
+  .g-pause .dot{background:var(--pause)}.g-view .dot{background:var(--muted)}
+  .body-rows{padding:2px 14px 12px}
+
+  .row{display:grid;grid-template-columns:110px 1fr 62px;align-items:center;gap:8px;padding:3px 0}
+  .row label{font-family:var(--mono);font-size:11px;color:var(--muted);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row input.num{font-family:var(--mono);font-size:11.5px;text-align:right;
+    font-variant-numeric:tabular-nums;color:var(--text);background:var(--panel-2);
+    border:1px solid var(--line);border-radius:6px;padding:3px 5px;width:100%;
+    -moz-appearance:textfield}
+  .row input.num::-webkit-outer-spin-button,.row input.num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .row input.num:focus{outline:none;border-color:var(--accent)}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;
+    background:var(--line);outline:none;width:100%}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+    border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--accent)}
+  input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--panel)}
+  input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px #39cfd966}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:2px 0 8px}
+  .toggle-row span{font-size:12px;color:var(--muted)}
+  .sw{position:relative;width:38px;height:21px;background:var(--line);border-radius:999px;cursor:pointer;transition:.15s;flex:none}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.15s}
+  .sw.on{background:var(--accent)}.sw.on::after{left:19px}
+  .note{color:var(--muted);font-size:11.5px;padding:10px 14px 2px;line-height:1.55}
+  .note code{font-family:var(--mono);color:var(--accent)}
+  footer{color:var(--muted);font-size:11.5px;margin-top:18px;line-height:1.6}
+  footer code{font-family:var(--mono);color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Kerbalism 방사선대 단면 뷰어</h1>
+    <p>인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.</p>
+  </header>
+
+  <div class="presets" id="presets">
+    <span class="sep"></span>
+    <button data-act="reset">현재값 초기화</button>
+    <button data-act="copy" class="copy">📋 Kerbalism cfg 복사</button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="screen">
+        <canvas id="cv"></canvas>
+        <canvas id="cv3d" style="display:none"></canvas>
+        <div class="readout" id="ro">커서를 올려보세요</div>
+        <div class="sun">☀ 항성 → +x (오른쪽)</div>
+        <div class="mode" id="mode">
+          <button data-m="2d" class="on">단면</button><button data-m="3d">3D</button>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="k"><span class="bar"></span></span>
+        <span id="scaleLo">0</span>–<span id="scaleHi">10</span> rad/h
+        <span class="k"><span class="swatch"></span> 자기권계면</span>
+        <span class="k"><span class="swatch" style="background:repeating-linear-gradient(90deg,var(--accent-warm) 0 5px,transparent 5px 8px)"></span> Shue 기준</span>
+        <span class="k"><span class="swatch body"></span> 바디</span>
+      </div>
+    </div>
+
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+"use strict";
+// ---- exact Kerbalism SDFs (src/Kerbalism/Radiation/Radiation.cs) ----
+function torusSDF(x,y,z,P){
+  const px = x*(x<0?P.ext:P.comp);
+  const q1 = Math.sqrt((px*px+z*z)*P.dxy)-P.dist;
+  const d1 = Math.sqrt(q1*q1+y*y)-P.rad;
+  const q2 = Math.sqrt((px*px+z*z)*P.bdxy)-P.bdist;
+  const d2 = Math.sqrt(q2*q2+y*y)-P.brad;
+  let v = Math.max(d1,-d2);
+  if(P.deform>0.001) v += Math.sin(px*5)*Math.sin(y*7)*Math.sin(z*6)*P.deform;
+  return v;
+}
+function pauseSDF(x,y,z,P){
+  let px = x + (P.off||0);            // 실험용 병진(비-cfg): 형태 전체를 꼬리쪽으로 물림
+  px = px*(px<0?P.ext:P.comp);
+  const py = y*P.hscale;
+  let v = Math.sqrt(px*px+py*py+z*z)-P.rad;
+  if(P.deform>0.001) v += Math.sin(px*5)*Math.sin(py*7)*Math.sin(z*6)*P.deform;
+  return v;
+}
+const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+// inferno colormap
+const STOPS=[[0,0,4],[27,12,65],[74,12,107],[120,28,109],[165,44,96],[207,68,70],[237,105,37],[251,155,6],[247,209,61],[252,255,164]];
+function inferno(t){t=clamp(t,0,1)*9;const i=Math.floor(t),f=t-i,a=STOPS[i],b=STOPS[Math.min(i+1,9)];
+  return [a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f];}
+
+// ---- parameter model ----
+function belt(pre){return Object.assign({on:true,rad:0,radiation:0,grad:3.3,dist:1,dxy:1,comp:1,ext:1,bdist:0.0001,brad:0,bdxy:1,deform:0},pre);}
+const state={
+  inner:belt({}), outer:belt({}),
+  pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,off:0,alpha:0.6},
+  view:{R:8,tilt:0,z:0,shue:0,offset:0}
+};
+
+const PRESETS=__PRESETS__;
+
+// ---- control definitions ----
+const F=(k,label,min,max,step)=>({k,label,min,max,step});
+const GROUPS=[
+  {id:"inner",title:"내대 (inner belt)",cls:"g-inner",toggle:true,
+   rows:[F("radiation","radiation_inner",0,400,0.5),F("grad","inner_gradient",0.5,6,0.1),
+     F("dist","inner_dist",0,12,0.01),F("rad","inner_radius",0.05,8,0.01),F("dxy","inner_deform_xy",0.2,2,0.001),
+     F("comp","inner_compression",1,2,0.01),F("ext","inner_extension",0.02,1.5,0.005),
+     F("bdist","inner_border_dist",0,8,0.001),F("brad","inner_border_radius",0,6,0.005),
+     F("bdxy","inner_border_deform_xy",0.2,2,0.01),F("deform","inner_deform",0,0.5,0.005)]},
+  {id:"outer",title:"외대 (outer belt)",cls:"g-outer",toggle:true,
+   rows:[F("radiation","radiation_outer",0,400,0.5),F("grad","outer_gradient",0.5,6,0.1),
+     F("dist","outer_dist",0,20,0.01),F("rad","outer_radius",0.05,12,0.01),F("dxy","outer_deform_xy",0.2,2,0.001),
+     F("comp","outer_compression",1,2,0.01),F("ext","outer_extension",0.02,1.5,0.005),
+     F("bdist","outer_border_dist",0,12,0.001),F("brad","outer_border_radius",0,10,0.005),
+     F("bdxy","outer_border_deform_xy",0.2,2,0.01),F("deform","outer_deform",0,0.5,0.005)]},
+  {id:"pause",title:"자기권계면 (pause)",cls:"g-pause",toggle:true,
+   rows:[F("rad","pause_radius",0,70,0.1),F("radiation","radiation_pause",-0.05,0,0.001),
+     F("comp","pause_compression",1,2,0.01),F("ext","pause_extension",0.02,1.5,0.005),
+     F("hscale","pause_height_scale",0.5,2,0.01),F("deform","pause_deform",0,0.5,0.005),
+     F("alpha","불투명도 (viz)",0,1,0.05),F("off","pause_offset ⚗비-cfg",0,30,0.1)]},
+  {id:"view",title:"뷰 / 배향",cls:"g-view",toggle:false,
+   rows:[F("R","view_halfwidth (R)",2,70,0.5),F("tilt","dipole_tilt (°)",0,90,0.5),F("offset","geomagnetic_offset",0,1,0.005),F("z","slice_z",0,6,0.05),
+     F("shue","Shue α 오버레이 (0=끔)",0,0.7,0.01)]}
+];
+
+// ---- build controls ----
+const controls=document.getElementById("controls");
+function fmt(v){const a=Math.abs(v);return a>=100?v.toFixed(0):a>=10?v.toFixed(1):a>=1?v.toFixed(2):v.toFixed(3);}
+GROUPS.forEach((g,gi)=>{
+  const det=document.createElement("details"); det.className=g.cls; if(gi<3)det.open=(gi===0);
+  const sum=document.createElement("summary");
+  sum.innerHTML=`<span class="dot"></span>${g.title}<span class="tri">▶</span>`;
+  det.appendChild(sum);
+  const box=document.createElement("div"); box.className="body-rows";
+  if(g.toggle){
+    const tr=document.createElement("div"); tr.className="toggle-row";
+    tr.innerHTML=`<span>표시</span><div class="sw" data-tg="${g.id}"></div>`;
+    box.appendChild(tr);
+  }
+  g.rows.forEach(r=>{
+    const row=document.createElement("div"); row.className="row";
+    row.innerHTML=`<label title="${r.label}">${r.label}</label>
+      <input type="range" min="${r.min}" max="${r.max}" step="${r.step}" data-g="${g.id}" data-k="${r.k}">
+      <input type="number" class="num" min="${r.min}" step="${r.step}" data-g="${g.id}" data-k="${r.k}">`;
+    box.appendChild(row);
+  });
+  det.appendChild(box); controls.appendChild(det);
+});
+
+function syncControls(){
+  document.querySelectorAll('input[type=range]').forEach(inp=>{
+    const v=state[inp.dataset.g][inp.dataset.k];
+    inp.value=v;
+    const num=inp.parentElement.querySelector('input.num');
+    if(num && document.activeElement!==num) num.value=fmt(+v);
+  });
+  document.querySelectorAll('.sw[data-tg]').forEach(sw=>{
+    sw.classList.toggle('on', state[sw.dataset.tg].on);
+  });
+  updateViewMax();
+}
+// 장면 전체(벨트·계면 꼬리·Shue 닫힘)가 들어오는 반너비 → 뷰 슬라이더 최대값에 반영
+let RMAX=70;
+function sceneExtent(){
+  let e=5;
+  const belt=B=>{ if(!B.on)return;
+    const m=B.dist+B.rad;
+    e=Math.max(e, m/Math.min(B.comp,B.ext,1), m); };
+  belt(state.inner); belt(state.outer);
+  if(state.pause.on){ const P=state.pause;
+    e=Math.max(e, P.rad/P.comp, P.rad/P.ext+(P.off||0), P.rad/P.hscale); }
+  return Math.ceil(e*1.06);
+}
+function updateViewMax(){
+  RMAX=Math.max(10, sceneExtent());
+  const el=document.querySelector('input[type=range][data-g="view"][data-k="R"]');
+  if(el) el.max=RMAX;
+}
+function applyControl(g,k,v){
+  state[g][k]=v;
+  // deform은 sin(x·5)sin(y·7)sin(z·6)이라 z=0 자오면에서 항등 0 → 처음 켜면 slice_z를 최대 진폭(π/12≈0.26)으로 자동 넛지
+  if(k==='deform' && v>0 && viewMode==='2d' && state.view.z===0){
+    state.view.z=0.26;
+    ro.innerHTML='deform은 z=0 평면에서 항상 0 → <b>slice_z=0.26</b> 자동 설정';
+  }
+  syncControls(); scheduleRender();
+}
+controls.addEventListener('input',e=>{
+  const inp=e.target; if(inp.type!=='range')return;
+  applyControl(inp.dataset.g, inp.dataset.k, +inp.value);
+});
+controls.addEventListener('change',e=>{
+  const inp=e.target; if(!inp.classList||!inp.classList.contains('num'))return;
+  const v=parseFloat(inp.value);
+  if(Number.isFinite(v)) applyControl(inp.dataset.g, inp.dataset.k, v);   // 직접 입력: 슬라이더 범위 초과 허용
+  else syncControls();
+});
+controls.addEventListener('click',e=>{
+  const sw=e.target.closest('.sw[data-tg]'); if(!sw)return;
+  const s=state[sw.dataset.tg]; s.on=!s.on; sw.classList.toggle('on',s.on); scheduleRender();
+});
+
+// ---- presets ----
+const presetBar=document.getElementById('presets');
+presetBar.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  if(b.dataset.act==='copy'){ copyCfg(b); return; }
+  if(b.dataset.act==='reset'){ applyPreset(currentPreset||'earth'); return; }
+  applyPreset(b.dataset.p);
+});
+// 현재 상태 → Kerbalism cfg (레거시 필드, 오늘 작동하는 스키마)
+function nm(v){ return Math.round(v*1e5)/1e5; }
+function toCfg(){
+  const s=state,I=s.inner,O=s.outer,P=s.pause,L=[];
+  L.push('// NearStars belt-viewer 내보내기 — 단위: 바디 반경, rad/h');
+  L.push('// Kerbalism MM 패치에 붙여넣고 name + :NEEDS[...] 지정');
+  if((P.off||0)>0.001) L.push('// ⚗ pause_offset '+nm(P.off)+' 는 뷰어 전용 실험 필드(실 cfg 아님) → 제외');
+  const belt=(B,pre)=>{
+    L.push('  has_'+pre+' = '+(B.on?'true':'false'));
+    if(!B.on) return;
+    L.push('  '+pre+'_dist = '+nm(B.dist));
+    L.push('  '+pre+'_radius = '+nm(B.rad));
+    if(Math.abs(B.dxy-1)>1e-4) L.push('  '+pre+'_deform_xy = '+nm(B.dxy));
+    if(Math.abs(B.comp-1)>1e-4) L.push('  '+pre+'_compression = '+nm(B.comp));
+    if(Math.abs(B.ext-1)>1e-4) L.push('  '+pre+'_extension = '+nm(B.ext));
+    if(B.brad>1e-4){ L.push('  '+pre+'_border_dist = '+nm(B.bdist));
+      L.push('  '+pre+'_border_radius = '+nm(B.brad));
+      if(Math.abs(B.bdxy-1)>1e-4) L.push('  '+pre+'_border_deform_xy = '+nm(B.bdxy)); }
+    if(B.deform>1e-3) L.push('  '+pre+'_deform = '+nm(B.deform));
+  };
+  L.push('RadiationModel'); L.push('{'); L.push('  name = nsCustom');
+  belt(I,'inner'); belt(O,'outer');
+  L.push('  has_pause = '+(P.on?'true':'false'));
+  if(P.on){ L.push('  pause_radius = '+nm(P.rad));
+    if(Math.abs(P.comp-1)>1e-4) L.push('  pause_compression = '+nm(P.comp));
+    if(Math.abs(P.ext-1)>1e-4) L.push('  pause_extension = '+nm(P.ext));
+    if(Math.abs(P.hscale-1)>1e-4) L.push('  pause_height_scale = '+nm(P.hscale));
+    if(P.deform>1e-3) L.push('  pause_deform = '+nm(P.deform)); }
+  L.push('}');
+  L.push('RadiationBody'); L.push('{'); L.push('  name = <BodyName>'); L.push('  radiation_model = nsCustom');
+  if(I.on){ L.push('  radiation_inner = '+nm(I.radiation));
+    if(Math.abs(I.grad-3.3)>1e-4) L.push('  radiation_inner_gradient = '+nm(I.grad)); }
+  if(O.on){ L.push('  radiation_outer = '+nm(O.radiation));
+    if(Math.abs(O.grad-2.2)>1e-4) L.push('  radiation_outer_gradient = '+nm(O.grad)); }
+  if(P.on) L.push('  radiation_pause = '+nm(P.radiation));
+  const tilt=s.view.tilt; if(Math.abs(tilt)>1e-4) L.push('  geomagnetic_pole_lat = '+nm(90-tilt));
+  const goff=s.view.offset||0; if(goff>1e-4) L.push('  geomagnetic_offset = '+nm(goff));
+  L.push('}');
+  if(P.on) L.push('// Shue-native pause (KerbalismShuePause PR 채택 시): pause_nose = '+nm(P.rad/P.comp)+
+    ' · pause_alpha = '+nm(Math.log2(P.comp))+' · pause_tail = '+nm(P.rad/P.ext));
+  return L.join('\n');
+}
+function copyCfg(btn){
+  const txt=toCfg(), old=btn.textContent;
+  const done=()=>{ btn.textContent='✓ 복사됨'; btn.classList.add('done');
+    setTimeout(()=>{btn.textContent=old;btn.classList.remove('done');},1400); };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done,()=>fallback(txt,done));
+  } else fallback(txt,done);
+}
+function fallback(txt,done){
+  const ta=document.createElement('textarea'); ta.value=txt;
+  ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');done();}catch(_){} document.body.removeChild(ta);
+}
+let currentPreset=null;
+function deepset(preset){
+  const P=PRESETS[preset];
+  state.inner=belt(P.inner); state.outer=belt(P.outer);
+  state.pause=Object.assign({on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,off:0,alpha:0.6},P.pause);
+  state.view=Object.assign({R:8,tilt:0,z:0,shue:0,offset:0},P.view);
+}
+function applyPreset(p){
+  currentPreset=p; deepset(p); syncControls();
+  document.querySelectorAll('#presets button[data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  scheduleRender();
+}
+
+// ---- rendering ----
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const ro=document.getElementById('ro');
+let SZ=420, img=null;
+function resize(){
+  const w=cv.clientWidth||420; SZ=Math.max(240,Math.min(460,Math.round(w)));
+  cv.width=SZ; cv.height=SZ; img=ctx.createImageData(SZ,SZ); scheduleRender();
+}
+function doseAt(x,y){ // world coords -> {dose, zone}
+  const v=state.view, tr=v.tilt*Math.PI/180, ca=Math.cos(tr), sa=Math.sin(tr);
+  const xr=x*ca - y*sa, yr=x*sa + y*ca - (v.offset||0), z=v.z;
+  let dose=0, zone=[];
+  const mag=Math.sqrt(x*x+y*y+z*z);
+  if(mag<1) return {dose:NaN,zone:'body',mag};
+  if(state.inner.on){ const d=torusSDF(xr,yr,z,state.inner);
+    if(d<0){ dose+=clamp(state.inner.grad*(-d)/state.inner.rad,0,1)*state.inner.radiation; zone.push('내대'); } }
+  if(state.outer.on){ const d=torusSDF(xr,yr,z,state.outer);
+    if(d<0){ dose+=clamp(state.outer.grad*(-d)/state.outer.rad,0,1)*state.outer.radiation; zone.push('외대'); } }
+  let pd=1;
+  if(state.pause.on){ pd=pauseSDF(xr,yr,z,state.pause);
+    if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation; if(!zone.length)zone.push('자기권 내'); } }
+  return {dose,zone:zone.join('+')||'—',mag,pd};
+}
+function render(){
+  if(!img)return;
+  const v=state.view, R=v.R, wpp=(2*R)/SZ, d=img.data;
+  const maxI=Math.max(state.inner.on?state.inner.radiation:0, state.outer.on?state.outer.radiation:0, 1e-6);
+  const pa=state.pause.alpha!=null?state.pause.alpha:0.6;
+  const tr=v.tilt*Math.PI/180, ca=Math.cos(tr), sa=Math.sin(tr), z=v.z, off=v.offset||0;
+  for(let j=0;j<SZ;j++){
+    const y=(SZ/2 - j)*wpp;
+    for(let i=0;i<SZ;i++){
+      const x=(i-SZ/2)*wpp;
+      const xr=x*ca - y*sa, yr=x*sa + y*ca - off;
+      const idx=(j*SZ+i)*4;
+      const mag=Math.sqrt(x*x+y*y+z*z);
+      let r,g,b;
+      if(mag<1){ // body, sunlit toward +x
+        const lit=clamp(0.32+0.5*(x/1),0.12,0.92);
+        r=48*lit+18; g=58*lit+20; b=74*lit+24;
+        d[idx]=r;d[idx+1]=g;d[idx+2]=b;d[idx+3]=255; continue;
+      }
+      let dose=0;
+      if(state.inner.on){const s=torusSDF(xr,yr,z,state.inner); if(s<0)dose+=clamp(state.inner.grad*(-s)/state.inner.rad,0,1)*state.inner.radiation;}
+      if(state.outer.on){const s=torusSDF(xr,yr,z,state.outer); if(s<0)dose+=clamp(state.outer.grad*(-s)/state.outer.rad,0,1)*state.outer.radiation;}
+      let pd=1;
+      if(state.pause.on) pd=pauseSDF(xr,yr,z,state.pause);
+      // base: space + faint magnetosphere interior (불투명도 pa 반영)
+      r=5;g=7;b=13;
+      if(state.pause.on && pd<0){ r+=(10-r)*pa; g+=(16-g)*pa; b+=(30-b)*pa; }
+      if(dose>1e-4){ const c=inferno(dose/maxI); r=c[0];g=c[1];b=c[2]; }
+      // pause boundary line (불투명도 pa 반영)
+      if(state.pause.on && Math.abs(pd)< wpp*1.3){ r+=(57-r)*pa; g+=(207-g)*pa; b+=(217-b)*pa; }
+      d[idx]=r;d[idx+1]=g;d[idx+2]=b;d[idx+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+  // overlay: rings + axes
+  ctx.save();
+  ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.fillStyle='rgba(255,255,255,.35)';
+  ctx.font='10px ui-monospace,monospace'; ctx.lineWidth=1;
+  const c=SZ/2, ppr=SZ/(2*R);
+  const step = R<=4?1 : R<=10?2 : R<=25?5 : 10;
+  for(let rr=step;rr<=R;rr+=step){
+    ctx.beginPath(); ctx.setLineDash([2,4]); ctx.arc(c,c,rr*ppr,0,7); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillText(rr+'',c+rr*ppr+2,c-2);
+  }
+  // axes
+  ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.beginPath();
+  ctx.moveTo(0,c);ctx.lineTo(SZ,c);ctx.moveTo(c,0);ctx.lineTo(c,SZ);ctx.stroke();
+  // Shue 기준 곡선 r(θ)=r0·(2/(1+cosθ))^α — 항성정렬 프레임(tilt 무관), r0=현재 pause 노즈
+  // 꼬리마감 L>r0이면: 연화 Shue 폐곡선(C∞ 단일식) + 순수 Shue 대조
+  const alS=state.view.shue;
+  if(alS>0.05 && state.pause.on){
+    const P=state.pause;
+    const nose=P.rad/P.comp-(P.off||0);
+    if(nose>0.3){
+      const L=P.rad/P.ext+(P.off||0);     // Kerbalism 계면 꼬리 길이에 연동 (pause_radius/extension + offset)
+      const m=1;                          // 테이퍼 m=1 고정 (기저형, 노브 없음 — 오너 확정 2026-07-23)
+      ctx.lineWidth=1.5;
+      ctx.font='10px ui-monospace,monospace';
+      if(L>nose*1.05){
+        // ── 연화 Shue (단일 매끄러운 폐곡선, 이음매 없음):
+        //    r(θ) = r0·((1+ε)/(ε+cos^{2m}(θ/2)))^{α/m},  ε = 1/((L/r0)^{m/α}−1)
+        //    ε→0 = 순수 Shue 환원, θ=180°서 dr/dθ=0 (둥근 끝)
+        const eps=1/(Math.pow(L/nose,m/alS)-1);
+        // 대조용 순수 Shue(열림) — 희미하게
+        ctx.strokeStyle='rgba(255,255,255,.20)'; ctx.setLineDash([3,5]);
+        ctx.beginPath();
+        let f2=true;
+        for(let deg=-150;deg<=150;deg+=2){
+          const th=deg*Math.PI/180;
+          const rr2=nose*Math.pow(2/(1+Math.cos(th)),alS);
+          const px2=c+rr2*Math.cos(th)*ppr, py2=c-rr2*Math.sin(th)*ppr;
+          if(f2){ctx.moveTo(px2,py2);f2=false;} else ctx.lineTo(px2,py2);
+        }
+        ctx.stroke();
+        // 연화 폐곡선
+        ctx.strokeStyle='rgba(255,154,82,.95)'; ctx.setLineDash([6,4]);
+        ctx.fillStyle='rgba(255,154,82,.055)';
+        ctx.beginPath();
+        f2=true;
+        for(let i=0;i<=240;i++){
+          const deg=-180+i*1.5;
+          const cu=Math.cos(deg*Math.PI/360);          // cos(θ/2)
+          const rr2=nose*Math.pow((1+eps)/(eps+Math.pow(cu*cu,m)),alS/m);
+          const th=deg*Math.PI/180;
+          const px2=c+rr2*Math.cos(th)*ppr, py2=c-rr2*Math.sin(th)*ppr;
+          if(f2){ctx.moveTo(px2,py2);f2=false;} else ctx.lineTo(px2,py2);
+        }
+        ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle='rgba(255,154,82,.95)';
+        ctx.beginPath(); ctx.arc(c+nose*ppr,c,2.5,0,7); ctx.fill();
+        ctx.fillText('연화 Shue (C∞)  α='+alS.toFixed(2)+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+'(pause 연동) ε='+eps.toFixed(4), c+nose*ppr+5, c-6);
+        ctx.fillStyle='rgba(255,255,255,.5)';
+        ctx.fillText('흰 점선 = 순수 Shue(열림) 대조', c-L*ppr*0.9, c+16);
+      } else {
+        // ── 열린 Shue (기존 동작)
+        ctx.strokeStyle='rgba(255,154,82,.85)'; ctx.setLineDash([6,4]);
+        ctx.beginPath();
+        let first=true;
+        for(let deg=-152;deg<=152;deg+=2){
+          const th=deg*Math.PI/180;
+          const rr2=nose*Math.pow(2/(1+Math.cos(th)),alS);
+          const px2=c+rr2*Math.cos(th)*ppr, py2=c-rr2*Math.sin(th)*ppr;
+          if(first){ctx.moveTo(px2,py2);first=false;} else ctx.lineTo(px2,py2);
+        }
+        ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle='rgba(255,154,82,.9)';
+        ctx.beginPath(); ctx.arc(c+nose*ppr,c,2.5,0,7); ctx.fill();
+        ctx.fillText('Shue α='+alS.toFixed(2)+' (r0='+nose.toFixed(1)+')', c+nose*ppr+5, c-6);
+      }
+    }
+  }
+  ctx.restore();
+  document.getElementById('scaleHi').textContent=fmt(maxI);
+}
+let raf=null;
+function scheduleRender(){ if(raf)return; raf=requestAnimationFrame(()=>{raf=null; viewMode==='3d'?render3d():render();}); }
+
+// ================= 3D volume raymarcher (same SDFs, in GLSL) =================
+let viewMode='2d';
+const cv3=document.getElementById('cv3d');
+let gl=null, prog=null, U={}, cam={yaw:0.6,pitch:0.35};
+
+const VSH=`attribute vec2 aP;void main(){gl_Position=vec4(aP,0.,1.);}`;
+const FSH=`precision highp float;
+uniform vec2 uRes;uniform float uYaw,uPitch,uDistCam,uTilt,uMaxI,uBR;
+uniform float uInnerOn,uOuterOn,uPauseOn,uOff;
+uniform float iD,iR,iXY,iC,iE,iBD,iBR2,iBXY,iDef,iInt,iGr;
+uniform float oD,oR,oXY,oC,oE,oBD,oBR2,oBXY,oDef,oInt,oGr;
+uniform float pR,pC,pE,pH,pDef,pOff,pAlpha;
+vec3 inferno(float t){t=clamp(t,0.,1.);
+ const vec3 c0=vec3(0.000218940,0.001651005,-0.019480898);
+ const vec3 c1=vec3(0.106513419,0.563956437,3.932712389);
+ const vec3 c2=vec3(11.60249308,-3.972853966,-15.94239411);
+ const vec3 c3=vec3(-41.70399613,17.43639888,44.35414520);
+ const vec3 c4=vec3(77.16293570,-33.40235894,-81.80730926);
+ const vec3 c5=vec3(-71.31942824,32.62606426,73.20951986);
+ const vec3 c6=vec3(25.13112622,-12.24266895,-23.07032500);
+ return clamp(c0+t*(c1+t*(c2+t*(c3+t*(c4+t*(c5+t*c6))))),0.,1.);}
+float torus(vec3 p,float D,float R,float XY,float C,float E,float BD,float BR2,float BXY,float DEF){
+ p.x*=p.x<0.0?E:C;
+ float q1=sqrt((p.x*p.x+p.z*p.z)*XY)-D;
+ float d1=sqrt(q1*q1+p.y*p.y)-R;
+ float q2=sqrt((p.x*p.x+p.z*p.z)*BXY)-BD;
+ float d2=sqrt(q2*q2+p.y*p.y)-BR2;
+ float v=max(d1,-d2);
+ if(DEF>0.001)v+=sin(p.x*5.)*sin(p.y*7.)*sin(p.z*6.)*DEF;
+ return v;}
+float pauseF(vec3 p){
+ p.x+=pOff;
+ p.x*=p.x<0.0?pE:pC; p.y*=pH;
+ float v=length(p)-pR;
+ if(pDef>0.001)v+=sin(p.x*5.)*sin(p.y*7.)*sin(p.z*6.)*pDef;
+ return v;}
+void main(){
+ vec2 uv=(gl_FragCoord.xy*2.0-uRes)/uRes.y;
+ float cy=cos(uYaw),sy=sin(uYaw),cp=cos(uPitch),sp=sin(uPitch);
+ vec3 ro=uDistCam*vec3(cp*sy,sp,cp*cy);
+ vec3 fw=normalize(-ro);
+ vec3 rt=normalize(cross(fw,vec3(0.,1.,0.)));
+ vec3 up=cross(rt,fw);
+ vec3 rd=normalize(fw+0.62*(uv.x*rt+uv.y*up));
+ float b=dot(ro,rd);
+ float c=dot(ro,ro)-uBR*uBR;
+ float h=b*b-c;
+ vec3 col=vec3(0.); float a=0.;
+ float ca=cos(radians(uTilt)),sa=sin(radians(uTilt));
+ if(h>0.0){
+  float t0=max(0.0,-b-sqrt(h)), t1=-b+sqrt(h);
+  float dt=(t1-t0)/110.0;
+  for(int i=0;i<110;i++){
+   float t=t0+(float(i)+0.5)*dt;
+   vec3 pw=ro+rd*t;
+   if(dot(pw,pw)<1.0){
+    vec3 n=normalize(pw);
+    float lit=clamp(0.32+0.55*n.x,0.10,0.95);
+    vec3 bod=vec3(0.20,0.24,0.30)*lit+vec3(0.055);
+    col+=(1.0-a)*bod; a=1.0; break;}
+   vec3 q=vec3(pw.x*ca-pw.y*sa, pw.x*sa+pw.y*ca-uOff, pw.z);
+   float dose=0.0;
+   if(uInnerOn>0.5){float d=torus(q,iD,iR,iXY,iC,iE,iBD,iBR2,iBXY,iDef);
+     if(d<0.0)dose+=clamp(iGr*(-d)/iR,0.,1.)*iInt;}
+   if(uOuterOn>0.5){float d=torus(q,oD,oR,oXY,oC,oE,oBD,oBR2,oBXY,oDef);
+     if(d<0.0)dose+=clamp(oGr*(-d)/oR,0.,1.)*oInt;}
+   if(dose>1e-4){
+    float dn=dose/uMaxI;
+    float aS=clamp(dn*13.0*dt/uBR,0.0,0.32);
+    col+=(1.0-a)*inferno(dn)*aS*1.25; a+=(1.0-a)*aS;}
+   if(uPauseOn>0.5){
+    float pd=pauseF(q);
+    float shell=exp(-abs(pd)/(uBR*0.006));
+    float aP2=shell*24.0*dt/uBR*pAlpha;
+    col+=(1.0-a)*vec3(0.22,0.81,0.85)*aP2;
+    a+=(1.0-a)*aP2*0.5;
+    if(pd<0.0){float aI=1.6*dt/uBR*pAlpha;
+     col+=(1.0-a)*vec3(0.045,0.075,0.13)*aI; a+=(1.0-a)*aI*0.4;}}
+   if(a>0.985)break;
+  }}
+ vec3 bg=vec3(0.020,0.027,0.051);
+ col+=(1.0-a)*bg;
+ gl_FragColor=vec4(col,1.0);}`;
+
+function glInit(){
+ if(gl)return true;
+ gl=cv3.getContext('webgl',{antialias:false,depth:false});
+ if(!gl){ro.innerHTML='WebGL을 사용할 수 없습니다';return false;}
+ function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
+ prog=gl.createProgram();
+ gl.attachShader(prog,sh(gl.VERTEX_SHADER,VSH));
+ gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FSH));
+ gl.linkProgram(prog);
+ if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));
+ gl.useProgram(prog);
+ const buf=gl.createBuffer();
+ gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+ gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+ const loc=gl.getAttribLocation(prog,'aP');
+ gl.enableVertexAttribArray(loc);
+ gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+ ['uRes','uYaw','uPitch','uDistCam','uTilt','uMaxI','uBR','uInnerOn','uOuterOn','uPauseOn','uOff',
+  'iD','iR','iXY','iC','iE','iBD','iBR2','iBXY','iDef','iInt','iGr',
+  'oD','oR','oXY','oC','oE','oBD','oBR2','oBXY','oDef','oInt','oGr',
+  'pR','pC','pE','pH','pDef','pOff','pAlpha'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
+ return true;
+}
+function resize3d(){
+ const dpr=Math.min(window.devicePixelRatio||1,1.5);
+ const w=Math.round((cv3.clientWidth||420)*dpr);
+ if(w<10)return;
+ cv3.width=w; cv3.height=w;
+ if(gl)gl.viewport(0,0,w,w);
+}
+function render3d(){
+ if(!glInit())return;
+ if(cv3.width<10)resize3d();
+ const s=state, v=s.view;
+ const maxI=Math.max(s.inner.on?s.inner.radiation:0, s.outer.on?s.outer.radiation:0, 1e-6);
+ gl.uniform2f(U.uRes,cv3.width,cv3.height);
+ gl.uniform1f(U.uYaw,cam.yaw); gl.uniform1f(U.uPitch,cam.pitch);
+ gl.uniform1f(U.uDistCam,v.R*2.6); gl.uniform1f(U.uBR,v.R*1.5);
+ gl.uniform1f(U.uTilt,v.tilt); gl.uniform1f(U.uMaxI,maxI); gl.uniform1f(U.uOff,v.offset||0);
+ gl.uniform1f(U.uInnerOn,s.inner.on?1:0);
+ gl.uniform1f(U.uOuterOn,s.outer.on?1:0);
+ gl.uniform1f(U.uPauseOn,s.pause.on?1:0);
+ const I=s.inner,O=s.outer,P=s.pause;
+ gl.uniform1f(U.iD,I.dist);gl.uniform1f(U.iR,I.rad);gl.uniform1f(U.iXY,I.dxy);
+ gl.uniform1f(U.iC,I.comp);gl.uniform1f(U.iE,I.ext);gl.uniform1f(U.iBD,I.bdist);
+ gl.uniform1f(U.iBR2,I.brad);gl.uniform1f(U.iBXY,I.bdxy);gl.uniform1f(U.iDef,I.deform);
+ gl.uniform1f(U.iInt,I.radiation);gl.uniform1f(U.iGr,I.grad);
+ gl.uniform1f(U.oD,O.dist);gl.uniform1f(U.oR,O.rad);gl.uniform1f(U.oXY,O.dxy);
+ gl.uniform1f(U.oC,O.comp);gl.uniform1f(U.oE,O.ext);gl.uniform1f(U.oBD,O.bdist);
+ gl.uniform1f(U.oBR2,O.brad);gl.uniform1f(U.oBXY,O.bdxy);gl.uniform1f(U.oDef,O.deform);
+ gl.uniform1f(U.oInt,O.radiation);gl.uniform1f(U.oGr,O.grad);
+ gl.uniform1f(U.pR,P.rad);gl.uniform1f(U.pC,P.comp);gl.uniform1f(U.pE,P.ext);
+ gl.uniform1f(U.pH,P.hscale);gl.uniform1f(U.pDef,P.deform);
+ gl.uniform1f(U.pOff,P.off||0);gl.uniform1f(U.pAlpha,P.alpha!=null?P.alpha:0.6);
+ gl.drawArrays(gl.TRIANGLES,0,3);
+ document.getElementById('scaleHi').textContent=fmt(maxI);
+}
+// mode switch
+document.getElementById('mode').addEventListener('click',e=>{
+ const b=e.target.closest('button'); if(!b)return;
+ viewMode=b.dataset.m;
+ document.querySelectorAll('#mode button').forEach(x=>x.classList.toggle('on',x===b));
+ cv.style.display=viewMode==='2d'?'block':'none';
+ cv3.style.display=viewMode==='3d'?'block':'none';
+ if(viewMode==='3d'){resize3d();ro.innerHTML='드래그 = 회전 · 휠 = 줌';}
+ else ro.innerHTML='커서를 올려보세요';
+ scheduleRender();
+});
+// 3D interaction: drag rotate, wheel zoom
+let drag=null;
+cv3.addEventListener('mousedown',e=>{drag={x:e.clientX,y:e.clientY};});
+window.addEventListener('mousemove',e=>{
+ if(!drag)return;
+ cam.yaw -= (e.clientX-drag.x)*0.008;
+ cam.pitch = clamp(cam.pitch+(e.clientY-drag.y)*0.008, -1.45, 1.45);
+ drag={x:e.clientX,y:e.clientY};
+ scheduleRender();
+});
+window.addEventListener('mouseup',()=>drag=null);
+cv3.addEventListener('wheel',e=>{
+ e.preventDefault();
+ state.view.R=clamp(state.view.R*(e.deltaY>0?1.12:0.89),2,RMAX);
+ syncControls(); scheduleRender();
+},{passive:false});
+cv3.addEventListener('touchstart',e=>{if(e.touches.length===1)drag={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
+cv3.addEventListener('touchmove',e=>{
+ if(!drag||e.touches.length!==1)return;
+ const t=e.touches[0];
+ cam.yaw-=(t.clientX-drag.x)*0.008;
+ cam.pitch=clamp(cam.pitch+(t.clientY-drag.y)*0.008,-1.45,1.45);
+ drag={x:t.clientX,y:t.clientY};
+ scheduleRender();
+},{passive:true});
+cv3.addEventListener('touchend',()=>drag=null);
+new ResizeObserver(()=>{if(viewMode==='3d'){resize3d();scheduleRender();}}).observe(cv3);
+
+// hover readout
+cv.addEventListener('mousemove',e=>{
+  const rect=cv.getBoundingClientRect();
+  const px=(e.clientX-rect.left)/rect.width*SZ, py=(e.clientY-rect.top)/rect.height*SZ;
+  const R=state.view.R, wpp=(2*R)/SZ;
+  const x=(px-SZ/2)*wpp, y=(SZ/2-py)*wpp;
+  const res=doseAt(x,y);
+  if(res.zone==='body'){ ro.innerHTML=`위치 <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R<br>바디 내부`; return; }
+  ro.innerHTML=`위치 <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R · |r|=${res.mag.toFixed(2)}<br>`+
+    `dose <b>${res.dose.toFixed(2)}</b> rad/h · 구역 ${res.zone}`+
+    (state.view.z>0?`<br><span class="z">slice z=${state.view.z.toFixed(2)}</span>`:'');
+});
+cv.addEventListener('mouseleave',()=>ro.innerHTML='커서를 올려보세요');
+
+document.getElementById('foot').innerHTML=
+ '충실도: <code>Inner/Outer_func</code>=토러스 SDF <code>max(d1,−d2)</code>(border 차집합), <code>Pause_func</code>=눌린 구, dose=<code>clamp(gradient·(−SDF)/radius,0,1)·intensity</code> — 전부 <code>src/Kerbalism/Radiation/Radiation.cs</code> 원문 그대로. '+
+ '<code>deform</code>은 sin(x·5)sin(y·7)sin(z·6)이라 좌표평면 위에선 항등 0 — 2D에서 처음 켜면 <code>slice_z</code>가 최대 진폭 0.26으로 자동 설정됩니다(3D에선 그대로 보임). '+
+ '3D 모드 = 같은 SDF를 GLSL로 이식해 볼륨 레이마칭(110스텝, 색=dose 방출·청록=계면 껍질). 드래그 회전·휠 줌. '+
+ '<code>pause_offset</code> ⚗ = 실험용 병진 지오메트리(전체를 꼬리쪽으로 물림) — <b>Kerbalism cfg에 없는 필드</b>라 emit 불가, comp 방식과의 비교용. '+
+ 'Shue 오버레이 = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0=현재 노즈(pause_radius/comp−offset), 항성정렬 프레임이라 tilt=0에서 비교 정확. '+
+ '주황 = <b>연화 Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — 단일 C∞ 폐곡선(이음매·크리스 없음), 테이퍼 m=1 고정(기저형, 노브 없음). 꼬리 길이 L은 <b>Kerbalism 계면 꼬리에 연동</b>(pause_radius/extension+offset), ε=1/((L/r0)^{1/α}−1)로 정확히 L서 닫힘. L 연동 덕에 주간측은 순수 Shue와 ~0.3% 이내(흰 점선 대조). plugins/KerbalismShuePause 권장안. 「Shue 데모」 프리셋이 원클릭. '+
+ '값은 슬라이더 또는 우측 숫자칸 직접 입력(범위 초과 허용). 뷰 반너비 슬라이더의 최대값은 장면 전체가 들어오는 크기로 자동 갱신(끝까지 밀면 전체 보기). '+
+ '스톡 프리셋 = KSP-RO/ROKerbalism 실배포 cfg(2026-07-24 검증), 물리 프리셋 = 쌍극자 L-셸 수치 피팅(fit_belts.py, 캡션의 IoU), NearStars 프리셋 = Phase 4 도출. 근거·렌더: <a href="https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts">위키 Radiation Belts</a> · docs/reference/solar-system-radiation-belts.md';
+
+// preset buttons from injected PRESETS (labels carried per entry)
+(function(){
+  const bar=document.getElementById('presets'), sep=bar.querySelector('.sep');
+  Object.entries(PRESETS).forEach(([k,p])=>{
+    const b=document.createElement('button'); b.dataset.p=k; b.textContent=p.label||k;
+    bar.insertBefore(b,sep);
+  });
+})();
+// init
+new ResizeObserver(resize).observe(cv);
+applyPreset('earth_phys');
+resize();
+</script>
+
+
+</body></html>
