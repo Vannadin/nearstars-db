@@ -1959,15 +1959,12 @@ decisions:
       almost none of it flat. Lush rainforest climbs the highlands, glowing faintly cyan along plants and
       coastlines at night, while active volcanic belts and unusually fast continental drift run on the same
       internal heat that powers the dynamo. Ice survives only on the highest summits and at the poles. The
-      floating Hallelujah mountains get their homage as dramatic stone arches and overhangs: the game's terrain
-      cannot levitate, and the owner approved the honest substitute; the unobtanium explanation stays in report
-      lore.
+      floating Hallelujah mountains get their homage as dramatic stone arches and overhangs.
     narrative_ko: >
       Pandora는 육지와 바다가 반반인 산악 세계다. 지구가 가져본 적 없는 육지 비중인데, 그중 평평한 땅은 거의
-      없다. 무성한 우림이 고지대를 타고 오르고, 밤이면 식물과 해안선을 따라 청록빛이 은은하게 번지며, 활동적인
-      화산대와 유난히 빠른 대륙이동은 다이나모를 돌리는 것과 같은 내부열로 굴러간다. 얼음은 최고봉 정상과
-      극지방에만 남는다. 떠 있는 할렐루야 산맥은 극적인 돌 아치와 오버행으로 오마주된다. 게임 지형은 부양할 수
-      없고, 오너는 이 정직한 대체를 승인했다. 언옵타늄 설명은 레포트 lore에 머문다.
+      없다. 무성한 우림이 고지대를 타고 오르고, 밤이면 식물과 해안선을 따라 청록빛이 은은하게 번진다. 활발한
+      화산대와 유난히 빠른 대륙이동은 다이나모까지 함께 돌리는 같은 내부열에서 나온다. 얼음은 최고봉 정상과
+      극지방에만 남는다. 떠 있는 할렐루야 산맥은 극적인 돌 아치와 오버행으로 오마주된다.
     fields:
       - { name: surface_type, value: "지구형, 육지:대양 ≈ 50:50, 산악 우세", op: set }
       - { name: hydrosphere, value: "액체 물 대양/바다 (~50%, 290K 안정)", op: set }
