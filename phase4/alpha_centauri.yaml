@@ -1852,7 +1852,7 @@ decisions:
       lean. For a locked moon the canon's "29°" never described a free spin axis anyway. Inside, radioactive decay
       and a gentle tidal knead keep the rock warm enough to drive the volcanoes, the fast continental drift, and the
       magnetic dynamo all from the same fire; the tide also pulls the moon faintly egg-shaped, invisible to the eye
-      but real to the orbit. The floating Hallelujah mountains are lore, not bulk physics. The whole configuration
+      but real to the orbit. The whole configuration
       was re-simulated and holds.
     narrative_ko: >
       캐넌이 주는 네 개의 물성 값은 동시에 다 맞을 수가 없다. 그래서 방문자가 실제로 체감하는 두 값, 크기와
@@ -1861,9 +1861,8 @@ decisions:
       바다에 걸리는 조석 부담이 폭주하지 않고 안전하게 유지되기 때문이다. 자전축 기울기는 궤도가 기운 ~10°
       그대로다. 조석 고정된 위성에게 캐넌의 "29°"는 애초에 자유로운 자전축을 가리킨 적이 없다. 내부에서는
       방사성 붕괴와 잔잔한 조석 가열이 암석을 데워, 화산과 빠른 대륙이동과 자기 다이나모를 모두 같은 열원으로
-      돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 눈에는 안 보여도 궤도에는 실재한다. 떠 있는
-      할렐루야 산맥은 설정(lore)일 뿐 벌크 물리가 아니다. 이 구성 전체를 재시뮬레이션으로 다시 검증했고, 결과는
-      안정적이었다.
+      돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 눈에는 안 보여도 궤도에는 실재한다. 이 구성
+      전체를 재시뮬레이션으로 다시 검증했고, 결과는 안정적이었다.
     fields:
       - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
       - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
@@ -1958,19 +1957,19 @@ decisions:
       Pandora is a mountain world with an even split of land and sea: more continent than Earth ever had, and
       almost none of it flat. Lush rainforest climbs the highlands, glowing faintly cyan along plants and
       coastlines at night, while active volcanic belts and unusually fast continental drift run on the same
-      internal heat that powers the dynamo. Ice survives only on the highest summits and at the poles. The
-      floating Hallelujah mountains get their homage as dramatic stone arches and overhangs.
+      internal heat that powers the dynamo. Ice survives only on the highest summits and at the poles. Its most
+      striking landform is a field of dramatic geometric rock formations at the flux-vortex site.
     narrative_ko: >
       Pandora는 육지와 바다가 반반인 산악 세계다. 지구가 가져본 적 없는 육지 비중인데, 그중 평평한 땅은 거의
       없다. 무성한 우림이 고지대를 타고 오르고, 밤이면 식물과 해안선을 따라 청록빛이 은은하게 번진다. 활발한
       화산대와 유난히 빠른 대륙이동은 다이나모까지 함께 돌리는 같은 내부열에서 나온다. 얼음은 최고봉 정상과
-      극지방에만 남는다. 떠 있는 할렐루야 산맥은 극적인 돌 아치와 오버행으로 오마주된다.
+      극지방에만 남는다. 가장 인상적인 지형은 플럭스 볼텍스 지점에 솟은 극적인 기하학적 암석 구조물들이다.
     fields:
       - { name: surface_type, value: "지구형, 육지:대양 ≈ 50:50, 산악 우세", op: set }
       - { name: hydrosphere, value: "액체 물 대양/바다 (~50%, 290K 안정)", op: set }
       - { name: biosphere, value: "무성한 우림 + 고생물 다양성, 청록 생물발광", op: set }
       - { name: tectonics, value: "활화산대 + 빠른 대륙이동 (조석+방사성)", op: set }
-      - { name: terrain, value: "산악+화산대+고지대 산맥, 부유산=PQS 아치/오버행 오마주", op: set }
+      - { name: terrain, value: "산악+화산대+고지대 산맥, 플럭스 볼텍스 지점에 기하학적 자연 암석 구조물", op: set }
       - { name: ice_caps, value: "고봉 정상 + 극관에만 (제한적)", op: set }
       - { name: albedo, value: 0.30, op: set }
       - { name: surface_temperature, value: 290, unit: K, op: set }
@@ -1978,15 +1977,15 @@ decisions:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
       evidence: >
-        Floating mountains are a PQS arch/overhang homage (KSP terrain cannot
-        levitate; actual levitation excluded, unobtanium=report lore). land:ocean ≈ 50:50 (vs Earth 30:70),
+        The flux-vortex landmark is a field of natural geometric rock formations, built as PQS terrain.
+        land:ocean ≈ 50:50 (vs Earth 30:70),
         mountains dominant·flatland scarce. hydrosphere=liquid water ~50%, stable at 290K (group 4 greenhouse);
         tectonics=active volcanic belts + fast drift (tidal+radiogenic, same origin as the dynamo). Ice caps=high
         peaks+polar caps only (limited at mean 290K); albedo ~0.30 (Earth-class from land·clouds·some ice/snow).
         Bioluminescence=subtle (a bit of plants + a bit of coastline) → rendered in the appearance row.
       evidence_ko: >
-        부유산은 PQS 아치·오버행 오마주(KSP 지형 부양 불가; 실제 부양 배제,
-        언옵타늄=레포트 lore). 육지:대양 ≈ 50:50(지구 30:70 대비), 산악 우세·평지 희소. hydrosphere=액체 물
+        플럭스 볼텍스 랜드마크는 자연 기하학 암석 구조물로, PQS 지형으로 구현. 육지:대양 ≈ 50:50(지구 30:70 대비),
+        산악 우세·평지 희소. hydrosphere=액체 물
         ~50%, 290K 안정(group 4 온실); tectonics=활화산대 + 빠른 대륙이동(조석+방사성, dynamo와 동근).
         빙관=고봉+극관만(평균 290K라 제한적); albedo ~0.30(육지·구름·일부 빙설로 지구급). 생물발광=은은(식물
         약간 + 해안 약간) → appearance 행서 렌더.
@@ -1999,12 +1998,12 @@ decisions:
       Pandora carries a field roughly twice Earth's, nearly unheard-of for a moon. The same tidal heat that
       fuels its volcanoes keeps the iron core churning, and the brisk 32-hour spin organizes that churn into a
       clean dipole. The field is honest physics, with no boost from unobtanium (the film Avatar's fictional
-      element), nowhere near enough to levitate mountains. Around the floating mountains the field spikes into a
+      element), nowhere near enough to levitate mountains. Around the geometric rock formations the field spikes into a
       "flux vortex", a place apart with a local aurora of its own.
     narrative_ko: >
       Pandora는 지구의 대략 두 배 자기장을 두른다. 위성으로서는 거의 전례가 없는 세기다. 화산을 지피는 것과
       같은 조석열이 철핵을 쉼 없이 휘젓고, 경쾌한 32시간 자전이 그 소용돌이를 깔끔한 쌍극으로 정돈한다. 영화의
-      가상 설정인 언옵타늄과 같은 부스트 없이 나온 정직한 물리라, 산을 띄우기에는 어림도 없다. 부유산 일대에서 자기장이 치솟는 "플럭스 볼텍스"는
+      가상 설정인 언옵타늄과 같은 부스트 없이 나온 정직한 물리라, 산을 띄우기에는 어림도 없다. 기하학적 암석 구조물 일대에서 자기장이 치솟는 "플럭스 볼텍스"는
       제 몫의 국소 오로라를 거느린 특별한 구역이다.
     fields:
       - { name: magnetic_field, value: "75 µT (~1.8× 지구; rocky-dynamo ℳ⁺ 상한, 조석-구동 Fe 핵 dynamo, 32h 자전 쌍극)", op: set }
@@ -2021,7 +2020,7 @@ decisions:
         Shares the same heat source (tidal heat) as the volcanism·fast continental drift (causally linked). Unusual among moons (only Ganymede has a
         weak dynamo). The unobtanium boost is excluded from the grounding (realism): just a strong intrinsic field. Not enough to levitate mountains
         (that is a canon/report mystery). Downstream report seed: the "seemingly able to mine what seems unminable"
-        nuance: leak the floating-mountain/flux-vortex mechanism into reports as a mystery/easter-egg without
+        nuance: leak the flux-vortex mechanism into reports as a mystery/easter-egg without
         physical assertion; the high-field zone is a formal biome (gameplay row).
       evidence_ko: >
         캐넌 Fe 핵 + 강한 자기장. 암석형 다이나모 사다리(RM22/OC06)로 근거화, 거대행성 에너지플럭스 법칙 아님
@@ -2029,9 +2028,9 @@ decisions:
         조석열(e강제 ~0.005)+방사성이 왕성히 대류시키고 빠른 32h 자전이 쌍극 유지 → ℳ⁺ 상한 ~1.8× 지구(적도 75 / 극 150 µT).
         "지구급"이 아니라 지구 수 배의 강장이며 interesting-first 상한 선택(이전 140 µT ≈ Polyphemus 0.82배는 giant-법칙 과적용이라 기각).
         화산·빠른 대륙이동과 같은 열원(조석열)을 공유(인과 묶임). 위성 중 이례적(가니메데만
-        약한 dynamo). 언옵타늄 부스트는 grounding서 제외(현실고증). 그냥 강한 고유 자기장. 부유산 띄울 정도는
+        약한 dynamo). 언옵타늄 부스트는 grounding서 제외(현실고증). 그냥 강한 고유 자기장. 산을 띄울 정도는
         아님(그건 canon/report 미스터리). 후행 레포트 씨앗: "채굴 불가능할 것 같은 물질을 채굴할 수 있을 듯한"
-        뉘앙스, 부유산/플럭스 볼텍스 메커니즘을 물리 단언 없이 미스터리/이스터에그로 레포트에 흘릴 것; 고자기장
+        뉘앙스, 플럭스 볼텍스 메커니즘을 물리 단언 없이 미스터리/이스터에그로 레포트에 흘릴 것; 고자기장
         구역은 정식 바이옴(gameplay 행).
 
   - body: Pandora
@@ -2204,20 +2203,15 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      As the only habitable world in NearStars, Pandora gets the richest biome map in the mod: seven biomes running
-      from the oceans and glowing coastlines up through rainforest, highland ranges, and volcanic belts to the icy
-      summits, capped by the flux-vortex zone, where the floating mountains, magnetic-anomaly science, and a local
-      aurora make one destination worth the whole trip. Landing here is the campaign's maximum-reward mission, and
-      the moon must first be found by observation on every difficulty. Unobtanium appears only as a mystery woven
-      into science reports.
+      Pandora is the most interesting destination in Alpha Centauri, with a rich range of environments from oceans
+      and rainforest to volcanic belts and icy peaks. Its most compelling site is the flux-vortex region, where
+      geometric structures and a local aurora together make the one landing worth the whole journey.
     narrative_ko: >
-      NearStars의 유일한 거주가능 세계답게 Pandora는 모드에서 가장 풍부한 biome map을 받는다. 대양과 빛나는
-      해안에서 시작해 우림, 고지대 산맥, 화산대를 지나 얼음 봉우리까지 일곱 바이옴이 이어지고, 그 정점에 플럭스
-      볼텍스 구역이 있다. 부유산과 자기 이상 과학과 국소 오로라가 겹쳐, 이 한 곳이 여정 전체 값을 한다. 여기
-      착륙이 캠페인의 최대 보상 임무이고, 이 위성은 모든 난도에서 먼저 관측으로 찾아야 한다. 언옵타늄은 과학
-      레포트에 짜 넣은 미스터리로만 등장한다.
+      Pandora는 Alpha Centauri에서 가장 흥미로운 목적지다. 대양과 우림, 화산대와 얼음 봉우리까지 풍부한 환경을
+      갖추고 있다. 그중에서도 가장 매력적인 곳은 플럭스 볼텍스 구역으로, 기하학적인 구조물들과 국소 오로라가
+      어우러져 이 한 곳이 여정 전체를 값어치 있게 만든다.
     fields:
-      - { name: science_biomes, value: "7: Oceans / Coastlines / Rainforest Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Floating Mtns (Flux-Vortex)", op: set, colors: {"Oceans":"#2A5C99","Coastlines":"#35B8A0","Rainforest Lowlands":"#3E7A3A","Highland Mountains":"#7A6A5A","Volcanic Belts":"#9A4A38","Ice Peaks & Polar Caps":"#D6E4EA","Floating Mtns (Flux-Vortex)":"#7A44C8"} }   # provisional naturalistic biome-map display colors (S↓; biolum coast + flux-vortex = accents)
+      - { name: science_biomes, value: "7: Oceans / Coastlines / Rainforest Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Geometric Formations (Flux-Vortex)", op: set, colors: {"Oceans":"#2A5C99","Coastlines":"#35B8A0","Rainforest Lowlands":"#3E7A3A","Highland Mountains":"#7A6A5A","Volcanic Belts":"#9A4A38","Ice Peaks & Polar Caps":"#D6E4EA","Geometric Formations (Flux-Vortex)":"#7A44C8"} }   # provisional naturalistic biome-map display colors (S↓; biolum coast + flux-vortex = accents)
       - { name: sphere_of_influence_tuning, value: "auto from mass", op: passthrough }
       - { name: difficulty, value: "임무=거주가능 세계 착륙(최대 보상) · 발견=RB F F F F", op: set }
     gate:
@@ -2225,16 +2219,16 @@ decisions:
       verdict: pass-in-window
       evidence: >
         Surface present → formal biome map (7): Oceans / Coastlines (bioluminescence) / Rainforest Lowlands /
-        Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Floating Mtns (Flux-Vortex),
+        Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Geometric Formations (Flux-Vortex),
         high-magnetic-anomaly special science. NearStars's only habitable body, so the richest biome map. In the
-        flux-vortex zone, place distinctive structures (floating mountains + magnetic-anomaly terrain) + a local
+        flux-vortex zone, place distinctive structures (geometric rock formations + magnetic-anomaly terrain) + a local
         aurora separate from the polar cap (see appearance.aurora). SOI=auto from mass; full ScienceValues.
         difficulty: mission=habitable-world landing (max reward); discovery=fictional→RB F F F F. Unobtanium only
         as a report mystery (report_flavor).
       evidence_ko: >
         표면 있음 → 정식 biome map(7): 대양 / 해안(생물발광) / 우림 저지대 / 고지대 산맥 / 화산대 / 빙봉·극관 /
-        부유산(플럭스 볼텍스), 고자기 이상 특수 과학. NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스
-        볼텍스 구역엔 특유 구조물(부유산 + 자기 이상 지형) 배치 + 극관과 별개의 국소 오로라(appearance.aurora
+        기하 구조물(플럭스 볼텍스), 고자기 이상 특수 과학. NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스
+        볼텍스 구역엔 기하학적 암석 구조물 + 자기 이상 지형 배치 + 극관과 별개의 국소 오로라(appearance.aurora
         참조). SOI=질량서 자동; ScienceValues 전체. difficulty: 임무=거주가능 세계 착륙(최대 보상);
         발견=fictional→RB F F F F. 언옵타늄은 report 미스터리로만(report_flavor).
 
