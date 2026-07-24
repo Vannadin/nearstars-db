@@ -1983,14 +1983,14 @@ decisions:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
       evidence: >
-        Owner art-direction (2026-06-22): 5-1 floating mountains=PQS arch homage approved (KSP terrain cannot
+        Floating mountains are a PQS arch/overhang homage (KSP terrain cannot
         levitate; actual levitation excluded, unobtanium=report lore). land:ocean ≈ 50:50 (vs Earth 30:70),
         mountains dominant·flatland scarce. hydrosphere=liquid water ~50%, stable at 290K (group 4 greenhouse);
         tectonics=active volcanic belts + fast drift (tidal+radiogenic, same origin as the dynamo). Ice caps=high
         peaks+polar caps only (limited at mean 290K); albedo ~0.30 (Earth-class from land·clouds·some ice/snow).
         Bioluminescence=subtle (a bit of plants + a bit of coastline) → rendered in the appearance row.
       evidence_ko: >
-        오너 art-direction(2026-06-22): 5-1 부유산=PQS 아치 오마주 승인(KSP 지형 부양 불가; 실제 부양 배제,
+        부유산은 PQS 아치·오버행 오마주(KSP 지형 부양 불가; 실제 부양 배제,
         언옵타늄=레포트 lore). 육지:대양 ≈ 50:50(지구 30:70 대비), 산악 우세·평지 희소. hydrosphere=액체 물
         ~50%, 290K 안정(group 4 온실); tectonics=활화산대 + 빠른 대륙이동(조석+방사성, dynamo와 동근).
         빙관=고봉+극관만(평균 290K라 제한적); albedo ~0.30(육지·구름·일부 빙설로 지구급). 생물발광=은은(식물
@@ -2186,7 +2186,7 @@ decisions:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
       evidence: >
-        Owner (2026-06-22): vegetation=Earth-style green (a), aurora=intense (a). The aurora color is composition-fixed (O₂ green 557.7nm + red 630nm,
+        Vegetation is Earth-style green and the aurora is intense. The aurora color is composition-fixed (O₂ green 557.7nm + red 630nm,
         N₂⁺ blue-violet 391nm + red band), distinguished from Polyphemus's H₂ pink. The intensity is physically justified: strong field + Dante sulfur plasma
         torus + position inside the Polyphemus magnetosphere = a Jupiter Io-torus strong-aurora analog. Local aurora:
         the flux-vortex high-field anomaly concentrates particle precipitation off the poles → an additional local
@@ -2195,7 +2195,7 @@ decisions:
         (O₂/N₂/CO₂); bioluminescence=EVE/emissive night texture; specular=ocean sun-glint (OceanFX); haze=Earth-style
         blue Rayleigh limb; artificial/city-lights=∅ (Na'vi pre-industrial).
       evidence_ko: >
-        오너(2026-06-22): 식생=지구식 초록(a), 오로라=강렬(a). 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색 630nm,
+        식생은 지구식 초록, 오로라는 강렬. 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색 630nm,
         N₂⁺ 청보라 391nm + 적색 밴드), 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante 황 플라스마
         토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 국소 오로라: 플럭스 볼텍스 고자기
         이상이 입자 강하를 비극지로 모음 → 극관 오로라와 별개로 그 구역 중심의 추가 오벌. 생물발광(지상 청록)과
