@@ -13,11 +13,11 @@ decisions:
     status: gated                 # 2026-06-22 facet-walk
     driver: [classification]
     narrative: >
-      Polyphemus is the system's flagship — a temperate Saturn-class gas giant of hydrogen and helium, 120 Earth
+      Polyphemus is the system's flagship: a temperate Saturn-class gas giant of hydrogen and helium, 120 Earth
       masses, cool enough to raise water clouds. It orbits Alpha Centauri A as a real direct-imaging candidate, and
       keeps its Avatar name as a cultural label over the formal designation Alpha Centauri A b.
     narrative_ko: >
-      Polyphemus는 이 계의 간판이다 — 수소·헬륨으로 이루어진 온화한 토성급 가스자이언트로, 지구 질량 120배에
+      Polyphemus는 이 계의 간판이다. 수소·헬륨으로 이루어진 온화한 토성급 가스자이언트로, 지구 질량 120배에
       물구름이 뜰 만큼 서늘하다. 실제 직접촬영 후보로서 Alpha Centauri A를 돌며, 공식 표기 Alpha Centauri A b
       위에 아바타 이름을 문화명으로 유지한다.
     fields:
@@ -30,7 +30,7 @@ decisions:
       verdict: pass-in-window
       evidence: >
         body_type=temperate Saturn (H₂/He, 120 M⊕, Teq 225K, water clouds Class I/II); designation/cultural per the
-        designations block. discoverability=adopt the real measurement — JWST direct-imaging candidate → IGNORELEVELS
+        designations block. discoverability=adopt the real measurement: JWST direct-imaging candidate → IGNORELEVELS
         T F F F (visible from the start only at Easy; Normal/Medium/Hard require observational discovery), real
         detection cited in ONDISCOVERY (arXiv:2508.03812, Sanghi & Beichman); the star α Cen A=naked_eye → T T T T
         always visible. Mapping canonical = researchbodies-cfg skill (references/db-mapping.md);
@@ -38,7 +38,7 @@ decisions:
         [[project_nearstars_discoverability_researchbodies]]
       evidence_ko: >
         body_type=온화 토성급(H₂/He, 120 M⊕, Teq 225K, 물구름 Class I/II); designation/cultural은 designations
-        블록. discoverability=실측 채택 — JWST 직접촬영 candidate → IGNORELEVELS T F F F(Easy만 시작 가시,
+        블록. discoverability=실측 채택: JWST 직접촬영 candidate → IGNORELEVELS T F F F(Easy만 시작 가시,
         Normal/Medium/Hard는 관측 발견), ONDISCOVERY에 실검출 인용(arXiv:2508.03812, Sanghi & Beichman); 항성
         α Cen A=naked_eye → T T T T 항상 가시. 매핑 canonical = researchbodies-cfg 스킬(references/db-mapping.md);
         emit 입력 = 스킬이 읽는 top-level discoverability 리스트(body/category/message/ref).
@@ -60,9 +60,9 @@ decisions:
     gate:
       criterion: [stability]
       verdict: pass-in-window
-      evidence: "Center of the stability window. HZ-stable verified over 1e5 yr (orbit stays 1.37–1.84 AU)."
-      evidence_ko: "안정창 중앙. HZ-안정 1e5 yr 검증(궤도 1.37–1.84 AU 유지)."
-    refs: ["2508.03812", "2508.03814"]
+      evidence: "Center of the stability window. HZ-stable verified over 1e5 yr (orbit stays 1.37–1.84 AU); the 1.6 AU center is our stability-sim result, not an observed value."
+      evidence_ko: "안정창 중앙. HZ-안정 1e5 yr 검증(궤도 1.37–1.84 AU 유지); 1.6 AU 중앙은 관측값이 아니라 우리 안정성 시뮬 결과."
+    refs: ["2508.03812", "2508.03814", "phase3/stability-sim/STABILITY_REPORT.md", "phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md"]
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -78,8 +78,9 @@ decisions:
     gate:
       criterion: [stability]
       verdict: pass-in-window
-      evidence: "Center of the e≈0–0.18 stability window. The observed e≈0.4 is KL-unstable (e→0.95 within 30 kyr, IAS15)."
-      evidence_ko: "e≈0–0.18 안정창 중앙. 관측 e≈0.4는 KL-불안정(30 kyr 내 e→0.95, IAS15)."
+      evidence: "Center of the e≈0–0.18 stability window. The observed e≈0.4 is KL-unstable (e→0.95 within 30 kyr, IAS15); e=0.1 is a stability-sim selection, not the observed value."
+      evidence_ko: "e≈0–0.18 안정창 중앙. 관측 e≈0.4는 KL-불안정(30 kyr 내 e→0.95, IAS15); e=0.1은 관측값이 아니라 안정성 시뮬 선택."
+    refs: ["2508.03812", "phase3/stability-sim/STABILITY_REPORT.md", "phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md"]
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -89,12 +90,12 @@ decisions:
     narrative: >
       The planet rides 16° above the binary's plane, orbiting the same way the two stars turn. The observed solutions
       near 50° and 130° would let the companion star wrench the orbit apart, so the board keeps the middle of the
-      stable range instead — and choosing the low prograde branch also collapses the observation's two-way ambiguity
+      stable range instead, and choosing the low prograde branch also collapses the observation's two-way ambiguity
       into a single clean answer. Only this 16° mutual tilt is binding; how the whole system faces the game's sky is
       a free orientation, settled in the orbit row.
     narrative_ko: >
       행성은 쌍성면에서 16° 기울어, 두 별이 도는 것과 같은 방향으로 돈다. 관측이 가리키는 ~50°·~130° 해는
-      동반성이 궤도를 비틀어 찢어 놓는 값이라, 보드는 대신 안정 범위의 한가운데를 잡았다 — 낮은 순행 가지를
+      동반성이 궤도를 비틀어 찢어 놓는 값이라, 보드는 대신 안정 범위의 한가운데를 잡았고, 낮은 순행 가지를
       고르면서 관측의 양갈래 모호성도 하나의 답으로 정리된다. 구속되는 것은 이 16° 상호경사뿐이고, 계 전체가
       게임 하늘을 어떻게 향할지는 자유 배향으로 orbit 행에서 정한다.
     fields:
@@ -104,17 +105,17 @@ decisions:
       verdict: documented-divergence
       divergence_note: >
         Beichman Table 4 observations ~50° (prograde)/~130° (retrograde, i_AB=79.24°), together with e≈0.4, are ECL Kozai-unstable
-        (e→0.95+, moon system disrupts). NearStars adopts 16° prograde at the center of the stability window (≲35°; ≳45° is Kozai) —
+        (e→0.95+, moon system disrupts). NearStars adopts 16° prograde at the center of the stability window (≲35°; ≳45° is Kozai),
         recorded in the Phase 3 Canonical alternatives. Being 16° low-inclination prograde, it also resolves the observed bimodal ambiguity into a single solution.
       divergence_note_ko: >
         Beichman Table 4 관측 ~50°(prograde)/~130°(retrograde, i_AB=79.24°)는 e≈0.4와 함께 ECL Kozai-불안정
-        (e→0.95+, 위성계 붕괴). NearStars는 안정창(≲35°, ≳45°는 Kozai) 중앙 16° prograde 채택 — Phase 3
+        (e→0.95+, 위성계 붕괴). NearStars는 안정창(≲35°, ≳45°는 Kozai) 중앙 16° prograde 채택. Phase 3
         Canonical alternatives에 기록. 16° 저경사 prograde라 관측의 bimodal 모호성도 단일해로 해소.
       evidence: >
-        Observations ~50°/~130°, together with e≈0.4, are Kozai-unstable. 16° mutual prograde is the center of the stability window (0–35°).
+        Observations ~50°/~130°, together with e≈0.4, are Kozai-unstable (our IAS15/MEGNO scans). 16° mutual prograde is the stability-sim-selected center of the window (0–35°), not an observed value.
       evidence_ko: >
-        관측 ~50°/~130°는 e≈0.4와 함께 Kozai-불안정. 16° mutual prograde는 안정창(0–35°) 중앙.
-    refs: ["2508.03812"]
+        관측 ~50°/~130°는 e≈0.4와 함께 Kozai-불안정(우리 IAS15/MEGNO 스캔). 16° mutual prograde는 안정성 시뮬이 고른 안정창(0–35°) 중앙이며 관측값이 아님.
+    refs: ["2508.03812", "phase3/stability-sim/STABILITY_REPORT.md", "phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md"]
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -123,7 +124,7 @@ decisions:
     driver: [emit, classification]
     narrative: >
       Polyphemus is placed so that in August 2024 it sits along the direction JWST detected it, with that state wound
-      back to the game's 1950 start epoch. Only the sighting direction is reproduced — along that line the
+      back to the game's 1950 start epoch. Only the sighting direction is reproduced: along that line the
       stability-safe orbit reaches under half the observed separation, an intrinsic limit of an orbit tuned for
       stability rather than for the observed geometry. The planet spins freely on a roughly ten-hour day, since a
       giant this far out never tidally locks, and the film's Lagrange-point co-orbital planetoids are not present.
@@ -131,7 +132,7 @@ decisions:
       rather than at round design values.
     narrative_ko: >
       Polyphemus는 2024년 8월에 JWST가 검출한 방향에 서도록 배치되고, 그 상태가 게임 시작 에포크인 1950년으로
-      되감긴다. 재현되는 것은 관측 방향뿐이다 — 그 시선을 따라 안정성용으로 고른 궤도는 관측된 분리의 절반에도
+      되감긴다. 재현되는 것은 관측 방향뿐이다. 그 시선을 따라 안정성용으로 고른 궤도는 관측된 분리의 절반에도
       못 미치는데, 이는 관측 기하가 아니라 안정성에 맞춘 궤도의 본질적 한계다. 행성은 약 10시간 주기로 자유
       자전하며(이 거리의 거인은 조석고정되지 않는다) 영화의 라그랑주점 공궤도 planetoid는 존재하지 않는다.
       시작 궤도요소는 검증된 안정성 런의 스냅샷이라, 계가 딱 떨어지는 설계값이 아니라 진화 중인 상태에서 시작한다.
@@ -140,7 +141,7 @@ decisions:
       - { name: argument_periapsis, value: 122.38, unit: deg, op: set, note: "관측-방향 정합값(AB면 프레임)" }
       - { name: mean_anomaly, value: 90.05, unit: deg, op: set, note: "1950 에포크로 되감은 위상. 관측 위상 ma_2024=321.46° − 38.64바퀴 → 90.05°. 74.6년 뒤(2024) PA 83.5° 도달" }
       - { name: epoch, value: 0, op: set, note: "게임 epoch 0 = 태양계 에포크 JD 2433282.5 (1950.0). mean_anomaly는 이 에포크 기준으로 되감김" }
-      - { name: spin_orbit_resonance, value: "none", op: set, note: "free ~10h rotator — 1.6 AU giant는 5 Gyr에도 미잠김" }
+      - { name: spin_orbit_resonance, value: "none", op: set, note: "free ~10h rotator (1.6 AU giant는 5 Gyr에도 미잠김)" }
       - { name: lagrange_placement, value: "none", op: set, note: "Poly-L4/L5 코오비탈 planetoid 제외 (불필요; binary 트로이 안정성 미검증)" }
     gate:
       criterion: [classification]
@@ -149,12 +150,12 @@ decisions:
         Orientation is free in principle (observation weak/bimodal; only the 16° mutual binds) and pinned to the
         detection geometry. The build() sim is sky-anchored (load.py feeds the binary i/Ω/ω verbatim from the
         J2000 solution); scripts/scan_pa_match.py sweeps the trajectory forward-only and picks the phase whose
-        sky-projected PA best matches the JWST/MIRI Aug-2024 detection (PA 83.5° E of N; Beichman 2025 Table 2 S1) —
+        sky-projected PA best matches the JWST/MIRI Aug-2024 detection (PA 83.5° E of N; Beichman 2025 Table 2 S1):
         match 83.66° (err 0.16°); that state is rewound to the game epoch (JD 2433282.5 = 1950.0) via mean anomaly
         (period 1.9307 yr, Δt 74.6 yr = 38.64 orbits): ma_2024 321.46° → ma_1950 90.05°. Direction only: along PA
         83.5° the adopted 1.6 AU/e=0.1 orbit reaches ~0.75 AU projected vs the observed ~2.0 AU (that PA sits near
-        the projected ellipse's minor axis; the major axis lies along the real binary node Ω=204.85°) — intrinsic to
-        the stability-selected orbit. Typed defaults = the t=500yr osculating snapshot
+        the projected ellipse's minor axis; the major axis lies along the real binary node Ω=204.85°). The shortfall
+        is intrinsic to the stability-selected orbit. Typed defaults = the t=500yr osculating snapshot
         (scripts/snapshot_elements.py → results/_snapshot500/elements.log; frame AB-plane,
         x-axis=A→B at t=500; snapshot mutual 16.127°); changing to any value preserving the 16° mutual is legal;
         snapshot a/e (1.5936 AU/0.0756) oscillates around the design anchors kept by the a/e/inc rows; epoch=0
@@ -166,17 +167,17 @@ decisions:
         배향은 원칙상 자유(관측 약/bimodal, 구속은 16° mutual뿐)이며 검출 기하에 고정. build()
         시뮬은 하늘 앵커됨(load.py가 쌍성 i/Ω/ω를 J2000 해에서 그대로 주입). scripts/scan_pa_match.py가 궤적을
         순방향 스윕해 하늘 투영 PA가 JWST/MIRI 2024-08 검출(PA 83.5° 북→동, Beichman 2025 Table 2 S1)에 가장
-        가까운 위상을 선택 — 83.66°(오차 0.16°). 그 상태를 평균근점이각으로 게임 에포크(JD 2433282.5 = 1950.0)로
-        되감음(주기 1.9307년, Δt 74.6년 = 38.64바퀴): ma_2024 321.46° → ma_1950 90.05°. 정합은 방향뿐 — PA 83.5°
+        가까운 위상을 선택: 83.66°(오차 0.16°). 그 상태를 평균근점이각으로 게임 에포크(JD 2433282.5 = 1950.0)로
+        되감음(주기 1.9307년, Δt 74.6년 = 38.64바퀴): ma_2024 321.46° → ma_1950 90.05°. 정합은 방향뿐. PA 83.5°
         선상에서 채택 궤도(1.6 AU/e=0.1)는 투영 ~0.75 AU까지만 닿음(관측 ~2.0 AU; 그 PA는 투영 타원의 단축 근처,
-        장축은 실측 쌍성 노드 Ω=204.85° 방향) → 안정성-선택 궤도의 본질적 한계. typed
+        장축은 실측 쌍성 노드 Ω=204.85° 방향). 이 분리 부족은 안정성-선택 궤도의 본질적 한계다. typed
         기본값 = t=500yr osculating 스냅샷(scripts/snapshot_elements.py →
         results/_snapshot500/elements.log, 프레임 AB면·x축=t=500의 A→B, 스냅샷 mutual 16.127°); 16° mutual만
         보존하면 어떤 값으로 바꿔도 합법; 스냅샷 a/e(1.5936 AU/0.0756)는 a/e/inc 행이 유지하는 설계 앵커 주위의
-        진동값. epoch=0(게임 epoch, Sol-Configs 관행). 캐비엇 — 궤도면 요소는 t*≈1957 osculating(1950까지 세차
+        진동값. epoch=0(게임 epoch, Sol-Configs 관행). 캐비엇: 궤도면 요소는 t*≈1957 osculating(1950까지 세차
         ~0.1°, 무시가능), 되감기는 인게임 주기 1.9307년 전제. 1.6 AU 거인은 5 Gyr에도 미잠김 → free rotator.
         캐넌 Poly-L4/L5 공궤도 planetoid(337/611km)는 제외(불필요, binary 트로이 안정성 미검증).
-    refs: ["2508.03814", "2508.03812"]
+    refs: ["2508.03814", "2508.03812", "phase3/stability-sim/STABILITY_REPORT.md"]
 
   # ── 벌크 (canon↔관측 밀도 충돌) ───────────────────────────────
   - body: Alpha Centauri A b
@@ -185,16 +186,16 @@ decisions:
     status: gated                 # ring-model 반경 채택 (Phase 3 tie-break), 2026-06-19 정정
     driver: [window-selection]
     narrative: >
-      Polyphemus is exactly Jupiter-sized yet strikingly light — barely half the density of water. Its brightness
+      Polyphemus is exactly Jupiter-sized yet strikingly light: barely half the density of water. Its brightness
       admits two readings: a bare, somewhat larger planet, or a Jupiter-sized one whose rings make up the missing
       cross-section. NearStars takes the ring reading, consistent with its ring system, keeping the ring-free
       planet as a recorded alternative; the mass is the same either way. The film's "denser than Jupiter" would
       nearly double the mass and is set aside, since observation outranks canon.
     narrative_ko: >
-      Polyphemus는 정확히 목성 크기인데 눈에 띄게 가볍다 — 물 밀도의 절반이 될까 말까다. 밝기는 두 가지로 읽을
+      Polyphemus는 정확히 목성 크기인데 눈에 띄게 가볍다. 물 밀도의 절반이 될까 말까다. 밝기는 두 가지로 읽을
       수 있다. 고리 없는 조금 더 큰 행성이거나, 목성 크기 행성에 고리가 모자란 단면적을 보태는 해이거나.
-      NearStars는 고리 해를 택해 자신의 고리계와 정합시키고, 고리 없는 행성은 대안으로 보존한다 — 질량은 어느
-      쪽이든 같다. 영화의 "목성보다 밀도 높다"는 질량을 거의 두 배로 불려야 해서 접었다 — 관측이 캐넌보다
+      NearStars는 고리 해를 택해 자신의 고리계와 정합시키고, 고리 없는 행성은 대안으로 보존한다. 질량은 어느
+      쪽이든 같다. 영화의 "목성보다 밀도 높다"는 질량을 거의 두 배로 불려야 해서 접었다. 관측이 캐넌보다
       우선한다.
     fields:
       - { name: radius, value: 1.0, unit: R_jup, op: set, phase3_default: "1.0 R_Jup (ring-model tie-break; ring-free 대안은 1.1–1.15 R_Jup)" }
@@ -204,14 +205,14 @@ decisions:
       evidence: >
         1.0 R_Jup (71,492 km), ρ ~0.47 g/cc (from 120 M⊕ + 1.0 R_Jup). Of the two solutions in Beichman §5.3, the
         ring-model (radius 1.0 R_Jup + rings account for the excess cross-section) is adopted. The mass is
-        ~120 M⊕ in both solutions (the difference is radius only). Coupled with appearance.rings — a small radius
+        ~120 M⊕ in both solutions (the difference is radius only). Coupled with appearance.rings: a small radius
         only holds if rings exist. The ring-free 1.1–1.15 is a preserved alternative. The prior commit's
         1.05 R_Jup/0.40 was a mis-transcription of the raw imaging estimate → cfg-ready 1.0/~0.47. The canon
         "denser than Jupiter" (ρ>1.33 → 220 M⊕+) is not adopted (observation first).
       evidence_ko: >
         1.0 R_Jup(71,492 km), ρ ~0.47 g/cc(120 M⊕ + 1.0 R_Jup서 도출). Beichman §5.3 두 해 중 ring-model(반경
         1.0 R_Jup + 고리가 초과 단면적 담당)을 채택. 질량은 두 해 모두 ~120 M⊕(차이는 반경뿐). appearance.rings와
-        커플링 — 작은 반경은 고리가 있어야만 성립. ring-free 1.1–1.15는 보존된 대안. 직전 커밋의 1.05 R_Jup/0.40은
+        커플링: 작은 반경은 고리가 있어야만 성립. ring-free 1.1–1.15는 보존된 대안. 직전 커밋의 1.05 R_Jup/0.40은
         raw 이미징 추정치를 잘못 옮긴 것 → cfg-ready 1.0/~0.47. canon "목성보다 밀도 큼"(ρ>1.33 → 220 M⊕↑)은
         미채택(관측 우선).
     refs: ["2508.03814"]
@@ -225,12 +226,12 @@ decisions:
       A ten-hour day flattens this puffy giant into a visibly oblate globe. The bulge follows from the rotation
       rate and an interior mass concentration assumed to lie between Saturn's and Jupiter's, via the standard
       textbook relation, which reproduces both planets well. It is not merely cosmetic: fed into the moon
-      simulation, the bulge reshapes the satellite layout — the adopted spacing stays stable with it included,
-      while the once-favored resonance lock falls apart. An independent figure pass reached the same numbers.
+      simulation, the bulge reshapes the satellite layout, keeping the adopted spacing stable while the
+      once-favored resonance lock falls apart. An independent figure pass reached the same numbers.
     narrative_ko: >
       10시간짜리 하루가 이 푸석한 거인을 눈에 띄게 납작한 구체로 만든다. 팽대는 자전 속도와 "토성과 목성 사이"로
       가정한 내부 질량 집중도에서 교과서 표준 관계식으로 계산되며, 이 식은 두 행성을 잘 재현한다. 단순 겉모습이
-      아니다 — 위성 시뮬레이션에 넣으면 팽대가 위성 배치를 바꿔, 채택한 간격 배치는 팽대를 포함해도 안정한 반면
+      아니다. 위성 시뮬레이션에 넣으면 팽대가 위성 배치를 바꿔, 채택한 간격 배치는 팽대를 포함해도 안정한 반면
       한때 유력했던 공명 락은 무너진다. 독립적으로 수행한 figure 패스도 같은 수치에 도달했다.
     fields:
       - { name: geopotential_j2, value: 0.023, reference_radius_km: 71492, op: set, phase3_default: "J2 ≈ 0.023 (범위 0.017–0.033; 절단보정 ~0.025–0.026)" }
@@ -242,28 +243,28 @@ decisions:
       evidence: >
         Radau–Darwin (Helled+2011 eq.3, arXiv:1109.1627), NMoI=(2/3)[1-(2/5)√(5m/(m+3J2)-1)], m=ω²R̄³/GM (mean
         radius; Polyphemus m≈0.19, self-consistently iterated with f≈0.13). Structural assumption NMoI=0.23 (range
-        0.21–0.26, from giant-planet measurements — Jupiter 0.265, Saturn ~0.21, ice giants ~0.22–0.24;
+        0.21–0.26, from giant-planet measurements: Jupiter 0.265, Saturn ~0.21, ice giants ~0.22–0.24;
         Helled+2011/2020 arXiv:2007.10783, Fortney+2018 arXiv:1609.06324; a 0.4 M_Jup low-density body is less
         condensed than Saturn → NMoI slightly higher) → J2≈0.023 (central), range 0.017–0.033 (span dominated by the
         NMoI assumption), J4≈-0.001. Calibration: the same equation reproduces Jupiter J2 -0.0%·Saturn -10.3% (known
         first-order error; m≈0.19 > Saturn's 0.14 → truncation underpredicts, corrected ~0.025–0.026). Input
         calibration J2: Jupiter=Iess2018, Saturn=Durante2017. Gas giant = axisymmetric → zonal only (j2[+j4]).
-        J2=0.023 injected into the moon sim and verified (scripts/j2.py — reboundx incompatible with rebound 5.x,
-        so custom rebound additional_forces, M&D vector form, <0.1% against the analytic precession rate) — flips
+        J2=0.023 injected into the moon sim and verified (scripts/j2.py; reboundx incompatible with rebound 5.x,
+        so custom rebound additional_forces, M&D vector form, <0.1% against the analytic precession rate), flipping
         the moon decisions via 135k-gap stability·3:2-lock escape (Principia applies J2 to inter-body computations,
         so this input was decisive). The figure pass independently re-confirmed
         (body-figure-methodology.md; visual oblate mesh a:b:c ≈ 1.149:1.149:1.0, VertexHeightOblateAdvanced, base
         radius=polar radius).
       evidence_ko: >
         Radau–Darwin(Helled+2011 eq.3, arXiv:1109.1627), NMoI=(2/3)[1-(2/5)√(5m/(m+3J2)-1)], m=ω²R̄³/GM(평균반경;
-        폴리페무스 m≈0.19, f≈0.13과 자기일관 반복). 구조 가정 NMoI=0.23(범위 0.21–0.26, 거대행성 실측 — 목성
-        0.265·토성 ~0.21·빙왕성 ~0.22–0.24; Helled+2011/2020 arXiv:2007.10783, Fortney+2018 arXiv:1609.06324;
+        폴리페무스 m≈0.19, f≈0.13과 자기일관 반복). 구조 가정 NMoI=0.23(범위 0.21–0.26, 거대행성 실측: 목성
+        0.265·토성 ~0.21·빙왕성 ~0.22–0.24, Helled+2011/2020 arXiv:2007.10783, Fortney+2018 arXiv:1609.06324;
         0.4 M_Jup 저밀도체는 토성보다 덜 응축 → NMoI 약간 높음) → J2≈0.023(central), 범위 0.017–0.033(폭은 NMoI
         가정이 지배), J4≈-0.001. calibration: 같은 식이 목성 J2 -0.0%·토성 -10.3% 재현(알려진 1차 오차; m≈0.19가
         토성 0.14보다 커 절단이 과소예측 → 보정 ~0.025–0.026). 입력 calibration J2: 목성=Iess2018,
         토성=Durante2017. 가스자이언트=축대칭 → zonal only(j2[+j4]). J2=0.023을 위성 시뮬에 주입 검증
-        완료(scripts/j2.py — reboundx가 rebound 5.x 비호환이라 자체 구현, rebound additional_forces, M&D 벡터형,
-        해석 세차율과 <0.1%) — 135k 갭 안정·3:2-락 이탈로 위성 결정을 뒤집음(Principia는 천체간 연산에도 J2를
+        완료(scripts/j2.py; reboundx가 rebound 5.x 비호환이라 자체 구현, rebound additional_forces, M&D 벡터형,
+        해석 세차율과 <0.1%), 135k 갭 안정·3:2-락 이탈로 위성 결정을 뒤집음(Principia는 천체간 연산에도 J2를
         적용하므로 이 입력이 결정적). figure 패스가 독립 재확인(body-figure-methodology.md; 시각
         oblate 메시 a:b:c ≈ 1.149:1.149:1.0, VertexHeightOblateAdvanced, base radius=극반경).
     refs: ["docs/reference/body-figure-methodology.md"]
@@ -291,23 +292,24 @@ decisions:
       criterion: [stability, visual-checklist]
       verdict: owner-override
       evidence: >
-        Re-sim (TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE — Pandora e≤0.0123. Moon system
+        Re-sim (TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE, Pandora e≤0.0123. Moon system
         shares a common node line (coherent warp; the sim loader gives every moon a parent node,
         load.add_hypotheticals); inclinations keep the design-of-record (inner Dante/Hades/Pandora ~9–11°,
-        retrograde Cassandra/Chaos ~176/179°, rel. Polyphemus orbital plane —
+        retrograde Cassandra/Chaos ~176/179°, rel. Polyphemus orbital plane;
         phase3/stability-sim/hypotheticals/alpha_centauri.json; 1000yr STABLE _finalv2). Ring ≠ 5° equatorial
         plane; ring = Chaos's orbital plane (Chaos-fed E-ring → shepherd-moon plane; near-coplanar retrograde
         ~180°). Eclipse check: θ (Pandora plane ↔ Polyphemus orbital plane) 0–18.9°, mean 9.5°, duty
-        94.2% (75.5% at 0°) — the 5° tilt partly cancels the companion's forcing, so eclipses are actually more
+        94.2% (75.5% at 0°): the 5° tilt partly cancels the companion's forcing, so eclipses are actually more
         frequent; companion perturbation makes θ oscillate → "eclipse seasons" arise naturally.
       evidence_ko: >
-        재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE — Pandora e≤0.0123. 위성계는 공통
+        재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE, Pandora e≤0.0123. 위성계는 공통
         노드선 공유(coherent warp; 시뮬 로더가 전 위성에 부모 노드 부여, load.add_hypotheticals), 경사는
         design-of-record 유지(inner Dante/Hades/Pandora ~9–11°·역행 Cassandra/Chaos ~176/179°, Polyphemus 공전면
-        대비 — phase3/stability-sim/hypotheticals/alpha_centauri.json; 1000yr STABLE _finalv2). 고리 ≠ 5° 적도면;
+        대비; phase3/stability-sim/hypotheticals/alpha_centauri.json; 1000yr STABLE _finalv2). 고리 ≠ 5° 적도면;
         고리 = Chaos 궤도면(Chaos 생성 E-고리 → shepherd 위성면; ~180° 근접-공면 역행). 일식 검증: θ(Pandora면↔Polyphemus 궤도면)
-        0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%) — 5°가 동반성 요동을 부분 상쇄해 일식이 오히려 잦음. 동반성
+        0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%): 5°가 동반성 요동을 부분 상쇄해 일식이 오히려 잦음. 동반성
         섭동으로 θ 요동 → "일식 시즌" 자연발생.
+    refs: ["phase3/stability-sim/STABILITY_REPORT.md"]
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -315,19 +317,19 @@ decisions:
     status: gated                  # 2026-07-15 — Avatar canon [GAME] 자전 채택 (기존 "목성/토성 유추 conf low" 오귀속 정정)
     driver: [canon]
     narrative: >
-      The day is 10.35 hours — the midpoint of the rotation range stated in the Avatar game canon. A giant this
+      The day is 10.35 hours, the midpoint of the rotation range stated in the Avatar game canon. A giant this
       far out never tidally locks, and the fast spin is what powers the pronounced equatorial bulge recorded in
       the figure rows.
     narrative_ko: >
-      하루는 10.35시간 — 아바타 게임 캐넌이 명시한 자전 범위의 중간값이다. 이 거리의 거인은 조석고정되지 않으며,
+      하루는 10.35시간, 아바타 게임 캐넌이 명시한 자전 범위의 중간값이다. 이 거리의 거인은 조석고정되지 않으며,
       빠른 자전이야말로 figure 행들에 기록된 뚜렷한 적도팽대의 동력이다.
     fields:
       - { name: rotation_period, value: 10.35, unit: h, op: set, phase3_default: "10 h (구 오귀속: 목성/토성 유추 conf low)" }
     gate:
       criterion: [canon-consistency]
       verdict: pass-in-window
-      evidence: "Adopts the midpoint of the Avatar canon [GAME] rotation 10.1–10.6 h (polyphemus-art-direction.md; canon also quotes 9.7 h in the core/magnetic-field frame). Fast rotation → consistent with a large equatorial bulge (flattening 0.13, q~0.19, J₂ 0.023 — bulk anchor)."
-      evidence_ko: "Avatar canon [GAME] 자전 10.1–10.6 h(polyphemus-art-direction.md; 캐넌은 핵/자기장 기준 9.7 h도 병기)의 중간값 채택. 빠른 자전 → 큰 적도팽대(flattening 0.13, q~0.19, J₂ 0.023 — bulk anchor)와 정합."
+      evidence: "Adopts the midpoint of the Avatar canon [GAME] rotation 10.1–10.6 h (polyphemus-art-direction.md; canon also quotes 9.7 h in the core/magnetic-field frame). Fast rotation → consistent with a large equatorial bulge (flattening 0.13, q~0.19, J₂ 0.023, bulk anchor)."
+      evidence_ko: "Avatar canon [GAME] 자전 10.1–10.6 h(polyphemus-art-direction.md; 캐넌은 핵/자기장 기준 9.7 h도 병기)의 중간값 채택. 빠른 자전 → 큰 적도팽대(flattening 0.13, q~0.19, J₂ 0.023, bulk anchor)와 정합."
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -337,22 +339,22 @@ decisions:
     driver: [physics, classification]
     narrative: >
       The remaining bulk facts, gathered in one place: the planet weighs 120 Earth masses, inherits its
-      5.3-billion-year age from the star, and runs on sunlight rather than inner fire — the opposite of the
+      5.3-billion-year age from the star, and runs on sunlight rather than inner fire, the opposite of the
       self-luminous eps Ind A b, though even its faint leftover warmth helps stir the bands and weather. The one
       free knob, the compass direction the tilted axis points, is left to the emit stage within the range that
       keeps Pandora's eclipses frequent.
     narrative_ko: >
       남은 벌크 사실들을 한자리에 모았다. 행성은 지구 질량 120배이고, 별에게서 53억 년 나이를 물려받았으며,
-      내부의 불이 아니라 햇빛으로 산다 — 자발광하는 eps Ind A b의 정반대다. 다만 희미하게 남은 내부 온기도
+      내부의 불이 아니라 햇빛으로 산다. 자발광하는 eps Ind A b의 정반대다. 다만 희미하게 남은 내부 온기도
       띠와 날씨를 젓는 데는 한몫한다. 하나 남은 자유 손잡이인 기운 자전축의 방위는, Pandora의 일식이 잦게
       유지되는 범위 안에서 emit 단계로 넘긴다.
     fields:
       - { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }
       - { name: gravity, value: 9.36, unit: m/s2, op: set, phase3_default: "GM/R² 파생 에코 (1-bar 반경 71492 km 기준)" }
-      - { name: flattening, value: 0.13, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 0.023, q 0.19) — 시각 oblate 슬롯; 대형 q라 1차식이 다소 하한" }
+      - { name: flattening, value: 0.13, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 0.023, q 0.19), 시각 oblate 슬롯; 대형 q라 1차식이 다소 하한" }
       - { name: spin_axis_orientation, value: "obliquity 5° 방위, 자유 emit (eclipse duty 94% bound)", op: set }
       - { name: internal_heat, value: "negligible (T_int<110K, 내부플럭스 ≲6% insolation, 자발광 아님)", op: set }
-      - { name: geopotential_c22, value: null, na_reason: "가스자이언트 자유 자전 — 축대칭이라 조석 삼축 없음 (zonal J2/J4만, 전용 행)" }
+      - { name: geopotential_c22, value: null, na_reason: "가스자이언트 자유 자전이라 축대칭, 조석 삼축 없음 (zonal J2/J4만, 전용 행)" }
       - { name: age, value: 5.3, unit: Gyr, op: set, phase3_default: "5.3 Gyr (α Cen A 상속)" }
     gate:
       criterion: [classification]
@@ -360,13 +362,13 @@ decisions:
       evidence: >
         mass 120 M⊕ (0.38 M_Jup) = Phase 3 foundation value, input to J2·density·tides·dynamo; age 5.3 Gyr
         inherited from α Cen A. internal_heat negligible: T_int<110K, internal flux ≲6% of insolation (old
-        low-mass Saturn-class → small residual heat), radiative equilibrium dominant, not self-luminous —
-        insolation-set, contrast eps Ind A b. spin_axis_orientation = azimuth of the 5° obliquity, free emit
+        low-mass Saturn-class → small residual heat), radiative equilibrium dominant, not self-luminous,
+        insolation-set (contrast eps Ind A b). spin_axis_orientation = azimuth of the 5° obliquity, free emit
         (de-perfect) = emit-noise within the eclipse-favorable bound (duty 94%).
       evidence_ko: >
         mass 120 M⊕(0.38 M_Jup) = Phase 3 토대값, J2·밀도·조석·dynamo 입력; age 5.3 Gyr는 α Cen A 상속.
         internal_heat 미미: T_int<110K, 내부플럭스 ≲insolation의 6%(늙은 저질량 토성급 → 잔여열 작음), 복사평형
-        지배·자발광 아님 — insolation-set, eps Ind A b와 대비. spin_axis_orientation = obliquity 5°의 방위, 자유
+        지배·자발광 아님, insolation-set(eps Ind A b와 대비). spin_axis_orientation = obliquity 5°의 방위, 자유
         emit(de-perfect) = eclipse-favorable 범위(duty 94%) 내 emit-noise.
 
   - body: Alpha Centauri A b
@@ -376,21 +378,21 @@ decisions:
     driver: [physics, classification]
     narrative: >
       The air is hydrogen and helium, modestly enriched in heavy elements the way a Saturn-class planet should be,
-      and the visible deck is water and ammonium-hydrosulfide cloud — the planet is just warm enough that ammonia
+      and the visible deck is water and ammonium-hydrosulfide cloud: the planet is just warm enough that ammonia
       never freezes into cloud of its own, a fact that quietly shapes its whole look. The board anchors the deck at
       225 K and one bar; nobody breathes here and nothing escapes, and with no surface there is nothing for a
-      greenhouse to lift — the deep interior is hot but never rendered. Full temperature and pressure profiles are
+      greenhouse to lift. The deep interior is hot but never rendered. Full temperature and pressure profiles are
       generated at emit from a standard cool-giant model grid, and the eccentric orbit legally drives a
       great-season cycle. The 225 K anchor assumes a moderate albedo; brighter water clouds could make the planet
       colder without changing its class, so the conservative reading is adopted.
     narrative_ko: >
       대기는 수소와 헬륨이고, 토성급 행성답게 무거운 원소가 적당히 농축되어 있으며, 눈에 보이는 덱은 물과
-      황화수소암모늄 구름이다 — 암모니아가 제 구름으로 얼어붙지 못할 만큼만 따뜻한데, 이 사실이 행성의 인상
+      황화수소암모늄 구름이다. 암모니아가 제 구름으로 얼어붙지 못할 만큼만 따뜻한데, 이 사실이 행성의 인상
       전체를 조용히 결정한다. 보드는 구름덱을 225 K·1 bar에 앵커한다. 여기서 숨 쉴 수는 없고 대기가 달아나지도
-      않으며, 표면이 없으니 온실이 끌어올릴 것도 없다 — 깊은 내부는 뜨겁지만 렌더되지 않는다. 온도·기압의 전체
+      않으며, 표면이 없으니 온실이 끌어올릴 것도 없다. 깊은 내부는 뜨겁지만 렌더되지 않는다. 온도·기압의 전체
       프로파일은 emit 때 표준 cool-giant 모델 격자로 생성되고, 찌그러진 궤도가 대계절 순환을 합법적으로
       구동한다. 225 K 앵커는 무난한 알베도 가정값이라 실제 물구름이 더 밝으면 더 차가울 수 있지만 분류는
-      그대로다 — 보수적 읽기를 채택했다.
+      그대로다. 보수적 읽기를 채택했다.
     fields:
       - { name: composition, value: "H₂/He bulk, [M/H]+0.5~1.0, clouds H₂O·NH₄SH (NH₃ 비응결), C/O 2.5×", op: set }
       - { name: pressure, value: 1, unit: bar, op: set, phase3_default: "1 bar 기준 앵커" }
@@ -404,24 +406,24 @@ decisions:
       verdict: pass-in-window
       evidence: >
         Composition: H₂/He bulk, [M/H]+0.5~1.0 = Thorngren2016 mass-metallicity expectation for the mass (not an
-        assumption); condensing species H₂O·NH₄SH — at 225K the skin T≈189K never reaches the NH₃ condensation
+        assumption); condensing species H₂O·NH₄SH: at 225K the skin T≈189K never reaches the NH₃ condensation
         point 150K, so ammonia stays gaseous (consistent with appearance.banding); C/O 2.5× (§5.2).
-        temperature/pressure are not scalars — at emit the cool-giant radiative-convective grid (Sonora Bobcat
+        temperature/pressure are not scalars: at emit the cool-giant radiative-convective grid (Sonora Bobcat
         2107.07434 / Fortney2007 astro-ph/0612671, _bib/gas-giant-atmosphere.yaml) generates
         temperatureCurve+pressureCurve, anchored at cloud-deck 225K/1 bar; the great-season uses
         temperatureEccentricityBiasCurve (e=0.1>threshold, passes the divide-by-zero guard). Classification
-        Class II water clouds (Sudarsky2003). Teq 225K assumes A_B=0.3 — with Class II albedo 0.5–0.8 it could be
+        Class II water clouds (Sudarsky2003). Teq 225K assumes A_B=0.3: with Class II albedo 0.5–0.8 it could be
         colder (still Class II; adopted conservatively). breathability false (atmosphereContainsOxygen=false);
         escape negligible (giant mass); greenhouse: no surface-lift (cloud deck=radiative layer, deep interior hot
         along the adiabat but not rendered); scale_height derived from the profile.
       evidence_ko: >
         composition: H₂/He bulk, [M/H]+0.5~1.0 = Thorngren2016 질량-금속성의 해당 질량 예상값(가정 아님); 응결
-        구름종 H₂O·NH₄SH — 225K서 skin T≈189K가 NH₃ 응결점 150K에 못 닿아 기체 잔류(appearance.banding 정합);
-        C/O 2.5×(§5.2). temperature/pressure는 스칼라 아님 — emit서 cool-giant 복사대류 격자(Sonora Bobcat
+        구름종 H₂O·NH₄SH: 225K서 skin T≈189K가 NH₃ 응결점 150K에 못 닿아 기체 잔류(appearance.banding 정합);
+        C/O 2.5×(§5.2). temperature/pressure는 스칼라 아님: emit서 cool-giant 복사대류 격자(Sonora Bobcat
         2107.07434 / Fortney2007 astro-ph/0612671, _bib/gas-giant-atmosphere.yaml)로
         temperatureCurve+pressureCurve 생성, 앵커=구름덱 225K/1 bar; great-season은
         temperatureEccentricityBiasCurve(e=0.1>임계, divide-by-zero 가드 통과). 분류 Class II 물구름
-        (Sudarsky2003). Teq 225K는 A_B=0.3 가정 — Class II 알베도 0.5–0.8이면 더 차가울 여지(여전히 Class II,
+        (Sudarsky2003). Teq 225K는 A_B=0.3 가정: Class II 알베도 0.5–0.8이면 더 차가울 여지(여전히 Class II,
         보수적 채택). breathability 불가(atmosphereContainsOxygen=false); escape 무시(거대질량); greenhouse:
         surface-lift 없음(구름덱=복사층, 깊은 곳은 단열선으로 뜨겁되 미렌더); scale_height는 프로파일서 도출.
     refs: ["2107.07434", "astro-ph/0612671"]
@@ -435,20 +437,20 @@ decisions:
     narrative: >
       Polyphemus wears three colors: white zones of water cloud, red-brown bands where photochemical pigments stain
       the deck, and slate-blue belts where gaps in the cloud expose the deep atmosphere's blue scatter. Its
-      signature storm inverts Jupiter's — not a raised red spot but a sunken eye, the deepest gap of all and
+      signature storm inverts Jupiter's: not a raised red spot but a sunken eye, the deepest gap of all and
       therefore the most saturated azure on the planet, matching the canon's "darkest blue storm". The palette is
       physics-bounded but owner-tuned: the white comes from the cloud chemistry, the band red was pushed to 70% of
       Jupiter's belt color, and the blues are honest scattered light, not methane trickery. Because the host star
       is a solar twin, the colors render almost exactly as painted, with no reddening correction. One deliberate
-      liberty is on record — the turbulent, festooned Jupiter-style banding is visual drama; a planet this calm
+      liberty is on record: the turbulent, festooned Jupiter-style banding is visual drama; a planet this calm
       would more naturally wear Saturn's quiet stripes (that call lives in the clouds row).
     narrative_ko: >
       Polyphemus는 세 가지 색을 입는다. 물구름의 흰 zone, 광화학 색소가 덱을 물들인 적갈색 띠, 그리고 구름
-      틈새로 깊은 대기의 푸른 산란이 비치는 슬레이트블루 belt. 시그니처 폭풍은 목성을 뒤집는다 — 솟은 붉은 점이
+      틈새로 깊은 대기의 푸른 산란이 비치는 슬레이트블루 belt. 시그니처 폭풍은 목성을 뒤집는다. 솟은 붉은 점이
       아니라 가라앉은 눈이고, 가장 깊은 틈이기에 행성에서 가장 짙은 azure이며, 캐넌의 "제일 짙은 파란 폭풍"과
       맞아떨어진다. 팔레트는 물리로 테두리 치고 오너가 조율했다. 흰색은 구름 화학에서 오고, 띠의 적색은 목성
       belt색의 70%로 밀었으며, 파랑은 메탄 눈속임이 아니라 정직하게 산란된 빛이다. 모항성이 태양 쌍둥이라 칠한
-      색이 거의 그대로 렌더되고 붉은 보정이 필요 없다. 의도적 일탈 하나를 기록한다 — 소용돌이와 festoon이 이는
+      색이 거의 그대로 렌더되고 붉은 보정이 필요 없다. 의도적 일탈 하나를 기록한다. 소용돌이와 festoon이 이는
       목성풍 난류 밴딩은 시각적 드라마이고, 이만큼 조용한 행성이라면 토성의 얌전한 줄무늬가 더
       자연스럽다(그 결정은 clouds 행에 있다).
     fields:
@@ -465,14 +467,14 @@ decisions:
       verdict: pass-in-window        # 색·메커니즘 in-window; 난류 밴딩만 field-level documented-divergence
       evidence: >
         White zones = water/NH4SH cloud tops (#eef1f4, Sudarsky Class II; at 225K skin T≈189K never reaches the
-        NH3 condensation point 150K — unlike Jupiter the tropopause never cools that far — so no ammonia cloud;
+        NH3 condensation point 150K (unlike Jupiter the tropopause never cools that far), so no ammonia cloud;
         visible deck = water/NH4SH). Red-brown chromophore = NH4SH radiolysis sulfur + CH4/PH3 photolysis
         hydrocarbon tholins absorbing blue·UV (cold-giant photochemistry, in-window); chromophore set to
         Jupiter belt red 70%. Slate-blue belts = Rayleigh scattering of the deep H2/He column exposed in shallow
         cloud gaps (haze attenuates saturation). Storm eye = the deepest gap → longest Rayleigh column → most
         saturated azure (inverse Great Red Spot; Rayleigh not methane absorption, so no cobalt over-saturation
         concern). Color methodology = atmosphere-reflected-color-methodology.md (Polyphemus is its worked example;
-        α Cen A=G2V solar twin → white point≈Sun, renders nearly as-is) — a different mechanism from
+        α Cen A=G2V solar twin → white point≈Sun, renders nearly as-is), a different mechanism from
         composition-color.md (reentry luminescence). Only the white has a Phase 3 hex basis; red-brown/blue/azure
         are art tie-breaks within the physical window. Condensation stratigraphy = Sudarsky 2000/2003 +
         Morley 2014 (pinned in docs/phase3/_bib/gas-giant-atmosphere.yaml). banding_morphology is a field-level
@@ -480,13 +482,13 @@ decisions:
         adopted for visual drama (interesting-first, explicit not silent; same as appearance.clouds).
       evidence_ko: >
         흰 zone = 물/NH4SH 구름탑(#eef1f4, Sudarsky Class II; 225K는 skin T≈189K로 NH3 응결점 150K에 끝내 못
-        닿음 — 목성과 달리 대류권계면이 거기까지 안 식음 — 암모니아 구름 없음, 가시 덱 = 물/NH4SH). 적갈
+        닿음(목성과 달리 대류권계면이 거기까지 안 식음), 암모니아 구름 없음, 가시 덱 = 물/NH4SH). 적갈
         chromophore = NH4SH 복사 생성물 황 + CH4/PH3 광분해 탄화수소 톨린의 청·UV 흡수(cold-giant 광화학,
         in-window); 금색은 목성 belt 적색 70%로 오너 조정. 슬레이트블루 belt = 얕은 구름틈에 드러난 깊은 H2/He
         컬럼의 Rayleigh 산란(haze가 채도 감쇄). 폭풍 눈 = 가장 깊은 틈 → 가장 긴 Rayleigh 컬럼 → 가장 진한
         azure(대적점의 역; 메탄 흡수 아닌 Rayleigh라 cobalt 과채도 우려 불필요). 색 방법론 =
         atmosphere-reflected-color-methodology.md(Polyphemus가 그 문서의 worked example; α Cen A=G2V
-        태양쌍둥이 → white point≈태양, 거의 그대로 렌더) — composition-color.md(재진입 발광)와는 다른 메커니즘.
+        태양쌍둥이 → white point≈태양, 거의 그대로 렌더), composition-color.md(재진입 발광)와는 다른 메커니즘.
         흰색만 Phase 3 hex 근거, 적갈/청/azure는 물리 창 내 art tie-break. 응결 층서 = Sudarsky 2000/2003 +
         Morley 2014(docs/phase3/_bib/gas-giant-atmosphere.yaml 핀). banding_morphology는 field-level
         owner-override: T_int<110K → 잔잔한 토성형 zonal band가 물리 기본값; 목성형 난류는 시각 드라마로
@@ -499,14 +501,14 @@ decisions:
     status: gated                 # group 6 facet-walk (2026-06-22) — 금색→목성 적색 70% 오너 조정
     driver: [visual]
     narrative: >
-      The red-brown stain on the bands comes from photochemical haze — sulfur compounds and hydrocarbon tholins
+      The red-brown stain on the bands comes from photochemical haze: sulfur compounds and hydrocarbon tholins
       cooked out of the upper atmosphere by starlight. Jupiter and Saturn both wear pigment haze of this kind
       despite being far colder, so on the warmer Polyphemus the mechanism works if anything better. Within that
-      physical window the deck carries a thicker pigment coat than Saturn's gold — Jupiter's belt red at 70% strength.
+      physical window the deck carries a thicker pigment coat than Saturn's gold: Jupiter's belt red at 70% strength.
     narrative_ko: >
-      띠를 물들인 적갈색은 광화학 haze에서 온다 — 별빛이 상층 대기를 구워 만든 황 화합물과 탄화수소 톨린이다.
+      띠를 물들인 적갈색은 광화학 haze에서 온다. 별빛이 상층 대기를 구워 만든 황 화합물과 탄화수소 톨린이다.
       훨씬 추운 목성과 토성도 이런 색소 haze를 두르고 있으니, 더 따뜻한 Polyphemus에서는 이 메커니즘이 오히려
-      더 잘 작동한다. 그 물리 창 안에서 덱은 토성의 금색 대신 더 두꺼운 색소 코팅을 두른다 — 목성 belt 적색의
+      더 잘 작동한다. 그 물리 창 안에서 덱은 토성의 금색 대신 더 두꺼운 색소 코팅을 두른다. 목성 belt 적색의
       70% 세기다.
     fields:
       - { name: haze, value: "#b4784e", window: "#a8703f–#bc8055", op: set }
@@ -515,14 +517,14 @@ decisions:
       verdict: pass-in-window
       evidence: >
         Photochemical chromophore haze (NH4SH sulfur + CH4/PH3 photolysis hydrocarbon tholins) justified by
-        cold-giant analogy — Jupiter (Teq~110K)·Saturn (~90K) show pigment haze from UV photolysis
+        cold-giant analogy: Jupiter (Teq~110K)·Saturn (~90K) show pigment haze from UV photolysis
         (NH3/CH4/PH3→hydrocarbons/tholins); Polyphemus (225K, H2/He+CH4, NH3 non-condensing, G2V UV) is warmer
         than both, so the mechanism holds even better. composition-color.md treats haze chromophores as a layer
         separate from the bulk (Titan tholins/sub-Neptune photochemistry); the red-brown is reflected light, so it
         does not come from the plasma yaml (that file is reentry plasma). Art tie-break within the Jupiter-belt
         window #a8703f–#bc8055, default #b4784e.
       evidence_ko: >
-        광화학 크로모포어 haze(NH4SH 황 + CH4/PH3 광분해 탄화수소 톨린)는 cold-giant 유추로 정당 —
+        광화학 크로모포어 haze(NH4SH 황 + CH4/PH3 광분해 탄화수소 톨린)는 cold-giant 유추로 정당하다.
         목성(Teq~110K)·토성(~90K)이 UV 광분해(NH3/CH4/PH3→탄화수소/톨린)로 색소 haze를 보이고,
         Polyphemus(225K, H2/He+CH4, NH3 비응결, G2V UV)는 둘보다 따뜻해 메커니즘이 오히려 잘 성립.
         composition-color.md은 haze 크로모포어를 bulk 밖 별도 층으로 다룸(Titan 톨린/sub-Neptune 광화학);
@@ -536,13 +538,13 @@ decisions:
     driver: [visual]
     narrative: >
       The cloud deck churns like Jupiter's: vortices and festoons along the band boundaries, plus one big
-      mid-latitude storm — the sunken blue eye. A planet with this little internal heat would more naturally look
+      mid-latitude storm, the sunken blue eye. A planet with this little internal heat would more naturally look
       like placid Saturn, so the turbulence is a deliberate choice for visual drama, recorded as an explicit
       divergence. Coverage stays at the Phase 3 value, the colors live in the banding row, and the shapes are
       painted onto cloud textures at emit.
     narrative_ko: >
-      구름덱은 목성처럼 끓는다. band 경계마다 소용돌이와 festoon이 일고, 중위도에 큰 폭풍 하나 — 가라앉은 파란
-      눈 — 가 돈다. 내부열이 이 정도로 적은 행성이라면 얌전한 토성 쪽이 더 자연스러우니, 난류는 시각적 드라마를
+      구름덱은 목성처럼 끓는다. band 경계마다 소용돌이와 festoon이 일고, 중위도에 큰 폭풍 하나(가라앉은 파란
+      눈)가 돈다. 내부열이 이 정도로 적은 행성이라면 얌전한 토성 쪽이 더 자연스러우니, 난류는 시각적 드라마를
       위한 의도적 선택이며 명시적 일탈로 기록한다. 덮임률은 Phase 3 값을 그대로 쓰고, 색은 banding 행에 있으며,
       형태는 emit 때 구름 텍스처로 그려진다.
     fields:
@@ -554,14 +556,14 @@ decisions:
       evidence: >
         Morphology = Jovian turbulent banding (many band-boundary vortices·festoons) + a single large mid-latitude
         anticyclone. Cloud coverage = Phase 3 0.9. The large storm = a sunken Rayleigh blue eye (Avatar canon),
-        colored per the banding row's storm-eye value. Realized at emit via cloud textures (EVE)/PQS — this row
-        records the art intent; color values are integrated in the banding row. Override basis: T_int<110K → a
+        colored per the banding row's storm-eye value. Realized at emit via cloud textures (EVE)/PQS; this row
+        records the art intent, color values integrated in the banding row. Override basis: T_int<110K → a
         calm Saturn-like zonal band is the physical default; turbulence adopted for visual drama
         (interesting-first, explicit).
       evidence_ko: >
         형태학 = 목성형 난류 밴딩(band 경계 소용돌이·festoon 多) + 중위도 단일 대형 anticyclone. 구름 coverage =
         Phase 3 0.9. 대형 폭풍 = 가라앉은 Rayleigh 파란 눈(Avatar canon), 색은 banding 행의 폭풍 눈 값. emit 시
-        구름 텍스처(EVE)/PQS로 구현 — 본 행은 art 의도 기록, 색 값은 banding 행에 통합. 오버라이드 근거:
+        구름 텍스처(EVE)/PQS로 구현; 본 행은 art 의도 기록, 색 값은 banding 행에 통합. 오버라이드 근거:
         T_int<110K → 잔잔한 토성형 zonal band가 물리 기본값; 난류는 시각 드라마로 채택(interesting-first, 명시).
 
   - body: Alpha Centauri A b
@@ -569,17 +571,17 @@ decisions:
     axis: appearance.aurora
     status: gated                 # documented-divergence — Phase 3는 aurora 없음, Phase 4가 가시 연출. 색만 조성-고정
     driver: [visual]
-    depends_on: "magnetosphere(자기장 결정) — 오로라 가둠/세기는 자기권에 의존, 그 행 먼저 확정 필요"
+    depends_on: "magnetosphere(자기장 결정): 오로라 가둠/세기는 자기권에 의존, 그 행 먼저 확정 필요"
     narrative: >
-      The poles glow rose-magenta — a deliberate color rhyme against Pandora's cyan bioluminescence: planet pink,
+      The poles glow rose-magenta, a deliberate color rhyme against Pandora's cyan bioluminescence: planet pink,
       moon cyan. The tint itself is not a choice: a hydrogen-helium sky can only glow in hydrogen's reds and
       violets, and with no atomic oxygen there is no Earth-style green to be had. The honest divergence is
-      visibility — the quiet star drives too little plasma for a bright aurora, so Phase 3 said "none"; Phase 4
+      visibility: the quiet star drives too little plasma for a bright aurora, so Phase 3 said "none"; Phase 4
       stages a faint one anyway so the contrast reads on screen.
     narrative_ko: >
-      극지방이 rose-magenta로 빛난다 — Pandora의 청록 생물발광과 의도적으로 운을 맞춘 색이다. 행성은 분홍, 달은
+      극지방이 rose-magenta로 빛난다. Pandora의 청록 생물발광과 의도적으로 운을 맞춘 색이다. 행성은 분홍, 달은
       청록. 색조 자체는 선택이 아니다. 수소-헬륨 하늘은 수소의 적색과 보라로만 빛날 수 있고, 원자 산소가 없어
-      지구식 초록은 나올 수 없다. 정직한 일탈은 가시성이다 — 조용한 별은 밝은 오로라를 피울 플라스마를 대주지
+      지구식 초록은 나올 수 없다. 정직한 일탈은 가시성이다. 조용한 별은 밝은 오로라를 피울 플라스마를 대주지
       못해 Phase 3는 "없음"이라 했지만, Phase 4는 화면에서 대비가 읽히도록 희미한 오로라를 연출한다.
     fields:
       - { name: aurora, value: "극 rose-magenta (H Balmer-α 적색 + H2 Fulcher/Balmer-β/γ 보라)", op: set, phase3_default: "aurora_present=false (medium)" }
@@ -588,16 +590,16 @@ decisions:
       verdict: owner-override
       evidence: >
         The H2/He atmosphere fixes the color (not a choice): H Balmer-α red + H2 Fulcher / Balmer-β/γ violet. No
-        atomic oxygen, so no Earth-style green. Most of the output is UV (visible aurora faint) — the divergence
+        atomic oxygen, so no Earth-style green. Most of the output is UV (visible aurora faint); the divergence
         is staging it visible. sRGB extracted at emit from element_plasma_colors.yaml /
-        molecular_plasma_colors.yaml. Override basis: Phase 3 aurora_present=false (medium) — the quiet G2V wind
-        (log R'HK −4.95) is a weak plasma driver at 1.6 AU; departure from the AI-synthesized default, color
+        molecular_plasma_colors.yaml. Override basis: Phase 3 aurora_present=false (medium), the quiet G2V wind
+        (log R'HK −4.95) a weak plasma driver at 1.6 AU; departure from the AI-synthesized default, color
         composition-fixed so in-window.
       evidence_ko: >
         H2/He 대기가 색을 고정(선택 아님): H Balmer-α 적색 + H2 Fulcher / Balmer-β/γ 보라. 원자 산소 없어
-        지구식 녹색 불가. 대부분 출력은 UV(가시 오로라 희미) — 발산은 "보이게 연출"한 점. sRGB는 emit 시
+        지구식 녹색 불가. 대부분 출력은 UV(가시 오로라 희미); 발산은 "보이게 연출"한 점. sRGB는 emit 시
         element_plasma_colors.yaml / molecular_plasma_colors.yaml에서 추출. 오버라이드 근거: Phase 3
-        aurora_present=false(medium) — 조용한 G2V 항성풍(log R'HK −4.95)이 1.6 AU서 약한 플라스마 구동원;
+        aurora_present=false(medium): 조용한 G2V 항성풍(log R'HK −4.95)이 1.6 AU서 약한 플라스마 구동원;
         AI-합성 기본값에서의 이탈이며 색은 조성-고정이라 in-window.
 
   - body: Alpha Centauri A b
@@ -606,17 +608,17 @@ decisions:
     status: gated                 # 4b 완료 (2026-06-22) — dynamo 스케일링 근거화
     driver: [physics]
     narrative: >
-      The dynamo gives Polyphemus a field of about 170 microtesla at the equator — eight times Saturn's, forty
+      The dynamo gives Polyphemus a field of about 170 microtesla at the equator: eight times Saturn's, forty
       percent of Jupiter's, sitting between the two but leaning jovian. The number comes from the project's
       standard dynamo scaling recipe fed with the planet's mass and age, and the same formula sanity-checks
       against Jupiter. The honest caveat: this mass sits at the bottom edge of the giant regime, and if helium
       stratification has set in the way it has at Saturn, the real field could be several times weaker. That
-      quieter alternative is set aside for the strong reading — it is this field that carries the aurora and the
+      quieter alternative is set aside for the strong reading; it is this field that carries the aurora and the
       radiation belts.
     narrative_ko: >
-      다이나모가 적도 기준 약 170마이크로테슬라의 자기장을 만든다 — 토성의 8배, 목성의 40%, 둘 사이에서 목성
+      다이나모가 적도 기준 약 170마이크로테슬라의 자기장을 만든다. 토성의 8배, 목성의 40%, 둘 사이에서 목성
       쪽으로 기운 값이다. 숫자는 프로젝트 표준 다이나모 스케일링 레시피에 행성의 질량과 나이를 넣어 얻었고,
-      같은 식이 목성으로 검산된다. 정직한 단서 하나 — 이 질량은 거인 영역의 바닥 언저리라, 토성처럼 헬륨
+      같은 식이 목성으로 검산된다. 정직한 단서 하나. 이 질량은 거인 영역의 바닥 언저리라, 토성처럼 헬륨
       성층화가 진행됐다면 실제 자기장은 몇 배 약할 수 있다. 그 조용한 대안은 접고 강한 읽기를 택했으며,
       오로라와 방사선대를 떠받치는 것이 바로 이 자기장이다.
     fields:
@@ -630,13 +632,13 @@ decisions:
         → B_eq 172 µT (B_pol ≈ 345 µT). Passes the Jupiter same-equation sanity check. Phase 3 itself was corrected
         from an ungrounded ~500µT to 170µT → agreement. canonical = docs/reference/planetary-dynamo-scaling.md.
         The He-stratified Saturn-class weak-field alternative (~20–50µT) was considered and set aside. caveat:
-        0.378 M_Jup is the giant-regime lower edge — with He stratification the actual value could be lower
+        0.378 M_Jup is the giant-regime lower edge: with He stratification the actual value could be lower
         (Saturn ~21µT). conf low–med.
       evidence_ko: >
         Reiners & Christensen 2010(arXiv:1007.1514) depth-corrected dipole 보간으로 0.378 M_Jup·5.3 Gyr → B_eq
         172 µT(B_pol ≈ 345 µT). 목성 동일식 sanity check 통과. Phase 3 자체도 미근거 ~500µT에서 170µT로 교정
         완료 → 일치. canonical = docs/reference/planetary-dynamo-scaling.md. He 성층화 토성급 약장 대안
-        (~20–50µT)은 검토 후 접었다. caveat: 0.378 M_Jup은 자이언트 영역 하한 — He 성층화면 실제 더 낮을 수도
+        (~20–50µT)은 검토 후 접었다. caveat: 0.378 M_Jup은 자이언트 영역 하한이라 He 성층화면 실제 더 낮을 수도
         (토성 ~21µT). conf low–med.
     refs: ["docs/reference/planetary-dynamo-scaling.md"]
 
@@ -646,13 +648,13 @@ decisions:
     status: gated                 # 4b 완료 (2026-06-22)
     driver: [physics]
     narrative: >
-      The magnetic bubble's nose stands about 23.5 planetary radii out — far enough that all five moons live
+      The magnetic bubble's nose stands about 23.5 planetary radii out, far enough that all five moons live
       inside it. That sorts the family: Dante, Hades, and Pandora sit in radiation-belt territory, Cassandra in
       the intermediate zone, and Chaos rides just inside the boundary, where a gust of stellar wind can briefly
       leave it exposed. The size barely budges however the inputs wiggle, because the standoff distance responds
       only to the sixth root of the field.
     narrative_ko: >
-      자기 거품의 코는 행성 반지름의 약 23.5배 밖에 선다 — 다섯 위성이 전부 그 안에 살 만큼 멀다. 이 크기가
+      자기 거품의 코는 행성 반지름의 약 23.5배 밖에 선다. 다섯 위성이 전부 그 안에 살 만큼 멀다. 이 크기가
       식구들을 줄 세운다. Dante·Hades·Pandora는 방사선대 영역에, Cassandra는 중간 지대에 있고, Chaos는 경계
       바로 안쪽을 날아 항성풍이 몰아치면 잠시 밖에 노출될 수 있다. standoff 거리는 자기장의 6제곱근에만
       반응해서, 입력이 어지간히 흔들려도 크기는 꿈쩍하지 않는다.
@@ -687,8 +689,8 @@ decisions:
       (the alternative of ending the belt at Cassandra is a recorded option). Chaos (21 R_p) flies outside the
       belts but inside the magnetopause. Belt shapes are numerical fits of the in-game field model to these drift shells;
       intensities are calibrated between the Earth and Jupiter dose anchors and checked against the computed Kennel–Petschek
-      ceiling. Weaker than Jupiter (~1500 rad/h) because Polyphemus's dynamo field is ~40% of Jupiter's — a smaller, cooler
-      giant traps and accelerates less — yet ~29× Earth's belt peak. The dipole tilt is not yet decided, so a
+      ceiling. Weaker than Jupiter (~1500 rad/h) because Polyphemus's dynamo field is ~40% of Jupiter's (a smaller,
+      cooler giant traps and accelerates less), yet ~29× Earth's belt peak. The dipole tilt is not yet decided, so a
       Jupiter-like ~10° is assumed for now; if the tilt axis is ever gated, this row follows it.
     narrative_ko: >
       Dante의 화산 황 토러스가 먹이는 목성형 2벨트계. 구조 전체가 캐넌 위성 위치로 고정된다. 강한 내대는 L 1.3–3.0에 걸치고
@@ -696,7 +698,7 @@ decisions:
       걸쳐 Cassandra를 잠기게 해 그 "intermediate" 방사선을 만든다(외대를 Cassandra에서 끊는 대안은 기록된
       선택지). Chaos(21 R_p)는 벨트 밖·자기권계면 안을 난다. 벨트 모양은 이 드리프트 셸에 인게임 모델을 수치 피팅한 것이고,
       강도는 지구·목성 선량 앵커 사이에서 보정한 뒤 계산된 Kennel–Petschek 상한으로 검산했다. 목성(~1500 rad/h)보다 약한
-      이유는 Polyphemus의 다이나모 자기장이 목성의 ~40%라서다 — 더 작고 식은 거인은 덜 가두고 덜 가속한다 — 그래도 지구
+      이유는 Polyphemus의 다이나모 자기장이 목성의 ~40%라서다(더 작고 식은 거인은 덜 가두고 덜 가속한다). 그래도 지구
       벨트 피크의 ~29배다. 쌍극 기울기는 아직 정하지 않아 당분간 목성형 ~10°를 가정하고, 그 축이 게이트되면 이
       행이 따라간다.
     fields:
@@ -730,23 +732,23 @@ decisions:
       verdict: methodology-derived
       evidence: >
         Geometry: dipole drift shells bounded by the canon moon L-shells (the moon-anchoring validated on Uranus in the
-        solar-system audit), fitted to the Kerbalism SDF by fit_belts.py — IoU 0.97 inner / 0.97 outer, loss-cone cut 1.05 R_p;
+        solar-system audit), fitted to the Kerbalism SDF by fit_belts.py: IoU 0.97 inner / 0.97 outer, loss-cone cut 1.05 R_p;
         pause nose 23.5 R_p from the magnetosphere row (pause_radius = nose x compression). Intensity: Part B saturated
         dose-anchor interpolation, 10.4 x (170/31)^1.9 = 265 -> 300 rad/h rounded (conf low); outer = 0.1x inner (torus-driven
         Jupiter ratio); the Dante torus is the stated saturating source. Ceiling check: kp_limit.py (5-planet-validated port of
-        the Mauk & Fox implementation) puts the K-P ceiling at >=5e2x Earth for any plausible torus density at the belt peak —
-        the chosen ~29x Earth passes with wide margin. Canon consistency: Hades sits at the inner-belt peak (its
+        the Mauk & Fox implementation) puts the K-P ceiling at >=5e2x Earth for any plausible torus density at the belt peak,
+        so the chosen ~29x Earth passes with wide margin. Canon consistency: Hades sits at the inner-belt peak (its
         environment.radiation row), Pandora in the slot (its magnetosphere row's "between-belts gap"), Cassandra submerged
         intermediate, Chaos belt-free inside the pause. rad/h values are conf-low regime calls (tuning targets), consistent
         with the moons' environment.radiation ladder. All lengths in R_p; dipole tilt encoded as geomagnetic_pole_lat 80
         (= 90° − ~10° Jupiter-analog assumption; follows magnetic_dipole_tilt_deg if/when gated).
       evidence_ko: >
-        지오메트리 — 캐넌 위성 L-셸이 경계 짓는 쌍극자 드리프트 셸(태양계 감사에서 천왕성으로 검증한 위성-앵커링)을
+        지오메트리: 캐넌 위성 L-셸이 경계 짓는 쌍극자 드리프트 셸(태양계 감사에서 천왕성으로 검증한 위성-앵커링)을
         fit_belts.py로 Kerbalism SDF에 피팅. IoU 내대 0.97/외대 0.97, 손실원뿔 컷 1.05 R_p, pause 노즈 23.5 R_p는
-        magnetosphere 행에서(pause_radius = 노즈 × compression). 강도 — Part B 포화 선량-앵커 보간, 10.4 × (170/31)^1.9
+        magnetosphere 행에서(pause_radius = 노즈 × compression). 강도: Part B 포화 선량-앵커 보간, 10.4 × (170/31)^1.9
         = 265 → 300 rad/h 반올림(conf low), 외대 = 내대의 0.1배(토러스-구동 목성 비), 포화 소스 = Dante 토러스 명시.
-        상한 검산 — kp_limit.py(5행성 검증 완료된 Mauk & Fox 구현 포팅) 기준 벨트 피크의 K–P 상한은 어떤 그럴듯한 토러스
-        밀도에서도 지구의 5×10²배 이상, 선택값 ~29배는 큰 여유로 통과. 캐넌 정합 — Hades = 내대 피크
+        상한 검산: kp_limit.py(5행성 검증 완료된 Mauk & Fox 구현 포팅) 기준 벨트 피크의 K–P 상한은 어떤 그럴듯한 토러스
+        밀도에서도 지구의 5×10²배 이상, 선택값 ~29배는 큰 여유로 통과. 캐넌 정합: Hades = 내대 피크
         (그 environment.radiation 행), Pandora = 슬롯("두 벨트 사이 gap"), Cassandra = 잠김 intermediate, Chaos = 벨트 밖·
         자기권 안. rad/h 값은 conf-low regime call(튜닝 타깃)이며 위성들의 environment.radiation 사다리와 정합.
         길이 단위 전부 R_p; 쌍극 기울기는 geomagnetic_pole_lat 80으로 인코딩(= 90° − 목성 아날로그 ~10° 가정;
@@ -761,34 +763,33 @@ decisions:
     narrative: >
       Each moon gets its radiation station: Dante extreme, Hades severe, Pandora moderate and livable, Cassandra
       low, Chaos low but variable. The interesting reconciliation is that the field alone is too weak for the
-      canon's brutal numbers — it is Dante's furious volcanism, feeding sulfur plasma into the belts at hundreds
+      canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at hundreds
       of times Io's rate, that makes the inner zone so deadly without inflating the field. Pandora stays habitable
       exactly as the canon says: it orbits in the gap between the two belts and shields its surface with its own
-      Earth-class field — no unobtanium required, just a good dynamo.
+      Earth-class field, no unobtanium required, just a good dynamo. The per-moon grades: Dante extreme
+      (>4,500 rem/day), Hades severe, Pandora moderate and habitable, Cassandra low, Chaos low and variable.
     narrative_ko: >
-      위성마다 방사선 자리가 정해진다. Dante 극심, Hades 심함, Pandora 중간이되 살 만함, Cassandra 낮음, Chaos
-      낮지만 가변. 재미있는 화해는 자기장만으로는 캐넌의 흉악한 수치가 안 나온다는 점이다 — Io의 수백 배로
+      위성마다 방사선 자리가 정해진다. 재미있는 화해는 자기장만으로는 캐넌의 흉악한 수치가 안 나온다는 점이다. Io의 수백 배로
       끓는 Dante의 화산이 황 플라스마를 벨트에 퍼부어, 자기장을 부풀리지 않고도 안쪽 지대를 그렇게 치명적으로
       만든다. Pandora는 캐넌 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 자기만의 지구급 자기장으로 표면을
-      가린다 — 언옵타늄은 필요 없고, 좋은 다이나모면 된다.
-    fields:
-      - { name: radiation, value: "Dante 극심(>4,500 rem/day) · Hades 심함 · Pandora 중간(거주가능) · Cassandra 낮음 · Chaos 낮음/가변", op: set }
+      가린다. 언옵타늄은 필요 없고, 좋은 다이나모면 된다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
+      Pandora 중간·거주가능, Cassandra 낮음, Chaos 낮음·가변.
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window        # 캐넌 >4500은 Dante 화산-source로 화해(場 발산 불요)
       evidence: >
-        Dose is set by field + source — despite 170µT (~0.4× Jupiter, ~8× Saturn; weak vs Jupiter for belt
+        Dose is set by field + source: despite 170µT (~0.4× Jupiter, ~8× Saturn; weak vs Jupiter for belt
         generation), Dante (820× Io volcanism) supplies enormous SO₂/sulfur plasma to the belt, so a strong belt
         forms. Dante innermost extreme (>4,500 rem/day), Hades near the peak (~2–3 R_p). The canon ">4,500
         rem/day" is reconciled via this volcanic source without inflating the field (see the Dante env.radiation
         row). Pandora is habitable via the gap between the two belts + its own strong intrinsic dipole (Fe-core
-        dynamo, Earth-class — details in the Pandora magnetism row); unobtanium is excluded from the physics
+        dynamo, Earth-class; details in the Pandora magnetism row); unobtanium is excluded from the physics
         grounding. Pandora's distance is fixed by the 32h tidal lock and does not move.
       evidence_ko: >
-        선량은 場+공급원으로 결정 — 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(820× Io
+        선량은 場+공급원으로 결정: 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(820× Io
         화산)가 막대한 SO₂/황 플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심(>4,500 rem/day), Hades
         피크(~2–3 R_p) 근처. 캐넌 ">4,500 rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행
-        참조). Pandora는 두 벨트 사이 gap + 자체 강한 고유 dipole(Fe핵 dynamo, 지구급 — 세부는 Pandora
+        참조). Pandora는 두 벨트 사이 gap + 자체 강한 고유 dipole(Fe핵 dynamo, 지구급; 세부는 Pandora
         magnetism 행)로 거주가능; 언옵타늄은 물리 grounding서 제외. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
 
   - body: Alpha Centauri A b
@@ -797,15 +798,15 @@ decisions:
     status: superseded            # → rings 결정으로 대체(2026-06-21). 얇은 Roche-zone 밀집고리 개념 폐기, 흐릿한 연속 E고리 채택. 이 행은 provenance용, live gate 없음(미방출).
     driver: [visual, observation]
     narrative: >
-      [SUPERSEDED — replaced by the rings row] Original: a thin dark framing line across the disk (not Saturn-class).
+      [SUPERSEDED: replaced by the rings row] Original: a thin dark framing line across the disk (not Saturn-class).
       Avatar canon = no rings; the original divergence basis was adopting the Beichman §5.3 ring-model radius fit (observation first).
       The unresolved "ring location = Roche-limit analysis" remained as separate work. On 2026-06-21 the thin Roche-zone dense-ring
-      concept was discarded and replaced by a faint continuous E-ring (the rings row) — this row is kept for provenance only, with no live gate and not emitted.
+      concept was discarded and replaced by a faint continuous E-ring (the rings row); this row is kept for provenance only, with no live gate and not emitted.
     narrative_ko: >
-      [SUPERSEDED — rings 행이 대체함] 원안: 디스크를 가로지르는 얇고 어두운 framing line(토성급 아님).
+      [SUPERSEDED: rings 행이 대체함] 원안: 디스크를 가로지르는 얇고 어두운 framing line(토성급 아님).
       Avatar canon = 고리 없음; Beichman §5.3 ring-model 반경 fit 채택(관측 우선)이 원 divergence 근거였음.
       미해결이던 "고리 위치 = 로슈 한계 분석"은 별개 작업으로 남아 있었음. 2026-06-21에 얇은 Roche-zone 밀집고리
-      개념을 폐기하고 흐릿한 연속 E고리(rings 행)로 대체함 — 이 행은 provenance로만 보존하며 live gate 없이 미방출.
+      개념을 폐기하고 흐릿한 연속 E고리(rings 행)로 대체함; 이 행은 provenance로만 보존하며 live gate 없이 미방출.
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -815,7 +816,7 @@ decisions:
     narrative: >
       Polyphemus keeps its rings, but as a ghost: a faint blue-white ice-dust E-ring so tenuous it almost honors
       the canon's "no rings", while still supplying the extra brightness the imaging needed. Its structure reads
-      from the moons — icy Chaos feeds the ring with cryovolcanic plumes the way Enceladus feeds Saturn's E-ring,
+      from the moons: icy Chaos feeds the ring with cryovolcanic plumes the way Enceladus feeds Saturn's E-ring,
       and Cassandra shepherds its inner edge. The ring splits into two annuli with a gap where Chaos orbits:
       physically the little moon cannot clear that lane, but a static ring drawn through a tilted moon's path
       would visibly break every orbit, so the gap is placed to vacate it. The ring plane follows Chaos's long-term
@@ -824,7 +825,7 @@ decisions:
       icy body.
     narrative_ko: >
       Polyphemus는 고리를 지키되 유령으로 만든다. 캐넌의 "고리 없음"을 거의 존중할 만큼 흐릿한 청백색 얼음-먼지
-      E고리인데, 이미징이 요구한 여분의 밝기는 그대로 공급한다. 구조는 위성들에서 읽힌다 — 얼음체 Chaos가
+      E고리인데, 이미징이 요구한 여분의 밝기는 그대로 공급한다. 구조는 위성들에서 읽힌다. 얼음체 Chaos가
       엔셀라두스가 토성 E고리를 먹이듯 cryovolcanic 플룸으로 고리를 먹이고, Cassandra가 안쪽 가장자리를 친다.
       고리는 두 환형으로 갈라지고 그 사이 간극을 Chaos가 돈다. 물리적으로 이 작은 달은 제 길을 비울 수 없지만,
       정적인 고리가 기운 달의 경로를 관통해 매 공전마다 화면이 깨져 보이므로 그 궤도를 비우는 간극을 둔다.
@@ -837,24 +838,24 @@ decisions:
       - { name: ring_gap_km, value: "1410000–1590000 (Chaos at 1500000 km)", op: set }
       - { name: ring_opacity, value: 9.0e-5, op: set }
       - { name: ring_color, value: "#cdd9e4", op: set }
-      - { name: ring_plane, value: "Chaos MEAN (Laplace) plane — retrograde inc ~175° rel. parent orbit (NOT the epoch 179° snapshot); anchor static ring here so Chaos librates ±sym about it", op: set }
+      - { name: ring_plane, value: "Chaos MEAN (Laplace) plane, retrograde inc ~175° rel. parent orbit (NOT the epoch 179° snapshot); anchor static ring here so Chaos librates ±sym about it", op: set }
       - { name: ring_composition, value: "water-ice dust (blue-white)", op: set }
       - { name: ring_brightness_R_jup, value: 0.05, op: set }
     gate:
       criterion: [stability, visual-checklist]
       verdict: owner-override
       evidence: >
-        A physical gap is impossible — in a test-particle sim (Sim B, ring_clearing.py 2000yr, results/_ring_clearing), Chaos is
+        A physical gap is impossible: in a test-particle sim (Sim B, ring_clearing.py 2000yr, results/_ring_clearing), Chaos is
         too small at mass ratio μ≈7.5e-7 to clear any gap (even particles at Chaos's semi-major axis survive). So the gap is intentional for
-        rendering purposes, not dynamics. To narrow the gap, Chaos e was lowered 0.10→0.02 (results/_chaos_e002, STABLE) —
+        rendering purposes, not dynamics. To narrow the gap, Chaos e was lowered 0.10→0.02 (results/_chaos_e002, STABLE):
         the radial excursion ±150k→±30k km, so a ~180k km gap clears it cleanly. Brightness sums orthogonally as area∝R², so an "apparent
         +0.05 R_Jup" corresponds to an equivalent disk ~0.32 R_Jup (~23k km). Beichman 2025 §5.3 (arXiv:2508.03814) "Planet Ring
-        System Models" — their preferred model is an optically thick ring inside Roche (Saturn-½ cross-section, equivalent disk 64,000 km), and
+        System Models": their preferred model is an optically thick ring inside Roche (Saturn-½ cross-section, equivalent disk 64,000 km), and
         our faint E-ring corresponds to their optically thin dust alternative (Kennedy 2011 irregular-satellite grinding).
         Ring-plane precession verification (dense 8000-snapshot leapfrog 2000yr, results/_principia2000_dense): Chaos
         mean plane = retrograde inc 175.4° rel. orbital plane (sim-frame normal [0.50,-0.80,-0.33]); instantaneous↔mean plane 10.9°;
         libration about the mean plane RMS 5.7°/max 12.6° (period ~56yr). Fixing to the epoch plane, the excursion is ~±6° (returns within 50yr) but
-        grows to 14/18° at 1000/2000yr — bounded by the mean-plane anchor. Dynamic tracking (ring↔live orbital plane linkage) is a long-term C#-plugin
+        grows to 14/18° at 1000/2000yr, bounded by the mean-plane anchor. Dynamic tracking (ring↔live orbital plane linkage) is a long-term C#-plugin
         task (not possible in cfg). Emit shape: Kopernicus rings are circular concentric annuli only (no
         eccentricity) → 2 Ring nodes (inner 800k–1.41M, outer 1.59M–2.5M km; gap 1.41M–1.59M with Chaos at 1.5M)
         sharing Chaos's mean plane (Laplace, retrograde inc ~175° rel. orbital plane, NOT the epoch 179° snapshot);
@@ -863,34 +864,34 @@ decisions:
         equivalent disk ~23k km = 13% of Beichman's Saturn-½ cross-section) keeps the planet at the gated
         1.0 R_Jup while matching the ~1.05 R_Jup observed flux. Feed (art-first): Chaos water
         cryovolcanic plumes (Enceladus→E-ring isomorphism; physics caveat = insufficient tidal heat at 20 R_p,
-        Chaos.surface divergence_note — adopted as art; sputtering/sublimation secondary supply). Color:
-        blue-white ice-dust #cdd9e4 — fine water-ice grains scatter
+        Chaos.surface divergence_note; adopted as art; sputtering/sublimation secondary supply). Color:
+        blue-white ice-dust #cdd9e4, fine water-ice grains scattering
         wavelength-dependently (small particles → blue dominance; Saturn E-ring/Enceladus precedent) → Chaos
         confirmed icy (inherited by group 10 satellites); the Phoebe-type dark carbonaceous alternative (C)
         rejected; visual impact small at τ≈9e-5.
       evidence_ko: >
-        물리적 간극은 불가 — 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서 Chaos는
+        물리적 간극은 불가: 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서 Chaos는
         질량비 μ≈7.5e-7로 너무 작아 어떤 간극도 못 비움(Chaos 반장축의 입자까지 생존). 그래서 갭은 동역학이 아닌
-        렌더링 목적의 의도적 부여. 간극을 좁히려 Chaos e를 0.10→0.02로 낮춤(results/_chaos_e002, STABLE) —
+        렌더링 목적의 의도적 부여. 간극을 좁히려 Chaos e를 0.10→0.02로 낮춤(results/_chaos_e002, STABLE):
         반경 흔들림 ±150k→±30k km라 ~180k km 갭이면 깔끔히 비움. 밝기는 면적∝R²로 직교 합산이라 "겉보기
         +0.05 R_Jup"는 등가원반 ~0.32 R_Jup(~23k km)에 해당. Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring
-        System Models" — 그들의 선호 모델은 Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고,
+        System Models": 그들의 선호 모델은 Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고,
         우리 흐릿한 E고리는 그들이 제시한 광학적으로 얇은 먼지 대안(Kennedy 2011 불규칙위성 분쇄)에 해당.
         고리면 세차 검증(dense 8000-snapshot leapfrog 2000yr, results/_principia2000_dense): Chaos
         평균면 = 역행 inc 175.4° rel 공전면(sim-frame normal [0.50,-0.80,-0.33]); 순간면↔평균면 10.9°;
         평균면 둘레 libration RMS 5.7°/max 12.6°(주기 ~56yr). epoch면 고정 시 이탈 ~±6°(50yr에 되돌아옴)이나
-        1000/2000yr엔 14/18°까지 커짐 — 평균면 앵커로 유계화. 동적 추종(고리↔라이브 궤도면 연동)은 C# 플러그인
+        1000/2000yr엔 14/18°까지 커짐, 평균면 앵커로 유계화. 동적 추종(고리↔라이브 궤도면 연동)은 C# 플러그인
         장기과제(cfg 불가). emit 형상: Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가) → Ring 노드
         2개(안쪽 800k–1.41M, 바깥 1.59M–2.5M km; 간극 1.41M–1.59M에 Chaos 1.5M)가 Chaos 평균면(Laplace, 역행
         inc ~175° rel 공전면, epoch 순간면 179° 아님)을 공유; 확산 E고리는 정상상태에서 축대칭(근점 세차
         무작위화)이라 원형 annulus가 충실하고, 작아진 Chaos e(0.02)는 간극 여유로 흡수. 겉보기 +0.05 R_Jup
         (τ≈9e-5, 등가원반 ~23k km = Beichman 토성½ 단면의 13%)라 행성은 게이트값 1.0 R_Jup 유지하며 ~1.05
         R_Jup 관측 플럭스 정합. feed(art-first): Chaos 물 cryovolcanic 플룸(엔셀라두스→E고리 동형;
-        물리 caveat = 20 R_p서 조석열 부족, Chaos.surface divergence_note — 그래도 art 채택;
-        sputtering/승화는 보조 공급). 색: 청백 얼음-먼지 #cdd9e4 —
-        고운 물-얼음 알갱이의 파장 의존 산란(작은 입자 → 청색 우세; 토성 E-ring/엔셀라두스 선례) → Chaos
-        얼음체 확정(group 10 satellites 상속); Phoebe형 어두운 탄소질 대안(C) 기각; τ≈9e-5라 시각 임팩트 작음.
-    refs: ["2508.03814"]
+        물리 caveat = 20 R_p서 조석열 부족, Chaos.surface divergence_note; 그래도 art 채택;
+        sputtering/승화는 보조 공급). 색: 청백 얼음-먼지 #cdd9e4, 고운 물-얼음 알갱이의 파장 의존
+        산란(작은 입자 → 청색 우세; 토성 E-ring/엔셀라두스 선례) → Chaos 얼음체 확정(group 10 satellites 상속);
+        Phoebe형 어두운 탄소질 대안(C) 기각; τ≈9e-5라 시각 임팩트 작음.
+    refs: ["2508.03814", "phase3/stability-sim/STABILITY_REPORT.md"]
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -898,36 +899,27 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      Polyphemus is the campaign's flagship destination — crossing interstellar distance to reach it is the
-      headline challenge, and it must first be found by telescope. Its signature blue storm stands as a distinct
-      landmark among the planet's latitude bands.
+      Its signature blue storm stands as a distinct landmark among Polyphemus's latitude bands.
     narrative_ko: >
-      Polyphemus는 이 캠페인의 플래그십 목적지다 — 성간 거리를 건너 도달하는 것 자체가 간판 과제이고, 먼저
-      망원경으로 찾아야 한다. 시그니처 파란 폭풍이 행성의 위도 띠들 사이에서 뚜렷한 랜드마크로 선다.
+      시그니처 파란 폭풍이 Polyphemus의 위도 띠들 사이에서 뚜렷한 랜드마크로 선다.
     fields:
       - { name: science_biomes, value: "위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴", op: set, colors: {"Equatorial":"#C9A26B","North Temperate":"#E4D3B0","South Temperate":"#A6784E","North Polar":"#9DB0C4","South Polar":"#B0A0AE","The Eye":"#244C8A"} }   # provisional naturalistic biome-map display colors (S↓, Promised Worlds convention); names TBC
       - { name: sphere_of_influence_tuning, value: "auto from mass (조정 불요)", op: passthrough }
       - { name: timewarp_limits, value: "대기 위 표준", op: passthrough }
-      - { name: difficulty, value: "임무=플래그십 · 발견=ResearchBodies IGNORELEVELS T F F F (candidate)", op: set }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
         No solid surface → no landing situation; science = atmospheric-flight ("flying above X")/space only. Gas
-        giants still carry a biome map (Jool/RSS Sol precedent — flight biomes via a lat/lon biome map): latitude
+        giants still carry a biome map (Jool/RSS Sol precedent, flight biomes via a lat/lon biome map): latitude
         bands (equatorial zone/N·S temperate belts/N·S poles) + the signature-storm (deep blue eye) dedicated
         biome (group 6 landmark = science landmark). Full ScienceValues block defined (landed/splashed token
         values, unreachable, inert). SOI=auto from mass (no tuning); timewarp=standard above the atmosphere.
-        Difficulty two layers: mission=flagship (approach = the interstellar journey itself);
-        discovery=ResearchBodies IGNORELEVELS T F F F as candidate (researchbodies-cfg skill db-mapping.md; see
-        identity.discoverability).
       evidence_ko: >
         고체 표면 없음 → 착륙 상황 미발생; 과학 = 대기-비행("X 상공 비행")/우주뿐. 가스자이언트도 biome map
-        보유(Jool/RSS Sol 선례 — 위경도 biome map으로 비행 바이옴): 위도 띠(적도대/북·남 온대 belt/북·남극) +
+        보유(Jool/RSS Sol 선례, 위경도 biome map으로 비행 바이옴): 위도 띠(적도대/북·남 온대 belt/북·남극) +
         시그니처 폭풍(깊은 파란 눈) 독자 바이옴(group 6 랜드마크 = 과학 명소). ScienceValues 전체 블록 정의
         (landed/splashed는 도달 불가라 토큰값, inert). SOI=질량서 자동(조정 불요); timewarp=대기 위 표준.
-        difficulty 두 층: 임무=플래그십(접근=항성간 여정 자체); 발견=ResearchBodies IGNORELEVELS T F F F
-        (candidate; researchbodies-cfg 스킬 db-mapping.md, identity.discoverability 참조).
 
   # ── group 5 surface = N/A (가스자이언트, 고체 표면 없음 — 구름덱은 atmosphere/appearance) ──
   # ── group 6 appearance = banding/haze/clouds/aurora/rings gated (facet-walk 2026-06-22); emission_glow/specular/artificial/surface = N/A ──
@@ -2692,15 +2684,15 @@ decisions:
     driver: [fiction, stability]   # SPEC class D (+ orbit는 stability-optimization)
     value: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos) — 본문 moons: 리스트가 body def"
     narrative: >
-      Five named moons circle Polyphemus — Dante, Hades, Pandora, Cassandra, Chaos: the film's cast, rebuilt to be
+      Five named moons circle Polyphemus (Dante, Hades, Pandora, Cassandra, Chaos): the film's cast, rebuilt to be
       dynamically honest. The campaign's key discovery: reading the canon's "Hades grazes Dante" literally ejects
-      Hades within a century, so the drama was recast as a sustained mild eccentricity — the same way Io burns —
+      Hades within a century, so the drama was recast as a sustained mild eccentricity (the same way Io burns),
       plus small moonlets. Each moon's full body definition and starting orbit live in the structured list below;
       the long trail of scans, reversals, and the final layout is preserved in the stability_scans and decision
       blocks.
     narrative_ko: >
-      다섯 명명 위성이 Polyphemus를 돈다 — Dante·Hades·Pandora·Cassandra·Chaos, 영화의 배역들을 동역학적으로
-      정직하게 다시 세운 것이다. 이 캠페인의 핵심 발견 하나 — 캐넌의 "Hades가 Dante를 스친다"를 글자 그대로
+      다섯 명명 위성이 Polyphemus를 돈다(Dante·Hades·Pandora·Cassandra·Chaos). 영화의 배역들을 동역학적으로
+      정직하게 다시 세운 것이다. 이 캠페인의 핵심 발견 하나. 캐넌의 "Hades가 Dante를 스친다"를 글자 그대로
       읽으면 Hades가 백 년 안에 튕겨 나간다. 그래서 그 드라마는 Io가 타는 방식과 같은, 유지되는 약한 이심률 +
       작은 moonlet들로 다시 캐스팅됐다. 각 위성의 신상명세와 시작 궤도는 아래 구조화된 목록에 있고, 스캔과
       번복과 최종 배치로 이어진 긴 궤적은 stability_scans와 결정 블록들에 남아 있다.
@@ -2709,18 +2701,19 @@ decisions:
       verdict: pass-in-window
       evidence: >
         Canon-literal "Hades grazes Dante" (e=0.30) → ejection within 100yr; tidal heating recast as a sustained
-        e≈0.05 (cf. Io's forced e=0.0041) + small moonlets. IAS15 1000yr (N-body including both stars α Cen A·B, reflecting the two outer moons' retrograde): CHAOTIC_BUT_HILL_STABLE — all 5 moons
+        e≈0.05 (cf. Io's forced e=0.0041) + small moonlets. IAS15 1000yr (N-body including both stars α Cen A·B, reflecting the two outer moons' retrograde): CHAOTIC_BUT_HILL_STABLE, all 5 moons
         Hill-bound·calm, ejections 0, Hades e 0.032–0.052 sustained, Pandora 0.02 R_Hill. Same grade as Barnard/TRAPPIST-1
         (bound, game-safe). results/_moons_alpha_centauri. Body defs = mass_kg·radius_km + 6 elements per moon
         (Kopernicus Orbit ↔ Principia 1:1) in the moons: list. See stability_scans.final_2026_06_21 /
         stability_scans.j2_confirm for the final roster·J2 re-verification.
       evidence_ko: >
         캐넌 직역 "Hades가 Dante를 스침"(e=0.30) → 100yr 내 이젝션; 조석가열은 유지되는 e≈0.05(cf. Io 강제
-        e=0.0041) + 작은 moonlet로 재구성. IAS15 1000yr (α Cen A·B 두 별 포함 N-body, 외곽 2위성 역행 반영): CHAOTIC_BUT_HILL_STABLE — 5위성 전부
+        e=0.0041) + 작은 moonlet로 재구성. IAS15 1000yr (α Cen A·B 두 별 포함 N-body, 외곽 2위성 역행 반영): CHAOTIC_BUT_HILL_STABLE, 5위성 전부
         Hill-bound·calm, 이젝션 0, Hades e 0.032–0.052 유지, Pandora 0.02 R_Hill. 바너드/TRAPPIST-1과 같은 등급
         (갇힘, 게임 안전). results/_moons_alpha_centauri. body def = 위성당 mass_kg·radius_km + 6요소
         (Kopernicus Orbit ↔ Principia 1:1), moons: 리스트 수록. 최종 로스터·J2 재검증은 stability_scans.final_2026_06_21 /
         stability_scans.j2_confirm 참조.
+    refs: ["phase3/stability-sim/STABILITY_REPORT.md", "phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md"]
     stability_scans:               # 안정성 시뮬 상세 기록 (verbatim, provenance)
       resonance_scan: >
         Hades 반장축 125k→172.5k 스캔(results/_moons_resonance_scan.md): 안전대는 저반장축 빈틈(127.5k–135k).
