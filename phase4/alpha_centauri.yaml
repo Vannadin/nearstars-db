@@ -2103,16 +2103,14 @@ decisions:
     driver: [physics]
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/solar-system-radiation-belts.md"]
     narrative: >
-      A shape-only refit of the superseded row above. Every physical value survives unchanged: the compressed mini-magnetosphere
-      (standoff 2.6 R_moon), a single thin CRAND belt at 4 rad/h cut off just above the atmosphere, and the ~10° dipole tilt.
-      What changed is how those facts are drawn: the belt is now the numerically fitted closed-field-line region instead of a
-      hand-placed doughnut, and the magnetopause is encoded so the game actually puts its nose at 2.6 (the old encoding misread
-      that field). All lengths in R_moon.
+      Pandora keeps a single thin radiation belt of its own, tucked just above the atmosphere. Its magnetosphere is squeezed
+      small, embedded inside Polyphemus's far larger field, so there is room for only one narrow belt where Earth would have
+      two. That belt is an orbital-altitude hazard that feeds the aurora rather than a danger at the surface, which the field
+      itself shields; the dipole leans about ten degrees.
     narrative_ko: >
-      위 superseded 행의 모양-한정 refit이다. 물리값은 전부 그대로다: 압축된 미니 자기권(standoff 2.6 R_moon), 대기 바로 위에서
-      잘리는 얇은 단일 CRAND 벨트 4 rad/h, 자기축 기울기 ~10°. 바뀐 것은 그 사실들을 그리는 방식뿐이다. 벨트는 손으로 놓은
-      도넛 대신 폐쇄 자력선 영역을 수치 피팅한 모양이 됐고, 자기권계면은 게임이 노즈를 실제로 2.6에 놓도록 재인코딩했다
-      (구행의 인코딩은 그 필드를 오독했었다). 길이 단위는 전부 R_moon.
+      판도라는 제 몫의 얇은 방사선대 하나를 대기 바로 위에 두르고 있다. 자기권이 Polyphemus의 훨씬 큰 자기장 안에 파묻혀
+      작게 눌린 탓에, 지구라면 두 겹일 자리에 좁은 벨트 한 겹만 들어선다. 이 벨트는 지표가 아니라 궤도 고도의 위협이라
+      오로라를 먹일 뿐, 지표는 자기장이 따로 막아 준다. 쌍극은 약 10° 기울어 있다.
     fields:
       - { name: radiation_model, value: nearstars_pandora, op: set }
       - { name: inner_dist, value: 1.0193, unit: R_moon, op: set }
