@@ -62,7 +62,7 @@ problem: the decomposition is fixed up front.
 | `environment` | `radiation` (Kerbalism dose zones), `stellar_wind` (mass-loss), `activity` (rotation/cycle/X-ray — stars), `heliosphere` (astrosphere extent), `flares`/space-weather (CME / storms), `uv_xray_flux`, `habitable_zone` (stars) |
 | `rings` | `ring_structure` (radii / gaps), `ring_composition`/color/opacity, `ring_plane` (inclination), `circumstellar_disk` (debris belt), `asteroid_belt` |
 | `satellites` | art-directed / fiction moons (class D) as a list, `co_orbitals`/trojans, `dust_sources` (ring feeders) |
-| `gameplay` | `sphere_of_influence_tuning`, `science_biomes`, `timewarp_limits`, `difficulty` — *KSP-specific; almost always passthrough* |
+| `gameplay` | `sphere_of_influence_tuning`, `science_biomes`, `timewarp_limits` (*KSP-specific, almost always passthrough*). **`difficulty` is deferred** (owner 2026-07-24): mission-difficulty grading is a mod-support concern, not a Phase 4 facet; do not author it now (discovery status lives in `identity.discoverability`). |
 
 The menu is the **union of decision axes any body type could need** — never pruned by type
 (a rocky moon still carries `rings` and `magnetism`; they just default to passthrough). Most
@@ -278,14 +278,30 @@ decisions:
 - Every emit number lives in a typed field (`value` + `unit`/`op`), never only in prose.
 - The gate block uses the schema keys **`evidence`** and **`divergence_note`** — not
   `note`/`paper`/`rationale`. Source citations go in `refs` (machine-readable), not prose.
-- **Prose readability contract** (owner feedback 2026-07-24). The two prose slots answer
-  different questions and must not blur or retell each other:
-  - `narrative` = the **owner-facing story** — what was decided, why, and which
-    alternatives were declined. ≤6 sentences. **No bibcodes, file paths, equations, or
-    parameter dumps** — inline citations are what makes boards unreadable; the refs live
-    in `refs[]`, the numbers in `fields[]`.
-  - gate `evidence` = the **verification trail** — method, tool + fit quality, formulas,
-    checks, encodings. Technical shorthand is fine here; storytelling is not.
+- **Prose readability contract** (owner feedback 2026-07-24, hardened over that day). The
+  two prose slots answer different questions and must not blur or retell each other:
+  - `narrative` = the **reader-facing story**: what the body *is* and why the value is
+    defensible, conclusion first. ≤6 sentences. **Excluded from the narrative:** bibcodes,
+    file paths, equations, parameter dumps (citations → `refs[]`, numbers → `fields[]`);
+    **owner-decision history** — dates, "owner chose/picked/declined", facet-walk/re-gate
+    logs (that provenance lives in the session checklist/context-notes, not on the board a
+    stranger reads); and **engine mechanics**: how a KSP feature works (gas-giant biome
+    maps, flight science, the discovery mod) is internal author knowledge, not the story.
+  - gate `evidence` = the **verification + grounding trail**: method, tool + fit quality,
+    formulas, checks, encodings, and the engine mechanics the narrative omits. Technical
+    shorthand is fine; storytelling and dated decision-logs are not.
+  - **`refs` carry the real grounding, not a proxy.** A methodology-derived value cites its
+    methodology doc; a **simulation-derived** value (stability windows, gap-clearing,
+    observation phase-match) cites the sim report/study (e.g. `phase3/stability-sim/*.md`);
+    a passthrough measurement cites every measurement paper. A method named in prose but
+    missing from `refs[]` is the recurring bug. The HTML builder links `docs/reference/*.md`
+    and `plans/*.md` refs to their wiki page and other repo `.md` refs to the GitHub blob.
+  - **No em-dashes** (CONVENTIONS §1.10) and **natural Korean, never a literal calque**
+    (the ko-mirror rule: 거대 가스행성 not 거인, 구름층 not 구름덱, …) apply to *every*
+    rendered field: narrative, evidence, notes, values.
+  - A qualitative / non-scalar value (a per-moon dose ladder, a grade) belongs in the
+    narrative prose, **not** forced into a typed `fields[]` entry pretending to be an emit
+    scalar.
 - `verdict: partial` is **illegal** — split into a `pass-in-window` field and a
   `documented-divergence` field (each with its own note).
 - `divergence_note` is required (non-null) wherever a verdict is `documented-divergence`,

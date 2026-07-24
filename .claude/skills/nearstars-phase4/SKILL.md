@@ -159,11 +159,19 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
 
 - Prose reasoning → `narrative:`. **Every emit number → a typed `fields[]`
   entry** (`name`, `value`, `unit`, `op`) — never buried in prose.
-- **Prose readability contract** (SPEC §3.1; owner feedback 2026-07-24):
-  `narrative` = owner-facing story (decision, why, declined alternatives),
-  ≤6 sentences, **no bibcodes / file paths / equations / parameter dumps**;
-  the gate `evidence` = the verification trail (tool, fit quality, formulas,
-  checks) and must not retell the narrative. Citations only in `refs[]`.
+- **Prose readability contract** (SPEC §3.1; owner feedback 2026-07-24, hardened
+  that day): `narrative` = reader-facing story (what the body *is*, why the value
+  holds, conclusion first), ≤6 sentences, and it **excludes** bibcodes / file paths
+  / equations / parameter dumps, **owner-decision history** (dates, "owner
+  chose/declined", facet-walk logs — that lives in checklist/context-notes), and
+  **engine mechanics** (biome maps, flight science, discovery mod: author knowledge,
+  not story). The gate `evidence` = verification + grounding trail (tool, fit
+  quality, formulas, checks, the mechanics the narrative omits); no storytelling, no
+  dated decision-logs. A qualitative/non-scalar value (dose ladder, grade) stays in
+  prose, not a fake typed field. **No em-dashes** (CONVENTIONS §1.10) and **natural
+  Korean, no calques** (거대 가스행성 not 거인, 구름층 not 구름덱) in every rendered
+  field. Simulation-derived values (stability windows, gap-clearing, phase-match) cite
+  the sim report (`phase3/stability-sim/*.md`) in `refs[]`, not just a paper.
 - Gate block keys are exactly `criterion` / `verdict` / `evidence` /
   `divergence_note`. Source citations → a machine-readable `refs:` list (bibcodes
   / arXiv ids only). Do **not** use `note`/`paper`/`rationale`.
