@@ -67,26 +67,55 @@
 강한가*를 정합니다. 따라서 벨트 강도는 공식 출력이 아니라 **공급원·손실을 명시한 regime
 판정**으로 남습니다.
 
-### 포화-레짐 캘리브레이션 (숫자 레시피가 있는 유일한 경우)
+### 정확한 K–P 천장(계산 가능)과 그것이 정하는 것 — 그리고 정하지 못하는 것
 
-공급원이 자기권을 K–P 상한까지 포화시킬 만큼 강한 경우 — 내부 플라스마 공급원, 예컨대
-Io급 화산 위성이 토러스를 먹이는 경우 — 강도는 곧 상한이고, 그 상한은 바디 간에
-캘리브레이션할 수 있습니다. 행성 간 K–P 프레임워크는 Mauk & Fox 2010
-[`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)
-(자화 5행성 전부의 K–P 제한 전자 스펙트럼 비교)입니다. 실용 2-앵커 레시피는
-[`solar-system-radiation-belts.md`](solar-system-radiation-belts.md)에서 감사한 포화계로
-보정합니다.
+K–P 한계는 이제 어떤 바디에 대해서든 **직접 계산할 수 있습니다**.
+[`scripts/refs/kp_limit.py`](../../../scripts/refs/kp_limit.py)는 Mauk & Fox가 직접 발표한
+구현을 검증해 옮긴 Python 포트입니다(그들의 공개 Zenodo 소프트웨어
+[`10.5281/zenodo.4782323`](https://zenodo.org/records/4782323), bibcode
+`2021zndo...4782323M` — 논문 본체인
+[`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)은
+유료이고 preprint가 없음). 계산 사슬은 이렇습니다. 유연한 미분 스펙트럼
+`j(E) = C·E·(kT(γ₁+1)+E)^(−γ₁−1)/(1+(E/E₀)^γ₂)`에 pitch 계수 sin^2s α를 곱해 →
+상대론적 사이클로트론 공명(Summers, Tang & Thorne 2009
+[`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S),
+eqs A4–A8) → A1/A2 적분에서 나오는 whistler 성장률 → 한계 안정성
+`CmCk = L·R_p·w_i/(3·v_g)`(파동 이득 3; Mourenas 2024
+[`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)이
+독립적으로 확인). 제한된 스펙트럼은 ~E⁻¹입니다(상대론적 계수가 비상대론의 2배; Summers
+2014 [`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+이 포트는 노트북의 지구 L=5 실행을 출력된 중간값 11개에서 ≤0.05 %로 재현합니다
+(w_i = 0.6582 vs 0.658455, CmCk 피크 0.6076 vs 0.6079 @ 103 keV).
 
-- 지구: B_eq 31 µT → 내대 피크 10.4 rad/h (ROKerbalism, AP9 자릿수와 일치).
-- 목성: B_eq 428 µT → ~1500 rad/h (Divine & Garrett 자릿수 10³–10⁴ rad/day).
-- 두 앵커 사이에서 피크 선량은 대략 **(B_eq)²**로 스케일(선량비 144 vs 場비 13.8,
-  지수 ln144/ln13.8 ≈ 1.9): `dose ≈ 10.4 rad/h × (B_eq / 31 µT)²`.
-- 외/내 비: 토러스-구동(목성형) 구조는 ~0.1(150/1500), 지구형 항성풍-공급 외대는
-  ~0.2(2.2/10.4).
+이 정밀 기계가 확립하는 구조적 사실 2가지.
 
-이 레시피는 **포화 레짐(강한 내부 공급원)에만** 적용됩니다. 공급 부족·gap 기아 벨트는
-상한 *아래*에 있고 일반 regime 판정으로 남습니다(예: Pandora의 지구 0.4배). 어느 쪽이든
-신뢰도는 낮습니다 — 지수는 2-앵커 경험 적합이지 도출된 법칙이 아닙니다.
+1. **천장의 지배 변수는 We/wpe ∝ B/√n_cold**입니다(스펙트럼·pitch 지수도 함께) — B
+   단독도 B²도 *아닙니다*. 국소 場이 강하고 냉플라스마가 희박한 곳(작은 L의 깊은 내대)
+   에서는 공명 에너지가 수십 MeV로 치솟아 ~MeV 천장이 사실상 구속력을 잃습니다 — 그런
+   벨트는 **K–P가 아니라 공급원/손실이 정합니다**. 워크드 체크(Polyphemus 내대 피크,
+   L = 2.07, B_local ≈ 지구 L=5 場의 129배): 토러스 밀도 10²–5×10³ cm⁻³ 전 구간에서
+   계산된 1 MeV 천장이 지구의 ≥ 5×10²–10¹⁶배 — 구속 조건이 된 적이 없습니다.
+2. **K–P 캡은 행성 간 선량 대비를 정하지 않습니다.** Mauk & Fox는 지구·목성·천왕성이
+   모두 ~0.1–1 MeV 부근에서 비슷한 미분 캡에 *걸려 있는데도* 선량이 자릿수로 다름을
+   발견합니다. 선량은 스펙트럼 적분·차폐 수송을 거친 양이라, 차폐 투과 컷오프 위의
+   **꼬리 경도**(1 MeV 전자의 CSDA 사거리 ≈ 2.0 mm Al)와 벨트 크기가 지배합니다.
+   커뮤니티 표준 수송은 SHIELDOSE-2입니다(Seltzer
+   [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+   [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
+   교과서 자유장 계수는 1 MeV에서 e⁻ cm⁻²당 ≈ 2.3×10⁻⁸ rad(Si), ~2.5 mm Al 뒤에서
+   ~10배 감쇠.
+
+**실용 rad/h 레시피(정정된 상태).** 공급원 포화된 목성-아키텍처 계에서는 감사된 두 포화
+*선량 앵커* — 지구 31 µT → 10.4 rad/h, 목성 428 µT → ~1500 rad/h — 사이를 보간합니다.
+`dose ≈ 10.4 × (B_eq/31 µT)^1.9`. 이것은 경도 + 벨트-크기 효과를 뭉뚱그린 **경험적
+선량-앵커 보간**이지 K–P 스케일링이 *아닙니다*(이전 개정판이 그렇게 잘못 라벨한 것을
+철회). 외/내 비는 토러스-구동(목성)이 ~0.1, 항성풍-공급(지구)이 ~0.2. 그다음 두 하드
+체크를 적용합니다. (a) 고른 강도는 그 벨트의 (B, L, n_cold)에서 `kp_limit.py`로 계산한
+K–P 천장 아래에 있어야 하고(Polyphemus 300 rad/h ≈ 지구 29배 ≪ 가장 조밀한 토러스에서도
+천장 ≥ 지구 5×10²배 — 통과), (b) 공급원 기아·gap 기아 벨트는 이 모든 것 *아래*에 있으며
+평범한 regime 판정으로 남습니다(Pandora 지구 0.4배). 신뢰도는 여전히 낮습니다 — 보간
+지수가 2-앵커 적합이고 픽션 토러스의 n_cold는 명시된 가정이므로 — 그러나 이제 모든 요인이
+기계론적이고, 핀되고, 경계지어졌습니다.
 
 ## Part C — Kerbalism 매핑
 
@@ -296,8 +325,24 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
   자기권계면 / 압력균형 개념의 기원.
 - **Shue et al. 1997 / 1998**, JGR 102, 9497 (`1997JGR...102.9497S`) / JGR 103, 17691
   (`1998JGR...10317691S`). 경험적 자기권계면 standoff + 풍 변화에 따른 형상.
-- **Kennel & Petschek 1966**, JGR 71, 1 (`1966JGR....71....1K`). 안정포획 플럭스 한계 —
+- **Kennel & Petschek 1966**, JGR 71, 1 ([`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K)). 안정포획 플럭스 한계 —
   벨트 강도의 공급원-무관 천장. Part B의 핵심.
+- **Summers, Tang & Thorne 2009**, JGRA 114, A10210 ([`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S));
+  **Summers et al. 2014**, JGRA 119, 6313 ([`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+  상대론적 K–P 정식화(eqs A1–A8)와 ~E⁻¹ 제한 스펙트럼(상대론적 계수가 비상대론의 2배).
+  둘 다 유료·preprint 없음 — 방정식은 아래 Mauk & Fox Zenodo 소프트웨어로 복원.
+- **Mauk & Fox 2010**, JGRA 115, A12220 ([`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)).
+  행성 간 미분 K–P 프레임워크: 지구/목성/천왕성이 캡에, 해왕성은 아래(주입 기아),
+  토성도 아래(물질 손실). 유료. **그들의 공개 구현**([Zenodo 10.5281/zenodo.4782323](https://zenodo.org/records/4782323),
+  `2021zndo...4782323M`)은 캐시(`_papers/mauk_fox_KP.nb` + 실행)되어
+  `scripts/refs/kp_limit.py`로 포팅됨(출력 중간값 11개에서 ≤0.05 %로 검증).
+- **Mourenas et al. 2024**, JGRA 129, e32193 ([`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
+  ~3 파동-이득 기준의 독립 확인(ELFIN).
+- **Seltzer 1979 / 1992**(SHIELDOSE / SHIELDOSE-2,
+  [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+  [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
+  표준 전자/양성자 fluence → Al 뒤 선량 수송 — 선량 대비가 ~1 MeV 미분 캡이 아니라
+  스펙트럼 경도로 정해지는 이유.
 - **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* (`1974pdrb.book.....S`).
   벨트를 채우는 방사확산 수송.
 - **Lenchek et al. 1961**, JGR 66, 4027 (`1961JGR....66.4027L`). CRAND 내부벨트 공급원.

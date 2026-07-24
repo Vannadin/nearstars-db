@@ -284,6 +284,9 @@
   `docs/belt-viewer.html` 빌드. 브라우저 인터랙티브 뷰어(실시간 SDF 단면 + 3D
   레이마칭, 필드별 슬라이더, `render_belts_bodies.BODIES`에서 주입한 17개 프리셋,
   Shue 오버레이, 원클릭 cfg 내보내기). 위키 Radiation-Belts 페이지에서 링크.
+- `scripts/refs/kp_limit.py` — Kennel–Petschek 포획 플럭스 상한 계산기. Mauk & Fox
+  원저자 Zenodo 구현의 검증된 파이썬 포팅(인쇄 중간값 11개 ≤0.05% 재현). 자기권
+  지오메트리 방법론 Part B의 벨트 강도 상한 체크에 사용.
 
 ## 스킬 디렉터리 배치
 

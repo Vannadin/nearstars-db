@@ -76,28 +76,62 @@ field tells you *whether* and *where* belts trap; the source/loss/K–P balance 
 you *how intense*. Belt intensity therefore stays a **regime call with a stated
 source and loss**, not a formula output.
 
-### Saturated-regime calibration (the one case with a numeric recipe)
+### The exact K–P ceiling (computable) and what it does — and does not — set
 
-When the source is strong enough to saturate the magnetosphere at the K–P
-ceiling — the internal-plasma-source case, e.g. an Io-class volcanic moon
-feeding a torus — the intensity *is* the ceiling, and the ceiling can be
-calibrated across bodies. The cross-planet K–P framework is Mauk & Fox 2010
-[`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)
-(K–P-limited electron spectra compared for all five magnetized planets).
-Practical two-anchor recipe, calibrated on the audited saturated systems in
-[`solar-system-radiation-belts.md`](solar-system-radiation-belts.md):
+The K–P limit is now **directly computable** for any body:
+[`scripts/refs/kp_limit.py`](../../scripts/refs/kp_limit.py) is a validated
+Python port of Mauk & Fox's own published implementation (their open Zenodo
+software [`10.5281/zenodo.4782323`](https://zenodo.org/records/4782323),
+bibcode `2021zndo...4782323M` — the paper itself,
+[`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M),
+is paywalled with no preprint). The chain: flexible differential spectrum
+`j(E) = C·E·(kT(γ₁+1)+E)^(−γ₁−1)/(1+(E/E₀)^γ₂)` with pitch factor sin^2s α →
+relativistic cyclotron resonance (Summers, Tang & Thorne 2009
+[`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S),
+eqs A4–A8) → whistler growth rate from the A1/A2 integrals → marginal
+stability `CmCk = L·R_p·w_i/(3·v_g)` (wave gain 3; independently confirmed by
+Mourenas 2024 [`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
+The limited spectrum is ~E⁻¹ (relativistic coefficient 2× non-relativistic;
+Summers 2014 [`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+The port reproduces the notebook's Earth L=5 run to ≤0.05 % on 11 printed
+intermediates (w_i = 0.6582 vs 0.658455, CmCk peak 0.6076 vs 0.6079 at 103 keV).
 
-- Earth: B_eq 31 µT → inner-belt peak 10.4 rad/h (ROKerbalism, matches AP9 order).
-- Jupiter: B_eq 428 µT → ~1500 rad/h (Divine & Garrett order 10³–10⁴ rad/day).
-- Across these, peak dose scales ≈ **(B_eq)²** (dose ratio 144 vs field ratio
-  13.8, exponent ln144/ln13.8 ≈ 1.9): `dose ≈ 10.4 rad/h × (B_eq / 31 µT)²`.
-- Outer/inner ratio: ~0.1 for a torus-driven (Jupiter-style) architecture
-  (150/1500), ~0.2 for an Earth-style wind-fed outer zone (2.2/10.4).
+Two structural facts the exact machinery establishes:
 
-This applies **only** in the saturated regime (strong internal source); a
-source-starved or gap-starved belt sits *below* the ceiling and stays a plain
-regime call (e.g. Pandora's 0.4× Earth). Confidence is low either way — the
-exponent is a two-anchor empirical fit, not a derived law.
+1. **The ceiling's controlling variable is We/wpe ∝ B/√n_cold** (plus the
+   spectral and pitch indices) — *not* B alone and not B². Where the local
+   field is strong and the cold plasma thin (deep inner belts at small L),
+   the resonant energy runs to tens of MeV and the ~MeV ceiling is
+   effectively unbound — those belts are **source/loss-set, not K–P-set**.
+   Worked check (Polyphemus inner-belt peak, L = 2.07, B_local ≈ 129× Earth's
+   L=5 field): across torus densities 10²–5×10³ cm⁻³ the computed 1 MeV
+   ceiling is ≥ 5×10²–10¹⁶ × Earth's — never the binding constraint.
+2. **The K–P cap does not set the dose contrast between planets.** Mauk & Fox
+   find Earth, Jupiter and Uranus all *at* comparable differential caps near
+   ~0.1–1 MeV, yet their doses differ by orders of magnitude: the dose is the
+   spectrally-integrated, shield-transported quantity, dominated by the
+   **hardness of the tail** above the shield transmission cutoff (a 1 MeV
+   electron's CSDA range ≈ 2.0 mm Al) and by belt size. The community-standard
+   transport is SHIELDOSE-2 (Seltzer
+   [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+   [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S));
+   textbook free-field factor ≈ 2.3×10⁻⁸ rad(Si) per e⁻ cm⁻² at 1 MeV,
+   de-rated ~10× behind ~2.5 mm Al.
+
+**Practical rad/h recipe (corrected status).** For a source-saturated
+Jupiter-architecture system, interpolate between the two audited saturated
+*dose anchors* — Earth 31 µT → 10.4 rad/h, Jupiter 428 µT → ~1500 rad/h —
+`dose ≈ 10.4 × (B_eq/31 µT)^1.9`. This is an **empirical dose-anchor
+interpolation** that bundles the hardness + belt-size effects; it is *not*
+the K–P scaling (an earlier revision mislabeled it so — retracted). Outer/inner
+ratio ~0.1 torus-driven (Jupiter), ~0.2 wind-fed (Earth). Then apply the two
+hard checks: (a) the chosen intensity must sit below the computed K–P ceiling
+at the belt's (B, L, n_cold) via `kp_limit.py` (Polyphemus 300 rad/h ≈ 29×
+Earth ≪ ceiling ≥ 5×10²× Earth at the densest plausible torus — passes); and
+(b) source-starved / gap-starved belts sit *below* any of this and stay plain
+regime calls (Pandora 0.4× Earth). Confidence remains low — the interpolation
+exponent is a two-anchor fit, and n_cold for a fiction torus is a stated
+assumption — but every factor is now mechanistic, pinned, and bounded.
 
 ## Part C — mapping to Kerbalism
 
@@ -346,8 +380,26 @@ a documented regime call rather than a computed number.
   Origin of the magnetopause / pressure-balance concept.
 - **Shue et al. 1997 / 1998**, JGR 102, 9497 (`1997JGR...102.9497S`) / JGR 103, 17691
   (`1998JGR...10317691S`). Empirical magnetopause standoff + shape under varying wind.
-- **Kennel & Petschek 1966**, JGR 71, 1 (`1966JGR....71....1K`). The stably-trapped
+- **Kennel & Petschek 1966**, JGR 71, 1 ([`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K)). The stably-trapped
   flux limit — the source-independent ceiling on belt intensity. Load-bearing for Part B.
+- **Summers, Tang & Thorne 2009**, JGRA 114, A10210 ([`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S));
+  **Summers et al. 2014**, JGRA 119, 6313 ([`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+  The relativistic K–P formulation (eqs A1–A8) and the ~E⁻¹ limited spectrum
+  (relativistic coefficient 2× non-relativistic). Both paywalled, no preprint —
+  equations recovered via the Mauk & Fox Zenodo software below.
+- **Mauk & Fox 2010**, JGRA 115, A12220 ([`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)).
+  The cross-planet differential K–P framework: Earth/Jupiter/Uranus at the cap,
+  Neptune below (injection-starved), Saturn below (material losses). Paywalled;
+  **their open implementation** ([Zenodo 10.5281/zenodo.4782323](https://zenodo.org/records/4782323),
+  `2021zndo...4782323M`) is cached (`_papers/mauk_fox_KP.nb` + run) and ported to
+  `scripts/refs/kp_limit.py` (validated to ≤0.05 % on 11 printed intermediates).
+- **Mourenas et al. 2024**, JGRA 129, e32193 ([`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
+  Independent confirmation of the ~3 wave-power-gain criterion (ELFIN).
+- **Seltzer 1979 / 1992** (SHIELDOSE / SHIELDOSE-2,
+  [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+  [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
+  The standard electron/proton fluence → dose-behind-Al transport — the reason
+  dose contrast is set by spectral hardness, not the ~1 MeV differential cap.
 - **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* (`1974pdrb.book.....S`).
   Radial-diffusion transport that populates the belts.
 - **Lenchek et al. 1961**, JGR 66, 4027 (`1961JGR....66.4027L`). CRAND inner-belt source.
