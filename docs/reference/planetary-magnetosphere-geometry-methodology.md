@@ -93,8 +93,26 @@ stability `CmCk = L·R_p·w_i/(3·v_g)` (wave gain 3; independently confirmed by
 Mourenas 2024 [`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
 The limited spectrum is ~E⁻¹ (relativistic coefficient 2× non-relativistic;
 Summers 2014 [`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
-The port reproduces the notebook's Earth L=5 run to ≤0.05 % on 11 printed
-intermediates (w_i = 0.6582 vs 0.658455, CmCk peak 0.6076 vs 0.6079 at 103 keV).
+
+**Validation (all five magnetized planets).** With the three source papers in
+the local cache (AGU's 24-month free-access archive; owner-downloaded PDFs in
+`docs/phase3/_papers/`), the port's normalisations are the *published* Summers
+2009 A2/A3 prefactors, and the notebook's Earth L=5 printed intermediates are
+reproduced to ~10⁻⁶ (w_i 0.658455, CmCk peak 0.607879 at 102.9 keV — exact to
+their printed digits). The Mauk & Fox per-planet analyses (their Table 1
+spectra + per-figure B/N/D) are then reproduced at the level their figures
+state:
+
+| Case (their figure) | Their finding | Our CmCk peak |
+|---|---|---|
+| Earth L=4 (Fig 7) | well below the limit | 0.28 ✓ |
+| Earth L=5 (Fig 5) | 0.60, near the limit | 0.6079 (exact) |
+| Earth L=6 (Fig 7) | near the limit | 1.46 ✓ |
+| Uranus L=4.73 (Fig 8, N=5) | matched/exceeded | 1.11 ✓ |
+| Jupiter L=8.3 (Fig 9, N=200, D=3) | near the limit | 0.68 ✓ |
+| Neptune L=7.4 (Fig 11, N=0.3) | ~30× below at 1 MeV | peak 0.91; 1 MeV factor 27.8 ✓ |
+
+These run in the module's `__main__` self-test.
 
 Two structural facts the exact machinery establishes:
 

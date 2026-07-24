@@ -13,18 +13,26 @@ peak of CmCk touches 1). CmCk >= 1 means the spectrum sits at/above the KP limit
 
 NOTE on norm1/norm2: the notebook lost the analytic definitions of its 'norm1'
 (eta normalisation) and 'norm2' (anisotropy normalisation) from kernel state --
-they appear only via ReplaceAll, never with '='. They are reconstructed here and
-validated against the notebook's own printed anchors (see the __main__ self-test):
-  * norm2 = -kr / (me * (We - wr))       -- reproduces Out[256]/Out[262] exactly.
-  * norm1 = (2*pi^2 * 0.16 / n_cold) * pR0(wr)
-        pR0 = resonant momentum at pperp=0; the ratio norm1/pR0 is constant in wr
-        (verified across the whole sweep). The dimensionless coefficient
-        2*pi^2*0.16 = 3.1582 is calibrated to the notebook's printed
-        norm1(0.1 We) = -1.6772e-18 anchor (Out[232]); with it, wi(0.03 We) and
-        the CmCk peak come out as INDEPENDENT checks (both match to ~0.05%).
-        The coefficient is assumed body-independent (velocity-space normalisation);
-        only Earth L=5 is available to calibrate, so far-from-Earth plasma regimes
-        (very different We/wpe) may carry small residual error here.
+they appear only via ReplaceAll, never with '='. Both are now taken directly from
+the published Summers, Tang & Thorne 2009 Appendix A (the paper PDF is cached at
+docs/phase3/_papers/summers_tang_thorne_2009_kp_limit.pdf):
+  * norm1 = pi * me * (wr - We) / (n_cold * kr)   -- the A2 prefactor
+        (pi me / N0) * ((wr - |We|)/k). Matches the notebook's printed
+        norm1(0.1 We) anchor (Out[232]) to 7e-7 -- 35x better than the earlier
+        single-anchor reconstruction, and it makes wi(0.03 We) and the CmCk
+        peak land on the printed values to ~1e-5.
+  * norm2 = -kr / (me * (We - wr))                -- the A3 prefactor
+        k / (me * (wr - |We|)); identical to the earlier reconstruction.
+(History: before the paper was obtained, both were reverse-engineered from the
+notebook's printed numbers; the A2/A3 forms confirmed that reconstruction --
+the fitted coefficient 3.1582 was pi to 0.5%, the drift being the relativistic
+gamma_R in the reconstructed pR0 that the exact form does not carry.)
+
+Per-planet validation: the __main__ self-test reproduces the notebook's Earth
+L=5 run exactly, then checks the Mauk & Fox 2010 published per-planet analyses
+(their Table 1 spectra + the per-figure B/N/D choices; the paper PDF is cached)
+at the factor level their figures support: Earth L=4/6, Uranus L=4.73,
+Jupiter L=8.3 (D=3), Neptune L=7.4.
 """
 import warnings
 import numpy as np
@@ -37,14 +45,10 @@ ME = 9.1e-28       # electron mass [g]
 C  = 3e10          # speed of light [cm/s]
 KEV_ERG = 1.61e-9  # 1 keV in erg (notebook's conversion constant)
 
-# calibrated dimensionless eta-normalisation coefficient (see module docstring)
-NORM1_COEFF = 2 * np.pi**2 * 0.16   # = 3.1582
-
-
 @dataclass
 class KPParams:
     """Inputs for one body/L-shell. Field/plasma in the notebook's units."""
-    MB: float       # dipole moment [Gauss * Rp^3]
+    MB: float       # dipole moment [Gauss * Rp^3] (ignored if B_nT given)
     L: float        # L-shell
     Rp: float       # body radius [cm]
     bsub: float     # storm depression subtracted from B [nT]
@@ -56,6 +60,9 @@ class KPParams:
     Eo: float       # keV
     gam2: float
     ss: float       # pitch-angle index: angular term (pperp/p)^(2*ss)
+    B_nT: float = None   # direct equatorial field [nT]; overrides MB/L^3 - bsub
+    D: float = None      # convective growth length in Rp for CmCk; default = L
+                         # (Mauk & Fox use D=3 for Jupiter, plasma scale height)
 
 
 class _KP:
@@ -64,7 +71,7 @@ class _KP:
     def __init__(self, p: KPParams):
         self.p = p
         # --- field & plasma (recipe "Field / plasma inputs") ---
-        self.B = 1e5 * p.MB / p.L**3 - p.bsub                 # [nT]
+        self.B = p.B_nT if p.B_nT is not None else 1e5 * p.MB / p.L**3 - p.bsub  # [nT]
         self.We = QE * self.B * 1e-5 / (ME * C)               # gyrofreq [rad/s]
         self.wpe = np.sqrt(4 * np.pi * p.n_cold * QE**2 / ME) # plasma freq [rad/s]
         self.a = (self.We / self.wpe)**2                      # key cold-plasma ratio
@@ -166,10 +173,10 @@ class _KP:
     def Ac(self, wr):      # critical anisotropy wr/(We-wr) (In[263])
         return wr / (self.We - wr)
 
-    def norm1(self, wr):   # reconstructed eta normalisation (see module docstring)
-        return (NORM1_COEFF / self.p.n_cold) * self.pR(wr, 0.0)
+    def norm1(self, wr):   # eta normalisation = Summers 2009 A2 prefactor (pi me/N0)(wr-We)/k
+        return np.pi * ME * (wr - self.We) / (self.p.n_cold * self.kr(wr))
 
-    def norm2(self, wr):   # reconstructed anisotropy normalisation (see module docstring)
+    def norm2(self, wr):   # anisotropy normalisation = Summers 2009 A3 prefactor k/(me(wr-We))
         return -self.kr(wr) / (ME * (self.We - wr))
 
     def vg(self, wr):      # group speed (full dispersion form, In[277]; used by CmCk table)
@@ -185,7 +192,8 @@ class _KP:
             * (self.norm2(wr) * t2 / t1 - self.Ac(wr))
 
     def cmck(self, wr):    # KP marginal-stability parameter (Summers Eq 21; In[283])
-        return self.wi(wr) * self.p.L * self.p.Rp / (3 * self.vg(wr))
+        D = self.p.D if self.p.D is not None else self.p.L
+        return self.wi(wr) * D * self.p.Rp / (3 * self.vg(wr))
 
 
 def kp_cmck(params: KPParams):
@@ -249,9 +257,9 @@ if __name__ == "__main__":
     jtest = (pperptest**2) * kp.fpa2(pperptest, 0.0) * KEV_ERG
     allok &= check("j spot-check (E=100keV)", jtest, 26292.5, 1e-5)
 
-    # 3. reconstructed norm1 anchor (Out[232]): norm1(0.1 We)
-    allok &= check("norm1(0.1 We)", kp.norm1(0.1 * kp.We), -1.6772188670355305e-18, 1e-3)
-    # reconstructed norm2 anchors (Out[256] norm2*temp2, Out[262] norm2*temp2/temp1)
+    # 3. norm1 anchor (Out[232]): the exact Summers A2 prefactor matches to ~7e-7
+    allok &= check("norm1(0.1 We)", kp.norm1(0.1 * kp.We), -1.6772188670355305e-18, 1e-5)
+    # norm2 anchors (Out[256] norm2*temp2, Out[262] norm2*temp2/temp1)
     n2t2 = kp.norm2(0.1 * kp.We) * kp._integ(kp.Integrand2, 0.1 * kp.We, imult=10000)
     allok &= check("norm2*temp2 (0.1 We)", n2t2, -1.36463e13, 1e-4)
     aniso = kp.norm2(0.9 * kp.We) * kp._integ(kp.Integrand2, 0.9 * kp.We, imult=3000) \
@@ -259,12 +267,49 @@ if __name__ == "__main__":
     allok &= check("anisotropy A (0.9 We)", aniso, 0.29943, 1e-3)
 
     # 4. growth rate wi at wr = 0.03 We (notebook In[269] block prints wi = 0.658455)
-    allok &= check("wi (wr=0.03 We)", kp.wi(0.03 * kp.We), 0.658455, 1e-2)
+    allok &= check("wi (wr=0.03 We)", kp.wi(0.03 * kp.We), 0.658455, 1e-3)
 
     # 5. CmCk peak (~0.608 near E~100 keV; notebook table row 40: 0.607879 @ 102.923 keV)
     E, cm = kp_cmck(earth)
     ipk = int(np.argmax(cm))
-    allok &= check("CmCk peak", cm[ipk], 0.607879, 1e-2)
+    allok &= check("CmCk peak", cm[ipk], 0.607879, 1e-3)
     allok &= check("E at CmCk peak [keV]", E[ipk], 102.923, 1e-2)
+
+    # 6. Mauk & Fox 2010 per-planet analyses (Table 1 spectra; B/N/D from the
+    #    per-planet figures; PDF cached). Their published results are figures,
+    #    so the targets are factor-level bands read from them:
+    #      Earth L=4  (Fig 7): well below the limit          -> peak in [0.1, 0.8]
+    #      Earth L=6  (Fig 7): near the limit                -> peak in [0.3, 2]
+    #      Uranus L=4.73 (Fig 8, N=5): matched/exceeded      -> peak in [0.5, 5]
+    #      Jupiter L=8.3 (Fig 9, N=200, D=3): near the limit -> peak in [0.3, 3]
+    #      Neptune L=7.4 (Fig 11, N=0.3): peak ~1 at low E,
+    #        but ~30x below near 1 MeV                       -> peak in [0.3, 3]
+    #                                                           and peak/cm(1MeV) in [10, 90]
+    def band(name, val, lo, hi):
+        ok = lo <= val <= hi
+        print(f"[{'PASS' if ok else 'FAIL'}] {name:28s} computed={val:.4g}  expected in [{lo}, {hi}]")
+        return ok
+
+    def peak(pp):
+        Ex, cmx = kp_cmck(pp)
+        return Ex, cmx, float(np.max(cmx))
+
+    _, _, pk = peak(KPParams(MB=0, L=4, Rp=6.37e8, bsub=0, n_cold=40, B_nT=376,
+                             Const=2.34e7, kT=0.001, gam1=1.290, Eo=1324, gam2=6.714, ss=0.3))
+    allok &= band("Earth L=4 CmCk peak", pk, 0.1, 0.8)
+    _, _, pk = peak(KPParams(MB=0, L=6, Rp=6.37e8, bsub=0, n_cold=8, B_nT=69,
+                             Const=7.96e6, kT=0.001, gam1=1.324, Eo=1715, gam2=5.676, ss=0.3))
+    allok &= band("Earth L=6 CmCk peak", pk, 0.3, 2.0)
+    _, _, pk = peak(KPParams(MB=0, L=4.73, Rp=2.5559e9, bsub=0, n_cold=5, B_nT=217,
+                             Const=6.5e6, kT=0.001, gam1=1.101, Eo=1189, gam2=5.604, ss=0.3))
+    allok &= band("Uranus L=4.73 CmCk peak", pk, 0.5, 5.0)
+    _, _, pk = peak(KPParams(MB=0, L=8.3, Rp=7.1492e9, bsub=0, n_cold=200, B_nT=747, D=3,
+                             Const=1.0e6, kT=0.001, gam1=0.8367, Eo=2546, gam2=1.741, ss=0.3))
+    allok &= band("Jupiter L=8.3 D=3 CmCk peak", pk, 0.3, 3.0)
+    En, cmn, pk = peak(KPParams(MB=0, L=7.4, Rp=2.4764e9, bsub=0, n_cold=0.3, B_nT=35,
+                                Const=5.49e6, kT=5.2, gam1=1.560, Eo=625, gam2=2.745, ss=0.3))
+    allok &= band("Neptune L=7.4 CmCk peak", pk, 0.3, 3.0)
+    cm1mev = float(np.interp(1000.0, En, cmn))
+    allok &= band("Neptune peak/CmCk(1MeV)", pk / cm1mev, 10.0, 90.0)
 
     print("\n" + ("ALL CHECKS PASSED" if allok else "SOME CHECKS FAILED"))

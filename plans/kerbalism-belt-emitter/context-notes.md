@@ -85,3 +85,23 @@ bundled (KP plateau ratio ≈ O(1)) × (hardness factor) × (shield transport);
 the upgrade decomposes it into stated factors with the KP plateau computed
 exactly. The Polyphemus rad/h remains a calibrated regime call, but each
 factor is now mechanistic and pinned.
+
+## 2026-07-24 — validation gap closed (owner-downloaded PDFs)
+
+- The three paywalled-to-bots papers are free (AGU 24-month archive); owner
+  downloaded them and they now live in docs/phase3/_papers/ (gitignored):
+  mauk_fox_2010_electron_belts.pdf, summers_tang_thorne_2009_kp_limit.pdf,
+  summers_2014_limiting_spectrum.pdf.
+- Summers 2009 Appendix A settled the reconstructed normalisations: norm1 is
+  EXACTLY the A2 prefactor pi*me*(wr-We)/(N0*kr) (the fitted 3.1582 was pi to
+  0.5%, drift = the relativistic gamma_R in the reconstructed pR0), norm2 is
+  exactly the A3 prefactor. With the exact forms the Earth L=5 anchors match
+  to ~1e-6/1e-7 (printed-digit exact) — the single-anchor-coefficient caveat
+  in kp_limit.py is retired.
+- Mauk & Fox Table 1 (per-planet spectra) + per-figure B/N/D extracted; the
+  module self-test now validates all five planets at figure level: Earth L=4
+  0.28 (below) / L=5 0.6079 (exact) / L=6 1.46 (near), Uranus 1.11 (at),
+  Jupiter L=8.3 D=3 0.68 (near), Neptune peak 0.91 with 1 MeV factor 27.8
+  below (paper: ~30). Their Jupiter L=3 ">=20x below KP" statement also
+  directly confirms our "deep strong-field inner belts are not K-P-bound"
+  regime call. B_nT direct-field + D override params added for these cases.
