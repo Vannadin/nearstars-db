@@ -298,9 +298,15 @@ Distinct from the mod development phases in
 - **Curation Phase 2** (paper-by-paper): Per-measurement curation from
   the literature when a system is being implemented in-game with
   Principia. See `phase2/trappist_1/` for a worked example.
-- **Curation Phase 3** (future): Synthesized values for in-game
-  representation (PQS terrain color, atmospheric tinting). Not yet
-  active. Will live alongside Phase 2 in the schema, distinct file set.
+- **Curation Phase 3** (active): Synthesized cfg-ready values for
+  in-game representation (PQS terrain color, atmospheric tinting,
+  rotation, interior), drafted per-system via the `nearstars-phase3`
+  skill and rendered to `docs/phase3/<slug>.html`. Lives alongside
+  Phase 2 in the schema, distinct file set (`phase3/<system>/`).
+- **Curation Phase 4** (active): Owner art-direction gate layer that
+  freezes final values for emit, driven by the `nearstars-phase4`
+  skill. Per-decision boards in `phase4/<system>.yaml`. See §2 for the
+  phase4/ root taxonomy.
 
 ---
 
@@ -322,7 +328,7 @@ git config user.email "vannadin00@gmail.com"
 ```
 
 Co-author lines for AI assistants are welcome (`Co-Authored-By: Claude
-Sonnet 4.6 <noreply@anthropic.com>`) but the primary author line stays
+Opus 4.8 <noreply@anthropic.com>`) but the primary author line stays
 the same.
 
 ### 5.2 Semantic commits
