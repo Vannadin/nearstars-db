@@ -52,3 +52,36 @@
 - Viewer builder now imports load_nearstars_specs — the Pandora/Polyphemus
   presets come from the gated board (same single source as the emitter); the
   hand-carried artifact sketch values are gone.
+
+## 2026-07-24 — owner challenge: replace the B² interpolation with the exact recipe
+
+Owner: "단순 보간으로 계산한거야? 방법론 규율대로 정확한 값을 구하는 법을 조사해줘."
+Mode A methodology upgrade, three research legs (solo Opus agents):
+
+1. **K–P formula recovered exactly** — not from the paywalled papers but from
+   Mauk & Fox's own open Zenodo software (2021zndo...4782323M, doi
+   10.5281/zenodo.4782323): the flexible spectral shape, Summers 2009 A4–A8
+   relativistic resonance, A1/A2 growth integrals, and the marginal-stability
+   condition CmCk = L·Rp·wi/(3·vg) with wave gain 3 (independently confirmed by
+   Mourenas 2024, 2024JGRA..12932193M). Cached: mauk_fox_KP.nb + rendered run
+   (validation targets: wi=0.658455, CmCk peak 0.608 for Earth L=5) +
+   kennel_petschek_recipe.md. Key scaling finding: the limit's controlling
+   variable is We/wpe ∝ B/√n_cold + spectral/pitch indices — **NOT B²**.
+2. **Flux→dose leg (the reframing)** — no single quotable per-intensity factor
+   exists in ADS abstracts; the standard method is SHIELDOSE-2 (Seltzer
+   1979ITNS...26.4896S, 1992STIN...9315580S). Load-bearing physics: Mauk & Fox
+   show Earth/Jupiter/Uranus sit at COMPARABLE differential K–P caps near
+   1 MeV, yet doses differ by orders — **dose contrast is driven by spectral
+   hardness (the tail above the ~2 mm-Al transmission cutoff; 1 MeV e⁻ CSDA
+   range ≈ 2.0 mm Al) and belt size, not the 1 MeV value**. Textbook free-field
+   factor 2.3e-8 rad(Si)/(e·cm⁻²) at 1 MeV, de-rated ~10× behind ~2.5 mm Al.
+   Recommendation adopted: anchor-ratio calibration (game Earth 10.4 rad/h)
+   with the hardness factor made explicit, not a naked 1-MeV ratio.
+3. **Python port** of the Zenodo notebook → scripts/refs/kp_limit.py
+   (agent running; validates against the notebook's printed intermediates).
+
+Implication for the methodology: the B² two-anchor interpolation empirically
+bundled (KP plateau ratio ≈ O(1)) × (hardness factor) × (shield transport);
+the upgrade decomposes it into stated factors with the KP plateau computed
+exactly. The Polyphemus rad/h remains a calibrated regime call, but each
+factor is now mechanistic and pinned.

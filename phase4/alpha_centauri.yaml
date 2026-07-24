@@ -656,10 +656,13 @@ decisions:
       gap at 3.53), outer belt L 4.2–10 (owner pick 2026-07-24: Cassandra 8.4 submerged → its "intermediate" radiation; the
       alternative Cassandra-swept 8.4 cut was declined), all well inside the pause (nose 23.5 R_p from the magnetosphere row;
       Chaos at 21 is belt-free but inside). Belt shapes = the Kerbalism SDF numerically fitted to these dipole drift shells
-      (fit_belts.py, IoU 0.97 inner / 0.97 outer; loss-cone cut 1.05 R_p). Intensities via the methodology's saturated-regime
-      calibration (Part B): the Dante torus saturates the magnetosphere at the Kennel–Petschek ceiling, so peak dose follows the
-      two-anchor B² interpolation — 10.4 × (170/31)² ≈ 313 → radiation_inner 300 rad/h (rounded); outer = 0.1× inner = 30 rad/h
-      (torus-driven Jupiter-style outer/inner ratio). Dipole tilt not yet decided → geomagnetic_pole_lat 80 assumed (~10°,
+      (fit_belts.py, IoU 0.97 inner / 0.97 outer; loss-cone cut 1.05 R_p). Intensities via the methodology's saturated
+      dose-anchor interpolation (Part B, corrected 2026-07-24): between Earth (31 µT → 10.4 rad/h) and Jupiter (428 µT → ~1500),
+      exponent 1.9 (the two-anchor fit) — 10.4 × (170/31)^1.9 ≈ 265 → radiation_inner 300 rad/h (rounded regime call); outer =
+      0.1× inner = 30 rad/h (torus-driven Jupiter-style outer/inner ratio). This interpolation is an empirical dose-anchor fit
+      (bundles spectral hardness + belt size), NOT the K–P scaling; the computed K–P ceiling check (kp_limit.py, the ported
+      Mauk & Fox implementation) passes with wide margin — at the belt peak (L 2.07, B_local ~129× Earth L=5) the ~MeV ceiling
+      is ≥5×10²× Earth's even at the densest plausible torus density, vs the chosen ~29× Earth. Dipole tilt not yet decided → geomagnetic_pole_lat 80 assumed (~10°,
       Jupiter-analog); follows magnetic_dipole_tilt_deg if/when gated. All lengths in R_p.
     narrative_ko: >
       Dante 화산 SO₂/황 토러스(Io 아날로그, Dante magnetic_field 행의 인과고리)가 먹이는 목성형 2벨트계. 구조는 캐넌 위성
@@ -667,9 +670,12 @@ decisions:
       슬롯 3.0–4.2(Pandora 보호 gap 3.53), 외대 L 4.2–10(오너 선택 2026-07-24: Cassandra 8.4 잠김 → "intermediate" 방사선.
       Cassandra-스윕 8.4 컷 대안은 기각), 전부 pause(노즈 23.5 R_p, magnetosphere 행) 안(Chaos 21은 벨트 밖·자기권 안).
       벨트 모양 = 이 쌍극자 드리프트 셸에 Kerbalism SDF를 수치 피팅(fit_belts.py, IoU 내대 0.97/외대 0.97, 손실원뿔 컷
-      1.05 R_p). 강도는 방법론 Part B 포화-레짐 캘리브레이션: Dante 토러스가 자기권을 Kennel–Petschek 상한까지 포화시키므로
-      2-앵커 B² 보간 — 10.4 × (170/31)² ≈ 313 → radiation_inner 300 rad/h(반올림), 외대 = 내대의 0.1배 = 30 rad/h(토러스-구동
-      목성형 외/내 비). 쌍극 기울기 미확정 → geomagnetic_pole_lat 80 가정(~10°, 목성 아날로그), magnetic_dipole_tilt_deg
+      1.05 R_p). 강도는 방법론 Part B 포화 선량-앵커 보간(2026-07-24 교정): 지구(31 µT → 10.4 rad/h)↔목성(428 µT → ~1500)
+      사이 지수 1.9(2-앵커 적합) — 10.4 × (170/31)^1.9 ≈ 265 → radiation_inner 300 rad/h(반올림 regime call), 외대 = 내대의
+      0.1배 = 30 rad/h(토러스-구동 목성형 외/내 비). 이 보간은 경험적 선량-앵커 적합(스펙트럼 경도+벨트 크기를 뭉뚱그림)이지
+      K–P 스케일링이 아니며, 계산된 K–P 상한 체크(kp_limit.py, Mauk & Fox 원저자 구현 포팅)는 큰 여유로 통과 — 벨트 피크
+      (L 2.07, 국소장 지구 L=5의 ~129배)에서 ~MeV 상한은 가장 조밀한 토러스 밀도 가정에서도 지구의 5×10²배 이상 vs 선택값
+      ~29배. 쌍극 기울기 미확정 → geomagnetic_pole_lat 80 가정(~10°, 목성 아날로그), magnetic_dipole_tilt_deg
       확정 시 따름. 길이 단위 전부 R_p.
     fields:
       - { name: radiation_model, value: nearstars_polyphemus, op: set }
@@ -703,17 +709,19 @@ decisions:
       evidence: >
         Derived via planetary-magnetosphere-geometry-methodology: geometry = dipole drift shells bounded by the canon moon
         L-shells (the same moon-anchoring validated on Uranus in solar-system-radiation-belts.md), numerically fitted to the
-        Kerbalism SDF (IoU .97/.97); intensity = Part B saturated-regime calibration (Kennel-Petschek ceiling, two-anchor B²
-        interpolation between Earth 31µT/10.4 and Jupiter 428µT/~1500) with the Dante torus as the stated saturating source,
-        outer/inner 0.1 per the torus-driven Jupiter ratio. Canon consistency: Hades sits at the inner-belt peak (its
+        Kerbalism SDF (IoU .97/.97); intensity = Part B saturated dose-anchor interpolation (Earth 31µT/10.4 ↔ Jupiter
+        428µT/~1500, exponent 1.9) with the Dante torus as the stated saturating source, outer/inner 0.1 per the torus-driven
+        Jupiter ratio, PLUS the computed Kennel-Petschek ceiling check (kp_limit.py port of the authors' implementation,
+        validated ≤0.05%): the chosen 300 rad/h sits far below the ceiling at any plausible torus density. Canon consistency: Hades sits at the inner-belt peak (its
         environment.radiation row), Pandora in the slot (its magnetosphere row's "between-belts gap"), Cassandra submerged
         intermediate, Chaos belt-free inside the pause. rad/h values are conf-low regime calls (tuning targets), consistent
         with the moons' environment.radiation ladder.
       evidence_ko: >
         planetary-magnetosphere-geometry-methodology로 도출: 지오메트리 = 캐넌 위성 L-셸이 경계 짓는 쌍극자 드리프트 셸
         (solar-system-radiation-belts.md에서 천왕성으로 검증한 위성-앵커링과 동일 수법)을 Kerbalism SDF에 수치 피팅
-        (IoU .97/.97). 강도 = Part B 포화-레짐 캘리브레이션(Kennel–Petschek 상한, 지구 31µT/10.4 ↔ 목성 428µT/~1500 2-앵커
-        B² 보간), 포화 소스 = Dante 토러스 명시, 외/내 비 0.1 = 토러스-구동 목성 비. 캐넌 정합: Hades = 내대 피크
+        (IoU .97/.97). 강도 = Part B 포화 선량-앵커 보간(지구 31µT/10.4 ↔ 목성 428µT/~1500, 지수 1.9), 포화 소스 = Dante
+        토러스 명시, 외/내 비 0.1 = 토러스-구동 목성 비, 그리고 계산된 Kennel–Petschek 상한 체크(원저자 구현 포팅
+        kp_limit.py, ≤0.05% 검증) — 선택값 300 rad/h는 어떤 그럴듯한 토러스 밀도에서도 상한을 크게 밑돎. 캐넌 정합: Hades = 내대 피크
         (그 environment.radiation 행), Pandora = 슬롯("두 벨트 사이 gap"), Cassandra = 잠김 intermediate, Chaos = 벨트 밖·
         자기권 안. rad/h 값은 conf-low regime call(튜닝 타깃)이며 위성들의 environment.radiation 사다리와 정합.
 
