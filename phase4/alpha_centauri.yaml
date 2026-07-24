@@ -1821,14 +1821,12 @@ decisions:
     narrative: >
       Pandora is the reason the whole system matters: a slightly-smaller-than-Earth moon at 0.8 g, the Na'vi
       homeworld, and the only habitable body anywhere in NearStars. Formally it is the third moon of Alpha
-      Centauri A b, keeping the Avatar name as its cultural name in descriptions only. Being pure fiction with no
-      real detection behind it, discovery works the hard way: on every difficulty the player has to find it by
-      observation.
+      Centauri A b, keeping the Avatar name as its cultural name in descriptions only. It is pure fiction, with no
+      real detection behind it.
     narrative_ko: >
       Pandora는 이 계 전체가 존재하는 이유다. 지구보다 약간 작은 0.8g 위성이자 Na'vi의 모천이고, NearStars를
       통틀어 유일한 거주가능 천체다. 공식적으로는 Alpha Centauri A b의 셋째 위성이며, 아바타 이름은 설명
-      텍스트에만 붙는 문화명으로 남는다. 실제 검출이 뒤에 없는 순수 픽션이라 발견은 어려운 길로 간다. 모든
-      난도에서 플레이어가 관측으로 직접 찾아야 한다.
+      텍스트에만 붙는 문화명으로 남는다. 실제 검출이 뒤에 없는 순수 픽션이다.
     fields:
       - { name: body_type, value: "거주가능 지구형 위성 (sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km)", op: set }
       - { name: designation, value: "Alpha Centauri A b III", op: set }
@@ -1847,8 +1845,8 @@ decisions:
     status: gated
     driver: [canon, physics]
     narrative: >
-      The canon hands us four body numbers that cannot all be true at once, so the owner kept the two a visitor
-      would actually feel (the size and the 0.8 g gravity) and derived the rest, landing the density realistically
+      The canon hands us four body numbers that cannot all be true at once, so the two a visitor would actually
+      feel (the size and the 0.8 g gravity) are kept and the rest derived, landing the density realistically
       between Mars and Earth. The day is 32 hours, tide-locked to Polyphemus, chosen over the canon's 27 because the
       wider orbit keeps the ocean's tidal budget safely below runaway. The axis tilt is simply the orbit's own ~10°
       lean. For a locked moon the canon's "29°" never described a free spin axis anyway. Inside, radioactive decay
@@ -1857,14 +1855,15 @@ decisions:
       but real to the orbit. The floating Hallelujah mountains are lore, not bulk physics. The whole configuration
       was re-simulated and holds.
     narrative_ko: >
-      캐넌은 동시에 참일 수 없는 네 개의 물성 값을 건넨다. 그래서 오너는 방문자가 실제로 체감할 두 값(크기와
-      0.8g 중력)을 지키고 나머지를 도출했으며, 밀도는 화성과 지구 사이에 현실적으로 안착했다. 하루는 32시간,
-      Polyphemus에 조석고정이다. 캐넌의 27시간 대신 고른 이유는 더 넓은 궤도가 바다의 조석 예산을 폭주 아래로
-      안전하게 지켜서다. 자전축 기울기는 궤도 자체의 ~10° 기울임 그대로다. 고정된 위성에게 캐넌의 "29°"는
-      애초에 자유 자전축을 뜻한 적이 없다. 내부에서는 방사성 붕괴와 부드러운 조석 반죽이 암석을 데워 화산, 빠른
-      대륙이동, 자기 다이나모를 전부 같은 불로 굴리고, 조석은 달을 희미하게 계란형으로 당긴다. 눈에는 안 보여도
-      궤도에는 실재한다. 떠 있는 할렐루야 산맥은 lore이지 벌크 물리가 아니다. 이 구성 전체를 재시뮬레이션으로
-      검증했고, 버틴다.
+      캐넌이 주는 네 개의 물성 값은 동시에 다 맞을 수가 없다. 그래서 방문자가 실제로 체감하는 두 값, 크기와
+      0.8g 중력만 살리고 나머지는 거기서 도출했다. 그 결과 밀도는 화성과 지구 사이 현실적인 값에 자리잡았다.
+      하루는 32시간이고 Polyphemus에 조석 고정돼 있다. 캐넌의 27시간 대신 이 값을 고른 건, 궤도가 더 넓어야
+      바다에 걸리는 조석 부담이 폭주하지 않고 안전하게 유지되기 때문이다. 자전축 기울기는 궤도가 기운 ~10°
+      그대로다. 조석 고정된 위성에게 캐넌의 "29°"는 애초에 자유로운 자전축을 가리킨 적이 없다. 내부에서는
+      방사성 붕괴와 잔잔한 조석 가열이 암석을 데워, 화산과 빠른 대륙이동과 자기 다이나모를 모두 같은 열원으로
+      돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 눈에는 안 보여도 궤도에는 실재한다. 떠 있는
+      할렐루야 산맥은 설정(lore)일 뿐 벌크 물리가 아니다. 이 구성 전체를 재시뮬레이션으로 다시 검증했고, 결과는
+      안정적이었다.
     fields:
       - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
       - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
@@ -1878,6 +1877,7 @@ decisions:
       - { name: geopotential_c22, value: 6.2e-4, op: set, note: "조석 삼축; 편평 0.83%(a−c≈47 km), 시각상 구, 궤도 섭동에만 실재" }
       - { name: age, value: 5.3, unit: Gyr, op: set }
       - { name: spin_axis_orientation, value: "orbit normal", op: set }
+    refs: ["docs/reference/mass-radius-relation-methodology.md", "docs/reference/body-figure-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md", "docs/reference/tidal-heating-methodology.md", "phase3/stability-sim/STABILITY_REPORT.md"]
     gate:
       criterion: [canon-consistency, physics]
       verdict: owner-override
@@ -1912,9 +1912,8 @@ decisions:
       The air is the canon's, kept faithfully: mostly nitrogen with oxygen, a heavy dose of carbon dioxide, a
       strange xenon richness, and toxic traces. At the surface the air runs about a tenth denser than Earth's. Raw
       sunlight out here would leave the moon frozen; it is the thick CO₂ greenhouse, a mild cousin of the Venus
-      mechanism, that
-      lifts the surface to livable warmth, with a gentle great-season swing as the parent planet rides its
-      eccentric orbit. So the habitability is honestly earned by the atmosphere, not by tides or a convenient star.
+      mechanism, that lifts the surface to livable warmth, with a gentle great-season swing as the parent planet
+      rides its eccentric orbit. So the habitability is honestly earned by the atmosphere, not by tides or a convenient star.
       Kerbals can breathe it (the game does not model toxicity) while the human-lethal chemistry survives as
       Kerbalism report lore. Full altitude profiles are generated at emit.
     narrative_ko: >
