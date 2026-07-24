@@ -265,6 +265,22 @@
 
 **출력.** validator: exit 0/1 + 행 단위 진단. 빌더: `docs/phase4/<system-slug>/*.html`.
 
+## 14. 방사선대 시각화 + Kerbalism emitter
+
+태양계 방사선대의 스톡 vs 물리 단면 렌더(위키)와 물리 근거 Kerbalism cfg 패치.
+감사 문서는 `solar-system-radiation-belts.md`.
+
+- `scripts/viz/render_belts.py` — 자오면 단면 PNG 렌더러. 인게임 Kerbalism
+  `RadiationModel` SDF를 그대로 재현(Unlicense 알고리즘).
+- `scripts/viz/render_belts_bodies.py` — 바디별 드라이버. `*_phys` 엔트리가 피팅된
+  벨트 지오메트리의 **단일 소스**(emitter도 여기서 읽음).
+- `scripts/viz/fit_belts.py` — 수치 피터. 쌍극자 드리프트-셸 타깃(r = L cos²λ,
+  loss-cone 컷)을 Nelder-Mead로 Kerbalism SDF 파라미터에 피팅, IoU로 채점.
+- `scripts/pipeline/emit_kerbalism_radiation.py` —
+  `dist/.../Patches/Kerbalism/NearStars-SolarSystemRadiation.cfg` 방출(RadiationModel +
+  RadiationBody 재바인드, 7바디, 클릭 가능한 ADS 출처 주석, 라운드트립 자가검증).
+  Kerbalism/ROKerbalism 메인테이너 업스트림 제안용.
+
 ## 스킬 디렉터리 배치
 
 라이브 스킬은 모두 `.claude/skills/<name>/` 아래에 둡니다. `.agents/skills/` 는 `<name>-workspace/` 빌드 환경과 gitignored Patreon-EA 스킬 (scatterer, eve, volumetrics) 전용입니다.

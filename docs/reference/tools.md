@@ -265,6 +265,22 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Output.** Validator: exit 0/1 + per-row diagnostics. Builder: `docs/phase4/<system-slug>/*.html`.
 
+## 14. Radiation-belt viz + Kerbalism emitter
+
+Solar-system radiation belts: stock-vs-physical cross-section renders (wiki) and the
+physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.md`.
+
+- `scripts/viz/render_belts.py` — meridian cross-section PNG renderer; reproduces the
+  in-game Kerbalism `RadiationModel` SDF exactly (Unlicense algorithm)
+- `scripts/viz/render_belts_bodies.py` — per-body driver; the `*_phys` entries are the
+  **single source of truth** for fitted belt geometry (consumed by the emitter too)
+- `scripts/viz/fit_belts.py` — numerical fitter: dipole drift-shell targets (r = L cos²λ,
+  loss-cone cut) → Kerbalism SDF parameters via Nelder-Mead, IoU-scored
+- `scripts/pipeline/emit_kerbalism_radiation.py` — emits
+  `dist/.../Patches/Kerbalism/NearStars-SolarSystemRadiation.cfg` (RadiationModel +
+  RadiationBody rebinds, 7 bodies, clickable ADS provenance comments, round-trip
+  self-check); intended as an upstream proposal to the Kerbalism/ROKerbalism maintainers
+
 ## Skills directory layout
 
 Live skills live under `.claude/skills/<name>/`. `.agents/skills/` is reserved for `<name>-workspace/` build environments and for gitignored Patreon-EA skills (scatterer, eve, volumetrics).
