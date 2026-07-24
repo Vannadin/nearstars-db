@@ -1819,14 +1819,13 @@ decisions:
     status: gated                  # facet-walk 2026-06-22
     driver: [classification]
     narrative: >
-      Pandora is the reason the whole system matters: a slightly-smaller-than-Earth moon at 0.8 g, the Na'vi
-      homeworld, and the only habitable body anywhere in NearStars. Formally it is the third moon of Alpha
-      Centauri A b, keeping the Avatar name as its cultural name in descriptions only. It is pure fiction, with no
-      real detection behind it.
+      Pandora is the most interesting body in the whole system: a slightly-smaller-than-Earth moon at 0.8 g, and
+      the only habitable body anywhere in NearStars. It is the third moon of Alpha Centauri A b, keeping the Avatar
+      name as its cultural name in descriptions only. It is pure fiction, with no real detection behind it.
     narrative_ko: >
-      Pandora는 이 계 전체가 존재하는 이유다. 지구보다 약간 작은 0.8g 위성이자 Na'vi의 모천이고, NearStars를
-      통틀어 유일한 거주가능 천체다. 공식적으로는 Alpha Centauri A b의 셋째 위성이며, 아바타 이름은 설명
-      텍스트에만 붙는 문화명으로 남는다. 실제 검출이 뒤에 없는 순수 픽션이다.
+      Pandora는 이 계 전체에서 가장 흥미로운 천체다. 지구보다 약간 작은 0.8g 위성이고, NearStars를 통틀어 유일한
+      거주가능 천체다. Alpha Centauri A b의 셋째 위성이며, 아바타 이름은 설명 텍스트에만 붙는 문화명으로 남는다.
+      실제 검출이 존재하지 않는 픽션 천체이다.
     fields:
       - { name: body_type, value: "거주가능 지구형 위성 (sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km)", op: set }
       - { name: designation, value: "Alpha Centauri A b III", op: set }
@@ -1845,24 +1844,23 @@ decisions:
     status: gated
     driver: [canon, physics]
     narrative: >
-      The canon hands us four body numbers that cannot all be true at once, so the two a visitor would actually
-      feel (the size and the 0.8 g gravity) are kept and the rest derived, landing the density realistically
-      between Mars and Earth. The day is 32 hours, tide-locked to Polyphemus, chosen over the canon's 27 because the
-      wider orbit keeps the ocean's tidal budget safely below runaway. The axis tilt is simply the orbit's own ~10°
-      lean. For a locked moon the canon's "29°" never described a free spin axis anyway. Inside, radioactive decay
-      and a gentle tidal knead keep the rock warm enough to drive the volcanoes, the fast continental drift, and the
-      magnetic dynamo all from the same fire; the tide also pulls the moon faintly egg-shaped, invisible to the eye
-      but real to the orbit. The whole configuration
-      was re-simulated and holds.
+      The film Avatar's setting gives four physical values that cannot all be true at once, so only the two a
+      visitor would actually feel (the size and the 0.8 g gravity) are kept and the rest derived from them through
+      the methodology, landing the density realistically between Mars and Earth. The day is 32 hours, tide-locked
+      to Polyphemus, chosen over the film's 27 because the wider orbit keeps the ocean's tidal budget safely below
+      runaway. The axis tilt is simply the orbit's own ~10° lean. For a tide-locked moon the canon's "29°" is
+      simply impossible. Inside, radioactive decay and a gentle tidal heating keep the rock warm enough to drive
+      the volcanoes, the fast continental drift, and the magnetic dynamo all from the same fire; the tide also
+      pulls the moon faintly egg-shaped, invisible to the eye but real to the Principia orbit.
     narrative_ko: >
-      캐넌이 주는 네 개의 물성 값은 동시에 다 맞을 수가 없다. 그래서 방문자가 실제로 체감하는 두 값, 크기와
-      0.8g 중력만 살리고 나머지는 거기서 도출했다. 그 결과 밀도는 화성과 지구 사이 현실적인 값에 자리잡았다.
-      하루는 32시간이고 Polyphemus에 조석 고정돼 있다. 캐넌의 27시간 대신 이 값을 고른 건, 궤도가 더 넓어야
-      바다에 걸리는 조석 부담이 폭주하지 않고 안전하게 유지되기 때문이다. 자전축 기울기는 궤도가 기운 ~10°
-      그대로다. 조석 고정된 위성에게 캐넌의 "29°"는 애초에 자유로운 자전축을 가리킨 적이 없다. 내부에서는
-      방사성 붕괴와 잔잔한 조석 가열이 암석을 데워, 화산과 빠른 대륙이동과 자기 다이나모를 모두 같은 열원으로
-      돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 눈에는 안 보여도 궤도에는 실재한다. 이 구성
-      전체를 재시뮬레이션으로 다시 검증했고, 결과는 안정적이었다.
+      영화 아바타의 배경 설정이 제공하는 네 개의 물성 값은 동시에 다 맞을 수가 없다. 그래서 방문자가 실제로
+      체감하는 두 값, 크기와 0.8g 중력만 살리고 나머지는 두 값을 기반으로 방법론을 통해 도출했다. 그 결과 밀도는
+      화성과 지구 사이 현실적인 값에 자리잡았다. 하루는 32시간이고 Polyphemus에 조석 고정돼 있다. 영화의 27시간
+      대신 이 값을 고른 건, 궤도가 더 넓어야 바다에 걸리는 조석 부담이 폭주하지 않고 안전하게 유지되기 때문이다.
+      자전축 기울기는 궤도가 기운 ~10° 그대로다. 조석 고정된 위성에게 캐넌의 "29°"는 애초에 불가능한 값이다.
+      내부에서는 방사성 붕괴와 잔잔한 조석 가열이 암석을 데워, 화산과 빠른 대륙이동과 자기 다이나모를 모두 같은
+      열원으로 돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 시각적으로는 보이지 않지만 프린키피아
+      궤도에는 영향을 준다.
     fields:
       - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
       - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
@@ -1908,18 +1906,16 @@ decisions:
     status: gated
     driver: [canon, physics]
     narrative: >
-      The air is the canon's, kept faithfully: mostly nitrogen with oxygen, a heavy dose of carbon dioxide, a
-      strange xenon richness, and toxic traces. At the surface it runs about a tenth denser than Earth's. Raw
-      sunlight out here would leave the moon frozen; it is the thick CO₂ greenhouse, a mild cousin of the Venus
-      mechanism, that lifts the surface to livable warmth, with a gentle great-season swing as the parent planet
-      rides its eccentric orbit. So the habitability is honestly earned by the atmosphere, not by tides or a
-      convenient star. You could breathe it, and yet the same air is slowly lethal to a human.
+      The air follows the film's setting faithfully: mostly nitrogen with oxygen, a heavy dose of carbon dioxide,
+      a strange xenon richness, and toxic traces that are lethal to Earth life. At the surface it runs about a
+      tenth denser than Earth's. Raw sunlight at this distance would not warm it enough, but the thick CO₂
+      greenhouse lifts the surface to livable temperatures, with a gentle great-season swing as the parent planet
+      rides its eccentric orbit.
     narrative_ko: >
-      대기는 캐넌 설정을 충실히 따랐다. 질소가 주성분이고 산소가 있으며, 이산화탄소가 듬뿍에 제논이 유난히
-      풍부하고, 독성 미량 성분까지 섞여 있다. 지표 기압은 지구보다 십분의 일쯤 높다. 이 거리의 맨 햇빛만으로는
-      얼어붙겠지만, 두터운 CO₂ 온실(금성 메커니즘의 온건한 사촌)이 지표를 살 만한 온도로 끌어올리고, 모행성이
-      찌그러진 궤도를 도는 리듬에 맞춰 대계절이 잔잔하게 오간다. 그러니 이 거주가능성은 조석이나 운 좋은 별이
-      아니라 대기가 정직하게 벌어들인 것이다. 숨은 쉴 수 있어도, 같은 공기가 사람에게는 서서히 치명적이다.
+      대기는 영화 설정을 충실히 따랐다. 질소가 주성분이고 산소가 있으며, 이산화탄소가 듬뿍에 제논이 유난히
+      풍부하고, 독성 미량 성분까지 섞여 있어 지구 생명체에겐 치명적이다. 지표 기압은 지구보다 십분의 일쯤 높다.
+      이 거리의 맨 햇빛만으로는 충분한 열이 제공되지 않지만, 두터운 CO₂ 온실이 지표를 살 만한 온도로 끌어올리고,
+      모행성이 찌그러진 궤도를 도는 리듬에 맞춰 대계절이 잔잔하게 오간다.
     fields:
       - { name: composition, value: "N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon)", op: set }
       - { name: pressure, value: 1.1, unit: atm, op: set, note: "canon ~20% 빽빽" }
@@ -1995,16 +1991,15 @@ decisions:
     status: gated
     driver: [physics, canon]
     narrative: >
-      Pandora carries a field roughly twice Earth's, nearly unheard-of for a moon. The same tidal heat that
-      fuels its volcanoes keeps the iron core churning, and the brisk 32-hour spin organizes that churn into a
-      clean dipole. The field is honest physics, with no boost from unobtanium (the film Avatar's fictional
-      element), nowhere near enough to levitate mountains. Around the geometric rock formations the field spikes into a
-      "flux vortex", a place apart with a local aurora of its own.
+      Pandora carries a field roughly twice Earth's, a strength nearly unheard-of for a moon. The same tidal heat
+      that fuels its volcanoes keeps the iron core churning, and the fast 32-hour spin organizes that churn into a
+      clean dipole. The film's fictional unobtanium does not exist here, but where the field spikes around the
+      geometric rock formations, the "flux vortex" produces a local aurora effect.
     narrative_ko: >
-      Pandora는 지구의 대략 두 배 자기장을 두른다. 위성으로서는 거의 전례가 없는 세기다. 화산을 지피는 것과
-      같은 조석열이 철핵을 쉼 없이 휘젓고, 경쾌한 32시간 자전이 그 소용돌이를 깔끔한 쌍극으로 정돈한다. 영화의
-      가상 설정인 언옵타늄과 같은 부스트 없이 나온 정직한 물리라, 산을 띄우기에는 어림도 없다. 기하학적 암석 구조물 일대에서 자기장이 치솟는 "플럭스 볼텍스"는
-      제 몫의 국소 오로라를 거느린 특별한 구역이다.
+      Pandora는 위성으로서는 거의 전례가 없는 세기인 지구 두배 가량의 자기장을 갖고 있다. 화산을 지피는 것과
+      같은 조석열이 철핵을 쉼 없이 휘젓고, 빠른 32시간의 자전이 그 소용돌이를 깔끔한 쌍극으로 정돈한다. 영화의
+      가상 설정인 언옵타늄은 존재하지 않지만, 기하학적 암석 구조물 일대에서 자기장이 치솟는 "플럭스 볼텍스"는
+      국소적인 오로라 효과를 제공한다.
     fields:
       - { name: magnetic_field, value: "75 µT (~1.8× 지구; rocky-dynamo ℳ⁺ 상한, 조석-구동 Fe 핵 dynamo, 32h 자전 쌍극)", op: set }
       - { name: magnetic_field_polar, value: 150, unit: uT, op: set }
@@ -2037,8 +2032,8 @@ decisions:
     axis: magnetism.magnetosphere
     status: gated
     driver: [physics, canon]
-    narrative: "Pandora's own magnetosphere shields the surface. Per canon it sits in the gap between Polyphemus's two radiation belts, and that position, together with its own strong field, is what keeps the moon habitable."
-    narrative_ko: "판도라 자신의 자기권이 지표를 감싸 보호한다. 캐넌대로 Polyphemus의 두 방사선대 사이 틈에 자리하며, 그 위치에 제 강한 자기장까지 더해져 이 위성을 거주가능하게 지켜 준다."
+    narrative: "Pandora's own magnetosphere shields the surface. As the setting has it, it sits in the gap between Polyphemus's two radiation belts, and that position, together with its strong field, is what keeps the moon habitable."
+    narrative_ko: "Pandora 자신의 자기권이 지표를 감싸 보호한다. 설정대로 Polyphemus의 두 방사선대 사이 틈에 자리하며, 그 위치에 강한 자기장까지 더해져 이 위성을 거주가능하게 지켜 준다."
     fields:
       - { name: magnetosphere, value: "고유 자기권 표면 차폐 (Polyphemus 두 벨트 사이 gap 위치)", op: set }
     gate:
