@@ -143,6 +143,17 @@ TARGETS = {
     # Ganymede: single weak belt on closed lines inside ~2 R_G standoff.
     # rcut = 1.0: no atmosphere -- particles absorb at the surface itself.
     'ganymede_belt': {'L': (1.1, 1.9), 'rcut': 1.0},
+
+    # ---- NearStars (phase4/alpha_centauri, owner-gated 2026-07-24) ----
+    # Polyphemus: Jupiter-analog giant, Dante torus source. Canon anchors: moon
+    # L-shells Dante 1.54 / Hades 2.07 (belt peak) / Pandora 3.53 (gap) /
+    # Cassandra 8.4 (submerged, intermediate) / Chaos 21 (outside belts).
+    'polyphemus_inner': {'L': (1.3, 3.0), 'rcut': 1.05},
+    'polyphemus_outer': {'L': (4.2, 10.0), 'rcut': 1.05},
+    # Pandora: strong-field embedded mini-magnetosphere (sub-regime 3b),
+    # compressed standoff 2.6 R_moon -> closed-line belt inside ~2.2; D-cut
+    # above the thick atmosphere (1.05, per the gated board row).
+    'pandora_belt': {'L': (1.15, 2.2), 'rcut': 1.05},
 }
 
 if __name__ == '__main__':

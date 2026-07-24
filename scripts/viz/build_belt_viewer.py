@@ -31,19 +31,33 @@ presets = {}
 for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys 쌍)
     presets[key] = conv(key, b)
 
-# NearStars Phase 4 도출 프리셋 (아티팩트 2026-07-23에서 이월)
-presets['pandora'] = {'label': 'Pandora (NearStars)',
-    'view': {'R': 4, 'tilt': 10, 'z': 0, 'offset': 0},
-    'inner': {'radiation': 4.0, 'grad': 3.3, 'dist': 1.4, 'rad': 0.5, 'comp': 1.1,
-              'ext': 0.8, 'bdist': 0.0001, 'brad': 1.05},
-    'outer': dict(OFF_BELT),
-    'pause': {'on': True, 'rad': 2.6, 'radiation': -0.01, 'comp': 1.15, 'ext': 0.6,
-              'hscale': 1.0}}
-presets['polyphemus'] = {'label': 'Polyphemus (NearStars)',
-    'view': {'R': 13, 'tilt': 5, 'z': 0, 'offset': 0},
-    'inner': {'radiation': 300, 'grad': 3.3, 'dist': 1.8, 'rad': 1.0, 'comp': 1.05, 'ext': 0.9},
-    'outer': {'radiation': 40, 'grad': 2.2, 'dist': 8.5, 'rad': 4.0, 'comp': 1.05, 'ext': 0.85},
-    'pause': {'on': True, 'rad': 22, 'radiation': -0.01, 'comp': 1.1, 'ext': 0.1, 'hscale': 1.02}}
+# NearStars 프리셋: 게이트된 phase4 보드에서 (emitter와 동일 소스)
+sys.path.insert(0, os.path.join(D, '..', 'pipeline'))
+from emit_kerbalism_radiation import load_nearstars_specs  # noqa: E402
+
+CFG2VIEW = {'dist': 'dist', 'radius': 'rad', 'deform_xy': 'dxy', 'compression': 'comp',
+            'extension': 'ext', 'border_dist': 'bdist', 'border_radius': 'brad',
+            'border_deform_xy': 'bdxy'}
+
+for name, spec in load_nearstars_specs().items():
+    m, bd = spec['model'], spec['body']
+    p = {'label': f'{name} (NearStars)', 'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
+    extent = 5.0
+    for kind, grad in (('inner', 3.3), ('outer', 2.2)):
+        belt = {CFG2VIEW[k[len(kind) + 1:]]: v for k, v in m.items() if k.startswith(kind)}
+        if belt:
+            belt['radiation'] = bd.get(f'radiation_{kind}', 0)
+            belt['grad'] = grad
+            p[kind] = belt
+            extent = max(extent, (belt['dist'] + belt['rad'])
+                         / (belt.get('dxy', 1) ** 0.5) * 1.15)
+    p['pause'] = {'on': True, 'rad': m.get('pause_radius', 5),
+                  'comp': m.get('pause_compression', 1), 'ext': m.get('pause_extension', 1),
+                  'hscale': m.get('pause_height_scale', 1),
+                  'radiation': bd.get('radiation_pause', -0.01)}
+    p['view'] = {'R': round(extent), 'tilt': 90 - bd.get('geomagnetic_pole_lat', 90),
+                 'z': 0, 'offset': bd.get('geomagnetic_offset', 0)}
+    presets[name.lower()] = p
 # Shue 데모: 지구 물리 파라미터 + 넓은 뷰 + α 오버레이
 shue = conv('earth_shue', dict(BODIES['earth_phys'], tilt=0))
 shue['label'] = 'Shue 데모'
