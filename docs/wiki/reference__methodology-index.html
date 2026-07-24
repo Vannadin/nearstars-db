@@ -92,6 +92,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__rocky-planet-dynamo-methodology.html">Rocky-planet magnetic-field grounding: internal-structure + OC06 dynamo scaling</a>
 <a class="nav-i" href="reference__science-system.html">KSP Science System — Reference for NearStars body authoring</a>
 <a class="nav-i" href="reference__solar-system-external-observer.html">The Solar System as an External Observer Would See It</a>
+<a class="nav-i" href="reference__solar-system-radiation-belts.html">Solar-System radiation belts: stock Kerbalism cfg vs the physics</a>
 <a class="nav-i" href="reference__stellar-photospheric-color-methodology.html">Stellar Photospheric-Color Methodology: Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB</a>
 <a class="nav-i" href="reference__surface-color-albedo-methodology.html">Surface Color &amp; Albedo Methodology: Composition → Reflectance → sRGB + Bond Albedo</a>
 <a class="nav-i" href="reference__tidal-heating-methodology.html">Tidal-Heating Methodology: Internal Power, Volcanism &amp; Subsurface Oceans</a>
@@ -136,7 +137,7 @@ doc has a Korean mirror under `ko/docs/reference/`.
 |---|---|---|
 | [planetary-dynamo-scaling](reference__planetary-dynamo-scaling.html) | Giant/BD magnetic field strength (energy-flux) | Christensen 2009; Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)); Yadav & Thorngren 2017 |
 | [rocky-planet-dynamo-methodology](reference__rocky-planet-dynamo-methodology.html) | Rocky (Earth/super-Earth) magnetic moment + surface field | Rodríguez-Mozos & Moya 2022 ([arXiv:2203.01065](https://arxiv.org/abs/2203.01065)); Olson & Christensen 2006; Gaidos 2010; Driscoll & Olson 2011 |
-| [planetary-magnetosphere-geometry-methodology](reference__planetary-magnetosphere-geometry-methodology.html) | Magnetosphere standoff + belt extent/intensity from B (→ Kerbalism) | Chapman & Ferraro 1931; Shue 1997/98; Kennel & Petschek 1966; Schulz & Lanzerotti 1974; Thorne 2010 |
+| [planetary-magnetosphere-geometry-methodology](reference__planetary-magnetosphere-geometry-methodology.html) | Magnetosphere standoff + belt extent/intensity from B (→ Kerbalism); exact K–P ceiling calculator `scripts/refs/kp_limit.py` | Chapman & Ferraro 1931; Shue 1997/98; Kennel & Petschek 1966; Summers 2009/2014; Mauk & Fox 2010 (+Zenodo port); Seltzer 1979/92; Schulz & Lanzerotti 1974; Thorne 2010 |
 | [mass-radius-relation-methodology](reference__mass-radius-relation-methodology.html) | Mass ↔ radius ↔ density tie-break | Seager 2007; Zeng 2016; Fortney 2007; Chen & Kipping 2017 |
 | [tidal-locking-timescale-methodology](reference__tidal-locking-timescale-methodology.html) | Spin state / synchronization timescale | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
 | [tidal-heating-methodology](reference__tidal-heating-methodology.html) | Tidal heating flux (Io/Enceladus-calibrated) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
@@ -179,6 +180,7 @@ XYZ → IEC 61966-2-1 sRGB), owned by the reflected-color doc.
 - [principia-cfg-reference](reference__principia-cfg-reference.html) / [principia-geopotential-data](reference__principia-geopotential-data.html): n-body gravity-model (J2/geopotential) cfg conventions.
 - [gravity-significance-floor-methodology](reference__gravity-significance-floor-methodology.html): literature grounding for the far-field gravity-truncation floor `a_floor` + switching-shell ratio (Principia fork). Folkner 2014 / Park 2021 (ephemeris perturber selection); Chesley 2014 (Yarkovsky detectability); Jiang & Tremaine 2010 (Jacobi radius); Rein & Spiegel 2015 (force-error budgets).
 - [binary-epoch-pipeline](reference__binary-epoch-pipeline.html): multi-star Keplerian → ICRS epoch propagation.
+- [solar-system-radiation-belts](reference__solar-system-radiation-belts.html): stock Kerbalism cfg vs ADS-grounded physics for all 7 magnetized Solar-System bodies (Earth/Jupiter/Saturn/Uranus/Neptune/Mercury/Ganymede) — calibrates the magnetosphere-geometry recipe; in-game SDF cross-section renders on the [wiki](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts). Joy 2002; Cooper 1983; Ness 1986/1989; Winslow 2013; Kivelson 2002; +18 more.
 
 ## Related
 
@@ -205,7 +207,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 |---|---|---|
 | [planetary-dynamo-scaling](reference__planetary-dynamo-scaling.html) | 거대행성/갈색왜성 자기장 세기 (에너지플럭스) | Christensen 2009; Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)); Yadav & Thorngren 2017 |
 | [rocky-planet-dynamo-methodology](reference__rocky-planet-dynamo-methodology.html) | 암석형(지구/슈퍼지구) 자기모멘트 + 표면장 | Rodríguez-Mozos & Moya 2022 ([arXiv:2203.01065](https://arxiv.org/abs/2203.01065)); Olson & Christensen 2006; Gaidos 2010; Driscoll & Olson 2011 |
-| [planetary-magnetosphere-geometry-methodology](reference__planetary-magnetosphere-geometry-methodology.html) | 자기장에서 자기권 standoff + 방사선대 크기/강도 도출 (→ Kerbalism) | Chapman & Ferraro 1931; Shue 1997/98; Kennel & Petschek 1966; Schulz & Lanzerotti 1974; Thorne 2010 |
+| [planetary-magnetosphere-geometry-methodology](reference__planetary-magnetosphere-geometry-methodology.html) | 자기장에서 자기권 standoff + 방사선대 크기/강도 도출 (→ Kerbalism). 정확한 K–P 상한 계산기 `scripts/refs/kp_limit.py` 포함 | Chapman & Ferraro 1931; Shue 1997/98; Kennel & Petschek 1966; Summers 2009/2014; Mauk & Fox 2010 (+Zenodo 포팅); Seltzer 1979/92; Schulz & Lanzerotti 1974; Thorne 2010 |
 | [mass-radius-relation-methodology](reference__mass-radius-relation-methodology.html) | 질량 ↔ 반경 ↔ 밀도 tie-break | Seager 2007; Zeng 2016; Fortney 2007; Chen & Kipping 2017 |
 | [tidal-locking-timescale-methodology](reference__tidal-locking-timescale-methodology.html) | 자전 상태 / 동기화 타임스케일 | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
 | [tidal-heating-methodology](reference__tidal-heating-methodology.html) | 조석가열 플럭스 (Io/Enceladus 캘리브레이션) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |

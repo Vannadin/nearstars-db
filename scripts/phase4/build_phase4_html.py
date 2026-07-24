@@ -138,15 +138,36 @@ def moons_table(moons):
             + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
 
 
+REPO_BLOB = "https://github.com/Vannadin/nearstars-db/blob/main/"
+
+
 def ref_url(r):
-    """Map a paper ref to a live URL: arXiv new/old-style -> arxiv.org,
-    otherwise treat it as an ADS bibcode -> ui.adsabs.harvard.edu."""
+    """Map a ref to a live URL:
+    - arXiv new/old-style -> arxiv.org
+    - a repo doc path (docs/reference/*.md, plans/*.md) -> its built wiki page
+    - any other repo .md path -> the GitHub blob (not rendered to the wiki)
+    - otherwise an ADS bibcode -> ui.adsabs.harvard.edu."""
     s = str(r).strip()
     if re.fullmatch(r"\d{4}\.\d{4,5}(v\d+)?", s):                 # 2508.03814
         return "https://arxiv.org/abs/" + s
     if re.fullmatch(r"[a-z-]+(\.[A-Z]{2})?/\d{7}(v\d+)?", s):     # astro-ph/0612671
         return "https://arxiv.org/abs/" + s
+    if s.endswith(".md"):                                        # our own docs, not a bibcode
+        m = re.fullmatch(r"docs/reference/(.+)\.md", s)
+        if m:
+            return "../../wiki/reference__" + m.group(1) + ".html"
+        m = re.fullmatch(r"plans/(.+)\.md", s)
+        if m:
+            return "../../wiki/plans__" + m.group(1) + ".html"
+        return REPO_BLOB + s                                     # e.g. phase3/stability-sim/*.md
     return "https://ui.adsabs.harvard.edu/abs/" + quote(s, safe="")  # ADS bibcode
+
+
+def ref_label(r):
+    """Display text for a ref: doc paths show just the filename (full paths
+    read badly next to bibcodes); everything else shows verbatim."""
+    s = str(r).strip()
+    return s.rsplit("/", 1)[-1] if s.endswith(".md") else s
 
 
 def refs_html(refs):
@@ -155,7 +176,7 @@ def refs_html(refs):
     if isinstance(refs, str):  # defensive — the validator rejects this, but never render per-char
         refs = [refs]
     return '<div class="refs">' + "".join(
-        f'<a class="ref" href="{esc(ref_url(r))}" target="_blank" rel="noopener">{esc(r)}</a>'
+        f'<a class="ref" href="{esc(ref_url(r))}" target="_blank" rel="noopener">{esc(ref_label(r))}</a>'
         for r in refs) + "</div>"
 
 

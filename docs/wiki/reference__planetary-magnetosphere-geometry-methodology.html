@@ -92,6 +92,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__rocky-planet-dynamo-methodology.html">Rocky-planet magnetic-field grounding: internal-structure + OC06 dynamo scaling</a>
 <a class="nav-i" href="reference__science-system.html">KSP Science System — Reference for NearStars body authoring</a>
 <a class="nav-i" href="reference__solar-system-external-observer.html">The Solar System as an External Observer Would See It</a>
+<a class="nav-i" href="reference__solar-system-radiation-belts.html">Solar-System radiation belts: stock Kerbalism cfg vs the physics</a>
 <a class="nav-i" href="reference__stellar-photospheric-color-methodology.html">Stellar Photospheric-Color Methodology: Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB</a>
 <a class="nav-i" href="reference__surface-color-albedo-methodology.html">Surface Color &amp; Albedo Methodology: Composition → Reflectance → sRGB + Bond Albedo</a>
 <a class="nav-i" href="reference__tidal-heating-methodology.html">Tidal-Heating Methodology: Internal Power, Volcanism &amp; Subsurface Oceans</a>
@@ -190,11 +191,86 @@ field tells you *whether* and *where* belts trap; the source/loss/K–P balance 
 you *how intense*. Belt intensity therefore stays a **regime call with a stated
 source and loss**, not a formula output.
 
+### The exact K–P ceiling (computable) and what it does — and does not — set
+
+The K–P limit is now **directly computable** for any body:
+[`scripts/refs/kp_limit.py`](../../scripts/refs/kp_limit.py) is a validated
+Python port of Mauk & Fox's own published implementation (their open Zenodo
+software [`10.5281/zenodo.4782323`](https://zenodo.org/records/4782323),
+bibcode `2021zndo...4782323M` — the paper itself,
+[`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M),
+is paywalled with no preprint). The chain: flexible differential spectrum
+`j(E) = C·E·(kT(γ₁+1)+E)^(−γ₁−1)/(1+(E/E₀)^γ₂)` with pitch factor sin^2s α →
+relativistic cyclotron resonance (Summers, Tang & Thorne 2009
+[`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S),
+eqs A4–A8) → whistler growth rate from the A1/A2 integrals → marginal
+stability `CmCk = L·R_p·w_i/(3·v_g)` (wave gain 3; independently confirmed by
+Mourenas 2024 [`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
+The limited spectrum is ~E⁻¹ (relativistic coefficient 2× non-relativistic;
+Summers 2014 [`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+
+**Validation (all five magnetized planets).** With the three source papers in
+the local cache (AGU's 24-month free-access archive; owner-downloaded PDFs in
+`docs/phase3/_papers/`), the port's normalisations are the *published* Summers
+2009 A2/A3 prefactors, and the notebook's Earth L=5 printed intermediates are
+reproduced to ~10⁻⁶ (w_i 0.658455, CmCk peak 0.607879 at 102.9 keV — exact to
+their printed digits). The Mauk & Fox per-planet analyses (their Table 1
+spectra + per-figure B/N/D) are then reproduced at the level their figures
+state:
+
+| Case (their figure) | Their finding | Our CmCk peak |
+|---|---|---|
+| Earth L=4 (Fig 7) | well below the limit | 0.28 ✓ |
+| Earth L=5 (Fig 5) | 0.60, near the limit | 0.6079 (exact) |
+| Earth L=6 (Fig 7) | near the limit | 1.46 ✓ |
+| Uranus L=4.73 (Fig 8, N=5) | matched/exceeded | 1.11 ✓ |
+| Jupiter L=8.3 (Fig 9, N=200, D=3) | near the limit | 0.68 ✓ |
+| Neptune L=7.4 (Fig 11, N=0.3) | ~30× below at 1 MeV | peak 0.91; 1 MeV factor 27.8 ✓ |
+
+These run in the module's `__main__` self-test.
+
+Two structural facts the exact machinery establishes:
+
+1. **The ceiling's controlling variable is We/wpe ∝ B/√n_cold** (plus the
+   spectral and pitch indices) — *not* B alone and not B². Where the local
+   field is strong and the cold plasma thin (deep inner belts at small L),
+   the resonant energy runs to tens of MeV and the ~MeV ceiling is
+   effectively unbound — those belts are **source/loss-set, not K–P-set**.
+   Worked check (Polyphemus inner-belt peak, L = 2.07, B_local ≈ 129× Earth's
+   L=5 field): across torus densities 10²–5×10³ cm⁻³ the computed 1 MeV
+   ceiling is ≥ 5×10²–10¹⁶ × Earth's — never the binding constraint.
+2. **The K–P cap does not set the dose contrast between planets.** Mauk & Fox
+   find Earth, Jupiter and Uranus all *at* comparable differential caps near
+   ~0.1–1 MeV, yet their doses differ by orders of magnitude: the dose is the
+   spectrally-integrated, shield-transported quantity, dominated by the
+   **hardness of the tail** above the shield transmission cutoff (a 1 MeV
+   electron's CSDA range ≈ 2.0 mm Al) and by belt size. The community-standard
+   transport is SHIELDOSE-2 (Seltzer
+   [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+   [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S));
+   textbook free-field factor ≈ 2.3×10⁻⁸ rad(Si) per e⁻ cm⁻² at 1 MeV,
+   de-rated ~10× behind ~2.5 mm Al.
+
+**Practical rad/h recipe (corrected status).** For a source-saturated
+Jupiter-architecture system, interpolate between the two audited saturated
+*dose anchors* — Earth 31 µT → 10.4 rad/h, Jupiter 428 µT → ~1500 rad/h —
+`dose ≈ 10.4 × (B_eq/31 µT)^1.9`. This is an **empirical dose-anchor
+interpolation** that bundles the hardness + belt-size effects; it is *not*
+the K–P scaling (an earlier revision mislabeled it so — retracted). Outer/inner
+ratio ~0.1 torus-driven (Jupiter), ~0.2 wind-fed (Earth). Then apply the two
+hard checks: (a) the chosen intensity must sit below the computed K–P ceiling
+at the belt's (B, L, n_cold) via `kp_limit.py` (Polyphemus 300 rad/h ≈ 29×
+Earth ≪ ceiling ≥ 5×10²× Earth at the densest plausible torus — passes); and
+(b) source-starved / gap-starved belts sit *below* any of this and stay plain
+regime calls (Pandora 0.4× Earth). Confidence remains low — the interpolation
+exponent is a two-anchor fit, and n_cold for a fiction torus is a stated
+assumption — but every factor is now mechanistic, pinned, and bounded.
+
 ## Part C — mapping to Kerbalism
 
 | Physical quantity | Kerbalism field | Derivation |
 |---|---|---|
-| Magnetopause standoff | `pause_radius` (+ `has_pause`) | R_mp/R_p from Part A |
+| Magnetopause standoff | `pause_radius` (+ `has_pause`) | **`pause_radius = R_mp × pause_compression`** — dayside x is compressed before the sphere test, so the sub-solar nose sits at `pause_radius/pause_compression` (flank = `pause_radius`). R_mp from Part A is the *nose* |
 | Magnetopause shield | `radiation_pause` (small negative) | the shield comes from *having* a pause at `pause_radius`; the value itself is small and stock-uniform (~−0.01), NOT scaled to standoff |
 | Belt extent | `inner_dist`/`inner_radius`, `outer_dist`/`outer_radius` (body radii) | Part A bounds |
 | Belt intensity (rad/h) | `radiation_inner`/`radiation_outer` | Part B regime: source − loss, K–P-capped — **set from the stated source/loss, not from B** |
@@ -207,8 +283,13 @@ Kerbalism models each field as a signed-distance shape, all lengths **in body ra
 ([Kerbalism modding docs](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html);
 stock values from `KerbalismConfig/System/Radiation.cfg`):
 
-- **inner belt** = a torus: `inner_dist` (major radius = ring-center distance) + `inner_radius` (section radius).
-- **outer belt** = a hollow shell (a torus minus a slightly smaller one, faded by `outer_border_start/end`): `outer_dist` + `outer_radius`.
+- **inner belt** = a torus minus a border torus: `inner_dist` (major radius) +
+  `inner_radius` (section radius), carved by `inner_border_dist/radius/deform_xy`
+  (a border with `border_dist ≈ 0` is a sphere cut — the loss-cone D-shape). All in
+  `deform_xy`-squashed coordinates: equatorial extent = `(dist ± radius)/√deform_xy`.
+  (`*_border_start/end`, still present in some shipped cfgs, are legacy — the current
+  parser reads only `border_dist/radius/deform_xy`.)
+- **outer belt** = same construction: `outer_dist` + `outer_radius` minus its border.
 - **magnetopause** = a sphere `pause_radius`, deformable toward the star (`*_compression`) and into a tail (`*_extension`); `*_deform`/`*_quality` are cosmetic.
 - Intensities + axis live on the `RadiationBody`: `radiation_inner/outer/pause` (rad/h, pause negative), `geomagnetic_pole_lat/lon`.
 
@@ -305,19 +386,65 @@ radiation-relevant, and the moon's *own* field is a minor player.
      does trap and precipitate feed aurorae rather than baking the ground. An
      intrinsic moon field is protective, not a self-inflicted hazard.
 
+**Strong-field embedded moon (a distinct sub-regime — the Ganymede analogy breaks).**
+The bullets above assume a *weak* moon field (Ganymede, ~6× local → leaky, negligible
+own belt). A moon with an intrinsically **planet-class dynamo** — Earth-class or stronger
+in *absolute* terms, not merely a few× the local parent field — is a qualitatively
+different case that must **not** be forced onto the Ganymede template:
+
+- **Small size, opposite cause.** In isolation such a moon would carry an *Earth-plus*
+  magnetosphere (its standalone standoff, moon field vs stellar-wind ram, exceeds
+  Earth's). Embedding then compresses it, because the external pressure is now the
+  parent's **local magnetic pressure** `B_parent²/2μ₀`, which deep in a giant's field
+  is *orders of magnitude* above the stellar-wind ram — so the standoff collapses to a
+  few moon-radii **regardless of how strong the moon's field is**. The compact size is
+  *imposed by the high-pressure environment*, not by a weak field. The field-crossover
+  standoff is `R_mp/R_moon ≈ (B_eq^moon / B_parent^local)^(1/3)` (the radius where the
+  moon's dipole magnitude equals the ambient parent field); the co-rotating plasma ram
+  trims it slightly further.
+- **Belt is Earth-*kind*, not Ganymede-negligible.** A high dominance ratio (≳15–20×)
+  gives *mostly closed* field lines — small polar cusps, little reconnection leak — so a
+  genuine closed trapping volume exists; and a **thick atmosphere supplies CRAND**
+  (Lenchek 1961), the same internal proton source that fills Earth's inner belt. A real
+  inner belt therefore forms, unlike Ganymede's. Two parent effects still *moderate* it:
+  the parent magnetosphere **screens galactic cosmic rays**, throttling the CRAND driver,
+  and a belt-gap orbit starves radial diffusion. Net intensity is **modest but
+  non-negligible** — well below an unshielded Earth, well above Ganymede. Still one belt
+  (the compressed volume has no room for Earth's two).
+- **Net role = strong shield + a real orbital-altitude belt.** The large dominance ratio
+  makes the shield robust (surface dose ≈ the ambient parent flux at the moon's L-shell,
+  heavily reduced); the CRAND belt it sustains is a hazard for *orbiting* craft, not the
+  surface, and its precipitation drives a genuine auroral oval. Heller & Zuluaga 2013
+  (`2013ApJ...776L..33H`, arXiv 1309.0811) frame exactly this shield-vs-belt tension for
+  exomoons — and note that formation models make an Earth-mass, strong-field moon
+  *unlikely*, so this sub-regime is physically coherent but **observationally
+  unprecedented** (a fiction-premise regime; flag confidence low, and never claim a
+  Solar-System exemplar — Ganymede is the only real intrinsic-dynamo moon and it is weak).
+
 **Kerbalism mapping (embedded moon):** give the moon its own compact `RadiationModel`
 (small `pause_radius` in moon radii; a single narrow belt) + a `RadiationBody` with a
-*weak* `radiation_inner` (source-starved) and a small stock-scale `radiation_pause`
-(~−0.01; the shield is the *presence* of a pause at `pause_radius`, not a big value).
-The moon's net surface dose = the parent's belt at its L-shell, reduced by its own pause.
+small stock-scale `radiation_pause` (~−0.01; the shield is the *presence* of a pause at
+`pause_radius`, not a big value). The moon's net surface dose = the parent's belt at its
+L-shell, reduced by its own pause. For `radiation_inner`, split by sub-regime: a
+**weak-field** moon (Ganymede) is source-starved → *weak* (~0.2× stock Kerbin); a
+**strong-field** moon (Pandora) sustains a real CRAND belt → *modest* (~0.3–0.5× Kerbin),
+GCR-screened below Earth but well above the Ganymede-negligible value. Neither is a field
+readout (Part B); both are the source–loss regime call.
 
-**Worked (Pandora vs Ganymede):** Pandora (75 µT, 3.53 R_p, in Polyphemus's belt gap)
-→ field ~19× the local parent field → standoff ~2.5 R_p, one weak belt
-(`radiation_inner ≈ 2` rad/h, ~0.2× stock Kerbin's 10.4 because it is gap-starved),
-`radiation_pause ≈ −0.01` (stock scale). Ganymede (0.72 µT, ~6× local Jovian) →
-standoff ~2 R_G, a negligible own belt. Pandora's mini-magnetosphere is the more
-robust of the two, yet its habitability still rests on the *shield*, not on any
-belt it makes.
+**Worked (Pandora = strong-field, vs Ganymede = weak-field):** Pandora (75 µT eq,
+3.53 R_p, in Polyphemus's belt gap) → field ~19× the 3.9 µT local parent field. In
+isolation it would carry a magnetosphere *bigger than Earth's* (standalone standoff
+~17 R_moon vs Polyphemus's stellar-wind ram); embedded, the parent's local magnetic
+pressure (~6 µPa, ~3000× a solar-wind ram) compresses it ~7× to a field-crossover
+standoff `(75/3.9)^(1/3) ≈ 2.6 R_moon`. The high 19× dominance keeps it mostly closed,
+so its thick habitable atmosphere sustains a **real CRAND inner belt**, not a
+Ganymede-negligible one — `radiation_inner ≈ 4` rad/h (~0.4× stock Kerbin's 10.4:
+GCR-screened by Polyphemus + gap-starved, but a genuine Earth-*kind* belt),
+`radiation_pause ≈ −0.01`. Ganymede (0.72 µT, ~6× local Jovian, no atmosphere) →
+standoff ~2 R_G, open polar caps, a negligible own belt. **Both are shields, not
+generators for the surface**: Pandora's habitability rests on the (gap + shield)
+ambient reduction, and its CRAND belt is an orbital-altitude hazard that feeds the
+aurora — not a surface one.
 
 ## Validation
 
@@ -334,11 +461,18 @@ belt it makes.
    an offset auroral oval. The standoff formula is only approximate, and here the
    **polar-to-equatorial ratio ≠ 2** genuinely encodes the multipole content —
    the one case where carrying both fields is informative rather than redundant.
-3. **Embedded moon** (a moon inside a giant's magnetosphere; **Pandora = Ganymede
-   analog**, Kivelson 1996 `1996Natur.384..537K`): the standoff balances against the
-   **parent's co-rotating magnetospheric plasma**, not the stellar wind; the result
-   is a mini-magnetosphere. Belt dose at the moon is set by the *parent's* belt at
-   that L-shell (a loss/source term for the parent), plus the moon's own shielding.
+3. **Embedded moon** (a moon inside a giant's magnetosphere): the standoff balances
+   against the **parent's co-rotating magnetospheric plasma / field**, not the stellar
+   wind; the result is a mini-magnetosphere. Belt dose at the moon is set by the
+   *parent's* belt at that L-shell (a loss/source term for the parent), plus the moon's
+   own shielding. Two sub-regimes (see Part D):
+   - **3a weak-field** (Ganymede, Kivelson 1996 `1996Natur.384..537K`): a few× local →
+     leaky, open polar caps, a negligible own belt. Pure shield.
+   - **3b strong-field** (planet-class dynamo, e.g. Pandora; Heller & Zuluaga 2013
+     `2013ApJ...776L..33H`): intrinsically Earth-plus but compressed by the parent's
+     magnetic pressure to a few R_moon; ≳15–20× dominance → mostly closed → a real
+     CRAND belt (if it has an atmosphere), moderated by parent GCR-screening. Strong
+     shield **plus** a genuine orbital-altitude belt. No Solar-System exemplar (low conf).
 4. **Induced / no dynamo** (Venus, Io, a dead rocky planet): no intrinsic trapping,
    no belts; the interaction is ionospheric/induced and the surface dose is the
    direct wind + GCR flux.
@@ -356,10 +490,13 @@ belt it makes.
   `pause_radius`, and the small stock-scale `radiation_pause` (~−0.01). The design's core
   is exactly this: an intensified inner belt bakes the inner moons (Dante >4500 rem/day),
   while habitable Pandora survives in a gap on its own strong-field shielding.
-- **Pandora** (embedded, Ganymede analog): own 75 µT dipole → a mini-magnetosphere
-  at 3.53 R_p *inside* Polyphemus's field. It sits in the **gap between Polyphemus's
-  two belts** and its own field adds shielding → the physical basis for habitability.
-  Standoff is computed against Polyphemus's local plasma, not the stellar wind.
+- **Pandora** (embedded, **strong-field** sub-regime 3b — *not* a Ganymede analog):
+  own 75 µT dipole → intrinsically an Earth-plus magnetosphere (standalone ~17 R_moon),
+  compressed ~7× to a ~2.6 R_moon mini-magnetosphere *inside* Polyphemus's field. It
+  sits in the **gap between Polyphemus's two belts** and its own field adds shielding →
+  the physical basis for habitability. The high 19× dominance + thick atmosphere sustain
+  a real CRAND belt (`radiation_inner ≈ 4` rad/h, an orbital hazard feeding the aurora,
+  not a surface one). Standoff is set against Polyphemus's local field, not the stellar wind.
 - **Proxima b** (weak dipole ~0.06–0.1 ℳ⊕): a small magnetosphere, standoff only a
   few R_p; belts marginal; surface dose dominated by the direct M-dwarf wind + flares.
 - **Proxima c** (ice-giant, offset/tilted multipolar): asymmetric belts, offset oval;
@@ -376,8 +513,26 @@ a documented regime call rather than a computed number.
   Origin of the magnetopause / pressure-balance concept.
 - **Shue et al. 1997 / 1998**, JGR 102, 9497 (`1997JGR...102.9497S`) / JGR 103, 17691
   (`1998JGR...10317691S`). Empirical magnetopause standoff + shape under varying wind.
-- **Kennel & Petschek 1966**, JGR 71, 1 (`1966JGR....71....1K`). The stably-trapped
+- **Kennel & Petschek 1966**, JGR 71, 1 ([`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K)). The stably-trapped
   flux limit — the source-independent ceiling on belt intensity. Load-bearing for Part B.
+- **Summers, Tang & Thorne 2009**, JGRA 114, A10210 ([`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S));
+  **Summers et al. 2014**, JGRA 119, 6313 ([`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+  The relativistic K–P formulation (eqs A1–A8) and the ~E⁻¹ limited spectrum
+  (relativistic coefficient 2× non-relativistic). Both paywalled, no preprint —
+  equations recovered via the Mauk & Fox Zenodo software below.
+- **Mauk & Fox 2010**, JGRA 115, A12220 ([`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)).
+  The cross-planet differential K–P framework: Earth/Jupiter/Uranus at the cap,
+  Neptune below (injection-starved), Saturn below (material losses). Paywalled;
+  **their open implementation** ([Zenodo 10.5281/zenodo.4782323](https://zenodo.org/records/4782323),
+  `2021zndo...4782323M`) is cached (`_papers/mauk_fox_KP.nb` + run) and ported to
+  `scripts/refs/kp_limit.py` (validated to ≤0.05 % on 11 printed intermediates).
+- **Mourenas et al. 2024**, JGRA 129, e32193 ([`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
+  Independent confirmation of the ~3 wave-power-gain criterion (ELFIN).
+- **Seltzer 1979 / 1992** (SHIELDOSE / SHIELDOSE-2,
+  [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+  [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
+  The standard electron/proton fluence → dose-behind-Al transport — the reason
+  dose contrast is set by spectral hardness, not the ~1 MeV differential cap.
 - **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* (`1974pdrb.book.....S`).
   Radial-diffusion transport that populates the belts.
 - **Lenchek et al. 1961**, JGR 66, 4027 (`1961JGR....66.4027L`). CRAND inner-belt source.
@@ -390,7 +545,12 @@ a documented regime call rather than a computed number.
 - **Cooper 1983**, JGR 88, 3945 (`1983JGR....88.3945C`). Ring/moon absorption as a
   belt loss — the Polyphemus ring + moons case.
 - **Kivelson et al. 1996**, Nature 384, 537 (`1996Natur.384..537K`). Ganymede's
-  embedded magnetosphere — the Pandora analog.
+  embedded magnetosphere — the weak-field embedded-moon (sub-regime 3a) exemplar.
+- **Heller & Zuluaga 2013**, ApJ 776, L33 (`2013ApJ...776L..33H`, arXiv
+  **[1309.0811](https://arxiv.org/abs/1309.0811)**). Exomoon magnetic shielding within a
+  giant planet's magnetosphere — the shield-vs-radiation-belt tension, and the note that
+  Earth-mass strong-field moons are formation-unlikely. Grounds the strong-field
+  embedded-moon (sub-regime 3b) as coherent-but-unprecedented (fiction-premise).
 - **Griessmeier et al. 2004**, A&A 425, 753 (`2004A&A...425..753G`); **Vidotto et al.
   2013**, A&A 557, A67 (`2013A&A...557A..67V`). Exoplanet magnetosphere size vs
   stellar wind / tidal locking — the close-in-planet standoff application.
@@ -473,11 +633,78 @@ a documented regime call rather than a computed number.
 강한가*를 정합니다. 따라서 벨트 강도는 공식 출력이 아니라 **공급원·손실을 명시한 regime
 판정**으로 남습니다.
 
+### 정확한 K–P 천장(계산 가능)과 그것이 정하는 것 — 그리고 정하지 못하는 것
+
+K–P 한계는 이제 어떤 바디에 대해서든 **직접 계산할 수 있습니다**.
+[`scripts/refs/kp_limit.py`](../../../scripts/refs/kp_limit.py)는 Mauk & Fox가 직접 발표한
+구현을 검증해 옮긴 Python 포트입니다(그들의 공개 Zenodo 소프트웨어
+[`10.5281/zenodo.4782323`](https://zenodo.org/records/4782323), bibcode
+`2021zndo...4782323M` — 논문 본체인
+[`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)은
+유료이고 preprint가 없음). 계산 사슬은 이렇습니다. 유연한 미분 스펙트럼
+`j(E) = C·E·(kT(γ₁+1)+E)^(−γ₁−1)/(1+(E/E₀)^γ₂)`에 pitch 계수 sin^2s α를 곱해 →
+상대론적 사이클로트론 공명(Summers, Tang & Thorne 2009
+[`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S),
+eqs A4–A8) → A1/A2 적분에서 나오는 whistler 성장률 → 한계 안정성
+`CmCk = L·R_p·w_i/(3·v_g)`(파동 이득 3; Mourenas 2024
+[`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)이
+독립적으로 확인). 제한된 스펙트럼은 ~E⁻¹입니다(상대론적 계수가 비상대론의 2배; Summers
+2014 [`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+
+
+**검증 (자화 5행성 전부).** 원 논문 3편이 로컬 캐시에 확보되면서(AGU 24개월
+무료 아카이브, 오너가 받은 PDF를 `docs/phase3/_papers/`에 보관) 포트의 정규화
+항은 *출판된* Summers 2009 A2/A3 프리팩터 그대로가 됐고, 노트북의 지구 L=5
+중간값들은 ~10⁻⁶ 수준으로 재현됩니다(w_i 0.658455, CmCk 피크 0.607879 @
+102.9 keV — 인쇄 자릿수까지 일치). 이어서 Mauk & Fox의 행성별 분석(Table 1
+스펙트럼 + 그림별 B/N/D)을 그들의 그림이 말하는 수준에서 재현합니다.
+
+| 케이스 (그들의 그림) | 그들의 판정 | 우리 CmCk 피크 |
+|---|---|---|
+| 지구 L=4 (Fig 7) | 상한보다 한참 아래 | 0.28 ✓ |
+| 지구 L=5 (Fig 5) | 0.60, 상한 근접 | 0.6079 (정확) |
+| 지구 L=6 (Fig 7) | 상한 근접 | 1.46 ✓ |
+| 천왕성 L=4.73 (Fig 8, N=5) | 도달/초과 | 1.11 ✓ |
+| 목성 L=8.3 (Fig 9, N=200, D=3) | 상한 근접 | 0.68 ✓ |
+| 해왕성 L=7.4 (Fig 11, N=0.3) | 1 MeV서 ~30배 아래 | 피크 0.91, 1 MeV 27.8배 아래 ✓ |
+
+이 케이스들은 모듈의 `__main__` 자가검증으로 실행됩니다.
+
+이 정밀 기계가 확립하는 구조적 사실 2가지.
+
+1. **천장의 지배 변수는 We/wpe ∝ B/√n_cold**입니다(스펙트럼·pitch 지수도 함께) — B
+   단독도 B²도 *아닙니다*. 국소 場이 강하고 냉플라스마가 희박한 곳(작은 L의 깊은 내대)
+   에서는 공명 에너지가 수십 MeV로 치솟아 ~MeV 천장이 사실상 구속력을 잃습니다 — 그런
+   벨트는 **K–P가 아니라 공급원/손실이 정합니다**. 워크드 체크(Polyphemus 내대 피크,
+   L = 2.07, B_local ≈ 지구 L=5 場의 129배): 토러스 밀도 10²–5×10³ cm⁻³ 전 구간에서
+   계산된 1 MeV 천장이 지구의 ≥ 5×10²–10¹⁶배 — 구속 조건이 된 적이 없습니다.
+2. **K–P 캡은 행성 간 선량 대비를 정하지 않습니다.** Mauk & Fox는 지구·목성·천왕성이
+   모두 ~0.1–1 MeV 부근에서 비슷한 미분 캡에 *걸려 있는데도* 선량이 자릿수로 다름을
+   발견합니다. 선량은 스펙트럼 적분·차폐 수송을 거친 양이라, 차폐 투과 컷오프 위의
+   **꼬리 경도**(1 MeV 전자의 CSDA 사거리 ≈ 2.0 mm Al)와 벨트 크기가 지배합니다.
+   커뮤니티 표준 수송은 SHIELDOSE-2입니다(Seltzer
+   [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+   [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
+   교과서 자유장 계수는 1 MeV에서 e⁻ cm⁻²당 ≈ 2.3×10⁻⁸ rad(Si), ~2.5 mm Al 뒤에서
+   ~10배 감쇠.
+
+**실용 rad/h 레시피(정정된 상태).** 공급원 포화된 목성-아키텍처 계에서는 감사된 두 포화
+*선량 앵커* — 지구 31 µT → 10.4 rad/h, 목성 428 µT → ~1500 rad/h — 사이를 보간합니다.
+`dose ≈ 10.4 × (B_eq/31 µT)^1.9`. 이것은 경도 + 벨트-크기 효과를 뭉뚱그린 **경험적
+선량-앵커 보간**이지 K–P 스케일링이 *아닙니다*(이전 개정판이 그렇게 잘못 라벨한 것을
+철회). 외/내 비는 토러스-구동(목성)이 ~0.1, 항성풍-공급(지구)이 ~0.2. 그다음 두 하드
+체크를 적용합니다. (a) 고른 강도는 그 벨트의 (B, L, n_cold)에서 `kp_limit.py`로 계산한
+K–P 천장 아래에 있어야 하고(Polyphemus 300 rad/h ≈ 지구 29배 ≪ 가장 조밀한 토러스에서도
+천장 ≥ 지구 5×10²배 — 통과), (b) 공급원 기아·gap 기아 벨트는 이 모든 것 *아래*에 있으며
+평범한 regime 판정으로 남습니다(Pandora 지구 0.4배). 신뢰도는 여전히 낮습니다 — 보간
+지수가 2-앵커 적합이고 픽션 토러스의 n_cold는 명시된 가정이므로 — 그러나 이제 모든 요인이
+기계론적이고, 핀되고, 경계지어졌습니다.
+
 ## Part C — Kerbalism 매핑
 
 | 물리량 | Kerbalism 필드 | 도출 |
 |---|---|---|
-| 자기권계면 standoff | `pause_radius` (+ `has_pause`) | Part A의 R_mp/R_p |
+| 자기권계면 standoff | `pause_radius` (+ `has_pause`) | **`pause_radius = R_mp × pause_compression`** — 주간측 x는 구 검사 전에 압축되므로 sub-solar 코는 `pause_radius/pause_compression`에 놓임(옆구리 = `pause_radius`). Part A의 R_mp가 *코* |
 | 자기권계면 차폐 | `radiation_pause` (작은 음수) | 차폐는 `pause_radius`에 pause가 *있다는 것*에서 나옴. 값 자체는 작고 스톡 균일(~−0.01)이며 standoff에 비례하지 않음 |
 | 벨트 범위 | `inner_dist`/`inner_radius`, `outer_dist`/`outer_radius` (바디 반경 단위) | Part A 경계 |
 | 벨트 강도(rad/h) | `radiation_inner`/`radiation_outer` | Part B regime: 공급원 − 손실, K–P 캡 — **B가 아니라 명시된 공급원/손실에서** |
@@ -490,8 +717,12 @@ Kerbalism은 각 field를 signed-distance 형상으로 모델링하며 길이는
 입니다([Kerbalism 모딩 문서](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html);
 스톡 값은 `KerbalismConfig/System/Radiation.cfg`).
 
-- **내대(inner)** = 토러스: `inner_dist`(장반경=고리 중심 거리) + `inner_radius`(단면 반경).
-- **외대(outer)** = 속 빈 셸(토러스에서 약간 작은 토러스를 뺌, `outer_border_start/end`로 페이드): `outer_dist` + `outer_radius`.
+- **내대(inner)** = 토러스에서 border 토러스를 뺀 것. `inner_dist`(장반경) + `inner_radius`
+  (단면 반경)를 `inner_border_dist/radius/deform_xy`로 도려냅니다(`border_dist ≈ 0`인 border는
+  구 컷 — loss-cone D 모양). 전부 `deform_xy`로 눌린 좌표계입니다. 적도 범위 =
+  `(dist ± radius)/√deform_xy`. (`*_border_start/end`는 일부 출하 cfg에 아직 남아 있지만 레거시
+  입니다 — 현재 파서는 `border_dist/radius/deform_xy`만 읽습니다.)
+- **외대(outer)** = 같은 구조. `outer_dist` + `outer_radius`에서 그 border를 뺍니다.
 - **자기권계면(pause)** = 구 `pause_radius`, 별 방향 압축(`*_compression`)·꼬리 방향 신장(`*_extension`) 가능. `*_deform`/`*_quality`는 렌더용.
 - 강도·축은 `RadiationBody`에: `radiation_inner/outer/pause`(rad/h, pause 음수), `geomagnetic_pole_lat/lon`.
 
@@ -571,16 +802,52 @@ NearStars에 대해 이게 확정하는 3가지.
      벨트 플럭스를 막는 것이고, 실제로 가두고 정출시키는 입자는 지표를 굽기보다 오로라를
      먹입니다. 고유 위성 자기장은 위협이 아니라 보호입니다.
 
-**Kerbalism 매핑(임베디드 위성):** 위성에 자체 소형 `RadiationModel`(위성 반지름 단위의 작은
-`pause_radius`, 단일 좁은 벨트) + `RadiationBody`(약한 `radiation_inner`(공급원 기아) + 작은
-스톡 스케일 `radiation_pause`(~−0.01. 차폐는 `pause_radius`에 pause가 *있다는 것*이지 큰 값이
-아님))을 줍니다. 위성 순 표면 선량 = 그 L-shell의 모행성 벨트를 자체 pause로 감쇠한 값.
+**강장 임베디드 위성 (별도 sub-regime — 가니메데 유추가 깨짐).** 위 항목들은 위성 場이 *약한*
+경우(가니메데, 국소의 ~6배 → 새고 자체 벨트가 무시할 만함)를 전제합니다. 고유 다이나모가
+**행성급** — 국소 모행성 場의 몇 배가 아니라 *절대값*으로 지구급 이상 — 인 위성은 질적으로
+다른 경우라, 가니메데 틀에 억지로 끼우면 **안 됩니다**.
 
-**워크드(Pandora vs 가니메데):** Pandora(75 µT, 3.53 R_p, Polyphemus 벨트 gap) → 국소 모행성
-場의 ~19배 → standoff ~2.5 R_p, 약한 단일 벨트(`radiation_inner ≈ 2` rad/h, gap 기아라
-스톡 Kerbin 10.4의 ~0.2배), `radiation_pause ≈ −0.01`(스톡 스케일). 가니메데(0.72 µT, 국소 목성 場의 ~6배)
-→ standoff ~2 R_G, 무시할 만한 자체 벨트. Pandora 미니자기권이 둘 중 더 튼튼하지만, 그
-거주가능성은 자체 벨트가 아니라 *차폐*에 기댑니다.
+- **작은 크기, 반대되는 원인.** 고립 상태라면 그런 위성은 *지구 이상*의 자기권을 가집니다
+  (위성 場 대 항성풍 램으로 잡은 독립 standoff가 지구를 넘음). 임베딩이 그걸 압축하는데,
+  이제 외부 압력이 모행성의 **국소 자기압** `B_parent²/2μ₀`이고 거대행성 場 깊숙이서는 이 값이
+  항성풍 램보다 *자릿수로* 크기 때문입니다 — 그래서 standoff는 **위성 場이 아무리 강해도**
+  위성 반경 몇 배로 붕괴합니다. 이 작은 크기는 약한 場이 아니라 *고압 환경이 강제*한 것입니다.
+  場 교차 standoff는 `R_mp/R_moon ≈ (B_eq^moon / B_parent^local)^(1/3)`(위성 쌍극 크기가 주변
+  모행성 場과 같아지는 반경)이고, 공회전 플라스마 램이 조금 더 깎습니다.
+- **벨트는 지구-*류*이지 가니메데식 무시 수준이 아님.** 높은 지배비(≳15–20배)는 *대부분 닫힌*
+  자기력선을 줍니다 — 극 cusp가 작고 재결합 누출이 적어 — 그래서 실제 폐쇄 포획 부피가
+  존재하고, **두꺼운 대기가 CRAND**(Lenchek 1961), 즉 지구 내대를 채우는 바로 그 내부
+  양성자원을 공급합니다. 그래서 가니메데와 달리 실제 내대가 형성됩니다. 두 모행성 효과가 이를
+  여전히 *완화*합니다. 모행성 자기권이 **은하우주선을 차단**해 CRAND 구동을 조이고, 벨트-gap
+  궤도가 방사확산을 굶깁니다. 순 강도는 **완만하지만 무시 못 할** 수준입니다 — 차폐 없는 지구보다
+  훨씬 아래, 가니메데보다 훨씬 위. 여전히 단일 벨트입니다(압축된 부피엔 지구식 2벨트 여지 없음).
+- **주역할 = 강한 차폐 + 실제 궤도고도 벨트.** 큰 지배비가 차폐를 튼튼하게 만들고(표면 선량 ≈
+  위성 L-shell에서의 주변 모행성 플럭스를 크게 줄인 값), 그것이 유지하는 CRAND 벨트는 표면이
+  아니라 *궤도* 비행체에 대한 위협이며, 그 정출이 진짜 오로라 오벌을 구동합니다. Heller & Zuluaga
+  2013(`2013ApJ...776L..33H`, arXiv 1309.0811)이 외계위성에 대해 바로 이 차폐-대-벨트 긴장을
+  다루고, 형성 모델상 지구질량·강장 위성은 *가능성이 낮다*고 지적합니다 — 그래서 이 sub-regime은
+  물리적으로 일관되지만 **관측적으로 전례가 없습니다**(픽션 전제 regime. 신뢰도 low로 표기하고,
+  태양계 전형을 주장하지 말 것 — 실제 고유-다이나모 위성은 가니메데뿐이고 그마저 약함).
+
+**Kerbalism 매핑(임베디드 위성):** 위성에 자체 소형 `RadiationModel`(위성 반지름 단위의 작은
+`pause_radius`, 단일 좁은 벨트) + 작은 스톡 스케일 `radiation_pause`(~−0.01. 차폐는
+`pause_radius`에 pause가 *있다는 것*이지 큰 값이 아님)를 가진 `RadiationBody`를 줍니다. 위성 순
+표면 선량 = 그 L-shell의 모행성 벨트를 자체 pause로 감쇠한 값. `radiation_inner`는 sub-regime별로
+나눕니다. **약장** 위성(가니메데)은 공급원 기아라 → *약함*(~0.2× 스톡 Kerbin). **강장**
+위성(Pandora)은 실제 CRAND 벨트를 유지해 → *완만함*(~0.3–0.5× Kerbin), GCR 차단으로 지구 아래지만
+가니메데식 무시 수준보다는 훨씬 위. 어느 쪽도 場 읽기가 아니라(Part B) 둘 다 공급원–손실 regime
+판정입니다.
+
+**워크드(Pandora = 강장, vs 가니메데 = 약장):** Pandora(75 µT eq, 3.53 R_p, Polyphemus 벨트 gap)
+→ 場이 국소 모행성 場 3.9 µT의 ~19배. 고립 상태라면 *지구보다 큰* 자기권을 가집니다(독립
+standoff ~17 R_moon, Polyphemus 항성풍 램 대비). 임베딩하면 모행성 국소 자기압(~6 µPa, 항성풍
+램의 ~3000배)이 ~7배 압축해 場 교차 standoff `(75/3.9)^(1/3) ≈ 2.6 R_moon`로 만듭니다. 높은
+19배 지배비가 대부분 닫힌 상태를 유지하므로 그 두꺼운 거주가능 대기가 가니메데식 무시 수준이
+아니라 **실제 CRAND 내대**를 유지합니다 — `radiation_inner ≈ 4` rad/h(스톡 Kerbin 10.4의 ~0.4배.
+Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiation_pause ≈ −0.01`. 가니메데
+(0.72 µT, 국소 목성 場의 ~6배, 대기 없음) → standoff ~2 R_G, 열린 극관, 무시할 만한 자체 벨트.
+**둘 다 표면 발생기가 아니라 차폐입니다.** Pandora의 거주가능성은 (gap + 차폐)의 주변 선량
+감소에 기대고, 그 CRAND 벨트는 오로라를 먹이는 궤도고도 위협이지 표면 위협이 아닙니다.
 
 ## 검증
 
@@ -596,10 +863,16 @@ NearStars에 대해 이게 확정하는 3가지.
    場 → **비대칭·얼룩진 벨트**와 틀어진 오로라 오벌. standoff 공식은 근사일 뿐이고, 여기서
    **극/적도 비 ≠ 2**가 다극 성분을 실제로 인코딩합니다 — 두 場을 다 들고 있는 게 redundant
    가 아니라 정보값이 되는 유일한 경우입니다.
-3. **임베디드 위성**(거대행성 자기권 안의 위성. **Pandora = 가니메데 아날로그**, Kivelson
-   1996 `1996Natur.384..537K`): standoff를 항성풍이 아니라 **모행성의 공회전 자기권
-   플라스마**에 대해 잡습니다. 결과는 미니자기권. 위성 위치의 벨트 선량은 *모행성*의 그
-   L-shell 벨트(모행성엔 손실/공급항) + 위성 자체 차폐로 결정됩니다.
+3. **임베디드 위성**(거대행성 자기권 안의 위성): standoff를 항성풍이 아니라 **모행성의 공회전
+   자기권 플라스마 / 場**에 대해 잡습니다. 결과는 미니자기권. 위성 위치의 벨트 선량은 *모행성*의
+   그 L-shell 벨트(모행성엔 손실/공급항) + 위성 자체 차폐로 결정됩니다. 두 sub-regime이 있습니다
+   (Part D 참조).
+   - **3a 약장**(가니메데, Kivelson 1996 `1996Natur.384..537K`): 국소의 몇 배 → 새고, 열린
+     극관, 무시할 만한 자체 벨트. 순수 차폐.
+   - **3b 강장**(행성급 다이나모, 예: Pandora; Heller & Zuluaga 2013 `2013ApJ...776L..33H`):
+     본질적으로 지구 이상이지만 모행성 자기압에 위성 반경 몇 배로 압축됨. ≳15–20배 지배비 →
+     대부분 닫힘 → (대기가 있으면) 실제 CRAND 벨트, 모행성 GCR 차단으로 완화됨. 강한 차폐 **에
+     더해** 진짜 궤도고도 벨트. 태양계 전형 없음(신뢰도 low).
 4. **유도 / 다이나모 없음**(금성, Io, 사멸 암석행성): 고유 포획 없음, 벨트 없음.
    상호작용은 전리층/유도형이고 표면 선량은 직접 풍 + GCR입니다.
 5. **약장/무대기**: `B_eq < 0.1× 지구` → 안정 벨트 없음, 표면 선량 직접.
@@ -614,9 +887,12 @@ NearStars에 대해 이게 확정하는 3가지.
   Dante-공급 *내대*(`radiation_inner` ~300, 목성 값 또는 그 이상) + 약한 외대, 큰 `pause_radius`,
   작은 스톡 스케일 `radiation_pause`(~−0.01). 설계의 핵심이 바로 이것 — 강화된 내대가 내측
   위성을 구우면서(Dante >4500 rem/day), 거주가능 Pandora는 gap에서 자체 강한 자기장 차폐로 생존.
-- **Pandora**(임베디드, 가니메데 아날로그): 자체 75 µT 쌍극 → Polyphemus 場 *안* 3.53 R_p
-  에 미니자기권. **Polyphemus 두 벨트 사이 gap**에 위치하고 자체 場이 차폐를 더함 →
-  거주가능의 물리 근거. standoff는 항성풍이 아니라 Polyphemus 국소 플라스마에 대해 계산.
+- **Pandora**(임베디드, **강장** sub-regime 3b — 가니메데 아날로그 *아님*): 자체 75 µT
+  쌍극 → 본질적으로 지구 이상의 자기권(독립 ~17 R_moon)이 Polyphemus 場 *안*에서 ~7배 압축돼
+  ~2.6 R_moon 미니자기권. **Polyphemus 두 벨트 사이 gap**에 위치하고 자체 場이 차폐를 더함 →
+  거주가능의 물리 근거. 높은 19배 지배비 + 두꺼운 대기가 실제 CRAND 벨트를 유지합니다
+  (`radiation_inner ≈ 4` rad/h, 오로라를 먹이는 궤도고도 위협이지 표면 위협 아님). standoff는
+  항성풍이 아니라 Polyphemus 국소 場에 대해 잡습니다.
 - **Proxima b**(약 쌍극 ~0.06–0.1 ℳ⊕): 작은 자기권, standoff 몇 R_p뿐; 벨트 미미;
   표면 선량은 직접 M왜성 풍 + 플레어 지배.
 - **Proxima c**(빙거성, offset/기운 다극): 비대칭 벨트, 틀어진 오벌; standoff 공식 근사;
@@ -632,8 +908,24 @@ NearStars에 대해 이게 확정하는 3가지.
   자기권계면 / 압력균형 개념의 기원.
 - **Shue et al. 1997 / 1998**, JGR 102, 9497 (`1997JGR...102.9497S`) / JGR 103, 17691
   (`1998JGR...10317691S`). 경험적 자기권계면 standoff + 풍 변화에 따른 형상.
-- **Kennel & Petschek 1966**, JGR 71, 1 (`1966JGR....71....1K`). 안정포획 플럭스 한계 —
+- **Kennel & Petschek 1966**, JGR 71, 1 ([`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K)). 안정포획 플럭스 한계 —
   벨트 강도의 공급원-무관 천장. Part B의 핵심.
+- **Summers, Tang & Thorne 2009**, JGRA 114, A10210 ([`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S));
+  **Summers et al. 2014**, JGRA 119, 6313 ([`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
+  상대론적 K–P 정식화(eqs A1–A8)와 ~E⁻¹ 제한 스펙트럼(상대론적 계수가 비상대론의 2배).
+  둘 다 유료·preprint 없음 — 방정식은 아래 Mauk & Fox Zenodo 소프트웨어로 복원.
+- **Mauk & Fox 2010**, JGRA 115, A12220 ([`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)).
+  행성 간 미분 K–P 프레임워크: 지구/목성/천왕성이 캡에, 해왕성은 아래(주입 기아),
+  토성도 아래(물질 손실). 유료. **그들의 공개 구현**([Zenodo 10.5281/zenodo.4782323](https://zenodo.org/records/4782323),
+  `2021zndo...4782323M`)은 캐시(`_papers/mauk_fox_KP.nb` + 실행)되어
+  `scripts/refs/kp_limit.py`로 포팅됨(출력 중간값 11개에서 ≤0.05 %로 검증).
+- **Mourenas et al. 2024**, JGRA 129, e32193 ([`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
+  ~3 파동-이득 기준의 독립 확인(ELFIN).
+- **Seltzer 1979 / 1992**(SHIELDOSE / SHIELDOSE-2,
+  [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S),
+  [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
+  표준 전자/양성자 fluence → Al 뒤 선량 수송 — 선량 대비가 ~1 MeV 미분 캡이 아니라
+  스펙트럼 경도로 정해지는 이유.
 - **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* (`1974pdrb.book.....S`).
   벨트를 채우는 방사확산 수송.
 - **Lenchek et al. 1961**, JGR 66, 4027 (`1961JGR....66.4027L`). CRAND 내부벨트 공급원.
@@ -645,7 +937,11 @@ NearStars에 대해 이게 확정하는 3가지.
 - **Cooper 1983**, JGR 88, 3945 (`1983JGR....88.3945C`). 벨트 손실로서의 고리/위성 흡수 —
   Polyphemus 고리 + 위성 케이스.
 - **Kivelson et al. 1996**, Nature 384, 537 (`1996Natur.384..537K`). 가니메데 임베디드
-  자기권 — Pandora 아날로그.
+  자기권 — 약장 임베디드 위성(sub-regime 3a) 전형.
+- **Heller & Zuluaga 2013**, ApJ 776, L33 (`2013ApJ...776L..33H`, arXiv
+  **[1309.0811](https://arxiv.org/abs/1309.0811)**). 거대행성 자기권 안에서의 외계위성 자기
+  차폐 — 차폐-대-벨트 긴장, 그리고 지구질량·강장 위성은 형성 가능성이 낮다는 지적. 강장
+  임베디드 위성(sub-regime 3b)을 일관되지만 전례 없는 것으로 근거화(픽션 전제).
 - **Griessmeier et al. 2004**, A&A 425, 753 (`2004A&A...425..753G`); **Vidotto et al.
   2013**, A&A 557, A67 (`2013A&A...557A..67V`). 항성풍/조석고정 대비 외계행성 자기권 크기 —
   근접 행성 standoff 적용.

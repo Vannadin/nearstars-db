@@ -92,6 +92,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__rocky-planet-dynamo-methodology.html">Rocky-planet magnetic-field grounding: internal-structure + OC06 dynamo scaling</a>
 <a class="nav-i" href="reference__science-system.html">KSP Science System — Reference for NearStars body authoring</a>
 <a class="nav-i" href="reference__solar-system-external-observer.html">The Solar System as an External Observer Would See It</a>
+<a class="nav-i" href="reference__solar-system-radiation-belts.html">Solar-System radiation belts: stock Kerbalism cfg vs the physics</a>
 <a class="nav-i" href="reference__stellar-photospheric-color-methodology.html">Stellar Photospheric-Color Methodology: Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB</a>
 <a class="nav-i" href="reference__surface-color-albedo-methodology.html">Surface Color &amp; Albedo Methodology: Composition → Reflectance → sRGB + Bond Albedo</a>
 <a class="nav-i" href="reference__tidal-heating-methodology.html">Tidal-Heating Methodology: Internal Power, Volcanism &amp; Subsurface Oceans</a>
@@ -378,6 +379,30 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/phase4/build_phase4_html.py <system>` — renders a v2 board into `docs/phase4/<system-slug>/` (index + one page per body): narrative prose + typed spec table (hex chips, windows, biome color swatches, per-field notes), gate evidence/divergence, KO/EN toggle. Slugs via `scripts/pipeline/_naming.py`. Deterministic (rerun → no diff).
 
 **Output.** Validator: exit 0/1 + per-row diagnostics. Builder: `docs/phase4/<system-slug>/*.html`.
+
+## 14. Radiation-belt viz + Kerbalism emitter
+
+Solar-system radiation belts: stock-vs-physical cross-section renders (wiki) and the
+physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.md`.
+
+- `scripts/viz/render_belts.py` — meridian cross-section PNG renderer; reproduces the
+  in-game Kerbalism `RadiationModel` SDF exactly (Unlicense algorithm)
+- `scripts/viz/render_belts_bodies.py` — per-body driver; the `*_phys` entries are the
+  **single source of truth** for fitted belt geometry (consumed by the emitter too)
+- `scripts/viz/fit_belts.py` — numerical fitter: dipole drift-shell targets (r = L cos²λ,
+  loss-cone cut) → Kerbalism SDF parameters via Nelder-Mead, IoU-scored
+- `scripts/pipeline/emit_kerbalism_radiation.py` — emits
+  `dist/.../Patches/Kerbalism/NearStars-SolarSystemRadiation.cfg` (RadiationModel +
+  RadiationBody rebinds, 7 bodies, clickable ADS provenance comments, round-trip
+  self-check); intended as an upstream proposal to the Kerbalism/ROKerbalism maintainers
+- `scripts/viz/build_belt_viewer.py` (+ `belt_viewer_template.html`) — builds
+  `docs/belt-viewer.html`, the interactive in-browser viewer (live SDF cross-section +
+  3D raymarch, per-field sliders, 17 presets injected from `render_belts_bodies.BODIES`,
+  Shue overlay, one-click cfg export); linked from the wiki Radiation-Belts page
+- `scripts/refs/kp_limit.py` — Kennel–Petschek trapped-flux ceiling calculator: a
+  validated Python port of Mauk & Fox's own Zenodo implementation (11 printed
+  intermediates reproduced ≤0.05%); used as the belt-intensity upper-bound check in
+  the magnetosphere-geometry methodology (Part B)
 
 ## Skills directory layout
 
@@ -692,6 +717,29 @@ target_list.json
 - `scripts/phase4/build_phase4_html.py <system>` — v2 보드를 `docs/phase4/<system-slug>/` (인덱스 + 바디별 1페이지)로 렌더. 산문 narrative + typed spec 표(hex 칩, window, 바이옴 색 스와치, 필드별 note), 게이트 evidence/divergence, 한/영 토글. 슬러그는 `scripts/pipeline/_naming.py` 사용. 결정론적 (재실행해도 diff 없음).
 
 **출력.** validator: exit 0/1 + 행 단위 진단. 빌더: `docs/phase4/<system-slug>/*.html`.
+
+## 14. 방사선대 시각화 + Kerbalism emitter
+
+태양계 방사선대의 스톡 vs 물리 단면 렌더(위키)와 물리 근거 Kerbalism cfg 패치.
+감사 문서는 `solar-system-radiation-belts.md`.
+
+- `scripts/viz/render_belts.py` — 자오면 단면 PNG 렌더러. 인게임 Kerbalism
+  `RadiationModel` SDF를 그대로 재현(Unlicense 알고리즘).
+- `scripts/viz/render_belts_bodies.py` — 바디별 드라이버. `*_phys` 엔트리가 피팅된
+  벨트 지오메트리의 **단일 소스**(emitter도 여기서 읽음).
+- `scripts/viz/fit_belts.py` — 수치 피터. 쌍극자 드리프트-셸 타깃(r = L cos²λ,
+  loss-cone 컷)을 Nelder-Mead로 Kerbalism SDF 파라미터에 피팅, IoU로 채점.
+- `scripts/pipeline/emit_kerbalism_radiation.py` —
+  `dist/.../Patches/Kerbalism/NearStars-SolarSystemRadiation.cfg` 방출(RadiationModel +
+  RadiationBody 재바인드, 7바디, 클릭 가능한 ADS 출처 주석, 라운드트립 자가검증).
+  Kerbalism/ROKerbalism 메인테이너 업스트림 제안용.
+- `scripts/viz/build_belt_viewer.py` (+ `belt_viewer_template.html`) —
+  `docs/belt-viewer.html` 빌드. 브라우저 인터랙티브 뷰어(실시간 SDF 단면 + 3D
+  레이마칭, 필드별 슬라이더, `render_belts_bodies.BODIES`에서 주입한 17개 프리셋,
+  Shue 오버레이, 원클릭 cfg 내보내기). 위키 Radiation-Belts 페이지에서 링크.
+- `scripts/refs/kp_limit.py` — Kennel–Petschek 포획 플럭스 상한 계산기. Mauk & Fox
+  원저자 Zenodo 구현의 검증된 파이썬 포팅(인쇄 중간값 11개 ≤0.05% 재현). 자기권
+  지오메트리 방법론 Part B의 벨트 강도 상한 체크에 사용.
 
 ## 스킬 디렉터리 배치
 
