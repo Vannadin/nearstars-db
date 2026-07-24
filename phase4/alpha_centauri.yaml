@@ -382,7 +382,7 @@ decisions:
       never freezes into cloud of its own, a fact that quietly shapes its whole look. The board anchors the deck at
       225 K and one bar; nobody breathes here and nothing escapes, and with no surface there is nothing for a
       greenhouse to lift. The deep interior is hot but never rendered. Full temperature and pressure profiles are
-      generated at emit from a standard cool-giant model grid, and the eccentric orbit legally drives a
+      generated at emit from a standard cool-giant model grid, and the eccentric orbit drives a
       great-season cycle. The 225 K anchor assumes a moderate albedo; brighter water clouds could make the planet
       colder without changing its class, so the conservative reading is adopted.
     narrative_ko: >
@@ -390,7 +390,7 @@ decisions:
       황화수소암모늄 구름이다. 암모니아가 제 구름으로 얼어붙지 못할 만큼만 따뜻한데, 이 사실이 행성의 인상
       전체를 조용히 결정한다. 보드는 구름층을 225 K·1 bar에 앵커한다. 여기서 숨 쉴 수는 없고 대기가 달아나지도
       않으며, 표면이 없으니 온실이 끌어올릴 것도 없다. 깊은 내부는 뜨겁지만 렌더되지 않는다. 온도·기압의 전체
-      프로파일은 emit 때 표준 cool-giant 모델 격자로 생성되고, 찌그러진 궤도가 대계절 순환을 합법적으로
+      프로파일은 emit 때 표준 cool-giant 모델 격자로 생성되고, 찌그러진 궤도가 대계절 순환을
       구동한다. 225 K 앵커는 무난한 알베도 가정값이라 실제 물구름이 더 밝으면 더 차가울 수 있지만 분류는
       그대로다. 보수적 읽기를 채택했다.
     fields:
@@ -439,7 +439,7 @@ decisions:
       the deck, and slate-blue belts where gaps in the cloud expose the deep atmosphere's blue scatter. Its
       signature storm inverts Jupiter's: not a raised red spot but a sunken eye, the deepest gap of all and
       therefore the most saturated azure on the planet, matching the canon's "darkest blue storm". The palette is
-      physics-bounded but owner-tuned: the white comes from the cloud chemistry, the band red was pushed to 70% of
+      physics-bounded but deliberately tuned: the white comes from the cloud chemistry, the band red was pushed to 70% of
       Jupiter's belt color, and the blues are honest scattered light, not methane trickery. Because the host star
       is a solar twin, the colors render almost exactly as painted, with no reddening correction. One deliberate
       liberty is on record: the turbulent, festooned Jupiter-style banding is visual drama; a planet this calm
@@ -448,7 +448,7 @@ decisions:
       Polyphemus는 세 가지 색을 입는다. 물구름의 흰 zone, 광화학 색소가 덱을 물들인 적갈색 띠, 그리고 구름
       틈새로 깊은 대기의 푸른 산란이 비치는 슬레이트블루 belt. 시그니처 폭풍은 목성을 뒤집는다. 솟은 붉은 점이
       아니라 가라앉은 눈이고, 가장 깊은 틈이기에 행성에서 가장 짙은 azure이며, 캐넌의 "제일 짙은 파란 폭풍"과
-      맞아떨어진다. 팔레트는 물리로 테두리 치고 오너가 조율했다. 흰색은 구름 화학에서 오고, 띠의 적색은 목성
+      맞아떨어진다. 팔레트는 물리로 테두리 치고 그 안에서 의도적으로 조율했다. 흰색은 구름 화학에서 오고, 띠의 적색은 목성
       belt색의 70%로 밀었으며, 파랑은 메탄 눈속임이 아니라 정직하게 산란된 빛이다. 모항성이 태양 쌍둥이라 칠한
       색이 거의 그대로 렌더되고 붉은 보정이 필요 없다. 의도적 일탈 하나를 기록한다. 소용돌이와 festoon이 이는
       목성풍 난류 밴딩은 시각적 드라마이고, 이만큼 조용한 행성이라면 토성의 얌전한 줄무늬가 더
@@ -766,13 +766,13 @@ decisions:
       canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at hundreds
       of times Io's rate, that makes the inner zone so deadly without inflating the field. Pandora stays habitable
       exactly as the canon says: it orbits in the gap between the two belts and shields its surface with its own
-      Earth-class field, no unobtanium required, just a good dynamo. The per-moon grades: Dante extreme
+      Earth-class field. The per-moon grades: Dante extreme
       (>4,500 rem/day), Hades severe, Pandora moderate and habitable, Cassandra low, Chaos low and variable.
     narrative_ko: >
       위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 캐넌의 가혹한 수치가 나오지 않는다는 것이다. Io의 수백 배로
       끓는 Dante의 화산이 황 플라스마를 벨트에 퍼부어, 자기장을 부풀리지 않고도 안쪽 지대를 그렇게 치명적으로
       만든다. Pandora는 캐넌 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 자기만의 지구급 자기장으로 표면을
-      가린다. 언옵타늄은 필요 없고, 좋은 다이나모면 된다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
+      가린다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
       Pandora 중간·거주가능, Cassandra 낮음, Chaos 낮음·가변.
     gate:
       criterion: [derived-grounding]
@@ -2656,14 +2656,14 @@ decisions:
     driver: [fiction, stability]   # SPEC class D (+ orbit는 stability-optimization)
     value: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos) — 본문 moons: 리스트가 body def"
     narrative: >
-      Five named moons circle Polyphemus (Dante, Hades, Pandora, Cassandra, Chaos): the film's cast, rebuilt to be
-      dynamically honest. The campaign's key discovery: reading the canon's "Hades grazes Dante" literally ejects
+      Five named moons circle Polyphemus (Dante, Hades, Pandora, Cassandra, Chaos): the moons that appear in the
+      film, rebuilt to be dynamically honest. The campaign's key discovery: reading the canon's "Hades grazes Dante" literally ejects
       Hades within a century, so the drama was recast as a sustained mild eccentricity (the same way Io burns),
       plus small moonlets. Each moon's full body definition and starting orbit live in the structured list below;
       the long trail of scans, reversals, and the final layout is preserved in the stability_scans and decision
       blocks.
     narrative_ko: >
-      다섯 명명 위성이 Polyphemus를 돈다(Dante·Hades·Pandora·Cassandra·Chaos). 영화의 배역들을 동역학적으로
+      다섯 명명 위성이 Polyphemus를 돈다(Dante·Hades·Pandora·Cassandra·Chaos). 영화에 등장하는 위성들을 동역학적으로
       앞뒤가 맞게 다시 세운 것이다. 이 캠페인의 핵심 발견 하나. 캐넌의 "Hades가 Dante를 스친다"를 글자 그대로
       읽으면 Hades가 백 년 안에 튕겨 나간다. 그래서 그 드라마는 Io가 타는 방식과 같은, 유지되는 약한 이심률 +
       작은 moonlet들로 다시 캐스팅됐다. 각 위성의 신상명세와 시작 궤도는 아래 구조화된 목록에 있고, 스캔과
