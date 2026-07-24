@@ -76,6 +76,29 @@ field tells you *whether* and *where* belts trap; the source/loss/K–P balance 
 you *how intense*. Belt intensity therefore stays a **regime call with a stated
 source and loss**, not a formula output.
 
+### Saturated-regime calibration (the one case with a numeric recipe)
+
+When the source is strong enough to saturate the magnetosphere at the K–P
+ceiling — the internal-plasma-source case, e.g. an Io-class volcanic moon
+feeding a torus — the intensity *is* the ceiling, and the ceiling can be
+calibrated across bodies. The cross-planet K–P framework is Mauk & Fox 2010
+[`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)
+(K–P-limited electron spectra compared for all five magnetized planets).
+Practical two-anchor recipe, calibrated on the audited saturated systems in
+[`solar-system-radiation-belts.md`](solar-system-radiation-belts.md):
+
+- Earth: B_eq 31 µT → inner-belt peak 10.4 rad/h (ROKerbalism, matches AP9 order).
+- Jupiter: B_eq 428 µT → ~1500 rad/h (Divine & Garrett order 10³–10⁴ rad/day).
+- Across these, peak dose scales ≈ **(B_eq)²** (dose ratio 144 vs field ratio
+  13.8, exponent ln144/ln13.8 ≈ 1.9): `dose ≈ 10.4 rad/h × (B_eq / 31 µT)²`.
+- Outer/inner ratio: ~0.1 for a torus-driven (Jupiter-style) architecture
+  (150/1500), ~0.2 for an Earth-style wind-fed outer zone (2.2/10.4).
+
+This applies **only** in the saturated regime (strong internal source); a
+source-starved or gap-starved belt sits *below* the ceiling and stays a plain
+regime call (e.g. Pandora's 0.4× Earth). Confidence is low either way — the
+exponent is a two-anchor empirical fit, not a derived law.
+
 ## Part C — mapping to Kerbalism
 
 | Physical quantity | Kerbalism field | Derivation |
