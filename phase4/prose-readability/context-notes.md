@@ -64,29 +64,27 @@ The board renderer maps `docs/reference/*.md` → wiki reference page, `phase3/*
 Earlier audit filled 11 ref gaps across Pandora/Polyphemus/Dante; warnings dropped 45 → 34.
 Remaining "no refs[]" gate warnings are acceptable (not errors).
 
-## Hades — current state (UNCOMMITTED in working tree)
+## Hades — DONE (all 9 rows committed)
 
-4 of 9 rows rewritten and confirmed; edits are staged in the working tree only.
+Resolved the parked `bulk.tidal_heating` question: the user chose the **nominal-vs-realized**
+framing. The narrative now says the heat reaches ~400× Io when scaled from Io, but because the
+moon is small and rigid most of it pushes the crust around instead of melting the surface. The
+full reconciliation (low k2/Q, film gray > game >900K > wiki) stays in `gate.evidence`.
 
-Done: identity, bulk, magnetism.magnetic_field, bulk.tidal_heating.
-Pending: **surface, appearance, atmosphere, environment.radiation, gameplay** (start here).
-
-### Open question on Hades `bulk.tidal_heating` (line ~1691)
-
-The narrative currently says Hades "carries strong tidal heating inside, some 400× Io's, but
-its surface stays dark." Physics check done this session:
-- Nominal Io-scaling → ~400× Io ≈ 4e16 W ≈ ~5,660 W/m² surface flux
-  ≈ ~850× Earth's total heat, ~61,000× Earth's surface flux. That would MELT the surface.
-- Reconciliation (already in `gate.evidence`): a small rigid moon has low k2/Q dissipation,
-  so realized heat is Ganymede-class → tectonics, non-luminous. Film(gray) > game(>900K) > wiki.
-
-The user reacted "엄청난거였구나" (that's huge) but did NOT pick an option. Before finalizing
-this row, offer again:
-- (a) leave narrative as-is (it already holds the tension), or
-- (b) sharpen the nominal-vs-realized nuance ("Io-스케일링으로는 ~400배에 이르지만 실제로는
-  대부분 텍토닉으로 흩어져 표면은 어둡다"), or
-- (c) reword the "400배" framing.
-Do not edit until the user chooses.
+Other Hades outcomes worth carrying forward:
+- `environment.radiation` now quotes a number instead of the bare grade "심함". Hades sits at
+  the inner belt's peak L (2.07 R_p), and the belt model's inner intensity is 300 rad/h, so
+  300 × 24 ≈ **7,200 rem/day** — the same grade as Dante further in. Field value + note + the
+  two belt methodology refs added to match Dante's row.
+- Ref parity check against the equivalent Dante rows caught two gaps: Hades `bulk`
+  (body-figure + tidal-locking-timescale) and `bulk.tidal_heating` (tidal-heating). Filled.
+  Gate warnings for alpha_centauri: 34 → 31. The remaining 4 Hades warnings (identity, surface,
+  appearance, gameplay) mirror Dante exactly, so they are the accepted baseline.
+- Biome lists belong in `fields`, never in the gameplay narrative (Dante set this precedent);
+  the "Poles is geographic, not seasonal" rationale goes to `gate.evidence`.
+- The user tends to hand back an edited version of the draft. Apply their wording verbatim,
+  with one exception: they wrote "단테" in Hangul, but the locked naming rule keeps fictional
+  NearStars bodies Latin, so it stays "Dante".
 
 ## Validation + build + commit (run at each body's closeout)
 

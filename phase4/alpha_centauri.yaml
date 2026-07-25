@@ -1621,13 +1621,13 @@ decisions:
     status: gated                  # facet-walk 2026-06-22
     driver: [classification]
     narrative: >
-      body_type=rocky moon (750 km, 5.0e21 kg, density ~2830 kg/m³, silicate rock·non-icy). designation=Alpha Centauri A b II ·
-      cultural=Hades (designations block, in-game description only). discoverability=fictional (synthetic moon, no real detection).
-      A gray Ganymede-type appearance but rocky in composition.
+      Hades is the second of Polyphemus's moons, a rocky body about 750 km across that looks like a gray Ganymede
+      but is silicate rather than icy. Formally the second moon (Alpha Centauri A b II), it keeps the Avatar name
+      Hades as its cultural name in descriptions only. It is pure fiction, with no real detection behind it.
     narrative_ko: >
-      body_type=암석 위성(750 km, 5.0e21 kg, 밀도 ~2830 kg/m³, 규산암·비빙질). designation=Alpha Centauri A b II ·
-      cultural=Hades(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음).
-      회색 가니메데형 외형이나 조성은 rocky.
+      Hades는 Polyphemus의 둘째 위성으로, 지름 750 km 안팎의 암석 천체다. 회색 가니메데처럼 보이지만 조성은
+      얼음이 아니라 규산암이다. 공식적으로는 둘째 위성(Alpha Centauri A b II)이며, 아바타 이름 Hades는 설명
+      텍스트에만 붙는 문화명이다. 실제 검출이 존재하지 않는 픽션 천체이다.
     fields:
       - { name: body_type, value: "rocky moon (750 km, 5.0e21 kg, ρ ~2830 kg/m³, 규산암·비빙질)", op: set }
       - { name: designation, value: "Alpha Centauri A b II", op: set }
@@ -1646,17 +1646,12 @@ decisions:
     status: gated
     driver: [invented, physics]
     narrative: >
-      mass 5.0e21 kg · radius 750 km (both INVENTED, no canon figures — affirmed as a Moon-class rocky body, density ~2830 kg/m³).
-      rotation=tidally locked to Polyphemus → spin=orbit ≈ 14.4h (derived from a=148,000km·M_Poly 120M⊕; cf. Dante 9.2h). obliquity
-      ~0° (lock damping). Tidal triaxiality C̄₂₂≈0.0039 (φ=0.70, a−c~5%), spin J₂ small (body-figure-methodology.md).
-      internal_heat=tidal (bulk.tidal_heating row). age=inherited from the system's 5.3 Gyr. spin_axis=orbit-normal aligned. mass·radius are
-      art-invented, not from the curation DB. Tidally locked·obliquity~0, so no axial seasons; 14.4h day-night in the stellar frame + longitudinal libration ±~5.7° (e=0.05).
+      Hades's mass and radius are invented, with no canon figures, so it is affirmed as a Moon-sized rocky body
+      about 750 km across. As the second moon, tide-locked to Polyphemus, its interior is kept warm by tides.
     narrative_ko: >
-      mass 5.0e21 kg · radius 750 km (둘 다 INVENTED, canon 수치 없음 — 달급 암석체로 affirm, 밀도 ~2830 kg/m³).
-      rotation=폴리페무스 조석고정 → 자전=공전 ≈ 14.4h(a=148,000km·M_Poly 120M⊕서 도출; cf. Dante 9.2h). obliquity
-      ~0°(락 감쇠). 조석 삼축 C̄₂₂≈0.0039 (φ=0.70, a−c~5%), 자전 J₂ 소형 (body-figure-methodology.md).
-      internal_heat=조석열(bulk.tidal_heating 행). age=계 5.3 Gyr 상속. spin_axis=궤도 법선 정렬. 질량·반경은
-      큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05).
+      Hades의 크기와 질량은 영화가 정한 수치가 없어 새로 구성했고, 지름 750 km 안팎의 달 크기 암석체로 확정했다.
+      둘째 위성으로서 Polyphemus에 조석 고정되어 내부가 따뜻하게 데워진다.
+    refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     fields:
       - { name: mass, value: 5.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 750, unit: km, op: set, note: "INVENTED" }
@@ -1681,13 +1676,9 @@ decisions:
     status: gated
     driver: [physics]
     narrative: >
-      No intrinsic magnetic field — a 750 km rocky moon cannot sustain a magnetic dynamo (small·low-conductivity core). No intrinsic magnetosphere/radiation_belts.
-      Unshieldedly submerged in the Polyphemus radiation-belt peak (2.07 R_p) → severe surface radiation (reflected in environment.radiation).
-      No magnetic shielding.
+      Hades has no magnetic field to shield it, so its surface radiation is high.
     narrative_ko: >
-      고유 자기장 없음 — 750 km 암석 위성은 자기 dynamo 불가(소형·저전도 핵). magnetosphere/radiation_belts 고유값
-      없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영).
-      자기 차폐 없음.
+      Hades는 고유 자기장의 차폐가 없어 높은 표면 방사선량을 갖고 있다.
     fields:
       - { name: magnetic_field, value: "none (750 km 암석 위성, dynamo 불가)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
@@ -1702,41 +1693,38 @@ decisions:
     status: gated
     driver: [physics, canon]
     narrative: >
-      Internal tidal heat exists (Io-scaling ~400× Io) but the surface is non-luminous — the energy manifests not as Io-style lava but as Ganymede-style tectonics
-      (grooved/fault terrain). A gray-solid surface under a small hard interior/thick regolith assumption.
-      Owner-override rationale: The [GAME] '>900K red-hot embers/near-fusion' is overridden by the [FILM/CANON] gray plain moon (ranking: film>game>wiki).
-      That >900K required a grazing (e~0.3, ejection) orbit. At the stable e≈0.04 the surface is non-luminous — tidal stress goes into
-      tectonic grooves (Ganymede-type), not visible lava.
+      Hades carries strong tidal heating inside. Scaled from Io it comes out some 400 times as much, but the moon is
+      small and rigid, so most of that heat goes into pushing its crust around rather than melting the surface. On its
+      stable orbit that leaves grooved and faulted terrain with no visible lava, and it reads as a gray, seemingly
+      dead moon.
     narrative_ko: >
-      내부 조석열 존재(Io-스케일링 ~400× Io)이나 표면 비발광 — 에너지가 Io식 용암이 아니라 가니메데식 텍토닉
-      (홈/단층 지형)으로 발현. 작고 단단한 내부/두꺼운 레골리스 가정 하 회색-고체 표면.
-      오너-오버라이드 근거: [GAME] '>900K 붉은 잉걸/near-fusion'은 [FILM/CANON] 회색 밋밋 위성에 밀림(등급: 영화>게임>위키).
-      그 >900K는 grazing(e~0.3, 이젝션) 궤도가 필요했음. 안정 e≈0.04에선 표면 비발광 — 조석 응력은
-      텍토닉 홈으로(가니메데형), 가시 용암 아님.
+      Hades도 내부에는 강한 조석열을 품는다. 이오를 기준으로 계산하면 그 400배에 이르지만, 작고 단단한 몸이라
+      열의 대부분은 표면을 녹이는 대신 지각을 밀어 올리는 데 쓰인다. 그래서 안정된 궤도에서는 눈에 보이는 용암
+      없이 홈과 단층 지형만 남고, 회색의 죽은 듯한 위성으로 보인다.
+    refs: ["docs/reference/tidal-heating-methodology.md"]
     fields:
       - { name: tidal_heating, value: "~400× Io (내부, 표면 비발광 — 텍토닉으로 발현)", op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: owner-override
-      evidence: "The Io-scaling ~400× Io assumes an Io-like k2/Q. A small rigid moon has low dissipation, so it channels into tectonics instead of melting."
-      evidence_ko: "Io-스케일링 ~400× Io는 Io-like k2/Q 가정. 작은 강체 위성은 dissipation 낮아 용융 대신 텍토닉 자원."
+      evidence: "Io-scaling gives ~400× Io internal heat, but a small rigid moon has low dissipation (low k2/Q), so it channels into tectonics instead of melting. The game's >900K red-hot surface is set aside for the film's gray plain moon (film > game > wiki); >900K would need an unstable grazing e~0.3 orbit, so at the stable e≈0.04 the surface stays non-luminous."
+      evidence_ko: "Io-스케일링 ~400× Io 내부열이나 작은 강체 위성은 dissipation(k2/Q) 낮아 용융 대신 텍토닉으로 흐른다. 게임의 >900K 붉은 표면은 영화의 회색 밋밋 위성에 밀린다(영화>게임>위키); >900K는 불안정한 grazing e~0.3 궤도가 필요하나 안정 e≈0.04에선 표면 비발광."
 
   - body: Hades
     axis: surface
     status: gated
     driver: [canon-film, physics]
     narrative: >
-      Ganymede-type gray — dark ancient cratered terrain + young bright grooved/fault terrain (traces of tidal stress). No visible lava.
-      Seemingly dead, but the tectonics subtly hint at tides. albedo 0.30 (group 5 facet-walk 2026-06-22: owner B = medium
-      gray (lunar-highland class). A (0.18 dark)·C (0.43 Ganymede-class) not adopted). surface_temperature_k 225 (albedo 0.30 +
-      α Cen A 1.6 AU insolation → Teq ~225K, consistent with the Polyphemus system. As an airless rocky body, KSP auto-derives it from flux+albedo;
-      tidally locked (14.4h stellar frame), so day-night+eclipse variation. Internal tidal heat contributes negligibly to surface temperature).
+      Hades has a gray, Ganymede-like surface. Old dark cratered ground is overlaid by younger bright grooved and
+      faulted terrain, so the marks of tidal stress show up in landforms alone. No lava is visible anywhere, and water
+      ice cannot survive at these temperatures, so it reads as dry rock rather than an icy world. Its brightness is a
+      medium gray, about that of the lunar highlands, and the surface sits near 225 K. Tide-locked to Polyphemus, it
+      swings that temperature through its long day, its night, and eclipses.
     narrative_ko: >
-      가니메데형 회색 — 어두운 고대 크레이터 지형 + 젊은 밝은 홈/단층(grooved) 지형(조석 응력 흔적). 가시 용암
-      없음. 죽은 듯하나 텍토닉이 조석을 은근히 암시. albedo 0.30(group 5 facet-walk 2026-06-22: 오너 B = 중간
-      회색(달 고지대급). A(0.18 어두움)·C(0.43 가니메데급)은 미채택). surface_temperature_k 225(albedo 0.30 +
-      α Cen A 1.6 AU 입사량 → Teq ~225K, 폴리페무스계 일관. 대기 없는 암석체라 KSP가 flux+albedo로 자동 산출;
-      조석고정(별 기준 14.4h)이라 낮밤+일식 변동. 내부 조석열은 표면온도 기여 미미).
+      Hades의 지표는 가니메데를 닮은 회색이다. 오래되고 어두운 크레이터 지형 위로 젊고 밝은 홈과 단층 지형이 겹쳐,
+      조석이 밀어붙인 흔적을 지형만으로 드러낸다. 용암은 어디에도 보이지 않고, 물얼음이 버틸 수 없는 온도라 얼음
+      위성이 아니라 마른 바위처럼 보인다. 밝기는 달 고지대 정도의 중간 회색이고, 지표 온도는 대체로 225 K 안팎이다.
+      Polyphemus에 한쪽 면을 고정한 채 돌기 때문에 낮과 밤, 그리고 식이 그 온도를 오르내리게 한다.
     fields:
       - { name: surface_type, value: "가니메데형 회색 rocky (어두운 크레이터 + 밝은 홈/단층 지형)", op: set }
       - { name: albedo, value: 0.30, op: set, note: "중간 회색(달 고지대급), 오너 B" }
@@ -1747,18 +1735,32 @@ decisions:
       evidence: >
         [FILM] gray plain + tidal energy=tectonic grooves (Ganymede grooved-terrain analogy). Composition=rock/silicate (not icy —
         water ice is unstable at ~225K+; Ganymede is a morphology analogy, not composition). Chemical-composition facet skipped (low-impact). Visual contrast with Dante (lava fractures).
-        albedo 0.30=owner B.
+        albedo 0.30=owner B (medium gray, lunar-highland class); A (0.18 dark)·C (0.43 Ganymede-class) not adopted.
+        surface_temperature_k 225 from albedo 0.30 + α Cen A insolation at 1.6 AU → Teq ~225K, consistent with the rest
+        of the Polyphemus system. As an airless rocky body KSP auto-derives it from flux+albedo; tidally locked
+        (14.4h stellar frame) so day-night+eclipse variation applies. Internal tidal heat contributes negligibly to
+        surface temperature.
       evidence_ko: >
         [FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 —
         ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와
-        시각 대비. albedo 0.30=오너 B.
+        시각 대비. albedo 0.30=오너 B(중간 회색, 달 고지대급); A(0.18 어두움)·C(0.43 가니메데급)은 미채택.
+        surface_temperature_k 225 = albedo 0.30 + α Cen A 1.6 AU 입사량 → Teq ~225K, 폴리페무스계 일관.
+        대기 없는 암석체라 KSP가 flux+albedo로 자동 산출; 조석고정(별 기준 14.4h)이라 낮밤+일식 변동.
+        내부 조석열은 표면온도 기여 미미.
 
   - body: Hades
     axis: appearance
     status: gated
     driver: [canon-film, visual]
-    narrative: "Ganymede palette — dark cratered terrain #5f574e, bright grooved terrain #9c968c, faint brownish tint. Achromatic-brown gray, non-luminous. Follows Ganymede's color (the film's gray plainness). Contrast with Dante's dark+lava glow = Hades gray calm."
-    narrative_ko: "가니메데 팔레트 — 어두운 크레이터 지형 #5f574e, 밝은 홈 지형 #9c968c, 약한 갈색조. 무채-갈 회색, 비발광. 가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요."
+    narrative: >
+      From a distance Hades is a gray moon built much like Ganymede. Its old cratered regions sink into a dark
+      brownish gray while the younger grooved terrain stands out a shade lighter, splitting the surface into two
+      tones. The tint goes no further than a faint hint of brown, and next to lava-lit Dante it reads as the quiet
+      gray one.
+    narrative_ko: >
+      멀리서 본 Hades는 가니메데와 비슷한 구조의 회색 위성이다. 크레이터가 뒤덮인 오래된 지역은 어두운 갈회색으로
+      가라앉고, 젊은 홈 지형은 그보다 밝은 회색으로 드러나 지표가 두 톤으로 갈린다. 색조는 아주 옅은 갈색기가 도는
+      정도에 그치고, 용암으로 불타는 Dante 옆에서 조용한 회색으로 대비를 이룬다.
     fields:
       - { name: surface, value: "가니메데 팔레트 — 어두운 크레이터 #5f574e, 밝은 홈 #9c968c, 약한 갈색조 (비발광)", op: set }
     gate:
@@ -1771,8 +1773,8 @@ decisions:
     axis: atmosphere
     status: passthrough
     driver: [passthrough]
-    narrative: "No significant atmosphere (Ganymede-style trace exosphere at a negligible level), non-breathable."
-    narrative_ko: "유의미 대기 없음(가니메데식 미량 외기권 무시 수준), 비호흡."
+    narrative: "Hades has no atmosphere to speak of."
+    narrative_ko: "Hades에는 유의미한 대기가 없다."
     fields:
       - { name: composition, value: "none (미량 외기권 무시 수준)", op: passthrough }
 
@@ -1780,37 +1782,36 @@ decisions:
     axis: environment.radiation
     status: gated
     driver: [physics]
-    narrative: "Severe — located at the radiation-belt peak (~2–3 R_p), as high as Dante. Surface heat is weaker than Dante's."
-    narrative_ko: "심함 — 방사선대 피크(~2–3 R_p)에 위치, Dante 못지않게 높음. 표면 열은 Dante보다 약함."
+    narrative: >
+      Hades sits exactly at the strongest point of Polyphemus's radiation belt. The dose there reaches some
+      7,200 rem a day.
+    narrative_ko: >
+      Hades는 Polyphemus 방사선대의 가장 강한 지점에 정확히 앉아 있다. 하루 받는 선량이 약 7,200 rem에 이른다.
     fields:
-      - { name: radiation, value: "심함 (방사선대 피크 ~2–3 R_p)", op: set }
+      - { name: radiation, value: "~7,200 rem/day (심함, 내대 피크 2.07 R_p)", op: set, note: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; Hades가 내대 피크 L에 위치해 Dante와 동급" }
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      evidence: "The belt dominates radiation independently of the surface (2.07 R_p=peak zone)."
-      evidence_ko: "벨트가 표면과 무관하게 방사선 지배(2.07 R_p=피크대)."
+      evidence: "Our value: the Polyphemus inner belt is 300 rad/h (radiation_belts row) and Hades at 2.07 R_p sits at its peak L, so ~300 rad/h × 24 h ≈ 7,200 rad/day ≈ 7,200 rem/day (rad≈rem), the same grade as Dante further in. The belt dominates radiation independently of the surface, so the mild surface heat does not soften it."
+      evidence_ko: "우리 값: 폴리페무스 내대 300 rad/h(radiation_belts 행), Hades(2.07 R_p)는 그 피크 L에 위치하므로 ~300 rad/h × 24h ≈ 7,200 rad/day ≈ 7,200 rem/day(rad≈rem)로 더 안쪽 Dante와 동급. 벨트가 표면과 무관하게 방사선을 지배해, 온건한 표면 열이 위험을 낮춰주지 않는다."
 
   - body: Hades
     axis: gameplay
     status: gated
     driver: [gameplay]
     narrative: >
-      Heat is milder than Dante's so the surface is stable, but being at the radiation-belt peak, shielding is essential. Biomes (6): Dark
-      Cratered Terrain / Bright Grooved Terrain / Impact Basins / Tectonic Ridges
-      / Poles (geographic high latitude) / Sub-Polyphemus Point (fixed point).
-      Less heat threat than Dante but radiation is comparable or greater (peak). A gray exploration target.
+      The surface is more stable than Dante's, but the radiation is strong enough that no stay lasts long without
+      proper shielding.
     narrative_ko: >
-      열은 Dante보다 온건해 표면 안정하나 방사선대 피크라 차폐 필수. 바이옴(6): 어두운 크레이터 고지(Dark
-      Cratered Terrain) / 밝은 홈 지형(Bright Grooved Terrain) / 대형 충돌분지(Impact Basins) / 단층 능선
-      (Tectonic Ridges) / 극(Poles, geographic 고위도) / 폴리페무스 대면점(Sub-Polyphemus Point, 고정 지점).
-      Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상.
+      Dante보다 표면은 안정하지만, 강한 방사선으로 인해 충분한 차폐 없이는 오래 머물 수 없다.
     fields:
       - { name: science_biomes, value: "6: Dark Cratered Terrain / Bright Grooved Terrain / Impact Basins / Tectonic Ridges / Poles / Sub-Polyphemus Point", op: set, colors: {"Dark Cratered Terrain":"#47433D","Bright Grooved Terrain":"#A9B6BE","Impact Basins":"#8A7E6E","Tectonic Ridges":"#6E6152","Poles":"#CFE0E6","Sub-Polyphemus Point":"#3E8C8A"} }   # provisional naturalistic biome-map display colors (S↓, sub-point = accent)
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
-      evidence: "Less heat threat than Dante but radiation is comparable or greater (peak). A gray exploration target."
-      evidence_ko: "Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상."
+      evidence: "Less heat threat than Dante, so landing and standing are easy, but radiation is comparable or greater (belt peak), making shielding mandatory for any long stay. A gray exploration target. The six biomes include a geographic (not seasonal) Poles biome and a fixed Sub-Polyphemus Point, since the moon is tide-locked with obliquity ~0."
+      evidence_ko: "Dante보다 열 위협 적어 착륙·체류 자체는 쉬우나 방사선은 동급 이상(벨트 피크)이라 장기 체류엔 차폐 필수. 회색 탐사 대상. 조석고정+obliquity~0이라 6개 바이옴 중 극(Poles)은 seasonal이 아닌 지리적 구분이고, 폴리페무스 대면점(Sub-Polyphemus Point)은 고정 지점이다."
 
   - body: Pandora                  # A b III
     axis: identity
