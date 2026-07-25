@@ -388,6 +388,9 @@ Polyphemus를 유난히 "정직한" 색 타깃으로 만든다. 조성→알베�
   Class-II 앵커).
 - [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): 여기의 레일리 기준선과 사용
   가능한 발색단 집합에 들어가는 *조성*(기압, μ, 산화환원)의 자매 레시피.
+- [greenhouse-warming-methodology](greenhouse-warming-methodology.md): 유기 haze는 여기서는
+  발색단이고 그쪽에서는 약 20 K를 식히는 냉각원이다. 따라서 hazy 천체의 색과 지표온도는 별개의
+  결정이 아니라 하나의 결정이다.
 - **발광 색**(재진입 플라스마, 기광, 오로라)은 `firefly-cfg` 스킬과
   `composition-color.md`에 산다: 다른 메커니즘(별빛 산란이 아니라 선/띠 발광)이다.
   반사색과 혼동하지 말 것.

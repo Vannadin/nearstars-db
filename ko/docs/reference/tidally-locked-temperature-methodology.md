@@ -306,6 +306,10 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
 
 ## 관련 문서
 
+- [greenhouse-warming-methodology](greenhouse-warming-methodology.md): 온실 상승폭
+  `T_surface − T_eq`을 다루는 자매 레시피. 이 문서는 닫힌 형태의 `T_eq`(Layer 1)와 낮밤 구조를,
+  그 문서는 대기가 그 위에 얼마를 얹는지를 담당한다. 그쪽은 조석고정 천체뿐 아니라 자유
+  자전체에도 적용된다.
 - [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): 같은 암석형 대기의
   표면기압·평균분자량(μ)·스케일높이를 정하는 자매 레시피. 여기서 나온 온도 `T`가 그
   스케일높이 공식에 들어간다.

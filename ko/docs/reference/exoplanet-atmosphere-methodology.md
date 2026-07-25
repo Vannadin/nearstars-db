@@ -303,6 +303,9 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): 여기 §6 스케일높이
   공식에 들어가는 온도 `T`를 정하는 자매 레시피. 워크드 예제에 쓴 Proxima b ~250–290 K
   범위는 그 문서의 Layer 3 GCM 앵커(Turbet+ 2016, Boutle+ 2017)에서 나온다.
+- [greenhouse-warming-methodology](greenhouse-warming-methodology.md): 여기서 정한 조성(CO₂
+  비율, CH₄, H₂, 총압)을 받아 `T_eq` 위의 온실 상승폭으로 바꾼다. 그 레시피가 허용하는 것보다
+  더 따뜻한 지표가 필요하면, 움직여야 하는 것은 조성이다.
 - [solar-system-external-observer](solar-system-external-observer.md): §1의 "우리는 대기를 측정하지
   못한다"는 경고의 근거가 되는, Teq의 온실효과 블라인드 캘리브레이션(금성 표면 환경은
   여기서 다루는 종류의 데이터에 보이지 않는다).

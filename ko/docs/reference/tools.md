@@ -287,6 +287,10 @@
 - `scripts/refs/kp_limit.py` — Kennel–Petschek 포획 플럭스 상한 계산기. Mauk & Fox
   원저자 Zenodo 구현의 검증된 파이썬 포팅(인쇄 중간값 11개 ≤0.05% 재현). 자기권
   지오메트리 방법론 Part B의 벨트 강도 상한 체크에 사용.
+- `scripts/refs/greenhouse_dt.py` — 온실 상승폭(T_surf − T_eq) 추정기. 문헌 iso-Ts 등온선
+  격자(Feulner 2012 / Kopparapu 2013 앵커)에 CH₄ 보정, Arney haze 상한, Goldblatt N₂ 압력확장을
+  더한다. `--s/--pco2/--ch4` 로 단발 조회, 인자 없이 실행하면 검증 표와 폴리페무스 위성 결과.
+  `docs/reference/greenhouse-warming-methodology.md` 의 계산 근거.
 
 ## 스킬 디렉터리 배치
 

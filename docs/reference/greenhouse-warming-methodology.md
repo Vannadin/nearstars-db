@@ -18,24 +18,43 @@ whether an atmosphere survives at all belongs to
 
 Calculator: [`scripts/refs/greenhouse_dt.py`](../../scripts/refs/greenhouse_dt.py).
 
-## Why not a forcing-plus-sensitivity formula
+## The idea
 
-The tempting route is radiative forcing (W/m²) times a climate sensitivity (K per
-W/m²). Both halves are grounded in the literature —
-[Byrne & Goldblatt 2014a](https://ui.adsabs.harvard.edu/abs/2014GeoRL..41..152B)
-compute CO₂ forcing from 100 ppmv to 50,000 ppmv (maximum 38.1 W/m²) and publish
-simplified expressions that fix the IPCC ones at high concentration, and
-[Byrne & Goldblatt 2014b](https://arxiv.org/abs/1409.1880) extend this to 28 Archean
-gases — but the product is not: the sensitivity itself depends on temperature through
-the water-vapor and ice-albedo feedbacks, so a single λ cannot span a frozen world and
-a temperate one. NearStars bodies sit exactly in that transition, so this recipe stays
-with the published model output instead.
+**Step 1 — the no-atmosphere temperature is free.** `T_eq` follows from the starlight a
+body receives and the fraction it reflects. One closed-form line, no model needed.
 
-## The relation: iso-Ts contours in (insolation, CO₂ column)
+**Step 2 — what the atmosphere adds is not free.** There is no closed form for it. The
+increment comes out of a radiative-convective or circulation model, so the only honest
+way to state one is to borrow a published model run.
 
-Published 1-D radiative-convective runs for a 1 bar background atmosphere converge on
-a simple statement: for a target surface temperature, the required CO₂ partial pressure
-rises steeply as insolation falls. Three points pin the **Ts = 273 K** contour:
+**Step 3 — borrow it as a contour, not as a single number.** Climate papers keep asking
+one question: *at this starlight level, how much CO₂ does the surface need to sit at
+273 K?* Each answer is a point on a (starlight, CO₂) plane, and the points trace a
+curve. That curve is the tool.
+
+Reading a body off the curve is then simple. More CO₂ than the curve at your starlight
+level means warmer than 273 K; less means colder. **How much** warmer comes from a
+second curve, the one for 288 K: the horizontal gap between the two curves is worth
+15 K, which converts "distance from the curve" into kelvin.
+
+Two facts about the curve's shape carry most of the physics:
+
+- **It rises steeply as starlight falls.** Halving the starlight is not paid for by
+  doubling the CO₂; on the Archean anchors, dropping `S/S₀` from 0.80 to 0.75 multiplies
+  the CO₂ needed for 273 K by six.
+- **It ends.** Past roughly 8 bar of CO₂, Rayleigh scattering brightens the planet faster
+  than the greenhouse deepens, so **more CO₂ stops helping**. That end point is the outer
+  edge of the habitable zone, and it is why a body far enough out cannot be warmed by CO₂
+  at all, no matter the inventory.
+
+Everything else in this doc is bookkeeping on top of that: where the anchor points come
+from, the corrections for CH₄, haze and total pressure, and how far the curve may be
+trusted.
+
+## The anchor points
+
+Published 1-D radiative-convective runs for a 1 bar background atmosphere.
+Three points pin the **Ts = 273 K** contour:
 
 | S/S₀ | pCO₂ for Ts = 273 K | Source |
 |---|---|---|
@@ -46,15 +65,14 @@ rises steeply as insolation falls. Three points pin the **Ts = 273 K** contour:
 and two pin the **Ts = 288 K** contour ([Feulner 2012](https://arxiv.org/abs/1204.4449) §5.1):
 0.1 bar at S/S₀ = 0.80, and 0.3 bar at S/S₀ = 0.75.
 
-The Kopparapu anchor is the physically meaningful end of the contour, not just another
-grid point: past ~8 bar, Rayleigh scattering by CO₂ raises the albedo faster than the
-greenhouse deepens, so **more CO₂ stops helping**. That is the outer edge of the
-habitable zone.
+The 8 bar point is the end of the contour described above, so the curve carries the
+habitable zone's outer edge inside it rather than needing a separate rule.
 
 ## The practical formula
 
-Interpolate `log₁₀ pCO₂` piecewise-linearly in `S/S₀` along each contour, then read the
-body's position relative to the 273 K contour:
+Between anchor points, interpolate `log₁₀ pCO₂` linearly in `S/S₀` along each contour.
+That gives the two curve positions at the body's starlight level, `pCO₂_273(S)` and
+`pCO₂_288(S)`, and the rest is the reading described above:
 
     pCO₂_eff  =  pCO₂ · 3            (if CH₄ is present at ≳ 1e-4 mixing ratio)
 
@@ -64,7 +82,10 @@ body's position relative to the 273 K contour:
 
     ΔT_gh  =  Ts  −  T_eq,        T_eq = 278.6 K · (S/S₀)^¼ · (1 − A)^¼
 
-Term by term, each grounded:
+In words: `pCO₂_eff / pCO₂_273` is how far the body sits from the 273 K curve, measured
+as a ratio; `m(S)` is the kelvin value of one factor-of-ten in that ratio, obtained from
+the gap between the two curves; the last two terms are corrections for haze and for
+total pressure. Each is grounded:
 
 - **CH₄ credit, factor 3.** [Feulner 2012](https://arxiv.org/abs/1204.4449) §5.3,
   after Kiehl & Dickinson 1987: a CH₄ mixing ratio of 1e-4 lowers the CO₂ needed for a
@@ -169,6 +190,22 @@ At this insolation the 273 K contour sits at **pCO₂ ≈ 0.40 bar** (CO₂ only
 Both recorded increments were assigned without a recipe and both come out optimistic —
 Cassandra by ~20 K, Pandora by ~15 K, against a ±10 K band. Confidence in the method is
 medium; in the inputs (CO₂ fraction, haze optical depth, albedo) low.
+
+## Why not radiative forcing times a climate sensitivity
+
+The textbook-looking alternative is to add up the forcing in W/m² and multiply by a
+sensitivity in K per W/m². Both halves exist in the literature:
+[Byrne & Goldblatt 2014a](https://ui.adsabs.harvard.edu/abs/2014GeoRL..41..152B) compute
+CO₂ forcing from 100 ppmv to 50,000 ppmv (maximum 38.1 W/m²) and publish simplified
+expressions that fix the IPCC ones at high concentration, and
+[2014b](https://arxiv.org/abs/1409.1880) extends this to 28 Archean gases.
+
+The product is the problem. The sensitivity is not a constant: water vapor and ice
+albedo make it depend on the temperature you are solving for, so one λ cannot cover a
+frozen world and a temperate one. NearStars bodies sit in exactly that transition, which
+is why this recipe stays with published model output. If it is ever rebuilt on forcing,
+those two papers are the place to start, and the sensitivity has to become a function of
+the state rather than a number.
 
 ## Citations
 
