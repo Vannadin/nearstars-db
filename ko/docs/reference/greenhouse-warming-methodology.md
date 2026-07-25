@@ -403,6 +403,10 @@ haze를 얼마나 인정하느냐에 따라 15~35 K, Pandora는 약 13 K 높다.
 
 - [`tidally-locked-temperature-methodology.md`](tidally-locked-temperature-methodology.md)
   — 이 레시피가 상승폭을 얹는 대상인 `T_eq`와 낮밤 구조를 담당한다.
+- [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — 위성이라면
+  `T_eq`가 별빛 값이 아니다. 식, 모행성의 열복사와 반사광, 조석 가열이 모두 들어온다. 이 문서의
+  `Ts`를 그대로 쓰지 말고 그 `T_eq`에 `greenhouse_increment()`를 합성하되, 그쪽 적용 범위 4번을
+  유념할 것.
 - [`exoplanet-atmosphere-methodology.md`](exoplanet-atmosphere-methodology.md) — 여기서 가정한
   대기가 애초에 유지되는지를 판정하고, 조성·기압을 소유한다.
 - [`atmosphere-reflected-color-methodology.md`](atmosphere-reflected-color-methodology.md)

@@ -291,6 +291,10 @@
   격자(Feulner 2012 / Kopparapu 2013 앵커)에 CH₄ 보정, Arney haze 상한, Goldblatt N₂ 압력확장을
   더한다. `--s/--pco2/--ch4` 로 단발 조회, 인자 없이 실행하면 검증 표와 폴리페무스 위성 결과.
   `docs/reference/greenhouse-warming-methodology.md` 의 계산 근거.
+- `scripts/refs/moon_energy_budget.py` — 위성 T_eq를 4항 에너지 예산(별빛−식, 행성 열복사+반사,
+  조석)으로 계산. 폭주 천장과 폴리페무스 적용 예 포함, `--pandora-27h-vs-32h`로 궤도 선택 표만 출력.
+  이오 조석 플럭스와 이오 식 지속시간으로 검증.
+  `docs/reference/moon-energy-budget-methodology.md` 의 계산 근거.
 
 ## 스킬 디렉터리 배치
 

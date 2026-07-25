@@ -438,6 +438,10 @@ the sensitivity has to become a function of the state rather than a number.
 
 - [`tidally-locked-temperature-methodology.md`](tidally-locked-temperature-methodology.md)
   — supplies `T_eq` and the day-night structure this recipe adds an increment to.
+- [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — for a
+  satellite, `T_eq` is not the stellar value: eclipses, the parent's thermal and reflected
+  light, and tidal heating all enter. Compose that `T_eq` with `greenhouse_increment()`
+  rather than using this doc's `Ts` directly, and mind its validity item 4.
 - [`exoplanet-atmosphere-methodology.md`](exoplanet-atmosphere-methodology.md) — decides
   whether the atmosphere assumed here is retained at all, and owns composition/pressure.
 - [`atmosphere-reflected-color-methodology.md`](atmosphere-reflected-color-methodology.md)

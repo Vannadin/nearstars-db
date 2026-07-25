@@ -293,6 +293,11 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   Arney haze cap, Goldblatt N₂ broadening); `--s/--pco2/--ch4` for a one-off query, no
   arguments for the validation table + the Polyphemus moons; backs
   `docs/reference/greenhouse-warming-methodology.md`
+- `scripts/refs/moon_energy_budget.py` — satellite T_eq from the four-term energy budget
+  (stellar minus eclipses, parent thermal + reflected, tidal), with the runaway ceiling and
+  the Polyphemus worked example; `--pandora-27h-vs-32h` for just the orbit-choice table.
+  Validates on Io's tidal flux and Io's eclipse duration. Backs
+  `docs/reference/moon-energy-budget-methodology.md`
 
 ## Skills directory layout
 

@@ -384,6 +384,9 @@ derived law.
 
 ## Related
 
+- [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — the satellite
+  counterpart: for a moon, replace this doc's Layer 1 `T_eq` with its four-term budget
+  (eclipses, parent thermal + reflected, tidal heating).
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): sibling recipe for the
   surface/equilibrium temperature of synchronous bodies; tidal heating here is an
   *additional* internal heat source layered on top of the irradiation that doc treats.

@@ -348,6 +348,9 @@ Enceladus/Europa·Io 문헌을 종합한 것이지 인용 가능한 단일 임�
 
 ## 관련 문서
 
+- [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — 위성 쪽 짝.
+  위성이라면 이 문서의 Layer 1 `T_eq`를 그쪽의 4항 예산(식, 모행성 열복사+반사, 조석 가열)으로
+  대체한다.
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): 동주기 바디의 표면/평형온도를
   다루는 자매 레시피. 여기서 다룬 조석가열은 그 문서가 다루는 복사에 더해지는 *추가* 내부
   열원이다.

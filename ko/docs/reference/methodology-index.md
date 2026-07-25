@@ -36,6 +36,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 |---|---|---|
 | [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md) | 대기 보유 + 기압/조성 | Zahnle & Catling 2017 (cosmic shoreline); Owen 2019; Dong 2017/2018 |
 | [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md) | 표면 온도 / 기후 상태 | Joshi 1997; Wordsworth 2015; Koll & Abbot 2016; Koll 2022 |
+| [moon-energy-budget-methodology](moon-energy-budget-methodology.md) | 위성 T_eq: 별빛 − 식 + 행성 열복사 + 행성 반사 + 조석, 행성주위 거주가능 경계 대조; 계산기 `scripts/refs/moon_energy_budget.py` | Heller & Barnes 2013 ([arXiv:1209.5323](https://arxiv.org/abs/1209.5323)); Dobos 2017 ([arXiv:1703.02447](https://arxiv.org/abs/1703.02447)); Barnes 2013 ([arXiv:1203.5104](https://arxiv.org/abs/1203.5104)); Tyler 2008; Beuthe 2016; Hay & Matsuyama 2017 |
 | [greenhouse-warming-methodology](greenhouse-warming-methodology.md) | 임의 기체 조합의 온실 상승폭 T_surf − T_eq. 4개 층(해석 모형 / 불투명도 자료 / iso-Ts 등온선 / 빌려온 계산) + 모항성 보정; 계산기 `scripts/refs/greenhouse_dt.py` | Robinson & Catling 2012 ([arXiv:1209.1833](https://arxiv.org/abs/1209.1833)); Karman 2019 (HITRAN CIA); Byrne & Goldblatt 2014a/b; Feulner 2012 ([arXiv:1204.4449](https://arxiv.org/abs/1204.4449)); Kopparapu 2013 ([arXiv:1301.6674](https://arxiv.org/abs/1301.6674)); Charnay 2013 ([arXiv:1310.4286](https://arxiv.org/abs/1310.4286)); Ramirez 2014/2018; Goldblatt 2009; Arney 2016 |
 | [internal-heat-luminosity-methodology](internal-heat-luminosity-methodology.md) | 내부열 + 자발광 (T_int) | Burrows 1997; Baraffe 2003; Fortney 2007; Marley 2007 |
 

@@ -178,6 +178,24 @@ def surface_t(s_rel: float, pco2_bar: float, ch4_bar: float = 0.0,
     }
 
 
+def greenhouse_increment(s_rel: float, pco2_bar: float, albedo: float,
+                         ch4_bar: float = 0.0, hazy: bool | None = None,
+                         p_total_bar: float = 1.0,
+                         teff_k: float = TEFF_SUN_K) -> float:
+    """The increment alone [K], for composing with a T_eq computed elsewhere.
+
+    Ts = T_eq + this. Use it when T_eq is not the plain stellar value -- a
+    satellite's four-term budget, for instance (see
+    docs/reference/moon-energy-budget-methodology.md). Caveat: the contours were
+    calibrated on bodies whose internal heat is negligible, so once the extra
+    flux is a large fraction of the absorbed stellar flux this composition is an
+    extrapolation; Barnes 2013 (arXiv 1203.5104) is the proper treatment.
+    """
+    r = surface_t(s_rel, pco2_bar, ch4_bar, hazy=hazy, p_total_bar=p_total_bar,
+                  teff_k=teff_k)
+    return r["ts_k"] - teq(s_rel, albedo)
+
+
 def _row(label, s_rel, pco2, ch4, albedo, published=None, hazy=None, p_total=1.0,
          teff=TEFF_SUN_K):
     r = surface_t(s_rel, pco2, ch4, hazy=hazy, p_total_bar=p_total, teff_k=teff)
