@@ -41,6 +41,7 @@ doc has a Korean mirror under `ko/docs/reference/`.
 |---|---|---|
 | [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md) | Atmosphere retention + pressure/composition | Zahnle & Catling 2017 (cosmic shoreline); Owen 2019; Dong 2017/2018 |
 | [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md) | Surface temperature / climate state | Joshi 1997; Wordsworth 2015; Koll & Abbot 2016; Koll 2022 |
+| [greenhouse-warming-methodology](greenhouse-warming-methodology.md) | Greenhouse increment T_surf − T_eq (iso-Ts contours); calculator `scripts/refs/greenhouse_dt.py` | Feulner 2012 ([arXiv:1204.4449](https://arxiv.org/abs/1204.4449)); Kopparapu 2013 ([arXiv:1301.6674](https://arxiv.org/abs/1301.6674)); Charnay 2013 ([arXiv:1310.4286](https://arxiv.org/abs/1310.4286)); Ramirez 2014; Wordsworth & Pierrehumbert 2013; Goldblatt 2009; Arney 2016 |
 | [internal-heat-luminosity-methodology](internal-heat-luminosity-methodology.md) | Internal heat + self-luminosity (T_int) | Burrows 1997; Baraffe 2003; Fortney 2007; Marley 2007 |
 
 ## Color (shared CIE 1931 → sRGB engine)

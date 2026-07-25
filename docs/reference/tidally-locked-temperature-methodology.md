@@ -342,6 +342,10 @@ exists), and one line on what it contributes.
 
 ## Related
 
+- [greenhouse-warming-methodology](greenhouse-warming-methodology.md): the sibling recipe for
+  the greenhouse increment `T_surface − T_eq`. This doc owns the closed-form `T_eq`
+  (Layer 1) and the day-night structure; that one owns how much an atmosphere adds on
+  top, and it applies to free rotators as well as locked bodies.
 - [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): the sibling recipe for
   the surface pressure, mean molecular weight (μ) and scale height of the same
   rocky atmospheres; the temperature `T` from here feeds its scale-height formula.

@@ -288,6 +288,11 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   validated Python port of Mauk & Fox's own Zenodo implementation (11 printed
   intermediates reproduced ≤0.05%); used as the belt-intensity upper-bound check in
   the magnetosphere-geometry methodology (Part B)
+- `scripts/refs/greenhouse_dt.py` — greenhouse increment (T_surf − T_eq) estimator from
+  the literature iso-Ts contour grid (Feulner 2012 / Kopparapu 2013 anchors, CH₄ credit,
+  Arney haze cap, Goldblatt N₂ broadening); `--s/--pco2/--ch4` for a one-off query, no
+  arguments for the validation table + the Polyphemus moons; backs
+  `docs/reference/greenhouse-warming-methodology.md`
 
 ## Skills directory layout
 

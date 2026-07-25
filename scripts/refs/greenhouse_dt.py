@@ -1,0 +1,166 @@
+# 온실 상승폭(T_surf - T_eq)을 문헌 iso-Ts 격자로 추정하는 계산기 (greenhouse-warming-methodology.md)
+"""Greenhouse temperature increment from a literature-anchored iso-Ts grid.
+
+Method + citations: docs/reference/greenhouse-warming-methodology.md
+
+The grid is pinned by three published CO2-only points on the Ts = 273 K contour
+(1 bar background, cloud-free 1-D radiative-convective models):
+
+  S/S0 = 0.80 -> pCO2 = 0.01 bar   Feulner 2012 (2012RvGeo..50.2006F) sec. 5.1, late Archean
+  S/S0 = 0.75 -> pCO2 = 0.06 bar   Feulner 2012, early Archean
+  S/S0 = 0.346 -> pCO2 = 8 bar     Kopparapu 2013 (arXiv 1301.6674) maximum-greenhouse limit
+
+and two on the Ts = 288 K contour (Feulner 2012 sec. 5.1):
+
+  S/S0 = 0.80 -> pCO2 = 0.1 bar
+  S/S0 = 0.75 -> pCO2 = 0.3 bar
+
+Usage:
+  python3 scripts/refs/greenhouse_dt.py                 # validation table + NearStars bodies
+  python3 scripts/refs/greenhouse_dt.py --s 0.594 --pco2 0.03 --ch4 0.003
+"""
+from __future__ import annotations
+
+import argparse
+import math
+
+# Earth's equilibrium temperature for zero albedo at 1 AU, S0 = 1361 W/m2.
+TEQ_REF_K = 278.6
+
+# iso-Ts contour anchors: (S/S0, log10 pCO2[bar]).
+ISO_273 = [(0.346, math.log10(8.0)), (0.75, math.log10(0.06)), (0.80, math.log10(0.01))]
+ISO_288 = [(0.75, math.log10(0.30)), (0.80, math.log10(0.10))]
+
+# Methane credit: Feulner 2012 sec. 5.3 / Kiehl & Dickinson 1987 -- a CH4 mixing
+# ratio ~1e-4 lowers the CO2 needed for a given Ts by about a factor of 3.
+CH4_CREDIT = 3.0
+# Organic-haze anti-greenhouse: Arney 2016 (arXiv 1610.04515), optically thick.
+HAZE_COOLING_MAX_K = 20.0
+# Haze forms once CH4/CO2 exceeds roughly this ratio (Haqq-Misra 2008, Arney 2016).
+HAZE_CH4_CO2_RATIO = 0.1
+
+
+def teq(s_rel: float, albedo: float) -> float:
+    """Equilibrium temperature [K] for insolation s_rel (in Earth units) and Bond albedo."""
+    return TEQ_REF_K * s_rel ** 0.25 * (1.0 - albedo) ** 0.25
+
+
+def _interp_log_pco2(anchors, s_rel: float) -> float:
+    """Piecewise-linear log10 pCO2 vs S/S0; the end segments extrapolate."""
+    pts = sorted(anchors)
+    if len(pts) == 1:
+        raise ValueError("need at least two anchors")
+    if s_rel <= pts[0][0]:
+        (s0, y0), (s1, y1) = pts[0], pts[1]
+    elif s_rel >= pts[-1][0]:
+        (s0, y0), (s1, y1) = pts[-2], pts[-1]
+    else:
+        for (s0, y0), (s1, y1) in zip(pts, pts[1:]):
+            if s0 <= s_rel <= s1:
+                break
+    return y0 + (y1 - y0) * (s_rel - s0) / (s1 - s0)
+
+
+def iso_pco2(s_rel: float, ts_k: float = 273.0) -> float:
+    """CO2 partial pressure [bar] needed for surface Ts at insolation s_rel (CO2 only)."""
+    anchors = ISO_273 if ts_k == 273.0 else ISO_288
+    return 10.0 ** _interp_log_pco2(anchors, s_rel)
+
+
+def slope_per_decade(s_rel: float) -> float:
+    """dTs / dlog10(pCO2) [K per decade], read off the 273 K and 288 K contour spacing.
+
+    Below S/S0 = 0.75 both contours are extrapolated with the same slope, so the
+    spacing -- and therefore this sensitivity -- freezes at its S = 0.75 value.
+    """
+    spacing = math.log10(iso_pco2(s_rel, 288.0) / iso_pco2(s_rel, 273.0))
+    return 15.0 / spacing
+
+
+def surface_t(s_rel: float, pco2_bar: float, ch4_bar: float = 0.0,
+              hazy: bool | None = None, p_total_bar: float = 1.0) -> dict:
+    """Estimate the surface temperature and the greenhouse increment.
+
+    Returns a dict with teq/ts/delta_t plus the individual contributions.
+    """
+    pco2_eff = pco2_bar
+    ch4_gain = 0.0
+    if ch4_bar > 0:
+        pco2_eff *= CH4_CREDIT
+        ch4_gain = slope_per_decade(s_rel) * math.log10(CH4_CREDIT)
+
+    if hazy is None:
+        hazy = pco2_bar > 0 and (ch4_bar / pco2_bar) > HAZE_CH4_CO2_RATIO
+    haze = HAZE_COOLING_MAX_K if hazy else 0.0
+
+    # Goldblatt 2009: doubling the N2 column adds ~4.4 K via pressure broadening.
+    n2_gain = 4.4 * math.log2(p_total_bar) if p_total_bar > 0 else 0.0
+
+    iso = iso_pco2(s_rel, 273.0)
+    ts = 273.0 + slope_per_decade(s_rel) * math.log10(pco2_eff / iso) - haze + n2_gain
+    return {
+        "iso273_pco2_bar": iso,
+        "slope_k_per_decade": slope_per_decade(s_rel),
+        "ch4_gain_k": ch4_gain,
+        "n2_gain_k": n2_gain,
+        "haze_k": -haze,
+        "ts_k": ts,
+    }
+
+
+def _row(label, s_rel, pco2, ch4, albedo, published=None, hazy=None, p_total=1.0):
+    r = surface_t(s_rel, pco2, ch4, hazy=hazy, p_total_bar=p_total)
+    t_eq = teq(s_rel, albedo)
+    note = ""
+    if published is not None:
+        note = "  published %5.1f  diff %+5.1f" % (published, r["ts_k"] - published)
+    print("%-34s S=%.3f pCO2=%-8.4g CH4=%-7.4g A=%.2f | Teq %5.1f  Ts %5.1f  dT %+5.1f%s"
+          % (label, s_rel, pco2, ch4, albedo, t_eq, r["ts_k"], r["ts_k"] - t_eq, note))
+    return r
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--s", type=float, help="insolation in Earth units (S/S0)")
+    ap.add_argument("--pco2", type=float, help="CO2 partial pressure [bar]")
+    ap.add_argument("--ch4", type=float, default=0.0, help="CH4 partial pressure [bar]")
+    ap.add_argument("--albedo", type=float, default=0.30, help="Bond albedo")
+    ap.add_argument("--ptotal", type=float, default=1.0, help="total surface pressure [bar]")
+    args = ap.parse_args()
+
+    if args.s and args.pco2:
+        _row("query", args.s, args.pco2, args.ch4, args.albedo, p_total=args.ptotal)
+        return
+
+    print("== Validation against published runs ==")
+    _row("Earth today (observed)", 1.0, 2.8e-4, 1.7e-6, 0.30, published=288.0)
+    _row("Feulner 2012 late Archean 273K", 0.80, 0.01, 0.0, 0.35, published=273.0)
+    _row("Feulner 2012 late Archean 288K", 0.80, 0.10, 0.0, 0.35, published=288.0)
+    _row("Feulner 2012 early Archean 273K", 0.75, 0.06, 0.0, 0.35, published=273.0)
+    _row("Feulner 2012 early Archean 288K", 0.75, 0.30, 0.0, 0.35, published=288.0)
+    _row("Kiehl+Dickinson 1987 +CH4", 0.75, 0.10, 1e-4, 0.35, published=288.0, hazy=False)
+    _row("Charnay 2013 GCM comp. C", 0.75, 0.10, 2e-3, 0.35, published=290.0, hazy=False)
+    _row("Kopparapu 2013 max greenhouse", 0.346, 8.0, 0.0, 0.35, published=273.0)
+
+    print()
+    print("== Early Mars: does the recipe reproduce the CO2-only impossibility? ==")
+    iso = iso_pco2(0.32, 273.0)
+    print("S=0.32 -> iso-273 needs pCO2 = %.1f bar, above the %.0f bar maximum-greenhouse"
+          % (iso, 8.0))
+    print("column, so CO2+H2O alone cannot reach 273 K (Kasting 1991; Ramirez 2014).")
+
+    print()
+    print("== NearStars: Polyphemus moons, alpha Cen A (L=1.521 Lsun) at 1.6 AU ==")
+    s_poly = 1.521 / 1.6 ** 2
+    print("S/S0 = %.4f" % s_poly)
+    _row("Cassandra as written (3% CO2)", s_poly, 0.03, 3e-3, 0.35, hazy=True)
+    _row("Cassandra, haze-free variant", s_poly, 0.03, 3e-3, 0.35, hazy=False)
+    _row("Cassandra for Ts=273 (CO2 only)", s_poly, iso_pco2(s_poly), 0.0, 0.35)
+    _row("Cassandra for Ts=273 (with CH4)", s_poly, iso_pco2(s_poly) / CH4_CREDIT, 3e-3,
+         0.35, hazy=False)
+    _row("Pandora as written (18% CO2)", s_poly, 0.198, 5e-3, 0.30, hazy=False, p_total=1.1)
+    _row("Pandora for Ts=290 (with CH4)", s_poly, 1.15, 5e-3, 0.30, hazy=False, p_total=1.1)
+
+
+if __name__ == "__main__":
+    main()

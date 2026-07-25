@@ -348,6 +348,10 @@ exists), and one line on what it contributes.
   for the temperature `T` that enters the scale-height formula here (§6); the
   Proxima b ~250–290 K range used in the worked example comes from its Layer-3 GCM
   anchors (Turbet+ 2016, Boutle+ 2017).
+- [greenhouse-warming-methodology](greenhouse-warming-methodology.md): consumes the
+  composition decided here (CO₂ fraction, CH₄, H₂, total pressure) and turns it into the
+  greenhouse increment above `T_eq`. If a body needs a warmer surface than that recipe
+  allows, the composition is what has to move.
 - [solar-system-external-observer](solar-system-external-observer.md): the Teq-blind-to-greenhouse
   calibration that motivates the "we don't measure the atmosphere" caution in §1
   (Venus' surface conditions are invisible to the kind of data we have here).

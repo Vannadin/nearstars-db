@@ -436,6 +436,9 @@ canonical work.
 - [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): the sibling recipe for the
   *composition* (pressure, μ, redox) that feeds the Rayleigh baseline and the set of
   available chromophores here.
+- [greenhouse-warming-methodology](greenhouse-warming-methodology.md): organic haze is
+  both a chromophore here and a ~20 K coolant there, so a hazy body's color and its
+  surface temperature are one decision, not two.
 - **Emission color** (reentry plasma, airglow, aurora) lives in the `firefly-cfg`
   skill and `composition-color.md`: a different mechanism (line/band emission, not
   scattering of starlight). Don't confuse it with reflected color.
