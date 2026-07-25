@@ -325,6 +325,7 @@ decisions:
       빠른 자전이야말로 figure 행들에 기록된 뚜렷한 적도팽대의 동력이다.
     fields:
       - { name: rotation_period, value: 10.35, unit: h, op: set, phase3_default: "10 h (구 오귀속: 목성/토성 유추 conf low)" }
+    refs: ["docs/reference/tidal-locking-timescale-methodology.md"]
     gate:
       criterion: [canon-consistency]
       verdict: pass-in-window
@@ -356,6 +357,7 @@ decisions:
       - { name: internal_heat, value: "negligible (T_int<110K, 내부플럭스 ≲6% insolation, 자발광 아님)", op: set }
       - { name: geopotential_c22, value: null, na_reason: "가스자이언트 자유 자전이라 축대칭, 조석 삼축 없음 (zonal J2/J4만, 전용 행)" }
       - { name: age, value: 5.3, unit: Gyr, op: set, phase3_default: "5.3 Gyr (α Cen A 상속)" }
+    refs: ["docs/reference/internal-heat-luminosity-methodology.md"]
     gate:
       criterion: [classification]
       verdict: pass-in-window
@@ -512,6 +514,7 @@ decisions:
       70% 세기다.
     fields:
       - { name: haze, value: "#b4784e", window: "#a8703f–#bc8055", op: set }
+    refs: ["docs/reference/atmosphere-reflected-color-methodology.md"]
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -585,6 +588,7 @@ decisions:
       못해 Phase 3는 "없음"이라 했지만, Phase 4는 화면에서 대비가 읽히도록 희미한 오로라를 연출한다.
     fields:
       - { name: aurora, value: "극 rose-magenta (H Balmer-α 적색 + H2 Fulcher/Balmer-β/γ 보라)", op: set, phase3_default: "aurora_present=false (medium)" }
+    refs: ["docs/reference/element-plasma-colors.md"]
     gate:
       criterion: [composition-lock]
       verdict: owner-override
@@ -660,6 +664,7 @@ decisions:
       반응해서, 입력이 어지간히 흔들려도 크기는 꿈쩍하지 않는다.
     fields:
       - { name: magnetosphere, value: 23.5, unit: R_p, op: set, phase3_default: "R_mp ≈ 23.5 R_p (5위성 전부 자기권 내)" }
+    refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
@@ -774,6 +779,7 @@ decisions:
       만든다. Pandora는 캐넌 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 자기만의 지구급 자기장으로 표면을
       가린다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
       Pandora 중간·거주가능, Cassandra 낮음, Chaos 낮음·가변.
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window        # 캐넌 >4500은 Dante 화산-source로 화해(場 발산 불요)
@@ -1442,6 +1448,7 @@ decisions:
       - { name: internal_heat, value: "tidal (see bulk.tidal_heating row, ~820× Io)", op: set }
       - { name: age, value: 5.3, unit: Gyr, op: set }
       - { name: spin_axis_orientation, value: "orbit normal", op: set }
+    refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     gate:
       criterion: [physics]
       verdict: pass-in-window
@@ -1574,6 +1581,7 @@ decisions:
       방사선대에서 온다.
     fields:
       - { name: radiation, value: "~7,200 rem/day (극심)", op: set, note: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; 영화 설정 하한 >4,500 초과" }
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency, derived-grounding]
       verdict: pass-in-window
@@ -2026,6 +2034,7 @@ decisions:
     narrative_ko: "Pandora 자신의 자기권이 지표를 감싸 보호한다. 설정대로 Polyphemus의 두 방사선대 사이 틈에 자리하며, 그 위치에 강한 자기장까지 더해져 이 위성을 거주가능하게 지켜 준다."
     fields:
       - { name: magnetosphere, value: "고유 자기권 표면 차폐 (Polyphemus 두 벨트 사이 gap 위치)", op: set }
+    refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency]
       verdict: pass-in-window
@@ -2148,6 +2157,7 @@ decisions:
       - { name: haze, value: "지구식 파란 Rayleigh 림", op: set }
       - { name: artificial, value: "none", op: set }
       - { name: rings, value: "none", op: set }
+    refs: ["docs/reference/element-plasma-colors.md", "docs/reference/atmosphere-reflected-color-methodology.md"]
     gate:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
@@ -2177,6 +2187,7 @@ decisions:
     narrative_ko: "중간/거주가능 수준. Polyphemus의 두 방사선대 사이 틈에 자리한 데다 제 강한 자기장까지 지표를 막아 방사선이 극심한 Dante나 Hades와는 뚜렷이 대조된다."
     fields:
       - { name: radiation, value: "중간/거주가능 (between-belts gap + 강 dipole 차폐)", op: set }
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency, derived-grounding]
       verdict: pass-in-window

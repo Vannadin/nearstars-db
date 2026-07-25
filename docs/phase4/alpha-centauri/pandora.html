@@ -215,7 +215,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetosphere</td><td class="v">고유 자기권 표면 차폐 (Polyphemus 두 벨트 사이 gap 위치)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>지구급 고유장 + between-belts(canon gap)면 표면 차폐 충분. 초강자기장 불요. 거주가능의 물리 근거.</span><span data-en hidden>An Earth-class intrinsic field + between-belts (canon gap) is enough to shield the surface. No ultra-strong field needed. The physical basis for habitability.</span></div>
-  
+  <div class="refs"><a class="ref" href="../../wiki/reference__planetary-magnetosphere-geometry-methodology.html" target="_blank" rel="noopener">planetary-magnetosphere-geometry-methodology.md</a></div>
 </article>
 <article class="dec is-sup" id="magnetism.radiation_belts">
   <div class="dec-head">
@@ -248,7 +248,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">base_colour</td><td class="v">지구식 초록 식생 + 파란 대양 + 흰 구름 마블</td><td class="o"></td></tr><tr><td class="k">clouds</td><td class="v">흰 물구름, 활발한 기상</td><td class="o"></td></tr><tr><td class="k">emission_glow</td><td class="v">은은한 청록 야간 생물발광 (식물+해안)</td><td class="o"></td></tr><tr><td class="k">aurora</td><td class="v">격렬·다색 (O₂ 초록 557.7/630nm + N₂⁺ 청보라 391nm + 적색) + 국소 플럭스-볼텍스 오벌</td><td class="o"></td></tr><tr><td class="k">specular</td><td class="v">대양 sun-glint (OceanFX)</td><td class="o"></td></tr><tr><td class="k">haze</td><td class="v">지구식 파란 Rayleigh 림</td><td class="o"></td></tr><tr><td class="k">artificial</td><td class="v">none</td><td class="o"></td></tr><tr><td class="k">rings</td><td class="v">none</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>식생은 지구식 초록, 오로라는 강렬. 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색 630nm, N₂⁺ 청보라 391nm + 적색 밴드), 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante 황 플라스마 토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 국소 오로라: 플럭스 볼텍스 고자기 이상이 입자 강하를 비극지로 모음 → 극관 오로라와 별개로 그 구역 중심의 추가 오벌. 생물발광(지상 청록)과 오로라(상공 다색)가 야간 공존. 오로라 sRGB는 emit 시 element/molecular_plasma_colors.yaml서 추출(O₂/N₂/CO₂); 생물발광=EVE/emissive 야간 텍스처; specular=대양 sun-glint(OceanFX); haze=지구식 파란 Rayleigh 림; artificial/도시 불빛=∅(Na&#x27;vi 전산업).<br></span><span data-en hidden>Vegetation is Earth-style green and the aurora is intense. The aurora color is composition-fixed (O₂ green 557.7nm + red 630nm, N₂⁺ blue-violet 391nm + red band), distinguished from Polyphemus&#x27;s H₂ pink. The intensity is physically justified: strong field + Dante sulfur plasma torus + position inside the Polyphemus magnetosphere = a Jupiter Io-torus strong-aurora analog. Local aurora: the flux-vortex high-field anomaly concentrates particle precipitation off the poles → an additional local oval centered on that zone, separate from the polar-cap aurora. Bioluminescence (ground cyan) and aurora (overhead multicolor) coexist at night. Aurora sRGB extracted at emit from element/molecular_plasma_colors.yaml (O₂/N₂/CO₂); bioluminescence=EVE/emissive night texture; specular=ocean sun-glint (OceanFX); haze=Earth-style blue Rayleigh limb; artificial/city-lights=∅ (Na&#x27;vi pre-industrial).<br></span></div>
-  
+  <div class="refs"><a class="ref" href="../../wiki/reference__element-plasma-colors.html" target="_blank" rel="noopener">element-plasma-colors.md</a><a class="ref" href="../../wiki/reference__atmosphere-reflected-color-methodology.html" target="_blank" rel="noopener">atmosphere-reflected-color-methodology.md</a></div>
 </article>
 <article class="dec" id="environment.radiation">
   <div class="dec-head">
@@ -259,7 +259,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">중간/거주가능 (between-belts gap + 강 dipole 차폐)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>between-belts gap + 강 dipole 차폐 = 거주가능의 물리 근거(magnetism 행). stellar_wind/activity/heliosphere/uv_xray/habitable_zone = 항성-레벨(A·B), Pandora 행 ∅.</span><span data-en hidden>between-belts gap + strong-dipole shielding = the physical basis for habitability (magnetism row). stellar_wind/activity/heliosphere/uv_xray/habitable_zone = star-level (A·B), no Pandora rows.</span></div>
-  
+  <div class="refs"><a class="ref" href="../../wiki/reference__solar-system-radiation-belts.html" target="_blank" rel="noopener">solar-system-radiation-belts.md</a><a class="ref" href="../../wiki/reference__planetary-magnetosphere-geometry-methodology.html" target="_blank" rel="noopener">planetary-magnetosphere-geometry-methodology.md</a></div>
 </article>
 <article class="dec" id="gameplay">
   <div class="dec-head">
