@@ -126,8 +126,9 @@ telescope. Neither was tuned.
    negligible; adding a contour-derived `ΔT_gh` on top of a tidally inflated `T_eq`
    assumes the increment is unchanged, when in reality the water-vapour feedback responds
    to the actual temperature. Barnes 2013 treats stellar and tidal flux together.
-5. **Ocean tidal dissipation is NOT in this budget.** See the open channel below. For a
-   moon with a surface ocean and non-zero obliquity, it may be the largest term of all.
+5. **Ocean tidal dissipation is NOT in this budget.** See the second channel below. For a
+   moon with a liquid ocean it is a separate term, set by the eccentricity tide and the
+   ocean's depth rather than by `k₂/Q`.
 
 ## Worked example: the Polyphemus moons
 
@@ -186,35 +187,59 @@ The lesson generalizes past this system. For a close-in moon the tidal term, not
 greenhouse, is usually the knob that decides habitability, and it is the knob with the
 worst-constrained input.
 
-## The open channel: ocean tidal dissipation
+## The second channel: ocean tidal dissipation
 
-Everything above uses **solid-body** tidal dissipation. A moon with a liquid ocean has a
-second channel, and the literature says it can dominate.
+Everything above uses **solid-body** tidal dissipation. A moon with a liquid ocean
+dissipates tidal energy in the water too, and that channel obeys different rules. Two
+forcings drive it, and telling them apart is the whole game.
 
+**Obliquity forcing is efficient but starved.**
 [Tyler 2008](https://ui.adsabs.harvard.edu/abs/2008Natur.456..770T) showed that the
-**obliquity** tide — a term usually dismissed as subdominant — has the right form and
-frequency to resonantly excite large-amplitude Rossby waves in a moon's ocean. For Europa
-the kinetic energy of that resonant flow is "two thousand times larger than that of the
-flow excited by the dominant tidal forces," enough to be a primary ocean heat source.
+obliquity tide — usually dismissed as subdominant — has the right form and frequency to
+resonantly excite large-amplitude Rossby waves in a moon's ocean; for Europa the kinetic
+energy of that resonant flow is "two thousand times larger than that of the flow excited by
+the dominant tidal forces." [Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)
+conclude that "obliquity tides are likely to dominate the tidal heating budget of icy
+satellite oceans."
 
-Two papers bound it:
-[Beuthe 2016](https://arxiv.org/abs/1608.08488) shows oceanic dissipation is "strongly
-reduced by the crustal constraint" in a *subsurface* ocean, contributing little to
-Enceladus's heat budget, and gives scaling rules relating subsurface to **surface** oceans.
-[Hay & Matsuyama 2017](https://ui.adsabs.harvard.edu/abs/2017Icar..281..342H) find that
-under bottom drag the obliquity Rossby resonance becomes independent of ocean thickness for
-thick oceans.
+The catch is the forcing angle. **What drives an obliquity tide is the angle between the
+spin axis and the moon's own orbit normal, not the tilt of that orbit relative to anything
+else.** A tidally damped moon settles into a Cassini state, and per
+[`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md) a
+close-in moon of a giant is expected at **sub-degree** obliquity — 10⁻³–10⁻² degrees like
+the Galileans, reaching Titan-like 0.1–0.3° only if an ocean amplifies it.
+[Matsuyama 2014](https://ui.adsabs.harvard.edu/abs/2014Icar..242...11M) puts a number on
+what that starvation costs: at Cassini-state obliquity, Enceladus's obliquity-tide flux is
+"smaller than the observed value by many orders of magnitude."
 
-Why this matters for NearStars: Beuthe's damping is a *crustal* effect, so it does not
-protect a moon whose ocean is at the surface, and the forcing scales with obliquity.
-Pandora's obliquity is **10°** against Europa's ~0.1°, roughly a hundredfold larger
-forcing amplitude, on a surface ocean with no ice lid. The channel is resonant, so it
-cannot be estimated by scaling — it needs the Laplace tidal equations solved the way Hay &
-Matsuyama do.
+**Eccentricity forcing is the live channel, and it is resonant.** Matsuyama 2014 finds the
+resonant response to the *eccentricity* tide "can be large enough to explain Enceladus'
+observed heat flow", and that ocean loading, self-attraction and solid-region deformation
+shift which ocean thicknesses resonate, "potentially resulting in orders of magnitude
+changes in the dissipated energy flux."
 
-**Status: unquantified, and it pushes toward runaway.** This is the largest single
-uncertainty in Pandora's habitability, and "the ocean's tidal budget" in the board's own
-wording refers to a budget that has so far only been computed for the solid body.
+For NearStars this is good news, because it turns a threat into a knob:
+
+- The channel that could run away needs an obliquity we do not have. Pandora's recorded
+  `obliquity: 10°` is the **orbital inclination** (the board's own note: canon 29° reread
+  as the orbital-plane tilt, `spin_axis_orientation: orbit normal`), so the tide-driving
+  angle is the Cassini-state value, sub-degree, comparable to or smaller than Europa's.
+- The channel that remains is set by **ocean thickness**, which for an invented world is an
+  art parameter. Pick a depth away from resonance and the flux is small; land on resonance
+  and it moves by orders of magnitude.
+- Pandora's ocean is at the surface, so the ice-shell effects
+  ([Beuthe 2016](https://arxiv.org/abs/1608.08488)'s crustal suppression,
+  [Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)'s
+  shell-mediated enhancement) do not apply; the free-surface treatment is the right one,
+  and Hay & Matsuyama extend free-surface scaling laws to shells "benchmarked to within
+  10 %", so the free-surface laws are the validated baseline rather than an approximation.
+
+**Status: bounded, not quantified.** No number is assigned here because the eccentricity
+resonance depends on an ocean depth nobody has chosen yet. What this section buys is the
+knowledge that the ocean channel is a depth choice rather than an uncontrolled risk, and
+that "the ocean's tidal budget" in the board's wording is the solid-body budget above plus
+this depth-dependent term. Fixing Pandora's ocean depth is the trigger to compute it, with
+[Matsuyama 2018](https://arxiv.org/abs/1804.07727) as the method.
 
 ## Citations
 
@@ -241,9 +266,24 @@ wording refers to a budget that has so far only been computed for the solid body
   (`2008Natur.456..770T`). Obliquity-driven Rossby-wave resonance in moon oceans; the
   2000× flow-energy result for Europa. *Nature letter, no preprint*: bibcode, numbers from
   the ADS abstract.
+- **[Matsuyama 2014](https://ui.adsabs.harvard.edu/abs/2014Icar..242...11M)**, Icarus 242,
+  11 (`2014Icar..242...11M`). Ocean loading, self-attraction and solid-region deformation
+  shift the resonant ocean thicknesses by orders of magnitude; at Cassini-state obliquity
+  Enceladus's obliquity-tide flux falls "many orders of magnitude" below observed, while the
+  resonant eccentricity tide can explain the observed heat flow. This is the paper that
+  decides which ocean forcing matters. No preprint; numbers from the ADS abstract.
+- **[Matsuyama 2018](https://arxiv.org/abs/1804.07727)**, Icarus 312, 208
+  (`2018Icar..312..208M`). Ocean tidal heating with solid shells; thin-shell approximation
+  accurate to a few percent for eccentricity tides. The method to use once an ocean depth is
+  chosen. **Cached** at `docs/phase3/_papers/1804.07727.md`.
 - **[Beuthe 2016](https://arxiv.org/abs/1608.08488)**, Icarus 280, 278
   (`2016Icar..280..278B`). Crustal control of dissipative ocean tides; subsurface-to-surface
   ocean scaling rules. Numbers from the ADS abstract.
+- **[Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)**,
+  Icarus 319, 68 (`2019Icar..319...68H`). Non-linear bottom drag with an ice shell;
+  free-surface dissipation scaling laws extended to shells and benchmarked to within 10 %;
+  concludes obliquity tides dominate icy-satellite ocean heating *where the obliquity
+  exists*. No preprint; numbers from the ADS abstract.
 - **[Hay & Matsuyama 2017](https://ui.adsabs.harvard.edu/abs/2017Icar..281..342H)**,
   Icarus 281, 342 (`2017Icar..281..342H`). Numerical Laplace-tidal-equation modelling with
   bottom drag; obliquity Rossby resonance independent of ocean thickness for thick oceans.
@@ -262,4 +302,7 @@ wording refers to a budget that has so far only been computed for the solid body
 - [`tidally-locked-temperature-methodology.md`](tidally-locked-temperature-methodology.md)
   — the planet-side `T_eq` and day-night structure; a moon replaces its Layer 1 with this
   doc's four terms.
+- [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md) —
+  supplies the spin-axis obliquity that decides whether the obliquity ocean tide is live.
+  Do not substitute an orbital inclination for it.
 - [methodology-index](methodology-index.md) — the living index of all derived-value recipes.
