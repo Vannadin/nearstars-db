@@ -1,0 +1,66 @@
+{
+ "_comment": "HADES LOW-e VARIANT (hades_e005): identical to the 2026-06-21 design-of-record except Hades eccentricity 0.005 (was 0.05). Purpose: test whether a low Hades e keeps its tidal flux compatible with a 225 K dark surface WITHOUT killing Dante's forced eccentricity (Dante's perpetual volcanism depends on perturbations from Hades). Same run settings as _final32b.",
+ "system": "alpha_centauri",
+ "bodies": [
+  {
+   "name": "Dante",
+   "parent": "Alpha Centauri A b",
+   "type": "moon",
+   "semi_major_axis_km": 110000,
+   "eccentricity": 0.01,
+   "inclination_deg": 9.0,
+   "node_deg": 89.0,
+   "mean_anomaly_deg": 35.0,
+   "mass_kg": 8e+21,
+   "radius_km": 900
+  },
+  {
+   "name": "Hades",
+   "parent": "Alpha Centauri A b",
+   "type": "moon",
+   "semi_major_axis_km": 148000,
+   "eccentricity": 0.005,
+   "inclination_deg": 11.0,
+   "node_deg": 91.0,
+   "mean_anomaly_deg": 140.0,
+   "mass_kg": 5e+21,
+   "radius_km": 750
+  },
+  {
+   "name": "Pandora",
+   "parent": "Alpha Centauri A b",
+   "type": "moon",
+   "semi_major_axis_km": 252393,
+   "eccentricity": 0.0,
+   "inclination_deg": 10.0,
+   "node_deg": 90.0,
+   "mean_anomaly_deg": 250.0,
+   "mass_kg": 4.3e+24,
+   "radius_km": 5724
+  },
+  {
+   "name": "Cassandra",
+   "parent": "Alpha Centauri A b",
+   "type": "moon",
+   "semi_major_axis_km": 600000,
+   "eccentricity": 0.05,
+   "inclination_deg": 176.0,
+   "node_deg": 247.0,
+   "mean_anomaly_deg": 300.0,
+   "mass_kg": 9e+23,
+   "radius_km": 3400
+  },
+  {
+   "name": "Chaos",
+   "parent": "Alpha Centauri A b",
+   "type": "moon",
+   "semi_major_axis_km": 1500000,
+   "eccentricity": 0.02,
+   "inclination_deg": 179.0,
+   "node_deg": 274.0,
+   "mean_anomaly_deg": 60.0,
+   "mass_kg": 5.4e+20,
+   "radius_km": 400
+  }
+ ]
+}

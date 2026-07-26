@@ -1693,81 +1693,128 @@ decisions:
     status: gated
     driver: [physics, canon]
     narrative: >
-      Hades carries strong tidal heating inside. Scaled from Io it comes out some 400 times as much, but the moon is
-      small and rigid, so most of that heat goes into pushing its crust around rather than melting the surface. On its
-      stable orbit that leaves grooved and faulted terrain with no visible lava, and it reads as a gray, seemingly
-      dead moon.
+      Tides keep Hades warm from the inside, releasing about fifteen times the heat Io does. That heat has nowhere to
+      go but out through the surface, and it is what sets the ground temperature rather than the distant star. Only a
+      thin shell of rock separates the surface from melt below, so the crust is young everywhere and no ancient
+      landscape survives on it.
     narrative_ko: >
-      Hades도 내부에는 강한 조석열을 품는다. 이오를 기준으로 계산하면 그 400배에 이르지만, 작고 단단한 몸이라
-      열의 대부분은 표면을 녹이는 대신 지각을 밀어 올리는 데 쓰인다. 그래서 안정된 궤도에서는 눈에 보이는 용암
-      없이 홈과 단층 지형만 남고, 회색의 죽은 듯한 위성으로 보인다.
-    refs: ["docs/reference/tidal-heating-methodology.md"]
+      조석이 Hades를 안에서부터 데워, 이오의 열다섯 배쯤을 내놓는다. 그 열은 표면으로 빠져나가는 수밖에 없어서,
+      땅의 온도를 정하는 것은 멀리 있는 별이 아니라 이 내부열이다. 표면과 아래의 용융부 사이를 가르는 것은 얇은
+      암석 껍질뿐이라, 지각은 어디나 젊고 오래된 지형은 남지 못한다.
+    refs: ["docs/reference/tidal-heating-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "phase3/stability-sim/STABILITY_REPORT.md"]
     fields:
-      - { name: tidal_heating, value: "~400× Io (내부, 표면 비발광 — 텍토닉으로 발현)", op: set }
+      - { name: tidal_heating, value: "~15× Io (207 W/m² 표면 플럭스; rocky band 하단 k₂/Q=1e-3, e_rms 0.0385)", op: set, note: "밴드 전체는 15–146× Io (k₂/Q 1e-3–1e-2), 표면 278–444K" }
     gate:
       criterion: [canon-consistency, physics]
       verdict: owner-override
-      evidence: "Io-scaling gives ~400× Io internal heat, but a small rigid moon has low dissipation (low k2/Q), so it channels into tectonics instead of melting. The game's >900K red-hot surface is set aside for the film's gray plain moon (film > game > wiki); >900K would need an unstable grazing e~0.3 orbit, so at the stable e≈0.04 the surface stays non-luminous."
-      evidence_ko: "Io-스케일링 ~400× Io 내부열이나 작은 강체 위성은 dissipation(k2/Q) 낮아 용융 대신 텍토닉으로 흐른다. 게임의 >900K 붉은 표면은 영화의 회색 밋밋 위성에 밀린다(영화>게임>위키); >900K는 불안정한 grazing e~0.3 궤도가 필요하나 안정 e≈0.04에선 표면 비발광."
+      evidence: >
+        REDERIVED 2026-07-26; the previous entry was energetically impossible. It read "~400x Io internal heat, but a
+        small rigid moon has low k2/Q so it channels into tectonics instead of melting", which fails twice: a low k2/Q
+        means the heat is never GENERATED (the 400x figure already assumes a k2/Q, so lowering one lowers the other),
+        and tectonics is not a heat sink -- deformation energy still leaves as radiation. Conservation fixes the surface
+        temperature: whatever power is generated must be radiated, so the area-weighted sigma*T^4 mean is pinned no
+        matter how the heat concentrates into hotspots.
+        Grounded chain: the stability sim's forced eccentricity, not an assumed one. Three runs with Hades e_init
+        0.005/0.010/0.020 all return e_max 0.047-0.064 identical to the design-of-record, i.e. Pandora (860x Hades's
+        mass, period ratio 2.22) forces it; e cannot be lowered by an initial condition. Simulated e_rms = 0.0385.
+        With the methodology's rocky band k2/Q = 1e-3..1e-2 that gives 207-2071 W/m² (15-146x Io) and a four-term
+        satellite T_eq of 278-444 K, against 141 W/m² of absorbed starlight. Owner takes the band's low end: 207 W/m²,
+        ~15x Io, T_eq 278 K (~5 C). Caution 3 of the tidal-heating doc applies -- the flux is above the melting
+        threshold, so fixed-Q is unreliable and an Andrade/Maxwell treatment could shift it by >10x; that gap is the
+        error bar.
+        Canon: the game's ">900K red-hot Hades" is still not adopted, but the film's "cold gray plain" is now only
+        half-adopted. Gray and non-luminous survives (the visible fraction of a 278 K blackbody is ~1e-20, far below
+        the ~798 K Draper point), while "ancient cratered plain" does not: a 10 m conductive lid over melt resurfaces
+        continuously. Owner accepted dropping the craters.
+      evidence_ko: >
+        2026-07-26 재도출. 이전 항목은 에너지적으로 불가능했다. "~400× Io 내부열이나 작은 강체라 k₂/Q가 낮아 용융
+        대신 텍토닉으로 흐른다"는 서술은 두 군데서 틀린다. k₂/Q가 낮으면 열이 애초에 생성되지 않으며(400×라는 값이
+        이미 특정 k₂/Q를 가정하므로 하나를 낮추면 다른 하나도 내려간다), 텍토닉은 열의 배출구가 아니다(변형에 쓰인
+        에너지도 결국 복사로 나간다). 보존 법칙이 표면 온도를 고정한다. 생성된 출력은 전부 복사되어야 하므로 열이
+        핫스팟으로 얼마나 모이든 면적가중 σT⁴ 평균은 묶여 있다.
+        근거 사슬은 가정한 이심률이 아니라 안정성 시뮬의 강제 이심률이다. Hades 초기 e를 0.005/0.010/0.020으로 넣은
+        세 런 모두 e_max 0.047~0.064로 설계 원본과 동일하게 돌아왔다. 즉 판도라(Hades 질량의 860배, 주기비 2.22)가
+        강제하는 값이며 초기 조건으로는 낮출 수 없다. 시뮬 e_rms = 0.0385. 방법론의 rocky 밴드 k₂/Q = 1e-3~1e-2를
+        적용하면 207~2071 W/m²(이오의 15~146배), 4항 위성 T_eq 278~444 K가 되고, 흡수 별빛은 141 W/m²다. 오너는
+        밴드 하단을 택한다. 207 W/m², 이오의 약 15배, T_eq 278 K(약 5 °C). tidal-heating 문서의 caution 3이 적용된다.
+        플럭스가 용융 문턱 위라 fixed-Q는 신뢰도가 떨어지고 Andrade/Maxwell 처리가 10배 이상 옮길 수 있으며, 그 간격이
+        오차 막대다.
+        캐넌: 게임의 ">900K 붉은 Hades"는 여전히 미채택이나, 영화의 "차가운 회색 밋밋"은 이제 절반만 채택된다. 회색·
+        비발광은 살아남는다(278 K 흑체의 가시 몫은 약 1e-20으로 Draper 점 약 798 K에 한참 못 미친다). 반면 "오래된
+        크레이터 평원"은 살아남지 못한다. 용융부 위 10 m 전도 지각은 계속 갈아엎힌다. 크레이터 제거는 오너 승인.
 
   - body: Hades
     axis: surface
     status: gated
     driver: [canon-film, physics]
     narrative: >
-      Hades has a gray, Ganymede-like surface. Old dark cratered ground is overlaid by younger bright grooved and
-      faulted terrain, so the marks of tidal stress show up in landforms alone. No lava is visible anywhere, and water
-      ice cannot survive at these temperatures, so it reads as dry rock rather than an icy world. Its brightness is a
-      medium gray, about that of the lunar highlands, and the surface sits near 225 K. Tide-locked to Polyphemus, it
-      swings that temperature through its long day, its night, and eclipses.
+      Hades is a gray rocky moon with a young surface. Tidal stress writes itself into the ground as grooves and
+      faults, and nothing older than that survives, because the crust is thin and constantly remade. No lava pools on
+      the surface, though the heat below reaches it: the ground sits near 278 K, mild for an airless world and far too
+      warm for any water ice. Its brightness is a medium gray, about that of the lunar highlands. Being tide-locked to
+      Polyphemus barely moves that temperature, since the warmth comes from inside rather than from the star.
     narrative_ko: >
-      Hades의 지표는 가니메데를 닮은 회색이다. 오래되고 어두운 크레이터 지형 위로 젊고 밝은 홈과 단층 지형이 겹쳐,
-      조석이 밀어붙인 흔적을 지형만으로 드러낸다. 용암은 어디에도 보이지 않고, 물얼음이 버틸 수 없는 온도라 얼음
-      위성이 아니라 마른 바위처럼 보인다. 밝기는 달 고지대 정도의 중간 회색이고, 지표 온도는 대체로 225 K 안팎이다.
-      Polyphemus에 한쪽 면을 고정한 채 돌기 때문에 낮과 밤, 그리고 식이 그 온도를 오르내리게 한다.
+      Hades는 표면이 젊은 회색 암석 위성이다. 조석 응력이 홈과 단층으로 땅에 새겨지고, 그보다 오래된 것은 남지
+      못한다. 지각이 얇고 끊임없이 새로 만들어지기 때문이다. 표면에 용암이 고이지는 않지만 아래의 열은 지표까지
+      올라와, 땅은 278 K 안팎에 머문다. 대기 없는 천체로서는 온화한 값이고, 물얼음이 남기에는 한참 뜨겁다. 밝기는
+      달 고지대 정도의 중간 회색이다. Polyphemus에 조석 고정되어 있어도 이 온도는 거의 흔들리지 않는다. 온기가
+      별이 아니라 내부에서 오기 때문이다.
+    refs: ["docs/reference/moon-energy-budget-methodology.md", "docs/reference/tidal-heating-methodology.md", "docs/reference/surface-color-albedo-methodology.md"]
     fields:
-      - { name: surface_type, value: "가니메데형 회색 rocky (어두운 크레이터 + 밝은 홈/단층 지형)", op: set }
+      - { name: surface_type, value: "회색 rocky, 젊은 지표 (홈/단층 지형 지배, 오래된 크레이터 없음 — 얇은 지각 상시 재포장)", op: set }
       - { name: albedo, value: 0.30, op: set, note: "중간 회색(달 고지대급), 오너 B" }
-      - { name: surface_temperature, value: 225, unit: K, op: set }
+      - { name: surface_temperature, value: 278, unit: K, op: set, note: "4항 Teq: 조석 207 W/m²가 별빛 141 W/m²를 압도 → 내부열이 지배; 구값 225K는 조석 항 누락" }
     gate:
       criterion: [canon-consistency]
       verdict: pass-in-window
       evidence: >
         [FILM] gray plain + tidal energy=tectonic grooves (Ganymede grooved-terrain analogy). Composition=rock/silicate (not icy —
-        water ice is unstable at ~225K+; Ganymede is a morphology analogy, not composition). Chemical-composition facet skipped (low-impact). Visual contrast with Dante (lava fractures).
+        water ice is unstable; Ganymede was a morphology analogy, not composition). Chemical-composition facet skipped (low-impact).
         albedo 0.30=owner B (medium gray, lunar-highland class); A (0.18 dark)·C (0.43 Ganymede-class) not adopted.
-        surface_temperature_k 225 from albedo 0.30 + α Cen A insolation at 1.6 AU → Teq ~225K, consistent with the rest
-        of the Polyphemus system. As an airless rocky body KSP auto-derives it from flux+albedo; tidally locked
-        (14.4h stellar frame) so day-night+eclipse variation applies. Internal tidal heat contributes negligibly to
-        surface temperature.
+        surface_temperature 225 → 278 K, 2026-07-26. The old 225 K was albedo 0.30 + α Cen A insolation with the
+        explicit note "internal tidal heat contributes negligibly", which is the error: the tidal term is 207 W/m²
+        against 141 W/m² of absorbed starlight, so internal heat DOMINATES and the star is the minor contributor
+        (bulk.tidal_heating row for the chain and the k2/Q band). Two consequences follow. Day-night and eclipse
+        variation nearly vanishes, because an internally heated surface does not track the sky. And the old cratered
+        terrain goes: a 10 m conductive lid over melt resurfaces continuously, so grooves and faults are the only
+        landforms that survive. Owner accepted dropping the craters. Visual contrast with Dante narrows but survives
+        in degree (Dante ~650 K with a 0.14 m lid and lava lakes; Hades 278 K with a 10 m lid and no surface lava).
+        KSP auto-derives an airless body's temperature from flux+albedo, so emit must inject the internal term
+        explicitly rather than relying on the stock path.
       evidence_ko: >
         [FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 —
-        ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와
-        시각 대비. albedo 0.30=오너 B(중간 회색, 달 고지대급); A(0.18 어두움)·C(0.43 가니메데급)은 미채택.
-        surface_temperature_k 225 = albedo 0.30 + α Cen A 1.6 AU 입사량 → Teq ~225K, 폴리페무스계 일관.
-        대기 없는 암석체라 KSP가 flux+albedo로 자동 산출; 조석고정(별 기준 14.4h)이라 낮밤+일식 변동.
-        내부 조석열은 표면온도 기여 미미.
+        水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트).
+        albedo 0.30=오너 B(중간 회색, 달 고지대급); A(0.18 어두움)·C(0.43 가니메데급)은 미채택.
+        surface_temperature 225 → 278 K, 2026-07-26. 구값 225K는 albedo 0.30 + α Cen A 입사량이었고 "내부 조석열은
+        표면온도 기여 미미"라는 메모가 붙어 있었는데, 그게 바로 오류다. 조석 항이 207 W/m²로 흡수 별빛 141 W/m²를
+        넘어서므로 내부열이 지배하고 별이 부수적이다(사슬과 k₂/Q 밴드는 bulk.tidal_heating 행 참조). 두 가지가
+        따라온다. 내부에서 데워지는 표면은 하늘을 따라가지 않으므로 낮밤·식 변동이 거의 사라진다. 그리고 오래된
+        크레이터 지형이 사라진다. 용융부 위 10 m 전도 지각은 계속 갈아엎히므로 살아남는 지형은 홈과 단층뿐이다.
+        크레이터 제거는 오너 승인. Dante와의 시각 대비는 좁아지지만 정도 차이로 남는다(Dante ~650 K, 지각 0.14 m,
+        용암호 / Hades 278 K, 지각 10 m, 지표 용암 없음). KSP는 대기 없는 천체 온도를 flux+albedo로 자동 산출하므로,
+        emit에서 내부열 항을 명시적으로 주입해야 하며 스톡 경로에 기대면 안 된다.
 
   - body: Hades
     axis: appearance
     status: gated
     driver: [canon-film, visual]
     narrative: >
-      From a distance Hades is a gray moon built much like Ganymede. Its old cratered regions sink into a dark
-      brownish gray while the younger grooved terrain stands out a shade lighter, splitting the surface into two
-      tones. The tint goes no further than a faint hint of brown, and next to lava-lit Dante it reads as the quiet
-      gray one.
+      From a distance Hades is a gray moon whose surface is drawn entirely in grooves and faults. The older, darker
+      ground between them reads brownish gray while the freshest bands stand out a shade lighter, splitting the
+      surface into two tones. The tint goes no further than a faint hint of brown, and nothing on the moon glows:
+      it is warm enough underfoot but far too cool to shine. Next to lava-lit Dante it stays the quiet gray one.
     narrative_ko: >
-      멀리서 본 Hades는 가니메데와 비슷한 구조의 회색 위성이다. 크레이터가 뒤덮인 오래된 지역은 어두운 갈회색으로
-      가라앉고, 젊은 홈 지형은 그보다 밝은 회색으로 드러나 지표가 두 톤으로 갈린다. 색조는 아주 옅은 갈색기가 도는
-      정도에 그치고, 용암으로 불타는 Dante 옆에서 조용한 회색으로 대비를 이룬다.
+      멀리서 본 Hades는 지표가 온통 홈과 단층으로 그려진 회색 위성이다. 그 사이의 오래되고 어두운 땅은 갈회색으로
+      보이고 가장 새로 난 띠는 그보다 밝게 드러나, 지표가 두 톤으로 갈린다. 색조는 아주 옅은 갈색기가 도는 정도에
+      그치고, 빛을 내는 곳은 한 군데도 없다. 발밑은 따뜻하지만 빛나기에는 한참 차갑다. 용암으로 불타는 Dante 옆에서
+      Hades는 여전히 조용한 회색이다.
     fields:
-      - { name: surface, value: "가니메데 팔레트 — 어두운 크레이터 #5f574e, 밝은 홈 #9c968c, 약한 갈색조 (비발광)", op: set }
+      - { name: surface, value: "회색 팔레트 — 어두운 지대 #5f574e, 밝은 홈/단층 #9c968c, 약한 갈색조 (비발광)", op: set }
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
-      evidence: "Follows Ganymede's color (the film's gray plainness). Contrast with Dante's dark+lava glow = Hades gray calm."
-      evidence_ko: "가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요."
+      evidence: "Keeps the film's gray plainness. Non-luminous is now a computed result rather than an assumption: a 278 K blackbody puts ~1e-20 of its flux in the visible, against the ~798 K Draper point where solids first glow, so a warm Hades is still a visually dark one. The Ganymede label is dropped from the palette with the craters (surface row) since the two-tone split is now old-vs-fresh tectonic ground, not cratered-vs-grooved. Contrast with Dante's dark+lava glow survives as a difference of degree."
+      evidence_ko: "영화의 회색-밋밋 유지. 비발광은 이제 가정이 아니라 계산 결과다. 278 K 흑체는 가시 영역에 플럭스의 약 1e-20만 내놓고, 고체가 처음 빛나는 Draper 점 약 798 K에 한참 못 미치므로 따뜻한 Hades도 시각적으로는 어둡다. 팔레트에서 가니메데 라벨은 크레이터와 함께 내렸다(surface 행). 두 톤 갈림이 크레이터 대 홈이 아니라 오래된 지각 대 갓 난 지각이기 때문이다. Dante의 어두운+용암발광과의 대비는 정도 차이로 남는다."
 
   - body: Hades
     axis: atmosphere
@@ -1801,17 +1848,18 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      The surface is more stable than Dante's, but the radiation is strong enough that no stay lasts long without
-      proper shielding.
+      Landing is easy and the ground is mild, a few degrees above freezing rather than hot. What limits a stay is the
+      radiation, which is strong enough that nothing lasts long here without proper shielding.
     narrative_ko: >
-      Dante보다 표면은 안정하지만, 강한 방사선으로 인해 충분한 차폐 없이는 오래 머물 수 없다.
+      착륙은 쉽고 땅은 온화하다. 뜨겁기보다 어는점을 조금 넘는 정도다. 체류를 제한하는 것은 방사선이고, 충분한 차폐
+      없이는 아무것도 오래 버티지 못한다.
     fields:
-      - { name: science_biomes, value: "6: Dark Cratered Terrain / Bright Grooved Terrain / Impact Basins / Tectonic Ridges / Poles / Sub-Polyphemus Point", op: set, colors: {"Dark Cratered Terrain":"#47433D","Bright Grooved Terrain":"#A9B6BE","Impact Basins":"#8A7E6E","Tectonic Ridges":"#6E6152","Poles":"#CFE0E6","Sub-Polyphemus Point":"#3E8C8A"} }   # provisional naturalistic biome-map display colors (S↓, sub-point = accent)
+      - { name: science_biomes, value: "6: Old Crust / Bright Grooved Terrain / Resurfacing Zones / Tectonic Ridges / Poles / Sub-Polyphemus Point", op: set, colors: {"Old Crust":"#47433D","Bright Grooved Terrain":"#A9B6BE","Resurfacing Zones":"#8A7E6E","Tectonic Ridges":"#6E6152","Poles":"#CFE0E6","Sub-Polyphemus Point":"#3E8C8A"} }   # provisional naturalistic biome-map display colors (S↓, sub-point = accent); Dark Cratered Terrain/Impact Basins retired 2026-07-26 with the craters
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
-      evidence: "Less heat threat than Dante, so landing and standing are easy, but radiation is comparable or greater (belt peak), making shielding mandatory for any long stay. A gray exploration target. The six biomes include a geographic (not seasonal) Poles biome and a fixed Sub-Polyphemus Point, since the moon is tide-locked with obliquity ~0."
-      evidence_ko: "Dante보다 열 위협 적어 착륙·체류 자체는 쉬우나 방사선은 동급 이상(벨트 피크)이라 장기 체류엔 차폐 필수. 회색 탐사 대상. 조석고정+obliquity~0이라 6개 바이옴 중 극(Poles)은 seasonal이 아닌 지리적 구분이고, 폴리페무스 대면점(Sub-Polyphemus Point)은 고정 지점이다."
+      evidence: "Less heat threat than Dante, so landing and standing are easy: the regrounded surface temperature of 278 K is a few degrees above freezing, not a thermal hazard. Radiation is comparable or greater (belt peak), making shielding mandatory for any long stay. A gray exploration target. The six biomes include a geographic (not seasonal) Poles biome and a fixed Sub-Polyphemus Point, since the moon is tide-locked with obliquity ~0. Two biomes renamed 2026-07-26: Dark Cratered Terrain → Old Crust and Impact Basins → Resurfacing Zones, following the surface row's retirement of ancient cratered ground (a 10 m lid over melt leaves no old craters to sample)."
+      evidence_ko: "Dante보다 열 위협 적어 착륙·체류 자체는 쉽다. 재도출된 표면온도 278 K는 어는점을 몇 도 넘는 값이라 열 위험이 아니다. 방사선은 동급 이상(벨트 피크)이라 장기 체류엔 차폐 필수. 회색 탐사 대상. 조석고정+obliquity~0이라 6개 바이옴 중 극(Poles)은 seasonal이 아닌 지리적 구분이고, 폴리페무스 대면점(Sub-Polyphemus Point)은 고정 지점이다. 2026-07-26 바이옴 두 개 개명: Dark Cratered Terrain → Old Crust, Impact Basins → Resurfacing Zones. surface 행에서 오래된 크레이터 지형을 폐기한 데 따른 것이다(용융부 위 10 m 지각에는 채집할 옛 크레이터가 없다)."
 
   - body: Pandora                  # A b III
     axis: identity
