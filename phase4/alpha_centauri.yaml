@@ -1918,29 +1918,48 @@ decisions:
     fields:
       - { name: composition, value: "N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon)", op: set }
       - { name: pressure, value: 1.1, unit: atm, op: set, note: "canon ~20% 빽빽" }
-      - { name: temperature, value: 290, unit: K, op: set, note: "Teq ~225K + CO₂ 온실 +70K; great-season ±15–25K" }
-      - { name: greenhouse, value: "강함 (CO₂>18%+CH₄+H₂S 구동, +70K lift)", op: set }
+      - { name: temperature, value: 290, unit: K, op: set, note: "4항 Teq 220.6K + 조석 45 W/m² → Teq 237K, + CO₂ 온실 +54K = 291K; great-season ±15–25K" }
+      - { name: greenhouse, value: "강함 (CO₂>18%+CH₄+H₂S 구동, +54K lift — 나머지는 조석)", op: set }
       - { name: scale_height, value: "도출 (무거운 CO₂+0.8g)", op: set }
       - { name: escape, value: "안정 (지구형 0.8g)", op: set }
       - { name: breathability, value: true, op: set, note: "O₂ 존재 but lore-독성; stock atmosphereContainsOxygen=true" }
-    refs: ["docs/reference/tidally-locked-temperature-methodology.md", "docs/reference/exoplanet-atmosphere-methodology.md"]
+    refs: ["docs/reference/greenhouse-warming-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "docs/reference/tidal-heating-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/exoplanet-atmosphere-methodology.md"]
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
       evidence: >
         Faithful to canon composition (N₂ + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1%) and pressure (~1.1 atm, canon
-        ~20% denser). Teq ~225K (Polyphemus-system insolation) + high-CO₂ greenhouse +70K → surface ~290K,
-        great-season ±15–25K, physically justified (a mild version of the Venusian mechanism); the lift is
-        greenhouse, not tidal/stellar. scale_height derived (heavy CO₂ + 0.8g); escape stable (Earth-like 0.8g).
+        ~20% denser). 290K REDERIVED 2026-07-26, value unchanged but the accounting is different: the old
+        "Teq ~225K + greenhouse +70K, the lift is greenhouse not tidal" double-counted the greenhouse, because the
+        greenhouse recipe (greenhouse-warming, Layer 3 extrapolated band) gives this composition only +54K, and the
+        stellar-only Teq is not 225K either. Grounded chain: four-term satellite Teq = 220.6K (moon-energy-budget:
+        eclipses remove 7.7% of the starlight at 3.53 R_p, the parent returns 11.7 W/m² thermal + 4.9 reflected),
+        plus solid-body tidal heating 45 W/m², giving Teq 237K; +54K greenhouse = 291K. So the lift IS partly tidal.
+        The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it
+        is the same k₂/Q that puts the canon 27h orbit at 106 W/m² against a ~101 W/m² runaway ceiling — i.e. one
+        interior model explains both the adopted 32h lock and the canon temperature. Sensitivity is severe: an
+        Io-like k₂/Q = 0.015 would make Pandora a 369K steam world. Ocean tidal dissipation is a separate,
+        depth-dependent term still unquantified; the obliquity channel that could run away is starved because the
+        spin axis is orbit-normal (the recorded obliquity 10° is the orbital inclination, and the Cassini-state
+        obliquity is sub-degree). great-season ±15–25K unchanged.
+        scale_height derived (heavy CO₂ + 0.8g); escape stable (Earth-like 0.8g).
         breathability: KSP stock does not model toxicity → atmosphereContainsOxygen=true (jets·Kerbal breathing),
         human toxicity is a Kerbalism flag/report lore. Altitude T/P curves generated at emit from the
         cool-giant/Earth-like model (the eccentricity curve reads the parent Polyphemus e for the great-season,
         a delicate emit value, see the facet-checklist).
       evidence_ko: >
-        canon 조성(N₂ + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1%)·압력(~1.1 atm, canon ~20% 빽빽) 충실. Teq
-        ~225K(폴리페무스계 입사) + 고CO₂ 온실 +70K → 지표 ~290K, great-season ±15–25K, 물리 정당(금성식
-        메커니즘의 온건판); lift는 조석/항성 아닌 온실. scale_height 도출(무거운 CO₂+0.8g); escape 안정(지구형
-        0.8g). breathability: KSP 스톡은 독성 미모델 → atmosphereContainsOxygen=true(제트·Kerbal 호흡), 인간
+        canon 조성(N₂ + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1%)·압력(~1.1 atm, canon ~20% 빽빽) 충실.
+        290K 재도출 2026-07-26, 값은 그대로지만 회계가 다르다. 구 서술 "Teq ~225K + 온실 +70K, lift는 조석 아닌
+        온실"은 온실을 이중 계산하고 있었다. 온실 레시피(greenhouse-warming, Layer 3 외삽 구간)가 이 조성에 주는
+        값은 +54K뿐이고, 별빛만의 Teq도 225K가 아니다. 근거 사슬: 4항 위성 Teq = 220.6K(moon-energy-budget —
+        3.53 R_p에서 식이 별빛의 7.7%를 걷어가고 모행성이 열복사 11.7 + 반사 4.9 W/m² 되돌려줌), 여기에 고체 조석
+        45 W/m²를 더해 Teq 237K, +54K 온실 = 291K. 즉 lift에는 조석이 실제로 들어간다. 조석 항은 시뮬 e ≈ 0.005에서
+        k₂/Q ≈ 0.0016을 요구하는데 이는 예측이 아니라 맞춘 값이다. 다만 같은 k₂/Q가 캐넌 27h 궤도를 106 W/m²로
+        올려 ~101 W/m² 폭주 천장을 넘긴다. 하나의 내부 모형이 채택된 32h 조석고정과 캐넌 온도를 동시에 설명하는
+        셈이다. 민감도는 가혹하다. 이오급 k₂/Q = 0.015면 판도라는 369K 증기 세계가 된다. 해양 조석 소산은 깊이에
+        의존하는 별도 항으로 아직 미정량이고, 폭주를 낼 수 있는 기울기 채널은 자전축이 궤도 법선이라 굶주려 있다
+        (기록된 obliquity 10°는 궤도 경사이고 Cassini 상태 기울기는 1도 미만). great-season ±15–25K는 그대로.
+        scale_height 도출(무거운 CO₂+0.8g); escape 안정(지구형 0.8g). breathability: KSP 스톡은 독성 미모델 → atmosphereContainsOxygen=true(제트·Kerbal 호흡), 인간
         독성은 Kerbalism 플래그/레포트 lore. 고도별 T/P 커브는 emit 시 cool-giant/지구형 모델서 생성
         (eccentricity curve는 부모 폴리페무스 e를 읽어 great-season 반영, delicate emit 값, facet-checklist 참조).
 
@@ -2292,25 +2311,19 @@ decisions:
     status: gated
     driver: [canon, physics]
     narrative: >
-      composition=N₂ primary (~0.8–1 bar) + a few % CO₂ + ~0.1–1% CH₄ + trace H₂ + H₂O, anoxic·reducing (canon N–H).
-      pressure ~1 bar. temperature: Teq ~225K + CO₂·CH₄·N₂–H₂ CIA greenhouse +45–50K → surface ~270–275K (marginally moist).
-      greenhouse=CO₂+CH₄+N₂–H₂ collision-induced absorption (Archean/early-Mars warming recipe). breathability=no O₂ → non-breathable
-      (atmosphereContainsOxygen=false). escape=retains N₂/CO₂, H₂ escapes but is replenished volcanically. Archean-Earth analog (A adopted).
-      1.6 AU is within α Cen A's habitable zone (inside the maximum-greenhouse limit ~2–2.5 AU), so liquid water is possible. Anoxic=not contradictory with an ocean (Archean Earth
-      2 Gyr precedent; O₂ requires oxygenic photosynthesis=life, not evolved). Since O₂·CH₄ cannot coexist, anoxic is chosen while preserving the orange haze. Altitude
-      T/P curves generated at emit.
+      Cassandra's atmosphere is mostly nitrogen at roughly one bar, much like Earth's. A few percent carbon dioxide
+      and a little methane ride along with it, and there is no oxygen at all. Starlight alone would leave the moon
+      near 220 K, and these greenhouse gases lift the surface only into the 240 to 260 K band, so the water opens up
+      seasonally rather than everywhere. The air is not breathable.
     narrative_ko: >
-      composition=N₂ 주성분(~0.8–1 bar) + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성(canon N–H).
-      pressure ~1 bar. temperature: Teq ~225K + CO₂·CH₄·N₂–H₂ CIA 온실 +45–50K → 지표 ~270–275K(한계-습윤).
-      greenhouse=CO₂+CH₄+N₂–H₂ 충돌유발흡수(시생대/초기화성 온난화 레시피). breathability=O₂ 없음 → 비호흡
-      (atmosphereContainsOxygen=false). escape=N₂/CO₂ 보유, H₂는 탈출하나 화산 보충. 시생대 지구 아날로그(A 채택).
-      1.6 AU는 α Cen A 거주가능대 내(최대온실 한계 ~2–2.5 AU 안)라 물 액체 가능. 무산소=물바다와 무모순(시생대 지구
-      20억 년 선례; O₂는 산소발생 광합성=생물 필요, 미진화). O₂·CH₄ 공존 불가라 무산소 택하며 주황 haze 보존. 고도
-      T/P 커브 emit 시 생성.
+      Cassandra의 대기는 질소가 주성분이며 압력은 지구와 비슷한 1기압 안팎이다. 여기에 이산화탄소가 수 퍼센트,
+      메테인이 조금 섞여 있고 산소는 전혀 없다. 별빛만으로는 220 K에 머물 곳이고, 이 온실가스들이 지표를 240~260 K
+      까지만 끌어올려 물은 계절에 따라서만 열린다. 숨을 쉴 수는 없다.
+    refs: ["docs/reference/greenhouse-warming-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "docs/reference/exoplanet-atmosphere-methodology.md"]
     fields:
       - { name: composition, value: "N₂ 주성분 + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성", op: set }
       - { name: pressure, value: 1, unit: bar, op: set }
-      - { name: temperature, value: "270–275", unit: K, op: set, note: "Teq ~225K + CIA 온실 +45–50K (한계-습윤)" }
+      - { name: temperature, value: "240–260", unit: K, op: set, note: "4항 Teq 219–223K + 온실 상승폭 +20K(haze 포함)~+40K(haze 없음); 구값 270–275K는 미근거 +45–50K 가정" }
       - { name: greenhouse, value: "CO₂+CH₄+N₂–H₂ 충돌유발흡수 (시생대/초기화성 레시피)", op: set }
       - { name: breathability, value: false, op: set }
       - { name: escape, value: "N₂/CO₂ 보유, H₂ 탈출하나 화산 보충", op: set }
@@ -2321,10 +2334,24 @@ decisions:
         Archean-Earth analog (A adopted). 1.6 AU is within α Cen A's habitable zone (inside the maximum-greenhouse limit ~2–2.5 AU), so liquid water is possible.
         Anoxic=not contradictory with an ocean (Archean Earth 2 Gyr precedent; O₂ requires oxygenic photosynthesis=life, not evolved). Since O₂·CH₄
         cannot coexist, anoxic is chosen while preserving the orange haze. Altitude T/P curves generated at emit.
+        TEMPERATURE REDERIVED 2026-07-26. The old 270–275K rested on an ungrounded "+45–50K CIA greenhouse" with no
+        recipe behind it. Grounded now: four-term satellite Teq = 219–223K (greenhouse-warming §Layer 3 gives the
+        increment, moon-energy-budget gives Teq: eclipses cost 3.1% of the starlight at 8.4 R_p, the parent adds
+        2.1+0.9 W/m² and tidal heating only 2.7–13 W/m² at this distance), plus a greenhouse increment of +20K with
+        the designed haze or +40K without it (CH₄/CO₂ = 0.1 sits exactly at the haze threshold, Arney 2016's ~20K
+        anti-greenhouse). Result 240–260K: below freezing on the global mean, so the seasonal/equatorial melt the
+        surface row already describes is the correct reading. Holding 270K would need pCO₂ ~0.13 bar (13% of a 1 bar
+        atmosphere, four times the recorded few-%) or percent-level H₂.
       evidence_ko: >
         시생대 지구 아날로그(A 채택). 1.6 AU는 α Cen A 거주가능대 내(최대온실 한계 ~2–2.5 AU 안)라 물 액체 가능.
         무산소=물바다와 무모순(시생대 지구 20억 년 선례; O₂는 산소발생 광합성=생물 필요, 미진화). O₂·CH₄ 공존
         불가라 무산소 택하며 주황 haze 보존. 고도 T/P 커브 emit 시 생성.
+        온도 재도출 2026-07-26. 구값 270–275K는 레시피 없는 "+45–50K CIA 온실" 가정에 기대고 있었다. 근거화 결과:
+        4항 위성 Teq = 219–223K(상승폭은 greenhouse-warming Layer 3, Teq는 moon-energy-budget — 8.4 R_p에서 식이
+        별빛의 3.1%를 걷어가고 모행성이 2.1+0.9 W/m², 이 거리의 조석열은 2.7~13 W/m²에 불과), 온실 상승폭은 설계된
+        haze를 인정하면 +20K, haze가 없다면 +40K(CH₄/CO₂ = 0.1이 정확히 haze 문턱, Arney 2016의 약 20K 역온실).
+        결과 240–260K로 전지구 평균은 어는점 아래이며, surface 행이 이미 서술한 계절·적도 국지 융해가 맞는 해석이다.
+        270K를 지키려면 pCO₂ ~0.13 bar(1 bar 대기의 13%, 기록된 수%의 네 배)나 퍼센트 수준 H₂가 필요하다.
 
   - body: Cassandra
     axis: surface                  # group 5 facet-walk 2026-06-22
@@ -2347,7 +2374,7 @@ decisions:
       - { name: tectonics, value: "방사성 구동, 일부 화산/열수구", op: set }
       - { name: ice_caps, value: "풍부 (극관+고위도)", op: set }
       - { name: albedo, value: 0.35, op: set }
-      - { name: surface_temperature, value: "270–275", unit: K, op: set, note: "부분 동결" }
+      - { name: surface_temperature, value: "240–260", unit: K, op: set, note: "부분 동결 (atmosphere 행 재도출과 동일; 구값 270–275K)" }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
