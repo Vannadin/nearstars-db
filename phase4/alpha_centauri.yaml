@@ -1983,14 +1983,15 @@ decisions:
     narrative: >
       The air follows the film's setting faithfully: mostly nitrogen with oxygen, a heavy dose of carbon dioxide,
       a strange xenon richness, and toxic traces that are lethal to Earth life. At the surface it runs about a
-      tenth denser than Earth's. Raw sunlight at this distance would not warm it enough, but the thick CO₂
-      greenhouse lifts the surface to livable temperatures, with a gentle great-season swing as the parent planet
-      rides its eccentric orbit.
+      tenth denser than Earth's. Raw sunlight at this distance would not warm it enough. The thick CO₂ greenhouse does
+      most of the lifting and tidal heat from below supplies the rest, together bringing the surface to livable
+      temperatures, with a gentle great-season swing as the parent planet rides its eccentric orbit.
     narrative_ko: >
       대기는 영화 설정을 충실히 따랐다. 질소가 주성분이고 산소가 있으며, 이산화탄소가 듬뿍에 제논이 유난히
       풍부하고, 독성 미량 성분까지 섞여 있어 지구 생명체에겐 치명적이다. 지표 기압은 지구보다 십분의 일쯤 높다.
-      이 거리의 맨 햇빛만으로는 충분한 열이 제공되지 않지만, 두터운 CO₂ 온실이 지표를 살 만한 온도로 끌어올리고,
-      모행성이 찌그러진 궤도를 도는 리듬에 맞춰 대계절이 잔잔하게 오간다.
+      이 거리의 맨 햇빛만으로는 충분한 열이 제공되지 않는다. 두꺼운 CO₂ 온실이 대부분을 끌어올리고, 조석이 데우는
+      내부열이 남은 몫을 보태 지표를 살 만한 온도로 만든다. 여기에 모행성이 찌그러진 궤도를 도는 리듬에 맞춰
+      대계절이 잔잔하게 오간다.
     fields:
       - { name: composition, value: "N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon)", op: set }
       - { name: pressure, value: 1.1, unit: atm, op: set, note: "canon ~20% 빽빽" }
@@ -2434,15 +2435,15 @@ decisions:
     status: gated
     driver: [canon, physics]
     narrative: >
-      Cold-moist Archean-type. hydrosphere=water ocean (liquid at the warm equator/in season, ice elsewhere) + ice caps. surface_type=rocky continents +
-      seas. biosphere=anaerobic microbial carbon cycle (extremophile mats, not lush, almost no bioluminescence). tectonics=radiogenic-driven
-      (outer, so tidal is minor), some volcanism/hydrothermal vents. terrain=cold rock·ice·coast. ice_caps=abundant (polar caps+high latitudes). albedo ~0.35.
-      surface_temp ~270–275K (partially frozen).
+      Cassandra's surface divides into rocky continents and seas, cold and damp. The water opens up only near the warm
+      equator or in season; the rest of the year it freezes, burying the poles and high latitudes under thick ice. Life
+      is present but nowhere near lush: anaerobic microbial mats spread across the floor, and almost nothing glows.
+      Radiogenic heat drives what tectonics there is, keeping a few volcanoes and hydrothermal vents open.
     narrative_ko: >
-      한랭-습윤 시생대형. hydrosphere=물바다(따뜻한 적도/계절엔 액체, 그 외 빙) + 빙관. surface_type=암석 대륙 +
-      바다. biosphere=혐기 미생물 탄소순환(극한생물 매트, 무성하지 않음, 생물발광 거의 없음). tectonics=방사성 구동
-      (외곽이라 조석 미미), 일부 화산/열수구. terrain=한랭 암석·빙·해안. ice_caps=풍부(극관+고위도). albedo ~0.35.
-      surface_temp ~270–275K(부분 동결).
+      Cassandra의 지표는 암석 대륙과 바다로 나뉜 한랭 습윤 지형이다. 바다는 따뜻한 적도나 계절에만 액체로 열리고,
+      나머지 시기에는 얼어붙어 극관과 고위도를 두꺼운 얼음으로 덮는다. 생명은 있지만 무성하지 않다. 산소 없이 사는
+      미생물 매트가 바닥에 깔린 정도이고, 빛을 내는 생물은 거의 없다. 지각을 움직이는 힘은 방사성 붕괴열이며, 그 열이
+      화산과 열수구를 일부 열어둔다.
     fields:
       - { name: surface_type, value: "암석 대륙 + 바다 (한랭-습윤 시생대형)", op: set }
       - { name: hydrosphere, value: "물바다 (한계-습윤, 부분빙) + 빙관", op: set }
