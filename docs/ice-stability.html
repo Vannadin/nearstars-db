@@ -125,12 +125,23 @@ h2{
 .f{display:flex;flex-direction:column;gap:5px;min-width:0}
 .f label{font-size:11px;color:var(--fg4);letter-spacing:.01em;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
-.f input{
+.f input,.f select{
   width:100%;padding:7px 9px;border-radius:8px;border:1px solid var(--bd2);
   background:var(--bg);color:var(--fg1);font-size:13px;
   font-family:ui-monospace,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums;
 }
-.f input:focus-visible{outline:2px solid var(--ac);outline-offset:1px;border-color:var(--ac)}
+.f select{appearance:none;cursor:pointer;padding-right:22px;
+  background-image:linear-gradient(45deg,transparent 50%,var(--fg4) 50%),
+                   linear-gradient(135deg,var(--fg4) 50%,transparent 50%);
+  background-position:calc(100% - 13px) 14px,calc(100% - 8px) 14px;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.f input:focus-visible,.f select:focus-visible{
+  outline:2px solid var(--ac);outline-offset:1px;border-color:var(--ac)}
+.warnline{display:flex;gap:8px;align-items:flex-start;margin:13px 0 0;padding:10px 12px;
+  border-radius:10px;background:var(--warn-bg);border:1px solid var(--bd2);
+  font-size:12.5px;color:var(--fg2);line-height:1.55}
+.warnline b{color:var(--warn);font-weight:600;flex:none}
+.warnline[hidden]{display:none}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips.top{margin-bottom:15px}
 .chip{
@@ -242,10 +253,12 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
   <p class="eyebrow">NearStars · 표면 얼음 안정성 게이트</p>
   <h1>표면 얼음은 알베도가 정한다</h1>
   <p class="deck">
-    어떤 천체에 노출된 물얼음 표면을 부여하려면, 그 얼음이 그 일사량에서 천체의 나이만큼
-    버티는지 먼저 확인해야 한다. 이 계산기는 궤도와 크기와 알베도를 받아 승화 손실률과 수명을
-    내고, 버티지 못할 때 <b>먼지 잔류층</b> 갈래가 무엇을 대신 내놓는지까지 보여준다.
-    밝은 얼음 앵커는 대부분 목성·토성계에서 온 값이라, 안쪽 궤도로 그대로 옮기면 틀린다.
+    어떤 천체에 노출된 얼음 표면을 부여하려면, 그 얼음이 그 일사량에서 천체의 나이만큼
+    버티는지 먼저 확인해야 한다. 이 계산기는 얼음 종류와 궤도와 크기와 알베도를 받아 승화
+    손실률과 수명을 내고, 버티지 못할 때 <b>먼지 잔류층</b> 갈래가 무엇을 대신 내놓는지까지
+    보여준다. 물·CO₂·NH₃·CH₄·CO·N₂ 여섯 종을 다루며, 종마다 삼중점이 달라 애초에 고체로
+    존재할 수 없는 경우를 먼저 걸러낸다. 밝은 얼음 앵커는 대부분 목성·토성계에서 온 값이라,
+    안쪽 궤도로 그대로 옮기면 틀린다.
   </p>
 </header>
 
@@ -254,6 +267,10 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
   <h2>천체 설정</h2>
   <div class="chips top" id="presets"></div>
   <div class="fields">
+    <div class="f"><label for="iSp">얼음 종류</label>
+      <select id="iSp"></select></div>
+    <div class="f"><label for="iRho">고체 밀도 kg/m³</label>
+      <input id="iRho" type="number" step="10" min="1" value="930"></div>
     <div class="f"><label for="iL">항성 광도 L☉</label>
       <input id="iL" type="number" step="0.001" min="0.0001" value="1.521"></div>
     <div class="f"><label for="iA">궤도 반장축 AU</label>
@@ -300,10 +317,11 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
           <p id="vBody">—</p>
         </div>
       </div>
+      <p class="warnline" id="vWarn" hidden><b>범위 밖</b><span id="vWarnTxt"></span></p>
     </section>
 
     <section class="card">
-      <h2>노출된 얼음일 때</h2>
+      <h2 id="hExposed">노출된 얼음일 때</h2>
       <dl class="grid">
         <div class="m"><dt>복사 평형온도 T_rad</dt><dd id="mTrad">—<small>K</small></dd></div>
         <div class="m"><dt>승화 냉각 후 표면 T</dt><dd id="mTsub">—<small>K</small></dd></div>
@@ -379,10 +397,36 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
       <p><b>표면 온도.</b> σT⁴ + L·Φ(T) = F_abs 를 이분법으로 푼다. 승화가 잠열 L = 2.83×10⁶ J/kg을
         가져가므로 활발히 승화하는 표면은 복사 평형보다 차갑고, 이 자기제한이 손실률을 결정한다.</p>
 
-      <p><b>승화 플럭스.</b> Φ = P_vap(T)·√(m/2πkT), Hertz–Knudsen 자유승화다. 얼음 증기압은
-        log₁₀(P/Pa) = −2663.5/T + 12.537로,
+      <p><b>승화 플럭스.</b> Φ = P_vap(T)·√(m/2πkT), Hertz–Knudsen 자유승화다.</p>
+
+      <p><b>종별 증기압 곡선.</b> 여섯 종 모두
+        <a href="https://ui.adsabs.harvard.edu/abs/2009P%26SS...57.2053F" target="_blank" rel="noopener">Fray &amp; Schmitt 2009</a>에서
+        가져왔다. Table 5의 다항식 ln(P/bar) = A₀ + Σ Aᵢ/Tⁱ, Table 4의 유효 온도구간과 편차,
+        H₂O는 Table 6과 Eq. 5–6의 Feistel &amp; Wagner 2007 반경험식이다. 상전이 온도에서 곡선이
+        갈리는 종(CO₂·N₂·CO)은 구간별로 계수를 바꿔 쓴다.
+        <b>이 논문은 페이월이다</b>(Elsevier, arXiv 판 없음). 오너의 대학 계정으로 받아
+        <code>docs/phase3/_papers/_fray2009.pdf</code>에 캐시했고, 출처 경위는 같은 폴더의
+        <code>_fray2009.PROVENANCE.txt</code>에 적어 두었다. 그 폴더는 gitignored이므로
+        논문 자체는 repo에 올라가지 않는다.</p>
+
+      <p><b>교차검증.</b> 물 곡선을 독립 출처인
         <a href="https://ui.adsabs.harvard.edu/abs/1993GeoRL..20..363M" target="_blank" rel="noopener">Marti &amp; Mauersberger 1993</a>의
-        170–250 K 실험식이다. 계산 온도가 이 구간을 벗어나면 외삽이다.</p>
+        170–250 K 실험식과 맞춰 보면 2% 안에서 일치하고, 삼중점 압력을 정확히 재현한다. CO₂와
+        CH₄는 삼중점 압력을 각각 0.35%·1.5%로, CO는 논문 본문의 0.1537 bar를 0.08%로 재현한다.</p>
+
+      <p><b>승화 잠열.</b> 별도 출처를 쓰지 않고 같은 증기압 곡선의 Clausius–Clapeyron 기울기
+        L = −R·d(ln P)/d(1/T)에서 얻는다. 물에서 2.83×10⁶ J/kg, CO₂에서 26.3 kJ/mol,
+        CH₄에서 9.8 kJ/mol이 나와 NIST 값과 1% 안에서 맞는다. 온도에 따라 변하는 값을
+        그대로 쓰므로 상수 근사보다 낫다.</p>
+
+      <p><b>삼중점 상한.</b> 표면 온도는 그 종의 삼중점을 넘지 못하게 묶는다. 삼중점은
+        Fray &amp; Schmitt Table 4의 구간 상한이다(H₂O 273.16 K, CO₂ 216.58 K, NH₃ 195.41 K,
+        CH₄ 90.68 K, CO 68.1 K, N₂ 63.14 K). 대개는 이 상한이 발동하지 않는다. 휘발성이 큰 종은
+        승화가 잠열을 워낙 많이 가져가서 스스로 삼중점 훨씬 아래에 붙들리기 때문이다. Chaos
+        궤도에서 CO₂ 표면이 복사 평형 234 K가 아니라 105 K에 앉는 것이 그 예이고, 그래도
+        초당 얼음이 깎여 나가는 것은 별개 문제다. 삼중점에서 승화해도 흡수 복사속을 다 내보낼
+        수 없을 때만 <b>고체 불가</b>로 판정하고, 그때 손실률은 유입 에너지 전량이 상변화로
+        나가는 상한으로 계산한다.</p>
 
       <p><b>잔류층 후퇴 깊이.</b> z = √(2·D·ρ_v·t / ρ_ice), 건조 레골리스를 통한 확산-제한 후퇴다.
         얼음이 승화하며 남긴 비휘발성 물질이 표면을 덮으면 손실이 몇 자리수 떨어진다는 것이
@@ -395,9 +439,11 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
 
       <p><b>가정으로 남는 것.</b> 확산계수 D는 가정값이고 후퇴 깊이는 √D로만 반응한다. 한 자리
         틀려도 3배 차이라 판정은 뒤집히지 않지만, 깊이를 값으로 쓰려면 근거가 필요하다. 잔류층이
-        실제로 형성되는지는 얼음 대 비휘발성 비율에 달린 별도 문제다. 물얼음 전용이며 N₂·CH₄·CO₂는
-        증기압 곡선이 완전히 달라 이 계산기로 다룰 수 없다. 내부 열원은 넣지 않았으니 조석 가열이
-        큰 천체는 표면 온도를 따로 올려 잡아야 한다.</p>
+        실제로 형성되는지는 얼음 대 비휘발성 비율에 달린 별도 문제다. <b>고체 밀도는 종별 명목값</b>이며
+        입력에서 덮어쓸 수 있다. 손실 깊이와 수명에만 선형으로 들어가고 승화 물리에는 개입하지
+        않으므로 근거값으로 다루지 않았다. 순수 단일 종만 계산한다. 실제 표면은 혼합물이고 혼합
+        얼음의 증기압은 각 종의 값보다 낮아지므로, 여기서 나온 손실률은 상한으로 읽어야 한다.
+        내부 열원은 넣지 않았으니 조석 가열이 큰 천체는 표면 온도를 따로 올려 잡아야 한다.</p>
 
       <p><b>성격.</b> 방법론 문서가 아니라 결정을 돕는 계산기다. 판정을 보드 값으로 옮길 때는
         위 근거를 해당 행의 <code>refs</code>에 적는다.</p>
@@ -409,9 +455,77 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
 <script>
 "use strict";
 /* ── 물리 상수 ─────────────────────────────────────────────── */
-var SIGMA=5.670374419e-8, S0=1361.0, LSUB=2.83e6,
-    KB=1.380649e-23, MH2O=2.991e-26,
-    RHO_ICE=930.0, YR=3.156e7, A_IR=0.05;
+var SIGMA=5.670374419e-8, S0=1361.0, KB=1.380649e-23,
+    NA=6.02214076e23, RGAS=8.314462618,
+    YR=3.156e7, A_IR=0.05;
+
+/* ── 얼음 종별 승화 증기압 ────────────────────────────────────
+   Fray & Schmitt 2009 (2009P&SS...57.2053F) Table 4 (유효구간·정확도) +
+   Table 5 (다항식 계수) + Table 6 (H₂O 특수식). 압력 단위는 bar.
+   poly:  ln(P) = A0 + Σ A_i/T^i                                (Eq. 4)
+   fw:    ln(P/Pt) = 1.5·ln(θ) + (1 − 1/θ)·Σ e_i·θ^i, θ = T/Tt  (Eq. 5-6)
+   rho는 명목값이며 입력에서 덮어쓸 수 있다(깊이 환산에만 쓰임).      */
+var SPECIES=[
+ {k:"H2O", n:"물 얼음 H₂O", M:18.0153, rho:930, Tt:273.16, form:"fw",
+  Pt:6.11657e-3, lo:0,
+  E:[20.9969665107897,3.72437478271362,-13.9205483215524,29.6988765013566,
+     -40.1972392635944,29.7880481050215,-9.13050963547721],
+  sd:22, md:180, src:"Feistel & Wagner 2007"},
+ {k:"CO2", n:"드라이아이스 CO₂", M:44.0095, rho:1600, Tt:216.58, form:"poly",
+  bands:[{lo:40,   hi:194.7,  sd:14.5, md:63,
+          A:[1.476e1,-2.571e3,-7.781e4,4.325e6,-1.207e8,1.350e9,0]},
+         {lo:194.7,hi:216.58, sd:0.33, md:0.72,
+          A:[1.861e1,-4.154e3,1.041e5,0,0,0,0]}],
+  src:"Brown & Ziegler 1979 / Fray & Schmitt 2009"},
+ {k:"NH3", n:"암모니아 얼음 NH₃", M:17.0305, rho:820, Tt:195.41, form:"poly",
+  bands:[{lo:15,hi:195.41, sd:1.6, md:4.2,
+          A:[1.596e1,-3.537e3,-3.310e4,1.742e6,-2.995e7,0,0]}],
+  src:"Fray & Schmitt 2009"},
+ {k:"CH4", n:"메탄 얼음 CH₄", M:16.0425, rho:520, Tt:90.68, form:"poly",
+  bands:[{lo:20.6,hi:90.68, sd:7.9, md:36,
+          A:[1.051e1,-1.110e3,-4.341e3,1.035e5,-7.910e5,0,0]}],
+  src:"Brown & Ziegler 1979"},
+ {k:"CO",  n:"일산화탄소 얼음 CO", M:28.0101, rho:930, Tt:68.1, form:"poly",
+  bands:[{lo:14,   hi:61.55, sd:1.2, md:3.2,
+          A:[1.043e1,-7.213e2,-1.074e4,2.341e5,-2.392e6,9.478e6,0]},
+         {lo:61.55,hi:68.1,  sd:0.9, md:2.0,
+          A:[1.025e1,-7.482e2,-5.843e3,3.939e4,0,0,0]}],
+  src:"Fray & Schmitt 2009 / Brown & Ziegler 1979"},
+ {k:"N2",  n:"질소 얼음 N₂", M:28.0134, rho:1000, Tt:63.14, form:"poly",
+  bands:[{lo:10,    hi:35.61, sd:19,  md:28,
+          A:[1.240e1,-8.074e2,-3.926e3,6.297e4,-4.633e5,1.325e6,0]},
+         {lo:35.61, hi:63.14, sd:1.5, md:4.6,
+          A:[8.514,-4.584e2,-1.987e4,4.800e5,-4.524e6,0,0]}],
+  src:"Fray & Schmitt 2009"}
+];
+function bandOf(sp,T){
+  if(sp.form==="fw") return {lo:sp.lo,hi:sp.Tt,sd:sp.sd,md:sp.md};
+  for(var i=0;i<sp.bands.length;i++)
+    if(T>=sp.bands[i].lo&&T<=sp.bands[i].hi) return sp.bands[i];
+  return T<sp.bands[0].lo?sp.bands[0]:sp.bands[sp.bands.length-1];
+}
+function pvapBar(sp,T){
+  if(T<=0) return 0;
+  if(sp.form==="fw"){
+    var th=T/sp.Tt, Z=0;
+    for(var i=0;i<sp.E.length;i++) Z+=sp.E[i]*Math.pow(th,i);
+    return sp.Pt*Math.exp(1.5*Math.log(th)+(1-sp.Tt/T)*Z);
+  }
+  var A=bandOf(sp,T).A, s=A[0];
+  for(var j=1;j<A.length;j++) s+=A[j]/Math.pow(T,j);
+  return Math.exp(s);
+}
+function pvap(sp,T){ return pvapBar(sp,T)*1e5; }                 // Pa
+function molMass(sp){ return sp.M*1e-3/NA; }                     // kg / 분자
+/* Hertz-Knudsen 자유승화 [kg/m2/s] */
+function hk(sp,T){ return pvap(sp,T)*Math.sqrt(molMass(sp)/(2*Math.PI*KB*T)); }
+/* 승화 잠열 [J/kg] — 같은 곡선의 Clausius-Clapeyron 기울기에서 얻는다.
+   물에서 2.83e6, CO2에서 26.3 kJ/mol, CH4에서 9.8 kJ/mol을 재현한다. */
+function lsub(sp,T){
+  var h=Math.max(0.01,T*1e-4);
+  var d=-RGAS*(Math.log(pvapBar(sp,T+h))-Math.log(pvapBar(sp,T-h)))/(1/(T+h)-1/(T-h));
+  return d/(sp.M*1e-3);
+}
 
 /* ── 프리셋: 우리 천체 + 모형 검증용 태양계 앵커 ─────────────── */
 var PRESETS=[
@@ -429,26 +543,37 @@ var PRESETS=[
    th:0, rf:0, ecl:0, dist:"9.55 AU", known:"얼음 지각 안정"}
 ];
 
-/* ── 물리 ─────────────────────────────────────────────────── */
-function pvap(T){ return Math.pow(10,-2663.5/T+12.537); }            // Pa
-function hk(T){ return pvap(T)*Math.sqrt(MH2O/(2*Math.PI*KB*T)); }   // kg/m2/s
+/* ── 에너지 예산 ──────────────────────────────────────────────
+   p = {sp,rho,L,a,R,age,th,rf,ecl,D} — R은 km, age는 Gyr        */
 function tRad(F){ return Math.pow(F/SIGMA,0.25); }
-function tSubl(F){                        // sigma T^4 + L*hk(T) = F
-  var lo=3, hi=tRad(F), T;
-  for(var i=0;i<200;i++){ T=(lo+hi)/2;
-    if(SIGMA*Math.pow(T,4)+LSUB*hk(T)>F) hi=T; else lo=T; }
-  return (lo+hi)/2;
-}
-/* p = {L,a,R,age,th,rf,ecl,D} — R은 km, age는 Gyr */
 function absorbed(p,alb){
   var sRel=p.L/(p.a*p.a);
   return sRel*S0*(1-alb)/4*(1-p.ecl/100) + p.th*(1-A_IR)/4 + p.rf*(1-alb)/4;
 }
-function lossAt(p,alb){ return hk(tSubl(absorbed(p,alb)))*YR/RHO_ICE; }   // m/yr
-function threshold(p){ return p.R*1e3/(p.age*1e9); }                      // m/yr
+/* 승화 냉각을 포함한 표면 온도. 삼중점을 넘으면 고체가 존재할 수 없으므로
+   그 위로는 올리지 않고, 넘었다는 사실을 melted로 알린다. */
+function surfaceT(p,alb){
+  var sp=p.sp, F=absorbed(p,alb), Tr=tRad(F), cap=Math.min(Tr,sp.Tt);
+  if(SIGMA*Math.pow(cap,4)+lsub(sp,cap)*hk(sp,cap)<F)
+    return {T:cap, Trad:Tr, melted:Tr>sp.Tt};       // 에너지 제한 — 고체 유지 불가
+  var lo=3, hi=cap, T;
+  for(var i=0;i<200;i++){ T=(lo+hi)/2;
+    if(SIGMA*Math.pow(T,4)+lsub(sp,T)*hk(sp,T)>F) hi=T; else lo=T; }
+  return {T:(lo+hi)/2, Trad:Tr, melted:false};
+}
+function lossAt(p,alb){                                     // m/yr
+  var s=surfaceT(p,alb), sp=p.sp;
+  if(s.melted){                                             // 유입 에너지 전량이 상변화로
+    var F=absorbed(p,alb);
+    return Math.min(F/lsub(sp,sp.Tt), hk(sp,sp.Tt))*YR/p.rho;
+  }
+  return hk(sp,s.T)*YR/p.rho;
+}
+function threshold(p){ return p.R*1e3/(p.age*1e9); }        // m/yr
 function lagDepth(p,alb){
-  var T=tRad(absorbed(p,alb)), rho_v=pvap(T)*MH2O/(KB*T);
-  return Math.sqrt(2*p.D*rho_v*p.age*1e9*YR/RHO_ICE);
+  var sp=p.sp, T=Math.min(tRad(absorbed(p,alb)),sp.Tt),
+      rho_v=pvap(sp,T)*molMass(sp)/(KB*T);
+  return Math.sqrt(2*p.D*rho_v*p.age*1e9*YR/p.rho);
 }
 function critAlbedo(p){
   var th=threshold(p), lo=0.0, hi=0.999999, m;
@@ -569,9 +694,11 @@ function drawChart(p,alb,aCrit){
   cctx.textAlign="right"; cctx.textBaseline="bottom"; cctx.fillStyle=fg4;
   cctx.fillText("Bond 알베도",L+iw,T+ih+30);
 
-  // §6 앵커 밴드
-  var bands=[{lo:0.05,hi:0.15,l:"잔류층·풍화 얼음 지형",c:ok},
-             {lo:0.60,hi:0.80,l:"신선한 물얼음",c:dgr}];
+  // §6 앵커 밴드 — 물얼음 표면에만 해당하는 구간이라 종이 다르면 그리지 않는다
+  var bands=p.sp.k==="H2O"
+    ? [{lo:0.05,hi:0.15,l:"잔류층·풍화 얼음 지형",c:ok},
+       {lo:0.60,hi:0.80,l:"신선한 물얼음",c:dgr}]
+    : [{lo:0.50,hi:0.85,l:"휘발성 얼음 평원",c:dgr}];
   for(var bi=0;bi<bands.length;bi++){
     var bn=bands[bi], bx=X(bn.lo), bw=X(bn.hi)-X(bn.lo);
     cctx.globalAlpha=0.09; cctx.fillStyle=bn.c; cctx.fillRect(bx,T,bw,ih);
@@ -633,15 +760,26 @@ function drawChart(p,alb,aCrit){
 }
 
 /* ── 입출력 ───────────────────────────────────────────────── */
-var F={L:"iL",a:"iA",R:"iR",age:"iAge",th:"iTh",rf:"iRf",ecl:"iEcl",D:"iD"};
+var F={rho:"iRho",L:"iL",a:"iA",R:"iR",age:"iAge",th:"iTh",rf:"iRf",ecl:"iEcl",D:"iD"};
 function params(){
-  var p={};
+  var p={sp:SPECIES[+document.getElementById("iSp").value]};
   for(var k in F){ var v=parseFloat(document.getElementById(F[k]).value); p[k]=isFinite(v)?v:0; }
-  if(p.a<=0) p.a=1; if(p.R<=0) p.R=1; if(p.age<=0) p.age=1; if(p.D<=0) p.D=3e-5;
+  if(p.a<=0) p.a=1; if(p.R<=0) p.R=1; if(p.age<=0) p.age=1;
+  if(p.D<=0) p.D=3e-5; if(p.rho<=0) p.rho=p.sp.rho;
   return p;
 }
+(function(){
+  var sel=document.getElementById("iSp"), h="";
+  for(var i=0;i<SPECIES.length;i++) h+='<option value="'+i+'">'+SPECIES[i].n+'</option>';
+  sel.innerHTML=h;
+  sel.addEventListener("change",function(){                 // 종을 바꾸면 명목 밀도로 되돌린다
+    document.getElementById("iRho").value=SPECIES[+sel.value].rho; render();
+  });
+})();
 function loadPreset(i){
   var pr=PRESETS[i];
+  document.getElementById("iSp").value=0;                   // 프리셋은 모두 물얼음
+  document.getElementById("iRho").value=SPECIES[0].rho;
   document.getElementById("iL").value=pr.L;
   document.getElementById("iA").value=pr.a;
   document.getElementById("iR").value=pr.R;
@@ -666,9 +804,11 @@ function fillAnchors(){
   var cur=params(), curA=parseFloat(document.getElementById("aIn").value), h="";
   for(var i=0;i<PRESETS.length;i++){
     var pr=PRESETS[i],
-        q={L:pr.L,a:pr.a,R:pr.R,age:pr.age,th:pr.th,rf:pr.rf,ecl:pr.ecl,D:cur.D},
-        T=tSubl(absorbed(q,pr.A)), l=lossAt(q,pr.A),
-        isCur=Math.abs(pr.L-cur.L)<1e-9&&Math.abs(pr.a-cur.a)<1e-9&&Math.abs(pr.A-curA)<0.003;
+        q={sp:SPECIES[0],rho:SPECIES[0].rho,L:pr.L,a:pr.a,R:pr.R,age:pr.age,
+           th:pr.th,rf:pr.rf,ecl:pr.ecl,D:cur.D},
+        T=surfaceT(q,pr.A).T, l=lossAt(q,pr.A),
+        isCur=cur.sp.k==="H2O"&&Math.abs(pr.L-cur.L)<1e-9&&
+              Math.abs(pr.a-cur.a)<1e-9&&Math.abs(pr.A-curA)<0.003;
     h+='<tr'+(isCur?' class="cur"':'')+'><td>'+pr.n+'</td><td>'+pr.dist+'</td><td>'+
        pr.A.toFixed(2)+'</td><td>'+T.toFixed(0)+' K</td><td>'+sig(l,2)+' m/yr</td><td>'+
        pr.known+'</td></tr>';
@@ -678,41 +818,59 @@ function fillAnchors(){
 
 var slider=document.getElementById("aIn");
 function render(){
-  var p=params(), alb=parseFloat(slider.value),
-      Fa=absorbed(p,alb), Tr=tRad(Fa), Ts=tSubl(Fa),
-      loss=hk(Ts)*YR/RHO_ICE, th=threshold(p), aCrit=critAlbedo(p),
+  var p=params(), sp=p.sp, alb=parseFloat(slider.value),
+      st=surfaceT(p,alb), Tr=st.Trad, Ts=st.T,
+      loss=lossAt(p,alb), th=threshold(p), aCrit=critAlbedo(p),
       life=p.R*1e3/loss, z=lagDepth(p,alb),
       area=4*Math.PI*Math.pow(p.R*1e3,2),
-      lagFeed=z/(p.age*1e9)*RHO_ICE*area/YR,
-      bareFeed=loss/YR*RHO_ICE*area,
-      ok=loss<=th;
+      lagFeed=z/(p.age*1e9)*p.rho*area/YR,
+      bareFeed=loss/YR*p.rho*area,
+      ok=loss<=th, bd=bandOf(sp,Ts);
 
   document.getElementById("aOut").textContent=alb.toFixed(3).replace(/0$/,"");
   document.getElementById("aTag").textContent=
-    aCrit===null?"어떤 알베도로도 불가":(ok?"얼음 유지 가능":"얼음 소멸");
+    st.melted?"고체 불가":(aCrit===null?"어떤 알베도로도 불가":(ok?"얼음 유지 가능":"얼음 소멸"));
+  document.getElementById("hExposed").textContent="노출된 "+sp.n+"일 때";
   document.getElementById("mTrad").innerHTML=Tr.toFixed(1)+'<small>K</small>';
   document.getElementById("mTsub").innerHTML=Ts.toFixed(1)+'<small>K</small>';
   document.getElementById("mLoss").innerHTML=sig(loss,3)+'<small>m/yr</small>';
   document.getElementById("mLife").innerHTML=ok?'—':dur(life);
 
+  /* 유효구간·삼중점 경고 */
+  var warn=document.getElementById("vWarn"), wtxt=document.getElementById("vWarnTxt"), msg="";
+  if(st.melted)
+    msg=sp.n+"의 삼중점은 "+sp.Tt+" K인데 복사 평형온도가 "+Tr.toFixed(0)+
+        " K다. 이 일사량에서 이 물질은 고체 표면으로 존재할 수 없다. 손실률은 유입 에너지가 "+
+        "상변화로 전부 나가는 상한으로 계산한 값이다.";
+  else if(Ts<bd.lo)
+    msg="표면 온도 "+Ts.toFixed(0)+" K가 이 곡선의 실험 구간("+bd.lo+"–"+
+        (sp.form==="fw"?sp.Tt:bd.hi)+" K) 아래다. 외삽 구간이므로 손실률의 절대값보다 "+
+        "판정 방향만 신뢰할 것.";
+  if(msg){ wtxt.textContent=msg; warn.hidden=false; } else warn.hidden=true;
+
   var key=document.getElementById("vKey"), title=document.getElementById("vTitle"),
       body=document.getElementById("vBody");
-  key.className="vd-key mono "+(ok?"st-ok":(loss>th*100?"st-dgr":"st-warn"));
-  if(ok){
+  key.className="vd-key mono "+(st.melted?"st-dgr":(ok?"st-ok":(loss>th*100?"st-dgr":"st-warn")));
+  if(st.melted){
+    key.textContent="불가";
+    title.textContent=sp.n+"은 이 일사량에서 고체로 존재하지 않는다";
+    body.textContent="삼중점 "+sp.Tt+" K를 복사 평형온도 "+Tr.toFixed(0)+
+      " K가 넘는다. 알베도를 아무리 올려도 표면 물질로 쓸 수 없고, 지하에 묻힌 형태만 가능하다.";
+  } else if(ok){
     key.textContent="유지";
-    title.textContent="노출 얼음이 "+p.age+" Gyr을 버틴다";
+    title.textContent="노출 "+sp.n+"이 "+p.age+" Gyr을 버틴다";
     body.textContent="알베도 "+alb.toFixed(3)+"에서 표면은 "+Ts.toFixed(0)+" K까지 식고 손실은 "+
       sig(loss,2)+" m/yr에 머문다."+
-      (alb>0.80?" 다만 이 밝기는 §6이 신선한 물얼음에 인정하는 0.6–0.8 밴드 밖이라, 왜 그만큼 밝은지를 따로 근거로 대야 한다.":"")+
+      (sp.k==="H2O"&&alb>0.80?" 다만 이 밝기는 §6이 신선한 물얼음에 인정하는 0.6–0.8 밴드 밖이라, 왜 그만큼 밝은지를 따로 근거로 대야 한다.":"")+
       " 이 온도에서는 승화가 거의 멈추므로, 고리나 토러스에 물질을 공급해야 한다면 충돌 파편 같은 다른 기제가 필요하다.";
   } else if(loss>th*100){
     key.textContent="소멸";
     title.textContent="반경 "+p.R+" km가 "+dur(life)+"에 사라진다";
     body.textContent="표면이 "+Ts.toFixed(0)+" K이라 손실이 "+sig(loss,2)+" m/yr이다. 나이에 비해 "+
       sig(p.age*1e9/life,2)+"배 부족하다."+
-      (aCrit===null?" 이 궤도에서는 어떤 알베도로도 노출 얼음이 성립하지 않는다."
+      (aCrit===null?" 이 궤도에서는 어떤 알베도로도 노출 "+sp.n+"이 성립하지 않는다."
                    :" 노출 얼음으로 가려면 알베도가 "+aCrit.toFixed(3)+"을 넘어야 한다.")+
-      " 아니라면 표면은 먼지 잔류층이어야 한다.";
+      " 아니라면 표면은 잔류층이어야 한다.";
   } else {
     key.textContent="한계";
     title.textContent="문턱 바로 아래 — "+dur(life)+"이면 끝난다";
@@ -740,7 +898,8 @@ function render(){
   for(var i=0;i<chips.length;i++){
     var pr=PRESETS[+chips[i].dataset.i];
     chips[i].setAttribute("aria-pressed",
-      (Math.abs(pr.L-p.L)<1e-9&&Math.abs(pr.a-p.a)<1e-9&&Math.abs(pr.A-alb)<0.003)?"true":"false");
+      (sp.k==="H2O"&&Math.abs(pr.L-p.L)<1e-9&&Math.abs(pr.a-p.a)<1e-9&&
+       Math.abs(pr.A-alb)<0.003)?"true":"false");
   }
 
   fillAnchors(); drawDisc(alb); drawChart(p,alb,aCrit);

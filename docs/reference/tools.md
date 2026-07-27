@@ -20,7 +20,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
 | 13 | Phase 4 board tools | Validate decision boards (emit gate) + render per-body board HTML | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
 | 14 | Radiation belts + derived-value calculators | Belt cross-sections, Kerbalism emitter, and the `scripts/refs/` methodology calculators | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
-| 15 | Surface ice stability | Can exposed water ice survive at this insolation? Albedo → loss rate, lifetime, lag-mantle depth | `docs/ice-stability.html` |
+| 15 | Surface ice stability | Can exposed ice (6 species) survive at this insolation? Albedo → loss rate, lifetime, lag-mantle depth | `docs/ice-stability.html` |
 
 ## Verification & QA — index
 
@@ -308,14 +308,19 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
 ## 15. Surface ice stability calculator
 
 `docs/ice-stability.html` — a standalone browser tool (no build step, no dependencies)
-answering one question: **can exposed water ice persist on this body's surface, at this
+answering one question: **can exposed ice persist on this body's surface, at this
 insolation, for this body's age?** Bright icy anchors in the albedo table are almost all
 Jupiter/Saturn-system bodies; transplanting their albedo to an inner orbit silently
 produces a surface that would sublimate away in Myr.
 
-Inputs: stellar luminosity, semi-major axis, body radius, age, Bond albedo, plus the
-three satellite terms (parent thermal, parent reflected, eclipse fraction) that
-`scripts/refs/moon_energy_budget.py` prints. Outputs: radiative and sublimation-cooled
+Six species: H₂O, CO₂, NH₃, CH₄, CO, N₂ — each with its own vapour-pressure curve, molar
+mass, triple point and nominal solid density. Latent heat is not a separate input: it comes
+from the Clausius–Clapeyron slope of the same curve, `L = −R·d(ln P)/d(1/T)`, so it is
+temperature-dependent and self-consistent per species.
+
+Inputs: species, solid density, stellar luminosity, semi-major axis, body radius, age,
+Bond albedo, plus the three satellite terms (parent thermal, parent reflected, eclipse
+fraction) that `scripts/refs/moon_energy_budget.py` prints. Outputs: radiative and sublimation-cooled
 surface temperature, ice loss rate, time to lose a body radius, the critical albedo above
 which the ice survives, and the alternative **lag-mantle** reading (diffusion-limited
 retreat depth + the resulting volatile outflux).
@@ -328,14 +333,26 @@ retreat depth + the resulting volatile outflux).
   shadow), and bare ice at 1 AU loses 0.81 m/yr (matching ~1 m of cometary nucleus
   erosion per perihelion passage).
 - Grounding is stated in the page footer: Heller & Barnes 2013 for the energy budget,
-  Hertz–Knudsen for the sublimation flux, [Marti & Mauersberger
-  1993](https://ui.adsabs.harvard.edu/abs/1993GeoRL..20..363M) for the ice vapour-pressure
-  fit (170–250 K), [Schörghofer
+  Hertz–Knudsen for the sublimation flux, [Fray & Schmitt
+  2009](https://ui.adsabs.harvard.edu/abs/2009P%26SS...57.2053F) Tables 4/5/6 for every
+  species' vapour-pressure curve with its validity range and fit deviation, [Schörghofer
   2008](https://ui.adsabs.harvard.edu/abs/2008ApJ...682..697S) for the lag-mantle
   retreat, and `surface-color-albedo-methodology.md` §6 for the albedo bands.
-- Domain limits, also in the footer: water ice only (N₂/CH₄/CO₂ have entirely different
-  vapour-pressure curves), the regolith diffusivity `D` is an assumption the retreat
-  depth scales as √D on, and no internal heat source is included.
+- **Fray & Schmitt 2009 is paywalled** (Elsevier, no arXiv preprint). The owner obtained it
+  through university access; it is cached at `docs/phase3/_papers/_fray2009.pdf` with the
+  provenance recorded alongside it in `_fray2009.PROVENANCE.txt`. That directory is
+  gitignored, so the article itself never enters the repo — only the coefficients we cite.
+  If the cache is ever lost, ask the owner rather than substituting a weaker source.
+- Coefficient transcription is verified two independent ways: the fitted curves reproduce
+  each species' triple-point pressure (H₂O exact, CO₂ 0.35%, CH₄ 1.5%, CO 0.08%), and the
+  latent heats differentiated out of them match NIST to within 1% (H₂O 51.0 kJ/mol, CO₂
+  26.3, CH₄ 9.8). The water curve also agrees with Marti & Mauersberger 1993 to 2% across
+  170–250 K, and extends usefully below it, which is where Europa and Enceladus sit.
+- Domain limits, also in the footer: single pure species only (real surfaces are mixtures,
+  whose vapour pressure is lower, so the loss rate is an upper bound), the solid densities
+  are nominal and editable (they enter only the depth conversion), the regolith diffusivity
+  `D` is an assumption the retreat depth scales as √D on, and no internal heat source is
+  included.
 
 Built for the Chaos albedo decision (2026-07-27); reusable for any icy body on any orbit.
 
