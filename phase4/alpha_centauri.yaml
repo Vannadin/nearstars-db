@@ -698,7 +698,7 @@ decisions:
       cooler giant traps and accelerates less), yet ~29× Earth's belt peak. The dipole tilt is not yet decided, so a
       Jupiter-like ~10° is assumed for now; if the tilt axis is ever gated, this row follows it.
     narrative_ko: >
-      Dante의 화산 황 토러스가 먹이는 목성형 2벨트계. 구조 전체가 캐넌 위성 위치로 고정된다. 강한 내대는 L 1.3–3.0에 걸치고
+      Dante의 화산 황 토러스가 채우는 목성형 2벨트계. 구조 전체가 캐넌 위성 위치로 고정된다. 강한 내대는 L 1.3–3.0에 걸치고
       정확히 Hades가 사는 자리(2.07 R_p)에서 피크를 찍는다. 슬롯 3.0–4.2는 Pandora(3.53)의 보호 gap이고, 외대는 L 4.2–10에
       걸쳐 Cassandra를 잠기게 해 그 "intermediate" 방사선을 만든다(외대를 Cassandra에서 끊는 대안은 기록된
       선택지). Chaos(21 R_p)는 벨트 밖·자기권계면 안을 난다. 벨트 모양은 이 드리프트 셸에 인게임 모델을 수치 피팅한 것이고,
@@ -836,7 +836,7 @@ decisions:
     narrative_ko: >
       Polyphemus는 고리를 지키되 유령으로 만든다. 캐넌의 "고리 없음"을 거의 존중할 만큼 흐릿한 청백색 얼음-먼지
       E고리인데, 이미징이 요구한 여분의 밝기는 그대로 채운다. 구조는 위성 배치가 정한다. 얼음체 Chaos가
-      엔셀라두스가 토성 E고리를 먹이듯 cryovolcanic 플룸으로 고리를 먹이고, Cassandra가 안쪽 가장자리를 친다.
+      엔셀라두스가 토성 E고리를 채우듯 cryovolcanic 플룸으로 고리에 물질을 올리고, Cassandra가 안쪽 가장자리를 친다.
       고리는 두 환형으로 갈라지고 그 사이 간극을 Chaos가 돈다. 물리적으로 이 작은 달은 제 길을 비울 수 없지만,
       정적인 고리가 기운 달의 경로를 관통해 매 공전마다 화면이 깨져 보이므로 그 궤도를 비우는 간극을 둔다.
       고리면은 어느 한 순간의 스냅샷이 아니라 Chaos 궤도의 장기 평균면을 따라, 달이 그 둘레를 흔들리는 수백 년
@@ -2725,19 +2725,14 @@ decisions:
     status: gated
     driver: [invented, physics]
     narrative: >
-      mass 5.4e20 kg · radius 400 km → gravity ~0.023 g (ultra-low gravity), density ~2015 kg/m³ (ice+rock). rotation=free rotation 9.5h
-      (at 1.5M km despin is essentially 0, unsynchronized primordial fast rotation). obliquity 15° (free rotator). Equatorial bulge: f≈0.06–0.075
-      (~6–7.5%, between Jupiter↔Saturn) — centrifugal flattening from the fast 9.5h rotation. internal_heat negligible (small·outer). j2=derived from the rotational bulge,
-      J₂≈0.026 (free rotation 9.5h, consistent with figure-methodology). age=5.3 Gyr. f≈(5/4)ω²R/g ≈ 8.8e7/P² → at 9.5h (34200s),
-      f~0.06–0.075 (safe vs the breakup limit ~2.3h). A 400km radius=enough for hydrostatic-equilibrium relaxation→the bulge actually forms. At emit via
-      geopotential_j2 (+reference_radius). obliquity 15° (not tidally locked→axis not erected, a tilted 'Chaos' rotation).
+      Chaos still spins at the speed it was born with. It orbits 1.5 million km out, too far for tides to have
+      taken hold of its rotation, so a day lasts 9.5 hours. Its axis was never straightened either, and leans
+      about 15 degrees. The spin swells the body at its equator until the equatorial diameter runs some
+      7 percent wider than the polar one. Almost no heat comes from inside.
     narrative_ko: >
-      mass 5.4e20 kg · radius 400 km → 중력 ~0.023 g(초저중력), 밀도 ~2015 kg/m³(얼음+암석). rotation=자유 자전 9.5h
-      (1.5M km라 despin 사실상 0, 미동기 원시 빠른 자전). obliquity 15°(자유 회전체). 적도 bulge: f≈0.06–0.075
-      (~6–7.5%, 목성↔토성 사이) — 빠른 9.5h 자전의 원심 편평. internal_heat 무시(소형·외곽). j2=회전 bulge서 도출,
-      J₂≈0.026 (자유 자전 9.5h, figure-methodology 일치). age=5.3 Gyr. f≈(5/4)ω²R/g ≈ 8.8e7/P² → 9.5h(34200s)면
-      f~0.06–0.075(붕괴 한계 ~2.3h서 안전). 400km 반경=유체평형 relax 충분→bulge 실제 형성. emit 시
-      geopotential_j2(+reference_radius)로. obliquity 15°(조석고정 아님→축 안 세워짐, 'Chaos' 기운 자전).
+      Chaos는 아직 태어날 때의 빠른 속도로 돌고 있다. 모행성에서 150만 km나 떨어져 있어 조석이 자전을 붙잡지
+      못했고, 그래서 9.5시간마다 한 바퀴를 돈다. 자전축도 세워지지 않아 15도쯤 기울어 있다. 이 회전이 천체를
+      적도 쪽으로 부풀려, 적도 지름이 극 지름보다 7퍼센트쯤 크다. 내부에서 나오는 열은 사실상 없다.
     fields:
       - { name: mass, value: 5.4e20, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 400, unit: km, op: set }
@@ -2751,6 +2746,7 @@ decisions:
       - { name: obliquity, value: 15, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.026, reference_radius_km: 400, op: set, note: "회전 bulge f≈0.06–0.075" }
       - { name: age, value: 5.3, unit: Gyr, op: set }
+    refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     gate:
       criterion: [physics]
       verdict: pass-in-window
@@ -2761,8 +2757,14 @@ decisions:
     axis: atmosphere               # G4 facet-walk 2026-06-23
     status: gated
     driver: [art, physics]
-    narrative: "No stable atmosphere (0.023g). But plumes create a local water-vapor exosphere/halo → escapes into the E-ring. Non-breathable. Ultra-low gravity cannot hold an atmosphere. Plume ejecta briefly form an exosphere, then go to the ring·space (Enceladus-style)."
-    narrative_ko: "안정 대기 없음(0.023g). 단 플룸이 만드는 국소 수증기 exosphere/halo → E-고리로 빠짐. 비호흡. 초저중력이라 대기 못 잡음. 플룸 분출물이 일시 exosphere 형성 후 고리·우주로(엔셀라두스식)."
+    narrative: >
+      Chaos has nothing to hold an atmosphere with. What the plumes throw up forms a thin shell around the moon
+      for a while, but it never settles back and soon becomes part of the ring. Vapour sublimating off the
+      surface spreads thinner still and stays as a gas layer beside the ring.
+    narrative_ko: >
+      Chaos는 대기를 붙잡을 힘이 없다. 플룸이 뿜어 올린 것들이 잠시 천체 주위에 옅은 껍질을 만들지만,
+      가라앉지 못하고 곧 고리의 일부가 된다. 표면 얼음에서 승화한 수증기는 그보다 옅게 퍼져 고리 옆에
+      기체 층으로 남는다.
     fields:
       - { name: composition, value: "none (안정 대기 없음; 플룸 국소 수증기 exosphere/halo → E-고리)", op: set }
       - { name: breathability, value: false, op: set }
@@ -2777,23 +2779,13 @@ decisions:
     status: gated
     driver: [art-first, physics-caveat]
     narrative: >
-      Ice (water ice+rock), dramatic Miranda-type fractures + water cryovolcanic plumes erupting from active tiger-stripe fracture zones (Enceladus
-      analog) → feeds the E-ring. Plume fallout repaves the surface with fresh ice → very bright. hydrosphere=subsurface liquid (art premise, localized).
-      albedo 0.91 (owner art choice — brighter than Enceladus 0.81, and the brightness the surface ice needs to survive).
-      surface_temp ~134K (very high albedo). No biosphere. ice_caps=global ice.
-      The plume-fed E-ring is isomorphic with the real Saturn E-ring (Enceladus-plume origin) → strengthens the 'E-ring' naming consistency.
-      Owner-override rationale: art-first (owner 2026-06-23): the water plumes prioritize visuals·narrative. Physically, at 20 R_p·e0.02, tidal heat is ~a few MW, so a subsurface
-      ocean·plumes are impossible (a⁻⁷·⁵ is fatal; insufficiency confirmed by case-analysis over all e·a·resonance·rotation combinations). Nonetheless the Enceladus-style
-      plume is adopted as art, with the authenticity caveat recorded.
+      The surface is water ice mixed with rock, and Miranda-like fractures dominate the terrain. Water jets rise
+      from the active fracture zones, and their fallout repaves the ground around them in fresh ice. That coat
+      leaves the surface very bright. At 134 K the ice holds.
     narrative_ko: >
-      얼음(물얼음+암석), Miranda형 극적 균열 + 활성 tiger-stripe 균열대서 물 cryovolcanic 플룸 분출(엔셀라두스
-      아날로그) → E-고리 공급. 플룸 낙진으로 표면 신선 얼음 재포장 → 매우 밝음. hydrosphere=지하 액체(art 전제, 국소).
-      albedo 0.91(오너 아트 선택 — 엔셀라두스 0.81보다 밝고, 표면 얼음이 존속하는 데 필요한 밝기).
-      surface_temp ~134K(매우 높은 알베도). biosphere 없음. ice_caps=전역 얼음.
-      E-고리=플룸-fed는 실제 토성 E-고리(엔셀라두스 플룸 기원)와 동형 → 'E-고리' 명명 정합↑.
-      오너-오버라이드 근거: art-first(오너 2026-06-23): 물 플룸은 시각·서사 우선. 물리적으론 20 R_p·e0.02서 조석열 ~수 MW라 지하
-      바다·플룸 불가(a⁻⁷·⁵가 치명; e·a·공명·자전 전 조합 case-analysis로 부족 확인). 그럼에도 엔셀라두스식
-      플룸을 art로 채택, 고증 caveat 기록.
+      표면은 물얼음과 암석이 섞인 얼음이고, Miranda를 닮은 균열이 지형을 지배한다. 활성 균열대에서는 물 제트가
+      솟아 낙진으로 주변을 신선한 얼음으로 다시 덮는다. 그 덮개 덕에 표면은 매우 밝다. 온도는 134 K에 머물러
+      얼음이 안정하게 유지된다.
     fields:
       - { name: surface_type, value: "얼음 (물얼음+암석), Miranda형 균열 + tiger-stripe cryovolcanic 플룸", op: set }
       - { name: hydrosphere, value: "지하 액체 (art 전제, 국소)", op: set }
@@ -2823,7 +2815,7 @@ decisions:
       evidence_ko: >
         이 행에는 오너 오버라이드가 둘 있다. (1) 플룸: 20 R_p·e 0.02에서 조석열이 수 MW뿐이라 엔셀라두스식
         cryovolcanism을 돌릴 지하 바다가 불가능하다(a⁻⁷·⁵가 치명적이며 e·a·공명·자전 전 조합을 확인했다).
-        플룸이 먹이는 E-고리가 실제 토성 E-고리와 동형이어서 "E-고리" 명명 정합을 강화하므로 아트로 채택했다.
+        플룸이 채우는 E-고리가 실제 토성 E-고리와 동형이어서 "E-고리" 명명 정합을 강화하므로 아트로 채택했다.
         (2) 알베도: 알베도 방법론 §6이 인정하는 어떤 밝기로도 이 자리에서 노출된 물얼음이 버티지 못한다.
         Chaos가 받는 복사속은 태양계 1.30 AU 상당이고, 그 자리에서 표면 얼음은 천체의 나이보다 빨리 승화한다.
         구값 알베도 0.70에서 0.089 m/yr로, 나이 5.3 Gyr에 대해 반경 400 km를 4.5 Myr에 잃는다. 존속 임계는
@@ -2843,13 +2835,13 @@ decisions:
     status: gated
     driver: [art, physics]
     narrative: >
-      Bright blue-white ice (Enceladus-type fresh frost, ice-blue #cdd9e4 family — same tone as the ring it feeds). Water jets/plumes from tiger-stripe
-      fracture zones (south pole or active scarps); airless so crisp shadows + plume light-scattering. Dramatic Miranda fractures.
-      biolum/aurora ∅. Plumes + bright frost = the Enceladus look. The blue-white ice visually links to the ice-blue E-ring (supplier-ring same tone).
+      From a distance Chaos is a white body with a blue cast, exactly the colour of the ice ring it supplies.
+      Fractures crossing the surface leave deep shadows, and the water jets rising from the active zones catch
+      the starlight and scatter it bright. With no atmosphere the line between light and dark is knife-sharp.
     narrative_ko: >
-      밝은 청백 얼음(Enceladus형 신선 frost, ice-blue #cdd9e4 계열 — 자기가 먹이는 고리와 동톤). tiger-stripe
-      균열대서 물 제트/플룸(남극 혹은 활성 단애), 무대기라 선명한 그림자 + 플룸 빛산란. 극적 Miranda 균열.
-      biolum/aurora ∅. 플룸 + 밝은 frost = Enceladus 룩. 청백 얼음이 ice-blue E-고리와 시각 연결(공급원-고리 동톤).
+      멀리서 본 Chaos는 푸른 기가 도는 흰 얼음 천체다. 스스로가 공급하는 얼음 고리와 정확히 같은 색이다.
+      표면을 가로지르는 균열이 그림자를 깊게 남기고, 활성 균열대에서 솟은 물 제트가 햇빛을 받아 밝게 흩어진다.
+      대기가 없어 명암의 경계는 칼처럼 선명하다.
     fields:
       - { name: surface, value: "밝은 청백 얼음 (Enceladus형 frost, ice-blue #cdd9e4), Miranda 균열", op: set }
       - { name: emission_glow, value: "tiger-stripe 물 제트/플룸 빛산란 (무대기라 선명 그림자)", op: set }
@@ -2863,38 +2855,45 @@ decisions:
     axis: magnetism.magnetic_field # G7 facet-walk 2026-06-23
     status: gated
     driver: [physics]
-    narrative: "None — a small icy body, no dynamo possible. At the 21 R_p magnetopause, radiation itself is low (environment)."
-    narrative_ko: "없음 — 소형 얼음체, dynamo 불가. 21 R_p 자기권계면이라 방사선 자체가 낮음(environment)."
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - { name: magnetic_field, value: "none (소형 얼음체, dynamo 불가)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      evidence: "At the 21 R_p magnetopause, radiation itself is low (environment)."
-      evidence_ko: "21 R_p 자기권계면이라 방사선 자체가 낮음(environment)."
+      evidence: "A small icy body: no dynamo is possible. Shielding is moot anyway — Chaos orbits at 21 R_p, near the outer edge of the Polyphemus magnetosphere (magnetopause 23.5 R_p, Polyphemus.magnetism.magnetosphere) and outside the belts, so the ambient radiation is weak (environment.radiation)."
+      evidence_ko: "소형 얼음체라 dynamo 불가. 차폐는 애초에 문제가 아니다 — Chaos는 21 R_p를 돌아 Polyphemus 자기권의 바깥 끝자리에 있고(자기권계면 23.5 R_p, Polyphemus.magnetism.magnetosphere) 벨트 밖이라 주변 방사선이 약하다(environment.radiation)."
 
   - body: Chaos
     axis: environment.radiation    # G8 facet-walk 2026-06-23
     status: gated
     driver: [physics]
-    narrative: "Low/variable — 21 R_p=magnetopause, part of the dayside outside the magnetosphere (times of direct exposure to α Cen A stellar wind·cosmic rays). Mild since outside the belt."
-    narrative_ko: "낮음/가변 — 21 R_p=자기권계면, 주간측 일부 자기권 밖(α Cen A 항성풍·우주선 직접 노출 시간 있음). belt 밖이라 온건."
+    narrative: >
+      The radiation Chaos takes is on the weak side, but not steady. It runs outside the belts, so most of the
+      time conditions are mild; sitting just inside the boundary of the magnetosphere, though, a hard gust of
+      stellar wind pushes that boundary inward and leaves the moon exposed for a while. Then it takes α Cen A's
+      wind and the cosmic-ray flux directly.
+    narrative_ko: >
+      Chaos가 받는 방사선은 약한 편이지만 일정하지 않다. 벨트 밖을 돌아 평소에는 온건한데, 자기권 경계 바로
+      안쪽이라 항성풍이 세게 밀려오면 경계가 밀려 들어와 한동안 그대로 노출된다. 그때는 α Cen A의 항성풍과
+      우주선을 직접 맞는다.
     fields:
-      - { name: radiation, value: "낮음/가변 (21 R_p 자기권계면, 주간측 일부 자기권 밖)", op: set }
+      - { name: radiation, value: "낮음/가변 (21 R_p, 벨트 밖 + 자기권계면 23.5 R_p 안쪽 — 항성풍 압축 시 노출)", op: set }
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      evidence: "Variable due to the magnetopause. wind/activity/heliosphere/flares/uv/HZ=star-level ∅."
-      evidence_ko: "자기권계면이라 가변. wind/activity/heliosphere/flares/uv/HZ=항성-레벨 ∅."
+      evidence: "Chaos orbits at 21 R_p: outside the radiation belts (outer belt ends at L 10, Polyphemus.magnetism.radiation_belts) and inside the 23.5 R_p magnetopause (Polyphemus.magnetism.magnetosphere). Hence weak but variable — the variability is stellar-wind compression pushing the standoff below 21 R_p, not the moon sitting on the boundary. wind/activity/heliosphere/flares/uv/HZ=star-level ∅."
+      evidence_ko: "Chaos는 21 R_p를 돈다. 방사선대 밖이고(외대가 L 10에서 끝난다, Polyphemus.magnetism.radiation_belts) 자기권계면 23.5 R_p 안쪽이다(Polyphemus.magnetism.magnetosphere). 그래서 약하지만 가변이며, 가변의 원인은 위성이 경계에 앉아 있는 것이 아니라 항성풍 압축이 standoff를 21 R_p 아래로 밀어 넣는 것이다. wind/activity/heliosphere/flares/uv/HZ=항성-레벨 ∅."
 
   # ── Chaos G9 rings = ∅ 전부(자체 고리 없음; circumstellar_disk·asteroid_belt 계-레벨 ∅). ──
   - body: Chaos
     axis: satellites               # G10 — dust_source 역할 (facet-walk 2026-06-23)
     status: gated
     driver: [art, physics]
-    narrative: "submoon ∅ · co_orbital ∅. dust_sources=Chaos is the E-ring supplier, and the supply is an art-direction choice: the water plumes stand in for a mechanism we cannot ground. Impact ejecta and sputtering are the physical channels, weak on their own. Sublimation carries ~134 kg/s of water vapour off the surface, but as gas it builds a neutral torus rather than ring material. Recorded in Polyphemus.rings."
-    narrative_ko: "submoon ∅ · co_orbital ∅. dust_sources=Chaos가 E-고리 공급원이며, 공급 기제는 아트 디렉션 선택이다. 물 플룸이 우리가 근거를 댈 수 없는 기제를 대신한다. 충돌 파편과 sputtering이 물리적 경로이지만 그것만으로는 약하다. 승화는 표면에서 초당 ~134 kg의 수증기를 내보내는데 기체라 고리 물질이 아니라 중성 토러스를 만든다. Polyphemus.rings 기록."
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - { name: dust_sources, value: "Chaos = E-고리 공급원 (물 플룸 = 아트 디렉션 / 충돌 파편·sputtering = 물리 경로, 단독으로는 약함)", op: set }
       - { name: neutral_torus_supply, value: 134, unit: kg/s, op: set, note: "표면 134 K 승화 유출 — 기체이므로 먼지 고리가 아니라 중성 수증기 토러스" }
@@ -2920,7 +2919,7 @@ decisions:
       evidence_ko: >
         플룸은 아트 디렉션이며 우리가 주장하는 기제가 아니다. 이유는 숫자 두 개다. 20 R_p·e 0.02에서 조석열이
         수 MW뿐이라 저장소를 돌릴 수준에 한참 못 미친다(surface 행). 그리고 Chaos의 탈출속도 424 m/s는 실제
-        먼지고리 공급 천체 중 가장 높다. 충돌 파편으로 먹이는 테베 34, 아말테아 58, 포이베 102 m/s보다 훨씬
+        먼지고리 공급 천체 중 가장 높다. 충돌 파편으로 고리를 채우는 테베 34, 아말테아 58, 포이베 102 m/s보다 훨씬
         높고, 239 m/s인 엔셀라두스조차 물질을 내보내려 플룸이 필요했다. 따라서 여기서 정직한 물리 경로인
         충돌 파편과 sputtering은 충분하다기보다 약하며, 근거를 댈 수 있는 어떤 방출 기제도 게이트된 밝기의
         고리를 떠받치지 못한다. 오너 결정은 플룸을 유지하고 아트로 표시하는 것이다. 승화는 먼지 공급원에서
@@ -2928,7 +2927,7 @@ decisions:
         들어올릴 수 있는 알갱이 반경이 2e-10 m로 물 분자보다 작다(혜성이 먼지를 끌고 나가는 것은 플럭스가
         여섯 자리 크고 km 규모 핵의 중력이 무시할 수준이기 때문이다). 기체 예산으로는 유효하다. 134 K
         표면에서 134 kg/s가 빠져나가고 탈출속도가 물의 열속도 430 m/s보다 낮아 자유롭게 이탈하므로,
-        에우로파처럼 중성 수증기 토러스를 고리와 나란히 만든다. 고리를 먹이는 것은 아니다. 얼음체라 알갱이
+        에우로파처럼 중성 수증기 토러스를 고리와 나란히 만든다. 고리를 채우는 것은 아니다. 얼음체라 알갱이
         조성이 ice-blue 고리와 일치한다.
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-27: verdict pass-in-window → owner-override, dust_sources에 아트 표시 명시,
@@ -2941,15 +2940,17 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      Has a surface → biome map (5): Chasmata / tiger-stripe Plume Vents (science hotspot) / Icy
-      Plains / Craters / Poles. (Coronae excluded=owner.) Landing=caution at ultra-low 0.023g (escape·bounce).
-      discovery=fictional→RB F F F F. Full ScienceValues. Plume Vents=science landmark (Enceladus tiger-stripe analogy). Ultra-low-gravity
-      landing has special difficulty. Coronae biome excluded (owner).
+      Chaos runs against the other moons, so you cannot hop across from a neighbour — reaching it costs a
+      separate bill to reverse your orbital direction. The surface divides into five: Chasmata (the 15–30 km
+      cliffs) / Plume Vents (active fractures with water jets) / Icy Plains (fresh ice laid down by plume
+      fallout) / Craters (the old terrain) / Poles (high latitude). The one worth going to is Plume Vents, where
+      material that has just come up from below can be caught where it lands.
     narrative_ko: >
-      표면 있음 → biome map(5): 거대 균열대(Chasmata) / tiger-stripe 플룸 분출대(Plume Vents, 과학 hotspot) / 얼음
-      평원(Icy Plains) / 크레이터(Craters) / 극(Poles). (코로나 제외=오너.) 착륙=초저중력 0.023g 주의(이탈·바운스).
-      발견=fictional→RB F F F F. ScienceValues 전체. 플룸 분출대=과학 명소(엔셀라두스 tiger-stripe 유추). 초저중력
-      착륙 난이도 특수. 코로나 바이옴 제외(오너).
+      다른 위성들과 반대 방향으로 도는 궤도라, 옆 위성에서 곧바로 건너올 수 없고 궤도 방향을 되돌리는 비용을
+      따로 치러야 한다. 지표는 다섯으로 갈린다. 거대 균열대(Chasmata, 15~30 km 절벽) / 플룸 분출대(Plume Vents,
+      물 제트가 솟는 활성 균열) / 얼음 평원(Icy Plains, 플룸 낙진이 덮은 신선 얼음) / 크레이터(Craters, 오래된
+      지형) / 극(Poles, 고위도). 그중 가장 흥미로운 곳은 플룸 분출대로, 지하에서 갓 올라온 물질을 그 자리에서
+      받을 수 있다.
     fields:
       - { name: science_biomes, value: "5: Chasmata / Plume Vents (hotspot) / Icy Plains / Craters / Poles", op: set, colors: {"Chasmata":"#3C4A5E","Plume Vents":"#33A5B5","Icy Plains":"#AEC8D6","Craters":"#7C8A96","Poles":"#E4ECF0"} }   # provisional naturalistic biome-map display colors (S↓; plume vents = accent)
       - { name: difficulty, value: "착륙=초저중력 0.023g 특수 · 발견=RB F F F F", op: set }
