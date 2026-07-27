@@ -285,8 +285,16 @@ decisions:
     file paths, equations, parameter dumps (citations → `refs[]`, numbers → `fields[]`);
     **owner-decision history** — dates, "owner chose/picked/declined", facet-walk/re-gate
     logs (that provenance lives in the session checklist/context-notes, not on the board a
-    stranger reads); and **engine mechanics**: how a KSP feature works (gas-giant biome
-    maps, flight science, the discovery mod) is internal author knowledge, not the story.
+    stranger reads); and **engine mechanics**: how a KSP feature works (flight science, the
+    discovery mod, cfg field semantics) is internal author knowledge, not the story.
+    - **The `gameplay` axis is the one exception on biomes** (owner, 2026-07-27), and takes a
+      fixed three-part shape: (1) what is distinctive about *going there* — skip anything
+      generic enough to apply to any body of its class; (2) the **biome list**, each entry
+      with at most a one-clause descriptor of what it is; (3) the single most interesting
+      place. Earlier guidance kept biome lists out of the narrative entirely; that is
+      superseded, because `science_biomes` *is* what the row decides, so the prose has to be
+      about it. Everything else engine-side (RB difficulty levels, `ScienceValues`, SOI
+      tuning, why Poles is geographic rather than seasonal) still belongs in `evidence`.
   - gate `evidence` = the **verification + grounding trail**: method, tool + fit quality,
     formulas, checks, encodings, and the engine mechanics the narrative omits. Technical
     shorthand is fine; storytelling and dated decision-logs are not.

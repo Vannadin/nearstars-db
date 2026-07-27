@@ -1648,11 +1648,16 @@ decisions:
     driver: [gameplay]
     narrative: >
       Landing here is very hard. Brief touchdowns are possible in the lava-free areas, but the extreme radiation
-      and heat make it impossible to stay long. The sight worth the trip is the great chasm with lava lakes on its
-      floor.
+      and heat make it impossible to stay long. The surface divides into six: Grand Chasma / Lava Lakes (the
+      hottest ground, on the face turned to Polyphemus) / Sulfur Plains / Basalt Plains (the far side) /
+      Volcanic Cones / Poles (set by position, not season). The sight worth the trip is the great chasm with
+      lava lakes on its floor.
     narrative_ko: >
-      착륙 난도는 매우 높다. 용암이 없는 지역에 잠시 착륙은 가능하지만, 극심한 방사선과 고온 탓에 오래 머물기는
-      어렵다. 그중 가장 볼 만한 곳은 바닥을 용암호가 채운 거대 협곡이다.
+      착륙 난도는 매우 높다. 용암이 없는 지역에 잠시 내려앉을 수는 있지만, 극심한 방사선과 고온 탓에 오래
+      머물기는 어렵다. 지표는 여섯으로 갈린다. 대협곡(Grand Chasma) / 용암호 사슬(Lava Lakes, Polyphemus
+      대면측이라 가장 뜨겁다) / 황 평원(Sulfur Plains) / 현무암 평원(Basalt Plains, 반대면) /
+      화산추·칼데라(Volcanic Cones) / 극(Poles, 계절이 아니라 위치로 갈린다). 그중 가장 볼 만한 곳은 바닥을
+      용암호가 채운 대협곡이다.
     fields:
       - { name: science_biomes, value: "6: Grand Chasma / Lava Lakes / Sulfur Plains / Basalt Plains / Volcanic Cones / Poles", op: set, colors: {"Grand Chasma":"#3A3B4A","Lava Lakes":"#C8492C","Sulfur Plains":"#C9A93E","Basalt Plains":"#4E463F","Volcanic Cones":"#7E4A3C","Poles":"#D8D0B6"} }   # provisional naturalistic biome-map display colors (S↓, lava = accent)
     gate:
@@ -1902,10 +1907,14 @@ decisions:
     driver: [gameplay]
     narrative: >
       The surface is more stable than Dante's, but the radiation is strong enough that no stay lasts long without
-      proper shielding. The most interesting spot is the sub-Polyphemus point, where the parent hangs fixed overhead.
+      proper shielding. The surface divides into six: Old Crust / Bright Grooved Terrain / Resurfacing Zones /
+      Tectonic Ridges / Poles (set by position) / Sub-Polyphemus Point (where the parent sits fixed). The most
+      interesting spot is that sub-Polyphemus point, with Polyphemus nailed to the sky overhead.
     narrative_ko: >
-      Dante보다 표면은 안정하지만, 강한 방사선으로 인해 충분한 차폐 없이는 오래 머물 수 없다. 가장 흥미로운 자리는
-      Polyphemus가 하늘에 고정된 대면점이다.
+      Dante보다 표면은 안정하지만, 강한 방사선 때문에 충분한 차폐 없이는 오래 머물 수 없다. 지표는 여섯으로
+      갈린다. 오래된 지각(Old Crust) / 밝은 홈 지형(Bright Grooved Terrain) / 재포장 지대(Resurfacing Zones) /
+      지구조 능선(Tectonic Ridges) / 극(Poles, 위치로 갈린다) / 대면점(Sub-Polyphemus Point, Polyphemus가
+      고정된 자리). 그중 가장 흥미로운 자리는 Polyphemus가 하늘에 붙박이로 걸린 대면점이다.
     fields:
       - { name: science_biomes, value: "6: Old Crust / Bright Grooved Terrain / Resurfacing Zones / Tectonic Ridges / Poles / Sub-Polyphemus Point", op: set, colors: {"Old Crust":"#47433D","Bright Grooved Terrain":"#A9B6BE","Resurfacing Zones":"#8A7E6E","Tectonic Ridges":"#6E6152","Poles":"#CFE0E6","Sub-Polyphemus Point":"#3E8C8A"} }   # provisional naturalistic biome-map display colors (S↓, sub-point = accent); Dark Cratered Terrain/Impact Basins retired 2026-07-26 with the craters
     gate:
@@ -2326,13 +2335,17 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      Pandora is the most interesting destination in Alpha Centauri, with a rich range of environments from oceans
-      and rainforest to volcanic belts and icy peaks. Its most compelling site is the flux-vortex region, where
-      geometric structures and a local aurora together make the one landing worth the whole journey.
+      Pandora is the most interesting destination in Alpha Centauri, and the only world in the system where a
+      person can breathe. The surface divides into seven: Oceans / Coastlines (bioluminescent) / Rainforest
+      Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Geometric Formations (the
+      magnetic-anomaly ground). Its most compelling site is the flux-vortex region, where geometric structures
+      and a local aurora together make the one landing worth the whole journey.
     narrative_ko: >
-      Pandora는 Alpha Centauri에서 가장 흥미로운 목적지다. 대양과 우림, 화산대와 얼음 봉우리까지 풍부한 환경을
-      갖추고 있다. 그중에서도 가장 매력적인 곳은 플럭스 볼텍스 구역으로, 기하학적인 구조물들과 국소 오로라가
-      어우러져 이 한 곳이 여정 전체를 값어치 있게 만든다.
+      Pandora는 Alpha Centauri에서 가장 흥미로운 목적지다. 이 계에서 유일하게 사람이 숨 쉴 수 있는 세계이기도
+      하다. 지표는 일곱으로 갈린다. 대양(Oceans) / 해안(Coastlines, 생물발광) / 우림 저지대(Rainforest
+      Lowlands) / 고지대 산맥(Highland Mountains) / 화산대(Volcanic Belts) / 빙봉·극관(Ice Peaks & Polar
+      Caps) / 기하 구조물(Geometric Formations, 자기 이상대). 그중 가장 매력적인 곳은 플럭스 볼텍스 구역으로,
+      기하학적 구조물과 국소 오로라가 어우러져 이 한 곳이 여정 전체를 값어치 있게 만든다.
     fields:
       - { name: science_biomes, value: "7: Oceans / Coastlines / Rainforest Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Geometric Formations (Flux-Vortex)", op: set, colors: {"Oceans":"#2A5C99","Coastlines":"#35B8A0","Rainforest Lowlands":"#3E7A3A","Highland Mountains":"#7A6A5A","Volcanic Belts":"#9A4A38","Ice Peaks & Polar Caps":"#D6E4EA","Geometric Formations (Flux-Vortex)":"#7A44C8"} }   # provisional naturalistic biome-map display colors (S↓; biolum coast + flux-vortex = accents)
       - { name: sphere_of_influence_tuning, value: "auto from mass", op: passthrough }
@@ -2673,11 +2686,15 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      Landing is not hard. The surface divides into six biomes, and the most interesting of them is the hydrothermal
-      one, where traces of anaerobic life can be found.
+      Landing is not hard, but there is nothing to breathe and it is cold, and sitting inside the outer belt means
+      shielding is needed too. The surface divides into six: Seas / Coastlines / Cold Highlands / Polar Ice /
+      Volcanic & Hydrothermal / Hazy Lowlands. The most interesting of them is the hydrothermal ground, where
+      traces of anaerobic life can be found.
     narrative_ko: >
-      착륙은 어렵지 않다. 지표는 여섯 개의 바이옴으로 갈리는데, 그중 가장 흥미로운 곳은 혐기성 생명의 흔적을 찾을
-      수 있는 열수구다.
+      착륙은 어렵지 않지만 숨 쉴 수 없고 춥다. 외대 안에 잠겨 있어 차폐도 필요하다. 지표는 여섯으로 갈린다.
+      바다(Seas) / 해안(Coastlines) / 한랭 고지(Cold Highlands) / 극빙(Polar Ice) / 화산·열수 지대(Volcanic &
+      Hydrothermal) / 연무 저지대(Hazy Lowlands). 그중 가장 흥미로운 곳은 혐기성 생명의 흔적을 찾을 수 있는
+      열수구다.
     fields:
       - { name: science_biomes, value: "6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (후보) Microbial Mats", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
       - { name: difficulty, value: "임무=한랭 무산소 착륙 + 외대 차폐 · 발견=RB F F F F", op: set, note: "구값은 차폐 경미 — environment.radiation 등급이 낮음→중간으로 오른 결과" }

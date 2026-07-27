@@ -164,11 +164,17 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   holds, conclusion first), ≤6 sentences, and it **excludes** bibcodes / file paths
   / equations / parameter dumps, **owner-decision history** (dates, "owner
   chose/declined", facet-walk logs — that lives in checklist/context-notes), and
-  **engine mechanics** (biome maps, flight science, discovery mod: author knowledge,
-  not story). The gate `evidence` = verification + grounding trail (tool, fit
+  **engine mechanics** (flight science, discovery mod, cfg field semantics: author
+  knowledge, not story). The gate `evidence` = verification + grounding trail (tool, fit
   quality, formulas, checks, the mechanics the narrative omits); no storytelling, no
   dated decision-logs. **`evidence` IS rendered in the board viewer** — it is not an
   internal channel, so treat it as reader-visible.
+- **The `gameplay` axis is the biome exception** (owner 2026-07-27) and takes a fixed
+  three-part shape: what is distinctive about going there (nothing generic to the body
+  class — "landing is tricky at low gravity" gets cut), then the **biome list** with at
+  most a one-clause descriptor each, then the single most interesting place. Biome lists
+  used to be banned from prose; superseded, since `science_biomes` is what the row
+  decides. RB levels / `ScienceValues` / SOI tuning stay in `evidence`.
 - **Value history → row-level `provenance:`** (SPEC §3.1). This is the one slot where
   dated decision-logs belong: what the value was, when and why it changed, which owner
   call settled it. The renderer reads only `narrative` / `fields` / `refs` / `gate`, so

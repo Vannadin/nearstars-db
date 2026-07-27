@@ -81,8 +81,9 @@ Other Hades outcomes worth carrying forward:
   (body-figure + tidal-locking-timescale) and `bulk.tidal_heating` (tidal-heating). Filled.
   Gate warnings for alpha_centauri: 34 → 31. The remaining 4 Hades warnings (identity, surface,
   appearance, gameplay) mirror Dante exactly, so they are the accepted baseline.
-- Biome lists belong in `fields`, never in the gameplay narrative (Dante set this precedent);
-  the "Poles is geographic, not seasonal" rationale goes to `gate.evidence`.
+- ~~Biome lists belong in `fields`, never in the gameplay narrative (Dante set this
+  precedent)~~ — **superseded 2026-07-27**, see "Gameplay rows: the three-part shape" below.
+  The "Poles is geographic, not seasonal" rationale still goes to `gate.evidence`.
 - The user tends to hand back an edited version of the draft. Apply their wording verbatim,
   with one exception: they wrote "단테" in Hangul, but the locked naming rule keeps fictional
   NearStars bodies Latin, so it stays "Dante".
@@ -203,6 +204,33 @@ never the problem. Three rules adopted, and the Chaos rows above were trimmed to
 
 Not waste, and deliberately kept: `evidence_ko` is half of `gate`, which is the cost of
 the bilingual viewer. Changing that is a viewer-policy question, not a cleanup.
+
+### Gameplay rows: the three-part shape (2026-07-27)
+
+The owner reviewed the finished gameplay rows against their `fields` and concluded the
+prose was about the wrong thing: `science_biomes` is what the row decides, so the prose
+has to be about the biomes. This **reverses the Dante-era rule** above. Canonical now in
+SPEC §3.1 and the skill's Step 4; all five surfaced bodies were rewritten to it.
+
+The shape:
+
+1. **What is distinctive about going there.** Cut anything generic to the body class. Two
+   drafts died here: "대기가 없어 그림자는 선명하고 표면은 밝다" (true of any airless icy
+   moon, and it is appearance content) and "중력이 너무 약해 착륙이 까다롭고 잘못 내려앉으면
+   튀어 오른다" (true of any tiny moon). Chaos's opening became its retrograde orbit, the
+   one thing no other moon in the system has and the only one a player pays for in fuel.
+2. **The biome list**, each entry with at most a one-clause descriptor: `용암호 사슬(Lava
+   Lakes, Polyphemus 대면측이라 가장 뜨겁다)`. Descriptors come from facts already on the
+   board, not new invention.
+3. **The single most interesting place**, named and given its reason.
+
+Kept in `evidence`, not promoted: RB difficulty levels, `ScienceValues`, SOI tuning, and
+the *reasons behind* the descriptors (tide-locked + obliquity ~0 → Poles is geographic).
+The two layers do not duplicate: prose says what a biome is, evidence says why we set it
+that way. Candidate biomes stay out of the prose list (Cassandra's Microbial Mats).
+
+Also settled: an axis with nothing to say gets `없음.` / `None.` and no padding — Chaos
+magnetism and satellites. Do not inflate an empty axis into a sentence.
 
 ### Open items
 

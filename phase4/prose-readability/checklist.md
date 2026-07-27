@@ -10,7 +10,7 @@ Applying the SPEC §3.1 prose readability contract to every decision row in
 - [x] Dante (committed)
 - [x] Hades (committed)
 - [x] Cassandra (committed)
-- [ ] Chaos
+- [x] Chaos (committed)
 - [ ] Alpha Cen A (star)
 - [ ] Alpha Cen B (star)
 
@@ -26,7 +26,23 @@ Applying the SPEC §3.1 prose readability contract to every decision row in
 - [x] environment.radiation (now quotes ~7,200 rem/day)
 - [x] gameplay
 
-Next body: **Chaos**.
+Next body: **Alpha Cen A** (star), then **Alpha Cen B**.
+
+## Chaos rows — all 9 done
+
+identity / bulk / atmosphere / surface / appearance / magnetism / environment.radiation /
+satellites / gameplay. Two axes with nothing to say (magnetism, satellites) are just `없음.`
+
+Value fixes that fell out: albedo 0.7 → 0.91 with surface_temperature 200 → 134 K (ice
+stability), the magnetopause misrecorded as Chaos's own 21 R_p instead of 23.5 R_p, canon's
+15–30 km cliffs restored, and the 먹이다 calque cleared board-wide.
+
+## Gameplay rows realigned (all 5 surfaced bodies)
+
+New three-part shape, owner 2026-07-27 — see context-notes. Dante, Hades, Pandora,
+Cassandra rewritten to match Chaos; Polyphemus has no surface so it keeps its own form.
+The old "no biome lists in prose" rule is superseded in SPEC §3.1, the skill, context-notes
+and memory.
 
 ## Per-body closeout (do NOT skip)
 
