@@ -1,6 +1,7 @@
 # Phase 4 prose-readability pass — context notes (session handoff)
 
-Last updated: 2026-07-25. Read this + `checklist.md` first, then resume Hades.
+Last updated: 2026-07-27. Read this + `checklist.md` first. Hades, Dante, Pandora and
+most of Cassandra are done; `gameplay` is Cassandra's last row.
 
 ## The task
 
@@ -102,3 +103,73 @@ identity `VaNnadin <vannadin00@gmail.com>` (local git config already set).
 - Flattening/oblateness viewer (opened earlier for the user): `phase4/figure/distortion-viewer.html`.
 - Full prior transcript (pre-compaction detail):
   `/Users/vana/.claude/projects/-Users-vana-Desktop-NearStars/4f7c6dfb-cfd5-47fe-b3f5-a4281368edcd.jsonl`
+
+---
+
+## Decision provenance moved off the board (2026-07-27)
+
+`gate.evidence` **is rendered in the board viewer** — it has been since the viewer's first
+commit (`b0a3a17`, 2026-07-10), as an `evidence`-tagged block, alongside the `verdict`
+badge (`owner-override` renders as "오너 확정"). It is not an internal channel.
+
+SPEC §3.1 bans dated decision-logs from `evidence` too, not just from `narrative`:
+"Technical shorthand is fine; storytelling and dated decision-logs are not", with the
+provenance directed to "the session checklist/context-notes, not on the board a stranger
+reads". The regrounding work below had put that provenance into `evidence`; it was stripped
+out and lives here instead. Only YAML comments (`#`) remain as an on-file internal channel —
+the parser drops them, so the viewer never sees them.
+
+### What changed, and why (the record the board no longer carries)
+
+**Dante `bulk.tidal_heating` / `surface`.** Restated on the measured eccentricity: the
+stability timeseries gives `e_rms` 0.0186, replacing an assumed mean of 0.0175. At
+`k₂/Q` 0.0155 that is ~1200× Io and ~11,500 W/m². The old row paired that flux with a 230 K
+ambient surface, which conservation forbids. Owner set ambient 400 °C (673 K) with 700 °C
+(973 K) hotspots, later asked for those to be written in Kelvin. The pair closes the energy
+budget at 1–5 % hotspot coverage.
+
+**Hades `bulk.tidal_heating` / `surface` / `appearance` / `gameplay`.** The previous entry
+("~400× Io, but low k₂/Q so it channels into tectonics") was energetically impossible on two
+counts. Ran the stability sim to test lowering Hades's eccentricity instead — three variants
+(`e_init` 0.005/0.010/0.020, settings identical to `_final32b`, archived at
+`phase3/stability-sim/results/_hades_lowe_scan/`) all returned `e_max` 0.047–0.064, i.e. the
+eccentricity is forced by Pandora and cannot be lowered by an initial condition. Dante's
+eccentricity survived in all three, so the feared coupling did not materialise. Owner then
+took the rocky band's low end (207 W/m², ~15× Io, `T_eq` 278 K) and **accepted dropping the
+ancient cratered terrain**, since a 10 m conductive lid over melt resurfaces continuously.
+Two biomes were renamed with it: Dark Cratered Terrain → Old Crust, Impact Basins →
+Resurfacing Zones.
+
+**Pandora `atmosphere`.** 290 K kept, accounting corrected: the old chain double-counted the
+greenhouse. Now four-term `T_eq` 220.6 K + 45 W/m² tidal → 237 K, +54 K greenhouse = 291 K.
+
+**Cassandra `atmosphere`.** Temperature regrounded off an ungrounded "+45–50 K CIA
+greenhouse" to 243–263 K. Pressure moved 1 bar → **1.37 bar** on owner's call: the retention
+gates do not constrain the value, the body's composition puts it in Titan's analog row rather
+than Earth's, and the owner wanted a non-round number precisely because the roster kept
+landing on Earth's values. That complaint also produced the §6 rule in
+`exoplanet-atmosphere-methodology.md` ("pick the analog row by composition and temperature
+class, not by proximity to the middle of the band").
+
+**Cassandra `magnetism.magnetic_field` / `environment.radiation`.** Owner chose option (a):
+the moon is inside Polyphemus's outer belt, so the grade is **intermediate**, not "low —
+outside the radiation belt" (that wording predated the 2026-07-24 belt geometry and had never
+been updated; the belts row's alternative of ending the outer belt at Cassandra was left
+unexercised). Owner also asked that the weak field be credited with holding off the belt.
+Note the scope distinction that survives in the row: crediting a field with lowering
+**surface dose** is standard physics, while crediting it with preventing **stellar-wind
+atmospheric stripping** is what Ramstad & Barabash 2021 argue against and what the atmosphere
+methodology's Gate 4 now forbids. Ganymede is the analog, so the shielding is partial —
+poles exposed.
+
+### Open items
+
+- **Cassandra's magnetic field strength is not derived.** "Weak" is not a number, and a
+  standoff calculation against the outer belt's plasma pressure needs one. Pandora's 75 µT
+  came through `rocky-planet-dynamo-methodology`; do the same for a 0.151 M⊕ core.
+- **Ocean tidal dissipation for Pandora is unquantified.** Bounded, not computed — the
+  eccentricity tide is resonant in ocean depth, so fixing the ocean depth is the trigger.
+  Method: Matsuyama 2018.
+- **Cassandra `gameplay` is the last row of the prose pass** and has not been touched.
+- The Earth-default sweep across other systems was **deliberately dropped**: only
+  alpha_centauri has had a real Phase 4 run, so findings on the other boards are noise.
