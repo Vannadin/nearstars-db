@@ -818,11 +818,9 @@ decisions:
     kopernicus_name: Polyphemus
     axis: rings                    # 고리 최종 확정 (2026-06-21 시뮬 검증). appearance.rings 대체.
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
-      2026-07-27: gate evidence의 고리 공급 항목 갱신. 구 서술은 "feed(art-first): Chaos 물
-      cryovolcanic 플룸 … 조석열 부족 … sputtering/승화는 보조"였다. Chaos.surface의 알베도가
-      0.91로 확정되며 표면이 134 K가 되어 승화 유출 ~134 kg/s가 계산되었고, 그것만으로 고리
-      질량 예산이 채워진다. 주공급과 보조가 뒤바뀌어 고리는 더 이상 아트에 의존하지 않는다.
-      ring_structure·plane·color·opacity 등 수치 필드는 전부 무변경. Chaos.satellites 행도 같이 갱신.
+      2026-07-27: gate evidence의 feed 항목만 갱신 — 플룸을 아트 디렉션으로 명시하고, 방출 기제
+      판단은 그 문제를 소유한 Chaos.satellites로 위임했다. 수치 필드(구조·평면·색·opacity)는 전부
+      무변경. 경위는 prose-readability/context-notes.md.
     status: gated
     driver: [visual, observation]
     narrative: >
@@ -874,16 +872,10 @@ decisions:
         a diffuse E-ring is axisymmetric at steady state (perihelion precession randomized), so a circular annulus
         is faithful, and the reduced Chaos e (0.02) is absorbed into the gap margin. Apparent +0.05 R_Jup (τ≈9e-5,
         equivalent disk ~23k km = 13% of Beichman's Saturn-½ cross-section) keeps the planet at the gated
-        1.0 R_Jup while matching the ~1.05 R_Jup observed flux. Feed: ART DIRECTION, not a grounded mechanism —
-        Chaos water cryovolcanic plumes (Enceladus→E-ring isomorphism). Two numbers make it a divergence: tidal
-        heat at 20 R_p is only a few MW (Chaos.surface divergence_note), and Chaos's 424 m/s escape velocity
-        exceeds every real dust-ring source (Thebe 34, Amalthea 58, Phoebe 102 by impact ejecta; even Enceladus
-        at 239 needed plumes), so impact ejecta and sputtering (Kennedy 2011 grinding, the optically thin dust
-        alternative above) are weak rather than sufficient. Owner kept the plumes and flagged them as art rather
-        than move the supply to the 9 unnamed canon moonlets. Sublimation is NOT a dust source:
-        Chaos sheds ~134 kg/s from its 134 K surface (2026-07-27), but as vapour it cannot carry grains —
-        free-molecular drag against 0.023 g caps the liftable grain at 2e-10 m — so it builds a neutral water
-        torus alongside the ring, not the ring itself. Color:
+        1.0 R_Jup while matching the ~1.05 R_Jup observed flux. Feed: ART DIRECTION — Chaos water cryovolcanic
+        plumes (Enceladus→E-ring isomorphism), kept as a look rather than a mechanism we ground. No ejection
+        mechanism available to this moon supplies the ring at this brightness; that assessment and its numbers
+        live in Chaos.satellites, which owns the question. Color:
         blue-white ice-dust #cdd9e4, fine water-ice grains scattering
         wavelength-dependently (small particles → blue dominance; Saturn E-ring/Enceladus precedent) → Chaos
         confirmed icy (inherited by group 10 satellites); the Phoebe-type dark carbonaceous alternative (C)
@@ -905,16 +897,9 @@ decisions:
         inc ~175° rel 공전면, epoch 순간면 179° 아님)을 공유; 확산 E고리는 정상상태에서 축대칭(근점 세차
         무작위화)이라 원형 annulus가 충실하고, 작아진 Chaos e(0.02)는 간극 여유로 흡수. 겉보기 +0.05 R_Jup
         (τ≈9e-5, 등가원반 ~23k km = Beichman 토성½ 단면의 13%)라 행성은 게이트값 1.0 R_Jup 유지하며 ~1.05
-        R_Jup 관측 플럭스 정합. feed: 아트 디렉션이며 근거를 댄 기제가 아니다 — Chaos 물 cryovolcanic
-        플룸(엔셀라두스→E고리 동형). divergence로 만드는 숫자가 둘이다. 20 R_p서 조석열이 수 MW뿐이고
-        (Chaos.surface divergence_note), Chaos의 탈출속도 424 m/s가 실제 먼지고리 공급 천체 전부를 넘는다
-        (충돌 파편으로 먹이는 테베 34·아말테아 58·포이베 102, 239인 엔셀라두스조차 플룸 필요). 따라서 충돌
-        파편과 sputtering(위 optically thin dust 대안, Kennedy 2011 마쇄)은 충분하다기보다 약하다. 오너는
-        공급원을 canon의 무명 위성 9개로 옮기는 대신 플룸을 유지하고 아트로 표시하기로 했다.
-        승화는 먼지 공급원이 아니다. Chaos가
-        134 K 표면에서 ~134 kg/s를 내보내지만(2026-07-27) 기체라 알갱이를 실어내지 못한다. 자유분자 항력을
-        0.023 g와 맞추면 들어올릴 수 있는 알갱이가 2e-10 m에 그친다. 따라서 고리와 나란히 중성 수증기
-        토러스를 만들 뿐 고리 자체를 만들지는 않는다.
+        R_Jup 관측 플럭스 정합. feed: 아트 디렉션 — Chaos 물 cryovolcanic 플룸(엔셀라두스→E고리
+        동형)이며, 근거를 댄 기제가 아니라 룩으로 유지한다. 이 위성이 쓸 수 있는 어떤 방출 기제도 이
+        밝기의 고리를 떠받치지 못한다. 그 판단과 숫자는 이 문제를 소유한 Chaos.satellites에 있다.
         색: 청백 얼음-먼지 #cdd9e4, 고운 물-얼음 알갱이의 파장 의존
         산란(작은 입자 → 청색 우세; 토성 E-ring/엔셀라두스 선례) → Chaos 얼음체 확정(group 10 satellites 상속);
         Phoebe형 어두운 탄소질 대안(C) 기각; τ≈9e-5라 시각 임팩트 작음.
@@ -1442,13 +1427,6 @@ decisions:
       verdict: pass-in-window
       evidence: "An Io-type volcanic world. discoverability=fictional → RB IGNORELEVELS F F F F (observation-discovered at all difficulties), researchbodies-cfg db-mapping canonical."
       evidence_ko: "Io형 화산 세계. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
-    provenance: >               # 뷰어 미렌더 — 값 이력 전용
-      2026-07-27: cliff_height 15–30 km 신규. canon [GAME]이 Chaos에 대해 말한 것은 세 가지뿐인데
-      (Cassandra 밖 궤도, Miranda형 균열, 절벽 15–30 km) 그중 절벽 높이가 보드 전체에서 누락되어
-      있었다. polyphemus-art-direction.md 위성 표에서 되살렸다. 참고로 태양계 최고 절벽인 Miranda의
-      Verona Rupes가 5–20 km이므로 canon은 그보다 큰 값을 준 것이고, 0.023 g에서는 성립한다.
-      canon의 원인 설명("past tidal heating")은 유지한다. 우리가 조석열 부족으로 기각한 것은 현재
-      진행 중인 지하 바다·플룸이고, 과거 공명에서 남은 균열은 별개 주장이다.
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Dante
@@ -2735,6 +2713,10 @@ decisions:
       evidence: "A retrograde icy sub-moon (confirmed an icy body in group 9 → feeds the blue-white E-ring). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
       evidence_ko: "역행 얼음 소위성(group 9서 얼음체 확정 → 푸른흰빛 E-고리 먹임). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
     refs: ["phase4/art-direction/polyphemus-art-direction.md"]
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-27: cliff_height 15–30 km 신규. canon [GAME]이 명시한 값인데 보드 전체에서
+      누락되어 있었고 polyphemus-art-direction.md 위성 표에서 되살렸다. canon의 원인 설명
+      ("past tidal heating")은 유지한다 — 조석열 부족으로 기각한 것은 현재의 바다·플룸이다.
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Chaos
@@ -2835,8 +2817,7 @@ decisions:
         above Enceladus (0.81), the brightest body known. The owner chose to keep the bright ice as art and
         raise the albedo past that threshold rather than accept a dark lag-mantled surface. 0.91 was picked over the bare
         minimum so the threshold is cleared by 33× rather than marginally; ice loss over 5.3 Gyr is then 12 km of
-        a 400 km radius. The ring is unaffected either way, since its grains come from the plumes and not from
-        sublimation (Chaos.satellites). Computed with docs/ice-stability.html (Fray & Schmitt 2009 vapour-pressure curves,
+        a 400 km radius. Computed with docs/ice-stability.html (Fray & Schmitt 2009 vapour-pressure curves,
         Hertz-Knudsen flux, latent heat from the curve's own Clausius-Clapeyron slope; validated against
         Europa, Enceladus, Ceres and cometary erosion at 1 AU).
       evidence_ko: >
@@ -2849,20 +2830,13 @@ decisions:
         알베도 0.875이며 §6의 신선 물얼음 밴드(0.6–0.8)와 알려진 가장 밝은 천체 엔셀라두스(0.81) 위다.
         오너는 어두운 잔류층 표면을 받아들이는 대신 밝은 얼음을 아트로 유지하고 알베도를 그 임계 위로
         올리기로 했다. 최소치가 아니라 0.91을 택한 것은 임계를 간신히가 아니라 33배로 넘기기 위해서다.
-        5.3 Gyr 동안의 얼음 손실은 반경 400 km 중 12 km다. 고리는 어느 쪽이든 영향이 없다. 고리 알갱이는
-        승화가 아니라 플룸에서 오기 때문이다(Chaos.satellites).
+        5.3 Gyr 동안의 얼음 손실은 반경 400 km 중 12 km다.
         계산은 docs/ice-stability.html(Fray & Schmitt 2009 증기압 곡선, Hertz–Knudsen 플럭스, 잠열은 같은
         곡선의 Clausius–Clapeyron 기울기에서 도출, 에우로파·엔셀라두스·세레스·1 AU 혜성 침식으로 검증).
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
-      2026-07-27: albedo 0.7 → 0.91, surface_temperature 200 K → 134 K. 구값은 "신선 얼음, Enceladus
-      0.81 참조 / 고알베도라 ~200K"라는 근거 없는 짝이었다. 표면 얼음 승화 안정성을 계산해 보니
-      1.30 AU 상당 일사량에서 0.70은 4.5 Myr에 소멸이고, 존속 임계가 0.875(§6 밴드 밖)였다.
-      대안은 어두운 먼지 잔류층(알베도 0.05–0.15, 표면 235 K, 승화 유출로 고리 공급)이었고 물리적으로
-      더 깔끔했으나, 오너가 밝은 얼음을 아트로 유지하고 알베도를 올리는 쪽을 택했다("알베도 그까이거
-      높여버려. 아트 선택으로"). 0.92를 제안했으나 오너가 0.91로 확정했다. 승화 유출로 고리 질량 예산을
-      대신할 수 있다고 잠시 적었으나 오류였고(승화는 기체, 고리는 알갱이) Chaos.satellites provenance에
-      경위를 남겼다. 고리 공급은 원래대로 플룸이며 조석열 오버라이드도 그대로다. 이 결정이 실제로 바꾼
-      것은 표면의 밝기와 온도뿐이다.
+      2026-07-27: albedo 0.7 → 0.91, surface_temperature 200 K → 134 K. 구 짝(0.7 / 200 K)은 근거가
+      없었고, 승화 안정성을 계산하니 0.70은 4.5 Myr에 소멸이었다. 오너가 어두운 잔류층 대안을 물리며
+      밝은 얼음 유지 + 알베도 상향을 택했다. 경위는 prose-readability/context-notes.md.
 
   - body: Chaos
     axis: appearance               # G6 facet-walk 2026-06-23
@@ -2958,18 +2932,9 @@ decisions:
         조성이 ice-blue 고리와 일치한다.
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-27: verdict pass-in-window → owner-override, dust_sources에 아트 표시 명시,
-      neutral_torus_supply 신규. 구값은 "art-first 물 플룸 주공급 + sputtering/승화 보조"였다.
-      경위를 남긴다. 알베도 0.91 확정 직후 dust_sources를 "표면 승화 ~134 kg/s가 질량 예산"으로 바꿨는데
-      오류였다. 승화는 수증기를 내보내고 고리는 고체 알갱이인데(색 #cdd9e4의 근거가 알갱이 산란) 둘이
-      이어지지 않는다. 이어서 충돌 파편을 주공급으로 옮겼으나 그것도 불필요했다. 이 천체는 처음부터
-      엔셀라두스를 모델로 설계되었다는 오너 지적이 맞다. 다만 검토 중에 탈출속도 424 m/s가 실제 먼지고리
-      공급 천체 전부보다 높다는 것이 드러나, 플룸뿐 아니라 어떤 방출 기제도 근거를 대기 어렵다는 사실이
-      확인되었다. 대안으로 무명 위성 9개(canon)를 공급원으로 옮기는 안을 제시했으나 오너가 플룸 유지 +
-      아트 표시를 택했다("걍 플룸으로 하고 아트 디렉션 표시만 하자"). 그에 맞춰 게이트 판정을
-      owner-override로 올렸다. 계산에서 남은 소득은 승화가 먼지를 만들 수 없다는 확인과, 그 수증기
-      134 kg/s가 중성 토러스를 만든다는 새 사실이다.
-      부수 사실: 구값 알베도 0.70이었다면 승화가 9 µm 알갱이까지 들어올렸다. 밝은 얼음을 택하며 그 경로가
-      닫혔지만 주공급이 플룸이므로 고리에는 영향이 없다.
+      neutral_torus_supply 134 kg/s 신규. 구값은 "art-first 물 플룸 주공급 + sputtering/승화 보조"로,
+      주공급 자체는 바뀌지 않았다. 오너가 플룸 유지 + 아트 표시를 택했다("걍 플룸으로 하고 아트 디렉션
+      표시만 하자"). 검토 경위는 prose-readability/context-notes.md.
 
   - body: Chaos
     axis: gameplay                 # G11 facet-walk 2026-06-23

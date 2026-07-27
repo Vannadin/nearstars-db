@@ -152,6 +152,58 @@ rule in `exoplanet-atmosphere-methodology` §6 and a new Gate 4 there (species-s
 retention, Jeans parameter), after they asked whether gravity, stellar wind and temperature
 were all covered — the first two were, temperature was not.
 
+### Chaos — the albedo / ring-feed detour (2026-07-27)
+
+Two wrong turns of mine, recorded so nobody re-walks them. Both came out of one real
+finding: exposed water ice cannot survive on Chaos. It sits at 1.30 AU-equivalent
+insolation, where the board's albedo 0.70 strips 400 km of ice in 4.5 Myr against a
+5.3 Gyr age, and the survival threshold (0.875) is outside the albedo methodology's own
+fresh-water-ice band (0.6–0.8) and above Enceladus (0.81). The owner chose to keep the
+bright ice as art and raise the albedo, landing on 0.91.
+
+1. I then claimed sublimation had become the ring's mass budget, since a 134 K surface
+   sheds ~134 kg/s. Wrong: sublimation sheds **vapour** and the ring is solid grains —
+   its own colour grounding is grain scattering. Free-molecular gas drag against 0.023 g
+   caps the liftable grain at 2e-10 m, smaller than a water molecule, so sublimation
+   cannot supply dust at all. (Comets manage it because their flux is ~6 orders larger
+   off km-scale nuclei with no gravity.)
+2. I then moved the supply to impact ejecta. Also wrong-headed — the owner pointed out
+   this body was designed as an Enceladus analogue from the start, and Saturn's E-ring is
+   plume-fed. **The original plume-first value was correct all along.**
+
+What the detour did earn: Chaos's 424 m/s escape velocity is higher than every real
+dust-ring source body (Thebe 34, Amalthea 58, Phoebe 102 m/s are impact-fed; even
+Enceladus at 239 m/s needed plumes). So *no* ejection mechanism we can ground supplies
+this ring at its gated brightness. Moving the supply to the 9 unnamed canon moonlets
+(escape velocities ~1 m/s, exactly how Jupiter's gossamer rings work) was offered and
+declined: the owner kept the plumes and asked that they be marked as art direction, so
+the satellites verdict rose to `owner-override`. The sublimation number survives as
+`neutral_torus_supply` — a Europa-like neutral water torus beside the ring, not feeding it.
+
+Side fact worth keeping: at the old albedo 0.70 the sublimation flux *could* lift 9 µm
+grains. Choosing bright ice closed that channel, but since the supply is the plumes
+anyway, the ring is unaffected.
+
+### YAML length discipline (2026-07-27)
+
+The owner asked whether the board was getting bloated. Measured: 3,181 lines / 222 KB at
+that point, +12% in one session for 1.2 bodies, i.e. ~36 lines per decision. `gate` is
+39% of the file (`evidence` + `evidence_ko`); `provenance` is only 2.7%, so provenance was
+never the problem. Three rules adopted, and the Chaos rows above were trimmed to them:
+
+1. **One fact, one row.** A fact is stated in full in the row that *owns* the decision;
+   other rows point at it by row name (`Chaos.satellites`), as the board already did with
+   `Chaos.surface divergence_note`. The 424 m/s assessment was duplicated across
+   satellites, rings and surface; it now lives in satellites only.
+2. **`provenance` ≤ 4 lines** — old value → new value, why, whose call. Detours and
+   session narrative come here instead. (My Chaos provenance blocks had grown to 10 and
+   14 lines, 2–5× the median, by narrating my own wrong turns.)
+3. **`evidence` states the conclusion and the check performed**, and delegates the
+   derivation to the tool or methodology doc rather than reproducing the arithmetic.
+
+Not waste, and deliberately kept: `evidence_ko` is half of `gate`, which is the cost of
+the bilingual viewer. Changing that is a viewer-policy question, not a cleanup.
+
 ### Open items
 
 - **Cassandra's magnetic field strength is not derived.** "Weak" is not a number, and a
