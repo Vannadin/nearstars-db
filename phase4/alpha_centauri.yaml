@@ -2655,27 +2655,24 @@ decisions:
 
   - body: Cassandra
     axis: gameplay                 # group 11 facet-walk 2026-06-22
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-27: difficulty "차폐 경미" → "외대 차폐". environment.radiation 등급이
+      낮음 → 중간으로 오른 데 따른 것. 바이옴 6종·후보 1종, SOI, ScienceValues, RB 등급은 무변경.
     status: gated
     driver: [gameplay]
     narrative: >
-      Has a surface → biome map (6): Seas / Coastlines / Cold Highlands / Polar Ice /
-      Volcanic & Hydrothermal (microbial hub) / Hazy Lowlands. Candidate (deferred): Microbial Mats
-      — added as a 7th later if it does not overlap other bodies' biomes. SOI=auto. difficulty: mission=cold anoxic
-      world landing (non-breathable, light shielding)·discovery=fictional→RB F F F F. Full ScienceValues. The second (marginal) life-world. Hydrothermal vents=anaerobic
-      microbial science hub. Non-breathable but with low radiation·heat threat, exploration-friendly. Microbial Mats biome=candidate (conditional on avoiding overlap with other bodies).
+      Landing is not hard. The surface divides into six biomes, and the most interesting of them is the hydrothermal
+      one, where traces of anaerobic life can be found.
     narrative_ko: >
-      표면 있음 → biome map(6): 물바다(Seas) / 해안(Coastlines) / 한랭 대륙·고지(Cold Highlands) / 빙관(Polar Ice) /
-      화산·열수구(Volcanic & Hydrothermal, 미생물 거점) / 얇은 haze 저지대(Hazy Lowlands). 후보(보류): 미생물 매트
-      지대(Microbial Mats) — 추후 다른 바디 바이옴과 안 겹치면 7번째로 추가. SOI=자동. difficulty: 임무=한랭 무산소
-      세계 착륙(비호흡, 차폐 경미)·발견=fictional→RB F F F F. ScienceValues 전체. 두 번째 (한계)생명 세계. 열수구=혐기
-      미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부).
+      착륙은 어렵지 않다. 지표는 여섯 개의 바이옴으로 갈리는데, 그중 가장 흥미로운 곳은 혐기성 생명의 흔적을 찾을
+      수 있는 열수구다.
     fields:
       - { name: science_biomes, value: "6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (후보) Microbial Mats", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
-      - { name: difficulty, value: "임무=한랭 무산소 착륙 · 발견=RB F F F F", op: set }
+      - { name: difficulty, value: "임무=한랭 무산소 착륙 + 외대 차폐 · 발견=RB F F F F", op: set, note: "구값은 차폐 경미 — environment.radiation 등급이 낮음→중간으로 오른 결과" }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
-      evidence: "The second (marginal) life-world. Hydrothermal vents=anaerobic microbial science hub. Non-breathable but with low radiation·heat threat, exploration-friendly. Microbial Mats biome=candidate (conditional on avoiding overlap with other bodies)."
+      evidence: "The second (marginal) life-world. Hydrothermal vents=anaerobic microbial science hub, which is why the narrative singles them out of the six. Non-breathable and cold, with intermediate radiation from sitting inside the outer belt (environment.radiation), so shielding is required rather than optional — the older \"light shielding\" reading came from the retired low grade. Heat is no threat. SOI=auto, full ScienceValues. Microbial Mats biome=candidate, a 7th added later only if it does not overlap other bodies' biomes."
       evidence_ko: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부)."
 
   - body: Chaos                    # A b V

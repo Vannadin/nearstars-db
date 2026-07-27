@@ -9,7 +9,7 @@ Applying the SPEC §3.1 prose readability contract to every decision row in
 - [x] Polyphemus / Alpha Centauri A b (committed)
 - [x] Dante (committed)
 - [x] Hades (committed)
-- [ ] Cassandra
+- [x] Cassandra (committed)
 - [ ] Chaos
 - [ ] Alpha Cen A (star)
 - [ ] Alpha Cen B (star)
@@ -26,7 +26,7 @@ Applying the SPEC §3.1 prose readability contract to every decision row in
 - [x] environment.radiation (now quotes ~7,200 rem/day)
 - [x] gameplay
 
-Next body: **Cassandra**.
+Next body: **Chaos**.
 
 ## Per-body closeout (do NOT skip)
 
