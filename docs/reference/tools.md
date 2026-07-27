@@ -19,6 +19,8 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 11 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
 | 13 | Phase 4 board tools | Validate decision boards (emit gate) + render per-body board HTML | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
+| 14 | Radiation belts + derived-value calculators | Belt cross-sections, Kerbalism emitter, and the `scripts/refs/` methodology calculators | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
+| 15 | Surface ice stability | Can exposed water ice survive at this insolation? Albedo → loss rate, lifetime, lag-mantle depth | `docs/ice-stability.html` |
 
 ## Verification & QA — index
 
@@ -302,6 +304,40 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   parameter per gas with Volkov 2011's regime thresholds, validated on Earth, Titan and
   Mars; `--mass/--radius/--texo` for a one-off body. Backs Gate 4 of
   `docs/reference/exoplanet-atmosphere-methodology.md`
+
+## 15. Surface ice stability calculator
+
+`docs/ice-stability.html` — a standalone browser tool (no build step, no dependencies)
+answering one question: **can exposed water ice persist on this body's surface, at this
+insolation, for this body's age?** Bright icy anchors in the albedo table are almost all
+Jupiter/Saturn-system bodies; transplanting their albedo to an inner orbit silently
+produces a surface that would sublimate away in Myr.
+
+Inputs: stellar luminosity, semi-major axis, body radius, age, Bond albedo, plus the
+three satellite terms (parent thermal, parent reflected, eclipse fraction) that
+`scripts/refs/moon_energy_budget.py` prints. Outputs: radiative and sublimation-cooled
+surface temperature, ice loss rate, time to lose a body radius, the critical albedo above
+which the ice survives, and the alternative **lag-mantle** reading (diffusion-limited
+retreat depth + the resulting volatile outflux).
+
+- The chart overlays the Bond-albedo bands from `surface-color-albedo-methodology.md` §6,
+  so it shows at a glance whether the survival threshold falls **inside** a band we can
+  actually cite or outside it.
+- Solar-system presets double as validation: Europa and Enceladus survive, Ceres at its
+  real albedo 0.09 loses 7.4 mm/yr (matching surface ice surviving only in permanent
+  shadow), and bare ice at 1 AU loses 0.81 m/yr (matching ~1 m of cometary nucleus
+  erosion per perihelion passage).
+- Grounding is stated in the page footer: Heller & Barnes 2013 for the energy budget,
+  Hertz–Knudsen for the sublimation flux, [Marti & Mauersberger
+  1993](https://ui.adsabs.harvard.edu/abs/1993GeoRL..20..363M) for the ice vapour-pressure
+  fit (170–250 K), [Schörghofer
+  2008](https://ui.adsabs.harvard.edu/abs/2008ApJ...682..697S) for the lag-mantle
+  retreat, and `surface-color-albedo-methodology.md` §6 for the albedo bands.
+- Domain limits, also in the footer: water ice only (N₂/CH₄/CO₂ have entirely different
+  vapour-pressure curves), the regolith diffusivity `D` is an assumption the retreat
+  depth scales as √D on, and no internal heat source is included.
+
+Built for the Chaos albedo decision (2026-07-27); reusable for any icy body on any orbit.
 
 ## Skills directory layout
 
