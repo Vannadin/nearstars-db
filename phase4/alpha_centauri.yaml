@@ -1476,6 +1476,11 @@ decisions:
 
   - body: Dante                    # A b I
     axis: bulk.tidal_heating
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: e 가정 평균 0.0175 → 안정성 시계열 측정 e_rms 0.0186. ~820× Io → ~1200× Io,
+      표면 플럭스 ~11,500 W/m². 구 행은 이 플럭스를 surface 행의 주변 230 K와 짝지어 에너지
+      보존을 위반했음. 오너가 주변 673 K + 핫스팟 973 K로 확정(처음 400/700 °C로 제시, 이어서
+      켈빈 표기 요청).
     status: gated                  # 2026-06-22 — 캐넌+물리 합치
     driver: [physics, canon]
     narrative: >
@@ -1516,6 +1521,10 @@ decisions:
 
   - body: Dante
     axis: surface
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: surface_temperature "230 K 주변 + ~600 K 핫스팟" → "673 K 주변 + ~973 K
+      화산 영역". bulk.tidal_heating의 조석 플럭스를 복사할 수 있는 값으로 맞춤. 팔레트는 무변경
+      (673 K가 Draper 점 798 K 아래라 주변 지표는 여전히 비발광).
     status: gated
     driver: [canon, physics]
     narrative: >
@@ -1715,6 +1724,11 @@ decisions:
 
   - body: Hades
     axis: bulk.tidal_heating
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: "~400× Io이나 k₂/Q 낮아 텍토닉으로 발현" 폐기 → ~15× Io, 207 W/m².
+      기각 이유는 evidence의 두 논거. 대안(Hades e 하향)은 안정성 시뮬 3런으로 기각 —
+      e_init 0.005/0.010/0.020 모두 e_max 0.047~0.064로 복귀(판도라가 강제), Dante e는 무영향.
+      스캔은 phase3/stability-sim/results/_hades_lowe_scan/. 오너가 rocky 밴드 하단 채택.
     status: gated
     driver: [physics, canon]
     narrative: >
@@ -1768,6 +1782,10 @@ decisions:
 
   - body: Hades
     axis: surface
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: surface_temperature 225 K → 278 K. 구값은 별빛만 계산에 "내부 조석열 기여
+      미미" 메모가 붙어 있었으나 조석 207 W/m² > 별빛 141 W/m². 오너 승인으로 오래된 크레이터
+      지형 폐기(용융부 위 지각 10 m), surface_type도 그에 맞춰 교체.
     status: gated
     driver: [canon-film, physics]
     narrative: >
@@ -1815,6 +1833,9 @@ decisions:
 
   - body: Hades
     axis: appearance
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: 팔레트에서 "가니메데 팔레트 / 어두운 크레이터" 라벨 제거 → "회색 팔레트 /
+      어두운 지대". 헥스 색값(#5f574e, #9c968c)은 무변경. surface 행의 크레이터 폐기에 따른 것.
     status: gated
     driver: [canon-film, visual]
     narrative: >
@@ -1863,6 +1884,9 @@ decisions:
 
   - body: Hades
     axis: gameplay
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: 바이옴 2개 개명 — Dark Cratered Terrain → Old Crust, Impact Basins →
+      Resurfacing Zones. 색값·개수(6) 무변경. surface 행의 크레이터 폐기에 따른 것.
     status: gated
     driver: [gameplay]
     narrative: >
@@ -1967,6 +1991,11 @@ decisions:
 
   - body: Pandora
     axis: atmosphere               # composition/pressure/temperature/greenhouse/breathability (group 4, facet-walk 2026-06-22)
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: temperature 290 K 유지, 회계 교체. 구 사슬 "Teq ~225K + 온실 +70K"는 온실
+      이중 계산 → 4항 Teq 220.6K + 조석 45 W/m² = Teq 237K, + 온실 +54K = 291K. greenhouse
+      필드도 +70K → +54K. refs에서 tidally-locked-temperature 제거(위성은 4항 예산이 Layer 1을
+      대체), moon-energy-budget·tidal-heating·cassini-state 추가.
     status: gated
     driver: [canon, physics]
     narrative: >
@@ -2374,6 +2403,14 @@ decisions:
 
   - body: Cassandra
     axis: atmosphere               # group 4 facet-walk 2026-06-22
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-26: temperature 270–275 K → 243–263 K. 구값은 레시피 없는 "+45–50K CIA 온실"
+      가정이었음.
+      2026-07-27: pressure 1 bar → 1.37 bar (오너 선택). 유지 게이트가 0.5~3 bar 어디도 지지하지
+      않고, 조성이 타이탄 계열이라 유사체 표의 중앙(지구) 줄을 물려받을 자리가 아니었음. 비정수
+      값은 의도(반듯한 수는 가정으로 읽힘). 이 지적이 exoplanet-atmosphere §6의 유사체 선택
+      규칙으로 이어짐. 온도 243–263 K는 그 기압에서 재계산(N₂ 압력확장 +2.0K 포함),
+      scale_height 13.8 km 신규.
     status: gated
     driver: [canon, physics]
     narrative: >
@@ -2520,6 +2557,9 @@ decisions:
 
   - body: Cassandra
     axis: magnetism.magnetic_field # group 7 facet-walk 2026-06-22 — 약함(오너 결정)
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-27: 차폐 주장에 적용 범위와 유사체를 붙임(가니메데형 부분 차폐, 극 노출).
+      Pandora 대비 문구와 magnetosphere 필드 신규. 자기장 세기는 여전히 미도출.
     status: gated
     driver: [physics]
     narrative: >
@@ -2567,6 +2607,11 @@ decisions:
 
   - body: Cassandra
     axis: environment.radiation    # group 8 facet-walk 2026-06-22
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-27: 등급 "낮음 (방사선대 밖)" → "중간" (오너 선택 a). 구 서술이 폴리페무스
+      radiation_belts 행(외대 L 4.2–10이 Cassandra를 잠기게 함)과 모순이었고, 벨트 지오메트리
+      도출보다 앞선 것이라 갱신되지 않았던 것. 벨트 행의 대안(외대를 Cassandra에서 끊기)은
+      미발동. refs 2건 추가.
     status: gated
     driver: [physics]
     narrative: >

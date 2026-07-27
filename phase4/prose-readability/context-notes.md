@@ -119,48 +119,38 @@ reads". The regrounding work below had put that provenance into `evidence`; it w
 out and lives here instead. Only YAML comments (`#`) remain as an on-file internal channel —
 the parser drops them, so the viewer never sees them.
 
-### What changed, and why (the record the board no longer carries)
+### Where the record lives now
 
-**Dante `bulk.tidal_heating` / `surface`.** Restated on the measured eccentricity: the
-stability timeseries gives `e_rms` 0.0186, replacing an assumed mean of 0.0175. At
-`k₂/Q` 0.0155 that is ~1200× Io and ~11,500 W/m². The old row paired that flux with a 230 K
-ambient surface, which conservation forbids. Owner set ambient 400 °C (673 K) with 700 °C
-(973 K) hotspots, later asked for those to be written in Kelvin. The pair closes the energy
-budget at 1–5 % hotspot coverage.
+Per-row value history moved onto the board itself as a **`provenance:`** key (SPEC §3.1,
+added 2026-07-27) — old value, when and why it changed, which owner call settled it, sitting
+next to the value rather than in this pass-scoped file. Ten rows carry it: Dante
+`bulk.tidal_heating` + `surface`; Hades `bulk.tidal_heating` + `surface` + `appearance` +
+`gameplay`; Pandora `atmosphere`; Cassandra `atmosphere` + `magnetism.magnetic_field` +
+`environment.radiation`.
 
-**Hades `bulk.tidal_heating` / `surface` / `appearance` / `gameplay`.** The previous entry
-("~400× Io, but low k₂/Q so it channels into tectonics") was energetically impossible on two
-counts. Ran the stability sim to test lowering Hades's eccentricity instead — three variants
-(`e_init` 0.005/0.010/0.020, settings identical to `_final32b`, archived at
-`phase3/stability-sim/results/_hades_lowe_scan/`) all returned `e_max` 0.047–0.064, i.e. the
-eccentricity is forced by Pandora and cannot be lowered by an initial condition. Dante's
-eccentricity survived in all three, so the feared coupling did not materialise. Owner then
-took the rocky band's low end (207 W/m², ~15× Io, `T_eq` 278 K) and **accepted dropping the
-ancient cratered terrain**, since a 10 m conductive lid over melt resurfaces continuously.
-Two biomes were renamed with it: Dark Cratered Terrain → Old Crust, Impact Basins →
-Resurfacing Zones.
+A real key rather than a YAML comment, because nothing rewrites these boards today but the
+schema has already migrated once (v1 → v2) and any future parse-and-redump would drop every
+comment silently. Verified: the gate passes with the new key and the rendered HTML contains
+none of it.
 
-**Pandora `atmosphere`.** 290 K kept, accounting corrected: the old chain double-counted the
-greenhouse. Now four-term `T_eq` 220.6 K + 45 W/m² tidal → 237 K, +54 K greenhouse = 291 K.
+This file keeps what is genuinely per-session — the arc below, and the open items.
 
-**Cassandra `atmosphere`.** Temperature regrounded off an ungrounded "+45–50 K CIA
-greenhouse" to 243–263 K. Pressure moved 1 bar → **1.37 bar** on owner's call: the retention
-gates do not constrain the value, the body's composition puts it in Titan's analog row rather
-than Earth's, and the owner wanted a non-round number precisely because the roster kept
-landing on Earth's values. That complaint also produced the §6 rule in
-`exoplanet-atmosphere-methodology.md` ("pick the analog row by composition and temperature
-class, not by proximity to the middle of the band").
+### The session arc (2026-07-26/27)
 
-**Cassandra `magnetism.magnetic_field` / `environment.radiation`.** Owner chose option (a):
-the moon is inside Polyphemus's outer belt, so the grade is **intermediate**, not "low —
-outside the radiation belt" (that wording predated the 2026-07-24 belt geometry and had never
-been updated; the belts row's alternative of ending the outer belt at Cassandra was left
-unexercised). Owner also asked that the weak field be credited with holding off the belt.
-Note the scope distinction that survives in the row: crediting a field with lowering
-**surface dose** is standard physics, while crediting it with preventing **stellar-wind
-atmospheric stripping** is what Ramstad & Barabash 2021 argue against and what the atmosphere
-methodology's Gate 4 now forbids. Ganymede is the analog, so the shielding is partial —
-poles exposed.
+Started as a prose pass and turned into a physics audit. Grounding the greenhouse increment
+(`greenhouse-warming-methodology`, new) showed Cassandra's and Pandora's temperatures rested
+on an unsourced "+45–50 K / +70 K CIA greenhouse". Grounding the satellite energy budget
+(`moon-energy-budget-methodology`, new) then showed every moon temperature had been computed
+as if the moon were a planet — no eclipses, no parent illumination, no tidal term — and that
+Dante's and Hades's recorded surface temperatures violated energy conservation against their
+own tidal fluxes by 300–400 K. Investigating "the ocean's tidal budget" behind Pandora's 32 h
+lock produced the stability scan that killed the lower-eccentricity option for Hades, and a
+correction: the obliquity ocean-tide channel is starved because the spin axis is orbit-normal,
+so the live channel is the eccentricity tide and it is a depth choice rather than a risk.
+Separately, the owner's "everything lands on Earth's values" complaint produced the analog-row
+rule in `exoplanet-atmosphere-methodology` §6 and a new Gate 4 there (species-selective
+retention, Jeans parameter), after they asked whether gravity, stellar wind and temperature
+were all covered — the first two were, temperature was not.
 
 ### Open items
 

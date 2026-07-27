@@ -290,6 +290,20 @@ decisions:
   - gate `evidence` = the **verification + grounding trail**: method, tool + fit quality,
     formulas, checks, encodings, and the engine mechanics the narrative omits. Technical
     shorthand is fine; storytelling and dated decision-logs are not.
+  - row-level **`provenance`** = the **value's own history**, and the one slot where dated
+    decision-logs belong: what the value used to be, when and why it changed, which owner
+    call settled it. Written for a future maintainer asking "why is this number different
+    from last month", not for a reader. **The board viewer does not render it** (the renderer
+    reads only `narrative`, `fields`, `refs` and the `gate` block, so unlisted keys are
+    ignored by construction), which is what makes it the safe home for provenance that
+    `evidence` is not — `evidence` *is* rendered.
+    Why a real key and not a YAML comment: nothing rewrites these boards today, but this
+    schema has already migrated once (v1 → v2), and any future parse-and-redump would drop
+    every comment silently. A key survives the round-trip, is greppable, and can later be
+    gated ("a row whose value changed must carry `provenance`").
+    Keep it short and factual — one line per change, newest last. Session narrative,
+    open questions and work-in-progress belong in the pass's `context-notes.md` instead;
+    `provenance` is per-value, the notes are per-session.
   - **`refs` carry the real grounding, not a proxy.** A methodology-derived value cites its
     methodology doc; a **simulation-derived** value (stability windows, gap-clearing,
     observation phase-match) cites the sim report/study (e.g. `phase3/stability-sim/*.md`);

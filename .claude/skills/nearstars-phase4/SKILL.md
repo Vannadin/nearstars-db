@@ -167,7 +167,18 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   **engine mechanics** (biome maps, flight science, discovery mod: author knowledge,
   not story). The gate `evidence` = verification + grounding trail (tool, fit
   quality, formulas, checks, the mechanics the narrative omits); no storytelling, no
-  dated decision-logs. A qualitative/non-scalar value (dose ladder, grade) stays in
+  dated decision-logs. **`evidence` IS rendered in the board viewer** — it is not an
+  internal channel, so treat it as reader-visible.
+- **Value history → row-level `provenance:`** (SPEC §3.1). This is the one slot where
+  dated decision-logs belong: what the value was, when and why it changed, which owner
+  call settled it. The renderer reads only `narrative` / `fields` / `refs` / `gate`, so
+  `provenance` is **not rendered** — that is what makes it safe. Use a real key, not a
+  YAML comment: nothing rewrites the boards today, but the schema has already migrated
+  once (v1 → v2) and any parse-and-redump would drop every comment silently. One line
+  per change, newest last. **Whenever you change a value that was already on the board,
+  add a `provenance` line for it in the same edit.** Session narrative and open
+  questions still go to the pass's `context-notes.md`; `provenance` is per-value.
+  A qualitative/non-scalar value (dose ladder, grade) stays in
   prose, not a fake typed field. **No em-dashes** (CONVENTIONS §1.10) and **natural
   Korean, no calques** (거대 가스행성 not 거인, 구름층 not 구름덱) in every rendered
   field. Simulation-derived values (stability windows, gap-clearing, phase-match) cite
