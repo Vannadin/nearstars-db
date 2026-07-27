@@ -314,6 +314,15 @@ physically bounded band**. The procedure:
    | Earth | ~1 bar | the canonical habitable middle |
    | Venus | ~90 bar | runaway, outgassing-dominated, no escape sink |
 
+   **Pick the analog by composition and temperature class, not by proximity to the
+   middle of the band.** Earth sits in the middle of that table, so it becomes the
+   path of least resistance whenever nothing forces a value, and a roster full of
+   invented worlds quietly converges on ~1 bar. An anoxic N₂+CH₄ world under an
+   organic haze with frozen surface volatiles belongs to Titan's row however
+   Earth-sized it is; a desiccated CO₂ world belongs to Mars's or Venus's. Choosing
+   the row first, then a value inside it, is what keeps the answer from being
+   "Earth by default".
+
    The Gate-2 stripping severity sets where in this band the body plausibly sits:
    heavy stripping pushes toward the Mars end, weak stripping plus active volcanism
    toward the Venus end.
