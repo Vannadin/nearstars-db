@@ -905,9 +905,13 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      Its signature blue storm stands as a distinct landmark among Polyphemus's latitude bands.
+      Polyphemus has no ground to land on. Skimming the atmosphere to slow down is as far as it goes, and any trip
+      between the moons has to pass through this planet's gravity well. The great blue storm set among its latitude
+      bands is visible from far off, and it is what makes the planet recognisable at a glance.
     narrative_ko: >
-      시그니처 파란 폭풍이 Polyphemus의 위도 띠들 사이에서 뚜렷한 랜드마크로 선다.
+      Polyphemus에는 착륙할 땅이 없다. 대기를 스쳐 감속하는 정도가 가능한 전부이고, 위성들 사이를 오가려면 반드시
+      이 행성의 중력권을 지나야 한다. 위도 띠 사이에 걸린 거대한 파란 폭풍은 멀리서도 눈에 띄어 이 행성을 한눈에
+      알아보게 한다.
     fields:
       - { name: science_biomes, value: "위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴", op: set, colors: {"Equatorial":"#C9A26B","North Temperate":"#E4D3B0","South Temperate":"#A6784E","North Polar":"#9DB0C4","South Polar":"#B0A0AE","The Eye":"#244C8A"} }   # provisional naturalistic biome-map display colors (S↓, Promised Worlds convention); names TBC
       - { name: sphere_of_influence_tuning, value: "auto from mass (조정 불요)", op: passthrough }
@@ -1638,10 +1642,11 @@ decisions:
     driver: [gameplay]
     narrative: >
       Landing here is very hard. Brief touchdowns are possible in the lava-free areas, but the extreme radiation
-      and heat make it impossible to stay long.
+      and heat make it impossible to stay long. The sight worth the trip is the great chasm with lava lakes on its
+      floor.
     narrative_ko: >
       착륙 난도는 매우 높다. 용암이 없는 지역에 잠시 착륙은 가능하지만, 극심한 방사선과 고온 탓에 오래 머물기는
-      어렵다.
+      어렵다. 그중 가장 볼 만한 곳은 바닥을 용암호가 채운 거대 협곡이다.
     fields:
       - { name: science_biomes, value: "6: Grand Chasma / Lava Lakes / Sulfur Plains / Basalt Plains / Volcanic Cones / Poles", op: set, colors: {"Grand Chasma":"#3A3B4A","Lava Lakes":"#C8492C","Sulfur Plains":"#C9A93E","Basalt Plains":"#4E463F","Volcanic Cones":"#7E4A3C","Poles":"#D8D0B6"} }   # provisional naturalistic biome-map display colors (S↓, lava = accent)
     gate:
@@ -1891,9 +1896,10 @@ decisions:
     driver: [gameplay]
     narrative: >
       The surface is more stable than Dante's, but the radiation is strong enough that no stay lasts long without
-      proper shielding.
+      proper shielding. The most interesting spot is the sub-Polyphemus point, where the parent hangs fixed overhead.
     narrative_ko: >
-      Dante보다 표면은 안정하지만, 강한 방사선으로 인해 충분한 차폐 없이는 오래 머물 수 없다.
+      Dante보다 표면은 안정하지만, 강한 방사선으로 인해 충분한 차폐 없이는 오래 머물 수 없다. 가장 흥미로운 자리는
+      Polyphemus가 하늘에 고정된 대면점이다.
     fields:
       - { name: science_biomes, value: "6: Old Crust / Bright Grooved Terrain / Resurfacing Zones / Tectonic Ridges / Poles / Sub-Polyphemus Point", op: set, colors: {"Old Crust":"#47433D","Bright Grooved Terrain":"#A9B6BE","Resurfacing Zones":"#8A7E6E","Tectonic Ridges":"#6E6152","Poles":"#CFE0E6","Sub-Polyphemus Point":"#3E8C8A"} }   # provisional naturalistic biome-map display colors (S↓, sub-point = accent); Dark Cratered Terrain/Impact Basins retired 2026-07-26 with the craters
     gate:
