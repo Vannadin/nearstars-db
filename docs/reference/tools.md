@@ -298,6 +298,10 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   the Polyphemus worked example; `--pandora-27h-vs-32h` for just the orbit-choice table.
   Validates on Io's tidal flux and Io's eclipse duration. Backs
   `docs/reference/moon-energy-budget-methodology.md`
+- `scripts/refs/jeans_escape.py` — species-by-species atmospheric retention: the Jeans
+  parameter per gas with Volkov 2011's regime thresholds, validated on Earth, Titan and
+  Mars; `--mass/--radius/--texo` for a one-off body. Backs Gate 4 of
+  `docs/reference/exoplanet-atmosphere-methodology.md`
 
 ## Skills directory layout
 

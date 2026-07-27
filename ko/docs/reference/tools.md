@@ -295,6 +295,9 @@
   조석)으로 계산. 폭주 천장과 폴리페무스 적용 예 포함, `--pandora-27h-vs-32h`로 궤도 선택 표만 출력.
   이오 조석 플럭스와 이오 식 지속시간으로 검증.
   `docs/reference/moon-energy-budget-methodology.md` 의 계산 근거.
+- `scripts/refs/jeans_escape.py` — 기체 종별 대기 보유 판정. 종마다 Jeans 파라미터를 구하고
+  Volkov 2011의 체제 임계값으로 판정하며, 지구·타이탄·화성으로 검증. `--mass/--radius/--texo`로
+  단발 조회. `docs/reference/exoplanet-atmosphere-methodology.md` 관문 4의 계산 근거.
 
 ## 스킬 디렉터리 배치
 
