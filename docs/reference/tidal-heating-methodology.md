@@ -282,6 +282,23 @@ moons qualitatively (board values, not reproduced here):
   Phase-4 board, recorded as a deliberate choice that overrides the physics, not a
   value the recipe produced. This is the canonical example of §8's honesty rule.
 
+**Hades — two refutations worth keeping (moved off the board, 2026-07-28).** Two
+plausible-sounding arguments failed on this body and generalize to any Io-type case:
+
+1. *"High internal heat, but a small rigid moon has a low k₂/Q, so the energy
+   channels into tectonics instead of melting"* is wrong twice. A low `k₂/Q` does not
+   redirect the heat — it means the heat is never **generated** (any Io-multiple
+   figure already assumes a `k₂/Q`; lowering one lowers the other). And tectonics is
+   not a heat sink: deformation energy still leaves the body as radiation, so
+   conservation pins the area-weighted `σT⁴` mean no matter how the heat concentrates
+   into hotspots. You cannot buy a cold surface with a hot interior.
+2. *"Just lower the eccentricity in the initial conditions."* When a much larger
+   neighbor forces `e` (Hades: Pandora at 770× its mass, period ratio 2.22), the
+   stability sim returns the same `e_max` for any initial `e` — three runs with
+   `e_init` 0.005/0.010/0.020 all came back at 0.047–0.064. Forced eccentricity is a
+   property of the architecture, not of the starting state; only moving the
+   architecture changes the heat.
+
 ---
 
 ## 8. Honesty & uncertainty
