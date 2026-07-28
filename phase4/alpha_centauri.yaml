@@ -785,6 +785,9 @@ decisions:
       2026-07-28: 그 이력만 담고 있던 superseded 행을 삭제하고 여기로 옮겼다.
       2026-07-28: ring_plane 주석·evidence의 "epoch 179° 스냅샷"을 ~176.5°로 정정 — 179는 설계값이고
       실제 emit 스냅샷은 inc 176.475 (감사 M6). 수치 필드 무변경.
+      2026-07-28: 고리 광도 재보정(오너 결정 ①a) — τ 9e-5→2.7e-4, 겉보기 +0.05→+0.125 R_Jup(등가원반
+      ~37k km). 구값은 오전사된 1.05 R_Jup 플럭스에 앵커돼 있어 bulk.radius의 ring-model 논증(1.0 R_Jup +
+      고리 = ring-free 1.10–1.15 플럭스)을 닫지 못했다(감사 C4).
     status: gated
     driver: [visual, observation]
     narrative: >
@@ -810,11 +813,11 @@ decisions:
       - { name: ring_inner_annulus_km, value: "800000–1410000", op: set }
       - { name: ring_outer_annulus_km, value: "1590000–2500000", op: set }
       - { name: ring_gap_km, value: "1410000–1590000 (Chaos at 1500000 km)", op: set }
-      - { name: ring_opacity, value: 9.0e-5, op: set }
+      - { name: ring_opacity, value: 2.7e-4, op: set }
       - { name: ring_color, value: "#cdd9e4", op: set }
       - { name: ring_plane, value: "Chaos MEAN (Laplace) plane, retrograde inc ~175° rel. parent orbit (NOT the epoch ~176.5° snapshot); anchor static ring here so Chaos librates ±sym about it", op: set }
       - { name: ring_composition, value: "water-ice dust (blue-white)", op: set }
-      - { name: ring_brightness_R_jup, value: 0.05, op: set }
+      - { name: ring_brightness_R_jup, value: 0.125, op: set }
     gate:
       criterion: [stability, visual-checklist]
       verdict: owner-override
@@ -823,7 +826,7 @@ decisions:
         too small at mass ratio μ≈7.5e-7 to clear any gap (even particles at Chaos's semi-major axis survive). So the gap is intentional for
         rendering purposes, not dynamics. To narrow the gap, Chaos e was lowered 0.10→0.02 (results/_chaos_e002, STABLE):
         the radial excursion ±150k→±30k km, so a ~180k km gap clears it cleanly. Brightness sums orthogonally as area∝R², so an "apparent
-        +0.05 R_Jup" corresponds to an equivalent disk ~0.32 R_Jup (~23k km). Beichman 2025 §5.3 (arXiv:2508.03814) "Planet Ring
+        +0.125 R_Jup" corresponds to an equivalent disk ~0.52 R_Jup (~37k km). Beichman 2025 §5.3 (arXiv:2508.03814) "Planet Ring
         System Models": their preferred model is an optically thick ring inside Roche (Saturn-½ cross-section, equivalent disk 64,000 km), and
         our faint E-ring corresponds to their optically thin dust alternative (Kennedy 2011 irregular-satellite grinding).
         Ring-plane precession verification (dense 8000-snapshot leapfrog 2000yr, results/_principia2000_dense): Chaos
@@ -834,22 +837,23 @@ decisions:
         eccentricity) → 2 Ring nodes (inner 800k–1.41M, outer 1.59M–2.5M km; gap 1.41M–1.59M with Chaos at 1.5M)
         sharing Chaos's mean plane (Laplace, retrograde inc ~175° rel. orbital plane, NOT the epoch ~176.5° snapshot);
         a diffuse E-ring is axisymmetric at steady state (perihelion precession randomized), so a circular annulus
-        is faithful, and the reduced Chaos e (0.02) is absorbed into the gap margin. Apparent +0.05 R_Jup (τ≈9e-5,
-        equivalent disk ~23k km = 13% of Beichman's Saturn-½ cross-section) keeps the planet at the gated
-        1.0 R_Jup while matching the ~1.05 R_Jup observed flux. Feed: ART DIRECTION — Chaos water cryovolcanic
+        is faithful, and the reduced Chaos e (0.02) is absorbed into the gap margin. Apparent +0.125 R_Jup (τ≈2.7e-4,
+        equivalent disk ~37k km = 33% of Beichman's Saturn-½ cross-section) keeps the planet at the gated
+        1.0 R_Jup while matching the ring-free 1.10–1.15 R_Jup flux family (midpoint 1.125); the previous
+        τ 9e-5 was calibrated against the mis-transcribed 1.05 R_Jup and could not close the radius argument. Feed: ART DIRECTION — Chaos water cryovolcanic
         plumes (Enceladus→E-ring isomorphism), kept as a look rather than a mechanism we ground. No ejection
         mechanism available to this moon supplies the ring at this brightness; that assessment and its numbers
         live in Chaos.satellites, which owns the question. Color:
         blue-white ice-dust #cdd9e4, fine water-ice grains scattering
         wavelength-dependently (small particles → blue dominance; Saturn E-ring/Enceladus precedent) → Chaos
         confirmed icy (inherited by group 10 satellites); the Phoebe-type dark carbonaceous alternative (C)
-        rejected; visual impact small at τ≈9e-5.
+        rejected; visual impact still modest at τ≈2.7e-4.
       evidence_ko: >
         물리적 간극은 불가: 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서 Chaos는
         질량비 μ≈7.5e-7로 너무 작아 어떤 간극도 못 비움(Chaos 반장축의 입자까지 생존). 그래서 갭은 동역학이 아닌
         렌더링 목적의 의도적 부여. 간극을 좁히려 Chaos e를 0.10→0.02로 낮춤(results/_chaos_e002, STABLE):
         반경 흔들림 ±150k→±30k km라 ~180k km 갭이면 깔끔히 비움. 밝기는 면적∝R²로 직교 합산이라 "겉보기
-        +0.05 R_Jup"는 등가원반 ~0.32 R_Jup(~23k km)에 해당. Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring
+        +0.125 R_Jup"는 등가원반 ~0.52 R_Jup(~37k km)에 해당. Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring
         System Models": 그들의 선호 모델은 Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고,
         우리 흐릿한 E고리는 그들이 제시한 광학적으로 얇은 먼지 대안(Kennedy 2011 불규칙위성 분쇄)에 해당.
         고리면 세차 검증(dense 8000-snapshot leapfrog 2000yr, results/_principia2000_dense): Chaos
@@ -858,15 +862,16 @@ decisions:
         1000/2000yr엔 14/18°까지 커짐, 평균면 앵커로 유계화. 동적 추종(고리↔라이브 궤도면 연동)은 C# 플러그인
         장기과제(cfg 불가). emit 형상: Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가) → Ring 노드
         2개(안쪽 800k–1.41M, 바깥 1.59M–2.5M km; 간극 1.41M–1.59M에 Chaos 1.5M)가 Chaos 평균면(Laplace, 역행
-        inc ~175° rel 공전면, epoch 순간면 179° 아님)을 공유; 확산 E고리는 정상상태에서 축대칭(근점 세차
-        무작위화)이라 원형 annulus가 충실하고, 작아진 Chaos e(0.02)는 간극 여유로 흡수. 겉보기 +0.05 R_Jup
-        (τ≈9e-5, 등가원반 ~23k km = Beichman 토성½ 단면의 13%)라 행성은 게이트값 1.0 R_Jup 유지하며 ~1.05
-        R_Jup 관측 플럭스 정합. feed: 아트 디렉션 — Chaos 물 cryovolcanic 플룸(엔셀라두스→E고리
+        inc ~175° rel 공전면, epoch 순간면 ~176.5° 아님)을 공유; 확산 E고리는 정상상태에서 축대칭(근점 세차
+        무작위화)이라 원형 annulus가 충실하고, 작아진 Chaos e(0.02)는 간극 여유로 흡수. 겉보기 +0.125 R_Jup
+        (τ≈2.7e-4, 등가원반 ~37k km = Beichman 토성½ 단면의 33%)라 행성은 게이트값 1.0 R_Jup를 유지하면서
+        ring-free 대안 1.10–1.15 R_Jup 플럭스 패밀리(중앙 1.125)와 정합. 구 τ 9e-5는 잘못 옮겨진 1.05 R_Jup에
+        보정돼 있어 반경 논증을 닫지 못했다. feed: 아트 디렉션 — Chaos 물 cryovolcanic 플룸(엔셀라두스→E고리
         동형)이며, 근거를 댄 기제가 아니라 룩으로 유지한다. 이 위성이 쓸 수 있는 어떤 방출 기제도 이
         밝기의 고리를 떠받치지 못한다. 그 판단과 숫자는 이 문제를 소유한 Chaos.satellites에 있다.
         색: 청백 얼음-먼지 #cdd9e4, 고운 물-얼음 알갱이의 파장 의존
         산란(작은 입자 → 청색 우세; 토성 E-ring/엔셀라두스 선례) → Chaos 얼음체 확정(group 10 satellites 상속);
-        Phoebe형 어두운 탄소질 대안(C) 기각; τ≈9e-5라 시각 임팩트 작음.
+        Phoebe형 어두운 탄소질 대안(C) 기각; τ≈2.7e-4라도 시각 임팩트는 여전히 크지 않음.
     refs: ["2508.03814", "phase3/stability-sim/STABILITY_REPORT.md"]
 
   - body: Alpha Centauri A b
@@ -1440,6 +1445,9 @@ decisions:
       2026-07-26: surface_temperature "230 K 주변 + ~600 K 핫스팟" → "673 K 주변 + ~973 K
       화산 영역". bulk.tidal_heating의 조석 플럭스를 복사할 수 있는 값으로 맞춤. 팔레트는 무변경
       (673 K가 Draper 점 798 K 아래라 주변 지표는 여전히 비발광).
+      2026-07-28: 감사 C5 후속(오너 결정 ②c) — 673 K는 황 융점(388 K) 위라 고체 황 평원이 물리적으로
+      불성립. 팔레트·알베도는 캐넌 룩으로 유지하되 albedo 필드를 owner-override로 마킹하고 evidence에
+      상 불안정 인정을 명시. 값 무변경.
     status: gated
     driver: [canon, physics]
     narrative: >
@@ -1455,7 +1463,7 @@ decisions:
       973 K까지 오른다.
     fields:
       - { name: surface_type, value: "silicate volcanic (Io-type)", op: set }
-      - { name: albedo, value: 0.30, op: set, note: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균" }
+      - { name: albedo, value: 0.30, op: set, verdict: owner-override, note: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균 — 고체 황은 673 K에서 불안정(융점 388 K), 노란 황 지대는 캐넌 룩 오너 오버라이드(evidence 참조)" }
       - { name: surface_temperature, value: "673 K ambient (400°C) + ~973 K (700°C) 화산 핫스팟", unit: K, op: set, note: "구값 230K+600K는 조석 플럭스 11,500 W/m²와 에너지 보존 위반; bulk.tidal_heating 행 참조" }
     gate:
       criterion: [canon-consistency, physics]
@@ -1469,7 +1477,11 @@ decisions:
         surface is hot but still visually DARK, since 673 K sits below the ~798 K Draper point where solids begin to
         glow, so the sulfur/basalt two-tone daylight look survives unchanged. The 973 K hotspots are above it, so only
         they glow — which is exactly the canon "orange lava flecks" and the night-side orange lines in the appearance
-        row. Nothing in the palette has to move.
+        row. One thing the Draper check did not cover: 673 K is above sulfur's 388 K melting point and within ~45 K
+        of its 718 K boiling point, so SOLID yellow sulfur cannot persist at ambient — exposed deposits melt and
+        evaporate (at 673 K sulfur is a dark-red liquid). The bright sulfur fields and the albedo-0.5 sulfur half
+        are therefore an owner override kept for the canon two-tone look, not a stable surface phase; the physics
+        does not support them at this temperature.
       evidence_ko: >
         캐넌 '영구 화산+월진+주황 용암 반점'. 조석가열은 비균일 — asthenosphere 소산이면 적도·조석축(sub/anti-planet)
         강화라 sub-Polyphemus 거대 균열+용암호는 물리 동기 있음(실제 Io는 경도 ~30–60° offset, 아트 허용). 그
@@ -1478,7 +1490,10 @@ decisions:
         불가능하다(bulk.tidal_heating 참조). 아트 측 결과가 둘 따라온다. 주변 지표는 뜨겁지만
         시각적으로는 여전히 어둡다. 673 K는 고체가 빛나기 시작하는 Draper 점 약 798 K 아래라, 황/현무암 이중 톤의
         주광 외관이 그대로 유지된다. 973 K 핫스팟은 그 위이므로 그곳만 발광하는데, 이것이 정확히 캐넌의 '주황 용암
-        반점'이자 appearance 행의 야간측 주황 실선이다. 팔레트는 하나도 바꿀 필요가 없다.
+        반점'이자 appearance 행의 야간측 주황 실선이다. 다만 Draper 검사가 다루지 않은 것이 하나 있다. 673 K는
+        황의 융점 388 K 위이고 비등점 718 K에서 45 K 안쪽이라, 고체 노란 황은 주변 지표에 남을 수 없다. 노출된
+        퇴적층은 녹아 증발한다(673 K의 황은 암적색 액체다). 따라서 밝은 황 지대와 알베도 0.5의 황 반쪽은 안정된
+        표면 상이 아니라 캐넌 이중 톤 룩을 위한 오너 오버라이드이며, 이 온도에서 물리는 이를 지지하지 않는다.
 
   - body: Dante
     axis: appearance
@@ -2448,19 +2463,22 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-27: 차폐 주장에 적용 범위와 유사체를 붙임(가니메데형 부분 차폐, 극 노출).
       Pandora 대비 문구와 magnetosphere 필드 신규. 자기장 세기는 여전히 미도출.
+      2026-07-28: 세기 도출(오너 결정 ④a, 감사 C7) — RM22 사다리, 가니메데 앵커 ℳ≈2×10⁻³ ℳ⊕ →
+      B_eq ≈ 0.4 µT(밴드 0.2~1.2). standoff ~1.1 R_moon이라 서사의 "외대를 막아낸다"를
+      "저위도 소폭 저감"으로 하향. 도출 전엔 criterion=derived-grounding이 실행 안 된 게이트였음.
     status: gated
     driver: [physics]
     narrative: >
       Cassandra carries a faint magnetic field of its own. An iron-rich core and a 39-hour spin do drive a dynamo,
-      though not to anything like Pandora's strength. It is still enough to hold off the outer belt it orbits inside,
-      so the surface dose stays low across most of the moon, with the poles the exception.
+      though only to Ganymede's class, a few tenths of a microtesla. That buys a skin-tight magnetosphere: it trims
+      the belt dose at low latitudes rather than holding the outer belt off, and the poles take the flux in full.
     narrative_ko: >
-      Cassandra는 미약한 자기장을 보유하고 있다. 철이 많은 핵과 39시간의 자전이 다이나모를 가동시키지만, 자기장의
-      세기를 Pandora만큼 끌어올리지는 않는다. 그럼에도 자신이 잠겨 있는 외대의 방사선을 막아내기에는 충분해서,
-      극지방을 제외한 대부분의 지표에서 선량이 낮게 유지된다.
+      Cassandra는 미약한 자기장을 보유하고 있다. 철이 많은 핵과 39시간의 자전이 다이나모를 가동시키지만, 세기는
+      가니메데급인 1마이크로테슬라의 몇 분의 1 수준이다. 그걸로 얻는 것은 표면에 겨우 붙는 자기권이다. 외대를
+      밀어내지는 못하고 저위도의 선량을 조금 깎아줄 뿐이며, 극은 플럭스를 고스란히 받는다.
     fields:
-      - { name: magnetic_field, value: "약한 고유 dipole (철-부유 핵 + 자유 자전 39h; Pandora 75 µT보다 훨씬 약함)", op: set, note: "세기 미도출 — rocky-dynamo로 정량화 필요" }
-      - { name: magnetosphere, value: "가니메데형 미니 자기권 (폴리페무스 자기권 안의 위성 자기권; 저위도 닫힘·극 열림)", op: set }
+      - { name: magnetic_field, value: "~0.4 µT eq / ~0.8 µT polar (가니메데급 고유 dipole; 철-부유 핵 + 자유 자전 39h, ℳ≈2×10⁻³ ℳ⊕)", op: set, note: "RM22 사다리 도출 2026-07-28, 밴드 0.2~1.2 µT; Pandora 75 µT의 ~1/200" }
+      - { name: magnetosphere, value: "가니메데형 미니 자기권, standoff ~1.1 R_moon (폴리페무스 자기권 안의 위성 자기권; 저위도 닫힘·극 열림)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -2476,9 +2494,15 @@ decisions:
         while open polar field lines funnel Jovian plasma straight in, which is why Ganymede's poles are darkened by
         irradiation and its equator is not. So Cassandra's surface is protected across most of the moon with the poles
         exposed, rather than uniformly safe.
-        The field STRENGTH is not derived, and that is a gap rather than a value. Pandora's 75 µT came through
-        rocky-dynamo; Cassandra is 0.151 M⊕ in total mass against Pandora's 0.645, so its dynamo must be far weaker, but "far
-        weaker" is not a number and a standoff calculation against the outer belt's plasma pressure needs one.
+        The field strength, derived via the rocky-dynamo ladder (RM22 anchors): at density 5466 kg/m³ (≈1.0 ρ⊕ at
+        0.53 R⊕) the body is iron-rich, Mercury-class CMF, and on the Mercury precedent a 0.151 M⊕ iron core is
+        still convecting at 5.3 Gyr; free rotation at 39 h keeps the dipolar regime. The Solar-System anchors
+        bracket the moment at ℳ ≈ 1e-3~6e-3 ℳ⊕ (Mercury 4e-4 at 0.055 M⊕, Ganymede 2e-3); the Ganymede anchor is
+        adopted as the structural analog this row already leans on: ℳ ≈ 2e-3 → B_eq = 30·ℳ·(R/R⊕)⁻³ =
+        30·2e-3/0.533³ ≈ 0.4 µT (band 0.2~1.2). The standoff check the old row asked for: the parent's local field
+        at 8.4 R_p is 170/8.4³ ≈ 0.29 µT, so R_mp ≈ (0.4/0.29)^(1/3) ≈ 1.1 R_moon, the same pressure-balance
+        convention as Pandora's 2.6. A skin-tight magnetosphere: partial low-latitude shielding survives (the
+        Ganymede outcome above), but "holds the outer belt off" does not.
       evidence_ko: >
         약한 자기장이며, 차폐 주장은 적용 범위를 함께 적어야 한다.
         범위부터. 이 행이 자기장에 인정하는 것은 **지표 입자 선량 저감**이며 이는 표준 물리다(그걸 위해
@@ -2489,9 +2513,13 @@ decisions:
         차폐다. 닫힌 자력선이 저위도를 지키는 반면 열린 극 자력선은 목성 플라스마를 그대로 끌어들이며, 그래서
         가니메데의 극은 조사로 어둡게 변색되고 적도는 그렇지 않다. 따라서 Cassandra도 균일하게 안전한 것이 아니라
         극이 노출된 채 대부분의 지표가 보호된다.
-        자기장 **세기**는 도출되지 않았고, 이는 값이 아니라 공백이다. Pandora의 75 µT는 rocky-dynamo를 거쳐 나왔고
-        Cassandra는 총질량 0.151 M⊕ 대 Pandora 0.645라 다이너모가 훨씬 약할 수밖에 없지만, "훨씬 약함"은 숫자가 아니며 외대
-        플라스마 압력에 대한 standoff 계산에는 숫자가 필요하다.
+        자기장 세기는 rocky-dynamo 사다리(RM22 앵커)로 도출했다. 밀도 5466 kg/m³(0.53 R⊕에서 ≈1.0 ρ⊕)라 철
+        부유·수성급 CMF이고, 수성 선례상 0.151 M⊕ 철핵은 5.3 Gyr에도 대류 유지, 자유 자전 39 h라 쌍극자 레짐이다.
+        태양계 앵커가 모멘트를 ℳ ≈ 1e-3~6e-3 ℳ⊕로 묶는데(수성 4e-4 at 0.055 M⊕, 가니메데 2e-3), 이 행이 이미
+        기대는 구조 유사체인 가니메데 앵커를 채택한다. ℳ ≈ 2e-3 → B_eq = 30·ℳ·(R/R⊕)⁻³ = 30·2e-3/0.533³ ≈
+        0.4 µT(밴드 0.2~1.2). 구 행이 요구했던 standoff 계산: 8.4 R_p의 모행성 국지장이 170/8.4³ ≈ 0.29 µT라
+        R_mp ≈ (0.4/0.29)^(1/3) ≈ 1.1 R_moon(Pandora의 2.6과 같은 압력 균형 관례). 표면에 겨우 붙는 자기권이다.
+        저위도 부분 차폐(위의 가니메데 결과)는 살아남지만 "외대를 막아낸다"는 성립하지 않는다.
 
   - body: Cassandra
     axis: environment.radiation    # group 8 facet-walk 2026-06-22
@@ -2500,18 +2528,20 @@ decisions:
       radiation_belts 행(외대 L 4.2–10이 Cassandra를 잠기게 함)과 모순이었고, 벨트 지오메트리
       도출보다 앞선 것이라 갱신되지 않았던 것. 벨트 행의 대안(외대를 Cassandra에서 끊기)은
       미발동. refs 2건 추가.
+      2026-07-28: magnetism 행 세기 도출(~0.4 µT, standoff ~1.1 R_moon)에 맞춰 자기장 기여를
+      "대부분 밀어냄" → "저위도 소폭 저감"으로 하향. 등급 중간은 불변(근거의 주축이 옅은 외대로 이동).
     status: gated
     driver: [physics]
     narrative: >
       Cassandra orbits inside Polyphemus's outer belt, so the particles are there, but they are far thinner than the
-      inner belt that bakes Dante and Hades, and the moon's own field turns most of what remains away from the ground.
+      inner belt that bakes Dante and Hades, and the moon's faint field trims a little more off at low latitudes.
       What limits life here is the cold and the missing oxygen, not radiation.
     narrative_ko: >
       Cassandra는 Polyphemus 외대 안쪽을 돈다. 입자가 없는 곳은 아니지만 Dante와 Hades를 굽는 내대보다 훨씬 옅고,
-      남은 몫의 대부분은 위성 자신의 자기장이 지표에서 밀어낸다. 이곳에서 생명을 제한하는 것은 방사선이 아니라
+      위성 자신의 옅은 자기장이 저위도에서 조금 더 깎아낸다. 이곳에서 생명을 제한하는 것은 방사선이 아니라
       추위와 없는 산소다.
     fields:
-      - { name: radiation, value: "중간 (외대 L 4.2–10 안쪽 8.4 R_p, 외대 30 rad/h; 위성 자기장이 지표 선량 저감, 극은 노출)", op: set, note: "구값 '낮음 (방사선대 밖)' — 벨트 지오메트리 도출 이전 서술" }
+      - { name: radiation, value: "중간 (외대 L 4.2–10 안쪽 8.4 R_p, 외대 30 rad/h; 위성 자기장 ~0.4 µT가 저위도 선량 소폭 저감, 극은 노출)", op: set, note: "구값 '낮음 (방사선대 밖)' — 벨트 지오메트리 도출 이전 서술" }
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -2521,10 +2551,10 @@ decisions:
         wrong here: the Polyphemus radiation_belts row puts the outer belt at L 4.2–10 and states it "submerges
         Cassandra, giving it its intermediate radiation", and its per-moon ladder reads Cassandra=intermediate. The
         belts row's recorded alternative of ending the outer belt at Cassandra is NOT exercised.
-        So the grade is intermediate, and the reason is the moon's own field rather than an empty orbit. The outer belt runs
-        30 rad/h against the inner belt's 300, so Cassandra starts a factor 10 below Dante and Hades, and its
-        Ganymede-type mini-magnetosphere deflects most of the rest away from low latitudes (see the magnetism row for
-        the scope of that claim and the missing field strength). Poles stay exposed.
+        So the grade is intermediate, and the reason is the thin outer belt, helped only marginally by the moon's own
+        field. The outer belt runs 30 rad/h against the inner belt's 300, so Cassandra starts a factor 10 below Dante
+        and Hades, and its skin-tight Ganymede-type mini-magnetosphere (standoff ~1.1 R_moon) trims the low-latitude
+        dose modestly (scope and the derived ~0.4 µT strength in the magnetism row). Poles stay exposed.
         stellar_wind/activity/heliosphere/flares/uv_xray/habitable_zone = star-level ∅, with the note that anoxia
         means no ozone and therefore raised surface UV; HZ position is handled in the atmosphere row.
       evidence_ko: >
@@ -2532,9 +2562,10 @@ decisions:
         radiation_belts 행이 외대를 L 4.2–10에 두고 "Cassandra를 잠기게 해 그 중간 방사선을 만든다"고 명시하며,
         위성별 사다리에도 Cassandra=중간으로 적혀 있다. 벨트 행이 기록해 둔 "외대를 Cassandra에서 끊는" 대안은
         발동하지 않는다.
-        따라서 등급은 중간이고, 이유는 빈 궤도가 아니라 위성 자신의 자기장이다. 외대는 30 rad/h로 내대 300 rad/h의
-        10분의 1이라 Cassandra는 Dante·Hades보다 한 자리 낮은 데서 출발하며, 가니메데형 미니 자기권이 남은 몫의
-        대부분을 저위도에서 밀어낸다(그 주장의 적용 범위와 미도출 자기장 세기는 magnetism 행 참조). 극은 노출된 채다.
+        따라서 등급은 중간이고, 이유는 옅은 외대다. 위성 자기장은 한계적으로만 거든다. 외대는 30 rad/h로 내대
+        300 rad/h의 10분의 1이라 Cassandra는 Dante·Hades보다 한 자리 낮은 데서 출발하며, 표면에 겨우 붙는
+        가니메데형 미니 자기권(standoff ~1.1 R_moon)이 저위도 선량을 소폭 깎는다(적용 범위와 도출된 ~0.4 µT
+        세기는 magnetism 행 참조). 극은 노출된 채다.
         stellar_wind/activity/heliosphere/flares/uv_xray/habitable_zone = 항성 레벨 ∅. 단 무산소는 오존이 없다는
         뜻이므로 지표 UV가 올라간다는 메모를 남긴다. HZ 내 위치는 atmosphere 행에서 다룬다.
 
