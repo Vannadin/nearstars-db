@@ -191,7 +191,8 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   questions still go to the pass's `context-notes.md`; `provenance` is per-value.
   A qualitative/non-scalar value (dose ladder, grade) stays in
   prose, not a fake typed field. **No em-dashes** (CONVENTIONS §1.10) and **natural
-  Korean, no calques** (거대 가스행성 not 거인, 구름층 not 구름덱) in every rendered
+  Korean, no calques** (거대 가스행성 not 거인, 구름층 not 구름덱, 영화/게임 설정 not
+  캐넌) in every rendered
   field. Simulation-derived values (stability windows, gap-clearing, phase-match) cite
   the sim report (`phase3/stability-sim/*.md`) in `refs[]`, not just a paper.
 - Gate block keys are exactly `criterion` / `verdict` / `evidence` /

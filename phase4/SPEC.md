@@ -321,7 +321,7 @@ decisions:
     missing from `refs[]` is the recurring bug. The HTML builder links `docs/reference/*.md`
     and `plans/*.md` refs to their wiki page and other repo `.md` refs to the GitHub blob.
   - **No em-dashes** (CONVENTIONS §1.10) and **natural Korean, never a literal calque**
-    (the ko-mirror rule: 거대 가스행성 not 거인, 구름층 not 구름덱, …) apply to *every*
+    (the ko-mirror rule: 거대 가스행성 not 거인, 구름층 not 구름덱, 영화/게임 설정 not 캐넌, …) apply to *every*
     rendered field: narrative, evidence, notes, values.
   - A qualitative / non-scalar value (a per-moon dose ladder, a grade) belongs in the
     narrative prose, **not** forced into a typed `fields[]` entry pretending to be an emit
