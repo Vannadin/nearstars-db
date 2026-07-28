@@ -14,7 +14,7 @@ automatically; perceptual axes are a human checklist. Every decision resolves to
 | `magnetism.*` / `environment.*` | consistency with the stellar-wind / dynamo synthesis layer | checklist / derived-grounding | `phase3/stellar_wind_synthesis`; `docs/reference/planetary-dynamo-scaling.md` |
 | Fiction body (class **D**) | Hill-bound (moon) + HZ-stable (host) + composition plausibility | **yes** (stability) + checklist (composition) | stability sim + composition checklist — **not** `culture`/`classification` |
 
-## Verdict decision — three verdicts
+## Verdict decision — four verdicts
 
 Distinguish divergence **from a paper** vs **from a non-paper baseline** — never collapse them.
 

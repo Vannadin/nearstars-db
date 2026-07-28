@@ -64,7 +64,9 @@ decisions:
     criterion: [observation]     # see gate-criteria.md
     verdict: pass-in-window      # pass-in-window | documented-divergence
     evidence: >
-      reproducible pointer / error bar / window the value sits in
+      conclusion in one sentence, then the check actually performed
+      (tool / comparison / the numbers), then one honest caveat only if
+      a real one exists (SPEC §3.1 fixed shape; no em-dash, no **markup**)
     divergence_note: null        # required (non-null) iff row verdict == documented-divergence
   refs: ["2508.03814"]           # bibcodes / arXiv ids, machine-readable list (no author names)
   fictional: true                # identity axis only — body is not a real catalogued
