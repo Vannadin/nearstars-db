@@ -1,6 +1,23 @@
 <!-- evidence 레지스터 통일 런의 착수 브리프 — compact 후 이어서 실행 -->
 # Evidence-register unification — brief
 
+**STATUS: EXECUTED 2026-07-28** (same day, post-compact session). Owner decisions:
+evidence shape confirmed via the Hades/Dante before-after examples (SPEC §3.1 now
+carries it); displaced arguments → methodology-doc worked-examples, with the Chaos
+surface/satellites override honesty records kept in place; gameplay+identity are
+refs-exempt. Step-6: difficulty fields retired (alpha), driver vocabulary fixed to
+SPEC §1's five tokens (alpha normalized, gate warns per file elsewhere), gravity
+unified to m/s², fictional-flag direction deferred to the owner's 40 Eri run,
+field_alignment's 25 unmapped phase4 names stay parked for pipeline WP5.
+Commits: 943ec80 (shape+refs exemption), 894f75a (difficulty), 75c33b3
+(driver+gravity), 3153833 (essay diet + tidal-heating §7 worked example),
+f76c818 (clipped-block checks). Terse-but-shaped rows (moon bulks, Pandora
+env.radiation, Chaos gameplay, both orbit rows) deliberately left un-inflated.
+
+---
+
+Original brief below, kept for the record.
+
 Written 2026-07-28 at the end of the audit fix-run session, for the follow-up
 run the owner deferred ("compact하고 나서 이어서"). Steps 1–5 of the audit fix
 order are done (commit map in `consistency-audit-FINDINGS.md` header); this is

@@ -193,7 +193,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative"><span data-i18n>Dante는 Polyphemus의 다섯 위성 중 가장 안쪽에 있는, 이오를 닮은 격렬한 화산에 뒤덮인 작은 규산염 세계다. 공식적으로는 첫째 위성(Alpha Centauri A b I)이며, 아바타 이름 Dante는 설명 텍스트에만 붙는 문화명이다. 실제 검출이 존재하지 않는 픽션 천체이다.<br></span><span data-en hidden>Dante is the innermost of Polyphemus&#x27;s five moons, a small silicate world blanketed in relentless, Io-like volcanism. Formally the first moon (Alpha Centauri A b I), it keeps the Avatar name Dante as its cultural name in descriptions only. It is pure fiction, with no real detection behind it.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">silicate volcanic moon (900 km, 8.0e21 kg, ρ ~2620 kg/m³)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Alpha Centauri A b I</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Dante</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> <span data-i18n>Io형 화산 세계.</span><span data-en hidden>An Io-type volcanic world.</span></div>
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>Io형 화산 위성으로 분류. 확인: 밀도 ~2620 kg/m³는 규산염 몸체 범위이고, 화산 활동은 bulk.tidal_heating 행의 ~1200× Io 플럭스가 뒷받침한다. 명명은 위성 순번 규약(Alpha Centauri A b I)을 따르며, 픽션 천체라 DB 대조 검사는 면제.<br></span><span data-en hidden>Classified an Io-type volcanic moon. Check: ρ ≈ 2620 kg/m³ sits in the silicate-body range, and the volcanism is powered by the ~1200× Io flux in the bulk.tidal_heating row. The designation follows the moon-numbering convention (Alpha Centauri A b I); fictional, so the db-parity check does not apply.<br></span></div>
   
 </article>
 <article class="dec" id="bulk">
@@ -215,7 +215,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative"><span data-i18n>Dante는 이오와 같이 유도 자기장만을 갖는다. 대신 이오와 동일하게 가장 안쪽 위성으로서 플라스마 공급원 역할을 하며, 화산이 뿜어낸 황 토러스가 Polyphemus의 방사선대를 포화시킨다.<br></span><span data-en hidden>Much like Io, Dante has only an induced magnetic field and, as the innermost moon, serves as a plasma source: its volcanic sulfur torus saturates Polyphemus&#x27;s radiation belt.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">none (no intrinsic dynamo; Io식 유도장만)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> <span data-i18n>magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를 먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비.</span><span data-en hidden>No intrinsic magnetosphere/radiation_belts. Dante&#x27;s volcanic SO₂/sulfur torus feeds the Polyphemus belt (environment.radiation causal loop). Being innermost, radiation is extreme·unshielded.</span></div>
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>고유 자기장 없음. 확인: 이오 선례가 그대로 적용되고(갈릴레오 근접비행은 이오 자체에서도 유의미한 고유 쌍극자를 찾지 못했다), 900 km의 Dante는 rocky-dynamo 사다리로도 ~0.4 µT에 그친 Cassandra보다 훨씬 작다. 이 위성이 내놓는 것은 자기장이 아니라 플라스마다. 화산 SO₂/황 토러스가 폴리페무스 방사선대를 먹이고(environment.radiation 인과 고리), 최내곽이라 그 방사선을 무방비로 받는다.<br></span><span data-en hidden>No intrinsic field. Check: the Io precedent carries over (Galileo&#x27;s flybys found no meaningful intrinsic dipole at Io itself), and at 900 km Dante is far below Cassandra, whose rocky-dynamo ladder result is already only ~0.4 µT. What the moon does contribute is plasma, not a field: its volcanic SO₂/sulfur torus feeds the Polyphemus belt (the environment.radiation causal loop), and being innermost it takes that radiation unshielded.<br></span></div>
   <div class="refs"><a class="ref" href="../../wiki/reference__rocky-planet-dynamo-methodology.html" target="_blank" rel="noopener">rocky-planet-dynamo-methodology.md</a></div>
 </article>
 <article class="dec" id="bulk.tidal_heating">
@@ -285,7 +285,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="alpha-centauri-b.html">← Alpha Centauri B</a><a class="navlink" href="hades.html">Hades →</a></div>
-<div class="stamp">빌드 2026-07-28 16:33 · f256d63+미커밋</div>
+<div class="stamp">빌드 2026-07-28 17:46 · f76c818</div>
 </div>
 <script>
 const b=document.body;
