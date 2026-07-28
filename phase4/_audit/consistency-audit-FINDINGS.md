@@ -22,6 +22,22 @@ values that never propagated to neighbouring rows**.
 Locations are `line` numbers in `phase4/alpha_centauri.yaml` unless another
 file is named. ✓ = independently re-verified by the orchestrator.
 
+**Fix-run status (same day, owner-sequenced 2>1>3>4>5>6):** steps 1–5 are
+done — rule 4 codified (`24df3a6`), stale-value sweep (`2a2a82d`),
+out-of-scope corruption repairs (`d8a7a9d`), owner physics decisions
+(`ab3ac00`: ring τ 2.7e-4 / Dante sulfur honest override / Cassandra dynamo
+derived ~0.4 µT; `f86ca87`: ladder wording, Pandora 안전, design-vs-snapshot
+caveat; `1782fd4`: aurora brightened to its torus driver + 캐넌 purge), the
+step-4 prose pass (`0ad9a1d`, `3723437`, `f256d63`: de-translationese,
+zero rendered em-dashes, plain-where-simple rewrites, KO noun
+naturalization), and the viewer fixes (`14d15fc`: na_reason, field-level
+override marks, row-value fallback). C6 (ring gap vs snapshot) was
+deliberately left as-is by the owner. Step 6 leftovers awaiting owner
+policy: gameplay/identity refs exemption-or-standing-refs, the difficulty
+deferral contradiction, fictional-flag direction (40 Eri practice), driver
+vocabulary, the 25 unmapped field names, gravity unit split. Line numbers
+below predate the fix run; grep by quote instead.
+
 ---
 
 ## 1. CRITICAL — in-scope (alpha_centauri)
