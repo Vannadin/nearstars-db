@@ -276,12 +276,19 @@ decisions:
 - **Prose readability contract** (owner feedback 2026-07-24, hardened over that day). The
   two prose slots answer different questions and must not blur or retell each other:
   - `narrative` = the **reader-facing story**: what the body *is* and why the value is
-    defensible, conclusion first. ≤6 sentences. **Excluded from the narrative:** bibcodes,
+    defensible, conclusion first. Keep it short: ~6 sentences is the yardstick, **not a
+    hard cap** (owner, 2026-07-28) — the point is that a long row reads as clutter. The
+    Korean is measured on its own; it does not inherit the English count by translation.
+    **Excluded from the narrative:** bibcodes,
     file paths, equations, parameter dumps (citations → `refs[]`, numbers → `fields[]`);
     **owner-decision history** — dates, "owner chose/picked/declined", facet-walk/re-gate
     logs (that provenance lives in the session checklist/context-notes, not on the board a
-    stranger reads); and **engine mechanics**: how a KSP feature works (flight science, the
-    discovery mod, cfg field semantics) is internal author knowledge, not the story.
+    stranger reads); **engine mechanics**: how a KSP feature works (flight science, the
+    discovery mod, cfg field semantics) is internal author knowledge, not the story; and
+    **workflow vocabulary** (2026-07-26/28 prose pass): the pipeline's own jargon —
+    passthrough/통과, emit, 앵커, "Phase 3"/"Phase 4", 보드, 게이트, "전용 행",
+    the union rule, raw field/axis names — never appears in a narrative. The story is
+    about the body; the machinery stays in `evidence`/`provenance`.
     - **The `gameplay` axis is the one exception on biomes** (owner, 2026-07-27), and takes a
       fixed three-part shape: (1) what is distinctive about *going there* — skip anything
       generic enough to apply to any body of its class; (2) the **biome list**, each entry

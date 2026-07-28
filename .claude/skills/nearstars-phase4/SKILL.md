@@ -161,11 +161,16 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   entry** (`name`, `value`, `unit`, `op`) — never buried in prose.
 - **Prose readability contract** (SPEC §3.1; owner feedback 2026-07-24, hardened
   that day): `narrative` = reader-facing story (what the body *is*, why the value
-  holds, conclusion first), ≤6 sentences, and it **excludes** bibcodes / file paths
+  holds, conclusion first), short — ~6 sentences is the yardstick, not a hard cap
+  (owner 2026-07-28; the point is no clutter, and the Korean is measured on its
+  own) — and it **excludes** bibcodes / file paths
   / equations / parameter dumps, **owner-decision history** (dates, "owner
-  chose/declined", facet-walk logs — that lives in checklist/context-notes), and
+  chose/declined", facet-walk logs — that lives in checklist/context-notes),
   **engine mechanics** (flight science, discovery mod, cfg field semantics: author
-  knowledge, not story). The gate `evidence` = verification + grounding trail (tool, fit
+  knowledge, not story), and **workflow vocabulary** (2026-07-26/28 prose pass):
+  passthrough/통과, emit, 앵커, "Phase 3"/"Phase 4", 보드, 게이트, "전용 행", the
+  union rule, raw field/axis names — the story is about the body, the machinery
+  stays in `evidence`/`provenance`. The gate `evidence` = verification + grounding trail (tool, fit
   quality, formulas, checks, the mechanics the narrative omits); no storytelling, no
   dated decision-logs. **`evidence` IS rendered in the board viewer** — it is not an
   internal channel, so treat it as reader-visible.

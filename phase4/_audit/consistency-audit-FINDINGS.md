@@ -331,7 +331,7 @@ would justify it; nowhere stated).
 
 | Item | Status |
 |---|---|
-| Rule 4 (workflow-vocab ban) not in SPEC/skill/memory | **Still open.** Boards comply (strict tokens zero board-wide ✓); the contract doesn't record the rule, so a later session will reintroduce them. |
+| Rule 4 (workflow-vocab ban) not in SPEC/skill/memory | **Closed 2026-07-28** (same session as this audit): codified into SPEC §3.1, skill Step 4 and the prose memory, together with the owner's clarification that ~6 sentences is a yardstick, not a hard cap. Boards already comply (strict tokens zero board-wide ✓). |
 | Cassandra field strength underived | **Worse than briefed:** the gate row now asserts pass-in-window on an unrun derivation (C7), and the brief's own "0.151 M⊕ core" phrasing inherited the total-mass mislabel (M9). |
 | Pandora ocean dissipation unquantified | Honestly flagged in `atmosphere` evidence; narrative presents 290 K as settled (one hedging clause would do). |
 | Chaos obliquity 15° unlabelled | Confirmed — and the sweep found 4 more unlabelled picks of the same class (§5). |
