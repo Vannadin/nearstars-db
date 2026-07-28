@@ -14,7 +14,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` patches | `kopernicus-cfg` skill |
 | 7 | Principia cfg | DB → Principia n-body patches | `principia-cfg` skill |
 | 8 | Firefly cfg | Phase 3 atmosphere → Firefly reentry-effect cfg | `firefly-cfg` skill |
-| 9 | ResearchBodies cfg | Phase 4 discoverability → ResearchBodies hide/discover patch | `researchbodies-cfg` skill |
+| 9 | ResearchBodies cfg (**입력 없음**) | Hide/discover patch for the third-party mod. **Its Phase 4 input layer was retired 2026-07-28** — kept for reference until the in-house replacement lands | `researchbodies-cfg` skill |
 | 10 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
 | 11 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
@@ -202,7 +202,14 @@ Correctness checks live across several functional groups. This index gathers the
 
 ## 9. ResearchBodies cfg generation
 
-**Purpose.** Emit the optional **discoverability** layer — a `RESEARCHBODIES { loadAs = mod ... }` ModuleManager patch that hides each NearStars body until the player discovers it via an observatory/telescope. Maps each body's real detection status (Phase 4 `identity > discoverability`) to an `IGNORELEVELS` start-visibility tuple + an `ONDISCOVERY` message (candidates cite the real detection paper).
+>  ⚠️ **This skill currently has no input.** The Phase 4 boards' `discoverability`
+>  fields and `discoverability_cfg` blocks were removed on 2026-07-28: the owner is
+>  building a discovery mod tailored to NearStars rather than driving JPLRepo's
+>  ResearchBodies. The skill and its emitter are kept as reference for that work, but
+>  nothing feeds them today. The only thing identity still carries is `fictional: true`,
+>  which exists for the db-parity gate, not for discovery.
+
+**Purpose (as designed).** Emit the optional **discoverability** layer — a `RESEARCHBODIES { loadAs = mod ... }` ModuleManager patch that hides each NearStars body until the player discovers it via an observatory/telescope. Mapped each body's real detection status to an `IGNORELEVELS` start-visibility tuple + an `ONDISCOVERY` message (candidates cite the real detection paper).
 
 **Trigger.** "ResearchBodies cfg 만들어줘", "discoverability 패치", "IGNORELEVELS / ONDISCOVERY", "이 바디 숨김 처리".
 

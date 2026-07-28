@@ -52,7 +52,7 @@ problem: the decomposition is fixed up front.
 
 | group | axes |
 |---|---|
-| `identity` | `body_type`/spectral_class, `designation` (e.g. Roman-numeral moons), `cultural_name` (in-game blurb text), `discoverability` (notability / discovery difficulty) |
+| `identity` | `body_type`/spectral_class, `designation` (e.g. Roman-numeral moons), `cultural_name` (in-game blurb text), `fictional: true` on bodies that are not real catalogued objects (exempts them from the db-parity gate) |
 | `orbit` | `semi_major_axis_au`, `eccentricity`, `inclination_deg`, `longitude_ascending_node`, `argument_periapsis`, `mean_anomaly`/epoch, `spin_orbit_resonance`/tidal-lock, `lagrange_placement` (trojans / co-orbitals) |
 | `bulk` | `mass`, `radius`, `gravity` (derived echo of GM/R² — Kopernicus geeASL slot), `geopotential_j2` + `reference_radius` (oblateness; Principia `j2` — always emitted as a pair), `flattening` (derived echo of the figure — visual oblate-mesh slot), `geopotential_c22` (tidal triaxiality — locked bodies), `j4` (fast rotators, optional), `rotation_period`, `obliquity`, `spin_axis_orientation` (pole RA/Dec), `internal_heat`/intrinsic_luminosity (self-luminous giants/BDs), `age`/cooling_age (stars/WDs), `tidal_heating` + `tidal_surface_flux` (Io-type moons) |
 | `atmosphere` | `composition`, `pressure`, `temperature`, `scale_height`, `breathability`/oxygen (stock O₂ flag), `greenhouse` (surface vs equilibrium T), `escape`/loss |
@@ -62,7 +62,7 @@ problem: the decomposition is fixed up front.
 | `environment` | `radiation` (Kerbalism dose zones), `stellar_wind` (mass-loss), `activity` (rotation/cycle/X-ray — stars), `heliosphere` (astrosphere extent), `flares`/space-weather (CME / storms), `uv_xray_flux`, `habitable_zone` (stars) |
 | `rings` | `ring_structure` (radii / gaps), `ring_composition`/color/opacity, `ring_plane` (inclination), `circumstellar_disk` (debris belt), `asteroid_belt` |
 | `satellites` | art-directed / fiction moons (class D) as a list, `co_orbitals`/trojans, `dust_sources` (ring feeders) |
-| `gameplay` | `sphere_of_influence_tuning`, `science_biomes`, `timewarp_limits` (*KSP-specific, almost always passthrough*). **`difficulty` is deferred** (owner 2026-07-24): mission-difficulty grading is a mod-support concern, not a Phase 4 facet; do not author it now (discovery status lives in `identity.discoverability`). |
+| `gameplay` | `sphere_of_influence_tuning`, `science_biomes`, `timewarp_limits` (*KSP-specific, almost always passthrough*). **`difficulty` is deferred** (owner 2026-07-24): mission-difficulty grading is a mod-support concern, not a Phase 4 facet; do not author it now. |
 
 The menu is the **union of decision axes any body type could need** — never pruned by type
 (a rocky moon still carries `rings` and `magnetism`; they just default to passthrough). Most
@@ -264,11 +264,6 @@ decisions:
         …reproducible pointer / error bar / window…
       divergence_note: null         # required iff row verdict == documented-divergence
     refs: ["2508.03814"]            # bibcodes / arXiv ids as a machine-readable list
-    discoverability_cfg:            # promoted structured block (identity axis)
-      category: naked_eye
-      ignorelevels: "T T T T"
-      message: null                 # ONDISCOVERY text (required for candidate/disputed)
-      ref: "2018AJ....155..117M"    # detection bibcode (not prose)
 ```
 
 **Rules v2 adds over v1:**

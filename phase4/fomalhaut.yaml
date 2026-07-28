@@ -15,17 +15,14 @@ decisions:
       body_type=**젊은(440 Myr) A4V 주계열성** — 로스터 유일 대형 **debris-disk 간판 호스트**. designation=Fomalhaut
       (α Piscis Austrini · HD 216956 · HIP 113368 · HR 8728). cultural=아랍어 "fam al-ḥūt"(물고기의 입) — **페르시아
       4 royal star 중 남쪽의 수호자**, 밤하늘 18번째로 밝고 Piscis Austrinus 최광성, "가을의 외로운 별(Lonely Star)".
-      discoverability=**맨눈**(V=1.16 1등성) → RB IGNORELEVELS T T T T(항상 가시).
     fields:
       - { name: body_type, value: "젊은 (440 Myr) A4V 주계열성 — debris-disk 간판 호스트", op: set }
       - { name: designation, value: "Fomalhaut (α PsA · HD 216956 · HIP 113368 · HR 8728)", op: set }
       - { name: cultural_name, value: "fam al-ḥūt (물고기의 입) · 페르시아 4 royal star 남쪽 수호자 · 가을의 외로운 별", op: set }
-      - { name: discoverability, value: "naked_eye (V=1.16, 1등성)", op: set }
     gate:
       criterion: [classification, observation, culture]
       verdict: pass-in-window
       evidence: "오너 G1 확정 2026-06-26 — 젊은 A4V debris-disk 간판. 맨눈 1등성→naked_eye T T T T. 문화=페르시아 royal star '물고기의 입'."
-    discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=1.16, Piscis Austrinus 최광성, 18th brightest)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Fomalhaut
     axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius)는 전용 행 (union rule)

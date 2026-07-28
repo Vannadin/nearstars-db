@@ -67,11 +67,8 @@ decisions:
       reproducible pointer / error bar / window the value sits in
     divergence_note: null        # required (non-null) iff row verdict == documented-divergence
   refs: ["2508.03814"]           # bibcodes / arXiv ids, machine-readable list (no author names)
-  discoverability_cfg:           # identity axis — promoted structured block (ResearchBodies)
-    category: naked_eye
-    ignorelevels: "T T T T"
-    message: null                # ONDISCOVERY text; required for candidate/disputed
-    ref: "2018AJ....155..117M"   # detection bibcode (not prose)
+  fictional: true                # identity axis only — body is not a real catalogued
+                                 # object, so the db-parity gate skips it
 ```
 
 ## Bulk template convention (SPEC §3.2)

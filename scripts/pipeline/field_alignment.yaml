@@ -45,11 +45,6 @@ alignment:
     unit: prose
     cfg: {kopernicus: "Properties/displayName (cultural variant)"}
     applies: any
-  - phase4: discoverability
-    phase3: [detection_status]
-    unit: prose
-    cfg: {researchbodies: "IGNORELEVELS + ONDISCOVERY"}
-    applies: any
 
   # ── bulk ────────────────────────────────────────────────────────────────
   - phase4: mass

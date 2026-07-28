@@ -84,6 +84,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -116,7 +133,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
@@ -150,13 +167,28 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
-<div class="summary"><span class="body-meta">9 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 5 gated · 0 divergence</span></div>
+<div class="summary"><span class="body-meta">7 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 5 gated · 0 divergence</span></div>
+<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>
 <div class="decisions"><article class="dec" id="environment.activity">
   <div class="dec-head">
     <code class="axis">environment.activity</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>주황빛 동반성은 둘 중 더 팔팔한 쪽이다. 코로나는 A보다 X선에서 밝고, 활동 사이클은 8.84년으로 어느 별과 견줘도 손꼽히게 깨끗하게 측정돼 있다. 전부 측정값이고 전부 통과시킨다. 여기서도 점검은 창작이 아니라 교정이었다 — B가 A의 수치 일부를 걸치고 있었고, 그걸 풀어낸 뒤에야 데이터가 &quot;활동적인 쪽은 B&quot;라는 서사와 실제로 맞아떨어졌다.<br></span><span data-en hidden>The orange companion is the livelier of the pair: a brighter X-ray corona than A&#x27;s and one of the cleanest-measured activity cycles of any star, ticking along at 8.84 years. All measured, all passed through. A review here too was corrective rather than creative — B had been wearing some of A&#x27;s numbers, and only after untangling them did the data actually agree with the &quot;B is the active one&quot; story.<br></span></p>
+  <p class="narrative"><span data-i18n>주황빛 동반성은 둘 중 더 팔팔한 쪽이다. 코로나는 A보다 X선에서 밝고, 활동 사이클은 8.84년으로 어느 별과 견줘도 손꼽히게 깨끗하게 측정돼 있다. 전부 관측으로 측정되어 있다.<br></span><span data-en hidden>The orange companion is the livelier of the pair: a brighter X-ray corona than A&#x27;s and one of the cleanest-measured activity cycles of any star, ticking along at 8.84 years. All of it measured.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">P_rot 41d, log R&#x27;HK −4.85, clean 8.84yr cycle (DeWarf2010), X-ray log Lx 27.04 (contrast ~4.5)<div class="fnote">K1V; contrast ~4.5=태양 진폭의 절반; radiation_surface ≈1.4(A의 ~2배, Lx 비 1.8 정합, 플레어성 아님); 2026-07-12 점검 P_rot 38→41d·R&#x27;HK −5.0→−4.85(DB recommended)·factor~10은 A 특성이라 제거</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
@@ -165,56 +197,45 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
     <code class="axis">magnetism.magnetic_field</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>B는 A의 1.5–2배, 즉 2–4가우스를 받는다. 더 차가운 주황 왜성이라 대류가 깊게 돌아 다이나모 효율이 높고, 그 효율을 메트로놈처럼 깨끗한 활동 사이클과 더 밝은 코로나가 실증한다. A처럼 직접 지도화된 적은 없어 이 값도 proxy이며, 직접 측정이 나오면 상향될 수 있다.<br></span><span data-en hidden>B gets a field half again to twice A&#x27;s — two to four gauss. As a cooler orange dwarf its convection runs deeper, making the dynamo more efficient, and the star backs that up with its metronome-clean activity cycle and the brighter corona. Like A it has never been directly mapped, so this too is a proxy, revisable upward if a direct measurement ever lands.<br></span></p>
+  <p class="narrative"><span data-i18n>B는 A의 1.5–2배, 즉 2–4가우스의 자기장을 지닌다. 더 차가운 주황 왜성이라 대류가 깊게 돌아 다이나모 효율이 높고, 그 효율은 메트로놈처럼 깨끗한 활동 사이클과 더 밝은 코로나에서 드러난다. A처럼 직접 측정된 적은 없어 이 값도 빌려온 것이며, 직접 측정이 나오면 올라갈 수 있다.<br></span><span data-en hidden>B carries a field half again to twice A&#x27;s, two to four gauss. As a cooler orange dwarf its convection runs deeper, making the dynamo more efficient, and the star backs that up with its metronome-clean activity cycle and the brighter corona. Like A it has never been directly measured, so this figure is borrowed too, and could go up if a direct measurement ever lands.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~2–4 G (large-scale surface, A보다 강함)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>K1V는 τ_conv 길어 Rossby≈1.4&lt;A → 더 효율적 dynamo(clean 8.84yr cycle 주기성 + X선 log Lx 27.04 &gt; A 26.78 방증). A의 ~1.5–2배. 직접 ZDI 없음 → proxy(low–med); ZDI pull 시 상향 가능. 2026-07-12 점검: &quot;factor~10 modulation&quot; 방증은 A의 특성이라 clean cycle 방증으로 교체.<br></span><span data-en hidden>K1V has a longer τ_conv, Rossby≈1.4&lt;A → a more efficient dynamo (corroborated by the clean 8.84yr cycle periodicity + X-ray log Lx 27.04 &gt; A 26.78). ~1.5–2× A. No direct ZDI → proxy (low–med); could be revised upward on a ZDI pull. 2026-07-12 review: the &quot;factor~10 modulation&quot; corroboration was A&#x27;s property, replaced with the clean-cycle corroboration.<br></span></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a></div>
-</article>
-<article class="dec is-sup" id="environment.stellar_wind">
-  <div class="dec-head">
-    <code class="axis">environment.stellar_wind</code>
-    <span class="pills"><span class="pill st-superseded"><span data-i18n>대체됨</span><span data-en hidden>Superseded</span></span></span>
-  </div>
-  <p class="narrative"><span data-i18n>[SUPERSEDED — 아래 재게이트 행이 대체함] 원안 Ṁ_B ≈ 0.6 Ṁ⊙. &quot;더 활동적이나 절대 풍은 A보다 약함&quot;이라는 원 논리는 스테일 X선(A가 더 밝다고 본 값)에 기댄 것 — 현 DB는 B가 X선 더 밝음(27.04 vs 26.78).<br></span><span data-en hidden>[SUPERSEDED — replaced by the re-gate row below] Original Ṁ_B ≈ 0.6 Ṁ⊙. The original logic &quot;more active but the absolute wind is weaker than A&#x27;s&quot; leaned on stale X-ray (which held A brighter) — the current DB has B brighter in X-ray (27.04 vs 26.78).<br></span></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">0.6 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
-  
-  
-  
 </article>
 <article class="dec" id="environment.stellar_wind">
   <div class="dec-head">
     <code class="axis">environment.stellar_wind</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>B는 측정된 합산 풍의 대부분 — 사분의 삼 — 을 가져간다. 표면은 A보다 X선에서 네 배 가까이 세게 타오르고 (더 작은 별에 더 밝은 코로나가 눌러 담겼다) 풍은 그 타오름을 따라 스케일하니, 활동적인 주황 왜성이 기질대로 바람도 지배한다. 이 분배는 측정된 총량 위에 얹은 가정이며, 산식은 A의 대응 행에 있다.<br></span><span data-en hidden>B takes the lion&#x27;s share of the pair&#x27;s measured combined wind — three quarters of it. Its surface blazes nearly four times harder in X-rays than A&#x27;s (a brighter corona squeezed onto a smaller star), and wind scales with that blaze, so the active orange dwarf dominates the breeze as befits its temperament. The split remains an assumption on top of a measured total; the arithmetic lives in A&#x27;s matching row.<br></span></p>
+  <p class="narrative"><span data-i18n>B는 측정된 합산 풍의 대부분, 사분의 삼을 가져간다. 표면은 A보다 X선에서 네 배 가까이 세게 타오르고 (더 작은 별에 더 밝은 코로나가 눌러 담겼다) 항성풍은 그 세기를 따라가니, 활동적인 주황 왜성이 바람까지 도맡는다. 이 분배는 측정된 총량 위에 얹은 가정이며, 산식은 A의 대응 행에 있다.<br></span><span data-en hidden>B takes the lion&#x27;s share of the pair&#x27;s measured combined wind, three quarters of it. Its surface blazes nearly four times harder in X-rays than A&#x27;s (a brighter corona squeezed onto a smaller star), and wind scales with that blaze, so the active orange dwarf dominates the breeze as befits its temperament. The split remains an assumption on top of a measured total; the arithmetic lives in A&#x27;s matching row.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">1.5 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> <span data-i18n>측정된 것은 합산 ~2 Ṁ⊙뿐(Wood 2001 공유 astrosphere); per-star 분배 A≈0.5/B≈1.5는 Wood 2002 표면 X선 플럭스 가중 가정(Ṁ/area ∝ F_X^1.34; B의 F_X는 더 밝은 Lx + 더 작은 반지름으로 A의 ~3.7배). 현 DB X선(A 26.78 / B 27.04)·반지름(1.223/0.863 R⊙)로 재계산 → Ṁ 비 B/A ≈ 2.9. 구행(B≈0.6)은 재앵커 전 스테일 X선 기반이라 역전돼 있었음. 상세 산식은 A 재게이트 행.<br></span><span data-en hidden>Only the combined ~2 Ṁ⊙ is measured (Wood 2001 shared astrosphere); the per-star split A≈0.5/B≈1.5 is a Wood 2002 surface-X-ray-flux-weighted assumption (Ṁ/area ∝ F_X^1.34; B&#x27;s F_X ~3.7× A&#x27;s from brighter Lx + smaller radius). Recomputed with the current DB X-ray (A 26.78 / B 27.04)·radii (1.223/0.863 R⊙) → Ṁ ratio B/A ≈ 2.9. The old row (B≈0.6) was reversed because it was based on pre-reanchor stale X-ray. Detailed derivation in the A re-gate row.<br></span></div>
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>측정된 것은 합산 ~2 Ṁ⊙뿐(Wood 2001 공유 astrosphere); per-star 분배 A≈0.5/B≈1.5는 Wood 2002 표면 X선 플럭스 가중 가정(Ṁ/area ∝ F_X^1.34; B의 F_X는 더 밝은 Lx + 더 작은 반지름으로 A의 ~3.7배). 현 DB X선(A 26.78 / B 27.04)·반지름(1.223/0.863 R⊙)로 재계산 → Ṁ 비 B/A ≈ 2.9. 상세 산식은 A 재게이트 행.<br></span><span data-en hidden>Only the combined ~2 Ṁ⊙ is measured (Wood 2001 shared astrosphere); the per-star split A≈0.5/B≈1.5 is a Wood 2002 surface-X-ray-flux-weighted assumption (Ṁ/area ∝ F_X^1.34; B&#x27;s F_X ~3.7× A&#x27;s from brighter Lx + smaller radius). Recomputed with the current DB X-ray (A 26.78 / B 27.04)·radii (1.223/0.863 R⊙) → Ṁ ratio B/A ≈ 2.9. Detailed derivation in the A re-gate row.<br></span></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2001ApJ...547L..49W" target="_blank" rel="noopener">2001ApJ...547L..49W</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2002ApJ...574..412W" target="_blank" rel="noopener">2002ApJ...574..412W</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016A%26A...596A..52R" target="_blank" rel="noopener">2016A&amp;A...596A..52R</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a></div>
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
     <code class="axis">appearance</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>B는 따뜻한 황등색으로 빛나, 태양을 빼닮은 짝과 한눈에 다른 별이다. 표면도 더 부산하다. 중위도 흑점군이 여럿에 밝은 반점이 뚜렷하고, granulation은 더 굵으며, 코로나는 A보다 밝고, 플레어도 가끔 인다 — 활동적이되 난폭하진 않다. A와 마찬가지로 물리는 측정값에서 곧장 나오고, 오너의 결정은 텍스처의 흑점 분장이었다 — B가 더 진한 손길을 받았다.<br></span><span data-en hidden>B glows a warm yellow-orange, visibly a different star from its twin-like partner. Its face is busier too: several mid-latitude spot groups with prominent bright patches, coarser granulation, a corona that outshines A&#x27;s, and the occasional flare — active, but never violent. As with A, the physics comes straight from the measurements; the owner&#x27;s call was the spot dressing on the texture, and B got the heavier hand.<br></span></p>
+  <p class="narrative"><span data-i18n>B는 따뜻한 황등색으로 빛나, 태양을 빼닮은 짝과 한눈에 다른 별이다. 표면도 더 부산하다. 중위도에 흑점군이 여럿 있고 밝은 반점이 뚜렷하며, granulation은 더 굵으며, 코로나는 A보다 밝고, 플레어도 가끔 인다. 활동적이되 난폭하진 않다. A와 마찬가지로 물리는 측정값에서 곧장 나오고, 정할 것은 텍스처의 흑점 분장뿐이었고, B에 더 진하게 손을 댔다.<br></span><span data-en hidden>B glows a warm yellow-orange, visibly a different star from its twin-like partner. Its face is busier too: several mid-latitude spot groups with prominent bright patches, coarser granulation, a corona that outshines A&#x27;s, and the occasional flare: active, but never violent. As with A, the physics comes straight from the measurements; the only call was the spot dressing on the texture, and B got the heavier hand.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffdcb0"></span><span class="hx">#ffdcb0</span><div class="fnote p3">Phase 3: K1V, Teff 5316K (황등)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">대류 granule (약간 큼)</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">표준 (적색쪽 강함)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">moderate ~1–3% 피복률, 중위도 흑점군 여럿</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">A보다 밝음 (log Lx 27.04)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">occasional (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> <span data-i18n>관측 측정서 도출(K1V Teff 5316K → sRGB ~#ffdcb0; A의 ~2배 활동도·clean 8.84yr cycle DeWarf2010·X선 log Lx 27.04 &gt; A 26.78 → 흑점 보통 ~1–3%, 중위도 흑점군 여럿 umbra+penumbra + faculae 뚜렷; 플레어 가끔, 플레어성 아님; limb darkening 적색쪽 강함; granulation 약간 큼). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough. 2026-07-12 점검: Teff 5260→5316K(DB), factor~10 제거(A의 특성) — 색 hex는 지각 이하 차이라 유지.<br></span><span data-en hidden>Derived from observed measurements (K1V Teff 5316K → sRGB ~#ffdcb0; ~2× A&#x27;s activity·clean 8.84yr cycle DeWarf2010·X-ray log Lx 27.04 &gt; A 26.78 → moderate spots ~1–3%, several mid-latitude groups umbra+penumbra + prominent faculae; occasional flares, not flare-active; limb darkening stronger toward the red; granulation slightly larger). Spot count=owner-delegated decision (for texture), moderate ~1–3%, more spot groups than A. color=K1V Teff passthrough. 2026-07-12 review: Teff 5260→5316K (DB), factor~10 removed (A&#x27;s property) — the color hex is a below-perception difference, kept.<br></span></div>
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>관측 측정서 도출(K1V Teff 5316K → sRGB ~#ffdcb0; A의 ~2배 활동도·clean 8.84yr cycle DeWarf2010·X선 log Lx 27.04 &gt; A 26.78 → 흑점 보통 ~1–3%, 중위도 흑점군 여럿 umbra+penumbra + faculae 뚜렷; 플레어 가끔, 플레어성 아님; limb darkening 적색쪽 강함; granulation 약간 큼). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough. 2026-07-12 점검: Teff 5260→5316K(DB), factor~10 제거(A의 특성). 색 hex는 지각 이하 차이라 유지.<br></span><span data-en hidden>Derived from observed measurements (K1V Teff 5316K → sRGB ~#ffdcb0; ~2× A&#x27;s activity·clean 8.84yr cycle DeWarf2010·X-ray log Lx 27.04 &gt; A 26.78 → moderate spots ~1–3%, several mid-latitude groups umbra+penumbra + prominent faculae; occasional flares, not flare-active; limb darkening stronger toward the red; granulation slightly larger). Spot count=owner-delegated decision (for texture), moderate ~1–3%, more spot groups than A. color=K1V Teff passthrough. 2026-07-12 review: Teff 5260→5316K (DB), factor~10 removed (A&#x27;s property); the color hex is a below-perception difference, kept.<br></span></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a><a class="ref" href="../../wiki/reference__stellar-photospheric-color-methodology.html" target="_blank" rel="noopener">stellar-photospheric-color-methodology.md</a></div>
 </article>
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
     <code class="axis">bulk.spin_axis_orientation</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>A와 달리 B에는 실제 자전축 측정이 있다 — 그리고 그 측정이 흥미로운 이야기를 한다. 별의 축이 궤도면 극에서 34°나 기울어 있다는, 맛내기로 지어낸 것이 아니라 데이터에서 곧장 읽힌 진짜 스핀-궤도 비정렬이다. 보드는 이를 채택하되, 기울기의 방위각이 미구속이므로 비정렬을 측정된 최솟값으로 유지하는 읽기를 취한다. 불확도가 커서 저신뢰 값으로 남기고, 더 나은 측정이 오면 다시 본다.<br></span><span data-en hidden>Unlike A, B actually has a spin-axis measurement — and it says something interesting: the star&#x27;s axis leans a good 34° away from the orbital plane&#x27;s pole, a genuine spin-orbit misalignment read straight from the data rather than invented for flavor. The board adopts it, taking the reading that keeps the misalignment at its measured minimum since the compass direction of the tilt is unconstrained. The uncertainty is large, so this stays a low-confidence value to be revisited when better measurements arrive.<br></span></p>
+  <p class="narrative"><span data-i18n>A와 달리 B는 자전축이 실제로 측정돼 있다. 그리고 그 값이 흥미롭다. 별의 축이 궤도면 극에서 34°나 기울어 있다는, 재미로 지어낸 값이 아니라 데이터에서 곧장 읽히는 진짜 스핀-궤도 비정렬이다. 기울기가 어느 방향인지는 구속되지 않아, 비정렬은 측정이 허용하는 최솟값으로 잡았다. 불확도가 커서 더 나은 측정이 오면 값이 달라질 수 있다.<br></span><span data-en hidden>Unlike A, B actually has a spin-axis measurement, and it says something interesting: the star&#x27;s axis leans a good 34° away from the orbital plane&#x27;s pole, a genuine spin-orbit misalignment read straight from the data rather than invented for flavor. Which way the tilt points is unconstrained, so the misalignment is taken at the smallest value the measurement allows. The uncertainty is large, and a better measurement could move it.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 45° (LOS 기준, 측정) · PA=궤도극 정렬 → 궤도면 대비 비정렬 ~34°</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> <span data-i18n>측정값 그대로 채택: i★ = 45°(+9/−19), Dumusque 2014 SOAP activity/RV modeling, DB recommended, low-conf. 궤도 경사 ~79° 대비 최소 3D 비정렬 |79−45| ≈ 34° — 비정렬 자체가 측정 함의(interesting-first); 가정은 방위각뿐(PA=궤도극, 최소 비정렬 읽기). ICRS 극 RA/Dec 변환은 emit 단계; 뷰어 i★ 레이어(측정=금색)와 정합. 불확도 커서 low-conf 유지, 후속 측정 시 갱신 후보.<br></span><span data-en hidden>Adopts the measured value as-is: i★ = 45° (+9/−19), Dumusque 2014 SOAP activity/RV modeling, DB recommended, low-conf. vs orbital inclination ~79° → minimum 3D misalignment |79−45| ≈ 34° — the misalignment itself is a measurement implication (interesting-first); the only assumption is the azimuth (PA = orbital pole, minimum-misalignment reading). ICRS pole RA/Dec conversion at the emit stage; consistent with the viewer&#x27;s i★ layer (measured=gold). Kept low-conf due to the large uncertainty; update candidate on follow-up.<br></span></div>
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>측정값 그대로 채택: i★ = 45°(+9/−19), Dumusque 2014 SOAP activity/RV modeling, DB recommended, low-conf. 궤도 경사 ~79° 대비 최소 3D 비정렬 |79−45| ≈ 34°이며 비정렬 자체가 측정 함의(interesting-first); 가정은 방위각뿐(PA=궤도극, 최소 비정렬 읽기). ICRS 극 RA/Dec 변환은 emit 단계; 뷰어 i★ 레이어(측정=금색)와 정합. 불확도 커서 low-conf 유지, 후속 측정 시 갱신 후보.<br></span><span data-en hidden>Adopts the measured value as-is: i★ = 45° (+9/−19), Dumusque 2014 SOAP activity/RV modeling, DB recommended, low-conf. vs orbital inclination ~79° → minimum 3D misalignment |79−45| ≈ 34°; the misalignment itself is a measurement implication (interesting-first); the only assumption is the azimuth (PA = orbital pole, minimum-misalignment reading). ICRS pole RA/Dec conversion at the emit stage; consistent with the viewer&#x27;s i★ layer (measured=gold). Kept low-conf due to the large uncertainty; update candidate on follow-up.<br></span></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D" target="_blank" rel="noopener">2014ApJ...796..133D</a></div>
 </article>
 <article class="dec" id="bulk.geopotential_j2">
@@ -222,35 +243,25 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">bulk.geopotential_j2</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>회전 편평 J2 = 5.7e-8. 같은 태양앵커 스케일링: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot 41±3d) → J2 5.7e-8 (±~15%). reference_radius = 적도반경 6.005e8 m. 느린 자전+작은 반지름이라 태양의 ~1/4 — 그래도 오너 정책대로 emit. 상세 산식·정책은 A 행 및 body-figure-methodology §2 참조.<br></span><span data-en hidden>Rotational flattening J2 = 5.7e-8. Same solar-anchored scaling: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot 41±3d) → J2 5.7e-8 (±~15%). reference_radius = equatorial radius 6.005e8 m. Slower rotation+smaller radius, so ~1/4 the Sun&#x27;s — but emitted per owner policy. See the A row and body-figure-methodology §2 for the detailed derivation·policy.<br></span></p>
+  <p class="narrative"><span data-i18n>회전 편평 J2 = 5.7e-8. 태양 기준 스케일링: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot 41±3d) → J2 5.7e-8 (±~15%). 적도반경 6.005e8 m. 태양의 ~1/4.<br></span><span data-en hidden>Rotational flattening J2 = 5.7e-8. Solar-scaled: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot 41±3d) → J2 5.7e-8 (±~15%). Equatorial radius 6.005e8 m. ~1/4 the Sun&#x27;s.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">5.7e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">6.005e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> <span data-i18n>q(5.48e-6, DB recommended) × 태양 측정 J2/q(0.0105) = 5.7e-8. K1V는 태양보다 응집 약간 덜해 실제값은 소폭 위일 수 있으나(계수 상향 여지) 차수 불변 — FGK 근사 범위 내.<br></span><span data-en hidden>q (5.48e-6, DB recommended) × measured solar J2/q (0.0105) = 5.7e-8. K1V is slightly less condensed than the Sun, so the actual value may be marginally higher (room for an upward coefficient), but the order is unchanged — within the FGK approximation range.<br></span></div>
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>q(5.48e-6, DB recommended) × 태양 측정 J2/q(0.0105) = 5.7e-8. K1V는 태양보다 응집 약간 덜해 실제값은 소폭 위일 수 있으나(계수 상향 여지) 차수 불변이며 FGK 근사 범위 내.<br></span><span data-en hidden>q (5.48e-6, DB recommended) × measured solar J2/q (0.0105) = 5.7e-8. K1V is slightly less condensed than the Sun, so the actual value may be marginally higher (room for an upward coefficient), but the order is unchanged, within the FGK approximation range.<br></span></div>
   <div class="refs"><a class="ref" href="../../wiki/reference__body-figure-methodology.html" target="_blank" rel="noopener">body-figure-methodology.md</a></div>
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
     <code class="axis">bulk</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>§3.2 앵커 — DB 측정 passthrough 에코: mass 0.9373 M⊙ · radius 0.8632 R⊙(6.005e8 m) · P_rot 41 d · age 5.3 Gyr. gravity 345 m/s² = GM/R² 파생 에코. spin_axis_orientation·geopotential_j2 (+reference_radius)는 전용 행이 담당(union rule).<br></span><span data-en hidden>§3.2 anchor — DB-measured passthrough echo: mass 0.9373 M⊙ · radius 0.8632 R⊙ (6.005e8 m) · P_rot 41 d · age 5.3 Gyr. gravity 345 m/s² = GM/R² derived echo. spin_axis_orientation·geopotential_j2 (+reference_radius) are handled by dedicated rows (union rule).<br></span></p>
+  <p class="narrative"><span data-i18n>mass 0.9373 M⊙ · radius 0.8632 R⊙(6.005e8 m) · P_rot 41 d · age 5.3 Gyr · gravity 345 m/s². 전부 관측으로 측정되어 있다.<br></span><span data-en hidden>mass 0.9373 M⊙ · radius 0.8632 R⊙ (6.005e8 m) · P_rot 41 d · age 5.3 Gyr · gravity 345 m/s². All measured.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">0.9373 <span class="u">M_sun</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radius</td><td class="v">0.8632 <span class="u">R_sun</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">gravity</td><td class="v">345 <span class="u">m/s2</span><div class="fnote p3">Phase 3: GM/R² 파생 에코</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flattening</td><td class="v">2.8e-06<div class="fnote">= (3J₂+q)/2 파생 에코 (J₂ 5.7e-8, q 5.5e-6) — 시각 oblate 슬롯</div></td><td class="o"></td></tr><tr><td class="k">rotation_period</td><td class="v">41 <span class="u">d</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">age</td><td class="v">5.3 <span class="u">Gyr</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016A%26A...594A.107K" target="_blank" rel="noopener">2016A&amp;A...594A.107K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016A%26A...586A..90P" target="_blank" rel="noopener">2016A&amp;A...586A..90P</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2018ApJ...864...99J" target="_blank" rel="noopener">2018ApJ...864...99J</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2017A%26A...597A.137K" target="_blank" rel="noopener">2017A&amp;A...597A.137K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2006A%26A...446..635B" target="_blank" rel="noopener">2006A&amp;A...446..635B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2003A%26A...404.1087K" target="_blank" rel="noopener">2003A&amp;A...404.1087K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2004A%26A...417..235E" target="_blank" rel="noopener">2004A&amp;A...417..235E</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2002A%26A...392L...9T" target="_blank" rel="noopener">2002A&amp;A...392L...9T</a></div>
-</article>
-<article class="dec" id="identity.discoverability">
-  <div class="dec-head">
-    <code class="axis">identity.discoverability</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
-  </div>
-  <p class="narrative"><span data-i18n>ResearchBodies 정책상 항성은 항상 가시. A와 동일.<br></span><span data-en hidden>Per ResearchBodies policy, stars are always visible. Same as A.<br></span></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">discoverability</td><td class="v">always visible (star)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
-  
-  
-  
 </article></div>
 <div class="bodynav"><a class="navlink" href="alpha-centauri-a.html">← Alpha Centauri A</a><a class="navlink" href="dante.html">Dante →</a></div>
+<div class="stamp">빌드 2026-07-28 13:41 · b31ecf7+미커밋</div>
 </div>
 <script>
 const b=document.body;

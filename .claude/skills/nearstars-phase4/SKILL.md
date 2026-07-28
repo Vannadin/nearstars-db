@@ -47,11 +47,11 @@ Phase 4 is **partially built**, not fully wired:
 - ✅ Boards exist for 6 confirmed systems; **only `alpha_centauri.yaml` is
   schema v2** — the other five are legacy v1 and must be migrated before they
   are emit-parseable. `trappist_1` and `luhman_16` have **no board yet**.
-- ⚠️ **Emit wiring is aspirational for 3 of 4 writers.** SPEC §4/§6 say the cfg
-  writers read the Phase 4 layer, but today only `researchbodies-cfg` reads
-  `phase4/<system>.yaml` (and via a *mismatched* contract — it reads a top-level
-  `discoverability:` list; the boards store `decisions[].discoverability_cfg`).
-  `kopernicus`/`principia`/`firefly` do not read Phase 4 at all yet.
+- ⚠️ **Emit wiring is aspirational: no writer reads the Phase 4 layer yet.**
+  SPEC §4/§6 say the cfg writers consume it, but `kopernicus`/`principia`/`firefly`
+  do not. `researchbodies-cfg` used to be the one partial consumer; the boards'
+  discoverability layer was retired on 2026-07-28 (owner is rebuilding that mod for
+  NearStars), so the only thing identity now carries for it is `fictional: true`.
 - So **Phase 4 today = authoring gated boards.** Actual cfg emit is deferred to
   project-end (owner decision). The known defects + remediation order are in
   [`phase4/_audit/emit-readiness-review.md`](../../../phase4/_audit/emit-readiness-review.md).

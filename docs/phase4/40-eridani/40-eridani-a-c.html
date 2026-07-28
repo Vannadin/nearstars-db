@@ -84,6 +84,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -116,7 +133,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
@@ -151,15 +168,30 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">11 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 8 gated · 0 divergence</span></div>
+<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
-  <p class="narrative">body_type=**수성형 작은 암석 행성**(수성 쌍둥이) — R ≈ 2,440 km(0.383 R⊕) · **0.38 g** · M **0.055 M⊕** · ρ ~5.4 g/cm³ (iron-rich). designation=**40 Eridani A c (Twoworld)** — 별에서 2번째 행성(b Erid 0.224 &lt; **c 0.40** &lt; d Threeworld 0.635). **우리 합성 바디**(관측 근거 0 — 40 Eri A 확정 행성 없음): c-d 근접 2:1 공명을 성립시키는 anchor로 도입(REBOUND로 검증). 문화=**에리디언 명명 패턴 확장** — 3번째를 무성의하게 &quot;Threeworld&quot;라 부른 종족이니 2번째는 **&quot;Twoworld&quot;**(오너 결정 2026-06-25). discoverability=**FFFF**(category `fictional` — 합성+소형+무특징, 실측 0 → 항상 발견).<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">수성형 작은 암석 행성 (수성 쌍둥이; R 2,440 km 0.383 R⊕, 0.38 g, 0.055 M⊕, ρ ~5.4 g/cm³)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">40 Eridani A c (Twoworld) — 별에서 2번째 행성</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Twoworld (Eridian 명명 패턴 확장)</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">fictional (합성 filler, 실측 0 → 항상 발견 FFFF)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">body_type=**수성형 작은 암석 행성**(수성 쌍둥이) — R ≈ 2,440 km(0.383 R⊕) · **0.38 g** · M **0.055 M⊕** · ρ ~5.4 g/cm³ (iron-rich). designation=**40 Eridani A c (Twoworld)** — 별에서 2번째 행성(b Erid 0.224 &lt; **c 0.40** &lt; d Threeworld 0.635). **우리 합성 바디**(관측 근거 0 — 40 Eri A 확정 행성 없음): c-d 근접 2:1 공명을 성립시키는 anchor로 도입(REBOUND로 검증). 문화=**에리디언 명명 패턴 확장** — 3번째를 무성의하게 &quot;Threeworld&quot;라 부른 종족이니 2번째는 **&quot;Twoworld&quot;**(오너 결정 2026-06-25).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">수성형 작은 암석 행성 (수성 쌍둥이; R 2,440 km 0.383 R⊕, 0.38 g, 0.055 M⊕, ρ ~5.4 g/cm³)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">40 Eridani A c (Twoworld) — 별에서 2번째 행성</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Twoworld (Eridian 명명 패턴 확장)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="disc"><span class="tag">discoverability</span> <code>fictional</code> · IGNORELEVELS <code>F F F F</code></div><div class="ev"><span class="tag">evidence</span> 오너 c1 확정 2026-06-25 — Twoworld(40 Eri A c), 우리 합성 filler(공명 anchor, canon 아님). 수성 쌍둥이(0.055 M⊕·0.38g). 별명=Twoworld(Eridian 패턴 확장, 오너 선택). disc=FFFF(fictional 합성).<br></div>
+  <div class="ev"><span class="tag">evidence</span> 오너 c1 확정 2026-06-25 — Twoworld(40 Eri A c), 우리 합성 filler(공명 anchor, canon 아님). 수성 쌍둥이(0.055 M⊕·0.38g). 별명=Twoworld(Eridian 패턴 확장, 오너 선택). disc=FFFF(fictional 합성).<br></div>
   
 </article>
 <article class="dec" id="orbit">
@@ -187,7 +219,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="atmosphere">
   <div class="dec-head">
     <code class="axis">atmosphere</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">**대기 없음**(맨돌) — 높은 insolation(Teq ~353K, substellar ~490K) + 낮은 탈출속도(0.38g, v_esc ~4 km/s) → cosmic shoreline **아래**(수성·달과 동일 영역). 수성식 **sputter exosphere**(미량 Na/K 등 표면 충돌 기원)는 가능하나 cfg 미모델(무시급). passthrough(없음).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">composition</td><td class="v">none (맨돌; Teq ~353K·substellar ~490K + 낮은 탈출속도 0.38g → cosmic shoreline 아래)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -220,7 +252,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
     <code class="axis">magnetism.magnetic_field</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">자기장 **무시급/없음** — 소형(0.055 M⊕)·식은 몸. (수성이 큰 금속핵으로 약한 ~1% 지구 dipole을 갖긴 하나, 그건 수성 특수 케이스 — 보수적으로 글로벌 dynamo 미작동 가정.) 표면 자기 차폐 없음 → c8 환경. passthrough(없음/무시급).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">무시급/없음 (소형 0.055 M⊕·식은 몸, 글로벌 dynamo 미작동 가정)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -231,7 +263,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="environment">
   <div class="dec-head">
     <code class="axis">environment</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">자기권 없음(c7) + 대기 없음 → 표면이 **40 Eri A 항성풍·UV·우주선에 노출**. radiation_surface=**보통~높음**(40 Eri A X선 ~3× 태양, 0.40 AU라 Erid 0.224보다 약하나 d 0.635보다 강함). 삼중성 B·C는 ~400 AU 밖 무관. 도출 passthrough.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">보통~높음 (40 Eri A X선 ~3× 태양, 0.40 AU; 자기권·대기 없음)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -273,6 +305,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="40-eridani-a-b.html">← 40 Eridani A b</a><a class="navlink" href="40-eridani-a-d.html">40 Eridani A d →</a></div>
+<div class="stamp">빌드 2026-07-28 13:41 · b31ecf7+미커밋</div>
 </div>
 <script>
 const b=document.body;

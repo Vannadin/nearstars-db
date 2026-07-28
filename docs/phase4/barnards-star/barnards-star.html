@@ -84,6 +84,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -116,7 +133,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
@@ -151,21 +168,36 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">9 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 4 gated · 0 divergence</span></div>
+<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">body_type=M4.0Ve 적색왜성 — 로스터 최고령(8.5 Gyr)·최저활동 급의 조용한 노익성. designation=Barnard&#x27;s star (GJ 699). discoverability=confirmed(V 9.5로 맨눈 불가, 1916 E.E. Barnard 고유운동 측정으로 유명해진 망원경 천체 — Proxima identity 행과 같은 패턴).<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">M4.0Ve 적색왜성 (조용한 노익성)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Barnard&#x27;s star (GJ 699)</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">confirmed (맨눈 불가, 망원경 — Barnard 1916 고유운동)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">body_type=M4.0Ve 적색왜성 — 로스터 최고령(8.5 Gyr)·최저활동 급의 조용한 노익성. designation=Barnard&#x27;s star (GJ 699).5로 맨눈 불가, 1916 E.E. Barnard 고유운동 측정으로 유명해진 망원경 천체 — Proxima identity 행과 같은 패턴).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">M4.0Ve 적색왜성 (조용한 노익성)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Barnard&#x27;s star (GJ 699)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="disc"><span class="tag">discoverability</span> <code>confirmed</code> · IGNORELEVELS <code>T F F F</code></div><div class="ev"><span class="tag">evidence</span> V 9.5 → naked_eye 불가, category=confirmed(망원경 검출사 정합). Proxima(11등, confirmed)와 동일 정책.<br></div>
+  <div class="ev"><span class="tag">evidence</span> V 9.5 → naked_eye 불가, category=confirmed(망원경 검출사 정합). Proxima(11등, confirmed)와 동일 정책.<br></div>
   
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
     <code class="axis">bulk</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">§3.2 앵커 — DB 측정 passthrough 에코: M 0.162±0.007 M☉ · R 0.187±0.001 R☉ · L 0.003558 L☉(전부 Schweitzer2019) · P_rot 145d(Toledo-Padrón2019) · age 8.5±1.5 Gyr(Ribas2018) · Teff 3195±28K(González Hernández2024) · [Fe/H] −0.39(Jahandar2023). gravity 1271 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯). spin_axis_orientation·geopotential_j2(+reference_radius)는 전용 행이 담당(union rule). 전부 고신뢰 측정 → emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">0.162 <span class="u">M_sun</span><div class="fnote">±0.007 (Schweitzer2019)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radius</td><td class="v">0.187 <span class="u">R_sun</span><div class="fnote">±0.001 (Schweitzer2019, 각지름 0.952 mas)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">gravity</td><td class="v">1271 <span class="u">m/s2</span><div class="fnote p3">Phase 3: GM/R² 파생 에코</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flattening</td><td class="v">1.6e-08<div class="fnote">= (3J₂+q)/2 파생 에코 (J₂ 2.2e-9, q 2.58e-8) — 시각 oblate 슬롯</div></td><td class="o"></td></tr><tr><td class="k">intrinsic_luminosity</td><td class="v">0.003558 <span class="u">L_sun</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">rotation_period</td><td class="v">145 <span class="u">d</span><div class="fnote">±15 (Toledo-Padrón2019, 로스터 최장)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">age</td><td class="v">8.5 <span class="u">Gyr</span><div class="fnote">±1.5 (Ribas2018). Teff 3195±28K (GH2024)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -176,7 +208,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="appearance">
   <div class="dec-head">
     <code class="axis">appearance</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">color=M4.0V 물리색 #ffd487(옅은 따뜻한 주황 — 실측 Pickles M4 SED→CIE; 방법론 문서의 진단 예시가 정확히 이 온도대: 40 Eri C 3167K vs Barnard 3195K). granulation=M왜성 대류 granule. limb_darkening α~0.4 (Claret2018 M-dwarf 보간, Proxima와 동일 tie-break). **spots_faculae=소수 ~0.5–1%**(오너 결정 2026-07-12 — 극저활동 노익성이나 145d 광도 변조 검출 이력이 있어 완전 무점은 아님; α Cen A보다 조금 더 있는 수준). corona=미약(X선 log Lx 25.3 — 로스터 항성 중 최저급). flares=드묾(정온 노익성; France2020 FUV 소플레어 검출 이력은 있음 → &quot;아예 없음&quot; 아님).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffd487"></span><span class="hx">#ffd487</span><div class="fnote p3">Phase 3: M4.0V, Teff 3195K (Pickles SED 물리색)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">M왜성 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.4<div class="fnote">α~0.4 (Claret2018 M-dwarf 보간)</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">~0.5–1% 피복률 (소수 — 오너 결정)</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">faint (X-ray log Lx 25.3, 로스터 최저급)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (정온 노익성; FUV 소플레어 이력 있음)</td><td class="o"></td></tr></tbody></table>
@@ -187,7 +219,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
     <code class="axis">magnetism.magnetic_field</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">평균 표면장 430 G(Reiners2022 CARMENES Zeeman). ZDI 대규모장 성분은 미큐레이션 — 측정 emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">0.43 <span class="u">kG</span><div class="fnote">평균 표면장 (Reiners2022 CARMENES)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -198,7 +230,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="environment.activity">
   <div class="dec-head">
     <code class="axis">environment.activity</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">P_rot 145±15d(Toledo-Padrón2019 — 로스터 최장) · log R&#x27;HK −5.82±0.08(최저활동) · X선 log Lx 25.3 / log Rx −5.8(France2020). 활동 사이클은 DB 미큐레이션. 측정 emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">P_rot 145±15d, log R&#x27;HK −5.82±0.08, X-ray log Lx 25.3 (log Rx −5.8)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -209,7 +241,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="environment.stellar_wind">
   <div class="dec-head">
     <code class="axis">environment.stellar_wind</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">Ṁ ≤ 0.2 Ṁ☉(Wood2021 astrospheric Lyα, 상한). 정온 노익성이라 풍 약함 — Proxima와 같은 등급의 상한.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">0.2 <span class="u">Mdot_sun</span><div class="fnote">≤0.2 상한 (Wood2021)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -220,7 +252,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="environment.heliosphere">
   <div class="dec-head">
     <code class="axis">environment.heliosphere</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">고속 항성 고유운동 → 항성 기준 ISM 유입 121 km/s(LIC, 유입각 θ 43°, Wood2021 — αCen계 ~25 km/s의 ~5배) → 강하게 압축된 혜성형 astrosphere. standoff 수치는 DB 미큐레이션(풍이 상한뿐이라 하한 불가) — 유입 벡터만 emit(뷰어 heliosphere 레이어와 동일 소스).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">heliosphere</td><td class="v">압축 혜성형 astrosphere (ISM 유입 121 km/s, θ 43°, LIC — Wood2021)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -251,6 +283,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939isss.book.....C" target="_blank" rel="noopener">1939isss.book.....C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S" target="_blank" rel="noopener">2019A&amp;A...625A..68S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.5145T" target="_blank" rel="noopener">2019MNRAS.488.5145T</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="system-wide.html">* →</a></div>
+<div class="stamp">빌드 2026-07-28 13:41 · b31ecf7+미커밋</div>
 </div>
 <script>
 const b=document.body;

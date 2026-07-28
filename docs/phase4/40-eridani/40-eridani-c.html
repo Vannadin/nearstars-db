@@ -84,6 +84,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -116,7 +133,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
@@ -151,21 +168,36 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">7 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 4 gated · 0 divergence</span></div>
+<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">body_type=**M4.5 Ve 플레어 별**(변광성 DY Eri) — 지속 Hα·광도 플레어, 태양 근접 활성 M왜성. **백색왜성 B와 233년 BC 쌍성**(e 0.41, 평균 ~33 AU). 행성 없음(큐레이션). designation=40 Eridani C(GJ 166 C · HIP 19849 C · DY Eri). discoverability=**V 11.17, 맨눈 아님 → 망원경 confirmed** → RB T F F F.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">M4.5 Ve 플레어 별 (변광성 DY Eri)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">40 Eridani C (GJ 166 C · HIP 19849 C · DY Eri)</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">telescopic confirmed (V 11.17)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">body_type=**M4.5 Ve 플레어 별**(변광성 DY Eri) — 지속 Hα·광도 플레어, 태양 근접 활성 M왜성. **백색왜성 B와 233년 BC 쌍성**(e 0.41, 평균 ~33 AU). 행성 없음(큐레이션). designation=40 Eridani C(GJ 166 C · HIP 19849 C · DY Eri).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">M4.5 Ve 플레어 별 (변광성 DY Eri)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">40 Eridani C (GJ 166 C · HIP 19849 C · DY Eri)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="disc"><span class="tag">discoverability</span> <code>confirmed</code> · IGNORELEVELS <code>T F F F</code></div><div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 비맨눈 별 TFFF(B·Proxima 선례). 활성 플레어 M왜성. C가 백색왜성 B를 ~33 AU서 공전하는 BC 쌍성.<br></div>
+  <div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 비맨눈 별 TFFF(B·Proxima 선례). 활성 플레어 M왜성. C가 백색왜성 B를 ~33 AU서 공전하는 BC 쌍성.<br></div>
   
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
     <code class="axis">bulk</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">M 0.198±0.004 M☉(Mason2021 동역학) · R 0.274±0.011 R☉(Mann2015) · Teff 3167±61K(Mann2015 BT-Settl 핏) · L 6.51e-3 L☉ (Cifuentes2020 CARMENES) · [Fe/H] −0.21(Mann2015). 자전 P_rot=**meta_notes-only**(Shan2024 8.56d, 그 논문 품질등급 D=최하위 /debated라 정식 채택 안 함, Open item). gravity 723 m/s² = GM/R² 파생 에코. age 1.8 Gyr = 계 coeval 상속(A 행 IFMR age — B 전구체 근거). 측정 passthrough. [2026-07-12: 구 &quot;figure/obliquity = OMIT confirm&quot;(2026-06-26)은 항성 J2 상시-emit 오너 정책으로 대체 — 아래 bulk.geopotential_j2 / bulk.spin_axis_orientation 행이 live.]<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">0.198 <span class="u">M_sun</span><div class="fnote">±0.004 (Mason2021 동역학)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radius</td><td class="v">0.274 <span class="u">R_sun</span><div class="fnote">±0.011 (Mann2015); Teff 3167±61K</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">gravity</td><td class="v">723 <span class="u">m/s2</span><div class="fnote p3">Phase 3: GM/R² 파생 에코</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flattening</td><td class="v">1.2e-05<div class="fnote">= (3J₂+q)/2 파생 에코 (J₂ 1.6e-6, q 1.9e-5) — 시각 oblate 슬롯</div></td><td class="o"></td></tr><tr><td class="k">age</td><td class="v">1.8 <span class="u">Gyr</span><div class="fnote">계 coeval 상속 (A 행 IFMR age, Bond2017 근거 공유)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">intrinsic_luminosity</td><td class="v">0.00651 <span class="u">L_sun</span><div class="fnote">Cifuentes2020 CARMENES; [Fe/H] −0.21</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">rotation_period</td><td class="v">8.56 <span class="u">d</span><div class="fnote">Shan2024 meta_notes-only (품질등급 D/debated, Open item)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -176,7 +208,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="appearance">
   <div class="dec-head">
     <code class="axis">appearance</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">color=**물리색 `#ffd587`**(옅은 따뜻한 주황) — 실측 Pickles M4.5 SED를 CIE 엔진에 통과시킨 값. 흑체 3167K=#ffbe78도 거의 맞고(살짝 더 채도 높을 뿐), 실측은 오히려 약간 더 옅음. TiO/VO/H₂O 분자밴드는 색지수·광도엔 크게 작용하나 밝기-정규화한 표시 색조는 거의 안 바뀜(항성광구색 문서 정정판). M4.5·3167K는 **Barnard(M4·3195K, #ffd487)에 사실상 일치**. 옛 사다리 #cf5a30(벽돌색)은 광도와 색조를 혼동한 render 짐작이라 폐기. spots/faculae=**활발**(DY Eri 플레어·지속 Hα — 활성 M왜성).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffd587"></span><span class="hx">#ffd587</span><div class="fnote">실측 Pickles M4.5 SED→CIE; Barnard #ffd487 앵커; 흑체 3167K #ffbe78도 근사; 옛 #cf5a30 폐기</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">활발 (DY Eri 플레어·지속 Hα)</td><td class="o"></td></tr></tbody></table>
@@ -187,7 +219,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
     <code class="axis">magnetism.magnetic_field</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">강한 자기장 — 활성 플레어 M왜성(변광성 DY Eri)으로 kG급 표면장 예상(Proxima M5.5 유사 dynamo). 직접 측정(Zeeman/ZDI)은 없으나 지속 Hα·광도 플레어가 강한 dynamo의 표현이고, 빠른 자전 추정(Shan2024 8.56d, 품질등급 D=meta_notes-only)· 비교적 젊은 시스템 나이(~1.8 Gyr coeval)와 정합. 완전대류 M왜성의 turbulent dynamo. 도출/정성 상한 → emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">강한 (kG급 예상, 활성 플레어 M왜성; 직접 측정 없음, 완전대류 turbulent dynamo)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -198,7 +230,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="environment">
   <div class="dec-head">
     <code class="axis">environment</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">플레어 지배 — DY Eri는 잦은 광도 플레어를 내는 활성 M왜성이라 국소 space weather가 거칠다(C엔 행성 없어 영향받을 바디는 없음). **BC 쌍성 맥락**: C가 백색왜성 B를 e 0.41·평균 ~33 AU로 공전하는 233년 쌍성 → Teff 17,200K인 B의 hard UV/EUV가 BC 영역을 비추나, 거리상 C 광구엔 거의 무관(C 자체 플레어가 지배). radiation은 자체 플레어 구동. A(K0.5V)와는 ~400 AU 밖이라 상호 무관. 고속 이동 시스템(V_ISM ~127 km/s, A와 공통). 도출/정성 → emit 그대로. 별-레벨 5축으로 C 완료.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">플레어 지배 (잦은 광도 플레어, 활성 M왜성 DY Eri)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radiation</td><td class="v">자체 플레어 구동 (C엔 행성 없음)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -229,6 +261,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939isss.book.....C" target="_blank" rel="noopener">1939isss.book.....C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2024A%26A...684A...9S" target="_blank" rel="noopener">2024A&amp;A...684A...9S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M" target="_blank" rel="noopener">2015ApJ...804...64M</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M" target="_blank" rel="noopener">2021AJ....162...53M</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="40-eridani-b.html">← 40 Eridani B</a><a class="navlink" href="40-eridani-a-b.html">40 Eridani A b →</a></div>
+<div class="stamp">빌드 2026-07-28 13:41 · b31ecf7+미커밋</div>
 </div>
 <script>
 const b=document.body;

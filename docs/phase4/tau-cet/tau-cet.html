@@ -84,6 +84,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -116,7 +133,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
@@ -151,21 +168,36 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">7 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 4 gated · 0 divergence</span></div>
+<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">body_type=**조용한 늙은 금속-빈약 G8.5V 솔라 아날로그**(태양보다 약간 차갑고 어둡고 철-빈약). 태양 최근접 **단일** Sun-like 별(3.65 pc), SETI 고전 타깃(Project Ozma 1960). designation=τ Ceti(HD 10700 · HIP 8102 · GJ 71). discoverability=**맨눈**(V=3.5, Cetus 육안) → RB IGNORELEVELS T T T T(항상 가시).<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">조용한 늙은 금속-빈약 G8.5V 솔라 아날로그</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">tau Ceti (HD 10700 · HIP 8102 · GJ 71)</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">naked_eye (V=3.5)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">body_type=**조용한 늙은 금속-빈약 G8.5V 솔라 아날로그**(태양보다 약간 차갑고 어둡고 철-빈약). 태양 최근접 **단일** Sun-like 별(3.65 pc), SETI 고전 타깃(Project Ozma 1960). designation=τ Ceti(HD 10700 · HIP 8102 · GJ 71).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">조용한 늙은 금속-빈약 G8.5V 솔라 아날로그</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">tau Ceti (HD 10700 · HIP 8102 · GJ 71)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="disc"><span class="tag">discoverability</span> <code>naked_eye</code> · IGNORELEVELS <code>T T T T</code></div><div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배).</div>
+  <div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배).</div>
   
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
     <code class="axis">bulk</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">§3.2 앵커 — DB 측정 passthrough 에코: M 0.783±0.012 M☉(Teixeira2009 asteroseismology) · R 0.793±0.004 R☉ (Korolik2023 CHARA/MIRC-X 간섭계) · Teff 5370±20K(Korolik2023) · L 0.488 L☉(Teixeira2009) · [Fe/H] −0.52±0.01 (Santos2013, 매우 철-빈약=시스템 정체성) · age ~10 Gyr(Di Folco2004 isochrone; **documented-divergence** vs Mamajek2008 5.8 Gyr — Phase3서 ~10 채택, 범위 4.4–12.4) · P_rot 46±4d(Korolik2023 gyro; **documented-divergence** vs Baliunas1996 34d — Phase3서 46 채택, Boro Saikia2018 ZDI 지지). gravity 342 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯). spin_axis_orientation·geopotential_j2(+reference_radius)는 전용 행이 담당(union rule). 전부 측정/Phase3 해결값 → emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">0.783 <span class="u">M_sun</span><div class="fnote">±0.012 (Teixeira2009)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radius</td><td class="v">0.793 <span class="u">R_sun</span><div class="fnote">±0.004 (Korolik2023 CHARA/MIRC-X)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">gravity</td><td class="v">342 <span class="u">m/s2</span><div class="fnote p3">Phase 3: GM/R² 파생 에코</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flattening</td><td class="v">2.1e-06<div class="fnote">= (3J₂+q)/2 파생 에코 (J₂ 4.2e-8, q 4.0e-6) — 시각 oblate 슬롯</div></td><td class="o"></td></tr><tr><td class="k">intrinsic_luminosity</td><td class="v">0.488 <span class="u">L_sun</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">age</td><td class="v">10 <span class="u">Gyr</span><div class="fnote">Di Folco2004; Phase3 해결값 (범위 4.4–12.4)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">rotation_period</td><td class="v">46 <span class="u">d</span><div class="fnote">±4 (Korolik2023 gyro; Phase3 해결값)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -176,7 +208,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="appearance">
   <div class="dec-head">
     <code class="axis">appearance</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">color=**물리색 `#ffeddf`** (Teff 5370K 흑체→sRGB 실측 `#ffecdd` + [Fe/H]−0.52 블루 nudge; 거의 흰-따뜻) — 색은 **Teff 5370K 지배**(태양 5772K보다 ~400K 낮아 더 노랑; sRGB 블루채널 Δ~13). **금속빈약은 line blanketing 약화로 sub-perceptual 블루 nudge**(+15~70K 등가, B−V ~0.02–0.03, sRGB 블루 +~2 — 역치 아래지만 방향 맞아 반영; Ramírez&amp;Meléndez2005·Casagrande2010·Huang2015 색-Teff-[Fe/H] 보정. [[feedback_skip_metallicity]] 정합). limb_darkening α 0.14(Korolik2023 H-band 간섭계 직접측정). spots/faculae=**매우 낮음**(log R&#x27;HK −4.977 극비활동; 장기 거동은 environment 행의 양립 표기 참조 — α Cen A보다 조용).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffeddf"></span><span class="hx">#ffeddf</span><div class="fnote p3">Phase 3: Teff 5370K 흑체 #ffecdd + 금속빈약 블루 nudge</div></td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.14<div class="fnote">α (Korolik2023 H-band 간섭계 직접측정)</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">very low (log R&#x27;HK −4.977 극비활동)</td><td class="o"></td></tr></tbody></table>
@@ -187,7 +219,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
     <code class="axis">magnetism.magnetic_field</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">약한 Sun-like 자기장 — **대규모장 0.17 G**(Chiti et al. 2025, DB recommended — 2026-07-12 점검서 반영; 이전 보드는 수치 없이 &quot;Zeeman 한계 ~50 G 아래·Boro Saikia2018 ZDI 약함&quot;만 기록). 극저활동(log R&#x27;HK −4.977)·늙은 나이(~10 Gyr)와 정합한 조용한 dynamo. 측정 emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">0.17 <span class="u">G</span><div class="fnote">대규모장 (Chiti2025); Boro Saikia2018 ZDI 정합</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -198,7 +230,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="environment">
   <div class="dec-head">
     <code class="axis">environment</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">activity=**사실상 flat**(Baum2022 ~50yr 모니터링 — 가장 자기조용 Sun-like 중 하나; GdS2021은 약한 ~11yr 후보 +장기하락을 시사 — 양립 표기: &quot;무~극약 사이클&quot;, DB에 cycle 미큐레이션). X선 **log Lx 26.69 검출**(Schmitt &amp; Liefke 2004, DB recommended — 2026-07-12 점검: 구기록 &quot;EXOSAT 상한 ≤26.5(Schmitt1985)&quot;를 검출값으로 교체). stellar_wind=**약함** Ṁ ≤ 0.1 Ṁ☉(Wood2021 astrospheric Lyα 상한). heliosphere: ISM 유입 ~50 km/s, astrosphere standoff **≲19 AU**(작음). radiation_surface ~0.6×태양(낮음). 행성계 space weather 매우 온화(K·M왜성식 XUV-구동 대기손실 없음 → 내행성 손실은 thermal Jeans 기본). 측정/상한 → emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">log R&#x27;HK −4.977; 사실상 flat (Baum2022; GdS2021 약한 ~11yr 후보 양립); X-ray log Lx 26.69 (S&amp;L2004)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">stellar_wind</td><td class="v">0.1 <span class="u">Mdot_sun</span><div class="fnote">≤0.1 상한 (Wood2021)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">heliosphere</td><td class="v">astrosphere standoff ≲19 AU (ISM 유입 ~50 km/s)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radiation</td><td class="v">~0.6× 태양 (낮음, flat)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -209,7 +241,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
     <code class="axis">bulk.spin_axis_orientation</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">i★ = 7°±7° 측정 채택(Korolik2023 간섭계+v sin i — **거의 극향(pole-on)**). 디스크 경사 i~35° (MacGregor2016 ALMA)와 어긋나 **별-디스크 최소 비정렬 ~28°** — 둘 다 측정이라 실측 기반의 흥미로운 읽기 (Korolik2023 본문이 직접 논의한 misalignment). 행성 궤도 경사는 미측정 — emit 배향 시 행성면은 디스크면 기준이 자연스러움(디스크=행성계 강착면). 극 방위각: 디스크 PA 105° 활용 가능. ICRS 변환은 emit 단계.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 7°±7° (LOS 기준, 측정) · 디스크(i 35°, PA 105°)와 최소 ~28° 비정렬</td><td class="o"></td></tr></tbody></table>
@@ -229,6 +261,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P" target="_blank" rel="noopener">1998MNRAS.297L..76P</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K" target="_blank" rel="noopener">2023AJ....166..123K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009A%26A...494..237T" target="_blank" rel="noopener">2009A&amp;A...494..237T</a></div>
 </article></div>
 
+<div class="stamp">빌드 2026-07-28 13:41 · b31ecf7+미커밋</div>
 </div>
 <script>
 const b=document.body;

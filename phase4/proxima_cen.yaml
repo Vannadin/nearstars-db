@@ -1,5 +1,5 @@
 # Proxima Centauri (α Cen C / GJ 551) Phase 4 결정 보드 — 별 + 행성 b/c/d. (body × axis) 행별 상태. DB 불변, staging 기록
-# 실관측 시스템 → 대부분 Phase 3 측정/합성값 passthrough, 소수 art/divergence + discoverability만 결정. grounding=docs/phase3/proxima-cen*.md
+# 실관측 시스템 → 대부분 Phase 3 측정/합성값 passthrough, 소수 art/divergence만 결정. grounding=docs/phase3/proxima-cen*.md
 schema_version: 2
 system: proxima_cen
 status: staged
@@ -13,7 +13,7 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=M5.5Ve 적색왜성(플레어 별). 태양 최근접성, α Cen AB에 ~13,000 AU 약결합. designation=Proxima Centauri
-      (α Cen C / GJ 551). discoverability=confirmed(맨눈 불가, 망원경 검출 — Innes 1915).
+      (α Cen C / GJ 551).
     fields:
       - name: body_type
         value: "M5.5Ve 적색왜성(플레어 별)"
@@ -21,16 +21,12 @@ decisions:
       - name: designation
         value: "Proxima Centauri (α Cen C / GJ 551)"
         op: set
-      - name: discoverability
-        value: "confirmed (맨눈 불가, 망원경 검출 — Innes 1915)"
-        op: set
     gate:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
         α Cen A·B(naked_eye, 밝은 별)와 달리 Proxima는 겉보기 11등이라 맨눈 불가 → category=confirmed(망원경 검출사와
         정합), naked_eye 아님. 오너 결정(a).
-    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Innes 1915 (telescopic discovery)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Proxima Cen
     axis: bulk                        # §3.2 템플릿 앵커 — 측정 passthrough 에코 (spin_axis·J2는 전용 행)
@@ -218,7 +214,7 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=암석 지구형 — **대륙형 호수 세계**(직하 고지대 + 흩어진 호수/내해 모자이크 → 야간측 빙관, **무생물**).
-      eyeball 아님. designation=Proxima Centauri b(고유명 없음). discoverability=confirmed(Anglada-Escudé 2016, RV).
+      eyeball 아님. designation=Proxima Centauri b(고유명 없음). RV로 확정된 행성이다(Anglada-Escudé 2016).
     fields:
       - name: body_type
         value: "암석 지구형 — 대륙형 호수 세계 (직하 고지대 + 흩어진 호수/내해 + 야간측 빙관, 무생물)"
@@ -226,16 +222,12 @@ decisions:
       - name: designation
         value: "Proxima Centauri b (고유명 없음)"
         op: set
-      - name: discoverability
-        value: "confirmed (Anglada-Escudé 2016, RV)"
-        op: set
     gate:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
-        confirmed(RV) → RB IGNORELEVELS T F F F. 기후=대륙형 호수(eyeball 회피, 로스터 다양성; 직하-고지대 전제라
+        RV confirmed. 기후=대륙형 호수(eyeball 회피, 로스터 다양성; 직하-고지대 전제라
         TRAPPIST-1 e와 자연 분기). 생명 없음.
-    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "2016Natur.536..437A (Anglada-Escudé 2016)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Proxima Cen b
     axis: orbit                       # a/e/inc/lock = 측정 passthrough
@@ -592,15 +584,13 @@ decisions:
       황혼대) · ⑥ 야간면(Night Side, 동결 암석) · ⑦ 야간 빙관(Night Ice Cap, 반대점 물얼음). **오로라대는 biome서 제외**
       — 고정 표면 구역이 아니라 G6 외형 요소로만(오너 결정). breathability=**불가**(무산소, atmosphereContainsOxygen=false).
       radiation 해저드=**high**(G8 — 약한 장+플레어; Kerbalism radiation_surface high tier, 플레어 시 spike). ScienceValues
-      전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.7 bar 비행 가능. 임무 난도 두 층: (1) 접근=항성간
-      플래그십(Proxima=태양 최근접성 4.24 ly, 여정 자체가 난도); (2) 발견 난도=ResearchBodies IGNORELEVELS, **confirmed라
-      T F F F**(G1 discoverability; Proxima 맨눈 불가나 행성은 RV confirmed → 별은 항상가시·행성은 관측발견).
+      전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.7 bar 비행 가능. 임무 난도의 핵심은 접근이다. Proxima는 태양 최근접(4.24 ly)이지만 여정 자체가 난도다.
     fields:
       - name: science_biomes
         value: "항성경도 동심원 7구획: 직하점/직하 호수(splashdown)/주간 저지/주간 고지/터미네이터/야간면/야간 빙관 (오로라대 제외)"
         op: set
       - name: difficulty
-        value: "임무=항성간 플래그십 · 발견=RB IGNORELEVELS T F F F (confirmed)"
+        value: "임무=항성간 플래그십 · 발견="
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"
@@ -610,9 +600,8 @@ decisions:
       verdict: pass-in-window
       evidence: >
         착륙·splashdown 가능(고체 표면+액체 호수)이 폴리페무스(가스자이언트, 비행/우주만)와의 핵심 게임 차이. 무산소+고방사선이
-        "거주가능존이되 적대적"이라는 G1 무생물 서사와 정합. radiation tier high는 G8서 derived. 발견=ResearchBodies
-        (identity.discoverability), emit는 researchbodies-cfg 스킬 db-mapping.md 기준. cfg emit(Kopernicus 표면색/biome·
-        atmosphere curve·ScienceValues·ResearchBodies)는 프로젝트 말미 일괄.
+        "거주가능존이되 적대적"이라는 G1 무생물 서사와 정합. radiation tier high는 G8서 derived. cfg emit(Kopernicus 표면색/biome·
+        atmosphere curve·ScienceValues)는 프로젝트 말미 일괄.
 
         owner_review: 2026-06-23 오너 검토 완료 — biome을 항성경도 7구획으로 확정(오로라대 제외, 직하점=시그니처 명소 유지,
         splashdown 호수 유지). 직전 커밋(2bb8540)은 오너 검토 없이 작성된 것이라 본 검토로 정정·승인.
@@ -624,7 +613,7 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=초단주기 sub-Earth — **뜨거운 무대기 암석(자기권 가진 수성형)**, 무생물. designation=Proxima Centauri d
-      (고유명 없음). discoverability=candidate(Faria2022 RV, 미확정) → RB IGNORELEVELS T F F F. **distinctive: 지구형
+      (고유명 없음). **distinctive: 지구형
       외계행성 최초의 자기장 추정치(~16 G)를 가진 행성 + 항성 플레어가 d 궤도에 phase-lock**(Zapatero Osorio 2026) —
       "별을 자기적으로 때리는 안쪽 행성".
     fields:
@@ -634,16 +623,12 @@ decisions:
       - name: designation
         value: "Proxima Centauri d (고유명 없음)"
         op: set
-      - name: discoverability
-        value: "candidate (Faria2022 RV, 미확정)"
-        op: set
     gate:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
         candidate(arXiv:2202.05188 Faria2022) → 별 항상가시·행성 관측발견 T F F F. 수성형이되 ~16 G 자기권 보유(G7,
         Zapatero Osorio2026 SPI)로 무자기장 수성과 차별. b(온대)·c(냉)와 극단 대비, 시스템 다양성. phase-lock SPI=d 시그니처.
-    discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "arXiv:2202.05188 (Faria 2022)", skill: "researchbodies-cfg/references/db-mapping.md"}
     refs: ["2202.05188"]
 
   - body: Proxima Cen d
@@ -942,7 +927,7 @@ decisions:
         value: "하이브리드 7구획: 직하 핫스팟/주간 고지/주간 평원/크레이터/터미네이터/야간면/자기극 풍화관"
         op: set
       - name: difficulty
-        value: "항성간 플래그십 + 최근접 고방사선 착륙; RB T F F F (candidate)"
+        value: "항성간 플래그십 + 최근접 고방사선 착륙"
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"
@@ -965,7 +950,6 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=**냉 mini-Neptune**(~8 M⊕, 1.5 AU, H/He 외피, Teq~40K), 무생물. designation=Proxima Centauri c(고유명 없음).
-      discoverability=candidate(Damasso2020 RV+천체측정, **존재 논쟁적**) → RB IGNORELEVELS T F F F.
     fields:
       - name: body_type
         value: "냉 mini-Neptune (~8 M⊕, 1.5 AU, H/He 외피, Teq~40K, 무생물)"
@@ -973,16 +957,12 @@ decisions:
       - name: designation
         value: "Proxima Centauri c (고유명 없음)"
         op: set
-      - name: discoverability
-        value: "candidate (Damasso2020 RV+천체측정, 존재 논쟁적)"
-        op: set
     gate:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
         오너 G1 확정 2026-06-23. candidate(2020SciA....6.7467D) → T F F F. 존재 논쟁(미확정 신호)은 '미발견 후보'와 정합.
         냉 mini-Neptune=b(온대 암석)·d(뜨거운 수성형)와 3극 대비.
-    discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "2020SciA....6.7467D (Damasso 2020)", skill: "researchbodies-cfg/references/db-mapping.md"}
     refs: ["2020SciA....6.7467D"]
 
   - body: Proxima Cen c
@@ -1281,7 +1261,7 @@ decisions:
         value: "위도 5띠: 적도대/북온대/남온대/북극/남극 (고리 그림자대 제외)"
         op: set
       - name: difficulty
-        value: "항성간 플래그십 + 시스템 최외곽(1.5 AU 도달 부담), 냉·dim; RB T F F F (candidate)"
+        value: "항성간 플래그십 + 시스템 최외곽(1.5 AU 도달 부담), 냉·dim"
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"
@@ -1301,10 +1281,10 @@ decisions:
     axis: identity
     status: gated
     driver: [classification, fiction]
+    fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       body_type=**냉 얼음 위성(명왕성 아날로그)** — N₂/CH₄/H₂O 얼음 + 톨린 적화 다양 지형, 무생물(극냉 ~40–60K). c의 위성,
-      c에 조석고정, 반경 ~950 km(트리톤/티타니아급). designation=Proxima Centauri c I(고유명 없음). discoverability=**픽션 위성→ FFFF**
-      (관측 근거 0, ResearchBodies 완전 미발견 — 별 TFFF·candidate와 달리 인게임서 직접 발견).
+      c에 조석고정, 반경 ~950 km(트리톤/티타니아급). designation=Proxima Centauri c I(고유명 없음).
     fields:
       - name: body_type
         value: "냉 얼음 위성 (명왕성 아날로그; N₂/CH₄/H₂O 얼음 + 톨린, 무생물 ~40–60K, 반경 ~950 km)"
@@ -1312,14 +1292,10 @@ decisions:
       - name: designation
         value: "Proxima Centauri c I (고유명 없음)"
         op: set
-      - name: discoverability
-        value: "fictional → F F F F (관측 근거 0, 인게임서 직접 발견)"
-        op: set
     gate:
       criterion: [classification, fiction]
       verdict: pass-in-window
-      evidence: "오너 G1 확정 2026-06-23. art-first 픽션 위성([[project_nearstars_discoverability_researchbodies]] fictional moons=FFFF). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린 세계)."
-    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "fiction (art-directed moon)", skill: "researchbodies-cfg/references/db-mapping.md"}
+      evidence: "오너 G1 확정 2026-06-23. art-first 픽션 위성( fictional moons=FFFF). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린 세계)."
 
   - body: Proxima Cen c I
     axis: orbit
@@ -1601,7 +1577,7 @@ decisions:
         value: "4구획: 적도 톨린대/중위도/극 N₂ 빙관/sub-c 고리-얼음 eyeball (anti-c 반구 제외)"
         op: set
       - name: difficulty
-        value: "항성간 플래그십 + 최외곽 c의 위성; RB F F F F (픽션 위성)"
+        value: "항성간 플래그십 + 최외곽 c의 위성"
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"

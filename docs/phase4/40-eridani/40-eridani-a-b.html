@@ -84,6 +84,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -116,7 +133,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
@@ -151,15 +168,30 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">11 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 11 gated · 1 divergence</span></div>
+<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
-  <p class="narrative">body_type=**암석 super-Earth**(~5 M⊕; Weir: 금속-풍부 암석 — 질량은 G3서 자기일관 재설정, Ma2018 8.47 M⊕는 철회된 artifact). 문화 주인공 — **Erid**(Project Hail Mary, Andy Weir; Rocky의 모행성) + **Vulcan**(Star Trek; Roddenberry1991이 40 Eri로 공인). designation=40 Eridani A b(Keid A b · HD 26965 A b). **status=철회됨** — Ma2018 RV 후보(P 42.245d)였으나 Burrows&amp;Lubin 2024가 42d=A의 자전 주기라 반박. **순수 문화 바디 documented-divergence로 재포함**(Tau Ceti e/Adrian 선례; Ma2018 값 보존·refuted 플래그). discoverability=관측 발견 이력대로 **TFFF**(망원경; 인게임선 실재 바디 취급, 철회는 현실 메타라 발견난도 아닌 flavor로 — RV 행성 일관, Proxima b 선례).<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">암석 super-Earth (~5 M⊕; 질량은 bulk서 자기일관 재설정, Ma2018 8.47 M⊕는 철회 artifact)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">40 Eridani A b (Keid A b · HD 26965 A b)</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Erid (PHM, Andy Weir) / Vulcan (Star Trek, Roddenberry1991)</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">refuted RV candidate (Ma2018 → Burrows&amp;Lubin2024 42d=항성자전); 인게임 실재 취급 TFFF</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">body_type=**암석 super-Earth**(~5 M⊕; Weir: 금속-풍부 암석 — 질량은 G3서 자기일관 재설정, Ma2018 8.47 M⊕는 철회된 artifact). 문화 주인공 — **Erid**(Project Hail Mary, Andy Weir; Rocky의 모행성) + **Vulcan**(Star Trek; Roddenberry1991이 40 Eri로 공인). designation=40 Eridani A b(Keid A b · HD 26965 A b). **status=철회됨** — Ma2018 RV 후보(P 42.245d)였으나 Burrows&amp;Lubin 2024가 42d=A의 자전 주기라 반박. **순수 문화 바디 documented-divergence로 재포함**(Tau Ceti e/Adrian 선례; Ma2018 값 보존·refuted 플래그). 인게임에서는 실재 바디로 취급한다. 철회는 현실 쪽 메타이므로 flavor로만 남긴다(RV 행성 일관, Proxima b 선례).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">암석 super-Earth (~5 M⊕; 질량은 bulk서 자기일관 재설정, Ma2018 8.47 M⊕는 철회 artifact)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">40 Eridani A b (Keid A b · HD 26965 A b)</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Erid (PHM, Andy Weir) / Vulcan (Star Trek, Roddenberry1991)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="disc"><span class="tag">discoverability</span> <code>disputed</code> · IGNORELEVELS <code>T F F F</code></div><div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함. disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드.<br></div>
+  <div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함. disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드.<br></div>
   
 </article>
 <article class="dec" id="orbit">
@@ -273,6 +305,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="40-eridani-c.html">← 40 Eridani C</a><a class="navlink" href="40-eridani-a-c.html">40 Eridani A c →</a></div>
+<div class="stamp">빌드 2026-07-28 13:41 · b31ecf7+미커밋</div>
 </div>
 <script>
 const b=document.body;

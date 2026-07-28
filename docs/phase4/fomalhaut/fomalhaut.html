@@ -84,6 +84,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -116,7 +133,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
@@ -151,21 +168,36 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">10 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 9 gated · 0 divergence</span></div>
+<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">body_type=**젊은(440 Myr) A4V 주계열성** — 로스터 유일 대형 **debris-disk 간판 호스트**. designation=Fomalhaut (α Piscis Austrini · HD 216956 · HIP 113368 · HR 8728). cultural=아랍어 &quot;fam al-ḥūt&quot;(물고기의 입) — **페르시아 4 royal star 중 남쪽의 수호자**, 밤하늘 18번째로 밝고 Piscis Austrinus 최광성, &quot;가을의 외로운 별(Lonely Star)&quot;. discoverability=**맨눈**(V=1.16 1등성) → RB IGNORELEVELS T T T T(항상 가시).<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">젊은 (440 Myr) A4V 주계열성 — debris-disk 간판 호스트</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Fomalhaut (α PsA · HD 216956 · HIP 113368 · HR 8728)</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">fam al-ḥūt (물고기의 입) · 페르시아 4 royal star 남쪽 수호자 · 가을의 외로운 별</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">naked_eye (V=1.16, 1등성)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">body_type=**젊은(440 Myr) A4V 주계열성** — 로스터 유일 대형 **debris-disk 간판 호스트**. designation=Fomalhaut (α Piscis Austrini · HD 216956 · HIP 113368 · HR 8728). cultural=아랍어 &quot;fam al-ḥūt&quot;(물고기의 입) — **페르시아 4 royal star 중 남쪽의 수호자**, 밤하늘 18번째로 밝고 Piscis Austrinus 최광성, &quot;가을의 외로운 별(Lonely Star)&quot;.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">젊은 (440 Myr) A4V 주계열성 — debris-disk 간판 호스트</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Fomalhaut (α PsA · HD 216956 · HIP 113368 · HR 8728)</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">fam al-ḥūt (물고기의 입) · 페르시아 4 royal star 남쪽 수호자 · 가을의 외로운 별</td><td class="o"></td></tr></tbody></table>
   
-  <div class="disc"><span class="tag">discoverability</span> <code>naked_eye</code> · IGNORELEVELS <code>T T T T</code></div><div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-26 — 젊은 A4V debris-disk 간판. 맨눈 1등성→naked_eye T T T T. 문화=페르시아 royal star &#x27;물고기의 입&#x27;.</div>
+  <div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-26 — 젊은 A4V debris-disk 간판. 맨눈 1등성→naked_eye T T T T. 문화=페르시아 royal star &#x27;물고기의 입&#x27;.</div>
   
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
     <code class="axis">bulk</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">M **1.92 M☉** · R **1.842 R☉** · Teff **8590 K** · L **16.63 L☉** · age **440 Myr**(젊음, Castor moving group) · [Fe/H] ≈ 태양(−0.03). 전부 Mamajek 2012(VLTI excess-corrected) 측정 → emit 그대로. **Canonical alternative**: Davis 2005 (excess 미보정, R 1.744 R☉·Teff 8819 K — 더 뜨겁고 작음)는 병기, excess 보정한 Mamajek 채택. **자전**: v sin i **93±9 km/s**(Głębocki/Royer 군집) · P_rot 직접 측정 없음 — **측정 i★=90°±9°(Hadjara2014)로 도출 P_rot ≈ 24.0 h(1.00 d)** [2026-07-12 점검: 구기록 &quot;i≈65° 가정 → ~0.97 d&quot;를 측정 기반으로 갱신 — 값은 근소 차]. **figure (오너 G2, 2026-06-26)**: **약한 시각 편평 emit** — 편평 **~2.2%(a/c 1.022)**(k₂ 경로 계산과 Roche 추정 일치; Absil 2009 간섭계 1.021 정합). 로스터 가시 임계(~5%) 아래지만 오너가 &quot;유명한 빠른 A형 자전체&quot; 표현으로 시각 oblate 채택. + **중력감광**(von Zeipel, 극이 적도보다 ~300K 뜨거움 → 고경사 시점서 미세 극-밝아짐; 분해 map 없음 → 추정 low). VertexHeightOblateAdvanced 메시, 시각 기준반경=극반경 (body-figure-methodology.md). [2026-07-12: 구 &quot;j2(중력) OMIT&quot; 문구는 항성 J2 상시-emit 오너 정책으로 대체 — 아래 bulk.geopotential_j2 행이 live. spin_axis도 별도 행으로 분리.] gravity 155 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">1.92 <span class="u">M_sun</span><div class="fnote">Mamajek 2012 (excess-corrected)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radius</td><td class="v">1.842 <span class="u">R_sun</span><div class="fnote">적도반경; alt=Davis2005 1.744 (excess 미보정) 병기</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">gravity</td><td class="v">155 <span class="u">m/s2</span><div class="fnote p3">Phase 3: GM/R² 파생 에코</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flattening</td><td class="v">0.022<div class="fnote">= (3J₂+q)/2 (J₂ 1.0e-4, q 0.044) — 로스터 항성 최대 편평; VertexHeightOblateAdvanced 시각 대상 (methodology §6)</div></td><td class="o"></td></tr><tr><td class="k">intrinsic_luminosity</td><td class="v">16.63 <span class="u">L_sun</span><div class="fnote">Teff 8590 K</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">age</td><td class="v">0.44 <span class="u">Gyr</span><div class="fnote">Castor moving group</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">rotation_period</td><td class="v">1.0 <span class="u">d</span><div class="fnote">도출 (v sin i 93±9 + 측정 i★ 90°±9 + R_eq) — 직접 측정 없음</div></td><td class="o"></td></tr></tbody></table>
@@ -176,7 +208,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="appearance">
   <div class="dec-head">
     <code class="axis">appearance</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">color=**물리색 `#cfe0ff`**(청백; A4V 8590K 흑체→sRGB. Vega A0V `#bdd5ff`보다 살짝 따뜻한 hue로 카탈로그 구분 — 8689→8590K shift는 sub-perceptual이나 방향 반영). **limb_darkening α 0.211**(Davis 2005 SUSI 간섭계 직접측정 — 태양 ~0.14보다 가팔라 H-전리 온도구배로 원반 가장자리가 더 어둑; 근접 시 ~30–40% 중심-가장자리 밝기차). **granulation 미미**(A형 복사 외피, 깊은 대류 없음 → 태양식 입상조직 거의 없음). **흑점/faculae·코로나·플레어 = 없음**(자기 dynamo 부재, magnetism 행 참조). 중력감광 극-밝아짐은 bulk(figure)에 기록.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#cfe0ff"></span><span class="hx">#cfe0ff</span><div class="fnote p3">Phase 3: A4V 8590K 흑체→sRGB (청백)</div></td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.211<div class="fnote">α (Davis2005 SUSI 직접측정, 태양보다 가파름)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">미미 (복사 외피)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">none (dynamo 부재)</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">none (자기 가열 없음; 약 X선은 동반성 귀속)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">none</td><td class="o"></td></tr></tbody></table>
@@ -187,7 +219,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
     <code class="axis">magnetism.magnetic_field</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">**magnetic_field = 없음/미검출.** A4V(8590K)는 표면 수소가 거의 완전전리라 불투명도 범프가 사라져 **외피가 복사평형** — 깊은 대류 외피가 없어 **태양식 αΩ dynamo 불가**(대류경계 ~F0–F2, Kraft break 위). → 자기 가열 채층/코로나·흑점·플레어· 활동주기 전무, log R&#x27;HK 정의 안 됨. **documented nuance (화석장)**: A형은 dynamo 대신 **fossil field**를 *가질 수* 있음 — Ap/Bp(A/B의 ~10%)는 형성기에 갇힌 kG급 잔존장(대류 없어 안정·보존), 정상 A형도 Vega처럼 ~0.6G **초미약장** 검출 사례(Lignières2009·Petit2010, 소멸 중 화석장 추정). 단 **Fomalhaut는 정상 A형이라 강한 화석장 미검출**, 초미약장 보고도 없음 — 있어도 dynamo식 활동(채층 가열·흑점·플레어)은 못 만듦. → cfg=무자기·무활동. magnetosphere/radiation_belts = N/A(항성).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">none/미검출 (복사 외피, dynamo 불가; fossil field도 미검출)</td><td class="o"></td></tr></tbody></table>
@@ -198,7 +230,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="environment">
   <div class="dec-head">
     <code class="axis">environment</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
   </div>
   <p class="narrative">activity/플레어 **없음**(dynamo 부재, magnetism 행). stellar_wind **미미**(A4V는 O/B형 line-driven wind만큼 뜨겁지 않음 → 약풍, astrosphere 비강조). X-ray 상한(ROSAT log Lx &lt; 27.5, 동반성 TW PsA 귀속). **광구 UV 강함**(8590K Wien 꼬리 &lt;200nm 다량 — 내행성 대기침식 구동요인이나 **확정 행성 없어** 대상 없음); 채층 Lyα 없어 XUV/EUV 비율은 낮음. habitable_zone ~3.5–6 AU (Kopparapu A4V)이나 디스크가 10–158 AU로 HZ 밖 cold 영역 → 학술 표기일 뿐 거주 바디 없음. 측정/분류 → emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">none (dynamo 부재); X-ray 상한 log Lx &lt; 27.5 (동반성 귀속)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">stellar_wind</td><td class="v">미미 (약풍, line-driven 아님)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">uv_xray_flux</td><td class="v">광구 UV 강함 (8590K Wien 꼬리), XUV/EUV 낮음</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">habitable_zone</td><td class="v">~3.5–6 AU (학술 표기; 거주 바디 없음)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
@@ -209,7 +241,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
     <code class="axis">bulk.spin_axis_orientation</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">**완전 3D 실측 자전축 채택**: i★ = 90°±9°(적도향, Hadjara2014 SCIROCCO 최초 3D 해) + PA_rot 65.6°±5° (Hadjara2014; Le Bouquin2009 AMBER 스펙트로 아스트로메트리 PA 65°±3°와 일치). **하늘 투영 정렬은 확실** — PA_star ⊥ 디스크 PA 156°(Le Bouquin 2009: &quot;행성계 각운동량이 항성 스핀과 동일선상이라는 표준 시나리오를 검증&quot;). **3D 정렬은 경계적**: 측정 i★ 90° vs 디스크 경사 ~66°(Kalas2005)는 1.5–2σ 긴장 — 측정값(90°)을 1차 채택, 디스크 정렬(66°)은 하한 병기. 구기록의 &quot;i~65°&quot;는 가정이었음(Le Bouquin은 PA만 측정) — 측정으로 대체.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 90°±9° (측정, 적도향) · PA_rot 65.6°±5° (측정, 디스크 PA에 수직) — 로스터 유일 3D 실측 극</td><td class="o"></td></tr></tbody></table>
@@ -231,7 +263,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="rings">
   <div class="dec-head">
     <code class="axis">rings</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">**간판 = 3중 debris-disk** (오너 G6=가, 2026-06-26: 3벨트 다 emit, 각자 경사로 JWST misalignment 재현). **① warm inner** 10–78 AU · i **47.8°**·PA 329.6° · 넓은 PR-drag 유입 디스크(narrow asteroid-belt 아님) · T~150K(pre-JWST SED). **② intermediate** 83–104 AU · i **67.5°**·PA 329.6° · e~0.3(가변) · mm 미검출(희박, Chittidi 2025) · 미지 행성 sculpting 추정. **③ cold main** 133–158 AU(폭 ~25, Δa/a 0.13) · i **65.6°**·PA 337.9°·ω 22.5° · **e 0.11**(유명한 &quot;Eye of Sauron&quot; 편심, ~14 AU offset) · T 65K · dust 0.015 M⊕(mm-cm; 모천체 4–10 M⊕) · 날카로운 내연(shepherd 추정). **색(현행 Mie 방법론 재실행 2026-06-26, scripts/phase3/disk_color_mie.py)**: 전 벨트 **얼음입자**(~50–80% 물얼음, Sommer 2025; PR-drag로 외고리 파편 공유) + A형 큰 blowout(a_min 4.33µm) → 회색-크림. **warm/intermediate = 합성** faithful `#fff4e5` / vivid `#ffe0b0`·`#ffe2b1`(B/I 0.68). **cold = 측정값 `#d6d8da`(회색) 유지**(Kalas 2005 HST·Acke 2012 — measure-vs-synthesize 규칙상 합성서 제외, 불변). pack=faithful 기본 + vivid alt 병기. **JWST 헤드라인**: 내부(47.8°) vs 외부(65.6°) 강한 misalignment → 벨트별 다른 경사로 표현. **제외/한계**: Fomalhaut b(&quot;Dagon&quot;)=충돌 dust cloud 반박(Gáspár&amp;Rieke 2020)→**제외**(flavor만, 바디 아님). &quot;Great Dust Cloud&quot;= 배경 은하(Kennedy 2023)→미렌더. ⚠ Kopernicus Ring=평평한 원형 → cold 편심 offset 표현 불가(Principia/커스텀/미래 volumetric 몫, 문서화) · 수직 두께(aspect 0.0175, Boley 2012)도 기록만(flat ring 미소비).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">ring_structure</td><td class="v">3벨트 — warm 10–78 AU · intermediate 83–104 AU (e~0.3) · cold 133–158 AU (e 0.11, offset ~14 AU, 내연 sharp)</td><td class="o"></td></tr><tr><td class="k">ring_plane</td><td class="v">i 47.8° / 67.5° / 65.6° · PA 329.6° / 329.6° / 337.9° (JWST misalignment 재현)</td><td class="o"></td></tr><tr><td class="k">ring_composition</td><td class="v">얼음입자 (~50–80% 물얼음, a_min 4.33µm) — warm/intermediate 합성 <span class="chip" style="background:#fff4e5"></span><span class="hx">#fff4e5</span> (vivid <span class="chip" style="background:#ffe0b0"></span><span class="hx">#ffe0b0</span>/<span class="chip" style="background:#ffe2b1"></span><span class="hx">#ffe2b1</span>), cold 측정 <span class="chip" style="background:#d6d8da"></span><span class="hx">#d6d8da</span> 유지</td><td class="o"></td></tr></tbody></table>
@@ -242,7 +274,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="satellites">
   <div class="dec-head">
     <code class="axis">satellites</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">**위성/행성 없음** — 확정 행성 0개(Fomalhaut b는 dust cloud 반박, rings 행). 달/co-orbital 없음. 디스크 입자 자체가 &quot;dust source&quot;. **동반성(백로그)**: Fomalhaut은 광년 규모 hierarchical triple — **TW PsA(K4V, 0.91 ly, V~6.5)** + **LP 876-10(M4V, 5.7 ly, V~11)**, 셋 다 Castor moving group 동령(440 Myr). 분리거리가 광년급이라 정렬 현상 없음. **NearStars DB 미포함** → 별도 entry 추가 후보(백로그): 추가 시 Fomalhaut 디스크 시점서 TW PsA가 고정 방위의 희미한 주황 점(&quot;두 번째 해&quot; 경계)으로 보일 수 있음. orbit/atmosphere/surface = ∅(단일 항성).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">satellites</td><td class="v">none — 행성/위성 0 (Fomalhaut b = dust cloud); 동반성 TW PsA·LP 876-10은 DB 미포함 백로그</td><td class="o"></td></tr></tbody></table>
@@ -253,7 +285,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="gameplay">
   <div class="dec-head">
     <code class="axis">gameplay</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">**착륙 바디 없는 유일 시스템 — 디스크가 주인공.** 목적지=편심 &quot;Eye of Sauron&quot; cold 고리 + 3중 misaligned 벨트를 통과·관측하는 비주얼 쇼케이스(다른 계는 다 착륙 세계 보유 → 뚜렷 분기). SOI=무거운 A형(1.92 M☉) 큰 권역(수동 튜닝). science/biomes 빈약 (착륙 불가) → 플라이바이·관측 + 성간 경유지 성격. 환경=강한 광구 UV. 발견 T T T T(맨눈 1등성).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">sphere_of_influence_tuning</td><td class="v">무거운 A형 (1.92 M☉) 큰 권역 — 수동 튜닝</td><td class="o"></td></tr><tr><td class="k">science_biomes</td><td class="v">빈약 (착륙 불가) — 플라이바이·관측·성간 경유지</td><td class="o"></td></tr></tbody></table>
@@ -262,6 +294,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 
+<div class="stamp">빌드 2026-07-28 13:41 · b31ecf7+미커밋</div>
 </div>
 <script>
 const b=document.body;

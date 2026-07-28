@@ -4,7 +4,7 @@
 
 FAIL (exit 1) on structural violations:
   10a  phase4 board `system:` != filename stem; real-body `body:` key not in db
-       and not marked fictional (identity row discoverability=fictional).
+       and not marked fictional (identity row `fictional: true`).
   10c  a docs/phase3 report whose `## Decisions` section exists but yields 0
        parseable rows (interface break for the md-scraping emitters).
 
@@ -50,18 +50,12 @@ for f in sorted((REPO / "db" / "systems").glob("*.json")):
 
 
 def is_fictional(rows_for_body: list[dict]) -> bool:
-    for row in rows_for_body:
-        cfg = row.get("discoverability_cfg")
-        if isinstance(cfg, dict) and cfg.get("category") == "fictional":
-            return True
-        for fld in row.get("fields") or []:
-            if (
-                isinstance(fld, dict)
-                and fld.get("name") == "discoverability"
-                and "fictional" in str(fld.get("value", ""))
-            ):
-                return True
-    return False
+    """A body we invented or took from fiction, so it is absent from db/ by design.
+
+    Signalled by `fictional: true` on the body's identity row. This used to read the
+    ResearchBodies `discoverability` field, which was retired with that integration.
+    """
+    return any(row.get("fictional") is True for row in rows_for_body)
 
 
 # ── 10a: phase4 boards ↔ db ─────────────────────────────────────────

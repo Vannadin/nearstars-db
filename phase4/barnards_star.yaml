@@ -14,18 +14,16 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=M4.0Ve 적색왜성 — 로스터 최고령(8.5 Gyr)·최저활동 급의 조용한 노익성. designation=Barnard's
-      star (GJ 699). discoverability=confirmed(V 9.5로 맨눈 불가, 1916 E.E. Barnard 고유운동 측정으로 유명해진
+      star (GJ 699).5로 맨눈 불가, 1916 E.E. Barnard 고유운동 측정으로 유명해진
       망원경 천체 — Proxima identity 행과 같은 패턴).
     fields:
       - { name: body_type, value: "M4.0Ve 적색왜성 (조용한 노익성)", op: set }
       - { name: designation, value: "Barnard's star (GJ 699)", op: set }
-      - { name: discoverability, value: "confirmed (맨눈 불가, 망원경 — Barnard 1916 고유운동)", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
         V 9.5 → naked_eye 불가, category=confirmed(망원경 검출사 정합). Proxima(11등, confirmed)와 동일 정책.
-    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Barnard 1916 (proper-motion discovery)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "Barnard's star"
     axis: bulk                        # §3.2 템플릿 앵커 — DB 측정 passthrough 에코 (spin_axis·J2는 전용 행)

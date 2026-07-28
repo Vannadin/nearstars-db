@@ -14,18 +14,16 @@ decisions:
     narrative: >
       body_type=**K0.5 V (Keid A)** — 40 Eri 삼중성의 최광 성분, 적당히 조용한 K왜성. 철회된 행성 b(**Vulcan/Erid**) 호스트. 비교적 젊음(~1.8 Gyr, 백색왜성
       IFMR coeval age)·약간 금속-빈약([Fe/H] −0.29). 5.01 pc(~16.3 ly). designation= 40 Eridani A(Keid · HD 26965 · HR 1325 · GJ
-      166 A · o² Eri A). discoverability=**맨눈**(V 4.43, Eridanus) → RB T T T T.
+      166 A · o² Eri A).
     fields:
       - {name: body_type, value: "K0.5 V (Keid A)", op: set}
       - {name: designation, value: "40 Eridani A (Keid · HD 26965 · HR 1325 · GJ 166 A · o² Eri A)", op: set}
-      - {name: discoverability, value: "naked-eye (V 4.43, Eridanus)", op: set}
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
       evidence: >
         오너 G1 확정 2026-06-24. 맨눈 별 naked_eye=T T T T. 문화=벌컨의 태양(Star Trek, Roddenberry1991 공인)+Erid의 태양(PHM 로키). 백색왜성 B+적색왜성
         C와 삼중성.
-    discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=4.43, Eridanus)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani A"
     axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius)는 전용 행 (union rule)
@@ -100,19 +98,16 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=**DA 백색왜성**(지구 크기 CO핵 축퇴 잔해) — 시리우스 B 다음 **태양 2번째 근접 WD**, 벤치마크 정밀질량 (Bond2017 HST/FGS). M왜성 C와 **233.2년
-      시각쌍성**(BC pair). designation=40 Eridani B(HD 26976 · WD 0413−077 · EG 11). discoverability=**V 9.53, 맨눈 아님 → 망원경
-      confirmed**(Proxima 선례) → RB T F F F.
+      시각쌍성**(BC pair). designation=40 Eridani B(HD 26976 · WD 0413−077 · EG 11).
     fields:
       - {name: body_type, value: "DA 백색왜성", op: set}
       - {name: designation, value: "40 Eridani B (HD 26976 · WD 0413−077 · EG 11)", op: set}
-      - {name: discoverability, value: "telescopic confirmed (V 9.53)", op: set}
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
       evidence: >
         오너 G1 확정 2026-06-24. 비맨눈 별이라 TFFF(맨눈 별 TTTT와 구분, Proxima 선례). DA WD body_type 동의. 문화: Erid 하늘의 WD(에리디언은 맹목이라 못
         봄)·Star Trek 40 Eri계.
-    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=9.53 WD); Bond 2017 benchmark", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani B"
     axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius·P_rot 35h)는 전용 행 (union rule)
@@ -175,18 +170,15 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=**M4.5 Ve 플레어 별**(변광성 DY Eri) — 지속 Hα·광도 플레어, 태양 근접 활성 M왜성. **백색왜성 B와 233년 BC 쌍성**(e 0.41, 평균 ~33 AU). 행성
-      없음(큐레이션). designation=40 Eridani C(GJ 166 C · HIP 19849 C · DY Eri). discoverability=**V 11.17, 맨눈 아님 → 망원경
-      confirmed** → RB T F F F.
+      없음(큐레이션). designation=40 Eridani C(GJ 166 C · HIP 19849 C · DY Eri).
     fields:
       - {name: body_type, value: "M4.5 Ve 플레어 별 (변광성 DY Eri)", op: set}
       - {name: designation, value: "40 Eridani C (GJ 166 C · HIP 19849 C · DY Eri)", op: set}
-      - {name: discoverability, value: "telescopic confirmed (V 11.17)", op: set}
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
       evidence: >
         오너 G1 확정 2026-06-24. 비맨눈 별 TFFF(B·Proxima 선례). 활성 플레어 M왜성. C가 백색왜성 B를 ~33 AU서 공전하는 BC 쌍성.
-    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=11.17 M dwarf DY Eri)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani C"
     axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius)는 전용 행 (union rule)
@@ -395,19 +387,17 @@ decisions:
       **Erid**(Project Hail Mary, Andy Weir; Rocky의 모행성) + **Vulcan**(Star Trek; Roddenberry1991이 40 Eri로 공인).
       designation=40 Eridani A b(Keid A b · HD 26965 A b). **status=철회됨** — Ma2018 RV 후보(P 42.245d)였으나 Burrows&Lubin 2024가
       42d=A의 자전 주기라 반박. **순수 문화 바디 documented-divergence로 재포함**(Tau Ceti e/Adrian 선례; Ma2018 값 보존·refuted 플래그).
-      discoverability=관측 발견 이력대로 **TFFF**(망원경; 인게임선 실재 바디 취급, 철회는 현실 메타라 발견난도 아닌 flavor로 — RV 행성 일관, Proxima b 선례).
+      인게임에서는 실재 바디로 취급한다. 철회는 현실 쪽 메타이므로 flavor로만 남긴다(RV 행성 일관, Proxima b 선례).
     fields:
       - {name: body_type, value: "암석 super-Earth (~5 M⊕; 질량은 bulk서 자기일관 재설정, Ma2018 8.47 M⊕는 철회 artifact)", op: set}
       - {name: designation, value: "40 Eridani A b (Keid A b · HD 26965 A b)", op: set}
       - {name: cultural_name, value: "Erid (PHM, Andy Weir) / Vulcan (Star Trek, Roddenberry1991)", op: set}
-      - {name: discoverability, value: "refuted RV candidate (Ma2018 → Burrows&Lubin2024 42d=항성자전); 인게임 실재 취급 TFFF", op: set}
     gate:
       criterion: [classification, culture]
       verdict: owner-override
       evidence: >
         오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함.
         disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드.
-    discoverability_cfg: {category: disputed, ignorelevels: "T F F F", ref: "Ma 2018 (2018AJ....155..117M) RV candidate, refuted by Burrows & Lubin 2024 (42d=stellar rotation); cultural (Erid/PHM + Vulcan/Star Trek). category=disputed(contested/refuted RV), not confirmed — same TFFF output.", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani A b"
     axis: orbit
@@ -671,24 +661,22 @@ decisions:
     axis: identity
     status: gated
     driver: ["synthetic filler (b-d 2:1 resonance anchor)"]
+    fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       body_type=**수성형 작은 암석 행성**(수성 쌍둥이) — R ≈ 2,440 km(0.383 R⊕) · **0.38 g** · M **0.055 M⊕** · ρ ~5.4 g/cm³
       (iron-rich). designation=**40 Eridani A c (Twoworld)** — 별에서 2번째 행성(b Erid 0.224 < **c 0.40** < d Threeworld 0.635).
       **우리 합성 바디**(관측 근거 0 — 40 Eri A 확정 행성 없음): c-d 근접 2:1 공명을 성립시키는 anchor로 도입(REBOUND로 검증). 문화=**에리디언 명명 패턴 확장** — 3번째를
-      무성의하게 "Threeworld"라 부른 종족이니 2번째는 **"Twoworld"**(오너 결정 2026-06-25). discoverability=**FFFF**(category `fictional` —
-      합성+소형+무특징, 실측 0 → 항상 발견).
+      무성의하게 "Threeworld"라 부른 종족이니 2번째는 **"Twoworld"**(오너 결정 2026-06-25).
     fields:
       - {name: body_type, value: "수성형 작은 암석 행성 (수성 쌍둥이; R 2,440 km 0.383 R⊕, 0.38 g, 0.055 M⊕, ρ ~5.4 g/cm³)", op: set}
       - {name: designation, value: "40 Eridani A c (Twoworld) — 별에서 2번째 행성", op: set}
       - {name: cultural_name, value: "Twoworld (Eridian 명명 패턴 확장)", op: set}
-      - {name: discoverability, value: "fictional (합성 filler, 실측 0 → 항상 발견 FFFF)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: owner-override
       evidence: >
         오너 c1 확정 2026-06-25 — Twoworld(40 Eri A c), 우리 합성 filler(공명 anchor, canon 아님). 수성 쌍둥이(0.055 M⊕·0.38g).
         별명=Twoworld(Eridian 패턴 확장, 오너 선택). disc=FFFF(fictional 합성).
-    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "synthetic filler body (Twoworld); no real detection — always discover. Tiny Mercury-twin (0.055 M⊕)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani A c"
     axis: orbit
@@ -872,17 +860,17 @@ decisions:
     axis: identity
     status: gated
     driver: ["PHM book canon (p.393)"]
+    fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       body_type=**작은 암석 행성**(지구 달 크기) — R ≈ 1,737 km(0.273 R⊕) · **0.2 g** · 역산 질량 ≈ **0.015 M⊕**(달의 ~1.2배) · ρ ~4.0
       g/cm³. 희박 **CO₂ 84% / N₂ 8% / SO₂ 4% + trace** 대기, 표면압 **<지구 1%**(Mars급). designation=**40 Eridani A d
       (Threeworld)** — 별에서 3번째 행성. **PHM 책 canon**(p.393 구체값). 순수 픽션 바디(관측 근거 0 — 40 Eri A 확정 행성 없음). 문화: **Astrophage
       Petrova-arc 끝점**(금성 역할 — CO₂ 대기서 Astrophage 번식) · 후에 **Taumoeba 투입**으로 개체수 감소 · 에리디언이 최근 발견, 맹목이라 무성의하게 "삼세계" 명명(인간식
-      천문 경이가 없던 종족). discoverability=**FFFF**(category `fictional` — 합성 바디, 실측 0; 작고 늦게 발견된 점도 정합).
+      천문 경이가 없던 종족).
     fields:
       - {name: body_type, value: "작은 암석 행성 (지구 달 크기; R 1,737 km 0.273 R⊕, 0.2 g, ~0.015 M⊕, ρ ~4.0 g/cm³)", op: set}
       - {name: designation, value: "40 Eridani A d (Threeworld) — 별에서 3번째 행성", op: set}
       - {name: cultural_name, value: "Threeworld (PHM p.393; Astrophage Petrova-arc 끝점·Taumoeba 투입지, 에리디언 최근 발견)", op: set}
-      - {name: discoverability, value: "fictional (순수 픽션, 실측 0 → 항상 발견 FFFF)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: owner-override
@@ -890,7 +878,6 @@ decisions:
         오너 G1 확정 2026-06-24 — Threeworld(40 Eri A d), PHM canon p.393. 달 크기·0.2g·~0.015 M⊕·희박 CO₂/N₂/SO₂(<지구1%).
         disc=FFFF(fictional, 순수 픽션+소형+늦은 발견). 문화=Astrophage Petrova-arc 끝점(금성 역할)·Taumoeba 투입지. 물리=책, 대기보유 수수께끼는 G4서 화산 보충으로
         보강.
-    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "synthetic PHM body (Threeworld, p.393); no real detection — always discover. Tiny (0.015 M⊕), Eridian late-discovery", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani A d"
     axis: orbit

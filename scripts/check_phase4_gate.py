@@ -46,7 +46,7 @@ AXIS_GROUPS = {
 }
 # §0 axis names per group (for soft name validation).
 AXIS_NAMES = {
-    "identity": {"body_type", "spectral_class", "designation", "cultural_name", "discoverability"},
+    "identity": {"body_type", "spectral_class", "designation", "cultural_name"},
     "orbit": {"semi_major_axis_au", "eccentricity", "inclination_deg", "longitude_ascending_node",
               "argument_periapsis", "mean_anomaly", "epoch", "spin_orbit_resonance",
               "tidal_lock", "lagrange_placement"},
@@ -239,7 +239,7 @@ def check_v2(path, doc):
 
             # machine-readable value present?
             has_value = nonempty(row.get("value")) or bool(fields) \
-                or bool(row.get("discoverability_cfg")) or nonempty(gate.get("value"))
+                or nonempty(gate.get("value"))
             if not has_value:
                 warns.append(f"{loc}: gated row has no machine-readable value/fields")
             if not row.get("refs"):
