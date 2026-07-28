@@ -66,6 +66,16 @@ def value_html(value):
     return HEX_RE.sub(repl, esc(value))
 
 
+def fields_of(d):
+    """fields가 없고 행 레벨 value만 있는 행(v1형)을 한 줄 표로 승격"""
+    fields = d.get("fields")
+    if fields:
+        return fields
+    if d.get("value") is not None:
+        return [{"name": d.get("axis", "value"), "value": d["value"]}]
+    return None
+
+
 def fields_table(fields):
     if not fields:
         return ""
@@ -76,8 +86,15 @@ def fields_table(fields):
             continue
         name = esc(f.get("name", ""))
         div = f.get("verdict") == "documented-divergence"
+        ovr = f.get("verdict") == "owner-override"
         warn = ' <span class="mini" title="documented divergence">⚠</span>' if div else ""
-        val = value_html(f.get("value"))
+        if ovr:
+            warn = ' <span class="mini" title="owner override: 물리가 지지하지 않는 연출 선택 (근거 참조)">✳</span>'
+        raw = f.get("value")
+        if raw is None and f.get("na_reason"):
+            val = '<span data-i18n>없음</span><span data-en hidden>N/A</span>'
+        else:
+            val = value_html(raw)
         if f.get("unit"):
             val += f' <span class="u">{esc(f["unit"])}</span>'
         if f.get("reference_radius_km"):
@@ -90,6 +107,8 @@ def fields_table(fields):
                 f'<span class="sw"><span class="chip" style="background:{esc(c)}"></span>'
                 f'{esc(n)} <span class="hx">{esc(c)}</span></span>'
                 for n, c in colors.items()) + "</div>")
+        if f.get("na_reason"):
+            val += f'<div class="fnote">{esc(f["na_reason"])}</div>'
         if f.get("note"):
             val += f'<div class="fnote">{esc(f["note"])}</div>'
         if f.get("phase3_default"):
@@ -222,7 +241,7 @@ def decision_html(d):
     <span class="pills">{pills}</span>
   </div>
   {nar}
-  {fields_table(d.get('fields'))}
+  {fields_table(fields_of(d))}
   {moons_table(d.get('moons'))}
   {dep_html}{ev_html}{dn_html}
   {refs_html(d.get('refs'))}
@@ -251,6 +270,8 @@ LEGEND = """<details class="legend"><summary><span data-i18n>표시 읽는 법</
   <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
   <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
   <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+  <dt><span class="mini">⚠ ✳</span></dt>
+  <dd><span data-i18n>행이 아니라 필드 하나에 붙는 같은 표시. ⚠는 문서화 이탈, ✳는 오너 확정.</span><span data-en hidden>The same marks at single-field level: ⚠ documented divergence, ✳ owner override.</span></dd>
 </dl></details>"""
 
 

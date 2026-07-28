@@ -304,8 +304,10 @@ decisions:
     decision-logs belong: what the value used to be, when and why it changed, which owner
     call settled it. Written for a future maintainer asking "why is this number different
     from last month", not for a reader. **The board viewer does not render it** (the renderer
-    reads only `narrative`, `fields`, `refs` and the `gate` block, so unlisted keys are
-    ignored by construction), which is what makes it the safe home for provenance that
+    reads `narrative`, `fields` — plus a row-level `value` fallback — `refs`, the `gate`
+    block, and row chrome (`axis`/`status`/`kopernicus_name`/`depends_on`/`moons`);
+    `provenance`, `driver`, `stability_scans` and other unlisted keys are ignored by
+    construction), which is what makes it the safe home for provenance that
     `evidence` is not — `evidence` *is* rendered.
     Why a real key and not a YAML comment: nothing rewrites these boards today, but this
     schema has already migrated once (v1 → v2), and any future parse-and-redump would drop

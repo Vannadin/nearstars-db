@@ -2244,7 +2244,7 @@ decisions:
     fields:
       - { name: science_biomes, value: "7: Oceans / Coastlines / Rainforest Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Geometric Formations (Flux-Vortex)", op: set, colors: {"Oceans":"#2A5C99","Coastlines":"#35B8A0","Rainforest Lowlands":"#3E7A3A","Highland Mountains":"#7A6A5A","Volcanic Belts":"#9A4A38","Ice Peaks & Polar Caps":"#D6E4EA","Geometric Formations (Flux-Vortex)":"#7A44C8"} }   # provisional naturalistic biome-map display colors (S↓; biolum coast + flux-vortex = accents)
       - { name: sphere_of_influence_tuning, value: "auto from mass", op: passthrough }
-      - { name: difficulty, value: "임무=거주가능 세계 착륙(최대 보상) ·", op: set }
+      - { name: difficulty, value: "임무=거주가능 세계 착륙(최대 보상)", op: set }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -2606,7 +2606,7 @@ decisions:
       흥미로운 곳은 혐기성 생명의 흔적을 찾을 수 있는 열수구다.
     fields:
       - { name: science_biomes, value: "6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (후보) Microbial Mats", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
-      - { name: difficulty, value: "임무=한랭 무산소 착륙 + 외대 차폐 ·", op: set, note: "구값은 차폐 경미; environment.radiation 등급이 낮음→중간으로 오른 결과" }
+      - { name: difficulty, value: "임무=한랭 무산소 착륙 + 외대 차폐", op: set, note: "구값은 차폐 경미; environment.radiation 등급이 낮음→중간으로 오른 결과" }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -2886,7 +2886,7 @@ decisions:
       받을 수 있다.
     fields:
       - { name: science_biomes, value: "5: Chasmata / Plume Vents (hotspot) / Icy Plains / Craters / Poles", op: set, colors: {"Chasmata":"#3C4A5E","Plume Vents":"#33A5B5","Icy Plains":"#AEC8D6","Craters":"#7C8A96","Poles":"#E4ECF0"} }   # provisional naturalistic biome-map display colors (S↓; plume vents = accent)
-      - { name: difficulty, value: "착륙=초저중력 0.023g 특수 ·", op: set }
+      - { name: difficulty, value: "착륙=초저중력 0.023g 특수", op: set }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -2901,20 +2901,18 @@ decisions:
     axis: satellites
     status: gated                  # 135k 갭 = J2 적용 후에도 안정 (TRACE+leapfrog 일치). 3:2-락은 J2로 탈락.
     driver: [fiction, stability]   # SPEC class D (+ orbit는 stability-optimization)
-    value: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos) — 본문 moons: 리스트가 body def"
+    fields:
+      - { name: satellites, value: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos); 본문 moons: 리스트가 body def", op: set }
     narrative: >
       Five named moons circle Polyphemus (Dante, Hades, Pandora, Cassandra, Chaos): the moons that appear in the
       film, rebuilt to be dynamically honest. The campaign's key discovery: reading the canon's "Hades grazes Dante" literally ejects
       Hades within a century, so the drama was recast as a sustained mild eccentricity (the same way Io burns),
-      plus small moonlets. Each moon's full body definition and starting orbit live in the structured list below;
-      the long trail of scans, reversals, and the final layout is preserved in the stability_scans and decision
-      blocks.
+      plus small moonlets. Each moon's full body definition and starting orbit live in the structured list below.
     narrative_ko: >
       다섯 명명 위성이 Polyphemus를 돈다(Dante·Hades·Pandora·Cassandra·Chaos). 영화에 등장하는 위성들을 동역학적으로
       앞뒤가 맞게 다시 세운 것이다. 이 캠페인의 핵심 발견 하나. 영화 설정의 "Hades가 Dante를 스친다"를 글자 그대로
       읽으면 Hades가 백 년 안에 튕겨 나간다. 그래서 그 드라마는 Io가 타는 방식과 같은, 유지되는 약한 이심률 +
-      작은 소위성들로 다시 캐스팅됐다. 각 위성의 신상명세와 시작 궤도는 아래 구조화된 목록에 있고, 스캔과
-      번복과 최종 배치로 이어진 긴 궤적은 stability_scans와 결정 블록들에 남아 있다.
+      작은 소위성들로 다시 캐스팅됐다. 각 위성의 신상명세와 시작 궤도는 아래 구조화된 목록에 있다.
     gate:
       criterion: [stability, hill-stability, resonance]
       verdict: pass-in-window
