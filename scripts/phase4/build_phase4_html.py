@@ -9,6 +9,7 @@ Writes docs/phase4/<system-slug>/index.html + one <body-slug>.html per body.
 """
 import html
 import re
+import datetime
 import sys
 from pathlib import Path
 from urllib.parse import quote
@@ -27,12 +28,12 @@ def body_slug(b):
     return "system-wide" if b.strip("* ") == "" else to_url_slug(b)
 
 STATUS_LABEL = {
-    "gated": ("확정", "Gated"), "passthrough": ("통과", "Passthrough"),
+    "gated": ("확정", "Gated"), "passthrough": ("손대지 않음", "Passthrough"),
     "open": ("미결", "Open"), "art-directed": ("연출", "Art-directed"),
     "emitted": ("반영", "Emitted"), "superseded": ("대체됨", "Superseded"),
 }
 VERDICT_LABEL = {
-    "pass-in-window": ("범위 내", "In-window"),
+    "pass-in-window": ("허용 범위 내", "In-window"),
     "documented-divergence": ("문서화 이탈", "Doc. divergence"),
     "owner-override": ("오너 확정", "Owner override"),
     "methodology-derived": ("방법론 도출", "Methodology-derived"),
@@ -200,12 +201,6 @@ def decision_html(d):
     narrative = bi(d.get("narrative"), d.get("narrative_ko"))
     nar = f'<p class="narrative">{narrative}</p>' if narrative else ""
 
-    disc = d.get("discoverability_cfg")
-    disc_html = ""
-    if disc:
-        disc_html = (f'<div class="disc"><span class="tag">discoverability</span> '
-                     f'<code>{esc(disc.get("category",""))}</code> · IGNORELEVELS '
-                     f'<code>{esc(disc.get("ignorelevels",""))}</code></div>')
 
     ev = bi(gate.get("evidence"), gate.get("evidence_ko"))
     ev_html = f'<div class="ev"><span class="tag">evidence</span> {ev}</div>' if ev else ""
@@ -229,7 +224,7 @@ def decision_html(d):
   {nar}
   {fields_table(d.get('fields'))}
   {moons_table(d.get('moons'))}
-  {disc_html}{dep_html}{ev_html}{dn_html}
+  {dep_html}{ev_html}{dn_html}
   {refs_html(d.get('refs'))}
 </article>"""
 
@@ -240,6 +235,23 @@ def body_stats(rows):
     nd = sum(1 for d in rows if (d.get("gate") or {}).get("verdict") == "documented-divergence")
     nopen = sum(1 for d in rows if d.get("status") in ("open", "art-directed"))
     return {"total": len(rows), "gated": ng, "passthrough": npt, "divergence": nd, "open": nopen}
+
+
+LEGEND = """<details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
+<dl>
+  <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
+  <dd><span data-i18n>이 축의 값을 Phase 4에서 정해 굳혔다.</span><span data-en hidden>The value for this axis was decided here and frozen.</span></dd>
+  <dt><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></dt>
+  <dd><span data-i18n>정할 것이 없어 앞 단계 값이 그대로 나간다.</span><span data-en hidden>Nothing to decide; the earlier value goes out unchanged.</span></dd>
+  <dt><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></dt>
+  <dd><span data-i18n>고른 값이 물리적으로 허용되는 구간 안에 있다.</span><span data-en hidden>The chosen value sits inside the physically allowed range.</span></dd>
+  <dt><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></dt>
+  <dd><span data-i18n>값을 근거 문서의 계산으로 얻었다.</span><span data-en hidden>The value was computed by a documented method.</span></dd>
+  <dt><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></dt>
+  <dd><span data-i18n>물리가 지지하지 않는데도 연출을 위해 택했다. 이유는 근거 항목에 있다.</span><span data-en hidden>Chosen for the look even though the physics does not support it; the reason is in the evidence.</span></dd>
+  <dt><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></dt>
+  <dd><span data-i18n>원작·관측과 어긋나지만 그 사실을 기록해 두었다.</span><span data-en hidden>It departs from canon or observation, and that departure is recorded.</span></dd>
+</dl></details>"""
 
 
 def render_body(system, body, rows, alias, prev_link, next_link):
@@ -280,8 +292,10 @@ def render_body(system, body, rows, alias, prev_link, next_link):
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">{meta}</span></div>
+{LEGEND}
 <div class="decisions">{decs}</div>
-{nav_html}"""
+{nav_html}
+{build_stamp()}"""
     return page(f"Phase 4 — {system} / {body}", content)
 
 
@@ -344,6 +358,21 @@ const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};
 </script>"""
+
+
+def build_stamp():
+    """Build time + source revision, so a stale page in a browser tab is obvious."""
+    import subprocess
+    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    try:
+        sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO,
+                             capture_output=True, text=True, timeout=5).stdout.strip()
+        dirty = subprocess.run(["git", "status", "--porcelain", "phase4"], cwd=REPO,
+                               capture_output=True, text=True, timeout=5).stdout.strip()
+        rev = f"{sha}{'+미커밋' if dirty else ''}" if sha else ""
+    except Exception:
+        rev = ""
+    return f'<div class="stamp">빌드 {ts}{" · " + rev if rev else ""}</div>'
 
 
 def page(title, content):
@@ -444,6 +473,23 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
+.stamp { margin:26px 0 0; padding-top:11px; border-top:1px solid var(--bd1);
+  font:400 11px/1.4 var(--mono); color:var(--fg4); letter-spacing:.02em }
+.legend { margin:0 0 18px; border:1px solid var(--bd1); border-radius:10px; background:var(--s1) }
+.legend > summary { padding:9px 13px; cursor:pointer; font:500 12px/1.4 var(--sans);
+  color:var(--fg3); list-style:none }
+.legend > summary::-webkit-details-marker { display:none }
+.legend > summary::before { content:"?"; display:inline-grid; place-items:center;
+  width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
+  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+.legend > summary:hover { color:var(--fg1) }
+.legend[open] > summary { border-bottom:1px solid var(--bd1) }
+.legend dl { margin:0; padding:11px 13px 13px;
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px 12px; align-items:baseline }
+.legend dt { margin:0 }
+.legend dd { margin:0; font:400 12.5px/1.5 var(--sans); color:var(--fg3) }
+@media (max-width:560px){ .legend dl { grid-template-columns:minmax(0,1fr); gap:3px }
+  .legend dd { margin-bottom:6px } }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }
@@ -476,7 +522,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .mini { color:var(--danger) }
 .chip { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:-1px;
   margin-right:5px; border:1px solid rgba(255,255,255,.22) }
-.ev,.disc { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
+.ev { font-size:12px; line-height:1.65; color:var(--fg3); margin-top:9px; max-width:74ch }
 .ev.div { color:var(--danger) }
 .tag { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
