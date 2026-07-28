@@ -42,9 +42,10 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      Center of the stability window. Reconciled the representative value from 1.9→1.6 within Beichman's preferred a<2 AU family.
+      The planet orbits at 1.6 AU: the center of the stable range, inside the family Beichman prefers at
+      under 2 AU.
     narrative_ko: >
-      안정창 중앙. Beichman 선호 a<2 AU 패밀리에서 대표값 1.9→1.6으로 정합.
+      행성은 1.6 AU를 돈다. 안정 범위의 중앙이고, Beichman이 선호하는 2 AU 안쪽 범위에 든다.
     fields:
       - { name: semi_major_axis_au, value: 1.6, unit: AU, op: set, phase3_default: "1.6 AU (Beichman 선호 a<2 AU 패밀리; 대표값 1.9→1.6 정합)" }
     gate:
@@ -60,9 +61,11 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      Center of the stability window, e=0.1. The observationally preferred e≈0.4 is Kozai-unstable → preserved as a Canonical alternative.
+      The eccentricity is 0.1, the center of the stable range. The observations prefer e≈0.4, but that orbit
+      is Kozai-unstable, so it is kept only as an alternative.
     narrative_ko: >
-      안정창 중앙 e=0.1. 관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존.
+      이심률은 0.1로 안정 범위의 중앙이다. 관측이 선호하는 e≈0.4는 Kozai 불안정이라 채택하지 않고
+      대안으로만 보존한다.
     fields:
       - { name: eccentricity, value: 0.1, op: set, phase3_default: "안정창 중앙 e=0.1 (관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존)" }
     gate:
@@ -82,7 +85,7 @@ decisions:
       solutions near 50° and 130° would let the companion star wrench the orbit apart, so the middle of the stable
       range is taken instead, and choosing the low prograde branch also collapses the observation's two-way
       ambiguity into a single clean answer. Only this 16° mutual tilt is binding; how the whole system faces the
-      game's sky is a free orientation, settled in the orbit row.
+      game's sky is a free orientation.
     narrative_ko: >
       행성은 쌍성면에서 16° 기울어, 두 별이 도는 것과 같은 방향으로 돈다. 관측이 가리키는 ~50°·~130° 해는 동반성이 궤도를 비틀어 찢어 놓는 값이라, 대신 안정 범위의 한가운데를 잡았고,
       낮은 순행 가지를 고르면서 관측의 양갈래 모호성도 하나의 답으로 정리된다. 구속되는 것은 이 16° 상호경사뿐이고, 계 전체가 게임 속에서 어느 방향을 바라볼지는 자유롭다.
@@ -431,7 +434,7 @@ decisions:
       Jupiter's belt color, and the blues are honest scattered light, not methane trickery. Because the host star
       is a solar twin, the colors render almost exactly as painted, with no reddening correction. One deliberate
       liberty is on record: the turbulent, festooned Jupiter-style banding is visual drama; a planet this calm
-      would more naturally wear Saturn's quiet stripes (that call lives in the clouds row).
+      would more naturally wear Saturn's quiet stripes; the clouds themselves are decided separately.
     narrative_ko: >
       Polyphemus는 세 가지 색을 입는다. 물구름의 흰 zone, 광화학 색소가 덱을 물들인 적갈색 띠, 그리고 구름
       틈새로 깊은 대기의 푸른 산란이 비치는 슬레이트블루 belt. 시그니처 폭풍은 목성을 뒤집는다. 솟은 붉은 점이
@@ -440,7 +443,7 @@ decisions:
       belt색의 70%로 밀었으며, 파랑은 메탄 눈속임이 아니라 정직하게 산란된 빛이다. 모항성이 태양 쌍둥이라 칠한
       색이 거의 그대로 렌더되고 붉은 보정이 필요 없다. 의도적 일탈 하나를 기록한다. 소용돌이와 festoon이 이는
       목성풍 난류 밴딩은 시각적 드라마이고, 이만큼 조용한 행성이라면 토성의 얌전한 줄무늬가 더
-      자연스럽다(그 결정은 clouds 행에 있다).
+      자연스럽다. 구름 자체는 따로 정한다.
     fields:
       - { name: banding_base, value: "#eef1f4", op: set, phase3_default: "#eef1f4 (물/NH4SH zone, Sudarsky Class II)", verdict: pass-in-window }
       - { name: banding_chromophore, value: "#b4784e", window: "#a8703f–#bc8055", op: set, verdict: pass-in-window }
@@ -678,21 +681,20 @@ decisions:
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/solar-system-radiation-belts.md"]
     narrative: >
-      A Jupiter-style two-belt system, fed by Dante's volcanic sulfur torus. The canon moon positions pin the whole
-      structure: the intense inner belt spans L 1.3–3.0 and peaks right where Hades sits (2.07 R_p); the 3.0–4.2
-      slot is Pandora's protective gap (3.53); the outer belt spans L 4.2–10 and submerges Cassandra, giving it its
-      "intermediate" radiation. Chaos (21 R_p) flies outside the belts but inside the magnetopause. Belt shapes are
-      numerical fits of the in-game field model to these drift shells; intensities are calibrated between the Earth
-      and Jupiter dose levels and checked against the computed Kennel–Petschek ceiling. Weaker than Jupiter (~1500
-      rad/h) because Polyphemus's dynamo field is ~40% of Jupiter's (a smaller, cooler giant traps and accelerates
-      less), yet ~29× Earth's belt peak. The dipole tilt is not yet decided, so a Jupiter-like ~10° is assumed for
-      now and will follow that axis once it is settled.
+      A Jupiter-style two-belt system, fed by Dante's volcanic sulfur torus, and the moons' orbits pin its whole
+      shape. The intense inner belt peaks right where Hades sits; the slot between the belts is Pandora's
+      protective gap; the outer belt submerges Cassandra, which is where its intermediate radiation comes from;
+      and Chaos flies outside the belts but still inside the magnetic bubble. The intensity lands between Earth's
+      and Jupiter's: weaker than Jupiter because the dynamo is weaker, a smaller and cooler giant trapping and
+      accelerating less, yet still about thirty times Earth's belt peak. The dipole tilt is not yet decided, so a
+      Jupiter-like small lean is assumed until that axis is settled.
     narrative_ko: >
-      Dante의 화산 황 토러스가 채우는 목성형 2벨트계. 구조 전체가 위성 위치로 고정된다. 강한 내대는 L 1.3–3.0에 걸치고 정확히 Hades가 사는 자리(2.07 R_p)에서 피크를
-      찍는다. 슬롯 3.0–4.2는 Pandora(3.53)의 보호 gap이고, 외대는 L 4.2–10에 걸쳐 Cassandra를 잠기게 해 그 "intermediate" 방사선을 만든다.
-      Chaos(21 R_p)는 벨트 밖·자기권계면 안을 난다. 벨트 모양은 이 드리프트 셸에 인게임 모델을 수치 피팅한 것이고, 강도는 지구와 목성의 선량 사이에서 보정한 뒤 계산된
-      Kennel–Petschek 상한으로 검산했다. 목성(~1500 rad/h)보다 약한 이유는 Polyphemus의 다이나모 자기장이 목성의 ~40%라서다(더 작고 식은 거대행성은 덜 가두고 덜
-      가속한다). 그래도 지구 벨트 피크의 ~29배다. 쌍극 기울기는 아직 정하지 않아 당분간 목성형 ~10°를 가정하며, 그 축이 정해지면 이 값도 따라간다.
+      Dante의 화산 황 토러스가 채우는 목성형 2벨트계이고, 그 모양 전체를 위성들의 궤도가 고정한다. 강한 내대는
+      정확히 Hades가 사는 자리에서 피크를 찍고, 두 벨트 사이 슬롯은 Pandora의 보호 틈새이며, 외대는 Cassandra를
+      잠기게 해 그 중간 방사선을 만든다. Chaos는 벨트 밖, 그러나 자기 거품 안쪽을 난다. 세기는 지구와 목성
+      사이에 놓인다. 다이나모가 약한 만큼(더 작고 식은 거대행성은 덜 가두고 덜 가속한다) 목성보다 약하지만,
+      그래도 지구 벨트 피크의 서른 배쯤 된다. 쌍극 기울기는 아직 정하지 않아 목성형 소기울기를 가정하며, 그
+      축이 정해지면 따라간다.
     fields:
       - { name: radiation_model, value: nearstars_polyphemus, op: set }
       - { name: inner_dist, value: 1.3793, unit: R_p, op: set }
@@ -726,9 +728,9 @@ decisions:
         Geometry: dipole drift shells bounded by the canon moon L-shells (the moon-anchoring validated on Uranus in the
         solar-system audit), fitted to the Kerbalism SDF by fit_belts.py: IoU 0.97 inner / 0.97 outer, loss-cone cut 1.05 R_p;
         pause nose 23.5 R_p from the magnetosphere row (pause_radius = nose x compression). Intensity: Part B saturated
-        dose-anchor interpolation, 10.4 x (170/31)^1.9 = 265 -> 300 rad/h rounded (conf low); outer = 0.1x inner (torus-driven
+        dose-anchor interpolation, 10.4 × (170/31)^1.9 = 265 → 300 rad/h rounded (conf low); outer = 0.1× inner (torus-driven
         Jupiter ratio); the Dante torus is the stated saturating source. Ceiling check: kp_limit.py (5-planet-validated port of
-        the Mauk & Fox implementation) puts the K-P ceiling at >=5e2x Earth for any plausible torus density at the belt peak,
+        the Mauk & Fox implementation) puts the K-P ceiling at ≥500× Earth for any plausible torus density at the belt peak,
         so the chosen ~29x Earth passes with wide margin. Canon consistency: Hades sits at the inner-belt peak (its
         environment.radiation row), Pandora in the slot (its magnetosphere row's "between-belts gap"), Cassandra submerged
         intermediate, Chaos belt-free inside the pause. rad/h values are conf-low regime calls (tuning targets), consistent
@@ -753,13 +755,12 @@ decisions:
     driver: [physics, gameplay]
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
     narrative: >
-      Each moon gets its radiation station: Dante extreme, Hades severe, Pandora safe and livable, Cassandra
-      intermediate, Chaos low but variable. The interesting reconciliation is that the field alone is too weak for
+      Each moon gets its radiation station: Dante extreme (>4,500 rem/day), Hades severe, Pandora safe and
+      livable, Cassandra intermediate, Chaos low but variable. The interesting reconciliation is that the field alone is too weak for
       the canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at roughly
       1,200 times Io's rate, that makes the inner zone so deadly without inflating the field. Pandora stays
       habitable exactly as the canon says: it orbits in the gap between the two belts and shields its surface with
-      its own field, a few times Earth's strength. The per-moon grades: Dante extreme
-      (>4,500 rem/day), Hades severe, Pandora safe and habitable, Cassandra intermediate, Chaos low and variable.
+      its own field, a few times Earth's strength.
     narrative_ko: >
       위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 영화 설정의 가혹한 수치가 나오지 않는다는 것이다. Io의 약 1200배로
       끓는 Dante의 화산이 황 플라스마를 벨트에 퍼부어, 자기장을 부풀리지 않고도 안쪽 지대를 그렇게 치명적으로
@@ -896,12 +897,13 @@ decisions:
     driver: [gameplay]
     narrative: >
       Polyphemus has no ground to land on. Skimming the atmosphere to slow down is as far as it goes, and any trip
-      between the moons has to pass through this planet's gravity well. The great blue storm set among its latitude
-      bands is visible from far off, and it is what makes the planet recognisable at a glance.
+      between the moons has to pass through this planet's gravity well. The science map follows the latitude bands:
+      an equatorial zone, a temperate belt and a polar cap for each hemisphere, plus the storm as a biome of its
+      own. That great blue eye, set among the bands and visible from far off, is the sight worth the trip.
     narrative_ko: >
       Polyphemus에는 착륙할 땅이 없다. 대기를 스쳐 감속하는 정도가 가능한 전부이고, 위성들 사이를 오가려면 반드시
-      이 행성의 중력권을 지나야 한다. 위도 띠 사이에 걸린 거대한 파란 폭풍은 멀리서도 눈에 띄어 이 행성을 한눈에
-      알아보게 한다.
+      이 행성의 중력권을 지나야 한다. 과학 지도는 위도 띠를 따른다. 적도대, 남북의 온대 띠, 남북의 극지, 그리고
+      폭풍 자체가 하나의 바이옴이다. 띠 사이에 걸려 멀리서도 보이는 그 거대한 파란 눈이 가 볼 만한 명소다.
     fields:
       - { name: science_biomes, value: "위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴", op: set, colors: {"Equatorial":"#C9A26B","North Temperate":"#E4D3B0","South Temperate":"#A6784E","North Polar":"#9DB0C4","South Polar":"#B0A0AE","The Eye":"#244C8A"} }   # provisional naturalistic biome-map display colors (S↓, Promised Worlds convention); names TBC
       - { name: sphere_of_influence_tuning, value: "auto from mass (조정 불요)", op: passthrough }
@@ -974,15 +976,13 @@ decisions:
     driver: [physics]
     narrative: >
       What is actually measured is the two stars' combined wind, blowing one shared bubble around the pair; how it
-      divides between them is our assumption, weighted by which star shines harder in X-rays. With the corrected
-      numbers the smaller, more active B turns out nearly three times windier, leaving A a quarter share. The old
-      split had it exactly backwards, built on the stale swapped X-ray values. The re-split ripples outward:
-      Polyphemus feels a gentler wind, and its magnetosphere grew slightly in the same pass.
+      divides between them is our assumption, weighted by which star shines harder in X-rays. The smaller, more
+      active B turns out nearly three times windier, leaving A a quarter share. Polyphemus, downstream, feels
+      that gentler wind, and its magnetosphere is slightly larger for it.
     narrative_ko: >
       실제로 측정된 것은 두 별을 하나의 거품으로 감싸는 합산 풍이고, 그것이 둘 사이에 어떻게 나뉘는지는 어느
-      별이 X선에서 더 세게 빛나는지로 가중한 우리의 가정이다. 교정된 수치로는 더 작고 활동적인 B가 세 배 가까이
-      드세서 A에게는 사분의 일 몫이 남는다. 옛 분배는 뒤바뀐 낡은 X선 값에 기대고 있어 정확히 거꾸로였다.
-      영향은 밖으로도 이어져 Polyphemus가 더 순한 바람을 맞게 됐고, 그 자기권도 조금 자랐다.
+      별이 X선에서 더 세게 빛나는지로 가중한 우리의 가정이다. 더 작고 활동적인 B가 세 배 가까이 드세서
+      A에게는 사분의 일 몫이 남는다. 그 하류의 Polyphemus는 그만큼 순한 바람을 맞고, 자기권도 조금 크다.
     fields:
       - { name: stellar_wind, value: 0.5, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
@@ -1111,11 +1111,11 @@ decisions:
       B takes the lion's share of the pair's measured combined wind, three quarters of it. Its surface blazes
       nearly four times harder in X-rays than A's (a brighter corona squeezed onto a smaller star), and wind
       scales with that blaze, so the active orange dwarf dominates the breeze as befits its temperament. The split
-      remains an assumption on top of a measured total; the arithmetic lives in A's matching row.
+      remains an assumption on top of a measured total; the arithmetic is laid out on A's side.
     narrative_ko: >
       B는 측정된 합산 풍의 대부분, 사분의 삼을 가져간다. 표면은 A보다 X선에서 네 배 가까이 세게 타오르고
       (더 작은 별에 더 밝은 코로나가 눌러 담겼다) 항성풍은 그 세기를 따라가니, 활동적인 주황 왜성이 바람까지
-      도맡는다. 이 분배는 측정된 총량 위에 얹은 가정이며, 산식은 A의 대응 행에 있다.
+      도맡는다. 이 분배는 측정된 총량 위에 얹은 가정이며, 산식은 A 쪽에 있다.
     fields:
       - { name: stellar_wind, value: 1.5, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
@@ -1181,11 +1181,10 @@ decisions:
     driver: [art-direction]
     narrative: >
       No i★ measurement. An arbitrary value: a Sun-like small ~7° tilt from the AB orbital-plane normal (analogy
-      to the Sun-ecliptic 7.25°). The visual effect is minor, but it replaces the silent default of "perfectly
-      aligned 0°" with an explicit decision.
+      to the Sun-ecliptic 7.25°). The visual effect is minor.
     narrative_ko: >
       i★ 측정 없음. 임의 값. AB 궤도면 법선에서 태양과 비슷한 ~7° 소기울기(태양-황도 7.25° 유비).
-      시각 효과는 미미하나 "완전 정렬 0°"로 남는 기본값을 명시 결정으로 대체.
+      시각 효과는 미미하다.
     fields:
       - { name: spin_axis_orientation, value: "AB 궤도면 법선 + ~7° tilt (방위각 자유, ICRS 극 RA/Dec 변환 at emit)", op: set }
       - { name: obliquity, value: 7, unit: deg, op: set }
@@ -1268,11 +1267,12 @@ decisions:
     status: gated                     # 2026-07-12 오너 정책 — 항성 J2 상시 계산·emit
     driver: [physics]
     narrative: >
-      Rotational flattening J2 = 5.7e-8. Solar-scaled: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot
-      41±3d) → J2 5.7e-8 (±~15%). Equatorial radius 6.005e8 m. ~1/4 the Sun's.
+      Rotational flattening gives B a J2 of 5.7e-8, about a quarter of the Sun's. B turns slower than the Sun
+      and is smaller, so the bulge is correspondingly small; the arithmetic is the same solar-anchored scaling
+      used for A.
     narrative_ko: >
-      회전 편평 J2 = 5.7e-8. 태양 기준 스케일링: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot 41±3d)
-      → J2 5.7e-8 (±~15%). 적도반경 6.005e8 m. 태양의 ~1/4.
+      회전 편평이 만드는 B의 J2는 5.7e-8로 태양의 4분의 1쯤이다. 태양보다 느리게 돌고 몸집도 작아 팽대가
+      그만큼 작다. 산식은 A와 같은 태양 앵커 스케일링이다.
     fields:
       - { name: geopotential_j2, value: 5.7e-8, op: set }
       - { name: reference_radius, value: 6.005e8, unit: m, op: set }
@@ -1421,12 +1421,12 @@ decisions:
     narrative: >
       Dante's tidal heating is extreme, roughly twelve hundred times Io's, and it never lets up. All of that heat has
       to leave through the surface, which is why the whole moon runs hot rather than merely holding a few hot vents:
-      the ground sits around 400 °C, with volcanic hotspots near 700 °C. Only a hand's breadth of rock separates that
+      the ground sits around 673 K, with volcanic hotspots near 973 K. Only a hand's breadth of rock separates that
       surface from melt underneath.
     narrative_ko: >
       Dante의 조석 가열은 이오의 약 1200배에 이르고 잦아들지 않는다. 그 열은 전부 표면으로 빠져나가야 하므로, 이
-      위성은 뜨거운 분화구 몇 개만 품는 게 아니라 천체 전체가 달궈져 있다. 땅은 400 °C 안팎이고 화산 핫스팟은
-      700 °C 근처다. 그 표면과 아래의 용융부를 가르는 것은 손 한 뼘 두께의 암석뿐이다.
+      위성은 뜨거운 분화구 몇 개만 품는 게 아니라 천체 전체가 달궈져 있다. 땅은 673 K 안팎이고 화산 핫스팟은
+      973 K 근처다. 그 표면과 아래의 용융부를 가르는 것은 손 한 뼘 두께의 암석뿐이다.
     fields:
       - { name: tidal_heating, value: "~1200× Io (시뮬 e_rms 0.0186, k₂/Q≈0.0155)", op: set, note: "구값 ~820×는 e 0.0175 가정" }
       - { name: tidal_surface_flux, value: "~11,500 W/m² (지표 673K=400°C; 핫스팟 973K=700°C가 면적 1–5%)", op: set, note: "전도 지각 두께 ~0.12 m" }
@@ -1659,10 +1659,8 @@ decisions:
     axis: magnetism.magnetic_field   # facet-walk 2026-06-22 — none 확인
     status: gated
     driver: [physics]
-    narrative: >
-      Hades has no magnetic field to shield it, so its surface radiation is high.
-    narrative_ko: >
-      Hades는 고유 자기장의 차폐가 없어 높은 표면 방사선량을 갖고 있다.
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - { name: magnetic_field, value: "none (750 km 암석 위성, dynamo 불가)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
@@ -1695,18 +1693,18 @@ decisions:
       criterion: [canon-consistency, physics]
       verdict: owner-override
       evidence: >
-        Two arguments are ruled out for this body and worth naming, because both look plausible. "~400x Io internal
-        heat, but a small rigid moon has low k2/Q so it channels into tectonics instead of melting" fails twice: a
-        low k2/Q means the heat is never GENERATED (an Io-multiple figure already assumes a k2/Q, so lowering one
-        lowers the other), and tectonics is not a heat sink -- deformation energy still leaves as radiation.
-        Conservation fixes the surface temperature: whatever power is generated must be radiated, so the area-weighted sigma*T^4 mean is pinned no
+        Two arguments are ruled out for this body and worth naming, because both look plausible. "~400× Io internal
+        heat, but a small rigid moon has low k₂/Q so it channels into tectonics instead of melting" fails twice: a
+        low k₂/Q means the heat is never GENERATED (an Io-multiple figure already assumes a k₂/Q, so lowering one
+        lowers the other), and tectonics is not a heat sink; deformation energy still leaves as radiation.
+        Conservation fixes the surface temperature: whatever power is generated must be radiated, so the area-weighted σT⁴ mean is pinned no
         matter how the heat concentrates into hotspots.
         Grounded chain: the stability sim's forced eccentricity, not an assumed one. Three runs with Hades e_init
         0.005/0.010/0.020 all return e_max 0.047-0.064 identical to the design-of-record, i.e. Pandora (770x Hades's
         mass, period ratio 2.22) forces it; e cannot be lowered by an initial condition. Simulated e_rms = 0.0385.
-        With the methodology's rocky band k2/Q = 1e-3~1e-2 that gives 207-2071 W/m² (15-146x Io) and a four-term
+        With the methodology's rocky band k₂/Q = 1e-3~1e-2 that gives 207-2071 W/m² (15-146× Io) and a four-term
         satellite T_eq of 278-444 K, against 141 W/m² of absorbed starlight. The band's low end is adopted: 207 W/m²,
-        ~15x Io, T_eq 278 K (~5 C). Caution 3 of the tidal-heating doc applies -- the flux is above the melting
+        ~15× Io, T_eq 278 K (~5 °C). Caution 3 of the tidal-heating doc applies: the flux is above the melting
         threshold, so fixed-Q is unreliable and an Andrade/Maxwell treatment could shift it by >10x; that gap is the
         error bar.
         Canon: the game's ">900K red-hot Hades" is still not adopted, but the film's "cold gray plain" is now only
@@ -1761,7 +1759,7 @@ decisions:
         surface_temperature 278 K, not the starlight-only value. Albedo 0.30 + α Cen A insolation alone would give
         225 K, and internal tidal heat is not negligible against it: the tidal term is 207 W/m²
         against 141 W/m² of absorbed starlight, so internal heat DOMINATES and the star is the minor contributor
-        (bulk.tidal_heating row for the chain and the k2/Q band). Two consequences follow. Day-night and eclipse
+        (bulk.tidal_heating row for the chain and the k₂/Q band). Two consequences follow. Day-night and eclipse
         variation nearly vanishes, because an internally heated surface does not track the sky. And the old cratered
         terrain goes: a 10 m conductive lid over melt resurfaces continuously, so grooves and faults are the only
         landforms that survive. Visual contrast with Dante narrows but survives
@@ -1809,8 +1807,8 @@ decisions:
     axis: atmosphere
     status: passthrough
     driver: [passthrough]
-    narrative: "Hades has no atmosphere to speak of."
-    narrative_ko: "Hades에는 유의미한 대기가 없다."
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - { name: composition, value: "none (미량 외기권 무시 수준)", op: passthrough }
 
@@ -2275,7 +2273,7 @@ decisions:
       the name Cassandra comes from material the studio released rather than the films themselves, and the moon does
       not really exist.
     narrative_ko: >
-      Cassandra는 Polyphemus를 도는 넷째 위성으로, 반경 3400 km가량에 위성들 가운데 2번째로 크다. 얇은 대기를
+      Cassandra는 Polyphemus를 도는 넷째 위성으로, 반경 3400 km가량에 위성들 가운데 둘째로 크다. 얇은 대기를
       두르고 있으며 미생물이 생존할 수 있을 것으로 보인다. 공식 이름은 Alpha Centauri A b IV이고, Cassandra는 영화
       본편이 아니라 제작사가 공개한 설정에서 온 명칭으로 실제로 존재하지는 않는다.
     fields:
@@ -2598,14 +2596,14 @@ decisions:
     driver: [gameplay]
     narrative: >
       Landing is not hard, but there is nothing to breathe and it is cold, and sitting inside the outer belt means
-      shielding is needed too. The surface divides into six: Seas / Coastlines / Cold Highlands / Polar Ice /
-      Volcanic & Hydrothermal / Hazy Lowlands. The most interesting of them is the hydrothermal ground, where
-      traces of anaerobic life can be found.
+      shielding is needed too. The surface divides into six: Seas (cold open water) / Coastlines / Cold Highlands /
+      Polar Ice / Volcanic & Hydrothermal (the vent fields) / Hazy Lowlands (where the amber haze pools). The most
+      interesting of them is the hydrothermal ground, where traces of anaerobic life can be found.
     narrative_ko: >
       착륙은 어렵지 않지만 숨 쉴 수 없고 춥다. 외대 안에 잠겨 있어 차폐도 필요하다. 지표는 여섯으로 갈린다.
-      바다(Seas) / 해안(Coastlines) / 한랭 고지(Cold Highlands) / 극빙(Polar Ice) / 화산·열수 지대(Volcanic &
-      Hydrothermal) / 연무 저지대(Hazy Lowlands). 그중 가장 흥미로운 곳은 혐기성 생명의 흔적을 찾을 수 있는
-      열수구다.
+      바다(Seas, 차가운 노출 수면) / 해안(Coastlines) / 한랭 고지(Cold Highlands) / 극빙(Polar Ice) / 화산·열수
+      지대(Volcanic & Hydrothermal, 열수구 지대) / 연무 저지대(Hazy Lowlands, 호박색 연무가 고이는 곳). 그중 가장
+      흥미로운 곳은 혐기성 생명의 흔적을 찾을 수 있는 열수구다.
     fields:
       - { name: science_biomes, value: "6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (후보) Microbial Mats", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
       - { name: difficulty, value: "임무=한랭 무산소 착륙 + 외대 차폐 ·", op: set, note: "구값은 차폐 경미; environment.radiation 등급이 낮음→중간으로 오른 결과" }
@@ -2624,12 +2622,15 @@ decisions:
       Chaos is the outermost of Polyphemus's moons, a small icy body only 400 km in radius, yet its surface is
       split by enormous Miranda-like fractures with cliffs running 15 to 30 km tall, which a gravity of just
       0.023 g holds up without letting those steep vast walls collapse. It travels on a retrograde orbit, and the
-      ice grains its plumes throw into that orbit are what fill the blue-white ring around Polyphemus.
+      ice grains its plumes throw into that orbit are what fill the blue-white ring around Polyphemus. Like the
+      other moons it is pure fiction, with no real detection behind it; formally it is Alpha Centauri A b V, with
+      Chaos kept as the cultural name.
     narrative_ko: >
       Chaos는 Polyphemus를 도는 위성 가운데 가장 바깥에 있는 작은 얼음 천체다. 반경은 400 km에 그치지만
       표면은 Miranda를 닮아 거대한 균열로 갈라져 있고, 그 사이로 높이 15~30 km에 이르는 절벽이 이어져 있으며
       0.023 g에 불과한 중력이 가파르고 거대한 절벽을 붕괴시키지 않고 유지시킨다. 역행 궤도를 갖고 있으며,
-      이 천체가 궤도로 뿜어 올리는 얼음 알갱이가 Polyphemus를 감싼 푸른 흰빛 고리를 채운다.
+      이 천체가 궤도로 뿜어 올리는 얼음 알갱이가 Polyphemus를 감싼 푸른 흰빛 고리를 채운다. 다른 위성들처럼
+      실제 검출이 없는 픽션 천체이고, 공식 명칭은 Alpha Centauri A b V, Chaos는 문화명으로 쓴다.
     fields:
       - { name: body_type, value: "작은 얼음 위성 (반경 400 km, ρ ~2015 kg/m³, Miranda형 균열), 역행, E-고리 공급원", op: set }
       - { name: cliff_height, value: "15–30", unit: km, op: set, note: "게임 설정 명시값; 0.023 g라 이 규모가 서 있을 수 있다" }
@@ -2686,7 +2687,7 @@ decisions:
     driver: [art, physics]
     narrative: >
       Chaos has nothing to hold an atmosphere with. What the plumes throw up forms a thin shell around the moon
-      for a while, but it never settles back and soon becomes part of the ring. Vapour sublimating off the
+      for a while, but it never settles back and soon becomes part of the ring. Vapor sublimating off the
       surface spreads thinner still and stays as a gas layer beside the ring.
     narrative_ko: >
       Chaos는 대기를 붙잡을 힘이 없다. 플룸이 뿜어 올린 것들이 잠시 천체 주위에 옅은 껍질을 만들지만,
@@ -2762,7 +2763,7 @@ decisions:
     status: gated
     driver: [art, physics]
     narrative: >
-      From a distance Chaos is a white body with a blue cast, exactly the colour of the ice ring it supplies.
+      From a distance Chaos is a white body with a blue cast, exactly the color of the ice ring it supplies.
       Fractures crossing the surface leave deep shadows, and the water jets rising from the active zones catch
       the starlight and scatter it bright. With no atmosphere the line between light and dark is knife-sharp.
     narrative_ko: >
@@ -2819,8 +2820,13 @@ decisions:
     axis: satellites               # G10 — dust_source 역할 (facet-walk 2026-06-23)
     status: gated
     driver: [art, physics]
-    narrative: "None."
-    narrative_ko: "없음."
+    narrative: >
+      Chaos has no moons of its own. What is settled here is what feeds the ring: the plumes are a look, not a
+      mechanism the physics supports, and the real outgassing is a thin water-vapor stream that rides alongside
+      the ring rather than filling it.
+    narrative_ko: >
+      Chaos에게 위성은 없다. 여기서 정하는 것은 고리를 무엇이 채우느냐다. 플룸은 물리가 지지하는 기제가 아니라
+      연출이고, 실제 방출은 고리를 채우기보다 그 곁을 도는 얇은 수증기 흐름이다.
     fields:
       - { name: dust_sources, value: "Chaos = E-고리 공급원 (물 플룸 = 아트 디렉션 / 충돌 파편·sputtering = 물리 경로, 단독으로는 약함)", op: set }
       - { name: neutral_torus_supply, value: 134, unit: kg/s, op: set, note: "표면 134 K 승화 유출; 기체이므로 먼지 고리가 아니라 중성 수증기 토러스" }
@@ -2867,7 +2873,7 @@ decisions:
     status: gated
     driver: [gameplay]
     narrative: >
-      Chaos runs against the other moons, so you cannot hop across from a neighbour; reaching it costs a
+      Chaos runs against the other moons, so you cannot hop across from a neighbor; reaching it costs a
       separate bill to reverse your orbital direction. The surface divides into five: Chasmata (the 15–30 km
       cliffs) / Plume Vents (active fractures with water jets) / Icy Plains (fresh ice laid down by plume
       fallout) / Craters (the old terrain) / Poles (high latitude). The one worth going to is Plume Vents, where
