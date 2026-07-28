@@ -546,7 +546,7 @@ decisions:
         #95bcc9(옅은 슬레이트블루; Rayleigh+CH₄ × K왜성 SED→CIE)는 documented divergence — 영화 azure=아트 과채도(Irwin2024 진짜 해왕성 옅음과 동류). 파랑
         물리메커니즘=깊은 Rayleigh+CH₄(G4). 표면 청록-회색(G5)은 대기 아래 비가시. emit 디스크=영화 파랑.
 
-        paper: docs/reference/atmosphere-reflected-color-methodology.md (Rayleigh+CH₄ 반사색·Irwin2024 얼음거성 옅음; 물리색
+        paper: docs/reference/atmosphere-reflected-color-methodology.md (Rayleigh+CH₄ 반사색·Irwin2024 얼음거성 옅음; 물리색 #95bcc9 = cie_color 엔진에 Rayleigh λ⁻⁴+CH₄ × 40 Eri A SED 통과 산출).
     refs: [2024MNRAS.52711521I]
 
   - body: "40 Eridani A b"

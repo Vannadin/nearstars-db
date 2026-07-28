@@ -14,8 +14,8 @@ decisions:
     driver: [classification, observation]
     narrative: >
       body_type=M4.0Ve 적색왜성 — 로스터 최고령(8.5 Gyr)·최저활동 급의 조용한 노익성. designation=Barnard's
-      star (GJ 699).5로 맨눈 불가, 1916 E.E. Barnard 고유운동 측정으로 유명해진
-      망원경 천체 — Proxima identity 행과 같은 패턴).
+      star (GJ 699). V 9.5로 맨눈에는 보이지 않고, 1916년 E.E. Barnard의 고유운동 측정으로 유명해진
+      망원경 천체다.
     fields:
       - { name: body_type, value: "M4.0Ve 적색왜성 (조용한 노익성)", op: set }
       - { name: designation, value: "Barnard's star (GJ 699)", op: set }

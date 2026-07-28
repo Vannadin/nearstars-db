@@ -590,7 +590,7 @@ decisions:
         value: "항성경도 동심원 7구획: 직하점/직하 호수(splashdown)/주간 저지/주간 고지/터미네이터/야간면/야간 빙관 (오로라대 제외)"
         op: set
       - name: difficulty
-        value: "임무=항성간 플래그십 · 발견="
+        value: "임무=항성간 플래그십"
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"
