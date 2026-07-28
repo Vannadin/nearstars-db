@@ -297,9 +297,20 @@ decisions:
       superseded, because `science_biomes` *is* what the row decides, so the prose has to be
       about it. Everything else engine-side (RB difficulty levels, `ScienceValues`, SOI
       tuning, why Poles is geographic rather than seasonal) still belongs in `evidence`.
-  - gate `evidence` = the **verification + grounding trail**: method, tool + fit quality,
-    formulas, checks, encodings, and the engine mechanics the narrative omits. Technical
-    shorthand is fine; storytelling and dated decision-logs are not.
+  - gate `evidence` = the **verification + grounding trail**, in a fixed shape (owner,
+    2026-07-28): ① the adopted conclusion in one sentence → ② the check actually
+    performed (tool, fit, comparison, the numbers) → ③ one honest caveat, only when a
+    real one exists — never invented to fill the slot. Technical shorthand, formulas,
+    row/file references and the engine mechanics the narrative omits all belong here.
+    What does **not**: rhetorical openers and section-header sentences; counter-argument
+    walkthroughs and derivations (move them to the matching methodology doc as a
+    worked-example entry and point to it in one line); editorial history ("was stated
+    backwards before" → `provenance`); emphasis markup (`**bold**` may render literally
+    in the KO string; both languages emphasize by sentence structure only). Length is a
+    judgment call, not a cap — but a block that reads as an essay is in the wrong slot.
+    Exception: an owner-override row whose evidence *is* the honesty record for a canon
+    departure (the reference cases: Chaos surface, Chaos satellites) keeps its full
+    argument in place.
   - row-level **`provenance`** = the **value's own history**, and the one slot where dated
     decision-logs belong: what the value used to be, when and why it changed, which owner
     call settled it. Written for a future maintainer asking "why is this number different
@@ -322,6 +333,9 @@ decisions:
     a passthrough measurement cites every measurement paper. A method named in prose but
     missing from `refs[]` is the recurring bug. The HTML builder links `docs/reference/*.md`
     and `plans/*.md` refs to their wiki page and other repo `.md` refs to the GitHub blob.
+    **`gameplay` and `identity` rows are refs-exempt** (owner, 2026-07-28): those axes
+    record design choices, not literature claims — an empty `refs[]` is the honest state
+    there, and the gate does not warn on it.
   - **No em-dashes** (CONVENTIONS §1.10) and **natural Korean, never a literal calque**
     (the ko-mirror rule: 거대 가스행성 not 거인, 구름층 not 구름덱, 영화/게임 설정 not 캐넌, …) apply to *every*
     rendered field: narrative, evidence, notes, values.

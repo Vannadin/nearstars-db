@@ -170,9 +170,16 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   knowledge, not story), and **workflow vocabulary** (2026-07-26/28 prose pass):
   passthrough/통과, emit, 앵커, "Phase 3"/"Phase 4", 보드, 게이트, "전용 행", the
   union rule, raw field/axis names — the story is about the body, the machinery
-  stays in `evidence`/`provenance`. The gate `evidence` = verification + grounding trail (tool, fit
-  quality, formulas, checks, the mechanics the narrative omits); no storytelling, no
-  dated decision-logs. **`evidence` IS rendered in the board viewer** — it is not an
+  stays in `evidence`/`provenance`. The gate `evidence` = verification + grounding trail
+  in a fixed shape (owner 2026-07-28): ① conclusion in one sentence → ② the check
+  actually performed (tool, fit, comparison, numbers) → ③ one honest caveat when a real
+  one exists. Counter-argument walkthroughs and derivations move to the methodology doc
+  as a worked-example (point to it in one line); editorial history → `provenance`; no
+  rhetorical openers, no emphasis markup (`**bold**` can render literally in KO — both
+  languages emphasize by sentence structure). Length is judgment, not a cap, but an
+  essay is in the wrong slot. Exception: owner-override rows whose evidence *is* the
+  honesty record for a canon departure (Chaos surface / satellites) keep the full
+  argument. **`evidence` IS rendered in the board viewer** — it is not an
   internal channel, so treat it as reader-visible.
 - **The `gameplay` axis is the biome exception** (owner 2026-07-27) and takes a fixed
   three-part shape: what is distinctive about going there (nothing generic to the body
@@ -207,6 +214,8 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
     not the papers inside it (see `methodology-derived` above).
   Never drop a single paper lifted from inside a methodology doc onto a derived
   value — the reader can't then tell a direct measurement from a recipe output.
+  **`gameplay` and `identity` rows are refs-exempt** (owner 2026-07-28): design
+  choices, not literature claims — empty `refs[]` is the honest state there.
 - `verdict: partial` is **illegal** → split into a `pass-in-window` field and a
   `documented-divergence` field, each with its own note.
 - `documented-divergence` (at row **or** field level) **requires** a non-null

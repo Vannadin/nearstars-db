@@ -242,7 +242,9 @@ def check_v2(path, doc):
                 or nonempty(gate.get("value"))
             if not has_value:
                 warns.append(f"{loc}: gated row has no machine-readable value/fields")
-            if not row.get("refs"):
+            # gameplay/identity record design choices, not literature claims —
+            # refs-exempt per SPEC §3.1 (owner, 2026-07-28)
+            if not row.get("refs") and group not in ("gameplay", "identity"):
                 warns.append(f"{loc}: gated row has no refs[]")
 
     # ── SPEC §3.2: bulk template convention ──────────────────────────────
