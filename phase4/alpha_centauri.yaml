@@ -1190,7 +1190,8 @@ decisions:
       verdict: pass-in-window
       evidence: >
         With no measurement, only a physical-range gate: alignment is the default expectation from close-pair formation·tidal evolution, and a small tilt (≲10°) is
-        unobjectionable by analogy to the Sun (7.25°). Consistent with all observations.
+        unobjectionable by analogy to the Sun (7.25°). Consistent with all observations. The pole azimuth
+        is free at emit orientation (the ICRS pole RA/Dec conversion happens at the emit stage).
       evidence_ko: >
         측정 부재라 물리 범위 게이트만: 근접쌍 형성·조석 진화상 정렬 기대가 기본이고 소기울기(≲10°)는 태양
         (7.25°) 유비로 무난. 어떤 관측과도 충돌 없음. 극 방위각은 emit 배향 자유(ICRS 극 RA/Dec 변환은 emit 단계).
@@ -1343,8 +1344,14 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "An Io-type volcanic world."
-      evidence_ko: "Io형 화산 세계."
+      evidence: >
+        Classified an Io-type volcanic moon. Check: ρ ≈ 2620 kg/m³ sits in the silicate-body range, and the
+        volcanism is powered by the ~1200× Io flux in the bulk.tidal_heating row. The designation follows
+        the moon-numbering convention (Alpha Centauri A b I); fictional, so the db-parity check does not apply.
+      evidence_ko: >
+        Io형 화산 위성으로 분류. 확인: 밀도 ~2620 kg/m³는 규산염 몸체 범위이고, 화산 활동은
+        bulk.tidal_heating 행의 ~1200× Io 플럭스가 뒷받침한다. 명명은 위성 순번 규약(Alpha Centauri A b I)을
+        따르며, 픽션 천체라 DB 대조 검사는 면제.
 
   - body: Dante
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
@@ -1401,8 +1408,17 @@ decisions:
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      evidence: "No intrinsic magnetosphere/radiation_belts. Dante's volcanic SO₂/sulfur torus feeds the Polyphemus belt (environment.radiation causal loop). Being innermost, radiation is extreme·unshielded."
-      evidence_ko: "magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를 먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비."
+      evidence: >
+        No intrinsic field. Check: the Io precedent carries over (Galileo's flybys found no meaningful
+        intrinsic dipole at Io itself), and at 900 km Dante is far below Cassandra, whose rocky-dynamo
+        ladder result is already only ~0.4 µT. What the moon does contribute is plasma, not a field: its
+        volcanic SO₂/sulfur torus feeds the Polyphemus belt (the environment.radiation causal loop), and
+        being innermost it takes that radiation unshielded.
+      evidence_ko: >
+        고유 자기장 없음. 확인: 이오 선례가 그대로 적용되고(갈릴레오 근접비행은 이오 자체에서도 유의미한 고유
+        쌍극자를 찾지 못했다), 900 km의 Dante는 rocky-dynamo 사다리로도 ~0.4 µT에 그친 Cassandra보다 훨씬
+        작다. 이 위성이 내놓는 것은 자기장이 아니라 플라스마다. 화산 SO₂/황 토러스가 폴리페무스 방사선대를
+        먹이고(environment.radiation 인과 고리), 최내곽이라 그 방사선을 무방비로 받는다.
 
   - body: Dante                    # A b I
     axis: bulk.tidal_heating
@@ -1616,8 +1632,15 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "A gray Ganymede-type appearance but rocky in composition."
-      evidence_ko: "회색 가니메데형 외형이나 조성은 rocky."
+      evidence: >
+        Classified a rocky moon behind a gray Ganymede-like face. Check: ρ ≈ 2830 kg/m³ is silicate, not
+        ice, so the gray is surface color rather than composition; the surface row's half-adopted film
+        reading (gray and non-luminous at 278 K) supplies it. Designation Alpha Centauri A b II; fictional,
+        so the db-parity check does not apply.
+      evidence_ko: >
+        회색의 가니메데형 얼굴을 한 암석 위성으로 분류. 확인: 밀도 ~2830 kg/m³는 얼음이 아니라 규산암 범위라
+        회색은 조성이 아니라 표면색이고, 그 색은 영화 설정을 절반 채택한 surface 행(278 K의 회색·비발광)이
+        든다. 명명은 Alpha Centauri A b II, 픽션 천체라 DB 대조 검사는 면제.
 
   - body: Hades
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
@@ -1662,8 +1685,14 @@ decisions:
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      evidence: "No intrinsic magnetosphere/radiation_belts. Unshieldedly submerged in the Polyphemus radiation-belt peak (2.07 R_p) → severe surface radiation (reflected in environment.radiation). No magnetic shielding."
-      evidence_ko: "magnetosphere/radiation_belts 고유값 없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영). 자기 차폐 없음."
+      evidence: >
+        No intrinsic field. Check: the same argument as Dante's row: the Io precedent (no intrinsic dipole
+        found at Io) plus a 750 km body far below Cassandra's ~0.4 µT ladder result. The consequence is
+        carried by environment.radiation: the moon sits unshielded in the Polyphemus belt peak (2.07 R_p).
+      evidence_ko: >
+        고유 자기장 없음. 확인: Dante 행과 같은 논거다. 이오 선례(이오에서도 고유 쌍극자 미검출)에 더해
+        750 km 몸체는 사다리로 ~0.4 µT에 그친 Cassandra보다 훨씬 작다. 결과는 environment.radiation 행이
+        든다. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠겨 있다.
 
   - body: Hades
     axis: bulk.tidal_heating
@@ -1858,8 +1887,15 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "The only habitable body (special handling)."
-      evidence_ko: "유일 거주가능체(특별 취급)."
+      evidence: >
+        Classified the system's only habitable body. Check: the three conditions are carried by its own
+        rows and hold together: a breathable oxygen atmosphere (atmosphere row), a between-belts orbit
+        under strong dipole shielding (environment.radiation row), and 0.8 g surface gravity (bulk row).
+        Designation Alpha Centauri A b III; fictional, so the db-parity check does not apply.
+      evidence_ko: >
+        이 계의 유일한 거주가능체로 분류. 확인: 근거 세 가지를 각자의 행이 든다. 호흡 가능한 산소 대기
+        (atmosphere 행), 방사선대 사이 궤도와 강한 쌍극자 차폐(environment.radiation 행), 표면 중력 0.8 g
+        (bulk 행). 명명은 Alpha Centauri A b III, 픽션 천체라 DB 대조 검사는 면제.
 
   - body: Pandora
     axis: bulk                     # mass/radius/gravity/rotation/obliquity (facet-walk 2026-06-22)
@@ -2267,8 +2303,17 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "A marginal life-world (microbial·carbon-cycle), semi-canon (soft)."
-      evidence_ko: "marginal life-world(미생물·탄소순환), semi-canon(soft)."
+      evidence: >
+        Classified a marginal life-world, microbial only. Check: the atmosphere row's 243–263 K anoxic N₂
+        allows seasonal liquid water but rules out oxygen-breathing life, which is exactly the
+        anaerobic-microbe reading the surface row records. Semi-canon: the film's system carries the moon's
+        existence, its character here is designed. Designation Alpha Centauri A b IV; fictional, so the
+        db-parity check does not apply.
+      evidence_ko: >
+        미생물 수준의 한계 생명 세계로 분류. 확인: atmosphere 행의 243~263 K 무산소 N₂가 계절적 액체 물은
+        허용하되 산소 호흡 생물은 배제하며, 이는 surface 행이 기록한 혐기 미생물 해석과 맞물린다. 영화
+        설정에는 위성의 존재만 있고 성격은 여기서 설계했다(semi-canon). 명명은 Alpha Centauri A b IV, 픽션
+        천체라 DB 대조 검사는 면제.
 
   - body: Cassandra
     axis: bulk                     # mass/radius/rotation/obliquity (facet-walk 2026-06-22)
@@ -2384,8 +2429,15 @@ decisions:
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
-      evidence: "Water ocean=marginally moist (partially frozen). Life=anaerobic microbes (differentiated from Pandora's lush biosphere). Hydrothermal vents=candidate carbon-cycle life hubs (biome)."
-      evidence_ko: "물바다=한계-습윤(부분빙). 생명=혐기 미생물(판도라 무성과 차별). 열수구=탄소순환 생명 거점 후보(바이옴)."
+      evidence: >
+        Water ocean=marginally moist (partially frozen). Life=anaerobic microbes (differentiated from
+        Pandora's lush biosphere). Hydrothermal vents=candidate carbon-cycle life hubs (biome). Check: the
+        partial freeze follows from the atmosphere row's 243–263 K (global mean below freezing, seasonal
+        melt), and anaerobic-only follows from its anoxic composition.
+      evidence_ko: >
+        물바다=한계-습윤(부분빙). 생명=혐기 미생물(판도라 무성과 차별). 열수구=탄소순환 생명 거점
+        후보(바이옴). 확인: 부분빙은 atmosphere 행의 243~263 K(전지구 평균이 어는점 아래, 계절 융해)에서
+        따라 나오고, 혐기 한정은 그 무산소 조성에서 따라 나온다.
 
   - body: Cassandra
     axis: appearance               # group 6 facet-walk 2026-06-22
@@ -2604,8 +2656,17 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "A retrograde icy sub-moon (confirmed an icy body in group 9 → feeds the blue-white E-ring)."
-      evidence_ko: "역행 얼음 소위성(group 9서 얼음체 확정 → 푸른흰빛 E-고리 먹임)."
+      evidence: >
+        Classified a small retrograde icy moon, the E-ring's supplier. Check: ρ ≈ 2015 kg/m³ is an ice-rock
+        mix, consistent with water plumes and the Miranda-like fracture terrain; the supply link to the
+        blue-white ring is recorded with numbers in the satellites row (the plume main supply is an
+        art-marked choice, the 134 kg/s neutral torus is the gas share). Designation Alpha Centauri A b V;
+        fictional, so the db-parity check does not apply.
+      evidence_ko: >
+        역행 궤도의 작은 얼음 위성이자 E-고리 공급원으로 분류. 확인: 밀도 ~2015 kg/m³는 얼음-암석 혼합
+        범위로 물 플룸과 Miranda형 균열 지형에 맞고, 청백 고리로의 공급 관계는 satellites 행이 수치로
+        든다(플룸 주공급은 아트 표시된 선택, 중성 수증기 토러스 134 kg/s는 기체 몫). 명명은
+        Alpha Centauri A b V, 픽션 천체라 DB 대조 검사는 면제.
     refs: ["phase4/art-direction/polyphemus-art-direction.md"]
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-27: cliff_height 15–30 km 신규. canon [GAME]이 명시한 값인데 보드 전체에서
@@ -2664,8 +2725,15 @@ decisions:
     gate:
       criterion: [physics]
       verdict: pass-in-window
-      evidence: "Ultra-low gravity cannot hold an atmosphere. Plume ejecta briefly form an exosphere, then go to the ring·space (Enceladus-style)."
-      evidence_ko: "초저중력이라 대기 못 잡음. 플룸 분출물이 일시 exosphere 형성 후 고리·우주로(엔셀라두스식)."
+      evidence: >
+        No atmosphere; plume ejecta form a transient exosphere, then leave for the ring and space
+        (Enceladus-style). Check: the numbers are in the satellites row: escape velocity sits below water's
+        ~430 m/s thermal speed at the surface temperature, so vapor escapes freely, 134 kg/s into the
+        neutral torus.
+      evidence_ko: >
+        대기 없음. 플룸 분출물이 일시적 exosphere를 만들었다가 고리와 우주로 떠난다(엔셀라두스식). 확인:
+        수치는 satellites 행에 있다. 탈출속도가 표면 온도의 물 열속도 ~430 m/s보다 낮아 수증기가 자유롭게
+        이탈하고, 134 kg/s가 중성 토러스로 간다.
 
   - body: Chaos
     axis: surface                  # G5 facet-walk 2026-06-23
@@ -2741,8 +2809,14 @@ decisions:
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
-      evidence: "Plumes + bright frost = the Enceladus look. The blue-white ice visually links to the ice-blue E-ring (supplier-ring same tone)."
-      evidence_ko: "플룸 + 밝은 frost = 엔셀라두스 룩. 청백 얼음이 ice-blue E-고리와 시각 연결(공급원-고리 동톤)."
+      evidence: >
+        Plumes plus bright frost, the Enceladus look. Check: the tone link to the ice-blue E-ring holds by
+        construction: the ring color was Mie-synthesized from icy-grain composition and Chaos is the grain
+        source (satellites row), so supplier and ring share the blue-white by the same material.
+      evidence_ko: >
+        플룸에 밝은 서리, 엔셀라두스 룩이다. 확인: ice-blue E-고리와의 동톤은 구성상 성립한다. 고리색은 얼음
+        알갱이 조성에서 Mie 합성으로 얻었고 그 알갱이의 공급원이 Chaos이므로(satellites 행), 공급원과 고리가
+        같은 재료로 같은 청백을 공유한다.
 
   - body: Chaos
     axis: magnetism.magnetic_field # G7 facet-walk 2026-06-23
