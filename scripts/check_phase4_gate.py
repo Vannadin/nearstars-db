@@ -74,6 +74,28 @@ STATUS = {"passthrough", "open", "art-directed", "gated", "emitted", "superseded
 
 # SPEC §1 decision-taxonomy classes — the fixed driver vocabulary (2026-07-28)
 DRIVER_TOKENS = {"window-selection", "engine", "synthetic", "fiction", "art-direction"}
+
+# SPEC §3.1 prose-hygiene guards over *rendered* fields (2026-07-28): the board
+# viewer shows these slots, so em-dashes, emphasis markup and banned calques
+# are reader-visible defects. provenance/comments are exempt (not rendered).
+BANNED_CALQUES = ("캐넌", "캐논", "구름덱", "가스자이언트")
+
+
+def _rendered_strings(row):
+    """Yield (slot, text) for every string the board viewer renders."""
+    for k in ("narrative", "narrative_ko", "value"):
+        if isinstance(row.get(k), str):
+            yield k, row[k]
+    for f in row.get("fields") or []:
+        if isinstance(f, dict):
+            for k in ("value", "note", "na_reason", "phase3_default"):
+                if isinstance(f.get(k), str):
+                    yield f"fields.{f.get('name')}.{k}", f[k]
+    gate = row.get("gate")
+    if isinstance(gate, dict):
+        for k in ("evidence", "evidence_ko", "divergence_note"):
+            if isinstance(gate.get(k), str):
+                yield f"gate.{k}", gate[k]
 VERDICT = {"pass-in-window", "documented-divergence", "owner-override", "methodology-derived"}
 FIELD_OPS = {"set", "scale", "passthrough"}
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
@@ -141,6 +163,7 @@ def check_v2(path, doc):
     bulk_anchors = {}          # body -> live `axis: bulk` anchor row
     bulk_named = {}            # body -> {name} from live dedicated bulk.<name> rows
     bad_driver_rows = 0        # rows with driver tokens outside SPEC §1
+    prose_hits = {}            # prose-hygiene defect kind -> row count (per file)
     for i, row in enumerate(rows):
         loc = f"{path.name} decisions[{i}]"
         if not isinstance(row, dict):
@@ -209,6 +232,25 @@ def check_v2(path, doc):
             toks = [drv] if isinstance(drv, str) else list(drv)
             bad_driver_rows += any(t not in DRIVER_TOKENS for t in toks)
 
+        # SPEC §3.1 prose hygiene over rendered fields (aggregated per file)
+        kinds = set()
+        for _slot, text in _rendered_strings(row):
+            if "—" in text:
+                kinds.add("em-dash (—) — CONVENTIONS §1.10 bans it in rendered fields")
+            if "**" in text:
+                kinds.add("'**' emphasis markup — SPEC §3.1: emphasize by sentence "
+                          "structure, markup may render literally")
+            for w in BANNED_CALQUES:
+                if w in text:
+                    kinds.add(f"banned calque '{w}' — ko-mirror rule "
+                              "(영화/게임 설정, 구름층, 거대 가스행성)")
+        if any(isinstance(f, dict) and f.get("name") == "difficulty"
+               for f in fields):
+            kinds.add("deferred 'difficulty' field authored — SPEC §0 defers the "
+                      "facet (owner 2026-07-24)")
+        for k in kinds:
+            prose_hits[k] = prose_hits.get(k, 0) + 1
+
         if status == "passthrough" and gate:
             fails.append(f"{loc}: passthrough row carries a gate block (must have none)")
 
@@ -262,6 +304,8 @@ def check_v2(path, doc):
         warns.append(f"{path.name}: {bad_driver_rows} row(s) use driver tokens outside "
                      f"the SPEC §1 vocabulary {sorted(DRIVER_TOKENS)} — normalize on "
                      "that board's next review run")
+    for kind, n in sorted(prose_hits.items()):
+        warns.append(f"{path.name}: {n} row(s) with {kind}")
 
     # ── SPEC §3.2: bulk template convention ──────────────────────────────
     for b in sorted(bodies_with_rows):
