@@ -2227,6 +2227,9 @@ decisions:
 
   - body: Pandora
     axis: gameplay                 # group 11 facet-walk 2026-06-22
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-28: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24,
+      임무 난이도 등급은 모드-지원 관심사). 구값 "임무=거주가능 세계 착륙(최대 보상)".
     status: gated
     driver: [gameplay]
     narrative: >
@@ -2244,7 +2247,6 @@ decisions:
     fields:
       - { name: science_biomes, value: "7: Oceans / Coastlines / Rainforest Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Geometric Formations (Flux-Vortex)", op: set, colors: {"Oceans":"#2A5C99","Coastlines":"#35B8A0","Rainforest Lowlands":"#3E7A3A","Highland Mountains":"#7A6A5A","Volcanic Belts":"#9A4A38","Ice Peaks & Polar Caps":"#D6E4EA","Geometric Formations (Flux-Vortex)":"#7A44C8"} }   # provisional naturalistic biome-map display colors (S↓; biolum coast + flux-vortex = accents)
       - { name: sphere_of_influence_tuning, value: "auto from mass", op: passthrough }
-      - { name: difficulty, value: "임무=거주가능 세계 착륙(최대 보상)", op: set }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -2254,13 +2256,12 @@ decisions:
         high-magnetic-anomaly special science. NearStars's only habitable body, so the richest biome map. In the
         flux-vortex zone, place distinctive structures (geometric rock formations + magnetic-anomaly terrain) + a local
         aurora separate from the polar cap (see appearance.aurora). SOI=auto from mass; full ScienceValues.
-        difficulty: mission=habitable-world landing (max reward); Unobtanium only
-        as a report mystery (report_flavor).
+        Unobtanium only as a report mystery (report_flavor).
       evidence_ko: >
         표면 있음 → 정식 biome map(7): 대양 / 해안(생물발광) / 우림 저지대 / 고지대 산맥 / 화산대 / 빙봉·극관 /
         기하 구조물(플럭스 볼텍스), 고자기 이상 특수 과학. NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스
         볼텍스 구역엔 기하학적 암석 구조물 + 자기 이상 지형 배치 + 극관과 별개의 국소 오로라(appearance.aurora
-        참조). SOI=질량서 자동; ScienceValues 전체. difficulty: 임무=거주가능 세계 착륙(최대 보상); 언옵타늄은 report 미스터리로만(report_flavor).
+        참조). SOI=질량서 자동; ScienceValues 전체. 언옵타늄은 report 미스터리로만(report_flavor).
 
   - body: Cassandra                # A b IV
     axis: identity
@@ -2592,6 +2593,8 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-27: difficulty "차폐 경미" → "외대 차폐". environment.radiation 등급이
       낮음 → 중간으로 오른 데 따른 것. 바이옴 6종·후보 1종, SOI, ScienceValues, RB 등급은 무변경.
+      2026-07-28: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24).
+      구값 "임무=한랭 무산소 착륙 + 외대 차폐".
     status: gated
     driver: [gameplay]
     narrative: >
@@ -2606,7 +2609,6 @@ decisions:
       흥미로운 곳은 혐기성 생명의 흔적을 찾을 수 있는 열수구다.
     fields:
       - { name: science_biomes, value: "6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (후보) Microbial Mats", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
-      - { name: difficulty, value: "임무=한랭 무산소 착륙 + 외대 차폐", op: set, note: "구값은 차폐 경미; environment.radiation 등급이 낮음→중간으로 오른 결과" }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -2870,6 +2872,9 @@ decisions:
 
   - body: Chaos
     axis: gameplay                 # G11 facet-walk 2026-06-23
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-28: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24).
+      구값 "착륙=초저중력 0.023g 특수".
     status: gated
     driver: [gameplay]
     narrative: >
@@ -2886,7 +2891,6 @@ decisions:
       받을 수 있다.
     fields:
       - { name: science_biomes, value: "5: Chasmata / Plume Vents (hotspot) / Icy Plains / Craters / Poles", op: set, colors: {"Chasmata":"#3C4A5E","Plume Vents":"#33A5B5","Icy Plains":"#AEC8D6","Craters":"#7C8A96","Poles":"#E4ECF0"} }   # provisional naturalistic biome-map display colors (S↓; plume vents = accent)
-      - { name: difficulty, value: "착륙=초저중력 0.023g 특수", op: set }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
