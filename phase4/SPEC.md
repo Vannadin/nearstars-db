@@ -115,6 +115,15 @@ physical value before that value is itself `gated`.
 Classes A–C/E modify an existing Phase 2/3 body; class D introduces a body the
 Phase 1–3 pipeline cannot carry (no measurement).
 
+A row's `driver:` key names the class(es) that drove the decision, using **exactly
+these five tokens** (2026-07-28 normalization; free-form tokens drift): `window-selection`
+(A — includes physics/observation-pinned choices, the value sits where the defensible
+window puts it), `engine` (B — Principia stability, emit mechanics, gameplay/science
+tuning), `synthetic` (C), `fiction` (D — canon-driven and invented-body decisions),
+`art-direction` (E). Use a list when several apply; a pure `passthrough` row carries
+no `driver` (its status already says everything). The gate warns on tokens outside
+this vocabulary.
+
 ---
 
 ## 2. The 고증 gate — four verdicts
@@ -203,7 +212,7 @@ decisions:
     status: gated                # passthrough | open | art-directed | gated | emitted
     op: scale                    # set | scale (how value applies over the Phase 3 default)
     value: 0.8
-    driver: engine+window-selection        # taxonomy class(es), §1
+    driver: [engine, window-selection]     # taxonomy class token(s), §1 — fixed vocabulary
     phase3_default: "β-prior (c≈0.08)"      # what Phase 3 presented
     gate:
       criterion: [stability, error-bar]

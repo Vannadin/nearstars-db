@@ -11,7 +11,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: identity
     status: gated                 # 2026-06-22 facet-walk
-    driver: [classification]
+    driver: [window-selection]
     narrative: >
       Polyphemus is the system's flagship: a temperate Saturn-class gas giant of hydrogen and helium, 120 Earth
       masses, cool enough to raise water clouds. It orbits Alpha Centauri A as a real direct-imaging candidate, and
@@ -79,7 +79,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: orbit.inclination_deg
     status: gated                 # 2026-06-22 — 상호경사 16° prograde 확정, 절대 sky-frame은 자유 emit 배향
-    driver: [stability, window-selection]
+    driver: [engine, window-selection]
     narrative: >
       The planet rides 16° above the binary's plane, orbiting the same way the two stars turn. The observed
       solutions near 50° and 130° would let the companion star wrench the orbit apart, so the middle of the stable
@@ -112,7 +112,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: orbit                      # was orbit.elements_residual — Ω/ω/mean_anomaly + spin-orbit + lagrange (facet-walk 2026-06-22)
     status: gated
-    driver: [emit, classification]
+    driver: [engine, window-selection]
     narrative: >
       Polyphemus is placed so that in August 2024 it sits along the direction JWST detected it, with that state wound
       back to the game's 1950 start epoch. Only the sighting direction is reproduced: along that line the
@@ -212,7 +212,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: bulk.geopotential_j2     # 편평도 (Principia j2 + reference_radius) — emit 필드 + 위성 동역학 입력
     status: gated                  # 2026-06-20 확정 — J2 위성 시뮬 완료(자체구현 j2.py로 주입·검증)
-    driver: [physical]             # 자전+밀도에서 도출(아트디렉션 아님)
+    driver: [window-selection]             # 자전+밀도에서 도출(아트디렉션 아님)
     narrative: >
       A ten-hour day flattens this puffy giant into a visibly oblate globe. The bulge follows from the rotation
       rate and an interior mass concentration assumed to lie between Saturn's and Jupiter's, via the standard
@@ -264,7 +264,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: bulk.obliquity
     status: gated                  # 5° 확정 (2026-06-22) — 재시뮬 STABLE + 일식 duty 검증
-    driver: [visual, physics]
+    driver: [art-direction, window-selection]
     narrative: >
       The spin axis leans just 5° from the orbital plane. A Saturn-like 27° would only serve to tilt the rings
       photogenically, but the ring instead lies in Chaos's orbital plane, so the axis stays nearly upright. Three
@@ -310,7 +310,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: bulk.rotation_period
     status: gated                  # 2026-07-15 — Avatar canon [GAME] 자전 채택 (기존 "목성/토성 유추 conf low" 오귀속 정정)
-    driver: [canon]
+    driver: [fiction]
     narrative: >
       The day is 10.35 hours, the midpoint of the rotation range stated in the Avatar game canon. A giant this
       far out never tidally locks, and the fast spin is what powers the pronounced equatorial bulge recorded in
@@ -332,7 +332,7 @@ decisions:
     axis: bulk                       # was bulk.residual — mass + spin_axis + internal_heat + age (facet-walk 2026-06-22)
     body_class: free_rotator         # §3.2 템플릿 앵커 — radius/rotation/obliquity/J2는 전용 행 (union rule)
     status: gated
-    driver: [physics, classification]
+    driver: [window-selection]
     narrative: >
       The remaining bulk facts, gathered in one place: the planet weighs 120 Earth masses, inherits its
       5.3-billion-year age from the star, and runs on sunlight rather than inner fire, the opposite of the
@@ -370,7 +370,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: atmosphere                 # composition/pressure/temperature/scale_height/breathability/greenhouse/escape (group 4, 2026-06-22)
     status: gated
-    driver: [physics, classification]
+    driver: [window-selection]
     narrative: >
       The air is hydrogen and helium, modestly enriched in heavy elements the way a Saturn-class planet should be, and
       the visible deck is water and ammonium-hydrosulfide cloud: the planet is just warm enough that ammonia never
@@ -424,7 +424,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: appearance.banding
     status: gated                 # group 6 facet-walk 완료 (2026-06-22) — 3색 띠 + 가라앉은 파란 폭풍
-    driver: [visual]
+    driver: [art-direction]
     narrative: >
       Polyphemus wears three colors: white zones of water cloud, red-brown bands where photochemical pigments stain
       the deck, and slate-blue belts where gaps in the cloud expose the deep atmosphere's blue scatter. Its
@@ -490,7 +490,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: appearance.haze
     status: gated                 # group 6 facet-walk (2026-06-22) — 금색→목성 적색 70% 오너 조정
-    driver: [visual]
+    driver: [art-direction]
     narrative: >
       The red-brown stain on the bands comes from photochemical haze: sulfur compounds and hydrocarbon tholins
       cooked out of the upper atmosphere by starlight. Jupiter and Saturn both wear pigment haze of this kind
@@ -527,7 +527,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: appearance.clouds
     status: gated                 # group 6 facet-walk (2026-06-22) — 형태학 명시 결정
-    driver: [visual]
+    driver: [art-direction]
     narrative: >
       The cloud deck churns like Jupiter's: vortices and festoons along the band boundaries, plus one big mid-latitude
       storm, the sunken blue eye. A planet with this little internal heat would more naturally look like placid
@@ -558,7 +558,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: appearance.aurora
     status: gated                 # 2026-07-28 재게이트 — 토러스-구동 밝은 오로라(물리 정합), 색 조성-고정
-    driver: [visual, physics]
+    driver: [art-direction, window-selection]
     depends_on: "magnetosphere(자기장 결정): 오로라 가둠/세기는 자기권에 의존, 그 행 먼저 확정 필요"
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-28: 밝기 상향(오너 결정 ⑥b, 감사 M11) — 구 근거 "항성풍 빈약 → 물리는 희미"는 구동 채널
@@ -603,7 +603,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: magnetism.magnetic_field
     status: gated                 # 4b 완료 (2026-06-22) — dynamo 스케일링 근거화
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       The dynamo gives Polyphemus a field of about 170 microtesla at the equator: eight times Saturn's, forty
       percent of Jupiter's, sitting between the two but leaning jovian. The number comes from the project's
@@ -643,7 +643,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: magnetism.magnetosphere
     status: gated                 # 4b 완료 (2026-06-22)
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       The magnetic bubble's nose stands about 23.5 planetary radii out, far enough that all five moons live
       inside it. That sorts the family: Dante, Hades, and Pandora sit in radiation-belt territory, Cassandra in
@@ -677,7 +677,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: magnetism.radiation_belts
     status: gated                 # 2026-07-24 도출 (오너 선택: 외대 L 4.2-10, 강도=방법론 재도출)
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/solar-system-radiation-belts.md"]
     narrative: >
@@ -752,7 +752,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: environment.radiation
     status: gated                 # 4b 완료 (2026-06-22)
-    driver: [physics, gameplay]
+    driver: [window-selection, engine]
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
     narrative: >
       Each moon gets its radiation station: Dante extreme (>4,500 rem/day), Hades severe, Pandora safe and
@@ -805,7 +805,7 @@ decisions:
       ~37k km). 구값은 오전사된 1.05 R_Jup 플럭스에 앵커돼 있어 bulk.radius의 ring-model 논증(1.0 R_Jup +
       고리 = ring-free 1.10–1.15 플럭스)을 닫지 못했다(감사 C4).
     status: gated
-    driver: [visual, observation]
+    driver: [art-direction, window-selection]
     narrative: >
       Polyphemus keeps its rings, but as a ghost: a faint blue-white ice-dust E-ring so tenuous it almost honors
       the canon's "no rings", while still supplying the extra brightness the imaging needed. Its structure reads
@@ -894,7 +894,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: gameplay                   # group 11 (facet-walk 2026-06-22; biome map 결정 정정)
     status: gated
-    driver: [gameplay]
+    driver: [engine]
     narrative: >
       Polyphemus has no ground to land on. Skimming the atmosphere to slow down is as far as it goes, and any trip
       between the moons has to pass through this planet's gravity well. The science map follows the latitude bands:
@@ -932,7 +932,6 @@ decisions:
     axis: environment.activity        # + radiation passthrough 묶음
     refs: ["2010ApJ...722..343D", "1996AJ....111..439H", "2016A&A...596A..52R", "2014AJ....147...59A"]
     status: passthrough               # 측정치 (audit 확인) — 변경 없음
-    driver: [passthrough]
     narrative: >
       A quiet star, every value of it measured: a 22-day rotation, a calm chromosphere, and
       a faint X-ray corona that breathes by a factor of ten over a tentative ~19-year cycle. It even spent
@@ -946,7 +945,7 @@ decisions:
   - body: Alpha Centauri A
     axis: magnetism.magnetic_field
     status: gated                     # 신규 도출 proxy (low conf)
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       Nobody has directly mapped this star's magnetic field. It sits too far south for the usual survey catalogs.
       But by every activity measure it is the Sun's twin, so it borrows the Sun's own large-scale field of
@@ -973,7 +972,7 @@ decisions:
   - body: Alpha Centauri A
     axis: environment.stellar_wind
     status: gated                     # 2026-07-12 재게이트 — 현 DB X선으로 플럭스 가중 재계산
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       What is actually measured is the two stars' combined wind, blowing one shared bubble around the pair; how it
       divides between them is our assumption, weighted by which star shines harder in X-rays. The smaller, more
@@ -1011,7 +1010,6 @@ decisions:
     axis: environment.heliosphere     # SHARED — 시스템 대표로 A에 기록
     refs: ["2001ApJ...547L..49W"]
     status: passthrough
-    driver: [passthrough]
     narrative: >
       The two stars blow one shared wind bubble, its nose standing about 176 AU out against the inflowing G-cloud
       gas. This is a measured astrosphere, recorded on A as the system representative. The bubble's exact facing direction
@@ -1026,7 +1024,7 @@ decisions:
   - body: Alpha Centauri A
     axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
     status: gated
-    driver: [observation]
+    driver: [window-selection]
     narrative: >
       Up close, A is simply the Sun with the serial numbers filed off: the same yellow-white light, the same
       boiling granulation, the same soft darkening toward the limb. It is if anything tidier than the Sun: a few
@@ -1065,7 +1063,6 @@ decisions:
     axis: environment.activity
     refs: ["2010ApJ...722..343D", "2016A&A...596A..52R"]
     status: passthrough
-    driver: [passthrough]
     narrative: >
       The orange companion is the livelier of the pair: a brighter X-ray corona than A's and one of the
       cleanest-measured activity cycles of any star, ticking along at 8.84 years. All of it measured.
@@ -1078,7 +1075,7 @@ decisions:
   - body: Alpha Centauri B
     axis: magnetism.magnetic_field
     status: gated                     # proxy (low conf)
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       B carries a field half again to twice A's, two to four gauss. As a cooler orange dwarf its convection runs
       deeper, making the dynamo more efficient, and the star backs that up with its metronome-clean activity cycle
@@ -1106,7 +1103,7 @@ decisions:
   - body: Alpha Centauri B
     axis: environment.stellar_wind
     status: gated                     # 2026-07-12 재게이트 — 현 DB X선으로 플럭스 가중 재계산
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       B takes the lion's share of the pair's measured combined wind, three quarters of it. Its surface blazes
       nearly four times harder in X-rays than A's (a brighter corona squeezed onto a smaller star), and wind
@@ -1138,7 +1135,7 @@ decisions:
   - body: Alpha Centauri B
     axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
     status: gated
-    driver: [observation]
+    driver: [window-selection]
     narrative: >
       B glows a warm yellow-orange, visibly a different star from its twin-like partner. Its face is busier too:
       several mid-latitude spot groups with prominent bright patches, coarser granulation, a corona that outshines
@@ -1201,7 +1198,7 @@ decisions:
   - body: Alpha Centauri B
     axis: bulk.spin_axis_orientation
     status: gated                     # 2026-07-12 오너 선택 — 측정 45° 채택 (silent-passthrough 해소)
-    driver: [observation]
+    driver: [window-selection]
     narrative: >
       Unlike A, B actually has a spin-axis measurement, and it says something interesting: the star's axis leans
       a good 34° away from the orbital plane's pole, a genuine spin-orbit misalignment read straight from the data
@@ -1233,7 +1230,7 @@ decisions:
   - body: Alpha Centauri A
     axis: bulk.geopotential_j2
     status: gated                     # 2026-07-12 오너 정책 — 항성 J2 상시 계산·emit (무시가능 처리 금지)
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       Rotational flattening J2 = 4.8e-7, roughly twice the Sun's: A spins faster (22 d against the Sun's
       25.4 d) and is the larger star.
@@ -1265,7 +1262,7 @@ decisions:
   - body: Alpha Centauri B
     axis: bulk.geopotential_j2
     status: gated                     # 2026-07-12 오너 정책 — 항성 J2 상시 계산·emit
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       Rotational flattening gives B a J2 of 5.7e-8, about a quarter of the Sun's. B turns slower than the Sun
       and is smaller, so the bulge is correspondingly small; the arithmetic is the same solar-anchored scaling
@@ -1293,7 +1290,6 @@ decisions:
     refs: ["2016A&A...594A.107K", "2016A&A...586A..90P", "2018ApJ...864...99J", "2007A&A...470..295B", "2017A&A...597A.137K", "2003A&A...404.1087K", "2010ApJ...722..343D", "2016A&A...588A..77B", "2002A&A...392L...9T"]
     body_class: star
     status: passthrough
-    driver: [passthrough]
     narrative: >
       mass 1.1055 M⊙ · radius 1.2234 R⊙ (8.511e8 m) · P_rot 22 d · age 5.3 Gyr · gravity 202 m/s².
       All measured.
@@ -1313,7 +1309,6 @@ decisions:
     refs: ["2016A&A...594A.107K", "2016A&A...586A..90P", "2018ApJ...864...99J", "2017A&A...597A.137K", "2006A&A...446..635B", "2003A&A...404.1087K", "2010ApJ...722..343D", "2004A&A...417..235E", "2002A&A...392L...9T"]
     body_class: star
     status: passthrough
-    driver: [passthrough]
     narrative: >
       mass 0.9373 M⊙ · radius 0.8632 R⊙ (6.005e8 m) · P_rot 41 d · age 5.3 Gyr · gravity 345 m/s².
       All measured.
@@ -1331,7 +1326,7 @@ decisions:
   - body: Dante                    # A b I
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: [classification]
+    driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       Dante is the innermost of Polyphemus's five moons, a small silicate world blanketed in relentless,
@@ -1355,7 +1350,7 @@ decisions:
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
     body_class: tidally_locked     # §3.2 템플릿 앵커
     status: gated
-    driver: [invented, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Dante's size and mass are invented; the film gives no figures to honor, so it is simply affirmed as a
       silicate rock roughly 900 km across. As the innermost moon it is tide-locked to Polyphemus, turning once
@@ -1393,7 +1388,7 @@ decisions:
   - body: Dante
     axis: magnetism.magnetic_field   # facet-walk 2026-06-22 — none 확인
     status: gated
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       Much like Io, Dante has only an induced magnetic field and, as the innermost moon, serves as a plasma
       source: its volcanic sulfur torus saturates Polyphemus's radiation belt.
@@ -1417,7 +1412,7 @@ decisions:
       보존을 위반했음. 오너가 주변 673 K + 핫스팟 973 K로 확정(처음 400/700 °C로 제시, 이어서
       켈빈 표기 요청).
     status: gated                  # 2026-06-22 — 게임 설정+물리 합치
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     narrative: >
       Dante's tidal heating is extreme, roughly twelve hundred times Io's, and it never lets up. All of that heat has
       to leave through the surface, which is why the whole moon runs hot rather than merely holding a few hot vents:
@@ -1464,7 +1459,7 @@ decisions:
       불성립. 팔레트·알베도는 게임 설정 룩으로 유지하되 albedo 필드를 owner-override로 마킹하고 evidence에
       상 불안정 인정을 명시. 값 무변경.
     status: gated
-    driver: [canon, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Dante is a silicate world of Io-like violence. Tide-locked, its parent-facing hemisphere holds a vast rift
       on the scale of Valles Marineris, its floor filled with lava lakes, while the far side is cooled basalt
@@ -1513,7 +1508,7 @@ decisions:
   - body: Dante
     axis: appearance
     status: gated
-    driver: [canon, visual]
+    driver: [fiction, art-direction]
     narrative: >
       Dante reads as a two-tone world: a bright sulfur half, yellow around its volcanoes and fractures, set
       against a dark black-basalt remainder. The canyons, calderas, and lava lakes glow from red to yellow-white
@@ -1536,7 +1531,7 @@ decisions:
   - body: Dante
     axis: atmosphere
     status: gated
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     narrative: "A tenuous atmosphere of volcanic sulfur dioxide and sulfur, much like Io's. It is unstable and not breathable."
     narrative_ko: "이오처럼 화산이 뿜어낸 이산화황과 황으로 이루어진 희박한 대기로, 안정적이지 않고 호흡도 불가능하다."
     fields:
@@ -1551,7 +1546,7 @@ decisions:
   - body: Dante
     axis: environment.radiation
     status: gated
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     narrative: >
       Radiation here is extreme, around 7,200 rem/day. It comes from Polyphemus's radiation belt, which Dante's
       own volcanic plasma feeds.
@@ -1580,7 +1575,7 @@ decisions:
   - body: Dante
     axis: gameplay
     status: gated
-    driver: [gameplay]
+    driver: [engine]
     narrative: >
       Landing here is very hard. Brief touchdowns are possible in the lava-free areas, but the extreme radiation
       and heat make it impossible to stay long. The surface divides into six: Grand Chasma / Lava Lakes (the
@@ -1604,7 +1599,7 @@ decisions:
   - body: Hades                    # A b II
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: [classification]
+    driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       Hades is the second of Polyphemus's moons, a rocky body about 750 km across that looks like a gray Ganymede
@@ -1628,7 +1623,7 @@ decisions:
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
     body_class: tidally_locked     # §3.2 템플릿 앵커
     status: gated
-    driver: [invented, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Hades's mass and radius are invented, with no canon figures, so it is affirmed as a Moon-sized rocky body
       about 750 km across. As the second moon, tide-locked to Polyphemus, its interior is kept warm by tides.
@@ -1658,7 +1653,7 @@ decisions:
   - body: Hades
     axis: magnetism.magnetic_field   # facet-walk 2026-06-22 — none 확인
     status: gated
-    driver: [physics]
+    driver: [window-selection]
     narrative: "None."
     narrative_ko: "없음."
     fields:
@@ -1678,7 +1673,7 @@ decisions:
       e_init 0.005/0.010/0.020 모두 e_max 0.047~0.064로 복귀(판도라가 강제), Dante e는 무영향.
       스캔은 phase3/stability-sim/results/_hades_lowe_scan/. 오너가 rocky 밴드 하단 채택.
     status: gated
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     narrative: >
       Tides keep Hades warm from the inside, releasing about fifteen times the heat Io does. That tidal heat drives the
       surface temperature dramatically higher. Only a thin shell of rock separates the surface from melt below, so the
@@ -1735,7 +1730,7 @@ decisions:
       미미" 메모가 붙어 있었으나 조석 207 W/m² > 별빛 141 W/m². 오너 승인으로 오래된 크레이터
       지형 폐기(용융부 위 지각 10 m), surface_type도 그에 맞춰 교체.
     status: gated
-    driver: [canon-film, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Hades is a gray rocky moon that looks like Ganymede. Strong tides resurface it over and over, so no old craters
       remain, and that tidal heat holds the surface near 278 K. That is high for an airless body, and it barely drops
@@ -1785,7 +1780,7 @@ decisions:
       2026-07-26: 팔레트에서 "가니메데 팔레트 / 어두운 크레이터" 라벨 제거 → "회색 팔레트 /
       어두운 지대". 헥스 색값(#5f574e, #9c968c)은 무변경. surface 행의 크레이터 폐기에 따른 것.
     status: gated
-    driver: [canon-film, visual]
+    driver: [fiction, art-direction]
     narrative: >
       From a distance Hades is a gray moon whose surface is drawn entirely in grooves and faults. The older, darker
       ground between them reads brownish gray while the freshest bands stand out a shade lighter, splitting the
@@ -1806,7 +1801,6 @@ decisions:
   - body: Hades
     axis: atmosphere
     status: passthrough
-    driver: [passthrough]
     narrative: "None."
     narrative_ko: "없음."
     fields:
@@ -1815,7 +1809,7 @@ decisions:
   - body: Hades
     axis: environment.radiation
     status: gated
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       Hades sits exactly at the strongest point of Polyphemus's radiation belt. The dose there reaches some
       7,200 rem a day.
@@ -1836,7 +1830,7 @@ decisions:
       2026-07-26: 바이옴 2개 개명 — Dark Cratered Terrain → Old Crust, Impact Basins →
       Resurfacing Zones. 색값·개수(6) 무변경. surface 행의 크레이터 폐기에 따른 것.
     status: gated
-    driver: [gameplay]
+    driver: [engine]
     narrative: >
       The surface is more stable than Dante's, but the radiation is strong enough that no stay lasts long without
       proper shielding. The surface divides into six: Old Crust / Bright Grooved Terrain / Resurfacing Zones /
@@ -1858,7 +1852,7 @@ decisions:
   - body: Pandora                  # A b III
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: [classification]
+    driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       Pandora is the most interesting body in the whole system: a slightly-smaller-than-Earth moon at 0.8 g, and
@@ -1882,7 +1876,7 @@ decisions:
     axis: bulk                     # mass/radius/gravity/rotation/obliquity (facet-walk 2026-06-22)
     body_class: tidally_locked     # §3.2 템플릿 앵커
     status: gated
-    driver: [canon, physics]
+    driver: [fiction, window-selection]
     narrative: >
       The film Avatar's setting gives four physical values that cannot all be true at once, so only the two a
       visitor would actually feel (the size and the 0.8 g gravity) are kept and the rest derived from them through
@@ -1906,7 +1900,7 @@ decisions:
     fields:
       - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
       - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
-      - { name: gravity, value: 0.8, unit: g, op: set, note: "canon 체감값" }
+      - { name: gravity, value: 7.84, unit: m/s2, op: set, note: "= 0.8 g, 영화 설정 체감값; GM/R² 일치" }
       - { name: flattening, value: 5.2e-3, op: set, note: "= (5/2)·J₂ 평균적도 spheroid, 시각상 사실상 구 (a−c≈47 km는 C22 행 note)" }
       - { name: reference_radius, value: 5724, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 32, unit: h, op: set, note: "조석고정 (canon 27h 대신)" }
@@ -1951,7 +1945,7 @@ decisions:
       필드도 +70K → +54K. refs에서 tidally-locked-temperature 제거(위성은 4항 예산이 Layer 1을
       대체), moon-energy-budget·tidal-heating·cassini-state 추가.
     status: gated
-    driver: [canon, physics]
+    driver: [fiction, window-selection]
     narrative: >
       The air follows the film's setting faithfully: mostly nitrogen with oxygen, a heavy dose of carbon dioxide,
       a strange xenon richness, and toxic traces that are lethal to Earth life. At the surface it runs about a
@@ -2015,7 +2009,7 @@ decisions:
   - body: Pandora
     axis: surface                  # type/hydrosphere/biosphere/tectonics/terrain/ice_caps/albedo/temp (group 5, facet-walk 2026-06-22)
     status: gated
-    driver: [canon, art, physics]
+    driver: [fiction, art-direction, window-selection]
     narrative: >
       Pandora is a mountain world with an even split of land and sea: more continent than Earth ever had, and
       almost none of it flat. Lush rainforest climbs the highlands, glowing faintly cyan along plants and
@@ -2056,7 +2050,7 @@ decisions:
   - body: Pandora                  # A b III
     axis: magnetism.magnetic_field
     status: gated
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     narrative: >
       Pandora carries a field roughly twice Earth's, a strength nearly unheard-of for a moon. The same tidal heat
       that fuels its volcanoes keeps the iron core churning, and the fast 32-hour spin organizes that churn into a
@@ -2098,7 +2092,7 @@ decisions:
   - body: Pandora
     axis: magnetism.magnetosphere
     status: gated
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     narrative: "Pandora's own magnetosphere shields the surface. As the setting has it, it sits in the gap between Polyphemus's two radiation belts, and that position, together with its strong field, is what keeps the moon habitable."
     narrative_ko: "Pandora 자신의 자기권이 지표를 감싸 보호한다. 설정대로 Polyphemus의 두 방사선대 사이 틈에 자리하며, 그 위치에 강한 자기장까지 더해져 이 위성을 거주가능하게 지켜 준다."
     fields:
@@ -2113,7 +2107,7 @@ decisions:
   - body: Pandora
     axis: magnetism.radiation_belts
     status: gated                 # 2026-07-24 refit — 물리값 보존, 지오메트리만 L-셸 피팅 + 필드 구조화
-    driver: [physics]
+    driver: [window-selection]
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/solar-system-radiation-belts.md"]
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-24: 이 행이 구 결정을 대체했다(오너 승인). 물리값은 그대로 보존하고, 손수 짠 토러스 지오메트리를
@@ -2168,7 +2162,7 @@ decisions:
   - body: Pandora
     axis: appearance               # base_colour/clouds/biolum/aurora/specular (group 6, facet-walk 2026-06-22)
     status: gated
-    driver: [canon, art, physics]
+    driver: [fiction, art-direction, window-selection]
     narrative: >
       From orbit Pandora looks much like Earth, with a green tint. About half the surface is ocean, and beneath
       white clouds the green of its vegetation blends with the blue of the seas. Pandora's nights are spectacular:
@@ -2213,7 +2207,7 @@ decisions:
   - body: Pandora
     axis: environment.radiation    # group 8 facet-walk 2026-06-22
     status: gated
-    driver: [physics, canon]
+    driver: [window-selection, fiction]
     narrative: "Safe and habitable. Sitting in the gap between Polyphemus's two belts and further shielded by its own strong field, it stands in sharp contrast to the extreme radiation of Dante and Hades."
     narrative_ko: "안전·거주가능 수준. Polyphemus의 두 방사선대 사이 틈에 자리한 데다 제 강한 자기장까지 지표를 막아 방사선이 극심한 Dante나 Hades와는 뚜렷이 대조된다."
     fields:
@@ -2231,7 +2225,7 @@ decisions:
       2026-07-28: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24,
       임무 난이도 등급은 모드-지원 관심사). 구값 "임무=거주가능 세계 착륙(최대 보상)".
     status: gated
-    driver: [gameplay]
+    driver: [engine]
     narrative: >
       Pandora is the most interesting destination in Alpha Centauri, and the only world in the system where a
       person can breathe. The surface divides into seven: Oceans / Coastlines (bioluminescent) / Rainforest
@@ -2266,7 +2260,7 @@ decisions:
   - body: Cassandra                # A b IV
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: [classification, canon-semi]
+    driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       Cassandra is the fourth moon orbiting Polyphemus, some 3,400 km in radius and the second largest of them. It
@@ -2291,7 +2285,7 @@ decisions:
     axis: bulk                     # mass/radius/rotation/obliquity (facet-walk 2026-06-22)
     body_class: free_rotator       # §3.2 템플릿 앵커 — 미동기 자유 자전 (39h)
     status: gated
-    driver: [invented, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Cassandra is a large rocky moon whose surface gravity reaches half of Earth's, and its iron-rich body is denser
       than Mars. Unlike the inner moons, its spin was never caught by its parent, so it turns once every 39 hours.
@@ -2304,7 +2298,7 @@ decisions:
     fields:
       - { name: mass, value: 9.0e23, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 3400, unit: km, op: set }
-      - { name: gravity, value: 0.53, unit: g, op: set }
+      - { name: gravity, value: 5.20, unit: m/s2, op: set, note: "= 0.53 g; GM/R² 파생 에코" }
       - { name: flattening, value: 1.3e-3, op: set, note: "= (3J₂+q)/2 (J₂ 4.1e-4, q 1.3e-3); J2 행 note f~0.13%와 동일 결정" }
       - { name: reference_radius, value: 3400, unit: km, op: set, note: "J2 기준 반경 = radius" }
       - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기), 모행성 방향 고정축이 없어 조석 삼축 부재" }
@@ -2331,7 +2325,7 @@ decisions:
       규칙으로 이어짐. 온도 243–263 K는 그 기압에서 재계산(N₂ 압력확장 +2.0K 포함),
       scale_height 13.8 km 신규.
     status: gated
-    driver: [canon, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Cassandra's atmosphere is mostly nitrogen, pressing down at 1.37 bar. Beyond a few percent carbon dioxide and a
       little methane there is nothing else, so it cannot be breathed. Those greenhouse gases lift the surface to
@@ -2393,7 +2387,7 @@ decisions:
   - body: Cassandra
     axis: surface                  # group 5 facet-walk 2026-06-22
     status: gated
-    driver: [canon, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Cassandra's surface divides into rocky continents and seas, cold and damp. The water is liquid only near the warm
       equator or in season; the rest of the year it freezes, burying the poles and high latitudes under thick ice.
@@ -2419,7 +2413,7 @@ decisions:
   - body: Cassandra
     axis: appearance               # group 6 facet-walk 2026-06-22
     status: gated
-    driver: [canon, art, physics]
+    driver: [fiction, art-direction, window-selection]
     narrative: >
       From a distance Cassandra is a pale blue-white bead under a thin amber wash. The organic haze that nitrogen and
       methane build photochemically sits high and thin, never hiding the surface but stripping the blue out of the
@@ -2483,7 +2477,7 @@ decisions:
       B_eq ≈ 0.4 µT(밴드 0.2~1.2). standoff ~1.1 R_moon이라 서사의 "외대를 막아낸다"를
       "저위도 소폭 저감"으로 하향. 도출 전엔 criterion=derived-grounding이 실행 안 된 게이트였음.
     status: gated
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       Cassandra carries a faint magnetic field of its own. An iron-rich core and a 39-hour spin do drive a dynamo,
       though only to Ganymede's class, a few tenths of a microtesla. That buys a skin-tight magnetosphere: it trims
@@ -2547,7 +2541,7 @@ decisions:
       2026-07-28: magnetism 행 세기 도출(~0.4 µT, standoff ~1.1 R_moon)에 맞춰 자기장 기여를
       "대부분 밀어냄" → "저위도 소폭 저감"으로 하향. 등급 중간은 불변(근거의 주축이 옅은 외대로 이동).
     status: gated
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       Cassandra orbits inside Polyphemus's outer belt, so the particles are there, but they are far thinner than the
       inner belt that bakes Dante and Hades, and the moon's faint field trims a little more off at low latitudes.
@@ -2596,7 +2590,7 @@ decisions:
       2026-07-28: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24).
       구값 "임무=한랭 무산소 착륙 + 외대 차폐".
     status: gated
-    driver: [gameplay]
+    driver: [engine]
     narrative: >
       Landing is not hard, but there is nothing to breathe and it is cold, and sitting inside the outer belt means
       shielding is needed too. The surface divides into six: Seas (cold open water) / Coastlines / Cold Highlands /
@@ -2618,7 +2612,7 @@ decisions:
   - body: Chaos                    # A b V
     axis: identity
     status: gated                  # facet-walk 2026-06-23
-    driver: [classification, canon-semi]
+    driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       Chaos is the outermost of Polyphemus's moons, a small icy body only 400 km in radius, yet its surface is
@@ -2653,7 +2647,7 @@ decisions:
     axis: bulk                     # mass/radius/rotation/obliquity/oblateness (facet-walk 2026-06-23)
     body_class: free_rotator       # §3.2 템플릿 앵커 — 미동기 자유 자전 (9.5h)
     status: gated
-    driver: [invented, physics]
+    driver: [fiction, window-selection]
     narrative: >
       Chaos still spins at the speed it was born with. It orbits 1.5 million km out, too far for tides to have
       taken hold of its rotation, so a day lasts 9.5 hours. Its axis was never straightened either, and leans
@@ -2666,7 +2660,7 @@ decisions:
     fields:
       - { name: mass, value: 5.4e20, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 400, unit: km, op: set }
-      - { name: gravity, value: 0.023, unit: g, op: set }
+      - { name: gravity, value: 0.225, unit: m/s2, op: set, note: "= 0.023 g; GM/R² 파생 에코" }
       - { name: flattening, value: 0.069, op: set, note: "= (3J₂+q)/2 (J₂ 0.026, q 0.060); J2 행 band 0.06–0.075 안" }
       - { name: reference_radius, value: 400, unit: km, op: set, note: "J2 기준 반경 = radius" }
       - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기), 모행성 방향 고정축이 없어 조석 삼축 부재" }
@@ -2686,7 +2680,7 @@ decisions:
   - body: Chaos
     axis: atmosphere               # G4 facet-walk 2026-06-23
     status: gated
-    driver: [art, physics]
+    driver: [art-direction, window-selection]
     narrative: >
       Chaos has nothing to hold an atmosphere with. What the plumes throw up forms a thin shell around the moon
       for a while, but it never settles back and soon becomes part of the ring. Vapor sublimating off the
@@ -2707,7 +2701,7 @@ decisions:
   - body: Chaos
     axis: surface                  # G5 facet-walk 2026-06-23
     status: gated
-    driver: [art-first, physics-caveat]
+    driver: [art-direction, window-selection]
     narrative: >
       The surface is water ice mixed with rock, and Miranda-like fractures dominate the terrain. Water jets rise
       from the active fracture zones, and their fallout repaves the ground around them in fresh ice. That coat
@@ -2763,7 +2757,7 @@ decisions:
   - body: Chaos
     axis: appearance               # G6 facet-walk 2026-06-23
     status: gated
-    driver: [art, physics]
+    driver: [art-direction, window-selection]
     narrative: >
       From a distance Chaos is a white body with a blue cast, exactly the color of the ice ring it supplies.
       Fractures crossing the surface leave deep shadows, and the water jets rising from the active zones catch
@@ -2784,7 +2778,7 @@ decisions:
   - body: Chaos
     axis: magnetism.magnetic_field # G7 facet-walk 2026-06-23
     status: gated
-    driver: [physics]
+    driver: [window-selection]
     narrative: "None."
     narrative_ko: "없음."
     fields:
@@ -2799,7 +2793,7 @@ decisions:
   - body: Chaos
     axis: environment.radiation    # G8 facet-walk 2026-06-23
     status: gated
-    driver: [physics]
+    driver: [window-selection]
     narrative: >
       The radiation Chaos takes is on the weak side, but not steady. It runs outside the belts, so most of the
       time conditions are mild; sitting just inside the boundary of the magnetosphere, though, a hard gust of
@@ -2821,7 +2815,7 @@ decisions:
   - body: Chaos
     axis: satellites               # G10 — dust_source 역할 (facet-walk 2026-06-23)
     status: gated
-    driver: [art, physics]
+    driver: [art-direction, window-selection]
     narrative: >
       Chaos has no moons of its own. What is settled here is what feeds the ring: the plumes are a look, not a
       mechanism the physics supports, and the real outgassing is a thin water-vapor stream that rides alongside
@@ -2876,7 +2870,7 @@ decisions:
       2026-07-28: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24).
       구값 "착륙=초저중력 0.023g 특수".
     status: gated
-    driver: [gameplay]
+    driver: [engine]
     narrative: >
       Chaos runs against the other moons, so you cannot hop across from a neighbor; reaching it costs a
       separate bill to reverse your orbital direction. The surface divides into five: Chasmata (the 15–30 km
@@ -2904,7 +2898,7 @@ decisions:
     kopernicus_name: Polyphemus
     axis: satellites
     status: gated                  # 135k 갭 = J2 적용 후에도 안정 (TRACE+leapfrog 일치). 3:2-락은 J2로 탈락.
-    driver: [fiction, stability]   # SPEC class D (+ orbit는 stability-optimization)
+    driver: [fiction, engine]   # SPEC class D (+ orbit는 stability-optimization)
     fields:
       - { name: satellites, value: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos); 본문 moons: 리스트가 body def", op: set }
     narrative: >

@@ -71,6 +71,9 @@ AXIS_NAMES = {
     "gameplay": {"sphere_of_influence_tuning", "science_biomes", "timewarp_limits", "difficulty"},
 }
 STATUS = {"passthrough", "open", "art-directed", "gated", "emitted", "superseded"}
+
+# SPEC §1 decision-taxonomy classes — the fixed driver vocabulary (2026-07-28)
+DRIVER_TOKENS = {"window-selection", "engine", "synthetic", "fiction", "art-direction"}
 VERDICT = {"pass-in-window", "documented-divergence", "owner-override", "methodology-derived"}
 FIELD_OPS = {"set", "scale", "passthrough"}
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
@@ -137,6 +140,7 @@ def check_v2(path, doc):
     bodies_with_rows = set()   # real bodies (not `*`) that have any live row
     bulk_anchors = {}          # body -> live `axis: bulk` anchor row
     bulk_named = {}            # body -> {name} from live dedicated bulk.<name> rows
+    bad_driver_rows = 0        # rows with driver tokens outside SPEC §1
     for i, row in enumerate(rows):
         loc = f"{path.name} decisions[{i}]"
         if not isinstance(row, dict):
@@ -198,6 +202,13 @@ def check_v2(path, doc):
                                  or any(not isinstance(r, str) for r in refs)):
             fails.append(f"{loc}: refs must be a list of strings, got {refs!r}")
 
+        # SPEC §1: driver uses the fixed five-class vocabulary (2026-07-28).
+        # Aggregated per file below — legacy boards carry many free-form tokens.
+        drv = row.get("driver")
+        if drv is not None:
+            toks = [drv] if isinstance(drv, str) else list(drv)
+            bad_driver_rows += any(t not in DRIVER_TOKENS for t in toks)
+
         if status == "passthrough" and gate:
             fails.append(f"{loc}: passthrough row carries a gate block (must have none)")
 
@@ -246,6 +257,11 @@ def check_v2(path, doc):
             # refs-exempt per SPEC §3.1 (owner, 2026-07-28)
             if not row.get("refs") and group not in ("gameplay", "identity"):
                 warns.append(f"{loc}: gated row has no refs[]")
+
+    if bad_driver_rows:
+        warns.append(f"{path.name}: {bad_driver_rows} row(s) use driver tokens outside "
+                     f"the SPEC §1 vocabulary {sorted(DRIVER_TOKENS)} — normalize on "
+                     "that board's next review run")
 
     # ── SPEC §3.2: bulk template convention ──────────────────────────────
     for b in sorted(bodies_with_rows):
