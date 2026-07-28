@@ -524,7 +524,7 @@ decisions:
     narrative: >
       The cloud deck churns like Jupiter's: vortices and festoons along the band boundaries, plus one big mid-latitude
       storm, the sunken blue eye. A planet with this little internal heat would more naturally look like placid
-      Saturn, so the turbulence is a deliberate choice for visual drama,.
+      Saturn, so the turbulence is a deliberate choice for visual drama.
     narrative_ko: >
       구름층은 목성처럼 끓는다. band 경계마다 소용돌이와 festoon이 일고, 중위도에 큰 폭풍 하나(가라앉은 파란 눈)가 돈다. 내부열이 이 정도로 적은 행성이라면 얌전한 토성 쪽이 더 자연스러우니,
       난류는 시각적 드라마를 위한 의도적 선택이다.
@@ -741,35 +741,35 @@ decisions:
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
     narrative: >
       Each moon gets its radiation station: Dante extreme, Hades severe, Pandora moderate and livable, Cassandra
-      low, Chaos low but variable. The interesting reconciliation is that the field alone is too weak for the
-      canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at hundreds
-      of times Io's rate, that makes the inner zone so deadly without inflating the field. Pandora stays habitable
-      exactly as the canon says: it orbits in the gap between the two belts and shields its surface with its own
-      Earth-class field. The per-moon grades: Dante extreme
-      (>4,500 rem/day), Hades severe, Pandora moderate and habitable, Cassandra low, Chaos low and variable.
+      intermediate, Chaos low but variable. The interesting reconciliation is that the field alone is too weak for
+      the canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at roughly
+      1,200 times Io's rate, that makes the inner zone so deadly without inflating the field. Pandora stays
+      habitable exactly as the canon says: it orbits in the gap between the two belts and shields its surface with
+      its own field, a few times Earth's strength. The per-moon grades: Dante extreme
+      (>4,500 rem/day), Hades severe, Pandora moderate and habitable, Cassandra intermediate, Chaos low and variable.
     narrative_ko: >
-      위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 캐넌의 가혹한 수치가 나오지 않는다는 것이다. Io의 수백 배로
+      위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 캐넌의 가혹한 수치가 나오지 않는다는 것이다. Io의 약 1200배로
       끓는 Dante의 화산이 황 플라스마를 벨트에 퍼부어, 자기장을 부풀리지 않고도 안쪽 지대를 그렇게 치명적으로
-      만든다. Pandora는 캐넌 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 자기만의 지구급 자기장으로 표면을
+      만든다. Pandora는 캐넌 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 지구 수 배 세기의 자기장으로 표면을
       가린다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
-      Pandora 중간·거주가능, Cassandra 낮음, Chaos 낮음·가변.
+      Pandora 중간·거주가능, Cassandra 중간, Chaos 낮음·가변.
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window        # 캐넌 >4500은 Dante 화산-source로 화해(場 발산 불요)
       evidence: >
         Dose is set by field + source: despite 170µT (~0.4× Jupiter, ~8× Saturn; weak vs Jupiter for belt
-        generation), Dante (820× Io volcanism) supplies enormous SO₂/sulfur plasma to the belt, so a strong belt
+        generation), Dante (~1,200× Io volcanism) supplies enormous SO₂/sulfur plasma to the belt, so a strong belt
         forms. Dante innermost extreme (>4,500 rem/day), Hades near the peak (~2–3 R_p). The canon ">4,500
         rem/day" is reconciled via this volcanic source without inflating the field (see the Dante env.radiation
         row). Pandora is habitable via the gap between the two belts + its own strong intrinsic dipole (Fe-core
-        dynamo, Earth-class; details in the Pandora magnetism row); unobtanium is excluded from the physics
+        dynamo, a few times Earth's strength; details in the Pandora magnetism row); unobtanium is excluded from the physics
         grounding. Pandora's distance is fixed by the 32h tidal lock and does not move.
       evidence_ko: >
-        선량은 場+공급원으로 결정: 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(820× Io
+        선량은 場+공급원으로 결정: 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(~1200× Io
         화산)가 막대한 SO₂/황 플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심(>4,500 rem/day), Hades
         피크(~2–3 R_p) 근처. 캐넌 ">4,500 rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행
-        참조). Pandora는 두 벨트 사이 gap + 자체 강한 고유 dipole(Fe핵 dynamo, 지구급; 세부는 Pandora
+        참조). Pandora는 두 벨트 사이 gap + 자체 강한 고유 dipole(Fe핵 dynamo, 지구 수 배; 세부는 Pandora
         magnetism 행)로 거주가능; 언옵타늄은 물리 grounding서 제외. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
 
   - body: Alpha Centauri A b
@@ -779,10 +779,12 @@ decisions:
       2026-06-21: 이 행이 구 appearance.rings 결정을 대체했다. 원안은 디스크를 가로지르는 얇고 어두운
       framing line(Beichman §5.3 ring-model 반경 fit 채택, 관측 우선)이었고, 미해결이던 "고리 위치 =
       로슈 한계 분석"이 별개로 남아 있었다. 얇은 Roche-zone 밀집고리를 폐기하고 흐릿한 연속 E고리로 갔다.
-      2026-07-28: 그 이력만 담고 있던 superseded 행을 삭제하고 여기로 옮겼다.
       2026-07-27: gate evidence의 feed 항목만 갱신 — 플룸을 아트 디렉션으로 명시하고, 방출 기제
       판단은 그 문제를 소유한 Chaos.satellites로 위임했다. 수치 필드(구조·평면·색·opacity)는 전부
       무변경. 경위는 prose-readability/context-notes.md.
+      2026-07-28: 그 이력만 담고 있던 superseded 행을 삭제하고 여기로 옮겼다.
+      2026-07-28: ring_plane 주석·evidence의 "epoch 179° 스냅샷"을 ~176.5°로 정정 — 179는 설계값이고
+      실제 emit 스냅샷은 inc 176.475 (감사 M6). 수치 필드 무변경.
     status: gated
     driver: [visual, observation]
     narrative: >
@@ -810,7 +812,7 @@ decisions:
       - { name: ring_gap_km, value: "1410000–1590000 (Chaos at 1500000 km)", op: set }
       - { name: ring_opacity, value: 9.0e-5, op: set }
       - { name: ring_color, value: "#cdd9e4", op: set }
-      - { name: ring_plane, value: "Chaos MEAN (Laplace) plane, retrograde inc ~175° rel. parent orbit (NOT the epoch 179° snapshot); anchor static ring here so Chaos librates ±sym about it", op: set }
+      - { name: ring_plane, value: "Chaos MEAN (Laplace) plane, retrograde inc ~175° rel. parent orbit (NOT the epoch ~176.5° snapshot); anchor static ring here so Chaos librates ±sym about it", op: set }
       - { name: ring_composition, value: "water-ice dust (blue-white)", op: set }
       - { name: ring_brightness_R_jup, value: 0.05, op: set }
     gate:
@@ -830,7 +832,7 @@ decisions:
         grows to 14/18° at 1000/2000yr, bounded by the mean-plane anchor. Dynamic tracking (ring↔live orbital plane linkage) is a long-term C#-plugin
         task (not possible in cfg). Emit shape: Kopernicus rings are circular concentric annuli only (no
         eccentricity) → 2 Ring nodes (inner 800k–1.41M, outer 1.59M–2.5M km; gap 1.41M–1.59M with Chaos at 1.5M)
-        sharing Chaos's mean plane (Laplace, retrograde inc ~175° rel. orbital plane, NOT the epoch 179° snapshot);
+        sharing Chaos's mean plane (Laplace, retrograde inc ~175° rel. orbital plane, NOT the epoch ~176.5° snapshot);
         a diffuse E-ring is axisymmetric at steady state (perihelion precession randomized), so a circular annulus
         is faithful, and the reduced Chaos e (0.02) is absorbed into the gap margin. Apparent +0.05 R_Jup (τ≈9e-5,
         equivalent disk ~23k km = 13% of Beichman's Saturn-½ cross-section) keeps the planet at the gated
@@ -1355,9 +1357,12 @@ decisions:
       - { name: obliquity, value: 0, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.039, reference_radius_km: 900, op: set, note: "= 10/3·C̄₂₂, φ0.80" }
       - { name: geopotential_c22, value: 0.0118, op: set, note: "조석 삼축, a−c~16% 계란형(모행성 방향)" }
-      - { name: internal_heat, value: "tidal (see bulk.tidal_heating row, ~820× Io)", op: set }
+      - { name: internal_heat, value: "tidal (see bulk.tidal_heating row, ~1200× Io)", op: set }
       - { name: age, value: 5.3, unit: Gyr, op: set }
       - { name: spin_axis_orientation, value: "orbit normal", op: set }
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-07-28: internal_heat 에코를 ~820×→~1200× Io로 정정 — 소유 행 bulk.tidal_heating의
+      2026-07-26 재도출이 이 에코에 전파되지 않고 있었다(감사 C3).
     refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     gate:
       criterion: [physics]
@@ -1532,13 +1537,13 @@ decisions:
       evidence: >
         Our value: the Polyphemus inner belt is 300 rad/h (radiation_belts row); Dante at 1.54 R_p sits inside it, so
         ~300 rad/h × 24 h ≈ 7,200 rad/day ≈ 7,200 rem/day (rad≈rem), above the film's floor. The film's setting: "innermost moonlet >4,500 rem/day (Io 3,200)". Holds even with the weak 170µT field — belt intensity is governed by the source, not the field:
-        Dante's 820× Io volcanism supplies an enormous SO₂/sulfur plasma torus (a super-enhanced Io→Jupiter belt)
+        Dante's ~1,200× Io volcanism supplies an enormous SO₂/sulfur plasma torus (a super-enhanced Io→Jupiter belt)
         → dense trapped particles → a strong belt. Causal loop: Dante's volcanism feeds the belt that bakes it. The film's setting >4500 ↔ dynamo 170µT
         reconciled without conflict (no field inflation needed). cf. Pandora is protected per the film's setting by being "between the two belts".
       evidence_ko: >
         우리 값: 폴리페무스 내대 300 rad/h(radiation_belts 행), Dante(1.54 R_p)는 내대 안이라
         ~300 rad/h × 24h ≈ 7,200 rad/day ≈ 7,200 rem/day(rad≈rem)로 영화 설정 하한 위. 영화 설정 "최내곽 moonlet >4,500 rem/day(Io 3,200)". 약한 170µT 장에도 성립 — 벨트 세기는 場이 아니라
-        공급원(source) 지배: Dante 820× Io 화산이 막대한 SO₂/황 플라스마 토러스 공급(Io→목성 벨트 초강화판)
+        공급원(source) 지배: Dante ~1200× Io 화산이 막대한 SO₂/황 플라스마 토러스 공급(Io→목성 벨트 초강화판)
         → 조밀 트랩 입자 → 강벨트. 인과고리: Dante 화산이 자신을 굽는 벨트를 먹임. 영화 설정 >4500 ↔ dynamo 170µT
         충돌 없이 화해(場 발산 불요). cf. Pandora는 영화 설정대로 "두 벨트 사이"라 보호.
 
@@ -1667,9 +1672,9 @@ decisions:
         Conservation fixes the surface temperature: whatever power is generated must be radiated, so the area-weighted sigma*T^4 mean is pinned no
         matter how the heat concentrates into hotspots.
         Grounded chain: the stability sim's forced eccentricity, not an assumed one. Three runs with Hades e_init
-        0.005/0.010/0.020 all return e_max 0.047-0.064 identical to the design-of-record, i.e. Pandora (860x Hades's
+        0.005/0.010/0.020 all return e_max 0.047-0.064 identical to the design-of-record, i.e. Pandora (770x Hades's
         mass, period ratio 2.22) forces it; e cannot be lowered by an initial condition. Simulated e_rms = 0.0385.
-        With the methodology's rocky band k2/Q = 1e-3.1e-2 that gives 207-2071 W/m² (15-146x Io) and a four-term
+        With the methodology's rocky band k2/Q = 1e-3~1e-2 that gives 207-2071 W/m² (15-146x Io) and a four-term
         satellite T_eq of 278-444 K, against 141 W/m² of absorbed starlight. The band's low end is adopted: 207 W/m²,
         ~15x Io, T_eq 278 K (~5 C). Caution 3 of the tidal-heating doc applies -- the flux is above the melting
         threshold, so fixed-Q is unreliable and an Andrade/Maxwell treatment could shift it by >10x; that gap is the
@@ -1685,7 +1690,7 @@ decisions:
         에너지도 결국 복사로 나간다). 보존 법칙이 표면 온도를 고정한다. 생성된 출력은 전부 복사되어야 하므로 열이
         핫스팟으로 얼마나 모이든 면적가중 σT⁴ 평균은 묶여 있다.
         근거 사슬은 가정한 이심률이 아니라 안정성 시뮬의 강제 이심률이다. Hades 초기 e를 0.005/0.010/0.020으로 넣은
-        세 런 모두 e_max 0.047~0.064로 설계 원본과 동일하게 돌아왔다. 즉 판도라(Hades 질량의 860배, 주기비 2.22)가
+        세 런 모두 e_max 0.047~0.064로 설계 원본과 동일하게 돌아왔다. 즉 판도라(Hades 질량의 770배, 주기비 2.22)가
         강제하는 값이며 초기 조건으로는 낮출 수 없다. 시뮬 e_rms = 0.0385. 방법론의 rocky 밴드 k₂/Q = 1e-3~1e-2를
         적용하면 207~2071 W/m²(이오의 15~146배), 4항 위성 T_eq 278~444 K가 되고, 흡수 별빛은 141 W/m²다. 밴드
         하단을 채택한다. 207 W/m², 이오의 약 15배, T_eq 278 K(약 5 °C). tidal-heating 문서의 caution 3이 적용된다.
@@ -1730,7 +1735,7 @@ decisions:
         variation nearly vanishes, because an internally heated surface does not track the sky. And the old cratered
         terrain goes: a 10 m conductive lid over melt resurfaces continuously, so grooves and faults are the only
         landforms that survive. Visual contrast with Dante narrows but survives
-        in degree (Dante ~650 K with a 0.14 m lid and lava lakes; Hades 278 K with a 10 m lid and no surface lava).
+        in degree (Dante ~673 K with a ~0.12 m lid and lava lakes; Hades 278 K with a 10 m lid and no surface lava).
         KSP auto-derives an airless body's temperature from flux+albedo, so emit must inject the internal term
         explicitly rather than relying on the stock path.
       evidence_ko: >
@@ -1742,7 +1747,7 @@ decisions:
         넘어서므로 내부열이 지배하고 별이 부수적이다(사슬과 k₂/Q 밴드는 bulk.tidal_heating 행 참조). 두 가지가
         따라온다. 내부에서 데워지는 표면은 하늘을 따라가지 않으므로 낮밤·식 변동이 거의 사라진다. 그리고 오래된
         크레이터 지형이 사라진다. 용융부 위 10 m 전도 지각은 계속 갈아엎히므로 살아남는 지형은 홈과 단층뿐이다.
-        Dante와의 시각 대비는 좁아지지만 정도 차이로 남는다(Dante ~650 K, 지각 0.14 m,
+        Dante와의 시각 대비는 좁아지지만 정도 차이로 남는다(Dante ~673 K, 지각 ~0.12 m,
         용암호 / Hades 278 K, 지각 10 m, 지표 용암 없음). KSP는 대기 없는 천체 온도를 flux+albedo로 자동 산출하므로,
         emit에서 내부열 항을 명시적으로 주입해야 하며 스톡 경로에 기대면 안 된다.
 
@@ -2072,8 +2077,8 @@ decisions:
     gate:
       criterion: [canon-consistency]
       verdict: pass-in-window
-      evidence: "An Earth-class intrinsic field + between-belts (canon gap) is enough to shield the surface. No ultra-strong field needed. The physical basis for habitability."
-      evidence_ko: "지구급 고유장 + between-belts(canon gap)면 표면 차폐 충분. 초강자기장 불요. 거주가능의 물리 근거."
+      evidence: "A strong intrinsic field a few times Earth's + between-belts (canon gap) is enough to shield the surface. No ultra-strong field needed. The physical basis for habitability."
+      evidence_ko: "지구 수 배 고유장 + between-belts(canon gap)면 표면 차폐 충분. 초강자기장 불요. 거주가능의 물리 근거."
 
   - body: Pandora
     axis: magnetism.radiation_belts
@@ -2328,10 +2333,10 @@ decisions:
         anti-greenhouse), N₂ pressure broadening +2.0K included. Result 243–263K: below freezing on the global mean,
         so the seasonal/equatorial melt the surface row already describes is the correct reading.
         PRESSURE 1.37 bar. The retention side does not constrain the value at all: Gate 1 passes with room (v_esc 5.94 km/s against Mars's 5.03, on a quiet G2V at 1.6 AU rather than an M dwarf),
-        Gate 2 does not apply, and at 8.4 R_p the moon sits inside Polyphemus's magnetopause (33 R_p) so the stellar
+        Gate 2 does not apply, and at 8.4 R_p the moon sits inside Polyphemus's magnetopause (23.5 R_p) so the stellar
         wind never reaches it directly. The analog decides it. This body is anoxic N₂ + CH₄ under an organic haze with
         mostly frozen surface volatiles, which is Titan's family and not Earth's, so the analog table's middle row is
-        the wrong one to inherit from. Titan holds 1.5 bar at a fourteenth of this mass and 44% of its escape
+        the wrong one to inherit from. Titan holds 1.5 bar at a seventh of this mass and 44% of its escape
         velocity, so 1.37 bar is comfortable. The non-round value is deliberate: a round 1.0 or 1.5 reads as an
         assumption, and the retention band (~0.5–3 bar) genuinely does not privilege either. Staying under 2 bar also keeps the greenhouse contours inside their 1-bar-background calibration.
         Holding 270K would instead need pCO₂ ~0.13 bar or percent-level H₂.
@@ -2347,9 +2352,9 @@ decisions:
         국지 융해가 맞는 해석이다.
         기압 1.37 bar. 유지 쪽은 값을 제약하지 못한다. Gate 1은 여유롭게 통과하고
         (탈출속도 5.94 km/s로 화성 5.03보다 높고, M왜성이 아니라 조용한 G2V의 1.6 AU), Gate 2는 해당 없으며,
-        8.4 R_p는 폴리페무스 자기권계면(33 R_p) 안쪽이라 항성풍이 직접 닿지도 않는다. 값을 정하는 것은 유사체다. 이
+        8.4 R_p는 폴리페무스 자기권계면(23.5 R_p) 안쪽이라 항성풍이 직접 닿지도 않는다. 값을 정하는 것은 유사체다. 이
         천체는 유기 haze 아래 무산소 N₂ + CH₄이고 표면 휘발성이 대부분 동결이라 지구가 아니라 타이탄의 가족이므로,
-        유사체 표의 중앙 줄을 물려받을 자리가 아니다. 타이탄은 이 질량의 14분의 1, 탈출속도의
+        유사체 표의 중앙 줄을 물려받을 자리가 아니다. 타이탄은 이 질량의 7분의 1, 탈출속도의
         44 %로 1.5 bar를 든다. 1.37 bar는 넉넉하다. 비정수 값은 의도적이다. 1.0이나 1.5 같은 반듯한 수는 가정으로
         읽히고, 유지 밴드(약 0.5~3 bar)가 실제로 어느 쪽도 특별히 지지하지 않는다. 2 bar 아래에 머무르면 온실 등온선의
         1 bar 배경 보정 범위 안에도 남는다. 270K를 지키려면 pCO₂ ~0.13 bar나 퍼센트 수준 H₂가 필요하다.
@@ -2472,7 +2477,7 @@ decisions:
         irradiation and its equator is not. So Cassandra's surface is protected across most of the moon with the poles
         exposed, rather than uniformly safe.
         The field STRENGTH is not derived, and that is a gap rather than a value. Pandora's 75 µT came through
-        rocky-dynamo; Cassandra's core is 0.151 M⊕ against Pandora's 0.645, so it must be far weaker, but "far
+        rocky-dynamo; Cassandra is 0.151 M⊕ in total mass against Pandora's 0.645, so its dynamo must be far weaker, but "far
         weaker" is not a number and a standoff calculation against the outer belt's plasma pressure needs one.
       evidence_ko: >
         약한 자기장이며, 차폐 주장은 적용 범위를 함께 적어야 한다.
@@ -2485,7 +2490,7 @@ decisions:
         가니메데의 극은 조사로 어둡게 변색되고 적도는 그렇지 않다. 따라서 Cassandra도 균일하게 안전한 것이 아니라
         극이 노출된 채 대부분의 지표가 보호된다.
         자기장 **세기**는 도출되지 않았고, 이는 값이 아니라 공백이다. Pandora의 75 µT는 rocky-dynamo를 거쳐 나왔고
-        Cassandra 핵은 0.151 M⊕ 대 Pandora 0.645라 훨씬 약할 수밖에 없지만, "훨씬 약함"은 숫자가 아니며 외대
+        Cassandra는 총질량 0.151 M⊕ 대 Pandora 0.645라 다이너모가 훨씬 약할 수밖에 없지만, "훨씬 약함"은 숫자가 아니며 외대
         플라스마 압력에 대한 standoff 계산에는 숫자가 필요하다.
 
   - body: Cassandra
@@ -2560,7 +2565,7 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: "The second (marginal) life-world. Hydrothermal vents=anaerobic microbial science hub, which is why the narrative singles them out of the six. Non-breathable and cold, with intermediate radiation from sitting inside the outer belt (environment.radiation), so shielding is required rather than optional — the older \"light shielding\" reading came from the retired low grade. Heat is no threat. SOI=auto, full ScienceValues. Microbial Mats biome=candidate, a 7th added later only if it does not overlap other bodies' biomes."
-      evidence_ko: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부)."
+      evidence_ko: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점(서사가 여섯 중 열수구만 짚는 이유). 비호흡·한랭에 외대 안쪽이라 방사선 중간(environment.radiation), 차폐는 선택이 아니라 필수. 구 '차폐 경미'는 폐기된 낮음 등급에서 온 서술. 열은 위협 아님. SOI=auto, full ScienceValues. 미생물 매트 바이옴=후보(다른 바디 바이옴과 중복하지 않을 때만 7번째로 추가)."
 
   - body: Chaos                    # A b V
     axis: identity
@@ -2672,7 +2677,7 @@ decisions:
       criterion: [stability, visual-checklist]
       verdict: owner-override
       evidence: >
-        Two separate owner overrides sit on this row. (1) The plumes: at 20 R_p with e 0.02 the tidal heat is
+        Two separate owner overrides sit on this row. (1) The plumes: at 21 R_p with e 0.02 the tidal heat is
         only a few MW, so a subsurface ocean driving Enceladus-style cryovolcanism is impossible (a⁻⁷·⁵ is
         fatal; checked across every e·a·resonance·rotation combination). Adopted as art because the plume-fed
         E-ring is isomorphic with the real Saturn E-ring, which strengthens the "E-ring" naming.
@@ -2687,7 +2692,7 @@ decisions:
         Hertz-Knudsen flux, latent heat from the curve's own Clausius-Clapeyron slope; validated against
         Europa, Enceladus, Ceres and cometary erosion at 1 AU).
       evidence_ko: >
-        이 행에는 오너 오버라이드가 둘 있다. (1) 플룸: 20 R_p·e 0.02에서 조석열이 수 MW뿐이라 엔셀라두스식
+        이 행에는 오너 오버라이드가 둘 있다. (1) 플룸: 21 R_p·e 0.02에서 조석열이 수 MW뿐이라 엔셀라두스식
         cryovolcanism을 돌릴 지하 바다가 불가능하다(a⁻⁷·⁵가 치명적이며 e·a·공명·자전 전 조합을 확인했다).
         플룸이 채우는 E-고리가 실제 토성 E-고리와 동형이어서 "E-고리" 명명 정합을 강화하므로 아트로 채택했다.
         (2) 알베도: 알베도 방법론 §6이 인정하는 어떤 밝기로도 이 자리에서 노출된 물얼음이 버티지 못한다.
@@ -2777,7 +2782,7 @@ decisions:
       criterion: [stability]
       verdict: owner-override
       evidence: >
-        The plumes are art direction, not a mechanism we claim. Two numbers say why. Tidal heat at 20 R_p with
+        The plumes are art direction, not a mechanism we claim. Two numbers say why. Tidal heat at 21 R_p with
         e 0.02 is only a few MW, far short of driving a reservoir (surface row). And Chaos's 424 m/s escape
         velocity is the highest of any real dust-ring source body — Thebe 34, Amalthea 58 and Phoebe 102 m/s are
         fed by impact ejecta, and even Enceladus at 239 m/s needed plumes to get material out. So impact ejecta
@@ -2791,7 +2796,7 @@ decisions:
         neutral water torus like Europa's, alongside the ring rather than feeding it. An icy body, so its grain
         composition matches the ice-blue ring.
       evidence_ko: >
-        플룸은 아트 디렉션이며 우리가 주장하는 기제가 아니다. 이유는 숫자 두 개다. 20 R_p·e 0.02에서 조석열이
+        플룸은 아트 디렉션이며 우리가 주장하는 기제가 아니다. 이유는 숫자 두 개다. 21 R_p·e 0.02에서 조석열이
         수 MW뿐이라 저장소를 돌릴 수준에 한참 못 미친다(surface 행). 그리고 Chaos의 탈출속도 424 m/s는 실제
         먼지고리 공급 천체 중 가장 높다. 충돌 파편으로 고리를 채우는 테베 34, 아말테아 58, 포이베 102 m/s보다 훨씬
         높고, 239 m/s인 엔셀라두스조차 물질을 내보내려 플룸이 필요했다. 따라서 여기서 정직한 물리 경로인
