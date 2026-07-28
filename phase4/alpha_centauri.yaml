@@ -284,7 +284,9 @@ decisions:
         shares a common node line (coherent warp; the sim loader gives every moon a parent node,
         load.add_hypotheticals); inclinations keep the design-of-record (inner Dante/Hades/Pandora ~9–11°,
         retrograde Cassandra/Chaos ~176/179°, rel. Polyphemus orbital plane;
-        phase3/stability-sim/hypotheticals/alpha_centauri.json; 1000yr STABLE _finalv2). Ring ≠ 5° equatorial
+        phase3/stability-sim/hypotheticals/alpha_centauri.json; 1000yr STABLE _finalv2); these are the design
+        means the coupled rows reference, while the emitted moons table is an osculating t=500yr snapshot
+        oscillating about them (Hades/Pandora ~18°, Cassandra ~168° at epoch). Ring ≠ 5° equatorial
         plane; ring = Chaos's orbital plane (Chaos-fed E-ring → shepherd-moon plane; near-coplanar retrograde
         ~180°). Eclipse check: θ (Pandora plane ↔ Polyphemus orbital plane) 0–18.9°, mean 9.5°, duty
         94.2% (75.5% at 0°): the 5° tilt partly cancels the companion's forcing, so eclipses are actually more
@@ -293,7 +295,9 @@ decisions:
         재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE, Pandora e≤0.0123. 위성계는 공통
         노드선 공유(coherent warp; 시뮬 로더가 전 위성에 부모 노드 부여, load.add_hypotheticals), 경사는
         design-of-record 유지(inner Dante/Hades/Pandora ~9–11°·역행 Cassandra/Chaos ~176/179°, Polyphemus 공전면
-        대비; phase3/stability-sim/hypotheticals/alpha_centauri.json; 1000yr STABLE _finalv2). 고리 ≠ 5° 적도면;
+        대비; phase3/stability-sim/hypotheticals/alpha_centauri.json; 1000yr STABLE _finalv2). 이 값들은 결합
+        행들이 참조하는 설계 평균이고, emit되는 moons 표는 그 둘레를 진동하는 t=500yr osculating 스냅샷이다
+        (epoch에서 Hades/Pandora ~18°, Cassandra ~168°). 고리 ≠ 5° 적도면;
         고리 = Chaos 궤도면(Chaos 생성 E-고리 → shepherd 위성면; ~180° 근접-공면 역행). 일식 검증: θ(Pandora면↔Polyphemus 궤도면)
         0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%): 5°가 동반성 요동을 부분 상쇄해 일식이 오히려 잦음. 동반성
         섭동으로 θ 요동 → "일식 시즌" 자연발생.
@@ -740,19 +744,19 @@ decisions:
     driver: [physics, gameplay]
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
     narrative: >
-      Each moon gets its radiation station: Dante extreme, Hades severe, Pandora moderate and livable, Cassandra
+      Each moon gets its radiation station: Dante extreme, Hades severe, Pandora safe and livable, Cassandra
       intermediate, Chaos low but variable. The interesting reconciliation is that the field alone is too weak for
       the canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at roughly
       1,200 times Io's rate, that makes the inner zone so deadly without inflating the field. Pandora stays
       habitable exactly as the canon says: it orbits in the gap between the two belts and shields its surface with
       its own field, a few times Earth's strength. The per-moon grades: Dante extreme
-      (>4,500 rem/day), Hades severe, Pandora moderate and habitable, Cassandra intermediate, Chaos low and variable.
+      (>4,500 rem/day), Hades severe, Pandora safe and habitable, Cassandra intermediate, Chaos low and variable.
     narrative_ko: >
       위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 캐넌의 가혹한 수치가 나오지 않는다는 것이다. Io의 약 1200배로
       끓는 Dante의 화산이 황 플라스마를 벨트에 퍼부어, 자기장을 부풀리지 않고도 안쪽 지대를 그렇게 치명적으로
       만든다. Pandora는 캐넌 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 지구 수 배 세기의 자기장으로 표면을
       가린다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
-      Pandora 중간·거주가능, Cassandra 중간, Chaos 낮음·가변.
+      Pandora 안전·거주가능, Cassandra 중간, Chaos 낮음·가변.
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -760,15 +764,17 @@ decisions:
       evidence: >
         Dose is set by field + source: despite 170µT (~0.4× Jupiter, ~8× Saturn; weak vs Jupiter for belt
         generation), Dante (~1,200× Io volcanism) supplies enormous SO₂/sulfur plasma to the belt, so a strong belt
-        forms. Dante innermost extreme (>4,500 rem/day), Hades near the peak (~2–3 R_p). The canon ">4,500
+        forms. Dante innermost extreme (>4,500 rem/day; it also sits inside its own source torus), Hades severe at the
+        belt peak (2.07 R_p). The canon ">4,500
         rem/day" is reconciled via this volcanic source without inflating the field (see the Dante env.radiation
         row). Pandora is habitable via the gap between the two belts + its own strong intrinsic dipole (Fe-core
         dynamo, a few times Earth's strength; details in the Pandora magnetism row); unobtanium is excluded from the physics
         grounding. Pandora's distance is fixed by the 32h tidal lock and does not move.
       evidence_ko: >
         선량은 場+공급원으로 결정: 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(~1200× Io
-        화산)가 막대한 SO₂/황 플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심(>4,500 rem/day), Hades
-        피크(~2–3 R_p) 근처. 캐넌 ">4,500 rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행
+        화산)가 막대한 SO₂/황 플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심(>4,500 rem/day; 자기 공급원
+        토러스 안이기도 함), Hades는 벨트
+        피크(2.07 R_p)에서 심함. 캐넌 ">4,500 rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행
         참조). Pandora는 두 벨트 사이 gap + 자체 강한 고유 dipole(Fe핵 dynamo, 지구 수 배; 세부는 Pandora
         magnetism 행)로 거주가능; 언옵타늄은 물리 grounding서 제외. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
 
@@ -1814,8 +1820,8 @@ decisions:
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      evidence: "Our value: the Polyphemus inner belt is 300 rad/h (radiation_belts row) and Hades at 2.07 R_p sits at its peak L, so ~300 rad/h × 24 h ≈ 7,200 rad/day ≈ 7,200 rem/day (rad≈rem), the same grade as Dante further in. The belt dominates radiation independently of the surface, so the mild surface heat does not soften it."
-      evidence_ko: "우리 값: 폴리페무스 내대 300 rad/h(radiation_belts 행), Hades(2.07 R_p)는 그 피크 L에 위치하므로 ~300 rad/h × 24h ≈ 7,200 rad/day ≈ 7,200 rem/day(rad≈rem)로 더 안쪽 Dante와 동급. 벨트가 표면과 무관하게 방사선을 지배해, 온건한 표면 열이 위험을 낮춰주지 않는다."
+      evidence: "Our value: the Polyphemus inner belt is 300 rad/h (radiation_belts row) and Hades at 2.07 R_p sits at its peak L, so ~300 rad/h × 24 h ≈ 7,200 rad/day ≈ 7,200 rem/day (rad≈rem), one notch below Dante, which adds its own source-torus dose. The belt dominates radiation independently of the surface, so the mild surface heat does not soften it."
+      evidence_ko: "우리 값: 폴리페무스 내대 300 rad/h(radiation_belts 행), Hades(2.07 R_p)는 그 피크 L에 위치하므로 ~300 rad/h × 24h ≈ 7,200 rad/day ≈ 7,200 rem/day(rad≈rem)로 Dante 바로 아래 등급(Dante는 자기 공급원 토러스 선량이 더해짐). 벨트가 표면과 무관하게 방사선을 지배해, 온건한 표면 열이 위험을 낮춰주지 않는다."
 
   - body: Hades
     axis: gameplay
@@ -1875,7 +1881,8 @@ decisions:
       visitor would actually feel (the size and the 0.8 g gravity) are kept and the rest derived from them through
       the methodology, landing the density realistically between Mars and Earth. The day is 32 hours, tide-locked
       to Polyphemus, chosen over the film's 27 because the wider orbit keeps the ocean's tidal budget safely below
-      runaway. The axis tilt is simply the orbit's own ~10° lean. For a tide-locked moon the canon's "29°" is
+      runaway. The axis tilt is simply the orbit's own ~10° lean (the design mean; the emitted snapshot leans ~18°
+      at epoch). For a tide-locked moon the canon's "29°" is
       simply impossible. Inside, radioactive decay and a gentle tidal heating keep the rock warm enough to drive
       the volcanoes, the fast continental drift, and the magnetic dynamo all from the same fire; the tide also
       pulls the moon faintly egg-shaped, invisible to the eye but real to the Principia orbit.
@@ -1884,7 +1891,8 @@ decisions:
       체감하는 두 값, 크기와 0.8g 중력만 살리고 나머지는 두 값을 기반으로 방법론을 통해 도출했다. 그 결과 밀도는
       화성과 지구 사이 현실적인 값에 자리잡았다. 하루는 32시간이고 Polyphemus에 조석 고정돼 있다. 영화의 27시간
       대신 이 값을 고른 건, 궤도가 더 넓어야 바다에 걸리는 조석 부담이 폭주하지 않고 안전하게 유지되기 때문이다.
-      자전축 기울기는 궤도가 기운 ~10° 그대로다. 조석 고정된 위성에게 캐넌의 "29°"는 애초에 불가능한 값이다.
+      자전축 기울기는 궤도가 기운 ~10° 그대로다(설계 평균 기준, emit 스냅샷은 epoch에서 ~18°). 조석 고정된
+      위성에게 캐넌의 "29°"는 애초에 불가능한 값이다.
       내부에서는 방사성 붕괴와 잔잔한 조석 가열이 암석을 데워, 화산과 빠른 대륙이동과 자기 다이나모를 모두 같은
       열원으로 돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 시각적으로는 보이지 않지만 프린키피아
       궤도에는 영향을 준다.
@@ -2199,10 +2207,10 @@ decisions:
     axis: environment.radiation    # group 8 facet-walk 2026-06-22
     status: gated
     driver: [physics, canon]
-    narrative: "Moderate and habitable. Sitting in the gap between Polyphemus's two belts and further shielded by its own strong field, it stands in sharp contrast to the extreme radiation of Dante and Hades."
-    narrative_ko: "중간/거주가능 수준. Polyphemus의 두 방사선대 사이 틈에 자리한 데다 제 강한 자기장까지 지표를 막아 방사선이 극심한 Dante나 Hades와는 뚜렷이 대조된다."
+    narrative: "Safe and habitable. Sitting in the gap between Polyphemus's two belts and further shielded by its own strong field, it stands in sharp contrast to the extreme radiation of Dante and Hades."
+    narrative_ko: "안전·거주가능 수준. Polyphemus의 두 방사선대 사이 틈에 자리한 데다 제 강한 자기장까지 지표를 막아 방사선이 극심한 Dante나 Hades와는 뚜렷이 대조된다."
     fields:
-      - { name: radiation, value: "중간/거주가능 (between-belts gap + 강 dipole 차폐)", op: set }
+      - { name: radiation, value: "안전/거주가능 (between-belts gap + 강 dipole 차폐)", op: set, note: "구 표기 '중간/거주가능' — Cassandra 중간과 등급명 충돌해 개명(오너 2026-07-28)" }
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency, derived-grounding]
