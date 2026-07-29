@@ -804,6 +804,8 @@ decisions:
       2026-07-28: 고리 광도 재보정(오너 결정 ①a) — τ 9e-5→2.7e-4, 겉보기 +0.05→+0.125 R_Jup(등가원반
       ~37k km). 구값은 오전사된 1.05 R_Jup 플럭스에 앵커돼 있어 bulk.radius의 ring-model 논증(1.0 R_Jup +
       고리 = ring-free 1.10–1.15 플럭스)을 닫지 못했다(감사 C4).
+      2026-07-29: evidence를 결론→확인(간극·밝기·평면)→유보 형태로 축약(401→~230단어). 수치 필드 무변경.
+      떨어져 나간 심층 수치(sim-frame normal, 순간면↔평균면 10.9°, 8000-snapshot 등)는 STABILITY_REPORT 몫.
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
@@ -838,56 +840,42 @@ decisions:
       criterion: [stability, visual-checklist]
       verdict: owner-override
       evidence: >
-        A physical gap is impossible: in a test-particle sim (Sim B, ring_clearing.py 2000yr, results/_ring_clearing), Chaos is
-        too small at mass ratio μ≈7.5e-7 to clear any gap (even particles at Chaos's semi-major axis survive). So the gap is intentional for
-        rendering purposes, not dynamics. To narrow the gap, Chaos e was lowered 0.10→0.02 (results/_chaos_e002, STABLE):
-        the radial excursion ±150k→±30k km, so a ~180k km gap clears it cleanly. Brightness sums orthogonally as area∝R², so an "apparent
-        +0.125 R_Jup" corresponds to an equivalent disk ~0.52 R_Jup (~37k km). Beichman 2025 §5.3 (arXiv:2508.03814) "Planet Ring
-        System Models": their preferred model is an optically thick ring inside Roche (Saturn-½ cross-section, equivalent disk 64,000 km), and
-        our faint E-ring corresponds to their optically thin dust alternative (Kennedy 2011 irregular-satellite grinding).
-        Ring-plane precession verification (dense 8000-snapshot leapfrog 2000yr, results/_principia2000_dense): Chaos
-        mean plane = retrograde inc 175.4° rel. orbital plane (sim-frame normal [0.50,-0.80,-0.33]); instantaneous↔mean plane 10.9°;
-        libration about the mean plane RMS 5.7°/max 12.6° (period ~56yr). Fixing to the epoch plane, the excursion is ~±6° (returns within 50yr) but
-        grows to 14/18° at 1000/2000yr, bounded by the mean-plane anchor. Dynamic tracking (ring↔live orbital plane linkage) is a long-term C#-plugin
-        task (not possible in cfg). Emit shape: Kopernicus rings are circular concentric annuli only (no
-        eccentricity) → 2 Ring nodes (inner 800k–1.41M, outer 1.59M–2.5M km; gap 1.41M–1.59M with Chaos at 1.5M)
-        sharing Chaos's mean plane (Laplace, retrograde inc ~175° rel. orbital plane, NOT the epoch ~176.5° snapshot);
-        a diffuse E-ring is axisymmetric at steady state (perihelion precession randomized), so a circular annulus
-        is faithful, and the reduced Chaos e (0.02) is absorbed into the gap margin. Apparent +0.125 R_Jup (τ≈2.7e-4,
-        equivalent disk ~37k km = 33% of Beichman's Saturn-½ cross-section) keeps the planet at the gated
-        1.0 R_Jup while matching the ring-free 1.10–1.15 R_Jup flux family (midpoint 1.125); the previous
-        τ 9e-5 was calibrated against the mis-transcribed 1.05 R_Jup and could not close the radius argument. Feed: ART DIRECTION; Chaos water cryovolcanic
-        plumes (Enceladus→E-ring isomorphism), kept as a look rather than a mechanism we ground. No ejection
-        mechanism available to this moon supplies the ring at this brightness; that assessment and its numbers
-        live in Chaos.satellites, which owns the question. Color:
-        blue-white ice-dust #cdd9e4, fine water-ice grains scattering
-        wavelength-dependently (small particles → blue dominance; Saturn E-ring/Enceladus precedent) → Chaos
-        confirmed icy (inherited by group 10 satellites); the Phoebe-type dark carbonaceous alternative (C)
-        rejected; visual impact still modest at τ≈2.7e-4.
+        Adopted: two circular annuli on Chaos's mean plane, a faint blue-white ice E-ring at τ≈2.7e-4
+        (apparent +0.125 R_Jup).
+        Check, gap: the test-particle sim (ring_clearing.py 2000 yr, results/_ring_clearing) shows Chaos
+        cannot clear a gap at mass ratio μ≈7.5e-7, so the gap is a rendering choice, not dynamics; lowering
+        Chaos e 0.10→0.02 (results/_chaos_e002, STABLE) shrinks its radial excursion to ±30k km, which the
+        ~180k km gap clears cleanly. Check, brightness: ring cross-sections add as R², so apparent
+        +0.125 R_Jup equals an equivalent disk of ~37k km, 33% of the Saturn-½ preferred model in Beichman
+        2025 §5.3; our ring is their optically thin dust alternative (Kennedy 2011 grinding), and the planet
+        stays at the gated 1.0 R_Jup while matching the ring-free 1.10–1.15 R_Jup flux family (midpoint
+        1.125). Check, plane: the dense 2000 yr leapfrog (results/_principia2000_dense) puts Chaos's mean
+        plane at retrograde inc 175.4° with libration RMS 5.7° (max 12.6°), so the annuli anchor to the mean
+        (Laplace) plane rather than the ~176.5° epoch snapshot. Kopernicus rings are circular concentric
+        annuli only; a steady-state diffuse E-ring is axisymmetric, so the circular shape is faithful and
+        the reduced Chaos e is absorbed by the gap margin. Color: fine water-ice grains scatter blue
+        (Saturn E-ring / Enceladus precedent), #cdd9e4; the Phoebe-type dark carbonaceous alternative is
+        rejected. The plume feed is kept as a look, not a grounded mechanism; the refutation and its numbers
+        live in Chaos.satellites, which owns that question.
+        Caveat: a ring tracking the live orbital plane needs a C# plugin (impossible in cfg); until then the
+        mean-plane anchor bounds the visual error, where an epoch-fixed plane would drift to 14–18° over
+        1000–2000 yr.
       evidence_ko: >
-        물리적 간극은 불가: 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서 Chaos는
-        질량비 μ≈7.5e-7로 너무 작아 어떤 간극도 못 비움(Chaos 반장축의 입자까지 생존). 그래서 갭은 동역학이 아닌
-        렌더링 목적의 의도적 부여. 간극을 좁히려 Chaos e를 0.10→0.02로 낮춤(results/_chaos_e002, STABLE):
-        반경 흔들림 ±150k→±30k km라 ~180k km 갭이면 깔끔히 비움. 밝기는 면적∝R²로 직교 합산이라 "겉보기
-        +0.125 R_Jup"는 등가원반 ~0.52 R_Jup(~37k km)에 해당. Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring
-        System Models": 그들의 선호 모델은 Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고,
-        우리 흐릿한 E고리는 그들이 제시한 광학적으로 얇은 먼지 대안(Kennedy 2011 불규칙위성 분쇄)에 해당.
-        고리면 세차 검증(dense 8000-snapshot leapfrog 2000yr, results/_principia2000_dense): Chaos
-        평균면 = 역행 inc 175.4° rel 공전면(sim-frame normal [0.50,-0.80,-0.33]); 순간면↔평균면 10.9°;
-        평균면 둘레 libration RMS 5.7°/max 12.6°(주기 ~56yr). epoch면 고정 시 이탈 ~±6°(50yr에 되돌아옴)이나
-        1000/2000yr엔 14/18°까지 커짐, 평균면 앵커로 유계화. 동적 추종(고리↔라이브 궤도면 연동)은 C# 플러그인
-        장기과제(cfg 불가). emit 형상: Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가) → Ring 노드
-        2개(안쪽 800k–1.41M, 바깥 1.59M–2.5M km; 간극 1.41M–1.59M에 Chaos 1.5M)가 Chaos 평균면(Laplace, 역행
-        inc ~175° rel 공전면, epoch 순간면 ~176.5° 아님)을 공유; 확산 E고리는 정상상태에서 축대칭(근점 세차
-        무작위화)이라 원형 annulus가 충실하고, 작아진 Chaos e(0.02)는 간극 여유로 흡수. 겉보기 +0.125 R_Jup
-        (τ≈2.7e-4, 등가원반 ~37k km = Beichman 토성½ 단면의 33%)라 행성은 게이트값 1.0 R_Jup를 유지하면서
-        ring-free 대안 1.10–1.15 R_Jup 플럭스 패밀리(중앙 1.125)와 정합. 구 τ 9e-5는 잘못 옮겨진 1.05 R_Jup에
-        보정돼 있어 반경 논증을 닫지 못했다. feed: 아트 디렉션, Chaos 물 cryovolcanic 플룸(엔셀라두스→E고리
-        동형)이며, 근거를 댄 기제가 아니라 룩으로 유지한다. 이 위성이 쓸 수 있는 어떤 방출 기제도 이
-        밝기의 고리를 떠받치지 못한다. 그 판단과 숫자는 이 문제를 소유한 Chaos.satellites에 있다.
-        색: 청백 얼음-먼지 #cdd9e4, 고운 물-얼음 알갱이의 파장 의존
-        산란(작은 입자 → 청색 우세; 토성 E-ring/엔셀라두스 선례) → Chaos 얼음체 확정(group 10 satellites 상속);
-        Phoebe형 어두운 탄소질 대안(C) 기각; τ≈2.7e-4라도 시각 임팩트는 여전히 크지 않음.
+        채택값은 Chaos 평균면 위의 원형 환형 2개, τ≈2.7e-4(겉보기 +0.125 R_Jup)의 흐릿한 청백 얼음 E고리.
+        간극 확인. 테스트입자 시뮬(ring_clearing.py 2000yr, results/_ring_clearing)에서 질량비 μ≈7.5e-7의
+        Chaos는 어떤 간극도 비우지 못하므로, 갭은 동역학이 아니라 렌더링 선택이다. Chaos e를 0.10→0.02로
+        낮추면(results/_chaos_e002, STABLE) 반경 흔들림이 ±30k km로 줄어 ~180k km 갭이 깔끔히 비운다.
+        밝기 확인. 고리 단면은 R²로 합산되므로 겉보기 +0.125 R_Jup는 등가원반 ~37k km, Beichman 2025 §5.3의
+        토성½ 선호 모델의 33%다. 우리 고리는 그들의 광학적으로 얇은 먼지 대안(Kennedy 2011 분쇄)에 해당하고,
+        행성은 게이트값 1.0 R_Jup를 유지하면서 ring-free 1.10~1.15 R_Jup 플럭스 패밀리(중앙 1.125)와
+        정합한다. 평면 확인. 고밀도 2000yr leapfrog(results/_principia2000_dense)에서 Chaos 평균면은 역행
+        경사 175.4°, libration RMS 5.7°(최대 12.6°)라 환형은 순간 스냅샷(~176.5°)이 아니라 평균(Laplace)면에
+        고정한다. Kopernicus 고리는 원형 동심 환형만 지원하는데, 정상상태의 확산 E고리는 축대칭이라 원형이
+        충실하고 작아진 Chaos e는 간극 여유가 흡수한다. 색. 고운 물-얼음 알갱이는 청색을 산란하므로(토성
+        E고리·엔셀라두스 선례) #cdd9e4이고, Phoebe형 어두운 탄소질 대안은 기각. 플룸 공급은 근거 댄 기제가
+        아니라 룩으로 유지하며, 그 반박과 수치는 문제를 소유한 Chaos.satellites 행에 있다.
+        유보: 라이브 궤도면을 따라가는 고리는 C# 플러그인이 필요하다(cfg로는 불가). 그때까지는 평균면 고정이
+        시각 오차를 유계화하는데, epoch 고정이었다면 1000~2000yr에 14~18°까지 벌어질 값이다.
     refs: ["2508.03814", "phase3/stability-sim/STABILITY_REPORT.md"]
 
   - body: Alpha Centauri A b
