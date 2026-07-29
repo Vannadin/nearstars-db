@@ -200,7 +200,11 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   prose, not a fake typed field. **No em-dashes** (CONVENTIONS §1.10) and **natural
   Korean, no calques** (거대 가스행성 not 거인, 구름층 not 구름덱, 영화/게임 설정 not
   캐넌) in every rendered
-  field. Simulation-derived values (stability windows, gap-clearing, phase-match) cite
+  field. **Name the source tier** (owner 2026-07-29): film/official-publication facts
+  ([CANON]) = 영화 설정 / "the film's"; *Avatar: The Game* datamine ([GAME]) = 게임
+  설정 / "the game's"; 원작 설정 / "the source material" only when a claim genuinely
+  spans tiers; semi-official items name their source (Cassandra: 2024 Lightstorm
+  panel). The per-fact tier map = the system's art-direction doc. Simulation-derived values (stability windows, gap-clearing, phase-match) cite
   the sim report (`phase3/stability-sim/*.md`) in `refs[]`, not just a paper.
 - Gate block keys are exactly `criterion` / `verdict` / `evidence` /
   `divergence_note`. Source citations → a machine-readable `refs:` list (bibcodes

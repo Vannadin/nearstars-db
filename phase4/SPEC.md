@@ -348,6 +348,14 @@ decisions:
   - **No em-dashes** (CONVENTIONS §1.10) and **natural Korean, never a literal calque**
     (the ko-mirror rule: 거대 가스행성 not 거인, 구름층 not 구름덱, 영화/게임 설정 not 캐넌, …) apply to *every*
     rendered field: narrative, evidence, notes, values.
+    - **Name the source tier, in both languages** (owner, 2026-07-29): a fact from the
+      film or its official film-side publications ([CANON]) is 영화 설정 / "the film's";
+      a fact from the *Avatar: The Game* datamine ([GAME]) is 게임 설정 / "the game's";
+      원작 설정 / "the source material" only for claims genuinely spanning tiers (or
+      absent from all of them); a semi-official item names its actual source (Cassandra:
+      the 2024 Lightstorm panel). Never blur the tiers into one blanket "canon" for a
+      tier-specific fact — the per-fact tier map is the system's art-direction doc
+      (alpha: `art-direction/polyphemus-art-direction.md`).
   - A qualitative / non-scalar value (a per-moon dose ladder, a grade) belongs in the
     narrative prose, **not** forced into a typed `fields[]` entry pretending to be an emit
     scalar.
