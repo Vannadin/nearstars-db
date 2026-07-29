@@ -1852,7 +1852,7 @@ Md:
       hex: null
       basis: Longest-lived isotope t½ ≈ 51.5 days; insufficient for flame test
       source: Helmenstine chart (X)
-false:
+'No':
   atomic_number: 102
   name: Nobelium
   regimes:
