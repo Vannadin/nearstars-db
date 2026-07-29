@@ -10,6 +10,44 @@ eccentric companion) rather than close-encounter, where TRACE is inaccurate.
 **Phase initialisation:** `raw.omega_deg` from DB where available; Ω and M
 randomised with a deterministic seed (`phase_seed=0`).
 
+## Validation standard — two methods, per hierarchy (owner, 2026-07-19)
+
+This is the project's orbit-sim contract, established on α Cen and binding for
+every system that ships. The axis is not "long vs short run" — it is **accurate
+physics vs in-game fidelity**, and each hierarchy (planetary system, satellite
+system) runs **both**:
+
+1. **Accurate integrator + MEGNO** (IAS15, or TRACE for close-encounter-driven
+   systems) — the physics baseline. Judges deterministic chaos (⟨Y⟩ ≈ 2 regular,
+   > 5 chaotic, Lyapunov time) and long-term survival. This is the long run,
+   because **duration changes verdicts**: α Cen's planetary system reads regular
+   (MEGNO 2.0) at 10⁵ yr and chaotic (MEGNO 47, Lyapunov ~4.4 Myr) at 10⁸ yr —
+   a run shorter than a few dozen Lyapunov times cannot see the chaos. Document
+   the duration dependence when it appears.
+2. **leapfrog, fixed 10-minute step** — Principia's actual ephemeris step, the
+   integration the game will really perform. No variational equations, so no
+   MEGNO: the verdict is a/e-drift boundedness. It exists for fidelity, not
+   speed.
+
+**Duration by hierarchy.** "Long" is counted in **orbits, not years**. Satellite
+systems: both methods at 10⁴ yr (an inner moon at P ≈ 0.4 d has done ~10⁷ orbits;
+10⁸-yr IAS15 there is step-bound and unrealistic). Planetary systems: fold moon
+masses into the parent, drop the moons (standard practice — avoids the inner-moon
+step limit), then IAS15+MEGNO as long as the science needs (a smooth two-body
+hierarchy reaches 10⁸ yr in hours).
+
+**Integrator selection** (the report's hybrid policy below is the screen-level
+view): WHFast+MEGNO first-pass screen → TRACE re-verify anything flagged, *except*
+secular-driven systems (Kozai-Lidov from a far companion — α Cen), where TRACE
+drifts and **IAS15 is canonical**. Near-equal binaries exclude WHFast outright
+(Jacobi coordinates).
+
+**Pass/fail semantics.** The a/e outcome is the verdict; MEGNO is the early
+warning, never the fail condition (chaotic-but-bounded ships — TRAPPIST-1).
+Measure real wall-clock per run instead of extrapolating. Moon-system runs
+include the parent's J₂ when it is on the board (`run.py --j2`), since Principia
+applies the geopotential in-game — see the Polyphemus J₂ section.
+
 ## Three diagnostics — survival, chaos, eccentricity
 
 The verdict separates *what actually happened* from *chaos risk* from *how
