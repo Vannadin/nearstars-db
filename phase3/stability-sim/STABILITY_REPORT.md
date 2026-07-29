@@ -244,6 +244,23 @@ lock gone under J₂, tilted inner pairs (θ 10–30°) stay bound but circulate
 lock to preserve), and differential nodal precession drifts their mutual
 inclination to ~60° — co-tilting does not keep Dante/Hades coplanar.
 
+### Chaos ring-plane precession — why the ring anchors to the mean plane
+
+The Polyphemus ring annuli share Chaos's **mean (Laplace) plane**, not its epoch
+snapshot. The dense diagnostic run behind that choice (leapfrog, fixed 10 min step,
+2000 yr, 8000 snapshots, `results/_principia2000_dense`):
+
+- Chaos mean plane = retrograde **inc 175.4°** relative to the parent's orbital
+  plane (sim-frame normal `[0.50, -0.80, -0.33]`); the emit epoch snapshot sits at
+  inc 176.475°, 10.9° between the instantaneous and mean planes.
+- Libration about the mean plane: **RMS 5.7° / max 12.6°**, period ~56 yr.
+- A plane fixed to the *epoch* instead: excursion ~±6° returning within 50 yr, but
+  growing to **14° / 18° at 1000 / 2000 yr** — unbounded drift, which is why the
+  mean-plane anchor wins. Dynamic ring↔live-plane tracking is impossible in cfg
+  (a long-term C# plugin task).
+
+Board consumer: `alpha_centauri.yaml` A b `rings` row (`ring_plane` field).
+
 ## Barnard's Star — Msini → true-mass dynamical bound (coplanar inclination scan)
 
 All four Barnard planets (d, b, c, e; 0.0188–0.0381 AU, sub-Earth) are RV
