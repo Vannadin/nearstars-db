@@ -118,14 +118,14 @@ decisions:
       back to the game's 1950 start epoch. Only the sighting direction is reproduced: along that line the
       stability-safe orbit reaches under half the observed separation, an intrinsic limit of an orbit tuned for
       stability rather than for the observed geometry. The planet spins freely on a roughly ten-hour day, since a
-      giant this far out never tidally locks, and the game's Lagrange-point co-orbital planetoids are not present.
+      giant this far out never tidally locks, and the Avatar game's Lagrange-point co-orbital planetoids are not present.
       Its starting elements are a snapshot from the verified stability run, so the system begins mid-evolution
       rather than at round design values.
     narrative_ko: >
       Polyphemus는 2024년 8월에 JWST가 검출한 방향에 서도록 배치되고, 그 상태가 게임 시작 에포크인 1950년으로
       되감긴다. 재현되는 것은 관측 방향뿐이다. 그 시선을 따라 안정성용으로 고른 궤도는 관측된 분리의 절반에도
       못 미치는데, 이는 관측 기하가 아니라 안정성에 맞춘 궤도의 본질적 한계다. 행성은 약 10시간 주기로 자유
-      자전하며(이 거리의 거대 가스행성은 조석고정되지 않는다) 게임 설정의 라그랑주점 공궤도 planetoid는 존재하지 않는다.
+      자전하며(이 거리의 거대 가스행성은 조석고정되지 않는다) 아바타 게임 설정의 라그랑주점 공궤도 planetoid는 존재하지 않는다.
       시작 궤도요소는 검증된 안정성 런의 스냅샷이라, 계가 딱 떨어지는 설계값이 아니라 진화 중인 상태에서 시작한다.
     fields:
       - { name: longitude_ascending_node, value: 273.10, unit: deg, op: set, note: "관측-방향 정합값(AB면 프레임). PA 83.5° 매칭 상태 → 1950 에포크. 제약은 AB면 대비 16° mutual(매칭 15.88°)" }
@@ -167,7 +167,7 @@ decisions:
         보존하면 어떤 값으로 바꿔도 합법; 스냅샷 a/e(1.5936 AU/0.0756)는 a/e/inc 행이 유지하는 설계 앵커 주위의
         진동값. epoch=0(게임 epoch, Sol-Configs 관행). 캐비엇: 궤도면 요소는 t*≈1957 osculating(1950까지 세차
         ~0.1°, 무시가능), 되감기는 인게임 주기 1.9307년 전제. 1.6 AU의 거대 가스행성은 5 Gyr에도 미잠김 → free rotator.
-        게임 설정의 Poly-L4/L5 공궤도 planetoid(337/611km)는 제외(불필요, binary 트로이 안정성 미검증).
+        아바타 게임 설정의 Poly-L4/L5 공궤도 planetoid(337/611km)는 제외(불필요, binary 트로이 안정성 미검증).
     refs: ["2508.03814", "2508.03812", "phase3/stability-sim/STABILITY_REPORT.md"]
 
   # ── 벌크 (canon↔관측 밀도 충돌) ───────────────────────────────
@@ -180,13 +180,13 @@ decisions:
       Polyphemus is exactly Jupiter-sized yet strikingly light: barely half the density of water. Its brightness
       admits two readings: a bare, somewhat larger planet, or a Jupiter-sized one whose rings make up the missing
       cross-section. NearStars takes the ring reading, consistent with its ring system, keeping the ring-free
-      planet as a recorded alternative; the mass is the same either way. The game's "denser than Jupiter" would
+      planet as a recorded alternative; the mass is the same either way. The Avatar game's "denser than Jupiter" would
       nearly double the mass and is set aside, since observation outranks the source material.
     narrative_ko: >
       Polyphemus는 정확히 목성 크기인데 눈에 띄게 가볍다. 물 밀도의 절반이 될까 말까다. 밝기는 두 가지로 읽을
       수 있다. 고리 없는 조금 더 큰 행성이거나, 목성 크기 행성에 고리가 모자란 단면적을 보태는 해이거나.
       NearStars는 고리 해를 택해 자신의 고리계와 정합시키고, 고리 없는 행성은 대안으로 보존한다. 질량은 어느
-      쪽이든 같다. 게임 설정의 "목성보다 밀도 높다"는 질량을 거의 두 배로 불려야 해서 접었다. 관측이 원작 설정보다
+      쪽이든 같다. 아바타 게임 설정의 "목성보다 밀도 높다"는 질량을 거의 두 배로 불려야 해서 접었다. 관측이 원작 설정보다
       우선한다.
     fields:
       - { name: radius, value: 1.0, unit: R_jup, op: set, phase3_default: "1.0 R_Jup (ring-model tie-break; ring-free 대안은 1.1–1.15 R_Jup)" }
@@ -198,13 +198,13 @@ decisions:
         ring-model (radius 1.0 R_Jup + rings account for the excess cross-section) is adopted. The mass is
         ~120 M⊕ in both solutions (the difference is radius only). Coupled with appearance.rings: a small radius
         only holds if rings exist. The ring-free 1.1–1.15 is a preserved alternative. The prior commit's
-        1.05 R_Jup/0.40 was a mis-transcription of the raw imaging estimate → cfg-ready 1.0/~0.47. The game canon
+        1.05 R_Jup/0.40 was a mis-transcription of the raw imaging estimate → cfg-ready 1.0/~0.47. The Avatar game canon
         "denser than Jupiter" (ρ>1.33 → 220 M⊕+) is not adopted (observation first).
       evidence_ko: >
         1.0 R_Jup(71,492 km), ρ ~0.47 g/cc(120 M⊕ + 1.0 R_Jup서 도출). Beichman §5.3 두 해 중 ring-model(반경
         1.0 R_Jup + 고리가 초과 단면적 담당)을 채택. 질량은 두 해 모두 ~120 M⊕(차이는 반경뿐). appearance.rings와
         커플링: 작은 반경은 고리가 있어야만 성립. ring-free 1.1–1.15는 보존된 대안. 직전 커밋의 1.05 R_Jup/0.40은
-        raw 이미징 추정치를 잘못 옮긴 것 → cfg-ready 1.0/~0.47. 게임 설정 "목성보다 밀도 큼"(ρ>1.33 → 220 M⊕↑)은
+        raw 이미징 추정치를 잘못 옮긴 것 → cfg-ready 1.0/~0.47. 아바타 게임 설정 "목성보다 밀도 큼"(ρ>1.33 → 220 M⊕↑)은
         미채택(관측 우선).
     refs: ["2508.03814"]
 
@@ -325,7 +325,7 @@ decisions:
       criterion: [canon-consistency]
       verdict: pass-in-window
       evidence: "Adopts the midpoint of the Avatar canon [GAME] rotation 10.1–10.6 h (polyphemus-art-direction.md; canon also quotes 9.7 h in the core/magnetic-field frame). Fast rotation → consistent with a large equatorial bulge (flattening 0.13, q~0.19, J₂ 0.023, bulk anchor)."
-      evidence_ko: "Avatar canon [GAME] 자전 10.1–10.6 h(polyphemus-art-direction.md; 게임 설정은 핵/자기장 기준 9.7 h도 병기)의 중간값 채택. 빠른 자전 → 큰 적도팽대(flattening 0.13, q~0.19, J₂ 0.023, bulk anchor)와 정합."
+      evidence_ko: "Avatar canon [GAME] 자전 10.1–10.6 h(polyphemus-art-direction.md; 아바타 게임 설정은 핵/자기장 기준 9.7 h도 병기)의 중간값 채택. 빠른 자전 → 큰 적도팽대(flattening 0.13, q~0.19, J₂ 0.023, bulk anchor)와 정합."
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -429,7 +429,7 @@ decisions:
       Polyphemus wears three colors: white zones of water cloud, red-brown bands where photochemical pigments stain
       the deck, and slate-blue belts where gaps in the cloud expose the deep atmosphere's blue scatter. Its
       signature storm inverts Jupiter's: not a raised red spot but a sunken eye, the deepest gap of all and
-      therefore the most saturated azure on the planet, matching the canon's "darkest blue storm". The palette is
+      therefore the most saturated azure on the planet, matching the film's "darkest blue storm". The palette is
       physics-bounded but deliberately tuned: the white comes from the cloud chemistry, the band red was pushed to 70% of
       Jupiter's belt color, and the blues are honest scattered light, not methane trickery. Because the host star
       is a solar twin, the colors render almost exactly as painted, with no reddening correction. One deliberate
@@ -725,7 +725,7 @@ decisions:
       criterion: [derived-grounding, canon-consistency]
       verdict: methodology-derived
       evidence: >
-        Geometry: dipole drift shells bounded by the canon moon L-shells (the moon-anchoring validated on Uranus in the
+        Geometry: dipole drift shells bounded by the named moons' L-shells (the moon-anchoring validated on Uranus in the
         solar-system audit), fitted to the Kerbalism SDF by fit_belts.py: IoU 0.97 inner / 0.97 outer, loss-cone cut 1.05 R_p;
         pause nose 23.5 R_p from the magnetosphere row (pause_radius = nose x compression). Intensity: Part B saturated
         dose-anchor interpolation, 10.4 × (170/31)^1.9 = 265 → 300 rad/h rounded (conf low); outer = 0.1× inner (torus-driven
@@ -757,12 +757,12 @@ decisions:
     narrative: >
       Each moon gets its radiation station: Dante extreme (>4,500 rem/day), Hades severe, Pandora safe and
       livable, Cassandra intermediate, Chaos low but variable. The interesting reconciliation is that the field alone is too weak for
-      the game canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at roughly
+      the Avatar game canon's brutal numbers: it is Dante's furious volcanism, feeding sulfur plasma into the belts at roughly
       1,200 times Io's rate, that makes the inner zone so deadly without inflating the field. Pandora stays
       habitable exactly as the film says: it orbits in the gap between the two belts and shields its surface with
       its own field, a few times Earth's strength.
     narrative_ko: >
-      위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 게임 설정의 가혹한 수치가 나오지 않는다는 것이다. Io의 약 1200배로
+      위성마다 받는 방사선 등급이 다르다. 흥미로운 대목은 자기장만으로는 아바타 게임 설정의 가혹한 수치가 나오지 않는다는 것이다. Io의 약 1200배로
       끓는 Dante의 화산이 황 플라스마를 벨트에 퍼부어, 자기장을 부풀리지 않고도 안쪽 지대를 그렇게 치명적으로
       만든다. Pandora는 영화 설정 그대로 살 만하다. 두 벨트 사이 틈새를 돌면서 지구 수 배 세기의 자기장으로 표면을
       가린다. 위성별 등급: Dante 극심(>4,500 rem/day), Hades 심함,
@@ -770,7 +770,7 @@ decisions:
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window        # 게임 설정 >4500은 Dante 화산-source로 화해(場 발산 불요)
+      verdict: pass-in-window        # 아바타 게임 설정 >4500은 Dante 화산-source로 화해(場 발산 불요)
       evidence: >
         Dose is set by field + source: despite 170µT (~0.4× Jupiter, ~8× Saturn; weak vs Jupiter for belt
         generation), Dante (~1,200× Io volcanism) supplies enormous SO₂/sulfur plasma to the belt, so a strong belt
@@ -784,7 +784,7 @@ decisions:
         선량은 場+공급원으로 결정: 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(~1200× Io
         화산)가 막대한 SO₂/황 플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심(>4,500 rem/day; 자기 공급원
         토러스 안이기도 함), Hades는 벨트
-        피크(2.07 R_p)에서 심함. 게임 설정 ">4,500 rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행
+        피크(2.07 R_p)에서 심함. 아바타 게임 설정 ">4,500 rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행
         참조). Pandora는 두 벨트 사이 gap + 자체 강한 고유 dipole(Fe핵 dynamo, 지구 수 배; 세부는 Pandora
         magnetism 행)로 거주가능; 언옵타늄은 물리 grounding서 제외. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
 
@@ -810,7 +810,7 @@ decisions:
     driver: [art-direction, window-selection]
     narrative: >
       Polyphemus keeps its rings, but as a ghost: a faint blue-white ice-dust E-ring so tenuous it almost honors
-      the canon's "no rings", while still supplying the extra brightness the imaging needed. Its structure reads
+      the film's "no rings", while still supplying the extra brightness the imaging needed. Its structure reads
       from the moons: icy Chaos feeds the ring with cryovolcanic plumes the way Enceladus feeds Saturn's E-ring,
       and Cassandra shepherds its inner edge. The ring splits into two annuli with a gap where Chaos orbits:
       physically the little moon cannot clear that lane, but a static ring drawn through a tilted moon's path
@@ -1415,7 +1415,7 @@ decisions:
       표면 플럭스 ~11,500 W/m². 구 행은 이 플럭스를 surface 행의 주변 230 K와 짝지어 에너지
       보존을 위반했음. 오너가 주변 673 K + 핫스팟 973 K로 확정(처음 400/700 °C로 제시, 이어서
       켈빈 표기 요청).
-    status: gated                  # 2026-06-22 — 게임 설정+물리 합치
+    status: gated                  # 2026-06-22 — 아바타 게임 설정+물리 합치
     driver: [window-selection, fiction]
     narrative: >
       Dante's tidal heating is extreme, roughly twelve hundred times Io's, and it never lets up. All of that heat has
@@ -1445,7 +1445,7 @@ decisions:
         Conductive lid over 1350 K melt is then ~0.12 m, which is what makes lava lakes and glowing fissures physical.
       evidence_ko: >
         Io 스케일링(Ė∝M_p^2.5·R^5·e²·a^-7.5), 1.54 R_p. 시뮬서 e가 0.0002–0.031로 진동하며 안 죽음(Hades 등 섭동이
-        강제 유지) → 영구. 게임 설정(Avatar: The Game) "조석력 영구 화산+월진, Roche 가장자리"와 정확히 일치.
+        강제 유지) → 영구. 아바타 게임 설정(Avatar: The Game) "조석력 영구 화산+월진, Roche 가장자리"와 정확히 일치.
         e는 가정한 평균이 아니라 안정성 시계열에서 측정한 e_rms 0.0186이며,
         k₂/Q 0.0155에서 이오의 약 1200배, 표면 플럭스 약 11,500 W/m²가 된다. 구 행은 이 플럭스를 230 K 주변
         온도(surface 행)와 짝지었는데 보존 법칙이 그걸 금지한다. 흡수 별빛 141 W/m²에 대해 11,500 W/m²면 면적가중
@@ -1460,7 +1460,7 @@ decisions:
       화산 영역". bulk.tidal_heating의 조석 플럭스를 복사할 수 있는 값으로 맞춤. 팔레트는 무변경
       (673 K가 Draper 점 798 K 아래라 주변 지표는 여전히 비발광).
       2026-07-28: 감사 C5 후속(오너 결정 ②c) — 673 K는 황 융점(388 K) 위라 고체 황 평원이 물리적으로
-      불성립. 팔레트·알베도는 게임 설정 룩으로 유지하되 albedo 필드를 owner-override로 마킹하고 evidence에
+      불성립. 팔레트·알베도는 아바타 게임 설정 룩으로 유지하되 albedo 필드를 owner-override로 마킹하고 evidence에
       상 불안정 인정을 명시. 값 무변경.
     status: gated
     driver: [fiction, window-selection]
@@ -1477,37 +1477,37 @@ decisions:
       973 K까지 오른다.
     fields:
       - { name: surface_type, value: "silicate volcanic (Io-type)", op: set }
-      - { name: albedo, value: 0.30, op: set, verdict: owner-override, note: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균; 고체 황은 673 K에서 불안정(융점 388 K), 노란 황 지대는 게임 설정 룩 오너 오버라이드(evidence 참조)" }
+      - { name: albedo, value: 0.30, op: set, verdict: owner-override, note: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균; 고체 황은 673 K에서 불안정(융점 388 K), 노란 황 지대는 아바타 게임 설정 룩 오너 오버라이드(evidence 참조)" }
       - { name: surface_temperature, value: "673 K ambient (400°C) + ~973 K (700°C) 화산 핫스팟", unit: K, op: set, note: "구값 230K+600K는 조석 플럭스 11,500 W/m²와 에너지 보존 위반; bulk.tidal_heating 행 참조" }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
       evidence: >
-        Canon 'perpetual volcanism+moonquakes+orange lava flecks'. Tidal heating is non-uniform: with asthenosphere dissipation, the equator·tidal axis (sub/anti-planet)
+        The Avatar game's 'perpetual volcanism+moonquakes+orange lava flecks'. Tidal heating is non-uniform: with asthenosphere dissipation, the equator·tidal axis (sub/anti-planet)
         are enhanced, so the sub-Polyphemus giant fracture+lava lakes have physical motivation (real Io has a ~30–60° longitude offset, art-permitted). That
         fracture's volcanic plasma feeds the radiation belt (environment.radiation row).
         The 673 K ambient / 973 K hotspot pair is what this row's own tidal flux can radiate; a 230 K ambient
         surface cannot (see bulk.tidal_heating). Two art consequences follow. The ambient
         surface is hot but still visually DARK, since 673 K sits below the ~798 K Draper point where solids begin to
         glow, so the sulfur/basalt two-tone daylight look survives unchanged. The 973 K hotspots are above it, so only
-        they glow, which is exactly the canon "orange lava flecks" and the night-side orange lines in the appearance
+        they glow, which is exactly the Avatar game's "orange lava flecks" and the night-side orange lines in the appearance
         row. One thing the Draper check did not cover: 673 K is above sulfur's 388 K melting point and within ~45 K
         of its 718 K boiling point, so SOLID yellow sulfur cannot persist at ambient: exposed deposits melt and
         evaporate (at 673 K sulfur is a dark-red liquid). The bright sulfur fields and the albedo-0.5 sulfur half
-        are therefore an owner override kept for the canon two-tone look, not a stable surface phase; the physics
+        are therefore an owner override kept for the Avatar game's two-tone look, not a stable surface phase; the physics
         does not support them at this temperature.
       evidence_ko: >
-        게임 설정 '영구 화산+월진+주황 용암 반점'. 조석가열은 비균일하다. asthenosphere 소산이면 적도·조석축(sub/anti-planet)
+        아바타 게임 설정 '영구 화산+월진+주황 용암 반점'. 조석가열은 비균일하다. asthenosphere 소산이면 적도·조석축(sub/anti-planet)
         강화라 sub-Polyphemus 거대 균열+용암호는 물리 동기 있음(실제 Io는 경도 ~30–60° offset, 아트 허용). 그
         균열의 화산 plasma가 방사선대를 먹임(environment.radiation 행).
         주변 673 K + 핫스팟 973 K 조합이 이 행 자신의 조석 플럭스를 복사해낼 수 있는 값이다. 주변 230 K로는
         불가능하다(bulk.tidal_heating 참조). 아트 측 결과가 둘 따라온다. 주변 지표는 뜨겁지만
         시각적으로는 여전히 어둡다. 673 K는 고체가 빛나기 시작하는 Draper 점 약 798 K 아래라, 황/현무암 이중 톤의
-        주광 외관이 그대로 유지된다. 973 K 핫스팟은 그 위이므로 그곳만 발광하는데, 이것이 정확히 게임 설정의 '주황 용암
+        주광 외관이 그대로 유지된다. 973 K 핫스팟은 그 위이므로 그곳만 발광하는데, 이것이 정확히 아바타 게임 설정의 '주황 용암
         반점'이자 appearance 행의 야간측 주황 실선이다. 다만 Draper 검사가 다루지 않은 것이 하나 있다. 673 K는
         황의 융점 388 K 위이고 비등점 718 K에서 45 K 안쪽이라, 고체 노란 황은 주변 지표에 남을 수 없다. 노출된
         퇴적층은 녹아 증발한다(673 K의 황은 암적색 액체다). 따라서 밝은 황 지대와 알베도 0.5의 황 반쪽은 안정된
-        표면 상이 아니라 게임 설정의 이중 톤 룩을 위한 오너 오버라이드이며, 이 온도에서 물리는 이를 지지하지 않는다.
+        표면 상이 아니라 아바타 게임 설정의 이중 톤 룩을 위한 오너 오버라이드이며, 이 온도에서 물리는 이를 지지하지 않는다.
 
   - body: Dante
     axis: appearance
@@ -1529,8 +1529,8 @@ decisions:
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
-      evidence: "High-contrast sulfur-plain/basalt halves (albedo mean ~0.30), arranged around volcanoes·fractures. Only the fractures glow. The sulfur area is expanded to half of the canon 'orange lava flecks'."
-      evidence_ko: "황 평원/현무암 반반 고대비(albedo 평균 ~0.30), 화산·균열 중심 배치. 균열만 발광. 게임 설정 'orange lava flecks'에서 황 면적을 반으로 확대."
+      evidence: "High-contrast sulfur-plain/basalt halves (albedo mean ~0.30), arranged around volcanoes·fractures. Only the fractures glow. The sulfur area is expanded to half of the Avatar game's 'orange lava flecks'."
+      evidence_ko: "황 평원/현무암 반반 고대비(albedo 평균 ~0.30), 화산·균열 중심 배치. 균열만 발광. 아바타 게임 설정 'orange lava flecks'에서 황 면적을 반으로 확대."
 
   - body: Dante
     axis: atmosphere
@@ -1558,22 +1558,22 @@ decisions:
       방사선이 극심해 하루 약 7,200 rem에 이른다. 이 방사선은 Dante 자신의 화산 플라스마가 공급하는 Polyphemus
       방사선대에서 온다.
     fields:
-      - { name: radiation, value: "~7,200 rem/day (극심)", op: set, note: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; 게임 설정 하한 >4,500 초과" }
+      - { name: radiation, value: "~7,200 rem/day (극심)", op: set, note: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; 아바타 게임 설정 하한 >4,500 초과" }
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency, derived-grounding]
       verdict: pass-in-window
       evidence: >
         Our value: the Polyphemus inner belt is 300 rad/h (radiation_belts row); Dante at 1.54 R_p sits inside it, so
-        ~300 rad/h × 24 h ≈ 7,200 rad/day ≈ 7,200 rem/day (rad≈rem), above the game's floor. The game's setting: "innermost moonlet >4,500 rem/day (Io 3,200)". Holds even with the weak 170µT field: belt intensity is governed by the source, not the field:
+        ~300 rad/h × 24 h ≈ 7,200 rad/day ≈ 7,200 rem/day (rad≈rem), above the Avatar game's floor. The Avatar game's setting: "innermost moonlet >4,500 rem/day (Io 3,200)". Holds even with the weak 170µT field: belt intensity is governed by the source, not the field:
         Dante's ~1,200× Io volcanism supplies an enormous SO₂/sulfur plasma torus (a super-enhanced Io→Jupiter belt)
-        → dense trapped particles → a strong belt. Causal loop: Dante's volcanism feeds the belt that bakes it. The game's setting >4500 ↔ dynamo 170µT
+        → dense trapped particles → a strong belt. Causal loop: Dante's volcanism feeds the belt that bakes it. The Avatar game's setting >4500 ↔ dynamo 170µT
         reconciled without conflict (no field inflation needed). cf. Pandora is protected per the film's setting by being "between the two belts".
       evidence_ko: >
         우리 값: 폴리페무스 내대 300 rad/h(radiation_belts 행), Dante(1.54 R_p)는 내대 안이라
-        ~300 rad/h × 24h ≈ 7,200 rad/day ≈ 7,200 rem/day(rad≈rem)로 게임 설정 하한 위. 게임 설정 "최내곽 moonlet >4,500 rem/day(Io 3,200)". 약한 170µT 장에도 성립한다. 벨트 세기는 場이 아니라
+        ~300 rad/h × 24h ≈ 7,200 rad/day ≈ 7,200 rem/day(rad≈rem)로 아바타 게임 설정 하한 위. 아바타 게임 설정 "최내곽 moonlet >4,500 rem/day(Io 3,200)". 약한 170µT 장에도 성립한다. 벨트 세기는 場이 아니라
         공급원(source) 지배: Dante ~1200× Io 화산이 막대한 SO₂/황 플라스마 토러스 공급(Io→목성 벨트 초강화판)
-        → 조밀 트랩 입자 → 강벨트. 인과고리: Dante 화산이 자신을 굽는 벨트를 먹임. 게임 설정 >4500 ↔ dynamo 170µT
+        → 조밀 트랩 입자 → 강벨트. 인과고리: Dante 화산이 자신을 굽는 벨트를 먹임. 아바타 게임 설정 >4500 ↔ dynamo 170µT
         충돌 없이 화해(場 발산 불요). cf. Pandora는 영화 설정대로 "두 벨트 사이"라 보호.
 
   - body: Dante
@@ -1710,7 +1710,7 @@ decisions:
         e_init 0.005/0.010/0.020 all return e_max 0.047–0.064 (Pandora, 770× Hades's mass at period ratio
         2.22, forces it; an initial condition cannot lower it). Simulated e_rms = 0.0385 with the
         methodology's rocky band k₂/Q = 1e-3~1e-2 gives 207–2071 W/m² (15–146× Io) and a four-term satellite
-        T_eq of 278–444 K, against 141 W/m² of absorbed starlight. Film/game settings: the game's ">900 K
+        T_eq of 278–444 K, against 141 W/m² of absorbed starlight. Film vs Avatar-game settings: the Avatar game's ">900 K
         red-hot Hades" stays unadopted; the film's "cold gray plain" is half-adopted: gray and non-luminous
         holds (a 278 K blackbody emits ~1e-20 of its power in the visible, far below the ~798 K Draper
         point), the ancient cratered plain does not (a ~10 m conductive lid over melt resurfaces
@@ -1722,7 +1722,7 @@ decisions:
         확인. 이심률은 가정이 아니라 안정성 시뮬의 강제값이다. 초기 e를 0.005/0.010/0.020으로 넣은 세 런 모두
         e_max 0.047~0.064로 복귀했다(질량 770배의 Pandora가 주기비 2.22로 강제하므로 초기 조건으로는 낮출 수
         없다). 시뮬 e_rms 0.0385에 방법론의 rocky 밴드 k₂/Q = 1e-3~1e-2를 적용하면 207~2071 W/m²(이오의
-        15~146배), 4항 위성 T_eq 278~444 K가 되고, 흡수 별빛은 141 W/m²다. 영화·게임 설정 대조. 게임의
+        15~146배), 4항 위성 T_eq 278~444 K가 되고, 흡수 별빛은 141 W/m²다. 영화·아바타 게임 설정 대조. 아바타 게임의
         ">900 K 붉은 Hades"는 미채택 유지, 영화의 "차가운 회색 평원"은 절반 채택이다. 회색·비발광은 성립하고
         (278 K 흑체의 가시 몫은 약 1e-20으로 Draper 점 약 798 K에 한참 못 미친다), 오래된 크레이터 평원은
         성립하지 않는다(용융부 위 ~10 m 전도 지각이 계속 갈아엎힌다). 유보: 플럭스가 용융 문턱 위라 fixed-Q의
@@ -1992,8 +1992,8 @@ decisions:
         eclipses remove 7.7% of the starlight at 3.53 R_p, the parent returns 11.7 W/m² thermal + 4.9 reflected),
         plus solid-body tidal heating 45 W/m², giving Teq 237K; +54K greenhouse = 291K. So the lift IS partly tidal.
         The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it
-        is the same k₂/Q that puts the canon 27h orbit at 106 W/m² against a ~101 W/m² runaway ceiling: one
-        interior model explains both the adopted 32h lock and the canon temperature. Sensitivity is severe: an
+        is the same k₂/Q that puts the film's 27h orbit at 106 W/m² against a ~101 W/m² runaway ceiling: one
+        interior model explains both the adopted 32h lock and the film's temperature. Sensitivity is severe: an
         Io-like k₂/Q = 0.015 would make Pandora a 369K steam world. Ocean tidal dissipation is a separate,
         depth-dependent term still unquantified; the obliquity channel that could run away is starved because the
         spin axis is orbit-normal (the recorded obliquity 10° is the orbital inclination, and the Cassini-state
@@ -2295,13 +2295,13 @@ decisions:
         Classified a marginal life-world, microbial only. Check: the atmosphere row's 243–263 K anoxic N₂
         allows seasonal liquid water but rules out oxygen-breathing life, which is exactly the
         anaerobic-microbe reading the surface row records. Semi-canon: the moon's existence is film-official (one of
-        Polyphemus's fourteen), its name comes from the game, and its stated character traces to a 2024
+        Polyphemus's fourteen), its name comes from the Avatar game, and its stated character traces to a 2024
         Lightstorm panel; the numbers here are designed. Designation Alpha Centauri A b IV; fictional, so the
         db-parity check does not apply.
       evidence_ko: >
         미생물 수준의 한계 생명 세계로 분류. 확인: atmosphere 행의 243~263 K 무산소 N₂가 계절적 액체 물은
         허용하되 산소 호흡 생물은 배제하며, 이는 surface 행이 기록한 혐기 미생물 해석과 맞물린다. 준공식이다.
-        위성의 존재는 영화 쪽 공식 설정(14위성 중 하나), 이름은 게임 설정, 서술된 성격은 2024년 Lightstorm 공식
+        위성의 존재는 영화 쪽 공식 설정(14위성 중 하나), 이름은 아바타 게임 설정, 서술된 성격은 2024년 Lightstorm 공식
         패널에서 왔고, 수치는 여기서 설계했다. 명명은 Alpha Centauri A b IV, 픽션
         천체라 DB 대조 검사는 면제.
 
@@ -2640,7 +2640,7 @@ decisions:
       실제 검출이 없는 픽션 천체이고, 공식 명칭은 Alpha Centauri A b V, Chaos는 문화명으로 쓴다.
     fields:
       - { name: body_type, value: "작은 얼음 위성 (반경 400 km, ρ ~2015 kg/m³, Miranda형 균열), 역행, E-고리 공급원", op: set }
-      - { name: cliff_height, value: "15–30", unit: km, op: set, note: "게임 설정 명시값; 0.023 g라 이 규모가 서 있을 수 있다" }
+      - { name: cliff_height, value: "15–30", unit: km, op: set, note: "아바타 게임 설정 명시값; 0.023 g라 이 규모가 서 있을 수 있다" }
       - { name: designation, value: "Alpha Centauri A b V", op: set }
       - { name: cultural_name, value: "Chaos", op: set }
     gate:
@@ -2933,31 +2933,31 @@ decisions:
     status: gated                  # 135k 갭 = J2 적용 후에도 안정 (TRACE+leapfrog 일치). 3:2-락은 J2로 탈락.
     driver: [fiction, engine]   # SPEC class D (+ orbit는 stability-optimization)
     fields:
-      - { name: satellites, value: "판도라 + 게임 설정 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos); 본문 moons: 리스트가 body def", op: set }
+      - { name: satellites, value: "판도라 + 아바타 게임 설정 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos); 본문 moons: 리스트가 body def", op: set }
     narrative: >
       Five named moons circle Polyphemus (Dante, Hades, Pandora, Cassandra, Chaos): the source material's moons
-      (named in the game; only Pandora is on screen), rebuilt to be dynamically honest. The campaign's key
-      discovery: reading the game's "Hades grazes Dante" literally ejects
+      (named in the Avatar game; only Pandora is on screen), rebuilt to be dynamically honest. The campaign's key
+      discovery: reading the Avatar game's "Hades grazes Dante" literally ejects
       Hades within a century, so the drama was recast as a sustained mild eccentricity (the same way Io burns),
       plus small moonlets. Each moon's full body definition and starting orbit live in the structured list below.
     narrative_ko: >
-      다섯 명명 위성이 Polyphemus를 돈다(Dante·Hades·Pandora·Cassandra·Chaos). 원작의 위성들을(이름은 게임 설정,
+      다섯 명명 위성이 Polyphemus를 돈다(Dante·Hades·Pandora·Cassandra·Chaos). 원작의 위성들을(이름은 아바타 게임 설정,
       화면에 등장하는 것은 Pandora뿐) 동역학적으로 앞뒤가 맞게 다시 세운 것이다. 이 캠페인의 핵심 발견 하나.
-      게임 설정의 "Hades가 Dante를 스친다"를 글자 그대로
+      아바타 게임 설정의 "Hades가 Dante를 스친다"를 글자 그대로
       읽으면 Hades가 백 년 안에 튕겨 나간다. 그래서 그 드라마는 Io가 타는 방식과 같은, 유지되는 약한 이심률 +
       작은 소위성들로 다시 캐스팅됐다. 각 위성의 신상명세와 시작 궤도는 아래 구조화된 목록에 있다.
     gate:
       criterion: [stability, hill-stability, resonance]
       verdict: pass-in-window
       evidence: >
-        Game-literal "Hades grazes Dante" (e=0.30) → ejection within 100yr; tidal heating recast as a sustained
+        Avatar-game-literal "Hades grazes Dante" (e=0.30) → ejection within 100yr; tidal heating recast as a sustained
         e≈0.05 (cf. Io's forced e=0.0041) + small moonlets. IAS15 1000yr (N-body including both stars α Cen A·B, reflecting the two outer moons' retrograde): CHAOTIC_BUT_HILL_STABLE, all 5 moons
         Hill-bound·calm, ejections 0, Hades e 0.032–0.052 sustained, Pandora 0.02 R_Hill. Same grade as Barnard/TRAPPIST-1
         (bound, game-safe). results/_moons_alpha_centauri. Body defs = mass_kg·radius_km + 6 elements per moon
         (Kopernicus Orbit ↔ Principia 1:1) in the moons: list. See stability_scans.final_2026_06_21 /
         stability_scans.j2_confirm for the final roster·J2 re-verification.
       evidence_ko: >
-        게임 설정 직역 "Hades가 Dante를 스침"(e=0.30) → 100yr 내 이젝션; 조석가열은 유지되는 e≈0.05(cf. Io 강제
+        아바타 게임 설정 직역 "Hades가 Dante를 스침"(e=0.30) → 100yr 내 이젝션; 조석가열은 유지되는 e≈0.05(cf. Io 강제
         e=0.0041) + 작은 moonlet로 재구성. IAS15 1000yr (α Cen A·B 두 별 포함 N-body, 외곽 2위성 역행 반영): CHAOTIC_BUT_HILL_STABLE, 5위성 전부
         Hill-bound·calm, 이젝션 0, Hades e 0.032–0.052 유지, Pandora 0.02 R_Hill. 바너드/TRAPPIST-1과 같은 등급
         (갇힘, 게임 안전). results/_moons_alpha_centauri. body def = 위성당 mass_kg·radius_km + 6요소

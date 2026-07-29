@@ -350,7 +350,8 @@ decisions:
     rendered field: narrative, evidence, notes, values.
     - **Name the source tier, in both languages** (owner, 2026-07-29): a fact from the
       film or its official film-side publications ([CANON]) is 영화 설정 / "the film's";
-      a fact from the *Avatar: The Game* datamine ([GAME]) is 게임 설정 / "the game's";
+      a fact from the *Avatar: The Game* datamine ([GAME]) is **아바타 게임 설정 / "the
+      Avatar game's"** — never bare 게임/"the game", which reads as KSP on this project;
       원작 설정 / "the source material" only for claims genuinely spanning tiers (or
       absent from all of them); a semi-official item names its actual source (Cassandra:
       the 2024 Lightstorm panel). Never blur the tiers into one blanket "canon" for a

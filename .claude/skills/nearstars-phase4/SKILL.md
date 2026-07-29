@@ -201,8 +201,9 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   Korean, no calques** (거대 가스행성 not 거인, 구름층 not 구름덱, 영화/게임 설정 not
   캐넌) in every rendered
   field. **Name the source tier** (owner 2026-07-29): film/official-publication facts
-  ([CANON]) = 영화 설정 / "the film's"; *Avatar: The Game* datamine ([GAME]) = 게임
-  설정 / "the game's"; 원작 설정 / "the source material" only when a claim genuinely
+  ([CANON]) = 영화 설정 / "the film's"; *Avatar: The Game* datamine ([GAME]) = 아바타
+  게임 설정 / "the Avatar game's" (never bare 게임/"the game" — that reads as KSP
+  here); 원작 설정 / "the source material" only when a claim genuinely
   spans tiers; semi-official items name their source (Cassandra: 2024 Lightstorm
   panel). The per-fact tier map = the system's art-direction doc. Simulation-derived values (stability windows, gap-clearing, phase-match) cite
   the sim report (`phase3/stability-sim/*.md`) in `refs[]`, not just a paper.
