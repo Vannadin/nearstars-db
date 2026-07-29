@@ -70,6 +70,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__emit-orbit-phase-match-methodology.html">Observation-anchored emit orbital phase: sky-PA match + epoch rewind</a>
 <a class="nav-i" href="reference__exoplanet-atmosphere-methodology.html">Rocky-Exoplanet Atmosphere Methodology: Surface Pressure &amp; Scale Height</a>
 <a class="nav-i" href="reference__gravity-significance-floor-methodology.html">Gravity Significance Floor: Methodology &amp; Literature Grounding</a>
+<a class="nav-i" href="reference__greenhouse-warming-methodology.html">Greenhouse warming grounding: four layers from any gas mixture to a surface temperature</a>
 <a class="nav-i" href="reference__guideline.html">Nearby Star Systems KSP Mod — Project Guideline</a>
 <a class="nav-i" href="reference__internal-heat-luminosity-methodology.html">Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature</a>
 <a class="nav-i" href="reference__ksp-modding-sources.html">KSP Modding — Authoritative Source Index</a>
@@ -80,6 +81,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
 <a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__moon-energy-budget-methodology.html">Satellite energy budget: the four terms a planet does not have</a>
 <a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
@@ -397,6 +399,23 @@ moons qualitatively (board values, not reproduced here):
   Phase-4 board, recorded as a deliberate choice that overrides the physics, not a
   value the recipe produced. This is the canonical example of §8's honesty rule.
 
+**Hades — two refutations worth keeping (moved off the board, 2026-07-28).** Two
+plausible-sounding arguments failed on this body and generalize to any Io-type case:
+
+1. *"High internal heat, but a small rigid moon has a low k₂/Q, so the energy
+   channels into tectonics instead of melting"* is wrong twice. A low `k₂/Q` does not
+   redirect the heat — it means the heat is never **generated** (any Io-multiple
+   figure already assumes a `k₂/Q`; lowering one lowers the other). And tectonics is
+   not a heat sink: deformation energy still leaves the body as radiation, so
+   conservation pins the area-weighted `σT⁴` mean no matter how the heat concentrates
+   into hotspots. You cannot buy a cold surface with a hot interior.
+2. *"Just lower the eccentricity in the initial conditions."* When a much larger
+   neighbor forces `e` (Hades: Pandora at 770× its mass, period ratio 2.22), the
+   stability sim returns the same `e_max` for any initial `e` — three runs with
+   `e_init` 0.005/0.010/0.020 all came back at 0.047–0.064. Forced eccentricity is a
+   property of the architecture, not of the starting state; only moving the
+   architecture changes the heat.
+
 ---
 
 ## 8. Honesty & uncertainty
@@ -499,6 +518,9 @@ derived law.
 
 ## Related
 
+- [`moon-energy-budget-methodology.md`](reference__moon-energy-budget-methodology.html) — the satellite
+  counterpart: for a moon, replace this doc's Layer 1 `T_eq` with its four-term budget
+  (eclipses, parent thermal + reflected, tidal heating).
 - [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html): sibling recipe for the
   surface/equilibrium temperature of synchronous bodies; tidal heating here is an
   *additional* internal heat source layered on top of the irradiation that doc treats.
@@ -767,6 +789,20 @@ Io의 ~10⁹배 작은데도 작은 `a` 덕분에 게이트 안에 머물러, �
   빙화산 플룸은 Phase 4 보드에서 **아트 우선의 문서화된 divergence**다, 레시피가 만든 값이
   아니라 물리를 뒤집는 의도적 선택으로 기록된다. §8 정직함 규칙의 canonical 예시다.
 
+**Hades — 남겨둘 만한 반론 격파 둘(2026-07-28, 보드에서 옮겨옴).** 그럴듯하게 들리지만 이
+천체에서 무너진 논거 둘로, 어떤 Io형 사례에도 일반화된다.
+
+1. *"내부열은 높지만 작은 강체 위성은 k₂/Q가 낮아 에너지가 용융 대신 텍토닉으로 흐른다"*는
+   두 군데서 틀린다. 낮은 `k₂/Q`는 열의 방향을 바꾸는 게 아니라 애초에 열이 **생성되지 않게**
+   한다(Io 배수 값은 이미 특정 `k₂/Q`를 가정하므로, 하나를 낮추면 다른 하나도 내려간다). 그리고
+   텍토닉은 열의 배출구가 아니다. 변형에 쓰인 에너지도 결국 복사로 빠져나가므로, 열이 핫스팟에
+   얼마나 몰리든 면적가중 `σT⁴` 평균은 보존 법칙이 고정한다. 뜨거운 내부로 차가운 표면을 살 수는
+   없다.
+2. *"초기 조건에서 이심률을 낮추면 된다."* 훨씬 큰 이웃이 `e`를 강제하는 구조에서는(Hades:
+   질량 770배의 Pandora, 주기비 2.22) 어떤 초기 `e`를 넣어도 안정성 시뮬이 같은 `e_max`를
+   돌려준다 — `e_init` 0.005/0.010/0.020 세 런 모두 0.047~0.064로 복귀했다. 강제 이심률은
+   초기 상태가 아니라 배치 구조의 속성이라, 열을 바꾸려면 구조를 옮기는 수밖에 없다.
+
 ---
 
 ## 8. 정직함과 불확실성
@@ -864,6 +900,9 @@ Enceladus/Europa·Io 문헌을 종합한 것이지 인용 가능한 단일 임�
 
 ## 관련 문서
 
+- [`moon-energy-budget-methodology.md`](reference__moon-energy-budget-methodology.html) — 위성 쪽 짝.
+  위성이라면 이 문서의 Layer 1 `T_eq`를 그쪽의 4항 예산(식, 모행성 열복사+반사, 조석 가열)으로
+  대체한다.
 - [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html): 동주기 바디의 표면/평형온도를
   다루는 자매 레시피. 여기서 다룬 조석가열은 그 문서가 다루는 복사에 더해지는 *추가* 내부
   열원이다.

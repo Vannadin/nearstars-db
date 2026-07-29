@@ -240,6 +240,7 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/preview-md.sh <md-file>` — render markdown to HTML and open in the browser
 - `scripts/check-mirrors.sh` — verify `ko/` mirror parity (missing or stale files)
 - `scripts/check_dead_links.py` — scan all tracked .md files for broken relative links
+- `scripts/check_site_links.py` — scan published docs/ HTML for site-internal 404s: static hrefs + markdown links inside embedded `<script type="text/markdown">` blocks (client-rendered, invisible to an href scan); `_papers/` mirrors skipped. Wired into check.sh (step 3b)
 - `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
 - `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
 - `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness + Phase 4 emit-gate (gate 8, tool 13). Manual invocation only.

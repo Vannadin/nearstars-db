@@ -26,6 +26,7 @@ is one of the built docs.
 from __future__ import annotations
 
 import html
+import os
 import re
 from pathlib import Path
 
@@ -34,6 +35,7 @@ OUT_DIR = REPO / 'docs' / 'wiki'
 
 MARKED = 'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js'
 GH_CSS = 'https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css'
+GH_BLOB = 'https://github.com/Vannadin/nearstars-db/blob/main/'
 
 # slug → output filename, filled by collect_docs(); used to rewrite links.
 _LINK_MAP: dict[str, str] = {}
@@ -55,26 +57,41 @@ def _strip_frontmatter(md: str) -> tuple[str, str]:
     return md, title
 
 
-def _rewrite_links(md: str) -> str:
-    """Rewrite internal *.md links.
+def _rewrite_links(md: str, src_dir: Path) -> str:
+    """Rewrite internal links for the docs/wiki/ page context.
 
-    - target maps to a built wiki page → point at it.
-    - non-.md target (http, anchor, relative .html) → leave untouched.
-    - internal .md NOT in the built set → drop to plain text. Those point
-      outside the published docs/ tree (e.g. into .claude/ skill refs) and
-      would 404 on the site; the link is valid only in the repo file view.
+    - internal .md that maps to a built wiki page → point at it.
+    - other relative repo targets → re-resolve from the source md's
+      directory. Inside docs/ → re-express relative to docs/wiki/ (the
+      page the reader is on; a source-relative ../../../docs/x.html is
+      valid in the repo file view but escapes the site root from wiki/).
+      Outside docs/ but in the repo (scripts, LICENSE, phase3/…) → the
+      GitHub blob URL. Nonexistent → drop to plain text (no 404 on site).
     """
+    docs_root = (REPO / 'docs').resolve()
+    wiki_dir = docs_root / 'wiki'
+
     def repl(m):
         text, target = m.group(1), m.group(2)
-        if target.startswith(('http://', 'https://', '#', 'mailto:')):
+        if target.startswith(('http://', 'https://', '#', 'mailto:', '/')):
             return m.group(0)
         base, _, anchor = target.partition('#')
-        if not base.endswith('.md'):
-            return m.group(0)
-        out = _LINK_MAP.get(Path(base).stem)
-        if out:
-            return f'[{text}]({out}{("#" + anchor) if anchor else ""})'
-        return text  # unbuilt internal .md → de-link (no broken href on site)
+        suffix = ('#' + anchor) if anchor else ''
+        if base.endswith('.md'):
+            out = _LINK_MAP.get(Path(base).stem)
+            if out:
+                return f'[{text}]({out}{suffix})'
+            return text  # unbuilt internal .md → de-link
+        resolved = (src_dir / base).resolve()
+        if not resolved.exists():
+            return m.group(0) if not base.endswith('.html') else text
+        if resolved.is_relative_to(docs_root):
+            rel = os.path.relpath(resolved, wiki_dir)
+            return f'[{text}]({rel}{suffix})'
+        if resolved.is_relative_to(REPO):
+            rel = resolved.relative_to(REPO).as_posix()
+            return f'[{text}]({GH_BLOB}{rel}{suffix})'
+        return text  # outside the repo → de-link
     return _FULL_LINK_RE.sub(repl, md)
 
 
@@ -89,7 +106,7 @@ def _prep(md_path: Path) -> tuple[str, str]:
     """Read a markdown file → (rendered-ready markdown, title)."""
     raw = md_path.read_text(encoding='utf-8')
     body, fm_title = _strip_frontmatter(raw)
-    body = _rewrite_links(body)
+    body = _rewrite_links(body, md_path.parent)
     title = fm_title or _first_h1(body) or md_path.stem
     return body, title
 

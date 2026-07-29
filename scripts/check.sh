@@ -21,6 +21,10 @@ echo "── 3. Markdown dead-link 스캔 ──"
 python3 scripts/check_dead_links.py || fail=1
 
 echo ""
+echo "── 3b. 사이트 내부 링크 (docs/ 404) ──"
+python3 scripts/check_site_links.py || fail=1
+
+echo ""
 echo "── 4. 컨벤션 점검 ──"
 # 4a. 같은 라이브 스킬이 두 트리에 동시 존재 금지
 for d in .claude/skills/*/; do

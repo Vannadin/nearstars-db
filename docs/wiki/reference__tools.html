@@ -70,6 +70,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__emit-orbit-phase-match-methodology.html">Observation-anchored emit orbital phase: sky-PA match + epoch rewind</a>
 <a class="nav-i" href="reference__exoplanet-atmosphere-methodology.html">Rocky-Exoplanet Atmosphere Methodology: Surface Pressure &amp; Scale Height</a>
 <a class="nav-i" href="reference__gravity-significance-floor-methodology.html">Gravity Significance Floor: Methodology &amp; Literature Grounding</a>
+<a class="nav-i" href="reference__greenhouse-warming-methodology.html">Greenhouse warming grounding: four layers from any gas mixture to a surface temperature</a>
 <a class="nav-i" href="reference__guideline.html">Nearby Star Systems KSP Mod — Project Guideline</a>
 <a class="nav-i" href="reference__internal-heat-luminosity-methodology.html">Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature</a>
 <a class="nav-i" href="reference__ksp-modding-sources.html">KSP Modding — Authoritative Source Index</a>
@@ -80,6 +81,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
 <a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__moon-energy-budget-methodology.html">Satellite energy budget: the four terms a planet does not have</a>
 <a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
@@ -129,11 +131,13 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` patches | `kopernicus-cfg` skill |
 | 7 | Principia cfg | DB → Principia n-body patches | `principia-cfg` skill |
 | 8 | Firefly cfg | Phase 3 atmosphere → Firefly reentry-effect cfg | `firefly-cfg` skill |
-| 9 | ResearchBodies cfg | Phase 4 discoverability → ResearchBodies hide/discover patch | `researchbodies-cfg` skill |
+| 9 | ResearchBodies cfg (**입력 없음**) | Hide/discover patch for the third-party mod. **Its Phase 4 input layer was retired 2026-07-28** — kept for reference until the in-house replacement lands | `researchbodies-cfg` skill |
 | 10 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
 | 11 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
 | 13 | Phase 4 board tools | Validate decision boards (emit gate) + render per-body board HTML | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
+| 14 | Radiation belts + derived-value calculators | Belt cross-sections, Kerbalism emitter, and the `scripts/refs/` methodology calculators | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
+| 15 | Surface ice stability | Can exposed ice (6 species) survive at this insolation? Albedo → loss rate, lifetime, lag-mantle depth | `docs/ice-stability.html` |
 
 ## Verification & QA — index
 
@@ -315,7 +319,14 @@ Correctness checks live across several functional groups. This index gathers the
 
 ## 9. ResearchBodies cfg generation
 
-**Purpose.** Emit the optional **discoverability** layer — a `RESEARCHBODIES { loadAs = mod ... }` ModuleManager patch that hides each NearStars body until the player discovers it via an observatory/telescope. Maps each body's real detection status (Phase 4 `identity > discoverability`) to an `IGNORELEVELS` start-visibility tuple + an `ONDISCOVERY` message (candidates cite the real detection paper).
+>  ⚠️ **This skill currently has no input.** The Phase 4 boards' `discoverability`
+>  fields and `discoverability_cfg` blocks were removed on 2026-07-28: the owner is
+>  building a discovery mod tailored to NearStars rather than driving JPLRepo's
+>  ResearchBodies. The skill and its emitter are kept as reference for that work, but
+>  nothing feeds them today. The only thing identity still carries is `fictional: true`,
+>  which exists for the db-parity gate, not for discovery.
+
+**Purpose (as designed).** Emit the optional **discoverability** layer — a `RESEARCHBODIES { loadAs = mod ... }` ModuleManager patch that hides each NearStars body until the player discovers it via an observatory/telescope. Mapped each body's real detection status to an `IGNORELEVELS` start-visibility tuple + an `ONDISCOVERY` message (candidates cite the real detection paper).
 
 **Trigger.** "ResearchBodies cfg 만들어줘", "discoverability 패치", "IGNORELEVELS / ONDISCOVERY", "이 바디 숨김 처리".
 
@@ -346,6 +357,7 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/preview-md.sh <md-file>` — render markdown to HTML and open in the browser
 - `scripts/check-mirrors.sh` — verify `ko/` mirror parity (missing or stale files)
 - `scripts/check_dead_links.py` — scan all tracked .md files for broken relative links
+- `scripts/check_site_links.py` — scan published docs/ HTML for site-internal 404s: static hrefs + markdown links inside embedded `<script type="text/markdown">` blocks (client-rendered, invisible to an href scan); `_papers/` mirrors skipped. Wired into check.sh (step 3b)
 - `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
 - `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
 - `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness + Phase 4 emit-gate (gate 8, tool 13). Manual invocation only.
@@ -403,6 +415,71 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   validated Python port of Mauk & Fox's own Zenodo implementation (11 printed
   intermediates reproduced ≤0.05%); used as the belt-intensity upper-bound check in
   the magnetosphere-geometry methodology (Part B)
+- `scripts/refs/greenhouse_dt.py` — greenhouse increment (T_surf − T_eq) estimator from
+  the literature iso-Ts contour grid (Feulner 2012 / Kopparapu 2013 anchors, CH₄ credit,
+  Arney haze cap, Goldblatt N₂ broadening); `--s/--pco2/--ch4` for a one-off query, no
+  arguments for the validation table + the Polyphemus moons; backs
+  `docs/reference/greenhouse-warming-methodology.md`
+- `scripts/refs/moon_energy_budget.py` — satellite T_eq from the four-term energy budget
+  (stellar minus eclipses, parent thermal + reflected, tidal), with the runaway ceiling and
+  the Polyphemus worked example; `--pandora-27h-vs-32h` for just the orbit-choice table.
+  Validates on Io's tidal flux and Io's eclipse duration. Backs
+  `docs/reference/moon-energy-budget-methodology.md`
+- `scripts/refs/jeans_escape.py` — species-by-species atmospheric retention: the Jeans
+  parameter per gas with Volkov 2011's regime thresholds, validated on Earth, Titan and
+  Mars; `--mass/--radius/--texo` for a one-off body. Backs Gate 4 of
+  `docs/reference/exoplanet-atmosphere-methodology.md`
+
+## 15. Surface ice stability calculator
+
+`docs/ice-stability.html` — a standalone browser tool (no build step, no dependencies)
+answering one question: **can exposed ice persist on this body's surface, at this
+insolation, for this body's age?** Bright icy anchors in the albedo table are almost all
+Jupiter/Saturn-system bodies; transplanting their albedo to an inner orbit silently
+produces a surface that would sublimate away in Myr.
+
+Six species: H₂O, CO₂, NH₃, CH₄, CO, N₂ — each with its own vapour-pressure curve, molar
+mass, triple point and nominal solid density. Latent heat is not a separate input: it comes
+from the Clausius–Clapeyron slope of the same curve, `L = −R·d(ln P)/d(1/T)`, so it is
+temperature-dependent and self-consistent per species.
+
+Inputs: species, solid density, stellar luminosity, semi-major axis, body radius, age,
+Bond albedo, plus the three satellite terms (parent thermal, parent reflected, eclipse
+fraction) that `scripts/refs/moon_energy_budget.py` prints. Outputs: radiative and sublimation-cooled
+surface temperature, ice loss rate, time to lose a body radius, the critical albedo above
+which the ice survives, and the alternative **lag-mantle** reading (diffusion-limited
+retreat depth + the resulting volatile outflux).
+
+- The chart overlays the Bond-albedo bands from `surface-color-albedo-methodology.md` §6,
+  so it shows at a glance whether the survival threshold falls **inside** a band we can
+  actually cite or outside it.
+- Solar-system presets double as validation: Europa and Enceladus survive, Ceres at its
+  real albedo 0.09 loses 7.4 mm/yr (matching surface ice surviving only in permanent
+  shadow), and bare ice at 1 AU loses 0.81 m/yr (matching ~1 m of cometary nucleus
+  erosion per perihelion passage).
+- Grounding is stated in the page footer: Heller & Barnes 2013 for the energy budget,
+  Hertz–Knudsen for the sublimation flux, [Fray & Schmitt
+  2009](https://ui.adsabs.harvard.edu/abs/2009P%26SS...57.2053F) Tables 4/5/6 for every
+  species' vapour-pressure curve with its validity range and fit deviation, [Schörghofer
+  2008](https://ui.adsabs.harvard.edu/abs/2008ApJ...682..697S) for the lag-mantle
+  retreat, and `surface-color-albedo-methodology.md` §6 for the albedo bands.
+- **Fray & Schmitt 2009 is paywalled** (Elsevier, no arXiv preprint). The owner obtained it
+  through university access; it is cached at `docs/phase3/_papers/_fray2009.pdf` with the
+  provenance recorded alongside it in `_fray2009.PROVENANCE.txt`. That directory is
+  gitignored, so the article itself never enters the repo — only the coefficients we cite.
+  If the cache is ever lost, ask the owner rather than substituting a weaker source.
+- Coefficient transcription is verified two independent ways: the fitted curves reproduce
+  each species' triple-point pressure (H₂O exact, CO₂ 0.35%, CH₄ 1.5%, CO 0.08%), and the
+  latent heats differentiated out of them match NIST to within 1% (H₂O 51.0 kJ/mol, CO₂
+  26.3, CH₄ 9.8). The water curve also agrees with Marti & Mauersberger 1993 to 2% across
+  170–250 K, and extends usefully below it, which is where Europa and Enceladus sit.
+- Domain limits, also in the footer: single pure species only (real surfaces are mixtures,
+  whose vapour pressure is lower, so the loss rate is an upper bound), the solid densities
+  are nominal and editable (they enter only the depth conversion), the regolith diffusivity
+  `D` is an assumption the retreat depth scales as √D on, and no internal heat source is
+  included.
+
+Built for the Chaos albedo decision (2026-07-27); reusable for any icy body on any orbit.
 
 ## Skills directory layout
 
@@ -684,6 +761,7 @@ target_list.json
 - `scripts/preview-md.sh <md-file>` — 마크다운을 HTML 로 렌더해 브라우저에서 열기
 - `scripts/check-mirrors.sh` — `ko/` 미러의 누락·구버전 상태 확인
 - `scripts/check_dead_links.py` — 추적되는 모든 .md 파일의 상대 링크 깨짐 스캔
+- `scripts/check_site_links.py` — 배포되는 docs/ HTML의 사이트 내부 404 스캔. 정적 href에 더해 `<script type="text/markdown">` 임베드 블록 안의 마크다운 링크(클라이언트 렌더라 href 스캔에 안 잡힘)까지 검사하고 `_papers/` 미러는 제외. check.sh 3b 단계에 배선
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
 - `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도 + Phase 4 emit-게이트 (게이트 8, 도구 13). 수동 실행 전용.
@@ -740,6 +818,17 @@ target_list.json
 - `scripts/refs/kp_limit.py` — Kennel–Petschek 포획 플럭스 상한 계산기. Mauk & Fox
   원저자 Zenodo 구현의 검증된 파이썬 포팅(인쇄 중간값 11개 ≤0.05% 재현). 자기권
   지오메트리 방법론 Part B의 벨트 강도 상한 체크에 사용.
+- `scripts/refs/greenhouse_dt.py` — 온실 상승폭(T_surf − T_eq) 추정기. 문헌 iso-Ts 등온선
+  격자(Feulner 2012 / Kopparapu 2013 앵커)에 CH₄ 보정, Arney haze 상한, Goldblatt N₂ 압력확장을
+  더한다. `--s/--pco2/--ch4` 로 단발 조회, 인자 없이 실행하면 검증 표와 폴리페무스 위성 결과.
+  `docs/reference/greenhouse-warming-methodology.md` 의 계산 근거.
+- `scripts/refs/moon_energy_budget.py` — 위성 T_eq를 4항 에너지 예산(별빛−식, 행성 열복사+반사,
+  조석)으로 계산. 폭주 천장과 폴리페무스 적용 예 포함, `--pandora-27h-vs-32h`로 궤도 선택 표만 출력.
+  이오 조석 플럭스와 이오 식 지속시간으로 검증.
+  `docs/reference/moon-energy-budget-methodology.md` 의 계산 근거.
+- `scripts/refs/jeans_escape.py` — 기체 종별 대기 보유 판정. 종마다 Jeans 파라미터를 구하고
+  Volkov 2011의 체제 임계값으로 판정하며, 지구·타이탄·화성으로 검증. `--mass/--radius/--texo`로
+  단발 조회. `docs/reference/exoplanet-atmosphere-methodology.md` 관문 4의 계산 근거.
 
 ## 스킬 디렉터리 배치
 

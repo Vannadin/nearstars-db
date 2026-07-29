@@ -70,6 +70,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__emit-orbit-phase-match-methodology.html">Observation-anchored emit orbital phase: sky-PA match + epoch rewind</a>
 <a class="nav-i" href="reference__exoplanet-atmosphere-methodology.html">Rocky-Exoplanet Atmosphere Methodology: Surface Pressure &amp; Scale Height</a>
 <a class="nav-i" href="reference__gravity-significance-floor-methodology.html">Gravity Significance Floor: Methodology &amp; Literature Grounding</a>
+<a class="nav-i" href="reference__greenhouse-warming-methodology.html">Greenhouse warming grounding: four layers from any gas mixture to a surface temperature</a>
 <a class="nav-i" href="reference__guideline.html">Nearby Star Systems KSP Mod — Project Guideline</a>
 <a class="nav-i" href="reference__internal-heat-luminosity-methodology.html">Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature</a>
 <a class="nav-i" href="reference__ksp-modding-sources.html">KSP Modding — Authoritative Source Index</a>
@@ -80,6 +81,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
 <a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__moon-energy-budget-methodology.html">Satellite energy budget: the four terms a planet does not have</a>
 <a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
@@ -457,6 +459,10 @@ exists), and one line on what it contributes.
 
 ## Related
 
+- [greenhouse-warming-methodology](reference__greenhouse-warming-methodology.html): the sibling recipe for
+  the greenhouse increment `T_surface − T_eq`. This doc owns the closed-form `T_eq`
+  (Layer 1) and the day-night structure; that one owns how much an atmosphere adds on
+  top, and it applies to free rotators as well as locked bodies.
 - [exoplanet-atmosphere-methodology](reference__exoplanet-atmosphere-methodology.html): the sibling recipe for
   the surface pressure, mean molecular weight (μ) and scale height of the same
   rocky atmospheres; the temperature `T` from here feeds its scale-height formula.
@@ -777,6 +783,10 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
 
 ## 관련 문서
 
+- [greenhouse-warming-methodology](reference__greenhouse-warming-methodology.html): 온실 상승폭
+  `T_surface − T_eq`을 다루는 자매 레시피. 이 문서는 닫힌 형태의 `T_eq`(Layer 1)와 낮밤 구조를,
+  그 문서는 대기가 그 위에 얼마를 얹는지를 담당한다. 그쪽은 조석고정 천체뿐 아니라 자유
+  자전체에도 적용된다.
 - [exoplanet-atmosphere-methodology](reference__exoplanet-atmosphere-methodology.html): 같은 암석형 대기의
   표면기압·평균분자량(μ)·스케일높이를 정하는 자매 레시피. 여기서 나온 온도 `T`가 그
   스케일높이 공식에 들어간다.

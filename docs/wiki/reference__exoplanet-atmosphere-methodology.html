@@ -70,6 +70,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__emit-orbit-phase-match-methodology.html">Observation-anchored emit orbital phase: sky-PA match + epoch rewind</a>
 <a class="nav-i on" href="reference__exoplanet-atmosphere-methodology.html">Rocky-Exoplanet Atmosphere Methodology: Surface Pressure &amp; Scale Height</a>
 <a class="nav-i" href="reference__gravity-significance-floor-methodology.html">Gravity Significance Floor: Methodology &amp; Literature Grounding</a>
+<a class="nav-i" href="reference__greenhouse-warming-methodology.html">Greenhouse warming grounding: four layers from any gas mixture to a surface temperature</a>
 <a class="nav-i" href="reference__guideline.html">Nearby Star Systems KSP Mod — Project Guideline</a>
 <a class="nav-i" href="reference__internal-heat-luminosity-methodology.html">Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature</a>
 <a class="nav-i" href="reference__ksp-modding-sources.html">KSP Modding — Authoritative Source Index</a>
@@ -80,6 +81,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
 <a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__moon-energy-budget-methodology.html">Satellite energy budget: the four terms a planet does not have</a>
 <a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
@@ -127,7 +129,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 > mean molecular weight, and atmospheric scale height of rocky NearStars targets
 > (Proxima b, the TRAPPIST-1 worlds, etc.), and for mapping those onto KSP/
 > Kopernicus pressure curves at emit.
-> This is a working reference, not a textbook. See §8 for the verified citations.
+> This is a working reference, not a textbook. See §9 for the verified citations.
 
 ## Table of Contents
 
@@ -135,11 +137,12 @@ body { margin: 0; background: #fff; color: #1f2328;
 2. [Gate 1: Retention (the Cosmic Shoreline)](#2-gate-1-retention-the-cosmic-shoreline)
 3. [Gate 2: M-Dwarf / Flare Stripping](#3-gate-2-m-dwarf--flare-stripping)
 4. [Gate 3: Supply (Outgassing), Composition & Redox](#4-gate-3-supply-outgassing-composition--redox)
-5. [Choosing the Pressure Value](#5-choosing-the-pressure-value)
-6. [Mean Molecular Weight (μ) & Scale Height](#6-mean-molecular-weight-μ--scale-height)
-7. [How NearStars Applies This](#7-how-nearstars-applies-this)
-8. [Annotated Bibliography](#8-annotated-bibliography)
-9. [Related](#related)
+5. [Gate 4: Which Species Survive (the Jeans Parameter)](#5-gate-4-which-species-survive-the-jeans-parameter)
+6. [Choosing the Pressure Value](#6-choosing-the-pressure-value)
+7. [Mean Molecular Weight (μ) & Scale Height](#7-mean-molecular-weight-μ--scale-height)
+8. [How NearStars Applies This](#8-how-nearstars-applies-this)
+9. [Annotated Bibliography](#9-annotated-bibliography)
+10. [Related](#related)
 
 ---
 
@@ -236,6 +239,10 @@ The Proxima/TRAPPIST literature maps this in detail:
   required field strength and the wind variability make protection uncertain
   rather than guaranteed. (There is no separate Garraffo Proxima *journal* paper in
   2017, only a conference abstract, so cite the 2016 *ApJL* for this point.)
+  **Read this one against Ramstad & Barabash 2021 in §5**, which argues from
+  solar-system ion-flux measurements that a dipole is not required to prevent
+  wind-driven escape and may increase ion escape instead. Magnetic shielding is an
+  open question here, not a mechanism to lean on.
 - **Meadows+ 2018**: enumerates the plausible **environmental/atmospheric states**
   of Proxima b (desiccated O₂-dominated, CO₂, Venus-like, habitable, …) that
   follow from different escape and evolution histories. This is the explicit
@@ -269,13 +276,143 @@ the atmosphere is oxidized (CO₂ / N₂ / H₂O) or reduced (CH₄ / H₂ / CO)
   **abundant CH₄** atmosphere (a reduced-redox endmember), the methane counterpart
   to the oxidized CO₂/N₂ default.
 
-The composition that emerges from Gate 3 is what feeds §6: an oxidized world lands
+The composition that emerges from Gate 3 is what feeds §7: an oxidized world lands
 near a CO₂/N₂ μ (heavy), a reduced one near a CH₄/H₂ μ (light), and the difference
 is large enough to change the scale height by a factor of several.
 
 ---
 
-## 5. Choosing the Pressure Value
+## 5. Gate 4: Which Species Survive (the Jeans Parameter)
+
+Gates 1–3 answer "is there an atmosphere, and what was outgassed into it". They do
+not answer **which of those gases stay**, and that is a separate competition:
+gravity against the thermal energy of *one molecular species* at the exobase. It is
+why Titan keeps nitrogen on 2.6 km/s of escape velocity while Mars loses hydrogen on
+5.0 km/s. Mass and temperature decide, not gravity alone.
+
+Calculator: [`scripts/refs/jeans_escape.py`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/refs/jeans_escape.py).
+
+### The Jeans parameter
+
+    λ  =  G M m / (k T_exo r_exo)
+
+the ratio of a molecule's gravitational to thermal energy, evaluated at the exobase.
+`m` is the mass of the individual species, so λ scales linearly with molecular
+weight: at the same temperature, N₂ is fourteen times more tightly bound than H₂.
+This is textbook kinetic theory (Jeans; see
+[Catling & Kasting 2017](https://ui.adsabs.harvard.edu/abs/2017aeil.book.....C) for
+the modern treatment), so it needs no separate grounding — but the *thresholds* do.
+
+### Regimes, and where they sit
+
+[Volkov 2011](https://arxiv.org/abs/1009.5110) mapped the transition with direct
+simulation Monte Carlo, which is what makes these numbers citable rather than
+folklore:
+
+| λ (at the lower boundary) | Regime | |
+|---|---|---|
+| ≲ 2.1 | isentropic supersonic outflow limit | hydrodynamic blow-off |
+| ~2–3 (atomic), ~2.4–3.6 (diatomic) | the transition itself | organized outflow gives way to molecule-by-molecule |
+| > 3 | escape proceeds molecule-by-molecule | |
+| ≳ 6 | "the escape rate does not deviate significantly from the familiar Jeans rate" | classical Jeans |
+
+Volkov also corrects an earlier belief: above λ ≈ 6 the rate is *not* strongly
+enhanced over the classical Jeans formula, and for diatomic gases above λ ≈ 4 it
+runs only a few tens of percent above the monatomic case.
+
+The calculator adds one convention that is **not** from the literature: it labels
+λ > 30 as "retained", on the grounds that the Jeans flux there is negligible over
+Gyr. Treat that boundary as this doc's bookkeeping, not as a published threshold.
+
+### The diffusion limit: why a light gas leaves at a rate its own λ does not set
+
+For a light species mixed into a heavier background, λ is not the whole story.
+[Hunten 1973](https://ui.adsabs.harvard.edu/abs/1973JAtS...30.1481H) showed that in
+the "easy escape" regime the flux is instead **capped by diffusion of the light
+species up through the background**, with a simple expression, so the loss rate is
+set by its mixing ratio rather than by the exobase temperature. Two consequences
+matter for us:
+
+- **A trace light gas escapes at the diffusion-limited rate.** Hunten reproduces
+  Earth's hydrogen flux to within a factor of 2 from the stratospheric H₂O mixing
+  ratio alone. An invented atmosphere with a few tenths of a percent H₂ is losing it
+  steadily however cold the exobase is.
+- **The heavy gases are not dragged along.** Even in hydrodynamic blow-off of the
+  light component, Hunten found the outflow "orderly, not chaotic", and "normally,
+  the heavier gases are not carried along". So a world can lose all its H₂ and keep
+  its N₂ inventory intact. Selective loss is the normal case, not a special one.
+
+### Ion escape, and the magnetic-field paradigm Gate 2 inherited
+
+Thermal escape is not the only sink, and here the literature has moved.
+[Ramstad & Barabash 2021](https://ui.adsabs.harvard.edu/abs/2021SSRv..217...36R)
+review the accumulated ion-flux measurements at Venus, Earth and Mars and find ion
+escape is either **energy-limited** (Venus, Earth) or **supply-limited** (Mars,
+"mainly due to its low gravity"), and that at Mars ion escape "has likely
+contributed relatively little to the total loss of the early Martian atmosphere, in
+comparison to neutral escape processes."
+
+Their headline conclusion revises Gate 2's framing: "contrary to the current
+paradigm … an intrinsic magnetic dipole field is **not required** to prevent stellar
+wind-driven escape of planetary atmospheres, and the presence of one may instead
+**increase** the rate of ion escape." Gate 2 above cites Garraffo+ 2016 for a
+planetary field shielding the atmosphere; read that as one side of an open question,
+not as the mechanism. **Do not use "it has a magnetosphere" as a retention argument
+on a NearStars board row.**
+
+### Validation
+
+`python3 scripts/refs/jeans_escape.py`
+
+| Body | v_esc | T_exo | λ per species | Known outcome |
+|---|---|---|---|---|
+| Earth | 11.2 km/s | 1000 K | H 7.0, H₂ 14, N₂ 195, O₂ 223 | H escapes, N₂/O₂ kept ✓ |
+| Titan | 2.6 km/s | 175 K | H₂ 3.1, CH₄ 24, N₂ 42 | N₂ kept on weak gravity because it is cold; H₂ in the transition regime and lost ✓ |
+| Mars | 5.0 km/s | 250 K | H 5.8, H₂ 12, CO₂ 253 | H escapes; CO₂ bound against *thermal* escape, its actual loss being ion/sputtering ✓ |
+
+Earth's H at λ = 7.0 reproduces the textbook value, and the Titan row is the useful
+one: it shows the recipe getting a body right *against* the naive gravity intuition,
+which is the failure mode this gate exists to prevent.
+
+### Worked example: Cassandra
+
+Cassandra (9.0 × 10²³ kg, 3400 km, v_esc 5.9 km/s) is recorded as retaining N₂/CO₂
+while H₂ "escapes but is replenished volcanically". That claim had no recipe behind
+it until now. Bracketing the exobase temperature, which is the weak input:
+
+| T_exo | H₂ | CH₄ | N₂ | CO₂ |
+|---|---|---|---|---|
+| 300 K | 13.5 | 107 | 187 | 294 |
+| 500 K | 8.1 | 64 | 112 | 177 |
+| 800 K | 5.1 | 40 | 70 | 110 |
+
+H₂ sits between classical Jeans and the molecule-by-molecule regime across the whole
+range while everything heavier is firmly bound — so the recorded entry is correct,
+and now quantified. Note that H₂'s loss will in practice be diffusion-limited at
+these mixing ratios, so the volcanic replenishment the row invokes is doing real
+work rather than papering over a gap.
+
+Pandora, at 3.85 × 10²⁴ kg and 9.5 km/s, holds everything including H₂S and Xe, with
+H₂ leaking slowly (λ 12.9 at 800 K). Hades and Dante never reach this gate: at 0.94
+and 1.09 km/s of escape velocity they fail Gate 1 outright.
+
+### Domain of validity
+
+1. **`T_exo` is the weak input.** It is not the surface temperature — Earth's
+   exobase runs ~1000 K against a 288 K surface — and for an invented body it is
+   unconstrained. Always bracket it as above rather than quoting one λ.
+2. **λ is a rate regime, not a yes/no.** A species at λ = 10 is escaping; whether
+   that matters depends on the inventory and the resupply, which is Gate 3's half of
+   the balance.
+3. **Non-thermal channels are not in λ at all**: ion escape, sputtering,
+   photochemical loss. For CO₂ on a Mars-like body these dominate, which is exactly
+   why Mars's λ = 253 does not mean Mars kept its atmosphere.
+4. **This gate does not set the pressure**, only which species may appear in the
+   composition that §6 then assigns a total pressure to.
+
+---
+
+## 6. Choosing the Pressure Value
 
 With the gates cleared, the surface pressure is a **documented choice within a
 physically bounded band**. The procedure:
@@ -294,6 +431,15 @@ physically bounded band**. The procedure:
    | Earth | ~1 bar | the canonical habitable middle |
    | Venus | ~90 bar | runaway, outgassing-dominated, no escape sink |
 
+   **Pick the analog by composition and temperature class, not by proximity to the
+   middle of the band.** Earth sits in the middle of that table, so it becomes the
+   path of least resistance whenever nothing forces a value, and a roster full of
+   invented worlds quietly converges on ~1 bar. An anoxic N₂+CH₄ world under an
+   organic haze with frozen surface volatiles belongs to Titan's row however
+   Earth-sized it is; a desiccated CO₂ world belongs to Mars's or Venus's. Choosing
+   the row first, then a value inside it, is what keeps the answer from being
+   "Earth by default".
+
    The Gate-2 stripping severity sets where in this band the body plausibly sits:
    heavy stripping pushes toward the Mars end, weak stripping plus active volcanism
    toward the Venus end.
@@ -304,12 +450,12 @@ physically bounded band**. The procedure:
    gameplay, and **recorded on the Phase 4 board together with its retention-gate
    justification**, never an unstated default.
 
-The output of §5 is a single chosen surface pressure (in pascals for Kopernicus)
-plus the composition from Gate 3. Both feed §6.
+The output of §6 is a single chosen surface pressure (in pascals for Kopernicus)
+plus the composition from Gate 3. Both feed §7.
 
 ---
 
-## 6. Mean Molecular Weight (μ) & Scale Height
+## 7. Mean Molecular Weight (μ) & Scale Height
 
 The scale height `H` is the e-folding height of pressure with altitude: it sets
 how fast the atmosphere thins out, and therefore the **shape** of the Kopernicus
@@ -360,16 +506,16 @@ body's actual g, never by analogy.
 
 ---
 
-## 7. How NearStars Applies This
+## 8. How NearStars Applies This
 
 The chosen pressure and composition map directly onto the Kopernicus atmosphere
 model:
 
 - **Chosen surface pressure → `staticPressureASL`** (the sea-level pressure, in kPa
-  in the Kopernicus convention, convert from the pascals of §5).
+  in the Kopernicus convention, convert from the pascals of §6).
 
 - **Composition → μ → H → the `pressureCurve` falloff.** The surface pressure sets
-  the curve's value at altitude 0; the scale height `H` from §6 sets the e-folding
+  the curve's value at altitude 0; the scale height `H` from §7 sets the e-folding
   rate at which it decays (`P(z) ≈ P₀ · exp(−z/H)` for an isothermal layer, which
   is the shape the pressureCurve keyframes approximate). A heavy (CO₂) atmosphere
   gives a small H and a steeply falling curve; a light (H₂/CH₄) one a large H and a
@@ -388,7 +534,7 @@ argument.
 
 ---
 
-## 8. Annotated Bibliography
+## 9. Annotated Bibliography
 
 Each entry: authors, year, journal, **verified** arXiv id (or a flag where none
 exists), and one line on what it contributes.
@@ -442,6 +588,37 @@ exists), and one line on what it contributes.
   reduced rocky planet can sustain an **abundant CH₄** atmosphere: the reduced-
   redox endmember opposite the CO₂/N₂ default. Gate 3.
 
+- **Volkov, A. N. et al. (2011)**: *ApJ Letters* 729, L24
+  (`2011ApJ...729L..24V`). **[arXiv:1009.5110](https://arxiv.org/abs/1009.5110).**
+  Direct simulation Monte Carlo of thermally driven escape, mapping the
+  hydrodynamic ↔ Jeans transition: λ₀ ~ 2–3 for an atomic gas (lower bound 2.1 = the
+  isentropic supersonic outflow limit), ~2.4–3.6 diatomic, and above λ₀ ≈ 6 the rate
+  matches the classical Jeans rate. Source of every λ threshold in §5. Numbers from
+  the ADS abstract; *ar5iv has no usable full text*.
+
+- **Hunten, D. M. (1973)**: *J. Atmos. Sci.* 30, 1481
+  (`1973JAtS...30.1481H`). **No arXiv preprint (1973).** The diffusion limit: for a
+  light gas in a heavier background the escape flux is set by diffusion up through
+  the background rather than by the exobase temperature, with a simple expression;
+  reproduces Earth's hydrogen flux to a factor of 2 from the stratospheric H₂O
+  mixing ratio. Also establishes that in blow-off of the light component the outflow
+  is "orderly, not chaotic" and "normally, the heavier gases are not carried along",
+  which is the basis for selective loss in §5. Numbers from the ADS abstract.
+
+- **Ramstad, R. & Barabash, S. (2021)**: *Space Science Reviews* 217, 36
+  (`2021SSRv..217...36R`). **No arXiv preprint found.** Reviews measured ion-escape
+  rates at Venus, Earth and Mars; ion escape is energy-limited (Venus, Earth) or
+  supply-limited (Mars, from its low gravity), and at Mars contributed relatively
+  little to the total early loss compared with neutral escape. Concludes, against the
+  prevailing paradigm, that an intrinsic dipole is not required to prevent
+  wind-driven escape and may increase ion escape. Revises how Gate 2's
+  magnetic-shielding argument should be read. Numbers from the ADS abstract.
+
+- **Catling, D. C. & Kasting, J. F. (2017)**: *Atmospheric Evolution on Inhabited and
+  Lifeless Worlds* (`2017aeil.book.....C`). Textbook home of the Jeans parameter and
+  the escape-regime taxonomy used in §5; cited as the allowed textbook exception, not
+  for a specific number.
+
 - **Wordsworth, R. & Kreidberg, L. (2022)**: *Annual Review of Astronomy &
   Astrophysics* 60, 159. **[arXiv:2112.04663](https://arxiv.org/abs/2112.04663).** The canonical review of rocky-
   exoplanet atmospheres: retention, escape, outgassing, observability. Read first.
@@ -460,9 +637,13 @@ exists), and one line on what it contributes.
 ## Related
 
 - [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html): the sibling recipe
-  for the temperature `T` that enters the scale-height formula here (§6); the
+  for the temperature `T` that enters the scale-height formula here (§7); the
   Proxima b ~250–290 K range used in the worked example comes from its Layer-3 GCM
   anchors (Turbet+ 2016, Boutle+ 2017).
+- [greenhouse-warming-methodology](reference__greenhouse-warming-methodology.html): consumes the
+  composition decided here (CO₂ fraction, CH₄, H₂, total pressure) and turns it into the
+  greenhouse increment above `T_eq`. If a body needs a warmer surface than that recipe
+  allows, the composition is what has to move.
 - [solar-system-external-observer](reference__solar-system-external-observer.html): the Teq-blind-to-greenhouse
   calibration that motivates the "we don't measure the atmosphere" caution in §1
   (Venus' surface conditions are invisible to the kind of data we have here).
@@ -483,7 +664,7 @@ exists), and one line on what it contributes.
 > 목적은 NearStars 암석형 타깃(Proxima b, TRAPPIST-1 행성들 등)의 표면기압·
 > 평균분자량·대기 스케일높이를 **선택하고 정당화**하는 재사용 가능한 절차를 두고,
 > 그 결과를 KSP/Kopernicus 기압 곡선으로 옮기는 것이다.
-> 교과서가 아니라 작업용 레퍼런스다. 검증된 인용은 §8을 보라.
+> 교과서가 아니라 작업용 레퍼런스다. 검증된 인용은 §9을 보라.
 
 ## 목차
 
@@ -491,11 +672,12 @@ exists), and one line on what it contributes.
 2. [관문 1: 유지(코스믹 쇼어라인)](#2-관문-1-유지코스믹-쇼어라인)
 3. [관문 2: M왜성 / 플레어 스트리핑](#3-관문-2-m왜성--플레어-스트리핑)
 4. [관문 3: 공급(탈가스), 조성과 산화환원](#4-관문-3-공급탈가스-조성과-산화환원)
-5. [기압 값 고르기](#5-기압-값-고르기)
-6. [평균분자량(μ)과 스케일높이](#6-평균분자량μ과-스케일높이)
-7. [NearStars 적용 방식](#7-nearstars-적용-방식)
-8. [주석 참고문헌](#8-주석-참고문헌)
-9. [관련 문서](#관련-문서)
+5. [관문 4: 어떤 기체가 살아남는가 (Jeans 파라미터)](#5-관문-4-어떤-기체가-살아남는가-jeans-파라미터)
+6. [기압 값 고르기](#6-기압-값-고르기)
+7. [평균분자량(μ)과 스케일높이](#7-평균분자량μ과-스케일높이)
+8. [NearStars 적용 방식](#8-nearstars-적용-방식)
+9. [주석 참고문헌](#9-주석-참고문헌)
+10. [관련 문서](#관련-문서)
 
 ---
 
@@ -576,7 +758,10 @@ Proxima/TRAPPIST 문헌이 이를 상세히 그린다.
 - **Garraffo+ 2016**: Proxima b의 **우주 기상**. 강하고 질서 있는 *행성* 자기장이
   대기를 항성풍에서 가릴 수는 있지만, 필요한 자기장 세기와 풍속 변동성 때문에 보호는
   보장이 아니라 불확실에 가깝다. (Garraffo의 2017년 Proxima *저널* 논문은 없고 학회
-  초록뿐이라, 이 논점은 2016 *ApJL*을 인용한다.)
+  초록뿐이라, 이 논점은 2016 *ApJL*을 인용한다.) **§5의 Ramstad & Barabash 2021과 함께
+  읽을 것.** 그쪽은 태양계 이온 유량 측정에서 쌍극자장이 항성풍 구동 탈출을 막는 데 필요하지
+  않고 오히려 이온 탈출을 늘릴 수 있다고 논증한다. 자기 차폐는 여기서 열린 문제이며 기대고
+  설 메커니즘이 아니다.
 - **Meadows+ 2018**: 서로 다른 탈출·진화 이력에서 따라 나오는 Proxima b의 그럴듯한
   **환경/대기 상태**(건조한 O₂ 우세, CO₂, 금성형, 거주가능 등)를 열거한다. 타이브레이크가
   그중에서 골라야 하는 명시적인 "분기 결과 집합"이다.
@@ -598,19 +783,135 @@ Proxima/TRAPPIST 문헌이 이를 상세히 그린다.
 - **Schaefer+ 2017**(Schaefer, 암석형 행성에서 탈가스된 초기 대기의 산화환원 상태;
   *ApJ* 843, 120, **arXiv 없음**)은 탈가스 물질의 산화 상태에서 초기 대기 산화환원을
   계산한다. 맨틀이 더 산화적이면 CO₂/H₂O 우세, 더 환원적이면 CH₄/H₂/CO 우세다. 내부
-  조성에서 §6이 필요로 하는 μ로 이어지는 고리다.
+  조성에서 §7이 필요로 하는 μ로 이어지는 고리다.
 - **Herbort+ 2020**: 흔한 지각 암석 종류와 탈가스 대기 사이의 화학 평형으로, 다양한
   암석 조성에 대해 결과 기체 목록을 예측한다. "이 지각이면 어떤 기체가 나오나"의 실용
   표다.
 - **Wogan+ 2020**: 환원적 암석 행성의 화산활동이 **풍부한 CH₄** 대기를 지탱할 수 있음을
   보인다. 산화형 CO₂/N₂ 기본값의 반대편에 있는 환원 산화환원 극단이다.
 
-관문 3에서 나오는 조성이 §6에 들어간다. 산화형 세계는 CO₂/N₂ μ(무거움) 근처, 환원형은
+관문 3에서 나오는 조성이 §7에 들어간다. 산화형 세계는 CO₂/N₂ μ(무거움) 근처, 환원형은
 CH₄/H₂ μ(가벼움) 근처에 떨어지고, 그 차이는 스케일높이를 몇 배씩 바꿀 만큼 크다.
 
 ---
 
-## 5. 기압 값 고르기
+## 5. 관문 4: 어떤 기체가 살아남는가 (Jeans 파라미터)
+
+관문 1~3은 "대기가 있는가, 그리고 무엇이 탈가스되어 들어갔는가"에 답한다. **그중 어떤
+기체가 남는가**에는 답하지 않으며, 그건 별개의 경쟁이다. 중력과 *하나의 분자종*이 외기권
+바닥에서 갖는 열에너지의 겨룸이다. 타이탄이 탈출속도 2.6 km/s로 질소를 지키는데 화성이
+5.0 km/s로 수소를 잃는 이유가 이것이다. 중력만이 아니라 질량과 온도가 정한다.
+
+계산기는 [`scripts/refs/jeans_escape.py`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/refs/jeans_escape.py)다.
+
+### Jeans 파라미터
+
+    λ  =  G M m / (k T_exo r_exo)
+
+분자의 중력에너지 대 열에너지 비이며 외기권 바닥에서 평가한다. `m`이 개별 종의 질량이므로
+λ는 분자량에 선형으로 비례한다. 같은 온도에서 N₂는 H₂보다 열네 배 단단히 묶여 있다. 여기까지는
+교과서 기체운동론(Jeans; 현대적 정리는
+[Catling & Kasting 2017](https://ui.adsabs.harvard.edu/abs/2017aeil.book.....C))이라 별도
+근거가 필요 없다. 그러나 *임계값*은 근거가 필요하다.
+
+### 체제와 그 경계
+
+[Volkov 2011](https://arxiv.org/abs/1009.5110)이 직접 시뮬레이션 몬테카를로로 전이 구간을
+그려냈고, 그래서 이 숫자들은 통념이 아니라 인용 가능한 값이다.
+
+| λ (하부 경계에서) | 체제 | |
+|---|---|---|
+| ≲ 2.1 | 등엔트로피 초음속 유출 한계 | 유체역학적 blow-off |
+| ~2–3(단원자), ~2.4–3.6(이원자) | 전이 구간 자체 | 조직적 유출이 분자 단위 탈출로 넘어감 |
+| > 3 | 분자 하나씩 탈출 | |
+| ≳ 6 | "탈출률이 익숙한 Jeans 비율에서 유의미하게 벗어나지 않는다" | 고전 Jeans |
+
+Volkov는 기존 통념 하나도 바로잡는다. λ ≈ 6 위에서 탈출률은 고전 Jeans 공식보다 크게
+증폭되지 *않으며*, 이원자 기체는 λ ≈ 4 위에서 단원자 대비 수십 퍼센트만 높다.
+
+계산기는 문헌에 **없는** 관례 하나를 추가한다. λ > 30을 "보유"로 표시하는데, 그 영역에서
+Jeans 유량이 수십억 년 규모로 무시할 수준이라는 근거다. 이 경계는 발표된 임계값이 아니라
+이 문서의 장부 처리로 다룰 것.
+
+### 확산 한계: 가벼운 기체가 자기 λ와 무관한 속도로 빠져나가는 이유
+
+무거운 배경 기체에 섞인 가벼운 종에게는 λ가 전부가 아니다.
+[Hunten 1973](https://ui.adsabs.harvard.edu/abs/1973JAtS...30.1481H)은 "쉬운 탈출" 체제에서
+유량이 대신 **가벼운 종이 배경을 뚫고 올라가는 확산으로 상한**이 잡히며 간단한 표현식이
+있음을 보였다. 즉 손실률이 외기권 온도가 아니라 그 종의 혼합비로 정해진다. 우리에게 중요한
+결과가 둘이다.
+
+- **미량의 가벼운 기체는 확산 한계 속도로 탈출한다.** Hunten은 성층권 H₂O 혼합비만으로
+  지구의 수소 유량을 2배 이내로 재현한다. H₂가 수 십분의 일 퍼센트 있는 창작 대기는 외기권이
+  얼마나 차갑든 꾸준히 그것을 잃고 있다.
+- **무거운 기체는 끌려 나가지 않는다.** 가벼운 성분이 blow-off 상태에 있어도 Hunten은 유출이
+  "혼돈이 아니라 질서 있으며", "보통 무거운 기체는 함께 실려 나가지 않는다"는 것을 발견했다.
+  그래서 어떤 천체는 H₂를 전부 잃으면서 N₂ 재고는 온전히 지킬 수 있다. 선택적 손실은 특수
+  사례가 아니라 기본이다.
+
+### 이온 탈출, 그리고 관문 2가 물려받은 자기장 패러다임
+
+열적 탈출만이 소실 경로는 아니고, 이 대목에서 문헌이 움직였다.
+[Ramstad & Barabash 2021](https://ui.adsabs.harvard.edu/abs/2021SSRv..217...36R)은 금성·지구·
+화성에 축적된 이온 유량 측정을 리뷰해, 이온 탈출이 **에너지 제한**(금성, 지구)이거나
+**공급 제한**(화성, "주로 낮은 중력 때문")이며, 화성에서 이온 탈출은 "중성 탈출 과정에 비해
+초기 화성 대기 총 손실에 상대적으로 적게 기여했을 것"이라고 정리한다.
+
+그들의 결론이 관문 2의 프레이밍을 수정한다. "현재 패러다임과 반대로 … 고유 자기 쌍극자장은
+항성풍 구동 대기 탈출을 막는 데 **필요하지 않으며**, 오히려 그것이 있으면 이온 탈출률을
+**높일** 수 있다." 위 관문 2는 행성 자기장의 대기 차폐를 근거로 Garraffo+ 2016을 인용하는데,
+그것은 열린 논쟁의 한쪽으로 읽어야 하고 확립된 메커니즘이 아니다. **NearStars 보드 행에서
+"자기권이 있다"를 대기 보유 논거로 쓰지 말 것.**
+
+### 검증
+
+`python3 scripts/refs/jeans_escape.py`
+
+| 천체 | v_esc | T_exo | 종별 λ | 알려진 결과 |
+|---|---|---|---|---|
+| 지구 | 11.2 km/s | 1000 K | H 7.0, H₂ 14, N₂ 195, O₂ 223 | H 탈출, N₂·O₂ 보유 ✓ |
+| 타이탄 | 2.6 km/s | 175 K | H₂ 3.1, CH₄ 24, N₂ 42 | 차갑기 때문에 약한 중력으로도 N₂ 보유, H₂는 전이 체제에서 손실 ✓ |
+| 화성 | 5.0 km/s | 250 K | H 5.8, H₂ 12, CO₂ 253 | H 탈출, CO₂는 *열적* 탈출에는 결합. 실제 손실은 이온·스퍼터링 ✓ |
+
+지구의 H가 λ = 7.0으로 교과서 값을 재현하고, 유용한 줄은 타이탄이다. 중력에 대한 소박한
+직관을 **거스르는** 천체를 레시피가 맞게 짚는다는 것을 보여주며, 이 관문이 존재하는 이유가
+바로 그 실패 모드다.
+
+### 워크드 예제: Cassandra
+
+Cassandra(9.0 × 10²³ kg, 3400 km, v_esc 5.9 km/s)는 N₂/CO₂를 보유하고 H₂는 "탈출하나 화산
+보충"으로 기록돼 있다. 그 주장에는 지금까지 레시피가 없었다. 약한 입력인 외기권 온도를
+범위로 두면 이렇다.
+
+| T_exo | H₂ | CH₄ | N₂ | CO₂ |
+|---|---|---|---|---|
+| 300 K | 13.5 | 107 | 187 | 294 |
+| 500 K | 8.1 | 64 | 112 | 177 |
+| 800 K | 5.1 | 40 | 70 | 110 |
+
+H₂는 범위 전체에서 고전 Jeans와 분자 단위 체제 사이에 있고 더 무거운 것들은 단단히 결합한다.
+기록된 항목이 옳고, 이제 정량화됐다. 이 혼합비에서 H₂ 손실은 실제로는 확산 제한일 것이므로,
+이 행이 끌어온 화산 보충은 공백을 덮는 장치가 아니라 실제로 일을 하고 있다.
+
+Pandora는 3.85 × 10²⁴ kg, 9.5 km/s로 H₂S와 Xe까지 전부 붙잡고 H₂만 천천히 새어 나간다
+(800 K에서 λ 12.9). Hades와 Dante는 이 관문에 오지도 못한다. 탈출속도가 0.94와 1.09 km/s로
+관문 1에서 탈락한다.
+
+### 적용 범위
+
+1. **`T_exo`가 약한 입력이다.** 표면온도가 아니다. 지구 외기권은 표면 288 K에 대해 약
+   1000 K다. 창작 천체에서는 제약이 없으므로 언제나 위처럼 범위로 두고 λ 하나를 인용하지 않는다.
+2. **λ는 예/아니오가 아니라 속도 체제다.** λ = 10인 종은 탈출하고 있다. 그게 중요한지는 재고량과
+   재공급에 달렸으며, 그쪽은 관문 3이 담당하는 균형의 절반이다.
+3. **비열적 경로는 λ에 아예 없다.** 이온 탈출, 스퍼터링, 광화학 손실이 그렇다. 화성형 천체의
+   CO₂에서는 이쪽이 지배하며, 화성의 λ = 253이 화성이 대기를 지켰다는 뜻이 아닌 이유가 정확히
+   이것이다.
+4. **이 관문은 기압을 정하지 않는다.** §6이 총압을 부여할 조성에 어떤 종이 등장할 수 있는지만
+   정한다.
+
+---
+
+## 6. 기압 값 고르기
 
 관문을 통과하면 표면기압은 **물리적으로 한정된 범위 안에서 문서화해 내리는 선택**이다.
 절차는 이렇다.
@@ -628,6 +929,12 @@ CH₄/H₂ μ(가벼움) 근처에 떨어지고, 그 차이는 스케일높이�
    | 지구 | ~1 bar | 거주가능 한가운데의 표준 |
    | 금성 | ~90 bar | 폭주, 탈가스 지배, 탈출 소실 없음 |
 
+   **유사체는 밴드 중앙에 가까운 칸이 아니라 조성·온도 계열이 일치하는 칸에서 고른다.** 지구가
+   이 표의 가운데 있어서, 아무것도 값을 강제하지 않으면 지구가 최소 저항 경로가 되고 창작 천체로
+   가득한 로스터가 조용히 1 bar 근처로 수렴한다. 유기 haze 아래 무산소 N₂+CH₄이고 표면 휘발성이
+   동결된 천체는 크기가 지구급이든 타이탄의 줄에 속하며, 건조한 CO₂ 천체는 화성이나 금성의 줄에
+   속한다. 줄을 먼저 고르고 그 안에서 값을 고르는 것이 답이 "기본값 지구"가 되지 않게 막는다.
+
    관문 2의 스트리핑 강도가 이 범위 안 위치를 정한다. 심한 스트리핑은 화성 끝으로,
    약한 스트리핑과 활발한 화산활동은 금성 끝으로 민다.
 
@@ -636,12 +943,12 @@ CH₄/H₂ μ(가벼움) 근처에 떨어지고, 그 차이는 스케일높이�
    그럴듯함과 게임플레이를 보고 골라 **유지 관문 정당화와 함께 Phase 4 보드에 기록한다**.
    말없는 기본값은 절대 아니다.
 
-§5의 산출물은 고른 표면기압 하나(Kopernicus용 파스칼)와 관문 3의 조성이다. 둘 다 §6으로
+§6의 산출물은 고른 표면기압 하나(Kopernicus용 파스칼)와 관문 3의 조성이다. 둘 다 §7으로
 들어간다.
 
 ---
 
-## 6. 평균분자량(μ)과 스케일높이
+## 7. 평균분자량(μ)과 스케일높이
 
 스케일높이 `H`는 고도에 따른 기압의 e-folding 높이다. 대기가 얼마나 빨리 옅어지는지를
 정하고, 따라서 Kopernicus `pressureCurve`의 **모양**을 정한다(고른 표면기압이 그 *높이*를
@@ -690,15 +997,15 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
 
 ---
 
-## 7. NearStars 적용 방식
+## 8. NearStars 적용 방식
 
 고른 기압과 조성은 Kopernicus 대기 모델로 곧장 매핑된다.
 
 - **고른 표면기압 → `staticPressureASL`**(해수면 기압. Kopernicus 관례에서 kPa이므로
-  §5의 파스칼에서 변환한다).
+  §6의 파스칼에서 변환한다).
 
 - **조성 → μ → H → `pressureCurve` 감쇠.** 표면기압이 고도 0에서의 곡선 값을 정하고,
-  §6의 스케일높이 `H`가 곡선이 감쇠하는 e-folding 속도를 정한다(등온층에서
+  §7의 스케일높이 `H`가 곡선이 감쇠하는 e-folding 속도를 정한다(등온층에서
   `P(z) ≈ P₀ · exp(−z/H)`이며, pressureCurve 키프레임이 근사하는 모양이다). 무거운(CO₂)
   대기는 작은 H와 가파른 곡선을, 가벼운(H₂/CH₄) 대기는 큰 H와 완만한 감쇠를 준다.
 
@@ -712,7 +1019,7 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
 
 ---
 
-## 8. 주석 참고문헌
+## 9. 주석 참고문헌
 
 각 항목. 저자, 연도, 저널, **검증된** arXiv 식별자(없으면 그 표시), 그리고 기여 한 줄.
 
@@ -758,6 +1065,31 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
   화산활동이 **풍부한 CH₄** 대기를 지탱할 수 있다. CO₂/N₂ 기본값 반대편의 환원 산화환원
   극단. 관문 3.
 
+- **Volkov, A. N. et al. (2011)**: *ApJ Letters* 729, L24
+  (`2011ApJ...729L..24V`). **[arXiv:1009.5110](https://arxiv.org/abs/1009.5110).**
+  열구동 탈출의 직접 시뮬레이션 몬테카를로로 유체역학 ↔ Jeans 전이를 지도화. 단원자 기체는
+  λ₀ ~ 2–3(하한 2.1 = 등엔트로피 초음속 유출 한계), 이원자는 ~2.4–3.6이고 λ₀ ≈ 6 위에서는
+  고전 Jeans 비율과 일치한다. §5의 모든 λ 임계값 출처. 수치는 ADS 초록에서, *ar5iv에 쓸 만한
+  전문 없음*.
+
+- **Hunten, D. M. (1973)**: *J. Atmos. Sci.* 30, 1481
+  (`1973JAtS...30.1481H`). **프리프린트 없음(1973).** 확산 한계. 무거운 배경 속 가벼운 기체의
+  탈출 유량은 외기권 온도가 아니라 배경을 뚫고 올라가는 확산으로 정해지며 간단한 표현식이
+  있다. 성층권 H₂O 혼합비만으로 지구 수소 유량을 2배 이내로 재현한다. 또한 가벼운 성분의
+  blow-off에서도 유출이 "혼돈이 아니라 질서 있고" "보통 무거운 기체는 함께 실려 나가지 않는다"는
+  것을 확립했으며, 이것이 §5 선택적 손실의 근거다. 수치는 ADS 초록에서.
+
+- **Ramstad, R. & Barabash, S. (2021)**: *Space Science Reviews* 217, 36
+  (`2021SSRv..217...36R`). **프리프린트 없음.** 금성·지구·화성에서 측정된 이온 탈출률 리뷰.
+  이온 탈출은 에너지 제한(금성, 지구)이거나 공급 제한(화성, 낮은 중력 탓)이고, 화성에서는
+  중성 탈출에 비해 초기 총 손실 기여가 상대적으로 작았다. 지배적 패러다임과 달리 고유 쌍극자장이
+  항성풍 구동 탈출을 막는 데 필요하지 않고 오히려 이온 탈출을 늘릴 수 있다고 결론한다. 관문 2의
+  자기 차폐 논거를 어떻게 읽어야 하는지를 수정한다. 수치는 ADS 초록에서.
+
+- **Catling, D. C. & Kasting, J. F. (2017)**: *Atmospheric Evolution on Inhabited and
+  Lifeless Worlds* (`2017aeil.book.....C`). §5에서 쓰는 Jeans 파라미터와 탈출 체제 분류의
+  교과서 출처. 허용되는 교과서 예외로 인용하며 특정 수치를 위한 것은 아니다.
+
 - **Wordsworth, R. & Kreidberg, L. (2022)**: *Annual Review of Astronomy &
   Astrophysics* 60, 159. **[arXiv:2112.04663](https://arxiv.org/abs/2112.04663).** 암석형 외계행성 대기의 표준 리뷰. 유지,
   탈출, 탈가스, 관측가능성. 먼저 읽을 것.
@@ -773,9 +1105,12 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
 
 ## 관련 문서
 
-- [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html): 여기 §6 스케일높이
+- [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html): 여기 §7 스케일높이
   공식에 들어가는 온도 `T`를 정하는 자매 레시피. 워크드 예제에 쓴 Proxima b ~250–290 K
   범위는 그 문서의 Layer 3 GCM 앵커(Turbet+ 2016, Boutle+ 2017)에서 나온다.
+- [greenhouse-warming-methodology](reference__greenhouse-warming-methodology.html): 여기서 정한 조성(CO₂
+  비율, CH₄, H₂, 총압)을 받아 `T_eq` 위의 온실 상승폭으로 바꾼다. 그 레시피가 허용하는 것보다
+  더 따뜻한 지표가 필요하면, 움직여야 하는 것은 조성이다.
 - [solar-system-external-observer](reference__solar-system-external-observer.html): §1의 "우리는 대기를 측정하지
   못한다"는 경고의 근거가 되는, Teq의 온실효과 블라인드 캘리브레이션(금성 표면 환경은
   여기서 다루는 종류의 데이터에 보이지 않는다).

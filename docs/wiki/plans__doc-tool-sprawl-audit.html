@@ -70,6 +70,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__emit-orbit-phase-match-methodology.html">Observation-anchored emit orbital phase: sky-PA match + epoch rewind</a>
 <a class="nav-i" href="reference__exoplanet-atmosphere-methodology.html">Rocky-Exoplanet Atmosphere Methodology: Surface Pressure &amp; Scale Height</a>
 <a class="nav-i" href="reference__gravity-significance-floor-methodology.html">Gravity Significance Floor: Methodology &amp; Literature Grounding</a>
+<a class="nav-i" href="reference__greenhouse-warming-methodology.html">Greenhouse warming grounding: four layers from any gas mixture to a surface temperature</a>
 <a class="nav-i" href="reference__guideline.html">Nearby Star Systems KSP Mod — Project Guideline</a>
 <a class="nav-i" href="reference__internal-heat-luminosity-methodology.html">Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature</a>
 <a class="nav-i" href="reference__ksp-modding-sources.html">KSP Modding — Authoritative Source Index</a>
@@ -80,6 +81,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
 <a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__moon-energy-budget-methodology.html">Satellite energy budget: the four terms a planet does not have</a>
 <a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
@@ -136,7 +138,7 @@ promotes it to `phase2/sprawl-lifecycle-gate/` when greenlit. One cleanup
 session; everything else is pending.
 
 **External references.** None — internal audit. Anchors:
-`AGENTS.md §2`, [`scripts/check.sh`](../scripts/check.sh),
+`AGENTS.md §2`, [`scripts/check.sh`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/check.sh),
 [`docs/reference/tools.md`](reference__tools.html). Related memory:
 `project-doc-tool-sprawl-audit`, `reference-check-command`,
 `project-naming-canonical`.
@@ -164,7 +166,7 @@ scripts/check.sh`. Counts are reproducible.
 
 Gate 5 ("경로 마이그레이션 잔여물") greps tracked file *contents* for the
 pattern `alpha-cen-proxima-system|trappist-1-system|docs/wiki|llm-wiki|skills-lock`.
-The `docs/wiki` token now matches [`scripts/build_docs.py`](../scripts/build_docs.py),
+The `docs/wiki` token now matches [`scripts/build_docs.py`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/build_docs.py),
 which **legitimately generates** `docs/wiki/` (17 rendered HTML files; the
 wiki was re-introduced post-LLM-wiki-rollback and is actively maintained —
 last touched commit `9df6ae3`, 2026-05-31). So the gate false-positives on
@@ -251,7 +253,7 @@ kept), `docs/phase2/yz-cet.html` (rendered output not committed),
 
 `AGENTS.md §2.1`'s English-only exclusion list enumerates only
 `phase2/<topic>/{checklist,context-notes}.md`. The actual enforcer,
-[`scripts/check-mirrors.sh`](../scripts/check-mirrors.sh), is broader on two
+[`scripts/check-mirrors.sh`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/check-mirrors.sh), is broader on two
 axes: (a) it only scans `docs/`, `plans/`, and `README.md` at all — the
 entire `phase2/` and `phase3/` trees are never mirror-checked; (b)
 `should_exclude()` additionally drops any `*/_*` path component (`_papers/`,
@@ -277,7 +279,7 @@ to `phase2/sprawl-lifecycle-gate/` when starting.
 
 ### 3.1 Fix gate-5 false-positive (unblocks the health check) [do first]
 
-- Edit [`scripts/check.sh`](../scripts/check.sh) gate 5: remove `docs/wiki`
+- Edit [`scripts/check.sh`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/check.sh) gate 5: remove `docs/wiki`
   from `patterns` (keep `llm-wiki` / `skills-lock` / the `-system` slugs).
 - Verify: `bash scripts/check.sh` exits 0 (currently exits 1 on this alone).
 - One commit: `fix(check): drop stale docs/wiki false-positive from gate 5`.
@@ -359,7 +361,7 @@ gitignore-재생성 가능 vs 고아), `AGENTS.md §2`의 4-홈 컨벤션 준수
 감사 세션에서 이미 실행했고, 나머지는 전부 보류다.
 
 **외부 참조.** 없음 — 내부 감사다. 앵커.
-`AGENTS.md §2`, [`scripts/check.sh`](../../scripts/check.sh),
+`AGENTS.md §2`, [`scripts/check.sh`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/check.sh),
 [`docs/reference/tools.md`](reference__tools.html). 관련 메모리.
 `project-doc-tool-sprawl-audit`, `reference-check-command`, `project-naming-canonical`.
 
@@ -386,7 +388,7 @@ gitignore-재생성 가능 vs 고아), `AGENTS.md §2`의 4-홈 컨벤션 준수
 
 게이트 5("경로 마이그레이션 잔여물")는 추적 파일의 *내용*을 패턴
 `alpha-cen-proxima-system|trappist-1-system|docs/wiki|llm-wiki|skills-lock`로 grep한다.
-이 중 `docs/wiki` 토큰이 이제 [`scripts/build_docs.py`](../../scripts/build_docs.py)에 걸린다.
+이 중 `docs/wiki` 토큰이 이제 [`scripts/build_docs.py`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/build_docs.py)에 걸린다.
 이 스크립트는 `docs/wiki/`를 **정상적으로 생성**하는 생성기다(렌더된 HTML 17개. LLM-위키 롤백 이후
 재도입돼 현재도 관리 중 — 마지막 변경 커밋 `9df6ae3`, 2026-05-31). 즉 게이트가 자기 생성기를
 오탐하면서 `check.sh`가 매 실행 비정상 종료한다. 항상 빨간 가드레일은 없는 것보다 나쁘다 —
@@ -457,7 +459,7 @@ gitignore-재생성 가능 vs 고아), `AGENTS.md §2`의 4-홈 컨벤션 준수
 ### F7 — 문서 ↔ 툴 drift. `AGENTS.md`의 미러 범위가 실제 enforcer보다 좁음 [낮음]
 
 `AGENTS.md §2.1`의 영어-전용 제외 목록은 `phase2/<topic>/{checklist,context-notes}.md`만 열거한다.
-실제 enforcer인 [`scripts/check-mirrors.sh`](../../scripts/check-mirrors.sh)는 두 축에서 더 넓다.
+실제 enforcer인 [`scripts/check-mirrors.sh`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/check-mirrors.sh)는 두 축에서 더 넓다.
 (a) 애초에 `docs/`·`plans/`·`README.md`만 스캔한다 — `phase2/`·`phase3/` 트리 전체는 미러 검사 대상이 아니다.
 (b) `should_exclude()`가 더해서 모든 `*/_*` 경로 component(`_papers/`, `_bib/`, `_audit/`, `_archive/`)와
 모든 `*/{checklist,context-notes}.md`를 제외한다. 툴 동작이 옳다 — `phase3/_audit/*.md` 같은
@@ -477,7 +479,7 @@ gitignore-재생성 가능 vs 고아), `AGENTS.md §2`의 4-홈 컨벤션 준수
 
 ### 3.1 게이트 5 오탐 수정 (health check 잠금 해제) [먼저]
 
-- [`scripts/check.sh`](../../scripts/check.sh) 게이트 5 편집. `patterns`에서 `docs/wiki` 제거
+- [`scripts/check.sh`](https://github.com/Vannadin/nearstars-db/blob/main/scripts/check.sh) 게이트 5 편집. `patterns`에서 `docs/wiki` 제거
   (`llm-wiki` / `skills-lock` / `-system` 슬러그는 유지).
 - 검증. `bash scripts/check.sh`가 0으로 종료(현재는 이것 하나로 1 종료).
 - 커밋 1개. `fix(check): drop stale docs/wiki false-positive from gate 5`.

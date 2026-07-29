@@ -70,6 +70,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__emit-orbit-phase-match-methodology.html">Observation-anchored emit orbital phase: sky-PA match + epoch rewind</a>
 <a class="nav-i" href="reference__exoplanet-atmosphere-methodology.html">Rocky-Exoplanet Atmosphere Methodology: Surface Pressure &amp; Scale Height</a>
 <a class="nav-i" href="reference__gravity-significance-floor-methodology.html">Gravity Significance Floor: Methodology &amp; Literature Grounding</a>
+<a class="nav-i" href="reference__greenhouse-warming-methodology.html">Greenhouse warming grounding: four layers from any gas mixture to a surface temperature</a>
 <a class="nav-i" href="reference__guideline.html">Nearby Star Systems KSP Mod — Project Guideline</a>
 <a class="nav-i" href="reference__internal-heat-luminosity-methodology.html">Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature</a>
 <a class="nav-i" href="reference__ksp-modding-sources.html">KSP Modding — Authoritative Source Index</a>
@@ -80,6 +81,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
 <a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__moon-energy-budget-methodology.html">Satellite energy budget: the four terms a planet does not have</a>
 <a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
 <a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
 <a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
@@ -156,6 +158,8 @@ doc has a Korean mirror under `ko/docs/reference/`.
 |---|---|---|
 | [exoplanet-atmosphere-methodology](reference__exoplanet-atmosphere-methodology.html) | Atmosphere retention + pressure/composition | Zahnle & Catling 2017 (cosmic shoreline); Owen 2019; Dong 2017/2018 |
 | [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html) | Surface temperature / climate state | Joshi 1997; Wordsworth 2015; Koll & Abbot 2016; Koll 2022 |
+| [moon-energy-budget-methodology](reference__moon-energy-budget-methodology.html) | Satellite T_eq: stellar − eclipses + parent thermal + parent reflected + tidal, vs the circumplanetary habitable edge; calculator `scripts/refs/moon_energy_budget.py` | Heller & Barnes 2013 ([arXiv:1209.5323](https://arxiv.org/abs/1209.5323)); Dobos 2017 ([arXiv:1703.02447](https://arxiv.org/abs/1703.02447)); Barnes 2013 ([arXiv:1203.5104](https://arxiv.org/abs/1203.5104)); Tyler 2008; Beuthe 2016; Hay & Matsuyama 2017 |
+| [greenhouse-warming-methodology](reference__greenhouse-warming-methodology.html) | Greenhouse increment T_surf − T_eq for any gas mixture: 4 layers (analytic model / opacity data / iso-Ts contours / borrowed runs) + host-star correction; calculator `scripts/refs/greenhouse_dt.py` | Robinson & Catling 2012 ([arXiv:1209.1833](https://arxiv.org/abs/1209.1833)); Karman 2019 (HITRAN CIA); Byrne & Goldblatt 2014a/b; Feulner 2012 ([arXiv:1204.4449](https://arxiv.org/abs/1204.4449)); Kopparapu 2013 ([arXiv:1301.6674](https://arxiv.org/abs/1301.6674)); Charnay 2013 ([arXiv:1310.4286](https://arxiv.org/abs/1310.4286)); Ramirez 2014/2018; Goldblatt 2009; Arney 2016 |
 | [internal-heat-luminosity-methodology](reference__internal-heat-luminosity-methodology.html) | Internal heat + self-luminosity (T_int) | Burrows 1997; Baraffe 2003; Fortney 2007; Marley 2007 |
 
 ## Color (shared CIE 1931 → sRGB engine)
@@ -225,6 +229,8 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 |---|---|---|
 | [exoplanet-atmosphere-methodology](reference__exoplanet-atmosphere-methodology.html) | 대기 보유 + 기압/조성 | Zahnle & Catling 2017 (cosmic shoreline); Owen 2019; Dong 2017/2018 |
 | [tidally-locked-temperature-methodology](reference__tidally-locked-temperature-methodology.html) | 표면 온도 / 기후 상태 | Joshi 1997; Wordsworth 2015; Koll & Abbot 2016; Koll 2022 |
+| [moon-energy-budget-methodology](reference__moon-energy-budget-methodology.html) | 위성 T_eq: 별빛 − 식 + 행성 열복사 + 행성 반사 + 조석, 행성주위 거주가능 경계 대조; 계산기 `scripts/refs/moon_energy_budget.py` | Heller & Barnes 2013 ([arXiv:1209.5323](https://arxiv.org/abs/1209.5323)); Dobos 2017 ([arXiv:1703.02447](https://arxiv.org/abs/1703.02447)); Barnes 2013 ([arXiv:1203.5104](https://arxiv.org/abs/1203.5104)); Tyler 2008; Beuthe 2016; Hay & Matsuyama 2017 |
+| [greenhouse-warming-methodology](reference__greenhouse-warming-methodology.html) | 임의 기체 조합의 온실 상승폭 T_surf − T_eq. 4개 층(해석 모형 / 불투명도 자료 / iso-Ts 등온선 / 빌려온 계산) + 모항성 보정; 계산기 `scripts/refs/greenhouse_dt.py` | Robinson & Catling 2012 ([arXiv:1209.1833](https://arxiv.org/abs/1209.1833)); Karman 2019 (HITRAN CIA); Byrne & Goldblatt 2014a/b; Feulner 2012 ([arXiv:1204.4449](https://arxiv.org/abs/1204.4449)); Kopparapu 2013 ([arXiv:1301.6674](https://arxiv.org/abs/1301.6674)); Charnay 2013 ([arXiv:1310.4286](https://arxiv.org/abs/1310.4286)); Ramirez 2014/2018; Goldblatt 2009; Arney 2016 |
 | [internal-heat-luminosity-methodology](reference__internal-heat-luminosity-methodology.html) | 내부열 + 자발광 (T_int) | Burrows 1997; Baraffe 2003; Fortney 2007; Marley 2007 |
 
 ## 색 (공용 CIE 1931 → sRGB 엔진)
