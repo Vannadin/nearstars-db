@@ -148,7 +148,7 @@ mutates Phase 2/3 (see `phase4/SPEC.md` "Phase distinction").
 | 2→db | curated JSON → `db/systems/*.json` via `build_systems.py` (strictly derived, never hand-edited) | `system_name`; file stem = `to_file_slug(system_name)` | `validate.py`; snake_case guard (check.sh 4b); freshness (7) |
 | 2→3 | curated measurements (read by the synthesis author) + `phase3/<system>/system.yaml` (**bibliography pipeline input only** — see §5) | db names / `system_slug` | — (human judgment; bib scripts validate their own schema) |
 | 3→4, 3→emit | `## Decisions` table in `docs/phase3/<slug>.md` — columns `Field / Value / Confidence / Basis`, parsed by `scripts/pipeline/phase3_decisions.py` | report slug = `to_url_slug(body name)`; row key = `Field` label | Decisions parse check (check.sh 10c) |
-| 4→emit | `phase4/<system>.yaml` `decisions[].fields[]` (+ `discoverability_cfg`) | board filename = `to_file_slug(system_name)`; `body:` = db `name` **exactly** (SPEC §3 naming contract); fiction bodies marked `discoverability: fictional` | schema gate (check.sh 8); body↔db + roster gates (10a/10b) |
+| 4→emit | `phase4/<system>.yaml` `decisions[].fields[]` | board filename = `to_file_slug(system_name)`; `body:` = db `name` **exactly** (SPEC §3 naming contract); fiction bodies marked `fictional: true` on the identity row (the ResearchBodies `discoverability` layer was retired 2026-07-28) | schema gate (check.sh 8); body↔db + roster gates (10a/10b) |
 | all→emit | resolver output (§3) | body name | dry-run (WP1) |
 
 ## 2. Join-key registry
@@ -303,7 +303,7 @@ Phase 2 vs 3 불변식. Phase 3의 입력은 반드시 Phase 2 측정치여야 �
 | 2→db | curated JSON → `build_systems.py`로 `db/systems/*.json` (strictly derived, 손으로 편집 금지) | `system_name`; file stem = `to_file_slug(system_name)` | `validate.py`; snake_case guard (check.sh 4b); freshness (7) |
 | 2→3 | curated 측정치(합성 작성자가 읽음) + `phase3/<system>/system.yaml` (**bibliography 파이프라인 입력 전용** — §5 참조) | db names / `system_slug` | — (사람 판단; bib 스크립트는 자기 스키마를 검증) |
 | 3→4, 3→emit | `docs/phase3/<slug>.md`의 `## Decisions` 테이블 — `Field / Value / Confidence / Basis` 컬럼, `scripts/pipeline/phase3_decisions.py`가 파싱 | report slug = `to_url_slug(body name)`; row key = `Field` label | Decisions parse check (check.sh 10c) |
-| 4→emit | `phase4/<system>.yaml`의 `decisions[].fields[]` (+ `discoverability_cfg`) | board filename = `to_file_slug(system_name)`; `body:` = db `name`과 **정확히 일치**(SPEC §3 naming contract); fiction body는 `discoverability: fictional` 표기 | schema gate (check.sh 8); body↔db + roster gates (10a/10b) |
+| 4→emit | `phase4/<system>.yaml`의 `decisions[].fields[]` | board filename = `to_file_slug(system_name)`; `body:` = db `name`과 **정확히 일치**(SPEC §3 naming contract); fiction body는 identity 행에 `fictional: true` 표기 (ResearchBodies discoverability 층은 2026-07-28 폐기) | schema gate (check.sh 8); body↔db + roster gates (10a/10b) |
 | all→emit | resolver 출력(§3) | body name | dry-run (WP1) |
 
 ## 2. Join-key 레지스트리

@@ -31,7 +31,7 @@ mutates Phase 2/3 (see `phase4/SPEC.md` "Phase distinction").
 | 2→db | curated JSON → `db/systems/*.json` via `build_systems.py` (strictly derived, never hand-edited) | `system_name`; file stem = `to_file_slug(system_name)` | `validate.py`; snake_case guard (check.sh 4b); freshness (7) |
 | 2→3 | curated measurements (read by the synthesis author) + `phase3/<system>/system.yaml` (**bibliography pipeline input only** — see §5) | db names / `system_slug` | — (human judgment; bib scripts validate their own schema) |
 | 3→4, 3→emit | `## Decisions` table in `docs/phase3/<slug>.md` — columns `Field / Value / Confidence / Basis`, parsed by `scripts/pipeline/phase3_decisions.py` | report slug = `to_url_slug(body name)`; row key = `Field` label | Decisions parse check (check.sh 10c) |
-| 4→emit | `phase4/<system>.yaml` `decisions[].fields[]` (+ `discoverability_cfg`) | board filename = `to_file_slug(system_name)`; `body:` = db `name` **exactly** (SPEC §3 naming contract); fiction bodies marked `discoverability: fictional` | schema gate (check.sh 8); body↔db + roster gates (10a/10b) |
+| 4→emit | `phase4/<system>.yaml` `decisions[].fields[]` | board filename = `to_file_slug(system_name)`; `body:` = db `name` **exactly** (SPEC §3 naming contract); fiction bodies marked `fictional: true` on the identity row (the ResearchBodies `discoverability` layer was retired 2026-07-28) | schema gate (check.sh 8); body↔db + roster gates (10a/10b) |
 | all→emit | resolver output (§3) | body name | dry-run (WP1) |
 
 ## 2. Join-key registry
