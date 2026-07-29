@@ -235,9 +235,9 @@ STREAK_USECASE_EN = {
 STREAK_USECASE_KO = {
     "CO2": "N2/O2 대기 안의 CN/Swan 밴드",
     "CH4": "타이탄 계열 CH4 → CN violet (청자, N2 우점)",
-    "NH3": "아이스자이언트 암모니아 → NH2 알파밴드 (호박)",
+    "NH3": "거대 얼음행성 암모니아 → NH2 알파밴드 (호박)",
     "H2O": "수증기 혼합",
-    "He":  "가스자이언트 He → D3 587nm 노랑 (Firefly 진홍 교정)",
+    "He":  "거대 가스행성 He → D3 587nm 노랑 (Firefly 진홍 교정)",
     "SO2": "Venus 계열 황 화합물",
     "H2S": "환원성 대기 황",
     "Na":  "용암 행성 / sub-Neptune 알칼리",
@@ -705,10 +705,10 @@ def render_references() -> str:
         '<p class="muted" data-i18n="references_caption" style="font-size:12px;margin:4px 0 10px"></p>'
         '<div class="refs-list">'
         '<h4 data-i18n="ref_h_method"></h4><ul>'
-        '<li><a href="reference/element-plasma-colors.md">element-plasma-colors.md</a> — element emission / flame colors (NIST ASD + chemistry literature)</li>'
-        '<li><a href="reference/plasma-color-methodology-review.md">plasma-color-methodology-review.md</a> — literature-grounded adversarial review; full per-dimension ADS bibliography</li>'
-        '<li><a href="reference/atmosphere-reflected-color-methodology.md">atmosphere-reflected-color-methodology.md</a> — shared CIE 1931 → sRGB colorimetry engine</li>'
-        '<li><a href="reference/methodology-index.md">methodology-index.md</a> — NearStars methodology index</li>'
+        '<li><a href="wiki/reference__element-plasma-colors.html">element-plasma-colors</a> — element emission / flame colors (NIST ASD + chemistry literature)</li>'
+        '<li><a href="wiki/reference__plasma-color-methodology-review.html">plasma-color-methodology-review</a> — literature-grounded adversarial review; full per-dimension ADS bibliography</li>'
+        '<li><a href="wiki/reference__atmosphere-reflected-color-methodology.html">atmosphere-reflected-color-methodology</a> — shared CIE 1931 → sRGB colorimetry engine</li>'
+        '<li><a href="wiki/reference__methodology-index.html">methodology-index</a> — NearStars methodology index</li>'
         '</ul>'
         '<h4 data-i18n="ref_h_sources"></h4><ul>'
         '<li><a href="https://physics.nist.gov/asd">NIST Atomic Spectra Database</a> — line wavelengths &amp; transition probabilities (A-values)</li>'
@@ -805,16 +805,16 @@ def build_t(palettes):
         "tip_atom": "원자", "tip_nodatafor": "데이터 없음:",
         "dom_thermal": "열복사", "dom_molecular": "분자 밴드",
         "dom_atomic": "원자선", "dom_ionic": "이온",
-        "aurora_caption": "밀도 슬라이더를 움직여 고도를 훑어보세요. 오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도), 가장 조밀한 행에선 ~80-105km airglow/유성기원 금속층(Na 589nm 노랑 + OH Meinel 적색 + Li/K/Ca⁺ 미량)으로 따뜻해집니다. CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 카탈로그의 다른 발광종: O I 777nm(밝은 오로라 심적색). 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종(생산량 기준). LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
+        "aurora_caption": "밀도 슬라이더를 움직여 고도를 훑어보세요. 오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도), 가장 조밀한 행에선 ~80-105km airglow/유성기원 금속층(Na 589nm 노랑 + OH Meinel 적색 + Li/K/Ca⁺ 미량)으로 따뜻해집니다. CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 거대 가스행성은 H-Balmer 핑크. 카탈로그의 다른 발광종: O I 777nm(밝은 오로라 심적색). 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종(생산량 기준). LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
         "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 위 주기율표와 같은 커버리지입니다. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
         "bt_blackbody": "흑체 (열복사)",
         "ptc_air": "N2/O2 (지구형)",
         "ptc_co2": "CO2 (화성/금성)",
-        "ptc_h2_he": "H2/He (가스자이언트)",
+        "ptc_h2_he": "H2/He (거대 가스행성)",
         "ptc_ch4": "CH4 (타이탄형)",
         "ptc_h2o": "H2O (수증기)",
-        "ptc_nh3": "NH3 (아이스자이언트)",
+        "ptc_nh3": "NH3 (거대 얼음행성)",
         "h_bodies": "현재 emit된 행성들 (엔진 산출)",
         "temp_label": "온도:",
         "th_streak_species": "종",
