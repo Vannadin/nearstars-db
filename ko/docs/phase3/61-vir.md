@@ -197,41 +197,41 @@ NearStars 렌더러에서 61 Vir 는 따뜻한 크림 G6.5V 별로 묘사됩니�
 
 - **von Braun K. et al. 2014** — *Stellar diameters and temperatures
   VI: high-resolution angular diameters of exoplanet host stars*,
-  MNRAS 438, 2413 (`2014MNRAS.438.2413V`, [arXiv:1312.1792](https://arxiv.org/abs/1312.1792)). 61 Vir 의
+  MNRAS 438, 2413 ([`2014MNRAS.438.2413V`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.438.2413V), [arXiv:1312.1792](https://arxiv.org/abs/1312.1792)). 61 Vir 의
   CHARA 간섭계. θ_LD = 1.073 ± 0.005 mas → R = 0.9867 ± 0.0048 R☉.
   F_bol 36.06e-8 → Teff 5538 ± 13 K, L 0.8222 ± 0.0033 L☉. Y² 질량
   0.93 M☉, 나이 8.6 Gyr. **항성 레이어의 Phase 2 anchor** (61 Vir 의
   유일한 간섭계 반지름).
 - **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
-  of the AMBRE-HARPS sample*, A&A 646, A77 (`2021A&A...646A..77G`,
+  of the AMBRE-HARPS sample*, A&A 646, A77 ([`2021A&A...646A..77G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G),
   [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)). log R'HK = −5.013 (1251 스펙트라) 과 isochrone
   나이 7.69 ± 1.44 Gyr. Phase 2 recommended 활동도 + 나이.
 - **Santos N. C. et al. 2013** — *SWEET-Cat*, A&A 556, A150
-  (`2013A&A...556A.150S`). [Fe/H] = −0.01 ± 0.01 (Phase 2 recommended
+  ([`2013A&A...556A.150S`](https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.150S)). [Fe/H] = −0.01 ± 0.01 (Phase 2 recommended
   금속도. Sousa 2008 −0.02 가 보강).
 - **Vogt S. S. et al. 2010** — *A Super-Earth and Two Neptunes
   Orbiting the Nearby Sun-Like Star 61 Virginis*, ApJ 708, 1366
-  (`2010ApJ...708.1366V`). 세 행성 검출 (b 4.215 일, c 38.021 일,
+  ([`2010ApJ...708.1366V`](https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V)). 세 행성 검출 (b 4.215 일, c 38.021 일,
   d 123.01 일). 항성 파라미터 (M 0.942, R 0.963, L 0.82) 는 위의 von
   Braun 2014 간섭계로 대체됨.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir: implications
   for the prevalence of debris in low-mass planetary systems*, MNRAS
-  424, 1206 (`2012MNRAS.424.1206W`, [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). Herschel/PACS
+  424, 1206 ([`2012MNRAS.424.1206W`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.424.1206W), [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). Herschel/PACS
   로 70/100/160 μm 에서 차가운 debris 띠를 분해 영상화. ~30 AU 중심,
   ~96 AU 까지 뻗는 단일한 넓은 띠, dust 온도 ~68 K, dust 질량 태양 KBO
   잔존량과 비슷. Circumstellar-disk 모든 Decisions 행의 anchor.
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age Estimation
   for Solar-Type Dwarfs Using Activity-Rotation Diagnostics*, ApJ 687,
-  1264 (`2008ApJ...687.1264M`, [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). 활동도/gyrochronology
+  1264 ([`2008ApJ...687.1264M`](https://ui.adsabs.harvard.edu/abs/2008ApJ...687.1264M), [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). 활동도/gyrochronology
   나이 6.1–6.6 Gyr 과 log R'HK −5.001. Gomes da Silva 2021 isochrone
   나이에 대한 documented-divergence 대안.
 - **Baliunas S. L. et al. 1996** / **Wright J. T. et al. 2004** — 61 Vir
-  의 Mt Wilson Ca II HK 회전 P_rot ≈ 29 일 (`2004ApJS..152..261W`).
+  의 Mt Wilson Ca II HK 회전 P_rot ≈ 29 일 ([`2004ApJS..152..261W`](https://ui.adsabs.harvard.edu/abs/2004ApJS..152..261W)).
   Baliunas 1996 이 Phase 2 recommended 회전 출처이며, Wright 2011 이
   정리.
 - **Pavlenko Y. V. et al. 2012** — *Effective temperatures, gravities,
   metallicities, and ages of 18 solar twin candidates*
-  (`2012MNRAS.422..542P`, [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). 61 Vir 를 포함한 솔라 트윈
+  ([`2012MNRAS.422..542P`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.422..542P), [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). 61 Vir 를 포함한 솔라 트윈
   후보의 고분해 분광. Teff = 5538 K 와 태양으로부터 0.05 dex 이내의
   [Fe/H] 를 확인.
 
@@ -239,33 +239,33 @@ NearStars 렌더러에서 61 Vir 는 따뜻한 크림 G6.5V 별로 묘사됩니�
 
 - **Isaacson H. & Fischer D. 2010** — *Chromospheric Activity and Jitter
   Measurements for 2630 Stars on the California Planet Search*, ApJ
-  725, 875 (`2010ApJ...725..875I`, [arXiv:1009.2301](https://arxiv.org/abs/1009.2301)). California HK
+  725, 875 ([`2010ApJ...725..875I`](https://ui.adsabs.harvard.edu/abs/2010ApJ...725..875I), [arXiv:1009.2301](https://arxiv.org/abs/1009.2301)). California HK
   카탈로그 refit. 61 Vir log R'HK ≈ −5.0 이 여러 시즌에 걸쳐 안정함을
   확인.
 - **Schmitt J. H. M. M. & Liefke C. 2004** — *NEXXUS: A Comprehensive
   ROSAT survey of coronal X-ray emission among nearby solar-like
-  stars*, A&A 417, 651 (`2004A&A...417..651S`). NEXXUS-2 카탈로그. 61
+  stars*, A&A 417, 651 ([`2004A&A...417..651S`](https://ui.adsabs.harvard.edu/abs/2004A%26A...417..651S)). NEXXUS-2 카탈로그. 61
   Vir log L_X ≈ 26.7–27.0 cgs, 조용한 G 왜성 locus.
 - **Tanner A. et al. 2014** — 61 Vir disk SED + 영상 follow-up 의
   context 논문. Wyatt 2012 의 차가운 띠 지오메트리를 강화.
 - **Su K. Y. L. et al. 2017** — *Hot extended Solar System dust and
   cold debris disks in the Spitzer + Herschel surveys*, AJ 153, 226
-  (`2017AJ....153..226S`). 차가운 disk 샘플의 61 Vir. Wyatt 2012 와
+  ([`2017AJ....153..226S`](https://ui.adsabs.harvard.edu/abs/2017AJ....153..226S)). 차가운 disk 샘플의 61 Vir. Wyatt 2012 와
   일관.
 - **Bensby T. et al. 2014** — *Exploring the Milky Way stellar disk: a
   detailed elemental abundance study of 714 F and G dwarfs*, A&A 562,
-  A71 (`2014A&A...562A..71B`, [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)). 얇은 원반 금속도 샘플
+  A71 ([`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B), [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)). 얇은 원반 금속도 샘플
   의 61 Vir. [Fe/H] 가 태양과 일관.
 - **Brewer J. M. et al. 2016** — *Spectral Properties of Cool Stars
   (SPOCS): extended catalog of 1626 stars*, ApJS 225, 32
-  (`2016ApJS..225...32B`, [arXiv:1606.07929](https://arxiv.org/abs/1606.07929)). SPOCS 확장 카탈로그.
+  ([`2016ApJS..225...32B`](https://ui.adsabs.harvard.edu/abs/2016ApJS..225...32B), [arXiv:1606.07929](https://arxiv.org/abs/1606.07929)). SPOCS 확장 카탈로그.
   61 Vir 의 [Fe/H], Teff, log g refit 이 Pavlenko 2012 의 솔라 트윈
   값과 일관.
 
 ### Read (instrument-only, not visual-informative)
 
 - **Gray R. O. et al. 2003** — *Contributions to the Nearby Stars
-  (NStars) Project*, AJ 126, 2048 (`2003AJ....126.2048G`). 원래의 G7V
+  (NStars) Project*, AJ 126, 2048 ([`2003AJ....126.2048G`](https://ui.adsabs.harvard.edu/abs/2003AJ....126.2048G)). 원래의 G7V
   분류. Gaia DR3 의 G6.5V 는 더 세분된 후속.
 - **Lawler S. M. et al. 2014** — 태양형 별 주위 차가운 disk 인구의
   context 논문. 61 Vir 가 인용됨.

@@ -8,7 +8,7 @@ TRAPPIST-1 f 는 M8V ultra-cool dwarf 를 9.21 일 주기로 도는 1.04 R⊕,
 지구와 가장 비슷하지만, Agol 2021 의 bulk density 가 4.92 g/cc 로 충분히
 낮아 f 는 상당량의 물을 품은 워터 월드일 가능성이 높습니다. Acuña 2025
 ([2504.16201](https://arxiv.org/abs/2504.16201)) 는 water mass fraction 을 16.2% ± 9.9% 로 추정합니다.
-f 에 대한 첫 NIRISS 대기 정찰 (Lim 2024, ADS bibcode 2024ESS.....510106L;
+f 에 대한 첫 NIRISS 대기 정찰 (Lim 2024, ADS bibcode [`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L);
 arXiv preprint 없음) 은 구름 없는 수소 풍부 대기를 배제했지만 2차 대기에는
 강한 제약을 걸지 못했습니다.
 
@@ -64,7 +64,7 @@ Wolf 2017, Turbet 2018, Fauchez 2019 는 모두 f 가 모델링된 모든 CO₂ 
 | `magnetic_field_present` | true (약함, ~0.05× 지구) | low | 작은 질량 + 차가운 내부 + 느린 자전 |
 | `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 ([1710.08761](https://arxiv.org/abs/1710.08761)) — 총 induction heating 1.1×10¹⁸ W ≈ f 표면 기준 0.0012 W/m². molten-mantle 임계값 미만 |
 | `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 ([1712.05641](https://arxiv.org/abs/1712.05641)) — Maxwell viscoelastic. F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. 하한은 0 (불확실성이 0 까지 걸침). 이전 Bolmont 2020 scaled 추정 대비 30배 높음 |
-| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W))의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 ([2203.01065](https://arxiv.org/abs/2203.01065)) scaling. 1.04 M⊕ 는 활성 dynamo 를 지지하나 느린 자전 (9.2 d) 으로 multipolar 영역, ~0.3× 지구 |
 | `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 ([1706.04617](https://arxiv.org/abs/1706.04617)) f 의 0.3 G 테스트 케이스. 활성 dynamo 를 지지 |
 | `magnetic_dipole_tilt_deg` | 12 | low | 동률 처리. 12° 오프셋이 두드러진 auroral cap 를 만듦 |
@@ -164,7 +164,7 @@ substellar 점에 open water 는 결코 형성되지 않습니다.
 ## 대기 합성
 
 f 에 대한 Lim 2024 NIRISS 정찰 (arXiv preprint 없음, conference abstract
-ADS bibcode 2024ESS.....510106L) 은 f 의 첫 JWST transmission 관측을
+ADS bibcode [`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L)) 은 f 의 첫 JWST transmission 관측을
 보고합니다. 결과는 다음과 같습니다. H₂-rich 대기는 배제되며 Moran 2018
 ([1810.05210](https://arxiv.org/abs/1810.05210)) 의 HST 한계와 일관되지만, 2차 대기 (CO₂, N₂, H₂O-rich) 는
 현재 가용한 transit baseline 으로는 제약되지 않습니다. 즉 f 의 관측적 그림은
@@ -322,7 +322,7 @@ cfg 도 이 가정에 맞춥니다.
 
 f 의 참고 문헌은 매우 작습니다 (15 편, arXiv 6 편).
 
-- **2024ESS.....510106L** Lim 2024 — TRAPPIST-1 f NIRISS 대기 정찰.
+- **[`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L)** Lim 2024 — TRAPPIST-1 f NIRISS 대기 정찰.
   **f 의 핵심 관측 논문이지만 arXiv preprint 가 없음.** ADS 초록만 가용.
   대기 추론 (H₂-rich 배제, 2차 대기 미제약) 은 초록에서 가져왔음. **arXiv
   preprint 가 등장하면 fetch 하도록 flag.**

@@ -2,7 +2,7 @@
 # τ Ceti e — Phase 3 Synthesis (Refuted — included as documented divergence)
 
 τ Ceti e was originally one of four RV planet candidates announced
-by Feng et al. 2017 (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)) around
+by Feng et al. 2017 ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F), [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)) around
 the metal-poor G8V τ Ceti — a 3.93 M⊕ (M sin i) super-Earth on a
 162.87-day orbit at 0.538 AU, sitting just inside the optimistic
 habitable zone (Kopparapu et al. 2014). It was the most disputed of the four
@@ -11,10 +11,10 @@ ratio and a stellar-activity contamination concern flagged in
 Feng 2017 §6.
 
 **Now classified as False Positive (NEA 2026-04-09)**, following
-Figueira et al. 2025 (`2025A&A...700A.174F`,
+Figueira et al. 2025 ([`2025A&A...700A.174F`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F),
 doi:10.1051/0004-6361/202553869) ESPRESSO sub-10 cm/s RV
 non-detection of the 162-day signal. Cretignier et al. 2021
-(`2021A&A...653A..43C`) had earlier reached the same negative
+([`2021A&A...653A..43C`](https://ui.adsabs.harvard.edu/abs/2021A%26A...653A..43C)) had earlier reached the same negative
 conclusion with the YARARA stellar-activity post-processing applied
 to HARPS data; ESPRESSO is the instrument-level confirmation that
 the original signal is stellar activity, not a planet. Per a project
@@ -75,7 +75,7 @@ False Positive reclassification.
 | `magnetic_field_strength_microtesla_equator` | 30 | low | Tie-break: RM22 scaling for the assumed parameters; comparable to Earth's |
 | `tidal_heating_w_m2` | 0.001–0.01 | low | e = 0.18 at 0.538 AU; modest tidal flux in the historical scenario |
 | `induction_heating_w_m2` | < 0.001 | low | Quiet host (log L_X ≤ 26.5); negligible induction |
-| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W)) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `aurora_present` | true (modest) | low | Modest field + atmosphere in the historical scenario; faint diffuse aurora possible |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break: [OI] 557.7 nm green if any O₂; N₂ Vegard-Kaplan blue-green otherwise |
 | `aurora_intensity_kR_typical` | 1 | low | Quiet host — auroral excitation rate well below Earth's |
@@ -284,19 +284,19 @@ it does not).
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Original discovery
+  ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F), [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Original discovery
   paper. Reports e at P = 162.87 d, M sin i = 3.93 M⊕, e = 0.18.
   Anchors the historical Decisions rows above. Feng 2017 §6
   itself cautions that e is the most amplitude-marginal of the
   four.
 - **Cretignier M. et al. 2021** — *YARARA: stellar-activity
   post-processing for HARPS RV*, A&A 653, A43
-  (`2021A&A...653A..43C`). First non-detection of the 162-d
+  ([`2021A&A...653A..43C`](https://ui.adsabs.harvard.edu/abs/2021A%26A...653A..43C)). First non-detection of the 162-d
   signal after stellar-activity decorrelation. Identifies the
   signal as activity-correlated rather than planetary.
 - **Figueira P. et al. 2025** — *ESPRESSO RV monitoring of τ Ceti:
   refutation of e and tightened limits on f/g/h*, A&A 700, A174
-  (`2025A&A...700A.174F`, doi:10.1051/0004-6361/202553869).
+  ([`2025A&A...700A.174F`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F), doi:10.1051/0004-6361/202553869).
   Instrument-level confirmation that e is a stellar-activity
   artifact. ESPRESSO's sub-10 cm/s precision is below the original
   Feng 2017 amplitude; the 162-d signal is absent. Drives the

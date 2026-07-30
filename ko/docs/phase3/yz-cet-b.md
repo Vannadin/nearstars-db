@@ -193,13 +193,13 @@ Kopernicus 에서 바디의 `rotationPeriod` 는 궤도 `period` 와 초 단위�
   (c/d 가 아니라 b), 반지름 bracket (지구형 밀도 시 0.89–1.0 R⊕),
   synodic-period 기하, 그리고 b 를 flux-tube 구동체로 만드는
   sub-Alfvénic 영역의 출처.
-- **2020A&A...636A.119S** Stock et al. 2020 — b 의 궤도 (P = 2.02087 d,
+- **[`2020A&A...636A.119S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A.119S)** Stock et al. 2020 — b 의 궤도 (P = 2.02087 d,
   a = 0.01634 AU, e = 0.06) 와 최소질량 (0.70 M⊕), 준경험적 반지름
   추정 (0.913 R⊕) 의 Phase 2 recommended 출처.
 
 ### Read (context / methodology, not decision-driving)
 
-- **2017A&A...605L..11A** Astudillo-Defru et al. 2017 — b/c/d 발견
+- **[`2017A&A...605L..11A`](https://ui.adsabs.harvard.edu/abs/2017A%26A...605L..11A)** Astudillo-Defru et al. 2017 — b/c/d 발견
   논문. 이전 궤도/질량 해 (P = 1.96876 d) 는 `recommended:false` 로
   보존. 시스템 구조의 맥락.
 - 항성 합성 (`yz-cet.md`) — b 의 조명과 SPI 환경을 정하는

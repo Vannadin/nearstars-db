@@ -18,10 +18,10 @@ independently verified (6/6 core values matched, 2026-06-16).
 
 | block | source | content |
 |---|---|---|
-| `clouds` (15) | Redfield & Linsky 2008, `2008ApJ...673..283R` (Tables 16 & 18) | warm-cloud heliocentric velocity vectors = the interstellar-wind **field** |
-| `astrospheres` (27) | Wood et al. 2021, `2021ApJ...915...37W` (Tables 2 & 3) | measured astrospheres — **validation + cloud assignment + wind strength**, NOT field anchors |
-| `astrospheres_xray` (3) | Kislyakova et al. 2024, `2024NatAs...8..596K` | X-ray-detected astrospheres (higher mass-loss; method tension, kept separate) |
-| `insitu_he` | Bzowski/McComas 2015, `2015ApJS..220...28B` | in-situ IBEX He inflow at the Sun |
+| `clouds` (15) | Redfield & Linsky 2008, [`2008ApJ...673..283R`](https://ui.adsabs.harvard.edu/abs/2008ApJ...673..283R) (Tables 16 & 18) | warm-cloud heliocentric velocity vectors = the interstellar-wind **field** |
+| `astrospheres` (27) | Wood et al. 2021, [`2021ApJ...915...37W`](https://ui.adsabs.harvard.edu/abs/2021ApJ...915...37W) (Tables 2 & 3) | measured astrospheres — **validation + cloud assignment + wind strength**, NOT field anchors |
+| `astrospheres_xray` (3) | Kislyakova et al. 2024, [`2024NatAs...8..596K`](https://ui.adsabs.harvard.edu/abs/2024NatAs...8..596K) | X-ray-detected astrospheres (higher mass-loss; method tension, kept separate) |
+| `insitu_he` | Bzowski/McComas 2015, [`2015ApJS..220...28B`](https://ui.adsabs.harvard.edu/abs/2015ApJS..220...28B) | in-situ IBEX He inflow at the Sun |
 
 **Conventions (critical).**
 - Cloud `(l_deg, b_deg)` = the **downwind** direction (where the gas flows *toward*),

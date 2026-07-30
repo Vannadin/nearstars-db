@@ -56,7 +56,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `surface_tint_rgb_hex_accent` | `#c84a18` (substellar 마그마-바다 glow) | low | Tie-break. ~1450 K 의 substellar 부분 용융 영역이 적-주황으로 복사 (Wien 피크 2 μm 이지만 가시광 꼬리 두드러짐). interesting-first 가 균일한 어두운 표면 대신 가시 lava-glow accent 채택 |
 | `surface_morphology` | substellar 마그마 바다 ~1500 km 반경. 중위도 식은 basalt 평원. 휘발성 제거된 야간 regolith | medium | Tie-break. Léger 2009 CoRoT-7b 마그마-바다 템플릿. 규산염 solidus 의 substellar isotherm 에서 ~30° 마그마-pond 반경 |
 | `tidal_heating_w_m2` | 0.1–1 | medium | 4.2 일 주기에서 e=0.12 에 대한 Bolmont 2020 스케일링. 이심률 기여는 이 질량에서 적당하지만 자명하지 않음. 일사 예산을 보충하지만 지배하지는 않음 |
-| `radiogenic_heat_w_m2` | 0.05 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 ~5 M⊕로 질량 스케일했으며 부분 용융 내부와 일관됨. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
+| `radiogenic_heat_w_m2` | 0.05 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 ~5 M⊕로 질량 스케일했으며 부분 용융 내부와 일관됨. 방법은 Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W))의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `star_apparent_angular_diameter_deg` | 1.02 | high | 유도. 2 × R★ / a × (180/π). 0.0502 AU 의 0.963 R☉ |
 | `stellar_illumination_color_temp_k` | 5552 | high | 호스트 Teff |
 
@@ -234,36 +234,36 @@ burst 가 있는 변형 렌더링은 Phase 3.5 시각 디테일 레이어에서 
 
 - **Vogt S. S. et al. 2010** — *A Super-Earth and Two Neptunes
   Orbiting the Nearby Sun-Like Star 61 Virginis*, ApJ 708, 1366
-  (`2010ApJ...708.1366V`). 발견 논문. b 의 궤도 (P=4.215 d,
+  ([`2010ApJ...708.1366V`](https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V)). 발견 논문. b 의 궤도 (P=4.215 d,
   a=0.0502 AU, e=0.12, ω=105°) 와 최소 질량 (Msini = 5.1 ± 0.5 M⊕)
   보고. HIRES + AAT 결합 RV 해. Decisions 표의 모든 궤도 + 질량 값이
   여기에 묶입니다.
 - **Léger A. et al. 2009** — *Transiting exoplanets from the CoRoT
   space mission VIII. CoRoT-7b: the first super-Earth with measured
-  radius*, A&A 506, 287 (`2009A&A...506..287L`, [arXiv:0908.0241](https://arxiv.org/abs/0908.0241)).
+  radius*, A&A 506, 287 ([`2009A&A...506..287L`](https://ui.adsabs.harvard.edu/abs/2009A%26A...506..287L), [arXiv:0908.0241](https://arxiv.org/abs/0908.0241)).
   용암-세계 템플릿. 뜨거운 암석 슈퍼지구에 대한 마그마-바다 dayside
   시나리오를 확립. b 는 약간 더 차가운 아날로그. 표면 형태 + 마그마-
   pond 시각 결정을 견인.
 - **Schaefer L. & Fegley B. 2009** — *Chemistry of silicate
   atmospheres of evaporating super-Earths*, ApJ 703, L113
-  (`2009ApJ...703L.113S`, [arXiv:0905.4045](https://arxiv.org/abs/0905.4045)). 뜨거운 암석 표면의
+  ([`2009ApJ...703L.113S`](https://ui.adsabs.harvard.edu/abs/2009ApJ...703L.113S), [arXiv:0905.4045](https://arxiv.org/abs/0905.4045)). 뜨거운 암석 표면의
   outgassing 화학. `atmosphere_composition` 선택을 견인 (1400–1500 K
   substellar 에서 Na, K, SiO, O₂ 규산염 증기 우세).
 - **Zeng L. et al. 2016** — *Mass-radius relation for rocky planets*,
-  ApJ 819, 127 (`2016ApJ...819..127Z`, [arXiv:1512.08827](https://arxiv.org/abs/1512.08827)). 지구 조성
+  ApJ 819, 127 ([`2016ApJ...819..127Z`](https://ui.adsabs.harvard.edu/abs/2016ApJ...819..127Z), [arXiv:1512.08827](https://arxiv.org/abs/1512.08827)). 지구 조성
   암석 행성의 mass-radius 스케일링. 5.1 M⊕ 에서 R ≈ 1.65 R⊕. `radius_rearth`
   tie-break 을 견인.
 - **Owen J. E. & Wu Y. 2017** — *The evaporation valley in the
-  Kepler planets*, ApJ 847, 29 (`2017ApJ...847...29O`,
+  Kepler planets*, ApJ 847, 29 ([`2017ApJ...847...29O`](https://ui.adsabs.harvard.edu/abs/2017ApJ...847...29O),
   [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). 광증발-valley 물리. b 를 단단히 "코어만" 영역에
   위치시킴 — 초기 H/He 외피는 ≲ 50 Myr 에 손실. `atmosphere_present =
   false` 선택을 견인.
 - **Hut P. 1981** — *Tidal evolution in close binary systems*, A&A
-  99, 126 (`1981A&A....99..126H`). 표준 평형-조석 모델. b 의 파라미터
+  99, 126 ([`1981A&A....99..126H`](https://ui.adsabs.harvard.edu/abs/1981A%26A....99..126H)). 표준 평형-조석 모델. b 의 파라미터
   에서의 조석 고정 시간 추정 (~10⁵–10⁶ 년) 이 여기서 따라옵니다.
   `tidally_locked = true` 선택의 anchor.
 - **Bolmont E. et al. 2020** — *Tidal dissipation and obliquity
-  evolution of TRAPPIST-1 planets* (`2020A&A...644A.165B`). 암석
+  evolution of TRAPPIST-1 planets* ([`2020A&A...644A.165B`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A.165B)). 암석
   외계행성의 조석 가열 스케일링. e=0.12, P=4.2 d 에서 0.1–1 W/m²
   추정값 제공.
 
@@ -271,25 +271,25 @@ burst 가 있는 변형 렌더링은 Phase 3.5 시각 디테일 레이어에서 
 
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-Type Dwarfs Using Activity-Rotation
-  Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`, [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)).
+  Diagnostics*, ApJ 687, 1264 ([`2008ApJ...687.1264M`](https://ui.adsabs.harvard.edu/abs/2008ApJ...687.1264M), [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)).
   호스트 합성에서 상속. 61 Vir 나이 6.1 ± 1.7 Gyr. 대기 손실의 시스템
   진화 시간 스케일을 결정.
 - **Pavlenko Y. V. et al. 2012** — *Effective temperatures, gravities,
   metallicities, and ages of 18 solar twin candidates*
-  (`2012MNRAS.422..542P`, [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). 호스트 합성에서 상속. 61
+  ([`2012MNRAS.422..542P`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.422..542P), [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). 호스트 합성에서 상속. 61
   Vir 솔라 트윈 풍부도 패턴 확인.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir*, MNRAS
-  424, 1206 (`2012MNRAS.424.1206W`, [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). 호스트 합성에서
+  424, 1206 ([`2012MNRAS.424.1206W`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.424.1206W), [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). 호스트 합성에서
   상속. ~30 AU 의 차가운 debris 띠가 b 의 분리에서 안쪽 행성과 동역학
   적으로 상호작용하지 않으므로 간략히 인용.
 - **Lopez E. D. & Fortney J. J. 2014** — *Understanding the
   mass-radius relation for sub-Neptunes*, ApJ 792, 1
-  (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). sub-Neptune envelope
+  ([`2014ApJ...792....1L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...792....1L), [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). sub-Neptune envelope
   mass-radius 스케일링. b 의 잠재적 광증발되지 않은 H/He 외피에 대한
   경계를 정보화 (논의된 대로 배제).
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope
   decompositions of super-Earths and sub-Neptunes*, ApJ 787, 173
-  (`2014ApJ...787..173H`). envelope-vs-rocky 결정의
+  ([`2014ApJ...787..173H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...787..173H)). envelope-vs-rocky 결정의
   맥락에서 간략히 사용. b 는 암석.
 
 ### Read (instrument-only, not visual-informative)

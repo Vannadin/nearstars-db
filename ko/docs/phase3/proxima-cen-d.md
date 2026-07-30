@@ -1,9 +1,9 @@
 <!-- Proxima Centauri d Phase 3 합성: cfg-ready 결정과 근거 -->
 # Proxima Centauri d — Phase 3 Synthesis
 
-Proxima Centauri d 는 Faria 외 2022 (`2022A&A...658A.115F`,
+Proxima Centauri d 는 Faria 외 2022 ([`2022A&A...658A.115F`](https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F),
 [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)) 가 5.122 일 주기의 0.26 M⊕ 천체로 처음 보고하고, 그
-뒤 Suárez Mascareño 외 2025 (`2025A&A...700A..11S`, [arXiv:2507.21751](https://arxiv.org/abs/2507.21751))
+뒤 Suárez Mascareño 외 2025 ([`2025A&A...700A..11S`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S), [arXiv:2507.21751](https://arxiv.org/abs/2507.21751))
 의 NIRPS + ESPRESSO 결합 분석에서 높은 유의도로 확정된 sub-Earth-mass
 ultra-short-period (USP) 행성 후보입니다. 0.029 AU 의 짧은 sma 로
 어떤 거주가능영역 해석에서도 안쪽 끝 안에 들어가지만, Proxima 의 희미한
@@ -167,7 +167,7 @@ Proxima superflare 동안 행성의 dayside 는 증가한 UV / 광학 플럭스�
 
 - **Faria J. P. et al. 2022** — *A candidate short-period sub-Earth
   orbiting Proxima Centauri*, A&A 658, A115
-  (`2022A&A...658A.115F`, [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). 발견 논문. P = 5.122 d,
+  ([`2022A&A...658A.115F`](https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F), [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). 발견 논문. P = 5.122 d,
   Msini = 0.26 M⊕ 보고. 궤도 이심률은 fit 의 정밀도에서 원형과 일관.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary
   system of Proxima with NIRPS: Breaking the m/s barrier*, A&A 700,

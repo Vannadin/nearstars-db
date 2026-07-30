@@ -8,7 +8,7 @@ the closest to Earth's in the entire system, but its bulk density
 (4.92 g/cc from Agol 2021) is low enough that f is most likely a
 significant water world: Acuña 2025 ([2504.16201](https://arxiv.org/abs/2504.16201)) infers a water mass
 fraction of 16.2% ± 9.9%. The first NIRISS atmospheric reconnaissance
-of f (Lim 2024, ADS bibcode 2024ESS.....510106L; no arXiv preprint
+of f (Lim 2024, ADS bibcode [`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L); no arXiv preprint
 available) rejected cloud-free hydrogen-rich atmospheres but did
 not strongly constrain secondary atmospheres.
 
@@ -65,7 +65,7 @@ preserved as the documented cfg variant.
 | `magnetic_field_present` | true (weak, ~0.05× Earth) | low | small mass + cold interior + slow rotation |
 | `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 ([1710.08761](https://arxiv.org/abs/1710.08761)) — total induction heating 1.1×10¹⁸ W ≈ 0.0012 W/m² normalized to f's surface; below molten-mantle threshold |
 | `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 ([1712.05641](https://arxiv.org/abs/1712.05641)) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. Lower bound is 0 (uncertainty spans to zero). Current value is 30× higher than the previous Bolmont 2020-scaled estimate |
-| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W)) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 ([2203.01065](https://arxiv.org/abs/2203.01065)) scaling; 1.04 M⊕ supports active dynamo but slow rotation (9.2 d) → multipolar regime, ~0.3× Earth |
 | `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 ([1706.04617](https://arxiv.org/abs/1706.04617)) test case for f at 0.3 G; supports active dynamo |
 | `magnetic_dipole_tilt_deg` | 12 | low | Tie-break: 12° offset gives distinctive auroral cap |
@@ -177,7 +177,7 @@ ever forms at the substellar point.
 ## Atmosphere synthesis
 
 The Lim 2024 NIRISS reconnaissance of f (no arXiv preprint, conference
-abstract ADS bibcode 2024ESS.....510106L) reports the first JWST
+abstract ADS bibcode [`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L)) reports the first JWST
 transmission observation of f. The result: H₂-rich atmospheres are
 rejected, consistent with Moran 2018 ([1810.05210](https://arxiv.org/abs/1810.05210)) HST limits, but
 secondary atmospheres (CO₂, N₂, H₂O-rich) cannot be constrained from
@@ -351,7 +351,7 @@ the cfg matches this assumption.
 
 The f bibliography is very small (15 papers, 6 with arXiv).
 
-- **2024ESS.....510106L** Lim 2024 — TRAPPIST-1 f NIRISS atmospheric
+- **[`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L)** Lim 2024 — TRAPPIST-1 f NIRISS atmospheric
   reconnaissance. **Key observational paper for f, but no arXiv
   preprint available.** ADS abstract only. The atmosphere
   inference (H₂-rich rejected, secondary atmospheres unconstrained)

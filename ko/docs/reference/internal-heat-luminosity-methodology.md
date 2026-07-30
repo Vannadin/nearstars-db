@@ -315,87 +315,87 @@ null도 맞춘다). 불확실성을 짊어지는 것은 *입력*(냉각 트랙�
 이루어진다.
 
 - **Stevenson, D. J. & Salpeter, E. E. (1977)**: *ApJS* 35, 239 (dynamics) & 35, 221
-  (phase diagram). **No arXiv** (`1977ApJS...35..239S`, `1977ApJS...35..221S`). Cites: 234 /
+  (phase diagram). **No arXiv** ([`1977ApJS...35..239S`](https://ui.adsabs.harvard.edu/abs/1977ApJS...35..239S), [`1977ApJS...35..221S`](https://ui.adsabs.harvard.edu/abs/1977ApJS...35..221S)). Cites: 234 /
   225. Founding H–He phase-separation ("helium rain") theory: the giant-planet
   differentiation luminosity term. §6.
-- **Hanel, R. et al. (1981)**: *JGR* 86, 8705. **No arXiv** (`1981JGR....86.8705H`).
+- **Hanel, R. et al. (1981)**: *JGR* 86, 8705. **No arXiv** ([`1981JGR....86.8705H`](https://ui.adsabs.harvard.edu/abs/1981JGR....86.8705H)).
   Cites: 133. Voyager IRIS albedo, internal heat and energy balance of **Jupiter** (emitted
   ≈ 1.67× absorbed). §4.
-- **Hanel, R. A. et al. (1983)**: *Icarus* 53, 262. **No arXiv** (`1983Icar...53..262H`).
+- **Hanel, R. A. et al. (1983)**: *Icarus* 53, 262. **No arXiv** ([`1983Icar...53..262H`](https://ui.adsabs.harvard.edu/abs/1983Icar...53..262H)).
   Cites: 114. **Saturn** internal heat flux and energy balance (emitted ≈ 1.78× absorbed,
   high for its mass, the helium-rain signature). §4, §6.
-- **Pearl, J. C. et al. (1990)**: *Icarus* 84, 12. **No arXiv** (`1990Icar...84...12P`).
+- **Pearl, J. C. et al. (1990)**: *Icarus* 84, 12. **No arXiv** ([`1990Icar...84...12P`](https://ui.adsabs.harvard.edu/abs/1990Icar...84...12P)).
   Cites: 135. Albedo, T_eff and energy balance of **Uranus** from Voyager IRIS: the
   anomalously *low* internal flux (ratio ≈ 1.06 ≈ zero), Neptune's twin that doesn't glow.
   §4.
 - **Pearl, J. C. & Conrath, B. J. (1991)**: *JGR* 96, 18921. **No arXiv**
-  (`1991JGR....9618921P`). Cites: 135. Albedo, T_eff (~59 K) and energy balance of
+  ([`1991JGR....9618921P`](https://ui.adsabs.harvard.edu/abs/1991JGR....9618921P)). Cites: 135. Albedo, T_eff (~59 K) and energy balance of
   **Neptune**: emits ~2.6× absorbed sunlight; the canonical "internal heat > insolation"
   calibration. §1, §4, §7.
-- **Pollack, J. B. et al. (1996)**: *Icarus* 124, 62. **No arXiv** (`1996Icar..124...62P`).
+- **Pollack, J. B. et al. (1996)**: *Icarus* 124, 62. **No arXiv** ([`1996Icar..124...62P`](https://ui.adsabs.harvard.edu/abs/1996Icar..124...62P)).
   Cites: 2774. Core-accretion formation of the giant planets: the physical origin of the
   *cold-start* low-entropy initial condition. §3.
 - **Burrows, A. et al. (1997)**: *ApJ* 491, 856. **arXiv:astro-ph/9705201**
-  (`1997ApJ...491..856B`). Cites: 1300. Nongray theory and evolutionary cooling tracks for
+  ([`1997ApJ...491..856B`](https://ui.adsabs.harvard.edu/abs/1997ApJ...491..856B)). Cites: 1300. Nongray theory and evolutionary cooling tracks for
   extrasolar giant planets and brown dwarfs: the foundational `L_int(M, age)` grid. §2.
-- **Guillot, T. (1999)**: *Science* 286, 72. **No arXiv** (`1999Sci...286...72G`).
+- **Guillot, T. (1999)**: *Science* 286, 72. **No arXiv** ([`1999Sci...286...72G`](https://ui.adsabs.harvard.edu/abs/1999Sci...286...72G)).
   Cites: 454. "Interiors of Giant Planets Inside and Outside the Solar System": review
   framing internal heat, contraction and energy balance. §2 context.
 - **Chabrier, G. & Baraffe, I. (2000)**: *ARA&A* 38, 337. **arXiv:astro-ph/0006383**
-  (`2000ARA&A..38..337C`). Cites: 537. Review of the theory of low-mass stars and substellar
+  ([`2000ARA&A..38..337C`](https://ui.adsabs.harvard.edu/abs/2000ARA%26A..38..337C)). Cites: 537. Review of the theory of low-mass stars and substellar
   objects: the cooling/contraction physics behind the tracks. §2.
 - **Baraffe, I. et al. (2003)**: *A&A* 402, 701. **arXiv:astro-ph/0302293**
-  (`2003A&A...402..701B`). Cites: 1528. COND evolutionary models for cool brown dwarfs and
+  ([`2003A&A...402..701B`](https://ui.adsabs.harvard.edu/abs/2003A%26A...402..701B)). Cites: 1528. COND evolutionary models for cool brown dwarfs and
   EGPs: the most-cited substellar cooling grid; `L_int`/`T_int` vs (M, age). §2, §7.
 - **Fortney, J. J., Marley, M. S. & Barnes, J. W. (2007)**: *ApJ* 659, 1661.
-  **arXiv:astro-ph/0612671** (`2007ApJ...659.1661F`). Cites: 949. Planetary radii across
+  **arXiv:astro-ph/0612671** ([`2007ApJ...659.1661F`](https://ui.adsabs.harvard.edu/abs/2007ApJ...659.1661F)). Cites: 949. Planetary radii across
   five orders of magnitude in mass and insolation, from thermal-evolution models: radius +
   cooling luminosity coupling (internal heat inflates the radius). §2.
 - **Marley, M. S. et al. (2007)**: *ApJ* 655, 541. **arXiv:astro-ph/0609739**
-  (`2007ApJ...655..541M`). Cites: 454. "On the Luminosity of Young Jupiters": the
+  ([`2007ApJ...655..541M`](https://ui.adsabs.harvard.edu/abs/2007ApJ...655..541M)). Cites: 454. "On the Luminosity of Young Jupiters": the
   hot-start vs cold-start initial-entropy dichotomy (~2 dex spread at young ages). §3.
 - **Saumon, D. & Marley, M. S. (2008)**: *ApJ* 689, 1327. **[arXiv:0808.2611](https://arxiv.org/abs/0808.2611)**
-  (`2008ApJ...689.1327S`). Cites: 619. Evolution of L and T dwarfs in color-magnitude
+  ([`2008ApJ...689.1327S`](https://ui.adsabs.harvard.edu/abs/2008ApJ...689.1327S)). Cites: 619. Evolution of L and T dwarfs in color-magnitude
   diagrams: the substellar cooling-track grid for the brown-dwarf regime. §2, §5.
 - **Marois, C. et al. (2008)**: *Science* 322, 1348. **[arXiv:0811.2606](https://arxiv.org/abs/0811.2606)**
-  (`2008Sci...322.1348M`). Cites: 1513. Direct imaging of the HR 8799 planets: young giants
+  ([`2008Sci...322.1348M`](https://ui.adsabs.harvard.edu/abs/2008Sci...322.1348M)). Cites: 1513. Direct imaging of the HR 8799 planets: young giants
   detected by their *own* cooling-track thermal light (the self-luminous regime). §1, §3, §7.
 - **Fortney, J. J. & Nettelmann, N. (2010)**: *Space Sci. Rev.* 152, 423.
-  **[arXiv:0912.0533](https://arxiv.org/abs/0912.0533)** (`2010SSRv..152..423F`). Cites: 314. Review of giant-planet interior
+  **[arXiv:0912.0533](https://arxiv.org/abs/0912.0533)** ([`2010SSRv..152..423F`](https://ui.adsabs.harvard.edu/abs/2010SSRv..152..423F)). Cites: 314. Review of giant-planet interior
   structure, composition and evolution: internal heat, contraction, helium rain in one
   place. §2, §6.
 - **Spiegel, D. S., Burrows, A. & Milsom, J. A. (2011)**: *ApJ* 727, 57.
-  **[arXiv:1008.5150](https://arxiv.org/abs/1008.5150)** (`2011ApJ...727...57S`). Cites: 276. The deuterium-burning mass limit
+  **[arXiv:1008.5150](https://arxiv.org/abs/1008.5150)** ([`2011ApJ...727...57S`](https://ui.adsabs.harvard.edu/abs/2011ApJ...727...57S)). Cites: 276. The deuterium-burning mass limit
   for brown dwarfs and giant planets (~11–14 M_J, composition-dependent): the planet/BD
   boundary and the transient burning luminosity. §6.
 - **Spiegel, D. S. & Burrows, A. (2012)**: *ApJ* 745, 174. **[arXiv:1108.5172](https://arxiv.org/abs/1108.5172)**
-  (`2012ApJ...745..174S`). Cites: 357. Spectral and photometric diagnostics of giant-planet
+  ([`2012ApJ...745..174S`](https://ui.adsabs.harvard.edu/abs/2012ApJ...745..174S)). Cites: 357. Spectral and photometric diagnostics of giant-planet
   formation scenarios: how to tell hot- from cold-start young giants observationally. §3.
 - **Marley, M. S. et al. (2021)**: *ApJ* 920, 85. **[arXiv:2107.07434](https://arxiv.org/abs/2107.07434)**
-  (`2021ApJ...920...85M`). Cites: 375. The Sonora Bobcat brown-dwarf atmosphere and
+  ([`2021ApJ...920...85M`](https://ui.adsabs.harvard.edu/abs/2021ApJ...920...85M)). Cites: 375. The Sonora Bobcat brown-dwarf atmosphere and
   *evolution* models: the modern substellar cooling-track grid superseding/extending
   Saumon & Marley 2008. §2, §5.
 - **Mankovich, C. R. & Fortney, J. J. (2020)**: *ApJ* 889, 51. **[arXiv:1912.01009](https://arxiv.org/abs/1912.01009)**
-  (`2020ApJ...889...51M`). Cites: 69. Helium phase separation gives a Jupiter/Saturn
+  ([`2020ApJ...889...51M`](https://ui.adsabs.harvard.edu/abs/2020ApJ...889...51M)). Cites: 69. Helium phase separation gives a Jupiter/Saturn
   dichotomy: quantifies the helium-rain luminosity active in Saturn but not yet Jupiter.
   §6.
 
 **Earth / rocky internal heat (radiogenic + secular):**
 
 - **Sclater, J. G., Jaupart, C. & Galson, D. (1980)**: *Rev. Geophys. Space Phys.* 18, 269.
-  **No arXiv** (`1980RvGSP..18..269S`). Cites: 861. The classic global terrestrial heat-loss
+  **No arXiv** ([`1980RvGSP..18..269S`](https://ui.adsabs.harvard.edu/abs/1980RvGSP..18..269S)). Cites: 861. The classic global terrestrial heat-loss
   budget (oceanic + continental): the ~0.08 W/m² / ~tens-of-TW scale. §5.
-- **Davies, J. Huw (2013)**: *G-cubed* 14, 4608. **No arXiv** (`2013GGG....14.4608D`).
+- **Davies, J. Huw (2013)**: *G-cubed* 14, 4608. **No arXiv** ([`2013GGG....14.4608D`](https://ui.adsabs.harvard.edu/abs/2013GGG....14.4608D)).
   Cites: 241. Global map of solid-Earth surface heat flow: the modern ~46–47 TW
   (~0.087 W/m² mean) census. §5, §7.
-- **Driscoll, P. & Bercovici, D. (2014)**: *Phys. Earth Planet. Inter.* 236, 36. **No arXiv** (`2014PEPI..236...36D`, doi 10.1016/j.pepi.2014.08.004). Cites: 108. Thermal and magnetic histories of Earth and Venus: ties a rocky body's interior heat budget (melting, radioactivity, core conductivity) to whether a **dynamo survives**; the heat → geodynamo link and the Earth/Venus divergence behind the §5 rocky regime and §7 Earth example. §5, §7.
+- **Driscoll, P. & Bercovici, D. (2014)**: *Phys. Earth Planet. Inter.* 236, 36. **No arXiv** ([`2014PEPI..236...36D`](https://ui.adsabs.harvard.edu/abs/2014PEPI..236...36D), doi 10.1016/j.pepi.2014.08.004). Cites: 108. Thermal and magnetic histories of Earth and Venus: ties a rocky body's interior heat budget (melting, radioactivity, core conductivity) to whether a **dynamo survives**; the heat → geodynamo link and the Earth/Venus divergence behind the §5 rocky regime and §7 Earth example. §5, §7.
 
 **Topics with no single canonical paper:** the surface-flux → `T_int ≈ 35 K` rocky-planet
 *scale* in §5 is a Stefan–Boltzmann conversion of the Earth heat-flow budget above, not a
 separate citable law; the per-body cold-start composition corrections are read off the
 grids (Baraffe 2003 / Sonora) rather than from one dedicated paper. The Davies & Davies
 (2010) "Earth's surface heat flux" estimate is not cleanly ADS-indexed as a primary
-article; the Davies 2013 map (`2013GGG....14.4608D`) and Sclater+ 1980 are the cited
+article; the Davies 2013 map ([`2013GGG....14.4608D`](https://ui.adsabs.harvard.edu/abs/2013GGG....14.4608D)) and Sclater+ 1980 are the cited
 anchors instead.
 
 ---

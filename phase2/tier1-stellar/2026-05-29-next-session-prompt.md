@@ -30,14 +30,14 @@ NearStars repo 의 2026-05-28 Tier 1 작업 27 commit 이 citation 무결성 문
 
 | 호스트 | Primary anchor | 값 |
 |---|---|---|
-| HD 69830 | Tanner et al. 2015 `2015ApJ...800..115T` (CHARA Classic, [arXiv:1412.5251](https://arxiv.org/abs/1412.5251)) | θ_LD = 0.674 ± 0.014 mas (H-band) → R = 0.9058 ± 0.019 R☉. Teff 5394 ± 62 K (CHARA+SED) 또는 5385 ± 44 K (SME). age 10.6 ± 4 Gyr (isochrone) 또는 7.5 ± 3 Gyr (SME). mass 0.863 ± 0.043 M☉. [Fe/H] −0.04 ± 0.03 |
-| Delta Pavonis | Rains et al. 2020 `2020MNRAS.493.2377R` (VLTI/PIONIER) | θ_LD = 1.828 ± 0.025 mas → R = 1.197 ± 0.016 R☉. Teff 5571 ± 48 K. δ Pav 는 그 paper sample 의 #11/16 |
-| Barnard's star | Boyajian et al. 2012 `2012ApJ...757..112B` (CHARA) | R = 0.1867 ± 0.0012 R☉. 어제 Rains 2021 으로 misattributed 됐었음 (값은 정확) |
-| 61 Vir | Rathsam et al. 2023 `2023MNRAS.525.4642R` Table A1 row HD 115617 / HIP 64924 | mass 0.93 ± 0.01, Teff 5568 ± 6 K, [Fe/H] +0.006 ± 0.004, age 5.50 +0.78/-0.74 Gyr. (어제 age 가 7.70 Gyr 로 fabricated 됐었음) |
-| AU Mic [Fe/H] | Miles & Shkolnik 2017 `2017AJ....154...67M` (HAZMAT II) | β Pic MG mean +0.12 ± 0.05. (어제 Shkolnik 2017 ApJ 838 87 로 misattributed) |
-| AU Mic radius | Donati et al. 2023 `2023MNRAS.525.2015D` (page 2015-2039) | (어제 page `..455` 로 typo) |
-| AU Mic mass | Wittrock et al. 2023 `2023AJ....166..232W` DOI `10.3847/1538-3881/acfda8` | (어제 DOI `acfda7` 로 typo) |
-| eps Eri | Baines & Armstrong 2012 `2012ApJ...744..138B` (`2012ApJ...761...57B` 는 HR 8799 논문) | R/Teff/L self-consistent. mass 0.82 ± 0.02 (Llop-Sayson 2021 의 re-quoted Baines & Armstrong 값) |
+| HD 69830 | Tanner et al. 2015 [`2015ApJ...800..115T`](https://ui.adsabs.harvard.edu/abs/2015ApJ...800..115T) (CHARA Classic, [arXiv:1412.5251](https://arxiv.org/abs/1412.5251)) | θ_LD = 0.674 ± 0.014 mas (H-band) → R = 0.9058 ± 0.019 R☉. Teff 5394 ± 62 K (CHARA+SED) 또는 5385 ± 44 K (SME). age 10.6 ± 4 Gyr (isochrone) 또는 7.5 ± 3 Gyr (SME). mass 0.863 ± 0.043 M☉. [Fe/H] −0.04 ± 0.03 |
+| Delta Pavonis | Rains et al. 2020 [`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R) (VLTI/PIONIER) | θ_LD = 1.828 ± 0.025 mas → R = 1.197 ± 0.016 R☉. Teff 5571 ± 48 K. δ Pav 는 그 paper sample 의 #11/16 |
+| Barnard's star | Boyajian et al. 2012 [`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B) (CHARA) | R = 0.1867 ± 0.0012 R☉. 어제 Rains 2021 으로 misattributed 됐었음 (값은 정확) |
+| 61 Vir | Rathsam et al. 2023 [`2023MNRAS.525.4642R`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.4642R) Table A1 row HD 115617 / HIP 64924 | mass 0.93 ± 0.01, Teff 5568 ± 6 K, [Fe/H] +0.006 ± 0.004, age 5.50 +0.78/-0.74 Gyr. (어제 age 가 7.70 Gyr 로 fabricated 됐었음) |
+| AU Mic [Fe/H] | Miles & Shkolnik 2017 [`2017AJ....154...67M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154...67M) (HAZMAT II) | β Pic MG mean +0.12 ± 0.05. (어제 Shkolnik 2017 ApJ 838 87 로 misattributed) |
+| AU Mic radius | Donati et al. 2023 [`2023MNRAS.525.2015D`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.2015D) (page 2015-2039) | (어제 page `..455` 로 typo) |
+| AU Mic mass | Wittrock et al. 2023 [`2023AJ....166..232W`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W) DOI `10.3847/1538-3881/acfda8` | (어제 DOI `acfda7` 로 typo) |
+| eps Eri | Baines & Armstrong 2012 [`2012ApJ...744..138B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...744..138B) ([`2012ApJ...761...57B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...761...57B) 는 HR 8799 논문) | R/Teff/L self-consistent. mass 0.82 ± 0.02 (Llop-Sayson 2021 의 re-quoted Baines & Armstrong 값) |
 
 eps Eri / AU Mic / Vega / Fomalhaut 의 나머지 카테고리 — 처음부터 lit search.
 

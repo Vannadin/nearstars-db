@@ -11,20 +11,20 @@ Curate them into `db/stellar_props_curated.json` arrays.
 
 ### mass_measurements
 
-- [x] Gillon 2016  — 2016Natur.533..221G — M = 0.08 ± 0.009 — evolutionary_model
-- [x] Gillon 2017  — 2017Natur.542..456G — M = 0.0802 ± 0.0073 — evolutionary_model
-- [x] Grimm 2018   — 2018A&A...613A..68G — M = 0.089 ± 0.007 — evolutionary_model (TTV-constrained)
-- [x] Van Grootel 2018 — 2018ApJ...853...30V — M = 0.089 ± 0.006 — evolutionary_model
-- [x] Stassun 2019 — 2019AJ....158..138S — M = 0.0908 ± 0.020 — spectroscopic_calibration
-- [x] Agol 2021    — 2021PSJ.....2....1A — M = 0.0898 ± 0.0023 — evolutionary_model **(recommended)**
+- [x] Gillon 2016  — [`2016Natur.533..221G`](https://ui.adsabs.harvard.edu/abs/2016Natur.533..221G) — M = 0.08 ± 0.009 — evolutionary_model
+- [x] Gillon 2017  — [`2017Natur.542..456G`](https://ui.adsabs.harvard.edu/abs/2017Natur.542..456G) — M = 0.0802 ± 0.0073 — evolutionary_model
+- [x] Grimm 2018   — [`2018A&A...613A..68G`](https://ui.adsabs.harvard.edu/abs/2018A%26A...613A..68G) — M = 0.089 ± 0.007 — evolutionary_model (TTV-constrained)
+- [x] Van Grootel 2018 — [`2018ApJ...853...30V`](https://ui.adsabs.harvard.edu/abs/2018ApJ...853...30V) — M = 0.089 ± 0.006 — evolutionary_model
+- [x] Stassun 2019 — [`2019AJ....158..138S`](https://ui.adsabs.harvard.edu/abs/2019AJ....158..138S) — M = 0.0908 ± 0.020 — spectroscopic_calibration
+- [x] Agol 2021    — [`2021PSJ.....2....1A`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2....1A) — M = 0.0898 ± 0.0023 — evolutionary_model **(recommended)**
 
 ### radius_measurements
 
-- [x] Gillon 2016  — 2016Natur.533..221G — R = 0.117 ± 0.004 — sed_fitting
-- [x] Gillon 2017  — 2017Natur.542..456G — R = 0.117 ± 0.0036 — sed_fitting
-- [x] Stassun 2019 — 2019AJ....158..138S — R = 0.1148 ± 0.0034 — interferometry (Gaia distance + SED)
-- [x] Ducrot 2020  — 2020A&A...640A.112D — R = 0.1234 ± 0.0033 — sed_fitting (Spitzer)
-- [x] Agol 2021    — 2021PSJ.....2....1A — R = 0.1192 ± 0.0013 — sed_fitting **(recommended)**
+- [x] Gillon 2016  — [`2016Natur.533..221G`](https://ui.adsabs.harvard.edu/abs/2016Natur.533..221G) — R = 0.117 ± 0.004 — sed_fitting
+- [x] Gillon 2017  — [`2017Natur.542..456G`](https://ui.adsabs.harvard.edu/abs/2017Natur.542..456G) — R = 0.117 ± 0.0036 — sed_fitting
+- [x] Stassun 2019 — [`2019AJ....158..138S`](https://ui.adsabs.harvard.edu/abs/2019AJ....158..138S) — R = 0.1148 ± 0.0034 — interferometry (Gaia distance + SED)
+- [x] Ducrot 2020  — [`2020A&A...640A.112D`](https://ui.adsabs.harvard.edu/abs/2020A%26A...640A.112D) — R = 0.1234 ± 0.0033 — sed_fitting (Spitzer)
+- [x] Agol 2021    — [`2021PSJ.....2....1A`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2....1A) — R = 0.1192 ± 0.0013 — sed_fitting **(recommended)**
 
 ## Planets (7) — Phase 2 array form
 
@@ -39,9 +39,9 @@ Method labels:
 - `discovery` — initial detection with rough estimates
 
 ### TRAPPIST-1 b
-- [x] Gillon 2017  — 2017Natur.542..456G — M=0.85, R=1.086 — ttv
-- [x] Grimm 2018   — 2018A&A...613A..68G — M=1.017, R=1.121 — ttv
-- [x] Agol 2021    — 2021PSJ.....2....1A — M=1.374 ± 0.069, R=1.116 ± 0.014 — ttv **(recommended)**
+- [x] Gillon 2017  — [`2017Natur.542..456G`](https://ui.adsabs.harvard.edu/abs/2017Natur.542..456G) — M=0.85, R=1.086 — ttv
+- [x] Grimm 2018   — [`2018A&A...613A..68G`](https://ui.adsabs.harvard.edu/abs/2018A%26A...613A..68G) — M=1.017, R=1.121 — ttv
+- [x] Agol 2021    — [`2021PSJ.....2....1A`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2....1A) — M=1.374 ± 0.069, R=1.116 ± 0.014 — ttv **(recommended)**
 
 ### TRAPPIST-1 c
 - [x] Gillon 2017  — M=1.38, R=1.056 — ttv
@@ -70,7 +70,7 @@ Method labels:
 
 ### TRAPPIST-1 h
 - [x] Gillon 2017  — R=0.755 only — discovery
-- [x] Luger 2017   — 2017NatAs...1E.129L — R=0.752 — discovery (confirmed h)
+- [x] Luger 2017   — [`2017NatAs...1E.129L`](https://ui.adsabs.harvard.edu/abs/2017NatAs...1E.129L) — R=0.752 — discovery (confirmed h)
 - [x] Grimm 2018   — M=0.331, R=0.773 — ttv
 - [x] Agol 2021    — M=0.326 ± 0.020, R=0.755 ± 0.014 — ttv **(recommended)**
 

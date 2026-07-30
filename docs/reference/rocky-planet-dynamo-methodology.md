@@ -23,7 +23,7 @@ estimate a rocky planet's magnetic moment from **mass + radius + orbital period
 alone**, by (1) solving the internal structure (core radius `r₀`, core density
 `ρ₀`) against a PREM-anchored equation of state, then (2) feeding that core into
 the convection-driven dynamo scaling laws of Olson & Christensen 2006 (OC06,
-`2006E&PSL.250..561O`). Unlike the giant case, the field is **not** set by total
+[`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O)). Unlike the giant case, the field is **not** set by total
 luminosity; it is set by the **convective buoyancy flux** through a conducting
 liquid-iron core:
 
@@ -34,7 +34,7 @@ OC06 identify four dimensionless controls. The pipeline treats three of them as
 sits in — this is why a rocky field is a *decision ladder*, not one closed form:
 
 1. **Dynamo-alive gate** — the magnetic Reynolds number must exceed the critical
-   `Rm > 40` (Gaidos 2010, `2010ApJ...718..596G`), else there is no self-sustained
+   `Rm > 40` (Gaidos 2010, [`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)), else there is no self-sustained
    dynamo and `ℳ = 0`. A frozen, non-convecting, or too-slow core fails here.
 2. **Regime gate (local Rossby number)** — `Ro_ℓ < 0.12` → **dipolar** (strong,
    organized field); `Ro_ℓ > 0.12` → **multipolar** (the moment collapses to
@@ -71,8 +71,8 @@ solver per body. We instead anchor on the **moments RM22 tabulate** (Solar Syste
    plate tectonics → low CMB heat flux), or `Rm < 40` → `ℳ = 0`, done.
 3. **Base moment** `ℳ_base` from the mass/CMF class anchor (table below).
 4. **Regime** — estimate rotation from tidal state (Grießmeier 2009 coupling test
-   `2009Icar..199..526G`; for eccentric orbits the spin-orbit resonance from
-   Dobrovolskis 2007 `2007Icar..192....1D`). Fast/free rotator → dipolar, keep
+   [`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G); for eccentric orbits the spin-orbit resonance from
+   Dobrovolskis 2007 [`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)). Fast/free rotator → dipolar, keep
    `ℳ_base`. Tidally-locked slow rotator that crosses `Ro_ℓ = 0.12` → multipolar,
    `ℳ ≈ 0.06 · ℳ_base`.
 5. **Planet-specific override** — a dedicated MHD/dynamo paper for the actual
@@ -129,7 +129,7 @@ Inputs are the curated Phase 2 mass/radius + Phase 3 rotation state.
 Notes:
 - **AU Mic d**: Earth-mass, tidally locked at 12.7 d. RM22 ladder → a weak,
   likely-multipolar field from a young but slowly-rotating core; the slow-rotation
-  regime penalty (Garraffo 2017, `2017ApJ...843L..33G`, arXiv 1706.04617) gives a
+  regime penalty (Garraffo 2017, [`2017ApJ...843L..33G`](https://ui.adsabs.harvard.edu/abs/2017ApJ...843L..33G), arXiv [1706.04617](https://arxiv.org/abs/1706.04617)) gives a
   few µT. Adopted 5 µT equatorial — replaces an earlier, wrong citation to
   Reiners & Christensen 2010 (a giant/BD paper).
 - **TRAPPIST-1 e**: the RM22 ladder derives ~2 µT (`ℳ < 0.1 ℳ⊕`) for a locked
@@ -153,23 +153,23 @@ regime gate, so a locked planet with an active core can still hold a modest fiel
   structure (PREM-anchored EOS) → OC06 dynamo scaling → magnetic moment from
   M, R, orbital period, validated on the Solar System and applied to 176 TESS
   planets. **Cached** in `docs/phase3/_papers/2203.01065.md`.
-- **Olson & Christensen 2006** (OC06), E&PSL 250, 561 (`2006E&PSL.250..561O`).
+- **Olson & Christensen 2006** (OC06), E&PSL 250, 561 ([`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O)).
   "Dipole moment scaling for convection-driven planetary dynamos" — the buoyancy-flux
   scaling laws, the `Ro_ℓ = 0.12` dipolar/multipolar boundary, and the ~0.06
   multipolar reduction that RM22 build on.
-- **Gaidos, Conrad, Manoj & Blake 2010**, ApJ 718, 596 (`2010ApJ...718..596G`).
+- **Gaidos, Conrad, Manoj & Blake 2010**, ApJ 718, 596 ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)).
   "Thermodynamic Limits on Magnetodynamos in Rocky Exoplanets" — the `Rm > 40`
   dynamo-onset gate and the no-solid-inner-core above ~2.5 M⊕ result.
-- **Driscoll & Olson 2011**, Icarus 213, 12 (`2011Icar..213...12D`). "Optimal
+- **Driscoll & Olson 2011**, Icarus 213, 12 ([`2011Icar..213...12D`](https://ui.adsabs.harvard.edu/abs/2011Icar..213...12D)). "Optimal
   dynamos in the cores of terrestrial exoplanets" — liquid-core-until-shutdown
   and the core-surface-to-planet-surface field extrapolation.
 - **Grießmeier, Stadelmann, Grenfell, Lammer & Motschmann 2009**, Icarus 199, 526
-  (`2009Icar..199..526G`). Tidal-coupling test used to decide whether a planet is
+  ([`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G)). Tidal-coupling test used to decide whether a planet is
   spin-locked (setting the rotation that feeds the regime gate).
-- **Dobrovolskis 2007**, Icarus 192, 1 (`2007Icar..192....1D`). "Spin states and
+- **Dobrovolskis 2007**, Icarus 192, 1 ([`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)). "Spin states and
   climates of eccentric exoplanets" — most-probable spin-orbit resonance for
   eccentric, tidally-influenced orbits.
-- **Garraffo et al. 2017**, ApJL 843, L33 (`2017ApJ...843L..33G`, arXiv
+- **Garraffo et al. 2017**, ApJL 843, L33 ([`2017ApJ...843L..33G`](https://ui.adsabs.harvard.edu/abs/2017ApJ...843L..33G), arXiv
   **[1706.04617](https://arxiv.org/abs/1706.04617)**, cached). Slow-rotation /
   sub-Alfvénic magnetic environment of TRAPPIST-1; the tidal-lock field context
   for M-dwarf planets.

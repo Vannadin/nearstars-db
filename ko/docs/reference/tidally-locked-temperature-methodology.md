@@ -233,7 +233,7 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
   붕괴를 막는다는 토대가 된 GCM 결과다.
 
 - **Pierrehumbert, R. T. (2011)**: *ApJ Letters* 726, L8. arXiv 프리프린트는 없고,
-  ADS bibcode **2011ApJ...726L...8P**로 인용한다(기존에 돌던 id 1010.5052는 무관한
+  ADS bibcode **[`2011ApJ...726L...8P`](https://ui.adsabs.harvard.edu/abs/2011ApJ...726L...8P)**로 인용한다(기존에 돌던 id 1010.5052는 무관한
   수학 논문이므로 쓰지 말 것). "A Palette of
   Climates for Gliese 581g". 조석고정 세계의 안구/눈덩이/Super-Europa 기후 상태를
   정의한다.
@@ -243,7 +243,7 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
   두꺼운 대기 / 워터벨트 해석을 뒷받침한다.
 
 - **Hu, Y. & Yang, J. (2014)**: *PNAS* 111, 629. arXiv 프리프린트는 없고, ADS
-  bibcode **2014PNAS..111..629H**로 인용한다(기존에 돌던 id 1312.3337은 폭주온실에
+  bibcode **[`2014PNAS..111..629H`](https://ui.adsabs.harvard.edu/abs/2014PNAS..111..629H)**로 인용한다(기존에 돌던 id 1312.3337은 폭주온실에
   관한 Leconte+ 2013이므로 쓰지 말 것). 해양 열수송이 안구 웅덩이를 바람 방향으로
   밀어내는 "랍스터" / 비대칭 안구 상태를 보인다.
 

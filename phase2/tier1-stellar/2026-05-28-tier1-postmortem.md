@@ -32,11 +32,11 @@
 
 | 호스트 | DB 에 있던 인용 | 실제 |
 |---|---|---|
-| HD 69830 | Tanner 2019 `2019ApJ...873...91T` | 존재하지 않음. 실제 = Tanner 2015 `2015ApJ...800..115T` |
-| eps Eri | Baines & Armstrong 2012 `2012ApJ...761...57B` | 그 bibcode 는 HR 8799 논문. eps Eri 논문은 `2012ApJ...744..138B` |
+| HD 69830 | Tanner 2019 [`2019ApJ...873...91T`](https://ui.adsabs.harvard.edu/abs/2019ApJ...873...91T) | 존재하지 않음. 실제 = Tanner 2015 [`2015ApJ...800..115T`](https://ui.adsabs.harvard.edu/abs/2015ApJ...800..115T) |
+| eps Eri | Baines & Armstrong 2012 [`2012ApJ...761...57B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...761...57B) | 그 bibcode 는 HR 8799 논문. eps Eri 논문은 [`2012ApJ...744..138B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...744..138B) |
 | AU Mic | Wittrock 2023 DOI `acfda7` | 한 글자 typo. 실제 = `acfda8` |
-| AU Mic | Donati 2023 `2023MNRAS.525..455D` | 페이지 오류. 실제 = `.2015D` |
-| AU Mic | Shkolnik 2017 `2017ApJ...838...87S` | DOI 404. 실제 HAZMAT II = Miles & Shkolnik 2017 `2017AJ....154...67M` |
+| AU Mic | Donati 2023 [`2023MNRAS.525..455D`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525..455D) | 페이지 오류. 실제 = `.2015D` |
+| AU Mic | Shkolnik 2017 [`2017ApJ...838...87S`](https://ui.adsabs.harvard.edu/abs/2017ApJ...838...87S) | DOI 404. 실제 HAZMAT II = Miles & Shkolnik 2017 [`2017AJ....154...67M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154...67M) |
 | 61 Vir | Rathsam 2023 age 7.70 +0.28/-0.26 Gyr | Table A1 실제 = 5.50 +0.78/-0.74 Gyr |
 | HD 69830 | Tanner 2015 Teff 5402 ± 11 K | 그 값은 Adibekyan 2012 의 것. Tanner 2015 본문은 5394 ± 62 K (CHARA) 또는 5385 ± 44 K (SME) |
 | HD 69830 | Tanner 2015 alt-age 10.6 ± 2 Gyr | 실제 = 10.6 ± 4 Gyr (uncertainty 2 → 4) |
@@ -45,7 +45,7 @@
 
 원본 측정 논문 대신 그 값을 re-quote 한 후속 논문을 인용. `method: interferometry` 라벨이 secondary source 에 붙는 형태.
 
-- **Barnard's star** 반지름 0.1868 ± 0.0011 → Rains et al. 2021 (`2021MNRAS.504.5788R`, "Characterization of 92 **southern** TESS candidate planet hosts and a new photometric [Fe/H] relation") 로 인용. 그러나 Rains 2021 은 광도 [Fe/H] calibration 논문이고 Barnard 미포함 (dec +04°, 남쪽 아님) + 새 interferometry 없음. 진짜 CHARA 소스 = Boyajian et al. 2012 (`2012ApJ...757..112B`, R = 0.1867 ± 0.0012) 이며 이미 같은 array 에 recommended:false 로 있었음.
+- **Barnard's star** 반지름 0.1868 ± 0.0011 → Rains et al. 2021 ([`2021MNRAS.504.5788R`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.504.5788R), "Characterization of 92 **southern** TESS candidate planet hosts and a new photometric [Fe/H] relation") 로 인용. 그러나 Rains 2021 은 광도 [Fe/H] calibration 논문이고 Barnard 미포함 (dec +04°, 남쪽 아님) + 새 interferometry 없음. 진짜 CHARA 소스 = Boyajian et al. 2012 ([`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B), R = 0.1867 ± 0.0012) 이며 이미 같은 array 에 recommended:false 로 있었음.
 - **HD 69830** Teff 5402 K → Tanner 2015 가 아니라 Adibekyan 2012 출처.
 - **eps Eri** mass 0.82 ± 0.02 → Llop-Sayson 2021 (downstream joint fit) 이 primary. 실제로는 Baines & Armstrong 2011/2012 의 값을 re-quote 한 것.
 
@@ -54,7 +54,7 @@
 meta_notes 가 "no direct interferometric measurement exists" 라 단언하지만 실제로 존재.
 
 - **HD 69830**. meta_notes: "no direct interferometric angular diameter exists — not included in any CHARA or VLTI-PIONIER programme through 2026". 실제. Tanner 2015 가 정확히 CHARA Classic H-band θ_LD = 0.674 ± 0.014 mas 직접 측정 논문.
-- **Delta Pavonis** (Tier 1 템플릿 호스트). 본문: "dec -66° too far south for CHARA; never observed by PAVO@SUSI or VLTI-PIONIER". 실제. **Rains et al. 2020 MNRAS 493** (`2020MNRAS.493.2377R`, "Precision angular diameters for 16 southern stars with VLTI/PIONIER") 가 δ Pav θ_LD = 1.828 ± 0.025 mas 측정. VLTI@Paranal 위도 -24°, SUSI@Narrabri 위도 -30° — 둘 다 dec -66° 관측 가능.
+- **Delta Pavonis** (Tier 1 템플릿 호스트). 본문: "dec -66° too far south for CHARA; never observed by PAVO@SUSI or VLTI-PIONIER". 실제. **Rains et al. 2020 MNRAS 493** ([`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R), "Precision angular diameters for 16 southern stars with VLTI/PIONIER") 가 δ Pav θ_LD = 1.828 ± 0.025 mas 측정. VLTI@Paranal 위도 -24°, SUSI@Narrabri 위도 -30° — 둘 다 dec -66° 관측 가능.
 - **이 패턴이 Delta Pav 템플릿 자체에 있다** = 그걸 copy 한 6 개 호스트 전부가 같은 false-negative 인식 모델을 상속.
 
 ### 패턴 4. Multi-layer drift
@@ -70,7 +70,7 @@ meta_notes 가 "no direct interferometric measurement exists" 라 단언하지�
 
 Phase 2 가 새 paper 로 업데이트되어도 Phase 3 markdown 이 자동 추적하지 않음.
 
-- **tau Cet**. Phase 2 에서 Korolik 2023 (`2023AJ....166..123K`) 이 radius/Teff/rotation 의 recommended:true. 그러나 Phase 3 markdown 은 여전히 Teixeira 2009 / Pavlenko 2012 / Baliunas 1996 인용. documented divergence 없음.
+- **tau Cet**. Phase 2 에서 Korolik 2023 ([`2023AJ....166..123K`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K)) 이 radius/Teff/rotation 의 recommended:true. 그러나 Phase 3 markdown 은 여전히 Teixeira 2009 / Pavlenko 2012 / Baliunas 1996 인용. documented divergence 없음.
 
 ### 패턴 6. Uncertainty drift
 
@@ -115,14 +115,14 @@ Phase 2 가 새 paper 로 업데이트되어도 Phase 3 markdown 이 자동 추�
 - 두 age 값. 10.6 ± 4 Gyr (isochrone) / 7.5 ± 3 Gyr (SME)
 - Mass 0.863 ± 0.043 M☉, Radius 0.9058 ± 0.019 R☉, L 0.622 ± 0.014 L☉, [Fe/H] -0.04 ± 0.03
 
-### Delta Pavonis Rains et al. 2020 (`2020MNRAS.493.2377R`)
+### Delta Pavonis Rains et al. 2020 ([`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R))
 - 정식 제목. *"Precision angular diameters for 16 southern stars with VLTI/PIONIER"*
 - θ_LD = 1.828 ± 0.025 mas (δ Pav = star #11 of 16)
 - 유도 반지름. 1.197 ± 0.016 R☉
 - Teff. 5571 ± 48 K
 - 이 값들은 Gomes da Silva 2021 PARSEC isochrone (DB 가 anchor 로 쓴 것) 보다 **더 직접적** — 다음 시도에서 Delta Pav 의 새 primary anchor 가 되어야 함.
 
-### Rathsam et al. 2023 (`2023MNRAS.525.4642R`, [arXiv:2309.00471](https://arxiv.org/abs/2309.00471))
+### Rathsam et al. 2023 ([`2023MNRAS.525.4642R`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525.4642R), [arXiv:2309.00471](https://arxiv.org/abs/2309.00471))
 - 정식 제목. *"Lithium depletion in solar analogs: age and mass effects"*
 - Sample. 74 solar twins + 79 from Carlos 2019 = 153 stars
 - 61 Vir (HD 115617 / HIP 064924) Table A1 row.
@@ -132,7 +132,7 @@ Phase 2 가 새 paper 로 업데이트되어도 Phase 3 markdown 이 자동 추�
   - Mass 0.93 ± 0.01 M☉
   - Age 5.50 +0.78/-0.74 Gyr (DB 의 7.70 Gyr 은 fabrication)
 
-### Barnard 's star Boyajian et al. 2012 (`2012ApJ...757..112B`)
+### Barnard 's star Boyajian et al. 2012 ([`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B))
 - 정식 CHARA interferometric source.
 - R = 0.1867 ± 0.0012 R☉
 - DB 가 이 값을 Rains 2021 에 misattribute 했었음 (값은 정확).

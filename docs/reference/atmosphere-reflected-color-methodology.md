@@ -339,7 +339,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
 (ADS, at survey time) given for spot-checking.
 
 - **Sneep, M. & Ubachs, W. (2005)**: *JQSRT* 92, 293. **No arXiv** (bibcode
-  `2005JQSRT..92..293S`). Direct lab measurement of Rayleigh scattering
+  [`2005JQSRT..92..293S`](https://ui.adsabs.harvard.edu/abs/2005JQSRT..92..293S)). Direct lab measurement of Rayleigh scattering
   cross-sections + King depolarization for the common atmospheric gases. The σ_R(λ)
   ground truth for §3. (275 cites.)
 
@@ -369,37 +369,37 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   §6 context. (135 cites.)
 
 - **Karkoschka, E. (1994)**: *Icarus* 111, 174. **No arXiv** (bibcode
-  `1994Icar..111..174K`). Spectrophotometry of the Jovian planets and Titan,
+  [`1994Icar..111..174K`](https://ui.adsabs.harvard.edu/abs/1994Icar..111..174K)). Spectrophotometry of the Jovian planets and Titan,
   300–1000 nm: the geometric-albedo atlas that grounds the CH₄ blue-green of Uranus
   / Neptune and the colors of Jupiter/Saturn/Titan. §5, §7. (332 cites.)
 
 - **Irwin, P. G. J. et al. (2024)**: *MNRAS* 527, 11521. **No arXiv** (bibcode
-  `2024MNRAS.52711521I`, DOI 10.1093/mnras/stad3761). Models Uranus's seasonal
+  [`2024MNRAS.52711521I`](https://ui.adsabs.harvard.edu/abs/2024MNRAS.52711521I), DOI 10.1093/mnras/stad3761). Models Uranus's seasonal
   color and compares to Neptune; the **aerosol** difference (thicker reflective haze
   on Uranus) explains why Uranus is paler/greener despite similar CH₄. §5, §7. (13
   cites, recent.)
 
 - **Khare, B. N. et al. (1984)**: *Icarus* 60, 127. **No arXiv** (bibcode
-  `1984Icar...60..127K`). Optical constants of Titan tholins, 0.02–920 µm: the
+  [`1984Icar...60..127K`](https://ui.adsabs.harvard.edu/abs/1984Icar...60..127K)). Optical constants of Titan tholins, 0.02–920 µm: the
   standard refractive indices for organic photochemical haze. §5, §7. (612 cites.)
 
 - **Tomasko, M. G. et al. (2008)**: *Planet. Space Sci.* 56, 669. **No arXiv**
-  (bibcode `2008P&SS...56..669T`). In-situ Titan aerosol model from Huygens DISR:
+  (bibcode [`2008P&SS...56..669T`](https://ui.adsabs.harvard.edu/abs/2008P%26SS...56..669T)). In-situ Titan aerosol model from Huygens DISR:
   pins the orange tholin haze from inside the atmosphere. §5, §7. (242 cites.)
 
 - **Carlson, R. W. et al. (2016)**: *Icarus* 274, 106. **No arXiv** (bibcode
-  `2016Icar..274..106C`). Jupiter's red chromophore as a photolyzed-NH₃ + acetylene
+  [`2016Icar..274..106C`](https://ui.adsabs.harvard.edu/abs/2016Icar..274..106C)). Jupiter's red chromophore as a photolyzed-NH₃ + acetylene
   product: the cautionary tale that warm jovian color chromophores are uncertain.
   §5, §7. (56 cites.)
 
 - **Orphal, J., Staehelin, J., Tamminen, J. … Serdyuchenko, A. et al. (2016)**:
-  *J. Mol. Spectrosc.* 327, 105. **No arXiv** (bibcode `2016JMoSp.327..105O`).
+  *J. Mol. Spectrosc.* 327, 105. **No arXiv** (bibcode [`2016JMoSp.327..105O`](https://ui.adsabs.harvard.edu/abs/2016JMoSp.327..105O)).
   "Absorption cross-sections of ozone … Status report 2015": the recommended ozone
   UV–visible cross-sections including the Chappuis band (consolidates the
   Serdyuchenko & Gorshelev 2014 laboratory dataset). §5. (72 cites.)
 
 - **Sagan, C. et al. (1993)**: *Nature* 365, 715. **No arXiv** (bibcode
-  `1993Natur.365..715S`). *A Search for Life on Earth from the Galileo Spacecraft*:
+  [`1993Natur.365..715S`](https://ui.adsabs.harvard.edu/abs/1993Natur.365..715S)). *A Search for Life on Earth from the Galileo Spacecraft*:
   Earth's disk-integrated spectrum, the canonical pale-blue-dot Rayleigh reference.
   §7. (316 cites.)
 
@@ -409,7 +409,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   space placement (not the colorimetry matrix). §6. (31 cites.)
 
 - **Polyanskiy, M. N. (2024)**: *Scientific Data* 11, 94. **No arXiv** (bibcode
-  `2024NatSD..11...94P`). The **refractiveindex.info** database of optical constants:
+  [`2024NatSD..11...94P`](https://ui.adsabs.harvard.edu/abs/2024NatSD..11...94P)). The **refractiveindex.info** database of optical constants:
   the data portal for per-species real index `n(λ)` (Rayleigh, §3) and complex index
   `n+ik` (aerosols/absorbers, §5). A curated **aggregator**: each dataset cites its
   own primary lab source, which is the per-row citation of record; cite this paper for

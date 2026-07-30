@@ -78,7 +78,7 @@ support, low = aesthetic choice within the allowed window.
 | `rotation_period_hours` | 10 | low | Tie-break: no rotation measurement. Jupiter-analog ~10 h picked over slower Saturn/Uranus values; a massive giant's angular-momentum budget favors rapid rotation. Within-window, not constrained |
 | `ring_present` | false | medium | No ring observed in any JWST/MIRI epoch (Matthews 2024, 2026); cfg default is no ring. An icy ring is preserved as an optional cfg variant — see Open items |
 | `ring_observed` | false | high | Matthews et al. 2024/2026 JWST/MIRI imaging shows the planet as a bright point source with no resolved ring component |
-| `magnetic_field_strength_microtesla_equator` | 3200 | low | Energy-flux dynamo scaling (Christensen et al. 2009 `2009Natur.457..167C`; Reiners & Christensen 2010 `1007.1514`): B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → for 7.6 M_Jup at ~3.5 Gyr, B_eq ≈ 3200 µT (range 2600–3700). Near the brown-dwarf boundary, so the field stays strong despite the older age (the mass exponent is extrapolated above its 1–5 M_J calibration → extra ~25% systematic). Supersedes the prior ad-hoc "2× Jupiter". See docs/reference/planetary-dynamo-scaling.md |
+| `magnetic_field_strength_microtesla_equator` | 3200 | low | Energy-flux dynamo scaling (Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C); Reiners & Christensen 2010 `1007.1514`): B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → for 7.6 M_Jup at ~3.5 Gyr, B_eq ≈ 3200 µT (range 2600–3700). Near the brown-dwarf boundary, so the field stays strong despite the older age (the mass exponent is extrapolated above its 1–5 M_J calibration → extra ~25% systematic). Supersedes the prior ad-hoc "2× Jupiter". See docs/reference/planetary-dynamo-scaling.md |
 | `magnetic_dipole_moment_normalized_earth` | 200000 | low | 3200 µT × (1.12 R_Jup)³ vs Jupiter (4.5 G equatorial, 20 000× Earth) → ≈ 2×10⁵ × Earth via energy-flux scaling (`1007.1514`); R³-sensitive → low conf |
 | `aurora_present` | false | medium | The host's quiet stellar wind (log R'HK = −4.72) at 20.9 AU delivers a very weak plasma driver; unlike the active-host jovians, no strong aurora is expected. cfg renders none |
 | `companion_to_brown_dwarf_pair` | ε Indi B (Ba T1–1.5 66.9 M_Jup + Bb T6 53.3 M_Jup) at ~1459 AU | high | Chen et al. 2022 — the wide brown-dwarf-pair component of the hierarchical triple; not the planet's host but part of its sky |
@@ -258,7 +258,7 @@ most desaturated giant:
   ω = 62°, P ≈ 108 yr. **Cornerstone paper** — drives the orbit, mass,
   and atmosphere Decisions rows. Phase 2 recommended anchor.
 - **Matthews E. C. et al. 2024** — JWST/MIRI direct-imaging discovery of
-  ε Indi A b (`2024Natur.633..789M`, [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). First-epoch
+  ε Indi A b ([`2024Natur.633..789M`](https://ui.adsabs.harvard.edu/abs/2024Natur.633..789M), [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). First-epoch
   photometry at 10.6 and 15.5 µm; establishes the ~275 K cold giant, the
   3–5 µm faintness (NaCo non-detection) implying elevated metallicity, and
   the common-proper-motion case. **Cornerstone paper.** (ar5iv full text
@@ -266,7 +266,7 @@ most desaturated giant:
   abstract and from Matthews 2026's recap.)
 - **Feng F. et al. 2019** — *Detection of the nearest Jupiter analog in
   radial velocity and astrometry data*, MNRAS 490, 5002
-  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
+  ([`2019MNRAS.490.5002F`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.5002F), doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
   RV + Hipparcos/Gaia astrometric detection; Phase 2 source for the host
   luminosity (0.239 L☉). The planet parameters here (a ≈ 11.6 AU,
   ~3.25 M_Jup, P ~45 yr) are the pre-JWST values, superseded by Matthews
@@ -276,18 +276,18 @@ most desaturated giant:
 
 - **Lundkvist M. S. et al. 2024** — *Low-amplitude solar-like
   oscillations in the K5 V star ε Indi A*, ApJ 964, 110
-  (`2024ApJ...964..110L`, [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). Host-star asteroseismic
+  ([`2024ApJ...964..110L`](https://ui.adsabs.harvard.edu/abs/2024ApJ...964..110L), [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). Host-star asteroseismic
   mass (0.782 M☉), R (0.713 R☉), Teff (4700 K), and the ~7.1 yr activity
   cycle. Provides the host stellar parameters that set the insolation and
   illumination-color-temperature rows. Detailed in the host Phase 3
   (`docs/phase3/eps-ind-a.md`).
 - **Chen M. et al. 2022** — *Precise Dynamical Masses of ε Indi Ba and
-  Bb* (`2022AJ....163..288C`, [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). Dynamical masses of the
+  Bb* ([`2022AJ....163..288C`](https://ui.adsabs.harvard.edu/abs/2022AJ....163..288C), [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). Dynamical masses of the
   wide brown-dwarf pair (Ba T1–1.5 66.9 M_Jup, Bb T6 53.3 M_Jup at
   ~1459 AU) and the system activity-age (~3.5 Gyr) that frames ε Indi A b
   as a "solar-age" giant. Drives the brown-dwarf-pair context row.
 - **Feng F. et al. 2018** — *Detection of the closest Jovian exoplanet in
-  the ε Indi triple system* (`2018arXiv180308163F`, [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
+  the ε Indi triple system* ([`2018arXiv180308163F`](https://ui.adsabs.harvard.edu/abs/2018arXiv180308163F), [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
   RV discovery preprint; earliest planet parameters (M sin i ~2.7 M_Jup,
   a ~12.8 AU), superseded by Feng 2019 / Matthews 2026; retained in the
   DB as `recommended:false`.

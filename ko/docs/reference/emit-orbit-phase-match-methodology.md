@@ -130,7 +130,7 @@ emit된 궤도(AB-평면 프레임, 에포크 1950.0): a = 1.6034 AU, e = 0.1024
 ## Citations
 
 - **Beichman et al. 2025**, "Worlds Next Door I", ApJL 989 L22, bibcode
-  `2025ApJ...989L..22B`, arXiv **[2508.03814](https://arxiv.org/abs/2508.03814)**
+  [`2025ApJ...989L..22B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...989L..22B), arXiv **[2508.03814](https://arxiv.org/abs/2508.03814)**
   (cached `docs/phase3/_papers/2508.03814.md`). Table 2 row S1: PA, 이각, 날짜 앵커.
   *관측 앵커를 공급.*
 - **Sanghi & Beichman 2025**, "Worlds Next Door II", arXiv

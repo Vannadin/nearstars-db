@@ -236,7 +236,7 @@ J = 8.39 에서는 훨씬 밝습니다). 실제 하늘에서의 signature 는 �
 
 - **Schweitzer A. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Different roads to radii and masses of the target
-  stars*, A&A 625, A68 (`2019A&A...625A..68S`,
+  stars*, A&A 625, A68 ([`2019A&A...625A..68S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S),
   doi:10.1051/0004-6361/201834965, arXiv:1904.03231). CARMENES
   기본 파라미터 편람. Phase 2 recommended Teff (2904 ± 51 K, PHOENIX
   피팅), 광도 (0.00073 ± 0.00001 L☉, bolometric flux), 반지름
@@ -246,7 +246,7 @@ J = 8.39 에서는 훨씬 밝습니다). 실제 하늘에서의 signature 는 �
   분광형이 가장 늦은 (M7 V) 천체로 명시적으로 강조됩니다.
 - **Zechmeister M. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Two temperate Earth-mass planet candidates around
-  Teegarden's Star*, A&A 627, A49 (`2019A&A...627A..49Z`,
+  Teegarden's Star*, A&A 627, A49 ([`2019A&A...627A..49Z`](https://ui.adsabs.harvard.edu/abs/2019A%26A...627A..49Z),
   doi:10.1051/0004-6361/201935460, arXiv:1906.07196). 행성 b 와 c
   (각각 ~1.1 M⊕, P = 4.91 d 와 11.4 d) 의 발견 논문. Phase 2
   recommended 나이 (7 ± 3 Gyr, PARSEC Bayesian / 두꺼운 원반 운동학)
@@ -255,7 +255,7 @@ J = 8.39 에서는 훨씬 밝습니다). 실제 하늘에서의 signature 는 �
   0.30°. 행성은 여기서 범위 밖이라 행성 follow-up 으로 표시.
 - **Dreizler S. et al. 2024** — *The CARMENES search for exoplanets
   around M dwarfs. The enigmatic planetary system of Teegarden's
-  Star*, A&A 684, A117 (`2024A&A...684A.117D`,
+  Star*, A&A 684, A117 ([`2024A&A...684A.117D`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.117D),
   doi:10.1051/0004-6361/202348033, arXiv:2402.00923). Phase 2
   recommended 자전 주기 (P_rot = 96.2 d, Lafarga 2021 분광 활동
   지표에서) 와 대안 질량/반지름 (0.097 ± 0.010 M☉, 0.120 ± 0.012 R☉,
@@ -275,7 +275,7 @@ J = 8.39 에서는 훨씬 밝습니다). 실제 하늘에서의 signature 는 �
 
 - **Marfil E. et al. 2021** — *The CARMENES search for exoplanets
   around M dwarfs. Stellar atmospheric parameters of target stars with
-  SteParSyn*, A&A 656, A162 (`2021A&A...656A.162M`,
+  SteParSyn*, A&A 656, A162 ([`2021A&A...656A.162M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...656A.162M),
   doi:10.1051/0004-6361/202141980, arXiv:2110.07329). SteParSyn
   Teff = 3034 ± 45 K, [Fe/H] = −0.11 ± 0.28. Dreizler 2024 가 대안
   파라미터 집합을 얻으려고 재실행한 line list 와 모델 그리드. 반지름/

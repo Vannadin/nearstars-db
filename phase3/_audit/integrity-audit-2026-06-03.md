@@ -24,7 +24,7 @@ same false alarms aren't re-raised.
 
 ### HIGH
 1. **Barnard's Star — Phase 2↔3 desync.** DB has 4 confirmed planets (Basant
-   2025, `2025ApJ...982L...1B`); Phase 3 has **0 planet reports**. Host narrates
+   2025, [`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B)); Phase 3 has **0 planet reports**. Host narrates
    them as González 2024 "candidates" and doesn't cite Basant 2025. Cause: the
    2026-05-28 revert (`a2ef49c`) → 05-30 host-only rebuild. *[manual]*
 2. **Teegarden's Star — same desync.** 3 DB planets, 0 reports. *[Phase 0 / agent]*

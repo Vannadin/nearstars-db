@@ -113,16 +113,16 @@ Per planet:
 
 ## Notes on sources
 
-- Plavchan 2020 (2020Natur.582..497P) — AU Mic b discovery transit
-- Martioli 2021 (2021A&A...649A.177M) — AU Mic c discovery transit  
-- Wittrock 2023 (2023AJ....166..232W) — TTV; introduces d candidate
-- Mallorquin 2024 (2024A&A...689A.132M) — ESPRESSO mass refinement b/c
-- Donati 2025 (2025A&A...700A.227D) — ESPRESSO; e candidate
-- Cale 2021 (2021AJ....162..295C) — RV mass/density for b, inflated puffy
-- Allart 2023 (2023A&A...677A.164A) — JWST He I 10830 detection for b
-- Hirano 2020 (2020ApJ...899L..13H) — Rossiter-McLaughlin for b
-- Klein 2021 (2021MNRAS.502..188K) — ZDI/RV for AU Mic
-- Tristan 2023 (2023ApJ...951...33T) — TESS flare census; bombardment context
+- Plavchan 2020 ([`2020Natur.582..497P`](https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P)) — AU Mic b discovery transit
+- Martioli 2021 ([`2021A&A...649A.177M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A.177M)) — AU Mic c discovery transit  
+- Wittrock 2023 ([`2023AJ....166..232W`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W)) — TTV; introduces d candidate
+- Mallorquin 2024 ([`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)) — ESPRESSO mass refinement b/c
+- Donati 2025 ([`2025A&A...700A.227D`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.227D)) — ESPRESSO; e candidate
+- Cale 2021 ([`2021AJ....162..295C`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..295C)) — RV mass/density for b, inflated puffy
+- Allart 2023 ([`2023A&A...677A.164A`](https://ui.adsabs.harvard.edu/abs/2023A%26A...677A.164A)) — JWST He I 10830 detection for b
+- Hirano 2020 ([`2020ApJ...899L..13H`](https://ui.adsabs.harvard.edu/abs/2020ApJ...899L..13H)) — Rossiter-McLaughlin for b
+- Klein 2021 ([`2021MNRAS.502..188K`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.502..188K)) — ZDI/RV for AU Mic
+- Tristan 2023 ([`2023ApJ...951...33T`](https://ui.adsabs.harvard.edu/abs/2023ApJ...951...33T)) — TESS flare census; bombardment context
 
 Most planet-specific papers not in _papers/ as full text; bibcodes cited
 based on published header conventions. For papers without verified full-text

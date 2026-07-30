@@ -27,8 +27,8 @@ the precession constant α. Meanwhile n̂ itself **precesses about the Laplace p
 k̂** at the orbital nodal rate g, holding a fixed inclination I. A **Cassini state**
 is the equilibrium in the frame co-precessing with the orbit: ŝ, n̂, k̂ stay
 **coplanar and precess together at the common rate g** (Colombo 1966
-`1966AJ.....71..891C`; Peale 1969 `1969AJ.....74..483P`). Tidal dissipation shifts
-ŝ slightly *out* of that plane (Su & Lai 2022 `2022MNRAS.509.3301S`).
+[`1966AJ.....71..891C`](https://ui.adsabs.harvard.edu/abs/1966AJ.....71..891C); Peale 1969 [`1969AJ.....74..483P`](https://ui.adsabs.harvard.edu/abs/1969AJ.....74..483P)). Tidal dissipation shifts
+ŝ slightly *out* of that plane (Su & Lai 2022 [`2022MNRAS.509.3301S`](https://ui.adsabs.harvard.edu/abs/2022MNRAS.509.3301S)).
 
 There are up to **four** states (Peale 1969):
 
@@ -39,20 +39,20 @@ There are up to **four** states (Peale 1969):
 - **States 3 & 4**: unstable.
 
 Under dissipation only **states 1 and 2 are attractors** (Ward 1975
-`1975AJ.....80...64W`). A body damped from near ε = 0 lands in **state 1**; a body
+[`1975AJ.....80...64W`](https://ui.adsabs.harvard.edu/abs/1975AJ.....80...64W)). A body damped from near ε = 0 lands in **state 1**; a body
 caught in / migrated through a secular spin–orbit resonance can be captured into
-**state 2** at high obliquity (Millholland & Laughlin 2019 `2019NatAs...3..424M`).
+**state 2** at high obliquity (Millholland & Laughlin 2019 [`2019NatAs...3..424M`](https://ui.adsabs.harvard.edu/abs/2019NatAs...3..424M)).
 
 ## 2. Equilibrium-obliquity relation
 
 With ε = obliquity (∠ ŝ,n̂), I = orbit inclination to the Laplace plane, g = Ω̇ < 0
 the nodal precession rate, α > 0 the spin precession constant, the Cassini states
-satisfy (Peale 1969 `1969AJ.....74..483P`; Ward & Hamilton 2004 `2004AJ....128.2501W`):
+satisfy (Peale 1969 [`1969AJ.....74..483P`](https://ui.adsabs.harvard.edu/abs/1969AJ.....74..483P); Ward & Hamilton 2004 [`2004AJ....128.2501W`](https://ui.adsabs.harvard.edu/abs/2004AJ....128.2501W)):
 
     α · cos ε · sin ε  +  g · sin(ε − I)  =  0                    (1)
 
 **Number of roots** is set by |g|/α against a critical ratio (Henrard 1987
-`1987CeMec..40..345H`; Ward & Hamilton 2004):
+[`1987CeMec..40..345H`](https://ui.adsabs.harvard.edu/abs/1987CeMec..40..345H); Ward & Hamilton 2004):
 
     (|g|/α)_crit = ( sin^(2/3) I + cos^(2/3) I )^(3/2)            (2)
 
@@ -63,7 +63,7 @@ for the resonance flag the small-I form |g|/α ≈ 1 is all we need. Verify the 
 expression in Ward & Hamilton 2004 before quoting it.)*
 
 **Small-angle State-1 solution** (ε, I small; Ward 1975; Fabrycky+ 2007
-`2007ApJ...665..754F`):
+[`2007ApJ...665..754F`](https://ui.adsabs.harvard.edu/abs/2007ApJ...665..754F)):
 
     ε₁  ≈  |g| sin I / ( α + |g| cos I )                          (3)
     α ≫ |g|  ⟹  ε₁ ≈ (|g|/α) sin I  →  0                          (4)
@@ -75,7 +75,7 @@ It becomes large only near the resonance |g|/α ~ 1 (state 2).
 
 ## 3. The precession constant α
 
-**Free / fast rotator** (Néron de Surgy & Laskar 1997 `1997A&A...318..975N`;
+**Free / fast rotator** (Néron de Surgy & Laskar 1997 [`1997A&A...318..975N`](https://ui.adsabs.harvard.edu/abs/1997A%26A...318..975N);
 Ward 1975), with n² = G M⋆ / a³ and the identity (C−A) = J₂·M R²:
 
     α = (3/2) · (n²/ω) · [ J₂ / (C/MR²) ] · (1−e²)^(−3/2)         (5)
@@ -87,7 +87,7 @@ lunisolar precession.
 **Synchronously locked body** (ω = n): **the case NearStars needs**. The body is
 triaxial (A < B < C); with hydrostatic figure coefficients J₂ and C̄₂₂ and
 normalized MoI C̃ ≡ C/MR², the satellite literature (Bills 2005
-`2005Icar..175..233B`; Baland+ 2011 `2011A&A...530A.141B`) uses:
+[`2005Icar..175..233B`](https://ui.adsabs.harvard.edu/abs/2005Icar..175..233B); Baland+ 2011 [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A...530A.141B)) uses:
 
     α_syn = (3/2) · n · ( J₂ + C̄₂₂ ) / (C/MR²)                    (6)
 
@@ -96,7 +96,7 @@ normalized MoI C̃ ≡ C/MR², the satellite literature (Bills 2005
 > hydrostatic synchronous body C̄₂₂ = 0.3·J₂, so the two differ by 1.3 J₂ vs 1.6 J₂,
 > a ~20 % spread in α, hence ~20 % in ε. **Adopt (6) (Baland/Bills)** since those
 > are calibrated on measured moons; carry the ±20 % as a modeling systematic, and
-> confirm the exact coefficient in `2011A&A...530A.141B` / `2005Icar..175..233B`
+> confirm the exact coefficient in [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A...530A.141B) / [`2005Icar..175..233B`](https://ui.adsabs.harvard.edu/abs/2005Icar..175..233B)
 > at point of use.
 
 Because ω = n makes n²/ω = n, the locked α is far smaller than a fast rotator's,
@@ -107,7 +107,7 @@ roundest-spun → smallest ε₁**, unless a resonance intervenes.
 ## 4. Getting the orbital nodal rate g
 
 **(a) Planet in a multi-planet system: Laplace–Lagrange secular theory**
-(Murray & Dermott 1999 `1999ssd..book.....M`, ch. 7). The nodal frequencies {g_i}
+(Murray & Dermott 1999 [`1999ssd..book.....M`](https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M), ch. 7). The nodal frequencies {g_i}
 are eigenvalues of the inclination interaction matrix B; leading order:
 
     B_jk = +(1/4) n_j · [m_k/(M⋆+m_j)] · α_jk · ᾱ_jk · b^(1)_{3/2}(α_jk)
@@ -117,7 +117,7 @@ are eigenvalues of the inclination interaction matrix B; leading order:
 coefficient. **Inputs**: neighbor masses + semi-major axes + host mass. Use the
 dominant mode's {g, I}. **For resonant chains** (e.g. TRAPPIST-1) Laplace–Lagrange
 breaks down → use direct **N-body nodal frequency analysis** (Millholland+ 2024
-`2024ApJ...961..203M`, [arXiv:2311.17908](https://arxiv.org/abs/2311.17908)).
+[`2024ApJ...961..203M`](https://ui.adsabs.harvard.edu/abs/2024ApJ...961..203M), [arXiv:2311.17908](https://arxiv.org/abs/2311.17908)).
 
 **(b) Close-in moon: driven by the planet's oblateness J₂** (Murray & Dermott 1999):
 
@@ -131,11 +131,11 @@ orbit about the star. **Inputs**: planet J₂, R_planet, moon a and n, other moo
 
 | body | state | measured obliquity | source | hydrostatic recipe reproduces? |
 |---|---|---|---|---|
-| **Mercury** (3:2) | 1 | **2.11 ± 0.1 arcmin** (0.035°) | `2007Sci...316..710M` Margot+ 2007 | **Yes**: Cassini relation + measured ε is *how* C/MR² is inferred; self-consistent with J₂, C₂₂ (`2009CeMDA.105..329M`). |
-| **Moon** | **2** | 6.7° to ecliptic (≈1.54° to Laplace plane) | `1975Sci...189..377W` Ward 1975 | Framework **yes**, figure **no**: genuine state-2 value from a Cassini-state transition, but the Moon's **fossil bulge** (J₂/C₂₂≈9≠10/3) breaks the hydrostatic α. Fossil flag. |
-| **Titan** | 1 | ≈0.3° | `2010AJ....139..311S` Stiles+ 2010 | **No**: rigid Titan under-predicts ~2–3×; the value needs a **subsurface ocean** (Cassini-state resonance of the shell), Baland+ 2011 `2011A&A...530A.141B`. Non-rigid flag. |
-| **Io–Callisto** | 1 | ≈10⁻³–10⁻² deg (small, non-zero) | `2005Icar..175..233B` Bills 2005 | **Yes** (rigid); a liquid layer shifts them (`2012Icar..220..435B`). Confirms **locked ≠ 0**. |
-| **Enceladus** | 1 | ≈0.0015° (rigid) | `2016Icar..268...12B` Baland+ 2016 | **Yes**; stays ≪ 0.05° even with an ocean (`2011Icar..214..779C`). |
+| **Mercury** (3:2) | 1 | **2.11 ± 0.1 arcmin** (0.035°) | [`2007Sci...316..710M`](https://ui.adsabs.harvard.edu/abs/2007Sci...316..710M) Margot+ 2007 | **Yes**: Cassini relation + measured ε is *how* C/MR² is inferred; self-consistent with J₂, C₂₂ ([`2009CeMDA.105..329M`](https://ui.adsabs.harvard.edu/abs/2009CeMDA.105..329M)). |
+| **Moon** | **2** | 6.7° to ecliptic (≈1.54° to Laplace plane) | [`1975Sci...189..377W`](https://ui.adsabs.harvard.edu/abs/1975Sci...189..377W) Ward 1975 | Framework **yes**, figure **no**: genuine state-2 value from a Cassini-state transition, but the Moon's **fossil bulge** (J₂/C₂₂≈9≠10/3) breaks the hydrostatic α. Fossil flag. |
+| **Titan** | 1 | ≈0.3° | [`2010AJ....139..311S`](https://ui.adsabs.harvard.edu/abs/2010AJ....139..311S) Stiles+ 2010 | **No**: rigid Titan under-predicts ~2–3×; the value needs a **subsurface ocean** (Cassini-state resonance of the shell), Baland+ 2011 [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A...530A.141B). Non-rigid flag. |
+| **Io–Callisto** | 1 | ≈10⁻³–10⁻² deg (small, non-zero) | [`2005Icar..175..233B`](https://ui.adsabs.harvard.edu/abs/2005Icar..175..233B) Bills 2005 | **Yes** (rigid); a liquid layer shifts them ([`2012Icar..220..435B`](https://ui.adsabs.harvard.edu/abs/2012Icar..220..435B)). Confirms **locked ≠ 0**. |
+| **Enceladus** | 1 | ≈0.0015° (rigid) | [`2016Icar..268...12B`](https://ui.adsabs.harvard.edu/abs/2016Icar..268...12B) Baland+ 2016 | **Yes**; stays ≪ 0.05° even with an ocean ([`2011Icar..214..779C`](https://ui.adsabs.harvard.edu/abs/2011Icar..214..779C)). |
 
 **Headline**: every well-measured synchronous body sits in a *non-zero* Cassini
 state 1 (Mercury 0.035°, Galileans 10⁻³–10⁻² deg, Titan 0.3° with ocean),
@@ -149,7 +149,7 @@ state 1 (Mercury 0.035°, Galileans 10⁻³–10⁻² deg, Titan 0.3° with ocea
   sub-degree** away from the |g|/α ≈ 1 resonance. Millholland+ 2024 find TRAPPIST-1
   planets most likely ε ≈ 0, **planet d the possible exception**. Default: compute
   ε ≈ 0.01–1°, not assumed zero.
-- **Resonance-enhanced state 2 is real.** Guerrero+ 2024 `2024ApJ...975..256G`: of
+- **Resonance-enhanced state 2 is real.** Guerrero+ 2024 [`2024ApJ...975..256G`](https://ui.adsabs.harvard.edu/abs/2024ApJ...975..256G): of
   280 known M-dwarf multiplanet systems, **~75 % of planets *could* be captured
   into a stable high-obliquity state 2**, breaking effective locking and giving a
   real day/night cycle, a *gameplay-interesting* (interesting-first) branch. Flag

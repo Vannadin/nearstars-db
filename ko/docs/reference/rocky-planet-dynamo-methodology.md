@@ -19,7 +19,7 @@
 Rodríguez-Mozos & Moya 2022 (RM22, A&A 661, A176, arXiv **[2203.01065](https://arxiv.org/abs/2203.01065)**, 캐시됨)는
 암석형 행성의 자기모멘트를 **질량 + 반지름 + 공전주기만으로** 추정합니다. (1) PREM에 앵커된
 상태방정식으로 내부구조(코어 반지름 `r₀`, 코어 밀도 `ρ₀`)를 풀고, (2) 그 코어를 Olson &
-Christensen 2006 (OC06, `2006E&PSL.250..561O`)의 대류 구동 다이나모 스케일링 법칙에
+Christensen 2006 (OC06, [`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O))의 대류 구동 다이나모 스케일링 법칙에
 넣습니다. 거대행성과 달리 자기장은 총광도가 아니라 전도성 액체 철 코어를 통과하는 **대류
 부력 플럭스**로 결정됩니다.
 
@@ -30,7 +30,7 @@ OC06는 무차원 제어변수 4개를 제시합니다. 파이프라인은 그�
 자기장이 하나의 닫힌 공식이 아니라 *결정 사다리*인 이유가 여기 있습니다.
 
 1. **다이나모 생존 게이트** — 자기 레이놀즈수가 임계값 `Rm > 40`을 넘어야 합니다
-   (Gaidos 2010, `2010ApJ...718..596G`). 아니면 자기유지 다이나모가 없고 `ℳ = 0`입니다.
+   (Gaidos 2010, [`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)). 아니면 자기유지 다이나모가 없고 `ℳ = 0`입니다.
    얼어붙었거나 대류하지 않거나 너무 느린 코어는 여기서 탈락합니다.
 2. **Regime 게이트(국소 Rossby수)** — `Ro_ℓ < 0.12` → **쌍극형**(강하고 조직화된 자기장),
    `Ro_ℓ > 0.12` → **다극형**(모멘트가 쌍극값의 `≈ 0.06 ×`로 붕괴. OC06 계수이며
@@ -62,8 +62,8 @@ RM22가 **표로 제시한 모멘트**(태양계 + TESS 표본)에 앵커하고 
 2. **살아있나?** 늙고 작음(지구 ~7 Gyr에 화성질량은 사멸), 정체뚜껑(금성형, 판구조 없음
    → 낮은 CMB 열류), `Rm < 40` → `ℳ = 0`, 종료.
 3. **기저 모멘트** `ℳ_base`를 질량/CMF 클래스 앵커에서(아래 표).
-4. **Regime** — 조석상태로 자전 추정(Grießmeier 2009 결합 판정 `2009Icar..199..526G`,
-   이심궤도는 Dobrovolskis 2007 `2007Icar..192....1D`의 자전–공전 공명). 빠른/자유
+4. **Regime** — 조석상태로 자전 추정(Grießmeier 2009 결합 판정 [`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G),
+   이심궤도는 Dobrovolskis 2007 [`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)의 자전–공전 공명). 빠른/자유
    자전 → 쌍극형, `ℳ_base` 유지. `Ro_ℓ = 0.12`를 넘는 조석고정 느린 자전 → 다극형,
    `ℳ ≈ 0.06 · ℳ_base`.
 5. **행성별 오버라이드** — 실제 행성 전용 MHD/다이나모 논문이 있으면 사다리를 대체
@@ -116,8 +116,8 @@ RM22의 격자는 0.1–48 M⊕이지만 물리는 급격히 분기합니다.
 
 노트.
 - **AU Mic d**: 지구질량, 12.7 d 조석고정. RM22 사다리 → 느리게 자전하는 젊은 코어에서
-  약한 다극형 자기장. 느린 자전 regime 페널티(Garraffo 2017, `2017ApJ...843L..33G`,
-  arXiv 1706.04617)로 수 µT. 적도 5 µT 채택 — 이전의 잘못된 Reiners & Christensen 2010
+  약한 다극형 자기장. 느린 자전 regime 페널티(Garraffo 2017, [`2017ApJ...843L..33G`](https://ui.adsabs.harvard.edu/abs/2017ApJ...843L..33G),
+  arXiv [1706.04617](https://arxiv.org/abs/1706.04617))로 수 µT. 적도 5 µT 채택 — 이전의 잘못된 Reiners & Christensen 2010
   인용(거대행성/BD 논문)을 대체합니다.
 - **TRAPPIST-1 e**: RM22 사다리는 고정된 0.69-M⊕ 코어에 ~2 µT(`ℳ < 0.1 ℳ⊕`)를
   도출합니다. cfg는 대신 **30 µT / 0.3 ℳ⊕**를 채택하는 *documented divergence*입니다.
@@ -137,21 +137,21 @@ RM22의 격자는 0.1–48 M⊕이지만 물리는 급격히 분기합니다.
   **[2203.01065](https://arxiv.org/abs/2203.01065)**). 방법 본체. 내부구조(PREM 앵커
   EOS) → OC06 다이나모 스케일링 → M·R·공전주기에서 자기모멘트, 태양계 검증 + TESS 176개
   행성 적용. `docs/phase3/_papers/2203.01065.md`에 **캐시됨**.
-- **Olson & Christensen 2006** (OC06), E&PSL 250, 561 (`2006E&PSL.250..561O`).
+- **Olson & Christensen 2006** (OC06), E&PSL 250, 561 ([`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O)).
   "Dipole moment scaling for convection-driven planetary dynamos" — 부력 플럭스
   스케일링 법칙, `Ro_ℓ = 0.12` 쌍극/다극 경계, RM22가 기반으로 삼는 ~0.06 다극 감소.
-- **Gaidos, Conrad, Manoj & Blake 2010**, ApJ 718, 596 (`2010ApJ...718..596G`).
+- **Gaidos, Conrad, Manoj & Blake 2010**, ApJ 718, 596 ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)).
   "Thermodynamic Limits on Magnetodynamos in Rocky Exoplanets" — `Rm > 40` 다이나모
   개시 게이트, ~2.5 M⊕ 이상에서 고체 내핵 미형성 결과.
-- **Driscoll & Olson 2011**, Icarus 213, 12 (`2011Icar..213...12D`). "Optimal
+- **Driscoll & Olson 2011**, Icarus 213, 12 ([`2011Icar..213...12D`](https://ui.adsabs.harvard.edu/abs/2011Icar..213...12D)). "Optimal
   dynamos in the cores of terrestrial exoplanets" — 정지까지 액체 코어, 코어 표면 →
   행성 표면 자기장 외삽.
 - **Grießmeier, Stadelmann, Grenfell, Lammer & Motschmann 2009**, Icarus 199, 526
-  (`2009Icar..199..526G`). 행성의 자전고정 여부 판정(regime 게이트에 넣을 자전 결정)에
+  ([`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G)). 행성의 자전고정 여부 판정(regime 게이트에 넣을 자전 결정)에
   쓰는 조석결합 판정.
-- **Dobrovolskis 2007**, Icarus 192, 1 (`2007Icar..192....1D`). "Spin states and
+- **Dobrovolskis 2007**, Icarus 192, 1 ([`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)). "Spin states and
   climates of eccentric exoplanets" — 이심·조석 영향 궤도의 최확 자전–공전 공명.
-- **Garraffo et al. 2017**, ApJL 843, L33 (`2017ApJ...843L..33G`, arXiv
+- **Garraffo et al. 2017**, ApJL 843, L33 ([`2017ApJ...843L..33G`](https://ui.adsabs.harvard.edu/abs/2017ApJ...843L..33G), arXiv
   **[1706.04617](https://arxiv.org/abs/1706.04617)**, 캐시됨). TRAPPIST-1의 느린 자전 /
   sub-Alfvénic 자기 환경. M왜성 행성의 조석고정 자기장 맥락.
 - **Wang et al. 2025** (arXiv **[2504.16662](https://arxiv.org/abs/2504.16662)**).

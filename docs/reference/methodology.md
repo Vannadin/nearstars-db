@@ -472,7 +472,7 @@ fetch a JPL Horizons state vector at JD2433282.5 and override the
 `derived` block manually.
 
 References:
-- Butkevich & Lindegren (2014), A&A 570, A62 — `doi:10.1051/0004-6361/201424483`, `arXiv:1407.4664`
+- Butkevich & Lindegren (2014), A&A 570, A62 — `doi:10.1051/0004-6361/201424483`, [`arXiv:1407.4664`](https://arxiv.org/abs/1407.4664)
   Canonical paper for epoch propagation in the Gaia era. Derives rigorous
   closed-form expressions for uniform rectilinear motion; used directly
   in the Gaia pipeline.

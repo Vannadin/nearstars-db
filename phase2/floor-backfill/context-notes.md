@@ -161,7 +161,7 @@ Append-only. Started 2026-07-20.
 - 55 Cnc B fully missing still: Moutou 2026 abstract carries no Teff
   (main-thread checked); a paper-table read is the lead.
 - **DB audit flag from the agent (recorded, out of scope here)**: the curated
-  70 Oph A/B radius cites Boyajian 2008 (2008ApJ...683..424B) but that paper
+  70 Oph A/B radius cites Boyajian 2008 ([`2008ApJ...683..424B`](https://ui.adsabs.harvard.edu/abs/2008ApJ...683..424B)) but that paper
   is "mu Cas A, sigma Dra, HR 511" — likely mis-citation in the mass/radius
   layer. Needs a dedicated audit pass.
 - Capella note: DB "Capella" host = Aa clump-giant primary values (Torres

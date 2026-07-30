@@ -266,28 +266,28 @@ forms a distinct "frozen sibling" companion in the system view.
 ### Read (visual-informative, drove decisions above)
 
 - **[2402.00923](https://arxiv.org/abs/2402.00923)** Dreizler S. et al. 2024 — *Teegarden's Star revisited*
-  (`2024A&A...684A.117D`). Table 4 refined c orbit
+  ([`2024A&A...684A.117D`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.117D)). Table 4 refined c orbit
   (P = 11.416 d, e = 0.04, msini = 1.05 M⊕, T_eq = 209 K @ A=0.3,
   S = 0.35 S⊕, ESI = 0.88 "closely resembling Proxima b").
 - **[2504.00978](https://arxiv.org/abs/2504.00978)** Hammond T. et al. 2025 — *The climates and thermal
   emission spectra of prime nearby temperate rocky exoplanet targets*
-  (`2025ApJ...984..181H`). 3D ExoCAM GCM of c at 100 μbar / 0.1 bar /
+  ([`2025ApJ...984..181H`](https://ui.adsabs.harvard.edu/abs/2025ApJ...984..181H)). 3D ExoCAM GCM of c at 100 μbar / 0.1 bar /
   2 bar CO₂ — c is ice-covered everywhere for all pCO₂, the only one
   of seven targets that never reaches liquid water. Driver of the
   cfg's snowball choice.
 - **[1906.07704](https://arxiv.org/abs/1906.07704)** Wandel A. & Tal-Or L. 2019 — *On the Habitability of
-  Teegarden's Star planets* (`2019ApJ...880L..21W`). 1D analytic
+  Teegarden's Star planets* ([`2019ApJ...880L..21W`](https://ui.adsabs.harvard.edu/abs/2019ApJ...880L..21W)). 1D analytic
   habitability range H_atm = 1–12 for c (f=0.5, T_max=340 K) — the
   older, more optimistic reading superseded for the cfg by Hammond
   2025.
 - **[1906.07196](https://arxiv.org/abs/1906.07196)** Zechmeister M. et al. 2019 — discovery paper for b
-  and c (`2019A&A...627A..49Z`). Original orbital parameters and host
+  and c ([`2019A&A...627A..49Z`](https://ui.adsabs.harvard.edu/abs/2019A%26A...627A..49Z)). Original orbital parameters and host
   characterization.
 
 ### Read (context / methodology, not decision-driving)
 
 - **[2007.15077](https://arxiv.org/abs/2007.15077)** Cifuentes C. et al. 2020 — CARMENES input catalogue
-  of M dwarfs (`2020A&A...642A.115C`). M-dwarf Teff/spectral-type
+  of M dwarfs ([`2020A&A...642A.115C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...642A.115C)). M-dwarf Teff/spectral-type
   calibration context (M7.0 V bin); the adopted host Teff of 2904 K
   is from Schweitzer 2019, not this catalogue's bin median.
 - **2512.16575** Fujii et al. — climate / habitability methodology

@@ -299,9 +299,9 @@ cfg 는 낮지만 0 은 아닌 자기장 채택 — 터미네이터에서 옅은
 ADS 쿼리로 surfacing 됐지만 arXiv preprint 가 없어 기관 도서관 접근이나
 PDF paste 필요. Phase 3 d 의 핵심 논문은.
 
-- **2025epsc.conf..178P** Piaulet-Ghorayeb 2025 EPSC abstract — 이미
+- **[`2025epsc.conf..178P`](https://ui.adsabs.harvard.edu/abs/2025epsc.conf..178P)** Piaulet-Ghorayeb 2025 EPSC abstract — 이미
   읽은 JWST 논문([2508.08416](https://arxiv.org/abs/2508.08416)) 의 conference 요약일 가능성 높음. Skip.
-- **2024absc.conf00561M / 2024ESS.....550004M / 2023PSJ.....4..192M**
+- **[`2024absc.conf00561M`](https://ui.adsabs.harvard.edu/abs/2024absc.conf00561M) / [`2024ESS.....550004M`](https://ui.adsabs.harvard.edu/abs/2024ESS.....550004M) / [`2023PSJ.....4..192M`](https://ui.adsabs.harvard.edu/abs/2023PSJ.....4..192M)**
   Mullens et al. 2023–2024 — "Feasibility of Detecting Biosignatures
   in the TRAPPIST-1 System." 같은 연구의 세 venue 출현. 시각 정보 아닐
   가능성(biosignature 초점). 대기 결정 재검토 필요할 때만 확인.

@@ -15,7 +15,7 @@ ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 
 ### Proxima b
 
 - **Del Genio et al. 2019** — *Habitable Climate Scenarios for Proxima
-  Centauri b with a Dynamic Ocean* (`2019AsBio..19...99D`, AsBio)
+  Centauri b with a Dynamic Ocean* ([`2019AsBio..19...99D`](https://ui.adsabs.harvard.edu/abs/2019AsBio..19...99D), AsBio)
   - 왜 중요한지: Boutle 2017 의 정적 슬랩 ocean 모델을 동적 ocean 으로
     확장. dayside 에서 nightside 로 열을 운반하는 ocean current
     역할이 atmosphere 만의 GCM 보다 강하다는 결론. 1 bar / N₂ + CO₂
@@ -25,7 +25,7 @@ ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 
     Decisions 표 Basis 에 인용. cited via Sergeev 2020 / Salazar 2020 /
     Boutle 2017 (모두 본문 캐시 보유).
 - **Noack et al. 2021** — *Interior heating and outgassing of Proxima Centauri b*
-  (`2021A&A...651A.103N`)
+  ([`2021A&A...651A.103N`](https://ui.adsabs.harvard.edu/abs/2021A%26A...651A.103N))
   - 왜 중요: Proxima b 의 mantle convection rate, outgassing flux 추정.
     오늘날 atmosphere 가 photochemically 가능한지의 interior boundary
     condition.
@@ -34,7 +34,7 @@ ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 
 
 - **Herath et al. 2021** — *Characterizing the possible interior structures
   of the nearby Exoplanets Proxima Centauri b and Ross 128 b*
-  (`2021MNRAS.500..333H`)
+  ([`2021MNRAS.500..333H`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.500..333H))
   - 왜 중요: interior CMF (core mass fraction) 가능 범위, mass-radius
     관계로 ice content 제약.
   - 합성에서의 활용: surface_composition + planet_radius 결정 시 인용.
@@ -44,7 +44,7 @@ ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 
 ### α Cen A / B
 
 - **DeWarf et al. 2010** — *X-Ray, FUV, and UV Observations of alpha
-  Centauri B* (`2010ApJ...722..343D`)
+  Centauri B* ([`2010ApJ...722..343D`](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D))
   - 왜 중요: α Cen B 의 8.1-yr 활동 사이클 + 36-40 d 회전 주기의 1차
     측정. DB Phase 2 의 `rotation_measurements` 와 `activity_measurements`
     recommended 소스. α Cen A 의 22 d 회전 + log R'HK = −4.95 도 같은
@@ -53,7 +53,7 @@ ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 
     Decisions 행의 Basis 직접 인용. abstract + DB attribution 으로 충분.
 
 - **Dumusque et al. 2012** — *An Earth-mass planet orbiting α Centauri B*
-  (`2012Natur.491..207D`)
+  ([`2012Natur.491..207D`](https://ui.adsabs.harvard.edu/abs/2012Natur.491..207D))
   - 왜 중요: α Cen Bb 발견 주장 (Nature). Rajpaul et al. 2016 의
     재분석으로 retracted (window-function artifact). α Cen B 페이지의
     `Open items` + 역사 문맥에 인용.
@@ -64,15 +64,15 @@ ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 
 
 ## Tier B — useful context, can wait
 
-- Krishnamurthy 2021 (`2021AJ....161..275K`) — ASTERIA transit search.
+- Krishnamurthy 2021 ([`2021AJ....161..275K`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..275K)) — ASTERIA transit search.
   Sets transit non-detection limits.
-- Ayres 2020/2021 (`2020ApJS..250...16A`, `2021ApJ...916...36A`) —
+- Ayres 2020/2021 ([`2020ApJS..250...16A`](https://ui.adsabs.harvard.edu/abs/2020ApJS..250...16A), [`2021ApJ...916...36A`](https://ui.adsabs.harvard.edu/abs/2021ApJ...916...36A)) —
   Sun-stellar UV/X-ray. Activity sequence context.
-- Engelbrecht 2024 (`2024ApJ...964...89E`) — 3D radiation environment of
+- Engelbrecht 2024 ([`2024ApJ...964...89E`](https://ui.adsabs.harvard.edu/abs/2024ApJ...964...89E)) — 3D radiation environment of
   Proxima b.
-- Quick 2023 (`2023ApJ...956...29Q`) — cryovolcanic activity on cold
+- Quick 2023 ([`2023ApJ...956...29Q`](https://ui.adsabs.harvard.edu/abs/2023ApJ...956...29Q)) — cryovolcanic activity on cold
   ocean planets. Generic but relevant to b's frozen-ocean alternative.
-- Eriksson 2024 (`2024MNRAS.527.9522E`) — Fe II fluorescence in K dwarfs.
+- Eriksson 2024 ([`2024MNRAS.527.9522E`](https://ui.adsabs.harvard.edu/abs/2024MNRAS.527.9522E)) — Fe II fluorescence in K dwarfs.
 
 ---
 

@@ -472,7 +472,7 @@ exists), and one line on what it contributes.
   redox endmember opposite the CO₂/N₂ default. Gate 3.
 
 - **Volkov, A. N. et al. (2011)**: *ApJ Letters* 729, L24
-  (`2011ApJ...729L..24V`). **[arXiv:1009.5110](https://arxiv.org/abs/1009.5110).**
+  ([`2011ApJ...729L..24V`](https://ui.adsabs.harvard.edu/abs/2011ApJ...729L..24V)). **[arXiv:1009.5110](https://arxiv.org/abs/1009.5110).**
   Direct simulation Monte Carlo of thermally driven escape, mapping the
   hydrodynamic ↔ Jeans transition: λ₀ ~ 2–3 for an atomic gas (lower bound 2.1 = the
   isentropic supersonic outflow limit), ~2.4–3.6 diatomic, and above λ₀ ≈ 6 the rate
@@ -480,7 +480,7 @@ exists), and one line on what it contributes.
   the ADS abstract; *ar5iv has no usable full text*.
 
 - **Hunten, D. M. (1973)**: *J. Atmos. Sci.* 30, 1481
-  (`1973JAtS...30.1481H`). **No arXiv preprint (1973).** The diffusion limit: for a
+  ([`1973JAtS...30.1481H`](https://ui.adsabs.harvard.edu/abs/1973JAtS...30.1481H)). **No arXiv preprint (1973).** The diffusion limit: for a
   light gas in a heavier background the escape flux is set by diffusion up through
   the background rather than by the exobase temperature, with a simple expression;
   reproduces Earth's hydrogen flux to a factor of 2 from the stratospheric H₂O
@@ -489,7 +489,7 @@ exists), and one line on what it contributes.
   which is the basis for selective loss in §5. Numbers from the ADS abstract.
 
 - **Ramstad, R. & Barabash, S. (2021)**: *Space Science Reviews* 217, 36
-  (`2021SSRv..217...36R`). **No arXiv preprint found.** Reviews measured ion-escape
+  ([`2021SSRv..217...36R`](https://ui.adsabs.harvard.edu/abs/2021SSRv..217...36R)). **No arXiv preprint found.** Reviews measured ion-escape
   rates at Venus, Earth and Mars; ion escape is energy-limited (Venus, Earth) or
   supply-limited (Mars, from its low gravity), and at Mars contributed relatively
   little to the total early loss compared with neutral escape. Concludes, against the
@@ -498,7 +498,7 @@ exists), and one line on what it contributes.
   magnetic-shielding argument should be read. Numbers from the ADS abstract.
 
 - **Catling, D. C. & Kasting, J. F. (2017)**: *Atmospheric Evolution on Inhabited and
-  Lifeless Worlds* (`2017aeil.book.....C`). Textbook home of the Jeans parameter and
+  Lifeless Worlds* ([`2017aeil.book.....C`](https://ui.adsabs.harvard.edu/abs/2017aeil.book.....C)). Textbook home of the Jeans parameter and
   the escape-regime taxonomy used in §5; cited as the allowed textbook exception, not
   for a specific number.
 

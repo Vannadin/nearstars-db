@@ -2,9 +2,9 @@
 
 Proxima Centauri d is a sub-Earth-mass ultra-short-period (USP)
 planet candidate first reported as a 0.26 M⊕ object at 5.122 d period
-by Faria et al. 2022 (`2022A&A...658A.115F`, [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)), and
+by Faria et al. 2022 ([`2022A&A...658A.115F`](https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F), [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)), and
 confirmed at high significance in the NIRPS + ESPRESSO joint analysis
-of Suárez Mascareño et al. 2025 (`2025A&A...700A..11S`,
+of Suárez Mascareño et al. 2025 ([`2025A&A...700A..11S`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S),
 [arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). At a semi-major axis of 0.029 AU it sits inside
 the inner edge of any habitable-zone interpretation; even so, with
 Proxima's faint M5.5V illumination (L = 0.00155 L☉) the insolation
@@ -182,7 +182,7 @@ purely a hot-rocky visual destination for player exploration.
 
 - **Faria J. P. et al. 2022** — *A candidate short-period sub-Earth
   orbiting Proxima Centauri*, A&A 658, A115
-  (`2022A&A...658A.115F`, [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). The discovery paper.
+  ([`2022A&A...658A.115F`](https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F), [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). The discovery paper.
   Reports P = 5.122 d, Msini = 0.26 M⊕. Orbital eccentricity is
   consistent with circular at the precision of the fit.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary

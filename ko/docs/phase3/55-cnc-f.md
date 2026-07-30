@@ -129,23 +129,23 @@ f 자체가 거대 가스 행성입니다—표면 액체 물을 가질 수 없�
 ### Read (visual-informative, drove decisions above)
 
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
-  with SPIRou…*, A&A 705, A190 (`2026A&A...705A.190M`,
+  with SPIRou…*, A&A 705, A190 ([`2026A&A...705A.190M`](https://ui.adsabs.harvard.edu/abs/2026A%26A...705A.190M),
   [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). 최신 RV 재피팅: 행성 f P = 260.58 d, a = 0.802 AU,
   e = 0.063, M sin i = 48.5 ± 2.8 M⊕. f 가 폭주-온실과 최대-온실 한계
   사이의 거주 가능 영역(Hill 2022)에 자리하고, 1–2 AU 의 온대 지구-질량
   행성이 동역학적으로 안정함을 확인. **Phase 2 추천 궤도 + 질량.** 모델
   컷오프 이후 출판 — 캐시 텍스트에 대조 확인.
 - **von Braun K. et al. 2011** — *The 55 Cancri System… Habitable Zone
-  Planet…*, ApJ 740, 49 (`2011ApJ...740...49V`, [arXiv:1107.1936](https://arxiv.org/abs/1107.1936)). 모성
+  Planet…*, ApJ 740, 49 ([`2011ApJ...740...49V`](https://ui.adsabs.harvard.edu/abs/2011ApJ...740...49V), [arXiv:1107.1936](https://arxiv.org/abs/1107.1936)). 모성
   L = 0.582 L☉ → T_eq 유도. f 가 이심 궤도 대부분을 HZ(0.67–1.32 AU)에서
   보냄을 식별. **HZ-거주 정박.**
 
 ### Read (context / methodology, not decision-driving)
 
-- **Bourrier V. et al. 2018** — `2018A&A...619A...1B`,
+- **Bourrier V. et al. 2018** — [`2018A&A...619A...1B`](https://ui.adsabs.harvard.edu/abs/2018A%26A...619A...1B),
   [arXiv:1807.04301](https://arxiv.org/abs/1807.04301). 재피팅: f 가 a = 0.7708 AU, e = 0.08,
   M sin i = 47.8 M⊕ — 기록된-대안 궤도/질량(Moutou 2025 로 대체).
-- **Fischer D. A. et al. 2008** — `2008ApJ...675..790F`. f 의 발견
+- **Fischer D. A. et al. 2008** — [`2008ApJ...675..790F`](https://ui.adsabs.harvard.edu/abs/2008ApJ...675..790F). f 의 발견
   논문(260 d 의 0.15 M_Jup). 역사적 맥락.
 
 ### Read (instrument-only, not visual-informative)

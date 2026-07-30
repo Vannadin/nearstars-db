@@ -226,7 +226,7 @@ still well above any habitable threshold.
 ### Read (visual-informative, drove decisions above)
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
-  Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
+  Barnard's Star from MAROON-X and ESPRESSO* ([`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B),
   [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). The MAROON-X paper that promoted e from
   candidate (59% detection probability from ESPRESSO alone) to
   confirmed (79% from joint MAROON-X + ESPRESSO). P = 6.7392 d,
@@ -234,7 +234,7 @@ still well above any habitable threshold.
   T_eq = 340 K (A=0, full redistribution); HZ = P 10–42 d; e < 0.02
   favored for stability.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
+  orbiting Barnard's star* ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G), [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   ESPRESSO data first identified e (6.74 d) as a candidate signal
   ("not within expectations" for detection sensitivity).
 - **Stefanov A. K. et al. 2024** — *TESS photometry of Barnard's Star*

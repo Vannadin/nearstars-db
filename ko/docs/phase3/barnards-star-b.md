@@ -176,13 +176,13 @@ cfg 의 flare-duty-cycle 속도 (~25%) 에서 일시적인 주변광 brightening
 ### Read (visual-informative, drove decisions above)
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
-  Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
+  Barnard's Star from MAROON-X and ESPRESSO* ([`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B),
   [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). MAROON-X 확인. P = 3.1542 d, Msini = 0.299 ±
   0.026 M⊕, a = 0.0229 AU, e = 0.03 (+0.03/−0.02), ω = +3.8°,
   T_eq = 438 K (Table 3, A = 0, 완전 열재분배). 안정성 분석은
   e < 0.02 를 선호.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
+  orbiting Barnard's star* ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G), [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   ESPRESSO 발견. 현대 Barnard 시스템의 첫 확정 행성. Msini = 0.37 ±
   0.05 M⊕ (ESPRESSO 전용) 와 A = 0.3 가정의 T_eq = 400 ± 7 K 보고 —
   Basant 의 438 K 와의 차이는 항성 매개변수가 아니라 albedo 가정
@@ -199,7 +199,7 @@ cfg 의 flare-duty-cycle 속도 (~25%) 에서 일시적인 주변광 brightening
   context-cite 만.*
 - **Lubin J. et al. 2021** — *Stellar Activity Manifesting at a
   One-year Alias Explains Barnard b as a False Positive*
-  (`2021AJ....162...61L`. arXiv preprint 없음). Ribas 2018 반박.
+  ([`2021AJ....162...61L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...61L). arXiv preprint 없음). Ribas 2018 반박.
   현재 Barnard b 가 2018 후보와 다른 행성임을 확립. *arXiv preprint
   없음 — context-cite 만.*
 - **Walterová M. & Běhounková M. 2020** — *Thermal and Orbital
@@ -210,7 +210,7 @@ cfg 의 flare-duty-cycle 속도 (~25%) 에서 일시적인 주변광 brightening
 ### Read (context / methodology, not decision-driving)
 
 - **Ribas I. et al. 2018** — *A candidate super-Earth planet orbiting
-  near the snow line of Barnard's star* (`2018Natur.563..365R`,
+  near the snow line of Barnard's star* ([`2018Natur.563..365R`](https://ui.adsabs.harvard.edu/abs/2018Natur.563..365R),
   [arXiv:1811.05955](https://arxiv.org/abs/1811.05955)). 역사적 클레임, 반박됨. b 라벨의 역사적 문헌
   맥락으로 보존.
 - **Toledo-Padrón B. et al. 2019** — *Stellar activity analysis of

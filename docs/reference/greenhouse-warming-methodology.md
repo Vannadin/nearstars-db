@@ -356,55 +356,55 @@ the sensitivity has to become a function of the state rather than a number.
 **Layer 1 — general theory**
 
 - **[Robinson & Catling 2012](https://arxiv.org/abs/1209.1833)**, ApJ 757, 104
-  (`2012ApJ...757..104R`). The analytic gray two-stream radiative-convective model;
+  ([`2012ApJ...757..104R`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..104R)). The analytic gray two-stream radiative-convective model;
   composition enters as the optical-depth/pressure power law plus an adiabat scaling.
   Validated by its authors on Venus, Jupiter and Titan. *ar5iv has no usable full text*;
   this doc cites its structure and validation set from the ADS abstract and does not
   restate its equations.
 - **[Robinson & Catling 2014](https://arxiv.org/abs/1312.6859)**, Nature Geoscience 7, 12
-  (`2014NatGe...7...12R`). The ~0.1 bar tropopause common to thick atmospheres, from
+  ([`2014NatGe...7...12R`](https://ui.adsabs.harvard.edu/abs/2014NatGe...7...12R)). The ~0.1 bar tropopause common to thick atmospheres, from
   pressure-dependent IR transparency. Used as a structural sanity check.
 - **[Pierrehumbert 2010](https://ui.adsabs.harvard.edu/abs/2010ppc..book.....P)**,
-  *Principles of Planetary Climate* (`2010ppc..book.....P`). Textbook derivation of the
+  *Principles of Planetary Climate* ([`2010ppc..book.....P`](https://ui.adsabs.harvard.edu/abs/2010ppc..book.....P)). Textbook derivation of the
   gray and band-model greenhouse relations; the allowed textbook exception.
 
 **Layer 2 — opacity data**
 
 - **[Karman 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..328..160K)**, Icarus 328, 160
-  (`2019Icar..328..160K`). The HITRAN collision-induced absorption section; source of the
+  ([`2019Icar..328..160K`](https://ui.adsabs.harvard.edu/abs/2019Icar..328..160K)). The HITRAN collision-induced absorption section; source of the
   CIA pair table above, including the absence of CO₂–H₂. No preprint; bibcode only.
 - **[Gordon 2017](https://ui.adsabs.harvard.edu/abs/2017JQSRT.203....3G)**, JQSRT 203, 3
-  (`2017JQSRT.203....3G`). HITRAN2016 line list. Cited as the standard data source.
+  ([`2017JQSRT.203....3G`](https://ui.adsabs.harvard.edu/abs/2017JQSRT.203....3G)). HITRAN2016 line list. Cited as the standard data source.
 - **[Byrne & Goldblatt 2014a](https://ui.adsabs.harvard.edu/abs/2014GeoRL..41..152B)**,
   GRL 41, 152, and **[2014b](https://arxiv.org/abs/1409.1880)**, Clim. Past 10, 1779
-  (`2014CliPa..10.1779B`). High-concentration forcings (CO₂ to 50,000 ppmv, max 38.1 W/m²)
+  ([`2014CliPa..10.1779B`](https://ui.adsabs.harvard.edu/abs/2014CliPa..10.1779B)). High-concentration forcings (CO₂ to 50,000 ppmv, max 38.1 W/m²)
   and forcings for 28 candidate Archean gases.
 - **[Ramirez 2018](https://arxiv.org/abs/1807.09504)**, Geosciences 8, 280
-  (`2018Geosc...8..280R`). Review of habitable-zone formulations beyond classical CO₂+H₂O;
+  ([`2018Geosc...8..280R`](https://ui.adsabs.harvard.edu/abs/2018Geosc...8..280R)). Review of habitable-zone formulations beyond classical CO₂+H₂O;
   the entry point for non-classical mixtures. Numbers here are from the ADS abstract only
   (ar5iv extraction failed); it is cited as a routing reference, not for a value.
 
 **Layer 3 — contour anchors**
 
 - **[Feulner 2012](https://arxiv.org/abs/1204.4449)**, Rev. Geophys. 50, 2006
-  (`2012RvGeo..50.2006F`). Faint-young-Sun review; §5.1 supplies four of the five contour
+  ([`2012RvGeo..50.2006F`](https://ui.adsabs.harvard.edu/abs/2012RvGeo..50.2006F)). Faint-young-Sun review; §5.1 supplies four of the five contour
   anchors and §5.3 the CH₄ factor-3 credit. **Cached** at `docs/phase3/_papers/1204.4449.md`.
 - **[Kopparapu 2013](https://arxiv.org/abs/1301.6674)**, ApJ 765, 131
-  (`2013ApJ...765..131K`). Habitable-zone limits; the maximum-greenhouse anchor (pCO₂ ~8 bar
+  ([`2013ApJ...765..131K`](https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K)). Habitable-zone limits; the maximum-greenhouse anchor (pCO₂ ~8 bar
   at 1.70 AU for the Sun, Ts fixed at 273 K, CO₂ varied 1–37.8 bar) and the Table 3
   parametric coefficients reproduced above. **Cached** at `docs/phase3/_papers/1301.6674.md`.
 - **[Charnay 2013](https://arxiv.org/abs/1310.4286)**, JGR-Atmospheres 118, 10414
-  (`2013JGRD..11810414C`). 3-D Archean GCM; composition C (0.1 bar CO₂ + 2 mbar CH₄ at
+  ([`2013JGRD..11810414C`](https://ui.adsabs.harvard.edu/abs/2013JGRD..11810414C)). 3-D Archean GCM; composition C (0.1 bar CO₂ + 2 mbar CH₄ at
   3.8 Ga → ~17 °C) is the independent validation row. **Cached** at
   `docs/phase3/_papers/1310.4286.md`.
 - **[Goldblatt 2009](https://ui.adsabs.harvard.edu/abs/2009NatGe...2..891G)**,
-  Nature Geoscience 2, 891 (`2009NatGe...2..891G`). N₂ pressure-broadening term
+  Nature Geoscience 2, 891 ([`2009NatGe...2..891G`](https://ui.adsabs.harvard.edu/abs/2009NatGe...2..891G)). N₂ pressure-broadening term
   (+4.4 °C per doubling of the N₂ inventory). No preprint; bibcode only.
 - **[Haqq-Misra 2008](https://ui.adsabs.harvard.edu/abs/2008AsBio...8.1127H)**,
-  Astrobiology 8, 1127 (`2008AsBio...8.1127H`). Revised, hazy CH₄ greenhouse: corrected CH₄
+  Astrobiology 8, 1127 ([`2008AsBio...8.1127H`](https://ui.adsabs.harvard.edu/abs/2008AsBio...8.1127H)). Revised, hazy CH₄ greenhouse: corrected CH₄
   coefficients, pCO₂ ≥ 0.03 bar required, haze onset is climatically cooling. No preprint.
 - **[Arney 2016](https://ui.adsabs.harvard.edu/abs/2016AsBio..16..873A)**, Astrobiology 16,
-  873 (`2016AsBio..16..873A`, arXiv [1610.04515](https://arxiv.org/abs/1610.04515)).
+  873 ([`2016AsBio..16..873A`](https://ui.adsabs.harvard.edu/abs/2016AsBio..16..873A), arXiv [1610.04515](https://arxiv.org/abs/1610.04515)).
   Coupled climate-photochemical-microphysical hazy Archean: ~20 K cooling, self-limiting,
   τ ~5 at 200 nm, surface UV down ~97 %. *ar5iv extraction failed*; numbers from the ADS
   abstract.
@@ -412,25 +412,25 @@ the sensitivity has to become a function of the state rather than a number.
   Clim. Past 11, 559. Archean CH₄ warming diminished by solar absorption lines; the reason
   the CH₄ credit is capped rather than scaled.
 - **[Wolf & Toon 2013](https://ui.adsabs.harvard.edu/abs/2013AsBio..13..656W)**,
-  Astrobiology 13, 656 (`2013AsBio..13..656W`). Archean GCM corroborating temperate Archean
+  Astrobiology 13, 656 ([`2013AsBio..13..656W`](https://ui.adsabs.harvard.edu/abs/2013AsBio..13..656W)). Archean GCM corroborating temperate Archean
   climates. Listed for completeness only — ADS carries no abstract and there is no preprint,
   so **no number in this doc comes from it**.
 
 **Layer 4 — borrowed model runs**
 
 - **[Ramirez 2014](https://arxiv.org/abs/1405.6701)**, Nature Geoscience 7, 59
-  (`2014NatGe...7...59R`). 1.3–4 bar CO₂ + 5–20 % H₂ raises early Mars above freezing.
+  ([`2014NatGe...7...59R`](https://ui.adsabs.harvard.edu/abs/2014NatGe...7...59R)). 1.3–4 bar CO₂ + 5–20 % H₂ raises early Mars above freezing.
   *ar5iv has no usable full text*; figures from the paper's own ADS abstract, cross-checked
   against Hayworth 2020's cached description.
 - **[Hayworth 2020](https://arxiv.org/abs/2004.09076)**, Icarus 345, 113770
-  (`2020Icar..34513770H`). CO₂–H₂ CIA on early Mars; source for the 32 %-of-modern-Earth
+  ([`2020Icar..34513770H`](https://ui.adsabs.harvard.edu/abs/2020Icar..34513770H)). CO₂–H₂ CIA on early Mars; source for the 32 %-of-modern-Earth
   flux figure, for Ramirez's H₂ thresholds, and for the N₂–H₂-as-CO₂–H₂ proxy statement.
   **Cached** at `docs/phase3/_papers/2004.09076.md`.
 - **[Wordsworth & Pierrehumbert 2013](https://ui.adsabs.harvard.edu/abs/2013Sci...339...64W)**,
-  Science 339, 64 (`2013Sci...339...64W`). H₂–N₂ CIA warming of the early Earth. *Science
+  Science 339, 64 ([`2013Sci...339...64W`](https://ui.adsabs.harvard.edu/abs/2013Sci...339...64W)). H₂–N₂ CIA warming of the early Earth. *Science
   report, no preprint*: bibcode, numbers from the ADS abstract.
 - **[Kasting 1991](https://ui.adsabs.harvard.edu/abs/1991Icar...94....1K)**, Icarus 94, 1
-  (`1991Icar...94....1K`), "CO₂ condensation and the climate of early Mars". The
+  ([`1991Icar...94....1K`](https://ui.adsabs.harvard.edu/abs/1991Icar...94....1K)), "CO₂ condensation and the climate of early Mars". The
   CO₂-cloud/albedo argument behind the maximum-greenhouse limit, cited through Kopparapu
   2013 and Hayworth 2020.
 

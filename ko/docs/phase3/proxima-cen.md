@@ -158,47 +158,47 @@ X 선 활성 단계에서 극적으로 밝아집니다. 항성풍 streamer 는 �
 
 - **Demory B.-O. et al. 2009** — *Mass-radius relation of low and very
   low-mass stars revisited with the VLTI*, A&A 505, 205
-  (`2009A&A...505..205D`, [arXiv:0906.0602](https://arxiv.org/abs/0906.0602)). VLTI/VINCI 간섭계
+  ([`2009A&A...505..205D`](https://ui.adsabs.harvard.edu/abs/2009A%26A...505..205D), [arXiv:0906.0602](https://arxiv.org/abs/0906.0602)). VLTI/VINCI 간섭계
   R = 0.141 ± 0.011 R☉ — 추천 Proxima 반지름.
 - **Passegger V. M. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Photospheric parameters of target stars from
-  high-resolution spectroscopy* (`2019A&A...627A.161P`,
+  high-resolution spectroscopy* ([`2019A&A...627A.161P`](https://ui.adsabs.harvard.edu/abs/2019A%26A...627A.161P),
   [arXiv:1907.00807](https://arxiv.org/abs/1907.00807)). 고분해능 분광 Teff = 2904 ± 51 K 와 H 밴드
   금속함량.
 - **Suárez Mascareño A. et al. 2016** — *Characterization of the radial
   velocity signal induced by rotation in late-type dwarfs*
-  (`2016A&A...595A..12S`, [arXiv:1506.08039](https://arxiv.org/abs/1506.08039)). GJ 551 의 Ca II H&K 활동
+  ([`2016A&A...595A..12S`](https://ui.adsabs.harvard.edu/abs/2016A%26A...595A..12S), [arXiv:1506.08039](https://arxiv.org/abs/1506.08039)). GJ 551 의 Ca II H&K 활동
   지표 log R'HK = −5.65 ± 0.17 (SM2020 에서 −4.98 로 재보정).
 - **Suárez Mascareño A. et al. 2020** — *Revisiting Proxima with
-  ESPRESSO* (`2020A&A...639A..77S`, [arXiv:2005.12114](https://arxiv.org/abs/2005.12114)). ESPRESSO RV
+  ESPRESSO* ([`2020A&A...639A..77S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...639A..77S), [arXiv:2005.12114](https://arxiv.org/abs/2005.12114)). ESPRESSO RV
   모니터링. 회전 주기 ~83.2 d 채택 (측정값 87 ± 12 d). 재보정된 활동
   인덱스 timeseries.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary
   system of Proxima with NIRPS: Breaking the m/s barrier*
-  (`2025A&A...700A..11S`, [arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). Proxima b 의 현재 best
+  ([`2025A&A...700A..11S`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S), [arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). Proxima b 의 현재 best
   궤도 fit (e ≈ 0, P = 11.18465 d, Msini = 1.055 M⊕) 과 Proxima d
   확정. GP 회전 주기 83.2 ± 1.6 d.
 - **Benedict G. F. et al. 1998** — *Photometry of Proxima Centauri and
   Barnard's Star Using Hubble Space Telescope Fine Guidance Sensor 3*,
-  AJ 116, 429 (`1998AJ....116..429B`). HST/FGS3 광도 회전 주기
+  AJ 116, 429 ([`1998AJ....116..429B`](https://ui.adsabs.harvard.edu/abs/1998AJ....116..429B)). HST/FGS3 광도 회전 주기
   83.5 ± 0.5 d — 추천 Proxima 회전 주기.
 - **Anglada-Escudé G. et al. 2016** — *A terrestrial planet candidate
   in a temperate orbit around Proxima Centauri*, Nature 536, 437
-  (`2016Natur.536..437A`, [arXiv:1609.03449](https://arxiv.org/abs/1609.03449)). Proxima b 의 원래 발견.
+  ([`2016Natur.536..437A`](https://ui.adsabs.harvard.edu/abs/2016Natur.536..437A), [arXiv:1609.03449](https://arxiv.org/abs/1609.03449)). Proxima b 의 원래 발견.
   supplementary Hα flare 빈도 측정.
 - **Faria J. P. et al. 2022** — *A candidate short-period sub-Earth
-  orbiting Proxima Centauri*, A&A 658, A115 (`2022A&A...658A.115F`,
+  orbiting Proxima Centauri*, A&A 658, A115 ([`2022A&A...658A.115F`](https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F),
   [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). P = 5.122 d, Msini = 0.26 M⊕ 의 Proxima d 후보.
 - **Reiners & Basri 2008 / Reiners et al. 2022 / Klein et al. 2021** —
-  Proxima 자기장. Reiners & Basri 2008 (`2008A&A...489L..45R`,
-  [arXiv:0808.2986](https://arxiv.org/abs/0808.2986)) 과 Reiners 2022 (`2022A&A...662A..41R`,
+  Proxima 자기장. Reiners & Basri 2008 ([`2008A&A...489L..45R`](https://ui.adsabs.harvard.edu/abs/2008A%26A...489L..45R),
+  [arXiv:0808.2986](https://arxiv.org/abs/0808.2986)) 과 Reiners 2022 ([`2022A&A...662A..41R`](https://ui.adsabs.harvard.edu/abs/2022A%26A...662A..41R),
   [arXiv:2204.00342](https://arxiv.org/abs/2204.00342), CARMENES) 는 moderate 평균 표면장 Bf ≈ 0.6 kG 를,
-  Klein 2021 (`2021MNRAS.500.1844K`, [arXiv:2010.14311](https://arxiv.org/abs/2010.14311), SPIRou ZDI) 은
+  Klein 2021 ([`2021MNRAS.500.1844K`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.500.1844K), [arXiv:2010.14311](https://arxiv.org/abs/2010.14311), SPIRou ZDI) 은
   ~0.2 kG 주로 poloidal 대규모장과 ~0.135 kG 쌍극자를 측정. (자기장
   측정이 없는 Reiners 2018 CARMENES 스펙트럼 atlas `1711.06576` 로의
   기존 오인용을 대체.)
 - **Vida K. et al. 2019** — *Flaring Activity of Proxima Centauri from
-  TESS Observations*, ApJ 884, 160 (`2019ApJ...884..160V`,
+  TESS Observations*, ApJ 884, 160 ([`2019ApJ...884..160V`](https://ui.adsabs.harvard.edu/abs/2019ApJ...884..160V),
   [arXiv:1907.12580](https://arxiv.org/abs/1907.12580)). Flare 통계, QPO super-flare, 연 3 회의 superflare.
 - **Fuhrmeister B. et al. 2022** — *The high energy spectrum of
   Proxima Centauri simultaneously observed at X-ray and FUV

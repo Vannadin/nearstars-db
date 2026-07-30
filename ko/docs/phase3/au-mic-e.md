@@ -3,7 +3,7 @@
 
 AU Microscopii e 는 22 Myr 의 M1Ve flare star AU Mic 주위를 도는
 시선속도 후보 행성으로 논란 상태이며, Donati et al. 2025 (A&A 700,
-A227. `2025A&A...700A.227D`. doi:10.1051/0004-6361/202555371) 가
+A227. [`2025A&A...700A.227D`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.227D). doi:10.1051/0004-6361/202555371) 가
 다년간의 SPIRou + ESPRESSO RV 캠페인에서 보고했습니다. 보고된 궤도
 주기는 33.11 ± 0.06 d, 최소 질량은 21.1 ± 5.4 M⊕ 입니다. 행성은
 통과하지 않으며 다른 독립 관측 제약 (TTV, 직접 촬영, 천체측정) 은
@@ -216,27 +216,27 @@ AU Mic e 의 시각적 표현은 (확인 조건부) AU Mic c 의 작고 차갑�
 
 ### Read (visual-informative, drove decisions above)
 
-- **Donati J.-F. et al. 2025** — *AU Mic system characterized with ESPRESSO*, A&A 700, A227 (`2025A&A...700A.227D`, doi:10.1051/0004-6361/202555371). AU Mic e 후보의 발견 논문. SPIRou + ESPRESSO RV 의 33.11-d 주기에서 최소 질량 21.1 ± 5.4 M⊕. **현재 유일한 검출이자 cornerstone.** AU Mic 의 super-saturated 활동이 RV 전용 검출을 확인하기 어렵게 만들어 NEA 에서 신호가 `pl_controv_flag = 1` 로 표시됨.
-- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). b/c 파라미터를 정밀화했지만 e 는 검출하지 못한 ESPRESSO + TESS 결합 분석 — AU Mic 에서 활동 모델링 민감도에 대한 맥락을 설정. Mallorquin 2024 의 미검출이 논란의 원천 중 하나. Donati 2025 의 더 후속 SPIRou 데이터 확장 분석이 Mallorquin 2024 의 파이프라인이 포착하지 못한 신호를 회수함.
+- **Donati J.-F. et al. 2025** — *AU Mic system characterized with ESPRESSO*, A&A 700, A227 ([`2025A&A...700A.227D`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.227D), doi:10.1051/0004-6361/202555371). AU Mic e 후보의 발견 논문. SPIRou + ESPRESSO RV 의 33.11-d 주기에서 최소 질량 21.1 ± 5.4 M⊕. **현재 유일한 검출이자 cornerstone.** AU Mic 의 super-saturated 활동이 RV 전용 검출을 확인하기 어렵게 만들어 NEA 에서 신호가 `pl_controv_flag = 1` 로 표시됨.
+- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 ([`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)). b/c 파라미터를 정밀화했지만 e 는 검출하지 못한 ESPRESSO + TESS 결합 분석 — AU Mic 에서 활동 모델링 민감도에 대한 맥락을 설정. Mallorquin 2024 의 미검출이 논란의 원천 중 하나. Donati 2025 의 더 후속 SPIRou 데이터 확장 분석이 Mallorquin 2024 의 파이프라인이 포착하지 못한 신호를 회수함.
 - **Mallorquin M. et al. 2024b (비확인)** — *Revisiting the dynamical masses of the transiting planets in the young AU Mic system*, A&A 수락 ([arXiv:2407.16461](https://arxiv.org/abs/2407.16461)). 명시적 비확인. "33.4 일 궤도 주기를 가진 행성 후보 AU Mic 'e' 의 최근 제안된 존재를 확인하지 못함". 이전 Donati 2023 주기를 사용해 광학 RV 에서 K_e < 10 m/s 의 3σ 상한 설정. Donati 2025 의 응답. 수정된 더 낮은 진폭 (5.9 m/s, 4.9σ) 이 Mallorquin 의 광학 민감도 floor 아래에 있어 SPIRou 근적외선에서 주로 검출 가능 — 파장 의존 SNR 이지 반박이 아님.
-- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). 안쪽 행성에 대한 TTV 동역학 질량. d 도입. Wittrock 의 N-body fit 은 33 d 의 추가 perturber 를 요구하지 않으며 (d-c TTV 잔차는 동역학 모델만으로 e 없이 설명 가능), 이는 e 논란 체인의 일부.
-- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 (`2017ApJ...847...29O`, [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). 광증발 프레임워크. 3.6 S⊕ + AU Mic XUV 의 e 는 22 Myr 에서 envelope 보전 임계점보다 훨씬 위에 있어, envelope 없는 암석 variant 보다 얇은-H/He-envelope cfg 픽을 뒷받침.
-- **Chen J. & Kipping D. 2017** — *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 (`2017ApJ...834...17C`, [arXiv:1603.08614](https://arxiv.org/abs/1603.08614)). RV 유도 질량에서 placeholder 반지름 2.9 R⊕ 를 추정하는 데 사용한 질량-반지름 관계.
+- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 ([`2023AJ....166..232W`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W), [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). 안쪽 행성에 대한 TTV 동역학 질량. d 도입. Wittrock 의 N-body fit 은 33 d 의 추가 perturber 를 요구하지 않으며 (d-c TTV 잔차는 동역학 모델만으로 e 없이 설명 가능), 이는 e 논란 체인의 일부.
+- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 ([`2017ApJ...847...29O`](https://ui.adsabs.harvard.edu/abs/2017ApJ...847...29O), [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). 광증발 프레임워크. 3.6 S⊕ + AU Mic XUV 의 e 는 22 Myr 에서 envelope 보전 임계점보다 훨씬 위에 있어, envelope 없는 암석 variant 보다 얇은-H/He-envelope cfg 픽을 뒷받침.
+- **Chen J. & Kipping D. 2017** — *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 ([`2017ApJ...834...17C`](https://ui.adsabs.harvard.edu/abs/2017ApJ...834...17C), [arXiv:1603.08614](https://arxiv.org/abs/1603.08614)). RV 유도 질량에서 placeholder 반지름 2.9 R⊕ 를 추정하는 데 사용한 질량-반지름 관계.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 의 b 발견. e 논란과 관련된 시스템의 항성 활동 맥락 정의.
-- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). c 의 발견. e 의 cfg 파라미터 대부분이 상속되는 sub-Neptune analog.
-- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare 센서스. 10³¹ erg 위 5.6/일 비율. e RV 신호에 대한 활동 오염 우려를 구동.
-- **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 (`2021MNRAS.502..188K`, [arXiv:2012.04970](https://arxiv.org/abs/2012.04970)). AU Mic 의 SPIRou 근적외선 ZDI + RV. Donati 2025 의 SPIRou + ESPRESSO 결합 분석에 투입된 방법론.
-- **Boldog Z. et al. 2025** — *Transit-timing variations in the AU Mic system observed with CHEOPS*, A&A 694, A137 (`2025A&A...694A.137B`, [arXiv:2501.13575](https://arxiv.org/abs/2501.13575)). CHEOPS TTV 가 b/c 궤도 정밀화 + d 가 내부 섭동자. 33 d 주기의 e 는 직접 다루지 않음 — Boldog 의 TTV fit 은 33 d 외부 섭동자를 요구하지 않음. e 를 확인하지도 반박하지도 않음. e 주기에서 시그너처가 없는 가장 최근 TTV 연구.
-- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). host 별 ZDI. 가까운 모든 후보에 대한 항성 자기장 맥락 제공.
-- **Goldreich P. & Soter S. 1966** — *Q in the Solar System*, Icarus 5, 375 (`1966Icar....5..375G`). 조건부 1:1 spin-orbit 결론에 사용한 조석 감쇠 시간 척도 프레임워크.
-- **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a Key Role in the Climate of Tidally Locked Terrestrial Exoplanets: Insights from High-Resolution Simulations*, ApJ 894, 84 (`2020ApJ...894...84S`, [arXiv:2004.03007](https://arxiv.org/abs/2004.03007)). 주야 재분배 논의에 적용된 substellar 대류 프레임워크.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 ([`2020Natur.582..497P`](https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P), [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 의 b 발견. e 논란과 관련된 시스템의 항성 활동 맥락 정의.
+- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 ([`2021A&A...649A.177M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A.177M), [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). c 의 발견. e 의 cfg 파라미터 대부분이 상속되는 sub-Neptune analog.
+- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 ([`2023ApJ...951...33T`](https://ui.adsabs.harvard.edu/abs/2023ApJ...951...33T), [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare 센서스. 10³¹ erg 위 5.6/일 비율. e RV 신호에 대한 활동 오염 우려를 구동.
+- **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 ([`2021MNRAS.502..188K`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.502..188K), [arXiv:2012.04970](https://arxiv.org/abs/2012.04970)). AU Mic 의 SPIRou 근적외선 ZDI + RV. Donati 2025 의 SPIRou + ESPRESSO 결합 분석에 투입된 방법론.
+- **Boldog Z. et al. 2025** — *Transit-timing variations in the AU Mic system observed with CHEOPS*, A&A 694, A137 ([`2025A&A...694A.137B`](https://ui.adsabs.harvard.edu/abs/2025A%26A...694A.137B), [arXiv:2501.13575](https://arxiv.org/abs/2501.13575)). CHEOPS TTV 가 b/c 궤도 정밀화 + d 가 내부 섭동자. 33 d 주기의 e 는 직접 다루지 않음 — Boldog 의 TTV fit 은 33 d 외부 섭동자를 요구하지 않음. e 를 확인하지도 반박하지도 않음. e 주기에서 시그너처가 없는 가장 최근 TTV 연구.
+- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 ([`2023MNRAS.525..455D`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525..455D)). host 별 ZDI. 가까운 모든 후보에 대한 항성 자기장 맥락 제공.
+- **Goldreich P. & Soter S. 1966** — *Q in the Solar System*, Icarus 5, 375 ([`1966Icar....5..375G`](https://ui.adsabs.harvard.edu/abs/1966Icar....5..375G)). 조건부 1:1 spin-orbit 결론에 사용한 조석 감쇠 시간 척도 프레임워크.
+- **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a Key Role in the Climate of Tidally Locked Terrestrial Exoplanets: Insights from High-Resolution Simulations*, ApJ 894, 84 ([`2020ApJ...894...84S`](https://ui.adsabs.harvard.edu/abs/2020ApJ...894...84S), [arXiv:2004.03007](https://arxiv.org/abs/2004.03007)). 주야 재분배 논의에 적용된 substellar 대류 프레임워크.
 
 ### Read (instrument / non-decisive)
 
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). Donati 2025 e 검출에 (간접적으로) 적용된 GP-detrending 방법론. e-결정적이지 않음.
+- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 ([`2021AJ....162..295C`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..295C), [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). Donati 2025 e 검출에 (간접적으로) 적용된 GP-detrending 방법론. e-결정적이지 않음.
 
 ### Not read — no arXiv preprint or low-priority (~15 papers)
 

@@ -4,19 +4,19 @@
 AU Microscopii b 는 22 Myr 전주계열 M1Ve flare star AU Microscopii
 주위 8.463 d 궤도를 도는 4.79 ± 0.29 R⊕, 8.99 ± 2.61 M⊕ 의 저밀도
 warm Neptune 입니다. Plavchan et al. 2020 (Nature 582, 497.
-`2020Natur.582..497P`. [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)) 이 TESS 통과에서 행성을
-발견했고, Cale et al. 2021 (AJ 162, 295. `2021AJ....162..295C`.
+[`2020Natur.582..497P`](https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P). [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)) 이 TESS 통과에서 행성을
+발견했고, Cale et al. 2021 (AJ 162, 295. [`2021AJ....162..295C`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..295C).
 [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)) 이 host 별 흑점 신호의 가우시안 프로세스 detrending
 후 첫 견고한 RV 질량을 제공했으며, Mallorquin et al. 2024
-(A&A 689, A132. `2024A&A...689A.132M`) 가 ESPRESSO + TESS 재분석으로
+(A&A 689, A132. [`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)) 가 ESPRESSO + TESS 재분석으로
 질량과 반지름을 모두 정밀화했습니다. bulk 밀도는 ≈ 0.45 g/cc — Neptune
 의 약 1/3 — 로 b 를 "puffy / inflated sub-Saturn" 영역에 깊숙이
 놓는데, 이는 수소 envelope 가 아직 식어 수축할 시간을 갖지 못한
 어린 통과 행성의 특징입니다. Allart et al. 2023 (A&A 677, A164.
-`2023A&A...677A.164A`. [arXiv:2308.10891](https://arxiv.org/abs/2308.10891)) 가 통과 동안 marginal-to-
+[`2023A&A...677A.164A`](https://ui.adsabs.harvard.edu/abs/2023A%26A...677A.164A). [arXiv:2308.10891](https://arxiv.org/abs/2308.10891)) 가 통과 동안 marginal-to-
 significant He I 10830 Å 흡수 시그너처를 보고했으며, 이는 확장된
 탈출 H/He envelope 과 일관됩니다. Hirano et al. 2020 (ApJ 899, L13.
-`2020ApJ...899L..13H`. [arXiv:2006.13654](https://arxiv.org/abs/2006.13654)) 은 Rossiter–McLaughlin 로
+[`2020ApJ...899L..13H`](https://ui.adsabs.harvard.edu/abs/2020ApJ...899L..13H). [arXiv:2006.13654](https://arxiv.org/abs/2006.13654)) 은 Rossiter–McLaughlin 로
 투영 obliquity 를 측정했고 ~5° 안쪽으로 정렬됨을 발견 (λ = −2.96°),
 이는 disk + 항성 자전축과 일관됩니다.
 
@@ -59,7 +59,7 @@ canonical-aligned. 세 개는 tie-break (대기 색 hex, 구름 색 hex, 띠
 | `cloud_tint_rgb_hex` | `#c0a880` | low | Tie-break. M1V 의 붉은 조명 하 H₂O/NH₃ 구름 입자의 따뜻한 크림. terminator 대비를 위해 균일 크림 대신 선택 |
 | `surface_morphology` | n/a — 단단한 표면 없음. 끝까지 가스 자이언트 envelope | high | 밀도와 질량-반지름 위치가 암석 표면을 배제 |
 | `magnetic_field_present` | true | low | Neptune-질량 H 풍부 envelope 이 dynamo 를 유지 (Neptune/Uranus 도 그렇다) |
-| `magnetic_field_strength_microtesla_equator` | 100 | low | 측정이 아니라 자릿수 수준의 추정이다. 에너지플럭스 다이나모 스케일링 (Christensen 2009 `2009Natur.457..167C`. 이를 inflate 된 외계행성에 적용한 것이 Yadav & Thorngren 2017 `1709.05676`) 은 hot Jupiter 에서 검증된 방법인데, AU Mic b (0.028 M_Jup) 는 그 질량 영역 아래 — He 분리 때문에 표면 자기장을 정량화할 수 없는 sub-Saturn 구간 (Stevenson 1980) 에 있다. cfg 는 Neptune/Uranus 얼음 거대 행성 analog (~0.1–0.5 G = 10–50 µT. Connerney 1991, Ness 1986) 로 값을 묶되, AU Mic 의 젊음 (22 Myr 이 내부를 inflate 시켜 내부 flux 를 높임) 을 반영해 ~100 µT 로 조정했다. docs/reference/planetary-dynamo-scaling.md 참고 |
+| `magnetic_field_strength_microtesla_equator` | 100 | low | 측정이 아니라 자릿수 수준의 추정이다. 에너지플럭스 다이나모 스케일링 (Christensen 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C). 이를 inflate 된 외계행성에 적용한 것이 Yadav & Thorngren 2017 `1709.05676`) 은 hot Jupiter 에서 검증된 방법인데, AU Mic b (0.028 M_Jup) 는 그 질량 영역 아래 — He 분리 때문에 표면 자기장을 정량화할 수 없는 sub-Saturn 구간 (Stevenson 1980) 에 있다. cfg 는 Neptune/Uranus 얼음 거대 행성 analog (~0.1–0.5 G = 10–50 µT. Connerney 1991, Ness 1986) 로 값을 묶되, AU Mic 의 젊음 (22 Myr 이 내부를 inflate 시켜 내부 flux 를 높임) 을 반영해 ~100 µT 로 조정했다. docs/reference/planetary-dynamo-scaling.md 참고 |
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I 흡수가 AU Mic XUV 하 에너지 한정 탈출에서 질량 손실 ~10⁹–10¹⁰ g/s 를 함의. Plavchan 2020 §6 이 비슷한 값을 추정. Cale 2021 §5 |
 | `aurora_present` | true | low | 강한 항성풍 + H 풍부 상층 대기 → H Balmer-α + H₂ Lyman + Werner 밴드 예상 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm + Lyman-α downconvert 가 분홍-빨강 지배색을 줌. interesting-first 가 옅은 UV-only 렌더링 대신 밝은 분홍을 선택 |
@@ -218,26 +218,26 @@ AU Mic 의 항성 디스크를 통과합니다. b 의 관측자는 disk 의 안�
 
 ### Read (visual-informative, drove decisions above)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 가 발견한 AU Mic b 의 통과 hot Neptune. 통과 유도 반지름 4.0 R⊕ (이후 4.79 로 정밀화). host XUV 환경과 대기 탈출 영역 논의. cornerstone 논문.
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). 다기기 GP detrending 으로 첫 견고한 RV 질량. puffy envelope 과 일관된 인플레이션 저밀도 보고.
-- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). ESPRESSO + TESS 결합 분석. b 의 질량을 8.99 ± 2.61 M⊕ 로, 반지름을 4.79 ± 0.29 R⊕ 로 정밀화. 개선된 항성 활동 모델링으로 Cale 2021 의 더 높은 질량을 대체. **headline 출처로 채택**.
-- **Allart R. et al. 2023** — *Homogeneous search for helium in the atmosphere of 11 gas giants with HST/STIS and CARMENES*, A&A 677, A164 (`2023A&A...677A.164A`, [arXiv:2308.10891](https://arxiv.org/abs/2308.10891)). AU Mic b 통과 동안의 marginal-to-significant He I 10830 Å 검출 보고. 탈출률과 확장 대기 기하 제약. atmosphere-present 와 escape-tail cfg 픽을 구동.
-- **Hirano T. et al. 2020** — *Evidence for Spin–Orbit Alignment in the TRAPPIST-1 System and Implications for the AU Mic system*, ApJ 899, L13 (`2020ApJ...899L..13H`, [arXiv:2006.13654](https://arxiv.org/abs/2006.13654)). Subaru IRD 의 b 에 대한 Rossiter–McLaughlin 측정. 투영 obliquity λ = −2.96°. disk + 항성 자전축과의 궤도면 정렬 확인.
-- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). 질량-반지름 envelope 질량 분율 보정. b 에 적용하면 질량 ~30% H/He. cfg 표면 압력 픽을 구동.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 ([`2020Natur.582..497P`](https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P), [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 가 발견한 AU Mic b 의 통과 hot Neptune. 통과 유도 반지름 4.0 R⊕ (이후 4.79 로 정밀화). host XUV 환경과 대기 탈출 영역 논의. cornerstone 논문.
+- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 ([`2021AJ....162..295C`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..295C), [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). 다기기 GP detrending 으로 첫 견고한 RV 질량. puffy envelope 과 일관된 인플레이션 저밀도 보고.
+- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 ([`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)). ESPRESSO + TESS 결합 분석. b 의 질량을 8.99 ± 2.61 M⊕ 로, 반지름을 4.79 ± 0.29 R⊕ 로 정밀화. 개선된 항성 활동 모델링으로 Cale 2021 의 더 높은 질량을 대체. **headline 출처로 채택**.
+- **Allart R. et al. 2023** — *Homogeneous search for helium in the atmosphere of 11 gas giants with HST/STIS and CARMENES*, A&A 677, A164 ([`2023A&A...677A.164A`](https://ui.adsabs.harvard.edu/abs/2023A%26A...677A.164A), [arXiv:2308.10891](https://arxiv.org/abs/2308.10891)). AU Mic b 통과 동안의 marginal-to-significant He I 10830 Å 검출 보고. 탈출률과 확장 대기 기하 제약. atmosphere-present 와 escape-tail cfg 픽을 구동.
+- **Hirano T. et al. 2020** — *Evidence for Spin–Orbit Alignment in the TRAPPIST-1 System and Implications for the AU Mic system*, ApJ 899, L13 ([`2020ApJ...899L..13H`](https://ui.adsabs.harvard.edu/abs/2020ApJ...899L..13H), [arXiv:2006.13654](https://arxiv.org/abs/2006.13654)). Subaru IRD 의 b 에 대한 Rossiter–McLaughlin 측정. 투영 obliquity λ = −2.96°. disk + 항성 자전축과의 궤도면 정렬 확인.
+- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 ([`2014ApJ...792....1L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...792....1L), [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). 질량-반지름 envelope 질량 분율 보정. b 에 적용하면 질량 ~30% H/He. cfg 표면 압력 픽을 구동.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 (`2021MNRAS.502..188K`, [arXiv:2012.04970](https://arxiv.org/abs/2012.04970)). AU Mic 의 SPIRou 근적외선 ZDI + RV. Mallorquin 2024 가 사용한 GP detrending 에 대한 항성 활동 맥락 제공.
-- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). ZDI 쌍극자 2 kG, 전체 RMS 4.6 kG. 항성 자기장 맥락 설정.
-- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare 센서스. 10³¹ erg 위 5.6/일 비율. 대기 탈출과 오로라 타이밍에 관련.
-- **Lavie B. et al. 2017** — *HELIOS-RETRIEVAL: Open-source Nested Sampling Atmospheric Retrieval Code for Exoplanets*, AJ 154, 91 (`2017AJ....154...91L`, [arXiv:1610.03216](https://arxiv.org/abs/1610.03216)). 미량 종 조성에 채택된 차가운 Neptune 광화학 프레임워크.
-- **Sing D. K. et al. 2016** — *A continuum from clear to cloudy hot-Jupiter exoplanets without primordial water depletion*, Nature 529, 59 (`2016Natur.529...59S`, [arXiv:1512.04341](https://arxiv.org/abs/1512.04341)). hot/warm 가스 자이언트의 구름 데크 압력 센서스. 0.70 cloud-cover 선택을 뒷받침.
-- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 (`2009ApJ...699..564S`, [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). 적도 superrotation GCM 프레임워크 (더 차가운 온도 적응 포함) 가 띠 형태 픽에 채택.
+- **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 ([`2021MNRAS.502..188K`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.502..188K), [arXiv:2012.04970](https://arxiv.org/abs/2012.04970)). AU Mic 의 SPIRou 근적외선 ZDI + RV. Mallorquin 2024 가 사용한 GP detrending 에 대한 항성 활동 맥락 제공.
+- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 ([`2023MNRAS.525..455D`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525..455D)). ZDI 쌍극자 2 kG, 전체 RMS 4.6 kG. 항성 자기장 맥락 설정.
+- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 ([`2023ApJ...951...33T`](https://ui.adsabs.harvard.edu/abs/2023ApJ...951...33T), [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare 센서스. 10³¹ erg 위 5.6/일 비율. 대기 탈출과 오로라 타이밍에 관련.
+- **Lavie B. et al. 2017** — *HELIOS-RETRIEVAL: Open-source Nested Sampling Atmospheric Retrieval Code for Exoplanets*, AJ 154, 91 ([`2017AJ....154...91L`](https://ui.adsabs.harvard.edu/abs/2017AJ....154...91L), [arXiv:1610.03216](https://arxiv.org/abs/1610.03216)). 미량 종 조성에 채택된 차가운 Neptune 광화학 프레임워크.
+- **Sing D. K. et al. 2016** — *A continuum from clear to cloudy hot-Jupiter exoplanets without primordial water depletion*, Nature 529, 59 ([`2016Natur.529...59S`](https://ui.adsabs.harvard.edu/abs/2016Natur.529...59S), [arXiv:1512.04341](https://arxiv.org/abs/1512.04341)). hot/warm 가스 자이언트의 구름 데크 압력 센서스. 0.70 cloud-cover 선택을 뒷받침.
+- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 ([`2009ApJ...699..564S`](https://ui.adsabs.harvard.edu/abs/2009ApJ...699..564S), [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). 적도 superrotation GCM 프레임워크 (더 차가운 온도 적응 포함) 가 띠 형태 픽에 채택.
 
 ### Read (instrument / non-decisive)
 
 - **Martioli E. et al. 2020** — *AU Mic b transits revisited with TESS Sector 27* (초기 sector-27 릴리스. 시각적 정보 없음).
-- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic b* (`2021A&A...654A.159S`, [arXiv:2108.07984](https://arxiv.org/abs/2108.07984)). CHEOPS 통과 타이밍. cfg-결정적이지 않음.
+- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic b* ([`2021A&A...654A.159S`](https://ui.adsabs.harvard.edu/abs/2021A%26A...654A.159S), [arXiv:2108.07984](https://arxiv.org/abs/2108.07984)). CHEOPS 통과 타이밍. cfg-결정적이지 않음.
 
 ### Not read — no arXiv preprint or low-priority (~25 papers)
 

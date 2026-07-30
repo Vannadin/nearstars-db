@@ -18,10 +18,10 @@ bibcode로 고정된 ~17 pc(55 ly) 이내 국부 성간물질 인구조사이며
 
 | block | source | content |
 |---|---|---|
-| `clouds` (15) | Redfield & Linsky 2008, `2008ApJ...673..283R` (Tables 16 & 18) | 따뜻한 구름의 태양중심 속도 벡터 = 성간풍 **벡터장** |
-| `astrospheres` (27) | Wood et al. 2021, `2021ApJ...915...37W` (Tables 2 & 3) | 측정된 항성권 — **검증 + 구름 할당 + 바람 세기**용이지, 벡터장 앵커가 아님 |
-| `astrospheres_xray` (3) | Kislyakova et al. 2024, `2024NatAs...8..596K` | X선으로 검출된 항성권(더 큰 질량손실; 방법론 충돌, 따로 분리해 보관) |
-| `insitu_he` | Bzowski/McComas 2015, `2015ApJS..220...28B` | 태양에서 직접 측정한 IBEX He 유입 |
+| `clouds` (15) | Redfield & Linsky 2008, [`2008ApJ...673..283R`](https://ui.adsabs.harvard.edu/abs/2008ApJ...673..283R) (Tables 16 & 18) | 따뜻한 구름의 태양중심 속도 벡터 = 성간풍 **벡터장** |
+| `astrospheres` (27) | Wood et al. 2021, [`2021ApJ...915...37W`](https://ui.adsabs.harvard.edu/abs/2021ApJ...915...37W) (Tables 2 & 3) | 측정된 항성권 — **검증 + 구름 할당 + 바람 세기**용이지, 벡터장 앵커가 아님 |
+| `astrospheres_xray` (3) | Kislyakova et al. 2024, [`2024NatAs...8..596K`](https://ui.adsabs.harvard.edu/abs/2024NatAs...8..596K) | X선으로 검출된 항성권(더 큰 질량손실; 방법론 충돌, 따로 분리해 보관) |
+| `insitu_he` | Bzowski/McComas 2015, [`2015ApJS..220...28B`](https://ui.adsabs.harvard.edu/abs/2015ApJS..220...28B) | 태양에서 직접 측정한 IBEX He 유입 |
 
 **컨벤션(중요).**
 - 구름의 `(l_deg, b_deg)`는 **풍하(downwind)** 방향, 즉 가스가 *향해* 흘러가는 쪽이다.

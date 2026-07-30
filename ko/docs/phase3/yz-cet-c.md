@@ -156,7 +156,7 @@ Kopernicus 에서 바디의 `rotationPeriod` 는 궤도 `period` 와 초 단위�
 
 ### Read (visual-informative, drove decisions above)
 
-- **2020A&A...636A.119S** Stock et al. 2020 — c 의 궤도 (P = 3.05989 d,
+- **[`2020A&A...636A.119S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A.119S)** Stock et al. 2020 — c 의 궤도 (P = 3.05989 d,
   a = 0.02156 AU, e = 0) 와 최소질량 (1.14 M⊕), 준경험적 반지름 추정
   (1.05 R⊕) 의 Phase 2 recommended 출처.
 - **[2304.00031](https://arxiv.org/abs/2304.00031)** Pineda & Villadsen 2023 — VLA SPI 연구. 전파 버스트가
@@ -168,7 +168,7 @@ Kopernicus 에서 바디의 `rotationPeriod` 는 궤도 `period` 와 초 단위�
 
 ### Read (context / methodology, not decision-driving)
 
-- **2017A&A...605L..11A** Astudillo-Defru et al. 2017 — 발견 논문.
+- **[`2017A&A...605L..11A`](https://ui.adsabs.harvard.edu/abs/2017A%26A...605L..11A)** Astudillo-Defru et al. 2017 — 발견 논문.
   이전 c 궤도/질량 해 (P = 3.06008 d, M sin i = 0.98 M⊕) 는
   `recommended:false` 로 보존.
 - 항성 합성 (`yz-cet.md`) — c 의 조명을 정하는 Teff/L/R/M 값.

@@ -192,13 +192,13 @@ cooler outermost e.
 ### Read (visual-informative, drove decisions above)
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
-  Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
+  Barnard's Star from MAROON-X and ESPRESSO* ([`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B),
   [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). The MAROON-X confirmation. P = 4.1244 d,
   Msini = 0.335 ± 0.030 M⊕, a = 0.0274 AU, e = 0.08 (−0.05/+0.06),
   ω = 90.8°, T_eq = 400 K (A=0, full redistribution). SPOCK stability
   favors e < 0.02.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
+  orbiting Barnard's star* ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G), [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   ESPRESSO data first identified c as a candidate.
 - **Stefanov A. K. et al. 2024** — *On the possible transit of
   Barnard b* ([arXiv:2410.00577](https://arxiv.org/abs/2410.00577)). TESS S80 non-detection; i ≤ 87.9°

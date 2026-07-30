@@ -183,49 +183,49 @@ planetary atmosphere.
 
 - **Demory B.-O. et al. 2009** — *Mass-radius relation of low and very
   low-mass stars revisited with the VLTI*, A&A 505, 205
-  (`2009A&A...505..205D`, [arXiv:0906.0602](https://arxiv.org/abs/0906.0602)). VLTI/VINCI interferometric
+  ([`2009A&A...505..205D`](https://ui.adsabs.harvard.edu/abs/2009A%26A...505..205D), [arXiv:0906.0602](https://arxiv.org/abs/0906.0602)). VLTI/VINCI interferometric
   R = 0.141 ± 0.011 R☉ — the recommended Proxima radius.
 - **Passegger V. M. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Photospheric parameters of target stars from
-  high-resolution spectroscopy* (`2019A&A...627A.161P`,
+  high-resolution spectroscopy* ([`2019A&A...627A.161P`](https://ui.adsabs.harvard.edu/abs/2019A%26A...627A.161P),
   [arXiv:1907.00807](https://arxiv.org/abs/1907.00807)). High-res spectroscopic Teff = 2904 ± 51 K and
   H-band metallicity.
 - **Suárez Mascareño A. et al. 2016** — *Characterization of the radial
   velocity signal induced by rotation in late-type dwarfs*
-  (`2016A&A...595A..12S`, [arXiv:1506.08039](https://arxiv.org/abs/1506.08039)). Ca II H&K activity index
+  ([`2016A&A...595A..12S`](https://ui.adsabs.harvard.edu/abs/2016A%26A...595A..12S), [arXiv:1506.08039](https://arxiv.org/abs/1506.08039)). Ca II H&K activity index
   log R'HK = −5.65 ± 0.17 for GJ 551 (recalibrated to −4.98 in SM2020).
 - **Suárez Mascareño A. et al. 2020** — *Revisiting Proxima with
-  ESPRESSO* (`2020A&A...639A..77S`, [arXiv:2005.12114](https://arxiv.org/abs/2005.12114)). ESPRESSO RV
+  ESPRESSO* ([`2020A&A...639A..77S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...639A..77S), [arXiv:2005.12114](https://arxiv.org/abs/2005.12114)). ESPRESSO RV
   monitoring; adopts rotation period ~83.2 d (87 ± 12 d measured);
   recalibrated activity index timeseries.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary
   system of Proxima with NIRPS: Breaking the m/s barrier*
-  (`2025A&A...700A..11S`, [arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). The current best orbital
+  ([`2025A&A...700A..11S`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S), [arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). The current best orbital
   fit for Proxima b (e ≈ 0, P = 11.18465 d, Msini = 1.055 M⊕) and
   confirmation of Proxima d; GP rotation period 83.2 ± 1.6 d.
 - **Benedict G. F. et al. 1998** — *Photometry of Proxima Centauri and
   Barnard's Star Using Hubble Space Telescope Fine Guidance Sensor 3*,
-  AJ 116, 429 (`1998AJ....116..429B`). HST/FGS3 photometric rotation
+  AJ 116, 429 ([`1998AJ....116..429B`](https://ui.adsabs.harvard.edu/abs/1998AJ....116..429B)). HST/FGS3 photometric rotation
   period 83.5 ± 0.5 d — the recommended Proxima rotation period.
 - **Anglada-Escudé G. et al. 2016** — *A terrestrial planet candidate
   in a temperate orbit around Proxima Centauri*, Nature 536, 437
-  (`2016Natur.536..437A`, [arXiv:1609.03449](https://arxiv.org/abs/1609.03449)). Original discovery of
+  ([`2016Natur.536..437A`](https://ui.adsabs.harvard.edu/abs/2016Natur.536..437A), [arXiv:1609.03449](https://arxiv.org/abs/1609.03449)). Original discovery of
   Proxima b; supplementary Hα flare-frequency measurements.
 - **Faria J. P. et al. 2022** — *A candidate short-period sub-Earth
-  orbiting Proxima Centauri*, A&A 658, A115 (`2022A&A...658A.115F`,
+  orbiting Proxima Centauri*, A&A 658, A115 ([`2022A&A...658A.115F`](https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F),
   [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). Proxima d candidate at P = 5.122 d, Msini =
   0.26 M⊕.
 - **Reiners & Basri 2008 / Reiners et al. 2022 / Klein et al. 2021** —
-  Proxima magnetic field. Reiners & Basri 2008 (`2008A&A...489L..45R`,
-  [arXiv:0808.2986](https://arxiv.org/abs/0808.2986)) and Reiners 2022 (`2022A&A...662A..41R`,
+  Proxima magnetic field. Reiners & Basri 2008 ([`2008A&A...489L..45R`](https://ui.adsabs.harvard.edu/abs/2008A%26A...489L..45R),
+  [arXiv:0808.2986](https://arxiv.org/abs/0808.2986)) and Reiners 2022 ([`2022A&A...662A..41R`](https://ui.adsabs.harvard.edu/abs/2022A%26A...662A..41R),
   [arXiv:2204.00342](https://arxiv.org/abs/2204.00342), CARMENES) give a moderate mean surface field
-  Bf ≈ 0.6 kG; Klein 2021 (`2021MNRAS.500.1844K`, [arXiv:2010.14311](https://arxiv.org/abs/2010.14311),
+  Bf ≈ 0.6 kG; Klein 2021 ([`2021MNRAS.500.1844K`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.500.1844K), [arXiv:2010.14311](https://arxiv.org/abs/2010.14311),
   SPIRou ZDI) recovers a ~0.2 kG mostly-poloidal large-scale field with
   a ~0.135 kG dipole. (Supersedes the earlier mis-citation to the
   Reiners 2018 CARMENES spectral atlas `1711.06576`, which carries no
   Proxima field measurement.)
 - **Vida K. et al. 2019** — *Flaring Activity of Proxima Centauri from
-  TESS Observations*, ApJ 884, 160 (`2019ApJ...884..160V`,
+  TESS Observations*, ApJ 884, 160 ([`2019ApJ...884..160V`](https://ui.adsabs.harvard.edu/abs/2019ApJ...884..160V),
   [arXiv:1907.12580](https://arxiv.org/abs/1907.12580)). Flare statistics, QPO super-flare, 5 super-flares
   per year.
 - **Fuhrmeister B. et al. 2022** — *The high energy spectrum of

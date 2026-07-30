@@ -237,26 +237,26 @@ c 의 P_orb = 11.4 d 는 7–8 Gyr 에 걸쳐 Griessmeier 2009 의 조석 고정
 ### Read (visual-informative, drove decisions above)
 
 - **[2402.00923](https://arxiv.org/abs/2402.00923)** Dreizler S. et al. 2024 — *Teegarden's Star revisited*
-  (`2024A&A...684A.117D`). Table 4 에서 c 궤도 정밀화
+  ([`2024A&A...684A.117D`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.117D)). Table 4 에서 c 궤도 정밀화
   (P = 11.416 d, e = 0.04, msini = 1.05 M⊕, T_eq = 209 K @ A=0.3,
   S = 0.35 S⊕, ESI = 0.88 "프록시마 b 와 매우 닮음").
 - **[2504.00978](https://arxiv.org/abs/2504.00978)** Hammond T. et al. 2025 — *The climates and thermal
   emission spectra of prime nearby temperate rocky exoplanet targets*
-  (`2025ApJ...984..181H`). 100 μbar / 0.1 bar / 2 bar CO₂ 의 c 3D
+  ([`2025ApJ...984..181H`](https://ui.adsabs.harvard.edu/abs/2025ApJ...984..181H)). 100 μbar / 0.1 bar / 2 bar CO₂ 의 c 3D
   ExoCAM GCM — c 는 모든 pCO₂ 에서 어디든 얼음 피복으로, 일곱 표적 중
   결코 액체 물에 도달하지 못하는 유일한 행성. cfg 의 눈덩이 선택을
   결정.
 - **[1906.07704](https://arxiv.org/abs/1906.07704)** Wandel A. & Tal-Or L. 2019 — *On the Habitability of
-  Teegarden's Star planets* (`2019ApJ...880L..21W`). c 에 대한 1D
+  Teegarden's Star planets* ([`2019ApJ...880L..21W`](https://ui.adsabs.harvard.edu/abs/2019ApJ...880L..21W)). c 에 대한 1D
   분석적 거주가능성 범위 H_atm = 1–12 (f=0.5, T_max=340 K) — cfg 에서는
   Hammond 2025 가 대체한 더 오래되고 낙관적인 독해.
 - **[1906.07196](https://arxiv.org/abs/1906.07196)** Zechmeister M. et al. 2019 — b 와 c 의 발견 논문
-  (`2019A&A...627A..49Z`). 원래 궤도 매개변수와 모성 특성화.
+  ([`2019A&A...627A..49Z`](https://ui.adsabs.harvard.edu/abs/2019A%26A...627A..49Z)). 원래 궤도 매개변수와 모성 특성화.
 
 ### Read (context / methodology, not decision-driving)
 
 - **[2007.15077](https://arxiv.org/abs/2007.15077)** Cifuentes C. et al. 2020 — CARMENES input catalogue
-  of M dwarfs (`2020A&A...642A.115C`). M-왜성 Teff/분광형 보정 맥락
+  of M dwarfs ([`2020A&A...642A.115C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...642A.115C)). M-왜성 Teff/분광형 보정 맥락
   (M7.0 V 빈). 채택된 모성 Teff 2904 K 는 이 카탈로그의 빈 중앙값이
   아니라 Schweitzer 2019 에서 옴.
 - **2512.16575** Fujii et al. — M-왜성 HZ 행성의 기후 / 거주가능성

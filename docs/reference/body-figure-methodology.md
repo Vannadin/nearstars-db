@@ -269,57 +269,57 @@ policy their J₂ is computed and emitted anyway. Principia carries the term.
 
 All bibcodes verified against NASA ADS.
 
-- **Helled, Anderson, Schubert & Stevenson 2011**, Icarus 216, 440 (`2011Icar..216..440H`,
+- **Helled, Anderson, Schubert & Stevenson 2011**, Icarus 216, 440 ([`2011Icar..216..440H`](https://ui.adsabs.harvard.edu/abs/2011Icar..216..440H),
   arXiv **[1109.1627](https://arxiv.org/abs/1109.1627)**): the Radau–Darwin NMoI ↔ J₂ relation used for the giants; the
   inversion form in §2. Pinned in `principia-geopotential-data.md`.
-- **Murray & Dermott 1999**, *Solar System Dynamics* (`1999ssd..book.....M`) §4: the
+- **Murray & Dermott 1999**, *Solar System Dynamics* ([`1999ssd..book.....M`](https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M)) §4: the
   hydrostatic figure of rotating and synchronous bodies; the textbook home of the chain.
-- **Tricarico 2014**, ApJ 782, 99 (`2014ApJ...782...99T`), modern rigorous statement of
+- **Tricarico 2014**, ApJ 782, 99 ([`2014ApJ...782...99T`](https://ui.adsabs.harvard.edu/abs/2014ApJ...782...99T)), modern rigorous statement of
   the synchronous figure: J₂/C₂₂ ≈ 10⁄3 and (b−c)/(a−c) ≈ 1⁄4, with the higher-order
-  Ω²/(πGρ) corrections. Paired with **Dermott 1979**, Icarus 37, 575 (`1979Icar...37..575D`),
+  Ω²/(πGρ) corrections. Paired with **Dermott 1979**, Icarus 37, 575 ([`1979Icar...37..575D`](https://ui.adsabs.harvard.edu/abs/1979Icar...37..575D)),
   the classic derivation of satellite shapes and gravitational moments.
-- **Pijpers 1998**, MNRAS 297, L76 (`1998MNRAS.297L..76P`): helioseismic solar
+- **Pijpers 1998**, MNRAS 297, L76 ([`1998MNRAS.297L..76P`](https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P)): helioseismic solar
   J₂ = (2.18 ± 0.06)×10⁻⁷; the measured anchor of the stellar solar-anchored q-scaling
   (FGK stars bypass Radau–Darwin, §2).
 - **Chandrasekhar 1939**, *An Introduction to the Study of Stellar Structure*
-  (`1939isss.book.....C`): polytrope moments of inertia; n = 3/2 (fully convective
+  ([`1939isss.book.....C`](https://ui.adsabs.harvard.edu/abs/1939isss.book.....C)): polytrope moments of inertia; n = 3/2 (fully convective
   M dwarf, non-relativistic white dwarf) NMoI ≈ 0.205, which puts both back inside
   Radau–Darwin validity (§2).
-- **Hermes et al. 2017**, ApJS 232, 23 (`2017ApJS..232...23H`): asteroseismic white
+- **Hermes et al. 2017**, ApJS 232, 23 ([`2017ApJS..232...23H`](https://ui.adsabs.harvard.edu/abs/2017ApJS..232...23H)): asteroseismic white
   dwarf rotation distribution; the sample median P ≈ 35 h is the documented
   statistical input for WDs with no measured rotation (§2).
-- **Sterne 1939**, MNRAS 99, 451 (`1939MNRAS..99..451S`): apsidal-motion /
+- **Sterne 1939**, MNRAS 99, 451 ([`1939MNRAS..99..451S`](https://ui.adsabs.harvard.edu/abs/1939MNRAS..99..451S)): apsidal-motion /
   internal-structure constants; origin of J₂ = (2/3)k₂q (§2). Modern Love-number
-  form: **Ragozzine & Wolf 2009** (`2009ApJ...698.1778R`).
-- **Claret 2004**, A&A 424, 919 (`2004A&A...424..919C`; latest grids Claret 2019
-  `2019A&A...628A..29C`): theoretical k₂ grids; the A-star coefficient source, with
+  form: **Ragozzine & Wolf 2009** ([`2009ApJ...698.1778R`](https://ui.adsabs.harvard.edu/abs/2009ApJ...698.1778R)).
+- **Claret 2004**, A&A 424, 919 ([`2004A&A...424..919C`](https://ui.adsabs.harvard.edu/abs/2004A%26A...424..919C); latest grids Claret 2019
+  [`2019A&A...628A..29C`](https://ui.adsabs.harvard.edu/abs/2019A%26A...628A..29C)): theoretical k₂ grids; the A-star coefficient source, with
   the solar theoretical-vs-empirical offset (~1.27×) as the quantified systematic.
-- **Hadjara et al. 2014**, A&A 569, A45 (`2014A&A...569A..45H`): Fomalhaut's first
+- **Hadjara et al. 2014**, A&A 569, A45 ([`2014A&A...569A..45H`](https://ui.adsabs.harvard.edu/abs/2014A%26A...569A..45H)): Fomalhaut's first
   full 3-D rotation solution (i★ = 90°±9°, V_eq sin i = 93±16 km/s, PA 65.6°); with
   Le Bouquin 2009 (PA ⊥ disk) the only fully measured stellar pole in the roster.
-- **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`):
+- **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* ([`1969efe..book.....C`](https://ui.adsabs.harvard.edu/abs/1969efe..book.....C)):
   Maclaurin spheroids (homogeneous rotational limit, f = 5q/4).
-- **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* (`1978ppi..book.....Z`);
-  **Hubbard 1984**, *Planetary Interiors* (`1984plin.book.....H`): theory of figures, the
+- **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* ([`1978ppi..book.....Z`](https://ui.adsabs.harvard.edu/abs/1978ppi..book.....Z));
+  **Hubbard 1984**, *Planetary Interiors* ([`1984plin.book.....H`](https://ui.adsabs.harvard.edu/abs/1984plin.book.....H)): theory of figures, the
   q–f–J₂–NMoI chain.
 - **Measured synchronous-figure anchors** (the J₂ = 10⁄3·C₂₂ calibration): Io: Anderson
-  et al. 2001 (`2001JGR...10632963A`; figure axes a−c = 14.4 km, b−c = 3.6 km → 4:1,
+  et al. 2001 ([`2001JGR...10632963A`](https://ui.adsabs.harvard.edu/abs/2001JGR...10632963A); figure axes a−c = 14.4 km, b−c = 3.6 km → 4:1,
   C/MR² = 0.3769); Europa: Anderson et al. 1998 *Science* four-encounter
-  (`1998Sci...281.2019A`); Ganymede: Anderson et al. 1996 (`1996Natur.384..541A`, J₂ & C₂₂
-  reported directly); Titan: Iess et al. 2010 *Science* (`2010Sci...327.1367I`; a−c = 410 m,
+  ([`1998Sci...281.2019A`](https://ui.adsabs.harvard.edu/abs/1998Sci...281.2019A)); Ganymede: Anderson et al. 1996 ([`1996Natur.384..541A`](https://ui.adsabs.harvard.edu/abs/1996Natur.384..541A), J₂ & C₂₂
+  reported directly); Titan: Iess et al. 2010 *Science* ([`2010Sci...327.1367I`](https://ui.adsabs.harvard.edu/abs/2010Sci...327.1367I); a−c = 410 m,
   b−c = 103 m → ratio 3.98 ≈ 4:1, C/MR² ≈ 0.34). All give J₂/C₂₂ ≈ 10⁄3.
 - **Moon (non-hydrostatic / fossil bulge)**: GRAIL gravity field, Zuber et al. 2013 *Science*
-  (`2013Sci...339..668Z`); the J₂/C₂₂-derived moment of inertia + interior interpretation,
-  Williams et al. 2014 (`2014JGRE..119.1546W`, I_s/MR² = 0.392728). J₂/C₂₂ ≈ 9 ≠ 10⁄3.
-- **Fomalhaut A spin axis**, Le Bouquin et al. 2009, A&A 498, L41 (`2009A&A...498L..41L`,
+  ([`2013Sci...339..668Z`](https://ui.adsabs.harvard.edu/abs/2013Sci...339..668Z)); the J₂/C₂₂-derived moment of inertia + interior interpretation,
+  Williams et al. 2014 ([`2014JGRE..119.1546W`](https://ui.adsabs.harvard.edu/abs/2014JGRE..119.1546W), I_s/MR² = 0.392728). J₂/C₂₂ ≈ 9 ≠ 10⁄3.
+- **Fomalhaut A spin axis**, Le Bouquin et al. 2009, A&A 498, L41 ([`2009A&A...498L..41L`](https://ui.adsabs.harvard.edu/abs/2009A%26A...498L..41L),
   VLTI/AMBER): A4V, spin-axis PA 65° ⊥ the disk, which confirms it is a fast rotator with a
   measured pole, though no oblateness figure is published (see §6 note).
 - **Synthetic high-degree field (§5)**: Kaula 1966, *Theory of Satellite Geodesy*
-  (`1966tsga.book.....K`): the degree-variance power law (Earth RMS ≈ 1×10⁻⁵/n²); GRAIL
-  applies the Moon its own Kaula constraint (Lemoine et al. 2013, `2013JGRE..118.1676L`),
+  ([`1966tsga.book.....K`](https://ui.adsabs.harvard.edu/abs/1966tsga.book.....K)): the degree-variance power law (Earth RMS ≈ 1×10⁻⁵/n²); GRAIL
+  applies the Moon its own Kaula constraint (Lemoine et al. 2013, [`2013JGRE..118.1676L`](https://ui.adsabs.harvard.edu/abs/2013JGRE..118.1676L)),
   confirming per-body recalibration. Heightmap→gravity (Stage B): Wieczorek, *Gravity and
-  Topography of the Terrestrial Planets*, Treatise on Geophysics (`2015trge.book..153W`;
-  orig. `2007plmo.book..165W`): Airy/Pratt isostasy + gravity-topography admittance.
+  Topography of the Terrestrial Planets*, Treatise on Geophysics ([`2015trge.book..153W`](https://ui.adsabs.harvard.edu/abs/2015trge.book..153W);
+  orig. [`2007plmo.book..165W`](https://ui.adsabs.harvard.edu/abs/2007plmo.book..165W)): Airy/Pratt isostasy + gravity-topography admittance.
 
 ## Appendix: measured Solar-System gravity fields (analogs)
 
@@ -329,19 +329,19 @@ field (everything else is degree-2 to low-degree, recovered from flybys).
 
 | body | model | deg | J₂ / C₂₂ (×10⁻⁶) | bibcode | dominant signal |
 |---|---|---|---|---|---|
-| Earth | EGM2008 | 2159 | 1082.6 / 1.57 | `2012JGRB..117.4406P` | the rich-geoid anchor (K ≈ 1e-5) |
-| Moon | GL0900 / GRGM900 | 900 | (in model) | `2014GeoRL..41.1452K`, `2013JGRE..118.1676L` | **mascons** → unstable low orbits; own Kaula constant |
-| Mars | MRO120D / GMM-3 | 120 | (in model) | `2016Icar..274..253K`, `2016Icar..272..228G` | Tharsis; high gravity-topo correlation |
-| Venus | MGNP180U | 180 | (in model) | `1999Icar..139....3K` | very high gravity-topo correlation (thick lithosphere) |
-| Mercury | HgM005 | 50 | (in model) | `2014JGRE..119.2417M`, `2019GeoRL..46.3625G` | low-degree; k₂ = 0.451 |
-| Io | Galileo | 2 | hydrostatic | `1996Sci...272..709A` | degree-2 only |
-| Europa | Galileo | 2 | hydrostatic | `1998Sci...281.2019A` | degree-2 only |
-| Ganymede | Galileo / +Juno | 2 | (1996 model) | `1996Natur.384..541A`, `2022GeoRL..4999475G` | degree-2; Juno hints at regional anomalies |
-| Callisto | Galileo | 2 | **32.7 / 10.2** | `2001Icar..153..157A` | degree-2; C/MR² = 0.355, partially differentiated |
-| Titan | Cassini | 3 | k₂ ≈ 0.6 | `2012Sci...337..457I` | tidal → subsurface ocean |
-| Enceladus | Cassini | 3 | **5435 / 1550** | `2014Sci...344...78I` | J₂/C₂₂ = 3.51, mildly non-hydrostatic (S-polar sea) |
-| Vesta | Dawn | 20 | (in model) | `2014Icar..240..103K` | non-hydrostatic (Rheasilvia) |
-| Ceres | Dawn | ~16 | hydrostatic | `2016Natur.537..515P` | isostatically compensated; MoI 0.37 |
+| Earth | EGM2008 | 2159 | 1082.6 / 1.57 | [`2012JGRB..117.4406P`](https://ui.adsabs.harvard.edu/abs/2012JGRB..117.4406P) | the rich-geoid anchor (K ≈ 1e-5) |
+| Moon | GL0900 / GRGM900 | 900 | (in model) | [`2014GeoRL..41.1452K`](https://ui.adsabs.harvard.edu/abs/2014GeoRL..41.1452K), [`2013JGRE..118.1676L`](https://ui.adsabs.harvard.edu/abs/2013JGRE..118.1676L) | **mascons** → unstable low orbits; own Kaula constant |
+| Mars | MRO120D / GMM-3 | 120 | (in model) | [`2016Icar..274..253K`](https://ui.adsabs.harvard.edu/abs/2016Icar..274..253K), [`2016Icar..272..228G`](https://ui.adsabs.harvard.edu/abs/2016Icar..272..228G) | Tharsis; high gravity-topo correlation |
+| Venus | MGNP180U | 180 | (in model) | [`1999Icar..139....3K`](https://ui.adsabs.harvard.edu/abs/1999Icar..139....3K) | very high gravity-topo correlation (thick lithosphere) |
+| Mercury | HgM005 | 50 | (in model) | [`2014JGRE..119.2417M`](https://ui.adsabs.harvard.edu/abs/2014JGRE..119.2417M), [`2019GeoRL..46.3625G`](https://ui.adsabs.harvard.edu/abs/2019GeoRL..46.3625G) | low-degree; k₂ = 0.451 |
+| Io | Galileo | 2 | hydrostatic | [`1996Sci...272..709A`](https://ui.adsabs.harvard.edu/abs/1996Sci...272..709A) | degree-2 only |
+| Europa | Galileo | 2 | hydrostatic | [`1998Sci...281.2019A`](https://ui.adsabs.harvard.edu/abs/1998Sci...281.2019A) | degree-2 only |
+| Ganymede | Galileo / +Juno | 2 | (1996 model) | [`1996Natur.384..541A`](https://ui.adsabs.harvard.edu/abs/1996Natur.384..541A), [`2022GeoRL..4999475G`](https://ui.adsabs.harvard.edu/abs/2022GeoRL..4999475G) | degree-2; Juno hints at regional anomalies |
+| Callisto | Galileo | 2 | **32.7 / 10.2** | [`2001Icar..153..157A`](https://ui.adsabs.harvard.edu/abs/2001Icar..153..157A) | degree-2; C/MR² = 0.355, partially differentiated |
+| Titan | Cassini | 3 | k₂ ≈ 0.6 | [`2012Sci...337..457I`](https://ui.adsabs.harvard.edu/abs/2012Sci...337..457I) | tidal → subsurface ocean |
+| Enceladus | Cassini | 3 | **5435 / 1550** | [`2014Sci...344...78I`](https://ui.adsabs.harvard.edu/abs/2014Sci...344...78I) | J₂/C₂₂ = 3.51, mildly non-hydrostatic (S-polar sea) |
+| Vesta | Dawn | 20 | (in model) | [`2014Icar..240..103K`](https://ui.adsabs.harvard.edu/abs/2014Icar..240..103K) | non-hydrostatic (Rheasilvia) |
+| Ceres | Dawn | ~16 | hydrostatic | [`2016Natur.537..515P`](https://ui.adsabs.harvard.edu/abs/2016Natur.537..515P) | isostatically compensated; MoI 0.37 |
 
 ## Related
 

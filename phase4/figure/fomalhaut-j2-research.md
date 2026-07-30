@@ -2,7 +2,7 @@
 
 **Scope.** Read-only literature research to ground the rotational J₂ of Fomalhaut A
 (α PsA, HD 216956, A4V; M = 1.92 M☉, R = 1.842 R☉, T_eff = 8590 K, age 440 Myr —
-all Mamajek 2012 `2012ApJ...754L..20M`, DB `recommended`). Early-type (A) stars have
+all Mamajek 2012 [`2012ApJ...754L..20M`](https://ui.adsabs.harvard.edu/abs/2012ApJ...754L..20M), DB `recommended`). Early-type (A) stars have
 no solar-anchored response coefficient in `body-figure-methodology.md`; this doc
 grounds the **apsidal-motion-constant (k₂) path**, J₂ = (2/3)·k₂·q.
 No board / DB / methodology files are modified here.
@@ -27,9 +27,9 @@ Both are the same first-order hydrostatic result.
 
 | role | bibcode | note |
 |---|---|---|
-| Foundational (defines internal-structure / apsidal-motion constants kⱼ from the Radau equation, and the second-harmonic distortion of a star by rotation **and** tides) | `1939MNRAS..99..451S` | Sterne 1939, "Apsidal motion in binary stars" — the classical origin of the kⱼ formalism. (No ADS abstract; it is the standard citation.) |
-| Modern theory + the k₂ grids we interpolate | `1993A&A...277..487C` (Claret & Giménez 1993) and `2019A&A...628A..29C` (Claret 2019, latest grids) | define k₂ and connect it to the observable distortion |
-| Accessible modern statement of the identical formula in Love-number form J₂ = (k₂ᶠ/3)(Ω²R³/GM) | `2009ApJ...698.1778R` (Ragozzine & Wolf 2009) | exoplanet-interior context, but the same rotational-bulge relation |
+| Foundational (defines internal-structure / apsidal-motion constants kⱼ from the Radau equation, and the second-harmonic distortion of a star by rotation **and** tides) | [`1939MNRAS..99..451S`](https://ui.adsabs.harvard.edu/abs/1939MNRAS..99..451S) | Sterne 1939, "Apsidal motion in binary stars" — the classical origin of the kⱼ formalism. (No ADS abstract; it is the standard citation.) |
+| Modern theory + the k₂ grids we interpolate | [`1993A&A...277..487C`](https://ui.adsabs.harvard.edu/abs/1993A%26A...277..487C) (Claret & Giménez 1993) and [`2019A&A...628A..29C`](https://ui.adsabs.harvard.edu/abs/2019A%26A...628A..29C) (Claret 2019, latest grids) | define k₂ and connect it to the observable distortion |
+| Accessible modern statement of the identical formula in Love-number form J₂ = (k₂ᶠ/3)(Ω²R³/GM) | [`2009ApJ...698.1778R`](https://ui.adsabs.harvard.edu/abs/2009ApJ...698.1778R) (Ragozzine & Wolf 2009) | exoplanet-interior context, but the same rotational-bulge relation |
 
 **Self-consistency (factor) check against the repo's solar anchor.** The methodology's
 FGK anchor is J₂/q = 0.0105 (from the *measured* helioseismic J₂☉ and q☉). Inverting
@@ -49,8 +49,8 @@ J₂ = (1/3)(0.54)(0.083) = 0.0149 vs measured 0.0147. The relation holds.
 ## 2. A-type k₂ from Claret grids (≈1.9 M☉, 0.44 Gyr)
 
 **Table adopted:** Claret 2004, "New grids of stellar models including tidal-evolution
-constants", `2004A&A...424..919C` (VizieR `J/A+A/424/919`, column `logK2`, Z = 0.02,
-X = 0.70, no overshoot). Latest revision `2019A&A...628A..29C` gives consistent values;
+constants", [`2004A&A...424..919C`](https://ui.adsabs.harvard.edu/abs/2004A%26A...424..919C) (VizieR `J/A+A/424/919`, column `logK2`, Z = 0.02,
+X = 0.70, no overshoot). Latest revision [`2019A&A...628A..29C`](https://ui.adsabs.harvard.edu/abs/2019A%26A...628A..29C) gives consistent values;
 2004 was used because its VizieR track is directly machine-readable.
 
 The mass grid brackets Fomalhaut with **logM = 0.2500 (1.78 M☉)** and **0.3000 (2.00 M☉)**.
@@ -84,7 +84,7 @@ below the Sun's (0.0158) — flattens less per unit q, as expected.
 HD 216956 a tight cluster: 75, 85, 85, 85, 88±2, 93±9, 93, 97, 100 km/s across FWHM /
 Fourier / cross-correlation methods. **Best adopted value v sin i = 93 ± 9 km/s**
 (the Fourier-transform line-profile determination; also the Di Folco 2004 / Hadjara 2014
-adopted value). Royer et al. (`2002A&A...393..897R`, `2007A&A...463..671R`) place it in
+adopted value). Royer et al. ([`2002A&A...393..897R`](https://ui.adsabs.harvard.edu/abs/2002A%26A...393..897R), [`2007A&A...463..671R`](https://ui.adsabs.harvard.edu/abs/2007A%26A...463..671R)) place it in
 the same 88–93 km/s range. Fomalhaut is a **moderate rotator** for an A star
 (~21 % of the Keplerian critical velocity, V_crit ≈ 446 km/s).
 
@@ -93,7 +93,7 @@ P_rot in the literature; the period is derived from v sin i + R + i (below).
 
 **Interferometric rotation (the key modern references):**
 
-- **Le Bouquin et al. 2009, `2009A&A...498L..41L`** — AMBER/VLTI spectro-astrometry
+- **Le Bouquin et al. 2009, [`2009A&A...498L..41L`](https://ui.adsabs.harvard.edu/abs/2009A%26A...498L..41L)** — AMBER/VLTI spectro-astrometry
   across the Brγ line (±3 μas astrometric precision, R = 1500), spatially+spectrally
   resolving the *rotating photosphere*. **What it measured:** the **position angle of
   the stellar rotation axis on the sky, PA_star = 65° ± 3°**, found **perpendicular to
@@ -105,7 +105,7 @@ P_rot in the literature; the period is derived from v sin i + R + i (below).
   — i.e. **spin–disk alignment**, the first such test for a debris disk and in a
   non-eclipsing system.
 
-- **Hadjara et al. 2014, `2014A&A...569A..45H`** ("Beyond the diffraction limit… II")
+- **Hadjara et al. 2014, [`2014A&A...569A..45H`](https://ui.adsabs.harvard.edu/abs/2014A%26A...569A..45H)** ("Beyond the diffraction limit… II")
   — reanalyzed the AMBER/VLTI differential phases with the fast-rotator model SCIROCCO
   and delivered the **first full 3-D rotation solution for Fomalhaut:**
   **R_eq = 1.8 ± 0.2 R☉, V_eq sin i = 93 ± 16 km/s, i★ = 90° ± 9° (equator-on),
@@ -115,7 +115,7 @@ P_rot in the literature; the period is derived from v sin i + R + i (below).
 **Alignment note.** The **sky-projected** alignment is solid (PA_star ⊥ PA_disk, both
 interferometric works). Full **3-D** alignment is only marginal: Hadjara's i★ = 90° ± 9°
 sits above the disk inclination i_disk ≈ 66–67° from face-on (Kalas et al. 2005,
-`2005Natur.435.1067K`; PA_disk = 156°). They agree at ~1.5–2σ, so I treat i★ = 90° (direct
+[`2005Natur.435.1067K`](https://ui.adsabs.harvard.edu/abs/2005Natur.435.1067K); PA_disk = 156°). They agree at ~1.5–2σ, so I treat i★ = 90° (direct
 measurement) as primary and carry the disk-aligned i ≈ 66° as the low-inclination bound.
 
 ---
@@ -158,7 +158,7 @@ own Roche treatment of the same star is internally consistent with this figure.
 
 ## Adopted values (for whoever fills the Principia gravity model later)
 
-- **k₂ = 0.0036** (log k₂ = −2.44), Claret 2004 grid `2004A&A...424..919C`, 2.0 M☉ track
+- **k₂ = 0.0036** (log k₂ = −2.44), Claret 2004 grid [`2004A&A...424..919C`](https://ui.adsabs.harvard.edu/abs/2004A%26A...424..919C), 2.0 M☉ track
   T_eff-matched to Fomalhaut at 440 Myr.
 - **P_rot ≈ 24 h (1.0 d)** — derived (no direct measurement), from V_eq = 93 km/s +
   i★ = 90° + R_eq = 1.842 R☉.
@@ -167,12 +167,12 @@ own Roche treatment of the same star is internally consistent with this figure.
 
 ## Key bibcodes (all ADS-verified)
 
-- `1939MNRAS..99..451S` — Sterne 1939, apsidal-motion / internal-structure constants (J₂=⅔k₂q origin)
-- `2004A&A...424..919C` — Claret 2004, k₂ grids (VizieR J/A+A/424/919) — **k₂ source**
-- `2019A&A...628A..29C` — Claret 2019, latest tidal-constant grids (consistency)
-- `2009ApJ...698.1778R` — Ragozzine & Wolf 2009, modern Love-number form of the relation
-- `2014A&A...569A..45H` — Hadjara et al. 2014, **i★ = 90°±9°, V_eq sin i = 93±16 km/s, R_eq = 1.8 R☉** — **primary rotation source**
-- `2009A&A...498L..41L` — Le Bouquin et al. 2009, PA_star = 65°±3° ⟂ disk; spin–disk alignment
-- `2012ApJ...754L..20M` — Mamajek 2012, M/age/params (DB recommended)
-- `2005Natur.435.1067K` — Kalas et al. 2005, disk PA 156° / i_disk ≈ 66° (alignment bound)
-- `III/244` (Głębocki & Gnaciński), `2002A&A...393..897R` / `2007A&A...463..671R` (Royer) — v sin i = 93±9 km/s
+- [`1939MNRAS..99..451S`](https://ui.adsabs.harvard.edu/abs/1939MNRAS..99..451S) — Sterne 1939, apsidal-motion / internal-structure constants (J₂=⅔k₂q origin)
+- [`2004A&A...424..919C`](https://ui.adsabs.harvard.edu/abs/2004A%26A...424..919C) — Claret 2004, k₂ grids (VizieR J/A+A/424/919) — **k₂ source**
+- [`2019A&A...628A..29C`](https://ui.adsabs.harvard.edu/abs/2019A%26A...628A..29C) — Claret 2019, latest tidal-constant grids (consistency)
+- [`2009ApJ...698.1778R`](https://ui.adsabs.harvard.edu/abs/2009ApJ...698.1778R) — Ragozzine & Wolf 2009, modern Love-number form of the relation
+- [`2014A&A...569A..45H`](https://ui.adsabs.harvard.edu/abs/2014A%26A...569A..45H) — Hadjara et al. 2014, **i★ = 90°±9°, V_eq sin i = 93±16 km/s, R_eq = 1.8 R☉** — **primary rotation source**
+- [`2009A&A...498L..41L`](https://ui.adsabs.harvard.edu/abs/2009A%26A...498L..41L) — Le Bouquin et al. 2009, PA_star = 65°±3° ⟂ disk; spin–disk alignment
+- [`2012ApJ...754L..20M`](https://ui.adsabs.harvard.edu/abs/2012ApJ...754L..20M) — Mamajek 2012, M/age/params (DB recommended)
+- [`2005Natur.435.1067K`](https://ui.adsabs.harvard.edu/abs/2005Natur.435.1067K) — Kalas et al. 2005, disk PA 156° / i_disk ≈ 66° (alignment bound)
+- `III/244` (Głębocki & Gnaciński), [`2002A&A...393..897R`](https://ui.adsabs.harvard.edu/abs/2002A%26A...393..897R) / [`2007A&A...463..671R`](https://ui.adsabs.harvard.edu/abs/2007A%26A...463..671R) (Royer) — v sin i = 93±9 km/s

@@ -208,14 +208,14 @@ Combining the surface, atmosphere, and magnetosphere decisions:
   identification (b, not c/d), the radius bracket (0.89–1.0 R⊕ for
   Earth-like density), the synodic-period geometry, and the
   sub-Alfvénic regime that makes b the flux-tube driver.
-- **2020A&A...636A.119S** Stock et al. 2020 — Phase 2 recommended
+- **[`2020A&A...636A.119S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A.119S)** Stock et al. 2020 — Phase 2 recommended
   source for b's orbit (P = 2.02087 d, a = 0.01634 AU, e = 0.06) and
   minimum mass (0.70 M⊕), plus the semi-empirical radius estimate
   (0.913 R⊕).
 
 ### Read (context / methodology, not decision-driving)
 
-- **2017A&A...605L..11A** Astudillo-Defru et al. 2017 — discovery paper
+- **[`2017A&A...605L..11A`](https://ui.adsabs.harvard.edu/abs/2017A%26A...605L..11A)** Astudillo-Defru et al. 2017 — discovery paper
   for b/c/d; earlier orbit/mass solution (P = 1.96876 d) retained as
   `recommended:false`. Context for the system architecture.
 - Host stellar synthesis (`yz-cet.md`) — the Teff/L/R/M/activity/field

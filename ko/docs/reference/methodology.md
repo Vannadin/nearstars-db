@@ -453,7 +453,7 @@ JPL Horizons에서 JD2433282.5의 상태 벡터를 직접 가져와 `derived` �
 수동으로 덮어쓰세요.
 
 참고문헌.
-- Butkevich & Lindegren (2014), A&A 570, A62 — `doi:10.1051/0004-6361/201424483`, `arXiv:1407.4664`
+- Butkevich & Lindegren (2014), A&A 570, A62 — `doi:10.1051/0004-6361/201424483`, [`arXiv:1407.4664`](https://arxiv.org/abs/1407.4664)
   Gaia 시대의 에포크 전파에 관한 기준 논문. 균일 직선 운동의 엄밀한 폐형식 표현을
   도출하며, Gaia 파이프라인에서 직접 사용됩니다.
 - ESA SP-1200 (1997), Vol. 1, Sec. 1.2 (Hipparcos Catalogue, Lindegren et al.)

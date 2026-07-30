@@ -249,7 +249,7 @@ Stellarium 까지 포함한 3-way 비교는
 
 > **NS는 Tau Ceti e 누락 — 2026-05-27 RESOLVED.** NEA 가
 > 2026-04-09 에 e 의 disposition 을 "False Positive Planet" 으로
-> flip 했습니다. Figueira 외 2025 (`2025A&A...700A.174F`,
+> flip 했습니다. Figueira 외 2025 ([`2025A&A...700A.174F`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F),
 > doi:10.1051/0004-6361/202553869) ESPRESSO sub-10 cm/s RV 비검출
 > 인용. DB 의 2026-05-22 retrieval 이 정상적으로 e 누락 상태를
 > 가져왔습니다 — 큐레이션 오버사이트 아님. Figueira 2025 는 f/g/h 도

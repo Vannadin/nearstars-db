@@ -45,7 +45,7 @@ Gillon 2017 ([1703.01424](https://arxiv.org/abs/1703.01424), stub), Burgasser & 
 
 ## Batch 2 — Alpha Centauri A/B  (DONE)
 - **MISATTRIBUTION**: M_A 1.1055±0.0039 / M_B 0.9373±0.0033 cited Pourbaix 2016 but are
-  actually Kervella 2016 (2016A&A...594A.107K, UNCACHED). Pourbaix gives 1.105±0.007 /
+  actually Kervella 2016 ([`2016A&A...594A.107K`](https://ui.adsabs.harvard.edu/abs/2016A%26A...594A.107K), UNCACHED). Pourbaix gives 1.105±0.007 /
   0.934±0.006. (DB + both Phase 3 docs.)
 - **FABRICATED attribution**: α Cen B Phase 3 teff_k = 5236±51 "Porto de Mello 2008" — actual
   PdM value 5316±28; 5236 is Kervella's interferometric Teff. Wrong value+unc+method.
@@ -216,9 +216,9 @@ trusted blind. Research/fetch + doc-edits were delegated to subagents; value-che
    SM2016's real value = −5.65 ± 0.17 (cache `1506.08039.md:184`), not −5.55; doc −4.0 was
    implausible → DB −5.55→−5.65 + uncertainty 0.17; doc −4.0→−5.65 + prose rewrite (old slow
    rotator, low/moderate quiescent activity, still flares). Stale SM25-bibcode open item removed
-   (DB already stores 2025A&A...700A..11S).
+   (DB already stores [`2025A&A...700A..11S`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S)).
 4. **eps Eri b** — the DB was ALREADY CORRECT (true mass 0.66 M_Jup @ i = 78.81°, Llop-Sayson 2021,
-   2021AJ....162..181L; cache `2108.02305.md:170` — astrometry-deprojected, NOT M sin i). The DOC
+   [`2021AJ....162..181L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..181L); cache `2108.02305.md:170` — astrometry-deprojected, NOT M sin i). The DOC
    was the inconsistent artifact: it used Mawet's 0.78 mislabeled "M sin i" and cited the COLLISION
    arXiv 2108.05552 (an unrelated ML paper) with a wrong title. Fixed doc to 0.66 @ 78.81°,
    corrected the citation to arXiv [2108.02305](https://arxiv.org/abs/2108.02305), documented the Mawet mass history (M sin i 0.72;

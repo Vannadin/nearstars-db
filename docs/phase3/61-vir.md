@@ -220,42 +220,42 @@ A's `#fff4e8` cream, 47 UMa, etc.).
 
 - **von Braun K. et al. 2014** — *Stellar diameters and temperatures
   VI: high-resolution angular diameters of exoplanet host stars*,
-  MNRAS 438, 2413 (`2014MNRAS.438.2413V`, [arXiv:1312.1792](https://arxiv.org/abs/1312.1792)). CHARA
+  MNRAS 438, 2413 ([`2014MNRAS.438.2413V`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.438.2413V), [arXiv:1312.1792](https://arxiv.org/abs/1312.1792)). CHARA
   interferometry of 61 Vir: θ_LD = 1.073 ± 0.005 mas → R = 0.9867 ±
   0.0048 R☉; F_bol 36.06e-8 → Teff 5538 ± 13 K, L 0.8222 ± 0.0033 L☉;
   Y² mass 0.93 M☉, age 8.6 Gyr. **Phase 2 anchor for the stellar
   layer** (the sole interferometric radius for 61 Vir).
 - **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
-  of the AMBRE-HARPS sample*, A&A 646, A77 (`2021A&A...646A..77G`,
+  of the AMBRE-HARPS sample*, A&A 646, A77 ([`2021A&A...646A..77G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G),
   [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)). log R'HK = −5.013 (1251 spectra) and an isochrone
   age 7.69 ± 1.44 Gyr. Phase 2 recommended activity + age.
 - **Santos N. C. et al. 2013** — *SWEET-Cat*, A&A 556, A150
-  (`2013A&A...556A.150S`). [Fe/H] = −0.01 ± 0.01 (Phase 2 recommended
+  ([`2013A&A...556A.150S`](https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.150S)). [Fe/H] = −0.01 ± 0.01 (Phase 2 recommended
   metallicity; Sousa 2008 −0.02 corroborates).
 - **Vogt S. S. et al. 2010** — *A Super-Earth and Two Neptunes
   Orbiting the Nearby Sun-Like Star 61 Virginis*, ApJ 708, 1366
-  (`2010ApJ...708.1366V`). The three planet detections (b 4.215 d,
+  ([`2010ApJ...708.1366V`](https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V)). The three planet detections (b 4.215 d,
   c 38.021 d, d 123.01 d). Its stellar parameters (M 0.942, R 0.963,
   L 0.82) are superseded by the von Braun 2014 interferometry above.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir: implications
   for the prevalence of debris in low-mass planetary systems*, MNRAS
-  424, 1206 (`2012MNRAS.424.1206W`, [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). Herschel/PACS
+  424, 1206 ([`2012MNRAS.424.1206W`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.424.1206W), [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). Herschel/PACS
   resolved imaging of the cold debris belt at 70/100/160 μm; single
   broad ring centred near ~30 AU extending to ~96 AU, dust temperature
   ~68 K, dust mass comparable to the Sun's KBO inventory. Anchors every
   Circumstellar-disk Decisions row.
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age Estimation
   for Solar-Type Dwarfs Using Activity-Rotation Diagnostics*, ApJ 687,
-  1264 (`2008ApJ...687.1264M`, [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). Activity/gyrochronology
+  1264 ([`2008ApJ...687.1264M`](https://ui.adsabs.harvard.edu/abs/2008ApJ...687.1264M), [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). Activity/gyrochronology
   age 6.1–6.6 Gyr and log R'HK −5.001 — the documented-divergence
   alternative to the Gomes da Silva 2021 isochrone age.
 - **Baliunas S. L. et al. 1996** / **Wright J. T. et al. 2004** — Mt
-  Wilson Ca II HK rotation P_rot ≈ 29 d for 61 Vir (`2004ApJS..152..261W`);
+  Wilson Ca II HK rotation P_rot ≈ 29 d for 61 Vir ([`2004ApJS..152..261W`](https://ui.adsabs.harvard.edu/abs/2004ApJS..152..261W));
   Baliunas 1996 is the Phase 2 recommended rotation source, compiled by
   Wright 2011.
 - **Pavlenko Y. V. et al. 2012** — *Effective temperatures, gravities,
   metallicities, and ages of 18 solar twin candidates*
-  (`2012MNRAS.422..542P`, [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). High-resolution
+  ([`2012MNRAS.422..542P`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.422..542P), [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). High-resolution
   spectroscopy of solar-twin candidates including 61 Vir; confirms
   Teff = 5538 K and [Fe/H] within 0.05 dex of solar.
 
@@ -263,33 +263,33 @@ A's `#fff4e8` cream, 47 UMa, etc.).
 
 - **Isaacson H. & Fischer D. 2010** — *Chromospheric Activity and Jitter
   Measurements for 2630 Stars on the California Planet Search*, ApJ
-  725, 875 (`2010ApJ...725..875I`, [arXiv:1009.2301](https://arxiv.org/abs/1009.2301)). The California
+  725, 875 ([`2010ApJ...725..875I`](https://ui.adsabs.harvard.edu/abs/2010ApJ...725..875I), [arXiv:1009.2301](https://arxiv.org/abs/1009.2301)). The California
   HK catalog refit; 61 Vir log R'HK ≈ −5.0 confirmed stable across
   multiple seasons.
 - **Schmitt J. H. M. M. & Liefke C. 2004** — *NEXXUS: A Comprehensive
   ROSAT survey of coronal X-ray emission among nearby solar-like
-  stars*, A&A 417, 651 (`2004A&A...417..651S`). NEXXUS-2 catalog;
+  stars*, A&A 417, 651 ([`2004A&A...417..651S`](https://ui.adsabs.harvard.edu/abs/2004A%26A...417..651S)). NEXXUS-2 catalog;
   61 Vir log L_X ≈ 26.7–27.0 cgs, quiet G-dwarf locus.
 - **Tanner A. et al. 2014** — context paper for the 61 Vir disk SED +
   imaging follow-up; reinforces the Wyatt 2012 cold-belt geometry.
 - **Su K. Y. L. et al. 2017** — *Hot extended Solar System dust and
   cold debris disks in the Spitzer + Herschel surveys*, AJ 153, 226
-  (`2017AJ....153..226S`). 61 Vir in the cold-disk sample; consistent
+  ([`2017AJ....153..226S`](https://ui.adsabs.harvard.edu/abs/2017AJ....153..226S)). 61 Vir in the cold-disk sample; consistent
   with Wyatt 2012.
 - **Bensby T. et al. 2014** — *Exploring the Milky Way stellar disk: a
   detailed elemental abundance study of 714 F and G dwarfs*, A&A 562,
-  A71 (`2014A&A...562A..71B`, [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)). 61 Vir in the
+  A71 ([`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B), [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)). 61 Vir in the
   thin-disk metallicity sample; [Fe/H] consistent with solar.
 - **Brewer J. M. et al. 2016** — *Spectral Properties of Cool Stars
   (SPOCS): extended catalog of 1626 stars*, ApJS 225, 32
-  (`2016ApJS..225...32B`, [arXiv:1606.07929](https://arxiv.org/abs/1606.07929)). SPOCS extended catalog;
+  ([`2016ApJS..225...32B`](https://ui.adsabs.harvard.edu/abs/2016ApJS..225...32B), [arXiv:1606.07929](https://arxiv.org/abs/1606.07929)). SPOCS extended catalog;
   refit of [Fe/H], Teff, log g for 61 Vir consistent with the
   Pavlenko 2012 solar-twin values.
 
 ### Read (instrument-only, not visual-informative)
 
 - **Gray R. O. et al. 2003** — *Contributions to the Nearby Stars
-  (NStars) Project*, AJ 126, 2048 (`2003AJ....126.2048G`). Original
+  (NStars) Project*, AJ 126, 2048 ([`2003AJ....126.2048G`](https://ui.adsabs.harvard.edu/abs/2003AJ....126.2048G)). Original
   G7V classification; Gaia DR3 G6.5V is the finer-resolution
   successor.
 - **Lawler S. M. et al. 2014** — context paper for the cold-disk

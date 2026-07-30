@@ -41,7 +41,7 @@ locking treatment first.
 
 ## 1. The law: the fixed-Q tidal-heating formula
 
-Peale, Cassen & Reynolds 1979 (*Science* 203, 892, `1979Sci...203..892P`) predicted,
+Peale, Cassen & Reynolds 1979 (*Science* 203, 892, [`1979Sci...203..892P`](https://ui.adsabs.harvard.edu/abs/1979Sci...203..892P)) predicted,
 famously days before Voyager imaged the eruptions, that Io would be melted by
 tidal dissipation. Their constant-phase-lag ("fixed-Q") result is still the
 first-order tool. For a synchronously rotating body of radius `R` on an eccentric
@@ -96,19 +96,19 @@ output is actually *measured*. These observed numbers calibrate `k₂/Q`.
 | **Enceladus** | Saturn | ~3.95 R_Sat | ~0.0047 | ~5–16 GW (≈10¹⁰ W) | ~5 GW from the SPT | k₂/Q ~ 0.002–0.01 (soft ice + ocean) |
 
 - **Io**: the calibration anchor. Infrared radiometry (Veeder+ 1994
-  `1994JGR....9917095V`; Veeder+ 2012 `2012Icar..219..701V`) puts the global heat
+  [`1994JGR....9917095V`](https://ui.adsabs.harvard.edu/abs/1994JGR....9917095V); Veeder+ 2012 [`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V)) puts the global heat
   output at ~10¹⁴ W, i.e. a surface flux ~2 W/m², an order of magnitude above
-  Earth's ~0.08 W/m². Lainey+ 2009 (`2009Natur.459..957L`) confirmed *active*
+  Earth's ~0.08 W/m². Lainey+ 2009 ([`2009Natur.459..957L`](https://ui.adsabs.harvard.edu/abs/2009Natur.459..957L)) confirmed *active*
   strong dissipation in the Io–Jupiter system from astrometry, closing the loop:
   the dissipation the formula needs is the dissipation the orbit shows. With Io's
   `a`, `e`, `R`, `M_J` and `k₂/Q ≈ 0.015`, the formula returns ~10¹⁴ W. ✓
 - **Enceladus**: the low-mass-body anchor. Cassini found an active south-polar
-  thermal anomaly and plumes (Spencer+ 2006 `2006Sci...311.1401S`); Howett+ 2011
-  (`2011JGRE..116.3003H`) measured ~15.8 GW from the south-polar terrain, and the
-  endogenic total is several GW (~10¹⁰ W). Nimmo+ 2007 (`2007Natur.447..289N`)
+  thermal anomaly and plumes (Spencer+ 2006 [`2006Sci...311.1401S`](https://ui.adsabs.harvard.edu/abs/2006Sci...311.1401S)); Howett+ 2011
+  ([`2011JGRE..116.3003H`](https://ui.adsabs.harvard.edu/abs/2011JGRE..116.3003H)) measured ~15.8 GW from the south-polar terrain, and the
+  endogenic total is several GW (~10¹⁰ W). Nimmo+ 2007 ([`2007Natur.447..289N`](https://ui.adsabs.harvard.edu/abs/2007Natur.447..289N))
   attributes the plumes to shear heating along the tiger stripes. Enceladus is tiny
   (`R ≈ 252 km`) so its `R⁵` is ~10⁹× smaller than Io's; the formula returns the
-  ~GW scale with a soft-ice + ocean `k₂/Q` (Meyer & Wisdom 2007 `2007Icar..188..535M`).
+  ~GW scale with a soft-ice + ocean `k₂/Q` (Meyer & Wisdom 2007 [`2007Icar..188..535M`](https://ui.adsabs.harvard.edu/abs/2007Icar..188..535M)).
   ✓
 
 The calibration spans **four orders of magnitude in Ė** (10¹⁴ → 10¹⁰ W) and a
@@ -167,12 +167,12 @@ and the heating **shuts off**. Sustained heating requires something to keep pump
 The pump is almost always a **mean-motion resonance** with another body:
 
 - **Io**: the Laplace resonance (Io:Europa:Ganymede 1:2:4). Yoder 1979
-  (`1979Natur.279..767Y`) showed how tidal heating in Io *drives and locks* this
+  ([`1979Natur.279..767Y`](https://ui.adsabs.harvard.edu/abs/1979Natur.279..767Y)) showed how tidal heating in Io *drives and locks* this
   resonance, which in turn forces Io's `e ≈ 0.0041` against damping. Without it Io's
   orbit would circularize and the volcanism would die.
 - **Enceladus**: the 2:1 mean-motion resonance with Dione forces `e ≈ 0.0047`
-  (Meyer & Wisdom 2007 `2007Icar..188..535M`; Meyer & Wisdom 2008
-  `2008Icar..193..213M`). The resonance is what makes a tiny moon geologically alive.
+  (Meyer & Wisdom 2007 [`2007Icar..188..535M`](https://ui.adsabs.harvard.edu/abs/2007Icar..188..535M); Meyer & Wisdom 2008
+  [`2008Icar..193..213M`](https://ui.adsabs.harvard.edu/abs/2008Icar..193..213M)). The resonance is what makes a tiny moon geologically alive.
 
 Practical rule: **if you are claiming sustained tidal heating, name the resonance
 (or other forcing) that maintains `e`.** A single moon with a measured/assumed `e`
@@ -206,16 +206,16 @@ Four regimes / cautions decide whether the fixed-Q recipe is even the right tool
 3. **Viscoelastic / rheological regime**: when `Ė` from §1 is near a melting or
    ocean threshold, the fixed-Q answer is unreliable and must be replaced by a
    frequency- and temperature-dependent **Maxwell / Andrade** treatment: Segatz+
-   1988 (`1988Icar...75..187S`, the founding viscoelastic-Io model), Henning,
-   O'Connell & Sasselov 2009 (`2009ApJ...707.1000H`, tidally heated terrestrial
-   exoplanets), Henning & Hurford 2014 (`2014ApJ...789...30H`, multilayered),
-   Renaud & Henning 2018 (`2018ApJ...857...98R`, Andrade vs Maxwell, heating can
+   1988 ([`1988Icar...75..187S`](https://ui.adsabs.harvard.edu/abs/1988Icar...75..187S), the founding viscoelastic-Io model), Henning,
+   O'Connell & Sasselov 2009 ([`2009ApJ...707.1000H`](https://ui.adsabs.harvard.edu/abs/2009ApJ...707.1000H), tidally heated terrestrial
+   exoplanets), Henning & Hurford 2014 ([`2014ApJ...789...30H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...789...30H), multilayered),
+   Renaud & Henning 2018 ([`2018ApJ...857...98R`](https://ui.adsabs.harvard.edu/abs/2018ApJ...857...98R), Andrade vs Maxwell, heating can
    differ by **large factors**, often >10×, and peaks at a resonant interior
    temperature). The fixed-Q and Andrade answers can disagree by an order of
    magnitude; that gap *is* the error bar.
 4. **Spin-orbit / non-synchronous, or near a spin-orbit resonance**: the `(21/2)e²`
    leading term is wrong; use the Efroimsky & Makarov frequency-dependent formalism
-   (Efroimsky & Williams 2012 `2012CeMDA.112..283E`). Mostly relevant to bodies
+   (Efroimsky & Williams 2012 [`2012CeMDA.112..283E`](https://ui.adsabs.harvard.edu/abs/2012CeMDA.112..283E)). Mostly relevant to bodies
    *not* yet locked, i.e. the locking-doc territory flagged at the top.
 
 For NearStars, the practical posture: use the fixed-Q formula with a class-`k₂/Q`
@@ -335,26 +335,26 @@ Each entry: authors, year, journal, **verified** arXiv id (or "no arXiv" + bibco
 ADS citation count, and one line on the contribution.
 
 - **Peale, S. J., Cassen, P. & Reynolds, R. T. (1979)**: *Science* 203, 892.
-  **No arXiv** (`1979Sci...203..892P`). Cites: 530. The founding tidal-heating
+  **No arXiv** ([`1979Sci...203..892P`](https://ui.adsabs.harvard.edu/abs/1979Sci...203..892P)). Cites: 530. The founding tidal-heating
   paper: the fixed-Q formula and the pre-Voyager prediction that Io would be melted.
   §1.
-- **Yoder, C. F. (1979)**: *Nature* 279, 767. **No arXiv** (`1979Natur.279..767Y`).
+- **Yoder, C. F. (1979)**: *Nature* 279, 767. **No arXiv** ([`1979Natur.279..767Y`](https://ui.adsabs.harvard.edu/abs/1979Natur.279..767Y)).
   Cites: 178. How tidal heating in Io drives and locks the Galilean (Laplace)
   resonance that maintains Io's eccentricity. §4.
 - **Segatz, M. et al. (1988)**: *Icarus* 75, 187. **No arXiv**
-  (`1988Icar...75..187S`). Cites: 258. Founding viscoelastic (Maxwell) Io model:
+  ([`1988Icar...75..187S`](https://ui.adsabs.harvard.edu/abs/1988Icar...75..187S)). Cites: 258. Founding viscoelastic (Maxwell) Io model:
   tidal dissipation, surface heat flow and figure beyond fixed-Q. §5.
 - **Veeder, G. J. et al. (1994)**: *JGR* 99, 17095. **No arXiv**
-  (`1994JGR....9917095V`). Cites: 217. Io's global heat flow from infrared
+  ([`1994JGR....9917095V`](https://ui.adsabs.harvard.edu/abs/1994JGR....9917095V)). Cites: 217. Io's global heat flow from infrared
   radiometry (~10¹⁴ W): the Io calibration. §2.
 - **Spencer, J. R. et al. (2006)**: *Science* 311, 1401. **No arXiv**
-  (`2006Sci...311.1401S`). Cites: 518. Cassini's discovery of Enceladus's active
+  ([`2006Sci...311.1401S`](https://ui.adsabs.harvard.edu/abs/2006Sci...311.1401S)). Cites: 518. Cassini's discovery of Enceladus's active
   south-polar thermal anomaly and plumes. §2.
 - **Meyer, J. & Wisdom, J. (2007)**: *Icarus* 188, 535. **No arXiv**
-  (`2007Icar..188..535M`). Cites: 152. Tidal heating in Enceladus and the
+  ([`2007Icar..188..535M`](https://ui.adsabs.harvard.edu/abs/2007Icar..188..535M)). Cites: 152. Tidal heating in Enceladus and the
   Enceladus–Dione 2:1 resonance maintaining its eccentricity. §2, §4.
 - **Nimmo, F. et al. (2007)**: *Nature* 447, 289. **No arXiv**
-  (`2007Natur.447..289N`). Cites: 239. Shear heating along the tiger stripes as the
+  ([`2007Natur.447..289N`](https://ui.adsabs.harvard.edu/abs/2007Natur.447..289N)). Cites: 239. Shear heating along the tiger stripes as the
   origin of Enceladus's plumes and heat flux. §2.
 - **Jackson, B., Barnes, R. & Greenberg, R. (2008)**: *ApJ* 681, 1631.
   **[arXiv:0803.0026](https://arxiv.org/abs/0803.0026).** Cites: 155. "Tidal Heating of Extrasolar Planets": applies
@@ -362,16 +362,16 @@ ADS citation count, and one line on the contribution.
   magnitude. §1, §3. (Companion: Jackson+ 2008 *ApJ* 678, 1396, **[arXiv:0802.1543](https://arxiv.org/abs/0802.1543)**,
   cites 382, the tidal-evolution / eccentricity-damping side.)
 - **Lainey, V. et al. (2009)**: *Nature* 459, 957. **No arXiv**
-  (`2009Natur.459..957L`). Cites: 359. Astrometric detection of *active* strong tidal
+  ([`2009Natur.459..957L`](https://ui.adsabs.harvard.edu/abs/2009Natur.459..957L)). Cites: 359. Astrometric detection of *active* strong tidal
   dissipation in the Io–Jupiter system: empirically closes the heating loop. §2.
 - **Henning, W. G., O'Connell, R. J. & Sasselov, D. D. (2009)**: *ApJ* 707, 1000.
   **[arXiv:0912.1907](https://arxiv.org/abs/0912.1907).** Cites: 158. Tidally heated terrestrial exoplanets with a
   viscoelastic response model: the exoplanet-rheology bridge. §5.
 - **Howett, C. J. A. et al. (2011)**: *JGR Planets* 116, E03003. **No arXiv**
-  (`2011JGRE..116.3003H`). Cites: 136. ~15.8 GW measured from Enceladus's south-polar
+  ([`2011JGRE..116.3003H`](https://ui.adsabs.harvard.edu/abs/2011JGRE..116.3003H)). Cites: 136. ~15.8 GW measured from Enceladus's south-polar
   region: the Enceladus calibration number. §2.
 - **Veeder, G. J. et al. (2012)**: *Icarus* 219, 701. **No arXiv**
-  (`2012Icar..219..701V`). Cites: 92. Io's volcanic thermal sources and global heat
+  ([`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V)). Cites: 92. Io's volcanic thermal sources and global heat
   flow: the updated ~10¹⁴ W census. §2.
 - **Efroimsky, M. & Williams, J. G. (2012)**: *Celest. Mech. Dyn. Astron.* 112, 283.
   **[arXiv:1105.6086](https://arxiv.org/abs/1105.6086).** Cites: 128. Bodily tides near spin-orbit resonances: the
@@ -383,7 +383,7 @@ ADS citation count, and one line on the contribution.
   Cites: 129. Exomoon habitability constrained by illumination *and* tidal heating:
   the moon-specific habitability bound directly relevant to NearStars moons. §6.
 - **Henning, W. G. & Hurford, T. (2014)**: *ApJ* 789, 30. **No arXiv**
-  (`2014ApJ...789...30H`). Cites: 55. Tidal heating in multilayered terrestrial
+  ([`2014ApJ...789...30H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...789...30H)). Cites: 55. Tidal heating in multilayered terrestrial
   exoplanets: layered viscoelastic structure. §5.
 - **Driscoll, P. E. & Barnes, R. (2015)**: *Astrobiology* 15, 739.
   **[arXiv:1509.07452](https://arxiv.org/abs/1509.07452).** Cites: 108. Tidal heating of Earth-like planets around M

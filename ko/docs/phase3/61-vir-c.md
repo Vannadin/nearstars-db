@@ -234,85 +234,85 @@ Kopernicus 단위로 ~2 590 000 초) 을 채택. 이는 궤도 주기와 구분�
 
 - **Vogt S. S. et al. 2010** — *A Super-Earth and Two Neptunes
   Orbiting the Nearby Sun-Like Star 61 Virginis*, ApJ 708, 1366
-  (`2010ApJ...708.1366V`). 발견 논문. c 의 궤도 (P=38.021 d,
+  ([`2010ApJ...708.1366V`](https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V)). 발견 논문. c 의 궤도 (P=38.021 d,
   a=0.2175 AU, e=0.14, ω=341°) 와 최소 질량 (Msini = 18.2 ± 1.1 M⊕)
   보고. HIRES + AAT 결합 RV 해. Decisions 표의 모든 궤도 + 질량 값이
   여기에 묶입니다.
 - **Owen J. E. & Wu Y. 2017** — *The evaporation valley in the
-  Kepler planets*, ApJ 847, 29 (`2017ApJ...847...29O`, [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)).
+  Kepler planets*, ApJ 847, 29 ([`2017ApJ...847...29O`](https://ui.adsabs.harvard.edu/abs/2017ApJ...847...29O), [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)).
   광증발-valley 물리. c 를 손실 경계 한참 오른쪽에 위치 (XUV 구동
   손실이 6 Gyr 에 걸쳐 외피의 ~0.6%). high 신뢰도로 `atmosphere_present
   = true` 의 anchor.
 - **Lopez E. D. & Fortney J. J. 2014** — *Understanding the
   mass-radius relation for sub-Neptunes*, ApJ 792, 1
-  (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). sub-Neptune envelope
+  ([`2014ApJ...792....1L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...792....1L), [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). sub-Neptune envelope
   mass-radius 스케일링. 3–5% H/He 외피 18 M⊕ 에서 R = 4.0–5.0 R⊕.
   cfg 는 4.5 R⊕ 채택. `radius_rearth` tie-break 의 anchor.
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope
   decompositions of super-Earths and sub-Neptunes*, ApJ 787, 173
-  (`2014ApJ...787..173H`). sub-Neptune mass-radius
+  ([`2014ApJ...787..173H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...787..173H)). sub-Neptune mass-radius
   다양성. H/He 외피 canonical 해석을 지지하고 물-풍부 대안의 경계를
   정함.
 - **Madhusudhan N. 2012** — *C/O ratio as a dimension for
   characterizing exoplanetary atmospheres*, ApJ 758, 36
-  (`2012ApJ...758...36M`, [arXiv:1209.2412](https://arxiv.org/abs/1209.2412)). sub-Neptune 원시-외피 조성
+  ([`2012ApJ...758...36M`](https://ui.adsabs.harvard.edu/abs/2012ApJ...758...36M), [arXiv:1209.2412](https://arxiv.org/abs/1209.2412)). sub-Neptune 원시-외피 조성
   baseline. H/He 일차 + 미량 응결 조성을 견인.
 - **Moses J. I. et al. 2013** — *Compositional diversity in the
-  atmospheres of hot Neptunes*, ApJ 777, 34 (`2013ApJ...777...34M`,
+  atmospheres of hot Neptunes*, ApJ 777, 34 ([`2013ApJ...777...34M`](https://ui.adsabs.harvard.edu/abs/2013ApJ...777...34M),
   [arXiv:1306.5178](https://arxiv.org/abs/1306.5178)). sub-Neptune 광화학. CH₄/HCN/광화학-haze 사슬을
   정보화.
 - **Morley C. V. et al. 2015** — *Thermal emission and reflected
   light spectra of super Earths with flat transmission spectra*, ApJ
-  815, 110 (`2015ApJ...815..110M`, [arXiv:1511.01492](https://arxiv.org/abs/1511.01492)). Haze 가 낀
+  815, 110 ([`2015ApJ...815..110M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...815..110M), [arXiv:1511.01492](https://arxiv.org/abs/1511.01492)). Haze 가 낀
   sub-Neptune 검색 프레임워크. `atmosphere_tint` 와 `cloud_tint`
   tie-break 을 견인 (태양 조명 아래의 따뜻한 크림 haze).
 - **Lavvas P. & Koskinen T. 2017** — *Aerosol properties of the
   atmospheres of extrasolar giant planets*, ApJ 847, 32
-  (`2017ApJ...847...32L`, [arXiv:1707.08077](https://arxiv.org/abs/1707.08077)). sub-Neptune 광화학 haze
+  ([`2017ApJ...847...32L`](https://ui.adsabs.harvard.edu/abs/2017ApJ...847...32L), [arXiv:1707.08077](https://arxiv.org/abs/1707.08077)). sub-Neptune 광화학 haze
   생성 메커니즘. 전역 구름 덮임과 haze 광학 깊이를 정보화.
 - **Kreidberg L. et al. 2014** — *Clouds in the atmosphere of the
   super-Earth exoplanet GJ 1214 b*, Nature 505, 69
-  (`2014Natur.505...69K`, [arXiv:1401.0022](https://arxiv.org/abs/1401.0022)). 표준적 "featureless 투과
+  ([`2014Natur.505...69K`](https://ui.adsabs.harvard.edu/abs/2014Natur.505...69K), [arXiv:1401.0022](https://arxiv.org/abs/1401.0022)). 표준적 "featureless 투과
   스펙트럼" sub-Neptune. c 는 비슷한 기대 시각의 더 따뜻한 아날로그.
 - **Showman A. P. et al. 2009** — *Atmospheric circulation of hot
   Jupiters: coupled radiative-dynamical GCM*, ApJ 699, 564
-  (`2009ApJ...699..564S`, [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). 조석 영향을 받는 가스 행성
+  ([`2009ApJ...699..564S`](https://ui.adsabs.harvard.edu/abs/2009ApJ...699..564S), [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). 조석 영향을 받는 가스 행성
   의 super-rotating 적도 jet 을 확립. c 의 `cloud_morphology` (zonal
   banding) 를 정보화.
 - **Lewis N. K. et al. 2014** — *GCMs of warm sub-Neptunes*, ApJ 795,
-  150 (`2014ApJ...795..150L`, [arXiv:1410.0008](https://arxiv.org/abs/1410.0008)). ~38 일 주기 sub-Neptune
+  150 ([`2014ApJ...795..150L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...795..150L), [arXiv:1410.0008](https://arxiv.org/abs/1410.0008)). ~38 일 주기 sub-Neptune
   영역에 대한 GCM 스케일링. pseudo-synchronous spin 과 적도-jet 순환을
   지지.
 - **Hut P. 1981** — *Tidal evolution in close binary systems*, A&A
-  99, 126 (`1981A&A....99..126H`). 이심 궤도의 pseudo-synchronous spin
+  99, 126 ([`1981A&A....99..126H`](https://ui.adsabs.harvard.edu/abs/1981A%26A....99..126H)). 이심 궤도의 pseudo-synchronous spin
   평형. c 의 spin 상태에 대한 기초 인용.
 - **Henning W. G. & Hurford T. 2014** — *Tidal heating in multilayered
-  terrestrial exoplanets*, ApJ 789, 30 (`2014ApJ...789...30H`,
+  terrestrial exoplanets*, ApJ 789, 30 ([`2014ApJ...789...30H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...789...30H),
   [arXiv:1311.5904](https://arxiv.org/abs/1311.5904)). sub-Neptune 조석 가열 + spin-lock 시간 스케일.
   c 의 파라미터에서 ~1–3 Gyr 제공.
 - **Bolmont E. et al. 2020** — *Tidal dissipation and obliquity
-  evolution* (`2020A&A...644A.165B`). c 의 조석-가열
+  evolution* ([`2020A&A...644A.165B`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A.165B)). c 의 조석-가열
   flux 스케일링 제공 (0.001–0.01 W/m²).
 
 ### Read (context / methodology, not decision-driving)
 
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
-  Estimation for Solar-Type Dwarfs* (`2008ApJ...687.1264M`,
+  Estimation for Solar-Type Dwarfs* ([`2008ApJ...687.1264M`](https://ui.adsabs.harvard.edu/abs/2008ApJ...687.1264M),
   [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). 호스트 합성에서 상속. 61 Vir 나이 6.1 ± 1.7 Gyr.
   광증발 진화 시간 스케일을 결정.
 - **Pavlenko Y. V. et al. 2012** — *Solar twin candidates*
-  (`2012MNRAS.422..542P`, [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). 호스트 합성에서 상속.
+  ([`2012MNRAS.422..542P`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.422..542P), [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). 호스트 합성에서 상속.
   광화학 haze 모델을 위한 솔라 트윈 SED 확인.
 - **Fulton B. J. et al. 2017** — *The California-Kepler Survey III.
   A Gap in the Radius Distribution of Small Planets*, AJ 154, 109
-  (`2017AJ....154..109F`, [arXiv:1703.10375](https://arxiv.org/abs/1703.10375)). 반지름 valley 인구.
+  ([`2017AJ....154..109F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..109F), [arXiv:1703.10375](https://arxiv.org/abs/1703.10375)). 반지름 valley 인구.
   c 의 18 M⊕ 인구에 대한 H/He 외피 canonical 해석을 지지.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir*
-  (`2012MNRAS.424.1206W`, [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). 호스트 합성에서 상속. 간략
+  ([`2012MNRAS.424.1206W`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.424.1206W), [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). 호스트 합성에서 상속. 간략
   히 인용. 30 AU 의 차가운 debris 고리는 0.22 AU 의 c 와 동역학적으로
   상호작용하지 않음.
 - **Madhusudhan N. et al. 2021** — *Habitability and biosignatures of
-  Hycean worlds*, ApJ 918, 1 (`2021ApJ...918....1M`, [arXiv:2108.10888](https://arxiv.org/abs/2108.10888)).
+  Hycean worlds*, ApJ 918, 1 ([`2021ApJ...918....1M`](https://ui.adsabs.harvard.edu/abs/2021ApJ...918....1M), [arXiv:2108.10888](https://arxiv.org/abs/2108.10888)).
   sub-Neptune 의 Hycean 대안 시나리오. d 의 Open-items variant 와 관련.
   더 따뜻한 T_eq 의 c 에는 덜 적용되지만 더 넓은 sub-Neptune 분류
   프레임워크로 인용.

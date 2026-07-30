@@ -263,7 +263,7 @@ HZ 안에 유지하며 ~225 000 km 에 Hill-안정한 판도라질량 위성 (0.
 ### Read (drove decisions above)
 
 - **Beichman C. et al. 2025** — *JWST Observations of the Nearest Sun-Like
-  Stars: Worlds Next Door I* (`2025ApJ...989L..22B`,
+  Stars: Worlds Next Door I* ([`2025ApJ...989L..22B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...989L..22B),
   doi:10.3847/2041-8213/adf53f, arXiv:2508.03814). 발견 논문.
   S1 = F1550C (15.5 µm) 검출, 3.5 ± 1.0 mJy, 1.51″ (~2 AU), 2024년 8월.
   네 개의 안정한 궤도 패밀리 (e ≈ 0.4, P 2–3 년, 상호 i ≈ 50°/130°),

@@ -142,7 +142,7 @@ Emitted orbit (AB-plane frame, epoch 1950.0): a = 1.6034 AU, e = 0.1024, i_mut =
 ## Citations
 
 - **Beichman et al. 2025**, "Worlds Next Door I", ApJL 989 L22, bibcode
-  `2025ApJ...989L..22B`, arXiv **[2508.03814](https://arxiv.org/abs/2508.03814)**
+  [`2025ApJ...989L..22B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...989L..22B), arXiv **[2508.03814](https://arxiv.org/abs/2508.03814)**
   (cached `docs/phase3/_papers/2508.03814.md`). Table 2 row S1: the PA, separation,
   and date anchor. *Supplies the observational anchor.*
 - **Sanghi & Beichman 2025**, "Worlds Next Door II", arXiv

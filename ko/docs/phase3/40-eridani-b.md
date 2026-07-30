@@ -40,7 +40,7 @@ alternatives` 섹션도 없습니다.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | DA2.9 | high | Gianninas, Bergeron & Ruiz 2011 (GBR11). DA 분광-온도 부분류 서베이 |
-| `mass_msun` | 0.558 ± 0.012 | medium | Mason et al. 2021 (`2021AJ....162...53M`). Izmailov 2019 BC 궤도 + Gaia eDR3 시차에서 유도한 역학 질량 (채택한 binary_orbits BC 요소 P=233.20 yr, e=0.4141 과 자기-일관). DOCUMENTED ALTERNATIVE: Bond et al. 2017 HST/FGS 는 0.573 ± 0.018 을 줌 (전용 WD astrometric / 중력 적색편이 질량, ~1.3σ 더 높음). 이 문서의 WD 반지름·냉각 나이·전구체/IFMR 특성은 Bond 의 0.573 에서 유도되며 WD-physics 패키지로 유지됨 |
+| `mass_msun` | 0.558 ± 0.012 | medium | Mason et al. 2021 ([`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M)). Izmailov 2019 BC 궤도 + Gaia eDR3 시차에서 유도한 역학 질량 (채택한 binary_orbits BC 요소 P=233.20 yr, e=0.4141 과 자기-일관). DOCUMENTED ALTERNATIVE: Bond et al. 2017 HST/FGS 는 0.573 ± 0.018 을 줌 (전용 WD astrometric / 중력 적색편이 질량, ~1.3σ 더 높음). 이 문서의 WD 반지름·냉각 나이·전구체/IFMR 특성은 Bond 의 0.573 에서 유도되며 WD-physics 패키지로 유지됨 |
 | `radius_rsun` | 0.01308 ± 0.00020 | high | Bond et al. 2017. BVRI + ubvy + JHK + Hipparcos 시차 + 대기 Teff 결합 SED fit |
 | `teff_k` | 17200 ± 110 | high | Bond et al. 2017. Balmer-line 대기 fit (Tremblay & Bergeron 2009 grid) |
 | `luminosity_lsun` | 0.01349 ± 0.00054 | high | Bond et al. 2017. 볼로메트릭 플럭스 적분 |
@@ -192,7 +192,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 
 - **Bond H. E., Bergeron P. & Bédard A. 2017** — *Astrophysical
   Implications of a New Dynamical Mass for the Nearby White Dwarf 40
-  Eridani B*, ApJ 848, 16 (`2017ApJ...848...16B`,
+  Eridani B*, ApJ 848, 16 ([`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B),
   [arXiv:1709.00478](https://arxiv.org/abs/1709.00478), DOI 10.3847/1538-4357/aa8a63). Mason 2017
   시각 궤도에 정박해 BC 페어를 HST/FGS 로 astrometry 한 결과를,
   순수-H 모델 대기 Balmer-line fit 과 BVRI + ubvy + JHK +
@@ -209,7 +209,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
   sensitive method for measuring very weak magnetic fields
   of DA white dwarfs — A search for a magnetic field at the
   250 G level in 40 Eridani B*, A&A 580, A120
-  (`2015A&A...580A.120L`, DOI 10.1051/0004-6361/201526434).
+  ([`2015A&A...580A.120L`](https://ui.adsabs.harvard.edu/abs/2015A%26A...580A.120L), DOI 10.1051/0004-6361/201526434).
   CFHT 의 ESPaDOnS 광역 원편광. 개별 ⟨Bz⟩ 측정이 σ ≈ 80–90 G
   안에서 0 과 일치. 어떤 장이든 ⟨Bz⟩ ≲ 250 G 의 잠정 상한을
   결론. 잡음이 "백색왜성에 대해 얻은 자기장 측정 표준 오차 중
@@ -218,7 +218,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 
 - **Mason B. D., Hartkopf W. I. & Miles K. N. 2017** —
   *Binary Star Orbits V. The Nearby White Dwarf — Red Dwarf
-  Pair 40 Eri BC*, AJ 154, 200 (`2017AJ....154..200M`,
+  Pair 40 Eri BC*, AJ 154, 200 ([`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M),
   [arXiv:1707.03635](https://arxiv.org/abs/1707.03635), DOI 10.3847/1538-3881/aa803e). 2016 년
   까지의 speckle interferometry 를 포함하는 시각 궤도 재유도.
   grade-1 definitive 해 Table 4. P = 230.09 ± 0.68 yr,
@@ -230,7 +230,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 - **Gianninas A., Bergeron P. & Ruiz M. T. 2011** —
   *A Spectroscopic Survey and Analysis of Bright,
   Hydrogen-Rich White Dwarfs*, ApJ 743, 138
-  (`2011ApJ...743..138G`, [arXiv:1109.3171](https://arxiv.org/abs/1109.3171)). DA 분광-온도 부분류
+  ([`2011ApJ...743..138G`](https://ui.adsabs.harvard.edu/abs/2011ApJ...743..138G), [arXiv:1109.3171](https://arxiv.org/abs/1109.3171)). DA 분광-온도 부분류
   서베이의 결정판이며 DA1–DA9 Sion 분류를 채택. 40 Eri B
   (WD 0413−077) 는 이 작업에서 DA2.9 부분류를 받았고, 이 값이
   2011 년 이후 Bond 2017 과 후속 문헌의 canonical 분광형이
@@ -241,13 +241,13 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 - **Tremblay P.-E. & Bergeron P. 2009** — *Spectroscopic
   Analysis of DA White Dwarfs: Stark Broadening of Hydrogen
   Lines Including Nonideal Effects*, ApJ 696, 1755
-  (`2009ApJ...696.1755T`). Bond 2017 이 Balmer-line Teff 및
+  ([`2009ApJ...696.1755T`](https://ui.adsabs.harvard.edu/abs/2009ApJ...696.1755T)). Bond 2017 이 Balmer-line Teff 및
   log g fit 에 채택한 순수-H 모델 대기 그리드.
 
 - **Salaris M. et al. 2009** — *Semi-empirical White Dwarf
   Initial–Final Mass Relations: A Thorough Analysis of
   Systematic Uncertainties due to Stellar Evolution Models*,
-  ApJ 692, 1013 (`2009ApJ...692.1013S`). Bond 2017 §6.2 가
+  ApJ 692, 1013 ([`2009ApJ...692.1013S`](https://ui.adsabs.harvard.edu/abs/2009ApJ...692.1013S)). Bond 2017 §6.2 가
   뒤집어서 측정 M_final = 0.573 M☉ 에서 M_init ≈ 1.8 M☉ 을
   복구할 때 쓴 관계 M_final = 0.134 M_init + 0.331.
 
@@ -259,7 +259,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
   Bagnulo 2015 의 비검출에 의해 사실상 대체됨.
 
 - **Tokovinin A. 2018** — *The Updated Multiple Star Catalog*,
-  ApJS 235, 6 (`2018ApJS..235....6T`). 40 Eri 의 MSC entry 가
+  ApJS 235, 6 ([`2018ApJS..235....6T`](https://ui.adsabs.harvard.edu/abs/2018ApJS..235....6T)). 40 Eri 의 MSC entry 가
   A↔BC 외곽 페어를 ~83″ 분리, ~8,000 년 근사 주기로 기록.
   적합된 Kepler 해는 없습니다.
 
@@ -267,7 +267,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 
 - **Mason B. D. et al. 2021** — *Speckle Interferometry at
   the US Naval Observatory. XXIV*, AJ 162, 53
-  (`2021AJ....162...53M`, DOI 10.3847/1538-3881/abfaa2).
+  ([`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M), DOI 10.3847/1538-3881/abfaa2).
   최신 BC 궤도 fit. P = 233.20 ± 0.65 yr, e = 0.4141 ±
   0.0072, a = 6.88788 ± 0.03488″. 현 Sixth Orbit Catalog
   엔트리로 등재. Phase 3 cfg 는 Bond 2017 의 질량 유도와
@@ -276,7 +276,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 
 - **Holberg J. B. et al. 2013** — *Where are all the
   Sirius-like binary systems?*, MNRAS 435, 2077
-  (`2013MNRAS.435.2077H`). 40 Eri BC 를 들녘 Sirius-like
+  ([`2013MNRAS.435.2077H`](https://ui.adsabs.harvard.edu/abs/2013MNRAS.435.2077H)). 40 Eri BC 를 들녘 Sirius-like
   (FGK + WD) 시스템 집단의 맥락에 둡니다. 40 Eri B
   파라미터를 새로 측정하지는 않습니다.
 
@@ -294,7 +294,7 @@ Decisions 표를 바꾸지 않습니다.
 ## Open items for follow-up
 
 - **Mason 2021 궤도 업데이트.** Mason et al. 2021
-  (`2021AJ....162...53M`) 가 Mason 2017 시각 궤도를 P = 233.20 ±
+  ([`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M)) 가 Mason 2017 시각 궤도를 P = 233.20 ±
   0.65 yr, e = 0.4141 ± 0.0072, a = 6.88788 ± 0.03488″ 로 갱신
   합니다. 후속 reconciliation 단계에서 2021 elements 를 채택하고
   Bond 2017 의 동일한 HST/FGS astrometry 와 결합해 역학 질량을

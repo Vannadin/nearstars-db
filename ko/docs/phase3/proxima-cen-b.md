@@ -273,7 +273,7 @@ UV + 광학 산란과 함께 잠시 밝아져, cfg `aurora_*` 필드와 동기�
   discriminant.
 - **Del Genio A. D. et al. 2019** — *Habitable Climate Scenarios for
   Proxima Centauri b with a Dynamic Ocean*, AsBio 19, 99
-  (`2019AsBio..19...99D`. arXiv 프리프린트 없음 — Tier A manual
+  ([`2019AsBio..19...99D`](https://ui.adsabs.harvard.edu/abs/2019AsBio..19...99D). arXiv 프리프린트 없음 — Tier A manual
   followup. Boutle / Sergeev / Salazar 통해 인용). 동적 ocean 이 열
   재분배를 강화하고 열린 물 디스크를 넓힘을 입증.
 - **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a
@@ -342,10 +342,10 @@ UV + 광학 산란과 함께 잠시 밝아져, cfg `aurora_*` 필드와 동기�
 - **Boldog Á. et al. 2024** — 내부 물 함량
   ([arXiv:2312.01893](https://arxiv.org/abs/2312.01893)).
 - **Noack L. et al. 2021** — *Interior heating and outgassing of
-  Proxima Centauri b* (`2021A&A...651A.103N`, no arXiv). Tier A
+  Proxima Centauri b* ([`2021A&A...651A.103N`](https://ui.adsabs.harvard.edu/abs/2021A%26A...651A.103N), no arXiv). Tier A
   manual followup. abstract 통해 인용.
 - **Herath M. et al. 2021** — *Interior structures of Proxima b and
-  Ross 128 b* (`2021MNRAS.500..333H`, no arXiv). Tier A manual
+  Ross 128 b* ([`2021MNRAS.500..333H`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.500..333H), no arXiv). Tier A manual
   followup. abstract 통해 인용.
 - **Reiners A. et al. 2018** — Proxima 자기장 ([arXiv:1711.06576](https://arxiv.org/abs/1711.06576)).
 - **Vida K. et al. 2019** — Proxima flare 통계 ([arXiv:1907.12580](https://arxiv.org/abs/1907.12580)).

@@ -191,13 +191,13 @@ hot-rocky 시각 목적지입니다.
 ### Read (visual-informative, drove decisions above)
 
 - **2503.08095** — Basant R. 외 2025, *Four Sub-Earth Planets Orbiting
-  Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`).
+  Barnard's Star from MAROON-X and ESPRESSO* ([`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B)).
   MAROON-X 확인 논문이며 모든 load-bearing 궤도/bulk 값의 출처. P =
   2.3402 ± 0.0003 d, M sin i = 0.263 ± 0.024 M⊕, a = 0.0188 ± 0.0003 AU,
   e = 0.04 (−0.03/+0.05), ω = −51.8°, T_eq = 483 K (A=0, full
   redistribution). e < 0.02 선호로 10⁹ 궤도 SPOCK 안정성, HZ 는 P = 10–42 d.
 - **[2410.00569](https://arxiv.org/abs/2410.00569)** — González Hernández J. I. 외 2024, *A sub-Earth-mass
-  planet orbiting Barnard's star* (`2024A&A...690A..79G`). ESPRESSO 발견
+  planet orbiting Barnard's star* ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G)). ESPRESSO 발견
   논문. d 후보의 첫 식별. 활동 사이클 3200 d, 회전 140 d. France 2020
   을 인용해 log(L_X/L_bol) ≈ −5.8 (Chandra) 보고.
 - **2102.08493** — Duvvuri G. 외 2021, *Reconstructing the EUV Emission

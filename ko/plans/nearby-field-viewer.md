@@ -17,7 +17,7 @@
 
 ## 데이터 소스
 - **Gaia Catalogue of Nearby Stars (GCNS; Gaia Collaboration / Smart et al. 2021,
-  2021A&A...649A...6G)** — EDR3 기반, 검증됨, 100 pc 이내 ~331k 별; 15.33 pc(= 50 ly)
+  [`2021A&A...649A...6G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A...6G))** — EDR3 기반, 검증됨, 100 pc 이내 ~331k 별; 15.33 pc(= 50 ly)
   이내는 사실상 완전하다. "모든 가까운 별"에 딱 맞는 카탈로그다.
   - 쿼리 대안: `gaiadr3.gaia_source`에서 `parallax > 65.24`(mas) = 50 ly 이내.
 - **밝은 별 갭(반드시 처리):** Gaia는 G ≲ 3에서 포화되므로, 가장 밝은 근처 별들 —

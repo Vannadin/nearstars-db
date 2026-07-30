@@ -59,12 +59,12 @@ Gaia 광학 시차의 신뢰도가 낮을 수 있습니다.
 
 | 출처 | 값 | 참고 문헌 |
 |--------|-------|-----------|
-| TEPCat allplanets-csv | 0.0122 Mjup = 3.8775 M⊕ | 2021PSJ.....2....1A |
+| TEPCat allplanets-csv | 0.0122 Mjup = 3.8775 M⊕ | [`2021PSJ.....2....1A`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2....1A) |
 | NASA Exoplanet Archive | 0.00122 Mjup = 0.388 M⊕ | 같은 논문 |
 
 나머지 TRAPPIST-1 행성들(b, c, e, f, g, h)은 두 출처 간 1% 이내로 일치합니다.
 차이가 정확히 10배라는 점은 TEPCat 데이터 입력 시 소수점 아래 0 하나가 누락된 것과 일치합니다
-(`0.00122` 대신 `0.0122`). 두 출처 모두 Agol et al. 2021 (2021PSJ.....2....1A)을 인용합니다.
+(`0.00122` 대신 `0.0122`). 두 출처 모두 Agol et al. 2021 ([`2021PSJ.....2....1A`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2....1A))을 인용합니다.
 
 TEPCat 수정 문의. https://www.astro.keele.ac.uk/jkt/tepcat/
 

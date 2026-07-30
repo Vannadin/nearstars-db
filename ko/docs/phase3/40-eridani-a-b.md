@@ -10,7 +10,7 @@ Baliunas 와 동료들이 공동 서명)가 Epsilon Eridani 대신 40 Eridani A 
 검출도 이만한 문화적 무게를 지니지 못하며, 바로 그 점이 이 천체가
 NearStars 데이터베이스에 남아 있는 유일한 이유입니다.
 
-이 후보는 Ma et al. 2018 (`2018AJ....155..117M`, Dharma Planet Survey
+이 후보는 Ma et al. 2018 ([`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M), Dharma Planet Survey
 RV 프로그램)이 40 Eridani 삼중계의 K0.5 V 주성 주위에서 M sin i ≈ 8.47
 M⊕, P = 42.245 일 주기, a = 0.224 AU 의 super-Earth 로 발표한 것입니다.
 40 Eri 는 5.0 pc 거리의 실재하는 인근 카탈로그 시스템으로, beyond-50-ly
@@ -195,7 +195,7 @@ b 가 존재했다면 **조석 고정되지 않았을** 것입니다. a = 0.224 
 
 - **Ma B. et al. 2018** — *The First Super-Earth Detection from the
   High Cadence and High Radial Velocity Precision Dharma Planet
-  Survey* (`2018AJ....155..117M`). 발견 논문. b 를 K0.5 V 주성 주위
+  Survey* ([`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M)). 발견 논문. b 를 K0.5 V 주성 주위
   P = 42.245 d, M sin i ≈ 8.47 M⊕, a ≈ 0.224 AU 로 보고합니다. 위
   철회 이전 Decisions 행들을 고정합니다.
 - **Burrows R. et al. 2024** — *The Death of Vulcan: NEID Reveals

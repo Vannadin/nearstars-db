@@ -306,7 +306,7 @@ fields.
   + observational discriminants.
 - **Del Genio A. D. et al. 2019** — *Habitable Climate Scenarios for
   Proxima Centauri b with a Dynamic Ocean*, AsBio 19, 99
-  (`2019AsBio..19...99D`; no arXiv preprint — Tier A manual followup,
+  ([`2019AsBio..19...99D`](https://ui.adsabs.harvard.edu/abs/2019AsBio..19...99D); no arXiv preprint — Tier A manual followup,
   cited via Boutle / Sergeev / Salazar). Demonstrates dynamic ocean
   enhances heat redistribution and widens the open-water disk.
 - **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a
@@ -376,10 +376,10 @@ fields.
 - **Boldog Á. et al. 2024** — Interior water content
   ([arXiv:2312.01893](https://arxiv.org/abs/2312.01893)).
 - **Noack L. et al. 2021** — *Interior heating and outgassing of
-  Proxima Centauri b* (`2021A&A...651A.103N`, no arXiv). Tier A
+  Proxima Centauri b* ([`2021A&A...651A.103N`](https://ui.adsabs.harvard.edu/abs/2021A%26A...651A.103N), no arXiv). Tier A
   manual followup; cited via abstract.
 - **Herath M. et al. 2021** — *Interior structures of Proxima b and
-  Ross 128 b* (`2021MNRAS.500..333H`, no arXiv). Tier A manual
+  Ross 128 b* ([`2021MNRAS.500..333H`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.500..333H), no arXiv). Tier A manual
   followup; cited via abstract.
 - **Reiners A. et al. 2018** — Proxima magnetic field ([arXiv:1711.06576](https://arxiv.org/abs/1711.06576)).
 - **Vida K. et al. 2019** — Proxima flare statistics ([arXiv:1907.12580](https://arxiv.org/abs/1907.12580)).

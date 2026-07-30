@@ -14,7 +14,7 @@ home in [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.m
 
 ## The law
 
-Christensen, Holzwarth & Reiners 2009 (Nature 457, 167, `2009Natur.457..167C`)
+Christensen, Holzwarth & Reiners 2009 (Nature 457, 167, [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C))
 showed that the dynamo field strength of a rapidly-rotating body is set by the
 **energy flux** (luminosity per unit area) threading its convective interior, not
 by its rotation rate and not by its mass directly. The mean field at the dynamo
@@ -23,7 +23,7 @@ surface scales as
     B_dyn  ∝  (energy flux)^(1/3)  ·  ρ^(1/6)
 
 with a thermodynamic-efficiency factor ≈ 1 for a wide class of objects. Reiners &
-Christensen 2010 (A&A 522, A13, `2010A&A...522A..13R`, arXiv **[1007.1514](https://arxiv.org/abs/1007.1514)**, cached)
+Christensen 2010 (A&A 522, A13, [`2010A&A...522A..13R`](https://ui.adsabs.harvard.edu/abs/2010A%26A...522A..13R), arXiv **[1007.1514](https://arxiv.org/abs/1007.1514)**, cached)
 write it in terms of mass, luminosity and radius (solar units):
 
     B_dyn  =  4.8 · (M · L² / R⁷)^(1/6)   [kG]
@@ -129,15 +129,15 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
 
 ## Citations
 
-- **Christensen, Holzwarth & Reiners 2009**, Nature 457, 167 (`2009Natur.457..167C`).
+- **Christensen, Holzwarth & Reiners 2009**, Nature 457, 167 ([`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C)).
   Origin of the energy-flux scaling law. *Nature letter, no arXiv preprint*: cited
   by bibcode (verifiable via ADS/Nature/PubMed; not in the ar5iv `_papers/` cache).
-- **Reiners & Christensen 2010**, A&A 522, A13 (`2010A&A...522A..13R`, arXiv
+- **Reiners & Christensen 2010**, A&A 522, A13 ([`2010A&A...522A..13R`](https://ui.adsabs.harvard.edu/abs/2010A%26A...522A..13R), arXiv
   **[1007.1514](https://arxiv.org/abs/1007.1514)**). Application to giant planets + brown dwarfs; the evolution tracks
   and tabulated dipole values this method is calibrated against. **Cached** in
   `docs/phase3/_papers/1007.1514.md` (pinned in the au-mic / eps-eri / gj-896-a /
   eps-ind-a bibliographies).
-- **Yadav & Thorngren 2017**, ApJL 849, L12 (`2017ApJ...849L..12Y`, arXiv
+- **Yadav & Thorngren 2017**, ApJL 849, L12 ([`2017ApJ...849L..12Y`](https://ui.adsabs.harvard.edu/abs/2017ApJ...849L..12Y), arXiv
   **[1709.05676](https://arxiv.org/abs/1709.05676)**, cached): applies the Christensen 2009 energy-flux scaling to
   inflated **hot Jupiters** (using Thorngren & Fortney radius-inflation luminosities).
   The most direct exoplanet application of the method; used for the AU Mic planets as

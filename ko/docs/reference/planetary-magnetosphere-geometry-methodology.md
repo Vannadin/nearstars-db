@@ -21,8 +21,8 @@
 ### 자기권계면 standoff (Chapman–Ferraro 균형)
 
 주간측 자기권계면은 행성 자기압이 주변 램압과 평형을 이루는 곳입니다(Chapman & Ferraro
-1931, `1931TeMAE..36...77C`; 경험식 Shue et al. 1997/1998, `1997JGR...102.9497S` /
-`1998JGR...10317691S`). 쌍극장이 `B(r) = B_eq·(R_p/r)³`로 감소하고 Chapman–Ferraro
+1931, [`1931TeMAE..36...77C`](https://ui.adsabs.harvard.edu/abs/1931TeMAE..36...77C); 경험식 Shue et al. 1997/1998, [`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S) /
+[`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)). 쌍극장이 `B(r) = B_eq·(R_p/r)³`로 감소하고 Chapman–Ferraro
 표면전류가 경계에서 場을 약 2배로 만든다면(계수 `f ≈ 2`).
 
     R_mp / R_p  =  [ f² · B_eq² / (2 μ₀ · P_ram) ]^(1/6)      (μ₀ = 4π×10⁻⁷)
@@ -47,19 +47,19 @@
 벨트 강도는 **공급원 − 손실 균형, 場/플라스마 상한으로 캡**됩니다.
 
 1. **공급원**이 바닥을 정합니다. 항성풍 포획, **CRAND**(우주선 알베도 중성자 붕괴,
-   내부벨트 양성자원, Lenchek 1961 `1961JGR....66.4027L`), 안쪽으로의 방사확산(Schulz &
-   Lanzerotti 1974 `1974pdrb.book.....S`), 그리고 **내부 플라스마원** — 화산 위성 하나가
+   내부벨트 양성자원, Lenchek 1961 [`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)), 안쪽으로의 방사확산(Schulz &
+   Lanzerotti 1974 [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)), 그리고 **내부 플라스마원** — 화산 위성 하나가
    전부를 지배할 수 있습니다(Io가 목성 벨트에 ~1 ton/s 주입, Bagenal 1994 Io torus
-   `1994JGR....9911043B`, Divine & Garrett 1983 목성 모델 `1983JGR....88.6889D`).
+   [`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B), Divine & Garrett 1983 목성 모델 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)).
 2. **Kennel–Petschek 상한**이 캡합니다. *최대 안정포획 플럭스*가 존재해, 그 위에서는
    입자 자신의 whistler-mode 파동이 성장해 loss cone으로 산란시킵니다(Kennel & Petschek
-   1966, `1966JGR....71....1K`, 2600+ 인용). 이 한계는 場과 냉플라스마 밀도에 의존하지만
+   1966, [`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K), 2600+ 인용). 이 한계는 場과 냉플라스마 밀도에 의존하지만
    **공급원 세기와 무관**합니다 — 그래서 강공급원 자기권(지구·목성)은 K–P 천장에서
    *포화*하고, 공급을 더 늘려도 강도가 오르지 않습니다.
 3. **손실**이 끌어내립니다. 파동–입자 산란(chorus/hiss/EMIC, Thorne 2010
-   `2010GeoRL..3722107T`, 리뷰 Ripoll 2020 `2020JGRA..12526735R`), Coulomb/대기 손실,
+   [`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T), 리뷰 Ripoll 2020 [`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)), Coulomb/대기 손실,
    그리고 **위성·고리에 의한 흡수** — 토성 벨트는 고리/위성에 쓸려나갑니다(Cooper 1983,
-   `1983JGR....88.3945C`).
+   [`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C)).
 
 도출 상의 귀결: **벨트 강도를 B_eq에서 읽을 수 없습니다.** 같은 場을 가진 두 바디도
 공급원(화산 위성 유무)과 손실(고리/위성 sweeping)에 따라 벨트 선량이 자릿수로 다를 수
@@ -73,7 +73,7 @@ K–P 한계는 이제 어떤 바디에 대해서든 **직접 계산할 수 있�
 [`scripts/refs/kp_limit.py`](../../../scripts/refs/kp_limit.py)는 Mauk & Fox가 직접 발표한
 구현을 검증해 옮긴 Python 포트입니다(그들의 공개 Zenodo 소프트웨어
 [`10.5281/zenodo.4782323`](https://zenodo.org/records/4782323), bibcode
-`2021zndo...4782323M` — 논문 본체인
+[`2021zndo...4782323M`](https://ui.adsabs.harvard.edu/abs/2021zndo...4782323M) — 논문 본체인
 [`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)은
 유료이고 preprint가 없음). 계산 사슬은 이렇습니다. 유연한 미분 스펙트럼
 `j(E) = C·E·(kT(γ₁+1)+E)^(−γ₁−1)/(1+(E/E₀)^γ₂)`에 pitch 계수 sin^2s α를 곱해 →
@@ -258,7 +258,7 @@ NearStars에 대해 이게 확정하는 3가지.
 - **주역할 = 강한 차폐 + 실제 궤도고도 벨트.** 큰 지배비가 차폐를 튼튼하게 만들고(표면 선량 ≈
   위성 L-shell에서의 주변 모행성 플럭스를 크게 줄인 값), 그것이 유지하는 CRAND 벨트는 표면이
   아니라 *궤도* 비행체에 대한 위협이며, 그 정출이 진짜 오로라 오벌을 구동합니다. Heller & Zuluaga
-  2013(`2013ApJ...776L..33H`, arXiv 1309.0811)이 외계위성에 대해 바로 이 차폐-대-벨트 긴장을
+  2013([`2013ApJ...776L..33H`](https://ui.adsabs.harvard.edu/abs/2013ApJ...776L..33H), arXiv 1309.0811)이 외계위성에 대해 바로 이 차폐-대-벨트 긴장을
   다루고, 형성 모델상 지구질량·강장 위성은 *가능성이 낮다*고 지적합니다 — 그래서 이 sub-regime은
   물리적으로 일관되지만 **관측적으로 전례가 없습니다**(픽션 전제 regime. 신뢰도 low로 표기하고,
   태양계 전형을 주장하지 말 것 — 실제 고유-다이나모 위성은 가니메데뿐이고 그마저 약함).
@@ -301,9 +301,9 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
    자기권 플라스마 / 場**에 대해 잡습니다. 결과는 미니자기권. 위성 위치의 벨트 선량은 *모행성*의
    그 L-shell 벨트(모행성엔 손실/공급항) + 위성 자체 차폐로 결정됩니다. 두 sub-regime이 있습니다
    (Part D 참조).
-   - **3a 약장**(가니메데, Kivelson 1996 `1996Natur.384..537K`): 국소의 몇 배 → 새고, 열린
+   - **3a 약장**(가니메데, Kivelson 1996 [`1996Natur.384..537K`](https://ui.adsabs.harvard.edu/abs/1996Natur.384..537K)): 국소의 몇 배 → 새고, 열린
      극관, 무시할 만한 자체 벨트. 순수 차폐.
-   - **3b 강장**(행성급 다이나모, 예: A b III; Heller & Zuluaga 2013 `2013ApJ...776L..33H`):
+   - **3b 강장**(행성급 다이나모, 예: A b III; Heller & Zuluaga 2013 [`2013ApJ...776L..33H`](https://ui.adsabs.harvard.edu/abs/2013ApJ...776L..33H)):
      본질적으로 지구 이상이지만 모행성 자기압에 위성 반경 몇 배로 압축됨. ≳15–20배 지배비 →
      대부분 닫힘 → (대기가 있으면) 실제 CRAND 벨트, 모행성 GCR 차단으로 완화됨. 강한 차폐 **에
      더해** 진짜 궤도고도 벨트. 태양계 전형 없음(신뢰도 low).
@@ -338,10 +338,10 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
 
 ## 인용
 
-- **Chapman & Ferraro 1931**, Terr. Magn. Atmos. Electr. 36, 77 (`1931TeMAE..36...77C`).
+- **Chapman & Ferraro 1931**, Terr. Magn. Atmos. Electr. 36, 77 ([`1931TeMAE..36...77C`](https://ui.adsabs.harvard.edu/abs/1931TeMAE..36...77C)).
   자기권계면 / 압력균형 개념의 기원.
-- **Shue et al. 1997 / 1998**, JGR 102, 9497 (`1997JGR...102.9497S`) / JGR 103, 17691
-  (`1998JGR...10317691S`). 경험적 자기권계면 standoff + 풍 변화에 따른 형상.
+- **Shue et al. 1997 / 1998**, JGR 102, 9497 ([`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S)) / JGR 103, 17691
+  ([`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)). 경험적 자기권계면 standoff + 풍 변화에 따른 형상.
 - **Kennel & Petschek 1966**, JGR 71, 1 ([`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K)). 안정포획 플럭스 한계 —
   벨트 강도의 공급원-무관 천장. Part B의 핵심.
 - **Summers, Tang & Thorne 2009**, JGRA 114, A10210 ([`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S));
@@ -351,7 +351,7 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
 - **Mauk & Fox 2010**, JGRA 115, A12220 ([`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)).
   행성 간 미분 K–P 프레임워크: 지구/목성/천왕성이 캡에, 해왕성은 아래(주입 기아),
   토성도 아래(물질 손실). 유료. **그들의 공개 구현**([Zenodo 10.5281/zenodo.4782323](https://zenodo.org/records/4782323),
-  `2021zndo...4782323M`)은 캐시(`_papers/mauk_fox_KP.nb` + 실행)되어
+  [`2021zndo...4782323M`](https://ui.adsabs.harvard.edu/abs/2021zndo...4782323M))은 캐시(`_papers/mauk_fox_KP.nb` + 실행)되어
   `scripts/refs/kp_limit.py`로 포팅됨(출력 중간값 11개에서 ≤0.05 %로 검증).
 - **Mourenas et al. 2024**, JGRA 129, e32193 ([`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
   ~3 파동-이득 기준의 독립 확인(ELFIN).
@@ -360,24 +360,24 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
   [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
   표준 전자/양성자 fluence → Al 뒤 선량 수송 — 선량 대비가 ~1 MeV 미분 캡이 아니라
   스펙트럼 경도로 정해지는 이유.
-- **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* (`1974pdrb.book.....S`).
+- **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* ([`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
   벨트를 채우는 방사확산 수송.
-- **Lenchek et al. 1961**, JGR 66, 4027 (`1961JGR....66.4027L`). CRAND 내부벨트 공급원.
-- **Divine & Garrett 1983**, JGR 88, 6889 (`1983JGR....88.6889D`); **Bagenal 1994**,
-  JGR 99, 11043 (`1994JGR....9911043B`). 목성 방사선 + Io 내부 플라스마원 — "강도는 場이
+- **Lenchek et al. 1961**, JGR 66, 4027 ([`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)). CRAND 내부벨트 공급원.
+- **Divine & Garrett 1983**, JGR 88, 6889 ([`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)); **Bagenal 1994**,
+  JGR 99, 11043 ([`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B)). 목성 방사선 + Io 내부 플라스마원 — "강도는 場이
   아니라 공급원이 정한다"의 canonical 사례.
-- **Thorne 2010**, GRL 37, L22107 (`2010GeoRL..3722107T`); **Ripoll et al. 2020**,
-  JGRA 125, e26735 (`2020JGRA..12526735R`). 파동–입자 가속·손실; 현대 벨트 동역학 리뷰.
-- **Cooper 1983**, JGR 88, 3945 (`1983JGR....88.3945C`). 벨트 손실로서의 고리/위성 흡수 —
+- **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
+  JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). 파동–입자 가속·손실; 현대 벨트 동역학 리뷰.
+- **Cooper 1983**, JGR 88, 3945 ([`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C)). 벨트 손실로서의 고리/위성 흡수 —
   A b 고리 + 위성 케이스.
-- **Kivelson et al. 1996**, Nature 384, 537 (`1996Natur.384..537K`). 가니메데 임베디드
+- **Kivelson et al. 1996**, Nature 384, 537 ([`1996Natur.384..537K`](https://ui.adsabs.harvard.edu/abs/1996Natur.384..537K)). 가니메데 임베디드
   자기권 — 약장 임베디드 위성(sub-regime 3a) 전형.
-- **Heller & Zuluaga 2013**, ApJ 776, L33 (`2013ApJ...776L..33H`, arXiv
+- **Heller & Zuluaga 2013**, ApJ 776, L33 ([`2013ApJ...776L..33H`](https://ui.adsabs.harvard.edu/abs/2013ApJ...776L..33H), arXiv
   **[1309.0811](https://arxiv.org/abs/1309.0811)**). 거대행성 자기권 안에서의 외계위성 자기
   차폐 — 차폐-대-벨트 긴장, 그리고 지구질량·강장 위성은 형성 가능성이 낮다는 지적. 강장
   임베디드 위성(sub-regime 3b)을 일관되지만 전례 없는 것으로 근거화(픽션 전제).
-- **Griessmeier et al. 2004**, A&A 425, 753 (`2004A&A...425..753G`); **Vidotto et al.
-  2013**, A&A 557, A67 (`2013A&A...557A..67V`). 항성풍/조석고정 대비 외계행성 자기권 크기 —
+- **Griessmeier et al. 2004**, A&A 425, 753 ([`2004A&A...425..753G`](https://ui.adsabs.harvard.edu/abs/2004A%26A...425..753G)); **Vidotto et al.
+  2013**, A&A 557, A67 ([`2013A&A...557A..67V`](https://ui.adsabs.harvard.edu/abs/2013A%26A...557A..67V)). 항성풍/조석고정 대비 외계행성 자기권 크기 —
   근접 행성 standoff 적용.
 
 ## Related

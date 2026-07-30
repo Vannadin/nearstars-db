@@ -264,7 +264,7 @@ exists), and one line on what it contributes.
   a modest atmosphere prevents nightside atmospheric collapse on a locked planet.
 
 - **Pierrehumbert, R. T. (2011)**: *ApJ Letters* 726, L8. No arXiv preprint;
-  cite by ADS bibcode **2011ApJ...726L...8P** (the previously-circulated id
+  cite by ADS bibcode **[`2011ApJ...726L...8P`](https://ui.adsabs.harvard.edu/abs/2011ApJ...726L...8P)** (the previously-circulated id
   1010.5052 is an unrelated mathematics paper: do not use it). "A Palette of
   Climates for Gliese 581g": defines the eyeball / snowball / Super-Europa
   climate states for a tidally-locked world.
@@ -274,7 +274,7 @@ exists), and one line on what it contributes.
   habitable zone; supports the thick-atmosphere / waterbelt readings.
 
 - **Hu, Y. & Yang, J. (2014)**: *PNAS* 111, 629. No arXiv preprint; cite by ADS
-  bibcode **2014PNAS..111..629H** (the previously-circulated id [1312.3337](https://arxiv.org/abs/1312.3337) is
+  bibcode **[`2014PNAS..111..629H`](https://ui.adsabs.harvard.edu/abs/2014PNAS..111..629H)** (the previously-circulated id [1312.3337](https://arxiv.org/abs/1312.3337) is
   Leconte+ 2013 on runaway greenhouse: do not use it). Ocean heat transport
   shifts the eyeball pool downwind: the "lobster" / asymmetric-eyeball state.
 

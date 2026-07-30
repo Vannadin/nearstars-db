@@ -62,7 +62,7 @@ jovian-analog tie-breaks (no spectrum or thermal map yet).
 | `planet_disk_tint_rgb_hex_accent` | `#c0a070` (warm tan-brown belts — deeper cloud layers + haze showing through) | low | Tie-break: Jupiter/Saturn belt-zone contrast under M-dwarf illumination; band amplitude moderate given the low insolation and weak convective drive |
 | `ring_present` | false | low | Tie-break: no detection (astrometry cannot see a ring). cfg defaults to "no ring" — no fabricated feature per the search-and-verify policy |
 | `rotation_period_hours` | 10 | low | Tie-break: no rotation measurement. Jupiter-analog ~10 h fast rotation; a massive young jovian retains a large primordial spin angular momentum, favoring Jupiter-class rapid rotation over slower Saturn/Uranus-like values |
-| `magnetic_field_strength_microtesla_equator` | 2000 | low | Energy-flux dynamo scaling (Christensen et al. 2009 `2009Natur.457..167C`; Reiners & Christensen 2010 `1007.1514`): B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 for 2.26 M_Jup. Host age is genuinely uncertain (≲100 Myr PMS vs ~950 Myr) → B_eq spans ~1600 (old) to ~3400 (young) µT; cfg picks ~2000 µT central, the young active host favoring the high end. (Field key normalized to the canonical `_strength_` spelling.) See docs/reference/planetary-dynamo-scaling.md |
+| `magnetic_field_strength_microtesla_equator` | 2000 | low | Energy-flux dynamo scaling (Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C); Reiners & Christensen 2010 `1007.1514`): B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 for 2.26 M_Jup. Host age is genuinely uncertain (≲100 Myr PMS vs ~950 Myr) → B_eq spans ~1600 (old) to ~3400 (young) µT; cfg picks ~2000 µT central, the young active host favoring the high end. (Field key normalized to the canonical `_strength_` spelling.) See docs/reference/planetary-dynamo-scaling.md |
 | `magnetic_dipole_moment_normalized_earth` | 120000 | low | 2000 µT × (1.10 R_Jup)³ vs Jupiter (4.5 G equatorial, 20 000× Earth) → ≈ 1.2×10⁵ × Earth via energy-flux scaling (`1007.1514`); age- and R³-sensitive → low conf |
 | `aurora_present` | true | medium | the host GJ 896 A is a very active flare star with a kG field and frequent radio/X-ray bursts (Curiel 2022); the elevated stellar wind + flare plasma flux at 0.64 AU, captured by the jovian magnetosphere, drives strong auroral emission |
 | `aurora_color_primary_hex` | `#c84080` (H-Balmer α 656 nm red-pink in an H₂-rich jovian atmosphere) | low | Tie-break: visible-band jovian aurora is dominated by H-Balmer α; reads as red-pink, reinforced by the deep-red illumination context |
@@ -218,7 +218,7 @@ banded, red-dwarf-lit Jovian on a visibly eccentric orbit:
 
 - **Curiel S. et al. 2022** — *3D orbital architecture of a dwarf
   binary system and its planetary companion*, AJ 164, 93
-  (`2022AJ....164...93C`, doi:10.3847/1538-3881/ac7c66,
+  ([`2022AJ....164...93C`](https://ui.adsabs.harvard.edu/abs/2022AJ....164...93C), doi:10.3847/1538-3881/ac7c66,
   [arXiv:2208.14553](https://arxiv.org/abs/2208.14553)). The VLBA + optical/IR astrometric discovery of
   GJ 896 A b. Phase 2 recommended source for the true mass
   (2.26 ± 0.57 M_Jup = 718.29 M⊕), the full orbital element set

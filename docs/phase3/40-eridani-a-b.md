@@ -11,7 +11,7 @@ Hail Mary* (2021). No other refuted detection carries this much
 cultural weight, and that is the entire reason it survives in the
 NearStars database at all.
 
-The candidate was announced by Ma et al. 2018 (`2018AJ....155..117M`,
+The candidate was announced by Ma et al. 2018 ([`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M),
 the Dharma Planet Survey RV program) as a super-Earth with
 M sin i ≈ 8.47 M⊕ on a P = 42.245-day orbit at a = 0.224 AU around
 the K0.5 V primary of the 40 Eridani triple, a real nearby catalog
@@ -223,7 +223,7 @@ pick.
 
 - **Ma B. et al. 2018** — *The First Super-Earth Detection from the
   High Cadence and High Radial Velocity Precision Dharma Planet
-  Survey* (`2018AJ....155..117M`). The discovery paper. Reports b at
+  Survey* ([`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M)). The discovery paper. Reports b at
   P = 42.245 d, M sin i ≈ 8.47 M⊕, a ≈ 0.224 AU around the K0.5 V
   primary. Anchors the pre-retraction Decisions rows above.
 - **Burrows R. et al. 2024** — *The Death of Vulcan: NEID Reveals

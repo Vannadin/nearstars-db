@@ -15,7 +15,7 @@ The existing 143 curated systems keep all of the above; field stars are the ligh
 
 ## Data source
 - **Gaia Catalogue of Nearby Stars (GCNS; Gaia Collaboration / Smart et al. 2021,
-  2021A&A...649A...6G)** — EDR3-based, vetted, ~331k stars within 100 pc; essentially
+  [`2021A&A...649A...6G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A...6G))** — EDR3-based, vetted, ~331k stars within 100 pc; essentially
   complete within 15.33 pc (= 50 ly). This is the right catalog for "all nearby stars."
   - Query alternative: `gaiadr3.gaia_source` with `parallax > 65.24` (mas) = within 50 ly.
 - **Bright-star gap (must handle):** Gaia saturates at G ≲ 3, so the brightest nearby

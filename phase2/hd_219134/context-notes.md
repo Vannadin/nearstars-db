@@ -45,7 +45,7 @@ measured ... more closely match the V15 values."
    density"), evolutionary 0.78 as alt. Agree within ~1.5 sigma. DB's
    prior 0.81 was the high end of the evolutionary range, unverified.
 3. **g/h provenance**: DB already attributes g & h to Vogt 2015 with the
-   correct bibcode (2015ApJ...814...12V). The task's "g/h say Gillon but
+   correct bibcode ([`2015ApJ...814...12V`](https://ui.adsabs.harvard.edu/abs/2015ApJ...814...12V)). The task's "g/h say Gillon but
    bibcode Vogt" did not match the actual DB state. The REAL provenance
    issue is **d & f**: DB lists them as mass_type="true mass" attributed
    to Gillon 2017, but Gillon 2017's abstract reports masses+radii for

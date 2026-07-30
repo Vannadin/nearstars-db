@@ -59,7 +59,7 @@ unverified M/R to proper method tiers + fill the empty high-impact categories
 - Anchors: Stock 2020 ([2002.01772](https://arxiv.org/abs/2002.01772), params+rotation 68.4d), Astudillo-Defru 2017 ([1708.03336](https://arxiv.org/abs/1708.03336), discovery+alt), Cifuentes 2020 (VizieR J/A+A/642/A115, teff/L), Schweitzer 2019 (1904.06025, M/R). Aurora: Pineda&Villadsen 2023 ([2304.00031](https://arxiv.org/abs/2304.00031)) + Trigilio 2023 ([2305.00809](https://arxiv.org/abs/2305.00809), planet b B-field). No moons.
 
 **eps Ind A** (eps_ind_a, Gaia 6412595290592307840, K5V, 11.9 ly)
-- ⚠ DB has MALFORMED bibcode `2026arXiv260308780M` (Matthews 2026 = arXiv [2603.08780](https://arxiv.org/abs/2603.08780)) → fix on escalation.
+- ⚠ DB has MALFORMED bibcode [`2026arXiv260308780M`](https://ui.adsabs.harvard.edu/abs/2026arXiv260308780M) (Matthews 2026 = arXiv [2603.08780](https://arxiv.org/abs/2603.08780)) → fix on escalation.
 - Planet b: cold super-Jupiter, mass migrated 3→6.3→7.6 MJ across RV→JWST. Anchors: Feng 2018 ([1803.08163](https://arxiv.org/abs/1803.08163)), Feng 2019 ([1910.06804](https://arxiv.org/abs/1910.06804)), Matthews 2024 ([2503.01599](https://arxiv.org/abs/2503.01599) Nature), Matthews 2026 ([2603.08780](https://arxiv.org/abs/2603.08780) best params). Atmosphere: NH3 + water-ice clouds (cold giant palette).
 - DECIDE (richness): ADD the brown-dwarf pair eps Ind B (Ba T1 67 MJ + Bb T6 53 MJ, Gaia 6412596012146801152), Chen 2022 mutual orbit P=11.02yr a=2.406AU modeled; the A–B wide pair (~1460 AU) left UNMODELED per existing wide-binary convention. Needs B in astrometry_raw → full pipeline run.
 

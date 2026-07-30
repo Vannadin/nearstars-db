@@ -33,7 +33,7 @@
   "intermediate"); intensities re-derived from the methodology rather than
   picked from presets; Pandora = refit shape only (values preserved).
 - Methodology upgraded first: Part B gained the **saturated-regime calibration**
-  (Mauk & Fox 2010, 2010JGRA..11512220M, verified via ADS + cached) — two-anchor
+  (Mauk & Fox 2010, [`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M), verified via ADS + cached) — two-anchor
   B² interpolation between Earth (31 µT → 10.4 rad/h) and Jupiter (428 µT →
   ~1500). Polyphemus 170 µT → 313 → 300 rad/h inner; outer = 0.1× (torus-driven
   Jupiter ratio) = 30. The board row cites the methodology doc per the
@@ -59,17 +59,17 @@ Owner: "단순 보간으로 계산한거야? 방법론 규율대로 정확한 �
 Mode A methodology upgrade, three research legs (solo Opus agents):
 
 1. **K–P formula recovered exactly** — not from the paywalled papers but from
-   Mauk & Fox's own open Zenodo software (2021zndo...4782323M, doi
+   Mauk & Fox's own open Zenodo software ([`2021zndo...4782323M`](https://ui.adsabs.harvard.edu/abs/2021zndo...4782323M), doi
    10.5281/zenodo.4782323): the flexible spectral shape, Summers 2009 A4–A8
    relativistic resonance, A1/A2 growth integrals, and the marginal-stability
    condition CmCk = L·Rp·wi/(3·vg) with wave gain 3 (independently confirmed by
-   Mourenas 2024, 2024JGRA..12932193M). Cached: mauk_fox_KP.nb + rendered run
+   Mourenas 2024, [`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)). Cached: mauk_fox_KP.nb + rendered run
    (validation targets: wi=0.658455, CmCk peak 0.608 for Earth L=5) +
    kennel_petschek_recipe.md. Key scaling finding: the limit's controlling
    variable is We/wpe ∝ B/√n_cold + spectral/pitch indices — **NOT B²**.
 2. **Flux→dose leg (the reframing)** — no single quotable per-intensity factor
    exists in ADS abstracts; the standard method is SHIELDOSE-2 (Seltzer
-   1979ITNS...26.4896S, 1992STIN...9315580S). Load-bearing physics: Mauk & Fox
+   [`1979ITNS...26.4896S`](https://ui.adsabs.harvard.edu/abs/1979ITNS...26.4896S), [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)). Load-bearing physics: Mauk & Fox
    show Earth/Jupiter/Uranus sit at COMPARABLE differential K–P caps near
    1 MeV, yet doses differ by orders — **dose contrast is driven by spectral
    hardness (the tail above the ~2 mm-Al transmission cutoff; 1 MeV e⁻ CSDA

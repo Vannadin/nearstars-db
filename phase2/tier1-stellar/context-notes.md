@@ -25,7 +25,7 @@ section.
   - activity: log R'HK primary; X-ray as secondary entry
 
 ## eps Eri (DONE 2026-05-29)
-- Anchor = Baines & Armstrong 2012 (2012ApJ...744..138B; arXiv [1112.0447](https://arxiv.org/abs/1112.0447) is the
+- Anchor = Baines & Armstrong 2012 ([`2012ApJ...744..138B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...744..138B); arXiv [1112.0447](https://arxiv.org/abs/1112.0447) is the
   full ar5iv text). Cache-verified in body/Table 3: theta_LD 2.153+/-0.028 mas,
   R 0.74+/-0.01, Teff 5039+/-126 (theta_LD + Fbol), L 0.32+/-0.03, M 0.82+/-0.05
   (Y^2 isochrone), age ~1 Gyr (isochrone, authors disclaim). 4 categories from
@@ -64,7 +64,7 @@ section.
   (theta_LD + Boyajian Fbol, text §3.2) and spectroscopic 5320 +/- 40 (their
   Table 1 adopted). Recommended the interferometric per contract method-priority;
   documented the split. Santos 2013 5310 +/- 17 (GdS VizieR row) as 3rd alt.
-- [Fe/H] = Santos 2013 -0.52 +/- 0.01 (GdS VizieR row r_Teff=2013A&A...556A.150S,
+- [Fe/H] = Santos 2013 -0.52 +/- 0.01 (GdS VizieR row r_Teff=[`2013A&A...556A.150S`](https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.150S),
   confirmed). Bruntt 2010 -0.18 (cached [1002.4268](https://arxiv.org/abs/1002.4268), table-verified) kept as the
   alpha-enhanced outlier alt.
 - Activity = Gomes da Silva 2021 logR'HK -4.977 (VizieR row recno 101); Mamajek

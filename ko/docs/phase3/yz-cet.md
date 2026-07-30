@@ -232,21 +232,21 @@ NearStars 렌더러에서 YZ Cet 은, 시그니처가 수수한 광구가 아니
   sub-Alfvénic 기하, 그리고 **행성 b 자기장 하한 B ≥ 0.4 G** — 첫
   간접 외계행성 자기장 측정 — 의 출처.
 - **Stock S. et al. 2020** — *The CARMENES search for exoplanets around
-  M dwarfs. Three temperate to warm super-Earths* (`2020A&A...636A.119S`,
+  M dwarfs. Three temperate to warm super-Earths* ([`2020A&A...636A.119S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A.119S),
   doi:10.1051/0004-6361/201936732). 자전 주기 (68.4 ± 0.05 d, 결합
   V-band 측광) 와 행성 b/c/d 궤도 및 최소질량의 Phase 2 recommended
   출처. Astudillo-Defru 2017 의 83 d 자전 주기를 대체.
 - **Cifuentes C. et al. 2020** — *CARMENES input catalogue of M dwarfs.
-  Photometric and astrometric properties* (`2020A&A...642A.115C`,
+  Photometric and astrometric properties* ([`2020A&A...642A.115C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...642A.115C),
   doi:10.1051/0004-6361/202038295). 유효온도 (3100 K, SED 피팅) 와 광도
   (0.0022 L☉, bolometric flux) 의 Phase 2 recommended 출처.
 - **Schweitzer A. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Different roads to radii and masses of the target
-  stars* (`2019A&A...625A..68S`, doi:10.1051/0004-6361/201834965).
+  stars* ([`2019A&A...625A..68S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S), doi:10.1051/0004-6361/201834965).
   질량 (0.1368 M☉) 과 반지름 (0.1571 R☉) 의 Phase 2 recommended 출처.
 - **Astudillo-Defru N. et al. 2017** — *The HARPS search for southern
   extra-solar planets. A compact system of short-period super-Earths
-  around YZ Ceti* (`2017A&A...605L..11A`, doi:10.1051/0004-6361/201731581).
+  around YZ Ceti* ([`2017A&A...605L..11A`](https://ui.adsabs.harvard.edu/abs/2017A%26A...605L..11A), doi:10.1051/0004-6361/201731581).
   세 행성의 발견 논문. 활동 지표 (log R'HK = −4.71) 와 분광형의 Phase 2
   recommended 출처. 이전 Teff/질량/반지름 대안은 `recommended:false`
   로 보존.

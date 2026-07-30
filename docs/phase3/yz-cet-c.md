@@ -171,7 +171,7 @@ Combining the surface and atmosphere decisions:
 
 ### Read (visual-informative, drove decisions above)
 
-- **2020A&A...636A.119S** Stock et al. 2020 — Phase 2 recommended
+- **[`2020A&A...636A.119S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A.119S)** Stock et al. 2020 — Phase 2 recommended
   source for c's orbit (P = 3.05989 d, a = 0.02156 AU, e = 0) and
   minimum mass (1.14 M⊕), plus the semi-empirical radius estimate
   (1.05 R⊕).
@@ -184,7 +184,7 @@ Combining the surface and atmosphere decisions:
 
 ### Read (context / methodology, not decision-driving)
 
-- **2017A&A...605L..11A** Astudillo-Defru et al. 2017 — discovery paper;
+- **[`2017A&A...605L..11A`](https://ui.adsabs.harvard.edu/abs/2017A%26A...605L..11A)** Astudillo-Defru et al. 2017 — discovery paper;
   earlier c orbit/mass solution (P = 3.06008 d, M sin i = 0.98 M⊕)
   retained as `recommended:false`.
 - Host stellar synthesis (`yz-cet.md`) — the Teff/L/R/M values that set

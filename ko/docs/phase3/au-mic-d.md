@@ -3,11 +3,11 @@
 
 AU Microscopii d 는 22 Myr 의 M1Ve flare star AU Mic 주위 12.74-d
 궤도를 도는 1.053 ± 0.511 M⊕ 지구질량 행성 후보입니다. Wittrock et
-al. 2023 (AJ 166, 232. `2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)) 이
+al. 2023 (AJ 166, 232. [`2023AJ....166..232W`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W), [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)) 이
 이미 알려진 행성 b 와 c 의 통과 타이밍 분석을 통해 TESS + 지상 결합
 통과 데이터셋에서 발견했습니다. d 자체는 통과하지 않으며 (직접
 반지름 측정 없음) 궤도 주기와 질량은 b 와 c 의 통과 시각에 새기는
-중력 섭동에서 옵니다. Mallorquin et al. 2024 (`2024A&A...689A.132M`)
+중력 섭동에서 옵니다. Mallorquin et al. 2024 ([`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M))
 의 독립적 ESPRESSO RV 재분석은 d 신호를 marginal RV 유의성에서
 찾으며 TTV 유도 질량과 일관됩니다. NASA Exoplanet Archive 에 등재된
 반지름 (1.02 R⊕) 은 측정값이 아니라 질량-반지름 관계의 placeholder
@@ -269,26 +269,26 @@ AU Mic d 의 시각 표현은 얇은 대기를 가진 조석 lock 암석 세계�
 
 ### Read (visual-informative, drove decisions above)
 
-- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). N-body + TTV 동역학 질량. 12.74 d, 질량 1.053 ± 0.511 M⊕ 의 TTV 전용 후보로 d 도입. **cornerstone 발견 논문.**
-- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). ESPRESSO RV 재분석이 d 신호를 marginal 유의성에서 회수. 불확실도 안에서 TTV 유도 파라미터 확인.
-- **Driscoll P. E. & Barnes R. 2015** — *Tidal Heating of Earth-like Exoplanets around M Stars*, Astrobiology 15, 739 (`2015AsBio..15..739D`, [arXiv:1506.08077](https://arxiv.org/abs/1506.08077)). M-왜성 거주가능 영역의 어린 암석 행성에 대한 조석 가열 구동 화산 활동 프레임워크. d 의 표면 화산 + 대기 보충 논증에 채택.
-- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 (`2017ApJ...847...29O`, [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). 광증발 프레임워크. M-왜성 XUV 하 d 의 일사량에서 작은 행성이 Myr 시간 척도에서 대기를 스트립한다는 canonical 논증. cfg 의 documented divergence 가 이 reading 에 반함.
-- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare 센서스. 10³¹ erg 위 비율 5.6/일. canonical alternative 에 대한 대기 스트립 논증 구동.
-- **Atri D. 2019** — *Modelling stellar proton event-induced particle radiation dose on close-in exoplanets*, MNRAS 492, L28 (`2020MNRAS.492L..28A`, [arXiv:1910.09871](https://arxiv.org/abs/1910.09871)). 항성 양성자 이벤트 하 M-왜성 외계행성에 대한 표면 dose 계산. 복사 환경과 오로라 강도에 정보 제공.
-- **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a Key Role in the Climate of Tidally Locked Terrestrial Exoplanets: Insights from High-Resolution Simulations*, ApJ 894, 84 (`2020ApJ...894...84S`, [arXiv:2004.03007](https://arxiv.org/abs/2004.03007)). 조석 lock thin-atmosphere 행성에 대한 substellar 대류 프레임워크.
+- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 ([`2023AJ....166..232W`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W), [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). N-body + TTV 동역학 질량. 12.74 d, 질량 1.053 ± 0.511 M⊕ 의 TTV 전용 후보로 d 도입. **cornerstone 발견 논문.**
+- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 ([`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)). ESPRESSO RV 재분석이 d 신호를 marginal 유의성에서 회수. 불확실도 안에서 TTV 유도 파라미터 확인.
+- **Driscoll P. E. & Barnes R. 2015** — *Tidal Heating of Earth-like Exoplanets around M Stars*, Astrobiology 15, 739 ([`2015AsBio..15..739D`](https://ui.adsabs.harvard.edu/abs/2015AsBio..15..739D), [arXiv:1506.08077](https://arxiv.org/abs/1506.08077)). M-왜성 거주가능 영역의 어린 암석 행성에 대한 조석 가열 구동 화산 활동 프레임워크. d 의 표면 화산 + 대기 보충 논증에 채택.
+- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 ([`2017ApJ...847...29O`](https://ui.adsabs.harvard.edu/abs/2017ApJ...847...29O), [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). 광증발 프레임워크. M-왜성 XUV 하 d 의 일사량에서 작은 행성이 Myr 시간 척도에서 대기를 스트립한다는 canonical 논증. cfg 의 documented divergence 가 이 reading 에 반함.
+- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 ([`2023ApJ...951...33T`](https://ui.adsabs.harvard.edu/abs/2023ApJ...951...33T), [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare 센서스. 10³¹ erg 위 비율 5.6/일. canonical alternative 에 대한 대기 스트립 논증 구동.
+- **Atri D. 2019** — *Modelling stellar proton event-induced particle radiation dose on close-in exoplanets*, MNRAS 492, L28 ([`2020MNRAS.492L..28A`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.492L..28A), [arXiv:1910.09871](https://arxiv.org/abs/1910.09871)). 항성 양성자 이벤트 하 M-왜성 외계행성에 대한 표면 dose 계산. 복사 환경과 오로라 강도에 정보 제공.
+- **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a Key Role in the Climate of Tidally Locked Terrestrial Exoplanets: Insights from High-Resolution Simulations*, ApJ 894, 84 ([`2020ApJ...894...84S`](https://ui.adsabs.harvard.edu/abs/2020ApJ...894...84S), [arXiv:2004.03007](https://arxiv.org/abs/2004.03007)). 조석 lock thin-atmosphere 행성에 대한 substellar 대류 프레임워크.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 의 b 발견. d 의 대기 보전 논의에 정보를 주는 항성 활동 맥락 제공.
-- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). c 의 발견. d 의 TTV 검출을 가능하게 한 안쪽 행성 구조 정의.
-- **Chen J. & Kipping D. 2017** — *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 (`2017ApJ...834...17C`, [arXiv:1603.08614](https://arxiv.org/abs/1603.08614)). d 의 placeholder 반지름 (1.02 R⊕) 에 NASA Exoplanet Archive 가 사용한 질량-반지름 관계.
-- **Goldreich P. & Soter S. 1966** — *Q in the Solar System*, Icarus 5, 375 (`1966Icar....5..375G`). 1:1 spin-orbit 결론에 사용한 조석 감쇠 시간 척도 프레임워크.
-- **Vinson A. M. & Hansen B. M. S. 2017** — *On the spin states of habitable zone exoplanets around M dwarfs: the effect of a near-resonant companion*, MNRAS 472, 3217 (`2017MNRAS.472.3217V`, [arXiv:1709.00007](https://arxiv.org/abs/1709.00007)). spin-orbit 공명 임계점. e = 0.003 이 3:2 에 너무 낮음.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 ([`2020Natur.582..497P`](https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P), [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 의 b 발견. d 의 대기 보전 논의에 정보를 주는 항성 활동 맥락 제공.
+- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 ([`2021A&A...649A.177M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A.177M), [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). c 의 발견. d 의 TTV 검출을 가능하게 한 안쪽 행성 구조 정의.
+- **Chen J. & Kipping D. 2017** — *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 ([`2017ApJ...834...17C`](https://ui.adsabs.harvard.edu/abs/2017ApJ...834...17C), [arXiv:1603.08614](https://arxiv.org/abs/1603.08614)). d 의 placeholder 반지름 (1.02 R⊕) 에 NASA Exoplanet Archive 가 사용한 질량-반지름 관계.
+- **Goldreich P. & Soter S. 1966** — *Q in the Solar System*, Icarus 5, 375 ([`1966Icar....5..375G`](https://ui.adsabs.harvard.edu/abs/1966Icar....5..375G)). 1:1 spin-orbit 결론에 사용한 조석 감쇠 시간 척도 프레임워크.
+- **Vinson A. M. & Hansen B. M. S. 2017** — *On the spin states of habitable zone exoplanets around M dwarfs: the effect of a near-resonant companion*, MNRAS 472, 3217 ([`2017MNRAS.472.3217V`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.472.3217V), [arXiv:1709.00007](https://arxiv.org/abs/1709.00007)). spin-orbit 공명 임계점. e = 0.003 이 3:2 에 너무 낮음.
 
 ### Read (instrument / non-decisive)
 
-- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). host 별 ZDI. 행성 복사 환경에 대한 항성 자기장 맥락 제공.
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). Mallorquin 2024 의 d 회수에 (간접적으로) 적용된 AU Mic RV detrending 방법론.
+- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 ([`2023MNRAS.525..455D`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525..455D)). host 별 ZDI. 행성 복사 환경에 대한 항성 자기장 맥락 제공.
+- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 ([`2021AJ....162..295C`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..295C), [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). Mallorquin 2024 의 d 회수에 (간접적으로) 적용된 AU Mic RV detrending 방법론.
 
 ### Not read — no arXiv preprint or low-priority (~20 papers)
 

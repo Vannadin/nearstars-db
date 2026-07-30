@@ -128,7 +128,7 @@ Counts: 18 canonical-aligned, 2 tie-break/methodology, 0 documented divergence.
 
 - Paper extraction delegated (11 cached texts); all load-bearing quotes
   grep-verified on main thread against docs/phase3/_papers/ before drafting.
-- Agol 2021 cache (2010.01074.md) is ABSTRACT-ONLY — stellar M/R/Teff rows
+- Agol 2021 cache ([2010.01074](https://arxiv.org/abs/2010.01074).md) is ABSTRACT-ONLY — stellar M/R/Teff rows
   rest on the Phase 2 curated entries (paper-verified at curation) plus the
   2566 K literature quote embedded in Radica 2024 §3. Flagged in Open items.
 - XUV discrepancy: Wheatley 2017 L_XUV/L_bol 6–9e-4 (~1.2–1.8e27 erg/s) vs

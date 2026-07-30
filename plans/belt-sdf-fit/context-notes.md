@@ -92,7 +92,7 @@ Verdicts on the 7 open items: 5 supported with firmer grounding, 2 adjusted.
 - **Uranus corrected** (the one real error): the L=3 split was arbitrary and the
   "413 nT @ 4.19 R_U" doc anchor was a magnetometer reading, not a belt. Real
   structural boundaries are the moon L-shells — Krimigis 1986 "except inside the
-  orbit of Miranda" + Cheng 1987 (1987JGR....9215315C, newly pinned) electron
+  orbit of Miranda" + Cheng 1987 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C), newly pinned) electron
   minima at Miranda/Ariel/Umbriel L 5.1/7.5/10.4 with broad maxima between.
   New windows: inner L 1.5–5 (inside Miranda), outer L 5–10 (Miranda→Umbriel);
   trapping detectable to Titania ~L 17. Refit IoU .98/.97.
@@ -103,7 +103,7 @@ Verdicts on the 7 open items: 5 supported with firmer grounding, 2 adjusted.
   Saturn horns (bounce population fills field lines — a latitude bound would be
   wrong), Neptune windows (Proteus L 4.75 divider; Triton 14.4), Earth outer
   rcut 1.05 (outer electrons precipitate into the loss cone at low altitude —
-  Liu 2024, 2024JGRA..12932171L, newly pinned), Ganymede L 1.1–1.9 with
+  Liu 2024, [`2024JGRA..12932171L`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932171L), newly pinned), Ganymede L 1.1–1.9 with
   rcut 1.0 (airless, surface-absorbed; refit IoU .967).
 - Paper cache relocated to canonical docs/phase3/_papers/ (agent had created a
   root _papers/ by mistake — my prompt's fault).

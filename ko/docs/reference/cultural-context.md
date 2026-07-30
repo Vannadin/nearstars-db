@@ -6,7 +6,7 @@ NearStars 는 실재 가까운 별을 다루고, 그중 일부는 사이파이�
 ## Tau Ceti — *Project Hail Mary* (Andy Weir, 2021)
 
 - **소설의 행성**: "Adrian" = Tau Cet e
-- **실제 status**: Tau Cet e 는 2026-04-09 NASA Exoplanet Archive 에서 **"False Positive Planet"** 으로 재분류 되었습니다 (Figueira 외 2025, `2025A&A...700A.174F` ESPRESSO sub-10 cm/s RV 비검출 인용). 소설은 Feng 2017 검출 picture 기반으로 집필 되었고, 그 picture 는 이제 obsolete 입니다.
+- **실제 status**: Tau Cet e 는 2026-04-09 NASA Exoplanet Archive 에서 **"False Positive Planet"** 으로 재분류 되었습니다 (Figueira 외 2025, [`2025A&A...700A.174F`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F) ESPRESSO sub-10 cm/s RV 비검출 인용). 소설은 Feng 2017 검출 picture 기반으로 집필 되었고, 그 picture 는 이제 obsolete 입니다.
 - **소설이 맞춘 점**: G8V 분광형, ~9 Gyr 나이 (태양의 두 배), 안정적 astrobiology 대상으로서의 Tau Ceti
 - **소설이 틀린 점 (현 데이터 기준)**: Adrian 이 거주 가능한 super-Earth 라는 가정 — 기반 RV 신호가 이제는 항성 활동으로 간주됨. 또 실재의 잔해 원반 (ALMA-resolved 6–55 AU, ~1.2 M⊕, MacGregor 2016) 도 소설에 없는데, 실제 진입 시 항해 위험.
 - **Weir 의 Adrian 명시 파라미터** (소설 텍스트 + Weir 인터뷰 종합. `docs/phase3/tau-cet-e.md § Bibliography` 참조). 표면 중력 **1.4 g** (Weir Sciam 팟캐스트. Feng 2017 의 3.93 M⊕ + 암석질 mass-radius 관계, ~1.68 R⊕ 함의). 대기 **91% CO₂ / 7% CH₄ / 1% Ar / 미량** (질소 미존재 — Taumoeba 가 질소 불내성). 표면 압력 명시 안 됨. 91.2 km 고도에서 0.02 bar / −51 °C 이 다 bar CO₂ 우세 표면을 함의. 우주에서 본 색 **녹색** (광화학 haze + 대기 부유 Taumoeba 생물). Weir 가 Feng 2017 궤도 직접 사용 (P ≈ 168 d, a ≈ 0.55 AU). 자전 주기 / day length 명시 안 됨. **표면 해양 없음** — sampling 임무는 10 km xenonite chain 으로 대기 상층 91.2 km 클라우드 타겟. 표면 도달 안 함.
@@ -18,7 +18,7 @@ NearStars 는 실재 가까운 별을 다루고, 그중 일부는 사이파이�
 ## 40 Eridani A — *Star Trek* (Vulcan) + *Project Hail Mary* (Erid)
 
 - **소설의 행성**: 40 Eri A b 가 *Star Trek* 의 Vulcan (Roddenberry 가 1991년 *Sky & Telescope* 편지에서 Epsilon Eri 가 아닌 40 Eri 로 확정). *Project Hail Mary* 의 Eridian (Rocky 종족) 도 40 Eridani A 출신.
-- **실제 status**: Ma 2018 (`2018AJ....155..117M`. 주기 42.245 d, 8.47 M⊕ super-Earth, a ≈ 0.224 AU, e = 0.04) 이 발표했으나 **Burrows/Lubin 2024 로 반박** — 42 일 신호는 별의 자전 주기이지 케플러 행성이 아닙니다. **프로젝트 결정(2026-06-03)으로 NS DB 에 철회 이전 Ma 2018 값으로 재등재**, Phase 3 에 반박 표기 (문화적 무게: Vulcan + Erid). 현대 기준 거주 가능 영역 밖이며, Vulcan 픽션은 발견 이전이라 Earth-like 세계를 가정했습니다.
+- **실제 status**: Ma 2018 ([`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M). 주기 42.245 d, 8.47 M⊕ super-Earth, a ≈ 0.224 AU, e = 0.04) 이 발표했으나 **Burrows/Lubin 2024 로 반박** — 42 일 신호는 별의 자전 주기이지 케플러 행성이 아닙니다. **프로젝트 결정(2026-06-03)으로 NS DB 에 철회 이전 Ma 2018 값으로 재등재**, Phase 3 에 반박 표기 (문화적 무게: Vulcan + Erid). 현대 기준 거주 가능 영역 밖이며, Vulcan 픽션은 발견 이전이라 Earth-like 세계를 가정했습니다.
 - **Weir 의 Erid 명시 파라미터** (worldbuilding 부록 문서, 사용자 2026-05-27 제공 "eridian.docx"). 실제 관측값으로는 질량 8.47 M⊕, 반장축 0.224 AU, e = 0.04, 주기 42.245 d, 별로부터의 에너지 플럭스 12,537 W/m². 관측과 충돌하지 않는 made-up 파라미터로는 암석질 + 금속 풍부 조성, 밀도 5,710 kg/m³, 반경 12,835 km, 대기 대부분 NH₃ (Weir 가 "NH4" 로 표기 — NH₃ 의 분자식 오기), 표면 압력 28 atm, 평균 표면온도 210 °C, 유도된 표면 중력 2.09 g, 자기장 지구의 약 25배 (이만한 NH₃ 대기 유지에 필요), 용융 금속 코어, 판구조 활동, 표면 액체수 존재 (28 atm 에서 물의 끓는점이 210 °C 위로 올라감), 항성일 5.1시간 (약 18,397 초 — 자기장 다이나모를 돌릴 만큼 빠른 자전).
 - **Weir 의 panspermia framing**: worldbuilding 부록은 "수십억 년 전 Tau Ceti 발 panspermia 이벤트가 지구와 Eridian 모성에 생명을 seeding 했다" 고 명시. Adrian (Tau Cet e) 을 panspermia 발원지로, 지구 + Erid 를 수용지로 설정 — 위의 Adrian 항목 + 소설의 Astrophage 배경설정과 정합. NS 는 cfg 에서 모델링 못 함, flavor-text 전용.
 - **Project Hail Mary (2026 영화)**: 영화는 Erid 를 **진한 파랑 대기와 고리계**로 묘사합니다. 이건 영화의 아트 디렉션으로 — Weir 의 worldbuilding (무색 ~28 atm NH₃ 대기, 고리 없음) 과 갈리며 **픽션이지 40 Eri A 의 실제 속성이 아닙니다**. 문화적 레퍼런스로만 기록하며, DB 에는 실제 Ma 2018 RV 후보값(질량 + 궤도)만 담고 픽션 대기·고리는 절대 넣지 않습니다.

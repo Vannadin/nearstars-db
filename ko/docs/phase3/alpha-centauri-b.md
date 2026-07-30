@@ -150,10 +150,10 @@ AU 분리의 동반자 A 는 원일점에서 V = −5.0, 근일점에서 V = −
   궤도 fit 에서 M_B = 0.972 ± 0.0045 M☉.
 - **Joyce M. & Chaboyer B. 2018** — [arXiv:1806.07567](https://arxiv.org/abs/1806.07567). 시스템 나이 5.3
   ± 0.3 Gyr.
-- **DeWarf L. E. et al. 2010** — (`2010ApJ...722..343D`, arXiv
+- **DeWarf L. E. et al. 2010** — ([`2010ApJ...722..343D`](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D), arXiv
   프리프린트 없음, Tier A manual followup). B 의 36–40 d 회전, log
   R'HK = −5.0, 8.1 년 색채권 사이클을 정의.
-- **Henry T. J. et al. 1996** — (`1996AJ....111..439H`, no arXiv).
+- **Henry T. J. et al. 1996** — ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H), no arXiv).
   B 의 원래 log R'HK = −5.00 측정.
 - **Rajpaul V. et al. 2016** — *Ghost in the time series: no planet
   for Alpha Cen B*, MNRAS 456, L6 ([arXiv:1510.05598](https://arxiv.org/abs/1510.05598)). Dumusque 2012
@@ -198,12 +198,12 @@ AU 분리의 동반자 A 는 원일점에서 V = −5.0, 근일점에서 V = −
 - **Spada F. et al. 2019** — [arXiv:1909.00701](https://arxiv.org/abs/1909.00701). K 왜성 반지름의 entropy
   calibration, Kervella 2017 을 검증.
 - **Krishnamurthy A. et al. 2021** — α Cen A, B 주위 ASTERIA 통과 탐색
-  (`2021AJ....161..275K`). 미검출 한계.
+  ([`2021AJ....161..275K`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..275K)). 미검출 한계.
 
 ### Not read — no arXiv preprint or low-priority (~40 papers)
 
 - **Dumusque X. et al. 2012** — *An Earth-mass planet orbiting α
-  Centauri B*, Nature 491, 207 (`2012Natur.491..207D`, no arXiv).
+  Centauri B*, Nature 491, 207 ([`2012Natur.491..207D`](https://ui.adsabs.harvard.edu/abs/2012Natur.491..207D), no arXiv).
   원래의 RV-jitter 기반 철회된 검출. Rajpaul 2016, Plavchan 2015 로
   대체.
 - 학회 abstract, 항성 간 추진 제안, SETI 탐색은 cfg 결정에 영향이

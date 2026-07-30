@@ -73,7 +73,7 @@ Kopernicus / 대기 cfg-ready 값. `Confidence`. high = 직접 측정되거나
 | `rotation_period_hours` | 10 | low | Tie-break. 자전 측정 없음. 더 느린 토성/천왕성 값 대신 목성형 ~10 h 채택. 질량 큰 거대 행성의 각운동량 예산은 빠른 자전을 선호. within-window, 제약 안 됨 |
 | `ring_present` | false | medium | 어떤 JWST/MIRI epoch 에서도 고리 미관측 (Matthews 2024, 2026). cfg 기본값은 고리 없음. 얼음 고리는 선택적 cfg 변종으로 보존 — Open items 참조 |
 | `ring_observed` | false | high | Matthews et al. 2024/2026 JWST/MIRI 영상은 분해된 고리 성분 없이 행성을 밝은 점광원으로 보임 |
-| `magnetic_field_strength_microtesla_equator` | 3200 | low | 에너지플럭스 다이나모 스케일링 (Christensen et al. 2009 `2009Natur.457..167C`. Reiners & Christensen 2010 `1007.1514`). B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → 7.6 M_Jup, ~3.5 Gyr 에서 B_eq ≈ 3200 µT (범위 2600–3700). 갈색왜성 경계에 가까워 나이가 많아도 자기장이 강하게 유지된다 (질량 지수가 1–5 M_J calibration 위로 외삽됨 → 추가 ~25% 계통오차). 이전의 임시 "Jupiter 2배" 를 대체. docs/reference/planetary-dynamo-scaling.md 참고 |
+| `magnetic_field_strength_microtesla_equator` | 3200 | low | 에너지플럭스 다이나모 스케일링 (Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C). Reiners & Christensen 2010 `1007.1514`). B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → 7.6 M_Jup, ~3.5 Gyr 에서 B_eq ≈ 3200 µT (범위 2600–3700). 갈색왜성 경계에 가까워 나이가 많아도 자기장이 강하게 유지된다 (질량 지수가 1–5 M_J calibration 위로 외삽됨 → 추가 ~25% 계통오차). 이전의 임시 "Jupiter 2배" 를 대체. docs/reference/planetary-dynamo-scaling.md 참고 |
 | `magnetic_dipole_moment_normalized_earth` | 200000 | low | 3200 µT × (1.12 R_Jup)³ 를 Jupiter (적도 4.5 G, Earth 의 20 000배) 와 비교 → 에너지플럭스 스케일링 (`1007.1514`) 으로 ≈ 2×10⁵ × Earth. R³ 에 민감 → 신뢰도 낮음 |
 | `aurora_present` | false | medium | 호스트의 조용한 항성풍 (log R'HK = −4.72) 이 20.9 AU 에 매우 약한 플라스마 구동을 전달. 활동적-호스트 jovian 과 달리 강한 오로라 기대 안 됨. cfg 는 렌더 안 함 |
 | `companion_to_brown_dwarf_pair` | ε Indi B (Ba T1–1.5 66.9 M_Jup + Bb T6 53.3 M_Jup), ~1459 AU | high | Chen et al. 2022 — 계층적 삼중성계의 넓은 갈색왜성-쌍 성분. 행성의 호스트는 아니지만 그 하늘의 일부 |
@@ -231,14 +231,14 @@ obliquity ≈ 27° (궤도 법선 기준).
   (+0.11/−0.083), i = 102.3°, Ω = 44.6°, ω = 62°, P ≈ 108 yr. **핵심
   논문** — 궤도, 질량, 대기 Decisions 행을 구동. Phase 2 recommended 앵커.
 - **Matthews E. C. et al. 2024** — ε Indi A b 의 JWST/MIRI 직접 촬영
-  발견 (`2024Natur.633..789M`, [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). 10.6 과 15.5 µm 의
+  발견 ([`2024Natur.633..789M`](https://ui.adsabs.harvard.edu/abs/2024Natur.633..789M), [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). 10.6 과 15.5 µm 의
   첫-epoch 측광. ~275 K 차가운 거대 행성, elevated 금속도를 함의하는 3–5 µm
   흐림 (NaCo 비검출), 공통-고유운동 논거를 확립. **핵심 논문.** (캐시에
   ar5iv 전문 없음 — HTML-only stub. 숫자는 초록과 Matthews 2026 의 요약에서
   취함.)
 - **Feng F. et al. 2019** — *Detection of the nearest Jupiter analog in
   radial velocity and astrometry data*, MNRAS 490, 5002
-  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
+  ([`2019MNRAS.490.5002F`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.5002F), doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
   RV + Hipparcos/Gaia 측성 검출. 호스트 광도 (0.239 L☉) 의 Phase 2 출처.
   여기서의 행성 파라미터 (a ≈ 11.6 AU, ~3.25 M_Jup, P ~45 yr) 는 pre-JWST
   값으로 Matthews 2026 이 대체. DB 에 `recommended:false` 로 보존.
@@ -247,17 +247,17 @@ obliquity ≈ 27° (궤도 법선 기준).
 
 - **Lundkvist M. S. et al. 2024** — *Low-amplitude solar-like
   oscillations in the K5 V star ε Indi A*, ApJ 964, 110
-  (`2024ApJ...964..110L`, [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). 호스트 별 측성지진 질량
+  ([`2024ApJ...964..110L`](https://ui.adsabs.harvard.edu/abs/2024ApJ...964..110L), [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). 호스트 별 측성지진 질량
   (0.782 M☉), R (0.713 R☉), Teff (4700 K), 그리고 ~7.1 yr 활동 주기. 일사와
   조명-색온도 행을 설정하는 호스트 항성 파라미터를 제공. 호스트 Phase 3
   (`docs/phase3/eps-ind-a.md`) 에 상술.
 - **Chen M. et al. 2022** — *Precise Dynamical Masses of ε Indi Ba and
-  Bb* (`2022AJ....163..288C`, [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). 넓은 갈색왜성 쌍의 역학
+  Bb* ([`2022AJ....163..288C`](https://ui.adsabs.harvard.edu/abs/2022AJ....163..288C), [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). 넓은 갈색왜성 쌍의 역학
   질량 (Ba T1–1.5 66.9 M_Jup, Bb T6 53.3 M_Jup, ~1459 AU) 과 ε Indi A b 를
   "태양-나이" 거대 행성으로 틀 짓는 시스템 활동-나이 (~3.5 Gyr). 갈색왜성-쌍
   맥락 행을 구동.
 - **Feng F. et al. 2018** — *Detection of the closest Jovian exoplanet in
-  the ε Indi triple system* (`2018arXiv180308163F`, [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
+  the ε Indi triple system* ([`2018arXiv180308163F`](https://ui.adsabs.harvard.edu/abs/2018arXiv180308163F), [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
   RV 발견 프리프린트. 가장 이른 행성 파라미터 (M sin i ~2.7 M_Jup,
   a ~12.8 AU) 로, Feng 2019 / Matthews 2026 이 대체. DB 에 `recommended:false`
   로 보존.

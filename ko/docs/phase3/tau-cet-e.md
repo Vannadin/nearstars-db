@@ -1,7 +1,7 @@
 <!-- τ Ceti e Phase 3 합성. 철회된(False Positive) 검출을 프로젝트 결정에 따라 documented divergence 로 재등재 -->
 # τ Ceti e — Phase 3 Synthesis (Refuted — included as documented divergence)
 
-τ Ceti e 는 본래 Feng et al. 2017 (`2017AJ....154..135F`,
+τ Ceti e 는 본래 Feng et al. 2017 ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F),
 [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)) 이 metal-poor G8V τ Ceti 주위에서 발표한 네 개
 RV 행성 후보 중 하나였습니다 — 162.87 일 주기로 0.538 AU 에서 도는
 3.93 M⊕ (M sin i) super-Earth 로, optimistic 거주가능영역 (Kopparapu et al. 2014)
@@ -11,10 +11,10 @@ RV 행성 후보 중 하나였습니다 — 162.87 일 주기로 0.538 AU 에서
 플래그했습니다.
 
 **현재는 존재 가능성이 철회됨 — NEA 2026-04-09 가 False Positive 로
-재분류**. Figueira et al. 2025 (`2025A&A...700A.174F`,
+재분류**. Figueira et al. 2025 ([`2025A&A...700A.174F`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F),
 doi:10.1051/0004-6361/202553869) 의 ESPRESSO sub-10 cm/s RV 정밀도가
 162 일 신호를 검출하지 못한 결과를 인용. Cretignier et al. 2021
-(`2021A&A...653A..43C`) 은 그보다 앞서 HARPS 데이터에 YARARA 항성-활동
+([`2021A&A...653A..43C`](https://ui.adsabs.harvard.edu/abs/2021A%26A...653A..43C)) 은 그보다 앞서 HARPS 데이터에 YARARA 항성-활동
 후처리를 적용해 같은 부정적 결론에 도달했고, ESPRESSO 는 원래 신호가
 행성이 아니라 항성 활동임을 기기 차원에서 확정했습니다. 프로젝트 결정에
 따라 e 는 철회 이전 Feng 2017 값으로 `db/systems/tau_cet.json::planets[]`
@@ -71,7 +71,7 @@ doi:10.1051/0004-6361/202553869) 의 ESPRESSO sub-10 cm/s RV 정밀도가
 | `magnetic_field_strength_microtesla_equator` | 30 | low | Tie-break. 가정 파라미터에 RM22 스케일링. 지구와 유사한 값 |
 | `tidal_heating_w_m2` | 0.001–0.01 | low | 0.538 AU 에서 e = 0.18. 역사적 시나리오에서 적당한 조석 플럭스 |
 | `induction_heating_w_m2` | < 0.001 | low | 조용한 호스트 (log L_X ≤ 26.5). induction 무시 가능 |
-| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W))의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `aurora_present` | true (적당함) | low | 역사적 시나리오의 적당한 자기장 + 대기. 희미한 확산 오로라 가능 |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break. 어떤 O₂ 라도 있다면 [OI] 557.7 nm 녹색. 없다면 N₂ Vegard-Kaplan 청록 |
 | `aurora_intensity_kR_typical` | 1 | low | 조용한 호스트 — 오로라 여기율이 지구의 그것보다 한참 아래 |
@@ -252,17 +252,17 @@ cfg 천체가 만들어지지 않으므로 cfg 와 무관.
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 원래 발견 논문.
+  ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F), [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 원래 발견 논문.
   e 를 P = 162.87 d, M sin i = 3.93 M⊕, e = 0.18 로 보고. 위
   역사적 Decisions 행을 정박. Feng 2017 §6 자체가 e 가 네 행성 중
   amplitude 가 가장 마지널함을 경계.
 - **Cretignier M. et al. 2021** — *YARARA: HARPS RV 의 항성-활동
-  후처리*, A&A 653, A43 (`2021A&A...653A..43C`). 항성-활동
+  후처리*, A&A 653, A43 ([`2021A&A...653A..43C`](https://ui.adsabs.harvard.edu/abs/2021A%26A...653A..43C)). 항성-활동
   탈상관 후 162 d 신호의 첫 미검출. 신호를 행성이 아니라 활동-상관
   으로 식별.
 - **Figueira P. et al. 2025** — *τ Ceti ESPRESSO RV 모니터링.
   e 의 철회와 f/g/h 의 더 엄격한 한계*, A&A 700, A174
-  (`2025A&A...700A.174F`, doi:10.1051/0004-6361/202553869).
+  ([`2025A&A...700A.174F`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F), doi:10.1051/0004-6361/202553869).
   e 가 항성-활동 아티팩트임을 기기 차원에서 확정. ESPRESSO 의
   sub-10 cm/s 정밀도는 원래 Feng 2017 진폭 아래. 162 d 신호 부재.
   NEA 2026-04-09 이 채택한 False Positive 처분을 견인.

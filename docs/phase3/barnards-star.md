@@ -251,7 +251,7 @@ flares the only sudden ones.
 
 - **Schweitzer A. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Different roads to radii and masses of the target
-  stars*, A&A 625, A68 (`2019A&A...625A..68S`,
+  stars*, A&A 625, A68 ([`2019A&A...625A..68S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S),
   doi:10.1051/0004-6361/201834965, arXiv:1904.03231). CARMENES
   fundamental-parameter compilation. Source for the Phase 2
   recommended mass (0.162 ± 0.007 M☉, spectroscopic calibration),
@@ -260,7 +260,7 @@ flares the only sudden ones.
   Gaia DR2 distance). Also the alternative Teff (3273 ± 51 K) and
   alternative VIS metallicity (−0.15 ± 0.16).
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star*, A&A 690, A79 (`2024A&A...690A..79G`,
+  orbiting Barnard's star*, A&A 690, A79 ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G),
   doi:10.1051/0004-6361/202451311, arXiv:2410.00569). ESPRESSO
   master-spectrum SteParSyn analysis: Teff = 3195 ± 28 K (Phase 2
   recommended). Also the discovery paper for the sub-Earth planet
@@ -275,14 +275,14 @@ flares the only sudden ones.
   Marfil −0.57) is anchored on this paper.
 - **Marfil E. et al. 2021** — *The CARMENES search for exoplanets
   around M dwarfs. Stellar atmospheric parameters of target stars
-  with SteParSyn*, A&A 656, A162 (`2021A&A...656A.162M`,
+  with SteParSyn*, A&A 656, A162 ([`2021A&A...656A.162M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...656A.162M),
   doi:10.1051/0004-6361/202141980, arXiv:2110.07329). CARMENES
   VIS+NIR parameter determination: Teff = 3254 ± 32 K and the
   most metal-poor reading [Fe/H] = −0.57 ± 0.10. Both enter the
   Canonical-alternatives table.
 - **Toledo-Padrón B. et al. 2019** — *Stellar activity analysis of
   Barnard's Star: very slow rotation and evidence for long-term
-  activity cycle*, MNRAS 488, 5145 (`2019MNRAS.488.5145T`,
+  activity cycle*, MNRAS 488, 5145 ([`2019MNRAS.488.5145T`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.5145T),
   doi:10.1093/mnras/stz1647, arXiv:1812.06712). Source for the
   Phase 2 recommended rotation period (P_rot = 145 ± 15 d,
   photometric) and chromospheric activity (log R'HK = −5.82 ± 0.08),
@@ -290,7 +290,7 @@ flares the only sudden ones.
   slow-rotation picture of this synthesis.
 - **Ribas I. et al. 2018** — *A candidate super-Earth planet orbiting
   near the snow line of Barnard's star*, Nature 563, 365
-  (`2018Natur.563..365R`). Source for the Phase 2 recommended
+  ([`2018Natur.563..365R`](https://ui.adsabs.harvard.edu/abs/2018Natur.563..365R)). Source for the Phase 2 recommended
   kinematic age (~8.5 ± 1.5 Gyr) from thick-disk / high-velocity
   membership. NOTE: the super-Earth "Barnard b" candidate announced
   in this paper (P ≈ 233 d) was later retracted (Lubin et al. 2021)
@@ -298,7 +298,7 @@ flares the only sudden ones.
   candidate.
 - **Boyajian T. S. et al. 2012b** — *Stellar Diameters and
   Temperatures II. Main-Sequence K- and M-Stars*, ApJ 757, 112
-  (`2012ApJ...757..112B`, doi:10.1088/0004-637X/757/2/112,
+  ([`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B), doi:10.1088/0004-637X/757/2/112,
   [arXiv:1208.2431](https://arxiv.org/abs/1208.2431)). CHARA-array limb-darkened angular diameter
   θ_LD = 0.952 mas for Barnard's Star — the interferometric basis
   for the Schweitzer 2019 recommended radius R = 0.187 R☉.
@@ -307,7 +307,7 @@ flares the only sudden ones.
 
 - **Mann A. W. et al. 2015** — *How to Constrain Your M Dwarf:
   Measuring Effective Temperature, Bolometric Luminosity, Mass, and
-  Radius*, ApJ 804, 64 (`2015ApJ...804...64M`,
+  Radius*, ApJ 804, 64 ([`2015ApJ...804...64M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M),
   doi:10.1088/0004-637X/804/1/64, arXiv:1501.01635). M_K-based
   empirical mass relation giving M = 0.161 ± 0.006 M☉ — the
   Phase 2 alternative mass, agreeing with Schweitzer 2019 within 1σ.

@@ -170,58 +170,58 @@ NearStars 렌더러에서 δ Pavonis 는 행성도 잔해 ring 도 동반자도 
 ### Read (visual-informative, drove decisions above)
 
 - **Rains A. D. et al. 2020** — *Precision angular diameters for 16
-  southern stars with VLTI/PIONIER* (`2020MNRAS.493.2377R`,
+  southern stars with VLTI/PIONIER* ([`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R),
   [arXiv:2004.02343](https://arxiv.org/abs/2004.02343)). 직접 간섭계 θ_LD = 1.828 ± 0.025 mas → R = 1.197 ±
   0.016 R☉, Teff = 5571 ± 48 K, L = 1.24 ± 0.03 L☉. 반지름·온도·광도의
   anchor.
 - **Bruntt H. et al. 2010** — *Accurate fundamental parameters for
-  23 bright solar-type stars* (`2010MNRAS.405.1907B`,
+  23 bright solar-type stars* ([`2010MNRAS.405.1907B`](https://ui.adsabs.harvard.edu/abs/2010MNRAS.405.1907B),
   [arXiv:1002.4268](https://arxiv.org/abs/1002.4268)). δ Pav 의 성진학 + 분광 분석. 성진학 M = 1.07 ± 0.13
   M☉, R = 1.20 R☉, Teff ≈ 5550 K, [Fe/H] = +0.33, v sin i ≈ 1.7 km/s.
   질량과 자전의 anchor.
 - **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
-  of 1674 FGK stars from the AMBRE-HARPS sample* (`2021A&A...646A..77G`).
+  of 1674 FGK stars from the AMBRE-HARPS sample* ([`2021A&A...646A..77G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G)).
   HARPS 6002 스펙트럼에서 log R'HK = −5.13. [Fe/H] = +0.36 ± 0.02.
   활동도와 금속도의 anchor.
 - **Eiroa C. et al. 2013** — *DUNES: DUst around NEarby Stars,
-  observational results* (`2013A&A...555A..11E`, [arXiv:1305.0155](https://arxiv.org/abs/1305.0155)).
+  observational results* ([`2013A&A...555A..11E`](https://ui.adsabs.harvard.edu/abs/2013A%26A...555A..11E), [arXiv:1305.0155](https://arxiv.org/abs/1305.0155)).
   Herschel/PACS 서베이. δ Pav 는 **비검출 (non-excess)** 별로,
   L_dust/L_★ < 5×10⁻⁷ — `disk_present = false` 의 근거.
 - **Bensby T. et al. 2014** — *Exploring the Milky Way stellar disk:
-  714 F and G dwarf stars* (`2014A&A...562A..71B`, [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)).
+  714 F and G dwarf stars* ([`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B), [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)).
   FEROS 고분해 분광. [Fe/H] = +0.37, 질량 1.03 M☉, isochrone 나이 4.9
   Gyr — 나이 발산의 젊은 쪽.
 - **Holmberg J., Nordström B., Andersen J. 2009** — *The
-  Geneva-Copenhagen survey III* (`2009A&A...501..941H`,
+  Geneva-Copenhagen survey III* ([`2009A&A...501..941H`](https://ui.adsabs.harvard.edu/abs/2009A%26A...501..941H),
   [arXiv:0811.3982](https://arxiv.org/abs/0811.3982)). Isochrone 나이 9.3 Gyr (5.8–10.7) — 채택한 (더 늙은)
   나이로, 매우 낮은 활동도와 일관.
 
 ### Read (context / methodology, not directly decision-driving)
 
 - **Lund M. N. et al. 2025** — *The TESS Legacy Sample of Bright
-  Stars. I.* (`2025A&A...701A.285L`, [arXiv:2508.08699](https://arxiv.org/abs/2508.08699)). δ Pav 의 현대
+  Stars. I.* ([`2025A&A...701A.285L`](https://ui.adsabs.harvard.edu/abs/2025A%26A...701A.285L), [arXiv:2508.08699](https://arxiv.org/abs/2508.08699)). δ Pav 의 현대
   TESS 성진학 검출. ν_max = 2269.8 ± 64.4 µHz, Δν = 107.9 ± 0.2 µHz
   (모델링된 M/R/age 는 미발표).
 - **Spada F. et al. 2011** — *Stellar evolutionary models*
-  (`2011MNRAS.416..447S`, [arXiv:1105.3125](https://arxiv.org/abs/1105.3125)). δ Pav 의 질량/나이에 대한
+  ([`2011MNRAS.416..447S`](https://ui.adsabs.harvard.edu/abs/2011MNRAS.416..447S), [arXiv:1105.3125](https://arxiv.org/abs/1105.3125)). δ Pav 의 질량/나이에 대한
   subgiant 진화 맥락.
 - **Mawet D. et al. 2017** — *Characterization of Exoplanets from
-  Their Formation. I.* (`2017AJ....153...44M`, [arXiv:1609.06163](https://arxiv.org/abs/1609.06163)).
+  Their Formation. I.* ([`2017AJ....153...44M`](https://ui.adsabs.harvard.edu/abs/2017AJ....153...44M), [arXiv:1609.06163](https://arxiv.org/abs/1609.06163)).
   NIRC2 vortex coronagraph. 1 AU 밖 ~3 M_Jup 동반자 한계.
 - **Lannier J. et al. 2017** — *Combining direct imaging and radial
-  velocity* (`2017A&A...603A..54L`, [arXiv:1705.03477](https://arxiv.org/abs/1705.03477)). SPHERE 직접
+  velocity* ([`2017A&A...603A..54L`](https://ui.adsabs.harvard.edu/abs/2017A%26A...603A..54L), [arXiv:1705.03477](https://arxiv.org/abs/1705.03477)). SPHERE 직접
   촬영 서베이의 δ Pav. 동반자 미검출.
 - **Tinney C. G. et al. 2005** — *The Anglo-Australian Planet Search*
-  (`2005ApJ...623L.121T`). δ Pav RV 모니터링. 행성 미검출 — RV 비검출
+  ([`2005ApJ...623L.121T`](https://ui.adsabs.harvard.edu/abs/2005ApJ...623L.121T)). δ Pav RV 모니터링. 행성 미검출 — RV 비검출
   기준선.
 - **Henry T. J. et al. 1996** — *A survey of Ca II H and K
   chromospheric emission in southern solar-type stars*
-  (`1996AJ....111..439H`). log R'HK = −4.999. 비활동 분류를 뒷받침.
+  ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H)). log R'HK = −4.999. 비활동 분류를 뒷받침.
 - **Hünsch M. et al. 1998** — *ROSAT all-sky survey catalogue of
-  nearby stars* (`1998A&AS..132..155H`). δ Pav X 선 검출, 0.073 ct/s →
+  nearby stars* ([`1998A&AS..132..155H`](https://ui.adsabs.harvard.edu/abs/1998A%26AS..132..155H)). δ Pav X 선 검출, 0.073 ct/s →
   log L_X ≈ 27.3 cgs.
 - **Gray R. O. et al. 2006** — *NStars: Spectral Classifications of
-  Nearby Stars* (`2006AJ....132..161G`, arXiv:astro-ph/0603770).
+  Nearby Stars* ([`2006AJ....132..161G`](https://ui.adsabs.harvard.edu/abs/2006AJ....132..161G), arXiv:astro-ph/0603770).
   G8IV 분류 확인.
 
 ## Open items for follow-up

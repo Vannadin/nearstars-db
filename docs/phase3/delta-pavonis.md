@@ -202,59 +202,59 @@ visual choices:
 ### Read (visual-informative, drove decisions above)
 
 - **Rains A. D. et al. 2020** — *Precision angular diameters for 16
-  southern stars with VLTI/PIONIER* (`2020MNRAS.493.2377R`,
+  southern stars with VLTI/PIONIER* ([`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R),
   [arXiv:2004.02343](https://arxiv.org/abs/2004.02343)). Direct interferometric θ_LD = 1.828 ± 0.025 mas →
   R = 1.197 ± 0.016 R☉, Teff = 5571 ± 48 K, L = 1.24 ± 0.03 L☉. The
   anchor for radius, temperature, and luminosity.
 - **Bruntt H. et al. 2010** — *Accurate fundamental parameters for
-  23 bright solar-type stars* (`2010MNRAS.405.1907B`,
+  23 bright solar-type stars* ([`2010MNRAS.405.1907B`](https://ui.adsabs.harvard.edu/abs/2010MNRAS.405.1907B),
   [arXiv:1002.4268](https://arxiv.org/abs/1002.4268)). Asteroseismic + spectroscopic analysis of δ Pav:
   asteroseismic M = 1.07 ± 0.13 M☉, R = 1.20 R☉, Teff ≈ 5550 K,
   [Fe/H] = +0.33, v sin i ≈ 1.7 km/s. Anchors mass and rotation.
 - **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
-  of 1674 FGK stars from the AMBRE-HARPS sample* (`2021A&A...646A..77G`).
+  of 1674 FGK stars from the AMBRE-HARPS sample* ([`2021A&A...646A..77G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G)).
   log R'HK = −5.13 from 6002 HARPS spectra; [Fe/H] = +0.36 ± 0.02.
   Anchors activity and metallicity.
 - **Eiroa C. et al. 2013** — *DUNES: DUst around NEarby Stars,
-  observational results* (`2013A&A...555A..11E`, [arXiv:1305.0155](https://arxiv.org/abs/1305.0155)).
+  observational results* ([`2013A&A...555A..11E`](https://ui.adsabs.harvard.edu/abs/2013A%26A...555A..11E), [arXiv:1305.0155](https://arxiv.org/abs/1305.0155)).
   Herschel/PACS survey; δ Pav is a **non-excess source** with
   L_dust/L_★ < 5×10⁻⁷ — the basis for `disk_present = false`.
 - **Bensby T. et al. 2014** — *Exploring the Milky Way stellar disk:
-  714 F and G dwarf stars* (`2014A&A...562A..71B`, [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)).
+  714 F and G dwarf stars* ([`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B), [arXiv:1309.2631](https://arxiv.org/abs/1309.2631)).
   FEROS high-resolution spectroscopy: [Fe/H] = +0.37, mass 1.03 M☉,
   isochrone age 4.9 Gyr — the younger arm of the age divergence.
 - **Holmberg J., Nordström B., Andersen J. 2009** — *The
-  Geneva-Copenhagen survey III* (`2009A&A...501..941H`,
+  Geneva-Copenhagen survey III* ([`2009A&A...501..941H`](https://ui.adsabs.harvard.edu/abs/2009A%26A...501..941H),
   [arXiv:0811.3982](https://arxiv.org/abs/0811.3982)). Isochrone age 9.3 Gyr (5.8–10.7) — the adopted
   (older) age, consistent with the very low activity.
 
 ### Read (context / methodology, not directly decision-driving)
 
 - **Lund M. N. et al. 2025** — *The TESS Legacy Sample of Bright
-  Stars. I.* (`2025A&A...701A.285L`, [arXiv:2508.08699](https://arxiv.org/abs/2508.08699)). Modern TESS
+  Stars. I.* ([`2025A&A...701A.285L`](https://ui.adsabs.harvard.edu/abs/2025A%26A...701A.285L), [arXiv:2508.08699](https://arxiv.org/abs/2508.08699)). Modern TESS
   asteroseismic detection of δ Pav: ν_max = 2269.8 ± 64.4 µHz,
   Δν = 107.9 ± 0.2 µHz (no published modeled M/R/age).
 - **Spada F. et al. 2011** — *Stellar evolutionary models*
-  (`2011MNRAS.416..447S`, [arXiv:1105.3125](https://arxiv.org/abs/1105.3125)). Subgiant evolutionary
+  ([`2011MNRAS.416..447S`](https://ui.adsabs.harvard.edu/abs/2011MNRAS.416..447S), [arXiv:1105.3125](https://arxiv.org/abs/1105.3125)). Subgiant evolutionary
   context for δ Pav's mass/age.
 - **Mawet D. et al. 2017** — *Characterization of Exoplanets from
-  Their Formation. I.* (`2017AJ....153...44M`, [arXiv:1609.06163](https://arxiv.org/abs/1609.06163)).
+  Their Formation. I.* ([`2017AJ....153...44M`](https://ui.adsabs.harvard.edu/abs/2017AJ....153...44M), [arXiv:1609.06163](https://arxiv.org/abs/1609.06163)).
   NIRC2 vortex coronagraph; companion limits ~3 M_Jup at >1 AU.
 - **Lannier J. et al. 2017** — *Combining direct imaging and radial
-  velocity* (`2017A&A...603A..54L`, [arXiv:1705.03477](https://arxiv.org/abs/1705.03477)). δ Pav in the
+  velocity* ([`2017A&A...603A..54L`](https://ui.adsabs.harvard.edu/abs/2017A%26A...603A..54L), [arXiv:1705.03477](https://arxiv.org/abs/1705.03477)). δ Pav in the
   SPHERE direct-imaging survey; no companions detected.
 - **Tinney C. G. et al. 2005** — *The Anglo-Australian Planet Search*
-  (`2005ApJ...623L.121T`). RV monitoring of δ Pav; no planet
+  ([`2005ApJ...623L.121T`](https://ui.adsabs.harvard.edu/abs/2005ApJ...623L.121T)). RV monitoring of δ Pav; no planet
   detection — the RV non-detection baseline.
 - **Henry T. J. et al. 1996** — *A survey of Ca II H and K
   chromospheric emission in southern solar-type stars*
-  (`1996AJ....111..439H`). log R'HK = −4.999; corroborates the
+  ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H)). log R'HK = −4.999; corroborates the
   inactive classification.
 - **Hünsch M. et al. 1998** — *ROSAT all-sky survey catalogue of
-  nearby stars* (`1998A&AS..132..155H`). δ Pav X-ray detection,
+  nearby stars* ([`1998A&AS..132..155H`](https://ui.adsabs.harvard.edu/abs/1998A%26AS..132..155H)). δ Pav X-ray detection,
   0.073 ct/s → log L_X ≈ 27.3 cgs.
 - **Gray R. O. et al. 2006** — *NStars: Spectral Classifications of
-  Nearby Stars* (`2006AJ....132..161G`, arXiv:astro-ph/0603770).
+  Nearby Stars* ([`2006AJ....132..161G`](https://ui.adsabs.harvard.edu/abs/2006AJ....132..161G), arXiv:astro-ph/0603770).
   Confirms the G8IV classification.
 
 ## Open items for follow-up

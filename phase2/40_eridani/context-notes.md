@@ -73,14 +73,14 @@ exactly one `recommended: true` per measurement array using:
 
 | Property | Value | Method | Reference | Bibcode |
 |---|---|---|---|---|
-| Mass | 0.78 ± 0.08 M☉ | evolutionary_model (Y-Y isochrone) | Ma et al. 2018 | 2018MNRAS.480.2411M |
-| Radius | 0.804 ± 0.006 R☉ | interferometry (VLTI/PIONIER) | Rains et al. 2020 | 2020MNRAS.493.2377R |
-| Teff | 5126 ± 30 K | interferometry (θ_LD + Fbol) | Rains et al. 2020 | 2020MNRAS.493.2377R |
-| Luminosity | 0.400 ± 0.010 L☉ | bolometric_flux | Rains et al. 2020 | 2020MNRAS.493.2377R |
-| Age | 6.9 ± 4.7 Gyr | isochrone (Y-Y) | Ma et al. 2018 | 2018MNRAS.480.2411M |
-| [Fe/H] | −0.29 ± 0.12 dex | high_res_spectroscopy (SPECIES) | Diaz et al. 2018 | 2018AJ....155..126D |
-| P_rot | 42.0 ± 2.5 d | photometric_variability (NEID+activity) | Burrows et al. 2024 | 2024AJ....167..243B |
-| log R'HK | −4.99 | log_rhk | Jenkins et al. 2011 | 2011A&A...531A...8J |
+| Mass | 0.78 ± 0.08 M☉ | evolutionary_model (Y-Y isochrone) | Ma et al. 2018 | [`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M) |
+| Radius | 0.804 ± 0.006 R☉ | interferometry (VLTI/PIONIER) | Rains et al. 2020 | [`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R) |
+| Teff | 5126 ± 30 K | interferometry (θ_LD + Fbol) | Rains et al. 2020 | [`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R) |
+| Luminosity | 0.400 ± 0.010 L☉ | bolometric_flux | Rains et al. 2020 | [`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R) |
+| Age | 6.9 ± 4.7 Gyr | isochrone (Y-Y) | Ma et al. 2018 | [`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M) |
+| [Fe/H] | −0.29 ± 0.12 dex | high_res_spectroscopy (SPECIES) | Diaz et al. 2018 | [`2018AJ....155..126D`](https://ui.adsabs.harvard.edu/abs/2018AJ....155..126D) |
+| P_rot | 42.0 ± 2.5 d | photometric_variability (NEID+activity) | Burrows et al. 2024 | [`2024AJ....167..243B`](https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B) |
+| log R'HK | −4.99 | log_rhk | Jenkins et al. 2011 | [`2011A&A...531A...8J`](https://ui.adsabs.harvard.edu/abs/2011A%26A...531A...8J) |
 
 Alternates kept for cross-check:
 - Mass: Diaz 2018 0.76 ± 0.03 M☉ (SPECIES isochrone)
@@ -92,26 +92,26 @@ Alternates kept for cross-check:
 
 | Property | Value | Method | Reference | Bibcode |
 |---|---|---|---|---|
-| Mass | 0.573 ± 0.018 M☉ | binary_orbit (MHM17 BC orbit + HST FGS) | Bond et al. 2017 | 2017ApJ...848...16B |
-| Radius | 0.01308 ± 0.00020 R☉ | sed_fitting (BVRI + ubvy + JHK + π_Hip + Teff_atm) | Bond et al. 2017 | 2017ApJ...848...16B |
-| Teff | 17 200 ± 110 K | high_res_spectroscopy (DA Balmer-line atmosphere fit) | Bond et al. 2017 | 2017ApJ...848...16B |
-| Luminosity | 0.01349 ± 0.00054 L☉ | bolometric_flux | Bond et al. 2017 | 2017ApJ...848...16B |
-| Total age | ~1.8 Gyr (Mfinal→IFMR→Mfinit→tMS) | isochrone (IFMR-derived progenitor lifetime) | Bond et al. 2017 | 2017ApJ...848...16B |
+| Mass | 0.573 ± 0.018 M☉ | binary_orbit (MHM17 BC orbit + HST FGS) | Bond et al. 2017 | [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B) |
+| Radius | 0.01308 ± 0.00020 R☉ | sed_fitting (BVRI + ubvy + JHK + π_Hip + Teff_atm) | Bond et al. 2017 | [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B) |
+| Teff | 17 200 ± 110 K | high_res_spectroscopy (DA Balmer-line atmosphere fit) | Bond et al. 2017 | [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B) |
+| Luminosity | 0.01349 ± 0.00054 L☉ | bolometric_flux | Bond et al. 2017 | [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B) |
+| Total age | ~1.8 Gyr (Mfinal→IFMR→Mfinit→tMS) | isochrone (IFMR-derived progenitor lifetime) | Bond et al. 2017 | [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B) |
 | [Fe/H] | N/A (clean DA, no metal pollution) | — | — | — |
 
-Spectral type updated DA4 → DA2.9 (Gianninas, Bergeron & Ruiz 2011, 2011ApJ...743..138G).
-Magnetic: non-magnetic, σ⟨Bz⟩ ≈ 85 G, no detection above ~250 G (Landstreet et al. 2015, 2015A&A...580A.120L).
+Spectral type updated DA4 → DA2.9 (Gianninas, Bergeron & Ruiz 2011, [`2011ApJ...743..138G`](https://ui.adsabs.harvard.edu/abs/2011ApJ...743..138G)).
+Magnetic: non-magnetic, σ⟨Bz⟩ ≈ 85 G, no detection above ~250 G (Landstreet et al. 2015, [`2015A&A...580A.120L`](https://ui.adsabs.harvard.edu/abs/2015A%26A...580A.120L)).
 Cooling age 122 Myr is the model-dependent thin-H envelope value, not a σ-quoted measurement — record in notes only.
 
 ### 40 Eri C (M4.5Ve / DY Eri) — recommended set
 
 | Property | Value | Method | Reference | Bibcode |
 |---|---|---|---|---|
-| Mass | 0.2036 ± 0.0064 M☉ | binary_orbit (BC dynamical) | Mason, Hartkopf & Miles 2017 | 2017AJ....154..200M |
-| Radius | 0.274 ± 0.011 R☉ | spectroscopic_calibration (M_K → R, Mann 2015) | Mann et al. 2015 | 2015ApJ...804...64M |
-| Teff | 3167 ± 60 K | low_res_spectroscopy (BT-Settl synth-spec fit to optical+NIR) | Mann et al. 2015 | 2015ApJ...804...64M |
-| Luminosity | (6.51 ± 0.13) × 10⁻³ L☉ | bolometric_flux (SED integration 0.4–24 μm) | Cifuentes et al. 2020 | 2020A&A...642A.115C |
-| Age | ~1.8 Gyr (system-coeval, from WD progenitor) | isochrone | Bond et al. 2017 | 2017ApJ...848...16B |
+| Mass | 0.2036 ± 0.0064 M☉ | binary_orbit (BC dynamical) | Mason, Hartkopf & Miles 2017 | [`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M) |
+| Radius | 0.274 ± 0.011 R☉ | spectroscopic_calibration (M_K → R, Mann 2015) | Mann et al. 2015 | [`2015ApJ...804...64M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M) |
+| Teff | 3167 ± 60 K | low_res_spectroscopy (BT-Settl synth-spec fit to optical+NIR) | Mann et al. 2015 | [`2015ApJ...804...64M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M) |
+| Luminosity | (6.51 ± 0.13) × 10⁻³ L☉ | bolometric_flux (SED integration 0.4–24 μm) | Cifuentes et al. 2020 | [`2020A&A...642A.115C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...642A.115C) |
+| Age | ~1.8 Gyr (system-coeval, from WD progenitor) | isochrone | Bond et al. 2017 | [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B) |
 | [Fe/H] | not directly measured — inherit from A | — | — | — |
 | P_rot | (Kemmer 2025 ≈137 d — flagged provisional, not curated) | — | — | — |
 | Hα | active (pEW ≈ −2 to −4 Å, ranges across surveys) | h_alpha | (skipped pending single-paper value) | — |
@@ -133,7 +133,7 @@ For Phase 2 curation, omit C's P_rot and activity unless a single verified value
 | grade | 4 | 1 (definitive) |
 | phase_reliable | false | true |
 
-Bibcode: 2017AJ....154..200M, DOI: 10.3847/1538-3881/aa803e, [arXiv:1707.03635](https://arxiv.org/abs/1707.03635)
+Bibcode: [`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M), DOI: 10.3847/1538-3881/aa803e, [arXiv:1707.03635](https://arxiv.org/abs/1707.03635)
 
 T_jd_tt conversion: J1847.7 = JD 2395929.775 (Julian year convention; Mason 2017 uses equinox J2000).
 
@@ -162,10 +162,10 @@ rather than an approved plan. Every recommended-set row above was decided
 2026-05-27, the day before the fabrication patterns were named. Status of
 each by category:
 
-- All bibcodes in this file (Bond 2017 `2017ApJ...848...16B`, Mason 2017
-  `2017AJ....154..200M`, Mann 2015 `2015ApJ...804...64M`, Cifuentes 2020
-  `2020A&A...642A.115C`, Gianninas 2011 `2011ApJ...743..138G`,
-  Landstreet 2015 `2015A&A...580A.120L`) → fetch abstract+Table, value-check.
+- All bibcodes in this file (Bond 2017 [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B), Mason 2017
+  [`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M), Mann 2015 [`2015ApJ...804...64M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M), Cifuentes 2020
+  [`2020A&A...642A.115C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...642A.115C), Gianninas 2011 [`2011ApJ...743..138G`](https://ui.adsabs.harvard.edu/abs/2011ApJ...743..138G),
+  Landstreet 2015 [`2015A&A...580A.120L`](https://ui.adsabs.harvard.edu/abs/2015A%26A...580A.120L)) → fetch abstract+Table, value-check.
 - "N/A" claims (40 Eri B metallicity, rotation, activity; 40 Eri C
   metallicity-inherit-from-A) → re-run lit search to confirm silence,
   not assume it. Same pattern as HD 69830 false-negative on interferometry.

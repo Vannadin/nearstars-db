@@ -20,37 +20,37 @@ NearStars 플라스마 발광색 엔진(LTE Saha–Boltzmann 발광 → CIE 파�
 
 ## 옳다고 확인된 것
 
-- **핵심 방법은 주류다.** LTE는 "Boltzmann–Maxwell·Saha–Eggert 식 적용의 필수 전제"이며(Cristoforetti 2010, `2010AcSpB..65...86C`, 322인용), CF-LIBS 정량은 바로 이 계산을 역으로 돌리는 것이다(`2023ApPhB.129..136L`). 다단 이온화 + 105개 분자를 포함한 LTE 합성 스펙트럼은 항성 대기에서 표준이다(Allard & Hauschildt 1995, `1995ApJ...445..433A`, 482인용).
-- **우리 핵심 영역에서 LTE는 성립한다.** McWhirter 기준(nₑ ≳ 1.6×10¹²·√T·ΔE³)은 광학 ΔE·10⁴ K에서 ~10¹⁵–10¹⁶ cm⁻³를 주는데, 대기압 열 플라스마 4000–15000 K는 그 위에 있다. 밀집 레이저 플라스마의 국소 Saha–Boltzmann 평형은 톰슨 산란으로 독립 검증됐다(`2014AcSpB..96...61M`).
+- **핵심 방법은 주류다.** LTE는 "Boltzmann–Maxwell·Saha–Eggert 식 적용의 필수 전제"이며(Cristoforetti 2010, [`2010AcSpB..65...86C`](https://ui.adsabs.harvard.edu/abs/2010AcSpB..65...86C), 322인용), CF-LIBS 정량은 바로 이 계산을 역으로 돌리는 것이다([`2023ApPhB.129..136L`](https://ui.adsabs.harvard.edu/abs/2023ApPhB.129..136L)). 다단 이온화 + 105개 분자를 포함한 LTE 합성 스펙트럼은 항성 대기에서 표준이다(Allard & Hauschildt 1995, [`1995ApJ...445..433A`](https://ui.adsabs.harvard.edu/abs/1995ApJ...445..433A), 482인용).
+- **우리 핵심 영역에서 LTE는 성립한다.** McWhirter 기준(nₑ ≳ 1.6×10¹²·√T·ΔE³)은 광학 ΔE·10⁴ K에서 ~10¹⁵–10¹⁶ cm⁻³를 주는데, 대기압 열 플라스마 4000–15000 K는 그 위에 있다. 밀집 레이저 플라스마의 국소 Saha–Boltzmann 평형은 톰슨 산란으로 독립 검증됐다([`2014AcSpB..96...61M`](https://ui.adsabs.harvard.edu/abs/2014AcSpB..96...61M)).
 - **색채측정은 교과서 경로**이며, 발광 스펙트럼을 그대로 SPD로 다룬다(조명광으로 나누지 않음, 스펙트럼→색 변환에서 가장 흔한 버그인데 우리는 피했다). Wyman–Sloan–Shirley(2013) 등색함수 피팅은 수 % 정확도로 색상에는 충분하다.
 - **해리 상수 K(T)는 교과서대로다.** (2πμkT/h²)³ᐟ² · (U_A U_B/U_AB) · exp(−D₀/kT), 부호·전인자·대칭수 σ 모두 맞다.
-- **비-LTE 단서가 옳다.** 재진입 충격층 복사는 열화학·복사 *비평형*으로 모델링되고(`1994ntrs.rept23568C` 등), N₂⁺(B)(391 nm)는 열적이 아니라 전자충돌로 채워진다(Te 주도, Park 2온도). 오로라 O I 557.7/630 nm는 금지 준안정선으로 전자 강하·해리재결합으로 들뜨고 고밀도에서 소광된다(`1989RSPSA.424....1S`, `1990AdSpR..10e..31F`, `1960JChPh..32..607Y`). C₂ Swan(상위 ~2.5 eV)은 열적으로 접근 가능하므로 탄소 플라스마 초록은 정당한 LTE 결과인 반면 N₂ 청색은 아니다. 확인됨.
+- **비-LTE 단서가 옳다.** 재진입 충격층 복사는 열화학·복사 *비평형*으로 모델링되고([`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C) 등), N₂⁺(B)(391 nm)는 열적이 아니라 전자충돌로 채워진다(Te 주도, Park 2온도). 오로라 O I 557.7/630 nm는 금지 준안정선으로 전자 강하·해리재결합으로 들뜨고 고밀도에서 소광된다([`1989RSPSA.424....1S`](https://ui.adsabs.harvard.edu/abs/1989RSPSA.424....1S), [`1990AdSpR..10e..31F`](https://ui.adsabs.harvard.edu/abs/1990AdSpR..10e..31F), [`1960JChPh..32..607Y`](https://ui.adsabs.harvard.edu/abs/1960JChPh..32..607Y)). C₂ Swan(상위 ~2.5 eV)은 열적으로 접근 가능하므로 탄소 플라스마 초록은 정당한 LTE 결과인 반면 N₂ 청색은 아니다. 확인됨.
 
 ## 실행 가능한 핵심 발견 (우선순위순)
 
 1. **연속복사 누락 + "열 항"은 대용물(색에 중간→중대).** 진짜 광학적으로 얇은 기체는 라인/밴드와 *연속복사*(자유-자유 제동복사, 속박-자유 재결합, H⁻)를 내지 Planck 연속을 내지 않는다. 우리 `(n_heavy/N_REF)·Planck` 항은 백열 대용물로, art-direction으로는 방어 가능하나 기체의 열 연속복사라 부르지 말고 **그렇게 라벨해야** 한다. 1000–3000 K 얇은 중성 기체는 가시 연속이 사실상 없다(잉걸불 글로우는 광학적으로 두꺼운/응축 물체의 성질). 실제 연속을 빼면 색이 과채도로 치우친다. → 완료: 캡션·헤더를 "incandescence stand-in"으로 수정.
 2. **슬랩을 버린 건 물리 실패가 아니라 단위 버그(중간).** 이전 `I=B(1−e^{−τ})` + κ=j/B 폭주는 단위 처리 실수일 뿐이었다: B는 해석적으로 약분된다(I=B(1−exp(−(Σj·L)/B))). τ_λ=(Σj·L)/B를 로그 영역에서 계산하면 안정적이다. 슬랩이 올바른 물리다: GAIN 없이 열+발광을 통합하고, 강한 공명선을 B_λ에서 포화시키며(자기흡수 색편향 해소), 얇은 극한에서 가산합으로 환원되고, GAIN을 물리적 경로길이 L로 대체한다. **가장 가치 높은 업그레이드로 추천.**
-3. **밴드=헤드를 밴드=중심으로(색에 중간).** 분자 밴드의 색은 헤드가 아니라 *엔벨로프*(회전/진동 퍼짐, 수십 nm)에 있다. 헤드에 유효선을 두면 각 시스템이 자기 엔벨로프의 가장 파란/빨간 극단으로 치우친다. 해법: *시퀀스 중심*에 유효선 2–3개를, g_e × 밴드 세기로 가중(bare exp(−hc·T_e/kT) 말고), LIFBASE/SPECAIR 합성과 한 번 대조. 실제 진단은 회전 엔벨로프 전체를 피팅한다(`2002JAP....91.8955C`).
+3. **밴드=헤드를 밴드=중심으로(색에 중간).** 분자 밴드의 색은 헤드가 아니라 *엔벨로프*(회전/진동 퍼짐, 수십 nm)에 있다. 헤드에 유효선을 두면 각 시스템이 자기 엔벨로프의 가장 파란/빨간 극단으로 치우친다. 해법: *시퀀스 중심*에 유효선 2–3개를, g_e × 밴드 세기로 가중(bare exp(−hc·T_e/kT) 말고), LIFBASE/SPECAIR 합성과 한 번 대조. 실제 진단은 회전 엔벨로프 전체를 피팅한다([`2002JAP....91.8955C`](https://ui.adsabs.harvard.edu/abs/2002JAP....91.8955C)).
 4. **이온선 발광 누락(고온에서 중간): 수정함.** 원소별 표에 1차이온(X II) 발광을 추가해, 고온 색이 연속으로 수렴하는 대신 이온 스펙트럼(Ba II 보라 등)을 보인다.
-5. **자기흡수(경미→중간).** 광학적으로 얇으면 B_λ에서 포화될 강한 공명선(Na D, Ca II)을 과대계산한다. 고농도·긴 경로·저온에서 최악(`2021AcAC.118539070T`, `2023RSCAd..1329613J`). 싼 보호장치: 단일 라인 기여를 국소 B_λ(T)에서 클램프.
+5. **자기흡수(경미→중간).** 광학적으로 얇으면 B_λ에서 포화될 강한 공명선(Na D, Ca II)을 과대계산한다. 고농도·긴 경로·저온에서 최악([`2021AcAC.118539070T`](https://ui.adsabs.harvard.edu/abs/2021AcAC.118539070T), [`2023RSCAd..1329613J`](https://ui.adsabs.harvard.edu/abs/2023RSCAd..1329613J)). 싼 보호장치: 단일 라인 기여를 국소 B_λ(T)에서 클램프.
 6. **단일 T_REF = 3500 K는 2차원 hue(T) 면의 1차원 절단.** 온도 라벨이 값과 함께 다닐 때만 정직하다. 알려진 플리퍼(Cu 초록↔보라, 아마 Ca/Sr/Fe/희토류)에 대체-온도 색을 병기할 것.
 7. **경미한 색채측정:** 협대역 라인 스펙트럼에는 채널별 clamp-to-0 대신 hue 보존 gamut 매핑. max-channel 정규화 전 epsilon 가드(하한 미만 → "색 미정", 노이즈 증폭 금지). 무적응 D65 가정 명시.
 8. **경미/색-중립:** 분배함수 ~25준위 절단은 채널별 정규화에서 약분돼 색 영향 없음(2차 Saha 효과만). 고정 라인폭 + top-80 캡도 색-중립. 세기-혼합 대체(A 없는 스펙트럼)는 녹황 편향(눈/사진 세기 척도)을 가지므로 "저신뢰"만이 아니라 *방향*도 명시.
 
 ## 출처
 
-ADS: `2010AcSpB..65...86C`, `2014AcSpB..96...61M`, `2023ApPhB.129..136L`, `2021AcAC.118539070T`, `2023RSCAd..1329613J`, `1995ApJ...445..433A`, `2002JAP....91.8955C`, `1998PPCF...40..361D`, `1960JChPh..32..607Y`, `1989RSPSA.424....1S`, `1990AdSpR..10e..31F`, `1994ntrs.rept23568C`, `1990STIN...9025290H`. 웹: CIE 1931 color space(Wikipedia), Wyman·Sloan·Shirley 2013(JCGT) 해석적 CMF, 불꽃반응 분자 밴드 CaO/SrO(RSC / LibreTexts). ADS는 천체물리·행성 중심이라 색채과학·분석화학은 색인이 약하다(그쪽은 Semantic Scholar / Crossref 사용).
+ADS: [`2010AcSpB..65...86C`](https://ui.adsabs.harvard.edu/abs/2010AcSpB..65...86C), [`2014AcSpB..96...61M`](https://ui.adsabs.harvard.edu/abs/2014AcSpB..96...61M), [`2023ApPhB.129..136L`](https://ui.adsabs.harvard.edu/abs/2023ApPhB.129..136L), [`2021AcAC.118539070T`](https://ui.adsabs.harvard.edu/abs/2021AcAC.118539070T), [`2023RSCAd..1329613J`](https://ui.adsabs.harvard.edu/abs/2023RSCAd..1329613J), [`1995ApJ...445..433A`](https://ui.adsabs.harvard.edu/abs/1995ApJ...445..433A), [`2002JAP....91.8955C`](https://ui.adsabs.harvard.edu/abs/2002JAP....91.8955C), [`1998PPCF...40..361D`](https://ui.adsabs.harvard.edu/abs/1998PPCF...40..361D), [`1960JChPh..32..607Y`](https://ui.adsabs.harvard.edu/abs/1960JChPh..32..607Y), [`1989RSPSA.424....1S`](https://ui.adsabs.harvard.edu/abs/1989RSPSA.424....1S), [`1990AdSpR..10e..31F`](https://ui.adsabs.harvard.edu/abs/1990AdSpR..10e..31F), [`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C), [`1990STIN...9025290H`](https://ui.adsabs.harvard.edu/abs/1990STIN...9025290H). 웹: CIE 1931 color space(Wikipedia), Wyman·Sloan·Shirley 2013(JCGT) 해석적 CMF, 불꽃반응 분자 밴드 CaO/SrO(RSC / LibreTexts). ADS는 천체물리·행성 중심이라 색채과학·분석화학은 색인이 약하다(그쪽은 Semantic Scholar / Crossref 사용).
 
 ## 추가 문헌: 비-LTE 재진입 & 오로라 (조사)
 
 위 LTE 검증 출처 외에, 비-LTE 작업(재진입 청색·2온도 모드·오로라 표)이 참조한 것.
 
 **비-LTE 재진입 / collisional-radiative 구현.** ADS:
-`2025PhPl..32j3512A`(3온도 CR 공기 플라스마), `2026arXiv260411856Z`(RAPRAL line-by-line + ray-tracing), `2011PhDT`(Monte Carlo 극초음속 복사), `2001PhDT`(재결합 공기 이온화 비평형), `1994ntrs.rept23568C`(비평형 재진입 복사). N₂⁺ 1NG 청색은 전자충돌(Park 2온도): saha_boltzmann `t_elec` 모드의 근거.
+`2025PhPl..32j3512A`(3온도 CR 공기 플라스마), [`2026arXiv260411856Z`](https://ui.adsabs.harvard.edu/abs/2026arXiv260411856Z)(RAPRAL line-by-line + ray-tracing), `2011PhDT`(Monte Carlo 극초음속 복사), `2001PhDT`(재결합 공기 이온화 비평형), [`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C)(비평형 재진입 복사). N₂⁺ 1NG 청색은 전자충돌(Park 2온도): saha_boltzmann `t_elec` 모드의 근거.
 
 **CR 데이터 가용성**(검증, 이전 과장 정정: 주요 대기엔 데이터 있음): LXCat 전자산란 단면적 DB(Pitchford et al. 2017, *Plasma Processes & Polymers*) 42종, N₂/O₂/CO₂/CH₄/H₂/CO/NO/SO₂ 포함. CoRaM-AIR 2온도 CR(전자상태 829). 화성/타이탄/목성 진입 CR 모델 존재. 이색적 외계행성 조성만 희박. 분자 라인리스트는 HITRAN/HITEMP.
 
-**오로라(금지선 + quenching).** 메커니즘: `1960JChPh..32..607Y`(N₂ 잔광의 오로라 녹색 OI 557.7), `1989RSPSA.424....1S`(O(¹S) airglow 메커니즘), `1990AdSpR..10e..31F`(금성 야광 O ¹D/¹S, 해리재결합 + 연전자 강하). 수명/quenching: Slanger & Copeland(energetic-oxygen 리뷰), Sobral et al. 1993 JGR 98(O(¹D)+O(³P)), Rees 1989(표준 aeronomy). quenching 계수는 표준 교과서값을 이들에 대조, 단일 측정에서 새로 추출한 건 아님.
+**오로라(금지선 + quenching).** 메커니즘: [`1960JChPh..32..607Y`](https://ui.adsabs.harvard.edu/abs/1960JChPh..32..607Y)(N₂ 잔광의 오로라 녹색 OI 557.7), [`1989RSPSA.424....1S`](https://ui.adsabs.harvard.edu/abs/1989RSPSA.424....1S)(O(¹S) airglow 메커니즘), [`1990AdSpR..10e..31F`](https://ui.adsabs.harvard.edu/abs/1990AdSpR..10e..31F)(금성 야광 O ¹D/¹S, 해리재결합 + 연전자 강하). 수명/quenching: Slanger & Copeland(energetic-oxygen 리뷰), Sobral et al. 1993 JGR 98(O(¹D)+O(³P)), Rees 1989(표준 aeronomy). quenching 계수는 표준 교과서값을 이들에 대조, 단일 측정에서 새로 추출한 건 아님.
 
 ## 분자 밴드 커버리지 (패널 확장)
 

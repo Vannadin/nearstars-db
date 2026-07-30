@@ -232,6 +232,7 @@
 - `scripts/check-mirrors.sh` — `ko/` 미러의 누락·구버전 상태 확인
 - `scripts/check_dead_links.py` — 추적되는 모든 .md 파일의 상대 링크 깨짐 스캔
 - `scripts/check_site_links.py` — 배포되는 docs/ HTML의 사이트 내부 404 스캔. 정적 href에 더해 `<script type="text/markdown">` 임베드 블록 안의 마크다운 링크(클라이언트 렌더라 href 스캔에 안 잡힘)까지 검사하고 `_papers/` 미러는 제외. check.sh 3b 단계에 배선
+- `scripts/check_citation_links.py` — docs/reference(+ko 미러)에서 클릭 가능한 링크로 감싸지지 않은 bibcode/arXiv ID를 실패 처리([`bibcode`](ADS abs URL, `&`는 `%26`) 형식). 코드펜스와 긴 인라인 코드 예시는 제외. check.sh 3c 단계에 배선
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
 - `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도 + Phase 4 emit-게이트 (게이트 8, 도구 13). 수동 실행 전용.

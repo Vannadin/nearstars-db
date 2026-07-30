@@ -256,7 +256,7 @@ and c's "explore the ice".
 
 - **Dreizler S. et al. 2024** — *Teegarden's Star revisited. A nearby
   planetary system with at least three planets*, A&A 684, A117
-  (`2024A&A...684A.117D`, [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). The discovery paper for
+  ([`2024A&A...684A.117D`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.117D), [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). The discovery paper for
   d. Provides P = 26.13 d, msini = 0.82 M⊕, a = 0.0791 AU, e = 0.07,
   T_eq = 159 K (A=0.3), S = 0.12 S⊕. The §5.2 comparison to "Jupiter
   or Ganymede temperatures" is the cfg's primary qualitative anchor.

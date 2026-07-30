@@ -227,7 +227,7 @@ cfg 는 5 μT 적도 를 지각-잔존-only 장으로 선택 — b 의 25 μT �
 
 - **Dreizler S. et al. 2024** — *Teegarden's Star revisited. A nearby
   planetary system with at least three planets*, A&A 684, A117
-  (`2024A&A...684A.117D`, [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). d 의 발견 논문. P = 26.13 d,
+  ([`2024A&A...684A.117D`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.117D), [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). d 의 발견 논문. P = 26.13 d,
   msini = 0.82 M⊕, a = 0.0791 AU, e = 0.07, T_eq = 159 K (A=0.3),
   S = 0.12 S⊕ 제공. §5.2 의 "목성 또는 가니메데 온도" 비교가 cfg 의 1차
   정성적 닻.

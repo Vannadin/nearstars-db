@@ -212,42 +212,42 @@ NearStars에는 이게 좋은 소식이다. 위협이 손잡이로 바뀌기 때
 ## 인용
 
 - **[Heller & Barnes 2013](https://arxiv.org/abs/1209.5323)**, Astrobiology 13, 18
-  (`2013AsBio..13...18H`). 4항 외계위성 예산(행성 반사, 열복사, 식, 조석 가열)과 행성주위 거주가능
+  ([`2013AsBio..13...18H`](https://ui.adsabs.harvard.edu/abs/2013AsBio..13...18H)). 4항 외계위성 예산(행성 반사, 열복사, 식, 조석 가열)과 행성주위 거주가능
   경계. 행성 반경 10배 예시도 여기서 왔다. *ar5iv 추출 실패*, 여기 쓴 진술은 논문 자체의 ADS
   초록에서.
 - **[Dobos, Heller & Turner 2017](https://arxiv.org/abs/1703.02447)**, A&A 601, A91
-  (`2017A&A...601A..91D`). 같은 네 에너지원을 외계위성 거주가능대 계산으로(Heller et al. 2014
+  ([`2017A&A...601A..91D`](https://ui.adsabs.harvard.edu/abs/2017A%26A...601A..91D)). 같은 네 에너지원을 외계위성 거주가능대 계산으로(Heller et al. 2014
   Eq. 4 따름). 이들의 거주가능성 음영에 쓰인 약 100 W/m² 조석 표지도 여기서.
   `docs/phase3/_papers/1703.02447.md`에 **캐시**.
 - **[Barnes 2013](https://arxiv.org/abs/1203.5104)**, Astrobiology 13, 225
-  (`2013AsBio..13..225B`). "Tidal Venuses". 조석 가열이 천체를 건조시킬 만큼 오래 폭주 온실을
+  ([`2013AsBio..13..225B`](https://ui.adsabs.harvard.edu/abs/2013AsBio..13..225B)). "Tidal Venuses". 조석 가열이 천체를 건조시킬 만큼 오래 폭주 온실을
   유도하는 현상과, 비원형 궤도에 대한 거주가능대 수정. 수치는 ADS 초록에서.
 - **[Heller 2015](https://arxiv.org/abs/1311.0292)**, Int. J. Astrobiology 14, 335
-  (`2015IJAsB..14..335H`). 뜨겁고 젊은 거대행성의 조명으로 생기는 외계위성 폭주 온실. 모행성 온도를
+  ([`2015IJAsB..14..335H`](https://ui.adsabs.harvard.edu/abs/2015IJAsB..14..335H)). 뜨겁고 젊은 거대행성의 조명으로 생기는 외계위성 폭주 온실. 모행성 온도를
   상수로 두는 것이 적용 한계인 이유.
 - **[Kopparapu 2013](https://arxiv.org/abs/1301.6674)**, ApJ 765, 131
-  (`2013ApJ...765..131K`). 1차 폭주 천장으로 쓴 습윤 온실 한계 제공.
+  ([`2013ApJ...765..131K`](https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K)). 1차 폭주 천장으로 쓴 습윤 온실 한계 제공.
   `docs/phase3/_papers/1301.6674.md`에 **캐시**.
 - **[Tyler 2008](https://ui.adsabs.harvard.edu/abs/2008Natur.456..770T)**, Nature 456, 770
-  (`2008Natur.456..770T`). 위성 바다의 기울기 구동 Rossby 파 공명. 유로파의 2000배 흐름 에너지
+  ([`2008Natur.456..770T`](https://ui.adsabs.harvard.edu/abs/2008Natur.456..770T)). 위성 바다의 기울기 구동 Rossby 파 공명. 유로파의 2000배 흐름 에너지
   결과. *Nature 레터, 프리프린트 없음*. bibcode 인용, 수치는 ADS 초록에서.
 - **[Matsuyama 2014](https://ui.adsabs.harvard.edu/abs/2014Icar..242...11M)**, Icarus 242, 11
-  (`2014Icar..242...11M`). 해양 하중·자체 인력·고체부 변형이 공명 바다 두께를 여러 자릿수 옮긴다.
+  ([`2014Icar..242...11M`](https://ui.adsabs.harvard.edu/abs/2014Icar..242...11M)). 해양 하중·자체 인력·고체부 변형이 공명 바다 두께를 여러 자릿수 옮긴다.
   Cassini 상태 기울기에서 엔켈라두스 기울기-조석 플럭스는 관측보다 "여러 자릿수" 작고, 공명하는
   이심률 조석이 관측 열유량을 설명한다. 어느 해양 강제력이 중요한지를 결정하는 논문. 프리프린트 없음,
   수치는 ADS 초록에서.
 - **[Matsuyama 2018](https://arxiv.org/abs/1804.07727)**, Icarus 312, 208
-  (`2018Icar..312..208M`). 고체 지각이 있는 해양 조석 가열. 이심률 조석에 대해 박막 근사가 수 %
+  ([`2018Icar..312..208M`](https://ui.adsabs.harvard.edu/abs/2018Icar..312..208M)). 고체 지각이 있는 해양 조석 가열. 이심률 조석에 대해 박막 근사가 수 %
   정확도. 바다 깊이를 정한 뒤 쓸 방법. `docs/phase3/_papers/1804.07727.md`에 **캐시**.
 - **[Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)**,
-  Icarus 319, 68 (`2019Icar..319...68H`). 얼음 지각이 있는 비선형 바닥 항력. 자유표면 소산 스케일링
+  Icarus 319, 68 ([`2019Icar..319...68H`](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)). 얼음 지각이 있는 비선형 바닥 항력. 자유표면 소산 스케일링
   법칙을 지각 있는 경우로 확장해 10 % 이내 벤치마크. *기울기가 존재하는 경우에* 기울기 조석이 얼음
   위성 해양 가열을 지배한다고 결론. 프리프린트 없음, 수치는 ADS 초록에서.
 - **[Beuthe 2016](https://arxiv.org/abs/1608.08488)**, Icarus 280, 278
-  (`2016Icar..280..278B`). 소산성 해양 조석의 지각 제약과 지하-표면 바다 스케일링 규칙. 수치는 ADS
+  ([`2016Icar..280..278B`](https://ui.adsabs.harvard.edu/abs/2016Icar..280..278B)). 소산성 해양 조석의 지각 제약과 지하-표면 바다 스케일링 규칙. 수치는 ADS
   초록에서.
 - **[Hay & Matsuyama 2017](https://ui.adsabs.harvard.edu/abs/2017Icar..281..342H)**,
-  Icarus 281, 342 (`2017Icar..281..342H`). 바닥 항력을 넣은 Laplace 조석 방정식 수치 모형. 두꺼운
+  Icarus 281, 342 ([`2017Icar..281..342H`](https://ui.adsabs.harvard.edu/abs/2017Icar..281..342H)). 바닥 항력을 넣은 Laplace 조석 방정식 수치 모형. 두꺼운
   바다에서 기울기 Rossby 공명이 두께와 무관. 프리프린트 없음, bibcode만.
 - **Peale, Cassen & Reynolds 1979** — 조석 항 자체.
   [`tidal-heating-methodology.md`](tidal-heating-methodology.md)를 통해 인용하며, 전체 인용과

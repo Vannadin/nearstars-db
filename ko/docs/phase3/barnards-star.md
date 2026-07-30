@@ -226,7 +226,7 @@ flare 는 드문 사건의 박자 찍기이며 (2019 년 HST 원자외선 flare 
 
 - **Schweitzer A. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Different roads to radii and masses of the target
-  stars*, A&A 625, A68 (`2019A&A...625A..68S`,
+  stars*, A&A 625, A68 ([`2019A&A...625A..68S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S),
   doi:10.1051/0004-6361/201834965, arXiv:1904.03231). CARMENES
   기본 파라미터 편람. Phase 2 recommended 질량 (0.162 ± 0.007 M☉,
   spectroscopic calibration), 광도 (0.003558 ± 0.000072 L☉,
@@ -234,7 +234,7 @@ flare 는 드문 사건의 박자 찍기이며 (2019 년 HST 원자외선 flare 
   2012b θ_LD 와 Gaia DR2 거리에서) 의 출처. 대안 Teff (3273 ±
   51 K) 와 대안 VIS 금속도 (−0.15 ± 0.16) 도 제공.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star*, A&A 690, A79 (`2024A&A...690A..79G`,
+  orbiting Barnard's star*, A&A 690, A79 ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G),
   doi:10.1051/0004-6361/202451311, arXiv:2410.00569). ESPRESSO
   master-spectrum SteParSyn 분석. Teff = 3195 ± 28 K (Phase 2
   recommended). sub-Earth 행성 후보 Barnard b (P ≈ 3.15 d, M sin i
@@ -247,27 +247,27 @@ flare 는 드문 사건의 박자 찍기이며 (2019 년 HST 원자외선 flare 
   −0.15 및 Marfil −0.57 대비) 는 이 논문에 정박.
 - **Marfil E. et al. 2021** — *The CARMENES search for exoplanets
   around M dwarfs. Stellar atmospheric parameters of target stars
-  with SteParSyn*, A&A 656, A162 (`2021A&A...656A.162M`,
+  with SteParSyn*, A&A 656, A162 ([`2021A&A...656A.162M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...656A.162M),
   doi:10.1051/0004-6361/202141980, arXiv:2110.07329). CARMENES
   VIS+NIR 파라미터 결정. Teff = 3254 ± 32 K 와 가장 금속이 빈약한
   값 [Fe/H] = −0.57 ± 0.10. 둘 다 Canonical-alternatives 표에 진입.
 - **Toledo-Padrón B. et al. 2019** — *Stellar activity analysis of
   Barnard's Star: very slow rotation and evidence for long-term
-  activity cycle*, MNRAS 488, 5145 (`2019MNRAS.488.5145T`,
+  activity cycle*, MNRAS 488, 5145 ([`2019MNRAS.488.5145T`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.5145T),
   doi:10.1093/mnras/stz1647, arXiv:1812.06712). Phase 2 recommended
   자전 주기 (P_rot = 145 ± 15 d, 광도 측정) 와 색채권 활동
   (log R'HK = −5.82 ± 0.08), 그리고 ~10 yr 장기 활동 사이클의 출처.
   이 합성의 정적 상태 / 느린 자전 그림을 규정.
 - **Ribas I. et al. 2018** — *A candidate super-Earth planet orbiting
   near the snow line of Barnard's star*, Nature 563, 365
-  (`2018Natur.563..365R`). 두꺼운 원반 / 고속도 멤버십에서 구한
+  ([`2018Natur.563..365R`](https://ui.adsabs.harvard.edu/abs/2018Natur.563..365R)). 두꺼운 원반 / 고속도 멤버십에서 구한
   Phase 2 recommended 운동학 나이 (~8.5 ± 1.5 Gyr) 의 출처. NOTE.
   이 논문이 발표한 super-Earth "Barnard b" 후보 (P ≈ 233 d) 는 이후
   철회됐고 (Lubin et al. 2021), González Hernández 2024 의 단주기
   후보와는 무관.
 - **Boyajian T. S. et al. 2012b** — *Stellar Diameters and
   Temperatures II. Main-Sequence K- and M-Stars*, ApJ 757, 112
-  (`2012ApJ...757..112B`, doi:10.1088/0004-637X/757/2/112,
+  ([`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B), doi:10.1088/0004-637X/757/2/112,
   [arXiv:1208.2431](https://arxiv.org/abs/1208.2431)). 바너드 별의 CHARA 어레이 사지 어두워짐 보정
   각지름 θ_LD = 0.952 mas — Schweitzer 2019 recommended 반지름
   R = 0.187 R☉ 의 간섭계 기반.
@@ -276,7 +276,7 @@ flare 는 드문 사건의 박자 찍기이며 (2019 년 HST 원자외선 flare 
 
 - **Mann A. W. et al. 2015** — *How to Constrain Your M Dwarf:
   Measuring Effective Temperature, Bolometric Luminosity, Mass, and
-  Radius*, ApJ 804, 64 (`2015ApJ...804...64M`,
+  Radius*, ApJ 804, 64 ([`2015ApJ...804...64M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M),
   doi:10.1088/0004-637X/804/1/64, arXiv:1501.01635). M_K 기반 경험
   질량 관계로 M = 0.161 ± 0.006 M☉ 를 줌 — Phase 2 대안 질량으로,
   Schweitzer 2019 와 1σ 안에서 일치.

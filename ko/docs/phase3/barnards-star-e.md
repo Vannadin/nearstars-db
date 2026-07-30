@@ -207,14 +207,14 @@ Barnard flare 동안의 오로라 밴드는 25% flare 듀티 사이클 동안 �
 ### Read (visual-informative, drove decisions above)
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
-  Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
+  Barnard's Star from MAROON-X and ESPRESSO* ([`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B),
   [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). e 를 후보 (ESPRESSO 단독 59% 검출 확률) 에서
   확정 (공동 MAROON-X + ESPRESSO 79%) 으로 격상한 MAROON-X 논문. P =
   6.7392 d, Msini = 0.193 ± 0.033 M⊕, a = 0.0381 AU, e = 0.04,
   ω = −27.5°, T_eq = 340 K (A=0, full redistribution). HZ = P 10–42 d.
   안정성을 위해 e < 0.02 선호.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
+  orbiting Barnard's star* ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G), [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   ESPRESSO 데이터가 e (6.74 d) 를 후보 신호로 처음 식별 (검출 민감도
   로는 "예상 밖").
 - **Stefanov A. K. et al. 2024** — *TESS photometry of Barnard's Star*

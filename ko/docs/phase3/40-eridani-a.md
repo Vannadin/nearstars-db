@@ -305,7 +305,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
 
 - **Boyajian T. S. 등 2012** — *Stellar Diameters and
   Temperatures II. Main-Sequence K- and M-Stars*, ApJ 757, 112
-  (`2012ApJ...757..112B`, doi:10.1088/0004-637X/757/2/112). 40
+  ([`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B), doi:10.1088/0004-637X/757/2/112). 40
   Eri A 가 GJ 166 A 로 포함된 CHARA Classic H 밴드 간섭계 각지름
   샘플. θ_LD = 1.504 ± 0.006 mas (Table 3); R = 0.8061 ± 0.0036
   R☉, Teff = 5143 ± 14 K, L = 0.4078 ± 0.0032 L☉ (Table 6). 두
@@ -313,7 +313,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
   primary 로 R/Teff/L 을 anchor 합니다.
 - **Rains A. D. 등 2020** — *Precision angular diameters for 16
   southern stars with VLTI/PIONIER*, MNRAS 493, 2377
-  (`2020MNRAS.493.2377R`, doi:10.1093/mnras/staa282,
+  ([`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R), doi:10.1093/mnras/staa282,
   [arXiv:2004.02343](https://arxiv.org/abs/2004.02343)). VLTI/PIONIER 4 망원경 H 밴드 간섭계. 40
   Eri A 는 Table 1 샘플의 16 개 중 7 번째. 독립적 cross-check:
   θ_LD = 1.486 ± 0.012 mas, R = 0.804 ± 0.006 R☉, Teff = 5126
@@ -324,7 +324,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
   and a brown dwarf candidate in a close binary system HD 87646*
   는 같은 저자들의 관련 연구입니다. 40 Eri A 에 대한 본
   논문은 **Ma 등 2018 MNRAS 480, 2411**
-  (`2018MNRAS.480.2411M`, doi:10.1093/mnras/sty1933) 으로 Dharma
+  ([`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M), doi:10.1093/mnras/sty1933) 으로 Dharma
   Planet Survey 의 HD 26965 b RV 검출을 보고합니다. Mass
   0.78 ± 0.08 M☉, age 6.9 ± 4.7 Gyr (PARSEC isochrone +
   다중 밴드 SED), Teff 5072 ± 53 K, [Fe/H] −0.42 ± 0.04
@@ -332,7 +332,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
   지금은 반박된 행성 후보의 source paper 이기도 합니다.
 - **Bond H. E. 등 2017** — *Astrophysical Implications of a
   New Dynamical Mass for the Nearby White Dwarf 40 Eridani B*,
-  ApJ 848, 16 (`2017ApJ...848...16B`, doi:10.3847/1538-4357/aa8a63,
+  ApJ 848, 16 ([`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B), doi:10.3847/1538-4357/aa8a63,
   [arXiv:1709.00478](https://arxiv.org/abs/1709.00478)). 40 Eri B 의 HST FGS 동역학 질량 0.573 ±
   0.018 M☉; §6.2 가 IFMR (initial mass ~1.8 M☉ → MS 수명
   1.7 Gyr + 냉각 122 Myr) 로 시스템 공통 나이 ~1.8 Gyr 을
@@ -340,14 +340,14 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
   `## Canonical alternatives` 참조.
 - **Burrows A. 등 2024** — *The Death of Vulcan: NEID Reveals
   That the Planet Candidate Orbiting HD 26965 Is Stellar Activity*,
-  AJ 167, 243 (`2024AJ....167..243B`, doi:10.3847/1538-3881/ad34d5,
+  AJ 167, 243 ([`2024AJ....167..243B`](https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B), doi:10.3847/1538-3881/ad34d5,
   [arXiv:2404.17494](https://arxiv.org/abs/2404.17494)). NEID line-by-line RV + 활성도 지표 상관이
   Ma 2018 벌컨 후보를 반박합니다. 자전 주기는 formal σ 없이
   "∼42 days" 로 보고됩니다. `rotation_period_days` Decisions
   row 와 Refuted-planet 섹션의 source.
 - **Diaz M. R. 등 2018** — *The Test Case of HD 26965:
   Difficulties Disentangling Weak Doppler Signals from Stellar
-  Activity*, AJ 155, 126 (`2018AJ....155..126D`,
+  Activity*, AJ 155, 126 ([`2018AJ....155..126D`](https://ui.adsabs.harvard.edu/abs/2018AJ....155..126D),
   doi:10.3847/1538-3881/aaa896, arXiv:1801.03970). HARPS 데이터로
   본 벌컨 신호의 pre-Burrows 검토. 활성도 대 행성 모호성을
   미리 짚어둔 paper. SPECIES atmospheric pipeline 으로부터의
@@ -358,7 +358,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
 - **Jenkins J. S. 등 2011** — *Chromospheric activities and
   kinematics for solar type dwarfs and subgiants: analysis of the
   activity distribution and the AVR*, A&A 531, A8
-  (`2011A&A...531A...8J`, doi:10.1051/0004-6361/201016333). HARPS
+  ([`2011A&A...531A...8J`](https://ui.adsabs.harvard.edu/abs/2011A%26A...531A...8J), doi:10.1051/0004-6361/201016333). HARPS
   로 본 890 개 남쪽 FGK 별의 Ca II H&K 서베이. Phase 2 권장
   log R'HK = −4.99 의 source (이번 세션에서 CDS 표 row 단위
   직접 fetch 는 못함, Open items 참조).
@@ -371,18 +371,18 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
   불가능하다는 점에서 인용합니다 (40 Eri A-BC ~8000 년).
 - **Mason B. D., Hartkopf W. I. & Miles K. N. 2017** — *Binary
   Star Orbits. V. The Nearby White Dwarf-Red Dwarf Pair 40 Eri BC*,
-  AJ 154, 200 (`2017AJ....154..200M`,
+  AJ 154, 200 ([`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M),
   doi:10.3847/1538-3881/aa803e). 내측 B-C 쌍의 grade-1 결정 궤도:
   P = 230.30 ± 0.68 yr, e = 0.4294 ± 0.0027. `db/binary_orbits.json`
   의 B-C 궤도 Phase 2 anchor.
 - **Henry T. J. 등 1996** — *A Survey of Ca II H and K
   Chromospheric Emission in Southern Solar-Type Stars*, AJ 111,
-  439 (`1996AJ....111..439H`, doi:10.1086/117796). 40 Eri A 를
+  439 ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H), doi:10.1086/117796). 40 Eri A 를
   포함한 더 이른 색층권 활성도 서베이. Phase 2 대안 log R'HK
   = −4.94. 직접 CDS row 는 이번 세션에서 table-verify 못함;
   bibcode/title 은 확인됨.
 - **Bensby T., Feltzing S. 등 2014** — *Exploring the Milky
-  Way stellar disk*, A&A 562, A71 (`2014A&A...562A..71B`,
+  Way stellar disk*, A&A 562, A71 ([`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B),
   doi:10.1051/0004-6361/201322631). thin/thick-disk 화학 abundance
   서베이의 714 F/G 왜성. 40 Eri A 에 대한 Phase 2 대안
   [Fe/H] = −0.31 ± 0.10. K0.5 V 분류는 sample boundary 에

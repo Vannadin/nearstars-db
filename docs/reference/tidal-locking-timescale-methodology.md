@@ -51,9 +51,9 @@ a small angle set by internal friction, and that lagging bulge applies a torque 
 drives the spin toward the orbital mean motion `n`. The **despin (synchronization)
 timescale** is the time for that torque to remove the excess spin angular momentum.
 For a homogeneous body of moment of inertia `I = α m R²` the constant-phase-lag
-("fixed-Q") result, as derived in Goldreich & Soter 1966 (`1966Icar....5..375G`)
+("fixed-Q") result, as derived in Goldreich & Soter 1966 ([`1966Icar....5..375G`](https://ui.adsabs.harvard.edu/abs/1966Icar....5..375G))
 and laid out textbook-form in Murray & Dermott 1999, *Solar System Dynamics*
-(`1999ssd..book.....M`), §5, is
+([`1999ssd..book.....M`](https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M)), §5, is
 
     τ_lock  ≈  (ω₀ − n) · (Q / k₂) · (I a⁶) / (3 G M_p² R⁵)
 
@@ -112,18 +112,18 @@ uses to calibrate on Io and Enceladus.
 - **The Moon**: the canonical 1:1 lock. With Earth as perturber at 3.84×10⁵ km and a
   rocky `Q/k₂`, `τ_lock` comes out far below a Gyr; the Moon was despun to synchronous
   rotation early in Solar-System history and shows us one face ever since. This is the
-  textbook anchor (Murray & Dermott 1999 §5; Peale 1977, `1977plsa.conf...87P`,
+  textbook anchor (Murray & Dermott 1999 §5; Peale 1977, [`1977plsa.conf...87P`](https://ui.adsabs.harvard.edu/abs/1977plsa.conf...87P),
   "Rotation Histories of the Natural Satellites"). ✓
 - **Mercury**: despun (its primordial fast spin is long gone, so `τ_lock ≪ t_sys`),
   but it locked into a **3:2 spin–orbit resonance**, not 1:1, because of its
   eccentricity plus a permanent quadrupole moment (Goldreich & Peale 1966,
-  `1966AJ.....71..425G`; capture explained by Correia & Laskar 2004,
-  `2004Natur.429..848C`). The "despin happened" call is right; "1:1" would be wrong.
+  [`1966AJ.....71..425G`](https://ui.adsabs.harvard.edu/abs/1966AJ.....71..425G); capture explained by Correia & Laskar 2004,
+  [`2004Natur.429..848C`](https://ui.adsabs.harvard.edu/abs/2004Natur.429..848C)). The "despin happened" call is right; "1:1" would be wrong.
   This is the §4 example. ✓ for despin, ✗ for naively assuming 1:1.
 - **Venus**: `τ_lock` for the *gravitational* tide alone is ≲ system age, so a
   naive application says "should be near-synchronous." Instead Venus rotates **slowly
   retrograde**. The resolution is the atmospheric **thermal tide** (Gold & Soter 1969,
-  `1969Icar...11..356G`; Dobrovolskis & Ingersoll 1980, `1980Icar...41....1D`): a thick
+  [`1969Icar...11..356G`](https://ui.adsabs.harvard.edu/abs/1969Icar...11..356G); Dobrovolskis & Ingersoll 1980, [`1980Icar...41....1D`](https://ui.adsabs.harvard.edu/abs/1980Icar...41....1D)): a thick
   atmosphere's thermally-driven bulge applies a torque that opposes the gravitational
   one and parks the spin away from 1:1. This is the §5 exception. ✗ for the bare formula.
 
@@ -158,8 +158,8 @@ The consequence for the two regimes NearStars cares about:
   planetary radii. The `a⁶` term makes `τ_lock` plunge to **≪ Gyr**, far below any
   realistic system age. **These bodies are locked.** This is *exactly* why the
   temperature and heating docs are entitled to assume synchronous rotation for them
-  (Kasting, Whitmire & Reynolds 1993, `1993Icar..101..108K`, note locking in the M-dwarf
-  HZ; Barnes 2017, `2017CeMDA.129..509B`, gives the magnitudes, see §7).
+  (Kasting, Whitmire & Reynolds 1993, [`1993Icar..101..108K`](https://ui.adsabs.harvard.edu/abs/1993Icar..101..108K), note locking in the M-dwarf
+  HZ; Barnes 2017, [`2017CeMDA.129..509B`](https://ui.adsabs.harvard.edu/abs/2017CeMDA.129..509B), gives the magnitudes, see §7).
 - **Far out (Earth at 1 AU around a Sun-like star; a distant moon).** The same `a⁶`
   blows `τ_lock` up to ≫ age. **These bodies are not locked** and keep their primordial
   spin. Earth at 1 AU has `τ_lock ≫ 4.5 Gyr`, which is why Earth is not tidally locked
@@ -191,24 +191,24 @@ assume. *(Moon; Galilean moons; most M-dwarf HZ planets on near-circular orbits.
 with a smooth (no strong permanent quadrupole) response on an eccentric orbit, the
 equilibrium is **not** `ω = n`. Tidal torque is strongest near periapse, where the
 body moves fastest, so the equilibrium spin settles *above* the mean motion. Hut 1981
-(`1981A&A....99..126H`) gives the equilibrium spin rate of the equilibrium-tide model:
+([`1981A&A....99..126H`](https://ui.adsabs.harvard.edu/abs/1981A%26A....99..126H)) gives the equilibrium spin rate of the equilibrium-tide model:
 
     ω_eq / n  =  (1 + (15/2)e² + (45/8)e⁴ + (5/16)e⁶) / [(1 + 3e² + (3/8)e⁴)(1 − e²)^{3/2}]
 
 which reduces to `ω_eq/n ≈ 1 + 6e²` for small `e`, slightly faster than synchronous,
 so the substellar point **drifts** rather than staying fixed. Dobrovolskis 2007
-(`2007Icar..192....1D`) works the climate consequences of these eccentric spin states.
+([`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)) works the climate consequences of these eccentric spin states.
 *This is the state to assign an eccentric NearStars body whose interior is fluid-like
 and has no large permanent figure.*
 
 **(c) Eccentricity + permanent quadrupole → higher p:q spin–orbit resonance.** A rocky
 body with a frozen-in permanent quadrupole (a non-axisymmetric figure) can be **captured
 into a p:q resonance** where it rotates `p` times per `q` orbits: Mercury's **3:2** is
-the type case (Goldreich & Peale 1966, `1966AJ.....71..425G`). Capture is *probabilistic*
+the type case (Goldreich & Peale 1966, [`1966AJ.....71..425G`](https://ui.adsabs.harvard.edu/abs/1966AJ.....71..425G)). Capture is *probabilistic*
 and depends on eccentricity and the tidal model: Correia & Laskar 2004
-(`2004Natur.429..848C`) showed Mercury's chaotic orbital evolution makes 3:2 the most
-likely outcome; Makarov 2012 (`2012ApJ...752...73M`) and Noyelles et al. 2014
-(`2014Icar..241...26N`) give capture probabilities and show that with a realistic
+([`2004Natur.429..848C`](https://ui.adsabs.harvard.edu/abs/2004Natur.429..848C)) showed Mercury's chaotic orbital evolution makes 3:2 the most
+likely outcome; Makarov 2012 ([`2012ApJ...752...73M`](https://ui.adsabs.harvard.edu/abs/2012ApJ...752...73M)) and Noyelles et al. 2014
+([`2014Icar..241...26N`](https://ui.adsabs.harvard.edu/abs/2014Icar..241...26N)) give capture probabilities and show that with a realistic
 (frequency-dependent) tidal model 3:2 capture is essentially certain for Mercury's `e`.
 A body in 3:2 has a **slowly moving substellar point** (two "hot longitudes" over an
 orbit), so the temperature doc's fixed-substellar geometry does **not** apply directly.
@@ -231,15 +231,15 @@ solid-body gravitational tide, and for a sufficiently thick atmosphere it can ba
 or overpower it, parking the spin in an **asynchronous** state away from 1:1.
 
 - **Venus is the Solar-System proof.** Its slow *retrograde* spin is the signature:
-  Gold & Soter 1969 (`1969Icar...11..356G`) proposed the atmospheric-tide mechanism,
-  and Dobrovolskis & Ingersoll 1980 (`1980Icar...41....1D`) worked the torque balance:
+  Gold & Soter 1969 ([`1969Icar...11..356G`](https://ui.adsabs.harvard.edu/abs/1969Icar...11..356G)) proposed the atmospheric-tide mechanism,
+  and Dobrovolskis & Ingersoll 1980 ([`1980Icar...41....1D`](https://ui.adsabs.harvard.edu/abs/1980Icar...41....1D)) worked the torque balance:
   the thermal tide holds Venus off the 1:1 state the gravitational tide would otherwise
   enforce.
-- **Terrestrial exoplanets generalize it.** Leconte et al. 2015 (`2015Sci...347..632L`,
+- **Terrestrial exoplanets generalize it.** Leconte et al. 2015 ([`2015Sci...347..632L`](https://ui.adsabs.harvard.edu/abs/2015Sci...347..632L),
   [arXiv:1502.01952](https://arxiv.org/abs/1502.01952)) showed that **Earth-mass HZ planets around lower-mass stars can be
   driven into asynchronous rotation by the atmospheric thermal tide**, i.e. the naive
   "M-dwarf HZ planet ⇒ 1:1 locked" inference can fail if the atmosphere is thick enough.
-  Correia, Levrard & Laskar 2008 (`2008A&A...488L..63C`, [arXiv:0808.1071](https://arxiv.org/abs/0808.1071)) earlier mapped
+  Correia, Levrard & Laskar 2008 ([`2008A&A...488L..63C`](https://ui.adsabs.harvard.edu/abs/2008A%26A...488L..63C), [arXiv:0808.1071](https://arxiv.org/abs/0808.1071)) earlier mapped
   the equilibrium-rotation regimes including the atmospheric-tide branch.
 
 **When it applies:** the thermal tide scales with atmospheric mass/surface pressure, so
@@ -325,15 +325,15 @@ lesson the sibling docs need: a thick atmosphere can break the 1:1 assumption ev
 
 **Proxima b / a generic M-dwarf HZ planet: the assumption-licensing case.** Host an
 M dwarf, HZ at `a ~ 0.05 AU` (Proxima b: 0.0485 AU). The `a⁶` term drives `τ_lock` to
-**≪ Gyr**, Barnes 2017 (`2017CeMDA.129..509B`) gives locking times of order 10⁶–10⁸ yr
+**≪ Gyr**, Barnes 2017 ([`2017CeMDA.129..509B`](https://ui.adsabs.harvard.edu/abs/2017CeMDA.129..509B)) gives locking times of order 10⁶–10⁸ yr
 for such orbits, far below the multi-Gyr host ages. **So the body is locked**, and on a
 near-circular orbit that means **1:1 synchronous**, which is precisely the state the
 [temperature](tidally-locked-temperature-methodology.md) and
 [heating](tidal-heating-methodology.md) docs assume for the NearStars terrestrial
 roster (Proxima b, the TRAPPIST-1 planets, etc.). **Caveat:** if such a planet has a
-*thick* atmosphere, the Leconte 2015 (`2015Sci...347..632L`) thermal-tide caveat (§5)
+*thick* atmosphere, the Leconte 2015 ([`2015Sci...347..632L`](https://ui.adsabs.harvard.edu/abs/2015Sci...347..632L)) thermal-tide caveat (§5)
 applies and the 1:1 state is no longer guaranteed: flag it, don't assert it. Turbet
-et al. 2016 (`2016A&A...596A.112T`) explores exactly this range of possible Proxima b
+et al. 2016 ([`2016A&A...596A.112T`](https://ui.adsabs.harvard.edu/abs/2016A%26A...596A.112T)) explores exactly this range of possible Proxima b
 spin/climate states.
 
 **A NearStars moon locked to its planet (α Cen system, qualitative).** A moon orbiting
@@ -356,43 +356,43 @@ Each entry: authors, year, journal/book, **verified** arXiv id (or "no arXiv" +
 bibcode), ADS citation count, and one line on the contribution.
 
 - **Goldreich, P. & Soter, S. (1966)**: *Icarus* 5, 375. **No arXiv**
-  (`1966Icar....5..375G`). Cites: 977. "Q in the Solar System": the founding treatment
+  ([`1966Icar....5..375G`](https://ui.adsabs.harvard.edu/abs/1966Icar....5..375G)). Cites: 977. "Q in the Solar System": the founding treatment
   of the tidal quality factor and the despin/tidal-evolution timescales; the source of
   the `Q/k₂` framing used throughout. §1.
 - **Goldreich, P. & Peale, S. (1966)**: *AJ* 71, 425. **No arXiv**
-  (`1966AJ.....71..425G`). Cites: 351. "Spin-orbit coupling in the solar system": the
+  ([`1966AJ.....71..425G`](https://ui.adsabs.harvard.edu/abs/1966AJ.....71..425G)). Cites: 351. "Spin-orbit coupling in the solar system": the
   founding theory of spin–orbit resonance capture; why an eccentric body with a
   permanent quadrupole locks into a p:q resonance (Mercury 3:2) rather than 1:1. §4.
 - **Gold, T. & Soter, S. (1969)**: *Icarus* 11, 356. **No arXiv**
-  (`1969Icar...11..356G`). Cites: 111. "Atmospheric Tides and the Resonant Rotation of
+  ([`1969Icar...11..356G`](https://ui.adsabs.harvard.edu/abs/1969Icar...11..356G)). Cites: 111. "Atmospheric Tides and the Resonant Rotation of
   Venus": proposes the atmospheric thermal-tide torque that holds a thick-atmosphere
   body off 1:1; the origin of the §5 exception. §5.
 - **Peale, S. J. (1977)**: in *Planetary Satellites* (IAU Colloq. 28). **No arXiv**
-  (`1977plsa.conf...87P`). Cites: 58. "Rotation Histories of the Natural Satellites":
+  ([`1977plsa.conf...87P`](https://ui.adsabs.harvard.edu/abs/1977plsa.conf...87P)). Cites: 58. "Rotation Histories of the Natural Satellites":
   the classic review of how satellites despin and reach their present rotation states;
   the worked-physics companion to the Moon/Galilean-moon calibration. §2.
 - **Dobrovolskis, A. R. & Ingersoll, A. P. (1980)**: *Icarus* 41, 1. **No arXiv**
-  (`1980Icar...41....1D`). Cites: 73. "Atmospheric tides and the rotation of Venus I":
+  ([`1980Icar...41....1D`](https://ui.adsabs.harvard.edu/abs/1980Icar...41....1D)). Cites: 73. "Atmospheric tides and the rotation of Venus I":
   the quantitative torque balance between the gravitational and thermal tides that sets
   Venus's spin; the mechanism behind §5. §5.
-- **Hut, P. (1981)**: *A&A* 99, 126. **No arXiv** (`1981A&A....99..126H`). Cites: 1367.
+- **Hut, P. (1981)**: *A&A* 99, 126. **No arXiv** ([`1981A&A....99..126H`](https://ui.adsabs.harvard.edu/abs/1981A%26A....99..126H)). Cites: 1367.
   "Tidal evolution in close binary systems": the equilibrium-tide model giving the
   **pseudo-synchronous** equilibrium spin (`ω_eq/n ≈ 1 + 6e²`) for eccentric orbits; the
   source of the §4 (b) formula. §4.
 - **Kasting, J. F., Whitmire, D. P. & Reynolds, R. T. (1993)**: *Icarus* 101, 108.
-  **No arXiv** (`1993Icar..101..108K`). Cites: 1951. "Habitable Zones around Main
+  **No arXiv** ([`1993Icar..101..108K`](https://ui.adsabs.harvard.edu/abs/1993Icar..101..108K)). Cites: 1951. "Habitable Zones around Main
   Sequence Stars": defines the classical HZ and notes that HZ planets around low-mass
   stars are close enough to become tidally locked; the locking motivation for the
   M-dwarf HZ. §3.
 - **Murray, C. D. & Dermott, S. F. (1999)**: *Solar System Dynamics* (Cambridge Univ.
-  Press). **Book** (`1999ssd..book.....M`). Cites: 2002. The standard textbook
+  Press). **Book** ([`1999ssd..book.....M`](https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M)). Cites: 2002. The standard textbook
   derivation of the tidal torque, the despin timescale, and spin–orbit dynamics (§5);
   the canonical source for the §1 formula rather than any single journal paper. §1, §2.
 - **Correia, A. C. M. & Laskar, J. (2004)**: *Nature* 429, 848. **No arXiv**
-  (`2004Natur.429..848C`). Cites: 122. "Mercury's capture into the 3/2 spin-orbit
+  ([`2004Natur.429..848C`](https://ui.adsabs.harvard.edu/abs/2004Natur.429..848C)). Cites: 122. "Mercury's capture into the 3/2 spin-orbit
   resonance as a result of its chaotic dynamics": explains why Mercury sits in 3:2 (the
   capture-probability problem) via chaotic orbital evolution. §4, §7.
-- **Dobrovolskis, A. R. (2007)**: *Icarus* 192, 1. **No arXiv** (`2007Icar..192....1D`).
+- **Dobrovolskis, A. R. (2007)**: *Icarus* 192, 1. **No arXiv** ([`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)).
   Cites: 40. "Spin states and climates of eccentric exoplanets": works out the
   rotation states (including pseudo-synchronous) and the climate consequences for
   eccentric exoplanets. §4.

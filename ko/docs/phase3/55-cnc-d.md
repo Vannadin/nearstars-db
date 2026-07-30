@@ -144,22 +144,22 @@ Msini(RV), 반지름은 추정-전용이며, 고리는 관측이 아니라 명�
 ### Read (visual-informative, drove decisions above)
 
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
-  with SPIRou…*, A&A 705, A190 (`2026A&A...705A.190M`,
+  with SPIRou…*, A&A 705, A190 ([`2026A&A...705A.190M`](https://ui.adsabs.harvard.edu/abs/2026A%26A...705A.190M),
   [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). 최신 RV 재피팅: 행성 d P = 4799 d(Bourrier 2018 의
   5574 d 보다 9σ 짧음), a = 5.6 AU, e = 0.0913, M sin i = 1214 ± 41 M⊕
   ≈ 3.8 M_Jup. 궤도가 ~10.5년 자기 주기와 얽히고 가능한 추가 외곽
   천체(장기 RV 추세, P > 24 yr)가 있음을 지적. **Phase 2 추천 궤도 +
   질량.** 모델 컷오프 이후 출판 — 캐시 텍스트에 대조 확인.
-- **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
+- **von Braun K. et al. 2011** — [`2011ApJ...740...49V`](https://ui.adsabs.harvard.edu/abs/2011ApJ...740...49V),
   [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). 모성 L = 0.582 L☉ → T_eq 유도.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Bourrier V. et al. 2018** — `2018A&A...619A...1B`,
+- **Bourrier V. et al. 2018** — [`2018A&A...619A...1B`](https://ui.adsabs.harvard.edu/abs/2018A%26A...619A...1B),
   [arXiv:1807.04301](https://arxiv.org/abs/1807.04301). 자기-주기 케플러를 포함한 재피팅: d 가 P = 5574 d,
   a = 5.957 AU, e = 0.13, M sin i = 991.6 M⊕ — 기록된-대안
   궤도(Canonical alternatives 참조).
-- **Marcy G. W. et al. 2002** — `2002ApJ...581.1375M`. d 의 발견 논문
+- **Marcy G. W. et al. 2002** — [`2002ApJ...581.1375M`](https://ui.adsabs.harvard.edu/abs/2002ApJ...581.1375M). d 의 발견 논문
   (당시 알려진 가장 긴 주기의 거대 행성 중 하나). 역사적 맥락.
 
 ### Read (instrument-only, not visual-informative)

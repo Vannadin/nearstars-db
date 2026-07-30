@@ -61,12 +61,12 @@ An independent infrared parallax measurement would resolve this conflict.
 
 | Source | Value | Reference |
 |--------|-------|-----------|
-| TEPCat allplanets-csv | 0.0122 Mjup = 3.8775 M⊕ | 2021PSJ.....2....1A |
+| TEPCat allplanets-csv | 0.0122 Mjup = 3.8775 M⊕ | [`2021PSJ.....2....1A`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2....1A) |
 | NASA Exoplanet Archive | 0.00122 Mjup = 0.388 M⊕ | same paper |
 
 All other TRAPPIST-1 planets (b, c, e, f, g, h) agree between the two sources within 1%.
 The discrepancy is exactly 10×, consistent with a missing decimal zero in TEPCat's data entry
-(`0.0122` instead of `0.00122`). Both sources cite Agol et al. 2021 (2021PSJ.....2....1A).
+(`0.0122` instead of `0.00122`). Both sources cite Agol et al. 2021 ([`2021PSJ.....2....1A`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2....1A)).
 
 Contact for TEPCat corrections: https://www.astro.keele.ac.uk/jkt/tepcat/
 

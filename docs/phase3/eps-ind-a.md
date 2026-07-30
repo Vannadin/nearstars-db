@@ -228,7 +228,7 @@ modest, quiet photosphere:
 
 - **Lundkvist M. S. et al. 2024** — *Low-amplitude solar-like
   oscillations in the K5 V star ε Indi A*, ApJ 964, 110
-  (`2024ApJ...964..110L`, doi:10.3847/1538-4357/ad25f2,
+  ([`2024ApJ...964..110L`](https://ui.adsabs.harvard.edu/abs/2024ApJ...964..110L), doi:10.3847/1538-4357/ad25f2,
   [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). Detects solar-like oscillations at ν_max =
   5265 ± 110 µHz (highest-frequency ever measured), giving an
   asteroseismic mass M = 0.782 ± 0.023 M☉ via ν_max scaling with the
@@ -238,20 +238,20 @@ modest, quiet photosphere:
   mass/radius/Teff.
 - **Feng F. et al. 2019** — *Detection of the nearest Jupiter analog in
   radial velocity and astrometry data*, MNRAS 490, 5002
-  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
+  ([`2019MNRAS.490.5002F`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.5002F), doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
   RV + Hipparcos/Gaia astrometric detection of ε Indi A b; Phase 2
   recommended source for the luminosity (0.239 L☉) and corroborating
   the ~35 d rotation and ~4 Gyr age. The planet orbit here (a ≈ 11.6 AU,
   ~3 M_Jup) is superseded by Matthews 2026.
 - **Feng F. et al. 2018** — *Detection of the closest Jovian exoplanet
-  in the ε Indi triple system* (`2018arXiv180308163F`, [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
+  in the ε Indi triple system* ([`2018arXiv180308163F`](https://ui.adsabs.harvard.edu/abs/2018arXiv180308163F), [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
   arXiv preprint; Phase 2 recommended source for the rotation period
   (~35 d, from RV + activity-index periodograms; the 17.8 d signal is
   the half-rotation alias). No refereed bibcode — superseded for the
   planet orbit by Feng 2019 / Matthews 2026.
 - **Chen M. et al. 2022** — *Precise Dynamical Masses of ε Indi Ba and
   Bb: Evidence of Slowed Cooling at the L/T Transition*, AJ 163, 288
-  (`2022AJ....163..288C`, doi:10.3847/1538-3881/ac66d2,
+  ([`2022AJ....163..288C`](https://ui.adsabs.harvard.edu/abs/2022AJ....163..288C), doi:10.3847/1538-3881/ac66d2,
   [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). VLT/NACO relative + FORS2 absolute astrometry of the
   brown-dwarf pair: Ba (T1–1.5) 66.92 ± 0.36 M_Jup, Bb (T6)
   53.25 ± 0.29 M_Jup. Phase 2 recommended source for ε Indi A's activity
@@ -262,7 +262,7 @@ modest, quiet photosphere:
 ### Read (context / methodology, not decision-driving)
 
 - **Matthews E. C. et al. 2024** — JWST/MIRI direct-imaging discovery of
-  ε Indi A b (`2024Natur.633..789M`, [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). Establishes the
+  ε Indi A b ([`2024Natur.633..789M`](https://ui.adsabs.harvard.edu/abs/2024Natur.633..789M), [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). Establishes the
   ~275 K cold super-Jupiter and the elevated-metallicity / 3–5 µm
   faintness context. Drives the planet b synthesis
   (`docs/phase3/eps-ind-a-b.md`); cited here for the system framing. The
@@ -274,11 +274,11 @@ modest, quiet photosphere:
   refined mass 7.6 ± 0.7 M_Jup, a = 20.9 AU, e = 0.244. Drives the planet
   b synthesis; cited here for the system framing.
 - **Demory B.-O. et al. 2009** — VLTI/VINCI interferometric radius/Teff/L
-  (`2009A&A...505..205D`). Phase 2 alternative mass 0.762 ± 0.038 M☉ (via
+  ([`2009A&A...505..205D`](https://ui.adsabs.harvard.edu/abs/2009A%26A...505..205D)). Phase 2 alternative mass 0.762 ± 0.038 M☉ (via
   the Xia 2008 M–L relation), agreeing with Lundkvist 2024 within 1σ.
   VizieR-only (no ar5iv body); not table-verified in this session.
 - **Santos N. C. et al. 2004** — Spectroscopic metallicities for
-  planet-host stars (`2004A&A...415.1153S`). [Fe/H] = −0.06 ± 0.08 for
+  planet-host stars ([`2004A&A...415.1153S`](https://ui.adsabs.harvard.edu/abs/2004A%26A...415.1153S)). [Fe/H] = −0.06 ± 0.08 for
   ε Indi A (cited via Matthews 2026); context for the skipped-metallicity
   row.
 

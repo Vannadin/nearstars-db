@@ -325,7 +325,7 @@ the Ma 2018 picture to preserve.
 
 - **Boyajian T. S. et al. 2012** — *Stellar Diameters and
   Temperatures II. Main-Sequence K- and M-Stars*, ApJ 757, 112
-  (`2012ApJ...757..112B`, doi:10.1088/0004-637X/757/2/112). CHARA
+  ([`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B), doi:10.1088/0004-637X/757/2/112). CHARA
   Classic H-band interferometric angular diameters for a sample
   including 40 Eri A as GJ 166 A: θ_LD = 1.504 ± 0.006 mas (Table 3);
   R = 0.8061 ± 0.0036 R☉, Teff = 5143 ± 14 K, L = 0.4078 ± 0.0032 L☉
@@ -334,7 +334,7 @@ the Ma 2018 picture to preserve.
   measurements.
 - **Rains A. D. et al. 2020** — *Precision angular diameters for 16
   southern stars with VLTI/PIONIER*, MNRAS 493, 2377
-  (`2020MNRAS.493.2377R`, doi:10.1093/mnras/staa282,
+  ([`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R), doi:10.1093/mnras/staa282,
   [arXiv:2004.02343](https://arxiv.org/abs/2004.02343)). VLTI/PIONIER four-telescope H-band
   interferometry; 40 Eri A is star #7 of 16 in Table 1. Independent
   cross-check: θ_LD = 1.486 ± 0.012 mas, R = 0.804 ± 0.006 R☉,
@@ -345,7 +345,7 @@ the Ma 2018 picture to preserve.
   and a brown dwarf candidate in a close binary system HD 87646*
   is the same authors' related work; the relevant paper for
   40 Eri A is **Ma et al. 2018 MNRAS 480, 2411**
-  (`2018MNRAS.480.2411M`, doi:10.1093/mnras/sty1933) reporting
+  ([`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M), doi:10.1093/mnras/sty1933) reporting
   the Dharma Planet Survey RV detection of HD 26965 b. Mass
   0.78 ± 0.08 M☉, age 6.9 ± 4.7 Gyr from PARSEC isochrone +
   multi-band SED, Teff 5072 ± 53 K, [Fe/H] −0.42 ± 0.04 (Table 2).
@@ -353,7 +353,7 @@ the Ma 2018 picture to preserve.
   also the source of the now-refuted planet candidate.
 - **Bond H. E. et al. 2017** — *Astrophysical Implications of a
   New Dynamical Mass for the Nearby White Dwarf 40 Eridani B*,
-  ApJ 848, 16 (`2017ApJ...848...16B`, doi:10.3847/1538-4357/aa8a63,
+  ApJ 848, 16 ([`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B), doi:10.3847/1538-4357/aa8a63,
   [arXiv:1709.00478](https://arxiv.org/abs/1709.00478)). HST FGS astrometric mass of 40 Eri B
   0.573 ± 0.018 M☉; §6.2 derives system-coeval total age ~1.8 Gyr
   from IFMR (initial mass ~1.8 M☉ → MS lifetime 1.7 Gyr + cooling
@@ -361,7 +361,7 @@ the Ma 2018 picture to preserve.
   `## Canonical alternatives`.
 - **Burrows A. et al. 2024** — *The Death of Vulcan: NEID Reveals
   That the Planet Candidate Orbiting HD 26965 Is Stellar Activity*,
-  AJ 167, 243 (`2024AJ....167..243B`, doi:10.3847/1538-3881/ad34d5,
+  AJ 167, 243 ([`2024AJ....167..243B`](https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B), doi:10.3847/1538-3881/ad34d5,
   [arXiv:2404.17494](https://arxiv.org/abs/2404.17494)). NEID line-by-line RV + activity-indicator
   correlations refute the Ma 2018 Vulcan candidate. Stellar
   rotation period reported as "∼42 days" with no formal σ.
@@ -369,7 +369,7 @@ the Ma 2018 picture to preserve.
   Refuted-planet section.
 - **Diaz M. R. et al. 2018** — *The Test Case of HD 26965:
   Difficulties Disentangling Weak Doppler Signals from Stellar
-  Activity*, AJ 155, 126 (`2018AJ....155..126D`,
+  Activity*, AJ 155, 126 ([`2018AJ....155..126D`](https://ui.adsabs.harvard.edu/abs/2018AJ....155..126D),
   doi:10.3847/1538-3881/aaa896, arXiv:1801.03970). Pre-Burrows
   examination of the Vulcan signal with HARPS data; foreshadows
   the activity-vs-planet ambiguity. Phase 2 alternative for mass
@@ -380,7 +380,7 @@ the Ma 2018 picture to preserve.
 - **Jenkins J. S. et al. 2011** — *Chromospheric activities and
   kinematics for solar type dwarfs and subgiants: analysis of the
   activity distribution and the AVR*, A&A 531, A8
-  (`2011A&A...531A...8J`, doi:10.1051/0004-6361/201016333). HARPS
+  ([`2011A&A...531A...8J`](https://ui.adsabs.harvard.edu/abs/2011A%26A...531A...8J), doi:10.1051/0004-6361/201016333). HARPS
   Ca II H&K survey of 890 southern FGK stars. Source for the
   Phase 2 log R'HK = −4.99 recommended value (caveat: the row-level
   CDS table entry was not directly fetched in this session, see
@@ -395,18 +395,18 @@ the Ma 2018 picture to preserve.
   unresolved in Keplerian terms).
 - **Mason B. D., Hartkopf W. I. & Miles K. N. 2017** — *Binary
   Star Orbits. V. The Nearby White Dwarf-Red Dwarf Pair 40 Eri BC*,
-  AJ 154, 200 (`2017AJ....154..200M`,
+  AJ 154, 200 ([`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M),
   doi:10.3847/1538-3881/aa803e). Definitive grade-1 orbit for the
   inner B-C pair: P = 230.30 ± 0.68 yr, e = 0.4294 ± 0.0027.
   Phase 2 anchor for the B-C orbit in `db/binary_orbits.json`.
 - **Henry T. J. et al. 1996** — *A Survey of Ca II H and K
   Chromospheric Emission in Southern Solar-Type Stars*, AJ 111,
-  439 (`1996AJ....111..439H`, doi:10.1086/117796). Earlier
+  439 ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H), doi:10.1086/117796). Earlier
   chromospheric activity survey including 40 Eri A. Phase 2
   alternative log R'HK = −4.94. Direct CDS row not table-verified
   in this session; bibcode/title confirmed.
 - **Bensby T., Feltzing S. et al. 2014** — *Exploring the Milky
-  Way stellar disk*, A&A 562, A71 (`2014A&A...562A..71B`,
+  Way stellar disk*, A&A 562, A71 ([`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B),
   doi:10.1051/0004-6361/201322631). Thin/thick-disk chemical
   abundance survey of 714 F/G dwarfs. Phase 2 alternative
   [Fe/H] = −0.31 ± 0.10 for 40 Eri A. The K0.5 V spectral type

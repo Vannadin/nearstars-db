@@ -23,8 +23,8 @@ classic mistake this doc guards against.
 ### Magnetopause standoff (Chapman–Ferraro balance)
 
 The dayside magnetopause sits where the planetary magnetic pressure balances the
-ambient ram pressure (Chapman & Ferraro 1931, `1931TeMAE..36...77C`; empirical
-form Shue et al. 1997/1998, `1997JGR...102.9497S` / `1998JGR...10317691S`).
+ambient ram pressure (Chapman & Ferraro 1931, [`1931TeMAE..36...77C`](https://ui.adsabs.harvard.edu/abs/1931TeMAE..36...77C); empirical
+form Shue et al. 1997/1998, [`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S) / [`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)).
 With the dipole field falling as `B(r) = B_eq·(R_p/r)³` and the Chapman–Ferraro
 surface currents roughly doubling the field at the boundary (factor `f ≈ 2`):
 
@@ -53,21 +53,21 @@ the belts.
 Belt intensity is a **source − loss balance, capped by a field/plasma ceiling**:
 
 1. **Source** sets the floor: stellar-wind capture; **CRAND** — cosmic-ray albedo
-   neutron decay, the inner-belt proton source (Lenchek 1961, `1961JGR....66.4027L`);
+   neutron decay, the inner-belt proton source (Lenchek 1961, [`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L));
    radial diffusion transporting particles inward (Schulz & Lanzerotti 1974,
-   `1974pdrb.book.....S`); and **internal plasma sources** — a volcanic moon can
+   [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)); and **internal plasma sources** — a volcanic moon can
    dominate everything (Io feeds ~1 ton/s into Jupiter's belts; Bagenal 1994 Io
-   torus, `1994JGR....9911043B`; Divine & Garrett 1983 Jovian model, `1983JGR....88.6889D`).
+   torus, [`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B); Divine & Garrett 1983 Jovian model, [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)).
 2. **Kennel–Petschek ceiling** caps it: there is a *maximum stably-trapped flux*
    above which the particles' own whistler-mode waves grow and scatter them into
-   the loss cone (Kennel & Petschek 1966, `1966JGR....71....1K`, 2600+ citations).
+   the loss cone (Kennel & Petschek 1966, [`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K), 2600+ citations).
    The limit depends on the field and cold-plasma density but is **independent of
    source strength** — so a strong-source magnetosphere (Earth, Jupiter) *saturates*
    at the K–P ceiling, and adding more source does not raise the intensity.
 3. **Losses** pull it down: wave–particle scattering (chorus/hiss/EMIC; Thorne 2010,
-   `2010GeoRL..3722107T`; review Ripoll 2020, `2020JGRA..12526735R`), Coulomb/
+   [`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T); review Ripoll 2020, [`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)), Coulomb/
    atmospheric losses, and **absorption by moons and rings** — Saturn's belts are
-   swept out by its rings/moons (Cooper 1983, `1983JGR....88.3945C`).
+   swept out by its rings/moons (Cooper 1983, [`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C)).
 
 Consequence for derivation: **you cannot read belt intensity off B_eq.** Two
 bodies with identical fields can differ by orders of magnitude in belt dose
@@ -82,7 +82,7 @@ The K–P limit is now **directly computable** for any body:
 [`scripts/refs/kp_limit.py`](../../scripts/refs/kp_limit.py) is a validated
 Python port of Mauk & Fox's own published implementation (their open Zenodo
 software [`10.5281/zenodo.4782323`](https://zenodo.org/records/4782323),
-bibcode `2021zndo...4782323M` — the paper itself,
+bibcode [`2021zndo...4782323M`](https://ui.adsabs.harvard.edu/abs/2021zndo...4782323M) — the paper itself,
 [`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M),
 is paywalled with no preprint). The chain: flexible differential spectrum
 `j(E) = C·E·(kT(γ₁+1)+E)^(−γ₁−1)/(1+(E/E₀)^γ₂)` with pitch factor sin^2s α →
@@ -300,7 +300,7 @@ different case that must **not** be forced onto the Ganymede template:
   makes the shield robust (surface dose ≈ the ambient parent flux at the moon's L-shell,
   heavily reduced); the CRAND belt it sustains is a hazard for *orbiting* craft, not the
   surface, and its precipitation drives a genuine auroral oval. Heller & Zuluaga 2013
-  (`2013ApJ...776L..33H`, arXiv 1309.0811) frame exactly this shield-vs-belt tension for
+  ([`2013ApJ...776L..33H`](https://ui.adsabs.harvard.edu/abs/2013ApJ...776L..33H), arXiv 1309.0811) frame exactly this shield-vs-belt tension for
   exomoons — and note that formation models make an Earth-mass, strong-field moon
   *unlikely*, so this sub-regime is physically coherent but **observationally
   unprecedented** (a fiction-premise regime; flag confidence low, and never claim a
@@ -351,10 +351,10 @@ aurora — not a surface one.
    wind; the result is a mini-magnetosphere. Belt dose at the moon is set by the
    *parent's* belt at that L-shell (a loss/source term for the parent), plus the moon's
    own shielding. Two sub-regimes (see Part D):
-   - **3a weak-field** (Ganymede, Kivelson 1996 `1996Natur.384..537K`): a few× local →
+   - **3a weak-field** (Ganymede, Kivelson 1996 [`1996Natur.384..537K`](https://ui.adsabs.harvard.edu/abs/1996Natur.384..537K)): a few× local →
      leaky, open polar caps, a negligible own belt. Pure shield.
    - **3b strong-field** (planet-class dynamo, e.g. A b III; Heller & Zuluaga 2013
-     `2013ApJ...776L..33H`): intrinsically Earth-plus but compressed by the parent's
+     [`2013ApJ...776L..33H`](https://ui.adsabs.harvard.edu/abs/2013ApJ...776L..33H)): intrinsically Earth-plus but compressed by the parent's
      magnetic pressure to a few R_moon; ≳15–20× dominance → mostly closed → a real
      CRAND belt (if it has an atmosphere), moderated by parent GCR-screening. Strong
      shield **plus** a genuine orbital-altitude belt. No Solar-System exemplar (low conf).
@@ -394,10 +394,10 @@ a documented regime call rather than a computed number.
 
 ## Citations
 
-- **Chapman & Ferraro 1931**, Terr. Magn. Atmos. Electr. 36, 77 (`1931TeMAE..36...77C`).
+- **Chapman & Ferraro 1931**, Terr. Magn. Atmos. Electr. 36, 77 ([`1931TeMAE..36...77C`](https://ui.adsabs.harvard.edu/abs/1931TeMAE..36...77C)).
   Origin of the magnetopause / pressure-balance concept.
-- **Shue et al. 1997 / 1998**, JGR 102, 9497 (`1997JGR...102.9497S`) / JGR 103, 17691
-  (`1998JGR...10317691S`). Empirical magnetopause standoff + shape under varying wind.
+- **Shue et al. 1997 / 1998**, JGR 102, 9497 ([`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S)) / JGR 103, 17691
+  ([`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)). Empirical magnetopause standoff + shape under varying wind.
 - **Kennel & Petschek 1966**, JGR 71, 1 ([`1966JGR....71....1K`](https://ui.adsabs.harvard.edu/abs/1966JGR....71....1K)). The stably-trapped
   flux limit — the source-independent ceiling on belt intensity. Load-bearing for Part B.
 - **Summers, Tang & Thorne 2009**, JGRA 114, A10210 ([`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S));
@@ -409,7 +409,7 @@ a documented regime call rather than a computed number.
   The cross-planet differential K–P framework: Earth/Jupiter/Uranus at the cap,
   Neptune below (injection-starved), Saturn below (material losses). Paywalled;
   **their open implementation** ([Zenodo 10.5281/zenodo.4782323](https://zenodo.org/records/4782323),
-  `2021zndo...4782323M`) is cached (`_papers/mauk_fox_KP.nb` + run) and ported to
+  [`2021zndo...4782323M`](https://ui.adsabs.harvard.edu/abs/2021zndo...4782323M)) is cached (`_papers/mauk_fox_KP.nb` + run) and ported to
   `scripts/refs/kp_limit.py` (validated to ≤0.05 % on 11 printed intermediates).
 - **Mourenas et al. 2024**, JGRA 129, e32193 ([`2024JGRA..12932193M`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932193M)).
   Independent confirmation of the ~3 wave-power-gain criterion (ELFIN).
@@ -418,26 +418,26 @@ a documented regime call rather than a computed number.
   [`1992STIN...9315580S`](https://ui.adsabs.harvard.edu/abs/1992STIN...9315580S)).
   The standard electron/proton fluence → dose-behind-Al transport — the reason
   dose contrast is set by spectral hardness, not the ~1 MeV differential cap.
-- **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* (`1974pdrb.book.....S`).
+- **Schulz & Lanzerotti 1974**, *Particle Diffusion in the Radiation Belts* ([`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
   Radial-diffusion transport that populates the belts.
-- **Lenchek et al. 1961**, JGR 66, 4027 (`1961JGR....66.4027L`). CRAND inner-belt source.
-- **Divine & Garrett 1983**, JGR 88, 6889 (`1983JGR....88.6889D`); **Bagenal 1994**,
-  JGR 99, 11043 (`1994JGR....9911043B`). Jovian radiation + the Io internal plasma
+- **Lenchek et al. 1961**, JGR 66, 4027 ([`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)). CRAND inner-belt source.
+- **Divine & Garrett 1983**, JGR 88, 6889 ([`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)); **Bagenal 1994**,
+  JGR 99, 11043 ([`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B)). Jovian radiation + the Io internal plasma
   source — the canonical "intensity set by source, not field" case.
-- **Thorne 2010**, GRL 37, L22107 (`2010GeoRL..3722107T`); **Ripoll et al. 2020**,
-  JGRA 125, e26735 (`2020JGRA..12526735R`). Wave–particle acceleration and loss;
+- **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
+  JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). Wave–particle acceleration and loss;
   modern belt-dynamics review.
-- **Cooper 1983**, JGR 88, 3945 (`1983JGR....88.3945C`). Ring/moon absorption as a
+- **Cooper 1983**, JGR 88, 3945 ([`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C)). Ring/moon absorption as a
   belt loss — the A b ring + moons case.
-- **Kivelson et al. 1996**, Nature 384, 537 (`1996Natur.384..537K`). Ganymede's
+- **Kivelson et al. 1996**, Nature 384, 537 ([`1996Natur.384..537K`](https://ui.adsabs.harvard.edu/abs/1996Natur.384..537K)). Ganymede's
   embedded magnetosphere — the weak-field embedded-moon (sub-regime 3a) exemplar.
-- **Heller & Zuluaga 2013**, ApJ 776, L33 (`2013ApJ...776L..33H`, arXiv
+- **Heller & Zuluaga 2013**, ApJ 776, L33 ([`2013ApJ...776L..33H`](https://ui.adsabs.harvard.edu/abs/2013ApJ...776L..33H), arXiv
   **[1309.0811](https://arxiv.org/abs/1309.0811)**). Exomoon magnetic shielding within a
   giant planet's magnetosphere — the shield-vs-radiation-belt tension, and the note that
   Earth-mass strong-field moons are formation-unlikely. Grounds the strong-field
   embedded-moon (sub-regime 3b) as coherent-but-unprecedented (fiction-premise).
-- **Griessmeier et al. 2004**, A&A 425, 753 (`2004A&A...425..753G`); **Vidotto et al.
-  2013**, A&A 557, A67 (`2013A&A...557A..67V`). Exoplanet magnetosphere size vs
+- **Griessmeier et al. 2004**, A&A 425, 753 ([`2004A&A...425..753G`](https://ui.adsabs.harvard.edu/abs/2004A%26A...425..753G)); **Vidotto et al.
+  2013**, A&A 557, A67 ([`2013A&A...557A..67V`](https://ui.adsabs.harvard.edu/abs/2013A%26A...557A..67V)). Exoplanet magnetosphere size vs
   stellar wind / tidal locking — the close-in-planet standoff application.
 
 ## Related

@@ -196,13 +196,13 @@ distinguish b from the hotter, partial-melt-accented d.
 ### Read (visual-informative, drove decisions above)
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
-  Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
+  Barnard's Star from MAROON-X and ESPRESSO* ([`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B),
   [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). The MAROON-X confirmation. P = 3.1542 d,
   Msini = 0.299 ± 0.026 M⊕, a = 0.0229 AU, e = 0.03 (+0.03/−0.02),
   ω = +3.8°, T_eq = 438 K (Table 3, A = 0, full redistribution).
   Stability analysis favors e < 0.02.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
+  orbiting Barnard's star* ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G), [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   The ESPRESSO discovery; first confirmed planet of the modern Barnard
   system. Reports Msini = 0.37 ± 0.05 M⊕ (ESPRESSO-only) and
   T_eq = 400 ± 7 K assuming A = 0.3 — the difference from Basant's
@@ -220,7 +220,7 @@ distinguish b from the hotter, partial-melt-accented d.
   *Not in local paper cache — context-cite only.*
 - **Lubin J. et al. 2021** — *Stellar Activity Manifesting at a
   One-year Alias Explains Barnard b as a False Positive*
-  (`2021AJ....162...61L`; no arXiv preprint). The refutation of
+  ([`2021AJ....162...61L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...61L); no arXiv preprint). The refutation of
   Ribas 2018 — establishes that the current Barnard b is a different
   planet from the 2018 candidate. *No arXiv preprint — context-cite
   only.*
@@ -232,7 +232,7 @@ distinguish b from the hotter, partial-melt-accented d.
 ### Read (context / methodology, not decision-driving)
 
 - **Ribas I. et al. 2018** — *A candidate super-Earth planet orbiting
-  near the snow line of Barnard's star* (`2018Natur.563..365R`,
+  near the snow line of Barnard's star* ([`2018Natur.563..365R`](https://ui.adsabs.harvard.edu/abs/2018Natur.563..365R),
   [arXiv:1811.05955](https://arxiv.org/abs/1811.05955)). Historical claim, refuted; preserved as
   historical literature context for the b designation.
 - **Toledo-Padrón B. et al. 2019** — *Stellar activity analysis of

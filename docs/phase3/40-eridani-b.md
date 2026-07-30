@@ -45,7 +45,7 @@ divergences, so no `## Canonical alternatives` section.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | DA2.9 | high | Gianninas, Bergeron & Ruiz 2011 (GBR11) — DA spectral-temperature subclass survey |
-| `mass_msun` | 0.558 ± 0.012 | medium | Mason et al. 2021 (`2021AJ....162...53M`) — dynamical mass from the Izmailov 2019 BC orbit + Gaia eDR3 parallax (self-consistent with the adopted binary_orbits BC elements P=233.20 yr, e=0.4141). DOCUMENTED ALTERNATIVE: Bond et al. 2017 HST/FGS gives 0.573 ± 0.018 (a dedicated WD astrometric / gravitational-redshift mass, ~1.3σ higher); the WD radius, cooling age, and progenitor/IFMR characterization in this doc derive from Bond's 0.573 and are retained as the WD-physics package |
+| `mass_msun` | 0.558 ± 0.012 | medium | Mason et al. 2021 ([`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M)) — dynamical mass from the Izmailov 2019 BC orbit + Gaia eDR3 parallax (self-consistent with the adopted binary_orbits BC elements P=233.20 yr, e=0.4141). DOCUMENTED ALTERNATIVE: Bond et al. 2017 HST/FGS gives 0.573 ± 0.018 (a dedicated WD astrometric / gravitational-redshift mass, ~1.3σ higher); the WD radius, cooling age, and progenitor/IFMR characterization in this doc derive from Bond's 0.573 and are retained as the WD-physics package |
 | `radius_rsun` | 0.01308 ± 0.00020 | high | Bond et al. 2017 — SED-fit from BVRI + ubvy + JHK + Hipparcos parallax + atmosphere Teff |
 | `teff_k` | 17200 ± 110 | high | Bond et al. 2017 — Balmer-line atmosphere fit (Tremblay & Bergeron 2009 grid) |
 | `luminosity_lsun` | 0.01349 ± 0.00054 | high | Bond et al. 2017 — bolometric flux integration |
@@ -223,7 +223,7 @@ neutral white.
 
 - **Bond H. E., Bergeron P. & Bédard A. 2017** — *Astrophysical
   Implications of a New Dynamical Mass for the Nearby White Dwarf 40
-  Eridani B*, ApJ 848, 16 (`2017ApJ...848...16B`,
+  Eridani B*, ApJ 848, 16 ([`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B),
   [arXiv:1709.00478](https://arxiv.org/abs/1709.00478), DOI 10.3847/1538-4357/aa8a63). HST/FGS
   astrometry of the BC pair anchored on the Mason 2017 visual
   orbit; pure-H model atmosphere Balmer-line fit; SED fit to
@@ -242,7 +242,7 @@ neutral white.
   sensitive method for measuring very weak magnetic fields
   of DA white dwarfs — A search for a magnetic field at the
   250 G level in 40 Eridani B*, A&A 580, A120
-  (`2015A&A...580A.120L`, DOI 10.1051/0004-6361/201526434).
+  ([`2015A&A...580A.120L`](https://ui.adsabs.harvard.edu/abs/2015A%26A...580A.120L), DOI 10.1051/0004-6361/201526434).
   ESPaDOnS broad-band circular polarimetry at CFHT;
   individual ⟨Bz⟩ measurements consistent with zero within
   σ ≈ 80–90 G; concludes a probable upper limit ⟨Bz⟩ ≲ 250 G,
@@ -252,7 +252,7 @@ neutral white.
 
 - **Mason B. D., Hartkopf W. I. & Miles K. N. 2017** —
   *Binary Star Orbits V. The Nearby White Dwarf — Red Dwarf
-  Pair 40 Eri BC*, AJ 154, 200 (`2017AJ....154..200M`,
+  Pair 40 Eri BC*, AJ 154, 200 ([`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M),
   [arXiv:1707.03635](https://arxiv.org/abs/1707.03635), DOI 10.3847/1538-3881/aa803e). Re-derived
   visual orbit incorporating speckle interferometry through
   2016; grade-1 definitive solution Table 4: P = 230.09 ±
@@ -265,7 +265,7 @@ neutral white.
 - **Gianninas A., Bergeron P. & Ruiz M. T. 2011** —
   *A Spectroscopic Survey and Analysis of Bright,
   Hydrogen-Rich White Dwarfs*, ApJ 743, 138
-  (`2011ApJ...743..138G`, [arXiv:1109.3171](https://arxiv.org/abs/1109.3171)). Definitive DA
+  ([`2011ApJ...743..138G`](https://ui.adsabs.harvard.edu/abs/2011ApJ...743..138G), [arXiv:1109.3171](https://arxiv.org/abs/1109.3171)). Definitive DA
   spectral-temperature index survey adopting the DA1–DA9
   Sion classification; 40 Eri B (WD 0413−077) carries the
   DA2.9 subtype in this work, the canonical post-2011 value
@@ -276,13 +276,13 @@ neutral white.
 - **Tremblay P.-E. & Bergeron P. 2009** — *Spectroscopic
   Analysis of DA White Dwarfs: Stark Broadening of Hydrogen
   Lines Including Nonideal Effects*, ApJ 696, 1755
-  (`2009ApJ...696.1755T`). The pure-H model-atmosphere grid
+  ([`2009ApJ...696.1755T`](https://ui.adsabs.harvard.edu/abs/2009ApJ...696.1755T)). The pure-H model-atmosphere grid
   Bond 2017 adopts for the Balmer-line Teff and log g fit.
 
 - **Salaris M. et al. 2009** — *Semi-empirical White Dwarf
   Initial–Final Mass Relations: A Thorough Analysis of
   Systematic Uncertainties due to Stellar Evolution Models*,
-  ApJ 692, 1013 (`2009ApJ...692.1013S`). The IFMR relation
+  ApJ 692, 1013 ([`2009ApJ...692.1013S`](https://ui.adsabs.harvard.edu/abs/2009ApJ...692.1013S)). The IFMR relation
   M_final = 0.134 M_init + 0.331 that Bond 2017 §6.2 inverts
   to recover M_init ≈ 1.8 M☉ from the measured M_final =
   0.573 M☉.
@@ -296,7 +296,7 @@ neutral white.
   Bagnulo 2015's null detection.
 
 - **Tokovinin A. 2018** — *The Updated Multiple Star Catalog*,
-  ApJS 235, 6 (`2018ApJS..235....6T`). MSC entry for 40 Eri
+  ApJS 235, 6 ([`2018ApJS..235....6T`](https://ui.adsabs.harvard.edu/abs/2018ApJS..235....6T)). MSC entry for 40 Eri
   records the A↔BC outer pair at ~83″ separation, ~8,000-yr
   approximate period, no fitted Keplerian solution.
 
@@ -304,7 +304,7 @@ neutral white.
 
 - **Mason B. D. et al. 2021** — *Speckle Interferometry at
   the US Naval Observatory. XXIV*, AJ 162, 53
-  (`2021AJ....162...53M`, DOI 10.3847/1538-3881/abfaa2).
+  ([`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M), DOI 10.3847/1538-3881/abfaa2).
   Newer BC orbit fit: P = 233.20 ± 0.65 yr, e = 0.4141 ±
   0.0072, a = 6.88788 ± 0.03488″. Listed as the current
   Sixth Orbit Catalog entry; Phase 3 cfg keeps Mason 2017
@@ -313,7 +313,7 @@ neutral white.
 
 - **Holberg J. B. et al. 2013** — *Where are all the
   Sirius-like binary systems?*, MNRAS 435, 2077
-  (`2013MNRAS.435.2077H`). Sets 40 Eri BC in the broader
+  ([`2013MNRAS.435.2077H`](https://ui.adsabs.harvard.edu/abs/2013MNRAS.435.2077H)). Sets 40 Eri BC in the broader
   population of nearby Sirius-like (FGK + WD) systems for
   context, but does not re-measure 40 Eri B parameters.
 
@@ -332,7 +332,7 @@ none would change the Decisions table.
 ## Open items for follow-up
 
 - **Mason 2021 orbit update.** Mason et al. 2021
-  (`2021AJ....162...53M`) supersedes the Mason 2017 visual
+  ([`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M)) supersedes the Mason 2017 visual
   orbit with P = 233.20 ± 0.65 yr, e = 0.4141 ± 0.0072,
   a = 6.88788 ± 0.03488″. A future reconciliation pass should
   adopt the 2021 elements and re-derive the dynamical mass

@@ -3,10 +3,10 @@
 
 AU Microscopii c 는 22 Myr 의 M1Ve flare star AU Mic 주위 18.86 d
 궤도를 도는 2.79 ± 0.18 R⊕, 14.46 ± 3.24 M⊕ 의 따뜻한 sub-Neptune
-입니다. Martioli et al. 2021 (A&A 649, A177. `2021A&A...649A.177M`.
+입니다. Martioli et al. 2021 (A&A 649, A177. [`2021A&A...649A.177M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A.177M).
 [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)) 이 더 긴 주기 때문에 원래의 Sector 1 탐색에서
 놓쳤던 TESS Sector 27 통과에서 행성을 발견했고, Mallorquin et al.
-2024 (A&A 689, A132. `2024A&A...689A.132M`) 가 결합된 ESPRESSO + TESS
+2024 (A&A 689, A132. [`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)) 가 결합된 ESPRESSO + TESS
 재분석으로 질량과 반지름을 모두 정밀화했습니다. bulk 밀도는 ≈ 3.7
 g/cc — 지구의 약 2/3 — 로, 통상의 암석 super-Earth 보다는 낮지만
 b 의 0.45 g/cc puffy 영역보다는 상당히 높습니다. c 는 가스 우세
@@ -202,23 +202,23 @@ c 에서 보입니다 (b 의 궤도면이 같은 가장자리 정면 기하 안�
 
 ### Read (visual-informative, drove decisions above)
 
-- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). TESS Sector 27 + 지상 확인으로 18.86 d 의 c. 통과 유도 반지름 2.79 R⊕. cornerstone 발견 논문.
-- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). ESPRESSO + TESS 결합 분석. c 의 질량을 14.46 ± 3.24 M⊕, 반지름을 2.79 ± 0.18 R⊕ 로 정밀화. **질량과 밀도에 대한 headline 출처로 채택**.
-- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). 질량-반지름 envelope 질량 분율 보정. c 의 파라미터가 ~5% H/He envelope 를 줌. cfg 표면 압력 픽을 구동.
-- **Fulton B. J. et al. 2017** — *The California-Kepler Survey III: Gap in the Radius Distribution of Small Planets*, AJ 154, 109 (`2017AJ....154..109F`, [arXiv:1703.10375](https://arxiv.org/abs/1703.10375)). ~1.8 R⊕ 의 sub-Neptune / super-Earth 반지름 골짜기. c 는 골짜기의 sub-Neptune 쪽에 앉아, water-world variant 보다 H/He envelope 해석을 통계적으로 선호.
-- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 (`2017ApJ...847...29O`, [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). sub-Neptune 골짜기에 대한 광증발 프레임워크. 6.5 S⊕ + AU Mic XUV 의 c 는 Gyr 시간 척도에서 envelope 보전 임계점 위에 적당히 있지만 22 Myr 에서는 그 한참 아래.
+- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 ([`2021A&A...649A.177M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A.177M), [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). TESS Sector 27 + 지상 확인으로 18.86 d 의 c. 통과 유도 반지름 2.79 R⊕. cornerstone 발견 논문.
+- **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 ([`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)). ESPRESSO + TESS 결합 분석. c 의 질량을 14.46 ± 3.24 M⊕, 반지름을 2.79 ± 0.18 R⊕ 로 정밀화. **질량과 밀도에 대한 headline 출처로 채택**.
+- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 ([`2014ApJ...792....1L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...792....1L), [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). 질량-반지름 envelope 질량 분율 보정. c 의 파라미터가 ~5% H/He envelope 를 줌. cfg 표면 압력 픽을 구동.
+- **Fulton B. J. et al. 2017** — *The California-Kepler Survey III: Gap in the Radius Distribution of Small Planets*, AJ 154, 109 ([`2017AJ....154..109F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..109F), [arXiv:1703.10375](https://arxiv.org/abs/1703.10375)). ~1.8 R⊕ 의 sub-Neptune / super-Earth 반지름 골짜기. c 는 골짜기의 sub-Neptune 쪽에 앉아, water-world variant 보다 H/He envelope 해석을 통계적으로 선호.
+- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 ([`2017ApJ...847...29O`](https://ui.adsabs.harvard.edu/abs/2017ApJ...847...29O), [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). sub-Neptune 골짜기에 대한 광증발 프레임워크. 6.5 S⊕ + AU Mic XUV 의 c 는 Gyr 시간 척도에서 envelope 보전 임계점 위에 적당히 있지만 22 Myr 에서는 그 한참 아래.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 의 b 발견. 시스템 전반의 항성 활동 환경과 AU Mic 광도곡선의 다-흑점 복잡도에 대한 맥락 제공.
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). GP detrending 으로 b 의 첫 견고한 RV 질량. c 에 적용된 방법론.
-- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). b 와 c 에 대한 TTV 기반 동역학 질량. d 후보 도입. Mallorquin 2024 의 불확실도 안에서 c 의 질량 확인.
-- **Zeng L. et al. 2019** — *Growth model interpretation of planet size distribution*, PNAS 116, 9723 (`2019PNAS..116.9723Z`, [arXiv:1906.04253](https://arxiv.org/abs/1906.04253)). c water-world variant 해석에 사용된 water-world 질량-반지름 모델.
-- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 (`2009ApJ...699..564S`, [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). 적도 superrotation GCM 프레임워크. 띠 형태 픽을 위해 sub-Neptune 온도와 자전으로 스케일.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 ([`2020Natur.582..497P`](https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P), [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 의 b 발견. 시스템 전반의 항성 활동 환경과 AU Mic 광도곡선의 다-흑점 복잡도에 대한 맥락 제공.
+- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 ([`2021AJ....162..295C`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..295C), [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). GP detrending 으로 b 의 첫 견고한 RV 질량. c 에 적용된 방법론.
+- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 ([`2023AJ....166..232W`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W), [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). b 와 c 에 대한 TTV 기반 동역학 질량. d 후보 도입. Mallorquin 2024 의 불확실도 안에서 c 의 질량 확인.
+- **Zeng L. et al. 2019** — *Growth model interpretation of planet size distribution*, PNAS 116, 9723 ([`2019PNAS..116.9723Z`](https://ui.adsabs.harvard.edu/abs/2019PNAS..116.9723Z), [arXiv:1906.04253](https://arxiv.org/abs/1906.04253)). c water-world variant 해석에 사용된 water-world 질량-반지름 모델.
+- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 ([`2009ApJ...699..564S`](https://ui.adsabs.harvard.edu/abs/2009ApJ...699..564S), [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). 적도 superrotation GCM 프레임워크. 띠 형태 픽을 위해 sub-Neptune 온도와 자전으로 스케일.
 
 ### Read (instrument / non-decisive)
 
-- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic c* (`2021A&A...654A.159S`, [arXiv:2108.07984](https://arxiv.org/abs/2108.07984)). c 의 CHEOPS 통과 타이밍. 주기와 경사각을 정밀화하지만 시각 cfg 를 구동하지 않음.
+- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic c* ([`2021A&A...654A.159S`](https://ui.adsabs.harvard.edu/abs/2021A%26A...654A.159S), [arXiv:2108.07984](https://arxiv.org/abs/2108.07984)). c 의 CHEOPS 통과 타이밍. 주기와 경사각을 정밀화하지만 시각 cfg 를 구동하지 않음.
 
 ### Not read — no arXiv preprint or low-priority (~20 papers)
 

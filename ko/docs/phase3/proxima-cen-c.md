@@ -214,7 +214,7 @@ PMa 범위 안에 있고, 8.2 M⊕ 는 더 낮은-경사 가장자리입니다.
 
 - **Damasso M. et al. 2020** — *A low-mass planet candidate orbiting
   Proxima Centauri at a distance of 1.5 AU*, Sci. Adv. 6, eaax7467
-  (`2020SciA....6.7467D`, doi:10.1126/sciadv.aax7467). **유일한 1차
+  ([`2020SciA....6.7467D`](https://ui.adsabs.harvard.edu/abs/2020SciA....6.7467D), doi:10.1126/sciadv.aax7467). **유일한 1차
   출처.** RV 후보. P = 1900 (+96/−82) d, a = 1.48 ± 0.08 AU,
   m sin i = 5.8 ± 1.9 M⊕, T_eq ≈ 39 (+16/−18) K, e 0 고정 (자유 런
   e = 0.41, 유의하지 않음). Gaia–Hipparcos PMa 가 진질량 ~10–20 M⊕ 와

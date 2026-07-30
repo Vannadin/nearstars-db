@@ -261,7 +261,7 @@ rotation convention.
 
 > **NS is missing Tau Ceti e — RESOLVED 2026-05-27.** NEA flipped
 > e's disposition to "False Positive Planet" on 2026-04-09, citing
-> Figueira et al. 2025 (`2025A&A...700A.174F`,
+> Figueira et al. 2025 ([`2025A&A...700A.174F`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F),
 > doi:10.1051/0004-6361/202553869) ESPRESSO sub-10 cm/s RV
 > non-detection. DB retrieval 2026-05-22 correctly inherited the
 > absence — not a curation oversight. Figueira 2025 also reports

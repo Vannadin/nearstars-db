@@ -34,15 +34,15 @@ all of which have clear fixes.
 
 - **The core method is mainstream.** LTE is "the essential requisite for applying
   Boltzmann–Maxwell and Saha–Eggert expressions" (Cristoforetti 2010,
-  `2010AcSpB..65...86C`, 322 cites); CF-LIBS quantification *is* this calculation
-  run in reverse (`2023ApPhB.129..136L`); LTE synthetic spectra with Saha across
+  [`2010AcSpB..65...86C`](https://ui.adsabs.harvard.edu/abs/2010AcSpB..65...86C), 322 cites); CF-LIBS quantification *is* this calculation
+  run in reverse ([`2023ApPhB.129..136L`](https://ui.adsabs.harvard.edu/abs/2023ApPhB.129..136L)); LTE synthetic spectra with Saha across
   many ionization stages + 105 molecules are standard in stellar atmospheres
-  (Allard & Hauschildt 1995, `1995ApJ...445..433A`, 482 cites).
+  (Allard & Hauschildt 1995, [`1995ApJ...445..433A`](https://ui.adsabs.harvard.edu/abs/1995ApJ...445..433A), 482 cites).
 - **LTE holds in our core regime.** McWhirter's criterion (nₑ ≳ 1.6×10¹²·√T·ΔE³)
   gives ~10¹⁵–10¹⁶ cm⁻³ for optical ΔE at 10⁴ K; an atmospheric-pressure thermal
   plasma at 4000–15000 K sits above this. Independent Thomson-scattering work
   confirms local Saha–Boltzmann equilibrium in dense laser plasma
-  (`2014AcSpB..96...61M`).
+  ([`2014AcSpB..96...61M`](https://ui.adsabs.harvard.edu/abs/2014AcSpB..96...61M)).
 - **The colorimetry is the textbook path** and correctly treats the emission
   spectrum directly as the SPD (no illuminant division: the most common
   spectrum-to-color bug, which we avoided). Wyman–Sloan–Shirley (2013) CMF fit is
@@ -50,11 +50,11 @@ all of which have clear fixes.
 - **Dissociation K(T) is textbook-correct**: (2πμkT/h²)³ᐟ² · (U_A U_B/U_AB) ·
   exp(−D₀/kT), right sign, right prefactor, σ symmetry number.
 - **The non-LTE caveats are right.** Reentry shock-layer radiation is modeled as
-  thermochemical/radiative *non-equilibrium* (`1994ntrs.rept23568C` et al.);
+  thermochemical/radiative *non-equilibrium* ([`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C) et al.);
   N₂⁺(B) (391 nm) is electron-impact populated (Te-driven, Park two-temperature),
   not thermal. Auroral O I 557.7/630 nm are forbidden metastable lines excited by
   electron precipitation / dissociative recombination and quenched at high
-  density (`1989RSPSA.424....1S`, `1990AdSpR..10e..31F`, `1960JChPh..32..607Y`).
+  density ([`1989RSPSA.424....1S`](https://ui.adsabs.harvard.edu/abs/1989RSPSA.424....1S), [`1990AdSpR..10e..31F`](https://ui.adsabs.harvard.edu/abs/1990AdSpR..10e..31F), [`1960JChPh..32..607Y`](https://ui.adsabs.harvard.edu/abs/1960JChPh..32..607Y)).
   C₂ Swan (upper state ~2.5 eV) **is** thermally accessible, so the carbon-plasma
   green is a legitimate LTE result while the N₂ blue is not. Confirmed.
 
@@ -83,13 +83,13 @@ all of which have clear fixes.
    its bluest/reddest extreme. Fix: place 2–3 effective lines at *sequence
    centroids*, weighted by g_e × band strength (not bare exp(−hc·T_e/kT)),
    cross-checked once against a LIFBASE/SPECAIR synthesis. Real diagnostics fit
-   the full rotational envelope (`2002JAP....91.8955C`).
+   the full rotational envelope ([`2002JAP....91.8955C`](https://ui.adsabs.harvard.edu/abs/2002JAP....91.8955C)).
 4. **Ion-line emission was missing (moderate at high T): FIXED.** Added first-ion
    (X II) emission to the per-element table; high-T colors now show ion spectra
    (Ba II violet, etc.) instead of fading to continuum.
 5. **Self-absorption (minor→moderate).** Optically-thin over-counts strong
    resonance lines (Na D, Ca II) that would saturate to B_λ; worst at high
-   concentration / long path / low T (`2021AcAC.118539070T`, `2023RSCAd..1329613J`).
+   concentration / long path / low T ([`2021AcAC.118539070T`](https://ui.adsabs.harvard.edu/abs/2021AcAC.118539070T), [`2023RSCAd..1329613J`](https://ui.adsabs.harvard.edu/abs/2023RSCAd..1329613J)).
    Cheap guard: clamp any single line's contribution at its local B_λ(T).
 6. **Single T_REF = 3500 K is a 1-D slice of a 2-D hue(T) surface.** Honest only
    if the temperature label travels with the value; flag the known flippers
@@ -106,11 +106,11 @@ all of which have clear fixes.
 
 ## Sources
 
-ADS: `2010AcSpB..65...86C`, `2014AcSpB..96...61M`, `2023ApPhB.129..136L`,
-`2021AcAC.118539070T`, `2023RSCAd..1329613J`, `1995ApJ...445..433A`,
-`2002JAP....91.8955C`, `1998PPCF...40..361D`, `1960JChPh..32..607Y`,
-`1989RSPSA.424....1S`, `1990AdSpR..10e..31F`, `1994ntrs.rept23568C`,
-`1990STIN...9025290H`. Web: CIE 1931 color space (Wikipedia); Wyman, Sloan &
+ADS: [`2010AcSpB..65...86C`](https://ui.adsabs.harvard.edu/abs/2010AcSpB..65...86C), [`2014AcSpB..96...61M`](https://ui.adsabs.harvard.edu/abs/2014AcSpB..96...61M), [`2023ApPhB.129..136L`](https://ui.adsabs.harvard.edu/abs/2023ApPhB.129..136L),
+[`2021AcAC.118539070T`](https://ui.adsabs.harvard.edu/abs/2021AcAC.118539070T), [`2023RSCAd..1329613J`](https://ui.adsabs.harvard.edu/abs/2023RSCAd..1329613J), [`1995ApJ...445..433A`](https://ui.adsabs.harvard.edu/abs/1995ApJ...445..433A),
+[`2002JAP....91.8955C`](https://ui.adsabs.harvard.edu/abs/2002JAP....91.8955C), [`1998PPCF...40..361D`](https://ui.adsabs.harvard.edu/abs/1998PPCF...40..361D), [`1960JChPh..32..607Y`](https://ui.adsabs.harvard.edu/abs/1960JChPh..32..607Y),
+[`1989RSPSA.424....1S`](https://ui.adsabs.harvard.edu/abs/1989RSPSA.424....1S), [`1990AdSpR..10e..31F`](https://ui.adsabs.harvard.edu/abs/1990AdSpR..10e..31F), [`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C),
+[`1990STIN...9025290H`](https://ui.adsabs.harvard.edu/abs/1990STIN...9025290H). Web: CIE 1931 color space (Wikipedia); Wyman, Sloan &
 Shirley 2013 (JCGT) analytic CMF; flame-test molecular bands CaO/SrO (RSC /
 LibreTexts). ADS is astrophysics/planetary-centric: color science and analytical
 chemistry are under-indexed there (use Semantic Scholar / Crossref for those).
@@ -122,9 +122,9 @@ the 2-temperature mode, and the aurora table) drew on:
 
 **Non-LTE reentry / collisional-radiative implementation.** ADS:
 `2025PhPl..32j3512A` (3-temperature collisional-radiative air plasma),
-`2026arXiv260411856Z` (RAPRAL line-by-line + ray-tracing), `2011PhDT` (Monte
+[`2026arXiv260411856Z`](https://ui.adsabs.harvard.edu/abs/2026arXiv260411856Z) (RAPRAL line-by-line + ray-tracing), `2011PhDT` (Monte
 Carlo hypersonic radiation), `2001PhDT` (ionizational non-equilibrium recombining
-air), `1994ntrs.rept23568C` (non-equilibrium reentry radiation). The N₂⁺ 1NG blue
+air), [`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C) (non-equilibrium reentry radiation). The N₂⁺ 1NG blue
 is electron-impact (Park two-temperature): the basis of saha_boltzmann's `t_elec`
 mode.
 
@@ -135,9 +135,9 @@ N₂/O₂/CO₂/CH₄/H₂/CO/NO/SO₂; CoRaM-AIR two-temperature CR (829 electr
 Mars/Titan/Jupiter entry CR models exist. Sparse only for exotic exoplanet
 compositions. HITRAN/HITEMP for molecular line lists.
 
-**Aurora (forbidden-line + quenching).** Mechanisms: `1960JChPh..32..607Y`
-(auroral green OI 557.7 in N₂ afterglows), `1989RSPSA.424....1S` (O(¹S) airglow
-mechanism), `1990AdSpR..10e..31F` (Venus nightglow O ¹D/¹S from dissociative
+**Aurora (forbidden-line + quenching).** Mechanisms: [`1960JChPh..32..607Y`](https://ui.adsabs.harvard.edu/abs/1960JChPh..32..607Y)
+(auroral green OI 557.7 in N₂ afterglows), [`1989RSPSA.424....1S`](https://ui.adsabs.harvard.edu/abs/1989RSPSA.424....1S) (O(¹S) airglow
+mechanism), [`1990AdSpR..10e..31F`](https://ui.adsabs.harvard.edu/abs/1990AdSpR..10e..31F) (Venus nightglow O ¹D/¹S from dissociative
 recombination + soft-electron precipitation). Lifetimes/quenching: Slanger &
 Copeland (energetic-oxygen review), Sobral et al. 1993 JGR 98 (O(¹D)+O(³P)),
 Rees 1989 (standard aeronomy). Quenching coefficients are standard textbook

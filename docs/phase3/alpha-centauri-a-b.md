@@ -269,7 +269,7 @@ habitable zone (too warm), so 1.6 AU is the nearest robust HZ orbit.
 ### Read (drove decisions above)
 
 - **Beichman C. et al. 2025** — *JWST Observations of the Nearest Sun-Like
-  Stars: Worlds Next Door I* (`2025ApJ...989L..22B`,
+  Stars: Worlds Next Door I* ([`2025ApJ...989L..22B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...989L..22B),
   doi:10.3847/2041-8213/adf53f, arXiv:2508.03814). The discovery paper.
   S1 = F1550C (15.5 µm) detection, 3.5 ± 1.0 mJy, 1.51″ (~2 AU), Aug 2024;
   four stable orbit families (e ≈ 0.4, P 2–3 yr, mutual i ≈ 50°/130°),

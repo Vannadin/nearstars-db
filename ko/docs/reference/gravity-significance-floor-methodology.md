@@ -51,29 +51,29 @@
 그냥 **버린다**. DE430/431 과 DE440/441 은 동일한 343개 소행성을 개별 적분한다. *"Perturbations
 from 343 asteroids have been included… The set… represents 90 percent of the total mass of the
 main belt and contains the asteroids with the most significant effects on the orbit of Mars in
-terms of perturbation amplitude and frequency"* (Folkner et al. 2014, `2014IPNPR.196C...1F`).
+terms of perturbation amplitude and frequency"* (Folkner et al. 2014, [`2014IPNPR.196C...1F`](https://ui.adsabs.harvard.edu/abs/2014IPNPR.196C...1F)).
 Park et al. 은 이 집합을 그대로 이어받는다. *"The 343 asteroids were the same set… which
 consist of ∼90% of the total asteroid-belt mass"* (Park, Folkner, Williams & Boggs 2021,
-`2021AJ....161..105P`). DE 는 **주소행성대 링(ring)을 전혀 쓰지 않는다**. 나머지 ~10% 소행성대
+[`2021AJ....161..105P`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..105P)). DE 는 **주소행성대 링(ring)을 전혀 쓰지 않는다**. 나머지 ~10% 소행성대
 질량은 통째로 무시하며, DE440 은 *카이퍼* 집합체(개별 KBO 30개 + 44 AU 의 36점 링)만 추가한다.
 
 정량적 문턱은 DE 와 INPOP 의 바탕이 되는 링 문헌에서 가장 명시적으로 진술된다. Kuchynka et
-al. 2010 (`2010A&A...514A..96K`) 은 2.8 AU 에 질량 `Mring = 0.6±0.2×10⁻¹⁰ M☉` 의 주소행성대
+al. 2010 ([`2010A&A...514A..96K`](https://ui.adsabs.harvard.edu/abs/2010A%26A...514A..96K)) 은 2.8 AU 에 질량 `Mring = 0.6±0.2×10⁻¹⁰ M☉` 의 주소행성대
 링을 두고 잔차를 정량화한다. 상위 소행성들에 링 하나를 더하면 내행성에 대한 전지구적 섭동의
 *"more than 99% of the global perturbation"* 을 포착하며, 무시된 소행성 신호를 지구–화성 거리
 상에서 *"to 38 m"* (진폭 선정, N=300) 또는 *"4 m for N=300"* (MIQP 선정)까지 줄인다. 즉 대략
 **10년에 걸친 1미터 규모**다. 이 예산은 개별 천체가 지배한다. Ceres 하나만으로도 1970–2010
-기간 지구–화성 거리에 ~1199 m 에 이른다 (Fienga et al. 2011, `2011CeMDA.111..363F`). 따라서
+기간 지구–화성 거리에 ~1199 m 에 이른다 (Fienga et al. 2011, [`2011CeMDA.111..363F`](https://ui.adsabs.harvard.edu/abs/2011CeMDA.111..363F)). 따라서
 *실효* 문턱은 천체별로 적용되는 **수십 년 데이터 구간에 걸친 ~1–40 m 위치 효과**다.
 
 INPOP 는 명시적 미터 하한을 두고 동일한 위치-효과 논리를 적용한다. *"approximately 240
 asteroids… should represent the perturbations induced by the main belt on planetary orbits
-down to an order of a meter"* (`2011CeMDA.111..363F`) 이며, 문턱 아래 나머지는 Kuchynka 링으로
+down to an order of a meter"* ([`2011CeMDA.111..363F`](https://ui.adsabs.harvard.edu/abs/2011CeMDA.111..363F)) 이며, 문턱 아래 나머지는 Kuchynka 링으로
 집계한다. INPOP19a 에 이르면 개별 집합은 343개로 늘고 여기에 `(0.061 ± 0.001) M⊕` 의 카이퍼
-링이 더해진다 (Di Ruscio et al. 2020, `2020A&A...640A...7D`). EPM 도 마찬가지로 개별 + 집계로
+링이 더해진다 (Di Ruscio et al. 2020, [`2020A&A...640A...7D`](https://ui.adsabs.harvard.edu/abs/2020A%26A...640A...7D)). EPM 도 마찬가지로 개별 + 집계로
 나눈다. 대형 소행성 301개에 더해 2.67 AU 에 질량 `(0.507 ± 0.051)×10⁻¹⁰ M☉` 의 회전 링을 두며,
 전체 소행성대 질량은 `(12.038 ± 0.087)×10⁻¹⁰ M☉` 이다 (Pitjeva & Pitjev 2018,
-`2018AstL...44..554P`).
+[`2018AstL...44..554P`](https://ui.adsabs.harvard.edu/abs/2018AstL...44..554P)).
 
 **우리 충실도와의 관련성.** 두 가지가 곧바로 전이된다. 첫째, 천체력 선례는 *적분 구간에 걸친
 측정 상대 기준선의 위치 효과*로 선정한다. 이는 우리 프로파일이 관심 두는 바로 그 양(시뮬레이션
@@ -86,12 +86,12 @@ down to an order of a meter"* (`2011CeMDA.111..363F`) 이며, 문턱 아래 나�
 않은 미터 수준 *절대* 정확도를 좇기 위해서만 존재한다.
 
 > **추출한 수치**
-> - **343**: DE430/431 및 DE440/441 에서 개별 적분한 소행성 수(소행성대 질량의 ≈90%) (`2014IPNPR.196C...1F`; `2021AJ....161..105P`)
-> - 선정 기준 = "most significant effects on the orbit of Mars…"; 나머지 ~10% 는 **버림**, DE 에 주소행성대 링 없음 (`2014IPNPR.196C...1F`)
-> - **4–38 m**: 링 하나가 문턱 아래 꼬리를 흡수한 뒤 남는 지구–화성 거리 잔차 효과(N=300); ">99% of global perturbation" 포착 (`2010A&A...514A..96K`)
-> - ~1199 m: 지구–화성 거리에 대한 단일 소행성(Ceres) 최대 효과, 1970–2010 (`2011CeMDA.111..363F`)
-> - ~240 소행성 "down to an order of a meter": INPOP 미터 수준 개별 섭동체 문턱 (`2011CeMDA.111..363F`)
-> - 개별 301개 + 2.67 AU 링 `(0.507±0.051)×10⁻¹⁰ M☉`; 전체 소행성대 `(12.038±0.087)×10⁻¹⁰ M☉`, EPM (`2018AstL...44..554P`)
+> - **343**: DE430/431 및 DE440/441 에서 개별 적분한 소행성 수(소행성대 질량의 ≈90%) ([`2014IPNPR.196C...1F`](https://ui.adsabs.harvard.edu/abs/2014IPNPR.196C...1F); [`2021AJ....161..105P`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..105P))
+> - 선정 기준 = "most significant effects on the orbit of Mars…"; 나머지 ~10% 는 **버림**, DE 에 주소행성대 링 없음 ([`2014IPNPR.196C...1F`](https://ui.adsabs.harvard.edu/abs/2014IPNPR.196C...1F))
+> - **4–38 m**: 링 하나가 문턱 아래 꼬리를 흡수한 뒤 남는 지구–화성 거리 잔차 효과(N=300); ">99% of global perturbation" 포착 ([`2010A&A...514A..96K`](https://ui.adsabs.harvard.edu/abs/2010A%26A...514A..96K))
+> - ~1199 m: 지구–화성 거리에 대한 단일 소행성(Ceres) 최대 효과, 1970–2010 ([`2011CeMDA.111..363F`](https://ui.adsabs.harvard.edu/abs/2011CeMDA.111..363F))
+> - ~240 소행성 "down to an order of a meter": INPOP 미터 수준 개별 섭동체 문턱 ([`2011CeMDA.111..363F`](https://ui.adsabs.harvard.edu/abs/2011CeMDA.111..363F))
+> - 개별 301개 + 2.67 AU 링 `(0.507±0.051)×10⁻¹⁰ M☉`; 전체 소행성대 `(12.038±0.087)×10⁻¹⁰ M☉`, EPM ([`2018AstL...44..554P`](https://ui.adsabs.harvard.edu/abs/2018AstL...44..554P))
 
 ---
 
@@ -100,28 +100,28 @@ down to an order of a meter"* (`2011CeMDA.111..363F`) 이며, 문턱 아래 나�
 자연 천체에서 추출된 가장 민감한 결맞은 가속도는 소행성 (101955) Bennu 의 Yarkovsky
 드리프트이며, 우리가 제안한 하한에 거의 정확히 놓인다. Chesley et al. 은 1999–2013 광학
 천체측정에 세 차례 출현 시의 레이더 지연을 더해 *"da/dt=(-19.0±0.1)×10⁻⁴ au/Myr or 284±1.5
-m/year"* 를 측정한다 (`2014Icar..235....5C`). 그 바탕이 되는 횡방향 비중력 가속도(JPL 파라미터
+m/year"* 를 측정한다 ([`2014Icar..235....5C`](https://ui.adsabs.harvard.edu/abs/2014Icar..235....5C)). 그 바탕이 되는 횡방향 비중력 가속도(JPL 파라미터
 A2)는 `−4.618(24)×10⁻¹⁴ au/day²` ≈ **9.3×10⁻¹³ m/s²** 로, 신호대잡음비 ~200 에서 얻은 문헌상
-가장 잘 결정된 Yarkovsky 검출이다 (Farnocchia et al. 2013, `2013Icar..224....1F`: *"The best
+가장 잘 결정된 Yarkovsky 검출이다 (Farnocchia et al. 2013, [`2013Icar..224....1F`](https://ui.adsabs.harvard.edu/abs/2013Icar..224....1F): *"The best
 determination is for asteroid (101955) 1999 RQ₃₆, with an SNR ∼ 200"*). 이를 달성하려면 출현
 당 ~75–300 m 지연 정밀도의 10년 규모 레이더 거리측정이 필요했다.
 
 최초의 직접 검출은 그 10년 전에 이미 같은 영역을 설정했다. Chesley et al. 은 0.5 km 소행성
 6489 Golevka 에서 *"Radar ranging from Arecibo… [which] unambiguously reveals a small
-nongravitational acceleration"* 로 Yarkovsky 를 검출했는데 (`2003Sci...302.1739C`), 이 역시
+nongravitational acceleration"* 로 Yarkovsky 를 검출했는데 ([`2003Sci...302.1739C`](https://ui.adsabs.harvard.edu/abs/2003Sci...302.1739C)), 이 역시
 ~12년, 세 차례 출현 기준선의 레이더를 통해서만 가능했다. 카탈로그 서베이는 이것이 전형값이
 아니라 감도의 *가장자리*임을 확인한다. *"21 NEAs whose orbital fits show a measurable orbital
-drift with a signal to noise ratio (SNR) greater than 3"* 뿐이며 (`2013Icar..224....1F`),
+drift with a signal to noise ratio (SNR) greater than 3"* 뿐이며 ([`2013Icar..224....1F`](https://ui.adsabs.harvard.edu/abs/2013Icar..224....1F)),
 Nugent et al. 은 54개 NEA 에 걸쳐 *"observed drifts (~10⁻³ AU Myr⁻¹)"* 를 보고한다. 이는
-횡방향으로 ~10⁻¹³ m/s² 규모다 (`2012AJ....144...60N`). 따라서 자연 천체의 검출 가능성 하한은
+횡방향으로 ~10⁻¹³ m/s² 규모다 ([`2012AJ....144...60N`](https://ui.adsabs.harvard.edu/abs/2012AJ....144...60N)). 따라서 자연 천체의 검출 가능성 하한은
 대략 **10⁻¹³–10⁻¹² m/s²** 에 걸쳐 있으며, 절대 위치가 외부적으로 수십 미터 수준까지 알려진
 특정 추적 천체에 대해 수십 년 레이더 거리측정을 해야만 도달한다.
 
 고전적인 우주선 추적 기준값은 이보다 거의 세 자릿수 위에 있다. Pioneer 이상(anomaly)은
 ~11.5년에 걸친 도플러 + 거리측정에서 *"a_P=(8.74±1.33)×10⁻⁸ cm/s²"* = **8.74×10⁻¹⁰ m/s²** 였고
-(Anderson et al. 2002, `2002PhRvD..65h2004A`), 그마저도 인공적 산물로 판명되었다. *"once the
+(Anderson et al. 2002, [`2002PhRvD..65h2004A`](https://ui.adsabs.harvard.edu/abs/2002PhRvD..65h2004A)), 그마저도 인공적 산물로 판명되었다. *"once the
 thermal recoil force is properly accounted for, no anomalous acceleration remains"* (Turyshev
-et al. 2012, `2012PhRvL.108x1101T`). 8.7×10⁻¹⁰ m/s² 신호가 우주선 자체 발열로 밝혀졌다는 점은,
+et al. 2012, [`2012PhRvL.108x1101T`](https://ui.adsabs.harvard.edu/abs/2012PhRvL.108x1101T)). 8.7×10⁻¹⁰ m/s² 신호가 우주선 자체 발열로 밝혀졌다는 점은,
 그 수준의 진짜 결맞은 가속도를 확립하기가 얼마나 어려운지 보여준다.
 
 **우리 하한의 위치.** `a_floor = 1×10⁻¹² m/s²` 는 사실상 지금껏 측정된 가장 민감한 가속도
@@ -135,20 +135,20 @@ et al. 2012, `2012PhRvL.108x1101T`). 8.7×10⁻¹⁰ m/s² 신호가 우주선 �
 `r_c` *아래*에서만 작동한다.
 
 > **추출한 수치**
-> - **9.3×10⁻¹³ m/s²**: Bennu 횡방향 Yarkovsky 가속도(A2 = −4.618×10⁻¹⁴ au/day²), 최고 자연천체 검출, SNR~200 (`2014Icar..235....5C`)
-> - 284 ± 1.5 m/yr: Bennu 장반경 드리프트, 1999–2013 광학 + 3회 출현 레이더 (`2014Icar..235....5C`)
-> - ~75–300 m: Bennu 검출을 가능케 한 출현당 레이더 지연 정밀도 (`2014Icar..235....5C`)
-> - ~10⁻³ AU/Myr (~10⁻¹³ m/s²): 54개 NEA 에 걸친 전형적 Yarkovsky 드리프트 (`2012AJ....144...60N`)
-> - 21개 NEA 만 SNR > 3: 궤도 피팅에서 Yarkovsky 의 통계적 검출 문턱 (`2013Icar..224....1F`)
-> - 최초 직접 Yarkovsky 검출, Arecibo 레이더, 0.5 km Golevka (`2003Sci...302.1739C`)
-> - **8.74×10⁻¹⁰ m/s²**: Pioneer 이상, ~11.5년 도플러+거리측정; 이후 열 반동으로 해소 (`2002PhRvD..65h2004A`; `2012PhRvL.108x1101T`)
+> - **9.3×10⁻¹³ m/s²**: Bennu 횡방향 Yarkovsky 가속도(A2 = −4.618×10⁻¹⁴ au/day²), 최고 자연천체 검출, SNR~200 ([`2014Icar..235....5C`](https://ui.adsabs.harvard.edu/abs/2014Icar..235....5C))
+> - 284 ± 1.5 m/yr: Bennu 장반경 드리프트, 1999–2013 광학 + 3회 출현 레이더 ([`2014Icar..235....5C`](https://ui.adsabs.harvard.edu/abs/2014Icar..235....5C))
+> - ~75–300 m: Bennu 검출을 가능케 한 출현당 레이더 지연 정밀도 ([`2014Icar..235....5C`](https://ui.adsabs.harvard.edu/abs/2014Icar..235....5C))
+> - ~10⁻³ AU/Myr (~10⁻¹³ m/s²): 54개 NEA 에 걸친 전형적 Yarkovsky 드리프트 ([`2012AJ....144...60N`](https://ui.adsabs.harvard.edu/abs/2012AJ....144...60N))
+> - 21개 NEA 만 SNR > 3: 궤도 피팅에서 Yarkovsky 의 통계적 검출 문턱 ([`2013Icar..224....1F`](https://ui.adsabs.harvard.edu/abs/2013Icar..224....1F))
+> - 최초 직접 Yarkovsky 검출, Arecibo 레이더, 0.5 km Golevka ([`2003Sci...302.1739C`](https://ui.adsabs.harvard.edu/abs/2003Sci...302.1739C))
+> - **8.74×10⁻¹⁰ m/s²**: Pioneer 이상, ~11.5년 도플러+거리측정; 이후 열 반동으로 해소 ([`2002PhRvD..65h2004A`](https://ui.adsabs.harvard.edu/abs/2002PhRvD..65h2004A); [`2012PhRvL.108x1101T`](https://ui.adsabs.harvard.edu/abs/2012PhRvL.108x1101T))
 
 ---
 
 ## C. 항성 동역학: 항성–항성 중력이 의미 있는 물리이기를 멈추는 지점
 
 관련된 물리 스케일은 **Jacobi(조석) 반경**이다. 쌍을 가로지르는 은하 조석 가속도가 그 쌍의
-상호 중력과 같아지는 이격거리다. Jiang & Tremaine (2010, `2010MNRAS.401..977J`) 는
+상호 중력과 같아지는 이격거리다. Jiang & Tremaine (2010, [`2010MNRAS.401..977J`](https://ui.adsabs.harvard.edu/abs/2010MNRAS.401..977J)) 는
 `r_J ≡ [G(M₁+M₂)/(4 Ω_g A_g)]^(1/3)` 을 정의하고 태양 근방에서 평가한다. 이는 *"equals 1.7
 pc = 3.5×10⁵ AU for solar-mass stars"* 로, 총질량 `M₁+M₂ = 2 M☉`, `R_g = 8 kpc` 에서
 `Ω_g ≈ 27`, `A_g ≈ 15 km/s/kpc` 를 쓴 값이다. 이들의 시뮬레이션은 개체군이 *"exhibits a
@@ -159,11 +159,11 @@ minimum at a few times the Jacobi radius r_J"* 임을 찾아내, 관측되는 �
 ≈ **1×10⁻¹³ m/s²** 다. 이 교차 가속도가 물리적으로 동기 부여된 하한이다. *관측된* 광폭 쌍성
 절단은 그보다 다소 안쪽인 ~0.1–1 pc 에 있다. 공통고유운동(common-proper-motion) 쌍은 단일
 멱법칙 `dN/dΔθ ∝ Δθ^(−α)` 를 따르며 ~1 pc 까지 *"α = 1.67 ± 0.07 for the disk"* 다 (Chanamé &
-Gould 2004, `2004ApJ...601..289C`). El-Badry 의 Gaia 리뷰(`2024NewAR..9801694E`,
+Gould 2004, [`2004ApJ...601..289C`](https://ui.adsabs.harvard.edu/abs/2004ApJ...601..289C)). El-Badry 의 Gaia 리뷰([`2024NewAR..9801694E`](https://ui.adsabs.harvard.edu/abs/2024NewAR..9801694E),
 [arXiv:2403.12146](https://arxiv.org/abs/2403.12146))도 같은 기울기를 보고하며, 속박 쌍이 깨끗이 식별되는 것은
 `s ≈ 5×10⁴ AU (≈0.24 pc)` 까지이고 *"≳10⁵ au … mostly chance alignments, not gravitationally
 bound"* 인 쌍들이라고 지적한다. 조우와 조석이 Gyr 규모로 가장 넓은 쌍을 갈아 없애므로
-(Weinberg, Shapiro & Wasserman 1987, `1987ApJ...312..367W`), 관측된 가장 넓은 속박 쌍성(~1 pc)
+(Weinberg, Shapiro & Wasserman 1987, [`1987ApJ...312..367W`](https://ui.adsabs.harvard.edu/abs/1987ApJ...312..367W)), 관측된 가장 넓은 속박 쌍성(~1 pc)
 은 형식적 `r_J`(1.7 pc)보다 몇 배 아래에 놓인다.
 
 **`r_c` 가 놓이는 곳.** `a_floor = 1×10⁻¹²` 는 `r_c(1 M☉) = 0.37 pc = 1.2 ly` 를 준다(2 M☉ 쌍
@@ -177,12 +177,12 @@ bound"* 인 쌍들이라고 지적한다. 조우와 조석이 Gyr 규모로 가�
 (조석이 지배했어야 할 원거리장 항을 결코 남기지 않는다) 조석 스케일에 맞춰져 있지는 않다.
 
 > **추출한 수치**
-> - **1.7 pc = 5.5 ly**: 태양 근방 2 M☉ (1+1) 쌍의 Jacobi(조석) 반경 (`2010MNRAS.401..977J`)
-> - `r_J = [G(M₁+M₂)/(4 Ω_g A_g)]^(1/3)`, `Ω_g ≈ 27`, `A_g ≈ 15 km/s/kpc`: 공식 + Oort 입력값 (`2010MNRAS.401..977J`)
-> - **~1×10⁻¹³ m/s²**: 교차점에서 상호 = 조석 가속도(물리적으로 동기 부여된 하한) (`2010MNRAS.401..977J` 에서 도출)
-> - α = 1.67 ± 0.07 (원반), ~1 pc 까지 단일 멱법칙: 관측된 광폭 쌍성 이격 분포 (`2004ApJ...601..289C`)
-> - ~5×10⁴ AU (~0.24 pc) 까지 속박; ≳10⁵ AU 는 대부분 우연 정렬: 관측된 최대 속박 이격거리 (`2024NewAR..9801694E`)
-> - `r_c(1 M☉) = 0.37 pc` 대 `r_J = 1.7 pc`: `r_c` 는 조석 교차점보다 ~4.6배 *안쪽*(그곳에서 이체 항이 여전히 지배) (`2010MNRAS.401..977J` 와 비교)
+> - **1.7 pc = 5.5 ly**: 태양 근방 2 M☉ (1+1) 쌍의 Jacobi(조석) 반경 ([`2010MNRAS.401..977J`](https://ui.adsabs.harvard.edu/abs/2010MNRAS.401..977J))
+> - `r_J = [G(M₁+M₂)/(4 Ω_g A_g)]^(1/3)`, `Ω_g ≈ 27`, `A_g ≈ 15 km/s/kpc`: 공식 + Oort 입력값 ([`2010MNRAS.401..977J`](https://ui.adsabs.harvard.edu/abs/2010MNRAS.401..977J))
+> - **~1×10⁻¹³ m/s²**: 교차점에서 상호 = 조석 가속도(물리적으로 동기 부여된 하한) ([`2010MNRAS.401..977J`](https://ui.adsabs.harvard.edu/abs/2010MNRAS.401..977J) 에서 도출)
+> - α = 1.67 ± 0.07 (원반), ~1 pc 까지 단일 멱법칙: 관측된 광폭 쌍성 이격 분포 ([`2004ApJ...601..289C`](https://ui.adsabs.harvard.edu/abs/2004ApJ...601..289C))
+> - ~5×10⁴ AU (~0.24 pc) 까지 속박; ≳10⁵ AU 는 대부분 우연 정렬: 관측된 최대 속박 이격거리 ([`2024NewAR..9801694E`](https://ui.adsabs.harvard.edu/abs/2024NewAR..9801694E))
+> - `r_c(1 M☉) = 0.37 pc` 대 `r_J = 1.7 pc`: `r_c` 는 조석 교차점보다 ~4.6배 *안쪽*(그곳에서 이체 항이 여전히 지배) ([`2010MNRAS.401..977J`](https://ui.adsabs.harvard.edu/abs/2010MNRAS.401..977J) 와 비교)
 
 ---
 
@@ -191,16 +191,16 @@ bound"* 인 쌍들이라고 지적한다. 조우와 조석이 Gyr 규모로 가�
 **장기 적분 오차 예산은 기계 정밀도와 ~10⁻⁹ 사이에 있다.** IAS15 는 *"systematic errors…well
 below machine precision"* 을 유지하며 Brouwer 법칙을 따르는데, 내부 수렴 허용오차는
 ε ≡ 10⁻¹⁶ 이지만 의도적으로 완화된 *"default value of ε_b = 10⁻⁹"* 를 쓴다 (Rein & Spiegel
-2015, `2015MNRAS.446.1424R`). WHFast 는 *"E_bias is absent… its implementation is completely
+2015, [`2015MNRAS.446.1424R`](https://ui.adsabs.harvard.edu/abs/2015MNRAS.446.1424R)). WHFast 는 *"E_bias is absent… its implementation is completely
 unbiased"* 하도록 설계되어 고전 Wisdom–Holman 사상보다 상대 에너지를 *"better by two to three
-orders of magnitude"* 로 보존한다 (Rein & Tamayo 2015, `2015MNRAS.452..376R`; 기반 방법: Wisdom
-& Holman 1991, `1991AJ....102.1528W`). 즉 보수적 장기 작업에 대한 커뮤니티 *목표* 상대 에너지/힘
+orders of magnitude"* 로 보존한다 (Rein & Tamayo 2015, [`2015MNRAS.452..376R`](https://ui.adsabs.harvard.edu/abs/2015MNRAS.452..376R); 기반 방법: Wisdom
+& Holman 1991, [`1991AJ....102.1528W`](https://ui.adsabs.harvard.edu/abs/1991AJ....102.1528W)). 즉 보수적 장기 작업에 대한 커뮤니티 *목표* 상대 에너지/힘
 오차는 ~10⁻⁹ 이고, 달성 가능한 하한은 10⁻¹⁵–10⁻¹⁶ 다.
 
 **무충돌(collisionless) 힘-정확도 표준은 훨씬 느슨하다: 수 ×10⁻³.** Dehnen 2002
-(`2002JCoPh.179...27D`) 는 *"in collisionless stellar dynamics a relative force error of few
+([`2002JCoPh.179...27D`](https://ui.adsabs.harvard.edu/abs/2002JCoPh.179...27D)) 는 *"in collisionless stellar dynamics a relative force error of few
 10⁻³ is often sufficient"* 라 하며 이는 개방각 `θ ≃ 0.5–0.65` 에서 달성된다. Barnes & Hut 1986
-(`1986Natur.324..446B`) 와 그 오차 분석은 은하/성단 코드가 통상 입자당 ~0.1–1% 힘 오차로
+([`1986Natur.324..446B`](https://ui.adsabs.harvard.edu/abs/1986Natur.324..446B)) 와 그 오차 분석은 은하/성단 코드가 통상 입자당 ~0.1–1% 힘 오차로
 돌아간다는 것을 확립했다. 따라서 통용되는 허용범위 대역은 ~10⁻³(무충돌)에서 ~10⁻⁹(행성 목표),
 ~10⁻¹⁵(적분기 반올림 하한)까지 걸쳐 있다.
 
@@ -222,10 +222,10 @@ HarmonicDamping 컨벤션이며 천체물리적·수치해석적 선례가 없�
 
 > **추출한 수치**
 > - **1.7×10⁻¹⁰**: `a_floor(1e-12)` 를 1 AU / 1 M☉ 에서의 상대 힘 오차로 본 값 (`GM/r²=5.93×10⁻³ m/s²`) (도출)
-> - 10⁻⁹: WHFast/IAS15 기본 사용자 정확도 파라미터 `ε_b` (`2015MNRAS.446.1424R`)
-> - 10⁻¹⁶: IAS15 내부 수렴 허용오차 ≈ 배정밀도 기계 ε(반올림 하한) (`2015MNRAS.446.1424R`)
-> - 2–3 자릿수: 고전 WH 사상 대비 WHFast 상대 에너지 개선; 무편향, Brouwer 스케일링 (`2015MNRAS.452..376R`)
-> - 수×10⁻³: `θ ≃ 0.5–0.65` 에서 무충돌 트리코드의 통용 상대 *힘* 오차 (`2002JCoPh.179...27D`; `1986Natur.324..446B`)
+> - 10⁻⁹: WHFast/IAS15 기본 사용자 정확도 파라미터 `ε_b` ([`2015MNRAS.446.1424R`](https://ui.adsabs.harvard.edu/abs/2015MNRAS.446.1424R))
+> - 10⁻¹⁶: IAS15 내부 수렴 허용오차 ≈ 배정밀도 기계 ε(반올림 하한) ([`2015MNRAS.446.1424R`](https://ui.adsabs.harvard.edu/abs/2015MNRAS.446.1424R))
+> - 2–3 자릿수: 고전 WH 사상 대비 WHFast 상대 에너지 개선; 무편향, Brouwer 스케일링 ([`2015MNRAS.452..376R`](https://ui.adsabs.harvard.edu/abs/2015MNRAS.452..376R))
+> - 수×10⁻³: `θ ≃ 0.5–0.65` 에서 무충돌 트리코드의 통용 상대 *힘* 오차 ([`2002JCoPh.179...27D`](https://ui.adsabs.harvard.edu/abs/2002JCoPh.179...27D); [`1986Natur.324..446B`](https://ui.adsabs.harvard.edu/abs/1986Natur.324..446B))
 > - **(비어 있음)**: 매끄러운 바깥쪽 절단 셸-폭 비율에 대한 문헌 근거 없음; 3배는 내부 테스트로만 정당화 유지
 
 ---
@@ -238,7 +238,7 @@ HarmonicDamping 컨벤션이며 천체물리적·수치해석적 선례가 없�
 궤도를 적분한다. 이 16개는 내태양계 / 화성 미션 궤도 아크에 측정 가능하게 편향을 줄 만큼 큰
 유일한 소행성으로 선정되며, 그보다 작은 것은 전부 버려진다. 이는 그것이 올라탄 *천체력*보다
 의도적으로 훨씬 거칠다. DE440 은 **소행성 343개 + KBO 30개 + KBO 링**을 싣는데
-(`2021AJ....161..105P`), 이는 항법 모델이 포함하는 섭동체보다 ~20배 많다. 커뮤니티 도구도
+([`2021AJ....161..105P`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..105P)), 이는 항법 모델이 포함하는 섭동체보다 ~20배 많다. 커뮤니티 도구도
 "필요한 것만 추가한다"는 규율을 반영한다. NASA GMAT 의 `ForceModel` 은 기본으로 **빈
 `PointMasses` 목록**을 배포하고(분석가가 제3천체를 열거하며, 통상 `{Sun, Luna, Jupiter}`, 소행성
 없음), Orekit 의 `CelestialBodyFactory` 는 태양, 달, 8개 행성, 명왕성만 점질량으로 사전 정의하며
@@ -246,7 +246,7 @@ HarmonicDamping 컨벤션이며 천체물리적·수치해석적 선례가 없�
 
 > **추출한 수치**
 > - **16**: JPL DSN 심우주 OD 힘 모델의 "Big-16" 대형 소행성(+ 태양, 8개 행성, 달, 명왕성) (Moyer, DESCANSO Monograph 2)
-> - **343 + KBO 30개 + 링**: 바탕이 되는 DE440 천체력의 섭동체(항법 모델의 ~20배) (`2021AJ....161..105P`)
+> - **343 + KBO 30개 + 링**: 바탕이 되는 DE440 천체력의 섭동체(항법 모델의 ~20배) ([`2021AJ....161..105P`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..105P))
 > - `PointMasses = {}` 기본값, 기본 소행성 없음: GMAT `ForceModel` (GMAT R2020a User's Guide)
 > - 태양 + 달 + 8개 행성 + 명왕성을 점질량으로, 내장 소행성 없음: Orekit `CelestialBodyFactory` (Orekit architecture docs)
 

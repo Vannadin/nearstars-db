@@ -329,12 +329,12 @@ Eri C `#ffd587`)을 보이는 워크드 증명이다.
 기여 한 줄. 점검용으로 (조사 시점 ADS) 피인용 수를 적었다.
 
 - **Bessell, M. S., Castelli, F. & Plez, B. (1998)**: *A&A* 333, 231. **No arXiv**
-  (bibcode `1998A&A...333..231B`). *Model atmospheres broad-band colors, bolometric
+  (bibcode [`1998A&A...333..231B`](https://ui.adsabs.harvard.edu/abs/1998A%26A...333..231B)). *Model atmospheres broad-band colors, bolometric
   corrections and temperature calibrations for O–M stars*: 모델 대기 SED를 합성 광대역
   색과 O→M 전 범위의 Teff 척도로 바꾸는 표준 선례. §2, §3. (1356 cites.)
 
 - **Pickles, A. J. (1998)**: *PASP* 110, 863. **No arXiv** (bibcode
-  `1998PASP..110..863P`). *A Stellar Spectral Flux Library: 1150–25000 Å*: §5의 M왜성 색
+  [`1998PASP..110..863P`](https://ui.adsabs.harvard.edu/abs/1998PASP..110..863P)). *A Stellar Spectral Flux Library: 1150–25000 Å*: §5의 M왜성 색
   적분에 **실제로 관측된 SED** 입력으로 쓰는 경험적 항성 분광 플럭스 라이브러리(O–M, 왜성/거성)다.
   M0V–M6V 스펙트럼을 §7 엔진에 통과시켜 계산된 사다리를 얻고, Pickles G2V로 표준 태양색에 대고
   파이프라인을 검증한다. §3, §5, §8. (1361 cites.)
@@ -345,12 +345,12 @@ Eri C `#ffd587`)을 보이는 워크드 증명이다.
   [Fe/H])` → 실제 광학 SED의 기본값. §3. (1801 cites.)
 
 - **Castelli, F. & Kurucz, R. L. (2003)**: IAU Symp. 210, A20. **arXiv:astro-ph/
-  0405087** (bibcode `2003IAUS..210P.A20C`). *New Grids of ATLAS9 Model Atmospheres*:
+  0405087** (bibcode [`2003IAUS..210P.A20C`](https://ui.adsabs.harvard.edu/abs/2003IAUS..210P.A20C)). *New Grids of ATLAS9 Model Atmospheres*:
   FGK와 그보다 뜨거운 별용 LTE 평행평면 격자(금속 line blanketing 포함), 태양형 색의
   일꾼. §3, §4. (1177 cites.)
 
 - **Allard, F., Homeier, D. & Freytag, B. (2011)**: ASP Conf. 448, 91.
-  **[arXiv:1011.5405](https://arxiv.org/abs/1011.5405)** (bibcode `2011ASPC..448...91A`). *Model Atmospheres From Very Low
+  **[arXiv:1011.5405](https://arxiv.org/abs/1011.5405)** (bibcode [`2011ASPC..448...91A`](https://ui.adsabs.harvard.edu/abs/2011ASPC..448...91A)). *Model Atmospheres From Very Low
   Mass Stars to Brown Dwarfs* (BT-Settl): M왜성 색 보정을 정량적으로 만드는 TiO/VO/H₂O
   분자 선목록과 먼지 처리를 갖춘 기준 차가운-왜성/BD 격자. §3, §5. (481 cites.)
 

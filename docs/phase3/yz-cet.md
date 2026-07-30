@@ -264,24 +264,24 @@ than its modest photosphere:
   geometry, and the **planet b magnetic field lower limit B ≥ 0.4 G** —
   the first indirect exoplanet magnetic-field measurement.
 - **Stock S. et al. 2020** — *The CARMENES search for exoplanets around
-  M dwarfs. Three temperate to warm super-Earths* (`2020A&A...636A.119S`,
+  M dwarfs. Three temperate to warm super-Earths* ([`2020A&A...636A.119S`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A.119S),
   doi:10.1051/0004-6361/201936732). Phase 2 recommended source for the
   rotation period (68.4 ± 0.05 d, combined V-band photometry) and for
   the planet b/c/d orbits and minimum masses. Supersedes the 83 d
   Astudillo-Defru 2017 rotation period.
 - **Cifuentes C. et al. 2020** — *CARMENES input catalogue of M dwarfs.
-  Photometric and astrometric properties* (`2020A&A...642A.115C`,
+  Photometric and astrometric properties* ([`2020A&A...642A.115C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...642A.115C),
   doi:10.1051/0004-6361/202038295). Phase 2 recommended source for the
   effective temperature (3100 K, SED fitting) and luminosity
   (0.0022 L☉, bolometric flux).
 - **Schweitzer A. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Different roads to radii and masses of the target
-  stars* (`2019A&A...625A..68S`, doi:10.1051/0004-6361/201834965).
+  stars* ([`2019A&A...625A..68S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S), doi:10.1051/0004-6361/201834965).
   Phase 2 recommended source for the mass (0.1368 M☉) and radius
   (0.1571 R☉).
 - **Astudillo-Defru N. et al. 2017** — *The HARPS search for southern
   extra-solar planets. A compact system of short-period super-Earths
-  around YZ Ceti* (`2017A&A...605L..11A`, doi:10.1051/0004-6361/201731581).
+  around YZ Ceti* ([`2017A&A...605L..11A`](https://ui.adsabs.harvard.edu/abs/2017A%26A...605L..11A), doi:10.1051/0004-6361/201731581).
   Discovery paper for the three planets; Phase 2 recommended source for
   the activity index (log R'HK = −4.71) and spectral type. Earlier
   Teff/mass/radius alternatives retained as `recommended:false`.

@@ -20,7 +20,7 @@ cfg-emit되지 않으므로(Kerbalism writer 보류 중) 출처(provenance)만 �
 ko 미러는 위임 후 검증했다(결정론적 재계산 + 인용된 모든 arXiv ID가 `_papers/`에 실재함을 확인).
 
 - **1a 자이언트 (method gap).** **Reiners & Christensen 2010**(`1007.1514`, 에너지-플럭스
-  dynamo 스케일링, Christensen et al. 2009 `2009Natur.457..167C` 기반)을 캐시했다.
+  dynamo 스케일링, Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C) 기반)을 캐시했다.
   재사용 가능한 worked method를 `docs/reference/planetary-dynamo-scaling.md`(+ko)에 작성했다.
   `B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93`. 논문 자체의 목성(9 G)·ε Eri b(19 G)
   행으로 검증했다. **진짜 자이언트** 3개를 선형 질량이 아니라 내부 광도 기반으로 재도출했다.
@@ -39,7 +39,7 @@ ko 미러는 위임 후 검증했다(결정론적 재계산 + 인용된 모든 a
 - **Tier 2.** Barnard dose. Atri(`1910.09871`) + France(`2009.01259`)를 핀했다(둘 다 실제로는
   캐시돼 있었다. 거짓 "not in cache"를 제거했다). HD 69830 c/d 자기장 신뢰도 medium/high→**low**.
   Barnard b/c/d/e dipole에 "Mercury analogy, not dynamo-modeled" 태그를 달았다. astrosphere
-  v_wind=400 km/s + Wood 2002/2005를 각 사용처에 명기했다. q=3.5에 Dohnanyi 1969(`1969JGR....74.2531D`)
+  v_wind=400 km/s + Wood 2002/2005를 각 사용처에 명기했다. q=3.5에 Dohnanyi 1969([`1969JGR....74.2531D`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.2531D))
   인용. ρ=2.5는 플래그.
 - **Tier 3.** τ Cet e/f의 "RM22 (Reiners-Christensen)"를 → "RM22 (Rodríguez-Mozos & Moya 2022,
   `2203.01065`)"로 de-conflate했다.
@@ -56,7 +56,7 @@ data.json / docs-wiki 오탐을 빼면 clean이다.
 없음. 원래 전수 감사가 놓친 method gap 4건을 추가로 근거화했다.
 
 - **Radiogenic heat (`radiogenic_heat_w_m2`, 약 10개 바디).** 인용 없이 지구 analog로
-  질량 스케일링돼 있었다(SPEC의 "paper/synth" 필드 → 계약 위반). Wang et al. 2020(`2020A&A...644A..19W`,
+  질량 스케일링돼 있었다(SPEC의 "paper/synth" 필드 → 계약 위반). Wang et al. 2020([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W),
   Eu→Th/U radiogenic 진단)을 근거로 삼되, 호스트 abundance는 큐레이션하지 않았으므로 지구
   analog임을 명시했다. 신뢰도 → low. tau-cet-e/f/g/h, 61-vir-b, hd-219134-b/c, trappist-1-f/g/h.
 - **Day-night / 온실 온도 델타 (약 8개 바디).** T_eq 위로 얹는 구체적 K offset이 이제 Cowan &
@@ -106,7 +106,7 @@ data.json / docs-wiki 오탐을 빼면 clean이다.
 > 감사가 스스로 경계하던 바로 그 오류를 범했다. "우리 캐시에 없다 / 못 찾았다"를 "존재하지
 > 않는다"와 혼동한 것이다. 2026-06-20 검증.
 > - **Yadav & Thorngren 2017** = "Estimating the magnetic field strength in hot
->   Jupiters", ApJL 849, L12, **arXiv `1709.05676`** (`2017ApJ...849L..12Y`) —
+>   Jupiters", ApJL 849, L12, **arXiv `1709.05676`** ([`2017ApJ...849L..12Y`](https://ui.adsabs.harvard.edu/abs/2017ApJ...849L..12Y)) —
 >   Christensen 2009 에너지플럭스 스케일링을 inflate 된 외계행성에 적용한, 실재하고
 >   주제에 딱 맞는 논문이다. 이제 **캐시됨**. au-mic-b/c/e의 문제는 *범위* 확장(hot
 >   Jupiter 스케일링을 sub-Neptune까지 외삽)이었지 날조가 아니었다.
@@ -135,7 +135,7 @@ data.json / docs-wiki 오탐을 빼면 clean이다.
 | AU Mic e | 30 µT | same Yadav & Thorngren 2017 (real, uncached, out-of-regime) | uncached + out-of-regime |
 
 **수정.** 실제로 캐시된 dynamo 스케일링에 근거를 둔다 — **Christensen, Holzwarth & Reiners
-2009**(에너지-플럭스 스케일링, `2009Natur.457..167C`) 또는 Reiners & Christensen 2010(제대로
+2009**(에너지-플럭스 스케일링, [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C)) 또는 Reiners & Christensen 2010(제대로
 캐시)을 써서 선형 질량이 아니라 에너지 플럭스에서 자기장을 재계산한다. 또는 솔직한
 low-confidence analog로 강등한다(아래의 compliant 패턴). dipole moment는 *내부적으로*
 일관됨에 유의(ε Eri 13200 = 0.66×20000). 즉 문제는 method이지 산술이 아니다.

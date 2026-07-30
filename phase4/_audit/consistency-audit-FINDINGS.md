@@ -287,8 +287,8 @@ would justify it; nowhere stated).
   and `appearance` (4 vs 2) — the missing ones are pair-covering papers;
   `A b/orbit` cites 1 of the 2 sim docs its three orbit siblings cite.
 - **Inline citations not in refs[]:** `bulk.geopotential_j2` evidence carries
-  arXiv 1109.1627 (+2007.10783, 1609.06324) inline ✓; `magnetism.magnetic_field`
-  carries 1007.1514 ✓; "Kennedy 2011" (rings) has no identifier anywhere.
+  arXiv [1109.1627](https://arxiv.org/abs/1109.1627) (+2007.10783, 1609.06324) inline ✓; `magnetism.magnetic_field`
+  carries [1007.1514](https://arxiv.org/abs/1007.1514) ✓; "Kennedy 2011" (rings) has no identifier anywhere.
 - **Cited doc ≠ claim:** C9 above; `STABILITY_REPORT.md` contains no
   obliquity (`_obliq5`), PA-match, or ring-clearing sections though three
   rows cite it for exactly those; `rocky-planet-dynamo-methodology.md` cited

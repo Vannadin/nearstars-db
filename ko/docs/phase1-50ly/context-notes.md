@@ -78,7 +78,7 @@ plan/checklist/context-notes는 `docs/phase1-50ly/`에 위치합니다 (저장�
 
 ### 2026-05-19 — `st_refname`의 URL 인코딩된 bibcode
 
-NASA Archive는 ADS URL의 `&`를 일관성 없이 인코딩합니다. 일부 행은 리터럴 `&`를 보내고 (예: `pl_refname`의 `2024A&A...688A.112V`), 다른 행은 URL 인코딩된 `%26`을 보냅니다 (예: HD 40307의 `st_refname`에서 `2013A%26A...549A..48T`). 기존 정규식 `[0-9A-Za-z\.\&\+\-]+`는 인코딩된 것을 놓쳐 10개 이상의 호스트에 대한 A&A bibcode를 자동으로 누락시켰습니다.
+NASA Archive는 ADS URL의 `&`를 일관성 없이 인코딩합니다. 일부 행은 리터럴 `&`를 보내고 (예: `pl_refname`의 [`2024A&A...688A.112V`](https://ui.adsabs.harvard.edu/abs/2024A%26A...688A.112V)), 다른 행은 URL 인코딩된 `%26`을 보냅니다 (예: HD 40307의 `st_refname`에서 `2013A%26A...549A..48T`). 기존 정규식 `[0-9A-Za-z\.\&\+\-]+`는 인코딩된 것을 놓쳐 10개 이상의 호스트에 대한 A&A bibcode를 자동으로 누락시켰습니다.
 
 **수정 사항.** 정규식 문자 클래스에 `%`를 추가하고 캡처된 그룹에 `urllib.parse.unquote()`를 적용했습니다. 115개의 고유한 행성 bibcode와 114개의 호스트 bibcode 모두 정상적으로 파싱됨을 확인했습니다.
 

@@ -175,10 +175,10 @@ items.
   0.972 ± 0.0045 M☉ from the binary orbital fit.
 - **Joyce M. & Chaboyer B. 2018** — [arXiv:1806.07567](https://arxiv.org/abs/1806.07567). System age
   5.3 ± 0.3 Gyr.
-- **DeWarf L. E. et al. 2010** — (`2010ApJ...722..343D`,
+- **DeWarf L. E. et al. 2010** — ([`2010ApJ...722..343D`](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D),
   no arXiv preprint, Tier A manual followup). Defines B's 36–40 d
   rotation, log R'HK = −5.0, and 8.1-yr chromospheric cycle.
-- **Henry T. J. et al. 1996** — (`1996AJ....111..439H`, no arXiv).
+- **Henry T. J. et al. 1996** — ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H), no arXiv).
   Original log R'HK = −5.00 measurement for B.
 - **Rajpaul V. et al. 2016** — *Ghost in the time series: no planet
   for Alpha Cen B*, MNRAS 456, L6 ([arXiv:1510.05598](https://arxiv.org/abs/1510.05598)). Window-function
@@ -225,12 +225,12 @@ items.
 - **Spada F. et al. 2019** — [arXiv:1909.00701](https://arxiv.org/abs/1909.00701). Entropy calibration of
   K-dwarf radii, validates Kervella 2017.
 - **Krishnamurthy A. et al. 2021** — ASTERIA transit search around α
-  Cen A and B (`2021AJ....161..275K`). Non-detection limits.
+  Cen A and B ([`2021AJ....161..275K`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..275K)). Non-detection limits.
 
 ### Not read — no arXiv preprint or low-priority (~40 papers)
 
 - **Dumusque X. et al. 2012** — *An Earth-mass planet orbiting α
-  Centauri B*, Nature 491, 207 (`2012Natur.491..207D`, no arXiv).
+  Centauri B*, Nature 491, 207 ([`2012Natur.491..207D`](https://ui.adsabs.harvard.edu/abs/2012Natur.491..207D), no arXiv).
   Original RV-jitter-driven retracted detection; superseded by
   Rajpaul 2016 and Plavchan 2015.
 - Conference proceedings, interstellar-propulsion proposals, and SETI

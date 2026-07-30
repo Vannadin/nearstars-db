@@ -59,7 +59,7 @@ UV/flare 에서 오는 옅은 광화학 haze, 고리 없음, Jupiter-스케일 �
 | `planet_disk_tint_rgb_hex_accent` | `#c0a070` (따뜻한 tan-갈색 띠 — 더 깊은 구름층 + haze 가 비쳐 보임) | low | Tie-break. M-왜성 조명 아래 Jupiter/Saturn 띠-zone 대비. 낮은 일사량과 약한 대류 구동 때문에 띠 진폭은 중간 |
 | `ring_present` | false | low | Tie-break. 검출 없음 (천체측정은 고리를 못 봄). cfg 가 "고리 없음" 으로 기본. search-and-verify 정책에 따라 지어낸 feature 없음 |
 | `rotation_period_hours` | 10 | low | Tie-break. 자전 측정 없음. Jupiter-analog ~10 h 빠른 자전. 무겁고 젊은 jovian 은 큰 원시 spin 각운동량을 유지해, 느린 Saturn/Uranus 식 값보다 Jupiter-부류 빠른 자전을 선호 |
-| `magnetic_field_strength_microtesla_equator` | 2000 | low | 에너지플럭스 다이나모 스케일링 (Christensen et al. 2009 `2009Natur.457..167C`. Reiners & Christensen 2010 `1007.1514`). 2.26 M_Jup 에 대한 B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93. 호스트 나이가 실제로 불확실해 (≲100 Myr PMS 대 ~950 Myr) B_eq 가 ~1600 (늙음) 에서 ~3400 (젊음) µT 까지 걸친다. cfg 는 중앙값 ~2000 µT 를 채택하며, 젊고 활동적인 호스트가 높은 쪽을 지지한다. (필드 키를 canonical `_strength_` 표기로 정규화함.) docs/reference/planetary-dynamo-scaling.md 참고 |
+| `magnetic_field_strength_microtesla_equator` | 2000 | low | 에너지플럭스 다이나모 스케일링 (Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C). Reiners & Christensen 2010 `1007.1514`). 2.26 M_Jup 에 대한 B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93. 호스트 나이가 실제로 불확실해 (≲100 Myr PMS 대 ~950 Myr) B_eq 가 ~1600 (늙음) 에서 ~3400 (젊음) µT 까지 걸친다. cfg 는 중앙값 ~2000 µT 를 채택하며, 젊고 활동적인 호스트가 높은 쪽을 지지한다. (필드 키를 canonical `_strength_` 표기로 정규화함.) docs/reference/planetary-dynamo-scaling.md 참고 |
 | `magnetic_dipole_moment_normalized_earth` | 120000 | low | 2000 µT × (1.10 R_Jup)³ 를 Jupiter (적도 4.5 G, Earth 의 20 000배) 와 비교 → 에너지플럭스 스케일링 (`1007.1514`) 으로 ≈ 1.2×10⁵ × Earth. 나이와 R³ 에 민감 → 신뢰도 낮음 |
 | `aurora_present` | true | medium | 호스트 GJ 896 A 는 kG 자기장과 잦은 전파/X-선 버스트를 가진 매우 활동적인 flare star (Curiel 2022). 0.64 AU 에서 높아진 항성풍 + flare 플라스마 flux 가 jovian 자기권에 포획되어 강한 오로라 방출을 구동 |
 | `aurora_color_primary_hex` | `#c84080` (H₂-풍부 jovian 대기의 H-Balmer α 656 nm 적-분홍) | low | Tie-break. 가시-대역 jovian 오로라는 H-Balmer α 지배. 적-분홍으로 읽히며, 깊은 붉은 조명 맥락이 보강 |
@@ -197,7 +197,7 @@ NearStars 렌더러에서 GJ 896 A b 는 가시적으로 이심적인 궤도 위
 
 - **Curiel S. et al. 2022** — *3D orbital architecture of a dwarf
   binary system and its planetary companion*, AJ 164, 93
-  (`2022AJ....164...93C`, doi:10.3847/1538-3881/ac7c66,
+  ([`2022AJ....164...93C`](https://ui.adsabs.harvard.edu/abs/2022AJ....164...93C), doi:10.3847/1538-3881/ac7c66,
   [arXiv:2208.14553](https://arxiv.org/abs/2208.14553)). GJ 896 A b 의 VLBA + 광학/적외선 천체측정 발견.
   진질량 (2.26 ± 0.57 M_Jup = 718.29 M⊕), 전체 궤도 요소 세트
   (a = 0.63965 AU, P = 284.39 d, e = 0.35, i = 69.2°, Ω = 45.62°,

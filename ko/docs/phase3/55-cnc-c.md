@@ -110,19 +110,19 @@ L = 0.582 L☉ 로 평형 온도는 T_eq(A=0) ≈ 489 K 가 유도됩니다—�
 ### Read (visual-informative, drove decisions above)
 
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
-  with SPIRou…*, A&A 705, A190 (`2026A&A...705A.190M`,
+  with SPIRou…*, A&A 705, A190 ([`2026A&A...705A.190M`](https://ui.adsabs.harvard.edu/abs/2026A%26A...705A.190M),
   [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). 최신 RV 재피팅: 행성 c P = 44.3936 d,
   a = 0.247 AU, e = 0.088, M sin i = 56.6 ± 2.2 M⊕. **Phase 2 추천 궤도
   + 질량.** 모델 컷오프 이후 출판 — 캐시 텍스트에 대조 확인.
-- **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
+- **von Braun K. et al. 2011** — [`2011ApJ...740...49V`](https://ui.adsabs.harvard.edu/abs/2011ApJ...740...49V),
   [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). 모성 L = 0.582 L☉ → T_eq 유도.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Bourrier V. et al. 2018** — `2018A&A...619A...1B`,
+- **Bourrier V. et al. 2018** — [`2018A&A...619A...1B`](https://ui.adsabs.harvard.edu/abs/2018A%26A...619A...1B),
   [arXiv:1807.04301](https://arxiv.org/abs/1807.04301). 재피팅: c 가 a = 0.2373 AU, e = 0.03,
   M sin i = 51.2 M⊕ — 기록된-대안 궤도/질량(Moutou 2025 로 대체).
-- **McArthur B. E. et al. 2004** — `2004ApJ...614L..81M`. 발견 논문.
+- **McArthur B. E. et al. 2004** — [`2004ApJ...614L..81M`](https://ui.adsabs.harvard.edu/abs/2004ApJ...614L..81M). 발견 논문.
   역사적 맥락.
 
 ### Read (instrument-only, not visual-informative)

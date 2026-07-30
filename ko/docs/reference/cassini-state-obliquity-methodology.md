@@ -21,8 +21,8 @@
 둘레를 세차**하게 만듭니다. 그 세차율은 세차 상수 α가 정합니다. 한편 n̂ 자신은 고정된 경사 I를 유지한 채
 **Laplace 극 k̂ 둘레를 궤도 승교점율 g로 세차**합니다. **Cassini state**는 궤도와 함께 세차하는
 공전 좌표계에서의 평형입니다. ŝ, n̂, k̂가 **한 평면에 놓인 채 공통 속도 g로 함께 세차**합니다(Colombo 1966
-`1966AJ.....71..891C`; Peale 1969 `1969AJ.....74..483P`). 조석 소산은 ŝ를 그 평면에서 살짝 *바깥으로*
-밀어냅니다(Su & Lai 2022 `2022MNRAS.509.3301S`).
+[`1966AJ.....71..891C`](https://ui.adsabs.harvard.edu/abs/1966AJ.....71..891C); Peale 1969 [`1969AJ.....74..483P`](https://ui.adsabs.harvard.edu/abs/1969AJ.....74..483P)). 조석 소산은 ŝ를 그 평면에서 살짝 *바깥으로*
+밀어냅니다(Su & Lai 2022 [`2022MNRAS.509.3301S`](https://ui.adsabs.harvard.edu/abs/2022MNRAS.509.3301S)).
 
 상태는 최대 **네 개**입니다(Peale 1969).
 
@@ -32,19 +32,19 @@
   종착 상태입니다.
 - **States 3 & 4**: 불안정합니다.
 
-소산 아래에서는 **state 1과 2만 끌개(attractor)**입니다(Ward 1975 `1975AJ.....80...64W`). ε = 0 근처에서
+소산 아래에서는 **state 1과 2만 끌개(attractor)**입니다(Ward 1975 [`1975AJ.....80...64W`](https://ui.adsabs.harvard.edu/abs/1975AJ.....80...64W)). ε = 0 근처에서
 감쇠된 천체는 **state 1**에 안착하고, 세속 자전–궤도 공명에 걸리거나 그것을 통과하며 이주한 천체는 높은
-obliquity의 **state 2**에 포획될 수 있습니다(Millholland & Laughlin 2019 `2019NatAs...3..424M`).
+obliquity의 **state 2**에 포획될 수 있습니다(Millholland & Laughlin 2019 [`2019NatAs...3..424M`](https://ui.adsabs.harvard.edu/abs/2019NatAs...3..424M)).
 
 ## 2. Equilibrium-obliquity relation
 
 ε = obliquity(∠ ŝ,n̂), I = Laplace 평면에 대한 궤도 경사, g = Ω̇ < 0 승교점 세차율, α > 0 자전 세차
-상수라 할 때, Cassini state는 다음을 만족합니다(Peale 1969 `1969AJ.....74..483P`; Ward & Hamilton 2004
-`2004AJ....128.2501W`).
+상수라 할 때, Cassini state는 다음을 만족합니다(Peale 1969 [`1969AJ.....74..483P`](https://ui.adsabs.harvard.edu/abs/1969AJ.....74..483P); Ward & Hamilton 2004
+[`2004AJ....128.2501W`](https://ui.adsabs.harvard.edu/abs/2004AJ....128.2501W)).
 
     α · cos ε · sin ε  +  g · sin(ε − I)  =  0                    (1)
 
-**근의 개수**는 임계비에 대한 |g|/α로 정해집니다(Henrard 1987 `1987CeMec..40..345H`; Ward & Hamilton 2004).
+**근의 개수**는 임계비에 대한 |g|/α로 정해집니다(Henrard 1987 [`1987CeMec..40..345H`](https://ui.adsabs.harvard.edu/abs/1987CeMec..40..345H); Ward & Hamilton 2004).
 
     (|g|/α)_crit = ( sin^(2/3) I + cos^(2/3) I )^(3/2)            (2)
 
@@ -53,7 +53,7 @@ obliquity의 **state 2**에 포획될 수 있습니다(Millholland & Laughlin 20
 이미지였습니다. 공명 플래그에는 작은 I 형태 |g|/α ≈ 1이면 충분하니, 인용하려거든 Ward & Hamilton 2004에서
 전체 표현을 먼저 확인하십시오.)*
 
-**작은 각 State-1 해**(ε, I 작음; Ward 1975; Fabrycky+ 2007 `2007ApJ...665..754F`).
+**작은 각 State-1 해**(ε, I 작음; Ward 1975; Fabrycky+ 2007 [`2007ApJ...665..754F`](https://ui.adsabs.harvard.edu/abs/2007ApJ...665..754F)).
 
     ε₁  ≈  |g| sin I / ( α + |g| cos I )                          (3)
     α ≫ |g|  ⟹  ε₁ ≈ (|g|/α) sin I  →  0                          (4)
@@ -64,7 +64,7 @@ obliquity의 **state 2**에 포획될 수 있습니다(Millholland & Laughlin 20
 
 ## 3. The precession constant α
 
-**자유 / 빠른 회전체**(Néron de Surgy & Laskar 1997 `1997A&A...318..975N`; Ward 1975), n² = G M⋆ / a³
+**자유 / 빠른 회전체**(Néron de Surgy & Laskar 1997 [`1997A&A...318..975N`](https://ui.adsabs.harvard.edu/abs/1997A%26A...318..975N); Ward 1975), n² = G M⋆ / a³
 및 항등식 (C−A) = J₂·M R²와 함께.
 
     α = (3/2) · (n²/ω) · [ J₂ / (C/MR²) ] · (1−e²)^(−3/2)         (5)
@@ -73,8 +73,8 @@ Sanity check: 지구의 태양 토크 α를 (5)로 구하면(J₂ = 1.08e-3, C/M
 ≈ 17″/yr로, 알려진 태양-달 세차의 태양 기여분 ~16″/yr와 맞아떨어집니다.
 
 **동기 고정된 천체**(ω = n): **NearStars가 필요로 하는 경우**입니다. 천체는 triaxial(A < B < C)이며,
-정유체 형상 계수 J₂와 C̄₂₂, 정규화 관성모멘트 C̃ ≡ C/MR²을 써서 위성 문헌(Bills 2005 `2005Icar..175..233B`;
-Baland+ 2011 `2011A&A...530A.141B`)은 다음을 씁니다.
+정유체 형상 계수 J₂와 C̄₂₂, 정규화 관성모멘트 C̃ ≡ C/MR²을 써서 위성 문헌(Bills 2005 [`2005Icar..175..233B`](https://ui.adsabs.harvard.edu/abs/2005Icar..175..233B);
+Baland+ 2011 [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A...530A.141B))은 다음을 씁니다.
 
     α_syn = (3/2) · n · ( J₂ + C̄₂₂ ) / (C/MR²)                    (6)
 
@@ -82,7 +82,7 @@ Baland+ 2011 `2011A&A...530A.141B`)은 다음을 씁니다.
 > (J₂ + C̄₂₂)/C̃ (6)을 씁니다. 정유체 동기 천체는 C̄₂₂ = 0.3·J₂이므로 둘은 1.3 J₂ 대 1.6 J₂로 갈려
 > α에서 ~20 %, 따라서 ε에서 ~20 %의 폭이 생깁니다. **(6)(Baland/Bills)을 채택합니다**. 측정된 위성으로
 > 캘리브레이션된 값이기 때문입니다. ±20 %는 모델링 계통 오차로 싣고, 정확한 계수는 사용 시점에
-> `2011A&A...530A.141B` / `2005Icar..175..233B`에서 확인하십시오.
+> [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A...530A.141B) / [`2005Icar..175..233B`](https://ui.adsabs.harvard.edu/abs/2005Icar..175..233B)에서 확인하십시오.
 
 ω = n이면 n²/ω = n이 되어 고정 천체의 α는 빠른 회전체보다 훨씬 작고, (J₂ + C̄₂₂)에 비례해 스케일합니다.
 고정 천체에서 이 값은 궤도가 조여들수록 *커집니다*(figure 문서 §3: J₂ ≈ q_s, C̄₂₂ ≈ 0.3 J₂). 그래서
@@ -90,7 +90,7 @@ Baland+ 2011 `2011A&A...530A.141B`)은 다음을 씁니다.
 
 ## 4. Getting the orbital nodal rate g
 
-**(a) 다중 행성계의 행성: Laplace–Lagrange 세속 이론**(Murray & Dermott 1999 `1999ssd..book.....M`,
+**(a) 다중 행성계의 행성: Laplace–Lagrange 세속 이론**(Murray & Dermott 1999 [`1999ssd..book.....M`](https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M),
 7장). 승교점 진동수 {g_i}는 경사 상호작용 행렬 B의 고유값입니다. 최저차는 이렇습니다.
 
     B_jk = +(1/4) n_j · [m_k/(M⋆+m_j)] · α_jk · ᾱ_jk · b^(1)_{3/2}(α_jk)
@@ -98,7 +98,7 @@ Baland+ 2011 `2011A&A...530A.141B`)은 다음을 씁니다.
 
 α_jk = 장반경 비(작은 쪽/큰 쪽), b^(1)_{3/2}는 Laplace 계수입니다. **입력**: 이웃 질량 + 장반경 + 주성
 질량. 지배 모드의 {g, I}를 씁니다. **공명 사슬**(예: TRAPPIST-1)에서는 Laplace–Lagrange가 무너지므로 →
-직접 **N-body 승교점 진동수 분석**을 씁니다(Millholland+ 2024 `2024ApJ...961..203M`, [arXiv:2311.17908](https://arxiv.org/abs/2311.17908)).
+직접 **N-body 승교점 진동수 분석**을 씁니다(Millholland+ 2024 [`2024ApJ...961..203M`](https://ui.adsabs.harvard.edu/abs/2024ApJ...961..203M), [arXiv:2311.17908](https://arxiv.org/abs/2311.17908)).
 
 **(b) 근접 위성: 모행성의 편평도 J₂가 이끔**(Murray & Dermott 1999).
 
@@ -111,11 +111,11 @@ J₂ 항)와 항성 둘레 궤도 사이의 균형점입니다. **입력**: 모�
 
 | body | state | measured obliquity | source | hydrostatic recipe reproduces? |
 |---|---|---|---|---|
-| **Mercury** (3:2) | 1 | **2.11 ± 0.1 arcmin** (0.035°) | `2007Sci...316..710M` Margot+ 2007 | **예**: Cassini 관계 + 측정된 ε가 *바로* C/MR²을 추론하는 방법이며, J₂, C₂₂와 자기일관적입니다(`2009CeMDA.105..329M`). |
-| **Moon** | **2** | 황도에 6.7° (Laplace 평면 기준 ≈1.54°) | `1975Sci...189..377W` Ward 1975 | 프레임워크는 **예**, 형상은 **아니오**: Cassini-state 전이에서 나온 진짜 state-2 값이지만, 달의 **화석 팽대부**(J₂/C₂₂≈9≠10/3)가 정유체 α를 깨뜨립니다. 화석 플래그. |
-| **Titan** | 1 | ≈0.3° | `2010AJ....139..311S` Stiles+ 2010 | **아니오**: 강체 Titan은 ~2–3× 과소예측합니다. 이 값은 **지하 바다**(껍질의 Cassini-state 공명)를 요구합니다, Baland+ 2011 `2011A&A...530A.141B`. 비강체 플래그. |
-| **Io–Callisto** | 1 | ≈10⁻³–10⁻² deg (작지만 0은 아님) | `2005Icar..175..233B` Bills 2005 | **예**(강체); 액체 층이 이들을 이동시킵니다(`2012Icar..220..435B`). **고정 ≠ 0**을 확증합니다. |
-| **Enceladus** | 1 | ≈0.0015° (강체) | `2016Icar..268...12B` Baland+ 2016 | **예**; 바다가 있어도 ≪ 0.05°에 머뭅니다(`2011Icar..214..779C`). |
+| **Mercury** (3:2) | 1 | **2.11 ± 0.1 arcmin** (0.035°) | [`2007Sci...316..710M`](https://ui.adsabs.harvard.edu/abs/2007Sci...316..710M) Margot+ 2007 | **예**: Cassini 관계 + 측정된 ε가 *바로* C/MR²을 추론하는 방법이며, J₂, C₂₂와 자기일관적입니다([`2009CeMDA.105..329M`](https://ui.adsabs.harvard.edu/abs/2009CeMDA.105..329M)). |
+| **Moon** | **2** | 황도에 6.7° (Laplace 평면 기준 ≈1.54°) | [`1975Sci...189..377W`](https://ui.adsabs.harvard.edu/abs/1975Sci...189..377W) Ward 1975 | 프레임워크는 **예**, 형상은 **아니오**: Cassini-state 전이에서 나온 진짜 state-2 값이지만, 달의 **화석 팽대부**(J₂/C₂₂≈9≠10/3)가 정유체 α를 깨뜨립니다. 화석 플래그. |
+| **Titan** | 1 | ≈0.3° | [`2010AJ....139..311S`](https://ui.adsabs.harvard.edu/abs/2010AJ....139..311S) Stiles+ 2010 | **아니오**: 강체 Titan은 ~2–3× 과소예측합니다. 이 값은 **지하 바다**(껍질의 Cassini-state 공명)를 요구합니다, Baland+ 2011 [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A...530A.141B). 비강체 플래그. |
+| **Io–Callisto** | 1 | ≈10⁻³–10⁻² deg (작지만 0은 아님) | [`2005Icar..175..233B`](https://ui.adsabs.harvard.edu/abs/2005Icar..175..233B) Bills 2005 | **예**(강체); 액체 층이 이들을 이동시킵니다([`2012Icar..220..435B`](https://ui.adsabs.harvard.edu/abs/2012Icar..220..435B)). **고정 ≠ 0**을 확증합니다. |
+| **Enceladus** | 1 | ≈0.0015° (강체) | [`2016Icar..268...12B`](https://ui.adsabs.harvard.edu/abs/2016Icar..268...12B) Baland+ 2016 | **예**; 바다가 있어도 ≪ 0.05°에 머뭅니다([`2011Icar..214..779C`](https://ui.adsabs.harvard.edu/abs/2011Icar..214..779C)). |
 
 **핵심**: 잘 측정된 동기 천체는 예외 없이 *0이 아닌* Cassini state 1에 앉아 있습니다(Mercury 0.035°,
 Galilean 위성 10⁻³–10⁻² deg, 바다 포함 Titan 0.3°), **"정확히 0"은 결코 옳지 않지만**, 공명(Moon =
@@ -127,7 +127,7 @@ state 2)이나 분리된 바다(Titan)가 끼어들지 않는 한 크기는 1도
   → 큰 α_syn → (4)에 의해 |g|/α ≈ 1 공명에서 멀면 **ε₁은 1도 미만**입니다. Millholland+ 2024는 TRAPPIST-1
   행성 대부분이 ε ≈ 0일 공산이 크고 **행성 d가 가능한 예외**라고 봅니다. 기본값: 0으로 가정하지 말고
   ε ≈ 0.01–1°를 계산합니다.
-- **공명으로 증폭된 state 2는 실재합니다.** Guerrero+ 2024 `2024ApJ...975..256G`: 알려진 M 왜성 다중
+- **공명으로 증폭된 state 2는 실재합니다.** Guerrero+ 2024 [`2024ApJ...975..256G`](https://ui.adsabs.harvard.edu/abs/2024ApJ...975..256G): 알려진 M 왜성 다중
   행성계 280개 중 **~75 %의 행성이 안정한 고-obliquity state 2에 포획될 *수* 있으며**, 유효 고정을 깨고
   실제 낮밤 주기를 만듭니다. *게임플레이로 흥미로운*(interesting-first) 분기입니다. 천체마다 |g|/α가
   임계 (2) 근처인지 표시하고, 그렇다면 수십 도의 문서화된 ε를 정당하게 채택할 수 있습니다.

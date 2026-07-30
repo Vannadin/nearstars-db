@@ -205,13 +205,13 @@ d is purely a hot-rocky visual destination for player exploration.
 
 - **2503.08095** — Basant R. et al. 2025, *Four Sub-Earth Planets
   Orbiting Barnard's Star from MAROON-X and ESPRESSO*
-  (`2025ApJ...982L...1B`). The MAROON-X confirmation paper and the source
+  ([`2025ApJ...982L...1B`](https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B)). The MAROON-X confirmation paper and the source
   of every load-bearing orbital/bulk value: P = 2.3402 ± 0.0003 d,
   M sin i = 0.263 ± 0.024 M⊕, a = 0.0188 ± 0.0003 AU, e = 0.04
   (−0.03/+0.05), ω = −51.8°, T_eq = 483 K (A=0, full redistribution);
   SPOCK stability over 10⁹ orbits with e < 0.02 favored, HZ at P = 10–42 d.
 - **[2410.00569](https://arxiv.org/abs/2410.00569)** — González Hernández J. I. et al. 2024, *A sub-Earth-mass
-  planet orbiting Barnard's star* (`2024A&A...690A..79G`). The ESPRESSO
+  planet orbiting Barnard's star* ([`2024A&A...690A..79G`](https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G)). The ESPRESSO
   discovery paper; first identification of the d candidate. Activity cycle
   3200 d, rotation 140 d; reports log(L_X/L_bol) ≈ −5.8 (Chandra, citing
   France 2020).

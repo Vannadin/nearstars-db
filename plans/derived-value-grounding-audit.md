@@ -23,7 +23,7 @@ application + ko mirrors delegated and verified (deterministic recompute + every
 cited arXiv ID confirmed in `_papers/`).
 
 - **1a giants (method gap).** Cached **Reiners & Christensen 2010** (`1007.1514`,
-  energy-flux dynamo scaling, built on Christensen et al. 2009 `2009Natur.457..167C`).
+  energy-flux dynamo scaling, built on Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C)).
   Wrote the reusable worked method `docs/reference/planetary-dynamo-scaling.md` (+ko):
   `B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93`, validated against the paper's
   own Jupiter (9 G) and ε Eri b (19 G) rows. Re-derived the three **true giants** off
@@ -45,7 +45,7 @@ cited arXiv ID confirmed in `_papers/`).
   were actually cached; dropped the false "not in cache"). HD 69830 c/d B-field
   confidence medium/high→**low**. Barnard b/c/d/e dipoles tagged "Mercury analogy, not
   dynamo-modeled". astrosphere v_wind=400 km/s + Wood 2002/2005 noted at each
-  point-of-use. Dohnanyi 1969 (`1969JGR....74.2531D`) cited for q=3.5; ρ=2.5 flagged.
+  point-of-use. Dohnanyi 1969 ([`1969JGR....74.2531D`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.2531D)) cited for q=3.5; ρ=2.5 flagged.
 - **Tier 3.** τ Cet e/f "RM22 (Reiners-Christensen)" de-conflated → "RM22
   (Rodríguez-Mozos & Moya 2022, `2203.01065`)".
 
@@ -63,7 +63,7 @@ original sweep missed were then grounded:
 
 - **Radiogenic heat (`radiogenic_heat_w_m2`, ~10 bodies)** — was Earth-analog
   mass-scaled with no cite (a SPEC "paper/synth" field → contract violation).
-  Grounded on Wang et al. 2020 (`2020A&A...644A..19W`, Eu→Th/U radiogenic
+  Grounded on Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W), Eu→Th/U radiogenic
   diagnosis) with explicit Earth-analog framing (host abundances not curated);
   confidence → low. tau-cet-e/f/g/h, 61-vir-b, hd-219134-b/c, trappist-1-f/g/h.
 - **Day-night / greenhouse temp deltas (~8 bodies)** — specific K offsets above
@@ -116,7 +116,7 @@ cited paper actually resolves in `_papers/` cache** (the phantom-citation guard)
 > was guarding against: conflating "we don't have it cached / couldn't find it"
 > with "it doesn't exist." Verified 2026-06-20:
 > - **Yadav & Thorngren 2017** = "Estimating the magnetic field strength in hot
->   Jupiters", ApJL 849, L12, **arXiv `1709.05676`** (`2017ApJ...849L..12Y`) —
+>   Jupiters", ApJL 849, L12, **arXiv `1709.05676`** ([`2017ApJ...849L..12Y`](https://ui.adsabs.harvard.edu/abs/2017ApJ...849L..12Y)) —
 >   a real, on-point paper applying Christensen 2009 energy-flux scaling to
 >   inflated exoplanets. Now **cached**. The au-mic-b/c/e issue was a *scope*
 >   stretch (hot-Jupiter scaling extrapolated to sub-Neptunes), not fabrication.
@@ -145,7 +145,7 @@ cited paper actually resolves in `_papers/` cache** (the phantom-citation guard)
 | AU Mic e | 30 µT | same Yadav & Thorngren 2017 (real, uncached, out-of-regime) | uncached + out-of-regime |
 
 **Fix:** ground on a real, cached dynamo scaling — **Christensen, Holzwarth & Reiners
-2009** (energy-flux scaling, `2009Natur.457..167C`) or Reiners & Christensen 2010
+2009** (energy-flux scaling, [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C)) or Reiners & Christensen 2010
 (cache it properly) — recomputing field from energy flux, NOT linear mass; OR demote
 to an honest low-confidence analog (the compliant pattern, below). Note the dipole
 moments are *internally* consistent (ε Eri 13200 = 0.66×20000), so it's the method,

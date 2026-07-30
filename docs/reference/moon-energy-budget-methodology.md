@@ -244,48 +244,48 @@ this depth-dependent term. Fixing A b III's ocean depth is the trigger to comput
 ## Citations
 
 - **[Heller & Barnes 2013](https://arxiv.org/abs/1209.5323)**, Astrobiology 13, 18
-  (`2013AsBio..13...18H`). The four-term exomoon budget (planetary reflection, thermal
+  ([`2013AsBio..13...18H`](https://ui.adsabs.harvard.edu/abs/2013AsBio..13...18H)). The four-term exomoon budget (planetary reflection, thermal
   emission, eclipses, tidal heating) and the circumplanetary habitable edge; also the
   >10 planetary-radii illustration. *ar5iv extraction failed*; the statements used here
   are from the paper's own ADS abstract.
 - **[Dobos, Heller & Turner 2017](https://arxiv.org/abs/1703.02447)**, A&A 601, A91
-  (`2017A&A...601A..91D`). The same four energy sources as an exomoon habitable-zone
+  ([`2017A&A...601A..91D`](https://ui.adsabs.harvard.edu/abs/2017A%26A...601A..91D)). The same four energy sources as an exomoon habitable-zone
   calculation, following Heller et al. 2014 Eq. 4; also the ~100 W/m² tidal marker used in
   their habitability shading. **Cached** at `docs/phase3/_papers/1703.02447.md`.
 - **[Barnes 2013](https://arxiv.org/abs/1203.5104)**, Astrobiology 13, 225
-  (`2013AsBio..13..225B`). "Tidal Venuses": tidal heating driving a runaway greenhouse long
+  ([`2013AsBio..13..225B`](https://ui.adsabs.harvard.edu/abs/2013AsBio..13..225B)). "Tidal Venuses": tidal heating driving a runaway greenhouse long
   enough to desiccate a world, and the resulting revision to the habitable zone for
   non-circular orbits. Numbers from the ADS abstract.
 - **[Heller 2015](https://arxiv.org/abs/1311.0292)**, Int. J. Astrobiology 14, 335
-  (`2015IJAsB..14..335H`). Runaway greenhouse on exomoons from irradiation by hot, young
+  ([`2015IJAsB..14..335H`](https://ui.adsabs.harvard.edu/abs/2015IJAsB..14..335H)). Runaway greenhouse on exomoons from irradiation by hot, young
   giant planets — the reason a constant parent temperature is a validity limit here.
 - **[Kopparapu 2013](https://arxiv.org/abs/1301.6674)**, ApJ 765, 131
-  (`2013ApJ...765..131K`). Supplies the moist-greenhouse limit used as the first-order
+  ([`2013ApJ...765..131K`](https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K)). Supplies the moist-greenhouse limit used as the first-order
   runaway ceiling. **Cached** at `docs/phase3/_papers/1301.6674.md`.
 - **[Tyler 2008](https://ui.adsabs.harvard.edu/abs/2008Natur.456..770T)**, Nature 456, 770
-  (`2008Natur.456..770T`). Obliquity-driven Rossby-wave resonance in moon oceans; the
+  ([`2008Natur.456..770T`](https://ui.adsabs.harvard.edu/abs/2008Natur.456..770T)). Obliquity-driven Rossby-wave resonance in moon oceans; the
   2000× flow-energy result for Europa. *Nature letter, no preprint*: bibcode, numbers from
   the ADS abstract.
 - **[Matsuyama 2014](https://ui.adsabs.harvard.edu/abs/2014Icar..242...11M)**, Icarus 242,
-  11 (`2014Icar..242...11M`). Ocean loading, self-attraction and solid-region deformation
+  11 ([`2014Icar..242...11M`](https://ui.adsabs.harvard.edu/abs/2014Icar..242...11M)). Ocean loading, self-attraction and solid-region deformation
   shift the resonant ocean thicknesses by orders of magnitude; at Cassini-state obliquity
   Enceladus's obliquity-tide flux falls "many orders of magnitude" below observed, while the
   resonant eccentricity tide can explain the observed heat flow. This is the paper that
   decides which ocean forcing matters. No preprint; numbers from the ADS abstract.
 - **[Matsuyama 2018](https://arxiv.org/abs/1804.07727)**, Icarus 312, 208
-  (`2018Icar..312..208M`). Ocean tidal heating with solid shells; thin-shell approximation
+  ([`2018Icar..312..208M`](https://ui.adsabs.harvard.edu/abs/2018Icar..312..208M)). Ocean tidal heating with solid shells; thin-shell approximation
   accurate to a few percent for eccentricity tides. The method to use once an ocean depth is
   chosen. **Cached** at `docs/phase3/_papers/1804.07727.md`.
 - **[Beuthe 2016](https://arxiv.org/abs/1608.08488)**, Icarus 280, 278
-  (`2016Icar..280..278B`). Crustal control of dissipative ocean tides; subsurface-to-surface
+  ([`2016Icar..280..278B`](https://ui.adsabs.harvard.edu/abs/2016Icar..280..278B)). Crustal control of dissipative ocean tides; subsurface-to-surface
   ocean scaling rules. Numbers from the ADS abstract.
 - **[Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)**,
-  Icarus 319, 68 (`2019Icar..319...68H`). Non-linear bottom drag with an ice shell;
+  Icarus 319, 68 ([`2019Icar..319...68H`](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)). Non-linear bottom drag with an ice shell;
   free-surface dissipation scaling laws extended to shells and benchmarked to within 10 %;
   concludes obliquity tides dominate icy-satellite ocean heating *where the obliquity
   exists*. No preprint; numbers from the ADS abstract.
 - **[Hay & Matsuyama 2017](https://ui.adsabs.harvard.edu/abs/2017Icar..281..342H)**,
-  Icarus 281, 342 (`2017Icar..281..342H`). Numerical Laplace-tidal-equation modelling with
+  Icarus 281, 342 ([`2017Icar..281..342H`](https://ui.adsabs.harvard.edu/abs/2017Icar..281..342H)). Numerical Laplace-tidal-equation modelling with
   bottom drag; obliquity Rossby resonance independent of ocean thickness for thick oceans.
   No preprint; bibcode only.
 - **Peale, Cassen & Reynolds 1979** — the tidal term itself, via

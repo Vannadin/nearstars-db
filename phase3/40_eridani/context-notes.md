@@ -6,9 +6,9 @@ Append-only decision log. 2026-05-29.
 
 - Triple: A (K0.5 V, V=4.43) + B (DA2.9 WD, V=9.53) + C (M4.5 Ve, V=11.17 flare star DY Eri)
 - Distance: 5.01 pc (Gaia DR3 + Hipparcos van Leeuwen 2007)
-- BC pair: 230.29 yr orbit (Mason, Hartkopf & Miles 2017 `2017AJ....154..200M`, e=0.4294, a=6.93")
+- BC pair: 230.29 yr orbit (Mason, Hartkopf & Miles 2017 [`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M), e=0.4294, a=6.93")
 - A-BC: ~83" separation, ~8000 yr outer orbit (Tokovinin MSC 2018, unfitted)
-- Planet: HD 26965 b ("Vulcan", Ma 2018) refuted (Burrows 2024 `2024AJ....167..243B` — 42 d signal is stellar rotation/activity, multi-instrument 16-yr RV)
+- Planet: HD 26965 b ("Vulcan", Ma 2018) refuted (Burrows 2024 [`2024AJ....167..243B`](https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B) — 42 d signal is stellar rotation/activity, multi-instrument 16-yr RV)
 - Disk: none known
 - System age: ~1.8 Gyr total (Bond 2017 §6.2 IFMR-derived; cooling age 122 Myr for B)
 
@@ -22,20 +22,20 @@ Known starting paper-actual values from 2026-05-27 prep notes (UNVERIFIED — ag
 
 | Property | 2026-05-27 candidate | Reference | Verify? |
 |---|---|---|---|
-| Mass | 0.78 ± 0.08 Msun | Ma 2018 `2018MNRAS.480.2411M` (evolutionary_model) | Re-fetch Ma 2018; this is the refuted planet paper |
-| Radius | 0.804 ± 0.006 Rsun | Rains 2020 `2020MNRAS.493.2377R` (interferometry VLTI/PIONIER) | Verify 40 Eri A is in Rains 2020 sample — Rains 2020 is 16 *southern* stars, 40 Eri A dec is -7° |
+| Mass | 0.78 ± 0.08 Msun | Ma 2018 [`2018MNRAS.480.2411M`](https://ui.adsabs.harvard.edu/abs/2018MNRAS.480.2411M) (evolutionary_model) | Re-fetch Ma 2018; this is the refuted planet paper |
+| Radius | 0.804 ± 0.006 Rsun | Rains 2020 [`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R) (interferometry VLTI/PIONIER) | Verify 40 Eri A is in Rains 2020 sample — Rains 2020 is 16 *southern* stars, 40 Eri A dec is -7° |
 | Teff | 5126 ± 30 K | Rains 2020 (interferometric θ_LD + F_bol) | Same — verify presence in sample |
 | Luminosity | 0.400 ± 0.010 Lsun | Rains 2020 (bolometric_flux) | Same |
 | Age | 6.9 ± 4.7 Gyr | Ma 2018 (isochrone Y-Y) | Verify; system-coeval ~1.8 Gyr from B WD conflicts strongly — this is one of the key Phase 3 decisions |
-| [Fe/H] | -0.29 ± 0.12 dex | Diaz 2018 `2018AJ....155..126D` (SPECIES high-res) | Verify |
-| P_rot | 42.0 ± 2.5 d | Burrows 2024 `2024AJ....167..243B` (photometric + activity, multi-instrument) | Verify in paper Table |
-| log R'HK | -4.99 | Jenkins 2011 `2011A&A...531A...8J` (log_rhk) | Verify |
+| [Fe/H] | -0.29 ± 0.12 dex | Diaz 2018 [`2018AJ....155..126D`](https://ui.adsabs.harvard.edu/abs/2018AJ....155..126D) (SPECIES high-res) | Verify |
+| P_rot | 42.0 ± 2.5 d | Burrows 2024 [`2024AJ....167..243B`](https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B) (photometric + activity, multi-instrument) | Verify in paper Table |
+| log R'HK | -4.99 | Jenkins 2011 [`2011A&A...531A...8J`](https://ui.adsabs.harvard.edu/abs/2011A%26A...531A...8J) (log_rhk) | Verify |
 
 Critical cross-checks:
 1. **Rains 2020 sample membership**: paper is "16 southern stars VLTI/PIONIER" — 40 Eri A dec -7°39' is *just barely* southern. Verify by fetching Table 1 of Rains 2020.
 2. **Age inconsistency**: Ma 2018 isochrone 6.9 Gyr vs Bond 2017 system-coeval 1.8 Gyr from WD progenitor IFMR. This is a documented divergence — Phase 3 narrative must address.
 3. **Burrows 2024 P_rot vs activity**: same paper that refuted the Vulcan planet derives P_rot from the spurious signal — extract carefully.
-4. **Other interferometric candidates**: Boyajian et al. 2012 CHARA `2012ApJ...757..112B` — verify if 40 Eri A is in that sample (Northern hemisphere CHARA so likely yes).
+4. **Other interferometric candidates**: Boyajian et al. 2012 CHARA [`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B) — verify if 40 Eri A is in that sample (Northern hemisphere CHARA so likely yes).
 
 After Phase 2 done, agent A continues to Phase 3 synthesis (Decisions table + Surface/Atmosphere/Rotation/Visual sections, stellar template `docs/phase3/alpha-centauri-a.md`).
 
@@ -46,9 +46,9 @@ Agent B drafts `docs/phase3/40-eridani-b.md` directly.
 
 Stellar-Phase 3 specific fields for a WD:
 - No surface tint / habitable zone / atmosphere sections (radiative DA atmosphere, no convective envelope, no chromospheric activity)
-- Cooling sequence: Bond 2017 `2017ApJ...848...16B` cooling age 122 Myr (thin H layer q_H ≈ 10⁻¹⁰)
+- Cooling sequence: Bond 2017 [`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B) cooling age 122 Myr (thin H layer q_H ≈ 10⁻¹⁰)
 - Total age: Bond 2017 IFMR-derived ~1.8 Gyr (progenitor M_initial ~1.8 Msun, pre-WD lifetime 1.7 Gyr)
-- Magnetic field: Landstreet & Bagnulo 2015 `2015A&A...580A.120L` upper limit <250 G
+- Magnetic field: Landstreet & Bagnulo 2015 [`2015A&A...580A.120L`](https://ui.adsabs.harvard.edu/abs/2015A%26A...580A.120L) upper limit <250 G
 - Spectral evolution: Bond 2017 §6 — currently DA, will mix into DC at lower Teff in distant future
 - Mass-radius: anchor for white-dwarf MRR (CO core thin H envelope) per Bond 2017 §6.3
 - Companion: paired with A at 83" (no binary_orbit cfg entry, A-BC unresolved) + with C at ~33 AU mean orbital separation (BC orbit Mason 2017)
@@ -116,10 +116,10 @@ Per Phase 3 skill Step 9.0. Every Decisions row planned for `docs/phase3/40-erid
 - **Age alt 1.8 Gyr (Bond 2017 IFMR-derived)** — VERIFIED at §6.2 (initial mass ~1.8 Msun, MS lifetime 1.7 Gyr + cooling age 122 Myr). Paper states "earlier concerns about an excessive age...appear to be resolved". No formal uncertainty in section text.
 - **[Fe/H] -0.29 ± 0.12 (Diaz 2018)** — VERIFIED at SPECIES Table 1. KEPT recommended.
 - **[Fe/H] alt -0.42 ± 0.04 (Ma 2018)** — VERIFIED at Ma 2018 Table 2; CORRECTS the prep notes which conflated -0.29 with Ma 2018.
-- **[Fe/H] alt -0.31 ± 0.10 (Bensby 2014)** — paper-stated value retained (paper-level verification deferred due to no direct table access; bibcode 2014A&A...562A..71B confirmed correct title).
+- **[Fe/H] alt -0.31 ± 0.10 (Bensby 2014)** — paper-stated value retained (paper-level verification deferred due to no direct table access; bibcode [`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B) confirmed correct title).
 - **P_rot 42 d (Burrows 2024)** — VERIFIED at paper abstract + multiple section quotes ("~42 days", "stellar rotation period of ∼42 days"). REMOVED fabricated ±2.5 d uncertainty (paper does not quote a formal σ). Method `photometric_variability` retained because Burrows' inference is from line-RV + activity-correlation periodograms.
-- **log R'HK -4.99 (Jenkins 2011)** — bibcode 2011A&A...531A...8J VERIFIED (paper title "Chromospheric activities and kinematics for solar type dwarfs and subgiants"). Specific HD 26965 row not table-verified (CDS table access limited in this session); value matches prep notes and well-known literature usage. Caveat in meta_notes.
-- **log R'HK alt -4.94 (Henry 1996)** — bibcode 1996AJ....111..439H confirmed correct title ("A Survey of Ca II H and K Chromospheric Emission in Southern Solar-Type Stars"). Same paper-table caveat.
+- **log R'HK -4.99 (Jenkins 2011)** — bibcode [`2011A&A...531A...8J`](https://ui.adsabs.harvard.edu/abs/2011A%26A...531A...8J) VERIFIED (paper title "Chromospheric activities and kinematics for solar type dwarfs and subgiants"). Specific HD 26965 row not table-verified (CDS table access limited in this session); value matches prep notes and well-known literature usage. Caveat in meta_notes.
+- **log R'HK alt -4.94 (Henry 1996)** — bibcode [`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H) confirmed correct title ("A Survey of Ca II H and K Chromospheric Emission in Southern Solar-Type Stars"). Same paper-table caveat.
 
 ### Phase 3 Decisions row classification (16 rows)
 
@@ -187,7 +187,7 @@ entries (orbit lives outside `stellar_props_curated.json`), so no DB
 patch is needed from Phase 3 — flag only.
 
 Mason 2021 update note: a newer orbit fit (Mason et al. 2021,
-`2021AJ....162...53M`, P = 233.20 ± 0.65 yr, e = 0.4141 ± 0.0072,
+[`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M), P = 233.20 ± 0.65 yr, e = 0.4141 ± 0.0072,
 a = 6.88788 ± 0.03488″) supersedes Mason 2017 in the Sixth Orbit
 Catalog and on Wikipedia. The Phase 3 synthesis uses Mason 2017
 because (1) the task brief and Phase 2 prep both refer to Mason 2017,
@@ -259,7 +259,7 @@ Notes:
   backlog (YZ Cet flux-tube class), deliberately NOT emitted.
 - Citation correction caught by Step-10 discipline: my from-memory ADS
   bibcodes for Boyajian 2012 / Bond 2017 were wrong; _bib registry
-  gives arXiv 1208.2431 / 1709.00478 — links fixed in both reports.
+  gives arXiv [1208.2431](https://arxiv.org/abs/1208.2431) / [1709.00478](https://arxiv.org/abs/1709.00478) — links fixed in both reports.
 - ko mirrors delegated to subagents; block parity self-verified (c: 33,
   d: 35 blocks). One agent misreported its own row count — parity
   script, not agent self-report, is the authority (again).

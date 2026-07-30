@@ -228,7 +228,7 @@ lower-inclination edge.
 
 - **Damasso M. et al. 2020** — *A low-mass planet candidate orbiting
   Proxima Centauri at a distance of 1.5 AU*, Sci. Adv. 6, eaax7467
-  (`2020SciA....6.7467D`, doi:10.1126/sciadv.aax7467). **The only primary
+  ([`2020SciA....6.7467D`](https://ui.adsabs.harvard.edu/abs/2020SciA....6.7467D), doi:10.1126/sciadv.aax7467). **The only primary
   source.** RV candidate: P = 1900 (+96/−82) d, a = 1.48 ± 0.08 AU,
   m sin i = 5.8 ± 1.9 M⊕, T_eq ≈ 39 (+16/−18) K, e fixed 0 (free run
   e = 0.41, not significant). Gaia–Hipparcos PMa compatible with a true

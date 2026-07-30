@@ -299,25 +299,25 @@ per-system tables: run `prototypes/warp_exotic_matter.py`.
 ADS-verified (citation_count-ranked). Format: tag — author (year), *title* —
 `bibcode` / arXiv. Citation counts as ADS reported on 2026-06-30.
 
-- <a id="A94"></a>**[A94]** Alcubierre (1994), *The warp drive: hyper-fast travel within general relativity* — `1994CQGra..11L..73A` / arXiv:gr-qc/0009013 — 351 cites
-- <a id="LV04"></a>**[LV04]** Lobo & Visser (2004), *Fundamental limitations on 'warp drive' spacetimes* — `2004CQGra..21.5871L` / arXiv:gr-qc/0406083 — 106 cites
-- <a id="N02"></a>**[N02]** Natário (2002), *Warp drive with zero expansion* — `2002CQGra..19.1157N` / arXiv:gr-qc/0110086 — 73 cites
-- <a id="H97"></a>**[H97]** Hiscock (1997), *Quantum effects in the Alcubierre warp-drive spacetime* — `1997CQGra..14L.183H` / arXiv:gr-qc/9707024 — 56 cites
-- <a id="PF97"></a>**[PF97]** Pfenning & Ford (1997), *The unphysical nature of 'warp drive'* — `1997CQGra..14.1743P` / arXiv:gr-qc/9702026 — 139 cites
-- <a id="P98"></a>**[P98]** Pfenning (1998, PhD thesis), *Quantum inequality restrictions on negative energy densities in curved spacetimes* — `1998PhDT........38P` / arXiv:gr-qc/9805037 — 42 cites
-- <a id="VdB99"></a>**[VdB99]** Van Den Broeck (1999), *A 'warp drive' with more reasonable total energy requirements* — `1999CQGra..16.3973V` / arXiv:gr-qc/9905084 — 88 cites
-- <a id="K98"></a>**[K98]** Krasnikov (1998), *Hyperfast travel in general relativity* — `1998PhRvD..57.4760K` / arXiv:gr-qc/9511068 — 104 cites
-- <a id="ER97"></a>**[ER97]** Everett & Roman (1997), *Superluminal subway: the Krasnikov tube* — `1997PhRvD..56.2100E` / arXiv:gr-qc/9702049 — 92 cites
-- <a id="K03"></a>**[K03]** Krasnikov (2003), *Quantum inequalities do not forbid spacetime shortcuts* — `2003PhRvD..67j4013K` / arXiv:gr-qc/0207057 — 21 cites
-- <a id="W03"></a>**[W03]** White (2003), *A discussion of space-time metric engineering* — `2003GReGr..35.2025W` — 17 cites *(no arXiv; applied/fringe)*
-- <a id="W13"></a>**[W13]** White (2013), *Warp field mechanics 101* — `2013JBIS...66..242W` — 8 cites *(no arXiv; applied/fringe; no numeric energy figure in abstract)*
-- <a id="W21"></a>**[W21]** White et al. (2021), *Worldline numerics applied to custom Casimir geometry generates unanticipated intersection with Alcubierre warp metric* — `2021EPJC...81..677W` — 7 cites *(no arXiv; applied/fringe)*
-- <a id="BM21"></a>**[BM21]** Bobrick & Martire (2021), *Introducing physical warp drives* — `2021CQGra..38j5009B` / [arXiv:2102.06824](https://arxiv.org/abs/2102.06824) — 40 cites
-- <a id="L21"></a>**[L21]** Lentz (2021), *Breaking the warp barrier: hyper-fast solitons in Einstein-Maxwell-plasma theory* — `2021CQGra..38g5015L` / [arXiv:2006.07125](https://arxiv.org/abs/2006.07125) — 30 cites
-- <a id="FH21"></a>**[FH21]** Fell & Heisenberg (2021), *Positive energy warp drive from hidden geometric structures* — `2021CQGra..38o5020F` / [arXiv:2104.06488](https://arxiv.org/abs/2104.06488) — 26 cites
-- <a id="F24"></a>**[F24]** Fuchs et al. (2024), *Constant velocity physical warp drive solution* — `2024CQGra..41i5013F` / [arXiv:2405.02709](https://arxiv.org/abs/2405.02709) — 12 cites
-- <a id="SSV22"></a>**[SSV22]** Santiago, Schuster & Visser (2022), *Generic warp drives violate the null energy condition* — `2022PhRvD.105f4038S` / [arXiv:2105.03079](https://arxiv.org/abs/2105.03079) — 48 cites
-- <a id="SSV23"></a>**[SSV23]** Schuster, Santiago & Visser (2023), *ADM mass in warp drive spacetimes* — `2023GReGr..55...14S` / [arXiv:2205.15950](https://arxiv.org/abs/2205.15950) — 13 cites
+- <a id="A94"></a>**[A94]** Alcubierre (1994), *The warp drive: hyper-fast travel within general relativity* — [`1994CQGra..11L..73A`](https://ui.adsabs.harvard.edu/abs/1994CQGra..11L..73A) / arXiv:gr-qc/0009013 — 351 cites
+- <a id="LV04"></a>**[LV04]** Lobo & Visser (2004), *Fundamental limitations on 'warp drive' spacetimes* — [`2004CQGra..21.5871L`](https://ui.adsabs.harvard.edu/abs/2004CQGra..21.5871L) / arXiv:gr-qc/0406083 — 106 cites
+- <a id="N02"></a>**[N02]** Natário (2002), *Warp drive with zero expansion* — [`2002CQGra..19.1157N`](https://ui.adsabs.harvard.edu/abs/2002CQGra..19.1157N) / arXiv:gr-qc/0110086 — 73 cites
+- <a id="H97"></a>**[H97]** Hiscock (1997), *Quantum effects in the Alcubierre warp-drive spacetime* — [`1997CQGra..14L.183H`](https://ui.adsabs.harvard.edu/abs/1997CQGra..14L.183H) / arXiv:gr-qc/9707024 — 56 cites
+- <a id="PF97"></a>**[PF97]** Pfenning & Ford (1997), *The unphysical nature of 'warp drive'* — [`1997CQGra..14.1743P`](https://ui.adsabs.harvard.edu/abs/1997CQGra..14.1743P) / arXiv:gr-qc/9702026 — 139 cites
+- <a id="P98"></a>**[P98]** Pfenning (1998, PhD thesis), *Quantum inequality restrictions on negative energy densities in curved spacetimes* — [`1998PhDT........38P`](https://ui.adsabs.harvard.edu/abs/1998PhDT........38P) / arXiv:gr-qc/9805037 — 42 cites
+- <a id="VdB99"></a>**[VdB99]** Van Den Broeck (1999), *A 'warp drive' with more reasonable total energy requirements* — [`1999CQGra..16.3973V`](https://ui.adsabs.harvard.edu/abs/1999CQGra..16.3973V) / arXiv:gr-qc/9905084 — 88 cites
+- <a id="K98"></a>**[K98]** Krasnikov (1998), *Hyperfast travel in general relativity* — [`1998PhRvD..57.4760K`](https://ui.adsabs.harvard.edu/abs/1998PhRvD..57.4760K) / arXiv:gr-qc/9511068 — 104 cites
+- <a id="ER97"></a>**[ER97]** Everett & Roman (1997), *Superluminal subway: the Krasnikov tube* — [`1997PhRvD..56.2100E`](https://ui.adsabs.harvard.edu/abs/1997PhRvD..56.2100E) / arXiv:gr-qc/9702049 — 92 cites
+- <a id="K03"></a>**[K03]** Krasnikov (2003), *Quantum inequalities do not forbid spacetime shortcuts* — [`2003PhRvD..67j4013K`](https://ui.adsabs.harvard.edu/abs/2003PhRvD..67j4013K) / arXiv:gr-qc/0207057 — 21 cites
+- <a id="W03"></a>**[W03]** White (2003), *A discussion of space-time metric engineering* — [`2003GReGr..35.2025W`](https://ui.adsabs.harvard.edu/abs/2003GReGr..35.2025W) — 17 cites *(no arXiv; applied/fringe)*
+- <a id="W13"></a>**[W13]** White (2013), *Warp field mechanics 101* — [`2013JBIS...66..242W`](https://ui.adsabs.harvard.edu/abs/2013JBIS...66..242W) — 8 cites *(no arXiv; applied/fringe; no numeric energy figure in abstract)*
+- <a id="W21"></a>**[W21]** White et al. (2021), *Worldline numerics applied to custom Casimir geometry generates unanticipated intersection with Alcubierre warp metric* — [`2021EPJC...81..677W`](https://ui.adsabs.harvard.edu/abs/2021EPJC...81..677W) — 7 cites *(no arXiv; applied/fringe)*
+- <a id="BM21"></a>**[BM21]** Bobrick & Martire (2021), *Introducing physical warp drives* — [`2021CQGra..38j5009B`](https://ui.adsabs.harvard.edu/abs/2021CQGra..38j5009B) / [arXiv:2102.06824](https://arxiv.org/abs/2102.06824) — 40 cites
+- <a id="L21"></a>**[L21]** Lentz (2021), *Breaking the warp barrier: hyper-fast solitons in Einstein-Maxwell-plasma theory* — [`2021CQGra..38g5015L`](https://ui.adsabs.harvard.edu/abs/2021CQGra..38g5015L) / [arXiv:2006.07125](https://arxiv.org/abs/2006.07125) — 30 cites
+- <a id="FH21"></a>**[FH21]** Fell & Heisenberg (2021), *Positive energy warp drive from hidden geometric structures* — [`2021CQGra..38o5020F`](https://ui.adsabs.harvard.edu/abs/2021CQGra..38o5020F) / [arXiv:2104.06488](https://arxiv.org/abs/2104.06488) — 26 cites
+- <a id="F24"></a>**[F24]** Fuchs et al. (2024), *Constant velocity physical warp drive solution* — [`2024CQGra..41i5013F`](https://ui.adsabs.harvard.edu/abs/2024CQGra..41i5013F) / [arXiv:2405.02709](https://arxiv.org/abs/2405.02709) — 12 cites
+- <a id="SSV22"></a>**[SSV22]** Santiago, Schuster & Visser (2022), *Generic warp drives violate the null energy condition* — [`2022PhRvD.105f4038S`](https://ui.adsabs.harvard.edu/abs/2022PhRvD.105f4038S) / [arXiv:2105.03079](https://arxiv.org/abs/2105.03079) — 48 cites
+- <a id="SSV23"></a>**[SSV23]** Schuster, Santiago & Visser (2023), *ADM mass in warp drive spacetimes* — [`2023GReGr..55...14S`](https://ui.adsabs.harvard.edu/abs/2023GReGr..55...14S) / [arXiv:2205.15950](https://arxiv.org/abs/2205.15950) — 13 cites
 
 ## Related
 

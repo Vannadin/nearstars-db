@@ -323,15 +323,15 @@ warmer cousin of TRAPPIST-1 e:
 
 - **Zechmeister M. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Two temperate Earth-mass planet candidates around
-  Teegarden's Star*, A&A 627, A49 (`2019A&A...627A..49Z`,
+  Teegarden's Star*, A&A 627, A49 ([`2019A&A...627A..49Z`](https://ui.adsabs.harvard.edu/abs/2019A%26A...627A..49Z),
   [arXiv:1906.07196](https://arxiv.org/abs/1906.07196)). Discovery of b and c. Initial mass and orbit.
 - **Dreizler S. et al. 2024** — *Teegarden's Star revisited*, A&A 684,
-  A117 (`2024A&A...684A.117D`, [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). Refined b orbit
+  A117 ([`2024A&A...684A.117D`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.117D), [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). Refined b orbit
   (P = 4.90634 d, e = 0.03, ω = 338°, msini = 1.16 M⊕, S = 1.08 S⊕,
   T_eq = 277 K at A=0.3, ESI 0.90) plus the SPECULOOS flare-frequency
   diagram.
 - **Wandel A. & Tal-Or L. 2019** — *On the Habitability of Teegarden's
-  Star planets*, ApJ 880, L21 (`2019ApJ...880L..21W`, [arXiv:1906.07704](https://arxiv.org/abs/1906.07704)).
+  Star planets*, ApJ 880, L21 ([`2019ApJ...880L..21W`](https://ui.adsabs.harvard.edu/abs/2019ApJ...880L..21W), [arXiv:1906.07704](https://arxiv.org/abs/1906.07704)).
   Analytic 1D habitability model — b habitable range H_atm = 0.32-3.7
   at f = 0.5; S(b) ≈ 1.15 S⊕.
 - **Boukrouche R., Caballero R., Lewis N. T. 2025** — *Near the
@@ -377,7 +377,7 @@ warmer cousin of TRAPPIST-1 e:
 - **Mandell A. et al. 2022** — MIRECLE mission concept; cited as PIE
   context.
 - **Hill M. L. et al. 2023** — Catalog of Habitable Zone Exoplanets
-  (`2023AJ....165...34H`, [arXiv:2304.13417](https://arxiv.org/abs/2304.13417)). Catalog-only entry; b
+  ([`2023AJ....165...34H`](https://ui.adsabs.harvard.edu/abs/2023AJ....165...34H), [arXiv:2304.13417](https://arxiv.org/abs/2304.13417)). Catalog-only entry; b
   ranks high but adds no measurement.
 
 ### Not read — no arXiv preprint or low-priority

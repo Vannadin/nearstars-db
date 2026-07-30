@@ -382,13 +382,13 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
 (ADS, at survey time) given for spot-checking.
 
 - **Bessell, M. S., Castelli, F. & Plez, B. (1998)**: *A&A* 333, 231. **No arXiv**
-  (bibcode `1998A&A...333..231B`). *Model atmospheres broad-band colors, bolometric
+  (bibcode [`1998A&A...333..231B`](https://ui.adsabs.harvard.edu/abs/1998A%26A...333..231B)). *Model atmospheres broad-band colors, bolometric
   corrections and temperature calibrations for O–M stars*: the standard precedent for
   turning a model-atmosphere SED into synthetic broadband colors and a Teff scale
   across the full O→M range. §2, §3. (1356 cites.)
 
 - **Pickles, A. J. (1998)**: *PASP* 110, 863. **No arXiv** (bibcode
-  `1998PASP..110..863P`). *A Stellar Spectral Flux Library: 1150–25000 Å*: the empirical
+  [`1998PASP..110..863P`](https://ui.adsabs.harvard.edu/abs/1998PASP..110..863P)). *A Stellar Spectral Flux Library: 1150–25000 Å*: the empirical
   stellar-spectral-flux library (O–M, dwarfs/giants) used as the **real observed SED**
   input for the M-dwarf color integration of §5: the M0V–M6V spectra are integrated
   through the §7 engine to give the computed ladder, with the Pickles G2V validating the
@@ -400,12 +400,12 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   [Fe/H])` → real optical SED for synthetic photometry. §3. (1801 cites.)
 
 - **Castelli, F. & Kurucz, R. L. (2003)**: IAU Symp. 210, A20. **arXiv:astro-ph/
-  0405087** (bibcode `2003IAUS..210P.A20C`). *New Grids of ATLAS9 Model Atmospheres*:
+  0405087** (bibcode [`2003IAUS..210P.A20C`](https://ui.adsabs.harvard.edu/abs/2003IAUS..210P.A20C)). *New Grids of ATLAS9 Model Atmospheres*:
   the LTE plane-parallel grids (with metal line blanketing) for FGK and hotter stars,
   the workhorse for solar-type colors. §3, §4. (1177 cites.)
 
 - **Allard, F., Homeier, D. & Freytag, B. (2011)**: ASP Conf. 448, 91.
-  **[arXiv:1011.5405](https://arxiv.org/abs/1011.5405)** (bibcode `2011ASPC..448...91A`). *Model Atmospheres From Very Low
+  **[arXiv:1011.5405](https://arxiv.org/abs/1011.5405)** (bibcode [`2011ASPC..448...91A`](https://ui.adsabs.harvard.edu/abs/2011ASPC..448...91A)). *Model Atmospheres From Very Low
   Mass Stars to Brown Dwarfs* (BT-Settl): the reference cool-dwarf/BD grid with the
   TiO/VO/H₂O molecular line lists and dust treatment that make the M-dwarf color
   correction quantitative. §3, §5. (481 cites.)

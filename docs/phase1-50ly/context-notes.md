@@ -78,7 +78,7 @@ Pre-bulk-fill backup saved at `/tmp/nearstars_backup/` (outside repo, no recursi
 
 ### 2026-05-19 — URL-encoded bibcodes in `st_refname`
 
-NASA Archive inconsistently encodes `&` in ADS URLs. Some rows ship literal `&` (e.g. `2024A&A...688A.112V` in `pl_refname`); others URL-encode it as `%26` (e.g. `2013A%26A...549A..48T` in `st_refname` for HD 40307). The original regex `[0-9A-Za-z\.\&\+\-]+` missed encoded ones, silently dropping A&A bibcodes for ~10+ hosts.
+NASA Archive inconsistently encodes `&` in ADS URLs. Some rows ship literal `&` (e.g. [`2024A&A...688A.112V`](https://ui.adsabs.harvard.edu/abs/2024A%26A...688A.112V) in `pl_refname`); others URL-encode it as `%26` (e.g. `2013A%26A...549A..48T` in `st_refname` for HD 40307). The original regex `[0-9A-Za-z\.\&\+\-]+` missed encoded ones, silently dropping A&A bibcodes for ~10+ hosts.
 
 **Fix:** added `%` to the regex character class and `urllib.parse.unquote()` on the captured group. Verified all 115 unique planet bibcodes and 114 host bibcodes now parse cleanly.
 

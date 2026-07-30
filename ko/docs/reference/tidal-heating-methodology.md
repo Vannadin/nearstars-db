@@ -39,7 +39,7 @@ Alpha Centauri A b I~III과 A b V(Dante·Hades·Pandora·Chaos)를 두고 네 �
 
 ## 1. 법칙: fixed-Q 조석가열 공식
 
-Peale, Cassen & Reynolds 1979 (*Science* 203, 892, `1979Sci...203..892P`)는, 보이저가
+Peale, Cassen & Reynolds 1979 (*Science* 203, 892, [`1979Sci...203..892P`](https://ui.adsabs.harvard.edu/abs/1979Sci...203..892P))는, 보이저가
 분출 장면을 촬영하기 며칠 전이라는 유명한 일화와 함께, Io가 조석 소산으로 녹아 있으리라
 예측했다. 그들의 일정 위상지연("fixed-Q") 결과는 지금도 1차 도구로 쓰인다. 섭동체 질량
 `M_p`를 도는, 장반경 `a`·이심률 `e`의 이심 궤도 위에서 반경 `R`로 동주기 자전하는 바디에
@@ -89,18 +89,18 @@ fixed-Q 형식은 *1차* 도구다. `k₂`와 `Q`를 상수로 다루는데, 이
 | **Io** | Jupiter | ~5.9 R_J | ~0.0041 | ~0.6–1.6 ×10¹⁴ W | ~2 W/m² (global) | k₂/Q ~ 0.015 (k₂≈0.3, Q≈20) |
 | **Enceladus** | Saturn | ~3.95 R_Sat | ~0.0047 | ~5–16 GW (≈10¹⁰ W) | ~5 GW from the SPT | k₂/Q ~ 0.002–0.01 (soft ice + ocean) |
 
-- **Io**는 calibration 앵커다. 적외선 복사측정(Veeder+ 1994 `1994JGR....9917095V`; Veeder+ 2012
-  `2012Icar..219..701V`)은 전구 열출력을 ~10¹⁴ W, 즉 지표 플럭스 ~2 W/m²로 잡는다. 지구의
-  ~0.08 W/m²보다 한 자릿수 높다. Lainey+ 2009(`2009Natur.459..957L`)는 천체측정으로 Io–Jupiter
+- **Io**는 calibration 앵커다. 적외선 복사측정(Veeder+ 1994 [`1994JGR....9917095V`](https://ui.adsabs.harvard.edu/abs/1994JGR....9917095V); Veeder+ 2012
+  [`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V))은 전구 열출력을 ~10¹⁴ W, 즉 지표 플럭스 ~2 W/m²로 잡는다. 지구의
+  ~0.08 W/m²보다 한 자릿수 높다. Lainey+ 2009([`2009Natur.459..957L`](https://ui.adsabs.harvard.edu/abs/2009Natur.459..957L))는 천체측정으로 Io–Jupiter
   계에서 *활동적인* 강한 소산을 확인해 고리를 닫았다. 공식이 요구하는 소산이 곧 궤도가 보여
   주는 소산이라는 것이다. Io의 `a`, `e`, `R`, `M_J`와 `k₂/Q ≈ 0.015`를 넣으면 공식은 ~10¹⁴ W를
   돌려준다. ✓
 - **Enceladus**는 저질량 바디 앵커다. 카시니는 활동적인 남극 열 이상과 플룸을 발견했고(Spencer+ 2006
-  `2006Sci...311.1401S`), Howett+ 2011(`2011JGRE..116.3003H`)은 남극 지형에서 ~15.8 GW를
-  측정했으며, 내인성 총량은 수 GW(~10¹⁰ W) 수준이다. Nimmo+ 2007(`2007Natur.447..289N`)은
+  [`2006Sci...311.1401S`](https://ui.adsabs.harvard.edu/abs/2006Sci...311.1401S)), Howett+ 2011([`2011JGRE..116.3003H`](https://ui.adsabs.harvard.edu/abs/2011JGRE..116.3003H))은 남극 지형에서 ~15.8 GW를
+  측정했으며, 내인성 총량은 수 GW(~10¹⁰ W) 수준이다. Nimmo+ 2007([`2007Natur.447..289N`](https://ui.adsabs.harvard.edu/abs/2007Natur.447..289N))은
   타이거 스트라이프를 따라 일어나는 전단 가열을 플룸의 원인으로 본다. Enceladus는 아주
   작아서(`R ≈ 252 km`) 그 `R⁵`이 Io의 ~10⁹배 작은데, soft-ice + ocean `k₂/Q`(Meyer & Wisdom
-  2007 `2007Icar..188..535M`)를 쓰면 공식이 ~GW 규모를 돌려준다. ✓
+  2007 [`2007Icar..188..535M`](https://ui.adsabs.harvard.edu/abs/2007Icar..188..535M))를 쓰면 공식이 ~GW 규모를 돌려준다. ✓
 
 calibration은 **Ė에서 네 자릿수**(10¹⁴ → 10¹⁰ W)와 반경에서 ~25배를 가로지르며, 동일한
 하나의 공식이 양쪽을 모두 포괄한다. 차수 수준 레시피가 건전하다는 증거가 바로 이것이다,
@@ -151,11 +151,11 @@ divergence**로 받아들였다. 물리적으로 도출된 피처가 명시적�
 
 그 펌프는 거의 언제나 다른 바디와의 **평균운동 공명**이다.
 
-- **Io**: Laplace 공명(Io:Europa:Ganymede 1:2:4). Yoder 1979(`1979Natur.279..767Y`)는
+- **Io**: Laplace 공명(Io:Europa:Ganymede 1:2:4). Yoder 1979([`1979Natur.279..767Y`](https://ui.adsabs.harvard.edu/abs/1979Natur.279..767Y))는
   Io의 조석가열이 이 공명을 *구동하고 잠그며*, 그 공명이 다시 감쇠에 맞서 Io의 `e ≈ 0.0041`을
   강제하는 과정을 보였다. 이것이 없으면 Io의 궤도는 원형화되고 화산활동도 사그라들 것이다.
 - **Enceladus**는 Dione와의 2:1 평균운동 공명이 `e ≈ 0.0047`을 강제한다(Meyer & Wisdom 2007
-  `2007Icar..188..535M`; Meyer & Wisdom 2008 `2008Icar..193..213M`). 작은 위성을 지질학적으로
+  [`2007Icar..188..535M`](https://ui.adsabs.harvard.edu/abs/2007Icar..188..535M); Meyer & Wisdom 2008 [`2008Icar..193..213M`](https://ui.adsabs.harvard.edu/abs/2008Icar..193..213M)). 작은 위성을 지질학적으로
   살아 있게 만드는 것이 바로 이 공명이다.
 
 실무 규칙은 이렇다. **지속적인 조석가열을 주장하려면 `e`를 유지하는 공명(또는 다른 강제력)을
@@ -186,13 +186,13 @@ fixed-Q 레시피가 애초에 옳은 도구인지를 결정하는 네 가지 �
    위성을 죽었다고 선언하기 전에 점탄성 모형으로 교차 점검하라.
 3. **점탄성 / 유변학 영역**: §1의 `Ė`가 융해 또는 바다 임계값 근처에 있을 때 fixed-Q 답은
    믿을 수 없으며, 진동수·온도 의존 **Maxwell / Andrade** 처리로 대체해야 한다. Segatz+ 1988
-   (`1988Icar...75..187S`, 점탄성 Io 모형의 효시), Henning, O'Connell & Sasselov 2009
-   (`2009ApJ...707.1000H`, 조석가열되는 지구형 외계행성), Henning & Hurford 2014
-   (`2014ApJ...789...30H`, 다층), Renaud & Henning 2018(`2018ApJ...857...98R`, Andrade 대 Maxwell,
+   ([`1988Icar...75..187S`](https://ui.adsabs.harvard.edu/abs/1988Icar...75..187S), 점탄성 Io 모형의 효시), Henning, O'Connell & Sasselov 2009
+   ([`2009ApJ...707.1000H`](https://ui.adsabs.harvard.edu/abs/2009ApJ...707.1000H), 조석가열되는 지구형 외계행성), Henning & Hurford 2014
+   ([`2014ApJ...789...30H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...789...30H), 다층), Renaud & Henning 2018([`2018ApJ...857...98R`](https://ui.adsabs.harvard.edu/abs/2018ApJ...857...98R), Andrade 대 Maxwell,
    가열이 **큰 인자**로, 흔히 10배 이상 달라질 수 있고 공명 내부 온도에서 정점을 이룬다) 등이다.
    fixed-Q와 Andrade 답은 한 자릿수까지 어긋날 수 있는데, 그 간극이 *곧* 오차 막대다.
 4. **스핀-궤도 / 비동주기, 또는 스핀-궤도 공명 근처**: `(21/2)e²` 선행 항이 틀린다. Efroimsky
-   & Makarov의 진동수 의존 형식론을 쓴다(Efroimsky & Williams 2012 `2012CeMDA.112..283E`).
+   & Makarov의 진동수 의존 형식론을 쓴다(Efroimsky & Williams 2012 [`2012CeMDA.112..283E`](https://ui.adsabs.harvard.edu/abs/2012CeMDA.112..283E)).
    주로 아직 고정되지 *않은* 바디, 즉 문서 맨 위에서 표시한 locking 문서의 영역에 해당한다.
 
 NearStars에서의 실무 자세는 이렇다. fixed-Q 공식을 분류 `k₂/Q` 대역과 함께 쓰고, **범위**(점값이
@@ -297,26 +297,26 @@ dynamo 문서의 단서들과 같은 정신으로 정리한다.
 기여 한 줄이다.
 
 - **Peale, S. J., Cassen, P. & Reynolds, R. T. (1979)**: *Science* 203, 892.
-  **No arXiv** (`1979Sci...203..892P`). Cites: 530. The founding tidal-heating
+  **No arXiv** ([`1979Sci...203..892P`](https://ui.adsabs.harvard.edu/abs/1979Sci...203..892P)). Cites: 530. The founding tidal-heating
   paper: the fixed-Q formula and the pre-Voyager prediction that Io would be melted.
   §1.
-- **Yoder, C. F. (1979)**: *Nature* 279, 767. **No arXiv** (`1979Natur.279..767Y`).
+- **Yoder, C. F. (1979)**: *Nature* 279, 767. **No arXiv** ([`1979Natur.279..767Y`](https://ui.adsabs.harvard.edu/abs/1979Natur.279..767Y)).
   Cites: 178. How tidal heating in Io drives and locks the Galilean (Laplace)
   resonance that maintains Io's eccentricity. §4.
 - **Segatz, M. et al. (1988)**: *Icarus* 75, 187. **No arXiv**
-  (`1988Icar...75..187S`). Cites: 258. Founding viscoelastic (Maxwell) Io model:
+  ([`1988Icar...75..187S`](https://ui.adsabs.harvard.edu/abs/1988Icar...75..187S)). Cites: 258. Founding viscoelastic (Maxwell) Io model:
   tidal dissipation, surface heat flow and figure beyond fixed-Q. §5.
 - **Veeder, G. J. et al. (1994)**: *JGR* 99, 17095. **No arXiv**
-  (`1994JGR....9917095V`). Cites: 217. Io's global heat flow from infrared
+  ([`1994JGR....9917095V`](https://ui.adsabs.harvard.edu/abs/1994JGR....9917095V)). Cites: 217. Io's global heat flow from infrared
   radiometry (~10¹⁴ W): the Io calibration. §2.
 - **Spencer, J. R. et al. (2006)**: *Science* 311, 1401. **No arXiv**
-  (`2006Sci...311.1401S`). Cites: 518. Cassini's discovery of Enceladus's active
+  ([`2006Sci...311.1401S`](https://ui.adsabs.harvard.edu/abs/2006Sci...311.1401S)). Cites: 518. Cassini's discovery of Enceladus's active
   south-polar thermal anomaly and plumes. §2.
 - **Meyer, J. & Wisdom, J. (2007)**: *Icarus* 188, 535. **No arXiv**
-  (`2007Icar..188..535M`). Cites: 152. Tidal heating in Enceladus and the
+  ([`2007Icar..188..535M`](https://ui.adsabs.harvard.edu/abs/2007Icar..188..535M)). Cites: 152. Tidal heating in Enceladus and the
   Enceladus–Dione 2:1 resonance maintaining its eccentricity. §2, §4.
 - **Nimmo, F. et al. (2007)**: *Nature* 447, 289. **No arXiv**
-  (`2007Natur.447..289N`). Cites: 239. Shear heating along the tiger stripes as the
+  ([`2007Natur.447..289N`](https://ui.adsabs.harvard.edu/abs/2007Natur.447..289N)). Cites: 239. Shear heating along the tiger stripes as the
   origin of Enceladus's plumes and heat flux. §2.
 - **Jackson, B., Barnes, R. & Greenberg, R. (2008)**: *ApJ* 681, 1631.
   **[arXiv:0803.0026](https://arxiv.org/abs/0803.0026).** Cites: 155. "Tidal Heating of Extrasolar Planets": applies
@@ -324,16 +324,16 @@ dynamo 문서의 단서들과 같은 정신으로 정리한다.
   magnitude. §1, §3. (Companion: Jackson+ 2008 *ApJ* 678, 1396, **[arXiv:0802.1543](https://arxiv.org/abs/0802.1543)**,
   cites 382, the tidal-evolution / eccentricity-damping side.)
 - **Lainey, V. et al. (2009)**: *Nature* 459, 957. **No arXiv**
-  (`2009Natur.459..957L`). Cites: 359. Astrometric detection of *active* strong tidal
+  ([`2009Natur.459..957L`](https://ui.adsabs.harvard.edu/abs/2009Natur.459..957L)). Cites: 359. Astrometric detection of *active* strong tidal
   dissipation in the Io–Jupiter system: empirically closes the heating loop. §2.
 - **Henning, W. G., O'Connell, R. J. & Sasselov, D. D. (2009)**: *ApJ* 707, 1000.
   **[arXiv:0912.1907](https://arxiv.org/abs/0912.1907).** Cites: 158. Tidally heated terrestrial exoplanets with a
   viscoelastic response model: the exoplanet-rheology bridge. §5.
 - **Howett, C. J. A. et al. (2011)**: *JGR Planets* 116, E03003. **No arXiv**
-  (`2011JGRE..116.3003H`). Cites: 136. ~15.8 GW measured from Enceladus's south-polar
+  ([`2011JGRE..116.3003H`](https://ui.adsabs.harvard.edu/abs/2011JGRE..116.3003H)). Cites: 136. ~15.8 GW measured from Enceladus's south-polar
   region: the Enceladus calibration number. §2.
 - **Veeder, G. J. et al. (2012)**: *Icarus* 219, 701. **No arXiv**
-  (`2012Icar..219..701V`). Cites: 92. Io's volcanic thermal sources and global heat
+  ([`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V)). Cites: 92. Io's volcanic thermal sources and global heat
   flow: the updated ~10¹⁴ W census. §2.
 - **Efroimsky, M. & Williams, J. G. (2012)**: *Celest. Mech. Dyn. Astron.* 112, 283.
   **[arXiv:1105.6086](https://arxiv.org/abs/1105.6086).** Cites: 128. Bodily tides near spin-orbit resonances: the
@@ -345,7 +345,7 @@ dynamo 문서의 단서들과 같은 정신으로 정리한다.
   Cites: 129. Exomoon habitability constrained by illumination *and* tidal heating:
   the moon-specific habitability bound directly relevant to NearStars moons. §6.
 - **Henning, W. G. & Hurford, T. (2014)**: *ApJ* 789, 30. **No arXiv**
-  (`2014ApJ...789...30H`). Cites: 55. Tidal heating in multilayered terrestrial
+  ([`2014ApJ...789...30H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...789...30H)). Cites: 55. Tidal heating in multilayered terrestrial
   exoplanets: layered viscoelastic structure. §5.
 - **Driscoll, P. E. & Barnes, R. (2015)**: *Astrobiology* 15, 739.
   **[arXiv:1509.07452](https://arxiv.org/abs/1509.07452).** Cites: 108. Tidal heating of Earth-like planets around M

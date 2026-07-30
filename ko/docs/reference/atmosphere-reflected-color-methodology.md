@@ -302,7 +302,7 @@ Polyphemus를 유난히 "정직한" 색 타깃으로 만든다. 조성→알베�
 그리고 기여 한 줄. 점검용으로 (조사 시점 ADS) 피인용 수를 적었다.
 
 - **Sneep, M. & Ubachs, W. (2005)**: *JQSRT* 92, 293. **No arXiv** (bibcode
-  `2005JQSRT..92..293S`). 흔한 대기 기체의 레일리 산란 단면적 + King 비편광의 직접
+  [`2005JQSRT..92..293S`](https://ui.adsabs.harvard.edu/abs/2005JQSRT..92..293S)). 흔한 대기 기체의 레일리 산란 단면적 + King 비편광의 직접
   실험 측정. §3의 σ_R(λ) 그라운드 트루스. (275 cites.)
 
 - **Gao, P. et al. (2021)**: *JGR Planets* 126, e06655. **[arXiv:2102.03480](https://arxiv.org/abs/2102.03480).**
@@ -328,35 +328,35 @@ Polyphemus를 유난히 "정직한" 색 타깃으로 만든다. 조성→알베�
   반사색이 계 매개변수에 따라 어떻게 이동하는지. §6 맥락. (135 cites.)
 
 - **Karkoschka, E. (1994)**: *Icarus* 111, 174. **No arXiv** (bibcode
-  `1994Icar..111..174K`). 목성형 행성과 타이탄의 분광 측광, 300–1000 nm: 천왕성 /
+  [`1994Icar..111..174K`](https://ui.adsabs.harvard.edu/abs/1994Icar..111..174K)). 목성형 행성과 타이탄의 분광 측광, 300–1000 nm: 천왕성 /
   해왕성의 CH₄ 청록과 목성/토성/타이탄 색을 근거짓는 기하 알베도 아틀라스. §5, §7.
   (332 cites.)
 
 - **Irwin, P. G. J. et al. (2024)**: *MNRAS* 527, 11521. **No arXiv** (bibcode
-  `2024MNRAS.52711521I`, DOI 10.1093/mnras/stad3761). 천왕성의 계절 색을 모델링하고
+  [`2024MNRAS.52711521I`](https://ui.adsabs.harvard.edu/abs/2024MNRAS.52711521I), DOI 10.1093/mnras/stad3761). 천왕성의 계절 색을 모델링하고
   해왕성과 비교한다. **에어로졸** 차이(천왕성의 더 두껍고 반사적인 연무)가 비슷한
   CH₄에도 천왕성이 더 옅고/푸른 이유를 설명한다. §5, §7. (13 cites, recent.)
 
 - **Khare, B. N. et al. (1984)**: *Icarus* 60, 127. **No arXiv** (bibcode
-  `1984Icar...60..127K`). 타이탄 톨린의 광학 상수, 0.02–920 µm: 유기 광화학 연무의
+  [`1984Icar...60..127K`](https://ui.adsabs.harvard.edu/abs/1984Icar...60..127K)). 타이탄 톨린의 광학 상수, 0.02–920 µm: 유기 광화학 연무의
   표준 굴절률. §5, §7. (612 cites.)
 
 - **Tomasko, M. G. et al. (2008)**: *Planet. Space Sci.* 56, 669. **No arXiv**
-  (bibcode `2008P&SS...56..669T`). Huygens DISR에서 얻은 현장 타이탄 에어로졸 모델:
+  (bibcode [`2008P&SS...56..669T`](https://ui.adsabs.harvard.edu/abs/2008P%26SS...56..669T)). Huygens DISR에서 얻은 현장 타이탄 에어로졸 모델:
   대기 안쪽에서 주황 톨린 연무를 못박는다. §5, §7. (242 cites.)
 
 - **Carlson, R. W. et al. (2016)**: *Icarus* 274, 106. **No arXiv** (bibcode
-  `2016Icar..274..106C`). 목성의 붉은 발색단을 광분해된 NH₃ + 아세틸렌 생성물로 본다:
+  [`2016Icar..274..106C`](https://ui.adsabs.harvard.edu/abs/2016Icar..274..106C)). 목성의 붉은 발색단을 광분해된 NH₃ + 아세틸렌 생성물로 본다:
   따뜻한 목성형 색 발색단이 불확실하다는 경계의 사례. §5, §7. (56 cites.)
 
 - **Orphal, J., Staehelin, J., Tamminen, J. … Serdyuchenko, A. et al. (2016)**:
-  *J. Mol. Spectrosc.* 327, 105. **No arXiv** (bibcode `2016JMoSp.327..105O`).
+  *J. Mol. Spectrosc.* 327, 105. **No arXiv** (bibcode [`2016JMoSp.327..105O`](https://ui.adsabs.harvard.edu/abs/2016JMoSp.327..105O)).
   "Absorption cross-sections of ozone … Status report 2015": Chappuis 띠를 포함한
   권장 오존 UV–가시 단면적(Serdyuchenko & Gorshelev 2014 실험 데이터셋을 통합). §5.
   (72 cites.)
 
 - **Sagan, C. et al. (1993)**: *Nature* 365, 715. **No arXiv** (bibcode
-  `1993Natur.365..715S`). *A Search for Life on Earth from the Galileo Spacecraft*:
+  [`1993Natur.365..715S`](https://ui.adsabs.harvard.edu/abs/1993Natur.365..715S)). *A Search for Life on Earth from the Galileo Spacecraft*:
   지구의 원반 적분 스펙트럼, 표준 창백한 푸른 점 레일리 레퍼런스. §7. (316 cites.)
 
 - **Krissansen-Totton, J., Schwieterman, E. W. et al. (2016)**: *ApJ* 817, 31.
@@ -364,7 +364,7 @@ Polyphemus를 유난히 "정직한" 색 타깃으로 만든다. 조성→알베�
   색 분류; 색공간 배치의 가장 가까운 천문 선례(색측정 행렬은 아님). §6. (31 cites.)
 
 - **Polyanskiy, M. N. (2024)**: *Scientific Data* 11, 94. **No arXiv** (bibcode
-  `2024NatSD..11...94P`). 광학상수 **refractiveindex.info** 데이터베이스: 종별 실수부
+  [`2024NatSD..11...94P`](https://ui.adsabs.harvard.edu/abs/2024NatSD..11...94P)). 광학상수 **refractiveindex.info** 데이터베이스: 종별 실수부
   굴절률 `n(λ)`(레일리, §3)와 복소 굴절률 `n+ik`(에어로졸·흡수체, §5)의 조회 포털이다.
   큐레이션된 **집계기**이며, 각 데이터셋은 자체 1차 실험 출처를 인용하므로 그게 행별 인용
   출처고, 데이터베이스 자체는 이 논문으로 인용한다. 용도에 맞게 phase를 맞춰 쓴다(대기는

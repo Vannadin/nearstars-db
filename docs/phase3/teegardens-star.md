@@ -269,7 +269,7 @@ occasionally lit by a brilliant flare.
 
 - **Schweitzer A. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Different roads to radii and masses of the target
-  stars*, A&A 625, A68 (`2019A&A...625A..68S`,
+  stars*, A&A 625, A68 ([`2019A&A...625A..68S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S),
   doi:10.1051/0004-6361/201834965, arXiv:1904.03231). CARMENES
   fundamental-parameter compilation. Source for the Phase 2
   recommended Teff (2904 ± 51 K, PHOENIX fit), luminosity
@@ -281,7 +281,7 @@ occasionally lit by a brilliant flare.
   CARMENES sample.
 - **Zechmeister M. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Two temperate Earth-mass planet candidates around
-  Teegarden's Star*, A&A 627, A49 (`2019A&A...627A..49Z`,
+  Teegarden's Star*, A&A 627, A49 ([`2019A&A...627A..49Z`](https://ui.adsabs.harvard.edu/abs/2019A%26A...627A..49Z),
   doi:10.1051/0004-6361/201935460, arXiv:1906.07196). Discovery paper
   for planets b and c (each ~1.1 M⊕, P = 4.91 d and 11.4 d). Source
   for the Phase 2 recommended age (7 ± 3 Gyr, PARSEC Bayesian /
@@ -291,7 +291,7 @@ occasionally lit by a brilliant flare.
   out of scope here — flagged for the planet follow-up.
 - **Dreizler S. et al. 2024** — *The CARMENES search for exoplanets
   around M dwarfs. The enigmatic planetary system of Teegarden's
-  Star*, A&A 684, A117 (`2024A&A...684A.117D`,
+  Star*, A&A 684, A117 ([`2024A&A...684A.117D`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A.117D),
   doi:10.1051/0004-6361/202348033, arXiv:2402.00923). Source for the
   Phase 2 recommended rotation period (P_rot = 96.2 d, from Lafarga
   2021 spectroscopic activity indices) and for the alternative
@@ -315,7 +315,7 @@ occasionally lit by a brilliant flare.
 
 - **Marfil E. et al. 2021** — *The CARMENES search for exoplanets
   around M dwarfs. Stellar atmospheric parameters of target stars with
-  SteParSyn*, A&A 656, A162 (`2021A&A...656A.162M`,
+  SteParSyn*, A&A 656, A162 ([`2021A&A...656A.162M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...656A.162M),
   doi:10.1051/0004-6361/202141980, arXiv:2110.07329). SteParSyn
   Teff = 3034 ± 45 K and [Fe/H] = −0.11 ± 0.28; the line list and
   model grid Dreizler 2024 re-ran to get the alternative parameter

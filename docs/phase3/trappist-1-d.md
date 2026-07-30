@@ -297,10 +297,10 @@ These were surfaced by the ADS query but lack arXiv preprints; would
 require institutional library access or PDF paste. For Phase 3 d, the
 key papers in this set are:
 
-- **2025epsc.conf..178P** Piaulet-Ghorayeb 2025 EPSC abstract — likely
+- **[`2025epsc.conf..178P`](https://ui.adsabs.harvard.edu/abs/2025epsc.conf..178P)** Piaulet-Ghorayeb 2025 EPSC abstract — likely
   a conference summary of the JWST paper already read ([2508.08416](https://arxiv.org/abs/2508.08416)).
   Skip.
-- **2024absc.conf00561M / 2024ESS.....550004M / 2023PSJ.....4..192M**
+- **[`2024absc.conf00561M`](https://ui.adsabs.harvard.edu/abs/2024absc.conf00561M) / [`2024ESS.....550004M`](https://ui.adsabs.harvard.edu/abs/2024ESS.....550004M) / [`2023PSJ.....4..192M`](https://ui.adsabs.harvard.edu/abs/2023PSJ.....4..192M)**
   Mullens et al. 2023–2024 — "Feasibility of Detecting Biosignatures
   in the TRAPPIST-1 System." Three appearances of the same study at
   different venues. Likely not visual-informative (biosignature focus).

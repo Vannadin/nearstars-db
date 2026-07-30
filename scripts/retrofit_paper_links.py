@@ -1,5 +1,5 @@
 # 논문 레퍼런스 일괄 링크화 — md 본문의 bibcode/arXiv id를 ADS/arXiv 마크다운 링크로 변환.
-# one-shot: CONVENTIONS §3.3 retrofit (2026-07-20 오너 지시), 이후 신규 문서는 작성 시 준수
+# CONVENTIONS §3.3 retrofit (2026-07-20 오너 지시) + 2026-07-30 백틱 스팬 확장, 재실행 안전(멱등)
 """Retrofit bare paper ids in md narrative into markdown links (CONVENTIONS §3.3).
 
 Safety model:
@@ -7,9 +7,11 @@ Safety model:
   docs/phase3/_bib/*.yaml `arxiv_id:` values, OR is written with an explicit
   `arXiv:` prefix at the use site. Bare number-like tokens never convert.
 - bibcodes match the strict 19-char ADS form.
-- Skipped contexts: fenced code blocks, inline backtick spans, YAML
-  frontmatter, lines that are YAML machine fields (`arxiv_id:`, `bibcode:`),
-  ids already inside a markdown link.
+- Inline backtick spans convert ONLY when the span is exactly one id
+  (`` `2018MNRAS.480.2411M` `` → ``[`2018MNRAS.480.2411M`](ADS)``, `&` → `%26`);
+  longer code spans (field examples, YAML snippets) stay untouched.
+- Skipped contexts: fenced code blocks, YAML frontmatter, lines that are YAML
+  machine fields (`arxiv_id:`, `bibcode:`), ids already inside a markdown link.
 
 Targets: *.md under docs/ plans/ phase2/ phase3/ phase4/ ko/ (excluding
 docs/wiki renders and _papers cache). Run with --dry for a report only.
@@ -27,10 +29,15 @@ REPO = Path(__file__).resolve().parent.parent
 ROOTS = ["docs", "plans", "phase2", "phase3", "phase4", "gameplay", "ko"]
 EXCLUDE_PARTS = {"wiki", "_papers", "node_modules"}
 
-BIB = re.compile(r"\b((?:1[89]|20)\d{2}[A-Za-z&][A-Za-z&.]{4}[A-Za-z0-9&.]{8}[A-Z])\b")
+# 19자 ADS form: YYYY(4) + journal(5) + volume/page(9) + author initial(1).
+# 2026-07-30 이전엔 {8}로 한 글자 짧아 실존 bibcode를 전혀 못 잡았음 (arXiv만 변환됨).
+BIB = re.compile(r"\b((?:1[89]|20)\d{2}[A-Za-z&][A-Za-z&.]{4}[A-Za-z0-9&.]{9}[A-Z])\b")
 ARX_PREFIXED = re.compile(r"\barXiv:\s?(\d{4}\.\d{4,5})(v\d+)?\b")
 ARX_BARE = re.compile(r"\b(\d{4}\.\d{4,5})(v\d+)?\b")
 MACHINE_LINE = re.compile(r"^\s*(arxiv_id|bibcode|doi)\s*:")
+# 백틱 스팬 전체가 id 하나일 때만 링크화 (긴 코드 예시는 보호 유지)
+CODE_BIB = re.compile(r"^`((?:1[89]|20)\d{2}[A-Za-z&][A-Za-z&.]{4}[A-Za-z0-9&.]{9}[A-Z])`$")
+CODE_ARX = re.compile(r"^`(arXiv:\s?(\d{4}\.\d{4,5})(?:v\d+)?)`$")
 
 
 def load_whitelist() -> set[str]:
@@ -54,9 +61,14 @@ def load_whitelist() -> set[str]:
 
 
 def split_protected(line: str) -> list[tuple[bool, str]]:
-    """Split a line into (protected, text) spans: backtick code + existing links protected."""
+    """Split a line into (protected, text) spans: backtick code + existing links + bare URLs protected.
+
+    Bare-URL protection also covers the continuation line of a markdown link whose
+    label wraps across lines (line-by-line processing would otherwise see its URL
+    as convertible plain text — 2026-07-30 tools.md nesting bug).
+    """
     spans: list[tuple[bool, str]] = []
-    pattern = re.compile(r"(`[^`]*`|\[[^\]]*\]\([^)]*\))")
+    pattern = re.compile(r"(`[^`]*`|\[[^\]]*\]\([^)]*\)|https?://[^\s)\]>]+)")
     pos = 0
     for m in pattern.finditer(line):
         if m.start() > pos:
@@ -74,7 +86,7 @@ def convert_text(text: str, whitelist: set[str]) -> tuple[str, int]:
     def bib_sub(m: re.Match) -> str:
         nonlocal n
         n += 1
-        return f"[{m.group(1)}](https://ui.adsabs.harvard.edu/abs/{m.group(1)})"
+        return f"[`{m.group(1)}`](https://ui.adsabs.harvard.edu/abs/{m.group(1).replace('&', '%26')})"
 
     def arx_pref_sub(m: re.Match) -> str:
         nonlocal n
@@ -110,6 +122,20 @@ def convert_text(text: str, whitelist: set[str]) -> tuple[str, int]:
         if in_fence or MACHINE_LINE.match(line):
             out_lines.append(line)
             continue
+        # pass 0: exact-id backtick spans → code-styled links (& → %26 per manual precedent)
+        rebuilt = ""
+        for protected, span in split_protected(line):
+            if protected:
+                cb = CODE_BIB.match(span)
+                ca = CODE_ARX.match(span)
+                if cb:
+                    n += 1
+                    span = f"[`{cb.group(1)}`](https://ui.adsabs.harvard.edu/abs/{cb.group(1).replace('&', '%26')})"
+                elif ca:
+                    n += 1
+                    span = f"[`{ca.group(1)}`](https://arxiv.org/abs/{ca.group(2)})"
+            rebuilt += span
+        line = rebuilt
         # apply each pattern in its own pass, re-protecting between passes so
         # a link created by pass N is opaque to pass N+1 (no nested links)
         for regex, sub in ((BIB, bib_sub), (ARX_PREFIXED, arx_pref_sub), (ARX_BARE, arx_bare_sub)):

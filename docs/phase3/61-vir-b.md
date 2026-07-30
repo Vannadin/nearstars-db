@@ -60,7 +60,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_tint_rgb_hex_accent` | `#c84a18` (substellar magma ocean glow) | low | Tie-break: substellar partial-melt region at ~1450 K radiates in red-orange (Wien peak at 2 μm but visible tail prominent); interesting-first picks a visible lava-glow accent over a uniformly dark surface |
 | `surface_morphology` | substellar magma ocean ~1500 km radius; basaltic cooled plains in mid-latitudes; volatile-stripped nightside regolith | medium | Tie-break: Léger 2009 CoRoT-7b magma-ocean template; substellar isotherm at silicate solidus gives ~30° magma-pond radius |
 | `tidal_heating_w_m2` | 0.1–1 | medium | Bolmont 2020 scaling for e=0.12 at 4.2 d period; eccentricity contribution is non-trivial but modest at this mass; supplements but does not dominate the insolation budget |
-| `radiogenic_heat_w_m2` | 0.05 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled to ~5 M⊕ and consistent with a partially molten interior. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
+| `radiogenic_heat_w_m2` | 0.05 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled to ~5 M⊕ and consistent with a partially molten interior. Method: Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W)) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `star_apparent_angular_diameter_deg` | 1.02 | high | derived: 2 × R★ / a × (180/π); 0.963 R☉ at 0.0502 AU |
 | `stellar_illumination_color_temp_k` | 5552 | high | host Teff |
 
@@ -263,36 +263,36 @@ surface renderers:
 
 - **Vogt S. S. et al. 2010** — *A Super-Earth and Two Neptunes
   Orbiting the Nearby Sun-Like Star 61 Virginis*, ApJ 708, 1366
-  (`2010ApJ...708.1366V`). The discovery paper. Reports b's orbit
+  ([`2010ApJ...708.1366V`](https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V)). The discovery paper. Reports b's orbit
   (P=4.215 d, a=0.0502 AU, e=0.12, ω=105°) and minimum mass
   (Msini = 5.1 ± 0.5 M⊕). HIRES + AAT joint RV solution. All
   Decisions table orbital + mass values anchor here.
 - **Léger A. et al. 2009** — *Transiting exoplanets from the CoRoT
   space mission VIII. CoRoT-7b: the first super-Earth with measured
-  radius*, A&A 506, 287 (`2009A&A...506..287L`, [arXiv:0908.0241](https://arxiv.org/abs/0908.0241)).
+  radius*, A&A 506, 287 ([`2009A&A...506..287L`](https://ui.adsabs.harvard.edu/abs/2009A%26A...506..287L), [arXiv:0908.0241](https://arxiv.org/abs/0908.0241)).
   The lava-world template — establishes the magma-ocean dayside
   scenario for hot rocky super-Earths. b is a slightly cooler analog.
   Drives surface morphology + magma-pond visual decisions.
 - **Schaefer L. & Fegley B. 2009** — *Chemistry of silicate
   atmospheres of evaporating super-Earths*, ApJ 703, L113
-  (`2009ApJ...703L.113S`, [arXiv:0905.4045](https://arxiv.org/abs/0905.4045)). Outgassing chemistry of
+  ([`2009ApJ...703L.113S`](https://ui.adsabs.harvard.edu/abs/2009ApJ...703L.113S), [arXiv:0905.4045](https://arxiv.org/abs/0905.4045)). Outgassing chemistry of
   hot-rocky surfaces. Drives the `atmosphere_composition` choice (Na,
   K, SiO, O₂ silicate-vapor dominant at 1400–1500 K substellar).
 - **Zeng L. et al. 2016** — *Mass-radius relation for rocky planets*,
-  ApJ 819, 127 (`2016ApJ...819..127Z`, [arXiv:1512.08827](https://arxiv.org/abs/1512.08827)). Mass-radius
+  ApJ 819, 127 ([`2016ApJ...819..127Z`](https://ui.adsabs.harvard.edu/abs/2016ApJ...819..127Z), [arXiv:1512.08827](https://arxiv.org/abs/1512.08827)). Mass-radius
   scaling for Earth-composition rocky planets; gives R ≈ 1.65 R⊕ for
   5.1 M⊕. Drives the `radius_rearth` tie-break.
 - **Owen J. E. & Wu Y. 2017** — *The evaporation valley in the
-  Kepler planets*, ApJ 847, 29 (`2017ApJ...847...29O`,
+  Kepler planets*, ApJ 847, 29 ([`2017ApJ...847...29O`](https://ui.adsabs.harvard.edu/abs/2017ApJ...847...29O),
   [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). Photoevaporation-valley physics. Places b firmly
   in the "core-only" regime — any initial H/He envelope is lost on
   ≲ 50 Myr. Drives the `atmosphere_present = false` choice.
 - **Hut P. 1981** — *Tidal evolution in close binary systems*, A&A
-  99, 126 (`1981A&A....99..126H`). Standard equilibrium-tide model;
+  99, 126 ([`1981A&A....99..126H`](https://ui.adsabs.harvard.edu/abs/1981A%26A....99..126H)). Standard equilibrium-tide model;
   the tidal-locking timescale estimate for b's parameters (~10⁵–10⁶ yr)
   follows from it. Anchors the `tidally_locked = true` choice.
 - **Bolmont E. et al. 2020** — *Tidal dissipation and obliquity
-  evolution of TRAPPIST-1 planets* (`2020A&A...644A.165B`). Tidal
+  evolution of TRAPPIST-1 planets* ([`2020A&A...644A.165B`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A.165B)). Tidal
   heating scaling for rocky exoplanets; provides the 0.1–1 W/m²
   estimate at e=0.12, P=4.2 d.
 
@@ -300,26 +300,26 @@ surface renderers:
 
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-Type Dwarfs Using Activity-Rotation
-  Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`, [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)).
+  Diagnostics*, ApJ 687, 1264 ([`2008ApJ...687.1264M`](https://ui.adsabs.harvard.edu/abs/2008ApJ...687.1264M), [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)).
   Inherited from the host-star synthesis. Gives 61 Vir age 6.1 ±
   1.7 Gyr; sets the system-evolution timescale for atmospheric loss.
 - **Pavlenko Y. V. et al. 2012** — *Effective temperatures, gravities,
   metallicities, and ages of 18 solar twin candidates*
-  (`2012MNRAS.422..542P`, [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). Inherited from host-star
+  ([`2012MNRAS.422..542P`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.422..542P), [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). Inherited from host-star
   synthesis. Confirms 61 Vir solar-twin abundance pattern.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir*, MNRAS
-  424, 1206 (`2012MNRAS.424.1206W`, [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). Inherited from
+  424, 1206 ([`2012MNRAS.424.1206W`](https://ui.adsabs.harvard.edu/abs/2012MNRAS.424.1206W), [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). Inherited from
   host-star synthesis. Cited briefly because the cold debris belt at
   ~30 AU does not interact dynamically with the inner planets at
   b's separation.
 - **Lopez E. D. & Fortney J. J. 2014** — *Understanding the
   mass-radius relation for sub-Neptunes*, ApJ 792, 1
-  (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). Sub-Neptune envelope
+  ([`2014ApJ...792....1L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...792....1L), [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). Sub-Neptune envelope
   mass-radius scaling; informs the bounds on b's potential
   unphotoevaporated H/He envelope (excluded as discussed).
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope
   decompositions of super-Earths and sub-Neptunes*, ApJ 787, 173
-  (`2014ApJ...787..173H`). Used briefly in the
+  ([`2014ApJ...787..173H`](https://ui.adsabs.harvard.edu/abs/2014ApJ...787..173H)). Used briefly in the
   context of envelope-vs-rocky decision; b is rocky.
 
 ### Read (instrument-only, not visual-informative)
