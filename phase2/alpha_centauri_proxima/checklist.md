@@ -16,7 +16,6 @@ three nearest-star components and the two Proxima planets.
 
 - [ ] Kervella et al. 2017 — [`2017A&A...597A.137K`](https://ui.adsabs.harvard.edu/abs/2017A%26A...597A.137K) — R=1.2234 ± 0.0053 — interferometry (VLTI/PIONIER) **(recommended; existing)**
 - [ ] Kervella et al. 2003 — [`2003A&A...404.1087K`](https://ui.adsabs.harvard.edu/abs/2003A%26A...404.1087K) — R=1.224 ± 0.003 — interferometry (VLTI/VINCI)
-- [ ] Bigot et al. 2008 — [`2008A&A...488..635B`](https://ui.adsabs.harvard.edu/abs/2008A%26A...488..635B) — R=1.224 ± 0.003 — interferometry (VLTI/VINCI revised) — **source unverified (2026-07-30): bibcode not on ADS; value duplicates the Kervella 2003 row; the real Bigot et al. 2006 paper is α Cen B limb darkening — re-curate before use**
 - [ ] Bazot et al. 2007 — [`2007A&A...470..295B`](https://ui.adsabs.harvard.edu/abs/2007A%26A...470..295B) — R=1.224 ± 0.003 — asteroseismology
 
 ### teff_measurements
@@ -131,13 +130,13 @@ three nearest-star components and the two Proxima planets.
 
 ### rotation_measurements
 
-- [ ] Suárez Mascareño et al. 2016 — [`2016MNRAS.459.3565S`](https://ui.adsabs.harvard.edu/abs/2016MNRAS.459.3565S) — P_rot=83.0 ± 0.8 days — photometric_variability **(recommended)** — **source unverified (2026-07-30): bibcode and pinned DOI both fail on ADS — re-curate before use**
+- [ ] Suárez Mascareño et al. 2016 — [`2016A&A...595A..12S`](https://ui.adsabs.harvard.edu/abs/2016A%26A...595A..12S) — P_rot=83.2 ± 0.1 days — photometric_variability (ASAS, 8.7 yr) **(recommended)**
 - [ ] Klein et al. 2021 — [`2021MNRAS.500.1844K`](https://ui.adsabs.harvard.edu/abs/2021MNRAS.500.1844K) — P_rot=89.8 ± 4.0 days — zeeman_doppler
 - [ ] Benedict et al. 1998 — [`1998AJ....116..429B`](https://ui.adsabs.harvard.edu/abs/1998AJ....116..429B) — P_rot=83.5 days — photometric_variability
 
 ### activity_measurements
 
-- [ ] Suárez Mascareño et al. 2016 — [`2016MNRAS.459.3565S`](https://ui.adsabs.harvard.edu/abs/2016MNRAS.459.3565S) — log R'HK=-5.55 — ca_ii_h_k **(recommended)** — **source unverified (2026-07-30): bibcode and pinned DOI both fail on ADS — re-curate before use**
+- [ ] Suárez Mascareño et al. 2015 — [`2015MNRAS.452.2745S`](https://ui.adsabs.harvard.edu/abs/2015MNRAS.452.2745S) — log R'HK=-5.65 ± 0.17 — ca_ii_h_k **(recommended)**
 
 ## Proxima Cen b
 

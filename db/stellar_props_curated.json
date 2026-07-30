@@ -3857,11 +3857,10 @@
         "value_log_rhk": -5.65,
         "uncertainty_log_rhk": 0.17,
         "method": "log_rhk",
-        "reference": "Suárez Mascareño et al. 2016",
-        "bibcode": "2016MNRAS.459.3565S",
-        "doi": "10.1093/mnras/stw1059",
-        "recommended": true,
-        "notes": "source unverified (2026-07-30): bibcode 2016MNRAS.459.3565S and doi 10.1093/mnras/stw1059 both fail on ADS; value kept pending re-curation"
+        "reference": "Suárez Mascareño et al. 2015",
+        "bibcode": "2015MNRAS.452.2745S",
+        "doi": "10.1093/mnras/stv1441",
+        "recommended": true
       }
     ],
     "mass_loss_measurements": [

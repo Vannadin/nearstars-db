@@ -123,8 +123,8 @@ decisions:
 
   - body: Proxima Cen
     axis: environment.activity        # 플레어 별 핵심 — 측정
-    # NOTE(2026-07-30): 2016MNRAS.459.3565S 는 ADS 미해결(DB 핀 DOI 도 실패) — 이 보드의 다음 리뷰 런에서 re-curate
-    refs: ["1998AJ....116..429B", "2017MNRAS.464.3281W", "2016MNRAS.459.3565S", "2004A&A...417..651S"]
+    # 2026-07-31: logR'HK -5.65±0.17 원출처를 SM2015 로 교정 (구 핀 2016MNRAS.459.3565S 는 ADS 미해결 오기였음)
+    refs: ["1998AJ....116..429B", "2017MNRAS.464.3281W", "2015MNRAS.452.2745S", "2004A&A...417..651S"]
     status: passthrough
     driver: [passthrough]
     narrative: >
