@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 14.2214,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3150,
+        "teff_k": 3096,
         "spectype": "M4.5V",
         "mass_measurements": [
           {
@@ -43,11 +43,53 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3096,
+            "uncertainty_k": 48,
+            "method": "high_res_spectroscopy",
+            "reference": "Cadieux et al. 2024",
+            "bibcode": "2024ApJ...960L...3C",
+            "doi": "10.3847/2041-8213/ad1691",
+            "recommended": true,
+            "notes": "NIRPS spectroscopy; same paper as the curated mass/radius. Cifuentes 2020 SED Teff 3100 K agrees."
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.00435,
+            "uncertainty_lsun": 7.23e-05,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "notes": "LHS 1140 = Karmn J00449-152. Cadieux 2024 tabulates no L.",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 5.0,
+            "method": "kinematic",
+            "reference": "Cadieux et al. 2024",
+            "bibcode": "2024ApJ...960L...3C",
+            "doi": "10.3847/2041-8213/ad1691",
+            "recommended": true,
+            "notes": "LOWER LIMIT: '>5 Gyr' from thin-disk kinematics (Appendix C.1); no central value with uncertainty exists."
+          }
+        ],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 131,
+            "method": "photometric_variability",
+            "reference": "Dittmann et al. 2017",
+            "bibcode": "2017Natur.544..333D",
+            "doi": "10.1038/nature22055",
+            "recommended": true,
+            "notes": "MEarth photometry; cited by Cadieux 2024."
+          }
+        ],
         "activity_measurements": [],
         "stellarium_id": null
       },
@@ -70,10 +112,10 @@
         "icrs_vx_j2000_km_s": -28.33889770692639,
         "icrs_vy_j2000_km_s": 17.373740233914408,
         "icrs_vz_j2000_km_s": -37.206136539750474,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.00435,
+        "age_gyr": 5.0,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 131,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
@@ -250,7 +292,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -259,7 +301,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -268,14 +310,14 @@
       "title": "Cadieux et al. 2024",
       "doi": null,
       "bibcode": "2024ApJ...960L...3C",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "LHS 1140 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

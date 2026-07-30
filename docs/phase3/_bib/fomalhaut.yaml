@@ -72,8 +72,8 @@ papers:
   status: fetched
   category: deep_read
   fetch_error: null
-- arxiv_id: '1705.10670'
-  ads_bibcode: 2017ApJ...842...80W
+- arxiv_id: '1612.01648'
+  ads_bibcode: 2017MNRAS.466.4201W
   title: White et al. 2017 — ALMA Cycle 4 outer ring; inclination 65.6 ± 0.4
   status: fetched
   category: deep_read

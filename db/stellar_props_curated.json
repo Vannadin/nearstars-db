@@ -3860,7 +3860,8 @@
         "reference": "Suárez Mascareño et al. 2016",
         "bibcode": "2016MNRAS.459.3565S",
         "doi": "10.1093/mnras/stw1059",
-        "recommended": true
+        "recommended": true,
+        "notes": "source unverified (2026-07-30): bibcode 2016MNRAS.459.3565S and doi 10.1093/mnras/stw1059 both fail on ADS; value kept pending re-curation"
       }
     ],
     "mass_loss_measurements": [

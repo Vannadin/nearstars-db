@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 5.7266,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 4893,
+        "teff_k": 5044,
         "spectype": "K2+V",
         "mass_measurements": [
           {
@@ -43,12 +43,53 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5044,
+            "uncertainty_k": 63,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "notes": "SPOCS 5080 K; consistent with Pepe 2011 (curated mass source).",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.42,
+            "method": "photometric",
+            "recommended": true,
+            "notes": "log L = -0.38.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 8.6,
+            "method": "isochrone",
+            "recommended": true,
+            "notes": "SPOCS isochrone gives 9.3 Gyr.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.07,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Catalog carries -5.07 and -5.31; quiet K2 dwarf.",
+            "reference": "Boro Saikia et al. 2018",
+            "bibcode": "2018A&A...616A.108B",
+            "doi": "10.1051/0004-6361/201629518"
+          }
+        ],
         "stellarium_id": "HD192310"
       },
       "derived": {
@@ -70,11 +111,11 @@
         "icrs_vx_j2000_km_s": 14.226596885854864,
         "icrs_vy_j2000_km_s": 72.0181075417275,
         "icrs_vz_j2000_km_s": 17.989713591753848,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.42,
+        "age_gyr": 8.6,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "activity_log_rhk": -5.07,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -222,7 +263,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -231,7 +272,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -240,7 +281,7 @@
       "title": "Pepe et al. 2011",
       "doi": "10.1051/0004-6361/201117055",
       "bibcode": "2011A&A...534A..58P",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "HD 192310 mass (unverified)"
       ]
@@ -249,14 +290,14 @@
       "title": "Rosenthal et al. 2021",
       "doi": null,
       "bibcode": "2021ApJS..255....8R",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "HD 192310 radius (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

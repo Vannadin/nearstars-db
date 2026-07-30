@@ -373,7 +373,7 @@ in the not-read set:
   recent Nature Astronomy summary. The arXiv preprint is on the way
   but not yet indexed at retrieval time (2026-05-21). **Flagged for
   re-fetch in a few weeks.**
-- **2026NatAs.tmp...65G** "No thick atmosphere around TRAPPIST-1 b
+- **[`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G)** "No thick atmosphere around TRAPPIST-1 b
   and c from JWST thermal phase curves" — likely the Nature
   Astronomy publication of Ducrot 2025 (already covered via the
   arXiv preprint [2509.02128](https://arxiv.org/abs/2509.02128)). Skip.

@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 13.5263,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3200,
+        "teff_k": 3270,
         "spectype": "M3.5V",
         "mass_measurements": [
           {
@@ -43,11 +43,53 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3270,
+            "uncertainty_k": 140,
+            "method": "photometric_color",
+            "recommended": true,
+            "notes": "Empirical M-dwarf relations from absolute magnitude (parallax-based). Southern (L 320-124), not in CARMENES.",
+            "reference": "Berta-Thompson et al. 2015",
+            "bibcode": "2015Natur.527..204B",
+            "doi": "10.1038/nature15762"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.00438,
+            "uncertainty_lsun": 0.00034,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "reference": "Berta-Thompson et al. 2015",
+            "bibcode": "2015Natur.527..204B",
+            "doi": "10.1038/nature15762"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 7.82,
+            "uncertainty_gyr": 3.07,
+            "method": "gyrochronology",
+            "recommended": true,
+            "notes": "Converted from log Age = 0.893 +/- 0.144 dex: 7.82 (+3.07/-2.21) Gyr; uncertainty = larger side. Old field dwarf, Prot 129.15 d.",
+            "reference": "Engle et al. 2024",
+            "bibcode": "2024ApJ...960...62E",
+            "doi": "10.3847/1538-4357/ad0840"
+          }
+        ],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 129.15,
+            "method": "photometric_variability",
+            "recommended": true,
+            "notes": "Long rotation; consistent with the ~122-125 d literature values.",
+            "reference": "Engle et al. 2024",
+            "bibcode": "2024ApJ...960...62E",
+            "doi": "10.3847/1538-4357/ad0840"
+          }
+        ],
         "activity_measurements": [],
         "stellarium_id": null
       },
@@ -70,10 +112,10 @@
         "icrs_vx_j2000_km_s": -9.508865605886486,
         "icrs_vy_j2000_km_s": 74.96974346343971,
         "icrs_vz_j2000_km_s": -8.56568254551231,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.00438,
+        "age_gyr": 7.82,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 129.15,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
@@ -221,7 +263,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -230,7 +272,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -239,7 +281,7 @@
       "title": "Xue et al. 2024",
       "doi": "10.3847/2041-8213/ad72e9",
       "bibcode": "2024ApJ...973L...8X",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 1132 mass (unverified)"
       ]
@@ -248,14 +290,14 @@
       "title": "Weisserman et al. 2026",
       "doi": null,
       "bibcode": "2026arXiv260407447W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 1132 radius (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

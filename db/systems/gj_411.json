@@ -19,7 +19,7 @@
         "radial_velocity_source": "simbad",
         "vmag_v": 7.47,
         "vmag_source": "hipparcos_hardcoded",
-        "teff_k": 3429,
+        "teff_k": 3500,
         "spectype": "M2+V",
         "mass_measurements": [
           {
@@ -43,12 +43,73 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3500,
+            "method": "sed_fitting",
+            "recommended": true,
+            "notes": "CARMENES BT-Settl SED-grid Teff (100 K grid, sigma~50 K).",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          },
+          {
+            "value_k": 3601,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "recommended": false,
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.019506,
+            "uncertainty_lsun": 0.0013,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 5.2,
+            "method": "gyrochronology",
+            "recommended": true,
+            "notes": "log Age = 0.719 +/- 0.119 dex -> 5.2 (+1.6/-1.3) Gyr; Prot 56.15 d.",
+            "reference": "Engle 2024",
+            "bibcode": "2024ApJ...960...62E",
+            "doi": "10.3847/1538-4357/ad0840"
+          }
+        ],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 56.15,
+            "uncertainty_days": 0.27,
+            "method": "photometric_variability",
+            "recommended": true,
+            "notes": "Consistent with Shan 2024 compiled 56.15 d (Diez Alonso) and Newton ~56 d.",
+            "reference": "Engle 2024",
+            "bibcode": "2024ApJ...960...62E",
+            "doi": "10.3847/1538-4357/ad0840"
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.5,
+            "uncertainty_log_rhk": 0.016,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Not in Astudillo (northern star). Corroborated by Schofer 2019 Halpha pEW -0.041 +/- 0.011 A (inactive).",
+            "reference": "Shan et al. 2024",
+            "bibcode": "2024A&A...684A...9S",
+            "doi": "10.1051/0004-6361/202346794"
+          }
+        ],
         "stellarium_id": "HD95735"
       },
       "derived": {
@@ -70,11 +131,11 @@
         "icrs_vx_j2000_km_s": 35.29852921533312,
         "icrs_vy_j2000_km_s": -1.6887438292893489,
         "icrs_vz_j2000_km_s": -96.37399206798088,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.019506,
+        "age_gyr": 5.2,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "rotation_period_days": 56.15,
+        "activity_log_rhk": -5.5,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -220,7 +281,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -229,7 +290,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -238,14 +299,14 @@
       "title": "Hurt et al. 2022",
       "doi": "10.3847/1538-3881/ac5c47",
       "bibcode": "2022AJ....163..218H",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 411 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

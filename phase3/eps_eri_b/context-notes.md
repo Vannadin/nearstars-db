@@ -2,28 +2,28 @@
 
 ## Anchor papers (inherited from host eps-eri Phase 3 triage)
 
-- **Hatzes 2000** (`2000ApJ...544L.145H`) — RV discovery
-- **Mawet 2019** (`2019AJ....157...33M`, arXiv [1810.03794](https://arxiv.org/abs/1810.03794)) — Keck/NIRC2 Ms-band
+- **Hatzes 2000** ([`2000ApJ...544L.145H`](https://ui.adsabs.harvard.edu/abs/2000ApJ...544L.145H)) — RV discovery
+- **Mawet 2019** ([`2019AJ....157...33M`](https://ui.adsabs.harvard.edu/abs/2019AJ....157...33M), arXiv [1810.03794](https://arxiv.org/abs/1810.03794)) — Keck/NIRC2 Ms-band
   vortex coronagraph direct imaging confirmation; rules out outer "ε Eri c"
-- **Llop-Sayson 2021** (`2021AJ....162..181L`, arXiv 2108.05552) — Joint RV +
+- **Llop-Sayson 2021** ([`2021AJ....162..181L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..181L), arXiv 2108.05552) — Joint RV +
   Hipparcos/Gaia astrometric fit. M_b = 0.78 ± 0.12 M_Jup deprojected from
   M sin i ≈ 0.66 M_Jup using i = 78.8° (this is RV-only inclination; updated
   by Roettenbacher 2022 below). a = 3.5 AU, P = 7.4 yr, e = 0.07.
-- **Roettenbacher 2022** (`2022AJ....163...19R`, arXiv 2110.10643) —
+- **Roettenbacher 2022** ([`2022AJ....163...19R`](https://ui.adsabs.harvard.edu/abs/2022AJ....163...19R), arXiv 2110.10643) —
   astrometric cross-check; provides ε Eri b inclination consistent with disk
   plane (i ≈ 34°). Title "No Reliable Astrometric Detection" means the
   individual-mission astrometric signal is marginal but combined with disk
   plane gives the coplanar reading.
-- **MacGregor 2015** (`2015ApJ...809L..47M`, arXiv 1505.03879) — ALMA cold
-  ring at 64.4 ± 0.5 AU with e ≈ 0.07
-- **Booth 2017** (`2017MNRAS.469.3200B`, arXiv 1705.05868) — three-belt
+- **MacGregor 2015** ([`2015ApJ...809...47M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...809...47M), arXiv 1507.01642) — SMA cold
+  ring at 64.4 (−3.0/+2.4) AU, ΔR/R ≈ 0.3
+- **Booth 2017** ([`2017MNRAS.469.3200B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.469.3200B), arXiv 1705.05868) — three-belt
   decomposition; disk inclination 34 ± 2°
-- **Su 2017** (`2017AJ....153..226S`, arXiv 1703.10330) — Genie model:
+- **Su 2017** ([`2017AJ....153..226S`](https://ui.adsabs.harvard.edu/abs/2017AJ....153..226S), arXiv 1703.10330) — Genie model:
   multi-belt sculpting requires gap-clearing planets; b is the sculptor of
   the asteroid–intermediate gap
-- **Quillen 2002** (`2002ApJ...578L.149Q`) — historical outer ε Eri c
+- **Quillen 2002** ([`2002ApJ...578L.149Q`](https://ui.adsabs.harvard.edu/abs/2002ApJ...578L.149Q)) — historical outer ε Eri c
   inference (ruled out)
-- **Benedict 2006** (`2006AJ....132.2206B`) — HST FGS astrometry (superseded
+- **Benedict 2006** ([`2006AJ....132.2206B`](https://ui.adsabs.harvard.edu/abs/2006AJ....132.2206B)) — HST FGS astrometry (superseded
   by Mawet 2019 direct imaging)
 
 Key extracted numbers (verified against host Phase 3 + DB):

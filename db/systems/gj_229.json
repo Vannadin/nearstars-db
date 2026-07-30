@@ -32,13 +32,104 @@
             "recommended": true
           }
         ],
-        "radius_measurements": [],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.5581,
+            "uncertainty_rsun": 0.0197,
+            "method": "sed_fitting",
+            "recommended": true,
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          },
+          {
+            "value_rsun": 0.5231,
+            "uncertainty_rsun": 0.019,
+            "method": "sed_fitting",
+            "recommended": false,
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965"
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 3700,
+            "method": "sed_fitting",
+            "recommended": true,
+            "notes": "GJ 229 A = HD 42581 A = Karmn J06105-218 (the famous T-dwarf host primary).",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          },
+          {
+            "value_k": 3837,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "recommended": false,
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.0526,
+            "uncertainty_lsun": 0.00238,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 2.82,
+            "uncertainty_gyr": 0.43,
+            "method": "gyrochronology",
+            "recommended": true,
+            "notes": "Converted from log Age = 0.45 +/- 0.062 dex: 2.82 (+0.43/-0.38) Gyr; uncertainty = larger side. Prot 27.3 d.",
+            "reference": "Engle et al. 2024",
+            "bibcode": "2024ApJ...960...62E",
+            "doi": "10.3847/1538-4357/ad0840"
+          }
+        ],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 27.3,
+            "uncertainty_days": 0.2,
+            "method": "photometric_variability",
+            "recommended": true,
+            "notes": "ASAS; Schofer 2019 and Astudillo 2017 (~25 d) consistent.",
+            "reference": "Diez Alonso et al. 2019",
+            "bibcode": "2019A&A...621A.126D",
+            "doi": "10.1051/0004-6361/201833316"
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_h_alpha_ew_angstrom": 0.003,
+            "uncertainty_h_alpha_ew_angstrom": 0.009,
+            "method": "h_alpha",
+            "recommended": true,
+            "notes": "~0 in Halpha.",
+            "reference": "Schofer et al. 2019",
+            "bibcode": "2019A&A...623A..44S",
+            "doi": "10.1051/0004-6361/201834114"
+          },
+          {
+            "value_log_rhk": -4.669,
+            "uncertainty_log_rhk": 0.132,
+            "method": "log_rhk",
+            "recommended": false,
+            "notes": "Moderately active in Ca II — consistent with the 27 d rotation.",
+            "reference": "Astudillo-Defru et al. 2017",
+            "bibcode": "2017A&A...600A..13A",
+            "doi": "10.1051/0004-6361/201527078"
+          }
+        ],
         "stellarium_id": "HD42581"
       },
       "derived": {
@@ -60,16 +151,16 @@
         "icrs_vx_j2000_km_s": 3.8584338670805005,
         "icrs_vy_j2000_km_s": -3.2188187858269055,
         "icrs_vz_j2000_km_s": -19.80239659620529,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.0526,
+        "age_gyr": 2.82,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 27.3,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": 0.003
       },
       "principia": {
         "gravitational_parameter_km3_s2": 67550631969.162,
-        "mean_radius_km": null
+        "mean_radius_km": 388270.2
       }
     }
   ],
@@ -210,7 +301,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -219,7 +310,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -228,14 +319,32 @@
       "title": "Feng et al. 2022",
       "doi": "10.3847/1538-4365/ac7e57",
       "bibcode": "2022ApJS..262...21F",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 229 mass (unverified)"
+      ]
+    },
+    {
+      "title": "Cifuentes et al. 2020",
+      "doi": "10.1051/0004-6361/202038295",
+      "bibcode": "2020A&A...642A.115C",
+      "accessed": "2026-07-30",
+      "used_for": [
+        "GJ 229 radius (sed_fitting)"
+      ]
+    },
+    {
+      "title": "Schweitzer et al. 2019",
+      "doi": "10.1051/0004-6361/201834965",
+      "bibcode": "2019A&A...625A..68S",
+      "accessed": "2026-07-30",
+      "used_for": [
+        "GJ 229 radius (sed_fitting)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

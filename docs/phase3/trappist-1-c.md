@@ -355,7 +355,7 @@ The c bibliography is smaller than b's (32 vs 66). Most non-arXiv
 papers are conference summaries or sister-planet biosignature studies.
 Notable items skipped:
 
-- **2026NatAs.tmp...65G** "No thick atmosphere around TRAPPIST-1 b
+- **[`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G)** "No thick atmosphere around TRAPPIST-1 b
   and c from JWST thermal phase curves" — likely the Nature Astronomy
   publication of Ducrot 2025 (covered via arXiv [2509.02128](https://arxiv.org/abs/2509.02128)). Skip.
 - **2025arXiv...** various retraction / re-fit conference summaries.

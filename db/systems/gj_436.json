@@ -43,12 +43,73 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3400,
+            "method": "sed_fitting",
+            "recommended": true,
+            "notes": "CARMENES BT-Settl SED-grid Teff (100 K grid, sigma~50 K).",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          },
+          {
+            "value_k": 3505,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "recommended": false,
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.024313,
+            "uncertainty_lsun": 0.00034,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 4.6,
+            "method": "gyrochronology",
+            "recommended": true,
+            "notes": "log Age = 0.659 +/- 0.076 dex -> 4.6 (+0.9/-0.7) Gyr; from adopted Prot 71.4 d (longer than the curated 44.6 d — see rotation note).",
+            "reference": "Engle 2024",
+            "bibcode": "2024ApJ...960...62E",
+            "doi": "10.3847/1538-4357/ad0840"
+          }
+        ],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 44.6,
+            "uncertainty_days": 2.0,
+            "method": "photometric_variability",
+            "recommended": true,
+            "notes": "SuperWASP, FAP<1e-4; Suarez Mascareno lit 44.09 d. CONTESTED: Engle 2024 adopts 71.4 d for its gyro age — literature disagrees on GJ 436 Prot.",
+            "reference": "Diez Alonso et al. 2019",
+            "bibcode": "2019A&A...621A.126D",
+            "doi": "10.1051/0004-6361/201833316"
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.457,
+            "uncertainty_log_rhk": 0.062,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "N=171 HARPS spectra. Shan 2024 compiles -5.27.",
+            "reference": "Astudillo-Defru et al. 2017",
+            "bibcode": "2017A&A...600A..13A",
+            "doi": "10.1051/0004-6361/201527078"
+          }
+        ],
         "stellarium_id": "HIP57087"
       },
       "derived": {
@@ -70,11 +131,11 @@
         "icrs_vx_j2000_km_s": -28.006786057786154,
         "icrs_vy_j2000_km_s": -39.42293374711312,
         "icrs_vz_j2000_km_s": -29.69218841050238,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.024313,
+        "age_gyr": 4.6,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "rotation_period_days": 44.6,
+        "activity_log_rhk": -5.457,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -158,7 +219,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -167,7 +228,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -176,14 +237,14 @@
       "title": "Maciejewski et al. 2014",
       "doi": null,
       "bibcode": "2014AcA....64..323M",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 436 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

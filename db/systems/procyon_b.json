@@ -19,7 +19,7 @@
         "radial_velocity_source": "simbad",
         "vmag_v": 10.92,
         "vmag_source": "hipparcos_hardcoded",
-        "teff_k": 7585,
+        "teff_k": 7740,
         "spectype": "DQZ",
         "mass_measurements": [
           {
@@ -43,9 +43,31 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 7740,
+            "uncertainty_k": 50,
+            "method": "low_res_spectroscopy",
+            "reference": "Provencal et al. 2002",
+            "bibcode": "2002ApJ...568..324P",
+            "doi": "10.1086/338769",
+            "recommended": true,
+            "notes": "HST/STIS 1800-10000 A (C2 Swan, Mg II, Fe). The only direct spectroscopic Teff; adopted unchanged by Liebert 2013 and Bond 2015 — single entry by design, not omission."
+          }
+        ],
         "luminosity_measurements": [],
-        "age_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 1.19,
+            "uncertainty_gyr": 0.11,
+            "method": "wd_cooling_model",
+            "reference": "Liebert et al. 2013",
+            "bibcode": "2013ApJ...769....7L",
+            "doi": "10.1088/0004-637X/769/1/7",
+            "recommended": true,
+            "notes": "COOLING age 1.19 +/- 0.11 Gyr from dedicated non-DA cooling sequences. System total age contested: Liebert 2013 1.87 Gyr vs Bond 2015 ~2.7 Gyr (affects total, not the cooling age)."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -76,7 +98,7 @@
         "barycenter_method": "single_component(Procyon A)",
         "phase_reliable": true,
         "luminosity_lsun": null,
-        "age_gyr": null,
+        "age_gyr": 1.19,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
@@ -94,7 +116,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +125,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -112,7 +134,7 @@
       "title": "Bond et al. 2015",
       "doi": "10.1088/0004-637X/813/2/106",
       "bibcode": "2015ApJ...813..106B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "Procyon B mass (binary_orbit)"
       ]
@@ -121,14 +143,14 @@
       "title": "Provencal et al. 2002 (mass-radius for DQZ WD)",
       "doi": "10.1086/338769",
       "bibcode": "2002ApJ...568..324P",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "Procyon B radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

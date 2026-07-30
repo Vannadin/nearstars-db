@@ -352,7 +352,7 @@ b bibliography 에는 arXiv preprint 가 없는 ~30 편의 논문이 있고, arX
   Nature Astronomy 종합일 가능성. arXiv preprint 가 곧 올라올 예정이지만
   수집 시점(2026-05-21)에는 아직 색인되지 않음. **몇 주 뒤 재수집
   대상으로 flag.**
-- **2026NatAs.tmp...65G** "No thick atmosphere around TRAPPIST-1 b
+- **[`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G)** "No thick atmosphere around TRAPPIST-1 b
   and c from JWST thermal phase curves" — Ducrot 2025 의 Nature
   Astronomy 출판판일 가능성 (arXiv preprint [2509.02128](https://arxiv.org/abs/2509.02128) 로 이미 다룸).
   Skip.

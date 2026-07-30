@@ -43,9 +43,50 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 1320,
+            "uncertainty_k": 20,
+            "method": "sed_fitting",
+            "reference": "King et al. 2010",
+            "bibcode": "2010A&A...510A..99K",
+            "doi": "10.1051/0004-6361/200912981",
+            "recommended": true,
+            "notes": "1300-1340 K from 0.63-5.1 um VLT spectra vs BT-Settl models (log g 5.25); midpoint. COND03 evolutionary prediction hotter (1352-1385 K) — atmospheric vs evolutionary Teff tension noted in-paper. Chen 2022 adds no independent Teff."
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 2e-05,
+            "uncertainty_lsun": 8e-07,
+            "method": "bolometric_flux",
+            "reference": "King et al. 2010",
+            "bibcode": "2010A&A...510A..99K",
+            "doi": "10.1051/0004-6361/200912981",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 3.5,
+            "uncertainty_gyr": 1.0,
+            "method": "activity_age",
+            "reference": "Chen et al. 2022",
+            "bibcode": "2022AJ....163..288C",
+            "doi": "10.3847/1538-3881/ac66d2",
+            "recommended": true,
+            "notes": "3.5 (+0.8/-1.0) Gyr — Chen 2022's own adopted system age (from eps Ind A chromospheric activity) used as the BD cooling benchmark; uncertainty = larger (lower) side."
+          },
+          {
+            "value_gyr": 4.0,
+            "method": "isochrone",
+            "reference": "King et al. 2010",
+            "bibcode": "2010A&A...510A..99K",
+            "doi": "10.1051/0004-6361/200912981",
+            "recommended": false,
+            "notes": "Independent BD-derived system age 3.7-4.3 Gyr (midpoint) from dynamical mass + COND03 models; superseded by the tighter Chen 2022 masses but retained."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -75,8 +116,8 @@
         "mass_ratio_q": 0.44289450741063646,
         "barycenter_method": "single_component(eps Ind Ba)",
         "phase_reliable": false,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 2e-05,
+        "age_gyr": 3.5,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
@@ -94,7 +135,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +144,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -112,7 +153,7 @@
       "title": "Chen et al. 2022",
       "doi": "10.3847/1538-3881/ac66d2",
       "bibcode": "2022AJ....163..288C",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "eps Ind Ba mass (binary_orbit)"
       ]
@@ -121,14 +162,14 @@
       "title": "King et al. 2010",
       "doi": "10.1051/0004-6361/200912981",
       "bibcode": "2010A&A...510A..99K",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "eps Ind Ba radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

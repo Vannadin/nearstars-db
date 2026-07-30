@@ -19,7 +19,7 @@
         "radial_velocity_source": "simbad",
         "vmag_v": 0.77,
         "vmag_source": "hipparcos_hardcoded",
-        "teff_k": 7485,
+        "teff_k": 7550,
         "spectype": "A7 V",
         "mass_measurements": [
           {
@@ -43,11 +43,66 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 7550,
+            "method": "high_res_spectroscopy",
+            "reference": "Erspamer & North 2003",
+            "bibcode": "2003A&A...398.1121E",
+            "recommended": true,
+            "notes": "Disk-integrated spectroscopic Teff (log g 4.13, [Fe/H] -0.24). Altair is a rapid rotator with strong gravity darkening — interferometric imaging (Monnier 2007 2007Sci...317..342M; Bouchaud 2020) resolves a pole-hot/equator-cool gradient rather than a single Teff; the pole/equator values live in paper tables not extractable via ADS/VizieR channels. Zorec & Royer 2012 7727 +/- 71 K and David & Hillenbrand 2015 7799 +/- 265 K are consistent."
+          },
+          {
+            "value_k": 7727,
+            "uncertainty_k": 71,
+            "method": "photometric_color",
+            "reference": "Zorec & Royer 2012",
+            "bibcode": "2012A&A...537A.120Z",
+            "recommended": false,
+            "notes": "From logT = 3.888 +/- 0.004 (VizieR J/A+A/537/A120, HD 187642); companion to the recommended luminosity (same paper)."
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 12.1,
+            "uncertainty_lsun": 0.4,
+            "method": "photometric",
+            "reference": "Zorec & Royer 2012",
+            "bibcode": "2012A&A...537A.120Z",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 0.1,
+            "method": "isochrone",
+            "reference": "Bouchaud et al. 2020",
+            "bibcode": "2020A&A...633A..78B",
+            "doi": "10.1051/0004-6361/201936830",
+            "recommended": true,
+            "notes": "~100 Myr from the 2D ESTER rotation-aware evolutionary model (core-H fraction Xc 0.71, M 1.86 +/- 0.03 Msun asteroseismically constrained). No formal sigma (model-dependent); consistent with Peterson 2006 \"barely off the ZAMS\"."
+          },
+          {
+            "value_gyr": 0.48,
+            "method": "isochrone",
+            "reference": "David & Hillenbrand 2015",
+            "bibcode": "2015ApJ...804..146D",
+            "recommended": false,
+            "notes": "482 Myr (68% CI 285-1055; VizieR J/ApJ/804/146, HIP 97649) from NON-rotating isochrones — unreliable for a rapid rotator; independent point only."
+          }
+        ],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 0.324,
+            "method": "v_sin_i",
+            "reference": "Bouchaud et al. 2020",
+            "bibcode": "2020A&A...633A..78B",
+            "doi": "10.1051/0004-6361/201936830",
+            "recommended": true,
+            "notes": "Period 7h46m derived in-paper (single source) from v sin i ~243 km/s + V_eq ~314 km/s + R_eq 2.008 +/- 0.006 Rsun + i = 50.7 +/- 1.2 deg (2D ESTER model, asteroseismic); Omega/Omega_K 0.74, flattening 0.220. Near-true period (i constrained). Independent v sin i: van Belle 2001 210 +/- 13, Zorec & Royer 2012 217 km/s."
+          }
+        ],
         "activity_measurements": [],
         "stellarium_id": "Altair"
       },
@@ -70,10 +125,10 @@
         "icrs_vx_j2000_km_s": -1.3413596899433635,
         "icrs_vy_j2000_km_s": 30.60997084538409,
         "icrs_vz_j2000_km_s": 5.1560748685721824,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 12.1,
+        "age_gyr": 0.1,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 0.324,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
@@ -89,7 +144,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -98,7 +153,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -107,7 +162,7 @@
       "title": "Bouchaud et al. 2020 (rotating evolutionary fit to interferometry)",
       "doi": "10.1051/0004-6361/201936830",
       "bibcode": "2020A&A...633A..78B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "Altair mass (evolutionary_model)"
       ]
@@ -116,14 +171,14 @@
       "title": "Monnier et al. 2007 (mean radius; equatorial 2.03 polar 1.63 Rsun)",
       "doi": "10.1126/science.1143205",
       "bibcode": "2007Sci...317..342M",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "Altair radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

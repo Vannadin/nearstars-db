@@ -68,7 +68,7 @@ Kopernicus / 대기 cfg-ready 값. `Confidence`. high = 직접 측정 혹은
 | `ring_present` | false | medium | Mawet 2019 Ms-band 고대비 촬영은 3.5 AU 분리에서 Saturn 밝기 고리 시스템을 검출했어야 함. 검출 없음. cfg 는 "고리 없음" 으로 기본값 설정 |
 | `ring_observed` | false | high | Mawet 2019 Ms-band 직접 촬영에서 고리 성분 검출되지 않음 |
 | `rotation_period_hours` | 10 | low | Tie-break. 자전 측정 없음. Jupiter analog 9.93 h (Jupiter 가 태양계에서 가장 빠른 jovian 자전). cfg 는 둥근 Jupiter-like 10 h 를 더 느린 Saturn-like (10.7 h) 나 Uranus-like (17.2 h) 보다 채택. 3.5 AU 에서의 질량 스케일과 각운동량 예산이 Jupiter 급 고속 자전 쪽 |
-| `magnetic_field_strength_microtesla_equator` | 660 | medium | 에너지플럭스 다이나모 스케일링 (Christensen et al. 2009 `2009Natur.457..167C`. Reiners & Christensen 2010 `1007.1514`, Table 4.3 + 1 M_J 냉각 트랙). B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → 0.66 M_Jup, 0.44 Gyr (젊음, gyrochronology) 에서 B_eq ≈ 660 µT (범위 540–810). 젊은 거대 행성은 질량이 낮아도 Jupiter 를 넘어선다. 다이나모를 구동하는 것이 질량이 아니라 내부 광도이기 때문이다. 이전의 "축소판 jovian, Jupiter 보다 ~7% 아래" 설명은 젊음 효과의 방향을 거꾸로 잡은 것이었다. docs/reference/planetary-dynamo-scaling.md 참고 |
+| `magnetic_field_strength_microtesla_equator` | 660 | medium | 에너지플럭스 다이나모 스케일링 (Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C). Reiners & Christensen 2010 `1007.1514`, Table 4.3 + 1 M_J 냉각 트랙). B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → 0.66 M_Jup, 0.44 Gyr (젊음, gyrochronology) 에서 B_eq ≈ 660 µT (범위 540–810). 젊은 거대 행성은 질량이 낮아도 Jupiter 를 넘어선다. 다이나모를 구동하는 것이 질량이 아니라 내부 광도이기 때문이다. 이전의 "축소판 jovian, Jupiter 보다 ~7% 아래" 설명은 젊음 효과의 방향을 거꾸로 잡은 것이었다. docs/reference/planetary-dynamo-scaling.md 참고 |
 | `magnetic_dipole_moment_normalized_earth` | 34000 | low | 660 µT × (1.05 R_Jup)³ 를 Jupiter (적도 4.5 G, Earth 의 20 000배) 와 비교 → 에너지플럭스 스케일링 (`1007.1514`) 으로 ≈ 34 000 × Earth. 선형 질량 0.66 × 20 000 = 13 200 을 대체. R³ 에 민감 → 신뢰도 낮음 |
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break. Jupiter 9.6°, Saturn 0°, Neptune 47°. cfg 는 시각적으로 명확한 오로라 oval 오프셋을 위해 Jupiter analog 10° 채택. Saturn-aligned 0° 는 시각적으로 단조로움 |
 | `aurora_present` | true | medium | ε Eri 의 항성풍 ≈ 30× 태양 질량 손실률 (Wood 2002) + 사이클 활동 corona 가 3.5 AU 에서 강한 입사 플라즈마 flux 구동. jovian 자기권 포획과 결합하면 Jupiter 와 비슷한 오로라 방출이 더 강한 구동으로 나타남 |
@@ -291,48 +291,48 @@ Jupiter-analog 자전 + 자기장 조합은 ε Eri b 를 "강한 자기권" 영�
 ### Read (visual-informative, drove decisions above)
 
 - **Hatzes A. P. et al. 2000** — *Evidence for a Long-Period Planet
-  Orbiting ε Eridani*, ApJ 544, L145 (`2000ApJ...544L.145H`). 원래의
+  Orbiting ε Eridani*, ApJ 544, L145 ([`2000ApJ...544L.145H`](https://ui.adsabs.harvard.edu/abs/2000ApJ...544L.145H)). 원래의
   시선속도 발견 논문. 초기값 P ≈ 6.85 yr, M sin i ≈ 0.86 M_Jup 을
   설정 (이후 정밀화됨).
 - **Quillen A. C. & Thorndike S. 2002** — *Structure in the ε Eridani
   Dusty Disk Caused by Mean Motion Resonances with a 0.3 Eccentricity
-  Planet at 40 AU*, ApJ 578, L149 (`2002ApJ...578L.149Q`). 차가운
+  Planet at 40 AU*, ApJ 578, L149 ([`2002ApJ...578L.149Q`](https://ui.adsabs.harvard.edu/abs/2002ApJ...578L.149Q)). 차가운
   고리 이심률에서 외부 "ε Eri c" 를 추론한 역사적 시도. Mawet 2019
   직접 촬영으로 배제되었으나 다중 belt 조각 sculpting 맥락에서 중요.
 - **Benedict G. F. et al. 2006** — *The Extrasolar Planet ε Eridani b.
   Orbit and Mass from Combined Astrometric and Spectroscopic Data*,
-  AJ 132, 2206 (`2006AJ....132.2206B`). HST FGS 천체측정 시도. 직접
+  AJ 132, 2206 ([`2006AJ....132.2206B`](https://ui.adsabs.harvard.edu/abs/2006AJ....132.2206B)). HST FGS 천체측정 시도. 직접
   촬영으로 대체되었으나 질량 결정 체인에서 역사적으로 중요.
 - **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
   Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157,
-  33 (`2019AJ....157...33M`, [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). L′ / Ms band 에서의
+  33 ([`2019AJ....157...33M`](https://ui.adsabs.harvard.edu/abs/2019AJ....157...33M), [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). L′ / Ms band 에서의
   ε Eri b 직접 촬영 확정. 30 AU 외부에서 행성 질량 > 0.3 M_Jup 의
   외부 ε Eri c 배제. hot-start 인플레이션 jovian 모델을 배제하는
   열방출 상한 제약. **핵심 관측 논문**.
 - **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
   of ε Eridani b with Radial Velocities, Hipparcos IAD-Gaia DR2
   Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
-  AJ 162, 181 (`2021AJ....162..181L`).
+  AJ 162, 181 ([`2021AJ....162..181L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..181L)).
   RV + Hipparcos/Gaia 천체측정 결합 fit. 진질량
   M_b = 0.66 (+0.12/−0.09) M_Jup, i = 78.81° (+29.34/−22.41),
   a = 3.48 AU. **핵심 관측 논문**.
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
-  Detection of ε Eridani b*, AJ 163, 19 (`2022AJ....163...19R`,
+  Detection of ε Eridani b*, AJ 163, 19 ([`2022AJ....163...19R`](https://ui.adsabs.harvard.edu/abs/2022AJ....163...19R),
   [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)). 여러 미션에 걸친 천체측정 cross-check. 개별
   시그널은 marginal 하지만 디스크 평면 coplanarity 논증과 결합하면
   Llop-Sayson 의 RV 전용 78.8° 보다 i ≈ 34° 를 선호.
-- **MacGregor M. A. et al. 2015** — *ALMA Observations of the
-  Debris Disk around ε Eridani*, ApJ 809, L47
-  (`2015ApJ...809L..47M`, [arXiv:1505.03879](https://arxiv.org/abs/1505.03879)). ALMA 1.3 mm 촬영이
-  차가운 고리를 64.4 ± 0.5 AU 에서 e ≈ 0.07 로 분해. 디스크 경사각
-  기준 좌표계 제공.
+- **MacGregor M. A. et al. 2015** — *밀리미터 간섭계로 분해한
+  ε Eridani 계*, ApJ 809, 47
+  ([`2015ApJ...809...47M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...809...47M), [arXiv:1507.01642](https://arxiv.org/abs/1507.01642)). SMA 1.3 mm 촬영이
+  차가운 고리를 64.4 (−3.0/+2.4) AU, ΔR/R ≈ 0.3 으로 분해. 디스크
+  경사각 기준 좌표계 제공.
 - **Booth M. et al. 2017** — *The Northern arc of ε Eridani's
   Debris Ring as seen by ALMA*, MNRAS 469, 3200
-  (`2017MNRAS.469.3200B`, [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)). 다중 파장 분해. 삼중
+  ([`2017MNRAS.469.3200B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.469.3200B), [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)). 다중 파장 분해. 삼중
   belt 구조. 차가운 고리 경사각 34 ± 2° — ε Eri b 의 궤도면과 일치
   하는 canonical 경사각 기준.
 - **Su K. Y. L. et al. 2017** — *The Inner 25 AU Debris Distribution
-  in the ε Eri System*, AJ 153, 226 (`2017AJ....153..226S`,
+  in the ε Eri System*, AJ 153, 226 ([`2017AJ....153..226S`](https://ui.adsabs.harvard.edu/abs/2017AJ....153..226S),
   [arXiv:1703.10330](https://arxiv.org/abs/1703.10330)). "Genie" 다중 belt 조각 sculpting 모델. 3 AU
   asteroid analog 와 20 AU 중간 belt 사이의 inner-gap sculptor 로
   ε Eri b 를 지목. **`companion_position_relative_belts` 결정을
@@ -341,7 +341,7 @@ Jupiter-analog 자전 + 자기장 조합은 ε Eri b 를 "강한 자기권" 영�
 ### Read (context / methodology, not decision-driving)
 
 - **Burrows A. et al. 2003** — *Beyond the T dwarfs* 와 관련 차가운
-  jovian 진화 트랙 (`2003ApJ...596..587B`). 0.5–1.5 M_Jup 행성의
+  jovian 진화 트랙 ([`2003ApJ...596..587B`](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..587B)). 0.5–1.5 M_Jup 행성의
   질량-반지름-나이 트랙. 0.66 M_Jup, 0.44 Gyr 에서 ε Eri b 의 반지름
   과 내부 광도 추정에 사용.
 - **Fortney J. J. et al. 2007** — *Planetary Radii across Five
@@ -353,13 +353,13 @@ Jupiter-analog 자전 + 자기장 조합은 ε Eri b 를 "강한 자기권" 영�
   ..174S`). hot-start 대 cold-start jovian 진화 트랙. Mawet 2019
   대비 측정이 ε Eri b 의 hot-start 트랙을 배제.
 - **Lodders K. 2003** — *Solar System Abundances and Condensation
-  Temperatures of the Elements* (`2003ApJ...591.1220L`). protosolar
+  Temperatures of the Elements* ([`2003ApJ...591.1220L`](https://ui.adsabs.harvard.edu/abs/2003ApJ...591.1220L)). protosolar
   풍부도 기준. 대기 조성 디폴트를 구동.
 - **Atreya S. K. et al. 1999** — *A comparison of the atmospheres
   of Jupiter and Saturn* 과 관련 응결 화학 참고. 암모니아 / 물 구름
   데크 고도 프레임워크 설정.
 - **Lewis J. S. 1969** — *The clouds of Jupiter and the NH₃-H₂O
-  and NH₃-H₂S systems* (`1969Icar...10..365L`). 원래의 열화학
+  and NH₃-H₂S systems* ([`1969Icar...10..365L`](https://ui.adsabs.harvard.edu/abs/1969Icar...10..365L)). 원래의 열화학
   구름 데크 시퀀스. 현대 jovian 대기 모델링에서도 여전히 사용되는
   프레임워크.
 - **Sromovsky L. A. et al. 2007** — Jupiter/Saturn 대류 구동과
@@ -374,60 +374,60 @@ Jupiter-analog 자전 + 자기장 조합은 ε Eri b 를 "강한 자기권" 영�
   ...2..303H`). sub-Neptune 톨린 화학을 jovian 으로 확장. Jupiter
   대비 haze 광학적 깊이 스케일링을 구동.
 - **Moses J. I. et al. 2005** — *Photochemistry of Saturn's
-  atmosphere* (`2005JGRE..110.8001M`). Saturn UV 광화학 기준. K2V
+  atmosphere* ([`2005JGRE..110.8001M`](https://ui.adsabs.harvard.edu/abs/2005JGRE..110.8001M)). Saturn UV 광화학 기준. K2V
   FUV 하의 ε Eri b 로 스케일.
 - **Wood B. E. et al. 2002** — *Measured Mass Loss Rates of Solar-
   like Stars as a Function of Age and Activity* (`2002ApJ...574
   ..412W`, arXiv:astro-ph/0203437). ε Eri 의 질량 손실률 ~30× 태양.
   자기권 구동 강도를 구동.
 - **France K. et al. 2018** — *The MUSCLES Treasury Survey* K 왜성
-  확장 (`2018ApJS..239...16F`). ε Eri 의 FUV / Lyα flux. 광화학
+  확장 ([`2018ApJS..239...16F`](https://ui.adsabs.harvard.edu/abs/2018ApJS..239...16F)). ε Eri 의 FUV / Lyα flux. 광화학
   강도 추정을 구동.
 - **Reiners A. & Christensen U. R. 2010** — *A magnetic field
   evolution scenario for brown dwarfs and giant planets*
-  (`2010A&A...522A..13R`, [arXiv:1007.1514](https://arxiv.org/abs/1007.1514), cached). jovian 에 대한
+  ([`2010A&A...522A..13R`](https://ui.adsabs.harvard.edu/abs/2010A%26A...522A..13R), [arXiv:1007.1514](https://arxiv.org/abs/1007.1514), cached). jovian 에 대한
   에너지플럭스 다이나모 스케일링. cfg 의 660 μT 자기장의 근거다 (젊은
   거대 행성은 Jupiter 보다 약한 게 아니라 더 강하다). Christensen,
-  Holzwarth & Reiners 2009 (`2009Natur.457..167C`) 의 스케일링 법칙
+  Holzwarth & Reiners 2009 ([`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C)) 의 스케일링 법칙
   위에 세워졌다.
 - **Metcalfe T. S. et al. 2013** — *Magnetic Activity Cycles in the
   Exoplanet Host Star ε Eridani*, ApJ 763, L26
-  (`2013ApJ...763L..26M`, [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). ~2.95 년 채층 활동
+  ([`2013ApJ...763L..26M`](https://ui.adsabs.harvard.edu/abs/2013ApJ...763L..26M), [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). ~2.95 년 채층 활동
   사이클의 최초 보고. Open items 에 적힌 사이클 위상 자기권 구동
   동기화를 구동. (b-bibliography 에는 미fetch. host Phase 3 에서
   인용.)
 - **Coffaro M. et al. 2020** — *A solar-like magnetic cycle on the
   mature K-dwarf 61 Cygni A and the X-ray cycle of ε Eridani*, A&A
-  636, A49 (`2020A&A...636A..49C`, [arXiv:2002.11009](https://arxiv.org/abs/2002.11009)). ε Eri b 궤도
+  636, A49 ([`2020A&A...636A..49C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..49C), [arXiv:2002.11009](https://arxiv.org/abs/2002.11009)). ε Eri b 궤도
   에서 wind 구동을 변조하는 X 선 사이클 진폭을 정밀화. (host
   bibliography `eps-eri.yaml` 에 핀됨, status fetched. b 용으로는
   별도 핀 안 됨.)
 - **Canup R. M. & Ward W. R. 2002** — *Formation of the Galilean
   Satellites: Conditions of Accretion*, AJ 124, 3404
-  (`2002AJ....124.3404C`). circumplanetary-disk 위성 강착
+  ([`2002AJ....124.3404C`](https://ui.adsabs.harvard.edu/abs/2002AJ....124.3404C)). circumplanetary-disk 위성 강착
   프레임워크. 추측성 위성 시스템 Open item 의 맥락. (b-bibliography
   에는 미fetch.)
 
 ### Read (instrument / non-cfg-decisive)
 
 - **Snellen I. A. G. et al. 2014** — *Fast spin of the young
-  extrasolar planet β Pictoris b* (`2014Natur.509...63S`). 도플러
+  extrasolar planet β Pictoris b* ([`2014Natur.509...63S`](https://ui.adsabs.harvard.edu/abs/2014Natur.509...63S)). 도플러
   확장 분광 기법. ε Eri b 에는 아직 적용 안 됨.
 - **Drossart P. et al. 1989** — *Detection of H₃⁺ on Jupiter*
-  (`1989Natur.340..539D`). ε Eri b 의 향후 오로라 검출 채널로서의
+  ([`1989Natur.340..539D`](https://ui.adsabs.harvard.edu/abs/1989Natur.340..539D)). ε Eri b 의 향후 오로라 검출 채널로서의
   H₃⁺ 방출.
 - **Clarke J. T. et al. 1996, 2009** — Jupiter HST FUV 오로라 관측.
   ε Eri b 에 스케일된 오로라 oval 기하 기준 제공.
 - **Bonfond B. 2017** — *Jovian auroral aspects* (`2017JGRA
   ...122.4548B`). Jupiter 오로라 oval 위도 기준.
 - **Wong M. H. et al. 2004** — *Updated Galileo probe abundance
-  measurements* (`2004Icar..171..153W`). Jupiter CH₄ / NH₃ 풍부도
+  measurements* ([`2004Icar..171..153W`](https://ui.adsabs.harvard.edu/abs/2004Icar..171..153W)). Jupiter CH₄ / NH₃ 풍부도
   기준. cfg 가 Jupiter analog 값 채택.
 - **Hanel R. A. et al. 1983, Li L. et al. 2018** — Saturn Bond
-  알베도 측정 (`1983Icar...53..262H`. `2018NatCo...9.3709L`).
+  알베도 측정 ([`1983Icar...53..262H`](https://ui.adsabs.harvard.edu/abs/1983Icar...53..262H). [`2018NatCo...9.3709L`](https://ui.adsabs.harvard.edu/abs/2018NatCo...9.3709L)).
   차가운 jovian Bond 알베도 tie-break 기준값.
 - **Goldreich P. & Soter S. 1966** — *Q in the Solar System*
-  (`1966Icar....5..375G`). 조석 잠금 시간 척도 계산을 위한 조석
+  ([`1966Icar....5..375G`](https://ui.adsabs.harvard.edu/abs/1966Icar....5..375G)). 조석 잠금 시간 척도 계산을 위한 조석
   소산 Q factor 기준.
 
 ### Not read — no arXiv preprint or low-priority (~30 papers)

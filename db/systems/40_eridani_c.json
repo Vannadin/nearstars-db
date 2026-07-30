@@ -96,8 +96,37 @@
             "recommended": true
           }
         ],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 8.56,
+            "method": "photometric_variability",
+            "reference": "Shan et al. 2024",
+            "bibcode": "2024A&A...684A...9S",
+            "doi": "10.1051/0004-6361/202346794",
+            "recommended": true,
+            "notes": "SuperWASP/TESS photometry; Shan 2024 quality flag SPD = D (lowest grade), their own determination. Only photometric period in the literature (Diez Alonso 2019 and Pass 2023 report none). Independently corroborated by Pass 2023 v sin i = 1.7 +/- 0.2 km/s, which with R = 0.274 R_sun implies P_rot/sin i = 8.2 d — excellent agreement. Prior \"debated, not curated\" stance (2026-05-29) reversed on this corroboration."
+          },
+          {
+            "value_days": 8.2,
+            "method": "v_sin_i",
+            "reference": "Pass et al. 2023",
+            "bibcode": "2023AJ....166...16P",
+            "doi": "10.3847/1538-3881/acd6a2",
+            "recommended": false,
+            "notes": "v sin i = 1.7 +/- 0.2 km/s; with R = 0.274 R_sun gives P_rot/sin i = 8.2 d (upper limit). Independent spectroscopic support for the Shan 2024 period."
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_h_alpha_ew_angstrom": -4.42,
+            "method": "h_alpha",
+            "reference": "Pass et al. 2023",
+            "bibcode": "2023AJ....166...16P",
+            "doi": "10.3847/1538-3881/acd6a2",
+            "recommended": true,
+            "notes": "H-alpha in emission; flare star (DY Eri). Multi-epoch TRES/CHIRON spectroscopy, volume-complete active mid-to-late M sample. No per-star EW uncertainty tabulated. NEXXUS ROSAT log Lx = 28.16 (Schmitt & Liefke 2004) is context only — the Lx/Lbol ratio would be a cross-paper computation, deliberately not curated as a measurement."
+          }
+        ],
         "stellarium_id": "omi02EriC"
       },
       "derived": {
@@ -127,9 +156,9 @@
         "luminosity_lsun": 0.00651,
         "age_gyr": 1.8,
         "metallicity_fe_h_dex": -0.21,
-        "rotation_period_days": null,
+        "rotation_period_days": 8.56,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": -4.42
       },
       "principia": {
         "gravitational_parameter_km3_s2": 26277063123.564,
@@ -143,7 +172,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-20",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -152,7 +181,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-20",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -161,7 +190,7 @@
       "title": "Mason et al. 2021",
       "doi": "10.3847/1538-3881/abfaa2",
       "bibcode": "2021AJ....162...53M",
-      "accessed": "2026-06-20",
+      "accessed": "2026-07-30",
       "used_for": [
         "40 Eridani C mass (binary_orbit)"
       ]
@@ -170,7 +199,7 @@
       "title": "Mason, Hartkopf & Miles 2017",
       "doi": "10.3847/1538-3881/aa803e",
       "bibcode": "2017AJ....154..200M",
-      "accessed": "2026-06-20",
+      "accessed": "2026-07-30",
       "used_for": [
         "40 Eridani C mass (binary_orbit)"
       ]
@@ -179,14 +208,14 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-06-20",
+      "accessed": "2026-07-30",
       "used_for": [
         "40 Eridani C radius (spectroscopic_calibration)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-20",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

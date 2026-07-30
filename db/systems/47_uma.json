@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 5.0117,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5860,
+        "teff_k": 5960,
         "spectype": "G1-VFe-0.5",
         "mass_measurements": [
           {
@@ -43,12 +43,62 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5960,
+            "uncertainty_k": 60,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "notes": "Homogeneous nearby-FGK abundance survey. SPOCS 5882 K, Brewer 2016 5872 K agree within ~90 K.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 1.58,
+            "method": "photometric",
+            "recommended": true,
+            "notes": "log L = 0.20 (M_bol from V + BC + Hipparcos parallax).",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 3.3,
+            "method": "isochrone",
+            "recommended": true,
+            "notes": "Luck 2017 isochrone; SPOCS isochrone gives 5.0 Gyr.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          },
+          {
+            "value_gyr": 5.0,
+            "method": "activity_age",
+            "recommended": false,
+            "notes": "Chromospheric (R'HK) age — genuine disagreement with the younger isochrone.",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "doi": "10.1086/591785"
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.02,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Boro Saikia 2018 gives -4.98/-4.86 multi-epoch. Inactive, near the solar-minimum floor.",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "doi": "10.1086/591785"
+          }
+        ],
         "stellarium_id": "47UMa"
       },
       "derived": {
@@ -70,11 +120,11 @@
         "icrs_vx_j2000_km_s": -0.537101737805112,
         "icrs_vy_j2000_km_s": 21.754185477086835,
         "icrs_vz_j2000_km_s": 10.05340635758319,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 1.58,
+        "age_gyr": 3.3,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "activity_log_rhk": -5.02,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -285,7 +335,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -294,7 +344,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -303,7 +353,7 @@
       "title": "Stassun et al. 2019",
       "doi": null,
       "bibcode": "2019AJ....158..138S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "47 UMa mass (unverified)"
       ]
@@ -312,14 +362,14 @@
       "title": "Gregory Fischer 2010",
       "doi": "10.1111/j.1365-2966.2009.16233.x",
       "bibcode": "2010MNRAS.403..731G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "planet 47 UMa b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

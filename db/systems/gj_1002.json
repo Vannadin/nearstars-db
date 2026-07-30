@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 13.9525,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 2951,
+        "teff_k": 2900,
         "spectype": "M5.5V",
         "mass_measurements": [
           {
@@ -43,12 +43,53 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 2900,
+            "method": "sed_fitting",
+            "recommended": true,
+            "notes": "SED-grid, sigma~50 K.",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.0014062,
+            "uncertainty_lsun": 1.92e-05,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
         "age_measurements": [],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 126,
+            "uncertainty_days": 15,
+            "method": "unverified",
+            "reference": "Suarez Mascareno et al. 2023",
+            "bibcode": "2023A&A...670A...5S",
+            "doi": "10.1051/0004-6361/202244991",
+            "recommended": true,
+            "notes": "From RV + FWHM GP activity modeling (not photometric — hence unverified method tag). Supersedes Shan 2024 compiled 93 d (Fouque 2023)."
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_h_alpha_ew_angstrom": 0.0,
+            "method": "h_alpha",
+            "recommended": true,
+            "notes": "pEW(Halpha) ~= 0: chromospherically quiet (Halpha filled-in). No log_rhk published.",
+            "reference": "Schofer et al. 2019",
+            "bibcode": "2019A&A...623A..44S",
+            "doi": "10.1051/0004-6361/201834114"
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -70,12 +111,12 @@
         "icrs_vx_j2000_km_s": -45.25419888636936,
         "icrs_vy_j2000_km_s": -19.976469856455214,
         "icrs_vz_j2000_km_s": -37.80354464211414,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.0014062,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 126,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": 0.0
       },
       "principia": {
         "gravitational_parameter_km3_s2": 15925492802.16,
@@ -216,7 +257,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -225,7 +266,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -234,14 +275,14 @@
       "title": "Suarez Mascareno et al. 2023",
       "doi": null,
       "bibcode": "2023A&A...670A...5S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 1002 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

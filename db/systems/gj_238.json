@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 11.592,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3395,
+        "teff_k": 3485,
         "spectype": "M2.5V",
         "mass_measurements": [
           {
@@ -43,12 +43,44 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3485,
+            "uncertainty_k": 140,
+            "method": "photometric_color",
+            "recommended": true,
+            "notes": "Tey 2024 (this-work) via the Mann 2015/2019 empirical relations; consistent with the curated R = 0.4314 (same paper). Southern, not in CARMENES.",
+            "reference": "Tey et al. 2024",
+            "bibcode": "2024AJ....167..283T",
+            "doi": "10.3847/1538-3881/ad3df1"
+          }
+        ],
         "luminosity_measurements": [],
         "age_measurements": [],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 81.0,
+            "method": "unverified",
+            "recommended": true,
+            "notes": "HARPS Ca II S-index periodogram (spectroscopic). Tey 2024 mentions a 'putative 44-d' ground-photometry period (unconfirmed).",
+            "reference": "Astudillo-Defru et al. 2017",
+            "bibcode": "2017A&A...600A..13A",
+            "doi": "10.1051/0004-6361/201527078"
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.43,
+            "uncertainty_log_rhk": 0.089,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Inactive (HARPS).",
+            "reference": "Astudillo-Defru et al. 2017",
+            "bibcode": "2017A&A...600A..13A",
+            "doi": "10.1051/0004-6361/201527078"
+          }
+        ],
         "stellarium_id": "HIP31300"
       },
       "derived": {
@@ -73,8 +105,8 @@
         "luminosity_lsun": null,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "rotation_period_days": 81.0,
+        "activity_log_rhk": -5.43,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -153,7 +185,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -162,7 +194,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -171,14 +203,14 @@
       "title": "Tey et al. 2024",
       "doi": "10.3847/1538-3881/ad3df1",
       "bibcode": "2024AJ....167..283T",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 238 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

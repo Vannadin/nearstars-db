@@ -17,7 +17,7 @@ Janson 2008). ε Eri 는 AB Doradus / Local Association 운동학 복합체
 가 ≈ 3 AU 에 있고 Spitzer 가 검출했으며 (Backman 2009. Su 2017),
 중간 dust 성분이 ≈ 20 AU 부근에 Herschel 자료로부터 추정되며
 (Greaves 2014. Booth 2017), 차가운 Kuiper analog 링이 ≈ 64 AU 에
-있어 처음에는 JCMT/SCUBA (Greaves 1998), 이어서 ALMA 가 고정밀로
+있어 처음에는 JCMT/SCUBA (Greaves 1998), 이어서 (서브)mm 간섭계가 고정밀로
 분해했습니다 (MacGregor 2015. Booth 2017). 차가운 링은 좁고 이심
 (e ≈ 0.07) 하며, 전체 dust 질량은 ≈ 0.04 M⊕ 입니다. canonical 해석
 (Su 2017 "Genie" 모델) 은 gap-clearing 행성들이 다중 belt 구조를
@@ -76,12 +76,12 @@ tie-break (별 + 디스크 + jovian 점광원의 시각 hex 색조) 입니다.
 | `disk_intermediate_inner_radius_au` | 20 | medium | Greaves 2014 Herschel — 중간 dust 성분 (2026-05-29 재귀속, Booth 2017 은 69 AU 링만 분해하고 20 AU 방출 없음). 가장 덜 분해된 belt |
 | `disk_intermediate_tint_rgb_hex` | `#fffcf3` (거의 중성. vivid `#fff6d8`) | low | 측정된 광학 색 없음. Mie 반사율 합성. blowout 크기 규산염 grain (a_min ~0.2 µm) → 거의 중성 반사율 (B/I 0.93). 별빛은 렌더러가 K2V 별색을 위에 입힘. vivid 팩 `#fff6d8` |
 | `disk_intermediate_opacity` | 0.20 | low | Tie-break. 희미한 중간 dust, 가시성 위해 boost |
-| `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 ALMA — 좁고 이심(e ≈ 0.07) 차가운 링이 64.4 ± 0.5 AU 에서 분해 (Booth 2017 Herschel 확인) |
+| `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 SMA — 좁고 이심(e ≈ 0.07) 차가운 링이 64.4 (−3.0/+2.4) AU 에서 분해 (Booth 2017 Herschel 확인) |
 | `disk_cold_dust_temperature_k` | 35 | high | MacGregor 2015 / Greaves 차가운 링 SED |
 | `disk_cold_tint_rgb_hex` | `#fff5ef` (옅은 따뜻함. vivid `#ffe3d0`) | low | 측정된 광학 색 없음 (sub-mm/mm 만). Mie 반사율 합성. 큰 얼음/규산염 grain (a ~15–135 µm, Backman 2009) 의 얼음+규산염 광학 상수를 Maxwell-Garnett 유효매질 이론으로 혼합 → 약간 따뜻한 반사율 (B/I 0.70). 별빛은 렌더러가 K2V 별색을 위에 입힘. vivid 팩 `#ffe3d0` |
 | `disk_cold_opacity` | 0.30 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
 | `disk_morphology` | three-belt. ~3 AU 안쪽 asteroid analog + ~20 AU 중간 성분 + ~64 AU 차가운 Kuiper analog 링 (좁고 이심 e ≈ 0.07) | medium | Su 2017 Genie 모델 + Booth 2017 / Greaves 2014 다중 belt 분해. intermediate 가 가장 덜 분해됨 |
-| `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA. Booth 2017 Herschel/SPIRE. Su 2017 Spitzer/MIPS. 여러 파장에서 차가운 링이 분해됨 |
+| `disk_resolved_imaging` | true | high | MacGregor 2015 SMA. Booth 2017 Herschel/SPIRE. Su 2017 Spitzer/MIPS. 여러 파장에서 차가운 링이 분해됨 |
 | `disk_imaging_observatory` | ALMA (차가운 링 지오메트리), Herschel-SPIRE (질량), Spitzer-IRS/MIPS (따뜻한 성분) | high | MacGregor 2015. Booth 2017. Su 2017. Backman 2009 |
 | `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 ALMA/Herschel 분해, 차가운 main ring 의 inclination. ε Eri b 와 coplanar 가 아님. Llop-Sayson 2021 은 행성 궤도 (i = 78.81°) 가 링의 34° 에서 ~2σ 벗어났다고 봄 (coplanar 해는 ~1σ 만 허용) |
 | `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017. 세 belt 통합 dust 질량 |
@@ -273,72 +273,72 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
 
 - **Baines E. K. & Armstrong J. T. 2012** — *Confirming Fundamental
   Properties of the Exoplanet Host Star ε Eridani Using the Navy
-  Optical Interferometer*, ApJ 744, 138 (`2012ApJ...744..138B`,
+  Optical Interferometer*, ApJ 744, 138 ([`2012ApJ...744..138B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...744..138B),
   [arXiv:1112.0447](https://arxiv.org/abs/1112.0447)). NOI 간섭계: θ_LD = 2.153 ± 0.028 mas →
   R = 0.74 ± 0.01 R☉, Teff = 5039 ± 126 K (θ_LD + bolometric flux),
   L = 0.32 ± 0.03 L☉, M = 0.82 ± 0.05 M☉ (Yonsei-Yale isochrone).
   반지름/Teff/광도/질량의 Phase 2 권장 앵커.
 - **Croll B. et al. 2006** — *MOST 으로 ε Eridani 흑점 탐색*, ApJ 648,
-  607 (`2006ApJ...648..607C`). MOST 우주 광도가 흑점 두 개를 분해
+  607 ([`2006ApJ...648..607C`](https://ui.adsabs.harvard.edu/abs/2006ApJ...648..607C)). MOST 우주 광도가 흑점 두 개를 분해
   (P1 = 11.35 d, P2 = 11.55 d). Phase 2 권장 회전 주기.
 - **Fröhlich H.-E. 2007** — *MOST 자료로 본 ε Eri 의 차등 회전*, AN
-  328, 1037 (`2007AN....328.1037F`, [arXiv:0711.0806](https://arxiv.org/abs/0711.0806)). Bayesian 재분석이
+  328, 1037 ([`2007AN....328.1037F`](https://ui.adsabs.harvard.edu/abs/2007AN....328.1037F), [arXiv:0711.0806](https://arxiv.org/abs/0711.0806)). Bayesian 재분석이
   P1 = 11.348, P2 = 11.553 d, k ≈ 0.09 를 확인.
 - **Gomes da Silva J. et al. 2021** — *AMBRE-HARPS 표본 1674 FGK 별의
-  색채권 활동도*, A&A 646, A77 (`2021A&A...646A..77G`, [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)).
+  색채권 활동도*, A&A 646, A77 ([`2021A&A...646A..77G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G), [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)).
   553 스펙트럼에서 log R'HK = −4.496. Phase 2 권장 활동도 지수.
 - **Santos N. C. et al. 2004** — *행성 보유성의 분광 금속함량*, A&A
-  415, 1153 (`2004A&A...415.1153S`). [Fe/H] = −0.13 ± 0.04. Phase 2
+  415, 1153 ([`2004A&A...415.1153S`](https://ui.adsabs.harvard.edu/abs/2004A%26A...415.1153S)). [Fe/H] = −0.13 ± 0.04. Phase 2
   권장 금속함량.
 - **Barnes S. A. 2007** — *Gyrochronology 를 이용한 예시 field 별
-  나이*, ApJ 669, 1167 (`2007ApJ...669.1167B`). ε Eri 의 gyrochronology
+  나이*, ApJ 669, 1167 ([`2007ApJ...669.1167B`](https://ui.adsabs.harvard.edu/abs/2007ApJ...669.1167B)). ε Eri 의 gyrochronology
   나이 ≈ 0.44 Gyr (Coffaro 2020 채택). Phase 2 권장 나이 (어린 가지 —
   Canonical alternatives 참조).
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-type Dwarfs Using Activity-Rotation
-  Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`,
+  Diagnostics*, ApJ 687, 1264 ([`2008ApJ...687.1264M`](https://ui.adsabs.harvard.edu/abs/2008ApJ...687.1264M),
   [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). Ca II HK + 회전 + X 선 + isochrone 을 결합해
   ε Eri 의 나이 ≈ 440 Myr 유도. canonical 어린 나이 부여.
 - **Janson M. et al. 2008** — *ε Eri 를 포함한 근방 별의 직접 촬영
-  검출* (`2008A&A...488..771J`). 운동학 + 활동도 기반 나이의 독립
+  검출* ([`2008A&A...488..771J`](https://ui.adsabs.harvard.edu/abs/2008A%26A...488..771J)). 운동학 + 활동도 기반 나이의 독립
   확인.
 - **Donahue R. A. et al. 1996** — *Mt. Wilson HK 프로젝트의 차가운
-  주계열 별 회전* (`1996ApJ...466..384D`). ~14 년 Ca II H&K 시계열
+  주계열 별 회전* ([`1996ApJ...466..384D`](https://ui.adsabs.harvard.edu/abs/1996ApJ...466..384D)). ~14 년 Ca II H&K 시계열
   에서 P_rot = 11.2 d. Croll 2006 MOST 두-흑점 주기와 일관하며
   (권장값으로는 그쪽으로 대체됨).
 - **Metcalfe T. S. et al. 2013** — *외계행성 보유성 ε Eridani 의
-  자기 활동 사이클*, ApJ 763, L26 (`2013ApJ...763L..26M`,
+  자기 활동 사이클*, ApJ 763, L26 ([`2013ApJ...763L..26M`](https://ui.adsabs.harvard.edu/abs/2013ApJ...763L..26M),
   [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). Mt. Wilson + SMARTS Ca II HK 에서 2.95 년의
   색채권 자기 사이클 분해.
 - **Coffaro M. et al. 2020** — *ε Eri 의 활동 호스트. 17 년의 X 선
-  모니터링*, A&A 636, A49 (`2020A&A...636A..49C`, [arXiv:2003.07069](https://arxiv.org/abs/2003.07069)).
+  모니터링*, A&A 636, A49 ([`2020A&A...636A..49C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..49C), [arXiv:2003.07069](https://arxiv.org/abs/2003.07069)).
   XMM 모니터링이 X 선에서 사이클 확인. log L_X 28.3–28.9 cgs.
 - **Backman D. et al. 2009** — *Epsilon Eridani 의 행성형 Debris
   Disk. Spitzer 와 Caltech Submillimeter Observatory 관측을 바탕으로
-  한 구조와 역학*, ApJ 690, 1522 (`2009ApJ...690.1522B`). Spitzer/IRS
+  한 구조와 역학*, ApJ 690, 1522 ([`2009ApJ...690.1522B`](https://ui.adsabs.harvard.edu/abs/2009ApJ...690.1522B)). Spitzer/IRS
   가 따뜻한 안쪽 belt 방출 검출. SED 분해로 ~3 AU asteroid belt
   analog 가 분해됨.
 - **Greaves J. S. et al. 1998** — *ε Eridani 주위의 Dust Ring. 어린
-  태양계의 analog*, ApJ 506, L133 (`1998ApJ...506L.133G`). JCMT/SCUBA
+  태양계의 analog*, ApJ 506, L133 ([`1998ApJ...506L.133G`](https://ui.adsabs.harvard.edu/abs/1998ApJ...506L.133G)). JCMT/SCUBA
   가 차가운 Kuiper analog 링의 첫 sub-mm imaging.
 - **Greaves J. S. et al. 2014** — *Herschel 이 본 별-debris disc
-  시스템의 정렬* (`2014MNRAS.438L..31G`, [arXiv:1312.4087](https://arxiv.org/abs/1312.4087)). Herschel
+  시스템의 정렬* ([`2014MNRAS.438L..31G`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.438L..31G), [arXiv:1312.4087](https://arxiv.org/abs/1312.4087)). Herschel
   분해 디스크 inclination + 중간 belt 추정.
-- **MacGregor M. A. et al. 2015** — *ε Eridani 주위 Debris Disk 의
-  ALMA 관측*, ApJ 809, L47 (`2015ApJ...809L..47M`, [arXiv:1505.03879](https://arxiv.org/abs/1505.03879)).
-  ALMA 1.3 mm imaging 이 차가운 링을 64.4 ± 0.5 AU 에서 분해하며
-  이심 e ≈ 0.07.
+- **MacGregor M. A. et al. 2015** — *밀리미터 간섭계로 분해한
+  ε Eridani 계*, ApJ 809, 47 ([`2015ApJ...809...47M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...809...47M), [arXiv:1507.01642](https://arxiv.org/abs/1507.01642)).
+  SMA 1.3 mm imaging 이 차가운 링을 64.4 (−3.0/+2.4) AU 에서 분해,
+  ΔR/R ≈ 0.3.
 - **Booth M. et al. 2017** — *ALMA 가 본 ε Eridani 의 Debris Ring
-  북쪽 호*, MNRAS 469, 3200 (`2017MNRAS.469.3200B`, [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)).
+  북쪽 호*, MNRAS 469, 3200 ([`2017MNRAS.469.3200B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.469.3200B), [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)).
   다파장 분해. 삼중 belt 구조 확인. 차가운 링 지오메트리와 inclination
   정련.
 - **Su K. Y. L. et al. 2017** — *ε Eri 시스템의 안쪽 25 AU Debris
-  분포*, AJ 153, 226 (`2017AJ....153..226S`, [arXiv:1703.10330](https://arxiv.org/abs/1703.10330)). "Genie"
+  분포*, AJ 153, 226 ([`2017AJ....153..226S`](https://ui.adsabs.harvard.edu/abs/2017AJ....153..226S), [arXiv:1703.10330](https://arxiv.org/abs/1703.10330)). "Genie"
   다중 belt sculpting 모델. 삼중 링 시스템 + 행성 perturber 의
   canonical 해석.
 - **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
   Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157, 33
-  (`2019AJ....157...33M`, [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). ε Eri b 직접 촬영 확정.
+  ([`2019AJ....157...33M`](https://ui.adsabs.harvard.edu/abs/2019AJ....157...33M), [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). ε Eri b 직접 촬영 확정.
   바깥쪽 "ε Eri c" 배제. RV 하한 M sin i = 0.72 M_Jup. 정보 없는
   edge-on 사전분포로는 M_b = 0.78 (−0.12/+0.38) M_Jup, i = 89° ± 42°.
   디스크 coplanar Gaussian 사전분포 (i = 34° ± 2°) 를 넣으면 대신
@@ -347,75 +347,73 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
 - **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
   of ε Eridani b with Radial Velocities, Hipparcos IAD–Gaia DR2
   Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
-  AJ 162, 181 (`2021AJ....162..181L`, [arXiv:2108.02305](https://arxiv.org/abs/2108.02305)). RV +
+  AJ 162, 181 ([`2021AJ....162..181L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..181L), [arXiv:2108.02305](https://arxiv.org/abs/2108.02305)). RV +
   Hipparcos IAD–Gaia DR2 천체측정 + 직접 촬영 상한 결합 fit. 채택
   실제 질량 M_b = 0.66 (−0.09/+0.12) M_Jup, i = 78.81°
   (−22.41/+29.34), a = 3.5 AU. 천체측정은 더 낮은 질량과 더 edge-on
   인 행성을 선호하며, 궤도를 차가운 링의 34° 평면에서 ~2σ 벗어난
   곳에 놓습니다 (coplanar 해는 ~1σ 만 허용).
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
-  Detection of ε Eri b* (`2022AJ....163...19R`, [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)).
+  Detection of ε Eri b* ([`2022AJ....163...19R`](https://ui.adsabs.harvard.edu/abs/2022AJ....163...19R), [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)).
   천체측정 교차 확인 (Phase 3 캐시에 없음. 여기서는 unverified.
   디스크와의 coplanar 결론은 이 합성에서 사실로 단정하지 않음).
 - **Roettenbacher R. M. et al. 2016** — *활동성 별 ζ Andromedae 의
-  태양형 dynamo 부재… 와 ε Eri Doppler Image* (`2016Natur.533..217R`).
+  태양형 dynamo 부재… 와 ε Eri Doppler Image* ([`2016Natur.533..217R`](https://ui.adsabs.harvard.edu/abs/2016Natur.533..217R)).
   분해된 polar-spot 면적이 있는 ε Eri Doppler imaging 포함.
 - **Hatzes A. P. et al. 2000** — *ε Eridani 주위 장주기 행성의 증거*,
-  ApJ 544, L145 (`2000ApJ...544L.145H`). RV 발견 논문. 역사적 맥락
+  ApJ 544, L145 ([`2000ApJ...544L.145H`](https://ui.adsabs.harvard.edu/abs/2000ApJ...544L.145H)). RV 발견 논문. 역사적 맥락
   설정.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Rosenthal L. J. et al. 2021** — *California Legacy Survey. I.
   근방 별 719 개의 정밀 RV 모니터링에서 도출한 행성 178 개 카탈로그*,
-  ApJS 255, 8 (`2021ApJS..255....8R`). 과거 채택값 R = 0.759 R☉ 의 출처
+  ApJS 255, 8 ([`2021ApJS..255....8R`](https://ui.adsabs.harvard.edu/abs/2021ApJS..255....8R)). 과거 채택값 R = 0.759 R☉ 의 출처
   (현재 Baines & Armstrong 2012 간섭계 R 0.74 로 대체됨).
 - **Valenti J. A. & Fischer D. A. 2005** — *차가운 별의 분광 속성
-  (SPOCS). I.* (`2005ApJS..159..141V`). SME 분광에서 [Fe/H] =
+  (SPOCS). I.* ([`2005ApJS..159..141V`](https://ui.adsabs.harvard.edu/abs/2005ApJS..159..141V)). SME 분광에서 [Fe/H] =
   −0.13 ± 0.04.
 - **Brewer J. M. et al. 2016** — *차가운 별의 분광 속성*
-  (`2016ApJS..225...32B`). 분광 Teff = 5180 K, [Fe/H] = −0.13
+  ([`2016ApJS..225...32B`](https://ui.adsabs.harvard.edu/abs/2016ApJS..225...32B)). 분광 Teff = 5180 K, [Fe/H] = −0.13
   (Teff 는 Baines 2012 간섭계 5039 K 로 대체됨).
 - **Di Folco E. et al. 2007** — *ε Eri 를 포함한 근방 별의 CHARA/FLUOR
-  간섭계* (`2007A&A...475..243D`). θ_LD = 2.126 mas, Baines & Armstrong
+  간섭계* ([`2007A&A...475..243D`](https://ui.adsabs.harvard.edu/abs/2007A%26A...475..243D)). θ_LD = 2.126 mas, Baines & Armstrong
   2012 를 보강하는 독립 간섭계 교차 확인.
 - **Henry T. J. et al. 1996** — *Solar Neighborhood. IV. 스무 번째로
-  가까운 별 시스템 발견* (`1996AJ....111..439H`). ε Eri 의 log R'HK
+  가까운 별 시스템 발견* ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H)). ε Eri 의 log R'HK
   참조.
 - **Zechmeister M. et al. 2013** — *ESO CES 와 HARPS 의 행성 탐색
-  프로그램* (`2013A&A...552A..78Z`, [arXiv:1211.7263](https://arxiv.org/abs/1211.7263)). 현대 epoch
+  프로그램* ([`2013A&A...552A..78Z`](https://ui.adsabs.harvard.edu/abs/2013A%26A...552A..78Z), [arXiv:1211.7263](https://arxiv.org/abs/1211.7263)). 현대 epoch
   에서 ε Eri 의 Ca II HK 인덱스 갱신.
 - **France K. et al. 2018** — *MUSCLES Treasury Survey* 의 K 왜성
-  확장 (`2018ApJS..239...16F`). 안쪽 행성의 대기 침식 추정에 정보
+  확장 ([`2018ApJS..239...16F`](https://ui.adsabs.harvard.edu/abs/2018ApJS..239...16F)). 안쪽 행성의 대기 침식 추정에 정보
   를 주는 FUV / Lyα 플럭스.
 - **Wood B. E. et al. 2002** — *나이와 활동도의 함수로 측정한 태양형
-  별의 질량 손실률* (`2002ApJ...574..412W`, arXiv:astro-ph/0203437).
+  별의 질량 손실률* ([`2002ApJ...574..412W`](https://ui.adsabs.harvard.edu/abs/2002ApJ...574..412W), arXiv:astro-ph/0203437).
   ε Eri 의 질량 손실률 ~30× 태양.
 - **Beeck B. et al. 2013** — *주계열 별의 근표면 convection 3D
   시뮬레이션. II.* ([arXiv:1308.4732](https://arxiv.org/abs/1308.4732)). cfg 용으로 스케일된 K 왜성
   granulation 속성.
-- **Bonanno A. et al. 2008** — *ε Eridani 의 Asteroseismology*
-  (`2008A&A...488..685B`, [arXiv:0805.2580](https://arxiv.org/abs/0805.2580)). 활동 floor 에 잠긴
-  marginal ν_max 검출.
-- **Frohlich H.-E. et al. 2007** — *ε Eri 흑점 모델링의 MOST 광도*
-  (`2007A&A...471..899F`). 5–10% 흑점 면적을 주는 광도 분해.
+- **Fröhlich H.-E. 2007** — *MOST 자료로 본 ε Eri 의 차등 회전*
+  ([`2007AN....328.1037F`](https://ui.adsabs.harvard.edu/abs/2007AN....328.1037F)). 5–10% 흑점 면적을 주는 흑점 모델 광도 분해.
 - **Croll B. et al. 2006** — *MOST 가 검출한 ε Eri 의 차등 회전*
-  (`2006ApJ...648..607C`). P_rot 와 차등 회전의 독립 확인.
+  ([`2006ApJ...648..607C`](https://ui.adsabs.harvard.edu/abs/2006ApJ...648..607C)). P_rot 와 차등 회전의 독립 확인.
 
 ### Read (instrument / non-cfg-decisive)
 
 - **Quillen A. C. & Thorndike S. 2002** — *40 AU 의 이심 0.3 행성과
   의 평균 운동 공명이 야기한 ε Eridani Dusty Disk 의 구조*
-  (`2002ApJ...578L.149Q`). 디스크 구조에서 추정한 원래의 "ε Eri c"
+  ([`2002ApJ...578L.149Q`](https://ui.adsabs.harvard.edu/abs/2002ApJ...578L.149Q)). 디스크 구조에서 추정한 원래의 "ε Eri c"
   바깥 행성. Mawet 2019 가 배제했지만 역사적으로 중요.
 - **Benedict G. F. et al. 2006** — *외계 행성 ε Eridani b. 궤도와
-  질량* (`2006AJ....132.2206B`). ε Eri b 에 대한 이전 HST FGS 천체
+  질량* ([`2006AJ....132.2206B`](https://ui.adsabs.harvard.edu/abs/2006AJ....132.2206B)). ε Eri b 에 대한 이전 HST FGS 천체
   측정 시도. 직접 촬영이 대체.
 - **Audard M. et al. 2000** — *늦은 형 별의 극자외 Flare 활동*
-  (`2000ApJ...541..396A`). super-flare 외삽에 사용된 K 왜성 flare
+  ([`2000ApJ...541..396A`](https://ui.adsabs.harvard.edu/abs/2000ApJ...541..396A)). super-flare 외삽에 사용된 K 왜성 flare
   빈도 분포.
-- **Linsky J. L. & Wood B. E. 1995** — *α Centauri 시선과 ε Eri 의
-  Lyα 프로파일* (`1995ApJ...445L.139L`). FUV / Lyα 기준선.
+- **Dring A. R. et al. 1997** — *국부 성간매질의 Lyα 흡수와 D/H 비*
+  ([`1997ApJ...488..760D`](https://ui.adsabs.harvard.edu/abs/1997ApJ...488..760D)). ε Eri Lyα 프로파일에 수소벽 성분 포함,
+  FUV / Lyα 기준선.
 
 ### Not read — no arXiv preprint or low-priority (~80 papers)
 

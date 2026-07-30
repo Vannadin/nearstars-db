@@ -129,7 +129,7 @@
 
 ### 3.3 논문 레퍼런스는 링크로(NEARSTARS)
 **규칙:** 사람이 읽는 문서의 논문 레퍼런스는 전부 **마크다운 링크**로 쓴다. bibcode는
-`[2018Icar..305..262I](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262I)`,
+`[2018Icar..305..262M](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262M)`,
 arXiv id는 `[1007.1514](https://arxiv.org/abs/1007.1514)` 형태. bibcode가 없으면 DOI
 링크도 허용. 맨 id는 기계 필드(YAML `bibcode:`/`arxiv_id:`, JSON, 코드)와 코드 블록
 안에서만 남긴다.

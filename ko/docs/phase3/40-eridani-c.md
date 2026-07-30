@@ -36,7 +36,7 @@ cfg 박자로 H-알파 플레어를 애니메이트합니다.** 큐레이션된 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | M4.5 Ve | high | Gray & Garrison 커뮤니티 canonical. SIMBAD M4.5Ve. Mann 2015 Table 5 는 M4.7 (MK 산포 범위 내). e 접미는 DY Eri 플레어 활동과 일관된 색채권 방출을 표시 |
-| `mass_msun` | 0.198 ± 0.0042 | high | Mason et al. 2021 (`2021AJ....162...53M`). Izmailov 2019 BC 궤도 (P = 233.20 yr, e = 0.4141) + Gaia eDR3 시차에서 유도한 역학 질량. 이전 Mason 2017 값 (0.2041, 옛 230.09-yr 궤도 + Heintz 1974 질량비 분할에 묶임) 을 대체. Mason 2021 이 M_C 를 직접 주므로 Heintz 질량비는 더 이상 필요 없음 |
+| `mass_msun` | 0.198 ± 0.0042 | high | Mason et al. 2021 ([`2021AJ....162...53M`](https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M)). Izmailov 2019 BC 궤도 (P = 233.20 yr, e = 0.4141) + Gaia eDR3 시차에서 유도한 역학 질량. 이전 Mason 2017 값 (0.2041, 옛 230.09-yr 궤도 + Heintz 1974 질량비 분할에 묶임) 을 대체. Mason 2021 이 M_C 를 직접 주므로 Heintz 질량비는 더 이상 필요 없음 |
 | `radius_rsun` | 0.274 ± 0.011 | high | Mann et al. 2015 Table 5 'Gl 166 C' 행. 간섭계 M 왜성 샘플로 보정된 M_K 밴드 반지름 관계 + BT-Settl 대기 모델 fit |
 | `teff_k` | 3167 ± 61 | high | Mann et al. 2015 Table 5. 저분해 SNIFS 광학 + SpeX NIR 스펙트럼을 BT-Settl 대기 그리드에 fit |
 | `luminosity_lsun` | 6.51e-3 ± 0.13e-3 | high | Cifuentes et al. 2020 CARMENES 카탈로그 Karmn J04153-076 행 (VizieR J/A+A/642/A115). Gaia DR2 거리 기반 다중 밴드 SED 적분 |
@@ -229,14 +229,14 @@ M4.5 V 플레어성은 Hα + Hβ + Ca II 방출이 우세한 광학 플레어 �
 
 - **Mason B. D., Hartkopf W. I., Miles K. N. 2017** — *Binary Star
   Orbits. V. The Nearby White Dwarf/Red Dwarf Pair 40 Eri BC*,
-  AJ 154, 200 (`2017AJ....154..200M`, [arXiv:1707.03635](https://arxiv.org/abs/1707.03635),
+  AJ 154, 200 ([`2017AJ....154..200M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..200M), [arXiv:1707.03635](https://arxiv.org/abs/1707.03635),
   DOI 10.3847/1538-3881/aa803e). 갱신된 230.09 년 BC 시각-분광 궤도.
   총질량 0.776 ± 0.024 M☉, e = 0.4300, a = 6.93″. Heintz 1974 질량비와
   결합해 M_C = 0.2041 ± 0.0064 M☉ 산출. **C 역학질량의 주 앵커.**
 - **Mann A. W., Feiden G. A., Gaidos E., Boyajian T., von Braun K.
   2015** — *How to Constrain Your M Dwarf: Measuring Effective
   Temperature, Bolometric Luminosity, Mass, and Radius*, ApJ 804, 64
-  (`2015ApJ...804...64M`, [arXiv:1501.01635](https://arxiv.org/abs/1501.01635), DOI 10.1088/0004-637X/804/1/64).
+  ([`2015ApJ...804...64M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M), [arXiv:1501.01635](https://arxiv.org/abs/1501.01635), DOI 10.1088/0004-637X/804/1/64).
   경험적 M 왜성 보정. Table 5 'Gl 166 C' 행이 R = 0.274 ± 0.011 R☉,
   T_eff = 3167 ± 61 K, [Fe/H] = -0.21 ± 0.08, Hα EW 를 줌. **반지름 /
   T_eff / [Fe/H] 의 주 앵커.** Table 7 Dartmouth 모델 fit (R = 0.242,
@@ -244,14 +244,14 @@ M4.5 V 플레어성은 Hα + Hβ + Ca II 방출이 우세한 광학 플레어 �
   데이터포인트로 보존.
 - **Cifuentes C., Caballero J. A., Cortés-Contreras M. et al. 2020** —
   *CARMENES input catalogue of M dwarfs. V. Luminosities, colours,
-  and spectral energy distributions*, A&A 642, A115 (`2020A&A...642A.115C`,
+  and spectral energy distributions*, A&A 642, A115 ([`2020A&A...642A.115C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...642A.115C),
   [arXiv:2007.15077](https://arxiv.org/abs/2007.15077), DOI 10.1051/0004-6361/202038295). CARMENES M 왜성
   샘플의 다중 밴드 SED 적분. Karmn J04153-076 = GJ 166 C 항목 (VizieR
   J/A+A/642/A115) 이 L = (6.51 ± 0.13) × 10⁻³ L☉. **광도의 주 앵커.**
 - **Bond H. E., Bergeron P., Bédard A. 2017** — *The aged
   Astrophysical Implications of a New Dynamical Mass for the Nearby
   White Dwarf 40 Eridani B*, ApJ 848, 16
-  (`2017ApJ...848...16B`, [arXiv:1709.00478](https://arxiv.org/abs/1709.00478), DOI 10.3847/1538-4357/aa8a63).
+  ([`2017ApJ...848...16B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B), [arXiv:1709.00478](https://arxiv.org/abs/1709.00478), DOI 10.3847/1538-4357/aa8a63).
   40 Eri B 의 HST/COS UV 분광. 전체 시스템 재분석. §6.2 의 IFMR
   (Salaris et al. 2009, M_final = 0.134 M_initial + 0.331) 가 B 의 M_progenitor ≈ 1.8 M☉ 을 시사하며, 시스템
   공시각 총 나이 ≈ 1.8 Gyr 가 도출됩니다. 같은 섹션이 C 의 AGB 물질
@@ -260,7 +260,7 @@ M4.5 V 플레어성은 Hα + Hβ + Ca II 방출이 우세한 광학 플레어 �
 - **Shan Y., Reiners A., Fabbian D. et al. 2024** — *The CARMENES
   search for exoplanets around M dwarfs. VII. Photospheric rotation
   periods from the activity time series of 166 M dwarfs*, A&A 684, A9
-  (`2024A&A...684A...9S`, [arXiv:2401.09550](https://arxiv.org/abs/2401.09550),
+  ([`2024A&A...684A...9S`](https://ui.adsabs.harvard.edu/abs/2024A%26A...684A...9S), [arXiv:2401.09550](https://arxiv.org/abs/2401.09550),
   DOI 10.1051/0004-6361/202346794). CARMENES 활동 지표 시계열.
   Karmn J04153-076 P_rot = 8.56 d, quality flag D ("debated"). 166 개
   주기 중 27 개가 debated, 68 개가 provisional. **DB meta_notes 에만
@@ -269,35 +269,35 @@ M4.5 V 플레어성은 Hα + Hβ + Ca II 방출이 우세한 광학 플레어 �
 ### Read (context / methodology)
 
 - **Heintz W. D. 1974** — *Astrometric study of four visual binaries*,
-  AJ 79, 819 (`1974AJ.....79..819H`). Mason 2017 이 총질량 분할에 쓴
+  AJ 79, 819 ([`1974AJ.....79..819H`](https://ui.adsabs.harvard.edu/abs/1974AJ.....79..819H)). Mason 2017 이 총질량 분할에 쓴
   역사적 BC 질량비를 제공.
 - **van Leeuwen F. 2007** — *Validation of the new Hipparcos
-  reduction*, A&A 474, 653 (`2007A&A...474..653V`). Mason 2017 의
+  reduction*, A&A 474, 653 ([`2007A&A...474..653V`](https://ui.adsabs.harvard.edu/abs/2007A%26A...474..653V)). Mason 2017 의
   역학질량 유도에 쓰인 시차.
 - **Cummings J. D., Kalirai J. S., Tremblay P.-E. et al. 2018** —
   *The white dwarf initial–final mass relation for progenitor masses
   up to 7.5 M☉*, ApJ 866, 21. Bond 2017 이 40 Eri B 의 전구체 질량
   반전에 쓴 IFMR.
 - **Fuhrmann K., Chini R., Buda L.-S. & Pozo Nuñez F. 2014** —
-  *On the Age of Gliese 86*, ApJ 785, 68 (`2014ApJ...785...68F`,
+  *On the Age of Gliese 86*, ApJ 785, 68 ([`2014ApJ...785...68F`](https://ui.adsabs.harvard.edu/abs/2014ApJ...785...68F),
   DOI 10.1088/0004-637X/785/1/68). 주로 Gl 86 K+WD 이중성의 나이
   결정 논문. 40 Eri C 를 analog 사례로 인용해, M 왜성 동반자의 "상당한
   투영 회전 속도" 가 degenerate 동반자의 이전 AGB 단계 물질 손실에서
   유래한 것으로 봅니다. Bond 2017 §6.2 가 같은 spin-up 가설을 40 Eri C
   에 적용하면서 인용.
 - **Tokovinin A. 2018** — *The updated multiple-star catalog*,
-  ApJS 235, 6 (`2018ApJS..235....6T`). A-BC 페어를 ~8000 년 외궤도의
+  ApJS 235, 6 ([`2018ApJS..235....6T`](https://ui.adsabs.harvard.edu/abs/2018ApJS..235....6T)). A-BC 페어를 ~8000 년 외궤도의
   unfitted 항목으로 등재.
 - **Burrows A. et al. 2024** — *The Death of Vulcan: NEID Reveals
   That the Planet Candidate Orbiting HD 26965 Is Stellar Activity*,
-  AJ 167, 243 (`2024AJ....167..243B`, DOI 10.3847/1538-3881/ad34d5).
+  AJ 167, 243 ([`2024AJ....167..243B`](https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B), DOI 10.3847/1538-3881/ad34d5).
   HD 26965 (= 40 Eri A) 의 NEID 정밀 RV 모니터링. Ma 2018 의 "Vulcan"
   행성 후보를 반박하고, 약 42 일 신호를 회전 변조된 항성 활동 (흑점 +
   convective blueshift 억제) 으로 귀속. C 와 직접 관련은 없지만 시스템의
   무행성 상태를 확립.
 - **Kopparapu R. K., Ramirez R. M., SchottelKotte J. et al. 2014** —
   *Habitable zones around main-sequence stars: dependence on planetary
-  mass*, ApJ 787, L29 (`2014ApJ...787L..29K`, [arXiv:1404.5292](https://arxiv.org/abs/1404.5292)). 40 Eri C
+  mass*, ApJ 787, L29 ([`2014ApJ...787L..29K`](https://ui.adsabs.harvard.edu/abs/2014ApJ...787L..29K), [arXiv:1404.5292](https://arxiv.org/abs/1404.5292)). 40 Eri C
   의 HZ 컨텍스트 값 유도에 쓴 HZ 경계 스케일링.
 
 ### Read (instrument / non-cfg-decisive)
@@ -305,25 +305,25 @@ M4.5 V 플레어성은 Hα + Hβ + Ca II 방출이 우세한 광학 플레어 �
 - **Schöfer P., Jeffers S. V., Reiners A. et al. 2019** —
   *The CARMENES search for exoplanets around M dwarfs.
   Activity indicators at visible and near-infrared wavelengths*,
-  A&A 623, A44 (`2019A&A...623A..44S`, [arXiv:1903.06803](https://arxiv.org/abs/1903.06803)).
+  A&A 623, A44 ([`2019A&A...623A..44S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...623A..44S), [arXiv:1903.06803](https://arxiv.org/abs/1903.06803)).
   CARMENES Hα EW 시계열. GJ 166 C 가 샘플에 포함. DB meta_notes 의
   Hα pEW 범위 -2 ~ -4 Å 에 쓰임.
-- **Newton E. R., Mondrik N., Irwin J. et al. 2017** — *New rotation
+- **Newton E. R., Mondrik N., Irwin J. et al. 2018** — *New rotation
   period measurements for M dwarfs in the southern hemisphere*,
-  AJ 154, 224 (`2017AJ....154..224N`, [arXiv:1611.04857](https://arxiv.org/abs/1611.04857)). MEarth-South
+  AJ 156, 217 ([`2018AJ....156..217N`](https://ui.adsabs.harvard.edu/abs/2018AJ....156..217N), [arXiv:1807.09365](https://arxiv.org/abs/1807.09365)). MEarth-South
   광도 회전 주기. 여러 서베이 Hα 교차 참조 중 하나.
 - **Reiners A., Zechmeister M., Caballero J. A. et al. 2018** —
   *The CARMENES search for exoplanets around M dwarfs. High-
   resolution optical and near-infrared spectroscopy of 324 survey
-  stars*, A&A 612, A49 (`2018A&A...612A..49R`, [arXiv:1711.06576](https://arxiv.org/abs/1711.06576)).
+  stars*, A&A 612, A49 ([`2018A&A...612A..49R`](https://ui.adsabs.harvard.edu/abs/2018A%26A...612A..49R), [arXiv:1711.06576](https://arxiv.org/abs/1711.06576)).
   CARMENES 기기 논문. GJ 166 C 파라미터 행.
 - **Wright N. J., Drake J. J., Mamajek E. E., Henry G. W. 2011** —
   *The stellar-activity-rotation relationship and the evolution of
-  stellar dynamos*, ApJ 743, 48 (`2011ApJ...743...48W`). M 왜성
+  stellar dynamos*, ApJ 743, 48 ([`2011ApJ...743...48W`](https://ui.adsabs.harvard.edu/abs/2011ApJ...743...48W)). M 왜성
   log L_X / L_bol 보정에 정성적으로 사용.
 - **France K., Loyd R. O. P., Youngblood A. et al. 2016** —
   *The MUSCLES treasury survey. I. Motivation and overview*,
-  ApJ 820, 89 (`2016ApJ...820...89F`, [arXiv:1602.09142](https://arxiv.org/abs/1602.09142)). 활동성 M
+  ApJ 820, 89 ([`2016ApJ...820...89F`](https://ui.adsabs.harvard.edu/abs/2016ApJ...820...89F), [arXiv:1602.09142](https://arxiv.org/abs/1602.09142)). 활동성 M
   왜성 주변 XUV 환경의 컨텍스트.
 
 ### Not read — no arXiv preprint or low-priority (~12 papers)

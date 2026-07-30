@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 4.2536,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5362,
+        "teff_k": 5401,
         "spectype": "G6V",
         "mass_measurements": [
           {
@@ -43,12 +43,52 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5401,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "notes": "Southern star, not in Luck 2017; consistent with Nari 2025 (curated M/R source).",
+            "reference": "Valenti & Fischer 2005",
+            "bibcode": "2005ApJS..159..141V",
+            "doi": "10.1086/430500"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.66,
+            "method": "photometric",
+            "recommended": true,
+            "notes": "log L = -0.18.",
+            "reference": "Valenti & Fischer 2005",
+            "bibcode": "2005ApJS..159..141V",
+            "doi": "10.1086/430500"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 13.5,
+            "method": "isochrone",
+            "recommended": true,
+            "notes": "At the model ceiling; Mamajek 2008 chromospheric age also 13.5 Gyr. Metal-poor and very old — a low-precision \"old\" indicator, not a tight value.",
+            "reference": "Valenti & Fischer 2005",
+            "bibcode": "2005ApJS..159..141V",
+            "doi": "10.1086/430500"
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.98,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Boro Saikia 2018 gives -4.95/-5.27. Inactive old-disk star.",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "doi": "10.1086/591785"
+          }
+        ],
         "stellarium_id": "eEri"
       },
       "derived": {
@@ -70,11 +110,11 @@
         "icrs_vx_j2000_km_s": -16.23654310206684,
         "icrs_vy_j2000_km_s": 115.87471629260051,
         "icrs_vz_j2000_km_s": -44.71516572250896,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.66,
+        "age_gyr": 13.5,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "activity_log_rhk": -4.98,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -347,7 +387,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -356,7 +396,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -365,7 +405,7 @@
       "title": "Nari et al. 2025",
       "doi": "10.1051/0004-6361/202451769",
       "bibcode": "2025A&A...693A.297N",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "HD 20794 mass (unverified)"
       ]
@@ -374,14 +414,14 @@
       "title": "Feng et al. 2017",
       "doi": "10.1051/0004-6361/201730406",
       "bibcode": "2017A&A...605A.103F",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "planet HD 20794 e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

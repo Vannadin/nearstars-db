@@ -19,7 +19,7 @@
         "radial_velocity_source": "simbad",
         "vmag_v": 0.34,
         "vmag_source": "hipparcos_hardcoded",
-        "teff_k": 6615,
+        "teff_k": 6543,
         "spectype": "F5 IV-V",
         "mass_measurements": [
           {
@@ -43,12 +43,52 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 6543,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "notes": "Consistent with interferometric determinations (Aufdenberg 2005). Luck 2017 6654 K; Gray 2003 6629 K — ~110 K spread across methods.",
+            "reference": "Valenti & Fischer 2005",
+            "bibcode": "2005ApJS..159..141V",
+            "doi": "10.1086/430500"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 6.9,
+            "method": "photometric",
+            "recommended": true,
+            "notes": "log L = 0.84; SPOCS gives 6.1 Lsun.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 2.3,
+            "method": "asteroseismology",
+            "recommended": true,
+            "notes": "CESAM model constrained by VINCI/VLTI diameter + asteroseismic large separation (~2314 Myr); Procyon A is ending its MS life. SPOCS isochrone 2.0 Gyr.",
+            "reference": "Kervella et al. 2004",
+            "bibcode": "2004A&A...413..251K",
+            "doi": "10.1051/0004-6361:20031527"
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.63,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Boro Saikia 2018 carries -4.75 and a -4.11 outlier; F-star R'HK is less reliable near the granulation-dominated regime.",
+            "reference": "Gray et al. 2003",
+            "bibcode": "2003AJ....126.2048G",
+            "doi": "10.1086/378365"
+          }
+        ],
         "stellarium_id": "Procyon"
       },
       "derived": {
@@ -75,11 +115,11 @@
         "mass_ratio_q": 0.2865302237029986,
         "barycenter_method": "single_component(Procyon A)",
         "phase_reliable": true,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 6.9,
+        "age_gyr": 2.3,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "activity_log_rhk": -4.63,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -94,7 +134,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +143,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -112,7 +152,7 @@
       "title": "Bond et al. 2015 (HST astrometry)",
       "doi": "10.1088/0004-637X/813/2/106",
       "bibcode": "2015ApJ...813..106B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "Procyon A mass (binary_orbit)"
       ]
@@ -121,14 +161,14 @@
       "title": "Aufdenberg et al. 2005",
       "doi": "10.1086/452622",
       "bibcode": "2005ApJ...633..424A",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "Procyon A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

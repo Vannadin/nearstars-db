@@ -69,7 +69,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `ring_present` | false | medium | Mawet 2019 Ms-band high-contrast imaging would detect a Saturn-bright ring system at the 3.5 AU separation; no ring component detected. cfg defaults to "no ring" |
 | `ring_observed` | false | high | Mawet 2019 Ms-band direct imaging detection without ring component |
 | `rotation_period_hours` | 10 | low | Tie-break: no rotation measurement. Jupiter-analog 9.93 h (Jupiter has fastest jovian rotation in the Solar System); cfg picks 10 h as round-number Jupiter-like value rather than slower Saturn-like (10.7 h) or Uranus-like (17.2 h) because mass-scaling and the angular-momentum budget at 3.5 AU favor Jupiter-class rapid rotation |
-| `magnetic_field_strength_microtesla_equator` | 660 | medium | Energy-flux dynamo scaling (Christensen et al. 2009 `2009Natur.457..167C`; Reiners & Christensen 2010 `1007.1514`, Table 4.3 + 1 M_J cooling track): B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → for 0.66 M_Jup at 0.44 Gyr (young, gyrochronology), B_eq ≈ 660 µT (range 540–810). A young giant EXCEEDS Jupiter despite lower mass because the dynamo is powered by internal luminosity, not mass — the prior "scaled-down jovian, ~7% below Jupiter" had the youth effect backwards. See docs/reference/planetary-dynamo-scaling.md |
+| `magnetic_field_strength_microtesla_equator` | 660 | medium | Energy-flux dynamo scaling (Christensen et al. 2009 [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C); Reiners & Christensen 2010 `1007.1514`, Table 4.3 + 1 M_J cooling track): B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → for 0.66 M_Jup at 0.44 Gyr (young, gyrochronology), B_eq ≈ 660 µT (range 540–810). A young giant EXCEEDS Jupiter despite lower mass because the dynamo is powered by internal luminosity, not mass — the prior "scaled-down jovian, ~7% below Jupiter" had the youth effect backwards. See docs/reference/planetary-dynamo-scaling.md |
 | `magnetic_dipole_moment_normalized_earth` | 34000 | low | 660 µT × (1.05 R_Jup)³ vs Jupiter (4.5 G equatorial, 20 000× Earth) → ≈ 34 000 × Earth via energy-flux scaling (`1007.1514`); supersedes the linear-mass 0.66 × 20 000 = 13 200. R³-sensitive → low conf |
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: Jupiter 9.6°, Saturn 0°, Neptune 47°. cfg picks Jupiter-analog 10° for visible auroral oval offset; Saturn-aligned 0° would be visually uninteresting |
 | `aurora_present` | true | medium | ε Eri's stellar wind ≈ 30× solar mass-loss rate (Wood 2002) + cycle-active corona drives strong incident plasma flux at 3.5 AU; combined with jovian magnetospheric capture this produces auroral emission analogous to Jupiter's but with elevated driver |
@@ -316,23 +316,23 @@ Combining surface (cloud-deck) and atmosphere decisions:
 ### Read (visual-informative, drove decisions above)
 
 - **Hatzes A. P. et al. 2000** — *Evidence for a Long-Period Planet
-  Orbiting ε Eridani*, ApJ 544, L145 (`2000ApJ...544L.145H`). The
+  Orbiting ε Eridani*, ApJ 544, L145 ([`2000ApJ...544L.145H`](https://ui.adsabs.harvard.edu/abs/2000ApJ...544L.145H)). The
   original radial-velocity discovery paper; sets P ≈ 6.85 yr and
   M sin i ≈ 0.86 M_Jup as the initial values (later refined).
 - **Quillen A. C. & Thorndike S. 2002** — *Structure in the ε Eridani
   Dusty Disk Caused by Mean Motion Resonances with a 0.3 Eccentricity
-  Planet at 40 AU*, ApJ 578, L149 (`2002ApJ...578L.149Q`). Historical
+  Planet at 40 AU*, ApJ 578, L149 ([`2002ApJ...578L.149Q`](https://ui.adsabs.harvard.edu/abs/2002ApJ...578L.149Q)). Historical
   inference of an outer "ε Eri c" from cold-ring eccentricity; ruled
   out by Mawet 2019 direct imaging but important for the
   multi-belt-sculpting context.
 - **Benedict G. F. et al. 2006** — *The Extrasolar Planet ε Eridani b.
   Orbit and Mass from Combined Astrometric and Spectroscopic Data*,
-  AJ 132, 2206 (`2006AJ....132.2206B`). HST FGS astrometric attempt;
+  AJ 132, 2206 ([`2006AJ....132.2206B`](https://ui.adsabs.harvard.edu/abs/2006AJ....132.2206B)). HST FGS astrometric attempt;
   superseded by direct imaging but historically important for the
   mass determination chain.
 - **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
   Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157,
-  33 (`2019AJ....157...33M`, [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). Direct imaging
+  33 ([`2019AJ....157...33M`](https://ui.adsabs.harvard.edu/abs/2019AJ....157...33M), [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). Direct imaging
   confirmation of ε Eri b at L′ and Ms band; rules out outer
   ε Eri c with planet mass > 0.3 M_Jup beyond 30 AU; constrains
   thermal-emission upper limit excluding hot-start inflated jovian
@@ -340,30 +340,30 @@ Combining surface (cloud-deck) and atmosphere decisions:
 - **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
   of ε Eridani b with Radial Velocities, Hipparcos IAD-Gaia DR2
   Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
-  AJ 162, 181 (`2021AJ....162..181L`).
+  AJ 162, 181 ([`2021AJ....162..181L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..181L)).
   Joint RV + Hipparcos/Gaia astrometric fit;
   true mass M_b = 0.66 (+0.12/−0.09) M_Jup, i = 78.81°
   (+29.34/−22.41), a = 3.48 AU. **Cornerstone observational
   paper.**
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
-  Detection of ε Eridani b*, AJ 163, 19 (`2022AJ....163...19R`,
+  Detection of ε Eridani b*, AJ 163, 19 ([`2022AJ....163...19R`](https://ui.adsabs.harvard.edu/abs/2022AJ....163...19R),
   [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)). Astrometric cross-check across multiple
   missions; the individual signal is marginal but combined with the
   disk-plane coplanarity argument favors i ≈ 34° over Llop-Sayson's
   RV-only 78.8°.
-- **MacGregor M. A. et al. 2015** — *ALMA Observations of the
-  Debris Disk around ε Eridani*, ApJ 809, L47
-  (`2015ApJ...809L..47M`, [arXiv:1505.03879](https://arxiv.org/abs/1505.03879)). ALMA 1.3 mm imaging
-  resolves the cold ring at 64.4 ± 0.5 AU with eccentricity e ≈ 0.07;
+- **MacGregor M. A. et al. 2015** — *The ε Eridani System Resolved
+  by Millimeter Interferometry*, ApJ 809, 47
+  ([`2015ApJ...809...47M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...809...47M), [arXiv:1507.01642](https://arxiv.org/abs/1507.01642)). SMA 1.3 mm imaging
+  resolves the cold ring at 64.4 (−3.0/+2.4) AU with ΔR/R ≈ 0.3;
   provides the disk inclination reference frame.
 - **Booth M. et al. 2017** — *The Northern arc of ε Eridani's
   Debris Ring as seen by ALMA*, MNRAS 469, 3200
-  (`2017MNRAS.469.3200B`, [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)). Multi-wavelength
+  ([`2017MNRAS.469.3200B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.469.3200B), [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)). Multi-wavelength
   decomposition; three-belt structure; cold-ring inclination 34 ± 2°
   — the canonical inclination reference matched by ε Eri b's
   orbital plane.
 - **Su K. Y. L. et al. 2017** — *The Inner 25 AU Debris Distribution
-  in the ε Eri System*, AJ 153, 226 (`2017AJ....153..226S`,
+  in the ε Eri System*, AJ 153, 226 ([`2017AJ....153..226S`](https://ui.adsabs.harvard.edu/abs/2017AJ....153..226S),
   [arXiv:1703.10330](https://arxiv.org/abs/1703.10330)). The "Genie" multi-belt sculpting model;
   identifies ε Eri b as the inner-gap sculptor between the 3 AU
   asteroid analog and the 20 AU intermediate belt. **Drives the
@@ -372,7 +372,7 @@ Combining surface (cloud-deck) and atmosphere decisions:
 ### Read (context / methodology, not decision-driving)
 
 - **Burrows A. et al. 2003** — *Beyond the T dwarfs* and related
-  cool-jovian evolutionary tracks (`2003ApJ...596..587B`). Mass-
+  cool-jovian evolutionary tracks ([`2003ApJ...596..587B`](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..587B)). Mass-
   radius-age tracks for 0.5–1.5 M_Jup planets; used to estimate ε
   Eri b's radius and intrinsic luminosity from 0.66 M_Jup, 0.44 Gyr.
 - **Fortney J. J. et al. 2007** — *Planetary Radii across Five
@@ -385,14 +385,14 @@ Combining surface (cloud-deck) and atmosphere decisions:
   Mawet 2019 contrast measurement rules out hot-start tracks for ε
   Eri b.
 - **Lodders K. 2003** — *Solar System Abundances and Condensation
-  Temperatures of the Elements* (`2003ApJ...591.1220L`). Protosolar
+  Temperatures of the Elements* ([`2003ApJ...591.1220L`](https://ui.adsabs.harvard.edu/abs/2003ApJ...591.1220L)). Protosolar
   abundance reference; drives the atmosphere composition default.
 - **Atreya S. K. et al. 1999** — *A comparison of the atmospheres
   of Jupiter and Saturn* and related condensation chemistry
   references. Sets the ammonia / water cloud-deck altitude
   framework.
 - **Lewis J. S. 1969** — *The clouds of Jupiter and the NH₃-H₂O
-  and NH₃-H₂S systems* (`1969Icar...10..365L`). Original thermo-
+  and NH₃-H₂S systems* ([`1969Icar...10..365L`](https://ui.adsabs.harvard.edu/abs/1969Icar...10..365L)). Original thermo-
   chemical cloud-deck sequence; still the framework used in modern
   jovian atmosphere modeling.
 - **Sromovsky L. A. et al. 2007** — Jupiter/Saturn convective drive
@@ -407,46 +407,46 @@ Combining surface (cloud-deck) and atmosphere decisions:
   ...2..303H`). Sub-Neptune tholin chemistry extended to jovians;
   drives the haze-optical-depth scaling vs Jupiter.
 - **Moses J. I. et al. 2005** — *Photochemistry of Saturn's
-  atmosphere* (`2005JGRE..110.8001M`). Saturn UV photochemistry
+  atmosphere* ([`2005JGRE..110.8001M`](https://ui.adsabs.harvard.edu/abs/2005JGRE..110.8001M)). Saturn UV photochemistry
   reference; scaled to ε Eri b under K2V FUV.
 - **Wood B. E. et al. 2002** — *Measured Mass Loss Rates of Solar-
   like Stars as a Function of Age and Activity* (`2002ApJ...574
   ..412W`, arXiv:astro-ph/0203437). ε Eri's mass-loss rate ~30×
   solar; drives the magnetosphere driver strength.
 - **France K. et al. 2018** — *The MUSCLES Treasury Survey*
-  extension to K dwarfs (`2018ApJS..239...16F`). FUV / Lyα fluxes
+  extension to K dwarfs ([`2018ApJS..239...16F`](https://ui.adsabs.harvard.edu/abs/2018ApJS..239...16F)). FUV / Lyα fluxes
   for ε Eri; drives the photochemistry-strength estimate.
 - **Reiners A. & Christensen U. R. 2010** — *A magnetic field
   evolution scenario for brown dwarfs and giant planets*
-  (`2010A&A...522A..13R`, [arXiv:1007.1514](https://arxiv.org/abs/1007.1514), cached). Energy-flux dynamo
+  ([`2010A&A...522A..13R`](https://ui.adsabs.harvard.edu/abs/2010A%26A...522A..13R), [arXiv:1007.1514](https://arxiv.org/abs/1007.1514), cached). Energy-flux dynamo
   scaling for jovians; the grounding for the cfg's 660 μT field (a young
   giant is stronger than Jupiter, not weaker). Built on the scaling law
-  of Christensen, Holzwarth & Reiners 2009 (`2009Natur.457..167C`).
+  of Christensen, Holzwarth & Reiners 2009 ([`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C)).
 - **Metcalfe T. S. et al. 2013** — *Magnetic Activity Cycles in the
   Exoplanet Host Star ε Eridani*, ApJ 763, L26
-  (`2013ApJ...763L..26M`, [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). First report of the
+  ([`2013ApJ...763L..26M`](https://ui.adsabs.harvard.edu/abs/2013ApJ...763L..26M), [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). First report of the
   ~2.95-yr chromospheric activity cycle; drives the cycle-phase
   magnetospheric-driver synchronization noted in Open items.
   (Not fetched in the b-bibliography; cited from the host Phase 3.)
 - **Coffaro M. et al. 2020** — *A solar-like magnetic cycle on the
   mature K-dwarf 61 Cygni A and the X-ray cycle of ε Eridani*, A&A
-  636, A49 (`2020A&A...636A..49C`, [arXiv:2002.11009](https://arxiv.org/abs/2002.11009)). Refines the
+  636, A49 ([`2020A&A...636A..49C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..49C), [arXiv:2002.11009](https://arxiv.org/abs/2002.11009)). Refines the
   X-ray cycle amplitude that modulates the wind driver at ε Eri b's
   orbit. (Pinned in the host bibliography `eps-eri.yaml`, status
   fetched; not separately pinned for b.)
 - **Canup R. M. & Ward W. R. 2002** — *Formation of the Galilean
   Satellites: Conditions of Accretion*, AJ 124, 3404
-  (`2002AJ....124.3404C`). Circumplanetary-disk satellite-accretion
+  ([`2002AJ....124.3404C`](https://ui.adsabs.harvard.edu/abs/2002AJ....124.3404C)). Circumplanetary-disk satellite-accretion
   framework; context for the speculative moon-system Open item.
   (Not fetched in the b-bibliography.)
 
 ### Read (instrument / non-cfg-decisive)
 
 - **Snellen I. A. G. et al. 2014** — *Fast spin of the young
-  extrasolar planet β Pictoris b* (`2014Natur.509...63S`). Doppler-
+  extrasolar planet β Pictoris b* ([`2014Natur.509...63S`](https://ui.adsabs.harvard.edu/abs/2014Natur.509...63S)). Doppler-
   broadened spectroscopy technique; not yet applied to ε Eri b.
 - **Drossart P. et al. 1989** — *Detection of H₃⁺ on Jupiter*
-  (`1989Natur.340..539D`). H₃⁺ emission as future aurora detection
+  ([`1989Natur.340..539D`](https://ui.adsabs.harvard.edu/abs/1989Natur.340..539D)). H₃⁺ emission as future aurora detection
   channel for ε Eri b.
 - **Clarke J. T. et al. 1996, 2009** — Jupiter HST FUV aurora
   observations; provides the auroral-oval geometry reference scaled
@@ -454,13 +454,13 @@ Combining surface (cloud-deck) and atmosphere decisions:
 - **Bonfond B. 2017** — *Jovian auroral aspects* (`2017JGRA
   ...122.4548B`). Jupiter auroral oval latitude reference.
 - **Wong M. H. et al. 2004** — *Updated Galileo probe abundance
-  measurements* (`2004Icar..171..153W`). Jupiter CH₄ / NH₃ abundance
+  measurements* ([`2004Icar..171..153W`](https://ui.adsabs.harvard.edu/abs/2004Icar..171..153W)). Jupiter CH₄ / NH₃ abundance
   reference; cfg adopts Jupiter-analog values.
 - **Hanel R. A. et al. 1983, Li L. et al. 2018** — Saturn Bond
-  albedo measurements (`1983Icar...53..262H`; `2018NatCo...9.3709L`).
+  albedo measurements ([`1983Icar...53..262H`](https://ui.adsabs.harvard.edu/abs/1983Icar...53..262H); [`2018NatCo...9.3709L`](https://ui.adsabs.harvard.edu/abs/2018NatCo...9.3709L)).
   Reference values for the cool-jovian Bond albedo tie-break.
 - **Goldreich P. & Soter S. 1966** — *Q in the Solar System*
-  (`1966Icar....5..375G`). Tidal-dissipation Q factor reference
+  ([`1966Icar....5..375G`](https://ui.adsabs.harvard.edu/abs/1966Icar....5..375G)). Tidal-dissipation Q factor reference
   for the tidal-lock timescale calculation.
 
 ### Not read — no arXiv preprint or low-priority (~30 papers)

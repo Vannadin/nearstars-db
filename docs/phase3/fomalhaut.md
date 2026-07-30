@@ -76,7 +76,7 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `visual_companion_event_lp_876_10_apparent_diameter_arcmin` | 0.00001 (point source, V ≈ 11 from any Fomalhaut planet) | medium | derived: M4V at 5.7 ly is below naked-eye limit but trivially visible in any in-game telescope view |
 | `disk_present` | true | high | Kalas et al. 2005 HST/ACS resolved coronagraphy |
 | `disk_belts` | warm, intermediate, cold | high | Gáspár et al. 2023 JWST/MIRI resolves a three-belt architecture: inner warm + intermediate + the classic eccentric cold main ring (Kalas 2005 / Boley 2012 / White 2017) |
-| `disk_warm_inner_radius_au` | 10 | high | Gáspár et al. 2023 (`2023NatAs...7..790G`) JWST/MIRI — inner warm belt inner edge |
+| `disk_warm_inner_radius_au` | 10 | high | Gáspár et al. 2023 ([`2023NatAs...7..790G`](https://ui.adsabs.harvard.edu/abs/2023NatAs...7..790G)) JWST/MIRI — inner warm belt inner edge |
 | `disk_warm_outer_radius_au` | 78 | high | Gáspár et al. 2023 — broad inner/warm disk extends out to the ~78 AU gap that separates it from the intermediate belt |
 | `disk_warm_tint_rgb_hex` | `#fff4e5` (pale cream; vivid `#ffe0b0`) | low | No measured optical color (thermal/interferometric only). Mie reflectance synthesis on **icy grains** (ice + silicate, ~50–80% water ice by volume): the warm dust is PR-drag fragments of the outer belt, not in-situ carbon (Sommer et al. 2025 `2503.18127`) → same icy composition as the cold ring, large blowout grains → faintly warm reflectance (B/I 0.68); renderer applies the A4 V blue-white light. Vivid pack: `#ffe0b0` |
 | `disk_warm_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
@@ -283,39 +283,39 @@ alignment phenomena on human timescales.
 ### Read (visual-informative, drove decisions above)
 
 - **Mamajek E. E. 2012** — *On the age and binarity of Fomalhaut*,
-  ApJ 754, L20 (`2012ApJ...754L..20M`, [arXiv:1206.6353](https://arxiv.org/abs/1206.6353)). **Phase 2
+  ApJ 754, L20 ([`2012ApJ...754L..20M`](https://ui.adsabs.harvard.edu/abs/2012ApJ...754L..20M), [arXiv:1206.6353](https://arxiv.org/abs/1206.6353)). **Phase 2
   anchor for the whole stellar layer.** Re-derives R 1.842 ± 0.019 R☉,
   Teff 8590 ± 73 K, L 16.63 ± 0.48 L☉ from the Absil 2009 excess-
   corrected θ_LD + Davis 2005 f_bol; mass 1.92 ± 0.02 M☉ (Y² tracks);
   age 440 ± 40 Myr (isochrone of A + gyro/Li/X-ray of companion TW PsA).
 - **Absil O. et al. 2009** — *A near-infrared interferometric survey of
-  debris-disc stars II: Fomalhaut*, ApJ 704, 150 (`2009ApJ...704..150A`,
+  debris-disc stars II: Fomalhaut*, ApJ 704, 150 ([`2009ApJ...704..150A`](https://ui.adsabs.harvard.edu/abs/2009ApJ...704..150A),
   [arXiv:0908.3133](https://arxiv.org/abs/0908.3133)). Excess-corrected VLTI/VINCI θ_LD = 2.223 ± 0.022 mas
   (subtracting the resolved 0.88% K-band circumstellar emission) — the
   angular diameter Mamajek 2012 uses for R/Teff. Apparent oblateness 1.021.
 - **Mamajek E. E. et al. 2013** — *Discovery of a Faint Companion to
   Alpha PsA Using MMT/AO 5 μm Imaging*, AJ 146, 154
-  (`2013AJ....146..154M`, [arXiv:1310.0764](https://arxiv.org/abs/1310.0764)). Identifies LP 876-10 as
+  ([`2013AJ....146..154M`](https://ui.adsabs.harvard.edu/abs/2013AJ....146..154M), [arXiv:1310.0764](https://arxiv.org/abs/1310.0764)). Identifies LP 876-10 as
   the M4V third component of the Fomalhaut hierarchical triple at
   5.7 ly projected; common proper motion + isochronal age match.
 - **Di Folco E. et al. 2004** — *VLTI near-IR interferometric
   observations of Vega-like stars*, A&A 426, 601
-  (`2004A&A...426..601D`, arXiv:astro-ph/0408390). The original
+  ([`2004A&A...426..601D`](https://ui.adsabs.harvard.edu/abs/2004A%26A...426..601D), arXiv:astro-ph/0408390). The original
   VLTI/VINCI K-band angular diameter; refined by the Absil 2009
   excess correction that Mamajek 2012 adopts.
 - **Dunkin S. K. et al. 1997** — *High-resolution spectroscopy of
-  Vega-like stars*, MNRAS 286, 604 (`1997MNRAS.286..604D`). [Fe/H] =
+  Vega-like stars*, MNRAS 286, 604 ([`1997MNRAS.286..604D`](https://ui.adsabs.harvard.edu/abs/1997MNRAS.286..604D)). [Fe/H] =
   −0.03 for Fomalhaut — the Phase 2 recommended (near-solar) metallicity;
   A-star [Fe/H] determinations scatter widely.
 - **Kalas P. et al. 2005** — *A planetary system as the origin of
   structure in Fomalhaut's dust belt*, Nature 435, 1067
-  (`2005Natur.435.1067K`). HST/ACS coronagraphy first resolves the
+  ([`2005Natur.435.1067K`](https://ui.adsabs.harvard.edu/abs/2005Natur.435.1067K)). HST/ACS coronagraphy first resolves the
   narrow, eccentric main ring at 133 AU with e ≈ 0.11 and a sharp
   inner edge — interpreted as gravitational sculpting by an unseen
   planet (the original "shepherding" inference).
 - **Kalas P. et al. 2008** — *Optical Images of an Exosolar Planet
   25 Light-Years from Earth*, Science 322, 1345
-  (`2008Sci...322.1345K`). The original "Fomalhaut b" HST detection
+  ([`2008Sci...322.1345K`](https://ui.adsabs.harvard.edu/abs/2008Sci...322.1345K)). The original "Fomalhaut b" HST detection
   paper. **Retraction context**: subsequent re-analysis by Gáspár &
   Rieke 2020 and the JWST 2023 non-detection (Gáspár 2023)
   re-interprets the source as a transient expanding dust cloud from
@@ -323,13 +323,13 @@ alignment phenomena on human timescales.
   synthesis follows the current consensus.
 - **Gáspár A. & Rieke G. H. 2020** — *New HST data and modeling
   reveal a massive planetesimal collision around Fomalhaut*, PNAS
-  117, 9712 (`2020PNAS..117.9712G`, [arXiv:2004.08736](https://arxiv.org/abs/2004.08736)). Re-analysis
+  117, 9712 ([`2020PNAS..117.9712G`](https://ui.adsabs.harvard.edu/abs/2020PNAS..117.9712G), [arXiv:2004.08736](https://arxiv.org/abs/2004.08736)). Re-analysis
   of HST archive shows "Fomalhaut b" has expanded and faded between
   2004–2014 epochs, consistent with an expanding dust cloud from a
   ~200 km planetesimal collision rather than a bound point source.
 - **Gáspár A. et al. 2023** — *Spatially resolved imaging of the
   inner Fomalhaut disk using JWST/MIRI*, Nature Astronomy 7, 790
-  (`2023NatAs...7..790G`, [arXiv:2305.03789](https://arxiv.org/abs/2305.03789)). JWST/MIRI imaging at
+  ([`2023NatAs...7..790G`](https://ui.adsabs.harvard.edu/abs/2023NatAs...7..790G), [arXiv:2305.03789](https://arxiv.org/abs/2305.03789)). JWST/MIRI imaging at
   15.5 µm + 23 µm resolves a previously-unknown **intermediate belt
   at ~83–104 AU** (separated from the inner disk by a ~78 AU gap;
   inner disk inclined ~47.8° vs the 64.4° outer ring) and revises the
@@ -338,76 +338,76 @@ alignment phenomena on human timescales.
   consistent with the dust-cloud interpretation.
 - **Boley A. C. et al. 2012** — *Constraining the planetary system
   of Fomalhaut using high-resolution ALMA observations*, ApJ 750,
-  L21 (`2012ApJ...750L..21B`, [arXiv:1204.0007](https://arxiv.org/abs/1204.0007)). ALMA Cycle 0
+  L21 ([`2012ApJ...750L..21B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...750L..21B), [arXiv:1204.0007](https://arxiv.org/abs/1204.0007)). ALMA Cycle 0
   imaging of the main ring; eccentricity e = 0.11 ± 0.01, inner
   edge 133 AU, outer edge 158 AU, width Δa/a ≈ 0.13; constrains
   shepherd planet mass to < 3 M_Jup.
 - **White J. A. et al. 2017** — *ALMA observations of Fomalhaut's
-  outer dust ring*, ApJ 842, 80 (`2017ApJ...842...80W`,
-  [arXiv:1705.10670](https://arxiv.org/abs/1705.10670)). Higher-resolution ALMA Cycle 4 follow-up;
+  outer dust ring*, MNRAS 466, 4201 ([`2017MNRAS.466.4201W`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.466.4201W),
+  [arXiv:1612.01648](https://arxiv.org/abs/1612.01648)). Higher-resolution ALMA Cycle 4 follow-up;
   confirms the narrow eccentric ring and refines the inclination
   to 65.6 ± 0.4°; sets the disk geometry cfg fields.
 - **Le Bouquin J.-B. et al. 2009** — *Spin axis of α PsA from
-  interferometry*, A&A 498, L41 (`2009A&A...498L..41L`,
+  interferometry*, A&A 498, L41 ([`2009A&A...498L..41L`](https://ui.adsabs.harvard.edu/abs/2009A%26A...498L..41L),
   [arXiv:0904.1688](https://arxiv.org/abs/0904.1688)). VLTI/AMBER measurement of stellar oblateness
   + spin axis orientation; demonstrates spin-orbit alignment with
   the debris disk to ~3°.
 - **Davis J. et al. 2005** — *Limb-darkening determinations for
   Fomalhaut and α Cen A from SUSI*, MNRAS 356, 1362
-  (`2005MNRAS.356.1362D`). Optical interferometric limb-darkening
+  ([`2005MNRAS.356.1362D`](https://ui.adsabs.harvard.edu/abs/2005MNRAS.356.1362D)). Optical interferometric limb-darkening
   power-law α(V) ≈ 0.21 for Fomalhaut; sets `limb_darkening_alpha_h`.
 
 ### Read (context / methodology, not directly decision-driving)
 
 - **Royer F. et al. 2007** — *Rotational velocities of A-type stars*,
-  A&A 463, 671 (`2007A&A...463..671R`, arXiv:astro-ph/0610785).
+  A&A 463, 671 ([`2007A&A...463..671R`](https://ui.adsabs.harvard.edu/abs/2007A%26A...463..671R), arXiv:astro-ph/0610785).
   Gives v sin i = 93 ± 3 km/s for Fomalhaut; combined with disk
   inclination to derive rotation period.
 - **Acke B. et al. 2012** — *Herschel images of Fomalhaut: An
   extrasolar Kuiper Belt at the height of its dynamical activity*,
-  A&A 540, A125 (`2012A&A...540A.125A`, [arXiv:1204.5037](https://arxiv.org/abs/1204.5037)).
+  A&A 540, A125 ([`2012A&A...540A.125A`](https://ui.adsabs.harvard.edu/abs/2012A%26A...540A.125A), [arXiv:1204.5037](https://arxiv.org/abs/1204.5037)).
   Herschel/PACS far-IR imaging of the cold main ring; SED fit
   T_dust ≈ 65 K; fills the `disk_dust_temperature_k` field.
 - **Holland W. S. et al. 2017** — *SONS: The JCMT legacy survey of
   debris discs at submillimetre wavelengths*, MNRAS 470, 3606
-  (`2017MNRAS.470.3606H`, [arXiv:1706.01218](https://arxiv.org/abs/1706.01218)). SCUBA-2 submm
+  ([`2017MNRAS.470.3606H`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.3606H), [arXiv:1706.01218](https://arxiv.org/abs/1706.01218)). SCUBA-2 submm
   photometry; main-ring dust mass ~1.5 × 10⁻² M⊕ in mm-cm grains.
 - **Saffe C. et al. 2008** — *Spectroscopic metallicities of Vega-
-  like stars*, A&A 490, 297 (`2008A&A...490..297S`,
+  like stars*, A&A 490, 297 ([`2008A&A...490..297S`](https://ui.adsabs.harvard.edu/abs/2008A%26A...490..297S),
   [arXiv:0805.3936](https://arxiv.org/abs/0805.3936)). Castor-moving-group [Fe/H] = −0.03 ± 0.05 — a
   corroborating metallicity (the cfg cites Dunkin 1997 as the Phase 2
   recommended value; both are near-solar).
 - **Stapelfeldt K. R. et al. 2004** — *First Look at the Fomalhaut
   Debris Disk with Spitzer*, ApJS 154, 458
-  (`2004ApJS..154..458S`). Spitzer/MIPS 24/70/160 µm photometry;
+  ([`2004ApJS..154..458S`](https://ui.adsabs.harvard.edu/abs/2004ApJS..154..458S)). Spitzer/MIPS 24/70/160 µm photometry;
   first multi-band thermal characterization of the dust disk.
 - **Currie T. et al. 2012** — *A Direct-Imaging Survey of the
   Fomalhaut Planetary System with the Hubble Space Telescope*, ApJ
-  760, L32 (`2012ApJ...760L..32C`, [arXiv:1210.6555](https://arxiv.org/abs/1210.6555)). Independent
+  760, L32 ([`2012ApJ...760L..32C`](https://ui.adsabs.harvard.edu/abs/2012ApJ...760L..32C), [arXiv:1210.6555](https://arxiv.org/abs/1210.6555)). Independent
   HST re-analysis of "Fomalhaut b"; early evidence that the source
   is not a self-luminous planet.
 - **Schröder C. & Schmitt J. H. M. M. 2007** — *X-ray emission from
-  A-type stars*, A&A 475, 677 (`2007A&A...475..677S`). ROSAT survey
+  A-type stars*, A&A 475, 677 ([`2007A&A...475..677S`](https://ui.adsabs.harvard.edu/abs/2007A%26A...475..677S)). ROSAT survey
   of A-star X-ray flux; sets the log L_X upper limit for Fomalhaut.
 - **Greaves J. S. et al. 2014** — *Alignment of the host star spin
   with the orbit of debris discs*, MNRAS 438, L31
-  (`2014MNRAS.438L..31G`, [arXiv:1311.3431](https://arxiv.org/abs/1311.3431)). Population-wide spin-
+  ([`2014MNRAS.438L..31G`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.438L..31G), [arXiv:1311.3431](https://arxiv.org/abs/1311.3431)). Population-wide spin-
   orbit alignment for A-star debris-disk hosts; supports the
   Le Bouquin 2009 alignment assumption.
 
 ### Read (instrument / non-cfg-decisive)
 
 - **Gray R. O. & Garrison R. F. 1989** — *The Late A-Type Stars:
-  Refined MK Classification* (`1989ApJS...70..623G`). MK system
+  Refined MK Classification* ([`1989ApJS...70..623G`](https://ui.adsabs.harvard.edu/abs/1989ApJS...70..623G)). MK system
   reclassification placing Fomalhaut at the A3V/A4V boundary.
 - **Monnier J. D. et al. 2010** — *Imaging the surface of Altair*,
-  Science 317, 342 (`2007Sci...317..342M`). Reference for
+  Science 317, 342 ([`2007Sci...317..342M`](https://ui.adsabs.harvard.edu/abs/2007Sci...317..342M)). Reference for
   gravity-darkening map of a comparable rapid-rotator A-star.
 - **Kopparapu R. K. et al. 2013** — *Habitable zones around main-
-  sequence stars*, ApJ 765, 131 (`2013ApJ...765..131K`,
+  sequence stars*, ApJ 765, 131 ([`2013ApJ...765..131K`](https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K),
   [arXiv:1301.6674](https://arxiv.org/abs/1301.6674)). HZ inner/outer boundaries for A4V star.
 - **Wyatt M. C. 2008** — *Evolution of Debris Disks*, ARA&A 46, 339
-  (`2008ARA&A..46..339W`). Theoretical framework for collisional
+  ([`2008ARA&A..46..339W`](https://ui.adsabs.harvard.edu/abs/2008ARA%26A..46..339W)). Theoretical framework for collisional
   cascade replenishment in resolved debris disks; underpins the
   `disk_planetesimal_belt_inferred` field.
 

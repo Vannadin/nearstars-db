@@ -33,9 +33,36 @@
           }
         ],
         "radius_measurements": [],
-        "teff_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 482,
+            "method": "sed_fitting",
+            "reference": "Faherty et al. 2024",
+            "bibcode": "2024Natur.628..511F",
+            "recommended": true,
+            "notes": "JWST NIRSpec/NIRCam atmospheric modeling (\"W1935\"; same fit finds a ~300 K thermal inversion, CH4 emission at 3.326 um). Corroborated by Suarez 2025. Combined-light value — De Furio 2025 later resolved a ~172 mas Y+Y binary."
+          },
+          {
+            "value_k": 315,
+            "method": "photometric_color",
+            "reference": "Marocco et al. 2019",
+            "bibcode": "2019ApJ...881...17M",
+            "recommended": false,
+            "notes": "Discovery estimate 270-360 K (midpoint) from Spitzer ch1-ch2 color relations — SUPERSEDED by JWST 482 K (extreme IR color broke the photometric relation)."
+          }
+        ],
         "luminosity_measurements": [],
-        "age_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 5.5,
+            "method": "unverified",
+            "reference": "De Furio et al. 2025",
+            "bibcode": "2025ApJ...990L..63D",
+            "doi": "10.3847/2041-8213/adfee1",
+            "recommended": true,
+            "notes": "ASSUMED field-age prior 1-10 Gyr (value = midpoint), adopted by De Furio 2025 to convert ATMO2020 luminosities into masses (12-39 + 7-24 MJup). NOT a measurement — method=unverified flags the assumption honestly. No independent age determination exists."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -61,7 +88,7 @@
         "icrs_vy_j2000_km_s": 39.77030340104151,
         "icrs_vz_j2000_km_s": 12.867394245361485,
         "luminosity_lsun": null,
-        "age_gyr": null,
+        "age_gyr": 5.5,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
@@ -143,7 +170,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -152,7 +179,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -161,14 +188,14 @@
       "title": "De Furio et al. 2025",
       "doi": "10.3847/2041-8213/adfee1",
       "bibcode": "2025ApJ...990L..63D",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "CWISEP J193518.59-154620.3 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

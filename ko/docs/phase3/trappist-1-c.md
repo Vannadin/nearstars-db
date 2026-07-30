@@ -360,7 +360,7 @@ c 의 참고문헌은 b 의 것보다 작음 (32 vs 66). arXiv 가 없는 논문
 대부분 학회 요약이거나 자매 행성의 biosignature 연구. 건너뛴 주목할
 만한 항목.
 
-- **2026NatAs.tmp...65G** "No thick atmosphere around TRAPPIST-1 b
+- **[`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G)** "No thick atmosphere around TRAPPIST-1 b
   and c from JWST thermal phase curves" — Ducrot 2025 의 Nature
   Astronomy 정식 출판본일 가능성이 높음 (arXiv [2509.02128](https://arxiv.org/abs/2509.02128) 으로 이미
   다룸). Skip.

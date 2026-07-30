@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 14.7462,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3043,
+        "teff_k": 3100,
         "spectype": "M4.5V",
         "mass_measurements": [
           {
@@ -43,11 +43,52 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3100,
+            "method": "sed_fitting",
+            "recommended": true,
+            "notes": "Mahajan 2024 (JWST) 3101 +/- 43 K — excellent agreement.",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          },
+          {
+            "value_k": 3101,
+            "uncertainty_k": 43,
+            "method": "sed_fitting",
+            "reference": "Mahajan et al. 2024",
+            "bibcode": "2024ApJ...963L..37M",
+            "doi": "10.3847/2041-8213/ad29f3",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.0034074,
+            "uncertainty_lsun": 4.96e-05,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "notes": "Mahajan 2024 0.00390 (+0.00021/-0.00020); Cloutier 2021 0.0046.",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
         "age_measurements": [],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 124.7,
+            "uncertainty_days": 5.0,
+            "method": "photometric_variability",
+            "reference": "Cloutier et al. 2021",
+            "bibcode": "2021AJ....162..174C",
+            "doi": "10.3847/1538-3881/ac1584",
+            "recommended": true,
+            "notes": "GP on STELLA photometry."
+          }
+        ],
         "activity_measurements": [],
         "stellarium_id": null
       },
@@ -70,10 +111,10 @@
         "icrs_vx_j2000_km_s": 34.602120698836984,
         "icrs_vy_j2000_km_s": -32.64836658618871,
         "icrs_vz_j2000_km_s": -50.03337908594543,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.0034074,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 124.7,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
@@ -158,7 +199,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -167,7 +208,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -176,14 +217,14 @@
       "title": "Mahajan et al. 2024",
       "doi": "10.3847/2041-8213/ad29f3",
       "bibcode": "2024ApJ...963L..37M",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 1214 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

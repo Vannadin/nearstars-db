@@ -19,7 +19,7 @@
         "radial_velocity_source": "Gontcharov 2006 PCRV, Sirius A system (2006AstL...32..759G)",
         "vmag_v": 8.44,
         "vmag_source": "hipparcos_hardcoded",
-        "teff_k": 25970,
+        "teff_k": 25193,
         "spectype": "DA2",
         "mass_measurements": [
           {
@@ -43,9 +43,49 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 25193,
+            "method": "low_res_spectroscopy",
+            "reference": "Barstow et al. 2005",
+            "bibcode": "2005MNRAS.362.1134B",
+            "doi": "10.1111/j.1365-2966.2005.09359.x",
+            "recommended": true,
+            "notes": "HST/STIS Balmer-line fit resolving B from A; log g 8.556. Formal error ~40 K; real spread vs the EUV/UV determination ~400 K."
+          },
+          {
+            "value_k": 24790,
+            "uncertainty_k": 100,
+            "method": "sed_fitting",
+            "reference": "Holberg et al. 1998",
+            "bibcode": "1998ApJ...497..935H",
+            "doi": "10.1086/305489",
+            "recommended": false,
+            "notes": "EUVE + IUE continuum fit (log g 8.57); ~400 K cooler than Barstow, both consistent with the Bond 2017 HR position."
+          }
+        ],
         "luminosity_measurements": [],
-        "age_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 0.126,
+            "method": "wd_cooling_model",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...840...70B",
+            "doi": "10.3847/1538-4357/aa6af8",
+            "recommended": true,
+            "notes": "COOLING age ~126 Myr from HR-diagram position at the dynamical mass (CO core); no formal sigma. Total age (cooling + progenitor) ~228 +/- 10 Myr. Same paper as the curated mass/radius."
+          },
+          {
+            "value_gyr": 0.124,
+            "uncertainty_gyr": 0.01,
+            "method": "wd_cooling_model",
+            "reference": "Liebert et al. 2005",
+            "bibcode": "2005ApJ...630L..69L",
+            "doi": "10.1086/462419",
+            "recommended": false,
+            "notes": "COOLING age 124 +/- 10 Myr (Fontaine/Wood tracks); total system age 225-250 Myr. Agrees with Bond to <2%."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -76,7 +116,7 @@
         "barycenter_method": "single_component(Sirius A)",
         "phase_reliable": true,
         "luminosity_lsun": null,
-        "age_gyr": null,
+        "age_gyr": 0.126,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
@@ -94,7 +134,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +143,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -112,14 +152,14 @@
       "title": "Bond et al. 2017",
       "doi": "10.3847/1538-4357/aa6af8",
       "bibcode": "2017ApJ...840...70B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "Sirius B mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

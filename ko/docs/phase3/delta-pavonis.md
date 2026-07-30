@@ -211,9 +211,6 @@ NearStars 렌더러에서 δ Pavonis 는 행성도 잔해 ring 도 동반자도 
 - **Lannier J. et al. 2017** — *Combining direct imaging and radial
   velocity* ([`2017A&A...603A..54L`](https://ui.adsabs.harvard.edu/abs/2017A%26A...603A..54L), [arXiv:1705.03477](https://arxiv.org/abs/1705.03477)). SPHERE 직접
   촬영 서베이의 δ Pav. 동반자 미검출.
-- **Tinney C. G. et al. 2005** — *The Anglo-Australian Planet Search*
-  ([`2005ApJ...623L.121T`](https://ui.adsabs.harvard.edu/abs/2005ApJ...623L.121T)). δ Pav RV 모니터링. 행성 미검출 — RV 비검출
-  기준선.
 - **Henry T. J. et al. 1996** — *A survey of Ca II H and K
   chromospheric emission in southern solar-type stars*
   ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H)). log R'HK = −4.999. 비활동 분류를 뒷받침.

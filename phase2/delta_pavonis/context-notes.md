@@ -17,21 +17,21 @@ curated under `phase2/curation-data-contract/SPEC.md`.
     false-negative-interferometry pattern (template assumed δ Pav had no direct θ_LD).
 
 **The anchor (postmortem-verified, must be the recommended radius/Teff source):**
-- Rains et al. 2020, `2020MNRAS.493.2377R`, [arXiv:2004.02343](https://arxiv.org/abs/2004.02343), VLTI/PIONIER.
+- Rains et al. 2020, [`2020MNRAS.493.2377R`](https://ui.adsabs.harvard.edu/abs/2020MNRAS.493.2377R), [arXiv:2004.02343](https://arxiv.org/abs/2004.02343), VLTI/PIONIER.
 - "Precision angular diameters for 16 southern stars with VLTI/PIONIER"; δ Pav is star #11/16.
 - θ_LD = 1.828 ± 0.025 mas → R = 1.197 ± 0.016 R☉; Teff = 5571 ± 48 K.
 - Observability: VLTI@Paranal (lat -24°), SUSI@Narrabri (lat -30°) both reach dec -66°;
   only CHARA (lat +34°) cannot. "Too far south for CHARA" ≠ "no interferometry".
 
 ## Candidate Phase 2 sources by category (from the md bibliography — verify each in cache)
-- mass: Bensby 2014 (2014A&A...562A..71B) + Spada 2011 evolutionary fit
+- mass: Bensby 2014 ([`2014A&A...562A..71B`](https://ui.adsabs.harvard.edu/abs/2014A%26A...562A..71B)) + Spada 2011 evolutionary fit
 - radius: **Rains 2020 (rec)**; Bruntt 2010 asteroseismic (alt)
 - teff: **Rains 2020 (rec)**; Bensby 2014 spectroscopic 5587±50; Gaia GSP-Phot 5604 (alt)
 - luminosity: Rains 2020 bolometric if reported, else Eiroa 2013 DUNES SED 1.22 L☉
-- age: Holmberg 2009 (2009A&A...501..941H) 6.6 Gyr; Spada 2011 subgiant 7.5 Gyr (isochrone)
+- age: Holmberg 2009 ([`2009A&A...501..941H`](https://ui.adsabs.harvard.edu/abs/2009A%26A...501..941H)) 6.6 Gyr; Spada 2011 subgiant 7.5 Gyr (isochrone)
 - metallicity: Bensby 2014 FEROS high-res +0.33 ± 0.05 dex
 - rotation: vsini ≈ 1.7 km/s (Bensby 2014) → P_rot lower bound only; low confidence
-- activity: Henry 1996 log R'HK -5.10; Hünsch 1998 (1998A&A...335L..73H) ROSAT X-ray
+- activity: Henry 1996 log R'HK -5.10; Hünsch 1998 ([`1998A&AS..132..155H`](https://ui.adsabs.harvard.edu/abs/1998A%26AS..132..155H)) ROSAT X-ray
 - disk: Eiroa 2013 DUNES + Lawler 2014 + Beichman 2006 → `disks_curated` (debris belt)
 
 ## Method-label notes (avoid the 40 Eri A drift)
@@ -99,11 +99,11 @@ rotation = vsini 1.7 km/s → P/sin i ≈ 36 d lower bound, low conf;
 activity = Henry log R'HK -4.999±0.018 (rec) + Hünsch X-ray log(Lx/Lbol) -6.4 (2nd entry).
 
 ## 2026-05-29 — Stage 3 RECENCY check (user-requested; server-side subagent)
-- Activity UPGRADE: Gomes da Silva 2021 (2021A&A...646A..77G, AMBRE-HARPS) log R'HK = -5.13
+- Activity UPGRADE: Gomes da Silva 2021 ([`2021A&A...646A..77G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G), AMBRE-HARPS) log R'HK = -5.13
   (wmean -5.1315 / median -5.1338), replaces Henry 1996 -4.999. Modern, large-N, long baseline.
 - [Fe/H]: GdS 2021 +0.36 ± 0.02 (AMBRE) — tightest + modern; Bensby +0.37, Bruntt +0.33 corroborate.
   → recommended [Fe/H] = GdS 2021 +0.36±0.02 (high_res_spectroscopy).
-- Asteroseismology: Lund 2025 (2025A&A...701A.285L, arXiv 2508.08699, TESS) νmax=2269.8±64.4,
+- Asteroseismology: Lund 2025 ([`2025A&A...701A.285L`](https://ui.adsabs.harvard.edu/abs/2025A%26A...701A.285L), arXiv 2508.08699, TESS) νmax=2269.8±64.4,
   Δν=107.9±0.2 µHz. NO modeled M/R/age published → keep Bruntt 2010 M/R; cite Lund as modern seismic.
 - Age: nothing newer/better; Holmberg 9.3 vs Bensby 4.9 tension stands (ranges overlap 5.8-9.6).
   DEFAULT pick = Holmberg 2009 9.3 Gyr recommended — physically consistent with very low activity
@@ -114,14 +114,14 @@ activity = Henry log R'HK -4.999±0.018 (rec) + Hünsch X-ray log(Lx/Lbol) -6.4 
 
 ## 2026-05-29 — DISK value-check CATCH (fabricated recommended source)
 disks_curated "Delta Pavonis" recommended entry cited "Lawler & Tanner 2014",
-bibcode 2014ApJ...780...28L, [arXiv:1310.3559](https://arxiv.org/abs/1310.3559). ALL THREE ARE FABRICATED/WRONG:
-  - bibcode 2014ApJ...780...28L: ADS no hit (does not exist)
+bibcode [`2014ApJ...780...28L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...780...28L), [arXiv:1310.3559](https://arxiv.org/abs/1310.3559). ALL THREE ARE FABRICATED/WRONG:
+  - bibcode [`2014ApJ...780...28L`](https://ui.adsabs.harvard.edu/abs/2014ApJ...780...28L): ADS no hit (does not exist)
   - arXiv 1310.3559: actually Hu & Liu 2013 PRA superfluid physics paper (unrelated)
   - author search Lawler+Tanner 2013-2015: no debris-disk paper exists
-Real δ Pav debris disk literature: Beichman 2006 (2006ApJ...652.1674B, astro-ph/0611682,
-Spitzer/MIPS 70um detection) + Eiroa 2010 (2010A&A...518L.131E DUNES first results) +
-Eiroa 2013 (2013A&A...555A..11E, arXiv 1305.0155, DUNES full). Also real: Lawler 2009
-(2009ApJ...705...89L Spitzer/IRS debris) + Tanner 2009 (2009ApJ...704..109T 160um survey).
+Real δ Pav debris disk literature: Beichman 2006 ([`2006ApJ...652.1674B`](https://ui.adsabs.harvard.edu/abs/2006ApJ...652.1674B), astro-ph/0611682,
+Spitzer/MIPS 70um detection) + Eiroa 2010 ([`2010A&A...518L.131E`](https://ui.adsabs.harvard.edu/abs/2010A%26A...518L.131E) DUNES first results) +
+Eiroa 2013 ([`2013A&A...555A..11E`](https://ui.adsabs.harvard.edu/abs/2013A%26A...555A..11E), arXiv 1305.0155, DUNES full). Also real: Lawler 2009
+([`2009ApJ...705...89L`](https://ui.adsabs.harvard.edu/abs/2009ApJ...705...89L) Spitzer/IRS debris) + Tanner 2009 ([`2009ApJ...704..109T`](https://ui.adsabs.harvard.edu/abs/2009ApJ...704..109T) 160um survey).
 → The geometry values (inner 30 / outer 80 / dust mass 0.012) were attributed to a
 nonexistent paper. Must re-anchor on Eiroa 2013 with value-checked numbers, drop Lawler 2014.
 
@@ -131,9 +131,9 @@ table12 "Non excess sources" (recno 114), NOT table14 (excess sources). Stronges
 in the survey: L_dust/L_* < 5e-7 (one of the two lowest, both within 6.1 pc). PACS
 70/100/160 um all consistent with photosphere (chi = -3.0/+1.2/-0.1). δ Pav absent from
 Beichman 2006, Tanner 2009 (0908.0049), Lawler 2009 (0909.0058) samples. "Lawler & Tanner
-2014" does not exist (2014ApJ...780...28C is a solar-physics paper; the entry confabulated
+2014" does not exist ([`2014ApJ...780...28C`](https://ui.adsabs.harvard.edu/abs/2014ApJ...780...28C) is a solar-physics paper; the entry confabulated
 the two real 2009 Spitzer papers + a fake 2014 date + a physics arXiv id).
 => FIX: remove δ Pav from disks_curated (not a disk host); record the Eiroa 2013
 non-detection (L/L* < 5e-7) in the stellar meta_notes; rewrite Phase 3 md disk sections
 (disk_present -> false, geometry rows removed, "cold debris ring" prose replaced with the
-non-detection) in en + ko. Recommended disk source for the limit = Eiroa 2013 (2013A&A...555A..11E).
+non-detection) in en + ko. Recommended disk source for the limit = Eiroa 2013 ([`2013A&A...555A..11E`](https://ui.adsabs.harvard.edu/abs/2013A%26A...555A..11E)).

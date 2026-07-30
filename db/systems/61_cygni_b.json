@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 6.0157,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3652,
+        "teff_k": 4171,
         "spectype": "K7 V",
         "mass_measurements": [
           {
@@ -43,12 +43,52 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 4171,
+            "uncertainty_k": 39,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.083,
+            "method": "photometric",
+            "recommended": true,
+            "notes": "log L = -1.08.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 6.0,
+            "method": "isochrone",
+            "recommended": true,
+            "notes": "System age (A+B) from CESAM2k + interferometry. Luck 2017 isochrone for B alone gives an anomalously young 3.3 Gyr (K7 isochrone degeneracy) — coeval system value preferred.",
+            "reference": "Kervella et al. 2008",
+            "bibcode": "2008A&A...488..667K",
+            "doi": "10.1051/0004-6361:200810080"
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.86,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Boro Saikia 2018 gives -4.70/-4.72; slightly less active than A.",
+            "reference": "Gray et al. 2003",
+            "bibcode": "2003AJ....126.2048G",
+            "doi": "10.1086/378365"
+          }
+        ],
         "stellarium_id": "61CygB"
       },
       "derived": {
@@ -75,11 +115,11 @@
         "mass_ratio_q": 0.5042735042735043,
         "barycenter_method": "mass_weighted_average(61 Cygni A,61 Cygni B)",
         "phase_reliable": false,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.083,
+        "age_gyr": 6.0,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "activity_log_rhk": -4.86,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -94,7 +134,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +143,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -112,14 +152,14 @@
       "title": "Kervella et al. 2008",
       "doi": "10.1051/0004-6361:200810080",
       "bibcode": "2008A&A...488..667K",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "61 Cygni B mass (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

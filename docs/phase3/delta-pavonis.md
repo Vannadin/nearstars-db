@@ -243,9 +243,6 @@ visual choices:
 - **Lannier J. et al. 2017** — *Combining direct imaging and radial
   velocity* ([`2017A&A...603A..54L`](https://ui.adsabs.harvard.edu/abs/2017A%26A...603A..54L), [arXiv:1705.03477](https://arxiv.org/abs/1705.03477)). δ Pav in the
   SPHERE direct-imaging survey; no companions detected.
-- **Tinney C. G. et al. 2005** — *The Anglo-Australian Planet Search*
-  ([`2005ApJ...623L.121T`](https://ui.adsabs.harvard.edu/abs/2005ApJ...623L.121T)). RV monitoring of δ Pav; no planet
-  detection — the RV non-detection baseline.
 - **Henry T. J. et al. 1996** — *A survey of Ca II H and K
   chromospheric emission in southern solar-type stars*
   ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H)). log R'HK = −4.999; corroborates the

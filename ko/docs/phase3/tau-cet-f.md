@@ -3,7 +3,7 @@
 
 τ Ceti f 는 metal-poor G8V τ Ceti 주위를 636 일 주기로 1.334 AU 에서
 도는 3.93 M⊕ (M sin i) RV 후보 행성입니다 (Feng 2017,
-`2017AJ....154..135F`). 현재 `db/systems/tau_cet.json` 에 들어 있는 세
+[`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F)). 현재 `db/systems/tau_cet.json` 에 들어 있는 세
 행성 중 가장 바깥쪽이며 (f, g, h 모두 Feng 2017 출처. e 는 호스트
 Phase 3 합성에서 큐레이션 갭으로 기록), 호스트 광도 0.488 L☉ 기준
 조사량은 0.27 S⊕ 로 — G8V 의 보수적 거주가능영역 바깥 경계
@@ -11,10 +11,9 @@ Phase 3 합성에서 큐레이션 갭으로 기록), 호스트 광도 0.488 L☉
 f 의 평형 온도는 202 K (A=0) 또는 184 K (A=0.3) 이며, 이 호스트에서는
 얇은 2차 대기로도 표면을 물 어는점 위로 데우지 못합니다. 행성은
 NEA 에서 **disputed** (`pl_controv_flag = 1`) 로 표시됩니다 — RV 단독,
-transit 없음, 직접 영상 없음, JWST 후속 관측 없음. Feng 2018
-(`2018A&A...613A..76F`) 가 시스템을 재검토했을 때 636 일 신호 자체는
-안정적이었지만, 일부 후속 분석 (Figueira 2025, 그리고 그 이전 Tuomi
-2013 의 5-행성 주장 철회 이력) 은 SNR 을 마지널한 수준으로 봅니다.
+transit 없음, 직접 영상 없음, JWST 후속 관측 없음. 636 일 신호는 독립
+재확인이 없고, 일부 분석 (Figueira 2025, 그리고 그 이전 Tuomi 2013 의
+5-행성 주장 철회 이력) 은 SNR 을 마지널한 수준으로 봅니다.
 
 **NearStars 시나리오 선택. 매장 가능 해양 위에 전구적 H₂O 얼음 외피를
 덮은 차갑고 얇은 대기의 snowball super-Earth, 탈가스 잔존물인 희박한
@@ -65,7 +64,7 @@ G 왜성 주위 outer-HZ super-Earth 의 이론적 기본값입니다. 맨 암�
 | `magnetic_field_strength_microtesla_equator` | 25 | low | Tie-break. 다주 주기로 자전하는 4–5 M⊕ 암석체에 RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`) 적용 시 ~0.5× 지구 |
 | `tidal_heating_w_m2` | 0.001–0.01 | medium | e = 0.16 은 무시할 수 없지만 a = 1.334 AU 는 멉니다. 통합 조석 플럭스는 적당함 |
 | `induction_heating_w_m2` | < 0.001 | medium | 이 거리에서 의미 있는 induction 가열을 끌어내기에 호스트 항성 자기장이 너무 약함 (Boro Saikia 2018 ZDI) |
-| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함(metal-poor 호스트라면 ²³²Th/²³⁸U 예산이 더 낮아지겠지만 여기서는 정량화하지 않음) |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W))의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함(metal-poor 호스트라면 ²³²Th/²³⁸U 예산이 더 낮아지겠지만 여기서는 정량화하지 않음) |
 | `aurora_present` | true (희미함) | low | 적당한 자기장 + 얇은 대기 → 확산 오로라 가능. 밝은 오로라에는 호스트 XUV 가 너무 약함 |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break. 광분해로 미량 O₂ 가 있을 경우 [OI] 557.7 nm 녹색. 그렇지 않으면 N₂ Vegard-Kaplan 청록 |
 | `aurora_intensity_kR_typical` | 1 | low | 조용한 호스트 — f 거리에서의 양성자 플럭스는 지구의 그것보다 한참 아래라서 오로라 강도는 지구 전형값 10 kR 보다 약 10× 약함 |
@@ -226,15 +225,10 @@ dynamo 를 지지할 수 있습니다. RM22 스케일링은 이 파라미터 조
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 발견 + f 궤도
+  ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F), [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 발견 + f 궤도
   (P = 636.13 ± 11.7 d), 질량 (Msini = 3.93 ± 1.05 M⊕), 이심률
   (0.16), 호스트 질량 (0.783 ± 0.012 M☉) 의 최선 제약. 모든 궤도
   및 물리 Decisions 행을 정박.
-- **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
-  system from HARPS RV*, A&A 613, A76 (`2018A&A...613A..76F`,
-  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). 확장된 HARPS 데이터셋으로 4-행성 시스템 재검토.
-  636 d 신호 안정적. NEA 의 controversial 플래그는 지속되는
-  amplitude-to-noise 우려를 반영.
 - **Wordsworth & Pierrehumbert 2015** (general atmospheric-escape
   argument) — f 에 채택한 0.1 bar N₂ / 미량 CO₂ 2차 대기의 일반
   대기-유지 참조로 사용. 구체적 제목은 핀하지 않음.
@@ -249,12 +243,12 @@ dynamo 를 지지할 수 있습니다. RM22 스케일링은 이 파라미터 조
 ### Read (context / methodology, not directly decision-driving)
 
 - **MacGregor M. A. et al. 2016** — *τ Ceti debris disk ALMA
-  imaging*, ApJ 828, 113 (`2016ApJ...828..113M`). 원반면 경사
+  imaging*, ApJ 828, 113 ([`2016ApJ...828..113M`](https://ui.adsabs.harvard.edu/abs/2016ApJ...828..113M)). 원반면 경사
   ~35°, Lawler et al. 2014 (Herschel) 에서 가져온 값 — f 궤도면
   기본값으로 채택 (Feng 2017 도 공면 가정).
 - **Tuomi M. et al. 2013** — *Signals embedded in the radial
   velocity noise: τ Ceti 5-planet claim*, A&A 551, A79
-  (`2013A&A...551A..79T`). 초기 5-행성 검출. Feng 2017 가 4개
+  ([`2013A&A...551A..79T`](https://ui.adsabs.harvard.edu/abs/2013A%26A...551A..79T)). 초기 5-행성 검출. Feng 2017 가 4개
   (e/f/g/h) 를 유지하고 1개 (구 라벨링의 b) 를 떨어뜨림. controversial
   플래그 이력 이해에 유용.
 - **Owen J. E. & Wu Y. 2017** — *The evaporation valley*. sub-
@@ -276,7 +270,7 @@ dynamo 를 지지할 수 있습니다. RM22 스케일링은 이 파라미터 조
 
 ### Not read — no arXiv preprint or low-priority (~15 papers)
 
-- **Tuomi 2013 erratum** — Tuomi 2014 (`2014MNRAS.441.1545T`) 가
+- **Tuomi 2013 erratum** — Tuomi 2014 ([`2014MNRAS.441.1545T`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T)) 가
   잡음 모델 정제. Feng 2017 로 대체.
 - **SETI/레이저-탐색/technosignature 논문 다수** — 행성에 대한
   cfg 관련성 없음.
@@ -305,9 +299,8 @@ dynamo 를 지지할 수 있습니다. RM22 스케일링은 이 파라미터 조
 - **사용자 입력. P=4562 d / 5 AU "h-후보".** 이 합성에 대한 사용자
   요청은 τ Cet h 를 P = 4562 d, a ≈ 5.0 AU (소행성-analog 벨트
   안쪽 가장자리 근처) 로 묘사했습니다. DB 의 권위 있는 h 는
-  P = 49.41 d / a = 0.243 AU. 4562 d 후보는 Feng 2018 §3.4 의
-  장주기 신호 또는 이후 RV 재분석 후보 중 DB 가 ingest 하지
-  않은 것일 가능성. 큐레이션 질문은 `db/systems/tau_cet.json` 의
+  P = 49.41 d / a = 0.243 AU. 4562 d 후보는 이후 RV 재분석의
+  장주기 후보 중 DB 가 ingest 하지 않은 것일 가능성. 큐레이션 질문은 `db/systems/tau_cet.json` 의
   Open item 에 로깅됨. 이 Phase 3 합성은 f 를 1.33 AU 의 *가장
   바깥쪽* 현재-DB 행성으로 다루며 DB 와 일치.
 - **맨 암석 무대기 cfg variant.** 대안적 해석은, f 가 휘발성

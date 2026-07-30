@@ -44,8 +44,25 @@
           }
         ],
         "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.018,
+            "method": "photometric",
+            "reference": "Morin et al. 2008",
+            "bibcode": "2008MNRAS.390..567M",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 0.1,
+            "method": "kinematic",
+            "reference": "Zuckerman 2013",
+            "bibcode": "2013ApJ...778....5Z",
+            "recommended": true,
+            "notes": "UPPER LIMIT/likely value: EQ Peg AB kinematics tie it to the young Octans-Near/Castor complex, \"likely age <=100 Myr\", flagged as possibly the nearest pre-MS system (6.2 pc). No formal sigma. Consistent with saturated X-ray + 1.06 d rotation."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [
           {
@@ -58,7 +75,16 @@
             "notes": "Fast rotator (P_rot = 1.061 d), consistent with an active M3.5Ve flare dwarf. Curiel 2022 quotes this from prior literature (not its own measurement); the underlying determination is the Morin et al. 2008 spectropolarimetric/ZDI study of EQ Peg A. method=unverified because the value enters Curiel only as a literature compilation cite. No uncertainty published. Verbatim (2208.14553.md:27): \"GJ 896A, is an M3.5 star with an estimated mass of 0.39 M_sun, a radius of 0.35 R_sun, a rotation period of 1.061 days, and a rotational inclination angle of 60 deg\"."
           }
         ],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_x_ray_log_lx_lbol": -3.02,
+            "method": "x_ray",
+            "reference": "Morin et al. 2008",
+            "bibcode": "2008MNRAS.390..567M",
+            "recommended": true,
+            "notes": "Morin 2008 Table 1 (ROSAT), EQ Peg A. Near the saturation ceiling, consistent with P_rot 1.061 d flare star. Chandra resolves A as 6-10x brighter than B (Liefke 2008) but gives only the ratio. No resolved Halpha EW catalog value found."
+          }
+        ],
         "stellarium_id": "BD+195116A",
         "inclination_measurements": [
           {
@@ -90,8 +116,8 @@
         "icrs_vx_j2000_km_s": 2.50745839090406,
         "icrs_vy_j2000_km_s": 16.982093471136757,
         "icrs_vz_j2000_km_s": -1.7388881649460588,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 0.018,
+        "age_gyr": 0.1,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 1.061,
         "activity_log_rhk": null,
@@ -211,7 +237,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -220,7 +246,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -229,14 +255,14 @@
       "title": "Curiel et al. 2022",
       "doi": "10.3847/1538-3881/ac7c66",
       "bibcode": "2022AJ....164...93C",
-      "accessed": "2026-06-15",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 896 A mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-15",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

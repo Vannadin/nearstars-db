@@ -19,7 +19,8 @@ inner asteroid-belt analog at ≈ 3 AU detected by Spitzer (Backman
 2009; Su 2017), an intermediate dust population near ≈ 20 AU
 inferred from Herschel (Greaves 2014; Booth 2017), and a cold
 Kuiper-analog ring at ≈ 64 AU resolved first by JCMT/SCUBA (Greaves
-1998) and then at high fidelity by ALMA (MacGregor 2015; Booth 2017).
+1998) and then at high fidelity in the (sub)mm (SMA: MacGregor 2015;
+ALMA: Booth 2017).
 The cold ring is narrow, eccentric (e ≈ 0.07), and bracketed by a
 total dust mass of ≈ 0.04 M⊕ — the canonical reading (Su 2017
 "Genie" model) is that gap-clearing planets sculpt the multi-belt
@@ -80,12 +81,12 @@ star + disk + jovian point of light).
 | `disk_intermediate_inner_radius_au` | 20 | medium | Greaves 2014 Herschel — intermediate dust population (re-attributed 2026-05-29 from Booth 2017, which resolves only the 69 AU ring and finds no 20 AU emission); least-resolved belt |
 | `disk_intermediate_tint_rgb_hex` | `#fffcf3` (near-neutral; vivid `#fff6d8`) | low | No measured optical color. Mie reflectance synthesis: blowout-size silicate (a_min ~0.2 µm) → near-neutral reflectance (B/I 0.93); renderer applies the K2V light. Vivid pack: `#fff6d8` |
 | `disk_intermediate_opacity` | 0.20 | low | Tie-break: faint intermediate dust, boosted for visibility |
-| `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 ALMA — narrow eccentric (e ≈ 0.07) cold ring resolved at 64.4 ± 0.5 AU (Booth 2017 Herschel confirms) |
+| `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 SMA — narrow eccentric (e ≈ 0.07) cold ring resolved at 64.4 (−3.0/+2.4) AU (Booth 2017 Herschel confirms) |
 | `disk_cold_dust_temperature_k` | 35 | high | MacGregor 2015 / Greaves cold-ring SED |
 | `disk_cold_tint_rgb_hex` | `#fff5ef` (pale warm; vivid `#ffe3d0`) | low | No measured optical color (sub-mm/mm only). Mie reflectance synthesis: large icy/silicate grains (a ~15–135 µm, Backman 2009), the ice+silicate optical constants mixed with Maxwell-Garnett effective-medium theory → mildly warm reflectance (B/I 0.70); renderer applies the K2V light. Vivid pack: `#ffe3d0` |
 | `disk_cold_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
 | `disk_morphology` | three-belt: inner asteroid analog at ~3 AU + intermediate population at ~20 AU + cold Kuiper-analog ring at ~64 AU (narrow, eccentric e ≈ 0.07) | medium | Su 2017 Genie model + Booth 2017 / Greaves 2014 multi-belt decomposition; intermediate is the least-resolved layer |
-| `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA; Booth 2017 Herschel/SPIRE; Su 2017 Spitzer/MIPS — cold ring resolved at multiple wavelengths |
+| `disk_resolved_imaging` | true | high | MacGregor 2015 SMA; Booth 2017 Herschel/SPIRE; Su 2017 Spitzer/MIPS — cold ring resolved at multiple wavelengths |
 | `disk_imaging_observatory` | ALMA (cold ring geometry), Herschel-SPIRE (mass), Spitzer-IRS/MIPS (warm components) | high | MacGregor 2015; Booth 2017; Su 2017; Backman 2009 |
 | `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 ALMA/Herschel-resolved inclination of the cold main ring. NOT coplanar with ε Eri b: Llop-Sayson 2021 finds the planet's orbit (i = 78.81°) ~2σ off the ring's 34° (a coplanar solution is only ~1σ allowed) |
 | `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017 — integrated dust mass across all three belts |
@@ -298,81 +299,81 @@ visual with real-time progression.
 
 - **Baines E. K. & Armstrong J. T. 2012** — *Confirming Fundamental
   Properties of the Exoplanet Host Star ε Eridani Using the Navy
-  Optical Interferometer*, ApJ 744, 138 (`2012ApJ...744..138B`,
+  Optical Interferometer*, ApJ 744, 138 ([`2012ApJ...744..138B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...744..138B),
   [arXiv:1112.0447](https://arxiv.org/abs/1112.0447)). NOI interferometry: θ_LD = 2.153 ± 0.028 mas →
   R = 0.74 ± 0.01 R☉, Teff = 5039 ± 126 K (θ_LD + bolometric flux),
   L = 0.32 ± 0.03 L☉, M = 0.82 ± 0.05 M☉ (Yonsei-Yale isochrone).
   Phase 2 recommended anchor for radius/Teff/luminosity/mass.
 - **Croll B. et al. 2006** — *Looking for Giant Earths in the HD 209458
   System... MOST photometry of ε Eridani*, ApJ 648, 607
-  (`2006ApJ...648..607C`). MOST space photometry resolves two spots at
+  ([`2006ApJ...648..607C`](https://ui.adsabs.harvard.edu/abs/2006ApJ...648..607C)). MOST space photometry resolves two spots at
   P1 = 11.35 d, P2 = 11.55 d. Phase 2 recommended rotation period.
 - **Fröhlich H.-E. 2007** — *The differential rotation of ε Eri from
-  MOST data*, AN 328, 1037 (`2007AN....328.1037F`, [arXiv:0711.0806](https://arxiv.org/abs/0711.0806)).
+  MOST data*, AN 328, 1037 ([`2007AN....328.1037F`](https://ui.adsabs.harvard.edu/abs/2007AN....328.1037F), [arXiv:0711.0806](https://arxiv.org/abs/0711.0806)).
   Bayesian reanalysis confirms P1 = 11.348, P2 = 11.553 d, k ≈ 0.09.
 - **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
   of 1674 FGK stars from the AMBRE-HARPS sample*, A&A 646, A77
-  (`2021A&A...646A..77G`, [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)). log R'HK = −4.496 from
+  ([`2021A&A...646A..77G`](https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G), [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)). log R'HK = −4.496 from
   553 spectra. Phase 2 recommended activity index.
 - **Santos N. C. et al. 2004** — *Spectroscopic metallicities for
-  planet-host stars*, A&A 415, 1153 (`2004A&A...415.1153S`). [Fe/H] =
+  planet-host stars*, A&A 415, 1153 ([`2004A&A...415.1153S`](https://ui.adsabs.harvard.edu/abs/2004A%26A...415.1153S)). [Fe/H] =
   −0.13 ± 0.04. Phase 2 recommended metallicity.
 - **Barnes S. A. 2007** — *Ages for Illustrative Field Stars Using
-  Gyrochronology*, ApJ 669, 1167 (`2007ApJ...669.1167B`). Gyrochronology
+  Gyrochronology*, ApJ 669, 1167 ([`2007ApJ...669.1167B`](https://ui.adsabs.harvard.edu/abs/2007ApJ...669.1167B)). Gyrochronology
   age ≈ 0.44 Gyr for ε Eri (adopted by Coffaro 2020); Phase 2
   recommended age (young branch — see Canonical alternatives).
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-type Dwarfs Using Activity-Rotation
-  Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`,
+  Diagnostics*, ApJ 687, 1264 ([`2008ApJ...687.1264M`](https://ui.adsabs.harvard.edu/abs/2008ApJ...687.1264M),
   [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). Combines Ca II HK + rotation + X-ray + isochrone
   to derive age ≈ 440 Myr for ε Eri; canonical youth attribution.
 - **Janson M. et al. 2008** — *Direct imaging detection of nearby
-  stars including ε Eri* (`2008A&A...488..771J`). Independent
+  stars including ε Eri* ([`2008A&A...488..771J`](https://ui.adsabs.harvard.edu/abs/2008A%26A...488..771J)). Independent
   kinematic + activity-based age confirmation.
 - **Donahue R. A. et al. 1996** — *Rotation of Cool Main-Sequence
-  Stars from the Mt. Wilson HK Project* (`1996ApJ...466..384D`).
+  Stars from the Mt. Wilson HK Project* ([`1996ApJ...466..384D`](https://ui.adsabs.harvard.edu/abs/1996ApJ...466..384D)).
   P_rot = 11.2 d from Ca II H&K timeseries over ~14 years; consistent
   with (and superseded as the recommended value by) the Croll 2006
   MOST two-spot period.
 - **Metcalfe T. S. et al. 2013** — *Magnetic Activity Cycles in the
   Exoplanet Host Star ε Eridani*, ApJ 763, L26
-  (`2013ApJ...763L..26M`, [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). Resolves the 2.95-yr
+  ([`2013ApJ...763L..26M`](https://ui.adsabs.harvard.edu/abs/2013ApJ...763L..26M), [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). Resolves the 2.95-yr
   chromospheric magnetic cycle from Mt. Wilson + SMARTS Ca II HK.
 - **Coffaro M. et al. 2020** — *The active host of ε Eri: 17 years
-  of X-ray monitoring*, A&A 636, A49 (`2020A&A...636A..49C`,
+  of X-ray monitoring*, A&A 636, A49 ([`2020A&A...636A..49C`](https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..49C),
   [arXiv:2003.07069](https://arxiv.org/abs/2003.07069)). XMM monitoring confirms the cycle in X-ray;
   log L_X ranges 28.3–28.9 cgs.
 - **Backman D. et al. 2009** — *Epsilon Eridani's Planetary Debris
   Disk: Structure and Dynamics Based on Spitzer and Caltech
   Submillimeter Observatory Observations*, ApJ 690, 1522
-  (`2009ApJ...690.1522B`). Spitzer/IRS detects warm inner-belt
+  ([`2009ApJ...690.1522B`](https://ui.adsabs.harvard.edu/abs/2009ApJ...690.1522B)). Spitzer/IRS detects warm inner-belt
   emission; SED decomposition resolves a ~3 AU asteroid-belt
   analog.
 - **Greaves J. S. et al. 1998** — *A Dust Ring around ε Eridani:
   Analog to the Young Solar System*, ApJ 506, L133
-  (`1998ApJ...506L.133G`). JCMT/SCUBA first sub-mm imaging of the
+  ([`1998ApJ...506L.133G`](https://ui.adsabs.harvard.edu/abs/1998ApJ...506L.133G)). JCMT/SCUBA first sub-mm imaging of the
   cold Kuiper-analog ring.
 - **Greaves J. S. et al. 2014** — *Alignment in star-debris disc
-  systems seen by Herschel* (`2014MNRAS.438L..31G`, [arXiv:1312.4087](https://arxiv.org/abs/1312.4087)).
+  systems seen by Herschel* ([`2014MNRAS.438L..31G`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.438L..31G), [arXiv:1312.4087](https://arxiv.org/abs/1312.4087)).
   Herschel-resolved disk inclination + intermediate-belt
   inference.
-- **MacGregor M. A. et al. 2015** — *ALMA Observations of the
-  Debris Disk around ε Eridani*, ApJ 809, L47
-  (`2015ApJ...809L..47M`, [arXiv:1505.03879](https://arxiv.org/abs/1505.03879)). ALMA 1.3 mm imaging
-  resolves the cold ring at 64.4 ± 0.5 AU with eccentricity e ≈ 0.07.
+- **MacGregor M. A. et al. 2015** — *The ε Eridani System Resolved
+  by Millimeter Interferometry*, ApJ 809, 47
+  ([`2015ApJ...809...47M`](https://ui.adsabs.harvard.edu/abs/2015ApJ...809...47M), [arXiv:1507.01642](https://arxiv.org/abs/1507.01642)). SMA 1.3 mm imaging
+  resolves the cold ring at 64.4 (−3.0/+2.4) AU with ΔR/R ≈ 0.3.
 - **Booth M. et al. 2017** — *The Northern arc of ε Eridani's
   Debris Ring as seen by ALMA*, MNRAS 469, 3200
-  (`2017MNRAS.469.3200B`, [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)). Multi-wavelength
+  ([`2017MNRAS.469.3200B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.469.3200B), [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)). Multi-wavelength
   decomposition; confirms the three-belt structure; refines cold-
   ring geometry and inclination.
 - **Su K. Y. L. et al. 2017** — *The Inner 25 AU Debris Distribution
-  in the ε Eri System*, AJ 153, 226 (`2017AJ....153..226S`,
+  in the ε Eri System*, AJ 153, 226 ([`2017AJ....153..226S`](https://ui.adsabs.harvard.edu/abs/2017AJ....153..226S),
   [arXiv:1703.10330](https://arxiv.org/abs/1703.10330)). The "Genie" multi-belt sculpting model;
   canonical reading for the triple-ring system + planetary
   perturbers.
 - **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
   Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157,
-  33 (`2019AJ....157...33M`, [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). Direct imaging
+  33 ([`2019AJ....157...33M`](https://ui.adsabs.harvard.edu/abs/2019AJ....157...33M), [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). Direct imaging
   confirmation of ε Eri b; rules out outer "ε Eri c". RV lower limit
   M sin i = 0.72 M_Jup; with the uninformative edge-on prior
   M_b = 0.78 (−0.12/+0.38) M_Jup at i = 89° ± 42°; imposing a
@@ -382,23 +383,23 @@ visual with real-time progression.
 - **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
   of ε Eridani b with Radial Velocities, Hipparcos IAD–Gaia DR2
   Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
-  AJ 162, 181 (`2021AJ....162..181L`, [arXiv:2108.02305](https://arxiv.org/abs/2108.02305)). Joint RV +
+  AJ 162, 181 ([`2021AJ....162..181L`](https://ui.adsabs.harvard.edu/abs/2021AJ....162..181L), [arXiv:2108.02305](https://arxiv.org/abs/2108.02305)). Joint RV +
   Hipparcos IAD–Gaia DR2 astrometric + direct-imaging upper-limit
   fit. Adopted true mass M_b = 0.66 (−0.09/+0.12) M_Jup at
   i = 78.81° (−22.41/+29.34); a = 3.5 AU. The astrometry favors a
   lower-mass, more edge-on planet, and places the orbit ~2σ off the
   cold ring's 34° plane (a coplanar solution is only ~1σ allowed).
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
-  Detection of ε Eri b* (`2022AJ....163...19R`, [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)).
+  Detection of ε Eri b* ([`2022AJ....163...19R`](https://ui.adsabs.harvard.edu/abs/2022AJ....163...19R), [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)).
   Astrometric cross-check (NOT in the Phase 3 cache — unverified
   here; its coplanar-with-disk conclusion is not asserted as fact in
   this synthesis).
 - **Roettenbacher R. M. et al. 2016** — *No Sun-like Dynamo on the
   Active Star ζ Andromedae… and ε Eri Doppler Image*
-  (`2016Natur.533..217R`). Includes ε Eri Doppler imaging with
+  ([`2016Natur.533..217R`](https://ui.adsabs.harvard.edu/abs/2016Natur.533..217R)). Includes ε Eri Doppler imaging with
   resolved polar-spot coverage.
 - **Hatzes A. P. et al. 2000** — *Evidence for a Long-Period Planet
-  Orbiting ε Eridani*, ApJ 544, L145 (`2000ApJ...544L.145H`). The
+  Orbiting ε Eridani*, ApJ 544, L145 ([`2000ApJ...544L.145H`](https://ui.adsabs.harvard.edu/abs/2000ApJ...544L.145H)). The
   RV discovery paper; sets the historical context.
 
 ### Read (context / methodology, not decision-driving)
@@ -406,58 +407,56 @@ visual with real-time progression.
 - **Rosenthal L. J. et al. 2021** — *The California Legacy Survey.
   I. A Catalog of 178 Planets from Precision Radial Velocity
   Monitoring of 719 Nearby Stars over Three Decades*, ApJS 255, 8
-  (`2021ApJS..255....8R`). Source of the formerly-adopted R = 0.759 R☉
+  ([`2021ApJS..255....8R`](https://ui.adsabs.harvard.edu/abs/2021ApJS..255....8R)). Source of the formerly-adopted R = 0.759 R☉
   (now superseded by the Baines & Armstrong 2012 interferometric R 0.74).
 - **Valenti J. A. & Fischer D. A. 2005** — *Spectroscopic Properties
-  of Cool Stars (SPOCS). I.* (`2005ApJS..159..141V`). [Fe/H] =
+  of Cool Stars (SPOCS). I.* ([`2005ApJS..159..141V`](https://ui.adsabs.harvard.edu/abs/2005ApJS..159..141V)). [Fe/H] =
   −0.13 ± 0.04 from SME spectroscopy.
 - **Brewer J. M. et al. 2016** — *Spectral Properties of Cool Stars*
-  (`2016ApJS..225...32B`). Spectroscopic Teff = 5180 K, [Fe/H] = −0.13
+  ([`2016ApJS..225...32B`](https://ui.adsabs.harvard.edu/abs/2016ApJS..225...32B)). Spectroscopic Teff = 5180 K, [Fe/H] = −0.13
   (the Teff superseded by the Baines 2012 interferometric 5039 K).
 - **Di Folco E. et al. 2007** — *CHARA/FLUOR interferometry of nearby
-  stars including ε Eri* (`2007A&A...475..243D`). θ_LD = 2.126 mas,
+  stars including ε Eri* ([`2007A&A...475..243D`](https://ui.adsabs.harvard.edu/abs/2007A%26A...475..243D)). θ_LD = 2.126 mas,
   the independent interferometric cross-check that corroborates Baines
   & Armstrong 2012.
 - **Henry T. J. et al. 1996** — *The Solar Neighborhood. IV. Discovery
-  of the Twentieth Nearest Star System* (`1996AJ....111..439H`).
+  of the Twentieth Nearest Star System* ([`1996AJ....111..439H`](https://ui.adsabs.harvard.edu/abs/1996AJ....111..439H)).
   log R'HK reference for ε Eri.
 - **Zechmeister M. et al. 2013** — *The planet search programme at the
-  ESO CES and HARPS* (`2013A&A...552A..78Z`, [arXiv:1211.7263](https://arxiv.org/abs/1211.7263)). Updated
+  ESO CES and HARPS* ([`2013A&A...552A..78Z`](https://ui.adsabs.harvard.edu/abs/2013A%26A...552A..78Z), [arXiv:1211.7263](https://arxiv.org/abs/1211.7263)). Updated
   Ca II HK index for ε Eri across modern epochs.
 - **France K. et al. 2018** — *The MUSCLES Treasury Survey* extension
-  to K dwarfs (`2018ApJS..239...16F`). FUV / Lyα fluxes informing
+  to K dwarfs ([`2018ApJS..239...16F`](https://ui.adsabs.harvard.edu/abs/2018ApJS..239...16F)). FUV / Lyα fluxes informing
   the atmospheric erosion estimate for any inner planet.
 - **Wood B. E. et al. 2002** — *Measured Mass Loss Rates of Solar-
-  like Stars as a Function of Age and Activity* (`2002ApJ...574..412W`,
+  like Stars as a Function of Age and Activity* ([`2002ApJ...574..412W`](https://ui.adsabs.harvard.edu/abs/2002ApJ...574..412W),
   arXiv:astro-ph/0203437). ε Eri's mass-loss rate ~30× solar.
 - **Beeck B. et al. 2013** — *Three-dimensional simulations of
   near-surface convection in main-sequence stars. II.* ([arXiv:1308.4732](https://arxiv.org/abs/1308.4732)).
   K-dwarf granulation properties scaled for the cfg.
-- **Bonanno A. et al. 2008** — *Asteroseismology of ε Eridani*
-  (`2008A&A...488..685B`, [arXiv:0805.2580](https://arxiv.org/abs/0805.2580)). Marginal ν_max detection
-  swamped by activity floor.
-- **Frohlich H.-E. et al. 2007** — *MOST photometry of ε Eri starspot
-  modeling* (`2007A&A...471..899F`). Photometric decomposition
-  yielding 5–10% spot coverage.
+- **Fröhlich H.-E. 2007** — *The differential rotation of ε Eri
+  from MOST data* ([`2007AN....328.1037F`](https://ui.adsabs.harvard.edu/abs/2007AN....328.1037F)). Photometric spot-model
+  decomposition yielding 5–10% spot coverage.
 - **Croll B. et al. 2006** — *Differential Rotation of ε Eri Detected
-  by MOST* (`2006ApJ...648..607C`). Independent confirmation of P_rot
+  by MOST* ([`2006ApJ...648..607C`](https://ui.adsabs.harvard.edu/abs/2006ApJ...648..607C)). Independent confirmation of P_rot
   and differential rotation.
 
 ### Read (instrument / non-cfg-decisive)
 
 - **Quillen A. C. & Thorndike S. 2002** — *Structure in the ε Eridani
   Dusty Disk Caused by Mean Motion Resonances with a 0.3 Eccentricity
-  Planet at 40 AU* (`2002ApJ...578L.149Q`). Original "ε Eri c" outer
+  Planet at 40 AU* ([`2002ApJ...578L.149Q`](https://ui.adsabs.harvard.edu/abs/2002ApJ...578L.149Q)). Original "ε Eri c" outer
   planet inference from disk structure; ruled out by Mawet 2019 but
   historically important.
 - **Benedict G. F. et al. 2006** — *The Extrasolar Planet ε Eridani b.
-  Orbit and Mass* (`2006AJ....132.2206B`). Earlier HST FGS astrometric
+  Orbit and Mass* ([`2006AJ....132.2206B`](https://ui.adsabs.harvard.edu/abs/2006AJ....132.2206B)). Earlier HST FGS astrometric
   attempt on ε Eri b that has been superseded by direct imaging.
 - **Audard M. et al. 2000** — *Extreme-Ultraviolet Flare Activity in
-  Late-Type Stars* (`2000ApJ...541..396A`). K-dwarf flare frequency
+  Late-Type Stars* ([`2000ApJ...541..396A`](https://ui.adsabs.harvard.edu/abs/2000ApJ...541..396A)). K-dwarf flare frequency
   distribution used for the superflare extrapolation.
-- **Linsky J. L. & Wood B. E. 1995** — *The α Centauri line of sight
-  and ε Eri Lyα profiles* (`1995ApJ...445L.139L`). FUV / Lyα baseline.
+- **Dring A. R. et al. 1997** — *Lyman-Alpha Absorption and the D/H
+  Ratio in the Local Interstellar Medium* ([`1997ApJ...488..760D`](https://ui.adsabs.harvard.edu/abs/1997ApJ...488..760D)).
+  ε Eri Lyα profile with a hydrogen-wall component; FUV / Lyα baseline.
 
 ### Not read — no arXiv preprint or low-priority (~80 papers)
 

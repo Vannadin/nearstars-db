@@ -19,7 +19,7 @@
         "radial_velocity_source": "Lindegren & Dravins 2021 astrometric RV, grav-redshift-free (2021A&A...652A..45L)",
         "vmag_v": 12.3916,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 6168,
+        "teff_k": 6106,
         "spectype": "DZ7",
         "mass_measurements": [
           {
@@ -43,9 +43,47 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 6106,
+            "method": "sed_fitting",
+            "reference": "Coutu et al. 2019",
+            "bibcode": "2019ApJ...885...74C",
+            "doi": "10.3847/1538-4357/ab46b9",
+            "recommended": true,
+            "notes": "Gaia-DR2 homogeneous analysis of He-rich polluted WDs (log g 8.2). No published sigma in the machine-readable row — value recorded without uncertainty rather than inventing one. Textbook ~7000-7500 K is superseded (Wolff 2002 UV line-blanketing revision); all 2009-2024 determinations sit at 6100-6220 K."
+          },
+          {
+            "value_k": 6168,
+            "method": "sed_fitting",
+            "reference": "Vincent et al. 2024",
+            "bibcode": "2024A&A...682A...5V",
+            "doi": "10.1051/0004-6361/202347694",
+            "recommended": false,
+            "notes": "Gaia XP spectrophotometry, automated WD survey (log g 8.22); independent corroboration at ~1%."
+          },
+          {
+            "value_k": 6220,
+            "method": "sed_fitting",
+            "reference": "Sion et al. 2009",
+            "bibcode": "2009AJ....138.1681S",
+            "doi": "10.1088/0004-6256/138/6/1681",
+            "recommended": false,
+            "notes": "20-pc WD census (log g 8.190); kept for internal consistency with the recommended cooling age (same catalog)."
+          }
+        ],
         "luminosity_measurements": [],
-        "age_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 3.13,
+            "method": "wd_cooling_model",
+            "reference": "Sion et al. 2009",
+            "bibcode": "2009AJ....138.1681S",
+            "doi": "10.1088/0004-6256/138/6/1681",
+            "recommended": true,
+            "notes": "COOLING age 3.13 Gyr tabulated in the 20-pc census (VizieR J/AJ/138/1681) for Teff 6220 K / log g 8.190; no formal sigma. A Giammichele 2012 ar5iv full-text grab returned Teff 8250 K / 5.94 Gyr — physically inconsistent, rejected as a table mis-read."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -71,7 +109,7 @@
         "icrs_vy_j2000_km_s": 23.169735302504733,
         "icrs_vz_j2000_km_s": -56.345048636330574,
         "luminosity_lsun": null,
-        "age_gyr": null,
+        "age_gyr": 3.13,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
@@ -89,7 +127,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -98,7 +136,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -107,14 +145,14 @@
       "title": "Holberg et al. 2008 (WD mass-radius)",
       "doi": "10.1088/0004-6256/135/4/1225",
       "bibcode": "2008AJ....135.1225H",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "Van Maanen's Star mass (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

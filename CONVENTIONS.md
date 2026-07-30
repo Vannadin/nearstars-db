@@ -129,7 +129,7 @@ Audit/review/bulk-delegation subagents run with `model: "opus"`, not the session
 
 ### 3.3 Paper references are links (NEARSTARS)
 **Rule:** Every paper reference in a human-readable doc is a **markdown link**, not a bare id:
-bibcode → `[2018Icar..305..262I](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262I)`,
+bibcode → `[2018Icar..305..262M](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262M)`,
 arXiv id → `[1007.1514](https://arxiv.org/abs/1007.1514)`. DOI links acceptable where no
 bibcode exists. Bare ids stay only in machine fields (YAML `bibcode:`/`arxiv_id:`, JSON,
 code) and inside code blocks.

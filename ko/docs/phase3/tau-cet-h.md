@@ -3,7 +3,7 @@
 
 τ Ceti h 는 metal-poor G8V τ Ceti 주위를 49.41 일 주기로 0.243 AU 에서
 도는 1.83 M⊕ (M sin i) RV 후보 행성입니다 (Feng 2017,
-`2017AJ....154..135F`). `db/systems/tau_cet.json` 에서 g (0.133 AU) 와
+[`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F)). `db/systems/tau_cet.json` 에서 g (0.133 AU) 와
 f (1.334 AU) 사이에 위치. 호스트 광도 0.488 L☉ 기준 조사량은
 **8.26 S⊕** — 더 어둡고 차가운 호스트라는 점을 빼면 Venus 급 조사량.
 평형 온도는 albedo 0 에서 472 K, Venus 형 구름 albedo 에서 334 K 로
@@ -64,7 +64,7 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `magnetic_field_strength_microtesla_equator` | 0.1 | low | Tie-break. 태양풍 상호작용에서 오는 유도 자기 모멘트만. Venus analog |
 | `tidal_heating_w_m2` | 0.05–0.5 | medium | a = 0.243 AU 에서 e = 0.23 은 유의함. Bolmont 2020 스케일링은 상승된 조석 플럭스를 주지만 Io (~2 W/m²) 한참 아래 — Venus-analog 화산 활동 가능 |
 | `induction_heating_w_m2` | < 0.001 | medium | 조용한 호스트 자기장. induction 무시 가능 |
-| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W))의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `aurora_present` | false | high | 전구 자기장 없음 → 유도 전용 태양풍 상호작용. auroral 오발 없음 (Venus-analog) |
 | `star_apparent_angular_diameter_deg` | 1.74 | high | derived. 2 × R★ / a × (180/π). 지구에서 본 태양의 3.3× |
 | `stellar_illumination_color_temp_k` | 5370 | high | 호스트 Teff (Pavlenko 2012) |
@@ -219,14 +219,10 @@ e = 0.23 의 이심 궤도에서 오는 libration 유도 조사량 변동은 궤
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 발견 + h 궤도
+  ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F), [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 발견 + h 궤도
   (P = 49.41 ± 0.08 d), 질량 (Msini = 1.83 ± 0.68 M⊕), 이심률
   (0.23 — 세 행성 중 가장 높음) 의 최선 제약. 모든 궤도 및 물리
   Decisions 행을 정박.
-- **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
-  system*, A&A 613, A76 (`2018A&A...613A..76F`,
-  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). 49.4 d 신호 안정성 확인. NEA 의 controversial
-  플래그는 amplitude-to-noise 우려 반영.
 - **Vinson A. M. & Hansen B. M. S. 2017** — *Spin-orbit dynamics
   of habitable-zone planets*. e ≳ 0.10 에서 3:2 포획 확률 > 80%.
   h 의 3:2 spin-orbit cfg 픽 정박.
@@ -277,8 +273,8 @@ e = 0.23 의 이심 궤도에서 오는 libration 유도 조사량 변동은 궤
   의존. cfg 는 원반에서 i ≈ 35° 채택 → 실제 질량 ≈ 3.2 M⊕.
 - **사용자 입력 불일치.** 사용자 요청은 τ Cet h 를 P = 4562 d /
   a = 5.0 AU 로 묘사. DB 의 권위 있는 h 는 P = 49.41 d / a =
-  0.243 AU. 4562-d 신호는 Feng 2018 §3.4 의 장주기 후보 또는 아직
-  ingest 되지 않은 이후 RV 재분석 후보일 가능성. 이 Phase 3
+  0.243 AU. 4562-d 신호는 아직 ingest 되지 않은 이후 RV 재분석의
+  장주기 후보일 가능성. 이 Phase 3
   합성은 DB 의 h (49.4 d) 를 다룸. 장주기 후보가 나중에 Phase 2
   / Phase 3 으로 승급되면 별도 cfg variant 나 재명명 항목 (예:
   "tau Cet i") 이 필요할 수 있음.

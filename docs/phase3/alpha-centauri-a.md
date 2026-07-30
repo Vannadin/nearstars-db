@@ -174,37 +174,37 @@ amplitude modulation).
 ### Read (visual-informative, drove decisions above)
 
 - **Pourbaix D. & Boffin H. M. J. 2016** — *Parallax and masses of α
-  Centauri revisited*, A&A 586, A90 (`2016A&A...586A..90P`,
+  Centauri revisited*, A&A 586, A90 ([`2016A&A...586A..90P`](https://ui.adsabs.harvard.edu/abs/2016A%26A...586A..90P),
   [arXiv:1601.01636](https://arxiv.org/abs/1601.01636)). Double-lined visual-spectroscopic binary fit
   using ESO/HARPS archive; orbital parallax 743 ± 1.3 mas, M_A =
   1.133 ± 0.0050 M☉ and M_B = 0.972 ± 0.0045 M☉.
 - **Kervella P. et al. 2016** — *Close stellar conjunctions of α
-  Centauri A and B until 2050*, A&A 594, A107 (`2016A&A...594A.107K`,
+  Centauri A and B until 2050*, A&A 594, A107 ([`2016A&A...594A.107K`](https://ui.adsabs.harvard.edu/abs/2016A%26A...594A.107K),
   [arXiv:1610.06079](https://arxiv.org/abs/1610.06079)). Revised binary orbital fit recomputed on the
   Pourbaix & Boffin radial-velocity set with new VLT/NACO + ALMA
   astrometry; orbital parallax 747.17 ± 0.61 mas and the lower
   dynamical masses M_A = 1.1055 ± 0.0039 M☉ and M_B = 0.9373 ±
   0.0033 M☉ adopted as the system mass anchor.
 - **Kervella P. et al. 2017** — *The radii and limb darkenings of α
-  Centauri A and B*, A&A 597, A137 (`2017A&A...597A.137K`,
+  Centauri A and B*, A&A 597, A137 ([`2017A&A...597A.137K`](https://ui.adsabs.harvard.edu/abs/2017A%26A...597A.137K),
   [arXiv:1610.06185](https://arxiv.org/abs/1610.06185)). VLTI/PIONIER interferometry in H band; angular
   diameters θ_LD(A) = 8.502 ± 0.038 mas, θ_LD(B) = 5.999 ± 0.025
   mas; with the revised parallax derives R_A = 1.2234 ± 0.0053 R☉,
   R_B = 0.8632 ± 0.0037 R☉.
 - **Joyce M. & Chaboyer B. 2018** — *Classically and Asteroseismically
   Constrained 1D Stellar Evolution Models of α Centauri A and B*,
-  ApJ 864, 99 (`2018ApJ...864...99J`, [arXiv:1806.07567](https://arxiv.org/abs/1806.07567)). DSEP
+  ApJ 864, 99 ([`2018ApJ...864...99J`](https://ui.adsabs.harvard.edu/abs/2018ApJ...864...99J), [arXiv:1806.07567](https://arxiv.org/abs/1806.07567)). DSEP
   evolutionary models fitting classical + p-mode constraints
   simultaneously; 31 viable model pairs; system age 5.3 ± 0.3 Gyr.
 - **DeWarf L. E. et al. 2010** — *X-Ray, FUV, and UV Observations of α
   Centauri B: Determination of Long-term Magnetic Activity Cycle and
-  Rotation Period* (`2010ApJ...722..343D`). Chromospheric and coronal
+  Rotation Period* ([`2010ApJ...722..343D`](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D)). Chromospheric and coronal
   monitoring of both A and B; rotation periods 22 ± 3 d (A) and
   36–40 d (B); 8.1-yr chromospheric cycle for B and Sun-like ~19-yr
   cycle for A. **No arXiv preprint** — Tier A manual followup;
   values drawn from the ApJ abstract and the DB Phase 2 attribution.
 - **Robrade J. et al. 2016** — *Coronal activity cycles in action —
-  X-rays from α Centauri A/B*, A&A 596, A53 (`2016A&A...596A..53R`,
+  X-rays from α Centauri A/B*, arXiv preprint ([`2016arXiv161206570R`](https://ui.adsabs.harvard.edu/abs/2016arXiv161206570R),
   [arXiv:1612.06570](https://arxiv.org/abs/1612.06570)). XMM-Newton + Chandra monitoring; confirms a
   ~19-yr coronal cycle on A; log L_X cycle amplitude factor ~4.
 - **Beichman C. et al. 2025** — *Worlds Next Door: A Candidate Giant
@@ -217,20 +217,20 @@ amplitude modulation).
 ### Read (context / methodology, not directly decision-driving)
 
 - **Porto de Mello G. F. et al. 2008** — *Photospheric, chromospheric,
-  and coronal activity of α Cen A* (`2008A&A...488..653P`). Defines
+  and coronal activity of α Cen A* ([`2008A&A...488..653P`](https://ui.adsabs.harvard.edu/abs/2008A%26A...488..653P)). Defines
   the canonical [Fe/H] = +0.24 ± 0.03 and Teff = 5847 ± 27 K for A.
 - **Bedding T. R. et al. 2004** — *Oscillation frequencies and mode
-  lifetimes in α Centauri A* (`2004ApJ...614..380B`,
+  lifetimes in α Centauri A* ([`2004ApJ...614..380B`](https://ui.adsabs.harvard.edu/abs/2004ApJ...614..380B),
   arXiv:astro-ph/0406471). 28 p-modes detected; sets the
   asteroseismic constraint table for A.
 - **de Meulenaer P. et al. 2010** — *Core properties of α Cen A
-  using asteroseismology* (`2010A&A...523A..54D`, [arXiv:1009.1237](https://arxiv.org/abs/1009.1237)).
+  using asteroseismology* ([`2010A&A...523A..54D`](https://ui.adsabs.harvard.edu/abs/2010A%26A...523A..54D), [arXiv:1009.1237](https://arxiv.org/abs/1009.1237)).
   44 p-modes; refined Δν = 105.9 μHz, ν_max ≈ 2200 μHz.
 - **Bigot L. et al. 2006** — VLTI/VINCI 3D-hydrodynamic radiative
   transfer constraint on α Cen B granulation. Cited via Kervella
   2017 §4.
 - **Wang H. S. et al. 2022** — *A Model Earth-sized Planet in the
-  Habitable Zone of α Centauri A/B* (`2022ApJ...927..134W`,
+  Habitable Zone of α Centauri A/B* ([`2022ApJ...927..134W`](https://ui.adsabs.harvard.edu/abs/2022ApJ...927..134W),
   [arXiv:2110.12565](https://arxiv.org/abs/2110.12565)). Frames the cfg habitable-zone geometry; 1.25 AU
   hot edge, 1.85 AU cold edge for A.
 - **Quarles B. et al. 2022** — *Milankovitch cycles for a
@@ -247,7 +247,7 @@ amplitude modulation).
   α Centauri AB System* ([arXiv:2104.10086](https://arxiv.org/abs/2104.10086)). Sub-milliarcsecond
   positions; sub-2025 ALMA campaign.
 - **Krishnamurthy A. et al. 2021** — ASTERIA transit search around α
-  Cen A and B (`2021AJ....161..275K`). No-detection limits.
+  Cen A and B ([`2021AJ....161..275K`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..275K)). No-detection limits.
 - **Spada F. et al. 2019** — *Entropy calibration of the radii of
   cool stars: α Cen A and B* ([arXiv:1909.00701](https://arxiv.org/abs/1909.00701)). Validates the
   Kervella 2017 + Joyce 2018 picture against entropy-based

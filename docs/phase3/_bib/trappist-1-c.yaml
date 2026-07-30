@@ -228,7 +228,7 @@ papers:
   filter_reason: auth(journal=AJ, has_arxiv, has_doi) + rel(sys_in_title, planet_c_in_abstract, topics=6) → combined=20>=10
 - &id006
   arxiv_id: null
-  ads_bibcode: 2026NatAs.tmp...65G
+  ads_bibcode: 2026NatAs..10..674G
   title: No thick atmosphere around TRAPPIST-1 b and c from JWST thermal phase curves
   authors:
   - Gillon, Michaël

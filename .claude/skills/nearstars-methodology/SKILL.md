@@ -143,7 +143,7 @@ Two execution rules:
   Note explicitly when a paper has no preprint (e.g. Nature letters) and is
   therefore verified by bibcode only. **Every citation in doc prose is a
   clickable markdown link** (CONVENTIONS.md §3.3) — bibcode →
-  `[2018Icar..305..262I](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262I)`,
+  `[2018Icar..305..262M](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262M)`,
   arXiv → `[1007.1514](https://arxiv.org/abs/1007.1514)` (`&` → `%26` in the URL).
   Bare ids stay only in machine fields / code blocks.
 

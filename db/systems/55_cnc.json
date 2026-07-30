@@ -107,7 +107,28 @@
             "recommended": true
           }
         ],
-        "age_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 10.2,
+            "uncertainty_gyr": 2.5,
+            "method": "isochrone",
+            "reference": "von Braun et al. 2011",
+            "bibcode": "2011ApJ...740...49V",
+            "doi": "10.1088/0004-637X/740/1/49",
+            "recommended": true,
+            "notes": "Isochrone fit anchored on the CHARA interferometric radius (R = 0.943 +/- 0.010 Rsun, Teff 5196 K), M = 0.905 Msun."
+          },
+          {
+            "value_gyr": 8.1,
+            "uncertainty_gyr": 3.54,
+            "method": "gyrochronology",
+            "reference": "Maxted et al. 2015",
+            "bibcode": "2015A&A...577A..90M",
+            "doi": "10.1051/0004-6361/201525774",
+            "recommended": false,
+            "notes": "Table 4 gyrochronological estimate (Prot 39.0 +/- 9.0 d); same paper's isochronal 10.91 +/- 1.62 Gyr agrees with von Braun."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [
           {
@@ -153,7 +174,7 @@
         "icrs_vy_j2000_km_s": 42.102606625365134,
         "icrs_vz_j2000_km_s": 0.637140427946008,
         "luminosity_lsun": 0.582,
-        "age_gyr": null,
+        "age_gyr": 10.2,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 38.8,
         "activity_log_rhk": -5.03,
@@ -678,7 +699,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-31",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -687,7 +708,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-31",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -696,7 +717,7 @@
       "title": "The 55 Cancri System: Fundamental Stellar Parameters, Habitable Zone Planet, and Super-Earth Diameter",
       "doi": "10.1088/0004-637X/740/1/49",
       "bibcode": "2011ApJ...740...49V",
-      "accessed": "2026-05-31",
+      "accessed": "2026-07-30",
       "used_for": [
         "55 Cnc mass (evolutionary_model)"
       ]
@@ -705,7 +726,7 @@
       "title": "Crida et al. 2018 (via Moutou et al. 2025 Table 1)",
       "doi": "10.1051/0004-6361/202556146",
       "bibcode": "2026A&A...705A.190M",
-      "accessed": "2026-05-31",
+      "accessed": "2026-07-30",
       "used_for": [
         "55 Cnc mass (evolutionary_model)"
       ]
@@ -714,14 +735,14 @@
       "title": "Bourrier et al. 2018",
       "doi": "10.1051/0004-6361/201833154",
       "bibcode": "2018A&A...619A...1B",
-      "accessed": "2026-05-31",
+      "accessed": "2026-07-30",
       "used_for": [
         "planet 55 Cnc e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-31",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

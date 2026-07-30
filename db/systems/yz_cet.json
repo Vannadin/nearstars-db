@@ -136,7 +136,28 @@
             "recommended": false
           }
         ],
-        "age_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 4.0,
+            "uncertainty_gyr": 0.6,
+            "method": "gyrochronology",
+            "reference": "Engle & Guinan 2017",
+            "bibcode": "2017ATel10678....1E",
+            "doi": null,
+            "recommended": true,
+            "notes": "Living-with-a-Red-Dwarf rotation-age relation, Prot 67.0 +/- 0.8 d; authors' adopted value. ATel, no DOI. Prot consistent with the curated 68.4 d (Stock 2020)."
+          },
+          {
+            "value_gyr": 3.5,
+            "uncertainty_gyr": 0.6,
+            "method": "activity_age",
+            "reference": "Engle & Guinan 2017",
+            "bibcode": "2017ATel10678....1E",
+            "doi": null,
+            "recommended": false,
+            "notes": "Independent X-ray (ROSAT) age from the same ATel; authors down-weight it (2 data points, flare-sensitive). Mean of both methods 3.8 +/- 0.5 Gyr."
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [
           {
@@ -194,7 +215,7 @@
         "icrs_vy_j2000_km_s": 29.613539233696745,
         "icrs_vz_j2000_km_s": 2.4786812272105845,
         "luminosity_lsun": 0.0022,
-        "age_gyr": null,
+        "age_gyr": 4.0,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 68.4,
         "activity_log_rhk": -4.71,
@@ -512,7 +533,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -521,7 +542,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -530,7 +551,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -539,7 +560,7 @@
       "title": "Cifuentes et al. 2020",
       "doi": "10.1051/0004-6361/202038295",
       "bibcode": "2020A&A...642A.115C",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -548,7 +569,7 @@
       "title": "Astudillo-Defru et al. 2017",
       "doi": "10.1051/0004-6361/201731581",
       "bibcode": "2017A&A...605L..11A",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -557,14 +578,14 @@
       "title": "Stock et al. 2020",
       "doi": "10.1051/0004-6361/201936732",
       "bibcode": "2020A&A...636A.119S",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "planet YZ Cet b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

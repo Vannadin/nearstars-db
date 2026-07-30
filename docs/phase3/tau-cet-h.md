@@ -3,7 +3,7 @@
 
 τ Ceti h is a 1.83 M⊕ (M sin i) RV candidate on a 49.41-day orbit at
 0.243 AU around the metal-poor G8V τ Ceti (Feng 2017,
-`2017AJ....154..135F`). It sits between g (0.133 AU) and f (1.334
+[`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F)). It sits between g (0.133 AU) and f (1.334
 AU) in `db/systems/tau_cet.json`. At 0.488 L☉ host luminosity, h
 receives **8.26 S⊕** — Venus-class insolation but on a fainter,
 cooler host. The equilibrium temperature is 472 K at zero albedo or
@@ -68,7 +68,7 @@ alternatives are preserved as cfg variants.
 | `magnetic_field_strength_microtesla_equator` | 0.1 | low | Tie-break: induced magnetic moment only from solar-wind interaction; Venus analog |
 | `tidal_heating_w_m2` | 0.05–0.5 | medium | e = 0.23 at a = 0.243 AU is significant; Bolmont 2020 scaling gives elevated tidal flux but still well below Io (~2 W/m²) — possibly Venus-analog volcanic activity |
 | `induction_heating_w_m2` | < 0.001 | medium | Quiet host magnetic field; negligible induction |
-| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W)) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `aurora_present` | false | high | No global magnetic field → induced-only solar-wind interaction; no auroral oval (Venus-analog) |
 | `star_apparent_angular_diameter_deg` | 1.74 | high | derived: 2 × R★ / a × (180/π); 3.3× the Sun seen from Earth |
 | `stellar_illumination_color_temp_k` | 5370 | high | host Teff (Pavlenko 2012) |
@@ -250,14 +250,10 @@ interaction.
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Discovery + best
+  ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F), [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Discovery + best
   constraint on h's orbit (P = 49.41 ± 0.08 d), mass
   (Msini = 1.83 ± 0.68 M⊕), eccentricity (0.23 — highest of the
   three). Anchors every orbital and physical Decisions row.
-- **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
-  system*, A&A 613, A76 (`2018A&A...613A..76F`,
-  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). Confirms 49.4-d signal stability;
-  controversial flag in NEA reflects amplitude-to-noise concerns.
 - **Vinson A. M. & Hansen B. M. S. 2017** — *Spin-orbit dynamics
   of habitable-zone planets*. 3:2 capture probability > 80% for
   e ≳ 0.10; anchors the cfg's 3:2 spin-orbit pick for h.
@@ -314,8 +310,8 @@ interaction.
 - **User-input discrepancy.** The user request described a τ Cet h
   at P = 4562 d / a = 5.0 AU. The DB authoritative h is at
   P = 49.41 d / a = 0.243 AU. The 4562-d signal is plausibly a
-  Feng 2018 §3.4 long-period candidate or a later RV-reanalysis
-  candidate not yet ingested. This Phase 3 synthesis treats the
+  long-period candidate from a later RV reanalysis
+  not yet ingested. This Phase 3 synthesis treats the
   DB h (49.4 d). If the long-period candidate is later promoted to
   Phase 2 / Phase 3, a separate cfg variant or a re-named entry
   (e.g., "tau Cet i") may be needed.

@@ -19,7 +19,7 @@
         "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S); SB1 + planet host, systemic",
         "vmag_v": 3.2644,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 4625,
+        "teff_k": 4850,
         "spectype": "K1III-IVCN1",
         "mass_measurements": [
           {
@@ -43,9 +43,41 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 4850,
+            "uncertainty_k": 4,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "notes": "Gray 2003 gives 4761 K. Luck's formal 4 K error is internal precision only — real spread ~90 K.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 11.5,
+            "method": "photometric",
+            "recommended": true,
+            "notes": "log L = 1.06; consistent with a first-ascent RGB star at R = 4.74 Rsun (Knudstrup 2023).",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 5.7,
+            "uncertainty_gyr": 0.9,
+            "method": "asteroseismology",
+            "recommended": true,
+            "notes": "5.7 (+0.8/-0.9) Gyr from SONG RV + TESS solar-like oscillations; same modelling as the curated M/R. uncertainty = larger side.",
+            "reference": "Knudstrup et al. 2023",
+            "bibcode": "2023A&A...675A.197K",
+            "doi": "10.1051/0004-6361/202346707"
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -70,8 +102,8 @@
         "icrs_vx_j2000_km_s": -20.580862937449385,
         "icrs_vy_j2000_km_s": -2.3971924211550535,
         "icrs_vz_j2000_km_s": -40.25843396280452,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 11.5,
+        "age_gyr": 5.7,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
@@ -154,7 +186,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -163,7 +195,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -172,14 +204,14 @@
       "title": "Knudstrup et al. 2023",
       "doi": "10.1051/0004-6361/202346707",
       "bibcode": "2023A&A...675A.197K",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "gam Cep mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

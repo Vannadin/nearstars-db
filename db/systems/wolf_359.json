@@ -19,7 +19,7 @@
         "radial_velocity_source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)",
         "vmag_v": 13.7365,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3027,
+        "teff_k": 2800,
         "spectype": "M6 V",
         "mass_measurements": [
           {
@@ -43,12 +43,54 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 2800,
+            "method": "sed_fitting",
+            "recommended": true,
+            "notes": "Mann 2015 2818 +/- 60 K, excellent agreement. Not in Schweitzer.",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.001109,
+            "uncertainty_lsun": 2.31e-05,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
         "age_measurements": [],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 2.704,
+            "uncertainty_days": 0.003,
+            "method": "photometric_variability",
+            "recommended": true,
+            "notes": "K2 photometry, FAP<1e-4. Fast rotator — young/active.",
+            "reference": "Diez Alonso et al. 2019",
+            "bibcode": "2019A&A...621A.126D",
+            "doi": "10.1051/0004-6361/201833316"
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_h_alpha_ew_angstrom": -7.22,
+            "uncertainty_h_alpha_ew_angstrom": 0.08,
+            "method": "h_alpha",
+            "recommended": true,
+            "notes": "Halpha in emission (active flare star); log LHa/Lbol = -3.982. Negative pEW = emission.",
+            "reference": "Schofer et al. 2019",
+            "bibcode": "2019A&A...623A..44S",
+            "doi": "10.1051/0004-6361/201834114"
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -70,12 +112,12 @@
         "icrs_vx_j2000_km_s": -10.203188927953166,
         "icrs_vy_j2000_km_s": 48.806647705839225,
         "icrs_vz_j2000_km_s": -28.203515101422596,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.001109,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 2.704,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": -7.22
       },
       "principia": {
         "gravitational_parameter_km3_s2": 14598368401.98,
@@ -89,7 +131,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -98,7 +140,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -107,14 +149,14 @@
       "title": "Pineda et al. 2021 (M dwarf mass-luminosity)",
       "doi": "10.3847/1538-4357/ac0aea",
       "bibcode": "2021ApJ...918...40P",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "Wolf 359 mass (spectroscopic_calibration)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

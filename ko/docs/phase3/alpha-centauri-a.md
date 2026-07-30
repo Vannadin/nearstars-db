@@ -154,35 +154,35 @@ K1V 점광원, 근일점에서는 ~0.04° 의 겉보기 항성 디스크로 보�
 ### Read (visual-informative, drove decisions above)
 
 - **Pourbaix D. & Boffin H. M. J. 2016** — *Parallax and masses of α
-  Centauri revisited*, A&A 586, A90 (`2016A&A...586A..90P`,
+  Centauri revisited*, A&A 586, A90 ([`2016A&A...586A..90P`](https://ui.adsabs.harvard.edu/abs/2016A%26A...586A..90P),
   [arXiv:1601.01636](https://arxiv.org/abs/1601.01636)). ESO/HARPS 아카이브를 이용한 분광 이중선 시각이중성
   fit. 궤도 시차 743 ± 1.3 mas, M_A = 1.133 ± 0.0050 M☉, M_B =
   0.972 ± 0.0045 M☉.
 - **Kervella P. et al. 2016** — *Close stellar conjunctions of α
-  Centauri A and B until 2050*, A&A 594, A107 (`2016A&A...594A.107K`,
+  Centauri A and B until 2050*, A&A 594, A107 ([`2016A&A...594A.107K`](https://ui.adsabs.harvard.edu/abs/2016A%26A...594A.107K),
   [arXiv:1610.06079](https://arxiv.org/abs/1610.06079)). Pourbaix & Boffin 의 시선속도 데이터에 새 VLT/NACO
   + ALMA 천체측정을 더해 다시 계산한 이중성 궤도 fit. 궤도 시차 747.17
   ± 0.61 mas 와 더 낮은 역학질량 M_A = 1.1055 ± 0.0039 M☉, M_B = 0.9373
   ± 0.0033 M☉ 를 시스템 질량 기준으로 채택합니다.
 - **Kervella P. et al. 2017** — *The radii and limb darkenings of α
-  Centauri A and B*, A&A 597, A137 (`2017A&A...597A.137K`,
+  Centauri A and B*, A&A 597, A137 ([`2017A&A...597A.137K`](https://ui.adsabs.harvard.edu/abs/2017A%26A...597A.137K),
   [arXiv:1610.06185](https://arxiv.org/abs/1610.06185)). H 밴드 VLTI/PIONIER 간섭계. 각지름 θ_LD(A) =
   8.502 ± 0.038 mas, θ_LD(B) = 5.999 ± 0.025 mas. 수정된 시차로 R_A =
   1.2234 ± 0.0053 R☉, R_B = 0.8632 ± 0.0037 R☉ 유도.
 - **Joyce M. & Chaboyer B. 2018** — *Classically and Asteroseismically
   Constrained 1D Stellar Evolution Models of α Centauri A and B*,
-  ApJ 864, 99 (`2018ApJ...864...99J`, [arXiv:1806.07567](https://arxiv.org/abs/1806.07567)). 고전 + p-mode
+  ApJ 864, 99 ([`2018ApJ...864...99J`](https://ui.adsabs.harvard.edu/abs/2018ApJ...864...99J), [arXiv:1806.07567](https://arxiv.org/abs/1806.07567)). 고전 + p-mode
   제약을 동시에 만족시키는 DSEP 진화 모델. 31 viable model pairs, 시스템
   나이 5.3 ± 0.3 Gyr.
 - **DeWarf L. E. et al. 2010** — *X-Ray, FUV, and UV Observations of α
   Centauri B: Determination of Long-term Magnetic Activity Cycle and
-  Rotation Period* (`2010ApJ...722..343D`). A 와 B 모두의 색채권과
+  Rotation Period* ([`2010ApJ...722..343D`](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D)). A 와 B 모두의 색채권과
   코로나 모니터링. 회전 주기 22 ± 3 d (A), 36–40 d (B). B 의 8.1 년
   색채권 사이클과 A 의 태양형 ~19 년 사이클. **arXiv 프리프린트 없음**.
   Tier A manual followup. 값은 ApJ abstract 와 DB Phase 2 attribution
   에서 가져옴.
 - **Robrade J. et al. 2016** — *Coronal activity cycles in action —
-  X-rays from α Centauri A/B*, A&A 596, A53 (`2016A&A...596A..53R`,
+  X-rays from α Centauri A/B*, arXiv 프리프린트 ([`2016arXiv161206570R`](https://ui.adsabs.harvard.edu/abs/2016arXiv161206570R),
   [arXiv:1612.06570](https://arxiv.org/abs/1612.06570)). XMM-Newton + Chandra 모니터링. A 의 ~19 년 코로나
   사이클 확인, log L_X 진폭 약 4 배.
 - **Beichman C. et al. 2025** — *Worlds Next Door: A Candidate Giant
@@ -195,19 +195,19 @@ K1V 점광원, 근일점에서는 ~0.04° 의 겉보기 항성 디스크로 보�
 ### Read (context / methodology, not directly decision-driving)
 
 - **Porto de Mello G. F. et al. 2008** — *Photospheric, chromospheric,
-  and coronal activity of α Cen A* (`2008A&A...488..653P`). A 의
+  and coronal activity of α Cen A* ([`2008A&A...488..653P`](https://ui.adsabs.harvard.edu/abs/2008A%26A...488..653P)). A 의
   canonical [Fe/H] = +0.24 ± 0.03 과 Teff = 5847 ± 27 K 를 정의.
 - **Bedding T. R. et al. 2004** — *Oscillation frequencies and mode
-  lifetimes in α Centauri A* (`2004ApJ...614..380B`,
+  lifetimes in α Centauri A* ([`2004ApJ...614..380B`](https://ui.adsabs.harvard.edu/abs/2004ApJ...614..380B),
   arXiv:astro-ph/0406471). 28 개 p-mode 검출. A 의 asteroseismic 제약
   표를 설정.
 - **de Meulenaer P. et al. 2010** — *Core properties of α Cen A
-  using asteroseismology* (`2010A&A...523A..54D`, [arXiv:1009.1237](https://arxiv.org/abs/1009.1237)).
+  using asteroseismology* ([`2010A&A...523A..54D`](https://ui.adsabs.harvard.edu/abs/2010A%26A...523A..54D), [arXiv:1009.1237](https://arxiv.org/abs/1009.1237)).
   44 개 p-mode. Δν = 105.9 μHz, ν_max ≈ 2200 μHz 로 정련.
 - **Bigot L. et al. 2006** — α Cen B granulation 의 VLTI/VINCI 3D 복사-
   유체역학 제약. Kervella 2017 §4 를 통해 인용.
 - **Wang H. S. et al. 2022** — *A Model Earth-sized Planet in the
-  Habitable Zone of α Centauri A/B* (`2022ApJ...927..134W`,
+  Habitable Zone of α Centauri A/B* ([`2022ApJ...927..134W`](https://ui.adsabs.harvard.edu/abs/2022ApJ...927..134W),
   [arXiv:2110.12565](https://arxiv.org/abs/2110.12565)). cfg 의 거주가능영역 지오메트리를 framing. A 의
   hot edge 1.25 AU, cold edge 1.85 AU.
 - **Quarles B. et al. 2022** — *Milankovitch cycles for a
@@ -223,7 +223,7 @@ K1V 점광원, 근일점에서는 ~0.04° 의 겉보기 항성 디스크로 보�
   α Centauri AB System* ([arXiv:2104.10086](https://arxiv.org/abs/2104.10086)). Sub-milliarcsecond
   위치. 2025년 이전 ALMA 캠페인.
 - **Krishnamurthy A. et al. 2021** — α Cen A, B 주위 ASTERIA 통과 탐색
-  (`2021AJ....161..275K`). 미검출 한계.
+  ([`2021AJ....161..275K`](https://ui.adsabs.harvard.edu/abs/2021AJ....161..275K)). 미검출 한계.
 - **Spada F. et al. 2019** — *Entropy calibration of the radii of
   cool stars: α Cen A and B* ([arXiv:1909.00701](https://arxiv.org/abs/1909.00701)). Kervella 2017 +
   Joyce 2018 의 그림을 엔트로피 기반 예측으로 검증.

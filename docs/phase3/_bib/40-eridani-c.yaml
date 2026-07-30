@@ -48,9 +48,9 @@ papers:
   status: fetched
   category: skim
   fetch_error: null
-- arxiv_id: '1611.04857'
-  ads_bibcode: 2017AJ....154..224N
-  title: Newton et al. 2017 — MEarth M dwarf rotation context
+- arxiv_id: '1807.09365'
+  ads_bibcode: 2018AJ....156..217N
+  title: Newton et al. 2018 — MEarth M dwarf rotation context
   status: fetched
   category: skim
   fetch_error: null

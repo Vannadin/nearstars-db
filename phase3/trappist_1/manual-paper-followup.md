@@ -17,31 +17,31 @@ known gaps. **Highest priority for manual fetch.**
 | Bibcode | Year | Planet | Title | Why it matters |
 |---|---|---|---|---|
 | 2026NatAs.tmp...88. | 2026 | b, c | The innermost planets in the TRAPPIST-1 system do not have thick atmospheres | Likely a Nature Astronomy publication consolidating Greene 2023 / Zieba 2023 / Ducrot 2025; may tighten atmosphere upper limits |
-| 2026NatAs.tmp...65G | 2026 | b, c | No thick atmosphere around TRAPPIST-1 b and c from JWST thermal phase curves | Likely the published version of [2509.02128](https://arxiv.org/abs/2509.02128) (Ducrot 2025); confirm if there are revised constraints |
-| 2024ESS.....510106L | 2024 | f | TRAPPIST-1 Atmospheric Reconnaissance with JWST: First Look at the Habitable-Zone Exoplanet TRAPPIST-1 f with NIRISS | **Only direct JWST observation of f**, currently cited from ADS abstract only. Full text could clarify atmosphere constraints. |
-| 2024ESS.....562710L | 2024 | c | Potential Atmospheric Compositions of TRAPPIST-1 c constrained by JWST | Possibly a precursor / conference version of Lincowski 2023 (arXiv [2308.05899](https://arxiv.org/abs/2308.05899)) — confirm consistency |
-| 2025epsc.conf..605N | 2025 | b, c, e (?) | Predicted atmospheric evolutionary pathways for the TRAPPIST-1 planets | Could supply system-wide evolutionary framework |
-| 2025EGUGA..2718054S | 2025 | b | Modelling surface mineral diversity of atmosphere-free rocky exoplanets | **Directly informs `surface_tint_rgb_hex_primary` for b** — mineralogy modeling for airless rocky exoplanets |
-| 2024EPSC...17..649T | 2024 | b, c | Reflectance and Emission Modelling of Airless Exoplanets | **Informs surface colors / albedo for airless b and c** |
-| 2024MNRAS.530L..13P | 2024 | g, h | Fundamentals for habitable scenarios for Earth-like planets in the TRAPPIST-1 system | Could refine the snowball/ocean choices for outer planets |
-| 2018AJ....155..239J | 2018 | h | Dynamical Constraints on Nontransiting Planets Orbiting TRAPPIST-1 | Constrains additional resonance partners that could affect h's tidal evolution |
+| [`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G) | 2026 | b, c | No thick atmosphere around TRAPPIST-1 b and c from JWST thermal phase curves | Likely the published version of [2509.02128](https://arxiv.org/abs/2509.02128) (Ducrot 2025); confirm if there are revised constraints |
+| [`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L) | 2024 | f | TRAPPIST-1 Atmospheric Reconnaissance with JWST: First Look at the Habitable-Zone Exoplanet TRAPPIST-1 f with NIRISS | **Only direct JWST observation of f**, currently cited from ADS abstract only. Full text could clarify atmosphere constraints. |
+| [`2024ESS.....562710L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....562710L) | 2024 | c | Potential Atmospheric Compositions of TRAPPIST-1 c constrained by JWST | Possibly a precursor / conference version of Lincowski 2023 (arXiv [2308.05899](https://arxiv.org/abs/2308.05899)) — confirm consistency |
+| [`2025epsc.conf..605N`](https://ui.adsabs.harvard.edu/abs/2025epsc.conf..605N) | 2025 | b, c, e (?) | Predicted atmospheric evolutionary pathways for the TRAPPIST-1 planets | Could supply system-wide evolutionary framework |
+| [`2025EGUGA..2718054S`](https://ui.adsabs.harvard.edu/abs/2025EGUGA..2718054S) | 2025 | b | Modelling surface mineral diversity of atmosphere-free rocky exoplanets | **Directly informs `surface_tint_rgb_hex_primary` for b** — mineralogy modeling for airless rocky exoplanets |
+| [`2024EPSC...17..649T`](https://ui.adsabs.harvard.edu/abs/2024EPSC...17..649T) | 2024 | b, c | Reflectance and Emission Modelling of Airless Exoplanets | **Informs surface colors / albedo for airless b and c** |
+| [`2024MNRAS.530L..13P`](https://ui.adsabs.harvard.edu/abs/2024MNRAS.530L..13P) | 2024 | g, h | Fundamentals for habitable scenarios for Earth-like planets in the TRAPPIST-1 system | Could refine the snowball/ocean choices for outer planets |
+| [`2018AJ....155..239J`](https://ui.adsabs.harvard.edu/abs/2018AJ....155..239J) | 2018 | h | Dynamical Constraints on Nontransiting Planets Orbiting TRAPPIST-1 | Constrains additional resonance partners that could affect h's tidal evolution |
 
 ## Tier B — useful context
 
 | Bibcode | Year | Planet | Title | Why it matters |
 |---|---|---|---|---|
-| 2024AGUFMP11E.3011L | 2024 | e | Coupled Atmospheric Chemistry, Radiation, and Dynamics of an Exoplanet (TRAPPIST-1 e) | Refinement of GCM input for e's atmosphere |
-| 2024EPSC...17..168C | 2024 | e | Haze Optical Depth in Exoplanet Atmospheres Varies with Rotation Rate | Cloud / haze visibility modeling |
-| 2024ESS.....562504V | 2024 | e | Who Run the World? (Flares): Ozone production in steam atmospheres during M-dwarf flares | O₃ visual tint refinement |
-| 2024ESS.....562907W | 2024 | e | What If The Earth Orbited TRAPPIST-1 Instead of the Sun? | Pedagogical / context |
-| 2024eas..conf..697C / 2024EGUGA..2611513C | 2024 | e, g | Impact of CO2 on water outgassing on rocky planets around TRAPPIST-1 | Atmosphere composition refinement for e/g |
-| 2024ApJ...970L...4D | 2024 | h | Updated Spectral Characteristics for the Ultracool Dwarf TRAPPIST-1 | Could update Teff / spectral type used in visual styling |
-| 2022AGUFM.P35C1897A | 2022 | h | Transition from XUV Driven Ion Escape to Hydrodynamic Escape | Atmospheric retention regime for h |
-| 2020EPSC...14..355A | 2020 | c, g | Assessing the habitability of observed Super Earths | Context |
-| 2018AGUFM.P44B..06M | 2018 | d, f | Insights into the atmospheres of the TRAPPIST-1 planets from the laboratory | Aerosol / chemistry lab work |
-| 2025epsc.conf..580B | 2025 | b | High-Resolution Transmission Spectroscopy of Venus: A Proxy for Atmospheric Characterization | Methodology |
-| 2025epsc.conf..178P | 2025 | d | TRAPPIST-1 d: A Case Study in Atmospheric Loss | Likely conference abstract of Piaulet-Ghorayeb 2025 (already covered via [2508.08416](https://arxiv.org/abs/2508.08416)) |
-| 2025EGUGA..27.6151S | 2025 | e | Is It Possible to Detect Airless Exomoons Through Thermal Phase Curves? | Methodology |
+| [`2024AGUFMP11E.3011L`](https://ui.adsabs.harvard.edu/abs/2024AGUFMP11E.3011L) | 2024 | e | Coupled Atmospheric Chemistry, Radiation, and Dynamics of an Exoplanet (TRAPPIST-1 e) | Refinement of GCM input for e's atmosphere |
+| [`2024EPSC...17..168C`](https://ui.adsabs.harvard.edu/abs/2024EPSC...17..168C) | 2024 | e | Haze Optical Depth in Exoplanet Atmospheres Varies with Rotation Rate | Cloud / haze visibility modeling |
+| [`2024ESS.....562504V`](https://ui.adsabs.harvard.edu/abs/2024ESS.....562504V) | 2024 | e | Who Run the World? (Flares): Ozone production in steam atmospheres during M-dwarf flares | O₃ visual tint refinement |
+| [`2024ESS.....562907W`](https://ui.adsabs.harvard.edu/abs/2024ESS.....562907W) | 2024 | e | What If The Earth Orbited TRAPPIST-1 Instead of the Sun? | Pedagogical / context |
+| [`2024eas..conf..697C`](https://ui.adsabs.harvard.edu/abs/2024eas..conf..697C) / [`2024EGUGA..2611513C`](https://ui.adsabs.harvard.edu/abs/2024EGUGA..2611513C) | 2024 | e, g | Impact of CO2 on water outgassing on rocky planets around TRAPPIST-1 | Atmosphere composition refinement for e/g |
+| [`2024ApJ...970L...4D`](https://ui.adsabs.harvard.edu/abs/2024ApJ...970L...4D) | 2024 | h | Updated Spectral Characteristics for the Ultracool Dwarf TRAPPIST-1 | Could update Teff / spectral type used in visual styling |
+| [`2022AGUFM.P35C1897A`](https://ui.adsabs.harvard.edu/abs/2022AGUFM.P35C1897A) | 2022 | h | Transition from XUV Driven Ion Escape to Hydrodynamic Escape | Atmospheric retention regime for h |
+| [`2020EPSC...14..355A`](https://ui.adsabs.harvard.edu/abs/2020EPSC...14..355A) | 2020 | c, g | Assessing the habitability of observed Super Earths | Context |
+| [`2018AGUFM.P44B..06M`](https://ui.adsabs.harvard.edu/abs/2018AGUFM.P44B..06M) | 2018 | d, f | Insights into the atmospheres of the TRAPPIST-1 planets from the laboratory | Aerosol / chemistry lab work |
+| [`2025epsc.conf..580B`](https://ui.adsabs.harvard.edu/abs/2025epsc.conf..580B) | 2025 | b | High-Resolution Transmission Spectroscopy of Venus: A Proxy for Atmospheric Characterization | Methodology |
+| [`2025epsc.conf..178P`](https://ui.adsabs.harvard.edu/abs/2025epsc.conf..178P) | 2025 | d | TRAPPIST-1 d: A Case Study in Atmospheric Loss | Likely conference abstract of Piaulet-Ghorayeb 2025 (already covered via [2508.08416](https://arxiv.org/abs/2508.08416)) |
+| [`2025EGUGA..27.6151S`](https://ui.adsabs.harvard.edu/abs/2025EGUGA..27.6151S) | 2025 | e | Is It Possible to Detect Airless Exomoons Through Thermal Phase Curves? | Methodology |
 
 ## Tier C — proceedings & catalogs (skip unless context needed)
 
@@ -59,7 +59,7 @@ read.
    (replace dots if URL needs them).
 2. **Nature Astronomy 2026 papers**: probably have arXiv preprints
    filed days-to-weeks later; try a re-fetch of bibliographies in
-   2026-06+ to see if `2026NatAs.tmp...88.` and `2026NatAs.tmp...65G`
+   2026-06+ to see if `2026NatAs.tmp...88.` and [`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G)
    now resolve.
 3. **Conference papers (EPSC, EGU, AGU)**: usually have abstracts only;
    may not be worth chasing unless the title is highly specific to a

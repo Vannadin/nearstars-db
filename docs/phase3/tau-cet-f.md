@@ -3,7 +3,7 @@
 
 τ Ceti f is a 3.93 M⊕ (M sin i) RV candidate on a 636-day orbit at
 1.334 AU around the metal-poor G8V τ Ceti (Feng 2017,
-`2017AJ....154..135F`). It is the outermost of the three planets
+[`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F)). It is the outermost of the three planets
 currently in `db/systems/tau_cet.json` (f, g, h all from Feng 2017;
 e is logged as a curation gap in the host Phase 3 synthesis). At
 0.488 L☉ host luminosity, f receives 0.27 S⊕ — that is **outside**
@@ -13,10 +13,9 @@ temperature is 202 K (A=0) or 184 K (A=0.3), and a thin secondary
 atmosphere cannot warm the surface above the water freezing point on
 this host. The planet is **disputed** in NEA (`pl_controv_flag = 1`)
 — RV-only, no transit, no direct imaging, no JWST follow-up.
-Feng 2018 (`2018A&A...613A..76F`) re-examined the system and the
-636-d signal remained stable but at a SNR that some subsequent
-analyses (Figueira 2025, Tuomi 2013 earlier 5-planet retraction history)
-treat as marginal.
+The 636-d signal has not been independently re-confirmed, and its
+SNR sits at a level that some analyses (Figueira 2025, and the
+earlier Tuomi 2013 five-planet retraction history) treat as marginal.
 
 **Scenario choice for NearStars: a cold thin-atmosphere snowball
 super-Earth with a global H₂O ice crust over a possible buried
@@ -69,7 +68,7 @@ preserved as a cfg variant in the Open items.
 | `magnetic_field_strength_microtesla_equator` | 25 | low | Tie-break: RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`) for a 4–5 M⊕ rocky body with multi-week rotation gives ~0.5× Earth |
 | `tidal_heating_w_m2` | 0.001–0.01 | medium | e = 0.16 is non-trivial but a = 1.334 AU is far; integrated tidal flux modest |
 | `induction_heating_w_m2` | < 0.001 | medium | Host stellar magnetic field too weak (Boro Saikia 2018 ZDI) at this distance to drive significant induction heating |
-| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed (a metal-poor host would lower the ²³²Th/²³⁸U budget, but this is not quantified here) |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 ([`2020A&A...644A..19W`](https://ui.adsabs.harvard.edu/abs/2020A%26A...644A..19W)) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed (a metal-poor host would lower the ²³²Th/²³⁸U budget, but this is not quantified here) |
 | `aurora_present` | true (faint) | low | Modest magnetic field + thin atmosphere → diffuse aurora possible; host XUV too weak for bright aurora |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break: [OI] 557.7 nm green if trace O₂ from photolysis; N₂ Vegard-Kaplan blue-green otherwise |
 | `aurora_intensity_kR_typical` | 1 | low | Quiet host — proton flux at f's distance is well below Earth's, giving aurora intensity ~10× weaker than Earth's typical 10 kR |
@@ -253,16 +252,11 @@ visual cfg.
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Discovery + best
+  ([`2017AJ....154..135F`](https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F), [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Discovery + best
   constraint on f's orbit (P = 636.13 ± 11.7 d), mass
   (Msini = 3.93 ± 1.05 M⊕), eccentricity (0.16), and host mass
   (0.783 ± 0.012 M☉). Anchors every orbital and physical Decisions
   row.
-- **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
-  system from HARPS RV*, A&A 613, A76 (`2018A&A...613A..76F`,
-  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). Re-examination of the 4-planet system with
-  expanded HARPS dataset; 636-d signal stable; controversial flag
-  in NEA reflects the persisting amplitude-to-noise concerns.
 - **Wordsworth & Pierrehumbert 2015** (general atmospheric-escape
   argument) — used here as a generic atmosphere-retention reference
   for the 0.1 bar N₂ / trace CO₂ secondary atmosphere adopted for f;
@@ -278,13 +272,13 @@ visual cfg.
 ### Read (context / methodology, not directly decision-driving)
 
 - **MacGregor M. A. et al. 2016** — *τ Ceti debris disk ALMA
-  imaging*, ApJ 828, 113 (`2016ApJ...828..113M`). Disk plane
+  imaging*, ApJ 828, 113 ([`2016ApJ...828..113M`](https://ui.adsabs.harvard.edu/abs/2016ApJ...828..113M)). Disk plane
   inclination ~35°, the value assumed from Lawler et al. 2014
   (Herschel) — adopted as the f orbital plane default
   (Feng 2017 also assumes coplanarity).
 - **Tuomi M. et al. 2013** — *Signals embedded in the radial
   velocity noise: τ Ceti 5-planet claim*, A&A 551, A79
-  (`2013A&A...551A..79T`). Earlier 5-planet detection; Feng 2017
+  ([`2013A&A...551A..79T`](https://ui.adsabs.harvard.edu/abs/2013A%26A...551A..79T)). Earlier 5-planet detection; Feng 2017
   retained 4 (e/f/g/h) and dropped 1 (b in old labeling). Useful
   for understanding the controversial-flag history.
 - **Owen J. E. & Wu Y. 2017** — *The evaporation valley*. Sub-
@@ -307,7 +301,7 @@ visual cfg.
 
 ### Not read — no arXiv preprint or low-priority (~15 papers)
 
-- **Tuomi 2013 erratum** — Tuomi 2014 (`2014MNRAS.441.1545T`)
+- **Tuomi 2013 erratum** — Tuomi 2014 ([`2014MNRAS.441.1545T`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T))
   refines the noise model; superseded by Feng 2017.
 - **Various SETI/laser-search/technosignature papers** — no cfg
   relevance for the planet.
@@ -340,8 +334,8 @@ visual cfg.
   request for this synthesis described a τ Cet h at P = 4562 d
   and a ≈ 5.0 AU (near the asteroid-analog belt inner edge). The
   DB authoritative h is at P = 49.41 d / a = 0.243 AU. The 4562 d
-  candidate is plausibly a Feng 2018 §3.4 long-period signal or a
-  later RV-reanalysis candidate that the DB has not ingested. The
+  candidate is plausibly a long-period RV signal from a
+  later reanalysis that the DB has not ingested. The
   curation question is logged in `db/systems/tau_cet.json` Open
   items; this Phase 3 synthesis treats f as the *outermost*
   current-DB planet at 1.33 AU, consistent with the DB.

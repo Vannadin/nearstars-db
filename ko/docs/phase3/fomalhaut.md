@@ -72,7 +72,7 @@ Kalas et al. 2008 이 HST 가시광 영상에서 보고한 그 유명한
 | `visual_companion_event_lp_876_10_apparent_diameter_arcmin` | 0.00001 (점광원, Fomalhaut 계 어느 행성에서든 V ≈ 11) | medium | 유도. 5.7 ly 의 M4V 는 맨눈 한계 아래지만 게임 내 망원경 뷰에서는 손쉽게 보임 |
 | `disk_present` | true | high | Kalas et al. 2005 의 HST/ACS 분해 코로나그래프 영상 |
 | `disk_belts` | warm, intermediate, cold | high | Gáspár 외 2023 JWST/MIRI 가 3 벨트 구조를 분해. 안쪽 warm + intermediate + 고전적 편심 cold 주 고리 (Kalas 2005 / Boley 2012 / White 2017) |
-| `disk_warm_inner_radius_au` | 10 | high | Gáspár 외 2023 (`2023NatAs...7..790G`) JWST/MIRI — 안쪽 warm 벨트 안쪽 가장자리 |
+| `disk_warm_inner_radius_au` | 10 | high | Gáspár 외 2023 ([`2023NatAs...7..790G`](https://ui.adsabs.harvard.edu/abs/2023NatAs...7..790G)) JWST/MIRI — 안쪽 warm 벨트 안쪽 가장자리 |
 | `disk_warm_outer_radius_au` | 78 | high | Gáspár 외 2023 — 넓은 안쪽/warm 디스크가 intermediate 벨트와 분리되는 ~78 AU gap 까지 뻗음 |
 | `disk_warm_tint_rgb_hex` | `#fff4e5` (옅은 크림색. vivid `#ffe0b0`) | low | 광학 색 측정값 없음 (열복사/간섭계 자료만). **얼음 입자** (얼음 + 규산염, 부피 기준 물 얼음 ~50–80%) 에 대한 Mie 반사율 합성. warm 먼지는 외곽 벨트에서 PR-drag 로 떨어져 나온 파편이지 그 자리에서 생긴 탄소질이 아니므로 (Sommer 외 2025 `2503.18127`) cold 고리와 동일한 얼음 조성이고, blowout 크기의 큰 입자라 살짝 따뜻한 반사율 (B/I 0.68). 렌더러가 A4 V 청백색 별빛을 위에 입힘. vivid 팩. `#ffe0b0` |
 | `disk_warm_opacity` | 0.30 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
@@ -265,52 +265,52 @@ Fomalhaut A 와 광폭 분리 동반성들 사이에는 식 / 엄폐 이벤트�
 ### Read (visual-informative, drove decisions above)
 
 - **Mamajek E. E. 2012** — *On the age and binarity of Fomalhaut*,
-  ApJ 754, L20 (`2012ApJ...754L..20M`, [arXiv:1206.6353](https://arxiv.org/abs/1206.6353)). **항성
+  ApJ 754, L20 ([`2012ApJ...754L..20M`](https://ui.adsabs.harvard.edu/abs/2012ApJ...754L..20M), [arXiv:1206.6353](https://arxiv.org/abs/1206.6353)). **항성
   레이어 전체의 Phase 2 anchor.** Absil 2009 의 excess 보정 θ_LD +
   Davis 2005 f_bol 에서 R 1.842 ± 0.019 R☉, Teff 8590 ± 73 K,
   L 16.63 ± 0.48 L☉ 를 재유도. 질량 1.92 ± 0.02 M☉ (Y² 트랙).
   나이 440 ± 40 Myr (A 의 등시선 + 동반성 TW PsA 의 자이로/Li/X 선).
 - **Absil O. et al. 2009** — *A near-infrared interferometric survey of
-  debris-disc stars II: Fomalhaut*, ApJ 704, 150 (`2009ApJ...704..150A`,
+  debris-disc stars II: Fomalhaut*, ApJ 704, 150 ([`2009ApJ...704..150A`](https://ui.adsabs.harvard.edu/abs/2009ApJ...704..150A),
   [arXiv:0908.3133](https://arxiv.org/abs/0908.3133)). excess 보정 VLTI/VINCI θ_LD = 2.223 ± 0.022 mas
   (분해된 0.88% K 밴드 별주위 방출을 빼냄) — Mamajek 2012 가 R/Teff
   에 쓰는 각지름. 겉보기 oblateness 1.021.
 - **Mamajek E. E. et al. 2013** — *Discovery of a Faint Companion to
   Alpha PsA Using MMT/AO 5 μm Imaging*, AJ 146, 154
-  (`2013AJ....146..154M`, [arXiv:1310.0764](https://arxiv.org/abs/1310.0764)). LP 876-10 을 Fomalhaut
+  ([`2013AJ....146..154M`](https://ui.adsabs.harvard.edu/abs/2013AJ....146..154M), [arXiv:1310.0764](https://arxiv.org/abs/1310.0764)). LP 876-10 을 Fomalhaut
   계층적 삼중계의 M4V 세 번째 성분으로 5.7 ly 투영 분리에서 식별.
   공통 고유운동 + 등시선 나이 일치.
 - **Di Folco E. et al. 2004** — *VLTI near-IR interferometric
   observations of Vega-like stars*, A&A 426, 601
-  (`2004A&A...426..601D`, arXiv:astro-ph/0408390). 원래의 VLTI/VINCI
+  ([`2004A&A...426..601D`](https://ui.adsabs.harvard.edu/abs/2004A%26A...426..601D), arXiv:astro-ph/0408390). 원래의 VLTI/VINCI
   K 밴드 각지름. Mamajek 2012 가 채택하는 Absil 2009 의 excess
   보정으로 정밀화됨.
 - **Dunkin S. K. et al. 1997** — *High-resolution spectroscopy of
-  Vega-like stars*, MNRAS 286, 604 (`1997MNRAS.286..604D`). Fomalhaut
+  Vega-like stars*, MNRAS 286, 604 ([`1997MNRAS.286..604D`](https://ui.adsabs.harvard.edu/abs/1997MNRAS.286..604D)). Fomalhaut
   의 [Fe/H] = −0.03 — Phase 2 recommended (거의 태양값) 금속도. A 형
   별 [Fe/H] 측정은 산포가 큼.
 - **Kalas P. et al. 2005** — *A planetary system as the origin of
   structure in Fomalhaut's dust belt*, Nature 435, 1067
-  (`2005Natur.435.1067K`). HST/ACS 코로나그래프가 133 AU 의 좁고
+  ([`2005Natur.435.1067K`](https://ui.adsabs.harvard.edu/abs/2005Natur.435.1067K)). HST/ACS 코로나그래프가 133 AU 의 좁고
   편심한 (e ≈ 0.11) 주 고리와 날카로운 안쪽 가장자리를 처음 분해
   — 보이지 않는 행성에 의한 중력적 조각으로 해석 (원조 "양치기"
   추론).
 - **Kalas P. et al. 2008** — *Optical Images of an Exosolar Planet
   25 Light-Years from Earth*, Science 322, 1345
-  (`2008Sci...322.1345K`). 원조 "Fomalhaut b" HST 검출 논문.
+  ([`2008Sci...322.1345K`](https://ui.adsabs.harvard.edu/abs/2008Sci...322.1345K)). 원조 "Fomalhaut b" HST 검출 논문.
   **철회 맥락**. Gáspár & Rieke 2020 의 후속 재분석과 JWST 2023
   미검출 (Gáspár 2023) 이 이 광원을 묶인 행성이 아닌 행성소체
   충돌에서 발생한 일과성 팽창 먼지 구름으로 재해석. 이 합성은 현재
   컨센서스를 따름.
 - **Gáspár A. & Rieke G. H. 2020** — *New HST data and modeling
   reveal a massive planetesimal collision around Fomalhaut*, PNAS
-  117, 9712 (`2020PNAS..117.9712G`, [arXiv:2004.08736](https://arxiv.org/abs/2004.08736)). HST 아카이브
+  117, 9712 ([`2020PNAS..117.9712G`](https://ui.adsabs.harvard.edu/abs/2020PNAS..117.9712G), [arXiv:2004.08736](https://arxiv.org/abs/2004.08736)). HST 아카이브
   재분석으로 "Fomalhaut b" 가 2004–2014 사이에 팽창하고 어두워
   졌음을 확인. 묶인 점광원이 아니라 ~200 km 행성소체 충돌에서
   나온 팽창 먼지 구름과 일관.
 - **Gáspár A. et al. 2023** — *Spatially resolved imaging of the
   inner Fomalhaut disk using JWST/MIRI*, Nature Astronomy 7, 790
-  (`2023NatAs...7..790G`, [arXiv:2305.03789](https://arxiv.org/abs/2305.03789)). 15.5 µm + 23 µm JWST/MIRI
+  ([`2023NatAs...7..790G`](https://ui.adsabs.harvard.edu/abs/2023NatAs...7..790G), [arXiv:2305.03789](https://arxiv.org/abs/2305.03789)). 15.5 µm + 23 µm JWST/MIRI
   영상이 이전에 알려지지 않았던 **~83–104 AU 의 중간 벨트** 를
   (~78 AU gap 으로 안쪽 디스크와 분리. 안쪽 디스크 경사 ~47.8° vs 외곽 고리 64.4°)
   분해하고, JWST 이전의 따뜻한 "소행성대 analog" 를 **넓은 안쪽
@@ -318,74 +318,74 @@ Fomalhaut A 와 광폭 분리 동반성들 사이에는 식 / 엄폐 이벤트�
   없음, 먼지 구름 해석과 일관.
 - **Boley A. C. et al. 2012** — *Constraining the planetary system
   of Fomalhaut using high-resolution ALMA observations*, ApJ 750,
-  L21 (`2012ApJ...750L..21B`, [arXiv:1204.0007](https://arxiv.org/abs/1204.0007)). ALMA Cycle 0 의 주
+  L21 ([`2012ApJ...750L..21B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...750L..21B), [arXiv:1204.0007](https://arxiv.org/abs/1204.0007)). ALMA Cycle 0 의 주
   고리 영상. 이심률 e = 0.11 ± 0.01, 안쪽 가장자리 133 AU, 바깥쪽
   가장자리 158 AU, 폭 Δa/a ≈ 0.13. 양치기 행성 질량을 < 3 M_Jup
   으로 제약.
 - **White J. A. et al. 2017** — *ALMA observations of Fomalhaut's
-  outer dust ring*, ApJ 842, 80 (`2017ApJ...842...80W`,
-  [arXiv:1705.10670](https://arxiv.org/abs/1705.10670)). 더 높은 분해능의 ALMA Cycle 4 follow-up. 좁은
+  outer dust ring*, MNRAS 466, 4201 ([`2017MNRAS.466.4201W`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.466.4201W),
+  [arXiv:1612.01648](https://arxiv.org/abs/1612.01648)). 더 높은 분해능의 ALMA Cycle 4 follow-up. 좁은
   편심 고리를 재확인하고 경사를 65.6 ± 0.4° 로 정밀화. 원반 기하
   cfg 필드를 결정.
 - **Le Bouquin J.-B. et al. 2009** — *Spin axis of α PsA from
-  interferometry*, A&A 498, L41 (`2009A&A...498L..41L`,
+  interferometry*, A&A 498, L41 ([`2009A&A...498L..41L`](https://ui.adsabs.harvard.edu/abs/2009A%26A...498L..41L),
   [arXiv:0904.1688](https://arxiv.org/abs/0904.1688)). VLTI/AMBER 의 별 oblateness + 자전축 방향 측정.
   잔해 원반과의 spin-orbit 정렬이 ~3° 안에서 성립함을 입증.
 - **Davis J. et al. 2005** — *Limb-darkening determinations for
   Fomalhaut and α Cen A from SUSI*, MNRAS 356, 1362
-  (`2005MNRAS.356.1362D`). 광학 간섭계 limb-darkening power-law
+  ([`2005MNRAS.356.1362D`](https://ui.adsabs.harvard.edu/abs/2005MNRAS.356.1362D)). 광학 간섭계 limb-darkening power-law
   α(V) ≈ 0.21 for Fomalhaut. `limb_darkening_alpha_h` 를 결정.
 
 ### Read (context / methodology, not directly decision-driving)
 
 - **Royer F. et al. 2007** — *Rotational velocities of A-type stars*,
-  A&A 463, 671 (`2007A&A...463..671R`, arXiv:astro-ph/0610785).
+  A&A 463, 671 ([`2007A&A...463..671R`](https://ui.adsabs.harvard.edu/abs/2007A%26A...463..671R), arXiv:astro-ph/0610785).
   Fomalhaut 에 대해 v sin i = 93 ± 3 km/s. 원반 경사와 결합해 자전
   주기 유도.
 - **Acke B. et al. 2012** — *Herschel images of Fomalhaut: An
   extrasolar Kuiper Belt at the height of its dynamical activity*,
-  A&A 540, A125 (`2012A&A...540A.125A`, [arXiv:1204.5037](https://arxiv.org/abs/1204.5037)). 차가운 주
+  A&A 540, A125 ([`2012A&A...540A.125A`](https://ui.adsabs.harvard.edu/abs/2012A%26A...540A.125A), [arXiv:1204.5037](https://arxiv.org/abs/1204.5037)). 차가운 주
   고리의 Herschel/PACS 원적외선 영상. SED fit 으로 T_dust ≈ 65 K.
   `disk_dust_temperature_k` 필드를 채움.
 - **Holland W. S. et al. 2017** — *SONS: The JCMT legacy survey of
   debris discs at submillimetre wavelengths*, MNRAS 470, 3606
-  (`2017MNRAS.470.3606H`, [arXiv:1706.01218](https://arxiv.org/abs/1706.01218)). SCUBA-2 서브밀리
+  ([`2017MNRAS.470.3606H`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.3606H), [arXiv:1706.01218](https://arxiv.org/abs/1706.01218)). SCUBA-2 서브밀리
   측광. mm-cm 입자에서 주 고리 먼지 질량 ~1.5 × 10⁻² M⊕.
 - **Saffe C. et al. 2008** — *Spectroscopic metallicities of Vega-
-  like stars*, A&A 490, 297 (`2008A&A...490..297S`,
+  like stars*, A&A 490, 297 ([`2008A&A...490..297S`](https://ui.adsabs.harvard.edu/abs/2008A%26A...490..297S),
   [arXiv:0805.3936](https://arxiv.org/abs/0805.3936)). Castor 운동성단 [Fe/H] = −0.03 ± 0.05 — 보강용
   금속도 (cfg 는 Phase 2 recommended 값으로 Dunkin 1997 을 인용.
   둘 다 거의 태양값).
 - **Stapelfeldt K. R. et al. 2004** — *First Look at the Fomalhaut
   Debris Disk with Spitzer*, ApJS 154, 458
-  (`2004ApJS..154..458S`). Spitzer/MIPS 24/70/160 µm 측광. 먼지
+  ([`2004ApJS..154..458S`](https://ui.adsabs.harvard.edu/abs/2004ApJS..154..458S)). Spitzer/MIPS 24/70/160 µm 측광. 먼지
   원반의 첫 다중 밴드 열복사 특성화.
 - **Currie T. et al. 2012** — *A Direct-Imaging Survey of the
   Fomalhaut Planetary System with the Hubble Space Telescope*, ApJ
-  760, L32 (`2012ApJ...760L..32C`, [arXiv:1210.6555](https://arxiv.org/abs/1210.6555)). "Fomalhaut b"
+  760, L32 ([`2012ApJ...760L..32C`](https://ui.adsabs.harvard.edu/abs/2012ApJ...760L..32C), [arXiv:1210.6555](https://arxiv.org/abs/1210.6555)). "Fomalhaut b"
   의 독립 HST 재분석. 광원이 자체발광 행성이 아니라는 초기 증거.
 - **Schröder C. & Schmitt J. H. M. M. 2007** — *X-ray emission from
-  A-type stars*, A&A 475, 677 (`2007A&A...475..677S`). A 형 별 X 선
+  A-type stars*, A&A 475, 677 ([`2007A&A...475..677S`](https://ui.adsabs.harvard.edu/abs/2007A%26A...475..677S)). A 형 별 X 선
   플럭스 ROSAT 서베이. Fomalhaut 의 log L_X 상한을 결정.
 - **Greaves J. S. et al. 2014** — *Alignment of the host star spin
   with the orbit of debris discs*, MNRAS 438, L31
-  (`2014MNRAS.438L..31G`, [arXiv:1311.3431](https://arxiv.org/abs/1311.3431)). A 형 별 잔해 원반
+  ([`2014MNRAS.438L..31G`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.438L..31G), [arXiv:1311.3431](https://arxiv.org/abs/1311.3431)). A 형 별 잔해 원반
   호스트의 종족 전체 spin-orbit 정렬. Le Bouquin 2009 의 정렬
   가정을 뒷받침.
 
 ### Read (instrument / non-cfg-decisive)
 
 - **Gray R. O. & Garrison R. F. 1989** — *The Late A-Type Stars:
-  Refined MK Classification* (`1989ApJS...70..623G`). MK 시스템
+  Refined MK Classification* ([`1989ApJS...70..623G`](https://ui.adsabs.harvard.edu/abs/1989ApJS...70..623G)). MK 시스템
   재분류. Fomalhaut 를 A3V/A4V 경계에 배치.
 - **Monnier J. D. et al. 2010** — *Imaging the surface of Altair*,
-  Science 317, 342 (`2007Sci...317..342M`). 비교 가능한 빠른 자전체
+  Science 317, 342 ([`2007Sci...317..342M`](https://ui.adsabs.harvard.edu/abs/2007Sci...317..342M)). 비교 가능한 빠른 자전체
   A 형 별의 중력 어두워짐 지도 참조.
 - **Kopparapu R. K. et al. 2013** — *Habitable zones around main-
-  sequence stars*, ApJ 765, 131 (`2013ApJ...765..131K`,
+  sequence stars*, ApJ 765, 131 ([`2013ApJ...765..131K`](https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K),
   [arXiv:1301.6674](https://arxiv.org/abs/1301.6674)). A4V 별 HZ 안쪽/바깥쪽 경계.
 - **Wyatt M. C. 2008** — *Evolution of Debris Disks*, ARA&A 46, 339
-  (`2008ARA&A..46..339W`). 분해된 잔해 원반의 충돌 cascade 보충
+  ([`2008ARA&A..46..339W`](https://ui.adsabs.harvard.edu/abs/2008ARA%26A..46..339W)). 분해된 잔해 원반의 충돌 cascade 보충
   이론 프레임워크. `disk_planetesimal_belt_inferred` 필드를 뒷받침.
 
 ### Not read — no arXiv preprint or low-priority (~30 papers)

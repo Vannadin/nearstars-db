@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 13.6937,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3256,
+        "teff_k": 3236,
         "spectype": "dM4.5",
         "mass_measurements": [
           {
@@ -43,12 +43,64 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3236,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "notes": "PHOENIX-ACES fit (Passegger method). Southern star, not in the CARMENES-north catalogs.",
+            "reference": "Luque et al. 2018",
+            "bibcode": "2018A&A...620A.171L",
+            "doi": "10.1051/0004-6361/201833423"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.00364,
+            "uncertainty_lsun": 5e-05,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "notes": "VOSA SED integration; consistent with the curated R = 0.192 (same paper).",
+            "reference": "Luque et al. 2018",
+            "bibcode": "2018A&A...620A.171L",
+            "doi": "10.1051/0004-6361/201833423"
+          }
+        ],
         "age_measurements": [],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 124.0,
+            "method": "unverified",
+            "recommended": true,
+            "notes": "From the HARPS Ca II S-index periodogram (spectroscopic, hence unverified tag).",
+            "reference": "Astudillo-Defru et al. 2017",
+            "bibcode": "2017A&A...600A..13A",
+            "doi": "10.1051/0004-6361/201527078"
+          },
+          {
+            "value_days": 70.0,
+            "method": "photometric_variability",
+            "recommended": false,
+            "notes": "LOWER LIMIT: Prot > 70 d (K2 photometry, EPIC 205913009).",
+            "reference": "Luque et al. 2018",
+            "bibcode": "2018A&A...620A.171L",
+            "doi": "10.1051/0004-6361/201833423"
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.708,
+            "uncertainty_log_rhk": 0.063,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Very inactive (HARPS); Luque 2018 also reports no Halpha emission and faint X-ray.",
+            "reference": "Astudillo-Defru et al. 2017",
+            "bibcode": "2017A&A...600A..13A",
+            "doi": "10.1051/0004-6361/201527078"
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -70,11 +122,11 @@
         "icrs_vx_j2000_km_s": -4.939010877997365,
         "icrs_vy_j2000_km_s": 48.95317163732416,
         "icrs_vz_j2000_km_s": -7.232602868094373,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.00364,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "rotation_period_days": 124.0,
+        "activity_log_rhk": -5.708,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -155,7 +207,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -164,7 +216,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -173,14 +225,14 @@
       "title": "Luque et al. 2018",
       "doi": "10.1051/0004-6361/201833423",
       "bibcode": "2018A&A...620A.171L",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 1265 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

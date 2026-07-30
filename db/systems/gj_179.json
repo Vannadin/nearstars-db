@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 12.0132,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3099,
+        "teff_k": 3200,
         "spectype": "M2V",
         "mass_measurements": [
           {
@@ -43,12 +43,61 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3200,
+            "method": "sed_fitting",
+            "recommended": true,
+            "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          },
+          {
+            "value_k": 3393,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "recommended": false,
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.01622,
+            "uncertainty_lsun": 0.000268,
+            "method": "bolometric_flux",
+            "recommended": true,
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295"
+          }
+        ],
         "age_measurements": [],
         "metallicity_measurements": [],
         "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_h_alpha_ew_angstrom": -0.054,
+            "uncertainty_h_alpha_ew_angstrom": 0.014,
+            "method": "h_alpha",
+            "recommended": true,
+            "reference": "Schofer et al. 2019",
+            "bibcode": "2019A&A...623A..44S",
+            "doi": "10.1051/0004-6361/201834114"
+          },
+          {
+            "value_log_rhk": -5.06,
+            "uncertainty_log_rhk": 0.028,
+            "method": "log_rhk",
+            "recommended": false,
+            "notes": "Compiled (Shan 2024).",
+            "reference": "Shan et al. 2024",
+            "bibcode": "2024A&A...684A...9S",
+            "doi": "10.1051/0004-6361/202346794"
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -70,12 +119,12 @@
         "icrs_vx_j2000_km_s": -10.455729200563308,
         "icrs_vy_j2000_km_s": -3.2918403411461625,
         "icrs_vz_j2000_km_s": -18.8278736015279,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.01622,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": -0.054
       },
       "principia": {
         "gravitational_parameter_km3_s2": 47378341086.426,
@@ -155,7 +204,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -164,7 +213,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -173,14 +222,14 @@
       "title": "Howard et al. 2010",
       "doi": "10.1088/0004-637x/721/2/1467",
       "bibcode": "2010ApJ...721.1467H",
-      "accessed": "2026-05-29",
+      "accessed": "2026-07-30",
       "used_for": [
         "GJ 179 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

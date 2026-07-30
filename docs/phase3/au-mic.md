@@ -329,116 +329,116 @@ the NS DB as a separate entry; see Open items.
 
 - **Gallenne A. et al. 2022** — *The radius and effective temperature
   of the pre-main-sequence M dwarf AU Mic via VLTI/PIONIER*, A&A 665,
-  A41 (`2022A&A...665A..41G`, [arXiv:2207.04116](https://arxiv.org/abs/2207.04116)). The only *refereed*
+  A41 ([`2022A&A...665A..41G`](https://ui.adsabs.harvard.edu/abs/2022A%26A...665A..41G), [arXiv:2207.04116](https://arxiv.org/abs/2207.04116)). The only *refereed*
   interferometric radius: θ_LD = 0.825 ± 0.033 ± 0.038 mas →
   R = 0.862 ± 0.052 R☉. Phase 2 recommended radius.
 - **Cristofari P. I. et al. 2023** — *Atmospheric parameters and
   magnetic fields of M dwarfs from SPIRou*, MNRAS 522, 1342
-  (`2023MNRAS.522.1342C`, [arXiv:2303.11241](https://arxiv.org/abs/2303.11241)). SPIRou atmospheric fit
+  ([`2023MNRAS.522.1342C`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.522.1342C), [arXiv:2303.11241](https://arxiv.org/abs/2303.11241)). SPIRou atmospheric fit
   (with magnetic fields): Teff = 3665 ± 31 K, [M/H] = +0.12 ± 0.10,
   log g = 4.52. Phase 2 recommended Teff + metallicity.
 - **Tsikoudi V. & Kellett B. J. 2000** — *ROSAT all-sky survey X-ray
-  emission from late-type stars*, MNRAS 319, 1147 (`2000MNRAS.319.1147T`).
+  emission from late-type stars*, MNRAS 319, 1147 ([`2000MNRAS.319.1147T`](https://ui.adsabs.harvard.edu/abs/2000MNRAS.319.1147T)).
   AU Mic quiescent Lx = 2.24 × 10²⁹ erg/s (log Lx 29.35, log Lx/Lbol
   ≈ −3.24). Phase 2 recommended X-ray activity proxy. (Supersedes the
   earlier Stelzer 2013 citation; the NEXXUS 2.51e29 value cited online
   is WRONG for AU Mic — NEXXUS is a G/K sample.)
 - **Plavchan P. et al. 2020** — *A planet within the debris disk
   around the pre-main-sequence star AU Microscopii*, Nature 582,
-  497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS discovery of
+  497 ([`2020Natur.582..497P`](https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P), [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS discovery of
   AU Mic b transiting hot Neptune; 4.86-d rotation period; PMS-isochrone
   mass 0.50 ± 0.03 M☉ (Phase 2 recommended mass); multi-spot complexity.
 - **Krist J. E. et al. 2005** — *Hubble Space Telescope Advanced
   Camera for Surveys Coronagraphic Imaging of the AU Microscopii
-  Debris Disk*, AJ 129, 1008 (`2005AJ....129.1008K`). First HST
+  Debris Disk*, AJ 129, 1008 ([`2005AJ....129.1008K`](https://ui.adsabs.harvard.edu/abs/2005AJ....129.1008K)). First HST
   resolved coronagraphic imaging; inner edge ~17–43 AU, outer
   extension > 200 AU; provides the geometric framework all later
   imaging refined.
 - **Schneider G. et al. 2014** — *Probing for Exoplanets Hiding in
   Dusty Debris Disks: Disk Imaging, Characterization, and
   Exploration with HST/STIS Multi-Roll Coronagraphy*, AJ 148, 59
-  (`2014AJ....148...59S`, [arXiv:1406.7303](https://arxiv.org/abs/1406.7303)). Deep HST/STIS revisit;
+  ([`2014AJ....148...59S`](https://ui.adsabs.harvard.edu/abs/2014AJ....148...59S), [arXiv:1406.7303](https://arxiv.org/abs/1406.7303)). Deep HST/STIS revisit;
   surface-brightness profile refined; outer halo traced to
   ~210 AU; inner edge confirmed at ~35 AU.
 - **Boccaletti A. et al. 2015** — *Fast-moving features in the
   debris disk around AU Microscopii*, Nature 526, 230
-  (`2015Natur.526..230B`, [arXiv:1510.06434](https://arxiv.org/abs/1510.06434)). First detection of
+  ([`2015Natur.526..230B`](https://ui.adsabs.harvard.edu/abs/2015Natur.526..230B), [arXiv:1510.06434](https://arxiv.org/abs/1510.06434)). First detection of
   five fast-moving south-east-ansa features in VLT/SPHERE
   polarimetric imaging; outward radial velocities 4–10 km/s.
 - **Boccaletti A. et al. 2018** — *Two years of monitoring the AU
   Microscopii debris disk with SPHERE: New properties for the
-  fast-moving features*, A&A 614, A52 (`2018A&A...614A..52B`,
+  fast-moving features*, A&A 614, A52 ([`2018A&A...614A..52B`](https://ui.adsabs.harvard.edu/abs/2018A%26A...614A..52B),
   [arXiv:1804.04574](https://arxiv.org/abs/1804.04574)). Multi-epoch follow-up confirming feature
   motion; sets velocity precision and the cfg-relevant constraint
   that motion is wind-launched, not Keplerian.
 - **Chiang E. & Fung J. 2017** — *Stellar-wind-driven Dust Ridges
   in the AU Mic Debris Disk*, ApJ 848, 4
-  (`2017ApJ...848....4C`, [arXiv:1707.08970](https://arxiv.org/abs/1707.08970)). Physical model for
+  ([`2017ApJ...848....4C`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848....4C), [arXiv:1707.08970](https://arxiv.org/abs/1707.08970)). Physical model for
   the moving substructures: stellar-wind / radiation pressure
   acceleration of small grains, with planetesimal-belt birth ring
   at ~35 AU. Drives the cfg `disk_morphology` and animation choice.
 - **Strubbe L. E. & Chiang E. 2006** — *Dust Dynamics, Surface
   Brightness Profiles, and Thermal Spectra of Debris Disks: The
-  Case of AU Microscopii*, ApJ 648, 652 (`2006ApJ...648..652S`,
+  Case of AU Microscopii*, ApJ 648, 652 ([`2006ApJ...648..652S`](https://ui.adsabs.harvard.edu/abs/2006ApJ...648..652S),
   arXiv:astro-ph/0606435). Birth-ring model placing the
   planetesimal belt at ~35 AU; SED fit constraining the dust
   temperature ~50 K.
 - **Chen C. H. et al. 2005** — *Spitzer IRS Spectroscopy of
   IRAS-Discovered Debris Disks*, ApJ 634, 1372
-  (`2005ApJ...634.1372C`). Spitzer cold-component SED-fit anchoring
+  ([`2005ApJ...634.1372C`](https://ui.adsabs.harvard.edu/abs/2005ApJ...634.1372C)). Spitzer cold-component SED-fit anchoring
   the dust temperature.
 - **Mamajek E. E. & Bell C. P. M. 2014** — *On the age of the
   beta Pictoris moving group*, MNRAS 445, 2169
-  (`2014MNRAS.445.2169M`, [arXiv:1409.2737](https://arxiv.org/abs/1409.2737)). Isochronal age 22 ± 3
+  ([`2014MNRAS.445.2169M`](https://ui.adsabs.harvard.edu/abs/2014MNRAS.445.2169M), [arXiv:1409.2737](https://arxiv.org/abs/1409.2737)). Isochronal age 22 ± 3
   Myr for the β Pic MG (and thus for AU Mic); LDB confirmation.
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and
   filling of the very active M dwarf AU Mic*, MNRAS 525, 455
-  (`2023MNRAS.525..455D`, [arXiv:2304.09642](https://arxiv.org/abs/2304.09642)). SPIRou ZDI: small-scale
+  ([`2023MNRAS.525..455D`](https://ui.adsabs.harvard.edu/abs/2023MNRAS.525..455D), [arXiv:2304.09642](https://arxiv.org/abs/2304.09642)). SPIRou ZDI: small-scale
   mean field ⟨B⟩ = 2.61 ± 0.05 kG, large-scale field 550 ± 30 G
   (Phase 2 recommended magnetic values); log L/L☉ = −0.99 ± 0.01 →
   L 0.102 (Phase 2 recommended luminosity); V−I Teff 3700 ± 70 and
   Dartmouth mass 0.60 (divergence alternatives).
 - **Wittrock J. M. et al. 2023** — *Transit Timing Variation
   Measurements and Dynamical Mass Determination of the AU Mic
-  System*, AJ 166, 232 (`2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)).
+  System*, AJ 166, 232 ([`2023AJ....166..232W`](https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W), [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)).
   N-body + TTV dynamical mass 0.51 ± 0.028 M☉ — consistent with, but
   superseded as the cfg value by, the Plavchan 2020 0.50 ± 0.03;
   introduces planet d as a TTV-only candidate.
 - **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic
-  System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`,
+  System with TESS*, ApJ 951, 33 ([`2023ApJ...951...33T`](https://ui.adsabs.harvard.edu/abs/2023ApJ...951...33T),
   [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS Sectors 1+27 flare census; rate
   5.6 events/day above 10³¹ erg; cumulative flare frequency
   distribution.
-- **Davenport J. R. A. et al. 2020** — *The Evryscope Fast
-  Transient Engine: real-time detection for rapidly evolving
-  transients*, ApJ 905, 107 (`2020ApJ...905..107D`,
-  [arXiv:2010.02392](https://arxiv.org/abs/2010.02392)). TESS first-year M-dwarf flare survey context;
+- **Günther M. N. et al. 2020** — *Stellar Flares from the First
+  TESS Data Release: Exploring a New Sample of M Dwarfs*,
+  AJ 159, 60 ([`2020AJ....159...60G`](https://ui.adsabs.harvard.edu/abs/2020AJ....159...60G),
+  [arXiv:1901.00443](https://arxiv.org/abs/1901.00443)). TESS first-year M-dwarf flare survey context;
   AU Mic in the high-energy tail of M1V flare activity.
 - **Cully S. L. et al. 1993** — *The EUVE observation of the 1992
   September X-ray flare on AU Mic*, ApJ 414, L49
-  (`1993ApJ...414L..49C`). The original mega-flare detection:
+  ([`1993ApJ...414L..49C`](https://ui.adsabs.harvard.edu/abs/1993ApJ...414L..49C)). The original mega-flare detection:
   ~10³⁴–10³⁵ erg in the EUV.
 - **Stelzer B. et al. 2013** — *The UV and X-ray activity of the M
   dwarfs within 10 pc of the Sun*, MNRAS 431, 2063
-  (`2013MNRAS.431.2063S`, [arXiv:1302.1061](https://arxiv.org/abs/1302.1061)). AU Mic quiescent X-ray;
+  ([`2013MNRAS.431.2063S`](https://ui.adsabs.harvard.edu/abs/2013MNRAS.431.2063S), [arXiv:1302.1061](https://arxiv.org/abs/1302.1061)). AU Mic quiescent X-ray;
   context only — NOT in the frozen Phase 2 bib (the cfg X-ray proxy is
   Tsikoudi & Kellett 2000, log Lx 29.35).
 
 ### Read (context / methodology, not decision-driving)
 
 - **Martioli E. et al. 2021** — *AU Mic c: a second planet
-  transiting the young M dwarf AU Mic* (`2021A&A...649A.177M`,
+  transiting the young M dwarf AU Mic* ([`2021A&A...649A.177M`](https://ui.adsabs.harvard.edu/abs/2021A%26A...649A.177M),
   [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). TESS + ground-based confirmation of AU Mic c;
   not stellar-decisive but defines the planet roster.
 - **Mallorquin M. et al. 2024** — *AU Mic system characterization
-  with ESPRESSO* (`2024A&A...689A.132M`). Refined b/c orbital and
+  with ESPRESSO* ([`2024A&A...689A.132M`](https://ui.adsabs.harvard.edu/abs/2024A%26A...689A.132M)). Refined b/c orbital and
   mass parameters; not stellar-decisive.
 - **Donati J.-F. et al. 2025** — *AU Mic system characterized with
-  ESPRESSO* (`2025A&A...700A.227D`). Adds AU Mic e candidate;
+  ESPRESSO* ([`2025A&A...700A.227D`](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.227D)). Adds AU Mic e candidate;
   context only for stellar synthesis.
-- **Shkolnik E. L. et al. 2017** — *HAZMAT II: Ultraviolet
-  Variability of Low-Mass Stars in the GALEX Archive*, ApJ 838,
-  87 (`2017ApJ...838...87S`, [arXiv:1611.02835](https://arxiv.org/abs/1611.02835)). β Pic MG and young
+- **Miles B. E. & Shkolnik E. L. 2017** — *HAZMAT II: Ultraviolet
+  Variability of Low-Mass Stars in the GALEX Archive*, AJ 154,
+  67 ([`2017AJ....154...67M`](https://ui.adsabs.harvard.edu/abs/2017AJ....154...67M), [arXiv:1705.03583](https://arxiv.org/abs/1705.03583)). β Pic MG and young
   M-dwarf activity calibration; context for AU Mic's saturated
   state.
 - **Smith B. A. & Terrile R. J. 1981** — *A Circumstellar Disk
@@ -447,20 +447,20 @@ the NS DB as a separate entry; see Open items.
 ### Read (instrument / non-cfg-decisive)
 
 - **Boyajian T. S. et al. 2012** — *Stellar Diameters and
-  Temperatures II*, ApJ 757, 112 (`2012ApJ...757..112B`,
+  Temperatures II*, ApJ 757, 112 ([`2012ApJ...757..112B`](https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B),
   [arXiv:1208.2431](https://arxiv.org/abs/1208.2431)). CHARA M-dwarf interferometric calibration;
   context for the Donati 2023 radius but no direct AU Mic
   measurement.
 - **Loyd R. O. P. et al. 2018** — *MUSCLES Treasury Survey V:
   FUV Flares On Active and Inactive M Dwarfs*, ApJ 867, 71
-  (`2018ApJ...867...71L`, [arXiv:1809.07322](https://arxiv.org/abs/1809.07322)). FUV flare statistics
+  ([`2018ApJ...867...71L`](https://ui.adsabs.harvard.edu/abs/2018ApJ...867...71L), [arXiv:1809.07322](https://arxiv.org/abs/1809.07322)). FUV flare statistics
   on young M-dwarf comparison set including AU Mic.
 - **Beeck B. et al. 2013** — *3D radiative-hydrodynamic simulations
   of cool main-sequence stars* (cited via Donati 2023 §3).
   Granulation model grid.
 - **Kowalski A. F. et al. 2013** — *Time-resolved Properties and
   Global Trends in dM Flares from Simultaneous Photometry and
-  Spectra*, ApJS 207, 15 (`2013ApJS..207...15K`, [arXiv:1307.2099](https://arxiv.org/abs/1307.2099)).
+  Spectra*, ApJS 207, 15 ([`2013ApJS..207...15K`](https://ui.adsabs.harvard.edu/abs/2013ApJS..207...15K), [arXiv:1307.2099](https://arxiv.org/abs/1307.2099)).
   Defines the white-light flare continuum decomposition adopted
   for the cfg flare color.
 

@@ -19,7 +19,7 @@
         "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)",
         "vmag_v": 3.4941,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5801,
+        "teff_k": 5937,
         "spectype": "G3 V",
         "mass_measurements": [
           {
@@ -43,12 +43,53 @@
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5937,
+            "uncertainty_k": 57,
+            "method": "high_res_spectroscopy",
+            "recommended": true,
+            "notes": "SPOCS 5941 K. Boyajian 2013 interferometry is the curated radius source.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 1.26,
+            "method": "photometric",
+            "recommended": true,
+            "notes": "log L = 0.10.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 6.5,
+            "method": "isochrone",
+            "recommended": true,
+            "notes": "SPOCS isochrone gives 5.7 Gyr.",
+            "reference": "Luck 2017",
+            "bibcode": "2017AJ....153...21L",
+            "doi": "10.3847/1538-3881/153/1/21"
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.86,
+            "method": "log_rhk",
+            "recommended": true,
+            "notes": "Classic Mount Wilson solar analog; moderate activity.",
+            "reference": "Boro Saikia et al. 2018",
+            "bibcode": "2018A&A...616A.108B",
+            "doi": "10.1051/0004-6361/201629518"
+          }
+        ],
         "stellarium_id": "Achird"
       },
       "derived": {
@@ -75,11 +116,11 @@
         "mass_ratio_q": 0.3720930232558139,
         "barycenter_method": "mass_weighted_average(Eta Cassiopeiae A,Eta Cassiopeiae B)",
         "phase_reliable": true,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 1.26,
+        "age_gyr": 6.5,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "activity_log_rhk": -4.86,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -94,7 +135,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +144,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -112,14 +153,14 @@
       "title": "Boyajian et al. 2013 (interferometry + binary orbit)",
       "doi": "10.1088/0004-637X/771/1/40",
       "bibcode": "2013ApJ...771...40B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "Eta Cassiopeiae A mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

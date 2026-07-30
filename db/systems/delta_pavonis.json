@@ -132,7 +132,26 @@
             "recommended": false
           }
         ],
-        "rotation_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 41,
+            "method": "v_sin_i",
+            "reference": "Costa Silva et al. 2020",
+            "bibcode": "2020A&A...634A.136C",
+            "doi": "10.1051/0004-6361/201936523",
+            "recommended": true,
+            "notes": "No measured photometric/chromospheric rotation period exists (very inactive, log R'HK ~ -5.13 — no spot modulation). Upper-limit period from v sin i = 1.507 km/s and R = 1.197 R_sun (P_rot/sin i = 41 d); the near-basal activity favours the long-period end. v sin i sits near the instrumental floor; literature spans 1.5-2.4 km/s (26-41 d)."
+          },
+          {
+            "value_days": 26,
+            "method": "v_sin_i",
+            "reference": "Hojjatpanah et al. 2019",
+            "bibcode": "2019A&A...629A..80H",
+            "doi": "10.1051/0004-6361/201834729",
+            "recommended": false,
+            "notes": "v sin i = 2.36 km/s -> P_rot/sin i = 26 d (upper limit); fast end of the plausible range."
+          }
+        ],
         "activity_measurements": [
           {
             "value_log_rhk": -5.13,
@@ -181,7 +200,7 @@
         "luminosity_lsun": 1.24,
         "age_gyr": 9.3,
         "metallicity_fe_h_dex": 0.36,
-        "rotation_period_days": null,
+        "rotation_period_days": 41,
         "activity_log_rhk": -5.13,
         "activity_h_alpha_ew_angstrom": null
       },
@@ -197,7 +216,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -206,7 +225,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -215,7 +234,7 @@
       "title": "Bruntt et al. 2010",
       "doi": null,
       "bibcode": "2010MNRAS.405.1907B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "Delta Pavonis mass (asteroseismology)"
       ]
@@ -224,7 +243,7 @@
       "title": "Bensby et al. 2014",
       "doi": null,
       "bibcode": "2014A&A...562A..71B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "Delta Pavonis mass (evolutionary_model)"
       ]
@@ -233,14 +252,14 @@
       "title": "Rains et al. 2020",
       "doi": "10.1093/mnras/staa282",
       "bibcode": "2020MNRAS.493.2377R",
-      "accessed": "2026-06-16",
+      "accessed": "2026-07-30",
       "used_for": [
         "Delta Pavonis radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-07-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
