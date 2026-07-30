@@ -1,10 +1,10 @@
 <!-- alpha Cen A b 동역학 연구 + 이번 세션 작업 정리 (방법론·도구·결과·재현) -->
-# Alpha Centauri A b — A Dynamical Habitability Study of the Real-Life Polyphemus
+# Alpha Centauri A b — A Dynamical Habitability Study of the Real-Life Alpha Centauri A b (Polyphemus)
 
 **Session writeup, 2026-06-07.** Methods, tools, results, and reproducibility
 for the NearStars work on α Centauri A b (Beichman et al. 2025's JWST/MIRI
-candidate "S1"), its identification with *Avatar*'s gas giant **Polyphemus**,
-and whether a habitable **Pandora**-class moon can survive there. Includes the
+candidate "S1"), its identification with *Avatar*'s gas giant **A b**,
+and whether a habitable **Alpha Centauri A b III (Pandora)**-class moon can survive there. Includes the
 supporting N-body stability framework built/extended this session.
 
 ---
@@ -13,7 +13,7 @@ supporting N-body stability framework built/extended this session.
 
 We treat the JWST/MIRI direct-imaging candidate α Cen A b (Beichman et al. 2025;
 Saturn-class, ~1.6 AU, in α Centauri A's habitable zone) as the real-life
-*Polyphemus* of *Avatar* and ask whether its canonical moon Pandora could be
+*A b* of *Avatar* and ask whether its canonical moon A b III could be
 dynamically stable. Using REBOUND with a hybrid integrator policy (WHFast +
 MEGNO as a screen; TRACE for close-encounter fidelity; **IAS15 as the canonical
 integrator for α Cen, whose forcing is secular from a massive distant companion
@@ -29,9 +29,9 @@ and eccentricity ≲0.18, asymmetric about 90° (octupole EKL); (4) the *Avatar*
 canon distance of 1.2 AU is **interior to α Cen A's habitable zone** —
 dynamically stable (e_max≈0.14) but too warm, not a stability failure;
 and (5) on a stability-selected orbit (a=1.6 AU, e=0.1, mutual
-i≈16° — the median of the stable range), Polyphemus stays in the HZ over 10⁵ yr
-and a **0.45 M⊕ Pandora-mass moon is Hill-stable** at 225,000 km. The complete
-α Cen A → Polyphemus → Pandora hierarchy (perturbed by α Cen B) is dynamically
+i≈16° — the median of the stable range), A b stays in the HZ over 10⁵ yr
+and a **0.45 M⊕ A b III-mass moon is Hill-stable** at 225,000 km. The complete
+α Cen A → A b → A b III hierarchy (perturbed by α Cen B) is dynamically
 viable — just not on the favored *observed* orbit.
 
 ---
@@ -49,11 +49,11 @@ dynamically-stable orbit families spanning P=2–3 yr and mutual inclination
 ≈50° (prograde) / ≈130° (retrograde) to the α Cen AB binary plane.
 
 The popular and scientific press immediately connected this to *Avatar*: NPR
-(2025-08-07) and Live Science called it "a real-life Pandora," and Sellers et
+(2025-08-07) and Live Science called it "a real-life A b III," and Sellers et
 al.'s *Seeking the Worlds of Avatar* (Astrobiology, 2025) assessed the
 prospects for detecting HZ moons of exactly this giant. In *Avatar* canon,
-**Polyphemus** is a Saturn-class gas giant orbiting α Cen A in its HZ with 14
-moons; the fifth, **Pandora**, is the habitable Na'vi homeworld (~0.45 M⊕,
+**A b** is a Saturn-class gas giant orbiting α Cen A in its HZ with 14
+moons; the fifth, **A b III**, is the habitable Na'vi homeworld (~0.45 M⊕,
 ~0.75 R⊕, 0.8 g, dense N₂/O₂/CO₂ atmosphere, ~27 h tidally-locked day, 29°
 axial tilt). This study asks the underlying real-science question: **can such a
 system be dynamically stable, and on what orbit?**
@@ -91,7 +91,7 @@ instead of the A-relative 1.6 AU, making dt 3.6× too large; fixed this session.
   >10× excursion) or its orbit go unbound (e_max ≥ 0.9)? This is the pass/fail.
 - **MEGNO** (Mean Exponential Growth of Nearby Orbits; Cincotta & Simó 2000) —
   the *chaos early-warning*: ⟨Y⟩→2 regular, growing = chaotic; Lyapunov time ≈
-  2·T/(MEGNO−2). Chaos ≠ instability (TRAPPIST-1 is chaotic but bounded for Gyr).
+  2·T/(MEGNO−2). Alpha Centauri A b V (Chaos) ≠ instability (TRAPPIST-1 is chaotic but bounded for Gyr).
   Unavailable under TRACE.
 - **Eccentricity tier** (`ecc_class`, added this session): calm (e_max<0.3),
   hot (0.3–0.9), extreme (≥0.9). A separate axis so "stable" (survives) is not
@@ -217,16 +217,16 @@ and the Phase 3
 report; the observed e≈0.4/i≈50° is retained as a `recommended:false`,
 Kozai-unstable canonical alternative.
 
-### 4.7 Pandora moon — Hill-stable
+### 4.7 A b III moon — Hill-stable
 
-Pandora's ~27 h tidally-locked day → orbital period → Kepler back-out gives
-**a_moon = 225,000 km** around the 120 M⊕ Polyphemus (Polyphemus spans ~36° of
-Pandora's sky — the films' skyline). With the dt fix, the integrator now resolves
+A b III's ~27 h tidally-locked day → orbital period → Kepler back-out gives
+**a_moon = 225,000 km** around the 120 M⊕ A b (A b spans ~36° of
+A b III's sky — the films' skyline). With the dt fix, the integrator now resolves
 the moon's 1.12-day (≈27 h) orbit — dt = 0.022 d, |ΔE/E| = 3.6×10⁻¹⁰ (TRACE; the
 earlier buggy dt of 50 d left the moon orbit wholly unresolved). At the adopted
-orbit, the full hierarchy (α Cen A + Polyphemus + Pandora + α Cen B) gives:
-Pandora a constant (Δa/a ≈ 1×10⁻⁵), **e ≈ 0 (max ~1×10⁻⁴), Hill fraction 0.02,
-bound** — deep inside the 0.5 r_H limit. A habitable Pandora-class moon is
+orbit, the full hierarchy (α Cen A + A b + A b III + α Cen B) gives:
+A b III a constant (Δa/a ≈ 1×10⁻⁵), **e ≈ 0 (max ~1×10⁻⁴), Hill fraction 0.02,
+bound** — deep inside the 0.5 r_H limit. A habitable A b III-class moon is
 dynamically viable.
 
 ---
@@ -248,7 +248,7 @@ dynamically viable.
   Kepler back-out of a from period when semi-major axis is uncurated (AU Mic
   d/e); (c) hypothetical moons placed relative to the parent orbital plane;
   (d) α Cen A b orbit parameterization (`--acen-*`).
-- `hypotheticals/alpha_centauri.json` — the Pandora moon test.
+- `hypotheticals/alpha_centauri.json` — the A b III moon test.
 - `check-mirrors.sh` reverse-pass — catches stale/orphan ko mirrors outside
   docs/plans (it caught two stale STABILITY_REPORT ko mirrors this session).
 
@@ -274,7 +274,7 @@ dynamically viable.
 
 Key commits (this session, on `main`): integrator option, results policy,
 eccentricity tier, α Cen A b Kozai + parameterization + inclination sweep,
-moon-frame fix + Pandora test, DB HZ orbit, Phase 3 cultural context. See
+moon-frame fix + A b III test, DB HZ orbit, Phase 3 cultural context. See
 `git log --grep stability-sim` and `--grep Polyphemus`.
 
 ---
@@ -283,7 +283,7 @@ moon-frame fix + Pandora test, DB HZ orbit, Phase 3 cultural context. See
 
 1. **Point-mass, no tides.** Tidal damping (absent here) would circularize a
    high-e/inclined orbit rather than always disrupt it — so the unstable
-   families might instead tidally settle at small a. A real Pandora's habitability
+   families might instead tidally settle at small a. A real A b III's habitability
    also depends on tidal heating, not modeled.
 2. **10⁴–10⁵ yr horizon** — short vs Gyr ages; MEGNO and the resonance scan
    mitigate but do not replace a SPOCK-style long-term probability.
@@ -292,7 +292,7 @@ moon-frame fix + Pandora test, DB HZ orbit, Phase 3 cultural context. See
    e/i are a stability-informed *choice* within the allowed range, not a
    measurement — a documented divergence from the observed favored orbit.
 4. **cfg-frame inclination** of the mutual 16° is an open item.
-5. **Pandora is fiction.** It is modeled only as a hypothetical-moon viability
+5. **A b III is fiction.** It is modeled only as a hypothetical-moon viability
    test, not added to the real-planet DB.
 
 ## References
@@ -304,7 +304,7 @@ moon-frame fix + Pandora test, DB HZ orbit, Phase 3 cultural context. See
 - Cincotta & Simó 2000 (MEGNO); Domingos et al. 2006 (moon stability limit)
 - Naoz 2016 (eccentric Kozai-Lidov review)
 - *Seeking the Worlds of Avatar*, Astrobiology 2025; NPR 2025-08-07
-- Avatar canon: Pandorapedia / Avatar Wiki (Polyphemus, Pandora)
+- Avatar canon: Pandorapedia / Avatar Wiki (A b, A b III)
 
 ## Related
 

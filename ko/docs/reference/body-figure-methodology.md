@@ -11,7 +11,7 @@
 여기는 **방법** 자체의 canonical 본거지입니다. *데이터 + cfg 형식* 짝 문서는
 [`principia-geopotential-data.md`](principia-geopotential-data.md)이며, 태양계 계수의 verbatim 값,
 정규화 규칙(J₂ = −√5·C̄₂₀, J₂ = 10⁄3·C̄₂₂), proto↔KSP-cfg 매핑을 담고 있습니다. 그 문서는 이미
-**Polyphemus** 자이언트의 J₂를 완전히 풀어 두었고, 이 문서는 그 레시피를 천체 종류 전반으로 일반화하고
+**Alpha Centauri A b (Polyphemus)** 자이언트의 J₂를 완전히 풀어 두었고, 이 문서는 그 레시피를 천체 종류 전반으로 일반화하고
 조석 C₂₂를 근거화합니다. J₂/C₂₂는 아트디렉션 선택이 아니라 **도출된 emit**입니다. 자전 + 질량 + 반경 +
 중심 응집도로부터 결정론적으로 따라 나오므로, 단위 변환처럼 천체마다 계산됩니다. 인게임에서 왜 중요하냐면,
 J₂는 **인공위성**에 작용하는 가장 지배적인 비-Keplerian 섭동(승교점 이동 + 근점 세차 ∝ (R/a)²·cos i)이고,
@@ -116,8 +116,8 @@ Europa, Ganymede, Titan 모두 J₂/C₂₂ ≈ 10/3)에서 **확인**되며, �
 **근–원 비대칭 (octupole / 물방울).** 두 조석 팽대가 똑같은 것은 degree 2(C̄₂₂, 짝함수 P₂ 변형)
 까지입니다. 다음 조석 항은 **홀함수 P₃ octupole**입니다. 모행성의 당김이 가까운 쪽에서 더 세므로
 **모행성 쪽 팽대가 반대쪽보다 살짝 큽니다**(모행성 방향으로 더 뾰족한 물방울/배 형상). 비대칭의 크기는
-대략 **R/a**(천체 반경 / 궤도 거리)에 사분극 팽대를 곱한 정도로, 여기선 sub-percent입니다(Dante R/a ≈ 0.8%,
-Hades ≈ 0.5%). 그래서 **기록만 하고 기본 emit은 하지 않습니다**. 두 가지 단서. (1) 중력 쪽으론 **degree-3**
+대략 **R/a**(천체 반경 / 궤도 거리)에 사분극 팽대를 곱한 정도로, 여기선 sub-percent입니다(Alpha Centauri A b I (Dante) R/a ≈ 0.8%,
+Alpha Centauri A b II (Hades) ≈ 0.5%). 그래서 **기록만 하고 기본 emit은 하지 않습니다**. 두 가지 단서. (1) 중력 쪽으론 **degree-3**
 항이라 동역학적으로 무시급입니다. (2) 대칭인 `CustomEllipsoid` 메시로는 **표현되지 않습니다**. 시각적
 물방울은 terrain pass에서 작은 degree-3 **heightmap** bump로 넣어야 합니다. 실제 사례로 달의 형상 중심이
 지구 쪽으로 치우쳐 있습니다.
@@ -183,7 +183,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 `reference_radius` 71492 km; Saturn 58232 vs 60330). (1) **Principia 중력**은 `mean_radius`(체적: 부피 결정) +
 `reference_radius`(적도: J₂ 스케일용)를 씁니다. 편평은 무차원 J₂에만 있어 **인플레이션이 없습니다**. (2) **VertexHeightOblateAdvanced
 시각**은 베이스 구를 a:b:c(전부 ≥ 1)로 키우므로, **Kopernicus PQS `radius`(베이스 구)를 극반경**(= 평균반경 × c_physical)으로
-두지 않으면 a·b·c배 부풀어 버립니다(Dante ×1.22). 극반경으로 두면 ≥ 1 비율이 부피 보존 형상을 재현합니다. (실제 자이언트는
+두지 않으면 a·b·c배 부풀어 버립니다(A b I ×1.22). 극반경으로 두면 ≥ 1 비율이 부피 보존 형상을 재현합니다. (실제 자이언트는
 구로 렌더해 이 시각 문제를 비껴갑니다: 편평은 J₂에만.)
 **하드 의존성**(노드를 쓰는 천체는 플러그인 없이는 형상이 안 나옴)이고
 눈에 보이는 임계값(a/c ≳ 1.02) 위의 천체만 이를 끌어옵니다. cfg 노드 + 스키마는 `kopernicus-cfg` 스킬에 있습니다(emit 단계에서 채움).
@@ -196,7 +196,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 | body | class | ω source | q (or q_s) | J₂ | C̄₂₂ | note |
 |---|---|---|---|---|---|---|
 | **Erid** (40 Eri A b) | free rocky | P_rot 5.1 h | **0.056** | **~0.017–0.019** | – | 로스터에서 가장 편평한 암석체: f ≈ 5 %, 인게임에서 보이는 적도 팽대부; 1차 값은 과소예측(큰 q) |
-| **Polyphemus** (α Cen A b) | gas giant | P_rot ~10 h | 0.19 | **~0.023–0.026** | – | geopotential-data.md에서 완전히 풀어 둠 (NMoI ~0.23) |
+| **A b** (α Cen A b) | gas giant | P_rot ~10 h | 0.19 | **~0.023–0.026** | – | geopotential-data.md에서 완전히 풀어 둠 (NMoI ~0.23) |
 | **TRAPPIST-1 b** | sync. rocky | n (P 1.51 d) | 1.5e-3 | ~1.5e-3 | **~4.6e-4** | 가까운 고정 → 실제 영구 조석 팽대부, J₂ ≈ 지구 수준 |
 | **Proxima b** | sync. rocky | n (P 11.2 d) | 2.8e-5 | ~2.8e-5 | ~8e-6 | 충분히 멀어 형상이 미미함(기록만; C₂₂는 emit 임계 아래로 추정) |
 | **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | – | 태양앵커 스케일링(0.0105·q); P_rot ±3 d에서 ±~30 %, 상시-emit 정책 아래 처음 emit된 항성 행 |
@@ -301,7 +301,7 @@ Earth/Moon/Mars/Venus만이 진정으로 *풍부한* 고차 장을 가집니다(
 ## Related
 
 - [`principia-geopotential-data.md`](principia-geopotential-data.md): verbatim
-  태양계 계수, 정규화, cfg 형식, Polyphemus 자이언트 워크드 예시.
+  태양계 계수, 정규화, cfg 형식, A b 자이언트 워크드 예시.
 - [`principia-cfg-reference.md`](principia-cfg-reference.md): cfg 스키마(노드 문법, 단위).
 - [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md): 고정 상태(형상의 자전 입력).
 - [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md): 반경 입력.

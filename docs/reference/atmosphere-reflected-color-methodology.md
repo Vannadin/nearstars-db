@@ -312,7 +312,7 @@ Huygens in-situ model) make the haze **orange-brown** and optically thick enough
 hide the surface entirely. The hue is set by the haze absorbing blue, not by any
 Rayleigh signature, the opposite limit from Earth.
 
-**Gas-giant warm cloud deck: the α Cen "Polyphemus" appearance.** A temperate
+**Gas-giant warm cloud deck: the α Cen "Alpha Centauri A b (Polyphemus)" appearance.** A temperate
 (~225 K) jovian-class giant lands in **Sudarsky Class II** ("water cloud" class;
 Sudarsky+ 2000/2003): high water + NH₄SH condensate decks, optically thick µm-scale
 particles → a bright, largely **neutral/white** Mie deck (§4) raising the albedo.
@@ -361,7 +361,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
 - **Sudarsky, D., Burrows, A. & Hubeny, I. (2003)**: *ApJ* 588, 1121.
   **arXiv:astro-ph/0210216.** *Theoretical Spectra and Atmospheres of Extrasolar
   Giant Planets*: the **five composition classes** (Class I/II water clouds, …);
-  Class II is the temperate-giant case for the Polyphemus example. §7. (273 cites.)
+  Class II is the temperate-giant case for the A b example. §7. (273 cites.)
 
 - **Cahoy, K. L., Marley, M. S. & Fortney, J. J. (2010)**: *ApJ* 724, 189.
   **[arXiv:1009.3071](https://arxiv.org/abs/1009.3071).** Exoplanet albedo spectra and colors as a function of phase,
@@ -432,7 +432,7 @@ canonical work.
 
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the sibling recipe
   for the temperature that decides which Sudarsky class / condensate deck a giant
-  falls into (the ~225 K Class-II anchor for the Polyphemus example).
+  falls into (the ~225 K Class-II anchor for the A b example).
 - [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): the sibling recipe for the
   *composition* (pressure, μ, redox) that feeds the Rayleigh baseline and the set of
   available chromophores here.

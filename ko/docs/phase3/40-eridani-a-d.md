@@ -1,13 +1,13 @@
 <!-- 40 Eridani A d Phase 3 합성. 가상의 *Project Hail Mary* "Threeworld" 대응 천체(아스트로파지 번식지) — 실재 검출 없음 -->
 # 40 Eridani A d — Phase 3 Synthesis (Fictional — *Project Hail Mary* Threeworld)
 
-40 Eridani A d 는 **실재 검출이 없는 픽션-캐넌 천체**입니다. Andy Weir 의
+40 Eridani A d 는 **실재 검출이 없는 소설 설정 픽션 천체**입니다. Andy Weir 의
 *Project Hail Mary* (2021, p. 393)에 나오는 Rocky 고향 시스템의 세 번째
 행성을 구현한 것으로, 표면 중력 0.2 g 에 지구 표면 기압의 1% 미만인 얇은
 84% CO₂ / 8% N₂ / 4% SO₂ 대기를 두른 달 크기의 세계입니다 — 40 Eridani
 페트로바 호 저편 끝의 아스트로파지 번식지이자, Tau Ceti 의 Adrian 에
 해당하는 이 시스템의 로컬 대응 천체입니다. 물리적 패키지(반지름, 중력,
-조성, 기압 상한)는 Weir 의 캐넌에서 그대로 가져왔고, 궤도는 동역학으로
+조성, 기압 상한)는 Weir 의 소설 설정에서 그대로 가져왔고, 궤도는 동역학으로
 검증한 NearStars 자체 설계입니다.
 
 궤도(a = 0.635 AU, e = 0.042, P = 209.27 d)는 합성 필러인 c 바깥에서
@@ -33,26 +33,26 @@
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
-| `disposition` | Fictional (*Project Hail Mary* Threeworld; no detection) | high | 유일한 high-confidence 행. 프로젝트 결정으로 구현한 픽션 캐넌, per-body 값은 `db/planets_curated.json` 에서 `method: theoretical` |
-| `mass_mearth` | 0.0149 | low | 캐넌에서 유도: 달 크기(R = 1737 km)에 0.2 g → M = g·R² = 0.0149 M⊕ |
-| `radius_rearth` | 0.273 | low | PHM p. 393 캐넌 — 달 크기(1737 km) |
+| `disposition` | Fictional (*Project Hail Mary* Threeworld; no detection) | high | 유일한 high-confidence 행. 프로젝트 결정으로 구현한 소설 설정 픽션, per-body 값은 `db/planets_curated.json` 에서 `method: theoretical` |
+| `mass_mearth` | 0.0149 | low | 소설 설정에서 유도: 달 크기(R = 1737 km)에 0.2 g → M = g·R² = 0.0149 M⊕ |
+| `radius_rearth` | 0.273 | low | PHM p. 393 소설 설정 — 달 크기(1737 km) |
 | `density_g_cc` | ~4.0 | low | 유도 M/R³ — 달(3.34)보다 치밀, 작은 철 핵과 정합 |
-| `surface_gravity_g_earth` | 0.2 | low | PHM p. 393 캐넌 |
+| `surface_gravity_g_earth` | 0.2 | low | PHM p. 393 소설 설정 |
 | `equilibrium_temp_k` (A=0.3) | 255 | low | 유도. (A=0) 279, (채택한 A=0.15) 268 |
 | `insolation_s_earth` | ~1.01 | low | 유도 0.4078 L☉ / (0.635 AU)² — 달 크기 천체에 지구 수준 복사 조도 |
 | `surface_temp_k` | ~275 mean | low | Teq(A=0.15) + 화성 규모의 얇은 CO₂ 온실효과(~6 K); 물 서리선에 걸쳐 있음 |
 | `bond_albedo` | 0.15 | low | tie-break: 부분적으로 밝은 서리 얼룩이 있는 어두운 현무암 |
 | `tidally_locked` | false (느린 자전체) | low | 0.635 AU 에서의 자전 감쇠는 c 궤도보다 ~16 배 느림 — 1.8 Gyr 시점에서 경계선상; tie-break 은 부분 감쇠된 느린 자전체를 택함 |
 | `rotation_period_h` | ~240 | low | tie-break: ~10 일 태양일이 눈에 띄는 서리-명암경계 지연을 구동 |
-| `atmosphere_composition` | 84% CO₂ / 8% N₂ / 4% SO₂ | low | PHM p. 393 캐넌; SO₂ 는 활발한 화산 보충을 함의(Atmosphere 참조) |
-| `atmosphere_surface_pressure_pa` | 800 | low | 캐넌의 "지구의 <1%" 상한(0.79%) 안에 든 설계값; 화성 수준의 기주 |
+| `atmosphere_composition` | 84% CO₂ / 8% N₂ / 4% SO₂ | low | PHM p. 393 소설 설정; SO₂ 는 활발한 화산 보충을 함의(Atmosphere 참조) |
+| `atmosphere_surface_pressure_pa` | 800 | low | 소설 설정의 "지구의 <1%" 상한(0.79%) 안에 든 설계값; 화성 수준의 기주 |
 | `surface_tint_rgb_hex` | `#6f665e` (cold basalt brown-gray) | low | tie-break: K0.5 V 빛 아래의 화산성 현무암 |
 | `surface_tint_rgb_hex_secondary` | `#d8d09a` (pale sulfur frost) | low | tie-break: 극지·야면 저온 트랩의 SO₂/유황 서리 |
 | `sky_tint_rgb_hex` | `#2e3550` (thin-air twilight steel blue) | low | ~800 Pa 의 레일리 산란이 얇은 하늘, 화성보다 어두움(먼지 부하가 적다고 가정) |
 
 ## Surface synthesis
 
-크기와 중력은 캐넌이며, 나머지는 전부 거기서 따라 나옵니다. 0.2 g 의
+크기와 중력은 소설 설정이며, 나머지는 전부 거기서 따라 나옵니다. 0.2 g 의
 1737 km 천체는 0.0149 M⊕ 에 ~4.0 g/cc 로 계산되는데 — 달보다 눈에 띄게
 치밀하고, 이는 작은 분화된 철 핵을 함의하며, 마침 대기가 필요로 하는
 잔류 화산 활동(아래)까지 뒷받침합니다. 1.8 Gyr 의 시스템 나이(Bond 2017
@@ -68,7 +68,7 @@ IFMR, 호스트 합성에서 채택)가 여기에 도움이 됩니다 — 달 �
 트랩(~32 Pa 의 분압은 ~175 K 아래에서만 응결)을 필요로 해 극야에
 국한됩니다 — 창백한 `#d8d09a` 유황-서리 얼룩이 그 시각적 시그니처입니다.
 
-**화산 지형.** 캐넌의 SO₂ 분율은 활발한 유황 화산 활동(Atmosphere 참조)을
+**화산 지형.** 소설 설정의 SO₂ 분율은 활발한 유황 화산 활동(Atmosphere 참조)을
 강제하므로, 지형 판독은 더 오래된 크레이터 지각을 젊은 화산 평원이 점점이
 찌르는 그림입니다 — 어두운 용암류, 열극 분출구, 밝은 서리-테두리 저온
 트랩. 이는 화성 온도의 Io 팔레트입니다 — 유황 톤이 녹아 있기보다 죽여지고
@@ -78,7 +78,7 @@ IFMR, 호스트 합성에서 채택)가 여기에 도움이 됩니다 — 달 �
 
 ## Atmosphere synthesis
 
-조성과 기압 상한은 캐넌이며(84/8/4 CO₂/N₂/SO₂, 지구의 < 1%), 합성의 몫은
+조성과 기압 상한은 소설 설정이며(84/8/4 CO₂/N₂/SO₂, 지구의 < 1%), 합성의 몫은
 그것들을 물리적으로 일관되게 만드는 것인데, 결과적으로 잘 맞아떨어집니다.
 
 **얇은 기압은 임의가 아니라 자기정합적입니다.** 2.6 km/s 탈출 속도와
@@ -90,7 +90,7 @@ IFMR, 호스트 합성에서 채택)가 여기에 도움이 됩니다 — 달 �
 
 **SO₂ 는 활발한 화산 활동의 결정적 증거입니다.** SO₂ 는 ~수십 년 규모로
 광분해되고 응결합니다 — 4% 의 상시 분율은 연속적 보충 없이는 불가능합니다.
-따라서 cfg 는 지속적 유황 화산 활동을 캐넌이 함의한 것으로 다루되, 정직한
+따라서 cfg 는 지속적 유황 화산 활동을 소설 설정이 함의한 것으로 다루되, 정직한
 약점으로서 *열원*에는 플래그를 답니다 — 조석 가열은 무시할 만하고(달 질량
 천체가 0.635 AU 에서 e = 0.042), 따라서 예산은 1.8 Gyr 시점의 잔류
 방사성 붕괴열 + 핵 결정화열이어야 합니다 — 경계선상이고, 저신뢰이며,
@@ -102,7 +102,7 @@ IFMR, 호스트 합성에서 채택)가 여기에 도움이 됩니다 — 달 �
 분지의 일시적 염수만이 이를 아슬아슬하게 비껴갈 수 있는데 — 텍스처 패스
 제안으로만 남기고 cfg 주장으로는 두지 않습니다).
 
-**아스트로파지 맥락(픽션 레이어).** PHM 캐넌에서 이 세계는 40 Eridani 의
+**아스트로파지 맥락(픽션 레이어).** PHM 소설에서 이 세계는 40 Eridani 의
 아스트로파지가 번식하는 곳입니다 — CO₂ 대기가 탄소를 공급하고, 페트로바
 호가 그것을 별과 잇습니다. NearStars 는 모든 아스트로파지 효과를 물리
 행에서 배제합니다 — 호는 시각 레이어 피처일 뿐이며(아래 참조), 어떤 cfg
@@ -133,7 +133,7 @@ IFMR, 호스트 합성에서 채택)가 여기에 도움이 됩니다 — 달 �
   빛날 수 있음 — 개연성 게이트 아래 국소적 화산 활동으로 허용되며, 결코
   용암 벌판으로는 안 됨.
 - **페트로바 호(픽션 레이어).** 이 시스템의 상징적 픽션 피처 — d 와 K0.5 V
-  주성 사이를 이동하는 아스트로파지 흐름으로, 캐넌상 25.984 μm 페트로바
+  주성 사이를 이동하는 아스트로파지 흐름으로, 소설 설정상 25.984 μm 페트로바
   파장(열적외선 — 물리적으로 눈에 보이지 않음; 희미한 짙은 붉은 호 렌더링은
   소설 자신의 시각 언어를 예술적으로 옮긴 허용된 번역)으로 방출합니다. 이는
   Kopernicus/Scatterer cfg 로 표현할 수 없으며 YZ Cet 플럭스 튜브와 같은
@@ -153,16 +153,16 @@ IFMR, 호스트 합성에서 채택)가 여기에 도움이 됩니다 — 달 �
 |---|---|---|
 | Canonical catalogs (2026) | 40 Eri A 주위 확정 행성 없음 | observation |
 | Weir's PHM canon (p. 393) | 세 번째 행성: 달 크기, 0.2 g, 84/8/4 CO₂/N₂/SO₂, 지구 기압의 <1%, 아스트로파지 번식지 | fiction (worldbuilding) |
-| **cfg pick** | 크기/중력/조성/기압 상한은 PHM 캐넌 그대로 채택; 궤도·자전·색조는 NS 설계 + tie-break 로 채움 | documented divergence (canonical = 행성 없음) |
+| **cfg pick** | 크기/중력/조성/기압 상한은 PHM 소설 설정 그대로 채택; 궤도·자전·색조는 NS 설계 + tie-break 로 채움 | documented divergence (canonical = 행성 없음) |
 
 ## Bibliography
 
-픽션 천체에는 발견 문헌이 존재하지 않으므로, 참고문헌은 캐넌 출처, 호스트
+픽션 천체에는 발견 문헌이 존재하지 않으므로, 참고문헌은 소설 설정 출처, 호스트
 그라운딩, 동역학 검증을 기록합니다.
 
 ### Read (canon + grounding)
 
-- **Weir A. 2021** — *Project Hail Mary* (소설), p. 393. 캐넌 출처 — Erid
+- **Weir A. 2021** — *Project Hail Mary* (소설), p. 393. 소설 설정 출처 — Erid
   시스템의 세 번째 행성, 달 크기, 0.2 g, 지구 기압의 < 1% 에서
   84% CO₂ / 8% N₂ / 4% SO₂, 아스트로파지 페트로바-호 번식지.
   `docs/reference/cultural-context.md § 40 Eridani A` 에 교차참조되어
@@ -191,12 +191,12 @@ IFMR, 호스트 합성에서 채택)가 여기에 도움이 됩니다 — 달 �
 - **화산 열 예산이 약점입니다.** 달 질량 천체가 1.8 Gyr 시점에 방사성
   붕괴열만으로 유황 화산 활동을 지탱하는 것은 경계선상입니다. 나중 패스가
   더 단단한 근거를 원한다면, 설계 이심률을 약간 높이거나(조석 보조) 쇠퇴하는
-  간헐적 화산 활동을 받아들이는 선택지가 있습니다 — 둘 다 캐넌의 대기 안에
+  간헐적 화산 활동을 받아들이는 선택지가 있습니다 — 둘 다 소설 설정의 대기 안에
   머뭅니다.
 - **페트로바 호 플러그인.** 호는 커스텀 플러그인 트랙 백로그에 올려두었으며
   (YZ Cet 플럭스 튜브와 같은 부류; C#/Harmony 작업은 프로젝트 정책에 따라
   위임). 이 리포트는 의도적으로 그에 대한 cfg 를 emit 하지 않습니다.
-- **자전은 순수 tie-break 입니다.** 캐넌에도 물리에도 240 h 자전일을 고정하는
+- **자전은 순수 tie-break 입니다.** 소설 설정에도 물리에도 240 h 자전일을 고정하는
   것은 없으며, Phase 4 보드 개정이 자유롭게 다시 고를 수 있습니다 —
   걸려 있는 것은 서리-명암경계 비주얼뿐입니다.
 - **일시적 염수.** 표면 기압(800 Pa)은 물의 삼중점(611 Pa) 바로 위에

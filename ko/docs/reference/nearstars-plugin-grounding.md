@@ -58,7 +58,7 @@ NearStars 결합 C# 플러그인 — **아직 초안 없음**(`plugins/` 스켈�
 - **하는 일:** Principia 하에서 Kopernicus 고리를 매 프레임 특정 천체의 *실시간* 궤도면으로 재정렬 — 공급/양치기 위성이 세차해도 고리가 그 위성과 공면 유지.
 - **cfg로 안 되는 이유:** Kopernicus 고리는 행성에 고정된 정적 디스크라 n-body에 반응 못 함. Principia에선 공급원 Chaos가 세차·libration(~56년, ±~6°, 2천년에 secular ~18°까지 — `results/_principia2000_dense`)해서 고정 고리가 벌어짐.
 - **근거화 출발점:** Kopernicus `Ring` 컴포넌트와 그 transform(KSPDocsSite / Kopernicus 소스), 천체의 실시간 `Orbit` 법선 읽기(`class_orbit.html`), `KSPAddon`/`MonoBehaviour`에서 프레임마다 갱신.
-- **임시(플러그인 전):** 정적 고리를 Chaos 평균면(Laplace)에 앵커 — `phase4/alpha_centauri.yaml` rings 축 참조.
+- **임시(플러그인 전):** 정적 고리를 Alpha Centauri A b V (Chaos) 평균면(Laplace)에 앵커 — `phase4/alpha_centauri.yaml` rings 축 참조.
 
 ---
 

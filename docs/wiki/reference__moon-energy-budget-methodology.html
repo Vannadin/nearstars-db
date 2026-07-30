@@ -247,28 +247,28 @@ telescope. Neither was tuned.
    moon with a liquid ocean it is a separate term, set by the eccentricity tide and the
    ocean's depth rather than by `k₂/Q`.
 
-## Worked example: the Polyphemus moons
+## Worked example: the Alpha Centauri A b (Polyphemus) moons
 
-α Cen A (`L = 1.521 L☉`, `Teff = 5847 K`), Polyphemus at 1.6 AU (`S/S₀ = 0.594`), parent
+α Cen A (`L = 1.521 L☉`, `Teff = 5847 K`), A b at 1.6 AU (`S/S₀ = 0.594`), parent
 radius 1.0 R_Jup, mass 120 M⊕, cloud-top 225 K, `A_p` = 0.30. The umbra reaches
 2.19 × 10⁷ km and **all five moons are inside it, eclipsed on every orbit** — for each of
 them `a·sin(i)` is smaller than the shadow radius.
 
 | Moon | a [R_p] | eclipse | stellar lost | parent thermal | parent reflected | T_eq stellar | T_eq 4-term | ΔT |
 |---|---|---|---|---|---|---|---|---|
-| Dante | 1.54 | 20.2 % | −28.6 W/m² | 61.3 | 25.6 | 223.5 K | 219.6 K | **−3.9 K** |
-| Hades | 2.07 | 14.2 % | −20.1 | 33.9 | 14.2 | 223.5 K | 219.6 K | **−3.9 K** |
-| Pandora | 3.53 | 7.7 % | −10.9 | 11.7 | 4.9 | 223.5 K | 220.6 K | **−2.9 K** |
-| Cassandra | 8.40 | 3.1 % | −4.1 | 2.1 | 0.9 | 219.4 K | 217.9 K | −1.5 K |
-| Chaos | 21.0 | 1.3 % | −0.8 | 0.3 | 0.1 | 180.8 K | 180.3 K | −0.5 K |
+| Alpha Centauri A b I (Dante) | 1.54 | 20.2 % | −28.6 W/m² | 61.3 | 25.6 | 223.5 K | 219.6 K | **−3.9 K** |
+| Alpha Centauri A b II (Hades) | 2.07 | 14.2 % | −20.1 | 33.9 | 14.2 | 223.5 K | 219.6 K | **−3.9 K** |
+| Alpha Centauri A b III (Pandora) | 3.53 | 7.7 % | −10.9 | 11.7 | 4.9 | 223.5 K | 220.6 K | **−2.9 K** |
+| Alpha Centauri A b IV (Cassandra) | 8.40 | 3.1 % | −4.1 | 2.1 | 0.9 | 219.4 K | 217.9 K | −1.5 K |
+| Alpha Centauri A b V (Chaos) | 21.0 | 1.3 % | −0.8 | 0.3 | 0.1 | 180.8 K | 180.3 K | −0.5 K |
 
-The parent's illumination is large at the moon — 61 W/m² of thermal flux reaching Dante —
+The parent's illumination is large at the moon — 61 W/m² of thermal flux reaching A b I —
 but it enters the global average divided by four and after albedo, while the eclipse
 removes stellar flux that was already divided by four. **Eclipse loss wins at every
 distance**, so the net effect of "being a moon" is cooling, not warming. Intuition points
 the other way, which is precisely why the term is worth computing.
 
-### Why Pandora's lock is 32 h and not the canon 27 h
+### Why A b III's lock is 32 h and not the canon 27 h
 
 The board chose a 32 h tidal lock over the film's 27 h, recorded as keeping the ocean's
 tidal budget sub-runaway. That decision holds up quantitatively, and the margin is thin:
@@ -281,7 +281,7 @@ tidal budget sub-runaway. That decision holds up quantitatively, and the margin 
 A 10.7 % smaller orbit raises the tidal flux by 2.34×, purely from `a^(−15/2)`. The canon
 orbit lands just past the runaway ceiling; the adopted one sits comfortably inside it.
 
-The same calculation then explains Pandora's canon surface temperature without touching its
+The same calculation then explains A b III's canon surface temperature without touching its
 canon composition. With the four-term `T_eq` and the greenhouse increment of +53.6 K from
 its 18 % CO₂ + CH₄ atmosphere:
 
@@ -297,7 +297,7 @@ its 18 % CO₂ + CH₄ atmosphere:
 Read this as a constraint, not a prediction: `k₂/Q` ≈ 0.0016 is *fitted* to land on 290 K.
 What the table earns is the consistency statement — a single `k₂/Q` exists that puts the
 canon 27 h orbit past the runaway ceiling *and* reproduces the canon 290 K at 32 h. The
-sensitivity is brutal in the other direction: an Io-like interior would make Pandora a
+sensitivity is brutal in the other direction: an Io-like interior would make A b III a
 369 K steam world.
 
 The lesson generalizes past this system. For a close-in moon the tidal term, not the
@@ -337,14 +337,14 @@ changes in the dissipated energy flux."
 
 For NearStars this is good news, because it turns a threat into a knob:
 
-- The channel that could run away needs an obliquity we do not have. Pandora's recorded
+- The channel that could run away needs an obliquity we do not have. A b III's recorded
   `obliquity: 10°` is the **orbital inclination** (the board's own note: canon 29° reread
   as the orbital-plane tilt, `spin_axis_orientation: orbit normal`), so the tide-driving
   angle is the Cassini-state value, sub-degree, comparable to or smaller than Europa's.
 - The channel that remains is set by **ocean thickness**, which for an invented world is an
   art parameter. Pick a depth away from resonance and the flux is small; land on resonance
   and it moves by orders of magnitude.
-- Pandora's ocean is at the surface, so the ice-shell effects
+- A b III's ocean is at the surface, so the ice-shell effects
   ([Beuthe 2016](https://arxiv.org/abs/1608.08488)'s crustal suppression,
   [Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)'s
   shell-mediated enhancement) do not apply; the free-surface treatment is the right one,
@@ -355,7 +355,7 @@ For NearStars this is good news, because it turns a threat into a knob:
 resonance depends on an ocean depth nobody has chosen yet. What this section buys is the
 knowledge that the ocean channel is a depth choice rather than an uncontrolled risk, and
 that "the ocean's tidal budget" in the board's wording is the solid-body budget above plus
-this depth-dependent term. Fixing Pandora's ocean depth is the trigger to compute it, with
+this depth-dependent term. Fixing A b III's ocean depth is the trigger to compute it, with
 [Matsuyama 2018](https://arxiv.org/abs/1804.07727) as the method.
 
 ## Citations
@@ -507,7 +507,7 @@ this depth-dependent term. Fixing Pandora's ocean depth is the trigger to comput
 않다. 정확한 계산은 Barnes 2013이다. 정밀한 경계가 아니라 레드라인으로 쓸 것.
 
 한 가지 더 염두에 둘 것. Heller & Barnes 자신의 예시는 위성이 **행성 반경 10배 밖**에 있는 배치가
-거주가능 위성을 시사한다는 것이었다. 가까운 캐넌 위성들은 시작부터 그 선의 반대쪽에 있다.
+거주가능 위성을 시사한다는 것이었다. 가까운 원작 설정 위성들은 시작부터 그 선의 반대쪽에 있다.
 
 ## 검증
 
@@ -538,53 +538,53 @@ this depth-dependent term. Fixing Pandora's ocean depth is the trigger to comput
 5. **해양 조석 소산은 이 예산에 없다.** 아래 두 번째 채널을 보라. 액체 바다가 있는 위성에서는
    별도 항이며, `k₂/Q`가 아니라 이심률 조석과 바다 깊이가 정한다.
 
-## 적용 예: 폴리페무스 위성들
+## 적용 예: A b(폴리페무스) 위성들
 
-α Cen A(`L = 1.521 L☉`, `Teff = 5847 K`), 1.6 AU의 폴리페무스(`S/S₀ = 0.594`), 모행성 반경
+α Cen A(`L = 1.521 L☉`, `Teff = 5847 K`), 1.6 AU의 A b(`S/S₀ = 0.594`), 모행성 반경
 1.0 R_Jup, 질량 120 M⊕, 구름층 225 K, `A_p` = 0.30. 본영이 2.19 × 10⁷ km까지 뻗고 **다섯 위성
 모두 그 안에서 매 궤도마다 식을 겪는다.** 모두 `a·sin(i)`가 그림자 반경보다 작다.
 
 | 위성 | a [R_p] | 식 | 잃는 별빛 | 행성 열복사 | 행성 반사 | T_eq 별빛만 | T_eq 4항 | 차이 |
 |---|---|---|---|---|---|---|---|---|
-| Dante | 1.54 | 20.2 % | −28.6 W/m² | 61.3 | 25.6 | 223.5 K | 219.6 K | **−3.9 K** |
-| Hades | 2.07 | 14.2 % | −20.1 | 33.9 | 14.2 | 223.5 K | 219.6 K | **−3.9 K** |
-| Pandora | 3.53 | 7.7 % | −10.9 | 11.7 | 4.9 | 223.5 K | 220.6 K | **−2.9 K** |
-| Cassandra | 8.40 | 3.1 % | −4.1 | 2.1 | 0.9 | 219.4 K | 217.9 K | −1.5 K |
-| Chaos | 21.0 | 1.3 % | −0.8 | 0.3 | 0.1 | 180.8 K | 180.3 K | −0.5 K |
+| Alpha Centauri A b I (Dante) | 1.54 | 20.2 % | −28.6 W/m² | 61.3 | 25.6 | 223.5 K | 219.6 K | **−3.9 K** |
+| Alpha Centauri A b II (Hades) | 2.07 | 14.2 % | −20.1 | 33.9 | 14.2 | 223.5 K | 219.6 K | **−3.9 K** |
+| Alpha Centauri A b III (Pandora) | 3.53 | 7.7 % | −10.9 | 11.7 | 4.9 | 223.5 K | 220.6 K | **−2.9 K** |
+| Alpha Centauri A b IV (Cassandra) | 8.40 | 3.1 % | −4.1 | 2.1 | 0.9 | 219.4 K | 217.9 K | −1.5 K |
+| Alpha Centauri A b V (Chaos) | 21.0 | 1.3 % | −0.8 | 0.3 | 0.1 | 180.8 K | 180.3 K | −0.5 K |
 
 모행성 조명은 위성 위치에서 보면 크다. Dante에 닿는 열복사만 61 W/m²다. 하지만 이 항은 전지구
 평균에 들어갈 때 4로 나뉘고 알베도도 먹는 반면, 식은 이미 4로 나뉜 별빛을 걷어낸다. **모든 거리에서
 식 손실이 이긴다.** 그래서 "위성이라는 사실"의 순 효과는 가열이 아니라 냉각이다. 직관은 반대를
 가리키고, 그래서 이 항을 계산할 값이 있다.
 
-### 판도라의 조석고정이 캐넌 27시간이 아니라 32시간인 이유
+### A b III(판도라)의 조석고정이 영화 설정 27시간이 아니라 32시간인 이유
 
 보드는 영화의 27시간 대신 32시간 조석고정을 택했고, 이유를 "해양의 조석 예산을 sub-runaway로
 유지"라고 기록했다. 그 결정은 정량적으로 성립하며, 여유는 얇다.
 
 | 주기 | a | `e` = 0.005, `k₂/Q` = 0.0016에서 조석 플럭스 | 101 W/m² 천장 대비 |
 |---|---|---|---|
-| 27 h (캐넌) | 225,365 km | **106 W/m²** | 초과 — Tidal Venus |
+| 27 h (영화 설정) | 225,365 km | **106 W/m²** | 초과 — Tidal Venus |
 | 32 h (채택) | 252,393 km | **45 W/m²** | 이내, 여유 2.2배 |
 
-궤도가 10.7 % 작아지면 `a^(−15/2)` 하나로 조석 플럭스가 2.34배가 된다. 캐넌 궤도는 폭주 천장을
+궤도가 10.7 % 작아지면 `a^(−15/2)` 하나로 조석 플럭스가 2.34배가 된다. 영화 설정 궤도는 폭주 천장을
 간신히 넘고, 채택된 궤도는 넉넉히 안쪽이다.
 
-같은 계산이 판도라의 캐넌 지표온도를, 캐넌 조성을 건드리지 않고 설명한다. 4항 `T_eq`와 CO₂ 18 % +
+같은 계산이 A b III의 영화 설정 지표온도를, 영화 설정 조성을 건드리지 않고 설명한다. 4항 `T_eq`와 CO₂ 18 % +
 CH₄ 대기의 온실 상승폭 +53.6 K를 쓰면 이렇다.
 
 | `k₂/Q` | 조석 플럭스 | T_eq | T_surface |
 |---|---|---|---|
 | 0 (조석 항 없음) | 0 | 220.6 K | 274.1 K |
 | 0.0010 | 28.3 W/m² | 231.4 K | 285.0 K |
-| **0.0016** | **45.3 W/m²** | **237.2 K** | **290.8 K** ← 캐넌 290 K |
+| **0.0016** | **45.3 W/m²** | **237.2 K** | **290.8 K** ← 영화 설정 290 K |
 | 0.0030 | 85.0 W/m² | 249.4 K | 302.9 K |
 | 0.0060 | 170 W/m² | 270.6 K | 324.2 K |
 | 0.0150 (이오급) | 425 W/m² | 315.1 K | 368.7 K |
 
 이 표는 예측이 아니라 제약으로 읽어야 한다. `k₂/Q` ≈ 0.0016은 290 K에 맞춘 값이다. 표가 벌어들이는
-것은 정합성 진술이다. 하나의 `k₂/Q`가 캐넌 27시간 궤도를 폭주 천장 밖으로 보내면서 동시에
-32시간에서 캐넌 290 K를 재현한다. 반대 방향의 민감도는 잔혹하다. 이오급 내부라면 판도라는 369 K의
+것은 정합성 진술이다. 하나의 `k₂/Q`가 영화 설정 27시간 궤도를 폭주 천장 밖으로 보내면서 동시에
+32시간에서 영화 설정 290 K를 재현한다. 반대 방향의 민감도는 잔혹하다. 이오급 내부라면 A b III는 369 K의
 증기 세계가 된다.
 
 교훈은 이 계를 넘어 일반화된다. 가까운 위성에서 거주가능성을 결정하는 손잡이는 보통 온실이 아니라
@@ -617,13 +617,13 @@ CH₄ 대기의 온실 상승폭 +53.6 K를 쓰면 이렇다.
 
 NearStars에는 이게 좋은 소식이다. 위협이 손잡이로 바뀌기 때문이다.
 
-- 폭주를 낼 수 있는 채널은 우리에게 없는 기울기를 요구한다. 판도라에 기록된 `obliquity: 10°`는
-  **궤도 경사**다(보드 자신의 메모: 캐넌 29°를 궤도면 경사로 재해석, `spin_axis_orientation: orbit
+- 폭주를 낼 수 있는 채널은 우리에게 없는 기울기를 요구한다. A b III에 기록된 `obliquity: 10°`는
+  **궤도 경사**다(보드 자신의 메모: 원작 설정 29°를 궤도면 경사로 재해석, `spin_axis_orientation: orbit
   normal`). 따라서 조석을 구동하는 각도는 Cassini 상태 값이고, 1도 미만으로 유로파와 비슷하거나 더
   작다.
 - 남는 채널은 **바다 두께**가 정한다. 창작 천체에서 두께는 아트 파라미터다. 공명에서 떨어진 깊이를
   고르면 플럭스는 작고, 공명에 걸치면 여러 자릿수로 움직인다.
-- 판도라의 바다는 표면에 있으므로 얼음 지각 효과([Beuthe 2016](https://arxiv.org/abs/1608.08488)의
+- A b III의 바다는 표면에 있으므로 얼음 지각 효과([Beuthe 2016](https://arxiv.org/abs/1608.08488)의
   지각 억제, [Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)의 지각
   매개 증폭)는 적용되지 않는다. 자유표면 처리가 맞고, Hay & Matsuyama가 자유표면 스케일링 법칙을
   지각 있는 경우로 확장하며 "10 % 이내로 벤치마크"했으므로 자유표면 법칙은 근사가 아니라 검증된
@@ -632,7 +632,7 @@ NearStars에는 이게 좋은 소식이다. 위협이 손잡이로 바뀌기 때
 **상태: 경계는 잡혔고 수치는 아직이다.** 이심률 공명이 아직 아무도 고르지 않은 바다 깊이에
 의존하므로 값을 부여하지 않는다. 이 절이 벌어들이는 것은, 해양 채널이 통제 불가능한 위험이 아니라
 깊이 선택의 문제라는 사실과, 보드가 말한 "해양 조석 예산"이 위의 고체 예산 더하기 이 깊이 의존 항이라는
-정리다. 판도라의 바다 깊이를 확정하는 순간이 계산 시점이고, 방법은
+정리다. A b III의 바다 깊이를 확정하는 순간이 계산 시점이고, 방법은
 [Matsuyama 2018](https://arxiv.org/abs/1804.07727)이다.
 
 ## 인용

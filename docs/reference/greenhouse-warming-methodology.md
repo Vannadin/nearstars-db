@@ -274,7 +274,7 @@ needs a strongly reducing mantle plus outgassing that outruns escape.
 2. **Layer 3 extrapolated band: `Seff_maxgh ≲ S/S₀ < 0.75`.** The contour here is a straight
    line between the early-Archean anchor and the maximum-greenhouse anchor: bounded at both
    ends by published points, unconstrained between. Expect **±10 K** and say so. The
-   Polyphemus moons live here.
+   Alpha Centauri A b (Polyphemus) moons live here.
 3. **Below the maximum-greenhouse limit**: the CO₂ route is closed, no matter the
    inventory. Reducing CIA is the only way to be warm — Layer 4's grid, with the CO₂–H₂
    proxy caveat from Layer 2.
@@ -289,10 +289,10 @@ needs a strongly reducing mantle plus outgassing that outruns escape.
 7. **Not for runaway/steam atmospheres, and not for H₂/He envelopes** (those are Layer 1
    with H₂–H₂ and H₂–He CIA, and the "surface" is a definition choice).
 
-## Worked examples: the Polyphemus moons
+## Worked examples: the A b moons
 
 α Cen A has `L = 1.521 L☉` and `Teff = 5847 K` (curated,
-`db/systems/alpha_centauri_a.json`), and Polyphemus orbits at 1.6 AU, so every moon
+`db/systems/alpha_centauri_a.json`), and A b orbits at 1.6 AU, so every moon
 receives `S/S₀ = 1.521 / 1.6² = 0.594` — **fainter than the early Archean Earth (0.75)**,
 though still well inside this star's maximum-greenhouse limit (0.348). Liquid water is
 possible in principle, but only with a CO₂ column far above Earth's. Near-solar host and a
@@ -303,17 +303,17 @@ At this insolation the 273 K contour sits at **pCO₂ ≈ 0.39 bar** (CO₂ only
 
 | Body | atmosphere as recorded | T_eq | Layer 3 Ts | ΔT_gh | recorded ΔT |
 |---|---|---|---|---|---|
-| Cassandra | 1 bar N₂, 3 % CO₂, 3 mbar CH₄, thin haze, A 0.35 | 220 K | **239 K** hazy / **259 K** haze-free | +20 / +40 K | +45–50 K |
-| Pandora | 1.1 bar, 18 % CO₂ + CH₄ + H₂S, A 0.30 | 224 K | **277 K** | +54 K | +70 K |
+| Alpha Centauri A b IV (Cassandra) | 1 bar N₂, 3 % CO₂, 3 mbar CH₄, thin haze, A 0.35 | 220 K | **239 K** hazy / **259 K** haze-free | +20 / +40 K | +45–50 K |
+| Alpha Centauri A b III (Pandora) | 1.1 bar, 18 % CO₂ + CH₄ + H₂S, A 0.30 | 224 K | **277 K** | +54 K | +70 K |
 
-- **Cassandra** sits exactly at the haze threshold: CH₄/CO₂ = 0.1. That makes the haze term
+- **A b IV** sits exactly at the haze threshold: CH₄/CO₂ = 0.1. That makes the haze term
   the whole argument. With haze it is a 239 K ice world; with no haze at all it reaches
   259 K. Since the body is *designed* with a visible amber haze, the defensible window is
   **240–260 K** — a partially frozen world whose water opens only near the warm equator or
   seasonally, which is what its surface description already says. Holding a global mean of
   270–275 K instead requires CO₂ at ~0.13 bar (13 % of a 1 bar atmosphere, four times the
   recorded value) or percent-level H₂.
-- **Pandora** lands at 277 K on the canon composition: habitable and above freezing, but
+- **A b III** lands at 277 K on the canon composition: habitable and above freezing, but
   ~13 K cooler than the recorded 290 K. Reaching 290 K at this insolation needs
   pCO₂ ≈ 0.8 bar, i.e. an atmosphere that is ~70 % CO₂ rather than 18 %, which contradicts
   the canon composition. The consistent choices are to lower the mean surface temperature to
@@ -322,7 +322,7 @@ At this insolation the 273 K contour sits at **pCO₂ ≈ 0.39 bar** (CO₂ only
   line data to credit at all; it is not carrying any of this warming.
 
 Both recorded increments were assigned without a recipe and both come out optimistic —
-Cassandra by 15–35 K depending on how much the haze is credited, Pandora by ~13 K, against
+A b IV by 15–35 K depending on how much the haze is credited, A b III by ~13 K, against
 a ±10 K band. Confidence in the method is medium; in the inputs (CO₂ fraction, haze optical
 depth, albedo) low.
 

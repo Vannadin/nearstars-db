@@ -141,7 +141,7 @@ low-confidence analog로 강등한다(아래의 compliant 패턴). dipole moment
 일관됨에 유의(ε Eri 13200 = 0.66×20000). 즉 문제는 method이지 산술이 아니다.
 
 **이미 compliant인 사례(솔직한 analog, 거짓 인용 없음 — 따라 할 패턴).**
-α Cen A b / Polyphemus(500 µT, "Saturn-analog, no measurement", low), HD 69830 b
+α Cen A b / Alpha Centauri A b (Polyphemus)(500 µT, "Saturn-analog, no measurement", low), HD 69830 b
 (Neptune-analog, low). **단 HD 69830 c/d**는 인용 없는 Neptune-analog 비율에 confidence를
 medium/high로 표기 — `low`여야 한다(Tier 2).
 
@@ -205,7 +205,7 @@ optical-constants 논문에서 온 것도 아니다. 이 둘이 방출된(low-co
 - **Stability-sim 선택**(Barnard, α Cen, 위성). 건전한 integrator 정책(TRACE Lu+2024),
   태양계 self-validation, 문헌 cross-check(GH2024, Basant 2025, Domingos+2006).
 - **항성풍 입력**(질량손실 Wood, L_X Wargelin/France, rotation/activity) — Phase 2 측정 + 인용.
-- **Phase 4 art-direction**(Pandora +70 K 온실, Hades e, synthetic-noise e≲0.05). art-direction
+- **Phase 4 art-direction**(Alpha Centauri A b III (Pandora) +70 K 온실, Alpha Centauri A b II (Hades) e, synthetic-noise e≲0.05). art-direction
   / documented-limitation으로 플래그, 아직 emit 안 함.
 
 ---

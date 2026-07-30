@@ -212,6 +212,18 @@ bibcode는 ADS 왕복을 강요한다.
 **상세:** URL slug는 `-` 구분자; 파일 slug는 `_` 구분자. 소문자 → 아포스트로피 제거 → 비알파뉴메릭 압축.
 **출처:** `project_naming_canonical.md`
 
+### 5.2b 문서에서의 문화명 대 공식 명칭
+**규칙:** 픽션 천체의 문화명(Polyphemus, Dante, …)은 그 천체 자신의 문서(해당 시스템의
+Phase 4 보드 행, art-direction 문서, phase3 리포트)에서만 쓴다. **바깥의 다른 문서**에서
+참조할 때는 **공식 명칭**을 쓴다. 문서당 첫 언급 = 전체형 + 괄호 문화명
+(`Alpha Centauri A b I (Dante)`, 한글 문장은 `A b III(판도라)`), 이후 언급 = 축약형(`A b I`).
+코드 경로·파일명·원문 인용은 예외.
+**이유:** 오너(2026-07-30) — 바깥 문서에서 문화명만 쓰면 실측 천체와 모드 픽션 천체가
+구분되지 않는다. 공식 명칭이 계 맥락을 함께 실어 나른다.
+**상세:** 대응은 Polyphemus = Alpha Centauri A b, Dante/Hades/Pandora/Cassandra/Chaos =
+A b I~V. 2026-07-30에 docs/reference·plans·stability-sim 리포트(+한글 미러) 약 300치환 적용.
+**출처:** `feedback_formal_designation_in_docs.md`
+
 ### 5.3 큐레이션 데이터 계약 및 수렴 규율
 **규칙:** `phase2/curation-data-contract/SPEC.md`는 Phase 2/3 데이터 요구사항의 정규 정의. 수렴 규율: 모든 인용 값의 arxiv_id를 `docs/phase3/_bib/<slug>.yaml`에 핀 → `fetch_arxiv_texts.py`로 gitignore 캐시에 **한 번만** 가져오기 → 캐시만 읽기(live web 절대 아님). 한 번에 한 호스트; 다중 계층 편집(DB + narrative + 한글 미러)은 한 커밋에; 각 후 `check.sh` 게이트.
 **이유:** 결정론 불명 live web 검색이 감사 발산 유발(매번 다른 논문, 다른 값 발견). 동결 캐시 + 단일 패스 + 호스트 하나씩 = 재현 가능.

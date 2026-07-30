@@ -119,7 +119,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 # Principia Geopotential Data — Solar System Bodies (verbatim)
 
 The real oblateness / spherical-harmonic gravity data that **Principia** ships for
-the Solar System, copied verbatim so we can write our own bodies (e.g. Polyphemus)
+the Solar System, copied verbatim so we can write our own bodies (e.g. Alpha Centauri A b (Polyphemus))
 the same way. This is the *data* companion to the cfg *schema* in
 [`principia-cfg-reference.md`](reference__principia-cfg-reference.html).
 
@@ -270,7 +270,7 @@ J₂ = **0.003408428530717952**.
 > **Note the giants' pattern:** strong even zonals (J₂ ≫ J₄ ≫ J₆), negligible odd
 > zonals, no tesseral (order > 0) terms — a fast-rotating fluid body is smooth and
 > axisymmetric. J₄ is negative (the bulge falls off faster than a pure J₂). This is
-> exactly the form a gas giant like Polyphemus should use.
+> exactly the form a gas giant like A b should use.
 
 ---
 
@@ -389,8 +389,8 @@ J₂ follows deterministically from rotation + density + mass + radius (the **Da
 relation), so it is a *derived* emit field (like a unit conversion), auto-computed per body
 — **not** an art-direction decision. By body type:
 
-- **Gas giant / fast free rotator** (Polyphemus) → zonal **J₂** (+ optional **J₄** ≈ −4 %
-  of J₂, **J₆**), no tesseral. Large: Jupiter 0.0147, Saturn 0.0163; Polyphemus (~10 h spin,
+- **Gas giant / fast free rotator** (A b) → zonal **J₂** (+ optional **J₄** ≈ −4 %
+  of J₂, **J₆**), no tesseral. Large: Jupiter 0.0147, Saturn 0.0163; A b (~10 h spin,
   0.47 g/cc, below Saturn's 0.69) → **J₂ ≈ 0.018–0.025**. Form: scalar `j2` (+ optional
   `geopotential_row` J₄/J₆), `reference_radius` = equatorial radius.
 - **Free-rotating rocky** (rare — fast non-locked) → small zonal **J₂** (slow spin → tiny);
@@ -426,7 +426,7 @@ to **−10 %** (m 0.140, NMoI 0.220). The Saturn residual is the **first-order t
 error**, which grows with m — so for a fast rotator (large m) the RD value is a slight
 *under*-estimate of the true J₂.
 
-**Worked — Polyphemus** (M = 120 M⊕, R_eq = 1.0 R_Jup, P_rot ≈ 10.1–10.6 h, NMoI ≈ 0.23
+**Worked — A b** (M = 120 M⊕, R_eq = 1.0 R_Jup, P_rot ≈ 10.1–10.6 h, NMoI ≈ 0.23
 [0.21–0.26]): iterating the figure (f = 3⁄2·J₂ + 1⁄2·m → mean radius → m) gives m ≈ 0.19,
 flattening ≈ 0.13, and **J₂ ≈ 0.023** (central). m ≈ 0.19 > Saturn's 0.14, so first-order
 truncation under-predicts by ~10–20 % → true ≈ **0.025–0.026**. Range **0.017–0.033**
@@ -455,7 +455,7 @@ is measured relative to that datum, so it carries no information about it.
 <script type="text/markdown" id="md-ko"><!-- Principia가 싣고 있는 태양계 천체별 지오포텐셜(J2·구면조화) 실제 값 — 우리 천체 작성용 레퍼런스 -->
 # Principia 지오포텐셜 데이터 — 태양계 천체 (원본 그대로)
 
-**Principia**가 태양계용으로 싣고 있는 실제 편평도 / 구면조화 중력 데이터입니다. 우리 천체(예: Polyphemus)를 같은 방식으로 작성할 수 있도록 원본을 그대로 옮겨 두었습니다. 이 문서는 [`principia-cfg-reference.md`](reference__principia-cfg-reference.html)가 다루는 cfg *스키마*에 대응하는 *데이터* 짝입니다.
+**Principia**가 태양계용으로 싣고 있는 실제 편평도 / 구면조화 중력 데이터입니다. 우리 천체(예: Alpha Centauri A b (Polyphemus))를 같은 방식으로 작성할 수 있도록 원본을 그대로 옮겨 두었습니다. 이 문서는 [`principia-cfg-reference.md`](reference__principia-cfg-reference.html)가 다루는 cfg *스키마*에 대응하는 *데이터* 짝입니다.
 
 ## 출처
 
@@ -585,7 +585,7 @@ J₂ = **0.0035107**. (각진동수가 **음수**입니다 — 천왕성은 역�
 ```
 J₂ = **0.003408428530717952**.
 
-> **거대행성들의 패턴에 주목.** 짝수 존 항이 강하고(J₂ ≫ J₄ ≫ J₆), 홀수 존 항은 무시할 만하며, tesseral(order > 0) 항은 없습니다 — 빠르게 도는 유체 천체는 매끄럽고 축대칭이기 때문입니다. J₄는 음수입니다(불룩한 부분이 순수 J₂보다 더 빨리 줄어듭니다). 이것이 바로 Polyphemus 같은 가스 거대행성이 따라야 할 형태입니다.
+> **거대행성들의 패턴에 주목.** 짝수 존 항이 강하고(J₂ ≫ J₄ ≫ J₆), 홀수 존 항은 무시할 만하며, tesseral(order > 0) 항은 없습니다 — 빠르게 도는 유체 천체는 매끄럽고 축대칭이기 때문입니다. J₄는 음수입니다(불룩한 부분이 순수 J₂보다 더 빨리 줄어듭니다). 이것이 바로 A b 같은 가스 거대행성이 따라야 할 형태입니다.
 
 ---
 
@@ -695,7 +695,7 @@ J₂는 **낮은 인공위성에 작용하는 가장 지배적인 비케플러 �
 
 J₂는 자전 + 밀도 + 질량 + 반경으로부터 결정론적으로 따라 나오므로(**Darwin–Radau** 관계), 단위 변환과 마찬가지로 천체별로 자동 계산되는 *파생* emit 필드입니다 — 아트 디렉션 결정이 **아닙니다**. 천체 유형별로 정리하면 다음과 같습니다.
 
-- **가스 거대행성 / 빠르게 자유 자전하는 천체**(Polyphemus) → 존 **J₂**(선택적으로 **J₄** ≈ J₂의 −4 %, **J₆**), tesseral 없음. 값이 큽니다. 목성 0.0147, 토성 0.0163. Polyphemus(~10시간 자전, 0.47 g/cc, 토성의 0.69보다 낮음) → **J₂ ≈ 0.018–0.025**. 형식: 스칼라 `j2`(선택적으로 `geopotential_row`로 J₄/J₆ 추가), `reference_radius` = 적도 반경.
+- **가스 거대행성 / 빠르게 자유 자전하는 천체**(A b) → 존 **J₂**(선택적으로 **J₄** ≈ J₂의 −4 %, **J₆**), tesseral 없음. 값이 큽니다. 목성 0.0147, 토성 0.0163. A b(~10시간 자전, 0.47 g/cc, 토성의 0.69보다 낮음) → **J₂ ≈ 0.018–0.025**. 형식: 스칼라 `j2`(선택적으로 `geopotential_row`로 J₄/J₆ 추가), `reference_radius` = 적도 반경.
 - **자유 자전하는 암석질**(드묾 — 빠르고 비고정) → 작은 존 **J₂**(느린 자전 → 아주 작음). tesseral(경도 방향 덩어리)은 외계행성에서 측정 불가능하므로 생략하거나(J₂만) 합성합니다(class C). 형식: 스칼라 `j2`.
 - **조석 고정된 암석질**(로스터의 상당수 — TRAPPIST-1, Proxima b …) → **축대칭이 아님**. 항성을 향한 영구적 조석 팽대부 때문에 삼축이 되어, 차수 2가 **J₂ (C̄₂₀) 그리고 실재하는 C̄₂₂ ≈ 0.3·J₂를 함께** 갖습니다(정수압 비율 J₂ = 10/3·C₂₂, Io/Europa/Ganymede에서 검증됨) — 측정 불가가 아니라 예측 가능합니다. 자전 = 공전 주기(알려진 값). 형식: 차수 2의 전체 cos/sin(`geopotential_row` degree 2: order 0 = C̄₂₀, order 2 = C̄₂₂).
 
@@ -712,7 +712,7 @@ inverted →  J₂ = (m/3)·[5/(s²+1) − 1],   s = (5/2)·(1 − (3/2)·NMoI)
 
 **구현은 항상 실제 거대행성으로 먼저 보정합니다**(이 규칙의 검증 단계). 같은 관계식으로 목성 J₂는 **−0.0 %**(m 0.0834, NMoI 0.2648), 토성 J₂는 **−10 %**(m 0.140, NMoI 0.220) 오차로 재현됩니다. 토성의 잔차는 **1차 절단 오차**로, m이 커질수록 함께 커집니다 — 그래서 빠르게 도는 천체(큰 m)에서는 RD 값이 실제 J₂를 약간 *과소*평가합니다.
 
-**계산 예 — Polyphemus** (M = 120 M⊕, R_eq = 1.0 R_Jup, P_rot ≈ 10.1–10.6 h, NMoI ≈ 0.23 [0.21–0.26]). 형상을 반복 계산하면(f = 3⁄2·J₂ + 1⁄2·m → 평균 반경 → m) m ≈ 0.19, 편평도 ≈ 0.13, 그리고 **J₂ ≈ 0.023**(중심값)이 나옵니다. m ≈ 0.19는 토성의 0.14보다 크므로 1차 절단이 ~10–20 % 과소예측합니다 → 실제 ≈ **0.025–0.026**. 범위는 **0.017–0.033**(NMoI 가정이 지배). 거대행성 보정용 J₂는 Iess et al. 2018(목성) / Durante et al. 2017(토성)에서 가져옵니다. 이 값을 쓸 때는 언제나 NMoI 가정과 범위를 함께 명시하세요.
+**계산 예 — A b** (M = 120 M⊕, R_eq = 1.0 R_Jup, P_rot ≈ 10.1–10.6 h, NMoI ≈ 0.23 [0.21–0.26]). 형상을 반복 계산하면(f = 3⁄2·J₂ + 1⁄2·m → 평균 반경 → m) m ≈ 0.19, 편평도 ≈ 0.13, 그리고 **J₂ ≈ 0.023**(중심값)이 나옵니다. m ≈ 0.19는 토성의 0.14보다 크므로 1차 절단이 ~10–20 % 과소예측합니다 → 실제 ≈ **0.025–0.026**. 범위는 **0.017–0.033**(NMoI 가정이 지배). 거대행성 보정용 J₂는 Iess et al. 2018(목성) / Durante et al. 2017(토성)에서 가져옵니다. 이 값을 쓸 때는 언제나 NMoI 가정과 범위를 함께 명시하세요.
 
 ### 고차항은 높이맵에서 (선택, 지형 단계)
 

@@ -2,7 +2,7 @@
 # Principia Geopotential Data — Solar System Bodies (verbatim)
 
 The real oblateness / spherical-harmonic gravity data that **Principia** ships for
-the Solar System, copied verbatim so we can write our own bodies (e.g. Polyphemus)
+the Solar System, copied verbatim so we can write our own bodies (e.g. Alpha Centauri A b (Polyphemus))
 the same way. This is the *data* companion to the cfg *schema* in
 [`principia-cfg-reference.md`](principia-cfg-reference.md).
 
@@ -153,7 +153,7 @@ J₂ = **0.003408428530717952**.
 > **Note the giants' pattern:** strong even zonals (J₂ ≫ J₄ ≫ J₆), negligible odd
 > zonals, no tesseral (order > 0) terms — a fast-rotating fluid body is smooth and
 > axisymmetric. J₄ is negative (the bulge falls off faster than a pure J₂). This is
-> exactly the form a gas giant like Polyphemus should use.
+> exactly the form a gas giant like A b should use.
 
 ---
 
@@ -272,8 +272,8 @@ J₂ follows deterministically from rotation + density + mass + radius (the **Da
 relation), so it is a *derived* emit field (like a unit conversion), auto-computed per body
 — **not** an art-direction decision. By body type:
 
-- **Gas giant / fast free rotator** (Polyphemus) → zonal **J₂** (+ optional **J₄** ≈ −4 %
-  of J₂, **J₆**), no tesseral. Large: Jupiter 0.0147, Saturn 0.0163; Polyphemus (~10 h spin,
+- **Gas giant / fast free rotator** (A b) → zonal **J₂** (+ optional **J₄** ≈ −4 %
+  of J₂, **J₆**), no tesseral. Large: Jupiter 0.0147, Saturn 0.0163; A b (~10 h spin,
   0.47 g/cc, below Saturn's 0.69) → **J₂ ≈ 0.018–0.025**. Form: scalar `j2` (+ optional
   `geopotential_row` J₄/J₆), `reference_radius` = equatorial radius.
 - **Free-rotating rocky** (rare — fast non-locked) → small zonal **J₂** (slow spin → tiny);
@@ -309,7 +309,7 @@ to **−10 %** (m 0.140, NMoI 0.220). The Saturn residual is the **first-order t
 error**, which grows with m — so for a fast rotator (large m) the RD value is a slight
 *under*-estimate of the true J₂.
 
-**Worked — Polyphemus** (M = 120 M⊕, R_eq = 1.0 R_Jup, P_rot ≈ 10.1–10.6 h, NMoI ≈ 0.23
+**Worked — A b** (M = 120 M⊕, R_eq = 1.0 R_Jup, P_rot ≈ 10.1–10.6 h, NMoI ≈ 0.23
 [0.21–0.26]): iterating the figure (f = 3⁄2·J₂ + 1⁄2·m → mean radius → m) gives m ≈ 0.19,
 flattening ≈ 0.13, and **J₂ ≈ 0.023** (central). m ≈ 0.19 > Saturn's 0.14, so first-order
 truncation under-predicts by ~10–20 % → true ≈ **0.025–0.026**. Range **0.017–0.033**

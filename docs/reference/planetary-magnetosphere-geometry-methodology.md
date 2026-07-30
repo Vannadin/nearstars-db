@@ -121,7 +121,7 @@ Two structural facts the exact machinery establishes:
    field is strong and the cold plasma thin (deep inner belts at small L),
    the resonant energy runs to tens of MeV and the ~MeV ceiling is
    effectively unbound — those belts are **source/loss-set, not K–P-set**.
-   Worked check (Polyphemus inner-belt peak, L = 2.07, B_local ≈ 129× Earth's
+   Worked check (Alpha Centauri A b (Polyphemus) inner-belt peak, L = 2.07, B_local ≈ 129× Earth's
    L=5 field): across torus densities 10²–5×10³ cm⁻³ the computed 1 MeV
    ceiling is ≥ 5×10²–10¹⁶ × Earth's — never the binding constraint.
 2. **The K–P cap does not set the dose contrast between planets.** Mauk & Fox
@@ -144,10 +144,10 @@ interpolation** that bundles the hardness + belt-size effects; it is *not*
 the K–P scaling (an earlier revision mislabeled it so — retracted). Outer/inner
 ratio ~0.1 torus-driven (Jupiter), ~0.2 wind-fed (Earth). Then apply the two
 hard checks: (a) the chosen intensity must sit below the computed K–P ceiling
-at the belt's (B, L, n_cold) via `kp_limit.py` (Polyphemus 300 rad/h ≈ 29×
+at the belt's (B, L, n_cold) via `kp_limit.py` (A b 300 rad/h ≈ 29×
 Earth ≪ ceiling ≥ 5×10²× Earth at the densest plausible torus — passes); and
 (b) source-starved / gap-starved belts sit *below* any of this and stay plain
-regime calls (Pandora 0.4× Earth). Confidence remains low — the interpolation
+regime calls (Alpha Centauri A b III (Pandora) 0.4× Earth). Confidence remains low — the interpolation
 exponent is a two-anchor fit, and n_cold for a fiction torus is a stated
 assumption — but every factor is now mechanistic, pinned, and bounded.
 
@@ -194,7 +194,7 @@ recurs in NearStars is a rendering consequence, not two different mechanisms.
 
 Two stock-anchored facts that correct earlier NearStars drafts:
 - `radiation_pause` is **small and roughly body-independent in stock** (Kerbin −0.011, Jool
-  −0.012) — it is *not* a large standoff-scaled shield term. (An earlier Pandora draft used
+  −0.012) — it is *not* a large standoff-scaled shield term. (An earlier A b III draft used
   −3.8, a Promised-Worlds pack tuning; regrounded to the ~−0.01 stock scale.)
 - `geomagnetic_pole_lat ≈ 80` for an Earth-tilt body matches stock Kerbin (80.37).
 
@@ -216,30 +216,30 @@ better anchor than stock Kerbin/Jool (ROKerbalism `KerbalismConfig/System/Radiat
 Three facts this settles for NearStars:
 1. **`radiation_pause` ≈ −0.01 for every body** (Earth/Jupiter −0.010, Saturn −0.011,
    Neptune −0.007) — confirms it is a small body-independent term, not a shield
-   magnitude. (Pandora's −0.01 is right.)
+   magnitude. (A b III's −0.01 is right.)
 2. **Gas giant → concentric, rocky → separated** is real-body, not just stock KSP.
 3. **Ring-loss vs volcanic-source is a competition** — Saturn is modeled *outer only,
    no inner* because ring absorption (Part D loss) wins and guts the inner belt; Jupiter
    keeps an intense inner belt because Io's plasma source (Part D source) wins. A ringed
-   giant can go either way. **Polyphemus follows Jupiter, not Saturn:** its volcanic inner
-   moon Dante (~820× Io) is an overwhelming source that dominates any ring sweeping →
+   giant can go either way. **A b follows Jupiter, not Saturn:** its volcanic inner
+   moon Alpha Centauri A b I (Dante) (~820× Io) is an overwhelming source that dominates any ring sweeping →
    an *intensified* inner belt, which the strong intrinsic field of the habitable moon
-   Pandora then shields against (the design's central drama).
+   A b III then shields against (the design's central drama).
    `geomagnetic_offset` (Uranus 0.3, Neptune 0.55) is the handle for the offset/
    multipolar dipoles of ice giants like Proxima c.
 
 ## Part D — moon ↔ parent interaction (embedded magnetospheres)
 
 A moon orbiting *inside* a giant's magnetosphere is a common NearStars case (every
-Polyphemus moon). It is not a scaled-down planet: three couplings dominate, all
+A b moon). It is not a scaled-down planet: three couplings dominate, all
 radiation-relevant, and the moon's *own* field is a minor player.
 
 1. **The moon lives inside the parent's belt.** The radiation the moon's surface
    sees is overwhelmingly the *parent's* trapped flux at the moon's L-shell — not
    anything the moon generates. So the first question is always *where in the
    parent's belt does the moon sit* (orbital distance in R_parent, bounded by the
-   parent standoff from Part A): a moon deep in the belt is baked (Io; Dante,
-   1.54 R_p), a moon in a belt gap is spared (Pandora, 3.53 R_p). The moon's own
+   parent standoff from Part A): a moon deep in the belt is baked (Io; A b I,
+   1.54 R_p), a moon in a belt gap is spared (A b III, 3.53 R_p). The moon's own
    field only *modulates* this ambient dose by shielding.
 
 2. **The moon is a loss (or source) term for the parent's belt.** A solid moon or
@@ -248,8 +248,8 @@ radiation-relevant, and the moon's *own* field is a minor player.
    Kennel–Petschek ceiling (Cooper 1983 — Saturn is the archetype, its rings and
    moons gut its belts). This is why a heavily-mooned giant is **not** automatically
    Jupiter-class: the moons + ring are a large distributed sink. Conversely a
-   volcanic moon is a **source** — Io / Dante feed a plasma torus that drives the
-   belt up toward the ceiling (Bagenal 1994). The same moon can be both: Dante
+   volcanic moon is a **source** — Io / A b I feed a plasma torus that drives the
+   belt up toward the ceiling (Bagenal 1994). The same moon can be both: A b I
    feeds the torus globally while sweeping particles locally.
 
 3. **The moon's own mini-magnetosphere** (only if it has an intrinsic dynamo).
@@ -312,22 +312,22 @@ small stock-scale `radiation_pause` (~−0.01; the shield is the *presence* of a
 `pause_radius`, not a big value). The moon's net surface dose = the parent's belt at its
 L-shell, reduced by its own pause. For `radiation_inner`, split by sub-regime: a
 **weak-field** moon (Ganymede) is source-starved → *weak* (~0.2× stock Kerbin); a
-**strong-field** moon (Pandora) sustains a real CRAND belt → *modest* (~0.3–0.5× Kerbin),
+**strong-field** moon (A b III) sustains a real CRAND belt → *modest* (~0.3–0.5× Kerbin),
 GCR-screened below Earth but well above the Ganymede-negligible value. Neither is a field
 readout (Part B); both are the source–loss regime call.
 
-**Worked (Pandora = strong-field, vs Ganymede = weak-field):** Pandora (75 µT eq,
-3.53 R_p, in Polyphemus's belt gap) → field ~19× the 3.9 µT local parent field. In
+**Worked (A b III = strong-field, vs Ganymede = weak-field):** A b III (75 µT eq,
+3.53 R_p, in A b's belt gap) → field ~19× the 3.9 µT local parent field. In
 isolation it would carry a magnetosphere *bigger than Earth's* (standalone standoff
-~17 R_moon vs Polyphemus's stellar-wind ram); embedded, the parent's local magnetic
+~17 R_moon vs A b's stellar-wind ram); embedded, the parent's local magnetic
 pressure (~6 µPa, ~3000× a solar-wind ram) compresses it ~7× to a field-crossover
 standoff `(75/3.9)^(1/3) ≈ 2.6 R_moon`. The high 19× dominance keeps it mostly closed,
 so its thick habitable atmosphere sustains a **real CRAND inner belt**, not a
 Ganymede-negligible one — `radiation_inner ≈ 4` rad/h (~0.4× stock Kerbin's 10.4:
-GCR-screened by Polyphemus + gap-starved, but a genuine Earth-*kind* belt),
+GCR-screened by A b + gap-starved, but a genuine Earth-*kind* belt),
 `radiation_pause ≈ −0.01`. Ganymede (0.72 µT, ~6× local Jovian, no atmosphere) →
 standoff ~2 R_G, open polar caps, a negligible own belt. **Both are shields, not
-generators for the surface**: Pandora's habitability rests on the (gap + shield)
+generators for the surface**: A b III's habitability rests on the (gap + shield)
 ambient reduction, and its CRAND belt is an orbital-altitude hazard that feeds the
 aurora — not a surface one.
 
@@ -335,11 +335,11 @@ aurora — not a surface one.
 
 - **Earth**: B_eq = 31 µT, solar-wind P_ram ≈ 2 nPa → R_mp/R_p = [2²·(3.1e-5)²/(2μ₀·2e-9)]^(1/6) ≈ **9.6** — matches the observed ~10 R_E sub-solar magnetopause. Inner belt ~1.2 R_E (CRAND protons), outer ~3–7 R_E (diffusion + chorus), intensity near the K–P ceiling. ✓
 - **Jupiter**: the field alone (~4.3 G equatorial) would not predict the extreme belts; the Io plasma source drives them to (and past) the K–P limit for electrons — the textbook proof that intensity ≠ f(B). ✓
-- **Polyphemus** (NearStars): 170 µT vs α Cen A wind ram 0.38 nPa → R_mp ≈ **22 R_p** (the Phase 4 board's independent 23.5 R_p, same balance). ✓
+- **A b** (NearStars): 170 µT vs α Cen A wind ram 0.38 nPa → R_mp ≈ **22 R_p** (the Phase 4 board's independent 23.5 R_p, same balance). ✓
 
 ## Domain of validity: regimes
 
-1. **Dipolar intrinsic** (Earth, Pandora): standoff formula applies; belts on
+1. **Dipolar intrinsic** (Earth, A b III): standoff formula applies; belts on
    L-shells; K–P-capped if the source is strong.
 2. **Multipolar intrinsic** (Uranus/Neptune, Proxima c; rocky multipolar regime
    with `Ro_ℓ > 0.12`): offset/tilted field → **asymmetric, patchy belts** and
@@ -353,7 +353,7 @@ aurora — not a surface one.
    own shielding. Two sub-regimes (see Part D):
    - **3a weak-field** (Ganymede, Kivelson 1996 `1996Natur.384..537K`): a few× local →
      leaky, open polar caps, a negligible own belt. Pure shield.
-   - **3b strong-field** (planet-class dynamo, e.g. Pandora; Heller & Zuluaga 2013
+   - **3b strong-field** (planet-class dynamo, e.g. A b III; Heller & Zuluaga 2013
      `2013ApJ...776L..33H`): intrinsically Earth-plus but compressed by the parent's
      magnetic pressure to a few R_moon; ≳15–20× dominance → mostly closed → a real
      CRAND belt (if it has an atmosphere), moderated by parent GCR-screening. Strong
@@ -365,23 +365,23 @@ aurora — not a surface one.
 
 ## Worked examples (NearStars)
 
-- **Polyphemus**: 170 µT → R_mp ≈ 22 R_p; **all five moons orbit inside the
+- **A b**: 170 µT → R_mp ≈ 22 R_p; **all five moons orbit inside the
   magnetosphere**. Belt intensity is a *source − loss* story, not a field readout:
-  Dante's extreme volcanism (~820× Io) feeds an intense inner belt (source), while
-  the ring + five moons sweep particles (loss) — but Dante's volcanism (~820× Io) is the
-  far bigger term, so Polyphemus is **source-dominated like Jupiter, not ring-swept like
-  Saturn**. The Kerbalism template is Jupiter (RSS): a strong Dante-fed *inner* belt
+  A b I's extreme volcanism (~820× Io) feeds an intense inner belt (source), while
+  the ring + five moons sweep particles (loss) — but A b I's volcanism (~820× Io) is the
+  far bigger term, so A b is **source-dominated like Jupiter, not ring-swept like
+  Saturn**. The Kerbalism template is Jupiter (RSS): a strong A b I-fed *inner* belt
   (`radiation_inner` ~300, Jupiter's value, or higher), a lesser outer belt, a large
   `pause_radius`, and the small stock-scale `radiation_pause` (~−0.01). The design's core
-  is exactly this: an intensified inner belt bakes the inner moons (Dante >4500 rem/day),
-  while habitable Pandora survives in a gap on its own strong-field shielding.
-- **Pandora** (embedded, **strong-field** sub-regime 3b — *not* a Ganymede analog):
+  is exactly this: an intensified inner belt bakes the inner moons (A b I >4500 rem/day),
+  while habitable A b III survives in a gap on its own strong-field shielding.
+- **A b III** (embedded, **strong-field** sub-regime 3b — *not* a Ganymede analog):
   own 75 µT dipole → intrinsically an Earth-plus magnetosphere (standalone ~17 R_moon),
-  compressed ~7× to a ~2.6 R_moon mini-magnetosphere *inside* Polyphemus's field. It
-  sits in the **gap between Polyphemus's two belts** and its own field adds shielding →
+  compressed ~7× to a ~2.6 R_moon mini-magnetosphere *inside* A b's field. It
+  sits in the **gap between A b's two belts** and its own field adds shielding →
   the physical basis for habitability. The high 19× dominance + thick atmosphere sustain
   a real CRAND belt (`radiation_inner ≈ 4` rad/h, an orbital hazard feeding the aurora,
-  not a surface one). Standoff is set against Polyphemus's local field, not the stellar wind.
+  not a surface one). Standoff is set against A b's local field, not the stellar wind.
 - **Proxima b** (weak dipole ~0.06–0.1 ℳ⊕): a small magnetosphere, standoff only a
   few R_p; belts marginal; surface dose dominated by the direct M-dwarf wind + flares.
 - **Proxima c** (ice-giant, offset/tilted multipolar): asymmetric belts, offset oval;
@@ -428,7 +428,7 @@ a documented regime call rather than a computed number.
   JGRA 125, e26735 (`2020JGRA..12526735R`). Wave–particle acceleration and loss;
   modern belt-dynamics review.
 - **Cooper 1983**, JGR 88, 3945 (`1983JGR....88.3945C`). Ring/moon absorption as a
-  belt loss — the Polyphemus ring + moons case.
+  belt loss — the A b ring + moons case.
 - **Kivelson et al. 1996**, Nature 384, 537 (`1996Natur.384..537K`). Ganymede's
   embedded magnetosphere — the weak-field embedded-moon (sub-regime 3a) exemplar.
 - **Heller & Zuluaga 2013**, ApJ 776, L33 (`2013ApJ...776L..33H`, arXiv

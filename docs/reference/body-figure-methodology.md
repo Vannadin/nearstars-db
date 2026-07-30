@@ -13,7 +13,7 @@ This is the canonical home for the **method**. The *data + cfg-form* companion i
 [`principia-geopotential-data.md`](principia-geopotential-data.md), which holds the
 verbatim Solar-System coefficients, the normalization rules (J₂ = −√5·C̄₂₀,
 J₂ = 10⁄3·C̄₂₂), and the proto↔KSP-cfg mapping. That document already works the
-**Polyphemus** giant J₂ in full; this one generalizes the recipe across body types
+**Alpha Centauri A b (Polyphemus)** giant J₂ in full; this one generalizes the recipe across body types
 and grounds the tidal C₂₂. J₂/C₂₂ is a **derived emit**, not an art-direction choice:
 it follows deterministically from rotation + mass + radius + central condensation, so
 it is computed per body like a unit conversion. Why it matters in-game: J₂ is the
@@ -141,7 +141,7 @@ degree 2 (C̄₂₂, an even P₂ deformation). The next tidal term is the **odd
 the primary's pull is stronger on the near side, so the **sub-primary bulge is slightly
 larger than the anti-primary one**, a faint teardrop/pear shape (pointier toward the
 primary). The asymmetry scales as ≈ **R/a** (body radius / orbital distance) times the
-quadrupole bulge, sub-percent here (Dante R/a ≈ 0.8 %, Hades ≈ 0.5 %), so it is
+quadrupole bulge, sub-percent here (Alpha Centauri A b I (Dante) R/a ≈ 0.8 %, Alpha Centauri A b II (Hades) ≈ 0.5 %), so it is
 **recorded, not emitted by default**. Notes: (1) gravity-side it is a **degree-3** term,
 dynamically negligible; (2) it is **not representable by the symmetric `CustomEllipsoid`**
 mesh: a visual teardrop would need a small degree-3 **heightmap** bump at the terrain pass.
@@ -217,7 +217,7 @@ Principia's giants show (Jupiter `mean_radius` 69911 km vs `reference_radius` 71
 58232 vs 60330): (1) the **Principia gravity** uses `mean_radius` (volumetric: sets the body's
 volume) + `reference_radius` (equatorial: only scales J₂); oblateness lives in the dimensionless
 J₂, so there is **no inflation**. (2) The **VertexHeightOblateAdvanced visual** scales a base
-sphere by the a:b:c (all ≥ 1), which inflates the body by a·b·c (Dante ×1.22) unless the
+sphere by the a:b:c (all ≥ 1), which inflates the body by a·b·c (A b I ×1.22) unless the
 **Kopernicus PQS `radius` (the base sphere) is set to the polar radius** (= mean × c_physical);
 then the ≥ 1 ratios reproduce the true volume-preserving shape. (Real giants sidestep the visual
 case: they are rendered as spheres, oblateness only in J₂.) **Hard dependency** (a body using the node
@@ -232,7 +232,7 @@ Inputs are the curated mass / radius / rotation; lock state from the
 | body | class | ω source | q (or q_s) | J₂ | C̄₂₂ | note |
 |---|---|---|---|---|---|---|
 | **Erid** (40 Eri A b) | free rocky | P_rot 5.1 h | **0.056** | **~0.017–0.019** | – | the roster's most oblate rocky body: f ≈ 5 %, an equatorial bulge visible in-game; first-order under-predicts (large q) |
-| **Polyphemus** (α Cen A b) | gas giant | P_rot ~10 h | 0.19 | **~0.023–0.026** | – | worked in full in geopotential-data.md (NMoI ~0.23) |
+| **A b** (α Cen A b) | gas giant | P_rot ~10 h | 0.19 | **~0.023–0.026** | – | worked in full in geopotential-data.md (NMoI ~0.23) |
 | **TRAPPIST-1 b** | sync. rocky | n (P 1.51 d) | 1.5e-3 | ~1.5e-3 | **~4.6e-4** | close-in lock → real permanent tidal bulge, J₂ ≈ Earth's |
 | **Proxima b** | sync. rocky | n (P 11.2 d) | 2.8e-5 | ~2.8e-5 | ~8e-6 | far enough that the figure is tiny (record; C₂₂ likely below emit threshold) |
 | **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | – | solar-anchored scaling (0.0105·q); ±~30 % from P_rot ±3 d, first star rows emitted under the always-emit policy |
@@ -346,7 +346,7 @@ field (everything else is degree-2 to low-degree, recovered from flybys).
 ## Related
 
 - [`principia-geopotential-data.md`](principia-geopotential-data.md): verbatim
-  Solar-System coefficients, normalization, cfg forms, the Polyphemus giant worked example.
+  Solar-System coefficients, normalization, cfg forms, the A b giant worked example.
 - [`principia-cfg-reference.md`](principia-cfg-reference.md): the cfg schema (node syntax, units).
 - [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md): lock state (the figure's spin input).
 - [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md): consumes J₂ + C̄₂₂ (§3) as the spin precession constant to get the equilibrium obliquity.

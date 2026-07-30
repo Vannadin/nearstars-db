@@ -348,7 +348,7 @@ The space-weathering archetype, and the demonstration that the *same* fresh mate
 state alone (§4).
 
 **NearStars α Cen application (qualitative).** A basaltic **volcanic body with sulfur
-deposits** is a decided Dante-style surface: **half sulfur-yellow, half basalt-grey**.
+deposits** is a decided Alpha Centauri A b I (Dante)-style surface: **half sulfur-yellow, half basalt-grey**.
 Composition picks both axes: the basalt half is mafic-Fe²⁺ dark grey at a low Bond
 albedo (~0.1, Moon-like, §6), while the **elemental-sulfur** deposits give the bright
 sulfur-yellow band (sulfur's electronic absorption cuts the blue → yellow) at a higher

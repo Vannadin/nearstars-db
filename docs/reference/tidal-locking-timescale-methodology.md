@@ -340,11 +340,11 @@ spin/climate states.
 its planet at a few planetary radii sits deep inside the `a⁶` gate: `τ_lock ≪ t_sys`,
 so it locks to **1:1 essentially immediately** on the system timescale. This is the
 state the [tidal-heating doc](tidal-heating-methodology.md) *assumes* for the α Cen
-Phase-4 moons (Dante, Hades, Pandora) when it applies the `(21/2)e²` synchronous
+Phase-4 moons (Alpha Centauri A b I (Dante), Alpha Centauri A b II (Hades), Alpha Centauri A b III (Pandora)) when it applies the `(21/2)e²` synchronous
 heating form, and this doc is what justifies that assumption. (The same `a⁶` that
 locks a close-in moon fast is the inverse of the `a⁻⁷·⁵` that *heats* a close-in moon
 hard: close-in moons both lock fastest **and** heat most, which is why they are the
-geologically interesting ones.) A moon far out (e.g. the heating doc's Chaos at ~20 R_p)
+geologically interesting ones.) A moon far out (e.g. the heating doc's Alpha Centauri A b V (Chaos) at ~20 R_p)
 has a much longer `τ_lock` and need not be assumed 1:1, consistent with its also being
 tidally cold.
 

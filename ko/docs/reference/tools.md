@@ -107,7 +107,7 @@
 **파일.**
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO 메인 엔트리
-- `phase3/stability-sim/scripts/ring_clearing.py` — 위성 주변 고리 청소·간극 측정용 테스트 입자 시뮬. 공급 위성의 반장축을 둘러싸는 무질량 입자 원반을 깔고 적분한 뒤 어느 반경이 살아남는지 보고합니다(위성이 간극을 여는지, 묻힌 채 도는지). 폴리페무스의 Chaos 공급 E고리가 연속임을 확인하는 데 썼습니다(Chaos 질량비 μ≈7.5e-7 로 간극을 못 비움 — `results/_ring_clearing.log`).
+- `phase3/stability-sim/scripts/ring_clearing.py` — 위성 주변 고리 청소·간극 측정용 테스트 입자 시뮬. 공급 위성의 반장축을 둘러싸는 무질량 입자 원반을 깔고 적분한 뒤 어느 반경이 살아남는지 보고합니다(위성이 간극을 여는지, 묻힌 채 도는지). A b의 A b V(Chaos) 공급 E고리가 연속임을 확인하는 데 썼습니다(A b V 질량비 μ≈7.5e-7 로 간극을 못 비움 — `results/_ring_clearing.log`).
 - `scripts/pipeline/phase3_decisions.py` — `docs/phase3/<slug>.md`의 `## Decisions` 표 공용 파서(3→4/3→emit 기계 인터페이스, [pipeline-contract](pipeline-contract.md) §1). 기존 emitter 정규식이 조용히 덮어쓰던 qualifier 중복 라벨(`equilibrium_temp_k (A=0)` vs `(A=0.3)`)을 보존한다. 소비자는 `check_pipeline_flow.py`·`resolve_emit_values.py`이고, emitter 스킬은 emit 재배선 때 이 모듈로 갈아탄다.
 - `scripts/check_pipeline_flow.py` + `db/roster.yaml` — check.sh 게이트 10. phase4 `body:` 키 ↔ db 이름 대조(창작 바디는 `discoverability=fictional`로 통과), 확정 로스터 완결성 매트릭스(보드·보드 행 커버리지·phase3 리포트 — 갭은 경고, 구조 위반은 실패), 전 phase3 리포트 Decisions 표 파싱 검증. `db/roster.yaml`이 확정 세트의 단일 데이터 소스이며 emit 범위도 이걸 읽는다.
 - `scripts/pipeline/field_alignment.yaml` — phase4 메뉴명 ↔ phase3 Decisions 키 ↔ cfg 타깃 정렬표([pipeline-contract](pipeline-contract.md) §3). 생성물이 아니라 손으로 큐레이션하는 계약 데이터다. 보드는 오너의 선택을 단위 없이 적고(`mass`) Decisions는 단위를 키에 박으므로(`mass_msun`/`mass_mearth`), 항목마다 후보 phase3 키를 우선순위 순으로 + 바디 클래스별 함의 단위를 함께 적는다. `resolve_emit_values.py`가 읽어 phase4-over-phase3 오버라이드를 실제로 발동시키고, 게이트 10f가 커버리지를 검사한다.
@@ -252,7 +252,7 @@
 
 **참고.** 색은 지각적 흑체 근사(보정된 SED 아님), 마커 크기는 광도 proxy(물리 반경 아닌 빌보드). 표 형태 DB 브라우저인 `docs/index.html`(2번 툴)과 별개로, 이쪽은 공간 배치를 본다.
 
-**관련 — 폴리페무스 위성계 뷰어.** `phase4/viewers/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 Chaos 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다. **동결(2026-06-22):** 설계 탐색 임무가 끝나(로스터·고리·obliquity 확정) 아티팩트로 보존하며, 이후 결정은 여기 동기화하지 않는다. 성도에 없는 고유 기능은 Pandora 지표 1인칭 시점+일식뿐이고, canonical·유지보수 시각화는 `docs/starmap.html` 이다.
+**관련 — 폴리페무스 위성계 뷰어.** `phase4/viewers/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(A b I~V = Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 A b V 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다. **동결(2026-06-22):** 설계 탐색 임무가 끝나(로스터·고리·obliquity 확정) 아티팩트로 보존하며, 이후 결정은 여기 동기화하지 않는다. 성도에 없는 고유 기능은 A b III 지표 1인칭 시점+일식뿐이고, canonical·유지보수 시각화는 `docs/starmap.html` 이다.
 
 ## 13. Phase 4 결정 보드 도구
 
@@ -290,10 +290,10 @@
   지오메트리 방법론 Part B의 벨트 강도 상한 체크에 사용.
 - `scripts/refs/greenhouse_dt.py` — 온실 상승폭(T_surf − T_eq) 추정기. 문헌 iso-Ts 등온선
   격자(Feulner 2012 / Kopparapu 2013 앵커)에 CH₄ 보정, Arney haze 상한, Goldblatt N₂ 압력확장을
-  더한다. `--s/--pco2/--ch4` 로 단발 조회, 인자 없이 실행하면 검증 표와 폴리페무스 위성 결과.
+  더한다. `--s/--pco2/--ch4` 로 단발 조회, 인자 없이 실행하면 검증 표와 A b 위성 결과.
   `docs/reference/greenhouse-warming-methodology.md` 의 계산 근거.
 - `scripts/refs/moon_energy_budget.py` — 위성 T_eq를 4항 에너지 예산(별빛−식, 행성 열복사+반사,
-  조석)으로 계산. 폭주 천장과 폴리페무스 적용 예 포함, `--pandora-27h-vs-32h`로 궤도 선택 표만 출력.
+  조석)으로 계산. 폭주 천장과 A b 적용 예 포함, `--pandora-27h-vs-32h`로 궤도 선택 표만 출력.
   이오 조석 플럭스와 이오 식 지속시간으로 검증.
   `docs/reference/moon-energy-budget-methodology.md` 의 계산 근거.
 - `scripts/refs/jeans_escape.py` — 기체 종별 대기 보유 판정. 종마다 Jeans 파라미터를 구하고

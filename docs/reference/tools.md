@@ -109,7 +109,7 @@ Correctness checks live across several functional groups. This index gathers the
 **Files.**
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO main entry
-- `phase3/stability-sim/scripts/ring_clearing.py` — test-particle ring-clearing / gap measurement around a moon: seed a disk of massless particles bracketing a feeder moon's semi-major axis, integrate, and report which radii survive (does the moon open a gap or stay embedded?). Used to confirm Polyphemus's Chaos-fed E-ring is continuous (Chaos μ≈7.5e-7 too small to clear a gap — `results/_ring_clearing.log`).
+- `phase3/stability-sim/scripts/ring_clearing.py` — test-particle ring-clearing / gap measurement around a moon: seed a disk of massless particles bracketing a feeder moon's semi-major axis, integrate, and report which radii survive (does the moon open a gap or stay embedded?). Used to confirm Alpha Centauri A b (Polyphemus)'s Alpha Centauri A b V (Chaos)-fed E-ring is continuous (A b V μ≈7.5e-7 too small to clear a gap — `results/_ring_clearing.log`).
 - `scripts/pipeline/phase3_decisions.py` — shared parser for the `## Decisions` table in `docs/phase3/<slug>.md` (the 3→4/3→emit machine interface, [pipeline-contract](pipeline-contract.md) §1). Preserves qualified duplicate labels (`equilibrium_temp_k (A=0)` vs `(A=0.3)`) that the legacy emitter regex silently collapsed. Consumers: `check_pipeline_flow.py`, `resolve_emit_values.py`; emitter skills adopt it at emit rewiring.
 - `scripts/check_pipeline_flow.py` + `db/roster.yaml` — check.sh gate 10: phase4 `body:` keys ↔ db names (fiction bodies pass via `discoverability=fictional`), confirmed-roster completeness matrix (boards / board row coverage / phase3 reports — gaps are warnings, structural violations fail), Decisions-table parse check over all phase3 reports. `db/roster.yaml` is the single data source for the confirmed set; emit scope reads it too.
 - `scripts/pipeline/field_alignment.yaml` — the phase4 menu name ↔ phase3 Decisions key ↔ cfg target map ([pipeline-contract](pipeline-contract.md) §3). Hand-curated contract data, not generated: boards record the owner's choice without units (`mass`), Decisions bake the unit into the key (`mass_msun`/`mass_mearth`), so each entry lists candidate phase3 keys in priority order plus the implied unit per body class. Read by `resolve_emit_values.py` (makes the phase4-over-phase3 override actually fire) and coverage-checked by gate 10f.
@@ -261,7 +261,7 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Note.** Colour = perceptual blackbody approximation (not a calibrated SED); marker size = luminosity proxy (billboard, not physical radius). Independent of the `docs/index.html` DB browser (tool 2) — that one is the tabular viewer, this is the spatial one.
 
-**Related — Polyphemus moon-system viewer.** `phase4/viewers/polyphemus-moon-viewer.html` is a standalone interactive 3D viewer for the α Cen A b (Polyphemus) moon system + ring design — the 5 named moons (Dante / Hades / Pandora / Cassandra / Chaos), their inclinations / nodes, and the faint Chaos-fed E-ring. A Phase 4 art-direction aid, separate from the catalog-wide star map; it visualizes the gated roster recorded in `phase4/alpha_centauri.yaml`. **FROZEN (2026-06-22):** its design-exploration job is done (roster / ring / obliquity locked), so it is kept as a captured artifact and later decisions are NOT synced into it. Its only feature the star map lacks is the Pandora surface POV + eclipse view; the canonical, maintained visualization is `docs/starmap.html`.
+**Related — A b moon-system viewer.** `phase4/viewers/polyphemus-moon-viewer.html` is a standalone interactive 3D viewer for the α Cen A b (Polyphemus) moon system + ring design — the 5 named moons (A b I–V = Dante / Hades / Pandora / Cassandra / Chaos), their inclinations / nodes, and the faint A b V-fed E-ring. A Phase 4 art-direction aid, separate from the catalog-wide star map; it visualizes the gated roster recorded in `phase4/alpha_centauri.yaml`. **FROZEN (2026-06-22):** its design-exploration job is done (roster / ring / obliquity locked), so it is kept as a captured artifact and later decisions are NOT synced into it. Its only feature the star map lacks is the A b III surface POV + eclipse view; the canonical, maintained visualization is `docs/starmap.html`.
 
 ## 13. Phase 4 decision-board tools
 
@@ -301,11 +301,11 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
 - `scripts/refs/greenhouse_dt.py` — greenhouse increment (T_surf − T_eq) estimator from
   the literature iso-Ts contour grid (Feulner 2012 / Kopparapu 2013 anchors, CH₄ credit,
   Arney haze cap, Goldblatt N₂ broadening); `--s/--pco2/--ch4` for a one-off query, no
-  arguments for the validation table + the Polyphemus moons; backs
+  arguments for the validation table + the A b moons; backs
   `docs/reference/greenhouse-warming-methodology.md`
 - `scripts/refs/moon_energy_budget.py` — satellite T_eq from the four-term energy budget
   (stellar minus eclipses, parent thermal + reflected, tidal), with the runaway ceiling and
-  the Polyphemus worked example; `--pandora-27h-vs-32h` for just the orbit-choice table.
+  the A b worked example; `--pandora-27h-vs-32h` for just the orbit-choice table.
   Validates on Io's tidal flux and Io's eclipse duration. Backs
   `docs/reference/moon-energy-budget-methodology.md`
 - `scripts/refs/jeans_escape.py` — species-by-species atmospheric retention: the Jeans
@@ -362,7 +362,7 @@ retreat depth + the resulting volatile outflux).
   `D` is an assumption the retreat depth scales as √D on, and no internal heat source is
   included.
 
-Built for the Chaos albedo decision (2026-07-27); reusable for any icy body on any orbit.
+Built for the A b V albedo decision (2026-07-27); reusable for any icy body on any orbit.
 
 ## Skills directory layout
 

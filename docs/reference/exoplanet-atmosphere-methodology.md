@@ -257,9 +257,9 @@ Earth's H at λ = 7.0 reproduces the textbook value, and the Titan row is the us
 one: it shows the recipe getting a body right *against* the naive gravity intuition,
 which is the failure mode this gate exists to prevent.
 
-### Worked example: Cassandra
+### Worked example: Alpha Centauri A b IV (Cassandra)
 
-Cassandra (9.0 × 10²³ kg, 3400 km, v_esc 5.9 km/s) is recorded as retaining N₂/CO₂
+A b IV (9.0 × 10²³ kg, 3400 km, v_esc 5.9 km/s) is recorded as retaining N₂/CO₂
 while H₂ "escapes but is replenished volcanically". That claim had no recipe behind
 it until now. Bracketing the exobase temperature, which is the weak input:
 
@@ -275,8 +275,8 @@ and now quantified. Note that H₂'s loss will in practice be diffusion-limited 
 these mixing ratios, so the volcanic replenishment the row invokes is doing real
 work rather than papering over a gap.
 
-Pandora, at 3.85 × 10²⁴ kg and 9.5 km/s, holds everything including H₂S and Xe, with
-H₂ leaking slowly (λ 12.9 at 800 K). Hades and Dante never reach this gate: at 0.94
+Alpha Centauri A b III (Pandora), at 3.85 × 10²⁴ kg and 9.5 km/s, holds everything including H₂S and Xe, with
+H₂ leaking slowly (λ 12.9 at 800 K). Alpha Centauri A b II (Hades) and Alpha Centauri A b I (Dante) never reach this gate: at 0.94
 and 1.09 km/s of escape velocity they fail Gate 1 outright.
 
 ### Domain of validity

@@ -133,7 +133,7 @@ choosing the wrong one is the dominant error:
 
 1. **Rocky, M ≲ ~6–8 M⊕ (R ≲ ~1.5–1.6 R⊕).** Solid Fe/rock/water grids; R ∝ M^~0.27.
    The radius is a *tight* function of mass once composition is fixed. This is the
-   NearStars terrestrial regime (Proxima b, the TRAPPIST-1 worlds, Pandora-class
+   NearStars terrestrial regime (Proxima b, the TRAPPIST-1 worlds, Alpha Centauri A b III (Pandora)-class
    moons).
 
 2. **Sub-Neptune / volatile-inflated, ~1.6 ≲ R ≲ ~4 R⊕.** A small mass of H/He or
@@ -249,7 +249,7 @@ gate that rejects the unphysical combination:
    (usually the radius and a target surface gravity, or the radius and an
    Earth-like composition) and letting the third follow.
 
-The canonical NearStars case is the moon **"Pandora"** (consistency-gate worked
+The canonical NearStars case is the moon **"A b III"** (consistency-gate worked
 example, §7): a canon that implied a bulk density of **~1.2 ρ⊕** at its size was
 **rejected as a super-Mercury**: too iron-rich to be a physical body at that
 radius. Option B (fix surface gravity at 0.8 g and the radius, solve for mass)
@@ -275,7 +275,7 @@ g = G·M/R² ≈ **1.07 g** and ρ ≈ **5.5 g/cm³** (≈ 1 ρ⊕), a rocky pla
 radius valley, so **no H/He envelope** and a secondary atmosphere at most (feeds
 the atmosphere doc's Proxima b lake-world: g ≈ 10.5 m/s², H ≈ 7–8 km).
 
-**Pandora: the density consistency gate (frame qualitatively).** A moon whose
+**A b III: the density consistency gate (frame qualitatively).** A moon whose
 canon implied ρ ≈ 1.2 ρ⊕ at its radius. That density at that size lands **denser
 than the pure-iron curve** (a "super-Mercury," not a physical rocky moon), so it
 was **rejected**. Option B fixes g = 0.8 g and the radius, solving for mass

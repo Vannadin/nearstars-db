@@ -5,7 +5,7 @@
 천체입니다. 이 별은 *Star Trek* 의 Spock 의 고향 행성 **Vulcan**
 이며 — Gene Roddenberry 가 1991 년 *Sky & Telescope* 에 보낸 편지(Sallie
 Baliunas 와 동료들이 공동 서명)가 Epsilon Eridani 대신 40 Eridani A 를
-캐넌으로 확정했습니다 — 동시에 Andy Weir 의 *Project Hail Mary* (2021)
+공식 설정으로 확정했습니다 — 동시에 Andy Weir 의 *Project Hail Mary* (2021)
 에서 외계인 Rocky 의 고향 행성 **Erid** 이기도 합니다. 다른 어떤 철회
 검출도 이만한 문화적 무게를 지니지 못하며, 바로 그 점이 이 천체가
 NearStars 데이터베이스에 남아 있는 유일한 이유입니다.
@@ -211,7 +211,7 @@ b 가 존재했다면 **조석 고정되지 않았을** 것입니다. a = 0.224 
 
 - **Roddenberry G. & Baliunas S. et al. 1991** — *Sky & Telescope*
   에 보낸 편지로, 40 Eridani A 를(Epsilon Eridani 대신) Spock 의 고향
-  행성 Vulcan 의 *Star Trek* 캐넌 위치로 확정합니다. 이 시스템의 가장
+  행성 Vulcan 의 *Star Trek* 공식 설정 위치로 확정합니다. 이 시스템의 가장
   두드러진 문화적 앵커입니다. `docs/reference/cultural-context.md § 40
   Eridani A` 에 기록되어 있습니다.
 - **Weir A. 2021** — *Project Hail Mary* (소설). 40 Eridani A 의 행성을

@@ -130,28 +130,28 @@ telescope. Neither was tuned.
    moon with a liquid ocean it is a separate term, set by the eccentricity tide and the
    ocean's depth rather than by `k₂/Q`.
 
-## Worked example: the Polyphemus moons
+## Worked example: the Alpha Centauri A b (Polyphemus) moons
 
-α Cen A (`L = 1.521 L☉`, `Teff = 5847 K`), Polyphemus at 1.6 AU (`S/S₀ = 0.594`), parent
+α Cen A (`L = 1.521 L☉`, `Teff = 5847 K`), A b at 1.6 AU (`S/S₀ = 0.594`), parent
 radius 1.0 R_Jup, mass 120 M⊕, cloud-top 225 K, `A_p` = 0.30. The umbra reaches
 2.19 × 10⁷ km and **all five moons are inside it, eclipsed on every orbit** — for each of
 them `a·sin(i)` is smaller than the shadow radius.
 
 | Moon | a [R_p] | eclipse | stellar lost | parent thermal | parent reflected | T_eq stellar | T_eq 4-term | ΔT |
 |---|---|---|---|---|---|---|---|---|
-| Dante | 1.54 | 20.2 % | −28.6 W/m² | 61.3 | 25.6 | 223.5 K | 219.6 K | **−3.9 K** |
-| Hades | 2.07 | 14.2 % | −20.1 | 33.9 | 14.2 | 223.5 K | 219.6 K | **−3.9 K** |
-| Pandora | 3.53 | 7.7 % | −10.9 | 11.7 | 4.9 | 223.5 K | 220.6 K | **−2.9 K** |
-| Cassandra | 8.40 | 3.1 % | −4.1 | 2.1 | 0.9 | 219.4 K | 217.9 K | −1.5 K |
-| Chaos | 21.0 | 1.3 % | −0.8 | 0.3 | 0.1 | 180.8 K | 180.3 K | −0.5 K |
+| Alpha Centauri A b I (Dante) | 1.54 | 20.2 % | −28.6 W/m² | 61.3 | 25.6 | 223.5 K | 219.6 K | **−3.9 K** |
+| Alpha Centauri A b II (Hades) | 2.07 | 14.2 % | −20.1 | 33.9 | 14.2 | 223.5 K | 219.6 K | **−3.9 K** |
+| Alpha Centauri A b III (Pandora) | 3.53 | 7.7 % | −10.9 | 11.7 | 4.9 | 223.5 K | 220.6 K | **−2.9 K** |
+| Alpha Centauri A b IV (Cassandra) | 8.40 | 3.1 % | −4.1 | 2.1 | 0.9 | 219.4 K | 217.9 K | −1.5 K |
+| Alpha Centauri A b V (Chaos) | 21.0 | 1.3 % | −0.8 | 0.3 | 0.1 | 180.8 K | 180.3 K | −0.5 K |
 
-The parent's illumination is large at the moon — 61 W/m² of thermal flux reaching Dante —
+The parent's illumination is large at the moon — 61 W/m² of thermal flux reaching A b I —
 but it enters the global average divided by four and after albedo, while the eclipse
 removes stellar flux that was already divided by four. **Eclipse loss wins at every
 distance**, so the net effect of "being a moon" is cooling, not warming. Intuition points
 the other way, which is precisely why the term is worth computing.
 
-### Why Pandora's lock is 32 h and not the canon 27 h
+### Why A b III's lock is 32 h and not the canon 27 h
 
 The board chose a 32 h tidal lock over the film's 27 h, recorded as keeping the ocean's
 tidal budget sub-runaway. That decision holds up quantitatively, and the margin is thin:
@@ -164,7 +164,7 @@ tidal budget sub-runaway. That decision holds up quantitatively, and the margin 
 A 10.7 % smaller orbit raises the tidal flux by 2.34×, purely from `a^(−15/2)`. The canon
 orbit lands just past the runaway ceiling; the adopted one sits comfortably inside it.
 
-The same calculation then explains Pandora's canon surface temperature without touching its
+The same calculation then explains A b III's canon surface temperature without touching its
 canon composition. With the four-term `T_eq` and the greenhouse increment of +53.6 K from
 its 18 % CO₂ + CH₄ atmosphere:
 
@@ -180,7 +180,7 @@ its 18 % CO₂ + CH₄ atmosphere:
 Read this as a constraint, not a prediction: `k₂/Q` ≈ 0.0016 is *fitted* to land on 290 K.
 What the table earns is the consistency statement — a single `k₂/Q` exists that puts the
 canon 27 h orbit past the runaway ceiling *and* reproduces the canon 290 K at 32 h. The
-sensitivity is brutal in the other direction: an Io-like interior would make Pandora a
+sensitivity is brutal in the other direction: an Io-like interior would make A b III a
 369 K steam world.
 
 The lesson generalizes past this system. For a close-in moon the tidal term, not the
@@ -220,14 +220,14 @@ changes in the dissipated energy flux."
 
 For NearStars this is good news, because it turns a threat into a knob:
 
-- The channel that could run away needs an obliquity we do not have. Pandora's recorded
+- The channel that could run away needs an obliquity we do not have. A b III's recorded
   `obliquity: 10°` is the **orbital inclination** (the board's own note: canon 29° reread
   as the orbital-plane tilt, `spin_axis_orientation: orbit normal`), so the tide-driving
   angle is the Cassini-state value, sub-degree, comparable to or smaller than Europa's.
 - The channel that remains is set by **ocean thickness**, which for an invented world is an
   art parameter. Pick a depth away from resonance and the flux is small; land on resonance
   and it moves by orders of magnitude.
-- Pandora's ocean is at the surface, so the ice-shell effects
+- A b III's ocean is at the surface, so the ice-shell effects
   ([Beuthe 2016](https://arxiv.org/abs/1608.08488)'s crustal suppression,
   [Hay & Matsuyama 2019](https://ui.adsabs.harvard.edu/abs/2019Icar..319...68H)'s
   shell-mediated enhancement) do not apply; the free-surface treatment is the right one,
@@ -238,7 +238,7 @@ For NearStars this is good news, because it turns a threat into a knob:
 resonance depends on an ocean depth nobody has chosen yet. What this section buys is the
 knowledge that the ocean channel is a depth choice rather than an uncontrolled risk, and
 that "the ocean's tidal budget" in the board's wording is the solid-body budget above plus
-this depth-dependent term. Fixing Pandora's ocean depth is the trigger to compute it, with
+this depth-dependent term. Fixing A b III's ocean depth is the trigger to compute it, with
 [Matsuyama 2018](https://arxiv.org/abs/1804.07727) as the method.
 
 ## Citations

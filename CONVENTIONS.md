@@ -213,6 +213,21 @@ Applies everywhere a citation surfaces, including the GitHub Wiki and generated 
 **Details:** URL slug `-` separator; file slug `_` separator. Lowercase → apostrophe-drop → compress non-alnum.
 **Source:** `project_naming_canonical.md`
 
+### 5.2b Cultural names vs formal designations in documents
+**Rule:** A fictional body's own documents (its Phase 4 board rows, the system's
+art-direction doc, its phase3 report) may use the cultural name (Polyphemus, Dante, …).
+Every **other** document referencing the body uses the **formal designation**: first
+mention per document = `Alpha Centauri A b I (Dante)` (full form + cultural name in
+parentheses), later mentions = the short form `A b I`. Korean text follows the same
+pattern (`A b III(판도라)` on first mention). Code paths, filenames, and quoted source
+material are exempt.
+**Why:** Owner (2026-07-30) — cultural names in outside docs blur what is a real
+catalogued object vs an in-mod fiction body; the designation carries the system context.
+**Details:** Designations: Polyphemus = Alpha Centauri A b; Dante/Hades/Pandora/
+Cassandra/Chaos = A b I–V. Applied 2026-07-30 across docs/reference, plans,
+stability-sim reports (+ ko mirrors), ~300 replacements.
+**Source:** `feedback_formal_designation_in_docs.md`
+
 ### 5.3 Curation data contract & convergence discipline
 **Rule:** `phase2/curation-data-contract/SPEC.md` is the canonical definition of Phase 2/3 data requirements. Convergence discipline: pin every cited value's arxiv_id in `docs/phase3/_bib/<slug>.yaml` → fetch **once** into gitignored cache via `fetch_arxiv_texts.py` → read cache only (never live web). One host at a time; multi-layer edits (DB + narrative + ko mirror) in one commit; `check.sh` gate after each.
 **Why:** Non-deterministic live web search caused audit divergence (each run found different papers, different values). Frozen cache + single-pass + one-host-at-a-time = reproducible.

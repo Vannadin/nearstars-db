@@ -152,7 +152,7 @@ moments are *internally* consistent (ε Eri 13200 = 0.66×20000), so it's the me
 not arithmetic.
 
 **Already compliant (honest analog, no false citation — the pattern to copy):**
-α Cen A b / Polyphemus (500 µT, "Saturn-analog, no measurement", low), HD 69830 b
+α Cen A b / Alpha Centauri A b (Polyphemus) (500 µT, "Saturn-analog, no measurement", low), HD 69830 b
 (Neptune-analog, low). **But HD 69830 c/d** mark confidence medium/high on an uncited
 Neptune-analog ratio — should be `low` (Tier 2).
 
@@ -217,7 +217,7 @@ blends, or pick a single cited material, or flag the blend n,k as an explicit as
   Solar-System self-validation, literature cross-checks (GH2024, Basant 2025, Domingos+2006).
 - **Stellar-wind inputs** (mass-loss Wood, L_X Wargelin/France, rotation/activity) — Phase 2
   measured + cited.
-- **Phase 4 art-direction** (Pandora +70 K greenhouse, Hades e, synthetic-noise e≲0.05): flagged
+- **Phase 4 art-direction** (Alpha Centauri A b III (Pandora) +70 K greenhouse, Alpha Centauri A b II (Hades) e, synthetic-noise e≲0.05): flagged
   art-direction / documented-limitation, not yet emitting.
 
 ---

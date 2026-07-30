@@ -9,7 +9,7 @@ the body's true effective temperature. Same spirit as the
 [tidal-heating doc](tidal-heating-methodology.md): cite the relation + a calibration
 that reproduces known bodies, not a fabricated measurement.
 
-This is a **recurring NearStars derived value**, used ad-hoc for Polyphemus
+This is a **recurring NearStars derived value**, used ad-hoc for Alpha Centauri A b (Polyphemus)
 (α Cen A b), ε Ind A b, and now Proxima c, so it gets a canonical grounded recipe here.
 
 > Citations resolved against NASA ADS (the registered `ADS_API_TOKEN`), not ad-hoc
@@ -87,7 +87,7 @@ Far enough out, the fixed `T_int` floor exceeds the vanishing `T_eq`.
 > **Energy-balance equivalent.** Observers usually quote the **internal flux ratio**: how
 > much power the body emits in excess of what it absorbs. If `f = L_int / L_absorbed`,
 > then `T_eff⁴ = T_eq⁴ (1 + f)`. Neptune has `f ≈ 1.6` (it emits ~2.6× what it absorbs,
-> §4); a self-luminous young giant has `f ≫ 1`; Polyphemus has `f ≲ 0.06` (§7).
+> §4); a self-luminous young giant has `f ≫ 1`; A b has `f ≲ 0.06` (§7).
 
 ---
 
@@ -114,7 +114,7 @@ The two robust qualitative scalings off those tracks:
   self-luminous for ~Gyr; a Saturn-mass object cools below detectability in ≲100 Myr.
 
 The practical consequence for NearStars: **an old, low-mass giant has a faint cooling
-luminosity and is irradiation-dominated** (Polyphemus, §7), whereas a **young giant of any
+luminosity and is irradiation-dominated** (A b, §7), whereas a **young giant of any
 mass is self-luminous** (the directly imaged regime, §3). Age and mass, not the host
 star, decide which regime a giant is in.
 
@@ -224,7 +224,7 @@ The body class decides which mechanism dominates and how confident the estimate 
    Confidence is a **factor of a few** (the Uranus anomaly, §4).
 3. **Giant planets (0.3 ≲ M ≲ 13 M_J): Kelvin–Helmholtz cooling tracks (§2).** Read
    `L_int(M, age)` off the Burrows/Baraffe/Fortney/Saumon-Marley grids. Old + low-mass →
-   faint → irradiation-dominated (Polyphemus §7); young → self-luminous (§3).
+   faint → irradiation-dominated (A b §7); young → self-luminous (§3).
 4. **Brown dwarfs (13–70 M_J): cooling tracks + a transient deuterium-burning plateau
    (§6).** Self-luminous for Gyr; the Sonora and Saumon & Marley grids cover this regime.
    `L_int` here is large enough that `T_eq` from a wide companion orbit is usually
@@ -281,7 +281,7 @@ heat is the larger term: its `T_eff` is set mostly by residual cooling, but it i
 self-luminous in the imaging sense (it would be detectable in thermal IR, but it is a cooled
 old giant, not a young hot one). Report `T_int` from the Gyr-old track, no start ambiguity.
 
-**Polyphemus = α Cen A b (old + low-mass = faint).** An **old (~5 Gyr), ~0.38 M_J
+**A b = α Cen A b (old + low-mass = faint).** An **old (~5 Gyr), ~0.38 M_J
 (Saturn-class)** temperate giant. Both knobs point to a *faint* cooling luminosity: low mass
 (small reservoir, fast cooling) **and** old age (long since cooled). The Phase-4 board used
 `T_int < 110 K` with internal flux **≲ 6 % of insolation**, i.e. `f ≲ 0.06`, so by §1

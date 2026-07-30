@@ -278,7 +278,7 @@ R(λ) = S(λ) · A(λ)
 으로 만들고, 표면을 통째로 가릴 만큼 광학적으로 두껍다. 색조는 레일리 신호가 아니라
 연무가 파랑을 흡수해서 정해진다. 지구의 반대 극한이다.
 
-**거대행성의 따뜻한 구름덱: α Cen "Polyphemus" 외관.** 온대(~225 K) 목성형 거대행성은
+**거대행성의 따뜻한 구름덱: α Cen "Alpha Centauri A b (Polyphemus)" 외관.** 온대(~225 K) 목성형 거대행성은
 **Sudarsky Class II**("물 구름" 클래스; Sudarsky+ 2000/2003)에 떨어진다. 높은 물 +
 NH₄SH 응결물 덱, 광학적으로 두꺼운 µm 규모 입자 → 밝고 대체로 **중성/흰색**인 Mie 덱(§4)이
 알베도를 올린다. **따뜻한 목성 같은 톤**은 위쪽 덱에 섞인 발색단에서 온다: 황 화합물
@@ -320,7 +320,7 @@ Polyphemus를 유난히 "정직한" 색 타깃으로 만든다. 조성→알베�
 
 - **Sudarsky, D., Burrows, A. & Hubeny, I. (2003)**: *ApJ* 588, 1121.
   **arXiv:astro-ph/0210216.** *Theoretical Spectra and Atmospheres of Extrasolar
-  Giant Planets*: **다섯 조성 클래스**(Class I/II 물 구름, …); Class II가 Polyphemus
+  Giant Planets*: **다섯 조성 클래스**(Class I/II 물 구름, …); Class II가 A b
   예제의 온대 거대행성 케이스다. §7. (273 cites.)
 
 - **Cahoy, K. L., Marley, M. S. & Fortney, J. J. (2010)**: *ApJ* 724, 189.
@@ -384,7 +384,7 @@ Polyphemus를 유난히 "정직한" 색 타깃으로 만든다. 조성→알베�
 ## 관련 문서
 
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): 거대행성이 어느 Sudarsky
-  클래스 / 응결물 덱에 떨어지는지를 정하는 온도의 자매 레시피(Polyphemus 예제의 ~225 K
+  클래스 / 응결물 덱에 떨어지는지를 정하는 온도의 자매 레시피(A b 예제의 ~225 K
   Class-II 앵커).
 - [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md): 여기의 레일리 기준선과 사용
   가능한 발색단 집합에 들어가는 *조성*(기압, μ, 산화환원)의 자매 레시피.

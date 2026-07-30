@@ -46,7 +46,7 @@ drifts and **IAS15 is canonical**. Near-equal binaries exclude WHFast outright
 warning, never the fail condition (chaotic-but-bounded ships — TRAPPIST-1).
 Measure real wall-clock per run instead of extrapolating. Moon-system runs
 include the parent's J₂ when it is on the board (`run.py --j2`), since Principia
-applies the geopotential in-game — see the Polyphemus J₂ section.
+applies the geopotential in-game — see the Alpha Centauri A b (Polyphemus) J₂ section.
 
 ## Three diagnostics — survival, chaos, eccentricity
 
@@ -209,12 +209,12 @@ IAS15 disrupts it, so 2 survive, not 3.)
 high-e/inclined orbit circularizes rather than disrupts, and a finer grid near
 the 45° and 112° boundaries would sharpen the stable band.
 
-### Polyphemus & Pandora (Avatar) — a HZ-stable orbit that hosts a moon
+### A b & Alpha Centauri A b III (Pandora) (Avatar) — a HZ-stable orbit that hosts a moon
 
-α Cen A b is the real-life candidate for **Polyphemus**, the *Avatar* gas giant
-whose moon **Pandora** is the Na'vi homeworld (Beichman 2025 / NPR 2025 /
+α Cen A b is the real-life candidate for **A b**, the *Avatar* gas giant
+whose moon **A b III** is the Na'vi homeworld (Beichman 2025 / NPR 2025 /
 *Seeking the Worlds of Avatar*, Astrobiology 2025). Asking whether a habitable
-Pandora could actually survive here drove a fine-tuning scan:
+A b III could actually survive here drove a fine-tuning scan:
 
 - **The Avatar canon distance (1.2 AU) is interior to the HZ** — at 1.2 AU the
   orbit is *dynamically* stable (e_max ≈ 0.14, MEGNO 2.0) but its periastron
@@ -225,22 +225,22 @@ Pandora could actually survive here drove a fine-tuning scan:
   median of the stable range — e 0–0.18 → **e = 0.1**, mutual inclination
   0–35° → **≈ 16°** — at a = 1.6 AU (the observed semi-major axis): HZ-stable
   over 10⁵ yr (IAS15, MEGNO 2.000, orbit 1.345–1.854 AU, e_max 0.157).
-- **Pandora is Hill-stable.** A 0.45 M⊕ moon at 225 000 km (Kepler back-out of
-  Pandora's ~27 h tidally-locked day; Polyphemus spans ~36° of its sky) sits at
+- **A b III is Hill-stable.** A 0.45 M⊕ moon at 225 000 km (Kepler back-out of
+  A b III's ~27 h tidally-locked day; A b spans ~36° of its sky) sits at
   ~0.02 R_Hill on a near-circular orbit (e ≈ 0, bound) — deep inside the
   Domingos+2006 limit. With the dt fix the moon's 1.12-day orbit is now properly
   resolved (dt 0.022 d, |ΔE/E| 3.6×10⁻¹⁰; the old dt of 50 d left it unresolved).
-  The full Avatar hierarchy (α Cen A → Polyphemus → Pandora, perturbed by α Cen
+  The full Avatar hierarchy (α Cen A → A b → A b III, perturbed by α Cen
   B) is dynamically viable on the stability-selected orbit, though not on the
   Kozai-unstable observed one. Test: `hypotheticals/alpha_centauri.json`, run
   with `--acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16` (moon: `--integrator
   trace`; planet boundaries: `--integrator ias15`).
 
-### Polyphemus moons with J₂ — the oblateness reverses the moon-orbit choice
+### A b moons with J₂ — the oblateness reverses the moon-orbit choice
 
-The point-mass moon runs omit Polyphemus's J₂. But Principia applies the
+The point-mass moon runs omit A b's J₂. But Principia applies the
 geopotential to the **celestial–celestial** integration, so the moons feel
-Polyphemus's oblateness in-game — J₂ is an *input* to the moon dynamics, not a
+A b's oblateness in-game — J₂ is an *input* to the moon dynamics, not a
 fidelity afterthought (`bulk.geopotential_j2 ≈ 0.023`, Radau–Darwin / Helled+2011,
 `reference_radius` 1.0 R_Jup). J₂ is injected via `run.py --j2 0.023` (a custom
 `scripts/j2.py` REBOUND `additional_forces` term — reboundx is incompatible with
@@ -250,16 +250,16 @@ impractical, so J₂ runs use TRACE (~11× faster, handles the binary).
 
 | config | point-mass (prior) | **with J₂ (in-game)** |
 |---|---|---|
-| **135k gap** (off-resonance) | stable | **STABLE** — 5 moons bound/calm, Hades e 0.02–0.05 (TRACE 1000 yr) |
-| **3:2 lock** (131k, M0=180°) | stable, libration held → *was the leading candidate* | **UNSTABLE** — Hades ejects at t ≈ 510 yr (TRACE 1000 yr) |
+| **135k gap** (off-resonance) | stable | **STABLE** — 5 moons bound/calm, Alpha Centauri A b II (Hades) e 0.02–0.05 (TRACE 1000 yr) |
+| **3:2 lock** (131k, M0=180°) | stable, libration held → *was the leading candidate* | **UNSTABLE** — A b II ejects at t ≈ 510 yr (TRACE 1000 yr) |
 
 **J₂ detunes the marginal 3:2 lock.** The lock was always a wide-amplitude
 (~130°) libration on the resonance edge; J₂'s added apsidal/nodal precession
-pushes it over the edge → circulation → Hades's eccentricity pumps to ejection
+pushes it over the edge → circulation → A b II's eccentricity pumps to ejection
 (~510 yr, inside the play horizon). So the off-resonance 135k gap — not the
 3:2 lock — is the moon layout to ship. **This reverses the point-mass
 recommendation** (which had the lock superseding the gap to self-consistently
-sustain Hades's tidal-heating eccentricity). With the lock dead under J₂, Hades's
+sustain A b II's tidal-heating eccentricity). With the lock dead under J₂, A b II's
 e ≈ 0.05 reverts to an *adopted given* (documented limitation), not a
 resonance-maintained value.
 
@@ -269,26 +269,26 @@ QUINLAN_TREMAINE order-12 (WHFast's Jacobi coordinates can't represent the
 moon→planet→star hierarchy). The **gap config is STABLE under leapfrog too**
 (|ΔE/E| 1.5×10⁻¹⁰) — accurate (TRACE) and Principia-class agree, so the adopted
 layout is robustly game-faithful. The **lock is integrator-sensitive** (leapfrog
-keeps Hades; TRACE ejects it): its ejection is a delicate resonant effect that
+keeps A b II; TRACE ejects it): its ejection is a delicate resonant effect that
 low-order fixed-step misses — itself a reason to avoid a knife-edge config.
 
 **Inclinations are *more* generous with J₂ (`results/_moons_inclination_scan.md`,
 TRACE 300 yr).** J₂ anchors the inner moons to the equatorial plane, resisting
 the star's Kozai pumping: the spread now stays bound to **s = 40°** (point-mass
-ejected there), the limiter shifting from inner Hades to the outer retrograde
-Chaos (e_max 0.88 at s = 40°). The visual sky-latitude spread can be pushed to
+ejected there), the limiter shifting from inner A b II to the outer retrograde
+Alpha Centauri A b V (Chaos) (e_max 0.88 at s = 40°). The visual sky-latitude spread can be pushed to
 s ≈ 25–30°. The inner-pair **co-tilt** (`results/_moons_cotilt_scan.md`): with the
 lock gone under J₂, tilted inner pairs (θ 10–30°) stay bound but circulate (no
 lock to preserve), and differential nodal precession drifts their mutual
 inclination to ~60° — co-tilting does not keep Dante/Hades coplanar.
 
-### Chaos ring-plane precession — why the ring anchors to the mean plane
+### A b V ring-plane precession — why the ring anchors to the mean plane
 
-The Polyphemus ring annuli share Chaos's **mean (Laplace) plane**, not its epoch
+The A b ring annuli share A b V's **mean (Laplace) plane**, not its epoch
 snapshot. The dense diagnostic run behind that choice (leapfrog, fixed 10 min step,
 2000 yr, 8000 snapshots, `results/_principia2000_dense`):
 
-- Chaos mean plane = retrograde **inc 175.4°** relative to the parent's orbital
+- A b V mean plane = retrograde **inc 175.4°** relative to the parent's orbital
   plane (sim-frame normal `[0.50, -0.80, -0.33]`); the emit epoch snapshot sits at
   inc 176.475°, 10.9° between the instantaneous and mean planes.
 - Libration about the mean plane: **RMS 5.7° / max 12.6°**, period ~56 yr.

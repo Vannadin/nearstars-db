@@ -60,9 +60,9 @@ KSPDocsSite / the wiki.**
 A NearStars-coupled C# plugin — **not yet drafted** (no `plugins/` skeleton). Same ownership as Warp/FluxTube: cfg-impossible runtime behavior → C# plugin; deep runtime + in-game test = Schultz lane.
 
 - **What:** re-orient a Kopernicus ring each frame to a chosen body's *live* Principia orbital plane, so a shepherd/source moon's ring stays coplanar as the moon precesses.
-- **Why cfg can't:** Kopernicus rings are static disks fixed to the planet — no n-body response. Under Principia the source moon (Chaos) precesses/librates (~56 yr, ±~6°; secular tip to ~18° over 2 kyr, per `results/_principia2000_dense`), so a fixed ring drifts off it.
+- **Why cfg can't:** Kopernicus rings are static disks fixed to the planet — no n-body response. Under Principia the source moon (Alpha Centauri A b V (Chaos)) precesses/librates (~56 yr, ±~6°; secular tip to ~18° over 2 kyr, per `results/_principia2000_dense`), so a fixed ring drifts off it.
 - **Grounding start:** Kopernicus `Ring` component + its transform (KSPDocsSite / Kopernicus source); read the body's live `Orbit` normal (`class_orbit.html`); update per-frame in a `KSPAddon`/`MonoBehaviour`.
-- **Interim (no plugin):** anchor the static ring to Chaos's *mean (Laplace) plane* — see `phase4/alpha_centauri.yaml` rings axis.
+- **Interim (no plugin):** anchor the static ring to A b V's *mean (Laplace) plane* — see `phase4/alpha_centauri.yaml` rings axis.
 
 ---
 

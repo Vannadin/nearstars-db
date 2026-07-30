@@ -9,8 +9,8 @@ volcanism, a subsurface ocean, or plumes. Same spirit as the
 that reproduces known bodies, not a fabricated measurement.
 
 This is the **single most repeated derived value in NearStars Phase 4** (it was
-recomputed four separate times in one α Cen session, for the moons Dante, Hades,
-Pandora and Chaos), so it gets a canonical grounded recipe here.
+recomputed four separate times in one α Cen session, for the moons
+Alpha Centauri A b I–III and A b V (Dante, Hades, Pandora, Chaos)), so it gets a canonical grounded recipe here.
 
 > Citations resolved against NASA ADS (the registered `ADS_API_TOKEN`), not ad-hoc
 > web search; arXiv id where one exists, otherwise the authoritative ADS bibcode
@@ -140,11 +140,11 @@ heating collapses to **MW-level**, utterly negligible for melting ice or driving
 plumes (Enceladus, by contrast, sits at only ~4 R_Sat, *close in*, which is why a
 252 km moon still musters GW).
 
-**The NearStars Chaos lesson.** In the α Cen Phase-4 work, the moon **Chaos** at
+**The NearStars A b V lesson.** In the α Cen Phase-4 work, the moon **A b V** at
 ~20 planetary radii was shown by exactly this calculation to receive only
 **~MW-level** tidal power, *orders of magnitude too little* to sustain a subsurface
 ocean or cryovolcanic plumes. The favourable narrative (resonance, soft interior)
-could not lift it past the `a⁻⁷·⁵` gate. So Chaos's plumes were accepted as an
+could not lift it past the `a⁻⁷·⁵` gate. So A b V's plumes were accepted as an
 **art-first documented divergence** on the Phase-4 board, explicitly *not* a
 physically derived feature. By contrast a moon placed close-in (a few R_p) clears
 the gate and its heating *is* derivable.
@@ -276,13 +276,13 @@ moons qualitatively (board values, not reproduced here):
   clears the §3 gate. Its `Ė` is in the GW–TW range depending on `R` and `k₂/Q`,
   enough for an active ocean or volcanism, a **derived** feature with the resonance
   named on the board.
-- **Chaos at ~20 R_p** fails the gate: the `a⁻⁷·⁵` collapse drops `Ė` to
+- **A b V at ~20 R_p** fails the gate: the `a⁻⁷·⁵` collapse drops `Ė` to
   **~MW-level**, ~5×10⁻⁴ of the close-in case, far below any ocean/plume threshold.
   Its cryovolcanic plumes are therefore an **art-first documented divergence** on the
   Phase-4 board, recorded as a deliberate choice that overrides the physics, not a
   value the recipe produced. This is the canonical example of §8's honesty rule.
 
-**Hades — two refutations worth keeping (moved off the board, 2026-07-28).** Two
+**A b II — two refutations worth keeping (moved off the board, 2026-07-28).** Two
 plausible-sounding arguments failed on this body and generalize to any Io-type case:
 
 1. *"High internal heat, but a small rigid moon has a low k₂/Q, so the energy
@@ -293,7 +293,7 @@ plausible-sounding arguments failed on this body and generalize to any Io-type c
    conservation pins the area-weighted `σT⁴` mean no matter how the heat concentrates
    into hotspots. You cannot buy a cold surface with a hot interior.
 2. *"Just lower the eccentricity in the initial conditions."* When a much larger
-   neighbor forces `e` (Hades: Pandora at 770× its mass, period ratio 2.22), the
+   neighbor forces `e` (A b II: A b III at 770× its mass, period ratio 2.22), the
    stability sim returns the same `e_max` for any initial `e` — three runs with
    `e_init` 0.005/0.010/0.020 all came back at 0.047–0.064. Forced eccentricity is a
    property of the architecture, not of the starting state; only moving the
@@ -316,7 +316,7 @@ In the spirit of the dynamo doc's caveats:
 - **`e` must be maintained or the heating is transient** (§4). A snapshot `e` with no
   resonance is not a steady heat source.
 - **The `a⁻⁷·⁵` gate is hard physics, not a tunable.** Where a NearStars body needs a
-  feature the gate forbids (Chaos), that is a **documented divergence**, flagged on
+  feature the gate forbids (A b V), that is a **documented divergence**, flagged on
   the board as art overriding physics, never dressed up as a derivation. The method's
   value is precisely that it tells you honestly when a feature is *not* physically
   supported, so the override is an explicit, recorded choice.
