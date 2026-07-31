@@ -368,7 +368,7 @@ The b bibliography includes ~30 papers without arXiv preprints, plus
 biosphere modeling, etc.). The most likely visual-informative items
 in the not-read set:
 
-- **2026NatAs.tmp...88** "The innermost planets in the TRAPPIST-1
+- **2026NatAs..10..608.** "The innermost planets in the TRAPPIST-1
   system do not have thick atmospheres" — likely Lustig-Yaeger-led
   recent Nature Astronomy summary. The arXiv preprint is on the way
   but not yet indexed at retrieval time (2026-05-21). **Flagged for

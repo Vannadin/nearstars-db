@@ -16,7 +16,7 @@ known gaps. **Highest priority for manual fetch.**
 
 | Bibcode | Year | Planet | Title | Why it matters |
 |---|---|---|---|---|
-| 2026NatAs.tmp...88. | 2026 | b, c | The innermost planets in the TRAPPIST-1 system do not have thick atmospheres | Likely a Nature Astronomy publication consolidating Greene 2023 / Zieba 2023 / Ducrot 2025; may tighten atmosphere upper limits |
+| 2026NatAs..10..608. | 2026 | b, c | The innermost planets in the TRAPPIST-1 system do not have thick atmospheres | Likely a Nature Astronomy publication consolidating Greene 2023 / Zieba 2023 / Ducrot 2025; may tighten atmosphere upper limits |
 | [`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G) | 2026 | b, c | No thick atmosphere around TRAPPIST-1 b and c from JWST thermal phase curves | Likely the published version of [2509.02128](https://arxiv.org/abs/2509.02128) (Ducrot 2025); confirm if there are revised constraints |
 | [`2024ESS.....510106L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....510106L) | 2024 | f | TRAPPIST-1 Atmospheric Reconnaissance with JWST: First Look at the Habitable-Zone Exoplanet TRAPPIST-1 f with NIRISS | **Only direct JWST observation of f**, currently cited from ADS abstract only. Full text could clarify atmosphere constraints. |
 | [`2024ESS.....562710L`](https://ui.adsabs.harvard.edu/abs/2024ESS.....562710L) | 2024 | c | Potential Atmospheric Compositions of TRAPPIST-1 c constrained by JWST | Possibly a precursor / conference version of Lincowski 2023 (arXiv [2308.05899](https://arxiv.org/abs/2308.05899)) — confirm consistency |
@@ -54,12 +54,12 @@ read.
 
 ## Fetching tips
 
-1. **ADS bibcodes** like `2026NatAs.tmp...88.` → search at
-   <https://ui.adsabs.harvard.edu/abs/2026NatAs.tmp...88./abstract>
+1. **ADS bibcodes** like `2026NatAs..10..608.` → search at
+   <https://ui.adsabs.harvard.edu/abs/2026NatAs..10..608./abstract>
    (replace dots if URL needs them).
 2. **Nature Astronomy 2026 papers**: probably have arXiv preprints
    filed days-to-weeks later; try a re-fetch of bibliographies in
-   2026-06+ to see if `2026NatAs.tmp...88.` and [`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G)
+   2026-06+ to see if `2026NatAs..10..608.` and [`2026NatAs..10..674G`](https://ui.adsabs.harvard.edu/abs/2026NatAs..10..674G)
    now resolve.
 3. **Conference papers (EPSC, EGU, AGU)**: usually have abstracts only;
    may not be worth chasing unless the title is highly specific to a

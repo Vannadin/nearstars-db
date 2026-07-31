@@ -184,7 +184,7 @@ describes. (Binary/multiple systems use one file per component; see
         "uncertainty_msun": 0.0039,
         "method": "binary_orbit",
         "reference": "Pourbaix et al. 2002",
-        "doi": "10.1051/0004-6361:20021249",
+        "doi": "10.1051/0004-6361:20020287",
         "recommended": true
       },
       {
@@ -398,8 +398,8 @@ complete bibliography for the file.
 [
   {
     "title": "Constraining the difference in convective blueshift between the components of alpha Centauri with precise radial velocities",
-    "doi": "10.1051/0004-6361:20021249",
-    "bibcode": "2002A&A...394..151P",
+    "doi": "10.1051/0004-6361:20020287",
+    "bibcode": "2002A&A...386..280P",
     "accessed": "2026-05-16",
     "used_for": ["Alpha Centauri A mass", "Alpha Centauri B mass"]
   },

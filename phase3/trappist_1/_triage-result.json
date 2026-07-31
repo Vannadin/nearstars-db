@@ -3431,20 +3431,20 @@
   "no_arxiv": {
     "deep_read": [
       {
-        "arxiv_id_or_bibcode": "2026NatAs.tmp...88.",
+        "arxiv_id_or_bibcode": "2026NatAs..10..608.",
         "title": "The innermost planets in the TRAPPIST-1 system do not have thick atmospheres",
         "abstract": "Thermal phase curves of the two innermost planets in the TRAPPIST-1 system show strong dayside emission and faint nightside emission \u2014 ruling out thick atmospheres on both planets. TRAPPIST-1 b seems to be airless. But TRAPPIST-1 c might host a tenuous atmosphere, or be a bare rock with different surface properties to TRAPPIST-1 b.",
         "authors": [],
         "year": "2026",
         "doi": "10.1038/s41550-026-02805-w",
-        "ads_bibcode": "2026NatAs.tmp...88.",
+        "ads_bibcode": "2026NatAs..10..608.",
         "planets": [
           "b",
           "c"
         ]
       },
       {
-        "arxiv_id_or_bibcode": "2026NatAs.tmp...65G",
+        "arxiv_id_or_bibcode": "2026NatAs..10..674G",
         "title": "No thick atmosphere around TRAPPIST-1 b and c from JWST thermal phase curves",
         "abstract": "The survival of dense secondary atmospheres around temperate rocky planets orbiting low-mass red dwarfs remains an important open question. Here we show that the thermal phase curves of TRAPPIST-1 b and TRAPPIST-1 c, measured with the James Webb Space Telescope at 15 \u03bcm, are consistent with bare rocky surfaces rather than thick atmospheres. TRAPPIST-1 b exhibits a high dayside brightness temperature (490 \u00b1 17 K), no significant nightside emission and no phase offset\u2014features indicative of a dark, airless surface. TRAPPIST-1 c shows a cooler dayside (369 \u00b1 23 K) and a similarly cold nightside, consistent with either a tenuous, oxygen-rich atmosphere or an equally airless, more reflective surface. Models with surface pressures above ~1 bar are strongly disfavoured for both planets. These results suggest divergent evolutionary pathways or atmospheric loss processes despite their similar compositions.",
         "authors": [
@@ -3484,7 +3484,7 @@
         ],
         "year": "2026",
         "doi": "10.1038/s41550-026-02806-9",
-        "ads_bibcode": "2026NatAs.tmp...65G",
+        "ads_bibcode": "2026NatAs..10..674G",
         "planets": [
           "b",
           "c"

@@ -121,7 +121,7 @@ Beyond the LTE-verification sources above, the non-LTE work (the reentry blue,
 the 2-temperature mode, and the aurora table) drew on:
 
 **Non-LTE reentry / collisional-radiative implementation.** ADS:
-`2025PhPl..32j3512A` (3-temperature collisional-radiative air plasma),
+`2025PhPl...32j3512A` (3-temperature collisional-radiative air plasma),
 [`2026arXiv260411856Z`](https://ui.adsabs.harvard.edu/abs/2026arXiv260411856Z) (RAPRAL line-by-line + ray-tracing), `2011PhDT` (Monte
 Carlo hypersonic radiation), `2001PhDT` (ionizational non-equilibrium recombining
 air), [`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C) (non-equilibrium reentry radiation). The N₂⁺ 1NG blue

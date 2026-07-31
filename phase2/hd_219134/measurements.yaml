@@ -123,7 +123,7 @@ stellar:
       uncertainty_deg: 8
       method: zeeman_doppler
       reference: Folsom et al. 2018
-      bibcode: 2018A&A...619A.130F
+      bibcode: 2018MNRAS.481.5286F
       recommended: true
       notes: ZDI (Narval).
     age_measurements:

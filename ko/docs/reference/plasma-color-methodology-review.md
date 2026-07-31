@@ -46,7 +46,7 @@ ADS: [`2010AcSpB..65...86C`](https://ui.adsabs.harvard.edu/abs/2010AcSpB..65...8
 위 LTE 검증 출처 외에, 비-LTE 작업(재진입 청색·2온도 모드·오로라 표)이 참조한 것.
 
 **비-LTE 재진입 / collisional-radiative 구현.** ADS:
-`2025PhPl..32j3512A`(3온도 CR 공기 플라스마), [`2026arXiv260411856Z`](https://ui.adsabs.harvard.edu/abs/2026arXiv260411856Z)(RAPRAL line-by-line + ray-tracing), `2011PhDT`(Monte Carlo 극초음속 복사), `2001PhDT`(재결합 공기 이온화 비평형), [`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C)(비평형 재진입 복사). N₂⁺ 1NG 청색은 전자충돌(Park 2온도): saha_boltzmann `t_elec` 모드의 근거.
+`2025PhPl...32j3512A`(3온도 CR 공기 플라스마), [`2026arXiv260411856Z`](https://ui.adsabs.harvard.edu/abs/2026arXiv260411856Z)(RAPRAL line-by-line + ray-tracing), `2011PhDT`(Monte Carlo 극초음속 복사), `2001PhDT`(재결합 공기 이온화 비평형), [`1994ntrs.rept23568C`](https://ui.adsabs.harvard.edu/abs/1994ntrs.rept23568C)(비평형 재진입 복사). N₂⁺ 1NG 청색은 전자충돌(Park 2온도): saha_boltzmann `t_elec` 모드의 근거.
 
 **CR 데이터 가용성**(검증, 이전 과장 정정: 주요 대기엔 데이터 있음): LXCat 전자산란 단면적 DB(Pitchford et al. 2017, *Plasma Processes & Polymers*) 42종, N₂/O₂/CO₂/CH₄/H₂/CO/NO/SO₂ 포함. CoRaM-AIR 2온도 CR(전자상태 829). 화성/타이탄/목성 진입 CR 모델 존재. 이색적 외계행성 조성만 희박. 분자 라인리스트는 HITRAN/HITEMP.
 

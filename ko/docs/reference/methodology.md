@@ -182,7 +182,7 @@ KSP 목적으로는 무시할 수 있는 수준입니다.
         "uncertainty_msun": 0.0039,
         "method": "binary_orbit",
         "reference": "Pourbaix et al. 2002",
-        "doi": "10.1051/0004-6361:20021249",
+        "doi": "10.1051/0004-6361:20020287",
         "recommended": true
       },
       {
@@ -384,8 +384,8 @@ DB가 아닌 Kopernicus cfg 생성 단계에서 처리합니다. cfg를 작성�
 [
   {
     "title": "Constraining the difference in convective blueshift between the components of alpha Centauri with precise radial velocities",
-    "doi": "10.1051/0004-6361:20021249",
-    "bibcode": "2002A&A...394..151P",
+    "doi": "10.1051/0004-6361:20020287",
+    "bibcode": "2002A&A...386..280P",
     "accessed": "2026-05-16",
     "used_for": ["Alpha Centauri A mass", "Alpha Centauri B mass"]
   },

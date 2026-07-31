@@ -347,7 +347,7 @@ b bibliography 에는 arXiv preprint 가 없는 ~30 편의 논문이 있고, arX
 논문도 ~5 편 추가됩니다. 그중 시각 정보를 줄 가능성이 가장 높은
 항목들을 적습니다.
 
-- **2026NatAs.tmp...88** "The innermost planets in the TRAPPIST-1
+- **2026NatAs..10..608.** "The innermost planets in the TRAPPIST-1
   system do not have thick atmospheres" — Lustig-Yaeger 가 주도한 최근
   Nature Astronomy 종합일 가능성. arXiv preprint 가 곧 올라올 예정이지만
   수집 시점(2026-05-21)에는 아직 색인되지 않음. **몇 주 뒤 재수집
