@@ -39,25 +39,29 @@ public sealed class WarpBridge : MonoBehaviour {
         bool warping =
             VesselHasEngagedDrive(vessel) && AssertReleaseFlag(vessel);
         if (warping) {
-          if (!last_warping_.ContainsKey(vessel.id)) {
+          if (!disengaged_frames_.ContainsKey(vessel.id)) {
             Debug.Log("[PrincipiaWarpBridge] Warp engaged on " +
                       vessel.vesselName +
                       "; asserting the Principia release flag");
           }
-          last_warping_[vessel.id] = Time.fixedTime;
-        } else if (last_warping_.TryGetValue(vessel.id, out float last)) {
-          // Clear our own assertion once the drive has stayed disengaged for
-          // a debounce interval, so re-adoption does not wait out the full
-          // dead-man grace; the debounce absorbs one-frame flameout or
-          // throttle flicker mid-cruise.  A mod asserting the channel
-          // directly re-raises the flag the next frame, so the worst case of
-          // stepping on one is a single adopt/release cycle.
-          if (Time.fixedTime - last > clear_debounce_seconds) {
+          disengaged_frames_[vessel.id] = 0;
+        } else if (disengaged_frames_.TryGetValue(vessel.id,
+                                                  out int frames)) {
+          // Clear our own assertion once the drive has stayed disengaged
+          // past a one-frame guard, so re-adoption is near-immediate instead
+          // of waiting out the dead-man grace; the guard absorbs a
+          // single-frame flameout or throttle flicker mid-cruise, and a
+          // wrongly cleared cruise costs one bounded adopt/release cycle,
+          // never corruption.  A mod asserting the channel directly
+          // re-raises the flag the next frame.
+          if (++frames >= clear_after_disengaged_frames) {
             SetReleaseFlag(vessel, false);
-            last_warping_.Remove(vessel.id);
+            disengaged_frames_.Remove(vessel.id);
             Debug.Log("[PrincipiaWarpBridge] Warp ended on " +
                       vessel.vesselName +
                       "; clearing the release flag for prompt re-adoption");
+          } else {
+            disengaged_frames_[vessel.id] = frames;
           }
         }
       } catch (Exception e) {
@@ -217,14 +221,15 @@ public sealed class WarpBridge : MonoBehaviour {
   private static Type kspie_drive_type_;
   private static FieldInfo kspie_is_enabled_;
 
-  // Seconds a drive must stay disengaged before the bridge clears the flag
-  // instead of letting the ~10 s dead-man grace run out.
-  private const float clear_debounce_seconds = 3;
+  // Consecutive disengaged physics frames before the bridge clears the flag
+  // instead of letting the ~10 s dead-man grace run out; 2 keeps a
+  // one-frame flicker guard while making re-adoption near-immediate.
+  private const int clear_after_disengaged_frames = 2;
 
-  // Physics-clock time of the last frame each vessel was detected warping;
-  // drives the engage/end transitions and the debounced clear.
-  private readonly Dictionary<Guid, float> last_warping_ =
-      new Dictionary<Guid, float>();
+  // Consecutive disengaged-frame count per vessel detected warping; 0 while
+  // engaged.  Drives the engage/end transitions and the prompt clear.
+  private readonly Dictionary<Guid, int> disengaged_frames_ =
+      new Dictionary<Guid, int>();
   private bool error_logged_ = false;
 }
 
