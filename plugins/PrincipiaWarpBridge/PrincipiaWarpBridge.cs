@@ -109,8 +109,21 @@ public sealed class WarpBridge : MonoBehaviour {
   // the elected engine refreshes all of them every frame.
   private static bool BlueshiftEngineIsWarping(PartModule module) {
     var engine = module as ModuleEngines;
-    if (engine == null || !engine.EngineIgnited || engine.flameout ||
-        engine.requestedThrottle <= 0f) {
+    if (engine == null || !engine.EngineIgnited) {
+      return false;
+    }
+    // Under rails timewarp Blueshift cruises by INJECTING the warp velocity
+    // into the stock orbit (addWarpCruiseVelocity), flagged by
+    // lockedCourseAndSpeed, and subtracts it back when the cruise ends.
+    // While that flag is up the stock orbit is not a valid re-adoption
+    // state — a vessel re-adopted then would keep warpSpeed × c forever —
+    // so it counts as warping regardless of throttle or flameout.  The
+    // ignition gate above matters: a shut-down engine never runs the
+    // cancel path, so its flag can be stale forever and must be ignored.
+    if ((bool)blueshift_locked_cruise_.GetValue(module)) {
+      return true;
+    }
+    if (engine.flameout || engine.requestedThrottle <= 0f) {
       return false;
     }
     return (bool)blueshift_apply_translation_.GetValue(module) &&
@@ -168,13 +181,15 @@ public sealed class WarpBridge : MonoBehaviour {
             FieldInfo altitude = BoolField(type, "meetsWarpAltitude");
             FieldInfo capacity = BoolField(type, "hasWarpCapacity");
             FieldInfo translating = BoolField(type, "applyWarpTranslation");
+            FieldInfo locked = BoolField(type, "lockedCourseAndSpeed");
             if (in_space != null && altitude != null && capacity != null &&
-                translating != null) {
+                translating != null && locked != null) {
               blueshift_engine_type_ = type;
               blueshift_is_in_space_ = in_space;
               blueshift_meets_warp_altitude_ = altitude;
               blueshift_has_warp_capacity_ = capacity;
               blueshift_apply_translation_ = translating;
+              blueshift_locked_cruise_ = locked;
             }
           }
         }
@@ -218,6 +233,7 @@ public sealed class WarpBridge : MonoBehaviour {
   private static FieldInfo blueshift_meets_warp_altitude_;
   private static FieldInfo blueshift_has_warp_capacity_;
   private static FieldInfo blueshift_apply_translation_;
+  private static FieldInfo blueshift_locked_cruise_;
   private static Type kspie_drive_type_;
   private static FieldInfo kspie_is_enabled_;
 
