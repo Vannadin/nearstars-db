@@ -6,6 +6,27 @@ using UnityEngine;
 
 namespace PrincipiaWarpBridge {
 
+// Difficulty-settings page for the bridge (stock dialog: new game or
+// in-game Settings → Difficulty Options).
+public class WarpBridgeSettings : GameParameters.CustomParameterNode {
+  [GameParameters.CustomParameterUI(
+      "Blueshift: preserve inertial velocity on cruise exit",
+      toolTip = "Blueshift's rails-timewarp cruise ends co-moving with the " +
+                "current main body (its stock behaviour).  With this on, " +
+                "the ship's pre-cruise inertial velocity is restored " +
+                "instead — a realistic arrival that must be braked off.",
+      autoPersistance = true)]
+  public bool preserveInertialVelocity = false;
+
+  public override string Title => "Warp bridge";
+  public override string Section => "PrincipiaWarpBridge";
+  public override string DisplaySection => "Principia Warp Bridge";
+  public override int SectionOrder => 1;
+  public override GameParameters.GameMode GameMode =>
+      GameParameters.GameMode.ANY;
+  public override bool HasPresets => false;
+}
+
 // Detects an engaged warp drive from Blueshift (WBIWarpEngine) or KSP
 // Interstellar Extended (AlcubierreDrive) on any loaded vessel and asserts
 // the Principia fork's warp release channel (PrincipiaWarpStatus.warpEngaged)
@@ -29,6 +50,8 @@ public sealed class WarpBridge : MonoBehaviour {
         !FlightGlobals.ready) {
       return;
     }
+    bool preserve_velocity = blueshift_engine_type_ != null &&
+                             PreserveInertialVelocityEnabled();
     List<Vessel> vessels = FlightGlobals.VesselsLoaded;
     for (int i = 0; i < vessels.Count; ++i) {
       Vessel vessel = vessels[i];
@@ -36,17 +59,56 @@ public sealed class WarpBridge : MonoBehaviour {
         continue;
       }
       try {
-        bool warping =
-            VesselHasEngagedDrive(vessel) && AssertReleaseFlag(vessel);
+        ScanVessel(vessel,
+                   out bool engaged,
+                   out bool cruise_locked,
+                   out bool has_blueshift_drive);
+        bool needs_state = engaged || cruise_locked ||
+                           (preserve_velocity && has_blueshift_drive);
+        if (!states_.TryGetValue(vessel.id, out VesselState state)) {
+          if (!needs_state) {
+            continue;
+          }
+          state = new VesselState();
+          states_[vessel.id] = state;
+        }
+
+        // Cruise-exit velocity bookkeeping (Blueshift's timewarp cruise
+        // rebases the ship to co-move with its main body; when the
+        // difficulty option asks for it, restore the pre-cruise inertial
+        // velocity instead).  The candidate is sampled every unlocked frame,
+        // frozen at lock start (pre-injection either way, since the lock
+        // flag and the injection are set in the same synchronous call), and
+        // replayed as an absolute target right after the unlock.
+        if (preserve_velocity && has_blueshift_drive) {
+          if (cruise_locked && !state.cruise_locked && state.has_candidate) {
+            state.frozen_velocity = state.candidate_velocity;
+            state.has_frozen = true;
+            Debug.Log("[PrincipiaWarpBridge] Timewarp cruise on " +
+                      vessel.vesselName +
+                      "; captured pre-cruise inertial velocity");
+          } else if (!cruise_locked && state.cruise_locked &&
+                     state.has_frozen && state.asserting) {
+            RestoreInertialVelocity(vessel, state.frozen_velocity);
+            state.has_frozen = false;
+          }
+          if (!cruise_locked) {
+            state.candidate_velocity = vessel.orbit.GetFrameVel();
+            state.has_candidate = true;
+          }
+        }
+        state.cruise_locked = cruise_locked;
+
+        bool warping = engaged && AssertReleaseFlag(vessel);
         if (warping) {
-          if (!disengaged_frames_.ContainsKey(vessel.id)) {
+          if (!state.asserting) {
             Debug.Log("[PrincipiaWarpBridge] Warp engaged on " +
                       vessel.vesselName +
                       "; asserting the Principia release flag");
           }
-          disengaged_frames_[vessel.id] = 0;
-        } else if (disengaged_frames_.TryGetValue(vessel.id,
-                                                  out int frames)) {
+          state.asserting = true;
+          state.disengaged_frames = 0;
+        } else if (state.asserting) {
           // Clear our own assertion once the drive has stayed disengaged
           // past a one-frame guard, so re-adoption is near-immediate instead
           // of waiting out the dead-man grace; the guard absorbs a
@@ -54,14 +116,12 @@ public sealed class WarpBridge : MonoBehaviour {
           // wrongly cleared cruise costs one bounded adopt/release cycle,
           // never corruption.  A mod asserting the channel directly
           // re-raises the flag the next frame.
-          if (++frames >= clear_after_disengaged_frames) {
+          if (++state.disengaged_frames >= clear_after_disengaged_frames) {
             SetReleaseFlag(vessel, false);
-            disengaged_frames_.Remove(vessel.id);
+            state.asserting = false;
             Debug.Log("[PrincipiaWarpBridge] Warp ended on " +
                       vessel.vesselName +
                       "; clearing the release flag for prompt re-adoption");
-          } else {
-            disengaged_frames_[vessel.id] = frames;
           }
         }
       } catch (Exception e) {
@@ -74,7 +134,13 @@ public sealed class WarpBridge : MonoBehaviour {
     }
   }
 
-  private static bool VesselHasEngagedDrive(Vessel vessel) {
+  private static void ScanVessel(Vessel vessel,
+                                 out bool engaged,
+                                 out bool cruise_locked,
+                                 out bool has_blueshift_drive) {
+    engaged = false;
+    cruise_locked = false;
+    has_blueshift_drive = false;
     List<Part> parts = vessel.parts;
     for (int p = 0; p < parts.Count; ++p) {
       PartModuleList modules = parts[p].Modules;
@@ -86,18 +152,22 @@ public sealed class WarpBridge : MonoBehaviour {
         }
         Type type = module.GetType();
         if (blueshift_engine_type_ != null &&
-            blueshift_engine_type_.IsAssignableFrom(type) &&
-            BlueshiftEngineIsWarping(module)) {
-          return true;
-        }
-        if (kspie_drive_type_ != null &&
-            kspie_drive_type_.IsAssignableFrom(type) &&
-            (bool)kspie_is_enabled_.GetValue(module)) {
-          return true;
+            blueshift_engine_type_.IsAssignableFrom(type)) {
+          has_blueshift_drive = true;
+          if (module is ModuleEngines engine && engine.EngineIgnited &&
+              (bool)blueshift_locked_cruise_.GetValue(module)) {
+            cruise_locked = true;
+            engaged = true;
+          } else if (BlueshiftEngineIsWarping(module)) {
+            engaged = true;
+          }
+        } else if (kspie_drive_type_ != null &&
+                   kspie_drive_type_.IsAssignableFrom(type) &&
+                   (bool)kspie_is_enabled_.GetValue(module)) {
+          engaged = true;
         }
       }
     }
-    return false;
   }
 
   // Mirrors the preconditions under which WBIWarpEngine applies its warp
@@ -130,6 +200,49 @@ public sealed class WarpBridge : MonoBehaviour {
            (bool)blueshift_is_in_space_.GetValue(module) &&
            (bool)blueshift_meets_warp_altitude_.GetValue(module) &&
            (bool)blueshift_has_warp_capacity_.GetValue(module);
+  }
+
+  // Rewrites the stock orbit so the vessel's total inertial velocity equals
+  // the pre-cruise capture, mirroring the GoOnRails/UpdateFromStateVectors
+  // pattern Blueshift itself uses.  Runs while the vessel is still released,
+  // so Principia adopts the corrected orbit.  The target is absolute, which
+  // makes the correction independent of whatever the cruise arithmetic left
+  // in the orbit.
+  private static void RestoreInertialVelocity(Vessel vessel,
+                                              Vector3d target_velocity) {
+    Orbit orbit = vessel.orbit;
+    Vector3d delta = target_velocity - orbit.GetFrameVel();
+    if (delta.sqrMagnitude < 1e-6) {
+      return;
+    }
+    vessel.IgnoreGForces(2);
+    bool was_packed = vessel.packed;
+    try {
+      if (!was_packed) {
+        vessel.GoOnRails();
+      }
+      orbit.UpdateFromStateVectors(orbit.pos,
+                                   orbit.vel + delta,
+                                   orbit.referenceBody,
+                                   Planetarium.GetUniversalTime());
+    } finally {
+      if (!was_packed) {
+        vessel.GoOffRails();
+      }
+    }
+    Debug.Log("[PrincipiaWarpBridge] Restored pre-cruise inertial velocity " +
+              "on " + vessel.vesselName + " (difficulty option); Δv " +
+              delta.magnitude.ToString("F1") + " m/s");
+  }
+
+  private static bool PreserveInertialVelocityEnabled() {
+    Game game = HighLogic.CurrentGame;
+    if (game == null) {
+      return false;
+    }
+    WarpBridgeSettings settings =
+        game.Parameters.CustomParams<WarpBridgeSettings>();
+    return settings != null && settings.preserveInertialVelocity;
   }
 
   private static bool AssertReleaseFlag(Vessel vessel) {
@@ -225,6 +338,16 @@ public sealed class WarpBridge : MonoBehaviour {
     return field != null && field.FieldType == typeof(bool) ? field : null;
   }
 
+  private sealed class VesselState {
+    public bool asserting;          // Release flag raised and not yet cleared.
+    public int disengaged_frames;   // Consecutive frames without a live drive.
+    public bool cruise_locked;      // Blueshift timewarp cruise in progress.
+    public bool has_candidate;      // candidate_velocity is valid.
+    public bool has_frozen;         // frozen_velocity is valid.
+    public Vector3d candidate_velocity;  // Latest unlocked inertial velocity.
+    public Vector3d frozen_velocity;     // Pre-cruise inertial velocity.
+  }
+
   private static bool initialized_ = false;
   private static Type warp_status_type_;
   private static PropertyInfo warp_engaged_;
@@ -242,10 +365,8 @@ public sealed class WarpBridge : MonoBehaviour {
   // one-frame flicker guard while making re-adoption near-immediate.
   private const int clear_after_disengaged_frames = 2;
 
-  // Consecutive disengaged-frame count per vessel detected warping; 0 while
-  // engaged.  Drives the engage/end transitions and the prompt clear.
-  private readonly Dictionary<Guid, int> disengaged_frames_ =
-      new Dictionary<Guid, int>();
+  private readonly Dictionary<Guid, VesselState> states_ =
+      new Dictionary<Guid, VesselState>();
   private bool error_logged_ = false;
 }
 
