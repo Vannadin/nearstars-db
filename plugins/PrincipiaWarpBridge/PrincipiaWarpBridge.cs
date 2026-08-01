@@ -38,13 +38,27 @@ public sealed class WarpBridge : MonoBehaviour {
       try {
         bool warping =
             VesselHasEngagedDrive(vessel) && AssertReleaseFlag(vessel);
-        if (warping && warping_.Add(vessel.id)) {
-          Debug.Log("[PrincipiaWarpBridge] Warp engaged on " +
-                    vessel.vesselName +
-                    "; asserting the Principia release flag");
-        } else if (!warping && warping_.Remove(vessel.id)) {
-          Debug.Log("[PrincipiaWarpBridge] Warp ended on " +
-                    vessel.vesselName + "; the release flag decays in ~10 s");
+        if (warping) {
+          if (!last_warping_.ContainsKey(vessel.id)) {
+            Debug.Log("[PrincipiaWarpBridge] Warp engaged on " +
+                      vessel.vesselName +
+                      "; asserting the Principia release flag");
+          }
+          last_warping_[vessel.id] = Time.fixedTime;
+        } else if (last_warping_.TryGetValue(vessel.id, out float last)) {
+          // Clear our own assertion once the drive has stayed disengaged for
+          // a debounce interval, so re-adoption does not wait out the full
+          // dead-man grace; the debounce absorbs one-frame flameout or
+          // throttle flicker mid-cruise.  A mod asserting the channel
+          // directly re-raises the flag the next frame, so the worst case of
+          // stepping on one is a single adopt/release cycle.
+          if (Time.fixedTime - last > clear_debounce_seconds) {
+            SetReleaseFlag(vessel, false);
+            last_warping_.Remove(vessel.id);
+            Debug.Log("[PrincipiaWarpBridge] Warp ended on " +
+                      vessel.vesselName +
+                      "; clearing the release flag for prompt re-adoption");
+          }
         }
       } catch (Exception e) {
         if (!error_logged_) {
@@ -102,6 +116,10 @@ public sealed class WarpBridge : MonoBehaviour {
   }
 
   private static bool AssertReleaseFlag(Vessel vessel) {
+    return SetReleaseFlag(vessel, true);
+  }
+
+  private static bool SetReleaseFlag(Vessel vessel, bool engaged) {
     List<VesselModule> modules = vessel.vesselModules;
     if (modules == null) {
       return false;
@@ -110,7 +128,7 @@ public sealed class WarpBridge : MonoBehaviour {
       VesselModule vessel_module = modules[i];
       if (vessel_module != null &&
           warp_status_type_.IsInstanceOfType(vessel_module)) {
-        warp_engaged_.SetValue(vessel_module, true, null);
+        warp_engaged_.SetValue(vessel_module, engaged, null);
         return true;
       }
     }
@@ -199,9 +217,14 @@ public sealed class WarpBridge : MonoBehaviour {
   private static Type kspie_drive_type_;
   private static FieldInfo kspie_is_enabled_;
 
-  // Vessels whose flag this bridge is currently asserting, for transition
-  // logging only.
-  private readonly HashSet<Guid> warping_ = new HashSet<Guid>();
+  // Seconds a drive must stay disengaged before the bridge clears the flag
+  // instead of letting the ~10 s dead-man grace run out.
+  private const float clear_debounce_seconds = 3;
+
+  // Physics-clock time of the last frame each vessel was detected warping;
+  // drives the engage/end transitions and the debounced clear.
+  private readonly Dictionary<Guid, float> last_warping_ =
+      new Dictionary<Guid, float>();
   private bool error_logged_ = false;
 }
 
