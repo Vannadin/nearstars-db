@@ -359,13 +359,15 @@
         "orbital": {
           "semi_major_axis_au": 0.133,
           "eccentricity": 0.06,
+          "uncertainty_eccentricity": 0.13,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 35.341,
           "epoch_jd": null,
           "mean_anomaly_at_epoch_deg": null,
           "source": "Feng et al. 2017",
           "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
+          "doi": "10.3847/1538-3881/aa83b4",
+          "notes": "MAP estimate with 95% credible interval, e = 0.06 [0.00, 0.19]; interval includes zero."
         },
         "physical": {
           "mass_mearth": 1.75,
@@ -424,13 +426,15 @@
         "orbital": {
           "semi_major_axis_au": 0.243,
           "eccentricity": 0.23,
+          "uncertainty_eccentricity": 0.16,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 7.45,
           "epoch_jd": null,
           "mean_anomaly_at_epoch_deg": null,
           "source": "Feng et al. 2017",
           "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
+          "doi": "10.3847/1538-3881/aa83b4",
+          "notes": "MAP estimate with 95% credible interval, e = 0.23 [0.08, 0.39]."
         },
         "physical": {
           "mass_mearth": 1.83,
@@ -489,13 +493,15 @@
         "orbital": {
           "semi_major_axis_au": 1.334,
           "eccentricity": 0.16,
+          "uncertainty_eccentricity": 0.16,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 119.75,
           "epoch_jd": null,
           "mean_anomaly_at_epoch_deg": null,
           "source": "Feng et al. 2017",
           "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
+          "doi": "10.3847/1538-3881/aa83b4",
+          "notes": "MAP estimate with 95% credible interval, e = 0.16 [0.00, 0.23]; interval includes zero."
         },
         "physical": {
           "mass_mearth": 3.93,
@@ -542,9 +548,12 @@
             "period_days": 162.87,
             "semi_major_axis_au": 0.538,
             "eccentricity": 0.18,
+            "uncertainty_eccentricity": 0.18,
             "method": "rv",
             "reference": "Feng et al. 2017 RV; signal reclassified False Positive (NEA 2026-04-09, Figueira 2025 ESPRESSO non-detection — stellar activity). Re-included per project decision (PHM Adrian cultural weight); disposition documented in Phase 3.",
-            "recommended": true
+            "recommended": true,
+            "notes": "MAP estimate with 95% credible interval, e = 0.18 [0.04, 0.36].",
+            "bibcode": "2017AJ....154..135F"
           }
         ],
         "physical": [
@@ -564,7 +573,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "epoch propagation method"
       ]
@@ -573,7 +582,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -582,7 +591,7 @@
       "title": "Teixeira et al. 2009",
       "doi": "10.1051/0004-6361:200810746",
       "bibcode": "2009A&A...494..237T",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "tau Cet mass (asteroseismology)"
       ]
@@ -591,7 +600,7 @@
       "title": "Korolik et al. 2023",
       "doi": "10.3847/1538-3881/ace911",
       "bibcode": "2023AJ....166..123K",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "tau Cet mass (spectroscopic)"
       ]
@@ -600,7 +609,7 @@
       "title": "MacGregor et al. 2016",
       "doi": "10.3847/0004-637X/828/2/113",
       "bibcode": "2016ApJ...828..113M",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "tau Cet disk single (resolved_imaging)"
       ]
@@ -609,7 +618,7 @@
       "title": "Greaves et al. 2004",
       "doi": "10.1111/j.1365-2966.2004.07957.x",
       "bibcode": "2004MNRAS.351L..54G",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "tau Cet disk single (photometric_excess)"
       ]
@@ -618,7 +627,7 @@
       "title": "Lawler et al. 2014",
       "doi": null,
       "bibcode": "2014MNRAS.444.2665L",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "tau Cet disk single (sed_fit)"
       ]
@@ -627,7 +636,7 @@
       "title": "Di Folco et al. 2007: CHARA/FLUOR angular diameter of tau Ceti",
       "doi": "10.1051/0004-6361:20077625",
       "bibcode": "2007A&A...475..243D",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
       ]
@@ -636,14 +645,14 @@
       "title": "Feng et al. 2017",
       "doi": "10.3847/1538-3881/aa83b4",
       "bibcode": "2017AJ....154..135F",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-01",
       "used_for": [
         "planet tau Cet g orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-31",
+    "retrieval_date": "2026-08-01",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

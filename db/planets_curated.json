@@ -1012,13 +1012,15 @@
       "orbital": {
         "semi_major_axis_au": 0.0229,
         "eccentricity": 0.03,
+        "uncertainty_eccentricity": 0.03,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 3.8,
         "epoch_jd": 2460243.38,
         "mean_anomaly_at_epoch_deg": 0.0,
         "source": "Basant et al. 2025",
         "bibcode": "2025ApJ...982L...1B",
-        "doi": "10.3847/2041-8213/adb8d5"
+        "doi": "10.3847/2041-8213/adb8d5",
+        "notes": "Posterior median with asymmetric errors, e = 0.03 (-0.02/+0.03), beta prior; consistent with circular."
       },
       "physical": {
         "mass_mearth": 0.299,
@@ -1034,13 +1036,15 @@
       "orbital": {
         "semi_major_axis_au": 0.0274,
         "eccentricity": 0.08,
+        "uncertainty_eccentricity": 0.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 90.8,
         "epoch_jd": 2460242.92,
         "mean_anomaly_at_epoch_deg": 0.0,
         "source": "Basant et al. 2025",
         "bibcode": "2025ApJ...982L...1B",
-        "doi": "10.3847/2041-8213/adb8d5"
+        "doi": "10.3847/2041-8213/adb8d5",
+        "notes": "Posterior median with asymmetric errors, e = 0.08 (-0.05/+0.06), beta prior."
       },
       "physical": {
         "mass_mearth": 0.335,
@@ -1056,13 +1060,15 @@
       "orbital": {
         "semi_major_axis_au": 0.0188,
         "eccentricity": 0.04,
+        "uncertainty_eccentricity": 0.05,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": -51.8,
         "epoch_jd": 2460243.7,
         "mean_anomaly_at_epoch_deg": 0.0,
         "source": "Basant et al. 2025",
         "bibcode": "2025ApJ...982L...1B",
-        "doi": "10.3847/2041-8213/adb8d5"
+        "doi": "10.3847/2041-8213/adb8d5",
+        "notes": "Posterior median with asymmetric errors, e = 0.04 (-0.03/+0.05), beta prior; consistent with circular."
       },
       "physical": {
         "mass_mearth": 0.263,
@@ -1078,13 +1084,15 @@
       "orbital": {
         "semi_major_axis_au": 0.0381,
         "eccentricity": 0.04,
+        "uncertainty_eccentricity": 0.04,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": -27.5,
         "epoch_jd": 2460245.3,
         "mean_anomaly_at_epoch_deg": 0.0,
         "source": "Basant et al. 2025",
         "bibcode": "2025ApJ...982L...1B",
-        "doi": "10.3847/2041-8213/adb8d5"
+        "doi": "10.3847/2041-8213/adb8d5",
+        "notes": "Posterior median with asymmetric errors, e = 0.04 (-0.03/+0.04), beta prior; consistent with circular."
       },
       "physical": {
         "mass_mearth": 0.193,
@@ -1578,9 +1586,12 @@
           "period_days": 162.87,
           "semi_major_axis_au": 0.538,
           "eccentricity": 0.18,
+          "uncertainty_eccentricity": 0.18,
           "method": "rv",
           "reference": "Feng et al. 2017 RV; signal reclassified False Positive (NEA 2026-04-09, Figueira 2025 ESPRESSO non-detection — stellar activity). Re-included per project decision (PHM Adrian cultural weight); disposition documented in Phase 3.",
-          "recommended": true
+          "recommended": true,
+          "notes": "MAP estimate with 95% credible interval, e = 0.18 [0.04, 0.36].",
+          "bibcode": "2017AJ....154..135F"
         }
       ],
       "physical": [
@@ -1598,13 +1609,15 @@
       "orbital": {
         "semi_major_axis_au": 1.334,
         "eccentricity": 0.16,
+        "uncertainty_eccentricity": 0.16,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 119.75,
         "epoch_jd": null,
         "mean_anomaly_at_epoch_deg": null,
         "source": "Feng et al. 2017",
         "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
+        "doi": "10.3847/1538-3881/aa83b4",
+        "notes": "MAP estimate with 95% credible interval, e = 0.16 [0.00, 0.23]; interval includes zero."
       },
       "physical": {
         "mass_mearth": 3.93,
@@ -1620,13 +1633,15 @@
       "orbital": {
         "semi_major_axis_au": 0.133,
         "eccentricity": 0.06,
+        "uncertainty_eccentricity": 0.13,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 35.341,
         "epoch_jd": null,
         "mean_anomaly_at_epoch_deg": null,
         "source": "Feng et al. 2017",
         "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
+        "doi": "10.3847/1538-3881/aa83b4",
+        "notes": "MAP estimate with 95% credible interval, e = 0.06 [0.00, 0.19]; interval includes zero."
       },
       "physical": {
         "mass_mearth": 1.75,
@@ -1642,13 +1657,15 @@
       "orbital": {
         "semi_major_axis_au": 0.243,
         "eccentricity": 0.23,
+        "uncertainty_eccentricity": 0.16,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 7.45,
         "epoch_jd": null,
         "mean_anomaly_at_epoch_deg": null,
         "source": "Feng et al. 2017",
         "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
+        "doi": "10.3847/1538-3881/aa83b4",
+        "notes": "MAP estimate with 95% credible interval, e = 0.23 [0.08, 0.39]."
       },
       "physical": {
         "mass_mearth": 1.83,
