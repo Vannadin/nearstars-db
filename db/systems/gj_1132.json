@@ -36,10 +36,11 @@
           {
             "value_rsun": 0.226,
             "uncertainty_rsun": 0.007,
-            "method": "unverified",
+            "method": "spectroscopic_calibration",
             "reference": "Weisserman et al. 2026",
-            "bibcode": "2026arXiv260407447W",
-            "doi": null,
+            "bibcode": "2026A&A...709A.165W",
+            "doi": "10.1051/0004-6361/202558011",
+            "notes": "NIRPS GTO CMF subprogram, Table 3. Radius from the Mann et al. 2015 empirical M_K-radius relation (their Eq. 4 / Table 1 coefficients), using 2MASS K photometry with a Gaia DR3 parallax; the companion mass on the same row of that table is 0.198 +/- 0.005 Msun.",
             "recommended": true
           }
         ],
@@ -263,7 +264,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-01",
       "used_for": [
         "epoch propagation method"
       ]
@@ -272,7 +273,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-01",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -281,23 +282,32 @@
       "title": "Xue et al. 2024",
       "doi": "10.3847/2041-8213/ad72e9",
       "bibcode": "2024ApJ...973L...8X",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-01",
       "used_for": [
         "GJ 1132 mass (unverified)"
       ]
     },
     {
       "title": "Weisserman et al. 2026",
+      "doi": "10.1051/0004-6361/202558011",
+      "bibcode": "2026A&A...709A.165W",
+      "accessed": "2026-08-01",
+      "used_for": [
+        "GJ 1132 radius (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Weisserman et al. 2026",
       "doi": null,
       "bibcode": "2026arXiv260407447W",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-01",
       "used_for": [
-        "GJ 1132 radius (unverified)"
+        "planet GJ 1132 c orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-30",
+    "retrieval_date": "2026-08-01",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

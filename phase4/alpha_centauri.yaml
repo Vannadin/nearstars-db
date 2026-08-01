@@ -918,7 +918,7 @@ decisions:
   # ── 항성 A·B: magnetism / environment (2026-06-22 audit 백로그 #2) ────────────────
   - body: Alpha Centauri A
     axis: environment.activity        # + radiation passthrough 묶음
-    refs: ["2010ApJ...722..343D", "1996AJ....111..439H", "2016A&A...596A..52R", "2014AJ....147...59A"]
+    refs: ["2010ApJ...722..343D", "1996AJ....111..439H", "2016arXiv161206570R", "2014AJ....147...59A"]
     status: passthrough               # 측정치 (audit 확인) — 변경 없음
     narrative: >
       A quiet star, every value of it measured: a 22-day rotation, a calm chromosphere, and
@@ -992,7 +992,7 @@ decisions:
       2026-07-12: stellar_wind 1 → 0.5 Ṁ⊙. 구값은 재앵커 전 X선(A가 더 밝다고 본 값)으로 가중해 A≈1·B≈0.6이
       었고, 현 DB(A 26.78 / B 27.04)로는 분배가 정확히 거꾸로였다. 2026-07-27: 이 이력을 담고 있던 별도
       superseded 행을 삭제하고 여기로 옮겼다.
-    refs: [2001ApJ...547L..49W, 2002ApJ...574..412W, 2016A&A...596A..52R, 2010ApJ...722..343D]
+    refs: [2001ApJ...547L..49W, 2002ApJ...574..412W, 2016arXiv161206570R, 2010ApJ...722..343D]
 
   - body: Alpha Centauri A
     axis: environment.heliosphere     # SHARED — 시스템 대표로 A에 기록
@@ -1045,11 +1045,11 @@ decisions:
         ~0.1–0.3%로 태양 이하; X선 log Lx ~26.78 → 약한 코로나, B보다 어두움; 플레어성 아님). 흑점량=오너 위임
         결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough. 2026-07-12 점검: Teff
         5790→5847K(DB), corona X선 수치 스왑 교정. 색 hex는 지각 이하 차이라 유지.
-    refs: ["2010ApJ...722..343D", "2016A&A...596A..52R", "2014AJ....147...59A", "docs/reference/stellar-photospheric-color-methodology.md"]
+    refs: ["2010ApJ...722..343D", "2016arXiv161206570R", "2014AJ....147...59A", "docs/reference/stellar-photospheric-color-methodology.md"]
 
   - body: Alpha Centauri B
     axis: environment.activity
-    refs: ["2010ApJ...722..343D", "2016A&A...596A..52R"]
+    refs: ["2010ApJ...722..343D", "2016arXiv161206570R"]
     status: passthrough
     narrative: >
       The orange companion is the livelier of the pair: a brighter X-ray corona than A's and one of the
@@ -1118,7 +1118,7 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-12: stellar_wind 0.6 → 1.5 Ṁ⊙. "더 활동적이나 절대 풍은 A보다 약하다"는 구 논리가 재앵커 전
       스테일 X선에 기대고 있었다. 2026-07-27: 이 이력을 담고 있던 별도 superseded 행을 삭제하고 여기로 옮겼다.
-    refs: [2001ApJ...547L..49W, 2002ApJ...574..412W, 2016A&A...596A..52R, 2010ApJ...722..343D]
+    refs: [2001ApJ...547L..49W, 2002ApJ...574..412W, 2016arXiv161206570R, 2010ApJ...722..343D]
 
   - body: Alpha Centauri B
     axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
