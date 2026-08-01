@@ -779,6 +779,10 @@ PLANET_PROVENANCE_KEYS = {"source", "reference", "bibcode", "doi"}
 PLANET_BLOCK_COMMON = {
     "source", "reference", "bibcode", "doi",   # provenance (source/reference 동의어)
     "method", "recommended",                    # Phase 2 array element fields
+    # notes = null 로 둔 값의 근거를 남기는 자리. 논문이 상한/하한만 준 경우
+    # (예: GJ 1132 c 이심률 e < 0.19) 점추정으로 승격하지 않고 null + notes 로
+    # 기록한다 — stellar/disks 측정치가 이미 쓰는 규약과 동일.
+    "notes",
 }
 
 PLANET_ORBITAL_ALLOWED = PLANET_BLOCK_COMMON | {

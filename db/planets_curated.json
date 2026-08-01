@@ -1339,21 +1339,22 @@
     {
       "pl_name": "GJ 1132 c",
       "orbital": {
-        "eccentricity": 0.19,
+        "eccentricity": null,
         "longitude_of_ascending_node_deg": null,
         "epoch_jd": null,
         "mean_anomaly_at_epoch_deg": null,
         "source": "Weisserman et al. 2026",
-        "bibcode": "2026arXiv260407447W",
-        "doi": null
+        "bibcode": "2026A&A...709A.165W",
+        "doi": "10.1051/0004-6361/202558011",
+        "notes": "Eccentricity has never been measured for this planet: every source gives a 95% upper limit only. Bonfils et al. 2018 (the discovery paper, 2018A&A...618A.142B) reports e_c < 0.27, and Weisserman et al. 2026 tightens it to e_c < 0.19 with the added NIRPS RVs. The Exoplanet Archive default row carried 0.19 as a bare point value with no uncertainty and attributed it to \"Feng et al. 2017\" (2017MNRAS.470.4794F), which is the Agatha periodogram methods paper and never mentions GJ 1132 -- an archive-side flattening plus mis-link. Kept null; Phase 3 may seed a synthetic eccentricity under 0.19."
       },
       "physical": {
         "mass_mearth": 2.91,
         "uncertainty_mearth": 0.27,
         "mass_type": "Msini",
         "source": "Weisserman et al. 2026",
-        "bibcode": "2026arXiv260407447W",
-        "doi": null
+        "bibcode": "2026A&A...709A.165W",
+        "doi": "10.1051/0004-6361/202558011"
       }
     }
   ],
