@@ -648,15 +648,20 @@ decisions:
 
   - body: Proxima Cen b
     axis: environment                 # G8 — 별 측정 환경 + G7 약한장에서 도출 (radiation/wind/heliosphere)
-    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/surface-radiation-dose-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
-      radiation(표면)=가혹이다. 원인은 약한 자기권(G7) + 잦은 슈퍼플레어(별 measured: 1.49회/일, ≥10³³erg ~3/년, X선 log Lx
-      27정온→28.5피크) + 근접궤도 0.0485 AU 직격. 0.3 bar 대기가 일부 column 차폐하나(1 bar 기준 ~1000 g/cm²의 30% 수준) 약한 장이라 플레어가 대기 직타 →
-      G1 무생물·G11 해저드의 물리 근거. stellar_wind=강함(근접 → wind ram 큼, Dong2017 escape 구동 = G4 retention
-      divergence 입력). heliosphere=astrosphere 심부(행성 0.0485 AU ≪ standoff ~55 AU[Wood2001] → 항상 항성풍 내부,
-      ISM 직접 미관측).
+      The surface environment is harsh. The star flares about one and a half times a day and sends up a superflare
+      roughly three times a year, and the planet takes it from 0.05 AU with little in the way of cover. Its field is
+      weak and multipolar, its air a third of Earth's, so the shielding column is under a third of ours. The wind
+      arrives hard for the same reason of proximity. What the planet never meets is the interstellar medium: it sits
+      deep inside the star's own bubble at all times, far within a boundary that stands at 55 AU.
+    narrative_ko: >
+      표면 환경은 가혹하다. 별은 하루 한 번 반쯤 플레어를 터뜨리고 해마다 세 번 정도는 슈퍼플레어를 올리는데,
+      행성은 0.05 AU에서 그것을 거의 가림막 없이 받는다. 자기장은 약하고 다중극이며 대기는 지구의 3분의 1이라,
+      차폐 기둥이 지구의 3분의 1에도 못 미친다. 항성풍 역시 가깝다는 같은 이유로 세게 들이친다. 반면 이 행성이
+      끝내 만나지 못하는 것은 성간물질이다. 55 AU에 서는 경계보다 한참 안쪽, 별의 거품 깊숙한 곳에 늘 잠겨 있다.
     fields:
       - name: radiation
         value: "가혹 (약한 자기권 + 슈퍼플레어 + 0.0485 AU 직격)"
@@ -671,14 +676,14 @@ decisions:
       criterion: [derived-grounding]
       verdict: pass-in-window
       evidence: >
-        rationale: 전부 별 measured 환경(environment.activity/stellar_wind/heliosphere) + G7 약한 자기권에서 도출이고,
-        별도 art 선택 없는 derived 축. radiation 등급(Kerbalism 매핑)은 high이되 정확 tier는 G11 gameplay서 확정.
-
-        coupling: G4 retention divergence(풍-구동 escape)·G1 무생물(방사선 적대)·G11 해저드의 공통 입력. G7 약한 장이
-        radiation 가혹의 직접 원인.
-
-        paper: 별 환경 측정 출처는 별 섹션(environment.activity/wind/heliosphere; Vida2019·Wargelin2024·Wood2001 등).
-        대기 escape = exoplanet-atmosphere-methodology.md Gate2(Dong2017·Ribas2016).
+        채택값은 표면 방사선 가혹, 항성풍 강함, 항성권 심부다. 세 값 모두 별 행의 측정치를 거리로 스케일한 도출값
+        이고 별도의 art 선택은 없다.
+        확인: 대기 기둥은 0.1·P/g = 286 g/cm²로 1 bar 환산 952의 30% 수준이다. 표면 선량 레시피에 넣으면 기둥
+        지수 2와 3 사이에서 연간 53~185 Gy, 시간당 0.60~2.11 rad에 해당한다(비교: 스톡 Kerbin 내대 10.4 rad/h).
+        자기장 기여는 기둥보다 약한 항이고(dose ∝ B^-1.48), 이 행성은 그 약한 항마저 거의 없다. 항성권은
+        표준 55 AU에 대해 궤도 0.0485 AU라 늘 내부이므로 성간물질 유입은 직접 닿지 않는다.
+        유보: Kerbalism에는 행성 표면 선량을 직접 넣는 필드가 없다. radiation_surface는 항성 전용이라, 위 rad/h는
+        엔진이 항성 방출과 자기권계면 차폐로 계산한 결과를 대조할 목표치이지 emit 값이 아니다.
 
   - body: Proxima Cen b
     axis: rings                       # G9 — 없음
@@ -714,17 +719,23 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-08-03: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24,
       임무 난이도 등급은 모드-지원 관심사). 구값 "임무=항성간 플래그십".
+      2026-08-04: 산문을 gameplay 3부 형태로 다시 썼다. evidence에 있던 오너 검토 로그(2026-06-23 7구획 확정,
+      오로라대 제외, 직전 커밋 2bb8540의 무검토 작성 정정)를 여기로 옮겼다. 구획 구성과 수치는 무변경.
     status: gated
     driver: [engine]
     narrative: >
-      고체 표면이 있어 착륙 가능한 암석 호수 세계(A b 거대 가스행성과 대비). biome = 항성경도 동심원(조석고정이라
-      위도 아닌 직하→명암경계선→반대점 순; 직하 최온, 바깥일수록 한랭) 7구획(오너 검토 2026-06-23):
-      ① 직하점(Substellar Point, 핫스팟 시그니처 명소, A b 폭풍눈 대응) · ② 직하 호수(Substellar Lakes,
-      splashdown) · ③ 주간 저지(Day Lowlands, 마픽) · ④ 주간 고지(Day Highlands, 장석질) · ⑤ 명암경계선(Terminator,
-      황혼대) · ⑥ 야간면(Night Side, 동결 암석) · ⑦ 야간 빙관(Night Ice Cap, 반대점 물얼음). 오로라대는 biome서 제외인데,
-      고정 표면 구역이 아니라 G6 외형 요소로만 쓴다(오너 결정). breathability=불가(무산소, atmosphereContainsOxygen=false).
-      radiation 해저드=high(G8, 약한 장+플레어; Kerbalism radiation_surface high tier, 플레어 시 spike). ScienceValues
-      전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.3 bar 비행 가능. 임무 난도의 핵심은 접근이다. Proxima는 태양 최근접(4.24 ly)이지만 여정 자체가 난도다.
+      You can land here, and that is the difference from Alpha Centauri A b, where skimming the air is all there is:
+      this world has solid ground, and at the substellar point there is open water to come down on. The map does not
+      divide by latitude but by how directly the star bears down. Seven zones run outward from that point: the
+      substellar point itself, the lakes around it, the mafic day lowlands, the feldspar day highlands, the
+      명암경계선 at twilight, the frozen night side, and the water-ice cap at the antistellar point. The place worth
+      the trip is the substellar point, where the star hangs at one fixed spot overhead and the lakes below it steam.
+    narrative_ko: >
+      이 행성에는 내려앉을 수 있다. 대기를 스치는 것이 전부인 Alpha Centauri A b와 갈리는 지점이 그것이고, 여기에는
+      고체 지표가 있으며 직하점에는 물 위로 내릴 자리까지 있다. 지도는 위도가 아니라 별이 얼마나 곧게 내리쬐는지로
+      갈린다. 그 점에서 바깥으로 일곱 구획이다. 직하점, 그 둘레의 호수, 마픽질 주간 저지, 장석질 주간 고지, 황혼의
+      명암경계선, 얼어붙은 야간면, 그리고 반대점의 물얼음 빙관이다. 가 볼 만한 곳은 직하점이다. 별이 하늘 한자리에
+      붙어 꼼짝하지 않고, 그 아래 호수가 김을 올린다.
     fields:
       - name: science_biomes
         value: "항성경도 동심원 7구획: 직하점/직하 호수(splashdown)/주간 저지/주간 고지/명암경계선/야간면/야간 빙관 (오로라대 제외)"
@@ -736,12 +747,13 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
-        착륙·splashdown 가능(고체 표면+액체 호수)이 A b(거대 가스행성, 비행/우주만)와의 핵심 게임 차이. 무산소+고방사선이
-        "거주가능존이되 적대적"이라는 G1 무생물 서사와 정합. radiation tier high는 G8서 derived. cfg emit(Kopernicus 표면색/biome·
-        atmosphere curve·ScienceValues)는 프로젝트 말미 일괄.
-
-        owner_review: 2026-06-23 오너 검토 완료. biome을 항성경도 7구획으로 확정(오로라대 제외, 직하점=시그니처 명소 유지,
-        splashdown 호수 유지). 직전 커밋(2bb8540)은 오너 검토 없이 작성된 것이라 본 검토로 정정·승인.
+        채택값은 항성경도 동심원 7구획과 착륙·splashdown 가능이다.
+        확인: 조석고정에 obliquity 0이라 계절이 없으므로 위도 구획이 의미를 잃고 직하점 기준 동심원이 남는다.
+        고체 표면과 액체 호수가 있어 landed·splashed·flying·in-space 네 상황이 모두 성립하고, 이것이 표면 없는
+        A b와의 게임 차이다. 오로라대는 고정 표면 구역이 아니라 외형 요소이므로 biome에서 제외했다. 산소가 없어
+        atmosphereContainsOxygen은 false다. SOI는 질량에서 자동으로 나오고 0.3 bar면 대기 비행이 가능하다.
+        유보: 방사선 등급은 높지만 Kerbalism에 행성 표면 선량 필드가 없다(radiation_surface는 항성 전용). 해저드는
+        항성 방출과 자기권계면 차폐로 엔진이 계산하며, 대조 목표치는 environment 행에 있다.
 
   # ════════ 행성 d (초단주기 sub-Earth, 뜨거운 무대기 수성 아날로그) — facet-walk 2026-06-23 ════════
   - body: Proxima Cen d
