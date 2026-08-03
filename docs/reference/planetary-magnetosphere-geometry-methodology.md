@@ -175,7 +175,18 @@ stock values from `KerbalismConfig/System/Radiation.cfg`):
   (`*_border_start/end`, still present in some shipped cfgs, are legacy — the current
   parser reads only `border_dist/radius/deform_xy`.)
 - **outer belt** = same construction: `outer_dist` + `outer_radius` minus its border.
-- **magnetopause** = a sphere `pause_radius`, deformable toward the star (`*_compression`) and into a tail (`*_extension`); `*_deform`/`*_quality` are cosmetic.
+- **magnetopause** = a sphere `pause_radius`, deformable toward the star (`*_compression`) and into a tail (`*_extension`); `*_quality` is a raymarch setting.
+- **`*_deform` is the engine's non-dipolar knob, not decoration** (corrected 2026-08-04).
+  It adds `sin(x·5)·sin(y·7)·sin(z·6)·A` to the signed distance, and because it depends on
+  all three coordinates *separately* it is the only parameter that **breaks axisymmetry**,
+  producing longitude-dependent lobes. `geomagnetic_offset`, by contrast, translates along
+  the axis: it is a dipole + quadrupole but stays axisymmetric. So a multipolar field's
+  irregular, lobed boundary is expressed through `deform`, and ROKerbalism uses it exactly
+  that way: `mercury` and the model literally named `irregular` both carry
+  `pause_deform = 0.1`, and `metallic` / `solidiron` / `anomaly` use 0.04–0.1
+  (`KSP-RO/ROKerbalism`, `GameData/KerbalismConfig/System/Radiation.cfg`). Kerbalism's own
+  modding docs describe it only as "deform the surface using a sum of sine waves", which is
+  what led an earlier revision of this doc to call it cosmetic.
 - Intensities + axis live on the `RadiationBody`: `radiation_inner/outer/pause` (rad/h, pause negative), `geomagnetic_pole_lat/lon`.
 
 **`inner` and `outer` are always two tori with `inner_dist < outer_dist`** — but whether

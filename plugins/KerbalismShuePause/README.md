@@ -32,6 +32,42 @@ Bonus: Shue 98 parametrizes `r0`, `α` by solar-wind pressure and IMF Bz — hoo
 that to Kerbalism's `solar_cycle`/storm state gives a magnetopause that visibly
 **compresses during storms**. That dynamic response is the PR selling point.
 
+## Scope addition — a size for the deformation (owner, 2026-08-04)
+
+Kerbalism's `*_deform` adds `sin(x·5)·sin(y·7)·sin(z·6)·A` to the signed distance. Because
+it depends on all three coordinates separately it is the engine's **only** non-axisymmetric
+knob, and ROKerbalism uses it exactly that way: the `mercury` model and the one literally
+named `irregular` both carry `pause_deform = 0.1`, with `metallic` / `solidiron` / `anomaly`
+at 0.04-0.1. So the mod already expresses "this field is not a clean dipole" through deform.
+
+**What is missing is a scale.** The wavenumbers 5/7/6 are hardcoded, so the *amplitude* of
+the lumpiness is tunable but its *size* is not. At a Mercury-like standoff of 1.54 body radii
+those wavenumbers put 8 to 11 lobes around the boundary, which is far finer than the
+multipolar fields we actually derive: a dynamo with power out to spherical-harmonic degree
+l = 4 wants about 4 lobes, i.e. wavenumbers near 2.6, a scale factor of ~0.52 against stock.
+
+So this plugin should carry a second geometry feature alongside the Shue surface:
+
+- **`pause_deform_scale`** (and the belt equivalents `inner_deform_scale` /
+  `outer_deform_scale`), a multiplier on the hardcoded wavenumbers. `1.0` reproduces stock
+  exactly, so every shipped cfg is unaffected.
+- Derivation of the value belongs with the field geometry, not with art: it follows from the
+  dominant harmonic degree, `k = l / R_mp`, scale factor `= k / 5`.
+- Composing with Shue: the deformation rides *on* the Shue surface rather than on the sphere,
+  so the two features are orthogonal and the scale term keeps its meaning.
+
+**Already prepared on our side** (so the plugin only has to read it):
+
+| Where | State |
+|---|---|
+| `scripts/viz/belt_viewer_template.html` | `*_deform_scale` sliders + 2D SDF + 3D raymarch all honour it; cfg export writes it as a `⚗` comment, never a cfg line |
+| `scripts/viz/build_belt_viewer.py` | passes a board's `pause_deform` and `pause_deform_scale` into the preset |
+| `scripts/pipeline/emit_kerbalism_radiation.py` | `pause_deform` is a real emitted key; `pause_deform_scale` sits in `PENDING_MODEL_KEYS` and is deliberately **not** written to cfg |
+| Phase 4 boards | may carry the value with an explicit unused marker, so the number is derived once and waits |
+
+Until the plugin lands, a board's scale value is documentation: the geometry is derived and
+recorded, and stock renders the stock lumpiness.
+
 ## Implementation sketch
 
 **Closed-tail requirement (owner, 2026-07-23).** In KSP the pause volume is a

@@ -182,6 +182,7 @@ strongly non-dipolar near the planet (quad/octupole comparable to dipole).
 | pause | 1.6 / comp 1.4 → nose **1.14** | nose **1.45 R_M** (1.35–1.55, → 1.28 in storms) | Winslow 2013 [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W) |
 | belts | none | **none** ✓ (too small/dynamic) | Schriver 2015 [`2015AGUFM.P53A2089S`](https://ui.adsabs.harvard.edu/abs/2015AGUFM.P53A2089S) |
 | geomagnetic_offset | 0.208 | **0.198** (484 km north) | Anderson 2011 [`2011Sci...333.1859A`](https://ui.adsabs.harvard.edu/abs/2011Sci...333.1859A) |
+| pause_deform | **0.1** | keep — the lobed, non-axisymmetric boundary of a multipolar field | Anderson 2011/2012 (offset dipole + higher multipoles); stock `mercury` and `irregular` both use 0.1 |
 | tilt | (small) | **<3°** (<0.8° refined) | Anderson 2011/2012 |
 | moment | — | 190–195 nT·R_M³, southward | Anderson 2011, Korth 2015 [`2015JGRA..120.4503K`](https://ui.adsabs.harvard.edu/abs/2015JGRA..120.4503K) |
 

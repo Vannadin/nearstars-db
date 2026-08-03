@@ -155,7 +155,7 @@ function torusSDF(x,y,z,P){
   const q2 = Math.sqrt((px*px+z*z)*P.bdxy)-P.bdist;
   const d2 = Math.sqrt(q2*q2+y*y)-P.brad;
   let v = Math.max(d1,-d2);
-  if(P.deform>0.001) v += Math.sin(px*5)*Math.sin(y*7)*Math.sin(z*6)*P.deform;
+  if(P.deform>0.001){const S=(P.dscale==null?1:P.dscale); v += Math.sin(px*5*S)*Math.sin(y*7*S)*Math.sin(z*6*S)*P.deform;}
   return v;
 }
 function pauseSDF(x,y,z,P){
@@ -163,7 +163,7 @@ function pauseSDF(x,y,z,P){
   px = px*(px<0?P.ext:P.comp);
   const py = y*P.hscale;
   let v = Math.sqrt(px*px+py*py+z*z)-P.rad;
-  if(P.deform>0.001) v += Math.sin(px*5)*Math.sin(py*7)*Math.sin(z*6)*P.deform;
+  if(P.deform>0.001){const S=(P.dscale==null?1:P.dscale); v += Math.sin(px*5*S)*Math.sin(py*7*S)*Math.sin(z*6*S)*P.deform;}
   return v;
 }
 const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
@@ -173,10 +173,10 @@ function inferno(t){t=clamp(t,0,1)*9;const i=Math.floor(t),f=t-i,a=STOPS[i],b=ST
   return [a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f];}
 
 // ---- parameter model ----
-function belt(pre){return Object.assign({on:true,rad:0,radiation:0,grad:3.3,dist:1,dxy:1,comp:1,ext:1,bdist:0.0001,brad:0,bdxy:1,deform:0},pre);}
+function belt(pre){return Object.assign({on:true,rad:0,radiation:0,grad:3.3,dist:1,dxy:1,comp:1,ext:1,bdist:0.0001,brad:0,bdxy:1,deform:0,dscale:1},pre);}
 const state={
   inner:belt({}), outer:belt({}),
-  pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,off:0,alpha:0.6},
+  pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,off:0,alpha:0.6},
   view:{R:8,tilt:0,z:0,shue:0,offset:0}
 };
 
@@ -190,17 +190,17 @@ const GROUPS=[
      F("dist","inner_dist",0,12,0.01),F("rad","inner_radius",0.05,8,0.01),F("dxy","inner_deform_xy",0.2,2,0.001),
      F("comp","inner_compression",1,2,0.01),F("ext","inner_extension",0.02,1.5,0.005),
      F("bdist","inner_border_dist",0,8,0.001),F("brad","inner_border_radius",0,6,0.005),
-     F("bdxy","inner_border_deform_xy",0.2,2,0.01),F("deform","inner_deform",0,0.5,0.005)]},
+     F("bdxy","inner_border_deform_xy",0.2,2,0.01),F("deform","inner_deform",0,0.5,0.005),F("dscale","inner_deform_scale ⚗비-cfg",0.1,2,0.01)]},
   {id:"outer",title:"외대 (outer belt)",cls:"g-outer",toggle:true,
    rows:[F("radiation","radiation_outer",0,400,0.5),F("grad","outer_gradient",0.5,6,0.1),
      F("dist","outer_dist",0,20,0.01),F("rad","outer_radius",0.05,12,0.01),F("dxy","outer_deform_xy",0.2,2,0.001),
      F("comp","outer_compression",1,2,0.01),F("ext","outer_extension",0.02,1.5,0.005),
      F("bdist","outer_border_dist",0,12,0.001),F("brad","outer_border_radius",0,10,0.005),
-     F("bdxy","outer_border_deform_xy",0.2,2,0.01),F("deform","outer_deform",0,0.5,0.005)]},
+     F("bdxy","outer_border_deform_xy",0.2,2,0.01),F("deform","outer_deform",0,0.5,0.005),F("dscale","outer_deform_scale ⚗비-cfg",0.1,2,0.01)]},
   {id:"pause",title:"자기권계면 (pause)",cls:"g-pause",toggle:true,
    rows:[F("rad","pause_radius",0,70,0.1),F("radiation","radiation_pause",-0.05,0,0.001),
      F("comp","pause_compression",1,2,0.01),F("ext","pause_extension",0.02,1.5,0.005),
-     F("hscale","pause_height_scale",0.5,2,0.01),F("deform","pause_deform",0,0.5,0.005),
+     F("hscale","pause_height_scale",0.5,2,0.01),F("deform","pause_deform",0,0.5,0.005),F("dscale","pause_deform_scale ⚗비-cfg",0.1,2,0.01),
      F("alpha","불투명도 (viz)",0,1,0.05),F("off","pause_offset ⚗비-cfg",0,30,0.1)]},
   {id:"view",title:"뷰 / 배향",cls:"g-view",toggle:false,
    rows:[F("R","view_halfwidth (R)",2,70,0.5),F("tilt","dipole_tilt (°)",0,90,0.5),F("offset","geomagnetic_offset",0,1,0.005),F("z","slice_z",0,6,0.05),
@@ -319,7 +319,8 @@ function toCfg(){
     if(Math.abs(P.comp-1)>1e-4) L.push('  pause_compression = '+nm(P.comp));
     if(Math.abs(P.ext-1)>1e-4) L.push('  pause_extension = '+nm(P.ext));
     if(Math.abs(P.hscale-1)>1e-4) L.push('  pause_height_scale = '+nm(P.hscale));
-    if(P.deform>1e-3) L.push('  pause_deform = '+nm(P.deform)); }
+    if(P.deform>1e-3) L.push('  pause_deform = '+nm(P.deform));
+    if(Math.abs((P.dscale==null?1:P.dscale)-1)>1e-3) L.push('// ⚗ pause_deform_scale '+nm(P.dscale)+' 는 스톡 Kerbalism이 소비하지 않는다(파수 5/7/6 하드코딩) → 자기권계면 플러그인 대기'); }
   L.push('}');
   L.push('RadiationBody'); L.push('{'); L.push('  name = <BodyName>'); L.push('  radiation_model = nsCustom');
   if(I.on){ L.push('  radiation_inner = '+nm(I.radiation));
@@ -351,7 +352,7 @@ let currentPreset=null;
 function deepset(preset){
   const P=PRESETS[preset];
   state.inner=belt(P.inner); state.outer=belt(P.outer);
-  state.pause=Object.assign({on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,off:0,alpha:0.6},P.pause);
+  state.pause=Object.assign({on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,off:0,alpha:0.6},P.pause);
   state.view=Object.assign({R:8,tilt:0,z:0,shue:0,offset:0},P.view);
 }
 function applyPreset(p){
@@ -511,7 +512,8 @@ uniform vec2 uRes;uniform float uYaw,uPitch,uDistCam,uTilt,uMaxI,uBR;
 uniform float uInnerOn,uOuterOn,uPauseOn,uOff;
 uniform float iD,iR,iXY,iC,iE,iBD,iBR2,iBXY,iDef,iInt,iGr;
 uniform float oD,oR,oXY,oC,oE,oBD,oBR2,oBXY,oDef,oInt,oGr;
-uniform float pR,pC,pE,pH,pDef,pOff,pAlpha;
+uniform float pR,pC,pE,pH,pDef,pDS,pOff,pAlpha;
+uniform float iDS,oDS;
 vec3 inferno(float t){t=clamp(t,0.,1.);
  const vec3 c0=vec3(0.000218940,0.001651005,-0.019480898);
  const vec3 c1=vec3(0.106513419,0.563956437,3.932712389);
@@ -521,20 +523,20 @@ vec3 inferno(float t){t=clamp(t,0.,1.);
  const vec3 c5=vec3(-71.31942824,32.62606426,73.20951986);
  const vec3 c6=vec3(25.13112622,-12.24266895,-23.07032500);
  return clamp(c0+t*(c1+t*(c2+t*(c3+t*(c4+t*(c5+t*c6))))),0.,1.);}
-float torus(vec3 p,float D,float R,float XY,float C,float E,float BD,float BR2,float BXY,float DEF){
+float torus(vec3 p,float D,float R,float XY,float C,float E,float BD,float BR2,float BXY,float DEF,float DS){
  p.x*=p.x<0.0?E:C;
  float q1=sqrt((p.x*p.x+p.z*p.z)*XY)-D;
  float d1=sqrt(q1*q1+p.y*p.y)-R;
  float q2=sqrt((p.x*p.x+p.z*p.z)*BXY)-BD;
  float d2=sqrt(q2*q2+p.y*p.y)-BR2;
  float v=max(d1,-d2);
- if(DEF>0.001)v+=sin(p.x*5.)*sin(p.y*7.)*sin(p.z*6.)*DEF;
+ if(DEF>0.001)v+=sin(p.x*5.*DS)*sin(p.y*7.*DS)*sin(p.z*6.*DS)*DEF;
  return v;}
 float pauseF(vec3 p){
  p.x+=pOff;
  p.x*=p.x<0.0?pE:pC; p.y*=pH;
  float v=length(p)-pR;
- if(pDef>0.001)v+=sin(p.x*5.)*sin(p.y*7.)*sin(p.z*6.)*pDef;
+ if(pDef>0.001)v+=sin(p.x*5.*pDS)*sin(p.y*7.*pDS)*sin(p.z*6.*pDS)*pDef;
  return v;}
 void main(){
  vec2 uv=(gl_FragCoord.xy*2.0-uRes)/uRes.y;
@@ -562,9 +564,9 @@ void main(){
     col+=(1.0-a)*bod; a=1.0; break;}
    vec3 q=vec3(pw.x*ca-pw.y*sa, pw.x*sa+pw.y*ca-uOff, pw.z);
    float dose=0.0;
-   if(uInnerOn>0.5){float d=torus(q,iD,iR,iXY,iC,iE,iBD,iBR2,iBXY,iDef);
+   if(uInnerOn>0.5){float d=torus(q,iD,iR,iXY,iC,iE,iBD,iBR2,iBXY,iDef,iDS);
      if(d<0.0)dose+=clamp(iGr*(-d)/iR,0.,1.)*iInt;}
-   if(uOuterOn>0.5){float d=torus(q,oD,oR,oXY,oC,oE,oBD,oBR2,oBXY,oDef);
+   if(uOuterOn>0.5){float d=torus(q,oD,oR,oXY,oC,oE,oBD,oBR2,oBXY,oDef,oDS);
      if(d<0.0)dose+=clamp(oGr*(-d)/oR,0.,1.)*oInt;}
    if(dose>1e-4){
     float dn=dose/uMaxI;
@@ -603,9 +605,9 @@ function glInit(){
  gl.enableVertexAttribArray(loc);
  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
  ['uRes','uYaw','uPitch','uDistCam','uTilt','uMaxI','uBR','uInnerOn','uOuterOn','uPauseOn','uOff',
-  'iD','iR','iXY','iC','iE','iBD','iBR2','iBXY','iDef','iInt','iGr',
-  'oD','oR','oXY','oC','oE','oBD','oBR2','oBXY','oDef','oInt','oGr',
-  'pR','pC','pE','pH','pDef','pOff','pAlpha'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
+  'iD','iR','iXY','iC','iE','iBD','iBR2','iBXY','iDef','iDS','iInt','iGr',
+  'oD','oR','oXY','oC','oE','oBD','oBR2','oBXY','oDef','oDS','oInt','oGr',
+  'pR','pC','pE','pH','pDef','pDS','pOff','pAlpha'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
  return true;
 }
 function resize3d(){
@@ -630,14 +632,14 @@ function render3d(){
  const I=s.inner,O=s.outer,P=s.pause;
  gl.uniform1f(U.iD,I.dist);gl.uniform1f(U.iR,I.rad);gl.uniform1f(U.iXY,I.dxy);
  gl.uniform1f(U.iC,I.comp);gl.uniform1f(U.iE,I.ext);gl.uniform1f(U.iBD,I.bdist);
- gl.uniform1f(U.iBR2,I.brad);gl.uniform1f(U.iBXY,I.bdxy);gl.uniform1f(U.iDef,I.deform);
+ gl.uniform1f(U.iBR2,I.brad);gl.uniform1f(U.iBXY,I.bdxy);gl.uniform1f(U.iDef,I.deform);gl.uniform1f(U.iDS,I.dscale==null?1:I.dscale);
  gl.uniform1f(U.iInt,I.radiation);gl.uniform1f(U.iGr,I.grad);
  gl.uniform1f(U.oD,O.dist);gl.uniform1f(U.oR,O.rad);gl.uniform1f(U.oXY,O.dxy);
  gl.uniform1f(U.oC,O.comp);gl.uniform1f(U.oE,O.ext);gl.uniform1f(U.oBD,O.bdist);
- gl.uniform1f(U.oBR2,O.brad);gl.uniform1f(U.oBXY,O.bdxy);gl.uniform1f(U.oDef,O.deform);
+ gl.uniform1f(U.oBR2,O.brad);gl.uniform1f(U.oBXY,O.bdxy);gl.uniform1f(U.oDef,O.deform);gl.uniform1f(U.oDS,O.dscale==null?1:O.dscale);
  gl.uniform1f(U.oInt,O.radiation);gl.uniform1f(U.oGr,O.grad);
  gl.uniform1f(U.pR,P.rad);gl.uniform1f(U.pC,P.comp);gl.uniform1f(U.pE,P.ext);
- gl.uniform1f(U.pH,P.hscale);gl.uniform1f(U.pDef,P.deform);
+ gl.uniform1f(U.pH,P.hscale);gl.uniform1f(U.pDef,P.deform);gl.uniform1f(U.pDS,P.dscale==null?1:P.dscale);
  gl.uniform1f(U.pOff,P.off||0);gl.uniform1f(U.pAlpha,P.alpha!=null?P.alpha:0.6);
  gl.drawArrays(gl.TRIANGLES,0,3);
  document.getElementById('scaleHi').textContent=fmt(maxI);

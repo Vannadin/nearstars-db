@@ -23,7 +23,11 @@ MODEL_KEYS = [
     'outer_extension', 'outer_border_dist', 'outer_border_radius',
     'outer_border_deform_xy',
     'pause_radius', 'pause_compression', 'pause_extension', 'pause_height_scale',
+    'pause_deform',            # 다중극 경계의 비축대칭 로브 (스톡 mercury/irregular = 0.1)
 ]
+# ⚗ 보드가 담지만 스톡 Kerbalism이 소비하지 않는 키 — 자기권계면 플러그인 대기.
+# emit에서는 주석으로만 흘려보내고 실제 cfg 라인으로 쓰지 않는다.
+PENDING_MODEL_KEYS = ['pause_deform_scale']
 BODY_KEYS = ['radiation_inner', 'radiation_outer', 'radiation_pause',
              'geomagnetic_pole_lat', 'geomagnetic_pole_lon', 'geomagnetic_offset']
 

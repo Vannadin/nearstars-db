@@ -603,15 +603,33 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      약한 행성 자기장(차수 ≲0.1–0.3× 지구, ≲ 수 µT 표면), 활성 dynamo 여부 자체가 불확실. 미측정이고, 외계행성 장
-      직접탐지 사례 없음(Pérez-Torres2021 전파 SPI 잠정). Zapatero Osorio2026(arXiv:2605.22925)이 b SPI를 플레어 강도
-      변조(b 공전주기 주기성)로 검출 → 자기적 상호작용 흔적이나, d와 달리 b는 자기장 값 미도출(phase-lock 아님). 방법 =
-      암석장 RM22 스케일링 + 조석고정 penalty(dynamo 문서 regime 4). 약함 동인 두 가지: (1) 조석고정 P=11.2일 느린 자전이
-      임계자전 아래 → dynamo 약화, (2) 노쇠 ~4.85 Gyr 핵 냉각 → 코어 대류 약화. conf=low.
+      The planet's field is weak, under a third of Earth's, and whether a dynamo is running at
+      all is uncertain. Two things work against it: tides hold the rotation to 11.2 days, too slow to organize a
+      dynamo, and a core that has been cooling for 4.85 billion years convects feebly. Nothing here is measured.
+      No exoplanet's magnetic field has been detected directly, and what has been reported is a modulation of the
+      star's flares at the planet's orbital period, a trace of magnetic interaction rather than a field strength.
+      What the slow rotation does decide is the field's shape: not a clean dipole with two poles, but a multipolar
+      one whose surface flux breaks into patches. Aurora follows those patches down to mid-latitudes instead of
+      ringing the poles, and the weak field shields poorly, which is why the atmosphere is at risk and the surface
+      takes what the star throws.
+    narrative_ko: >
+      이 행성의 자기장은 약하다. 지구의 3분의 1에도 못 미치고, 활성 다이나모가 돌고 있는지 자체가 불확실하다. 불리한
+      조건이 둘이다. 조석에 묶여 11.2일에 한 번 도는 자전은 다이나모를 조직할 만큼 빠르지 않고, 48억 년을 식은 핵은
+      대류가 시들하다. 측정된 것은 없다. 외계행성의 자기장을 직접 검출한 사례가 아직 없고, 보고된 것은 이 별의
+      플레어가 행성 공전 주기에 맞춰 변조된다는 사실, 즉 자기적 상호작용의 흔적일 뿐 세기가 아니다. 느린 자전이
+      확실히 정하는 것은 세기가 아니라 형태다. 두 극을 가진 매끈한 쌍극자가 아니라, 표면 자속이 여러 조각으로
+      갈라진 다중극이다. 그래서 오로라가 극지를 둘러싸는 대신 그 반점을 따라 중위도까지 내려오고, 약한 장은 차폐를
+      제대로 못 해 대기가 위험해지고 지표는 별이 던지는 것을 그대로 받는다.
     fields:
       - name: magnetic_field
         value: "약한 (차수 ≲0.1–0.3× 지구, ≲ 수 µT 표면); 활성 dynamo 여부 불확실, conf=low"
         op: set
+      - { name: field_geometry, value: "다중극 (multipolar; Ro_l > 0.12 게이트 통과)", op: set, note: "쌍극 모멘트 0.06배 붕괴, 사다리값 B_eq ~1.2 µT·B_pol ~2.4 µT. 형태 도식 = docs/img/field-geometry.png" }
+      - { name: radiation_model, value: "irregular (스톡 템플릿 재사용)", op: set, note: "벨트 없음 + pause_deform 0.1의 비축대칭 경계. 미지정 필드는 템플릿 값을 따른다" }
+      - { name: geomagnetic_offset, value: 0.25, op: set, note: "축대칭 다중극(쌍극+사극) 성분; 수성 0.208보다 크다. 쌍극 지배력이 더 약하기 때문이다" }
+      - { name: geomagnetic_pole_lat, value: 60, unit: deg, op: set, note: "기울기 30°. 다중극이라 단일 극의 의미가 약하고 축도 미측정이라 대칭을 깨는 쪽으로 art 선택" }
+      - { name: magnetopause_standoff_rp, value: 1.54, unit: R_p, op: set, note: "Chapman-Ferraro: B_eq 1.2 µT, 0.0485 AU 램압 170 nPa(Ṁ ≤ 0.2 Ṁ☉ 상한이라 최대 압축). 수성 1.45와 동급" }
+      - { name: pause_deform_scale, value: 0.52, op: set, note: "⚗ 엔진 미소비(스톡은 파수 5/7/6 하드코딩). l=4에서 k = l/R_mp = 2.6이라 스톡 대비 0.52배(로브 4개, 스톡은 8~11개). KerbalismShuePause 플러그인 대기" }
     gate:
       criterion: [derived-grounding]
       verdict: methodology-derived

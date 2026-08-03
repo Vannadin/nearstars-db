@@ -54,6 +54,9 @@ for name, spec in load_nearstars_specs().items():
     p['pause'] = {'on': True, 'rad': m.get('pause_radius', 5),
                   'comp': m.get('pause_compression', 1), 'ext': m.get('pause_extension', 1),
                   'hscale': m.get('pause_height_scale', 1),
+                  'deform': m.get('pause_deform', 0),
+                  # ⚗ 비-cfg: 스톡은 파수 5/7/6 하드코딩. 보드가 값을 담아도 엔진은 아직 안 읽는다.
+                  'dscale': m.get('pause_deform_scale', 1),
                   'radiation': bd.get('radiation_pause', -0.01)}
     p['view'] = {'R': round(extent), 'tilt': 90 - bd.get('geomagnetic_pole_lat', 90),
                  'z': 0, 'offset': bd.get('geomagnetic_offset', 0)}
