@@ -316,7 +316,7 @@ decisions:
       - name: eccentricity
         value: 0
         op: passthrough
-        note: "≈0 measured (SM2025); inc 미측정(비통과). emit 주의: e≈0 + 0.7bar 대기 → Kopernicus temperatureEccentricityBiasCurve 0-나눗셈 트랩 → 측정값이라 noise 금지 → emit시 곡선 suppress"
+        note: "≈0 measured (SM2025); inc 미측정(비통과). emit 주의: e≈0 + 0.3 bar 대기 → Kopernicus temperatureEccentricityBiasCurve 0-나눗셈 트랩 → 측정값이라 noise 금지 → emit시 곡선 suppress"
       - name: tidal_lock
         value: "1:1 (락타임 <10⁵yr); Ω/ω/M free-emit"
         op: passthrough
@@ -411,35 +411,47 @@ decisions:
     refs: ["1007.0245", "docs/reference/mass-radius-relation-methodology.md", "docs/reference/body-figure-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/internal-heat-luminosity-methodology.md"]
 
   - body: Proxima Cen b
-    axis: atmosphere                  # G4 — 기압=오너 결정 0.7 bar, 나머지 방법론 도출
+    axis: atmosphere                  # G4
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-08-04: pressure 0.7 → 0.3 bar (오너 결정). 구값 0.7 bar는 Phase 3 앵커 1 bar에서 내려온 값인데 사유
+      기록이 없었고, 야간 CO₂ 서리가 분압을 버퍼링한다는 조건을 넣으면 야간 157 K를 요구해 GCM 앵커 150 K와
+      어긋났다. 150 K가 버퍼링하는 분압 8.4 mbar가 3%가 되는 총기압이 0.28 bar라 0.3 bar가 자기정합적이다.
+      같은 검토에서 evidence의 CO₂ frost point 135 K가 오류로 드러났다(같은 Fray & Schmitt 곡선으로 21 mbar는
+      156.8 K, 화성 극관 147.7 K로 곡선 검증). divergence_note의 "shoreline 위"도 반대로 정정했고, Ribas 2016을
+      침식 근거로 인용한 것도 바로잡았다(그 논문은 보유 쪽 결론이다).
     status: gated
     driver: [window-selection]
     narrative: >
-      The planet holds an atmosphere at about two-thirds of Earth's pressure. Nitrogen dominates it with 3 percent
+      The planet holds an atmosphere at about a third of Earth's pressure. Nitrogen dominates it with 3 percent
       carbon dioxide, and that 3 percent works as a greenhouse that keeps the star-facing ground above the freezing
       point of water. There is no oxygen, so it cannot be breathed. The air is thin: 95 percent of its mass sits
-      within 21 km of the surface. The far side, in permanent night, cools below 150 K but not far enough for the
-      carbon dioxide to settle out as frost, so the atmosphere does not collapse onto the night side. That this air
-      survives at all, though, is a choice rather than an observation. This star's flares and wind are capable of
-      stripping an atmosphere of this size.
+      within 21 km of the surface. On the far side, in permanent night, the ground is cold enough that some of the
+      carbon dioxide settles out as dry-ice frost, and that frost is what fixes how much of the gas stays in the
+      air: any excess freezes onto it, any shortfall sublimates back. Nothing survives as frost on the lit side,
+      where even the terminator is far too warm. That this air survives the star at all, though, is a choice rather
+      than an observation. Proxima's flares and wind are capable of stripping an atmosphere of this size.
     narrative_ko: >
-      이 행성에는 지구의 3분의 2쯤 되는 기압의 대기가 있다. 질소가 주성분이고 이산화탄소가 3% 섞여 있는데, 그 3%가
+      이 행성에는 지구의 3분의 1쯤 되는 기압의 대기가 있다. 질소가 주성분이고 이산화탄소가 3% 섞여 있는데, 그 3%가
       온실로 작용해 별을 마주한 쪽 지표를 물의 어는점 위에 붙들어 둔다. 산소는 없어 숨 쉴 수 없다. 대기는 얇다.
-      질량의 95%가 지표 위 21 km 안에 들어 있다. 밤이 영원한 반대편은 150 K 아래로 식지만 이산화탄소가 서리로
-      내려앉을 만큼은 아니어서, 대기가 밤 쪽에 얼어붙어 사라지는 붕괴는 일어나지 않는다. 다만 이 대기가 지금까지
-      남아 있다는 것 자체는 관측이 아니라 선택이다. 이 별의 플레어와 항성풍에는 이만한 대기를 벗겨낼 힘이 있다.
+      질량의 95%가 지표 위 21 km 안에 들어 있다. 밤이 영원한 반대편은 지표가 충분히 차가워 이산화탄소 일부가
+      드라이아이스 서리로 내려앉고, 그 서리가 대기에 남는 기체의 양을 정한다. 남으면 서리로 얼어붙고 모자라면
+      다시 승화해 돌아온다. 빛을 받는 쪽에는 서리가 남지 못한다. 터미네이터조차 너무 따뜻하다. 다만 이 대기가
+      별을 견디고 남아 있다는 것 자체는 관측이 아니라 선택이다. Proxima의 플레어와 항성풍에는 이만한 대기를
+      벗겨낼 힘이 있다.
     # MIGRATION-FLAG: derived_temps 는 비표준 행-레벨 키로 프로즈 원문 보존 (validator 무시). 온도값 typed field 로 병기.
     derived_temps: >
-      **Teq≈228K(A 0.33, 기압 무관 — G5 albedo cascade)**. 조석고정 1:1 → Layer-3 GCM(Boutle2017 ~1 bar N₂+CO₂ 케이스를
-      0.7 bar + A 0.33로 약간 하향): 직하 ~282–288K(여전히 >273K → 액체 호수 유지)·야간 ~150–162K(빙관)·평균 ~243–248K.
-      직하 데이샤이드 호수 + 나머지 빙결 = G1 "대륙형 호수 세계"와 정합. (A를 0.43까지 올려야 직하가 빙점 — 0.33은 충분한 마진.)
+      Teq≈228K(A 0.33, 기압 무관, G5 albedo cascade). 조석고정 1:1 → 1 bar GCM 앵커(Turbet2016·Boutle2017: 직하 290K,
+      야간 150K, 평균 250K)에서 0.3 bar로 Koll 2022 대비 스케일링: 직하 ~295–310K(>273K → 액체 호수 유지)·야간
+      ~148–152K(CO₂ 서리 버퍼가 이 온도에 고정)·평균 ~240K. 온실 계산기(greenhouse_dt.py, S 0.668·pCO₂ 9 mbar·A 0.33)는
+      평균 Ts 241K. 직하 호수 + 나머지 빙결 = 대륙형 호수 세계와 정합하고, 얇아진 대기는 재분배를 줄여 직하를 오히려
+      높이므로 빙점 마진이 0.7 bar보다 넓다.
     fields:
       - name: pressure
-        value: 0.7
+        value: 0.3
         unit: bar
         op: set
         phase3_default: "Phase 3 합성 대기(있으면); 본 결정이 art-direction 기압/조성 확정값"
-        note: "오너 결정 2026-06-23"
+        note: "야간 최저 ~150 K의 CO₂ 서리가 분압 8.4 mbar를 버퍼링 → 3%가 되는 총기압 0.28 bar. 구값 0.7 bar는 야간 157 K를 요구해 GCM 앵커와 어긋났다"
       - name: composition
         value: "N₂ 지배 + CO₂ ~3% (μ≈28.5 g/mol)"
         op: set
@@ -447,7 +459,7 @@ decisions:
         value: 228
         unit: K
         op: set
-        note: "Teq (A 0.33, 기압 무관). 직하 ~282–288K·야간 ~150–162K·평균 ~243–248K (Layer-3 GCM)"
+        note: "Teq (A 0.33, 기압 무관). 0.3 bar 재분배: 직하 ~295–310K·야간 ~148–152K·평균 ~240K (1 bar GCM 앵커에서 Koll 2022 대비 스케일링)"
       - name: scale_height
         value: 7
         unit: km
@@ -458,23 +470,32 @@ decisions:
         op: set
         note: "무생물·무산소, atmosphereContainsOxygen=false"
       - name: escape
-        value: "M왜성 플레어 stripping 위험이나 호수세계 전제로 보유 채택"
+        value: "shoreline 아래(중력 허용치의 23배 초과)이나 호수 세계 전제로 보유 채택"
         op: set
     gate:
       criterion: [classification, retention, error-bar]
       verdict: documented-divergence
       divergence_note: >
-        대기 문서 3-gate: cosmic shoreline 위지만 M왜성 강플레어·항성풍 stripping(Dong2017·Ribas2016) 위험이라 "보유"는
-        자동이 아님. G1 호수세계(액체 물)가 대기 보유를 요구하므로 Meadows2018 "온대/거주가능" 분기를 명시 tie-break로 채택.
-        Garraffo2016 자기차폐가 도울 수 있으나 불확실해서 발산으로 명기.
+        경험적 cosmic shoreline(Zahnle & Catling 2017, v_esc ∝ I_XUV^¼)에서 이 행성은 유지 쪽이 아니라 벗겨지는
+        쪽에 있다. 탈출속도 11.94 km/s는 지구의 1.068배뿐이어서 중력이 허용하는 조사량이 1.3배인데, Ribas 2016이
+        측정한 실제 조사량은 EUV 30배·X선 250배로 약 23배 초과한다. 그래도 대기를 남긴 것은 이 보드가 b를 액체
+        물 호수 세계로 확정했기 때문이고, Meadows 2018이 나열한 환경 상태 중 온대 분기를 명시적 tie-break로
+        골랐다. 문헌은 갈려 있다. Dong 2017의 항성풍 이온 탈출은 지질학적으로 짧은 시간에 침식된다고 보는 반면,
+        Ribas 2016은 에너지 제한 탈출로 계산해 잃은 수소가 지구 바다 하나 미만이며 b가 유력한 거주가능 후보라고
+        맺는다. 즉 우리가 떠난 것은 경험적 shoreline과 Dong의 이온 탈출이고, 택한 것은 Ribas·Meadows의 상세
+        계산이다. Garraffo 2016의 자기 차폐는 도울 수 있으나 Ramstad & Barabash 2021이 반대 방향을 제시하므로
+        근거로 세우지 않는다.
       evidence: >
-        채택값은 0.7 bar의 N₂ 대기에 CO₂ 3%, 평균 분자량 28.5, 규모 높이 7 km, 평형온도 228 K, 산소 없음이다.
-        확인: CO₂ 분압 21 mbar의 frost point는 135 K로 야간 150~165 K보다 낮아 동결하지 않으므로 야간측 대기
-        붕괴를 피한다. 0.7 bar에서는 대기 열조석이 약해 비동기 자전 조건이 발동하지 않아 1:1 고정과 obliquity 0이
-        그대로 유지되며, 1 bar보다 오히려 안전하다. 온도 3계층은 GCM 앵커로 직하 282~288 K, 야간 150~162 K,
-        평균 243~248 K이다.
-        유보: 이 대기가 남아 있다는 것이 이 행에서 문헌을 벗어난 지점이다. 어떤 근거로 그렇게 두었는지는 이탈
-        기록에 적었다.
+        채택값은 0.3 bar의 N₂ 대기에 CO₂ 3%, 평균 분자량 28.5, 규모 높이 7 km, 평형온도 228 K, 산소 없음이다.
+        확인: 기압을 정한 것은 야간측 CO₂ 냉각 포획이다. Fray & Schmitt 증기압 곡선에서 야간 최저 150 K의 서리가
+        대기 CO₂ 분압을 8.4 mbar로 버퍼링하고, 그 값이 3%가 되는 총기압이 0.28 bar다. 서리 더미가 저장고로
+        작동해 남는 CO₂는 얼어붙고 모자라면 승화해 돌아오므로 분압이 유지된다. 일사를 받는 쪽에는 서리가 남지
+        않는다. 터미네이터 200 K에서 이미 증기압이 1,556 mbar로 대기 분압의 170배다. 0.3 bar는 Joshi 1997의
+        붕괴 임계 0.1~0.3 bar의 상단이라 수송이 야간을 그 온도에 붙들 수 있고, 열조석도 1 bar보다 약해 1:1
+        고정과 obliquity 0이 안전하다. 온도 3계층은 1 bar GCM 앵커(직하 290 K·야간 150 K·평균 250 K)에서
+        Koll 2022 대비 스케일링으로 옮겼고, 온실 계산기는 평균 241 K를 준다.
+        유보: Bond 알베도 0.33은 직하 구름을 포함해 잡은 값인데, 기압이 얇아지면 구름이 줄어 알베도가 0.30 쪽으로
+        내려갈 수 있다. 그러면 평형온도가 오른다. surface 행에서 함께 볼 사안으로 남긴다.
     refs: ["1702.04089", "1608.06813", "1608.08620", "docs/reference/exoplanet-atmosphere-methodology.md", "docs/reference/tidally-locked-temperature-methodology.md"]
 
   - body: Proxima Cen b
@@ -603,7 +624,7 @@ decisions:
     driver: [window-selection]
     narrative: >
       radiation(표면)=가혹이다. 원인은 약한 자기권(G7) + 잦은 슈퍼플레어(별 measured: 1.49회/일, ≥10³³erg ~3/년, X선 log Lx
-      27정온→28.5피크) + 근접궤도 0.0485 AU 직격. 0.7 bar 대기가 일부 column 차폐하나 약한 장이라 플레어가 대기 직타 →
+      27정온→28.5피크) + 근접궤도 0.0485 AU 직격. 0.3 bar 대기가 일부 column 차폐하나(1 bar 기준 ~1000 g/cm²의 30% 수준) 약한 장이라 플레어가 대기 직타 →
       G1 무생물·G11 해저드의 물리 근거. stellar_wind=강함(근접 → wind ram 큼, Dong2017 escape 구동 = G4 retention
       divergence 입력). heliosphere=astrosphere 심부(행성 0.0485 AU ≪ standoff ~55 AU[Wood2001] → 항상 항성풍 내부,
       ISM 직접 미관측).
@@ -674,7 +695,7 @@ decisions:
       황혼대) · ⑥ 야간면(Night Side, 동결 암석) · ⑦ 야간 빙관(Night Ice Cap, 반대점 물얼음). 오로라대는 biome서 제외인데,
       고정 표면 구역이 아니라 G6 외형 요소로만 쓴다(오너 결정). breathability=불가(무산소, atmosphereContainsOxygen=false).
       radiation 해저드=high(G8, 약한 장+플레어; Kerbalism radiation_surface high tier, 플레어 시 spike). ScienceValues
-      전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.7 bar 비행 가능. 임무 난도의 핵심은 접근이다. Proxima는 태양 최근접(4.24 ly)이지만 여정 자체가 난도다.
+      전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.3 bar 비행 가능. 임무 난도의 핵심은 접근이다. Proxima는 태양 최근접(4.24 ly)이지만 여정 자체가 난도다.
     fields:
       - name: science_biomes
         value: "항성경도 동심원 7구획: 직하점/직하 호수(splashdown)/주간 저지/주간 고지/터미네이터/야간면/야간 빙관 (오로라대 제외)"

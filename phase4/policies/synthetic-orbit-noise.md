@@ -4,6 +4,14 @@
 **Status:** spec / backlog. Phase 4 not yet built. Generalizes the earlier
 synthetic-eccentricity idea to all suspiciously-perfect orbital elements.
 
+**Scope, widened 2026-08-04 (owner):** the intent is that *every* defaulted value
+eventually carries noise, not only orbital elements. The rules below are written per
+element because the orbital guardrails are the ones already worked out, but they read
+as the general contract: never a measurement, emit-stage only, physically bounded,
+and one-sided at a threshold (rule 5). A derived physical value whose cascade other
+rows depend on (pressure feeding temperature feeding albedo) is the case rule 5
+exists for.
+
 ## Why
 Where an element was never measured, the pipeline fills a **default**: inclination
 0° (face-on) or 90° (edge-on), eccentricity 0, Ω 0, ω 0/90, round integers. Those
@@ -35,7 +43,25 @@ as natural — **without ever touching a real measurement**.
    the noised emit — tradeoff noted.)
 4. **Physically bounded** (below). Noise must stay inside the Phase-3 defensible
    window AND inside any observational constraint the body still has to satisfy.
-5. **Stability-gated.** After perturbing a multi-body system, run the stability sim
+5. **One-sided at a threshold.** A value that sits *on* a physical threshold gets
+   noise only in the direction that moves it **away** from that threshold, or is
+   excluded from noise entirely. Two-sided jitter on a threshold value does not blur
+   a round number, it flips a verdict. This rule generalizes past orbital elements:
+   the owner's intent (2026-08-04) is that eventually **every** defaulted value
+   carries noise, so the threshold check has to be part of picking any bound, not a
+   special case for `i` and `e`.
+
+   Known threshold-adjacent values, first cases:
+   - **Proxima Cen b `atmosphere.pressure` = 0.3 bar** sits exactly at the upper edge
+     of Joshi 1997's 0.1–0.3 bar night-side collapse band, and the value is itself
+     pinned by the CO₂ frost point that buffers the partial pressure. Any jitter is
+     **upward only**; downward crosses into atmospheric collapse.
+   - **`eccentricity` = 0 (measured)** is not noised at all: Kopernicus'
+     `temperatureEccentricityBiasCurve` divides by zero there, and the fix is to
+     suppress the curve at emit rather than to jitter a measurement off the trap
+     (rule 1 forbids the jitter anyway).
+
+6. **Stability-gated.** After perturbing a multi-body system, run the stability sim
    ([[project_nearstars_stability_sim]]); if it goes unstable (ejection / Hill breach
    / MEGNO chaotic beyond baseline), shrink the amplitude or reseed. **This is the
    "orbit verification before Phase 4" step.** Single isolated planets skip it.
