@@ -508,6 +508,7 @@ decisions:
 
   - body: Proxima Cen b
     axis: environment                 # G8 — 별 측정 환경 + G7 약한장에서 도출 (radiation/wind/heliosphere)
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
@@ -663,6 +664,7 @@ decisions:
   - body: Proxima Cen d
     axis: bulk                        # §3.2 템플릿 앵커
     body_class: tidally_locked
+    refs: ["docs/reference/mass-radius-relation-methodology.md", "docs/reference/body-figure-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md", "docs/reference/internal-heat-luminosity-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
@@ -736,6 +738,7 @@ decisions:
 
   - body: Proxima Cen d
     axis: atmosphere
+    refs: ["docs/reference/exoplanet-atmosphere-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
@@ -865,6 +868,7 @@ decisions:
 
   - body: Proxima Cen d
     axis: environment
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
@@ -1010,6 +1014,7 @@ decisions:
   - body: Proxima Cen c
     axis: bulk                        # §3.2 템플릿 앵커
     body_class: free_rotator
+    refs: ["docs/reference/mass-radius-relation-methodology.md", "docs/reference/body-figure-methodology.md", "docs/reference/internal-heat-luminosity-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
@@ -1085,6 +1090,7 @@ decisions:
 
   - body: Proxima Cen c
     axis: atmosphere
+    refs: ["docs/reference/tidally-locked-temperature-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
@@ -1117,6 +1123,7 @@ decisions:
 
   - body: Proxima Cen c
     axis: surface
+    refs: ["docs/reference/surface-color-albedo-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: "∅ (고체 표면 없음: mini-Neptune, H/He 외피 + 심층 코어 미도달). 착륙 불가. 가시 색은 표면 아닌 대기(G6)서."
@@ -1185,6 +1192,7 @@ decisions:
 
   - body: Proxima Cen c
     axis: environment
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
@@ -1308,6 +1316,7 @@ decisions:
 
   - body: Proxima Cen c I
     axis: orbit
+    refs: ["docs/reference/tidal-locking-timescale-methodology.md"]
     status: gated
     driver: [window-selection, engine]
     # (해소 2026-07-12) 마이그레이션 때 semi_major_axis_au 필드에 km 값이 들어갔던 것을 AU로 환산 — 필드명 단위와 값 단위 일치.
@@ -1342,6 +1351,7 @@ decisions:
   - body: Proxima Cen c I
     axis: bulk                        # §3.2 템플릿 앵커
     body_class: tidally_locked
+    refs: ["docs/reference/body-figure-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/tidal-heating-methodology.md"]
     status: gated
     driver: [window-selection, fiction]
     narrative: >
@@ -1419,6 +1429,7 @@ decisions:
 
   - body: Proxima Cen c I
     axis: atmosphere
+    refs: ["docs/reference/exoplanet-atmosphere-methodology.md", "docs/reference/ice-stability-methodology.md"]
     status: gated
     driver: [fiction]
     narrative: >
@@ -1503,6 +1514,7 @@ decisions:
 
   - body: Proxima Cen c I
     axis: magnetism.magnetic_field
+    refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     status: gated
     driver: [fiction]
     narrative: >
@@ -1520,6 +1532,7 @@ decisions:
 
   - body: Proxima Cen c I
     axis: environment
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
