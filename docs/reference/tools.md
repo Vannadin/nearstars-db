@@ -21,6 +21,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 13 | Phase 4 board tools | Validate decision boards (emit gate) + render per-body board HTML | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
 | 14 | Radiation belts + derived-value calculators | Belt cross-sections, Kerbalism emitter, and the `scripts/refs/` methodology calculators | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
 | 15 | Surface ice stability | Can exposed ice (6 species) survive at this insolation? Albedo → loss rate, lifetime, lag-mantle depth | `docs/ice-stability.html` |
+| 16 | Magnetic field geometry (dipolar vs multipolar) | Meridional field lines + surface B_r map + traced open-field auroral footprint, for the Ro_l gate's *shape* consequence | `scripts/viz/render_field_geometry.py` |
 
 ## Verification & QA — index
 
@@ -414,3 +415,28 @@ target_list.json
 - [adding_stars](adding_stars.md) — operational sequence using the script index here
 - [mod-reference](mod-reference.md) — downstream mod-side tools
 - [guideline](guideline.md) — project-level context (phases, distance limits) for the tools
+
+## 16. Magnetic field geometry renderer
+
+`scripts/viz/render_field_geometry.py` — renders the **shape** of a planetary field, not
+its strength, because that is what the player sees. The rocky-dynamo recipe gates on the
+local Rossby number (`Ro_l = 0.12`); below it the field is dipolar and aurora sits in two
+polar caps, above it the dynamo goes multipolar and the open-field footprint scatters into
+patches down to mid-latitudes.
+
+Four panels: meridional field lines for each case, and the surface radial-field map with
+the auroral footprint overlaid.
+
+- The footprint is **traced, not thresholded**: field lines are integrated from a
+  96 × 48 surface grid (vectorized, both directions) and a cell is marked when its line
+  escapes to r > 4. An earlier `|B_r|`-threshold version painted half the polar hemisphere
+  for a dipole and was wrong.
+- Potential-field model from Gauss coefficients to `l = 4`, Schmidt semi-normalized
+  Legendre functions. `numpy` + `PIL` only, matching `render_belts.py`; no matplotlib in
+  this environment. ~0.8 s per render.
+- **Schematic, not a dynamo solution.** The multipolar coefficient set is a seeded
+  realization (`seed=20260804`) with the spectrum weighted as the literature describes;
+  it is not a solution of the induction equation.
+- Grounding: `docs/reference/rocky-planet-dynamo-methodology.md` (the `Ro_l` gate and the
+  0.06× moment collapse). Output: `docs/img/field-geometry.png`.
+

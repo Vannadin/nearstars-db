@@ -59,7 +59,7 @@ Kopernicus / atmosphere cfg-ready 값. `Confidence`. high = 직접 측정
 | `aurora_present` | true | low | 얇은 대기 + 약한 자기장 → 가시 오로라 활동, H₂O-rich tail 에서 새로운 화학 |
 | `aurora_color_primary_hex` | `#B0E0E6` | low | tie-break (interesting-first). H₂O 구름 aerosol 여기 + OH 밴드 발광이 Mie scattering 으로 가시광까지 끌어올려진 옅은 cyan-white |
 | `aurora_color_secondary_hex` | `#4DFF4D` | low | 산소가 있을 경우 미량 [OI] 녹색; tie-break. interesting-first 가 UV-only 보다 가시 secondary 선택 |
-| `aurora_emission_species_primary` | `OH(A-X) 308 nm + H Lyman-α + 터미네이터 H₂O 얼음에서의 산란` | low | 대기 조성에서 유도(Turbet 2023 의 water-rich tail → 독특한 cloud-resonant 발광) |
+| `aurora_emission_species_primary` | `OH(A-X) 308 nm + H Lyman-α + 명암경계선 H₂O 얼음에서의 산란` | low | 대기 조성에서 유도(Turbet 2023 의 water-rich tail → 독특한 cloud-resonant 발광) |
 | `aurora_oval_magnetic_latitude_deg` | 30 | medium | 약한 자기장 → oval aperture 더 넓음 (Vidotto 2013) |
 | `aurora_intensity_kR_typical` | 200 | low | 얇은 대기라 입자가 더 깊이 침투하고 입자당 더 밝음; flare 가 견인 |
 | `induction_heating_magma_ocean_fraction` | 0.56 | medium | Kislyakova 2018 ([1710.08761](https://arxiv.org/abs/1710.08761)) — radiogenic 의 56%; 마그마 바다 플로지빌리티가 d 의 기존 magma-relict 형태 노트를 보강 |
@@ -156,14 +156,14 @@ subsurface 층에서 응결 상태(액체 물 또는 ice Ih) 로 존재 가능. 
 canonical NearStars 출력은 JWST 제약 해석 유지하되, cooling-and-
 condensing 시나리오는 cfg 변형으로 보존.
 
-**구름 공명 오로라.** d 가 채택한 시나리오 — mbar 고도의 터미네이터
+**구름 공명 오로라.** d 가 채택한 시나리오 — mbar 고도의 명암경계선
 H₂O 얼음 구름 (Turbet 2023) — 은 독특한 오로라 시그너처를 만듦. 항성풍
 입자가 얇은 물-풍부 대기로 침투하면서 H₂O 를 H 와 OH 라디칼로 해리, OH
 (A-X) 308 nm UV 발광을 생성. 중요한 점은 고고도 얼음 구름이 이 UV 를
-Mie scattering 으로 가시 파장까지 산란시켜 터미네이터에 집중된 옅은
+Mie scattering 으로 가시 파장까지 산란시켜 명암경계선에 집중된 옅은
 cyan-white 오로라 광채를 만든다는 것 — 지구의 극관 오로라 기하와 구별됨.
 강도는 ~200 kR (지구의 20배) 에 도달, M-dwarf 의 강한 항성풍 플럭스가
-견인. cfg 렌더링용. 터미네이터를 따라 primary `#B0E0E6` (옅은 cyan-
+견인. cfg 렌더링용. 명암경계선를 따라 primary `#B0E0E6` (옅은 cyan-
 white), 국지 [OI] 강화 시 secondary `#4DFF4D` (녹색). interesting-first
 tie-break 가 보이지 않는 순수 UV 대안 대신 cloud-resonant 가시광 렌더링을
 선호.
@@ -200,7 +200,7 @@ TRAPPIST-1 d 시스템 파라미터가 강한 동기 회전 구성을 강제. �
 조석 고정 행성을 지구 dipole moment 의 ~0.02 배에 위치시키며 적도 표면
 자기장은 ~1 μT 수준. Kislyakova 2018 의 56% induction-heating 분율은 d
 내부에 활성 액체 층이 존재함을 시사하므로 약한 잔류 dynamo 는 플로지블.
-cfg 는 낮지만 0 은 아닌 자기장 채택 — 터미네이터에서 옅은 cloud-resonant
+cfg 는 낮지만 0 은 아닌 자기장 채택 — 명암경계선에서 옅은 cloud-resonant
 오로라를 지지하기엔 충분하나 dayside 의 대부분에서 항성풍을 편향시키기엔
 부족한 수준.
 
@@ -350,7 +350,7 @@ TRAPPIST-1 Exoplanetary System" 논문이 접근 가능하면 paste 부탁 — �
   0.3 필요) 은 미래 renderer 가 "wet d" 변형을 지원하려면 명시적인 cfg
   주의 가치 있음. Canonical cfg 는 airless / near-airless 해석 아래 A_B
   = 0.10; wet 변형은 A_B ≥ 0.3 필요.
-- 터미네이터의 cloud-resonant 오로라는 d 의 독특한 cfg 시그너처. H₂O
+- 명암경계선의 cloud-resonant 오로라는 d 의 독특한 cfg 시그너처. H₂O
   얼음 구름 고도가 오로라 입자 침전층보다 높다는 가정에 의존하므로,
   향후 관측이 구름 고도를 낮춘다면 cyan-white 광채 결정 재검토 필요.
 - 25 Sv/yr 표면 도즈는 d 를 Kerbalism 의 "고방사선" 등급에 위치시킴;

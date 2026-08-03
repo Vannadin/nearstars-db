@@ -435,7 +435,7 @@ decisions:
       온실로 작용해 별을 마주한 쪽 지표를 물의 어는점 위에 붙들어 둔다. 산소는 없어 숨 쉴 수 없다. 대기는 얇다.
       질량의 95%가 지표 위 21 km 안에 들어 있다. 밤이 영원한 반대편은 지표가 충분히 차가워 이산화탄소 일부가
       드라이아이스 서리로 내려앉고, 그 서리가 대기에 남는 기체의 양을 정한다. 남으면 서리로 얼어붙고 모자라면
-      다시 승화해 돌아온다. 빛을 받는 쪽에는 서리가 남지 못한다. 터미네이터조차 너무 따뜻하다. 다만 이 대기가
+      다시 승화해 돌아온다. 빛을 받는 쪽에는 서리가 남지 못한다. 명암경계선조차 너무 따뜻하다. 다만 이 대기가
       별을 견디고 남아 있다는 것 자체는 관측이 아니라 선택이다. Proxima의 플레어와 항성풍에는 이만한 대기를
       벗겨낼 힘이 있다.
     # MIGRATION-FLAG: derived_temps 는 비표준 행-레벨 키로 프로즈 원문 보존 (validator 무시). 온도값 typed field 로 병기.
@@ -490,7 +490,7 @@ decisions:
         확인: 기압을 정한 것은 야간측 CO₂ 냉각 포획이다. Fray & Schmitt 증기압 곡선에서 야간 최저 150 K의 서리가
         대기 CO₂ 분압을 8.4 mbar로 버퍼링하고, 그 값이 3%가 되는 총기압이 0.28 bar다. 서리 더미가 저장고로
         작동해 남는 CO₂는 얼어붙고 모자라면 승화해 돌아오므로 분압이 유지된다. 일사를 받는 쪽에는 서리가 남지
-        않는다. 터미네이터 200 K에서 이미 증기압이 1,556 mbar로 대기 분압의 170배다. 0.3 bar는 Joshi 1997의
+        않는다. 명암경계선 200 K에서 이미 증기압이 1,556 mbar로 대기 분압의 170배다. 0.3 bar는 Joshi 1997의
         붕괴 임계 0.1~0.3 bar의 상단이라 수송이 야간을 그 온도에 붙들 수 있고, 열조석도 1 bar보다 약해 1:1
         고정과 obliquity 0이 안전하다. 온도 3계층은 1 bar GCM 앵커(직하 290 K·야간 150 K·평균 250 K)에서
         Koll 2022 대비 스케일링으로 옮겼고, 온실 계산기는 평균 241 K를 준다.
@@ -504,10 +504,18 @@ decisions:
     status: gated
     driver: [window-selection, art-direction]
     narrative: >
-      대륙 = 2색(오너 1+2 조합): 회녹색 마픽 저지(올리빈/휘석질 현무암 mare, Fe²⁺ 결정장 → 어두운 회녹, A~0.1) +
-      밝은 장석질 고지(anorthosite highlands, A~0.2–0.25). 화성형 적색은 아니다. 무생물·무산소(G4)라 철이 환원(Fe²⁺)
-      상태 유지, O→Fe³⁺ 전하이동(적색 슬로프) 미발생. 직하 호수/내해 = 어두운 물(A~0.07, G1 캐나다/지중해형 산재).
-      야간 빙관 = 밝은 물얼음(A~0.5–0.6, 살짝 청색). 직하 구름층 = 물구름(Yang2013 안정화 피드백, 데이샤이드 알베도↑).
+      The hemisphere in permanent day divides into two colours of ground. The low country is basalt rich in olivine
+      and pyroxene, a dark grey-green; the high country is feldspar-rich and bright. It is not Mars-red. With no
+      life and no oxygen the iron never oxidizes and stays reduced, so the charge transfer that makes rust-red never
+      happens. Lakes and inland seas lie scattered between them as dark water, and water cloud hangs over the
+      substellar point, cooling what is beneath. The far side, in permanent night, is covered in bright water ice
+      with a faint blue cast.
+    narrative_ko: >
+      낮이 영원한 반구는 두 가지 색의 땅으로 갈린다. 낮은 곳은 올리빈과 휘석이 많은 현무암 지대라 어두운
+      회녹색이고, 높은 곳은 장석이 모인 밝은 고지다. 화성처럼 붉지는 않다. 생명도 산소도 없어 철이 산화되지
+      못하고 환원된 상태로 남는 탓에, 붉은색을 만드는 전하 이동이 일어나지 않는다. 그 사이로 호수와 내해가
+      흩어져 어두운 물빛으로 놓이고, 직하점 위에는 물구름이 걸려 그 아래를 식힌다. 밤이 영원한 반대편은 밝은
+      물얼음으로 덮여 살짝 푸르다.
     # MIGRATION-FLAG: bond_albedo_cascade / cfg_colors_intrinsic 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (색은 emit 말미 art-pass, typed 색필드 미분해).
     bond_albedo_cascade: >
       Bond albedo는 **일사받는 데이샤이드만** 결정(1:1 고정 → 야간측 일사 0 → 밝은 빙관은 Bond에 미기여, 과대평가 회피).
@@ -535,30 +543,34 @@ decisions:
       criterion: [classification, visual-checklist]
       verdict: pass-in-window
       evidence: >
-        rationale: 색조/패턴은 interesting-first 축(표면색 문서 §1 posture)이고, 묶이는 hard tie는 면적가중 Bond
-        albedo뿐(→온도 cascade). 대륙 어두움·비적색은 환원 산화상태로 grounded(표면색 문서 §2: 산화상태가 색 최대 레버).
-        2색(mare/highland) + 호수·빙관·구름의 다요소 = interesting-first 다양성, eyeball 회피(G1 대륙형 호수 유지).
-
-        paper: 표면색·Bond albedo = docs/reference/surface-color-albedo-methodology.md (Fe²⁺ 결정장 §2, Bond=q·p §6).
-        직하 구름 피드백 = 온도 문서 Layer-3(Yang2013).
-
-        emit_note: Kopernicus 표면색/biome emit는 프로젝트 말미 일괄. 색조 sRGB는 표면색 문서 + atmosphere-reflected-color
-        엔진으로 조성→색 합성(emit 단계). 야간 빙관/직하 호수/2색 대륙 = biome 구획 후보.
+        채택값은 2색 대륙(어두운 회녹 마픽 저지 + 밝은 장석질 고지), 직하 호수·내해, 야간 빙관, Bond 알베도
+        0.33이다.
+        확인: 색을 정하는 최대 레버는 산화상태다. 무생물·무산소이므로 철이 Fe²⁺로 남아 Fe³⁺ 전하이동이 만드는
+        적색 슬로프가 생기지 않는다. Bond 알베도는 일사를 받는 데이샤이드만으로 면적가중했다. 1:1 고정이라
+        야간측 일사가 0이어서 밝은 빙관을 넣으면 과대평가가 된다. 어두운 마픽과 호수, 밝은 고지와 직하 구름을
+        합쳐 0.33이 되고, 이 값이 대기 행의 평형온도 228 K와 맞물려 닫힌다. 여기서 나눈 표면 구획은 gameplay
+        행의 biome 후보로 이어진다.
+        유보: 색조와 패턴 자체는 물리가 허용하는 창 안에서 고른 아트 선택이다. 물리가 묶는 것은 면적가중 Bond
+        알베도 하나뿐이다. 0.3 bar로 내려가면 직하 구름이 얇아져 알베도가 0.30 쪽으로 갈 수 있으나, 그때 평형온도
+        상승은 2.5 K로 온실 계산의 ±10 K 밴드 안이라 판정을 바꾸지 않는다.
 
   - body: Proxima Cen b
     axis: appearance                  # G6 — Proxima-lit 표시색 + 디스크 종합 + 희미 플레어-오로라
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
-      종합 인상 = 따뜻한 황토/적갈 디스크(Proxima M5.5, Teff 2904K reddening). 조석고정 → 직하 반구가 별 향함.
-      가장 밝은 = 직하 물구름 소용돌이(크림-화이트), 둘레로 reddening된 2색 대륙(움버 저지 + 테라코타 고지) + 산재한
-      검붉은 호수, 터미네이터 너머 크림빛 야간 빙관. 폴리페무스(G2V 태양쌍둥이광=고유색 거의 그대로)와 결정 대비다.
-      여기선 별빛 자체가 붉어 디스크 전체가 따뜻하게 물듦. + 희미한 플레어-오로라(아래 게이트).
-      aurora_divergence: 희미·간헐(플레어 시) 오로라를 의도 연출. 행성 자기장은 미측정이다(외계행성 장 직접탐지 사례
-      없음; Pérez-Torres2021 2012.02116 전파 SPI는 잠정·항성 플레어 기원). 게다가 조석고정 느린 자전 → 암석 dynamo 약할
-      가능성↑(Driscoll&Olson2011, RM22 스케일링). 단 드라이버(별)는 강력하다. 잦은 슈퍼플레어 입자플럭스 막대(별
-      environment.activity 측정값). 그래서 "약한 장 가정 + 강한 구동 → 희미·간헐 오로라"를 owner-override로
-      채택(장 존재를 약하게 가정, 명기).
+      Under red starlight the planet reads as a warm ochre disk. The brightest thing on it is the swirl of water
+      cloud over the substellar point, ringed by two-tone continents stained red, with lakes sunk dark between them.
+      Past the terminator the night-side ice cap carries on in cream. Starlight erases the blue of that ice. It is
+      the opposite of Alpha Centauri A b (Polyphemus), which stands under a Sun twin and keeps its own colours almost untouched. Only
+      when a flare breaks does a violet aurora spread faintly, and with no oxygen the green Earth shows never
+      appears.
+    narrative_ko: >
+      붉은 별빛 아래 이 행성은 따뜻한 황토빛 원반으로 보인다. 가장 밝은 것은 직하점에 걸린 물구름의 소용돌이이고,
+      그 둘레로 붉게 물든 두 색의 대륙이 펼쳐지며 사이사이 호수가 검붉게 잠긴다. 명암경계선을 넘어서면 야간
+      빙관이 크림빛으로 이어진다. 얼음의 푸른 기는 별빛에 지워진다. 태양 쌍둥이의 빛을 받아 제 색을 거의 그대로
+      보이는 Alpha Centauri A b(폴리페무스)와는 정반대다. 플레어가 터질 때만 자줏빛 오로라가 희미하게 번지는데, 산소가 없어
+      지구에서 보는 초록빛은 나타나지 않는다.
     # MIGRATION-FLAG: cfg_colors_displayed 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (표시 팔레트, emit 말미 정밀화).
     cfg_colors_displayed: >
       Proxima reddening 적용 근사(§6 엔진, illuminant=별; emit서 정밀화). 마픽 저지 #3e2c16(움버) ·
@@ -575,16 +587,15 @@ decisions:
       criterion: [visual-checklist, composition-lock]
       verdict: owner-override
       evidence: >
-        palette_note: 표시 팔레트는 derived(in-window)이고, 고유 반사색(G5) × Proxima SED를 §6 엔진으로 렌더한 결과.
-        별색 reddening은 물리.
-
-        aurora_color: 색은 composition-lock(in-window)이다. N₂ 지배·무산소(G4) 대기라 Earth의 OI 557nm 녹색(O 풍부
-        필요)은 죽고, N₂ 1st Positive 적·N₂⁺ 391nm 자색 지배 → 적자색(magenta-violet) 오로라. composition-color.md
-        aurora regime.
-
-        paper: 자기장 관측 현황 = Garcia-Sage2017(2017ApJ...844L..13G, 장 가정 보호모델)·Garraffo2016·Pérez-Torres2021
-        (2012.02116 전파탐색). 약한장 근거 = 조석고정→느린자전 dynamo(Driscoll&Olson2011 2011Icar..213...12D, RM22).
-        오로라색 = composition-color.md.
+        채택값은 따뜻한 황토·적갈 원반이고, 직하 구름 소용돌이가 가장 밝으며, 붉게 물든 2색 대륙과 검붉은 호수,
+        크림빛 야간 빙관, 그리고 플레어 때만 보이는 희미한 자적색 오로라가 얹힌다.
+        확인: 표시색은 surface 행의 고유 반사색에 Proxima의 스펙트럼을 곱해 얻었고, 별빛이 붉히는 것 자체는
+        물리다. 오로라 색은 조성이 잠근다. N₂ 지배에 산소가 없어 지구의 산소 557 nm 녹색선이 나오지 못하고,
+        N₂ 1st Positive의 적색과 N₂⁺ 391 nm의 자색이 지배해 자적색이 된다.
+        유보: 이 행성의 자기장은 측정된 적이 없다. 외계행성 자기장 직접 검출 사례가 없고, 전파로 본 항성-행성
+        상호작용도 잠정이며 항성 플레어 기원일 수 있다. 조석고정된 느린 자전은 약한 다이나모를 시사하는 반면
+        구동원인 별은 강력하다. 그래서 약한 장을 가정하고 강한 구동을 얹어 희미하고 간헐적인 오로라를 택했다.
+        장의 존재를 약하게 가정한 선택임을 명기한다.
     refs: ["2017ApJ...844L..13G", "2012.02116", "2011Icar..213...12D"]
 
   - body: Proxima Cen b
@@ -681,24 +692,24 @@ decisions:
         궤도를 흩는다. 다양성 우선 원칙의 물리적 예외에 해당한다. 증거의 부재가 아니라 물리적 부재다.
 
   - body: Proxima Cen b
-    axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (폴리페무스 거대 가스행성과 대비)
+    axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (A b 거대 가스행성과 대비)
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-08-03: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24,
       임무 난이도 등급은 모드-지원 관심사). 구값 "임무=항성간 플래그십".
     status: gated
     driver: [engine]
     narrative: >
-      고체 표면이 있어 착륙 가능한 암석 호수 세계(폴리페무스 거대 가스행성과 대비). biome = 항성경도 동심원(조석고정이라
-      위도 아닌 직하→터미네이터→반대점 순; 직하 최온, 바깥일수록 한랭) 7구획(오너 검토 2026-06-23):
-      ① 직하점(Substellar Point, 핫스팟 시그니처 명소, 폴리페무스 폭풍눈 대응) · ② 직하 호수(Substellar Lakes,
-      splashdown) · ③ 주간 저지(Day Lowlands, 마픽) · ④ 주간 고지(Day Highlands, 장석질) · ⑤ 터미네이터(Terminator,
+      고체 표면이 있어 착륙 가능한 암석 호수 세계(A b 거대 가스행성과 대비). biome = 항성경도 동심원(조석고정이라
+      위도 아닌 직하→명암경계선→반대점 순; 직하 최온, 바깥일수록 한랭) 7구획(오너 검토 2026-06-23):
+      ① 직하점(Substellar Point, 핫스팟 시그니처 명소, A b 폭풍눈 대응) · ② 직하 호수(Substellar Lakes,
+      splashdown) · ③ 주간 저지(Day Lowlands, 마픽) · ④ 주간 고지(Day Highlands, 장석질) · ⑤ 명암경계선(Terminator,
       황혼대) · ⑥ 야간면(Night Side, 동결 암석) · ⑦ 야간 빙관(Night Ice Cap, 반대점 물얼음). 오로라대는 biome서 제외인데,
       고정 표면 구역이 아니라 G6 외형 요소로만 쓴다(오너 결정). breathability=불가(무산소, atmosphereContainsOxygen=false).
       radiation 해저드=high(G8, 약한 장+플레어; Kerbalism radiation_surface high tier, 플레어 시 spike). ScienceValues
       전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.3 bar 비행 가능. 임무 난도의 핵심은 접근이다. Proxima는 태양 최근접(4.24 ly)이지만 여정 자체가 난도다.
     fields:
       - name: science_biomes
-        value: "항성경도 동심원 7구획: 직하점/직하 호수(splashdown)/주간 저지/주간 고지/터미네이터/야간면/야간 빙관 (오로라대 제외)"
+        value: "항성경도 동심원 7구획: 직하점/직하 호수(splashdown)/주간 저지/주간 고지/명암경계선/야간면/야간 빙관 (오로라대 제외)"
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"
@@ -707,7 +718,7 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
-        착륙·splashdown 가능(고체 표면+액체 호수)이 폴리페무스(거대 가스행성, 비행/우주만)와의 핵심 게임 차이. 무산소+고방사선이
+        착륙·splashdown 가능(고체 표면+액체 호수)이 A b(거대 가스행성, 비행/우주만)와의 핵심 게임 차이. 무산소+고방사선이
         "거주가능존이되 적대적"이라는 G1 무생물 서사와 정합. radiation tier high는 G8서 derived. cfg emit(Kopernicus 표면색/biome·
         atmosphere curve·ScienceValues)는 프로젝트 말미 일괄.
 
@@ -1046,13 +1057,13 @@ decisions:
       변동, 게임플레이 훅). 과학 타깃은 지구형 외계행성 최초 자기장(SPI)이고, 자기권·phase-lock 관측 과학 명소다. biome = 하이브리드
       7구획(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 시그니처
       명소) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) ·
-      ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ 자기극 풍화관(Magnetic Polar Caps), 플레어 입자
+      ⑤ 명암경계선(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ 자기극 풍화관(Magnetic Polar Caps), 플레어 입자
       집중 채널로 강풍화된 어두운 흑갈 극관(G5 2-tone; 자기장 시그니처 biome, 무자기장 수성의 단순 극 크레이터와 차별).
       ScienceValues 전체(landed/flying-low=탄도/in-space; splashed=토큰 inert). SOI 자동. 난도=항성간 플래그십 + 최근접
       고방사선 착륙. 발견=RB T F F F(candidate, G1).
     fields:
       - name: science_biomes
-        value: "하이브리드 7구획: 직하 핫스팟/주간 고지/주간 평원/크레이터/터미네이터/야간면/자기극 풍화관"
+        value: "하이브리드 7구획: 직하 핫스팟/주간 고지/주간 평원/크레이터/명암경계선/야간면/자기극 풍화관"
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"
@@ -1383,7 +1394,7 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      mini-Neptune이라 고체 표면 없음 → 착륙·splashdown 불가, 대기비행("X 상공 비행")+궤도만(폴리페무스형). breathability=
+      mini-Neptune이라 고체 표면 없음 → 착륙·splashdown 불가, 대기비행("X 상공 비행")+궤도만(A b형). breathability=
       불가. radiation 해저드=낮음(G8, 최외곽이라 시스템서 가장 안전). biome = 위도 5띠(자유자전이라 항성경도 아닌
       위도; 오너 검토 2026-06-23): 적도대 · 북온대 · 남온대 · 북극 · 남극. 고리 그림자대는 제외(오너). 2중 적/흰 고리 +
       위성 Proxima c I는 biome 아닌 시각·탐사 피처. ScienceValues(flying/in-space; landed/splashed=토큰 inert). SOI 자동.
@@ -1402,7 +1413,7 @@ decisions:
         owner_review: 2026-06-23 오너 검토로 biome 위도 5띠 확정, 고리 그림자대 제외(b의 오로라대 제외와 동일 취지: 고정
         표면구역 아닌 피처는 biome서 뺌).
 
-        note: 표면 없음이 b(착륙 호수세계)·d(착륙 수성형)와의 게임 차이다. c는 폴리페무스형 비행/우주. 고리·위성이 c만의 탐사
+        note: 표면 없음이 b(착륙 호수세계)·d(착륙 수성형)와의 게임 차이다. c는 A b형 비행/우주. 고리·위성이 c만의 탐사
         매력. cfg emit(biome map·ScienceValues·ResearchBodies·Ring 노드)는 프로젝트 말미.
 
   # ════════ 위성 Proxima c I (c의 픽션 위성, 명왕성 아날로그 냉 얼음) — 판도라식 독자 facet-walk 2026-06-23 (축별) ════════

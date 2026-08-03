@@ -442,6 +442,10 @@ a documented regime call rather than a computed number.
 
 ## Related
 
+- [`surface-radiation-dose-methodology.md`](surface-radiation-dose-methodology.md) —
+  the **surface** dose from stellar particle events arriving through the atmosphere. This
+  doc owns the trapped-belt dose; that one owns what reaches the ground, and the two are
+  separate chains that must not be conflated.
 - [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) and
   [`planetary-dynamo-scaling.md`](planetary-dynamo-scaling.md) — supply the `B_eq`
   this method consumes.

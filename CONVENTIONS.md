@@ -42,6 +42,15 @@ Always reply in formal Korean (존댓말). Full rule: `CLAUDE.md` §5 + §12 ess
 **Details:** Code field names, chart axes, and formal notation (equations) keep abbreviations. Rule is "write e/i/a when labeling; spell it out when explaining."
 **Source:** `feedback_no_orbital_abbreviations.md`
 
+### 1.6b Korean term for the terminator: 명암경계선
+**Rule:** The day/night boundary on any body is **명암경계선** in Korean prose and in
+Korean biome names. Not 터미네이터 (transliteration), not 명암선. The English label
+`Terminator` stays as-is in code, cfg field values and English-side biome labels.
+**Why:** Owner (2026-08-04) fixed the project term; the transliteration had leaked into
+prose and into biome lists across the Phase 4 boards.
+**Details:** The word is body-agnostic — a moon's terminator is 그 위성의 명암경계선, no
+separate term. For a tidally locked body, 영구 명암경계선 when the permanence matters.
+
 ### 1.7 No rest suggestions
 **Rule:** After completing a task unit, report state and propose next steps. Do **not** offer "take a break / rest / manage your energy" suggestions.
 **Why:** User is decisive about pacing (sends "ㄱㄱ" to go, ends turn to stop). Unsolicited rest suggestions feel condescending.

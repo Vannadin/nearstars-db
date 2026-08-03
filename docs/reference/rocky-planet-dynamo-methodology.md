@@ -178,6 +178,9 @@ regime gate, so a locked planet with an active core can still hold a modest fiel
 
 ## Related
 
+- [`surface-radiation-dose-methodology.md`](surface-radiation-dose-methodology.md) —
+  consumes this doc's field strength as the weaker of its two shielding terms
+  (dose ∝ B^−1.48, against the atmospheric column's ∝ C^−2…−3).
 - [`planetary-dynamo-scaling.md`](planetary-dynamo-scaling.md) — the giant /
   substellar energy-flux method; the two split at the rocky ↔ sub-Neptune boundary.
 - [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md) —
