@@ -18,7 +18,9 @@ Their reasoning is about which error a reader can catch — sulfur's melting poi
 school chemistry, the tidal-heat partition needs the literature — so an error is
 better hidden in the obscure layer.
 
-It turns out no error is needed at all. What conservation pins is the *area-weighted*
+My first reading of this was that no error is needed at all. That was wrong, and the
+owner caught it; the corrected account is in the section below. What follows is the
+arithmetic, which does hold. What conservation pins is the *area-weighted*
 `sigma T^4` mean (11,500 W/m2 tidal + 141 W/m2 absorbed starlight -> 673 K), which is
 exactly what `tidal-heating-methodology.md` §7 refutation 1 says: you cannot buy a
 cold surface with a hot interior. But that pins the mean, not the ambient. Letting
@@ -76,3 +78,32 @@ Still open on the boards, deferred by the owner to the next Phase 4 review pass:
 audit X2 (cross-board superlative contradictions), X3 (40 Eri A d 268 vs 260 K),
 X4 (Proxima d retired surface colour in appearance/base_color), X5 (discoverability
 retirement half-applied on 40 Eri).
+
+## Correction (2026-08-03, same session)
+
+The owner challenged the justification: is hotspot concentration not the exact move
+`tidal-heating-methodology.md` §7 refutation 1 rejects? Checking the Io literature
+rather than my recollection: **yes, the analogy I leaned on was wrong.** Veeder 1994
+([`1994JGR....9917095V`](https://ui.adsabs.harvard.edu/abs/1994JGR....9917095V))
+finds Io's heat flow dominated by *large warm* regions at ≤200 K, with small
+high-temperature (≥300 K) hotspots contributing little; Veeder 2012
+([`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V))
+puts ~50% of the volcanic heat flow in 1.2% of the surface. So Io does concentrate
+its heat, but not through incandescent exposed melt, and my "this is Io's actual
+architecture" claim inverted the observation. The "~3× Io's active fraction" figure
+in the first divergence note was also unfounded.
+
+What survives the check: the arithmetic (the partition reproduces 11,641 W/m² and
+preserves the 673 K mean) and the owner's decision. What changes: the departure is
+real and larger than first written. To hold the plains at 360 K, 92% of a
+~4,700×-Io heat flow has to exit through exposed melt at the ~1350 K silicate
+ceiling over 5.7% of the surface, leaving a ~2.4 m conductive lid where Io's is
+kilometres. Physically the plains are a chilled crust over near-surface melt, and
+naming them solid sulfur-bearing ground is the art choice. Values unchanged; the
+divergence note, the narratives, the partition check and the row's refs now say
+this. Veeder 1994/2012 added to refs.
+
+Lesson for the next pass: when a methodology doc already carries a refutation of the
+move you are about to make, treat that as the primary evidence and verify the
+counter-analogy against the literature *before* writing the note, not after the owner
+reads it.
