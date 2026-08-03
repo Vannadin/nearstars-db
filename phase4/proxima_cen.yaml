@@ -1421,14 +1421,24 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-08-03: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24,
       임무 난이도 등급은 모드-지원 관심사). 구값 "항성간 플래그십 + 시스템 최외곽(1.5 AU 도달 부담), 냉·dim".
+      2026-08-04: 산문을 gameplay 3부 형태(특별한 점 → 바이옴 목록 → 명소)로 다시 썼다. evidence의
+      오너 검토 로그를 여기로 옮겼고, c의 존재가 미확정이라는 유보를 evidence에 추가했다. 구획·수치 무변경.
     status: gated
     driver: [engine]
     narrative: >
-      mini-Neptune이라 고체 표면 없음 → 착륙·splashdown 불가, 대기비행("X 상공 비행")+궤도만(A b형). breathability=
-      불가. radiation 해저드=낮음(G8, 최외곽이라 시스템서 가장 안전). biome = 위도 5띠(자유자전이라 항성경도 아닌
-      위도; 오너 검토 2026-06-23): 적도대 · 북온대 · 남온대 · 북극 · 남극. 고리 그림자대는 제외(오너). 2중 적/흰 고리 +
-      위성 Proxima c I는 biome 아닌 시각·탐사 피처. ScienceValues(flying/in-space; landed/splashed=토큰 inert). SOI 자동.
-      난도 = 항성간 플래그십 + 시스템 최외곽(1.5 AU 도달 부담), 냉·dim. 발견=RB T F F F(candidate, G1).
+      There is nothing to land on, so this is a place you fly through and orbit around, and what makes the trip worth
+      it is that the sky here has furniture: a double ring, one red band and one white, and a moon of its own. This is
+      also the only planet in the system that spins freely, so its map divides by latitude the way an ordinary world's
+      does: an equatorial belt, a temperate band north and south, and a polar zone at each end. Five in all. The ring
+      shadow sweeping across those bands is a sight rather than a zone of its own, and so is the moon. The best of it
+      is the equatorial belt at ring plane, where the rings collapse to a bright line edge-on and the shadow falls
+      straight down.
+    narrative_ko: >
+      내려앉을 땅이 없으니 이곳은 지나며 날고 둘레를 도는 행성이고, 그럼에도 찾아갈 값어치는 하늘에 있다. 붉은 띠와
+      흰 띠로 된 2중 고리, 그리고 제 위성이 걸려 있다. 이 계에서 유일하게 자유롭게 자전하는 행성이라 지도도 보통
+      세계처럼 위도로 갈린다. 적도대, 남북의 온대 띠, 남북의 극지, 모두 다섯이다. 그 띠들을 가로질러 훑고 가는 고리
+      그림자는 별도의 구역이 아니라 볼거리이고, 위성도 그렇다. 그중 백미는 고리면의 적도대다. 고리가 옆에서 보여
+      한 줄기 밝은 선으로 접히고, 그림자가 곧게 내리꽂힌다.
     fields:
       - name: science_biomes
         value: "위도 5띠: 적도대/북온대/남온대/북극/남극 (고리 그림자대 제외)"
@@ -1440,11 +1450,12 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
-        owner_review: 2026-06-23 오너 검토로 biome 위도 5띠 확정, 고리 그림자대 제외(b의 오로라대 제외와 동일 취지: 고정
-        표면구역 아닌 피처는 biome서 뺌).
-
-        note: 표면 없음이 b(착륙 호수세계)·d(착륙 수성형)와의 게임 차이다. c는 A b형 비행/우주. 고리·위성이 c만의 탐사
-        매력. cfg emit(biome map·ScienceValues·ResearchBodies·Ring 노드)는 프로젝트 말미.
+        채택값은 위도 5띠와 착륙 불가다.
+        확인: 자유 자전이라 별을 향한 각도가 아니라 위도가 기후를 가르므로, 조석고정된 b·d의 항성경도 동심원과
+        반대 방식이 맞다. 고체 표면이 없어 flying·in-space만 성립하고 landed·splashed 토큰은 비활성이다. 고리
+        그림자대와 위성은 고정된 표면 구역이 아니므로 biome에서 빼고 시각·탐사 피처로 둔다. SOI는 질량에서
+        자동으로 나온다.
+        유보: 이 행성의 존재 자체가 확정되지 않았다. 그러니 이 구획도 c가 있다는 가정 위에 있다.
 
   # ════════ 위성 Proxima c I (c의 픽션 위성, 명왕성 아날로그 냉 얼음) — 판도라식 독자 facet-walk 2026-06-23 (축별) ════════
   - body: Proxima Cen c I
