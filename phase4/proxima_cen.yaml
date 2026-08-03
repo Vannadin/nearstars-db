@@ -803,15 +803,24 @@ decisions:
   - body: Proxima Cen d
     axis: appearance
     refs: ["docs/reference/surface-color-albedo-methodology.md"]
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-08-03: 감사 X4 — 이 행이 폐기된 단색 #34302c에서 표시색을 뽑고 있었다. surface 행(G5)이
+      자기권 차폐 재근거화로 중위도 #3c3833 · 자기극관 #2a2622의 2-tone으로 대체한 뒤에도 appearance와
+      base_color가 갱신되지 않아 극관이 통째로 빠져 있었다. 구값 "#34302c → Proxima-lit ~#36281a".
+      Proxima-lit은 고유색에 항성 표시색 #ffcc75(정규화 1.0/0.800/0.459)를 채널 곱한 값이다. 같은 연산으로
+      구 단색을 다시 계산하면 #342614가 나오므로, 기록돼 있던 ~#36281a는 순수 곱이 아닌 눈대중 값이었다.
+      색 정밀화는 emit 말미 art-pass 몫이라는 정책은 그대로다.
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
-      Proxima M5.5 적색광 입은 **어두운 따뜻한 회갈색 디스크**(공간풍화 수성형). 표시 고유색 #34302c → Proxima-lit ~#36281a.
-      크레이터·풍화 줄무늬 가능. **오로라 없음**(무대기 — 자기장은 ~16 G로 존재하나[G7] 발광 매질 대기가 없어 auroral 발광 불가).
-      b(황토 호수세계)·c(냉 mini-Neptune)와 시각 3극.
+      Proxima의 적색광을 입은 어두운 따뜻한 회갈색 디스크이고, 공간풍화된 수성을 닮았다. 단색이 아니라 2-tone이다.
+      자기권이 항성풍을 막아 준 중위도는 상대적으로 밝고(고유 #3c3833 → Proxima-lit ~#3c2d17), 플레어 입자가
+      집중 채널되는 자기극관은 거의 흑갈로 짙다(고유 #2a2622 → Proxima-lit ~#2a1e10). 크레이터와 풍화 줄무늬가
+      더해진다. 오로라는 없다. 자기장은 약 16 G로 존재하지만 발광할 대기가 없다. b의 황토 호수세계, c의 차가운
+      미니 해왕성과 함께 시각적으로 세 극을 이룬다.
     fields:
       - name: base_color
-        value: "#34302c → Proxima-lit ~#36281a (어두운 따뜻한 회갈; 크레이터·풍화 줄무늬)"
+        value: "중위도 #3c3833 → Proxima-lit ~#3c2d17 / 자기극관 #2a2622 → Proxima-lit ~#2a1e10 (2-tone; 크레이터·풍화 줄무늬)"
         op: set
       - name: aurora
         value: "none (무대기 — ~16 G 자기장 존재하나 발광 매질 없어 불가)"
@@ -819,7 +828,12 @@ decisions:
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
-      evidence: "표시색=고유색×Proxima SED(§6 엔진, emit 정밀화). 무대기라 구름·haze 없음, 순수 표면."
+      evidence: >
+        채택값은 surface 행이 정한 2-tone을 Proxima 조명 아래로 옮긴 것이다. 중위도 ~#3c2d17, 자기극관 ~#2a1e10.
+        확인: 고유색은 surface 행의 자기권-차폐 재근거화 값(#3c3833 · #2a2622)이고, 표시색은 그 값에 항성
+        표시색 #ffcc75를 채널 곱한 결과다(§6 엔진의 모항성 SED 곱을 표시색 수준에서 적용). 무대기라 구름과
+        haze가 없어 순수 표면이 그대로 보인다.
+        유보: 정확한 hex는 emit 말미 art-pass에서 실측 SED로 다시 뽑는다.
 
   - body: Proxima Cen d
     axis: magnetism.magnetic_field
