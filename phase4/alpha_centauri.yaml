@@ -2785,8 +2785,8 @@ decisions:
       - { name: albedo, value: 0.91, op: set, note: "오너 아트 선택; §6 신선 물얼음 밴드(0.6–0.8)·엔셀라두스(0.81) 위. 표면 얼음 존속 임계 0.875를 넘기는 값" }
       - { name: surface_temperature, value: 134, unit: K, op: set }
       - { name: ice_caps, value: "전역 얼음", op: set }
-    refs: ["docs/reference/surface-color-albedo-methodology.md", "2009P&SS...57.2053F",
-           "1993GeoRL..20..363M", "2008ApJ...682..697S"]
+    refs: ["docs/reference/ice-stability-methodology.md", "docs/reference/surface-color-albedo-methodology.md",
+           "docs/reference/moon-energy-budget-methodology.md", "docs/reference/tidal-heating-methodology.md"]
     gate:
       criterion: [stability, visual-checklist]
       verdict: owner-override
@@ -2802,9 +2802,8 @@ decisions:
         above Enceladus (0.81), the brightest body known. The owner chose to keep the bright ice as art and
         raise the albedo past that threshold rather than accept a dark lag-mantled surface. 0.91 was picked over the bare
         minimum so the threshold is cleared by 33× rather than marginally; ice loss over 5.3 Gyr is then 12 km of
-        a 400 km radius. Computed with docs/ice-stability.html (Fray & Schmitt 2009 vapour-pressure curves,
-        Hertz-Knudsen flux, latent heat from the curve's own Clausius-Clapeyron slope; validated against
-        Europa, Enceladus, Ceres and cometary erosion at 1 AU).
+        a 400 km radius. Recipe and its validation: ice-stability-methodology.md, whose worked example is this
+        body; the threshold behaves the way Hayne & Aharonson found for a Ceres polar cap.
       evidence_ko: >
         이 행에는 오너 오버라이드가 둘 있다. (1) 플룸: 21 R_p·e 0.02에서 조석열이 수 MW뿐이라 엔셀라두스식
         cryovolcanism을 돌릴 지하 바다가 불가능하다(a⁻⁷·⁵가 치명적이며 e·a·공명·자전 전 조합을 확인했다).
@@ -2816,8 +2815,8 @@ decisions:
         오너는 어두운 잔류층 표면을 받아들이는 대신 밝은 얼음을 아트로 유지하고 알베도를 그 임계 위로
         올리기로 했다. 최소치가 아니라 0.91을 택한 것은 임계를 간신히가 아니라 33배로 넘기기 위해서다.
         5.3 Gyr 동안의 얼음 손실은 반경 400 km 중 12 km다.
-        계산은 docs/ice-stability.html(Fray & Schmitt 2009 증기압 곡선, Hertz–Knudsen 플럭스, 잠열은 같은
-        곡선의 Clausius–Clapeyron 기울기에서 도출, 에우로파·엔셀라두스·세레스·1 AU 혜성 침식으로 검증).
+        레시피와 그 검증은 ice-stability-methodology.md에 있고 이 천체가 그 문서의 worked example이다. 임계가
+        움직이는 방향은 Hayne & Aharonson이 세레스 극관에서 얻은 결과와 같다.
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-27: albedo 0.7 → 0.91, surface_temperature 200 K → 134 K. 구 짝(0.7 / 200 K)은 근거가
       없었고, 승화 안정성을 계산하니 0.70은 4.5 Myr에 소멸이었다. 오너가 어두운 잔류층 대안을 물리며
@@ -2902,7 +2901,7 @@ decisions:
       - { name: dust_sources, value: "Chaos = E-고리 공급원 (물 플룸 = 아트 디렉션 / 충돌 파편·sputtering = 물리 경로, 단독으로는 약함)", op: set }
       - { name: neutral_torus_supply, value: 134, unit: kg/s, op: set, note: "표면 134 K 승화 유출; 기체이므로 먼지 고리가 아니라 중성 수증기 토러스" }
       - { name: co_orbitals, value: "none", op: set }
-    refs: ["2009P&SS...57.2053F", "phase4/art-direction/polyphemus-art-direction.md"]
+    refs: ["docs/reference/ice-stability-methodology.md", "phase4/art-direction/polyphemus-art-direction.md"]
     gate:
       criterion: [stability]
       verdict: owner-override

@@ -294,6 +294,9 @@ this depth-dependent term. Fixing A b III's ocean depth is the trigger to comput
 
 ## Related
 
+- [`ice-stability-methodology.md`](ice-stability-methodology.md) — consumes this doc's
+  `F_abs` to decide whether exposed ice survives; the sublimation term makes the surface
+  colder than the `T_eq` computed here whenever a volatile is exposed.
 - [`tidal-heating-methodology.md`](tidal-heating-methodology.md) — owns the tidal power
   formula and the `k₂/Q` regimes this doc consumes as one of its four terms.
 - [`greenhouse-warming-methodology.md`](greenhouse-warming-methodology.md) — adds the

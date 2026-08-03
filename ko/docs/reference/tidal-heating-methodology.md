@@ -362,6 +362,9 @@ Enceladus/Europa·Io 문헌을 종합한 것이지 인용 가능한 단일 임�
 
 ## 관련 문서
 
+- [`ice-stability-methodology.md`](ice-stability-methodology.md) — 강하게 가열되는 천체에
+  얼음 표면이 있다는 것은 모순이다. 그 레시피의 예산은 외부 유입만 다루므로, 얼음 존속을 판정하기
+  전에 여기서 구한 내부 플럭스를 더해야 한다.
 - [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — 위성 쪽 짝.
   위성이라면 이 문서의 Layer 1 `T_eq`를 그쪽의 4항 예산(식, 모행성 열복사+반사, 조석 가열)으로
   대체한다.

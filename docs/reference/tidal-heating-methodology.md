@@ -401,6 +401,9 @@ derived law.
 
 ## Related
 
+- [`ice-stability-methodology.md`](ice-stability-methodology.md) — an icy surface on a
+  strongly heated body is a contradiction; that recipe's budget is external-only, so the
+  internal flux derived here must be added before judging ice survival.
 - [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — the satellite
   counterpart: for a moon, replace this doc's Layer 1 `T_eq` with its four-term budget
   (eclipses, parent thermal + reflected, tidal heating).

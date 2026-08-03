@@ -17,15 +17,15 @@ anyone with school chemistry, a wrong tidal-heat partition is not.
 
 ## C9 — Chaos ice stability
 
-- [ ] `docs/reference/ice-stability-methodology.md` (ADS-verified recipe)
-- [ ] ko mirror
-- [ ] `docs/reference/methodology-index.md` entry
-- [ ] `Chaos/surface` + `Chaos/satellites` refs point at the recipe, not at papers
+- [x] `docs/reference/ice-stability-methodology.md` (ADS-verified recipe)
+- [x] ko mirror
+- [x] `docs/reference/methodology-index.md` entry
+- [x] `Chaos/surface` + `Chaos/satellites` refs point at the recipe, not at papers
       lifted from inside the tool
 
 ## Close-out
 
-- [ ] `python3 scripts/check_phase4_gate.py` clean
-- [ ] `./scripts/check.sh`
+- [x] `python3 scripts/check_phase4_gate.py` clean
+- [x] `./scripts/check.sh`
 - [ ] rebuild the alpha_centauri board pages
 - [ ] commits (one per logical change)

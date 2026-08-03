@@ -341,6 +341,9 @@ retreat depth + the resulting volatile outflux).
   real albedo 0.09 loses 7.4 mm/yr (matching surface ice surviving only in permanent
   shadow), and bare ice at 1 AU loses 0.81 m/yr (matching ~1 m of cometary nucleus
   erosion per perihelion passage).
+- The recipe this tool implements, with its validation table and regime limits, is
+  `docs/reference/ice-stability-methodology.md`. Cite that doc on a board row, not the
+  tool and not the papers compiled inside it.
 - Grounding is stated in the page footer: Heller & Barnes 2013 for the energy budget,
   Hertz–Knudsen for the sublimation flux, [Fray & Schmitt
   2009](https://ui.adsabs.harvard.edu/abs/2009P%26SS...57.2053F) Tables 4/5/6 for every

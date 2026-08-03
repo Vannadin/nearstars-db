@@ -255,6 +255,9 @@ NearStars에는 이게 좋은 소식이다. 위협이 손잡이로 바뀌기 때
 
 ## Related
 
+- [`ice-stability-methodology.md`](ice-stability-methodology.md) — 이 문서의 `F_abs`를 받아
+  노출된 얼음이 존속하는지 판정한다. 휘발성 종이 노출돼 있으면 승화 항 때문에 표면이 여기서 구한
+  `T_eq`보다 차가워진다.
 - [`tidal-heating-methodology.md`](tidal-heating-methodology.md) — 이 문서가 네 항 중 하나로
   소비하는 조석 출력 공식과 `k₂/Q` 체제를 소유한다.
 - [`greenhouse-warming-methodology.md`](greenhouse-warming-methodology.md) — 여기서 구한 `T_eq`

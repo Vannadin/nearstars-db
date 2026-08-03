@@ -477,6 +477,10 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## Related
 
+- [ice-stability-methodology](ice-stability-methodology.md): asks whether an icy surface can
+  **exist** at the orbit before its color is chosen. It judges an albedo pick against §6's
+  bands, and a body needing an albedo above them (Chaos at 0.91) is an override, not a
+  derivation.
 - [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md): the **sibling** that
   owns the **colorimetry engine** (§6: spectrum → XYZ → sRGB with the host-star SED)
   reused here, and the **refractiveindex.info portal** (Polyanskiy 2024; gas-phase

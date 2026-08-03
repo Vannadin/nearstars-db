@@ -426,6 +426,9 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## 관련 문서
 
+- [ice-stability-methodology](ice-stability-methodology.md): 색을 고르기 전에 그 궤도에서
+  얼음 표면이 **존재할 수 있는지**를 먼저 묻는다. 알베도 선택은 §6의 밴드에 대고 판정하며, 밴드를
+  넘는 값이 필요한 천체(Chaos의 0.91)는 도출이 아니라 오버라이드다.
 - [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md): 여기서 재사용하는
   **색측정 엔진**(§6: 스펙트럼 → XYZ → sRGB, 광원은 모항성 SED)과
   **refractiveindex.info 포털**(Polyanskiy 2024; 거기서는 기체상, 여기서는 고체·액체상)을
