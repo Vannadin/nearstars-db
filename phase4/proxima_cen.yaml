@@ -724,12 +724,20 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      You can land here, and that is the difference from Alpha Centauri A b, where skimming the air is all there is:
-      this world has solid ground, and at the substellar point there is open water to come down on. The map does not
-      divide by latitude but by how directly the star bears down. Seven zones run outward from that point: the
-      substellar point itself, the lakes around it, the mafic day lowlands, the feldspar day highlands, the
-      명암경계선 at twilight, the frozen night side, and the water-ice cap at the antistellar point. The place worth
-      the trip is the substellar point, where the star hangs at one fixed spot overhead and the lakes below it steam.
+      You can put a craft down here, which is the difference from Alpha Centauri A b, where skimming the air is all
+      there is. The map divides by how directly the star bears down rather than by latitude, so seven zones ring
+      outward from the substellar point: the substellar point with the star straight overhead, the lakes around it
+      where a craft can come down on water, the dark basalt of the day lowlands, the bright feldspar highlands above
+      them, the 명암경계선 where the sun sits on the horizon and stays there, the frozen night side, and the
+      water-ice cap over the antistellar point. The auroral belt is left out, having no fixed ground of its own. The
+      one to visit is the substellar point, where the star hangs at a single spot and the lakes beneath it steam.
+    narrative_ko: >
+      이 행성에는 내려앉을 수 있다. 대기를 스치는 것이 전부인 Alpha Centauri A b와 갈리는 지점이 그것이다. 지도는
+      위도가 아니라 별이 얼마나 곧게 내리쬐는지로 갈려, 직하점에서 바깥으로 일곱 구획이 동심원을 그린다. 별이 머리
+      꼭대기에 선 직하점, 그 둘레로 물 위에 내려앉을 수 있는 직하 호수, 어두운 현무암의 주간 저지, 그 위로 밝은
+      장석질 고지, 해가 지평에 걸린 채 움직이지 않는 명암경계선, 얼어붙은 야간면, 그리고 반대점을 덮은 물얼음
+      빙관이다. 오로라대는 제 땅이 고정돼 있지 않아 구획에서 뺐다. 가 볼 만한 곳은 직하점이다. 별이 하늘 한자리에
+      붙어 꼼짝하지 않고, 그 아래 호수가 김을 올린다.
     narrative_ko: >
       이 행성에는 내려앉을 수 있다. 대기를 스치는 것이 전부인 Alpha Centauri A b와 갈리는 지점이 그것이고, 여기에는
       고체 지표가 있으며 직하점에는 물 위로 내릴 자리까지 있다. 지도는 위도가 아니라 별이 얼마나 곧게 내리쬐는지로
