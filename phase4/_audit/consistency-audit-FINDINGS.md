@@ -63,7 +63,7 @@ Softened understatement "hundreds of times / 수백 배" at L745/L751.
 Recomputation confirms ~1268× Io / ~11,800 W/m², i.e. 1200 is right.
 
 **C4. Ring photometry is calibrated against the wrong observed radius,
-undermining the gated 1.0 R_Jup.** `A b/rings` evidence: +0.05 R_Jup
+undermining the gated 1.0 R_Jup.** ✓ (closed 2026-07-28: τ 9e-5 → 2.7e-4) `A b/rings` evidence: +0.05 R_Jup
 equivalent disk (~23k km, τ≈9e-5) "matching the ~1.05 R_Jup observed flux".
 But `bulk.radius` calls 1.05 a mis-transcription and keeps ring-free
 1.1–1.15 R_Jup as the flux-required alternative. Cross-sections add as R²:
@@ -72,7 +72,8 @@ reaching 1.10–1.15 needs an equivalent disk 0.46–0.57 R_Jup (33–41k km),
 that licenses radius 1.0. Two gated emit values depend on this.
 
 **C5. Dante's 673 K surface cannot retain the sulfur its albedo, palette and
-biome map are built on.** Elemental S melts at 388 K, boils ~718 K; at 673 K
+biome map are built on.** ✓ (closed 2026-08-03: plains lowered to 360 K, partition
+recorded as a documented-divergence on bulk.tidal_heating) Elemental S melts at 388 K, boils ~718 K; at 673 K
 ambient with only a tenuous SO₂ exosphere, exposed sulfur deposits evaporate.
 The 2026-07-26 regrounding checked only the Draper point (798 K), never
 volatile stability. Affects `surface` albedo note (황 반 ~0.5), `appearance`
@@ -103,7 +104,8 @@ under an owner-override badge whose viewer legend promises an explanation.
 Rule 6 (`없음.`) misapplied to a non-empty axis.
 
 **C9. Chaos `surface`/`satellites` cite a methodology doc that does not cover
-the load-bearing claim.** The sublimation-lifetime calculation (albedo 0.91 ⇒
+the load-bearing claim.** ✓ (closed 2026-08-03: ice-stability-methodology.md written,
+both rows re-pointed) The sublimation-lifetime calculation (albedo 0.91 ⇒
 134 K ice stable; 0.70 ⇒ gone in 4.5 Myr; 6.7e-11 kg/m²s outflux) comes from
 the `docs/ice-stability.html` tool, which neither row cites;
 `surface-color-albedo-methodology.md` (cited) contains no sublimation/ice
@@ -380,6 +382,13 @@ would justify it; nowhere stated).
   YAML (stamp aside). All file refs resolve.
 
 ## 11. Suggested sequencing (owner's call — nothing has been edited)
+
+> **Status as of 2026-08-03.** A `✓` on a finding above means it is closed; the
+> summary tables in this doc were written at audit time and were never rewritten, so
+> read the per-finding marks, not the counts. Steps 1, 2 and 4 below are done, and so
+> are all nine in-scope CRITICAL findings (C1–C9). What remains open is the
+> out-of-scope set on the other five boards, X2–X5, deferred by the owner to the next
+> Phase 4 review pass; X1 is closed.
 
 1. **Out-of-scope corruption repairs (X1)** — three surgical row-scoped
    fixes; two are live on published pages. Then rebuild the five stale
