@@ -12,8 +12,15 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      body_type=M5.5Ve 적색왜성(플레어 별). 태양 최근접성, α Cen AB에 ~13,000 AU 약결합. designation=Proxima Centauri
-      (α Cen C / GJ 551).
+      The closest star to the Sun. It is a red dwarf of an eighth of a solar mass, and the e on the end of its
+      spectral type marks hydrogen emission: this is a flare star. It sits 13,000 AU from α Cen AB, bound so
+      loosely that it is the system's third member while moving almost independently of the pair's orbit. Besides
+      Proxima Centauri it also answers to α Cen C and GJ 551.
+    narrative_ko: >
+      태양에서 가장 가까운 별이다. 질량이 태양의 8분의 1뿐인 적색왜성이고, 분광형 끝의 e는 수소 방출선을 뜻한다.
+      즉 이 별은 플레어 별이다. α Cen AB에서 13,000 AU 떨어져 아주 약하게 묶여 있어, 같은 계의 세 번째
+      구성원이면서도 두 별의 궤도와는 거의 무관하게 움직인다. Proxima Centauri라는 이름 외에 α Cen C나
+      GJ 551로도 불린다.
     fields:
       - name: body_type
         value: "M5.5Ve 적색왜성(플레어 별)"
@@ -34,10 +41,18 @@ decisions:
     body_class: star
     status: passthrough
     narrative: >
-      M 0.1221±0.0022 M☉(SM2025 진화모델) · R 0.141±0.011 R☉(Demory2009 VLTI) · Teff 2904±51K(Passegger2019) ·
-      L 0.00157 L☉ · age ~4.85±0.5 Gyr(kinematic, 포획 vs 동시생성 미정) · P_rot 83.5 d(DB recommended, J2 행과
-      동일 입력). gravity 1684 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯). spin_axis_orientation·
-      geopotential_j2(+reference_radius)는 전용 행이 담당(union rule). 전부 고신뢰 측정 → emit 그대로.
+      A small cold star: an eighth of the Sun's mass, a seventh of its radius, and a mere six-hundred-and-fortieth
+      of its light. The surface runs at 2,900 K, less than half the Sun's, so most of that light leaves in the
+      infrared. Packing that mass into that radius puts the surface gravity above 170 times Earth's. Rotation is
+      slow at 83.5 days, which makes this star's day close to three Earth months. The age comes out near 4.85
+      billion years, much like the Sun's, but it is a kinematic estimate, so whether Proxima was captured by
+      α Cen AB or born alongside it remains open. Every value here is a high-confidence measurement.
+    narrative_ko: >
+      태양의 8분의 1 질량에 7분의 1 반지름, 밝기는 640분의 1에 그치는 작고 차가운 별이다. 표면은 2,900 K로
+      태양의 절반이 채 안 되고, 그만큼 빛은 적외선 쪽으로 몰린다. 작고 무거운 몸집이라 표면 중력은 지구의
+      170배가 넘는다. 자전은 83.5일로 느려서, 이 별의 하루는 지구의 석 달에 가깝다. 나이는 약 48억 년으로
+      태양과 비슷하지만 운동학으로 얻은 값이라, α Cen AB에 나중에 붙잡힌 것인지 함께 태어난 것인지는 아직
+      갈리지 않는다. 값은 모두 신뢰도 높은 실측이다.
     fields:
       - name: mass
         value: 0.1221
@@ -77,10 +92,20 @@ decisions:
     axis: appearance                  # [star] group 6 — 관측 기반 + 흑점 결정
     status: gated
     driver: [window-selection]
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-08-03: 산문을 문체 계약에 맞춰 다시 썼다. 폐기 이력을 여기로 옮겼다. 구 표시색 #c54c2a(심적색)은
+      광도와 색조를 혼동한 render 짐작이라 폐기하고 실측 Pickles SED→CIE의 #ffcc75로 대체했다. 수치 필드는
+      무변경이고 인용은 refs가 담는다.
     narrative: >
-      color=M5.5V 물리색 #ffcc75(옅은 따뜻한 주황, 실측 Pickles SED→CIE; TiO/VO/H₂O는 색지수·광도엔 크나 밝기-정규화 표시색조엔 미미). 옛 #c54c2a(심적색)은 광도/색조 혼동 render 짐작이라 폐기. limb_darkening α~0.4(Claret2018 M-dwarf 보간, tie-break).
-      spots_faculae=보통~다소 많음 ~3–5%(활동적 M왜성 큰 spot; 83d 자전 변조 검출=spot 존재; A·B보다 多). flare 색
-      #ff5e2a(Hα)는 참조용이고, 동적 플레어는 cfg 렌더 불가라 visual passthrough, 효과는 environment.radiation/activity로.
+      In visible light this star shows a warm orange. Spots cover 3 to 5 percent of the surface, which makes it
+      look blotchier than α Cen A or B. The darkening toward the limb is moderate for a red dwarf this size. The
+      red hydrogen glow of a flare is recorded for reference, but a flicker that changes with time cannot go into
+      a config file, so it stays out of the star's appearance.
+    narrative_ko: >
+      가시광에서 이 별은 따뜻한 주황색을 띠고 있다. 흑점이 표면의 3~5%를 덮고 있어 α Cen A·B에 비해
+      얼룩덜룩해 보인다. 가장자리로 갈수록 어두워지는 정도는 이 크기의 적색왜성치고 온건하다. 플레어가 터질 때의
+      붉은 수소 발광색은 참고로 적어 두지만, 시간에 따라 변하는 번쩍임은 설정 파일에 담을 수 없어 겉모습에는
+      들어가지 않는다.
     fields:
       - name: color
         value: "#ffcc75"
@@ -110,8 +135,14 @@ decisions:
     refs: ["2008ApJ...684.1390R", "2021MNRAS.500.1844K"]
     status: passthrough
     narrative: >
-      평균 표면장 0.6 kG(Reiners&Basri2008/Reiners2022 CARMENES), 대규모 dipole 0.135 kG(Klein2021 ZDI, 주로 poloidal).
-      spin incl 47°±7°. 측정 emit.
+      This star's magnetic field runs hundreds of times the Sun's. Averaged over the surface it reaches
+      0.6 kilogauss, of which the large-scale dipole that actually extends out to the planets is 0.135 kilogauss.
+      The rest is tangled at small scales and does not reach far. Being fully convective, it does not run the Sun's
+      layered dynamo, which is how it holds a field this strong while turning slowly.
+    narrative_ko: >
+      이 별의 자기장은 태양의 수백 배에 달한다. 표면 전체를 평균하면 0.6 킬로가우스이고, 그중 행성까지 뻗는
+      대규모 쌍극자 성분은 0.135 킬로가우스다. 나머지는 작은 규모로 얽혀 있어 멀리 미치지 못한다. 완전 대류
+      별이라 태양처럼 층이 갈린 다이나모가 아니고, 그래서 느린 자전에도 이만한 장을 유지한다.
     fields:
       - name: magnetic_field
         value: 0.6
@@ -124,12 +155,21 @@ decisions:
     # 2026-07-31: logR'HK -5.65±0.17 원출처를 SM2015 로 교정 (구 핀 2016MNRAS.459.3565S 는 ADS 미해결 오기였음)
     refs: ["1998AJ....116..429B", "2017MNRAS.464.3281W", "2015MNRAS.452.2745S", "2004A&A...417..651S"]
     status: passthrough
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-08-03: 산문을 문체 계약에 맞춰 다시 썼다. 본문에 있던 점검 로그를 여기로 옮겼다. 2026-07-12 점검에서
+      사이클 인용을 Wargelin2024에서 2017(2017MNRAS.464.3281W)로 바꿔 DB recommended 핀과 정렬했다. 수치 필드는
+      무변경이고 인용은 refs가 담는다.
     narrative: >
-      P_rot 83.5±0.5d(Benedict1998 HST) · 7년 사이클(Wargelin2017 X선+UV+광학, DB 핀 2017MNRAS.464.3281W) ·
-      log R'HK −5.65±0.17(정온 활동도 낮음). 플레어: 총 1.49회/일(Vida2019 TESS), 슈퍼플레어(≥10³³ erg)
-      ~3회/년, ultra ~0.5회/년. X선 log Lx ~27.0 정온 / ~28.5 플레어피크. 역설(노쇠 느린자전인데 빈번
-      슈퍼플레어)은 7년 사이클 변조로 화해. 측정 emit. [2026-07-12 점검: 사이클 인용 Wargelin2024→2017로
-      DB recommended 핀과 정렬.]
+      The star looks quiet and detonates often. It turns slowly at 83.5 days and its quiescent chromospheric
+      activity is low, yet flares arrive about 1.5 times a day. Superflares beyond anything the Sun offers come
+      around three times a year, and one an order of magnitude larger about every other year. An old slow rotator
+      flaring this often reads as a contradiction, and a seven-year activity cycle is what bridges it. X-ray
+      brightness swings by more than a factor of thirty between quiescence and flare peak.
+    narrative_ko: >
+      이 별은 조용한 듯 보이지만 자주 폭발한다. 자전은 83.5일로 느리고 평상시 채층 활동 지표도 낮은데, 플레어는
+      하루 평균 1.5회로 터진다. 태양이 내놓는 무엇보다 큰 슈퍼플레어가 해마다 세 번쯤, 그보다 한 자릿수 큰 것이
+      2년에 한 번쯤 온다. 나이 든 느린 자전체가 이렇게 자주 폭발하는 것은 모순처럼 보이지만, 7년 주기의 활동
+      사이클이 그 사이를 메운다. X선 밝기는 평상시와 플레어 최대 사이에서 30배 넘게 오간다.
     fields:
       - name: activity
         value: "P_rot 83.5±0.5d (Benedict1998 HST), 7년 사이클 (Wargelin2017), log R'HK −5.65±0.17"
@@ -143,7 +183,13 @@ decisions:
     refs: ["2001ApJ...547L..49W"]
     status: passthrough
     narrative: >
-      Ṁ ≤0.2 Ṁ☉(Wood2001 astrospheric Lyα 상한). 풍-지배 아닌 플레어-지배 환경. L_bol 낮아 절대 풍 약함.
+      The wind this star sheds is weaker than the Sun's. What the observations give is an upper limit, no more
+      than a fifth of the Sun's mass-loss rate, which follows from the star being so small and faint. So what
+      troubles the planets here is not a steady wind but the flares that arrive in bursts.
+    narrative_ko: >
+      이 별이 흘려보내는 항성풍은 태양보다도 약하다. 관측으로 얻은 것은 상한값이고, 태양 질량손실률의 5분의 1을
+      넘지 않는다. 별 자체가 워낙 어둡고 작아서 그렇다. 그래서 이 계의 행성들을 괴롭히는 것은 꾸준한 바람이
+      아니라 이따금 들이치는 플레어다.
     fields:
       - name: stellar_wind
         value: 0.2
@@ -156,7 +202,13 @@ decisions:
     refs: ["2001ApJ...547L..49W"]
     status: passthrough
     narrative: >
-      Astrosphere standoff ≲55 AU(Wood2001). 국부 ISM 유입 ~25 km/s(Wood2005, α Cen AB와 동일 G-cloud 흐름).
+      The boundary where this star's wind is stopped by the interstellar medium sits inside 55 AU. Against the
+      Sun's equivalent boundary beyond 100 AU that is less than half the size, which is what a weak wind buys. The
+      interstellar flow it pushes through runs at 25 km/s, the same cloud α Cen AB travels in.
+    narrative_ko: >
+      항성풍이 성간물질에 밀려 멈추는 경계는 55 AU 안쪽이다. 태양의 같은 경계가 100 AU를 넘는 것과 비교하면
+      절반도 되지 않는 작은 거품이고, 약한 바람의 당연한 결과다. 이 별이 헤치고 지나가는 성간 흐름은 초속
+      25 km이며, α Cen AB가 지나는 것과 같은 구름이다.
     fields:
       - name: heliosphere
         value: "astrosphere standoff ≲55 AU (Wood2001); ISM 유입 ~25 km/s (Wood2005, α Cen AB와 동일 G-cloud)"
@@ -168,9 +220,16 @@ decisions:
     status: gated                     # 측정 채택 (Klein 2021 ZDI)
     driver: [window-selection]
     narrative: >
-      i★ = 47°±7° 측정 채택(Klein, Donati et al. 2021 ZDI, DB recommended). 극 방위각 미구속 → emit 배향
-      자유(ICRS 극 RA/Dec 변환은 emit 단계). 행성 b/c/d 궤도 경사는 전부 미측정(DB null)이라 스핀-궤도
-      정렬 여부는 진술 불가다. 궤도 emit이 배향을 정할 때 이 항성 적도면이 기준 후보.
+      The star's spin axis is tilted 47 degrees to our line of sight, a value that came out of the same
+      observations that map its magnetic field. Which way the axis points on the sky is still unconstrained, so we
+      know the tilt and not the bearing. None of the three planets has a measured orbital inclination either, so
+      whether this star's spin lines up with their orbital plane cannot be answered yet. That leaves its equatorial
+      plane as a candidate reference when the planets' orbital orientation has to be fixed.
+    narrative_ko: >
+      이 별의 자전축은 우리 시선에 대해 47도 기울어 있다. 자기장 지도를 그리는 관측에서 함께 얻은 값이다. 다만
+      축이 하늘에서 어느 방향을 향하는지는 아직 묶이지 않아, 기울기만 알고 방위는 모른다. 행성 셋의 궤도 경사도
+      측정된 것이 없어서, 이 별의 자전이 행성 궤도면과 나란한지는 지금 답할 수 없다. 그래서 행성 궤도의 방향을
+      정할 때 이 적도면을 기준으로 삼는 것이 후보로 남는다.
     fields:
       - { name: spin_axis_orientation, value: "i★ 47°±7° (LOS 기준, 측정) · PA 자유, ICRS 변환 at emit", op: set }
     gate:
@@ -186,11 +245,16 @@ decisions:
     status: gated                     # 오너 정책 2026-07-12 — 항성 J2 상시 계산·emit
     driver: [window-selection]
     narrative: >
-      회전 편평 J2 = 3.7e-9. 완전 대류 M왜성이라 태양앵커 스케일링 대신 Radau-Darwin 복귀: n=3/2
-      폴리트로프 NMoI ≈ 0.205(Chandrasekhar 1939)는 R-D 유효범위(≥0.13) 안 → J2/q = 0.084.
-      q = ω²R³/GM = 4.42e-8 (M 0.1221 M☉·R 0.141 R☉·P_rot 83.5d, 전부 DB recommended) → J2 3.7e-9
-      (±~25%, 반지름 불확도 지배). reference_radius = 적도반경 9.809e7 m. 방법·M왜성 분기 =
-      body-figure-methodology.md §2 (2026-07-12 확장).
+      This star is very nearly a perfect sphere. Turning once in 83.5 days leaves the centrifugal term negligible
+      against its own gravity, so the equatorial bulge stays at the level of four parts in a billion. The Sun, by
+      the same measure, is bulged about sixty times more. Because the star is fully convective its internal mass
+      distribution cannot be borrowed from the Sun, so the flattening comes from a moment of inertia taken from a
+      polytrope model instead. The uncertainty is about a quarter, dominated by the measured radius.
+    narrative_ko: >
+      이 별은 사실상 완벽한 구다. 자전이 83.5일로 느려서 원심력이 자기중력에 비해 무시할 만하고, 그래서 적도가
+      부푸는 정도가 10억분의 4 수준에 머문다. 태양이 같은 값에서 이 별의 60배쯤 부풀어 있다. 완전 대류 별이라
+      내부 질량 분포를 태양에서 빌려 올 수 없어, 폴리트로프 모형으로 얻은 관성모멘트를 써서 편평도를 구했다.
+      값의 불확도는 4분의 1 정도이고 대부분 반지름 측정에서 온다.
     fields:
       - { name: geopotential_j2, value: 3.7e-9, op: set }
       - { name: reference_radius, value: 9.809e7, unit: m, op: set }
