@@ -58,3 +58,21 @@ come from the `docs/ice-stability.html` tool, while `refs` cited
 `surface-color-albedo-methodology.md` (which has no sublimation treatment) plus three
 papers lifted from inside the tool. That inverts the provenance rule: a reader cannot
 tell a measurement from a recipe output. Fix is a real recipe doc, not a refs edit.
+
+## Close-out (2026-08-03)
+
+Four commits: the Dante re-gate, the ice-stability recipe + Chaos refs, the board
+rebuild, the wiki page + ko link fix. `check_phase4_gate.py` 0 errors on
+alpha_centauri (11 warnings, all pre-existing rows without refs), `check.sh` fully
+green.
+
+Two things the rebuild surfaced that a YAML-only check would have missed: the wiki
+rendering of a new `docs/reference/` doc has to be built (`scripts/build_docs.py`)
+before a board page can link it, and a ko-mirror link to a `docs/` asset needs three
+levels up, not one. Both were caught by check.sh only after the pages existed, so the
+order that works is: edit YAML, rebuild boards, build docs, then check.
+
+Still open on the boards, deferred by the owner to the next Phase 4 review pass:
+audit X2 (cross-board superlative contradictions), X3 (40 Eri A d 268 vs 260 K),
+X4 (Proxima d retired surface colour in appearance/base_color), X5 (discoverability
+retirement half-applied on 40 Eri).
