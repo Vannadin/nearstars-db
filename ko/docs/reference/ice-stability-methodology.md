@@ -9,7 +9,7 @@
 1.6 AU 상당의 일사량에 놓인 천체가 수 Myr 만에 반지름 전체를 승화로 잃을 수도
 있다.
 
-이 레시피를 구현한 계산기는 [`docs/ice-stability.html`](../ice-stability.html)
+이 레시피를 구현한 계산기는 [`docs/ice-stability.html`](../../../docs/ice-stability.html)
 이다 (브라우저 안에서 도는 단일 페이지). 이 문서는 계산기의 숫자가 인용하는
 근거이고, 계산기는 도구일 뿐 권위의 출처가 아니다.
 
