@@ -563,6 +563,67 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 """
 
 
+def render_hub():
+    """Top-level docs/phase4/ landing page across every v2 board.
+
+    The wiki's Viewers Gallery links `…/phase4/`, which 404s without an index
+    here (found 2026-08-03). check_site_links.py only walks links inside docs/,
+    so an inbound wiki link cannot be gated — this page is what keeps it alive.
+    """
+    boards = []
+    for src in sorted((REPO / "phase4").glob("*.yaml")):
+        try:
+            b = yaml.safe_load(src.read_text(encoding="utf-8")) or {}
+        except Exception:
+            continue
+        if str(b.get("schema_version", "")).strip() not in {"2", "2.0"}:
+            continue
+        system = b.get("system") or src.stem
+        rows = b.get("decisions") or []
+        if not rows:
+            continue
+        slug = to_url_slug(src.stem)
+        if not (REPO / "docs" / "phase4" / slug / "index.html").exists():
+            continue
+        bodies = []
+        for d in rows:
+            if d.get("body") not in bodies:
+                bodies.append(d.get("body"))
+        ndiv = sum(1 for d in rows
+                   if (d.get("gate") or {}).get("verdict") == "documented-divergence")
+        boards.append((system, slug, len(bodies), len(rows), ndiv))
+
+    cards = []
+    for system, slug, nb, nr, ndiv in boards:
+        badges = [f'<span class="mini-pill g">{nb} bodies</span>']
+        if ndiv:
+            badges.append(f'<span class="mini-pill d">{ndiv} div</span>')
+        cards.append(f"""<a class="body-card" href="{slug}/index.html">
+  <div class="bc-head"><span class="bc-name">{esc(system)}</span></div>
+  <div class="bc-count">{nr} <span data-i18n>결정</span><span data-en hidden>decisions</span></div>
+  <div class="bc-badges">{"".join(badges)}</div>
+</a>""")
+    content = f"""<nav class="crumb">
+  <a href="../index.html">NearStars</a> ·
+  <a href="../reports.html"><span data-i18n>보고서</span><span data-en hidden>Reports</span></a> ·
+  <a href="../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
+  <span class="here">Phase 4</span>
+</nav>
+<header>
+  <h1><span data-i18n>Phase 4 결정 보드</span><span data-en hidden>Phase 4 decision boards</span></h1>
+  <div class="spacer"></div>
+  {LANG_SEG}
+</header>
+<p class="intro"><span data-i18n>각 항성계의 art-direction을 고증 게이트로 검증해 emit용으로 확정한 값입니다. 계를 골라 천체별 결정을 봅니다.</span><span data-en hidden>Per-system art-direction validated against the 고증 gate and frozen for emit. Pick a system to see its bodies' decisions.</span></p>
+<div class="summary">
+  <span><b>{len(boards)}</b> <span data-i18n>항성계</span><span data-en hidden>systems</span></span>
+  <span><b>{sum(x[3] for x in boards)}</b> <span data-i18n>결정</span><span data-en hidden>decisions</span></span>
+  <span><b>{sum(x[4] for x in boards)}</b> documented-divergence</span>
+</div>
+<div class="body-grid">{"".join(cards)}</div>"""
+    return page("Phase 4 — NearStars decision boards", content)
+
+
 def main():
     if len(sys.argv) < 2:
         print("usage: build_phase4_html.py <system>", file=sys.stderr)
@@ -599,8 +660,12 @@ def main():
             render_body(system, b, bodies[b], aliases.get(b), prev_link, next_link),
             encoding="utf-8")
 
+    hub = REPO / "docs" / "phase4" / "index.html"
+    hub.write_text(render_hub(), encoding="utf-8")
+
     rel = out_dir.relative_to(REPO)
     print(f"[ok] wrote {rel}/index.html + {len(order)} body pages ({len(decisions)} decisions)")
+    print(f"[ok] wrote {hub.relative_to(REPO)} (hub across all v2 boards)")
     return 0
 
 

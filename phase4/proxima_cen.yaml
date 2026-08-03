@@ -415,11 +415,19 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      surface_pressure=0.7 bar(오너 결정 2026-06-23). composition=N₂ 지배 + CO₂ ~3%(온실로 직하 빙점 위 유지),
-      μ≈28.5 g/mol. Bond albedo A≈0.33(G5 표면서 cascade, 밝은 anorthosite 고지 + 직하 구름층이 데이샤이드 알베도를
-      0.30→0.33으로 올림; 오너 "평균 알베도 조금↑" 2026-06-23). breathability=불가(무생물·무산소, atmosphereContainsOxygen=false).
-      scale_height H≈7 km(=RT/μg, T~250K·g 10.5·μ 28.5; 기압엔 무관). escape=M왜성 플레어 stripping 위험이나
-      호수세계 전제로 보유 채택(게이트 참조).
+      The planet holds an atmosphere at about two-thirds of Earth's pressure. Nitrogen dominates it with 3 percent
+      carbon dioxide, and that 3 percent works as a greenhouse that keeps the star-facing ground above the freezing
+      point of water. There is no oxygen, so it cannot be breathed. The air is thin: 95 percent of its mass sits
+      within 21 km of the surface. The far side, in permanent night, cools below 150 K but not far enough for the
+      carbon dioxide to settle out as frost, so the atmosphere does not collapse onto the night side. That this air
+      survives at all, though, is a choice rather than an observation. This star's flares and wind are capable of
+      stripping an atmosphere of this size.
+    narrative_ko: >
+      이 행성에는 지구의 3분의 2쯤 되는 기압의 대기가 있다. 질소가 주성분이고 이산화탄소가 3% 섞여 있는데, 그 3%가
+      온실로 작용해 별을 마주한 쪽 지표를 물의 어는점 위에 붙들어 둔다. 산소는 없어 숨 쉴 수 없다. 대기는 얇다.
+      질량의 95%가 지표 위 21 km 안에 들어 있다. 밤이 영원한 반대편은 150 K 아래로 식지만 이산화탄소가 서리로
+      내려앉을 만큼은 아니어서, 대기가 밤 쪽에 얼어붙어 사라지는 붕괴는 일어나지 않는다. 다만 이 대기가 지금까지
+      남아 있다는 것 자체는 관측이 아니라 선택이다. 이 별의 플레어와 항성풍에는 이만한 대기를 벗겨낼 힘이 있다.
     # MIGRATION-FLAG: derived_temps 는 비표준 행-레벨 키로 프로즈 원문 보존 (validator 무시). 온도값 typed field 로 병기.
     derived_temps: >
       **Teq≈228K(A 0.33, 기압 무관 — G5 albedo cascade)**. 조석고정 1:1 → Layer-3 GCM(Boutle2017 ~1 bar N₂+CO₂ 케이스를
@@ -460,15 +468,14 @@ decisions:
         자동이 아님. G1 호수세계(액체 물)가 대기 보유를 요구하므로 Meadows2018 "온대/거주가능" 분기를 명시 tie-break로 채택.
         Garraffo2016 자기차폐가 도울 수 있으나 불확실해서 발산으로 명기.
       evidence: >
-        locking_note: 새 locking 문서 교차검증 결과, 0.7 bar는 대기 열조석이 약해 Leconte2015 비동기 caveat 미발동 → G3의
-        1:1·obliquity 0 견고(오히려 1 bar보다 안전).
-
-        collapse_note: CO₂ ~3% @0.7 bar(분압 ~21 mbar)의 frost point ~135K < 야간 150–165K → CO₂ 미동결, 야간측
-        대기붕괴 회피.
-
-        paper: 기압/μ/scale-height = docs/reference/exoplanet-atmosphere-methodology.md. 온도 3계층 =
-        docs/reference/tidally-locked-temperature-methodology.md (Layer-3 앵커 Turbet2016·Boutle2017, 검증 id는 그 문서).
-    refs: ["1702.04089", "1608.06813", "1608.08620"]
+        채택값은 0.7 bar의 N₂ 대기에 CO₂ 3%, 평균 분자량 28.5, 규모 높이 7 km, 평형온도 228 K, 산소 없음이다.
+        확인: CO₂ 분압 21 mbar의 frost point는 135 K로 야간 150~165 K보다 낮아 동결하지 않으므로 야간측 대기
+        붕괴를 피한다. 0.7 bar에서는 대기 열조석이 약해 비동기 자전 조건이 발동하지 않아 1:1 고정과 obliquity 0이
+        그대로 유지되며, 1 bar보다 오히려 안전하다. 온도 3계층은 GCM 앵커로 직하 282~288 K, 야간 150~162 K,
+        평균 243~248 K이다.
+        유보: 이 대기가 남아 있다는 것이 이 행에서 문헌을 벗어난 지점이다. 어떤 근거로 그렇게 두었는지는 이탈
+        기록에 적었다.
+    refs: ["1702.04089", "1608.06813", "1608.08620", "docs/reference/exoplanet-atmosphere-methodology.md", "docs/reference/tidally-locked-temperature-methodology.md"]
 
   - body: Proxima Cen b
     axis: surface                     # G5 — 대륙형 호수 세계 표면; 색=표면색 문서, A=Bond cascade
