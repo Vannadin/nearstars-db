@@ -57,12 +57,12 @@ decisions:
       - name: flattening
         value: 2.8e-8
         op: set
-        note: "= (3J₂+q)/2 파생 에코 (J₂ 3.7e-9, q 4.4e-8) — 시각 oblate 슬롯"
+        note: "= (3J₂+q)/2 파생 에코 (J₂ 3.7e-9, q 4.4e-8), 시각 oblate 슬롯"
       - name: rotation_period
         value: 83.5
         unit: d
         op: passthrough
-        note: "DB recommended — bulk.geopotential_j2 행과 동일 입력"
+        note: "DB recommended, bulk.geopotential_j2 행과 동일 입력"
       - name: intrinsic_luminosity
         value: 0.00157
         unit: L_sun
@@ -78,9 +78,9 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      color=M5.5V 물리색 #ffcc75(옅은 따뜻한 주황 — 실측 Pickles SED→CIE; TiO/VO/H₂O는 색지수·광도엔 크나 밝기-정규화 표시색조엔 미미). 옛 #c54c2a(심적색)은 광도/색조 혼동 render 짐작이라 폐기. limb_darkening α~0.4(Claret2018 M-dwarf 보간, tie-break).
-      **spots_faculae=보통~다소 많음 ~3–5%**(활동적 M왜성 큰 spot; 83d 자전 변조 검출=spot 존재; A·B보다 多). flare 색
-      #ff5e2a(Hα)는 참조용 — **동적 플레어는 cfg 렌더 불가**라 visual passthrough, 효과는 environment.radiation/activity로.
+      color=M5.5V 물리색 #ffcc75(옅은 따뜻한 주황, 실측 Pickles SED→CIE; TiO/VO/H₂O는 색지수·광도엔 크나 밝기-정규화 표시색조엔 미미). 옛 #c54c2a(심적색)은 광도/색조 혼동 render 짐작이라 폐기. limb_darkening α~0.4(Claret2018 M-dwarf 보간, tie-break).
+      spots_faculae=보통~다소 많음 ~3–5%(활동적 M왜성 큰 spot; 83d 자전 변조 검출=spot 존재; A·B보다 多). flare 색
+      #ff5e2a(Hα)는 참조용이고, 동적 플레어는 cfg 렌더 불가라 visual passthrough, 효과는 environment.radiation/activity로.
     fields:
       - name: color
         value: "#ffcc75"
@@ -95,13 +95,13 @@ decisions:
         value: "~3–5% (보통~다소 많음; 83d 자전 변조 검출)"
         op: set
       - name: flares
-        value: "#ff5e2a (Hα, 참조용 — 동적 플레어 cfg 렌더 불가, visual passthrough)"
+        value: "#ff5e2a (Hα, 참조용; 동적 플레어 cfg 렌더 불가, visual passthrough)"
         op: set
     gate:
       criterion: [observation]
       verdict: methodology-derived
       evidence: >
-        색 정정 2026-06-24 — 물리색 #ffcc75(실측 Pickles SED→CIE), 옛 #c54c2a 폐기. limb=tie-break passthrough.
+        색 정정 2026-06-24. 물리색 #ffcc75(실측 Pickles SED→CIE)를 채택하고 옛 #c54c2a는 폐기. limb=tie-break passthrough.
         흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인).
     refs: ["docs/reference/stellar-photospheric-color-methodology.md"]
 
@@ -126,7 +126,7 @@ decisions:
     status: passthrough
     narrative: >
       P_rot 83.5±0.5d(Benedict1998 HST) · 7년 사이클(Wargelin2017 X선+UV+광학, DB 핀 2017MNRAS.464.3281W) ·
-      log R'HK −5.65±0.17(정온 활동도 낮음). **플레어**: 총 1.49회/일(Vida2019 TESS), 슈퍼플레어(≥10³³ erg)
+      log R'HK −5.65±0.17(정온 활동도 낮음). 플레어: 총 1.49회/일(Vida2019 TESS), 슈퍼플레어(≥10³³ erg)
       ~3회/년, ultra ~0.5회/년. X선 log Lx ~27.0 정온 / ~28.5 플레어피크. 역설(노쇠 느린자전인데 빈번
       슈퍼플레어)은 7년 사이클 변조로 화해. 측정 emit. [2026-07-12 점검: 사이클 인용 Wargelin2024→2017로
       DB recommended 핀과 정렬.]
@@ -143,7 +143,7 @@ decisions:
     refs: ["2001ApJ...547L..49W"]
     status: passthrough
     narrative: >
-      Ṁ ≤0.2 Ṁ☉(Wood2001 astrospheric Lyα 상한). 풍-지배 아닌 **플레어-지배** 환경. L_bol 낮아 절대 풍 약함.
+      Ṁ ≤0.2 Ṁ☉(Wood2001 astrospheric Lyα 상한). 풍-지배 아닌 플레어-지배 환경. L_bol 낮아 절대 풍 약함.
     fields:
       - name: stellar_wind
         value: 0.2
@@ -170,7 +170,7 @@ decisions:
     narrative: >
       i★ = 47°±7° 측정 채택(Klein, Donati et al. 2021 ZDI, DB recommended). 극 방위각 미구속 → emit 배향
       자유(ICRS 극 RA/Dec 변환은 emit 단계). 행성 b/c/d 궤도 경사는 전부 미측정(DB null)이라 스핀-궤도
-      정렬 여부는 진술 불가 — 궤도 emit이 배향을 정할 때 이 항성 적도면이 기준 후보.
+      정렬 여부는 진술 불가다. 궤도 emit이 배향을 정할 때 이 항성 적도면이 기준 후보.
     fields:
       - { name: spin_axis_orientation, value: "i★ 47°±7° (LOS 기준, 측정) · PA 자유, ICRS 변환 at emit", op: set }
     gate:
@@ -186,7 +186,7 @@ decisions:
     status: gated                     # 오너 정책 2026-07-12 — 항성 J2 상시 계산·emit
     driver: [window-selection]
     narrative: >
-      회전 편평 J2 = 3.7e-9. 완전 대류 M왜성이라 태양앵커 스케일링 대신 **Radau-Darwin 복귀**: n=3/2
+      회전 편평 J2 = 3.7e-9. 완전 대류 M왜성이라 태양앵커 스케일링 대신 Radau-Darwin 복귀: n=3/2
       폴리트로프 NMoI ≈ 0.205(Chandrasekhar 1939)는 R-D 유효범위(≥0.13) 안 → J2/q = 0.084.
       q = ω²R³/GM = 4.42e-8 (M 0.1221 M☉·R 0.141 R☉·P_rot 83.5d, 전부 DB recommended) → J2 3.7e-9
       (±~25%, 반지름 불확도 지배). reference_radius = 적도반경 9.809e7 m. 방법·M왜성 분기 =
@@ -198,7 +198,7 @@ decisions:
       criterion: [derived-grounding]
       verdict: methodology-derived
       evidence: >
-        느린 자전(83.5d)+작은 반지름이라 q 자체가 태양의 ~1/470 — 로스터 최소 J2. 그래도 오너 정책
+        느린 자전(83.5d)+작은 반지름이라 q 자체가 태양의 ~1/470이고, 로스터 최소 J2다. 그래도 오너 정책
         (항성 J2 무시가능 처리 금지, Principia 플레이 중요)대로 계산값 emit. 태양 비율(0.0105) 대신
         M왜성 폴리트로프 계수(0.084)를 쓴 것은 응집도 차이의 물리적 귀결.
     refs: ["docs/reference/body-figure-methodology.md"]
@@ -209,11 +209,11 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      body_type=암석 지구형 — **대륙형 호수 세계**(직하 고지대 + 흩어진 호수/내해 모자이크 → 야간측 빙관, **무생물**).
+      body_type=암석 지구형인 대륙형 호수 세계(직하 고지대 + 흩어진 호수/내해 모자이크 → 야간측 빙관, 무생물).
       eyeball 아님. designation=Proxima Centauri b(고유명 없음). RV로 확정된 행성이다(Anglada-Escudé 2016).
     fields:
       - name: body_type
-        value: "암석 지구형 — 대륙형 호수 세계 (직하 고지대 + 흩어진 호수/내해 + 야간측 빙관, 무생물)"
+        value: "암석 지구형: 대륙형 호수 세계 (직하 고지대 + 흩어진 호수/내해 + 야간측 빙관, 무생물)"
         op: set
       - name: designation
         value: "Proxima Centauri b (고유명 없음)"
@@ -253,9 +253,9 @@ decisions:
     narrative: >
       mass 1.22 M⊕(등방 prior 중앙 진질량) · radius ~1.07 R⊕ · g ~1.07 · 밀도 ~5.5 g/cm³(지구형 암석) · 조석고정 ·
       obliquity ~0 · age ~4.85 Gyr. [§3.2 정규화 2026-07-12] 조석고정의 자명 귀결 승격: rotation = 공전주기
-      11.186 d(DB), spin_axis = 궤도 법선. figure는 body-figure-methodology.md §6 워크드 값 승격 —
+      11.186 d(DB), spin_axis = 궤도 법선. figure는 body-figure-methodology.md §6 워크드 값 승격이다.
       q_s 2.8e-5 → J2 ≈ 2.8e-5 · 조석 C̄₂₂ ≈ 8e-6 (reference_radius 6817 km = radius). [2026-07-14]
-      internal_heat 표면 미미(radiogenic ~Earth-scale, T_eff≈T_eq §7) — 값의 몫은 G7 약한 dynamo 구동원.
+      internal_heat 표면 미미(radiogenic ~Earth-scale, T_eff≈T_eq §7)이고, 값의 몫은 G7 약한 dynamo 구동원.
     fields:
       - name: mass
         value: 1.22
@@ -276,7 +276,7 @@ decisions:
       - name: flattening
         value: 7.0e-5
         op: set
-        note: "= (5/2)·J₂ 평균적도 spheroid (J₂ 2.8e-5) — 시각상 구"
+        note: "= (5/2)·J₂ 평균적도 spheroid (J₂ 2.8e-5), 시각상 구"
       - name: rotation_period
         value: 11.186
         unit: d
@@ -292,7 +292,7 @@ decisions:
       - name: geopotential_c22
         value: 8.0e-6
         op: set
-        note: "영구 조석 삼축 (§6 워크드) — emit 임계 판단은 emit 단계"
+        note: "영구 조석 삼축 (§6 워크드), emit 임계 판단은 emit 단계"
       - name: reference_radius
         value: 6817
         unit: km
@@ -320,7 +320,7 @@ decisions:
         ~1 M⊕는 H/He 미보유 + 플레어 광증발).
 
         paper: Ho & Turner 2011 (ApJ 739, 26; arXiv:1007.0245) "Posterior Distribution of sin(i)…". CAVEAT: 등방
-        ×1.1547은 단순가정 중앙값 — sin(i) 사후분포는 모집단 질량함수에 의존하며, 가파른 질량함수면 보정이 더 작아져
+        ×1.1547은 단순가정 중앙값이다. sin(i) 사후분포는 모집단 질량함수에 의존하며, 가파른 질량함수면 보정이 더 작아져
         (진질량이 Msini에 더 근접) ×1.1547은 상한쪽 추정. 즉 1.22는 '등방-prior 관례값', 실제 기대값은 1.055~1.22
         하단 가능. 선례(Barnard) 일관 위해 1.22 채택, 이 caveat 명기.
 
@@ -333,9 +333,9 @@ decisions:
     driver: [window-selection]
     narrative: >
       surface_pressure=0.7 bar(오너 결정 2026-06-23). composition=N₂ 지배 + CO₂ ~3%(온실로 직하 빙점 위 유지),
-      μ≈28.5 g/mol. **Bond albedo A≈0.33**(G5 표면서 cascade — 밝은 anorthosite 고지 + 직하 구름층이 데이샤이드 알베도를
+      μ≈28.5 g/mol. Bond albedo A≈0.33(G5 표면서 cascade, 밝은 anorthosite 고지 + 직하 구름층이 데이샤이드 알베도를
       0.30→0.33으로 올림; 오너 "평균 알베도 조금↑" 2026-06-23). breathability=불가(무생물·무산소, atmosphereContainsOxygen=false).
-      scale_height H≈7 km(=RT/μg, T~250K·g 10.5·μ 28.5 — 기압엔 무관). escape=M왜성 플레어 stripping 위험이나
+      scale_height H≈7 km(=RT/μg, T~250K·g 10.5·μ 28.5; 기압엔 무관). escape=M왜성 플레어 stripping 위험이나
       호수세계 전제로 보유 채택(게이트 참조).
     # MIGRATION-FLAG: derived_temps 는 비표준 행-레벨 키로 프로즈 원문 보존 (validator 무시). 온도값 typed field 로 병기.
     derived_temps: >
@@ -347,7 +347,7 @@ decisions:
         value: 0.7
         unit: bar
         op: set
-        phase3_default: "Phase 3 합성 대기(있으면) — 본 결정이 art-direction 기압/조성 확정값"
+        phase3_default: "Phase 3 합성 대기(있으면); 본 결정이 art-direction 기압/조성 확정값"
         note: "오너 결정 2026-06-23"
       - name: composition
         value: "N₂ 지배 + CO₂ ~3% (μ≈28.5 g/mol)"
@@ -375,9 +375,9 @@ decisions:
       divergence_note: >
         대기 문서 3-gate: cosmic shoreline 위지만 M왜성 강플레어·항성풍 stripping(Dong2017·Ribas2016) 위험이라 "보유"는
         자동이 아님. G1 호수세계(액체 물)가 대기 보유를 요구하므로 Meadows2018 "온대/거주가능" 분기를 명시 tie-break로 채택.
-        Garraffo2016 자기차폐가 도울 수 있으나 불확실 — 발산으로 명기.
+        Garraffo2016 자기차폐가 도울 수 있으나 불확실해서 발산으로 명기.
       evidence: >
-        locking_note: 새 locking 문서 교차검증 — 0.7 bar는 대기 열조석이 약해 Leconte2015 비동기 caveat 미발동 → G3의
+        locking_note: 새 locking 문서 교차검증 결과, 0.7 bar는 대기 열조석이 약해 Leconte2015 비동기 caveat 미발동 → G3의
         1:1·obliquity 0 견고(오히려 1 bar보다 안전).
 
         collapse_note: CO₂ ~3% @0.7 bar(분압 ~21 mbar)의 frost point ~135K < 야간 150–165K → CO₂ 미동결, 야간측
@@ -393,8 +393,8 @@ decisions:
     status: gated
     driver: [window-selection, art-direction]
     narrative: >
-      대륙 = **2색**(오너 1+2 조합): 회녹색 마픽 저지(올리빈/휘석질 현무암 mare, Fe²⁺ 결정장 → 어두운 회녹, A~0.1) +
-      밝은 장석질 고지(anorthosite highlands, A~0.2–0.25). **화성형 적색 아님** — 무생물·무산소(G4)라 철이 환원(Fe²⁺)
+      대륙 = 2색(오너 1+2 조합): 회녹색 마픽 저지(올리빈/휘석질 현무암 mare, Fe²⁺ 결정장 → 어두운 회녹, A~0.1) +
+      밝은 장석질 고지(anorthosite highlands, A~0.2–0.25). 화성형 적색은 아니다. 무생물·무산소(G4)라 철이 환원(Fe²⁺)
       상태 유지, O→Fe³⁺ 전하이동(적색 슬로프) 미발생. 직하 호수/내해 = 어두운 물(A~0.07, G1 캐나다/지중해형 산재).
       야간 빙관 = 밝은 물얼음(A~0.5–0.6, 살짝 청색). 직하 구름층 = 물구름(Yang2013 안정화 피드백, 데이샤이드 알베도↑).
     # MIGRATION-FLAG: bond_albedo_cascade / cfg_colors_intrinsic 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (색은 emit 말미 art-pass, typed 색필드 미분해).
@@ -424,7 +424,7 @@ decisions:
       criterion: [classification, visual-checklist]
       verdict: pass-in-window
       evidence: >
-        rationale: 색조/패턴은 interesting-first 축(표면색 문서 §1 posture) — 묶이는 hard tie는 면적가중 Bond
+        rationale: 색조/패턴은 interesting-first 축(표면색 문서 §1 posture)이고, 묶이는 hard tie는 면적가중 Bond
         albedo뿐(→온도 cascade). 대륙 어두움·비적색은 환원 산화상태로 grounded(표면색 문서 §2: 산화상태가 색 최대 레버).
         2색(mare/highland) + 호수·빙관·구름의 다요소 = interesting-first 다양성, eyeball 회피(G1 대륙형 호수 유지).
 
@@ -439,13 +439,13 @@ decisions:
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
-      종합 인상 = **따뜻한 황토/적갈 디스크**(Proxima M5.5, Teff 2904K reddening). 조석고정 → 직하 반구가 별 향함.
+      종합 인상 = 따뜻한 황토/적갈 디스크(Proxima M5.5, Teff 2904K reddening). 조석고정 → 직하 반구가 별 향함.
       가장 밝은 = 직하 물구름 소용돌이(크림-화이트), 둘레로 reddening된 2색 대륙(움버 저지 + 테라코타 고지) + 산재한
-      검붉은 호수, 터미네이터 너머 크림빛 야간 빙관. **폴리페무스(G2V 태양쌍둥이광=고유색 거의 그대로)와 결정 대비** —
-      여기선 별빛 자체가 붉어 디스크 전체가 따뜻하게 물듦. + **희미한 플레어-오로라**(아래 게이트).
-      aurora_divergence: 희미·간헐(플레어 시) 오로라를 의도 연출. **행성 자기장은 미측정**(외계행성 장 직접탐지 사례
+      검붉은 호수, 터미네이터 너머 크림빛 야간 빙관. 폴리페무스(G2V 태양쌍둥이광=고유색 거의 그대로)와 결정 대비다.
+      여기선 별빛 자체가 붉어 디스크 전체가 따뜻하게 물듦. + 희미한 플레어-오로라(아래 게이트).
+      aurora_divergence: 희미·간헐(플레어 시) 오로라를 의도 연출. 행성 자기장은 미측정이다(외계행성 장 직접탐지 사례
       없음; Pérez-Torres2021 2012.02116 전파 SPI는 잠정·항성 플레어 기원). 게다가 조석고정 느린 자전 → 암석 dynamo 약할
-      가능성↑(Driscoll&Olson2011, RM22 스케일링). 단 드라이버(별)는 강력 — 잦은 슈퍼플레어 입자플럭스 막대(별
+      가능성↑(Driscoll&Olson2011, RM22 스케일링). 단 드라이버(별)는 강력하다. 잦은 슈퍼플레어 입자플럭스 막대(별
       environment.activity 측정값). 그래서 "약한 장 가정 + 강한 구동 → 희미·간헐 오로라"를 owner-override로
       채택(장 존재를 약하게 가정, 명기).
     # MIGRATION-FLAG: cfg_colors_displayed 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (표시 팔레트, emit 말미 정밀화).
@@ -464,11 +464,11 @@ decisions:
       criterion: [visual-checklist, composition-lock]
       verdict: owner-override
       evidence: >
-        palette_note: 표시 팔레트는 derived(in-window) — 고유 반사색(G5) × Proxima SED를 §6 엔진으로 렌더한 결과.
+        palette_note: 표시 팔레트는 derived(in-window)이고, 고유 반사색(G5) × Proxima SED를 §6 엔진으로 렌더한 결과.
         별색 reddening은 물리.
 
-        aurora_color: 색은 composition-lock(in-window) — N₂ 지배·**무산소**(G4) 대기라 Earth의 OI 557nm 녹색(O 풍부
-        필요)은 죽고, N₂ 1st Positive 적·N₂⁺ 391nm 자색 지배 → **적자색(magenta-violet) 오로라**. composition-color.md
+        aurora_color: 색은 composition-lock(in-window)이다. N₂ 지배·무산소(G4) 대기라 Earth의 OI 557nm 녹색(O 풍부
+        필요)은 죽고, N₂ 1st Positive 적·N₂⁺ 391nm 자색 지배 → 적자색(magenta-violet) 오로라. composition-color.md
         aurora regime.
 
         paper: 자기장 관측 현황 = Garcia-Sage2017(2017ApJ...844L..13G, 장 가정 보호모델)·Garraffo2016·Pérez-Torres2021
@@ -481,9 +481,9 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      **약한 행성 자기장**(차수 ≲0.1–0.3× 지구, ≲ 수 µT 표면), **활성 dynamo 여부 자체가 불확실**. 미측정 — 외계행성 장
-      직접탐지 사례 없음(Pérez-Torres2021 전파 SPI 잠정). **Zapatero Osorio2026(arXiv:2605.22925)이 b SPI를 플레어 강도
-      변조(b 공전주기 주기성)로 검출 → 자기적 상호작용 흔적이나, d와 달리 b는 자기장 값 미도출**(phase-lock 아님). 방법 =
+      약한 행성 자기장(차수 ≲0.1–0.3× 지구, ≲ 수 µT 표면), 활성 dynamo 여부 자체가 불확실. 미측정이고, 외계행성 장
+      직접탐지 사례 없음(Pérez-Torres2021 전파 SPI 잠정). Zapatero Osorio2026(arXiv:2605.22925)이 b SPI를 플레어 강도
+      변조(b 공전주기 주기성)로 검출 → 자기적 상호작용 흔적이나, d와 달리 b는 자기장 값 미도출(phase-lock 아님). 방법 =
       암석장 RM22 스케일링 + 조석고정 penalty(dynamo 문서 regime 4). 약함 동인 두 가지: (1) 조석고정 P=11.2일 느린 자전이
       임계자전 아래 → dynamo 약화, (2) 노쇠 ~4.85 Gyr 핵 냉각 → 코어 대류 약화. conf=low.
     fields:
@@ -494,13 +494,13 @@ decisions:
       criterion: [derived-grounding]
       verdict: methodology-derived
       evidence: >
-        rationale: G6 "희미한 플레어-오로라" 채택이 **약한 장 존재**를 이미 함의 → G7은 그 정량·명시(별도 art 선택 없는
-        derived 축). 자이언트 energy-flux 법칙(Christensen2009)은 부적용 — 암석체라 RM22 경로. 강한 장 가정은 근거
+        rationale: G6 "희미한 플레어-오로라" 채택이 약한 장 존재를 이미 함의 → G7은 그 정량·명시(별도 art 선택 없는
+        derived 축). 자이언트 energy-flux 법칙(Christensen2009)은 부적용이고, 암석체라 RM22 경로. 강한 장 가정은 근거
         없음(미측정+느린자전+노쇠).
 
-        coupling: G4 retention divergence 강화 — 약한 장 → 자기차폐 미약 → M왜성 stripping 무방비(Garcia-Sage2017·
+        coupling: G4 retention divergence를 강화한다. 약한 장 → 자기차폐 미약 → M왜성 stripping 무방비(Garcia-Sage2017·
         Garraffo2016: 장이 있어도 Proxima 활동성엔 보호 어려움) → "보유"를 documented-divergence로 둔 게 정당. G6 오로라
-        희미함과도 정합. environment.radiation(G8)에도 입력 — 약한 자기권 → 표면 방사선 환경 가혹(플레어 직격).
+        희미함과도 정합. environment.radiation(G8)에도 입력이다. 약한 자기권 → 표면 방사선 환경 가혹(플레어 직격).
 
         paper: 암석 dynamo = docs/reference/planetary-dynamo-scaling.md regime 4(RM22 2203.01065 + Garraffo2017 +
         조석lock penalty). 노쇠/느린자전 약화 = Driscoll&Olson2011.
@@ -511,10 +511,10 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      radiation(표면)=**가혹** — 약한 자기권(G7) + 잦은 슈퍼플레어(별 measured: 1.49회/일, ≥10³³erg ~3/년, X선 log Lx
+      radiation(표면)=가혹이다. 원인은 약한 자기권(G7) + 잦은 슈퍼플레어(별 measured: 1.49회/일, ≥10³³erg ~3/년, X선 log Lx
       27정온→28.5피크) + 근접궤도 0.0485 AU 직격. 0.7 bar 대기가 일부 column 차폐하나 약한 장이라 플레어가 대기 직타 →
-      G1 무생물·G11 해저드의 물리 근거. stellar_wind=**강함**(근접 → wind ram 큼, Dong2017 escape 구동 = G4 retention
-      divergence 입력). heliosphere=**astrosphere 심부**(행성 0.0485 AU ≪ standoff ~55 AU[Wood2001] → 항상 항성풍 내부,
+      G1 무생물·G11 해저드의 물리 근거. stellar_wind=강함(근접 → wind ram 큼, Dong2017 escape 구동 = G4 retention
+      divergence 입력). heliosphere=astrosphere 심부(행성 0.0485 AU ≪ standoff ~55 AU[Wood2001] → 항상 항성풍 내부,
       ISM 직접 미관측).
     fields:
       - name: radiation
@@ -530,7 +530,7 @@ decisions:
       criterion: [derived-grounding]
       verdict: pass-in-window
       evidence: >
-        rationale: 전부 별 measured 환경(environment.activity/stellar_wind/heliosphere) + G7 약한 자기권에서 도출 —
+        rationale: 전부 별 measured 환경(environment.activity/stellar_wind/heliosphere) + G7 약한 자기권에서 도출이고,
         별도 art 선택 없는 derived 축. radiation 등급(Kerbalism 매핑)은 high이되 정확 tier는 G11 gameplay서 확정.
 
         coupling: G4 retention divergence(풍-구동 escape)·G1 무생물(방사선 적대)·G11 해저드의 공통 입력. G7 약한 장이
@@ -551,7 +551,7 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "암석 지구형엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]]) — feature 없으면 없음으로."
+      evidence: "암석 지구형엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]])에 따라 feature 없으면 없음으로."
 
   - body: Proxima Cen b
     axis: satellites                  # G10 — 없음 (근접 조석환경 물리적 예외)
@@ -559,29 +559,29 @@ decisions:
     driver: [engine, window-selection]
     narrative: >
       위성 없음. Hill 반경 R_H = a·(m_p/3M★)^⅓ = 0.0485 AU×0.0215 ≈ 156,000 km, 순행 안정역 ~0.3–0.5 R_H(50–78k km)로
-      좁고, **조석고정 근접 행성**이라 강한 항성조석이 Gyr 스케일로 위성 궤도 불안정화 → 큰 위성 미보유가 일반적.
+      좁고, 조석고정 근접 행성이라 강한 항성조석이 Gyr 스케일로 위성 궤도 불안정화 → 큰 위성 미보유가 일반적.
     gate:
       criterion: [stability, classification]
       verdict: pass-in-window
       evidence: >
-        [[feedback_gameplay_variety]]의 "그 자리에 아무것도 없어야 함" **물리적 예외** — 근접 조석환경이 안정 위성을 막아
+        [[feedback_gameplay_variety]]의 "그 자리에 아무것도 없어야 함" 물리적 예외다. 근접 조석환경이 안정 위성을 막아
         '없음'이 근거 있는 선택(증거 부재 아닌 물리적 부재). 오너 결정 2026-06-23(소형 위성 시도 대신 없음 채택).
 
   - body: Proxima Cen b
-    axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (폴리페무스 거대 가스행성와 대비)
+    axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (폴리페무스 거대 가스행성과 대비)
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-08-03: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24,
       임무 난이도 등급은 모드-지원 관심사). 구값 "임무=항성간 플래그십".
     status: gated
     driver: [engine]
     narrative: >
-      **고체 표면 있음 → 착륙 가능** 암석 호수 세계(폴리페무스 거대 가스행성와 대비). **biome = 항성경도 동심원**(조석고정이라
-      위도 아닌 직하→터미네이터→반대점 순; 직하 최온, 바깥일수록 한랭) **7구획**(오너 검토 2026-06-23):
-      ① 직하점(Substellar Point, 핫스팟 **시그니처 명소** — 폴리페무스 폭풍눈 대응) · ② 직하 호수(Substellar Lakes,
-      **splashdown**) · ③ 주간 저지(Day Lowlands, 마픽) · ④ 주간 고지(Day Highlands, 장석질) · ⑤ 터미네이터(Terminator,
-      황혼대) · ⑥ 야간면(Night Side, 동결 암석) · ⑦ 야간 빙관(Night Ice Cap, 반대점 물얼음). **오로라대는 biome서 제외**
-      — 고정 표면 구역이 아니라 G6 외형 요소로만(오너 결정). breathability=**불가**(무산소, atmosphereContainsOxygen=false).
-      radiation 해저드=**high**(G8 — 약한 장+플레어; Kerbalism radiation_surface high tier, 플레어 시 spike). ScienceValues
+      고체 표면이 있어 착륙 가능한 암석 호수 세계(폴리페무스 거대 가스행성과 대비). biome = 항성경도 동심원(조석고정이라
+      위도 아닌 직하→터미네이터→반대점 순; 직하 최온, 바깥일수록 한랭) 7구획(오너 검토 2026-06-23):
+      ① 직하점(Substellar Point, 핫스팟 시그니처 명소, 폴리페무스 폭풍눈 대응) · ② 직하 호수(Substellar Lakes,
+      splashdown) · ③ 주간 저지(Day Lowlands, 마픽) · ④ 주간 고지(Day Highlands, 장석질) · ⑤ 터미네이터(Terminator,
+      황혼대) · ⑥ 야간면(Night Side, 동결 암석) · ⑦ 야간 빙관(Night Ice Cap, 반대점 물얼음). 오로라대는 biome서 제외인데,
+      고정 표면 구역이 아니라 G6 외형 요소로만 쓴다(오너 결정). breathability=불가(무산소, atmosphereContainsOxygen=false).
+      radiation 해저드=high(G8, 약한 장+플레어; Kerbalism radiation_surface high tier, 플레어 시 spike). ScienceValues
       전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.7 bar 비행 가능. 임무 난도의 핵심은 접근이다. Proxima는 태양 최근접(4.24 ly)이지만 여정 자체가 난도다.
     fields:
       - name: science_biomes
@@ -598,7 +598,7 @@ decisions:
         "거주가능존이되 적대적"이라는 G1 무생물 서사와 정합. radiation tier high는 G8서 derived. cfg emit(Kopernicus 표면색/biome·
         atmosphere curve·ScienceValues)는 프로젝트 말미 일괄.
 
-        owner_review: 2026-06-23 오너 검토 완료 — biome을 항성경도 7구획으로 확정(오로라대 제외, 직하점=시그니처 명소 유지,
+        owner_review: 2026-06-23 오너 검토 완료. biome을 항성경도 7구획으로 확정(오로라대 제외, 직하점=시그니처 명소 유지,
         splashdown 호수 유지). 직전 커밋(2bb8540)은 오너 검토 없이 작성된 것이라 본 검토로 정정·승인.
 
   # ════════ 행성 d (초단주기 sub-Earth, 뜨거운 무대기 수성 아날로그) — facet-walk 2026-06-23 ════════
@@ -607,13 +607,13 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      body_type=초단주기 sub-Earth — **뜨거운 무대기 암석(자기권 가진 수성형)**, 무생물. designation=Proxima Centauri d
-      (고유명 없음). **distinctive: 지구형
-      외계행성 최초의 자기장 추정치(~16 G)를 가진 행성 + 항성 플레어가 d 궤도에 phase-lock**(Zapatero Osorio 2026) —
-      "별을 자기적으로 때리는 안쪽 행성".
+      body_type=초단주기 sub-Earth인 뜨거운 무대기 암석(자기권 가진 수성형), 무생물. designation=Proxima Centauri d
+      (고유명 없음). distinctive: 지구형
+      외계행성 최초의 자기장 추정치(~16 G)를 가진 행성 + 항성 플레어가 d 궤도에 phase-lock(Zapatero Osorio 2026),
+      곧 "별을 자기적으로 때리는 안쪽 행성".
     fields:
       - name: body_type
-        value: "초단주기 sub-Earth — 뜨거운 무대기 암석 (자기권 가진 수성형, 무생물)"
+        value: "초단주기 sub-Earth: 뜨거운 무대기 암석 (자기권 가진 수성형, 무생물)"
         op: set
       - name: designation
         value: "Proxima Centauri d (고유명 없음)"
@@ -632,8 +632,8 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      a=0.02885 AU · P=5.122d · **e≈0 물리 floor**(미측정 → emit시 de-perfect ≲0.05) · inc 미측정(비통과) ·
-      **조석고정 1:1**(a⁶ 게이트 초고속). Ω/ω/M = 자유 emit.
+      a=0.02885 AU · P=5.122d · e≈0 물리 floor(미측정 → emit시 de-perfect ≲0.05) · inc 미측정(비통과) ·
+      조석고정 1:1(a⁶ 게이트 초고속). Ω/ω/M = 자유 emit.
     fields:
       - name: semi_major_axis_au
         value: 0.02885
@@ -653,10 +653,10 @@ decisions:
       verdict: pass-in-window
       evidence: >
         rationale: 관측 e 미구속 → [[project_nearstars_synthetic_eccentricity]] 정책으로 emit시 seeded e ≲0.05 상한
-        (구체값은 per-system seed로 emit 생성, 보드엔 의도만 — 정책 rule 2). 0.029 AU는 조석 원형화 즉각이라 물리 기본은
+        (구체값은 per-system seed로 emit 생성, 보드엔 의도만; 정책 rule 2). 0.029 AU는 조석 원형화 즉각이라 물리 기본은
         e≈0이나, 미측정이므로 realism/다양성용 small seed를 emit서 부여.
         ω_eq/n≈1.015 → 1:1 유지. 수성 e=0.2는 기각(0.029 AU 강조석+공명 부재로 비현실; 오너 결정 2026-06-23).
-        **emit시 다행성계 stability-sim 검증 필요.**
+        emit시 다행성계 stability-sim 검증 필요.
 
         paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).
 
@@ -739,9 +739,9 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      **무대기(bare rock)**. 극근접 0.029 AU 강irradiation·강플레어 stripping + 저중력(g 0.58, 낮은 escape v) → cosmic
-      shoreline **아래** → 대기 미보유. breathability=∅. (희박 표토-기원 exosphere 정도는 가능하나 렌더 무의미.)
-      **주의: ~16 G 자기장(G7)도 대기 보유 못 함** — shoreline 아래 + 직하 450K 열탈출 + Garcia-Sage2017/Garraffo2016(장
+      무대기(bare rock). 극근접 0.029 AU 강irradiation·강플레어 stripping + 저중력(g 0.58, 낮은 escape v) → cosmic
+      shoreline 아래 → 대기 미보유. breathability=∅. (희박 표토-기원 exosphere 정도는 가능하나 렌더 무의미.)
+      주의: ~16 G 자기장(G7)도 대기 보유는 못 한다. shoreline 아래 + 직하 450K 열탈출 + Garcia-Sage2017/Garraffo2016(장
       있어도 Proxima 활동성엔 보호 불가) + 강한 장의 극 cusp 탈출이 오히려 손실 가중. 즉 강한 장 ≠ 대기 보유.
     fields:
       - name: composition
@@ -754,7 +754,7 @@ decisions:
       criterion: [retention]
       verdict: pass-in-window
       evidence: >
-        rationale: 대기 문서 Gate1(cosmic shoreline) 아래 — b보다 근접·저중력이라 stripping 압도. 무대기가 grounded
+        rationale: 대기 문서 Gate1(cosmic shoreline) 아래다. b보다 근접·저중력이라 stripping 압도. 무대기가 grounded
         기본(오너 채택 2026-06-23).
 
         paper: docs/reference/exoplanet-atmosphere-methodology.md Gate1(Zahnle&Catling2017 shoreline).
@@ -765,13 +765,13 @@ decisions:
     status: gated
     driver: [window-selection, art-direction]
     narrative: >
-      뜨거운 **bare rock**. **Teq~317K**(1.87× 지구 일사) · 무대기 1:1 → **직하~450K**(=Teq×√2, 무재분배) · **극냉 야간**
+      뜨거운 bare rock. Teq~317K(1.87× 지구 일사) · 무대기 1:1 → 직하~450K(=Teq×√2, 무재분배) · 극냉 야간
       (무대기 거대 day-night 대비). 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 표면=어두운 현무암,
-      **단 ~16 G 자기권(G7)이 항성풍 sputtering을 편향 → 솔라윈드-구동 우주풍화(npFe⁰) 감소** → 무자기장 수성보다 **덜 붉고
-      덜 어두움**(미세운석 gardening만 잔존; 수성 표면장 ~0.003 G 대비 d는 ~5000× 강해 차폐 유효). **단 phase-lock 플레어
-      입자가 자기극으로 집중 채널 → 자기극에 짙은 풍화 극관**(npFe⁰ 농집, 거의 흑갈). 결과 = **밝은 중위도(자기권 차폐로
-      신선) ↔ 어두운 자기극관의 뚜렷한 2-tone 표면** — 자기장 강화의 **가시 시그니처**. 고유색: 중위도 #3c3833(직전 #34302c보다
-      밝게, 차폐분) · **자기극관 ~#2a2622(거의 흑갈, 집중 풍화)**.
+      단 ~16 G 자기권(G7)이 항성풍 sputtering을 편향 → 솔라윈드-구동 우주풍화(npFe⁰) 감소 → 무자기장 수성보다 덜 붉고
+      덜 어두움(미세운석 gardening만 잔존; 수성 표면장 ~0.003 G 대비 d는 ~5000× 강해 차폐 유효). 단 phase-lock 플레어
+      입자가 자기극으로 집중 채널 → 자기극에 짙은 풍화 극관(npFe⁰ 농집, 거의 흑갈). 결과 = 밝은 중위도(자기권 차폐로
+      신선) ↔ 어두운 자기극관의 뚜렷한 2-tone 표면이고, 자기장 강화의 가시 시그니처. 고유색: 중위도 #3c3833(직전 #34302c보다
+      밝게, 차폐분) · 자기극관 ~#2a2622(거의 흑갈, 집중 풍화).
     # MIGRATION-FLAG: cfg_colors_intrinsic 는 비표준 행-레벨 키로 hex 색 원문 보존 (색은 emit 말미 art-pass, typed 색필드 미분해).
     cfg_colors_intrinsic: >
       고유(중립광 기준) 반사색 — 중위도(자기권 차폐로 신선) #3c3833 · 자기극관(집중 풍화, 거의 흑갈) ~#2a2622.
@@ -788,7 +788,7 @@ decisions:
       - name: albedo
         value: 0.11
         op: set
-        note: "Bond, 무자기장 수성(~0.088)보다 높음 — 자기권 sputtering 차폐로 우주풍화(npFe⁰) 감소; 자기극관 국소 저albedo"
+        note: "Bond, 무자기장 수성(~0.088)보다 높음, 자기권 sputtering 차폐로 우주풍화(npFe⁰) 감소; 자기극관 국소 저albedo"
     gate:
       criterion: [classification, visual-checklist]
       verdict: pass-in-window
@@ -797,7 +797,7 @@ decisions:
         미세운석 풍화는 잔존(자기권 무관). phase-lock 플레어(Zapatero Osorio2026)는 자기극 채널 → 극 풍화 비대칭. 무산소·무생물
         이라 Fe³⁺ 적색 슬로프 무관(애초 무대기). 색조=interesting-first.
 
-        paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000 — 자기권 차폐로 감소).
+        paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000, 자기권 차폐로 감소).
         자기장=G7(Zapatero Osorio2026). Teq=온도 문서.
 
   - body: Proxima Cen d
@@ -823,7 +823,7 @@ decisions:
         value: "중위도 #3c3833 → Proxima-lit ~#3c2d17 / 자기극관 #2a2622 → Proxima-lit ~#2a1e10 (2-tone; 크레이터·풍화 줄무늬)"
         op: set
       - name: aurora
-        value: "none (무대기 — ~16 G 자기장 존재하나 발광 매질 없어 불가)"
+        value: "none (무대기, ~16 G 자기장 존재하나 발광 매질 없어 불가)"
         op: set
     gate:
       criterion: [visual-checklist]
@@ -840,9 +840,9 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      **극 자기장 ~16 G**(범위 3–280 G) — **Zapatero Osorio et al. 2026**(arXiv:2605.22925) SPI 추정, **지구형 외계행성
-      최초의 자기장 추정치**. 항성 플레어가 d 궤도위상에 **phase-lock**(>99.8% 유의) → helicity-driven 재결합 + Poynting flux
-      형식으로 도출(Mars 반경 가정). 관측>모델이라 기존 dynamo-scaling '약장' 추측을 **대체**.
+      극 자기장 ~16 G(범위 3–280 G). Zapatero Osorio et al. 2026(arXiv:2605.22925) SPI 추정이고, 지구형 외계행성
+      최초의 자기장 추정치. 항성 플레어가 d 궤도위상에 phase-lock(>99.8% 유의) → helicity-driven 재결합 + Poynting flux
+      형식으로 도출(Mars 반경 가정). 관측>모델이라 기존 dynamo-scaling '약장' 추측을 대체.
     fields:
       - name: magnetic_field
         value: "~16 G (극 자기장, 범위 3–280 G)"
@@ -854,10 +854,10 @@ decisions:
       evidence: >
         rationale: SPI 관측 추정(~16 G)이 RM22 느린자전 약장 추측을 supersede(오너 결정 2026-06-23, 관측 우선). caveat:
         모델의존(helicity reconnection·Poynting flux, Mars 반경 가정)·범위 3–280 G로 광범. dynamo 이론(조석고정 느린자전
-        →약장)과 긴장 — 범위 하단 ~3 G가 이론 정합이나 central 16 G는 SPI 채택. 16 G 극장은 약하지 않음(지구 극 ~0.6 G·
+        →약장)과 긴장이 있는데, 범위 하단 ~3 G가 이론 정합이나 central 16 G는 SPI 채택. 16 G 극장은 약하지 않음(지구 극 ~0.6 G·
         목성 ~14 G 수준).
 
-        feature: **phase-lock 플레어는 d의 distinctive 피처** — '별을 자기적으로 때리는 안쪽 행성'. G8 방사선·G1 정체성에 연계.
+        feature: phase-lock 플레어는 d의 distinctive 피처, 곧 '별을 자기적으로 때리는 안쪽 행성'이다. G8 방사선·G1 정체성에 연계.
 
         paper: Zapatero Osorio et al. 2026 (arXiv:2605.22925) "Star-planet interaction in the Proxima system". 약장 기존
         추측 출처=dynamo 문서 regime4(RM22).
@@ -868,9 +868,9 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      radiation=**극심** — 최근접(0.029 AU) 플레어 별 + **무대기 표면 직노출** + **d에 phase-lock된 플레어**(Zapatero Osorio
-      2026, G7) → 표면 방사선 시스템 최악. ~16 G 자기권(G7)이 하전입자 일부 편향하나 무대기라 surface 보호 미미. **단 16 G
-      자기권 + 최근접 플레어 → 강한 포획 방사선대(목성형) → 표면뿐 아니라 d 주변 궤도 공간도 고방사선**(접근선·궤도선이 belt
+      radiation=극심(최근접(0.029 AU) 플레어 별 + 무대기 표면 직노출 + d에 phase-lock된 플레어[Zapatero Osorio
+      2026, G7] → 표면 방사선 시스템 최악). ~16 G 자기권(G7)이 하전입자 일부 편향하나 무대기라 surface 보호 미미. 단 16 G
+      자기권 + 최근접 플레어 → 강한 포획 방사선대(목성형) → 표면뿐 아니라 d 주변 궤도 공간도 고방사선(접근선·궤도선이 belt
       통과). stellar_wind=매우 강(최근접 ram). heliosphere=astrosphere 최심부. G11 해저드·G1 무생물의 물리 근거.
     fields:
       - name: radiation
@@ -886,7 +886,7 @@ decisions:
       criterion: [derived-grounding]
       verdict: pass-in-window
       evidence: >
-        별 measured 환경 + 무대기 + d-phase-locked 플레어(G7 SPI)에서 도출. 정정: 자기장은 약하지 않음(~16 G) — 단 무대기라
+        별 measured 환경 + 무대기 + d-phase-locked 플레어(G7 SPI)에서 도출. 정정: 자기장은 약하지 않음(~16 G). 단 무대기라
         surface 보호 한계. b보다 가혹(더 근접·무대기 차폐 0).
 
         paper: 별 환경 측정 = 별 섹션(environment.activity/wind/heliosphere); phase-lock 플레어 = Zapatero Osorio 2026
@@ -904,13 +904,13 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "극근접 뜨거운 암석엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]]) — feature 없으면 없음."
+      evidence: "극근접 뜨거운 암석엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]])에 따라 feature 없으면 없음."
 
   - body: Proxima Cen d
     axis: satellites
     status: gated
     driver: [engine, window-selection]
-    narrative: "위성 없음 — 극근접(0.029 AU) 미세 Hill 반경 + 강항성조석으로 안정 위성 불가(b보다 더 단호한 물리적 부재)."
+    narrative: "위성 없음. 극근접(0.029 AU) 미세 Hill 반경 + 강항성조석으로 안정 위성 불가(b보다 더 단호한 물리적 부재)."
     gate:
       criterion: [stability]
       verdict: pass-in-window
@@ -924,16 +924,16 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      **착륙 가능**(고체 표면)이나 **splashdown 없음**(무액체)·**대기비행 없음**(무대기 → 동력/탄도만). breathability=**불가**
-      (무대기). radiation 해저드=**극심**(G8 — 최근접 플레어+무대기 직노출, 시스템 최악 tier; 가혹한 착륙). **~16 G 자기권(G7)
-      → 방사선대(trapped 입자)·자기극 강하 + 항성 플레어가 d 궤도위상에 phase-lock → 주기적 방사선 spike**(궤도 위상별 위험
-      변동, 게임플레이 훅). **과학 타깃: 지구형 외계행성 최초 자기장(SPI) — 자기권·phase-lock 관측 과학 명소**. **biome = 하이브리드
-      7구획**(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 **시그니처
-      명소**) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) ·
-      ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ **자기극 풍화관(Magnetic Polar Caps)** — 플레어 입자
+      착륙 가능(고체 표면)이나 splashdown 없음(무액체)·대기비행 없음(무대기 → 동력/탄도만). breathability=불가
+      (무대기). radiation 해저드=극심(G8, 최근접 플레어+무대기 직노출, 시스템 최악 tier; 가혹한 착륙). ~16 G 자기권(G7)
+      → 방사선대(trapped 입자)·자기극 강하 + 항성 플레어가 d 궤도위상에 phase-lock → 주기적 방사선 spike(궤도 위상별 위험
+      변동, 게임플레이 훅). 과학 타깃은 지구형 외계행성 최초 자기장(SPI)이고, 자기권·phase-lock 관측 과학 명소다. biome = 하이브리드
+      7구획(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 시그니처
+      명소) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) ·
+      ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ 자기극 풍화관(Magnetic Polar Caps), 플레어 입자
       집중 채널로 강풍화된 어두운 흑갈 극관(G5 2-tone; 자기장 시그니처 biome, 무자기장 수성의 단순 극 크레이터와 차별).
       ScienceValues 전체(landed/flying-low=탄도/in-space; splashed=토큰 inert). SOI 자동. 난도=항성간 플래그십 + 최근접
-      고방사선 착륙. 발견=RB **T F F F**(candidate, G1).
+      고방사선 착륙. 발견=RB T F F F(candidate, G1).
     fields:
       - name: science_biomes
         value: "하이브리드 7구획: 직하 핫스팟/주간 고지/주간 평원/크레이터/터미네이터/야간면/자기극 풍화관"
@@ -945,11 +945,11 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
-        owner_review: 2026-06-23 오너 검토·선택 — biome 스킴 C(하이브리드) 채택. RSS 수성(지질+크레이터+극, 3:2라 항성경도
-        미사용) 확인 후, d는 **1:1 고정**이라 수성 지질 + 영구 day/night 열구조를 결합(직하 핫스팟·야간면 추가). 무대기라 b의
+        owner_review: 2026-06-23 오너 검토·선택으로 biome 스킴 C(하이브리드) 채택. RSS 수성(지질+크레이터+극, 3:2라 항성경도
+        미사용) 확인 후, d는 1:1 고정이라 수성 지질 + 영구 day/night 열구조를 결합(직하 핫스팟·야간면 추가). 무대기라 b의
         호수/빙관/구름 biome은 없음.
 
-        note: 무대기·무액체가 b(호수세계, splashdown·대기비행)와의 핵심 게임 차이 — d는 수성형 진공 착륙. radiation 극심=G8
+        note: 무대기·무액체가 b(호수세계, splashdown·대기비행)와의 핵심 게임 차이다. d는 수성형 진공 착륙. radiation 극심=G8
         derived. cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미 일괄.
 
   # ════════ 행성 c (원거리 냉 mini-Neptune + Gratton 고리 + 소형 위성) — facet-walk 2026-06-23 (축별 walk) ════════
@@ -958,7 +958,7 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      body_type=**냉 mini-Neptune**(~8 M⊕, 1.5 AU, H/He 외피, Teq~40K), 무생물. designation=Proxima Centauri c(고유명 없음).
+      body_type=냉 mini-Neptune(~8 M⊕, 1.5 AU, H/He 외피, Teq~40K), 무생물. designation=Proxima Centauri c(고유명 없음).
     fields:
       - name: body_type
         value: "냉 mini-Neptune (~8 M⊕, 1.5 AU, H/He 외피, Teq~40K, 무생물)"
@@ -979,9 +979,9 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      a≈1.5 AU · P≈1900d(~5.2yr) · e≈0.04 — 전부 Damasso2020 측정 passthrough. **비조석고정**(1.5 AU → locking 문서 a⁶상
-      τ_lock ≫ 나이) → 자유자전, **자전주기 ~27h**(오너 결정, 해왕성형보다 약간 느린 자전; 미구속이라 art 선택). 경사각·절대 배향 = 천체측정
-      논쟁이라 자유 emit. **진질량 = Msini×1.1547 ≈ 8 M⊕**(등방 중앙값, b·d 선례 일관) — "c 존재 가정 하" 전제.
+      a≈1.5 AU · P≈1900d(~5.2yr) · e≈0.04는 전부 Damasso2020 측정 passthrough. 비조석고정(1.5 AU → locking 문서 a⁶상
+      τ_lock ≫ 나이) → 자유자전, 자전주기 ~27h(오너 결정, 해왕성형보다 약간 느린 자전; 미구속이라 art 선택). 경사각·절대 배향 = 천체측정
+      논쟁이라 자유 emit. 진질량 = Msini×1.1547 ≈ 8 M⊕(등방 중앙값, b·d 선례 일관)이고, "c 존재 가정 하" 전제.
     fields:
       - name: semi_major_axis_au
         value: 1.5
@@ -999,8 +999,8 @@ decisions:
       criterion: [classification, derived-grounding]
       verdict: pass-in-window
       evidence: >
-        rationale: 오너 결정 2026-06-23 (a) — 진질량 등방중앙 8 M⊕ 채택. Kervella&Damasso2020(arXiv:2003.13106) 천체측정
-        경사각/질량은 **논쟁적**(신호 후속 반박)이라 비채택, caveat 병기. c 존재 자체가 disputed candidate라 "있다는 가정
+        rationale: 오너 결정 2026-06-23 (a)로 진질량 등방중앙 8 M⊕ 채택. Kervella&Damasso2020(arXiv:2003.13106) 천체측정
+        경사각/질량은 논쟁적(신호 후속 반박)이라 비채택, caveat 병기. c 존재 자체가 disputed candidate라 "있다는 가정
         하" 진행. 자전주기 ~27h는 미구속 자유자전의 오너 art 선택(해왕성형보다 약간 느림). 1.5 AU 비잠김은 locking 문서 a⁶로 확정.
 
         paper: 진질량 등방 = Ho&Turner2011(1007.0245). 경사각 논쟁 = Kervella&Damasso2020(2003.13106). 비잠김 =
@@ -1013,8 +1013,8 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      mass **8 M⊕**(G2 등방중앙) · **radius ~2.7 R⊕**(오너 채택 중심값; mini-Neptune이라 H/He 외피 inflation, 질량-반경
-      regime2 확률관계 band 2.5–3 R⊕) · g ~1.1 g · **밀도 ~0.41 ρ⊕(~2.2 g/cm³)** 휘발성-풍부(암석↔빙거성 중간) · 비조석고정 ·
+      mass 8 M⊕(G2 등방중앙) · radius ~2.7 R⊕(오너 채택 중심값; mini-Neptune이라 H/He 외피 inflation, 질량-반경
+      regime2 확률관계 band 2.5–3 R⊕) · g ~1.1 g · 밀도 ~0.41 ρ⊕(~2.2 g/cm³) 휘발성-풍부(암석↔빙거성 중간) · 비조석고정 ·
       age ~4.85 Gyr. [§3.2 정규화 2026-07-12] gravity·reference_radius 파생 에코 승격, c22 = n/a(자유 자전).
       [2026-07-14 figure+walk] obliquity 17°(오너 art)·spin 궤도법선서 17° 기움·J₂ ~8e-4(q 6.7e-3·NMoI 0.23
       Radau-Darwin)·flattening 0.45%(a/c 1.005 → 가시 threshold 아래)·internal_heat T_int~45–50K(cold mini-Neptune
@@ -1043,7 +1043,7 @@ decisions:
         note: "J2 기준 반경 = radius (2.7 R⊕)"
       - name: geopotential_c22
         value: null
-        na_reason: "자유 자전(비조석고정) — 모항성 방향 고정축이 없어 영구 조석 삼축 부재"
+        na_reason: "자유 자전(비조석고정), 모항성 방향 고정축이 없어 영구 조석 삼축 부재"
       - name: rotation_period
         value: 27
         unit: h
@@ -1053,7 +1053,7 @@ decisions:
         value: 17
         unit: deg
         op: set
-        note: "오너 art 2026-07-14 — 유일한 자유회전 행성이라 축 다양성 부여(b/d/c I는 조석고정 0°). 방위각은 emit de-perfect"
+        note: "오너 art 2026-07-14, 유일한 자유회전 행성이라 축 다양성 부여(b/d/c I는 조석고정 0°). 방위각은 emit de-perfect"
       - name: spin_axis_orientation
         value: "궤도 법선에서 17° 기움 (방위각 de-perfect-at-emit, synthetic-orbit-noise 정책)"
         op: set
@@ -1068,7 +1068,7 @@ decisions:
       - name: internal_heat
         value: "T_int ~45–50 K (Neptune analog) → T_eff 40→~53 K"
         op: set
-        note: "cold mini-Neptune (§7) — 저일사라 내부열이 온도 지배(range, factor-few 불확실). 표면은 여전히 휘발성 동결(CH₄/N₂). Pearl&Conrath1991 Neptune 앵커"
+        note: "cold mini-Neptune (§7), 저일사라 내부열이 온도 지배(range, factor-few 불확실). 표면은 여전히 휘발성 동결(CH₄/N₂). Pearl&Conrath1991 Neptune 앵커"
       - name: age
         value: 4.85
         unit: Gyr
@@ -1077,7 +1077,7 @@ decisions:
       criterion: [derived-grounding, error-bar]
       verdict: pass-in-window
       evidence: >
-        rationale: 오너 G3 2026-06-23 — 반경 중심 ~2.7 R⊕ 채택(band 2.5–3 R⊕). 8 M⊕는 radius valley 경계지만 G1
+        rationale: 오너 G3 2026-06-23으로 반경 중심 ~2.7 R⊕ 채택(band 2.5–3 R⊕). 8 M⊕는 radius valley 경계지만 G1
         mini-Neptune reading이라 H/He 외피로 inflation → 확률관계(Forecaster/Otegi)가 적정 도구(단일 암석 그리드 아님).
         해왕성(17M⊕/3.9R⊕)·천왕성(14.5M⊕/4R⊕)보다 작은 mini-Neptune이라 ~2.7 R⊕ 정합. 밀도 2.2 g/cm³ = 휘발성-풍부.
 
@@ -1088,8 +1088,8 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      **두꺼운 H/He 외피**(mini-Neptune, 고체 표면 없음 → G5 ∅). Teq~40K 극냉 → CH₄(동결 90K)·N₂(63K)·NH₃·H₂O 전부 동결 →
-      심층 얼음-구름층, **상층 관측 대기 = H/He만 기체**(H₂ ~20K까지 기체). 금속성/메탄 함량=**차수 미상**(미관측; 외형 색은
+      두꺼운 H/He 외피(mini-Neptune, 고체 표면 없음 → G5 ∅). Teq~40K 극냉 → CH₄(동결 90K)·N₂(63K)·NH₃·H₂O 전부 동결 →
+      심층 얼음-구름층, 상층 관측 대기 = H/He만 기체(H₂ ~20K까지 기체). 금속성/메탄 함량=차수 미상(미관측; 외형 색은
       G6서 다룸). breathability=∅. escape=무시(대질량·원거리 저irradiation).
     fields:
       - name: composition
@@ -1110,7 +1110,7 @@ decisions:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
-        냉 mini-Neptune(G1) 직결 — H/He 1차 외피, 40K라 휘발성 응결. 금속성 미관측이라 차수미상으로 두고 색 디테일은 G6
+        냉 mini-Neptune(G1) 직결이다. H/He 1차 외피, 40K라 휘발성 응결. 금속성 미관측이라 차수미상으로 두고 색 디테일은 G6
         (오너 결정 2026-06-23). T/P 프로파일은 emit시 cool-Neptune 격자.
 
         paper: 온도 Teq=tidally-locked-temperature-methodology.md Layer1(비잠김이라 균일 가까움). 보유=대질량+원거리 자명.
@@ -1119,7 +1119,7 @@ decisions:
     axis: surface
     status: gated
     driver: [window-selection]
-    narrative: "∅ (고체 표면 없음 — mini-Neptune, H/He 외피 + 심층 코어 미도달). 착륙 불가. 가시 색은 표면 아닌 대기(G6)서."
+    narrative: "∅ (고체 표면 없음: mini-Neptune, H/He 외피 + 심층 코어 미도달). 착륙 불가. 가시 색은 표면 아닌 대기(G6)서."
     fields:
       - name: surface_type
         value: "none (H/He 외피 + 심층 코어 미도달, 착륙 불가)"
@@ -1127,7 +1127,7 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "표면색·albedo 문서 scope — 가스/얼음 외피체엔 surface 축 N/A. 오너 G5 확정 2026-06-23."
+      evidence: "표면색·albedo 문서 scope상 가스/얼음 외피체엔 surface 축 N/A. 오너 G5 확정 2026-06-23."
 
   - body: Proxima Cen c
     axis: appearance
@@ -1135,28 +1135,28 @@ decisions:
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
-      **창백한 회백 얼음구름 mini-Neptune**(오너 a, 2026-06-23) — **해왕성처럼 파랗지 않음.** 해왕성 진청색은 ~72K라 기체
-      CH₄가 상층서 빨강 흡수하기 때문인데, c는 Teq~40K(내부열 보태도 ~50–60K, 둘 다 CH₄ 응결점 90K 아래)라 **CH₄가 얼어
-      빠져 빨강 흡수 기체 부재 → 진청 메커니즘 약함** → H/He + 고층 얼음·haze의 **거의 중성 회백 + 약한 Rayleigh 청**.
-      1.5 AU·M5.5라 **극도로 어두움**, Proxima reddening은 빛 자체가 약해 미미. 고유색 ~#c4d0d8(창백 회청), 표시=매우 dim
-      (저광량+약한 온기끼). b(황토)·d(회갈)와 또 다른 극 = **창백 회백**.
+      창백한 회백 얼음구름 mini-Neptune(오너 a, 2026-06-23)이고, 해왕성처럼 파랗지 않다. 해왕성 진청색은 ~72K라 기체
+      CH₄가 상층서 빨강 흡수하기 때문인데, c는 Teq~40K(내부열 보태도 ~50–60K, 둘 다 CH₄ 응결점 90K 아래)라 CH₄가 얼어
+      빠져 빨강 흡수 기체 부재 → 진청 메커니즘 약함 → H/He + 고층 얼음·haze의 거의 중성 회백 + 약한 Rayleigh 청.
+      1.5 AU·M5.5라 극도로 어두움, Proxima reddening은 빛 자체가 약해 미미. 고유색 ~#c4d0d8(창백 회청), 표시=매우 dim
+      (저광량+약한 온기끼). b(황토)·d(회갈)와 또 다른 극 = 창백 회백.
     fields:
       - name: base_color
         value: "#c4d0d8 (창백 회청/회백; 거의 중성 + 약한 Rayleigh 청)"
         op: set
       - name: clouds
-        value: "H/He + 고층 얼음·haze (해왕성처럼 파랗지 않음 — CH₄ 응결로 진청 메커니즘 약함)"
+        value: "H/He + 고층 얼음·haze (해왕성처럼 파랗지 않음, CH₄ 응결로 진청 메커니즘 약함)"
         op: set
     gate:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
       evidence: >
-        rationale: "차가운 mini-Neptune은 덜 파랑"은 grounded — CH₄ 응결(<90K)로 기체 CH₄ 빨강흡수 사라짐(해왕성 72K
+        rationale: "차가운 mini-Neptune은 덜 파랑"은 grounded다. CH₄ 응결(<90K)로 기체 CH₄ 빨강흡수 사라짐(해왕성 72K
         대비). 색=대기 반사색 문서 §6 엔진(H/He Rayleigh + 약 흡수, 얼음 haze). G4서 미룬 색 디테일을 여기서 확정. 내부열
         effective ~50–60K도 CH₄ 동결 유지라 결론 불변(internal-heat 문서).
 
-        brightness_note: **절대 dimness(1.5 AU·M5.5)는 cfg 비인자** — KSP/Kopernicus는 바디를 normalize해 가시
-        렌더하므로 실세계 어두움은 인게임에 안 반영됨. 외형 결정의 본질 = **색(창백 회백)**이지 밝기 아님. dimness는 실세계
+        brightness_note: 절대 dimness(1.5 AU·M5.5)는 cfg 비인자다. KSP/Kopernicus는 바디를 normalize해 가시
+        렌더하므로 실세계 어두움은 인게임에 안 반영됨. 외형 결정의 본질 = 색(창백 회백)이지 밝기 아님. dimness는 실세계
         trivia로만 기록.
 
         paper: 색=docs/reference/atmosphere-reflected-color-methodology.md(Rayleigh+haze). 온도=tidally-locked-temperature
@@ -1167,8 +1167,8 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      **빙거성 아날로그 ~0.1–0.5 G**, **비쌍극·기울고 중심 이탈**(Neptune/Uranus 유추 — 얇은 전도층 대류로 다극·tilted ~47–59°).
-      차수값, conf low(미관측). 오로라=미약(c는 별서 1.5 AU 멀어 입자 플럭스 약함 — b·d 근접 플레어 환경과 대조).
+      빙거성 아날로그 ~0.1–0.5 G, 비쌍극·기울고 중심 이탈(Neptune/Uranus 유추, 얇은 전도층 대류로 다극·tilted ~47–59°).
+      차수값, conf low(미관측). 오로라=미약(c는 별서 1.5 AU 멀어 입자 플럭스 약함; b·d 근접 플레어 환경과 대조).
     fields:
       - name: magnetic_field
         value: "~0.1–0.5 G (빙거성 아날로그, 비쌍극·tilted ~47–59°); conf low"
@@ -1177,7 +1177,7 @@ decisions:
       criterion: [derived-grounding]
       verdict: methodology-derived
       evidence: >
-        note: dynamo 문서 regime 3 — sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog
+        note: dynamo 문서 regime 3에 따라 sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog
         차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23.
 
         paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).
@@ -1188,12 +1188,12 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      radiation=**낮음** — 최외곽 1.5 AU(b의 ~30배·d의 ~50배 거리)라 플레어 입자 플럭스 거리감쇄 + 빙거성 자기권(G7) 차폐 →
+      radiation=낮음. 최외곽 1.5 AU(b의 ~30배·d의 ~50배 거리)라 플레어 입자 플럭스 거리감쇄 + 빙거성 자기권(G7) 차폐 →
       시스템서 가장 조용. stellar_wind=약(원거리 ram 작음). heliosphere=astrosphere 심부(1.5 AU ≪ standoff ~55 AU →
-      항상 항성풍 내부, ISM 직접 미관측). 차갑고 조용한 외곽 — 무생물(극냉)·낮은 해저드.
+      항상 항성풍 내부, ISM 직접 미관측). 차갑고 조용한 외곽이고, 무생물(극냉)·낮은 해저드.
     fields:
       - name: radiation
-        value: "낮음 (최외곽 1.5 AU + 빙거성 자기권 차폐 — 시스템서 가장 조용)"
+        value: "낮음 (최외곽 1.5 AU + 빙거성 자기권 차폐, 시스템서 가장 조용)"
         op: set
       - name: stellar_wind
         value: "약 (원거리 ram 작음)"
@@ -1211,11 +1211,11 @@ decisions:
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
-      **2중 얼음 고리 + 선명한 적/흰 줄무늬**(오너 2026-06-23, 토성 클론 회피) — Gratton2020(arXiv:2004.06685) SPHERE
-      점광원(밝기 과잉→대형 고리계 추정)을 hook으로. 기하=**분리된 안·바깥 두 고리 띠**(사이 큰 간극; 토성의 균일 넓은
-      시트와 정반대). 색=**적/흰 교대 줄무늬** — 백띠=청정 물얼음(고albedo), 적띠=톨린 코팅 얼음(KBO/명왕성식 냉-처리,
+      2중 얼음 고리 + 선명한 적/흰 줄무늬(오너 2026-06-23, 토성 클론 회피)이고, Gratton2020(arXiv:2004.06685) SPHERE
+      점광원(밝기 과잉→대형 고리계 추정)을 hook으로 삼는다. 기하=분리된 안·바깥 두 고리 띠(사이 큰 간극; 토성의 균일 넓은
+      시트와 정반대). 색=적/흰 교대 줄무늬다. 백띠=청정 물얼음(고albedo), 적띠=톨린 코팅 얼음(KBO/명왕성식 냉-처리,
       위성 Proxima c I의 명왕성 테마와 통일). c ~40–60K라 얼음 안정, Gratton 밝은 신호와 양립(청정 얼음 백띠가 밝음).
-      규모: 두 띠 모두 얼음 Roche(~3.3 R_c=56,700 km) 안쪽 — 안 띠 ~1.4–1.9 R_c(24,000–32,700 km) · 바깥 띠
+      규모: 두 띠 모두 얼음 Roche(~3.3 R_c=56,700 km) 안쪽이고, 안 띠 ~1.4–1.9 R_c(24,000–32,700 km) · 바깥 띠
       ~2.4–3.0 R_c(41,300–51,600 km). 색 합성=디스크색 문서 Mie(물얼음 + 톨린 n,k), faithful/vivid 변종.
     fields:
       - name: ring_structure
@@ -1231,10 +1231,10 @@ decisions:
       criterion: [observation, visual-checklist]
       verdict: documented-divergence
       divergence_note: >
-        Gratton 점광원은 **잠정**(논문이 배경원 가능성도 명시) — 고리는 interesting-first 채택, 명시 발산. 잠정 관측 근거가
-        있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). **토성 클론 회피**가 명시 의도 —
+        Gratton 점광원은 잠정이다(논문이 배경원 가능성도 명시). 고리는 interesting-first 채택, 명시 발산. 잠정 관측 근거가
+        있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). 토성 클론 회피가 명시 의도이고,
         2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성 위성과 테마 통일.
-        간극 위치·줄무늬 패턴은 art — emit시 로슈 한계·고리면 정합 점검 권장.
+        간극 위치·줄무늬 패턴은 art이고, emit시 로슈 한계·고리면 정합 점검 권장.
       evidence: >
         paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie,
         청정 얼음 Warren&Brandt2008 + 톨린 Khare1984).
@@ -1245,11 +1245,11 @@ decisions:
     status: gated
     driver: [fiction, engine]
     narrative: >
-      **위성 1개 = Proxima c I** — **반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
-      조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. **판도라식 독자 facet-walk로 별도
-      바디 전개**(아래 "Proxima Centauri c I" 블록 11축).
-      관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
-      가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO).
+      위성 1개 = Proxima c I. 반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
+      조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. 판도라식 독자 facet-walk로 별도
+      바디 전개(아래 "Proxima Centauri c I" 블록 11축).
+      관측 근거 0이고, art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
+      가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). emit시 stability-sim 필수([[project_nearstars_stability_sim]] Hill+MEGNO).
       정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).
     gate:
       criterion: [fiction, stability, hill-stability]
@@ -1263,11 +1263,11 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      mini-Neptune이라 **고체 표면 없음 → 착륙·splashdown 불가, 대기비행("X 상공 비행")+궤도만**(폴리페무스형). breathability=
-      **불가**. radiation 해저드=**낮음**(G8, 최외곽 — 시스템서 가장 안전). **biome = 위도 5띠**(자유자전이라 항성경도 아닌
-      위도; 오너 검토 2026-06-23): 적도대 · 북온대 · 남온대 · 북극 · 남극. **고리 그림자대는 제외**(오너). 2중 적/흰 고리 +
-      위성 Proxima c I는 biome 아닌 **시각·탐사 피처**. ScienceValues(flying/in-space; landed/splashed=토큰 inert). SOI 자동.
-      난도 = 항성간 플래그십 + **시스템 최외곽(1.5 AU 도달 부담)**, 냉·dim. 발견=RB **T F F F**(candidate, G1).
+      mini-Neptune이라 고체 표면 없음 → 착륙·splashdown 불가, 대기비행("X 상공 비행")+궤도만(폴리페무스형). breathability=
+      불가. radiation 해저드=낮음(G8, 최외곽이라 시스템서 가장 안전). biome = 위도 5띠(자유자전이라 항성경도 아닌
+      위도; 오너 검토 2026-06-23): 적도대 · 북온대 · 남온대 · 북극 · 남극. 고리 그림자대는 제외(오너). 2중 적/흰 고리 +
+      위성 Proxima c I는 biome 아닌 시각·탐사 피처. ScienceValues(flying/in-space; landed/splashed=토큰 inert). SOI 자동.
+      난도 = 항성간 플래그십 + 시스템 최외곽(1.5 AU 도달 부담), 냉·dim. 발견=RB T F F F(candidate, G1).
     fields:
       - name: science_biomes
         value: "위도 5띠: 적도대/북온대/남온대/북극/남극 (고리 그림자대 제외)"
@@ -1279,10 +1279,10 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
-        owner_review: 2026-06-23 오너 검토 — biome 위도 5띠 확정, 고리 그림자대 제외(b의 오로라대 제외와 동일 취지: 고정
+        owner_review: 2026-06-23 오너 검토로 biome 위도 5띠 확정, 고리 그림자대 제외(b의 오로라대 제외와 동일 취지: 고정
         표면구역 아닌 피처는 biome서 뺌).
 
-        note: 표면 없음이 b(착륙 호수세계)·d(착륙 수성형)와의 게임 차이 — c는 폴리페무스형 비행/우주. 고리·위성이 c만의 탐사
+        note: 표면 없음이 b(착륙 호수세계)·d(착륙 수성형)와의 게임 차이다. c는 폴리페무스형 비행/우주. 고리·위성이 c만의 탐사
         매력. cfg emit(biome map·ScienceValues·ResearchBodies·Ring 노드)는 프로젝트 말미.
 
   # ════════ 위성 Proxima c I (c의 픽션 위성, 명왕성 아날로그 냉 얼음) — 판도라식 독자 facet-walk 2026-06-23 (축별) ════════
@@ -1292,7 +1292,7 @@ decisions:
     driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
-      body_type=**냉 얼음 위성(명왕성 아날로그)** — N₂/CH₄/H₂O 얼음 + 톨린 적화 다양 지형, 무생물(극냉 ~40–60K). c의 위성,
+      body_type=냉 얼음 위성(명왕성 아날로그)이고, N₂/CH₄/H₂O 얼음 + 톨린 적화 다양 지형, 무생물(극냉 ~40–60K). c의 위성,
       c에 조석고정, 반경 ~950 km(트리톤/티타니아급). designation=Proxima Centauri c I(고유명 없음).
     fields:
       - name: body_type
@@ -1312,19 +1312,19 @@ decisions:
     driver: [window-selection, engine]
     # (해소 2026-07-12) 마이그레이션 때 semi_major_axis_au 필드에 km 값이 들어갔던 것을 AU로 환산 — 필드명 단위와 값 단위 일치.
     narrative: >
-      c 주위 **a ≈ 4 R_c ≈ 69,000 km**(고리 외경 51,600 km 바로 바깥, 얼음 Roche 56,700 km 살짝 밖 — 자기중력 위성이라
-      Roche 경계 밖이면 안전). **조석고정 1:1**(이 거리면 ~10³–10⁴년에 잠김; c 8 M⊕·얼음 저밀도라 매우 빠름). **e ≈ 0**
+      c 주위 a ≈ 4 R_c ≈ 69,000 km(고리 외경 51,600 km 바로 바깥, 얼음 Roche 56,700 km 살짝 밖; 자기중력 위성이라
+      Roche 경계 밖이면 안전). 조석고정 1:1(이 거리면 ~10³–10⁴년에 잠김; c 8 M⊕·얼음 저밀도라 매우 빠름). e ≈ 0
       (조석 원형화) · c 적도면 공전 · Ω/ω/M 자유 emit.
     fields:
       - name: semi_major_axis_au
         value: 4.61e-4
         unit: AU
         op: set
-        note: "= 69,000 km ≈4 R_c (고리 외경 51,600 km 바로 밖, Roche 56,700 km 살짝 밖); c 적도면 공전; Ω/ω/M 자유 emit — 필드명이 _au라 km 값 그대로 두면 emit 사고(2026-07-12 환산)"
+        note: "= 69,000 km ≈4 R_c (고리 외경 51,600 km 바로 밖, Roche 56,700 km 살짝 밖); c 적도면 공전; Ω/ω/M 자유 emit; 필드명이 _au라 km 값 그대로 두면 emit 사고(2026-07-12 환산)"
       - name: eccentricity
         value: 0
         op: set
-        note: "조석 원형화 e≈0 (물리 강제, 기본값 아님). 대기 사실상 없음(µbar exosphere)이라 대기 곡선 0-나눗셈 트랩 무관 — emit시 확인만"
+        note: "조석 원형화 e≈0 (물리 강제, 기본값 아님). 대기 사실상 없음(µbar exosphere)이라 대기 곡선 0-나눗셈 트랩 무관; emit시 확인만"
       - name: tidal_lock
         value: "1:1 (~10³–10⁴년 잠김)"
         op: set
@@ -1335,7 +1335,7 @@ decisions:
         rationale: 오너 "고리 바로 바깥" 2026-06-23. Roche 밖(자기중력 위성 안전) + Hill 안정역(270–450만 km) 깊숙이.
         조석고정은 despin τ∝a⁶ρ/M_p²로 이 거리·8 M⊕서 ~10³–10⁴년(나이≪) → 1:1 확정(locking 문서).
 
-        coupling: 큰 위성이 고리 외경 바로 밖 → **바깥 고리 가장자리 shepherd(truncate)** → G9 고리가 거기서 끝나는 역학적 이유.
+        coupling: 큰 위성이 고리 외경 바로 밖 → 바깥 고리 가장자리 shepherd(truncate) → G9 고리가 거기서 끝나는 역학적 이유.
 
         paper: 조석고정 τ = docs/reference/tidal-locking-timescale-methodology.md(a⁶). emit시 stability-sim 권장.
 
@@ -1345,14 +1345,14 @@ decisions:
     status: gated
     driver: [window-selection, fiction]
     narrative: >
-      **반경 ~950 km**(트리톤 1,353·티타니아 788 사이, 중대형 얼음 위성) · 얼음 밀도 ~1.9 g/cm³(명왕성/트리톤급) →
-      **질량 ~0.0011 M⊕**(달의 ~0.09배, ~6.8e21 kg) · **g ~0.5 m/s²**(~0.05 g, 저중력) · 조석고정 · obliquity ~0 · age
-      ~4.85 Gyr. c 대비 비율 ~0.055 = **해왕성-트리톤급**(mini-Neptune 위성 비율로 정합). [§3.2 정규화 2026-07-12]
+      반경 ~950 km(트리톤 1,353·티타니아 788 사이, 중대형 얼음 위성) · 얼음 밀도 ~1.9 g/cm³(명왕성/트리톤급) →
+      질량 ~0.0011 M⊕(달의 ~0.09배, ~6.8e21 kg) · g ~0.5 m/s²(~0.05 g, 저중력) · 조석고정 · obliquity ~0 · age
+      ~4.85 Gyr. c 대비 비율 ~0.055 = 해왕성-트리톤급(mini-Neptune 위성 비율로 정합). [§3.2 정규화 2026-07-12]
       조석고정의 자명 귀결 승격: rotation = 공전주기 ~17.7 h(케플러, 보드 a 4.61e-4 AU·M_c 8 M⊕), spin_axis =
-      궤도 법선(c 기준), reference_radius = radius. [2026-07-14 figure — 궤도 pin 후 재도출] a=4 R_c 초근접 →
+      궤도 법선(c 기준), reference_radius = radius. [2026-07-14 figure, 궤도 pin 후 재도출] a=4 R_c 초근접 →
       q_s 0.0184(n²R³/GM, 조석 검산 (M_c/M_cI)(R/a)³ 일치) → J₂ ~1.6e-2·C̄₂₂ ~4.9e-3·flattening ~4%(a/c~1.04)
-      → **가시 삼축 계란형**(Mimas 실제 앵커 q_s 0.0186 동일). ledger의 "threshold 아래" 예상은 궤도 확정 전 값이라
-      뒤집힘 — **오블레이트 메쉬 emit 대상**. internal_heat는 e≈0 원형이라 정상상태 조석가열 없어 미미.
+      → 가시 삼축 계란형(Mimas 실제 앵커 q_s 0.0186 동일). ledger의 "threshold 아래" 예상은 궤도 확정 전 값이라
+      뒤집힘. 오블레이트 메쉬 emit 대상. internal_heat는 e≈0 원형이라 정상상태 조석가열 없어 미미.
     fields:
       - name: radius
         value: 950
@@ -1397,7 +1397,7 @@ decisions:
       - name: internal_heat
         value: "negligible"
         op: set
-        note: "소형 얼음체 radiogenic 미미; e≈0 원형궤도 → 정상상태 조석가열 0. 강제 e(공명)면 c 초근접이라 Io급 가열 가능 — tidal-heating-methodology.md"
+        note: "소형 얼음체 radiogenic 미미; e≈0 원형궤도 → 정상상태 조석가열 0. 강제 e(공명)면 c 초근접이라 Io급 가열 가능; tidal-heating-methodology.md"
       - name: obliquity
         value: 0
         unit: deg
@@ -1411,7 +1411,7 @@ decisions:
       criterion: [fiction, error-bar]
       verdict: pass-in-window
       evidence: >
-        rationale: 오너 2026-06-23 — 앞서 "1.5× 달"(반경 2,600km, 비율 0.15 과대)을 **~950 km로 하향**(비율 ~0.055=
+        rationale: 오너 2026-06-23 결정으로, 앞서 "1.5× 달"(반경 2,600km, 비율 0.15 과대)을 ~950 km로 하향(비율 ~0.055=
         해왕성-트리톤, mini-Neptune 위성에 정합). 픽션이라 질량/반경은 얼음 밀도(~1.9)로 자기일관 도출. g·밀도는
         트리톤/티타니아급.
 
@@ -1422,9 +1422,9 @@ decisions:
     status: gated
     driver: [fiction]
     narrative: >
-      **희박 N₂ 대기(명왕성식, +CH₄/CO 미량)** — 표면 N₂ 얼음 승화로 ~Pa(µbar)급(명왕성 ~1 Pa 유추). 증기압 평형이라
-      **승화-지지 정상상태**(탈출분을 얼음 승화가 재공급 → Gyr 안정; v_esc~0.97 km/s 낮아도 명왕성처럼 유지). **tholin 청색
-      haze 층**(명왕성 특유 → G6 외형 연계). breathability=∅. 게임상 공기역학 무의미(너무 희박).
+      희박 N₂ 대기(명왕성식, +CH₄/CO 미량)이고, 표면 N₂ 얼음 승화로 ~Pa(µbar)급(명왕성 ~1 Pa 유추). 증기압 평형이라
+      승화-지지 정상상태(탈출분을 얼음 승화가 재공급 → Gyr 안정; v_esc~0.97 km/s 낮아도 명왕성처럼 유지). tholin 청색
+      haze 층(명왕성 특유 → G6 외형 연계). breathability=∅. 게임상 공기역학 무의미(너무 희박).
     fields:
       - name: composition
         value: "희박 N₂ (명왕성식, +CH₄/CO 미량) + tholin 청색 haze 층"
@@ -1454,12 +1454,12 @@ decisions:
     driver: [fiction, art-direction]
     # MIGRATION-FLAG: 표면 hex 색(#dcd6c6/#6e4632/#e8eef0)은 narrative 원문에 보존, typed 색필드 미분해 (emit 말미 art-pass).
     narrative: >
-      **명왕성/트리톤 아날로그 — 이원(bimodal) 지형 + 위도 구조**(오너 a, 2026-06-23). 조성=N₂/CH₄/CO/H₂O 얼음 + tholin.
-      **공간 배치(오너)**: **적갈 tholin 지대 = 적도대**(가장 많이 조명·따뜻 → 톨린 생성 + 휘발성 손실; 명왕성 Cthulhu식
-      저albedo) / **밝은 N₂/CH₄ 얼음 = 극관**(가장 추워 휘발성 cold-trap → 고albedo 창백 크림; 트리톤 밝은 극관식). 휘발성
-      이동 물리와 정합. 크라이오볼케이노 시그니처 **제외**(오너). Bond albedo 전반 높음(~0.5–0.7, 명왕성급) 단 공간 변동 큼.
-      고유색=크림 N₂(극) ~#dcd6c6 · 적갈 tholin(적도) ~#6e4632 · 물얼음 청백 패치. 조석고정. **+ sub-c eyeball**(오너 2026-06-23):
-      c·고리 마주보는 sub-c 지점에 **고리-얼음 신선 코팅 → 밝고 톨린 없는 국소 원형 영역**(고리 바로 밖 shepherd 위성이라
+      명왕성/트리톤 아날로그이고, 이원(bimodal) 지형 + 위도 구조(오너 a, 2026-06-23). 조성=N₂/CH₄/CO/H₂O 얼음 + tholin.
+      공간 배치(오너): 적갈 tholin 지대 = 적도대(가장 많이 조명·따뜻 → 톨린 생성 + 휘발성 손실; 명왕성 Cthulhu식
+      저albedo) / 밝은 N₂/CH₄ 얼음 = 극관(가장 추워 휘발성 cold-trap → 고albedo 창백 크림; 트리톤 밝은 극관식). 휘발성
+      이동 물리와 정합. 크라이오볼케이노 시그니처 제외(오너). Bond albedo 전반 높음(~0.5–0.7, 명왕성급) 단 공간 변동 큼.
+      고유색=크림 N₂(극) ~#dcd6c6 · 적갈 tholin(적도) ~#6e4632 · 물얼음 청백 패치. 조석고정. + sub-c eyeball(오너 2026-06-23):
+      c·고리 마주보는 sub-c 지점에 고리-얼음 신선 코팅 → 밝고 톨린 없는 국소 원형 영역(고리 바로 밖 shepherd 위성이라
       쓸어담은 ring-ice가 톨린을 매몰; 트리톤/Iapetus식 한쪽 코팅). 고유색 신선 얼음 백 ~#e8eef0.
     fields:
       - name: surface_type
@@ -1484,11 +1484,11 @@ decisions:
     status: gated
     driver: [art-direction]
     narrative: >
-      **명왕성 룩 + 위도 구조** — **어두운 적갈 tholin 적도대 + 밝은 크림 N₂ 극관**(G5 위도 배치; 트리톤식 밝은 극 + 적도
-      적화), 그 위 얼룩(mottled) 디테일 + **얇은 청색
-      tholin haze 림**(G4 haze 역광 → 명왕성 시그니처 청 노을, 위성 특징 비주얼). 조석고정이라 **하늘에 c가 거대하게 + 2중
-      적/흰 고리까지** 떠 보임(위성서 본 장관). 표시색=고유색 거의 그대로(별서 멀어 reddening 미미 + 인게임 normalize):
-      크림 #dcd6c6 · 적갈 #6e4632 · haze 청. b(황토)·c(창백 회백)·d(회갈)와 또 다른 = **크림+적갈 얼룩 + 청 haze**.
+      명왕성 룩 + 위도 구조다. 어두운 적갈 tholin 적도대 + 밝은 크림 N₂ 극관(G5 위도 배치; 트리톤식 밝은 극 + 적도
+      적화), 그 위 얼룩(mottled) 디테일 + 얇은 청색
+      tholin haze 림(G4 haze 역광 → 명왕성 시그니처 청 노을, 위성 특징 비주얼). 조석고정이라 하늘에 c가 거대하게 + 2중
+      적/흰 고리까지 떠 보임(위성서 본 장관). 표시색=고유색 거의 그대로(별서 멀어 reddening 미미 + 인게임 normalize):
+      크림 #dcd6c6 · 적갈 #6e4632 · haze 청. b(황토)·c(창백 회백)·d(회갈)와 또 다른 = 크림+적갈 얼룩 + 청 haze.
     fields:
       - name: base_color
         value: "크림 #dcd6c6 (극) + 적갈 #6e4632 (적도) 얼룩; 표시색=고유색 거의 그대로"
@@ -1506,8 +1506,8 @@ decisions:
     status: gated
     driver: [fiction]
     narrative: >
-      **무자기장** — ~950 km 소형 얼음체라 금속핵 대류 dynamo 불가(얼음 위성 전형). 유도장도 미미(e~0·조석고정→조석가열
-      없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 무관하게 **c 자기권 안**
+      무자기장이다. ~950 km 소형 얼음체라 금속핵 대류 dynamo 불가(얼음 위성 전형). 유도장도 미미(e~0·조석고정→조석가열
+      없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 무관하게 c 자기권 안
       (4 R_c)이라 자기 환경은 c가 결정.
     fields:
       - name: magnetic_field
@@ -1523,13 +1523,13 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      radiation=**낮음**(시스템 최저) — c가 별서 1.5 AU 멀고 위성이 **c 자기권 안**이라 항성풍·플레어 직격을 c가 차폐.
-      **항성풍 차폐 → 표면 항성풍 라디올리시스 거의 없음**(G5 톨린이 명왕성보다 덜 빠른 이유). **GCR(은하 우주선)은 차폐
-      안 됨 → 4.85 Gyr 누적이 G5 적도 톨린 적화의 주력**(KBO식). c 자기권 플라스마 sputtering=modest. heliosphere=
-      Proxima astrosphere 심부(c 경유). 차갑고 조용 — 무생물·최저 해저드.
+      radiation=낮음(시스템 최저). c가 별서 1.5 AU 멀고 위성이 c 자기권 안이라 항성풍·플레어 직격을 c가 차폐.
+      항성풍 차폐 → 표면 항성풍 라디올리시스 거의 없음(G5 톨린이 명왕성보다 덜 빠른 이유). GCR(은하 우주선)은 차폐
+      안 됨 → 4.85 Gyr 누적이 G5 적도 톨린 적화의 주력(KBO식). c 자기권 플라스마 sputtering=modest. heliosphere=
+      Proxima astrosphere 심부(c 경유). 차갑고 조용하고, 무생물·최저 해저드.
     fields:
       - name: radiation
-        value: "낮음 (시스템 최저 — c 자기권 차폐; GCR만 비차폐, 적도 톨린 적화 주력)"
+        value: "낮음 (시스템 최저, c 자기권 차폐; GCR만 비차폐, 적도 톨린 적화 주력)"
         op: set
       - name: stellar_wind
         value: "차폐됨 (c 자기권 4 R_c 내부 → 항성풍 직격 c가 차단; 표면 라디올리시스 거의 없음)"
@@ -1564,7 +1564,7 @@ decisions:
     axis: satellites
     status: gated
     driver: [fiction, engine]
-    narrative: "submoon(위성의 위성) 없음 — 동역학적 불안정으로 태양계에도 사례 0, ~950 km 위성은 보유 불가. 물리적 부재."
+    narrative: "submoon(위성의 위성) 없음. 동역학적 불안정으로 태양계에도 사례 0, ~950 km 위성은 보유 불가. 물리적 부재."
     gate:
       criterion: [classification, stability]
       verdict: pass-in-window
@@ -1578,12 +1578,12 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      **착륙 가능**(고체 얼음 표면, 명왕성/트리톤 착륙 느낌). **저중력 g~0.5 m/s²**(통통 튀는 착륙). splashdown 없음(동결)·
-      대기비행 없음(~Pa 너무 희박, 단 청 haze는 보임). breathability=**불가**. radiation 해저드=**낮음**(G8 시스템 최저 — 상대적
-      안전 착륙지). **biome = 위도 지형 + sub-c eyeball 4구획**(오너 검토 2026-06-23): ① 적도 톨린대(어두운 적갈) · ② 중위도
-      (전이) · ③ 극 N₂ 빙관(밝은 크림) · ④ **sub-c 고리-얼음 eyeball**(밝은 신선 얼음·톨린 없음, c+2중 고리 마주보는 **시그니처
-      명소**). anti-c 반구 biome 제외(오너). ScienceValues(landed/flying-low=탄도/in-space; splashed 토큰 inert). SOI 자동.
-      난도 = 항성간 플래그십 + 최외곽 c의 위성(시스템 깊숙이). 발견=RB **F F F F**(픽션 위성, G1).
+      착륙 가능(고체 얼음 표면, 명왕성/트리톤 착륙 느낌). 저중력 g~0.5 m/s²(통통 튀는 착륙). splashdown 없음(동결)·
+      대기비행 없음(~Pa 너무 희박, 단 청 haze는 보임). breathability=불가. radiation 해저드=낮음(G8 시스템 최저라 상대적
+      안전 착륙지). biome = 위도 지형 + sub-c eyeball 4구획(오너 검토 2026-06-23): ① 적도 톨린대(어두운 적갈) · ② 중위도
+      (전이) · ③ 극 N₂ 빙관(밝은 크림) · ④ sub-c 고리-얼음 eyeball(밝은 신선 얼음·톨린 없음, c+2중 고리 마주보는 시그니처
+      명소). anti-c 반구 biome 제외(오너). ScienceValues(landed/flying-low=탄도/in-space; splashed 토큰 inert). SOI 자동.
+      난도 = 항성간 플래그십 + 최외곽 c의 위성(시스템 깊숙이). 발견=RB F F F F(픽션 위성, G1).
     fields:
       - name: science_biomes
         value: "4구획: 적도 톨린대/중위도/극 N₂ 빙관/sub-c 고리-얼음 eyeball (anti-c 반구 제외)"
@@ -1595,7 +1595,7 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
-        owner_review: 2026-06-23 오너 검토 — biome 4구획(위도 3 + sub-c eyeball), anti-c 제외. sub-c eyeball=고리-얼음
+        owner_review: 2026-06-23 오너 검토로 biome 4구획(위도 3 + sub-c eyeball), anti-c 제외. sub-c eyeball=고리-얼음
         코팅 시그니처.
 
         note: 착륙 가능(b·d처럼 고체)이되 명왕성식 얼음+톨린+저중력의 독특한 착륙지. c+2중고리 하늘 풍경이 sub-c 명소의 매력.

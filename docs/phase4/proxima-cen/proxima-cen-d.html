@@ -190,8 +190,8 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">identity</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">body_type=초단주기 sub-Earth — **뜨거운 무대기 암석(자기권 가진 수성형)**, 무생물. designation=Proxima Centauri d (고유명 없음). **distinctive: 지구형 외계행성 최초의 자기장 추정치(~16 G)를 가진 행성 + 항성 플레어가 d 궤도에 phase-lock**(Zapatero Osorio 2026) — &quot;별을 자기적으로 때리는 안쪽 행성&quot;.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">초단주기 sub-Earth — 뜨거운 무대기 암석 (자기권 가진 수성형, 무생물)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Proxima Centauri d (고유명 없음)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">body_type=초단주기 sub-Earth인 뜨거운 무대기 암석(자기권 가진 수성형), 무생물. designation=Proxima Centauri d (고유명 없음). distinctive: 지구형 외계행성 최초의 자기장 추정치(~16 G)를 가진 행성 + 항성 플레어가 d 궤도에 phase-lock(Zapatero Osorio 2026), 곧 &quot;별을 자기적으로 때리는 안쪽 행성&quot;.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">초단주기 sub-Earth: 뜨거운 무대기 암석 (자기권 가진 수성형, 무생물)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Proxima Centauri d (고유명 없음)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> candidate(arXiv:2202.05188 Faria2022) → 별 항상가시·행성 관측발견 T F F F. 수성형이되 ~16 G 자기권 보유(G7, Zapatero Osorio2026 SPI)로 무자기장 수성과 차별. b(온대)·c(냉)와 극단 대비, 시스템 다양성. phase-lock SPI=d 시그니처.<br></div>
   <div class="refs"><a class="ref" href="https://arxiv.org/abs/2202.05188" target="_blank" rel="noopener">2202.05188</a></div>
@@ -201,10 +201,10 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">orbit</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">a=0.02885 AU · P=5.122d · **e≈0 물리 floor**(미측정 → emit시 de-perfect ≲0.05) · inc 미측정(비통과) · **조석고정 1:1**(a⁶ 게이트 초고속). Ω/ω/M = 자유 emit.<br></p>
+  <p class="narrative">a=0.02885 AU · P=5.122d · e≈0 물리 floor(미측정 → emit시 de-perfect ≲0.05) · inc 미측정(비통과) · 조석고정 1:1(a⁶ 게이트 초고속). Ω/ω/M = 자유 emit.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">semi_major_axis_au</td><td class="v">0.02885 <span class="u">AU</span><div class="fnote">P=5.122d</div></td><td class="o"></td></tr><tr><td class="k">eccentricity</td><td class="v">0<div class="fnote">물리 floor e≈0 (0.029AU 강조석 원형화). 미측정이라 emit시 de-perfect seed (상한 ≲0.05); 구체값은 per-system seed로 emit 생성·보드 미기록 (synthetic-orbit-noise 정책 rule 2). NOT baked</div><div class="fnote p3">Phase 3: e≈0 (Faria2022 저진폭 RV, 미구속 가정)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">tidal_lock</td><td class="v">1:1 (a⁶ 게이트 초고속); Ω/ω/M 자유 emit</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> rationale: 관측 e 미구속 → [[project_nearstars_synthetic_eccentricity]] 정책으로 emit시 seeded e ≲0.05 상한 (구체값은 per-system seed로 emit 생성, 보드엔 의도만 — 정책 rule 2). 0.029 AU는 조석 원형화 즉각이라 물리 기본은 e≈0이나, 미측정이므로 realism/다양성용 small seed를 emit서 부여. ω_eq/n≈1.015 → 1:1 유지. 수성 e=0.2는 기각(0.029 AU 강조석+공명 부재로 비현실; 오너 결정 2026-06-23). **emit시 다행성계 stability-sim 검증 필요.**<br>paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).<br></div>
+  <div class="ev"><span class="tag">evidence</span> rationale: 관측 e 미구속 → [[project_nearstars_synthetic_eccentricity]] 정책으로 emit시 seeded e ≲0.05 상한 (구체값은 per-system seed로 emit 생성, 보드엔 의도만; 정책 rule 2). 0.029 AU는 조석 원형화 즉각이라 물리 기본은 e≈0이나, 미측정이므로 realism/다양성용 small seed를 emit서 부여. ω_eq/n≈1.015 → 1:1 유지. 수성 e=0.2는 기각(0.029 AU 강조석+공명 부재로 비현실; 오너 결정 2026-06-23). emit시 다행성계 stability-sim 검증 필요.<br>paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S" target="_blank" rel="noopener">2025A&amp;A...700A..11S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2022A%26A...658A.115F" target="_blank" rel="noopener">2022A&amp;A...658A.115F</a></div>
 </article>
 <article class="dec" id="bulk">
@@ -223,10 +223,10 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">atmosphere</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">**무대기(bare rock)**. 극근접 0.029 AU 강irradiation·강플레어 stripping + 저중력(g 0.58, 낮은 escape v) → cosmic shoreline **아래** → 대기 미보유. breathability=∅. (희박 표토-기원 exosphere 정도는 가능하나 렌더 무의미.) **주의: ~16 G 자기장(G7)도 대기 보유 못 함** — shoreline 아래 + 직하 450K 열탈출 + Garcia-Sage2017/Garraffo2016(장 있어도 Proxima 활동성엔 보호 불가) + 강한 장의 극 cusp 탈출이 오히려 손실 가중. 즉 강한 장 ≠ 대기 보유.<br></p>
+  <p class="narrative">무대기(bare rock). 극근접 0.029 AU 강irradiation·강플레어 stripping + 저중력(g 0.58, 낮은 escape v) → cosmic shoreline 아래 → 대기 미보유. breathability=∅. (희박 표토-기원 exosphere 정도는 가능하나 렌더 무의미.) 주의: ~16 G 자기장(G7)도 대기 보유는 못 한다. shoreline 아래 + 직하 450K 열탈출 + Garcia-Sage2017/Garraffo2016(장 있어도 Proxima 활동성엔 보호 불가) + 강한 장의 극 cusp 탈출이 오히려 손실 가중. 즉 강한 장 ≠ 대기 보유.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">composition</td><td class="v">무대기 (bare rock; 희박 표토-기원 exosphere 정도만, 렌더 무의미)</td><td class="o"></td></tr><tr><td class="k">breathability</td><td class="v">False</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> rationale: 대기 문서 Gate1(cosmic shoreline) 아래 — b보다 근접·저중력이라 stripping 압도. 무대기가 grounded 기본(오너 채택 2026-06-23).<br>paper: docs/reference/exoplanet-atmosphere-methodology.md Gate1(Zahnle&amp;Catling2017 shoreline).<br></div>
+  <div class="ev"><span class="tag">evidence</span> rationale: 대기 문서 Gate1(cosmic shoreline) 아래다. b보다 근접·저중력이라 stripping 압도. 무대기가 grounded 기본(오너 채택 2026-06-23).<br>paper: docs/reference/exoplanet-atmosphere-methodology.md Gate1(Zahnle&amp;Catling2017 shoreline).<br></div>
   
 </article>
 <article class="dec" id="surface">
@@ -234,10 +234,10 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">surface</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">뜨거운 **bare rock**. **Teq~317K**(1.87× 지구 일사) · 무대기 1:1 → **직하~450K**(=Teq×√2, 무재분배) · **극냉 야간** (무대기 거대 day-night 대비). 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 표면=어두운 현무암, **단 ~16 G 자기권(G7)이 항성풍 sputtering을 편향 → 솔라윈드-구동 우주풍화(npFe⁰) 감소** → 무자기장 수성보다 **덜 붉고 덜 어두움**(미세운석 gardening만 잔존; 수성 표면장 ~0.003 G 대비 d는 ~5000× 강해 차폐 유효). **단 phase-lock 플레어 입자가 자기극으로 집중 채널 → 자기극에 짙은 풍화 극관**(npFe⁰ 농집, 거의 흑갈). 결과 = **밝은 중위도(자기권 차폐로 신선) ↔ 어두운 자기극관의 뚜렷한 2-tone 표면** — 자기장 강화의 **가시 시그니처**. 고유색: 중위도 #3c3833(직전 #34302c보다 밝게, 차폐분) · **자기극관 ~#2a2622(거의 흑갈, 집중 풍화)**.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">bare rock (어두운 현무암, 2-tone: 밝은 중위도 ↔ 어두운 자기극관)</td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">450 <span class="u">K</span><div class="fnote">직하 (Teq~317K ×√2, 무재분배); 극냉 야간 (고유색은 cfg_colors_intrinsic)</div></td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.11<div class="fnote">Bond, 무자기장 수성(~0.088)보다 높음 — 자기권 sputtering 차폐로 우주풍화(npFe⁰) 감소; 자기극관 국소 저albedo</div></td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">뜨거운 bare rock. Teq~317K(1.87× 지구 일사) · 무대기 1:1 → 직하~450K(=Teq×√2, 무재분배) · 극냉 야간 (무대기 거대 day-night 대비). 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 표면=어두운 현무암, 단 ~16 G 자기권(G7)이 항성풍 sputtering을 편향 → 솔라윈드-구동 우주풍화(npFe⁰) 감소 → 무자기장 수성보다 덜 붉고 덜 어두움(미세운석 gardening만 잔존; 수성 표면장 ~0.003 G 대비 d는 ~5000× 강해 차폐 유효). 단 phase-lock 플레어 입자가 자기극으로 집중 채널 → 자기극에 짙은 풍화 극관(npFe⁰ 농집, 거의 흑갈). 결과 = 밝은 중위도(자기권 차폐로 신선) ↔ 어두운 자기극관의 뚜렷한 2-tone 표면이고, 자기장 강화의 가시 시그니처. 고유색: 중위도 #3c3833(직전 #34302c보다 밝게, 차폐분) · 자기극관 ~#2a2622(거의 흑갈, 집중 풍화).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">bare rock (어두운 현무암, 2-tone: 밝은 중위도 ↔ 어두운 자기극관)</td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">450 <span class="u">K</span><div class="fnote">직하 (Teq~317K ×√2, 무재분배); 극냉 야간 (고유색은 cfg_colors_intrinsic)</div></td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.11<div class="fnote">Bond, 무자기장 수성(~0.088)보다 높음, 자기권 sputtering 차폐로 우주풍화(npFe⁰) 감소; 자기극관 국소 저albedo</div></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> rationale: cascade(G7 ~16 G): 자기권이 솔라윈드 sputtering 차폐 → 우주풍화 줄어 무자기장 수성보다 신선·고albedo쪽. 미세운석 풍화는 잔존(자기권 무관). phase-lock 플레어(Zapatero Osorio2026)는 자기극 채널 → 극 풍화 비대칭. 무산소·무생물 이라 Fe³⁺ 적색 슬로프 무관(애초 무대기). 색조=interesting-first.<br>paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000 — 자기권 차폐로 감소). 자기장=G7(Zapatero Osorio2026). Teq=온도 문서.<br></div>
+  <div class="ev"><span class="tag">evidence</span> rationale: cascade(G7 ~16 G): 자기권이 솔라윈드 sputtering 차폐 → 우주풍화 줄어 무자기장 수성보다 신선·고albedo쪽. 미세운석 풍화는 잔존(자기권 무관). phase-lock 플레어(Zapatero Osorio2026)는 자기극 채널 → 극 풍화 비대칭. 무산소·무생물 이라 Fe³⁺ 적색 슬로프 무관(애초 무대기). 색조=interesting-first.<br>paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000, 자기권 차폐로 감소). 자기장=G7(Zapatero Osorio2026). Teq=온도 문서.<br></div>
   <div class="refs"><a class="ref" href="../../wiki/reference__surface-color-albedo-methodology.html" target="_blank" rel="noopener">surface-color-albedo-methodology.md</a></div>
 </article>
 <article class="dec" id="appearance">
@@ -245,10 +245,10 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">appearance</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">Proxima M5.5 적색광 입은 **어두운 따뜻한 회갈색 디스크**(공간풍화 수성형). 표시 고유색 #34302c → Proxima-lit ~#36281a. 크레이터·풍화 줄무늬 가능. **오로라 없음**(무대기 — 자기장은 ~16 G로 존재하나[G7] 발광 매질 대기가 없어 auroral 발광 불가). b(황토 호수세계)·c(냉 mini-Neptune)와 시각 3극.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">base_color</td><td class="v"><span class="chip" style="background:#34302c"></span><span class="hx">#34302c</span> → Proxima-lit ~<span class="chip" style="background:#36281a"></span><span class="hx">#36281a</span> (어두운 따뜻한 회갈; 크레이터·풍화 줄무늬)</td><td class="o"></td></tr><tr><td class="k">aurora</td><td class="v">none (무대기 — ~16 G 자기장 존재하나 발광 매질 없어 불가)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">Proxima의 적색광을 입은 어두운 따뜻한 회갈색 디스크이고, 공간풍화된 수성을 닮았다. 단색이 아니라 2-tone이다. 자기권이 항성풍을 막아 준 중위도는 상대적으로 밝고(고유 #3c3833 → Proxima-lit ~#3c2d17), 플레어 입자가 집중 채널되는 자기극관은 거의 흑갈로 짙다(고유 #2a2622 → Proxima-lit ~#2a1e10). 크레이터와 풍화 줄무늬가 더해진다. 오로라는 없다. 자기장은 약 16 G로 존재하지만 발광할 대기가 없다. b의 황토 호수세계, c의 차가운 미니 해왕성과 함께 시각적으로 세 극을 이룬다.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">base_color</td><td class="v">중위도 <span class="chip" style="background:#3c3833"></span><span class="hx">#3c3833</span> → Proxima-lit ~<span class="chip" style="background:#3c2d17"></span><span class="hx">#3c2d17</span> / 자기극관 <span class="chip" style="background:#2a2622"></span><span class="hx">#2a2622</span> → Proxima-lit ~<span class="chip" style="background:#2a1e10"></span><span class="hx">#2a1e10</span> (2-tone; 크레이터·풍화 줄무늬)</td><td class="o"></td></tr><tr><td class="k">aurora</td><td class="v">none (무대기, ~16 G 자기장 존재하나 발광 매질 없어 불가)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> 표시색=고유색×Proxima SED(§6 엔진, emit 정밀화). 무대기라 구름·haze 없음, 순수 표면.</div>
+  <div class="ev"><span class="tag">evidence</span> 채택값은 surface 행이 정한 2-tone을 Proxima 조명 아래로 옮긴 것이다. 중위도 ~#3c2d17, 자기극관 ~#2a1e10. 확인: 고유색은 surface 행의 자기권-차폐 재근거화 값(#3c3833 · #2a2622)이고, 표시색은 그 값에 항성 표시색 #ffcc75를 채널 곱한 결과다(§6 엔진의 모항성 SED 곱을 표시색 수준에서 적용). 무대기라 구름과 haze가 없어 순수 표면이 그대로 보인다. 유보: 정확한 hex는 emit 말미 art-pass에서 실측 SED로 다시 뽑는다.<br></div>
   <div class="refs"><a class="ref" href="../../wiki/reference__surface-color-albedo-methodology.html" target="_blank" rel="noopener">surface-color-albedo-methodology.md</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
@@ -256,10 +256,10 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">magnetism.magnetic_field</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">**극 자기장 ~16 G**(범위 3–280 G) — **Zapatero Osorio et al. 2026**(arXiv:2605.22925) SPI 추정, **지구형 외계행성 최초의 자기장 추정치**. 항성 플레어가 d 궤도위상에 **phase-lock**(&gt;99.8% 유의) → helicity-driven 재결합 + Poynting flux 형식으로 도출(Mars 반경 가정). 관측&gt;모델이라 기존 dynamo-scaling &#x27;약장&#x27; 추측을 **대체**.<br></p>
+  <p class="narrative">극 자기장 ~16 G(범위 3–280 G). Zapatero Osorio et al. 2026(arXiv:2605.22925) SPI 추정이고, 지구형 외계행성 최초의 자기장 추정치. 항성 플레어가 d 궤도위상에 phase-lock(&gt;99.8% 유의) → helicity-driven 재결합 + Poynting flux 형식으로 도출(Mars 반경 가정). 관측&gt;모델이라 기존 dynamo-scaling &#x27;약장&#x27; 추측을 대체.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~16 G (극 자기장, 범위 3–280 G)<div class="fnote">Zapatero Osorio 2026 SPI 추정; 지구형 외계행성 최초. phase-lock &gt;99.8% 유의 (helicity reconnection + Poynting flux, Mars 반경 가정)</div></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> rationale: SPI 관측 추정(~16 G)이 RM22 느린자전 약장 추측을 supersede(오너 결정 2026-06-23, 관측 우선). caveat: 모델의존(helicity reconnection·Poynting flux, Mars 반경 가정)·범위 3–280 G로 광범. dynamo 이론(조석고정 느린자전 →약장)과 긴장 — 범위 하단 ~3 G가 이론 정합이나 central 16 G는 SPI 채택. 16 G 극장은 약하지 않음(지구 극 ~0.6 G· 목성 ~14 G 수준).<br>feature: **phase-lock 플레어는 d의 distinctive 피처** — &#x27;별을 자기적으로 때리는 안쪽 행성&#x27;. G8 방사선·G1 정체성에 연계.<br>paper: Zapatero Osorio et al. 2026 (arXiv:2605.22925) &quot;Star-planet interaction in the Proxima system&quot;. 약장 기존 추측 출처=dynamo 문서 regime4(RM22).<br></div>
+  <div class="ev"><span class="tag">evidence</span> rationale: SPI 관측 추정(~16 G)이 RM22 느린자전 약장 추측을 supersede(오너 결정 2026-06-23, 관측 우선). caveat: 모델의존(helicity reconnection·Poynting flux, Mars 반경 가정)·범위 3–280 G로 광범. dynamo 이론(조석고정 느린자전 →약장)과 긴장이 있는데, 범위 하단 ~3 G가 이론 정합이나 central 16 G는 SPI 채택. 16 G 극장은 약하지 않음(지구 극 ~0.6 G· 목성 ~14 G 수준).<br>feature: phase-lock 플레어는 d의 distinctive 피처, 곧 &#x27;별을 자기적으로 때리는 안쪽 행성&#x27;이다. G8 방사선·G1 정체성에 연계.<br>paper: Zapatero Osorio et al. 2026 (arXiv:2605.22925) &quot;Star-planet interaction in the Proxima system&quot;. 약장 기존 추측 출처=dynamo 문서 regime4(RM22).<br></div>
   <div class="refs"><a class="ref" href="https://arxiv.org/abs/2605.22925" target="_blank" rel="noopener">2605.22925</a></div>
 </article>
 <article class="dec" id="environment">
@@ -267,10 +267,10 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">environment</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">radiation=**극심** — 최근접(0.029 AU) 플레어 별 + **무대기 표면 직노출** + **d에 phase-lock된 플레어**(Zapatero Osorio 2026, G7) → 표면 방사선 시스템 최악. ~16 G 자기권(G7)이 하전입자 일부 편향하나 무대기라 surface 보호 미미. **단 16 G 자기권 + 최근접 플레어 → 강한 포획 방사선대(목성형) → 표면뿐 아니라 d 주변 궤도 공간도 고방사선**(접근선·궤도선이 belt 통과). stellar_wind=매우 강(최근접 ram). heliosphere=astrosphere 최심부. G11 해저드·G1 무생물의 물리 근거.<br></p>
+  <p class="narrative">radiation=극심(최근접(0.029 AU) 플레어 별 + 무대기 표면 직노출 + d에 phase-lock된 플레어[Zapatero Osorio 2026, G7] → 표면 방사선 시스템 최악). ~16 G 자기권(G7)이 하전입자 일부 편향하나 무대기라 surface 보호 미미. 단 16 G 자기권 + 최근접 플레어 → 강한 포획 방사선대(목성형) → 표면뿐 아니라 d 주변 궤도 공간도 고방사선(접근선·궤도선이 belt 통과). stellar_wind=매우 강(최근접 ram). heliosphere=astrosphere 최심부. G11 해저드·G1 무생물의 물리 근거.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">극심 (최근접 + 무대기 직노출 + d-phase-lock 플레어 + 포획 방사선대)</td><td class="o"></td></tr><tr><td class="k">stellar_wind</td><td class="v">매우 강 (최근접 ram)</td><td class="o"></td></tr><tr><td class="k">heliosphere</td><td class="v">astrosphere 최심부</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> 별 measured 환경 + 무대기 + d-phase-locked 플레어(G7 SPI)에서 도출. 정정: 자기장은 약하지 않음(~16 G) — 단 무대기라 surface 보호 한계. b보다 가혹(더 근접·무대기 차폐 0).<br>paper: 별 환경 측정 = 별 섹션(environment.activity/wind/heliosphere); phase-lock 플레어 = Zapatero Osorio 2026 (2605.22925, G7); 대기 escape 무관(무대기).<br></div>
+  <div class="ev"><span class="tag">evidence</span> 별 measured 환경 + 무대기 + d-phase-locked 플레어(G7 SPI)에서 도출. 정정: 자기장은 약하지 않음(~16 G). 단 무대기라 surface 보호 한계. b보다 가혹(더 근접·무대기 차폐 0).<br>paper: 별 환경 측정 = 별 섹션(environment.activity/wind/heliosphere); phase-lock 플레어 = Zapatero Osorio 2026 (2605.22925, G7); 대기 escape 무관(무대기).<br></div>
   
 </article>
 <article class="dec" id="rings">
@@ -281,7 +281,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">고리 없음 (극근접 뜨거운 암석, 근거·픽션 없음).</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">ring_structure</td><td class="v">none</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> 극근접 뜨거운 암석엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]]) — feature 없으면 없음.</div>
+  <div class="ev"><span class="tag">evidence</span> 극근접 뜨거운 암석엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]])에 따라 feature 없으면 없음.</div>
   
 </article>
 <article class="dec" id="satellites">
@@ -289,7 +289,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">satellites</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">위성 없음 — 극근접(0.029 AU) 미세 Hill 반경 + 강항성조석으로 안정 위성 불가(b보다 더 단호한 물리적 부재).</p>
+  <p class="narrative">위성 없음. 극근접(0.029 AU) 미세 Hill 반경 + 강항성조석으로 안정 위성 불가(b보다 더 단호한 물리적 부재).</p>
   
   
   <div class="ev"><span class="tag">evidence</span> [[feedback_gameplay_variety]] &#x27;물리적으로 아무것도 없음&#x27; 예외.</div>
@@ -300,14 +300,14 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">gameplay</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">**착륙 가능**(고체 표면)이나 **splashdown 없음**(무액체)·**대기비행 없음**(무대기 → 동력/탄도만). breathability=**불가** (무대기). radiation 해저드=**극심**(G8 — 최근접 플레어+무대기 직노출, 시스템 최악 tier; 가혹한 착륙). **~16 G 자기권(G7) → 방사선대(trapped 입자)·자기극 강하 + 항성 플레어가 d 궤도위상에 phase-lock → 주기적 방사선 spike**(궤도 위상별 위험 변동, 게임플레이 훅). **과학 타깃: 지구형 외계행성 최초 자기장(SPI) — 자기권·phase-lock 관측 과학 명소**. **biome = 하이브리드 7구획**(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 **시그니처 명소**) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) · ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ **자기극 풍화관(Magnetic Polar Caps)** — 플레어 입자 집중 채널로 강풍화된 어두운 흑갈 극관(G5 2-tone; 자기장 시그니처 biome, 무자기장 수성의 단순 극 크레이터와 차별). ScienceValues 전체(landed/flying-low=탄도/in-space; splashed=토큰 inert). SOI 자동. 난도=항성간 플래그십 + 최근접 고방사선 착륙. 발견=RB **T F F F**(candidate, G1).<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">science_biomes</td><td class="v">하이브리드 7구획: 직하 핫스팟/주간 고지/주간 평원/크레이터/터미네이터/야간면/자기극 풍화관</td><td class="o"></td></tr><tr><td class="k">difficulty</td><td class="v">항성간 플래그십 + 최근접 고방사선 착륙</td><td class="o"></td></tr><tr><td class="k">sphere_of_influence_tuning</td><td class="v">auto from mass</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  <p class="narrative">착륙 가능(고체 표면)이나 splashdown 없음(무액체)·대기비행 없음(무대기 → 동력/탄도만). breathability=불가 (무대기). radiation 해저드=극심(G8, 최근접 플레어+무대기 직노출, 시스템 최악 tier; 가혹한 착륙). ~16 G 자기권(G7) → 방사선대(trapped 입자)·자기극 강하 + 항성 플레어가 d 궤도위상에 phase-lock → 주기적 방사선 spike(궤도 위상별 위험 변동, 게임플레이 훅). 과학 타깃은 지구형 외계행성 최초 자기장(SPI)이고, 자기권·phase-lock 관측 과학 명소다. biome = 하이브리드 7구획(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 시그니처 명소) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) · ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ 자기극 풍화관(Magnetic Polar Caps), 플레어 입자 집중 채널로 강풍화된 어두운 흑갈 극관(G5 2-tone; 자기장 시그니처 biome, 무자기장 수성의 단순 극 크레이터와 차별). ScienceValues 전체(landed/flying-low=탄도/in-space; splashed=토큰 inert). SOI 자동. 난도=항성간 플래그십 + 최근접 고방사선 착륙. 발견=RB T F F F(candidate, G1).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">science_biomes</td><td class="v">하이브리드 7구획: 직하 핫스팟/주간 고지/주간 평원/크레이터/터미네이터/야간면/자기극 풍화관</td><td class="o"></td></tr><tr><td class="k">sphere_of_influence_tuning</td><td class="v">auto from mass</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> owner_review: 2026-06-23 오너 검토·선택 — biome 스킴 C(하이브리드) 채택. RSS 수성(지질+크레이터+극, 3:2라 항성경도 미사용) 확인 후, d는 **1:1 고정**이라 수성 지질 + 영구 day/night 열구조를 결합(직하 핫스팟·야간면 추가). 무대기라 b의 호수/빙관/구름 biome은 없음.<br>note: 무대기·무액체가 b(호수세계, splashdown·대기비행)와의 핵심 게임 차이 — d는 수성형 진공 착륙. radiation 극심=G8 derived. cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미 일괄.<br></div>
+  <div class="ev"><span class="tag">evidence</span> owner_review: 2026-06-23 오너 검토·선택으로 biome 스킴 C(하이브리드) 채택. RSS 수성(지질+크레이터+극, 3:2라 항성경도 미사용) 확인 후, d는 1:1 고정이라 수성 지질 + 영구 day/night 열구조를 결합(직하 핫스팟·야간면 추가). 무대기라 b의 호수/빙관/구름 biome은 없음.<br>note: 무대기·무액체가 b(호수세계, splashdown·대기비행)와의 핵심 게임 차이다. d는 수성형 진공 착륙. radiation 극심=G8 derived. cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미 일괄.<br></div>
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="proxima-cen-b.html">← Proxima Cen b</a><a class="navlink" href="proxima-cen-c.html">Proxima Cen c →</a></div>
-<div class="stamp">빌드 2026-08-03 17:50 · ba932f6</div>
+<div class="stamp">빌드 2026-08-03 19:38 · 735322d+미커밋</div>
 </div>
 <script>
 const b=document.body;
