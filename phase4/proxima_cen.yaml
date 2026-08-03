@@ -273,8 +273,14 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      body_type=암석 지구형인 대륙형 호수 세계(직하 고지대 + 흩어진 호수/내해 모자이크 → 야간측 빙관, 무생물).
-      eyeball 아님. designation=Proxima Centauri b(고유명 없음). RV로 확정된 행성이다(Anglada-Escudé 2016).
+      The closest planet to the Sun. A rocky world about Earth's size, with highland rising at the centre of the
+      face turned toward its star and lakes and inland seas scattered around it. The far side, where night never
+      ends, is capped in ice. It is not the eyeball world usually drawn, with an ocean pooled at the substellar
+      point. Nothing lives here.
+    narrative_ko: >
+      태양에서 가장 가까운 행성이다. 지구와 비슷한 크기의 암석 세계이고, 별을 향한 한쪽 면 가운데에 고지대가 솟고
+      그 주변으로 호수와 내해가 흩어져 있다. 밤이 영원한 반대편에는 얼음이 덮여 있다. 흔히 그려지는 눈알 모양의
+      세계, 즉 직하점에 바다가 고인 형태는 아니다. 생명은 없다.
     fields:
       - name: body_type
         value: "암석 지구형: 대륙형 호수 세계 (직하 고지대 + 흩어진 호수/내해 + 야간측 빙관, 무생물)"
@@ -294,7 +300,13 @@ decisions:
     refs: ["2025A&A...700A..11S", "2016Natur.536..437A", "2022A&A...658A.115F"]
     status: passthrough
     narrative: >
-      a=0.04848 AU · P=11.18465d · e≈0(SM2025) · inc 미측정(비통과) · 조석고정(락타임 <10⁵yr). Ω/ω/M free-emit.
+      It hugs its star, one lap in 11.2 days. The orbit is circular for all practical purposes, and at this
+      distance tides lock the spin to it within a hundred thousand years, so one face holds toward the star
+      forever. The planet does not transit, so how far the orbit tilts to our line of sight is unknown.
+    narrative_ko: >
+      별에 아주 가까이 붙어 11.2일에 한 바퀴를 돈다. 궤도는 사실상 원이고, 이 거리에서는 조석이 10만 년 안에
+      자전을 궤도에 묶어 버리므로 한쪽 면이 영원히 별을 마주한다. 통과 현상이 관측되지 않아 궤도가 우리 시선에
+      얼마나 기울었는지는 모른다.
     fields:
       - name: semi_major_axis_au
         value: 0.04848
@@ -608,7 +620,8 @@ decisions:
     axis: rings                       # G9 — 없음
     status: gated
     driver: [window-selection]
-    narrative: "고리 없음. 근접 암석행성, 관측 근거·픽션 없음 → 단순 부재."
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - name: ring_structure
         value: "none"
@@ -622,15 +635,15 @@ decisions:
     axis: satellites                  # G10 — 없음 (근접 조석환경 물리적 예외)
     status: gated
     driver: [engine, window-selection]
-    narrative: >
-      위성 없음. Hill 반경 R_H = a·(m_p/3M★)^⅓ = 0.0485 AU×0.0215 ≈ 156,000 km, 순행 안정역 ~0.3–0.5 R_H(50–78k km)로
-      좁고, 조석고정 근접 행성이라 강한 항성조석이 Gyr 스케일로 위성 궤도 불안정화 → 큰 위성 미보유가 일반적.
+    narrative: "None."
+    narrative_ko: "없음."
     gate:
       criterion: [stability, classification]
       verdict: pass-in-window
       evidence: >
-        [[feedback_gameplay_variety]]의 "그 자리에 아무것도 없어야 함" 물리적 예외다. 근접 조석환경이 안정 위성을 막아
-        '없음'이 근거 있는 선택(증거 부재 아닌 물리적 부재). 오너 결정 2026-06-23(소형 위성 시도 대신 없음 채택).
+        채택값은 위성 없음이다. 확인: Hill 반경은 a·(m_p/3M★)^⅓ = 0.0485 AU × 0.0215 ≈ 156,000 km이고 순행
+        안정역은 그 0.3~0.5배인 50,000~78,000 km로 좁으며, 조석고정된 근접 행성이라 항성 조석이 Gyr 규모로 그
+        궤도를 흩는다. 다양성 우선 원칙의 물리적 예외에 해당한다. 증거의 부재가 아니라 물리적 부재다.
 
   - body: Proxima Cen b
     axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (폴리페무스 거대 가스행성과 대비)
