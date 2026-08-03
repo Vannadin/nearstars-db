@@ -1426,13 +1426,13 @@ decisions:
       Dante's tidal heating is extreme, roughly twelve hundred times Io's, and it never lets up. All of that heat has
       to leave through the surface, and on this board it leaves the way Io's does, through exposed melt rather than
       through hot ground everywhere: lava covers about a twentieth of the moon at some 1350 K while the plains between
-      sit near 360 K. That split is a look chosen over the honest reading, which runs the plains hot enough to melt
-      their own sulfur.
+      sit near 360 K. That split is an art choice; spread evenly, the same heat would leave the plains hot enough to
+      melt their own sulfur.
     narrative_ko: >
       Dante의 조석 가열은 이오의 약 1200배에 이르고 잦아들지 않는다. 그 열은 전부 표면으로 빠져나가야 하는데, 이
       보드에서는 이오와 같은 방식으로, 땅 전체가 달궈지는 대신 노출된 용융부를 통해 빠져나간다. 위성의 약 20분의 1이
-      1350 K 안팎의 용암이고 그 사이 평원은 360 K 근처다. 이 분배는 정직한 독법 대신 택한 룩이다. 정직하게 읽으면
-      평원은 제 황을 녹일 만큼 뜨겁다.
+      1350 K 안팎의 용암이고 그 사이 평원은 360 K 근처다. 이 분배는 아트 선택이다. 같은 열을 고르게 펴면 평원은
+      제 황을 녹일 만큼 뜨거워진다.
     fields:
       - { name: tidal_heating, value: "~1200× Io (시뮬 e_rms 0.0186, k₂/Q≈0.0155)", op: set, note: "구값 ~820×는 e 0.0175 가정" }
       - { name: tidal_surface_flux, value: "~11,500 W/m² (평원 360K; 노출 용융부 1350K이 면적 ~5.7%)", op: set, note: "전도 지각 두께 ~2.1 m (평원). 균일 복사면 독법은 주변 673 K + 지각 0.12 m" }
@@ -1441,24 +1441,18 @@ decisions:
       criterion: [stability, canon-consistency]
       verdict: documented-divergence
       divergence_note: >
-        The tidal-heating recipe (docs/reference/tidal-heating-methodology.md) makes the area-weighted
-        radiating mean 673 K from 11,500 W/m² of tidal flux plus 141 W/m² of absorbed starlight, and its §7
-        refutation states outright that concentrating the heat into hotspots cannot buy a cool surface. Taken
-        straight, the plains are 673 K: above sulfur's 388 K melting point and within 45 K of its 718 K boiling
-        point, so the yellow sulfur this moon's palette, albedo and biome map are built on could not exist. The
-        board keeps the sulfur and lowers the plains to 360 K instead, paying for it by routing the whole budget
-        through ~5.7% of the surface as exposed 1350 K melt. The mean is preserved and the arithmetic closes, but
-        ~5.7% permanently exposed melt is roughly triple Io's active fraction, and the recipe would not have
-        produced this partition on its own. It is a look, chosen knowing the honest reading melts the sulfur.
+        Recipe (docs/reference/tidal-heating-methodology.md): tidal 11,500 W/m² + starlight 141 W/m² fix the
+        area-weighted radiating mean at 673 K, and its §7 refutation rejects hotspot concentration as a route to a
+        cool surface. Plains at 673 K exceed sulfur's melting point 388 K (boiling 718 K), so the yellow sulfur
+        behind the palette, the albedo-0.5 half and the Sulfur Plains biome cannot exist. NearStars lowers the
+        plains to 360 K and routes the budget through ~5.7% exposed 1350 K melt; the mean and the arithmetic hold.
+        Departure = the partition, ~3× Io's active fraction, adopted for the look.
       divergence_note_ko: >
-        조석가열 레시피(docs/reference/tidal-heating-methodology.md)는 조석 플럭스 11,500 W/m²에 흡수 별빛
-        141 W/m²를 더해 면적가중 복사 평균을 673 K로 만들고, §7 반박은 열을 핫스팟으로 모아 차가운 표면을
-        살 수는 없다고 못박는다. 곧이곧대로 읽으면 평원은 673 K다. 황의 융점 388 K 위이고 비등점 718 K에서
-        45 K 안쪽이므로, 이 위성의 팔레트와 알베도와 바이옴 지도가 딛고 선 노란 황이 존재할 수 없다. 보드는
-        황을 지키고 평원을 360 K로 내리는 쪽을 택했으며, 그 대가로 전체 열수지를 표면의 약 5.7 %인 1350 K
-        노출 용융부로 몰아 내보낸다. 평균은 보존되고 계산도 닫히지만, 5.7 %가 상시 노출 용융부라는 것은
-        이오의 활동 면적의 대략 세 배이고 레시피가 스스로 내놓을 분배도 아니다. 정직한 독법이 황을 녹인다는
-        것을 알면서 택한 룩이다.
+        레시피(docs/reference/tidal-heating-methodology.md): 조석 11,500 W/m² + 별빛 141 W/m²가 면적가중 복사
+        평균을 673 K로 고정하고, §7 반박은 핫스팟 집중으로 차가운 표면을 얻는 길을 기각한다. 평원 673 K는 황의
+        융점 388 K를 넘으므로(비등 718 K) 팔레트·알베도 0.5 반쪽·황 평원 바이옴이 딛는 노란 황이 성립하지
+        않는다. NearStars는 평원을 360 K로 내리고 열수지를 표면 ~5.7 %의 1350 K 노출 용융부로 보낸다. 평균과
+        계산은 유지된다. 이탈 = 그 분배이며, 이오 활동 면적의 ~3배다. 룩을 위해 채택했다.
       evidence: >
         Io scaling (Ė∝M_p^2.5·R^5·e²·a^-7.5), 1.54 R_p. In the sim e oscillates 0.0002–0.031 without dying
         (perturbations from Hades etc. force-sustain it) → perpetual. Exactly matches the canon (Avatar: The Game)
