@@ -1556,15 +1556,19 @@ decisions:
       where this ring begins. The white bands are clean water ice and bright; the red ones are tholin-coated ice,
       like Pluto's surface. At c's 40-60 K orbit ice does not dry out by sublimation, so both materials keep. The
       bands ride separately, 24,000-32,700 km inside and 41,300-51,600 km outside, and the wide gap between them
-      gives a face unlike Saturn's uniform sheet. The moon c I inherits the same tholin red, tying the planet's
-      surroundings into one Pluto-toned palette.
+      gives a face unlike Saturn's uniform sheet. Far beyond both, ice grains shed by the moon c I spread into a
+      tenuous outer ring reaching some twenty planetary radii, a ghost layer that carries the memory of the SPHERE
+      brightness excess without pretending to reproduce it. The moon c I inherits the same tholin red, tying the
+      planet's surroundings into one Pluto-toned palette.
     narrative_ko: >
       검은 우주를 배경으로 붉은 띠와 흰 띠가 번갈아 도는 2중 고리다. SPHERE 관측이 c 자리에서 행성만으로 설명하기
       어려운 밝기 초과를 잡았고, 대형 고리계가 그 초과를 설명하는 후보 중 하나라는 것이 이 고리의 출발점이다. 흰
       띠는 깨끗한 물얼음이라 밝고, 붉은 띠는 명왕성 표면처럼 톨린이 입혀진 얼음이다. 40~60 K의 c 궤도에서는 얼음이
       승화로 마르지 않으므로 두 재질 모두 안정하게 남는다. 두 띠는 안쪽 24,000~32,700 km와 바깥 41,300~51,600 km에
-      나뉘어 돌고, 사이의 넓은 간극 덕에 토성의 균일한 시트와는 다른 얼굴이 된다. 같은 톨린 붉은색을 위성 c I가
-      이어받아, 이 행성 둘레는 하나의 명왕성풍 색으로 묶인다.
+      나뉘어 돌고, 사이의 넓은 간극 덕에 토성의 균일한 시트와는 다른 얼굴이 된다. 두 띠 훨씬 바깥에는 위성 c I이
+      흘린 얼음 알갱이가 행성 반지름 스무 배까지 퍼진 희박한 외곽 고리가 있다. SPHERE 밝기 초과의 기억을 담는 유령
+      같은 층이지만, 그 밝기를 재현한다고 주장하지는 않는다. 같은 톨린 붉은색을 위성 c I가 이어받아, 이 행성
+      둘레는 하나의 명왕성풍 색으로 묶인다.
     fields:
       - name: ring_structure
         value: "2중 띠: 안쪽 24000-32700 km (~1.4-1.9 R_c) / 바깥 41300-51600 km (~2.4-3.0 R_c), 사이 큰 간극"
@@ -1575,11 +1579,20 @@ decisions:
       - name: ring_color
         value: "적/흰 교대 줄무늬"
         op: set
+      - name: ring_e_structure
+        value: "확산 외곽고리 (E-ring식): 4-20 R_c (69,000-344,000 km), tau ~1e-4"
+        op: set
+        note: "바깥 끝 20 R_c = Gratton 등가반경 4.8 R_Jup. Hill 반경(~900만 km) 심부라 역학적으로 안전"
+      - name: ring_e_composition
+        value: "청정 얼음 미세 알갱이 (위성 c I 공급, 공급 기작은 satellites 행에서 확정)"
+        op: set
     provenance: >
       2026-08-04 스윕: 산문을 EN/KO 계약 형태로 재작성(내용 무변경), refs에 디스크색·얼음 안정성 방법론 문서 추가,
       내대(1.41~2.91 R_c)와의 공간 겹침을 유보로 병기(천왕성 선례로 공존 판정). 구획·수치 무변경.
       같은 날 지구 시선 밝기 계산기(뷰어)로 Gratton 대비 정량 대조: 게이트 고리 ~7e-10 = 실측의 0.2% → "밝은 신호와
       양립" 표현을 철회하고 hook을 테마적 착상으로 명시. 전문 캐시 docs/phase3/_papers/2004.06685.md 추가.
+      같은 날 오너 결정으로 확산 외곽고리(E-ring식, 4~20 R_c, c I 공급) 신설 — Gratton 등가반경에 맞춘 명시 발산,
+      측광 재현 불가는 divergence_note에 병기.
     gate:
       criterion: [observation, visual-checklist]
       verdict: documented-divergence
@@ -1588,6 +1601,10 @@ decisions:
         근거가 있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). 토성 클론 회피가
         명시 의도이고, 2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성
         위성과 테마 통일. 간극 위치·줄무늬 패턴은 art이고, emit시 로슈 한계·고리면 정합 점검 권장.
+        확산 외곽고리(4~20 R_c)는 Gratton 신호에 대한 별도의 명시 발산이다(오너 2026-08-04). 바깥 끝을 실측이
+        요구하는 등가반경 4.8 R_Jup에 맞춘 서사적 흔적이지만, 측광으로는 tau ~1e-4에서 밀집 띠와 합쳐도 실측 대비의
+        ~0.4%라 신호를 재현하지 못한다(재현에는 ~30 R_c에 피복 1이 필요해 비물리). 신호가 배경원으로 판명나도
+        고리는 c I 공급층으로 자립한다.
       evidence: >
         채택값은 2중 얼음 띠와 적/흰 교대 줄무늬다.
         확인: 두 띠 모두 얼음 Roche 한계 ~3.3 R_c(56,700 km) 안쪽에 있다. 40~60 K에서의 얼음 안정은 얼음 안정성

@@ -48,6 +48,13 @@
     <div id="readout"></div>
   </div>
   <div class="grp">
+    <h3>확산 외곽고리 (E-ring · c I 공급)</h3>
+    <label class="ck"><input type="checkbox" id="ckE" checked> 표시 (다이버전스: Gratton 등가반경 흔적)</label>
+    <div class="ctrl"><label>안쪽 <b id="vEIn">4 R_c</b></label><input type="range" id="rEIn" min="3.3" max="15" step="0.1" value="4"></div>
+    <div class="ctrl"><label>바깥 <b id="vEOut">20 R_c</b></label><input type="range" id="rEOut" min="6" max="35" step="0.5" value="20"></div>
+    <div class="ctrl"><label>피복률 τ <b id="vECov">1e-4</b></label><input type="range" id="rECov" min="-5" max="-1" step="0.1" value="-4"></div>
+  </div>
+  <div class="grp">
     <h3>지구 시선 밝기 (Gratton 2020 대비)</h3>
     <div class="ctrl"><label>위상·산란 인자 φ <b id="vPhi">0.50</b></label><input type="range" id="rPhi" min="0.05" max="1" step="0.01" value="0.5"></div>
     <div class="ctrl"><label>고리 개방각 B (시선↔고리면) <b id="vOpen">35°</b></label><input type="range" id="rOpen" min="0" max="90" step="1" value="35"></div>
@@ -94,7 +101,8 @@ const R_KM=17202, ROCHE_RC=3.3, FLAT=0.0045, MAG_TILT=50, MAG_OFF=0.4;
 const D_KM=1.5*1.496e8, RJUP_KM=71492, GRATTON_C=3.5e-7, GRATTON_ERR=2.0e-7;
 const S={ rIn1:1.40, rOut1:1.90, rIn2:2.40, rOut2:3.00, tau:0.62, stripes:5,
           flatX:1, obl:17, spin:true, mag:true, roche:true, plane:true, redLight:false,
-          phi:0.5, openB:35, Ap:0.35, Ar:0.37, cov:0.62, tgt:3.5e-7 };
+          phi:0.5, openB:35, Ap:0.35, Ar:0.37, cov:0.62, tgt:3.5e-7,
+          eOn:true, eIn:4, eOut:20, eCov:1e-4 };   // 확산 외곽고리 (명시 발산, 얼음 알베도 0.5 고정
 
 const stage=document.getElementById('stage');
 const renderer=new THREE.WebGLRenderer({antialias:true});
@@ -186,6 +194,26 @@ function rebuildRings(){ for(const r of rings){ tiltGrp.remove(r); r.geometry.di
     const m=new THREE.Mesh(gm,mat); m.rotation.x=Math.PI/2; tiltGrp.add(m); rings.push(m); } }
 rebuildRings();
 
+// ── 확산 외곽고리 (E-ring식): 안쪽으로 갈수록 옅어지는 청백 글로우 ──
+let eRing=null;
+function rebuildERing(){ if(eRing){ tiltGrp.remove(eRing); eRing.geometry.dispose(); eRing=null; }
+  if(!S.eOn || S.eOut<=S.eIn+0.2) return;
+  const gm=new THREE.RingGeometry(S.eIn,S.eOut,192,1);
+  const p=gm.attributes.position, uv=gm.attributes.uv;
+  for(let i=0;i<p.count;i++){ const r=Math.hypot(p.getX(i),p.getY(i)); uv.setXY(i,(r-S.eIn)/(S.eOut-S.eIn),0.5); }
+  const w=256,h=4,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,w,0);
+  g.addColorStop(0,'rgba(214,228,238,0)'); g.addColorStop(0.25,'rgba(214,228,238,0.85)');
+  g.addColorStop(0.7,'rgba(200,216,230,0.55)'); g.addColorStop(1,'rgba(190,208,224,0)');
+  x.fillStyle=g; x.fillRect(0,0,w,h);
+  const tex=new THREE.CanvasTexture(c);
+  // 표시 불투명도는 τ 로그 스케일 연동 + 바닥값 (실제 τ~1e-4를 그대로 쓰면 안 보임)
+  const vis=Math.min(0.5,0.05+0.06*(Math.log10(S.eCov)+5));
+  eRing=new THREE.Mesh(gm,new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:vis,
+    side:THREE.DoubleSide,depthWrite:false}));
+  eRing.rotation.x=Math.PI/2; tiltGrp.add(eRing); }
+rebuildERing();
+
 // ── 기준선 ──
 function circle(rRc,color,dashed,parent){ const n=256,pts=[];
   for(let i=0;i<=n;i++){ const t=i/n*Math.PI*2; pts.push(new THREE.Vector3(Math.cos(t)*rRc,0,Math.sin(t)*rRc)); }
@@ -218,6 +246,14 @@ bind('rAr','Ar',v=>v.toFixed(2));
 bind('rCov','cov',v=>v.toFixed(2));
 { const el=document.getElementById('rTgt'), out=document.getElementById('vTgt');
   el.addEventListener('input',()=>{ S.tgt=parseFloat(el.value)*1e-7; out.textContent=parseFloat(el.value).toFixed(1)+'e-7'; }); }
+let needE=false;
+{ const el=document.getElementById('ckE'); el.addEventListener('change',()=>{ S.eOn=el.checked; needE=true; }); }
+{ const el=document.getElementById('rEIn'), out=document.getElementById('vEIn');
+  el.addEventListener('input',()=>{ S.eIn=parseFloat(el.value); out.textContent=S.eIn.toFixed(1)+' R_c'; needE=true; }); }
+{ const el=document.getElementById('rEOut'), out=document.getElementById('vEOut');
+  el.addEventListener('input',()=>{ S.eOut=parseFloat(el.value); out.textContent=S.eOut.toFixed(1)+' R_c'; needE=true; }); }
+{ const el=document.getElementById('rECov'), out=document.getElementById('vECov');
+  el.addEventListener('input',()=>{ S.eCov=Math.pow(10,parseFloat(el.value)); out.textContent=S.eCov.toExponential(0); needE=true; }); }
 { const el=document.getElementById('rFlat'), out=document.getElementById('vFlat');
   el.addEventListener('input',()=>{ S.flatX=parseFloat(el.value);
     out.textContent=S.flatX.toFixed(0)+'× ('+(FLAT*S.flatX*100).toFixed(1)+'%)'; applyFlat(); }); }
@@ -233,8 +269,9 @@ function ringAreaR2(){ // Σ(o²−i²) [R_c² 단위]
   return Math.max(0,S.rOut1**2-S.rIn1**2)+Math.max(0,S.rOut2**2-S.rIn2**2); }
 function contrastNow(){
   const proj=Math.sin(S.openB*Math.PI/180); // 개방각 B: 0=edge-on(투영 0), 90=face-on(전면)
-  const req2_km=S.Ap*R_KM*R_KM + S.Ar*proj*S.cov*ringAreaR2()*R_KM*R_KM;
-  return S.phi*req2_km/(4*D_KM*D_KM); }
+  let req2=S.Ap + S.Ar*proj*S.cov*ringAreaR2();
+  if(S.eOn) req2+=0.5*proj*S.eCov*Math.max(0,S.eOut**2-S.eIn**2);  // 확산 외곽고리 (얼음 A=0.5)
+  return S.phi*req2*R_KM*R_KM/(4*D_KM*D_KM); }
 function brightout(){
   const c=contrastNow();
   const ratio=c/S.tgt;
@@ -274,6 +311,7 @@ addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.upd
 
 function loop(){ requestAnimationFrame(loop);
   if(needRings){ rebuildRings(); needRings=false; }
+  if(needE){ rebuildERing(); needE=false; }
   tiltGrp.rotation.z=S.obl*Math.PI/180;
   magGrp.visible=S.mag; rocheRing.visible=S.roche; planeDisk.visible=S.plane;
   if(S.spin){ planet.rotation.y+=0.004; }   // 27h 자전 (과장 속도)
