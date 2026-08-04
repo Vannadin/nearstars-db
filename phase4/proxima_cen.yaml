@@ -1556,17 +1556,15 @@ decisions:
       where this ring begins. The white bands are clean water ice and bright; the red ones are tholin-coated ice,
       like Pluto's surface. At c's 40-60 K orbit ice does not dry out by sublimation, so both materials keep. The
       bands ride separately, 24,000-32,700 km inside and 41,300-51,600 km outside, and the wide gap between them
-      gives a face unlike Saturn's uniform sheet. Nothing lies beyond them: the moon c I is too large to let its
-      impact debris escape, so no diffuse dust layer can be sustained further out. The moon inherits the same tholin
-      red, tying the planet's surroundings into one Pluto-toned palette.
+      gives a face unlike Saturn's uniform sheet. Beyond the outer band the space is empty. The moon c I inherits the
+      same tholin red, tying the planet's surroundings into one Pluto-toned palette.
     narrative_ko: >
       검은 우주를 배경으로 붉은 띠와 흰 띠가 번갈아 도는 2중 고리다. SPHERE 관측이 c 자리에서 행성만으로 설명하기
       어려운 밝기 초과를 잡았고, 대형 고리계가 그 초과를 설명하는 후보 중 하나라는 것이 이 고리의 출발점이다. 흰
       띠는 깨끗한 물얼음이라 밝고, 붉은 띠는 명왕성 표면처럼 톨린이 입혀진 얼음이다. 40~60 K의 c 궤도에서는 얼음이
       승화로 마르지 않으므로 두 재질 모두 안정하게 남는다. 두 띠는 안쪽 24,000~32,700 km와 바깥 41,300~51,600 km에
-      나뉘어 돌고, 사이의 넓은 간극 덕에 토성의 균일한 시트와는 다른 얼굴이 된다. 그 바깥에는 아무것도 없다. 위성
-      c I은 덩치가 커서 충돌로 튄 파편을 놓아주지 못하므로, 더 먼 곳에 희박한 먼지층이 유지될 수 없다. 같은 톨린
-      붉은색을 위성이 이어받아, 이 행성 둘레는 하나의 명왕성풍 색으로 묶인다.
+      나뉘어 돌고, 사이의 넓은 간극 덕에 토성의 균일한 시트와는 다른 얼굴이 된다. 바깥 띠를 넘어가면 빈 공간이다.
+      같은 톨린 붉은색을 위성 c I가 이어받아, 이 행성 둘레는 하나의 명왕성풍 색으로 묶인다.
     fields:
       - name: ring_structure
         value: "2중 띠: 안쪽 24000-32700 km (~1.4-1.9 R_c) / 바깥 41300-51600 km (~2.4-3.0 R_c), 사이 큰 간극"
@@ -1582,9 +1580,7 @@ decisions:
       내대(1.41~2.91 R_c)와의 공간 겹침을 유보로 병기(천왕성 선례로 공존 판정). 구획·수치 무변경.
       같은 날 지구 시선 밝기 계산기(뷰어)로 Gratton 대비 정량 대조: 게이트 고리 ~7e-10 = 실측의 0.2% → "밝은 신호와
       양립" 표현을 철회하고 hook을 테마적 착상으로 명시. 전문 캐시 docs/phase3/_papers/2004.06685.md 추가.
-      같은 날 오너 결정으로 확산 외곽고리(E-ring식, 4~20 R_c, c I 공급)를 신설했다가 같은 날 조건부 트리거로 철회.
-      c I 궤도를 원궤도로 확정하고 간헐천 공급을 배제하자 공급원이 남지 않았다(950 km 위성의 탈출속도 ~1 km/s가
-      미소운석 방출물을 붙잡음). 철회 근거는 divergence_note에 기록.
+      같은 날 확산 외곽고리(E-ring식)를 검토했다가 오너 결정으로 채택하지 않음. 고리는 밀집 2중 띠로 확정.
     gate:
       criterion: [observation, visual-checklist]
       verdict: documented-divergence
@@ -1593,9 +1589,8 @@ decisions:
         근거가 있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). 토성 클론 회피가
         명시 의도이고, 2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성
         위성과 테마 통일. 간극 위치·줄무늬 패턴은 art이고, emit시 로슈 한계·고리면 정합 점검 권장.
-        Gratton 신호를 흔적으로 살리는 확산 외곽고리(E-ring식)를 검토했다가 철회했다(오너 2026-08-04). 확산 먼지는
-        공급과 손실이 균형을 이뤄야 유지되는데, c I은 반경이 커서 탈출속도가 높아 미소운석 방출물을 거의 놓아주지
-        못하고, 간헐천 공급도 배제됐다. 공급원이 없는 확산층은 물리적으로 서지 않으므로 고리는 밀집 2중 띠로 끝난다.
+        고리는 밀집 2중 띠로 끝나고 그 바깥에 확산 먼지층은 두지 않는다. Gratton 신호를 시각적으로 흉내낼 외곽층은
+        어느 두께로 잡아도 측광을 재현하지 못하므로(위 수치), 관측 근거 없는 구조를 추가하지 않는 쪽을 택했다.
       evidence: >
         채택값은 2중 얼음 띠와 적/흰 교대 줄무늬다.
         확인: 두 띠 모두 얼음 Roche 한계 ~3.3 R_c(56,700 km) 안쪽에 있다. 40~60 K에서의 얼음 안정은 얼음 안정성
@@ -1613,7 +1608,7 @@ decisions:
     status: gated
     driver: [fiction, engine]
     narrative: >
-      위성 1개 = Proxima c I. 반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
+      위성 1개 = Proxima c I. 지름 652 km(미마스-카론급, 명왕성 느낌)(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
       조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. 판도라식 독자 facet-walk로 별도
       바디 전개(아래 "Proxima Centauri c I" 블록 11축).
       관측 근거 0이고, art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
@@ -1676,10 +1671,10 @@ decisions:
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
       body_type=냉 얼음 위성(명왕성 아날로그)이고, N₂/CH₄/H₂O 얼음 + 톨린 적화 다양 지형, 무생물(극냉 ~40–60K). c의 위성,
-      c에 조석고정, 반경 ~950 km(트리톤/티타니아급). designation=Proxima Centauri c I(고유명 없음).
+      c에 조석고정, 지름 652 km(미마스-카론급). designation=Proxima Centauri c I(고유명 없음).
     fields:
       - name: body_type
-        value: "냉 얼음 위성 (명왕성 아날로그; N₂/CH₄/H₂O 얼음 + 톨린, 무생물 ~40–60K, 반경 ~950 km)"
+        value: "냉 얼음 위성 (명왕성 아날로그; N₂/CH₄/H₂O 얼음 + 톨린, 무생물 ~40–60K, 지름 652 km)"
         op: set
       - name: designation
         value: "Proxima Centauri c I (고유명 없음)"
@@ -1730,30 +1725,34 @@ decisions:
     status: gated
     driver: [window-selection, fiction]
     narrative: >
-      반경 ~950 km(트리톤 1,353·티타니아 788 사이, 중대형 얼음 위성) · 얼음 밀도 ~1.9 g/cm³(명왕성/트리톤급) →
-      질량 ~0.0011 M⊕(달의 ~0.09배, ~6.8e21 kg) · g ~0.5 m/s²(~0.05 g, 저중력) · 조석고정 · obliquity ~0 · age
-      ~4.85 Gyr. c 대비 비율 ~0.055 = 해왕성-트리톤급(mini-Neptune 위성 비율로 정합). [§3.2 정규화 2026-07-12]
-      조석고정의 자명 귀결 승격: rotation = 공전주기 ~17.7 h(케플러, 보드 a 4.61e-4 AU·M_c 8 M⊕), spin_axis =
-      궤도 법선(c 기준), reference_radius = radius. [2026-07-14 figure, 궤도 pin 후 재도출] a=4 R_c 초근접 →
-      q_s 0.0184(n²R³/GM, 조석 검산 (M_c/M_cI)(R/a)³ 일치) → J₂ ~1.6e-2·C̄₂₂ ~4.9e-3·flattening ~4%(a/c~1.04)
-      → 가시 삼축 계란형(Mimas 실제 앵커 q_s 0.0186 동일). ledger의 "threshold 아래" 예상은 궤도 확정 전 값이라
-      뒤집힘. 오블레이트 메쉬 emit 대상. internal_heat는 e≈0 원형이라 정상상태 조석가열 없어 미미.
+      A small icy moon 652 km across, between Mimas and Charon in size, and dense enough at 1.6 g/cm³ that rock
+      outweighs ice inside it. Gravity at the surface is about a hundredth of Earth's, so a thrown stone travels far
+      and a dropped one falls slowly. It keeps one face to the planet, since a body this close is locked within a few
+      thousand years, and the circular orbit leaves no tidal heating to speak of. Being so close does deform it: the
+      planet's pull stretches the moon into an egg 5% longer than it is tall, which is enough to see against the
+      stars.
+    narrative_ko: >
+      지름 652 km의 작은 얼음 위성이다. 미마스와 카론 사이 크기이고, 밀도가 1.6 g/cm³이라 안에서는 얼음보다 암석이
+      무겁다. 표면 중력은 지구의 백분의 일 남짓이라 던진 돌은 멀리 날아가고 떨어뜨린 돌은 느리게 내려앉는다. 행성을
+      향해 한쪽 면만 보인다. 이만큼 가까우면 수천 년 안에 잠기기 때문이다. 궤도가 원이라 말할 만한 조석가열도 없다.
+      다만 가까운 대가로 모양이 일그러진다. 행성의 인력이 위성을 키보다 5% 길쭉한 계란으로 늘여 놓았고, 그 정도면
+      별을 배경으로 눈에 띈다.
     fields:
       - name: radius
-        value: 950
+        value: 326
         unit: km
         op: set
-        note: "트리톤 1,353·티타니아 788 사이, 중대형 얼음 위성"
+        note: "지름 652 km (오너 2026-08-04). 미마스 198·카론 606 km 사이의 소형 얼음 위성"
       - name: mass
-        value: 6.8e21
+        value: 2.32e20
         unit: kg
         op: set
-        note: "~0.0011 M⊕ (달의 ~0.09배); 얼음 밀도 ~1.9 g/cm³; g ~0.5 m/s² (~0.05 g)"
+        note: "밀도 1.6 g/cm³ (오너 2026-08-04, 암석질량비 ~0.59) → 3.9e-5 M⊕ (달의 ~0.003배)"
       - name: gravity
-        value: 0.503
+        value: 0.146
         unit: m/s2
         op: set
-        note: "GM/R² 파생 에코 (~0.05 g)"
+        note: "GM/R² 파생 에코 (~0.015 g); 탈출속도 308 m/s"
       - name: rotation_period
         value: 17.7
         unit: h
@@ -1763,22 +1762,22 @@ decisions:
         value: "c 궤도 법선에서 Cassini ε(≲0.004°) offset (State 1, 사실상 궤도 법선); 방위각 de-perfect-at-emit"
         op: set
       - name: reference_radius
-        value: 950
+        value: 326
         unit: km
         op: set
         note: "J2/C22 기준 반경 = radius"
       - name: geopotential_j2
-        value: 1.6e-2
+        value: 1.91e-2
         op: set
-        note: "≈0.88·q_s (q_s 0.0184 = n²R³/GM, a=4 R_c 초근접; 얼음체 Europa 앵커). 동기위성 figure §3"
+        note: "≈0.88·q_s (q_s 0.0217 = n²R³/GM, a=4 R_c 초근접; 조석 검산 (M_c/M_cI)(R/a)³ 일치). 동기위성 figure §3"
       - name: geopotential_c22
-        value: 4.9e-3
+        value: 5.74e-3
         op: set
         note: "=0.30·J₂ (J₂=10/3·C̄₂₂ 조석 삼축; 축차 a−c:b−c=4:1)"
       - name: flattening
-        value: 4.0e-2
+        value: 4.78e-2
         op: set
-        note: "=(5/2)·J₂ → a/c~1.04 (>2% 가시 삼축, 계란형). Mimas 실제 앵커(q_s 0.0186 동일, 가시 삼축). 오블레이트 메쉬 emit 대상"
+        note: "=(5/2)·J₂ → a/c~1.05 (>2% 가시 삼축, 계란형). Mimas 실제 앵커(q_s 0.0186 근사, 가시 삼축). 오블레이트 메쉬 emit 대상"
       - name: internal_heat
         value: "negligible"
         op: set
@@ -1792,15 +1791,24 @@ decisions:
         value: 4.85
         unit: Gyr
         op: set
+    provenance: >
+      2026-06-23: 오너가 앞선 "1.5× 달"(반경 2,600 km, 모행성 대비 0.15로 과대)을 반경 950 km로 하향.
+      2026-07-14: 궤도 확정 후 figure 재도출(q_s 0.0184 → J₂ 1.6e-2, flattening 4%).
+      2026-08-04: 오너가 지름 652 km(반경 326 km)·밀도 1.6 g/cm³로 확정. 질량 6.8e21 → 2.32e20 kg,
+      g 0.503 → 0.146 m/s², q_s 0.0184 → 0.0217(R³/M 비가 커짐)이라 J₂ 1.91e-2·C̄₂₂ 5.74e-3·flattening 4.78%로
+      재계산. 궤도(4 R_c 원궤도)·자전(17.7 h)·obliquity는 무변경.
     gate:
       criterion: [fiction, error-bar]
       verdict: pass-in-window
       evidence: >
-        rationale: 오너 2026-06-23 결정으로, 앞서 "1.5× 달"(반경 2,600km, 비율 0.15 과대)을 ~950 km로 하향(비율 ~0.055=
-        해왕성-트리톤, mini-Neptune 위성에 정합). 픽션이라 질량/반경은 얼음 밀도(~1.9)로 자기일관 도출. g·밀도는
-        트리톤/티타니아급.
-
-        caveat: G1·c-G10의 '~1.5× 달' 표기는 본 G3로 정정(~950 km).
+        채택값은 지름 652 km, 밀도 1.6 g/cm³, 질량 2.32e20 kg, g 0.146 m/s², flattening 4.78%다.
+        확인: 픽션 천체이므로 질량은 오너가 정한 지름과 밀도에서 자기일관하게 계산했고, 밀도 1.6은 물얼음 0.93과
+        암석 3.2 사이에서 암석 질량비 0.59에 해당해 카론(1.70)과 미마스(1.15) 사이에 든다. 반경 326 km는 구형인
+        미마스(198 km)보다 크므로 유체정역학 평형이 성립하고 형태는 구다. figure는 궤도가 정한 회전 파라미터
+        q_s = n²R³/GM = 0.0217에서 나왔고, 조석 검산 (M_c/M_cI)(R/a)³이 같은 값을 준다. 가시 임계 2%를 넘는
+        4.78% 편평도라 계란형 메쉬가 emit 대상이다.
+        유보: 관측이 전혀 없는 픽션 위성이라 모든 값이 오너 선택과 그로부터의 도출이다. 궤도가 원이어서 조석가열은
+        0으로 두지만, 나중에 공명 파트너를 넣으면 강제 이심률로 이오급 가열이 열린다.
 
   - body: Proxima Cen c I
     axis: atmosphere
@@ -1893,7 +1901,7 @@ decisions:
     status: gated
     driver: [fiction]
     narrative: >
-      무자기장이다. ~950 km 소형 얼음체라 금속핵 대류 dynamo 불가(얼음 위성 전형). 유도장도 미미(e~0·조석고정→조석가열
+      무자기장이다. 지름 652 km 소형 얼음체라 금속핵 대류 dynamo 불가(얼음 위성 전형). 유도장도 미미(e~0·조석고정→조석가열
       없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 무관하게 c 자기권 안
       (4 R_c)이라 자기 환경은 c가 결정.
     fields:
@@ -1938,7 +1946,7 @@ decisions:
     axis: rings
     status: gated
     driver: [fiction]
-    narrative: "고리 없음 (~950 km 위성, 고리 물질·근거 없음). 단순 부재."
+    narrative: "고리 없음 (지름 652 km 위성, 고리 물질·근거 없음). 단순 부재."
     fields:
       - name: ring_structure
         value: "none"
@@ -1952,7 +1960,7 @@ decisions:
     axis: satellites
     status: gated
     driver: [fiction, engine]
-    narrative: "submoon(위성의 위성) 없음. 동역학적 불안정으로 태양계에도 사례 0, ~950 km 위성은 보유 불가. 물리적 부재."
+    narrative: "submoon(위성의 위성) 없음. 동역학적 불안정으로 태양계에도 사례 0, 지름 652 km 위성은 보유 불가. 물리적 부재."
     gate:
       criterion: [classification, stability]
       verdict: pass-in-window
