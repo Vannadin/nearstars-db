@@ -312,6 +312,12 @@ decisions:
       superseded, because `science_biomes` *is* what the row decides, so the prose has to be
       about it. Everything else engine-side (RB difficulty levels, `ScienceValues`, SOI
       tuning, why Poles is geographic rather than seasonal) still belongs in `evidence`.
+  - **Never dress up what is definitional for the body class** (owner, 2026-08-04).
+    "There is no surface to stand on" for a gas planet, "it has no air" for an airless
+    moon, "it is far from its star" for an outer body: the reader already knows from
+    `body_type`, and writing it as if it were a finding makes the whole narrative
+    suspect. State only what this body does that another of its class would not. The
+    same rule already governs the `gameplay` axis; it applies to every narrative.
   - gate `evidence` = the **verification + grounding trail**, in a fixed shape (owner,
     2026-07-28): ① the adopted conclusion in one sentence → ② the check actually
     performed (tool, fit, comparison, the numbers) → ③ one honest caveat, only when a
