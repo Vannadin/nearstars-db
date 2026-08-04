@@ -1511,23 +1511,40 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      radiation=낮음. 최외곽 1.5 AU(b의 ~30배·d의 ~50배 거리)라 플레어 입자 플럭스 거리감쇄 + 빙거성 자기권(G7) 차폐 →
-      시스템서 가장 조용. stellar_wind=약(원거리 ram 작음). heliosphere=astrosphere 심부(1.5 AU ≪ standoff ~55 AU →
-      항상 항성풍 내부, ISM 직접 미관측). 차갑고 조용한 외곽이고, 무생물(극냉)·낮은 해저드.
+      The flare protons that scour b and d thin with the square of distance, and c sits thirty to fifty times farther
+      out, so the same flare delivers a thousandth as many particles here. The stellar wind thins the same way: the
+      ram pressure at c's orbit is about a tenth of what Earth takes from the solar wind. Proxima's astrosphere is
+      smaller than the Sun's, though, and filters galactic cosmic rays poorly; what gets through is what c's
+      magnetosphere catches to fill its trapped belts. So interplanetary space here is the quietest in the system,
+      with the one biting exception inside a few planetary radii.
+    narrative_ko: >
+      b와 d를 할퀴는 플레어 양성자는 거리의 제곱으로 옅어진다. c는 그 행성들보다 별에서 30~50배 멀리 있어서, 같은
+      플레어를 맞아도 도착하는 입자는 천분의 일 수준이다. 항성풍도 같은 이유로 옅어져, c 궤도의 풍압은 지구가
+      태양풍에서 받는 값의 10분의 1쯤이다. 다만 프록시마의 항성권은 태양권보다 작아 은하 우주선을 거의 거르지
+      못하고, 그렇게 들어온 우주선이 c의 자기권에 잡혀 포획대를 채운다. 그래서 행성간 공간은 계에서 가장
+      조용하지만, 행성 반지름 몇 배 안쪽만은 예외로 문다.
     fields:
       - name: radiation
-        value: "낮음 (최외곽 1.5 AU + 빙거성 자기권 차폐, 시스템서 가장 조용)"
+        value: "행성간 공간 낮음 (플레어 플럭스 거리감쇄, 계에서 가장 조용); 단 자기권 포획대는 예외 (내대 8 rad/h)"
         op: set
       - name: stellar_wind
-        value: "약 (원거리 ram 작음)"
+        value: "약 (1.5 AU 램압 0.178 nPa, 지구 태양풍의 ~0.09배)"
         op: set
       - name: heliosphere
         value: "astrosphere 심부 (1.5 AU ≪ standoff ~55 AU)"
         op: set
+    provenance: >
+      2026-08-04 스윕: 산문을 EN/KO 계약 형태로 재작성, 방사선대 실물리 재계산(내대 8 rad/h 신설)과 정합하도록
+      "가장 조용"에 포획대 예외를 병기. 풍압 수치는 방사선대 행의 Chapman-Ferraro 입력과 동일값.
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      evidence: "별 measured 환경 거리스케일 + G7 빙거성 자기권에서 도출. b·d와 정반대(저방사선). 오너 G8 확정 2026-06-23."
+      evidence: >
+        채택값은 행성간 방사선 낮음, 항성풍 약(램압 0.178 nPa), 항성권 심부다.
+        확인: 플레어 입자 플럭스는 거리 제곱 감쇄로 b 대비 약 천분의 일이고, 램압은 태양풍 1 AU 2 nPa에 질량손실률
+        0.2배와 거리 1.5 AU를 넣은 값으로 방사선대 행의 Chapman-Ferraro 입력과 같다. 항성권 standoff ~55 AU는 별
+        environment 행의 값을 그대로 썼고, 포획대 예외 수치는 이 행성 방사선대 행과 대조했다.
+        유보: 프록시마의 입자 방출은 실측이 없어 태양 SPE 스펙트럼의 거리 스케일링이다.
 
   - body: Proxima Cen c
     axis: rings
