@@ -732,20 +732,6 @@ decisions:
       fixed ground. The most worthwhile of them is the substellar point, where the star hangs at one spot and the
       lakes below it steam.
     narrative_ko: >
-      착륙은 가능하지만 오래 머물기는 어렵다. 자기장이 약하고 대기도 지구의 3분의 1이라 플레어가 지표까지 닿는다.
-      대신 이 계에서 유일하게 물 위에 내려앉을 수 있는 곳이다. 지표는 일곱으로 갈린다. 직하점(Substellar Point,
-      별이 머리 꼭대기에 고정) / 직하 호수(Substellar Lakes, 물 위 착륙) / 주간 저지(Day Lowlands, 어두운 현무암) /
-      주간 고지(Day Highlands, 밝은 장석질) / 명암경계선(Terminator, 해가 지평에 걸려 멈춘 황혼대) / 야간면(Night
-      Side, 얼어붙은 암석) / 야간 빙관(Night Ice Cap, 반대점 물얼음). 오로라대는 고정된 땅이 없어 제외했다. 그중
-      가장 볼 만한 곳은 별이 한자리에 붙박이로 걸린 직하점으로, 그 아래 호수가 김을 올린다.
-    narrative_ko: >
-      이 행성에는 내려앉을 수 있다. 대기를 스치는 것이 전부인 Alpha Centauri A b와 갈리는 지점이 그것이다. 지도는
-      위도가 아니라 별이 얼마나 곧게 내리쬐는지로 갈려, 직하점에서 바깥으로 일곱 구획이 동심원을 그린다. 별이 머리
-      꼭대기에 선 직하점, 그 둘레로 물 위에 내려앉을 수 있는 직하 호수, 어두운 현무암의 주간 저지, 그 위로 밝은
-      장석질 고지, 해가 지평에 걸린 채 움직이지 않는 명암경계선, 얼어붙은 야간면, 그리고 반대점을 덮은 물얼음
-      빙관이다. 오로라대는 제 땅이 고정돼 있지 않아 구획에서 뺐다. 가 볼 만한 곳은 직하점이다. 별이 하늘 한자리에
-      붙어 꼼짝하지 않고, 그 아래 호수가 김을 올린다.
-    narrative_ko: >
       이 행성에는 내려앉을 수 있다. 대기를 스치는 것이 전부인 Alpha Centauri A b와 갈리는 지점이 그것이고, 여기에는
       고체 지표가 있으며 직하점에는 물 위로 내릴 자리까지 있다. 지도는 위도가 아니라 별이 얼마나 곧게 내리쬐는지로
       갈린다. 그 점에서 바깥으로 일곱 구획이다. 직하점, 그 둘레의 호수, 마픽질 주간 저지, 장석질 주간 고지, 황혼의
@@ -1581,6 +1567,8 @@ decisions:
       같은 날 지구 시선 밝기 계산기(뷰어)로 Gratton 대비 정량 대조: 게이트 고리 ~7e-10 = 실측의 0.2% → "밝은 신호와
       양립" 표현을 철회하고 hook을 테마적 착상으로 명시. 전문 캐시 docs/phase3/_papers/2004.06685.md 추가.
       같은 날 확산 외곽고리(E-ring식)를 검토했다가 오너 결정으로 채택하지 않음. 고리는 밀집 2중 띠로 확정.
+      2026-08-05: 위성 궤도가 4 → 6.4 R_c로 물러나며 바깥 띠 외경의 근거를 위성 shepherd에서 얼음 Roche 한계로
+      교체. 구획·수치는 무변경.
     gate:
       criterion: [observation, visual-checklist]
       verdict: documented-divergence
@@ -1593,7 +1581,8 @@ decisions:
         어느 두께로 잡아도 측광을 재현하지 못하므로(위 수치), 관측 근거 없는 구조를 추가하지 않는 쪽을 택했다.
       evidence: >
         채택값은 2중 얼음 띠와 적/흰 교대 줄무늬다.
-        확인: 두 띠 모두 얼음 Roche 한계 ~3.3 R_c(56,700 km) 안쪽에 있다. 40~60 K에서의 얼음 안정은 얼음 안정성
+        확인: 두 띠 모두 얼음 Roche 한계 ~3.3 R_c(56,700 km) 안쪽에 있고, 바깥 띠가 3.0 R_c에서 끝나는 것도 그
+        한계 바로 안쪽이라는 사실이 근거다(위성이 가장자리를 붙잡는다는 초기 설명은 위성이 6.4 R_c로 물러나며 폐기). 40~60 K에서의 얼음 안정은 얼음 안정성
         문서의 승화 수명으로, 색은 디스크색 문서의 Mie 합성(청정 물얼음 Warren&Brandt 2008 + 톨린 Khare 1984 광학상수)
         으로 얻었다. hook은 Gratton 2020 본문의 밝기 초과 대목과 대조했다.
         유보: 고리 띠가 내대(적도 1.41~2.91 R_c)와 겹쳐 포획 입자를 쓸어낼 수 있으나, 실측 천왕성이 좁은 고리와
@@ -1608,11 +1597,11 @@ decisions:
     status: gated
     driver: [fiction, engine]
     narrative: >
-      위성 1개 = Proxima c I. 지름 652 km(미마스-카론급, 명왕성 느낌)(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
+      위성 1개 = Proxima c I. 지름 652 km(미마스-카론급)(물얼음 기반암 + 방사분해 톨린 적화), 고유명 없음, c에
       조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. 판도라식 독자 facet-walk로 별도
       바디 전개(아래 "Proxima Centauri c I" 블록 11축).
       관측 근거 0이고, art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
-      가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). emit시 stability-sim 필수([[project_nearstars_stability_sim]] Hill+MEGNO).
+      가능(불가 아님). 카론 아날로그는 물리 정합(카론=~50K 물얼음 + 톨린 극관, 대기 없음). emit시 stability-sim 필수([[project_nearstars_stability_sim]] Hill+MEGNO).
       정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).
     gate:
       criterion: [fiction, stability, hill-stability]
@@ -1634,11 +1623,6 @@ decisions:
       follow latitude rather than the angle to the star. The ring shadow and the moon are excluded, neither being
       fixed ground. The most worthwhile is the equatorial belt at ring plane, where the double ring folds edge-on into
       a single bright line and its shadow falls straight down.
-    narrative_ko: >
-      고체 표면이 없어 착륙은 불가하고 대기 비행과 궤도만 가능하다. 과학 지도는 다섯으로 갈린다. 적도대(Equatorial) / 북온대(North Temperate) / 남온대(South Temperate) /
-      북극(North Polar) / 남극(South Polar). 이 계에서 유일한 자유 자전 행성이라 구획이 별을 향한 각도가 아니라
-      위도를 따른다. 고리 그림자대와 위성은 고정된 땅이 아니어서 제외했다. 그중 가장 볼 만한 곳은 고리면의
-      적도대로, 2중 고리가 옆에서 한 줄기 밝은 선으로 접히고 그림자가 곧게 내리꽂힌다.
     narrative_ko: >
       내려앉을 땅이 없으니 이곳은 지나며 날고 둘레를 도는 행성이고, 그럼에도 찾아갈 값어치는 하늘에 있다. 붉은 띠와
       흰 띠로 된 2중 고리, 그리고 제 위성이 걸려 있다. 이 계에서 유일하게 자유롭게 자전하는 행성이라 지도도 보통
@@ -1663,18 +1647,18 @@ decisions:
         자동으로 나온다.
         유보: 이 행성의 존재 자체가 확정되지 않았다. 그러니 이 구획도 c가 있다는 가정 위에 있다.
 
-  # ════════ 위성 Proxima c I (c의 픽션 위성, 명왕성 아날로그 냉 얼음) — 판도라식 독자 facet-walk 2026-06-23 (축별) ════════
+  # ════════ 위성 Proxima c I (c의 픽션 위성, 카론 아날로그 냉 물얼음) — 판도라식 독자 facet-walk 2026-06-23 (축별) ════════
   - body: Proxima Cen c I
     axis: identity
     status: gated
     driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
     narrative: >
-      body_type=냉 얼음 위성(명왕성 아날로그)이고, N₂/CH₄/H₂O 얼음 + 톨린 적화 다양 지형, 무생물(극냉 ~40–60K). c의 위성,
+      body_type=냉 얼음 위성(카론 아날로그)이고, 물얼음 기반암 + 방사분해 톨린 적화, 무생물(극냉 ~40–60K). c의 위성,
       c에 조석고정, 지름 652 km(미마스-카론급). designation=Proxima Centauri c I(고유명 없음).
     fields:
       - name: body_type
-        value: "냉 얼음 위성 (명왕성 아날로그; N₂/CH₄/H₂O 얼음 + 톨린, 무생물 ~40–60K, 지름 652 km)"
+        value: "냉 얼음 위성 (카론 아날로그; 물얼음 + 방사분해 톨린, 대기 없음, 무생물 ~40–60K, 지름 652 km)"
         op: set
       - name: designation
         value: "Proxima Centauri c I (고유명 없음)"
@@ -1682,41 +1666,63 @@ decisions:
     gate:
       criterion: [classification, fiction]
       verdict: pass-in-window
-      evidence: "오너 G1 확정 2026-06-23. art-first 픽션 위성( fictional moons=FFFF). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린 세계)."
+      evidence: "오너 G1 확정 2026-06-23. art-first 픽션 위성(fictional moons=FFFF). 카론 아날로그는 물리 정합(카론=~50K 물얼음 + 톨린 극관 + 무대기, 652 km에서 대기 보유 불가라 명왕성이 아니라 카론이 맞는 짝)."
 
   - body: Proxima Cen c I
     axis: orbit
-    refs: ["docs/reference/tidal-locking-timescale-methodology.md"]
     status: gated
     driver: [window-selection, engine]
-    # (해소 2026-07-12) 마이그레이션 때 semi_major_axis_au 필드에 km 값이 들어갔던 것을 AU로 환산 — 필드명 단위와 값 단위 일치.
     narrative: >
-      c 주위 a ≈ 4 R_c ≈ 69,000 km(고리 외경 51,600 km 바로 바깥, 얼음 Roche 56,700 km 살짝 밖; 자기중력 위성이라
-      Roche 경계 밖이면 안전). 조석고정 1:1(이 거리면 ~10³–10⁴년에 잠김; c 8 M⊕·얼음 저밀도라 매우 빠름). e ≈ 0
-      (조석 원형화) · c 적도면 공전 · Ω/ω/M 자유 emit.
+      The moon rides the outer edge of the planet's radiation belt, 110,000 km out, close enough to graze the trapped
+      particles and far enough that the tides push it outward rather than in. That distinction decides everything:
+      inside 5.3 planetary radii the planet's 27-hour spin is slower than the orbit, and a moon there spirals down
+      into the rings within a few hundred million years, the fate Phobos is meeting at Mars. Out here it retreats
+      instead, slowly enough to be imperceptible. It keeps one face to the planet, locked within a hundred thousand
+      years of forming, and the orbit is circular for the same tidal reason.
+    narrative_ko: >
+      위성은 행성 방사선대의 바깥 테두리를 타고 돈다. 11만 km 거리이고, 포획된 입자를 스칠 만큼 가깝지만 조석이
+      위성을 안쪽이 아니라 바깥으로 밀어낼 만큼은 멀다. 이 구분이 모든 것을 정한다. 반지름 5.3배 안쪽에서는 행성의
+      27시간 자전이 위성의 공전보다 느려서, 그 자리의 위성은 수억 년 안에 고리로 감겨 내려간다. 화성에서 포보스가
+      맞고 있는 운명이다. 여기서는 반대로 물러나며, 그 속도는 알아챌 수 없을 만큼 느리다. 행성을 향해 한쪽 면만
+      보이는데 생긴 뒤 십만 년 안에 잠겼고, 궤도가 원인 것도 같은 조석 때문이다.
     fields:
       - name: semi_major_axis_au
-        value: 4.61e-4
+        value: 7.3592e-4
         unit: AU
         op: set
-        note: "= 69,000 km ≈4 R_c (고리 외경 51,600 km 바로 밖, Roche 56,700 km 살짝 밖); c 적도면 공전; Ω/ω/M 자유 emit; 필드명이 _au라 km 값 그대로 두면 emit 사고(2026-07-12 환산)"
+        note: "= 110,093 km = 6.4 R_c (오너 2026-08-05). 방사선 외대 적도 외곽 6.52 R_c 바로 안쪽 + 동기궤도 5.31 R_c 바깥; c 적도면 공전; Ω/ω/M 자유 emit; 필드명이 _au라 km 값 그대로 두면 emit 사고(2026-07-12 환산)"
       - name: eccentricity
         value: 0
         op: set
-        note: "조석 원형화 e≈0 (물리 강제, 기본값 아님). 대기 사실상 없음(µbar exosphere)이라 대기 곡선 0-나눗셈 트랩 무관; emit시 확인만"
-      - name: tidal_lock
-        value: "1:1 (~10³–10⁴년 잠김)"
+        note: "조석 원형화 e≈0 (물리 강제, 기본값 아님). 대기 없음이라 대기 곡선 0-나눗셈 트랩 무관; emit시 확인만"
+      - name: orbital_period
+        value: 35.7
+        unit: h
         op: set
+        note: "= 1.49일 (케플러, a 6.4 R_c·M_c 8 M⊕). 자전과 같음"
+      - name: tidal_lock
+        value: "1:1 (~10⁴–10⁵년 잠김)"
+        op: set
+        note: "τ∝a⁶라 4 R_c 대비 17배 느리지만 여전히 나이에 비해 순간"
+    provenance: >
+      2026-06-23: 오너가 "고리 바로 바깥" 의도로 a=4 R_c(69,000 km) 확정. 근거는 바깥 고리 가장자리 shepherd.
+      2026-08-05: 조석 진화 검산으로 4 R_c 철회. c의 자전 27시간이 만드는 동기궤도가 5.31 R_c라 4 R_c는 그
+      안쪽이고, 포보스형 안쪽 감김으로 190~570 Myr에 고리로 낙하한다(포보스 실측 2 cm/yr를 2배 안에서 재현하는
+      da/dt = 3(k2/Q)(Mm/Mp)·n·a·(Rp/a)⁵로 계산). 오너가 방사선 외대에 살짝 걸치는 6.4 R_c를 택해 동기궤도 밖으로
+      이동. 고리 외경의 역학적 근거는 shepherd에서 얼음 Roche 한계 3.3 R_c로 교체(고리 3.0 R_c는 그 바로 안쪽).
     gate:
       criterion: [stability, classification]
       verdict: pass-in-window
       evidence: >
-        rationale: 오너 "고리 바로 바깥" 2026-06-23. Roche 밖(자기중력 위성 안전) + Hill 안정역(270–450만 km) 깊숙이.
-        조석고정은 despin τ∝a⁶ρ/M_p²로 이 거리·8 M⊕서 ~10³–10⁴년(나이≪) → 1:1 확정(locking 문서).
-
-        coupling: 큰 위성이 고리 외경 바로 밖 → 바깥 고리 가장자리 shepherd(truncate) → G9 고리가 거기서 끝나는 역학적 이유.
-
-        paper: 조석고정 τ = docs/reference/tidal-locking-timescale-methodology.md(a⁶). emit시 stability-sim 권장.
+        채택값은 a 6.4 R_c(110,093 km), e 0, 공전·자전 35.7시간, 1:1 조석고정이다.
+        확인: 궤도 반경은 두 경계 사이에 끼워 정했다. 방사선 외대의 적도 외곽이 (2.8+2.5)/√0.66 = 6.52 R_c이고
+        동기궤도가 5.31 R_c이므로, 6.4 R_c는 벨트를 스치면서 동기궤도 밖에 남는 유일한 폭 안에 있다. 동기궤도 밖이
+        결정적인 이유는 조석 이동 부호가 뒤집히기 때문이다. 안쪽이면 감기고 밖이면 물러나는데, 여기서는 바깥으로
+        연간 0.2~0.7 cm 물러나 나이 전체에 걸쳐 무해하다. 계산식은 포보스의 실측 후퇴 속도를 2배 안에서 재현한다.
+        조석고정은 despin τ∝a⁶로 10⁴~10⁵년이라 나이에 비해 순간이고, Hill 안정역(270~450만 km) 깊숙이 든다.
+        유보: k2/Q는 미니 해왕성에서 관측이 없어 자릿수 불확실하다. 다만 6.4 R_c는 부호가 안전한 쪽이라 이 불확실성이
+        판정을 뒤집지 않는다. 반대로 4 R_c는 어떤 k2/Q를 넣어도 나이를 못 버틴다.
+    refs: ["docs/reference/tidal-locking-timescale-methodology.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
 
   - body: Proxima Cen c I
     axis: bulk                        # §3.2 템플릿 앵커
@@ -1728,9 +1734,9 @@ decisions:
       A small icy moon 652 km across, between Mimas and Charon in size, and dense enough at 1.6 g/cm³ that rock
       outweighs ice inside it. Gravity at the surface is about a hundredth of Earth's, so a thrown stone travels far
       and a dropped one falls slowly. It keeps one face to the planet, since a body this close is locked within a few
-      thousand years, and the circular orbit leaves no tidal heating to speak of. Being so close does deform it: the
-      planet's pull stretches the moon into an egg 5% longer than it is tall, which is enough to see against the
-      stars.
+      thousand years, and the circular orbit leaves no tidal heating to speak of. The planet's pull still deforms it,
+      but only by about a percent, too little to notice from outside; it shows up in the gravity field rather than in
+      the silhouette.
     narrative_ko: >
       지름 652 km의 작은 얼음 위성이다. 미마스와 카론 사이 크기이고, 밀도가 1.6 g/cm³이라 안에서는 얼음보다 암석이
       무겁다. 표면 중력은 지구의 백분의 일 남짓이라 던진 돌은 멀리 날아가고 떨어뜨린 돌은 느리게 내려앉는다. 행성을
@@ -1754,10 +1760,10 @@ decisions:
         op: set
         note: "GM/R² 파생 에코 (~0.015 g); 탈출속도 308 m/s"
       - name: rotation_period
-        value: 17.7
+        value: 35.7
         unit: h
         op: set
-        note: "= 공전주기 (조석고정 to c; 케플러 a 4.61e-4 AU·M_c 8 M⊕)"
+        note: "= 공전주기 (조석고정 to c; 케플러 a 7.3592e-4 AU = 6.4 R_c·M_c 8 M⊕)"
       - name: spin_axis_orientation
         value: "c 궤도 법선에서 Cassini ε(≲0.004°) offset (State 1, 사실상 궤도 법선); 방위각 de-perfect-at-emit"
         op: set
@@ -1767,17 +1773,17 @@ decisions:
         op: set
         note: "J2/C22 기준 반경 = radius"
       - name: geopotential_j2
-        value: 1.91e-2
+        value: 4.70e-3
         op: set
-        note: "≈0.88·q_s (q_s 0.0217 = n²R³/GM, a=4 R_c 초근접; 조석 검산 (M_c/M_cI)(R/a)³ 일치). 동기위성 figure §3"
+        note: "≈0.88·q_s (q_s 5.34e-3 = n²/(G·ρ·4π/3), a=6.4 R_c; 조석 검산 (M_c/M_cI)(R/a)³ 일치). 동기위성 figure §3"
       - name: geopotential_c22
-        value: 5.74e-3
+        value: 1.41e-3
         op: set
         note: "=0.30·J₂ (J₂=10/3·C̄₂₂ 조석 삼축; 축차 a−c:b−c=4:1)"
       - name: flattening
-        value: 4.78e-2
+        value: 1.18e-2
         op: set
-        note: "=(5/2)·J₂ → a/c~1.05 (>2% 가시 삼축, 계란형). Mimas 실제 앵커(q_s 0.0186 근사, 가시 삼축). 오블레이트 메쉬 emit 대상"
+        note: "=(5/2)·J₂ → a/c~1.012 (<2% 가시 임계 아래). 6.4 R_c로 물러나며 q_s가 4배 줄어 계란형이 사라짐 → 오블레이트 메쉬 비대상, 중력에만 반영"
       - name: internal_heat
         value: "negligible"
         op: set
@@ -1795,82 +1801,130 @@ decisions:
       2026-06-23: 오너가 앞선 "1.5× 달"(반경 2,600 km, 모행성 대비 0.15로 과대)을 반경 950 km로 하향.
       2026-07-14: 궤도 확정 후 figure 재도출(q_s 0.0184 → J₂ 1.6e-2, flattening 4%).
       2026-08-04: 오너가 지름 652 km(반경 326 km)·밀도 1.6 g/cm³로 확정. 질량 6.8e21 → 2.32e20 kg,
-      g 0.503 → 0.146 m/s², q_s 0.0184 → 0.0217(R³/M 비가 커짐)이라 J₂ 1.91e-2·C̄₂₂ 5.74e-3·flattening 4.78%로
-      재계산. 궤도(4 R_c 원궤도)·자전(17.7 h)·obliquity는 무변경.
+      g 0.503 → 0.146 m/s²로 재계산.
+      2026-08-05: 궤도가 4 → 6.4 R_c로 물러나 figure 재도출. q_s = n²/(G·ρ·4π/3)이 반지름과 무관하고 궤도만
+      의존하므로 0.0217 → 5.34e-3으로 4배 줄었고, J₂ 4.70e-3·C̄₂₂ 1.41e-3·flattening 1.18%가 되어 가시 임계 2%
+      아래로 내려갔다. 계란형 메쉬 emit 대상에서 제외. 자전은 공전과 같아 17.7 → 35.7시간.
     gate:
       criterion: [fiction, error-bar]
       verdict: pass-in-window
       evidence: >
-        채택값은 지름 652 km, 밀도 1.6 g/cm³, 질량 2.32e20 kg, g 0.146 m/s², flattening 4.78%다.
+        채택값은 지름 652 km, 밀도 1.6 g/cm³, 질량 2.32e20 kg, g 0.146 m/s², flattening 1.18%다.
         확인: 픽션 천체이므로 질량은 오너가 정한 지름과 밀도에서 자기일관하게 계산했고, 밀도 1.6은 물얼음 0.93과
         암석 3.2 사이에서 암석 질량비 0.59에 해당해 카론(1.70)과 미마스(1.15) 사이에 든다. 반경 326 km는 구형인
         미마스(198 km)보다 크므로 유체정역학 평형이 성립하고 형태는 구다. figure는 궤도가 정한 회전 파라미터
-        q_s = n²R³/GM = 0.0217에서 나왔고, 조석 검산 (M_c/M_cI)(R/a)³이 같은 값을 준다. 가시 임계 2%를 넘는
-        4.78% 편평도라 계란형 메쉬가 emit 대상이다.
+        q_s = n²/(G·ρ·4π/3) = 5.34e-3에서 나왔고, 조석 검산 (M_c/M_cI)(R/a)³이 같은 값을 준다. q_s가 반지름이
+        아니라 밀도와 궤도만으로 결정되므로 크기를 바꿔도 편평도는 변하지 않고, 6.4 R_c로 물러난 것이 1.18%로
+        낮춘 원인이다. 가시 임계 2% 아래라 계란형 메쉬는 emit 대상이 아니고 중력에만 반영한다.
         유보: 관측이 전혀 없는 픽션 위성이라 모든 값이 오너 선택과 그로부터의 도출이다. 궤도가 원이어서 조석가열은
         0으로 두지만, 나중에 공명 파트너를 넣으면 강제 이심률로 이오급 가열이 열린다.
 
   - body: Proxima Cen c I
     axis: atmosphere
-    refs: ["docs/reference/exoplanet-atmosphere-methodology.md", "docs/reference/ice-stability-methodology.md"]
     status: gated
     driver: [fiction]
     narrative: >
-      희박 N₂ 대기(명왕성식, +CH₄/CO 미량)이고, 표면 N₂ 얼음 승화로 ~Pa(µbar)급(명왕성 ~1 Pa 유추). 증기압 평형이라
-      승화-지지 정상상태(탈출분을 얼음 승화가 재공급 → Gyr 안정; v_esc~0.97 km/s 낮아도 명왕성처럼 유지). tholin 청색
-      haze 층(명왕성 특유 → G6 외형 연계). breathability=∅. 게임상 공기역학 무의미(너무 희박).
+      No atmosphere. A moon this small cannot hold one: nitrogen molecules at 45 K carry enough thermal speed
+      relative to the 308 m/s escape velocity that any gas released is gone rather than retained, and Charon, which
+      is nearly twice this size, is airless for the same reason. Sublimating ice still puts a whisper of vapour above
+      the surface, far thinner than the best laboratory vacuum, and every molecule of it is on a one-way trip. What
+      this rules out is the thing a Pluto-like moon would otherwise offer, the blue haze at the limb, because haze
+      needs an atmosphere to hang in.
+    narrative_ko: >
+      대기가 없다. 이만큼 작은 위성은 대기를 붙잡지 못한다. 45 K의 질소 분자는 탈출속도 308 m/s에 비해 충분히
+      빠르게 움직여서, 방출된 기체는 머무는 대신 떠난다. 이 위성의 두 배에 가까운 카론이 같은 이유로 대기가 없다.
+      얼음이 승화하며 표면 위에 기체의 속삭임 정도는 남지만, 실험실 최고 진공보다도 희박하고 그 분자들은 모두
+      돌아오지 않는 길을 간다. 이로써 명왕성 닮은 위성이라면 기대할 만한 것 하나가 배제된다. 지평선의 청색 연무다.
+      연무는 걸려 있을 대기가 있어야 생긴다.
     fields:
       - name: composition
-        value: "희박 N₂ (명왕성식, +CH₄/CO 미량) + tholin 청색 haze 층"
+        value: "대기 없음. 승화 엑소스피어만 (N₂/CH₄ 미량, 무충돌·비결속)"
         op: set
       - name: pressure
-        value: 1
+        value: 0
         unit: Pa
         op: set
-        note: "µbar급 (명왕성 ~1 Pa 유추, 승화-지지 정상상태); KSP상 사실상 무대기"
+        note: "결속 대기 없음. 국소 승화 증기는 nPa 이하 무충돌 엑소스피어로 KSP 무대기 처리"
       - name: breathability
         value: false
         op: set
+      - name: escape
+        value: "유체역학적 날림 (Jeans λ(N₂,45K) = 3.6, 탈출속도 308 m/s)"
+        op: set
+    provenance: >
+      2026-06-23: 명왕성 아날로그로 희박 N₂ 대기 1 Pa + 톨린 청색 haze를 채택. 근거는 "승화-지지 정상상태"와
+      당시 반경 950 km(표기 v_esc ~0.97 km/s).
+      2026-08-05: 오너가 지름 652 km를 확정하면서 철회. Jeans 매개변수로 재검산하니 λ(N₂,45K) = 3.6으로,
+      대기를 실제로 못 가진 카론(λ 11)보다도 아래다(명왕성 62·트리톤 94·타이탄 125가 보유 기준선). 승화-지지 논거도
+      성립하지 않는다. 증기압 평형은 대기가 있어야 승화와 응결이 상쇄되는 것이므로, 대기가 날아가는 천체에서는
+      자유 승화가 되어 N₂ 얼음 자체가 남지 않는다. 판정 근거 그림 docs/img/moon-atmosphere-feasibility.png.
     gate:
-      criterion: [classification]
-      verdict: pass-in-window
+      criterion: [classification, derived-grounding]
+      verdict: methodology-derived
       evidence: >
-        rationale: 명왕성 아날로그(g 0.5·~40–60K·N₂ 얼음)라 명왕성식 희박 N₂가 자연. 안정 근거 = 승화-지지(증기압 평형) +
-        중력 결속(대기 H~30 km ≪ 위성 Hill 2,460 km). c 자기권 상호작용(픽업/torus)은 modest라 본 결정엔 미상세화
-        (승화로 상쇄, 오너 2026-06-23).
-
-        paper: 명왕성 N₂ 대기·haze 유추. scale-height/μ = docs/reference/exoplanet-atmosphere-methodology.md.
+        채택값은 결속 대기 없음이고, 남는 것은 무충돌 승화 엑소스피어다.
+        확인: Jeans 매개변수 λ = GMμ/kTR로 판정했다. 이 위성은 45 K에서 λ = 3.6인데, 유체역학적 날림 경계가 약 25,
+        Gyr 보유 경계가 약 60이다. 실측으로 경계를 검증하면 대기를 가진 명왕성 62·트리톤 94·타이탄 125가 위쪽에,
+        대기가 없는 카론 11·엔셀라두스 1.3이 아래쪽에 놓인다. 카론은 이 위성보다 크면서도 대기가 없어 직접 반례가
+        된다. N₂ 얼음이 표면에 남는다는 전제도 함께 무너진다. 명왕성이 얼음을 지키는 것은 대기가 증기압 평형을 만들어
+        승화와 응결을 상쇄하기 때문이고, 대기가 없으면 자유 승화가 되어 흡수 일사만으로도 계 나이에 위성 지름보다
+        두꺼운 층이 날아간다. 그래서 표면 행은 N₂ 극관 대신 물얼음 기반암을 담는다.
+        유보: 보유 판정은 필요조건일 뿐이다. 가니메데는 λ 115로 보유 영역인데도 대기가 없는데, 110 K에서 N₂가 얼음으로
+        남지 못해 공급원이 없기 때문이다. 여기서는 두 조건이 모두 부정이라 결론이 갈리지 않는다.
+    refs: ["docs/reference/exoplanet-atmosphere-methodology.md", "docs/reference/ice-stability-methodology.md"]
 
   - body: Proxima Cen c I
     axis: surface
-    refs: ["docs/reference/surface-color-albedo-methodology.md"]
+    refs: ["docs/reference/surface-color-albedo-methodology.md", "docs/reference/crater-degradation-methodology.md",
+           "docs/reference/ice-stability-methodology.md"]
     status: gated
     driver: [fiction, art-direction]
-    # MIGRATION-FLAG: 표면 hex 색(#dcd6c6/#6e4632/#e8eef0)은 narrative 원문에 보존, typed 색필드 미분해 (emit 말미 art-pass).
     narrative: >
-      명왕성/트리톤 아날로그이고, 이원(bimodal) 지형 + 위도 구조(오너 a, 2026-06-23). 조성=N₂/CH₄/CO/H₂O 얼음 + tholin.
-      공간 배치(오너): 적갈 tholin 지대 = 적도대(가장 많이 조명·따뜻 → 톨린 생성 + 휘발성 손실; 명왕성 Cthulhu식
-      저albedo) / 밝은 N₂/CH₄ 얼음 = 극관(가장 추워 휘발성 cold-trap → 고albedo 창백 크림; 트리톤 밝은 극관식). 휘발성
-      이동 물리와 정합. 크라이오볼케이노 시그니처 제외(오너). Bond albedo 전반 높음(~0.5–0.7, 명왕성급) 단 공간 변동 큼.
-      고유색=크림 N₂(극) ~#dcd6c6 · 적갈 tholin(적도) ~#6e4632 · 물얼음 청백 패치. 조석고정. + sub-c eyeball(오너 2026-06-23):
-      c·고리 마주보는 sub-c 지점에 고리-얼음 신선 코팅 → 밝고 톨린 없는 국소 원형 영역(고리 바로 밖 shepherd 위성이라
-      쓸어담은 ring-ice가 톨린을 매몰; 트리톤/Iapetus식 한쪽 코팅). 고유색 신선 얼음 백 ~#e8eef0.
+      Water ice bedrock, stained dark red where the planet's radiation belt has worked on it longest. The moon grazes
+      the belt's outer edge, so charged particles rain steadily onto the leading hemisphere and break down the methane
+      and carbon dioxide locked in the ice into heavy organics, the same reddening that darkens one hemisphere of
+      Iapetus and the Uranian moons. Against that stained ground sit two kinds of bright terrain: the fresh ice thrown
+      up by young craters, and a pale circular patch on the face turned toward the planet, where ice drifting off the
+      rings settles faster than the radiation can darken it. The craters themselves never heal here, since ice this
+      cold does not flow, so the surface is a saturated record of every impact it has taken.
+    narrative_ko: >
+      물얼음 기반암이고, 행성 방사선대가 가장 오래 작업한 곳이 어두운 붉은색으로 물들어 있다. 위성이 벨트의 바깥
+      테두리를 스치므로 하전입자가 앞서 가는 반구에 꾸준히 쏟아지고, 얼음에 갇힌 메탄과 이산화탄소를 무거운 유기물로
+      분해한다. 이아페투스와 천왕성 위성들의 한쪽 반구를 어둡게 만든 것과 같은 붉힘이다. 그 물든 바탕 위에 밝은 지형이
+      두 종류 놓인다. 젊은 크레이터가 파올린 신선한 얼음, 그리고 행성을 마주보는 면의 창백한 원형 얼룩이다. 그 얼룩은
+      고리에서 흘러온 얼음이 방사선이 어둡게 만드는 속도보다 빠르게 내려앉는 자리다. 크레이터는 여기서 결코 아물지
+      않는다. 이만큼 차가운 얼음은 흐르지 않기 때문이다. 그래서 표면은 자기가 받아낸 모든 충돌의 기록이 포화된 상태로
+      남아 있다.
     fields:
       - name: surface_type
-        value: "ice (명왕성/트리톤 아날로그, bimodal: 적도 tholin + 극 N₂/CH₄ 빙관 + sub-c 신선얼음 eyeball)"
+        value: "물얼음 기반암 (카론 아날로그) + 방사분해 톨린 적화 + 신선얼음 크레이터 + sub-c 고리얼음 코팅 얼룩"
         op: set
       - name: albedo
-        value: "~0.5–0.7 (Bond, 명왕성급, 공간 변동 큼)"
+        value: "~0.25–0.45 (Bond, 카론 0.25~0.38 대역; 적화부 낮고 신선얼음·sub-c 얼룩 높음)"
         op: set
+      - name: crater_state
+        value: "포화 (이완·매몰·풍화 채널 모두 부재)"
+        op: set
+        note: "40~50 K 물얼음은 T/T_melt 0.17로 이완 꺼짐, 대기·화산 없음 → 확산만 남고 1 km 크레이터 소거에 계 나이 초과"
+    provenance: >
+      2026-06-23: 명왕성/트리톤 아날로그로 적도 톨린대 + 극 N₂/CH₄ 빙관 + sub-c eyeball을 채택.
+      2026-08-05: 대기 철회에 따라 N₂/CH₄ 극관을 뺐다. 대기 없이는 자유 승화로 N₂ 얼음이 남지 않는다(대기 행 참조).
+      대체 서사는 카론 아날로그다. 붉은 유기물의 근원을 휘발성 광화학에서 벨트 방사분해로 옮겼고, 6.4 R_c가 방사선
+      외대를 스치는 궤도라 그 공급이 실제로 있다. 위도 구조(적도대/극관) 대신 반구 구조(선행 반구 적화 / sub-c 얼룩)로
+      바뀐 것이 시각적 귀결이다. 크레이터 포화는 크레이터 풍화 문서의 판정을 새로 반영한 항목이다.
     gate:
-      criterion: [classification, visual-checklist]
-      verdict: pass-in-window
+      criterion: [classification, visual-checklist, derived-grounding]
+      verdict: methodology-derived
       evidence: >
-        rationale: 명왕성/트리톤 직접 유추(같은 ~40–60K 냉 얼음+톨린 regime). 색=표면색 문서(물얼음 Warren&Brandt·tholin
-        Khare·N₂/CH₄ Grundy/Cruikshank). 별서 멀어 reddening 미미 + 인게임 normalize → 색이 본질(밝기 아님). interesting-first
-        균형 지형.
-
-        paper: docs/reference/surface-color-albedo-methodology.md(얼음·tholin n,k). 명왕성/트리톤 표면=Grundy2016·Cruikshank1993.
+        채택값은 물얼음 기반암에 방사분해 적화, 신선얼음 크레이터, sub-c 얼룩이고 크레이터는 포화 상태다.
+        확인: 세 갈래로 검증했다. 얼음 종류는 얼음 안정성 문서로, 40~50 K에서 물얼음은 영구 안정이고 N₂는 대기 없이
+        존속 불가다. 크레이터 상태는 크레이터 풍화 문서의 채널 대조로, 이완은 T/T_melt 0.17에서 꺼지고 매몰과 풍화는
+        공급원이 없어 확산만 남는데 그 채널로는 1 km 크레이터 소거에 계 나이를 넘긴다. 적화는 궤도가 정한다. 6.4 R_c는
+        외대 적도 외곽 6.52 R_c 바로 안쪽이라 하전입자 유입이 실재하고, 얼음 속 CH₄·CO₂의 방사분해가 무거운 유기물을
+        만드는 것은 이아페투스와 천왕성 위성의 어두운 붉은 물질을 설명하는 기작이다. 색은 표면색 문서의 엔진으로
+        물얼음과 톨린 광학상수를 섞어 얻었다.
+        유보: 관측이 없는 픽션 위성이라 반구 대비의 세기는 아트 선택이다. sub-c 얼룩은 고리 물질이 위성까지 확산한다는
+        전제에 기대는데, 고리 외경 3.0 R_c와 궤도 6.4 R_c 사이의 수송 효율은 계산하지 않았다.
 
   - body: Proxima Cen c I
     axis: appearance
@@ -1878,22 +1932,41 @@ decisions:
     status: gated
     driver: [art-direction]
     narrative: >
-      명왕성 룩 + 위도 구조다. 어두운 적갈 tholin 적도대 + 밝은 크림 N₂ 극관(G5 위도 배치; 트리톤식 밝은 극 + 적도
-      적화), 그 위 얼룩(mottled) 디테일 + 얇은 청색
-      tholin haze 림(G4 haze 역광 → 명왕성 시그니처 청 노을, 위성 특징 비주얼). 조석고정이라 하늘에 c가 거대하게 + 2중
-      적/흰 고리까지 떠 보임(위성서 본 장관). 표시색=고유색 거의 그대로(별서 멀어 reddening 미미 + 인게임 normalize):
-      크림 #dcd6c6 · 적갈 #6e4632 · haze 청. b(황토)·c(창백 회백)·d(회갈)와 또 다른 = 크림+적갈 얼룩 + 청 haze.
+      Two hemispheres that barely look like the same body. The side that leads the moon around its orbit is a dark
+      rust brown, worked over by the radiation belt; the side facing the planet carries a pale ring-ice patch bright
+      enough to read as a second, smaller disk. Between them the ground is grey-white water ice, pocked everywhere
+      with craters that will never soften, and the youngest of those craters cut bright rays into the rust. There is
+      no limb glow of any kind, since there is no air. Against ochre b, pale grey-blue c and grey-brown d, this one
+      is the rust-and-bone body.
+    narrative_ko: >
+      두 반구가 같은 천체로 보이지 않을 만큼 다르다. 궤도를 앞서 가는 쪽은 방사선대에 시달려 어두운 녹빛 갈색이고,
+      행성을 마주보는 쪽은 창백한 고리얼음 얼룩이 또 하나의 작은 원반처럼 읽힐 만큼 밝다. 그 사이의 바탕은 회백색
+      물얼음이며 결코 부드러워지지 않을 크레이터가 온 면에 박혀 있고, 그중 가장 젊은 것들은 녹빛 위에 밝은 광선을
+      새긴다. 지평선의 빛무리는 어떤 종류도 없다. 공기가 없기 때문이다. 황토색인 b, 창백한 회청색인 c, 회갈색인 d
+      사이에서 이 천체는 녹빛과 뼛빛을 맡는다.
     fields:
       - name: base_color
-        value: "크림 #dcd6c6 (극) + 적갈 #6e4632 (적도) 얼룩; 표시색=고유색 거의 그대로"
+        value: "회백 물얼음 #d3d8dc 바탕 + 선행 반구 녹빛 갈색 #6e4632 + sub-c 신선얼음 #e8eef0"
         op: set
       - name: haze
-        value: "얇은 청색 tholin haze 림 (명왕성 시그니처 청 노을)"
+        value: null
+        na_reason: "대기가 없어 연무층이 성립하지 않는다. 청색 haze 림은 대기 철회와 함께 폐기(2026-08-05)"
+      - name: surface_detail
+        value: "포화 크레이터 + 젊은 크레이터의 밝은 광선계 (ray crater)"
         op: set
+    provenance: >
+      2026-06-23: 명왕성 룩(적도 톨린대 + 크림 극관 + 청색 tholin haze 림)을 채택.
+      2026-08-05: 대기 철회로 haze 림을 폐기하고, 위도 구조를 반구 구조로 교체(표면 행과 동일 결정). 색 자체는
+      톨린 적갈과 물얼음 회백을 유지하되 배치가 바뀌었다.
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
-      evidence: "G4(haze)+G5(이원 지형) 종합. 색=표면색·대기반사색 문서 엔진. c+고리가 하늘에 보이는 건 조석고정 위성의 자연 연출. 오너 G6 확정 2026-06-23."
+      evidence: >
+        채택값은 회백 물얼음 바탕에 선행 반구 녹빛 갈색, sub-c 신선얼음 얼룩, 포화 크레이터다.
+        확인: 색은 표면색 문서의 엔진으로 물얼음과 톨린 광학상수에서 얻었고, 배치는 표면 행의 지형 결정을 그대로
+        따른다. 연무가 없다는 것은 대기 행의 Jeans 판정에서 직접 따라온다. 계 안의 다른 세 천체와 색이 겹치지
+        않는지도 대조했다.
+        유보: 반구 대비의 세기와 광선계의 밀도는 아트 선택이다.
 
   - body: Proxima Cen c I
     axis: magnetism.magnetic_field
@@ -1915,32 +1988,48 @@ decisions:
 
   - body: Proxima Cen c I
     axis: environment
-    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
+    refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md",
+           "docs/reference/surface-radiation-dose-methodology.md"]
     status: gated
     driver: [window-selection]
     narrative: >
-      radiation=낮음(시스템 최저). c가 별서 1.5 AU 멀고 위성이 c 자기권 안이라 항성풍·플레어 직격을 c가 차폐.
-      항성풍 차폐 → 표면 항성풍 라디올리시스 거의 없음(G5 톨린이 명왕성보다 덜 빠른 이유). GCR(은하 우주선)은 차폐
-      안 됨 → 4.85 Gyr 누적이 G5 적도 톨린 적화의 주력(KBO식). c 자기권 플라스마 sputtering=modest. heliosphere=
-      Proxima astrosphere 심부(c 경유). 차갑고 조용하고, 무생물·최저 해저드.
+      Sheltered from the star, exposed to the planet. The planet's magnetosphere takes the stellar wind and the flare
+      particles, so nothing arrives from Proxima directly, but the orbit grazes the outer edge of the trapped-particle
+      belt and those particles reach the ground without an atmosphere to stop them. That is the dose that matters
+      here, a couple of rad an hour at the surface, and it is also the engine behind the reddened leading hemisphere.
+      Galactic cosmic rays add a steady floor on top, unfiltered because Proxima's astrosphere is small.
+    narrative_ko: >
+      별로부터는 가려져 있고 행성에게는 노출되어 있다. 항성풍과 플레어 입자는 행성의 자기권이 받아내므로 프록시마에서
+      직접 오는 것은 없다. 그러나 궤도가 포획 입자대의 바깥 테두리를 스치고, 그 입자들은 막아줄 대기가 없어 지표까지
+      닿는다. 여기서 문제가 되는 선량은 그것이고, 표면에서 시간당 수 rad 수준이다. 이것이 앞서 가는 반구를 붉히는
+      엔진이기도 하다. 그 위로 은하 우주선이 꾸준한 바닥선을 얹는데, 프록시마의 항성권이 작아 걸러지지 않는다.
     fields:
       - name: radiation
-        value: "낮음 (시스템 최저, c 자기권 차폐; GCR만 비차폐, 적도 톨린 적화 주력)"
+        value: "중간 (항성 기원은 c 자기권이 차폐, 대신 외대 포획 입자를 직접 받음 ~1–2 rad/h + 비차폐 GCR)"
         op: set
+        note: "6.4 R_c는 외대 적도 외곽 6.52 R_c 바로 안쪽. 대기가 없어 대기 감쇠 없음"
       - name: stellar_wind
-        value: "차폐됨 (c 자기권 4 R_c 내부 → 항성풍 직격 c가 차단; 표면 라디올리시스 거의 없음)"
+        value: "차폐됨 (c 자기권 내부 → 항성풍·플레어 직격 c가 차단)"
         op: set
       - name: heliosphere
         value: "Proxima astrosphere 심부 (c 경유)"
         op: set
+    provenance: >
+      2026-06-23: "시스템 최저 방사선"으로 확정. 근거는 c 자기권 차폐 + GCR만 비차폐이고, 톨린 적화의 주력을 GCR로 봤다.
+      2026-08-05: 궤도가 6.4 R_c로 확정되며 재판정. 그 자리는 c의 방사선 외대 안쪽 테두리라 포획 입자를 직접 받고,
+      대기가 없어 감쇠도 없다. 그래서 "최저"가 아니라 "중간"이며, 톨린 적화의 주력도 GCR에서 벨트 방사분해로 바뀐다
+      (표면 행과 같은 결정). 항성풍 차폐는 그대로 유지.
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
       evidence: >
-        note: 별 거리 + c 자기권 차폐 + GCR에서 도출. 항성풍 차폐(c)와 GCR 비차폐의 조합이 G5 톨린 생성률·분포를 설명.
-        오너 G8 확정 2026-06-23.
-
-        coupling: G5 표면 톨린(GCR 주도, 항성풍 채널 없음) + G7(c 자기권 내부)와 정합.
+        채택값은 항성 기원 차폐, 벨트 포획 입자 직접 노출 ~1–2 rad/h, 비차폐 GCR 바닥선이다.
+        확인: 노출 여부는 궤도와 벨트 기하의 대조로 정했다. c의 외대는 적도에서 0.37~6.52 R_c에 걸치고 위성 궤도가
+        6.4 R_c이므로 벨트 안쪽 테두리에 든다. 벨트 세기는 모행성 방사선대 행의 1.2 rad/h이고, 대기 기둥이 없어
+        표면 선량 감쇠가 걸리지 않는다(표면 선량 문서의 감쇠식은 기둥밀도를 요구하는데 여기서는 0이다). 항성 기원
+        차폐는 위성이 c 자기권 심부에 있다는 사실에서 나온다.
+        유보: 벨트 세기 자체가 방법론이 명시하는 저신뢰 레짐 콜이고, 위성이 벨트 입자를 쓸어내며 자기 궤도에 회랑을
+        파는 되먹임은 넣지 않았다.
 
   - body: Proxima Cen c I
     axis: rings
