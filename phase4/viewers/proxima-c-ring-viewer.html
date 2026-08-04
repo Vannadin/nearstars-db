@@ -48,6 +48,18 @@
     <div id="readout"></div>
   </div>
   <div class="grp">
+    <h3>지구 시선 밝기 (Gratton 2020 대비)</h3>
+    <div class="ctrl"><label>위상·산란 인자 φ <b id="vPhi">0.50</b></label><input type="range" id="rPhi" min="0.05" max="1" step="0.01" value="0.5"></div>
+    <div class="ctrl"><label>고리 개방각 B (시선↔고리면) <b id="vOpen">35°</b></label><input type="range" id="rOpen" min="0" max="90" step="1" value="35"></div>
+    <div class="ctrl"><label>행성 알베도 <b id="vAp">0.35</b></label><input type="range" id="rAp" min="0.05" max="0.9" step="0.01" value="0.35"></div>
+    <div class="ctrl"><label>고리 유효 알베도 (백 0.55 / 적 0.18 혼합) <b id="vAr">0.37</b></label><input type="range" id="rAr" min="0.05" max="0.9" step="0.01" value="0.37"></div>
+    <div class="ctrl"><label>고리 피복률 (광학두께) <b id="vCov">0.62</b></label><input type="range" id="rCov" min="0.02" max="1" step="0.01" value="0.62"></div>
+    <div class="ctrl"><label>목표 대비 <b id="vTgt">3.5e-7</b></label><input type="range" id="rTgt" min="1.5" max="5.5" step="0.1" value="3.5"></div>
+    <div id="brightout" style="font-size:12px;line-height:1.7"></div>
+    <button id="btnFit" style="margin-top:7px;width:100%;padding:6px;border:1px solid var(--line);border-radius:8px;
+      background:#14203a;color:var(--ink);cursor:pointer;font-size:12px">피복률을 목표 대비에 맞추기</button>
+  </div>
+  <div class="grp">
     <h3>몸체</h3>
     <div class="ctrl"><label>편평도 과장 <b id="vFlat">1× (실제 0.45%)</b></label><input type="range" id="rFlat" min="1" max="60" step="1" value="1"></div>
     <div class="ctrl"><label>자전축 기울기 <b id="vObl">17°</b></label><input type="range" id="rObl" min="0" max="60" step="0.5" value="17"></div>
@@ -77,8 +89,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // 보드 게이트값 (phase4/proxima_cen.yaml)
 const R_KM=17202, ROCHE_RC=3.3, FLAT=0.0045, MAG_TILT=50, MAG_OFF=0.4;
+// Gratton+2020 (arXiv:2004.06685) 반사광 대비: c = φ·A·r²/(4d²), d=궤도거리.
+// 실측 후보 대비 (3.5±2.0)e-7 → φA~0.5면 반사 등가반경 4.8±1.7 R_Jup 필요.
+const D_KM=1.5*1.496e8, RJUP_KM=71492, GRATTON_C=3.5e-7, GRATTON_ERR=2.0e-7;
 const S={ rIn1:1.40, rOut1:1.90, rIn2:2.40, rOut2:3.00, tau:0.62, stripes:5,
-          flatX:1, obl:17, spin:true, mag:true, roche:true, plane:true, redLight:false };
+          flatX:1, obl:17, spin:true, mag:true, roche:true, plane:true, redLight:false,
+          phi:0.5, openB:35, Ap:0.35, Ar:0.37, cov:0.62, tgt:3.5e-7 };
 
 const stage=document.getElementById('stage');
 const renderer=new THREE.WebGLRenderer({antialias:true});
@@ -195,6 +211,13 @@ bind('rIn2','rIn2',v=>v.toFixed(2)+' R_c');
 bind('rOut2','rOut2',v=>v.toFixed(2)+' R_c');
 bind('rTau','tau',v=> v<0.25?'옅음':v<0.6?'보통':'짙음');
 bind('rStr','stripes',v=>v.toFixed(0));
+bind('rPhi','phi',v=>v.toFixed(2));
+bind('rOpen','openB',v=>v.toFixed(0)+'°');
+bind('rAp','Ap',v=>v.toFixed(2));
+bind('rAr','Ar',v=>v.toFixed(2));
+bind('rCov','cov',v=>v.toFixed(2));
+{ const el=document.getElementById('rTgt'), out=document.getElementById('vTgt');
+  el.addEventListener('input',()=>{ S.tgt=parseFloat(el.value)*1e-7; out.textContent=parseFloat(el.value).toFixed(1)+'e-7'; }); }
 { const el=document.getElementById('rFlat'), out=document.getElementById('vFlat');
   el.addEventListener('input',()=>{ S.flatX=parseFloat(el.value);
     out.textContent=S.flatX.toFixed(0)+'× ('+(FLAT*S.flatX*100).toFixed(1)+'%)'; applyFlat(); }); }
@@ -204,6 +227,34 @@ for(const [id,key] of [['ckSpin','spin'],['ckMag','mag'],['ckRoche','roche'],['c
   const el=document.getElementById(id); el.addEventListener('change',()=>{ S[key]=el.checked;
     if(key==='redLight') applyLight(); }); S[key]=el.checked; }
 applyFlat(); applyLight();
+
+// ── 지구 시선 밝기: Gratton 식 c = φ·(Σ A_i·r_eq,i²)/(4d²), r_eq² = 투영단면적/π ──
+function ringAreaR2(){ // Σ(o²−i²) [R_c² 단위]
+  return Math.max(0,S.rOut1**2-S.rIn1**2)+Math.max(0,S.rOut2**2-S.rIn2**2); }
+function contrastNow(){
+  const proj=Math.sin(S.openB*Math.PI/180); // 개방각 B: 0=edge-on(투영 0), 90=face-on(전면)
+  const req2_km=S.Ap*R_KM*R_KM + S.Ar*proj*S.cov*ringAreaR2()*R_KM*R_KM;
+  return S.phi*req2_km/(4*D_KM*D_KM); }
+function brightout(){
+  const c=contrastNow();
+  const ratio=c/S.tgt;
+  const reqR=2*D_KM*Math.sqrt(S.tgt/(S.phi*Math.max(0.05,S.Ar)))/RJUP_KM; // 목표에 필요한 반사 등가반경
+  const nowR=Math.sqrt(4*D_KM*D_KM*c/(S.phi*Math.max(0.05,S.Ar)))/RJUP_KM;
+  const inBand=Math.abs(c-GRATTON_C)<=GRATTON_ERR;
+  document.getElementById('brightout').innerHTML=
+    `<span class="k">현재 대비</span> <b>${c.toExponential(2)}</b> · 목표의 <b>${(ratio*100).toFixed(2)}%</b><br>`+
+    `<span class="k">반사 등가반경</span> <b>${nowR.toFixed(2)} R_Jup</b> (목표 ${reqR.toFixed(1)}, Gratton 4.8±1.7)`+
+    (inBand? `<div class="flag ok">✓ Gratton 실측 밴드 (3.5±2.0)e-7 안</div>`
+           : `<div class="flag bad">Gratton 밴드 밖 — 부족 ${(1/Math.max(ratio,1e-9)).toFixed(0)}×</div>`); }
+document.getElementById('btnFit').onclick=()=>{
+  // 피복률만 움직여 목표 대비 도달 시도; 한계(1.0)에 막히면 부족 배율 표시
+  const proj=Math.sin(S.openB*Math.PI/180);
+  const need=(4*D_KM*D_KM*S.tgt/S.phi - S.Ap*R_KM*R_KM)/(S.Ar*proj*ringAreaR2()*R_KM*R_KM);
+  S.cov=Math.min(1,Math.max(0.02,need));
+  const el=document.getElementById('rCov'); el.value=S.cov;
+  document.getElementById('vCov').textContent=S.cov.toFixed(2)+(need>1?` (필요 ${need.toFixed(0)} — 도달 불가)`:'');
+  S.tau=Math.max(0.12,S.cov); document.getElementById('rTau').value=S.tau;
+  needRings=true; };
 
 function readout(){
   const km=v=>((v*R_KM/1000).toFixed(1))+'k';
@@ -226,7 +277,7 @@ function loop(){ requestAnimationFrame(loop);
   tiltGrp.rotation.z=S.obl*Math.PI/180;
   magGrp.visible=S.mag; rocheRing.visible=S.roche; planeDisk.visible=S.plane;
   if(S.spin){ planet.rotation.y+=0.004; }   // 27h 자전 (과장 속도)
-  controls.update(); readout(); renderer.render(scene,camera); }
+  controls.update(); readout(); brightout(); renderer.render(scene,camera); }
 loop();
 </script>
 </body>

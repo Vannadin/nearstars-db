@@ -1578,6 +1578,8 @@ decisions:
     provenance: >
       2026-08-04 스윕: 산문을 EN/KO 계약 형태로 재작성(내용 무변경), refs에 디스크색·얼음 안정성 방법론 문서 추가,
       내대(1.41~2.91 R_c)와의 공간 겹침을 유보로 병기(천왕성 선례로 공존 판정). 구획·수치 무변경.
+      같은 날 지구 시선 밝기 계산기(뷰어)로 Gratton 대비 정량 대조: 게이트 고리 ~7e-10 = 실측의 0.2% → "밝은 신호와
+      양립" 표현을 철회하고 hook을 테마적 착상으로 명시. 전문 캐시 docs/phase3/_papers/2004.06685.md 추가.
     gate:
       criterion: [observation, visual-checklist]
       verdict: documented-divergence
@@ -1592,7 +1594,10 @@ decisions:
         문서의 승화 수명으로, 색은 디스크색 문서의 Mie 합성(청정 물얼음 Warren&Brandt 2008 + 톨린 Khare 1984 광학상수)
         으로 얻었다. hook은 Gratton 2020 본문의 밝기 초과 대목과 대조했다.
         유보: 고리 띠가 내대(적도 1.41~2.91 R_c)와 겹쳐 포획 입자를 쓸어낼 수 있으나, 실측 천왕성이 좁은 고리와
-        양성자 내대를 공존시키는 선례라 회랑 수준으로 본다.
+        양성자 내대를 공존시키는 선례라 회랑 수준으로 본다. 또한 정량으로는 이 고리가 Gratton 밝기 초과를 설명하지
+        못한다. Gratton 식 c = φAr²/(4d²)로 게이트 고리의 반사 대비는 ~7e-10, 실측 (3.5±2.0)e-7의 0.2%이고 Roche를
+        채운 정면 고리조차 4%다(실측이 실재라면 포말하우트 b급 먼지구름 규모가 필요). hook은 테마적 착상이지 측광
+        설명이 아니다.
     refs: ["2004.06685", "docs/reference/debris-disk-color-methodology.md", "docs/reference/ice-stability-methodology.md"]
 
   - body: Proxima Cen c
