@@ -1130,7 +1130,18 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      body_type=냉 mini-Neptune(~8 M⊕, 1.5 AU, H/He 외피, Teq~40K), 무생물. designation=Proxima Centauri c(고유명 없음).
+      This is a planet that may not exist. A radial-velocity signal at 1900 days was reported in 2020 and has never
+      been confirmed; when the system was resurveyed in 2025 with a near-infrared spectrograph, whether that signal is
+      even in the data came out inconclusive. Nor has it been ruled out. Taken as real it is a cold mini-Neptune of
+      about eight Earth masses, holding a hydrogen-helium envelope at 40 K from 1.5 AU. Set beside temperate rocky b
+      and hot mercurian d it splits the system three ways. Nothing lives there. Every value this board carries for c
+      rests on assuming c is there.
+    narrative_ko: >
+      이 행성은 있을지도 모르는 행성이다. 2020년에 1900일 주기의 시선속도 신호로 보고됐지만 확인되지 않았고,
+      2025년 근적외선 분광기로 이 계를 다시 훑었을 때도 그 신호가 데이터에 있는지 결론이 나지 않았다. 부정된 것도
+      아니다. 있다고 보면 지구 질량의 여덟 배쯤 되는 차가운 미니 해왕성이고, 1.5 AU에서 수소·헬륨 외피를 두른 채
+      40 K에 머문다. 온대 암석 세계인 b, 뜨거운 수성형인 d와 나란히 놓이면 이 계가 세 갈래로 갈린다. 생명은 없다.
+      이 보드에서 c에 관한 모든 값은 c가 있다는 가정 위에 있다.
     fields:
       - name: body_type
         value: "냉 mini-Neptune (~8 M⊕, 1.5 AU, H/He 외피, Teq~40K, 무생물)"
@@ -1142,18 +1153,29 @@ decisions:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
-        오너 G1 확정 2026-06-23. candidate(2020SciA....6.7467D) → T F F F. 존재 논쟁(미확정 신호)은 '미발견 후보'와 정합.
-        냉 mini-Neptune=b(온대 암석)·d(뜨거운 수성형)와 3극 대비.
-    refs: ["2020SciA....6.7467D"]
+        채택값은 차가운 미니 해왕성이고, 존재는 미확정 후보다.
+        확인: 신호의 유일한 출처는 Damasso & Del Sordo 2020의 1900일 시선속도이고, 그 값이 지금도 유일한 수치
+        근거다. 2025년 NIRPS 관측은 b를 확인하고 d의 존재를 확정했으나 c의 신호에 대해서는 결론을 내지 못했다.
+        5년 뒤 더 정밀한 장비로도 확인도 부정도 되지 않았다. 미발견 후보라는 분류가 이 상태와 정합한다.
+        유보: 이 행이 미확정을 선언하므로 c의 다른 모든 행과 c I 위성이 그 가정에 딸려 있다. c가 부정되면 함께
+        사라진다.
+    refs: ["2020SciA....6.7467D", "2025A&A...700A..11S"]
 
   - body: Proxima Cen c
     axis: orbit
     status: gated
     driver: [window-selection]
     narrative: >
-      a≈1.5 AU · P≈1900d(~5.2yr) · e≈0.04는 전부 Damasso2020 측정 passthrough. 비조석고정(1.5 AU → locking 문서 a⁶상
-      τ_lock ≫ 나이) → 자유자전, 자전주기 ~27h(오너 결정, 해왕성형보다 약간 느린 자전; 미구속이라 art 선택). 경사각·절대 배향 = 천체측정
-      논쟁이라 자유 emit. 진질량 = Msini×1.1547 ≈ 8 M⊕(등방 중앙값, b·d 선례 일관)이고, "c 존재 가정 하" 전제.
+      It circles 1.5 AU out, once every 5.2 years, on an orbit that is nearly circular. At that distance tides cannot
+      hold its spin, which makes it the only freely rotating planet in the system. Nothing constrains the rotation
+      period, so it is set at 27 hours, a little slower than Neptune's. The orbit's tilt to our line of sight is
+      unknown as well. An astrometric attempt to pin the inclination was disputed along with the signal itself, so the
+      orientation is left free at emit.
+    narrative_ko: >
+      별에서 1.5 AU 떨어져 5.2년에 한 바퀴를 돈다. 궤도는 거의 원에 가깝다. 이만큼 멀면 조석이 자전을 붙들지 못해,
+      이 계에서 유일하게 자유롭게 도는 행성이 된다. 자전 주기는 관측으로 묶이지 않아 27시간으로 정했다. 해왕성보다
+      조금 느린 값이다. 궤도가 우리 시선에 얼마나 기울었는지도 모른다. 천체측정으로 경사각을 잡으려는 시도가 있었지만
+      그 결과는 신호 자체와 함께 반박됐고, 그래서 배향은 emit 단계에서 자유롭게 정한다.
     fields:
       - name: semi_major_axis_au
         value: 1.5
@@ -1165,18 +1187,18 @@ decisions:
         op: passthrough
         note: "Damasso2020 측정"
       - name: tidal_lock
-        value: "none (비조석고정, 1.5 AU → τ_lock ≫ 나이); 경사각·절대 배향 자유 emit"
+        value: "none (비조석고정, 1.5 AU → τ_lock ≫ 나이); 경사각·Ω·ω는 미측정이라 de-perfect-at-emit (synthetic-orbit-noise 정책; 측정값 e 0.04는 노이즈 대상 아님)"
         op: set
     gate:
       criterion: [classification, derived-grounding]
       verdict: pass-in-window
       evidence: >
-        rationale: 오너 결정 2026-06-23 (a)로 진질량 등방중앙 8 M⊕ 채택. Kervella&Damasso2020(arXiv:2003.13106) 천체측정
-        경사각/질량은 논쟁적(신호 후속 반박)이라 비채택, caveat 병기. c 존재 자체가 disputed candidate라 "있다는 가정
-        하" 진행. 자전주기 ~27h는 미구속 자유자전의 오너 art 선택(해왕성형보다 약간 느림). 1.5 AU 비잠김은 locking 문서 a⁶로 확정.
-
-        paper: 진질량 등방 = Ho&Turner2011(1007.0245). 경사각 논쟁 = Kervella&Damasso2020(2003.13106). 비잠김 =
-        tidal-locking-timescale-methodology.md(a⁶).
+        채택값은 장반경 1.5 AU, 주기 1900일, 이심률 0.04, 비조석고정, 자전 27시간이다.
+        확인: 앞의 셋은 Damasso & Del Sordo 2020의 측정을 그대로 통과시킨 값이다. 조석고정 여부는 고정 시간이
+        장반경의 6제곱에 비례하는 관계로 판정하며, 1.5 AU에서는 그 시간이 별의 나이를 크게 넘어 자유 자전이 남는다.
+        진질량은 최소질량에 등방 prior의 중앙 경사 60°를 적용해 8 M⊕이고, b·d와 같은 방식이다. Kervella & Damasso
+        2020의 천체측정 경사각과 질량은 신호 후속 반박과 함께 논쟁 대상이라 채택하지 않았다.
+        유보: 자전 27시간은 관측이 없는 자리의 오너 선택이다. 방위각과 절대 배향도 미구속이라 emit에서 정한다.
     refs: ["2020SciA....6.7467D", "2003.13106", "1007.0245"]
 
   - body: Proxima Cen c
@@ -1186,12 +1208,18 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      mass 8 M⊕(G2 등방중앙) · radius ~2.7 R⊕(오너 채택 중심값; mini-Neptune이라 H/He 외피 inflation, 질량-반경
-      regime2 확률관계 band 2.5–3 R⊕) · g ~1.1 g · 밀도 ~0.41 ρ⊕(~2.2 g/cm³) 휘발성-풍부(암석↔빙거성 중간) · 비조석고정 ·
-      age ~4.85 Gyr. [§3.2 정규화 2026-07-12] gravity·reference_radius 파생 에코 승격, c22 = n/a(자유 자전).
-      [2026-07-14 figure+walk] obliquity 17°(오너 art)·spin 궤도법선서 17° 기움·J₂ ~8e-4(q 6.7e-3·NMoI 0.23
-      Radau-Darwin)·flattening 0.45%(a/c 1.005 → 가시 threshold 아래)·internal_heat T_int~45–50K(cold mini-Neptune
-      Neptune analog, §7 → T_eff 40→~53K이나 표면 여전히 휘발성 동결).
+      A mini-Neptune of eight Earth masses and about 2.7 Earth radii. At 2.2 g/cm³ its density is under half of
+      Earth's, so this is not a rock but a volatile-rich body puffed out by a hydrogen-helium envelope. Surface
+      gravity comes out close to Earth's. As the one freely rotating planet here its day runs 27 hours, fast enough to
+      leave a mark on the gravity field if not on the visible disk. The spin axis leans 17 degrees from the orbital
+      plane. Internal heat, Neptune-like, lifts the surface from 40 K into the 50s, and even so the volatiles stay
+      frozen.
+    narrative_ko: >
+      지구 질량의 여덟 배에 반지름은 2.7배쯤 되는 미니 해왕성이다. 밀도가 지구의 절반도 안 되는 2.2 g/cm³이라,
+      암석 덩어리가 아니라 수소·헬륨 외피에 부푼 휘발성 풍부한 몸이다. 표면 중력은 지구와 비슷하다. 자유롭게
+      자전하는 유일한 행성이라 하루가 27시간이고, 그 속도가 눈에 보이는 원반을 일그러뜨릴 정도는 아니지만 중력에는
+      새겨질 만큼 부풀린다. 자전축은 궤도면에서 17도 기울어 있다. 내부에서 올라오는 열은 해왕성만큼 있어 표면
+      온도를 40 K에서 50 K대로 밀어 올리지만, 그래도 휘발성은 여전히 얼어 있다.
     fields:
       - name: mass
         value: 8
@@ -1250,11 +1278,16 @@ decisions:
       criterion: [derived-grounding, error-bar]
       verdict: pass-in-window
       evidence: >
-        rationale: 오너 G3 2026-06-23으로 반경 중심 ~2.7 R⊕ 채택(band 2.5–3 R⊕). 8 M⊕는 radius valley 경계지만 G1
-        mini-Neptune reading이라 H/He 외피로 inflation → 확률관계(Forecaster/Otegi)가 적정 도구(단일 암석 그리드 아님).
-        해왕성(17M⊕/3.9R⊕)·천왕성(14.5M⊕/4R⊕)보다 작은 mini-Neptune이라 ~2.7 R⊕ 정합. 밀도 2.2 g/cm³ = 휘발성-풍부.
-
-        paper: docs/reference/mass-radius-relation-methodology.md (regime2 sub-Neptune band, Forecaster Chen&Kipping2017·Otegi2020).
+        채택값은 질량 8 M⊕, 반지름 2.7 R⊕, 밀도 2.2 g/cm³, 자전 27시간, obliquity 17°, J₂ 8e-4다.
+        확인: 8 M⊕는 radius valley 경계에 걸리지만 미니 해왕성으로 읽으므로 단일 암석 그리드가 아니라 확률적
+        질량-반경 관계가 맞는 도구이고, 그 밴드 2.5~3 R⊕의 중심으로 2.7을 잡았다. 밀도 게이트도 통과한다. 같은
+        반지름대의 GJ 1214 b가 1.88, 해왕성이 1.64, 천왕성이 1.25 g/cm³이니 2.24는 이 부류에서 낮은 쪽이 아니라
+        높은 쪽이고, 밴드 안에서 가장 암석에 가까운 절반에 해당한다(R 2.5면 2.82, R 3.0이면 해왕성과 같은 1.63).
+        J₂는 자유 자전의 회전 파라미터 6.7e-3에 Radau-Darwin으로 얻은 관성모멘트 0.23을 적용해 8e-4이고, 편평도
+        0.45%는 겉보기 임계 2% 아래라 중력에만 반영하고 시각 메쉬로는 만들지 않는다. 조석 삼축은 자유 자전이라
+        해당 없음이다.
+        유보: 반지름과 obliquity는 관측이 없는 자리의 오너 선택이다. 내부열은 해왕성 유추라 배수 수준의 불확도를
+        갖는다.
 
   - body: Proxima Cen c
     axis: atmosphere
@@ -1262,9 +1295,13 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      두꺼운 H/He 외피(mini-Neptune, 고체 표면 없음 → G5 ∅). Teq~40K 극냉 → CH₄(동결 90K)·N₂(63K)·NH₃·H₂O 전부 동결 →
-      심층 얼음-구름층, 상층 관측 대기 = H/He만 기체(H₂ ~20K까지 기체). 금속성/메탄 함량=차수 미상(미관측; 외형 색은
-      G6서 다룸). breathability=∅. escape=무시(대질량·원거리 저irradiation).
+      A thick hydrogen-helium envelope that only grows denser downward. At 40 K methane freezes out by 90 K and
+      nitrogen by 63 K, so hydrogen and helium are all that stay gaseous and the rest settles into ice-cloud layers
+      below. How much heavier material is mixed in has never been observed, not even to an order of magnitude.
+    narrative_ko: >
+      수소와 헬륨으로 된 두꺼운 외피가 아래로 갈수록 짙어진다. 40 K에서는 메탄이 90 K, 질소가 63 K에서 이미
+      얼어붙으므로 기체로 남는 것은 수소와 헬륨뿐이고, 나머지는 아래쪽에서 얼음 구름층을 이룬다. 무거운 원소가
+      얼마나 섞였는지는 관측된 적이 없어 자릿수조차 모른다.
     fields:
       - name: composition
         value: "두꺼운 H/He 외피 (상층 관측 대기 = H/He만 기체); 심층 얼음-구름층 (CH₄/N₂/NH₃/H₂O 동결)"
@@ -1284,25 +1321,32 @@ decisions:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
-        냉 mini-Neptune(G1) 직결이다. H/He 1차 외피, 40K라 휘발성 응결. 금속성 미관측이라 차수미상으로 두고 색 디테일은 G6
-        (오너 결정 2026-06-23). T/P 프로파일은 emit시 cool-Neptune 격자.
-
-        paper: 온도 Teq=tidally-locked-temperature-methodology.md Layer1(비잠김이라 균일 가까움). 보유=대질량+원거리 자명.
+        채택값은 두꺼운 H/He 외피, 평형온도 40 K, 탈출 무시다.
+        확인: 온도는 조석고정 온도 문서의 첫 층으로 얻었고, 자유 자전이라 재분배가 좋아 균일에 가깝다. 응결 여부는
+        각 종의 동결점과 대조했다. 메탄 90 K, 질소 63 K가 모두 40 K보다 높아 기체로 남지 못하고 수소만 20 K
+        근처까지 버틴다. 대기 보유는 8 M⊕의 중력과 1.5 AU의 낮은 조사량에서 나온다.
+        유보: 금속성과 메탄 함량은 관측이 없어 자릿수 미상으로 둔다. T/P 프로파일은 emit 단계에서 차가운 해왕성
+        격자를 쓴다.
 
   - body: Proxima Cen c
     axis: surface
     refs: ["docs/reference/surface-color-albedo-methodology.md"]
     status: gated
     driver: [window-selection]
-    narrative: "∅ (고체 표면 없음: mini-Neptune, H/He 외피 + 심층 코어 미도달). 착륙 불가. 가시 색은 표면 아닌 대기(G6)서."
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - name: surface_type
-        value: "none (H/He 외피 + 심층 코어 미도달, 착륙 불가)"
+        value: null
+        na_reason: "H/He 외피체라 표면 축이 성립하지 않는다. 표면색·알베도 문서의 적용 범위 밖이고, 가시 색은 appearance 행이 담는다"
         op: set
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "표면색·albedo 문서 scope상 가스/얼음 외피체엔 surface 축 N/A. 오너 G5 확정 2026-06-23."
+      evidence: >
+        표면 축은 해당 없음이다.
+        확인: 표면색·알베도 문서가 규정하는 적용 범위는 고체 표면을 가진 천체이고, H/He 외피체는 그 밖이다.
+        가시 색을 정하는 것은 표면이 아니라 대기이므로 appearance 행이 그 판단을 갖는다.
 
   - body: Proxima Cen c
     axis: appearance
@@ -1310,11 +1354,16 @@ decisions:
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
-      창백한 회백 얼음구름 mini-Neptune(오너 a, 2026-06-23)이고, 해왕성처럼 파랗지 않다. 해왕성 진청색은 ~72K라 기체
-      CH₄가 상층서 빨강 흡수하기 때문인데, c는 Teq~40K(내부열 보태도 ~50–60K, 둘 다 CH₄ 응결점 90K 아래)라 CH₄가 얼어
-      빠져 빨강 흡수 기체 부재 → 진청 메커니즘 약함 → H/He + 고층 얼음·haze의 거의 중성 회백 + 약한 Rayleigh 청.
-      1.5 AU·M5.5라 극도로 어두움, Proxima reddening은 빛 자체가 약해 미미. 고유색 ~#c4d0d8(창백 회청), 표시=매우 dim
-      (저광량+약한 온기끼). b(황토)·d(회갈)와 또 다른 극 = 창백 회백.
+      It is not Neptune-blue. Neptune's deep blue comes from gaseous methane in the upper atmosphere absorbing red,
+      and Neptune is warm enough at 72 K to keep that methane gaseous. This planet sits at 40 K, in the 50s with
+      internal heat, cold enough that the methane freezes out of the upper layers and nothing is left to eat the red.
+      What remains is the weak blue scattering of hydrogen and helium over the near-neutral grey-white of high ice and
+      haze. The disk reads pale grey-blue, a third colour beside ochre b and grey-brown d.
+    narrative_ko: >
+      해왕성처럼 파랗지 않다. 해왕성의 진청색은 상층의 기체 메탄이 붉은빛을 흡수해서 나오는 색인데, 그 행성은
+      72 K라 메탄이 기체로 남아 있다. 여기는 40 K이고 내부열을 보태도 50 K대라 메탄이 얼어 상층에서 빠지므로,
+      붉은빛을 먹을 기체가 없다. 남는 것은 수소와 헬륨의 약한 청색 산란과 고층 얼음·연무의 거의 중성한 회백이다.
+      그래서 창백한 회청색 원반이 되고, 황토색인 b와 회갈색인 d 사이에서 세 번째 색을 맡는다.
     fields:
       - name: base_color
         value: "#c4d0d8 (창백 회청/회백; 거의 중성 + 약한 Rayleigh 청)"
@@ -1326,37 +1375,135 @@ decisions:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
       evidence: >
-        rationale: "차가운 mini-Neptune은 덜 파랑"은 grounded다. CH₄ 응결(<90K)로 기체 CH₄ 빨강흡수 사라짐(해왕성 72K
-        대비). 색=대기 반사색 문서 §6 엔진(H/He Rayleigh + 약 흡수, 얼음 haze). G4서 미룬 색 디테일을 여기서 확정. 내부열
-        effective ~50–60K도 CH₄ 동결 유지라 결론 불변(internal-heat 문서).
-
-        brightness_note: 절대 dimness(1.5 AU·M5.5)는 cfg 비인자다. KSP/Kopernicus는 바디를 normalize해 가시
-        렌더하므로 실세계 어두움은 인게임에 안 반영됨. 외형 결정의 본질 = 색(창백 회백)이지 밝기 아님. dimness는 실세계
-        trivia로만 기록.
-
-        paper: 색=docs/reference/atmosphere-reflected-color-methodology.md(Rayleigh+haze). 온도=tidally-locked-temperature
-        + internal-heat-luminosity 문서(Teq 40K, T_eff ~50–60K). 시각 standout=고리(G9, 밝은 얼음).
+        채택값은 고유색 #c4d0d8의 창백한 회청색 원반이다.
+        확인: 해왕성이 72 K에서 기체 메탄으로 붉은빛을 흡수해 진청색이 되는 것과 대조했다. 이 행성의 40 K는 메탄
+        응결점 90 K보다 훨씬 낮고 내부열을 더한 50 K대에서도 그 아래이므로, 상층에 붉은빛을 흡수할 기체가 남지
+        않는다. 색 자체는 대기 반사색 문서의 엔진으로 수소·헬륨의 Rayleigh 산란과 얼음 연무의 약한 흡수를 합쳐
+        얻었다.
+        유보: 1.5 AU에 M5.5 별이라 실제로는 극도로 어둡지만, Kopernicus가 천체를 정규화해 렌더하므로 그 어두움은
+        인게임에 반영되지 않는다. 이 행이 정하는 것은 밝기가 아니라 색이다.
 
   - body: Proxima Cen c
     axis: magnetism.magnetic_field
     status: gated
     driver: [window-selection]
     narrative: >
-      빙거성 아날로그 ~0.1–0.5 G, 비쌍극·기울고 중심 이탈(Neptune/Uranus 유추, 얇은 전도층 대류로 다극·tilted ~47–59°).
-      차수값, conf low(미관측). 오로라=미약(c는 별서 1.5 AU 멀어 입자 플럭스 약함; b·d 근접 플레어 환경과 대조).
+      The field looks like Uranus's and Neptune's. Convection in a thin conducting shell, as in those two, does not
+      build a clean dipole; it builds a multipolar field with the axis strongly tilted and displaced from centre.
+      Running the energy-flux recipe on this planet's own internal heat gives about 0.18 gauss at the surface, and the
+      same chain reproduces Neptune to within a factor of 1.4. This is multipolar for a different reason than b: there
+      rotation decides the shape, here the interior structure does. Aurora is faint, since few particles reach this
+      distance to strike the field at all.
+    narrative_ko: >
+      자기장은 천왕성과 해왕성 쪽을 닮는다. 두 행성처럼 얇은 전도층에서 대류가 일어나면 깔끔한 쌍극자가 서지 못하고,
+      축이 크게 기울고 중심에서 밀려난 다극장이 된다. 이 행성의 내부열로 에너지플럭스 레시피를 돌리면 표면에서 약
+      0.18 가우스가 나오는데, 같은 사슬이 해왕성을 1.4배 안에서 재현한다. b가 느린 자전 때문에 다중극인 것과 이유가
+      다르다. 여기서는 회전이 아니라 내부 구조가 형태를 정한다. 오로라는 미약하다. 자기권을 때릴 입자가 애초에 이
+      거리까지 거의 오지 않는다.
     fields:
       - name: magnetic_field
         value: "~0.1–0.5 G (빙거성 아날로그, 비쌍극·tilted ~47–59°); conf low"
         op: set
+      - { name: field_geometry, value: "기울고 중심 이탈한 다중극 (빙거성형)", op: set, note: "얇은 전도층 대류. 형상 도식 docs/img/field-geometry-proxima-c.png" }
+      - { name: radiation_model, value: "빙거성형 (CRAND 내대 + 항성풍 외대 + 계면)", op: set, note: "실측 천왕성·해왕성이 양성자 내대와 전자 외대를 모두 가지는 것을 따른다. 상세는 radiation_belts 행" }
+      - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "기울기 50°. 천왕성 58.6°·해왕성 47° 사이" }
+      - { name: geomagnetic_offset, value: 0.4, op: set, note: "중심 이탈. 천왕성 0.3·해왕성 0.55 사이" }
     gate:
       criterion: [derived-grounding]
       verdict: methodology-derived
       evidence: >
-        note: dynamo 문서 regime 3에 따라 sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog
-        차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23.
-
-        paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).
+        채택값은 표면 자기장 약 0.18 G(범위 0.09~0.5)이고 형태는 기울고 이탈한 다중극이다.
+        확인: 내부열 T_int 45~50 K에서 내부 광도 8.6e14~1.3e15 W를 얻고, 에너지플럭스 관계 B_dyn = 4.8(M L²/R⁷)^(1/6)에
+        표면 환산 1/(2√2)과 다중극 붕괴 0.06배를 적용해 0.17~0.20 G가 나온다. 같은 사슬로 해왕성은 0.198 G가 나와
+        관측 ~0.14 G의 1.4배이고, 천왕성은 0.087 G로 관측 ~0.23 G의 0.4배다. 즉 이 부류에서 자릿수는 맞고 배수는
+        틀릴 수 있다. 기울고 이탈한 형태는 두 빙거성의 공통 특징이며, 형상 도식은 docs/img/field-geometry-proxima-c.png
+        에 있다.
+        유보: 다이나모 문서는 해왕성 이하 질량에서 이 법칙을 헬륨 분리 때문에 적용 범위 밖으로 둔다. 그래서 두
+        빙거성으로 먼저 검증한 뒤에만 썼고, 결과는 배수 수준의 추정이다. 관측은 없다.
     refs: ["docs/reference/planetary-dynamo-scaling.md"]
+
+  - body: Proxima Cen c
+    axis: magnetism.radiation_belts
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      Two belts, filled by two different machines. Close in, cosmic rays strike the deep atmosphere and the neutrons
+      they splash back decay into trapped protons, the same source that fills Earth's inner belt; here it runs harder,
+      because Proxima's small astrosphere barely filters the cosmic rays and the weak field turns few of them away.
+      Farther out, near three radii, sits the electron belt the stellar wind feeds, and that one is faint: the wind at
+      1.5 AU carries a tenth of what Earth's magnetosphere is fed, so the belt stays well under the flux its own field
+      could hold. The magnetopause that contains both stands about twelve radii out.
+    narrative_ko: >
+      벨트는 두 겹이고, 채우는 기계가 서로 다르다. 안쪽에서는 우주선이 깊은 대기를 때리고 튕겨 나온 중성자가 붕괴해
+      양성자로 포획되는데, 지구 내대를 채우는 것과 같은 소스다. 여기서는 그것이 더 세게 돈다. 프록시마의 작은
+      항성권은 우주선을 거의 거르지 못하고, 약한 자기장은 들어오는 우주선을 별로 쳐내지 못하기 때문이다. 바깥쪽
+      반지름 세 배 근처에는 항성풍이 채우는 전자 벨트가 있는데 이쪽은 희미하다. 1.5 AU의 항성풍은 지구 자기권이
+      받는 것의 십분의 일밖에 나르지 못해서, 벨트는 자기장이 담을 수 있는 한계에 한참 못 미친 채로 남는다. 이 둘을
+      담는 자기권계면은 반지름의 열두 배쯤에 선다.
+    fields:
+      - { name: radiation_model, value: "nearstars_proxima_c", op: set, note: "빙거성형: CRAND 내대 + 항성풍 외대 + 계면" }
+      - { name: inner_dist, value: 1.5, op: set, note: "CRAND 양성자대. 저L 포획 (지구 내대 L~1.5와 같은 자리)" }
+      - { name: inner_radius, value: 0.86, op: set, note: "오너 튜닝. 컷 적용 후 유효 구간 적도 1.41~2.91 R_c" }
+      - { name: inner_deform_xy, value: 0.66, op: set }
+      - { name: inner_deform, value: 0.115, op: set, note: "다중극 얼룩짐. 스톡 최대 0.1을 약간 넘지만 단면 대비 미세" }
+      - { name: inner_border_dist, value: 0.0001, op: set, note: "구면 컷 = 손실원뿔 D-형. 지구 모델과 같은 구조" }
+      - { name: inner_border_radius, value: 1.0, op: set, note: "적도 컷 1.0/√0.5 = 1.41 R_c. 거울점이 대기에 잠기는 입자의 소멸 경계" }
+      - { name: inner_border_deform_xy, value: 0.5, op: set }
+      - { name: outer_dist, value: 2.8, op: set, note: "자기권계면 nose 11.9 R_c × 0.235 (실측 천왕성 0.24·해왕성 0.23의 비율)" }
+      - { name: outer_radius, value: 2.5, op: set }
+      - { name: outer_deform_xy, value: 0.66, op: set, note: "빙거성 앵커(천왕성 phys 0.664)" }
+      - { name: outer_deform, value: 0.5, op: set, note: "오너 튜닝. 다중극 얼룩. 스톡 최대 0.1의 5배지만 단면 2.5 대비 20%라 토폴로지 유지" }
+      - { name: outer_border_dist, value: 1.54, op: set, note: "내측 carve. 지구 모델의 border/dist 비 0.55를 따름" }
+      - { name: outer_border_radius, value: 1.42, op: set, note: "적도 컷 ~3.6 R_c. 내대(~1.4-2.9)와의 사이가 슬롯이 됨" }
+      - { name: outer_border_deform_xy, value: 0.66, op: set }
+      - { name: pause_radius, value: 16.84, op: set, note: "플랭크 = nose×√2. nose 11.9 R_c = Chapman-Ferraro (B_eq 0.18 G, 1.5 AU 램압 0.178 nPa)" }
+      - { name: pause_compression, value: 1.414, op: set, note: "Shue α=0.5의 플랭크/nose 비 √2를 SDF로 재현. 스톡 earth 1.5·mercury 1.4와 같은 급" }
+      - { name: pause_extension, value: 0.135, op: set, note: "꼬리 = rad/ext = 125 R_c = pause_tail과 정합" }
+      - { name: pause_height_scale, value: 1.0, op: set, note: "Shue 형상은 축대칭. 스톡의 1.1은 자오면 폭을 1/1.1로 눌러 Shue와 어긋남" }
+      - { name: radiation_inner, value: 8.0, unit: rad/h, op: set, note: "지구 내대 10.4의 ~0.8배. 소스(비변조 GCR+낮은 차단강성)는 지구 이상, 다중극 포획 불안정이 깎음" }
+      - { name: radiation_inner_gradient, value: 1.9, op: set, note: "오너 튜닝. 스톡 3.3보다 완만한 에지" }
+      - { name: radiation_outer, value: 1.2, unit: rad/h, op: set, note: "포화 앵커 3.7 rad/h(18 µT)의 ~1/3. 풍압 0.09× 지구의 소스 제한, 범위 0.4~2" }
+      - { name: radiation_outer_gradient, value: 2.2, op: set, note: "스톡 earth 값 명시 (생략 시 코드 기본값으로 떨어짐)" }
+      - { name: radiation_pause, value: -0.01, op: set }
+      - { name: pause_nose, value: 11.905, op: set, note: "⚗ Shue-native (KerbalismShuePause 채택 시). = pause_radius/compression" }
+      - { name: pause_alpha, value: 0.5, op: set, note: "⚗ Shue-native. Shue 1998 지구 경험치 차용, 빙거성 피팅 문헌 없음(저신뢰)" }
+      - { name: pause_tail, value: 125, op: set, note: "⚗ Shue-native. 꼬리 컷. 지구 꼬리 관측 ~200 R_E 스케일과 정합" }
+      - { name: pause_offset, value: 19.7, op: set, note: "⚗ offset 에뮬레이션 (경량 패치용). 구 중심을 꼬리쪽으로 이동해 Shue 근사. 아래 3값과 세트" }
+      - { name: pause_offset_radius, value: 21.5, op: set, note: "⚗ offset 세트. 최대폭 = Shue 점근 2×nose 근사" }
+      - { name: pause_offset_compression, value: 0.68, op: set, note: "⚗ offset 세트. nose 11.9 유지용" }
+      - { name: pause_offset_extension, value: 0.204, op: set, note: "⚗ offset 세트. 꼬리 마감 125 정합. 스톡 SDF는 최대폭이 행성 중심에 고정돼 Shue 꼬리 벌어짐(최대폭이 행성 뒤 ~1.7 nose 지점)을 표현 불가. offset이 그 한계를 푼다" }
+      - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "기울기 50°" }
+      - { name: geomagnetic_offset, value: 0.4, op: set }
+    refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/solar-system-radiation-belts.md"]
+    provenance: >
+      2026-08-04 초판은 세기를 스톡 uranus/neptune cfg에 앵커해 외대 2.0 rad/h 단일 벨트로 잡았다. 같은 날 오너
+      지시로 실물리 재계산: 세기는 소스-손실 레짐 콜(포화 선량앵커 3.7 rad/h × 풍압비)로 외대 1.2, CRAND 내대
+      8.0을 신설, kp_limit.py로 K-P 천장 비구속 확인(n_cold 0.3~50 스윕에서 천장 6~10¹¹× 지구). 같은 날 두 벨트에
+      지구 모델 구조의 border 컷 추가(내대 손실원뿔 구면 컷 적도 1.41 R_c, 외대 내측 carve). 같은 날 뷰어 오너 튜닝
+      채택(inner_radius 0.86, inner_deform 0.115, outer_deform 0.5, outer_border_radius 1.42, gradient 1.9/2.2),
+      pause_deform은 오너 결정으로 제거(다극 미세왜곡이 계면까지 미치는 것은 어색), 계면 플랭크를 Shue α=0.5
+      실형상에 정렬(pause_radius 12.5→16.7, compression 1.05→1.4, nose 11.9 불변), Shue-native 3필드(⚗) 기록.
+      같은 날 잔여 폭 불일치 원인 규명(pause_height_scale 1.1이 자오면 폭을 1/1.1로 누름) → SDF를 Shue에 완전
+      정렬: radius 16.84(=nose×√2), compression 1.414, height_scale 1.0(축대칭), extension 0.135(꼬리 125 정합).
+      뷰어 계면 렌더도 다이폴 틸트에서 분리(항성정렬 프레임).
+    gate:
+      criterion: [derived-grounding]
+      verdict: methodology-derived
+      evidence: >
+        채택값은 CRAND 내대(1.5 R_c, 8.0 rad/h), 항성풍 외대(2.8 R_c, 1.2 rad/h), 자기권계면 nose 11.9 R_c다.
+        확인: 계면은 Chapman-Ferraro 균형(0.18 G, 1.5 AU 램압 0.178 nPa → 11.9 R_c, 6제곱근이라 입력 오차에 둔감).
+        외대 위치는 실측 천왕성 0.24·해왕성 0.23의 계면 대비 비율로 11.9 × 0.235 = 2.8 R_c. 세기는 방법론 Part B의
+        소스-손실 레짐 콜로 정했다. 외대는 포화 선량앵커 10.4×(18/31)^1.9 = 3.7 rad/h에 풍압 제한(1.5 AU 램압은
+        지구의 0.09배, 해왕성 국지값의 80배)을 얹어 1.2 rad/h(범위 0.4~2), 내대는 비변조 GCR과 낮은 자기 차단강성이
+        CRAND 소스를 지구 이상으로 올리지만 다중극 포획 불안정이 깎아 지구 10.4의 0.8배인 8.0 rad/h. 두 값 모두
+        kp_limit.py로 계산한 K-P 천장 아래임을 확인했다(냉플라스마 0.3~50 cm⁻³ 스윕에서 천장이 지구 L=5의 6배~10¹¹배로
+        구속 조건이 아님). 내대를 두는 것은 실측 천왕성·해왕성이 양성자 내대를 실제로 가지는 것과 같은 물리다.
+        두 벨트의 안쪽 경계는 지구 모델 구조의 border 컷으로 팠다. 내대는 거울점이 대기에 잠기는 입자가 사라지는
+        손실원뿔 구면 컷(적도 1.41 R_c), 외대는 내대와의 사이 슬롯을 여는 내측 carve(적도 ~3.6 R_c)다. 계면 플랭크는
+        Shue 1998의 실측 형상(α=0.5, 플랭크 = nose×√2 = 16.8 R_c)에 맞췄고, SDF와 Shue-native가 같은 폭이 되도록
+        compression 1.4로 정렬했다.
+        유보: 벨트 세기는 방법론이 명시하듯 본질적으로 저신뢰 레짐 콜이고, 위성 c I가 자기 궤도의 입자를 쓸어
+        회랑을 팔 수 있는데 그 손실항은 위성 행이 확정된 뒤에야 넣을 수 있다.
 
   - body: Proxima Cen c
     axis: environment
