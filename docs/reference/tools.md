@@ -265,6 +265,8 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Related — A b moon-system viewer.** `phase4/viewers/polyphemus-moon-viewer.html` is a standalone interactive 3D viewer for the α Cen A b (Polyphemus) moon system + ring design — the 5 named moons (A b I–V = Dante / Hades / Pandora / Cassandra / Chaos), their inclinations / nodes, and the faint A b V-fed E-ring. A Phase 4 art-direction aid, separate from the catalog-wide star map; it visualizes the gated roster recorded in `phase4/alpha_centauri.yaml`. **FROZEN (2026-06-22):** its design-exploration job is done (roster / ring / obliquity locked), so it is kept as a captured artifact and later decisions are NOT synced into it. Its only feature the star map lacks is the A b III surface POV + eclipse view; the canonical, maintained visualization is `docs/starmap.html`.
 
+**Related — Proxima c body+ring viewer.** `phase4/viewers/proxima-c-ring-viewer.html` (2026-08-04): standalone 3D viewer of Proxima c's gated shape — the double red/white ring bands (24.0–32.7k / 41.3–51.6k km, stripe count and edges adjustable), the J₂ flattening (0.45% real, exaggeration slider), obliquity 17°, the 50°-tilted / 0.4 R_c-offset magnetic axis, the icy Roche limit, and an M-dwarf red-light toggle. Same three@0.160 CDN stack as the Erid viewers; a Phase 4 art-direction aid for `phase4/proxima_cen.yaml`.
+
 ## 13. Phase 4 decision-board tools
 
 **Purpose.** Keep the Phase 4 art-direction boards (`phase4/<system>.yaml`, schema v2) emit-safe and reviewable — validate every board against the SPEC contract, and render each board as per-body HTML pages for gate review.

@@ -255,6 +255,8 @@
 
 **관련 — 폴리페무스 위성계 뷰어.** `phase4/viewers/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(A b I~V = Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 A b V 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다. **동결(2026-06-22):** 설계 탐색 임무가 끝나(로스터·고리·obliquity 확정) 아티팩트로 보존하며, 이후 결정은 여기 동기화하지 않는다. 성도에 없는 고유 기능은 A b III 지표 1인칭 시점+일식뿐이고, canonical·유지보수 시각화는 `docs/starmap.html` 이다.
 
+**관련 — 프록시마 c 몸체+고리 뷰어.** `phase4/viewers/proxima-c-ring-viewer.html` (2026-08-04): 프록시마 c의 게이트 확정 형태를 보는 독립형 3D 뷰어다. 적/흰 2중 고리 띠(24.0~32.7k / 41.3~51.6k km, 경계·줄무늬 수 조절), J₂ 편평도(실제 0.45%, 과장 슬라이더), 자전축 기울기 17°, 50° 기울고 0.4 R_c 이탈한 자기축, 얼음 Roche 한계, M왜성 적색광 토글을 담는다. Erid 뷰어들과 같은 three@0.160 CDN 스택이며, `phase4/proxima_cen.yaml` 의 아트디렉션 보조 도구다.
+
 ## 13. Phase 4 결정 보드 도구
 
 **목적.** Phase 4 아트 디렉션 보드(`phase4/<system>.yaml`, 스키마 v2)를 emit-안전하고 리뷰 가능한 상태로 유지한다. 모든 보드를 SPEC 계약에 대해 검증하고, 게이트 리뷰용으로 바디별 HTML 페이지를 렌더한다.

@@ -1,0 +1,233 @@
+<!doctype html>
+<!-- Proxima c 형태 3D 뷰어: 편평도(J2 figure)·2중 적/흰 고리·자전축 17°·자기축 50°까지 한눈에. erid-ring-viewer와 동일한 three@0.160 importmap 스택(로컬 오픈용, CDN). 보드 phase4/proxima_cen.yaml의 게이트 값 시각화. -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Proxima c 형태 3D 뷰어</title>
+<style>
+  :root{ --bg:#05060a; --panel:#0d1018e6; --line:#1c2433; --ink:#e8edf6; --dim:#8893a6;
+    --acc:#7aa2ff; --roche:#ff6b5a; --mag:#c88aff; --warn:#ffb454; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:-apple-system,"Apple SD Gothic Neo","Pretendard",Segoe UI,Roboto,sans-serif}
+  #stage{position:fixed;inset:0} canvas{display:block;touch-action:none}
+  #title{position:fixed;top:10px;right:14px;z-index:5;font-weight:600;font-size:15px;text-align:right}
+  #title small{color:var(--dim);font-weight:400;margin-left:6px;font-size:12px}
+  #hint{position:fixed;bottom:12px;right:14px;z-index:5;color:var(--dim);font-size:11.5px}
+  #panel{position:fixed;top:46px;left:12px;width:296px;max-height:calc(100% - 60px);overflow-y:auto;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;z-index:4;backdrop-filter:blur(8px);font-size:13px}
+  .grp{margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:12px}.grp:last-child{border:0}
+  .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin-bottom:9px;font-weight:600}
+  .ctrl{margin:9px 0}
+  .ctrl label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-bottom:4px}
+  .ctrl label b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--line);border-radius:3px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid #05060a}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid #05060a}
+  .ck{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--dim);cursor:pointer;margin:6px 0}.ck input{accent-color:var(--acc)}
+  .leg{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--dim);margin:5px 0}
+  .sw{width:18px;height:0;border-top:2px solid;flex:0 0 auto}
+  #readout{font-size:12px;line-height:1.7} #readout .k{color:var(--dim)} #readout b{font-variant-numeric:tabular-nums}
+  .flag{font-size:11.5px;padding:2px 0}.ok{color:#7fd1a0}.bad{color:var(--warn)}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="title">Proxima c 형태 3D 뷰어 <small>미니 해왕성 · 드래그로 회전</small></div>
+<div id="hint">드래그=회전 · 휠=줌 · 우클릭드래그=이동</div>
+<div id="panel">
+  <div class="grp">
+    <h3>고리 (R_c 단위 · 보드 게이트값)</h3>
+    <div class="ctrl"><label>안 띠 안쪽 <b id="vIn1">1.40 R_c</b></label><input type="range" id="rIn1" min="1.05" max="3.2" step="0.01" value="1.40"></div>
+    <div class="ctrl"><label>안 띠 바깥 <b id="vOut1">1.90 R_c</b></label><input type="range" id="rOut1" min="1.1" max="3.2" step="0.01" value="1.90"></div>
+    <div class="ctrl"><label>바깥 띠 안쪽 <b id="vIn2">2.40 R_c</b></label><input type="range" id="rIn2" min="1.2" max="3.3" step="0.01" value="2.40"></div>
+    <div class="ctrl"><label>바깥 띠 바깥 <b id="vOut2">3.00 R_c</b></label><input type="range" id="rOut2" min="1.3" max="3.6" step="0.01" value="3.00"></div>
+    <div class="ctrl"><label>불투명도 <b id="vTau">보통</b></label><input type="range" id="rTau" min="0.1" max="0.95" step="0.01" value="0.62"></div>
+    <div class="ctrl"><label>줄무늬 수 (띠당) <b id="vStr">5</b></label><input type="range" id="rStr" min="2" max="12" step="1" value="5"></div>
+    <div id="readout"></div>
+  </div>
+  <div class="grp">
+    <h3>몸체</h3>
+    <div class="ctrl"><label>편평도 과장 <b id="vFlat">1× (실제 0.45%)</b></label><input type="range" id="rFlat" min="1" max="60" step="1" value="1"></div>
+    <div class="ctrl"><label>자전축 기울기 <b id="vObl">17°</b></label><input type="range" id="rObl" min="0" max="60" step="0.5" value="17"></div>
+    <label class="ck"><input type="checkbox" id="ckSpin" checked> 자전 애니메이션 (27 h)</label>
+    <label class="ck"><input type="checkbox" id="ckMag" checked> 자기축 (기울기 50° · 이탈 0.4 R_c)</label>
+    <label class="ck"><input type="checkbox" id="ckRoche" checked> 얼음 Roche 한계 3.3 R_c</label>
+    <label class="ck"><input type="checkbox" id="ckPlane" checked> 궤도면 격자</label>
+    <label class="ck"><input type="checkbox" id="ckRedLight"> Proxima 조명 (M왜성 적색광)</label>
+  </div>
+  <div class="grp">
+    <h3>범례</h3>
+    <div class="leg"><span class="sw" style="border-color:var(--roche);border-top-style:dashed"></span>얼음 Roche 3.3 R_c (56.7k km)</div>
+    <div class="leg"><span class="sw" style="border-color:var(--mag)"></span>자기축 (다중극, 중심 이탈)</div>
+    <div class="leg"><span class="sw" style="border-color:#e8edf6"></span>자전축 (17°)</div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// 보드 게이트값 (phase4/proxima_cen.yaml)
+const R_KM=17202, ROCHE_RC=3.3, FLAT=0.0045, MAG_TILT=50, MAG_OFF=0.4;
+const S={ rIn1:1.40, rOut1:1.90, rIn2:2.40, rOut2:3.00, tau:0.62, stripes:5,
+          flatX:1, obl:17, spin:true, mag:true, roche:true, plane:true, redLight:false };
+
+const stage=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));
+renderer.setSize(innerWidth,innerHeight); stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x05060a);
+const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,0.05,2000);
+camera.position.set(4.6,2.6,6.4);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=0.08; controls.minDistance=2; controls.maxDistance=40;
+
+// 조명 — 기본은 중립(Kopernicus 정규화 렌더), 토글로 M왜성 적색광
+const amb=new THREE.AmbientLight(0x33405a,0.9); scene.add(amb);
+const star=new THREE.DirectionalLight(0xffffff,2.2); star.position.set(7,3,4); scene.add(star);
+function applyLight(){ star.color.set(S.redLight?0xffb488:0xffffff); amb.color.set(S.redLight?0x3a2c30:0x33405a); }
+
+// 별 배경
+{ const n=900, pos=new Float32Array(n*3); for(let i=0;i<n;i++){ const r=120+Math.random()*300,
+    t=Math.random()*Math.PI*2, p=Math.acos(2*Math.random()-1);
+  pos[i*3]=r*Math.sin(p)*Math.cos(t); pos[i*3+1]=r*Math.cos(p); pos[i*3+2]=r*Math.sin(p)*Math.sin(t); }
+  const gm=new THREE.BufferGeometry(); gm.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(gm,new THREE.PointsMaterial({color:0xcdd6ea,size:0.7,sizeAttenuation:false,transparent:true,opacity:0.8}))); }
+
+// ── 기울임 그룹: 자전축 obliquity로 몸체+고리+축이 함께 기움 ──
+const tiltGrp=new THREE.Group(); scene.add(tiltGrp);
+
+// ── 행성: 창백 회청 #c4d0d8 + 은은한 위도 띠 (appearance 행) ──
+function planetTex(){ const w=1024,h=512,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,'#b8c6d2'); g.addColorStop(0.5,'#c4d0d8'); g.addColorStop(1,'#b4c2ce');
+  x.fillStyle=g; x.fillRect(0,0,w,h);
+  // 저대비 위도 밴드 — 냉한 H/He 외피는 해왕성보다 흐릿한 띠
+  for(let b=0;b<10;b++){ const cy=(0.12+0.76*Math.random())*h, hh=8+Math.random()*26;
+    const tone=Math.random()<0.5?'205,214,222':'176,188,200';
+    x.fillStyle=`rgba(${tone},${0.10+Math.random()*0.14})`;
+    x.fillRect(0,cy-hh/2,w,hh); }
+  // 아주 옅은 고위도 어두워짐
+  const g2=x.createLinearGradient(0,0,0,h);
+  g2.addColorStop(0,'rgba(90,105,125,0.18)'); g2.addColorStop(0.25,'rgba(0,0,0,0)');
+  g2.addColorStop(0.75,'rgba(0,0,0,0)'); g2.addColorStop(1,'rgba(90,105,125,0.18)');
+  x.fillStyle=g2; x.fillRect(0,0,w,h);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; }
+const planet=new THREE.Mesh(new THREE.SphereGeometry(1,96,64),
+  new THREE.MeshStandardMaterial({map:planetTex(),roughness:1,metalness:0,emissive:0x0e141c,emissiveIntensity:0.3}));
+tiltGrp.add(planet);
+const glow=new THREE.Mesh(new THREE.SphereGeometry(1.03,64,48),
+  new THREE.MeshBasicMaterial({color:0x9fb4c4,transparent:true,opacity:0.13,side:THREE.BackSide}));
+tiltGrp.add(glow);
+function applyFlat(){ const f=Math.min(0.9,FLAT*S.flatX); planet.scale.set(1,1-f,1); glow.scale.set(1,1-f,1); }
+
+// ── 자전축 라인 ──
+const spinAxis=(()=>{ const gm=new THREE.BufferGeometry().setFromPoints(
+    [new THREE.Vector3(0,-1.7,0), new THREE.Vector3(0,1.7,0)]);
+  return new THREE.Line(gm,new THREE.LineBasicMaterial({color:0xe8edf6,transparent:true,opacity:0.75})); })();
+tiltGrp.add(spinAxis);
+
+// ── 자기축: 자전축에서 50° 기움 + 중심 이탈 0.4 R_c (자기장 행) ──
+const magGrp=new THREE.Group();
+{ const gm=new THREE.BufferGeometry().setFromPoints(
+    [new THREE.Vector3(0,-1.9,0), new THREE.Vector3(0,1.9,0)]);
+  const ln=new THREE.Line(gm,new THREE.LineDashedMaterial({color:0xc88aff,dashSize:0.14,gapSize:0.08,transparent:true,opacity:0.95}));
+  ln.computeLineDistances(); magGrp.add(ln);
+  const tip=new THREE.Mesh(new THREE.ConeGeometry(0.06,0.18,12),
+    new THREE.MeshBasicMaterial({color:0xc88aff})); tip.position.y=1.9; magGrp.add(tip); }
+magGrp.rotation.z=MAG_TILT*Math.PI/180;
+magGrp.position.y=MAG_OFF;      // 자기 중심이 자전축 방향으로 0.4 R_c 이탈
+tiltGrp.add(magGrp);
+
+// ── 2중 고리: 톨린 적 / 청정 얼음 백 줄무늬 ──
+let rings=[];
+function bandTex(nStripes){ const w=512,h=8,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+  // 줄무늬: 백(청정 얼음)과 적(톨린 코팅) 교대 + 폭 약간 불규칙
+  const RED='#8a4632', RED2='#a05a3c', WHITE='#e9edf0', WHITE2='#d8dee4';
+  let pos=0, i=0;
+  while(pos<w){ const ww=(w/nStripes)*(0.6+Math.random()*0.8);
+    x.fillStyle=(i%2===0)?(Math.random()<0.5?WHITE:WHITE2):(Math.random()<0.5?RED:RED2);
+    x.fillRect(pos,0,ww,h); pos+=ww; i++; }
+  // 경계 소프트닝
+  x.globalAlpha=0.25; x.filter='blur(1px)'; x.drawImage(c,0,0); x.filter='none'; x.globalAlpha=1;
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; }
+function rebuildRings(){ for(const r of rings){ tiltGrp.remove(r); r.geometry.dispose(); } rings=[];
+  for(const [ri,ro] of [[S.rIn1,S.rOut1],[S.rIn2,S.rOut2]]){
+    if(ro<=ri+0.02) continue;
+    const gm=new THREE.RingGeometry(ri,ro,192,1);
+    const p=gm.attributes.position, uv=gm.attributes.uv;
+    for(let i=0;i<p.count;i++){ const r=Math.hypot(p.getX(i),p.getY(i)); uv.setXY(i,(r-ri)/(ro-ri),0.5); }
+    const mat=new THREE.MeshStandardMaterial({map:bandTex(S.stripes),side:THREE.DoubleSide,transparent:true,
+      opacity:Math.max(0.12,S.tau),roughness:1,metalness:0,emissive:0x141210,emissiveIntensity:0.35});
+    const m=new THREE.Mesh(gm,mat); m.rotation.x=Math.PI/2; tiltGrp.add(m); rings.push(m); } }
+rebuildRings();
+
+// ── 기준선 ──
+function circle(rRc,color,dashed,parent){ const n=256,pts=[];
+  for(let i=0;i<=n;i++){ const t=i/n*Math.PI*2; pts.push(new THREE.Vector3(Math.cos(t)*rRc,0,Math.sin(t)*rRc)); }
+  const gm=new THREE.BufferGeometry().setFromPoints(pts);
+  const mat=dashed? new THREE.LineDashedMaterial({color,dashSize:0.12,gapSize:0.09,transparent:true,opacity:0.9})
+                  : new THREE.LineBasicMaterial({color,transparent:true,opacity:0.9});
+  const ln=new THREE.Line(gm,mat); if(dashed) ln.computeLineDistances(); (parent||scene).add(ln); return ln; }
+const rocheRing=circle(ROCHE_RC,0xff6b5a,true,tiltGrp);   // Roche는 몸체 적도면 기준
+
+// 궤도면 격자 (기울지 않음 — obliquity의 기준면)
+const planeDisk=(()=>{ const gm=new THREE.RingGeometry(1.02,6,64,1);
+  const m=new THREE.MeshBasicMaterial({color:0x121a2a,transparent:true,opacity:0.25,side:THREE.DoubleSide});
+  const d=new THREE.Mesh(gm,m); d.rotation.x=Math.PI/2; scene.add(d); return d; })();
+
+// ── UI ──
+let needRings=false;
+function bind(id,key,fmt){ const el=document.getElementById(id), out=document.getElementById('v'+id.slice(1));
+  const upd=()=>{ S[key]=parseFloat(el.value); if(out) out.textContent=fmt(S[key]); needRings=true; };
+  el.addEventListener('input',upd); upd(); }
+bind('rIn1','rIn1',v=>v.toFixed(2)+' R_c');
+bind('rOut1','rOut1',v=>v.toFixed(2)+' R_c');
+bind('rIn2','rIn2',v=>v.toFixed(2)+' R_c');
+bind('rOut2','rOut2',v=>v.toFixed(2)+' R_c');
+bind('rTau','tau',v=> v<0.25?'옅음':v<0.6?'보통':'짙음');
+bind('rStr','stripes',v=>v.toFixed(0));
+{ const el=document.getElementById('rFlat'), out=document.getElementById('vFlat');
+  el.addEventListener('input',()=>{ S.flatX=parseFloat(el.value);
+    out.textContent=S.flatX.toFixed(0)+'× ('+(FLAT*S.flatX*100).toFixed(1)+'%)'; applyFlat(); }); }
+{ const el=document.getElementById('rObl'), out=document.getElementById('vObl');
+  el.addEventListener('input',()=>{ S.obl=parseFloat(el.value); out.textContent=S.obl.toFixed(1)+'°'; }); }
+for(const [id,key] of [['ckSpin','spin'],['ckMag','mag'],['ckRoche','roche'],['ckPlane','plane'],['ckRedLight','redLight']]){
+  const el=document.getElementById(id); el.addEventListener('change',()=>{ S[key]=el.checked;
+    if(key==='redLight') applyLight(); }); S[key]=el.checked; }
+applyFlat(); applyLight();
+
+function readout(){
+  const km=v=>((v*R_KM/1000).toFixed(1))+'k';
+  const insideRoche=S.rOut2<=ROCHE_RC;
+  const gap=S.rIn2-S.rOut1;
+  const f1=insideRoche? `<div class="flag ok">✓ 두 띠 모두 얼음 Roche 안 (3.3 R_c)</div>`
+                      : `<div class="flag bad">⚠ 바깥 띠가 Roche 밖 — 위성 응집 가능 구역</div>`;
+  const f2=(gap>=0.05)? `<div class="flag ok">✓ 간극 ${gap.toFixed(2)} R_c (${km(gap)} km)</div>`
+                      : `<div class="flag bad">⚠ 두 띠가 겹침</div>`;
+  document.getElementById('readout').innerHTML=
+    `<span class="k">안 띠</span> <b>${S.rIn1.toFixed(2)}–${S.rOut1.toFixed(2)} R_c</b> · ${km(S.rIn1)}–${km(S.rOut1)} km<br>`+
+    `<span class="k">바깥 띠</span> <b>${S.rIn2.toFixed(2)}–${S.rOut2.toFixed(2)} R_c</b> · ${km(S.rIn2)}–${km(S.rOut2)} km`+
+    f2+f1; }
+
+addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight); });
+
+function loop(){ requestAnimationFrame(loop);
+  if(needRings){ rebuildRings(); needRings=false; }
+  tiltGrp.rotation.z=S.obl*Math.PI/180;
+  magGrp.visible=S.mag; rocheRing.visible=S.roche; planeDisk.visible=S.plane;
+  if(S.spin){ planet.rotation.y+=0.004; }   // 27h 자전 (과장 속도)
+  controls.update(); readout(); renderer.render(scene,camera); }
+loop();
+</script>
+</body>
+</html>
