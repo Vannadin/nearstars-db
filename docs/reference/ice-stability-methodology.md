@@ -205,6 +205,9 @@ owner-override rather than a pass: the recipe does not license 0.91, it prices i
 
 ## Related
 
+- [`crater-degradation-methodology.md`](crater-degradation-methodology.md) — the next
+  question: given that the ice survives, do its craters? (Sublimation kills the ice;
+  relaxation and convection kill the craters in it.)
 - [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — supplies
   `F_abs`, the input this recipe is most sensitive to.
 - [`surface-color-albedo-methodology.md`](surface-color-albedo-methodology.md) — the

@@ -47,6 +47,12 @@ doc has a Korean mirror under `ko/docs/reference/`.
 | [surface-radiation-dose-methodology](surface-radiation-dose-methodology.md) | Surface dose from stellar particle events through an atmospheric column (Kerbalism hazard layer), distinct from trapped-belt dose | Atri 2020 ([arXiv:1910.09871](https://arxiv.org/abs/1910.09871)); Atri 2017 ([arXiv:1606.07027](https://arxiv.org/abs/1606.07027)); Grießmeier 2016 ([arXiv:1603.06500](https://arxiv.org/abs/1603.06500)); MSL RAD calibration |
 | [ice-stability-methodology](ice-stability-methodology.md) | Whether exposed ice survives at an orbit: sublimation lifetime + the albedo survival threshold; calculator [`docs/ice-stability.html`](../ice-stability.html) | Fray & Schmitt 2009 ([`2009P&SS...57.2053F`](https://ui.adsabs.harvard.edu/abs/2009P%26SS...57.2053F)); Feistel & Wagner 2007; Schörghofer 2008/2016; Hayne & Aharonson 2015; Marti & Mauersberger 1993 |
 
+## Surface & geology
+
+| Methodology | Grounds | Key references |
+|---|---|---|
+| [crater-degradation-methodology](crater-degradation-methodology.md) | Cratered vs crater-free look: per-channel crater erasure timescales (diffusion / burial / viscous relaxation / fluvial / wholesale renewal) vs impact accumulation | Fassett & Thomson 2014; Hartmann 1984; Zahnle 2003; Passey & Shoemaker 1981; Bland 2012; McKinnon 2016; Forsberg-Taylor 2004; Neish & Lorenz 2012; Strom 1994 |
+
 ## Color (shared CIE 1931 → sRGB engine)
 
 All four reflected/emitted color recipes share one colorimetry engine (CIE 1931 CMF →

@@ -40,6 +40,12 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 | [greenhouse-warming-methodology](greenhouse-warming-methodology.md) | 임의 기체 조합의 온실 상승폭 T_surf − T_eq. 4개 층(해석 모형 / 불투명도 자료 / iso-Ts 등온선 / 빌려온 계산) + 모항성 보정; 계산기 `scripts/refs/greenhouse_dt.py` | Robinson & Catling 2012 ([arXiv:1209.1833](https://arxiv.org/abs/1209.1833)); Karman 2019 (HITRAN CIA); Byrne & Goldblatt 2014a/b; Feulner 2012 ([arXiv:1204.4449](https://arxiv.org/abs/1204.4449)); Kopparapu 2013 ([arXiv:1301.6674](https://arxiv.org/abs/1301.6674)); Charnay 2013 ([arXiv:1310.4286](https://arxiv.org/abs/1310.4286)); Ramirez 2014/2018; Goldblatt 2009; Arney 2016 |
 | [internal-heat-luminosity-methodology](internal-heat-luminosity-methodology.md) | 내부열 + 자발광 (T_int) | Burrows 1997; Baraffe 2003; Fortney 2007; Marley 2007 |
 
+## 표면·지질
+
+| 방법론 | 근거 대상 | 핵심 레퍼런스 |
+|---|---|---|
+| [crater-degradation-methodology](crater-degradation-methodology.md) | 크레이터투성이 vs 크레이터 없음: 채널별 크레이터 소거 시간척도(확산 / 매몰 / 점성 이완 / 유수 / 통째 갱신) 대 충돌 누적 | Fassett & Thomson 2014; Hartmann 1984; Zahnle 2003; Passey & Shoemaker 1981; Bland 2012; McKinnon 2016; Forsberg-Taylor 2004; Neish & Lorenz 2012; Strom 1994 |
+
 ## 색 (공용 CIE 1931 → sRGB 엔진)
 
 반사/발광색 레시피 넷은 하나의 색측정 엔진(CIE 1931 CMF → XYZ → IEC 61966-2-1 sRGB)을 공유하며,

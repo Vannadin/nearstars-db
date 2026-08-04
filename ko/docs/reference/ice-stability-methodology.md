@@ -202,6 +202,9 @@ board 가 이걸 읽는 방식은 이렇다. 원래의 알베도 0.70 은 그냥
 
 ## Related
 
+- [`crater-degradation-methodology.md`](crater-degradation-methodology.md) — 다음
+  질문. 얼음이 살아남는다면 그 안의 크레이터는? (승화는 얼음을 죽이고, 이완과
+  대류는 그 안의 크레이터를 죽인다.)
 - [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — `F_abs`
   를 공급한다. 이 레시피가 가장 민감하게 반응하는 입력이다.
 - [`surface-color-albedo-methodology.md`](surface-color-albedo-methodology.md) —
