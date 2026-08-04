@@ -272,6 +272,125 @@ def main(out="docs/img/moon-atmosphere-feasibility.png"):
                   f"-> {'INWARD DECAY' if a_rp < rs else 'outward, stable'}")
 
 
+
+
+# ---------------------------------------------------------------------------
+# 실제 비율 도면: 프록시마 c + 고리 + c I (모행성 크기·거리·위성 크기 동일 축척)
+# ---------------------------------------------------------------------------
+def scale_figure(out="docs/img/proxima-c-system-to-scale.png"):
+    RC_KM = 17202.0          # c 반지름
+    RING_INNER, RING_OUTER = (1.40, 1.90), (2.40, 3.00)
+    ROCHE, SYNC = 3.30, 5.31
+    BELT = (3.90, 6.50)
+    MOON_R_KM, FLAT = 326.0, 0.0478
+    ORBITS = [(4.01, "현 보드값 4.0 R_c", BAD), (7.00, "제안 7.0 R_c", GOOD)]
+
+    W, H = 1720, 1040
+    img = Image.new("RGB", (W, H), BG)
+    d = ImageDraw.Draw(img)
+    f9, f10, f11, f13 = font(11), font(12), font(13), font(15)
+    d.text((30, 20), "Proxima c 계 — 실제 비율", font=font(24, True), fill=INK)
+    d.text((30, 56), "모행성 크기 · 고리 · 위성 크기 · 궤도 거리를 모두 같은 축척으로 "
+                     "·  c 반지름 17,202 km", font=f11, fill=DIM)
+
+    # ---------------- A. 측면(궤도면 안에서 본) 실제 비율 ----------------
+    x0, ymid, XMAX = 250, 322, 7.9
+    ppu = (W - x0 - 130) / XMAX
+    d.text((30, 100), "A. 궤도면 측면에서 본 모습 (실제 비율)", font=f13, fill=INK)
+    # 방사선 외대
+    d.rectangle([x0 + BELT[0] * ppu, ymid - 66, x0 + BELT[1] * ppu, ymid + 66],
+                fill=(32, 22, 32))
+    d.text((x0 + BELT[0] * ppu + 8, ymid - 86), "방사선 외대 3.9–6.5 R_c",
+           font=f9, fill=(160, 116, 148))
+    # 고리 두 띠 (측면이라 선)
+    for lo, hi in (RING_INNER, RING_OUTER):
+        d.rectangle([x0 + lo * ppu, ymid - 2, x0 + hi * ppu, ymid + 2],
+                    fill=(182, 186, 196))
+    d.text((x0 + RING_INNER[0] * ppu - 4, ymid + 12),
+           "고리 1.4–1.9 · 2.4–3.0 R_c", font=f9, fill=(182, 186, 196))
+    # Roche / 동기궤도
+    for val, lbl, col in ((ROCHE, "얼음 Roche 3.3", (206, 126, 116)),
+                          (SYNC, "동기궤도 5.31", WARM)):
+        xv = x0 + val * ppu
+        for yy in range(ymid - 108, ymid + 109, 8):
+            d.line([(xv, yy), (xv, yy + 4)], fill=col)
+        d.text((xv - 30, ymid - 130), lbl, font=f9, fill=col)
+    # 모행성
+    pr = ppu
+    d.ellipse([x0 - pr, ymid - pr, x0 + pr, ymid + pr], fill=(150, 164, 176))
+    d.ellipse([x0 - pr, ymid - pr, x0 + pr, ymid + pr], outline=(196, 208, 220))
+    d.text((x0 - 34, ymid + pr + 14), "Proxima c", font=f11, fill=INK)
+    d.text((x0 - 34, ymid + pr + 30), "지름 34,404 km", font=f9, fill=DIM)
+    # 위성 (실제 비율)
+    for a_rc, lbl, col in ORBITS:
+        xm = x0 + a_rc * ppu
+        rm = MOON_R_KM / RC_KM * ppu
+        d.ellipse([xm - rm, ymid - rm, xm + rm, ymid + rm], fill=col)
+        d.line([(xm, ymid - 34), (xm, ymid - rm - 3)], fill=col)
+        d.text((xm - 44, ymid - 52), lbl, font=f10, fill=col)
+        d.text((xm - 44, ymid + 26), f"{a_rc * RC_KM:,.0f} km".replace(",", " "),
+               font=f9, fill=col)
+    # 축척 바
+    barkm = 20000
+    bl = barkm / RC_KM * ppu
+    bx_, by_ = x0 + 3.9 * ppu, ymid + pr + 22
+    d.line([(bx_, by_), (bx_ + bl, by_)], fill=INK, width=2)
+    for xx in (bx_, bx_ + bl):
+        d.line([(xx, by_ - 5), (xx, by_ + 5)], fill=INK)
+    d.text((bx_ + bl / 2 - 30, by_ + 9), "20 000 km", font=f9, fill=INK)
+
+    # ---------------- B. c I 확대 ----------------
+    MAG = 25
+    d.text((30, 622), f"B. c I 확대 (A 도면의 {MAG}배) — 조석으로 늘어난 계란형",
+           font=f13, fill=INK)
+    rm_b = MOON_R_KM / RC_KM * ppu * MAG
+    bx, by2 = 170, 790
+    d.ellipse([bx - rm_b, by2 - rm_b * (1 - FLAT), bx + rm_b, by2 + rm_b * (1 - FLAT)],
+              fill=(178, 152, 142), outline=(214, 194, 184))
+    d.text((bx - 50, by2 + rm_b + 18), "Proxima c I", font=f11, fill=INK)
+    d.text((bx - 50, by2 + rm_b + 34), "지름 652 km · a/c 1.05", font=f9, fill=DIM)
+    tx = bx + rm_b + 46
+    for j, s in enumerate((
+            f"같은 {MAG}배로 모행성을 그리면 지름이 {2*ppu*MAG:,.0f} px, 화면 밖이다.",
+            "A 도면의 위성 점 크기가 실제 비율이다 — 반지름이 c의 1/53.",
+            "행성 원반 안에 c I을 53개 늘어놓을 수 있다.",
+            "편평도 4.8%는 실제로 이 정도로 미묘하다. 계란형이라 해도 눈에 겨우 걸린다.")):
+        d.text((tx, by2 - 30 + j * 20), s.replace(",", " "), font=f10, fill=DIM)
+
+    # ---------------- C. c I 하늘에서 본 c ----------------
+    d.text((980, 622), "C. c I 하늘에서 본 c의 겉보기 크기", font=f13, fill=INK)
+    cy = 790
+    dpp = 6.4
+    xx = 1120
+    for a_rc, col in ((4.01, BAD), (7.00, GOOD)):
+        ang = 2 * math.degrees(math.asin(1 / a_rc))
+        r = ang / 2 * dpp
+        d.line([(xx - r * 2.2, cy), (xx + r * 2.2, cy)], fill=(198, 202, 212))
+        d.ellipse([xx - r, cy - r, xx + r, cy + r], fill=(150, 164, 176))
+        d.ellipse([xx - r, cy - r, xx + r, cy + r], outline=col)
+        d.text((xx - 52, cy + r + 16), f"{a_rc:.1f} R_c 에서 {ang:.1f}°",
+               font=f10, fill=col)
+        xx += 250
+    mr = 0.52 / 2 * dpp
+    d.ellipse([1600 - mr, cy - mr, 1600 + mr, cy + mr], fill=(216, 216, 216))
+    d.text((1556, cy + 14), "지구에서 본 달 0.52°", font=f9, fill=DIM)
+    d.text((980, 946), "고리는 c I이 적도면을 돌기 때문에 정확히 측면으로 보인다. "
+                       "원반이 아니라 밝은 한 줄이다.", font=f10, fill=DIM)
+
+    img.save(out)
+    print("wrote", out)
+    print(f"  c I / c 반지름비 = {MOON_R_KM / RC_KM:.4f} (1/{RC_KM / MOON_R_KM:.0f})")
+    for a_rc, _, _ in ORBITS:
+        print(f"  a={a_rc:.2f} R_c = {a_rc*RC_KM:,.0f} km, "
+              f"c 겉보기 지름 {2*math.degrees(math.asin(1/a_rc)):.1f} deg")
+
+
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else
-         "docs/img/moon-atmosphere-feasibility.png")
+    if "--scale" in sys.argv:
+        scale_figure()
+    elif "--all" in sys.argv:
+        main()
+        scale_figure()
+    else:
+        main(sys.argv[1] if len(sys.argv) > 1 else
+             "docs/img/moon-atmosphere-feasibility.png")
