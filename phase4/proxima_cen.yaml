@@ -1592,7 +1592,7 @@ decisions:
       같은 날 지구 시선 밝기 계산기(뷰어)로 Gratton 대비 정량 대조: 게이트 고리 ~7e-10 = 실측의 0.2% → "밝은 신호와
       양립" 표현을 철회하고 hook을 테마적 착상으로 명시. 전문 캐시 docs/phase3/_papers/2004.06685.md 추가.
       같은 날 오너 결정으로 확산 외곽고리(E-ring식, 4~20 R_c, c I 공급) 신설 — Gratton 등가반경에 맞춘 명시 발산,
-      측광 재현 불가는 divergence_note에 병기.
+      측광 재현 불가는 divergence_note에 병기. 채택은 조건부(오너): c I 세부 워크에서 공급원 역할이 어색하면 철회.
     gate:
       criterion: [observation, visual-checklist]
       verdict: documented-divergence
