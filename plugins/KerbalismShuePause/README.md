@@ -32,6 +32,22 @@ Bonus: Shue 98 parametrizes `r0`, `α` by solar-wind pressure and IMF Bz — hoo
 that to Kerbalism's `solar_cycle`/storm state gives a magnetopause that visibly
 **compresses during storms**. That dynamic response is the PR selling point.
 
+## Scope addition — offset-sphere fallback mode (owner, 2026-08-04)
+
+The "max cross-section pinned at the body plane" defect above has a **one-line
+lightweight fix** short of full Shue: shift the sphere centre tailward before the
+scaling (`p.x += pause_offset`). A least-squares fit against the softened Shue
+curve for Proxima c (nose 11.905, α 0.5, tail 125) lands within a few percent
+everywhere: `pause_offset 19.7, radius 21.5, compression 0.68, extension 0.204`
+reproduces the nose (11.9), the body-plane width (16.8), the max width (21.5 at
+x = −19.7, vs Shue's ~2×nose well behind the body) and the tail closure (125).
+The boards carry these as ⚗ `pause_offset*` fields (emitter `PENDING_MODEL_KEYS`);
+the belt viewer's `pause_offset` slider previews it. If the full Shue mode is
+rejected upstream, this fallback is a far smaller Harmony patch with most of the
+visual payoff. Every shipped stock/ROKerbalism pause underrepresents tail width
+this way (Earth: flank 15 vs observed tail radius 25–30 R_E), so the fallback is
+generally applicable, not a NearStars quirk.
+
 ## Scope addition — a size for the deformation (owner, 2026-08-04)
 
 Kerbalism's `*_deform` adds `sin(x·5)·sin(y·7)·sin(z·6)·A` to the signed distance. Because
