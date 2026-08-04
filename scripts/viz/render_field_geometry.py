@@ -98,6 +98,28 @@ def multipolar(seed: int = 20260804):
     return c
 
 
+def icegiant(tilt_deg=50.0, offset=0.4, seed=20260804):
+    """Tilted + offset multipolar field, the Uranus/Neptune shape.
+
+    A dipole tilted by `tilt_deg` puts power into g11 as well as g10. Displacing that
+    dipole along its axis by `offset` body radii is, to leading order, a quadrupole of
+    g20 ≈ 2·offset·g10, which is why an "offset dipole" is already a multipolar field.
+    Thin-shell convection then adds the rest of the l = 2-3 power.
+    """
+    t = math.radians(tilt_deg)
+    g10 = -math.cos(t)
+    c = {(1, 0): (g10, 0.0), (1, 1): (-math.sin(t), 0.0),
+         (2, 0): (2.0 * offset * g10, 0.0)}
+    rng = np.random.default_rng(seed)
+    for l in (2, 3):
+        for m in range(0, l + 1):
+            g, h = c.get((l, m), (0.0, 0.0))
+            sc = 0.35 / l ** 0.5
+            c[(l, m)] = (g + float(rng.normal(0, sc)),
+                         h + (0.0 if m == 0 else float(rng.normal(0, sc))))
+    return c
+
+
 def trace_lines(coeffs, n_seed=13, r_max=6.0, steps=2600, ds=0.02):
     """Meridional (phi = 0 and pi) field lines, integrated both ways from the surface."""
     lines = []
@@ -284,7 +306,11 @@ def draw_map(img, ox, oy, w, h, coeffs, title, font, fsmall):
 
 
 def main() -> int:
-    out = sys.argv[1] if len(sys.argv) > 1 else "docs/img/field-geometry.png"
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    case = "c" if "--case=c" in sys.argv or "--icegiant" in sys.argv else "b"
+    default = ("docs/img/field-geometry-proxima-c.png" if case == "c"
+               else "docs/img/field-geometry.png")
+    out = args[0] if args else default
     W, H = 1500, 1180
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
@@ -295,20 +321,32 @@ def main() -> int:
     except OSError:
         font = fsmall = fbig = ImageFont.load_default()
 
-    d.text((36, 26), "자기장 기하: 쌍극 vs 다중극", font=fbig, fill=FG)
+    d.text((36, 26), "자기장 기하: 쌍극 vs 다중극" if case == "b" else "자기장 기하: 축대칭 다중극 vs 기울고 이탈한 다중극",
+           font=fbig, fill=FG)
     d.text((36, 64), "Ro_l = 0.12 게이트가 강도만이 아니라 형태를 바꾼다. 붉은색 = 표면에서 나오는 자기장, "
                      "푸른색 = 들어가는 자기장, 연두색 = 오로라 발자국(r > 4까지 열린 자기력선을 추적해 표시).",
            font=fsmall, fill=DIM)
 
-    mp = multipolar()
-    draw_panel(img, 30, 100, 720, 520, DIPOLAR,
-               "쌍극 (Ro_l < 0.12) — 지구 기준",
-               "축대칭 쌍극자 하나. 자기력선이 두 극으로 모인다.", font, fsmall)
-    draw_panel(img, 760, 100, 710, 520, mp,
-               "다중극 (Ro_l > 0.12) — Proxima Cen b 채택",
-               "쌍극 성분이 지배력을 잃고 l = 2~4가 섞인다. 모멘트는 0.06배로 붕괴.", font, fsmall)
-    draw_map(img, 30, 630, 720, 500, DIPOLAR, "표면 B_r — 쌍극: 두 극에 열린 극관 하나씩", font, fsmall)
-    draw_map(img, 760, 630, 710, 500, mp, "표면 B_r — 다중극: 중위도까지 흩어진 발자국 반점", font, fsmall)
+    if case == "c":
+        left, right = multipolar(), icegiant()
+        lt = ("다중극, 축대칭 — Proxima Cen b",
+              "느린 자전이 형태를 정한다. 축은 그대로 두고 쌍극 지배력만 잃는다.")
+        rt = ("기울고 이탈한 다중극 — Proxima Cen c 채택",
+              "얇은 전도층 대류. 축이 50° 기울고 0.4 R 밀려나며 l = 2~3이 섞인다.")
+        lm = "표면 B_r — b: 축을 따라 반점이 남는다"
+        rm = "표면 B_r — c: 기울기·이탈로 발자국이 한쪽으로 몰린다"
+    else:
+        left, right = DIPOLAR, multipolar()
+        lt = ("쌍극 (Ro_l < 0.12) — 지구 기준",
+              "축대칭 쌍극자 하나. 자기력선이 두 극으로 모인다.")
+        rt = ("다중극 (Ro_l > 0.12) — Proxima Cen b 채택",
+              "쌍극 성분이 지배력을 잃고 l = 2~4가 섞인다. 모멘트는 0.06배로 붕괴.")
+        lm = "표면 B_r — 쌍극: 두 극에 열린 극관 하나씩"
+        rm = "표면 B_r — 다중극: 중위도까지 흩어진 발자국 반점"
+    draw_panel(img, 30, 100, 720, 520, left, lt[0], lt[1], font, fsmall)
+    draw_panel(img, 760, 100, 710, 520, right, rt[0], rt[1], font, fsmall)
+    draw_map(img, 30, 630, 720, 500, left, lm, font, fsmall)
+    draw_map(img, 760, 630, 710, 500, right, rm, font, fsmall)
 
     d.text((36, H - 26), "도식이며 dynamo 해가 아니다. 다중극 계수는 seed 20260804의 실현값 "
                          "(문헌이 기술하는 스펙트럼 가중을 따름). 근거: rocky-planet-dynamo-methodology.md",
