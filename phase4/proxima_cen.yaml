@@ -724,13 +724,20 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      You can put a craft down here, which is the difference from Alpha Centauri A b, where skimming the air is all
-      there is. The map divides by how directly the star bears down rather than by latitude, so seven zones ring
-      outward from the substellar point: the substellar point with the star straight overhead, the lakes around it
-      where a craft can come down on water, the dark basalt of the day lowlands, the bright feldspar highlands above
-      them, the 명암경계선 where the sun sits on the horizon and stays there, the frozen night side, and the
-      water-ice cap over the antistellar point. The auroral belt is left out, having no fixed ground of its own. The
-      one to visit is the substellar point, where the star hangs at a single spot and the lakes beneath it steam.
+      Landing is possible, but staying is not. The field is weak and the air a third of Earth's, so flares reach the
+      ground. In exchange this is the one place in the system where a craft can come down on water. The surface splits
+      into seven: Substellar Point (the star fixed straight overhead) / Substellar Lakes (splashdown) / Day Lowlands
+      (dark basalt) / Day Highlands (bright feldspar) / Terminator (the sun parked on the horizon) / Night Side
+      (frozen rock) / Night Ice Cap (water ice at the antistellar point). The auroral belt is excluded, having no
+      fixed ground. The most worthwhile of them is the substellar point, where the star hangs at one spot and the
+      lakes below it steam.
+    narrative_ko: >
+      착륙은 가능하지만 오래 머물기는 어렵다. 자기장이 약하고 대기도 지구의 3분의 1이라 플레어가 지표까지 닿는다.
+      대신 이 계에서 유일하게 물 위에 내려앉을 수 있는 곳이다. 지표는 일곱으로 갈린다. 직하점(Substellar Point,
+      별이 머리 꼭대기에 고정) / 직하 호수(Substellar Lakes, 물 위 착륙) / 주간 저지(Day Lowlands, 어두운 현무암) /
+      주간 고지(Day Highlands, 밝은 장석질) / 명암경계선(Terminator, 해가 지평에 걸려 멈춘 황혼대) / 야간면(Night
+      Side, 얼어붙은 암석) / 야간 빙관(Night Ice Cap, 반대점 물얼음). 오로라대는 고정된 땅이 없어 제외했다. 그중
+      가장 볼 만한 곳은 별이 한자리에 붙박이로 걸린 직하점으로, 그 아래 호수가 김을 올린다.
     narrative_ko: >
       이 행성에는 내려앉을 수 있다. 대기를 스치는 것이 전부인 Alpha Centauri A b와 갈리는 지점이 그것이다. 지도는
       위도가 아니라 별이 얼마나 곧게 내리쬐는지로 갈려, 직하점에서 바깥으로 일곱 구획이 동심원을 그린다. 별이 머리
@@ -1434,13 +1441,18 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      There is nothing to land on, so this is a place you fly through and orbit around, and what makes the trip worth
-      it is that the sky here has furniture: a double ring, one red band and one white, and a moon of its own. This is
-      also the only planet in the system that spins freely, so its map divides by latitude the way an ordinary world's
-      does: an equatorial belt, a temperate band north and south, and a polar zone at each end. Five in all. The ring
-      shadow sweeping across those bands is a sight rather than a zone of its own, and so is the moon. The best of it
-      is the equatorial belt at ring plane, where the rings collapse to a bright line edge-on and the shadow falls
-      straight down.
+      There is no solid surface, so landing is out and only atmospheric flight and orbit are available. At 1.5 AU it
+      is also the farthest thing in the system to reach. The science map splits into five: Equatorial / North
+      Temperate / South Temperate / North Polar / South Polar. Being the only freely rotating planet here, its zones
+      follow latitude rather than the angle to the star. The ring shadow and the moon are excluded, neither being
+      fixed ground. The most worthwhile is the equatorial belt at ring plane, where the double ring folds edge-on into
+      a single bright line and its shadow falls straight down.
+    narrative_ko: >
+      고체 표면이 없어 착륙은 불가하고 대기 비행과 궤도만 가능하다. 1.5 AU에 있어 이 계에서 도달 부담도 가장 크다.
+      과학 지도는 다섯으로 갈린다. 적도대(Equatorial) / 북온대(North Temperate) / 남온대(South Temperate) /
+      북극(North Polar) / 남극(South Polar). 이 계에서 유일한 자유 자전 행성이라 구획이 별을 향한 각도가 아니라
+      위도를 따른다. 고리 그림자대와 위성은 고정된 땅이 아니어서 제외했다. 그중 가장 볼 만한 곳은 고리면의
+      적도대로, 2중 고리가 옆에서 한 줄기 밝은 선으로 접히고 그림자가 곧게 내리꽂힌다.
     narrative_ko: >
       내려앉을 땅이 없으니 이곳은 지나며 날고 둘레를 도는 행성이고, 그럼에도 찾아갈 값어치는 하늘에 있다. 붉은 띠와
       흰 띠로 된 2중 고리, 그리고 제 위성이 걸려 있다. 이 계에서 유일하게 자유롭게 자전하는 행성이라 지도도 보통
