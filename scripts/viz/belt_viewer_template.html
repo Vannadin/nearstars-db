@@ -177,7 +177,7 @@ function belt(pre){return Object.assign({on:true,rad:0,radiation:0,grad:3.3,dist
 const state={
   inner:belt({}), outer:belt({}),
   pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,off:0,alpha:0.6},
-  view:{R:8,tilt:0,z:0,shue:0,offset:0}
+  view:{R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,offset:0}
 };
 
 const PRESETS=__PRESETS__;
@@ -204,7 +204,9 @@ const GROUPS=[
      F("alpha","불투명도 (viz)",0,1,0.05),F("off","pause_offset ⚗비-cfg",0,30,0.1)]},
   {id:"view",title:"뷰 / 배향",cls:"g-view",toggle:false,
    rows:[F("R","view_halfwidth (R)",2,70,0.5),F("tilt","dipole_tilt (°)",0,90,0.5),F("offset","geomagnetic_offset",0,1,0.005),F("z","slice_z",0,6,0.05),
-     F("shue","Shue α 오버레이 (0=끔)",0,0.7,0.01)]}
+     F("shue","Shue α 오버레이 (0=끔)",0,0.7,0.01),
+     F("shue_r0","Shue r0 고정 (0=pause 연동)",0,50,0.1),
+     F("shue_L","Shue 꼬리 L 고정 (0=pause 연동)",0,300,1)]}
 ];
 
 // ---- build controls ----
@@ -331,8 +333,10 @@ function toCfg(){
   const tilt=s.view.tilt; if(Math.abs(tilt)>1e-4) L.push('  geomagnetic_pole_lat = '+nm(90-tilt));
   const goff=s.view.offset||0; if(goff>1e-4) L.push('  geomagnetic_offset = '+nm(goff));
   L.push('}');
-  if(P.on) L.push('// Shue-native pause (KerbalismShuePause PR 채택 시): pause_nose = '+nm(P.rad/P.comp)+
-    ' · pause_alpha = '+nm(Math.log2(P.comp))+' · pause_tail = '+nm(P.rad/P.ext));
+  if(P.on){ const V=state.view, fx=V.shue_r0>0;
+    L.push('// Shue-native pause (KerbalismShuePause PR 채택 시): pause_nose = '+nm(fx?V.shue_r0:P.rad/P.comp)+
+    ' · pause_alpha = '+nm(fx?V.shue:Math.log2(P.comp))+' · pause_tail = '+nm(fx&&V.shue_L>0?V.shue_L:P.rad/P.ext)+
+    (fx?' (보드 고정값)':' (pause 역산값)')); }
   return L.join('\n');
 }
 function copyCfg(btn){
@@ -353,7 +357,7 @@ function deepset(preset){
   const P=PRESETS[preset];
   state.inner=belt(P.inner); state.outer=belt(P.outer);
   state.pause=Object.assign({on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,off:0,alpha:0.6},P.pause);
-  state.view=Object.assign({R:8,tilt:0,z:0,shue:0,offset:0},P.view);
+  state.view=Object.assign({R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,offset:0},P.view);
 }
 function applyPreset(p){
   currentPreset=p; deepset(p); syncControls();
@@ -380,7 +384,8 @@ function doseAt(x,y){ // world coords -> {dose, zone}
   if(state.outer.on){ const d=torusSDF(xr,yr,z,state.outer);
     if(d<0){ dose+=clamp(state.outer.grad*(-d)/state.outer.rad,0,1)*state.outer.radiation; zone.push('외대'); } }
   let pd=1;
-  if(state.pause.on){ pd=pauseSDF(xr,yr,z,state.pause);
+  // 계면은 항성풍이 정하는 형상 — 다이폴 틸트/이탈과 무관하게 항성정렬 프레임에서 평가
+  if(state.pause.on){ pd=pauseSDF(x,y,z,state.pause);
     if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation; if(!zone.length)zone.push('자기권 내'); } }
   return {dose,zone:zone.join('+')||'—',mag,pd};
 }
@@ -407,7 +412,7 @@ function render(){
       if(state.inner.on){const s=torusSDF(xr,yr,z,state.inner); if(s<0)dose+=clamp(state.inner.grad*(-s)/state.inner.rad,0,1)*state.inner.radiation;}
       if(state.outer.on){const s=torusSDF(xr,yr,z,state.outer); if(s<0)dose+=clamp(state.outer.grad*(-s)/state.outer.rad,0,1)*state.outer.radiation;}
       let pd=1;
-      if(state.pause.on) pd=pauseSDF(xr,yr,z,state.pause);
+      if(state.pause.on) pd=pauseSDF(x,y,z,state.pause); // 계면은 항성정렬 (틸트 미적용)
       // base: space + faint magnetosphere interior (불투명도 pa 반영)
       r=5;g=7;b=13;
       if(state.pause.on && pd<0){ r+=(10-r)*pa; g+=(16-g)*pa; b+=(30-b)*pa; }
@@ -436,9 +441,11 @@ function render(){
   const alS=state.view.shue;
   if(alS>0.05 && state.pause.on){
     const P=state.pause;
-    const nose=P.rad/P.comp-(P.off||0);
+    // 고정 앵커(보드 ⚗ pause_nose/tail)가 있으면 그 물리값 사용 — pause 슬라이더를 움직여도 Shue 기준은 불변
+    const fixed=state.view.shue_r0>0;
+    const nose=fixed?state.view.shue_r0:P.rad/P.comp-(P.off||0);
     if(nose>0.3){
-      const L=P.rad/P.ext+(P.off||0);     // Kerbalism 계면 꼬리 길이에 연동 (pause_radius/extension + offset)
+      const L=(fixed&&state.view.shue_L>0)?state.view.shue_L:P.rad/P.ext+(P.off||0);
       const m=1;                          // 테이퍼 m=1 고정 (기저형, 노브 없음 — 오너 확정 2026-07-23)
       ctx.lineWidth=1.5;
       ctx.font='10px ui-monospace,monospace';
@@ -474,7 +481,7 @@ function render(){
         ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
         ctx.fillStyle='rgba(255,154,82,.95)';
         ctx.beginPath(); ctx.arc(c+nose*ppr,c,2.5,0,7); ctx.fill();
-        ctx.fillText('연화 Shue (C∞)  α='+alS.toFixed(2)+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+'(pause 연동) ε='+eps.toFixed(4), c+nose*ppr+5, c-6);
+        ctx.fillText('연화 Shue (C∞)  α='+alS.toFixed(2)+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+(fixed?'(보드 고정)':'(pause 연동)')+' ε='+eps.toFixed(4), c+nose*ppr+5, c-6);
         ctx.fillStyle='rgba(255,255,255,.5)';
         ctx.fillText('흰 점선 = 순수 Shue(열림) 대조', c-L*ppr*0.9, c+16);
       } else {
@@ -573,7 +580,7 @@ void main(){
     float aS=clamp(dn*13.0*dt/uBR,0.0,0.32);
     col+=(1.0-a)*inferno(dn)*aS*1.25; a+=(1.0-a)*aS;}
    if(uPauseOn>0.5){
-    float pd=pauseF(q);
+    float pd=pauseF(pw); // 계면은 항성정렬 (틸트 미적용)
     float shell=exp(-abs(pd)/(uBR*0.006));
     float aP2=shell*24.0*dt/uBR*pAlpha;
     col+=(1.0-a)*vec3(0.22,0.81,0.85)*aP2;

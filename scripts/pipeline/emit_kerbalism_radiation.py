@@ -18,17 +18,20 @@ ADS = 'https://ui.adsabs.harvard.edu/abs/'
 MODEL_KEYS = [
     'inner_dist', 'inner_radius', 'inner_deform_xy', 'inner_compression',
     'inner_extension', 'inner_border_dist', 'inner_border_radius',
-    'inner_border_deform_xy',
+    'inner_border_deform_xy', 'inner_deform',
     'outer_dist', 'outer_radius', 'outer_deform_xy', 'outer_compression',
     'outer_extension', 'outer_border_dist', 'outer_border_radius',
-    'outer_border_deform_xy',
+    'outer_border_deform_xy', 'outer_deform',
     'pause_radius', 'pause_compression', 'pause_extension', 'pause_height_scale',
     'pause_deform',            # 다중극 경계의 비축대칭 로브 (스톡 mercury/irregular = 0.1)
 ]
 # ⚗ 보드가 담지만 스톡 Kerbalism이 소비하지 않는 키 — 자기권계면 플러그인 대기.
 # emit에서는 주석으로만 흘려보내고 실제 cfg 라인으로 쓰지 않는다.
-PENDING_MODEL_KEYS = ['pause_deform_scale']
-BODY_KEYS = ['radiation_inner', 'radiation_outer', 'radiation_pause',
+PENDING_MODEL_KEYS = ['pause_deform_scale', 'pause_nose', 'pause_alpha', 'pause_tail',
+                      'pause_offset', 'pause_offset_radius',
+                      'pause_offset_compression', 'pause_offset_extension']
+BODY_KEYS = ['radiation_inner', 'radiation_inner_gradient',
+             'radiation_outer', 'radiation_outer_gradient', 'radiation_pause',
              'geomagnetic_pole_lat', 'geomagnetic_pole_lon', 'geomagnetic_offset']
 
 # 벨트 dict 키 → cfg 필드 (렌더 전용 키 radiation/grad 제외)
@@ -230,8 +233,10 @@ def load_nearstars_specs():
             name = row.get('kopernicus_name', row['body'])
             model = {k: fields[k] for k in MODEL_KEYS if k in fields}
             body = {k: fields[k] for k in BODY_KEYS if k in fields}
+            pending = {k: fields[k] for k in PENDING_MODEL_KEYS if k in fields}
             specs[name] = {'model_name': fields['radiation_model'], 'model': model,
-                           'body': body, 'refs': row.get('refs', []), 'system': fn}
+                           'body': body, 'pending': pending,
+                           'refs': row.get('refs', []), 'system': fn}
     return specs
 
 
