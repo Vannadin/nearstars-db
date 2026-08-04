@@ -302,7 +302,13 @@ decisions:
       fixed three-part shape: (1) what is distinctive about *going there* — skip anything
       generic enough to apply to any body of its class; (2) the **biome list**, each entry
       with at most a one-clause descriptor of what it is; (3) the single most interesting
-      place. Earlier guidance kept biome lists out of the narrative entirely; that is
+      place. **Never frame in-system travel as a difficulty** (owner, 2026-08-04): every
+      body here is reached only after an interstellar crossing, so "the outermost planet is
+      the hardest to reach" or "the journey is the challenge" says nothing a player has not
+      already paid for. Access conditions that *are* worth stating are local and physical:
+      whether you can land at all, whether you can stay, what the radiation or heat costs
+      you, what a retrograde orbit costs in delta-v relative to its neighbours.
+      Earlier guidance kept biome lists out of the narrative entirely; that is
       superseded, because `science_biomes` *is* what the row decides, so the prose has to be
       about it. Everything else engine-side (RB difficulty levels, `ScienceValues`, SOI
       tuning, why Poles is geographic rather than seasonal) still belongs in `evidence`.

@@ -1441,15 +1441,14 @@ decisions:
     status: gated
     driver: [engine]
     narrative: >
-      There is no solid surface, so landing is out and only atmospheric flight and orbit are available. At 1.5 AU it
-      is also the farthest thing in the system to reach. The science map splits into five: Equatorial / North
+      There is no solid surface, so landing is out and only atmospheric flight and orbit are available. The science
+      map splits into five: Equatorial / North
       Temperate / South Temperate / North Polar / South Polar. Being the only freely rotating planet here, its zones
       follow latitude rather than the angle to the star. The ring shadow and the moon are excluded, neither being
       fixed ground. The most worthwhile is the equatorial belt at ring plane, where the double ring folds edge-on into
       a single bright line and its shadow falls straight down.
     narrative_ko: >
-      고체 표면이 없어 착륙은 불가하고 대기 비행과 궤도만 가능하다. 1.5 AU에 있어 이 계에서 도달 부담도 가장 크다.
-      과학 지도는 다섯으로 갈린다. 적도대(Equatorial) / 북온대(North Temperate) / 남온대(South Temperate) /
+      고체 표면이 없어 착륙은 불가하고 대기 비행과 궤도만 가능하다. 과학 지도는 다섯으로 갈린다. 적도대(Equatorial) / 북온대(North Temperate) / 남온대(South Temperate) /
       북극(North Polar) / 남극(South Polar). 이 계에서 유일한 자유 자전 행성이라 구획이 별을 향한 각도가 아니라
       위도를 따른다. 고리 그림자대와 위성은 고정된 땅이 아니어서 제외했다. 그중 가장 볼 만한 곳은 고리면의
       적도대로, 2중 고리가 옆에서 한 줄기 밝은 선으로 접히고 그림자가 곧게 내리꽂힌다.
