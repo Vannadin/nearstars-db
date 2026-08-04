@@ -110,6 +110,21 @@ bombardment. Use this channel only where a working hydrological/aeolian cycle
 exists; its effective erasure time for D ≳ 10 km craters is a few hundred Myr
 at Mars/Titan vigor.
 
+**The Earth endmember (active climate, the fastest steady channel).** The
+global cosmogenic-¹⁰Be compilation (Portenga & Bierman 2011) puts Earth's
+denudation at **54 m/Myr median (218 mean) for drainage basins** and 5.4 m/Myr
+(12 mean) for bare outcrops, with strong climate splits (temperate outcrops
+25 m/Myr, arid basins 100, glaciated polar basins 537). Feeding the median
+basin rate into the burial/relief arithmetic erases a 1 km crater (200 m of
+relief) in **~4 Myr** and a 20 km crater in a few tens of Myr — a thousand
+times faster than lunar diffusion, and *steady*, unlike Venus. The crater
+record agrees: only 128 impact structures are exposed, the inventory is
+erosion-limited below ~6 km diameter (~90 craters of 1–6 km should exist but
+are already consumed or unrecognizable; Hergarten & Kenkmann 2015), and the
+ocean floor recycles entirely in <200 Myr. Render verdict for an active-climate
+Earth-analog: **no visible craters at game scale** outside the odd young or
+arid-shielded one — a living surface wears its weather, not its bombardment.
+
 ### 5. Wholesale renewal (convective overturn, tectonic repaving)
 
 Not gradual: the terrain itself is replaced. Anchors are Sputnik Planitia
@@ -214,6 +229,16 @@ board from the other side: at ~800× Io's volcanic supply, channel 2 buries a
 - **Neish & Lorenz 2012**, P&SS 60, 26
   ([`2012P&SS...60...26N`](https://ui.adsabs.harvard.edu/abs/2012P%26SS...60...26N)).
   Titan's crater density comparable to Venus — the thick-atmosphere anchor.
+- **Portenga & Bierman 2011**, GSA Today 21(8), 4
+  ([`2011GSAT...21h...4P`](https://ui.adsabs.harvard.edu/abs/2011GSAT...21h...4P)).
+  The global ¹⁰Be denudation compilation (1599 rates): basins 54 m/Myr median /
+  218 mean, outcrops 5.4 / 12, and the climate-zone splits. Open access at GSA
+  Today; numbers read from the full text.
+- **Hergarten & Kenkmann 2015**, EPSL 425, 187
+  ([`2015E&PSL.425..187H`](https://ui.adsabs.harvard.edu/abs/2015E%26PSL.425..187H)).
+  Earth's crater inventory is erosion-limited: complete above ~6 km, ~90
+  undiscovered/consumed at 1–6 km — the observational check on the Earth
+  endmember.
 - **Strom, Schaber & Kirk 1994**, JGR 99, 10899
   ([`1994JGR....9910899S`](https://ui.adsabs.harvard.edu/abs/1994JGR....9910899S)).
   Venus: 84 % pristine / 2.5 % embayed craters → episodic global resurfacing;
