@@ -385,12 +385,131 @@ def scale_figure(out="docs/img/proxima-c-system-to-scale.png"):
               f"c 겉보기 지름 {2*math.degrees(math.asin(1/a_rc)):.1f} deg")
 
 
+
+# ---------------------------------------------------------------------------
+# 벨트 안쪽 경계 vs 바깥쪽 경계 배치 비교 (c 자전이 동기궤도를 어디로 옮기는지 포함)
+# ---------------------------------------------------------------------------
+def edge_compare(out="docs/img/proxima-c-i-orbit-edge-compare.png"):
+    G_ = 6.674e-11
+    RC_KM = 17202.0
+    MC = 8 * 5.972e24
+    MOON_R_KM = 326.0
+    RHO = 1.6e3
+    BELT = ((1.54 + 1.42) / math.sqrt(0.66), (2.8 + 2.5) / math.sqrt(0.66))
+    RING = ((1.40, 1.90), (2.40, 3.00))
+    ROCHE = 3.30
+
+    def sync_rc(P_h):
+        return (G_ * MC * (P_h * 3600 / (2 * math.pi)) ** 2) ** (1 / 3) / (RC_KM * 1e3)
+
+    def figure(a_rc):
+        a = a_rc * RC_KM * 1e3
+        n = math.sqrt(G_ * MC / a ** 3)
+        qs = n * n / (G_ * RHO * 4 * math.pi / 3)
+        J2 = 0.88 * qs
+        return (2 * math.pi / n / 3600, J2, 2.5 * J2,
+                2 * math.degrees(math.asin(1 / a_rc)))
+
+    CASES = [
+        ("안쪽 경계  3.75 R_c", 3.75, 16.0, GOOD, "c 자전 16 h — 해왕성 16.1 · 천왕성 17.2"),
+        ("바깥쪽 경계  6.4 R_c", 6.40, 27.0, ACC, "c 자전 27 h — 기존 보드값"),
+    ]
+
+    W, H = 1700, 1050
+    img = Image.new("RGB", (W, H), BG)
+    d = ImageDraw.Draw(img)
+    f9, f10, f11, f13 = font(11), font(12), font(13), font(15)
+    d.text((30, 20), "c I 궤도 — 벨트 안쪽 경계 vs 바깥쪽 경계", font=font(24, True), fill=INK)
+    d.text((30, 56), "동기궤도(주황)는 c의 자전이 정한다. 위성이 그 안쪽이면 감겨 들어가고 "
+                     "바깥이면 물러난다.  ·  모행성·위성·거리는 실제 비율", font=f11, fill=DIM)
+
+    x0, XMAX = 250, 7.6
+    ppu = 900 / XMAX
+    for k, (title, a_rc, prot, col, sub) in enumerate(CASES):
+        y = 300 + k * 350
+        P_h, J2, flat, ang = figure(a_rc)
+        rs = sync_rc(prot)
+        inside = a_rc < rs
+        d.text((30, y - 152), title, font=font(17, True), fill=col)
+        d.text((30, y - 130), sub, font=f9, fill=DIM)
+        d.rectangle([x0 + BELT[0] * ppu, y - 50, x0 + BELT[1] * ppu, y + 50],
+                    fill=(34, 24, 34))
+        d.text((x0 + BELT[0] * ppu + 6, y - 70),
+               f"방사선 외대 {BELT[0]:.2f}–{BELT[1]:.2f} R_c", font=f9, fill=(162, 118, 150))
+        for lo, hi in RING:
+            d.rectangle([x0 + lo * ppu, y - 2, x0 + hi * ppu, y + 2], fill=(182, 186, 196))
+        xv = x0 + ROCHE * ppu
+        for yy in range(y - 76, y + 77, 8):
+            d.line([(xv, yy), (xv, yy + 4)], fill=(206, 126, 116))
+        d.text((xv - 96, y + 84), "얼음 Roche 3.3", font=f9, fill=(206, 126, 116))
+        xs = x0 + rs * ppu
+        for yy in range(y - 96, y + 97, 8):
+            d.line([(xs, yy), (xs, yy + 4)], fill=WARM)
+        d.text((xs - 36, y - 118), f"동기궤도 {rs:.2f}", font=f10, fill=WARM)
+        pr = ppu
+        d.ellipse([x0 - pr, y - pr, x0 + pr, y + pr], fill=(150, 164, 176))
+        d.ellipse([x0 - pr, y - pr, x0 + pr, y + pr], outline=(196, 208, 220))
+        xm = x0 + a_rc * ppu
+        rm = MOON_R_KM / RC_KM * ppu
+        d.ellipse([xm - rm, y - rm, xm + rm, y + rm], fill=col)
+        d.text((xm - 30, y - 96), f"c I  {a_rc} R_c", font=f10, fill=col)
+        d.line([(xm, y - 82), (xm, y - rm - 3)], fill=col)
+        arrow = "◀ 안쪽으로 감김" if inside else "바깥으로 물러남 ▶"
+        d.text((xm - (72 if inside else 16), y + 14), arrow, font=f10,
+               fill=BAD if inside else GOOD)
+        # 위성 확대 (편평도 차이가 이 결정의 시각적 핵심)
+        MAG = 22
+        rb = MOON_R_KM / RC_KM * ppu * MAG
+        bx2, by3 = xm, y + 108
+        d.ellipse([bx2 - rb, by3 - rb * (1 - flat), bx2 + rb, by3 + rb * (1 - flat)],
+                  fill=(178, 152, 142), outline=col)
+        d.text((bx2 - 52, by3 + rb + 8), f"c I ×{MAG}  편평도 {flat*100:.2f}%",
+               font=f9, fill=col)
+        # 오른쪽 요약표
+        tx = x0 + XMAX * ppu + 46
+        rows = [
+            ("공전 · 자전", f"{P_h:.1f} h"),
+            ("하늘의 c", f"{ang:.1f}°  (달 0.52°의 {ang/0.52:.0f}배)"),
+            ("편평도", f"{flat*100:.2f}%  " +
+                      ("가시 계란형 · 메쉬 emit" if flat > 0.02 else "비가시 · 중력만")),
+            ("벨트", "안쪽 테두리를 안음" if a_rc < 4.5 else "바깥 테두리를 스침"),
+            ("조석 운명", "수억 년 내 고리로 낙하" if inside else "안정 (바깥으로 이동)"),
+        ]
+        for jj, (kk, vv) in enumerate(rows):
+            yy = y - 62 + jj * 27
+            d.text((tx, yy), kk, font=f9, fill=DIM)
+            d.text((tx + 86, yy), vv, font=f11,
+                   fill=BAD if (kk == "조석 운명" and inside) else INK)
+
+    vy = 858
+    d.rectangle([30, vy, W - 30, vy + 136], outline=LINE)
+    d.text((48, vy + 12), "차이 요약", font=f13, fill=INK)
+    for jj, (s, c) in enumerate((
+            ("안쪽 경계로 가려면 c의 자전을 27 h에서 16 h로 낮춰야 한다. 동기궤도가 5.31에서 3.77 R_c로 내려와 위성이 그 바깥에 놓인다.", GOOD),
+            ("27 h는 보드에 미구속 자유자전·오너 art 선택으로 적힌 임의값이고, 실측 빙거성은 천왕성 17.2 h · 해왕성 16.1 h로 원래 빠르다.", GOOD),
+            ("안쪽이 얻는 것: 편평도 5.84%로 계란형 부활, 하늘의 c가 30.9°, 공전 16 h가 c 자전과 같아 하늘 한자리에 붙박인 것처럼 보인다.", INK),
+            ("안쪽이 치르는 것: 동기궤도 3.77과 궤도 3.75가 거의 붙어 조석 이동이 사실상 0이다. 마진을 원하면 c 자전 15 h + 위성 3.7 R_c.", WARM),
+    )):
+        d.text((48, vy + 40 + jj * 21), s, font=f11, fill=c)
+
+    img.save(out)
+    print("wrote", out)
+    for title, a_rc, prot, _, _ in CASES:
+        P_h, J2, flat, ang = figure(a_rc)
+        rs = sync_rc(prot)
+        print(f"  {title}: sync={rs:.2f}  P={P_h:.2f} h  flat={flat*100:.2f}%  "
+              f"ang={ang:.1f} deg  {'INSIDE' if a_rc < rs else 'outside'}")
+
+
 if __name__ == "__main__":
-    if "--scale" in sys.argv:
+    if "--edge" in sys.argv:
+        edge_compare()
+    elif "--scale" in sys.argv:
         scale_figure()
     elif "--all" in sys.argv:
         main()
         scale_figure()
+        edge_compare()
     else:
         main(sys.argv[1] if len(sys.argv) > 1 else
              "docs/img/moon-atmosphere-feasibility.png")
