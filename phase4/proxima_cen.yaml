@@ -1734,18 +1734,18 @@ decisions:
     status: gated
     driver: [window-selection, fiction]
     narrative: >
-      A small icy moon 652 km across, between Mimas and Charon in size, and dense enough at 1.6 g/cm³ that rock
-      outweighs ice inside it. Gravity at the surface is about a hundredth of Earth's, so a thrown stone travels far
-      and a dropped one falls slowly. It keeps one face to the planet, since a body this close is locked within a few
-      thousand years, and the circular orbit leaves no tidal heating to speak of. The planet's pull still deforms it,
-      but only by about a percent, too little to notice from outside; it shows up in the gravity field rather than in
-      the silhouette.
+      A small ice moon 652 km across, larger than Mimas and smaller than Charon, and dense enough at 1.6 g/cm³ that
+      rock accounts for about six tenths of its mass. Surface gravity is a seventieth of Earth's. Everything else
+      follows from how close the planet is. Tides locked its rotation early, so one hemisphere never turns away, and
+      the same tides rounded the orbit off. With no eccentricity left there is nothing to knead the interior, and
+      that alone is why this moon is cold where Enceladus is not. The planet's pull does stretch it, but by about one
+      percent, too little to see against the stars and visible only in the gravity field.
     narrative_ko: >
-      지름 652 km의 작은 얼음 위성이다. 미마스와 카론 사이 크기이고, 밀도가 1.6 g/cm³이라 안에서는 얼음보다 암석이
-      무겁다. 표면 중력은 지구의 백분의 일 남짓이라 던진 돌은 멀리 날아가고 떨어뜨린 돌은 느리게 내려앉는다. 행성을
-      향해 한쪽 면만 보인다. 이만큼 가까우면 수천 년 안에 잠기기 때문이다. 궤도가 원이라 말할 만한 조석가열도 없다.
-      다만 가까운 대가로 모양이 일그러진다. 행성의 인력이 위성을 키보다 5% 길쭉한 계란으로 늘여 놓았고, 그 정도면
-      별을 배경으로 눈에 띈다.
+      지름 652 km의 작은 얼음 위성이다. 미마스보다 크고 카론보다 작으며, 밀도가 1.6 g/cm³이라 질량의 6할쯤이
+      암석이다. 표면 중력은 지구의 70분의 1이다. 나머지 성질은 행성이 가깝다는 사실에서 따라 나온다. 조석이
+      일찌감치 자전을 잠가 한쪽 반구가 영영 돌아서지 않고, 같은 조석이 궤도를 원으로 다듬어 놓았다. 이심률이 남지
+      않았으니 속을 주무를 힘도 없다. 엔셀라두스는 뜨겁고 이 위성은 차가운 이유가 그 하나다. 행성의 인력이 몸을
+      늘이기는 하지만 1퍼센트 남짓이라 별을 배경으로 알아볼 수 없고, 중력장에만 드러난다.
     fields:
       - name: radius
         value: 326
