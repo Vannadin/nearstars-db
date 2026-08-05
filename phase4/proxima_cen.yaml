@@ -1710,6 +1710,9 @@ decisions:
       안쪽이고, 포보스형 안쪽 감김으로 190~570 Myr에 고리로 낙하한다(포보스 실측 2 cm/yr를 2배 안에서 재현하는
       da/dt = 3(k2/Q)(Mm/Mp)·n·a·(Rp/a)⁵로 계산). 오너가 방사선 외대에 살짝 걸치는 6.4 R_c를 택해 동기궤도 밖으로
       이동. 고리 외경의 역학적 근거는 shepherd에서 얼음 Roche 한계 3.3 R_c로 교체(고리 3.0 R_c는 그 바로 안쪽).
+      같은 날 벨트 안쪽 테두리(3.64 R_c) 배치도 검토했다. c 자전을 27 → 16시간(빙거성 실측 대역)으로 낮추면 동기궤도가
+      3.77 R_c로 내려와 성립하고 편평도 5.84%로 계란형이 부활하지만, 오너가 바깥쪽 경계를 택해 채택하지 않았다.
+      비교 그림 docs/img/proxima-c-i-orbit-edge-compare.png.
     gate:
       criterion: [stability, classification]
       verdict: pass-in-window
@@ -1881,23 +1884,25 @@ decisions:
     driver: [fiction, art-direction]
     narrative: >
       Water ice bedrock, stained dark red where the planet's radiation belt has worked on it longest. The moon grazes
-      the belt's outer edge, so charged particles rain steadily onto the leading hemisphere and break down the methane
-      and carbon dioxide locked in the ice into heavy organics, the same reddening that darkens one hemisphere of
-      Iapetus and the Uranian moons. Against that stained ground sit two kinds of bright terrain: the fresh ice thrown
+      the belt's outer edge, and because the belt sweeps around the planet faster than the moon can orbit, the
+      particles overtake it and rain onto the trailing hemisphere, breaking down the methane
+      and carbon dioxide locked in the ice into heavy organics. It is the same reddening that darkens the trailing
+      hemispheres of Jupiter's icy moons, and for the same reason. Against that stained ground sit two kinds of bright terrain: the fresh ice thrown
       up by young craters, and a pale circular patch on the face turned toward the planet, where ice drifting off the
       rings settles faster than the radiation can darken it. The craters themselves never heal here, since ice this
       cold does not flow, so the surface is a saturated record of every impact it has taken.
     narrative_ko: >
       물얼음 기반암이고, 행성 방사선대가 가장 오래 작업한 곳이 어두운 붉은색으로 물들어 있다. 위성이 벨트의 바깥
-      테두리를 스치므로 하전입자가 앞서 가는 반구에 꾸준히 쏟아지고, 얼음에 갇힌 메탄과 이산화탄소를 무거운 유기물로
-      분해한다. 이아페투스와 천왕성 위성들의 한쪽 반구를 어둡게 만든 것과 같은 붉힘이다. 그 물든 바탕 위에 밝은 지형이
+      테두리를 스치는데, 벨트는 위성이 공전하는 것보다 빠르게 행성을 돌기 때문에 입자가 위성을 추월해 뒤따르는
+      반구에 쏟아진다. 그것이 얼음에 갇힌 메탄과 이산화탄소를 무거운 유기물로 분해한다. 목성의 얼음 위성들이
+      후행 반구부터 어두워지는 것과 같은 이유다. 그 물든 바탕 위에 밝은 지형이
       두 종류 놓인다. 젊은 크레이터가 파올린 신선한 얼음, 그리고 행성을 마주보는 면의 창백한 원형 얼룩이다. 그 얼룩은
       고리에서 흘러온 얼음이 방사선이 어둡게 만드는 속도보다 빠르게 내려앉는 자리다. 크레이터는 여기서 결코 아물지
       않는다. 이만큼 차가운 얼음은 흐르지 않기 때문이다. 그래서 표면은 자기가 받아낸 모든 충돌의 기록이 포화된 상태로
       남아 있다.
     fields:
       - name: surface_type
-        value: "물얼음 기반암 (카론 아날로그) + 방사분해 톨린 적화 + 신선얼음 크레이터 + sub-c 고리얼음 코팅 얼룩"
+        value: "물얼음 기반암 (카론 아날로그) + 후행 반구 방사분해 톨린 적화 + 신선얼음 크레이터 + sub-c 고리얼음 코팅 얼룩"
         op: set
       - name: albedo
         value: "~0.25–0.45 (Bond, 카론 0.25~0.38 대역; 적화부 낮고 신선얼음·sub-c 얼룩 높음)"
@@ -1910,7 +1915,7 @@ decisions:
       2026-06-23: 명왕성/트리톤 아날로그로 적도 톨린대 + 극 N₂/CH₄ 빙관 + sub-c eyeball을 채택.
       2026-08-05: 대기 철회에 따라 N₂/CH₄ 극관을 뺐다. 대기 없이는 자유 승화로 N₂ 얼음이 남지 않는다(대기 행 참조).
       대체 서사는 카론 아날로그다. 붉은 유기물의 근원을 휘발성 광화학에서 벨트 방사분해로 옮겼고, 6.4 R_c가 방사선
-      외대를 스치는 궤도라 그 공급이 실제로 있다. 위도 구조(적도대/극관) 대신 반구 구조(선행 반구 적화 / sub-c 얼룩)로
+      외대를 스치는 궤도라 그 공급이 실제로 있다. 위도 구조(적도대/극관) 대신 반구 구조(후행 반구 적화 / sub-c 얼룩)로
       바뀐 것이 시각적 귀결이다. 크레이터 포화는 크레이터 풍화 문서의 판정을 새로 반영한 항목이다.
     gate:
       criterion: [classification, visual-checklist, derived-grounding]
@@ -1921,7 +1926,8 @@ decisions:
         존속 불가다. 크레이터 상태는 크레이터 풍화 문서의 채널 대조로, 이완은 T/T_melt 0.17에서 꺼지고 매몰과 풍화는
         공급원이 없어 확산만 남는데 그 채널로는 1 km 크레이터 소거에 계 나이를 넘긴다. 적화는 궤도가 정한다. 6.4 R_c는
         외대 적도 외곽 6.52 R_c 바로 안쪽이라 하전입자 유입이 실재하고, 얼음 속 CH₄·CO₂의 방사분해가 무거운 유기물을
-        만드는 것은 이아페투스와 천왕성 위성의 어두운 붉은 물질을 설명하는 기작이다. 색은 표면색 문서의 엔진으로
+        만드는 것은 목성 얼음 위성의 어두운 물질을 설명하는 기작이다. 맞는 면은 후행 반구다. c의 자전 27시간이
+        위성 공전 35.7시간보다 빨라 함께 도는 플라스마가 위성을 추월하므로, 갈릴레이 위성들과 같은 방향으로 때린다. 색은 표면색 문서의 엔진으로
         물얼음과 톨린 광학상수를 섞어 얻었다.
         유보: 관측이 없는 픽션 위성이라 반구 대비의 세기는 아트 선택이다. sub-c 얼룩은 고리 물질이 위성까지 확산한다는
         전제에 기대는데, 고리 외경 3.0 R_c와 궤도 6.4 R_c 사이의 수송 효율은 계산하지 않았다.
@@ -1932,21 +1938,22 @@ decisions:
     status: gated
     driver: [art-direction]
     narrative: >
-      Two hemispheres that barely look like the same body. The side that leads the moon around its orbit is a dark
-      rust brown, worked over by the radiation belt; the side facing the planet carries a pale ring-ice patch bright
+      Two hemispheres that barely look like the same body. The side that trails the moon around its orbit is a dark
+      rust brown, worked over by the radiation belt overtaking it; the side facing the planet carries a pale ring-ice patch bright
       enough to read as a second, smaller disk. Between them the ground is grey-white water ice, pocked everywhere
       with craters that will never soften, and the youngest of those craters cut bright rays into the rust. There is
       no limb glow of any kind, since there is no air. Against ochre b, pale grey-blue c and grey-brown d, this one
       is the rust-and-bone body.
     narrative_ko: >
-      두 반구가 같은 천체로 보이지 않을 만큼 다르다. 궤도를 앞서 가는 쪽은 방사선대에 시달려 어두운 녹빛 갈색이고,
+      두 반구가 같은 천체로 보이지 않을 만큼 다르다. 궤도를 뒤따르는 쪽은 추월해 오는 방사선대에 시달려 어두운
+      녹빛 갈색이고,
       행성을 마주보는 쪽은 창백한 고리얼음 얼룩이 또 하나의 작은 원반처럼 읽힐 만큼 밝다. 그 사이의 바탕은 회백색
       물얼음이며 결코 부드러워지지 않을 크레이터가 온 면에 박혀 있고, 그중 가장 젊은 것들은 녹빛 위에 밝은 광선을
       새긴다. 지평선의 빛무리는 어떤 종류도 없다. 공기가 없기 때문이다. 황토색인 b, 창백한 회청색인 c, 회갈색인 d
       사이에서 이 천체는 녹빛과 뼛빛을 맡는다.
     fields:
       - name: base_color
-        value: "회백 물얼음 #d3d8dc 바탕 + 선행 반구 녹빛 갈색 #6e4632 + sub-c 신선얼음 #e8eef0"
+        value: "회백 물얼음 #d3d8dc 바탕 + 후행 반구 녹빛 갈색 #6e4632 + sub-c 신선얼음 #e8eef0"
         op: set
       - name: haze
         value: null
@@ -1962,7 +1969,7 @@ decisions:
       criterion: [visual-checklist]
       verdict: pass-in-window
       evidence: >
-        채택값은 회백 물얼음 바탕에 선행 반구 녹빛 갈색, sub-c 신선얼음 얼룩, 포화 크레이터다.
+        채택값은 회백 물얼음 바탕에 후행 반구 녹빛 갈색, sub-c 신선얼음 얼룩, 포화 크레이터다.
         확인: 색은 표면색 문서의 엔진으로 물얼음과 톨린 광학상수에서 얻었고, 배치는 표면 행의 지형 결정을 그대로
         따른다. 연무가 없다는 것은 대기 행의 Jeans 판정에서 직접 따라온다. 계 안의 다른 세 천체와 색이 겹치지
         않는지도 대조했다.
@@ -1975,11 +1982,11 @@ decisions:
     driver: [fiction]
     narrative: >
       무자기장이다. 지름 652 km 소형 얼음체라 금속핵 대류 dynamo 불가(얼음 위성 전형). 유도장도 미미(e~0·조석고정→조석가열
-      없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 무관하게 c 자기권 안
-      (4 R_c)이라 자기 환경은 c가 결정.
+      없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 자기 환경은 전적으로
+      c가 정한다. 궤도 6.4 R_c가 c 방사선 외대 안쪽이라, 위성은 자기 장을 갖는 대신 남의 벨트 속을 지난다.
     fields:
       - name: magnetic_field
-        value: "none (소형 얼음체 무dynamo, 유도장도 미미; c 자기권 4 R_c 내부)"
+        value: "none (소형 얼음체 무dynamo, 유도장도 미미; c 자기권 6.4 R_c 내부, 외대 안쪽)"
         op: set
     gate:
       criterion: [classification]
@@ -2057,31 +2064,46 @@ decisions:
 
   - body: Proxima Cen c I
     axis: gameplay
-    provenance: >               # 뷰어 미렌더 — 값 이력 전용
-      2026-08-03: difficulty 필드 폐기 — SPEC §0가 difficulty facet을 보류함(오너 2026-07-24,
-      임무 난이도 등급은 모드-지원 관심사). 구값 "항성간 플래그십 + 최외곽 c의 위성".
     status: gated
     driver: [engine]
     narrative: >
-      착륙 가능(고체 얼음 표면, 명왕성/트리톤 착륙 느낌). 저중력 g~0.5 m/s²(통통 튀는 착륙). splashdown 없음(동결)·
-      대기비행 없음(~Pa 너무 희박, 단 청 haze는 보임). breathability=불가. radiation 해저드=낮음(G8 시스템 최저라 상대적
-      안전 착륙지). biome = 위도 지형 + sub-c eyeball 4구획(오너 검토 2026-06-23): ① 적도 톨린대(어두운 적갈) · ② 중위도
-      (전이) · ③ 극 N₂ 빙관(밝은 크림) · ④ sub-c 고리-얼음 eyeball(밝은 신선 얼음·톨린 없음, c+2중 고리 마주보는 시그니처
-      명소). anti-c 반구 biome 제외(오너). ScienceValues(landed/flying-low=탄도/in-space; splashed 토큰 inert). SOI 자동.
-      난도 = 항성간 플래그십 + 최외곽 c의 위성(시스템 깊숙이). 발견=RB F F F F(픽션 위성, G1).
+      The reason to come here is the sky rather than the ground. The moon keeps one face to the planet, so from the
+      near side the planet hangs fixed at eighteen degrees across, thirty-five times the width of Earth's Moon, with
+      the double ring edge-on beneath it as a single bright line, and it never moves. Gravity is a sixtieth of
+      Earth's, which makes landing forgiving and walking useless. The map divides into four: Trailing Hemisphere,
+      Leading Hemisphere, Sub-planet Patch and Ray Craters. Land on the Sub-planet Patch, the bright ring-ice ground
+      directly beneath the planet.
+    narrative_ko: >
+      여기 오는 이유는 땅이 아니라 하늘이다. 위성이 행성을 향해 한쪽 면만 보이므로, 그쪽 반구에서는 행성이 18도
+      너비로 하늘에 걸린 채 움직이지 않는다. 지구에서 보는 달의 서른다섯 배이고, 그 아래로 2중 고리가 측면으로 누워
+      밝은 한 줄을 긋는다. 중력은 지구의 60분의 1이라 착륙은 너그럽지만 걷는 것은 소용없다. 지도는 넷으로 갈린다.
+      후행 반구(Trailing Hemisphere, 벨트에 그을린 녹빛 적화지) / 선행 반구(Leading Hemisphere, 손 덜 탄 회백 얼음)
+      / sub-c 얼음 얼룩(Sub-planet Patch, 고리에서 내려앉은 밝은 신선 얼음) / 광선 크레이터(Ray Craters, 젊은
+      충돌구가 뿌린 밝은 줄기). 내려앉을 곳은 sub-c 얼음 얼룩이다. 행성이 바로 머리 위에 붙박여 있다.
     fields:
       - name: science_biomes
-        value: "4구획: 적도 톨린대/중위도/극 N₂ 빙관/sub-c 고리-얼음 eyeball (anti-c 반구 제외)"
+        value: "4구획: 후행 반구 적화지 / 선행 반구 / sub-c 얼음 얼룩 / 광선 크레이터"
+        op: set
+      - name: landing
+        value: "가능 (고체 얼음 표면, g 0.146 m/s²). 물 착수·대기비행 없음"
         op: set
       - name: sphere_of_influence_tuning
         value: "auto from mass"
-        op: passthrough
+        op: set
+    provenance: >
+      2026-06-23: 4구획을 위도 기반으로 잡았다(적도 톨린대 / 중위도 / 극 N₂ 빙관 / sub-c eyeball).
+      2026-08-05: 표면 결정이 바뀌며 재작성. 대기 철회로 청색 haze 관람 요소를 뺐고, 중력 표기를 0.5 → 0.146 m/s²로
+      고쳤으며, 방사선 해저드를 "시스템 최저"에서 벨트 노출로 정정했다. 구획은 위도가 아니라 반구 구조를 따르므로
+      적도대·극관 대신 후행/선행 반구와 광선 크레이터로 바뀌었다. 난도 등급은 SPEC §0의 difficulty facet 보류를
+      따라 적지 않는다.
     gate:
-      criterion: [gameplay]
+      criterion: [classification]
       verdict: pass-in-window
       evidence: >
-        owner_review: 2026-06-23 오너 검토로 biome 4구획(위도 3 + sub-c eyeball), anti-c 제외. sub-c eyeball=고리-얼음
-        코팅 시그니처.
-
-        note: 착륙 가능(b·d처럼 고체)이되 명왕성식 얼음+톨린+저중력의 독특한 착륙지. c+2중고리 하늘 풍경이 sub-c 명소의 매력.
-        cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미.
+        채택값은 과학 구획 4개와 착륙 가능이다.
+        확인: 구획은 표면 행이 정한 지형 단위를 그대로 옮겼다. 후행 반구 적화는 벨트 플라스마가 위성을 추월해 때리는
+        면이고, sub-c 얼음 얼룩은 조석고정으로 행성을 향해 고정된 면이라 둘 다 지표에 고정된 경계를 갖는다. 광선
+        크레이터는 크레이터 포화 판정에서 나온 단위로, 이완이 없어 젊은 충돌구의 밝은 줄기가 지워지지 않는다.
+        행성의 겉보기 크기 18도는 궤도 6.4 R_c에서 계산했다.
+        유보: 벨트 안쪽 궤도라 지표 선량이 시간당 수 rad 수준이므로, EVA 체류 시간이 실제로는 제약이 된다. 그 수치는
+        환경 행이 갖는다.
