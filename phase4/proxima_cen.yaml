@@ -706,6 +706,11 @@ decisions:
     driver: [engine, window-selection]
     narrative: "None."
     narrative_ko: "없음."
+    fields:
+      - name: satellite_count
+        value: 0
+        op: set
+        note: "Hill 반경 156,500 km, 순행 안정 한계 0.4895 R_H = 76,600 km(행성 반경의 11배)로 여지는 있으나 형성 근거·관측 모두 없음"
     gate:
       criterion: [stability, classification]
       verdict: pass-in-window
@@ -713,6 +718,7 @@ decisions:
         채택값은 위성 없음이다. 확인: Hill 반경은 a·(m_p/3M★)^⅓ = 0.0485 AU × 0.0215 ≈ 156,000 km이고 순행
         안정역은 그 0.3~0.5배인 50,000~78,000 km로 좁으며, 조석고정된 근접 행성이라 항성 조석이 Gyr 규모로 그
         궤도를 흩는다. 다양성 우선 원칙의 물리적 예외에 해당한다. 증거의 부재가 아니라 물리적 부재다.
+    refs: ["2006MNRAS.373.1227D"]
 
   - body: Proxima Cen b
     axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (A b 거대 가스행성과 대비)
@@ -1069,10 +1075,16 @@ decisions:
     status: gated
     driver: [engine, window-selection]
     narrative: "위성 없음. 극근접(0.029 AU) 미세 Hill 반경 + 강항성조석으로 안정 위성 불가(b보다 더 단호한 물리적 부재)."
+    fields:
+      - name: satellite_count
+        value: 0
+        op: set
+        note: "Hill 반경 55,500 km, 순행 안정 한계 27,200 km = 행성 반경의 3.9배뿐. 강한 항성 조석까지 겹쳐 물리적 부재"
     gate:
       criterion: [stability]
       verdict: pass-in-window
       evidence: "[[feedback_gameplay_variety]] '물리적으로 아무것도 없음' 예외."
+    refs: ["2006MNRAS.373.1227D"]
 
   - body: Proxima Cen d
     axis: gameplay
@@ -1597,15 +1609,54 @@ decisions:
     status: gated
     driver: [fiction, engine]
     narrative: >
-      위성 1개 = Proxima c I. 지름 652 km(미마스-카론급)(물얼음 기반암 + 방사분해 톨린 적화), 고유명 없음, c에
-      조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. 판도라식 독자 facet-walk로 별도
-      바디 전개(아래 "Proxima Centauri c I" 블록 11축).
-      관측 근거 0이고, art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
-      가능(불가 아님). 카론 아날로그는 물리 정합(카론=~50K 물얼음 + 톨린 극관, 대기 없음). emit시 stability-sim 필수([[project_nearstars_stability_sim]] Hill+MEGNO).
-      정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).
+      One moon, 652 km across, orbiting deep inside the room this planet has for one. Nothing has been observed here;
+      the moon is invented, and the reason it is allowed is that at 1.5 AU the planet's gravitational reach extends
+      nine million kilometres, so a satellite at a hundred and ten thousand is holding onto its parent about as
+      firmly as anything in a planetary system can. The inner planets could not host one: they orbit close enough to
+      the star that the same reach shrinks to almost nothing. The moon is named by the convention for a body with no
+      name of its own, the parent's designation and a numeral.
+    narrative_ko: >
+      위성 하나, 지름 652 km이고, 이 행성이 위성에게 내줄 수 있는 공간의 아주 안쪽을 돈다. 여기서 관측된 것은
+      아무것도 없다. 이 위성은 지어낸 것이고, 그것이 허용되는 이유는 1.5 AU에서 행성의 중력이 미치는 범위가
+      900만 km까지 뻗기 때문이다. 11만 km에 있는 위성은 행성계에서 위성이 모행성을 붙들 수 있는 가장 단단한 축에
+      든다. 안쪽 행성들은 이런 위성을 가질 수 없다. 별에 가까이 붙어 있어 같은 범위가 거의 남지 않기 때문이다.
+      이름은 고유명이 없는 천체의 관례를 따라 모행성 기호에 숫자를 붙였다.
+    fields:
+      - name: satellite_count
+        value: 1
+        op: set
+      - name: satellites
+        value: "Proxima Cen c I (고유명 없음, 지름 652 km, 물얼음 + 방사분해 톨린, c에 조석고정)"
+        op: set
+        note: "세부 11축은 별도 바디 블록"
+      - name: hill_radius
+        value: 9.05e6
+        unit: km
+        op: set
+        note: "a(M_p/3M★)^(1/3), a 1.5 AU · M_p 8 M⊕ · M★ 0.1221 M☉"
+      - name: satellite_stability_limit
+        value: 4.43e6
+        unit: km
+        op: set
+        note: "순행 원궤도 0.4895 R_H (Domingos 2006). c I의 11만 km는 이 한계의 2.5%"
+    provenance: >
+      2026-06-23: 오너가 다양성을 위해 픽션 위성 1개를 결정. 당시 반경 ~950 km, 명왕성 아날로그.
+      2026-08-05: c I 세부 워크 결과를 반영해 지름 652 km·카론 아날로그로 갱신하고, 비어 있던 evidence와
+      typed fields를 채웠다. Hill 반경과 안정 한계를 수치로 박아 "안정 위성 가능"이라는 종전의 말뿐인 근거를
+      검증 가능한 형태로 바꿨다.
     gate:
       criterion: [fiction, stability, hill-stability]
       verdict: owner-override
+      evidence: >
+        채택값은 픽션 위성 1개이고, 이 행은 그 결정의 정직성 기록이다.
+        확인: 관측 근거는 0이다. c 자체가 확정되지 않은 후보 행성이므로 위성을 시사하는 자료는 존재할 수 없고,
+        이것은 오너가 다양성을 위해 넣은 창작이다. 물리적으로 불가능하지 않다는 것만 확인했다. Hill 반경은
+        a(M_p/3M★)^(1/3)로 905만 km이고, 순행 원궤도 위성의 안정 한계는 그 0.4895배인 443만 km다(Domingos 2006).
+        c I의 궤도 11만 km는 그 한계의 2.5%에 불과해 안정 여유가 매우 크다. 같은 계산을 b와 d에 적용하면 별에
+        가까워 Hill 반경이 작아지므로, 위성을 c에만 둔 것은 자의가 아니라 이 차이를 따른 결과다.
+        유보: N-body 검증은 아직 돌리지 않았다. 위성이 하나뿐이고 궤도가 안정 한계의 2.5%라 결과가 뒤집힐 여지는
+        작지만, emit 전에 stability-sim으로 확인하는 것이 남은 절차다.
+    refs: ["2006MNRAS.373.1227D", "docs/reference/tidal-locking-timescale-methodology.md"]
 
   - body: Proxima Cen c
     axis: gameplay
@@ -2043,10 +2094,16 @@ decisions:
     status: gated
     driver: [fiction, engine]
     narrative: "submoon(위성의 위성) 없음. 동역학적 불안정으로 태양계에도 사례 0, 지름 652 km 위성은 보유 불가. 물리적 부재."
+    fields:
+      - name: satellite_count
+        value: 0
+        op: set
+        note: "submoon 부재. c I 자신의 Hill 반경 1,293 km, 안정 한계는 위성 반경의 1.94배뿐이라 조석 감쇠로 존속 불가"
     gate:
       criterion: [classification, stability]
       verdict: pass-in-window
       evidence: "submoon 불안정. 오너 G10 확정 2026-06-23."
+    refs: ["2019MNRAS.483L..80K", "2020AJ....159..260R"]
 
   - body: Proxima Cen c I
     axis: gameplay
