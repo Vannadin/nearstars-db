@@ -23,8 +23,12 @@ canvas{display:block}
 #topbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:12px;
   padding:0 18px;z-index:20;background:linear-gradient(180deg,rgba(6,7,10,.82),transparent);pointer-events:none}
 #topbar>*{pointer-events:auto}
-#brand{font-weight:600;font-size:15px}
-#brand .sub{color:var(--fg4);font-weight:400;font-size:12px;margin-left:8px}
+.ns-brand{font-weight:700;font-size:13px;color:rgba(255,255,255,.94);text-decoration:none;letter-spacing:.2px;pointer-events:auto}
+#nsnav{font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;display:flex;gap:9px;align-items:center;pointer-events:auto}
+#nsnav a{color:rgba(255,255,255,.52);text-decoration:none}
+#nsnav a:hover{color:#aac8ff}
+#nsnav .ns-here{color:rgba(255,255,255,.90)}
+#nsnav .ns-sep{color:rgba(255,255,255,.22)}
 .spacer{flex:1}
 .btn{font-family:var(--sans);font-size:12px;color:var(--fg2);background:var(--surf1);border:1px solid var(--bd1);
   border-radius:8px;padding:6px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.16s}
@@ -175,7 +179,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
     -webkit-overflow-scrolling:touch;scrollbar-width:none}
   #topbar::-webkit-scrollbar{display:none}
   #topbar>*{flex-shrink:0}
-  #brand{font-size:13px} #brand .sub{display:none} .spacer{display:none}
+  #nsnav{display:none} .spacer{display:none}
   .btn{padding:8px 11px}
   #legend{left:10px;bottom:10px;max-width:46vw;padding:9px 10px;gap:6px;border-radius:11px}
   #legend .note{display:none}
@@ -205,12 +209,9 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="hoverLabel" class="label" style="display:none"></div>
 
 <div id="topbar">
-  <a href="index.html" class="btn" id="backDb" title="NearStars DB">DB</a>
-  <a href="reports.html" class="btn" title="Curation reports">Reports</a>
-  <a href="phase4/index.html" class="btn" title="Phase 4 decision boards">Phase 4</a>
-  <a href="tools.html" class="btn" title="Standalone tools">Tools</a>
-  <a href="wiki/index.html" class="btn" title="Project docs">Wiki</a>
-  <div id="brand">NearStars<span class="sub" data-i18n="subtitle">근방 항성계 3D 지도</span></div>
+  <!-- 공용 ns-bar 콘텐츠의 인라인 변형 — 항목은 scripts/pipeline/_nav.py NAV_ITEMS 와 동기 유지 -->
+  <a class="ns-brand" href="index.html">NearStars</a>
+  <nav id="nsnav"><a href="index.html">DB</a><span class="ns-sep">·</span><span class="ns-here">3D Map</span><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></nav>
   <div class="spacer"></div>
   <button class="btn" id="toggleLabels"><span class="dot"></span><span data-i18n="allLabels">모든 라벨</span></button>
   <button class="btn on" id="toggleStems"><span class="dot"></span><span data-i18n="dropLines">수직선</span></button>
@@ -337,14 +338,14 @@ const SEG_STAB = 180;             // stability-orbit ellipse segments (buffers p
 
 /* ── i18n ─────────────────────────────────────────────────────────────── */
 const STR = {
-  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',spinAxes:'자전축',helio:'항성권',windMap:'성간풍',allStars:'모든 별',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
+  ko:{allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',spinAxes:'자전축',helio:'항성권',windMap:'성간풍',allStars:'모든 별',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
     distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',phase3:'Phase 3 보고서 열기',
     hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
     hintTouch:'한 손가락 = 회전 · 두 손가락 = 줌·이동 · 탭 = 정보 · 더블탭 = 들어가기',
     ly:'광년',pc:'pc',yr:'년',stabBtn:'안정성 시뮬 ▶',disrupt:'파괴 위험',stabObs:'관측 궤도(불안정)'},
-  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',spinAxes:'Spin axes',helio:'Heliosphere',windMap:'ISM wind',allStars:'All stars',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
+  en:{allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',spinAxes:'Spin axes',helio:'Heliosphere',windMap:'ISM wind',allStars:'All stars',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
     distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',phase3:'Open Phase 3 report',

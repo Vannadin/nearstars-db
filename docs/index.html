@@ -14,6 +14,8 @@ body { overflow-x: hidden; }
 
 /* v1 헤더는 index.html의 인라인 스타일에서 발췌 (헤더 영역만) */
 header{padding:16px 22px;align-items:center;gap:20px}
+.hd-spacer{flex:1}
+.filters{padding:11px 22px;border-bottom:1px solid var(--bd-soft)}
 h1{font-size:20px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;flex:1}
 input[type=text]{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.80);padding:6px 12px;border-radius:6px;font-size:13px;width:210px;outline:none}
@@ -36,8 +38,6 @@ input[type=checkbox]{accent-color:#7aa8ff}
 .lang-tg{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.36);padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;transition:color .12s,background .12s,border-color .12s}
 .lang-tg:hover{color:rgba(255,255,255,.56)}
 .lang-tg.on{background:rgba(122,168,255,.18);color:#aac8ff;border-color:rgba(122,168,255,.45)}
-.map3d-link{text-decoration:none;color:#aac8ff;border:1px solid rgba(122,168,255,.45);background:rgba(122,168,255,.14);padding:4px 11px;border-radius:6px;font-size:12px;white-space:nowrap;transition:background .12s,color .12s,border-color .12s}
-.map3d-link:hover{background:rgba(122,168,255,.22);color:rgba(255,255,255,.88);border-color:rgba(122,168,255,.55)}
 
 /* ── 사용법 modal ─────────────────────────────────────────────────────── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;-webkit-overflow-scrolling:touch}
@@ -658,10 +658,15 @@ input[type=checkbox]{accent-color:#7aa8ff}
 </style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><span class="ns-here">DB</span><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 <header>
   <h1>NearStars <span>DB</span></h1>
-  <nav class="ns-nav" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-    <a href="starmap.html" class="map3d-link" data-i18n="map3d">3D 지도 ↗</a>
-  </nav>
-  <div class="filters">
+  <span class="hd-spacer"></span>
+  <button id="howto-btn" class="help-btn" type="button">? How to use</button>
+  <div class="lang-toggle-wrap">
+    <button class="lang-tg" data-lang="en">EN</button>
+    <button class="lang-tg" data-lang="ko">한</button>
+  </div>
+</header>
+
+<div class="filters">
     <input type="text" id="q" data-i18n-placeholder="search" placeholder="Search system or star…" autocomplete="off">
     <div class="fg">
       <span data-i18n="spec">Spec</span>
@@ -702,17 +707,12 @@ input[type=checkbox]{accent-color:#7aa8ff}
       </div>
     </div>
   </div>
-</header>
+
 
 <div class="stats-bar">
   <span id="stats">— / 152 systems</span>
   <span class="spacer"></span>
-  <button id="howto-btn" class="help-btn" type="button">? How to use</button>
-  <div class="lang-toggle-wrap">
-    <button class="lang-tg" data-lang="en">EN</button>
-    <button class="lang-tg" data-lang="ko">한</button>
-  </div>
-  <span style="color:#3a5060;font-size:11px">v2 preview · sample data</span>
+  <span style="color:rgba(255,255,255,.25);font-size:11px">v2 preview · sample data</span>
 </div>
 
 <!-- ── Howto modal (init 시 빌드, 클릭 시 toggle) ───────────────────────── -->
@@ -792,7 +792,6 @@ const T = {
     spec: 'Spec', specAll: 'All',
     dist: 'Dist ≤',
     hasPlanets: 'Has planets',
-    map3d: '3D Map ↗',
     sort: 'Sort',
     columns: { sysName: 'System', starName: 'Primary star', spec: 'Spec',
                dist: 'Distance', teff: 'Teff', mass: 'Mass', rad: 'Radius', np: 'Planets' },
@@ -884,7 +883,6 @@ const T = {
     spec: '분광형', specAll: '전체',
     dist: '거리 ≤',
     hasPlanets: '행성 있음',
-    map3d: '3D 지도 ↗',
     sort: '정렬',
     columns: { sysName: '시스템', starName: '대표 항성', spec: '분광형',
                dist: '거리', teff: '유효온도', mass: '질량', rad: '반지름', np: '행성' },

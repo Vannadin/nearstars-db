@@ -41,7 +41,7 @@ These pages do not render as designed without network access.
 ## Heaviest pages
 
 - `phase4/orbit-viewers/trappist-1/interactive.html` — 1432 KB
-- `starmap.html` — 1257 KB
+- `starmap.html` — 1258 KB
 - `phase4/orbit-viewers/alpha-centauri/interactive.html` — 1024 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_leapfrog.html` — 1020 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_megno.html` — 1017 KB
@@ -49,4 +49,4 @@ These pages do not render as designed without network access.
 - `phase4/orbit-viewers/barnards-star/interactive.html` — 777 KB
 - `phase4/orbit-viewers/tau-cet/interactive.html` — 769 KB
 
-<!-- generated 2026-08-07 19:29 -->
+<!-- generated 2026-08-07 19:40 -->
