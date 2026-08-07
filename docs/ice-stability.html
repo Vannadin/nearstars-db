@@ -173,6 +173,10 @@ h2{
 }
 .chip:hover{background:var(--s3);color:var(--fg1);border-color:var(--bd3)}
 .chip:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.seg{display:inline-flex;padding:2px;gap:2px;background:var(--s1);border:1px solid var(--bd2);border-radius:8px}
+.seg button{background:transparent;border:none;color:var(--fg3);font:500 12px/1 inherit;font-family:inherit;padding:4px 10px;border-radius:6px;cursor:pointer}
+.seg button:hover{color:var(--fg1)}
+.seg button.on{background:var(--s3);color:var(--fg1)}
 .chip[aria-pressed=true]{background:var(--ac-bg);border-color:var(--ac);color:var(--ac)}
 
 /* ── 알베도 조작 ── */
@@ -271,8 +275,9 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
 
 <div class="wrap">
 <header>
-  <button class="chip" type="button" id="toggleLang"
-          style="float:right;margin-left:14px" aria-label="Language / 언어">EN</button>
+  <div class="seg" id="langSeg" style="float:right;margin-left:14px" aria-label="Language / 언어">
+    <button type="button" data-lang="ko">한</button><button type="button" data-lang="en">EN</button>
+  </div>
   <p class="eyebrow" data-i18n="eyebrow">NearStars · 표면 얼음 안정성 게이트</p>
   <h1 data-i18n="h1">표면 얼음은 알베도가 정한다</h1>
   <p class="deck" data-i18n="deck">
@@ -1137,14 +1142,16 @@ function applyLang(){
   var ar=document.querySelectorAll("[data-i18n-aria]");
   for(var j=0;j<ar.length;j++)
     ar[j].setAttribute("aria-label",STR[lang][ar[j].getAttribute("data-i18n-aria")]);
-  document.getElementById("toggleLang").textContent=lang==="ko"?"EN":"한";
+  var sb=document.querySelectorAll("#langSeg button");
+  for(var k=0;k<sb.length;k++) sb[k].classList.toggle("on",sb[k].getAttribute("data-lang")===lang);
   buildSpecies(); buildPresets(); render();      // 셀렉트·칩·표·판정·그래프 라벨 갱신
 }
-document.getElementById("toggleLang").onclick=function(){
-  lang=lang==="ko"?"en":"ko";
+document.getElementById("langSeg").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-lang]"); if(!b) return;
+  lang=b.getAttribute("data-lang");
   localStorage.setItem("nearstars-lang",lang);
   applyLang();
-};
+});
 applyLang();
 
 new MutationObserver(render)

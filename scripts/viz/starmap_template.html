@@ -32,6 +32,9 @@ canvas{display:block}
 .spacer{flex:1}
 .btn{font-family:var(--sans);font-size:12px;color:var(--fg2);background:var(--surf1);border:1px solid var(--bd1);
   border-radius:8px;padding:6px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.16s}
+.seg{display:inline-flex;padding:2px;gap:2px;background:var(--surf1);border:1px solid var(--bd1);border-radius:8px;pointer-events:auto}
+.seg button{background:transparent;border:none;color:var(--fg3,rgba(255,255,255,.56));font:500 12px/1 var(--sans);padding:5px 10px;border-radius:6px;cursor:pointer}
+.seg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
 .btn:hover{background:var(--surf2);color:var(--fg1)}
 .btn.on{color:var(--accent);border-color:var(--accent-glow);background:rgba(122,168,255,.1)}
 .btn .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.5}
@@ -223,7 +226,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <button class="btn" id="toggleMotion"><span class="dot"></span><span data-i18n="motion">공간 운동</span></button>
   <button class="btn" id="toggleFar"><span class="dot"></span><span data-i18n="beyond">50광년 밖</span></button>
   <button class="btn" id="toggleHelp" title="사용법 / Help">?</button>
-  <button class="btn" id="toggleLang">EN</button>
+  <div class="seg" id="langSeg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div>
 </div>
 
 <div id="legend">
@@ -390,7 +393,7 @@ function applyLang(){
   document.documentElement.lang=lang;
   renderHelp();
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n; if(STR[lang][k]!==undefined) el.textContent=STR[lang][k];});
-  document.getElementById('toggleLang').textContent = lang==='ko'?'EN':'한';
+  document.querySelectorAll('#langSeg button').forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));
   if(selected) renderInfo(selected);
   if(typeof stabActive!=='undefined' && stabActive && stabSelCl){
     stabTitleEl.innerHTML=`<b>${(lang==='ko'&&stabSelCl.label_ko)?stabSelCl.label_ko:stabSelCl.label}</b> · ${lang==='ko'?'궤도 진화':'orbit evolution'}`;
@@ -1759,7 +1762,7 @@ btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
 btnMotion.onclick=()=>{ showMotion=!showMotion; btnMotion.classList.toggle('on',showMotion);
   document.getElementById('motionRow').style.display=showMotion?'':'none';
   if(showMotion) rebuildMotion(); applyFilter(); };
-document.getElementById('toggleLang').onclick=()=>{lang=lang==='ko'?'en':'ko';localStorage.setItem('nearstars-lang',lang);applyLang();};
+document.getElementById('langSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-lang]');if(!b)return;lang=b.dataset.lang;localStorage.setItem('nearstars-lang',lang);applyLang();});
 const slider=document.getElementById('distSlider');
 slider.oninput=()=>{distLimit=+slider.value;document.getElementById('distVal').textContent=distLimit+' ly';applyFilter();};
 const lb=document.getElementById('lbSlider');

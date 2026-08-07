@@ -20,6 +20,9 @@
   #frames .lab{color:rgba(255,255,255,.52);font-size:11px;margin-right:2px}
   #frames button{background:rgba(255,255,255,.05);color:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px}
   #frames button.on{background:rgba(122,168,255,.30);color:#fff;border-color:#7aa8ff}
+  #langSeg{display:inline-flex;padding:2px;gap:2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:8px}
+  #langSeg button{background:transparent;border:none;color:rgba(255,255,255,.56);font:500 12px/1 system-ui;padding:4px 9px;border-radius:6px;cursor:pointer}
+  #langSeg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
 </style><nav style="position:fixed;top:8px;left:12px;z-index:1000;font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);padding:4px 10px;border-radius:6px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a> &nbsp;·&nbsp; <a href="../../index.html" style="color:#7aa8ff;text-decoration:none">Phase 4</a> &nbsp;·&nbsp; <a href="../../../index.html" style="color:#7aa8ff;text-decoration:none">DB</a></nav>
 <div id="hud">
   <h1>Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°] — <span class="v">STABLE</span></h1>
@@ -32,7 +35,7 @@
   <span id="yr"></span>
   <input id="scrub" type="range" min="0" max="1000" value="0">
   <span class="note" data-l="note">궤도면·이심률 진화 = 실측. 천체 마커의 공전 위상 = 예시(빠른 궤도는 스냅샷으로 복원 불가).</span>
-  <button id="lang">EN</button>
+  <div id="langSeg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div>
 </div>
 <script type="importmap">
 { "imports": {
@@ -182,15 +185,15 @@ const L={ko:{unit:'단위',frame:'기준면',pause:'일시정지',play:'재생',
          en:{unit:'unit',frame:'ref. plane',pause:'pause',play:'play',
              note:'Orbit-plane and eccentricity evolution are measured; body-marker orbital phase is illustrative (fast orbits cannot be recovered from snapshots).'}};
 let lang=localStorage.getItem('nearstars-lang')==='ko'?'ko':'en';
-const langBtn=document.getElementById('lang');
+const langSeg=document.getElementById('langSeg');
 function applyLang(){
   document.querySelectorAll('[data-l]').forEach(el=>{el.textContent=L[lang][el.dataset.l];});
   framesUI.querySelectorAll('button').forEach(b=>{
     const fr=DATA.frames[+b.dataset.fi]; b.textContent=lang==='ko'?fr.label:(fr.label_en||fr.label);});
-  langBtn.textContent=lang==='ko'?'EN':'한국어';
+  langSeg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));
   setPlayLabel();
 }
-langBtn.onclick=()=>{lang=lang==='ko'?'en':'ko'; localStorage.setItem('nearstars-lang',lang); applyLang();};
+langSeg.onclick=e=>{const b=e.target.closest('button[data-lang]'); if(!b)return; lang=b.dataset.lang; localStorage.setItem('nearstars-lang',lang); applyLang();};
 applyLang();
 
 function tick(){

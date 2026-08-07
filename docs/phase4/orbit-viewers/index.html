@@ -17,8 +17,9 @@
   .pill.warn{color:#e0b070;background:rgba(224,176,112,.12)}
   .pill.bad{color:#e090d0;background:rgba(224,144,208,.14)}
   .sub{display:block;color:rgba(255,255,255,.52);font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums}
-  .seg{float:right} .seg button{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:4px 10px;cursor:pointer}
-  .seg button.on{border-color:#7aa8ff}
+  .seg{float:right;display:inline-flex;padding:2px;gap:2px;background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.09);border-radius:8px}
+  .seg button{background:transparent;color:rgba(255,255,255,.56);border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font:500 12px/1 system-ui}
+  .seg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
   .crumb{font-size:12px;margin-bottom:8px} .crumb a{color:#7aa8ff;text-decoration:none}
 </style>
 <style>
@@ -43,7 +44,7 @@
 @media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
 </style><div class="ns-bar"><a class="ns-brand" href="../../index.html">NearStars</a><a href="../../index.html">DB</a><span class="ns-sep">·</span><a href="../../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../../tools.html">Tools</a><span class="ns-sep">·</span><a href="../../wiki/index.html">Wiki</a></div>
 <header>
-  <div class="seg"><button id="ko">한국어</button><button id="en" class="on">EN</button></div>
+  <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
   <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
   <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span>
     <span data-i18n> 적분기 교차 검증은 <a href="alpha-centauri-validation/index.html" style="color:#7aa8ff">알파센 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="alpha-centauri-validation/index.html" style="color:#7aa8ff">Alpha Cen validation set</a>.</span></div>

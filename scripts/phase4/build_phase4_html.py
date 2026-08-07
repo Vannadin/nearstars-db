@@ -367,7 +367,7 @@ def render_index(system, order, bodies, aliases):
     return page(f"Phase 4 — {system}", content)
 
 
-LANG_SEG = ('<div class="seg"><button id="ko">한국어</button>'
+LANG_SEG = ('<div class="seg"><button id="ko">한</button>'
             '<button id="en" class="on">EN</button></div>')
 
 SCRIPT = """<script>
