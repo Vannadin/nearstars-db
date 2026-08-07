@@ -15,7 +15,7 @@ Per-axis work items (apply to each row as relevant):
 - [x] Commit the validator absence-row refs exemption (ad00ce0)
 
 ## Axes
-- [ ] identity (also: drop retired RB discoverability tuple from evidence)
+- [x] identity (also: drop retired RB discoverability tuple from evidence) — 03f74a7
 - [ ] orbit
 - [ ] bulk (→ methodology-derived)
 - [ ] atmosphere (→ methodology-derived)

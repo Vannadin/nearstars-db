@@ -802,12 +802,26 @@ decisions:
 
   - body: Proxima Cen d
     axis: orbit
-    refs: ["2025A&A...700A..11S", "2022A&A...658A.115F"]
+    refs: ["2025A&A...700A..11S", "2022A&A...658A.115F", "docs/reference/tidal-locking-timescale-methodology.md"]
     status: gated
     driver: [window-selection]
+    provenance: >
+      2026-06-23: Mercury-style e=0.2 rejected (strong tides at 0.029 AU, no
+      resonance to pump e); physical floor e≈0 with a seeded de-perfect at emit
+      adopted instead.
+      2026-08-07: prose modernization (EN+KO narrative, 3-part evidence, wiki-link
+      token removed from evidence). No value changed.
     narrative: >
-      a=0.02885 AU · P=5.122d · e≈0 물리 floor(미측정 → emit시 de-perfect ≲0.05) · inc 미측정(비통과) ·
-      조석고정 1:1(a⁶ 게이트 초고속). Ω/ω/M = 자유 emit.
+      It hugs the star tighter than either sibling, one lap in five days. No eccentricity has been measured;
+      at this distance tides would circularize the orbit almost immediately, so a circle is the physical
+      default rather than an observation. The same tides locked the spin long ago, one face holding toward
+      the star forever. The planet does not transit, so how far the orbit tilts to our line of sight is
+      unknown.
+    narrative_ko: >
+      형제 행성들보다 별을 더 바짝 끌어안고 닷새 만에 한 바퀴를 돈다. 이심률은 측정된 적이 없다. 이 거리에서는
+      조석이 궤도를 거의 즉시 원으로 다듬기 때문에, 원 궤도는 관측이 아니라 물리적 기본값이다. 같은 조석이
+      오래전에 자전을 묶어 한쪽 면이 영원히 별을 마주한다. 통과 현상이 관측되지 않아 궤도가 우리 시선에 얼마나
+      기울었는지는 모른다.
     fields:
       - name: semi_major_axis_au
         value: 0.02885
@@ -826,13 +840,10 @@ decisions:
       criterion: [classification, stability]
       verdict: pass-in-window
       evidence: >
-        rationale: 관측 e 미구속 → [[project_nearstars_synthetic_eccentricity]] 정책으로 emit시 seeded e ≲0.05 상한
-        (구체값은 per-system seed로 emit 생성, 보드엔 의도만; 정책 rule 2). 0.029 AU는 조석 원형화 즉각이라 물리 기본은
-        e≈0이나, 미측정이므로 realism/다양성용 small seed를 emit서 부여.
-        ω_eq/n≈1.015 → 1:1 유지. 수성 e=0.2는 기각(0.029 AU 강조석+공명 부재로 비현실; 오너 결정 2026-06-23).
-        emit시 다행성계 stability-sim 검증 필요.
-
-        paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).
+        a·P는 측정 통과값, e는 물리 floor ≈0에 emit 단계 seeded de-perfect(상한 ≲0.05; synthetic-orbit-noise
+        정책 rule 2에 따라 구체값은 per-system seed로 emit이 생성, 보드에는 의도만 기록). 확인한 것: 조석
+        시간척도 방법론(a⁶ 스케일링)으로 0.029 AU에서 원형화·고정이 즉각임을 확인했고, ω_eq/n≈1.015로 1:1
+        유지, 수성식 e=0.2는 강조석+공명 부재로 기각. 유보: emit 시 다행성계 stability-sim 재검증이 남아 있다.
 
   - body: Proxima Cen d
     axis: bulk                        # §3.2 템플릿 앵커
