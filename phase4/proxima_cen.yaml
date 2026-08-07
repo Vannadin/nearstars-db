@@ -851,11 +851,33 @@ decisions:
     refs: ["docs/reference/mass-radius-relation-methodology.md", "docs/reference/body-figure-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md", "docs/reference/internal-heat-luminosity-methodology.md"]
     status: gated
     driver: [window-selection]
+    provenance: >
+      2026-07-12: §3.2 normalization, the trivial consequences of tidal lock
+      promoted to explicit fields (rotation = orbital period, spin axis = orbit
+      normal, reference_radius = radius).
+      2026-07-14: figure filled from the synchronous ledger (J2 1.7e-4, C22
+      5.0e-5, flattening 0.04%) and internal_heat set negligible-at-surface.
+      2026-08-07: prose modernization (EN+KO narrative, 3-part evidence, dates
+      moved here); verdict migrated pass-in-window -> methodology-derived
+      (recipe output, matching b bulk). No value changed.
     narrative: >
-      mass ~0.30 M⊕(등방 prior 중앙 진질량; Msini 0.26×1.1547) · radius ~0.72 R⊕(암석 그리드 0.30^0.27) · g ~0.58 ·
-      ρ ~지구형 암석 · 조석고정 · obliquity~0 · age ~4.85 Gyr. [§3.2 정규화 2026-07-12] 조석고정의 자명 귀결 승격:
-      rotation = 공전주기 5.122 d(DB), spin_axis = 궤도 법선, reference_radius = radius. [2026-07-14 figure]
-      J₂ 1.7e-4·C̄₂₂ 5.0e-5(동기 ledger, visual 0.07% → 가시 아래 중력만)·flattening 0.04%·internal_heat 표면 미미.
+      A rock less than a third of Earth's mass and about seven tenths its size, with a little over half our
+      surface gravity. The mass is the radial-velocity minimum corrected for orbital inclination by
+      probability, a median rather than a measurement; a world this small sits far below the boundary where
+      planets keep thick envelopes, so rock is not in doubt. Tides hold the rotation to the orbit, and the
+      spin axis stands almost exactly perpendicular to the orbital plane, a tilt computed as an equilibrium
+      rather than assumed. The slow spin leaves the equatorial bulge far below anything the eye could see,
+      and the heat still rising from the interior is too little to warm the surface. Whatever drives the
+      planet's strong magnetic field was measured, not predicted: a small old world like this ought to have
+      cooled past easy dynamo action long ago.
+    narrative_ko: >
+      지구 질량의 3분의 1이 못 되는 암석 행성이고, 크기는 지구의 7할쯤, 표면 중력은 절반을 조금 넘는다. 질량은
+      시선속도가 주는 최소값에 궤도 경사를 확률로 보정한 중앙값이라 측정치는 아니다. 이만큼 작은 세계는 두꺼운
+      가스 외피를 지키는 경계보다 한참 아래에 있어 암석이라는 데는 의심이 없다. 조석이 자전을 공전에 묶고 있고,
+      자전축은 궤도면에 거의 정확히 수직으로 선다. 이 기울기는 가정이 아니라 평형을 계산해 얻은 값이다. 느린
+      자전 탓에 적도가 부푸는 정도는 눈에 보일 수준에 한참 못 미치고, 내부에서 아직 올라오는 열도 표면을 데우기엔
+      너무 적다. 다만 이 행성의 강한 자기장이 무엇으로 도는지는 예측이 아니라 관측의 몫인데, 이만큼 작고 늙은
+      세계라면 진작 식어 다이너모가 멎었어야 하기 때문이다.
     fields:
       - name: mass
         value: 0.30
@@ -913,12 +935,13 @@ decisions:
         op: set
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
-        rationale: Msini→진질량 ×1.1547(등방중앙, Barnard/Proxima b 선례). sub-Earth라 radius valley 한참 아래 →
-        확실히 암석. R/g는 질량-반경 그리드.
-
-        paper: docs/reference/mass-radius-relation-methodology.md (암석 R∝M^0.27, valley 분류).
+        질량 0.30 M⊕(등방 prior 중앙 진질량, Msini 0.26 ×1.1547)·반경 0.72 R⊕이고, figure·obliquity·내부열은
+        전부 방법론 레시피 산출값. 확인한 것: radius valley 한참 아래라 암석 확정, 반경은 암석 그리드 R∝M^0.27,
+        figure는 동기 자전 ledger(J₂≈q_s, C̄₂₂=0.3·J₂, f=(5/2)·J₂=0.04%로 가시 임계 2% 아래), obliquity는
+        Cassini State 1 계산(|g|/α=0.018 ≪ 공명 임계 ~1.1 → ε≈0.02–0.05°). 유보: 궤도 경사가 미측정이라
+        진질량은 통계 중앙값이고, face-on에 가까울수록 실제 질량은 이보다 커진다.
 
   - body: Proxima Cen d
     axis: atmosphere

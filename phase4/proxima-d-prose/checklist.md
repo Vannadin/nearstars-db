@@ -16,7 +16,7 @@ Per-axis work items (apply to each row as relevant):
 
 ## Axes
 - [x] identity (also: drop retired RB discoverability tuple from evidence) — 03f74a7
-- [ ] orbit
+- [x] orbit — f8f65e3
 - [ ] bulk (→ methodology-derived)
 - [ ] atmosphere (→ methodology-derived)
 - [ ] surface (→ methodology-derived)
