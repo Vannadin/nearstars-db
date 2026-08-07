@@ -947,11 +947,10 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      None. Too close and too light: the star's flares strip gas faster than the rock can hold it, and even
-      its strong magnetic field funnels the losses through the poles rather than preventing them.
+      None. The planet's position, its size, and its interaction with the host star cannot sustain an
+      atmosphere.
     narrative_ko: >
-      없음. 너무 가깝고 너무 가볍다. 별의 플레어가 암석이 붙잡는 속도보다 빠르게 기체를 벗겨 가고, 강한 자기장도
-      손실을 막기보다는 극으로 몰아 보낼 뿐이다.
+      없음. 이 행성의 위치와 크기, 모항성과의 상호작용은 대기를 유지시키지 못한다.
     fields:
       - name: composition
         value: "무대기 (bare rock; 희박 표토-기원 exosphere 정도만, 렌더 무의미)"
