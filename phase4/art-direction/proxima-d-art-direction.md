@@ -75,6 +75,14 @@ cracks, small craters crisper than Mercury's, contraction scarps to mark the
 age.* Meshes with the gameplay biomes (Day Plains / Craters / Magnetic Polar
 Caps).
 
+## Alfvén wing (future in-game visual)
+
+Concept figure `docs/img/proxima-d-alfven-wing.png` (wiki-ready; script
+`scripts/viz/render_alfven_wing.py`). Not expressible in Kerbalism's radiation
+SDF — if implemented in-game it rides the in-house flux-tube plugin
+(`plugins/NearStarsFluxTube/`, YZ Cet SPI arc prototype): a second tube pair,
+starward 12° / anti-starward 7°, leaning toward the orbit's trailing side.
+
 ## Related
 
 - Board rows: `../proxima_cen.yaml` (d surface / appearance / gameplay)
