@@ -9,7 +9,7 @@
     radial-gradient(60% 50% at 18% -10%, rgba(122,168,255,.07), transparent 70%),
     radial-gradient(50% 45% at 92% 110%, rgba(224,144,208,.05), transparent 70%),
     #06070a;
-  --bg-header:      rgba(10,12,18,.62);
+  --bg-header:      transparent;   /* 상단 띠는 공용 ns-bar가 담당 — 페이지 헤더는 투명 (Phase 4 보드 규격) */
   --bg-card:        rgba(255,255,255,.022);
   --bg-card-alt:    rgba(255,255,255,.045);
   --bg-stats:       rgba(255,255,255,.014);
@@ -72,10 +72,10 @@ header {
   flex-wrap: wrap;
 }
 h1 {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   color: var(--fg-emph);
-  letter-spacing: .3px;
+  letter-spacing: -.01em;
 }
 h1 span {
   color: var(--accent);
