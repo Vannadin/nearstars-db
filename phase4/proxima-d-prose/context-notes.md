@@ -36,3 +36,22 @@ must move it gets a provenance line.
   gameplay narrative.
 
 ## Decisions made during the pass
+
+- 2026-08-07: owner redirected the pass to per-axis review (solo-run rewrites
+  were presumptuous for owner-facing prose). New cadence: show each axis's
+  rewritten narrative/evidence, owner approves or supplies wording, then
+  commit. identity / atmosphere / surface got owner wording (dfe4097, a63d059,
+  ee5f66b); orbit and bulk approved as written.
+- 2026-08-07: night-hemisphere temperature filled at ~30 K (geothermal-flux
+  sigma-T^4 balance, textbook-formula exception; lunar PSR 20-40 K anchor) on
+  the owner's "n kelvin" prompt — narrative, typed field and evidence agree.
+- 2026-08-07: polar-cap grounding question led to a real §4 gap: the npFe0
+  optics were documented but the shielding/cusp geometry was board-level
+  reasoning. §4 got a new subsection (lunar magnetic swirls, Ganymede caps)
+  + ko mirror; surface evidence now points at it.
+- 2026-08-07: crater-density art read recorded in the new
+  phase4/art-direction/proxima-d-art-direction.md (owner asked for a light,
+  art-direction-depth dig only).
+- 2026-08-07: found + fixed a coefficient typo in the tidally-locked
+  temperature doc (substellar ceiling "1.19" -> 1.41 = sqrt 2; computed values
+  were already correct).

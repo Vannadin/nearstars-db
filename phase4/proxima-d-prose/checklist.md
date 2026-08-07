@@ -21,8 +21,8 @@ Per-axis work items (apply to each row as relevant):
 - [x] atmosphere (→ methodology-derived; c I absence-line convention) — fa949cd
 - [x] surface (→ methodology-derived) — 0b823bd
 - [x] appearance (EN narrative + cfg_colors_displayed rehome) — fbaaecd
-- [ ] magnetism.magnetic_field
-- [ ] environment (→ methodology-derived)
+- [ ] magnetism.magnetic_field (rewritten 4da43e9, owner review pending)
+- [ ] environment (→ methodology-derived; rewritten 9c4fa2e, owner review pending)
 - [ ] rings
 - [ ] satellites
 - [ ] gameplay (drop retired 난도 value; 3-part shape; engine bits → evidence)
