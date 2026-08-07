@@ -845,7 +845,7 @@ def build_t(palettes):
 
 
 TEMPLATE = """<!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title data-i18n="title"></title>
@@ -1053,8 +1053,8 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
   <h1 data-i18n="title"></h1>
   <div class="crumb"><a href="index.html">DB</a> · <a href="starmap.html">3D Map</a> · <a href="reports.html">Reports</a> · <span>Colors</span> · <a href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">Wiki ↗</a></div>
   <div class="seg lang-toggle" id="lang-seg">
-    <button class="on" data-lang="ko">한</button>
-    <button data-lang="en">EN</button>
+    <button data-lang="ko">한</button>
+    <button class="on" data-lang="en">EN</button>
   </div>
 </header>
 <main>
@@ -1146,7 +1146,7 @@ const ELEMENT_TEMP = {element_temp_json};
 const MOLECULE_TEMP = {molecule_temp_json};
 const AURORA = {aurora_json};
 
-let lang = localStorage.getItem('nearstars-lang') || 'ko';
+let lang = localStorage.getItem('nearstars-lang') || 'en';
 let temp = parseInt(localStorage.getItem('nearstars-temp') || '4000', 10);
 let density = parseInt(localStorage.getItem('nearstars-density') || '11', 10);
 

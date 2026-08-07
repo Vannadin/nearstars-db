@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- 주어진 일사량에서 표면 얼음이 존속 가능한지 Bond 알베도로 판정하는 계산기 -->
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -646,7 +646,7 @@ var STR={
   boardShort:"board"
  }
 };
-var lang=localStorage.getItem("nearstars-lang")||"ko";
+var lang=localStorage.getItem("nearstars-lang")||"en";
 function t(k){ return STR[lang][k]; }
 function tf(k){ var a=arguments;
   return STR[lang][k].replace(/\{(\d)\}/g,function(_,i){ return a[+i+1]; }); }

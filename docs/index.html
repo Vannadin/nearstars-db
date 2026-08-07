@@ -955,8 +955,7 @@ const T = {
     ],
   },
 };
-let LANG = (localStorage.getItem('nearstars-lang') ||
-            (navigator.language && navigator.language.startsWith('ko') ? 'ko' : 'en'));
+let LANG = localStorage.getItem('nearstars-lang') || 'en';   // English by default; a stored choice wins
 function tt() { return T[LANG] || T.en; }
 function tLookup(path) {
   return path.split('.').reduce((v, p) => (v == null ? v : v[p]), tt());

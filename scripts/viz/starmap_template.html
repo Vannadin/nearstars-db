@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- NearStars 3D 성도 뷰어 — build_starmap.py가 데이터를 주입해 생성 -->
-<html lang="ko" data-ns="v2">
+<html lang="en" data-ns="v2">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -352,7 +352,7 @@ const STR = {
     hintTouch:'1 finger = rotate · 2 fingers = zoom/pan · tap = info · double-tap = enter',
     ly:'ly',pc:'pc',yr:'yr',stabBtn:'Stability sim ▶',disrupt:'disruption risk',stabObs:'observed orbit (unstable)'}
 };
-let lang='ko';
+let lang=localStorage.getItem('nearstars-lang')||'en';   // English by default; a stored choice wins
 const HELP={
   ko:{title:'사용법', sections:[
     {h:'보기', items:[['맵 ↔ 시스템','별로 가까이 줌인하면 시스템 뷰(행성 궤도·실제 크기), 멀어지면 광년 스케일 성도.']]},
@@ -1758,7 +1758,7 @@ btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
 btnMotion.onclick=()=>{ showMotion=!showMotion; btnMotion.classList.toggle('on',showMotion);
   document.getElementById('motionRow').style.display=showMotion?'':'none';
   if(showMotion) rebuildMotion(); applyFilter(); };
-document.getElementById('toggleLang').onclick=()=>{lang=lang==='ko'?'en':'ko';applyLang();};
+document.getElementById('toggleLang').onclick=()=>{lang=lang==='ko'?'en':'ko';localStorage.setItem('nearstars-lang',lang);applyLang();};
 const slider=document.getElementById('distSlider');
 slider.oninput=()=>{distLimit=+slider.value;document.getElementById('distVal').textContent=distLimit+' ly';applyFilter();};
 const lb=document.getElementById('lbSlider');
