@@ -1135,17 +1135,12 @@ decisions:
       measured stellar environment via the magnetosphere-geometry recipe).
       No value changed.
     narrative: >
-      The harshest radiation environment in the system. This planet stands closest to a flare star with no
-      air to blunt anything, and the flares themselves strike in step with its orbit. Its own magnetic field
-      makes matters worse for a visitor: sixteen gauss this close to the star traps charged particles into
-      radiation belts of Jupiter's kind, so the danger fills the space around the planet, not just its
-      ground. The stellar wind rams harder here than anywhere else in the system, deep in the star's
-      innermost weather.
+      The harshest radiation environment in the system. The star's flares strike the planet head-on in step
+      with its orbit, and the magnetic field traps those charged particles into radiation belts of Jupiter's
+      kind. So the danger fills the space around the planet, not just its ground.
     narrative_ko: >
-      이 계에서 가장 가혹한 방사선 환경이다. 플레어 별에 가장 가까이 선 행성인데 무엇 하나 누그러뜨려 줄 대기가
-      없고, 그 플레어마저 공전에 박자를 맞춰 때린다. 행성 자신의 자기장은 방문자에게 오히려 해가 된다. 별에
-      이토록 가까운 16가우스는 하전입자를 붙잡아 목성형 방사선대를 이루므로, 위험은 지면만이 아니라 행성 둘레
-      공간까지 채운다. 항성풍은 계 어디보다 세게 들이치고, 별의 가장 안쪽 날씨에 깊이 잠겨 있다.
+      이 계에서 가장 가혹한 방사선 환경이다. 별의 플레어가 공전에 박자를 맞춰 행성을 정면으로 때리고, 자기장은
+      그 하전입자를 붙잡아 목성형 방사선대를 이룬다. 그래서 위험은 지면만이 아니라 행성 둘레 공간까지 채운다.
     fields:
       - name: radiation
         value: "극심 (최근접 + 무대기 직노출 + d-phase-lock 플레어 + 포획 방사선대)"
