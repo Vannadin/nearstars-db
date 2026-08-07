@@ -17,8 +17,8 @@ Per-axis work items (apply to each row as relevant):
 ## Axes
 - [x] identity (also: drop retired RB discoverability tuple from evidence) — 03f74a7
 - [x] orbit — f8f65e3
-- [ ] bulk (→ methodology-derived)
-- [ ] atmosphere (→ methodology-derived)
+- [x] bulk (→ methodology-derived) — 03a275f
+- [x] atmosphere (→ methodology-derived; c I absence-line convention) — fa949cd
 - [ ] surface (→ methodology-derived)
 - [ ] appearance (add EN narrative; already new-style otherwise)
 - [ ] magnetism.magnetic_field

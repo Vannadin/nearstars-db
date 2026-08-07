@@ -232,12 +232,12 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="surface">
   <div class="dec-head">
     <code class="axis">surface</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></span>
   </div>
-  <p class="narrative">뜨거운 bare rock. Teq~317K(1.87× 지구 일사) · 무대기 1:1 → 직하~450K(=Teq×√2, 무재분배) · 극냉 야간 (무대기 거대 day-night 대비). 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 표면=어두운 현무암, 단 ~16 G 자기권(G7)이 항성풍 sputtering을 편향 → 솔라윈드-구동 우주풍화(npFe⁰) 감소 → 무자기장 수성보다 덜 붉고 덜 어두움(미세운석 gardening만 잔존; 수성 표면장 ~0.003 G 대비 d는 ~5000× 강해 차폐 유효). 단 phase-lock 플레어 입자가 자기극으로 집중 채널 → 자기극에 짙은 풍화 극관(npFe⁰ 농집, 거의 흑갈). 결과 = 밝은 중위도(자기권 차폐로 신선) ↔ 어두운 자기극관의 뚜렷한 2-tone 표면이고, 자기장 강화의 가시 시그니처. 고유색: 중위도 #3c3833(직전 #34302c보다 밝게, 차폐분) · 자기극관 ~#2a2622(거의 흑갈, 집중 풍화).<br></p>
+  <p class="narrative"><span data-i18n>어두운 현무암 세계다. 별 아래에서는 450켈빈까지 구워지고, 영원히 돌아서지 않는 밤 면에서는 얼어붙는다. 암석은 어디서나 고체로 남는데, 별 바로 아래 지점조차 녹는점에는 한참 못 미친다. 이 표면을 특별하게 만드는 것은 자기장이 새겨 놓은 무늬다. 중위도에서는 자기장이 항성풍을 땅에 닿기 전에 막아 주어 수성은 가져 본 적 없는 더 신선하고 밝은 낯을 지키는 반면, 자기장이 붙잡은 플레어 입자는 자기극으로 쏟아져 그곳을 거의 흑갈색 극관으로 풍화시킨다. 그 결과가 투톤 세계다. 어두운 두 극 사이의 밝은 띠, 눈에 보이는 자기장이다.<br></span><span data-en hidden>Dark basalt, baked to about 450 kelvin under the star and frozen on the night side that never turns away. The rock stays solid everywhere; even the point directly beneath the star falls far short of melting. What makes this surface unusual is written by the magnetic field. Across the mid-latitudes the field holds the stellar wind off the ground, so the rock keeps a fresher, paler face than Mercury ever could, while the flare particles the field catches are poured onto the magnetic poles and weather them into caps of near-black brown. The result is a two-tone world, pale belts between dark poles, the magnetic field made visible.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">bare rock (어두운 현무암, 2-tone: 밝은 중위도 ↔ 어두운 자기극관)</td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">450 <span class="u">K</span><div class="fnote">직하 (Teq~317K ×√2, 무재분배); 극냉 야간 (고유색은 cfg_colors_intrinsic)</div></td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.11<div class="fnote">Bond, 무자기장 수성(~0.088)보다 높음, 자기권 sputtering 차폐로 우주풍화(npFe⁰) 감소; 자기극관 국소 저albedo</div></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> rationale: cascade(G7 ~16 G): 자기권이 솔라윈드 sputtering 차폐 → 우주풍화 줄어 무자기장 수성보다 신선·고albedo쪽. 미세운석 풍화는 잔존(자기권 무관). phase-lock 플레어(Zapatero Osorio2026)는 자기극 채널 → 극 풍화 비대칭. 무산소·무생물 이라 Fe³⁺ 적색 슬로프 무관(애초 무대기). 색조=interesting-first.<br>paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000, 자기권 차폐로 감소). 자기장=G7(Zapatero Osorio2026). Teq=온도 문서.<br></div>
+  <div class="ev"><span class="tag">evidence</span> 투톤 bare rock 확정. 중위도 신선 현무암(고유 #3c3833, Bond albedo 0.11)과 자기극 풍화 극관(~#2a2622). 확인한 것: 색·albedo 방법론 §4 우주풍화 캐스케이드(Hapke 2001·Pieters 2000)로 관측 자기장 ~16 G의 차폐 효과를 따라갔다. 항성풍 sputtering 차폐 → npFe⁰ 생성 감소 → 무자기장 수성(albedo ~0.088)보다 신선하고 밝은 쪽, 미세운석 gardening은 자기권과 무관해 잔존, phase-lock 플레어의 극 채널링(Zapatero Osorio 2026)이 극 풍화 비대칭의 근거. 직하 450 K는 Teq 317 K에 무재분배 √2 배율. 색조 선택 자체는 interesting-first 예술 결정. 유보: 극관 경계와 정확한 색은 emit 말미 art-pass에서 실측 기반으로 확정한다.<br></div>
   <div class="refs"><a class="ref" href="../../wiki/reference__surface-color-albedo-methodology.html" target="_blank" rel="noopener">surface-color-albedo-methodology.md</a></div>
 </article>
 <article class="dec" id="appearance">
@@ -307,7 +307,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="proxima-cen-b.html">← Proxima Cen b</a><a class="navlink" href="proxima-cen-c.html">Proxima Cen c →</a></div>
-<div class="stamp">빌드 2026-08-07 10:48 · 03a275f+미커밋</div>
+<div class="stamp">빌드 2026-08-07 10:50 · fa949cd+미커밋</div>
 </div>
 <script>
 const b=document.body;
