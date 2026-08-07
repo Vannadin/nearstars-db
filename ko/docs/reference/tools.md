@@ -279,6 +279,11 @@
   `RadiationModel` SDF를 그대로 재현(Unlicense 알고리즘).
 - `scripts/viz/render_belts_bodies.py` — 바디별 드라이버. `*_phys` 엔트리가 피팅된
   벨트 지오메트리의 **단일 소스**(emitter도 여기서 읽음).
+- `scripts/refs/proxima_d_belt_dose.py` — Proxima d 벨트 선량 도출(방법론 Part B).
+  dose-anchor 보간 10.4×(B_eq/31 µT)^1.9 → 내대 ~5×10³ / 외대 ~1×10³ rad/h(신뢰
+  낮음, 목성 앵커 1.9배 밖 외삽; 장 범위 3–280 G면 2×10²–10⁶), `kp_limit.py`
+  CmCk 검증으로 K–P 상한 비구속(source/loss-set) 확인. `proxima_d_phys` 시각화
+  항목의 근거.
 - `scripts/viz/fit_belts.py` — 수치 피터. 쌍극자 드리프트-셸 타깃(r = L cos²λ,
   loss-cone 컷)을 Nelder-Mead로 Kerbalism SDF 파라미터에 피팅, IoU로 채점.
 - `scripts/pipeline/emit_kerbalism_radiation.py` —

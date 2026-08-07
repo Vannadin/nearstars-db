@@ -289,6 +289,11 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   in-game Kerbalism `RadiationModel` SDF exactly (Unlicense algorithm)
 - `scripts/viz/render_belts_bodies.py` — per-body driver; the `*_phys` entries are the
   **single source of truth** for fitted belt geometry (consumed by the emitter too)
+- `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
+  Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
+  ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G
+  range spans 2×10²–10⁶), plus the `kp_limit.py` CmCk check showing the K–P ceiling
+  never binds (source/loss-set). Feeds the `proxima_d_phys` viz entry.
 - `scripts/viz/fit_belts.py` — numerical fitter: dipole drift-shell targets (r = L cos²λ,
   loss-cone cut) → Kerbalism SDF parameters via Nelder-Mead, IoU-scored
 - `scripts/pipeline/emit_kerbalism_radiation.py` — emits

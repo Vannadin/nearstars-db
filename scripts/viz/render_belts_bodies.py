@@ -74,11 +74,14 @@ BODIES={
  #   P_ram(0.029 AU) = 태양풍 1 AU (n 5 cm^-3, v 450 km/s) r^-2 스케일 ~ 2.0e-6 Pa
  #   → nose = (B_eq²/2μ0 P_ram)^(1/6) ≈ 7 R_d. 장 범위 3-280 G → nose 4-18 (B^(1/3)).
  # 벨트 셸은 지구형 SDF 재사용(L 1.2-2 내대 / L 3-5.5 외대, standoff 7 안쪽으로 압축).
- # 주의: radiation 강도값은 시각화용 잠정치(지구 대비 ~3배, 플레어 주입) — 이미터 확정
- #   전 fit/논문 근거화 필요. dipole tilt 미지 → 지구형 10° 가정 명기.
- 'proxima_d_phys':{'title':'Proxima Cen d — physical (16 G SPI)','sub':'B_p 16 G → mp nose ~7 R_d (4-18 over 3-280 G); shells L 1.2-2 / 3-5.5; tilt unknown (Earth-like 10° drawn)','R':12,'tilt':10,
-   'inner':{'radiation':30,'grad':3.3,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':1.0,'bdxy':1.0},  # 무대기 → 하부 컷=표면 r=1.0 (지구 1000km loss-cone 경계는 대기 흡수 산물이라 부적용)
-   'outer':{'radiation':8,'grad':2.2,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.01,'ext':1.0,'bdist':1.2,'brad':1.0,'bdxy':0.6748},  # L 3-5.5 (nose 7 안쪽)
+ # 강도(자기권 기하 방법론 Part B): dose-anchor 보간 10.4×(B_eq/31µT)^1.9, B_eq 800 µT
+ #   → 내대 ~5×10³ rad/h, 외대 = 0.2×내대(wind-fed 비, 토러스 없음) ~1×10³ rad/h.
+ #   kp_limit.py 검증: L=4, n_cold 1-100 cm⁻³서 CmCk ≪ 1 → K-P 상한 비구속(source-set).
+ #   주의: 앵커쌍(지구·목성) 밖 외삽(B_eq 1.9× 목성)이라 신뢰 낮음; 장 범위 3-280 G면
+ #   2×10²-10⁶ rad/h. dipole tilt 미지 → 지구형 10° 가정 명기.
+ 'proxima_d_phys':{'title':'Proxima Cen d — physical (16 G SPI)','sub':'B_p 16 G → mp nose ~7 R_d (4-18 over 3-280 G); shells L 1.2-2 / 3-5.5; dose anchor-interp (low conf); tilt unknown (10° drawn)','R':12,'tilt':10,
+   'inner':{'radiation':5000,'grad':3.3,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':1.0,'bdxy':1.0},  # 무대기 → 하부 컷=표면 r=1.0 (지구 1000km loss-cone 경계는 대기 흡수 산물이라 부적용)
+   'outer':{'radiation':1000,'grad':2.2,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.01,'ext':1.0,'bdist':1.2,'brad':1.0,'bdxy':0.6748},  # L 3-5.5 (nose 7 안쪽)
    'pause':{'radiation':-0.01,'rad':10.5,'comp':1.5,'ext':0.075,'hscale':1.1}},  # nose 10.5/1.5 = 7 R_d
 }
 

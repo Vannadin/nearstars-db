@@ -151,6 +151,16 @@ regime calls (Alpha Centauri A b III (Pandora) 0.4× Earth). Confidence remains 
 exponent is a two-anchor fit, and n_cold for a fiction torus is a stated
 assumption — but every factor is now mechanistic, pinned, and bounded.
 
+**Worked case — Proxima d (16 G SPI polar field, wind/flare-fed, no torus).**
+B_eq = 800 µT → the anchor interpolation gives inner ~5×10³ rad/h and outer
+~1×10³ (wind-fed 0.2 ratio). This extrapolates 1.9× beyond the Jupiter anchor,
+so confidence is low, and the 3–280 G field range spans 2×10²–10⁶ rad/h.
+`kp_limit.py` at L = 4 (B_local 1.25×10⁴ nT; n_cold 1–100 cm⁻³ — an airless
+planet feeds no ionospheric plasmasphere) gives CmCk ≪ 1 at every density: the
+K–P ceiling never binds and the belts are source/loss-set, the same structural
+regime as every strong-field small-L case. Viz entry: `render_belts_bodies.py
+proxima_d_phys`.
+
 ## Part C — mapping to Kerbalism
 
 | Physical quantity | Kerbalism field | Derivation |
