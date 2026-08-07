@@ -19,8 +19,8 @@ Per-axis work items (apply to each row as relevant):
 - [x] orbit — f8f65e3
 - [x] bulk (→ methodology-derived) — 03a275f
 - [x] atmosphere (→ methodology-derived; c I absence-line convention) — fa949cd
-- [ ] surface (→ methodology-derived)
-- [ ] appearance (add EN narrative; already new-style otherwise)
+- [x] surface (→ methodology-derived) — 0b823bd
+- [x] appearance (EN narrative + cfg_colors_displayed rehome) — fbaaecd
 - [ ] magnetism.magnetic_field
 - [ ] environment (→ methodology-derived)
 - [ ] rings

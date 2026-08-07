@@ -1086,10 +1086,22 @@ decisions:
     axis: magnetism.magnetic_field
     status: gated
     driver: [window-selection]
+    provenance: >
+      2026-06-23: the SPI observational estimate adopted over the dynamo-scaling
+      weak-field expectation (owner, observation-first).
+      2026-08-07: prose modernization (EN+KO narrative, 3-part evidence,
+      decision date moved here). No value changed.
     narrative: >
-      극 자기장 ~16 G(범위 3–280 G). Zapatero Osorio et al. 2026(arXiv:2605.22925) SPI 추정이고, 지구형 외계행성
-      최초의 자기장 추정치. 항성 플레어가 d 궤도위상에 phase-lock(>99.8% 유의) → helicity-driven 재결합 + Poynting flux
-      형식으로 도출(Mars 반경 가정). 관측>모델이라 기존 dynamo-scaling '약장' 추측을 대체.
+      A polar field of roughly sixteen gauss wraps the planet, comparable to Jupiter's and dozens of times
+      Earth's, the first magnetic field ever inferred for a rocky world beyond the Solar System. Theory
+      expected almost nothing here; a small, old, slowly turning world should have outlived its dynamo long
+      ago. The number was instead read off the star, whose flares keep time with the planet's orbit, and the
+      magnetic handshake needed to drive that rhythm sets the field's strength.
+    narrative_ko: >
+      약 16가우스의 극 자기장이 행성을 감싼다. 목성에 견줄 만하고 지구의 수십 배이며, 태양계 밖 암석 행성에서
+      추정된 최초의 자기장이다. 이론은 여기서 거의 아무것도 기대하지 않았다. 작고 늙고 느리게 도는 세계라면
+      다이너모가 진작 멎었어야 하기 때문이다. 그런데 이 수치는 별에서 읽혔다. 별의 플레어가 행성의 공전에 박자를
+      맞추는데, 그 리듬을 만드는 데 필요한 자기적 악수의 세기가 곧 이 값이다.
     fields:
       - name: magnetic_field
         value: "~16 G (극 자기장, 범위 3–280 G)"
@@ -1099,15 +1111,12 @@ decisions:
       criterion: [observation, derived-grounding]
       verdict: pass-in-window
       evidence: >
-        rationale: SPI 관측 추정(~16 G)이 RM22 느린자전 약장 추측을 supersede(오너 결정 2026-06-23, 관측 우선). caveat:
-        모델의존(helicity reconnection·Poynting flux, Mars 반경 가정)·범위 3–280 G로 광범. dynamo 이론(조석고정 느린자전
-        →약장)과 긴장이 있는데, 범위 하단 ~3 G가 이론 정합이나 central 16 G는 SPI 채택. 16 G 극장은 약하지 않음(지구 극 ~0.6 G·
-        목성 ~14 G 수준).
-
-        feature: phase-lock 플레어는 d의 distinctive 피처, 곧 '별을 자기적으로 때리는 안쪽 행성'이다. G8 방사선·G1 정체성에 연계.
-
-        paper: Zapatero Osorio et al. 2026 (arXiv:2605.22925) "Star-planet interaction in the Proxima system". 약장 기존
-        추측 출처=dynamo 문서 regime4(RM22).
+        SPI 관측 추정 극자기장 ~16 G(범위 3–280 G) 채택, 기존 dynamo-scaling 약장 추측(dynamo 문서 regime 4,
+        RM22)을 관측 우선으로 대체. 확인한 것: phase-lock 유의성 >99.8%(Zapatero Osorio 2026), helicity 재결합 +
+        Poynting flux 정식화(Mars 반경 가정)이고, 16 G 극장은 지구 극 ~0.6 G·목성 ~14 G와 비교해 약하지 않은
+        값. phase-lock 플레어는 방사선·정체성 행이 공유하는 d의 시그니처다. 유보: 모델 의존 추정이고 범위가
+        3–280 G로 넓다. 조석고정 느린 자전이 시사하는 약장 이론과의 긴장은 남는데, 범위 하단 ~3 G가 이론
+        정합이고 중앙값 16 G는 SPI 채택이다.
     refs: ["2605.22925"]
 
   - body: Proxima Cen d
