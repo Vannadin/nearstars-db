@@ -1165,7 +1165,11 @@ decisions:
     axis: rings
     status: gated
     driver: [window-selection]
-    narrative: "고리 없음 (극근접 뜨거운 암석, 근거·픽션 없음)."
+    provenance: >
+      2026-08-07: prose modernization (EN+KO absence line; wiki-link token in
+      evidence replaced with plain words). Owner-confirmed. No value changed.
+    narrative: "None. Nothing survives to make one this deep in the star's tide, and no observation or story asks for one."
+    narrative_ko: "없음. 별의 조석이 이렇게 깊은 곳엔 고리를 이룰 것이 남지 않고, 관측도 픽션도 고리를 요구하지 않는다."
     fields:
       - name: ring_structure
         value: "none"
@@ -1173,7 +1177,9 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "극근접 뜨거운 암석엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]])에 따라 feature 없으면 없음."
+      evidence: >
+        고리 부재 확정. 확인한 것: 극근접 뜨거운 암석은 고리 기본 부재이고, 근거 없는 디스크를 만들지 않는
+        search-and-verify 원칙에 따라 feature가 없으면 없음으로 둔다.
 
   - body: Proxima Cen d
     axis: satellites
