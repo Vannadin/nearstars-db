@@ -52,9 +52,23 @@ VIEWER_CRUMB = (
     f' &nbsp;·&nbsp; <a href="../../../index.html" style="{_CRUMB_STYLE}">DB</a></nav>')
 
 
+# docs/assets/에 vendoring된 사본으로 CDN 참조를 로컬화 (뷰어 페이지 기준 상대경로)
+_CDN_LOCAL = {
+    "https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js":
+        "../../../assets/plotly.min.js",
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js":
+        "../../../assets/three.module.js",
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/":
+        "../../../assets/jsm/",
+}
+
+
 def inject_crumb(path: Path, crumb: str = VIEWER_CRUMB):
-    """Insert the back-crumb overlay right after <body> (idempotent)."""
+    """Insert the back-crumb overlay right after <body>; localize CDN refs (idempotent)."""
     html = path.read_text()
+    for cdn, local in _CDN_LOCAL.items():
+        html = html.replace(cdn, local)
+    path.write_text(html)
     if 'Orbit viewers</a>' in html:
         return
     new, n = re.subn(r'(<body[^>]*>)', r'\1' + crumb, html, count=1)

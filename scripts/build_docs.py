@@ -33,8 +33,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 OUT_DIR = REPO / 'docs' / 'wiki'
 
-MARKED = 'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js'
-GH_CSS = 'https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css'
+# vendored locally (docs/assets/) — marked@12.0.2 / github-markdown-css@5.5.0
+MARKED = '../assets/marked.min.js'
+GH_CSS = '../assets/github-markdown-light.min.css'
 GH_BLOB = 'https://github.com/Vannadin/nearstars-db/blob/main/'
 
 # slug → output filename, filled by collect_docs(); used to rewrite links.

@@ -34,10 +34,13 @@ GitHub wiki demoted to a secondary link.
 - [x] `scan_viewers()` + host-slug prefix match → `3D` pill in the System cell
 
 ## B. CDN vendoring → `docs/assets/`
-- [ ] marked.min.js + github-markdown-light.css (wiki 58p) — best ratio
-- [ ] plotly.min.js (orbit viewers 16p)
-- [ ] three.js module + OrbitControls (starmap)
-- [ ] Google fonts (phase4 30p + starmap) → vendored woff2 or system fallback
+- [x] marked.min.js + github-markdown-light.css (wiki 58p)
+- [x] plotly.min.js (interactive 6p + validation 4p) — localized in inject_crumb
+- [x] three.module.js + jsm/controls/OrbitControls.js (starmap + orbit3d 6p —
+      orbit3d was three, not plotly)
+- [x] Geist/Geist Mono woff2 ×11 + geist.css (156 KB); Noto Sans KR dropped from
+      the request — Korean falls to the system stack (Apple SD Gothic / Malgun)
+- [x] remaining `src/href="https://…"` count: 0
 
 ## D. i18n stragglers
 - [ ] belt-viewer.html toggle (generator)

@@ -37,13 +37,11 @@ Note: `index.html` builds its rows at runtime from `reports-manifest.json`, so i
 
 These pages do not render as designed without network access.
 
-- `cdn.jsdelivr.net` — 69 pages
-- `fonts.googleapis.com` — 31 pages
 
 ## Heaviest pages
 
 - `phase4/orbit-viewers/trappist-1/interactive.html` — 1431 KB
-- `starmap.html` — 1258 KB
+- `starmap.html` — 1257 KB
 - `phase4/orbit-viewers/alpha-centauri/interactive.html` — 1023 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_leapfrog.html` — 1020 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_megno.html` — 1017 KB
@@ -51,4 +49,4 @@ These pages do not render as designed without network access.
 - `phase4/orbit-viewers/barnards-star/interactive.html` — 776 KB
 - `phase4/orbit-viewers/tau-cet/interactive.html` — 769 KB
 
-<!-- generated 2026-08-07 18:19 -->
+<!-- generated 2026-08-07 18:26 -->
