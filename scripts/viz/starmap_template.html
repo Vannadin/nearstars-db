@@ -21,7 +21,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--fg1);font
 #stage{position:fixed;inset:0}
 canvas{display:block}
 #topbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:12px;
-  padding:0 18px;z-index:20;background:linear-gradient(180deg,rgba(6,7,10,.82),transparent);pointer-events:none}
+  padding:0 18px;z-index:20;background:linear-gradient(180deg,rgba(6,7,10,.82),transparent);pointer-events:none;
+  flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+#topbar::-webkit-scrollbar{display:none}
+#topbar>*{flex-shrink:0}
+@media (max-width:1500px){ #topbar #nsnav{display:none} }
 #topbar>*{pointer-events:auto}
 .ns-brand{font-weight:700;font-size:13px;color:rgba(255,255,255,.94);text-decoration:none;letter-spacing:.2px;pointer-events:auto}
 #nsnav{font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;display:flex;gap:9px;align-items:center;pointer-events:auto}
@@ -31,9 +35,9 @@ canvas{display:block}
 #nsnav .ns-sep{color:rgba(255,255,255,.22)}
 .spacer{flex:1}
 .btn{font-family:var(--sans);font-size:12px;color:var(--fg2);background:var(--surf1);border:1px solid var(--bd1);
-  border-radius:8px;padding:6px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.16s}
+  border-radius:8px;padding:6px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.16s;white-space:nowrap;flex-shrink:0}
 .seg{display:inline-flex;padding:2px;gap:2px;background:var(--surf1);border:1px solid var(--bd1);border-radius:8px;pointer-events:auto}
-.seg button{background:transparent;border:none;color:var(--fg3,rgba(255,255,255,.56));font:500 12px/1 var(--sans);padding:5px 10px;border-radius:6px;cursor:pointer}
+.seg button{background:transparent;border:none;color:var(--fg3,rgba(255,255,255,.56));font:500 12px/1 var(--sans);padding:5px 10px;border-radius:6px;cursor:pointer;white-space:nowrap}
 .seg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
 .btn:hover{background:var(--surf2);color:var(--fg1)}
 .btn.on{color:var(--accent);border-color:var(--accent-glow);background:rgba(122,168,255,.1)}
