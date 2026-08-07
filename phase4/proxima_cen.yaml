@@ -1300,12 +1300,12 @@ decisions:
       hold its spin, which makes it the only freely rotating planet in the system. Nothing constrains the rotation
       period, so it is set at 27 hours, a little slower than Neptune's. The orbit's tilt to our line of sight is
       unknown as well. An astrometric attempt to pin the inclination was disputed along with the signal itself, so the
-      orientation is left free at emit.
+      orientation is left unset.
     narrative_ko: >
       별에서 1.5 AU 떨어져 5.2년에 한 바퀴를 돈다. 궤도는 거의 원에 가깝다. 이만큼 멀면 조석이 자전을 붙들지 못해,
       이 계에서 유일하게 자유롭게 도는 행성이 된다. 자전 주기는 관측으로 묶이지 않아 27시간으로 정했다. 해왕성보다
       조금 느린 값이다. 궤도가 우리 시선에 얼마나 기울었는지도 모른다. 천체측정으로 경사각을 잡으려는 시도가 있었지만
-      그 결과는 신호 자체와 함께 반박됐고, 그래서 배향은 emit 단계에서 자유롭게 정한다.
+      그 결과는 신호 자체와 함께 반박됐고, 그래서 궤도의 배향은 정해 두지 않는다.
     fields:
       - name: semi_major_axis_au
         value: 1.5
