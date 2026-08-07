@@ -13,6 +13,9 @@ OUT = os.path.join(D, '..', '..', 'docs', 'belt-viewer.html')
 KO = {'earth': '지구', 'jupiter': '목성', 'saturn': '토성', 'uranus': '천왕성',
       'neptune': '해왕성', 'mercury': '수성', 'ganymede': '가니메데',
       'proxima_d': '프록시마 d'}
+EN = {'earth': 'Earth', 'jupiter': 'Jupiter', 'saturn': 'Saturn', 'uranus': 'Uranus',
+      'neptune': 'Neptune', 'mercury': 'Mercury', 'ganymede': 'Ganymede',
+      'proxima_d': 'Proxima d'}
 OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 
 
@@ -20,6 +23,7 @@ def conv(key, b):
     body, kind = key.rsplit('_', 1)
     label = KO[body] + (' 스톡' if kind == 'stock' else ' 물리')
     p = {'label': label,
+         'label_en': EN[body] + (' stock' if kind == 'stock' else ' phys'),
          'view': {'R': b['R'], 'tilt': abs(b.get('tilt', 0)), 'z': 0,
                   'offset': b.get('offset', 0)}}
     for belt in ('inner', 'outer'):
@@ -47,7 +51,8 @@ CFG2VIEW = {'dist': 'dist', 'radius': 'rad', 'deform_xy': 'dxy', 'compression': 
 
 for name, spec in load_nearstars_specs().items():
     m, bd = spec['model'], spec['body']
-    p = {'label': f'{name} (NearStars)', 'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
+    p = {'label': f'{name} (NearStars)', 'label_en': f'{name} (NearStars)',
+         'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
     extent = 5.0
     for kind, grad in (('inner', 3.3), ('outer', 2.2)):
         belt = {CFG2VIEW[k[len(kind) + 1:]]: v for k, v in m.items() if k.startswith(kind)}

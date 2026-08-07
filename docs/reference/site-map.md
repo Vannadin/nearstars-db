@@ -49,4 +49,4 @@ These pages do not render as designed without network access.
 - `phase4/orbit-viewers/barnards-star/interactive.html` — 776 KB
 - `phase4/orbit-viewers/tau-cet/interactive.html` — 769 KB
 
-<!-- generated 2026-08-07 18:26 -->
+<!-- generated 2026-08-07 18:36 -->

@@ -165,16 +165,20 @@ inv = _vnorm(inv) if any(inv) else [0.0, 0.0, 1.0]
 # middle frame: the center's own orbital plane if it orbits something (moon mode:
 # the parent planet's orbit); else the most-massive orbiting body's plane (star mode).
 if center_first:
-    ref_up, ref_label = _orbit_normal(*center_first), "중심체 공전면"
+    ref_up, ref_label, ref_label_en = _orbit_normal(*center_first), "중심체 공전면", "center's orbit plane"
 else:
     mb = max(names, key=lambda n: mass_of.get(n, 0.0))
     _, _, _, inc0, node0, _ = raw[mb][0]
-    ref_up, ref_label = _orbit_normal(inc0, node0), f"{mb.split()[-1]} 궤도면"
+    ref_up = _orbit_normal(inc0, node0)
+    ref_label, ref_label_en = f"{mb.split()[-1]} 궤도면", f"{mb.split()[-1]} orbit plane"
 
 frames = [
-    {"name": "invariable", "label": "불변면", "up": [round(x, 5) for x in inv]},
-    {"name": "reference", "label": ref_label, "up": [round(x, 5) for x in ref_up]},
-    {"name": "sky", "label": "하늘면(관측)", "up": [0.0, 0.0, 1.0]},
+    {"name": "invariable", "label": "불변면", "label_en": "invariable plane",
+     "up": [round(x, 5) for x in inv]},
+    {"name": "reference", "label": ref_label, "label_en": ref_label_en,
+     "up": [round(x, 5) for x in ref_up]},
+    {"name": "sky", "label": "하늘면(관측)", "label_en": "sky plane (observed)",
+     "up": [0.0, 0.0, 1.0]},
 ]
 
 # plasma-ish palette matching plot_moons.py order
@@ -230,15 +234,16 @@ HTML = r"""<!-- __TITLE__ : 안정성 런 3D 궤도 세차 애니메이션 (자�
 </style>
 <div id="hud">
   <h1>__SYSTEM__ — <span class="v">__VERDICT__</span></h1>
-  <div class="sub">center __CENTER__ · 단위 __UNIT__ · __INTEG__ dt=__DT__min · |ΔE/E|=__DE__</div>
-  <div id="frames"><span class="lab">기준면</span></div>
+  <div class="sub">center __CENTER__ · <span data-l="unit">단위</span> __UNIT__ · __INTEG__ dt=__DT__min · |ΔE/E|=__DE__</div>
+  <div id="frames"><span class="lab" data-l="frame">기준면</span></div>
   <div id="leg"></div>
 </div>
 <div id="ctl">
-  <button id="play">⏸ 일시정지</button>
+  <button id="play">⏸</button>
   <span id="yr"></span>
   <input id="scrub" type="range" min="0" max="1000" value="0">
-  <span class="note">궤도면·이심률 진화 = 실측. 천체 마커의 공전 위상 = 예시(빠른 궤도는 스냅샷으로 복원 불가).</span>
+  <span class="note" data-l="note">궤도면·이심률 진화 = 실측. 천체 마커의 공전 위상 = 예시(빠른 궤도는 스냅샷으로 복원 불가).</span>
+  <button id="lang">EN</button>
 </div>
 <script type="importmap">
 { "imports": {
@@ -324,7 +329,7 @@ function applyFrame(i){
   framesUI.querySelectorAll('button').forEach((b,bi)=>b.classList.toggle('on', bi===i));
 }
 DATA.frames.forEach((fr,i)=>{
-  const b=document.createElement('button'); b.textContent=fr.label; b.onclick=()=>applyFrame(i);
+  const b=document.createElement('button'); b.dataset.fi=i; b.onclick=()=>applyFrame(i);
   framesUI.appendChild(b);
 });
 applyFrame(0);  // default = invariable plane
@@ -378,8 +383,26 @@ function updateRing(m, el){
 // playback
 let fpos=0, playing=true, speed=nF/600; // ~10 s to sweep the run at 60fps
 const yr=document.getElementById('yr'), scrub=document.getElementById('scrub'), playBtn=document.getElementById('play');
-playBtn.onclick=()=>{playing=!playing; playBtn.textContent=playing?'⏸ 일시정지':'▶ 재생';};
-scrub.oninput=()=>{fpos=(+scrub.value/1000)*(nF-1); playing=false; playBtn.textContent='▶ 재생';};
+function setPlayLabel(){playBtn.textContent=(playing?'⏸ ':'▶ ')+L[lang][playing?'pause':'play'];}
+playBtn.onclick=()=>{playing=!playing; setPlayLabel();};
+scrub.oninput=()=>{fpos=(+scrub.value/1000)*(nF-1); playing=false; setPlayLabel();};
+
+// language toggle (nearstars-lang, EN default) — UI strings only
+const L={ko:{unit:'단위',frame:'기준면',pause:'일시정지',play:'재생',
+             note:'궤도면·이심률 진화 = 실측. 천체 마커의 공전 위상 = 예시(빠른 궤도는 스냅샷으로 복원 불가).'},
+         en:{unit:'unit',frame:'ref. plane',pause:'pause',play:'play',
+             note:'Orbit-plane and eccentricity evolution are measured; body-marker orbital phase is illustrative (fast orbits cannot be recovered from snapshots).'}};
+let lang=localStorage.getItem('nearstars-lang')==='ko'?'ko':'en';
+const langBtn=document.getElementById('lang');
+function applyLang(){
+  document.querySelectorAll('[data-l]').forEach(el=>{el.textContent=L[lang][el.dataset.l];});
+  framesUI.querySelectorAll('button').forEach(b=>{
+    const fr=DATA.frames[+b.dataset.fi]; b.textContent=lang==='ko'?fr.label:(fr.label_en||fr.label);});
+  langBtn.textContent=lang==='ko'?'EN':'한국어';
+  setPlayLabel();
+}
+langBtn.onclick=()=>{lang=lang==='ko'?'en':'ko'; localStorage.setItem('nearstars-lang',lang); applyLang();};
+applyLang();
 
 function tick(){
   requestAnimationFrame(tick);

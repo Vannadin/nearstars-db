@@ -43,8 +43,12 @@ GitHub wiki demoted to a secondary link.
 - [x] remaining `src/href="https://…"` count: 0
 
 ## D. i18n stragglers
-- [ ] belt-viewer.html toggle (generator)
-- [ ] orbit3d.html ×6 toggle (build_viewers.py)
+- [x] belt-viewer.html: full UI dictionary (header, presets, controls, readouts,
+      canvas captions, footer EN translation); preset labels get label_en from the
+      builder; toggle in the preset bar, EN default; cfg-export comments stay Korean
+      (tool output, not prose)
+- [x] orbit3d.html ×6: HUD/controls/frame labels bilingual (label_en carried in
+      DATA.frames), toggle in the control bar, EN default; node --check clean on both
 
 ## Verify (every step)
 - [ ] `python3 scripts/build_sitemap.py` regenerated after each structure change

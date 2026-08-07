@@ -110,14 +110,15 @@
 <div class="wrap">
   <header>
     <nav style="font-size:12px;margin-bottom:12px;opacity:.85"><a href="index.html">DB</a> · <a href="starmap.html">3D Map</a> · <a href="reports.html">Reports</a> · <a href="phase4/index.html">Phase 4</a> · <a href="tools.html">Tools</a> · <a href="wiki/index.html">Wiki</a></nav>
-    <h1>Kerbalism 방사선대 단면 뷰어</h1>
-    <p>인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.</p>
+    <h1 id="h1t">Kerbalism 방사선대 단면 뷰어</h1>
+    <p id="introT">인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.</p>
   </header>
 
   <div class="presets" id="presets">
     <span class="sep"></span>
-    <button data-act="reset">현재값 초기화</button>
-    <button data-act="copy" class="copy">📋 Kerbalism cfg 복사</button>
+    <button data-act="reset" id="resetBtn">현재값 초기화</button>
+    <button data-act="copy" class="copy" id="copyBtn">📋 Kerbalism cfg 복사</button>
+    <button data-act="lang" id="langBtn">EN</button>
   </div>
 
   <div class="grid">
@@ -126,17 +127,17 @@
         <canvas id="cv"></canvas>
         <canvas id="cv3d" style="display:none"></canvas>
         <div class="readout" id="ro">커서를 올려보세요</div>
-        <div class="sun">☀ 항성 → +x (오른쪽)</div>
+        <div class="sun" id="sunT">☀ 항성 → +x (오른쪽)</div>
         <div class="mode" id="mode">
-          <button data-m="2d" class="on">단면</button><button data-m="3d">3D</button>
+          <button data-m="2d" class="on" id="mode2d">단면</button><button data-m="3d">3D</button>
         </div>
       </div>
       <div class="legend">
         <span class="k"><span class="bar"></span></span>
         <span id="scaleLo">0</span>–<span id="scaleHi">10</span> rad/h
-        <span class="k"><span class="swatch"></span> 자기권계면</span>
-        <span class="k"><span class="swatch" style="background:repeating-linear-gradient(90deg,var(--accent-warm) 0 5px,transparent 5px 8px)"></span> Shue 기준</span>
-        <span class="k"><span class="swatch body"></span> 바디</span>
+        <span class="k"><span class="swatch"></span> <span data-l="legPause">자기권계면</span></span>
+        <span class="k"><span class="swatch" style="background:repeating-linear-gradient(90deg,var(--accent-warm) 0 5px,transparent 5px 8px)"></span> <span data-l="legShue">Shue 기준</span></span>
+        <span class="k"><span class="swatch body"></span> <span data-l="legBody">바디</span></span>
       </div>
     </div>
 
@@ -148,6 +149,39 @@
 
 <script>
 "use strict";
+// ---- language (nearstars-lang, EN default) ----
+let lang = localStorage.getItem('nearstars-lang')==='ko' ? 'ko' : 'en';
+const T = {
+  ko:{
+    h1:'Kerbalism 방사선대 단면 뷰어',
+    intro:'인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.',
+    reset:'현재값 초기화', copy:'📋 Kerbalism cfg 복사', copied:'✓ 복사됨',
+    hover:'커서를 올려보세요', drag3d:'드래그 = 회전 · 휠 = 줌',
+    sun:'☀ 항성 → +x (오른쪽)', mode2d:'단면',
+    legPause:'자기권계면', legShue:'Shue 기준', legBody:'바디', show:'표시',
+    webgl:'WebGL을 사용할 수 없습니다',
+    deformNote:'deform은 z=0 평면에서 항상 0 → <b>slice_z=0.26</b> 자동 설정',
+    pos:'위치', inBody:'바디 내부', zone:'구역',
+    zInner:'내대', zOuter:'외대', zMag:'자기권 내',
+    shueSoft:'연화 Shue (C∞)', boardFix:'(보드 고정)', pauseLink:'(pause 연동)',
+    shueDash:'흰 점선 = 순수 Shue(열림) 대조'
+  },
+  en:{
+    h1:'Kerbalism radiation belt section viewer',
+    intro:'Meridional (z=0) section computed from the in-game <code>RadiationModel</code> SDFs verbatim. Color = dose (rad/h), cyan line = magnetopause. Unit = body radii.',
+    reset:'Reset values', copy:'📋 Copy Kerbalism cfg', copied:'✓ copied',
+    hover:'Hover the canvas', drag3d:'drag = rotate · wheel = zoom',
+    sun:'☀ star → +x (right)', mode2d:'section',
+    legPause:'magnetopause', legShue:'Shue reference', legBody:'body', show:'show',
+    webgl:'WebGL is unavailable',
+    deformNote:'deform is identically 0 on the z=0 plane → <b>slice_z=0.26</b> set automatically',
+    pos:'position', inBody:'inside body', zone:'zone',
+    zInner:'inner belt', zOuter:'outer belt', zMag:'inside magnetosphere',
+    shueSoft:'softened Shue (C∞)', boardFix:'(board-pinned)', pauseLink:'(tracks pause)',
+    shueDash:'white dashes = pure (open) Shue reference'
+  }
+};
+const t = k => T[lang][k];
 // ---- exact Kerbalism SDFs (src/Kerbalism/Radiation/Radiation.cs) ----
 function torusSDF(x,y,z,P){
   const px = x*(x<0?P.ext:P.comp);
@@ -181,47 +215,49 @@ const state={
   view:{R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,offset:0}
 };
 
-const PRESETS={"jupiter_stock": {"label": "목성 스톡", "view": {"R": 16, "tilt": 10.3, "z": 0, "offset": 0}, "inner": {"radiation": 300, "grad": 3.3, "dist": 6.0, "rad": 1.0, "comp": 1.05, "ext": 0.9}, "outer": {"radiation": 50, "grad": 2.2, "dist": 6.5, "rad": 6.5, "comp": 1.05, "ext": 0.85}, "pause": {"radiation": -0.01, "rad": 60, "comp": 1.05, "ext": 0.01, "hscale": 1.02}}, "jupiter_phys": {"label": "목성 물리", "view": {"R": 18, "tilt": 10.3, "z": 0, "offset": 0.1}, "inner": {"radiation": 1500, "grad": 3.3, "dist": 1.3435, "rad": 1.159, "dxy": 0.693, "comp": 1.05, "ext": 0.9, "bdist": 0.0003, "brad": 0.8889, "bdxy": 0.5866}, "outer": {"radiation": 150, "grad": 2.2, "dist": 3.2565, "rad": 3.2269, "dxy": 0.1483, "comp": 1.05, "ext": 0.9, "bdist": 0.0001, "brad": 4.238, "bdxy": 1.85}, "pause": {"radiation": -0.01, "rad": 75.6, "comp": 1.2, "ext": 0.05, "hscale": 1.15}}, "saturn_stock": {"label": "토성 스톡", "view": {"R": 16, "tilt": 0, "z": 0, "offset": 0}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 150, "grad": 2.2, "dist": 7.0, "rad": 7.0, "comp": 1.05, "ext": 0.95}, "pause": {"radiation": -0.011, "rad": 20, "comp": 1.02, "ext": 0.1, "hscale": 1.0}}, "saturn_phys": {"label": "토성 물리", "view": {"R": 16, "tilt": 0.01, "z": 0, "offset": 0}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 10, "grad": 2.2, "dist": 2.6173, "rad": 2.3184, "dxy": 0.6735, "comp": 1.05, "ext": 0.85, "bdist": 0.9889, "brad": 0.8883, "bdxy": 0.6616}, "pause": {"radiation": -0.011, "rad": 28.8, "comp": 1.2, "ext": 0.05, "hscale": 1.1}}, "uranus_stock": {"label": "천왕성 스톡", "view": {"R": 16, "tilt": 58.6, "z": 0, "offset": 0.3}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 4, "grad": 2.2, "dist": 7.0, "rad": 7.0, "comp": 1.05, "ext": 0.95}, "pause": {"radiation": -0.01, "rad": 20, "comp": 1.02, "ext": 0.1, "hscale": 1.0}}, "uranus_phys": {"label": "천왕성 물리", "view": {"R": 16, "tilt": 59, "z": 0, "offset": 0.3}, "inner": {"radiation": 40, "grad": 3.3, "dist": 2.1836, "rad": 1.93, "dxy": 0.6732, "comp": 1.02, "ext": 1.0, "bdist": 0.0563, "brad": 0.8488, "bdxy": 0.3727}, "outer": {"radiation": 8, "grad": 2.2, "dist": 4.3078, "rad": 3.8644, "dxy": 0.6644, "comp": 1.02, "ext": 0.95, "bdist": 2.3256, "brad": 1.9463, "bdxy": 0.7307}, "pause": {"radiation": -0.01, "rad": 21.6, "comp": 1.2, "ext": 0.1, "hscale": 1.1}}, "neptune_stock": {"label": "해왕성 스톡", "view": {"R": 16, "tilt": 47, "z": 0, "offset": 0.55}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 2.5, "grad": 2.2, "dist": 7.0, "rad": 7.0, "comp": 1.05, "ext": 0.95}, "pause": {"radiation": -0.007, "rad": 20, "comp": 1.02, "ext": 0.1, "hscale": 1.0}}, "neptune_phys": {"label": "해왕성 물리", "view": {"R": 16, "tilt": 47, "z": 0, "offset": 0.55}, "inner": {"radiation": 30, "grad": 3.3, "dist": 2.1836, "rad": 1.93, "dxy": 0.6732, "comp": 1.02, "ext": 1.0, "bdist": 0.0563, "brad": 0.8488, "bdxy": 0.3727}, "outer": {"radiation": 6, "grad": 2.2, "dist": 5.9998, "rad": 5.4076, "dxy": 0.6573, "comp": 1.02, "ext": 0.95, "bdist": 2.5862, "brad": 1.9982, "bdxy": 0.8656}, "pause": {"radiation": -0.007, "rad": 31.8, "comp": 1.2, "ext": 0.08, "hscale": 1.1}}, "mercury_stock": {"label": "수성 스톡", "view": {"R": 3, "tilt": 6, "z": 0, "offset": 0.208}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"radiation": -0.001, "rad": 1.6, "comp": 1.4, "ext": 0.05, "hscale": 1.0, "deform": 0.1}}, "mercury_phys": {"label": "수성 물리", "view": {"R": 3, "tilt": 2, "z": 0, "offset": 0.2}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"radiation": -0.001, "rad": 2.03, "comp": 1.4, "ext": 0.05, "hscale": 1.0, "deform": 0.1}}, "earth_stock": {"label": "지구 스톡", "view": {"R": 8, "tilt": 11, "z": 0, "offset": 0, "shue": 0.58, "shue_r0": 10, "shue_L": 200}, "inner": {"radiation": 10.376, "grad": 3.3, "dist": 0.813, "rad": 0.7, "dxy": 0.572, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 0.915, "bdxy": 0.5}, "outer": {"radiation": 2.214, "grad": 2.2, "dist": 2.6338, "rad": 2.48, "dxy": 0.7225, "comp": 1.01, "ext": 1.0, "bdist": 1.4412, "brad": 1.4875, "bdxy": 0.7225}, "pause": {"radiation": -0.01, "rad": 15, "comp": 1.5, "ext": 0.075, "hscale": 1.1}}, "earth_phys": {"label": "지구 물리", "view": {"R": 8, "tilt": 11, "z": 0, "offset": 0, "shue": 0.58, "shue_r0": 10, "shue_L": 200}, "inner": {"radiation": 10.376, "grad": 3.3, "dist": 0.9413, "rad": 0.7698, "dxy": 0.7314, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 1.1836, "bdxy": 1.0505}, "outer": {"radiation": 2.214, "grad": 2.2, "dist": 3.0123, "rad": 2.7018, "dxy": 0.662, "comp": 1.01, "ext": 1.0, "bdist": 1.3175, "brad": 1.1596, "bdxy": 0.6748}, "pause": {"radiation": -0.01, "rad": 15, "comp": 1.5, "ext": 0.075, "hscale": 1.1}}, "ganymede_stock": {"label": "가니메데 스톡", "view": {"R": 4, "tilt": 4, "z": 0, "offset": 0}, "inner": {"radiation": 0.33, "grad": 3.3, "dist": 0.8, "rad": 0.6}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"on": false, "rad": 5}}, "ganymede_phys": {"label": "가니메데 물리", "view": {"R": 4, "tilt": 4, "z": 0, "offset": 0}, "inner": {"radiation": 0.33, "grad": 3.3, "dist": 0.8758, "rad": 0.7327, "dxy": 0.715, "comp": 1.05, "ext": 0.9, "bdist": 0.0222, "brad": 0.9408, "bdxy": 0.8693}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"radiation": -0.01, "rad": 2.75, "comp": 1.375, "ext": 0.7, "hscale": 1.0}}, "proxima_d_phys": {"label": "프록시마 d 물리", "view": {"R": 12, "tilt": 10, "z": 0, "offset": 0}, "inner": {"radiation": 5000, "grad": 3.3, "dist": 0.9413, "rad": 0.7698, "dxy": 0.7314, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 1.0, "bdxy": 1.0}, "outer": {"radiation": 1000, "grad": 2.2, "dist": 2.7, "rad": 2.3, "dxy": 0.662, "comp": 1.01, "ext": 1.0, "bdist": 1.2, "brad": 1.0, "bdxy": 0.6748}, "pause": {"radiation": -0.01, "rad": 10.5, "comp": 1.5, "ext": 0.075, "hscale": 1.1}}, "polyphemus": {"label": "Polyphemus (NearStars)", "inner": {"dist": 1.3793, "rad": 1.159, "dxy": 0.7142, "comp": 1.05, "ext": 0.9, "bdist": 0.2656, "brad": 0.7491, "bdxy": 0.6384, "radiation": 300, "grad": 3.3}, "outer": {"dist": 4.2824, "rad": 3.8588, "dxy": 0.659, "comp": 1.05, "ext": 0.9, "bdist": 2.0738, "brad": 1.6687, "bdxy": 0.8079, "radiation": 30, "grad": 2.2}, "pause": {"on": true, "rad": 28.2, "comp": 1.2, "ext": 0.05, "hscale": 1.1, "deform": 0, "dscale": 1, "radiation": -0.01}, "view": {"R": 12, "tilt": 10, "z": 0, "offset": 0}}, "pandora": {"label": "Pandora (NearStars)", "inner": {"dist": 1.0193, "rad": 0.8489, "dxy": 0.7196, "bdist": 0.0971, "brad": 0.9349, "bdxy": 0.8829, "radiation": 4.0, "grad": 3.3}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"on": true, "rad": 2.99, "comp": 1.15, "ext": 0.6, "hscale": 1, "deform": 0, "dscale": 1, "radiation": -0.01}, "view": {"R": 5, "tilt": 10, "z": 0, "offset": 0}}, "proxima cen c": {"label": "Proxima Cen c (NearStars)", "inner": {"dist": 1.5, "rad": 0.86, "dxy": 0.66, "bdist": 0.0001, "brad": 1.0, "bdxy": 0.5, "deform": 0.115, "radiation": 8.0, "grad": 1.9}, "outer": {"dist": 2.8, "rad": 2.5, "dxy": 0.66, "bdist": 1.54, "brad": 1.42, "bdxy": 0.66, "deform": 0.5, "radiation": 1.2, "grad": 2.2}, "pause": {"on": true, "rad": 16.84, "comp": 1.414, "ext": 0.135, "hscale": 1.0, "deform": 0, "dscale": 1, "radiation": -0.01}, "view": {"R": 8, "tilt": 50, "z": 0, "offset": 0.4, "shue": 0.5, "shue_r0": 11.905, "shue_L": 125}}, "shueDemo": {"label": "Shue 데모", "view": {"R": 210, "tilt": 0, "z": 0, "offset": 0, "shue": 0.58}, "inner": {"radiation": 10.376, "grad": 3.3, "dist": 0.9413, "rad": 0.7698, "dxy": 0.7314, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 1.1836, "bdxy": 1.0505}, "outer": {"radiation": 2.214, "grad": 2.2, "dist": 3.0123, "rad": 2.7018, "dxy": 0.662, "comp": 1.01, "ext": 1.0, "bdist": 1.3175, "brad": 1.1596, "bdxy": 0.6748}, "pause": {"radiation": -0.01, "rad": 15, "comp": 1.5, "ext": 0.075, "hscale": 1.1, "alpha": 0.35}}};
+const PRESETS={"jupiter_stock": {"label": "목성 스톡", "label_en": "Jupiter stock", "view": {"R": 16, "tilt": 10.3, "z": 0, "offset": 0}, "inner": {"radiation": 300, "grad": 3.3, "dist": 6.0, "rad": 1.0, "comp": 1.05, "ext": 0.9}, "outer": {"radiation": 50, "grad": 2.2, "dist": 6.5, "rad": 6.5, "comp": 1.05, "ext": 0.85}, "pause": {"radiation": -0.01, "rad": 60, "comp": 1.05, "ext": 0.01, "hscale": 1.02}}, "jupiter_phys": {"label": "목성 물리", "label_en": "Jupiter phys", "view": {"R": 18, "tilt": 10.3, "z": 0, "offset": 0.1}, "inner": {"radiation": 1500, "grad": 3.3, "dist": 1.3435, "rad": 1.159, "dxy": 0.693, "comp": 1.05, "ext": 0.9, "bdist": 0.0003, "brad": 0.8889, "bdxy": 0.5866}, "outer": {"radiation": 150, "grad": 2.2, "dist": 3.2565, "rad": 3.2269, "dxy": 0.1483, "comp": 1.05, "ext": 0.9, "bdist": 0.0001, "brad": 4.238, "bdxy": 1.85}, "pause": {"radiation": -0.01, "rad": 75.6, "comp": 1.2, "ext": 0.05, "hscale": 1.15}}, "saturn_stock": {"label": "토성 스톡", "label_en": "Saturn stock", "view": {"R": 16, "tilt": 0, "z": 0, "offset": 0}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 150, "grad": 2.2, "dist": 7.0, "rad": 7.0, "comp": 1.05, "ext": 0.95}, "pause": {"radiation": -0.011, "rad": 20, "comp": 1.02, "ext": 0.1, "hscale": 1.0}}, "saturn_phys": {"label": "토성 물리", "label_en": "Saturn phys", "view": {"R": 16, "tilt": 0.01, "z": 0, "offset": 0}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 10, "grad": 2.2, "dist": 2.6173, "rad": 2.3184, "dxy": 0.6735, "comp": 1.05, "ext": 0.85, "bdist": 0.9889, "brad": 0.8883, "bdxy": 0.6616}, "pause": {"radiation": -0.011, "rad": 28.8, "comp": 1.2, "ext": 0.05, "hscale": 1.1}}, "uranus_stock": {"label": "천왕성 스톡", "label_en": "Uranus stock", "view": {"R": 16, "tilt": 58.6, "z": 0, "offset": 0.3}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 4, "grad": 2.2, "dist": 7.0, "rad": 7.0, "comp": 1.05, "ext": 0.95}, "pause": {"radiation": -0.01, "rad": 20, "comp": 1.02, "ext": 0.1, "hscale": 1.0}}, "uranus_phys": {"label": "천왕성 물리", "label_en": "Uranus phys", "view": {"R": 16, "tilt": 59, "z": 0, "offset": 0.3}, "inner": {"radiation": 40, "grad": 3.3, "dist": 2.1836, "rad": 1.93, "dxy": 0.6732, "comp": 1.02, "ext": 1.0, "bdist": 0.0563, "brad": 0.8488, "bdxy": 0.3727}, "outer": {"radiation": 8, "grad": 2.2, "dist": 4.3078, "rad": 3.8644, "dxy": 0.6644, "comp": 1.02, "ext": 0.95, "bdist": 2.3256, "brad": 1.9463, "bdxy": 0.7307}, "pause": {"radiation": -0.01, "rad": 21.6, "comp": 1.2, "ext": 0.1, "hscale": 1.1}}, "neptune_stock": {"label": "해왕성 스톡", "label_en": "Neptune stock", "view": {"R": 16, "tilt": 47, "z": 0, "offset": 0.55}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"radiation": 2.5, "grad": 2.2, "dist": 7.0, "rad": 7.0, "comp": 1.05, "ext": 0.95}, "pause": {"radiation": -0.007, "rad": 20, "comp": 1.02, "ext": 0.1, "hscale": 1.0}}, "neptune_phys": {"label": "해왕성 물리", "label_en": "Neptune phys", "view": {"R": 16, "tilt": 47, "z": 0, "offset": 0.55}, "inner": {"radiation": 30, "grad": 3.3, "dist": 2.1836, "rad": 1.93, "dxy": 0.6732, "comp": 1.02, "ext": 1.0, "bdist": 0.0563, "brad": 0.8488, "bdxy": 0.3727}, "outer": {"radiation": 6, "grad": 2.2, "dist": 5.9998, "rad": 5.4076, "dxy": 0.6573, "comp": 1.02, "ext": 0.95, "bdist": 2.5862, "brad": 1.9982, "bdxy": 0.8656}, "pause": {"radiation": -0.007, "rad": 31.8, "comp": 1.2, "ext": 0.08, "hscale": 1.1}}, "mercury_stock": {"label": "수성 스톡", "label_en": "Mercury stock", "view": {"R": 3, "tilt": 6, "z": 0, "offset": 0.208}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"radiation": -0.001, "rad": 1.6, "comp": 1.4, "ext": 0.05, "hscale": 1.0, "deform": 0.1}}, "mercury_phys": {"label": "수성 물리", "label_en": "Mercury phys", "view": {"R": 3, "tilt": 2, "z": 0, "offset": 0.2}, "inner": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"radiation": -0.001, "rad": 2.03, "comp": 1.4, "ext": 0.05, "hscale": 1.0, "deform": 0.1}}, "earth_stock": {"label": "지구 스톡", "label_en": "Earth stock", "view": {"R": 8, "tilt": 11, "z": 0, "offset": 0, "shue": 0.58, "shue_r0": 10, "shue_L": 200}, "inner": {"radiation": 10.376, "grad": 3.3, "dist": 0.813, "rad": 0.7, "dxy": 0.572, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 0.915, "bdxy": 0.5}, "outer": {"radiation": 2.214, "grad": 2.2, "dist": 2.6338, "rad": 2.48, "dxy": 0.7225, "comp": 1.01, "ext": 1.0, "bdist": 1.4412, "brad": 1.4875, "bdxy": 0.7225}, "pause": {"radiation": -0.01, "rad": 15, "comp": 1.5, "ext": 0.075, "hscale": 1.1}}, "earth_phys": {"label": "지구 물리", "label_en": "Earth phys", "view": {"R": 8, "tilt": 11, "z": 0, "offset": 0, "shue": 0.58, "shue_r0": 10, "shue_L": 200}, "inner": {"radiation": 10.376, "grad": 3.3, "dist": 0.9413, "rad": 0.7698, "dxy": 0.7314, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 1.1836, "bdxy": 1.0505}, "outer": {"radiation": 2.214, "grad": 2.2, "dist": 3.0123, "rad": 2.7018, "dxy": 0.662, "comp": 1.01, "ext": 1.0, "bdist": 1.3175, "brad": 1.1596, "bdxy": 0.6748}, "pause": {"radiation": -0.01, "rad": 15, "comp": 1.5, "ext": 0.075, "hscale": 1.1}}, "ganymede_stock": {"label": "가니메데 스톡", "label_en": "Ganymede stock", "view": {"R": 4, "tilt": 4, "z": 0, "offset": 0}, "inner": {"radiation": 0.33, "grad": 3.3, "dist": 0.8, "rad": 0.6}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"on": false, "rad": 5}}, "ganymede_phys": {"label": "가니메데 물리", "label_en": "Ganymede phys", "view": {"R": 4, "tilt": 4, "z": 0, "offset": 0}, "inner": {"radiation": 0.33, "grad": 3.3, "dist": 0.8758, "rad": 0.7327, "dxy": 0.715, "comp": 1.05, "ext": 0.9, "bdist": 0.0222, "brad": 0.9408, "bdxy": 0.8693}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"radiation": -0.01, "rad": 2.75, "comp": 1.375, "ext": 0.7, "hscale": 1.0}}, "proxima_d_phys": {"label": "프록시마 d 물리", "label_en": "Proxima d phys", "view": {"R": 12, "tilt": 10, "z": 0, "offset": 0}, "inner": {"radiation": 5000, "grad": 3.3, "dist": 0.9413, "rad": 0.7698, "dxy": 0.7314, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 1.0, "bdxy": 1.0}, "outer": {"radiation": 1000, "grad": 2.2, "dist": 2.7, "rad": 2.3, "dxy": 0.662, "comp": 1.01, "ext": 1.0, "bdist": 1.2, "brad": 1.0, "bdxy": 0.6748}, "pause": {"radiation": -0.01, "rad": 10.5, "comp": 1.5, "ext": 0.075, "hscale": 1.1}}, "polyphemus": {"label": "Polyphemus (NearStars)", "label_en": "Polyphemus (NearStars)", "inner": {"dist": 1.3793, "rad": 1.159, "dxy": 0.7142, "comp": 1.05, "ext": 0.9, "bdist": 0.2656, "brad": 0.7491, "bdxy": 0.6384, "radiation": 300, "grad": 3.3}, "outer": {"dist": 4.2824, "rad": 3.8588, "dxy": 0.659, "comp": 1.05, "ext": 0.9, "bdist": 2.0738, "brad": 1.6687, "bdxy": 0.8079, "radiation": 30, "grad": 2.2}, "pause": {"on": true, "rad": 28.2, "comp": 1.2, "ext": 0.05, "hscale": 1.1, "deform": 0, "dscale": 1, "radiation": -0.01}, "view": {"R": 12, "tilt": 10, "z": 0, "offset": 0}}, "pandora": {"label": "Pandora (NearStars)", "label_en": "Pandora (NearStars)", "inner": {"dist": 1.0193, "rad": 0.8489, "dxy": 0.7196, "bdist": 0.0971, "brad": 0.9349, "bdxy": 0.8829, "radiation": 4.0, "grad": 3.3}, "outer": {"on": false, "radiation": 0, "dist": 1, "rad": 0.5}, "pause": {"on": true, "rad": 2.99, "comp": 1.15, "ext": 0.6, "hscale": 1, "deform": 0, "dscale": 1, "radiation": -0.01}, "view": {"R": 5, "tilt": 10, "z": 0, "offset": 0}}, "proxima cen c": {"label": "Proxima Cen c (NearStars)", "label_en": "Proxima Cen c (NearStars)", "inner": {"dist": 1.5, "rad": 0.86, "dxy": 0.66, "bdist": 0.0001, "brad": 1.0, "bdxy": 0.5, "deform": 0.115, "radiation": 8.0, "grad": 1.9}, "outer": {"dist": 2.8, "rad": 2.5, "dxy": 0.66, "bdist": 1.54, "brad": 1.42, "bdxy": 0.66, "deform": 0.5, "radiation": 1.2, "grad": 2.2}, "pause": {"on": true, "rad": 16.84, "comp": 1.414, "ext": 0.135, "hscale": 1.0, "deform": 0, "dscale": 1, "radiation": -0.01}, "view": {"R": 8, "tilt": 50, "z": 0, "offset": 0.4, "shue": 0.5, "shue_r0": 11.905, "shue_L": 125}}, "shueDemo": {"label": "Shue 데모", "label_en": "Earth phys", "view": {"R": 210, "tilt": 0, "z": 0, "offset": 0, "shue": 0.58}, "inner": {"radiation": 10.376, "grad": 3.3, "dist": 0.9413, "rad": 0.7698, "dxy": 0.7314, "comp": 1.01, "ext": 1.0, "bdist": 0.0001, "brad": 1.1836, "bdxy": 1.0505}, "outer": {"radiation": 2.214, "grad": 2.2, "dist": 3.0123, "rad": 2.7018, "dxy": 0.662, "comp": 1.01, "ext": 1.0, "bdist": 1.3175, "brad": 1.1596, "bdxy": 0.6748}, "pause": {"radiation": -0.01, "rad": 15, "comp": 1.5, "ext": 0.075, "hscale": 1.1, "alpha": 0.35}}};
 
 // ---- control definitions ----
-const F=(k,label,min,max,step)=>({k,label,min,max,step});
+const F=(k,label,min,max,step,label_en)=>({k,label,min,max,step,label_en});
 const GROUPS=[
-  {id:"inner",title:"내대 (inner belt)",cls:"g-inner",toggle:true,
+  {id:"inner",title:"내대 (inner belt)",title_en:"inner belt",cls:"g-inner",toggle:true,
    rows:[F("radiation","radiation_inner",0,400,0.5),F("grad","inner_gradient",0.5,6,0.1),
      F("dist","inner_dist",0,12,0.01),F("rad","inner_radius",0.05,8,0.01),F("dxy","inner_deform_xy",0.2,2,0.001),
      F("comp","inner_compression",1,2,0.01),F("ext","inner_extension",0.02,1.5,0.005),
      F("bdist","inner_border_dist",0,8,0.001),F("brad","inner_border_radius",0,6,0.005),
-     F("bdxy","inner_border_deform_xy",0.2,2,0.01),F("deform","inner_deform",0,0.5,0.005),F("dscale","inner_deform_scale ⚗비-cfg",0.1,2,0.01)]},
-  {id:"outer",title:"외대 (outer belt)",cls:"g-outer",toggle:true,
+     F("bdxy","inner_border_deform_xy",0.2,2,0.01),F("deform","inner_deform",0,0.5,0.005),F("dscale","inner_deform_scale ⚗non-cfg",0.1,2,0.01)]},
+  {id:"outer",title:"외대 (outer belt)",title_en:"outer belt",cls:"g-outer",toggle:true,
    rows:[F("radiation","radiation_outer",0,400,0.5),F("grad","outer_gradient",0.5,6,0.1),
      F("dist","outer_dist",0,20,0.01),F("rad","outer_radius",0.05,12,0.01),F("dxy","outer_deform_xy",0.2,2,0.001),
      F("comp","outer_compression",1,2,0.01),F("ext","outer_extension",0.02,1.5,0.005),
      F("bdist","outer_border_dist",0,12,0.001),F("brad","outer_border_radius",0,10,0.005),
-     F("bdxy","outer_border_deform_xy",0.2,2,0.01),F("deform","outer_deform",0,0.5,0.005),F("dscale","outer_deform_scale ⚗비-cfg",0.1,2,0.01)]},
-  {id:"pause",title:"자기권계면 (pause)",cls:"g-pause",toggle:true,
+     F("bdxy","outer_border_deform_xy",0.2,2,0.01),F("deform","outer_deform",0,0.5,0.005),F("dscale","outer_deform_scale ⚗non-cfg",0.1,2,0.01)]},
+  {id:"pause",title:"자기권계면 (pause)",title_en:"magnetopause (pause)",cls:"g-pause",toggle:true,
    rows:[F("rad","pause_radius",0,70,0.1),F("radiation","radiation_pause",-0.05,0,0.001),
      F("comp","pause_compression",1,2,0.01),F("ext","pause_extension",0.02,1.5,0.005),
-     F("hscale","pause_height_scale",0.5,2,0.01),F("deform","pause_deform",0,0.5,0.005),F("dscale","pause_deform_scale ⚗비-cfg",0.1,2,0.01),
-     F("alpha","불투명도 (viz)",0,1,0.05),F("off","pause_offset ⚗비-cfg",0,30,0.1)]},
-  {id:"view",title:"뷰 / 배향",cls:"g-view",toggle:false,
+     F("hscale","pause_height_scale",0.5,2,0.01),F("deform","pause_deform",0,0.5,0.005),F("dscale","pause_deform_scale ⚗non-cfg",0.1,2,0.01),
+     F("alpha","불투명도 (viz)",0,1,0.05,"opacity (viz)"),F("off","pause_offset ⚗non-cfg",0,30,0.1)]},
+  {id:"view",title:"뷰 / 배향",title_en:"view / orientation",cls:"g-view",toggle:false,
    rows:[F("R","view_halfwidth (R)",2,70,0.5),F("tilt","dipole_tilt (°)",0,90,0.5),F("offset","geomagnetic_offset",0,1,0.005),F("z","slice_z",0,6,0.05),
-     F("shue","Shue α 오버레이 (0=끔)",0,0.7,0.01),
-     F("shue_r0","Shue r0 고정 (0=pause 연동)",0,50,0.1),
-     F("shue_L","Shue 꼬리 L 고정 (0=pause 연동)",0,300,1)]}
+     F("shue","Shue α 오버레이 (0=끔)",0,0.7,0.01,"Shue α overlay (0=off)"),
+     F("shue_r0","Shue r0 고정 (0=pause 연동)",0,50,0.1,"Shue r0 pin (0=track pause)"),
+     F("shue_L","Shue 꼬리 L 고정 (0=pause 연동)",0,300,1,"Shue tail L pin (0=track pause)")]}
 ];
 
 // ---- build controls ----
 const controls=document.getElementById("controls");
 function fmt(v){const a=Math.abs(v);return a>=100?v.toFixed(0):a>=10?v.toFixed(1):a>=1?v.toFixed(2):v.toFixed(3);}
+const _sumEls=[], _labelEls=[];   // (el, def) 쌍 — 언어 전환 시 재라벨
 GROUPS.forEach((g,gi)=>{
   const det=document.createElement("details"); det.className=g.cls; if(gi<3)det.open=(gi===0);
   const sum=document.createElement("summary");
-  sum.innerHTML=`<span class="dot"></span>${g.title}<span class="tri">▶</span>`;
+  sum.innerHTML=`<span class="dot"></span><span class="gt">${g.title}</span><span class="tri">▶</span>`;
+  _sumEls.push([sum,g]);
   det.appendChild(sum);
   const box=document.createElement("div"); box.className="body-rows";
   if(g.toggle){
     const tr=document.createElement("div"); tr.className="toggle-row";
-    tr.innerHTML=`<span>표시</span><div class="sw" data-tg="${g.id}"></div>`;
+    tr.innerHTML=`<span data-l="show">표시</span><div class="sw" data-tg="${g.id}"></div>`;
     box.appendChild(tr);
   }
   g.rows.forEach(r=>{
@@ -229,6 +265,7 @@ GROUPS.forEach((g,gi)=>{
     row.innerHTML=`<label title="${r.label}">${r.label}</label>
       <input type="range" min="${r.min}" max="${r.max}" step="${r.step}" data-g="${g.id}" data-k="${r.k}">
       <input type="number" class="num" min="${r.min}" step="${r.step}" data-g="${g.id}" data-k="${r.k}">`;
+    _labelEls.push([row.querySelector('label'),r]);
     box.appendChild(row);
   });
   det.appendChild(box); controls.appendChild(det);
@@ -268,7 +305,7 @@ function applyControl(g,k,v){
   // deform은 sin(x·5)sin(y·7)sin(z·6)이라 z=0 자오면에서 항등 0 → 처음 켜면 slice_z를 최대 진폭(π/12≈0.26)으로 자동 넛지
   if(k==='deform' && v>0 && viewMode==='2d' && state.view.z===0){
     state.view.z=0.26;
-    ro.innerHTML='deform은 z=0 평면에서 항상 0 → <b>slice_z=0.26</b> 자동 설정';
+    ro.innerHTML=t('deformNote');
   }
   syncControls(); scheduleRender();
 }
@@ -293,6 +330,7 @@ presetBar.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b)return;
   if(b.dataset.act==='copy'){ copyCfg(b); return; }
   if(b.dataset.act==='reset'){ applyPreset(currentPreset||'earth'); return; }
+  if(b.dataset.act==='lang'){ lang=lang==='ko'?'en':'ko'; localStorage.setItem('nearstars-lang',lang); applyLang(); return; }
   applyPreset(b.dataset.p);
 });
 // 현재 상태 → Kerbalism cfg (레거시 필드, 오늘 작동하는 스키마)
@@ -342,7 +380,7 @@ function toCfg(){
 }
 function copyCfg(btn){
   const txt=toCfg(), old=btn.textContent;
-  const done=()=>{ btn.textContent='✓ 복사됨'; btn.classList.add('done');
+  const done=()=>{ btn.textContent=t('copied'); btn.classList.add('done');
     setTimeout(()=>{btn.textContent=old;btn.classList.remove('done');},1400); };
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(txt).then(done,()=>fallback(txt,done));
@@ -381,13 +419,13 @@ function doseAt(x,y){ // world coords -> {dose, zone}
   const mag=Math.sqrt(x*x+y*y+z*z);
   if(mag<1) return {dose:NaN,zone:'body',mag};
   if(state.inner.on){ const d=torusSDF(xr,yr,z,state.inner);
-    if(d<0){ dose+=clamp(state.inner.grad*(-d)/state.inner.rad,0,1)*state.inner.radiation; zone.push('내대'); } }
+    if(d<0){ dose+=clamp(state.inner.grad*(-d)/state.inner.rad,0,1)*state.inner.radiation; zone.push(t('zInner')); } }
   if(state.outer.on){ const d=torusSDF(xr,yr,z,state.outer);
-    if(d<0){ dose+=clamp(state.outer.grad*(-d)/state.outer.rad,0,1)*state.outer.radiation; zone.push('외대'); } }
+    if(d<0){ dose+=clamp(state.outer.grad*(-d)/state.outer.rad,0,1)*state.outer.radiation; zone.push(t('zOuter')); } }
   let pd=1;
   // 계면은 항성풍이 정하는 형상 — 다이폴 틸트/이탈과 무관하게 항성정렬 프레임에서 평가
   if(state.pause.on){ pd=pauseSDF(x,y,z,state.pause);
-    if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation; if(!zone.length)zone.push('자기권 내'); } }
+    if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation; if(!zone.length)zone.push(t('zMag')); } }
   return {dose,zone:zone.join('+')||'—',mag,pd};
 }
 function render(){
@@ -482,9 +520,9 @@ function render(){
         ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
         ctx.fillStyle='rgba(255,154,82,.95)';
         ctx.beginPath(); ctx.arc(c+nose*ppr,c,2.5,0,7); ctx.fill();
-        ctx.fillText('연화 Shue (C∞)  α='+alS.toFixed(2)+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+(fixed?'(보드 고정)':'(pause 연동)')+' ε='+eps.toFixed(4), c+nose*ppr+5, c-6);
+        ctx.fillText(t('shueSoft')+'  α='+alS.toFixed(2)+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+(fixed?t('boardFix'):t('pauseLink'))+' ε='+eps.toFixed(4), c+nose*ppr+5, c-6);
         ctx.fillStyle='rgba(255,255,255,.5)';
-        ctx.fillText('흰 점선 = 순수 Shue(열림) 대조', c-L*ppr*0.9, c+16);
+        ctx.fillText(t('shueDash'), c-L*ppr*0.9, c+16);
       } else {
         // ── 열린 Shue (기존 동작)
         ctx.strokeStyle='rgba(255,154,82,.85)'; ctx.setLineDash([6,4]);
@@ -597,7 +635,7 @@ void main(){
 function glInit(){
  if(gl)return true;
  gl=cv3.getContext('webgl',{antialias:false,depth:false});
- if(!gl){ro.innerHTML='WebGL을 사용할 수 없습니다';return false;}
+ if(!gl){ro.innerHTML=t('webgl');return false;}
  function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
   if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
  prog=gl.createProgram();
@@ -659,8 +697,8 @@ document.getElementById('mode').addEventListener('click',e=>{
  document.querySelectorAll('#mode button').forEach(x=>x.classList.toggle('on',x===b));
  cv.style.display=viewMode==='2d'?'block':'none';
  cv3.style.display=viewMode==='3d'?'block':'none';
- if(viewMode==='3d'){resize3d();ro.innerHTML='드래그 = 회전 · 휠 = 줌';}
- else ro.innerHTML='커서를 올려보세요';
+ if(viewMode==='3d'){resize3d();ro.innerHTML=t('drag3d');}
+ else ro.innerHTML=t('hover');
  scheduleRender();
 });
 // 3D interaction: drag rotate, wheel zoom
@@ -698,14 +736,14 @@ cv.addEventListener('mousemove',e=>{
   const R=state.view.R, wpp=(2*R)/SZ;
   const x=(px-SZ/2)*wpp, y=(SZ/2-py)*wpp;
   const res=doseAt(x,y);
-  if(res.zone==='body'){ ro.innerHTML=`위치 <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R<br>바디 내부`; return; }
-  ro.innerHTML=`위치 <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R · |r|=${res.mag.toFixed(2)}<br>`+
-    `dose <b>${res.dose.toFixed(2)}</b> rad/h · 구역 ${res.zone}`+
+  if(res.zone==='body'){ ro.innerHTML=`${t('pos')} <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R<br>${t('inBody')}`; return; }
+  ro.innerHTML=`${t('pos')} <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R · |r|=${res.mag.toFixed(2)}<br>`+
+    `dose <b>${res.dose.toFixed(2)}</b> rad/h · ${t('zone')} ${res.zone}`+
     (state.view.z>0?`<br><span class="z">slice z=${state.view.z.toFixed(2)}</span>`:'');
 });
-cv.addEventListener('mouseleave',()=>ro.innerHTML='커서를 올려보세요');
+cv.addEventListener('mouseleave',()=>ro.innerHTML=t('hover'));
 
-document.getElementById('foot').innerHTML=
+const FOOT_KO=
  '충실도: <code>Inner/Outer_func</code>=토러스 SDF <code>max(d1,−d2)</code>(border 차집합), <code>Pause_func</code>=눌린 구, dose=<code>clamp(gradient·(−SDF)/radius,0,1)·intensity</code> — 전부 <code>src/Kerbalism/Radiation/Radiation.cs</code> 원문 그대로. '+
  '<code>deform</code>은 sin(x·5)sin(y·7)sin(z·6)이라 좌표평면 위에선 항등 0 — 2D에서 처음 켜면 <code>slice_z</code>가 최대 진폭 0.26으로 자동 설정됩니다(3D에선 그대로 보임). '+
  '3D 모드 = 같은 SDF를 GLSL로 이식해 볼륨 레이마칭(110스텝, 색=dose 방출·청록=계면 껍질). 드래그 회전·휠 줌. '+
@@ -714,6 +752,15 @@ document.getElementById('foot').innerHTML=
  '주황 = <b>연화 Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — 단일 C∞ 폐곡선(이음매·크리스 없음), 테이퍼 m=1 고정(기저형, 노브 없음). 꼬리 길이 L은 <b>Kerbalism 계면 꼬리에 연동</b>(pause_radius/extension+offset), ε=1/((L/r0)^{1/α}−1)로 정확히 L서 닫힘. L 연동 덕에 주간측은 순수 Shue와 ~0.3% 이내(흰 점선 대조). plugins/KerbalismShuePause 권장안. 「Shue 데모」 프리셋이 원클릭. '+
  '값은 슬라이더 또는 우측 숫자칸 직접 입력(범위 초과 허용). 뷰 반너비 슬라이더의 최대값은 장면 전체가 들어오는 크기로 자동 갱신(끝까지 밀면 전체 보기). '+
  '스톡 프리셋 = KSP-RO/ROKerbalism 실배포 cfg(2026-07-24 검증), 물리 프리셋 = 쌍극자 L-셸 수치 피팅(fit_belts.py, 캡션의 IoU), NearStars 프리셋 = Phase 4 도출. 근거·렌더: <a href="https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts">위키 Radiation Belts</a> · docs/reference/solar-system-radiation-belts.md';
+const FOOT_EN=
+ 'Fidelity: <code>Inner/Outer_func</code> = torus SDF <code>max(d1,−d2)</code> (border subtraction), <code>Pause_func</code> = squashed sphere, dose = <code>clamp(gradient·(−SDF)/radius,0,1)·intensity</code> — all verbatim from <code>src/Kerbalism/Radiation/Radiation.cs</code>. '+
+ '<code>deform</code> is sin(x·5)sin(y·7)sin(z·6), identically 0 on coordinate planes — turning it on in 2D auto-sets <code>slice_z</code> to the max-amplitude 0.26 (visible as-is in 3D). '+
+ '3D mode ports the same SDFs to GLSL volume raymarching (110 steps; color = dose emission, cyan = pause shell). Drag to rotate, wheel to zoom. '+
+ '<code>pause_offset</code> ⚗ = experimental translation geometry (pulls the whole shape tailward) — <b>not a Kerbalism cfg field</b>, so it cannot be emitted; kept for comparison with the compression approach. '+
+ 'Shue overlay = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0 = current nose (pause_radius/comp−offset), evaluated in the star-aligned frame so the comparison is exact at tilt=0. '+
+ 'Orange = <b>softened Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — a single C∞ closed curve (no seam or crease), taper pinned at m=1 (base form, no knob). Tail length L <b>tracks the Kerbalism pause tail</b> (pause_radius/extension+offset), with ε=1/((L/r0)^{1/α}−1) closing exactly at L. Thanks to the L link the dayside stays within ~0.3% of pure Shue (white dashed reference). Recommended for plugins/KerbalismShuePause; the "Shue demo" preset is one click. '+
+ 'Set values with the sliders or by typing in the number boxes (out-of-range allowed). The view half-width slider\'s max auto-grows to fit the whole scene (push to the end for a full view). '+
+ 'Stock presets = deployed KSP-RO/ROKerbalism cfg (verified 2026-07-24); phys presets = numeric dipole L-shell fits (fit_belts.py, IoU in the caption); NearStars presets = Phase 4 derivations. Grounding and renders: <a href="https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts">wiki Radiation Belts</a> · docs/reference/solar-system-radiation-belts.md';
 
 // preset buttons from injected PRESETS (labels carried per entry)
 (function(){
@@ -723,9 +770,30 @@ document.getElementById('foot').innerHTML=
     bar.insertBefore(b,sep);
   });
 })();
+
+// ---- language switch ----
+function applyLang(){
+  document.getElementById('h1t').textContent=t('h1');
+  document.getElementById('introT').innerHTML=t('intro');
+  document.getElementById('resetBtn').textContent=t('reset');
+  document.getElementById('copyBtn').textContent=t('copy');
+  document.getElementById('sunT').textContent=t('sun');
+  document.getElementById('mode2d').textContent=t('mode2d');
+  document.getElementById('langBtn').textContent=lang==='ko'?'EN':'한국어';
+  document.querySelectorAll('[data-l]').forEach(el=>{el.textContent=t(el.dataset.l);});
+  _sumEls.forEach(([sum,g])=>{sum.querySelector('.gt').textContent=(lang==='en'&&g.title_en)?g.title_en:g.title;});
+  _labelEls.forEach(([el,r])=>{const s=(lang==='en'&&r.label_en)?r.label_en:r.label; el.textContent=s; el.title=s;});
+  document.querySelectorAll('#presets button[data-p]').forEach(b=>{
+    const p=PRESETS[b.dataset.p]; b.textContent=(lang==='en'&&p.label_en)?p.label_en:(p.label||b.dataset.p);});
+  document.getElementById('foot').innerHTML=lang==='ko'?FOOT_KO:FOOT_EN;
+  ro.innerHTML=(typeof viewMode!=='undefined'&&viewMode==='3d')?t('drag3d'):t('hover');
+  scheduleRender();   // 캔버스 캡션(연화 Shue 라벨) 즉시 갱신
+}
+
 // init
 new ResizeObserver(resize).observe(cv);
 applyPreset('earth_phys');
+applyLang();
 resize();
 </script>
 
