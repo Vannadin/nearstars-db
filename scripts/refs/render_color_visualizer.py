@@ -28,6 +28,9 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts" / "refs"))
 import cie_color                        # noqa: E402  (aurora emitter swatches)
+sys.path.insert(0, str(ROOT / "scripts" / "pipeline"))
+from _nav import global_nav             # noqa: E402  (공용 전역 nav)
+GLOBAL_NAV = global_nav()
 sys.path.insert(0, str(ROOT / ".claude/skills/firefly-cfg/scripts"))
 from emit_firefly_cfg import (  # noqa: E402
     PALETTES, STREAK_PALETTE, DEFAULTS_HEX_RGB,
@@ -1051,7 +1054,7 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <body>
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb"><a href="index.html">DB</a> · <a href="starmap.html">3D Map</a> · <a href="reports.html">Reports</a> · <span>Colors</span> · <a href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">Wiki ↗</a></div>
+  <div class="crumb">{GLOBAL_NAV}</div>
   <div class="seg lang-toggle" id="lang-seg">
     <button data-lang="ko">한</button>
     <button class="on" data-lang="en">EN</button>
@@ -1370,6 +1373,7 @@ def main() -> int:
     aurora_json = json.dumps(aurora_data, ensure_ascii=False)
 
     html_out = TEMPLATE.format(
+        GLOBAL_NAV=GLOBAL_NAV,
         periodic_table=periodic,
         molecular_panel=molecular,
         palettes_section=palettes_section,

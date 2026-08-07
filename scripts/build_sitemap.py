@@ -36,13 +36,7 @@ EXCLUDE = ("phase3/_papers/",)
 
 # Defects the owner has seen and accepted (or that are pending a separate task).
 # A defect outside this set fails --audit-only, so a regression is loud.
-BASELINE_ORPHANS = {
-    "belt-viewer.html",
-    "ice-stability.html",
-    "phase4/index.html",
-    "phase4/orbit-viewers/index.html",
-    "phase4/orbit-viewers/alpha-centauri-validation/index.html",
-}
+BASELINE_ORPHANS = set()  # 2026-08-07 site-optimization pass 이후 고아 0 — 유지할 것
 
 SECTIONS = [
     ("root", "Top-level surfaces", lambda p: "/" not in p),

@@ -23,6 +23,7 @@ Usage:
 """
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -36,6 +37,34 @@ SCRIPTS = SIM / "scripts"
 MANIFEST = SIM / "viewer-manifest.yaml"
 GALLERY = ROOT / "docs/phase4/orbit-viewers"
 PY = sys.executable
+
+sys.path.insert(0, str(ROOT / "scripts" / "pipeline"))
+from _nav import global_nav  # noqa: E402  (공용 전역 nav)
+
+# 복사되는 뷰어 페이지(plotly 전체화면)에 띄우는 되돌아가기 크럼 오버레이.
+_CRUMB_STYLE = 'color:#7fb0ff;text-decoration:none'
+VIEWER_CRUMB = (
+    '<nav style="position:fixed;top:8px;left:12px;z-index:1000;'
+    'font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);'
+    'padding:4px 10px;border-radius:6px">'
+    f'<a href="../index.html" style="{_CRUMB_STYLE}">← Orbit viewers</a>'
+    f' &nbsp;·&nbsp; <a href="../../index.html" style="{_CRUMB_STYLE}">Phase 4</a>'
+    f' &nbsp;·&nbsp; <a href="../../../index.html" style="{_CRUMB_STYLE}">DB</a></nav>')
+
+
+def inject_crumb(path: Path, crumb: str = VIEWER_CRUMB):
+    """Insert the back-crumb overlay right after <body> (idempotent)."""
+    html = path.read_text()
+    if 'Orbit viewers</a>' in html:
+        return
+    new, n = re.subn(r'(<body[^>]*>)', r'\1' + crumb, html, count=1)
+    if n == 0 and '</head>' in html:
+        new = html.replace('</head>', '</head>' + crumb, 1)
+    elif n == 0 and '</style>' in html:  # 암시적 <head>/<body> 구조 (뷰어 페이지)
+        new = html.replace('</style>', '</style>' + crumb, 1)
+    elif n == 0:
+        new = html + crumb
+    path.write_text(new)
 
 
 def slug(name):
@@ -75,6 +104,8 @@ def collect(name, out_dir):
     shutil.copy2(out_dir / f"{name}_orbits.png", dst / "orbits.png")
     shutil.copy2(out_dir / f"{name}_orbit3d.html", dst / "orbit3d.html")
     shutil.copy2(out_dir / f"{name}_interactive.html", dst / "interactive.html")
+    inject_crumb(dst / "orbit3d.html")
+    inject_crumb(dst / "interactive.html")
     summary = json.loads((out_dir / f"{name}_summary.json").read_text())
     integ = summary["integration"]
     return {
@@ -125,11 +156,15 @@ def write_gallery(cards):
   .pill.bad{{color:#e57;background:rgba(229,85,119,.13)}}
   .sub{{display:block;color:#8a94a8;font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums}}
   .seg{{float:right}} .seg button{{background:#1c2740;color:#cdd6e6;border:1px solid #2c3a5a;border-radius:6px;padding:4px 10px;cursor:pointer}}
+  .seg button.on{{border-color:#7fb0ff}}
+  .crumb{{font-size:12px;margin-bottom:8px}} .crumb a{{color:#7fb0ff;text-decoration:none}}
 </style>
 <header>
-  <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
+  <div class="seg"><button id="ko">한국어</button><button id="en" class="on">EN</button></div>
+  <nav class="crumb">{global_nav('../../')}</nav>
   <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
-  <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span></div>
+  <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span>
+    <span data-i18n> 적분기 교차 검증은 <a href="alpha-centauri-validation/index.html" style="color:#7fb0ff">알파센 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="alpha-centauri-validation/index.html" style="color:#7fb0ff">Alpha Cen validation set</a>.</span></div>
 </header>
 <div class="grid">
 {chr(10).join(rows)}
@@ -137,7 +172,9 @@ def write_gallery(cards):
 <script>
 const ko=document.getElementById('ko'),en=document.getElementById('en');
 function set(e){{document.querySelectorAll('[data-i18n]').forEach(x=>x.hidden=e);document.querySelectorAll('[data-en]').forEach(x=>x.hidden=!e);ko.classList.toggle('on',!e);en.classList.toggle('on',e);}}
-ko.onclick=()=>set(false);en.onclick=()=>set(true);
+ko.onclick=()=>{{set(false);localStorage.setItem('nearstars-lang','ko');}};
+en.onclick=()=>{{set(true);localStorage.setItem('nearstars-lang','en');}};
+set(localStorage.getItem('nearstars-lang')!=='ko');
 </script>
 """
     (GALLERY / "index.html").write_text(html)

@@ -147,8 +147,11 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
         '<nav class="side">',
         '<a class="brand" href="index.html">NearStars <span>docs</span></a>',
         '<a class="nav-x" href="../index.html">⌗ System database</a>',
+        '<a class="nav-x" href="../starmap.html">✦ 3D star map</a>',
         '<a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>',
-        '<a class="nav-x" href="../firefly-colors.html">◳ Element &amp; plasma colors</a>',
+        '<a class="nav-x" href="../phase4/index.html">◫ Phase 4 boards</a>',
+        '<a class="nav-x" href="../tools.html">⚒ Tools</a>',
+        '<a class="nav-x" href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">↗ GitHub wiki</a>',
     ]
     labels = {'reference': 'Reference', 'plans': 'Plans'}
     for g in ('reference', 'plans'):

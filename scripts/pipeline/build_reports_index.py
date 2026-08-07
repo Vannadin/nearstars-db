@@ -23,6 +23,7 @@ import sys
 from pathlib import Path
 
 from _naming import to_url_slug
+from _nav import global_nav
 
 
 def load_db_names(repo: Path) -> tuple[dict[str, str], dict[str, tuple[str, str]]]:
@@ -103,7 +104,25 @@ def scan_phase4(repo: Path) -> dict[str, str]:
     return out
 
 
-def build_manifest(host_names, planet_map, phase2_slugs, phase3_slugs, phase4_map):
+def scan_viewers(repo: Path) -> dict[str, str]:
+    """Map orbit-viewer dir name -> its interactive page path (docs-relative).
+
+    Viewer dirs are named by system url-slug (docs/phase4/orbit-viewers/<slug>/),
+    so a host row matches when its slug equals the dir or extends it by a
+    component suffix (alpha-centauri-a -> alpha-centauri).
+    """
+    root = repo / 'docs' / 'phase4' / 'orbit-viewers'
+    out: dict[str, str] = {}
+    if not root.exists():
+        return out
+    for d in sorted(root.iterdir()):
+        if d.is_dir() and (d / 'interactive.html').exists():
+            out[d.name] = f'phase4/orbit-viewers/{d.name}/interactive.html'
+    return out
+
+
+def build_manifest(host_names, planet_map, phase2_slugs, phase3_slugs, phase4_map,
+                   viewer_map=None):
     """Group by host. Returns {host_display_name: {phase2: path?, phase3: {letter: path}, phase4: {letter: path}}}.
 
     Phase 4 board pages are keyed by the same body-slug as Phase 3, so each P4
@@ -111,11 +130,21 @@ def build_manifest(host_names, planet_map, phase2_slugs, phase3_slugs, phase4_ma
     board bodies (no P3 slug) are not curation reports and don't appear here.
     """
     manifest: dict[str, dict] = {}
+    viewer_map = viewer_map or {}
+
+    def viewer_for(host_slug: str):
+        for vdir, path in viewer_map.items():
+            if host_slug == vdir or host_slug.startswith(vdir + '-'):
+                return path
+        return None
 
     for slug in phase2_slugs:
         host = host_names.get(slug, slug)
         manifest.setdefault(host, {'phase2': None, 'phase3': {}, 'phase4': {}})
         manifest[host]['phase2'] = f'phase2/{slug}.html'
+        v = viewer_for(slug)
+        if v:
+            manifest[host]['viewer'] = v
 
     for slug in phase3_slugs:
         if slug in planet_map:
@@ -133,6 +162,9 @@ def build_manifest(host_names, planet_map, phase2_slugs, phase3_slugs, phase4_ma
         manifest[host]['phase3'][letter] = f'phase3/{slug}.html'
         if slug in phase4_map:
             manifest[host]['phase4'][letter] = phase4_map[slug]
+        v = viewer_for(host_slug)
+        if v:
+            manifest[host].setdefault('viewer', v)
 
     return manifest
 
@@ -158,6 +190,7 @@ main { max-width: 980px }
 .pill-p3 { background: #2a1a30; color: #c890d0 }
 .pill-p4 { background: #1e2f22; color: #7fc98f }
 .pill-mf { background: rgba(216,160,64,0.15); color: var(--warn-soft); border: 1px solid rgba(216,160,64,0.35) }
+.pill-3d { background: #12283a; color: #7ac8e0 }
 .lang-toggle { margin-left: auto }
 .empty { color: var(--fg-faint); font-style: italic }
 .sidepanel { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--bd-strong); border-radius: 6px; background: var(--bg-card); display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
@@ -184,7 +217,7 @@ main { max-width: 980px }
 
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb"><a href="index.html">DB</a> · <a href="starmap.html">3D Map</a> · <span>Reports</span> · <a href="wiki/reference__methodology-index.html">Methodology</a> · <a href="firefly-colors.html">Colors</a> · <a href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">Wiki ↗</a></div>
+  <div class="crumb">__NAV__ · <a href="wiki/reference__methodology-index.html">Methodology</a></div>
   <div class="seg lang-toggle" id="lang-seg">
     <button data-lang="ko">한</button>
     <button class="on" data-lang="en">EN</button>
@@ -300,9 +333,14 @@ def render_html(manifest: dict, has_manual_fetch: bool) -> str:
 
             p3_cell = letter_chips(info.get('phase3', {}), 'pill-p3')
             p4_cell = letter_chips(info.get('phase4', {}), 'pill-p4')
+            viewer_chip = (
+                f' &nbsp;<a href="{info["viewer"]}" title="Orbit viewer">'
+                f'<span class="pill pill-3d">3D</span></a>'
+                if info.get('viewer') else ''
+            )
             row_parts.append(
                 f'        <tr>\n'
-                f'          <td class="sys" data-label="System">{host_name}</td>\n'
+                f'          <td class="sys" data-label="System">{host_name}{viewer_chip}</td>\n'
                 f'          <td data-label="Phase 2">{p2_cell}</td>\n'
                 f'          <td data-label="Phase 3">{p3_cell}</td>\n'
                 f'          <td data-label="Phase 4">{p4_cell}</td>\n'
@@ -320,7 +358,10 @@ def render_html(manifest: dict, has_manual_fetch: bool) -> str:
             '  </div>'
         )
 
-    return PAGE_TEMPLATE.replace('__ROWS__', rows).replace('__SIDEPANELS__', sidepanels)
+    return (PAGE_TEMPLATE
+            .replace('__NAV__', global_nav(here='Reports'))
+            .replace('__ROWS__', rows)
+            .replace('__SIDEPANELS__', sidepanels))
 
 
 def main() -> int:
@@ -330,7 +371,9 @@ def main() -> int:
     host_names, planet_map = load_db_names(repo)
     phase2_slugs, phase3_slugs = scan_reports(repo)
     phase4_map = scan_phase4(repo)
-    manifest = build_manifest(host_names, planet_map, phase2_slugs, phase3_slugs, phase4_map)
+    viewer_map = scan_viewers(repo)
+    manifest = build_manifest(host_names, planet_map, phase2_slugs, phase3_slugs, phase4_map,
+                              viewer_map)
 
     has_manual_fetch = (repo / 'docs' / 'phase3' / 'manual-fetch.html').exists()
 

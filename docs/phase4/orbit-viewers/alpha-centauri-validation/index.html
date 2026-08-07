@@ -22,7 +22,8 @@
   .seg button.on{background:#2b60b0}
 </style>
 <header>
-  <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
+  <div class="seg"><button id="ko">한국어</button><button id="en" class="on">EN</button></div>
+  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7fb0ff;text-decoration:none">← Orbit viewers</a> · <a href="../../index.html" style="color:#7fb0ff;text-decoration:none">Phase 4</a> · <a href="../../../tools.html" style="color:#7fb0ff;text-decoration:none">Tools</a> · <a href="../../../index.html" style="color:#7fb0ff;text-decoration:none">DB</a></nav>
   <h1>Alpha Centauri A b (Polyphemus) — <span data-i18n>궤도 안정성 검증</span><span data-en hidden>orbit stability validation</span></h1>
   <div class="lead"><span data-i18n>위성계와 행성계를 각각 두 방식으로 교차 검증했습니다. leapfrog(고정 10분 스텝)는 Principia 인게임 적분기와 정합하고, IAS15+MEGNO는 결정론적 카오스를 판정합니다(MEGNO≈2 정칙, &gt;5 카오스).</span><span data-en hidden>Both the moon system and the planet orbit are cross-checked two ways. Leapfrog (fixed 10-min step) matches Principia's in-game integrator; IAS15+MEGNO diagnoses deterministic chaos (MEGNO≈2 regular, &gt;5 chaotic).</span></div>
 </header>
@@ -62,5 +63,7 @@
 <script>
 const ko=document.getElementById('ko'),en=document.getElementById('en');
 function set(e){document.querySelectorAll('[data-i18n]').forEach(x=>x.hidden=e);document.querySelectorAll('[data-en]').forEach(x=>x.hidden=!e);ko.classList.toggle('on',!e);en.classList.toggle('on',e);}
-ko.onclick=()=>set(false);en.onclick=()=>set(true);
+ko.onclick=()=>{set(false);localStorage.setItem('nearstars-lang','ko');};
+en.onclick=()=>{set(true);localStorage.setItem('nearstars-lang','en');};
+set(localStorage.getItem('nearstars-lang')!=='ko');
 </script>

@@ -19,6 +19,7 @@ import yaml
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 from pipeline._naming import to_url_slug  # noqa: E402
+from pipeline._nav import global_nav  # noqa: E402
 
 HEX_RE = re.compile(r"#[0-9a-fA-F]{6}")
 
@@ -614,10 +615,8 @@ def render_hub():
   <div class="bc-badges">{"".join(badges)}</div>
 </a>""")
     content = f"""<nav class="crumb">
-  <a href="../index.html">NearStars</a> ·
-  <a href="../reports.html"><span data-i18n>보고서</span><span data-en hidden>Reports</span></a> ·
-  <a href="../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
-  <span class="here">Phase 4</span>
+  {global_nav('../', 'Phase 4')} ·
+  <a href="../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a>
 </nav>
 <header>
   <h1><span data-i18n>Phase 4 결정 보드</span><span data-en hidden>Phase 4 decision boards</span></h1>
@@ -630,7 +629,8 @@ def render_hub():
   <span><b>{sum(x[3] for x in boards)}</b> <span data-i18n>결정</span><span data-en hidden>decisions</span></span>
   <span><b>{sum(x[4] for x in boards)}</b> documented-divergence</span>
 </div>
-<div class="body-grid">{"".join(cards)}</div>"""
+<div class="body-grid">{"".join(cards)}</div>
+<p class="intro"><a href="orbit-viewers/index.html"><span data-i18n>궤도 뷰어 갤러리 →</span><span data-en hidden>Orbit viewer gallery →</span></a></p>"""
     return page("Phase 4 — NearStars decision boards", content)
 
 
