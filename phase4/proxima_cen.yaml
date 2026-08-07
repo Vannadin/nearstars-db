@@ -556,6 +556,8 @@ decisions:
 
   - body: Proxima Cen b
     axis: appearance                  # G6 — Proxima-lit 표시색 + 디스크 종합 + 희미 플레어-오로라
+    provenance: >
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
@@ -583,6 +585,27 @@ decisions:
       - name: aurora
         value: "희미·간헐 플레어-오로라, 적자색 (magenta-violet)"
         op: set
+      - name: hapke_terrain
+        value: 1.0
+        op: set
+        note: "달형 패밀리 육지 (확산 코사인 지수 = 램버트)"
+      - name: hapke_scaled
+        value: 1.0
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.86
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+      - name: hapke_theta
+        value: 18
+        unit: deg
+        op: set
+        note: "포화 크레이터 레골리스 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.45
+        op: set
+        note: "면적가중 기하(시각) 알베도; 에너지 수지용 Bond 0.33은 surface 행"
     gate:
       criterion: [visual-checklist, composition-lock]
       verdict: owner-override
@@ -596,7 +619,7 @@ decisions:
         상호작용도 잠정이며 항성 플레어 기원일 수 있다. 조석고정된 느린 자전은 약한 다이나모를 시사하는 반면
         구동원인 별은 강력하다. 그래서 약한 장을 가정하고 강한 구동을 얹어 희미하고 간헐적인 오로라를 택했다.
         장의 존재를 약하게 가정한 선택임을 명기한다.
-    refs: ["2017ApJ...844L..13G", "2012.02116", "2011Icar..213...12D"]
+    refs: ["2017ApJ...844L..13G", "2012.02116", "2011Icar..213...12D", "docs/reference/hapke-shader-methodology.md"]
 
   - body: Proxima Cen b
     axis: magnetism.magnetic_field    # G7 — 암석 dynamo(RM22)+조석고정 penalty → 약한 장. G6서 함의된 결정 명시
@@ -1029,7 +1052,7 @@ decisions:
 
   - body: Proxima Cen d
     axis: appearance
-    refs: ["docs/reference/surface-color-albedo-methodology.md"]
+    refs: ["docs/reference/surface-color-albedo-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-08-03: 감사 X4 — 이 행이 폐기된 단색 #34302c에서 표시색을 뽑고 있었다. surface 행(G5)이
       자기권 차폐 재근거화로 중위도 #3c3833 · 자기극관 #2a2622의 2-tone으로 대체한 뒤에도 appearance와
@@ -1045,6 +1068,7 @@ decisions:
       narrative (crater saturation, subdued basalt maria, lobate scarps, crisp
       small craters, color-only caps) from
       phase4/art-direction/proxima-d-art-direction.md.
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
@@ -1073,6 +1097,27 @@ decisions:
       - name: aurora
         value: "none (무대기, ~16 G 자기장 존재하나 발광 매질 없어 불가)"
         op: set
+      - name: hapke_terrain
+        value: 0.95
+        op: set
+        note: "수성 0.88과 달 1.0 사이. 자기권 차폐로 npFe⁰ 성숙이 무차폐 수성보다 덜하다"
+      - name: hapke_scaled
+        value: 2.2
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.86
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+      - name: hapke_theta
+        value: 18
+        unit: deg
+        op: set
+        note: "포화 크레이터 레골리스 아날로그(달·수성 18°) (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.12
+        op: set
+        note: "면적가중 기하 알베도(달 p 0.12/A 0.11 관계); Bond 0.11은 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -1477,7 +1522,9 @@ decisions:
 
   - body: Proxima Cen c
     axis: appearance
-    refs: ["docs/reference/atmosphere-reflected-color-methodology.md"]
+    provenance: >
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
+    refs: ["docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
@@ -1498,6 +1545,26 @@ decisions:
       - name: clouds
         value: "H/He + 고층 얼음·haze (해왕성처럼 파랗지 않음, CH₄ 응결로 진청 메커니즘 약함)"
         op: set
+      - name: hapke_terrain
+        value: null
+        na_reason: "고체 표면 없음. 지형 셰이더 미적용(거대행성)"
+      - name: hapke_scaled
+        value: 1.6
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.8
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.47 (53% 다공)"
+      - name: hapke_theta
+        value: 10
+        unit: deg
+        op: set
+        note: "거대행성 아날로그(토성·해왕성 10°) (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.45
+        op: set
+        note: "구름 상부 기하 알베도(천왕성 0.51·해왕성 0.41 대역)"
     gate:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
@@ -2106,7 +2173,7 @@ decisions:
 
   - body: Proxima Cen c I
     axis: appearance
-    refs: ["docs/reference/surface-color-albedo-methodology.md"]
+    refs: ["docs/reference/surface-color-albedo-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     status: gated
     driver: [art-direction]
     narrative: >
@@ -2133,10 +2200,32 @@ decisions:
       - name: surface_detail
         value: "포화 크레이터 + 젊은 크레이터의 밝은 광선계 (ray crater)"
         op: set
+      - name: hapke_terrain
+        value: 0.43
+        op: set
+        note: "얼음/어두운 입자 패밀리. Sol의 카론 자신이 0.43"
+      - name: hapke_scaled
+        value: 2.2
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.86
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+      - name: hapke_theta
+        value: 23
+        unit: deg
+        op: set
+        note: "카론 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.4
+        op: set
+        note: "카론 p_v 0.41 대역; Bond ~0.25–0.45는 surface 행"
     provenance: >
       2026-06-23: 명왕성 룩(적도 톨린대 + 크림 극관 + 청색 tholin haze 림)을 채택.
       2026-08-05: 대기 철회로 haze 림을 폐기하고, 위도 구조를 반구 구조로 교체(표면 행과 동일 결정). 색 자체는
       톨린 적갈과 물얼음 회백을 유지하되 배치가 바뀌었다.
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window

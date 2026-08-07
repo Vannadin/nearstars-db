@@ -423,6 +423,8 @@ decisions:
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
     axis: appearance.banding
+    provenance: >
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated                 # group 6 facet-walk 완료 (2026-06-22) — 3색 띠 + 가라앉은 파란 폭풍
     driver: [art-direction]
     narrative: >
@@ -453,6 +455,26 @@ decisions:
         value: "Jovian turbulent banding (띠 경계 소용돌이·페스툰 다수)"
         op: set
         verdict: owner-override
+      - name: hapke_terrain
+        value: null
+        na_reason: "고체 표면 없음. 지형 셰이더 미적용(거대행성)"
+      - name: hapke_scaled
+        value: 1.6
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.8
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.47 (53% 다공)"
+      - name: hapke_theta
+        value: 10
+        unit: deg
+        op: set
+        note: "거대행성 아날로그(토성 10°) (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.55
+        op: set
+        note: "물구름 Class I/II라 토성 0.47보다 밝은 쪽"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window        # 색·메커니즘 in-window; 난류 밴딩만 field-level documented-divergence
@@ -484,7 +506,7 @@ decisions:
         Morley 2014(docs/phase3/_bib/gas-giant-atmosphere.yaml 핀). banding_morphology는 field-level
         owner-override: T_int<110K → 잔잔한 토성형 zonal band가 물리 기본값; 목성형 난류는 시각 드라마로
         채택(interesting-first, silent 아닌 명시; appearance.clouds와 동일).
-    refs: ["docs/reference/atmosphere-reflected-color-methodology.md"]
+    refs: ["docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -1554,6 +1576,8 @@ decisions:
 
   - body: Dante
     axis: appearance
+    provenance: >
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated
     driver: [fiction, art-direction]
     narrative: >
@@ -1566,9 +1590,31 @@ decisions:
       흑현무암이다. 대협곡과 칼데라, 용암호는 온도에 따라 적색에서 황백색으로 발광하며, 야간측에는 주황 실선을
       그린다. 모행성을 마주보는 반구에서는 Polyphemus가 하늘에 고정된 채 떠 있어, 발밑의 용암 협곡과 머리 위
       거대 가스행성이 이 위성의 시그니처 풍경을 이룬다.
+    refs: ["docs/reference/hapke-shader-methodology.md"]
     fields:
       - { name: surface, value: "sulfur plains #d9c24a (밝음) / basalt #2a2622 (어두움), 고대비 이중-재질", op: set }
       - { name: emission_glow, value: "lava #ff5a1e→#ffd070 (온도별), 협곡·칼데라·용암호", op: set }
+      - name: hapke_terrain
+        value: 0.45
+        op: set
+        note: "밝은 유리질/화산 서리 패밀리. Sol의 Io 자신이 0.45"
+      - name: hapke_scaled
+        value: 2.0
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.86
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+      - name: hapke_theta
+        value: 20
+        unit: deg
+        op: set
+        note: "Io 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.35
+        op: set
+        note: "면적가중 기하 알베도; Bond 0.3은 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -1832,6 +1878,7 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-26: 팔레트에서 "가니메데 팔레트 / 어두운 크레이터" 라벨 제거 → "회색 팔레트 /
       어두운 지대". 헥스 색값(#5f574e, #9c968c)은 무변경. surface 행의 크레이터 폐기에 따른 것.
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated
     driver: [fiction, art-direction]
     narrative: >
@@ -1843,8 +1890,30 @@ decisions:
       멀리서 본 Hades는 지표가 온통 홈과 단층으로 그려진 회색 위성이다. 그 사이의 오래되고 어두운 땅은 갈회색으로
       보이고 가장 새로 난 띠는 그보다 밝게 드러나, 지표가 두 톤으로 갈린다. 색조는 아주 옅은 갈색기가 도는 정도에
       그치고, 용암으로 불타는 Dante 옆에서 조용한 회색으로 대비를 이룬다.
+    refs: ["docs/reference/hapke-shader-methodology.md"]
     fields:
       - { name: surface, value: "회색 팔레트: 어두운 지대 #5f574e, 밝은 홈/단층 #9c968c, 약한 갈색조 (비발광)", op: set }
+      - name: hapke_terrain
+        value: 0.88
+        op: set
+        note: "어두운 암석 레골리스 패밀리(수성·Ceres·Vesta)"
+      - name: hapke_scaled
+        value: 2.2
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.86
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+      - name: hapke_theta
+        value: 18
+        unit: deg
+        op: set
+        note: "포화 크레이터 레골리스 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.33
+        op: set
+        note: "면적가중 기하 알베도; Bond 0.3은 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -2221,6 +2290,8 @@ decisions:
 
   - body: Pandora
     axis: appearance               # base_colour/clouds/biolum/aurora/specular (group 6, facet-walk 2026-06-22)
+    provenance: >
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated
     driver: [fiction, art-direction, window-selection]
     narrative: >
@@ -2242,7 +2313,28 @@ decisions:
       - { name: haze, value: "지구식 파란 Rayleigh 림", op: set }
       - { name: artificial, value: "none", op: set }
       - { name: rings, value: "none", op: set }
-    refs: ["docs/reference/element-plasma-colors.md", "docs/reference/atmosphere-reflected-color-methodology.md"]
+      - name: hapke_terrain
+        value: 1.0
+        op: set
+        note: "달형 패밀리 육지"
+      - name: hapke_scaled
+        value: 1.0
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.86
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+      - name: hapke_theta
+        value: 18
+        unit: deg
+        op: set
+        note: "포화 크레이터 레골리스 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.45
+        op: set
+        note: "면적가중 기하 알베도; Bond 0.3은 surface 행"
+    refs: ["docs/reference/element-plasma-colors.md", "docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     gate:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
@@ -2482,6 +2574,7 @@ decisions:
       2026-07-28: 구 서술이 amber를 haze의 산란색으로 거꾸로 설명했던 교정 이력을 evidence에서
       이곳으로 옮김(교정 자체는 이전 패스, haze_aerosol_radius 하한 ≳0.2 µm 신설과 함께).
       evidence는 결론→확인→유보 형태로 축약, 내용 불변.
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated
     driver: [fiction, art-direction, window-selection]
     narrative: >
@@ -2495,7 +2588,7 @@ decisions:
       유기 haze가 높은 고도에 얇게 걸쳐, 표면을 가리지는 않고 그 빛에서 파란색만 걷어낸다. 그래서 아래의 청회색
       바다와 흰 극관, 어두운 암석 대륙, 흰 물구름이 호박색으로 물든 채 드러난다. 바다는 별빛을 받아 반짝이고,
       약한 자기장 탓에 오로라는 희미하다.
-    refs: ["docs/reference/atmosphere-reflected-color-methodology.md"]
+    refs: ["docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     fields:
       - { name: base_colour, value: "엷은 청백 마블 + 약한 amber (청회색 바다 + 흰 빙관 + 어두운 대륙)", op: set }
       - { name: haze, value: "얇은 고층 유기 톨린 haze (표면 비침; amber는 산란색이 아니라 투과 색조)", op: set }
@@ -2504,6 +2597,27 @@ decisions:
       - { name: specular, value: "바다 glint", op: set }
       - { name: aurora, value: "약함 (약자기장)", op: set }
       - { name: rings, value: "none", op: set }
+      - name: hapke_terrain
+        value: 1.56
+        op: set
+        note: "먼지 옅은 대기 패밀리. Mars 1.56(대비 강한 낙조)"
+      - name: hapke_scaled
+        value: 1.0
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 2.02
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.54 (46% 다공)"
+      - name: hapke_theta
+        value: 24
+        unit: deg
+        op: set
+        note: "Mars 아날로그(바람 다듬은 먼지 지형) (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 0.35
+        op: set
+        note: "면적가중 기하 알베도; Bond 0.35는 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -2829,6 +2943,8 @@ decisions:
 
   - body: Chaos
     axis: appearance               # G6 facet-walk 2026-06-23
+    provenance: >
+      2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
@@ -2839,9 +2955,31 @@ decisions:
       멀리서 본 Chaos는 푸른 기가 도는 흰 얼음 천체다. 스스로가 공급하는 얼음 고리와 정확히 같은 색이다.
       표면을 가로지르는 균열이 그림자를 깊게 남기고, 활성 균열대에서 솟은 물 제트가 햇빛을 받아 밝게 흩어진다.
       대기가 없어 명암의 경계는 칼처럼 선명하다.
+    refs: ["docs/reference/hapke-shader-methodology.md"]
     fields:
       - { name: surface, value: "밝은 청백 얼음 (엔셀라두스형 frost, ice-blue #cdd9e4), Miranda 균열", op: set }
       - { name: emission_glow, value: "tiger-stripe 물 제트/플룸 빛산란 (무대기라 선명 그림자)", op: set }
+      - name: hapke_terrain
+        value: 0.43
+        op: set
+        note: "얼음 패밀리. 엔셀라두스급 신선 서리"
+      - name: hapke_scaled
+        value: 2.2
+        op: set
+        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+      - name: hapke_porosity_k
+        value: 1.73
+        op: set
+        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.44 (56% 다공)"
+      - name: hapke_theta
+        value: 15
+        unit: deg
+        op: set
+        note: "Miranda 균열 30°와 엔셀라두스 서리 6° 절충(E-고리 서리가 균열 지형을 덮음) (적합 파라미터라 도출 아닌 아날로그 선택)"
+      - name: albedo_mean
+        value: 1.2
+        op: set
+        note: "신선 서리라 기하 알베도가 1을 넘는다(엔셀라두스 p_v 1.38 선례); Bond 0.91은 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window

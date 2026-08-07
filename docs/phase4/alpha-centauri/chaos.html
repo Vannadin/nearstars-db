@@ -235,10 +235,10 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative"><span data-i18n>멀리서 본 Chaos는 푸른 기가 도는 흰 얼음 천체다. 스스로가 공급하는 얼음 고리와 정확히 같은 색이다. 표면을 가로지르는 균열이 그림자를 깊게 남기고, 활성 균열대에서 솟은 물 제트가 햇빛을 받아 밝게 흩어진다. 대기가 없어 명암의 경계는 칼처럼 선명하다.<br></span><span data-en hidden>From a distance Chaos is a white body with a blue cast, exactly the color of the ice ring it supplies. Fractures crossing the surface leave deep shadows, and the water jets rising from the active zones catch the starlight and scatter it bright. With no atmosphere the line between light and dark is knife-sharp.<br></span></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface</td><td class="v">밝은 청백 얼음 (엔셀라두스형 frost, ice-blue <span class="chip" style="background:#cdd9e4"></span><span class="hx">#cdd9e4</span>), Miranda 균열</td><td class="o"></td></tr><tr><td class="k">emission_glow</td><td class="v">tiger-stripe 물 제트/플룸 빛산란 (무대기라 선명 그림자)</td><td class="o"></td></tr></tbody></table>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface</td><td class="v">밝은 청백 얼음 (엔셀라두스형 frost, ice-blue <span class="chip" style="background:#cdd9e4"></span><span class="hx">#cdd9e4</span>), Miranda 균열</td><td class="o"></td></tr><tr><td class="k">emission_glow</td><td class="v">tiger-stripe 물 제트/플룸 빛산란 (무대기라 선명 그림자)</td><td class="o"></td></tr><tr><td class="k">hapke_terrain</td><td class="v">0.43<div class="fnote">얼음 패밀리. 엔셀라두스급 신선 서리</div></td><td class="o"></td></tr><tr><td class="k">hapke_scaled</td><td class="v">2.2<div class="fnote">원반 위상 거동(Sol 클래스 컨벤션)</div></td><td class="o"></td></tr><tr><td class="k">hapke_porosity_k</td><td class="v">1.73<div class="fnote">Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.44 (56% 다공)</div></td><td class="o"></td></tr><tr><td class="k">hapke_theta</td><td class="v">15 <span class="u">deg</span><div class="fnote">Miranda 균열 30°와 엔셀라두스 서리 6° 절충(E-고리 서리가 균열 지형을 덮음) (적합 파라미터라 도출 아닌 아날로그 선택)</div></td><td class="o"></td></tr><tr><td class="k">albedo_mean</td><td class="v">1.2<div class="fnote">신선 서리라 기하 알베도가 1을 넘는다(엔셀라두스 p_v 1.38 선례); Bond 0.91은 surface 행</div></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>플룸에 밝은 서리, 엔셀라두스 룩이다. 확인: ice-blue E-고리와의 동톤은 구성상 성립한다. 고리색은 얼음 알갱이 조성에서 Mie 합성으로 얻었고 그 알갱이의 공급원이 Chaos이므로(satellites 행), 공급원과 고리가 같은 재료로 같은 청백을 공유한다.<br></span><span data-en hidden>Plumes plus bright frost, the Enceladus look. Check: the tone link to the ice-blue E-ring holds by construction: the ring color was Mie-synthesized from icy-grain composition and Chaos is the grain source (satellites row), so supplier and ring share the blue-white by the same material.<br></span></div>
-  
+  <div class="refs"><a class="ref" href="../../wiki/reference__hapke-shader-methodology.html" target="_blank" rel="noopener">hapke-shader-methodology.md</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
@@ -285,7 +285,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="cassandra.html">← Cassandra</a></div>
-<div class="stamp">빌드 2026-08-07 14:43 · 73517f4+미커밋</div>
+<div class="stamp">빌드 2026-08-07 16:08 · 9ddaf3e+미커밋</div>
 </div>
 <script>
 const b=document.body;
