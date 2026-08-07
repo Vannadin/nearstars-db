@@ -449,6 +449,9 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## 관련 문서
 
+- [hapke-shader-methodology](hapke-shader-methodology.md): 이 문서의 표면 상태(§4
+  풍화, §6 알베도)를 Sol 엔진의 `_Hapke` 셰이더 값 두 개(Parallax 지형 + 스케일드
+  원반 룩)로 옮기는 레시피. Sol-Configs 자체의 바디별 표가 앵커다.
 - [ice-stability-methodology](ice-stability-methodology.md): 색을 고르기 전에 그 궤도에서
   얼음 표면이 **존재할 수 있는지**를 먼저 묻는다. 알베도 선택은 §6의 밴드에 대고 판정하며, 밴드를
   넘는 값이 필요한 천체(Chaos의 0.91)는 도출이 아니라 오버라이드다.

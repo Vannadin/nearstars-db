@@ -58,6 +58,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 | [surface-color-albedo-methodology](surface-color-albedo-methodology.md) | 표면 광물색 + Bond albedo | Burns 1993; Hapke 1981/2012; Kokaly (USGS) 2017; Grundy |
 | [debris-disk-color-methodology](debris-disk-color-methodology.md) | 잔해원반 먼지 산란색 (Mie) | Draine 2003; Bohren & Huffman 1983; Khare 1984 |
 | [element-plasma-colors](element-plasma-colors.md) | 발광/플라스마색 (오로라·재진입·선) | NIST ASD; Pearse & Gaydon; Park 1990 |
+| [hapke-shader-methodology](hapke-shader-methodology.md) | Sol `_Hapke` 셰이더 값(지형+스케일드) 바디 클래스별 처방 | Sol-Configs @ f9e6fdf (앵커); Hapke 1981/1986/2002; Sato 2014; Warell 2004; Verbiscer 2005; Belskaya & Shevchenko 2000 |
 
 ## 검증 (도출이 아니라 Phase-4 게이트)
 

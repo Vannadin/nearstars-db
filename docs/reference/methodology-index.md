@@ -65,6 +65,7 @@ XYZ → IEC 61966-2-1 sRGB), owned by the reflected-color doc.
 | [surface-color-albedo-methodology](surface-color-albedo-methodology.md) | Surface mineral color + Bond albedo | Burns 1993; Hapke 1981/2012; Kokaly (USGS) 2017; Grundy |
 | [debris-disk-color-methodology](debris-disk-color-methodology.md) | Debris-disk dust scattering color (Mie) | Draine 2003; Bohren & Huffman 1983; Khare 1984 |
 | [element-plasma-colors](element-plasma-colors.md) | Emission/plasma color (aurora, reentry, lines) | NIST ASD; Pearse & Gaydon; Park 1990 |
+| [hapke-shader-methodology](hapke-shader-methodology.md) | Sol `_Hapke` shader values (terrain + scaled) per body class | Sol-Configs @ f9e6fdf (anchors); Hapke 1981/1986/2002; Sato 2014; Warell 2004; Verbiscer 2005; Belskaya & Shevchenko 2000 |
 
 ## Validation (not derivation, but Phase-4 gates)
 

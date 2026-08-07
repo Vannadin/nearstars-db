@@ -506,6 +506,9 @@ paper. (c) RELAB has no peer-reviewed descriptor paper of record; cite the PDS b
 
 ## Related
 
+- [hapke-shader-methodology](hapke-shader-methodology.md): turns this doc's surface
+  state (§4 weathering, §6 albedo) into the Sol engine's two `_Hapke` shader values
+  (Parallax terrain + scaled disk look), anchored on Sol-Configs' own per-body table.
 - [ice-stability-methodology](ice-stability-methodology.md): asks whether an icy surface can
   **exist** at the orbit before its color is chosen. It judges an albedo pick against §6's
   bands, and a body needing an albedo above them (Chaos at 0.91) is an override, not a
