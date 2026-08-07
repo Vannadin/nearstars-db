@@ -15,3 +15,14 @@
   everything else nav-bearing is generator-emitted.
 - Orbit viewers are built by `phase3/stability-sim/scripts/build_viewers.py`
   (commit 9f288c3, manifest + batch driver + gallery).
+- Close-out 2026-08-07: four commits — 0cdef1e (gate 11), 2c084b2 (IA rewire),
+  6996003 (CDN vendoring), 5440f10 (viewer i18n). End state: 272 pages,
+  orphans 0, dead ends 0, published CDN references 0, every toggle EN-default.
+- Gotchas for future passes: viewer pages use implicit <head>/<body> markup, so
+  crumb/asset injection falls back to `</style>`; `build_viewers` re-runs the SIM
+  when the manifest is newer than a summary (run.py fails under system Python 3.9
+  — re-render with animate_orbits/plot_interactive directly instead); the
+  validation set (alpha-centauri-validation) is hand-maintained, not rebuilt.
+- Deferred to their own sessions: C (page diet — plans/viewer-optimization.md
+  remaining items + orbit-viewer payload rounding), full EN pass over the belt
+  viewer's exported cfg comments if ever wanted.
