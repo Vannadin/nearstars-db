@@ -222,6 +222,35 @@ The honest consequence: weathering + grain size + a trace organic coating can mo
 surface's **albedo by a factor of 2–5 and its hue from neutral to deep red** without
 changing the bulk composition at all. Treat the surface *state* as a recorded choice.
 
+### Magnetic shielding & cusp concentration: who gets weathered where
+
+Space weathering has two drivers with different reach: **micrometeorites are
+field-blind** (they weather the whole body uniformly), while **charged-particle
+weathering follows the magnetic geometry**. A global field deflects the ion flux
+away from low and mid latitudes and funnels it along open field lines into the
+**polar cusps** — so a magnetized airless body weathers *less* where it is
+shielded and *harder* at its magnetic poles. Both halves of that statement have
+direct solar-system anchors:
+
+- **Lunar magnetic-anomaly swirls (Reiner Gamma archetype).** Where crustal
+  fields locally stand off the solar wind, the regolith stays **bright and less
+  red** while the surrounding bombarded terrain matures dark — the observed
+  "shielded = fresh, bombarded = dark" contrast (Hood & Schubert 1980 shielding
+  hypothesis; Hemingway & Garrick-Bethell 2012 on the field-topology match;
+  Glotch+ 2015, Denevi+ 2016 for the maturity mapping).
+- **Ganymede's polar caps.** The cap boundary tracks the open/closed field-line
+  boundary of Ganymede's intrinsic magnetosphere (Khurana+ 2007): particles
+  precipitate poleward of it and alter the surface. On icy Ganymede the optical
+  sign flips (sputtering redistributes bright frost), but it is the observed
+  proof that **a magnetosphere organizes surface alteration into polar caps**.
+
+Practical rule for a magnetized airless rock: keep the micrometeorite-driven
+darkening global, subtract most of the ion-driven (npFe⁰-fine, reddening)
+component across the shielded belts, and concentrate a saturated ion dose at the
+magnetic poles — mid-latitudes fresher and paler than the unmagnetized analog
+(Mercury), poles darker (worked case: Proxima d's two-tone surface, board
+`phase4/proxima_cen.yaml`).
+
 ---
 
 ## 5. Reflectance Spectrum → sRGB (Use the Atmosphere Doc's Engine)

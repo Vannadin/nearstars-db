@@ -986,20 +986,20 @@ decisions:
       2026-08-07: prose modernization (EN+KO narrative, 3-part evidence,
       value-history phrase moved here); verdict migrated pass-in-window ->
       methodology-derived (space-weathering cascade output). No value changed.
+      2026-08-07 (owner wording): narrative recast by the owner; the vague
+      "frigid night" replaced with a number, ~30 K = geothermal-flux radiative
+      balance (<=0.08 W/m2 -> ~34 K, lunar PSR 20-40 K anchor). The
+      shielding/cusp geometry the caps rest on was written into the color
+      methodology §4 (lunar swirls + Ganymede caps) the same day.
     narrative: >
-      Dark basalt, baked to about 450 kelvin under the star and frozen on the night side that never turns
-      away. The rock stays solid everywhere; even the point directly beneath the star falls far short of
-      melting. What makes this surface unusual is written by the magnetic field. Across the mid-latitudes
-      the field holds the stellar wind off the ground, so the rock keeps a fresher, paler face than Mercury
-      ever could, while the flare particles the field catches are poured onto the magnetic poles and weather
-      them into caps of near-black brown. The result is a two-tone world, pale belts between dark poles, the
-      magnetic field made visible.
+      A dark basaltic surface, holding about 450 kelvin beneath the star and some 30 kelvin on the night
+      hemisphere. Across the mid-latitudes the magnetic field holds the stellar wind off the ground, so the
+      rock keeps a fresher, paler face than Mercury ever could, while the flare particles the field catches
+      are poured onto the magnetic poles and weather them into caps of near-black brown.
     narrative_ko: >
-      어두운 현무암 세계다. 별 아래에서는 450켈빈까지 구워지고, 영원히 돌아서지 않는 밤 면에서는 얼어붙는다.
-      암석은 어디서나 고체로 남는데, 별 바로 아래 지점조차 녹는점에는 한참 못 미친다. 이 표면을 특별하게 만드는
-      것은 자기장이 새겨 놓은 무늬다. 중위도에서는 자기장이 항성풍을 땅에 닿기 전에 막아 주어 수성은 가져 본 적
-      없는 더 신선하고 밝은 낯을 지키는 반면, 자기장이 붙잡은 플레어 입자는 자기극으로 쏟아져 그곳을 거의 흑갈색
-      극관으로 풍화시킨다. 그 결과가 투톤 세계다. 어두운 두 극 사이의 밝은 띠, 눈에 보이는 자기장이다.
+      어두운 현무암질 표면으로, 별 아래에서는 450켈빈, 밤 반구에서는 30켈빈 남짓을 유지한다. 중위도에서는
+      자기장이 항성풍을 땅에 닿기 전에 막아 주어 수성은 가져 본 적 없는 더 신선하고 밝은 표면을 지키는 반면,
+      자기장이 붙잡은 플레어 입자는 자기극으로 쏟아져 그곳을 거의 흑갈색 극관으로 풍화시킨다.
     # MIGRATION-FLAG: cfg_colors_intrinsic 는 비표준 행-레벨 키로 hex 색 원문 보존 (색은 emit 말미 art-pass, typed 색필드 미분해).
     cfg_colors_intrinsic: >
       고유(중립광 기준) 반사색 — 중위도(자기권 차폐로 신선) #3c3833 · 자기극관(집중 풍화, 거의 흑갈) ~#2a2622.
@@ -1012,7 +1012,7 @@ decisions:
         value: 450
         unit: K
         op: set
-        note: "직하 (Teq~317K ×√2, 무재분배); 극냉 야간 (고유색은 cfg_colors_intrinsic)"
+        note: "직하 (Teq~317K ×√2, 무재분배); 야간 반구 ~30 K (지열 플럭스 σT⁴ 평형; 고유색은 cfg_colors_intrinsic)"
       - name: albedo
         value: 0.11
         op: set
@@ -1025,8 +1025,10 @@ decisions:
         확인한 것: 색·albedo 방법론 §4 우주풍화 캐스케이드(Hapke 2001·Pieters 2000)로 관측 자기장 ~16 G의 차폐
         효과를 따라갔다. 항성풍 sputtering 차폐 → npFe⁰ 생성 감소 → 무자기장 수성(albedo ~0.088)보다 신선하고
         밝은 쪽, 미세운석 gardening은 자기권과 무관해 잔존, phase-lock 플레어의 극 채널링(Zapatero Osorio 2026)이
-        극 풍화 비대칭의 근거. 직하 450 K는 Teq 317 K에 무재분배 √2 배율. 색조 선택 자체는 interesting-first
-        예술 결정. 유보: 극관 경계와 정확한 색은 emit 말미 art-pass에서 실측 기반으로 확정한다.
+        극 풍화 비대칭의 근거. 차폐·cusp 기하의 관측 앵커는 §4의 달 자기 이상 소용돌이(차폐 = 밝음)와
+        가니메데 극관(자기권이 극관을 조직). 직하 450 K는 Teq 317 K에 무재분배 √2 배율, 야간 반구 ~30 K는
+        지열 플럭스 ≤0.08 W/m²의 σT⁴ 평형(달 영구음영 크레이터 실측 20–40 K와 같은 급). 색조 선택 자체는
+        interesting-first 예술 결정. 유보: 극관 경계와 정확한 색은 emit 말미 art-pass에서 실측 기반으로 확정한다.
 
   - body: Proxima Cen d
     axis: appearance
