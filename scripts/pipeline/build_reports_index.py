@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 
 from _naming import to_url_slug
-from _nav import global_nav
+from _nav import global_bar
 
 
 def load_db_names(repo: Path) -> tuple[dict[str, str], dict[str, tuple[str, str]]]:
@@ -214,10 +214,10 @@ main { max-width: 980px }
 </style>
 </head>
 <body>
-
+__BAR__
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb">__NAV__ · <a href="wiki/reference__methodology-index.html">Methodology</a></div>
+  <div class="crumb"><a href="wiki/reference__methodology-index.html">Methodology</a></div>
   <div class="seg lang-toggle" id="lang-seg">
     <button data-lang="ko">한</button>
     <button class="on" data-lang="en">EN</button>
@@ -359,7 +359,7 @@ def render_html(manifest: dict, has_manual_fetch: bool) -> str:
         )
 
     return (PAGE_TEMPLATE
-            .replace('__NAV__', global_nav(here='Reports'))
+            .replace('__BAR__', global_bar(here='Reports'))
             .replace('__ROWS__', rows)
             .replace('__SIDEPANELS__', sidepanels))
 

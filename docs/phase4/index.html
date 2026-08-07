@@ -152,9 +152,29 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 </style>
 </head>
 <body>
+<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.55) }
+  html.ns-light-ok .ns-bar a:hover { color:#2f66d8 }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+</style><div class="ns-bar"><a class="ns-brand" href="../index.html">NearStars</a><a href="../index.html">DB</a><span class="ns-sep">·</span><a href="../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../tools.html">Tools</a><span class="ns-sep">·</span><a href="../wiki/index.html">Wiki</a></div>
 <div class="wrap">
 <nav class="crumb">
-  <a href="../index.html">DB</a> · <a href="../starmap.html">3D Map</a> · <a href="../reports.html">Reports</a> · <span>Phase 4</span> · <a href="../tools.html">Tools</a> · <a href="../wiki/index.html">Wiki</a> ·
   <a href="../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a>
 </nav>
 <header>

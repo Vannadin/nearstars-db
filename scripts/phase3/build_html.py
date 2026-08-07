@@ -41,6 +41,10 @@ except ImportError:
     sys.path.insert(0, str(Path(__file__).parent))
     from field_tooltips import FIELD_TOOLTIPS
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'pipeline'))
+from _nav import global_bar  # noqa: E402
+BAR = global_bar('../')
+
 
 # ── markdown → block tree ───────────────────────────────────────────────────
 
@@ -774,10 +778,10 @@ html[lang="en"] .field-tt:hover::after {{ content: attr(data-en-tip) }}
 </head>
 
 <body>
-
+{BAR}
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb"><a href="../index.html" data-i18n="back_db"></a> · <a href="../reports.html" data-i18n="reports_index"></a> · <a href="../wiki/reference__methodology-index.html" data-i18n="methodology_index"></a>{phase4_crumb}</div>
+  <div class="crumb"><a href="../wiki/reference__methodology-index.html" data-i18n="methodology_index"></a>{phase4_crumb}</div>
   <div class="seg lang-toggle" id="lang-seg">
     <button data-lang="ko">한</button>
     <button class="on" data-lang="en">EN</button>

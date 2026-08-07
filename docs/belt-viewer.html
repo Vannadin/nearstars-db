@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" class="ns-light-ok">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,6 +7,27 @@
 <!-- Generated from scripts/viz/belt_viewer_template.html by build_belt_viewer.py -->
 </head>
 <body>
+<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.55) }
+  html.ns-light-ok .ns-bar a:hover { color:#2f66d8 }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+</style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 <style>
   :root{
     --bg:#06070a; --panel:rgba(255,255,255,.022); --panel-2:rgba(255,255,255,.05); --line:rgba(255,255,255,.09);
@@ -109,7 +130,6 @@
 
 <div class="wrap">
   <header>
-    <nav style="font-size:12px;margin-bottom:12px;opacity:.85"><a href="index.html">DB</a> · <a href="starmap.html">3D Map</a> · <a href="reports.html">Reports</a> · <a href="phase4/index.html">Phase 4</a> · <a href="tools.html">Tools</a> · <a href="wiki/index.html">Wiki</a></nav>
     <h1 id="h1t">Kerbalism 방사선대 단면 뷰어</h1>
     <p id="introT">인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.</p>
   </header>

@@ -19,7 +19,7 @@ import yaml
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 from pipeline._naming import to_url_slug  # noqa: E402
-from pipeline._nav import global_nav  # noqa: E402
+from pipeline._nav import global_bar  # noqa: E402
 
 HEX_RE = re.compile(r"#[0-9a-fA-F]{6}")
 
@@ -308,8 +308,6 @@ def render_body(system, body, rows, alias, prev_link, next_link):
     )
 
     content = f"""<nav class="crumb">
-  <a href="../../index.html">NearStars</a> ·
-  <a href="../../reports.html"><span data-i18n>보고서</span><span data-en hidden>Reports</span></a> ·
   <a href="../../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
   <a href="index.html">Phase 4 · <span class="sys">{esc(system)}</span></a> ·
   <span class="here">{esc(body)}</span>{p3_link}
@@ -351,8 +349,6 @@ def render_index(system, order, bodies, aliases):
   <div class="bc-badges">{"".join(badges)}</div>
 </a>""")
     content = f"""<nav class="crumb">
-  <a href="../../index.html">NearStars</a> ·
-  <a href="../../reports.html"><span data-i18n>보고서</span><span data-en hidden>Reports</span></a> ·
   <a href="../../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
   <span class="here">Phase 4 · <span class="sys">{esc(system)}</span></span>
 </nav>
@@ -419,6 +415,7 @@ def page(title, content, depth=2):
 <style>{STYLE}</style>
 </head>
 <body>
+{global_bar('../' * depth, 'Phase 4')}
 <div class="wrap">
 {content}
 </div>
@@ -614,7 +611,6 @@ def render_hub():
   <div class="bc-badges">{"".join(badges)}</div>
 </a>""")
     content = f"""<nav class="crumb">
-  {global_nav('../', 'Phase 4')} ·
   <a href="../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a>
 </nav>
 <header>

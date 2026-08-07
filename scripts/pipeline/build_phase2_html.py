@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 
 from _naming import to_url_slug, to_file_slug
+from _nav import global_bar
 
 
 # Categories added in the 2026-05-21 Phase 2 schema expansion.
@@ -121,13 +122,13 @@ h3 { margin: 14px 0 6px }
 </style>
 </head>
 <body>
+__BAR__
 <header>
   <h1>__SYSTEM_NAME__ <span>· Phase 2 measurements</span></h1>
-  <div class="crumb"><a href="../index.html">← back to database</a> · <a href="../reports.html">reports</a></div>
 </header>
 
 <main id="root">
-  <div style="color:#3a5068;padding:60px;text-align:center">Loading…</div>
+  <div style="color:var(--fg-faint);padding:60px;text-align:center">Loading…</div>
 </main>
 
 <footer>
@@ -372,6 +373,7 @@ def build_one(repo: Path, system_name: str) -> Path:
     url_slug = to_url_slug(system_name)
     file_slug = to_file_slug(system_name)
     html = (PAGE_TEMPLATE
+            .replace('__BAR__', global_bar('../'))
             .replace('__SYSTEM_NAME__', system_name)
             .replace('__JSON_FILENAME__', file_slug))
     out_dir = repo / 'docs' / 'phase2'

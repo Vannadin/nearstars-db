@@ -21,9 +21,30 @@
   .seg{float:right}.seg button{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:4px 10px;cursor:pointer}
   .seg button.on{background:rgba(122,168,255,.30)}
 </style>
+<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.55) }
+  html.ns-light-ok .ns-bar a:hover { color:#2f66d8 }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+</style><div class="ns-bar"><a class="ns-brand" href="../../../index.html">NearStars</a><a href="../../../index.html">DB</a><span class="ns-sep">·</span><a href="../../../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../../../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../../../tools.html">Tools</a><span class="ns-sep">·</span><a href="../../../wiki/index.html">Wiki</a></div>
 <header>
   <div class="seg"><button id="ko">한국어</button><button id="en" class="on">EN</button></div>
-  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a> · <a href="../../index.html" style="color:#7aa8ff;text-decoration:none">Phase 4</a> · <a href="../../../tools.html" style="color:#7aa8ff;text-decoration:none">Tools</a> · <a href="../../../index.html" style="color:#7aa8ff;text-decoration:none">DB</a></nav>
+  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a></nav>
   <h1>Alpha Centauri A b (Polyphemus) — <span data-i18n>궤도 안정성 검증</span><span data-en hidden>orbit stability validation</span></h1>
   <div class="lead"><span data-i18n>위성계와 행성계를 각각 두 방식으로 교차 검증했습니다. leapfrog(고정 10분 스텝)는 Principia 인게임 적분기와 정합하고, IAS15+MEGNO는 결정론적 카오스를 판정합니다(MEGNO≈2 정칙, &gt;5 카오스).</span><span data-en hidden>Both the moon system and the planet orbit are cross-checked two ways. Leapfrog (fixed 10-min step) matches Principia's in-game integrator; IAS15+MEGNO diagnoses deterministic chaos (MEGNO≈2 regular, &gt;5 chaotic).</span></div>
 </header>

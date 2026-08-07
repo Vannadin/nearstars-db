@@ -29,8 +29,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts" / "refs"))
 import cie_color                        # noqa: E402  (aurora emitter swatches)
 sys.path.insert(0, str(ROOT / "scripts" / "pipeline"))
-from _nav import global_nav             # noqa: E402  (공용 전역 nav)
-GLOBAL_NAV = global_nav()
+from _nav import global_bar             # noqa: E402  (공용 1줄 바)
+GLOBAL_BAR = global_bar()
 sys.path.insert(0, str(ROOT / ".claude/skills/firefly-cfg/scripts"))
 from emit_firefly_cfg import (  # noqa: E402
     PALETTES, STREAK_PALETTE, DEFAULTS_HEX_RGB,
@@ -1052,9 +1052,9 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 </style>
 </head>
 <body>
+{GLOBAL_BAR}
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb">{GLOBAL_NAV}</div>
   <div class="seg lang-toggle" id="lang-seg">
     <button data-lang="ko">한</button>
     <button class="on" data-lang="en">EN</button>
@@ -1373,7 +1373,7 @@ def main() -> int:
     aurora_json = json.dumps(aurora_data, ensure_ascii=False)
 
     html_out = TEMPLATE.format(
-        GLOBAL_NAV=GLOBAL_NAV,
+        GLOBAL_BAR=GLOBAL_BAR,
         periodic_table=periodic,
         molecular_panel=molecular,
         palettes_section=palettes_section,

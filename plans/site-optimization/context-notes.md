@@ -26,3 +26,12 @@
 - Deferred to their own sessions: C (page diet — plans/viewer-optimization.md
   remaining items + orbit-viewer payload rounding), full EN pass over the belt
   viewer's exported cfg comments if ever wanted.
+- Design phase (owner-driven, same day): every surface unified on the v2
+  (Phase 4 board) palette; then a two-tier header — `_nav.global_bar()` emits a
+  self-contained one-line site bar (brand + DB·3D Map·Reports·Phase 4·Tools·Wiki,
+  light-scheme variant behind `html.ns-light-ok`) inserted right after <body> on
+  255 document pages, while page headers keep only page-specific controls
+  (title, lang toggle, filters, contextual crumbs like Methodology / ← board).
+  Fullscreen apps (starmap topbar, orbit3d/interactive overlay crumb) stay compact.
+  Light-theme rollout to document surfaces is a proposed next step (model:
+  ice-stability's paired palettes); owner has not yet decided.

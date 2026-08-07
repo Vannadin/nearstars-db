@@ -26,6 +26,9 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'pipeline'))
+from _nav import global_bar  # noqa: E402
+
 
 ADS_BASE = 'https://ui.adsabs.harvard.edu/abs/'
 
@@ -243,10 +246,10 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
 </style>
 </head>
 <body>
+__BAR__
 
 <header>
   <h1 data-i18n="title"></h1>
-  <div class="crumb"><a href="../index.html" data-i18n="back_db"></a> · <a href="../reports.html" data-i18n="reports_index"></a></div>
   <div class="seg lang-toggle" id="lang-seg">
     <button data-lang="ko">한</button>
     <button class="on" data-lang="en">EN</button>
@@ -537,6 +540,7 @@ def main() -> int:
     bib_auto = collect_bib_manual(repo)
     bib_auto_html = render_bib_auto(bib_auto)
     page = (PAGE_TEMPLATE
+        .replace('__BAR__', global_bar('../'))
         .replace('__SYSTEMS__', systems_html)
         .replace('__BIB_AUTO__', bib_auto_html)
         .replace('__TIPS__', tips_html)

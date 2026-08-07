@@ -28,7 +28,12 @@ from __future__ import annotations
 import html
 import os
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent / 'pipeline'))
+from _nav import global_bar  # noqa: E402
+BAR = global_bar('../', 'Wiki')
 
 REPO = Path(__file__).resolve().parent.parent
 OUT_DIR = REPO / 'docs' / 'wiki'
@@ -147,11 +152,6 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
     rows = [
         '<nav class="side">',
         '<a class="brand" href="index.html">NearStars <span>docs</span></a>',
-        '<a class="nav-x" href="../index.html">⌗ System database</a>',
-        '<a class="nav-x" href="../starmap.html">✦ 3D star map</a>',
-        '<a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>',
-        '<a class="nav-x" href="../phase4/index.html">◫ Phase 4 boards</a>',
-        '<a class="nav-x" href="../tools.html">⚒ Tools</a>',
         '<a class="nav-x" href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">↗ GitHub wiki</a>',
     ]
     labels = {'reference': 'Reference', 'plans': 'Plans'}
@@ -238,6 +238,7 @@ def page_html(title: str, sidebar: str, en_md: str, ko_md: str | None) -> str:
 <style>{_CSS}</style>
 </head>
 <body>
+{BAR}
 <div class="layout">
 {sidebar}
 <div class="content-wrap">

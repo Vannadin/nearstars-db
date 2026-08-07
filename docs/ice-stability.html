@@ -1,12 +1,33 @@
 <!doctype html>
 <!-- 주어진 일사량에서 표면 얼음이 존속 가능한지 Bond 알베도로 판정하는 계산기 -->
-<html lang="en">
+<html lang="en" class="ns-light-ok">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title data-i18n="docTitle">표면 얼음 안정성 — 알베도 계산기</title>
 </head>
 <body>
+<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.55) }
+  html.ns-light-ok .ns-bar a:hover { color:#2f66d8 }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+</style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 
 <style>
 /* ── tokens: NearStars Design System v2. light가 기본, dark가 재정의. ── */
@@ -252,7 +273,6 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
 <header>
   <button class="chip" type="button" id="toggleLang"
           style="float:right;margin-left:14px" aria-label="Language / 언어">EN</button>
-  <nav style="font-size:12px;margin-bottom:12px;opacity:.85"><a href="index.html">DB</a> · <a href="starmap.html">3D Map</a> · <a href="reports.html">Reports</a> · <a href="phase4/index.html">Phase 4</a> · <a href="tools.html">Tools</a> · <a href="wiki/index.html">Wiki</a></nav>
   <p class="eyebrow" data-i18n="eyebrow">NearStars · 표면 얼음 안정성 게이트</p>
   <h1 data-i18n="h1">표면 얼음은 알베도가 정한다</h1>
   <p class="deck" data-i18n="deck">

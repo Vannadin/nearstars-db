@@ -39,7 +39,7 @@ GALLERY = ROOT / "docs/phase4/orbit-viewers"
 PY = sys.executable
 
 sys.path.insert(0, str(ROOT / "scripts" / "pipeline"))
-from _nav import global_nav  # noqa: E402  (공용 전역 nav)
+from _nav import global_bar  # noqa: E402  (공용 1줄 바)
 
 # 복사되는 뷰어 페이지(plotly 전체화면)에 띄우는 되돌아가기 크럼 오버레이.
 _CRUMB_STYLE = 'color:#7aa8ff;text-decoration:none'
@@ -173,9 +173,9 @@ def write_gallery(cards):
   .seg button.on{{border-color:#7aa8ff}}
   .crumb{{font-size:12px;margin-bottom:8px}} .crumb a{{color:#7aa8ff;text-decoration:none}}
 </style>
+{global_bar('../../', 'Phase 4')}
 <header>
   <div class="seg"><button id="ko">한국어</button><button id="en" class="on">EN</button></div>
-  <nav class="crumb">{global_nav('../../')}</nav>
   <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
   <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span>
     <span data-i18n> 적분기 교차 검증은 <a href="alpha-centauri-validation/index.html" style="color:#7aa8ff">알파센 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="alpha-centauri-validation/index.html" style="color:#7aa8ff">Alpha Cen validation set</a>.</span></div>
