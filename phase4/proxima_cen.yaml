@@ -773,16 +773,14 @@ decisions:
       was a leftover of the discoverability layer retired 2026-07-28 and is
       dropped. No value changed.
     narrative: >
-      The innermost planet, a hot bare rock smaller than Earth that circles its star in five days. It would
-      pass for Mercury except for one thing: a magnetic field of roughly sixteen gauss wraps it, the first
-      ever inferred for a rocky world beyond the Solar System. And the star seems to answer. Its flares erupt
-      in step with the planet's orbit, as if the little world struck the star a magnetic blow on every pass.
-      Nothing lives here.
+      The innermost planet, a rocky world twice the size of Mercury that circles its star in five days. What
+      sets it decisively apart from Mercury is a magnetic field of some sixteen gauss, the first ever
+      inferred for a rocky planet beyond the Solar System. Its star's flares erupt in step with the planet's
+      orbit, as if the little world struck the star a magnetic blow on every pass.
     narrative_ko: >
-      가장 안쪽 행성이고, 지구보다 작은 뜨거운 맨 암석이 닷새 만에 별을 한 바퀴 돈다. 수성을 닮았지만 결정적으로
-      다른 점이 하나 있다. 약 16가우스의 자기장이 행성을 감싸고 있는데, 태양계 밖 암석 행성에서 추정된 최초의
-      자기장이다. 그리고 별이 여기에 응답하는 듯하다. 플레어가 행성의 공전 위상에 발맞춰 터져 나와, 마치 이 작은
-      세계가 지나갈 때마다 별을 자기적으로 두드리는 것 같다. 생명은 없다.
+      가장 안쪽 행성으로, 수성의 두 배 크기의 암석 행성이 닷새 만에 별을 한 바퀴 돈다. 수성과 결정적으로 다른
+      점은 바로 16가우스에 달하는 자기장으로, 태양계 밖의 암석 행성에서 추정된 최초의 자기장이다. 플레어가
+      행성의 공전 위상에 발맞춰 터져 나와, 마치 이 작은 세계가 지나갈 때마다 별을 자기적으로 두드리는 것 같다.
     fields:
       - name: body_type
         value: "초단주기 sub-Earth: 뜨거운 무대기 암석 (자기권 가진 수성형, 무생물)"
