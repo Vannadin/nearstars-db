@@ -16,19 +16,19 @@ Owner's "planets unfinished" premise does not hold. Real open work is narrow:
 
 ## Findings triage
 HYGIENE (autonomous):
-- [ ] d surface: rehome hex colors + assign a numeric albedo (currently prose,
+- [x] d surface: rehome hex colors + assign a numeric albedo (currently prose,
       no MIGRATION-FLAG — the only real oversight vs b)
-- [ ] Figure fills — locked bodies mechanical §6 (J2≈q_s, C22≈tidal,
+- [x] Figure fills — locked bodies mechanical §6 (J2≈q_s, C22≈tidal,
       flattening=(5/2)·J2): **d** (J2/C22/flattening) + **c I** (J2/C22/flattening)
-- [ ] internal_heat: d/c I = negligible + na_reason (small cold bodies);
+- [x] internal_heat: d/c I = negligible + na_reason (small cold bodies);
       **c** (mini-Neptune) = check methodology for a small intrinsic flux
-- [ ] c figure: J2/flattening need q + NMoI for the 27 h free rotator (not the
+- [x] c figure: J2/flattening need q + NMoI for the 27 h free rotator (not the
       cheap locked echo) — derivation, still autonomous
-- [ ] Minor: c I add stellar_wind field; c I pressure→numeric; d/c environment
+- [x] Minor: c I add stellar_wind field; c I pressure→numeric; d/c environment
       add paper pointer; d rings add evidence line; d atmosphere date the adoption
 
 DECISION-REOPEN (owner art):
-- [ ] **c obliquity + spin_axis_orientation** — c is the only FREE rotator among
+- [x] **c obliquity + spin_axis_orientation** — c is the only FREE rotator among
       the planets (27 h). Per skill these are real owner choices, not passthrough
       (cf. αCen Chaos got a gated 15° tilt). b/d/c I are all locked (obliquity 0).
 

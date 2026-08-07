@@ -21,13 +21,13 @@ Per-axis work items (apply to each row as relevant):
 - [x] atmosphere (→ methodology-derived; c I absence-line convention) — fa949cd
 - [x] surface (→ methodology-derived) — 0b823bd
 - [x] appearance (EN narrative + cfg_colors_displayed rehome) — fbaaecd
-- [ ] magnetism.magnetic_field (rewritten 4da43e9, owner review pending)
-- [ ] environment (→ methodology-derived; rewritten 9c4fa2e, owner review pending)
-- [ ] rings
-- [ ] satellites
-- [ ] gameplay (drop retired 난도 value; 3-part shape; engine bits → evidence)
+- [x] magnetism.magnetic_field — 4da43e9 + owner wording
+- [x] environment (→ methodology-derived; owner tight-form) — ce13401 (+belt viz/dose/Alfven wing: 6d1887d e239623 3cbf6f8)
+- [x] rings — confirmed
+- [x] satellites — confirmed
+- [x] gameplay (3-part shape; retired 난도/RB tuple dropped) — 44ccec1
 
 ## Close-out
-- [ ] check_phase4_gate.py 0 errors, no new warnings
-- [ ] build_phase4_html.py proxima_cen (per commit)
-- [ ] tick proxima-planet-reaudit stale checkboxes (done 2026-07-14, never ticked)
+- [x] check_phase4_gate.py 0 errors, 0 warnings (every axis commit)
+- [x] build_phase4_html.py proxima_cen (per commit)
+- [x] tick proxima-planet-reaudit stale checkboxes (done 2026-07-14, never ticked)
