@@ -55,3 +55,16 @@ must move it gets a provenance line.
 - 2026-08-07: found + fixed a coefficient typo in the tidally-locked
   temperature doc (substellar ceiling "1.19" -> 1.41 = sqrt 2; computed values
   were already correct).
+- 2026-08-07: environment side-quests grew out of owner questions: belt
+  cross-section viz (proxima_d_phys, inner-belt lower cut = surface, owner
+  catch), methodology-derived doses (inner 5e3 / outer 1e3 rad/h central,
+  low confidence, scripts/refs/proxima_d_belt_dose.py), and the Alfven-wing
+  figure redrawn on the real u +- v_A characteristics after an owner catch.
+  Wing = future flux-tube-plugin use case (not expressible in Kerbalism SDF).
+- 2026-08-07: repo-wide 공짜 calque sweep (boards + ko mirrors + wiki rebuild);
+  banned as translationese in the ko-style memory, word allowed where it
+  genuinely means free-of-charge.
+- PASS CLOSED 2026-08-07: all 11 d axes owner-reviewed and confirmed, gate
+  0 errors / 0 warnings, check.sh fully green. Style precedent for future
+  passes: owner tight-form (no self-evident/definitional facts), per-axis
+  confirm-before-commit, approved prose frozen (append-only edits).
