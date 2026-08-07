@@ -949,10 +949,11 @@ decisions:
     status: gated
     driver: [window-selection]
     narrative: >
-      무대기(bare rock). 극근접 0.029 AU 강irradiation·강플레어 stripping + 저중력(g 0.58, 낮은 escape v) → cosmic
-      shoreline 아래 → 대기 미보유. breathability=∅. (희박 표토-기원 exosphere 정도는 가능하나 렌더 무의미.)
-      주의: ~16 G 자기장(G7)도 대기 보유는 못 한다. shoreline 아래 + 직하 450K 열탈출 + Garcia-Sage2017/Garraffo2016(장
-      있어도 Proxima 활동성엔 보호 불가) + 강한 장의 극 cusp 탈출이 오히려 손실 가중. 즉 강한 장 ≠ 대기 보유.
+      None. Too close and too light: the star's flares strip gas faster than the rock can hold it, and even
+      its strong magnetic field funnels the losses through the poles rather than preventing them.
+    narrative_ko: >
+      없음. 너무 가깝고 너무 가볍다. 별의 플레어가 암석이 붙잡는 속도보다 빠르게 기체를 벗겨 가고, 강한 자기장도
+      손실을 막기보다는 극으로 몰아 보낼 뿐이다.
     fields:
       - name: composition
         value: "무대기 (bare rock; 희박 표토-기원 exosphere 정도만, 렌더 무의미)"
@@ -960,14 +961,19 @@ decisions:
       - name: breathability
         value: false
         op: set
+    provenance: >
+      2026-06-23: airless adopted as the grounded default (owner).
+      2026-08-07: prose compressed to the absence line per the c I convention;
+      inline citations moved to evidence; verdict migrated pass-in-window ->
+      methodology-derived (Gate 1 recipe output). No value changed.
     gate:
       criterion: [retention]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
-        rationale: 대기 문서 Gate1(cosmic shoreline) 아래다. b보다 근접·저중력이라 stripping 압도. 무대기가 grounded
-        기본(오너 채택 2026-06-23).
-
-        paper: docs/reference/exoplanet-atmosphere-methodology.md Gate1(Zahnle&Catling2017 shoreline).
+        무대기가 근거 있는 기본값. 확인한 것: 대기 방법론 Gate 1의 cosmic shoreline(Zahnle & Catling 2017)
+        아래이고(b보다 근접·저중력이라 stripping이 압도), 직하 450 K 열탈출이 겹치며, ~16 G 자기장도 보호가
+        못 된다(Garcia-Sage 2017·Garraffo 2016: Proxima 활동성엔 장이 있어도 불충분, 극 cusp가 오히려 탈출
+        통로). 유보: 표토 기원의 무충돌 엑소스피어 정도는 있을 수 있으나 렌더에는 무의미하다.
 
   - body: Proxima Cen d
     axis: surface
