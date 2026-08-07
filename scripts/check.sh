@@ -119,6 +119,10 @@ echo "── 10. 파이프라인 경계 게이트 (pipeline-contract.md §1) ─
 python3 scripts/check_pipeline_flow.py || fail=1
 
 echo ""
+echo "── 11. 사이트맵 연결성 게이트 (신규 고아 페이지 감지) ──"
+python3 scripts/build_sitemap.py --audit-only || fail=1
+
+echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else
