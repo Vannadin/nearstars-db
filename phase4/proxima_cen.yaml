@@ -1041,17 +1041,33 @@ decisions:
       Proxima-lit은 고유색에 항성 표시색 #ffcc75(정규화 1.0/0.800/0.459)를 채널 곱한 값이다. 같은 연산으로
       구 단색을 다시 계산하면 #342614가 나오므로, 기록돼 있던 ~#36281a는 순수 곱이 아닌 눈대중 값이었다.
       색 정밀화는 emit 말미 art-pass 몫이라는 정책은 그대로다.
+
+      2026-08-07: EN+KO narrative pair added; display hex rehomed from the
+      narrative and base_color field into the cfg_colors_displayed block
+      (b convention). No value changed.
     status: gated
     driver: [art-direction, window-selection]
     narrative: >
-      Proxima의 적색광을 입은 어두운 따뜻한 회갈색 디스크이고, 공간풍화된 수성을 닮았다. 단색이 아니라 2-tone이다.
-      자기권이 항성풍을 막아 준 중위도는 상대적으로 밝고(고유 #3c3833 → Proxima-lit ~#3c2d17), 플레어 입자가
-      집중 채널되는 자기극관은 거의 흑갈로 짙다(고유 #2a2622 → Proxima-lit ~#2a1e10). 크레이터와 풍화 줄무늬가
-      더해진다. 오로라는 없다. 자기장은 약 16 G로 존재하지만 발광할 대기가 없다. b의 황토 호수세계, c의 차가운
-      미니 해왕성과 함께 시각적으로 세 극을 이룬다.
+      Under the red starlight the planet is a dim, warm grey-brown disk, a space-weathered Mercury
+      look-alike, but two-toned rather than flat. The mid-latitudes, where the magnetic field keeps the
+      ground fresh, read slightly pale; the magnetic poles, where the flare particles pour in, darken to
+      near-black caps. Craters and weathering streaks mottle the face. There is no aurora: the field is
+      there, sixteen gauss of it, but there is no air to light. Beside b's ochre lake world and c's cold
+      mini-Neptune it stands as the third visual extreme.
+    narrative_ko: >
+      붉은 별빛 아래 이 행성은 어둡고 따뜻한 회갈색 원반이고, 우주풍화된 수성을 닮았다. 다만 단색이 아니라
+      투톤이다. 자기장이 지면을 신선하게 지켜 준 중위도는 상대적으로 밝게 보이고, 플레어 입자가 쏟아지는
+      자기극은 거의 검은 극관으로 어두워진다. 크레이터와 풍화 줄무늬가 표면에 얼룩진다. 오로라는 없다.
+      16가우스의 자기장은 있지만 빛날 대기가 없다. b의 황토 호수 세계, c의 차가운 미니 해왕성과 함께 시각적
+      세 극단을 이룬다.
+    # MIGRATION-FLAG: cfg_colors_displayed 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (표시 팔레트, emit 말미 정밀화).
+    cfg_colors_displayed: >
+      Proxima reddening 적용 근사(§6 엔진, illuminant=별; emit서 정밀화). 중위도(자기권 차폐로 신선)
+      #3c3833 → Proxima-lit ~#3c2d17 · 자기극관(집중 풍화, 거의 흑갈) #2a2622 → Proxima-lit ~#2a1e10.
+      고유색은 G5 cfg_colors_intrinsic.
     fields:
       - name: base_color
-        value: "중위도 #3c3833 → Proxima-lit ~#3c2d17 / 자기극관 #2a2622 → Proxima-lit ~#2a1e10 (2-tone; 크레이터·풍화 줄무늬)"
+        value: "어두운 따뜻한 회갈 2-tone 디스크 (Proxima reddening; 밝은 중위도 ↔ 거의 흑갈 자기극관, 크레이터·풍화 줄무늬)"
         op: set
       - name: aurora
         value: "none (무대기, ~16 G 자기장 존재하나 발광 매질 없어 불가)"
