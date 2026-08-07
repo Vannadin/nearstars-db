@@ -120,6 +120,46 @@ Art-pass consequence: a finished NearStars body eventually ships the two low-res
 parameter maps (or flat defaults) plus K and θ̄, alongside the color/normal/height
 set. The board records the scalars; the maps are emit-end texture work.
 
+### Can K and θ̄ be derived rather than copied?
+
+**K: yes — it is a closed-form function of packing.** Hapke 2008
+([`2008Icar..195..918H`](https://ui.adsabs.harvard.edu/abs/2008Icar..195..918H),
+series paper 6, *Effects of porosity*) gives the porosity coefficient explicitly in
+terms of the filling factor φ of the optical (top-millimetre) layer:
+
+    K = −ln(1 − 1.209 φ^(2/3)) / (1.209 φ^(2/3))
+
+so the derivation chain is **surface type → φ → K**, one step, no analog copying.
+Inverting Sol's own assignments confirms they sit on this curve at sensible
+packings:
+
+| Sol K | implied φ | porosity | reading |
+|---|---|---|---|
+| 2.02 (Mars) | 0.54 | 46 % | wind-compacted dust |
+| 1.86 (default) | 0.49 | 51 % | lunar-like regolith (real lunar φ ≈ 0.4–0.5 ✓) |
+| 1.73 (Enceladus) | 0.45 | 56 % | fresh frost |
+| 1.34 / 1.20 / 1.19 (Deimos, Europa, Phobos) | 0.24 / 0.13 / 0.12 | 76–88 % | fairy-castle fluff |
+
+Pick φ from the surface state we already derive (mature regolith 0.45–0.50,
+fresh frost ~0.45, uncompacted fluff 0.1–0.25), then compute K. Note φ is the
+**near-surface optical packing, not the body's bulk porosity** — bulk density
+from mass and radius says nothing about it.
+
+Tested and rejected: **K does not track surface gravity**. Across 16 Sol bodies
+corr(K, log g) is only +0.58 and is carried by outliers (Europa at g = 1.31 gets
+1.20 while Miranda at g = 0.08 gets 1.86). Sol assigns K by *surface type*, not
+by compaction under weight; do the same.
+
+**θ̄: no — it is a fitted parameter, not a predicted one.** The roughness
+correction (Hapke 1984,
+[`1984Icar...59...41H`](https://ui.adsabs.harvard.edu/abs/1984Icar...59...41H))
+defines θ̄ as the mean slope angle of sub-resolution topography, and it is obtained
+by *fitting* a measured phase curve or by measuring a high-resolution DEM — neither
+exists for an exoplanet. So θ̄ stays anchored on the nearest Solar-System analog,
+informed by the terrain character we do derive (crater-degradation methodology):
+saturated cratered regolith ≈ 18°, smooth frost-mantled ≈ 6°, fractured/ridged ice
+≈ 30°. Record it as an analog choice, never as a derivation.
+
 ## Practical recipe (per body class)
 
 1. **Pick the scaled value by class** — this is the firm half:
@@ -138,10 +178,10 @@ set. The board records the scalars; the maps are emit-end texture work.
    `albedo_mean` field is the area-weighted **geometric** (visual) albedo of the
    final palette; the Bond value for the energy budget stays on the surface row.
    Conversion and definitions: surface-color-albedo methodology §6.
-4. **Pick K and θ̄ from the anchor families**: porosity K = 1.86 unless the
-   surface is compacted (Phobos-class 1.2–1.35) or unusually fluffy; roughness
-   θ̄ = 18° for lunar-like regolith, ~6° for smooth frost, ~30° for fractured
-   ice.
+4. **Compute K from φ** with the Hapke 2008 formula above (pick φ from the
+   surface state: mature regolith 0.45–0.50, fresh frost ~0.45, uncompacted
+   fluff 0.1–0.25), and **pick θ̄ by analog** (18° cratered regolith, ~6° smooth
+   frost, ~30° fractured ice) — it is a fitted parameter with no predictor.
 5. Record the values in the body's Phase 4 appearance row as typed fields
    (`hapke_terrain`, `hapke_scaled`, `hapke_porosity_k`, `hapke_theta`),
    refs = this doc. The Scatter/Surge parameter maps are deferred to the
@@ -171,6 +211,12 @@ Titan's scaled 2.2 (rule 1 would say 1.0) — flagged above as an art call.
   bibcode-verified. Shared with the surface-color methodology.
 - **Hapke, B. 1986**, Icarus 67, 264 ([`1986Icar...67..264H`](https://ui.adsabs.harvard.edu/abs/1986Icar...67..264H)).
   Shadow-hiding opposition effect (series paper 4). Bibcode-verified, no preprint.
+- **Hapke, B. 2008**, Icarus 195, 918 ([`2008Icar..195..918H`](https://ui.adsabs.harvard.edu/abs/2008Icar..195..918H)).
+  Porosity effects (series paper 6): the closed-form K(φ) this doc computes the
+  porosity coefficient with. Bibcode-verified.
+- **Hapke, B. 1984**, Icarus 59, 41 ([`1984Icar...59...41H`](https://ui.adsabs.harvard.edu/abs/1984Icar...59...41H)).
+  Macroscopic-roughness correction (series paper 3): defines θ̄ as a *fitted* mean
+  slope angle, which is why θ̄ is anchored, not derived. Bibcode-verified.
 - **Hapke, B. 2002**, Icarus 157, 523 ([`2002Icar..157..523H`](https://ui.adsabs.harvard.edu/abs/2002Icar..157..523H)).
   Coherent-backscatter opposition effect (series paper 5). Bibcode-verified.
 - **Sato, H. et al. 2014**, JGR Planets 119, 1775 ([`2014JGRE..119.1775S`](https://ui.adsabs.harvard.edu/abs/2014JGRE..119.1775S)).
