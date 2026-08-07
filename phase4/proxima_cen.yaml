@@ -1833,9 +1833,15 @@ decisions:
     status: gated
     driver: [fiction]
     fictional: true            # 실제 관측된 천체가 아님 (DB 대조 검사 면제)
+    provenance: >
+      2026-08-07: prose modernization, owner-confirmed (EN+KO story pair; the
+      field-name dump narrative retired). No value changed.
     narrative: >
-      body_type=냉 얼음 위성(카론 아날로그)이고, 물얼음 기반암 + 방사분해 톨린 적화, 무생물(극냉 ~40–60K). c의 위성,
-      c에 조석고정, 지름 652 km(미마스-카론급). designation=Proxima Centauri c I(고유명 없음).
+      The planet's only moon, a cold ice world 652 kilometres across. Radiation-baked red tholin stains its
+      water-ice bedrock, giving it Charon's face.
+    narrative_ko: >
+      c의 하나뿐인 위성이고, 지름 652 km의 차가운 얼음 세계다. 물얼음 기반암 위로 방사선이 구워 낸 붉은 톨린이
+      물들어 카론을 닮았다.
     fields:
       - name: body_type
         value: "냉 얼음 위성 (카론 아날로그; 물얼음 + 방사분해 톨린, 대기 없음, 무생물 ~40–60K, 지름 652 km)"
@@ -2146,10 +2152,17 @@ decisions:
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     status: gated
     driver: [fiction]
+    provenance: >
+      2026-06-23: owner confirmed no field.
+      2026-08-07: prose modernization, owner-confirmed (EN+KO absence story,
+      3-part evidence, decision date moved here). No value changed.
     narrative: >
-      무자기장이다. 지름 652 km 소형 얼음체라 금속핵 대류 dynamo 불가(얼음 위성 전형). 유도장도 미미(e~0·조석고정→조석가열
-      없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 자기 환경은 전적으로
-      c가 정한다. 궤도 6.4 R_c가 c 방사선 외대 안쪽이라, 위성은 자기 장을 갖는 대신 남의 벨트 속을 지난다.
+      None. An ice body this size has no metal core to run a dynamo, and with no subsurface ocean there is
+      no induced field either. Its magnetic environment belongs entirely to the planet: instead of carrying
+      a field of its own, the moon rides through someone else's radiation belt.
+    narrative_ko: >
+      없음. 이만한 얼음체는 다이너모를 돌릴 금속핵이 없고, 지하 바다가 없어 유도장도 생기지 않는다. 자기 환경은
+      전적으로 행성의 몫이라, 위성은 제 장을 갖는 대신 남의 방사선대 속을 지난다.
     fields:
       - name: magnetic_field
         value: "none (소형 얼음체 무dynamo, 유도장도 미미; c 자기권 6.4 R_c 내부, 외대 안쪽)"
@@ -2157,7 +2170,10 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      evidence: "소형 얼음 위성 전형(무dynamo). 지하 바다 없음(열원 부재)이라 유도장도 없음. c 자기권 내부라 위성 자체 장 불필요. 오너 G7 확정 2026-06-23."
+      evidence: >
+        자기장 부재 확정. 확인한 것: 소형 얼음 위성 전형(금속핵 대류 없음)이고, e≈0 조석고정이라 조석 가열이
+        없어 전도성 지하 바다가 만들어지지 않고 Europa식 유도장 경로도 닫힌다. 궤도의 자기 환경은 c의 자기권과
+        environment 행이 정한다.
 
   - body: Proxima Cen c I
     axis: environment
@@ -2208,7 +2224,11 @@ decisions:
     axis: rings
     status: gated
     driver: [fiction]
-    narrative: "고리 없음 (지름 652 km 위성, 고리 물질·근거 없음). 단순 부재."
+    provenance: >
+      2026-08-07: prose modernization, owner-confirmed (bare absence line;
+      the reasons were self-evident for a 652 km moon). No value changed.
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - name: ring_structure
         value: "none"
@@ -2222,7 +2242,12 @@ decisions:
     axis: satellites
     status: gated
     driver: [fiction, engine]
-    narrative: "submoon(위성의 위성) 없음. 동역학적 불안정으로 태양계에도 사례 0, 지름 652 km 위성은 보유 불가. 물리적 부재."
+    provenance: >
+      2026-08-07: prose modernization, owner-confirmed (bare absence line; the
+      submoon instability argument stays in the field note and evidence).
+      No value changed.
+    narrative: "None."
+    narrative_ko: "없음."
     fields:
       - name: satellite_count
         value: 0
