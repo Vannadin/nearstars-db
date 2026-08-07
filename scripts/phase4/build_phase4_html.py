@@ -93,6 +93,9 @@ def fields_table(fields):
         raw = f.get("value")
         if raw is None and f.get("na_reason"):
             val = '<span data-i18n>없음</span><span data-en hidden>N/A</span>'
+        elif isinstance(raw, str) and not _nullish(f.get("value_ko")):
+            # bilingual field value: `value` is the English source, `value_ko` its mirror
+            val = bi(raw, f.get("value_ko"))
         else:
             val = value_html(raw)
         if f.get("unit"):
@@ -107,12 +110,16 @@ def fields_table(fields):
                 f'<span class="sw"><span class="chip" style="background:{esc(c)}"></span>'
                 f'{esc(n)} <span class="hx">{esc(c)}</span></span>'
                 for n, c in colors.items()) + "</div>")
+        # note / na_reason / phase3_default follow the prose contract: the base key is
+        # the English source, `<key>_ko` its mirror. Legacy single-language entries
+        # (most of the board) render untoggled via bi()'s fallback.
         if f.get("na_reason"):
-            val += f'<div class="fnote">{esc(f["na_reason"])}</div>'
+            val += f'<div class="fnote">{bi(f["na_reason"], f.get("na_reason_ko"))}</div>'
         if f.get("note"):
-            val += f'<div class="fnote">{esc(f["note"])}</div>'
+            val += f'<div class="fnote">{bi(f["note"], f.get("note_ko"))}</div>'
         if f.get("phase3_default"):
-            val += f'<div class="fnote p3">Phase 3: {esc(f["phase3_default"])}</div>'
+            val += (f'<div class="fnote p3">Phase 3: '
+                    f'{bi(f["phase3_default"], f.get("phase3_default_ko"))}</div>')
         op = f.get("op")
         opcell = f'<span class="op {esc(op)}">{esc(op)}</span>' if op and op != "set" else ""
         body.append(
@@ -153,7 +160,7 @@ def moons_table(moons):
             rows.append(f'<tr class="mdesign">{dcells}</tr>')
         if m.get("note"):
             rows.append(f'<tr class="mnote"><td></td><td colspan="{len(MOON_COLS)}">'
-                        f'<div class="fnote">{esc(m["note"])}</div></td></tr>')
+                        f'<div class="fnote">{bi(m["note"], m.get("note_ko"))}</div></td></tr>')
     return ('<div class="moonwrap"><table class="spec moons"><thead><tr>' + head
             + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
 

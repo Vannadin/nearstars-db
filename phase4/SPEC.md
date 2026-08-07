@@ -259,7 +259,7 @@ decisions:
         value: 1.0
         unit: R_jup
         op: set                     # set | scale | passthrough
-        phase3_default: "1.0 R_Jup (low)"
+        phase3_default: "1.0 R_Jup (low)"       # *_ko mirrors the Korean side
       - name: geopotential_j2       # → bulk.geopotential_j2 (Principia j2 + reference_radius)
         value: 0.023
         reference_radius_km: 71492
@@ -280,6 +280,14 @@ decisions:
   top-level `value`). The group must be in the §0 menu; each `fields[].name` should be a
   §0 axis name.
 - Every emit number lives in a typed field (`value` + `unit`/`op`), never only in prose.
+- **Field text is bilingual on the same contract as prose** (owner, 2026-08-07). A
+  field's `note`, `na_reason`, `phase3_default` and any string `value` hold the
+  **English source**; the Korean mirror goes in `note_ko` / `na_reason_ko` /
+  `phase3_default_ko` / `value_ko`. The board viewer toggles them exactly like
+  `narrative` / `narrative_ko`. Legacy single-language entries stay valid and render
+  untoggled (the renderer falls back to whichever side exists), so migration is
+  incremental: **whenever you touch a field, add the missing side.** New fields must
+  ship both.
 - The gate block uses the schema keys **`evidence`** and **`divergence_note`** — not
   `note`/`paper`/`rationale`. Source citations go in `refs` (machine-readable), not prose.
 - **Prose readability contract** (owner feedback 2026-07-24, hardened over that day). The

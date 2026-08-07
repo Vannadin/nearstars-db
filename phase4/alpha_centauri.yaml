@@ -457,24 +457,29 @@ decisions:
         verdict: owner-override
       - name: hapke_terrain
         value: null
-        na_reason: "고체 표면 없음. 지형 셰이더 미적용(거대행성)"
+        na_reason: "No solid surface; the terrain shader does not apply (giant)."
+        na_reason_ko: "고체 표면 없음. 지형 셰이더 미적용(거대행성)"
       - name: hapke_scaled
         value: 1.6
         op: set
-        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+        note: "Full-disk phase behaviour (Sol's class convention)."
+        note_ko: "원반 위상 거동(Sol 클래스 컨벤션)"
       - name: hapke_porosity_k
         value: 1.8
         op: set
-        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.47 (53% 다공)"
+        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.47 (53% porosity)."
+        note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.47 (53% 다공)"
       - name: hapke_theta
         value: 10
         unit: deg
         op: set
-        note: "거대행성 아날로그(토성 10°) (적합 파라미터라 도출 아닌 아날로그 선택)"
+        note: "Giant analog (Saturn 10 deg). A fitted parameter, so an analog choice rather than a derivation."
+        note_ko: "거대행성 아날로그(토성 10°). 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 0.55
         op: set
-        note: "물구름 Class I/II라 토성 0.47보다 밝은 쪽"
+        note: "Class I/II water clouds, so brighter than Saturn's 0.47."
+        note_ko: "물구름 Class I/II라 토성 0.47보다 밝은 쪽"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window        # 색·메커니즘 in-window; 난류 밴딩만 field-level documented-divergence
@@ -1597,24 +1602,29 @@ decisions:
       - name: hapke_terrain
         value: 0.45
         op: set
-        note: "밝은 유리질/화산 서리 패밀리. Sol의 Io 자신이 0.45"
+        note: "Bright glazed / volcanic-frost family. Sol's own Io is 0.45."
+        note_ko: "밝은 유리질/화산 서리 패밀리. Sol의 Io 자신이 0.45"
       - name: hapke_scaled
         value: 2.0
         op: set
-        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+        note: "Full-disk phase behaviour (Sol's class convention)."
+        note_ko: "원반 위상 거동(Sol 클래스 컨벤션)"
       - name: hapke_porosity_k
         value: 1.86
         op: set
-        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.49 (51% porosity)."
+        note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
       - name: hapke_theta
         value: 20
         unit: deg
         op: set
-        note: "Io 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+        note: "Io analog. A fitted parameter, so an analog choice rather than a derivation."
+        note_ko: "Io 아날로그. 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 0.35
         op: set
-        note: "면적가중 기하 알베도; Bond 0.3은 surface 행"
+        note: "Area-weighted geometric albedo; Bond 0.3 stays on the surface row."
+        note_ko: "면적가중 기하 알베도; Bond 0.3은 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -1896,24 +1906,29 @@ decisions:
       - name: hapke_terrain
         value: 0.88
         op: set
-        note: "어두운 암석 레골리스 패밀리(수성·Ceres·Vesta)"
+        note: "Dark rocky regolith family (Mercury, Ceres, Vesta)."
+        note_ko: "어두운 암석 레골리스 패밀리(수성·Ceres·Vesta)"
       - name: hapke_scaled
         value: 2.2
         op: set
-        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+        note: "Full-disk phase behaviour (Sol's class convention)."
+        note_ko: "원반 위상 거동(Sol 클래스 컨벤션)"
       - name: hapke_porosity_k
         value: 1.86
         op: set
-        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.49 (51% porosity)."
+        note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
       - name: hapke_theta
         value: 18
         unit: deg
         op: set
-        note: "포화 크레이터 레골리스 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+        note: "Cratered-regolith analog. A fitted parameter, so an analog choice rather than a derivation."
+        note_ko: "포화 크레이터 레골리스 아날로그. 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 0.33
         op: set
-        note: "면적가중 기하 알베도; Bond 0.3은 surface 행"
+        note: "Area-weighted geometric albedo; Bond 0.3 stays on the surface row."
+        note_ko: "면적가중 기하 알베도; Bond 0.3은 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -2316,24 +2331,29 @@ decisions:
       - name: hapke_terrain
         value: 1.0
         op: set
-        note: "달형 패밀리 육지"
+        note: "Lunar-family land."
+        note_ko: "달형 패밀리 육지"
       - name: hapke_scaled
         value: 1.0
         op: set
-        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+        note: "Full-disk phase behaviour (Sol's class convention)."
+        note_ko: "원반 위상 거동(Sol 클래스 컨벤션)"
       - name: hapke_porosity_k
         value: 1.86
         op: set
-        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
+        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.49 (51% porosity)."
+        note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
       - name: hapke_theta
         value: 18
         unit: deg
         op: set
-        note: "포화 크레이터 레골리스 아날로그 (적합 파라미터라 도출 아닌 아날로그 선택)"
+        note: "Cratered-regolith analog. A fitted parameter, so an analog choice rather than a derivation."
+        note_ko: "포화 크레이터 레골리스 아날로그. 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 0.45
         op: set
-        note: "면적가중 기하 알베도; Bond 0.3은 surface 행"
+        note: "Area-weighted geometric albedo; Bond 0.3 stays on the surface row."
+        note_ko: "면적가중 기하 알베도; Bond 0.3은 surface 행"
     refs: ["docs/reference/element-plasma-colors.md", "docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     gate:
       criterion: [visual-checklist, composition-lock]
@@ -2600,24 +2620,29 @@ decisions:
       - name: hapke_terrain
         value: 1.56
         op: set
-        note: "먼지 옅은 대기 패밀리. Mars 1.56(대비 강한 낙조)"
+        note: "Dusty thin-atmosphere family. Mars 1.56 (contrasty falloff)."
+        note_ko: "먼지 옅은 대기 패밀리. Mars 1.56(대비 강한 낙조)"
       - name: hapke_scaled
         value: 1.0
         op: set
-        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+        note: "Full-disk phase behaviour (Sol's class convention)."
+        note_ko: "원반 위상 거동(Sol 클래스 컨벤션)"
       - name: hapke_porosity_k
         value: 2.02
         op: set
-        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.54 (46% 다공)"
+        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.54 (46% porosity)."
+        note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.54 (46% 다공)"
       - name: hapke_theta
         value: 24
         unit: deg
         op: set
-        note: "Mars 아날로그(바람 다듬은 먼지 지형) (적합 파라미터라 도출 아닌 아날로그 선택)"
+        note: "Mars analog (wind-worked dust terrain). A fitted parameter, so an analog choice rather than a derivation."
+        note_ko: "Mars 아날로그(바람 다듬은 먼지 지형). 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 0.35
         op: set
-        note: "면적가중 기하 알베도; Bond 0.35는 surface 행"
+        note: "Area-weighted geometric albedo; Bond 0.35 stays on the surface row."
+        note_ko: "면적가중 기하 알베도; Bond 0.35는 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
@@ -2962,24 +2987,29 @@ decisions:
       - name: hapke_terrain
         value: 0.43
         op: set
-        note: "얼음 패밀리. 엔셀라두스급 신선 서리"
+        note: "Icy family. Enceladus-class fresh frost."
+        note_ko: "얼음 패밀리. 엔셀라두스급 신선 서리"
       - name: hapke_scaled
         value: 2.2
         op: set
-        note: "원반 위상 거동(Sol 클래스 컨벤션)"
+        note: "Full-disk phase behaviour (Sol's class convention)."
+        note_ko: "원반 위상 거동(Sol 클래스 컨벤션)"
       - name: hapke_porosity_k
         value: 1.73
         op: set
-        note: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.44 (56% 다공)"
+        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.44 (56% porosity)."
+        note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.44 (56% 다공)"
       - name: hapke_theta
         value: 15
         unit: deg
         op: set
-        note: "Miranda 균열 30°와 엔셀라두스 서리 6° 절충(E-고리 서리가 균열 지형을 덮음) (적합 파라미터라 도출 아닌 아날로그 선택)"
+        note: "Between Miranda's fractures 30 deg and Enceladus' frost 6 deg (E-ring frost mantles the fractured terrain). A fitted parameter, so an analog choice rather than a derivation."
+        note_ko: "Miranda 균열 30°와 엔셀라두스 서리 6° 절충(E-고리 서리가 균열 지형을 덮음). 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 1.2
         op: set
-        note: "신선 서리라 기하 알베도가 1을 넘는다(엔셀라두스 p_v 1.38 선례); Bond 0.91은 surface 행"
+        note: "Fresh frost, so the geometric albedo exceeds 1.0 (Enceladus' measured p_v 1.38 is the precedent); Bond 0.91 stays on the surface row."
+        note_ko: "신선 서리라 기하 알베도가 1을 넘는다(엔셀라두스 p_v 1.38 선례); Bond 0.91은 surface 행"
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
