@@ -1054,21 +1054,17 @@ decisions:
       Under the red starlight the planet is a dim, warm grey-brown disk, a space-weathered Mercury
       look-alike, but two-toned rather than flat. The mid-latitudes, where the magnetic field keeps the
       ground fresh, read slightly pale; the magnetic poles, where the flare particles pour in, darken to
-      near-black caps, and the caps are color only, terrain showing through them unchanged. The face is
-      saturated, crater upon crater, the old volcanic plains of the lowlands telling themselves apart only
-      by their thinner crater count, and long thrust scarps folded by the planet's cooling contraction cut
-      across the craters to mark its age. With no day-night cycle the small craters keep edges crisper than
-      Mercury's, and nothing here is cracked. No aurora either: the field is there, sixteen gauss of it,
-      but there is no air to light. Beside b's ochre lake world and c's cold mini-Neptune it stands as the
-      third visual extreme.
+      near-black caps. The face is crater-saturated, with faint volcanic plains, small craters crisper than
+      Mercury's, and contraction scarps cutting across. There is no aurora: the field is there, sixteen
+      gauss of it, but there is no air to light. Beside b's ochre lake world and c's cold mini-Neptune it
+      stands as the third visual extreme.
     narrative_ko: >
       붉은 별빛 아래 이 행성은 어둡고 따뜻한 회갈색 원반이고, 우주풍화된 수성을 닮았다. 다만 단색이 아니라
       투톤이다. 자기장이 지면을 신선하게 지켜 준 중위도는 상대적으로 밝게 보이고, 플레어 입자가 쏟아지는
-      자기극은 거의 검은 극관으로 어두워지는데, 극관은 색으로만 덮여 그 아래 지형이 그대로 비친다. 표면은
-      크레이터 위에 크레이터가 겹친 포화 상태이고, 저지대의 오랜 화산 평지는 성긴 크레이터 밀도로만 은은하게
-      구분되며, 식으며 수축한 몸이 접어 놓은 단층 절벽이 크레이터를 가로질러 세월을 표시한다. 낮밤 사이클이
-      없어 잔 크레이터의 날은 수성보다 또렷하고, 균열 지형은 없다. 오로라도 없다. 16가우스의 자기장은 있지만
-      빛날 대기가 없다. b의 황토 호수 세계, c의 차가운 미니 해왕성과 함께 시각적 세 극단을 이룬다.
+      자기극은 거의 검은 극관으로 어두워진다. 표면은 크레이터가 포화된 낯이고, 그 위에 은은한 화산 평지와
+      수성보다 또렷한 잔 크레이터, 크레이터를 가로지르는 수축 절벽이 얹힌다. 오로라는 없다. 16가우스의
+      자기장은 있지만 빛날 대기가 없다. b의 황토 호수 세계, c의 차가운 미니 해왕성과 함께 시각적 세 극단을
+      이룬다.
     # MIGRATION-FLAG: cfg_colors_displayed 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (표시 팔레트, emit 말미 정밀화).
     cfg_colors_displayed: >
       Proxima reddening 적용 근사(§6 엔진, illuminant=별; emit서 정밀화). 중위도(자기권 차폐로 신선)
