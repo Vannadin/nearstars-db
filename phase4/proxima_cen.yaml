@@ -634,16 +634,13 @@ decisions:
       criterion: [derived-grounding]
       verdict: methodology-derived
       evidence: >
-        rationale: G6 "희미한 플레어-오로라" 채택이 약한 장 존재를 이미 함의 → G7은 그 정량·명시(별도 art 선택 없는
-        derived 축). 자이언트 energy-flux 법칙(Christensen2009)은 부적용이고, 암석체라 RM22 경로. 강한 장 가정은 근거
-        없음(미측정+느린자전+노쇠).
-
-        coupling: G4 retention divergence를 강화한다. 약한 장 → 자기차폐 미약 → M왜성 stripping 무방비(Garcia-Sage2017·
-        Garraffo2016: 장이 있어도 Proxima 활동성엔 보호 어려움) → "보유"를 documented-divergence로 둔 게 정당. G6 오로라
-        희미함과도 정합. environment.radiation(G8)에도 입력이다. 약한 자기권 → 표면 방사선 환경 가혹(플레어 직격).
-
-        paper: 암석 dynamo = docs/reference/planetary-dynamo-scaling.md regime 4(RM22 2203.01065 + Garraffo2017 +
-        조석lock penalty). 노쇠/느린자전 약화 = Driscoll&Olson2011.
+        약한 다중극 장(사다리값 B_eq ~1.2 µT)으로 확정하고, 활성 다이나모 여부는 불확실로 둔다. 희미한
+        플레어-오로라를 채택한 순간 약한 장은 이미 함의됐으므로, 이 행은 별도 예술 선택 없는 정량화다. 확인한
+        것: 암석 다이나모 방법론 regime 4(RM22 + 조석고정 penalty, 노쇠 냉각은 Driscoll & Olson 2011)로
+        계산했고, 거대행성용 energy-flux 법칙은 부적용임을 확인했으며, 이 약한 장이 대기 보유의 divergence
+        (Garcia-Sage 2017·Garraffo 2016: 장이 있어도 Proxima 활동성엔 보호가 어렵다), 희미한 오로라, 가혹한
+        표면 방사선 환경(플레어 직격)과 서로 정합함을 교차 확인했다. 유보: 측정은 없다. 보고된 것은 플레어의
+        궤도 주기 변조라는 상호작용의 흔적뿐이라, 세기는 방법론 사다리값이다.
     refs: ["2605.22925", "2203.01065"]
 
   - body: Proxima Cen b
