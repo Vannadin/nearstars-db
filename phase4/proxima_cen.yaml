@@ -767,11 +767,22 @@ decisions:
     axis: identity
     status: gated
     driver: [window-selection]
+    provenance: >
+      2026-08-07: prose modernization. Narrative rewritten to story style (EN+KO),
+      evidence to the 3-part shape. The RB discovery tuple (T F F F) in evidence
+      was a leftover of the discoverability layer retired 2026-07-28 and is
+      dropped. No value changed.
     narrative: >
-      body_type=초단주기 sub-Earth인 뜨거운 무대기 암석(자기권 가진 수성형), 무생물. designation=Proxima Centauri d
-      (고유명 없음). distinctive: 지구형
-      외계행성 최초의 자기장 추정치(~16 G)를 가진 행성 + 항성 플레어가 d 궤도에 phase-lock(Zapatero Osorio 2026),
-      곧 "별을 자기적으로 때리는 안쪽 행성".
+      The innermost planet, a hot bare rock smaller than Earth that circles its star in five days. It would
+      pass for Mercury except for one thing: a magnetic field of roughly sixteen gauss wraps it, the first
+      ever inferred for a rocky world beyond the Solar System. And the star seems to answer. Its flares erupt
+      in step with the planet's orbit, as if the little world struck the star a magnetic blow on every pass.
+      Nothing lives here.
+    narrative_ko: >
+      가장 안쪽 행성이고, 지구보다 작은 뜨거운 맨 암석이 닷새 만에 별을 한 바퀴 돈다. 수성을 닮았지만 결정적으로
+      다른 점이 하나 있다. 약 16가우스의 자기장이 행성을 감싸고 있는데, 태양계 밖 암석 행성에서 추정된 최초의
+      자기장이다. 그리고 별이 여기에 응답하는 듯하다. 플레어가 행성의 공전 위상에 발맞춰 터져 나와, 마치 이 작은
+      세계가 지나갈 때마다 별을 자기적으로 두드리는 것 같다. 생명은 없다.
     fields:
       - name: body_type
         value: "초단주기 sub-Earth: 뜨거운 무대기 암석 (자기권 가진 수성형, 무생물)"
@@ -783,9 +794,11 @@ decisions:
       criterion: [classification]
       verdict: pass-in-window
       evidence: >
-        candidate(arXiv:2202.05188 Faria2022) → 별 항상가시·행성 관측발견 T F F F. 수성형이되 ~16 G 자기권 보유(G7,
-        Zapatero Osorio2026 SPI)로 무자기장 수성과 차별. b(온대)·c(냉)와 극단 대비, 시스템 다양성. phase-lock SPI=d 시그니처.
-    refs: ["2202.05188"]
+        분류는 초단주기 sub-Earth 무대기 암석, 자기권을 가진 수성형으로 확정. 확인한 것: RV 검출은 후보 단계
+        (Faria 2022), SPI 추정 극자기장 ~16 G(Zapatero Osorio 2026)가 무자기장 수성과의 차별 근거이고, b(온대
+        호수 세계)·c(차가운 mini-Neptune)와 세 극단을 이뤄 로스터 다양성을 확인했다. 유보: 아직 확정 검출이
+        아닌 candidate다.
+    refs: ["2202.05188", "2605.22925"]
 
   - body: Proxima Cen d
     axis: orbit
