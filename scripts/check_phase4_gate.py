@@ -117,6 +117,30 @@ def nonempty(v):
     return v is not None and str(v).strip() != "" and str(v).strip().lower() != "null"
 
 
+
+# 부재를 뜻하는 필드 값 — 이 값들만으로 이뤄진 행은 "이 축은 없다"는 선언이라
+# 인용할 문헌 주장이 애초에 없다 (SPEC §3.1 refs 면제).
+ABSENCE_VALUES = {None, 0, False, "none", "None", "없음", "n/a", "N/A"}
+
+
+def is_absence_row(fields):
+    """모든 typed field가 부재를 표현하면 True (필드가 없으면 판정 불가 → False)."""
+    if not fields:
+        return False
+    for f in fields:
+        if not isinstance(f, dict):
+            return False
+        if nonempty(f.get("na_reason")):
+            continue
+        v = f.get("value")
+        if isinstance(v, str):
+            v = v.strip()
+        if v in ABSENCE_VALUES:
+            continue
+        return False
+    return True
+
+
 def is_v2(doc):
     """2 / 2.0 / "2" all count — a quoting slip must not downgrade a strict board."""
     return str(doc.get("schema_version", "")).strip() in {"2", "2.0"}
@@ -295,9 +319,12 @@ def check_v2(path, doc):
                 or nonempty(gate.get("value"))
             if not has_value:
                 warns.append(f"{loc}: gated row has no machine-readable value/fields")
-            # gameplay/identity record design choices, not literature claims —
-            # refs-exempt per SPEC §3.1 (owner, 2026-07-28)
-            if not row.get("refs") and group not in ("gameplay", "identity"):
+            # refs-exempt rows (SPEC §3.1): gameplay/identity record design choices
+            # (owner 2026-07-28), and a pure-absence row asserts that a facet is not
+            # there — no literature claims either, so empty refs is the honest state
+            # (owner 2026-08-05). Exempt means "not required", never "not allowed".
+            if not row.get("refs") and group not in ("gameplay", "identity") \
+                    and not is_absence_row(fields):
                 warns.append(f"{loc}: gated row has no refs[]")
 
     if bad_driver_rows:
