@@ -1,29 +1,29 @@
 <!-- α Cen 궤도 안정성 검증 매트릭스 (Phase 4 자료). 수동 작성 — 4검사 요약. -->
 <!doctype html><meta charset="utf-8"><title>Alpha Centauri — orbit stability validation</title>
 <style>
-  body{margin:0;background:#0a0c12;color:#cdd6e6;font:14px/1.65 system-ui,sans-serif}
-  header{padding:20px 24px;border-bottom:1px solid #1c2436}
-  h1{margin:0;font-size:19px} .lead{color:#8a94a8;font-size:13px;margin-top:6px;max-width:80ch}
+  body{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.65 system-ui,sans-serif}
+  header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.09)}
+  h1{margin:0;font-size:19px} .lead{color:rgba(255,255,255,.52);font-size:13px;margin-top:6px;max-width:80ch}
   main{padding:22px;max-width:1100px}
   table.matrix{border-collapse:collapse;margin:6px 0 22px}
-  table.matrix th,table.matrix td{border:1px solid #1c2436;padding:9px 13px;text-align:left;vertical-align:top}
-  table.matrix th{background:#11141d;font-size:12px;color:#8a94a8}
-  .v-ok{color:#8fe3a0;font-weight:600} .v-warn{color:#e8c561;font-weight:600}
+  table.matrix th,table.matrix td{border:1px solid rgba(255,255,255,.09);padding:9px 13px;text-align:left;vertical-align:top}
+  table.matrix th{background:rgba(255,255,255,.03);font-size:12px;color:rgba(255,255,255,.52)}
+  .v-ok{color:#4ec9b0;font-weight:600} .v-warn{color:#e0b070;font-weight:600}
   .mono{font-family:ui-monospace,monospace;font-size:12px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
-  .card{background:#11141d;border:1px solid #1c2436;border-radius:10px;overflow:hidden}
-  .card img{width:100%;display:block;background:#06070d}
+  .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;overflow:hidden}
+  .card img{width:100%;display:block;background:#06070a}
   .card .m{padding:11px 13px} .card h3{margin:0 0 4px;font-size:14px}
-  .card .sub{color:#8a94a8;font-size:12px} .card a{color:#7fb0ff;text-decoration:none;font-size:12px}
+  .card .sub{color:rgba(255,255,255,.52);font-size:12px} .card a{color:#7aa8ff;text-decoration:none;font-size:12px}
   .card a:hover{text-decoration:underline}
-  h2{font-size:15px;margin:26px 0 10px;border-top:1px solid #1c2436;padding-top:18px}
-  .note{color:#8a94a8;font-size:12.5px;max-width:80ch}
-  .seg{float:right}.seg button{background:#1c2740;color:#cdd6e6;border:1px solid #2c3a5a;border-radius:6px;padding:4px 10px;cursor:pointer}
-  .seg button.on{background:#2b60b0}
+  h2{font-size:15px;margin:26px 0 10px;border-top:1px solid rgba(255,255,255,.09);padding-top:18px}
+  .note{color:rgba(255,255,255,.52);font-size:12.5px;max-width:80ch}
+  .seg{float:right}.seg button{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:4px 10px;cursor:pointer}
+  .seg button.on{background:rgba(122,168,255,.30)}
 </style>
 <header>
   <div class="seg"><button id="ko">한국어</button><button id="en" class="on">EN</button></div>
-  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7fb0ff;text-decoration:none">← Orbit viewers</a> · <a href="../../index.html" style="color:#7fb0ff;text-decoration:none">Phase 4</a> · <a href="../../../tools.html" style="color:#7fb0ff;text-decoration:none">Tools</a> · <a href="../../../index.html" style="color:#7fb0ff;text-decoration:none">DB</a></nav>
+  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a> · <a href="../../index.html" style="color:#7aa8ff;text-decoration:none">Phase 4</a> · <a href="../../../tools.html" style="color:#7aa8ff;text-decoration:none">Tools</a> · <a href="../../../index.html" style="color:#7aa8ff;text-decoration:none">DB</a></nav>
   <h1>Alpha Centauri A b (Polyphemus) — <span data-i18n>궤도 안정성 검증</span><span data-en hidden>orbit stability validation</span></h1>
   <div class="lead"><span data-i18n>위성계와 행성계를 각각 두 방식으로 교차 검증했습니다. leapfrog(고정 10분 스텝)는 Principia 인게임 적분기와 정합하고, IAS15+MEGNO는 결정론적 카오스를 판정합니다(MEGNO≈2 정칙, &gt;5 카오스).</span><span data-en hidden>Both the moon system and the planet orbit are cross-checked two ways. Leapfrog (fixed 10-min step) matches Principia's in-game integrator; IAS15+MEGNO diagnoses deterministic chaos (MEGNO≈2 regular, &gt;5 chaotic).</span></div>
 </header>

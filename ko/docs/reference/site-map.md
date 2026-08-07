@@ -2,7 +2,7 @@
 # 사이트맵: 발행 문서 표면
 
 > `python3 scripts/build_sitemap.py`로 생성. 손으로 고치지 말 것.
-> 페이지 272개, 합계 21.6 MB, 내부 링크 4801개.
+> 페이지 272개, 합계 21.7 MB, 내부 링크 4801개.
 > gitignore된 논문 캐시(`docs/phase3/_papers/`)는 사이트가 아니라 로컬 캐시라 제외한다.
 
 ## 구조
@@ -10,7 +10,7 @@
 | 구획 | 페이지 | 용량 | 역할 |
 |---|---:|---:|---|
 | `root` | 7 | 2.4 MB | Top-level surfaces |
-| `wiki` | 59 | 2.8 MB | Rendered reference docs + plans |
+| `wiki` | 59 | 2.9 MB | Rendered reference docs + plans |
 | `phase2` | 77 | 1.1 MB | Per-host measurement reports |
 | `phase3` | 81 | 5.8 MB | Per-planet synthesis reports |
 | `phase4` | 48 | 9.4 MB | Decision boards + orbit viewers |
@@ -40,13 +40,13 @@
 
 ## 최대 용량 페이지
 
-- `phase4/orbit-viewers/trappist-1/interactive.html` — 1431 KB
+- `phase4/orbit-viewers/trappist-1/interactive.html` — 1432 KB
 - `starmap.html` — 1257 KB
-- `phase4/orbit-viewers/alpha-centauri/interactive.html` — 1023 KB
+- `phase4/orbit-viewers/alpha-centauri/interactive.html` — 1024 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_leapfrog.html` — 1020 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_megno.html` — 1017 KB
 - `firefly-colors.html` — 936 KB
-- `phase4/orbit-viewers/barnards-star/interactive.html` — 776 KB
+- `phase4/orbit-viewers/barnards-star/interactive.html` — 777 KB
 - `phase4/orbit-viewers/tau-cet/interactive.html` — 769 KB
 
-<!-- generated 2026-08-07 18:36 -->
+<!-- generated 2026-08-07 18:56 -->

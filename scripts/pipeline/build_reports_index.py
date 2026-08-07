@@ -181,16 +181,16 @@ PAGE_TEMPLATE = r'''<!DOCTYPE html>
 main { max-width: 980px }
 .rt { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px }
 .rt th { padding: 9px 12px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10.5px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
-.rt td { padding: 8px 12px; border-top: 1px solid var(--bd-soft); color: #b0c4d8; font-family: var(--mono); font-size: 12.5px; vertical-align: top }
+.rt td { padding: 8px 12px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12.5px; vertical-align: top }
 .rt td.sys { font-family: var(--sans); color: var(--fg-emph); font-weight: 600 }
 .rt a { color: var(--accent) }
 .rt a:hover { text-decoration: underline }
 .pill { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: .3px; margin-right: 4px }
-.pill-p2 { background: #1a2f44; color: #7aaae0 }
-.pill-p3 { background: #2a1a30; color: #c890d0 }
-.pill-p4 { background: #1e2f22; color: #7fc98f }
+.pill-p2 { background: rgba(122,168,255,.12); color: #7aa8ff }
+.pill-p3 { background: rgba(224,144,208,.14); color: #e090d0 }
+.pill-p4 { background: rgba(78,201,176,.12); color: #4ec9b0 }
 .pill-mf { background: rgba(216,160,64,0.15); color: var(--warn-soft); border: 1px solid rgba(216,160,64,0.35) }
-.pill-3d { background: #12283a; color: #7ac8e0 }
+.pill-3d { background: rgba(122,200,224,.12); color: #7ac8e0 }
 .lang-toggle { margin-left: auto }
 .empty { color: var(--fg-faint); font-style: italic }
 .sidepanel { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--bd-strong); border-radius: 6px; background: var(--bg-card); display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
@@ -201,11 +201,11 @@ main { max-width: 980px }
 @media (max-width: 600px) {
   .rt thead { display: none }
   .rt, .rt tbody, .rt tr, .rt td { display: block; width: 100% }
-  .rt tr { border: 1px solid #1a2333; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; background: #0a1018 }
+  .rt tr { border: 1px solid var(--bd-strong); border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; background: var(--bg-card) }
   .rt td { display: flex; justify-content: space-between; align-items: baseline; border: none; padding: 3px 0; gap: 10px; font-size: 12px }
   .rt td::before {
     content: attr(data-label);
-    color: #5a7090; font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--fg-dim); font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
     font-family: var(--sans); font-weight: 600; flex-shrink: 0
   }
   .rt td.sys { justify-content: flex-start; font-size: 14px }

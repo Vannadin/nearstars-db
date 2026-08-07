@@ -203,7 +203,7 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
 
 .mft { width: 100%; border-collapse: collapse; font-size: 12px; margin: 4px 0 12px }
 .mft th { padding: 7px 9px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
-.mft td { padding: 6px 9px; border-top: 1px solid var(--bd-soft); color: #b0c4d8; vertical-align: top; line-height: 1.5 }
+.mft td { padding: 6px 9px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); vertical-align: top; line-height: 1.5 }
 .mft td.bib { font-family: var(--mono); font-size: 11px; white-space: nowrap }
 .mft td.bib a { color: var(--accent); text-decoration: none }
 .mft td.bib a:hover { text-decoration: underline }
@@ -230,11 +230,11 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
 @media (max-width: 600px) {
   .mft thead { display: none }
   .mft, .mft tbody, .mft tr, .mft td { display: block; width: 100% }
-  .mft tr { border: 1px solid #1a2333; border-radius: 6px; padding: 8px 11px; margin-bottom: 8px; background: #0a1018 }
+  .mft tr { border: 1px solid var(--bd-strong); border-radius: 6px; padding: 8px 11px; margin-bottom: 8px; background: var(--bg-card) }
   .mft td { display: flex; justify-content: space-between; align-items: baseline; border: none; padding: 3px 0; gap: 10px; font-size: 12px }
   .mft td::before {
     content: attr(data-label);
-    color: #5a7090; font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--fg-dim); font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
     font-family: var(--sans); font-weight: 600; flex-shrink: 0
   }
   .mft td.title, .mft td.why { display: block }

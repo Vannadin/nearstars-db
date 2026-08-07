@@ -134,9 +134,9 @@ sub = (f"{integ['integrator']} · dt={dt_min:.1f} min · {tspan:,} yr · "
 LIGHT = {"paper": "#ffffff", "plot": "#ffffff", "font": "#1a1a1a",
          "grid": "#dfe3ea", "zero": "#b8c0cc", "zero_hi": "#8a93a3",
          "sub": "#5a6473", "legend_bg": "rgba(255,255,255,.65)"}
-DARK = {"paper": "#0a0c12", "plot": "#0a0c12", "font": "#cdd6e6",
-        "grid": "#1c2436", "zero": "#1c2436", "zero_hi": "#3a4560",
-        "sub": "#8a94a8", "legend_bg": "rgba(10,13,22,.6)"}
+DARK = {"paper": "#06070a", "plot": "#06070a", "font": "rgba(255,255,255,.82)",
+        "grid": "rgba(255,255,255,.09)", "zero": "rgba(255,255,255,.09)", "zero_hi": "rgba(255,255,255,.18)",
+        "sub": "rgba(255,255,255,.52)", "legend_bg": "rgba(10,12,18,.6)"}
 
 ANN = [
     f"Orbits (top-down, initial) — {'star' if mode=='star' else 'parent'} {center}",
@@ -194,11 +194,11 @@ HTML = """<!-- __TITLE__ : 안정성 런 인터랙티브 4패널 (자동 생성,
 <!doctype html><meta charset="utf-8"><title>__TITLE__</title>
 <style>
   html,body{margin:0;height:100%;background:#ffffff;transition:background .2s}
-  body.dark{background:#0a0c12}
+  body.dark{background:#06070a}
   #p{width:100%;height:100vh}
   #theme{position:fixed;top:8px;right:12px;z-index:10;background:#eef1f6;color:#1a1a1a;
     border:1px solid #c8cfdb;border-radius:6px;padding:5px 11px;cursor:pointer;font:13px system-ui}
-  body.dark #theme{background:#1c2740;color:#cdd6e6;border-color:#2c3a5a}
+  body.dark #theme{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border-color:rgba(255,255,255,.13)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
 <button id="theme">🌙 Dark</button>

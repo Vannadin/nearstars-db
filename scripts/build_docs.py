@@ -33,9 +33,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 OUT_DIR = REPO / 'docs' / 'wiki'
 
-# vendored locally (docs/assets/) — marked@12.0.2 / github-markdown-css@5.5.0
+# vendored locally (docs/assets/) — marked@12.0.2 / github-markdown-css@5.5.0 (v2 dark)
 MARKED = '../assets/marked.min.js'
-GH_CSS = '../assets/github-markdown-light.min.css'
+GH_CSS = '../assets/github-markdown-dark.min.css'
 GH_BLOB = 'https://github.com/Vannadin/nearstars-db/blob/main/'
 
 # slug → output filename, filled by collect_docs(); used to rewrite links.
@@ -167,43 +167,51 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
 _CSS = """
 :root { --side-w: 256px }
 * { box-sizing: border-box }
-body { margin: 0; background: #fff; color: #1f2328;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+body { margin: 0;
+  background:
+    radial-gradient(60% 50% at 18% -10%, rgba(122,168,255,.07), transparent 70%),
+    radial-gradient(50% 45% at 92% 110%, rgba(224,144,208,.05), transparent 70%),
+    #06070a;
+  background-attachment: fixed; color: rgba(255,255,255,.80);
+  font-family: 'Geist', 'Inter', system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif }
 .layout { display: flex; align-items: flex-start; min-height: 100vh }
 .side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
-  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
-.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  overflow-y: auto; border-right: 1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.014);
+  padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: rgba(255,255,255,.94);
   text-decoration: none; margin: 2px 6px 14px }
-.side .brand span { color: #6e7781; font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+.side .brand span { color: rgba(255,255,255,.40); font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: rgba(255,255,255,.36);
   margin: 16px 6px 4px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+.side a { display: block; text-decoration: none; color: rgba(255,255,255,.72); padding: 5px 8px;
   border-radius: 6px; line-height: 1.4 }
-.side a:hover { background: #eaeef2 }
-.side a.on { background: #0969da; color: #fff; font-weight: 600 }
-.side a.nav-x { color: #57606a }
+.side a:hover { background: rgba(255,255,255,.05) }
+.side a.on { background: rgba(122,168,255,.18); color: #aac8ff; font-weight: 600 }
+.side a.nav-x { color: rgba(255,255,255,.50) }
 .content-wrap { flex: 1; min-width: 0; padding: 0 16px }
 .topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
 @media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
-.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
-.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
-  font-size: 13px; font-family: inherit }
-.seg button.on { background: #0969da; color: #fff }
-.lang-only { color: #8c959f; font-size: 12px }
-.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+.seg { display: inline-flex; border: 1px solid rgba(255,255,255,.12); border-radius: 6px; overflow: hidden }
+.seg button { background: rgba(255,255,255,.05); color: rgba(255,255,255,.56); border: none; padding: 4px 13px;
+  cursor: pointer; font-size: 13px; font-family: inherit }
+.seg button.on { background: rgba(122,168,255,.18); color: #aac8ff }
+.lang-only { color: rgba(255,255,255,.36); font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto;
+  padding: 24px 45px 60px; background: transparent !important }
 @media (max-width: 767px) { .markdown-body { padding: 15px } }
 .markdown-body table { display: table; width: 100% }
-.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+.markdown-body blockquote { color: #7aa8ff; border-left-color: #7aa8ff; background: rgba(122,168,255,.08);
   padding: 8px 16px; border-radius: 4px }
-.markdown-body h1 { border-bottom: 2px solid #d0d7de }
-.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+.markdown-body h1 { border-bottom: 2px solid rgba(255,255,255,.09) }
+.markdown-body h2 { border-bottom: 1px solid rgba(255,255,255,.09); margin-top: 28px }
+.markdown-body a { color: #7aa8ff }
+.markdown-body code { color: rgba(255,255,255,.86) }
 @media (max-width: 767px) {
   .layout { flex-direction: column }
   .side { width: auto; flex: none; height: auto; position: static;
-    border-right: none; border-bottom: 1px solid #d0d7de }
+    border-right: none; border-bottom: 1px solid rgba(255,255,255,.09) }
 }
 """
-
 
 def page_html(title: str, sidebar: str, en_md: str, ko_md: str | None) -> str:
     bilingual = ko_md is not None
@@ -224,6 +232,7 @@ def page_html(title: str, sidebar: str, en_md: str, ko_md: str | None) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{html.escape(title)} · NearStars docs</title>
+<link rel="stylesheet" href="../assets/fonts/geist.css">
 <link rel="stylesheet" href="{GH_CSS}">
 <script src="{MARKED}"></script>
 <style>{_CSS}</style>

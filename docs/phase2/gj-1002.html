@@ -7,33 +7,33 @@
 <title>GJ 1002 · Phase 2 measurements</title>
 <link rel="stylesheet" href="../style.css">
 <style>
-.intro { color: #7a92ac; max-width: 780px; margin-bottom: 8px }
-.intro b { color: #a0bcd8 }
+.intro { color: var(--fg-muted); max-width: 780px; margin-bottom: 8px }
+.intro b { color: rgba(255,255,255,.88) }
 h2 { margin-bottom: 10px }
 h3 { margin: 14px 0 6px }
 
 .plot { position: relative; margin: 8px 0 }
 .plot svg { display: block; width: 100%; height: auto }
-.plot .gridline { stroke: #152030; stroke-width: 1 }
-.plot .axis { stroke: #3a5060; stroke-width: 1 }
-.plot .tick-label { fill: #5a7090; font-size: 10px; font-family: var(--mono) }
-.plot .point { fill: #5a8eb8 }
+.plot .gridline { stroke: rgba(255,255,255,.07); stroke-width: 1 }
+.plot .axis { stroke: rgba(255,255,255,.18); stroke-width: 1 }
+.plot .tick-label { fill: rgba(255,255,255,.40); font-size: 10px; font-family: var(--mono) }
+.plot .point { fill: #7aa8ff }
 .plot .point.rec { fill: var(--ok); stroke: var(--ok-soft); stroke-width: 1.5 }
-.plot .errbar { stroke: #3a6080; stroke-width: 1.2 }
+.plot .errbar { stroke: rgba(122,168,255,.45); stroke-width: 1.2 }
 .plot .errbar.rec { stroke: #5acc70 }
-.plot .row-label { fill: #90a8c0; font-size: 11px; font-family: var(--sans) }
+.plot .row-label { fill: rgba(255,255,255,.62); font-size: 11px; font-family: var(--sans) }
 .plot .row-label.rec { fill: var(--ok-soft); font-weight: 600 }
-.plot .axis-title { fill: #7a92ac; font-size: 11px; font-family: var(--mono) }
+.plot .axis-title { fill: rgba(255,255,255,.46); font-size: 11px; font-family: var(--mono) }
 
 .mt { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px }
 .mt th { padding: 7px 10px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
-.mt td { padding: 6px 10px; border-top: 1px solid var(--bd-soft); color: #a8c0d8; font-family: var(--mono); font-size: 12px; vertical-align: top }
-.mt td.nm { font-family: var(--sans); color: #a8c0d8 }
+.mt td { padding: 6px 10px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12px; vertical-align: top }
+.mt td.nm { font-family: var(--sans); color: rgba(255,255,255,.80) }
 .mt tr.rec td { background: #0e1f1a }
 .mt tr.rec td:first-child { border-left: 2px solid var(--ok) }
 .rec-badge { color: var(--ok-soft); font-weight: 700; font-size: 11px; letter-spacing: .4px }
 .method-pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase }
-.method-ttv { background: #1a2f44; color: #7aaae0 }
+.method-ttv { background: rgba(122,168,255,.12); color: #7aa8ff }
 .method-evolutionary_model { background: #2a2a18; color: #d8c870 }
 .method-sed_fitting { background: #1f2438; color: #b0a8e8 }
 .method-spectroscopic_calibration { background: #2a1f1f; color: #d0a098 }
@@ -44,7 +44,7 @@ h3 { margin: 14px 0 6px }
 @media (min-width: 900px) { .planets-grid { grid-template-columns: 1fr 1fr } }
 .planet-card h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap }
 .planet-card h3 .deriv { font-size: 11px; color: #5a7890; font-family: var(--mono); font-weight: 400; letter-spacing: .2px }
-.summary { font-size: 12px; color: #7a92ac; margin: 4px 0 10px; font-family: var(--mono) }
+.summary { font-size: 12px; color: var(--fg-muted); margin: 4px 0 10px; font-family: var(--mono) }
 
 @media (max-width: 600px) {
   .intro { font-size: 12px }
@@ -59,7 +59,7 @@ h3 { margin: 14px 0 6px }
   .mt td { display: flex; justify-content: space-between; align-items: baseline; border: none; padding: 3px 0; gap: 10px; font-size: 12px }
   .mt td::before {
     content: attr(data-label);
-    color: #5a7090; font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--fg-dim); font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
     font-family: var(--sans); font-weight: 600; flex-shrink: 0
   }
   .mt td:empty, .mt td[data-label="status"]:empty { display: none }

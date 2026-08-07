@@ -710,7 +710,7 @@ ul.intro {{ padding-left: 22px }}
 
 .dt {{ width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px }}
 .dt th {{ padding: 8px 10px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10.5px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }}
-.dt td {{ padding: 7px 10px; border-top: 1px solid var(--bd-soft); color: #b0c4d8; font-family: var(--mono); font-size: 12px; vertical-align: top; line-height: 1.55 }}
+.dt td {{ padding: 7px 10px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12px; vertical-align: top; line-height: 1.55 }}
 
 pre {{ background: var(--bg-card-alt); border: 1px solid var(--bd-soft); border-radius: 4px; padding: 10px 12px; overflow-x: auto; margin: 8px 0 }}
 pre code {{ background: none; padding: 0; font-size: 12px }}
@@ -759,7 +759,7 @@ html[lang="en"] .field-tt:hover::after {{ content: attr(data-en-tip) }}
    stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */
 .spectrum-bar-wide {{ mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent) }}
 /* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
-.spectrum-bar-invisible {{ background: repeating-linear-gradient(45deg, #1a1f2a, #1a1f2a 4px, #232838 4px, #232838 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }}
+.spectrum-bar-invisible {{ background: repeating-linear-gradient(45deg, rgba(255,255,255,.05), rgba(255,255,255,.05) 4px, rgba(255,255,255,.09) 4px, rgba(255,255,255,.09) 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }}
 .palette-swatch-invisible {{ background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }}
 .spectrum-range {{ font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }}
 
@@ -767,7 +767,7 @@ html[lang="en"] .field-tt:hover::after {{ content: attr(data-en-tip) }}
   section {{ margin-bottom: 24px }}
   .dt thead {{ display: none }}
   .dt, .dt tbody, .dt tr, .dt td {{ display: block; width: 100% }}
-  .dt tr {{ border: 1px solid #1a2333; border-radius: 6px; padding: 8px 11px; margin-bottom: 6px; background: #0a1018 }}
+  .dt tr {{ border: 1px solid var(--bd-strong); border-radius: 6px; padding: 8px 11px; margin-bottom: 6px; background: var(--bg-card) }}
   .dt td {{ display: block; border: none; padding: 3px 0; font-size: 12px }}
 }}
 </style>

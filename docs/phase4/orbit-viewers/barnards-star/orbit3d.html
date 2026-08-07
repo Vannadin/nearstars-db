@@ -1,26 +1,26 @@
 <!-- Barnard's star — 3D orbit evolution : 안정성 런 3D 궤도 세차 애니메이션 (자동 생성, animate_orbits.py). three@0.160 importmap. -->
 <meta charset="utf-8"><title>Barnard's star — 3D orbit evolution</title>
 <style>
-  html,body{margin:0;height:100%;background:#06070d;color:#cdd6e6;font:13px/1.5 system-ui,sans-serif;overflow:hidden}
-  #hud{position:fixed;top:10px;left:12px;z-index:10;background:rgba(10,13,22,.72);padding:10px 13px;border-radius:9px;backdrop-filter:blur(4px);max-width:290px}
+  html,body{margin:0;height:100%;background:#06070a;color:rgba(255,255,255,.82);font:13px/1.5 system-ui,sans-serif;overflow:hidden}
+  #hud{position:fixed;top:10px;left:12px;z-index:10;background:rgba(10,12,18,.72);padding:10px 13px;border-radius:9px;backdrop-filter:blur(4px);max-width:290px}
   #hud h1{font-size:14px;margin:0 0 4px}
-  #hud .v{color:#8fe3a0;font-weight:600}
-  #hud .sub{color:#8a94a8;font-size:11px}
-  #leg{margin-top:8px;border-top:1px solid #263049;padding-top:7px}
+  #hud .v{color:#4ec9b0;font-weight:600}
+  #hud .sub{color:rgba(255,255,255,.52);font-size:11px}
+  #leg{margin-top:8px;border-top:1px solid rgba(255,255,255,.10);padding-top:7px}
   #leg .row{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
   #leg .nm{display:flex;align-items:center;gap:6px}
   #leg .sw{width:10px;height:10px;border-radius:50%}
-  #ctl{position:fixed;bottom:12px;left:12px;right:12px;z-index:10;display:flex;align-items:center;gap:12px;background:rgba(10,13,22,.72);padding:9px 13px;border-radius:9px;backdrop-filter:blur(4px)}
-  #ctl button{background:#1c2740;color:#cdd6e6;border:1px solid #2c3a5a;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13px}
-  #ctl button:hover{background:#26355a}
+  #ctl{position:fixed;bottom:12px;left:12px;right:12px;z-index:10;display:flex;align-items:center;gap:12px;background:rgba(10,12,18,.72);padding:9px 13px;border-radius:9px;backdrop-filter:blur(4px)}
+  #ctl button{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13px}
+  #ctl button:hover{background:rgba(122,168,255,.20)}
   #ctl input[type=range]{flex:1}
-  #yr{font-variant-numeric:tabular-nums;color:#8fe3a0;font-weight:600;min-width:90px}
-  .note{color:#8a94a8;font-size:11px;max-width:200px}
+  #yr{font-variant-numeric:tabular-nums;color:#4ec9b0;font-weight:600;min-width:90px}
+  .note{color:rgba(255,255,255,.52);font-size:11px;max-width:200px}
   #frames{margin-top:7px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-  #frames .lab{color:#8a94a8;font-size:11px;margin-right:2px}
-  #frames button{background:#141c30;color:#aeb8cc;border:1px solid #2c3a5a;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px}
-  #frames button.on{background:#2b60b0;color:#fff;border-color:#3b78d0}
-</style><nav style="position:fixed;top:8px;left:12px;z-index:1000;font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);padding:4px 10px;border-radius:6px"><a href="../index.html" style="color:#7fb0ff;text-decoration:none">← Orbit viewers</a> &nbsp;·&nbsp; <a href="../../index.html" style="color:#7fb0ff;text-decoration:none">Phase 4</a> &nbsp;·&nbsp; <a href="../../../index.html" style="color:#7fb0ff;text-decoration:none">DB</a></nav>
+  #frames .lab{color:rgba(255,255,255,.52);font-size:11px;margin-right:2px}
+  #frames button{background:rgba(255,255,255,.05);color:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px}
+  #frames button.on{background:rgba(122,168,255,.30);color:#fff;border-color:#7aa8ff}
+</style><nav style="position:fixed;top:8px;left:12px;z-index:1000;font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);padding:4px 10px;border-radius:6px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a> &nbsp;·&nbsp; <a href="../../index.html" style="color:#7aa8ff;text-decoration:none">Phase 4</a> &nbsp;·&nbsp; <a href="../../../index.html" style="color:#7aa8ff;text-decoration:none">DB</a></nav>
 <div id="hud">
   <h1>Barnard's star — <span class="v">STABLE</span></h1>
   <div class="sub">center Barnard's star · <span data-l="unit">단위</span> AU · leapfrog dt=10.0min · |ΔE/E|=3.9e-06</div>
@@ -68,7 +68,7 @@ const VIEW=20, SC=VIEW/DATA.maxa;
 const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(devicePixelRatio); renderer.setSize(innerWidth,innerHeight);
 document.body.appendChild(renderer.domElement);
-const scene=new THREE.Scene(); scene.background=new THREE.Color('#06070d');
+const scene=new THREE.Scene(); scene.background=new THREE.Color('#06070a');
 const camera=new THREE.PerspectiveCamera(52, innerWidth/innerHeight, 0.05, 1e5);
 camera.position.set(26, 19, 32);
 const controls=new OrbitControls(camera, renderer.domElement); controls.enableDamping=true;

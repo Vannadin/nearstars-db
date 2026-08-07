@@ -42,7 +42,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "pipeline"))
 from _nav import global_nav  # noqa: E402  (공용 전역 nav)
 
 # 복사되는 뷰어 페이지(plotly 전체화면)에 띄우는 되돌아가기 크럼 오버레이.
-_CRUMB_STYLE = 'color:#7fb0ff;text-decoration:none'
+_CRUMB_STYLE = 'color:#7aa8ff;text-decoration:none'
 VIEWER_CRUMB = (
     '<nav style="position:fixed;top:8px;left:12px;z-index:1000;'
     'font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);'
@@ -153,32 +153,32 @@ def write_gallery(cards):
     html = f"""<!-- 궤도 동역학 뷰어 갤러리 (자동 생성, build_viewers.py) -->
 <!doctype html><meta charset="utf-8"><title>NearStars — Orbit dynamics viewers</title>
 <style>
-  body{{margin:0;background:#0a0c12;color:#cdd6e6;font:14px/1.6 system-ui,sans-serif}}
-  header{{padding:20px 24px;border-bottom:1px solid #1c2436}}
-  h1{{margin:0;font-size:19px}} .lead{{color:#8a94a8;font-size:13px;margin-top:4px;max-width:70ch}}
+  body{{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.6 system-ui,sans-serif}}
+  header{{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.09)}}
+  h1{{margin:0;font-size:19px}} .lead{{color:rgba(255,255,255,.52);font-size:13px;margin-top:4px;max-width:70ch}}
   .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:22px}}
-  .card{{background:#11141d;border:1px solid #1c2436;border-radius:10px;overflow:hidden;transition:border-color .15s}}
-  .card:hover{{border-color:#3b78d0}}
-  .card img{{width:100%;display:block;background:#06070d}}
-  .meta{{padding:11px 13px}} .meta h3{{margin:0 0 5px;font-size:15px;color:#cdd6e6}}
+  .card{{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;overflow:hidden;transition:border-color .15s}}
+  .card:hover{{border-color:#7aa8ff}}
+  .card img{{width:100%;display:block;background:#06070a}}
+  .meta{{padding:11px 13px}} .meta h3{{margin:0 0 5px;font-size:15px;color:rgba(255,255,255,.82)}}
   .links{{margin-top:8px;display:flex;gap:8px}}
-  .links a{{font-size:12px;color:#7fb0ff;text-decoration:none;border:1px solid #2c3a5a;border-radius:5px;padding:2px 9px}}
-  .links a:hover{{background:#1c2740}}
+  .links a{{font-size:12px;color:#7aa8ff;text-decoration:none;border:1px solid rgba(255,255,255,.13);border-radius:5px;padding:2px 9px}}
+  .links a:hover{{background:rgba(255,255,255,.06)}}
   .pill{{font-size:11px;padding:2px 8px;border-radius:5px;font-family:ui-monospace,monospace}}
-  .pill.ok{{color:#8fe3a0;background:rgba(143,227,160,.13)}}
-  .pill.warn{{color:#e8c561;background:rgba(232,197,97,.13)}}
-  .pill.bad{{color:#e57;background:rgba(229,85,119,.13)}}
-  .sub{{display:block;color:#8a94a8;font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums}}
-  .seg{{float:right}} .seg button{{background:#1c2740;color:#cdd6e6;border:1px solid #2c3a5a;border-radius:6px;padding:4px 10px;cursor:pointer}}
-  .seg button.on{{border-color:#7fb0ff}}
-  .crumb{{font-size:12px;margin-bottom:8px}} .crumb a{{color:#7fb0ff;text-decoration:none}}
+  .pill.ok{{color:#4ec9b0;background:rgba(78,201,176,.12)}}
+  .pill.warn{{color:#e0b070;background:rgba(224,176,112,.12)}}
+  .pill.bad{{color:#e090d0;background:rgba(224,144,208,.14)}}
+  .sub{{display:block;color:rgba(255,255,255,.52);font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums}}
+  .seg{{float:right}} .seg button{{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:4px 10px;cursor:pointer}}
+  .seg button.on{{border-color:#7aa8ff}}
+  .crumb{{font-size:12px;margin-bottom:8px}} .crumb a{{color:#7aa8ff;text-decoration:none}}
 </style>
 <header>
   <div class="seg"><button id="ko">한국어</button><button id="en" class="on">EN</button></div>
   <nav class="crumb">{global_nav('../../')}</nav>
   <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
   <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span>
-    <span data-i18n> 적분기 교차 검증은 <a href="alpha-centauri-validation/index.html" style="color:#7fb0ff">알파센 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="alpha-centauri-validation/index.html" style="color:#7fb0ff">Alpha Cen validation set</a>.</span></div>
+    <span data-i18n> 적분기 교차 검증은 <a href="alpha-centauri-validation/index.html" style="color:#7aa8ff">알파센 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="alpha-centauri-validation/index.html" style="color:#7aa8ff">Alpha Cen validation set</a>.</span></div>
 </header>
 <div class="grid">
 {chr(10).join(rows)}
