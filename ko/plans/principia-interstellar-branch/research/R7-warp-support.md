@@ -123,7 +123,7 @@ WS4 스텁(plan 디렉토리)과 warp 코퍼스(gameplay 디렉토리)는 **서�
 - 돌고 있는 `FlightPlanOptimizationDriver`는 warp-이전 plan의 사본을 쥐고 있다
   (`flight_plan_optimizer.hpp:223`). `RebaseIfNeeded`가 하는 그대로 정확히 중단해야 한다
   (`vessel.cpp:196-198`).
-- **Minimal-fork에서는 이 모두가 공짜다.** flight plan/prediction은 파괴된 Vessel과 함께
+- **Minimal-fork에서는 이 모두가 저절로 해결된다.** flight plan/prediction은 파괴된 Vessel과 함께
   죽고 목적지에서 다시 만들어진다. 이것이 수용된 "warp 시 flight-plan 소실"이다.
 
 ### D. 다시-seed 시 subsystem 할당 — WS1 교차점 **[해결됨. minimal-fork에서는 자동 교정. big-fork는 처리해야 함]**
@@ -137,7 +137,7 @@ WS4 스텁(plan 디렉토리)과 warp 코퍼스(gameplay 디렉토리)는 **서�
   `FreeVesselsAndPartsAndCollectPileUps`가 `vessels_.erase(it)`을 한다(`plugin.cpp:626`).
   다시-adopt 시 **완전히 새로운** `Vessel`이 `subsystem_ = ephemeris->subsystem_of_body(parent->body())`로
   생성되고(`vessel.cpp:93`), 부모는 `vessel.mainBody`인데 순항 레이어가 이를 목적지 별로
-  설정해 두었다. 그래서 신선한 선체는 목적지 subsystem을 *공짜로* 얻고, 파트들의 DoF는
+  설정해 두었다. 그래서 신선한 선체는 목적지 subsystem을 *저절로* 얻고, 파트들의 DoF는
   `InsertUnloadedPart`(`plugin.cpp:446-455`)에 의해 그 (올바른) 원점으로 변환된다.
   **다시-seed subsystem fork는 필요 없다.** (내 이전 "subsystem fork 필요" 판단은 일어나지
   않는 persist-and-reseed 모델에 기반했다 — 선체는 파괴된다.)
@@ -204,7 +204,7 @@ WS4 스텁(plan 디렉토리)과 warp 코퍼스(gameplay 디렉토리)는 **서�
 - **전략별 결과(§9.2 참조).** *직접-DoF* 다시-seed(big-fork)는 v0을 자동 보존한다. *stock-궤도*
   다시-seed(minimal-fork)는 barycentric 속도를 `v_deststar + v_orbit`로 설정하므로
   (`plugin.cpp:446-447`), 순진한 속박 stock 궤도는 선체를 **목적지 별과 함께 움직이는 parking
-  궤도에 놓아 성간 Δv 전부(수십 km/s)를 플레이어에게 조용히 공짜로 넘겨준다.** 수정은
+  궤도에 놓아 성간 Δv 전부(수십 km/s)를 플레이어에게 아무 대가 없이 조용히 넘겨준다.** 수정은
   **순항-쪽, fork 없음**이다. dropout stock 궤도를 상대 속도 `v_orbit = v0 − v_deststar`로 쓰면
   barycentric은 `v_deststar + (v0 − v_deststar) = v0`이 되어 — 현실적인 쌍곡선 도착이 된다.
   순항 레이어는 이미 v0을 캡처했고 `v_deststar`를 조회할 수 있다.
@@ -354,7 +354,7 @@ Principia 트래커에는 전용 Alcubierre/warp/teleport 이슈가 없다(검�
   속도는 모든 subsystem 프레임에서 동일하고, subsystem 변경은 위치만 옮긴다(`RebaseIfNeeded`는
   속도를 건드리지 않고 `trajectory_.Translate(disp)`, `vessel.cpp:172-181`.
   `SubsystemConversionMotion` = RigidMotion, 항등 회전, 정지 프레임 속도, `plugin.cpp:1911-1921`).
-- **직접-DoF 다시-seed(big-fork).** Barycentric DoF 속도를 유지 ⇒ v0 공짜 보존.
+- **직접-DoF 다시-seed(big-fork).** Barycentric DoF 속도를 유지 ⇒ v0 자동 보존.
 - **stock-궤도 다시-seed(minimal-fork).** `InsertUnloadedPart`가 barycentric DoF =
   `parent->current_degrees_of_freedom(t) + PlanetariumRotation⁻¹(from_parent)`
   (`plugin.cpp:444-447`)로 설정, 즉 속도 = `v_deststar + v_orbit`.
