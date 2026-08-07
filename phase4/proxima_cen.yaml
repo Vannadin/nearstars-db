@@ -1185,7 +1185,17 @@ decisions:
     axis: satellites
     status: gated
     driver: [engine, window-selection]
-    narrative: "위성 없음. 극근접(0.029 AU) 미세 Hill 반경 + 강항성조석으로 안정 위성 불가(b보다 더 단호한 물리적 부재)."
+    provenance: >
+      2026-08-07: prose modernization (EN+KO absence story; wiki-link token in
+      evidence replaced with plain words, the stability numbers moved into the
+      3-part evidence). Owner-confirmed. No value changed.
+    narrative: >
+      None. The star leaves almost no room: the zone where a moon could keep its orbit reaches barely four
+      planet radii out, and the same tides that locked the planet would strip one away. Of the three planets
+      this is the firmest emptiness.
+    narrative_ko: >
+      없음. 별이 자리를 거의 남겨 주지 않는다. 위성이 궤도를 지킬 수 있는 영역은 행성 반경의 네 배 남짓까지이고,
+      행성을 잠근 그 조석이 위성마저 벗겨 간다. 세 행성 가운데 가장 단호한 빈자리다.
     fields:
       - name: satellite_count
         value: 0
@@ -1194,7 +1204,10 @@ decisions:
     gate:
       criterion: [stability]
       verdict: pass-in-window
-      evidence: "[[feedback_gameplay_variety]] '물리적으로 아무것도 없음' 예외."
+      evidence: >
+        위성 부재 확정. 확인한 것: Hill 반경 55,500 km에 순행 안정 한계 0.49 R_H ≈ 27,200 km(행성 반경 3.9배,
+        Domingos 2006)로 c I를 검증한 것과 같은 계산이며, 다채로움 우선 원칙의 '물리적으로 아무것도 없음' 예외에
+        해당한다.
     refs: ["2006MNRAS.373.1227D"]
 
   - body: Proxima Cen d
