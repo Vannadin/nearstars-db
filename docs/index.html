@@ -34,10 +34,6 @@ input[type=checkbox]{accent-color:#7aa8ff}
 .stats-bar .spacer{flex:1}
 .help-btn{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.36);font-size:12px;padding:3px 10px;border-radius:12px;cursor:pointer;letter-spacing:.3px}
 .help-btn:hover{border-color:#7aa8ff;color:rgba(255,255,255,.56)}
-.lang-toggle-wrap{display:flex;gap:3px}
-.lang-tg{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.36);padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;transition:color .12s,background .12s,border-color .12s}
-.lang-tg:hover{color:rgba(255,255,255,.56)}
-.lang-tg.on{background:rgba(122,168,255,.18);color:#aac8ff;border-color:rgba(122,168,255,.45)}
 
 /* ── 사용법 modal ─────────────────────────────────────────────────────── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;-webkit-overflow-scrolling:touch}
@@ -660,9 +656,9 @@ input[type=checkbox]{accent-color:#7aa8ff}
   <h1>NearStars <span>DB</span></h1>
   <span class="hd-spacer"></span>
   <button id="howto-btn" class="help-btn" type="button">? How to use</button>
-  <div class="lang-toggle-wrap">
-    <button class="lang-tg" data-lang="en">EN</button>
+  <div class="seg">
     <button class="lang-tg" data-lang="ko">한</button>
+    <button class="lang-tg" data-lang="en">EN</button>
   </div>
 </header>
 
@@ -721,9 +717,9 @@ input[type=checkbox]{accent-color:#7aa8ff}
     <div class="modal-head">
       <h2 id="howto-title">NearStars DB · How to use</h2>
       <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-        <div class="lang-toggle-wrap">
-          <button class="lang-tg" data-lang="en">EN</button>
+        <div class="seg">
           <button class="lang-tg" data-lang="ko">한</button>
+          <button class="lang-tg" data-lang="en">EN</button>
         </div>
         <button class="modal-close" id="howto-close" type="button">Close</button>
       </div>
