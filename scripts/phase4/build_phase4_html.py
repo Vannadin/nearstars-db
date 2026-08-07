@@ -416,12 +416,20 @@ def page(title, content, depth=2):
 </head>
 <body>
 {global_bar('../' * depth, 'Phase 4')}
-<div class="wrap">
-{content}
-</div>
+{_split_head(content)}
 {SCRIPT}
 </body>
 </html>"""
+
+
+def _split_head(content):
+    """크럼+헤더를 전폭 스트립(.pagehead)으로 분리 — 다른 표면들과 좌측 정렬을 맞춤.
+    본문(요약·결정 카드)은 기존 중앙 열(.wrap)에 남는다."""
+    if "</header>" in content:
+        head, rest = content.split("</header>", 1)
+        return (f'<div class="pagehead">{head}</header></div>\n'
+                f'<div class="wrap">{rest}</div>')
+    return f'<div class="wrap">{content}</div>'
 
 
 STYLE = """
@@ -448,7 +456,9 @@ body {
 }
 a { color:var(--accent); text-decoration:none }
 a:hover { color:#aac8ff }
-.wrap { max-width:940px; margin:0 auto; padding:26px 22px 90px }
+.wrap { max-width:940px; margin:0 auto; padding:20px 22px 90px }
+.pagehead { padding:16px 28px 2px; border-bottom:1px solid var(--bd1) }
+@media (max-width:600px) { .pagehead { padding:12px 16px 2px } }
 .crumb { font-family:var(--mono); font-size:11.5px; color:var(--fg4); margin-bottom:14px }
 .crumb a { color:var(--fg3) } .crumb .here { color:var(--fg2) } .crumb .sys { color:var(--accent) }
 header { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:6px }

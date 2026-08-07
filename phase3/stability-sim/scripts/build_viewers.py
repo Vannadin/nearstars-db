@@ -52,14 +52,17 @@ VIEWER_CRUMB = (
     f' &nbsp;·&nbsp; <a href="../../../index.html" style="{_CRUMB_STYLE}">DB</a></nav>')
 
 
-# docs/assets/에 vendoring된 사본으로 CDN 참조를 로컬화 (뷰어 페이지 기준 상대경로)
+# docs/assets/에 vendoring된 사본으로 CDN 참조를 로컬화 (뷰어 페이지 기준 상대경로).
+# three(ES 모듈)는 예외 — Chromium 계열이 file:// 모듈 임포트를 CORS로 차단해
+# 로컬 사본이 로드되지 않으므로 CDN을 유지한다 (클래식 <script>인 plotly는 무관).
 _CDN_LOCAL = {
     "https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js":
         "../../../assets/plotly.min.js",
-    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js":
-        "../../../assets/three.module.js",
-    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/":
-        "../../../assets/jsm/",
+    # 과거 로컬화분 원복 (orbit3d가 file://에서 죽는 문제)
+    "../../../assets/three.module.js":
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "../../../assets/jsm/":
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
 }
 
 

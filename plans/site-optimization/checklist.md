@@ -36,8 +36,10 @@ GitHub wiki demoted to a secondary link.
 ## B. CDN vendoring → `docs/assets/`
 - [x] marked.min.js + github-markdown-light.css (wiki 58p)
 - [x] plotly.min.js (interactive 6p + validation 4p) — localized in inject_crumb
-- [x] three.module.js + jsm/controls/OrbitControls.js (starmap + orbit3d 6p —
-      orbit3d was three, not plotly)
+- [x] ~~three.module.js + jsm~~ REVERTED to CDN: Chromium-family browsers
+      (owner's Whale included) block file:// ES-module imports by CORS, so the
+      local copy broke starmap/orbit3d for local viewing. Classic scripts
+      (plotly/marked) are unaffected and stay vendored.
 - [x] Geist/Geist Mono woff2 ×11 + geist.css (156 KB); Noto Sans KR dropped from
       the request — Korean falls to the system stack (Apple SD Gothic / Malgun)
 - [x] remaining `src/href="https://…"` count: 0

@@ -372,7 +372,7 @@ function render(l) {
   const seg = document.getElementById('lang-seg');
   if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
 }
-let lang = localStorage.getItem('nearstars-lang') || 'ko';
+let lang = localStorage.getItem('nearstars-lang') || 'en';
 render(lang);
 const seg = document.getElementById('lang-seg');
 if (seg) seg.addEventListener('click', e => {

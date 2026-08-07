@@ -2,7 +2,7 @@
 # 사이트맵: 발행 문서 표면
 
 > `python3 scripts/build_sitemap.py`로 생성. 손으로 고치지 말 것.
-> 페이지 272개, 합계 22.0 MB, 내부 링크 5522개.
+> 페이지 272개, 합계 22.1 MB, 내부 링크 5522개.
 > gitignore된 논문 캐시(`docs/phase3/_papers/`)는 사이트가 아니라 로컬 캐시라 제외한다.
 
 ## 구조
@@ -49,4 +49,4 @@
 - `phase4/orbit-viewers/barnards-star/interactive.html` — 777 KB
 - `phase4/orbit-viewers/tau-cet/interactive.html` — 769 KB
 
-<!-- generated 2026-08-07 19:40 -->
+<!-- generated 2026-08-07 19:58 -->
