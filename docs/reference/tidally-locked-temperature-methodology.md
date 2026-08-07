@@ -105,7 +105,7 @@ surface element is in instantaneous local radiative balance. At the substellar
 point the star is overhead, so the geometry factor is 1 (not 1/4):
 
 ```
-T_ss = [ S (1 − A) / σ ]^(1/4)   =   Teq · 4^(1/4)   ≈   1.19 · Teq
+T_ss = [ S (1 − A) / σ ]^(1/4)   =   Teq · 4^(1/4)   ≈   1.41 · Teq
 ```
 
 **Proxima b (A = 0.2): T_ss ≈ 336 K.** This is the **ceiling**: no atmosphere can
