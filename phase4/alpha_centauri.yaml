@@ -47,7 +47,7 @@ decisions:
     narrative_ko: >
       행성은 1.6 AU를 돈다. 안정 범위의 중앙이고, Beichman이 선호하는 2 AU 안쪽 범위에 든다.
     fields:
-      - { name: semi_major_axis_au, value: 1.6, unit: AU, op: set, phase3_default: "1.6 AU (Beichman 선호 a<2 AU 패밀리; 대표값 1.9→1.6 정합)" }
+      - { name: semi_major_axis_au, value: 1.6, unit: AU, op: set, phase3_default: "1.6 AU (Beichman's preferred a<2 AU family; consistent with pulling the 1.9 representative to 1.6)", phase3_default_ko: "1.6 AU (Beichman 선호 a<2 AU 패밀리; 대표값 1.9→1.6 정합)" }
     gate:
       criterion: [stability]
       verdict: pass-in-window
@@ -67,7 +67,7 @@ decisions:
       이심률은 0.1로 안정 범위의 중앙이다. 관측이 선호하는 e≈0.4는 Kozai 불안정이라 채택하지 않고
       대안으로만 보존한다.
     fields:
-      - { name: eccentricity, value: 0.1, op: set, phase3_default: "안정창 중앙 e=0.1 (관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존)" }
+      - { name: eccentricity, value: 0.1, op: set, phase3_default: "e = 0.1, the middle of the stability window (the observationally preferred e~0.4 is Kozai-unstable and is kept as a canonical alternative)", phase3_default_ko: "안정창 중앙 e=0.1 (관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존)" }
     gate:
       criterion: [stability]
       verdict: pass-in-window
@@ -90,7 +90,7 @@ decisions:
       행성은 쌍성면에서 16° 기울어, 두 별이 도는 것과 같은 방향으로 돈다. 관측이 가리키는 ~50°·~130° 해는 동반성이 궤도를 비틀어 찢어 놓는 값이라, 대신 안정 범위의 한가운데를 잡았고,
       낮은 순행 가지를 고르면서 관측의 양갈래 모호성도 하나의 답으로 정리된다. 구속되는 것은 이 16° 상호경사뿐이고, 계 전체가 게임 속에서 어느 방향을 바라볼지는 자유롭다.
     fields:
-      - { name: inclination_deg, value: 16, unit: deg, op: set, phase3_default: "mutual_inclination_deg=16 (안정창 0–35°의 중앙); 관측 ~50°/~130°는 Kozai-불안정이라 미채택" }
+      - { name: inclination_deg, value: 16, unit: deg, op: set, phase3_default: "mutual_inclination_deg = 16 (the middle of the 0-35 deg stability window); the observed ~50/~130 deg are Kozai-unstable and not adopted", phase3_default_ko: "mutual_inclination_deg=16 (안정창 0–35°의 중앙); 관측 ~50°/~130°는 Kozai-불안정이라 미채택" }
     gate:
       criterion: [stability, error-bar]
       verdict: documented-divergence
@@ -128,12 +128,12 @@ decisions:
       자전하며(이 거리의 거대 가스행성은 조석고정되지 않는다) 아바타 게임 설정의 라그랑주점 공궤도 planetoid는 존재하지 않는다.
       시작 궤도요소는 검증된 안정성 런의 스냅샷이라, 계가 딱 떨어지는 설계값이 아니라 진화 중인 상태에서 시작한다.
     fields:
-      - { name: longitude_ascending_node, value: 273.10, unit: deg, op: set, note: "관측-방향 정합값(AB면 프레임). PA 83.5° 매칭 상태 → 1950 에포크. 제약은 AB면 대비 16° mutual(매칭 15.88°)" }
-      - { name: argument_periapsis, value: 122.38, unit: deg, op: set, note: "관측-방향 정합값(AB면 프레임)" }
-      - { name: mean_anomaly, value: 90.05, unit: deg, op: set, note: "1950 에포크로 되감은 위상. 관측 위상 ma_2024=321.46° − 38.64바퀴 → 90.05°. 74.6년 뒤(2024) PA 83.5° 도달" }
-      - { name: epoch, value: 0, op: set, note: "게임 epoch 0 = 태양계 에포크 JD 2433282.5 (1950.0). mean_anomaly는 이 에포크 기준으로 되감김" }
-      - { name: spin_orbit_resonance, value: "none", op: set, note: "free ~10h rotator (1.6 AU giant는 5 Gyr에도 미잠김)" }
-      - { name: lagrange_placement, value: "none", op: set, note: "Poly-L4/L5 코오비탈 planetoid 제외 (불필요; binary 트로이 안정성 미검증)" }
+      - { name: longitude_ascending_node, value: 273.10, unit: deg, op: set, note: "Matched to the observed direction (in the AB-plane frame). Matching state at PA 83.5 deg, rewound to the 1950 epoch. The constraint is a 16 deg mutual inclination to the AB plane (15.88 deg at match)", note_ko: "관측-방향 정합값(AB면 프레임). PA 83.5° 매칭 상태 → 1950 에포크. 제약은 AB면 대비 16° mutual(매칭 15.88°)" }
+      - { name: argument_periapsis, value: 122.38, unit: deg, op: set, note: "Matched to the observed direction (in the AB-plane frame)", note_ko: "관측-방향 정합값(AB면 프레임)" }
+      - { name: mean_anomaly, value: 90.05, unit: deg, op: set, note: "The phase rewound to the 1950 epoch. Observed phase ma_2024 = 321.46 deg minus 38.64 revolutions -> 90.05 deg. Reaches PA 83.5 deg 74.6 years later, in 2024", note_ko: "1950 에포크로 되감은 위상. 관측 위상 ma_2024=321.46° − 38.64바퀴 → 90.05°. 74.6년 뒤(2024) PA 83.5° 도달" }
+      - { name: epoch, value: 0, op: set, note: "Game epoch 0 = the Solar-System epoch JD 2433282.5 (1950.0). mean_anomaly is rewound to that epoch", note_ko: "게임 epoch 0 = 태양계 에포크 JD 2433282.5 (1950.0). mean_anomaly는 이 에포크 기준으로 되감김" }
+      - { name: spin_orbit_resonance, value: "none", op: set, note: "A free ~10 h rotator (a giant at 1.6 AU is not locked even after 5 Gyr)", note_ko: "free ~10h rotator (1.6 AU giant는 5 Gyr에도 미잠김)" }
+      - { name: lagrange_placement, value: "none", op: set, note: "No Poly-L4/L5 co-orbital planetoid (unnecessary, and Trojan stability in a binary is unverified)", note_ko: "Poly-L4/L5 코오비탈 planetoid 제외 (불필요; binary 트로이 안정성 미검증)" }
     gate:
       criterion: [classification]
       verdict: pass-in-window
@@ -189,7 +189,7 @@ decisions:
       쪽이든 같다. 아바타 게임 설정의 "목성보다 밀도 높다"는 질량을 거의 두 배로 불려야 해서 접었다. 관측이 원작 설정보다
       우선한다.
     fields:
-      - { name: radius, value: 1.0, unit: R_jup, op: set, phase3_default: "1.0 R_Jup (ring-model tie-break; ring-free 대안은 1.1–1.15 R_Jup)" }
+      - { name: radius, value: 1.0, unit: R_jup, op: set, phase3_default: "1.0 R_Jup (ring-model tie-break; the ring-free alternative is 1.1-1.15 R_Jup)", phase3_default_ko: "1.0 R_Jup (ring-model tie-break; ring-free 대안은 1.1–1.15 R_Jup)" }
     gate:
       criterion: [error-bar]
       verdict: pass-in-window
@@ -225,7 +225,7 @@ decisions:
       아니다. 위성 시뮬레이션에 넣으면 팽대가 위성 배치를 바꿔, 채택한 간격 배치는 팽대를 포함해도 안정한 반면
       한때 유력했던 공명 락은 무너진다. 독립적으로 수행한 figure 패스도 같은 수치에 도달했다.
     fields:
-      - { name: geopotential_j2, value: 0.023, reference_radius_km: 71492, op: set, phase3_default: "J2 ≈ 0.023 (범위 0.017–0.033; 절단보정 ~0.025–0.026)" }
+      - { name: geopotential_j2, value: 0.023, reference_radius_km: 71492, op: set, phase3_default: "J2 ~ 0.023 (range 0.017-0.033; truncation-corrected ~0.025-0.026)", phase3_default_ko: "J2 ≈ 0.023 (범위 0.017–0.033; 절단보정 ~0.025–0.026)" }
       - { name: reference_radius, value: 71492, unit: km, op: set }
       - { name: j4, value: -0.001, op: set }
     gate:
@@ -278,7 +278,7 @@ decisions:
       노드선을 타고 공전면 위 ~10°를 도는 위성들, 그리고 Chaos를 따라가는 고리. 위성계는 이 기울기에서 안정하고,
       작은 기울기가 마침 Pandora의 일식을 더 잦게 만들어 동반성이 기하를 흔드는 대로 "일식 시즌"이 자연 발생한다.
     fields:
-      - { name: obliquity, value: 5, unit: deg, op: set, phase3_default: "27° (토성-유추 tie-break, 고리 기울기용 → 폐기)" }
+      - { name: obliquity, value: 5, unit: deg, op: set, phase3_default: "27 deg (Saturn-analogy tie-break for the ring tilt; retired)", phase3_default_ko: "27° (토성-유추 tie-break, 고리 기울기용 → 폐기)" }
     gate:
       criterion: [stability, visual-checklist]
       verdict: owner-override
@@ -319,7 +319,7 @@ decisions:
       하루는 10.35시간, 아바타 게임 설정이 명시한 자전 범위의 중간값이다. 이 거리의 거대 가스행성은 조석고정되지 않으며,
       빠른 자전이야말로 figure 행들에 기록된 뚜렷한 적도팽대의 동력이다.
     fields:
-      - { name: rotation_period, value: 10.35, unit: h, op: set, phase3_default: "10 h (구 오귀속: 목성/토성 유추 conf low)" }
+      - { name: rotation_period, value: 10.35, unit: h, op: set, phase3_default: "10 h (former misattribution: Jupiter/Saturn analogy, confidence low)", phase3_default_ko: "10 h (구 오귀속: 목성/토성 유추 conf low)" }
     refs: ["docs/reference/tidal-locking-timescale-methodology.md"]
     gate:
       criterion: [canon-consistency]
@@ -344,12 +344,12 @@ decisions:
       희미하게 남은 내부 온기도 띠와 날씨를 젓는 데는 한몫한다. 자유롭게 정할 수 있는 값은 기운 자전축의 방위 하나뿐이고, Pandora의 일식이 잦게 유지되는 범위 안에서 고른다.
     fields:
       - { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }
-      - { name: gravity, value: 9.36, unit: m/s2, op: set, phase3_default: "GM/R² 파생 에코 (1-bar 반경 71492 km 기준)" }
-      - { name: flattening, value: 0.13, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 0.023, q 0.19), 시각 oblate 슬롯; 대형 q라 1차식이 다소 하한" }
-      - { name: spin_axis_orientation, value: "obliquity 5° 방위, 자유 emit (eclipse duty 94% bound)", op: set }
-      - { name: internal_heat, value: "negligible (T_int<110K, 내부플럭스 ≲6% insolation, 자발광 아님)", op: set }
-      - { name: geopotential_c22, value: null, na_reason: "거대 가스행성은 자유 자전이라 축대칭, 조석 삼축 없음 (zonal J2/J4만, 전용 행)" }
-      - { name: age, value: 5.3, unit: Gyr, op: set, phase3_default: "5.3 Gyr (α Cen A 상속)" }
+      - { name: gravity, value: 9.36, unit: m/s2, op: set, phase3_default: "derived echo of GM/R^2 (referenced to the 1-bar radius 71,492 km)", phase3_default_ko: "GM/R² 파생 에코 (1-bar 반경 71492 km 기준)" }
+      - { name: flattening, value: 0.13, op: set, note: "= (3J2+q)/2 derived echo (J2 0.023, q 0.19); the visual oblateness slot. q is large here, so the first-order expression runs a little low", note_ko: "= (3J₂+q)/2 파생 에코 (J₂ 0.023, q 0.19), 시각 oblate 슬롯; 대형 q라 1차식이 다소 하한" }
+      - { name: spin_axis_orientation, value: "Azimuth of the 5 deg obliquity, free at emit (bounded by the 94% eclipse duty)", value_ko: "obliquity 5° 방위, 자유 emit (eclipse duty 94% bound)", op: set }
+      - { name: internal_heat, value: "negligible (T_int < 110 K, internal flux <=6% of insolation, not self-luminous)", value_ko: "negligible (T_int<110K, 내부플럭스 ≲6% insolation, 자발광 아님)", op: set }
+      - { name: geopotential_c22, value: null, na_reason: "A giant gas planet rotates freely and is therefore axisymmetric, with no tidal triaxiality (zonal J2/J4 only, in their own row)", na_reason_ko: "거대 가스행성은 자유 자전이라 축대칭, 조석 삼축 없음 (zonal J2/J4만, 전용 행)" }
+      - { name: age, value: 5.3, unit: Gyr, op: set, phase3_default: "5.3 Gyr (inherited from Alpha Cen A)", phase3_default_ko: "5.3 Gyr (α Cen A 상속)" }
     refs: ["docs/reference/internal-heat-luminosity-methodology.md"]
     gate:
       criterion: [classification]
@@ -385,13 +385,13 @@ decisions:
       않는다. 온도·기압의 전체 프로파일은 표준 한랭 거대행성 모델을 따르고, 찌그러진 궤도가 대계절 순환을 구동한다. 225 K는 무난한 알베도를 가정한 값이라, 물구름이 실제로 더 밝으면 더 차가울
       수 있다. 분류는 그대로다.
     fields:
-      - { name: composition, value: "H₂/He bulk, [M/H]+0.5~1.0, clouds H₂O·NH₄SH (NH₃ 비응결), C/O 2.5×", op: set }
-      - { name: pressure, value: 1, unit: bar, op: set, phase3_default: "1 bar 기준 앵커" }
-      - { name: temperature, value: 225, unit: K, op: set, phase3_default: "구름층 225K 앵커 (A_B=0.3 가정)" }
-      - { name: scale_height, value: "프로파일서 도출", op: set }
+      - { name: composition, value: "H2/He bulk, [M/H] +0.5 to 1.0, clouds of H2O and NH4SH (NH3 does not condense), C/O 2.5x", value_ko: "H₂/He bulk, [M/H]+0.5~1.0, clouds H₂O·NH₄SH (NH₃ 비응결), C/O 2.5×", op: set }
+      - { name: pressure, value: 1, unit: bar, op: set, phase3_default: "Anchored at the 1 bar level", phase3_default_ko: "1 bar 기준 앵커" }
+      - { name: temperature, value: 225, unit: K, op: set, phase3_default: "Cloud-deck anchor 225 K (assuming A_B = 0.3)", phase3_default_ko: "구름층 225K 앵커 (A_B=0.3 가정)" }
+      - { name: scale_height, value: "Derived from the profile", value_ko: "프로파일서 도출", op: set }
       - { name: breathability, value: false, op: set }
-      - { name: greenhouse, value: "none (표면 없어 surface-lift 없음)", op: set }
-      - { name: escape, value: "negligible (거대질량)", op: set }
+      - { name: greenhouse, value: "none (no surface, so there is no surface lift)", value_ko: "none (표면 없어 surface-lift 없음)", op: set }
+      - { name: escape, value: "negligible (very massive)", value_ko: "negligible (거대질량)", op: set }
     gate:
       criterion: [classification, error-bar]
       verdict: pass-in-window
@@ -447,12 +447,13 @@ decisions:
       목성풍 난류 밴딩은 시각적 드라마이고, 이만큼 조용한 행성이라면 토성의 얌전한 줄무늬가 더
       자연스럽다. 구름 자체는 따로 정한다.
     fields:
-      - { name: banding_base, value: "#eef1f4", op: set, phase3_default: "#eef1f4 (물/NH4SH zone, Sudarsky Class II)", verdict: pass-in-window }
+      - { name: banding_base, value: "#eef1f4", op: set, phase3_default: "#eef1f4 (water / NH4SH zone, Sudarsky Class II)", phase3_default_ko: "#eef1f4 (물/NH4SH zone, Sudarsky Class II)", verdict: pass-in-window }
       - { name: banding_chromophore, value: "#b4784e", window: "#a8703f–#bc8055", op: set, verdict: pass-in-window }
       - { name: banding_belt, value: "#647e96", window: "#5a6e82–#6e8499", op: set, verdict: pass-in-window }
-      - { name: banding_storm_eye, value: "#214a72", window: "#1e4068–#2a5480", op: set, verdict: pass-in-window, note: "구름 렌더 tint; biome-map 'The Eye' 픽셀 #244C8A(gameplay.science_biomes)와 파이프라인이 달라 의도적으로 별개" }
+      - { name: banding_storm_eye, value: "#214a72", window: "#1e4068–#2a5480", op: set, verdict: pass-in-window, note: "A cloud render tint; deliberately separate from the biome-map 'The Eye' pixel #244C8A (gameplay.science_biomes), which runs through a different pipeline", note_ko: "구름 렌더 tint; biome-map 'The Eye' 픽셀 #244C8A(gameplay.science_biomes)와 파이프라인이 달라 의도적으로 별개" }
       - name: banding_morphology
-        value: "Jovian turbulent banding (띠 경계 소용돌이·페스툰 다수)"
+        value: "Jovian turbulent banding (many vortices and festoons along the band boundaries)"
+        value_ko: "Jovian turbulent banding (띠 경계 소용돌이·페스툰 다수)"
         op: set
         verdict: owner-override
       - name: hapke_terrain
@@ -563,7 +564,7 @@ decisions:
       구름층은 목성처럼 끓는다. 띠 경계마다 소용돌이와 페스툰이 일고, 중위도에 큰 폭풍 하나(가라앉은 파란 눈)가 돈다. 내부열이 이 정도로 적은 행성이라면 얌전한 토성 쪽이 더 자연스러우니,
       난류는 시각적 드라마를 위한 의도적 선택이다.
     fields:
-      - { name: clouds, value: "Jovian turbulent banding + 중위도 단일 anticyclone", op: set }
+      - { name: clouds, value: "Jovian turbulent banding with a single mid-latitude anticyclone", value_ko: "Jovian turbulent banding + 중위도 단일 anticyclone", op: set }
       - { name: cloud_coverage, value: 0.9, op: set, phase3_default: "0.9 (Phase 3)" }
     gate:
       criterion: [visual-checklist]
@@ -603,7 +604,7 @@ decisions:
       오로라는 안에서 먹인다. Dante의 플라스마 토러스와 10시간 자전이 밝은 메인 오벌을 물리 기대값으로
       만들며, 별이 조용한 것은 상관이 없다.
     fields:
-      - { name: aurora, value: "극 rose-magenta 밝은 메인 오벌 (H Balmer-α 적색 + H2 Fulcher/Balmer-β/γ 보라; 내부 토러스-구동)", op: set, phase3_default: "aurora_present=false (medium; 항성풍 채널만 평가한 값)" }
+      - { name: aurora, value: "A bright rose-magenta main auroral oval at the poles (H Balmer-alpha red plus H2 Fulcher and Balmer-beta/gamma violet; driven by the internal torus)", value_ko: "극 rose-magenta 밝은 메인 오벌 (H Balmer-α 적색 + H2 Fulcher/Balmer-β/γ 보라; 내부 토러스-구동)", op: set, phase3_default: "aurora_present = false (medium; a value that only evaluated the stellar-wind channel)", phase3_default_ko: "aurora_present=false (medium; 항성풍 채널만 평가한 값)" }
     refs: ["docs/reference/element-plasma-colors.md", "docs/reference/solar-system-radiation-belts.md"]
     gate:
       criterion: [composition-lock, derived-grounding]
@@ -646,7 +647,7 @@ decisions:
       성층화가 진행됐다면 실제 자기장은 몇 배 약할 수 있다. 그 조용한 대안은 접고 강한 읽기를 택했으며,
       오로라와 방사선대를 떠받치는 것이 바로 이 자기장이다.
     fields:
-      - { name: magnetic_field, value: 170, unit: uT, op: set, phase3_default: "170 µT (Phase 3도 근거 교정됨)" }
+      - { name: magnetic_field, value: 170, unit: uT, op: set, phase3_default: "170 uT (Phase 3's grounding was corrected too)", phase3_default_ko: "170 µT (Phase 3도 근거 교정됨)" }
       - { name: magnetic_field_polar, value: 345, unit: uT, op: set }
     gate:
       criterion: [derived-grounding]
@@ -683,7 +684,7 @@ decisions:
       바로 안쪽을 날아 항성풍이 몰아치면 잠시 밖에 노출될 수 있다. 경계면까지의 거리는 자기장의 6제곱근에만
       반응해서, 입력이 어지간히 흔들려도 크기는 꿈쩍하지 않는다.
     fields:
-      - { name: magnetosphere, value: 23.5, unit: R_p, op: set, phase3_default: "R_mp ≈ 23.5 R_p (5위성 전부 자기권 내)" }
+      - { name: magnetosphere, value: 23.5, unit: R_p, op: set, phase3_default: "R_mp ~ 23.5 R_p (all five moons sit inside the magnetosphere)", phase3_default_ko: "R_mp ≈ 23.5 R_p (5위성 전부 자기권 내)" }
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -740,14 +741,14 @@ decisions:
       - { name: outer_border_dist, value: 2.0738, unit: R_p, op: set }
       - { name: outer_border_radius, value: 1.6687, unit: R_p, op: set }
       - { name: outer_border_deform_xy, value: 0.8079, op: set }
-      - { name: pause_radius, value: 28.2, unit: R_p, op: set, note: "= 노즈 23.5 × comp 1.2 (nose = pause_radius/pause_compression)" }
+      - { name: pause_radius, value: 28.2, unit: R_p, op: set, note: "= nose 23.5 x compression 1.2 (nose = pause_radius/pause_compression)", note_ko: "= 노즈 23.5 × comp 1.2 (nose = pause_radius/pause_compression)" }
       - { name: pause_compression, value: 1.2, op: set }
       - { name: pause_extension, value: 0.05, op: set }
       - { name: pause_height_scale, value: 1.1, op: set }
       - { name: radiation_inner, value: 300, unit: "rad/h", op: set }
       - { name: radiation_outer, value: 30, unit: "rad/h", op: set }
       - { name: radiation_pause, value: -0.01, unit: "rad/h", op: set }
-      - { name: geomagnetic_pole_lat, value: 80, unit: deg, op: set, note: "= 90° − 자기축 기울기 ~10° 가정(목성 아날로그); magnetic_dipole_tilt_deg 확정 시 따름" }
+      - { name: geomagnetic_pole_lat, value: 80, unit: deg, op: set, note: "= 90 deg minus an assumed ~10 deg magnetic-axis tilt (Jupiter analog); follows magnetic_dipole_tilt_deg once that is fixed", note_ko: "= 90° − 자기축 기울기 ~10° 가정(목성 아날로그); magnetic_dipole_tilt_deg 확정 시 따름" }
     gate:
       criterion: [derived-grounding, canon-consistency]
       verdict: methodology-derived
@@ -854,7 +855,7 @@ decisions:
       고리면은 어느 한 순간의 스냅샷이 아니라 Chaos 궤도의 장기 평균면을 따라, 달이 그 둘레를 흔들리는 수백 년
       캠페인에도 그럴듯함이 유지된다. 어두운 탄소질 대신 고른 청백 얼음 팔레트가 Chaos를 얼음체로 확정한다.
     fields:
-      - { name: ring_structure, value: "2-annulus: 안쪽 800000–1410000 km / 바깥 1590000–2500000 km", op: set }
+      - { name: ring_structure, value: "Two annuli: inner 800,000-1,410,000 km and outer 1,590,000-2,500,000 km", value_ko: "2-annulus: 안쪽 800000–1410000 km / 바깥 1590000–2500000 km", op: set }
       - { name: ring_inner_annulus_km, value: "800000–1410000", op: set }
       - { name: ring_outer_annulus_km, value: "1590000–2500000", op: set }
       - { name: ring_gap_km, value: "1410000–1590000 (Chaos at 1500000 km)", op: set }
@@ -920,9 +921,9 @@ decisions:
       이 행성의 중력권을 지나야 한다. 과학 지도는 위도 띠를 따른다. 적도대, 남북의 온대 띠, 남북의 극지, 그리고
       폭풍 자체가 하나의 바이옴이다. 띠 사이에 걸려 멀리서도 보이는 그 거대한 파란 눈이 가 볼 만한 명소다.
     fields:
-      - { name: science_biomes, value: "위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴", op: set, colors: {"Equatorial":"#C9A26B","North Temperate":"#E4D3B0","South Temperate":"#A6784E","North Polar":"#9DB0C4","South Polar":"#B0A0AE","The Eye":"#244C8A"} }   # provisional naturalistic biome-map display colors (S↓, Promised Worlds convention); names TBC
-      - { name: sphere_of_influence_tuning, value: "auto from mass (조정 불요)", op: passthrough }
-      - { name: timewarp_limits, value: "대기 위 표준", op: passthrough }
+      - { name: science_biomes, value: "Latitude bands (equatorial, north and south temperate belts, north and south polar) plus the signature storm (the deep blue eye) as its own biome", value_ko: "위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴", op: set, colors: {"Equatorial":"#C9A26B","North Temperate":"#E4D3B0","South Temperate":"#A6784E","North Polar":"#9DB0C4","South Polar":"#B0A0AE","The Eye":"#244C8A"} }   # provisional naturalistic biome-map display colors (S↓, Promised Worlds convention); names TBC
+      - { name: sphere_of_influence_tuning, value: "auto from mass (no tuning needed)", value_ko: "auto from mass (조정 불요)", op: passthrough }
+      - { name: timewarp_limits, value: "Standard above the atmosphere", value_ko: "대기 위 표준", op: passthrough }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -955,7 +956,7 @@ decisions:
       조용한 별이고, 모든 값이 관측으로 측정되어 있다. 22일 자전, 잔잔한 채층, 그리고 잠정
       ~19년 주기로 열 배까지 밝아졌다 어두워지는 희미한 X선 코로나가 있다. 2005–2013년에는 마운더최소기 같은 저상태까지 겪었다.
     fields:
-      - { name: activity, value: "P_rot 22d, log R'HK −4.95, X-ray log Lx ~26.78 (cycle swing ~10), cycle ~19.1yr (tentative)", op: passthrough, note: "Lx=Robrade&Schmitt2016(2005–2013 마운더최소기형 저상태), cycle=Ayres2014 tentative; radiation_surface ≈0.8 유지; 2026-07-12 점검서 A/B X선 스왑 교정" }
+      - { name: activity, value: "P_rot 22d, log R'HK −4.95, X-ray log Lx ~26.78 (cycle swing ~10), cycle ~19.1yr (tentative)", op: passthrough, note: "Lx from Robrade & Schmitt 2016 (the 2005-2013 Maunder-minimum-like low state), cycle from Ayres 2014 (tentative); radiation_surface stays ~0.8. The A/B X-ray swap was corrected in the 2026-07-12 review", note_ko: "Lx=Robrade&Schmitt2016(2005–2013 마운더최소기형 저상태), cycle=Ayres2014 tentative; radiation_surface ≈0.8 유지; 2026-07-12 점검서 A/B X선 스왑 교정" }
 
   - body: Alpha Centauri A
     axis: magnetism.magnetic_field
@@ -998,7 +999,7 @@ decisions:
       별이 X선에서 더 세게 빛나는지로 가중한 우리의 가정이다. 더 작고 활동적인 B가 세 배 가까이 드세서
       A에게는 사분의 일 몫이 남는다. 그 하류의 Polyphemus는 그만큼 순한 바람을 맞고, 자기권도 조금 크다.
     fields:
-      - { name: stellar_wind, value: 0.5, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
+      - { name: stellar_wind, value: 0.5, unit: Mdot_sun, op: set, phase3_default: "Combined ~2 Mdot_sun (Wood 2001 measurement)", phase3_default_ko: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
       criterion: [derived-grounding]
       verdict: owner-override   # 합산만 측정, per-star 분배는 가정
@@ -1034,7 +1035,7 @@ decisions:
       astrosphere이며 시스템 대표로 A에 기록한다. 거품이 어느 쪽을 향하는지는 신뢰도가 낮은 데다 어차피 훗날
       플러그인만 렌더할 수 있다. 스톡 게임은 그리지 못한다.
     fields:
-      - { name: heliosphere, value: "~176 AU shared astrosphere standoff (G-cloud 유입 ~25 km/s)", op: passthrough, note: "Wood2001 Lyα; 176 AU = 120·√2·26/25; apex ~187°/+22°는 plugin-only·low-conf" }
+      - { name: heliosphere, value: "~176 AU shared astrosphere standoff (G-cloud inflow ~25 km/s)", value_ko: "~176 AU shared astrosphere standoff (G-cloud 유입 ~25 km/s)", op: passthrough, note: "Wood 2001 Lyman-alpha; 176 AU = 120 x sqrt(2) x 26/25; the apex at ~187 deg / +22 deg is plugin-only and low confidence", note_ko: "Wood2001 Lyα; 176 AU = 120·√2·26/25; apex ~187°/+22°는 plugin-only·low-conf" }
 
   - body: Alpha Centauri A
     axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
@@ -1052,12 +1053,12 @@ decisions:
       어두운 약한 코로나, 그리고 거의 기록되지 않을 만큼 드문 플레어가 전부다. 전부 측정값에서 나온 것이며, 정할 것은
       텍스처에 흑점을 몇 개나 그릴지뿐이었다. 답은 "아주 조금"이었다.
     fields:
-      - { name: color, value: "#fff4ea", op: set, phase3_default: "G2V, Teff 5847K (황백, 거의 태양)" }
-      - { name: granulation, value: "solar-type 대류 granule", op: set }
-      - { name: limb_darkening, value: "solar-type (표준)", op: set }
-      - { name: spots_faculae, value: "sparse ~0.1–0.3% 피복률", op: set }
+      - { name: color, value: "#fff4ea", op: set, phase3_default: "G2V, Teff 5847 K (yellow-white, nearly solar)", phase3_default_ko: "G2V, Teff 5847K (황백, 거의 태양)" }
+      - { name: granulation, value: "Solar-type convective granules", value_ko: "solar-type 대류 granule", op: set }
+      - { name: limb_darkening, value: "Solar-type (standard)", value_ko: "solar-type (표준)", op: set }
+      - { name: spots_faculae, value: "Sparse, ~0.1-0.3% coverage", value_ko: "sparse ~0.1–0.3% 피복률", op: set }
       - { name: corona, value: "present (weak, X-ray log Lx ~26.78)", op: set }
-      - { name: flares, value: "rare (플레어성 아님)", op: set }
+      - { name: flares, value: "rare (not a flare star)", value_ko: "rare (플레어성 아님)", op: set }
     gate:
       criterion: [observation]
       verdict: pass-in-window
@@ -1085,7 +1086,7 @@ decisions:
       주황빛 동반성은 둘 중 더 팔팔한 쪽이다. 코로나는 A보다 X선에서 밝고, 활동 사이클은 8.84년으로 어느 별과
       견줘도 손꼽히게 깨끗하게 측정돼 있다. 전부 관측으로 측정되어 있다.
     fields:
-      - { name: activity, value: "P_rot 41d, log R'HK −4.85, clean 8.84yr cycle (DeWarf2010), X-ray log Lx 27.04 (contrast ~4.5)", op: passthrough, note: "K1V; contrast ~4.5=태양 진폭의 절반; radiation_surface ≈1.4(A의 ~2배, Lx 비 1.8 정합, 플레어성 아님); 2026-07-12 점검 P_rot 38→41d·R'HK −5.0→−4.85(DB recommended)·factor~10은 A 특성이라 제거" }
+      - { name: activity, value: "P_rot 41d, log R'HK −4.85, clean 8.84yr cycle (DeWarf2010), X-ray log Lx 27.04 (contrast ~4.5)", op: passthrough, note: "K1V; contrast ~4.5, i.e. half the solar amplitude; radiation_surface ~1.4 (about twice A's, consistent with the 1.8 Lx ratio; not a flare star). The 2026-07-12 review moved P_rot 38 -> 41 d and R'HK -5.0 -> -4.85 (DB recommended), and dropped the ~10 factor, which is a property of A", note_ko: "K1V; contrast ~4.5=태양 진폭의 절반; radiation_surface ≈1.4(A의 ~2배, Lx 비 1.8 정합, 플레어성 아님); 2026-07-12 점검 P_rot 38→41d·R'HK −5.0→−4.85(DB recommended)·factor~10은 A 특성이라 제거" }
 
   - body: Alpha Centauri B
     axis: magnetism.magnetic_field
@@ -1101,7 +1102,7 @@ decisions:
       효율은 메트로놈처럼 깨끗한 활동 사이클과 더 밝은 코로나에서 드러난다. A처럼 직접 측정된 적은 없어 이 값도
       빌려온 것이며, 직접 측정이 나오면 올라갈 수 있다.
     fields:
-      - { name: magnetic_field, value: "~2–4 G (large-scale surface, A보다 강함)", op: set }
+      - { name: magnetic_field, value: "~2-4 G (large-scale surface field, stronger than A's)", value_ko: "~2–4 G (large-scale surface, A보다 강함)", op: set }
     gate:
       criterion: [activity-proxy]
       verdict: pass-in-window
@@ -1129,7 +1130,7 @@ decisions:
       (더 작은 별에 더 밝은 코로나가 눌러 담겼다) 항성풍은 그 세기를 따라가니, 활동적인 주황 왜성이 바람까지
       도맡는다. 이 분배는 측정된 총량 위에 얹은 가정이며, 산식은 A 쪽에 있다.
     fields:
-      - { name: stellar_wind, value: 1.5, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
+      - { name: stellar_wind, value: 1.5, unit: Mdot_sun, op: set, phase3_default: "Combined ~2 Mdot_sun (Wood 2001 measurement)", phase3_default_ko: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
       criterion: [derived-grounding]
       verdict: owner-override   # 합산만 측정, per-star 분배는 가정
@@ -1162,12 +1163,12 @@ decisions:
       난폭하진 않다. A와 마찬가지로 물리는 측정값에서 곧장 나오고, 정할 것은 텍스처의 흑점 분장뿐이었고,
       B에 더 진하게 손을 댔다.
     fields:
-      - { name: color, value: "#ffdcb0", op: set, phase3_default: "K1V, Teff 5316K (황등)" }
-      - { name: granulation, value: "대류 granule (약간 큼)", op: set }
-      - { name: limb_darkening, value: "표준 (적색쪽 강함)", op: set }
-      - { name: spots_faculae, value: "moderate ~1–3% 피복률, 중위도 흑점군 여럿", op: set }
-      - { name: corona, value: "A보다 밝음 (log Lx 27.04)", op: set }
-      - { name: flares, value: "occasional (플레어성 아님)", op: set }
+      - { name: color, value: "#ffdcb0", op: set, phase3_default: "K1V, Teff 5316 K (yellow-orange)", phase3_default_ko: "K1V, Teff 5316K (황등)" }
+      - { name: granulation, value: "Convective granules (slightly larger)", value_ko: "대류 granule (약간 큼)", op: set }
+      - { name: limb_darkening, value: "Standard (stronger toward the red)", value_ko: "표준 (적색쪽 강함)", op: set }
+      - { name: spots_faculae, value: "Moderate, ~1-3% coverage, with several mid-latitude spot groups", value_ko: "moderate ~1–3% 피복률, 중위도 흑점군 여럿", op: set }
+      - { name: corona, value: "Brighter than A (log Lx 27.04)", value_ko: "A보다 밝음 (log Lx 27.04)", op: set }
+      - { name: flares, value: "occasional (not a flare star)", value_ko: "occasional (플레어성 아님)", op: set }
     gate:
       criterion: [observation]
       verdict: pass-in-window
@@ -1198,7 +1199,7 @@ decisions:
       i★ 측정 없음. 임의 값. AB 궤도면 법선에서 태양과 비슷한 ~7° 소기울기(태양-황도 7.25° 유비).
       시각 효과는 미미하다.
     fields:
-      - { name: spin_axis_orientation, value: "AB 궤도면 법선 + ~7° tilt (방위각 자유, ICRS 극 RA/Dec 변환 at emit)", op: set }
+      - { name: spin_axis_orientation, value: "The AB orbital-plane normal plus a ~7 deg tilt (azimuth free; converted to ICRS pole RA/Dec at emit)", value_ko: "AB 궤도면 법선 + ~7° tilt (방위각 자유, ICRS 극 RA/Dec 변환 at emit)", op: set }
       - { name: obliquity, value: 7, unit: deg, op: set }
     gate:
       criterion: [physics]
@@ -1226,7 +1227,7 @@ decisions:
       기울기가 어느 방향인지는 구속되지 않아, 비정렬은 측정이 허용하는 최솟값으로 잡았다.
       불확도가 커서 더 나은 측정이 오면 값이 달라질 수 있다.
     fields:
-      - { name: spin_axis_orientation, value: "i★ 45° (LOS 기준, 측정) · PA=궤도극 정렬 → 궤도면 대비 비정렬 ~34°", op: set }
+      - { name: spin_axis_orientation, value: "i* 45 deg (measured, relative to the line of sight); PA aligned with the orbital pole, giving a ~34 deg misalignment to the orbital plane", value_ko: "i★ 45° (LOS 기준, 측정) · PA=궤도극 정렬 → 궤도면 대비 비정렬 ~34°", op: set }
     gate:
       criterion: [observation]
       verdict: pass-in-window
@@ -1315,8 +1316,8 @@ decisions:
     fields:
       - { name: mass, value: 1.1055, unit: M_sun, op: passthrough }
       - { name: radius, value: 1.2234, unit: R_sun, op: passthrough }
-      - { name: gravity, value: 202, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
-      - { name: flattening, value: 2.4e-5, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 4.8e-7, q 4.6e-5); 시각 oblate 슬롯" }
+      - { name: gravity, value: 202, unit: m/s2, op: passthrough, phase3_default: "derived echo of GM/R^2", phase3_default_ko: "GM/R² 파생 에코" }
+      - { name: flattening, value: 2.4e-5, op: set, note: "= (3J2+q)/2 derived echo (J2 4.8e-7, q 4.6e-5); the visual oblateness slot", note_ko: "= (3J₂+q)/2 파생 에코 (J₂ 4.8e-7, q 4.6e-5); 시각 oblate 슬롯" }
       - { name: rotation_period, value: 22, unit: d, op: passthrough }
       - { name: age, value: 5.3, unit: Gyr, op: passthrough }
 
@@ -1334,8 +1335,8 @@ decisions:
     fields:
       - { name: mass, value: 0.9373, unit: M_sun, op: passthrough }
       - { name: radius, value: 0.8632, unit: R_sun, op: passthrough }
-      - { name: gravity, value: 345, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
-      - { name: flattening, value: 2.8e-6, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 5.7e-8, q 5.5e-6); 시각 oblate 슬롯" }
+      - { name: gravity, value: 345, unit: m/s2, op: passthrough, phase3_default: "derived echo of GM/R^2", phase3_default_ko: "GM/R² 파생 에코" }
+      - { name: flattening, value: 2.8e-6, op: set, note: "= (3J2+q)/2 derived echo (J2 5.7e-8, q 5.5e-6); the visual oblateness slot", note_ko: "= (3J₂+q)/2 파생 에코 (J₂ 5.7e-8, q 5.5e-6); 시각 oblate 슬롯" }
       - { name: rotation_period, value: 41, unit: d, op: passthrough }
       - { name: age, value: 5.3, unit: Gyr, op: passthrough }
 
@@ -1387,13 +1388,13 @@ decisions:
     fields:
       - { name: mass, value: 8.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 900, unit: km, op: set, note: "INVENTED" }
-      - { name: gravity, value: 0.659, unit: m/s2, op: set, note: "GM/R² 파생 에코" }
-      - { name: flattening, value: 0.098, op: set, note: "= (5/2)·J₂ 평균적도 spheroid; 시각 슬롯; 계란 장축 a−c~16%는 C22 행 note" }
-      - { name: reference_radius, value: 900, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
-      - { name: rotation_period, value: 9.2, unit: h, op: set, note: "tidally locked (자전=공전)" }
+      - { name: gravity, value: 0.659, unit: m/s2, op: set, note: "derived echo of GM/R^2", note_ko: "GM/R² 파생 에코" }
+      - { name: flattening, value: 0.098, op: set, note: "= (5/2)*J2 mean-equatorial spheroid; the visual slot. The egg's long axis, a-c ~16%, is in the C22 row's note", note_ko: "= (5/2)·J₂ 평균적도 spheroid; 시각 슬롯; 계란 장축 a−c~16%는 C22 행 note" }
+      - { name: reference_radius, value: 900, unit: km, op: set, note: "J2/C22 reference radius = radius", note_ko: "J2/C22 기준 반경 = radius" }
+      - { name: rotation_period, value: 9.2, unit: h, op: set, note: "tidally locked (rotation = orbit)", note_ko: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.039, reference_radius_km: 900, op: set, note: "= 10/3·C̄₂₂, φ0.80" }
-      - { name: geopotential_c22, value: 0.0118, op: set, note: "조석 삼축, a−c~16% 계란형(모행성 방향)" }
+      - { name: geopotential_c22, value: 0.0118, op: set, note: "Tidal triaxiality, an a-c ~16% egg shape pointed at the parent", note_ko: "조석 삼축, a−c~16% 계란형(모행성 방향)" }
       - { name: internal_heat, value: "tidal (see bulk.tidal_heating row, ~1200× Io)", op: set }
       - { name: age, value: 5.3, unit: Gyr, op: set }
       - { name: spin_axis_orientation, value: "orbit normal", op: set }
@@ -1418,7 +1419,7 @@ decisions:
       Dante는 이오와 같이 유도 자기장만을 갖는다. 대신 이오와 동일하게 가장 안쪽 위성으로서 플라스마 공급원
       역할을 하며, 화산이 뿜어낸 황 토러스가 Polyphemus의 방사선대를 포화시킨다.
     fields:
-      - { name: magnetic_field, value: "none (no intrinsic dynamo; Io식 유도장만)", op: set }
+      - { name: magnetic_field, value: "none (no intrinsic dynamo; only an Io-style induced field)", value_ko: "none (no intrinsic dynamo; Io식 유도장만)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -1465,8 +1466,8 @@ decisions:
       사이 평원이 360 K 근처에 머문다. 이 분배는 아트 선택이고, 후한 선택이다. 같은 열을 고르게 펴면 표면 전체가
       제 황이 녹는 온도 위에 있게 된다.
     fields:
-      - { name: tidal_heating, value: "~1200× Io (시뮬 e_rms 0.0186, k₂/Q≈0.0155)", op: set, note: "구값 ~820×는 e 0.0175 가정" }
-      - { name: tidal_surface_flux, value: "~11,500 W/m² (평원 360K; 노출 용융부 1350K이 면적 ~5.7%)", op: set, note: "전도 지각 두께 ~2.1 m (평원). 균일 복사면 독법은 주변 673 K + 지각 0.12 m" }
+      - { name: tidal_heating, value: "~1200x Io (simulated e_rms 0.0186, k2/Q ~0.0155)", value_ko: "~1200× Io (시뮬 e_rms 0.0186, k₂/Q≈0.0155)", op: set, note: "The old ~820x assumed e 0.0175", note_ko: "구값 ~820×는 e 0.0175 가정" }
+      - { name: tidal_surface_flux, value: "~11,500 W/m2 (360 K plains; the exposed melt at 1350 K covers ~5.7% of the area)", value_ko: "~11,500 W/m² (평원 360K; 노출 용융부 1350K이 면적 ~5.7%)", op: set, note: "Conductive crust ~2.1 m thick (plains). Read as a uniform radiating surface it would be 673 K with a 0.12 m crust", note_ko: "전도 지각 두께 ~2.1 m (평원). 균일 복사면 독법은 주변 673 K + 지각 0.12 m" }
     refs: ["docs/reference/tidal-heating-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "phase3/stability-sim/STABILITY_REPORT.md", "2012Icar..219..701V", "1994JGR....9917095V"]
     gate:
       criterion: [stability, canon-consistency]
@@ -1549,8 +1550,8 @@ decisions:
       유지할 만큼 서늘하고, 노출된 용융부는 1350 K에 이른다.
     fields:
       - { name: surface_type, value: "silicate volcanic (Io-type)", op: set }
-      - { name: albedo, value: 0.30, op: set, note: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균; 360 K 평원에서 고체 사방정계 황이 안정상이라 성립" }
-      - { name: surface_temperature, value: "360 K 평원 (87°C) + ~1350 K (1077°C) 노출 용융부, 용융부 면적 ~5.7%", unit: K, op: set, note: "평원을 균일 복사면으로 읽으면 673 K이고 황이 녹는다(bulk.tidal_heating 행의 다이버전스 노트 참조). 구값 230K+600K는 조석 플럭스 11,500 W/m²와 에너지 보존 위반" }
+      - { name: albedo, value: 0.30, op: set, note: "Bulk average of ~0.5 over the sulfur half and ~0.10 over the basalt half; it holds because solid orthorhombic sulfur is the stable phase on the 360 K plains", note_ko: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균; 360 K 평원에서 고체 사방정계 황이 안정상이라 성립" }
+      - { name: surface_temperature, value: "360 K plains (87 C) plus exposed melt at ~1350 K (1077 C), the melt covering ~5.7% of the area", value_ko: "360 K 평원 (87°C) + ~1350 K (1077°C) 노출 용융부, 용융부 면적 ~5.7%", unit: K, op: set, note: "Read as a uniform radiating surface the plains would be 673 K and the sulfur would melt (see the divergence note on the bulk.tidal_heating row). The old 230 K + 600 K violated energy conservation against the 11,500 W/m2 tidal flux", note_ko: "평원을 균일 복사면으로 읽으면 673 K이고 황이 녹는다(bulk.tidal_heating 행의 다이버전스 노트 참조). 구값 230K+600K는 조석 플럭스 11,500 W/m²와 에너지 보존 위반" }
     refs: ["docs/reference/tidal-heating-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "docs/reference/surface-color-albedo-methodology.md"]
     gate:
       criterion: [canon-consistency, physics]
@@ -1597,8 +1598,8 @@ decisions:
       거대 가스행성이 이 위성의 시그니처 풍경을 이룬다.
     refs: ["docs/reference/hapke-shader-methodology.md"]
     fields:
-      - { name: surface, value: "sulfur plains #d9c24a (밝음) / basalt #2a2622 (어두움), 고대비 이중-재질", op: set }
-      - { name: emission_glow, value: "lava #ff5a1e→#ffd070 (온도별), 협곡·칼데라·용암호", op: set }
+      - { name: surface, value: "sulfur plains #d9c24a (bright) against basalt #2a2622 (dark), a high-contrast two-material surface", value_ko: "sulfur plains #d9c24a (밝음) / basalt #2a2622 (어두움), 고대비 이중-재질", op: set }
+      - { name: emission_glow, value: "lava #ff5a1e to #ffd070 (by temperature), in canyons, calderas and lava lakes", value_ko: "lava #ff5a1e→#ffd070 (온도별), 협곡·칼데라·용암호", op: set }
       - name: hapke_terrain
         value: 0.45
         op: set
@@ -1638,7 +1639,7 @@ decisions:
     narrative: "A tenuous atmosphere of volcanic sulfur dioxide and sulfur, much like Io's. It is unstable and not breathable."
     narrative_ko: "이오처럼 화산이 뿜어낸 이산화황과 황으로 이루어진 희박한 대기로, 안정적이지 않고 호흡도 불가능하다."
     fields:
-      - { name: composition, value: "tenuous SO₂/sulfur (화산 outgassing, Io 유추)", op: set }
+      - { name: composition, value: "tenuous SO2 / sulfur (volcanic outgassing, by analogy with Io)", value_ko: "tenuous SO₂/sulfur (화산 outgassing, Io 유추)", op: set }
       - { name: breathability, value: false, op: set }
     gate:
       criterion: [physics]
@@ -1657,7 +1658,7 @@ decisions:
       방사선이 극심해 하루 약 7,200 rem에 이른다. 이 방사선은 Dante 자신의 화산 플라스마가 공급하는 Polyphemus
       방사선대에서 온다.
     fields:
-      - { name: radiation, value: "~7,200 rem/day (극심)", op: set, note: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; 아바타 게임 설정 하한 >4,500 초과" }
+      - { name: radiation, value: "~7,200 rem/day (extreme)", value_ko: "~7,200 rem/day (극심)", op: set, note: "Our belt model's inner belt at 300 rad/h x 24 h ~ 7,200 rad/day, above the Avatar game's stated >4,500 lower bound", note_ko: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; 아바타 게임 설정 하한 >4,500 초과" }
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency, derived-grounding]
@@ -1713,7 +1714,7 @@ decisions:
       얼음이 아니라 규산암이다. 공식적으로는 둘째 위성(Alpha Centauri A b II)이며, 아바타 이름 Hades는 설명
       텍스트에만 붙는 문화명이다. 실제 검출이 존재하지 않는 픽션 천체이다.
     fields:
-      - { name: body_type, value: "rocky moon (750 km, 5.0e21 kg, ρ ~2830 kg/m³, 규산암·비빙질)", op: set }
+      - { name: body_type, value: "rocky moon (750 km, 5.0e21 kg, density ~2830 kg/m3, silicate and ice-free)", value_ko: "rocky moon (750 km, 5.0e21 kg, ρ ~2830 kg/m³, 규산암·비빙질)", op: set }
       - { name: designation, value: "Alpha Centauri A b II", op: set }
       - { name: cultural_name, value: "Hades", op: set }
     gate:
@@ -1744,13 +1745,13 @@ decisions:
     fields:
       - { name: mass, value: 5.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 750, unit: km, op: set, note: "INVENTED" }
-      - { name: gravity, value: 0.593, unit: m/s2, op: set, note: "GM/R² 파생 에코" }
-      - { name: flattening, value: 0.033, op: set, note: "= (5/2)·J₂ 평균적도 spheroid; 시각 슬롯; 계란 장축 a−c~5%는 C22 행 note" }
-      - { name: reference_radius, value: 750, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
-      - { name: rotation_period, value: 14.4, unit: h, op: set, note: "tidally locked (자전=공전)" }
+      - { name: gravity, value: 0.593, unit: m/s2, op: set, note: "derived echo of GM/R^2", note_ko: "GM/R² 파생 에코" }
+      - { name: flattening, value: 0.033, op: set, note: "= (5/2)*J2 mean-equatorial spheroid; the visual slot. The egg's long axis, a-c ~5%, is in the C22 row's note", note_ko: "= (5/2)·J₂ 평균적도 spheroid; 시각 슬롯; 계란 장축 a−c~5%는 C22 행 note" }
+      - { name: reference_radius, value: 750, unit: km, op: set, note: "J2/C22 reference radius = radius", note_ko: "J2/C22 기준 반경 = radius" }
+      - { name: rotation_period, value: 14.4, unit: h, op: set, note: "tidally locked (rotation = orbit)", note_ko: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.013, reference_radius_km: 750, op: set, note: "= 10/3·C̄₂₂, φ0.70" }
-      - { name: geopotential_c22, value: 0.0039, op: set, note: "조석 삼축, a−c~5% 약한 계란형" }
+      - { name: geopotential_c22, value: 0.0039, op: set, note: "Tidal triaxiality, a weak a-c ~5% egg shape", note_ko: "조석 삼축, a−c~5% 약한 계란형" }
       - { name: internal_heat, value: "tidal (see bulk.tidal_heating row)", op: set }
       - { name: age, value: 5.3, unit: Gyr, op: set }
       - { name: spin_axis_orientation, value: "orbit normal", op: set }
@@ -1767,7 +1768,7 @@ decisions:
     narrative: "None."
     narrative_ko: "없음."
     fields:
-      - { name: magnetic_field, value: "none (750 km 암석 위성, dynamo 불가)", op: set }
+      - { name: magnetic_field, value: "none (a 750 km rocky moon cannot run a dynamo)", value_ko: "none (750 km 암석 위성, dynamo 불가)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -1799,7 +1800,7 @@ decisions:
       표면과 아래의 용융부 사이를 가르는 것은 얇은 암석 껍질뿐이라, 지각은 어디나 젊고 오래된 지형은 남지 못한다.
     refs: ["docs/reference/tidal-heating-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "phase3/stability-sim/STABILITY_REPORT.md"]
     fields:
-      - { name: tidal_heating, value: "~15× Io (207 W/m² 표면 플럭스; rocky band 하단 k₂/Q=1e-3, e_rms 0.0385)", op: set, note: "밴드 전체는 15–146× Io (k₂/Q 1e-3–1e-2), 표면 278–444K" }
+      - { name: tidal_heating, value: "~15x Io (207 W/m2 surface flux; the bottom of the rocky band, k2/Q = 1e-3, e_rms 0.0385)", value_ko: "~15× Io (207 W/m² 표면 플럭스; rocky band 하단 k₂/Q=1e-3, e_rms 0.0385)", op: set, note: "The full band is 15-146x Io (k2/Q 1e-3 to 1e-2), giving surface temperatures of 278-444 K", note_ko: "밴드 전체는 15–146× Io (k₂/Q 1e-3–1e-2), 표면 278–444K" }
     gate:
       criterion: [canon-consistency, physics]
       verdict: owner-override
@@ -1848,9 +1849,9 @@ decisions:
       밤에도 온도가 거의 떨어지지 않고 유지된다.
     refs: ["docs/reference/moon-energy-budget-methodology.md", "docs/reference/tidal-heating-methodology.md", "docs/reference/surface-color-albedo-methodology.md"]
     fields:
-      - { name: surface_type, value: "회색 rocky, 젊은 지표 (홈/단층 지형 지배, 오래된 크레이터 없음, 얇은 지각 상시 재포장)", op: set }
-      - { name: albedo, value: 0.30, op: set, note: "중간 회색(달 고지대급), 오너 B" }
-      - { name: surface_temperature, value: 278, unit: K, op: set, note: "4항 Teq: 조석 207 W/m²가 별빛 141 W/m²를 압도 → 내부열이 지배; 구값 225K는 조석 항 누락" }
+      - { name: surface_type, value: "Grey rock, a young surface (grooves and faults dominate, no old craters, the thin crust is continually repaved)", value_ko: "회색 rocky, 젊은 지표 (홈/단층 지형 지배, 오래된 크레이터 없음, 얇은 지각 상시 재포장)", op: set }
+      - { name: albedo, value: 0.30, op: set, note: "Mid-grey, lunar-highlands class; owner choice B", note_ko: "중간 회색(달 고지대급), 오너 B" }
+      - { name: surface_temperature, value: 278, unit: K, op: set, note: "Four-term Teq: the 207 W/m2 of tidal heating overwhelms 141 W/m2 of starlight, so internal heat governs. The old 225 K omitted the tidal term", note_ko: "4항 Teq: 조석 207 W/m²가 별빛 141 W/m²를 압도 → 내부열이 지배; 구값 225K는 조석 항 누락" }
     gate:
       criterion: [canon-consistency]
       verdict: pass-in-window
@@ -1902,7 +1903,7 @@ decisions:
       그치고, 용암으로 불타는 Dante 옆에서 조용한 회색으로 대비를 이룬다.
     refs: ["docs/reference/hapke-shader-methodology.md"]
     fields:
-      - { name: surface, value: "회색 팔레트: 어두운 지대 #5f574e, 밝은 홈/단층 #9c968c, 약한 갈색조 (비발광)", op: set }
+      - { name: surface, value: "Grey palette: dark terrain #5f574e, bright grooves and faults #9c968c, faintly brown; not self-luminous", value_ko: "회색 팔레트: 어두운 지대 #5f574e, 밝은 홈/단층 #9c968c, 약한 갈색조 (비발광)", op: set }
       - name: hapke_terrain
         value: 0.88
         op: set
@@ -1941,7 +1942,7 @@ decisions:
     narrative: "None."
     narrative_ko: "없음."
     fields:
-      - { name: composition, value: "none (미량 외기권 무시 수준)", op: passthrough }
+      - { name: composition, value: "none (any trace exosphere is negligible)", value_ko: "none (미량 외기권 무시 수준)", op: passthrough }
 
   - body: Hades
     axis: environment.radiation
@@ -1953,7 +1954,7 @@ decisions:
     narrative_ko: >
       Hades는 Polyphemus 방사선대의 가장 강한 지점에 정확히 앉아 있다. 하루 받는 선량이 약 7,200 rem에 이른다.
     fields:
-      - { name: radiation, value: "~7,200 rem/day (심함, 내대 피크 2.07 R_p)", op: set, note: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; Hades가 내대 피크 L에 위치해 Dante와 동급" }
+      - { name: radiation, value: "~7,200 rem/day (severe, at the inner-belt peak of 2.07 R_p)", value_ko: "~7,200 rem/day (심함, 내대 피크 2.07 R_p)", op: set, note: "Our belt model's inner belt at 300 rad/h x 24 h ~ 7,200 rad/day; Hades sits at the inner belt's peak L, so it matches Dante", note_ko: "우리 belt 모델 내대 300 rad/h ×24h ≈ 7,200 rad/day; Hades가 내대 피크 L에 위치해 Dante와 동급" }
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -2000,7 +2001,7 @@ decisions:
       거주가능 천체다. Alpha Centauri A b의 셋째 위성이며, 아바타 이름은 설명 텍스트에만 붙는 문화명으로 남는다.
       실제 검출이 존재하지 않는 픽션 천체이다.
     fields:
-      - { name: body_type, value: "거주가능 지구형 위성 (sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km)", op: set }
+      - { name: body_type, value: "Habitable terrestrial moon (sub-Earth, 0.645 M_earth, 0.8 g, radius 5724 km)", value_ko: "거주가능 지구형 위성 (sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km)", op: set }
       - { name: designation, value: "Alpha Centauri A b III", op: set }
       - { name: cultural_name, value: "Pandora", op: set }
     gate:
@@ -2042,16 +2043,16 @@ decisions:
       열원으로 돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 시각적으로는 보이지 않지만 프린키피아
       궤도에는 영향을 준다.
     fields:
-      - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
-      - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
-      - { name: gravity, value: 7.84, unit: m/s2, op: set, note: "= 0.8 g, 영화 설정 체감값; GM/R² 일치" }
-      - { name: flattening, value: 5.2e-3, op: set, note: "= (5/2)·J₂ 평균적도 spheroid, 시각상 사실상 구 (a−c≈47 km는 C22 행 note)" }
-      - { name: reference_radius, value: 5724, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
-      - { name: rotation_period, value: 32, unit: h, op: set, note: "조석고정 (canon 27h 대신)" }
-      - { name: obliquity, value: 10, unit: deg, op: set, note: "궤도경사서 옴" }
-      - { name: internal_heat, value: "방사성 + 약한 조석 (e강제 ~0.005) → 화산·대륙이동·dynamo 구동", op: set }
-      - { name: geopotential_j2, value: 2.06e-3, reference_radius_km: 5724, op: set, note: "= 10/3·C̄₂₂, φ0.95, 0.645 M⊕(3.85e24 kg) 재계산 (구 5.5e-4계는 기각된 0.72 M⊕ 기반)" }
-      - { name: geopotential_c22, value: 6.2e-4, op: set, note: "조석 삼축; 편평 0.83%(a−c≈47 km), 시각상 구, 궤도 섭동에만 실재" }
+      - { name: radius, value: 5724, unit: km, op: set, note: "Diameter 11,447 km in the film's setting", note_ko: "canon 지름 11,447" }
+      - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "Option B: fix 0.8 g -> 0.645 M_earth", phase3_default_ko: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
+      - { name: gravity, value: 7.84, unit: m/s2, op: set, note: "= 0.8 g, the value the film's setting has people feel; consistent with GM/R^2", note_ko: "= 0.8 g, 영화 설정 체감값; GM/R² 일치" }
+      - { name: flattening, value: 5.2e-3, op: set, note: "= (5/2)*J2 mean-equatorial spheroid; visually a sphere for all practical purposes (the a-c ~47 km is in the C22 row's note)", note_ko: "= (5/2)·J₂ 평균적도 spheroid, 시각상 사실상 구 (a−c≈47 km는 C22 행 note)" }
+      - { name: reference_radius, value: 5724, unit: km, op: set, note: "J2/C22 reference radius = radius", note_ko: "J2/C22 기준 반경 = radius" }
+      - { name: rotation_period, value: 32, unit: h, op: set, note: "Tidally locked (in place of the film's 27 h)", note_ko: "조석고정 (canon 27h 대신)" }
+      - { name: obliquity, value: 10, unit: deg, op: set, note: "Comes from the orbital inclination", note_ko: "궤도경사서 옴" }
+      - { name: internal_heat, value: "Radiogenic plus weak tidal heating (forced e ~0.005), enough to drive volcanism, continental drift and a dynamo", value_ko: "방사성 + 약한 조석 (e강제 ~0.005) → 화산·대륙이동·dynamo 구동", op: set }
+      - { name: geopotential_j2, value: 2.06e-3, reference_radius_km: 5724, op: set, note: "= 10/3 * C22bar with phi 0.95, recomputed for 0.645 M_earth (3.85e24 kg); the old 5.5e-4 family was based on the rejected 0.72 M_earth", note_ko: "= 10/3·C̄₂₂, φ0.95, 0.645 M⊕(3.85e24 kg) 재계산 (구 5.5e-4계는 기각된 0.72 M⊕ 기반)" }
+      - { name: geopotential_c22, value: 6.2e-4, op: set, note: "Tidal triaxiality; flattening 0.83% (a-c ~47 km), visually a sphere, real only in the orbital perturbations", note_ko: "조석 삼축; 편평 0.83%(a−c≈47 km), 시각상 구, 궤도 섭동에만 실재" }
       - { name: age, value: 5.3, unit: Gyr, op: set }
       - { name: spin_axis_orientation, value: "orbit normal", op: set }
     refs: ["docs/reference/mass-radius-relation-methodology.md", "docs/reference/body-figure-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md", "docs/reference/tidal-heating-methodology.md", "phase3/stability-sim/STABILITY_REPORT.md"]
@@ -2103,13 +2104,13 @@ decisions:
       내부열이 남은 몫을 보태 지표를 살 만한 온도로 만든다. 여기에 모행성이 찌그러진 궤도를 도는 리듬에 맞춰
       대계절이 잔잔하게 오간다.
     fields:
-      - { name: composition, value: "N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon)", op: set }
-      - { name: pressure, value: 1.1, unit: atm, op: set, note: "canon ~20% 빽빽" }
-      - { name: temperature, value: 290, unit: K, op: set, note: "4항 Teq 220.6K + 조석 45 W/m² → Teq 237K, + CO₂ 온실 +54K = 291K; great-season ±15–25K" }
-      - { name: greenhouse, value: "강함 (CO₂>18%+CH₄+H₂S 구동, +54K lift, 나머지는 조석)", op: set }
-      - { name: scale_height, value: "도출 (무거운 CO₂+0.8g)", op: set }
-      - { name: escape, value: "안정 (지구형 0.8g)", op: set }
-      - { name: breathability, value: true, op: set, note: "O₂ 존재 but lore-독성; stock atmosphereContainsOxygen=true" }
+      - { name: composition, value: "N2-dominated with O2, CO2 >18%, Xe 5.5%, CH4 and H2S >1% (the film's setting)", value_ko: "N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon)", op: set }
+      - { name: pressure, value: 1.1, unit: atm, op: set, note: "~20% denser in the film's setting", note_ko: "canon ~20% 빽빽" }
+      - { name: temperature, value: 290, unit: K, op: set, note: "Four-term Teq 220.6 K plus 45 W/m2 of tidal heating gives Teq 237 K, and +54 K of CO2 greenhouse brings it to 291 K; the great season swings it by +-15-25 K", note_ko: "4항 Teq 220.6K + 조석 45 W/m² → Teq 237K, + CO₂ 온실 +54K = 291K; great-season ±15–25K" }
+      - { name: greenhouse, value: "Strong (driven by CO2 >18% with CH4 and H2S, a +54 K lift; the rest is tidal)", value_ko: "강함 (CO₂>18%+CH₄+H₂S 구동, +54K lift, 나머지는 조석)", op: set }
+      - { name: scale_height, value: "Derived (heavy CO2 at 0.8 g)", value_ko: "도출 (무거운 CO₂+0.8g)", op: set }
+      - { name: escape, value: "Stable (terrestrial at 0.8 g)", value_ko: "안정 (지구형 0.8g)", op: set }
+      - { name: breathability, value: true, op: set, note: "O2 is present but toxic in the source material; stock atmosphereContainsOxygen = true", note_ko: "O₂ 존재 but lore-독성; stock atmosphereContainsOxygen=true" }
     refs: ["docs/reference/greenhouse-warming-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "docs/reference/tidal-heating-methodology.md", "docs/reference/cassini-state-obliquity-methodology.md", "docs/reference/exoplanet-atmosphere-methodology.md"]
     gate:
       criterion: [canon-consistency, physics]
@@ -2166,12 +2167,12 @@ decisions:
       화산대와 유난히 빠른 대륙이동은 다이나모까지 함께 돌리는 같은 내부열에서 나온다. 얼음은 최고봉 정상과
       극지방에만 남는다. 가장 인상적인 지형은 플럭스 볼텍스 지점에 솟은 극적인 기하학적 암석 구조물들이다.
     fields:
-      - { name: surface_type, value: "지구형, 육지:대양 ≈ 50:50, 산악 우세", op: set }
-      - { name: hydrosphere, value: "액체 물 대양/바다 (~50%, 290K 안정)", op: set }
-      - { name: biosphere, value: "무성한 우림 + 고생물 다양성, 청록 생물발광", op: set }
-      - { name: tectonics, value: "활화산대 + 빠른 대륙이동 (조석+방사성)", op: set }
-      - { name: terrain, value: "산악+화산대+고지대 산맥, 플럭스 볼텍스 지점에 기하학적 자연 암석 구조물", op: set }
-      - { name: ice_caps, value: "고봉 정상 + 극관에만 (제한적)", op: set }
+      - { name: surface_type, value: "Terrestrial, land to ocean ~50:50, mountain-dominated", value_ko: "지구형, 육지:대양 ≈ 50:50, 산악 우세", op: set }
+      - { name: hydrosphere, value: "Liquid water oceans and seas (~50%, stable at 290 K)", value_ko: "액체 물 대양/바다 (~50%, 290K 안정)", op: set }
+      - { name: biosphere, value: "Lush rainforest with high paleo-diversity and cyan bioluminescence", value_ko: "무성한 우림 + 고생물 다양성, 청록 생물발광", op: set }
+      - { name: tectonics, value: "Active volcanic belts and fast continental drift (tidal plus radiogenic)", value_ko: "활화산대 + 빠른 대륙이동 (조석+방사성)", op: set }
+      - { name: terrain, value: "Mountains, volcanic belts and highland ranges, with geometric natural rock formations at the flux-vortex sites", value_ko: "산악+화산대+고지대 산맥, 플럭스 볼텍스 지점에 기하학적 자연 암석 구조물", op: set }
+      - { name: ice_caps, value: "Only on the high summits and the polar caps (limited)", value_ko: "고봉 정상 + 극관에만 (제한적)", op: set }
       - { name: albedo, value: 0.30, op: set }
       - { name: surface_temperature, value: 290, unit: K, op: set }
     gate:
@@ -2206,7 +2207,7 @@ decisions:
       가상 설정인 언옵타늄은 존재하지 않지만, 기하학적 암석 구조물 일대에서 자기장이 치솟는 "플럭스 볼텍스"는
       국소적인 오로라 효과를 제공한다.
     fields:
-      - { name: magnetic_field, value: "75 µT (~1.8× 지구; rocky-dynamo ℳ⁺ 상한, 조석-구동 Fe 핵 dynamo, 32h 자전 쌍극)", op: set }
+      - { name: magnetic_field, value: "75 uT (~1.8x Earth; the upper bound of the rocky-dynamo M+ ladder, a tidally driven iron-core dynamo, dipolar at a 32 h rotation)", value_ko: "75 µT (~1.8× 지구; rocky-dynamo ℳ⁺ 상한, 조석-구동 Fe 핵 dynamo, 32h 자전 쌍극)", op: set }
       - { name: magnetic_field_polar, value: 150, unit: uT, op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     gate:
@@ -2240,7 +2241,7 @@ decisions:
     narrative: "Pandora's own magnetosphere shields the surface. As the setting has it, it sits in the gap between Polyphemus's two radiation belts, and that position, together with its strong field, is what keeps the moon habitable."
     narrative_ko: "Pandora 자신의 자기권이 지표를 감싸 보호한다. 설정대로 Polyphemus의 두 방사선대 사이 틈에 자리하며, 그 위치에 강한 자기장까지 더해져 이 위성을 거주가능하게 지켜 준다."
     fields:
-      - { name: magnetosphere, value: "고유 자기권 표면 차폐 (Polyphemus 두 벨트 사이 gap 위치)", op: set }
+      - { name: magnetosphere, value: "Its own magnetosphere shields the surface (it sits in the gap between Polyphemus' two belts)", value_ko: "고유 자기권 표면 차폐 (Polyphemus 두 벨트 사이 gap 위치)", op: set }
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency]
@@ -2275,12 +2276,12 @@ decisions:
       - { name: inner_border_dist, value: 0.0971, unit: R_moon, op: set }
       - { name: inner_border_radius, value: 0.9349, unit: R_moon, op: set }
       - { name: inner_border_deform_xy, value: 0.8829, op: set }
-      - { name: pause_radius, value: 2.99, unit: R_moon, op: set, note: "= 노즈(standoff) 2.6 × comp 1.15 (nose = pause_radius/pause_compression)" }
+      - { name: pause_radius, value: 2.99, unit: R_moon, op: set, note: "= nose (standoff) 2.6 x compression 1.15 (nose = pause_radius/pause_compression)", note_ko: "= 노즈(standoff) 2.6 × comp 1.15 (nose = pause_radius/pause_compression)" }
       - { name: pause_compression, value: 1.15, op: set }
       - { name: pause_extension, value: 0.6, op: set }
-      - { name: radiation_inner, value: 4.0, unit: "rad/h", op: set, phase3_default: "2.0 (구값: 약장 gap-기아 가정)" }
+      - { name: radiation_inner, value: 4.0, unit: "rad/h", op: set, phase3_default: "2.0 (old value: assumed a weak field and a starved gap)", phase3_default_ko: "2.0 (구값: 약장 gap-기아 가정)" }
       - { name: radiation_pause, value: -0.01, unit: "rad/h", op: set }
-      - { name: geomagnetic_pole_lat, value: 80, unit: deg, op: set, note: "= 90° − 자기축 기울기 ~10°; magnetic_dipole_tilt_deg 확정 시 따름" }
+      - { name: geomagnetic_pole_lat, value: 80, unit: deg, op: set, note: "= 90 deg minus a ~10 deg magnetic-axis tilt; follows magnetic_dipole_tilt_deg once that is fixed", note_ko: "= 90° − 자기축 기울기 ~10°; magnetic_dipole_tilt_deg 확정 시 따름" }
     gate:
       criterion: [derived-grounding]
       verdict: methodology-derived
@@ -2320,12 +2321,12 @@ decisions:
       번지며, 대기 상층부에서는 격렬한 오로라가 타오른다. 특히 강한 국소 자기장을 띠고 있는 지역의 하늘에 독특한
       형태의 오로라가 더해진다.
     fields:
-      - { name: base_colour, value: "지구식 초록 식생 + 파란 대양 + 흰 구름 마블", op: set }
-      - { name: clouds, value: "흰 물구름, 활발한 기상", op: set }
-      - { name: emission_glow, value: "은은한 청록 야간 생물발광 (식물+해안)", op: set }
-      - { name: aurora, value: "격렬·다색 (O₂ 초록 557.7/630nm + N₂⁺ 청보라 391nm + 적색) + 국소 플럭스-볼텍스 오벌", op: set }
-      - { name: specular, value: "대양 sun-glint (OceanFX)", op: set }
-      - { name: haze, value: "지구식 파란 Rayleigh 림", op: set }
+      - { name: base_colour, value: "Earth-like green vegetation with blue oceans and white cloud marbling", value_ko: "지구식 초록 식생 + 파란 대양 + 흰 구름 마블", op: set }
+      - { name: clouds, value: "White water clouds, active weather", value_ko: "흰 물구름, 활발한 기상", op: set }
+      - { name: emission_glow, value: "Soft cyan bioluminescence at night (plants and coastlines)", value_ko: "은은한 청록 야간 생물발광 (식물+해안)", op: set }
+      - { name: aurora, value: "Violent and multicolored (O2 green 557.7/630 nm, N2+ blue-violet 391 nm, plus red) with local flux-vortex ovals", value_ko: "격렬·다색 (O₂ 초록 557.7/630nm + N₂⁺ 청보라 391nm + 적색) + 국소 플럭스-볼텍스 오벌", op: set }
+      - { name: specular, value: "Ocean sun-glint (OceanFX)", value_ko: "대양 sun-glint (OceanFX)", op: set }
+      - { name: haze, value: "An Earth-like blue Rayleigh limb", value_ko: "지구식 파란 Rayleigh 림", op: set }
       - { name: artificial, value: "none", op: set }
       - { name: rings, value: "none", op: set }
       - name: hapke_terrain
@@ -2383,7 +2384,7 @@ decisions:
     narrative: "Safe and habitable. Sitting in the gap between Polyphemus's two belts and further shielded by its own strong field, it stands in sharp contrast to the extreme radiation of Dante and Hades."
     narrative_ko: "안전·거주가능 수준. Polyphemus의 두 방사선대 사이 틈에 자리한 데다 제 강한 자기장까지 지표를 막아 방사선이 극심한 Dante나 Hades와는 뚜렷이 대조된다."
     fields:
-      - { name: radiation, value: "안전/거주가능 (between-belts gap + 강 dipole 차폐)", op: set, note: "구 표기 '중간/거주가능'; Cassandra 중간과 등급명 충돌해 개명(오너 2026-07-28)" }
+      - { name: radiation, value: "Safe and habitable (the between-belts gap plus strong dipolar shielding)", value_ko: "안전/거주가능 (between-belts gap + 강 dipole 차폐)", op: set, note: "Formerly labelled 'moderate/habitable'; renamed because the grade name collided with Cassandra's moderate (owner, 2026-07-28)", note_ko: "구 표기 '중간/거주가능'; Cassandra 중간과 등급명 충돌해 개명(오너 2026-07-28)" }
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [canon-consistency, derived-grounding]
@@ -2444,7 +2445,7 @@ decisions:
       두르고 있으며 미생물이 생존할 수 있을 것으로 보인다. 공식 이름은 Alpha Centauri A b IV이고, Cassandra는 영화
       본편이 아니라 제작사가 공개한 설정에서 온 명칭으로 실제로 존재하지는 않는다.
     fields:
-      - { name: body_type, value: "큰 암석 위성 (반경 3400 km), 얇은 대기 + 한계 거주 (미생물급)", op: set }
+      - { name: body_type, value: "Large rocky moon (radius 3400 km) with a thin atmosphere and marginal habitability (microbial level)", value_ko: "큰 암석 위성 (반경 3400 km), 얇은 대기 + 한계 거주 (미생물급)", op: set }
       - { name: designation, value: "Alpha Centauri A b IV", op: set }
       - { name: cultural_name, value: "Cassandra", op: set }
     gate:
@@ -2481,16 +2482,16 @@ decisions:
     fields:
       - { name: mass, value: 9.0e23, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 3400, unit: km, op: set }
-      - { name: gravity, value: 5.20, unit: m/s2, op: set, note: "= 0.53 g; GM/R² 파생 에코" }
-      - { name: flattening, value: 1.3e-3, op: set, note: "= (3J₂+q)/2 (J₂ 4.1e-4, q 1.3e-3); J2 행 note f~0.13%와 동일 결정" }
-      - { name: reference_radius, value: 3400, unit: km, op: set, note: "J2 기준 반경 = radius" }
-      - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기), 모행성 방향 고정축이 없어 조석 삼축 부재" }
-      - { name: rotation_period, value: 39, unit: h, op: set, note: "자유 자전 (미동기, 공명 락 아님)" }
+      - { name: gravity, value: 5.20, unit: m/s2, op: set, note: "= 0.53 g; derived echo of GM/R^2", note_ko: "= 0.53 g; GM/R² 파생 에코" }
+      - { name: flattening, value: 1.3e-3, op: set, note: "= (3J2+q)/2 (J2 4.1e-4, q 1.3e-3); the same decision as the f ~0.13% in the J2 row's note", note_ko: "= (3J₂+q)/2 (J₂ 4.1e-4, q 1.3e-3); J2 행 note f~0.13%와 동일 결정" }
+      - { name: reference_radius, value: 3400, unit: km, op: set, note: "J2 reference radius = radius", note_ko: "J2 기준 반경 = radius" }
+      - { name: geopotential_c22, value: null, na_reason: "Free rotation (not synchronous): with no axis fixed toward the parent there is no tidal triaxiality", na_reason_ko: "자유 자전(미동기), 모행성 방향 고정축이 없어 조석 삼축 부재" }
+      - { name: rotation_period, value: 39, unit: h, op: set, note: "Free rotation (not synchronous, not resonance-locked)", note_ko: "자유 자전 (미동기, 공명 락 아님)" }
       - { name: obliquity, value: 20, unit: deg, op: set }
-      - { name: internal_heat, value: "방사성 위주 (외곽·큰 a라 조석 미미)", op: set }
-      - { name: geopotential_j2, value: 4.1e-4, reference_radius_km: 3400, op: set, note: "회전 편평 f~0.13%, C₂₂ 없음" }
+      - { name: internal_heat, value: "Mostly radiogenic (far out and at a large semi-major axis, so tidal heating is negligible)", value_ko: "방사성 위주 (외곽·큰 a라 조석 미미)", op: set }
+      - { name: geopotential_j2, value: 4.1e-4, reference_radius_km: 3400, op: set, note: "Rotational flattening f ~0.13%, no C22", note_ko: "회전 편평 f~0.13%, C₂₂ 없음" }
       - { name: age, value: 5.3, unit: Gyr, op: set }
-      - { name: spin_axis_orientation, value: "20° 경사", op: set }
+      - { name: spin_axis_orientation, value: "Tilted 20 deg", value_ko: "20° 경사", op: set }
     gate:
       criterion: [physics]
       verdict: pass-in-window
@@ -2519,13 +2520,13 @@ decisions:
       물이 존재하는 시기가 있다.
     refs: ["docs/reference/greenhouse-warming-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "docs/reference/exoplanet-atmosphere-methodology.md"]
     fields:
-      - { name: composition, value: "N₂ 주성분 + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성", op: set }
-      - { name: pressure, value: 1.37, unit: bar, op: set, note: "타이탄급 유사체(1.5 bar) 안쪽의 비정수 선택; 구값 1 bar는 지구 기본값" }
-      - { name: temperature, value: "243–263", unit: K, op: set, note: "4항 Teq 219K + 온실 상승폭 +24K(haze 포함)~+44K(haze 없음), N₂ 압력확장 +2.0K 포함; 구값 270–275K는 미근거 +45–50K 가정" }
+      - { name: composition, value: "N2-dominated with a few percent CO2, ~0.1-1% CH4, and traces of H2 and H2O; anoxic and reducing", value_ko: "N₂ 주성분 + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성", op: set }
+      - { name: pressure, value: 1.37, unit: bar, op: set, note: "A non-round choice just inside the Titan-like analog (1.5 bar); the old 1 bar was an Earth default", note_ko: "타이탄급 유사체(1.5 bar) 안쪽의 비정수 선택; 구값 1 bar는 지구 기본값" }
+      - { name: temperature, value: "243–263", unit: K, op: set, note: "Four-term Teq 219 K plus a greenhouse lift of +24 K (with haze) to +44 K (without), including +2.0 K of N2 pressure broadening; the old 270-275 K assumed an ungrounded +45-50 K", note_ko: "4항 Teq 219K + 온실 상승폭 +24K(haze 포함)~+44K(haze 없음), N₂ 압력확장 +2.0K 포함; 구값 270–275K는 미근거 +45–50K 가정" }
       - { name: scale_height, value: 13.8, unit: km, op: set, note: "H=RT/μg, μ 28.5 g/mol(N₂+3% CO₂), g 5.20 m/s², T 245K" }
-      - { name: greenhouse, value: "CO₂+CH₄+N₂–H₂ 충돌유발흡수 (시생대/초기화성 레시피)", op: set }
+      - { name: greenhouse, value: "CO2 + CH4 + N2-H2 collision-induced absorption (the Archean / early-Mars recipe)", value_ko: "CO₂+CH₄+N₂–H₂ 충돌유발흡수 (시생대/초기화성 레시피)", op: set }
       - { name: breathability, value: false, op: set }
-      - { name: escape, value: "N₂/CO₂ 보유, H₂ 탈출하나 화산 보충", op: set }
+      - { name: escape, value: "Retains N2 and CO2; H2 escapes but is replenished volcanically", value_ko: "N₂/CO₂ 보유, H₂ 탈출하나 화산 보충", op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
@@ -2568,13 +2569,13 @@ decisions:
       정도이며, 나머지 시기에는 얼어붙어 극관과 고위도를 두꺼운 얼음으로 덮는다. 지표면 곳곳에 원시적인 혐기성
       미생물의 군락이 존재한다.
     fields:
-      - { name: surface_type, value: "암석 대륙 + 바다 (한랭-습윤 시생대형)", op: set }
-      - { name: hydrosphere, value: "물바다 (한계-습윤, 부분빙) + 빙관", op: set }
-      - { name: biosphere, value: "혐기 미생물 탄소순환 (매트, 무성하지 않음)", op: set }
-      - { name: tectonics, value: "방사성 구동, 일부 화산/열수구", op: set }
-      - { name: ice_caps, value: "풍부 (극관+고위도)", op: set }
+      - { name: surface_type, value: "Rocky continents with seas (a cold, wet Archean type)", value_ko: "암석 대륙 + 바다 (한랭-습윤 시생대형)", op: set }
+      - { name: hydrosphere, value: "Water seas (marginally wet, partly frozen) with ice caps", value_ko: "물바다 (한계-습윤, 부분빙) + 빙관", op: set }
+      - { name: biosphere, value: "Anaerobic microbial carbon cycling (mats, not lush)", value_ko: "혐기 미생물 탄소순환 (매트, 무성하지 않음)", op: set }
+      - { name: tectonics, value: "Radiogenically driven, with some volcanism and hydrothermal vents", value_ko: "방사성 구동, 일부 화산/열수구", op: set }
+      - { name: ice_caps, value: "Abundant (polar caps and high latitudes)", value_ko: "풍부 (극관+고위도)", op: set }
       - { name: albedo, value: 0.35, op: set }
-      - { name: surface_temperature, value: "243–263", unit: K, op: set, note: "부분 동결 (atmosphere 행 재도출과 동일, 1.37 bar 기준; 구값 270–275K)" }
+      - { name: surface_temperature, value: "243–263", unit: K, op: set, note: "Partly frozen (the same re-derivation as the atmosphere row, referenced to 1.37 bar; the old value was 270-275 K)", note_ko: "부분 동결 (atmosphere 행 재도출과 동일, 1.37 bar 기준; 구값 270–275K)" }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
@@ -2610,12 +2611,12 @@ decisions:
       약한 자기장 탓에 오로라는 희미하다.
     refs: ["docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     fields:
-      - { name: base_colour, value: "엷은 청백 마블 + 약한 amber (청회색 바다 + 흰 빙관 + 어두운 대륙)", op: set }
-      - { name: haze, value: "얇은 고층 유기 톨린 haze (표면 비침; amber는 산란색이 아니라 투과 색조)", op: set }
-      - { name: haze_aerosol_radius, value: "≳0.2", unit: µm, op: set, note: "하한. 이보다 작으면 레일리 영역 산란이 흡수를 압도해 haze가 청색(#c7e6ff)이 됨" }
-      - { name: clouds, value: "흰 물구름 (활발한 기상)", op: set }
-      - { name: specular, value: "바다 glint", op: set }
-      - { name: aurora, value: "약함 (약자기장)", op: set }
+      - { name: base_colour, value: "Pale blue-white marbling with a faint amber (grey-blue seas, white ice caps, dark continents)", value_ko: "엷은 청백 마블 + 약한 amber (청회색 바다 + 흰 빙관 + 어두운 대륙)", op: set }
+      - { name: haze, value: "A thin high organic tholin haze (the surface shows through; the amber is a transmitted tint, not a scattering color)", value_ko: "얇은 고층 유기 톨린 haze (표면 비침; amber는 산란색이 아니라 투과 색조)", op: set }
+      - { name: haze_aerosol_radius, value: "≳0.2", unit: µm, op: set, note: "A lower bound. Below this, Rayleigh-regime scattering overwhelms absorption and the haze turns blue (#c7e6ff)", note_ko: "하한. 이보다 작으면 레일리 영역 산란이 흡수를 압도해 haze가 청색(#c7e6ff)이 됨" }
+      - { name: clouds, value: "White water clouds (active weather)", value_ko: "흰 물구름 (활발한 기상)", op: set }
+      - { name: specular, value: "Sea glint", value_ko: "바다 glint", op: set }
+      - { name: aurora, value: "Weak (weak field)", value_ko: "약함 (약자기장)", op: set }
       - { name: rings, value: "none", op: set }
       - name: hapke_terrain
         value: 1.56
@@ -2691,8 +2692,8 @@ decisions:
       가니메데급인 1마이크로테슬라의 몇 분의 1 수준이다. 그걸로 얻는 것은 표면에 겨우 붙는 자기권이다. 외대를
       밀어내지는 못하고 저위도의 선량을 조금 깎아줄 뿐이며, 극은 플럭스를 고스란히 받는다.
     fields:
-      - { name: magnetic_field, value: "~0.4 µT eq / ~0.8 µT polar (가니메데급 고유 dipole; 철-부유 핵 + 자유 자전 39h, ℳ≈2×10⁻³ ℳ⊕)", op: set, note: "RM22 사다리 도출 2026-07-28, 밴드 0.2~1.2 µT; Pandora 75 µT의 ~1/200" }
-      - { name: magnetosphere, value: "가니메데형 미니 자기권, standoff ~1.1 R_moon (폴리페무스 자기권 안의 위성 자기권; 저위도 닫힘·극 열림)", op: set }
+      - { name: magnetic_field, value: "~0.4 uT equatorial / ~0.8 uT polar (a Ganymede-class intrinsic dipole; an iron-rich core with free 39 h rotation, M ~ 2e-3 M_earth)", value_ko: "~0.4 µT eq / ~0.8 µT polar (가니메데급 고유 dipole; 철-부유 핵 + 자유 자전 39h, ℳ≈2×10⁻³ ℳ⊕)", op: set, note: "Derived from the RM22 ladder on 2026-07-28, band 0.2-1.2 uT; about 1/200 of Pandora's 75 uT", note_ko: "RM22 사다리 도출 2026-07-28, 밴드 0.2~1.2 µT; Pandora 75 µT의 ~1/200" }
+      - { name: magnetosphere, value: "A Ganymede-type mini-magnetosphere, standoff ~1.1 moon radii (a satellite magnetosphere inside Polyphemus'; closed at low latitudes, open at the poles)", value_ko: "가니메데형 미니 자기권, standoff ~1.1 R_moon (폴리페무스 자기권 안의 위성 자기권; 저위도 닫힘·극 열림)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -2748,7 +2749,7 @@ decisions:
       위성 자신의 옅은 자기장이 저위도에서 조금 더 깎아낸다. 이곳에서 생명을 제한하는 것은 방사선이 아니라
       추위와 없는 산소다.
     fields:
-      - { name: radiation, value: "중간 (외대 L 4.2–10 안쪽 8.4 R_p, 외대 30 rad/h; 위성 자기장 ~0.4 µT가 저위도 선량 소폭 저감, 극은 노출)", op: set, note: "구값 '낮음 (방사선대 밖)'; 벨트 지오메트리 도출 이전 서술" }
+      - { name: radiation, value: "Moderate (inside the outer belt's L 4.2-10 at 8.4 R_p, where the outer belt runs 30 rad/h; the moon's ~0.4 uT field trims the low-latitude dose slightly while the poles stay exposed)", value_ko: "중간 (외대 L 4.2–10 안쪽 8.4 R_p, 외대 30 rad/h; 위성 자기장 ~0.4 µT가 저위도 선량 소폭 저감, 극은 노출)", op: set, note: "Formerly 'low (outside the radiation belts)', written before the belt geometry was derived", note_ko: "구값 '낮음 (방사선대 밖)'; 벨트 지오메트리 도출 이전 서술" }
     refs: ["docs/reference/solar-system-radiation-belts.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -2799,7 +2800,7 @@ decisions:
       지대(Volcanic & Hydrothermal, 열수구 지대) / 연무 저지대(Hazy Lowlands, 호박색 연무가 고이는 곳). 그중 가장
       흥미로운 곳은 혐기성 생명의 흔적을 찾을 수 있는 열수구다.
     fields:
-      - { name: science_biomes, value: "6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (후보) Microbial Mats", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
+      - { name: science_biomes, value: "Six zones plus one candidate (7 color keys): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (candidate) Microbial Mats", value_ko: "6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands / (후보) Microbial Mats", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -2825,8 +2826,8 @@ decisions:
       이 천체가 궤도로 뿜어 올리는 얼음 알갱이가 Polyphemus를 감싼 푸른 흰빛 고리를 채운다. 다른 위성들처럼
       실제 검출이 없는 픽션 천체이고, 공식 명칭은 Alpha Centauri A b V, Chaos는 문화명으로 쓴다.
     fields:
-      - { name: body_type, value: "작은 얼음 위성 (반경 400 km, ρ ~2015 kg/m³, Miranda형 균열), 역행, E-고리 공급원", op: set }
-      - { name: cliff_height, value: "15–30", unit: km, op: set, note: "아바타 게임 설정 명시값; 0.023 g라 이 규모가 서 있을 수 있다" }
+      - { name: body_type, value: "Small icy moon (radius 400 km, density ~2015 kg/m3, Miranda-type fractures), retrograde, the E-ring source", value_ko: "작은 얼음 위성 (반경 400 km, ρ ~2015 kg/m³, Miranda형 균열), 역행, E-고리 공급원", op: set }
+      - { name: cliff_height, value: "15–30", unit: km, op: set, note: "A value the Avatar game's setting states explicitly; at 0.023 g a cliff on this scale can stand", note_ko: "아바타 게임 설정 명시값; 0.023 g라 이 규모가 서 있을 수 있다" }
       - { name: designation, value: "Alpha Centauri A b V", op: set }
       - { name: cultural_name, value: "Chaos", op: set }
     gate:
@@ -2866,15 +2867,15 @@ decisions:
     fields:
       - { name: mass, value: 5.4e20, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 400, unit: km, op: set }
-      - { name: gravity, value: 0.225, unit: m/s2, op: set, note: "= 0.023 g; GM/R² 파생 에코" }
-      - { name: flattening, value: 0.069, op: set, note: "= (3J₂+q)/2 (J₂ 0.026, q 0.060); J2 행 band 0.06–0.075 안" }
-      - { name: reference_radius, value: 400, unit: km, op: set, note: "J2 기준 반경 = radius" }
-      - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기), 모행성 방향 고정축이 없어 조석 삼축 부재" }
-      - { name: internal_heat, value: "negligible (소형·외곽, 조석 despin 사실상 0, 방사성만)", op: set }
-      - { name: spin_axis_orientation, value: "궤도 법선 + 15° tilt ('Chaos' 기운 자전, obliquity 필드와 동일 결정); 방위각 de-perfect-at-emit", op: set }
-      - { name: rotation_period, value: 9.5, unit: h, op: set, note: "자유 자전 (미동기)" }
+      - { name: gravity, value: 0.225, unit: m/s2, op: set, note: "= 0.023 g; derived echo of GM/R^2", note_ko: "= 0.023 g; GM/R² 파생 에코" }
+      - { name: flattening, value: 0.069, op: set, note: "= (3J2+q)/2 (J2 0.026, q 0.060); inside the 0.06-0.075 band in the J2 row", note_ko: "= (3J₂+q)/2 (J₂ 0.026, q 0.060); J2 행 band 0.06–0.075 안" }
+      - { name: reference_radius, value: 400, unit: km, op: set, note: "J2 reference radius = radius", note_ko: "J2 기준 반경 = radius" }
+      - { name: geopotential_c22, value: null, na_reason: "Free rotation (not synchronous): with no axis fixed toward the parent there is no tidal triaxiality", na_reason_ko: "자유 자전(미동기), 모행성 방향 고정축이 없어 조석 삼축 부재" }
+      - { name: internal_heat, value: "negligible (small and far out; tidal despin is effectively zero, leaving only radiogenic heat)", value_ko: "negligible (소형·외곽, 조석 despin 사실상 0, 방사성만)", op: set }
+      - { name: spin_axis_orientation, value: "The orbit normal plus a 15 deg tilt (the tilted spin that gives 'Chaos' its name, the same decision as the obliquity field); azimuth de-perfected at emit", value_ko: "궤도 법선 + 15° tilt ('Chaos' 기운 자전, obliquity 필드와 동일 결정); 방위각 de-perfect-at-emit", op: set }
+      - { name: rotation_period, value: 9.5, unit: h, op: set, note: "Free rotation (not synchronous)", note_ko: "자유 자전 (미동기)" }
       - { name: obliquity, value: 15, unit: deg, op: set }
-      - { name: geopotential_j2, value: 0.026, reference_radius_km: 400, op: set, note: "회전 bulge f≈0.06–0.075" }
+      - { name: geopotential_j2, value: 0.026, reference_radius_km: 400, op: set, note: "Rotational bulge f ~0.06-0.075", note_ko: "회전 bulge f≈0.06–0.075" }
       - { name: age, value: 5.3, unit: Gyr, op: set }
     refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     gate:
@@ -2896,7 +2897,7 @@ decisions:
       가라앉지 못하고 곧 고리의 일부가 된다. 표면 얼음에서 승화한 수증기는 그보다 옅게 퍼져 고리 옆에
       기체 층으로 남는다.
     fields:
-      - { name: composition, value: "none (안정 대기 없음; 플룸 국소 수증기 exosphere/halo → E-고리)", op: set }
+      - { name: composition, value: "none (no stable atmosphere; the plumes make a local water-vapor exosphere and halo that feeds the E-ring)", value_ko: "none (안정 대기 없음; 플룸 국소 수증기 exosphere/halo → E-고리)", op: set }
       - { name: breathability, value: false, op: set }
     gate:
       criterion: [physics]
@@ -2924,11 +2925,11 @@ decisions:
       솟아 낙진으로 주변을 신선한 얼음으로 다시 덮는다. 그 덮개 덕에 표면은 매우 밝다. 온도는 134 K에 머물러
       얼음이 안정하게 유지된다.
     fields:
-      - { name: surface_type, value: "얼음 (물얼음+암석), Miranda형 균열 + tiger-stripe cryovolcanic 플룸", op: set }
-      - { name: hydrosphere, value: "지하 액체 (art 전제, 국소)", op: set }
-      - { name: albedo, value: 0.91, op: set, note: "오너 아트 선택; §6 신선 물얼음 밴드(0.6–0.8)·엔셀라두스(0.81) 위. 표면 얼음 존속 임계 0.875를 넘기는 값" }
+      - { name: surface_type, value: "Ice (water ice with rock), Miranda-type fractures and tiger-stripe cryovolcanic plumes", value_ko: "얼음 (물얼음+암석), Miranda형 균열 + tiger-stripe cryovolcanic 플룸", op: set }
+      - { name: hydrosphere, value: "Subsurface liquid (an art premise, local)", value_ko: "지하 액체 (art 전제, 국소)", op: set }
+      - { name: albedo, value: 0.91, op: set, note: "An owner art choice, above section 6's fresh-water-ice band (0.6-0.8) and Enceladus (0.81). It exceeds the 0.875 threshold for surface ice to persist", note_ko: "오너 아트 선택; §6 신선 물얼음 밴드(0.6–0.8)·엔셀라두스(0.81) 위. 표면 얼음 존속 임계 0.875를 넘기는 값" }
       - { name: surface_temperature, value: 134, unit: K, op: set }
-      - { name: ice_caps, value: "전역 얼음", op: set }
+      - { name: ice_caps, value: "Ice everywhere", value_ko: "전역 얼음", op: set }
     refs: ["docs/reference/ice-stability-methodology.md", "docs/reference/surface-color-albedo-methodology.md",
            "docs/reference/moon-energy-budget-methodology.md", "docs/reference/tidal-heating-methodology.md"]
     gate:
@@ -2982,8 +2983,8 @@ decisions:
       대기가 없어 명암의 경계는 칼처럼 선명하다.
     refs: ["docs/reference/hapke-shader-methodology.md"]
     fields:
-      - { name: surface, value: "밝은 청백 얼음 (엔셀라두스형 frost, ice-blue #cdd9e4), Miranda 균열", op: set }
-      - { name: emission_glow, value: "tiger-stripe 물 제트/플룸 빛산란 (무대기라 선명 그림자)", op: set }
+      - { name: surface, value: "Bright blue-white ice (Enceladus-type frost, ice-blue #cdd9e4) with Miranda fractures", value_ko: "밝은 청백 얼음 (엔셀라두스형 frost, ice-blue #cdd9e4), Miranda 균열", op: set }
+      - { name: emission_glow, value: "Light scattering in the tiger-stripe water jets and plumes (airless, so the shadows stay sharp)", value_ko: "tiger-stripe 물 제트/플룸 빛산란 (무대기라 선명 그림자)", op: set }
       - name: hapke_terrain
         value: 0.43
         op: set
@@ -3029,7 +3030,7 @@ decisions:
     narrative: "None."
     narrative_ko: "없음."
     fields:
-      - { name: magnetic_field, value: "none (소형 얼음체, dynamo 불가)", op: set }
+      - { name: magnetic_field, value: "none (a small icy body cannot run a dynamo)", value_ko: "none (소형 얼음체, dynamo 불가)", op: set }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     gate:
       criterion: [derived-grounding]
@@ -3051,7 +3052,7 @@ decisions:
       안쪽이라 항성풍이 세게 밀려오면 경계가 밀려 들어와 한동안 그대로 노출된다. 그때는 α Cen A의 항성풍과
       우주선을 직접 맞는다.
     fields:
-      - { name: radiation, value: "낮음/가변 (21 R_p, 벨트 밖 + 자기권계면 23.5 R_p 안쪽; 항성풍 압축 시 노출)", op: set }
+      - { name: radiation, value: "Low and variable (at 21 R_p, outside the belts but inside the 23.5 R_p magnetopause; exposed when the stellar wind compresses it)", value_ko: "낮음/가변 (21 R_p, 벨트 밖 + 자기권계면 23.5 R_p 안쪽; 항성풍 압축 시 노출)", op: set }
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
@@ -3071,8 +3072,8 @@ decisions:
       Chaos에게 위성은 없다. 여기서 정하는 것은 고리를 무엇이 채우느냐다. 플룸은 물리가 지지하는 기제가 아니라
       연출이고, 실제 방출은 고리를 채우기보다 그 곁을 도는 얇은 수증기 흐름이다.
     fields:
-      - { name: dust_sources, value: "Chaos = E-고리 공급원 (물 플룸 = 아트 디렉션 / 충돌 파편·sputtering = 물리 경로, 단독으로는 약함)", op: set }
-      - { name: neutral_torus_supply, value: 134, unit: kg/s, op: set, note: "표면 134 K 승화 유출; 기체이므로 먼지 고리가 아니라 중성 수증기 토러스" }
+      - { name: dust_sources, value: "Chaos is the E-ring source (the water plumes are the art direction; impact debris and sputtering are the physical route, too weak on their own)", value_ko: "Chaos = E-고리 공급원 (물 플룸 = 아트 디렉션 / 충돌 파편·sputtering = 물리 경로, 단독으로는 약함)", op: set }
+      - { name: neutral_torus_supply, value: 134, unit: kg/s, op: set, note: "Sublimation outflow from the 134 K surface; being gas, it makes a neutral water-vapor torus rather than a dust ring", note_ko: "표면 134 K 승화 유출; 기체이므로 먼지 고리가 아니라 중성 수증기 토러스" }
       - { name: co_orbitals, value: "none", op: set }
     refs: ["docs/reference/ice-stability-methodology.md", "phase4/art-direction/polyphemus-art-direction.md"]
     gate:
@@ -3147,7 +3148,7 @@ decisions:
     status: gated                  # 135k 갭 = J2 적용 후에도 안정 (TRACE+leapfrog 일치). 3:2-락은 J2로 탈락.
     driver: [fiction, engine]   # SPEC class D (+ orbit는 stability-optimization)
     fields:
-      - { name: satellites, value: "판도라 + 아바타 게임 설정 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos); 본문 moons: 리스트가 body def", op: set }
+      - { name: satellites, value: "Pandora plus the five moons named in the Avatar game's setting (Dante, Hades, Pandora, Cassandra, Chaos); the moons: list in the text is the body definition", value_ko: "판도라 + 아바타 게임 설정 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos); 본문 moons: 리스트가 body def", op: set }
     narrative: >
       Five named moons circle Polyphemus (Dante, Hades, Pandora, Cassandra, Chaos): the source material's moons
       (named in the Avatar game; only Pandora is on screen), rebuilt to be dynamically honest. The campaign's key
@@ -3255,11 +3256,11 @@ decisions:
       # 프레임: inc/lan = 폴리페무스 궤도면 기준, x축 = 폴리페무스면-AB면 상호 노드선(t=500). emit 시 게임 프레임 변환.
       # epoch=0(게임 epoch, 공통 — Principia는 한 시점 정합 상태 요구; 궤도상 위치는 ma_deg가 담당).
       # GM은 mass_kg에서 도출(G·M) — 이중 기록 안 함. 질량·반경은 INVENTED(Pandora·Cassandra 지름만 canon).
-      - { name: Dante,     parent: "Alpha Centauri A b", order: 1, a_km: 109921.3, e: 0.01397, inc_deg: 10.996, lan_deg: 157.34, argp_deg: 195.61, ma_deg: 34.93, epoch: 0, design: { a_km: 110000, e: 0.01, inc_deg: 9.0, lan_deg: 89, ma_deg: 35 }, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → ~110k(직전 100k도)는 2배+ 밖 안전." }
-      - { name: Hades,     parent: "Alpha Centauri A b", order: 2, a_km: 148805.1, e: 0.05298, inc_deg: 17.863, lan_deg: 128.30, argp_deg: 14.17, ma_deg: 325.30, epoch: 0, design: { a_km: 148000, e: 0.05, inc_deg: 11.0, lan_deg: 91, ma_deg: 140 }, mass_kg: 5.0e21, radius_km: 750,  note: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
-      - { name: Pandora,   parent: "Alpha Centauri A b", order: 5, a_km: 252433.4, e: 0.00517, inc_deg: 18.041, lan_deg: 115.69, argp_deg: 116.07, ma_deg: 53.69, epoch: 0, design: { a_km: 252393, e: 0.0, inc_deg: 10.0, lan_deg: 90, ma_deg: 250 }, mass_kg: 3.85e24, radius_km: 5724, note: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ✅ 3.85e24 재시뮬 STABLE 검증(results/_pandora_massB, 1000yr TRACE+J2, |ΔE/E| 7.6e-9, Pandora e≤0.0075 — 스냅샷 e 0.00517도 이내). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출(스냅샷 +40km는 주기 +0.02%뿐, 32h일 유지). 폴리페무스 하늘서 ~32°." }
-      - { name: Cassandra, parent: "Alpha Centauri A b", order: "outer", a_km: 600591.4,  e: 0.06624, inc_deg: 168.241, lan_deg: 264.65, argp_deg: 147.85, ma_deg: 3.63, epoch: 0, design: { a_km: 600000, e: 0.05, inc_deg: 176.0, lan_deg: 247, ma_deg: 300 }, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
-      - { name: Chaos,     parent: "Alpha Centauri A b", order: "outermost named", a_km: 1576906.3, e: 0.01488, inc_deg: 176.475, lan_deg: 269.16, argp_deg: 187.00, ma_deg: 335.21, epoch: 0, design: { a_km: 1500000, e: 0.02, inc_deg: 179.0, lan_deg: 274, ma_deg: 60 }, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원 — 고리면=Chaos 궤도면(설계 평균 기준; 스냅샷 lan 269). 평균 a 1.5M 주위 진동(스냅샷 1.577M, r 1.55–1.60M — 고리 간극 1.41–1.59M은 평균 기준 설계, results/_chaos_e002 ±30k 스윙 검증). e 0.10→0.02로 낮춰 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
+      - { name: Dante,     parent: "Alpha Centauri A b", order: 1, a_km: 109921.3, e: 0.01397, inc_deg: 10.996, lan_deg: 157.34, argp_deg: 195.61, ma_deg: 34.93, epoch: 0, design: { a_km: 110000, e: 0.01, inc_deg: 9.0, lan_deg: 89, ma_deg: 35 }, mass_kg: 8.0e21, radius_km: 900,  note: "The innermost volcanic moonlet (1.54 R_p). Being solid, the rigid Roche limit (~48.5k) governs, so ~110k (and the earlier 100k) sits safely at more than twice that.", note_ko: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → ~110k(직전 100k도)는 2배+ 밖 안전." }
+      - { name: Hades,     parent: "Alpha Centauri A b", order: 2, a_km: 148805.1, e: 0.05298, inc_deg: 17.863, lan_deg: 128.30, argp_deg: 14.17, ma_deg: 325.30, epoch: 0, design: { a_km: 148000, e: 0.05, inc_deg: 11.0, lan_deg: 91, ma_deg: 140 }, mass_kg: 5.0e21, radius_km: 750,  note: "It has internal tidal heat, but the surface follows the film's setting: a grey Ganymede-type face with tectonic grooves and no self-luminosity. The Avatar game's >900 K red embers are rejected. With Dante at 110k, 135k lost too much of the gap and escaped, so it was pushed to 148k to restore it (period ratio 1.56). e ~0.05 adopted as given.", note_ko: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
+      - { name: Pandora,   parent: "Alpha Centauri A b", order: 5, a_km: 252433.4, e: 0.00517, inc_deg: 18.041, lan_deg: 115.69, argp_deg: 116.07, ma_deg: 53.69, epoch: 0, design: { a_km: 252393, e: 0.0, inc_deg: 10.0, lan_deg: 90, ma_deg: 250 }, mass_kg: 3.85e24, radius_km: 5724, note: "The film's setting: 11,447 km across (radius 5724), habitable. Mass is option B (fix gravity at 0.8 g -> 0.645 M_earth = 3.85e24 kg, a realistic 0.89 Earth densities). The setting's 0.72 M_earth / 1.2 Earth densities is internally inconsistent and not adopted. Re-simulated at 3.85e24 and verified STABLE (results/_pandora_massB, 1000 yr TRACE+J2, |dE/E| 7.6e-9, Pandora e <= 0.0075; the snapshot's 0.00517 is inside that). Tidally locked at 32 h (in place of the setting's 27 h, for ocean robustness), which sets a; the snapshot's +40 km shifts the period by only +0.02% and keeps the 32 h day. Spans ~32 deg in Polyphemus' sky.", note_ko: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ✅ 3.85e24 재시뮬 STABLE 검증(results/_pandora_massB, 1000yr TRACE+J2, |ΔE/E| 7.6e-9, Pandora e≤0.0075 — 스냅샷 e 0.00517도 이내). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출(스냅샷 +40km는 주기 +0.02%뿐, 32h일 유지). 폴리페무스 하늘서 ~32°." }
+      - { name: Cassandra, parent: "Alpha Centauri A b", order: "outer", a_km: 600591.4,  e: 0.06624, inc_deg: 168.241, lan_deg: 264.65, argp_deg: 147.85, ma_deg: 3.63, epoch: 0, design: { a_km: 600000, e: 0.05, inc_deg: 176.0, lan_deg: 247, ma_deg: 300 }, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "The second-largest moon, over 6500 km across in the film's setting, with an N-H atmosphere. Retrograde per the setting, nearly coplanar with Chaos' retrograde orbit (viewer normalization 184). It shepherds the inner edge of the E-ring.", note_ko: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
+      - { name: Chaos,     parent: "Alpha Centauri A b", order: "outermost named", a_km: 1576906.3, e: 0.01488, inc_deg: 176.475, lan_deg: 269.16, argp_deg: 187.00, ma_deg: 335.21, epoch: 0, design: { a_km: 1500000, e: 0.02, inc_deg: 179.0, lan_deg: 274, ma_deg: 60 }, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda-type fractures. Retrograde per the setting, nearly coplanar with Cassandra's retrograde orbit (viewer normalization 181). Being retrograde it stays stable out to 0.7 R_Hill. The E-ring source, with the ring plane set by Chaos' orbital plane (designed on the mean, snapshot lan 269). The mean a oscillates around 1.5M (snapshot 1.577M, r 1.55-1.60M; the 1.41-1.59M ring gap is designed on the mean, verified against the +-30k swing in results/_chaos_e002). e was lowered from 0.10 to 0.02 to narrow the ring gap so the ring plane does not cut through the moon.", note_ko: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원 — 고리면=Chaos 궤도면(설계 평균 기준; 스냅샷 lan 269). 평균 a 1.5M 주위 진동(스냅샷 1.577M, r 1.55–1.60M — 고리 간극 1.41–1.59M은 평균 기준 설계, results/_chaos_e002 ±30k 스윙 검증). e 0.10→0.02로 낮춰 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
     designations:                  # 공식 표기 = 행성에 로마자 숫자(거리순). Avatar 이름은 문화명(인게임 설명에만).
       convention: "위성은 행성명 + 대문자 로마숫자(거리순). 인게임 바디명=표기, Avatar 문화명은 설명 텍스트에만(cfg-emit 단계로 연기)."
       map:
