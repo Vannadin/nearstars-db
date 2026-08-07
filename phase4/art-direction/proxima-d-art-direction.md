@@ -25,6 +25,11 @@ Two-tone space-weathered basalt: fresh shielded mid-latitudes intrinsic `#3c3833
 (Proxima-lit ~`#2a1e10`), Bond albedo 0.11. The caps are an optical overlay —
 they recolor terrain, never reshape it.
 
+**Working-palette rule (owner, 2026-08-07): any hex actually used in graphics
+work is the INTRINSIC color (no starlight baked in).** The engine multiplies
+the star's light at render time, so lit values would double-apply it. The
+Proxima-lit hexes above are preview-only.
+
 Color mechanism map (size-dependent npFe⁰ optics, methodology §4):
 
 - Micrometeorite gardening (planet-wide, field-blind): coarse mpFe → darkens,
