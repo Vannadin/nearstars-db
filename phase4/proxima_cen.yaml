@@ -1055,14 +1055,14 @@ decisions:
       look-alike, but two-toned rather than flat. The mid-latitudes, where the magnetic field keeps the
       ground fresh, read slightly pale; the magnetic poles, where the flare particles pour in, darken to
       near-black caps. Craters and weathering streaks mottle the face, broken here and there by faint
-      volcanic plains and small craters crisper than Mercury's. There is no aurora: the field is there,
+      volcanic plains like the lunar maria and small craters crisper than Mercury's. There is no aurora: the field is there,
       sixteen gauss of it, but there is no air to light. Beside b's ochre lake world and c's cold
       mini-Neptune it stands as the third visual extreme.
     narrative_ko: >
       붉은 별빛 아래 이 행성은 어둡고 따뜻한 회갈색 원반이고, 우주풍화된 수성을 닮았다. 다만 단색이 아니라
       투톤이다. 자기장이 지면을 신선하게 지켜 준 중위도는 상대적으로 밝게 보이고, 플레어 입자가 쏟아지는
-      자기극은 거의 검은 극관으로 어두워진다. 크레이터와 풍화 줄무늬가 표면에 얼룩지고, 사이사이 은은한 화산
-      평지와 수성보다 또렷한 잔 크레이터가 섞인다. 오로라는 없다. 16가우스의 자기장은 있지만 빛날 대기가 없다.
+      자기극은 거의 검은 극관으로 어두워진다. 크레이터와 풍화 줄무늬가 표면에 얼룩지고, 사이사이 달 바다와
+      비슷한 은은한 화산 평지와 수성보다 또렷한 잔 크레이터가 섞인다. 오로라는 없다. 16가우스의 자기장은 있지만 빛날 대기가 없다.
       b의 황토 호수 세계, c의 차가운 미니 해왕성과 함께 시각적 세 극단을 이룬다.
     # MIGRATION-FLAG: cfg_colors_displayed 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (표시 팔레트, emit 말미 정밀화).
     cfg_colors_displayed: >
