@@ -279,6 +279,11 @@
   `RadiationModel` SDF를 그대로 재현(Unlicense 알고리즘).
 - `scripts/viz/render_belts_bodies.py` — 바디별 드라이버. `*_phys` 엔트리가 피팅된
   벨트 지오메트리의 **단일 소스**(emitter도 여기서 읽음).
+- `scripts/viz/render_alfven_wing.py` — Proxima d 알펜 윙 개념도
+  (`docs/img/proxima-d-alfven-wing.png`). sub-Alfvénic 항성풍(M_A ~ 0.3 가정) →
+  bow shock 없음. 별 쪽/반대쪽 두 가닥 윙(기울기 arctan M_A ≈ 17°)이 phase-lock
+  플레어를 만드는 별-행성 자기 연결 통로임을 그리고, 근접 뷰에 닫힌 쌍극자 코어,
+  Shue nose 7 R_d, 풍화 극관을 함께 표시.
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d 벨트 선량 도출(방법론 Part B).
   dose-anchor 보간 10.4×(B_eq/31 µT)^1.9 → 내대 ~5×10³ / 외대 ~1×10³ rad/h(신뢰
   낮음, 목성 앵커 1.9배 밖 외삽; 장 범위 3–280 G면 2×10²–10⁶), `kp_limit.py`

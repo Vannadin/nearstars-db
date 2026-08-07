@@ -289,6 +289,11 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   in-game Kerbalism `RadiationModel` SDF exactly (Unlicense algorithm)
 - `scripts/viz/render_belts_bodies.py` — per-body driver; the `*_phys` entries are the
   **single source of truth** for fitted belt geometry (consumed by the emitter too)
+- `scripts/viz/render_alfven_wing.py` — Proxima d Alfvén-wing concept figure
+  (`docs/img/proxima-d-alfven-wing.png`): sub-Alfvénic wind (M_A ~ 0.3 assumed) → no bow
+  shock; the wing pair (one branch starward, one anti-starward, tilt arctan M_A ≈ 17°)
+  carries the star–planet magnetic connection behind the phase-locked flares, plus a
+  close-up with the closed dipole core, Shue nose 7 R_d, and the weathered polar caps.
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
   Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
   ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G
