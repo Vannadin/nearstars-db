@@ -22,6 +22,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 14 | Radiation belts + derived-value calculators | Belt cross-sections, Kerbalism emitter, and the `scripts/refs/` methodology calculators | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
 | 15 | Surface ice stability | Can exposed ice (6 species) survive at this insolation? Albedo → loss rate, lifetime, lag-mantle depth | `docs/ice-stability.html` |
 | 16 | Magnetic field geometry (dipolar vs multipolar) | Meridional field lines + surface B_r map + traced open-field auroral footprint, for the Ro_l gate's *shape* consequence | `scripts/viz/render_field_geometry.py` |
+| 17 | Site map + connectivity audit | Published-page inventory, hubs, orphan/dead-end/CDN defects | `scripts/build_sitemap.py` |
 
 ## Verification & QA — index
 
@@ -246,6 +247,7 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/check_citation_links.py` — fail on any bibcode/arXiv ID in docs/reference (+ ko mirror) that is not wrapped in a clickable link ([`bibcode`](ADS abs URL, `&` → `%26`)); code fences and longer inline-code examples skipped. Wired into check.sh (step 3c)
 - `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
 - `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
+- `scripts/build_sitemap.py` — site map + connectivity audit of the published docs/ surface: page count and weight per section, hubs, and three defect classes (orphans with no inbound link, dead ends with no outbound link, CDN dependencies). Writes `docs/reference/site-map.md` + ko mirror; `--audit-only` skips the write and exits 1 on a **new** orphan (the accepted set is `BASELINE_ORPHANS` in the script)
 - `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness + Phase 4 emit-gate (gate 8, tool 13). Manual invocation only.
 
 ## 12. 3D star map viewer

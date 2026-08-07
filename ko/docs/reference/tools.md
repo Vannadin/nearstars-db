@@ -19,6 +19,10 @@
 | 11 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D 성도 | `db/systems/` → 인터랙티브 3D 지도 (광년 스케일 + 시스템별 AU 뷰) | `scripts/viz/build_starmap.py` |
 | 13 | Phase 4 보드 도구 | 결정 보드 검증(emit 게이트) + 바디별 보드 HTML 렌더 | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
+| 14 | 방사선대 + 도출값 계산기 | 벨트 단면, Kerbalism 이미터, `scripts/refs/` 방법론 계산기 | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
+| 15 | 표면 얼음 안정성 | 노출된 얼음(6종)이 이 일사량에서 존속하는가? 알베도 → 손실률·수명·lag 맨틀 깊이 | `docs/ice-stability.html` |
+| 16 | 자기장 기하(쌍극 vs 다중극) | 자오면 자기력선 + 표면 B_r 지도 + 열린 자기력선 추적 오로라 발자국. Ro_l 게이트의 *형태* 귀결 | `scripts/viz/render_field_geometry.py` |
+| 17 | 사이트맵 + 연결성 감사 | 발행 페이지 인벤토리, 허브, 고아·막다른·CDN 결함 | `scripts/build_sitemap.py` |
 
 ## 검증 & QA — 인덱스
 
@@ -236,6 +240,7 @@
 - `scripts/check_citation_links.py` — docs/reference(+ko 미러)에서 클릭 가능한 링크로 감싸지지 않은 bibcode/arXiv ID를 실패 처리([`bibcode`](ADS abs URL, `&`는 `%26`) 형식). 코드펜스와 긴 인라인 코드 예시는 제외. check.sh 3c 단계에 배선
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
+- `scripts/build_sitemap.py` — 발행되는 docs/ 표면의 사이트맵 + 연결성 감사. 구획별 페이지 수·용량, 허브, 그리고 결함 세 종류(인바운드 없는 고아, 아웃바운드 없는 막다른 페이지, CDN 의존)를 보고한다. `docs/reference/site-map.md` + ko 미러를 생성하고, `--audit-only`는 쓰기 없이 **신규** 고아가 생기면 1로 종료한다(승인된 집합은 스크립트의 `BASELINE_ORPHANS`)
 - `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도 + Phase 4 emit-게이트 (게이트 8, 도구 13). 수동 실행 전용.
 
 ## 12. 3D 성도 뷰어
