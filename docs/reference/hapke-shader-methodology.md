@@ -10,12 +10,15 @@ anchor table** read from Sol-Configs itself (the canonical cfg source), and a
 **photometric literature layer** that grounds *why* the anchors cluster the way they
 do and how to place a new body between them.
 
-**Honesty note.** The shader itself ships compiled in an asset bundle; the exact
-term `_Hapke` multiplies (opposition-surge gain vs phase-function exponent) is not
-readable from source. Everything below is grounded in (a) the observable per-body
-values Sol assigns, and (b) the physical photometry those assignments track. Treat
-`_Hapke` as a **look parameter calibrated against real bodies**, not a measured
-Hapke model coefficient.
+**What `_Hapke` actually is (source-confirmed).** The terrain shader is open
+source (Gameslinx/Parallax-Continued,
+`Assets/Shaders/Includes/ParallaxGlobalFunctions.cginc`): the scalar is simply a
+**diffuse-cosine exponent**, `NdotL = pow(NdotL, _Hapke)`. Below 1 the lighting
+stays flat and bright up to the terminator (the icy look), 1.0 is pure Lambert,
+above 1 the falloff steepens into dramatic shading. The *real* Hapke BRDF lives in
+the scaled shader's per-pixel parameter maps and global scalars (next section);
+that shader ships compiled, so its channel semantics below are characterized
+forensically from the shipped textures, not read from HLSL.
 
 ## The canonical source (non-ADS exception, pinned)
 
@@ -46,10 +49,11 @@ Reading of the two knobs (rendering regimes, not one physical constant):
   toward the limb and how hard the brightness surges near full phase (the "lunar
   look"). Sol's convention is tight: **airless regolith/ice = 2.2**, bright glazed
   ice = 2.0, gas giants and compacted-ejecta moonlets = 1.6, atmospheres ≈ 1.0.
-- **terrain `_Hapke`** controls the ground-level backscatter response (how the
-  surface brightens when the Sun stands behind the viewer). Sol assigns it in
-  **discrete family presets** ({0.38–0.45, 0.56, 0.88, 1.0, 1.15, 1.56}), i.e. by
-  surface analog, then per-body look tuning inside the family.
+- **terrain `_Hapke`** is the diffuse-cosine exponent above: the icy family
+  (0.38–0.45) keeps ground lighting flat to the terminator, 1.0 is Lambert
+  (Luna), 1.56 gives Mars its contrasty falloff. Sol assigns it in **discrete
+  family presets** ({0.38–0.45, 0.56, 0.88, 1.0, 1.15, 1.56}), i.e. by surface
+  analog, then per-body look tuning inside the family.
 
 ## The physical layer: why the families order this way
 
@@ -85,6 +89,37 @@ phase function:
   1.0 scaled; Earth/Venus off the airless path entirely) — the disk look is then
   clouds/haze, not ground photometry.
 
+## What the scaled shader actually consumes (texture forensics)
+
+The `Custom/HapkeScaled` material takes, besides the ordinary `_ColorMap` /
+`_BumpMap` / `_HeightMap`, **two Hapke-specific parameter maps** plus per-body
+global scalars (verified across all 50 real-scale Sol bodies; channel statistics
+from a BC7 decode of the shipped Mercury 4k pack):
+
+- **`_ScatteringTex`** and **`_SurgeTex`** are **512×256 equirect parameter maps**
+  (1/8 the color-map resolution — the parameters vary at geologic-unit scale).
+  They assign Hapke optical parameters per coordinate, heightmap-style; they are
+  neither color nor normal data. Measured channel structure (Mercury):
+  - Scatter: R ≈ single-scattering-albedo class (mean 0.40, +0.92 correlation
+    with surface brightness), G ≈ phase-function asymmetry class (0.22, −0.82),
+    B a third parameter (0.72); alpha unused.
+  - Surge: R ≈ opposition-surge amplitude B₀ (mean 0.82, **−0.92** vs
+    brightness — darker regolith surges harder, exactly the SHOE physics), G ≈
+    surge width h (0.09, matching the literature's h_S ~0.05–0.1); B/A unused.
+  - Channel-to-parameter naming is inferred from value statistics (the scaled
+    shader is compiled); the ranges and correlations match the canonical Hapke
+    parameter families.
+- **`_porosityCoeffient`** — the Hapke porosity coefficient K, global per body:
+  1.86 for nearly everything (lunar-like fill factor), with physical variations
+  (Europa 1.2, Phobos 1.19, Deimos 1.34, Enceladus 1.73, Mars 2.02).
+- **`_Theta`** — macroscopic roughness θ̄ in degrees: Moon/Mercury 18, smooth
+  frost (Enceladus, Titan) 6, fractured icy moons 30–31.
+- `_GammaBoost` / `_LightBoost` — pure look trims.
+
+Art-pass consequence: a finished NearStars body eventually ships the two low-res
+parameter maps (or flat defaults) plus K and θ̄, alongside the color/normal/height
+set. The board records the scalars; the maps are emit-end texture work.
+
 ## Practical recipe (per body class)
 
 1. **Pick the scaled value by class** — this is the firm half:
@@ -103,8 +138,14 @@ phase function:
    `albedo_mean` field is the area-weighted **geometric** (visual) albedo of the
    final palette; the Bond value for the energy budget stays on the surface row.
    Conversion and definitions: surface-color-albedo methodology §6.
-4. Record both values in the body's Phase 4 appearance row as typed fields
-   (`hapke_terrain`, `hapke_scaled`), refs = this doc.
+4. **Pick K and θ̄ from the anchor families**: porosity K = 1.86 unless the
+   surface is compacted (Phobos-class 1.2–1.35) or unusually fluffy; roughness
+   θ̄ = 18° for lunar-like regolith, ~6° for smooth frost, ~30° for fractured
+   ice.
+5. Record the values in the body's Phase 4 appearance row as typed fields
+   (`hapke_terrain`, `hapke_scaled`, `hapke_porosity_k`, `hapke_theta`),
+   refs = this doc. The Scatter/Surge parameter maps are deferred to the
+   emit-end art pass.
 
 ### Validation: the recipe reproduces Sol's own assignments
 
