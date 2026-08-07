@@ -59,7 +59,7 @@ decisions:
         value: 0.1221
         unit: M_sun
         op: passthrough
-        note: "+-0.0022 (SM2025 evolutionary model)"
+        note: "±0.0022 (SM2025 evolutionary model)"
         note_ko: "±0.0022 (SM2025 진화모델)"
       - name: radius
         value: 0.141
@@ -75,7 +75,7 @@ decisions:
       - name: flattening
         value: 2.8e-8
         op: set
-        note: "= (3J2+q)/2 derived echo (J2 3.7e-9, q 4.4e-8); the visual oblateness slot"
+        note: "= (3J₂+q)/2 derived echo (J₂ 3.7e-9, q 4.4e-8); the visual oblateness slot"
         note_ko: "= (3J₂+q)/2 파생 에코 (J₂ 3.7e-9, q 4.4e-8), 시각 oblate 슬롯"
       - name: rotation_period
         value: 83.5
@@ -91,7 +91,7 @@ decisions:
         value: 4.85
         unit: Gyr
         op: passthrough
-        note: "+-0.5 (kinematic; capture vs co-formation unsettled). Teff 2904+-51 K (Passegger 2019)"
+        note: "±0.5 (kinematic; capture vs co-formation unsettled). Teff 2904±51 K (Passegger 2019)"
         note_ko: "±0.5 (kinematic; 포획 vs 동시생성 미정). Teff 2904±51K (Passegger2019)"
 
   - body: Proxima Cen
@@ -118,19 +118,19 @@ decisions:
         op: set
         phase3_default: "#c54c2a (deep red; a render guess that confused luminosity with hue, retired)"
         phase3_default_ko: "#c54c2a (심적색, 광도/색조 혼동 render 짐작 → 폐기)"
-        note: "M5.5V physical color, measured Pickles SED -> CIE"
+        note: "M5.5V physical color, measured Pickles SED → CIE"
         note_ko: "M5.5V 물리색, 실측 Pickles SED→CIE"
       - name: limb_darkening
         value: 0.4
         op: set
-        note: "alpha ~0.4 (Claret 2018 M-dwarf interpolation, tie-break)"
+        note: "α ~0.4 (Claret 2018 M-dwarf interpolation, tie-break)"
         note_ko: "α~0.4 (Claret2018 M-dwarf 보간, tie-break)"
       - name: spots_faculae
         value: "~3-5% (moderate to somewhat high; 83 d rotational modulation detected)"
         value_ko: "~3–5% (보통~다소 많음; 83d 자전 변조 검출)"
         op: set
       - name: flares
-        value: "#ff5e2a (H-alpha, for reference; dynamic flares cannot be rendered from cfg, visual passthrough)"
+        value: "#ff5e2a (H-α, for reference; dynamic flares cannot be rendered from cfg, visual passthrough)"
         value_ko: "#ff5e2a (Hα, 참조용; 동적 플레어 cfg 렌더 불가, visual passthrough)"
         op: set
     gate:
@@ -159,12 +159,12 @@ decisions:
         value: 0.6
         unit: kG
         op: passthrough
-        note: "Mean surface field (Reiners & Basri 2008 / Reiners 2022 CARMENES); large-scale dipole 0.135 kG (Klein 2021 ZDI, mostly poloidal); spin inclination 47+-7 deg"
+        note: "Mean surface field (Reiners & Basri 2008 / Reiners 2022 CARMENES); large-scale dipole 0.135 kG (Klein 2021 ZDI, mostly poloidal); spin inclination 47±7°"
         note_ko: "평균 표면장 (Reiners&Basri2008/Reiners2022 CARMENES); 대규모 dipole 0.135 kG (Klein2021 ZDI, 주로 poloidal); spin incl 47°±7°"
 
   - body: Proxima Cen
     axis: environment.activity        # 플레어 별 핵심 — 측정
-    # 2026-07-31: logR'HK -5.65±0.17 원출처를 SM2015 로 교정 (구 핀 2016MNRAS.459.3565S 는 ADS 미해결 오기였음)
+    # 2026-07-31: logR'HK −5.65±0.17 원출처를 SM2015 로 교정 (구 핀 2016MNRAS.459.3565S 는 ADS 미해결 오기였음)
     refs: ["1998AJ....116..429B", "2017MNRAS.464.3281W", "2015MNRAS.452.2745S", "2004A&A...417..651S"]
     status: passthrough
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
@@ -184,11 +184,11 @@ decisions:
       사이클이 그 사이를 메운다. X선 밝기는 평상시와 플레어 최대 사이에서 30배 넘게 오간다.
     fields:
       - name: activity
-        value: "P_rot 83.5+-0.5 d (Benedict 1998 HST), 7-year cycle (Wargelin 2017), log R'HK -5.65+-0.17"
+        value: "P_rot 83.5±0.5 d (Benedict 1998 HST), 7-year cycle (Wargelin 2017), log R'HK −5.65±0.17"
         value_ko: "P_rot 83.5±0.5d (Benedict1998 HST), 7년 사이클 (Wargelin2017), log R'HK −5.65±0.17"
         op: passthrough
       - name: flares
-        value: "1.49 flares/day (Vida 2019 TESS); superflares >=10^33 erg ~3/yr, ultra ~0.5/yr; X-ray log Lx ~27.0 quiescent to 28.5 peak"
+        value: "1.49 flares/day (Vida 2019 TESS); superflares ≥10³³ erg ~3/yr, ultra ~0.5/yr; X-ray log Lx ~27.0 quiescent to 28.5 peak"
         value_ko: "1.49회/일 (Vida2019 TESS); 슈퍼플레어 ≥10³³erg ~3회/년, ultra ~0.5회/년; X선 log Lx ~27.0 정온→28.5 피크"
         op: passthrough
 
@@ -209,7 +209,7 @@ decisions:
         value: 0.2
         unit: Mdot_sun
         op: passthrough
-        note: "<=0.2 (Wood 2001 astrospheric Lyman-alpha upper limit). A flare-dominated environment; the steady wind itself is weak"
+        note: "≤0.2 (Wood 2001 astrospheric Lyman-α upper limit). A flare-dominated environment; the steady wind itself is weak"
         note_ko: "≤0.2 (Wood2001 astrospheric Lyα 상한). 플레어-지배 환경, 절대 풍 약함"
 
   - body: Proxima Cen
@@ -226,7 +226,7 @@ decisions:
       25 km이며, α Cen AB가 지나는 것과 같은 구름이다.
     fields:
       - name: heliosphere
-        value: "Astrosphere standoff <=55 AU (Wood 2001); ISM inflow ~25 km/s (Wood 2005, the same G-cloud as Alpha Cen AB)"
+        value: "Astrosphere standoff ≤55 AU (Wood 2001); ISM inflow ~25 km/s (Wood 2005, the same G-cloud as Alpha Cen AB)"
         value_ko: "astrosphere standoff ≲55 AU (Wood2001); ISM 유입 ~25 km/s (Wood2005, α Cen AB와 동일 G-cloud)"
         op: passthrough
 
@@ -247,7 +247,7 @@ decisions:
       측정된 것이 없어서, 이 별의 자전이 행성 궤도면과 나란한지는 지금 답할 수 없다. 그래서 행성 궤도의 방향을
       정할 때 이 적도면을 기준으로 삼는 것이 후보로 남는다.
     fields:
-      - { name: spin_axis_orientation, value: "i* 47+-7 deg (measured, relative to the line of sight); position angle free, converted to ICRS at emit", value_ko: "i★ 47°±7° (LOS 기준, 측정) · PA 자유, ICRS 변환 at emit", op: set }
+      - { name: spin_axis_orientation, value: "i* 47±7° (measured, relative to the line of sight); position angle free, converted to ICRS at emit", value_ko: "i★ 47°±7° (LOS 기준, 측정) · PA 자유, ICRS 변환 at emit", op: set }
     gate:
       criterion: [observation]
       verdict: pass-in-window
@@ -337,7 +337,7 @@ decisions:
         note: "~0 measured (SM2025); inclination unmeasured (non-transiting). Emit caution: e~0 with a 0.3 bar atmosphere trips the Kopernicus temperatureEccentricityBiasCurve divide-by-zero, and the value is measured so noise is banned; suppress the curve at emit"
         note_ko: "≈0 measured (SM2025); inc 미측정(비통과). emit 주의: e≈0 + 0.3 bar 대기 → Kopernicus temperatureEccentricityBiasCurve 0-나눗셈 트랩 → 측정값이라 noise 금지 → emit시 곡선 suppress"
       - name: tidal_lock
-        value: "1:1 (locking time <10^5 yr); Omega/omega/M free at emit"
+        value: "1:1 (locking time <10⁵ yr); Omega/omega/M free at emit"
         value_ko: "1:1 (락타임 <10⁵yr); Ω/ω/M free-emit"
         op: passthrough
 
@@ -365,7 +365,7 @@ decisions:
         value: 1.22
         unit: M_earth
         op: set
-        phase3_default: "Msini 1.055 M_earth (RV minimum mass, SM2025)"
+        phase3_default: "Msini 1.055 M⊕ (RV minimum mass, SM2025)"
         phase3_default_ko: "Msini 1.055 M⊕ (RV 최소질량, SM2025)"
         note: "Median true mass under an isotropic prior"
         note_ko: "등방 prior 중앙 진질량"
@@ -373,7 +373,7 @@ decisions:
         value: 1.07
         unit: R_earth
         op: set
-        note: "Non-transiting tie-break (mass-radius); g ~1.07, density ~5.5 g/cm3, terrestrial rock"
+        note: "Non-transiting tie-break (mass-radius); g ~1.07, density ~5.5 g/cm³, terrestrial rock"
         note_ko: "비통과 tie-break(질량-반경); g~1.07·밀도~5.5 g/cm³ 지구형 암석"
       - name: gravity
         value: 1.07
@@ -384,7 +384,7 @@ decisions:
       - name: flattening
         value: 7.0e-5
         op: set
-        note: "= (5/2)*J2 mean-equatorial spheroid (J2 2.8e-5); visually a sphere"
+        note: "= (5/2)·J₂ mean-equatorial spheroid (J₂ 2.8e-5); visually a sphere"
         note_ko: "= (5/2)·J₂ 평균적도 spheroid (J₂ 2.8e-5), 시각상 구"
       - name: rotation_period
         value: 11.186
@@ -393,7 +393,7 @@ decisions:
         note: "= orbital period (tidally locked, DB curated)"
         note_ko: "= 공전주기 (조석고정, DB curated)"
       - name: spin_axis_orientation
-        value: "Offset from the orbit normal toward the Laplace pole by the Cassini epsilon (~0.03 deg), the State 1 equilibrium; azimuth de-perfected at emit"
+        value: "Offset from the orbit normal toward the Laplace pole by the Cassini ε (~0.03°), the State 1 equilibrium; azimuth de-perfected at emit"
         value_ko: "궤도 법선에서 Cassini ε(~0.03°)만큼 Laplace pole 쪽 offset (State 1 평형); 방위각 de-perfect-at-emit"
         op: set
       - name: geopotential_j2
@@ -410,19 +410,19 @@ decisions:
         value: 6817
         unit: km
         op: set
-        note: "J2/C22 reference radius = radius"
+        note: "J₂/C₂₂ reference radius = radius"
         note_ko: "J2/C22 기준 반경 = radius"
       - name: internal_heat
         value: "negligible (at the surface)"
         value_ko: "negligible (표면)"
         op: set
-        note: "Radiogenic, Earth-scale ~0.08 W/m2 (T_int ~35 K), so the surface holds T_eff ~ T_eq (section 7); that internal heat is what drives the weak dynamo (RM22)"
+        note: "Radiogenic, Earth-scale ~0.08 W/m² (T_int ~35 K), so the surface holds T_eff ~ T_eq (section 7); that internal heat is what drives the weak dynamo (RM22)"
         note_ko: "radiogenic ~Earth-scale ~0.08 W/m² (T_int~35K), 표면 T_eff≈T_eq(§7); 내부열 몫은 G7 약한 dynamo(RM22) 구동"
       - name: obliquity
         value: 0
         unit: deg
         op: set
-        note: "~0 = the Cassini State 1 equilibrium (computed, not assumed). |g|/alpha = 0.017 (Laplace-Lagrange nodal rate g with the synchronous alpha, far below the ~1.1 resonance threshold) -> epsilon_1 = (|g|/alpha)*sin I ~ 0.02-0.05 deg for the near-coplanar orbital inclination. No dramatic obliquity. Method: cassini-state-obliquity-methodology.md"
+        note: "~0 = the Cassini State 1 equilibrium (computed, not assumed). |g|/α = 0.017 (Laplace-Lagrange nodal rate g with the synchronous α, far below the ~1.1 resonance threshold) → ε₁ = (|g|/α)·sin I ~ 0.02-0.05° for the near-coplanar orbital inclination. No dramatic obliquity. Method: cassini-state-obliquity-methodology.md"
         note_ko: "≈0 = Cassini State 1 평형 (가정 아님·계산). |g|/α=0.017 (Laplace–Lagrange 승교점율 g + 동기 α, ≪ 공명 임계 ~1.1) → ε₁=(|g|/α)·sinI ≈0.02–0.05° (근접-공면 궤도 I). 극단 obliquity 없음. method=cassini-state-obliquity-methodology.md"
       - name: age
         value: 4.85
@@ -485,10 +485,10 @@ decisions:
         op: set
         phase3_default: "Phase 3 synthesized atmosphere where one exists; this decision fixes the art-directed pressure and composition"
         phase3_default_ko: "Phase 3 합성 대기(있으면); 본 결정이 art-direction 기압/조성 확정값"
-        note: "CO2 frost at the ~150 K night-side minimum buffers a partial pressure of 8.4 mbar, which makes 0.28 bar the total pressure at which CO2 is 3%. The old 0.7 bar demanded a 157 K night side and clashed with the GCM anchor"
+        note: "CO₂ frost at the ~150 K night-side minimum buffers a partial pressure of 8.4 mbar, which makes 0.28 bar the total pressure at which CO₂ is 3%. The old 0.7 bar demanded a 157 K night side and clashed with the GCM anchor"
         note_ko: "야간 최저 ~150 K의 CO₂ 서리가 분압 8.4 mbar를 버퍼링 → 3%가 되는 총기압 0.28 bar. 구값 0.7 bar는 야간 157 K를 요구해 GCM 앵커와 어긋났다"
       - name: composition
-        value: "N2-dominated with ~3% CO2 (mu ~28.5 g/mol)"
+        value: "N₂-dominated with ~3% CO₂ (μ ~28.5 g/mol)"
         value_ko: "N₂ 지배 + CO₂ ~3% (μ≈28.5 g/mol)"
         op: set
       - name: temperature
@@ -643,7 +643,7 @@ decisions:
       - name: hapke_porosity_k
         value: 1.86
         op: set
-        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.49 (51% porosity)."
+        note: "Hapke 2008 K(φ) computed; optical-layer filling factor φ ~ 0.49 (51% porosity)."
         note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
       - name: hapke_theta
         value: 18
@@ -695,15 +695,15 @@ decisions:
       제대로 못 해 대기가 위험해지고 지표는 별이 던지는 것을 그대로 받는다.
     fields:
       - name: magnetic_field
-        value: "Weak (order <=0.1-0.3x Earth, <= a few microtesla at the surface); whether a dynamo is active is uncertain, confidence low"
+        value: "Weak (order ≤0.1-0.3× Earth, ≤ a few microtesla at the surface); whether a dynamo is active is uncertain, confidence low"
         value_ko: "약한 (차수 ≲0.1–0.3× 지구, ≲ 수 µT 표면); 활성 dynamo 여부 불확실, conf=low"
         op: set
-      - { name: field_geometry, value: "Multipolar (passes the Ro_l > 0.12 gate)", value_ko: "다중극 (multipolar; Ro_l > 0.12 게이트 통과)", op: set, note: "The dipole moment collapses to 0.06x; ladder values B_eq ~1.2 uT, B_pol ~2.4 uT. Shape diagram: docs/img/field-geometry.png", note_ko: "쌍극 모멘트 0.06배 붕괴, 사다리값 B_eq ~1.2 µT·B_pol ~2.4 µT. 형태 도식 = docs/img/field-geometry.png" }
+      - { name: field_geometry, value: "Multipolar (passes the Ro_l > 0.12 gate)", value_ko: "다중극 (multipolar; Ro_l > 0.12 게이트 통과)", op: set, note: "The dipole moment collapses to 0.06×; ladder values B_eq ~1.2 µT, B_pol ~2.4 µT. Shape diagram: docs/img/field-geometry.png", note_ko: "쌍극 모멘트 0.06배 붕괴, 사다리값 B_eq ~1.2 µT·B_pol ~2.4 µT. 형태 도식 = docs/img/field-geometry.png" }
       - { name: radiation_model, value: "irregular (stock template reused)", value_ko: "irregular (스톡 템플릿 재사용)", op: set, note: "No belts, plus the non-axisymmetric boundary from pause_deform 0.1. Unspecified fields follow the template", note_ko: "벨트 없음 + pause_deform 0.1의 비축대칭 경계. 미지정 필드는 템플릿 값을 따른다" }
       - { name: geomagnetic_offset, value: 0.25, op: set, note: "The axisymmetric multipole (dipole plus quadrupole) component; larger than Mercury's 0.208 because the dipole dominates less here", note_ko: "축대칭 다중극(쌍극+사극) 성분; 수성 0.208보다 크다. 쌍극 지배력이 더 약하기 때문이다" }
-      - { name: geomagnetic_pole_lat, value: 60, unit: deg, op: set, note: "A 30 deg tilt. The field is multipolar so a single pole means little, and the axis is unmeasured, so the art choice breaks the symmetry", note_ko: "기울기 30°. 다중극이라 단일 극의 의미가 약하고 축도 미측정이라 대칭을 깨는 쪽으로 art 선택" }
-      - { name: magnetopause_standoff_rp, value: 1.54, unit: R_p, op: set, note: "Chapman-Ferraro: B_eq 1.2 uT against 170 nPa of ram pressure at 0.0485 AU (maximum compression, since Mdot <= 0.2 Mdot_sun is an upper limit). Comparable to Mercury's 1.45", note_ko: "Chapman-Ferraro: B_eq 1.2 µT, 0.0485 AU 램압 170 nPa(Ṁ ≤ 0.2 Ṁ☉ 상한이라 최대 압축). 수성 1.45와 동급" }
-      - { name: pause_deform_scale, value: 0.52, op: set, note: "Not consumed by the engine (stock hard-codes wavenumbers 5/7/6). At l = 4, k = l/R_mp = 2.6, i.e. 0.52x stock (4 lobes against stock's 8-11). Awaiting the KerbalismShuePause plugin", note_ko: "⚗ 엔진 미소비(스톡은 파수 5/7/6 하드코딩). l=4에서 k = l/R_mp = 2.6이라 스톡 대비 0.52배(로브 4개, 스톡은 8~11개). KerbalismShuePause 플러그인 대기" }
+      - { name: geomagnetic_pole_lat, value: 60, unit: deg, op: set, note: "A 30° tilt. The field is multipolar so a single pole means little, and the axis is unmeasured, so the art choice breaks the symmetry", note_ko: "기울기 30°. 다중극이라 단일 극의 의미가 약하고 축도 미측정이라 대칭을 깨는 쪽으로 art 선택" }
+      - { name: magnetopause_standoff_rp, value: 1.54, unit: R_p, op: set, note: "Chapman-Ferraro: B_eq 1.2 µT against 170 nPa of ram pressure at 0.0485 AU (maximum compression, since Ṁ ≤ 0.2 Ṁ☉ is an upper limit). Comparable to Mercury's 1.45", note_ko: "Chapman-Ferraro: B_eq 1.2 µT, 0.0485 AU 램압 170 nPa(Ṁ ≤ 0.2 Ṁ☉ 상한이라 최대 압축). 수성 1.45와 동급" }
+      - { name: pause_deform_scale, value: 0.52, op: set, note: "Not consumed by the engine (stock hard-codes wavenumbers 5/7/6). At l = 4, k = l/R_mp = 2.6, i.e. 0.52× stock (4 lobes against stock's 8-11). Awaiting the KerbalismShuePause plugin", note_ko: "⚗ 엔진 미소비(스톡은 파수 5/7/6 하드코딩). l=4에서 k = l/R_mp = 2.6이라 스톡 대비 0.52배(로브 4개, 스톡은 8~11개). KerbalismShuePause 플러그인 대기" }
     gate:
       criterion: [derived-grounding]
       verdict: methodology-derived
@@ -909,10 +909,10 @@ decisions:
         op: passthrough
         phase3_default: "e~0 (Faria 2022 low-amplitude RV, assumed unconstrained)"
         phase3_default_ko: "e≈0 (Faria2022 저진폭 RV, 미구속 가정)"
-        note: "Physical floor e~0 (strong tides circularize at 0.029 AU). Unmeasured, so a de-perfect seed is applied at emit (upper bound <=0.05); the concrete value is generated per system seed at emit and not recorded on the board (synthetic-orbit-noise policy rule 2). NOT baked"
+        note: "Physical floor e~0 (strong tides circularize at 0.029 AU). Unmeasured, so a de-perfect seed is applied at emit (upper bound ≤0.05); the concrete value is generated per system seed at emit and not recorded on the board (synthetic-orbit-noise policy rule 2). NOT baked"
         note_ko: "물리 floor e≈0 (0.029AU 강조석 원형화). 미측정이라 emit시 de-perfect seed (상한 ≲0.05); 구체값은 per-system seed로 emit 생성·보드 미기록 (synthetic-orbit-noise 정책 rule 2). NOT baked"
       - name: tidal_lock
-        value: "1:1 (the a^6 gate is near-instant); Omega/omega/M free at emit"
+        value: "1:1 (the a⁶ gate is near-instant); Omega/omega/M free at emit"
         value_ko: "1:1 (a⁶ 게이트 초고속); Ω/ω/M 자유 emit"
         op: set
     gate:
@@ -962,9 +962,9 @@ decisions:
         value: 0.30
         unit: M_earth
         op: set
-        phase3_default: "Msini 0.26 M_earth (RV minimum mass, Faria 2022)"
+        phase3_default: "Msini 0.26 M⊕ (RV minimum mass, Faria 2022)"
         phase3_default_ko: "Msini 0.26 M⊕ (RV 최소질량, Faria2022)"
-        note: "Median true mass under an isotropic prior (Msini 0.26 x 1.1547)"
+        note: "Median true mass under an isotropic prior (Msini 0.26× 1.1547)"
         note_ko: "등방 prior 중앙 진질량 (Msini 0.26×1.1547)"
       - name: radius
         value: 0.72
@@ -985,14 +985,14 @@ decisions:
         note: "= orbital period (tidally locked, DB curated)"
         note_ko: "= 공전주기 (조석고정, DB curated)"
       - name: spin_axis_orientation
-        value: "Offset from the orbit normal toward the Laplace pole by the Cassini epsilon (~0.03 deg), the State 1 equilibrium; azimuth de-perfected at emit"
+        value: "Offset from the orbit normal toward the Laplace pole by the Cassini ε (~0.03°), the State 1 equilibrium; azimuth de-perfected at emit"
         value_ko: "궤도 법선에서 Cassini ε(~0.03°)만큼 Laplace pole 쪽 offset (State 1 평형); 방위각 de-perfect-at-emit"
         op: set
       - name: reference_radius
         value: 4587
         unit: km
         op: set
-        note: "J2/C22 reference radius = radius (0.72 R_earth)"
+        note: "J₂/C₂₂ reference radius = radius (0.72 R⊕)"
         note_ko: "J2/C22 기준 반경 = radius (0.72 R⊕)"
       - name: geopotential_j2
         value: 1.7e-4
@@ -1002,24 +1002,24 @@ decisions:
       - name: geopotential_c22
         value: 5.0e-5
         op: set
-        note: "= 0.30*J2 (permanent tidal triaxiality, J2 = 10/3 * C22bar)"
+        note: "= 0.30·J₂ (permanent tidal triaxiality, J₂ = 10/3·C̄₂₂)"
         note_ko: "=0.30·J₂ (영구 조석 삼축, J₂=10/3·C̄₂₂)"
       - name: flattening
         value: 4.25e-4
         op: set
-        note: "= (5/2)*J2 (0.04%, below the 2% visibility threshold, so visually a sphere)"
+        note: "= (5/2)·J₂ (0.04%, below the 2% visibility threshold, so visually a sphere)"
         note_ko: "=(5/2)·J₂ (0.04%, 가시 threshold 2% 아래 → 시각상 구)"
       - name: internal_heat
         value: "negligible (at the surface)"
         value_ko: "negligible (표면)"
         op: set
-        note: "Radiogenic at or below Earth scale (an old, low-mass 0.30 M_earth body cooled early), so the surface holds T_eff ~ T_eq (section 7). The ~16 G field is an SPI observation, though, so the dynamo follows the measurement rather than the internal-heat prediction"
+        note: "Radiogenic at or below Earth scale (an old, low-mass 0.30 M⊕ body cooled early), so the surface holds T_eff ~ T_eq (section 7). The ~16 G field is an SPI observation, though, so the dynamo follows the measurement rather than the internal-heat prediction"
         note_ko: "radiogenic ~Earth-scale 이하(노쇠 0.30 M⊕ 저질량 조기냉각), 표면 T_eff≈T_eq(§7). 단 ~16G 자기장은 SPI 관측(G7)이라 dynamo는 관측 우선(내부열 예측과 별개)"
       - name: obliquity
         value: 0
         unit: deg
         op: set
-        note: "~0 = the Cassini State 1 equilibrium (computed, not assumed). |g|/alpha = 0.018 (Laplace-Lagrange g with the synchronous alpha, far below the ~1.1 resonance threshold) -> epsilon_1 = (|g|/alpha)*sin I ~ 0.02-0.05 deg for the near-coplanar orbital inclination. No dramatic obliquity. Method: cassini-state-obliquity-methodology.md"
+        note: "~0 = the Cassini State 1 equilibrium (computed, not assumed). |g|/α = 0.018 (Laplace-Lagrange g with the synchronous α, far below the ~1.1 resonance threshold) → ε₁ = (|g|/α)·sin I ~ 0.02-0.05° for the near-coplanar orbital inclination. No dramatic obliquity. Method: cassini-state-obliquity-methodology.md"
         note_ko: "≈0 = Cassini State 1 평형 (가정 아님·계산). |g|/α=0.018 (Laplace–Lagrange g + 동기 α, ≪ 공명 임계 ~1.1) → ε₁=(|g|/α)·sinI ≈0.02–0.05° (근접-공면 궤도 I). 극단 obliquity 없음. method=cassini-state-obliquity-methodology.md"
       - name: age
         value: 4.85
@@ -1108,7 +1108,7 @@ decisions:
         value: 450
         unit: K
         op: set
-        note: "Substellar (Teq ~317 K x sqrt(2), no redistribution); night hemisphere ~30 K (geothermal-flux sigma-T^4 balance). Intrinsic colors are in cfg_colors_intrinsic"
+        note: "Substellar (Teq ~317 K x √2, no redistribution); night hemisphere ~30 K (geothermal-flux σ-T⁴ balance). Intrinsic colors are in cfg_colors_intrinsic"
         note_ko: "직하 (Teq~317K ×√2, 무재분배); 야간 반구 ~30 K (지열 플럭스 σT⁴ 평형; 고유색은 cfg_colors_intrinsic)"
       - name: albedo
         value: 0.11
@@ -1190,13 +1190,13 @@ decisions:
       - name: hapke_porosity_k
         value: 1.86
         op: set
-        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.49 (51% porosity)."
+        note: "Hapke 2008 K(φ) computed; optical-layer filling factor φ ~ 0.49 (51% porosity)."
         note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
       - name: hapke_theta
         value: 18
         unit: deg
         op: set
-        note: "Cratered-regolith analog (Moon/Mercury 18 deg). A fitted parameter, so an analog choice rather than a derivation."
+        note: "Cratered-regolith analog (Moon/Mercury 18°). A fitted parameter, so an analog choice rather than a derivation."
         note_ko: "포화 크레이터 레골리스 아날로그(달·수성 18°). 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 0.12
@@ -1408,7 +1408,7 @@ decisions:
       이 보드에서 c에 관한 모든 값은 c가 있다는 가정 위에 있다.
     fields:
       - name: body_type
-        value: "Cold mini-Neptune (~8 M_earth, 1.5 AU, H/He envelope, Teq ~40 K, lifeless)"
+        value: "Cold mini-Neptune (~8 M⊕, 1.5 AU, H/He envelope, Teq ~40 K, lifeless)"
         value_ko: "냉 mini-Neptune (~8 M⊕, 1.5 AU, H/He 외피, Teq~40K, 무생물)"
         op: set
       - name: designation
@@ -1455,7 +1455,7 @@ decisions:
         note: "Measured by Damasso 2020"
         note_ko: "Damasso2020 측정"
       - name: tidal_lock
-        value: "none (not tidally locked; at 1.5 AU tau_lock far exceeds the age). Inclination, Omega and omega are unmeasured and de-perfected at emit (synthetic-orbit-noise policy; the measured e 0.04 is not a noise target)"
+        value: "none (not tidally locked; at 1.5 AU τ_lock far exceeds the age). Inclination, Omega and omega are unmeasured and de-perfected at emit (synthetic-orbit-noise policy; the measured e 0.04 is not a noise target)"
         value_ko: "none (비조석고정, 1.5 AU → τ_lock ≫ 나이); 경사각·Ω·ω는 미측정이라 de-perfect-at-emit (synthetic-orbit-noise 정책; 측정값 e 0.04는 노이즈 대상 아님)"
         op: set
     gate:
@@ -1494,7 +1494,7 @@ decisions:
         value: 8
         unit: M_earth
         op: set
-        phase3_default: "Msini 7 M_earth (RV, Damasso 2020); radius unobserved (non-transiting)"
+        phase3_default: "Msini 7 M⊕ (RV, Damasso 2020); radius unobserved (non-transiting)"
         phase3_default_ko: "Msini 7 M⊕ (RV, Damasso2020); 반경 미관측(비통과)"
         note: "Median under an isotropic prior"
         note_ko: "G2 등방중앙"
@@ -1502,7 +1502,7 @@ decisions:
         value: 2.7
         unit: R_earth
         op: set
-        note: "Owner-adopted central value (band 2.5-3 R_earth, H/He envelope inflation); g ~1.1 g, density ~2.2 g/cm3, volatile-rich"
+        note: "Owner-adopted central value (band 2.5-3 R⊕, H/He envelope inflation); g ~1.1 g, density ~2.2 g/cm³, volatile-rich"
         note_ko: "오너 채택 중심값 (band 2.5–3 R⊕, H/He 외피 inflation); g ~1.1 g, 밀도 ~2.2 g/cm³ 휘발성-풍부"
       - name: gravity
         value: 1.1
@@ -1514,7 +1514,7 @@ decisions:
         value: 17202
         unit: km
         op: set
-        note: "J2 reference radius = radius (2.7 R_earth)"
+        note: "J₂ reference radius = radius (2.7 R⊕)"
         note_ko: "J2 기준 반경 = radius (2.7 R⊕)"
       - name: geopotential_c22
         value: null
@@ -1530,26 +1530,26 @@ decisions:
         value: 17
         unit: deg
         op: set
-        note: "Owner art choice, 2026-07-14: the only freely rotating planet here, so it carries the axial variety (b, d and c I are all locked at 0 deg). The azimuth is de-perfected at emit"
+        note: "Owner art choice, 2026-07-14: the only freely rotating planet here, so it carries the axial variety (b, d and c I are all locked at 0°). The azimuth is de-perfected at emit"
         note_ko: "오너 art 2026-07-14, 유일한 자유회전 행성이라 축 다양성 부여(b/d/c I는 조석고정 0°). 방위각은 emit de-perfect"
       - name: spin_axis_orientation
-        value: "Tilted 17 deg from the orbit normal (azimuth de-perfected at emit, synthetic-orbit-noise policy)"
+        value: "Tilted 17° from the orbit normal (azimuth de-perfected at emit, synthetic-orbit-noise policy)"
         value_ko: "궤도 법선에서 17° 기움 (방위각 de-perfect-at-emit, synthetic-orbit-noise 정책)"
         op: set
       - name: geopotential_j2
         value: 8.0e-4
         op: set
-        note: "Free rotation: q 6.7e-3 (P_rot 27 h) with NMoI 0.23 through Radau-Darwin -> J2 ~8e-4 (range 5e-4 to 1e-3; figure ledger)"
+        note: "Free rotation: q 6.7e-3 (P_rot 27 h) with NMoI 0.23 through Radau-Darwin → J₂ ~8e-4 (range 5e-4 to 1e-3; figure ledger)"
         note_ko: "자유회전 q 6.7e-3(P_rot 27h)·NMoI 0.23 Radau-Darwin → J₂~8e-4 (range 5e-4–1e-3; figure ledger)"
       - name: flattening
         value: 4.5e-3
         op: set
-        note: "Free rotation: f = (3*J2+q)/2 ~ 0.45%; a/c ~1.005, below the 2% visibility threshold, so gravitational J2 only and no oblate mesh"
+        note: "Free rotation: f = (3*J₂+q)/2 ~ 0.45%; a/c ~1.005, below the 2% visibility threshold, so gravitational J₂ only and no oblate mesh"
         note_ko: "자유회전 f=(3·J₂+q)/2 ≈0.45%; a/c~1.005 < 2% 가시 threshold → 중력 J₂만, 오블레이트 메쉬 없음"
       - name: internal_heat
         value: "T_int ~45–50 K (Neptune analog) → T_eff 40→~53 K"
         op: set
-        note: "Cold mini-Neptune (section 7): insolation is so low that internal heat governs the temperature (a range, uncertain by a factor of a few). The surface still has its volatiles frozen (CH4/N2). Anchored on Pearl & Conrath 1991 for Neptune"
+        note: "Cold mini-Neptune (section 7): insolation is so low that internal heat governs the temperature (a range, uncertain by a factor of a few). The surface still has its volatiles frozen (CH₄/N₂). Anchored on Pearl & Conrath 1991 for Neptune"
         note_ko: "cold mini-Neptune (§7), 저일사라 내부열이 온도 지배(range, factor-few 불확실). 표면은 여전히 휘발성 동결(CH₄/N₂). Pearl&Conrath1991 Neptune 앵커"
       - name: age
         value: 4.85
@@ -1585,7 +1585,7 @@ decisions:
       얼마나 섞였는지는 관측된 적이 없어 자릿수조차 모른다.
     fields:
       - name: composition
-        value: "A thick H/He envelope (the observable upper atmosphere is H/He gas only) over deep ice-cloud layers (CH4/N2/NH3/H2O frozen out)"
+        value: "A thick H/He envelope (the observable upper atmosphere is H/He gas only) over deep ice-cloud layers (CH₄/N₂/NH₃/H₂O frozen out)"
         value_ko: "두꺼운 H/He 외피 (상층 관측 대기 = H/He만 기체); 심층 얼음-구름층 (CH₄/N₂/NH₃/H₂O 동결)"
         op: set
       - name: temperature
@@ -1657,7 +1657,7 @@ decisions:
         value_ko: "#c4d0d8 (창백 회청/회백; 거의 중성 + 약한 Rayleigh 청)"
         op: set
       - name: clouds
-        value: "H/He with high ice clouds and haze (not Neptune-blue: CH4 condensation makes the deep-blue mechanism weak here)"
+        value: "H/He with high ice clouds and haze (not Neptune-blue: CH₄ condensation makes the deep-blue mechanism weak here)"
         value_ko: "H/He + 고층 얼음·haze (해왕성처럼 파랗지 않음, CH₄ 응결로 진청 메커니즘 약함)"
         op: set
       - name: hapke_terrain
@@ -1672,13 +1672,13 @@ decisions:
       - name: hapke_porosity_k
         value: 1.8
         op: set
-        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.47 (53% porosity)."
+        note: "Hapke 2008 K(φ) computed; optical-layer filling factor φ ~ 0.47 (53% porosity)."
         note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.47 (53% 다공)"
       - name: hapke_theta
         value: 10
         unit: deg
         op: set
-        note: "Giant analog (Saturn/Neptune 10 deg). A fitted parameter, so an analog choice rather than a derivation."
+        note: "Giant analog (Saturn/Neptune 10°). A fitted parameter, so an analog choice rather than a derivation."
         note_ko: "거대행성 아날로그(토성·해왕성 10°). 적합 파라미터라 도출이 아닌 아날로그 선택이다."
       - name: albedo_mean
         value: 0.45
@@ -1716,12 +1716,12 @@ decisions:
       거리까지 거의 오지 않는다.
     fields:
       - name: magnetic_field
-        value: "~0.1-0.5 G (ice-giant analog, non-dipolar and tilted ~47-59 deg); confidence low"
+        value: "~0.1-0.5 G (ice-giant analog, non-dipolar and tilted ~47-59°); confidence low"
         value_ko: "~0.1–0.5 G (빙거성 아날로그, 비쌍극·tilted ~47–59°); conf low"
         op: set
       - { name: field_geometry, value: "Tilted and offset multipolar (ice-giant type)", value_ko: "기울고 중심 이탈한 다중극 (빙거성형)", op: set, note: "Convection in a thin conducting shell. Shape diagram: docs/img/field-geometry-proxima-c.png", note_ko: "얇은 전도층 대류. 형상 도식 docs/img/field-geometry-proxima-c.png" }
       - { name: radiation_model, value: "Ice-giant type (CRAND inner belt, wind-fed outer belt, and the boundary between)", value_ko: "빙거성형 (CRAND 내대 + 항성풍 외대 + 계면)", op: set, note: "Follows the measured Uranus and Neptune, which both carry a proton inner belt and an electron outer belt. Details are in the radiation_belts row", note_ko: "실측 천왕성·해왕성이 양성자 내대와 전자 외대를 모두 가지는 것을 따른다. 상세는 radiation_belts 행" }
-      - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "A 50 deg tilt, between Uranus' 58.6 and Neptune's 47", note_ko: "기울기 50°. 천왕성 58.6°·해왕성 47° 사이" }
+      - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "A 50° tilt, between Uranus' 58.6 and Neptune's 47", note_ko: "기울기 50°. 천왕성 58.6°·해왕성 47° 사이" }
       - { name: geomagnetic_offset, value: 0.4, op: set, note: "Offset from center, between Uranus' 0.3 and Neptune's 0.55", note_ko: "중심 이탈. 천왕성 0.3·해왕성 0.55 사이" }
     gate:
       criterion: [derived-grounding]
@@ -1762,7 +1762,7 @@ decisions:
       - { name: inner_deform_xy, value: 0.66, op: set }
       - { name: inner_deform, value: 0.115, op: set, note: "Multipolar patchiness. Slightly over stock's 0.1 maximum, but small against the cross-section", note_ko: "다중극 얼룩짐. 스톡 최대 0.1을 약간 넘지만 단면 대비 미세" }
       - { name: inner_border_dist, value: 0.0001, op: set, note: "Spherical cut = the loss-cone D shape. The same structure as the Earth model", note_ko: "구면 컷 = 손실원뿔 D-형. 지구 모델과 같은 구조" }
-      - { name: inner_border_radius, value: 1.0, op: set, note: "Equatorial cut 1.0/sqrt(0.5) = 1.41 R_c. The boundary where mirroring particles sink into the atmosphere and are lost", note_ko: "적도 컷 1.0/√0.5 = 1.41 R_c. 거울점이 대기에 잠기는 입자의 소멸 경계" }
+      - { name: inner_border_radius, value: 1.0, op: set, note: "Equatorial cut 1.0/√0.5 = 1.41 R_c. The boundary where mirroring particles sink into the atmosphere and are lost", note_ko: "적도 컷 1.0/√0.5 = 1.41 R_c. 거울점이 대기에 잠기는 입자의 소멸 경계" }
       - { name: inner_border_deform_xy, value: 0.5, op: set }
       - { name: outer_dist, value: 2.8, op: set, note: "Magnetopause nose 11.9 R_c x 0.235 (the measured ratio for Uranus 0.24 and Neptune 0.23)", note_ko: "자기권계면 nose 11.9 R_c × 0.235 (실측 천왕성 0.24·해왕성 0.23의 비율)" }
       - { name: outer_radius, value: 2.5, op: set }
@@ -1771,23 +1771,23 @@ decisions:
       - { name: outer_border_dist, value: 1.54, op: set, note: "Inner carve. Follows the Earth model's border/dist ratio of 0.55", note_ko: "내측 carve. 지구 모델의 border/dist 비 0.55를 따름" }
       - { name: outer_border_radius, value: 1.42, op: set, note: "Equatorial cut ~3.6 R_c. The space between it and the inner belt (~1.4-2.9) becomes the slot", note_ko: "적도 컷 ~3.6 R_c. 내대(~1.4-2.9)와의 사이가 슬롯이 됨" }
       - { name: outer_border_deform_xy, value: 0.66, op: set }
-      - { name: pause_radius, value: 16.84, op: set, note: "Flank = nose x sqrt(2). Nose 11.9 R_c from Chapman-Ferraro (B_eq 0.18 G against 0.178 nPa of ram pressure at 1.5 AU)", note_ko: "플랭크 = nose×√2. nose 11.9 R_c = Chapman-Ferraro (B_eq 0.18 G, 1.5 AU 램압 0.178 nPa)" }
-      - { name: pause_compression, value: 1.414, op: set, note: "Reproduces the flank/nose ratio sqrt(2) of Shue alpha = 0.5 in the SDF. The same order as stock earth 1.5 and mercury 1.4", note_ko: "Shue α=0.5의 플랭크/nose 비 √2를 SDF로 재현. 스톡 earth 1.5·mercury 1.4와 같은 급" }
+      - { name: pause_radius, value: 16.84, op: set, note: "Flank = nose x √2. Nose 11.9 R_c from Chapman-Ferraro (B_eq 0.18 G against 0.178 nPa of ram pressure at 1.5 AU)", note_ko: "플랭크 = nose×√2. nose 11.9 R_c = Chapman-Ferraro (B_eq 0.18 G, 1.5 AU 램압 0.178 nPa)" }
+      - { name: pause_compression, value: 1.414, op: set, note: "Reproduces the flank/nose ratio √2 of Shue α = 0.5 in the SDF. The same order as stock earth 1.5 and mercury 1.4", note_ko: "Shue α=0.5의 플랭크/nose 비 √2를 SDF로 재현. 스톡 earth 1.5·mercury 1.4와 같은 급" }
       - { name: pause_extension, value: 0.135, op: set, note: "Tail = rad/ext = 125 R_c, consistent with pause_tail", note_ko: "꼬리 = rad/ext = 125 R_c = pause_tail과 정합" }
       - { name: pause_height_scale, value: 1.0, op: set, note: "The Shue shape is axisymmetric. Stock's 1.1 squeezes the meridional width by 1/1.1 and departs from Shue", note_ko: "Shue 형상은 축대칭. 스톡의 1.1은 자오면 폭을 1/1.1로 눌러 Shue와 어긋남" }
-      - { name: radiation_inner, value: 8.0, unit: rad/h, op: set, note: "~0.8x Earth's inner belt 10.4. The source (unmodulated GCR plus low cutoff rigidity) exceeds Earth's, while multipolar trapping instability cuts it back", note_ko: "지구 내대 10.4의 ~0.8배. 소스(비변조 GCR+낮은 차단강성)는 지구 이상, 다중극 포획 불안정이 깎음" }
+      - { name: radiation_inner, value: 8.0, unit: rad/h, op: set, note: "~0.8× Earth's inner belt 10.4. The source (unmodulated GCR plus low cutoff rigidity) exceeds Earth's, while multipolar trapping instability cuts it back", note_ko: "지구 내대 10.4의 ~0.8배. 소스(비변조 GCR+낮은 차단강성)는 지구 이상, 다중극 포획 불안정이 깎음" }
       - { name: radiation_inner_gradient, value: 1.9, op: set, note: "Owner tuning. A gentler edge than stock's 3.3", note_ko: "오너 튜닝. 스톡 3.3보다 완만한 에지" }
-      - { name: radiation_outer, value: 1.2, unit: rad/h, op: set, note: "~1/3 of the 3.7 rad/h saturated anchor (18 uT). Source-limited by a wind pressure 0.09x Earth's; range 0.4 to 2", note_ko: "포화 앵커 3.7 rad/h(18 µT)의 ~1/3. 풍압 0.09× 지구의 소스 제한, 범위 0.4~2" }
+      - { name: radiation_outer, value: 1.2, unit: rad/h, op: set, note: "~1/3 of the 3.7 rad/h saturated anchor (18 µT). Source-limited by a wind pressure 0.09× Earth's; range 0.4 to 2", note_ko: "포화 앵커 3.7 rad/h(18 µT)의 ~1/3. 풍압 0.09× 지구의 소스 제한, 범위 0.4~2" }
       - { name: radiation_outer_gradient, value: 2.2, op: set, note: "Stock earth value stated explicitly (omitting it falls back to the code default)", note_ko: "스톡 earth 값 명시 (생략 시 코드 기본값으로 떨어짐)" }
       - { name: radiation_pause, value: -0.01, op: set }
       - { name: pause_nose, value: 11.905, op: set, note: "Shue-native (if KerbalismShuePause is adopted). = pause_radius/compression", note_ko: "⚗ Shue-native (KerbalismShuePause 채택 시). = pause_radius/compression" }
       - { name: pause_alpha, value: 0.5, op: set, note: "Shue-native. Borrows Shue 1998's empirical Earth value; there is no ice-giant fit in the literature (low confidence)", note_ko: "⚗ Shue-native. Shue 1998 지구 경험치 차용, 빙거성 피팅 문헌 없음(저신뢰)" }
       - { name: pause_tail, value: 125, op: set, note: "Shue-native. Tail cut. Consistent with the ~200 R_E scale of Earth's observed tail", note_ko: "⚗ Shue-native. 꼬리 컷. 지구 꼬리 관측 ~200 R_E 스케일과 정합" }
       - { name: pause_offset, value: 19.7, op: set, note: "Offset emulation (for the lightweight patch). Moves the sphere center tailward to approximate Shue. A set with the three values below", note_ko: "⚗ offset 에뮬레이션 (경량 패치용). 구 중심을 꼬리쪽으로 이동해 Shue 근사. 아래 3값과 세트" }
-      - { name: pause_offset_radius, value: 21.5, op: set, note: "Offset set. Maximum width = the Shue asymptote, approximated as 2x nose", note_ko: "⚗ offset 세트. 최대폭 = Shue 점근 2×nose 근사" }
+      - { name: pause_offset_radius, value: 21.5, op: set, note: "Offset set. Maximum width = the Shue asymptote, approximated as 2× nose", note_ko: "⚗ offset 세트. 최대폭 = Shue 점근 2×nose 근사" }
       - { name: pause_offset_compression, value: 0.68, op: set, note: "Offset set. Holds the nose at 11.9", note_ko: "⚗ offset 세트. nose 11.9 유지용" }
       - { name: pause_offset_extension, value: 0.204, op: set, note: "Offset set. Matches the 125 tail cut. The stock SDF pins maximum width to the planet center and so cannot express the Shue tail flare (widest ~1.7 nose behind the planet); the offset lifts that limit", note_ko: "⚗ offset 세트. 꼬리 마감 125 정합. 스톡 SDF는 최대폭이 행성 중심에 고정돼 Shue 꼬리 벌어짐(최대폭이 행성 뒤 ~1.7 nose 지점)을 표현 불가. offset이 그 한계를 푼다" }
-      - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "A 50 deg tilt", note_ko: "기울기 50°" }
+      - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "A 50° tilt", note_ko: "기울기 50°" }
       - { name: geomagnetic_offset, value: 0.4, op: set }
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/solar-system-radiation-belts.md"]
     provenance: >
@@ -1844,7 +1844,7 @@ decisions:
         value_ko: "행성간 공간 낮음 (플레어 플럭스 거리감쇄, 계에서 가장 조용); 단 자기권 포획대는 예외 (내대 8 rad/h)"
         op: set
       - name: stellar_wind
-        value: "Weak (0.178 nPa of ram pressure at 1.5 AU, ~0.09x the solar wind at Earth)"
+        value: "Weak (0.178 nPa of ram pressure at 1.5 AU, ~0.09× the solar wind at Earth)"
         value_ko: "약 (1.5 AU 램압 0.178 nPa, 지구 태양풍의 ~0.09배)"
         op: set
       - name: heliosphere
@@ -2087,13 +2087,13 @@ decisions:
         value: 35.7
         unit: h
         op: set
-        note: "= 1.49 days (Kepler, a 6.4 R_c with M_c 8 M_earth). Same as the rotation period"
+        note: "= 1.49 days (Kepler, a 6.4 R_c with M_c 8 M⊕). Same as the rotation period"
         note_ko: "= 1.49일 (케플러, a 6.4 R_c·M_c 8 M⊕). 자전과 같음"
       - name: tidal_lock
-        value: "1:1 (locked within ~10^4-10^5 years)"
+        value: "1:1 (locked within ~10⁴-10⁵ years)"
         value_ko: "1:1 (~10⁴–10⁵년 잠김)"
         op: set
-        note: "tau scales as a^6, so 17x slower than at 4 R_c, yet still instant against the system's age"
+        note: "τ scales as a⁶, so 17× slower than at 4 R_c, yet still instant against the system's age"
         note_ko: "τ∝a⁶라 4 R_c 대비 17배 느리지만 여전히 나이에 비해 순간"
     provenance: >
       2026-06-23: 오너가 "고리 바로 바깥" 의도로 a=4 R_c(69,000 km) 확정. 근거는 바깥 고리 가장자리 shepherd.
@@ -2148,7 +2148,7 @@ decisions:
         value: 2.32e20
         unit: kg
         op: set
-        note: "Density 1.6 g/cm3 (owner, 2026-08-04; rock mass fraction ~0.59) -> 3.9e-5 M_earth (~0.003x the Moon)"
+        note: "Density 1.6 g/cm³ (owner, 2026-08-04; rock mass fraction ~0.59) → 3.9e-5 M⊕ (~0.003× the Moon)"
         note_ko: "밀도 1.6 g/cm³ (오너 2026-08-04, 암석질량비 ~0.59) → 3.9e-5 M⊕ (달의 ~0.003배)"
       - name: gravity
         value: 0.146
@@ -2160,32 +2160,32 @@ decisions:
         value: 35.7
         unit: h
         op: set
-        note: "= orbital period (tidally locked to c; Kepler with a 7.3592e-4 AU = 6.4 R_c and M_c 8 M_earth)"
+        note: "= orbital period (tidally locked to c; Kepler with a 7.3592e-4 AU = 6.4 R_c and M_c 8 M⊕)"
         note_ko: "= 공전주기 (조석고정 to c; 케플러 a 7.3592e-4 AU = 6.4 R_c·M_c 8 M⊕)"
       - name: spin_axis_orientation
-        value: "Offset from c's orbit normal by the Cassini epsilon (<=0.004 deg), State 1, effectively the orbit normal; azimuth de-perfected at emit"
+        value: "Offset from c's orbit normal by the Cassini ε (≤0.004°), State 1, effectively the orbit normal; azimuth de-perfected at emit"
         value_ko: "c 궤도 법선에서 Cassini ε(≲0.004°) offset (State 1, 사실상 궤도 법선); 방위각 de-perfect-at-emit"
         op: set
       - name: reference_radius
         value: 326
         unit: km
         op: set
-        note: "J2/C22 reference radius = radius"
+        note: "J₂/C₂₂ reference radius = radius"
         note_ko: "J2/C22 기준 반경 = radius"
       - name: geopotential_j2
         value: 4.70e-3
         op: set
-        note: "~0.88*q_s (q_s 5.34e-3 = n^2/(G*rho*4pi/3) at a = 6.4 R_c; the tidal cross-check (M_c/M_cI)(R/a)^3 agrees). Synchronous-satellite figure, section 3"
+        note: "~0.88*q_s (q_s 5.34e-3 = n²/(G·ρ·4π/3) at a = 6.4 R_c; the tidal cross-check (M_c/M_cI)(R/a)³ agrees). Synchronous-satellite figure, section 3"
         note_ko: "≈0.88·q_s (q_s 5.34e-3 = n²/(G·ρ·4π/3), a=6.4 R_c; 조석 검산 (M_c/M_cI)(R/a)³ 일치). 동기위성 figure §3"
       - name: geopotential_c22
         value: 1.41e-3
         op: set
-        note: "= 0.30*J2 (J2 = 10/3 * C22bar tidal triaxiality; axis differences a-c : b-c = 4:1)"
+        note: "= 0.30·J₂ (J₂ = 10/3·C̄₂₂ tidal triaxiality; axis differences a-c : b-c = 4:1)"
         note_ko: "=0.30·J₂ (J₂=10/3·C̄₂₂ 조석 삼축; 축차 a−c:b−c=4:1)"
       - name: flattening
         value: 1.18e-2
         op: set
-        note: "= (5/2)*J2 -> a/c ~1.012 (below the 2% visibility threshold). Retreating to 6.4 R_c cut q_s fourfold and the egg shape disappeared, so no oblate mesh; gravity only"
+        note: "= (5/2)·J₂ → a/c ~1.012 (below the 2% visibility threshold). Retreating to 6.4 R_c cut q_s fourfold and the egg shape disappeared, so no oblate mesh; gravity only"
         note_ko: "=(5/2)·J₂ → a/c~1.012 (<2% 가시 임계 아래). 6.4 R_c로 물러나며 q_s가 4배 줄어 계란형이 사라짐 → 오블레이트 메쉬 비대상, 중력에만 반영"
       - name: internal_heat
         value: "negligible"
@@ -2196,7 +2196,7 @@ decisions:
         value: 0
         unit: deg
         op: set
-        note: "~0 = Cassini State 1 (computed). |g|/alpha = 8e-4 (g driven by c's J2 with the synchronous alpha) -> epsilon_1 <= 0.004 deg, Galilean-satellite class, effectively zero. Method: cassini-state-obliquity-methodology.md"
+        note: "~0 = Cassini State 1 (computed). |g|/α = 8e-4 (g driven by c's J₂ with the synchronous α) → ε₁ ≤ 0.004°, Galilean-satellite class, effectively zero. Method: cassini-state-obliquity-methodology.md"
         note_ko: "≈0 = Cassini State 1 (계산). |g|/α=8e-4 (c의 J₂ 구동 g + 동기 α) → ε₁≲0.004° (갈릴레이 위성급, 사실상 0). method=cassini-state-obliquity-methodology.md"
       - name: age
         value: 4.85
@@ -2243,7 +2243,7 @@ decisions:
         value: false
         op: set
       - name: escape
-        value: "Hydrodynamic blow-off (Jeans lambda(N2, 45 K) = 3.6, escape velocity 308 m/s)"
+        value: "Hydrodynamic blow-off (Jeans λ(N₂, 45 K) = 3.6, escape velocity 308 m/s)"
         value_ko: "유체역학적 날림 (Jeans λ(N₂,45K) = 3.6, 탈출속도 308 m/s)"
         op: set
     provenance: >
@@ -2371,7 +2371,7 @@ decisions:
       - name: hapke_porosity_k
         value: 1.86
         op: set
-        note: "Hapke 2008 K(phi) computed; optical-layer filling factor phi ~ 0.49 (51% porosity)."
+        note: "Hapke 2008 K(φ) computed; optical-layer filling factor φ ~ 0.49 (51% porosity)."
         note_ko: "Hapke 2008 K(φ) 계산, 광학층 충전율 φ≈0.49 (51% 다공)"
       - name: hapke_theta
         value: 23
@@ -2541,7 +2541,7 @@ decisions:
         value_ko: "4구획: 후행 반구 적화지 / 선행 반구 / sub-c 얼음 얼룩 / 광선 크레이터"
         op: set
       - name: landing
-        value: "Possible (solid ice surface, g 0.146 m/s2). No splashdown and no atmospheric flight"
+        value: "Possible (solid ice surface, g 0.146 m/s²). No splashdown and no atmospheric flight"
         value_ko: "가능 (고체 얼음 표면, g 0.146 m/s²). 물 착수·대기비행 없음"
         op: set
       - name: sphere_of_influence_tuning
