@@ -77,7 +77,9 @@ def luminance(hexstr: str) -> float:
 
 
 def text_on(hexstr: str) -> str:
-    return "#000" if luminance(hexstr) > 0.4 else "#fff"
+    """흑/백 중 대비가 큰 쪽. 임계값 방식은 중간 명도에서 2.5:1 까지 떨어진다."""
+    L = luminance(hexstr)
+    return "#000" if (L + 0.05) / 0.05 >= 1.05 / (L + 0.05) else "#fff"
 
 
 def rgb_intensity_to_hex(rgb_i: tuple) -> str:
@@ -286,7 +288,7 @@ def render_plasma_temp_grid() -> str:
     data = yaml.safe_load(PLASMA_TEMP_DB.read_text(encoding="utf-8"))
     cell = ("display:inline-block;vertical-align:top;width:34px;height:26px;font-size:9px;"
             "text-align:center;line-height:26px")
-    head = "display:inline-block;vertical-align:top;width:34px;font-size:9px;text-align:center;color:#888"
+    head = "display:inline-block;vertical-align:top;width:34px;font-size:9px;text-align:center;color:var(--fg-muted)"
     lab = "flex:0 0 150px;font-size:12px"
     row = "display:flex;align-items:center;margin:2px 0;white-space:nowrap"
 
@@ -337,7 +339,7 @@ def render_element_temp_grid() -> str:
     data = yaml.safe_load(ELEMENT_TEMP_DB.read_text(encoding="utf-8"))
     cell = ("display:inline-block;vertical-align:top;width:30px;height:20px;font-size:8px;"
             "text-align:center;line-height:20px")
-    head = "display:inline-block;vertical-align:top;width:30px;font-size:8px;text-align:center;color:#888"
+    head = "display:inline-block;vertical-align:top;width:30px;font-size:8px;text-align:center;color:var(--fg-muted)"
     lab = "flex:0 0 84px;font-size:11px"
     row = "display:flex;align-items:center;margin:1px 0;white-space:nowrap"
 
@@ -410,7 +412,7 @@ def render_firefly_stock() -> str:
     row = "display:flex;align-items:flex-start;margin:3px 0"
     head = ('<div style="' + row + '"><div style="' + lab + '"></div><div>'
             + "".join(f'<div style="display:inline-block;width:62px;font-size:8px;text-align:center;'
-                      f'color:#888;margin:1px">{slot}<br>{region}</div>' for slot, region in FIREFLY_SLOTS)
+                      f'color:var(--fg-muted);margin:1px">{slot}<br>{region}</div>' for slot, region in FIREFLY_SLOTS)
             + '</div></div>')
     rows = [head]
     for body, cols in FIREFLY_STOCK.items():
@@ -573,7 +575,7 @@ def render_aurora_emitters() -> str:
             sw = (f'<span class="swatch-inline" style="background:{hexv};'
                   f'color:{text_on(hexv)}">{hexv}</span>')
         else:
-            sw = f'<span class="swatch-inline" style="background:#1b1b1b;color:#888">{band}</span>'
+            sw = f'<span class="swatch-inline" style="background:#1b1b1b;color:rgba(255,255,255,.82)">{band}</span>'
         rows.append(
             f'<tr data-forbidden="{forb}" data-atot="{atot}" data-ksum="{ksum}">'
             f'<td>{sw}</td><td class="sp">{html.escape(name)}</td>'
@@ -903,13 +905,13 @@ html, body {{ overflow-x: clip; }}
   align-items: center; justify-content: center;
   transition: background 0.4s ease, color 0.4s ease;
   background-image: repeating-linear-gradient(45deg, #1a1828 0 4px, #2a1a38 4px 8px);
-  color: #6a7898;
+  color: var(--fg-muted);
 }}
 .el-cell.visible {{ background-image: none; border-color: rgba(0,0,0,0.5) }}
-.el-cell .z {{ position: absolute; top: 2px; left: 4px; font-size: 9px; opacity: 0.85 }}
+.el-cell .z {{ position: absolute; top: 2px; left: 4px; font-size: 9px; opacity: 1 }}
 .el-cell .sym {{ font-size: 16px; font-weight: bold }}
-.el-cell .name {{ font-size: 7px; opacity: 0.75; text-align: center }}
-.el-cell .chip {{ position: absolute; bottom: 1px; right: 2px; font-size: 6px; opacity: 0.7 }}
+.el-cell .name {{ font-size: 7px; opacity: 0.92; text-align: center }}
+.el-cell .chip {{ position: absolute; bottom: 1px; right: 2px; font-size: 6px; opacity: 0.9 }}
 @media (max-width: 1100px) {{
   .el-cell .sym {{ font-size: 12px }}
   .el-cell .name {{ display: none }}
@@ -930,9 +932,9 @@ html, body {{ overflow-x: clip; }}
   font-family: system-ui, sans-serif }}
 #copy-pop.copied {{ border-color: #4ad07a }}
 #copy-pop.copied .pop-hint {{ opacity: 0.95; color: #7fe6a3 }}
-.refs-list a {{ color: #9bb8ff }}
+.refs-list a {{ color: var(--accent) }}
 .refs-list li {{ margin: 3px 0; font-size: 12px; line-height: 1.55 }}
-.refs-list h3 {{ margin: 12px 0 4px; font-size: 12px; color: #aab2c8 }}
+.refs-list h3 {{ margin: 12px 0 4px; font-size: 12px; color: var(--fg-primary) }}
 details.collapsible > summary {{
   cursor: pointer; list-style: none; user-select: none;
   font-size: 1.2rem; color: var(--fg-emph); margin-bottom: 0.5rem;
@@ -948,7 +950,7 @@ details.collapsible[open] > summary::before {{ content: "\\25BE  " }}
 }}
 .mol-cell {{
   background-image: repeating-linear-gradient(45deg, #1a1828 0 4px, #2a1a38 4px 8px);
-  color: #6a7898;
+  color: var(--fg-muted);
   border-radius: 3px; padding: 8px 6px;
   font-size: 11px; text-align: center;
   border: 1px solid rgba(0,0,0,0.3);
@@ -1154,7 +1156,13 @@ function luminance(hex) {{
   const chan = c => c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4);
   return 0.2126*chan(r) + 0.7152*chan(g) + 0.0722*chan(b);
 }}
-function textOn(hex) {{ return luminance(hex) > 0.4 ? '#000' : '#fff'; }}
+// 타일 색은 데이터(계산된 발광색)라 바꿀 수 없다 → 글자를 흑/백 중 대비가 큰 쪽으로.
+// 임계값 방식은 중간 명도에서 2.5:1 까지 떨어졌다. 최대선택은 최악에도 4.58:1 을 보장한다.
+function textOn(hex) {{
+  const L = luminance(hex);
+  const onWhite = 1.05 / (L + 0.05), onBlack = (L + 0.05) / 0.05;
+  return onBlack >= onWhite ? '#000' : '#fff';
+}}
 function domL(d) {{
   return ({{'thermal': T[lang].dom_thermal, 'molecular bands': T[lang].dom_molecular,
             'atomic lines': T[lang].dom_atomic, 'ionic': T[lang].dom_ionic}})[d] || d;

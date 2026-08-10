@@ -195,6 +195,16 @@ main { max-width: 980px }
 .pill-p4 { background: rgba(78,201,176,.12); color: #4ec9b0 }
 .pill-mf { background: rgba(216,160,64,0.15); color: var(--warn-soft); border: 1px solid rgba(216,160,64,0.35) }
 .pill-3d { background: rgba(122,200,224,.12); color: #7ac8e0 }
+/* 라이트: 다크 알약색은 흰 배경에서 1.5~1.9:1 로 무너진다. 색상은 유지하고
+   자기 틴트 위에서 4.6:1 을 넘도록 다시 고른 값. */
+@media (prefers-color-scheme: light) {
+  html.ns-light-ok .pill-p2 { background: rgba(16,77,218,.11);  color: #104dda }
+  html.ns-light-ok .pill-p3 { background: rgba(153,44,131,.12); color: #992c83 }
+  html.ns-light-ok .pill-p4 { background: rgba(30,102,87,.12);  color: #1e6657 }
+  html.ns-light-ok .pill-3d { background: rgba(28,99,120,.12);  color: #1c6378 }
+  html.ns-light-ok .pill-mf { background: rgba(118,84,25,.13);  color: #765419;
+    border-color: rgba(118,84,25,.35) }
+}
 .lang-toggle { margin-left: auto }
 .empty { color: var(--fg-faint); font-style: italic }
 .sidepanel { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--bd-strong); border-radius: 6px; background: var(--bg-card); display: flex; align-items: center; gap: 12px; flex-wrap: wrap }

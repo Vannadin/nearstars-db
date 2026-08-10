@@ -54,7 +54,7 @@ SEG_CSS = """
 .seg.seg button.on { background:rgba(255,255,255,.07); color:rgba(255,255,255,.94) }
 @media (prefers-color-scheme:light) { html.ns-light-ok .seg.seg {
   background:rgba(12,17,34,.03); border-color:rgba(12,17,34,.12) }
-  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.55) }
+  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.62) }
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }"""
@@ -66,7 +66,7 @@ SEG_CSS = """
 A11Y_CSS = """
 :focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
 @media (prefers-color-scheme:light) {
-  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+  html.ns-light-ok :focus-visible { outline-color:#114edd } }
 @media (prefers-reduced-motion:reduce) {
   *, *::before, *::after { animation-duration:.01ms !important;
     animation-iteration-count:1 !important; transition-duration:.01ms !important;
@@ -87,8 +87,8 @@ _BAR_CSS = """<style>
 @media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
   background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
   html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
-  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.55) }
-  html.ns-light-ok .ns-bar a:hover { color:#2f66d8 }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .ns-bar a:hover { color:#114edd }
   html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
   html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
 @media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }

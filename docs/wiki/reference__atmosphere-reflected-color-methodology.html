@@ -28,10 +28,10 @@
       radial-gradient(58% 48% at 16% -12%, rgba(47,102,216,.07), transparent 70%),
       radial-gradient(48% 44% at 94% 108%, rgba(168,58,142,.05), transparent 70%);
     --w-fg1: rgba(9,12,22,.95); --w-fg2: rgba(9,12,22,.80);
-    --w-fg3: rgba(9,12,22,.72); --w-fg4: rgba(9,12,22,.55);
+    --w-fg3: rgba(9,12,22,.76); --w-fg4: rgba(9,12,22,.62);
     --w-s1: rgba(12,17,34,.022); --w-s2: rgba(12,17,34,.055);
     --w-bd: rgba(12,17,34,.10);
-    --w-on-bg: rgba(47,102,216,.14); --w-on-fg: #1a4bb0 }
+    --w-on-bg: rgba(17,78,221,.13); --w-on-fg: #0a3fb0 }
 }
 * { box-sizing: border-box }
 body { margin: 0;
@@ -89,8 +89,8 @@ body { margin: 0;
 @media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
   background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
   html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
-  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.55) }
-  html.ns-light-ok .ns-bar a:hover { color:#2f66d8 }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .ns-bar a:hover { color:#114edd }
   html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
   html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
 @media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
@@ -107,13 +107,13 @@ body { margin: 0;
 .seg.seg button.on { background:rgba(255,255,255,.07); color:rgba(255,255,255,.94) }
 @media (prefers-color-scheme:light) { html.ns-light-ok .seg.seg {
   background:rgba(12,17,34,.03); border-color:rgba(12,17,34,.12) }
-  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.55) }
+  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.62) }
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
 :focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
 @media (prefers-color-scheme:light) {
-  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+  html.ns-light-ok :focus-visible { outline-color:#114edd } }
 @media (prefers-reduced-motion:reduce) {
   *, *::before, *::after { animation-duration:.01ms !important;
     animation-iteration-count:1 !important; transition-duration:.01ms !important;

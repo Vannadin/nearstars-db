@@ -56,3 +56,27 @@ surface, then fixed everything the review found.
   for the dark-figure regeneration. The four alpha-cen validation PNGs have no
   generator in the repo, so they were re-shot headless from their own dark plotly
   pages — if they ever need regenerating, do that again rather than hunting for a script.
+
+## 2026-08-10 (later) — light colours, measured rather than guessed
+
+The first light pass flipped tokens by hand and left the semantic/data colours
+alone. Measuring every text node's contrast against its *composited* background
+(playwright walks the DOM, composites ancestor backgrounds, applies the WCAG
+formula) found ~40 failures in light: the phase pills, phase4 verdict pills,
+DB modal and phase2 method tags were still wearing dark-theme colours (1.5-2.4:1),
+and the values I had picked were 0.2-0.7 short (3.7-4.4:1).
+
+Method that replaced the guessing: keep the hue, binary-search lightness until
+the colour clears 5.0:1 **against the background it actually sits on** — a pill
+sits on its own 12% tint over a card tint over the canvas, so solving against
+the bare canvas overshoots by ~1 point. Solver lives in the session scratchpad;
+the resulting palette is in the light blocks.
+
+Two findings worth keeping:
+- **Spectral pills can't be darkened, they must be re-hued.** In dark they were
+  separated by lightness alone (#b2c4ff / #9eb8ff / #cfdcff for O/B/A); darkening
+  collapses all three to the same blue. The light set spreads them along the real
+  colour-temperature sequence by hue (253° violet → 8° red).
+- **Threshold-based black/white text picking is wrong.** `luminance > 0.4 ? black
+  : white` on the periodic table gave 2.5:1 on mid-tone tiles. Choosing whichever
+  of black/white has the higher contrast guarantees ≥4.58:1 for any colour.

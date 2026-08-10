@@ -67,20 +67,20 @@
 
     --fg-primary:     rgba(9,12,22,.80);
     --fg-emph:        rgba(9,12,22,.95);
-    --fg-muted:       rgba(9,12,22,.60);
-    --fg-dim:         rgba(9,12,22,.52);
-    --fg-faint:       rgba(9,12,22,.52);
+    --fg-muted:       rgba(9,12,22,.66);
+    --fg-dim:         rgba(9,12,22,.60);
+    --fg-faint:       rgba(9,12,22,.60);
     --fg-code:        rgba(9,12,22,.78);
 
-    --accent:         #2f66d8;
-    --accent-soft:    rgba(47,102,216,.85);
-    --accent-hover:   #1a4bb0;
+    --accent:         #114edd;
+    --accent-soft:    #114edd;
+    --accent-hover:   #0a3fb0;
 
-    --ok:             #0f8168;
-    --ok-soft:        #0b6350;
-    --warn:           #96650f;
-    --warn-soft:      #744e0b;
-    --danger:         #a5388b;
+    --ok:             #1e6657;
+    --ok-soft:        #17564a;
+    --warn:           #765419;
+    --warn-soft:      #634713;
+    --danger:         #992c83;
   }
   /* sticky 표 헤더는 캔버스가 아니라 불투명 배경이 필요하다 (행이 비쳐 보이면 못 읽는다) */
   html.ns-light-ok .rt th, html.ns-light-ok .dt th { background: #eceef5 }

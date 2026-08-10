@@ -44,8 +44,8 @@
   --v2-fg-1:             rgba(255,255,255,0.94);   /* h1, primary             */
   --v2-fg-2:             rgba(255,255,255,0.78);   /* body                    */
   --v2-fg-3:             rgba(255,255,255,0.56);   /* secondary / labels      */
-  --v2-fg-4:             rgba(255,255,255,0.36);   /* dim / mono meta         */
-  --v2-fg-5:             rgba(255,255,255,0.20);   /* empty / "—"             */
+  --v2-fg-4:             rgba(255,255,255,0.46);   /* dim / mono meta (AA)    */
+  --v2-fg-5:             rgba(255,255,255,0.30);   /* empty / "—"             */
 
   /* ── accent: refined electric blue with white core ─────────────────── */
   --v2-accent:           #7aa8ff;
@@ -153,34 +153,35 @@
 
     --v2-fg-1:             rgba(9,12,22,0.95);
     --v2-fg-2:             rgba(9,12,22,0.78);
-    --v2-fg-3:             rgba(9,12,22,0.60);
-    --v2-fg-4:             rgba(9,12,22,0.52);
-    --v2-fg-5:             rgba(9,12,22,0.42);
+    --v2-fg-3:             rgba(9,12,22,0.66);
+    --v2-fg-4:             rgba(9,12,22,0.60);
+    --v2-fg-5:             rgba(9,12,22,0.52);
 
-    --v2-accent:           #2f66d8;
-    --v2-accent-soft:      rgba(47,102,216,0.85);
-    --v2-accent-bg:        rgba(47,102,216,0.10);
-    --v2-accent-glow:      rgba(47,102,216,0.26);
+    --v2-accent:           #114edd;
+    --v2-accent-soft:      #114edd;
+    --v2-accent-bg:        rgba(17,78,221,0.10);
+    --v2-accent-glow:      rgba(17,78,221,0.26);
 
-    --v2-ok:               #0f8168;  --v2-ok-bg:     rgba(15,129,104,0.12);
-    --v2-ok-glow:          rgba(15,129,104,0.24);
-    --v2-warn:             #96650f;  --v2-warn-bg:   rgba(150,101,15,0.13);
-    --v2-danger:           #a5388b;  --v2-danger-bg: rgba(165,56,139,0.12);
-    --v2-danger-glow:      rgba(165,56,139,0.26);
+    --v2-ok:               #1e6657;  --v2-ok-bg:     rgba(30,102,87,0.12);
+    --v2-ok-glow:          rgba(30,102,87,0.24);
+    --v2-warn:             #765419;  --v2-warn-bg:   rgba(118,84,25,0.13);
+    --v2-danger:           #992c83;  --v2-danger-bg: rgba(153,44,131,0.12);
+    --v2-danger-glow:      rgba(153,44,131,0.26);
 
-    /* spectral: same hue order O→M (blue→red), lightness dropped so the
-       chips stay legible on white — the pale A/F tints would vanish. */
-    --v2-spec-O:           #3f5bc4;   --v2-spec-O-bg: rgba(63,91,196,0.10);
-    --v2-spec-B:           #4468cc;   --v2-spec-B-bg: rgba(68,104,204,0.10);
-    --v2-spec-A:           #5a7ec8;   --v2-spec-A-bg: rgba(90,126,200,0.10);
-    --v2-spec-F:           #7a7a1f;   --v2-spec-F-bg: rgba(122,122,31,0.12);
-    --v2-spec-G:           #8a6a12;   --v2-spec-G-bg: rgba(138,106,18,0.13);
-    --v2-spec-K:           #a55a1e;   --v2-spec-K-bg: rgba(165,90,30,0.13);
-    --v2-spec-M:           #b8422f;   --v2-spec-M-bg: rgba(184,66,47,0.13);
-    --v2-spec-X:           #5c697f;   --v2-spec-X-bg: rgba(92,105,127,0.10);
+    /* spectral: 다크판은 명도로만 갈렸다 — 라이트에서 그대로 어둡게 하면 O/B/A 가
+       같은 파랑으로 뭉친다. 색온도 순서를 색상(hue)으로 벌려 구분을 유지하고,
+       각 색은 자기 틴트 위에서 4.6:1 을 넘도록 계산했다. */
+    --v2-spec-O:           #6644e4;   --v2-spec-O-bg: rgba(102,68,228,0.13);
+    --v2-spec-B:           #3950e9;   --v2-spec-B-bg: rgba(57,80,233,0.13);
+    --v2-spec-A:           #3b688f;   --v2-spec-A-bg: rgba(59,104,143,0.13);
+    --v2-spec-F:           #656808;   --v2-spec-F-bg: rgba(101,104,8,0.13);
+    --v2-spec-G:           #835d03;   --v2-spec-G-bg: rgba(131,93,3,0.13);
+    --v2-spec-K:           #a54709;   --v2-spec-K-bg: rgba(165,71,9,0.13);
+    --v2-spec-M:           #ba2b15;   --v2-spec-M-bg: rgba(186,43,21,0.13);
+    --v2-spec-X:           #56657b;   --v2-spec-X-bg: rgba(86,101,123,0.13);
 
-    --v2-reticle:          rgba(20,140,86,0.80);
-    --v2-reticle-faint:    rgba(20,140,86,0.24);
+    --v2-reticle:          rgba(20,129,65,0.85);
+    --v2-reticle-faint:    rgba(20,129,65,0.26);
   }
 }
 

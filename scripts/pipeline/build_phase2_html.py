@@ -61,42 +61,63 @@ PAGE_TEMPLATE = r'''<!DOCTYPE html>
 <link rel="stylesheet" href="../style.css">
 <style>
 .intro { color: var(--fg-muted); max-width: 780px; margin-bottom: 8px }
-.intro b { color: rgba(255,255,255,.88) }
+.intro b { color: var(--fg-emph) }
+
+/* 방법 태그 / 추천 행 색 — 다크 기본, 라이트는 같은 색상을 흰 배경용으로 다시 고른 값 */
+:root {
+  --rec-bg: #0e1f1a;
+  --m-evo: #d8c870;  --m-evo-bg: #2a2a18;
+  --m-sed: #b0a8e8;  --m-sed-bg: #1f2438;
+  --m-spec:#d0a098;  --m-spec-bg:#2a1f1f;
+  --m-disc:#80c898;  --m-disc-bg:#1a3022;
+  --m-def: #90a8c0;  --m-def-bg: #1e2438;
+}
+@media (prefers-color-scheme: light) {
+  html.ns-light-ok {
+    --rec-bg: #e3f0ec;
+    --m-evo: #6c5815;  --m-evo-bg: #f0ecd8;
+    --m-sed: #4b459b;  --m-sed-bg: #e6e5f5;
+    --m-spec:#93463c;  --m-spec-bg:#f4e6e3;
+    --m-disc:#1e6657;  --m-disc-bg:#e0efe5;
+    --m-def: #46586c;  --m-def-bg: #e6eaf0;
+  }
+}
+
 h2 { margin-bottom: 10px }
 h3 { margin: 14px 0 6px }
 
 .plot { position: relative; margin: 8px 0 }
 .plot svg { display: block; width: 100%; height: auto }
-.plot .gridline { stroke: rgba(255,255,255,.07); stroke-width: 1 }
-.plot .axis { stroke: rgba(255,255,255,.18); stroke-width: 1 }
-.plot .tick-label { fill: rgba(255,255,255,.40); font-size: 11px; font-family: var(--mono) }
+.plot .gridline { stroke: var(--bd-mid); stroke-width: 1 }
+.plot .axis { stroke: var(--bd-input); stroke-width: 1 }
+.plot .tick-label { fill: var(--fg-dim); font-size: 11px; font-family: var(--mono) }
 .plot .point { fill: #7aa8ff }
 .plot .point.rec { fill: var(--ok); stroke: var(--ok-soft); stroke-width: 1.5 }
 .plot .errbar { stroke: rgba(122,168,255,.45); stroke-width: 1.2 }
 .plot .errbar.rec { stroke: #5acc70 }
-.plot .row-label { fill: rgba(255,255,255,.62); font-size: 11px; font-family: var(--sans) }
+.plot .row-label { fill: var(--fg-muted); font-size: 11px; font-family: var(--sans) }
 .plot .row-label.rec { fill: var(--ok-soft); font-weight: 600 }
-.plot .axis-title { fill: rgba(255,255,255,.46); font-size: 11px; font-family: var(--mono) }
+.plot .axis-title { fill: var(--fg-dim); font-size: 11px; font-family: var(--mono) }
 
 .mt { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px }
 .mt th { padding: 7px 10px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 11px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
-.mt td { padding: 6px 10px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12px; vertical-align: top }
-.mt td.nm { font-family: var(--sans); color: rgba(255,255,255,.80) }
-.mt tr.rec td { background: #0e1f1a }
+.mt td { padding: 6px 10px; border-top: 1px solid var(--bd-soft); color: var(--fg-code); font-family: var(--mono); font-size: 12px; vertical-align: top }
+.mt td.nm { font-family: var(--sans); color: var(--fg-primary) }
+.mt tr.rec td { background: var(--rec-bg) }
 .mt tr.rec td:first-child { border-left: 2px solid var(--ok) }
-.rec-badge { color: var(--ok-soft); font-weight: 700; font-size: 11px; letter-spacing: .4px }
+.rec-badge { color: var(--ok); font-weight: 700; font-size: 11px; letter-spacing: .4px }
 .method-pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase }
 .method-ttv { background: rgba(122,168,255,.12); color: #7aa8ff }
-.method-evolutionary_model { background: #2a2a18; color: #d8c870 }
-.method-sed_fitting { background: #1f2438; color: #b0a8e8 }
-.method-spectroscopic_calibration { background: #2a1f1f; color: #d0a098 }
-.method-discovery { background: #1a3022; color: #80c898 }
-.method-default { background: #1e2438; color: #90a8c0 }
+.method-evolutionary_model { background: var(--m-evo-bg); color: var(--m-evo) }
+.method-sed_fitting { background: var(--m-sed-bg); color: var(--m-sed) }
+.method-spectroscopic_calibration { background: var(--m-spec-bg); color: var(--m-spec) }
+.method-discovery { background: var(--m-disc-bg); color: var(--m-disc) }
+.method-default { background: var(--m-def-bg); color: var(--m-def) }
 
 .planets-grid { display: grid; grid-template-columns: 1fr; gap: 14px }
 @media (min-width: 900px) { .planets-grid { grid-template-columns: 1fr 1fr } }
 .planet-card h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap }
-.planet-card h3 .deriv { font-size: 11px; color: #5a7890; font-family: var(--mono); font-weight: 400; letter-spacing: .2px }
+.planet-card h3 .deriv { font-size: 11px; color: var(--fg-muted); font-family: var(--mono); font-weight: 400; letter-spacing: .2px }
 .summary { font-size: 12px; color: var(--fg-muted); margin: 4px 0 10px; font-family: var(--mono) }
 
 @media (max-width: 600px) {
@@ -107,8 +128,8 @@ h3 { margin: 14px 0 6px }
   .plot .axis-title { font-size: 11px }
   .mt thead { display: none }
   .mt, .mt tbody, .mt tr, .mt td { display: block; width: 100% }
-  .mt tr { border: 1px solid #1a2333; border-radius: 6px; padding: 9px 11px; margin-bottom: 8px; background: #0a1018 }
-  .mt tr.rec { border-left: 2px solid var(--ok); background: #0e1f1a; padding-left: 9px }
+  .mt tr { border: 1px solid var(--bd-strong); border-radius: 6px; padding: 9px 11px; margin-bottom: 8px; background: var(--bg-card-alt) }
+  .mt tr.rec { border-left: 2px solid var(--ok); background: var(--rec-bg); padding-left: 9px }
   .mt td { display: flex; justify-content: space-between; align-items: baseline; border: none; padding: 3px 0; gap: 10px; font-size: 12px }
   .mt td::before {
     content: attr(data-label);

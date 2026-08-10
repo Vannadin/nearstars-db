@@ -727,7 +727,7 @@ ul.intro {{ padding-left: 22px }}
 .dfilter .count {{ color: var(--fg-dim); font-size: 11.5px; font-family: var(--mono); white-space: nowrap }}
 .dt {{ width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px }}
 .dt th {{ position: sticky; top: 0; z-index: 2; padding: 8px 10px; background: #0d0f16; color: var(--fg-dim); font-size: 11.5px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }}
-.dt td {{ padding: 7px 10px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12px; vertical-align: top; line-height: 1.55 }}
+.dt td {{ padding: 7px 10px; border-top: 1px solid var(--bd-soft); color: var(--fg-code); font-family: var(--mono); font-size: 12px; vertical-align: top; line-height: 1.55 }}
 
 pre {{ background: var(--bg-card-alt); border: 1px solid var(--bd-soft); border-radius: 4px; padding: 10px 12px; overflow-x: auto; margin: 8px 0 }}
 pre code {{ background: none; padding: 0; font-size: 12px }}
@@ -742,13 +742,21 @@ pre code {{ background: none; padding: 0; font-size: 12px }}
 .palette-swatch .hex {{ opacity: 0.72; font-size: 11px }}
 .palette-swatch-emissive {{ color: rgba(0,0,0,0.88) }}
 /* wide-band fade: 좌우 25% 가 페이지 배경색이라 검정 텍스트가 안 보임 → 흰색 + outline 으로 전환 */
-.palette-swatch-emissive-wide {{ color: rgba(255,255,255,0.92) }}
+.palette-swatch-emissive-wide {{ color: var(--wide-fg) }}
 .palette-swatch-emissive-wide .role,
-.palette-swatch-emissive-wide .hex {{ text-shadow: 0 0 3px rgba(0,0,0,0.85), 0 0 1px rgba(0,0,0,0.85) }}
+.palette-swatch-emissive-wide .hex {{ text-shadow: var(--wide-halo) }}
+:root {{ --swatch-bd: rgba(255,255,255,0.20);
+  --wide-fg: rgba(255,255,255,0.92);
+  --wide-halo: 0 0 3px rgba(0,0,0,0.85), 0 0 1px rgba(0,0,0,0.85) }}
+@media (prefers-color-scheme: light) {{
+  html.ns-light-ok {{ --swatch-bd: rgba(12,17,34,0.22);
+    --wide-fg: rgba(9,12,22,0.92);
+    --wide-halo: 0 0 3px rgba(255,255,255,0.95), 0 0 1px rgba(255,255,255,0.95) }}
+}}
 .palette-marker {{ position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }}
 
 /* color visualization: inline chip beside every <code>#xxxxxx</code> */
-.hex-chip {{ display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }}
+.hex-chip {{ display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid var(--swatch-bd); vertical-align: -1px; margin-right: 5px }}
 
 /* hover-only tooltip on cfg field names — no on-page legend, only on hover.
    Bilingual: html[lang] selects ko vs en attribute. */
@@ -770,7 +778,7 @@ html[lang="en"] .field-tt:hover::after {{ content: attr(data-en-tip) }}
 }}
 
 /* color visualization: aurora rows render a wavelength gradient bar */
-.spectrum-bar {{ display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }}
+.spectrum-bar {{ display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid var(--swatch-bd); vertical-align: -2px; margin-right: 6px; position: relative }}
 .spectrum-bar .marker {{ position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }}
 /* Wide bands (>60 nm) fade their edges via mask so visual weight sits at the band center —
    stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */

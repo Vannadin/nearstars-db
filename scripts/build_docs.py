@@ -203,10 +203,10 @@ _CSS = """
       radial-gradient(58% 48% at 16% -12%, rgba(47,102,216,.07), transparent 70%),
       radial-gradient(48% 44% at 94% 108%, rgba(168,58,142,.05), transparent 70%);
     --w-fg1: rgba(9,12,22,.95); --w-fg2: rgba(9,12,22,.80);
-    --w-fg3: rgba(9,12,22,.72); --w-fg4: rgba(9,12,22,.55);
+    --w-fg3: rgba(9,12,22,.76); --w-fg4: rgba(9,12,22,.62);
     --w-s1: rgba(12,17,34,.022); --w-s2: rgba(12,17,34,.055);
     --w-bd: rgba(12,17,34,.10);
-    --w-on-bg: rgba(47,102,216,.14); --w-on-fg: #1a4bb0 }
+    --w-on-bg: rgba(17,78,221,.13); --w-on-fg: #0a3fb0 }
 }
 * { box-sizing: border-box }
 body { margin: 0;
