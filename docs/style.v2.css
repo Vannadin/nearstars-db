@@ -71,7 +71,7 @@
   --v2-spec-O:           #b2c4ff;   --v2-spec-O-bg: rgba(178,196,255,0.10);
   --v2-spec-B:           #9eb8ff;   --v2-spec-B-bg: rgba(158,184,255,0.10);
   --v2-spec-A:           #cfdcff;   --v2-spec-A-bg: rgba(207,220,255,0.08);
-  --v2-spec-F:           #f3f7c2;   --v2-spec-F-bg: rgba(243,247,194,0.10);
+  --v2-spec-F:           #f2efe9;   --v2-spec-F-bg: rgba(242,239,233,0.10);
   --v2-spec-G:           #ffe28a;   --v2-spec-G-bg: rgba(255,226,138,0.12);
   --v2-spec-K:           #ffb47a;   --v2-spec-K-bg: rgba(255,180,122,0.12);
   --v2-spec-M:           #ff8a76;   --v2-spec-M-bg: rgba(255,138,118,0.14);
@@ -81,10 +81,13 @@
      위의 --v2-spec-* 는 알약 '글자색'이라 테마마다 대비에 맞춰 다시 고른다.
      아래 -swatch 는 별의 실제 색(청색초거성 → 적색왜성)이라 테마와 무관하게
      고정한다 — 라이트에서 대비 때문에 어둡히면 G형이 노랑이 아니라 갈색이 된다. */
+  /* F 는 '흰 별'이다 — 이전 #f3f7c2 는 G>R 이라 초록으로 보였고, 흑체 궤적은 초록을
+     지나지 않는다. 엔진(scripts/refs/stellar_photospheric_color.py)의 6200K 광구색이
+     사실상 백색이므로 램프 밝기의 중성-따뜻한 흰색으로 둔다. */
   --v2-spec-O-swatch:    #b2c4ff;
   --v2-spec-B-swatch:    #9eb8ff;
   --v2-spec-A-swatch:    #cfdcff;
-  --v2-spec-F-swatch:    #f3f7c2;
+  --v2-spec-F-swatch:    #f2efe9;
   --v2-spec-G-swatch:    #ffe28a;
   --v2-spec-K-swatch:    #ffb47a;
   --v2-spec-M-swatch:    #ff8a76;
@@ -187,7 +190,7 @@
     --v2-spec-O:           #6a48e5;   --v2-spec-O-bg: rgba(178,196,255,0.22);
     --v2-spec-B:           #3a52e9;   --v2-spec-B-bg: rgba(158,184,255,0.22);
     --v2-spec-A:           #3d6d96;   --v2-spec-A-bg: rgba(207,220,255,0.22);
-    --v2-spec-F:           #6d7109;   --v2-spec-F-bg: rgba(243,247,194,0.22);
+    --v2-spec-F:           #766a5d;   --v2-spec-F-bg: rgba(242,239,233,0.22);
     --v2-spec-G:           #8b6304;   --v2-spec-G-bg: rgba(255,226,138,0.22);
     --v2-spec-K:           #a84909;   --v2-spec-K-bg: rgba(255,180,122,0.22);
     --v2-spec-M:           #b92a15;   --v2-spec-M-bg: rgba(255,138,118,0.22);
