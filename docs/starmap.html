@@ -19,20 +19,14 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--fg1);font-family:var(--sans)}
 #stage{position:fixed;inset:0}
+.ns-bar{position:fixed;top:0;left:0;right:0;z-index:21}
 canvas{display:block}
-#topbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:12px;
+#topbar{position:fixed;top:34px;left:0;right:0;height:52px;display:flex;align-items:center;gap:12px;
   padding:0 18px;z-index:20;background:linear-gradient(180deg,rgba(6,7,10,.82),transparent);pointer-events:none;
   flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 #topbar::-webkit-scrollbar{display:none}
 #topbar>*{flex-shrink:0}
-@media (max-width:1500px){ #topbar #nsnav{display:none} }
 #topbar>*{pointer-events:auto}
-.ns-brand{font-weight:700;font-size:13px;color:rgba(255,255,255,.94);text-decoration:none;letter-spacing:.2px;pointer-events:auto}
-#nsnav{font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;display:flex;gap:9px;align-items:center;pointer-events:auto}
-#nsnav a{color:rgba(255,255,255,.52);text-decoration:none}
-#nsnav a:hover{color:#aac8ff}
-#nsnav .ns-here{color:rgba(255,255,255,.90)}
-#nsnav .ns-sep{color:rgba(255,255,255,.22)}
 .spacer{flex:1}
 .btn{font-family:var(--sans);font-size:12px;color:var(--fg2);background:var(--surf1);border:1px solid var(--bd1);
   border-radius:8px;padding:6px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.16s;white-space:nowrap;flex-shrink:0}
@@ -195,7 +189,6 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
     -webkit-overflow-scrolling:touch;scrollbar-width:none}
   #topbar::-webkit-scrollbar{display:none}
   #topbar>*{flex-shrink:0}
-  #nsnav{display:none} .spacer{display:none}
   .btn{padding:8px 11px}
   #legend{left:10px;bottom:10px;max-width:46vw;padding:9px 10px;gap:6px;border-radius:11px}
   #legend .note{display:none}
@@ -224,11 +217,97 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="labels"></div>
 <div id="hoverLabel" class="label" style="display:none"></div>
 
+<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .ns-bar a:hover { color:#114edd }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+
+/* .seg.seg = 특이도 상향: 본문 내 <style> 를 가진 페이지에서도 정본이 이긴다 */
+.seg.seg { display:inline-flex; padding:2px; gap:2px; flex-shrink:0;
+  background:rgba(255,255,255,.022); border:1px solid rgba(255,255,255,.09);
+  border-radius:8px }
+.seg.seg button { background:transparent; border:none; cursor:pointer;
+  padding:5px 10px; border-radius:6px; white-space:nowrap;
+  color:rgba(255,255,255,.56);
+  font:500 12px/1 'Geist','Inter',system-ui,sans-serif }
+.seg.seg button:hover { color:rgba(255,255,255,.80) }
+.seg.seg button.on { background:rgba(255,255,255,.07); color:rgba(255,255,255,.94) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .seg.seg {
+  background:rgba(12,17,34,.03); border-color:rgba(12,17,34,.12) }
+  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
+  html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
+    color:rgba(9,12,22,.92) } }
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#114edd } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
+</style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><span class="ns-here">3D Map</span><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 <div id="topbar">
-  <!-- 공용 ns-bar 콘텐츠의 인라인 변형 — 항목은 scripts/pipeline/_nav.py NAV_ITEMS 와 동기 유지 -->
-  <a class="ns-brand" href="index.html">NearStars</a>
-  <nav id="nsnav"><a href="index.html">DB</a><span class="ns-sep">·</span><span class="ns-here">3D Map</span><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></nav>
-  <div class="spacer"></div>
+  <!-- 공용 바는 이 위에 자기 행으로 들어간다 (<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .ns-bar a:hover { color:#114edd }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+
+/* .seg.seg = 특이도 상향: 본문 내 <style> 를 가진 페이지에서도 정본이 이긴다 */
+.seg.seg { display:inline-flex; padding:2px; gap:2px; flex-shrink:0;
+  background:rgba(255,255,255,.022); border:1px solid rgba(255,255,255,.09);
+  border-radius:8px }
+.seg.seg button { background:transparent; border:none; cursor:pointer;
+  padding:5px 10px; border-radius:6px; white-space:nowrap;
+  color:rgba(255,255,255,.56);
+  font:500 12px/1 'Geist','Inter',system-ui,sans-serif }
+.seg.seg button:hover { color:rgba(255,255,255,.80) }
+.seg.seg button.on { background:rgba(255,255,255,.07); color:rgba(255,255,255,.94) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .seg.seg {
+  background:rgba(12,17,34,.03); border-color:rgba(12,17,34,.12) }
+  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
+  html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
+    color:rgba(9,12,22,.92) } }
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#114edd } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
+</style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><span class="ns-here">3D Map</span><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>) — 여기는 페이지 전용 컨트롤만 -->
   <button class="btn" id="toggleLabels"><span class="dot"></span><span data-i18n="allLabels">모든 라벨</span></button>
   <button class="btn on" id="toggleStems"><span class="dot"></span><span data-i18n="dropLines">수직선</span></button>
   <button class="btn" id="toggleOrbits"><span class="dot"></span><span data-i18n="orbits">궤도</span></button>

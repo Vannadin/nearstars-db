@@ -19,20 +19,14 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--fg1);font-family:var(--sans)}
 #stage{position:fixed;inset:0}
+.ns-bar{position:fixed;top:0;left:0;right:0;z-index:21}
 canvas{display:block}
-#topbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:12px;
+#topbar{position:fixed;top:34px;left:0;right:0;height:52px;display:flex;align-items:center;gap:12px;
   padding:0 18px;z-index:20;background:linear-gradient(180deg,rgba(6,7,10,.82),transparent);pointer-events:none;
   flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 #topbar::-webkit-scrollbar{display:none}
 #topbar>*{flex-shrink:0}
-@media (max-width:1500px){ #topbar #nsnav{display:none} }
 #topbar>*{pointer-events:auto}
-.ns-brand{font-weight:700;font-size:13px;color:rgba(255,255,255,.94);text-decoration:none;letter-spacing:.2px;pointer-events:auto}
-#nsnav{font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;display:flex;gap:9px;align-items:center;pointer-events:auto}
-#nsnav a{color:rgba(255,255,255,.52);text-decoration:none}
-#nsnav a:hover{color:#aac8ff}
-#nsnav .ns-here{color:rgba(255,255,255,.90)}
-#nsnav .ns-sep{color:rgba(255,255,255,.22)}
 .spacer{flex:1}
 .btn{font-family:var(--sans);font-size:12px;color:var(--fg2);background:var(--surf1);border:1px solid var(--bd1);
   border-radius:8px;padding:6px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.16s;white-space:nowrap;flex-shrink:0}
@@ -195,7 +189,6 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
     -webkit-overflow-scrolling:touch;scrollbar-width:none}
   #topbar::-webkit-scrollbar{display:none}
   #topbar>*{flex-shrink:0}
-  #nsnav{display:none} .spacer{display:none}
   .btn{padding:8px 11px}
   #legend{left:10px;bottom:10px;max-width:46vw;padding:9px 10px;gap:6px;border-radius:11px}
   #legend .note{display:none}
@@ -224,11 +217,9 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="labels"></div>
 <div id="hoverLabel" class="label" style="display:none"></div>
 
+__BAR__
 <div id="topbar">
-  <!-- 공용 ns-bar 콘텐츠의 인라인 변형 — 항목은 scripts/pipeline/_nav.py NAV_ITEMS 와 동기 유지 -->
-  <a class="ns-brand" href="index.html">NearStars</a>
-  <nav id="nsnav"><a href="index.html">DB</a><span class="ns-sep">·</span><span class="ns-here">3D Map</span><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></nav>
-  <div class="spacer"></div>
+  <!-- 공용 바는 이 위에 자기 행으로 들어간다 (__BAR__) — 여기는 페이지 전용 컨트롤만 -->
   <button class="btn" id="toggleLabels"><span class="dot"></span><span data-i18n="allLabels">모든 라벨</span></button>
   <button class="btn on" id="toggleStems"><span class="dot"></span><span data-i18n="dropLines">수직선</span></button>
   <button class="btn" id="toggleOrbits"><span class="dot"></span><span data-i18n="orbits">궤도</span></button>

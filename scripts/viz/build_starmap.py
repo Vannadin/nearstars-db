@@ -1209,6 +1209,9 @@ def self_check(payload):
 
 
 # ── emit ───────────────────────────────────────────────────────────────────
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "pipeline"))
+from _nav import global_bar  # noqa: E402  (공용 1줄 바)
+
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "starmap_template.html")
 
 
@@ -1218,6 +1221,8 @@ def emit_html(payload):
     with open(TEMPLATE_PATH, encoding="utf-8") as fh:
         template = fh.read()
     html = template.replace("/*__DATA__*/", data_json)
+    # 다른 표면들과 같은 두 층 구조: 공용 바가 자기 행, 그 아래가 페이지 툴바.
+    html = html.replace("__BAR__", global_bar(here="3D Map"))
     os.makedirs(os.path.dirname(OUT_HTML), exist_ok=True)
     with open(OUT_HTML, "w", encoding="utf-8") as fh:
         fh.write(html)
