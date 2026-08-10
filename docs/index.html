@@ -1022,7 +1022,13 @@ const T = {
     ],
   },
 };
-let LANG = localStorage.getItem('nearstars-lang') || 'en';   // English by default; a stored choice wins
+// file:// 에서 브라우저가 저장소를 막으면 localStorage 접근이 예외를 던진다. 그 예외가
+// 스크립트 최상단에서 터지면 페이지 전체가 죽으므로(표도 버튼도 전부) 안전 접근기로 감싼다.
+const LS = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+};
+let LANG = LS.get('nearstars-lang') || 'en';   // English by default; a stored choice wins
 function tt() { return T[LANG] || T.en; }
 function tLookup(path) {
   return path.split('.').reduce((v, p) => (v == null ? v : v[p]), tt());
@@ -1041,7 +1047,7 @@ function applyStaticLabels() {
 }
 function setLang(l) {
   LANG = l;
-  localStorage.setItem('nearstars-lang', l);
+  LS.set('nearstars-lang', l);
   applyStaticLabels();
   if (typeof buildHowtoBody === 'function') buildHowtoBody();
   if (DB.length) renderAll();
@@ -1473,7 +1479,7 @@ function openHowto() {
 function closeHowto() {
   document.getElementById('howto-overlay').classList.remove('open');
   if (document.getElementById('howto-dontshow').checked) {
-    try { localStorage.setItem(HOWTO_KEY, '1'); } catch {}
+    try { LS.set(HOWTO_KEY, '1'); } catch {}
   }
 }
 document.getElementById('howto-btn').addEventListener('click', openHowto);
@@ -1483,7 +1489,7 @@ document.getElementById('howto-overlay').addEventListener('click', (e) => {
   if (e.target.id === 'howto-overlay') closeHowto();
 });
 // first-visit auto-open (data 로드와 무관)
-if (!localStorage.getItem(HOWTO_KEY)) {
+if (!LS.get(HOWTO_KEY)) {
   setTimeout(openHowto, 200);
 } else {
   // 버튼 라벨 초기화 (modal 열지 않아도 버튼은 표시되어야 함)
@@ -1499,11 +1505,11 @@ const REARTH_KM  = 6371;
 const MSUN_TON   = 1.989e27;
 const MEARTH_TON = 5.972e21;
 
-let UNIT_DIST = (localStorage.getItem('nearstars-unit-dist') || 'pc');
-let UNIT_SRAD  = (localStorage.getItem('nearstars-unit-srad')  || 'rsun');
-let UNIT_SMASS = (localStorage.getItem('nearstars-unit-smass') || 'msun');
-let UNIT_PRAD  = (localStorage.getItem('nearstars-unit-prad')  || 'rearth');
-let UNIT_PMASS = (localStorage.getItem('nearstars-unit-pmass') || 'mearth');
+let UNIT_DIST = (LS.get('nearstars-unit-dist') || 'pc');
+let UNIT_SRAD  = (LS.get('nearstars-unit-srad')  || 'rsun');
+let UNIT_SMASS = (LS.get('nearstars-unit-smass') || 'msun');
+let UNIT_PRAD  = (LS.get('nearstars-unit-prad')  || 'rearth');
+let UNIT_PMASS = (LS.get('nearstars-unit-pmass') || 'mearth');
 function sci(v, d = 4) { return v == null ? '—' : (+v).toExponential(d); }
 function fSRad(rsun) {
   if (rsun == null) return '—';
@@ -1961,7 +1967,7 @@ function bindFilters() {
       btn.addEventListener('click', () => {
         const val = btn.dataset[dataAttr];
         setter(val);
-        localStorage.setItem(storageKey, val);
+        LS.set(storageKey, val);
         document.querySelectorAll(`#${segId} button`).forEach(b => b.classList.toggle('on', b === btn));
         if (segId === 'dist-seg') document.getElementById('dist-lbl').textContent = fDistLabelOnly(FILTER.dist);
         renderAll();
@@ -1974,12 +1980,12 @@ function bindFilters() {
   document.querySelectorAll('#phase-seg button').forEach(btn => {
     btn.addEventListener('click', () => {
       FILTER.phase = btn.dataset.phase;
-      localStorage.setItem('nearstars-filter-phase', FILTER.phase);
+      LS.set('nearstars-filter-phase', FILTER.phase);
       document.querySelectorAll('#phase-seg button').forEach(b => b.classList.toggle('on', b === btn));
       renderAll();
     });
   });
-  const savedPhase = localStorage.getItem('nearstars-filter-phase');
+  const savedPhase = LS.get('nearstars-filter-phase');
   if (savedPhase && ['all','p2','p3','both'].includes(savedPhase)) {
     FILTER.phase = savedPhase;
     document.querySelectorAll('#phase-seg button').forEach(b => b.classList.toggle('on', b.dataset.phase === savedPhase));
