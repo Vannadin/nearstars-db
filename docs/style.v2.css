@@ -77,6 +77,19 @@
   --v2-spec-M:           #ff8a76;   --v2-spec-M-bg: rgba(255,138,118,0.14);
   --v2-spec-X:           #a3b0c8;   --v2-spec-X-bg: rgba(163,176,200,0.08);
 
+  /* ── spectral SWATCH (색 자체가 데이터) ─────────────────────────────
+     위의 --v2-spec-* 는 알약 '글자색'이라 테마마다 대비에 맞춰 다시 고른다.
+     아래 -swatch 는 별의 실제 색(청색초거성 → 적색왜성)이라 테마와 무관하게
+     고정한다 — 라이트에서 대비 때문에 어둡히면 G형이 노랑이 아니라 갈색이 된다. */
+  --v2-spec-O-swatch:    #b2c4ff;
+  --v2-spec-B-swatch:    #9eb8ff;
+  --v2-spec-A-swatch:    #cfdcff;
+  --v2-spec-F-swatch:    #f3f7c2;
+  --v2-spec-G-swatch:    #ffe28a;
+  --v2-spec-K-swatch:    #ffb47a;
+  --v2-spec-M-swatch:    #ff8a76;
+  --v2-spec-X-swatch:    #a3b0c8;
+
   /* ── type ───────────────────────────────────────────────────────────
      Geist sans + Geist Mono (Vercel's open-source family — modern,
      low-contrast, very wide-weight range). KR fallback for bilingual.   */
@@ -168,17 +181,22 @@
     --v2-danger:           #992c83;  --v2-danger-bg: rgba(153,44,131,0.12);
     --v2-danger-glow:      rgba(153,44,131,0.26);
 
-    /* spectral: 다크판은 명도로만 갈렸다 — 라이트에서 그대로 어둡게 하면 O/B/A 가
-       같은 파랑으로 뭉친다. 색온도 순서를 색상(hue)으로 벌려 구분을 유지하고,
-       각 색은 자기 틴트 위에서 4.6:1 을 넘도록 계산했다. */
-    --v2-spec-O:           #6644e4;   --v2-spec-O-bg: rgba(102,68,228,0.13);
-    --v2-spec-B:           #3950e9;   --v2-spec-B-bg: rgba(57,80,233,0.13);
-    --v2-spec-A:           #3b688f;   --v2-spec-A-bg: rgba(59,104,143,0.13);
-    --v2-spec-F:           #656808;   --v2-spec-F-bg: rgba(101,104,8,0.13);
-    --v2-spec-G:           #835d03;   --v2-spec-G-bg: rgba(131,93,3,0.13);
-    --v2-spec-K:           #a54709;   --v2-spec-K-bg: rgba(165,71,9,0.13);
-    --v2-spec-M:           #ba2b15;   --v2-spec-M-bg: rgba(186,43,21,0.13);
-    --v2-spec-X:           #56657b;   --v2-spec-X-bg: rgba(86,101,123,0.13);
+    /* spectral 알약: 배경 틴트는 별의 진짜 색을 그대로 쓴다 (G형은 노랑이어야 한다).
+       글자만 그 틴트 위에서 4.6:1 을 넘도록 다시 골랐다 — 다크판은 명도로만 갈려서
+       그대로 어둡히면 O/B/A 가 같은 파랑으로 뭉치므로, 색상도 색온도 순서로 벌렸다. */
+    --v2-spec-O:           #6a48e5;   --v2-spec-O-bg: rgba(178,196,255,0.22);
+    --v2-spec-B:           #3a52e9;   --v2-spec-B-bg: rgba(158,184,255,0.22);
+    --v2-spec-A:           #3d6d96;   --v2-spec-A-bg: rgba(207,220,255,0.22);
+    --v2-spec-F:           #6d7109;   --v2-spec-F-bg: rgba(243,247,194,0.22);
+    --v2-spec-G:           #8b6304;   --v2-spec-G-bg: rgba(255,226,138,0.22);
+    --v2-spec-K:           #a84909;   --v2-spec-K-bg: rgba(255,180,122,0.22);
+    --v2-spec-M:           #b92a15;   --v2-spec-M-bg: rgba(255,138,118,0.22);
+    --v2-spec-X:           #55647a;   --v2-spec-X-bg: rgba(163,176,200,0.22);
+
+    /* 별색 막대는 흰 배경에서 옅게 묻힌다 — 색은 그대로 두고 테두리로 형태를 준다
+       (WCAG 는 의미 있는 그래픽에 3:1 을 요구한다. 색이 아니라 경계로 확보한다) */
+    --spec-edge:           rgba(12,17,34,0.30);
+    --spec-edge-strong:    rgba(12,17,34,0.42);
 
     --v2-reticle:          rgba(20,129,65,0.85);
     --v2-reticle-faint:    rgba(20,129,65,0.26);
