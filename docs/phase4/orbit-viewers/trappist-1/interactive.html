@@ -3,6 +3,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>TRAPPIST-1 — interactive orbit analysis</title>
 <style>
   html,body{margin:0;height:100%;background:#ffffff;transition:background .2s}
+  @media (max-width:700px){
+    nav{font-size:13px !important}
+    nav a{min-height:38px;display:inline-flex;align-items:center;padding:0 6px}
+    #theme{min-height:38px;padding:0 13px}
+    /* plotly 자체 모드바도 터치 규격으로 */
+    .modebar-btn{min-width:38px !important;min-height:38px !important}
+    .modebar-btn svg{transform:scale(1.15)}
+  }
 :focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
 @media (prefers-color-scheme:light) {
   html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
@@ -11,7 +19,7 @@
     animation-iteration-count:1 !important; transition-duration:.01ms !important;
     scroll-behavior:auto !important } }
   body.dark{background:#06070a}
-  #p{width:100%;height:100vh}
+  #p{width:100%;height:100vh;height:100dvh}
   #theme{position:fixed;top:8px;right:12px;z-index:10;background:#eef1f6;color:#1a1a1a;
     border:1px solid #c8cfdb;border-radius:6px;padding:5px 11px;cursor:pointer;font:13px system-ui}
   body.dark #theme{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border-color:rgba(255,255,255,.13)}

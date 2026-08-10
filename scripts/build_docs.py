@@ -213,8 +213,8 @@ body { margin: 0;
   background: var(--w-grad), var(--w-bg);
   background-attachment: fixed; color: var(--w-fg2);
   font-family: 'Geist', 'Inter', system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif }
-.layout { display: flex; align-items: flex-start; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+.layout { display: flex; align-items: flex-start; min-height: 100vh; min-height: 100dvh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh; height: 100dvh;
   overflow-y: auto; border-right: 1px solid var(--w-bd); background: var(--w-s1);
   padding: 16px 12px; font-size: 13px }
 .side .brand { display: block; font-weight: 700; font-size: 15px; color: var(--w-fg1);
@@ -243,8 +243,19 @@ body { margin: 0;
 .markdown-body code { color: rgba(255,255,255,.86) }
 @media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static;
-    border-right: none; border-bottom: 1px solid rgba(255,255,255,.09) }
+  /* 사이드바를 세로로 다 펼치면 문서 59개가 본문 앞을 막는다 → 자체 스크롤 영역으로 */
+  .side { width: auto; flex: none; position: static; max-height: 42vh; overflow-y: auto;
+    border-right: none; border-bottom: 1px solid var(--w-bd); padding: 10px 10px 12px }
+  .side .brand { position: sticky; top: -10px; margin: 0 0 10px; padding: 8px 6px;
+    background: var(--w-bg); z-index: 1 }
+  .side a { min-height: 40px; display: flex; align-items: center; padding: 6px 10px }
+  .side .nav-grp { margin: 14px 6px 2px }
+  /* 본문 폭 고정: 넓은 표는 페이지가 아니라 표 자신이 스크롤한다 */
+  .content-wrap { max-width: 100%; padding: 0 }
+  .markdown-body { min-width: 0; max-width: 100% }
+  .markdown-body table { display: block; width: 100%; max-width: 100%; overflow-x: auto }
+  .markdown-body pre { overflow-x: auto }
+  .topbar { max-width: 100% }
 }
 """
 

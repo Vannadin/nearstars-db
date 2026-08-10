@@ -13,6 +13,12 @@ h3 { font-size: 14px; margin: 16px 0 8px }
 .intro { font-size: 13.5px; line-height: 1.7 }
 ul.intro { padding-left: 22px }
 
+@media (max-width: 700px) {
+  .crumb a { min-height: 36px; display: inline-flex; align-items: center }
+  .dfin { min-height: 40px; font-size: 16px }
+  .dt th, .dt td { font-size: 12px }
+  main { padding: 14px 13px 56px }
+}
 .dfilter { display: flex; align-items: center; gap: 10px; margin-bottom: 8px }
 .dfilter input { flex: 1; min-width: 170px; background: var(--bg-input); border: 1px solid var(--bd-input); border-radius: 6px; color: var(--fg-primary); font: 12.5px var(--sans); padding: 5px 10px }
 .dfilter input::placeholder { color: var(--fg-dim) }
@@ -110,7 +116,26 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
   html.ns-light-ok .ns-bar a:hover { color:#114edd }
   html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
   html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
-@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+/* 모바일: 두 줄로 접히고 링크가 13px 높이였다 → 한 줄 가로 스크롤 + 44px 터치 타깃.
+   구분점은 폭만 먹으므로 감추고, 브랜드는 왼쪽에 고정해 되돌아갈 곳을 남긴다. */
+@media (max-width:700px) {
+  .ns-bar { gap:0; padding:0 0 0 12px; flex-wrap:nowrap; overflow-x:auto;
+    overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; align-items:stretch }
+  .ns-bar::-webkit-scrollbar { display:none }
+  .ns-bar > * { flex-shrink:0 }
+  .ns-bar .ns-sep { display:none }
+  .ns-bar .ns-brand { position:sticky; left:0; z-index:1; display:flex; align-items:center;
+    padding-right:12px; background:linear-gradient(90deg,rgba(10,12,18,.92) 70%,transparent) }
+  .ns-bar a:not(.ns-brand), .ns-bar span.ns-here {
+    display:flex; align-items:center; min-height:44px; padding:0 11px }
+  .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #7aa8ff }
+}
+@media (max-width:700px) and (prefers-color-scheme:light) {
+  html.ns-light-ok .ns-bar .ns-brand {
+    background:linear-gradient(90deg,rgba(245,246,250,.94) 70%,transparent) }
+  html.ns-light-ok .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #114edd }
+}
 
 /* .seg.seg = 특이도 상향: 본문 내 <style> 를 가진 페이지에서도 정본이 이긴다 */
 .seg.seg { display:inline-flex; padding:2px; gap:2px; flex-shrink:0;
@@ -128,6 +153,11 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
+/* 모바일: 세그먼트 버튼이 24px 였다 → 44px 터치 타깃 */
+@media (max-width:700px) {
+  .seg.seg button { min-height:40px; min-width:44px; justify-content:center;
+    display:inline-flex; align-items:center; font-size:13px; padding:0 12px }
+}
 :focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
 @media (prefers-color-scheme:light) {
   html.ns-light-ok :focus-visible { outline-color:#114edd } }

@@ -1002,6 +1002,11 @@ details.collapsible[open] > summary::before {{ content: "\\25BE  " }}
 }}
 .streak-table td.sp {{ font-family: var(--mono); font-weight: 600 }}
 .streak-table td.rgbi {{ font-family: var(--mono); font-size: 12px; color: var(--fg-muted) }}
+@media (max-width: 700px) {{
+  input[type=range] {{ height: 36px }}
+  .refs-list a {{ min-height: 36px; display: inline-flex; align-items: center }}
+  .el-cell {{ min-height: 34px }}
+}}
 .swatch-inline {{ display: inline-block; padding: 2px 8px; border-radius: 3px; font-family: var(--mono); font-size: 12px }}
 
 .body-grid {{

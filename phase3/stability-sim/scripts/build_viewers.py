@@ -195,6 +195,11 @@ def write_gallery(cards):
     html.ns-light-ok .pill.warn{{color:#765419;background:rgba(118,84,25,.13)}}
     html.ns-light-ok .pill.bad{{color:#992c83;background:rgba(153,44,131,.12)}}
   }}
+  @media (max-width:700px){{
+    .links a{{min-height:40px;display:inline-flex;align-items:center;padding:0 13px}}
+    .grid{{grid-template-columns:1fr;gap:12px;padding:14px}}
+    header{{padding:14px 14px}} h1{{font-size:17px}}
+  }}
   .crumb{{font-size:12px;margin-bottom:8px}} .crumb a{{color:#7aa8ff;text-decoration:none}}
 </style>
 {global_bar('../../', 'Phase 4')}

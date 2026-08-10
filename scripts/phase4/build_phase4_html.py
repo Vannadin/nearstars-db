@@ -521,6 +521,15 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   background:var(--s1); border:1px solid var(--bd2); border-radius:6px; padding:3px 8px }
 .axis-toc a:hover { color:var(--fg1); background:var(--s2); border-color:var(--bd1) }
 .dec { scroll-margin-top:14px }
+@media (max-width:700px){
+  .axis-toc a{min-height:36px;display:inline-flex;align-items:center;padding:0 11px;font-size:12px}
+  .crumb a,.crumb .here{min-height:36px;display:inline-flex;align-items:center}
+  .wrap{padding:14px 13px 70px} .pagehead{padding:12px 14px 2px}
+  .dec{padding:12px 13px} .spec th,.spec td{font-size:12px}
+  .narr{font-size:14px;line-height:1.72}
+  .ref{min-height:36px;display:inline-flex;align-items:center}
+  .navlink{min-height:40px;display:inline-flex;align-items:center;padding:0 13px}
+}
 /* decision cards */
 .decisions { display:flex; flex-direction:column; gap:10px }
 .dec { background:var(--s1); border:1px solid var(--bd2); border-radius:12px; padding:14px 16px;

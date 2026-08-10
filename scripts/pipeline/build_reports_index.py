@@ -212,6 +212,12 @@ main { max-width: 980px }
 .sidepanel a:hover { text-decoration: underline }
 .sidepanel .note { color: var(--fg-dim); font-size: 11.5px; flex: 1; min-width: 240px }
 
+@media (max-width: 700px) {
+  /* 알약+글자 묶음이 19px 폭이었다 — 손가락이 닿는 크기로 */
+  .rt a { min-width: 44px; justify-content: center; white-space: nowrap; gap: 3px }
+  .pill { white-space: nowrap }
+  .crumb a { min-height: 36px; display: inline-flex; align-items: center }
+}
 @media (max-width: 600px) {
   .rt thead { display: none }
   .rt, .rt tbody, .rt tr, .rt td { display: block; width: 100% }

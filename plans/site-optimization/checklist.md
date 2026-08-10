@@ -80,3 +80,25 @@ GitHub wiki demoted to a secondary link.
 - [x] every document surface opts in with `<html class="ns-light-ok">`;
       fullscreen apps (starmap, orbit3d) stay dark by design
 - [x] phase2 pages got the same file:// data fallback as the DB browser
+
+## G. Mobile support (2026-08-10)
+- [x] audit harness: playwright iPhone 13 across all 16 page types — horizontal
+      overflow, tap-target size, body/label font size, JS errors
+- [x] global bar: was two wrapped rows of 13px links → one scrollable row,
+      44px targets, separators dropped, brand sticky, current page underlined
+- [x] segment controls (한/EN, filters): 24px → 40px min target
+- [x] wiki: the only page that scrolled sideways (543px). Sidebar became a 42vh
+      scroll region so 59 links stop blocking the article; wide tables scroll
+      inside themselves
+- [x] shared stylesheet mobile block: 15px body, 14px intro, 40px form controls
+      (16px font so iOS doesn't zoom), 36px table links, cards scroll wide tables
+- [x] per-surface controls: starmap layer buttons + zoom + tour, ice chips,
+      belt presets/sliders/mode, phase4 axis chips + crumbs + prev/next,
+      phase3 crumb/filter, gallery card links, orbit3d HUD, plotly modebar
+- [x] DB header: help button + language toggle share one row instead of two
+- [x] 100vh → dvh fallbacks (wiki shell, ice, plotly viewers)
+- [x] starmap touch hint moved below the two-tier header
+- Result: horizontal overflow 0/16 pages; every *control* ≥36px. What the audit
+  still flags is inline links inside running prose (phase3 61, phase2 17,
+  wiki 15) — exempt by WCAG 2.5.8, and the phase2 chart-label links are
+  duplicated as normal-size links in the table beneath each plot.

@@ -214,6 +214,14 @@ HTML = r"""<!-- __TITLE__ : 안정성 런 3D 궤도 세차 애니메이션 (자�
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>__TITLE__</title>
 <style>
   html,body{margin:0;height:100%;background:#06070a;color:rgba(255,255,255,.82);font:13px/1.5 system-ui,sans-serif;overflow:hidden}
+  @media (max-width:700px){
+    nav{font-size:13px !important}
+    nav a{min-height:38px;display:inline-flex;align-items:center;padding:0 6px}
+    #hud{max-width:calc(100vw - 24px)}
+    #hud button,#hud .on{min-height:36px;display:inline-flex;align-items:center;padding:0 11px}
+    input[type=range]{height:36px}
+    #bar{gap:10px;padding:10px 12px}
+  }
   #hud{position:fixed;top:44px;left:12px;z-index:10;background:rgba(10,12,18,.72);padding:10px 13px;border-radius:9px;backdrop-filter:blur(4px);max-width:290px}
   #hud h1{font-size:14px;margin:0 0 4px}
   #hud .v{color:#4ec9b0;font-weight:600}
@@ -236,7 +244,11 @@ HTML = r"""<!-- __TITLE__ : 안정성 런 3D 궤도 세차 애니메이션 (자�
   .seg.seg{display:inline-flex;padding:2px;gap:2px;flex-shrink:0;background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.09);border-radius:8px}
   .seg.seg button{background:transparent;border:none;cursor:pointer;padding:5px 10px;border-radius:6px;white-space:nowrap;color:rgba(255,255,255,.56);font:500 12px/1 'Geist','Inter',system-ui,sans-serif}
   .seg.seg button:hover{color:rgba(255,255,255,.80)}
-  .seg.seg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
+  .seg.seg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}/* 모바일: 세그먼트 버튼이 24px 였다 → 44px 터치 타깃 */
+@media (max-width:700px) {
+  .seg.seg button { min-height:40px; min-width:44px; justify-content:center;
+    display:inline-flex; align-items:center; font-size:13px; padding:0 12px }
+}
   :focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
   @media (prefers-color-scheme:light) {
     html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }

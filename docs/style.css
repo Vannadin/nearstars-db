@@ -219,3 +219,30 @@ footer a { color: var(--fg-dim) }
   /* prevent overflow of long monospace tokens in cards */
   .card, .card *, code { min-width: 0; word-break: break-word; overflow-wrap: anywhere }
 }
+
+/* ── mobile / touch (≤700px) ────────────────────────────────────────────────
+   The audit at 390px found 12-13px tap targets and 11-12px body copy across
+   the report surfaces. Raise the reading size and give every tappable thing a
+   real hit area, without changing the desktop layout. */
+@media (max-width: 700px) {
+  body { font-size: 15px }
+  .intro { font-size: 14px; line-height: 1.7 }
+  main { padding: 14px 14px 56px }
+
+  /* wide tables scroll inside themselves rather than the page */
+  .card { overflow-x: auto }
+  .rt, .dt, .mt { font-size: 13px }
+
+  /* pills and letter links in tables are the smallest targets on the site */
+  .rt a, .dt a, .mt a { display: inline-flex; align-items: center; min-height: 36px;
+    padding: 0 4px }
+  .pill { padding: 5px 11px; font-size: 11.5px }
+
+  /* form controls: 40px so the tap lands and iOS does not zoom the field */
+  input[type=text], input[type=search], select, button { min-height: 40px; font-size: 16px }
+  .rfilter input, .dfilter input { min-height: 40px; font-size: 16px }
+
+  input[type=range] { height: 40px }
+  input[type=checkbox] { width: 22px; height: 22px }
+  footer { padding: 18px 14px; font-size: 12px }
+}

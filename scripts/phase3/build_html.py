@@ -721,6 +721,12 @@ h3 {{ font-size: 14px; margin: 16px 0 8px }}
 .intro {{ font-size: 13.5px; line-height: 1.7 }}
 ul.intro {{ padding-left: 22px }}
 
+@media (max-width: 700px) {{
+  .crumb a {{ min-height: 36px; display: inline-flex; align-items: center }}
+  .dfin {{ min-height: 40px; font-size: 16px }}
+  .dt th, .dt td {{ font-size: 12px }}
+  main {{ padding: 14px 13px 56px }}
+}}
 .dfilter {{ display: flex; align-items: center; gap: 10px; margin-bottom: 8px }}
 .dfilter input {{ flex: 1; min-width: 170px; background: var(--bg-input); border: 1px solid var(--bd-input); border-radius: 6px; color: var(--fg-primary); font: 12.5px var(--sans); padding: 5px 10px }}
 .dfilter input::placeholder {{ color: var(--fg-dim) }}

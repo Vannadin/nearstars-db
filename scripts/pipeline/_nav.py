@@ -57,7 +57,12 @@ SEG_CSS = """
   html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.62) }
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
-    color:rgba(9,12,22,.92) } }"""
+    color:rgba(9,12,22,.92) } }
+/* 모바일: 세그먼트 버튼이 24px 였다 → 44px 터치 타깃 */
+@media (max-width:700px) {
+  .seg.seg button { min-height:40px; min-width:44px; justify-content:center;
+    display:inline-flex; align-items:center; font-size:13px; padding:0 12px }
+}"""
 
 # ── site-wide accessibility floor ────────────────────────────────────────────
 # Keyboard focus was invisible everywhere before 2026-08-10 (no :focus rule on
@@ -91,7 +96,26 @@ _BAR_CSS = """<style>
   html.ns-light-ok .ns-bar a:hover { color:#114edd }
   html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
   html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
-@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+/* 모바일: 두 줄로 접히고 링크가 13px 높이였다 → 한 줄 가로 스크롤 + 44px 터치 타깃.
+   구분점은 폭만 먹으므로 감추고, 브랜드는 왼쪽에 고정해 되돌아갈 곳을 남긴다. */
+@media (max-width:700px) {
+  .ns-bar { gap:0; padding:0 0 0 12px; flex-wrap:nowrap; overflow-x:auto;
+    overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; align-items:stretch }
+  .ns-bar::-webkit-scrollbar { display:none }
+  .ns-bar > * { flex-shrink:0 }
+  .ns-bar .ns-sep { display:none }
+  .ns-bar .ns-brand { position:sticky; left:0; z-index:1; display:flex; align-items:center;
+    padding-right:12px; background:linear-gradient(90deg,rgba(10,12,18,.92) 70%,transparent) }
+  .ns-bar a:not(.ns-brand), .ns-bar span.ns-here {
+    display:flex; align-items:center; min-height:44px; padding:0 11px }
+  .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #7aa8ff }
+}
+@media (max-width:700px) and (prefers-color-scheme:light) {
+  html.ns-light-ok .ns-bar .ns-brand {
+    background:linear-gradient(90deg,rgba(245,246,250,.94) 70%,transparent) }
+  html.ns-light-ok .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #114edd }
+}
 """ + SEG_CSS + A11Y_CSS + """
 </style>"""
 

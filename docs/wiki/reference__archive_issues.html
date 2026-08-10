@@ -38,8 +38,8 @@ body { margin: 0;
   background: var(--w-grad), var(--w-bg);
   background-attachment: fixed; color: var(--w-fg2);
   font-family: 'Geist', 'Inter', system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif }
-.layout { display: flex; align-items: flex-start; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+.layout { display: flex; align-items: flex-start; min-height: 100vh; min-height: 100dvh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh; height: 100dvh;
   overflow-y: auto; border-right: 1px solid var(--w-bd); background: var(--w-s1);
   padding: 16px 12px; font-size: 13px }
 .side .brand { display: block; font-weight: 700; font-size: 15px; color: var(--w-fg1);
@@ -68,8 +68,19 @@ body { margin: 0;
 .markdown-body code { color: rgba(255,255,255,.86) }
 @media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static;
-    border-right: none; border-bottom: 1px solid rgba(255,255,255,.09) }
+  /* 사이드바를 세로로 다 펼치면 문서 59개가 본문 앞을 막는다 → 자체 스크롤 영역으로 */
+  .side { width: auto; flex: none; position: static; max-height: 42vh; overflow-y: auto;
+    border-right: none; border-bottom: 1px solid var(--w-bd); padding: 10px 10px 12px }
+  .side .brand { position: sticky; top: -10px; margin: 0 0 10px; padding: 8px 6px;
+    background: var(--w-bg); z-index: 1 }
+  .side a { min-height: 40px; display: flex; align-items: center; padding: 6px 10px }
+  .side .nav-grp { margin: 14px 6px 2px }
+  /* 본문 폭 고정: 넓은 표는 페이지가 아니라 표 자신이 스크롤한다 */
+  .content-wrap { max-width: 100%; padding: 0 }
+  .markdown-body { min-width: 0; max-width: 100% }
+  .markdown-body table { display: block; width: 100%; max-width: 100%; overflow-x: auto }
+  .markdown-body pre { overflow-x: auto }
+  .topbar { max-width: 100% }
 }
 </style>
 </head>
@@ -93,7 +104,26 @@ body { margin: 0;
   html.ns-light-ok .ns-bar a:hover { color:#114edd }
   html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
   html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
-@media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+/* 모바일: 두 줄로 접히고 링크가 13px 높이였다 → 한 줄 가로 스크롤 + 44px 터치 타깃.
+   구분점은 폭만 먹으므로 감추고, 브랜드는 왼쪽에 고정해 되돌아갈 곳을 남긴다. */
+@media (max-width:700px) {
+  .ns-bar { gap:0; padding:0 0 0 12px; flex-wrap:nowrap; overflow-x:auto;
+    overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; align-items:stretch }
+  .ns-bar::-webkit-scrollbar { display:none }
+  .ns-bar > * { flex-shrink:0 }
+  .ns-bar .ns-sep { display:none }
+  .ns-bar .ns-brand { position:sticky; left:0; z-index:1; display:flex; align-items:center;
+    padding-right:12px; background:linear-gradient(90deg,rgba(10,12,18,.92) 70%,transparent) }
+  .ns-bar a:not(.ns-brand), .ns-bar span.ns-here {
+    display:flex; align-items:center; min-height:44px; padding:0 11px }
+  .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #7aa8ff }
+}
+@media (max-width:700px) and (prefers-color-scheme:light) {
+  html.ns-light-ok .ns-bar .ns-brand {
+    background:linear-gradient(90deg,rgba(245,246,250,.94) 70%,transparent) }
+  html.ns-light-ok .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #114edd }
+}
 
 /* .seg.seg = 특이도 상향: 본문 내 <style> 를 가진 페이지에서도 정본이 이긴다 */
 .seg.seg { display:inline-flex; padding:2px; gap:2px; flex-shrink:0;
@@ -111,6 +141,11 @@ body { margin: 0;
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
+/* 모바일: 세그먼트 버튼이 24px 였다 → 44px 터치 타깃 */
+@media (max-width:700px) {
+  .seg.seg button { min-height:40px; min-width:44px; justify-content:center;
+    display:inline-flex; align-items:center; font-size:13px; padding:0 12px }
+}
 :focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
 @media (prefers-color-scheme:light) {
   html.ns-light-ok :focus-visible { outline-color:#114edd } }
