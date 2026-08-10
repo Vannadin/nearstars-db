@@ -128,6 +128,63 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════
+   Light theme — follows prefers-color-scheme for pages that opt in with
+   <html class="ns-light-ok">. Same structure as the dark set: the canvas
+   flips, foregrounds become dark-at-alpha, and every accent/status/spectral
+   hue is re-picked at a lower lightness so it still reads on white. Text
+   pairs are held to the same ≥4.5:1 floor as dark.
+   ════════════════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: light) {
+  html.ns-light-ok, html.ns-light-ok [data-ns="v2"] {
+    --v2-bg-canvas:        #f5f6fa;
+    --v2-bg-grad:
+      radial-gradient(58% 48% at 16% -12%, rgba(47,102,216,0.07), transparent 70%),
+      radial-gradient(48% 44% at 94% 108%, rgba(168,58,142,0.05), transparent 70%);
+
+    --v2-surface-1:        rgba(12,17,34,0.030);
+    --v2-surface-2:        rgba(12,17,34,0.055);
+    --v2-surface-3:        rgba(12,17,34,0.085);
+    --v2-surface-sticky:   rgba(245,246,250,0.78);
+    --v2-surface-pop:      rgba(252,253,255,0.94);
+
+    --v2-bd-1:             rgba(12,17,34,0.08);
+    --v2-bd-2:             rgba(12,17,34,0.13);
+    --v2-bd-3:             rgba(12,17,34,0.22);
+
+    --v2-fg-1:             rgba(9,12,22,0.95);
+    --v2-fg-2:             rgba(9,12,22,0.78);
+    --v2-fg-3:             rgba(9,12,22,0.60);
+    --v2-fg-4:             rgba(9,12,22,0.52);
+    --v2-fg-5:             rgba(9,12,22,0.42);
+
+    --v2-accent:           #2f66d8;
+    --v2-accent-soft:      rgba(47,102,216,0.85);
+    --v2-accent-bg:        rgba(47,102,216,0.10);
+    --v2-accent-glow:      rgba(47,102,216,0.26);
+
+    --v2-ok:               #0f8168;  --v2-ok-bg:     rgba(15,129,104,0.12);
+    --v2-ok-glow:          rgba(15,129,104,0.24);
+    --v2-warn:             #96650f;  --v2-warn-bg:   rgba(150,101,15,0.13);
+    --v2-danger:           #a5388b;  --v2-danger-bg: rgba(165,56,139,0.12);
+    --v2-danger-glow:      rgba(165,56,139,0.26);
+
+    /* spectral: same hue order O→M (blue→red), lightness dropped so the
+       chips stay legible on white — the pale A/F tints would vanish. */
+    --v2-spec-O:           #3f5bc4;   --v2-spec-O-bg: rgba(63,91,196,0.10);
+    --v2-spec-B:           #4468cc;   --v2-spec-B-bg: rgba(68,104,204,0.10);
+    --v2-spec-A:           #5a7ec8;   --v2-spec-A-bg: rgba(90,126,200,0.10);
+    --v2-spec-F:           #7a7a1f;   --v2-spec-F-bg: rgba(122,122,31,0.12);
+    --v2-spec-G:           #8a6a12;   --v2-spec-G-bg: rgba(138,106,18,0.13);
+    --v2-spec-K:           #a55a1e;   --v2-spec-K-bg: rgba(165,90,30,0.13);
+    --v2-spec-M:           #b8422f;   --v2-spec-M-bg: rgba(184,66,47,0.13);
+    --v2-spec-X:           #5c697f;   --v2-spec-X-bg: rgba(92,105,127,0.10);
+
+    --v2-reticle:          rgba(20,140,86,0.80);
+    --v2-reticle-faint:    rgba(20,140,86,0.24);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
    Reusable atoms for v2 — drop into a page with <html data-ns="v2"> or
    inside [data-ns="v2"] scope.
    ════════════════════════════════════════════════════════════════════ */

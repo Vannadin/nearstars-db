@@ -27,6 +27,7 @@
   --fg-muted:       rgba(255,255,255,.56);
   --fg-dim:         rgba(255,255,255,.46);
   --fg-faint:       rgba(255,255,255,.46);
+  --fg-code:        rgba(255,255,255,.72);
 
   --accent:         #7aa8ff;
   --accent-soft:    rgba(122,168,255,.78);
@@ -40,6 +41,49 @@
 
   --mono: 'Geist Mono', 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
   --sans: 'Geist', 'Inter', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+
+/* ── light theme ────────────────────────────────────────────────────────────────
+   브라우저 설정(prefers-color-scheme)을 따라간다. 값은 ice-stability.html 의
+   v2 라이트 팔레트와 동일 — 대비는 다크와 같은 기준(본문 ≥4.5:1)으로 맞췄다.
+   페이지가 <html class="ns-light-ok"> 로 옵트인해야 적용된다.               */
+@media (prefers-color-scheme: light) {
+  html.ns-light-ok {
+    --bg-body:
+      radial-gradient(58% 48% at 16% -12%, rgba(47,102,216,.07), transparent 70%),
+      radial-gradient(48% 44% at 94% 108%, rgba(168,58,142,.05), transparent 70%),
+      #f5f6fa;
+    --bg-card:        rgba(12,17,34,.030);
+    --bg-card-alt:    rgba(12,17,34,.055);
+    --bg-stats:       rgba(12,17,34,.018);
+    --bg-input:       rgba(12,17,34,.045);
+    --bg-input-on:    rgba(47,102,216,.14);
+
+    --bd-soft:        rgba(12,17,34,.07);
+    --bd-mid:         rgba(12,17,34,.10);
+    --bd-strong:      rgba(12,17,34,.13);
+    --bd-input:       rgba(12,17,34,.18);
+    --bd-input-on:    rgba(47,102,216,.45);
+
+    --fg-primary:     rgba(9,12,22,.80);
+    --fg-emph:        rgba(9,12,22,.95);
+    --fg-muted:       rgba(9,12,22,.60);
+    --fg-dim:         rgba(9,12,22,.52);
+    --fg-faint:       rgba(9,12,22,.52);
+    --fg-code:        rgba(9,12,22,.78);
+
+    --accent:         #2f66d8;
+    --accent-soft:    rgba(47,102,216,.85);
+    --accent-hover:   #1a4bb0;
+
+    --ok:             #0f8168;
+    --ok-soft:        #0b6350;
+    --warn:           #96650f;
+    --warn-soft:      #744e0b;
+    --danger:         #a5388b;
+  }
+  /* sticky 표 헤더는 캔버스가 아니라 불투명 배경이 필요하다 (행이 비쳐 보이면 못 읽는다) */
+  html.ns-light-ok .rt th, html.ns-light-ok .dt th { background: #eceef5 }
 }
 
 /* ── reset ──────────────────────────────────────────────────────────────────── */
@@ -113,7 +157,7 @@ h2 {
 h3 {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255,255,255,.72);
+  color: var(--fg-code);
   margin: 16px 0 8px;
   letter-spacing: .2px;
 }
@@ -124,7 +168,7 @@ h3 {
   max-width: 820px;
   line-height: 1.65;
 }
-.intro b { color: rgba(255,255,255,.90) }
+.intro b { color: var(--fg-emph) }
 .intro p { margin-bottom: 10px }
 .intro p:last-child { margin-bottom: 0 }
 
@@ -149,7 +193,7 @@ code {
   background: var(--bg-input);
   padding: 1px 5px;
   border-radius: 3px;
-  color: rgba(255,255,255,.72);
+  color: var(--fg-code);
 }
 
 /* ── footer ────────────────────────────────────────────────────────────────── */

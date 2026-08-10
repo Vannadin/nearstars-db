@@ -154,7 +154,7 @@ def write_gallery(cards):
         <a href="{c['slug']}/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
   </div>""")
     html = f"""<!-- 궤도 동역학 뷰어 갤러리 (자동 생성, build_viewers.py) -->
-<!doctype html><html lang="en"><meta charset="utf-8">
+<!doctype html><html lang="en" class="ns-light-ok"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NearStars — Orbit dynamics viewers</title>
 <style>
@@ -175,6 +175,24 @@ def write_gallery(cards):
   .pill.bad{{color:#e090d0;background:rgba(224,144,208,.14)}}
   .sub{{display:block;color:rgba(255,255,255,.52);font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums}}
   header .seg{{float:right}}
+
+  @media (prefers-color-scheme: light) {{
+    html.ns-light-ok body{{background:#f5f6fa;color:rgba(9,12,22,.80)}}
+    html.ns-light-ok header{{border-bottom-color:rgba(12,17,34,.13)}}
+    html.ns-light-ok h1{{color:rgba(9,12,22,.95)}}
+    html.ns-light-ok .lead,html.ns-light-ok .sub,html.ns-light-ok .note{{color:rgba(9,12,22,.60)}}
+    html.ns-light-ok .card{{background:rgba(12,17,34,.030);border-color:rgba(12,17,34,.13)}}
+    html.ns-light-ok .card img{{background:#f5f6fa}}
+    html.ns-light-ok .card a,html.ns-light-ok .crumb a,html.ns-light-ok .links a{{color:#2f66d8}}
+    html.ns-light-ok .links a{{border-color:rgba(12,17,34,.18)}}
+    html.ns-light-ok h2{{border-top-color:rgba(12,17,34,.13)}}
+    html.ns-light-ok table.matrix td,html.ns-light-ok table.matrix th{{border-color:rgba(12,17,34,.13)}}
+    html.ns-light-ok table.matrix th{{background:rgba(12,17,34,.045);color:rgba(9,12,22,.60)}}
+    html.ns-light-ok code,html.ns-light-ok .k{{color:rgba(9,12,22,.78)}}
+    html.ns-light-ok .pill.ok{{color:#0f8168;background:rgba(15,129,104,.12)}}
+    html.ns-light-ok .pill.warn{{color:#96650f;background:rgba(150,101,15,.13)}}
+    html.ns-light-ok .pill.bad{{color:#a5388b;background:rgba(165,56,139,.12)}}
+  }}
   .crumb{{font-size:12px;margin-bottom:8px}} .crumb a{{color:#7aa8ff;text-decoration:none}}
 </style>
 {global_bar('../../', 'Phase 4')}

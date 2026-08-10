@@ -71,3 +71,12 @@ GitHub wiki demoted to a secondary link.
 - [x] phase4 body boards: axis anchor TOC (>3 decisions)
 - [x] wiki sidebar grouped (Methodology / Engine & mods / Pipeline & data / Reference / Plans)
 - [x] belt viewer presets grouped by row (Stock / Physical / NearStars / Demo)
+
+## F. Light / dark theme (2026-08-10)
+- [x] `docs/style.css` + `docs/style.v2.css` carry paired light palettes; the v2
+      override also targets `[data-ns="v2"]`, which re-declares the tokens locally
+- [x] phase4 boards, wiki shell (+ github-markdown-light swap by media), gallery,
+      validation index, DB browser: light blocks, hardcoded whites tokenised
+- [x] every document surface opts in with `<html class="ns-light-ok">`;
+      fullscreen apps (starmap, orbit3d) stay dark by design
+- [x] phase2 pages got the same file:// data fallback as the DB browser
