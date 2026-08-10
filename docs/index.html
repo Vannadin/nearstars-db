@@ -637,6 +637,36 @@ input[type=checkbox]{accent-color:var(--v2-accent)}
   [data-ns="v2"] .a2-mt td[data-label=""] { display: none; }
   [data-ns="v2"] .a2-mt td[data-label=""]:has(.a2-rec-tick) { display: block; padding-top: 6px; text-align: right; }
 }
+
+/* ── 가이드 투어 (코치마크) — 3D 맵의 #tourOv 와 같은 방식, v2 토큰 사용 ───────── */
+#dbTourOv{position:fixed;inset:0;z-index:300;display:none}
+#dbTourOv.show{display:block}
+#dbTourSpot{position:absolute;border-radius:10px;border:1.5px solid var(--v2-accent);
+  box-shadow:0 0 0 9999px rgba(4,6,11,.72);pointer-events:none;
+  transition:left .32s ease,top .32s ease,width .32s ease,height .32s ease}
+#dbTourSpot.hide{display:none}
+#dbTourCard{position:absolute;width:min(340px,88vw);background:var(--v2-surface-pop);
+  backdrop-filter:blur(8px);border:1px solid var(--v2-bd-3);border-radius:12px;padding:14px 17px;
+  box-shadow:0 18px 50px rgba(0,0,0,.55);font-size:13px;line-height:1.6;color:var(--v2-fg-2);
+  transition:left .3s ease,top .3s ease}
+#dbTourCard h4{margin:3px 0 6px;font-size:15px;color:var(--v2-fg-1);font-weight:600}
+#dbTourStep{font-size:11.5px;letter-spacing:.09em;color:var(--v2-fg-4);text-transform:uppercase}
+#dbTourCard .thead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#dbTourCard .nav{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:10px}
+#dbTourCard .nav>div{display:flex;gap:8px}
+#dbTourCard .nav button{font-size:12.5px;background:var(--v2-surface-2);border:1px solid var(--v2-bd-2);
+  border-radius:7px;padding:6px 12px;cursor:pointer;color:var(--v2-fg-2);font-family:inherit}
+#dbTourCard .nav button:hover{border-color:var(--v2-accent)}
+#dbTourNext{background:var(--v2-accent)!important;border-color:transparent!important;
+  color:#0a0d15!important;font-weight:600}
+@media (prefers-color-scheme:light){
+  html.ns-light-ok #dbTourSpot{box-shadow:0 0 0 9999px rgba(9,12,22,.45)}
+  html.ns-light-ok #dbTourNext{color:#fff!important}
+}
+@media (max-width:700px){
+  #dbTourCard{width:calc(100vw - 24px);left:12px!important}
+  #dbTourCard .nav button{min-height:40px;padding:0 14px}
+}
 </style>
 </head>
 <body>
@@ -789,6 +819,16 @@ input[type=checkbox]{accent-color:var(--v2-accent)}
   </div>
 </div>
 
+<div id="dbTourOv">
+  <div id="dbTourSpot"></div>
+  <div id="dbTourCard">
+    <div class="thead"><div id="dbTourStep"></div></div>
+    <h4 id="dbTourTitle"></h4>
+    <div id="dbTourBody"></div>
+    <div class="nav"><button id="dbTourSkip" type="button"></button>
+      <div><button id="dbTourPrev" type="button"></button><button id="dbTourNext" type="button"></button></div></div>
+  </div>
+</div>
 <!-- ── v2 본문: data-ns="v2" 스코프 안에서만 v2 토큰 활성 ───────────────── -->
 <div data-ns="v2" class="a2-root">
   <table class="a2-table">
@@ -1482,9 +1522,114 @@ function closeHowto() {
     try { LS.set(HOWTO_KEY, '1'); } catch {}
   }
 }
+
+// ── 가이드 투어 ───────────────────────────────────────────────────────────────
+// "시작하기" 가 약속하는 안내. 3D 맵의 투어와 같은 코치마크 방식이고, 단계마다
+// 실제 UI 를 강조하며 필요하면 그 조작을 대신 해준다(행 펼치기 등).
+const DB_TOUR = [
+  {center:true,
+   ko:{t:'NearStars DB', b:'태양 근처 항성계 152개를 논문 근거와 함께 모아둔 표예요. 잠깐 둘러볼까요?'},
+   en:{t:'NearStars DB', b:'152 nearby stellar systems, curated with their sources. Quick tour?'}},
+  {sel:'#q',
+   ko:{t:'검색', b:'별이나 항성계 이름을 입력하면 바로 좁혀져요. 예: proxima, 40 eri.'},
+   en:{t:'Search', b:'Type a star or system name to filter instantly — try proxima or 40 eri.'}},
+  {sel:'.filters',
+   ko:{t:'필터', b:'분광형(Spec), 거리 상한(Dist ≤), 행성 보유 여부로 거를 수 있어요. 거리 단위는 pc·ly·AU 토글을 따라가요.'},
+   en:{t:'Filters', b:'Narrow by spectral type, distance cap, or "has planets". The distance unit follows the pc/ly/AU toggle.'}},
+  {sel:'#phase-seg',
+   ko:{t:'큐레이션 단계', b:'P2 = 논문별 측정치, P3 = 인게임 표현 합성까지 끝난 천체. 어디까지 작업됐는지로 거를 수 있어요.'},
+   en:{t:'Curation phase', b:'P2 = paper-by-paper measurements, P3 = in-game synthesis done. Filter by how far a body has been taken.'}},
+  {sel:'#srad-seg',
+   ko:{t:'단위 토글', b:'반지름·질량을 태양 단위와 km·t 로, 행성은 지구 단위로 바꿔 볼 수 있어요.'},
+   en:{t:'Unit toggles', b:'Switch radius and mass between solar units and km/t; planets use Earth units.'}},
+  {sel:'.a2-row, .a2-card',
+   before:()=>{ const r=document.querySelector('.a2-row, .a2-card'); if(r && !document.querySelector('.a2-row.open')) r.click(); },
+   ko:{t:'행 펼치기', b:'행을 누르면 세부 패널이 열려요. 첫 행을 열어뒀어요.'},
+   en:{t:'Expand a row', b:'Tap a row to open its detail panel — the first one is open now.'}},
+  {sel:'.a2-detail',
+   ko:{t:'세부 패널', b:'실제 하늘 이미지(DSS·2MASS·unWISE), 좌표와 측정치, 별빛 색, 행성 목록, 논문 출처가 한자리에 있어요.'},
+   en:{t:'Detail panel', b:'Real sky cutouts (DSS, 2MASS, unWISE), astrometry, the star colour, its planets, and the papers behind each value.'}},
+  {sel:'.a2-rep-row',
+   ko:{t:'리포트로 가기', b:'P2·P3 알약을 누르면 그 천체의 큐레이션 리포트로 넘어가요. 값이 어디서 왔는지 전부 적혀 있어요.'},
+   en:{t:'Jump to reports', b:'The P2/P3 pills open that body\'s curation report, where every value states its source.'}},
+  {sel:'.ns-bar',
+   ko:{t:'다른 표면', b:'3D 지도, 리포트 색인, Phase 4 결정 보드, 도구, 위키로 여기서 건너가요.'},
+   en:{t:'The other surfaces', b:'From here you reach the 3D map, the report index, the Phase 4 boards, the tools, and the wiki.'}},
+  {center:true,
+   ko:{t:'끝이에요', b:'이제 직접 둘러보세요. 다시 보려면 우상단 "? 사용법" → 시작하기.'},
+   en:{t:'That is it', b:'Explore on your own. To replay: "? How to use" → Get started.'}},
+];
+const DBT_KEY = 'nearstars-db-tour-done';
+const dbtOv = document.getElementById('dbTourOv');
+const dbtSpot = document.getElementById('dbTourSpot');
+const dbtCard = document.getElementById('dbTourCard');
+let dbtI = -1;
+
+function dbtPlace(step, scrolled) {
+  const el = step.center ? null : document.querySelector(step.sel);
+  let r = el ? el.getBoundingClientRect() : null;
+  if (r && r.width && r.height) {
+    // 화면 밖이면 한 번만 스크롤해서 데려온다. 대상이 화면보다 큰 경우(세부 패널)에는
+    // 이 조건이 영구히 참이 되어 강조가 갇히므로, 시도는 딱 한 번만 한다.
+    const off = r.bottom < 40 || r.top > innerHeight - 40;
+    if (!scrolled && off) {
+      el.scrollIntoView({block:'center', behavior:'smooth'});
+      return setTimeout(()=>dbtPlace(step, true), 700);
+    }
+    // 대상이 화면보다 길면 보이는 부분만 강조한다
+    const top = Math.max(4, r.top), bottom = Math.min(innerHeight - 4, r.bottom);
+    r = {left:r.left, right:r.right, width:r.width, top, bottom, height:Math.max(24, bottom - top)};
+    const pad = 8;
+    dbtSpot.classList.remove('hide');
+    dbtSpot.style.left = (r.left - pad) + 'px';
+    dbtSpot.style.top = (r.top - pad) + 'px';
+    dbtSpot.style.width = (r.width + 2*pad) + 'px';
+    dbtSpot.style.height = (r.height + 2*pad) + 'px';
+    const cw = dbtCard.offsetWidth, ch = dbtCard.offsetHeight;
+    dbtCard.style.left = Math.min(Math.max(8, r.left), innerWidth - cw - 8) + 'px';
+    dbtCard.style.top = ((r.bottom + 12 + ch < innerHeight) ? r.bottom + 12
+                        : Math.max(8, r.top - 12 - ch)) + 'px';
+  } else {
+    dbtSpot.classList.add('hide');
+    dbtCard.style.left = Math.round((innerWidth - dbtCard.offsetWidth)/2) + 'px';
+    dbtCard.style.top = Math.round((innerHeight - dbtCard.offsetHeight)/2) + 'px';
+  }
+}
+function dbtRender() {
+  const step = DB_TOUR[dbtI]; if (!step) return;
+  const L = step[LANG] || step.en;
+  const ko = LANG === 'ko';
+  document.getElementById('dbTourStep').textContent =
+    (ko ? '단계' : 'Step') + ` ${dbtI+1} / ${DB_TOUR.length}`;
+  document.getElementById('dbTourTitle').textContent = L.t;
+  document.getElementById('dbTourBody').textContent = L.b;
+  const prev = document.getElementById('dbTourPrev');
+  prev.style.visibility = dbtI ? 'visible' : 'hidden';
+  prev.textContent = ko ? '‹ 이전' : '‹ Back';
+  document.getElementById('dbTourNext').textContent =
+    dbtI === DB_TOUR.length - 1 ? (ko ? '완료' : 'Done') : (ko ? '다음 ›' : 'Next ›');
+  document.getElementById('dbTourSkip').textContent = ko ? '건너뛰기' : 'Skip';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>dbtPlace(step)));
+}
+function dbtShow(i) {
+  dbtI = i; const step = DB_TOUR[i]; if (!step) return dbtEnd();
+  if (step.before) { try { step.before(); } catch (e) {} }
+  dbtRender();
+}
+function dbtStart() { dbtOv.classList.add('show'); dbtShow(0); }
+function dbtEnd() { dbtOv.classList.remove('show'); LS.set(DBT_KEY, '1'); }
+document.getElementById('dbTourNext').onclick = () =>
+  dbtI >= DB_TOUR.length - 1 ? dbtEnd() : dbtShow(dbtI + 1);
+document.getElementById('dbTourPrev').onclick = () => { if (dbtI > 0) dbtShow(dbtI - 1); };
+document.getElementById('dbTourSkip').onclick = dbtEnd;
+const dbtReflow = () => { if (dbtOv.classList.contains('show') && DB_TOUR[dbtI]) dbtPlace(DB_TOUR[dbtI]); };
+addEventListener('resize', dbtReflow);
+addEventListener('scroll', dbtReflow, {passive:true});
+addEventListener('keydown', e => { if (e.key === 'Escape' && dbtOv.classList.contains('show')) dbtEnd(); });
+
 document.getElementById('howto-btn').addEventListener('click', openHowto);
 document.getElementById('howto-close').addEventListener('click', closeHowto);
-document.getElementById('howto-start').addEventListener('click', closeHowto);
+document.getElementById('howto-start').addEventListener('click', () => { closeHowto(); dbtStart(); });
 document.getElementById('howto-overlay').addEventListener('click', (e) => {
   if (e.target.id === 'howto-overlay') closeHowto();
 });
