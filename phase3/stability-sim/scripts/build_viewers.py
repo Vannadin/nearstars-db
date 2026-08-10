@@ -172,9 +172,7 @@ def write_gallery(cards):
   .pill.warn{{color:#e0b070;background:rgba(224,176,112,.12)}}
   .pill.bad{{color:#e090d0;background:rgba(224,144,208,.14)}}
   .sub{{display:block;color:rgba(255,255,255,.52);font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums}}
-  .seg{{float:right;display:inline-flex;padding:2px;gap:2px;background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.09);border-radius:8px}}
-  .seg button{{background:transparent;color:rgba(255,255,255,.56);border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font:500 12px/1 system-ui}}
-  .seg button.on{{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}}
+  header .seg{{float:right}}
   .crumb{{font-size:12px;margin-bottom:8px}} .crumb a{{color:#7aa8ff;text-decoration:none}}
 </style>
 {global_bar('../../', 'Phase 4')}

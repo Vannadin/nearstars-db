@@ -191,10 +191,6 @@ body { margin: 0;
 .content-wrap { flex: 1; min-width: 0; padding: 0 16px }
 .topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
 @media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
-.seg { display: inline-flex; border: 1px solid rgba(255,255,255,.12); border-radius: 6px; overflow: hidden }
-.seg button { background: rgba(255,255,255,.05); color: rgba(255,255,255,.56); border: none; padding: 4px 13px;
-  cursor: pointer; font-size: 13px; font-family: inherit }
-.seg button.on { background: rgba(122,168,255,.18); color: #aac8ff }
 .lang-only { color: rgba(255,255,255,.36); font-size: 12px }
 .markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto;
   padding: 24px 45px 60px; background: transparent !important }

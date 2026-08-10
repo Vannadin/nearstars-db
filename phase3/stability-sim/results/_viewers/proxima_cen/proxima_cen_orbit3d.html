@@ -20,9 +20,11 @@
   #frames .lab{color:rgba(255,255,255,.52);font-size:11px;margin-right:2px}
   #frames button{background:rgba(255,255,255,.05);color:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.13);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px}
   #frames button.on{background:rgba(122,168,255,.30);color:#fff;border-color:#7aa8ff}
-  #langSeg{display:inline-flex;padding:2px;gap:2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:8px}
-  #langSeg button{background:transparent;border:none;color:rgba(255,255,255,.56);font:500 12px/1 system-ui;padding:4px 9px;border-radius:6px;cursor:pointer}
-  #langSeg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
+  /* 세그먼트 컨트롤 정본 사본 — scripts/pipeline/_nav.py SEG_CSS 와 동기 유지 */
+  .seg.seg{display:inline-flex;padding:2px;gap:2px;flex-shrink:0;background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.09);border-radius:8px}
+  .seg.seg button{background:transparent;border:none;cursor:pointer;padding:5px 10px;border-radius:6px;white-space:nowrap;color:rgba(255,255,255,.56);font:500 12px/1 'Geist','Inter',system-ui,sans-serif}
+  .seg.seg button:hover{color:rgba(255,255,255,.80)}
+  .seg.seg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
 </style>
 <div id="hud">
   <h1>Proxima Cen — <span class="v">STABLE</span></h1>
@@ -35,7 +37,7 @@
   <span id="yr"></span>
   <input id="scrub" type="range" min="0" max="1000" value="0">
   <span class="note" data-l="note">궤도면·이심률 진화 = 실측. 천체 마커의 공전 위상 = 예시(빠른 궤도는 스냅샷으로 복원 불가).</span>
-  <div id="langSeg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div>
+  <div class="seg" id="langSeg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div>
 </div>
 <script type="importmap">
 { "imports": {

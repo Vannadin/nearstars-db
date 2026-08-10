@@ -27,6 +27,23 @@
   html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
   html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
 @media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
+
+/* .seg.seg = 특이도 상향: 본문 내 <style> 를 가진 페이지에서도 정본이 이긴다 */
+.seg.seg { display:inline-flex; padding:2px; gap:2px; flex-shrink:0;
+  background:rgba(255,255,255,.022); border:1px solid rgba(255,255,255,.09);
+  border-radius:8px }
+.seg.seg button { background:transparent; border:none; cursor:pointer;
+  padding:5px 10px; border-radius:6px; white-space:nowrap;
+  color:rgba(255,255,255,.56);
+  font:500 12px/1 'Geist','Inter',system-ui,sans-serif }
+.seg.seg button:hover { color:rgba(255,255,255,.80) }
+.seg.seg button.on { background:rgba(255,255,255,.07); color:rgba(255,255,255,.94) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .seg.seg {
+  background:rgba(12,17,34,.03); border-color:rgba(12,17,34,.12) }
+  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.55) }
+  html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
+  html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
+    color:rgba(9,12,22,.92) } }
 </style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 <style>
   :root{
@@ -61,9 +78,6 @@
   .presets button.copy:hover{background:var(--accent-warm);color:#2a1400;border-color:var(--accent-warm)}
   .presets button.copy.done{background:#4caf7d;border-color:#4caf7d;color:#04240f}
   .presets .sep{flex:1}
-  .seg{display:inline-flex;padding:2px;gap:2px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px}
-  .seg button{background:transparent;border:none;color:var(--muted);font:600 12px/1 var(--sans);padding:5px 10px;border-radius:6px;cursor:pointer}
-  .seg button.on{background:var(--accent);color:#04222a}
 
   .grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;margin-top:14px;align-items:start}
   @media (max-width:820px){.grid{grid-template-columns:1fr}}

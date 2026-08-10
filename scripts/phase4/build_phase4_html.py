@@ -471,10 +471,6 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
-.seg { display:inline-flex; padding:2px; gap:2px; background:var(--s1); border:1px solid var(--bd2); border-radius:8px }
-.seg button { background:transparent; border:none; color:var(--fg3); font:500 12px/1 var(--sans);
-  padding:6px 11px; border-radius:6px; cursor:pointer; transition:.14s }
-.seg button:hover { color:var(--fg2) } .seg button.on { background:var(--s3); color:var(--fg1) }
 /* index grid */
 .body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
 .body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;

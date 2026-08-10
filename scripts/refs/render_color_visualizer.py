@@ -1042,13 +1042,6 @@ header {{
   border-bottom: 1px solid var(--bd-soft);
 }}
 header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
-.seg {{ display: inline-flex; border: 1px solid var(--bd-input); border-radius: 4px; overflow: hidden }}
-.seg button {{
-  background: var(--bg-input); color: var(--fg-muted);
-  border: none; padding: 4px 12px;
-  cursor: pointer; font-family: var(--sans); font-size: 12px;
-}}
-.seg button.on {{ background: var(--bg-input-on); color: var(--fg-emph) }}
 </style>
 </head>
 <body>
