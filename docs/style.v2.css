@@ -77,6 +77,13 @@
   --v2-spec-M:           #ff8a76;   --v2-spec-M-bg: rgba(255,138,118,0.14);
   --v2-spec-X:           #a3b0c8;   --v2-spec-X-bg: rgba(163,176,200,0.08);
 
+  /* 갈색왜성 L/T/Y — 흑체가 아니다. 먼지 구름(L)과 압력확장된 K I 공명선 날개(T)가
+     가시광을 지배해 T형은 자주색으로 보인다. BT-Settl(Allard+2012) / Morley+2014
+     모델 스펙트럼을 CIE 엔진에 통과시켜 얻은 값. */
+  --v2-spec-L:           #ff1a02;   --v2-spec-L-bg: rgba(255,101,85,0.12);
+  --v2-spec-T:           #9c50ff;   --v2-spec-T-bg: rgba(111,0,255,0.16);
+  --v2-spec-Y:           #fd0039;   --v2-spec-Y-bg: rgba(255,37,86,0.13);
+
   /* ── spectral SWATCH (색 자체가 데이터) ─────────────────────────────
      위의 --v2-spec-* 는 알약 '글자색'이라 테마마다 대비에 맞춰 다시 고른다.
      아래 -swatch 는 별의 실제 색(청색초거성 → 적색왜성)이라 테마와 무관하게
@@ -92,6 +99,9 @@
   --v2-spec-K-swatch:    #ffb47a;
   --v2-spec-M-swatch:    #ff8a76;
   --v2-spec-X-swatch:    #a3b0c8;
+  --v2-spec-L-swatch:    #ff6555;
+  --v2-spec-T-swatch:    #6f00ff;
+  --v2-spec-Y-swatch:    #ff2556;
 
   /* ── type ───────────────────────────────────────────────────────────
      Geist sans + Geist Mono (Vercel's open-source family — modern,
@@ -195,6 +205,9 @@
     --v2-spec-K:           #a84909;   --v2-spec-K-bg: rgba(255,180,122,0.22);
     --v2-spec-M:           #b92a15;   --v2-spec-M-bg: rgba(255,138,118,0.22);
     --v2-spec-X:           #55647a;   --v2-spec-X-bg: rgba(163,176,200,0.22);
+    --v2-spec-L:           #bb1200;   --v2-spec-L-bg: rgba(255,101,85,0.22);
+    --v2-spec-T:           #6300e2;   --v2-spec-T-bg: rgba(111,0,255,0.22);
+    --v2-spec-Y:           #b20028;   --v2-spec-Y-bg: rgba(255,37,86,0.22);
 
     --v2-reticle:          rgba(20,129,65,0.85);
     --v2-reticle-faint:    rgba(20,129,65,0.26);
@@ -273,6 +286,9 @@
 [data-ns="v2"] .v2-sb.G { color: var(--v2-spec-G); background: var(--v2-spec-G-bg); }
 [data-ns="v2"] .v2-sb.K { color: var(--v2-spec-K); background: var(--v2-spec-K-bg); }
 [data-ns="v2"] .v2-sb.M { color: var(--v2-spec-M); background: var(--v2-spec-M-bg); }
+[data-ns="v2"] .v2-sb.L { color: var(--v2-spec-L); background: var(--v2-spec-L-bg); }
+[data-ns="v2"] .v2-sb.T { color: var(--v2-spec-T); background: var(--v2-spec-T-bg); }
+[data-ns="v2"] .v2-sb.Y { color: var(--v2-spec-Y); background: var(--v2-spec-Y-bg); }
 [data-ns="v2"] .v2-sb.X { color: var(--v2-spec-X); background: var(--v2-spec-X-bg); }
 
 /* curation pills (v2) */

@@ -40,7 +40,8 @@ is the grounded method for the **stellar** tint specifically.
 3. [Synthetic Photometry: the Proper Way (Model Atmosphere → CIE)](#3-synthetic-photometry-the-proper-way-model-atmosphere-cie)
 4. [The Metallicity Correction: Line Blanketing](#4-the-metallicity-correction-line-blanketing)
 5. [M Dwarfs Break the Blackbody: TiO/VO Molecular Bands](#5-m-dwarfs-break-the-blackbody-tiovo-molecular-bands)
-6. [Domain of Validity: Three Regimes](#6-domain-of-validity-three-regimes)
+5b. [Brown Dwarfs Break the Blackbody Completely: Clouds and Alkali Wings](#5b-brown-dwarfs-break-the-blackbody-completely-clouds-and-alkali-wings)
+6. [Domain of Validity: Four Regimes](#6-domain-of-validity-four-regimes)
 7. [The Colorimetry Engine](#7-the-colorimetry-engine)
 8. [Worked Examples](#8-worked-examples)
 9. [Honesty: What These Hexes Are](#9-honesty-what-these-hexes-are)
@@ -232,7 +233,74 @@ superseded by the computed values above. See §9.)
 
 ---
 
-## 6. Domain of Validity: Three Regimes
+---
+
+## 5b. Brown Dwarfs Break the Blackbody Completely: Clouds and Alkali Wings
+
+M dwarfs bend the blackbody; L, T and Y dwarfs leave it. Two things take over the
+visible band:
+
+- **Condensate clouds** (L): iron and silicate grains form a photospheric deck that
+  reddens the emergent spectrum well beyond any Planck curve.
+- **Alkali resonance wings** (T, Y): at these pressures the Na I D and K I 7665/7699
+  resonance lines are broadened into continuum-like troughs hundreds of nanometres
+  wide. The K I wings remove most of the red, which is why the *cooler* object looks
+  *bluer* — the opposite of the blackbody's direction.
+
+### Method
+
+Same engine as everywhere else (§7): model spectrum → CIE 1931 → sRGB. The grids:
+
+| Regime | Grid | Reference |
+|---|---|---|
+| L, T (2400–800 K) | BT-Settl, solar metallicity, log g 5.0 | Allard, Homeier & Freytag 2012, [2012RSPTA.370.2765A](https://ui.adsabs.harvard.edu/abs/2012RSPTA.370.2765A) |
+| Y (≤ 500 K) | Morley et al. 2014 water-cloud models, f_sed 5, log g 5.0 | [2014ApJ...787...78M](https://ui.adsabs.harvard.edu/abs/2014ApJ...787...78M) |
+
+Spectra come from the SVO Theoretical Spectra Server and are cached under
+`scripts/refs/.cache/btsettl/` and `.cache/morley14/`, mirroring the Pickles cache.
+Only 300–900 nm is resampled onto the colour-matching grid; everything else is the
+same `cie_color` path used by the reflected-colour and plasma docs.
+
+**Why Y uses a different grid.** BT-Settl's 400–500 K entries return a visible-band
+integral *larger* than its own 800 K model, which is non-physical and means the grid
+changes regime below ~600 K. Morley et al. 2014 is built for that range, and its
+400/450 K models restore the monotonic fade (visible integral 5.3e1 / 7.5e1 against
+4.9e2 at 800 K).
+
+### The computed ladder
+
+| Teff | Class (approx.) | Colour | Reading |
+|---:|---|---|---|
+| 2100 K | L1–L2 | `#ff7800` | deep orange; dust deck dominates |
+| 1900 K | L3–L4 | `#ff6555` | red-orange |
+| 1700 K | L5–L6 | `#ff7b00` | orange |
+| 1400 K | L8 / T0 | `#c73bff` | **magenta** — the transition, K I wings take over |
+| 1300 K | T0–T1 | `#a632ff` | violet-magenta |
+| 1100 K | T3–T4 | `#6f00ff` | violet |
+| 1000 K | T5 | `#7d00ff` | violet |
+| 800 K | T7–T8 | `#e000ff` | magenta |
+| 450 K | Y0 | `#ff217b` | crimson-magenta (Morley) |
+| 400 K | Y0–Y1 | `#ff2556` | crimson; visible flux ~4 orders below L |
+
+**Validation.** The literature's qualitative result for T dwarfs is that they would
+look magenta to the eye rather than red. The pipeline reproduces this without being
+told to: 1400 K comes back `#c73bff`. That is the check that the alkali wings are
+being carried through the colorimetry correctly.
+
+Class representatives used by the DB viewer: L = 1900 K, T = 1100 K, Y = 400 K.
+
+**What is still missing.** Carbon (C) and S-type stars have no C-rich model grid on
+the SVO server and no templates in MILES, so their tints remain conventional deep
+reds rather than computed values. They are qualitatively right — C₂/CN absorption
+genuinely makes carbon stars among the reddest objects in the sky — but they are not
+derived. No C or S star is in the NearStars roster; if one is ever added, compute it
+from the X-Shooter Spectral Library (Verro et al. 2022,
+[2022A&A...660A..34V](https://ui.adsabs.harvard.edu/abs/2022A%26A...660A..34V), which
+covers 300–2480 nm) or a COMARCS C-rich grid before using it.
+
+---
+
+## 6. Domain of Validity: Four Regimes
 
 The body's spectral type decides which method is valid. Be explicit: the blackbody is
 the project's **working approximation for FGK + white dwarfs**, and the M-dwarf ladder
@@ -252,7 +320,14 @@ is the **molecular-band-corrected output** that replaces it for cool dwarfs.
    the blackbody is a fair first approximation of the displayed tint, erring slightly
    toward over-saturation. (NearStars: AU Mic, Barnard, Proxima, Teegarden, 40 Eri C;
    the M-dwarf field stars.)
-3. **Special cases → model atmospheres also required, flag explicitly.**
+3. **Brown dwarfs (L / T / Y) → the blackbody is not merely inaccurate, it is the
+   wrong hue family.** Below ~2400 K the visible band is shaped by condensate clouds
+   and by the pressure-broadened Na I / K I resonance wings, not by a continuum. The
+   K I 7665/7699 doublet's damping wings eat the red end of a T dwarf's spectrum, so a
+   T dwarf reads **violet-magenta** while a blackbody at the same Teff would say deep
+   red. Use a model atmosphere (§5b). (NearStars: Luhman 16 A/B, eps Ind Ba/Bb,
+   CWISEP J1935-1546.)
+4. **Special cases → model atmospheres also required, flag explicitly.**
    - **Carbon stars**: C/O > 1 swaps TiO for C₂/CN bands, reddening the star and
      adding a distinct character a blackbody cannot reproduce.
    - **Very hot O/B stars**: the optical sits far out on the Rayleigh-Jeans tail; the

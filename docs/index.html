@@ -1063,7 +1063,11 @@ function decorateGlossary(root) {
 // ── Spectral type tooltip (ported from index.v1.html) ──────────────────────
 // 용어집 툴팁의 분광형 점. 채도를 올린 램프라 --v2-spec-*-swatch 와 값이 다르지만
 // 색상(hue) 순서는 같아야 한다 — F 는 '흰 별'이므로 초록이 될 수 없다 (구 #eeff90).
-const SPEC_DOT = {O:'#9ab0ff',B:'#a8c8ff',A:'#d0e8ff',F:'#f4f2ee',G:'#ffe840',K:'#ff9020',M:'#ff4020',L:'#cc2000',T:'#880000',Y:'#440000',W:'#8888ff',C:'#ff8800',S:'#ff6600',D:'#e0e0ff'};
+// L/T/Y 는 흑체가 아니다 — 먼지 구름과 Na/K 공명선 날개가 가시광을 지배한다.
+// BT-Settl(L·T) / Morley+2014(Y) 모델 스펙트럼을 프로젝트 CIE 엔진에 통과시킨 값:
+// L 1900K #ff6555, T 1100K #6f00ff (K I 날개가 적색을 먹어 보라), Y 400K #ff2556.
+// 자세한 절차는 docs/reference/stellar-photospheric-color-methodology.md.
+const SPEC_DOT = {O:'#9ab0ff',B:'#a8c8ff',A:'#d0e8ff',F:'#f4f2ee',G:'#ffe840',K:'#ff9020',M:'#ff4020',L:'#ff6555',T:'#6f00ff',Y:'#ff2556',W:'#8888ff',C:'#ff8800',S:'#ff6600',D:'#e0e0ff'};
 
 const SPEC_INFO = {
   ko: {
@@ -2008,7 +2012,8 @@ function v2Spec(s) {
   if (!s) return 'X';
   const c = s[0];
   if (['O','B','A','F','G','K','M'].includes(c)) return c;
-  if (['L','T','Y'].includes(c)) return 'M';
+  // 갈색왜성은 M 으로 접지 않는다 — 스펙트럼이 완전히 달라 색도 다르다
+  if (['L','T','Y'].includes(c)) return c;
   return 'X';
 }
 
@@ -2067,6 +2072,9 @@ function specStrongBg(cls) {
     G: 'rgba(255,226,138,0.20)',
     K: 'rgba(255,180,122,0.20)',
     M: 'rgba(255,138,118,0.22)',
+    L: 'rgba(255,101,85,0.20)',
+    T: 'rgba(111,0,255,0.24)',
+    Y: 'rgba(255,37,86,0.20)',
     X: 'rgba(163,176,200,0.16)',
   };
   return map[cls] || map.X;
