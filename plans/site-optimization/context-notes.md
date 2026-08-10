@@ -80,3 +80,31 @@ Two findings worth keeping:
 - **Threshold-based black/white text picking is wrong.** `luminance > 0.4 ? black
   : white` on the periodic table gave 2.5:1 on mid-tone tiles. Choosing whichever
   of black/white has the higher contrast guarantees ≥4.58:1 for any colour.
+
+## 2026-08-10 (later still) — colour-as-data audit
+
+Swept every hex in the repo and judged it by the physics that produces it,
+not by one blanket rule. Counts: phase3 728, phase4 210, db/refs 3531, plus
+the UI palettes.
+
+Classification matters more than the check. A green star is impossible (the
+blackbody locus never passes through green) but green is *correct* for line
+emission (aurora 557.7 nm, Cu/Ba flame bands) and for reflected light off
+vegetation or mafic rock. A first pass that flagged green everywhere produced
+48 false positives; once colours were split by mechanism — thermal / reflected
+/ line-emission — and near-neutrals were excluded by a chroma floor, every
+remaining flag traced to a documented basis in its own row.
+
+Findings:
+- **F-class was green in three separate palettes** (CSS tokens, starmap legend,
+  SPEC_DOT glossary). Same table copied three times, fixed three times. Worth
+  collapsing to one source if a fourth copy ever appears.
+- Everything else is clean. The starmap's Teff→RGB (Helland approximation)
+  never yields green across 1000–40000 K and tracks
+  `stellar_photospheric_color.blackbody_hex` within the 18% white-blend it
+  documents.
+- `lte_plasma_colors.yaml` deliberately differs from familiar flame colours
+  (Sr blue rather than crimson, K pale green rather than lilac) because it is
+  optically-thin *atomic* emission at 3500 K; the flame answers live in
+  `element_plasma_colors.yaml`'s `atomic_flame` regime and match the textbook
+  values. Don't "fix" one against the other.
