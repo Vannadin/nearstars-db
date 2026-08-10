@@ -862,13 +862,21 @@ TEMPLATE = """<!DOCTYPE html>
    `overflow-x: clip` clips horizontally WITHOUT creating a scroll container,
    so the sticky bar pins to the viewport again. Scoped to this page. */
 html, body {{ overflow-x: clip; }}
+/* 고정된 온도/밀도 바는 불투명해야 한다. var(--bg-card) 는 2~3% 틴트라
+   주기율표가 바를 그대로 뚫고 보였다 (라벨·슬라이더·수치가 타일 위에 겹침). */
 .regime-bar {{
   display: flex; align-items: center; gap: 0.75rem;
-  margin: 1rem 0; padding: 0.5rem 0.75rem;
-  background: var(--bg-card); border: 1px solid var(--bd-mid);
-  border-radius: 4px;
+  margin: 1rem 0; padding: 0.6rem 0.8rem;
+  background: var(--bar-solid); border: 1px solid var(--bd-strong);
+  border-radius: 8px;
   position: sticky; top: 0; z-index: 20;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px -8px rgba(0,0,0,0.6);
+}}
+:root {{ --bar-solid: #0d0f16 }}
+@media (prefers-color-scheme: light) {{
+  html.ns-light-ok {{ --bar-solid: #eceef5 }}
+  .regime-bar {{ box-shadow: 0 6px 18px -10px rgba(9,12,22,0.35) }}
 }}
 .regime-bar .label {{ color: var(--fg-muted); font-size: 0.9rem }}
 #temp-slider {{ flex: 1; max-width: 460px; cursor: pointer; accent-color: var(--accent); }}
@@ -904,8 +912,17 @@ html, body {{ overflow-x: clip; }}
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   transition: background 0.4s ease, color 0.4s ease;
-  background-image: repeating-linear-gradient(45deg, #1a1828 0 4px, #2a1a38 4px 8px);
+  background-image: var(--nodata-hatch);
   color: var(--fg-muted);
+}}
+/* '데이터 없음' 해칭도 테마를 따라야 한다 — 다크용 남색 줄무늬가 라이트에서
+   가장 무거운 요소가 되어버렸다. */
+:root {{ --nodata-hatch: repeating-linear-gradient(45deg, #1a1828 0 4px, #2a1a38 4px 8px) }}
+@media (prefers-color-scheme: light) {{
+  html.ns-light-ok {{ --nodata-hatch:
+    repeating-linear-gradient(45deg, #e6e8f0 0 4px, #dcdfe9 4px 8px) }}
+  .el-cell {{ border-color: rgba(12,17,34,0.18) }}
+  .el-cell.visible {{ border-color: rgba(12,17,34,0.28) }}
 }}
 .el-cell.visible {{ background-image: none; border-color: rgba(0,0,0,0.5) }}
 .el-cell .z {{ position: absolute; top: 2px; left: 4px; font-size: 9px; opacity: 1 }}
