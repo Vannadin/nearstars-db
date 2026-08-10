@@ -40,7 +40,8 @@ is the grounded method for the **stellar** tint specifically.
 3. [Synthetic Photometry: the Proper Way (Model Atmosphere → CIE)](#3-synthetic-photometry-the-proper-way-model-atmosphere-cie)
 4. [The Metallicity Correction: Line Blanketing](#4-the-metallicity-correction-line-blanketing)
 5. [M Dwarfs Break the Blackbody: TiO/VO Molecular Bands](#5-m-dwarfs-break-the-blackbody-tiovo-molecular-bands)
-6. [Domain of Validity: Three Regimes](#6-domain-of-validity-three-regimes)
+5b. [Brown Dwarfs Break the Blackbody Completely — and the Ladder Goes Continuous](#5b-brown-dwarfs-break-the-blackbody-completely--and-the-ladder-goes-continuous)
+6. [Domain of Validity: Four Regimes](#6-domain-of-validity-four-regimes)
 7. [The Colorimetry Engine](#7-the-colorimetry-engine)
 8. [Worked Examples](#8-worked-examples)
 9. [Honesty: What These Hexes Are](#9-honesty-what-these-hexes-are)
@@ -232,7 +233,91 @@ superseded by the computed values above. See §9.)
 
 ---
 
-## 6. Domain of Validity: Three Regimes
+## 5b. Brown Dwarfs Break the Blackbody Completely — and the Ladder Goes Continuous
+
+M dwarfs bend the blackbody; L, T and Y dwarfs leave it. Two things take over the
+visible band:
+
+- **Condensate clouds** (L): iron and silicate grains form a photospheric deck that
+  reddens the emergent spectrum well beyond any Planck curve.
+- **Alkali resonance wings** (T, Y): at these pressures the Na I D and K I 7665/7699
+  resonance lines broaden into continuum-like troughs hundreds of nanometres wide.
+  The K I wings remove most of the red, so the *cooler* object reads *bluer* — the
+  opposite of the blackbody's direction.
+
+### Grids
+
+| Regime | Grid | Reference |
+|---|---|---|
+| L, T (2600–600 K) | BT-Settl, solar metallicity, log g 5.0 | Allard, Homeier & Freytag 2012, [2012RSPTA.370.2765A](https://ui.adsabs.harvard.edu/abs/2012RSPTA.370.2765A) |
+| Y (≤ 500 K) | Morley et al. 2014 water-cloud models, f_sed 5, log g 5.0 | [2014ApJ...787...78M](https://ui.adsabs.harvard.edu/abs/2014ApJ...787...78M) |
+
+Spectra come from the SVO Theoretical Spectra Server, cached under
+`scripts/refs/.cache/{bt-settl,morley14}/` exactly as the Pickles spectra are, and go
+through the same `cie_color` path as everything else (§7).
+
+**Why Y needs its own grid.** BT-Settl's 400–500 K models return a visible-band
+integral *larger* than its own 800 K model — non-physical, and a sign the grid changes
+regime below ~600 K. Morley et al. 2014 covers that range and restores the monotonic
+fade.
+
+### Colour by temperature, not by class letter
+
+The first attempt at this coloured each body by its **spectral class**, using one
+representative temperature per class. That produced an indefensible result on screen:
+Luhman 16 A (1310 K) drawn red and Luhman 16 B (1280 K) drawn violet, a hue jump
+across 30 K, because A was given the mid-L representative (1900 K) and B the mid-T one
+(1100 K). The class letter is a classification boundary; it is not where the physics
+changes.
+
+`colour_for_teff()` therefore treats every model as a **knot** and interpolates between
+them at the body's own temperature — no binning, no snapping to grid steps. Each knot
+is reduced to its **chromaticity** (normalised to a common luminance) first: how bright
+to draw a swatch is a UI decision, what colour it is is not.
+
+The two Luhman 16 components now come out `#ff52ff` and `#f74eff` — the same colour, as
+two objects 30 K apart should be.
+
+### The ladder
+
+Selected knots (`python3 -c "…; from stellar_photospheric_color import ladder_knots"`):
+
+| Teff | Colour | Reading |
+|---:|---|---|
+| 40000 K | `#9ab3f9` | blue-white |
+| 9800 K | `#abb4d3` | pale blue (Sirius A) |
+| 5847 K | `#bdb3ae` | near-neutral (α Cen A) |
+| 3850 K | `#dbab82` | warm tan |
+| 2904 K | `#deac6a` | orange-tan (Proxima) |
+| 2100 K | `#ff8900` | orange; L dust deck |
+| 1700 K | `#ff8b00` | orange |
+| 1600 K | `#ff52d6` | pink — the L/T transition begins |
+| 1310 K | `#ff52ff` | magenta (Luhman 16 A) |
+| 1100 K | `#d800ff` | violet; K I wings at their deepest |
+| 880 K | `#ff00ff` | magenta (eps Ind Bb) |
+| 400 K | `#ff3677` | crimson-pink (Morley) |
+
+**Validation.** The literature's qualitative result is that a T dwarf would look
+magenta rather than red. The pipeline reproduces it without being told to. That is the
+check that the alkali wings survive the colorimetry.
+
+**Known scatter.** Neighbouring BT-Settl knots in the L range (1700–1900 K) disagree by
+more than their 100 K spacing would suggest — the model's own cloud treatment, not a
+resampling artefact (widening the integration window changes nothing). The values are
+carried through as computed rather than smoothed.
+
+**What is still missing.** Carbon (C) and S-type stars have no C-rich model grid on the
+SVO server and no templates in MILES, so their tints remain conventional deep reds
+rather than computed values. They are qualitatively right — C₂/CN absorption genuinely
+makes carbon stars among the reddest objects in the sky — but they are not derived. No
+C or S star is in the NearStars roster; if one is added, compute it from the X-Shooter
+Spectral Library (Verro et al. 2022,
+[2022A&A...660A..34V](https://ui.adsabs.harvard.edu/abs/2022A%26A...660A..34V), 300–2480 nm)
+or a COMARCS C-rich grid first.
+
+---
+
+## 6. Domain of Validity: Four Regimes
 
 The body's spectral type decides which method is valid. Be explicit: the blackbody is
 the project's **working approximation for FGK + white dwarfs**, and the M-dwarf ladder
@@ -252,7 +337,11 @@ is the **molecular-band-corrected output** that replaces it for cool dwarfs.
    the blackbody is a fair first approximation of the displayed tint, erring slightly
    toward over-saturation. (NearStars: AU Mic, Barnard, Proxima, Teegarden, 40 Eri C;
    the M-dwarf field stars.)
-3. **Special cases → model atmospheres also required, flag explicitly.**
+3. **Brown dwarfs (L / T / Y) → the blackbody names the wrong hue family.** Clouds and
+   alkali resonance wings, not a continuum, shape the visible band; colour comes from
+   the continuous model ladder (§5b). (NearStars: Luhman 16 A/B, eps Ind Ba/Bb,
+   CWISEP J1935-1546.)
+4. **Special cases → model atmospheres also required, flag explicitly.**
    - **Carbon stars**: C/O > 1 swaps TiO for C₂/CN bands, reddening the star and
      adding a distinct character a blackbody cannot reproduce.
    - **Very hot O/B stars**: the optical sits far out on the Rayleigh-Jeans tail; the
