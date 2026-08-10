@@ -234,8 +234,7 @@ is the grounded method for the **stellar** tint specifically.
 3. [Synthetic Photometry: the Proper Way (Model Atmosphere → CIE)](#3-synthetic-photometry-the-proper-way-model-atmosphere-cie)
 4. [The Metallicity Correction: Line Blanketing](#4-the-metallicity-correction-line-blanketing)
 5. [M Dwarfs Break the Blackbody: TiO/VO Molecular Bands](#5-m-dwarfs-break-the-blackbody-tiovo-molecular-bands)
-5b. [Brown Dwarfs Break the Blackbody Completely — and the Ladder Goes Continuous](#5b-brown-dwarfs-break-the-blackbody-completely--and-the-ladder-goes-continuous)
-6. [Domain of Validity: Four Regimes](#6-domain-of-validity-four-regimes)
+6. [Domain of Validity: Three Regimes](#6-domain-of-validity-three-regimes)
 7. [The Colorimetry Engine](#7-the-colorimetry-engine)
 8. [Worked Examples](#8-worked-examples)
 9. [Honesty: What These Hexes Are](#9-honesty-what-these-hexes-are)
@@ -427,116 +426,7 @@ superseded by the computed values above. See §9.)
 
 ---
 
-## 5b. Brown Dwarfs Break the Blackbody Completely — and the Ladder Goes Continuous
-
-M dwarfs bend the blackbody; L, T and Y dwarfs leave it. Two things take over the
-visible band:
-
-- **Condensate clouds** (L): iron and silicate grains form a photospheric deck that
-  reddens the emergent spectrum well beyond any Planck curve.
-- **Alkali resonance wings** (T, Y): at these pressures the Na I D and K I 7665/7699
-  resonance lines broaden into continuum-like troughs hundreds of nanometres wide.
-  The K I wings remove most of the red, so the *cooler* object reads *bluer* — the
-  opposite of the blackbody's direction.
-
-### Grids
-
-| Regime | Grid | Reference |
-|---|---|---|
-| L, T (2600–600 K) | BT-Settl, solar metallicity, log g 5.0 | Allard, Homeier & Freytag 2012, [2012RSPTA.370.2765A](https://ui.adsabs.harvard.edu/abs/2012RSPTA.370.2765A) |
-| Y (≤ 500 K) | Morley et al. 2014 water-cloud models, f_sed 5, log g 5.0 | [2014ApJ...787...78M](https://ui.adsabs.harvard.edu/abs/2014ApJ...787...78M) |
-
-Spectra come from the SVO Theoretical Spectra Server, cached under
-`scripts/refs/.cache/{bt-settl,morley14}/` exactly as the Pickles spectra are, and go
-through the same `cie_color` path as everything else (§7).
-
-**Why Y needs its own grid.** BT-Settl's 400–500 K models return a visible-band
-integral *larger* than its own 800 K model — non-physical, and a sign the grid changes
-regime below ~600 K. Morley et al. 2014 covers that range and restores the monotonic
-fade.
-
-### Colour by temperature, not by class letter
-
-The first attempt at this coloured each body by its **spectral class**, using one
-representative temperature per class. That produced an indefensible result on screen:
-Luhman 16 A (1310 K) drawn red and Luhman 16 B (1280 K) drawn violet, a hue jump
-across 30 K, because A was given the mid-L representative (1900 K) and B the mid-T one
-(1100 K). The class letter is a classification boundary; it is not where the physics
-changes.
-
-`colour_for_teff()` therefore treats every model as a **knot** and interpolates between
-them at the body's own temperature — no binning, no snapping to grid steps. Each knot
-is reduced to its **chromaticity** (normalised to a common luminance) first: how bright
-to draw a swatch is a UI decision, what colour it is is not.
-
-The two Luhman 16 components now come out `#cca2ff` and `#c6a5ff` — the same colour, as
-two objects 30 K apart should be.
-
-### Out of gamut: why these are pale, not vivid
-
-The first version of this ladder rendered T dwarfs as a vivid magenta, and that was
-wrong. Cool dwarf chromaticities sit **well outside sRGB**: at 1100 K the blue channel
-wants 4.3x maximum and the green channel goes negative. Clipping each channel to [0,1]
-separately — the obvious thing to do, and what the first version did — invents
-saturation the colour never had, and can move the hue as well.
-
-`_to_gamut()` instead mixes toward a grey of the same luminance until the colour fits,
-giving up only what the display cannot show and keeping the hue. Cool dwarfs need 65-86%
-grey, so their honest rendering is a **pale lavender**, not a magenta. Everything at or
-above ~3850 K is already inside sRGB and needs 0%.
-
-Two things to keep straight when reading these hexes:
-
-- **The hue direction is real.** A T dwarf's visible flux genuinely peaks blueward of
-  its red trough: in the 1100 K model the 4500 Å window sits ~100x above the
-  5000-6000 Å floor, and the eye is roughly ten times more sensitive at 450 nm than at
-  700 nm, so the weighted result lands on the violet side of neutral. That is the
-  documented reason T dwarfs are described as magenta rather than red.
-- **The brightness is not.** Every knot is normalised to a common luminance so a 4px
-  swatch stays visible. A real T dwarf emits almost entirely in the infrared — the
-  visible-band integral at 1100 K is ~300x below a 2100 K L dwarf's — so at any true
-  brightness it would be far too dim for colour vision to engage at all.
-
-### The ladder
-
-Selected knots (`python3 -c "…; from stellar_photospheric_color import ladder_knots"`):
-
-| Teff | Colour | Reading |
-|---:|---|---|
-| 40000 K | `#9ab3f9` | blue-white |
-| 9800 K | `#abb4d3` | pale blue (Sirius A) |
-| 5847 K | `#bdb3ae` | near-neutral (α Cen A) |
-| 3850 K | `#dbab82` | warm tan |
-| 2904 K | `#deac6a` | orange-tan (Proxima) |
-| 2100 K | `#ff8900` | orange; L dust deck |
-| 1700 K | `#ff8b00` | orange |
-| 1600 K | `#ff52d6` | pink — the L/T transition begins |
-| 1310 K | `#cca2ff` | pale lavender (Luhman 16 A) |
-| 1100 K | `#baa9ff` | pale violet; K I wings at their deepest |
-| 880 K | `#cca2ff` | pale lavender (eps Ind Bb) |
-| 400 K | `#ff97a2` | pale pink (Morley) |
-
-**Validation.** The literature's qualitative result is that a T dwarf would look
-magenta rather than red. The pipeline reproduces it without being told to. That is the
-check that the alkali wings survive the colorimetry.
-
-**Known scatter.** Neighbouring BT-Settl knots in the L range (1700–1900 K) disagree by
-more than their 100 K spacing would suggest — the model's own cloud treatment, not a
-resampling artefact (widening the integration window changes nothing). The values are
-carried through as computed rather than smoothed.
-
-**What is still missing.** Carbon (C) and S-type stars have no C-rich model grid on the
-SVO server and no templates in MILES, so their tints remain conventional deep reds
-rather than computed values. They are qualitatively right — C₂/CN absorption genuinely
-makes carbon stars among the reddest objects in the sky — but they are not derived. No
-C or S star is in the NearStars roster; if one is added, compute it from the X-Shooter
-Spectral Library (Verro et al. 2022,
-[2022A&A...660A..34V](https://ui.adsabs.harvard.edu/abs/2022A%26A...660A..34V), 300–2480 nm)
-or a COMARCS C-rich grid first.
-
----
-
-## 6. Domain of Validity: Four Regimes
+## 6. Domain of Validity: Three Regimes
 
 The body's spectral type decides which method is valid. Be explicit: the blackbody is
 the project's **working approximation for FGK + white dwarfs**, and the M-dwarf ladder
@@ -556,11 +446,7 @@ is the **molecular-band-corrected output** that replaces it for cool dwarfs.
    the blackbody is a fair first approximation of the displayed tint, erring slightly
    toward over-saturation. (NearStars: AU Mic, Barnard, Proxima, Teegarden, 40 Eri C;
    the M-dwarf field stars.)
-3. **Brown dwarfs (L / T / Y) → the blackbody names the wrong hue family.** Clouds and
-   alkali resonance wings, not a continuum, shape the visible band; colour comes from
-   the continuous model ladder (§5b). (NearStars: Luhman 16 A/B, eps Ind Ba/Bb,
-   CWISEP J1935-1546.)
-4. **Special cases → model atmospheres also required, flag explicitly.**
+3. **Special cases → model atmospheres also required, flag explicitly.**
    - **Carbon stars**: C/O > 1 swaps TiO for C₂/CN bands, reddening the star and
      adding a distinct character a blackbody cannot reproduce.
    - **Very hot O/B stars**: the optical sits far out on the Rayleigh-Jeans tail; the
@@ -822,8 +708,7 @@ bands) has a clear high-citation canonical work, listed above.
 3. [합성 측광: 제대로 하는 길 (모델 대기 → CIE)](#3-합성-측광-제대로-하는-길-모델-대기-cie)
 4. [금속함량 보정: Line Blanketing](#4-금속함량-보정-line-blanketing)
 5. [M왜성은 흑체를 깬다 · TiO/VO 분자밴드](#5-m왜성은-흑체를-깬다-tiovo-분자밴드)
-5b. [갈색왜성은 흑체를 아예 벗어난다 · 그리고 사다리를 연속으로](#5b-갈색왜성은-흑체를-아예-벗어난다--그리고-사다리를-연속으로)
-6. [유효 영역: 네 가지 영역](#6-유효-영역-네-가지-영역)
+6. [유효 영역: 세 가지 영역](#6-유효-영역-세-가지-영역)
 7. [색측정 엔진](#7-색측정-엔진)
 8. [워크드 예제](#8-워크드-예제)
 9. [정직성: 이 hex들이 무엇인가](#9-정직성-이-hex들이-무엇인가)
@@ -989,103 +874,7 @@ M4–M5에서는 실제 SED가 흑체보다 오히려 미세하게 **더 옅다*
 
 ---
 
-## 5b. 갈색왜성은 흑체를 아예 벗어난다 · 그리고 사다리를 연속으로
-
-M왜성이 흑체를 휘게 한다면, L·T·Y형은 아예 떠난다. 가시광을 가져가는 것은 두 가지다.
-
-- **응결 구름** (L형). 철과 규산염 알갱이가 광구에 구름층을 만들어 어떤 플랑크 곡선보다도
-  스펙트럼을 붉게 만든다.
-- **알칼리 공명선 날개** (T·Y형). 이 압력에서 Na I D선과 K I 7665/7699선은 수백 나노미터
-  폭의 연속체 같은 골로 퍼진다. K I 날개가 적색을 대부분 먹기 때문에 **더 차가운 천체가
-  오히려 더 푸르게** 보인다. 흑체와 반대 방향이다.
-
-### 격자
-
-| 영역 | 격자 | 근거 |
-|---|---|---|
-| L·T (2600–600 K) | BT-Settl, 태양 금속함량, log g 5.0 | Allard, Homeier & Freytag 2012, [2012RSPTA.370.2765A](https://ui.adsabs.harvard.edu/abs/2012RSPTA.370.2765A) |
-| Y (≤ 500 K) | Morley et al. 2014 물구름 모델, f_sed 5, log g 5.0 | [2014ApJ...787...78M](https://ui.adsabs.harvard.edu/abs/2014ApJ...787...78M) |
-
-스펙트럼은 SVO Theoretical Spectra Server에서 받아 Pickles와 똑같이
-`scripts/refs/.cache/{bt-settl,morley14}/` 에 캐시하고, 나머지는 §7의 `cie_color` 경로를
-그대로 탄다.
-
-**Y형에 별도 격자가 필요한 이유.** BT-Settl의 400–500 K 모델은 가시광 적분값이 자기 자신의
-800 K 모델보다 *크다*. 물리적으로 불가능하고, 600 K 아래에서 격자의 영역이 바뀐다는 신호다.
-Morley et al. 2014가 그 온도대를 담당하며 단조로운 감쇠를 회복시킨다.
-
-### 분광형이 아니라 온도로 칠한다
-
-첫 시도는 천체를 **분광형**으로 칠했다. 분광형마다 대표 온도를 하나씩 잡는 방식이었고,
-화면에는 변호할 수 없는 결과가 나왔다. 루만 16 A(1310 K)는 빨강, B(1280 K)는 보라 —
-30 K 차이로 색상이 튀었다. A가 L형 대표값 1900 K를, B가 T형 대표값 1100 K를 받았기
-때문이다. 분광형 글자는 분류의 경계일 뿐, 물리가 바뀌는 지점이 아니다.
-
-그래서 `colour_for_teff()` 는 모든 모델을 **매듭**으로 두고 천체 자신의 온도에서 그 사이를
-보간한다. 구간으로 나누지도, 격자 눈금에 붙이지도 않는다. 매듭은 먼저 **색도**로 환원한다
-(밝기는 공통값으로 통일). 스와치를 얼마나 밝게 그릴지는 UI의 결정이지만, 무슨 색인지는
-아니기 때문이다.
-
-이제 루만 16 두 성분은 `#cca2ff` 와 `#c6a5ff` 로 나온다 — 30 K 떨어진 두 천체가 그래야
-하는 대로, 같은 색이다.
-
-### 색역 밖이라서 짙지 않고 옅다
-
-이 사다리의 첫 버전은 T형을 선명한 마젠타로 그렸고, 그것은 틀렸다. 차가운 왜성의 색도는
-**sRGB 밖에 한참 나가 있다**. 1100 K에서 청색 채널은 최대치의 4.3배를 요구하고 녹색 채널은
-음수가 된다. 채널마다 [0,1]로 자르는 것 — 가장 손이 가는 처리이고 첫 버전이 한 일 — 은
-색이 원래 갖지 않은 채도를 만들어내고, 색상까지 옮길 수 있다.
-
-`_to_gamut()` 은 대신 같은 휘도의 회색과 섞어 색역 안에 들어올 때까지만 양보한다. 디스플레이가
-표현할 수 없는 만큼만 포기하고 색상은 지킨다. 차가운 왜성은 회색 65~86%가 필요하므로, 정직한
-표현은 **옅은 라벤더**이지 마젠타가 아니다. ~3850 K 이상은 이미 sRGB 안이라 0%다.
-
-이 hex를 읽을 때 구분해야 할 두 가지가 있다.
-
-- **색상 방향은 실제다.** T형의 가시광 플럭스는 적색 골보다 청색 쪽에서 실제로 더 높다.
-  1100 K 모델에서 4500 Å 창은 5000–6000 Å 바닥보다 ~100배 위에 있고, 눈은 700 nm보다
-  450 nm에서 열 배가량 민감하다. 그래서 가중 결과가 중성의 보라 쪽에 떨어진다. T형을 붉은색이
-  아니라 마젠타로 서술하는 문헌의 근거가 바로 이것이다.
-- **밝기는 실제가 아니다.** 4px 스와치가 보이도록 모든 매듭을 공통 휘도로 정규화했다. 실제
-  T형은 거의 전부 적외선으로 방출한다 — 1100 K의 가시광 적분은 2100 K L형보다 ~300배
-  아래다 — 따라서 실제 밝기에서는 색각이 작동하기에도 너무 어둡다.
-
-### 사다리
-
-주요 매듭은 이렇다.
-
-| Teff | 색 | 읽는 법 |
-|---:|---|---|
-| 40000 K | `#9ab3f9` | 청백 |
-| 9800 K | `#abb4d3` | 옅은 파랑 (시리우스 A) |
-| 5847 K | `#bdb3ae` | 거의 중성 (알파 센타우리 A) |
-| 3850 K | `#dbab82` | 따뜻한 황갈 |
-| 2904 K | `#deac6a` | 주황황갈 (프록시마) |
-| 2100 K | `#ff8900` | 주황. L형 먼지층 |
-| 1700 K | `#ff8b00` | 주황 |
-| 1600 K | `#ff52d6` | 분홍. L/T 전이 시작 |
-| 1310 K | `#cca2ff` | 옅은 라벤더 (루만 16 A) |
-| 1100 K | `#baa9ff` | 옅은 보라. K I 날개가 가장 깊은 지점 |
-| 880 K | `#cca2ff` | 옅은 라벤더 (eps Ind Bb) |
-| 400 K | `#ff97a2` | 옅은 분홍 (Morley) |
-
-**검증.** T형이 붉은색이 아니라 마젠타로 보인다는 것이 문헌의 정성적 결론인데, 파이프라인은
-시키지 않아도 이를 재현한다. 알칼리 날개가 색측정까지 살아남았는지 확인하는 지점이다.
-
-**알려진 산포.** L형 구간(1700–1900 K)의 이웃 매듭들은 100 K 간격이 설명하는 것보다 크게
-어긋난다. 리샘플링 아티팩트가 아니라(적분 창을 넓혀도 값이 그대로다) 모델 자신의 구름 처리
-때문이다. 값은 매끄럽게 다듬지 않고 계산된 그대로 싣는다.
-
-**아직 없는 것.** 탄소별(C)과 S형은 SVO에 탄소 과잉 격자가 없고 MILES에도 템플릿이 없어
-색조가 계산값이 아니라 관례적 심적색으로 남아 있다. 정성적으로는 맞다 — C₂/CN 흡수 때문에
-탄소별이 하늘에서 가장 붉은 축인 것은 사실이다 — 하지만 도출값은 아니다. 현재 로스터에
-C형·S형은 없다. 추가된다면 X-Shooter Spectral Library (Verro et al. 2022,
-[2022A&A...660A..34V](https://ui.adsabs.harvard.edu/abs/2022A%26A...660A..34V), 300–2480 nm)
-나 COMARCS 탄소 과잉 격자로 먼저 계산할 것.
-
----
-
-## 6. 유효 영역: 네 가지 영역
+## 6. 유효 영역: 세 가지 영역
 
 바디의 분광형이 어느 방법이 유효한지를 정한다. 명확히 하면 이렇다. 흑체는 프로젝트가 **FGK
 + 백색왜성용으로 쓰는 작업용 근사**이고, M왜성 사다리는 차가운 왜성에서 그것을 대체하는

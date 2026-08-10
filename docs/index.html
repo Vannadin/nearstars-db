@@ -2057,48 +2057,6 @@ function teffRGBv2(t) {
   return `#${h(cr)}${h(cg)}${h(cb)}`;
 }
 
-// ── 별 색: 천체의 Teff 에서 직접 (분광형으로 나누지 않는다) ─────────────────
-// 매듭 = 모델 스펙트럼을 CIE 로 통과시킨 색도(밝기는 통일). 400~2600K 는 갈색왜성
-// 격자(BT-Settl / Morley+2014), 그 위는 Pickles M + 흑체. 생성:
-//   python3 -c "import sys;sys.path.insert(0,'scripts/refs');
-//               from stellar_photospheric_color import ladder_knots;print(ladder_knots())"
-// 근거와 사다리 전체는 docs/reference/stellar-photospheric-color-methodology.md.
-const TEFF_KNOTS = [[400,4.3001,0.0796,0.4002],[450,4.2056,0.0640,0.8330],[600,4.4451,0.0747,0.0212],[700,4.2967,0.0000,1.1983],[800,3.2314,0.0000,4.3351],[900,2.3102,0.0000,7.0479],[1000,1.7710,0.0000,8.6356],[1100,1.4997,0.0000,9.4344],[1200,1.4537,0.1101,8.4793],[1300,2.1656,0.1811,5.6792],[1400,2.5395,0.1945,4.4464],[1500,3.2453,0.1768,2.5428],[1600,3.5885,0.1840,1.4614],[1700,2.8228,0.5591,0.0000],[1800,3.2988,0.3859,0.3144],[1900,3.2027,0.4168,0.2909],[2000,3.0035,0.5054,0.0000],[2100,2.8824,0.5414,0.0000],[2200,2.5895,0.6274,0.0104],[2300,2.3093,0.7043,0.0737],[2400,1.9767,0.7946,0.1586],[2500,1.8016,0.8428,0.1972],[2600,1.6408,0.8852,0.2509],[2800,1.5878,0.8967,0.2929],[3000,1.5956,0.8909,0.3272],[3200,1.4266,0.9392,0.3456],[3500,1.5625,0.8924,0.4098],[3850,1.5424,0.8908,0.4843],[4200,1.3517,0.9379,0.5795],[4800,1.2358,0.9588,0.7138],[5500,1.1384,0.9733,0.8571],[6500,1.0399,0.9851,1.0306],[8000,0.9518,0.9902,1.2391],[10000,0.8743,0.9937,1.4322],[15000,0.7856,0.9930,1.7002],[25000,0.7312,0.9873,1.9174],[40000,0.7011,0.9828,2.0504]];
-
-// 매듭 사이를 선형광에서 보간 — 온도를 100K 단위로 끊지 않는다.
-function starColorForTeff(teff, lum) {
-  if (!teff) return null;
-  lum = lum || 0.46;
-  const K = TEFF_KNOTS;
-  let v;
-  if (teff <= K[0][0]) v = K[0].slice(1);
-  else if (teff >= K[K.length - 1][0]) v = K[K.length - 1].slice(1);
-  else {
-    let i = 1;
-    while (i < K.length && K[i][0] < teff) i++;
-    const [t0, r0, g0, b0] = K[i - 1], [t1, r1, g1, b1] = K[i];
-    const f = (teff - t0) / (t1 - t0);
-    v = [r0 + (r1 - r0) * f, g0 + (g1 - g0) * f, b0 + (b1 - b0) * f];
-  }
-  const y = 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
-  let c = v.map(x => x * lum / y);
-  // 차가운 왜성의 색도는 sRGB 밖이다(1100K 는 청색이 최대의 4.3배, 녹색은 음수).
-  // 채널별로 자르면 없던 채도를 만들어내므로, 같은 휘도의 회색과 섞어 색역에 넣는다.
-  let lo = 0, hi = 1;
-  for (let k = 0; k < 40; k++) {
-    const t = (lo + hi) / 2;
-    const m = c.map(x => (1 - t) * x + t * lum);
-    if (m.every(x => x >= -1e-9 && x <= 1 + 1e-9)) hi = t; else lo = t;
-  }
-  c = c.map(x => (1 - hi) * x + hi * lum);
-  const enc = x => {
-    x = Math.max(0, Math.min(1, x));
-    const e = x <= 0.0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - 0.055;
-    return Math.round(Math.max(0, Math.min(255, e * 255))).toString(16).padStart(2, '0');
-  };
-  return '#' + enc(c[0]) + enc(c[1]) + enc(c[2]);
-}
-
 function specStrongBg(cls) {
   // surface-α 를 한 단계 강하게 (A2_RefinedSpectral.jsx 의 replace 로직과 동일)
   const map = {
@@ -2114,17 +2072,14 @@ function specStrongBg(cls) {
   return map[cls] || map.X;
 }
 
-function specStyleVars(cls, teff) {
-  // 막대/행 틴트/글로우 = 그 별의 Teff 에서 계산한 실제 색. Teff 가 없을 때만
-  // 분광형 대표 스와치로 떨어진다. 알약은 분류 라벨이라 계속 분광형 색을 쓴다.
-  const bar = starColorForTeff(teff);
+function specStyleVars(cls) {
   const specBg = `var(--v2-spec-${cls}-bg)`;
   const strongBg = specStrongBg(cls);
   return [
-    `--spec-color: ${bar || `var(--v2-spec-${cls}-swatch)`}`,
-    `--spec-tint: ${bar ? bar + '1f' : specBg}`,
-    `--spec-tint-strong: ${bar ? bar + '33' : strongBg}`,
-    `--spec-glow: ${bar ? bar + '2b' : specBg}`,
+    `--spec-color: var(--v2-spec-${cls}-swatch)`,   // 별의 실제 색 (글자색 토큰 아님)
+    `--spec-tint: ${specBg}`,
+    `--spec-tint-strong: ${strongBg}`,
+    `--spec-glow: ${specBg}`,
   ].join('; ');
 }
 
@@ -2457,7 +2412,7 @@ function renderRows() {
     const key = rowKey(r);
     const isOpen = OPEN_KEY === key;
     const cls = v2Spec(r.spec);
-    const rowStyle = specStyleVars(cls, r.teff);
+    const rowStyle = specStyleVars(cls);
 
     const planetCell = r.np > 0
       ? `<span class="a2-pc">${r.np}</span>`
@@ -2496,7 +2451,7 @@ function renderCards() {
     const key = rowKey(r);
     const isOpen = OPEN_KEY === key;
     const cls = v2Spec(r.spec);
-    const cardStyle = specStyleVars(cls, r.teff);
+    const cardStyle = specStyleVars(cls);
 
     const planetPill = r.np > 0
       ? `<span class="a2-pc">${r.np}p</span>`
