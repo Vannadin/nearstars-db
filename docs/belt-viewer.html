@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" class="ns-light-ok">
+<html lang="en" class="ns-light-ok">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -44,6 +44,13 @@
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
 </style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 <style>
   :root{
@@ -112,7 +119,7 @@
   summary{list-style:none;cursor:pointer;padding:11px 14px;font-weight:600;font-size:13px;
     display:flex;align-items:center;gap:8px;user-select:none}
   summary::-webkit-details-marker{display:none}
-  summary .tri{color:var(--muted);font-size:10px;transition:.15s;margin-left:auto}
+  summary .tri{color:var(--muted);font-size:11px;transition:.15s;margin-left:auto}
   details[open] summary .tri{transform:rotate(90deg)}
   summary .dot{width:9px;height:9px;border-radius:50%}
   .g-inner .dot{background:#ed6925}.g-outer .dot{background:#8a5cff}

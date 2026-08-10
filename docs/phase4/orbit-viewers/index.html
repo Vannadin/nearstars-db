@@ -1,5 +1,7 @@
 <!-- 궤도 동역학 뷰어 갤러리 (자동 생성, build_viewers.py) -->
-<!doctype html><meta charset="utf-8"><title>NearStars — Orbit dynamics viewers</title>
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NearStars — Orbit dynamics viewers</title>
 <style>
   body{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.6 system-ui,sans-serif}
   header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.09)}
@@ -57,6 +59,13 @@
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
 </style><div class="ns-bar"><a class="ns-brand" href="../../index.html">NearStars</a><a href="../../index.html">DB</a><span class="ns-sep">·</span><a href="../../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../../tools.html">Tools</a><span class="ns-sep">·</span><a href="../../wiki/index.html">Wiki</a></div>
 <header>
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
@@ -67,7 +76,7 @@
 <div class="grid">
   <div class="card">
     <a href="alpha-centauri/interactive.html"><img src="alpha-centauri/orbits.png" alt="Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]" loading="lazy"></a>
-    <div class="meta"><h3>Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]</h3>
+    <div class="meta"><h2>Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]</h2>
       <span class="pill ok">stable</span>
       <span class="sub">5 <span data-i18n>위성</span><span data-en hidden>moons</span> · leapfrog dt=10.0min · |ΔE/E|=3.9e-10</span>
       <div class="links"><a href="alpha-centauri/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>
@@ -75,7 +84,7 @@
   </div>
   <div class="card">
     <a href="proxima-cen/interactive.html"><img src="proxima-cen/orbits.png" alt="Proxima Cen" loading="lazy"></a>
-    <div class="meta"><h3>Proxima Cen</h3>
+    <div class="meta"><h2>Proxima Cen</h2>
       <span class="pill ok">stable</span>
       <span class="sub">3 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=2.1e-10</span>
       <div class="links"><a href="proxima-cen/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>
@@ -83,7 +92,7 @@
   </div>
   <div class="card">
     <a href="40-eridani/interactive.html"><img src="40-eridani/orbits.png" alt="40 Eridani A" loading="lazy"></a>
-    <div class="meta"><h3>40 Eridani A</h3>
+    <div class="meta"><h2>40 Eridani A</h2>
       <span class="pill ok">stable</span>
       <span class="sub">3 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=1.4e-09</span>
       <div class="links"><a href="40-eridani/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>
@@ -91,7 +100,7 @@
   </div>
   <div class="card">
     <a href="tau-cet/interactive.html"><img src="tau-cet/orbits.png" alt="tau Cet" loading="lazy"></a>
-    <div class="meta"><h3>tau Cet</h3>
+    <div class="meta"><h2>tau Cet</h2>
       <span class="pill ok">stable</span>
       <span class="sub">4 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=7.5e-08</span>
       <div class="links"><a href="tau-cet/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>
@@ -99,7 +108,7 @@
   </div>
   <div class="card">
     <a href="barnards-star/interactive.html"><img src="barnards-star/orbits.png" alt="Barnard's star" loading="lazy"></a>
-    <div class="meta"><h3>Barnard's star</h3>
+    <div class="meta"><h2>Barnard's star</h2>
       <span class="pill ok">stable</span>
       <span class="sub">4 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=3.9e-06</span>
       <div class="links"><a href="barnards-star/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>
@@ -107,7 +116,7 @@
   </div>
   <div class="card">
     <a href="trappist-1/interactive.html"><img src="trappist-1/orbits.png" alt="TRAPPIST-1" loading="lazy"></a>
-    <div class="meta"><h3>TRAPPIST-1</h3>
+    <div class="meta"><h2>TRAPPIST-1</h2>
       <span class="pill ok">stable</span>
       <span class="sub">7 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=9.0e-08</span>
       <div class="links"><a href="trappist-1/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>

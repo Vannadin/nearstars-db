@@ -59,6 +59,19 @@ SEG_CSS = """
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }"""
 
+# ── site-wide accessibility floor ────────────────────────────────────────────
+# Keyboard focus was invisible everywhere before 2026-08-10 (no :focus rule on
+# 269/272 pages), and only one page honoured prefers-reduced-motion. Both are
+# global concerns, so they ride with the bar like SEG_CSS does.
+A11Y_CSS = """
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }"""
+
 _BAR_CSS = """<style>
 .ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
   padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
@@ -79,7 +92,7 @@ _BAR_CSS = """<style>
   html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
   html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
 @media (max-width:600px) { .ns-bar { padding:8px 14px; gap:10px } }
-""" + SEG_CSS + """
+""" + SEG_CSS + A11Y_CSS + """
 </style>"""
 
 

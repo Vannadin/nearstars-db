@@ -713,7 +713,7 @@ h3 {{ font-size: 14px; margin: 16px 0 8px }}
 ul.intro {{ padding-left: 22px }}
 
 .dt {{ width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px }}
-.dt th {{ padding: 8px 10px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10.5px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }}
+.dt th {{ padding: 8px 10px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 11.5px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }}
 .dt td {{ padding: 7px 10px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12px; vertical-align: top; line-height: 1.55 }}
 
 pre {{ background: var(--bg-card-alt); border: 1px solid var(--bd-soft); border-radius: 4px; padding: 10px 12px; overflow-x: auto; margin: 8px 0 }}
@@ -726,7 +726,7 @@ pre code {{ background: none; padding: 0; font-size: 12px }}
 .palette-swatch {{ flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 7px; font-family: var(--mono); font-size: 9.5px; line-height: 1.2; transition: flex-grow 0.15s ease; position: relative; overflow: hidden }}
 .palette-swatch:hover {{ flex-grow: 2.2 }}
 .palette-swatch .role {{ opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }}
-.palette-swatch .hex {{ opacity: 0.72; font-size: 10px }}
+.palette-swatch .hex {{ opacity: 0.72; font-size: 11px }}
 .palette-swatch-emissive {{ color: rgba(0,0,0,0.88) }}
 /* wide-band fade: 좌우 25% 가 페이지 배경색이라 검정 텍스트가 안 보임 → 흰색 + outline 으로 전환 */
 .palette-swatch-emissive-wide {{ color: rgba(255,255,255,0.92) }}
@@ -765,7 +765,7 @@ html[lang="en"] .field-tt:hover::after {{ content: attr(data-en-tip) }}
 /* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
 .spectrum-bar-invisible {{ background: repeating-linear-gradient(45deg, rgba(255,255,255,.05), rgba(255,255,255,.05) 4px, rgba(255,255,255,.09) 4px, rgba(255,255,255,.09) 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }}
 .palette-swatch-invisible {{ background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }}
-.spectrum-range {{ font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }}
+.spectrum-range {{ font-size: 11px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }}
 
 @media (max-width: 600px) {{
   section {{ margin-bottom: 24px }}

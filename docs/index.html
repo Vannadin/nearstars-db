@@ -21,13 +21,13 @@ h1{font-size:20px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 input[type=text]{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.80);padding:6px 12px;border-radius:6px;font-size:13px;width:210px;outline:none}
 input[type=text]:focus{border-color:#7aa8ff}
 select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.80);padding:5px 10px;border-radius:6px;font-size:13px;outline:none;cursor:pointer}
-.fg{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.40)}
+.fg{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.46)}
 input[type=range]{accent-color:#7aa8ff;width:100px}
 label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.52)}
 input[type=checkbox]{accent-color:#7aa8ff}
-.stats-bar{padding:6px 20px;font-size:12px;color:rgba(255,255,255,.25);border-bottom:1px solid rgba(255,255,255,.045);background:rgba(255,255,255,.014);display:flex;align-items:center;gap:10px}
+.stats-bar{padding:6px 20px;font-size:12px;color:rgba(255,255,255,.46);border-bottom:1px solid rgba(255,255,255,.045);background:rgba(255,255,255,.014);display:flex;align-items:center;gap:10px}
 .stats-bar .spacer{flex:1}
-.help-btn{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.36);font-size:12px;padding:3px 10px;border-radius:12px;cursor:pointer;letter-spacing:.3px}
+.help-btn{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.56);font-size:12px;padding:3px 10px;border-radius:12px;cursor:pointer;letter-spacing:.3px}
 .help-btn:hover{border-color:#7aa8ff;color:rgba(255,255,255,.56)}
 
 /* ── 사용법 modal ─────────────────────────────────────────────────────── */
@@ -43,7 +43,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 .modal li{margin-bottom:5px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.55}
 .modal li b{color:rgba(255,255,255,.92)}
 .modal kbd{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);padding:1px 6px;border-radius:3px;font-family:monospace;font-size:11px;color:rgba(255,255,255,.62)}
-.modal-footer{margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:rgba(255,255,255,.40);flex-wrap:wrap}
+.modal-footer{margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:rgba(255,255,255,.46);flex-wrap:wrap}
 .modal-footer label{font-size:12px;color:rgba(255,255,255,.46);gap:6px;display:flex;align-items:center}
 
 /* glossary tooltip — kv 라벨/단위 토큰 hover 시 도움말 popup */
@@ -68,11 +68,11 @@ input[type=checkbox]{accent-color:#7aa8ff}
 .tip-cls{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .tip-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.15)}
 .tip-cls-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.88)}
-.tip-temp{font-size:12px;color:rgba(255,255,255,.44);margin-bottom:6px;padding-left:20px}
+.tip-temp{font-size:12px;color:rgba(255,255,255,.56);margin-bottom:6px;padding-left:20px}
 .tip-desc{font-size:12px;color:rgba(255,255,255,.56);line-height:1.6;margin-bottom:7px;padding-left:20px}
-.tip-row{font-size:12px;color:rgba(255,255,255,.44);margin-bottom:3px;padding-left:4px}
+.tip-row{font-size:12px;color:rgba(255,255,255,.56);margin-bottom:3px;padding-left:4px}
 .tip-row b{color:rgba(255,255,255,.62)}
-.tip-sfx{font-size:11px;color:rgba(255,255,255,.30);margin-top:2px;padding-left:4px}
+.tip-sfx{font-size:11px;color:rgba(255,255,255,.46);margin-top:2px;padding-left:4px}
 
 /* ── v2 본문 — A2_RefinedSpectral.jsx 의 a2_styles 를 그대로 vanilla 이식 ── */
 [data-ns="v2"] .a2-root { position: relative; display: flex; flex-direction: column;
@@ -81,7 +81,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 
 [data-ns="v2"] .a2-table { width: 100%; border-collapse: separate; border-spacing: 0; }
 [data-ns="v2"] .a2-th { padding: 11px 16px; text-align: left;
-                        font: 600 10.5px/1 var(--v2-font-sans); letter-spacing: 0.08em;
+                        font: 600 11.5px/1 var(--v2-font-sans); letter-spacing: 0.08em;
                         text-transform: uppercase; color: var(--v2-fg-4);
                         border-bottom: 1px solid var(--v2-bd-2);
                         background: var(--v2-surface-1); }
@@ -166,7 +166,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 [data-ns="v2"] .a2-rep-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
                              padding-bottom: 14px; margin-bottom: 18px;
                              border-bottom: 1px solid var(--v2-bd-1); }
-[data-ns="v2"] .a2-rep-label { font: 600 10.5px/1 var(--v2-font-sans);
+[data-ns="v2"] .a2-rep-label { font: 600 11.5px/1 var(--v2-font-sans);
                                letter-spacing: 0.08em; text-transform: uppercase;
                                color: var(--v2-fg-4); }
 [data-ns="v2"] .a2-rep-chip { display: inline-flex; align-items: center; gap: 6px;
@@ -198,7 +198,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 }
 
 [data-ns="v2"] .a2-section-h { display: flex; align-items: baseline; gap: 12px;
-                               font: 500 10.5px/1 var(--v2-font-sans);
+                               font: 500 11.5px/1 var(--v2-font-sans);
                                letter-spacing: 0.12em; text-transform: uppercase;
                                color: var(--v2-fg-3); margin-bottom: 14px;
                                padding-bottom: 8px; }
@@ -232,7 +232,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
   font: 500 12px/1 var(--v2-font-mono); letter-spacing: 0.04em;
 }
 [data-ns="v2"] .a2-img-cap {
-  font: 500 10px/1.4 var(--v2-font-mono);
+  font: 500 11px/1.4 var(--v2-font-mono);
   color: var(--v2-fg-4); margin-top: 6px;
 }
 [data-ns="v2"] .a2-reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
@@ -251,7 +251,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 [data-ns="v2"] .a2-survey-btn {
   background: transparent; border: 1px solid var(--v2-bd-2);
   color: var(--v2-fg-4); padding: 3px 8px; border-radius: 4px;
-  font: 500 10.5px/1.4 var(--v2-font-sans);
+  font: 500 11.5px/1.4 var(--v2-font-sans);
   cursor: pointer; transition: var(--v2-t-fast);
 }
 [data-ns="v2"] .a2-survey-btn:hover:not(:disabled):not(.on) {
@@ -269,7 +269,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 [data-ns="v2"] .a2-stl-btn {
   background: transparent; border: 1px solid var(--v2-bd-2);
   color: var(--v2-fg-3); padding: 3px 9px; border-radius: 4px;
-  font: 500 10.5px/1.4 var(--v2-font-sans); cursor: pointer;
+  font: 500 11.5px/1.4 var(--v2-font-sans); cursor: pointer;
   transition: var(--v2-t-fast);
 }
 [data-ns="v2"] .a2-stl-btn:hover:not(:disabled) { color: var(--v2-fg-1); border-color: var(--v2-bd-3); }
@@ -336,7 +336,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 [data-ns="v2"] .a2-cc-copy {
   background: transparent; border: 1px solid var(--v2-bd-2);
   color: var(--v2-fg-4); padding: 3px 9px; border-radius: 4px;
-  font: 500 10.5px/1 var(--v2-font-sans); cursor: pointer; letter-spacing: 0.02em;
+  font: 500 11.5px/1 var(--v2-font-sans); cursor: pointer; letter-spacing: 0.02em;
   transition: var(--v2-t-fast);
 }
 [data-ns="v2"] .a2-cc-copy:hover { border-color: var(--v2-bd-3); color: var(--v2-fg-2); }
@@ -367,7 +367,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 [data-ns="v2"] .a2-fov-btn, [data-ns="v2"] .a2-survey-btn {
   background: transparent; border: 1px solid var(--v2-bd-2);
   color: var(--v2-fg-4); padding: 4px 4px; border-radius: 4px;
-  font: 500 10.5px/1.4 var(--v2-font-sans);
+  font: 500 11.5px/1.4 var(--v2-font-sans);
   cursor: pointer; transition: var(--v2-t-fast);
   text-align: center; white-space: nowrap;
   min-width: 0; overflow: hidden; text-overflow: ellipsis;
@@ -381,7 +381,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 /* SIMBAD / Stellarium — survey-grid 안에서 같은 셀 크기로 정렬. */
 [data-ns="v2"] .a2-survey-grid .a2-ext-link,
 [data-ns="v2"] .a2-survey-grid .a2-stl-btn {
-  padding: 4px 4px; font: 500 10.5px/1.4 var(--v2-font-sans);
+  padding: 4px 4px; font: 500 11.5px/1.4 var(--v2-font-sans);
   justify-content: center; text-align: center;
   white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis;
 }
@@ -389,7 +389,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
   display: inline-flex; align-items: center; gap: 4px;
   background: transparent; border: 1px solid var(--v2-bd-2);
   color: var(--v2-fg-3); padding: 3px 9px; border-radius: 4px;
-  font: 500 10.5px/1.4 var(--v2-font-sans); cursor: pointer;
+  font: 500 11.5px/1.4 var(--v2-font-sans); cursor: pointer;
   text-decoration: none; transition: var(--v2-t-fast);
 }
 [data-ns="v2"] .a2-ext-link:hover { color: var(--v2-fg-1); border-color: var(--v2-bd-3); }
@@ -415,7 +415,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
   padding: 4px 0 12px;
 }
 [data-ns="v2"] .a2-cs-label {
-  font: 600 10.5px/1 var(--v2-font-sans);
+  font: 600 11.5px/1 var(--v2-font-sans);
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--v2-fg-4);
 }
@@ -570,8 +570,8 @@ input[type=checkbox]{accent-color:#7aa8ff}
   [data-ns="v2"] .a2-cc-swatch { width: 48px; height: 48px; }
   [data-ns="v2"] .a2-cc-row { grid-template-columns: 48px 1fr auto; gap: 10px; }
   /* survey picker — 모바일 버튼 폰트/패딩 축소 */
-  [data-ns="v2"] .a2-survey-btn { padding: 2px 6px; font-size: 10px; }
-  [data-ns="v2"] .a2-stl-btn { padding: 3px 9px; font-size: 10.5px; }
+  [data-ns="v2"] .a2-survey-btn { padding: 2px 6px; font-size: 11px; }
+  [data-ns="v2"] .a2-stl-btn { padding: 3px 9px; font-size: 11.5px; }
   /* 별 이미지 — 모바일은 더 작게 */
   [data-ns="v2"] .a2-star-img,
   [data-ns="v2"] .a2-img-no { width: 160px; height: 160px; }
@@ -663,6 +663,13 @@ input[type=checkbox]{accent-color:#7aa8ff}
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
 </style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><span class="ns-here">DB</span><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><a href="tools.html">Tools</a><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 <header>
   <h1>NearStars <span>DB</span></h1>
@@ -720,7 +727,7 @@ input[type=checkbox]{accent-color:#7aa8ff}
 <div class="stats-bar">
   <span id="stats">— / 152 systems</span>
   <span class="spacer"></span>
-  <span style="color:rgba(255,255,255,.25);font-size:11px">v2 preview · sample data</span>
+  <span style="color:rgba(255,255,255,.46);font-size:11px">v2 preview · sample data</span>
 </div>
 
 <!-- ── Howto modal (init 시 빌드, 클릭 시 toggle) ───────────────────────── -->
@@ -1922,23 +1929,39 @@ function bindFilters() {
   bindUnitSeg('pmass-seg', 'pmass', v => UNIT_PMASS = v, 'nearstars-unit-pmass');
 }
 
+// 정렬 헤더의 현재 상태를 aria-sort 로 노출 (스크린리더가 방향까지 읽는다).
+function syncAriaSort() {
+  document.querySelectorAll('.a2-th.sortable').forEach(th => {
+    th.setAttribute('aria-sort', th.dataset.col === SORT.col
+      ? (SORT.dir === 1 ? 'ascending' : 'descending') : 'none');
+  });
+}
+
 function bindSort() {
   document.querySelectorAll('.a2-th.sortable').forEach(th => {
     th.style.cursor = 'pointer';
-    th.addEventListener('click', () => {
+    th.tabIndex = 0;                     // 키보드로도 정렬 가능해야 한다
+    const sort = () => {
       const col = th.dataset.col;
       if (SORT.col === col) SORT.dir = -SORT.dir;
       else { SORT.col = col; SORT.dir = 1; }
       syncMobileSort();
+      syncAriaSort();
       renderAll();
+    };
+    th.addEventListener('click', sort);
+    th.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sort(); }
     });
   });
+  syncAriaSort();
   const sel = document.getElementById('a2-sort-col');
   const btn = document.getElementById('a2-sort-dir');
-  if (sel) sel.addEventListener('change', e => { SORT.col = e.target.value; renderAll(); });
+  if (sel) sel.addEventListener('change', e => { SORT.col = e.target.value; syncAriaSort(); renderAll(); });
   if (btn) btn.addEventListener('click', () => {
     SORT.dir = -SORT.dir;
     btn.textContent = SORT.dir === 1 ? '↑' : '↓';
+    syncAriaSort();
     renderAll();
   });
 }
@@ -2089,6 +2112,7 @@ function detailContentHTML(r) {
         <div class="a2-star-img-row">
           <div class="a2-dss-wrap">
             <img class="a2-star-img" id="${imgId}"
+              alt="${initial.name} sky survey cutout centred on ${star.name}"
               data-ra-orig="${raR.toFixed(6)}" data-dec-orig="${decR.toFixed(6)}"
               data-pmra="${pmraR.toFixed(3)}" data-pmdec="${pmdecR.toFixed(3)}"
               data-fov="${fov0}" data-survey="${initial.name}"

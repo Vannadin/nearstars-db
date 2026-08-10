@@ -435,7 +435,7 @@ def _split_head(content):
 STYLE = """
 :root {
   --bg:#06070a; --fg1:rgba(255,255,255,.94); --fg2:rgba(255,255,255,.80); --fg3:rgba(255,255,255,.56);
-  --fg4:rgba(255,255,255,.36); --s1:rgba(255,255,255,.022); --s2:rgba(255,255,255,.045);
+  --fg4:rgba(255,255,255,.46); --s1:rgba(255,255,255,.022); --s2:rgba(255,255,255,.045);
   --s3:rgba(255,255,255,.07); --bd1:rgba(255,255,255,.05); --bd2:rgba(255,255,255,.09);
   --accent:#7aa8ff; --accent-bg:rgba(122,168,255,.10);
   --ok:#4ec9b0; --ok-bg:rgba(78,201,176,.12); --warn:#e0b070; --warn-bg:rgba(224,176,112,.12);
@@ -497,7 +497,7 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .axis { font-family:var(--mono); font-size:12.5px; color:var(--accent); background:var(--accent-bg);
   padding:2px 8px; border-radius:6px }
 .pills { display:flex; gap:5px; flex-wrap:wrap; margin-left:auto }
-.pill { font:600 10px/1.4 var(--sans); letter-spacing:.03em; text-transform:uppercase;
+.pill { font:600 11px/1.4 var(--sans); letter-spacing:.03em; text-transform:uppercase;
   padding:2px 9px; border-radius:999px }
 .pill.st-gated,.pill.st-emitted { color:var(--ok); background:var(--ok-bg) }
 .pill.st-passthrough { color:var(--fg4); background:var(--s2) }
@@ -515,7 +515,7 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .legend > summary::-webkit-details-marker { display:none }
 .legend > summary::before { content:"?"; display:inline-grid; place-items:center;
   width:15px; height:15px; margin-right:8px; border-radius:50%; background:var(--s3);
-  color:var(--fg3); font:600 10px/1 var(--sans); vertical-align:-2px }
+  color:var(--fg3); font:600 11px/1 var(--sans); vertical-align:-2px }
 .legend > summary:hover { color:var(--fg1) }
 .legend[open] > summary { border-bottom:1px solid var(--bd1) }
 .legend dl { margin:0; padding:11px 13px 13px;
@@ -536,20 +536,20 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .spec td.v { color:var(--fg1); word-break:break-word }
 .spec td.o { text-align:right; width:1% }
 .spec .u { color:var(--fg4); font-size:11px } .spec .hx { color:var(--fg2) }
-.spec .win { color:var(--fg4); font-size:10.5px; border:1px solid var(--bd1); border-radius:4px;
+.spec .win { color:var(--fg4); font-size:11.5px; border:1px solid var(--bd1); border-radius:4px;
   padding:1px 6px; margin-left:6px; white-space:nowrap }
-.fnote { color:var(--fg4); font-size:10.5px; font-family:var(--sans); line-height:1.5; margin-top:3px; max-width:64ch }
+.fnote { color:var(--fg4); font-size:11.5px; font-family:var(--sans); line-height:1.5; margin-top:3px; max-width:64ch }
 .fnote.p3 { color:var(--fg4); font-style:italic }
 .swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
-.swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
+.swatches .sw { font-size:11.5px; color:var(--fg3); white-space:nowrap }
 .swatches .hx { color:var(--fg4); font-size:9.5px }
 .moonwrap { overflow-x:auto; margin:8px 0 2px }
 .spec.moons td.v { white-space:nowrap }
 .spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
 .spec.moons tr.mnote + tr td { border-top:none }
 .spec.moons tr td { border-bottom:none }
-.spec.moons tr.mdesign td, .spec.moons td.dsn { color:var(--fg4); font-size:10.5px; padding-top:0 }
-.spec.moons tr.mdesign td.k { font-family:var(--sans); font-size:10px }
+.spec.moons tr.mdesign td, .spec.moons td.dsn { color:var(--fg4); font-size:11.5px; padding-top:0 }
+.spec.moons tr.mdesign td.k { font-family:var(--sans); font-size:11px }
 .spec.moons tr:last-child td, .spec.moons tr.mnote td { border-bottom:1px solid var(--bd1) }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
@@ -562,7 +562,7 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   color:var(--fg4); border:1px solid var(--bd2); border-radius:4px; padding:1px 5px; margin-right:6px }
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
-.ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
+.ref { font-family:var(--mono); font-size:11px; color:var(--fg4); background:var(--s1);
   border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
 a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }

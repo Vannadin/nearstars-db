@@ -147,14 +147,16 @@ def write_gallery(cards):
                   f'{c["n_moons"]} <span data-i18n>위성</span><span data-en hidden>moons</span>')
         rows.append(f"""  <div class="card">
     <a href="{c['slug']}/interactive.html"><img src="{c['slug']}/orbits.png" alt="{c['system']}" loading="lazy"></a>
-    <div class="meta"><h3>{c['system']}</h3>
+    <div class="meta"><h2>{c['system']}</h2>
       <span class="pill {vclass}">{c['verdict']}</span>
       <span class="sub">{bodies} · {c['integrator']} dt={c['dt_min']}min · |ΔE/E|={c['dE']}</span>
       <div class="links"><a href="{c['slug']}/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>
         <a href="{c['slug']}/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
   </div>""")
     html = f"""<!-- 궤도 동역학 뷰어 갤러리 (자동 생성, build_viewers.py) -->
-<!doctype html><meta charset="utf-8"><title>NearStars — Orbit dynamics viewers</title>
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NearStars — Orbit dynamics viewers</title>
 <style>
   body{{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.6 system-ui,sans-serif}}
   header{{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.09)}}

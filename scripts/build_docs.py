@@ -180,8 +180,8 @@ body { margin: 0;
   padding: 16px 12px; font-size: 13px }
 .side .brand { display: block; font-weight: 700; font-size: 15px; color: rgba(255,255,255,.94);
   text-decoration: none; margin: 2px 6px 14px }
-.side .brand span { color: rgba(255,255,255,.40); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: rgba(255,255,255,.36);
+.side .brand span { color: rgba(255,255,255,.46); font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 11px; letter-spacing: .6px; color: rgba(255,255,255,.46);
   margin: 16px 6px 4px; font-weight: 700 }
 .side a { display: block; text-decoration: none; color: rgba(255,255,255,.72); padding: 5px 8px;
   border-radius: 6px; line-height: 1.4 }
@@ -191,7 +191,7 @@ body { margin: 0;
 .content-wrap { flex: 1; min-width: 0; padding: 0 16px }
 .topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
 @media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
-.lang-only { color: rgba(255,255,255,.36); font-size: 12px }
+.lang-only { color: rgba(255,255,255,.46); font-size: 12px }
 .markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto;
   padding: 24px 45px 60px; background: transparent !important }
 @media (max-width: 767px) { .markdown-body { padding: 15px } }

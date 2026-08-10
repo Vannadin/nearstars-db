@@ -57,6 +57,13 @@ main { max-width: 980px }
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
 </style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><span class="ns-here">Tools</span><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
 <header>
   <h1 data-i18n="title"></h1>

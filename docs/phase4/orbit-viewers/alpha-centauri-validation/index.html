@@ -1,5 +1,7 @@
 <!-- α Cen 궤도 안정성 검증 매트릭스 (Phase 4 자료). 수동 작성 — 4검사 요약. -->
-<!doctype html><meta charset="utf-8"><title>Alpha Centauri — orbit stability validation</title>
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alpha Centauri — orbit stability validation</title>
 <style>
   body{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.65 system-ui,sans-serif}
   header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.09)}
@@ -57,6 +59,13 @@
   html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
   html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
     color:rgba(9,12,22,.92) } }
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
 </style><div class="ns-bar"><a class="ns-brand" href="../../../index.html">NearStars</a><a href="../../../index.html">DB</a><span class="ns-sep">·</span><a href="../../../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../../../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../../../tools.html">Tools</a><span class="ns-sep">·</span><a href="../../../wiki/index.html">Wiki</a></div>
 <header>
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
@@ -81,17 +90,17 @@
 
   <h2><span data-i18n>위성계</span><span data-en hidden>Moon system</span></h2>
   <div class="grid">
-    <div class="card"><a href="moon_leapfrog.html"><img src="moon_leapfrog.png"></a>
+    <div class="card"><a href="moon_leapfrog.html"><img src="moon_leapfrog.png" alt="Moon-system orbital elements over 10⁴ yr, leapfrog integrator"></a>
       <div class="m"><h3>leapfrog · 10⁴ yr</h3><div class="sub"><span data-i18n>인게임 정합 · STABLE</span><span data-en hidden>in-game fidelity · STABLE</span> · <a href="moon_leapfrog.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a></div></div></div>
-    <div class="card"><a href="moon_megno.html"><img src="moon_megno.png"></a>
+    <div class="card"><a href="moon_megno.html"><img src="moon_megno.png" alt="Moon-system MEGNO chaos indicator over 10⁴ yr, IAS15 integrator"></a>
       <div class="m"><h3>IAS15+MEGNO · 10⁴ yr</h3><div class="sub">MEGNO 3.65 · <a href="moon_megno.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a></div></div></div>
   </div>
 
   <h2><span data-i18n>행성계</span><span data-en hidden>Planet orbit</span></h2>
   <div class="grid">
-    <div class="card"><a href="planets_leapfrog.html"><img src="planets_leapfrog.png"></a>
+    <div class="card"><a href="planets_leapfrog.html"><img src="planets_leapfrog.png" alt="Planet-orbit elements over 10⁴ yr, leapfrog integrator"></a>
       <div class="m"><h3>leapfrog · 10⁴ yr</h3><div class="sub"><span data-i18n>인게임 정합 · STABLE</span><span data-en hidden>in-game fidelity · STABLE</span> · <a href="planets_leapfrog.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a></div></div></div>
-    <div class="card"><a href="planets_megno.html"><img src="planets_megno.png"></a>
+    <div class="card"><a href="planets_megno.html"><img src="planets_megno.png" alt="Planet-orbit MEGNO chaos indicator over 10⁸ yr, IAS15 integrator"></a>
       <div class="m"><h3>IAS15+MEGNO · 10⁸ yr</h3><div class="sub">MEGNO 47.3 · CHAOTIC-HILL-STABLE · <a href="planets_megno.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a></div></div></div>
   </div>
 

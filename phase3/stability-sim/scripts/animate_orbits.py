@@ -210,7 +210,8 @@ data = {
 }
 
 HTML = r"""<!-- __TITLE__ : 안정성 런 3D 궤도 세차 애니메이션 (자동 생성, animate_orbits.py). three@0.160 importmap. -->
-<meta charset="utf-8"><title>__TITLE__</title>
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>__TITLE__</title>
 <style>
   html,body{margin:0;height:100%;background:#06070a;color:rgba(255,255,255,.82);font:13px/1.5 system-ui,sans-serif;overflow:hidden}
   #hud{position:fixed;top:10px;left:12px;z-index:10;background:rgba(10,12,18,.72);padding:10px 13px;border-radius:9px;backdrop-filter:blur(4px);max-width:290px}
@@ -236,6 +237,13 @@ HTML = r"""<!-- __TITLE__ : 안정성 런 3D 궤도 세차 애니메이션 (자�
   .seg.seg button{background:transparent;border:none;cursor:pointer;padding:5px 10px;border-radius:6px;white-space:nowrap;color:rgba(255,255,255,.56);font:500 12px/1 'Geist','Inter',system-ui,sans-serif}
   .seg.seg button:hover{color:rgba(255,255,255,.80)}
   .seg.seg button.on{background:rgba(255,255,255,.07);color:rgba(255,255,255,.94)}
+  :focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+  @media (prefers-color-scheme:light) {
+    html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+  @media (prefers-reduced-motion:reduce) {
+    *, *::before, *::after { animation-duration:.01ms !important;
+      animation-iteration-count:1 !important; transition-duration:.01ms !important;
+      scroll-behavior:auto !important } }
 </style>
 <div id="hud">
   <h1>__SYSTEM__ — <span class="v">__VERDICT__</span></h1>

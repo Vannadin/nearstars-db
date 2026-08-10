@@ -1,5 +1,6 @@
 <!-- Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°] — interactive orbit analysis : 안정성 런 인터랙티브 4패널 (자동 생성, plot_interactive.py). Plotly CDN. -->
-<!doctype html><meta charset="utf-8"><title>Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°] — interactive orbit analysis</title>
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°] — interactive orbit analysis</title>
 <style>
   html,body{margin:0;height:100%;background:#ffffff;transition:background .2s}
   body.dark{background:#06070a}
@@ -7,6 +8,14 @@
   #theme{position:fixed;top:8px;right:12px;z-index:10;background:#eef1f6;color:#1a1a1a;
     border:1px solid #c8cfdb;border-radius:6px;padding:5px 11px;cursor:pointer;font:13px system-ui}
   body.dark #theme{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border-color:rgba(255,255,255,.13)}
+
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#2f66d8 } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
 </style><nav style="position:fixed;top:8px;left:12px;z-index:1000;font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);padding:4px 10px;border-radius:6px"><a href="../index.html" style="color:#7fb0ff;text-decoration:none">← Orbit viewers</a> &nbsp;·&nbsp; <a href="../../index.html" style="color:#7fb0ff;text-decoration:none">Phase 4</a> &nbsp;·&nbsp; <a href="../../../index.html" style="color:#7fb0ff;text-decoration:none">DB</a></nav>
 <script src="../../../assets/plotly.min.js"></script>
 <button id="theme">🌙 Dark</button>

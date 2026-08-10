@@ -69,7 +69,7 @@ h3 { margin: 14px 0 6px }
 .plot svg { display: block; width: 100%; height: auto }
 .plot .gridline { stroke: rgba(255,255,255,.07); stroke-width: 1 }
 .plot .axis { stroke: rgba(255,255,255,.18); stroke-width: 1 }
-.plot .tick-label { fill: rgba(255,255,255,.40); font-size: 10px; font-family: var(--mono) }
+.plot .tick-label { fill: rgba(255,255,255,.40); font-size: 11px; font-family: var(--mono) }
 .plot .point { fill: #7aa8ff }
 .plot .point.rec { fill: var(--ok); stroke: var(--ok-soft); stroke-width: 1.5 }
 .plot .errbar { stroke: rgba(122,168,255,.45); stroke-width: 1.2 }
@@ -79,13 +79,13 @@ h3 { margin: 14px 0 6px }
 .plot .axis-title { fill: rgba(255,255,255,.46); font-size: 11px; font-family: var(--mono) }
 
 .mt { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px }
-.mt th { padding: 7px 10px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
+.mt th { padding: 7px 10px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 11px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
 .mt td { padding: 6px 10px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12px; vertical-align: top }
 .mt td.nm { font-family: var(--sans); color: rgba(255,255,255,.80) }
 .mt tr.rec td { background: #0e1f1a }
 .mt tr.rec td:first-child { border-left: 2px solid var(--ok) }
 .rec-badge { color: var(--ok-soft); font-weight: 700; font-size: 11px; letter-spacing: .4px }
-.method-pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase }
+.method-pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase }
 .method-ttv { background: rgba(122,168,255,.12); color: #7aa8ff }
 .method-evolutionary_model { background: #2a2a18; color: #d8c870 }
 .method-sed_fitting { background: #1f2438; color: #b0a8e8 }
@@ -102,9 +102,9 @@ h3 { margin: 14px 0 6px }
 @media (max-width: 600px) {
   .intro { font-size: 12px }
   .summary { font-size: 11px }
-  .plot .row-label { font-size: 10.5px }
-  .plot .tick-label { font-size: 10px }
-  .plot .axis-title { font-size: 10px }
+  .plot .row-label { font-size: 11.5px }
+  .plot .tick-label { font-size: 11px }
+  .plot .axis-title { font-size: 11px }
   .mt thead { display: none }
   .mt, .mt tbody, .mt tr, .mt td { display: block; width: 100% }
   .mt tr { border: 1px solid #1a2333; border-radius: 6px; padding: 9px 11px; margin-bottom: 8px; background: #0a1018 }
@@ -112,7 +112,7 @@ h3 { margin: 14px 0 6px }
   .mt td { display: flex; justify-content: space-between; align-items: baseline; border: none; padding: 3px 0; gap: 10px; font-size: 12px }
   .mt td::before {
     content: attr(data-label);
-    color: var(--fg-dim); font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--fg-dim); font-size: 11px; text-transform: uppercase; letter-spacing: .4px;
     font-family: var(--sans); font-weight: 600; flex-shrink: 0
   }
   .mt td:empty, .mt td[data-label="status"]:empty { display: none }

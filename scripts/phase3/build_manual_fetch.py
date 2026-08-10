@@ -205,7 +205,7 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
 .empty { color: var(--fg-faint); font-style: italic }
 
 .mft { width: 100%; border-collapse: collapse; font-size: 12px; margin: 4px 0 12px }
-.mft th { padding: 7px 9px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
+.mft th { padding: 7px 9px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 11px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
 .mft td { padding: 6px 9px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); vertical-align: top; line-height: 1.5 }
 .mft td.bib { font-family: var(--mono); font-size: 11px; white-space: nowrap }
 .mft td.bib a { color: var(--accent); text-decoration: none }
@@ -214,7 +214,7 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
 .mft td.planet { font-family: var(--mono); font-size: 11px; color: var(--fg-muted) }
 .mft td.title { color: var(--fg-emph); font-weight: 500 }
 .mft td.why { color: var(--fg-primary); font-size: 11.5px }
-.mft code { background: var(--bg-card-alt); padding: 1px 5px; border-radius: 3px; font-size: 10.5px }
+.mft code { background: var(--bg-card-alt); padding: 1px 5px; border-radius: 3px; font-size: 11.5px }
 
 .tier-pill { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: .3px; margin-right: 6px }
 .tier-A { background: rgba(216,160,64,0.15); color: var(--warn-soft); border: 1px solid rgba(216,160,64,0.35) }
@@ -237,7 +237,7 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
   .mft td { display: flex; justify-content: space-between; align-items: baseline; border: none; padding: 3px 0; gap: 10px; font-size: 12px }
   .mft td::before {
     content: attr(data-label);
-    color: var(--fg-dim); font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--fg-dim); font-size: 11px; text-transform: uppercase; letter-spacing: .4px;
     font-family: var(--sans); font-weight: 600; flex-shrink: 0
   }
   .mft td.title, .mft td.why { display: block }

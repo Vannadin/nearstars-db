@@ -25,8 +25,8 @@
   --fg-primary:     rgba(255,255,255,.80);
   --fg-emph:        rgba(255,255,255,.94);
   --fg-muted:       rgba(255,255,255,.56);
-  --fg-dim:         rgba(255,255,255,.40);
-  --fg-faint:       rgba(255,255,255,.25);
+  --fg-dim:         rgba(255,255,255,.46);
+  --fg-faint:       rgba(255,255,255,.46);
 
   --accent:         #7aa8ff;
   --accent-soft:    rgba(122,168,255,.78);

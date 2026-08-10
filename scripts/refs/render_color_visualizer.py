@@ -497,9 +497,9 @@ def render_sol_comparison() -> str:
             return (f'<div class="sol-row"><span class="sol-src" data-i18n="{src_key}"></span>'
                     f'<div class="sol-sws">{sw}</div></div>')
         cards.append(
-            f'<div class="sol-card"><h4>{b["name"]} '
+            f'<div class="sol-card"><h3>{b["name"]} '
             f'<span class="muted">{b["label"]} · {b["v"]:g} km/s'
-            f'{(" · " + b["ff_note"]) if b.get("ff_note") else ""}</span></h4>'
+            f'{(" · " + b["ff_note"]) if b.get("ff_note") else ""}</span></h3>'
             + swrow(lambda s: ours.get(s), "sol_ours")
             + swrow(lambda s: b["firefly"].get(s), "sol_firefly")
             + '</div>'
@@ -707,13 +707,13 @@ def render_references() -> str:
     return (
         '<p class="muted" data-i18n="references_caption" style="font-size:12px;margin:4px 0 10px"></p>'
         '<div class="refs-list">'
-        '<h4 data-i18n="ref_h_method"></h4><ul>'
+        '<h3 data-i18n="ref_h_method"></h3><ul>'
         '<li><a href="wiki/reference__element-plasma-colors.html">element-plasma-colors</a> — element emission / flame colors (NIST ASD + chemistry literature)</li>'
         '<li><a href="wiki/reference__plasma-color-methodology-review.html">plasma-color-methodology-review</a> — literature-grounded adversarial review; full per-dimension ADS bibliography</li>'
         '<li><a href="wiki/reference__atmosphere-reflected-color-methodology.html">atmosphere-reflected-color-methodology</a> — shared CIE 1931 → sRGB colorimetry engine</li>'
         '<li><a href="wiki/reference__methodology-index.html">methodology-index</a> — NearStars methodology index</li>'
         '</ul>'
-        '<h4 data-i18n="ref_h_sources"></h4><ul>'
+        '<h3 data-i18n="ref_h_sources"></h3><ul>'
         '<li><a href="https://physics.nist.gov/asd">NIST Atomic Spectra Database</a> — line wavelengths &amp; transition probabilities (A-values)</li>'
         f'<li>Saha–Boltzmann LTE emission — Cristoforetti et al. 2010 (<a href="{ads}2010AcSpB..65...86C">2010AcSpB..65...86C</a>); Allard &amp; Hauschildt 1995 (<a href="{ads}1995ApJ...445..433A">1995ApJ...445..433A</a>)</li>'
         '<li>Colorimetry — CIE 1931 CMF → XYZ → sRGB (IEC 61966-2-1); analytic CMF fit: Wyman, Sloan &amp; Shirley 2013 (JCGT)</li>'
@@ -851,6 +851,7 @@ TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title data-i18n="title"></title>
 <link rel="stylesheet" href="style.css">
 <style>
@@ -925,13 +926,13 @@ html, body {{ overflow-x: clip; }}
 #copy-pop .pop-sw {{ display: inline-block; width: 22px; height: 22px; border-radius: 4px;
   border: 1px solid rgba(255,255,255,0.3); vertical-align: middle; margin-right: 7px }}
 #copy-pop .pop-hex {{ vertical-align: middle; font-weight: bold; font-size: 13px; color: #eef; letter-spacing: 0.5px }}
-#copy-pop .pop-hint {{ display: block; font-size: 10px; opacity: 0.6; margin-top: 3px;
+#copy-pop .pop-hint {{ display: block; font-size: 11px; opacity: 0.6; margin-top: 3px;
   font-family: system-ui, sans-serif }}
 #copy-pop.copied {{ border-color: #4ad07a }}
 #copy-pop.copied .pop-hint {{ opacity: 0.95; color: #7fe6a3 }}
 .refs-list a {{ color: #9bb8ff }}
 .refs-list li {{ margin: 3px 0; font-size: 12px; line-height: 1.55 }}
-.refs-list h4 {{ margin: 12px 0 4px; font-size: 12px; color: #aab2c8 }}
+.refs-list h3 {{ margin: 12px 0 4px; font-size: 12px; color: #aab2c8 }}
 details.collapsible > summary {{
   cursor: pointer; list-style: none; user-select: none;
   font-size: 1.2rem; color: var(--fg-emph); margin-bottom: 0.5rem;
@@ -988,7 +989,7 @@ details.collapsible[open] > summary::before {{ content: "\\25BE  " }}
   font-size: 9px; line-height: 1.2;
   border: 1px solid rgba(0,0,0,0.3);
 }}
-.palette-swatch .role {{ font-weight: 600; font-size: 10px }}
+.palette-swatch .role {{ font-weight: 600; font-size: 11px }}
 .palette-swatch .hex {{ font-family: var(--mono); font-size: 9px; opacity: 0.85 }}
 .palette-swatch .rgbi {{ font-family: var(--mono); font-size: 8px; opacity: 0.7 }}
 
@@ -1019,8 +1020,8 @@ details.collapsible[open] > summary::before {{ content: "\\25BE  " }}
   gap: 0.8rem; margin: 0.5rem 0 1rem; }}
 .sol-card {{ background: var(--bg-card); border: 1px solid var(--bd-mid);
   border-radius: 6px; padding: 0.7rem 0.9rem; }}
-.sol-card h4 {{ margin: 0 0 0.5rem 0; font-size: 0.95rem; color: var(--fg-emph); }}
-.sol-card h4 .muted {{ font-weight: normal; font-size: 0.78rem; }}
+.sol-card h3 {{ margin: 0 0 0.5rem 0; font-size: 0.95rem; color: var(--fg-emph); }}
+.sol-card h3 .muted {{ font-weight: normal; font-size: 0.78rem; }}
 .sol-row {{ display: flex; align-items: center; gap: 0.5rem; margin: 3px 0; }}
 .sol-src {{ flex: 0 0 52px; font-size: 0.72rem; color: var(--fg-muted); }}
 .sol-sws {{ display: flex; gap: 3px; flex: 1; }}

@@ -180,7 +180,7 @@ PAGE_TEMPLATE = r'''<!DOCTYPE html>
 <style>
 main { max-width: 980px }
 .rt { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px }
-.rt th { padding: 9px 12px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 10.5px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
+.rt th { padding: 9px 12px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 11.5px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
 .rt td { padding: 8px 12px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12.5px; vertical-align: top }
 .rt td.sys { font-family: var(--sans); color: var(--fg-emph); font-weight: 600 }
 .rt a { color: var(--accent) }
@@ -205,7 +205,7 @@ main { max-width: 980px }
   .rt td { display: flex; justify-content: space-between; align-items: baseline; border: none; padding: 3px 0; gap: 10px; font-size: 12px }
   .rt td::before {
     content: attr(data-label);
-    color: var(--fg-dim); font-size: 10px; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--fg-dim); font-size: 11px; text-transform: uppercase; letter-spacing: .4px;
     font-family: var(--sans); font-weight: 600; flex-shrink: 0
   }
   .rt td.sys { justify-content: flex-start; font-size: 14px }

@@ -56,7 +56,7 @@
   --s1:rgba(12,17,34,.030); --s2:rgba(12,17,34,.055); --s3:rgba(12,17,34,.085);
   --bd1:rgba(12,17,34,.10); --bd2:rgba(12,17,34,.145); --bd3:rgba(12,17,34,.26);
   --fg1:rgba(9,12,22,.95); --fg2:rgba(9,12,22,.74); --fg3:rgba(9,12,22,.55);
-  --fg4:rgba(9,12,22,.38); --fg5:rgba(9,12,22,.18);
+  --fg4:rgba(9,12,22,.50); --fg5:rgba(9,12,22,.50);
   --ac:#2f66d8; --ac-bg:rgba(47,102,216,.10); --ac-glow:rgba(47,102,216,.26);
   --ok:#0f8168; --ok-bg:rgba(15,129,104,.12);
   --warn:#96650f; --warn-bg:rgba(150,101,15,.13);
@@ -73,7 +73,7 @@
     --s1:rgba(255,255,255,.024); --s2:rgba(255,255,255,.046); --s3:rgba(255,255,255,.072);
     --bd1:rgba(255,255,255,.055); --bd2:rgba(255,255,255,.095); --bd3:rgba(255,255,255,.16);
     --fg1:rgba(255,255,255,.94); --fg2:rgba(255,255,255,.78); --fg3:rgba(255,255,255,.56);
-    --fg4:rgba(255,255,255,.36); --fg5:rgba(255,255,255,.20);
+    --fg4:rgba(255,255,255,.46); --fg5:rgba(255,255,255,.46);
     --ac:#7aa8ff; --ac-bg:rgba(122,168,255,.10); --ac-glow:rgba(122,168,255,.32);
     --ok:#4ec9b0; --ok-bg:rgba(78,201,176,.12);
     --warn:#e0b070; --warn-bg:rgba(224,176,112,.12);
@@ -89,7 +89,7 @@
   --s1:rgba(12,17,34,.030); --s2:rgba(12,17,34,.055); --s3:rgba(12,17,34,.085);
   --bd1:rgba(12,17,34,.10); --bd2:rgba(12,17,34,.145); --bd3:rgba(12,17,34,.26);
   --fg1:rgba(9,12,22,.95); --fg2:rgba(9,12,22,.74); --fg3:rgba(9,12,22,.55);
-  --fg4:rgba(9,12,22,.38); --fg5:rgba(9,12,22,.18);
+  --fg4:rgba(9,12,22,.50); --fg5:rgba(9,12,22,.50);
   --ac:#2f66d8; --ac-bg:rgba(47,102,216,.10); --ac-glow:rgba(47,102,216,.26);
   --ok:#0f8168; --ok-bg:rgba(15,129,104,.12);
   --warn:#96650f; --warn-bg:rgba(150,101,15,.13);
@@ -105,7 +105,7 @@
   --s1:rgba(255,255,255,.024); --s2:rgba(255,255,255,.046); --s3:rgba(255,255,255,.072);
   --bd1:rgba(255,255,255,.055); --bd2:rgba(255,255,255,.095); --bd3:rgba(255,255,255,.16);
   --fg1:rgba(255,255,255,.94); --fg2:rgba(255,255,255,.78); --fg3:rgba(255,255,255,.56);
-  --fg4:rgba(255,255,255,.36); --fg5:rgba(255,255,255,.20);
+  --fg4:rgba(255,255,255,.46); --fg5:rgba(255,255,255,.46);
   --ac:#7aa8ff; --ac-bg:rgba(122,168,255,.10); --ac-glow:rgba(122,168,255,.32);
   --ok:#4ec9b0; --ok-bg:rgba(78,201,176,.12);
   --warn:#e0b070; --warn-bg:rgba(224,176,112,.12);
@@ -128,7 +128,7 @@ body{
 
 .eyebrow{
   font-family:ui-monospace,"SF Mono",Menlo,monospace;
-  font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--fg4);margin:0 0 14px;
 }
 h1{
@@ -152,7 +152,7 @@ header{padding-bottom:32px;margin-bottom:22px;border-bottom:1px solid var(--bd1)
 .setup{margin-bottom:18px}
 h2{
   margin:0 0 14px;font-family:ui-monospace,"SF Mono",Menlo,monospace;
-  font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--fg4);font-weight:500;
 }
 .note{font-size:12.5px;color:var(--fg4);margin:12px 0 0;line-height:1.55}
@@ -255,12 +255,12 @@ input[type=range]:focus-visible{outline:2px solid var(--ac);outline-offset:4px;b
 .rd li span:last-child{font-family:ui-monospace,"SF Mono",Menlo,monospace;
   font-variant-numeric:tabular-nums;color:var(--fg2);text-align:right}
 .pill{display:inline-block;font-family:ui-monospace,"SF Mono",Menlo,monospace;
-  font-size:10.5px;padding:2px 7px;border-radius:999px;letter-spacing:.04em}
+  font-size:11.5px;padding:2px 7px;border-radius:999px;letter-spacing:.04em}
 
 .scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
 th{
-  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:10px;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;
   letter-spacing:.1em;text-transform:uppercase;color:var(--fg4);font-weight:500;
   text-align:right;padding:0 0 9px;border-bottom:1px solid var(--bd2);
 }
@@ -392,7 +392,7 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
       <h2 data-i18n="twoTitle">두 갈래 읽기 — 현재 알베도에서</h2>
       <div class="two">
         <div class="rd">
-          <h4 data-i18n="rdBareH">노출 얼음</h4>
+          <h3 data-i18n="rdBareH">노출 얼음</h3>
           <p class="sub" data-i18n="rdBareSub">신선한 얼음이 그대로 하늘을 본다</p>
           <ul>
             <li><span data-i18n="liT">표면 온도</span><span id="bT">—</span></li>
@@ -402,7 +402,7 @@ footer code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;
           </ul>
         </div>
         <div class="rd">
-          <h4 data-i18n="rdLagH">먼지 잔류층</h4>
+          <h3 data-i18n="rdLagH">먼지 잔류층</h3>
           <p class="sub" data-i18n="rdLagSub">승화 잔류물이 표면을 덮어 확산-제한이 된다</p>
           <ul>
             <li><span data-i18n="liT">표면 온도</span><span id="gT">—</span></li>
