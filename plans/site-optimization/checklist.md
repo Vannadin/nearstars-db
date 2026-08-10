@@ -56,3 +56,18 @@ GitHub wiki demoted to a secondary link.
 - [ ] `python3 scripts/build_sitemap.py` regenerated after each structure change
 - [ ] `./scripts/check.sh` green
 - [ ] browser smoke on one page per changed generator
+
+## E. UX/UI review pass (2026-08-10)
+- [x] a11y floor: focus rings, prefers-reduced-motion, AA text contrast (.46), 11px
+      type floor, lang/viewport on viewer pages, aria-sort + keyboard sort, alt text
+- [x] DB browser works from `file://` — `data.js` / `reports-manifest.js` classic-script
+      fallbacks emitted by the builders; error state now names the fix
+- [x] stability-sim PNGs render dark (`nsplot.apply_dark`); validation thumbnails
+      re-shot from their own dark plotly pages (no generator exists for those four)
+- [x] orbit3d back-crumb no longer overlaps the HUD (HUD top 10px → 44px)
+- [x] reports.html: sticky thead + system filter with live count
+      (`html,body overflow-x: clip` — `hidden` was killing sticky)
+- [x] phase3 decisions table: sticky thead + field filter
+- [x] phase4 body boards: axis anchor TOC (>3 decisions)
+- [x] wiki sidebar grouped (Methodology / Engine & mods / Pipeline & data / Reference / Plans)
+- [x] belt viewer presets grouped by row (Stock / Physical / NearStars / Demo)

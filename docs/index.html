@@ -1796,7 +1796,21 @@ document.querySelectorAll('.lang-tg').forEach(b => {
 });
 applyStaticLabels();
 
-fetch('data.json').then(r => r.json()).then(data => {
+// file:// 로 열면 Chromium 이 fetch 를 CORS 로 막는다. 그때는 같은 데이터를 담은
+// 클래식 <script>(data.js / reports-manifest.js)를 끼워 넣어 받는다 — 스크립트 태그는
+// file:// 에서도 로드되기 때문. 빌드가 두 형식을 함께 낸다 (build_site.py).
+function loadJSON(url, globalName) {
+  return fetch(url).then(r => r.json()).catch(() => new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = url.replace(/\.json$/, '.js');
+    s.onload = () => window[globalName] !== undefined
+      ? resolve(window[globalName]) : reject(new Error('fallback script carried no data'));
+    s.onerror = () => reject(new Error('neither ' + url + ' nor its .js fallback could be loaded'));
+    document.head.appendChild(s);
+  }));
+}
+
+loadJSON('data.json', 'NS_DATA').then(data => {
   DB = data;
   // 거리 슬라이더 max 를 데이터의 실제 최대 거리로 동적 설정 — beyond-50ly 이색
   // 천체(예: V1400 Cen 138 pc, PSR J0108 240 pc)도 슬라이더를 끝까지 밀면 보이게.
@@ -1814,12 +1828,21 @@ fetch('data.json').then(r => r.json()).then(data => {
   bindSort();
   renderAll();
 }).catch(err => {
-  document.getElementById('a2-tbody').innerHTML = `<tr><td colspan="9" style="padding:24px;color:var(--v2-fg-4)">Failed to load data.json: ${err.message}</td></tr>`;
+  document.getElementById('a2-tbody').innerHTML =
+    `<tr><td colspan="9" style="padding:26px 24px;color:var(--v2-fg-2);line-height:1.7">
+      <b style="color:var(--v2-fg-1)">The catalogue could not be loaded.</b><br>
+      ${err.message}<br><br>
+      <span style="color:var(--v2-fg-3)">If you opened this file directly, run the build once
+      (<code>python3 scripts/pipeline/build_site.py</code>) so <code>data.js</code> exists,
+      or serve the folder over HTTP:</span><br>
+      <code style="display:inline-block;margin-top:6px;padding:5px 9px;border-radius:5px;
+        background:rgba(255,255,255,.05)">python3 -m http.server -d docs 8000</code>
+    </td></tr>`;
 });
 
 // REPORTS manifest — Phase 2 / Phase 3 큐레이션 보고서 메타. data.json 과 독립 fetch.
 // 도착 시점이 data.json 보다 늦어도 OK (받자마자 re-render 트리거).
-fetch('reports-manifest.json').then(r => r.ok ? r.json() : {}).then(m => {
+loadJSON('reports-manifest.json', 'NS_REPORTS').then(m => {
   REPORTS = m;
   if (DB.length) renderAll();
 }).catch(() => {});

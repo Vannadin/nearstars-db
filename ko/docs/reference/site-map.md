@@ -2,7 +2,7 @@
 # 사이트맵: 발행 문서 표면
 
 > `python3 scripts/build_sitemap.py`로 생성. 손으로 고치지 말 것.
-> 페이지 272개, 합계 22.4 MB, 내부 링크 5522개.
+> 페이지 272개, 합계 22.5 MB, 내부 링크 5522개.
 > gitignore된 논문 캐시(`docs/phase3/_papers/`)는 사이트가 아니라 로컬 캐시라 제외한다.
 
 ## 구조
@@ -12,8 +12,8 @@
 | `root` | 7 | 2.4 MB | Top-level surfaces |
 | `wiki` | 59 | 3.0 MB | Rendered reference docs + plans |
 | `phase2` | 77 | 1.3 MB | Per-host measurement reports |
-| `phase3` | 81 | 6.1 MB | Per-planet synthesis reports |
-| `phase4` | 48 | 9.5 MB | Decision boards + orbit viewers |
+| `phase3` | 81 | 6.2 MB | Per-planet synthesis reports |
+| `phase4` | 48 | 9.6 MB | Decision boards + orbit viewers |
 
 **허브**(아웃바운드 링크 최다):
 - `reports.html` → 186
@@ -44,9 +44,9 @@
 - `starmap.html` — 1259 KB
 - `phase4/orbit-viewers/alpha-centauri/interactive.html` — 1024 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_leapfrog.html` — 1020 KB
-- `phase4/orbit-viewers/alpha-centauri-validation/moon_megno.html` — 1017 KB
+- `phase4/orbit-viewers/alpha-centauri-validation/moon_megno.html` — 1018 KB
 - `firefly-colors.html` — 938 KB
 - `phase4/orbit-viewers/barnards-star/interactive.html` — 777 KB
 - `phase4/orbit-viewers/tau-cet/interactive.html` — 769 KB
 
-<!-- generated 2026-08-10 11:25 -->
+<!-- generated 2026-08-10 13:00 -->

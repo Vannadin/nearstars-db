@@ -44,7 +44,9 @@
 
 /* ── reset ──────────────────────────────────────────────────────────────────── */
 * { box-sizing: border-box; margin: 0; padding: 0 }
-html, body { overflow-x: hidden; max-width: 100vw }
+/* clip (not hidden): hidden turns these into scroll containers and kills
+   position:sticky on the report table header. */
+html, body { overflow-x: clip; max-width: 100vw }
 img, svg { max-width: 100%; height: auto }
 
 /* ── typography ─────────────────────────────────────────────────────────────── */

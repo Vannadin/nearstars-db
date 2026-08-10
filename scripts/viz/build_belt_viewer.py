@@ -21,9 +21,9 @@ OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 
 def conv(key, b):
     body, kind = key.rsplit('_', 1)
-    label = KO[body] + (' 스톡' if kind == 'stock' else ' 물리')
-    p = {'label': label,
-         'label_en': EN[body] + (' stock' if kind == 'stock' else ' phys'),
+    # 그룹 라벨이 stock/phys 를 이미 말해주므로 버튼에는 천체명만 남긴다.
+    p = {'label': KO[body], 'label_en': EN[body],
+         'group': 'stock' if kind == 'stock' else 'phys',
          'view': {'R': b['R'], 'tilt': abs(b.get('tilt', 0)), 'z': 0,
                   'offset': b.get('offset', 0)}}
     for belt in ('inner', 'outer'):
@@ -51,7 +51,7 @@ CFG2VIEW = {'dist': 'dist', 'radius': 'rad', 'deform_xy': 'dxy', 'compression': 
 
 for name, spec in load_nearstars_specs().items():
     m, bd = spec['model'], spec['body']
-    p = {'label': f'{name} (NearStars)', 'label_en': f'{name} (NearStars)',
+    p = {'label': name, 'label_en': name, 'group': 'nearstars',
          'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
     extent = 5.0
     for kind, grad in (('inner', 3.3), ('outer', 2.2)):
@@ -81,6 +81,8 @@ for name, spec in load_nearstars_specs().items():
 # Shue 데모: 지구 물리 파라미터 + 넓은 뷰 + α 오버레이
 shue = conv('earth_shue', dict(BODIES['earth_phys'], tilt=0))
 shue['label'] = 'Shue 데모'
+shue['label_en'] = 'Shue demo'
+shue['group'] = 'demo'          # 지구 물리와 같은 줄에 서면 중복처럼 보인다
 shue['view'].update({'R': 210, 'shue': 0.58})
 shue['pause']['alpha'] = 0.35
 presets['shueDemo'] = shue

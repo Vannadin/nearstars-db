@@ -61,6 +61,11 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .mini-pill.d { color:var(--danger); background:var(--danger-bg) }
 .mini-pill.p { color:var(--fg4); background:var(--s2) }
 .mini-pill.o { color:var(--warn); background:var(--warn-bg) }
+.axis-toc { display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 12px }
+.axis-toc a { font-family:var(--mono); font-size:11px; color:var(--fg3); text-decoration:none;
+  background:var(--s1); border:1px solid var(--bd2); border-radius:6px; padding:3px 8px }
+.axis-toc a:hover { color:var(--fg1); background:var(--s2); border-color:var(--bd1) }
+.dec { scroll-margin-top:14px }
 /* decision cards */
 .decisions { display:flex; flex-direction:column; gap:10px }
 .dec { background:var(--s1); border:1px solid var(--bd2); border-radius:12px; padding:14px 16px;
@@ -208,6 +213,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 </header></div>
 <div class="wrap">
 <div class="summary"><span class="body-meta">9 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 8 gated · 0 divergence</span></div>
+<nav class="axis-toc" aria-label="Decisions on this page"><a href="#identity">identity</a><a href="#bulk">bulk</a><a href="#magnetism.magnetic_field">magnetism.magnetic_field</a><a href="#bulk.tidal_heating">bulk.tidal_heating</a><a href="#surface">surface</a><a href="#appearance">appearance</a><a href="#atmosphere">atmosphere</a><a href="#environment.radiation">environment.radiation</a><a href="#gameplay">gameplay</a></nav>
 <details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
 <dl>
   <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
@@ -325,7 +331,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="dante.html">← Dante</a><a class="navlink" href="pandora.html">Pandora →</a></div>
-<div class="stamp">빌드 2026-08-10 11:24 · 82aff59</div></div>
+<div class="stamp">빌드 2026-08-10 13:00 · 6125c36f</div></div>
 <script>
 const b=document.body;
 function setLang(en){

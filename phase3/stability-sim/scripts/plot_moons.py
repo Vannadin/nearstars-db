@@ -25,6 +25,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+from nsplot import apply_dark
+
+apply_dark()
+
 RJUP_KM = 71492.0
 AU_KM = 1.495978707e8
 

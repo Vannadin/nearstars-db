@@ -123,16 +123,34 @@ def _embed(md: str) -> str:
 
 
 # ── doc discovery ────────────────────────────────────────────────────────────
+# 사이드바 묶음 — 50개 넘는 reference 를 한 덩어리로 늘어놓지 않기 위한 분류.
+# 파일명 규칙만 보고 나누므로 새 문서가 들어와도 자동으로 자리를 찾는다.
+def _ref_group(slug: str) -> str:
+    if slug.endswith('-methodology') or slug in {'planetary-dynamo-scaling',
+                                                 'methodology', 'methodology-index',
+                                                 'plasma-color-methodology-review'}:
+        return 'methodology'
+    if slug.startswith(('principia-', 'mod-', 'ksp-', 'planet-pack')) or slug in {
+            'science-system', 'nearstars-plugin-grounding', 'body-tree-spec',
+            'rex-data-comparison', 'solar-system-external-observer'}:
+        return 'engine'
+    if slug in {'data-sources', 'pipeline-contract', 'binary-epoch-pipeline',
+                'adding_stars', 'site-map', 'tools', 'guideline', 'archive_issues'}:
+        return 'pipeline'
+    return 'reference'
+
+
 def collect_docs() -> dict[str, list[dict]]:
-    groups: dict[str, list[dict]] = {'reference': [], 'plans': []}
+    groups: dict[str, list[dict]] = {'methodology': [], 'engine': [], 'pipeline': [],
+                                     'reference': [], 'plans': []}
 
     for md in sorted((REPO / 'docs' / 'reference').glob('*.md')):
         slug = md.stem
         ko = REPO / 'ko' / 'docs' / 'reference' / f'{slug}.md'
         out = f'reference__{slug}.html'
         _LINK_MAP[slug] = out
-        groups['reference'].append({'slug': slug, 'out': out, 'en': md,
-                                    'ko': ko if ko.exists() else None})
+        groups[_ref_group(slug)].append({'slug': slug, 'out': out, 'en': md,
+                                         'ko': ko if ko.exists() else None})
 
     for md in sorted((REPO / 'plans').glob('*.md')):
         if md.stem in {'_template', 'README'}:
@@ -154,8 +172,9 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
         '<a class="brand" href="index.html">NearStars <span>docs</span></a>',
         '<a class="nav-x" href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">↗ GitHub wiki</a>',
     ]
-    labels = {'reference': 'Reference', 'plans': 'Plans'}
-    for g in ('reference', 'plans'):
+    labels = {'methodology': 'Methodology', 'engine': 'Engine & mods',
+              'pipeline': 'Pipeline & data', 'reference': 'Reference', 'plans': 'Plans'}
+    for g in ('methodology', 'engine', 'pipeline', 'reference', 'plans'):
         rows.append(f'<div class="nav-grp">{labels[g]}</div>')
         for d in groups[g]:
             cls = 'nav-i on' if d['out'] == active else 'nav-i'

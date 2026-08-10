@@ -17,6 +17,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+from nsplot import apply_dark
+
+apply_dark()
+
 RESULTS = Path(__file__).resolve().parent.parent / "results"
 label = sys.argv[1] if len(sys.argv) > 1 else "barnards_star_i60"
 

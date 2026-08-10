@@ -289,6 +289,11 @@ def render_body(system, body, rows, alias, prev_link, next_link):
             f'{st["gated"]} gated · {st["divergence"]} divergence'
             + (f' · {st["open"]} open' if st["open"] else ""))
     decs = "\n".join(decision_html(d) for d in rows)
+    # 축 앵커 목차 — 보드가 길어 특정 축으로 바로 못 가던 문제(2026-08-10 UX 점검).
+    axes = [d.get("axis", "") for d in rows if d.get("axis")]
+    toc = ('<nav class="axis-toc" aria-label="Decisions on this page">'
+           + "".join(f'<a href="#{esc(a)}">{esc(a)}</a>' for a in axes)
+           + '</nav>') if len(axes) > 3 else ""
     nav = []
     if prev_link:
         nav.append(f'<a class="navlink" href="{prev_link[0]}">← {esc(prev_link[1])}</a>')
@@ -319,6 +324,7 @@ def render_body(system, body, rows, alias, prev_link, next_link):
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
 <div class="summary"><span class="body-meta">{meta}</span></div>
+{toc}
 {LEGEND}
 <div class="decisions">{decs}</div>
 {nav_html}
@@ -487,6 +493,11 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .mini-pill.d { color:var(--danger); background:var(--danger-bg) }
 .mini-pill.p { color:var(--fg4); background:var(--s2) }
 .mini-pill.o { color:var(--warn); background:var(--warn-bg) }
+.axis-toc { display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 12px }
+.axis-toc a { font-family:var(--mono); font-size:11px; color:var(--fg3); text-decoration:none;
+  background:var(--s1); border:1px solid var(--bd2); border-radius:6px; padding:3px 8px }
+.axis-toc a:hover { color:var(--fg1); background:var(--s2); border-color:var(--bd1) }
+.dec { scroll-margin-top:14px }
 /* decision cards */
 .decisions { display:flex; flex-direction:column; gap:10px }
 .dec { background:var(--s1); border:1px solid var(--bd2); border-radius:12px; padding:14px 16px;

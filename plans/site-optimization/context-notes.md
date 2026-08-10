@@ -35,3 +35,24 @@
   Fullscreen apps (starmap topbar, orbit3d/interactive overlay crumb) stay compact.
   Light-theme rollout to document surfaces is a proposed next step (model:
   ice-stability's paired palettes); owner has not yet decided.
+
+## 2026-08-10 — UX/UI review pass
+
+Ran the ui-ux-pro-max rule tables (installed globally that day) over the 272-page
+surface, then fixed everything the review found.
+
+- **Static-text audits over-count.** Grepping HTML for `<h3>` before `<h2>` flagged
+  82 heading-skip pages; the DOM had 3. The other 79 were heading tags inside JS
+  template strings. Same for `aria-sort` (148 flagged → 1 real sortable table).
+  Audit rendered DOM, not source text.
+- **`overflow-x: hidden` kills `position: sticky`.** It makes the element a scroll
+  container, so a sticky `<th>` sticks to that container instead of the viewport.
+  `overflow-x: clip` gives the same clipping without the scroll container.
+- **The DB browser never worked from `file://`.** `fetch()` is blocked there, so the
+  catalogue silently rendered as one error row. Builders now emit a classic-script
+  twin (`data.js`, `reports-manifest.js`) — classic scripts load over `file://`
+  where fetch and ES modules do not (same boundary as the three.js CDN decision).
+- **matplotlib was not installed anywhere**; added to `phase3/stability-sim/.venv`
+  for the dark-figure regeneration. The four alpha-cen validation PNGs have no
+  generator in the repo, so they were re-shot headless from their own dark plotly
+  pages — if they ever need regenerating, do that again rather than hunting for a script.
