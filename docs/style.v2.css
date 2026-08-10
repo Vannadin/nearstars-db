@@ -93,6 +93,16 @@
   --v2-spec-M-swatch:    #ff8a76;
   --v2-spec-X-swatch:    #a3b0c8;
 
+  /* 열린 행/카드의 강한 틴트 (JS 가 --spec-tint-strong 으로 참조) */
+  --v2-spec-O-bg-strong: rgba(178,196,255,0.18);
+  --v2-spec-B-bg-strong: rgba(158,184,255,0.18);
+  --v2-spec-A-bg-strong: rgba(207,220,255,0.16);
+  --v2-spec-F-bg-strong: rgba(242,239,233,0.18);
+  --v2-spec-G-bg-strong: rgba(255,226,138,0.20);
+  --v2-spec-K-bg-strong: rgba(255,180,122,0.20);
+  --v2-spec-M-bg-strong: rgba(255,138,118,0.22);
+  --v2-spec-X-bg-strong: rgba(163,176,200,0.16);
+
   /* ── type ───────────────────────────────────────────────────────────
      Geist sans + Geist Mono (Vercel's open-source family — modern,
      low-contrast, very wide-weight range). KR fallback for bilingual.   */
@@ -195,6 +205,16 @@
     --v2-spec-K:           #a84909;   --v2-spec-K-bg: rgba(255,180,122,0.22);
     --v2-spec-M:           #b92a15;   --v2-spec-M-bg: rgba(255,138,118,0.22);
     --v2-spec-X:           #55647a;   --v2-spec-X-bg: rgba(163,176,200,0.22);
+    /* 이 틴트는 열린 행뿐 아니라 세부 패널 전체(.a2-detail 그라디언트)에도 깔린다.
+       다크에서 은은한 발광이던 알파가 흰 배경에서는 분홍 물감이 된다 → 힌트 수준으로. */
+    --v2-spec-O-bg-strong: rgba(63,91,196,0.09);
+    --v2-spec-B-bg-strong: rgba(68,104,204,0.09);
+    --v2-spec-A-bg-strong: rgba(90,126,200,0.09);
+    --v2-spec-F-bg-strong: rgba(120,110,95,0.07);
+    --v2-spec-G-bg-strong: rgba(160,120,20,0.09);
+    --v2-spec-K-bg-strong: rgba(165,90,30,0.09);
+    --v2-spec-M-bg-strong: rgba(184,66,47,0.08);
+    --v2-spec-X-bg-strong: rgba(92,105,127,0.09);
 
     --v2-reticle:          rgba(20,129,65,0.85);
     --v2-reticle-faint:    rgba(20,129,65,0.26);

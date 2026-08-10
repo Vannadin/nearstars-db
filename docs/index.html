@@ -2088,18 +2088,10 @@ function teffRGBv2(t) {
 }
 
 function specStrongBg(cls) {
-  // surface-α 를 한 단계 강하게 (A2_RefinedSpectral.jsx 의 replace 로직과 동일)
-  const map = {
-    O: 'rgba(178,196,255,0.18)',
-    B: 'rgba(158,184,255,0.18)',
-    A: 'rgba(207,220,255,0.16)',
-    F: 'rgba(242,239,233,0.18)',
-    G: 'rgba(255,226,138,0.20)',
-    K: 'rgba(255,180,122,0.20)',
-    M: 'rgba(255,138,118,0.22)',
-    X: 'rgba(163,176,200,0.16)',
-  };
-  return map[cls] || map.X;
+  // 열린 행/카드의 강한 틴트. 라이트 테마에서는 같은 알파가 분홍 물감처럼 번지므로
+  // 리터럴이 아니라 토큰을 돌려주고 알파는 style.v2.css 가 테마별로 정한다.
+  const known = ['O','B','A','F','G','K','M','X'];
+  return `var(--v2-spec-${known.includes(cls) ? cls : 'X'}-bg-strong)`;
 }
 
 function specStyleVars(cls) {
@@ -2171,7 +2163,7 @@ function detailContentHTML(r) {
         <div class="a2-star-img-row">
           <div class="a2-dss-wrap">
             <img class="a2-star-img" id="${imgId}"
-              alt="${initial.name} sky survey cutout centred on ${star.name}"
+              alt="${initial.name} sky survey cutout centred on ${st.name}"
               data-ra-orig="${raR.toFixed(6)}" data-dec-orig="${decR.toFixed(6)}"
               data-pmra="${pmraR.toFixed(3)}" data-pmdec="${pmdecR.toFixed(3)}"
               data-fov="${fov0}" data-survey="${initial.name}"
