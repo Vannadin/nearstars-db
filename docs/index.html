@@ -2081,12 +2081,22 @@ function starColorForTeff(teff, lum) {
     v = [r0 + (r1 - r0) * f, g0 + (g1 - g0) * f, b0 + (b1 - b0) * f];
   }
   const y = 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
-  const enc = c => {
-    c = Math.max(0, Math.min(1, c * lum / y));
-    const s = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
-    return Math.round(Math.max(0, Math.min(255, s * 255))).toString(16).padStart(2, '0');
+  let c = v.map(x => x * lum / y);
+  // 차가운 왜성의 색도는 sRGB 밖이다(1100K 는 청색이 최대의 4.3배, 녹색은 음수).
+  // 채널별로 자르면 없던 채도를 만들어내므로, 같은 휘도의 회색과 섞어 색역에 넣는다.
+  let lo = 0, hi = 1;
+  for (let k = 0; k < 40; k++) {
+    const t = (lo + hi) / 2;
+    const m = c.map(x => (1 - t) * x + t * lum);
+    if (m.every(x => x >= -1e-9 && x <= 1 + 1e-9)) hi = t; else lo = t;
+  }
+  c = c.map(x => (1 - hi) * x + hi * lum);
+  const enc = x => {
+    x = Math.max(0, Math.min(1, x));
+    const e = x <= 0.0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - 0.055;
+    return Math.round(Math.max(0, Math.min(255, e * 255))).toString(16).padStart(2, '0');
   };
-  return '#' + enc(v[0]) + enc(v[1]) + enc(v[2]);
+  return '#' + enc(c[0]) + enc(c[1]) + enc(c[2]);
 }
 
 function specStrongBg(cls) {

@@ -196,6 +196,26 @@ def ladder_knots() -> list[tuple[int, list[float]]]:
     return [(t, _chromaticity(h)) for t, h in sorted(knots)]
 
 
+def _to_gamut(v: list[float], luminance: float) -> list[float]:
+    """Bring an out-of-gamut chromaticity into sRGB by desaturating, not clipping.
+
+    Cool dwarf chromaticities sit well outside sRGB — at 1100 K the blue channel
+    wants 4.3x maximum and green goes negative. Clipping each channel separately
+    is what produced the vivid magenta in the first pass: it invents saturation the
+    colour never had and can move the hue. Mixing toward a grey of the same
+    luminance keeps the hue and gives up only what the display cannot show.
+    """
+    lo, hi = 0.0, 1.0
+    for _ in range(40):
+        t = (lo + hi) / 2
+        c = [(1 - t) * x + t * luminance for x in v]
+        if all(-1e-9 <= x <= 1 + 1e-9 for x in c):
+            hi = t
+        else:
+            lo = t
+    return [(1 - hi) * x + hi * luminance for x in v]
+
+
 def colour_for_teff(teff: float, luminance: float = 0.46) -> str:
     """Photospheric colour at ANY Teff — knots interpolated in linear light."""
     knots = ladder_knots()
@@ -210,8 +230,9 @@ def colour_for_teff(teff: float, luminance: float = 0.46) -> str:
         f = (teff - t0) / (t1 - t0)
         v = [a + (b - a) * f for a, b in zip(v0, v1)]
     y = 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]
+    v = _to_gamut([c * luminance / y for c in v], luminance)
     return "#%02x%02x%02x" % tuple(
-        int(round(max(0, min(255, _linear_to_srgb(c * luminance / y))))) for c in v)
+        int(round(max(0, min(255, _linear_to_srgb(c))))) for c in v)
 
 
 def blackbody_hex(teff: float) -> str:

@@ -275,8 +275,33 @@ them at the body's own temperature — no binning, no snapping to grid steps. Ea
 is reduced to its **chromaticity** (normalised to a common luminance) first: how bright
 to draw a swatch is a UI decision, what colour it is is not.
 
-The two Luhman 16 components now come out `#ff52ff` and `#f74eff` — the same colour, as
+The two Luhman 16 components now come out `#cca2ff` and `#c6a5ff` — the same colour, as
 two objects 30 K apart should be.
+
+### Out of gamut: why these are pale, not vivid
+
+The first version of this ladder rendered T dwarfs as a vivid magenta, and that was
+wrong. Cool dwarf chromaticities sit **well outside sRGB**: at 1100 K the blue channel
+wants 4.3x maximum and the green channel goes negative. Clipping each channel to [0,1]
+separately — the obvious thing to do, and what the first version did — invents
+saturation the colour never had, and can move the hue as well.
+
+`_to_gamut()` instead mixes toward a grey of the same luminance until the colour fits,
+giving up only what the display cannot show and keeping the hue. Cool dwarfs need 65-86%
+grey, so their honest rendering is a **pale lavender**, not a magenta. Everything at or
+above ~3850 K is already inside sRGB and needs 0%.
+
+Two things to keep straight when reading these hexes:
+
+- **The hue direction is real.** A T dwarf's visible flux genuinely peaks blueward of
+  its red trough: in the 1100 K model the 4500 Å window sits ~100x above the
+  5000-6000 Å floor, and the eye is roughly ten times more sensitive at 450 nm than at
+  700 nm, so the weighted result lands on the violet side of neutral. That is the
+  documented reason T dwarfs are described as magenta rather than red.
+- **The brightness is not.** Every knot is normalised to a common luminance so a 4px
+  swatch stays visible. A real T dwarf emits almost entirely in the infrared — the
+  visible-band integral at 1100 K is ~300x below a 2100 K L dwarf's — so at any true
+  brightness it would be far too dim for colour vision to engage at all.
 
 ### The ladder
 
@@ -292,10 +317,10 @@ Selected knots (`python3 -c "…; from stellar_photospheric_color import ladder_
 | 2100 K | `#ff8900` | orange; L dust deck |
 | 1700 K | `#ff8b00` | orange |
 | 1600 K | `#ff52d6` | pink — the L/T transition begins |
-| 1310 K | `#ff52ff` | magenta (Luhman 16 A) |
-| 1100 K | `#d800ff` | violet; K I wings at their deepest |
-| 880 K | `#ff00ff` | magenta (eps Ind Bb) |
-| 400 K | `#ff3677` | crimson-pink (Morley) |
+| 1310 K | `#cca2ff` | pale lavender (Luhman 16 A) |
+| 1100 K | `#baa9ff` | pale violet; K I wings at their deepest |
+| 880 K | `#cca2ff` | pale lavender (eps Ind Bb) |
+| 400 K | `#ff97a2` | pale pink (Morley) |
 
 **Validation.** The literature's qualitative result is that a T dwarf would look
 magenta rather than red. The pipeline reproduces it without being told to. That is the
