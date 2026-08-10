@@ -31,13 +31,16 @@ input[type=checkbox]{accent-color:var(--v2-accent)}
 .help-btn:hover{border-color:var(--v2-accent);color:var(--v2-fg-3)}
 
 /* ── 사용법 modal ─────────────────────────────────────────────────────── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;-webkit-overflow-scrolling:touch}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:center;justify-content:center;overflow-y:auto;padding:24px 16px;-webkit-overflow-scrolling:touch}
 .modal-overlay.open{display:flex}
 @media (prefers-color-scheme:light){
   html.ns-light-ok .modal-overlay{background:rgba(9,12,22,.42)}
   html.ns-light-ok .modal{box-shadow:0 18px 50px -18px rgba(9,12,22,.45);border-color:rgba(47,102,216,.45)}
 }
-.modal{background:var(--v2-surface-pop);backdrop-filter:blur(8px);border:1px solid rgba(122,168,255,.45);border-radius:10px;max-width:580px;width:100%;padding:22px 26px;color:var(--v2-fg-2);box-shadow:0 12px 48px rgba(0,0,0,.6)}
+.modal{background:var(--v2-surface-pop);backdrop-filter:blur(8px);border:1px solid rgba(122,168,255,.45);border-radius:10px;max-width:580px;width:100%;padding:22px 26px;color:var(--v2-fg-2);box-shadow:0 12px 48px rgba(0,0,0,.6);display:flex;flex-direction:column;max-height:calc(100vh - 80px);max-height:calc(100dvh - 80px)}
+/* 창이 낮으면 '시작하기'가 화면 밖으로 내려가 눌리지 않았다 → 본문만 스크롤 */
+#howto-body{overflow-y:auto;min-height:0;flex:1;overscroll-behavior:contain}
+.modal-head,.modal-footer{flex-shrink:0}
 .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--v2-bd-2)}
 .modal-head h2{font-size:16px;color:var(--v2-fg-1);font-weight:600;flex:1;min-width:0}
 .modal-close{background:none;border:1px solid var(--v2-accent-soft);color:var(--v2-accent);padding:4px 12px;border-radius:5px;cursor:pointer;font-size:12px;flex-shrink:0;font-family:inherit;transition:background .12s,color .12s}
@@ -47,7 +50,7 @@ input[type=checkbox]{accent-color:var(--v2-accent)}
 .modal li{margin-bottom:5px;font-size:13px;color:var(--v2-fg-2);line-height:1.55}
 .modal li b{color:var(--v2-fg-1)}
 .modal kbd{background:var(--v2-surface-2);border:1px solid var(--v2-bd-3);padding:1px 6px;border-radius:3px;font-family:monospace;font-size:11px;color:var(--v2-fg-3)}
-.modal-footer{margin-top:16px;padding-top:12px;border-top:1px solid var(--v2-bd-2);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--v2-fg-4);flex-wrap:wrap}
+.modal-footer{margin-top:14px;padding-top:12px;border-top:1px solid var(--v2-bd-2);display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--v2-fg-4);flex-wrap:wrap}
 .modal-footer label{font-size:12px;color:var(--v2-fg-4);gap:6px;display:flex;align-items:center}
 
 /* glossary tooltip — kv 라벨/단위 토큰 hover 시 도움말 popup */
