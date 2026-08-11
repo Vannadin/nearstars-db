@@ -182,7 +182,30 @@ code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .navlink { font-size:13px; color:var(--fg3) } .navlink:hover { color:var(--accent) }
 body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collapsed .refs { display:none }
 @media (max-width:640px) {
-  .wrap { padding:16px 13px 60px } .pills { margin-left:0 } .spec td.k { white-space:normal }
+  .wrap { padding:16px 13px 60px } .pills { margin-left:0 }
+  /* The field ledger cannot stay a 3-column table here: a long snake_case key has no
+     break opportunity, so at 390px it claimed 219px and left the value column 54px —
+     one word per line, cells 1000px tall. Stack it instead: label on top, value full
+     width underneath. */
+  table.spec:not(.moons), .spec:not(.moons) tbody, .spec:not(.moons) tr,
+  .spec:not(.moons) td { display:block; width:auto }
+  .spec:not(.moons) thead { display:none }
+  .spec:not(.moons) tr { padding:7px 0; border-bottom:1px solid var(--bd1) }
+  .spec:not(.moons) tr:last-child { border-bottom:none }
+  .spec:not(.moons) td { padding:0; border-bottom:none }
+  .spec:not(.moons) td.k { white-space:normal; overflow-wrap:anywhere; padding:0 0 3px;
+    font:500 11px/1.35 var(--sans); letter-spacing:.06em; text-transform:uppercase;
+    color:var(--fg4) }
+  .spec:not(.moons) tr.d td.k { color:var(--danger) }
+  .spec:not(.moons) td.v { font-size:13px }
+  .spec:not(.moons) td.o { text-align:left; margin-top:5px }
+  .spec:not(.moons) td.o:empty { display:none }
+  /* the moon ledger is a genuine matrix — let it exceed the viewport and scroll.
+     Its per-moon prose must not scroll with it: pin those notes to the table's left
+     edge and wrap them at viewport width, or they are unreadable without panning. */
+  .spec.moons { width:auto; min-width:100% }
+  .spec.moons tr.mnote td:first-child { display:none }
+  .spec.moons tr.mnote .fnote { width:calc(100vw - 76px) }
 }
 </style>
 </head>
@@ -398,7 +421,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 
-<div class="stamp">빌드 2026-08-10 17:35 · 4029a1d3</div></div>
+<div class="stamp">빌드 2026-08-11 12:50 · 01068161</div></div>
 <script>
 const b=document.body;
 function setLang(en){
