@@ -337,6 +337,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 | [tidal-locking-timescale-methodology](reference__tidal-locking-timescale-methodology.html) | 자전 상태 / 동기화 타임스케일 | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
 | [tidal-heating-methodology](reference__tidal-heating-methodology.html) | 조석가열 플럭스 (Io/Enceladus 캘리브레이션) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
 | [body-figure-methodology](reference__body-figure-methodology.html) | 자전 편평 J₂ + 조석 triaxial C₂₂ (Principia 중력모델) | Helled 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan 앵커 |
+| [cassini-state-obliquity-methodology](reference__cassini-state-obliquity-methodology.html) | 조석으로 감쇠된 천체의 평형 자전축 기울기 (고정됐다고 기울기 0은 아님) | Peale 1969; Ward 1975; Ward & Hamilton 2004; Bills 2005; Baland 2011; Margot 2007 (수성 앵커) |
 
 ## 궤도·에포크
 
@@ -353,6 +354,8 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 | [moon-energy-budget-methodology](reference__moon-energy-budget-methodology.html) | 위성 T_eq: 별빛 − 식 + 행성 열복사 + 행성 반사 + 조석, 행성주위 거주가능 경계 대조; 계산기 `scripts/refs/moon_energy_budget.py` | Heller & Barnes 2013 ([arXiv:1209.5323](https://arxiv.org/abs/1209.5323)); Dobos 2017 ([arXiv:1703.02447](https://arxiv.org/abs/1703.02447)); Barnes 2013 ([arXiv:1203.5104](https://arxiv.org/abs/1203.5104)); Tyler 2008; Beuthe 2016; Hay & Matsuyama 2017 |
 | [greenhouse-warming-methodology](reference__greenhouse-warming-methodology.html) | 임의 기체 조합의 온실 상승폭 T_surf − T_eq. 4개 층(해석 모형 / 불투명도 자료 / iso-Ts 등온선 / 빌려온 계산) + 모항성 보정; 계산기 `scripts/refs/greenhouse_dt.py` | Robinson & Catling 2012 ([arXiv:1209.1833](https://arxiv.org/abs/1209.1833)); Karman 2019 (HITRAN CIA); Byrne & Goldblatt 2014a/b; Feulner 2012 ([arXiv:1204.4449](https://arxiv.org/abs/1204.4449)); Kopparapu 2013 ([arXiv:1301.6674](https://arxiv.org/abs/1301.6674)); Charnay 2013 ([arXiv:1310.4286](https://arxiv.org/abs/1310.4286)); Ramirez 2014/2018; Goldblatt 2009; Arney 2016 |
 | [internal-heat-luminosity-methodology](reference__internal-heat-luminosity-methodology.html) | 내부열 + 자발광 (T_int) | Burrows 1997; Baraffe 2003; Fortney 2007; Marley 2007 |
+| [surface-radiation-dose-methodology](reference__surface-radiation-dose-methodology.html) | 항성 입자 이벤트가 대기 기둥을 뚫고 지표에 남기는 선량 (Kerbalism 위험 층). 갇힌 방사선대 선량과는 별개 | Atri 2020 ([arXiv:1910.09871](https://arxiv.org/abs/1910.09871)); Atri 2017 ([arXiv:1606.07027](https://arxiv.org/abs/1606.07027)); Grießmeier 2016 ([arXiv:1603.06500](https://arxiv.org/abs/1603.06500)); MSL RAD 캘리브레이션 |
+| [ice-stability-methodology](reference__ice-stability-methodology.html) | 해당 궤도에서 드러난 얼음이 살아남는지: 승화 수명 + 알베도 생존 문턱값; 계산기 [`docs/ice-stability.html`](../ice-stability.html) | Fray & Schmitt 2009 ([`2009P&SS...57.2053F`](https://ui.adsabs.harvard.edu/abs/2009P%26SS...57.2053F)); Feistel & Wagner 2007; Schörghofer 2008/2016; Hayne & Aharonson 2015; Marti & Mauersberger 1993 |
 
 ## 표면·지질
 
@@ -382,6 +385,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 - [principia-cfg-reference](reference__principia-cfg-reference.html) / [principia-geopotential-data](reference__principia-geopotential-data.html): n-body 중력모델(J2/geopotential) cfg 규약.
 - [gravity-significance-floor-methodology](reference__gravity-significance-floor-methodology.html): Principia 포크의 far-field 중력 절단 floor `a_floor` + 스위칭-셸 비율을 문헌으로 근거화. Folkner 2014 / Park 2021(에페메리스 섭동체 선정), Chesley 2014(Yarkovsky 검출 한계), Jiang & Tremaine 2010(Jacobi 반경), Rein & Spiegel 2015(힘-오차 예산).
 - [binary-epoch-pipeline](reference__binary-epoch-pipeline.html): 다성계 Keplerian → ICRS 에포크 전파.
+- [solar-system-radiation-belts](reference__solar-system-radiation-belts.html): 자기장을 가진 태양계 7개 천체(지구/목성/토성/천왕성/해왕성/수성/가니메데)에 대해 스톡 Kerbalism cfg와 ADS 근거 물리를 대조 — 자기권 형상 레시피의 캘리브레이션 축입니다. 인게임 SDF 단면 렌더는 [위키](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)에 있습니다. Joy 2002; Cooper 1983; Ness 1986/1989; Winslow 2013; Kivelson 2002; 외 18편.
 
 ## 관련 문서
 
