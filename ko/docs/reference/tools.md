@@ -238,6 +238,7 @@
 - `scripts/check_dead_links.py` — 추적되는 모든 .md 파일의 상대 링크 깨짐 스캔
 - `scripts/check_site_links.py` — 배포되는 docs/ HTML의 사이트 내부 404 스캔. 정적 href에 더해 `<script type="text/markdown">` 임베드 블록 안의 마크다운 링크(클라이언트 렌더라 href 스캔에 안 잡힘)까지 검사하고 `_papers/` 미러는 제외. check.sh 3b 단계에 배선
 - `scripts/check_citation_links.py` — docs/reference(+ko 미러)에서 클릭 가능한 링크로 감싸지지 않은 bibcode/arXiv ID를 실패 처리([`bibcode`](ADS abs URL, `&`는 `%26`) 형식). 코드펜스와 긴 인라인 코드 예시는 제외. check.sh 3c 단계에 배선
+- `scripts/check_methodology_coverage.py` — check.sh 게이트 12. 방법론 문서는 세 곳에 모두 등재돼야 하므로 파일 존재가 아니라 항목 *집합*을 대조한다. 영문 인덱스, 한글 미러(원본보다 레시피가 적어도 미러 게이트는 통과해버린다), 그리고 GitHub 위키의 `Methodology-Library` / `-ko` 포털 — 이 포털은 `nearstars-db.wiki.git`이라는 별도 저장소에 있어 이 레포의 어떤 게이트에도 안 잡힌다. 인덱스가 가리키지 않는 `*-methodology.md` 파일도 실패 처리한다. 위키 쪽은 shallow clone이며, 네트워크가 안 되면 경고 후 통과하고 `--no-wiki`로 건너뛴다
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
 - `scripts/build_sitemap.py` — 발행되는 docs/ 표면의 사이트맵 + 연결성 감사. 구획별 페이지 수·용량, 허브, 그리고 결함 세 종류(인바운드 없는 고아, 아웃바운드 없는 막다른 페이지, CDN 의존)를 보고한다. `docs/reference/site-map.md` + ko 미러를 생성하고, `--audit-only`는 쓰기 없이 **신규** 고아가 생기면 1로 종료한다(승인된 집합은 스크립트의 `BASELINE_ORPHANS`)

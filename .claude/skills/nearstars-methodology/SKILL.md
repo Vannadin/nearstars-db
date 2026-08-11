@@ -183,12 +183,21 @@ Korean HTML comment stating the doc's role):
 7. **Citations** — annotated: full reference, bibcode, arXiv id, whether it
    is in the `_papers/` cache, and one sentence on what role it plays.
 
-Registration checklist (a Mode A doc is not done until all four):
+Registration checklist (a Mode A doc is not done until all six):
 - [ ] Row added to the right section of `docs/reference/methodology-index.md`.
+- [ ] **The same row in `ko/docs/reference/methodology-index.md`** — the index has
+      its own mirror, and adding only the English row is the failure that let the
+      Korean index drift three recipes behind (2026-08-11).
 - [ ] Korean mirror at `ko/docs/reference/<same-name>.md` — natural Korean,
       not literal translation; keep block structure.
+- [ ] **Entry in the GitHub wiki portal**, both `Methodology-Library.md` and
+      `Methodology-Library-ko.md`. That wiki is a separate git repository
+      (`https://github.com/Vannadin/nearstars-db.wiki.git`) with no copy in this
+      repo, so pushing here publishes nothing there: clone it, edit, push to
+      `master`. It had stalled ten documents behind before this rule existed.
 - [ ] Cross-links: `## Related` in the new doc and in its nearest siblings.
-- [ ] `./scripts/check.sh` green (mirror parity, dead links, conventions).
+- [ ] `./scripts/check.sh` green — gate 12 (`check_methodology_coverage.py`)
+      enforces the three registrations above.
 
 ## Mode B — the R-series research prompt
 

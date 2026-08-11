@@ -123,6 +123,10 @@ echo "── 11. 사이트맵 연결성 게이트 (신규 고아 페이지 감�
 python3 scripts/build_sitemap.py --audit-only || fail=1
 
 echo ""
+echo "── 12. 방법론 등재 게이트 (EN 인덱스 / KO 미러 / 위키 포털) ──"
+python3 scripts/check_methodology_coverage.py || fail=1
+
+echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else
