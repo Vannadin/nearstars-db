@@ -40,7 +40,9 @@ stability), the magnetopause misrecorded as Chaos's own 21 R_p instead of 23.5 R
 ## Gameplay rows realigned (all 5 surfaced bodies)
 
 New three-part shape, owner 2026-07-27 — see context-notes. Dante, Hades, Pandora,
-Cassandra rewritten to match Chaos; Polyphemus has no surface so it keeps its own form.
+Cassandra rewritten to match Chaos; Polyphemus was exempted then for having no surface,
+and was brought into the same shape on 2026-08-13 (the belt structure replaced the
+class-definitional "no ground to land on" opening, evidence to the 3-part form).
 The old "no biome lists in prose" rule is superseded in SPEC §3.1, the skill, context-notes
 and memory.
 

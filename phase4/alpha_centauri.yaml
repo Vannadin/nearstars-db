@@ -909,16 +909,25 @@ decisions:
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
     axis: gameplay                   # group 11 (facet-walk 2026-06-22; biome map 결정 정정)
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-08-13: prose modernization. Narrative reshaped to the fixed three-part gameplay form. The
+      class-definitional opening ("no ground to land on", atmosphere skimming, moon transfers through the
+      gravity well) is dropped per SPEC §3.1 (owner 2026-08-04: never dress up what the body_type already
+      says, never frame in-system travel as a difficulty); the access line now states the belt structure,
+      which is local and physical. Evidence reshaped to the ①adopted-②checked-③caveat form and the biome
+      names and the pixel-vs-tint separation moved into it. No value changed.
     status: gated
     driver: [engine]
     narrative: >
-      Polyphemus has no ground to land on. Skimming the atmosphere to slow down is as far as it goes, and any trip
-      between the moons has to pass through this planet's gravity well. The science map follows the latitude bands:
-      an equatorial zone, a temperate belt and a polar cap for each hemisphere, plus the storm as a biome of its
-      own. That great blue eye, set among the bands and visible from far off, is the sight worth the trip.
+      Where a craft parks matters more here than how it arrives. Two belts fed by Dante's sulfur torus wrap the
+      planet, the inner one peaking around thirty times Earth's, and the one benign lane through them is the slot
+      Pandora rides in. The science map follows the latitude bands: an equatorial zone, a temperate belt over the
+      pigment bands and a polar cap for each hemisphere, plus the storm as a biome of its own. That great blue eye,
+      set among the bands and visible from far off, is the sight worth the trip.
     narrative_ko: >
-      Polyphemus에는 착륙할 땅이 없다. 대기를 스쳐 감속하는 정도가 가능한 전부이고, 위성들 사이를 오가려면 반드시
-      이 행성의 중력권을 지나야 한다. 과학 지도는 위도 띠를 따른다. 적도대, 남북의 온대 띠, 남북의 극지, 그리고
+      여기서 중요한 것은 어떻게 도착하느냐가 아니라 어느 궤도에 머무느냐다. Dante의 황 토러스가 채운 방사선대가
+      두 겹으로 행성을 감싸고, 안쪽 벨트의 피크는 지구 벨트의 서른 배에 이른다. 그 사이를 안전하게 지나는 자리는
+      Pandora가 도는 틈새뿐이다. 과학 지도는 위도 띠를 따른다. 적도대, 색소 띠 위에 얹힌 남북의 온대 띠, 남북의 극지, 그리고
       폭풍 자체가 하나의 바이옴이다. 띠 사이에 걸려 멀리서도 보이는 그 거대한 파란 눈이 가 볼 만한 명소다.
     fields:
       - { name: science_biomes, value: "Latitude bands (equatorial, north and south temperate belts, north and south polar) plus the signature storm (the deep blue eye) as its own biome", value_ko: "위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴", op: set, colors: {"Equatorial":"#C9A26B","North Temperate":"#E4D3B0","South Temperate":"#A6784E","North Polar":"#9DB0C4","South Polar":"#B0A0AE","The Eye":"#244C8A"} }   # provisional naturalistic biome-map display colors (S↓, Promised Worlds convention); names TBC
@@ -928,16 +937,25 @@ decisions:
       criterion: [gameplay]
       verdict: pass-in-window
       evidence: >
-        No solid surface → no landing situation; science = atmospheric-flight ("flying above X")/space only. Gas
-        giants still carry a biome map (Jool/RSS Sol precedent, flight biomes via a lat/lon biome map): latitude
-        bands (equatorial zone/N·S temperate belts/N·S poles) + the signature-storm (deep blue eye) dedicated
-        biome (group 6 landmark = science landmark). Full ScienceValues block defined (landed/splashed token
-        values, unreachable, inert). SOI=auto from mass (no tuning); timewarp=standard above the atmosphere.
+        The adopted values are six flight biomes (five latitude bands plus the signature storm), with SOI and
+        timewarp both left untuned. Verified: with no solid surface only the flying and in-space situations occur,
+        so ScienceValues is filled throughout with landed/splashed as inert unreachable tokens; a gas giant still
+        carries a lat/lon biome map (the Jool and RSS Sol precedent), and the band boundaries follow the
+        appearance.banding zones so the map and the render agree. The Eye is the same feature as that row's storm
+        eye, but its biome-map pixel #244C8A stays a separate value from the cloud tint #214a72 because the two go
+        through different pipelines. SOI follows from the mass and timewarp is standard above the atmosphere.
+        Caveat: the biome names are provisional, and belt dose is not set here; Kerbalism computes it from the
+        magnetism.radiation_belts geometry. The cfg emit (biome map, ScienceValues) is batched at the end of the
+        project.
       evidence_ko: >
-        고체 표면 없음 → 착륙 상황 미발생; 과학 = 대기-비행("X 상공 비행")/우주뿐. 거대 가스행성도 biome map
-        보유(Jool/RSS Sol 선례, 위경도 biome map으로 비행 바이옴): 위도 띠(적도대/북·남 온대 belt/북·남극) +
-        시그니처 폭풍(깊은 파란 눈) 독자 바이옴(group 6 랜드마크 = 과학 명소). ScienceValues 전체 블록 정의
-        (landed/splashed는 도달 불가라 토큰값, inert). SOI=질량서 자동(조정 불요); timewarp=대기 위 표준.
+        채택값은 비행 바이옴 여섯(위도 띠 다섯 + 시그니처 폭풍)이고 SOI·timewarp은 조정하지 않는다. 확인: 고체
+        표면이 없어 flying·in-space 두 상황만 성립하므로 ScienceValues는 전체를 채우되 landed/splashed는 도달
+        불가 토큰으로 둔다. 거대 가스행성도 위경도 biome map을 쓴다(Jool/RSS Sol 선례). 띠 경계는
+        appearance.banding의 zone을 그대로 따라가 맵과 렌더가 어긋나지 않는다. 눈은 그 행의 폭풍 눈과 같은 것이지만
+        biome-map 픽셀 #244C8A는 구름 tint #214a72와 파이프라인이 달라 별개 값으로 유지한다. SOI는 질량에서
+        나오고 timewarp은 대기 위 표준이다. 유보: 바이옴 이름은 잠정이고, 벨트 선량은 여기서 정하지 않는다.
+        magnetism.radiation_belts 지오메트리에서 Kerbalism이 계산한다. cfg emit(biome map·ScienceValues)은
+        프로젝트 말미 일괄이다.
 
   # ── group 5 surface = N/A (거대 가스행성, 고체 표면 없음 — 구름층은 atmosphere/appearance) ──
   # ── group 6 appearance = banding/haze/clouds/aurora/rings gated (facet-walk 2026-06-22); emission_glow/specular/artificial/surface = N/A ──
