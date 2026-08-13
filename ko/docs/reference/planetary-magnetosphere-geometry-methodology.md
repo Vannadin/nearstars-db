@@ -212,6 +212,142 @@ NearStars에 대해 이게 확정하는 3가지.
    내대, 그리고 거주가능 위성 Pandora의 강한 고유장이 그걸 막음(설계의 핵심 드라마).
    `geomagnetic_offset`(천왕성 0.3, 해왕성 0.55)은 Proxima c 같은 빙거성의 offset/다극 쌍극 핸들.
 
+### `radiation_*_gradient` — 껍질 안쪽의 선량 상승 기울기
+
+벨트 껍질은 지오메트리일 뿐이고, 그 안에서 실제로 받는 선량은 이렇게 계산됩니다.
+
+    dose = clamp( gradient · (−SDF) / radius , 0 , 1 ) · radiation_inner|outer
+
+(`Radiation.cs`. `scripts/viz/render_belts.py:50`과 벨트 뷰어가 이 식을 원문 그대로 옮겼기
+때문에 뷰어의 선량 표시를 미리보기로 신뢰할 수 있습니다.) `−SDF`는 껍질 표면에서 파고든
+깊이이고 `radius`는 그 벨트 자신의 `*_radius`이므로, 선량은 **경계에서 0으로 시작해 다음
+깊이에서 최대 강도에 도달하는 선형 램프**입니다.
+
+    d* = *_radius / gradient          (바디 반경 단위, deform_xy로 눌린 좌표계 기준)
+
+즉 단면 반경의 `1/gradient`만큼을 최대치까지 올라가는 데 씁니다. 배포된 값은 내대 **3.3**
+(단면 반경의 30 %에서 평탄부 진입), 외대 **2.2**(45 %)이고, emitter와 뷰어는 이 둘을 같으면
+생략하는 기본값으로 취급합니다. 그래서 cfg에 `radiation_inner_gradient` 줄이 적혀 있다면 항상
+의도적인 이탈입니다.
+
+**구하는 방법.** gradient는 벨트의 경계나 최대치가 아니라 반경방향 **프로파일의 모양**을
+담는 유일한 필드라, Part B가 이미 필요로 하는 그 프로파일에서 나옵니다.
+
+1. 자기적도를 따라간 반경방향 선량(또는 >MeV 플럭스) 프로파일을 Part B의 공급−손실 모형에서
+   가져옵니다. 앵커 바디는 발표된 모형에서 바로 읽어도 됩니다(목성 벨트는 Divine & Garrett
+   1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D), 반경확산 프로파일은 Schulz & Lanzerotti 1974
+   [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
+2. 프로파일이 최대가 되는 `r_peak`와 같은 쪽 껍질 경계 `r_edge`를 읽어 `d* = |r_peak − r_edge|`.
+3. `gradient = *_radius / d*`.
+
+핵심 원 근처에서야 최대가 되는 프로파일은 `gradient ≈ 1`(길고 완만한 상승)이고, 경계 바로
+안쪽에서 포화하는 프로파일은 큰 gradient(단단한 경계)입니다. `deform_xy`가 1에서 많이 벗어난
+벨트라면 먼저 눌린 좌표계로 환산하십시오. SDF가 깊이를 재는 곳이 실제 적도거리가 아니라
+그쪽입니다.
+
+**실제로 발목을 잡는 결합 두 가지.**
+
+- **`gradient` ↔ `*_radius`.** 둘은 `radius/gradient` 비로만 등장하므로, 단면 반경을 다시
+  피팅하면 램프 깊이도 조용히 따라 움직입니다. `fit_belts.py`를 다시 돌렸다면 gradient도
+  다시 구해야 합니다.
+- **`gradient < 1`이면 적어놓은 강도에 끝내 도달하지 못합니다.** clamp가 1에서 잘리고 껍질의
+  가장 깊은 점도 `−SDF = radius`까지밖에 못 가므로, 실현되는 최대 선량은
+  `gradient · radiation_*`입니다. 완만한 프로파일 때문에 `gradient < 1`을 택한다면 강도를 그
+  값으로 나눠 넣어야 최대 선량이 정직해집니다. 그러지 않으면 보드에 적힌 rad/h가 게임이 적용하는
+  값과 다릅니다. (Proxima c 내대의 `gradient 1.9`는 안전 구간이고, 현재 NearStars에 1 미만은
+  없습니다.)
+
+A b 내대 예시. `inner_radius` 1.159 R_p에 `gradient` 3.3이면 평탄부가 껍질 표면에서 0.35 R_p
+안쪽에서 시작하므로, 300 rad/h가 껍질 대부분에 걸리고 Hades의 L-셸 쪽 얇은 표피만 등급이
+깎입니다.
+
+### 나머지 값들 — 무엇이 정하고, 무엇을 끌고 가는가
+
+도출 순서가 중요합니다. `R_mp` 아래의 모든 값이 자기장이나 항성풍이 바뀌면 함께 바뀌므로,
+단일 필드를 손보는 대신 사슬을 위에서 아래로 다시 돌리십시오.
+
+    B_eq + P_ram  →  R_mp (Part A)  →  pause 필드
+                                   →  벨트 L-셸 경계  →  fit_belts.py  →  벨트 지오메트리
+    공급 − 손실 (Part B) + K–P 천장  →  radiation_inner/outer
+    반경방향 프로파일 모양           →  radiation_*_gradient
+    조화 성분 / 기울기 / offset      →  deform, pole_lat/lon, geomagnetic_offset
+
+| 필드 | 무엇이 정하나 | 도출 | 무엇과 묶이나 |
+|---|---|---|---|
+| `has_pause` | 애초에 가두는지 | `B_eq ≳ 0.1×` 지구 (regime 5는 `false`) | 이게 없으면 벨트도 없음 |
+| `pause_radius` | Part A 노즈 | `R_mp × pause_compression`. 압축은 구 판정 *전에* x에 적용됨 | `pause_compression`. 둘은 함께 다시 구할 것 |
+| `pause_compression` | 주야면 비대칭 | 측면/노즈 비. Shue 등가로 `α = log₂(comp)`이라 ROK 지구 1.5 ⇒ α 0.585 | `pause_radius`, 그리고 아래 Shue `α` |
+| `pause_extension` | 꼬리를 닫는 길이 | `L = pause_radius / extension`. `L`은 lobe 자기장이 GCR에 무의미해지는 거리로(지구 ≈ 200 R_E) | 꼬리 길이만. 노즈는 무관 |
+| `pause_height_scale` | pause의 극방향 편평 | 극 standoff 대 적도 standoff 비(1.0=구, 자이언트 ~1.1) | 독립 |
+| `radiation_pause` | GCR 차폐의 유무 | standoff에 비례하지 **않음**. 스톡에서 ~−0.01로 일정 | 없음(위 정정 참조) |
+| `inner_dist` / `outer_dist` | 벨트 핵심의 L-셸 | 드리프트 셸 `r = L cos²λ`의 `L_core`, `fit_belts.py` 피팅 | `*_radius`·`*_deform_xy`(한 번에 같이 피팅) |
+| `inner_radius` / `outer_radius` | 껍질 두께 | L-셸 띠의 반폭, 같은 피팅 | `gradient`(위의 비) |
+| `*_deform_xy` | 드리프트 셸의 위도방향 눌림 | `cos²λ` 닫힘에서. 적도 범위 = `(dist ± radius)/√deform_xy` | 보고하는 범위값. 프로파일과 비교 전 환산 |
+| `*_border_dist` / `*_border_radius` / `*_border_deform_xy` | 대기 손실원뿔 | 빼내는 껍질. `border_dist ≈ 0`이면 손실원뿔 고도(~1.05 R_p)의 구면 절단으로 퇴화 | 선량 영역의 내측 경계 |
+| `*_compression` / `*_extension` (벨트) | 벨트의 항성풍 반응 | 벨트는 거의 반응 안 함. 스톡/ROK 모두 1.01–1.05, 0.85–1.0 유지 | 바디별로 손대지 말 것 |
+| `*_deform` | 비쌍극 요철 | SDF에 더하는 진폭(바디 반경 단위)이라 경계가 최대 ±A만큼 흔들림. ROKerbalism 앵커(`mercury`/`irregular` 0.1, `metallic`/`solidiron`/`anomaly` 0.04–0.1) | 요철의 *크기*는 아래 미구현 `*_deform_scale`이 정함 |
+| `radiation_inner` / `radiation_outer` | Part B regime call | 공급 − 손실, K–P 상한. `scripts/refs/kp_limit.py`로 검산 | `gradient`가 1 미만일 때 |
+| `radiation_*_gradient` | 반경방향 프로파일 모양 | `*_radius / d*`(위) | `*_radius` |
+| `geomagnetic_pole_lat` / `_lon` | 쌍극 기울기 | `lat = 90° − magnetic_dipole_tilt_deg`. 역전 쌍극은 부호가 따라감(목성 −80) | aurora 행의 오벌 편심 |
+| `geomagnetic_offset` | 쌍극 중심의 이동 | 자기축 방향 이동거리 / R_p (수성 0.198, 천왕성 0.3, 해왕성 0.55). `deform`과 달리 축대칭 유지 | 벨트도 함께 이동. `deform`과 이중계상 금지 |
+| `*_quality` | 레이마치 스텝 수 | 렌더 전용, 물리 없음 | 없음 |
+| `radiation_surface` | 항성 레벨 필드 | **항성 전용**. 행성 표면 선량은 여기 없음(그 사슬은 `surface-radiation-dose-methodology.md`) | 없음 |
+
+재현성을 지키는 습관 두 가지. 벨트 지오메트리는 손으로 맞추지 말고 `fit_belts.py`로 구하십시오
+(실제 SDF에 대해 IoU를 최적화하므로 적어 넣는 숫자가 엔진이 렌더하는 숫자와 같아집니다). 그리고
+출력값 옆에 **입력값**(`B_eq`, `P_ram`, `L` 경계, 공급항)을 보드에 함께 남기십시오. 위 필드는
+전부 물리량 네댓 개의 하류입니다.
+
+### ⚗ 아직 없는 필드 — KerbalismShuePause 플러그인
+
+벨트 뷰어가 노출하는 손잡이 셋은 **현재 배포된 어떤 Kerbalism도 읽지 않습니다.** 값은 지금
+구해서 기록해 두고, 인하우스 Harmony 2 패치(또는 업스트림 PR)를 기다립니다. 기각한 대안까지
+포함한 브리프는
+[`plugins/KerbalismShuePause/README.md`](../../../plugins/KerbalismShuePause/README.md)입니다.
+파이프라인 규율은 이렇습니다. emitter는 이들을 `PENDING_MODEL_KEYS`에 두고 cfg 줄로 **절대**
+쓰지 않으며, 뷰어는 `⚗`로 표시하고 주석으로만 내보내며, 보드는 미사용 표시를 달아 값을 실을
+수 있습니다. 도출은 한 번만 하고, 플러그인이 오기 전까지 게임은 스톡 거동을 렌더합니다.
+
+**`*_deform_scale`** (`pause_`/`inner_`/`outer_`). Kerbalism의 deform은 SDF에
+`sin(x·5)·sin(y·7)·sin(z·6)·A`를 더합니다. 진폭 `A`는 조절되지만 파수가 하드코딩이라 요철이
+*얼마나 큰지*는 정할 수 없습니다. 수성 수준인 standoff 1.54 R_p에서 저 파수는 경계에 8–11개
+lobe를 만드는데, dynamo 레시피가 실제로 내놓는 다극장보다 훨씬 잘게 쪼갠 값입니다. scale은 그
+파수에 걸리는 배수이고(`1.0`이 스톡과 완전히 동일하므로 배포된 cfg는 하나도 바뀌지 않습니다),
+보기 좋게 고르는 값이 아니라 자기장에서 나옵니다.
+
+    k = ℓ / R_mp                deform_scale = k / 5
+
+`ℓ`은 그 자기장의 지배적 구면조화 차수입니다(dynamo 레시피의 regime call에서 옵니다). `ℓ = 4`
+까지 파워가 있는 dynamo가 `R_mp` 1.54에 있으면 `k ≈ 2.6`, 즉 `deform_scale ≈ 0.52`입니다.
+진폭과 scale은 서로 독립입니다. `A`는 경계가 얼마나 멀리 흔들리는지, scale은 몇 개의 lobe로
+흔들리는지입니다.
+
+**Shue 기반 pause** (`pause_shue`, `pause_nose` = r0, `pause_alpha` = α, `pause_tail` = L).
+Kerbalism의 pause는 구를 x방향으로 구간별 스케일한 것이라 노즈가 지나치게 뭉툭하고, 최대
+단면이 바디 평면에 못 박히며, 꼬리가 방추형으로 닫힙니다. Shue et al. 1997/1998
+([`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S) / [`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S))이 물리량 둘로 하는 일을 결합된 필드
+셋으로 대신하는 셈입니다. 채택한 형태는 이음매 없는 C∞ 닫힌 곡선 하나인 **연화 Shue**입니다.
+
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α        ε = 1 / ( (L/r0)^(1/α) − 1 )
+
+`ε → 0`이면 정확한 Shue로 돌아가고, `ε > 0`이면 `r(180°) = L`에서 기울기 0으로 꼬리가 닫히며
+어디에도 이음매가 없습니다. 세 필드의 도출은 이렇습니다. **r0**은 Part A의 Chapman–Ferraro
+노즈를 그대로 씁니다(압축비로 인코딩하지 않습니다). **α**는 Shue 98의 램압력·IMF `Bz` 적합에서
+나오고, 조용한 항성풍 기본값이 0.58입니다(`α ≥ 0.5`는 본질적으로 열린 꼬리라는 뜻이고, 닫는
+일은 α가 아니라 `ε` 항의 몫입니다). **L**은 lobe 자기장이 GCR에 무의미해지는 거리입니다.
+기존 필드에서의 환산은 별도 비용이 없습니다. `α = log₂(compression)`, `r0 = pause_radius / compression`,
+`L = pause_radius / extension`. 다만 이 환산이 형상을 보존하는 것은 지구형 cfg뿐입니다. RSS
+목성의 `compression` 1.05는 α 0.07로 환산되어 주야면이 비물리적으로 구에 가까워지므로,
+자이언트는 환산 후 α를 다시 조율해야 합니다.
+
+**`pause_offset`**은 전체 Shue 모드가 기각될 때의 값싼 대안입니다. 스케일 전에 구의 중심을
+꼬리쪽으로 옮기면(`p.x += pause_offset`) "최대 폭이 바디 평면에 박힌다"는 결함이 한 줄로
+고쳐집니다. Proxima c의 연화 Shue 곡선(노즈 11.905, α 0.5, 꼬리 125)에 최소제곱으로 맞추면
+`pause_offset` 19.7 / radius 21.5 / compression 0.68 / extension 0.204가 노즈, 바디 평면 폭,
+최대 폭, 꼬리 닫힘을 모두 수 % 안에서 재현합니다. 배포된 스톡·ROKerbalism pause는 전부 같은
+방식으로 꼬리 폭을 과소평가하므로(지구는 측면 15인데 관측된 꼬리 반경이 25–30 R_E), 이건
+NearStars만의 문제가 아닙니다.
+
 ## Part D — 위성 ↔ 모행성 상호작용 (임베디드 자기권)
 
 거대행성 자기권 *안*을 도는 위성은 NearStars에서 흔한 경우입니다(A b 위성 전부).

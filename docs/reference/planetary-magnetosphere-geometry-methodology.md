@@ -249,6 +249,154 @@ Three facts this settles for NearStars:
    `geomagnetic_offset` (Uranus 0.3, Neptune 0.55) is the handle for the offset/
    multipolar dipoles of ice giants like Proxima c.
 
+### `radiation_*_gradient` — the radial dose ramp inside a shell
+
+The belt shells are geometry only; the dose a vessel actually takes inside one is
+
+    dose = clamp( gradient · (−SDF) / radius , 0 , 1 ) · radiation_inner|outer
+
+(`Radiation.cs`; reproduced verbatim in `scripts/viz/render_belts.py:50` and in the
+belt viewer, which is why the viewer's readout can be trusted as a preview). `−SDF`
+is the depth below the shell surface and `radius` is that belt's own `*_radius`, so
+the dose ramps **linearly from zero at the boundary to the full intensity at depth**
+
+    d* = *_radius / gradient          (body radii, in the deform_xy-squashed metric)
+
+i.e. `1/gradient` is the fraction of the section radius spent climbing to the
+plateau. The shipped values are inner **3.3** (plateau at 30 % of the section
+radius) and outer **2.2** (45 %); the emitter and the viewer treat those two as the
+omit-if-equal default, so a written `radiation_inner_gradient` line always means a
+deliberate departure.
+
+**How to derive it.** The gradient is the one field that encodes the *shape* of the
+radial profile rather than its bounds or its peak, so it comes from the same profile
+Part B already needs:
+
+1. Take the radial dose (or >MeV flux) profile along the magnetic equator, from the
+   Part B source − loss model — anchored bodies can read it off a published model
+   (Divine & Garrett 1983 for the Jovian belts, [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D); radial-diffusion
+   profiles per Schulz & Lanzerotti 1974, [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
+2. Read off `r_peak` (where the profile maxes) and `r_edge` (the fitted shell
+   boundary on the same side), then `d* = |r_peak − r_edge|`.
+3. `gradient = *_radius / d*`.
+
+A profile that peaks right at its core circle gives `gradient ≈ 1` (a long, gentle
+climb); a profile that saturates immediately inside the boundary gives a large
+gradient (a hard-edged shell). Convert into the squashed metric first when
+`deform_xy` is far from 1, because the SDF measures depth there, not in true
+equatorial distance.
+
+**Two couplings that bite.**
+
+- **`gradient` ↔ `*_radius`.** They appear only as the ratio `radius/gradient`, so
+  any re-fit that moves the section radius silently moves the ramp depth. Re-derive
+  the gradient whenever `fit_belts.py` is re-run.
+- **`gradient < 1` never reaches the stated intensity.** The clamp saturates at 1,
+  and the deepest point of the shell only reaches `−SDF = radius`, so the realized
+  peak is `gradient · radiation_*`. If a soft profile forces `gradient < 1`, the
+  intensity has to be divided by it to keep the peak dose honest — otherwise the
+  board's rad/h number is not what the game applies. (Proxima c's inner belt at
+  `gradient 1.9` is inside the safe range; nothing in NearStars currently goes
+  below 1.)
+
+Worked example — A b's inner belt: `inner_radius` 1.159 R_p at `gradient` 3.3 puts
+the plateau 0.35 R_p inside the shell surface, so the full 300 rad/h applies across
+most of the shell and only the thin skin near Hades' L-shell edge is graded.
+
+### Deriving the rest — what fixes each field, and what it drags with it
+
+Derivation order matters: everything downstream of `R_mp` changes when the field or
+the wind changes, so run the chain top-down rather than patching single fields.
+
+    B_eq + P_ram  →  R_mp (Part A)  →  pause fields
+                                   →  belt L-shell bounds  →  fit_belts.py  →  belt geometry
+    source − loss (Part B) + K–P ceiling  →  radiation_inner/outer
+    radial profile shape                  →  radiation_*_gradient
+    harmonic content / tilt / offset      →  deform, pole_lat/lon, geomagnetic_offset
+
+| Field | What fixes it | Derivation | Couples to |
+|---|---|---|---|
+| `has_pause` | does the body trap at all | `B_eq ≳ 0.1×` Earth (regime 5 below is `false`) | belts exist only if this does |
+| `pause_radius` | Part A nose | `R_mp × pause_compression` — the compression is applied to x *before* the sphere test | `pause_compression`; re-derive both together |
+| `pause_compression` | dayside/flank asymmetry | flank/nose ratio; Shue-equivalent `α = log₂(comp)`, so ROK Earth 1.5 ⇒ α 0.585 | `pause_radius`, and the Shue `α` below |
+| `pause_extension` | tail closure length | `L = pause_radius / extension`; pick `L` where the lobe field stops mattering for GCR (Earth ≈ 200 R_E) | tail length only; nose unaffected |
+| `pause_height_scale` | polar flattening of the pause | ratio of polar to equatorial standoff (1.0 = spherical; giants ~1.1) | independent |
+| `radiation_pause` | GCR shield presence | **not** scaled to standoff: ~−0.01 stock-uniform | nothing (see the correction above) |
+| `inner_dist` / `outer_dist` | L-shell of the belt core | `L_core` of the drift shell, `r = L cos²λ`, fitted by `fit_belts.py` | `*_radius`, `*_deform_xy` (one joint fit) |
+| `inner_radius` / `outer_radius` | shell thickness | half-width of the L-shell band, same fit | `gradient` (ratio, above) |
+| `*_deform_xy` | latitudinal squash of the drift shell | from `cos²λ` closure; equatorial extent = `(dist ± radius)/√deform_xy` | reported extents; convert before comparing to profiles |
+| `*_border_dist` / `*_border_radius` / `*_border_deform_xy` | the atmospheric loss cone | subtracted shell; `border_dist ≈ 0` degenerates to a sphere cut at the loss-cone altitude (~1.05 R_p) | inner edge of the dose region |
+| `*_compression` / `*_extension` (belts) | belt response to the wind | belts barely respond: stock/ROK stay at 1.01–1.05 and 0.85–1.0 | keep, don't tune per body |
+| `*_deform` | non-dipolar lumpiness | amplitude in body radii added to the SDF, so the boundary wanders by up to ±A; anchor on ROKerbalism (`mercury` / `irregular` 0.1, `metallic`/`solidiron`/`anomaly` 0.04–0.1) | the (pending) `*_deform_scale` sets its *size* |
+| `radiation_inner` / `radiation_outer` | Part B regime call | source − loss, K–P-capped; check against `scripts/refs/kp_limit.py` | `gradient` when it is < 1 |
+| `radiation_*_gradient` | radial profile shape | `*_radius / d*` (above) | `*_radius` |
+| `geomagnetic_pole_lat` / `_lon` | dipole tilt | `lat = 90° − magnetic_dipole_tilt_deg` (sign follows a reversed dipole: Jupiter −80) | the aurora row's oval offset |
+| `geomagnetic_offset` | dipole centre offset | offset distance / R_p, along the magnetic axis (Mercury 0.198, Uranus 0.3, Neptune 0.55) — axisymmetric, unlike `deform` | belts inherit the shift; do not double-count with `deform` |
+| `*_quality` | raymarch step count | rendering only, no physics | nothing |
+| `radiation_surface` | star-level field | **stars only** — a planetary surface dose does not live here (that chain is `surface-radiation-dose-methodology.md`) | nothing |
+
+Two habits that keep this reproducible: derive the belt geometry with
+`fit_belts.py` rather than by hand (it optimizes IoU against the actual SDF, so the
+numbers you write are the numbers the engine renders), and record the *inputs*
+(`B_eq`, `P_ram`, `L`-bounds, source term) on the board next to the outputs, because
+the fields above are all downstream of four or five physical numbers.
+
+### ⚗ Fields that do not exist yet — the KerbalismShuePause plugin
+
+Three of the knobs the belt viewer exposes are **not consumed by any shipped
+Kerbalism**. They are derived and recorded now, and wait on an in-house Harmony 2
+patch (or an upstream PR) — the brief, including the rejected alternatives, is
+[`plugins/KerbalismShuePause/README.md`](../../plugins/KerbalismShuePause/README.md).
+Pipeline discipline: the emitter keeps them in `PENDING_MODEL_KEYS` and **never**
+writes them as cfg lines, the viewer marks them `⚗` and exports them as comments,
+and a board may carry the value with an explicit unused marker. So the derivation
+happens once, and stock renders stock behaviour until the plugin lands.
+
+**`*_deform_scale`** (`pause_` / `inner_` / `outer_`). Kerbalism's deform adds
+`sin(x·5)·sin(y·7)·sin(z·6)·A`: the amplitude `A` is tunable but the wavenumbers are
+hardcoded, so *how big* the lumps are cannot be set. At a Mercury-like standoff of
+1.54 R_p those wavenumbers put 8–11 lobes around the boundary, far finer than the
+multipolar fields the dynamo recipes actually produce. The scale is a multiplier on
+the wavenumbers (`1.0` = stock exactly, so no shipped cfg changes), and it is
+derived from the field, not chosen for looks:
+
+    k = ℓ / R_mp                deform_scale = k / 5
+
+with `ℓ` the dominant spherical-harmonic degree of the field (from the dynamo
+recipe's regime call). A dynamo with power out to `ℓ = 4` at `R_mp` 1.54 wants
+`k ≈ 2.6`, i.e. `deform_scale ≈ 0.52`. Amplitude and scale are orthogonal: `A` is
+how far the boundary wanders, `scale` is how many lobes it wanders in.
+
+**Shue-native pause** (`pause_shue`, `pause_nose` = r0, `pause_alpha` = α,
+`pause_tail` = L). Kerbalism's pause is a sphere with piecewise x-scaling, which is
+too blunt at the nose, pins the widest cross-section at the body plane, and closes
+the tail into a spindle — three coupled fields faking what Shue et al. 1997/1998
+([`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S) / [`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)) do with two physical
+ones. The adopted form is the **softened Shue**, a single C∞ closed curve:
+
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α        ε = 1 / ( (L/r0)^(1/α) − 1 )
+
+`ε → 0` recovers exact Shue; `ε > 0` closes the tail at `r(180°) = L` with zero
+slope and no join anywhere. Derivation of the three fields: **r0** is the Part A
+Chapman–Ferraro nose directly (no compression-ratio encoding); **α** comes from the
+Shue 98 fit against ram pressure and IMF `Bz` (0.58 is the quiet-wind default, and
+`α ≥ 0.5` means an intrinsically open tail — closure is the `ε` term's job, not
+α's); **L** is where the lobe field becomes GCR-irrelevant. Legacy conversion is
+free: `α = log₂(compression)`, `r0 = pause_radius / compression`,
+`L = pause_radius / extension`. It is shape-faithful for Earth-style configs only —
+RSS Jupiter's `compression` 1.05 converts to α 0.07, an unphysically spherical
+dayside, so giants need α re-tuned after conversion rather than converted blindly.
+
+**`pause_offset`** is the cheap fallback if the full Shue mode is rejected: shift
+the sphere centre tailward before the scaling (`p.x += pause_offset`), which fixes
+the "widest at the body plane" defect in one line. A least-squares fit against the
+softened Shue curve for Proxima c (nose 11.905, α 0.5, tail 125) reproduces the
+nose, the body-plane width, the maximum width and the tail closure within a few
+percent at `pause_offset` 19.7 / radius 21.5 / compression 0.68 / extension 0.204.
+Every shipped stock and ROKerbalism pause underrepresents tail width the same way
+(Earth flank 15 vs an observed 25–30 R_E tail radius), so this is a general defect,
+not a NearStars quirk.
+
 ## Part D — moon ↔ parent interaction (embedded magnetospheres)
 
 A moon orbiting *inside* a giant's magnetosphere is a common NearStars case (every
