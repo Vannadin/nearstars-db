@@ -1,66 +1,165 @@
 NearStars — Third-Party Notices
+Last reviewed: 2026-08-13
 
-This file lists third-party software and data sources whose content
-appears in or is referenced by this repository, together with the
-required attribution.
+This repository is licensed under CC-BY-NC-SA 4.0 (see LICENSE). This file
+lists every third party whose software, assets or data appear in, are ported
+into, or are described by this repository, with the attribution each requires.
 
-================================================================
-Principia (https://github.com/mockingbirdnest/Principia)
-================================================================
-
-Portions of this repository — specifically
-`docs/reference/principia-cfg-reference.md` and related
-Principia-format documentation — describe the cfg format of
-Principia, which is licensed under the MIT License.
-
-    Copyright (c) 2014 Robin Leroy
-
-    Permission is hereby granted, free of charge, to any person
-    obtaining a copy of this software and associated documentation
-    files (the "Software"), to deal in the Software without
-    restriction, including without limitation the rights to use,
-    copy, modify, merge, publish, distribute, sublicense, and/or
-    sell copies of the Software, and to permit persons to whom the
-    Software is furnished to do so, subject to the following
-    conditions:
-
-    The above copyright notice and this permission notice shall be
-    included in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-    OTHER DEALINGS IN THE SOFTWARE.
+Sections are ordered by how strong the obligation is:
+  1. Vendored files — third-party code/assets shipped inside this repo
+  2. Ported algorithms — third-party logic reimplemented here
+  3. Mods described or targeted — no code reproduced
+  4. Runtime dependencies of the published site
+  5. Data sources and literature services
 
 ================================================================
-Sol-Configs (https://github.com/RSS-Reborn/Sol-Configs)
+1. VENDORED FILES (shipped in this repository)
 ================================================================
 
-Sol-Configs is licensed under CC-BY-NC-SA 4.0, the same license as
-this repository. The skill files
-`.claude/skills/kopernicus-cfg/references/planet-body.md`,
-`star-body.md`, and `ocean.md` currently use raw-link redirects to
-upstream files rather than verbatim reproduction. See
-`docs/reference/data-sources.md` §2.
+marked — https://github.com/markedjs/marked
+  MIT License. `docs/assets/marked.min.js` (v12.0.2), vendored so the doc
+  pages render markdown client-side without a CDN.
+
+github-markdown-css — https://github.com/sindresorhus/github-markdown-css
+  MIT License. `docs/assets/github-markdown-dark.min.css` and
+  `github-markdown-light.min.css` (v5.5.0).
+
+Plotly.js — https://github.com/plotly/plotly.js
+  MIT License. `docs/assets/plotly.min.js`, used by the interactive orbit
+  viewers and the MEGNO stability plots under `docs/phase4/orbit-viewers/`.
+
+Geist / Geist Mono — https://github.com/vercel/geist-font
+  SIL Open Font License 1.1. `docs/assets/fonts/*.woff2` + `geist.css`.
 
 ================================================================
-Kopernicus (https://github.com/ballisticfox/Kopernicus)
+2. PORTED ALGORITHMS (reimplemented, not copied verbatim)
 ================================================================
 
-Referenced descriptively only. No Kopernicus source code is
-reproduced in this repository. Kopernicus is licensed under
-LGPL-3.0.
+Kerbalism — https://github.com/Kerbalism/Kerbalism
+  Released to the public domain under the Unlicense
+  (https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE), so no
+  permission is required; attribution is given as a courtesy.
+  `scripts/viz/render_belts.py` and `scripts/viz/fit_belts.py` reproduce the
+  radiation-field signed-distance functions and dose ramp from
+  `src/Kerbalism/Radiation/Radiation.cs`
+  (https://github.com/Kerbalism/Kerbalism/blob/master/src/Kerbalism/Radiation/Radiation.cs),
+  and `docs/belt-viewer.html` evaluates the same functions in the browser.
+
+Mauk & Fox 2010 Kennel–Petschek implementation
+  https://zenodo.org/records/4782323 (ADS 2021zndo...4782323M)
+  The authors' own open implementation, ported to `scripts/refs/kp_limit.py`
+  and validated against their printed intermediates. Cited in
+  `docs/reference/planetary-magnetosphere-geometry-methodology.md`.
+
+REBOUND — https://github.com/hannorein/rebound
+  GPL-3.0. Used as a library (not vendored) by the stability sandbox under
+  `phase3/stability-sim/`; simulations are run against an installed copy.
 
 ================================================================
-Astronomical data
+3. MODS DESCRIBED OR TARGETED (no code reproduced)
 ================================================================
 
-Stellar and exoplanet measurement values aggregated in `db/` are
-derived from public astronomical catalogs (NASA Exoplanet Archive,
-Gaia DR3, SIMBAD, TEPCat). These values are factual data and are
-not subject to the repository's MIT license. Citation policies for
-each catalog are documented in `docs/reference/data-sources.md`.
+Every entry below is referenced descriptively — this repository writes or
+documents configuration files for them. Install and cfg roles are in
+`docs/reference/mod-reference.md`.
+
+Required base
+  Kopernicus (ballisticfox fork) — https://github.com/ballisticfox/Kopernicus
+    LGPL-3.0. Planetary-system framework; NearStars bodies are Kopernicus cfg.
+  Module Manager — https://github.com/sarbian/ModuleManager
+    The cfg patch runtime (`NEEDS[]`, `FOR[]`, `@`). The repository carries no
+    LICENSE file; its README states a CC share-alike intent with two caveats
+    (https://github.com/sarbian/ModuleManager#readme). Verified 2026-08-13.
+  Sol-Configs (RSS-Reborn / ballisticfox) — https://github.com/RSS-Reborn/Sol-Configs
+    CC-BY-NC-SA 4.0, the same license as this repository. NearStars sits on
+    top of it. Skill references link to upstream files rather than reproduce
+    them; see `docs/reference/data-sources.md` §2.
+  BurstPQS — https://github.com/Phantomical/BurstPQS
+    Burst-compiled terrain generation.
+
+Physics and gameplay
+  Principia — https://github.com/mockingbirdnest/Principia
+    MIT License, Copyright (c) 2014 Robin Leroy. The n-body integrator.
+    `docs/reference/principia-cfg-reference.md` documents its cfg format.
+    Full MIT text: https://github.com/mockingbirdnest/Principia/blob/master/LICENSE.txt
+  Kerbalism — https://github.com/Kerbalism/Kerbalism
+    Unlicense. Life support and the radiation model this repo emits belts for
+    (see section 2 for the ported algorithm).
+  ResearchBodies — https://github.com/JPLRepo/ResearchBodies
+    Body discoverability. Patch layer currently retired; kept for reference.
+  BetterTimeWarpContinued — https://github.com/linuxgurugamer/BetterTimeWarpContinued
+  Relativity — https://github.com/Vannadin/Relativity
+
+Visuals
+  Scatterer — https://github.com/LGhassen/Scatterer
+    Atmospheric scattering and ocean shading.
+  Environmental Visual Enhancements (EVE-Redux / Volumetrics) —
+    https://github.com/LGhassen/EnvironmentalVisualEnhancements
+    Cloud, aurora and volumetric layers. The Volumetrics V5 early-access
+    build is Patreon-distributed; no EA asset or schema from it is committed
+    to this repository.
+  Deferred Rendering — https://github.com/LGhassen/Deferred
+  Parallax Continued — https://github.com/Gameslinx/Parallax-Continued
+    PBR terrain shaders and 3D scatters.
+  OPM-Parallax (convention reference) — https://github.com/OneSaltyPringle/OPM-Parallax
+  Firefly — https://github.com/M1rageDev/Firefly
+    Code GPL-3.0; model and texture assets All Rights Reserved
+    (https://github.com/M1rageDev/Firefly/blob/master/LICENSE). Only the cfg
+    schema and its source lines are referenced here, never its assets.
+    Reentry and supersonic heating effects; this repo writes its cfg
+    and grounds its plasma colors (`docs/reference/composition-color.md`).
+  Firefly Planet Pack Configs — https://github.com/SPACEMAN9813/Firefly-Planet-Pack-Configs
+  Textures Unlimited — https://github.com/shadowmage45/TexturesUnlimited
+  TUFX — https://github.com/KSPModStewards/TUFX
+  Distant Object Enhancement — https://github.com/KSPModStewards/DistantObjectEnhancement
+  PlanetShine — https://github.com/PapaJoesSoup/ksp-planetshine
+
+Kerbal Space Program itself is © Squad / Private Division / Intercept Games.
+NearStars is an unofficial fan modification and is not affiliated with them.
+
+================================================================
+4. RUNTIME DEPENDENCIES OF THE PUBLISHED SITE
+================================================================
+
+three.js — https://github.com/mrdoob/three.js
+  MIT License. Loaded from jsDelivr (https://cdn.jsdelivr.net/npm/three@0.160.0)
+  by the 3D star map and orbit viewers; it is an ES module, so it is linked
+  rather than vendored.
+
+================================================================
+5. DATA SOURCES AND LITERATURE SERVICES
+================================================================
+
+Measurement values in `db/` are factual data aggregated from public
+catalogs; they are not covered by this repository's license. Per-source
+citation policy is in `docs/reference/data-sources.md`.
+
+  NASA Exoplanet Archive — https://exoplanetarchive.ipac.caltech.edu
+    NASA/IPAC, operated by Caltech under contract with NASA.
+  Gaia (DR3), ESA — https://www.cosmos.esa.int/gaia
+    Data processed by the Gaia Data Processing and Analysis Consortium (DPAC);
+    acknowledgement text: https://gea.esac.esa.int/archive/documentation/credits.html
+  SIMBAD, CDS Strasbourg — https://simbad.cds.unistra.fr
+    Wenger et al. 2000, A&AS 143, 9.
+  VizieR, CDS Strasbourg — https://vizier.cds.unistra.fr
+  TEPCat — https://www.astro.keele.ac.uk/jkt/tepcat/
+    Southworth 2011.
+  DACE, Geneva Observatory — https://dace.unige.ch
+  Stellarium Web — https://stellarium-web.org
+    Used for the independent position cross-check.
+  NASA ADS — https://ui.adsabs.harvard.edu
+    Every citation in this repository is pinned by ADS bibcode or arXiv id.
+  arXiv / ar5iv — https://arxiv.org , https://ar5iv.labs.arxiv.org
+    Full texts are cached locally for verification only, never redistributed.
+  Crossref — https://www.crossref.org
+  NIST Atomic Spectra Database — https://physics.nist.gov/asd
+    Line data behind the plasma-color engine.
+  USGS Spectral Library (Kokaly et al. 2017, Data Series 1035) —
+    https://pubs.usgs.gov/ds/1035/
+    Mineral reflectance behind the surface-color work. (The lab's own pages
+    block automated access; the Data Series release is the citable copy.)
+
+Fictional bodies adapted for gameplay variety (the Alpha Centauri A b moon
+system among them) are flagged as fiction in the database and on every
+published page; the underlying franchise names remain the property of their
+respective owners.
