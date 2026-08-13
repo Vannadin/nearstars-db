@@ -24,7 +24,7 @@
 
 ---
 
-## TL;DR
+## 요약
 
 > **별 렌더링이 가장 값어치 높은 수확이다.** Kopernicus 의 전체
 > `ScaledVersion` (sunspot/rim Material + Coronas), `Light` (강도 곡선 4
@@ -44,7 +44,7 @@
 
 ---
 
-## 1. Licensing & attribution
+## 1. 라이선스와 출처 표기
 
 **기본 원칙.** *기법·방법·아이디어는 저작권 대상이 아니다 — 구체적인
 표현(config 텍스트, 텍스처, 메시, 컴파일된 코드)만 저작권으로 보호된다.*
@@ -106,7 +106,7 @@ NearStars 가 실제로 **사용/번들** 할 현실적인 후보다 (MIT 고지
 
 ---
 
-## 2. Star & stellar-object rendering
+## 2. 항성·항성체 렌더링
 
 가장 값어치 높은 영역이다. NearStars 는 **실제 별** 을 싣고 이미 Teff /
 L / R / mass 를 큐레이션하므로, 이 팩들이 손으로 튜닝한 값은 전부
@@ -138,7 +138,7 @@ hex 를 **렌더링용으로 변형**한 파생물이지 두 번째 계산이 �
 는 Teff 와 반비례로 유지. 마법 같은 숫자를 복사하지 말고 생성하라. (에미터.
 `emit_kopernicus_cfg.py` → `star_fields.py`.)
 
-### 2.2 Coronas
+### 2.2 코로나
 
 `ScaledVersion { Coronas { <Value|Corona> { scaleSpeed, scaleLimitX/Y,
 speed, rotation, updateInterval, Material { texture, invFade,
@@ -227,7 +227,7 @@ atmosphere 없이도 실제 근접 위험을 부여한다.
 
 ---
 
-## 3. Debris disks & rings — four techniques
+## 3. 잔해 원반과 고리 — 네 가지 기법
 
 NearStars 는 실제 debris-disk 호스트 (Vega/Fomalhaut/ε Eri 급) 를 갖고
 있다. 팩들 전반에 네 가지 별개 메커니즘이 존재하니 경우에 맞게 고른다. (여기
@@ -276,7 +276,7 @@ semiMajorAxis = min/max; inclination; eccentricity } } }` 와 여러 반경
 
 ---
 
-## 4. Aurorae & emissive volumetric FX
+## 4. 오로라와 발광 볼류메트릭 FX
 
 세 팩 모두 같은 방식으로 aurora 를 렌더하며, **SPVE 가 무료 release-3
 스키마에서도 작동함을 증명한다** → 배포 가능.
@@ -301,7 +301,7 @@ semiMajorAxis = min/max; inclination; eccentricity } } }` 와 여러 반경
 
 ---
 
-## 5. Atmospheres, oceans, Scatterer
+## 5. 대기·바다·Scatterer
 
 > 스키마/기법만 다룬다. 대기/바다 **색**은 여기서 추측하지 않고 도출한다.
 > 하늘/헤이즈 색조는
@@ -337,7 +337,7 @@ semiMajorAxis = min/max; inclination; eccentricity } } }` 와 여러 반경
 
 ---
 
-## 6. PQS terrain recipes (procedural, no real heightmap)
+## 6. PQS 지형 레시피 (절차적, 실측 하이트맵 없이)
 
 실제 DEM 이 없는 외계행성을 위해, 이 스택들은 그럴듯한 지형 기복을
 생성한다.
@@ -360,7 +360,7 @@ semiMajorAxis = min/max; inclination; eccentricity } } }` 와 여러 반경
 
 ---
 
-## 7. Parallax conventions (fills the pending Parallax reference)
+## 7. Parallax 컨벤션 (미작성이던 Parallax 레퍼런스를 채움)
 
 ([[project-nearstars-mod-refs-pending]] 의 "Parallax still unwritten"
 항목을 해소한다.)
@@ -387,7 +387,7 @@ semiMajorAxis = min/max; inclination; eccentricity } } }` 와 여러 반경
 
 ---
 
-## 8. EVE weather / particle / effect library
+## 8. EVE 날씨·파티클·이펙트 라이브러리
 
 하우스 스타일로 채택할 만한, 재사용 가능한 named-effect 패턴이다.
 효과는 한 번 정의하고 어느 cloud 볼륨에서든 **문자열 이름** 으로
@@ -413,7 +413,7 @@ particle/droplet/lightning/wetSurface 라이브러리는 그대로 재사용 가
 
 ---
 
-## 9. Scene-level visuals
+## 9. 씬 레벨 비주얼
 
 - **TUFX post-processing** (`TUFX_PROFILE { Antialiasing; EFFECT
   ColorGrading{ Tonemapper = ACES }; EFFECT Bloom{ Intensity, Threshold,
@@ -430,7 +430,7 @@ particle/droplet/lightning/wetSurface 라이브러리는 그대로 재사용 가
 
 ---
 
-## 10. Config organization & ModuleManager patterns
+## 10. cfg 구성과 ModuleManager 패턴
 
 가장 강한 *구조적* 교훈이다 (두 다중-시스템 팩이 여기서 수렴한다).
 
@@ -468,7 +468,7 @@ biome 키 지역 crew report, 5개 언어 로컬라이제이션 레이아웃.
 
 ---
 
-## 11. Quality cautions / what NOT to copy
+## 11. 품질 주의 — 따라 쓰면 안 되는 것
 
 - **전부 stock-scale 이다.** 모든 radii, altitude, SOI, luminosity /
   intensity / temperature 곡선, `HazardousBody` 임계값, raymarching
@@ -498,7 +498,7 @@ biome 키 지역 crew report, 5개 언어 로컬라이제이션 레이아웃.
 
 ---
 
-## 12. Priority adoption list for NearStars
+## 12. NearStars 우선 도입 목록
 
 1. **별 렌더링 제너레이터** — Material/Light/Coronas/Atmosphere/
    HazardousBody + intensity 곡선 4종, 전부 큐레이션한 Teff / L / R / mass
@@ -519,7 +519,7 @@ biome 키 지역 crew report, 5개 언어 로컬라이제이션 레이아웃.
 
 ---
 
-## Sources
+## 출처
 
 - SPVE — <https://github.com/TheSpacePotato/SpacePotato-s-Volumetric-Enhancements> (CC BY-NC 4.0)
 - Cosmic Serenity — <https://github.com/ProximaCentauri-star/Cosmic-Serenity> (configs GPL-3.0; assets ARR)

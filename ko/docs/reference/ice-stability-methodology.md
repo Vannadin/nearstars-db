@@ -137,7 +137,7 @@ Enceladus 는 안정한 얼음 지각을 돌려주고, Ceres 는 영구 음영 �
 상한이다. 그리고 고체 밀도는 종별 명목값이다. 깊이와 수명에는 선형으로 들어가지만
 승화 물리 자체에는 들어가지 않는다.
 
-## Worked example: Chaos (Alpha Centauri A b V)
+## 워크드 예제: Chaos (Alpha Centauri A b V)
 
 Phase 2/3 앵커에서 온 입력은 L = 1.521 L☉, 궤도 거리 1.6 AU 상당, 반지름 400 km,
 나이 5.3 Gyr, 그리고 위성 에너지 수지에서 오는 모행성 항 (열복사 0.33 W/m²,

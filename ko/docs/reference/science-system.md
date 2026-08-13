@@ -101,7 +101,7 @@ biome별 결과를 주는지를 정한다(situationMask의 부분집합이며 `0
 
 출처. Kopernicus kittopia-dumps, `github.com/Kopernicus/Kopernicus/wiki/Properties`.
 
-### 1.4 Biome
+### 1.4 바이옴
 
 `Body { Properties { } }` 안에서 ScienceValues 옆에 둔다.
 

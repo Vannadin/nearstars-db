@@ -455,7 +455,7 @@ state-2 solution exists.
 > Galilean 위성들)와 동기 경우의 세차 상수 계수입니다. 계수 두 개는 과잉 주장 대신 명시적 불확실성
 > 플래그를 달고 갑니다(§3, §6).
 
-## 1. What a Cassini state is
+## 1. 카시니 상태란
 
 주성(항성, 위성의 경우 모행성)은 천체의 자전 + 조석 팽대부에 토크를 걸어, **자전축 ŝ가 궤도 법선 n̂
 둘레를 세차**하게 만듭니다. 그 세차율은 세차 상수 α가 정합니다. 한편 n̂ 자신은 고정된 경사 I를 유지한 채
@@ -476,7 +476,7 @@ state-2 solution exists.
 감쇠된 천체는 **state 1**에 안착하고, 세속 자전–궤도 공명에 걸리거나 그것을 통과하며 이주한 천체는 높은
 obliquity의 **state 2**에 포획될 수 있습니다(Millholland & Laughlin 2019 [`2019NatAs...3..424M`](https://ui.adsabs.harvard.edu/abs/2019NatAs...3..424M)).
 
-## 2. Equilibrium-obliquity relation
+## 2. 평형 기울기 관계식
 
 ε = obliquity(∠ ŝ,n̂), I = Laplace 평면에 대한 궤도 경사, g = Ω̇ < 0 승교점 세차율, α > 0 자전 세차
 상수라 할 때, Cassini state는 다음을 만족합니다(Peale 1969 [`1969AJ.....74..483P`](https://ui.adsabs.harvard.edu/abs/1969AJ.....74..483P); Ward & Hamilton 2004
@@ -502,7 +502,7 @@ obliquity의 **state 2**에 포획될 수 있습니다(Millholland & Laughlin 20
 평형 obliquity는 ≈ (|g|/α)·sin I라는 *작지만 0은 아닌* 값으로 억눌립니다. **정확히 0은 아닙니다**. 이 값은
 공명 |g|/α ~ 1(state 2) 근처에서만 커집니다.
 
-## 3. The precession constant α
+## 3. 세차 상수 α
 
 **자유 / 빠른 회전체**(Néron de Surgy & Laskar 1997 [`1997A&A...318..975N`](https://ui.adsabs.harvard.edu/abs/1997A%26A...318..975N); Ward 1975), n² = G M⋆ / a³
 및 항등식 (C−A) = J₂·M R²와 함께.
@@ -528,7 +528,7 @@ Baland+ 2011 [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A
 고정 천체에서 이 값은 궤도가 조여들수록 *커집니다*(figure 문서 §3: J₂ ≈ q_s, C̄₂₂ ≈ 0.3 J₂). 그래서
 **가장 조인 고정일수록 가장 둥글게 도는 → 가장 작은 ε₁**이 됩니다, 공명이 끼어들지 않는 한.
 
-## 4. Getting the orbital nodal rate g
+## 4. 궤도 승교점 이동률 g 구하기
 
 **(a) 다중 행성계의 행성: Laplace–Lagrange 세속 이론**(Murray & Dermott 1999 [`1999ssd..book.....M`](https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M),
 7장). 승교점 진동수 {g_i}는 경사 상호작용 행렬 B의 고유값입니다. 최저차는 이렇습니다.
@@ -547,7 +547,7 @@ Baland+ 2011 [`2011A&A...530A.141B`](https://ui.adsabs.harvard.edu/abs/2011A%26A
 여기에 항성 및 다른 위성/고리 항이 더해집니다. 위성의 Laplace 평면 경사 I는 모행성 적도(가까울 때 지배하는
 J₂ 항)와 항성 둘레 궤도 사이의 균형점입니다. **입력**: 모행성 J₂, R_planet, 위성 a와 n, 다른 위성들.
 
-## 5. Calibration anchors (verify the recipe here first)
+## 5. 검산 앵커 (레시피를 먼저 여기서 확인)
 
 | body | state | measured obliquity | source | hydrostatic recipe reproduces? |
 |---|---|---|---|---|
@@ -561,7 +561,7 @@ J₂ 항)와 항성 둘레 궤도 사이의 균형점입니다. **입력**: 모�
 Galilean 위성 10⁻³–10⁻² deg, 바다 포함 Titan 0.3°), **"정확히 0"은 결코 옳지 않지만**, 공명(Moon =
 state 2)이나 분리된 바다(Titan)가 끼어들지 않는 한 크기는 1도 미만입니다.
 
-## 6. Regime guidance / expected magnitudes
+## 6. Regime 가이드와 예상 크기
 
 - **M 왜성 둘레 a ≈ 0.03–0.05 AU의 근접 암석 행성**(Proxima b형, TRAPPIST-1형): 조인 고정 → 큰 J₂+C₂₂
   → 큰 α_syn → (4)에 의해 |g|/α ≈ 1 공명에서 멀면 **ε₁은 1도 미만**입니다. Millholland+ 2024는 TRAPPIST-1
@@ -576,7 +576,7 @@ state 2)이나 분리된 바다(Titan)가 끼어들지 않는 한 크기는 1도
   이를 Titan 같은 ~0.1–0.3°로 증폭할 수 있습니다(documented-divergence 선택지). 공명은 |g|/α로
   확인합니다.
 
-## 7. Inputs needed per body (checklist)
+## 7. 천체별 필요 입력 (체크리스트)
 
 figure 문서 + 큐레이션된 DB에서.
 - **J₂**, 고정 천체는 **C̄₂₂** · **C/MR²**(천체 종류) · **자전 ω**(동기이면 = n)와 **평균 운동 n** ·
@@ -590,7 +590,7 @@ g를 위해.
 그다음: α는 자유면 (5), 고정이면 (6) → (1)을 풀어 state-1 근을 구하고((3)/(4)는 작은 각 검증) → ε를
 보고합니다. |g|/α를 (2)에 대해 시험해 큰 state-2 해가 존재하는지 표시합니다.
 
-## 8. Caveats (honest)
+## 8. 유보 사항
 
 1. **동기 α 계수**: Baland/Bills의 (6) (J₂+C̄₂₂)/C̃ 대 강체 (J₂+2C̄₂₂)/C̃: ~20 % 폭; Baland/Bills를
    채택하고 계통을 싣습니다.

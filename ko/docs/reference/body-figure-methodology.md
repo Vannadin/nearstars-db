@@ -22,7 +22,7 @@ Principia는 비행체를 완전한 지오포텐셜 안에서 적분하기 때�
 > 교과서 결과이므로 "도출값은 논문 근거화" 원칙의 허용된 예외입니다. 그럼에도 인용이 필요한 것은
 > **캘리브레이션 앵커**(측정된 태양계 J₂/C₂₂)와 관성모멘트 경계이며, 이들은 NASA ADS로 해소합니다.
 
-## 1. The figure parameter
+## 1. 형상 파라미터
 
 두 효과 모두 표면에서의 원심(또는 조석) 가속도 대 자체중력 가속도의 무차원 비로 지배됩니다.
 
@@ -33,7 +33,7 @@ Principia는 비행체를 완전한 지오포텐셜 안에서 적분하기 때�
 n²R³/(GM_body) = (M_primary/M_body)(R/a)³가 성립하여 자전 파라미터와 조석 파라미터가 비슷한 크기이기
 때문입니다. 고정된 경우는 q_s = n²R³/(GM)로 씁니다.
 
-## 2. Rotational figure: Maclaurin vs Radau–Darwin
+## 2. 자전 형상: Maclaurin 대 Radau–Darwin
 
 q에 대한 1차 근사에서, 편평도 f = (R_eq − R_pol)/R_eq와 J₂는 다음 정유체 관계를 따릅니다.
 
@@ -52,7 +52,7 @@ q에 대한 1차 근사에서, 편평도 f = (R_eq − R_pol)/R_eq와 J₂는 �
 
   같은 q에서 더 응집된 천체는 편평이 **덜** 일어나므로, J₂/q는 ½ 아래로 떨어집니다.
 
-### Calibration (always verify on the real bodies first)
+### 검산 (항상 실측 천체로 먼저 확인)
 
 | 천체 | 종류 | q | NMoI | J₂/q | measured J₂ |
 |---|---|---|---|---|---|
@@ -90,7 +90,7 @@ NMoI 0.205 인스턴스입니다. A형은 Claret 2004 그리드(Claret 2019와 �
 **오너 정책(2026-07-12): 항성 J₂는 크기와 무관하게 항상 계산해서 emit하며, "무시가능" 기록으로 끝내는 처리는
 금지합니다**. Principia가 이 항을 적분하므로 오너가 상시 반영을 원합니다.
 
-## 3. Tidal triaxiality: synchronously locked bodies
+## 3. 조석 삼축성: 동기 고정된 천체
 
 (거의) 원궤도에 고정된 천체는 주성을 향하는 **영구** 조석 팽대부를 일으킵니다. 그 2차 형상은
 **triaxial**(반축 a > b > c, a는 주성을 향하고 c는 자전축)이 되어, J₂ **와** 실제 sectoral C̄₂₂를 함께
@@ -122,7 +122,7 @@ Alpha Centauri A b II (Hades) ≈ 0.5%). 그래서 **기록만 하고 기본 emi
 물방울은 terrain pass에서 작은 degree-3 **heightmap** bump로 넣어야 합니다. 실제 사례로 달의 형상 중심이
 지구 쪽으로 치우쳐 있습니다.
 
-## 4. Regimes by body type
+## 4. 천체 종류별 regime
 
 | body class | spin | figure | coefficients |
 |---|---|---|---|
@@ -135,7 +135,7 @@ Alpha Centauri A b II (Hades) ≈ 0.5%). 그래서 **기록만 하고 기본 emi
 emit할 때마다 필수입니다. cfg 형식(scalar `j2`, zonal `geopotential_row`, full cos/sin)은
 [`principia-geopotential-data.md`](principia-geopotential-data.md)에 정리되어 있습니다.
 
-## 5. High-degree geoid for rocky bodies: synthetic now, heightmap later
+## 5. 암석 천체의 고차 지오이드: 지금은 합성, 하이트맵은 나중에
 
 §2–§3은 **2차(degree-2)** 형상(자전 + 조석)을 결정론적으로 고정합니다. 실제 암석체는 그 위에 *울퉁불퉁한*
 3차 이상의 장을 함께 가집니다. 천체 고유의 내부 밀도 이상(anomaly)과 지형이 남기는 중력 지문입니다(지구,
@@ -188,7 +188,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 **하드 의존성**(노드를 쓰는 천체는 플러그인 없이는 형상이 안 나옴)이고
 눈에 보이는 임계값(a/c ≳ 1.02) 위의 천체만 이를 끌어옵니다. cfg 노드 + 스키마는 `kopernicus-cfg` 스킬에 있습니다(emit 단계에서 채움).
 
-## 6. Worked examples (NearStars roster, Phase 4 active set)
+## 6. 워크드 예제 (NearStars 로스터, Phase 4 활성 세트)
 
 입력값은 큐레이션된 질량 / 반경 / 자전이며, 고정 상태는
 [조석고정 타임스케일 방법](tidal-locking-timescale-methodology.md)에서 가져옵니다.
@@ -212,7 +212,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 (TRAPPIST-1 b ≫ Proxima b). 항성 형상은 의미 있는 궤도 거리에서 동역학적으로 미미하지만, 2026-07-12 오너
 정책에 따라 J₂를 계산해 항상 emit합니다. Principia가 이 항을 싣고 갑니다.
 
-## 7. Procedure (per body)
+## 7. 절차 (천체별)
 
 1. 고정 상태 결정(조석고정 타임스케일 방법) → 자유 또는 동기.
 2. q(자유: P_rot) 또는 q_s(고정: 궤도 n)를 **평균** 반경을 써서 계산(Helled+2011 컨벤션; emit하는
@@ -226,7 +226,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
    항상 emit합니다(오너 정책 2026-07-12, Principia가 이 항을 싣고 감).** `reference_radius` = 적도 반경으로 설정.
 7. `db/systems/*`를 직접 건드리지 말고 **큐레이션된 source layer**를 통해 작성한 뒤 rebuild.
 
-## 8. Citations
+## 8. 인용
 
 모든 bibcode는 NASA ADS로 검증했습니다.
 
@@ -276,7 +276,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
   Topography of the Terrestrial Planets*, Treatise on Geophysics ([`2015trge.book..153W`](https://ui.adsabs.harvard.edu/abs/2015trge.book..153W);
   orig. [`2007plmo.book..165W`](https://ui.adsabs.harvard.edu/abs/2007plmo.book..165W)): Airy/Pratt isostasy + 중력-지형 admittance.
 
-## Appendix: measured Solar-System gravity fields (analogs)
+## 부록: 실측 태양계 중력장 (아날로그)
 
 형상 레시피와 Kaula 캘리브레이션을 위한 레퍼런스 앵커입니다. "deg"는 복원된 최대 구면조화 차수이며,
 Earth/Moon/Mars/Venus만이 진정으로 *풍부한* 고차 장을 가집니다(나머지는 모두 degree-2에서 저차까지로,
