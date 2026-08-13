@@ -1,4 +1,8 @@
 <!-- 자주 묻는 질문 -->
+---
+title: FAQ
+---
+
 # FAQ
 
 **When does it release?**

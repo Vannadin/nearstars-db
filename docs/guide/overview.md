@@ -1,4 +1,8 @@
 <!-- 모드 개요 — 무엇을 만드는 모드이고 v1 로스터가 무엇인지 -->
+---
+title: Overview
+---
+
 # NearStars
 
 Sometime deep into a career save, with reusable rockets flying and the tech tree nearly bare, you point a probe not at another planet but at a *star*, and spend years of mission time coasting toward it. NearStars exists to make that arrival worth the wait. You leave a fully realistic Sol system behind and reach a real stellar neighbor, and every world waiting there is built from what astronomers have actually measured.

@@ -52,8 +52,16 @@ _FULL_LINK_RE = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
 
 
 def _strip_frontmatter(md: str) -> tuple[str, str]:
-    """Drop a leading YAML frontmatter block; return (body, title_from_fm)."""
+    """Drop a leading YAML frontmatter block; return (body, title_from_fm).
+
+    Repo convention puts a one-line Korean HTML comment on line 1 of every doc, so
+    the frontmatter can sit just after it; skip past that comment before matching.
+    """
     title = ''
+    lead = ''
+    cm = re.match(r'^<!--.*?-->\n', md, re.DOTALL)
+    if cm:
+        lead, md = cm.group(0), md[cm.end():]
     m = _FRONTMATTER_RE.match(md)
     if m:
         fm = m.group(0)
@@ -61,7 +69,7 @@ def _strip_frontmatter(md: str) -> tuple[str, str]:
         if tm:
             title = tm.group(1).strip()
         md = md[m.end():]
-    return md, title
+    return lead + md, title
 
 
 def _rewrite_links(md: str, src_dir: Path) -> str:
@@ -183,13 +191,24 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
         '<a class="brand" href="index.html">NearStars <span>docs</span></a>',
         '<a class="nav-x" href="https://github.com/Vannadin/nearstars-db" target="_blank" rel="noopener">↗ Repository</a>',
     ]
-    labels = {'guide': 'Guide', 'methodology': 'Methodology', 'engine': 'Engine & mods',
-              'pipeline': 'Pipeline & data', 'reference': 'Reference', 'plans': 'Plans'}
+    # 사이드바도 본문 토글을 따라간다 — 두 언어 제목을 함께 심고 CSS 가 html[lang] 로 고른다.
+    # 문서 제목은 각 언어 파일의 H1 에서 오므로 별도 번역표가 없다(미러 없으면 양쪽 동일).
+    labels = {'guide': ('Guide', '안내'), 'methodology': ('Methodology', '방법론'),
+              'engine': ('Engine & mods', '엔진·모드'), 'pipeline': ('Pipeline & data', '파이프라인·데이터'),
+              'reference': ('Reference', '레퍼런스'), 'plans': ('Plans', '기획')}
+
+    def bi(en: str, ko: str) -> str:
+        if en == ko:
+            return html.escape(en)
+        return (f'<span class="l-en">{html.escape(en)}</span>'
+                f'<span class="l-ko">{html.escape(ko)}</span>')
+
     for g in ('guide', 'methodology', 'engine', 'pipeline', 'reference', 'plans'):
-        rows.append(f'<div class="nav-grp">{labels[g]}</div>')
+        rows.append(f'<div class="nav-grp">{bi(*labels[g])}</div>')
         for d in groups[g]:
             cls = 'nav-i on' if d['out'] == active else 'nav-i'
-            rows.append(f'<a class="{cls}" href="{d["out"]}">{html.escape(d["title"])}</a>')
+            rows.append(f'<a class="{cls}" href="{d["out"]}">'
+                        f'{bi(d["title"], d.get("title_ko", d["title"]))}</a>')
     rows.append('</nav>')
     return '\n'.join(rows)
 
@@ -237,6 +256,11 @@ body { margin: 0;
 .side a:hover { background: var(--w-s2) }
 .side a.on { background: var(--w-on-bg); color: var(--w-on-fg); font-weight: 600 }
 .side a.nav-x { color: var(--w-fg4) }
+/* 사이드바 언어 전환 — render() 가 html[lang] 을 세팅하므로 JS 없이 CSS 로 고른다.
+   기본(lang 미설정) 은 영어, 한글 제목은 lang=ko 일 때만 나온다. */
+.l-ko { display: none }
+html[lang="ko"] .l-en { display: none }
+html[lang="ko"] .l-ko { display: inline }
 .content-wrap { flex: 1; min-width: 0; padding: 0 16px }
 .topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
 @media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
@@ -338,7 +362,11 @@ def build() -> None:
     for g in groups.values():
         for d in g:
             d['en_md'], d['title'] = _prep(d['en'])
-            d['ko_md'] = _prep(d['ko'])[0] if d['ko'] else None
+            if d['ko']:
+                d['ko_md'], ko_title = _prep(d['ko'])
+                d['title_ko'] = ko_title or d['title']
+            else:
+                d['ko_md'], d['title_ko'] = None, d['title']   # 미러 없으면 양쪽 같은 제목
 
     # pass 2: emit pages
     count = 0
