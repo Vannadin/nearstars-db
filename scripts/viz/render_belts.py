@@ -98,7 +98,10 @@ def render(body, out, size=560, z=0.0):
                 if max(abs(px[i]),abs(py[i]),abs(px[i+1]),abs(py[i+1])) > 4*size: continue
                 dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=2)
             dr.ellipse([c+r0*ppr-3,c-3,c+r0*ppr+3,c+3],fill=(255,154,82))
-            dr.text((c+r0*ppr+6,c-16),f"Shue r0 {r0:.1f} α {al:.2f}",fill=(255,154,82),font=fnt)
+            lbl=f"Shue r0 {r0:.1f} α {al:.2f}"
+            lx=c+r0*ppr+6
+            if lx+len(lbl)*7 > size-6: lx=c+r0*ppr-6-len(lbl)*7   # 프레임 밖으로 나가면 왼쪽에
+            dr.text((max(lx,4),c-16),lbl,fill=(255,154,82),font=fnt)
     dr.text((10,8),body['title'],fill=(230,235,245),font=fbig)
     dr.text((10,30),body.get('sub',''),fill=(140,160,190),font=fnt)
     dr.text((size-96,size-20),"☀ star →",fill=(255,154,82),font=fnt)

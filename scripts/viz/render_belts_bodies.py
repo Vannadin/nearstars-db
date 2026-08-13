@@ -30,11 +30,11 @@ BODIES={
 
  # ---- URANUS: 극단 tilt 59° + offset 0.3 ----
  # 스톡=generic `saturn` 모델 재사용(외대 7/7만; radiation_inner 75는 has_inner=false라 미사용 죽은 값)
- 'uranus_stock':{'title':'Uranus — stock (ROKerbalism RSS.cfg)','sub':'generic saturn model: outer 7/7, pause 20; pole_lat 31.4, offset 0.3','R':16,'tilt':58.6,'offset':0.3,
+ 'uranus_stock':{'title':'Uranus — stock (ROKerbalism RSS.cfg)','sub':'generic saturn model: outer 7/7, pause 20; pole_lat 31.4, offset 0.3','R':22,'tilt':58.6,'offset':0.3,
    'outer':{'radiation':4,'grad':2.2,'dist':7.0,'rad':7.0,'comp':1.05,'ext':0.95},
    'pause':{'radiation':-0.010,'rad':20,'comp':1.02,'ext':0.1,'hscale':1.0}},
  # 벨트 구조 경계=위성 L-셸 (Krimigis 1986 Miranda 안쪽 예외역 + Cheng 1987 전자 극소: Miranda 5.1/Ariel 7.5/Umbriel 10.4)
- 'uranus_phys':{'title':'Uranus — physical (SDF fit)','sub':'tilt 59°, offset 0.3; L 1.5-5 / 5-10 Miranda·Umbriel cut (IoU .98/.97)','R':16,'tilt':59,'offset':0.3,
+ 'uranus_phys':{'title':'Uranus — physical (SDF fit)','sub':'tilt 59°, offset 0.3; L 1.5-5 / 5-10 Miranda·Umbriel cut (IoU .98/.97)','R':22,'tilt':59,'offset':0.3,
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). grad: 프로파일이 위성-소거 극소 사이 넓은 최대(Cheng 1987)라
    # 피크가 껍질 핵심 → 컷 이후 최심점으로 클램프한 하한값. 1.0을 그대로 넣으면 포화 지점이 없어 실효 강도가 0.64배로 깎임.
    'inner':{'radiation':40,'grad':1.57,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.001,'ext':0.997,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
@@ -43,10 +43,10 @@ BODIES={
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
  # 스톡=generic `saturn` 모델 재사용(pause 20 — 26.5 아님; radiation_inner 39 미사용 죽은 값)
- 'neptune_stock':{'title':'Neptune — stock (ROKerbalism RSS.cfg)','sub':'generic saturn model: outer 7/7, pause 20; pole_lat 43, offset 0.55','R':16,'tilt':47,'offset':0.55,
+ 'neptune_stock':{'title':'Neptune — stock (ROKerbalism RSS.cfg)','sub':'generic saturn model: outer 7/7, pause 20; pole_lat 43, offset 0.55','R':28,'tilt':47,'offset':0.55,
    'outer':{'radiation':2.5,'grad':2.2,'dist':7.0,'rad':7.0,'comp':1.05,'ext':0.95},
    'pause':{'radiation':-0.007,'rad':20,'comp':1.02,'ext':0.1,'hscale':1.0}},
- 'neptune_phys':{'title':'Neptune — physical (SDF fit)','sub':'tilt 47°, offset 0.55 R_N; shells L 1.5-5 / L 5-14 Triton cut (IoU .98/.97)','R':16,'tilt':47,'offset':0.55,
+ 'neptune_phys':{'title':'Neptune — physical (SDF fit)','sub':'tilt 47°, offset 0.55 R_N; shells L 1.5-5 / L 5-14 Triton cut (IoU .98/.97)','R':28,'tilt':47,'offset':0.55,
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). grad 외대: 피크 L7 (Stone 1989), 내대: 프로파일 없어 지구 내대 아날로그
    'inner':{'radiation':30,'grad':2.09,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.0,'ext':0.999,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
    'outer':{'radiation':6,'grad':2.63,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.004,'ext':0.98,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
@@ -59,11 +59,11 @@ BODIES={
    'pause':{'radiation':-0.001,'rad':2.03,'comp':1.4,'ext':0.05,'hscale':1.0,'deform':0.1}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
  # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----
- 'earth_stock':{'title':'Earth — stock (ROKerbalism)','sub':'inner 0.81/0.70 (D), outer 2.63/2.48 (O), pause 15','R':8,'tilt':11,
+ 'earth_stock':{'title':'Earth — stock (ROKerbalism)','sub':'inner 0.81/0.70 (D), outer 2.63/2.48 (O), pause 15','R':12,'tilt':11,
    'inner':{'radiation':10.376,'grad':3.3,'dist':0.813,'rad':0.70,'dxy':0.572,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':0.915,'bdxy':0.5},
    'outer':{'radiation':2.214,'grad':2.2,'dist':2.6338,'rad':2.48,'dxy':0.7225,'comp':1.01,'ext':1.0,'bdist':1.4412,'brad':1.4875,'bdxy':0.7225},
    'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},
- 'earth_phys':{'title':'Earth — physical (SDF fit)','sub':'shells L 1.1-2 (>1000 km) / L 3-7, slot between (IoU .99/.98); mp nose 10','R':8,'tilt':11,
+ 'earth_phys':{'title':'Earth — physical (SDF fit)','sub':'shells L 1.1-2 (>1000 km) / L 3-7, slot between (IoU .99/.98); mp nose 10','R':12,'tilt':11,
    # grad/comp/ext = 자기권 기하 방법론 Part C 도출값 (2026-08-13). grad=rad/d*(피크 깊이, d_max 클램프),
    # comp/ext = pause 비대칭 × eps=(r_core/nose)³. 아래 IoU 수치는 L-셸 피팅(dist/rad/dxy/border) 기준이라 무영향.
    'inner':{'radiation':10.376,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.001,'ext':0.999,'bdist':1e-4,'brad':1.1836,'bdxy':1.0505},  # 내대 하한=1000km(loss-cone 고갈 경계). grad: 피크 L1.5(Ginet 2013)
