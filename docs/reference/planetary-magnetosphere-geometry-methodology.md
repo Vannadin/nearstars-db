@@ -303,7 +303,8 @@ gradient (a hard-edged shell).
 at 2.15 against the shipped 2.2 — it recovers a stock value it was never told, which
 is the validation. Earth's **inner** belt lands at 2.09 against the shipped 3.3, so it
 is the inner-belt steepness that turns out unsupported: the proton peak at L ≈ 1.5
-(AP9; Ripoll 2016, [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)) sits 0.37 R_E below the loss-cone cut, not
+(AE9/AP9, Ginet 2013 [`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G); slot per Ripoll 2016,
+[`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)) sits 0.37 R_E below the loss-cone cut, not
 0.23 R_E. Jupiter's inner belt (peak 1.5–2 R_J, Divine & Garrett 1983) gives 2.24. Uranus
 is the case the floor rule exists for: its electron profile is a broad maximum between
 moon-swept minima (Cheng 1987, [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)), which reads as a peak at the shell
@@ -362,7 +363,7 @@ the wind changes, so run the chain top-down rather than patching single fields.
 | `inner_radius` / `outer_radius` | shell thickness | half-width of the L-shell band, same fit | `gradient` (ratio, above) |
 | `*_deform_xy` | latitudinal squash of the drift shell | from `cos²λ` closure; equatorial extent = `(dist ± radius)/√deform_xy` | reported extents; convert before comparing to profiles |
 | `*_border_dist` / `*_border_radius` / `*_border_deform_xy` | the atmospheric loss cone | subtracted shell; `border_dist ≈ 0` degenerates to a sphere cut at the loss-cone altitude (~1.05 R_p) | inner edge of the dose region |
-| `*_compression` / `*_extension` (belts) | belt response to the wind | belts barely respond: stock/ROK stay at 1.01–1.05 and 0.85–1.0 | keep, don't tune per body |
+| `*_compression` / `*_extension` (belts) | how much of the boundary's asymmetry reaches the shell | the pause asymmetry damped by `(r_core/R_mp)³` — see below | `pause_compression`/`pause_extension`, and `R_mp` |
 | `*_deform` | non-dipolar lumpiness | amplitude in body radii added to the SDF, so the boundary wanders by up to ±A; anchor on ROKerbalism (`mercury` / `irregular` 0.1, `metallic`/`solidiron`/`anomaly` 0.04–0.1) | the (pending) `*_deform_scale` sets its *size* |
 | `radiation_inner` / `radiation_outer` | Part B regime call | source − loss, K–P-capped; check against `scripts/refs/kp_limit.py` | `gradient` when it is < 1 |
 | `radiation_*_gradient` | radial profile shape | `*_radius / d*` (above) | `*_radius` |
@@ -370,6 +371,60 @@ the wind changes, so run the chain top-down rather than patching single fields.
 | `geomagnetic_offset` | dipole centre offset | offset distance / R_p, along the magnetic axis (Mercury 0.198, Uranus 0.3, Neptune 0.55) — axisymmetric, unlike `deform` | belts inherit the shift; do not double-count with `deform` |
 | `*_quality` | raymarch step count | rendering only, no physics | nothing |
 | `radiation_surface` | star-level field | **stars only** — a planetary surface dose does not live here (that chain is `surface-radiation-dose-methodology.md`) | nothing |
+
+### Belt `*_compression` / `*_extension` — the boundary's asymmetry, damped inward
+
+A belt shell is not the magnetopause, and it is not a circle either. It sits between the
+two, so the honest question is *how much* of the boundary's day–night asymmetry reaches
+it. Two limits fix the answer:
+
+- deep inside (`r ≪ R_mp`) the field is the undistorted dipole, so the shell is
+  **symmetric** — `compression = extension = 1`;
+- at the boundary the shell *is* the boundary, so it carries the pause's own asymmetry
+  (and beyond it drift shells split and open — Pfitzer 1969,
+  [`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P); Öztürk & Wolf 2007, [`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)).
+
+The weight between those limits is the ratio of the **external (boundary-current) field
+to the dipole field** at that radius. Chapman–Ferraro currents contribute a nearly
+uniform field in the inner region whose magnitude is about the dipole's own field at the
+boundary — this is the same `f ≈ 2` doubling Part A already relies on — so
+
+    ε(r) = ( r / R_mp )³ ,      r_core = *_dist / √(*_deform_xy)
+
+and the shell inherits that fraction of the pause's distortion:
+
+    *_compression = 1 + ε · (pause_compression − 1)
+    *_extension   = 1 − ε · (1 − pause_extension)
+
+Evaluate ε at the shell's **core circle**, not its outer edge: Kerbalism applies one
+x-scale to the whole shell, and the core carries both the dose peak and the shell's
+characteristic L, so the core value is the shell average rather than its worst point.
+The edge value is worth computing as the upper bound — for Earth's outer belt it is
+`ε 0.35` against `0.05` at the core, which is the size of the approximation Kerbalism's
+one-scale-per-shell design forces on us.
+
+Mead 1964 ([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M)) is the grounding for the shape of the distortion: the
+Chapman–Ferraro solution compresses field lines on **both** the day and night sides, and
+the day–night asymmetry proper comes from the distributed tail currents that the
+spacecraft-fitted models quantify (Mead & Fairfield 1975,
+[`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)). Interpolating toward the adopted pause shape is a proxy for
+that asymmetric term, not a derivation of it, so this recipe is **medium-low
+confidence** — but it is anchored at both ends and it replaces what was previously a
+copied constant. Mead's 1964 *numbers* have long been superseded for quantitative work
+by the spacecraft-fitted Tsyganenko family (T02, [`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T)), which is the
+route to take if this ever needs to be better than an interpolation: fit a T-class field
+and read the shell asymmetry off it, rather than refine the ansatz.
+
+**Validation.** The recipe recovers ROKerbalism's Ganymede belt compression, 1.05,
+without being told (core `ε` 0.139, since an embedded moon's belt fills a large fraction
+of its 2 R_moon standoff), and it reproduces Earth's near-symmetric inner belt
+(1.001 against the shipped 1.01). At geosynchronous, `ε` 0.29 gives a nightside stretch
+of 1.36×, the right order for the well-known day–night asymmetry there. Where it
+*disagrees* is instructive: the giants' shipped 1.05 / 0.9 is unreachable, because a
+belt at 8 R_J inside a 63 R_J standoff has `ε` 0.002 — those numbers are stylistic, not
+physical. The bodies where the term genuinely bites are the compressed ones: **Proxima d**
+(outer belt `ε` 0.107 → 1.05 / 0.90, against the Earth-copied 1.01 / 1.0 it carries
+today) and the embedded moons Ganymede and A b III (`ε` 0.099 → 1.015 / 0.96).
 
 Two habits that keep this reproducible: derive the belt geometry with
 `fit_belts.py` rather than by hand (it optimizes IoU against the actual SDF, so the
@@ -633,6 +688,21 @@ a documented regime call rather than a computed number.
   15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). Where each belt's flux actually peaks — Earth's inner-belt
   peak and slot, and Uranus' broad maxima between moon-swept minima. These are the
   profile shapes the `radiation_*_gradient` recipe reads `d*` from.
+- **Ginet et al. 2013**, SSRv 179, 579 ([`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G)). AE9/AP9/SPM, the current
+  standard trapped-flux specification — the successor to AE8/AP8 and the model to read a
+  radial profile off for Earth. Cite this rather than "AP9" loosely.
+- **Mead 1964**, JGR 69, 1181 ([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M)); **Mead & Fairfield 1975**, JGR 80,
+  523 ([`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)); **Tsyganenko 2002**, JGRA 107, 1179
+  ([`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T)). How the boundary currents deform the inner field — Mead for the
+  Chapman–Ferraro solution's shape (compression on both day and night sides), Mead &
+  Fairfield for the distributed tail currents the theory understates, Tsyganenko for the
+  modern quantitative standard. Mead's *description* is still the canonical statement and
+  is cited as such today; its *coefficients* are superseded by the T-family. Load-bearing
+  for the belt `*_compression`/`*_extension` recipe.
+- **Pfitzer et al. 1969**, JGR 74, 4687 ([`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P)); **Öztürk & Wolf 2007**,
+  JGRA 112, A07207 ([`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)). Drift-shell splitting in the distorted
+  magnetosphere, observed and then mapped near the dayside magnetopause — the outer limit
+  of the asymmetry recipe, where shells stop being closed surfaces at all.
 - **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
   JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). Wave–particle acceleration and loss;
   modern belt-dynamics review.

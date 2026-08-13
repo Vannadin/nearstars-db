@@ -261,7 +261,8 @@ NearStars에 대해 이게 확정하는 3가지.
 **앵커 검산.** 태양계 피팅에 이 레시피를 돌리면 지구 **외대**가 2.15로 나옵니다. 배포값 2.2를
 알려주지 않았는데 되찾아온 값이고, 이것이 검증입니다. 지구 **내대**는 배포값 3.3에 대해
 2.09가 나오므로, 근거가 없는 쪽은 내대의 급한 기울기였습니다. L ≈ 1.5의 양성자 피크
-(AP9. Ripoll 2016, [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R))가 손실원뿔 컷에서 0.23 R_E가 아니라 0.37 R_E
+(AE9/AP9는 Ginet 2013 [`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G), 슬롯은 Ripoll 2016
+[`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R))가 손실원뿔 컷에서 0.23 R_E가 아니라 0.37 R_E
 아래에 있습니다. 목성 내대(피크 1.5–2 R_J, Divine & Garrett 1983)는 2.24입니다. 천왕성이
 바로 하한 규칙이 필요한 사례입니다. 전자 프로파일이 위성이 쓸어낸 극소 사이의 넓은 최대
 (Cheng 1987, [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C))라 피크가 껍질 핵심으로 읽히는데, 그 핵심은 컷으로
@@ -315,7 +316,7 @@ A b 내대 예시. 설계상 피크가 A b II의 L-셸(2.07 R_p)에 있고 SDF�
 | `inner_radius` / `outer_radius` | 껍질 두께 | L-셸 띠의 반폭, 같은 피팅 | `gradient`(위의 비) |
 | `*_deform_xy` | 드리프트 셸의 위도방향 눌림 | `cos²λ` 닫힘에서. 적도 범위 = `(dist ± radius)/√deform_xy` | 보고하는 범위값. 프로파일과 비교 전 환산 |
 | `*_border_dist` / `*_border_radius` / `*_border_deform_xy` | 대기 손실원뿔 | 빼내는 껍질. `border_dist ≈ 0`이면 손실원뿔 고도(~1.05 R_p)의 구면 절단으로 퇴화 | 선량 영역의 내측 경계 |
-| `*_compression` / `*_extension` (벨트) | 벨트의 항성풍 반응 | 벨트는 거의 반응 안 함. 스톡/ROK 모두 1.01–1.05, 0.85–1.0 유지 | 바디별로 손대지 말 것 |
+| `*_compression` / `*_extension` (벨트) | 경계 비대칭이 껍질까지 얼마나 닿는지 | pause 비대칭을 `(r_core/R_mp)³`로 감쇠 — 아래 절 | `pause_compression`·`pause_extension`, `R_mp` |
 | `*_deform` | 비쌍극 요철 | SDF에 더하는 진폭(바디 반경 단위)이라 경계가 최대 ±A만큼 흔들림. ROKerbalism 앵커(`mercury`/`irregular` 0.1, `metallic`/`solidiron`/`anomaly` 0.04–0.1) | 요철의 *크기*는 아래 미구현 `*_deform_scale`이 정함 |
 | `radiation_inner` / `radiation_outer` | Part B regime call | 공급 − 손실, K–P 상한. `scripts/refs/kp_limit.py`로 검산 | `gradient`가 1 미만일 때 |
 | `radiation_*_gradient` | 반경방향 프로파일 모양 | `*_radius / d*`(위) | `*_radius` |
@@ -323,6 +324,51 @@ A b 내대 예시. 설계상 피크가 A b II의 L-셸(2.07 R_p)에 있고 SDF�
 | `geomagnetic_offset` | 쌍극 중심의 이동 | 자기축 방향 이동거리 / R_p (수성 0.198, 천왕성 0.3, 해왕성 0.55). `deform`과 달리 축대칭 유지 | 벨트도 함께 이동. `deform`과 이중계상 금지 |
 | `*_quality` | 레이마치 스텝 수 | 렌더 전용, 물리 없음 | 없음 |
 | `radiation_surface` | 항성 레벨 필드 | **항성 전용**. 행성 표면 선량은 여기 없음(그 사슬은 `surface-radiation-dose-methodology.md`) | 없음 |
+
+### 벨트 `*_compression` / `*_extension` — 경계의 비대칭을 안쪽으로 감쇠시켜 상속
+
+벨트 껍질은 자기권계면도 아니고 원도 아닙니다. 둘 사이에 있으니, 정직한 질문은 경계의 주야
+비대칭이 그 껍질까지 **얼마나** 닿느냐입니다. 답은 두 극한이 고정합니다.
+
+- 깊은 안쪽(`r ≪ R_mp`)은 왜곡되지 않은 쌍극장이라 껍질이 **대칭**입니다. `compression =
+  extension = 1`.
+- 경계에서는 껍질이 곧 경계이므로 pause의 비대칭을 그대로 가집니다. 그 바깥에서는 드리프트
+  셸이 갈라지고 열립니다(Pfitzer 1969, [`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P); Öztürk & Wolf 2007,
+  [`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)).
+
+두 극한 사이의 가중치는 그 반경에서의 **외부(경계전류) 자기장 대 쌍극장 비**입니다.
+Chapman–Ferraro 전류는 내부 영역에 거의 균일한 자기장을 만들고 그 크기가 경계에서의 쌍극장
+정도인데, 이것이 Part A가 이미 쓰고 있는 `f ≈ 2` 배가와 같은 이야기입니다. 그래서
+
+    ε(r) = ( r / R_mp )³ ,      r_core = *_dist / √(*_deform_xy)
+
+이고, 껍질은 pause 왜곡의 그 비율만큼을 물려받습니다.
+
+    *_compression = 1 + ε · (pause_compression − 1)
+    *_extension   = 1 − ε · (1 − pause_extension)
+
+ε는 껍질의 **핵심 원**에서 계산하십시오. 바깥 에지가 아닙니다. Kerbalism은 껍질 전체에 x-스케일
+하나만 적용하고, 핵심이 선량 피크와 껍질의 대표 L을 함께 들고 있으므로 핵심 값이 껍질 평균에
+해당합니다. 에지 값은 상한으로 함께 계산해 둘 만합니다. 지구 외대는 핵심 `ε 0.05`에 에지
+`ε 0.35`인데, 이 차이가 "껍질당 스케일 하나"라는 Kerbalism 설계가 강요하는 근사의 크기입니다.
+
+왜곡의 형태에 대한 근거는 Mead 1964([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M))입니다. Chapman–Ferraro 해는
+주간면과 야간면 **양쪽** 자기력선을 압축하고, 주야 비대칭 자체는 위성 관측으로 정량화된 분산
+전류에서 나옵니다(Mead & Fairfield 1975, [`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)). 채택한 pause 형상으로
+보간하는 것은 그 비대칭 항의 대리이지 도출이 아니므로 이 레시피는 **중저 신뢰**입니다. 다만
+양 끝이 고정되어 있고, 이전의 복사한 상수를 대체합니다. Mead의 *수치*는 정량 작업에서는
+위성 피팅 Tsyganenko 계열(T02, [`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T))로 오래전에 대체됐습니다. 보간보다
+정확해야 할 일이 생기면 ansatz를 다듬는 대신 T 계열 자기장을 피팅해 셸 비대칭을 직접 읽는
+것이 정답입니다.
+
+**검증.** 이 레시피는 ROKerbalism 가니메데의 벨트 compression 1.05를 알려주지 않았는데
+되찾아옵니다(핵심 `ε` 0.139. 임베디드 위성은 벨트가 2 R_moon 짜리 standoff의 큰 몫을 채우기
+때문입니다). 지구 내대의 거의 대칭인 상태도 재현합니다(배포값 1.01에 대해 1.001). 정지궤도에서는
+`ε` 0.29로 야간면이 1.36배 늘어나는데, 잘 알려진 그곳의 주야 비대칭과 같은 급입니다. 어긋나는
+쪽이 오히려 유익합니다. 자이언트의 배포값 1.05 / 0.9는 도달 불가입니다. 63 R_J standoff 안의
+8 R_J 벨트는 `ε`이 0.002이니, 그 숫자는 물리가 아니라 연출입니다. 이 항이 실제로 무는 바디는
+눌린 쪽입니다. **Proxima d**(외대 `ε` 0.107 → 1.05 / 0.90. 지금 들고 있는 값은 지구에서 복사한
+1.01 / 1.0)와 임베디드 위성 가니메데·A b III(`ε` 0.099 → 1.015 / 0.96)입니다.
 
 재현성을 지키는 습관 두 가지. 벨트 지오메트리는 손으로 맞추지 말고 `fit_belts.py`로 구하십시오
 (실제 SDF에 대해 IoU를 최적화하므로 적어 넣는 숫자가 엔진이 렌더하는 숫자와 같아집니다). 그리고
@@ -546,6 +592,19 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
   15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). 각 벨트의 플럭스가 실제로 어디서 최대인지. 지구 내대 피크와
   슬롯, 천왕성의 위성-소거 극소 사이 넓은 최대. `radiation_*_gradient` 레시피가 `d*`를 읽어오는
   프로파일 형상이 이들입니다.
+- **Ginet et al. 2013**, SSRv 179, 579 ([`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G)). AE9/AP9/SPM, 현행 표준
+  포획입자 플럭스 규격이며 AE8/AP8의 후속. 지구의 반경방향 프로파일은 여기서 읽습니다. "AP9"라고
+  뭉개지 말고 이 논문을 인용할 것.
+- **Mead 1964**, JGR 69, 1181 ([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M)); **Mead & Fairfield 1975**, JGR 80,
+  523 ([`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)); **Tsyganenko 2002**, JGRA 107, 1179
+  ([`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T)). 경계전류가 내부 자기장을 어떻게 변형하는지. Mead는
+  Chapman–Ferraro 해의 형태(주간·야간 양쪽 압축), Mead & Fairfield는 이론이 과소평가한 분산 전류,
+  Tsyganenko는 현행 정량 표준입니다. Mead의 *서술*은 오늘도 canonical로 인용되지만 *계수*는 T 계열로
+  대체됐습니다. 벨트 `*_compression`/`*_extension` 레시피의 근거입니다.
+- **Pfitzer et al. 1969**, JGR 74, 4687 ([`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P)); **Öztürk & Wolf 2007**,
+  JGRA 112, A07207 ([`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)). 왜곡된 자기권에서의 드리프트 셸 분열. 관측으로
+  확인된 뒤 주간면 자기권계면 근처에서 매핑됐습니다. 비대칭 레시피의 바깥 한계, 즉 셸이 더는 닫힌
+  면이 아니게 되는 지점입니다.
 - **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
   JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). 파동–입자 가속·손실; 현대 벨트 동역학 리뷰.
 - **Cooper 1983**, JGR 88, 3945 ([`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C)). 벨트 손실로서의 고리/위성 흡수 —
