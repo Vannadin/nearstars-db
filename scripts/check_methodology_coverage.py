@@ -1,37 +1,32 @@
-# 방법론 문서가 영문 인덱스·한글 인덱스·GitHub 위키 포털 세 곳에 모두 등재됐는지 대조하는 게이트
+# 방법론 문서가 영문 인덱스와 한글 인덱스 두 곳에 모두 등재됐는지 대조하는 게이트
 """Methodology registration gate.
 
-A new recipe has to land in three places, and nothing so far noticed when it
+A new recipe has to land in two places, and nothing so far noticed when it
 did not:
 
 1. `docs/reference/methodology-index.md`   (English index, canonical)
 2. `ko/docs/reference/methodology-index.md` (Korean mirror)
-3. the GitHub wiki's `Methodology-Library` / `-ko` portal
 
 The mirror gate only checks that a *file* exists, so a mirror that silently
 lists three fewer recipes than its English source passes it (found 2026-08-11:
-KO listed 20 against EN's 23). The wiki lives in its own git repository
-(`nearstars-db.wiki.git`) and sits outside every gate in this repo, so it had
-stalled at 18 entries while the library grew to 28.
+KO listed 20 against EN's 23). This compares the actual entry sets.
 
-This compares the actual entry sets. The wiki half needs the network; when the
-clone fails it warns and passes, so an offline `check.sh` still runs clean.
-Use --no-wiki to skip that half deliberately.
+There used to be a third surface: the GitHub-repo wiki's `Methodology-Library`
+portal, which this gate shallow-cloned to verify. Publishing consolidated onto
+Pages on 2026-08-13 (`plans/wiki-consolidation/`), so the portal is retired and
+`docs/reference/methodology-index.md` is published directly by build_docs.py.
+That also removes this gate's only network dependency.
 """
 import re
-import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 EN_INDEX = REPO / "docs/reference/methodology-index.md"
 KO_INDEX = REPO / "ko/docs/reference/methodology-index.md"
-WIKI_URL = "https://github.com/Vannadin/nearstars-db.wiki.git"
 
 ROW_LINK = re.compile(r"^\|\s*\[[^\]]+\]\(([a-z0-9-]+)\.md\)", re.M)
 BULLET_LINK = re.compile(r"^-\s*\[[^\]]+\]\(([a-z0-9-]+)\.md\)", re.M)
-WIKI_LINK = re.compile(r"blob/main/(?:ko/)?docs/reference/([a-z0-9-]+)\.md")
 
 
 def sections(text):
@@ -62,16 +57,6 @@ def index_entries(path):
     return recipes, validation
 
 
-def fetch_wiki():
-    """Shallow-clone the wiki; None when the network is unavailable."""
-    tmp = tempfile.mkdtemp(prefix="nswiki-")
-    r = subprocess.run(["git", "clone", "--depth", "1", "-q", WIKI_URL, tmp],
-                       capture_output=True, text=True, timeout=90)
-    if r.returncode != 0:
-        return None
-    return Path(tmp)
-
-
 def main():
     errors, warnings = [], []
 
@@ -93,24 +78,6 @@ def main():
         if slug not in en_recipes | en_validation:
             errors.append(f"docs/reference/{slug}.md exists but no index row points at it")
 
-    # 3. the wiki portal covers every recipe (extras there are fine)
-    if "--no-wiki" in sys.argv:
-        warnings.append("wiki portal check skipped (--no-wiki)")
-    else:
-        wiki = fetch_wiki()
-        if wiki is None:
-            warnings.append("wiki portal check skipped: cannot reach "
-                            "nearstars-db.wiki.git (offline?)")
-        else:
-            for page in ("Methodology-Library.md", "Methodology-Library-ko.md"):
-                p = wiki / page
-                if not p.exists():
-                    errors.append(f"wiki page {page} is gone")
-                    continue
-                listed = set(WIKI_LINK.findall(p.read_text(encoding="utf-8")))
-                for slug in sorted(en_recipes - listed):
-                    errors.append(f"wiki {page} does not link '{slug}'")
-
     n = len(en_recipes) + len(en_validation)
     for w in warnings:
         print(f"  [WARN] {w}")
@@ -119,8 +86,8 @@ def main():
         for e in errors:
             print(f"    · {e}")
         return 1
-    print(f"  [PASS] methodology coverage: {n} document(s) registered in EN index, "
-          f"KO mirror, and the wiki portal")
+    print(f"  [PASS] methodology coverage: {n} document(s) registered in the EN index "
+          f"and the KO mirror")
     return 0
 
 

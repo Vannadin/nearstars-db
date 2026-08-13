@@ -71,7 +71,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 - [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md): n-body 중력모델(J2/geopotential) cfg 규약.
 - [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md): Principia 포크의 far-field 중력 절단 floor `a_floor` + 스위칭-셸 비율을 문헌으로 근거화. Folkner 2014 / Park 2021(에페메리스 섭동체 선정), Chesley 2014(Yarkovsky 검출 한계), Jiang & Tremaine 2010(Jacobi 반경), Rein & Spiegel 2015(힘-오차 예산).
 - [binary-epoch-pipeline](binary-epoch-pipeline.md): 다성계 Keplerian → ICRS 에포크 전파.
-- [solar-system-radiation-belts](solar-system-radiation-belts.md): 자기장을 가진 태양계 7개 천체(지구/목성/토성/천왕성/해왕성/수성/가니메데)에 대해 스톡 Kerbalism cfg와 ADS 근거 물리를 대조 — 자기권 형상 레시피의 캘리브레이션 축입니다. 인게임 SDF 단면 렌더는 [위키](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)에 있습니다. Joy 2002; Cooper 1983; Ness 1986/1989; Winslow 2013; Kivelson 2002; 외 18편.
+- [solar-system-radiation-belts](solar-system-radiation-belts.md): 자기장을 가진 태양계 7개 천체(지구/목성/토성/천왕성/해왕성/수성/가니메데)에 대해 스톡 Kerbalism cfg와 ADS 근거 물리를 대조 — 자기권 형상 레시피의 캘리브레이션 축입니다. 인게임 SDF 단면 렌더를 문서 안에 함께 싣습니다. Joy 2002; Cooper 1983; Ness 1986/1989; Winslow 2013; Kivelson 2002; 외 18편.
 
 ## 관련 문서
 

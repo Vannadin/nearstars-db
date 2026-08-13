@@ -1,4 +1,4 @@
-<!-- 태양계 자기권 천체 7종의 실제 방사선대 물리 vs Kerbalism 스톡 cfg 비교 (ADS 근거, 위키 시각화 연동) -->
+<!-- 태양계 자기권 천체 7종의 실제 방사선대 물리 vs Kerbalism 스톡 cfg 비교 (ADS 근거, 단면 렌더 포함) -->
 # 태양계 방사선대: 스톡 Kerbalism cfg vs 실제 물리
 
 **포획 입자 벨트를 가진 자기권**(또는 그저 자기권을 가진) 태양계 천체를 하나씩 훑으며,
@@ -6,9 +6,7 @@
 NearStars의 자기권 지오메트리 레시피가 가상 천체용 벨트를 뽑아내기 전에 실제 바디로 먼저
 보정하고, 스톡 모델이 러프한 자리채움에 그친 곳에는 물리 정확 cfg 값을 되먹이려고 존재합니다.
 
-단면 시각화는 위키에 있습니다.
-**[Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)** —
-바디마다 두 렌더 모두 인게임 `RadiationModel` SDF입니다. **스톡**은 출하 cfg(2026-07-24에
+아래 각 바디가 **단면 두 장**을 함께 싣습니다. 두 렌더 모두 인게임 `RadiationModel` SDF입니다. **스톡**은 출하 cfg(2026-07-24에
 `KSP-RO/ROKerbalism`의 `System/Radiation.cfg` + `Support/RSS.cfg`로 검증), **물리**는 같은 SDF에서
 여섯 개 벨트 모양 파라미터를 ADS로 앵커한 자기력선 사이의 실제 쌍극 drift-shell 영역
 (r = L cos²λ, 대기 상단에서 loss-cone 컷)에 **수치적으로 적합**한 것입니다
@@ -21,6 +19,16 @@ NearStars의 자기권 지오메트리 레시피가 가상 천체용 벨트를 �
 재현(출처 [Kerbalism](https://github.com/Kerbalism/Kerbalism), [Unlicense](https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE)·퍼블릭 도메인). 場 모양 스키마는
 [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md)
 를 보세요.
+
+**렌더 읽는 법.** 색 = 선량(inferno), 청록 = cfg의 자기권계면, 주황 파선 = 같은 standoff의
+**Shue 자기권계면**(위성 관측을 피팅한 경험 형상. 비교용이고 점이 `r0`), 회색 = 바디,
+원 = 바디 반경 눈금, 항성은 +x 방향입니다. 벨트는 기울어진 자기 프레임, 자기권계면은 항성정렬
+프레임에서 그립니다. Kerbalism 자신이 그렇게 계산합니다. 계면은 `Gsm_space(rb, false)`로
+렌더·선량 계산하고, 기울어진 프레임은 벨트 몫입니다. 2026-08-13부터 벨트 *내부*를 결정하는 두
+필드(선량 램프 `radiation_*_gradient`, 벨트 `*_compression`/`*_extension`)는 스톡 복사가 아니라
+도출값입니다. 레시피와 그것이 뒤집은 것들은 방법론 문서 Part C에 있습니다. 목성과 토성은
+standoff가 63·24 바디 반경이라 계면을 프레임에 담으면 벨트가 알아볼 수 없이 작아지므로, 이 둘은
+벨트에 맞춰 두었습니다.
 
 ## Scope — 자기화된 바디만
 
@@ -79,6 +87,11 @@ NearStars의 자기권 지오메트리 레시피가 가상 천체용 벨트를 �
 앵커), ADS 핀이 붙은 물리값, 그리고 그 차이(delta)를 제시합니다.
 
 ### Earth (캘리브레이션 앵커 — 그리고, 올바로 읽으면 좋은 앵커)
+
+| 스톡 | 물리 |
+|---|---|
+| ![earth 스톡](../../../docs/img/belts/earth_stock.png) | ![earth 물리](../../../docs/img/belts/earth_phys.png) |
+
 | Field | Stock (`earth`) | Physical | Source |
 |---|---|---|---|
 | pause | 15 / comp 1.5 → **코 10 R_E** | ~10 R_E sub-solar ✓ | Shue 1997 [`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S), Fairfield 1971 [`1971JGR....76.6700F`](https://ui.adsabs.harvard.edu/abs/1971JGR....76.6700F) |
@@ -96,6 +109,11 @@ L-shell을 재적합합니다(내대 L 1.1–2에 하한 ~1000 km, 외대 L 3–
 차이는 작습니다 — 외대 가장자리 7 vs 6 R_E, 그리고 살짝 더 두꺼운 내대 초승달입니다. 외대 혼(horn)의 저고도 컷(~300 km)은 그대로 둡니다 — 내대와 달리 외대 전자는 bounce/drift loss cone을 타고 저고도로 일상적으로 강수합니다(POES 관측. Liu 2024 [`2024JGRA..12932171L`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932171L)).
 
 ### Jupiter
+
+| 스톡 | 물리 |
+|---|---|
+| ![jupiter 스톡](../../../docs/img/belts/jupiter_stock.png) | ![jupiter 물리](../../../docs/img/belts/jupiter_phys.png) |
+
 | Field | Stock (RSS `jupiter`) | Physical | Source |
 |---|---|---|---|
 | inner belt | 6.0/1.0 (dxy 없음) → 적도 **5–7 R_J** | 쌍극형 셸 **L 1.2–3** (피크 ~1.5–2 R_J; 적합 IoU .98) | Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D) |
@@ -113,6 +131,11 @@ L-shell을 재적합합니다(내대 L 1.1–2에 하한 ~1000 km, 외대 L 3–
 D-cut과 magnetodisc 평탄화를 둘 다 뺍니다.
 
 ### Saturn
+
+| 스톡 | 물리 |
+|---|---|
+| ![saturn 스톡](../../../docs/img/belts/saturn_stock.png) | ![saturn 물리](../../../docs/img/belts/saturn_phys.png) |
+
 | Field | Stock (`saturn` 모델, RSS.cfg) | Physical | Source |
 |---|---|---|---|
 | has_inner | false (outer only) | **false — correct** (rings absorb) | Cooper 1983 [`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C) |
@@ -130,6 +153,11 @@ D-cut과 magnetodisc 평탄화를 둘 다 뺍니다.
 무시할 만합니다. 쌍극은 거의 완벽히 축대칭이라(Cao 2020) tilt ≈ 0입니다.
 
 ### Uranus
+
+| 스톡 | 물리 |
+|---|---|
+| ![uranus 스톡](../../../docs/img/belts/uranus_stock.png) | ![uranus 물리](../../../docs/img/belts/uranus_phys.png) |
+
 | Field | Stock (범용 `saturn` 모델, RSS.cfg) | Physical | Source |
 |---|---|---|---|
 | geomagnetic tilt | pole_lat 31.4 (=58.6°) | **59–60°** ✓ | Ness 1986 [`1986Sci...233...85N`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...85N) |
@@ -148,6 +176,11 @@ L-범위에 걸쳐 벨트를 쓸어냅니다(Stone 1986 [`1986Sci...233...93S`](
 [`1987JGR....9215354B`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215354B)). 극성 부호는 1차 초록에서 언급되지 않았습니다(지어내지 않음).
 
 ### Neptune
+
+| 스톡 | 물리 |
+|---|---|
+| ![neptune 스톡](../../../docs/img/belts/neptune_stock.png) | ![neptune 물리](../../../docs/img/belts/neptune_phys.png) |
+
 | Field | Stock (범용 `saturn` 모델, RSS.cfg) | Physical | Source |
 |---|---|---|---|
 | geomagnetic tilt | pole_lat 43 (=47°) | **47°** ✓ | Ness 1989 [`1989Sci...246.1473N`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1473N) |
@@ -163,6 +196,11 @@ L-범위에 걸쳐 벨트를 쓸어냅니다(Stone 1986 [`1986Sci...233...93S`](
 잘립니다. 행성 근처의 場은 강하게 비쌍극적입니다(사극/팔극이 쌍극에 맞먹음).
 
 ### Mercury
+
+| 스톡 | 물리 |
+|---|---|
+| ![mercury 스톡](../../../docs/img/belts/mercury_stock.png) | ![mercury 물리](../../../docs/img/belts/mercury_phys.png) |
+
 | Field | Stock (ROKerbalism `mercury`) | Physical | Source |
 |---|---|---|---|
 | pause | 1.6 / comp 1.4 → 코 **1.14** | 코 **1.45 R_M** (1.35–1.55, → 1.28 in storms) | Winslow 2013 [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W) |
@@ -179,6 +217,11 @@ L-범위에 걸쳐 벨트를 쓸어냅니다(Stone 1986 [`1986Sci...233...93S`](
 넉넉한 게 아닙니다.
 
 ### Ganymede
+
+| 스톡 | 물리 |
+|---|---|
+| ![ganymede 스톡](../../../docs/img/belts/ganymede_stock.png) | ![ganymede 물리](../../../docs/img/belts/ganymede_phys.png) |
+
 | Field | Stock (ROKerbalism `ganymede`) | Physical | Source |
 |---|---|---|---|
 | surface dipole | (implicit) | **719 nT eq** (tilt 176°) | Kivelson 2002 [`2002Icar..157..507K`](https://ui.adsabs.harvard.edu/abs/2002Icar..157..507K) |
@@ -238,6 +281,6 @@ wings. Saur 2018 [`2018ASSL..448..153S`](https://ui.adsabs.harvard.edu/abs/2018A
 - [`planetary-dynamo-scaling.md`](planetary-dynamo-scaling.md) /
   [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — B-field
   입력값.
-- Wiki: [Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)
+- 발행 페이지(렌더 포함): [태양계 방사선대](https://vannadin.github.io/nearstars-db/wiki/reference__solar-system-radiation-belts.html)
   (단면 이미지).
 - [methodology-index](methodology-index.md).

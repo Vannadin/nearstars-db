@@ -155,7 +155,7 @@ def emit():
     L.append("// nose semantics (nose = pause_radius / pause_compression).")
     L.append("// Intensities: physical values -- conf-low regime calls, not field readouts.")
     L.append("// Full audit + renders: docs/reference/solar-system-radiation-belts.md")
-    L.append("// https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts")
+    L.append("// https://vannadin.github.io/nearstars-db/wiki/reference__solar-system-radiation-belts.html")
     for s in SOLAR:
         b = BODIES[s['phys']]
         model = 'nearstars_' + s['body'].lower()

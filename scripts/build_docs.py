@@ -142,8 +142,18 @@ def _ref_group(slug: str) -> str:
 
 
 def collect_docs() -> dict[str, list[dict]]:
-    groups: dict[str, list[dict]] = {'methodology': [], 'engine': [], 'pipeline': [],
-                                     'reference': [], 'plans': []}
+    groups: dict[str, list[dict]] = {'guide': [], 'methodology': [], 'engine': [],
+                                     'pipeline': [], 'reference': [], 'plans': []}
+
+    # docs/guide/ = 독자용 안내 문서(개요·설치·FAQ·항성계 소개…). reference 와 섞으면
+    # _ref_group 이 파일명만 보고 'Reference' 로 분류해 실제 레퍼런스를 묻어버린다.
+    for md in sorted((REPO / 'docs' / 'guide').glob('*.md')):
+        slug = md.stem
+        ko = REPO / 'ko' / 'docs' / 'guide' / f'{slug}.md'
+        out = f'guide__{slug}.html'
+        _LINK_MAP[slug] = out
+        groups['guide'].append({'slug': slug, 'out': out, 'en': md,
+                                'ko': ko if ko.exists() else None})
 
     for md in sorted((REPO / 'docs' / 'reference').glob('*.md')):
         slug = md.stem
@@ -171,11 +181,11 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
     rows = [
         '<nav class="side">',
         '<a class="brand" href="index.html">NearStars <span>docs</span></a>',
-        '<a class="nav-x" href="https://github.com/Vannadin/nearstars-db/wiki" target="_blank" rel="noopener">↗ GitHub wiki</a>',
+        '<a class="nav-x" href="https://github.com/Vannadin/nearstars-db" target="_blank" rel="noopener">↗ Repository</a>',
     ]
-    labels = {'methodology': 'Methodology', 'engine': 'Engine & mods',
+    labels = {'guide': 'Guide', 'methodology': 'Methodology', 'engine': 'Engine & mods',
               'pipeline': 'Pipeline & data', 'reference': 'Reference', 'plans': 'Plans'}
-    for g in ('methodology', 'engine', 'pipeline', 'reference', 'plans'):
+    for g in ('guide', 'methodology', 'engine', 'pipeline', 'reference', 'plans'):
         rows.append(f'<div class="nav-grp">{labels[g]}</div>')
         for d in groups[g]:
             cls = 'nav-i on' if d['out'] == active else 'nav-i'

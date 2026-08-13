@@ -1,4 +1,4 @@
-<!-- 태양계 자기권 천체 7종의 실제 방사선대 물리 vs Kerbalism 스톡 cfg 비교 (ADS 근거, 위키 시각화 연동) -->
+<!-- 태양계 자기권 천체 7종의 실제 방사선대 물리 vs Kerbalism 스톡 cfg 비교 (ADS 근거, 단면 렌더 포함) -->
 # Solar-System radiation belts: stock Kerbalism cfg vs the physics
 
 A body-by-body audit of every Solar-System object that has a **magnetosphere with
@@ -8,9 +8,8 @@ calibrate the NearStars magnetosphere-geometry recipe against real bodies before
 that recipe emits belts for fictional ones, and to feed the physics-accurate cfg
 values back where the stock model is a rough placeholder.
 
-Cross-section visualizations are on the wiki:
-**[Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)** —
-two renders per body, both the in-game `RadiationModel` SDF: **stock** = the shipped
+Each body below carries its **two cross-sections**, both the in-game `RadiationModel` SDF:
+**stock** = the shipped
 cfg (verified 2026-07-24 against `KSP-RO/ROKerbalism` `System/Radiation.cfg` +
 `Support/RSS.cfg`), **physical** = the same SDF with its six belt-shape parameters
 **numerically fitted** (`scripts/viz/fit_belts.py`, Nelder-Mead multi-start) to the real
@@ -24,6 +23,18 @@ is reproduced from [`src/Kerbalism/Radiation/Radiation.cs`](https://github.com/K
 ([Kerbalism](https://github.com/Kerbalism/Kerbalism), public domain / [Unlicense](https://github.com/Kerbalism/Kerbalism/blob/master/LICENSE)); see
 [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md)
 for the field-shape schema.
+
+**Reading the renders.** Colour = dose (inferno), cyan = the cfg's magnetopause, orange
+dashed = the **Shue magnetopause** for the same standoff (the empirical spacecraft-fit
+shape, drawn for comparison; the dot marks `r0`), grey = the body, rings = body radii,
+star toward +x. Belts are drawn in the tilted magnetic frame and the magnetopause in the
+star-aligned one, which is how Kerbalism itself evaluates them — it renders and doses the
+pause from `Gsm_space(rb, false)` and reserves the tilted frame for the belts. Since
+2026-08-13 the two fields that shape a belt's *interior* are derived rather than copied
+from stock (the dose ramp `radiation_*_gradient` and the belt `*_compression`/`*_extension`);
+the recipes, and what they overturn, are in the methodology doc's Part C. Jupiter's and
+Saturn's magnetopause stands off at 63 and 24 body radii, far enough that fitting it in
+frame would shrink the belts past readability, so those two stay zoomed on the belts.
 
 ## Scope — only magnetized bodies
 
@@ -84,6 +95,11 @@ Each block gives the stock `RadiationBody`/`RadiationModel` (ROKerbalism `System
 Radiation.cfg` + RSS anchors), the physical values with ADS pins, and the delta.
 
 ### Earth (calibration anchor — and, read correctly, a good one)
+
+| Stock | Physical |
+|---|---|
+| ![earth Stock](../img/belts/earth_stock.png) | ![earth Physical](../img/belts/earth_phys.png) |
+
 | Field | Stock (`earth`) | Physical | Source |
 |---|---|---|---|
 | pause | 15 / comp 1.5 → **nose 10 R_E** | ~10 R_E sub-solar ✓ | Shue 1997 [`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S), Fairfield 1971 [`1971JGR....76.6700F`](https://ui.adsabs.harvard.edu/abs/1971JGR....76.6700F) |
@@ -106,6 +122,11 @@ cone at low altitude (POES observations; Liu 2024
 [`2024JGRA..12932171L`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932171L)).
 
 ### Jupiter
+
+| Stock | Physical |
+|---|---|
+| ![jupiter Stock](../img/belts/jupiter_stock.png) | ![jupiter Physical](../img/belts/jupiter_phys.png) |
+
 | Field | Stock (RSS `jupiter`) | Physical | Source |
 |---|---|---|---|
 | inner belt | 6.0/1.0 (no dxy) → equator **5–7 R_J** | dipolar shell **L 1.2–3** (peak ~1.5–2 R_J; fit IoU .98) | Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D) |
@@ -124,6 +145,11 @@ ceiling. Stock puts the strong belt ~3× too far out (6 vs ~2 R_J) and omits bot
 D-cut and the magnetodisc flattening.
 
 ### Saturn
+
+| Stock | Physical |
+|---|---|
+| ![saturn Stock](../img/belts/saturn_stock.png) | ![saturn Physical](../img/belts/saturn_phys.png) |
+
 | Field | Stock (`saturn` model, RSS.cfg) | Physical | Source |
 |---|---|---|---|
 | has_inner | false (outer only) | **false — correct** (rings absorb) | Cooper 1983 [`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C) |
@@ -142,6 +168,11 @@ belt is chopped into inter-moon corridors (Kollmann 2013, Roussos 2007
 near-perfectly axisymmetric (Cao 2020), so tilt ≈ 0.
 
 ### Uranus
+
+| Stock | Physical |
+|---|---|
+| ![uranus Stock](../img/belts/uranus_stock.png) | ![uranus Physical](../img/belts/uranus_phys.png) |
+
 | Field | Stock (generic `saturn` model, RSS.cfg) | Physical | Source |
 |---|---|---|---|
 | geomagnetic tilt | pole_lat 31.4 (=58.6°) | **59–60°** ✓ | Ness 1986 [`1986Sci...233...85N`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...85N) |
@@ -161,6 +192,11 @@ fires, since the model has no inner belt. The belt intensity is a tuned placehol
 abstracts (not fabricated).
 
 ### Neptune
+
+| Stock | Physical |
+|---|---|
+| ![neptune Stock](../img/belts/neptune_stock.png) | ![neptune Physical](../img/belts/neptune_phys.png) |
+
 | Field | Stock (generic `saturn` model, RSS.cfg) | Physical | Source |
 |---|---|---|---|
 | geomagnetic tilt | pole_lat 43 (=47°) | **47°** ✓ | Ness 1989 [`1989Sci...246.1473N`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1473N) |
@@ -177,6 +213,11 @@ Belts peak at L≈7 (just outside Proteus at 4.75 R_N), carved by ring/moon abso
 strongly non-dipolar near the planet (quad/octupole comparable to dipole).
 
 ### Mercury
+
+| Stock | Physical |
+|---|---|
+| ![mercury Stock](../img/belts/mercury_stock.png) | ![mercury Physical](../img/belts/mercury_phys.png) |
+
 | Field | Stock (ROKerbalism `mercury`) | Physical | Source |
 |---|---|---|---|
 | pause | 1.6 / comp 1.4 → nose **1.14** | nose **1.45 R_M** (1.35–1.55, → 1.28 in storms) | Winslow 2013 [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W) |
@@ -195,6 +236,11 @@ slightly *tight* vs the physical 1.45 — not generous, as an earlier revision (
 pause_radius as the standoff) had it.
 
 ### Ganymede
+
+| Stock | Physical |
+|---|---|
+| ![ganymede Stock](../img/belts/ganymede_stock.png) | ![ganymede Physical](../img/belts/ganymede_phys.png) |
+
 | Field | Stock (ROKerbalism `ganymede`) | Physical | Source |
 |---|---|---|---|
 | surface dipole | (implicit) | **719 nT eq** (tilt 176°) | Kivelson 2002 [`2002Icar..157..507K`](https://ui.adsabs.harvard.edu/abs/2002Icar..157..507K) |
@@ -257,6 +303,6 @@ a low orbiter. **Stock omits the pause entirely** — a fix worth adding.
 - [`planetary-dynamo-scaling.md`](planetary-dynamo-scaling.md) /
   [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — the B-field
   inputs.
-- Wiki: [Radiation Belts](https://github.com/Vannadin/nearstars-db/wiki/Radiation-Belts)
+- Published page (renders included): [Solar-System radiation belts](https://vannadin.github.io/nearstars-db/wiki/reference__solar-system-radiation-belts.html)
   (cross-section images).
 - [methodology-index](methodology-index.md).
