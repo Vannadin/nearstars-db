@@ -281,9 +281,15 @@ Part B already needs:
    `deform_xy` and `deform` all move which boundary is nearest, and for Earth's inner
    belt the binding one is the loss-cone cut, not the torus wall. Evaluating the SDF
    also removes the need to convert into the squashed metric by hand.
-3. `gradient = *_radius / d*`. It is `≥ 1` by construction, since the peak cannot lie
-   deeper than the shell's core.
-4. **No profile of its own?** Inherit the *plateau fraction* of the class analog
+3. Clamp `d*` to `d_max`, the depth of the **deepest point that survives the border
+   cut** (found the same way, by scanning the SDF over the shell). The cut usually
+   carves the torus core away, so `d_max` runs 0.5–0.65 `*_radius` in practice, and an
+   evidence peak can land in space the shell no longer occupies.
+4. `gradient = *_radius / d*`. The binding floor is therefore
+   **`gradient ≥ *_radius / d_max`**, not `≥ 1`: below it the belt never reaches its
+   stated `radiation_*` anywhere, and the whole belt is silently scaled down by
+   `gradient · d_max / *_radius`.
+5. **No profile of its own?** Inherit the *plateau fraction* of the class analog
    rather than the stock number: Earth's inner belt for CRAND proton belts, Earth's
    outer belt for wind- and diffusion-fed electron belts, Jupiter's inner belt for
    torus-fed ones. That keeps an ungrounded body on a measured shape instead of a
@@ -298,11 +304,21 @@ at 2.15 against the shipped 2.2 — it recovers a stock value it was never told,
 is the validation. Earth's **inner** belt lands at 2.09 against the shipped 3.3, so it
 is the inner-belt steepness that turns out unsupported: the proton peak at L ≈ 1.5
 (AP9; Ripoll 2016, [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)) sits 0.37 R_E below the loss-cone cut, not
-0.23 R_E. Jupiter's inner belt (peak 1.5–2 R_J, Divine & Garrett 1983) gives 2.24, and
-Uranus collapses to **1.0**, because its electron profile is a broad maximum between
-moon-swept minima (Cheng 1987, [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)) — the peak is at the shell core, so
-the ramp has to run the full half-thickness. Per-body peak positions and their sources
-are tabulated in [`solar-system-radiation-belts.md`](solar-system-radiation-belts.md).
+0.23 R_E. Jupiter's inner belt (peak 1.5–2 R_J, Divine & Garrett 1983) gives 2.24. Uranus
+is the case the floor rule exists for: its electron profile is a broad maximum between
+moon-swept minima (Cheng 1987, [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)), which reads as a peak at the shell
+core — but the core is carved away, so the value clamps to the floor at **1.57** inner
+and **1.85** outer. Taken literally (peak at the core, `gradient` 1.0) the belt would
+have saturated nowhere and run at 0.64× its stated intensity. Per-body peak positions
+and their sources are tabulated in
+[`solar-system-radiation-belts.md`](solar-system-radiation-belts.md).
+
+One consequence worth expecting: with the ramp this long, the **fully saturated core is
+thin**. Measured on the meridian cross-section, it is 9 % of the shell for Earth's outer
+belt and only 1.5 % for the inner one (against 23 % under the stock 3.3). That is the
+honest reading of a narrow measured peak, not an artifact — but it does mean the stated
+`radiation_inner` is a value a vessel touches only near the belt's heart, and the dose
+ladder the moons see should be read off the SDF, not off the headline number.
 
 **Two couplings that bite.**
 
