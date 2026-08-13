@@ -31,4 +31,5 @@ front door of stubs so inbound links survive.
 ## Verification
 - [x] `./scripts/check.sh` green (mirror parity, dead links, sitemap orphans, gate 12)
 - [x] sitemap audit: 279 pages, 0 new orphans
-- [ ] Every wiki stub resolves to a live Pages URL — spot-check after the next Pages deploy
+- [x] Every wiki stub resolves to a live Pages URL (all 8 guide/reference targets plus the
+      belt images return 200 after the 2026-08-13 deploy)
