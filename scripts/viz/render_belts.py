@@ -28,8 +28,11 @@ def pause_sdf(x,y,z,P):
     px = x*np.where(x<0,P.get('ext',1),P.get('comp',1)); py = y*P.get('hscale',1)
     return np.sqrt(px*px+py*py+z*z)-P['rad']
 
-def render(body, out, size=560, z=0.0):
-    """body: {title, sub, R(halfwidth), tilt, inner{}, outer{}, pause{}}"""
+def render(body, out, size=1120, z=0.0):
+    """body: {title, sub, R(halfwidth), tilt, inner{}, outer{}, pause{}}
+    오버레이(글꼴·선폭·여백)는 size/560 배율로 함께 커진다 — 크게 뽑아도 레이아웃 동일, 글자만 선명."""
+    k = size/560.0                        # 560px 기준 레이아웃 배율
+    def S(v): return max(1,int(round(v*k)))
     R = body['R']; tilt = np.radians(body.get('tilt',0))
     ca,sa = np.cos(tilt),np.sin(tilt)
     xs = (np.arange(size)-size/2)*(2*R/size)
@@ -59,7 +62,7 @@ def render(body, out, size=560, z=0.0):
     img[m]=inferno(dose[m]/maxI)
     if pause and pause.get('on',True):
         wpp=2*R/size
-        img[np.abs(pd)<wpp*1.3]=(57,207,217)
+        img[np.abs(pd)<wpp*1.3*k]=(57,207,217)
     body_m = mag<1
     lit = np.clip(0.32+0.5*X,0.12,0.92)
     img[body_m]=np.stack([48*lit+18,58*lit+20,74*lit+24],-1)[body_m]
@@ -67,13 +70,13 @@ def render(body, out, size=560, z=0.0):
     dr = ImageDraw.Draw(im)
     c=size/2; ppr=size/(2*R)
     step = 1 if R<=4 else 2 if R<=10 else 5 if R<=25 else 10 if R<=60 else 20
-    try: fnt=ImageFont.truetype("/System/Library/Fonts/Menlo.ttc",11); fbig=ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc",15)
+    try: fnt=ImageFont.truetype("/System/Library/Fonts/Menlo.ttc",S(11)); fbig=ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc",S(15))
     except: fnt=ImageFont.load_default(); fbig=fnt
     rr=step
     while rr<=R:
-        dr.ellipse([c-rr*ppr,c-rr*ppr,c+rr*ppr,c+rr*ppr],outline=(255,255,255,30))
-        dr.text((c+rr*ppr+2,c-13),str(rr),fill=(150,150,150),font=fnt); rr+=step
-    dr.line([0,c,size,c],fill=(255,255,255,26)); dr.line([c,0,c,size],fill=(255,255,255,26))
+        dr.ellipse([c-rr*ppr,c-rr*ppr,c+rr*ppr,c+rr*ppr],outline=(255,255,255,30),width=S(1))
+        dr.text((c+rr*ppr+S(2),c-S(13)),str(rr),fill=(150,150,150),font=fnt); rr+=step
+    dr.line([0,c,size,c],fill=(255,255,255,26),width=S(1)); dr.line([c,0,c,size],fill=(255,255,255,26),width=S(1))
     # ── Shue 자기권계면 기준선 (주황 파선) — 항성정렬 프레임, 연화형 폐곡선 ──
     #    r(θ) = r0·((1+ε)/(ε+cos²(θ/2)))^α,  ε = 1/((L/r0)^(1/α)−1);  ε→0이면 순수 Shue
     #    r0 = pause 노즈 = pause_radius/comp,  L = 꼬리 = pause_radius/ext,  α = log2(comp)
@@ -96,27 +99,29 @@ def render(body, out, size=560, z=0.0):
             for i in range(0,len(px)-1,2):          # 파선: 두 칸 그리고 한 칸 띄움
                 if (i//2) % 3 == 2: continue
                 if max(abs(px[i]),abs(py[i]),abs(px[i+1]),abs(py[i+1])) > 4*size: continue
-                dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=2)
-            dr.ellipse([c+r0*ppr-3,c-3,c+r0*ppr+3,c+3],fill=(255,154,82))
+                dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=S(2))
+            dr.ellipse([c+r0*ppr-S(3),c-S(3),c+r0*ppr+S(3),c+S(3)],fill=(255,154,82))
             lbl=f"Shue r0 {r0:.1f} α {al:.2f}"
-            lx=c+r0*ppr+6
-            if lx+len(lbl)*7 > size-6: lx=c+r0*ppr-6-len(lbl)*7   # 프레임 밖으로 나가면 왼쪽에
-            dr.text((max(lx,4),c-16),lbl,fill=(255,154,82),font=fnt)
-    dr.text((10,8),body['title'],fill=(230,235,245),font=fbig)
-    dr.text((10,30),body.get('sub',''),fill=(140,160,190),font=fnt)
-    dr.text((size-96,size-20),"☀ star →",fill=(255,154,82),font=fnt)
+            lw=dr.textlength(lbl,font=fnt)
+            lx=c+r0*ppr+S(6)
+            if lx+lw > size-S(6): lx=c+r0*ppr-S(6)-lw               # 프레임 밖으로 나가면 왼쪽에
+            dr.text((max(lx,S(4)),c-S(16)),lbl,fill=(255,154,82),font=fnt)
+    dr.text((S(10),S(8)),body['title'],fill=(230,235,245),font=fbig)
+    dr.text((S(10),S(30)),body.get('sub',''),fill=(140,160,190),font=fnt)
+    dr.text((size-S(96),size-S(20)),"☀ star →",fill=(255,154,82),font=fnt)
     # 절대 강도 컬러바 (색은 이 바디 peak 기준 정규화 — 바디끼리 절대 비교하려면 이 숫자를 볼 것)
     def g(v): return f"{v:.0f}" if abs(v)>=10 else f"{v:.2f}".rstrip('0').rstrip('.')
-    bx,by,bw,bh=10,size-46,150,9
+    bx,by,bw,bh=S(10),size-S(46),S(150),S(9)
     for i in range(bw):
         cr=inferno(i/(bw-1)); dr.line([(bx+i,by),(bx+i,by+bh)],fill=(int(cr[0]),int(cr[1]),int(cr[2])))
-    dr.rectangle([bx,by,bx+bw,by+bh],outline=(120,120,120))
-    dr.text((bx,by-13),"dose 0",fill=(150,160,175),font=fnt)
-    dr.text((bx+bw-46,by-13),f"{g(maxI)} rad/h",fill=(247,209,61),font=fnt)
+    dr.rectangle([bx,by,bx+bw,by+bh],outline=(120,120,120),width=S(1))
+    dr.text((bx,by-S(13)),"dose 0",fill=(150,160,175),font=fnt)
+    peak=f"{g(maxI)} rad/h"
+    dr.text((bx+bw-dr.textlength(peak,font=fnt),by-S(13)),peak,fill=(247,209,61),font=fnt)
     parts=[]
     if inner and inner.get('on',True): parts.append(f"inner {g(inner['radiation'])}")
     if outer and outer.get('on',True): parts.append(f"outer {g(outer['radiation'])}")
-    dr.text((bx,by+bh+2),("peak "+" · ".join(parts)+" rad/h" if parts else "no belt"),fill=(150,160,175),font=fnt)
+    dr.text((bx,by+bh+S(2)),("peak "+" · ".join(parts)+" rad/h" if parts else "no belt"),fill=(150,160,175),font=fnt)
     im.save(out); print("wrote",out)
     return out
 
