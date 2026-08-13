@@ -50,7 +50,10 @@ def render(body, out, size=560, z=0.0):
         dose[m]+=np.clip(B.get('grad',gdef)*(-d[m])/B['rad'],0,1)*B['radiation']
     img = np.zeros((size,size,3),float); img[:]=(5,7,13)
     if pause and pause.get('on',True):
-        pd = pause_sdf(Xr,Yr,Z,pause)
+        # 계면은 항성정렬(untilted) 프레임에서 평가 — Kerbalism이 벨트만 tilted GSM으로 두고
+        # 계면은 Gsm_space(rb,false)로 렌더·선량 계산한다(Radiation.cs:609, :714). offset도 그 프레임의
+        # y축(자전축)을 따른다. 이전 판은 계면까지 쌍극 기울기로 돌려 방향이 틀어져 있었다.
+        pd = pause_sdf(X,Y-off,Z,pause)
         img[pd<0]=(10,16,30)
     m = dose>1e-4
     img[m]=inferno(dose[m]/maxI)
@@ -71,6 +74,31 @@ def render(body, out, size=560, z=0.0):
         dr.ellipse([c-rr*ppr,c-rr*ppr,c+rr*ppr,c+rr*ppr],outline=(255,255,255,30))
         dr.text((c+rr*ppr+2,c-13),str(rr),fill=(150,150,150),font=fnt); rr+=step
     dr.line([0,c,size,c],fill=(255,255,255,26)); dr.line([c,0,c,size],fill=(255,255,255,26))
+    # ── Shue 자기권계면 기준선 (주황 파선) — 항성정렬 프레임, 연화형 폐곡선 ──
+    #    r(θ) = r0·((1+ε)/(ε+cos²(θ/2)))^α,  ε = 1/((L/r0)^(1/α)−1);  ε→0이면 순수 Shue
+    #    r0 = pause 노즈 = pause_radius/comp,  L = 꼬리 = pause_radius/ext,  α = log2(comp)
+    #    (레거시 환산은 방법론 Part C. 보드가 ⚗ pause_nose/alpha/tail을 들고 있으면 그 값 우선)
+    if pause and pause.get('on',True):
+        comp = pause.get('comp',1.0)
+        r0 = pause.get('shue_nose', pause['rad']/comp)
+        al = pause.get('shue_alpha', np.log2(comp) if comp>1.001 else 0.58)
+        Ltail = pause.get('shue_tail', pause['rad']/max(pause.get('ext',1.0),1e-3))
+        if r0>0.3 and al>0.05:
+            if Ltail > r0*1.05:
+                eps = 1.0/((Ltail/r0)**(1.0/al) - 1.0)
+                th = np.radians(np.linspace(-180,180,481))
+                rr_ = r0*((1+eps)/(eps+np.cos(th/2)**2))**al
+            else:
+                eps = 0.0
+                th = np.radians(np.linspace(-150,150,401))
+                rr_ = r0*(2.0/(1.0+np.cos(th)))**al
+            px = c + rr_*np.cos(th)*ppr; py = c - rr_*np.sin(th)*ppr
+            for i in range(0,len(px)-1,2):          # 파선: 두 칸 그리고 한 칸 띄움
+                if (i//2) % 3 == 2: continue
+                if max(abs(px[i]),abs(py[i]),abs(px[i+1]),abs(py[i+1])) > 4*size: continue
+                dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=2)
+            dr.ellipse([c+r0*ppr-3,c-3,c+r0*ppr+3,c+3],fill=(255,154,82))
+            dr.text((c+r0*ppr+6,c-16),f"Shue r0 {r0:.1f} α {al:.2f}",fill=(255,154,82),font=fnt)
     dr.text((10,8),body['title'],fill=(230,235,245),font=fbig)
     dr.text((10,30),body.get('sub',''),fill=(140,160,190),font=fnt)
     dr.text((size-96,size-20),"☀ star →",fill=(255,154,82),font=fnt)
