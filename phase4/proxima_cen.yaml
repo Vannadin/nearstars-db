@@ -2012,7 +2012,9 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-08-13: 방법론 Part C 신규 절 반영. radiation_outer_gradient 2.2 → 2.15(지구 외대 아날로그),
       inner/outer compression·extension 신규 기록(1.002/0.997, 1.01/0.979. eps 0.0037·0.024).
-      radiation_inner_gradient 1.9는 오너 튜닝값이라 손대지 않았다 — 도출값은 2.09이고 오너 결정 대기.
+      radiation_inner_gradient는 오너 튜닝 1.9 → 도출값 2.09(오너 결정 2026-08-13, 일관성 우선).
+      방향은 원래 튜닝과 같고(스톡 3.3보다 완만) 평탄부 진입 지점이 단면 반경의 53% → 48%로 옮겨간다.
+      하한(rad/d_max = 1.59)은 두 값 모두 통과하므로 강도가 깎이는 문제는 없었다.
     status: gated
     driver: [window-selection]
     narrative: >
@@ -2054,7 +2056,7 @@ decisions:
       - { name: pause_extension, value: 0.135, op: set, note: "Tail = rad/ext = 125 R_c, consistent with pause_tail", note_ko: "꼬리 = rad/ext = 125 R_c = pause_tail과 정합" }
       - { name: pause_height_scale, value: 1.0, op: set, note: "The Shue shape is axisymmetric. Stock's 1.1 squeezes the meridional width by 1/1.1 and departs from Shue", note_ko: "Shue 형상은 축대칭. 스톡의 1.1은 자오면 폭을 1/1.1로 눌러 Shue와 어긋남" }
       - { name: radiation_inner, value: 8.0, unit: rad/h, op: set, note: "~0.8× Earth's inner belt 10.4. The source (unmodulated GCR plus low cutoff rigidity) exceeds Earth's, while multipolar trapping instability cuts it back", note_ko: "지구 내대 10.4의 ~0.8배. 소스(비변조 GCR+낮은 차단강성)는 지구 이상, 다중극 포획 불안정이 깎음" }
-      - { name: radiation_inner_gradient, value: 1.9, op: set, note: "Owner tuning. A gentler edge than stock's 3.3", note_ko: "오너 튜닝. 스톡 3.3보다 완만한 에지" }
+      - { name: radiation_inner_gradient, value: 2.09, op: set, note: "Derived: a CRAND proton belt with no measured profile, so it inherits Earth's inner-belt plateau fraction, the same analog that already justifies inner_dist 1.5. Supersedes an owner tuning of 1.9, which pointed the same way (softer than stock) by judgement rather than derivation", note_ko: "도출값. 측정 프로파일이 없는 CRAND 양성자대라 지구 내대의 평탄부 비율을 물려받는다. inner_dist 1.5를 정당화한 것과 같은 아날로그다. 방향은 같았으나(스톡보다 완만) 도출이 아닌 판단이었던 오너 튜닝 1.9를 대체" }
       - { name: radiation_outer, value: 1.2, unit: rad/h, op: set, note: "~1/3 of the 3.7 rad/h saturated anchor (18 µT). Source-limited by a wind pressure 0.09× Earth's; range 0.4 to 2", note_ko: "포화 앵커 3.7 rad/h(18 µT)의 ~1/3. 풍압 0.09× 지구의 소스 제한, 범위 0.4~2" }
       - { name: radiation_outer_gradient, value: 2.15, op: set, note: "Derived: no profile of its own, so it inherits Earth's outer-belt plateau fraction, the class analog for a wind-fed electron belt. The old 2.2 was the stock earth number stated explicitly", note_ko: "도출값. 자기 프로파일이 없어 항성풍이 먹이는 전자대의 등급 아날로그인 지구 외대의 평탄부 비율을 물려받는다. 구값 2.2는 스톡 earth 값을 명시한 것" }
       - { name: radiation_pause, value: -0.01, op: set }
