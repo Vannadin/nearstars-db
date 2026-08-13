@@ -2009,6 +2009,10 @@ decisions:
 
   - body: Proxima Cen c
     axis: magnetism.radiation_belts
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-08-13: 방법론 Part C 신규 절 반영. radiation_outer_gradient 2.2 → 2.15(지구 외대 아날로그),
+      inner/outer compression·extension 신규 기록(1.002/0.997, 1.01/0.979. eps 0.0037·0.024).
+      radiation_inner_gradient 1.9는 오너 튜닝값이라 손대지 않았다 — 도출값은 2.09이고 오너 결정 대기.
     status: gated
     driver: [window-selection]
     narrative: >
@@ -2034,6 +2038,8 @@ decisions:
       - { name: inner_border_dist, value: 0.0001, op: set, note: "Spherical cut = the loss-cone D shape. The same structure as the Earth model", note_ko: "구면 컷 = 손실원뿔 D-형. 지구 모델과 같은 구조" }
       - { name: inner_border_radius, value: 1.0, op: set, note: "Equatorial cut 1.0/√0.5 = 1.41 R_c. The boundary where mirroring particles sink into the atmosphere and are lost", note_ko: "적도 컷 1.0/√0.5 = 1.41 R_c. 거울점이 대기에 잠기는 입자의 소멸 경계" }
       - { name: inner_border_deform_xy, value: 0.5, op: set }
+      - { name: inner_compression, value: 1.002, op: set, note: "Derived: eps = (r_core/R_mp)^3 = 0.0037 at a core of 1.85 R_c against an 11.9 R_c nose", note_ko: "도출값. 핵심 1.85 R_c 대 nose 11.9 R_c에서 eps=(r_core/R_mp)³=0.0037" }
+      - { name: inner_extension, value: 0.997, op: set, note: "Same eps against pause_extension 0.135", note_ko: "같은 eps를 pause_extension 0.135에 적용" }
       - { name: outer_dist, value: 2.8, op: set, note: "Magnetopause nose 11.9 R_c x 0.235 (the measured ratio for Uranus 0.24 and Neptune 0.23)", note_ko: "자기권계면 nose 11.9 R_c × 0.235 (실측 천왕성 0.24·해왕성 0.23의 비율)" }
       - { name: outer_radius, value: 2.5, op: set }
       - { name: outer_deform_xy, value: 0.66, op: set, note: "Ice-giant anchor (Uranus phys 0.664)", note_ko: "빙거성 앵커(천왕성 phys 0.664)" }
@@ -2041,6 +2047,8 @@ decisions:
       - { name: outer_border_dist, value: 1.54, op: set, note: "Inner carve. Follows the Earth model's border/dist ratio of 0.55", note_ko: "내측 carve. 지구 모델의 border/dist 비 0.55를 따름" }
       - { name: outer_border_radius, value: 1.42, op: set, note: "Equatorial cut ~3.6 R_c. The space between it and the inner belt (~1.4-2.9) becomes the slot", note_ko: "적도 컷 ~3.6 R_c. 내대(~1.4-2.9)와의 사이가 슬롯이 됨" }
       - { name: outer_border_deform_xy, value: 0.66, op: set }
+      - { name: outer_compression, value: 1.01, op: set, note: "Derived: eps 0.024 at a core of 3.45 R_c. Small, but this is the shell that carries what asymmetry there is", note_ko: "도출값. 핵심 3.45 R_c에서 eps 0.024. 작지만 그나마 비대칭을 가지는 쪽은 이 껍질이다" }
+      - { name: outer_extension, value: 0.979, op: set, note: "Same eps against pause_extension 0.135", note_ko: "같은 eps를 pause_extension 0.135에 적용" }
       - { name: pause_radius, value: 16.84, op: set, note: "Flank = nose x √2. Nose 11.9 R_c from Chapman-Ferraro (B_eq 0.18 G against 0.178 nPa of ram pressure at 1.5 AU)", note_ko: "플랭크 = nose×√2. nose 11.9 R_c = Chapman-Ferraro (B_eq 0.18 G, 1.5 AU 램압 0.178 nPa)" }
       - { name: pause_compression, value: 1.414, op: set, note: "Reproduces the flank/nose ratio √2 of Shue α = 0.5 in the SDF. The same order as stock earth 1.5 and mercury 1.4", note_ko: "Shue α=0.5의 플랭크/nose 비 √2를 SDF로 재현. 스톡 earth 1.5·mercury 1.4와 같은 급" }
       - { name: pause_extension, value: 0.135, op: set, note: "Tail = rad/ext = 125 R_c, consistent with pause_tail", note_ko: "꼬리 = rad/ext = 125 R_c = pause_tail과 정합" }
@@ -2048,7 +2056,7 @@ decisions:
       - { name: radiation_inner, value: 8.0, unit: rad/h, op: set, note: "~0.8× Earth's inner belt 10.4. The source (unmodulated GCR plus low cutoff rigidity) exceeds Earth's, while multipolar trapping instability cuts it back", note_ko: "지구 내대 10.4의 ~0.8배. 소스(비변조 GCR+낮은 차단강성)는 지구 이상, 다중극 포획 불안정이 깎음" }
       - { name: radiation_inner_gradient, value: 1.9, op: set, note: "Owner tuning. A gentler edge than stock's 3.3", note_ko: "오너 튜닝. 스톡 3.3보다 완만한 에지" }
       - { name: radiation_outer, value: 1.2, unit: rad/h, op: set, note: "~1/3 of the 3.7 rad/h saturated anchor (18 µT). Source-limited by a wind pressure 0.09× Earth's; range 0.4 to 2", note_ko: "포화 앵커 3.7 rad/h(18 µT)의 ~1/3. 풍압 0.09× 지구의 소스 제한, 범위 0.4~2" }
-      - { name: radiation_outer_gradient, value: 2.2, op: set, note: "Stock earth value stated explicitly (omitting it falls back to the code default)", note_ko: "스톡 earth 값 명시 (생략 시 코드 기본값으로 떨어짐)" }
+      - { name: radiation_outer_gradient, value: 2.15, op: set, note: "Derived: no profile of its own, so it inherits Earth's outer-belt plateau fraction, the class analog for a wind-fed electron belt. The old 2.2 was the stock earth number stated explicitly", note_ko: "도출값. 자기 프로파일이 없어 항성풍이 먹이는 전자대의 등급 아날로그인 지구 외대의 평탄부 비율을 물려받는다. 구값 2.2는 스톡 earth 값을 명시한 것" }
       - { name: radiation_pause, value: -0.01, op: set }
       - { name: pause_nose, value: 11.905, op: set, note: "Shue-native (if KerbalismShuePause is adopted). = pause_radius/compression", note_ko: "⚗ Shue-native (KerbalismShuePause 채택 시). = pause_radius/compression" }
       - { name: pause_alpha, value: 0.5, op: set, note: "Shue-native. Borrows Shue 1998's empirical Earth value; there is no ice-giant fit in the literature (low confidence)", note_ko: "⚗ Shue-native. Shue 1998 지구 경험치 차용, 빙거성 피팅 문헌 없음(저신뢰)" }

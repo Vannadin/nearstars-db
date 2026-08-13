@@ -12,8 +12,10 @@ BODIES={
    'pause':{'radiation':-0.01,'rad':60,'comp':1.05,'ext':0.01,'hscale':1.02}},
  # phys 지오메트리 = fit_belts.py 수치 피팅(쌍극자 L-셸 타깃, IoU 명기). pause는 nose=rad/comp 의미론으로 계산.
  'jupiter_phys':{'title':'Jupiter — physical (SDF fit)','sub':'dipolar inner L 1.2-3 (IoU .98) + magnetodisc slab 3-16 × ±3 (IoU .87)','R':18,'tilt':10.3,'offset':0.1,
-   'inner':{'radiation':1500,'grad':3.3,'dist':1.3435,'rad':1.159,'dxy':0.693,'comp':1.05,'ext':0.9,'bdist':3e-4,'brad':0.8889,'bdxy':0.5866},
-   'outer':{'radiation':150,'grad':2.2,'dist':3.2565,'rad':3.2269,'dxy':0.1483,'comp':1.05,'ext':0.9,'bdist':1e-4,'brad':4.238,'bdxy':1.85},  # 자기원반=적도 전류시트(렌즈형, 반두께 3=Khurana; 3-16은 프레임 절단)
+   # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). 63 R_J standoff 안의 벨트라 eps~0.002 → 대칭이 물리값
+   # (배포 1.05/0.9는 연출이었음). grad 내대: 피크 1.5-2 R_J (Divine & Garrett 1983).
+   'inner':{'radiation':1500,'grad':2.24,'dist':1.3435,'rad':1.159,'dxy':0.693,'comp':1.0,'ext':1.0,'bdist':3e-4,'brad':0.8889,'bdxy':0.5866},
+   'outer':{'radiation':150,'grad':2.15,'dist':3.2565,'rad':3.2269,'dxy':0.1483,'comp':1.0,'ext':0.998,'bdist':1e-4,'brad':4.238,'bdxy':1.85},  # 자기원반=적도 전류시트(렌즈형, 반두께 3=Khurana; 3-16은 프레임 절단)
    'pause':{'radiation':-0.01,'rad':75.6,'comp':1.2,'ext':0.05,'hscale':1.15}},  # nose 63 R_J (Joy 2002)
 
  # ---- SATURN: 스톡=외대만, 물리=고리가 내대 소거→외대만(축대칭), CRAND 약함 ----
@@ -22,7 +24,8 @@ BODIES={
    'outer':{'radiation':150,'grad':2.2,'dist':7.0,'rad':7.0,'comp':1.05,'ext':0.95},
    'pause':{'radiation':-0.011,'rad':20,'comp':1.02,'ext':0.1,'hscale':1.0}},
  'saturn_phys':{'title':'Saturn — physical (SDF fit)','sub':'rings absorb inner belt; CRAND shell L 2.3-6 (IoU .98); ~0° tilt','R':16,'tilt':0.01,
-   'outer':{'radiation':10,'grad':2.2,'dist':2.6173,'rad':2.3184,'dxy':0.6735,'comp':1.05,'ext':0.85,'bdist':0.9889,'brad':0.8883,'bdxy':0.6616},  # 고리 바깥 단일 초승달
+   # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). eps 0.002 → 대칭. grad: 자기 프로파일 근거 없어 CRAND 아날로그(지구 외대)
+   'outer':{'radiation':10,'grad':2.15,'dist':2.6173,'rad':2.3184,'dxy':0.6735,'comp':1.0,'ext':0.998,'bdist':0.9889,'brad':0.8883,'bdxy':0.6616},  # 고리 바깥 단일 초승달
    'pause':{'radiation':-0.011,'rad':28.8,'comp':1.2,'ext':0.05,'hscale':1.1}},  # nose 24 R_S (Achilleos 2008)
 
  # ---- URANUS: 극단 tilt 59° + offset 0.3 ----
@@ -32,8 +35,10 @@ BODIES={
    'pause':{'radiation':-0.010,'rad':20,'comp':1.02,'ext':0.1,'hscale':1.0}},
  # 벨트 구조 경계=위성 L-셸 (Krimigis 1986 Miranda 안쪽 예외역 + Cheng 1987 전자 극소: Miranda 5.1/Ariel 7.5/Umbriel 10.4)
  'uranus_phys':{'title':'Uranus — physical (SDF fit)','sub':'tilt 59°, offset 0.3; L 1.5-5 / 5-10 Miranda·Umbriel cut (IoU .98/.97)','R':16,'tilt':59,'offset':0.3,
-   'inner':{'radiation':40,'grad':3.3,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.02,'ext':1.0,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
-   'outer':{'radiation':8,'grad':2.2,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.02,'ext':0.95,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
+   # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). grad: 프로파일이 위성-소거 극소 사이 넓은 최대(Cheng 1987)라
+   # 피크가 껍질 핵심 → 컷 이후 최심점으로 클램프한 하한값. 1.0을 그대로 넣으면 포화 지점이 없어 실효 강도가 0.64배로 깎임.
+   'inner':{'radiation':40,'grad':1.57,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.001,'ext':0.997,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
+   'outer':{'radiation':8,'grad':1.85,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.005,'ext':0.977,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
    'pause':{'radiation':-0.010,'rad':21.6,'comp':1.2,'ext':0.1,'hscale':1.1}},  # nose 18 R_U (Ness 1986)
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
@@ -42,8 +47,9 @@ BODIES={
    'outer':{'radiation':2.5,'grad':2.2,'dist':7.0,'rad':7.0,'comp':1.05,'ext':0.95},
    'pause':{'radiation':-0.007,'rad':20,'comp':1.02,'ext':0.1,'hscale':1.0}},
  'neptune_phys':{'title':'Neptune — physical (SDF fit)','sub':'tilt 47°, offset 0.55 R_N; shells L 1.5-5 / L 5-14 Triton cut (IoU .98/.97)','R':16,'tilt':47,'offset':0.55,
-   'inner':{'radiation':30,'grad':3.3,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.02,'ext':1.0,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
-   'outer':{'radiation':6,'grad':2.2,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.02,'ext':0.95,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
+   # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). grad 외대: 피크 L7 (Stone 1989), 내대: 프로파일 없어 지구 내대 아날로그
+   'inner':{'radiation':30,'grad':2.09,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.0,'ext':0.999,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
+   'outer':{'radiation':6,'grad':2.63,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.004,'ext':0.98,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
    'pause':{'radiation':-0.007,'rad':31.8,'comp':1.2,'ext':0.08,'hscale':1.1}},  # nose 26.5 R_N (Ness 1989)
 
  # ---- MERCURY: 벨트 없음, 초소형 offset 자기권 (표면 직격) ----
@@ -58,15 +64,19 @@ BODIES={
    'outer':{'radiation':2.214,'grad':2.2,'dist':2.6338,'rad':2.48,'dxy':0.7225,'comp':1.01,'ext':1.0,'bdist':1.4412,'brad':1.4875,'bdxy':0.7225},
    'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},
  'earth_phys':{'title':'Earth — physical (SDF fit)','sub':'shells L 1.1-2 (>1000 km) / L 3-7, slot between (IoU .99/.98); mp nose 10','R':8,'tilt':11,
-   'inner':{'radiation':10.376,'grad':3.3,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':1.1836,'bdxy':1.0505},  # 내대 하한=1000km(loss-cone 고갈 경계)
-   'outer':{'radiation':2.214,'grad':2.2,'dist':3.0123,'rad':2.7018,'dxy':0.662,'comp':1.01,'ext':1.0,'bdist':1.3175,'brad':1.1596,'bdxy':0.6748},  # L3-7, 보더 카브=슬롯
+   # grad/comp/ext = 자기권 기하 방법론 Part C 도출값 (2026-08-13). grad=rad/d*(피크 깊이, d_max 클램프),
+   # comp/ext = pause 비대칭 × eps=(r_core/nose)³. 아래 IoU 수치는 L-셸 피팅(dist/rad/dxy/border) 기준이라 무영향.
+   'inner':{'radiation':10.376,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.001,'ext':0.999,'bdist':1e-4,'brad':1.1836,'bdxy':1.0505},  # 내대 하한=1000km(loss-cone 고갈 경계). grad: 피크 L1.5(Ginet 2013)
+   'outer':{'radiation':2.214,'grad':2.15,'dist':3.0123,'rad':2.7018,'dxy':0.662,'comp':1.025,'ext':0.953,'bdist':1.3175,'brad':1.1596,'bdxy':0.6748},  # L3-7, 보더 카브=슬롯. grad: heart L4.5 → 배포 2.2 복원
    'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  'ganymede_stock':{'title':'Ganymede — stock (ROKerbalism)','sub':'inner 0.8/0.6, no pause defined','R':4,'tilt':4,
    'inner':{'radiation':0.33,'grad':3.3,'dist':0.8,'rad':0.6}},
  'ganymede_phys':{'title':'Ganymede — physical (SDF fit)','sub':'719 nT dipole; closed-line belt L 1.1-1.9, surface-absorbed (IoU .97); mp nose 2, width 5.5','R':4,'tilt':4,
-   'inner':{'radiation':0.33,'grad':3.3,'dist':0.8758,'rad':0.7327,'dxy':0.715,'comp':1.05,'ext':0.9,'bdist':0.0222,'brad':0.9408,'bdxy':0.8693},  # 무대기 → 컷=표면(r=1.0)
+   # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). eps 0.139(작은 standoff의 큰 몫을 벨트가 채움)이라
+   # 도출 comp 1.052가 배포값 1.05를 되찾음 — 이 바디가 비대칭 레시피의 검증 앵커다.
+   'inner':{'radiation':0.33,'grad':2.09,'dist':0.8758,'rad':0.7327,'dxy':0.715,'comp':1.052,'ext':0.958,'bdist':0.0222,'brad':0.9408,'bdxy':0.8693},  # 무대기 → 컷=표면(r=1.0)
    'pause':{'radiation':-0.01,'rad':2.75,'comp':1.375,'ext':0.7,'hscale':1.0}},  # nose 2.0 / 폭 5.5 R_G (Kivelson 1998)
 
  # ---- PROXIMA d: 16 G SPI 관측장 (Zapatero Osorio 2026) → 지구급 자기권 + 강한 포획 벨트 ----
@@ -80,8 +90,10 @@ BODIES={
  #   주의: 앵커쌍(지구·목성) 밖 외삽(B_eq 1.9× 목성)이라 신뢰 낮음; 장 범위 3-280 G면
  #   2×10²-10⁶ rad/h. dipole tilt 미지 → 지구형 10° 가정 명기.
  'proxima_d_phys':{'title':'Proxima Cen d — physical (16 G SPI)','sub':'B_p 16 G → mp nose ~7 R_d (4-18 over 3-280 G); shells L 1.2-2 / 3-5.5; dose anchor-interp (low conf); tilt unknown (10° drawn)','R':12,'tilt':10,
-   'inner':{'radiation':5000,'grad':3.3,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':1.0,'bdxy':1.0},  # 무대기 → 하부 컷=표면 r=1.0 (지구 1000km loss-cone 경계는 대기 흡수 산물이라 부적용)
-   'outer':{'radiation':1000,'grad':2.2,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.01,'ext':1.0,'bdist':1.2,'brad':1.0,'bdxy':0.6748},  # L 3-5.5 (nose 7 안쪽)
+   # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). 지구 프리셋서 복사돼 있던 comp/ext를 교체:
+   # 외대 핵심이 nose의 47%(eps 0.107)라 이 바디는 실제로 비대칭이어야 한다 → 1.053/0.901. grad는 지구 아날로그.
+   'inner':{'radiation':5000,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.002,'ext':0.996,'bdist':1e-4,'brad':1.0,'bdxy':1.0},  # 무대기 → 하부 컷=표면 r=1.0 (지구 1000km loss-cone 경계는 대기 흡수 산물이라 부적용)
+   'outer':{'radiation':1000,'grad':2.15,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.053,'ext':0.901,'bdist':1.2,'brad':1.0,'bdxy':0.6748},  # L 3-5.5 (nose 7 안쪽)
    'pause':{'radiation':-0.01,'rad':10.5,'comp':1.5,'ext':0.075,'hscale':1.1}},  # nose 10.5/1.5 = 7 R_d
 }
 

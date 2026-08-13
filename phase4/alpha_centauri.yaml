@@ -704,6 +704,11 @@ decisions:
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
     axis: magnetism.radiation_belts
+    provenance: >               # 뷰어 미렌더 — 값 이력 전용
+      2026-08-13: gradient·comp/ext 도출 반영 (방법론 Part C 신규 절). radiation_inner_gradient 1.65와
+      radiation_outer_gradient 2.15를 신규 기록(이전에는 필드 부재로 코드 기본값 3.3/2.2에 의존).
+      inner/outer compression·extension은 자이언트 앵커에서 복사돼 있던 1.05/0.9를 eps=(r_core/R_mp)³
+      도출값(1.0/1.0, 1.002/0.989)으로 교체. 지오메트리·강도는 무변경.
     status: gated                 # 2026-07-24 도출 (오너 선택: 외대 L 4.2-10, 강도=방법론 재도출)
     driver: [window-selection, fiction]
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
@@ -728,16 +733,16 @@ decisions:
       - { name: inner_dist, value: 1.3793, unit: R_p, op: set }
       - { name: inner_radius, value: 1.159, unit: R_p, op: set }
       - { name: inner_deform_xy, value: 0.7142, op: set }
-      - { name: inner_compression, value: 1.05, op: set }
-      - { name: inner_extension, value: 0.9, op: set }
+      - { name: inner_compression, value: 1.0, op: set, note: "Derived: eps = (r_core/R_mp)^3 = 0.0003 at a core of 1.63 R_p against a 23.5 R_p nose, so none of the boundary asymmetry reaches this shell. Replaces a copied giant-anchor 1.05", note_ko: "도출값. 핵심 1.63 R_p 대 nose 23.5 R_p라 eps=(r_core/R_mp)³=0.0003, 경계 비대칭이 이 껍질까지 오지 않는다. 복사돼 있던 자이언트 앵커 1.05를 대체" }
+      - { name: inner_extension, value: 1.0, op: set, note: "Same eps; the tail stretch does not reach this deep either (was a copied 0.9)", note_ko: "같은 eps. 꼬리 신장도 이 깊이까지 오지 않는다(구값 0.9는 복사값)" }
       - { name: inner_border_dist, value: 0.2656, unit: R_p, op: set }
       - { name: inner_border_radius, value: 0.7491, unit: R_p, op: set }
       - { name: inner_border_deform_xy, value: 0.6384, op: set }
       - { name: outer_dist, value: 4.2824, unit: R_p, op: set }
       - { name: outer_radius, value: 3.8588, unit: R_p, op: set }
       - { name: outer_deform_xy, value: 0.659, op: set }
-      - { name: outer_compression, value: 1.05, op: set }
-      - { name: outer_extension, value: 0.9, op: set }
+      - { name: outer_compression, value: 1.002, op: set, note: "Derived: eps 0.0113 at a core of 5.28 R_p (was a copied 1.05)", note_ko: "도출값. 핵심 5.28 R_p에서 eps 0.0113 (구값 1.05는 복사값)" }
+      - { name: outer_extension, value: 0.989, op: set, note: "Derived from the same eps against pause_extension 0.05 (was a copied 0.9)", note_ko: "같은 eps를 pause_extension 0.05에 적용한 도출값 (구값 0.9는 복사값)" }
       - { name: outer_border_dist, value: 2.0738, unit: R_p, op: set }
       - { name: outer_border_radius, value: 1.6687, unit: R_p, op: set }
       - { name: outer_border_deform_xy, value: 0.8079, op: set }
@@ -746,7 +751,9 @@ decisions:
       - { name: pause_extension, value: 0.05, op: set }
       - { name: pause_height_scale, value: 1.1, op: set }
       - { name: radiation_inner, value: 300, unit: "rad/h", op: set }
+      - { name: radiation_inner_gradient, value: 1.65, op: set, note: "Derived: the design puts the flux peak at A b II's L-shell (2.07 R_p), which the SDF reports 0.70 R_p below the boundary, so radius 1.159 / 0.70 = 1.65. The stock 3.3 would have held the full 300 rad/h short of the moon", note_ko: "도출값. 설계상 플럭스 피크가 A b II의 L-셸(2.07 R_p)이고 SDF로 재면 경계에서 0.70 R_p 아래라 반경 1.159/0.70 = 1.65. 스톡 3.3이면 300 rad/h 전량이 그 위성에 못 미친다" }
       - { name: radiation_outer, value: 30, unit: "rad/h", op: set }
+      - { name: radiation_outer_gradient, value: 2.15, op: set, note: "No profile of its own, so it inherits the Earth outer-belt plateau fraction (the class analog for a wind- and diffusion-fed electron belt) rather than the stock 2.2", note_ko: "자기 프로파일이 없어 지구 외대의 평탄부 비율을 물려받는다(항성풍·확산이 먹이는 전자대의 등급 아날로그). 스톡 2.2 대신" }
       - { name: radiation_pause, value: -0.01, unit: "rad/h", op: set }
       - { name: geomagnetic_pole_lat, value: 80, unit: deg, op: set, note: "= 90° minus an assumed ~10° magnetic-axis tilt (Jupiter analog); follows magnetic_dipole_tilt_deg once that is fixed", note_ko: "= 90° − 자기축 기울기 ~10° 가정(목성 아날로그); magnetic_dipole_tilt_deg 확정 시 따름" }
     gate:
@@ -764,6 +771,10 @@ decisions:
         intermediate, Chaos belt-free inside the pause. rad/h values are conf-low regime calls (tuning targets), consistent
         with the moons' environment.radiation ladder. All lengths in R_p; dipole tilt encoded as geomagnetic_pole_lat 80
         (= 90° − ~10° Jupiter-analog assumption; follows magnetic_dipole_tilt_deg if/when gated).
+        Dose ramp and shell asymmetry are derived rather than defaulted: gradient = radius / (SDF depth of the
+        flux peak) puts the inner belt at 1.65 with its peak on A b II's L-shell, and the boundary asymmetry
+        damped by eps = (r_core/R_mp)^3 leaves both shells effectively symmetric (0.0003 inner, 0.0113 outer),
+        retiring the copied giant-anchor 1.05 / 0.9.
       evidence_ko: >
         지오메트리: 위성 L-셸이 경계 짓는 쌍극자 드리프트 셸(태양계 감사에서 천왕성으로 검증한 위성-앵커링)을
         fit_belts.py로 Kerbalism SDF에 피팅. IoU 내대 0.97/외대 0.97, 손실원뿔 컷 1.05 R_p, pause 노즈 23.5 R_p는
@@ -774,7 +785,10 @@ decisions:
         (그 environment.radiation 행), Pandora = 슬롯("두 벨트 사이 gap"), Cassandra = 잠김 intermediate, Chaos = 벨트 밖·
         자기권 안. rad/h 값은 conf-low regime call(튜닝 타깃)이며 위성들의 environment.radiation 사다리와 정합.
         길이 단위 전부 R_p; 쌍극 기울기는 geomagnetic_pole_lat 80으로 인코딩(= 90° − 목성 아날로그 ~10° 가정;
-        magnetic_dipole_tilt_deg 확정 시 따름).
+        magnetic_dipole_tilt_deg 확정 시 따름). 선량 램프와 껍질 비대칭은 기본값이 아니라 도출값이다.
+        gradient = 반경/(플럭스 피크의 SDF 깊이)로 내대가 1.65(피크는 A b II의 L-셸), 경계 비대칭을
+        eps=(r_core/R_mp)³로 감쇠시키면 두 껍질 모두 실질 대칭(내대 0.0003, 외대 0.0113)이라 복사돼 있던
+        자이언트 앵커 1.05 / 0.9는 폐기.
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -2277,6 +2291,9 @@ decisions:
       L-셸 수치 피팅으로 교체했으며 패킹 문자열이던 radiation_model을 emitter가 직접 읽는 개별 cfg 필드로
       구조화했다. radiation_inner는 그 전에 2.0(약장 gap-기아 가정)에서 4.0으로 올라와 있었다.
       2026-07-28: 이력만 담고 있던 superseded 행을 삭제하고 여기로 옮겼다.
+      2026-08-13: 방법론 Part C 신규 절 반영 — radiation_inner_gradient 2.09(지구 내대 아날로그)와
+      inner_compression/extension 1.015/0.961(eps 0.099)을 신규 기록. 이전에는 세 필드가 모두 부재해
+      코드 기본값(3.3, 대칭)으로 떨어져 있었다. 지오메트리·강도는 무변경.
     narrative: >
       Pandora keeps a single thin radiation belt of its own, tucked just above the atmosphere. Its magnetosphere is squeezed
       small, embedded inside Polyphemus's far larger field, so there is room for only one narrow belt where Earth would have
@@ -2298,6 +2315,9 @@ decisions:
       - { name: pause_compression, value: 1.15, op: set }
       - { name: pause_extension, value: 0.6, op: set }
       - { name: radiation_inner, value: 4.0, unit: "rad/h", op: set, phase3_default: "2.0 (old value: assumed a weak field and a starved gap)", phase3_default_ko: "2.0 (구값: 약장 gap-기아 가정)" }
+      - { name: radiation_inner_gradient, value: 2.09, op: set, note: "A CRAND belt with no profile of its own, so it inherits Earth's inner-belt plateau fraction, the class analog. Replaces the code default 3.3", note_ko: "자기 프로파일이 없는 CRAND 벨트라 등급 아날로그인 지구 내대의 평탄부 비율을 물려받는다. 코드 기본값 3.3을 대체" }
+      - { name: inner_compression, value: 1.015, op: set, note: "Derived: eps = (r_core/R_mp)^3 = 0.099, since a core at 1.20 R_moon inside a 2.6 R_moon standoff does feel the boundary. An embedded moon is one of the few cases where this term matters", note_ko: "도출값. 핵심 1.20 R_moon이 standoff 2.6 R_moon 안이라 eps=(r_core/R_mp)³=0.099로 경계가 실제로 느껴진다. 임베디드 위성은 이 항이 유의미한 드문 경우다" }
+      - { name: inner_extension, value: 0.961, op: set, note: "Same eps against pause_extension 0.6", note_ko: "같은 eps를 pause_extension 0.6에 적용" }
       - { name: radiation_pause, value: -0.01, unit: "rad/h", op: set }
       - { name: geomagnetic_pole_lat, value: 80, unit: deg, op: set, note: "= 90° minus a ~10° magnetic-axis tilt; follows magnetic_dipole_tilt_deg once that is fixed", note_ko: "= 90° − 자기축 기울기 ~10°; magnetic_dipole_tilt_deg 확정 시 따름" }
     gate:
