@@ -276,15 +276,33 @@ Part B already needs:
    Part B source − loss model — anchored bodies can read it off a published model
    (Divine & Garrett 1983 for the Jovian belts, [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D); radial-diffusion
    profiles per Schulz & Lanzerotti 1974, [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
-2. Read off `r_peak` (where the profile maxes) and `r_edge` (the fitted shell
-   boundary on the same side), then `d* = |r_peak − r_edge|`.
-3. `gradient = *_radius / d*`.
+2. Evaluate the shell's **own SDF** at that peak on the equator: `d* = −SDF(r_peak)`.
+   Do this numerically rather than as `|r_peak − r_edge|` — the border cut,
+   `deform_xy` and `deform` all move which boundary is nearest, and for Earth's inner
+   belt the binding one is the loss-cone cut, not the torus wall. Evaluating the SDF
+   also removes the need to convert into the squashed metric by hand.
+3. `gradient = *_radius / d*`. It is `≥ 1` by construction, since the peak cannot lie
+   deeper than the shell's core.
+4. **No profile of its own?** Inherit the *plateau fraction* of the class analog
+   rather than the stock number: Earth's inner belt for CRAND proton belts, Earth's
+   outer belt for wind- and diffusion-fed electron belts, Jupiter's inner belt for
+   torus-fed ones. That keeps an ungrounded body on a measured shape instead of a
+   round default.
 
 A profile that peaks right at its core circle gives `gradient ≈ 1` (a long, gentle
 climb); a profile that saturates immediately inside the boundary gives a large
-gradient (a hard-edged shell). Convert into the squashed metric first when
-`deform_xy` is far from 1, because the SDF measures depth there, not in true
-equatorial distance.
+gradient (a hard-edged shell).
+
+**Anchor check.** Run on the Solar-System fits, the recipe puts Earth's **outer** belt
+at 2.15 against the shipped 2.2 — it recovers a stock value it was never told, which
+is the validation. Earth's **inner** belt lands at 2.09 against the shipped 3.3, so it
+is the inner-belt steepness that turns out unsupported: the proton peak at L ≈ 1.5
+(AP9; Ripoll 2016, [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)) sits 0.37 R_E below the loss-cone cut, not
+0.23 R_E. Jupiter's inner belt (peak 1.5–2 R_J, Divine & Garrett 1983) gives 2.24, and
+Uranus collapses to **1.0**, because its electron profile is a broad maximum between
+moon-swept minima (Cheng 1987, [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)) — the peak is at the shell core, so
+the ramp has to run the full half-thickness. Per-body peak positions and their sources
+are tabulated in [`solar-system-radiation-belts.md`](solar-system-radiation-belts.md).
 
 **Two couplings that bite.**
 
@@ -299,9 +317,11 @@ equatorial distance.
   `gradient 1.9` is inside the safe range; nothing in NearStars currently goes
   below 1.)
 
-Worked example — A b's inner belt: `inner_radius` 1.159 R_p at `gradient` 3.3 puts
-the plateau 0.35 R_p inside the shell surface, so the full 300 rad/h applies across
-most of the shell and only the thin skin near Hades' L-shell edge is graded.
+Worked example — A b's inner belt: the design puts the peak at A b II's L-shell
+(2.07 R_p), which the SDF reports 0.70 R_p below the boundary, so with
+`inner_radius` 1.159 the recipe gives `gradient` **1.65** — a much gentler ramp than
+the 3.3 default the board still carries, and one that moves the full 300 rad/h out to
+where the moon actually orbits.
 
 ### Deriving the rest — what fixes each field, and what it drags with it
 
@@ -593,6 +613,10 @@ a documented regime call rather than a computed number.
 - **Divine & Garrett 1983**, JGR 88, 6889 ([`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)); **Bagenal 1994**,
   JGR 99, 11043 ([`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B)). Jovian radiation + the Io internal plasma
   source — the canonical "intensity set by source, not field" case.
+- **Ripoll et al. 2016**, GRL 43, 5616 ([`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)); **Cheng et al. 1987**, JGR 92,
+  15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). Where each belt's flux actually peaks — Earth's inner-belt
+  peak and slot, and Uranus' broad maxima between moon-swept minima. These are the
+  profile shapes the `radiation_*_gradient` recipe reads `d*` from.
 - **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
   JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). Wave–particle acceleration and loss;
   modern belt-dynamics review.

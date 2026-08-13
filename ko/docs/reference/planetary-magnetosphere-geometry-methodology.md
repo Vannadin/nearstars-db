@@ -237,13 +237,29 @@ NearStars에 대해 이게 확정하는 3가지.
    가져옵니다. 앵커 바디는 발표된 모형에서 바로 읽어도 됩니다(목성 벨트는 Divine & Garrett
    1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D), 반경확산 프로파일은 Schulz & Lanzerotti 1974
    [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
-2. 프로파일이 최대가 되는 `r_peak`와 같은 쪽 껍질 경계 `r_edge`를 읽어 `d* = |r_peak − r_edge|`.
-3. `gradient = *_radius / d*`.
+2. 그 피크 위치에서 껍질 **자신의 SDF**를 적도면 기준으로 계산합니다. `d* = −SDF(r_peak)`.
+   `|r_peak − r_edge|`로 손으로 재지 말고 수치로 구하십시오. border 컷과 `deform_xy`,
+   `deform`이 모두 "가장 가까운 경계"를 바꿔놓기 때문이고, 실제로 지구 내대에서 깊이를
+   결정하는 것은 토러스 벽이 아니라 손실원뿔 컷입니다. SDF로 구하면 눌린 좌표계 환산도
+   따로 할 필요가 없습니다.
+3. `gradient = *_radius / d*`. 피크가 껍질 핵심보다 깊을 수는 없으니 결과는 항상 `≥ 1`입니다.
+4. **자기 프로파일이 없는 바디라면** 스톡 숫자를 쓰지 말고 같은 등급 아날로그의 *평탄부
+   비율*을 물려받습니다. CRAND 양성자대는 지구 내대, 항성풍·확산이 먹이는 전자대는 지구
+   외대, 토러스가 먹이는 벨트는 목성 내대입니다. 근거 없는 바디를 둥근 기본값이 아니라
+   실측된 형상 위에 앉히는 것이 요점입니다.
 
 핵심 원 근처에서야 최대가 되는 프로파일은 `gradient ≈ 1`(길고 완만한 상승)이고, 경계 바로
-안쪽에서 포화하는 프로파일은 큰 gradient(단단한 경계)입니다. `deform_xy`가 1에서 많이 벗어난
-벨트라면 먼저 눌린 좌표계로 환산하십시오. SDF가 깊이를 재는 곳이 실제 적도거리가 아니라
-그쪽입니다.
+안쪽에서 포화하는 프로파일은 큰 gradient(단단한 경계)입니다.
+
+**앵커 검산.** 태양계 피팅에 이 레시피를 돌리면 지구 **외대**가 2.15로 나옵니다. 배포값 2.2를
+알려주지 않았는데 되찾아온 값이고, 이것이 검증입니다. 지구 **내대**는 배포값 3.3에 대해
+2.09가 나오므로, 근거가 없는 쪽은 내대의 급한 기울기였습니다. L ≈ 1.5의 양성자 피크
+(AP9. Ripoll 2016, [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R))가 손실원뿔 컷에서 0.23 R_E가 아니라 0.37 R_E
+아래에 있습니다. 목성 내대(피크 1.5–2 R_J, Divine & Garrett 1983)는 2.24이고, 천왕성은
+**1.0**까지 내려갑니다. 전자 프로파일이 위성이 쓸어낸 극소 사이의 넓은 최대(Cheng 1987,
+[`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C))라 피크가 껍질 핵심에 있고, 그래서 램프가 반두께를 다 써야 합니다.
+바디별 피크 위치와 출처는 [`solar-system-radiation-belts.md`](solar-system-radiation-belts.md)에
+표로 있습니다.
 
 **실제로 발목을 잡는 결합 두 가지.**
 
@@ -257,9 +273,9 @@ NearStars에 대해 이게 확정하는 3가지.
   값과 다릅니다. (Proxima c 내대의 `gradient 1.9`는 안전 구간이고, 현재 NearStars에 1 미만은
   없습니다.)
 
-A b 내대 예시. `inner_radius` 1.159 R_p에 `gradient` 3.3이면 평탄부가 껍질 표면에서 0.35 R_p
-안쪽에서 시작하므로, 300 rad/h가 껍질 대부분에 걸리고 Hades의 L-셸 쪽 얇은 표피만 등급이
-깎입니다.
+A b 내대 예시. 설계상 피크가 A b II의 L-셸(2.07 R_p)에 있고 SDF로 재면 경계에서 0.70 R_p
+아래이므로, `inner_radius` 1.159와 함께 `gradient` **1.65**가 나옵니다. 보드가 아직 들고 있는
+기본값 3.3보다 훨씬 완만하고, 300 rad/h 전량이 실제로 그 위성이 도는 자리까지 나옵니다.
 
 ### 나머지 값들 — 무엇이 정하고, 무엇을 끌고 가는가
 
@@ -511,6 +527,10 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
 - **Divine & Garrett 1983**, JGR 88, 6889 ([`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)); **Bagenal 1994**,
   JGR 99, 11043 ([`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B)). 목성 방사선 + Io 내부 플라스마원 — "강도는 場이
   아니라 공급원이 정한다"의 canonical 사례.
+- **Ripoll et al. 2016**, GRL 43, 5616 ([`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)); **Cheng et al. 1987**, JGR 92,
+  15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). 각 벨트의 플럭스가 실제로 어디서 최대인지. 지구 내대 피크와
+  슬롯, 천왕성의 위성-소거 극소 사이 넓은 최대. `radiation_*_gradient` 레시피가 `d*`를 읽어오는
+  프로파일 형상이 이들입니다.
 - **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
   JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). 파동–입자 가속·손실; 현대 벨트 동역학 리뷰.
 - **Cooper 1983**, JGR 88, 3945 ([`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C)). 벨트 손실로서의 고리/위성 흡수 —
