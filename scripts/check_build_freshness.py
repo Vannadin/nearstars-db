@@ -172,6 +172,35 @@ except Exception as e:
     failures.append(f"phase2-coverage check errored: {e}")
 
 
+# 7. docs/wiki/*.html freshness vs its markdown source
+#    The project publishes two wikis: the GitHub-repo wiki (separate git repo) and the
+#    Pages-side mirror under docs/wiki/, generated from docs/reference/*.md + plans/*.md
+#    by build_docs.py. Editing a reference doc without rerunning that builder leaves the
+#    published page silently showing the old text — how the methodology doc's Part C
+#    additions sat unpublished on 2026-08-13.
+wiki_dir = DOCS / "wiki"
+if not wiki_dir.exists():
+    failures.append("docs/wiki/ missing — run build_docs.py")
+else:
+    stale_wiki = []
+    SKIP = {"_template", "README"}          # build_docs.py 도 이 둘은 발행하지 않는다
+    for src, prefix in ((DOCS / "reference", "reference__"), (ROOT / "plans", "plans__")):
+        for md in src.glob("*.md"):
+            if md.stem in SKIP:
+                continue
+            page = wiki_dir / f"{prefix}{md.stem}.html"
+            if not page.exists():
+                stale_wiki.append(f"{page.name} (missing)")
+            elif md.stat().st_mtime > page.stat().st_mtime + 1.0:
+                stale_wiki.append(page.name)
+    if stale_wiki:
+        failures.append(
+            f"{len(stale_wiki)} docs/wiki page(s) older than their markdown: "
+            f"{sorted(stale_wiki)[:5]}{'...' if len(stale_wiki) > 5 else ''} "
+            f"— run build_docs.py"
+        )
+
+
 # Output
 if failures:
     for msg in failures:

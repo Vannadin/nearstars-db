@@ -478,6 +478,245 @@ Three facts this settles for NearStars:
    `geomagnetic_offset` (Uranus 0.3, Neptune 0.55) is the handle for the offset/
    multipolar dipoles of ice giants like Proxima c.
 
+### `radiation_*_gradient` — the radial dose ramp inside a shell
+
+The belt shells are geometry only; the dose a vessel actually takes inside one is
+
+    dose = clamp( gradient · (−SDF) / radius , 0 , 1 ) · radiation_inner|outer
+
+(`Radiation.cs`; reproduced verbatim in `scripts/viz/render_belts.py:50` and in the
+belt viewer, which is why the viewer's readout can be trusted as a preview). `−SDF`
+is the depth below the shell surface and `radius` is that belt's own `*_radius`, so
+the dose ramps **linearly from zero at the boundary to the full intensity at depth**
+
+    d* = *_radius / gradient          (body radii, in the deform_xy-squashed metric)
+
+i.e. `1/gradient` is the fraction of the section radius spent climbing to the
+plateau. The shipped values are inner **3.3** (plateau at 30 % of the section
+radius) and outer **2.2** (45 %); the emitter and the viewer treat those two as the
+omit-if-equal default, so a written `radiation_inner_gradient` line always means a
+deliberate departure.
+
+**How to derive it.** The gradient is the one field that encodes the *shape* of the
+radial profile rather than its bounds or its peak, so it comes from the same profile
+Part B already needs:
+
+1. Take the radial dose (or >MeV flux) profile along the magnetic equator, from the
+   Part B source − loss model — anchored bodies can read it off a published model
+   (Divine & Garrett 1983 for the Jovian belts, [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D); radial-diffusion
+   profiles per Schulz & Lanzerotti 1974, [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
+2. Evaluate the shell's **own SDF** at that peak on the equator: `d* = −SDF(r_peak)`.
+   Do this numerically rather than as `|r_peak − r_edge|` — the border cut,
+   `deform_xy` and `deform` all move which boundary is nearest, and for Earth's inner
+   belt the binding one is the loss-cone cut, not the torus wall. Evaluating the SDF
+   also removes the need to convert into the squashed metric by hand.
+3. Clamp `d*` to `d_max`, the depth of the **deepest point that survives the border
+   cut** (found the same way, by scanning the SDF over the shell). The cut usually
+   carves the torus core away, so `d_max` runs 0.5–0.65 `*_radius` in practice, and an
+   evidence peak can land in space the shell no longer occupies.
+4. `gradient = *_radius / d*`. The binding floor is therefore
+   **`gradient ≥ *_radius / d_max`**, not `≥ 1`: below it the belt never reaches its
+   stated `radiation_*` anywhere, and the whole belt is silently scaled down by
+   `gradient · d_max / *_radius`.
+5. **No profile of its own?** Inherit the *plateau fraction* of the class analog
+   rather than the stock number: Earth's inner belt for CRAND proton belts, Earth's
+   outer belt for wind- and diffusion-fed electron belts, Jupiter's inner belt for
+   torus-fed ones. That keeps an ungrounded body on a measured shape instead of a
+   round default.
+
+A profile that peaks right at its core circle gives `gradient ≈ 1` (a long, gentle
+climb); a profile that saturates immediately inside the boundary gives a large
+gradient (a hard-edged shell).
+
+**Anchor check.** Run on the Solar-System fits, the recipe puts Earth's **outer** belt
+at 2.15 against the shipped 2.2 — it recovers a stock value it was never told, which
+is the validation. Earth's **inner** belt lands at 2.09 against the shipped 3.3, so it
+is the inner-belt steepness that turns out unsupported: the proton peak at L ≈ 1.5
+(AE9/AP9, Ginet 2013 [`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G); slot per Ripoll 2016,
+[`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)) sits 0.37 R_E below the loss-cone cut, not
+0.23 R_E. Jupiter's inner belt (peak 1.5–2 R_J, Divine & Garrett 1983) gives 2.24. Uranus
+is the case the floor rule exists for: its electron profile is a broad maximum between
+moon-swept minima (Cheng 1987, [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)), which reads as a peak at the shell
+core — but the core is carved away, so the value clamps to the floor at **1.57** inner
+and **1.85** outer. Taken literally (peak at the core, `gradient` 1.0) the belt would
+have saturated nowhere and run at 0.64× its stated intensity. Per-body peak positions
+and their sources are tabulated in
+[`solar-system-radiation-belts.md`](reference__solar-system-radiation-belts.html).
+
+One consequence worth expecting: with the ramp this long, the **fully saturated core is
+thin**. Measured on the meridian cross-section, it is 9 % of the shell for Earth's outer
+belt and only 1.5 % for the inner one (against 23 % under the stock 3.3). That is the
+honest reading of a narrow measured peak, not an artifact — but it does mean the stated
+`radiation_inner` is a value a vessel touches only near the belt's heart, and the dose
+ladder the moons see should be read off the SDF, not off the headline number.
+
+**Two couplings that bite.**
+
+- **`gradient` ↔ `*_radius`.** They appear only as the ratio `radius/gradient`, so
+  any re-fit that moves the section radius silently moves the ramp depth. Re-derive
+  the gradient whenever `fit_belts.py` is re-run.
+- **`gradient < 1` never reaches the stated intensity.** The clamp saturates at 1,
+  and the deepest point of the shell only reaches `−SDF = radius`, so the realized
+  peak is `gradient · radiation_*`. If a soft profile forces `gradient < 1`, the
+  intensity has to be divided by it to keep the peak dose honest — otherwise the
+  board's rad/h number is not what the game applies. (Proxima c's inner belt at
+  `gradient 1.9` is inside the safe range; nothing in NearStars currently goes
+  below 1.)
+
+Worked example — A b's inner belt: the design puts the peak at A b II's L-shell
+(2.07 R_p), which the SDF reports 0.70 R_p below the boundary, so with
+`inner_radius` 1.159 the recipe gives `gradient` **1.65** — a much gentler ramp than
+the 3.3 default the board still carries, and one that moves the full 300 rad/h out to
+where the moon actually orbits.
+
+### Deriving the rest — what fixes each field, and what it drags with it
+
+Derivation order matters: everything downstream of `R_mp` changes when the field or
+the wind changes, so run the chain top-down rather than patching single fields.
+
+    B_eq + P_ram  →  R_mp (Part A)  →  pause fields
+                                   →  belt L-shell bounds  →  fit_belts.py  →  belt geometry
+    source − loss (Part B) + K–P ceiling  →  radiation_inner/outer
+    radial profile shape                  →  radiation_*_gradient
+    harmonic content / tilt / offset      →  deform, pole_lat/lon, geomagnetic_offset
+
+| Field | What fixes it | Derivation | Couples to |
+|---|---|---|---|
+| `has_pause` | does the body trap at all | `B_eq ≳ 0.1×` Earth (regime 5 below is `false`) | belts exist only if this does |
+| `pause_radius` | Part A nose | `R_mp × pause_compression` — the compression is applied to x *before* the sphere test | `pause_compression`; re-derive both together |
+| `pause_compression` | dayside/flank asymmetry | flank/nose ratio; Shue-equivalent `α = log₂(comp)`, so ROK Earth 1.5 ⇒ α 0.585 | `pause_radius`, and the Shue `α` below |
+| `pause_extension` | tail closure length | `L = pause_radius / extension`; pick `L` where the lobe field stops mattering for GCR (Earth ≈ 200 R_E) | tail length only; nose unaffected |
+| `pause_height_scale` | polar flattening of the pause | ratio of polar to equatorial standoff (1.0 = spherical; giants ~1.1) | independent |
+| `radiation_pause` | GCR shield presence | **not** scaled to standoff: ~−0.01 stock-uniform | nothing (see the correction above) |
+| `inner_dist` / `outer_dist` | L-shell of the belt core | `L_core` of the drift shell, `r = L cos²λ`, fitted by `fit_belts.py` | `*_radius`, `*_deform_xy` (one joint fit) |
+| `inner_radius` / `outer_radius` | shell thickness | half-width of the L-shell band, same fit | `gradient` (ratio, above) |
+| `*_deform_xy` | latitudinal squash of the drift shell | from `cos²λ` closure; equatorial extent = `(dist ± radius)/√deform_xy` | reported extents; convert before comparing to profiles |
+| `*_border_dist` / `*_border_radius` / `*_border_deform_xy` | the atmospheric loss cone | subtracted shell; `border_dist ≈ 0` degenerates to a sphere cut at the loss-cone altitude (~1.05 R_p) | inner edge of the dose region |
+| `*_compression` / `*_extension` (belts) | how much of the boundary's asymmetry reaches the shell | the pause asymmetry damped by `(r_core/R_mp)³` — see below | `pause_compression`/`pause_extension`, and `R_mp` |
+| `*_deform` | non-dipolar lumpiness | amplitude in body radii added to the SDF, so the boundary wanders by up to ±A; anchor on ROKerbalism (`mercury` / `irregular` 0.1, `metallic`/`solidiron`/`anomaly` 0.04–0.1) | the (pending) `*_deform_scale` sets its *size* |
+| `radiation_inner` / `radiation_outer` | Part B regime call | source − loss, K–P-capped; check against `scripts/refs/kp_limit.py` | `gradient` when it is < 1 |
+| `radiation_*_gradient` | radial profile shape | `*_radius / d*` (above) | `*_radius` |
+| `geomagnetic_pole_lat` / `_lon` | dipole tilt | `lat = 90° − magnetic_dipole_tilt_deg` (sign follows a reversed dipole: Jupiter −80) | the aurora row's oval offset |
+| `geomagnetic_offset` | dipole centre offset | offset distance / R_p, along the magnetic axis (Mercury 0.198, Uranus 0.3, Neptune 0.55) — axisymmetric, unlike `deform` | belts inherit the shift; do not double-count with `deform` |
+| `*_quality` | raymarch step count | rendering only, no physics | nothing |
+| `radiation_surface` | star-level field | **stars only** — a planetary surface dose does not live here (that chain is `surface-radiation-dose-methodology.md`) | nothing |
+
+### Belt `*_compression` / `*_extension` — the boundary's asymmetry, damped inward
+
+A belt shell is not the magnetopause, and it is not a circle either. It sits between the
+two, so the honest question is *how much* of the boundary's day–night asymmetry reaches
+it. Two limits fix the answer:
+
+- deep inside (`r ≪ R_mp`) the field is the undistorted dipole, so the shell is
+  **symmetric** — `compression = extension = 1`;
+- at the boundary the shell *is* the boundary, so it carries the pause's own asymmetry
+  (and beyond it drift shells split and open — Pfitzer 1969,
+  [`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P); Öztürk & Wolf 2007, [`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)).
+
+The weight between those limits is the ratio of the **external (boundary-current) field
+to the dipole field** at that radius. Chapman–Ferraro currents contribute a nearly
+uniform field in the inner region whose magnitude is about the dipole's own field at the
+boundary — this is the same `f ≈ 2` doubling Part A already relies on — so
+
+    ε(r) = ( r / R_mp )³ ,      r_core = *_dist / √(*_deform_xy)
+
+and the shell inherits that fraction of the pause's distortion:
+
+    *_compression = 1 + ε · (pause_compression − 1)
+    *_extension   = 1 − ε · (1 − pause_extension)
+
+Evaluate ε at the shell's **core circle**, not its outer edge: Kerbalism applies one
+x-scale to the whole shell, and the core carries both the dose peak and the shell's
+characteristic L, so the core value is the shell average rather than its worst point.
+The edge value is worth computing as the upper bound — for Earth's outer belt it is
+`ε 0.35` against `0.05` at the core, which is the size of the approximation Kerbalism's
+one-scale-per-shell design forces on us.
+
+Mead 1964 ([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M)) is the grounding for the shape of the distortion: the
+Chapman–Ferraro solution compresses field lines on **both** the day and night sides, and
+the day–night asymmetry proper comes from the distributed tail currents that the
+spacecraft-fitted models quantify (Mead & Fairfield 1975,
+[`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)). Interpolating toward the adopted pause shape is a proxy for
+that asymmetric term, not a derivation of it, so this recipe is **medium-low
+confidence** — but it is anchored at both ends and it replaces what was previously a
+copied constant. Mead's 1964 *numbers* have long been superseded for quantitative work
+by the spacecraft-fitted Tsyganenko family (T02, [`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T)), which is the
+route to take if this ever needs to be better than an interpolation: fit a T-class field
+and read the shell asymmetry off it, rather than refine the ansatz.
+
+**Validation.** The recipe recovers ROKerbalism's Ganymede belt compression, 1.05,
+without being told (core `ε` 0.139, since an embedded moon's belt fills a large fraction
+of its 2 R_moon standoff), and it reproduces Earth's near-symmetric inner belt
+(1.001 against the shipped 1.01). At geosynchronous, `ε` 0.29 gives a nightside stretch
+of 1.36×, the right order for the well-known day–night asymmetry there. Where it
+*disagrees* is instructive: the giants' shipped 1.05 / 0.9 is unreachable, because a
+belt at 8 R_J inside a 63 R_J standoff has `ε` 0.002 — those numbers are stylistic, not
+physical. The bodies where the term genuinely bites are the compressed ones: **Proxima d**
+(outer belt `ε` 0.107 → 1.05 / 0.90, against the Earth-copied 1.01 / 1.0 it carries
+today) and the embedded moons Ganymede and A b III (`ε` 0.099 → 1.015 / 0.96).
+
+Two habits that keep this reproducible: derive the belt geometry with
+`fit_belts.py` rather than by hand (it optimizes IoU against the actual SDF, so the
+numbers you write are the numbers the engine renders), and record the *inputs*
+(`B_eq`, `P_ram`, `L`-bounds, source term) on the board next to the outputs, because
+the fields above are all downstream of four or five physical numbers.
+
+### ⚗ Fields that do not exist yet — the KerbalismShuePause plugin
+
+Three of the knobs the belt viewer exposes are **not consumed by any shipped
+Kerbalism**. They are derived and recorded now, and wait on an in-house Harmony 2
+patch (or an upstream PR) — the brief, including the rejected alternatives, is
+`plugins/KerbalismShuePause/README.md`.
+Pipeline discipline: the emitter keeps them in `PENDING_MODEL_KEYS` and **never**
+writes them as cfg lines, the viewer marks them `⚗` and exports them as comments,
+and a board may carry the value with an explicit unused marker. So the derivation
+happens once, and stock renders stock behaviour until the plugin lands.
+
+**`*_deform_scale`** (`pause_` / `inner_` / `outer_`). Kerbalism's deform adds
+`sin(x·5)·sin(y·7)·sin(z·6)·A`: the amplitude `A` is tunable but the wavenumbers are
+hardcoded, so *how big* the lumps are cannot be set. At a Mercury-like standoff of
+1.54 R_p those wavenumbers put 8–11 lobes around the boundary, far finer than the
+multipolar fields the dynamo recipes actually produce. The scale is a multiplier on
+the wavenumbers (`1.0` = stock exactly, so no shipped cfg changes), and it is
+derived from the field, not chosen for looks:
+
+    k = ℓ / R_mp                deform_scale = k / 5
+
+with `ℓ` the dominant spherical-harmonic degree of the field (from the dynamo
+recipe's regime call). A dynamo with power out to `ℓ = 4` at `R_mp` 1.54 wants
+`k ≈ 2.6`, i.e. `deform_scale ≈ 0.52`. Amplitude and scale are orthogonal: `A` is
+how far the boundary wanders, `scale` is how many lobes it wanders in.
+
+**Shue-native pause** (`pause_shue`, `pause_nose` = r0, `pause_alpha` = α,
+`pause_tail` = L). Kerbalism's pause is a sphere with piecewise x-scaling, which is
+too blunt at the nose, pins the widest cross-section at the body plane, and closes
+the tail into a spindle — three coupled fields faking what Shue et al. 1997/1998
+([`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S) / [`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)) do with two physical
+ones. The adopted form is the **softened Shue**, a single C∞ closed curve:
+
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α        ε = 1 / ( (L/r0)^(1/α) − 1 )
+
+`ε → 0` recovers exact Shue; `ε > 0` closes the tail at `r(180°) = L` with zero
+slope and no join anywhere. Derivation of the three fields: **r0** is the Part A
+Chapman–Ferraro nose directly (no compression-ratio encoding); **α** comes from the
+Shue 98 fit against ram pressure and IMF `Bz` (0.58 is the quiet-wind default, and
+`α ≥ 0.5` means an intrinsically open tail — closure is the `ε` term's job, not
+α's); **L** is where the lobe field becomes GCR-irrelevant. Legacy conversion is
+free: `α = log₂(compression)`, `r0 = pause_radius / compression`,
+`L = pause_radius / extension`. It is shape-faithful for Earth-style configs only —
+RSS Jupiter's `compression` 1.05 converts to α 0.07, an unphysically spherical
+dayside, so giants need α re-tuned after conversion rather than converted blindly.
+
+**`pause_offset`** is the cheap fallback if the full Shue mode is rejected: shift
+the sphere centre tailward before the scaling (`p.x += pause_offset`), which fixes
+the "widest at the body plane" defect in one line. A least-squares fit against the
+softened Shue curve for Proxima c (nose 11.905, α 0.5, tail 125) reproduces the
+nose, the body-plane width, the maximum width and the tail closure within a few
+percent at `pause_offset` 19.7 / radius 21.5 / compression 0.68 / extension 0.204.
+Every shipped stock and ROKerbalism pause underrepresents tail width the same way
+(Earth flank 15 vs an observed 25–30 R_E tail radius), so this is a general defect,
+not a NearStars quirk.
+
 ## Part D — moon ↔ parent interaction (embedded magnetospheres)
 
 A moon orbiting *inside* a giant's magnetosphere is a common NearStars case (every
@@ -674,6 +913,25 @@ a documented regime call rather than a computed number.
 - **Divine & Garrett 1983**, JGR 88, 6889 ([`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)); **Bagenal 1994**,
   JGR 99, 11043 ([`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B)). Jovian radiation + the Io internal plasma
   source — the canonical "intensity set by source, not field" case.
+- **Ripoll et al. 2016**, GRL 43, 5616 ([`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)); **Cheng et al. 1987**, JGR 92,
+  15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). Where each belt's flux actually peaks — Earth's inner-belt
+  peak and slot, and Uranus' broad maxima between moon-swept minima. These are the
+  profile shapes the `radiation_*_gradient` recipe reads `d*` from.
+- **Ginet et al. 2013**, SSRv 179, 579 ([`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G)). AE9/AP9/SPM, the current
+  standard trapped-flux specification — the successor to AE8/AP8 and the model to read a
+  radial profile off for Earth. Cite this rather than "AP9" loosely.
+- **Mead 1964**, JGR 69, 1181 ([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M)); **Mead & Fairfield 1975**, JGR 80,
+  523 ([`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)); **Tsyganenko 2002**, JGRA 107, 1179
+  ([`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T)). How the boundary currents deform the inner field — Mead for the
+  Chapman–Ferraro solution's shape (compression on both day and night sides), Mead &
+  Fairfield for the distributed tail currents the theory understates, Tsyganenko for the
+  modern quantitative standard. Mead's *description* is still the canonical statement and
+  is cited as such today; its *coefficients* are superseded by the T-family. Load-bearing
+  for the belt `*_compression`/`*_extension` recipe.
+- **Pfitzer et al. 1969**, JGR 74, 4687 ([`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P)); **Öztürk & Wolf 2007**,
+  JGRA 112, A07207 ([`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)). Drift-shell splitting in the distorted
+  magnetosphere, observed and then mapped near the dayside magnetopause — the outer limit
+  of the asymmetry recipe, where shells stop being closed surfaces at all.
 - **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
   JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). Wave–particle acceleration and loss;
   modern belt-dynamics review.
@@ -917,6 +1175,219 @@ NearStars에 대해 이게 확정하는 3가지.
    내대, 그리고 거주가능 위성 Pandora의 강한 고유장이 그걸 막음(설계의 핵심 드라마).
    `geomagnetic_offset`(천왕성 0.3, 해왕성 0.55)은 Proxima c 같은 빙거성의 offset/다극 쌍극 핸들.
 
+### `radiation_*_gradient` — 껍질 안쪽의 선량 상승 기울기
+
+벨트 껍질은 지오메트리일 뿐이고, 그 안에서 실제로 받는 선량은 이렇게 계산됩니다.
+
+    dose = clamp( gradient · (−SDF) / radius , 0 , 1 ) · radiation_inner|outer
+
+(`Radiation.cs`. `scripts/viz/render_belts.py:50`과 벨트 뷰어가 이 식을 원문 그대로 옮겼기
+때문에 뷰어의 선량 표시를 미리보기로 신뢰할 수 있습니다.) `−SDF`는 껍질 표면에서 파고든
+깊이이고 `radius`는 그 벨트 자신의 `*_radius`이므로, 선량은 **경계에서 0으로 시작해 다음
+깊이에서 최대 강도에 도달하는 선형 램프**입니다.
+
+    d* = *_radius / gradient          (바디 반경 단위, deform_xy로 눌린 좌표계 기준)
+
+즉 단면 반경의 `1/gradient`만큼을 최대치까지 올라가는 데 씁니다. 배포된 값은 내대 **3.3**
+(단면 반경의 30 %에서 평탄부 진입), 외대 **2.2**(45 %)이고, emitter와 뷰어는 이 둘을 같으면
+생략하는 기본값으로 취급합니다. 그래서 cfg에 `radiation_inner_gradient` 줄이 적혀 있다면 항상
+의도적인 이탈입니다.
+
+**구하는 방법.** gradient는 벨트의 경계나 최대치가 아니라 반경방향 **프로파일의 모양**을
+담는 유일한 필드라, Part B가 이미 필요로 하는 그 프로파일에서 나옵니다.
+
+1. 자기적도를 따라간 반경방향 선량(또는 >MeV 플럭스) 프로파일을 Part B의 공급−손실 모형에서
+   가져옵니다. 앵커 바디는 발표된 모형에서 바로 읽어도 됩니다(목성 벨트는 Divine & Garrett
+   1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D), 반경확산 프로파일은 Schulz & Lanzerotti 1974
+   [`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
+2. 그 피크 위치에서 껍질 **자신의 SDF**를 적도면 기준으로 계산합니다. `d* = −SDF(r_peak)`.
+   `|r_peak − r_edge|`로 손으로 재지 말고 수치로 구하십시오. border 컷과 `deform_xy`,
+   `deform`이 모두 "가장 가까운 경계"를 바꿔놓기 때문이고, 실제로 지구 내대에서 깊이를
+   결정하는 것은 토러스 벽이 아니라 손실원뿔 컷입니다. SDF로 구하면 눌린 좌표계 환산도
+   따로 할 필요가 없습니다.
+3. `d*`를 `d_max`로 클램프합니다. `d_max`는 **border 컷을 견디고 살아남은 가장 깊은 점**의
+   깊이이고, 같은 방식으로 껍질 전체의 SDF를 훑어 구합니다. 컷이 토러스 핵심을 잘라내는 것이
+   보통이라 실제 `d_max`는 `*_radius`의 0.5~0.65 수준이고, 근거상의 피크가 이미 껍질이
+   차지하지 않는 자리에 떨어질 수 있습니다.
+4. `gradient = *_radius / d*`. 따라서 실제 하한은 `≥ 1`이 아니라
+   **`gradient ≥ *_radius / d_max`**입니다. 이 아래로 내려가면 벨트 어디에서도 명시한
+   `radiation_*`에 도달하지 못하고, 벨트 전체가 `gradient · d_max / *_radius` 배로 조용히
+   깎입니다.
+5. **자기 프로파일이 없는 바디라면** 스톡 숫자를 쓰지 말고 같은 등급 아날로그의 *평탄부
+   비율*을 물려받습니다. CRAND 양성자대는 지구 내대, 항성풍·확산이 먹이는 전자대는 지구
+   외대, 토러스가 먹이는 벨트는 목성 내대입니다. 근거 없는 바디를 둥근 기본값이 아니라
+   실측된 형상 위에 앉히는 것이 요점입니다.
+
+핵심 원 근처에서야 최대가 되는 프로파일은 `gradient ≈ 1`(길고 완만한 상승)이고, 경계 바로
+안쪽에서 포화하는 프로파일은 큰 gradient(단단한 경계)입니다.
+
+**앵커 검산.** 태양계 피팅에 이 레시피를 돌리면 지구 **외대**가 2.15로 나옵니다. 배포값 2.2를
+알려주지 않았는데 되찾아온 값이고, 이것이 검증입니다. 지구 **내대**는 배포값 3.3에 대해
+2.09가 나오므로, 근거가 없는 쪽은 내대의 급한 기울기였습니다. L ≈ 1.5의 양성자 피크
+(AE9/AP9는 Ginet 2013 [`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G), 슬롯은 Ripoll 2016
+[`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R))가 손실원뿔 컷에서 0.23 R_E가 아니라 0.37 R_E
+아래에 있습니다. 목성 내대(피크 1.5–2 R_J, Divine & Garrett 1983)는 2.24입니다. 천왕성이
+바로 하한 규칙이 필요한 사례입니다. 전자 프로파일이 위성이 쓸어낸 극소 사이의 넓은 최대
+(Cheng 1987, [`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C))라 피크가 껍질 핵심으로 읽히는데, 그 핵심은 컷으로
+잘려나가 없으므로 값이 하한인 내대 **1.57**, 외대 **1.85**로 붙습니다. 문자 그대로 핵심을
+피크로 보고 `gradient` 1.0을 넣었다면 벨트가 어디서도 포화하지 못하고 명시 강도의 0.64배로
+돌아갔을 것입니다. 바디별 피크 위치와 출처는
+[`solar-system-radiation-belts.md`](reference__solar-system-radiation-belts.html)에 표로 있습니다.
+
+미리 알아둘 결과가 하나 있습니다. 램프가 이렇게 길면 **완전히 포화한 심부가 얇습니다.**
+자오면 단면에서 재면 지구 외대가 껍질의 9 %, 내대는 1.5 %뿐입니다(스톡 3.3에서는 23 %).
+좁은 실측 피크의 정직한 반영이고 계산 오류가 아니지만, 명시한 `radiation_inner`는 벨트의
+심장 근처에서만 닿는 값이라는 뜻이기도 합니다. 위성들이 받는 선량 사다리는 표제 숫자가 아니라
+SDF에서 읽어야 합니다.
+
+**실제로 발목을 잡는 결합 두 가지.**
+
+- **`gradient` ↔ `*_radius`.** 둘은 `radius/gradient` 비로만 등장하므로, 단면 반경을 다시
+  피팅하면 램프 깊이도 조용히 따라 움직입니다. `fit_belts.py`를 다시 돌렸다면 gradient도
+  다시 구해야 합니다.
+- **`gradient < 1`이면 적어놓은 강도에 끝내 도달하지 못합니다.** clamp가 1에서 잘리고 껍질의
+  가장 깊은 점도 `−SDF = radius`까지밖에 못 가므로, 실현되는 최대 선량은
+  `gradient · radiation_*`입니다. 완만한 프로파일 때문에 `gradient < 1`을 택한다면 강도를 그
+  값으로 나눠 넣어야 최대 선량이 정직해집니다. 그러지 않으면 보드에 적힌 rad/h가 게임이 적용하는
+  값과 다릅니다. (Proxima c 내대의 `gradient 1.9`는 안전 구간이고, 현재 NearStars에 1 미만은
+  없습니다.)
+
+A b 내대 예시. 설계상 피크가 A b II의 L-셸(2.07 R_p)에 있고 SDF로 재면 경계에서 0.70 R_p
+아래이므로, `inner_radius` 1.159와 함께 `gradient` **1.65**가 나옵니다. 보드가 아직 들고 있는
+기본값 3.3보다 훨씬 완만하고, 300 rad/h 전량이 실제로 그 위성이 도는 자리까지 나옵니다.
+
+### 나머지 값들 — 무엇이 정하고, 무엇을 끌고 가는가
+
+도출 순서가 중요합니다. `R_mp` 아래의 모든 값이 자기장이나 항성풍이 바뀌면 함께 바뀌므로,
+단일 필드를 손보는 대신 사슬을 위에서 아래로 다시 돌리십시오.
+
+    B_eq + P_ram  →  R_mp (Part A)  →  pause 필드
+                                   →  벨트 L-셸 경계  →  fit_belts.py  →  벨트 지오메트리
+    공급 − 손실 (Part B) + K–P 천장  →  radiation_inner/outer
+    반경방향 프로파일 모양           →  radiation_*_gradient
+    조화 성분 / 기울기 / offset      →  deform, pole_lat/lon, geomagnetic_offset
+
+| 필드 | 무엇이 정하나 | 도출 | 무엇과 묶이나 |
+|---|---|---|---|
+| `has_pause` | 애초에 가두는지 | `B_eq ≳ 0.1×` 지구 (regime 5는 `false`) | 이게 없으면 벨트도 없음 |
+| `pause_radius` | Part A 노즈 | `R_mp × pause_compression`. 압축은 구 판정 *전에* x에 적용됨 | `pause_compression`. 둘은 함께 다시 구할 것 |
+| `pause_compression` | 주야면 비대칭 | 측면/노즈 비. Shue 등가로 `α = log₂(comp)`이라 ROK 지구 1.5 ⇒ α 0.585 | `pause_radius`, 그리고 아래 Shue `α` |
+| `pause_extension` | 꼬리를 닫는 길이 | `L = pause_radius / extension`. `L`은 lobe 자기장이 GCR에 무의미해지는 거리로(지구 ≈ 200 R_E) | 꼬리 길이만. 노즈는 무관 |
+| `pause_height_scale` | pause의 극방향 편평 | 극 standoff 대 적도 standoff 비(1.0=구, 자이언트 ~1.1) | 독립 |
+| `radiation_pause` | GCR 차폐의 유무 | standoff에 비례하지 **않음**. 스톡에서 ~−0.01로 일정 | 없음(위 정정 참조) |
+| `inner_dist` / `outer_dist` | 벨트 핵심의 L-셸 | 드리프트 셸 `r = L cos²λ`의 `L_core`, `fit_belts.py` 피팅 | `*_radius`·`*_deform_xy`(한 번에 같이 피팅) |
+| `inner_radius` / `outer_radius` | 껍질 두께 | L-셸 띠의 반폭, 같은 피팅 | `gradient`(위의 비) |
+| `*_deform_xy` | 드리프트 셸의 위도방향 눌림 | `cos²λ` 닫힘에서. 적도 범위 = `(dist ± radius)/√deform_xy` | 보고하는 범위값. 프로파일과 비교 전 환산 |
+| `*_border_dist` / `*_border_radius` / `*_border_deform_xy` | 대기 손실원뿔 | 빼내는 껍질. `border_dist ≈ 0`이면 손실원뿔 고도(~1.05 R_p)의 구면 절단으로 퇴화 | 선량 영역의 내측 경계 |
+| `*_compression` / `*_extension` (벨트) | 경계 비대칭이 껍질까지 얼마나 닿는지 | pause 비대칭을 `(r_core/R_mp)³`로 감쇠 — 아래 절 | `pause_compression`·`pause_extension`, `R_mp` |
+| `*_deform` | 비쌍극 요철 | SDF에 더하는 진폭(바디 반경 단위)이라 경계가 최대 ±A만큼 흔들림. ROKerbalism 앵커(`mercury`/`irregular` 0.1, `metallic`/`solidiron`/`anomaly` 0.04–0.1) | 요철의 *크기*는 아래 미구현 `*_deform_scale`이 정함 |
+| `radiation_inner` / `radiation_outer` | Part B regime call | 공급 − 손실, K–P 상한. `scripts/refs/kp_limit.py`로 검산 | `gradient`가 1 미만일 때 |
+| `radiation_*_gradient` | 반경방향 프로파일 모양 | `*_radius / d*`(위) | `*_radius` |
+| `geomagnetic_pole_lat` / `_lon` | 쌍극 기울기 | `lat = 90° − magnetic_dipole_tilt_deg`. 역전 쌍극은 부호가 따라감(목성 −80) | aurora 행의 오벌 편심 |
+| `geomagnetic_offset` | 쌍극 중심의 이동 | 자기축 방향 이동거리 / R_p (수성 0.198, 천왕성 0.3, 해왕성 0.55). `deform`과 달리 축대칭 유지 | 벨트도 함께 이동. `deform`과 이중계상 금지 |
+| `*_quality` | 레이마치 스텝 수 | 렌더 전용, 물리 없음 | 없음 |
+| `radiation_surface` | 항성 레벨 필드 | **항성 전용**. 행성 표면 선량은 여기 없음(그 사슬은 `surface-radiation-dose-methodology.md`) | 없음 |
+
+### 벨트 `*_compression` / `*_extension` — 경계의 비대칭을 안쪽으로 감쇠시켜 상속
+
+벨트 껍질은 자기권계면도 아니고 원도 아닙니다. 둘 사이에 있으니, 정직한 질문은 경계의 주야
+비대칭이 그 껍질까지 **얼마나** 닿느냐입니다. 답은 두 극한이 고정합니다.
+
+- 깊은 안쪽(`r ≪ R_mp`)은 왜곡되지 않은 쌍극장이라 껍질이 **대칭**입니다. `compression =
+  extension = 1`.
+- 경계에서는 껍질이 곧 경계이므로 pause의 비대칭을 그대로 가집니다. 그 바깥에서는 드리프트
+  셸이 갈라지고 열립니다(Pfitzer 1969, [`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P); Öztürk & Wolf 2007,
+  [`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)).
+
+두 극한 사이의 가중치는 그 반경에서의 **외부(경계전류) 자기장 대 쌍극장 비**입니다.
+Chapman–Ferraro 전류는 내부 영역에 거의 균일한 자기장을 만들고 그 크기가 경계에서의 쌍극장
+정도인데, 이것이 Part A가 이미 쓰고 있는 `f ≈ 2` 배가와 같은 이야기입니다. 그래서
+
+    ε(r) = ( r / R_mp )³ ,      r_core = *_dist / √(*_deform_xy)
+
+이고, 껍질은 pause 왜곡의 그 비율만큼을 물려받습니다.
+
+    *_compression = 1 + ε · (pause_compression − 1)
+    *_extension   = 1 − ε · (1 − pause_extension)
+
+ε는 껍질의 **핵심 원**에서 계산하십시오. 바깥 에지가 아닙니다. Kerbalism은 껍질 전체에 x-스케일
+하나만 적용하고, 핵심이 선량 피크와 껍질의 대표 L을 함께 들고 있으므로 핵심 값이 껍질 평균에
+해당합니다. 에지 값은 상한으로 함께 계산해 둘 만합니다. 지구 외대는 핵심 `ε 0.05`에 에지
+`ε 0.35`인데, 이 차이가 "껍질당 스케일 하나"라는 Kerbalism 설계가 강요하는 근사의 크기입니다.
+
+왜곡의 형태에 대한 근거는 Mead 1964([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M))입니다. Chapman–Ferraro 해는
+주간면과 야간면 **양쪽** 자기력선을 압축하고, 주야 비대칭 자체는 위성 관측으로 정량화된 분산
+전류에서 나옵니다(Mead & Fairfield 1975, [`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)). 채택한 pause 형상으로
+보간하는 것은 그 비대칭 항의 대리이지 도출이 아니므로 이 레시피는 **중저 신뢰**입니다. 다만
+양 끝이 고정되어 있고, 이전의 복사한 상수를 대체합니다. Mead의 *수치*는 정량 작업에서는
+위성 피팅 Tsyganenko 계열(T02, [`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T))로 오래전에 대체됐습니다. 보간보다
+정확해야 할 일이 생기면 ansatz를 다듬는 대신 T 계열 자기장을 피팅해 셸 비대칭을 직접 읽는
+것이 정답입니다.
+
+**검증.** 이 레시피는 ROKerbalism 가니메데의 벨트 compression 1.05를 알려주지 않았는데
+되찾아옵니다(핵심 `ε` 0.139. 임베디드 위성은 벨트가 2 R_moon 짜리 standoff의 큰 몫을 채우기
+때문입니다). 지구 내대의 거의 대칭인 상태도 재현합니다(배포값 1.01에 대해 1.001). 정지궤도에서는
+`ε` 0.29로 야간면이 1.36배 늘어나는데, 잘 알려진 그곳의 주야 비대칭과 같은 급입니다. 어긋나는
+쪽이 오히려 유익합니다. 자이언트의 배포값 1.05 / 0.9는 도달 불가입니다. 63 R_J standoff 안의
+8 R_J 벨트는 `ε`이 0.002이니, 그 숫자는 물리가 아니라 연출입니다. 이 항이 실제로 무는 바디는
+눌린 쪽입니다. **Proxima d**(외대 `ε` 0.107 → 1.05 / 0.90. 지금 들고 있는 값은 지구에서 복사한
+1.01 / 1.0)와 임베디드 위성 가니메데·A b III(`ε` 0.099 → 1.015 / 0.96)입니다.
+
+재현성을 지키는 습관 두 가지. 벨트 지오메트리는 손으로 맞추지 말고 `fit_belts.py`로 구하십시오
+(실제 SDF에 대해 IoU를 최적화하므로 적어 넣는 숫자가 엔진이 렌더하는 숫자와 같아집니다). 그리고
+출력값 옆에 **입력값**(`B_eq`, `P_ram`, `L` 경계, 공급항)을 보드에 함께 남기십시오. 위 필드는
+전부 물리량 네댓 개의 하류입니다.
+
+### ⚗ 아직 없는 필드 — KerbalismShuePause 플러그인
+
+벨트 뷰어가 노출하는 손잡이 셋은 **현재 배포된 어떤 Kerbalism도 읽지 않습니다.** 값은 지금
+구해서 기록해 두고, 인하우스 Harmony 2 패치(또는 업스트림 PR)를 기다립니다. 기각한 대안까지
+포함한 브리프는
+`plugins/KerbalismShuePause/README.md`입니다.
+파이프라인 규율은 이렇습니다. emitter는 이들을 `PENDING_MODEL_KEYS`에 두고 cfg 줄로 **절대**
+쓰지 않으며, 뷰어는 `⚗`로 표시하고 주석으로만 내보내며, 보드는 미사용 표시를 달아 값을 실을
+수 있습니다. 도출은 한 번만 하고, 플러그인이 오기 전까지 게임은 스톡 거동을 렌더합니다.
+
+**`*_deform_scale`** (`pause_`/`inner_`/`outer_`). Kerbalism의 deform은 SDF에
+`sin(x·5)·sin(y·7)·sin(z·6)·A`를 더합니다. 진폭 `A`는 조절되지만 파수가 하드코딩이라 요철이
+*얼마나 큰지*는 정할 수 없습니다. 수성 수준인 standoff 1.54 R_p에서 저 파수는 경계에 8–11개
+lobe를 만드는데, dynamo 레시피가 실제로 내놓는 다극장보다 훨씬 잘게 쪼갠 값입니다. scale은 그
+파수에 걸리는 배수이고(`1.0`이 스톡과 완전히 동일하므로 배포된 cfg는 하나도 바뀌지 않습니다),
+보기 좋게 고르는 값이 아니라 자기장에서 나옵니다.
+
+    k = ℓ / R_mp                deform_scale = k / 5
+
+`ℓ`은 그 자기장의 지배적 구면조화 차수입니다(dynamo 레시피의 regime call에서 옵니다). `ℓ = 4`
+까지 파워가 있는 dynamo가 `R_mp` 1.54에 있으면 `k ≈ 2.6`, 즉 `deform_scale ≈ 0.52`입니다.
+진폭과 scale은 서로 독립입니다. `A`는 경계가 얼마나 멀리 흔들리는지, scale은 몇 개의 lobe로
+흔들리는지입니다.
+
+**Shue 기반 pause** (`pause_shue`, `pause_nose` = r0, `pause_alpha` = α, `pause_tail` = L).
+Kerbalism의 pause는 구를 x방향으로 구간별 스케일한 것이라 노즈가 지나치게 뭉툭하고, 최대
+단면이 바디 평면에 못 박히며, 꼬리가 방추형으로 닫힙니다. Shue et al. 1997/1998
+([`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S) / [`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S))이 물리량 둘로 하는 일을 결합된 필드
+셋으로 대신하는 셈입니다. 채택한 형태는 이음매 없는 C∞ 닫힌 곡선 하나인 **연화 Shue**입니다.
+
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α        ε = 1 / ( (L/r0)^(1/α) − 1 )
+
+`ε → 0`이면 정확한 Shue로 돌아가고, `ε > 0`이면 `r(180°) = L`에서 기울기 0으로 꼬리가 닫히며
+어디에도 이음매가 없습니다. 세 필드의 도출은 이렇습니다. **r0**은 Part A의 Chapman–Ferraro
+노즈를 그대로 씁니다(압축비로 인코딩하지 않습니다). **α**는 Shue 98의 램압력·IMF `Bz` 적합에서
+나오고, 조용한 항성풍 기본값이 0.58입니다(`α ≥ 0.5`는 본질적으로 열린 꼬리라는 뜻이고, 닫는
+일은 α가 아니라 `ε` 항의 몫입니다). **L**은 lobe 자기장이 GCR에 무의미해지는 거리입니다.
+기존 필드에서의 환산은 별도 비용이 없습니다. `α = log₂(compression)`, `r0 = pause_radius / compression`,
+`L = pause_radius / extension`. 다만 이 환산이 형상을 보존하는 것은 지구형 cfg뿐입니다. RSS
+목성의 `compression` 1.05는 α 0.07로 환산되어 주야면이 비물리적으로 구에 가까워지므로,
+자이언트는 환산 후 α를 다시 조율해야 합니다.
+
+**`pause_offset`**은 전체 Shue 모드가 기각될 때의 값싼 대안입니다. 스케일 전에 구의 중심을
+꼬리쪽으로 옮기면(`p.x += pause_offset`) "최대 폭이 바디 평면에 박힌다"는 결함이 한 줄로
+고쳐집니다. Proxima c의 연화 Shue 곡선(노즈 11.905, α 0.5, 꼬리 125)에 최소제곱으로 맞추면
+`pause_offset` 19.7 / radius 21.5 / compression 0.68 / extension 0.204가 노즈, 바디 평면 폭,
+최대 폭, 꼬리 닫힘을 모두 수 % 안에서 재현합니다. 배포된 스톡·ROKerbalism pause는 전부 같은
+방식으로 꼬리 폭을 과소평가하므로(지구는 측면 15인데 관측된 꼬리 반경이 25–30 R_E), 이건
+NearStars만의 문제가 아닙니다.
+
 ## Part D — 위성 ↔ 모행성 상호작용 (임베디드 자기권)
 
 거대행성 자기권 *안*을 도는 위성은 NearStars에서 흔한 경우입니다(A b 위성 전부).
@@ -1080,6 +1551,23 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
 - **Divine & Garrett 1983**, JGR 88, 6889 ([`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)); **Bagenal 1994**,
   JGR 99, 11043 ([`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B)). 목성 방사선 + Io 내부 플라스마원 — "강도는 場이
   아니라 공급원이 정한다"의 canonical 사례.
+- **Ripoll et al. 2016**, GRL 43, 5616 ([`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)); **Cheng et al. 1987**, JGR 92,
+  15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). 각 벨트의 플럭스가 실제로 어디서 최대인지. 지구 내대 피크와
+  슬롯, 천왕성의 위성-소거 극소 사이 넓은 최대. `radiation_*_gradient` 레시피가 `d*`를 읽어오는
+  프로파일 형상이 이들입니다.
+- **Ginet et al. 2013**, SSRv 179, 579 ([`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G)). AE9/AP9/SPM, 현행 표준
+  포획입자 플럭스 규격이며 AE8/AP8의 후속. 지구의 반경방향 프로파일은 여기서 읽습니다. "AP9"라고
+  뭉개지 말고 이 논문을 인용할 것.
+- **Mead 1964**, JGR 69, 1181 ([`1964JGR....69.1181M`](https://ui.adsabs.harvard.edu/abs/1964JGR....69.1181M)); **Mead & Fairfield 1975**, JGR 80,
+  523 ([`1975JGR....80..523M`](https://ui.adsabs.harvard.edu/abs/1975JGR....80..523M)); **Tsyganenko 2002**, JGRA 107, 1179
+  ([`2002JGRA..107.1179T`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1179T)). 경계전류가 내부 자기장을 어떻게 변형하는지. Mead는
+  Chapman–Ferraro 해의 형태(주간·야간 양쪽 압축), Mead & Fairfield는 이론이 과소평가한 분산 전류,
+  Tsyganenko는 현행 정량 표준입니다. Mead의 *서술*은 오늘도 canonical로 인용되지만 *계수*는 T 계열로
+  대체됐습니다. 벨트 `*_compression`/`*_extension` 레시피의 근거입니다.
+- **Pfitzer et al. 1969**, JGR 74, 4687 ([`1969JGR....74.4687P`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.4687P)); **Öztürk & Wolf 2007**,
+  JGRA 112, A07207 ([`2007JGRA..112.7207O`](https://ui.adsabs.harvard.edu/abs/2007JGRA..112.7207O)). 왜곡된 자기권에서의 드리프트 셸 분열. 관측으로
+  확인된 뒤 주간면 자기권계면 근처에서 매핑됐습니다. 비대칭 레시피의 바깥 한계, 즉 셸이 더는 닫힌
+  면이 아니게 되는 지점입니다.
 - **Thorne 2010**, GRL 37, L22107 ([`2010GeoRL..3722107T`](https://ui.adsabs.harvard.edu/abs/2010GeoRL..3722107T)); **Ripoll et al. 2020**,
   JGRA 125, e26735 ([`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)). 파동–입자 가속·손실; 현대 벨트 동역학 리뷰.
 - **Cooper 1983**, JGR 88, 3945 ([`1983JGR....88.3945C`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.3945C)). 벨트 손실로서의 고리/위성 흡수 —
