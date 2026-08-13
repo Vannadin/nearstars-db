@@ -19,7 +19,8 @@
   --w-fg3: rgba(255,255,255,.72); --w-fg4: rgba(255,255,255,.50);
   --w-s1: rgba(255,255,255,.014); --w-s2: rgba(255,255,255,.05);
   --w-bd: rgba(255,255,255,.07);
-  --w-on-bg: rgba(122,168,255,.18); --w-on-fg: #aac8ff }
+  --w-on-bg: rgba(122,168,255,.18); --w-on-fg: #aac8ff;
+  --w-code: rgba(255,255,255,.86) }
 /* 라이트 테마 — 브라우저 설정을 따른다 (마크다운 본문은 github-markdown-light 가 담당) */
 @media (prefers-color-scheme: light) {
   html.ns-light-ok {
@@ -31,7 +32,8 @@
     --w-fg3: rgba(9,12,22,.76); --w-fg4: rgba(9,12,22,.62);
     --w-s1: rgba(12,17,34,.022); --w-s2: rgba(12,17,34,.055);
     --w-bd: rgba(12,17,34,.10);
-    --w-on-bg: rgba(17,78,221,.13); --w-on-fg: #0a3fb0 }
+    --w-on-bg: rgba(17,78,221,.13); --w-on-fg: #0a3fb0;
+    --w-code: rgba(9,12,22,.86) }
 }
 * { box-sizing: border-box }
 body { margin: 0;
@@ -70,7 +72,7 @@ html[lang="ko"] .l-ko { display: inline }
 .markdown-body h1 { border-bottom: 2px solid rgba(255,255,255,.09) }
 .markdown-body h2 { border-bottom: 1px solid rgba(255,255,255,.09); margin-top: 28px }
 .markdown-body a { color: #7aa8ff }
-.markdown-body code { color: rgba(255,255,255,.86) }
+.markdown-body code { color: var(--w-code) }   /* 라이트에서 흰 글자로 남던 버그 */
 @media (max-width: 767px) {
   .layout { flex-direction: column }
   /* 사이드바를 세로로 다 펼치면 문서 59개가 본문 앞을 막는다 → 자체 스크롤 영역으로 */
@@ -173,8 +175,8 @@ html[lang="ko"] .l-ko { display: inline }
 <a class="nav-i" href="guide__viewers.html"><span class="l-en">Viewers Gallery</span><span class="l-ko">뷰어 갤러리</span></a>
 <div class="nav-grp"><span class="l-en">Methodology</span><span class="l-ko">방법론</span></div>
 <a class="nav-i" href="reference__atmosphere-reflected-color-methodology.html"><span class="l-en">Atmosphere Reflected-Color Methodology: Composition → Spectrum → sRGB</span><span class="l-ko">대기 반사색 방법론: 조성 → 스펙트럼 → sRGB</span></a>
-<a class="nav-i" href="reference__body-figure-methodology.html">Body figure grounding: rotational oblateness (J₂) and tidal triaxiality (C₂₂)</a>
-<a class="nav-i" href="reference__cassini-state-obliquity-methodology.html">Cassini-state obliquity: equilibrium spin-axis tilt of a damped body</a>
+<a class="nav-i" href="reference__body-figure-methodology.html"><span class="l-en">Body figure grounding: rotational oblateness (J₂) and tidal triaxiality (C₂₂)</span><span class="l-ko">천체 형상 근거화: 자전 편평도(J₂)와 조석 삼축성(C₂₂)</span></a>
+<a class="nav-i" href="reference__cassini-state-obliquity-methodology.html"><span class="l-en">Cassini-state obliquity: equilibrium spin-axis tilt of a damped body</span><span class="l-ko">카시니 상태 자전축 기울기: 감쇠된 천체의 평형 기울기</span></a>
 <a class="nav-i" href="reference__crater-degradation-methodology.html"><span class="l-en">Crater degradation grounding: how long a crater survives each resurfacing process</span><span class="l-ko">크레이터 풍화 근거화: 각 재포장 과정이 크레이터를 지우는 데 걸리는 시간</span></a>
 <a class="nav-i" href="reference__debris-disk-color-methodology.html"><span class="l-en">Debris-Disk Color Methodology: Composition + Grain Size → Mie Scattering → Reflectance → sRGB</span><span class="l-ko">Debris-Disk Color Methodology: 조성 + 입자 크기 → Mie 산란 → reflectance → sRGB</span></a>
 <a class="nav-i" href="reference__emit-orbit-phase-match-methodology.html"><span class="l-en">Observation-anchored emit orbital phase: sky-PA match + epoch rewind</span><span class="l-ko">관측 앵커 기반 emit 궤도 위상: 하늘 PA 정합 + 에포크 되감기</span></a>
@@ -201,11 +203,11 @@ html[lang="ko"] .l-ko { display: inline }
 <div class="nav-grp"><span class="l-en">Engine &amp; mods</span><span class="l-ko">엔진·모드</span></div>
 <a class="nav-i" href="reference__body-tree-spec.html"><span class="l-en">Body-Tree Spec — Sun-rooted, stars as direct children</span><span class="l-ko">Body-Tree Spec — Sun에 뿌리를 둔, 별들이 직속 자식인 구조</span></a>
 <a class="nav-i" href="reference__ksp-modding-sources.html"><span class="l-en">KSP Modding — Authoritative Source Index</span><span class="l-ko">KSP 모딩 — 권위 자료 색인</span></a>
-<a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
+<a class="nav-i" href="reference__mod-reference.html"><span class="l-en">NearStars — Mod Reference</span><span class="l-ko">NearStars 모드 설치 레퍼런스</span></a>
 <a class="nav-i" href="reference__mod-release-layout.html"><span class="l-en">NearStars Mod-Release Repo Layout</span><span class="l-ko">NearStars 모드 릴리즈 저장소 레이아웃</span></a>
 <a class="nav-i" href="reference__mod-title-candidates.html"><span class="l-en">NearStars — mod title (Latin motto) candidates</span><span class="l-ko">NearStars — 모드 제목(라틴어 표어) 후보</span></a>
 <a class="nav-i on" href="reference__nearstars-plugin-grounding.html"><span class="l-en">NearStars — Plugin Grounding Map</span><span class="l-ko">NearStars — 플러그인 근거화 지도</span></a>
-<a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
+<a class="nav-i" href="reference__planet-pack-techniques.html"><span class="l-en">Planet-Pack Visual Techniques — Reference Mining</span><span class="l-ko">행성팩 시각 기법 — 레퍼런스 마이닝</span></a>
 <a class="nav-i" href="reference__principia-cfg-reference.html"><span class="l-en">Principia CFG Technical Reference</span><span class="l-ko">Principia CFG 기술 참조</span></a>
 <a class="nav-i" href="reference__principia-geopotential-data.html"><span class="l-en">Principia Geopotential Data — Solar System Bodies (verbatim)</span><span class="l-ko">Principia 지오포텐셜 데이터 — 태양계 천체 (원본 그대로)</span></a>
 <a class="nav-i" href="reference__rex-data-comparison.html"><span class="l-en">REX vs NearStars Data Comparison</span><span class="l-ko">REX vs NearStars 데이터 비교</span></a>
@@ -214,26 +216,18 @@ html[lang="ko"] .l-ko { display: inline }
 <div class="nav-grp"><span class="l-en">Pipeline &amp; data</span><span class="l-ko">파이프라인·데이터</span></div>
 <a class="nav-i" href="reference__adding_stars.html"><span class="l-en">Adding Stars to the NearStars Database</span><span class="l-ko">NearStars 데이터베이스에 별 추가하기</span></a>
 <a class="nav-i" href="reference__archive_issues.html"><span class="l-en">NASA Exoplanet Archive Data Issues</span><span class="l-ko">NASA Exoplanet Archive 데이터 이슈</span></a>
-<a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__binary-epoch-pipeline.html"><span class="l-en">Binary / Multiple Star Epoch Pipeline Reference</span><span class="l-ko">다성계 에포크 파이프라인 레퍼런스</span></a>
 <a class="nav-i" href="reference__data-sources.html"><span class="l-en">Data Sources and Attribution</span><span class="l-ko">데이터 출처 및 저작권 표기</span></a>
 <a class="nav-i" href="reference__guideline.html"><span class="l-en">Nearby Star Systems KSP Mod — Project Guideline</span><span class="l-ko">근접 항성계 KSP 모드 — 프로젝트 가이드라인</span></a>
 <a class="nav-i" href="reference__pipeline-contract.html"><span class="l-en">NearStars Pipeline Contract — Phases, Interfaces, Gates</span><span class="l-ko">NearStars 파이프라인 계약 — 단계, 인터페이스, 게이트</span></a>
 <a class="nav-i" href="reference__site-map.html"><span class="l-en">Site map: the published doc surface</span><span class="l-ko">사이트맵: 발행 문서 표면</span></a>
 <a class="nav-i" href="reference__tools.html"><span class="l-en">Tools — NearStars</span><span class="l-ko">툴 목록 — NearStars</span></a>
 <div class="nav-grp"><span class="l-en">Reference</span><span class="l-ko">레퍼런스</span></div>
-<a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
+<a class="nav-i" href="reference__color-materials.html"><span class="l-en">Color materials &amp; the plausibility gate</span><span class="l-ko">색 재질과 개연성 게이트</span></a>
 <a class="nav-i" href="reference__cultural-context.html"><span class="l-en">Cultural context — NS systems in science fiction</span><span class="l-ko">Cultural context — NS 시스템의 사이파이 레퍼런스</span></a>
 <a class="nav-i" href="reference__element-plasma-colors.html"><span class="l-en">Element plasma colors</span><span class="l-ko">원소별 플라즈마 색상</span></a>
 <a class="nav-i" href="reference__lism-kinematics.html"><span class="l-en">Local Interstellar Medium kinematics &amp; the heliosphere/ISM-wind viewer</span><span class="l-ko">국부 성간물질(LISM) 운동학과 태양권/성간풍 뷰어</span></a>
 <a class="nav-i" href="reference__solar-system-radiation-belts.html"><span class="l-en">Solar-System radiation belts: stock Kerbalism cfg vs the physics</span><span class="l-ko">태양계 방사선대: 스톡 Kerbalism cfg vs 실제 물리</span></a>
-<div class="nav-grp"><span class="l-en">Plans</span><span class="l-ko">기획</span></div>
-<a class="nav-i" href="plans__derived-value-grounding-audit.html">Derived-Value Grounding Audit (retroactive, 2026-06-20)</a>
-<a class="nav-i" href="plans__doc-tool-sprawl-audit.html"><span class="l-en">Doc / tool sprawl audit — findings + lifecycle-gate plan</span><span class="l-ko">문서 / 툴 난립 감사 — 발견 + 라이프사이클 게이트 플랜</span></a>
-<a class="nav-i" href="plans__nearby-field-viewer.html"><span class="l-en">All stars within 50 ly — full markers (uncurated) — viewer plan</span><span class="l-ko">50 ly 이내 모든 별 — 풀 마커(큐레이션 없음) — 뷰어 계획</span></a>
-<a class="nav-i" href="plans__paper-scoping.html"><span class="l-en">NearStars paper — scoping note (exploration phase)</span><span class="l-ko">NearStars 논문화 — 스코핑 노트 (탐색 단계)</span></a>
-<a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html"><span class="l-en">Stellarium vs NearStars binary-orbit pipeline comparison</span><span class="l-ko">Stellarium vs NearStars 다성계 궤도 파이프라인 비교</span></a>
-<a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html"><span class="l-en">Universe Sandbox vs Principia n-body engine comparison</span><span class="l-ko">Universe Sandbox vs Principia n-body 엔진 비교</span></a>
-<a class="nav-i" href="plans__viewer-optimization.html"><span class="l-en">3D Star-Map Viewer — recap + optimization plan</span><span class="l-ko">3D 성도 뷰어 — 정리(recap) + 최적화 계획</span></a>
 </nav>
 <div class="content-wrap">
   <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>

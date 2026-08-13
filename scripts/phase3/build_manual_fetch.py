@@ -206,7 +206,7 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
 
 .mft { width: 100%; border-collapse: collapse; font-size: 12px; margin: 4px 0 12px }
 .mft th { padding: 7px 9px; background: var(--bg-card-alt); color: var(--fg-dim); font-size: 11px; text-transform: uppercase; text-align: left; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid var(--bd-strong) }
-.mft td { padding: 6px 9px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); vertical-align: top; line-height: 1.5 }
+.mft td { padding: 6px 9px; border-top: 1px solid var(--bd-soft); color: var(--fg-code); vertical-align: top; line-height: 1.5 }
 .mft td.bib { font-family: var(--mono); font-size: 11px; white-space: nowrap }
 .mft td.bib a { color: var(--accent); text-decoration: none }
 .mft td.bib a:hover { text-decoration: underline }

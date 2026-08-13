@@ -1,4 +1,4 @@
-# reference/plans 산문 문서를 GitHub 스타일 HTML 뷰어로 빌드 (preview-md.sh + 한/영 토글 + 사이드바)
+# guide/reference 산문 문서를 GitHub 스타일 HTML 뷰어로 빌드 (preview-md.sh + 한/영 토글 + 사이드바)
 """Build a sidebar-navigated static doc site, matching the local preview viewer.
 
 This mirrors scripts/preview-md.sh exactly: client-side rendering via
@@ -7,15 +7,17 @@ It deliberately does NOT pull in the DB site's design (style.css) — that
 broke tables and re-skinned the docs. The only additions over the local
 preview are a 한/EN toggle and a left sidebar.
 
-Covers docs/reference/*.md (+ ko/ mirrors) and plans/*.md (+ ko/plans/
-mirrors). Each page embeds the raw markdown for each available language
+Covers docs/guide/*.md and docs/reference/*.md (+ ko/ mirrors). `plans/` is
+deliberately NOT published — planning notes stay internal repo documents, and
+links to them fall through to the GitHub file view. Each page embeds the raw
+markdown for each available language
 and marked renders the selected one client-side — no server-side parser,
 so every GFM feature (tables included) renders correctly.
 
 Outputs under docs/wiki/:
   - index.html                 # docs hub
+  - guide__<slug>.html
   - reference__<slug>.html
-  - plans__<slug>.html
 
 Usage: python3 scripts/build_docs.py
 
@@ -96,7 +98,12 @@ def _rewrite_links(md: str, src_dir: Path) -> str:
             out = _LINK_MAP.get(Path(base).stem)
             if out:
                 return f'[{text}]({out}{suffix})'
-            return text  # unbuilt internal .md → de-link
+            # 발행하지 않는 내부 문서(plans/ 등)는 저장소 파일 뷰로 보낸다
+            resolved_md = (src_dir / base).resolve()
+            if resolved_md.exists() and resolved_md.is_relative_to(REPO):
+                rel = resolved_md.relative_to(REPO).as_posix()
+                return f'[{text}]({GH_BLOB}{rel}{suffix})'
+            return text  # 존재하지 않는 내부 .md → de-link
         resolved = (src_dir / base).resolve()
         if not resolved.exists():
             return m.group(0) if not base.endswith('.html') else text
@@ -151,7 +158,7 @@ def _ref_group(slug: str) -> str:
 
 def collect_docs() -> dict[str, list[dict]]:
     groups: dict[str, list[dict]] = {'guide': [], 'methodology': [], 'engine': [],
-                                     'pipeline': [], 'reference': [], 'plans': []}
+                                     'pipeline': [], 'reference': []}
 
     # docs/guide/ = 독자용 안내 문서(개요·설치·FAQ·항성계 소개…). reference 와 섞으면
     # _ref_group 이 파일명만 보고 'Reference' 로 분류해 실제 레퍼런스를 묻어버린다.
@@ -171,15 +178,8 @@ def collect_docs() -> dict[str, list[dict]]:
         groups[_ref_group(slug)].append({'slug': slug, 'out': out, 'en': md,
                                          'ko': ko if ko.exists() else None})
 
-    for md in sorted((REPO / 'plans').glob('*.md')):
-        if md.stem in {'_template', 'README'}:
-            continue
-        slug = md.stem
-        ko = REPO / 'ko' / 'plans' / f'{slug}.md'
-        out = f'plans__{slug}.html'
-        _LINK_MAP[slug] = out
-        groups['plans'].append({'slug': slug, 'out': out, 'en': md,
-                                'ko': ko if ko.exists() else None})
+    # plans/ 는 발행하지 않는다 (오너 결정 2026-08-13: 기획 노트는 내부 문서).
+    # 저장소에는 그대로 남고, 본문에서 걸린 링크는 GitHub blob 으로 떨어진다.
 
     return groups
 
@@ -195,7 +195,7 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
     # 문서 제목은 각 언어 파일의 H1 에서 오므로 별도 번역표가 없다(미러 없으면 양쪽 동일).
     labels = {'guide': ('Guide', '안내'), 'methodology': ('Methodology', '방법론'),
               'engine': ('Engine & mods', '엔진·모드'), 'pipeline': ('Pipeline & data', '파이프라인·데이터'),
-              'reference': ('Reference', '레퍼런스'), 'plans': ('Plans', '기획')}
+              'reference': ('Reference', '레퍼런스')}
 
     def bi(en: str, ko: str) -> str:
         if en == ko:
@@ -203,7 +203,7 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
         return (f'<span class="l-en">{html.escape(en)}</span>'
                 f'<span class="l-ko">{html.escape(ko)}</span>')
 
-    for g in ('guide', 'methodology', 'engine', 'pipeline', 'reference', 'plans'):
+    for g in ('guide', 'methodology', 'engine', 'pipeline', 'reference'):
         rows.append(f'<div class="nav-grp">{bi(*labels[g])}</div>')
         for d in groups[g]:
             cls = 'nav-i on' if d['out'] == active else 'nav-i'
@@ -223,7 +223,8 @@ _CSS = """
   --w-fg3: rgba(255,255,255,.72); --w-fg4: rgba(255,255,255,.50);
   --w-s1: rgba(255,255,255,.014); --w-s2: rgba(255,255,255,.05);
   --w-bd: rgba(255,255,255,.07);
-  --w-on-bg: rgba(122,168,255,.18); --w-on-fg: #aac8ff }
+  --w-on-bg: rgba(122,168,255,.18); --w-on-fg: #aac8ff;
+  --w-code: rgba(255,255,255,.86) }
 /* 라이트 테마 — 브라우저 설정을 따른다 (마크다운 본문은 github-markdown-light 가 담당) */
 @media (prefers-color-scheme: light) {
   html.ns-light-ok {
@@ -235,7 +236,8 @@ _CSS = """
     --w-fg3: rgba(9,12,22,.76); --w-fg4: rgba(9,12,22,.62);
     --w-s1: rgba(12,17,34,.022); --w-s2: rgba(12,17,34,.055);
     --w-bd: rgba(12,17,34,.10);
-    --w-on-bg: rgba(17,78,221,.13); --w-on-fg: #0a3fb0 }
+    --w-on-bg: rgba(17,78,221,.13); --w-on-fg: #0a3fb0;
+    --w-code: rgba(9,12,22,.86) }
 }
 * { box-sizing: border-box }
 body { margin: 0;
@@ -274,7 +276,7 @@ html[lang="ko"] .l-ko { display: inline }
 .markdown-body h1 { border-bottom: 2px solid rgba(255,255,255,.09) }
 .markdown-body h2 { border-bottom: 1px solid rgba(255,255,255,.09); margin-top: 28px }
 .markdown-body a { color: #7aa8ff }
-.markdown-body code { color: rgba(255,255,255,.86) }
+.markdown-body code { color: var(--w-code) }   /* 라이트에서 흰 글자로 남던 버그 */
 @media (max-width: 767px) {
   .layout { flex-direction: column }
   /* 사이드바를 세로로 다 펼치면 문서 59개가 본문 앞을 막는다 → 자체 스크롤 영역으로 */

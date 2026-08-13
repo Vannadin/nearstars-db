@@ -210,7 +210,8 @@ def _rewrite_md_href(href: str) -> str:
 
     - sibling phase-3 doc (bare ``slug.md``)  -> ``slug.html`` (same dir)
     - reference doc (``.../reference/slug.md``) -> ``../wiki/reference__slug.html``
-    - plan doc (``.../plans/slug.md``)          -> ``../wiki/plans__slug.html``
+    - plan doc (``.../plans/slug.md``)          -> the GitHub file view
+      (plans/ is unpublished by owner decision 2026-08-13 — internal notes)
     http/anchor/non-.md targets are returned unchanged.
     """
     if href.startswith(('http://', 'https://', '#', 'mailto:')):
@@ -223,7 +224,7 @@ def _rewrite_md_href(href: str) -> str:
     if '/reference/' in base:
         return f'../wiki/reference__{stem}.html{frag}'
     if '/plans/' in base:
-        return f'../wiki/plans__{stem}.html{frag}'
+        return f'https://github.com/Vannadin/nearstars-db/blob/main/plans/{stem}.md{frag}'
     if '/' not in base:                       # bare sibling in docs/phase3/
         return f'{stem}.html{frag}'
     return href

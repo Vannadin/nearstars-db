@@ -1,4 +1,4 @@
-# Binary / Multiple Star Epoch Pipeline Reference
+# 다성계 에포크 파이프라인 레퍼런스
 
 > 출처: mockingbirdnest/Principia, RSS-Reborn/Sol-Configs,
 > CharonSSS/RSS-Origin-2 (v1.0.0, 2026-05-21), USNO/GSU orb6 카탈로그,

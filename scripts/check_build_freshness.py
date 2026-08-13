@@ -173,9 +173,9 @@ except Exception as e:
 
 
 # 7. docs/wiki/*.html freshness vs its markdown source
-#    The project publishes two wikis: the GitHub-repo wiki (separate git repo) and the
-#    Pages-side mirror under docs/wiki/, generated from docs/reference/*.md + plans/*.md
-#    by build_docs.py. Editing a reference doc without rerunning that builder leaves the
+#    Publishing lives on Pages under docs/wiki/, generated from docs/guide/*.md and
+#    docs/reference/*.md by build_docs.py. (plans/ is deliberately unpublished — owner
+#    decision 2026-08-13, planning notes stay internal.) Editing a reference doc without rerunning that builder leaves the
 #    published page silently showing the old text — how the methodology doc's Part C
 #    additions sat unpublished on 2026-08-13.
 wiki_dir = DOCS / "wiki"
@@ -184,7 +184,7 @@ if not wiki_dir.exists():
 else:
     stale_wiki = []
     SKIP = {"_template", "README"}          # build_docs.py 도 이 둘은 발행하지 않는다
-    for src, prefix in ((DOCS / "reference", "reference__"), (ROOT / "plans", "plans__")):
+    for src, prefix in ((DOCS / "guide", "guide__"), (DOCS / "reference", "reference__")):
         for md in src.glob("*.md"):
             if md.stem in SKIP:
                 continue

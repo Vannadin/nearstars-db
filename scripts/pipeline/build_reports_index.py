@@ -185,7 +185,7 @@ main { max-width: 980px }
 .rfilter input { flex: 1; min-width: 180px; background: var(--bg-input); border: 1px solid var(--bd-input); border-radius: 6px; color: var(--fg-primary); font: 13px var(--sans); padding: 6px 11px }
 .rfilter input::placeholder { color: var(--fg-dim) }
 .rfilter .count { color: var(--fg-dim); font-size: 12px; font-family: var(--mono); white-space: nowrap }
-.rt td { padding: 8px 12px; border-top: 1px solid var(--bd-soft); color: rgba(255,255,255,.72); font-family: var(--mono); font-size: 12.5px; vertical-align: top }
+.rt td { padding: 8px 12px; border-top: 1px solid var(--bd-soft); color: var(--fg-code); font-family: var(--mono); font-size: 12.5px; vertical-align: top }
 .rt td.sys { font-family: var(--sans); color: var(--fg-emph); font-weight: 600 }
 .rt a { color: var(--accent) }
 .rt a:hover { text-decoration: underline }

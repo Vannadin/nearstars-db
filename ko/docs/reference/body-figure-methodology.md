@@ -1,5 +1,5 @@
 <!-- 천체의 구-대비 변형(자전 편평 J2 + 조석고정 triaxial C22)을 근거화 계산해 Principia 중력모델에 채우는 방법 -->
-# Body figure grounding: rotational oblateness (J₂) and tidal triaxiality (C₂₂)
+# 천체 형상 근거화: 자전 편평도(J₂)와 조석 삼축성(C₂₂)
 
 모든 NearStars 천체의 2차(degree-2) **형상**을 다루는 방법론 레퍼런스입니다. 천체가 완전한 구에서 얼마나
 벗어나는지, 그리고 그 변형을 어떤 중력 계수가 포착하는지를 설명합니다. 물리적 원인은 둘, 계수도 둘입니다.

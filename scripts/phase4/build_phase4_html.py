@@ -184,9 +184,9 @@ def ref_url(r):
         m = re.fullmatch(r"docs/reference/(.+)\.md", s)
         if m:
             return "../../wiki/reference__" + m.group(1) + ".html"
-        m = re.fullmatch(r"plans/(.+)\.md", s)
-        if m:
-            return "../../wiki/plans__" + m.group(1) + ".html"
+        # plans/ 는 미발행(내부 문서, 오너 2026-08-13) → 저장소 파일 뷰로
+        if re.fullmatch(r"plans/(.+)\.md", s):
+            return REPO_BLOB + s
         return REPO_BLOB + s                                     # e.g. phase3/stability-sim/*.md
     return "https://ui.adsabs.harvard.edu/abs/" + quote(s, safe="")  # ADS bibcode
 

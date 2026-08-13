@@ -1,4 +1,4 @@
-# NearStars — Mod Reference
+# NearStars 모드 설치 레퍼런스
 
 > **관점.** 이 문서는 **KSP 모드 설치 레퍼런스** 입니다. 어떤 모드를 설치해야 하는지, 무엇을 하는지, 어디서 받는지를 의존성 등급별 (Required / Graphics / Compatibility / Optional) 로 정리합니다.
 >

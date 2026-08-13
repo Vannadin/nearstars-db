@@ -1,4 +1,4 @@
-# Planet-Pack Visual Techniques — Reference Mining
+# 행성팩 시각 기법 — 레퍼런스 마이닝
 
 > **출처** (읽기 전용 분석, 2026-05-30).
 > - **SPVE** — SpacePotato's Volumetric Enhancements,

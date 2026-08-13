@@ -1,5 +1,5 @@
 <!-- 조석으로 감쇠된 천체의 평형 자전축 기울기(Cassini state obliquity)를 근거화 계산해 "고정=obliquity 0" 가정을 실제 평형값으로 대체하는 방법 -->
-# Cassini-state obliquity: equilibrium spin-axis tilt of a damped body
+# 카시니 상태 자전축 기울기: 감쇠된 천체의 평형 기울기
 
 자전이 조석으로 감쇠되어 **Cassini state**에 들어앉은 천체의 **평형 obliquity ε**를 다루는 방법론
 레퍼런스입니다. "조석고정 ⟹ obliquity = 0" 식의 게으른 가정을 실제 Cassini-state 값으로 대체합니다.
