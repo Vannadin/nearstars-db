@@ -108,17 +108,26 @@
   .presets button.copy:hover{background:var(--accent-warm);color:#2a1400;border-color:var(--accent-warm)}
   .presets button.copy.done{background:#4caf7d;border-color:#4caf7d;color:#04240f}
   .presets .sep{flex:1}
-  .preset-pick{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;
-    letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
-  .preset-pick select{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0;
-    text-transform:none;color:var(--fg);background:var(--s2);border:1px solid var(--bd);
-    border-radius:8px;padding:7px 10px;min-width:230px;cursor:pointer}
-  .preset-pick select:hover{border-color:var(--accent)}
-  .preset-pick select:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .pick-wrap{flex-basis:100%;display:flex;flex-direction:column;gap:8px}
+  .sys-tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .sys-tabs button{font-family:var(--sans);font-size:12.5px;font-weight:600;background:none;
+    border:0;border-bottom:2px solid transparent;color:var(--muted);padding:6px 10px;cursor:pointer;
+    border-radius:6px 6px 0 0}
+  .sys-tabs button:hover{color:var(--fg);background:var(--panel-2)}
+  .sys-tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+  .sys-tabs button:focus-visible,.body-btns button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .body-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .body-btns{display:flex;flex-wrap:wrap;gap:6px}
+  .body-btns button{font-family:var(--sans);font-size:12.5px;font-weight:600;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--fg);border-radius:7px;padding:5px 11px;cursor:pointer}
+  .body-btns button:hover{border-color:var(--accent);color:var(--accent)}
+  .body-btns button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#04222a}
+  .body-btns button .moon{opacity:.55;margin-right:3px}
+  .seg.variant{margin-left:auto}
   @media (max-width:700px){
     .presets button{min-height:40px;padding:0 13px;font-size:13px}
-    .preset-pick select{min-width:100%;min-height:40px}
-    .preset-pick{flex-basis:100%}
+    .body-btns button,.sys-tabs button{min-height:40px}
+    .seg.variant{margin-left:0}
     .preset-lab{min-width:0;width:100%;margin-bottom:2px}
     .row label{min-height:36px;display:flex;align-items:center}
     .row input[type=range]{height:36px}
@@ -200,8 +209,16 @@
   </header>
 
   <div class="presets" id="presets">
-    <label class="preset-pick"><span data-l="pick">천체</span>
-      <select id="presetSel"></select></label>
+    <div class="pick-wrap">
+      <div class="sys-tabs" id="sysTabs" role="tablist" aria-label="star system"></div>
+      <div class="body-row">
+        <div class="body-btns" id="bodyBtns" role="group" aria-label="body"></div>
+        <div class="seg variant" id="variantSeg" hidden>
+          <button data-var="stock" data-l="vStock">스톡</button>
+          <button data-var="phys" data-l="vPhys">물리</button>
+        </div>
+      </div>
+    </div>
     <span class="sep"></span>
     <button data-act="reset" id="resetBtn">현재값 초기화</button>
     <button data-act="copy" class="copy" id="copyBtn">📋 Kerbalism cfg 복사</button>
@@ -242,7 +259,7 @@ const T = {
   ko:{
     h1:'Kerbalism 방사선대 단면 뷰어',
     intro:'인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.',
-    pick:'천체', reset:'현재값 초기화', copy:'📋 Kerbalism cfg 복사', copied:'✓ 복사됨',
+    vStock:'스톡', vPhys:'물리', reset:'현재값 초기화', copy:'📋 Kerbalism cfg 복사', copied:'✓ 복사됨',
     hover:'커서를 올려보세요', drag3d:'드래그 = 회전 · 휠 = 줌',
     sun:'☀ 항성 → +x (오른쪽)', mode2d:'단면',
     legPause:'자기권계면', legShue:'Shue 기준', legBody:'바디', show:'표시',
@@ -256,7 +273,7 @@ const T = {
   en:{
     h1:'Kerbalism radiation belt section viewer',
     intro:'Meridional (z=0) section computed from the in-game <code>RadiationModel</code> SDFs verbatim. Color = dose (rad/h), cyan line = magnetopause. Unit = body radii.',
-    pick:'Body', reset:'Reset values', copy:'📋 Copy Kerbalism cfg', copied:'✓ copied',
+    vStock:'Stock', vPhys:'Physical', reset:'Reset values', copy:'📋 Copy Kerbalism cfg', copied:'✓ copied',
     hover:'Hover the canvas', drag3d:'drag = rotate · wheel = zoom',
     sun:'☀ star → +x (right)', mode2d:'section',
     legPause:'magnetopause', legShue:'Shue reference', legBody:'body', show:'show',
@@ -416,7 +433,7 @@ const presetBar=document.getElementById('presets');
 presetBar.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b)return;
   if(b.dataset.act==='copy'){ copyCfg(b); return; }
-  if(b.dataset.act==='reset'){ applyPreset(currentPreset||'earth'); return; }
+  if(b.dataset.act==='reset'){ applyPreset(currentPreset||'earth_phys'); return; }
   if(b.dataset.lang){ lang=b.dataset.lang; localStorage.setItem('nearstars-lang',lang); applyLang(); return; }
   applyPreset(b.dataset.p);
 });
@@ -487,7 +504,12 @@ function deepset(preset){
 }
 function applyPreset(p){
   currentPreset=p; deepset(p); syncControls();
-  if(presetSel && presetSel.value!==p) presetSel.value=p;
+  const meta=PRESETS[p];
+  if(meta && typeof curBody!=='undefined'){
+    curBody=meta.body_key||p; curVar=meta.variant||'only';
+    if(meta.sys && meta.sys!==curSys){ curSys=meta.sys; buildBodies(); }
+    if(typeof labelPicker==='function') labelPicker();
+  }
   scheduleRender();
 }
 
@@ -849,39 +871,96 @@ const FOOT_EN=
  'Set values with the sliders or by typing in the number boxes (out-of-range allowed). The view half-width slider\'s max auto-grows to fit the whole scene (push to the end for a full view). '+
  'Stock presets = deployed KSP-RO/ROKerbalism cfg (verified 2026-07-24); phys presets = numeric dipole L-shell fits (fit_belts.py, IoU in the caption); NearStars presets = Phase 4 derivations. Grounding and renders: <a href="wiki/reference__solar-system-radiation-belts.html">Solar-System radiation belts</a> (renders included)';
 
-// 프리셋 선택 = 항성계 단위 드롭다운. 버튼 19개가 네 줄을 먹던 자리를 한 줄로 줄이고,
-// 위성은 모행성 아래로 들여써서 계층이 드러나게 한다.
-const SYS_ORDER=['sol_stock','sol_phys','alpha_centauri','proxima_cen','demo'];
-const presetSel=document.getElementById('presetSel');
-function sysKey(p){ return p.sys || p.group || 'other'; }
-function buildPresetSelect(){
-  const byS={};
-  Object.entries(PRESETS).forEach(([k,p])=>{ (byS[sysKey(p)]??=[]).push([k,p]); });
-  const order=SYS_ORDER.filter(g=>byS[g]).concat(Object.keys(byS).filter(g=>!SYS_ORDER.includes(g)));
-  presetSel.innerHTML='';
-  order.forEach(g=>{
-    const og=document.createElement('optgroup'); og.dataset.sys=g;
-    // 모행성 먼저, 그 위성이 뒤따르게 (depth 0 → 1)
-    byS[g].sort((a,b)=>(a[1].depth||0)-(b[1].depth||0));
-    byS[g].forEach(([k,p])=>{
-      const o=document.createElement('option'); o.value=k; og.appendChild(o);
-    });
-    presetSel.appendChild(og);
-  });
-  labelPresetSelect();
+// 프리셋 선택 = 2단 구조. 1행 항성계 탭, 2행 그 계의 천체 버튼, 그리고 같은 천체에
+// 스톡/물리 두 판본이 있으면 오른쪽 세그먼트로 즉시 토글한다(이 뷰어의 주 용도가 그 비교다).
+const SYS_ORDER=['sol','alpha_centauri','proxima_cen','demo'];
+const sysTabs=document.getElementById('sysTabs'), bodyBtns=document.getElementById('bodyBtns'),
+      variantSeg=document.getElementById('variantSeg');
+const BY_SYS={}, BY_BODY={};
+Object.entries(PRESETS).forEach(([k,p])=>{
+  (BY_SYS[p.sys||p.group]??=[]).push(k);
+  (BY_BODY[p.body_key||k]??={})[p.variant||'only']=k;
+});
+const SYS_LIST=SYS_ORDER.filter(g=>BY_SYS[g]).concat(Object.keys(BY_SYS).filter(g=>!SYS_ORDER.includes(g)));
+let curSys=SYS_LIST[0], curBody=null, curVar='phys';
+
+function bodiesOf(sys){                      // 계 안의 천체 목록(중복 제거, 모행성 → 위성 순)
+  const seen=[], out=[];
+  BY_SYS[sys].forEach(k=>{ const b=PRESETS[k].body_key||k; if(!seen.includes(b)){seen.push(b); out.push(b);} });
+  return out.sort((a,b)=>(PRESETS[BY_BODY[a][Object.keys(BY_BODY[a])[0]]].depth||0)
+                        -(PRESETS[BY_BODY[b][Object.keys(BY_BODY[b])[0]]].depth||0));
 }
-function labelPresetSelect(){
-  presetSel.querySelectorAll('optgroup').forEach(og=>{
-    const any=PRESETS[og.querySelector('option').value];
-    og.label=(lang==='en'&&any.sys_label_en)?any.sys_label_en:(any.sys_label||og.dataset.sys);
-  });
-  presetSel.querySelectorAll('option').forEach(o=>{
-    const p=PRESETS[o.value], nm=(lang==='en'&&p.label_en)?p.label_en:(p.label||o.value);
-    o.textContent=(p.depth?'\u00a0\u00a0└ ':'')+nm+(p.desig&&p.desig!==nm?'  ('+p.desig+')':'');
+function presetFor(body,variant){
+  const v=BY_BODY[body]; return v[variant] || v.phys || v.only || v[Object.keys(v)[0]];
+}
+function anyPreset(body){ const v=BY_BODY[body]; return PRESETS[v[Object.keys(v)[0]]]; }
+function nameOf(p){ return (lang==='en'&&p.label_en)?p.label_en:(p.label||''); }
+
+function buildTabs(){
+  sysTabs.innerHTML='';
+  SYS_LIST.forEach(g=>{
+    const b=document.createElement('button'); b.dataset.sys=g; b.type='button';
+    b.setAttribute('role','tab'); b.setAttribute('aria-selected', String(g===curSys));
+    b.tabIndex = g===curSys ? 0 : -1;
+    sysTabs.appendChild(b);
   });
 }
-buildPresetSelect();
-presetSel.addEventListener('change',()=>applyPreset(presetSel.value));
+function buildBodies(){
+  bodyBtns.innerHTML='';
+  bodiesOf(curSys).forEach(bk=>{
+    const p=anyPreset(bk), b=document.createElement('button'); b.type='button'; b.dataset.body=bk;
+    if(p.depth) b.innerHTML='<span class="moon" aria-hidden="true">└</span>';
+    b.appendChild(document.createTextNode(''));
+    if(p.desig) b.title=p.desig;
+    b.setAttribute('aria-pressed', String(bk===curBody));
+    bodyBtns.appendChild(b);
+  });
+  labelPicker();
+}
+function labelPicker(){
+  sysTabs.querySelectorAll('button').forEach(b=>{
+    const p=PRESETS[BY_SYS[b.dataset.sys][0]];
+    b.textContent=(lang==='en'&&p.sys_label_en)?p.sys_label_en:(p.sys_label||b.dataset.sys);
+    b.setAttribute('aria-selected', String(b.dataset.sys===curSys));
+    b.tabIndex = b.dataset.sys===curSys ? 0 : -1;
+  });
+  bodyBtns.querySelectorAll('button').forEach(b=>{
+    const p=anyPreset(b.dataset.body), txt=nameOf(p);
+    b.lastChild.nodeValue=txt;
+    b.setAttribute('aria-pressed', String(b.dataset.body===curBody));
+  });
+  variantSeg.querySelectorAll('button').forEach(b=>{
+    b.classList.toggle('on', b.dataset.var===curVar);
+    b.textContent=t(b.dataset.l);
+  });
+}
+function selectBody(bk,{keepVariant=true}={}){
+  curBody=bk;
+  const v=BY_BODY[bk], hasBoth = v.stock && v.phys;
+  variantSeg.hidden=!hasBoth;
+  if(!hasBoth) curVar='only';
+  else if(!keepVariant || !v[curVar]) curVar='phys';
+  applyPreset(presetFor(bk,curVar));
+  labelPicker();
+}
+function selectSys(g){
+  curSys=g; buildBodies(); selectBody(bodiesOf(g)[0]);
+}
+buildTabs();
+sysTabs.addEventListener('click',e=>{ const b=e.target.closest('button[data-sys]'); if(b) selectSys(b.dataset.sys); });
+sysTabs.addEventListener('keydown',e=>{                       // 탭은 좌우 화살표로 이동 (WAI-ARIA tablist)
+  if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key)) return;
+  e.preventDefault();
+  const i=SYS_LIST.indexOf(curSys);
+  const n=e.key==='Home'?0:e.key==='End'?SYS_LIST.length-1
+        :(i+(e.key==='ArrowRight'?1:-1)+SYS_LIST.length)%SYS_LIST.length;
+  selectSys(SYS_LIST[n]); sysTabs.querySelector(`button[data-sys="${SYS_LIST[n]}"]`).focus();
+});
+bodyBtns.addEventListener('click',e=>{ const b=e.target.closest('button[data-body]'); if(b) selectBody(b.dataset.body,{keepVariant:true}); });
+variantSeg.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-var]'); if(!b) return;
+  curVar=b.dataset.var; applyPreset(presetFor(curBody,curVar)); labelPicker();
+});
 
 // ---- language switch ----
 function applyLang(){
@@ -895,7 +974,7 @@ function applyLang(){
   document.querySelectorAll('[data-l]').forEach(el=>{el.textContent=t(el.dataset.l);});
   _sumEls.forEach(([sum,g])=>{sum.querySelector('.gt').textContent=(lang==='en'&&g.title_en)?g.title_en:g.title;});
   _labelEls.forEach(([el,r])=>{const s=(lang==='en'&&r.label_en)?r.label_en:r.label; el.textContent=s; el.title=s;});
-  labelPresetSelect();
+  labelPicker();
   document.getElementById('foot').innerHTML=lang==='ko'?FOOT_KO:FOOT_EN;
   ro.innerHTML=(typeof viewMode!=='undefined'&&viewMode==='3d')?t('drag3d'):t('hover');
   scheduleRender();   // 캔버스 캡션(연화 Shue 라벨) 즉시 갱신
@@ -903,7 +982,7 @@ function applyLang(){
 
 // init
 new ResizeObserver(resize).observe(cv);
-applyPreset('earth_phys');
+buildBodies(); selectBody('earth');   // 기본 진입 = 태양계·지구·물리
 applyLang();
 resize();
 </script>

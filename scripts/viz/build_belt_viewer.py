@@ -48,9 +48,10 @@ SOL_KO, SOL_EN = '태양계', 'Solar System'
 presets = {}
 for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys 쌍)
     p = conv(key, b)
-    p['sys'] = 'sol_' + p['group']
-    p['sys_label'] = f"{SOL_KO} · {'스톡' if p['group'] == 'stock' else '물리'}"
-    p['sys_label_en'] = f"{SOL_EN} · {'stock' if p['group'] == 'stock' else 'physical'}"
+    p['sys'] = 'sol'
+    p['sys_label'], p['sys_label_en'] = SOL_KO, SOL_EN
+    p['body_key'] = key.rsplit('_', 1)[0]     # earth_stock / earth_phys → earth
+    p['variant'] = p['group']                 # stock | phys — 같은 천체의 두 판본
     p['depth'] = 0
     if p['group'] == 'phys':           # 물리 프리셋만 Shue 기준선을 기본으로 켠다
         p['view']['shue'] = shue_alpha(p.get('pause'))
@@ -100,6 +101,7 @@ for name, spec in load_nearstars_specs().items():
     p = {'label': name, 'label_en': name, 'group': 'nearstars',
          'sys': syskey, 'sys_label': ko_sys, 'sys_label_en': en_sys,
          'depth': 1 if is_moon else 0, 'desig': desig,
+         'body_key': name.lower().replace(' ', '_'), 'variant': None,
          'parent': ROMAN.sub('', desig) if is_moon else None,
          'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
     extent = 5.0
@@ -132,7 +134,7 @@ for name, spec in load_nearstars_specs().items():
 # Proxima d 는 보드 행이 없어 render_belts_bodies 에 값이 있지만, 계 소속은 프록시마다.
 if 'proxima_d_phys' in presets:
     pd = presets['proxima_d_phys']
-    pd.update({'group': 'nearstars', 'sys': 'proxima_cen',
+    pd.update({'group': 'nearstars', 'sys': 'proxima_cen', 'body_key': 'proxima_cen_d', 'variant': None,
                'sys_label': SYS_LABEL['proxima_cen'][0], 'sys_label_en': SYS_LABEL['proxima_cen'][1],
                'depth': 0, 'desig': 'Proxima Centauri d',
                'label': 'Proxima Cen d', 'label_en': 'Proxima Cen d'})
@@ -143,7 +145,8 @@ shue = conv('earth_shue', dict(BODIES['earth_phys'], tilt=0))
 shue['label'] = 'Shue 데모'
 shue['label_en'] = 'Shue demo'
 shue['group'] = 'demo'          # 지구 물리와 같은 줄에 서면 중복처럼 보인다
-shue.update({'sys': 'demo', 'sys_label': '데모', 'sys_label_en': 'Demo', 'depth': 0})
+shue.update({'sys': 'demo', 'sys_label': '데모', 'sys_label_en': 'Demo', 'depth': 0,
+             'body_key': 'shue_demo', 'variant': None})
 shue['view'].update({'R': 210, 'shue': 0.58})
 shue['pause']['alpha'] = 0.35
 presets['shueDemo'] = shue
