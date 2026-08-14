@@ -101,7 +101,24 @@ The smoothstep makes α continuous in value *and* slope at the terminator, so th
 curve stays smooth where the two regimes meet, and `ε` still closes the tail at `L`.
 Now the constraints land on separate parameters: **`r0` and `α_day` are pinned by the
 measured nose and terminator, `L` by the observed tail length, and `α_night` sets how
-the tail flares between them.** **Choosing `α_night`, and the artifact to watch.** Because `ε` closes the tail at a
+the tail flares between them.** **What is still Shue, and what is not.** Worth being exact, because three different
+things now share one curve family, and only the first is a published model:
+
+| Tier | Form | Deviation from pure Shue | Used for |
+|---|---|---|---|
+| **Shue 1997/98** | `r = r0 (2/(1+cos θ))^α`, open tail | none — it *is* the model | Mercury, Jupiter (α from their own fits) |
+| **Shue + closure** | adds `ε` so the tail shuts at `L` | dayside ≤ 0.33 % (Earth, at the flank); the tail is qualitatively different — closed, not open | Earth |
+| **2α wake form (ours)** | `α` varies with angle past the terminator | dayside ≤ 0.07 % (Venus 0.011 %, Mars 0.066 %); **the nightside is not Shue at all** | Venus, Mars |
+
+Two honest points follow. First, Shue's own formula is an *empirical fit* to Earth
+magnetopause crossings, not a derivation from first principles, so "modifying it"
+is not breaking a physical law — it is changing which data a shape function was
+tuned to. Second, that is exactly why the labelling matters: the dayside stays
+faithful in every tier (a fraction of a percent), but calling the induced-body
+nightside "Shue" would be wrong. The renders and the viewer therefore name each
+curve by its tier rather than calling everything Shue.
+
+**Choosing `α_night`, and the artifact to watch.** Because `ε` closes the tail at a
 finite `L`, the width always rises and then necks — only the size of the bulge is
 tunable, and a large `α_night` turns the tail into a visible lens. Measured on the
 width profile:

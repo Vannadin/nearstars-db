@@ -337,7 +337,24 @@ The smoothstep makes α continuous in value *and* slope at the terminator, so th
 curve stays smooth where the two regimes meet, and `ε` still closes the tail at `L`.
 Now the constraints land on separate parameters: **`r0` and `α_day` are pinned by the
 measured nose and terminator, `L` by the observed tail length, and `α_night` sets how
-the tail flares between them.** **Choosing `α_night`, and the artifact to watch.** Because `ε` closes the tail at a
+the tail flares between them.** **What is still Shue, and what is not.** Worth being exact, because three different
+things now share one curve family, and only the first is a published model:
+
+| Tier | Form | Deviation from pure Shue | Used for |
+|---|---|---|---|
+| **Shue 1997/98** | `r = r0 (2/(1+cos θ))^α`, open tail | none — it *is* the model | Mercury, Jupiter (α from their own fits) |
+| **Shue + closure** | adds `ε` so the tail shuts at `L` | dayside ≤ 0.33 % (Earth, at the flank); the tail is qualitatively different — closed, not open | Earth |
+| **2α wake form (ours)** | `α` varies with angle past the terminator | dayside ≤ 0.07 % (Venus 0.011 %, Mars 0.066 %); **the nightside is not Shue at all** | Venus, Mars |
+
+Two honest points follow. First, Shue's own formula is an *empirical fit* to Earth
+magnetopause crossings, not a derivation from first principles, so "modifying it"
+is not breaking a physical law — it is changing which data a shape function was
+tuned to. Second, that is exactly why the labelling matters: the dayside stays
+faithful in every tier (a fraction of a percent), but calling the induced-body
+nightside "Shue" would be wrong. The renders and the viewer therefore name each
+curve by its tier rather than calling everything Shue.
+
+**Choosing `α_night`, and the artifact to watch.** Because `ε` closes the tail at a
 finite `L`, the width always rises and then necks — only the size of the bulge is
 tunable, and a large `α_night` turns the tail into a visible lens. Measured on the
 width profile:
@@ -1184,7 +1201,22 @@ a documented regime call rather than a computed number.
 smoothstep 덕분에 α가 명암경계선에서 값과 기울기 모두 연속이라 두 영역이 만나는 자리가 매끄럽고,
 `ε`은 여전히 꼬리를 `L`에서 닫습니다. 이제 제약이 서로 다른 파라미터에 얹힙니다. **`r0`와
 `α_day`는 실측 노즈·명암경계선이, `L`은 관측된 꼬리 길이가 고정하고, `α_night`이 그 사이에서
-꼬리가 벌어지는 정도를 정합니다.** **`α_night` 고르기, 그리고 주의할 인공물.** `ε`이 꼬리를 유한한 `L`에서 닫기 때문에 폭은 늘 커졌다가
+꼬리가 벌어지는 정도를 정합니다.** **어디까지가 Shue이고 어디부터가 아닌가.** 이제 한 곡선 계열에 성격이 다른 셋이 섞여 있고, 발표된
+모델은 첫 번째뿐이므로 정확히 갈라 둡니다.
+
+| 등급 | 형태 | 순수 Shue 대비 편차 | 쓰는 곳 |
+|---|---|---|---|
+| **Shue 1997/98** | `r = r0 (2/(1+cos θ))^α`, 열린 꼬리 | 없음 — 그 자체가 모델 | 수성, 목성(각자의 적합 α) |
+| **Shue + 닫힘** | `ε`을 더해 꼬리를 `L`에서 닫음 | 주간면 ≤ 0.33 %(지구, 플랭크). 꼬리는 질적으로 다름 — 열린 게 아니라 닫힘 | 지구 |
+| **2α 항적형 (우리 확장)** | 명암경계선 뒤에서 `α`가 각도 의존 | 주간면 ≤ 0.07 %(금성 0.011 %, 화성 0.066 %). **야간면은 Shue가 아님** | 금성, 화성 |
+
+여기서 두 가지를 정직하게 짚습니다. 첫째, Shue의 공식 자체가 지구 자기권계면 통과 관측에 맞춘
+*경험 적합*이지 제1원리 유도가 아닙니다. 그러니 "고쳤다"는 것이 물리 법칙을 깨는 일은 아니고,
+형상 함수를 어떤 데이터에 맞출지 바꾸는 일입니다. 둘째, 그래서 라벨이 중요합니다. 주간면은 어느
+등급에서나 충실하지만(수십분의 1 퍼센트), 유도 천체의 야간면을 "Shue"라고 부르면 틀립니다. 그래서
+렌더와 뷰어가 곡선마다 이름을 등급으로 표시합니다.
+
+**`α_night` 고르기, 그리고 주의할 인공물.** `ε`이 꼬리를 유한한 `L`에서 닫기 때문에 폭은 늘 커졌다가
 목이 잘립니다. 조절할 수 있는 것은 불룩함의 크기뿐이고, `α_night`이 크면 꼬리가 눈에 띄는 렌즈가
 됩니다. 폭 프로파일을 재면 이렇습니다.
 

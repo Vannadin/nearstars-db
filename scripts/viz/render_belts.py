@@ -111,7 +111,9 @@ def render(body, out, size=1120, z=0.0):
                 dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=S(2))
             oy = c - off*ppr
             dr.ellipse([c+r0*ppr-S(3),oy-S(3),c+r0*ppr+S(3),oy+S(3)],fill=(255,154,82))
-            lbl=f"Shue r0 {r0:.1f} α {al:.2f}"
+            kind = ('2α wake (ours)' if al_n else
+                    'Shue+closure' if Ltail > r0*1.05 else 'Shue 1997')
+            lbl=f"{kind}  r0 {r0:.1f} α {al:.2f}" + (f"/{al_n:.2f}" if al_n else "")
             lw=dr.textlength(lbl,font=fnt)
             lx=c+r0*ppr+S(6)
             if lx+lw > size-S(6): lx=c+r0*ppr-S(6)-lw               # 프레임 밖으로 나가면 왼쪽에

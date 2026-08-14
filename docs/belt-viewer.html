@@ -267,7 +267,7 @@ const T = {
     deformNote:'deform은 z=0 평면에서 항상 0 → <b>slice_z=0.26</b> 자동 설정',
     pos:'위치', inBody:'바디 내부', zone:'구역',
     zInner:'내대', zOuter:'외대', zMag:'자기권 내',
-    shueSoft:'연화 Shue (C∞)', boardFix:'(보드 고정)', pauseLink:'(pause 연동)',
+    shueSoft:'연화 Shue (C∞)', shueTwo:'2α 항적형 (우리 확장)', boardFix:'(보드 고정)', pauseLink:'(pause 연동)',
     shueDash:'흰 점선 = 순수 Shue(열림) 대조'
   },
   en:{
@@ -281,7 +281,7 @@ const T = {
     deformNote:'deform is identically 0 on the z=0 plane → <b>slice_z=0.26</b> set automatically',
     pos:'position', inBody:'inside body', zone:'zone',
     zInner:'inner belt', zOuter:'outer belt', zMag:'inside magnetosphere',
-    shueSoft:'softened Shue (C∞)', boardFix:'(board-pinned)', pauseLink:'(tracks pause)',
+    shueSoft:'softened Shue (C∞)', shueTwo:'2α wake form (our extension)', boardFix:'(board-pinned)', pauseLink:'(tracks pause)',
     shueDash:'white dashes = pure (open) Shue reference'
   }
 };
@@ -637,7 +637,7 @@ function render(){
         ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
         ctx.fillStyle='rgba(255,154,82,.95)';
         ctx.beginPath(); ctx.arc(c+nose*ppr,oy,2.5,0,7); ctx.fill();
-        ctx.fillText(t('shueSoft')+'  α='+alS.toFixed(2)+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+(fixed?t('boardFix'):t('pauseLink'))+' ε='+eps.toFixed(4), c+nose*ppr+5, oy-6);
+        ctx.fillText((aN?t('shueTwo')+'  α='+alS.toFixed(2)+'/'+aN.toFixed(2):t('shueSoft')+'  α='+alS.toFixed(2))+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+(fixed?t('boardFix'):t('pauseLink'))+' ε='+eps.toFixed(4), c+nose*ppr+5, oy-6);
         ctx.fillStyle='rgba(255,255,255,.5)';
         ctx.fillText(t('shueDash'), c-L*ppr*0.9, c+16);
       } else {
