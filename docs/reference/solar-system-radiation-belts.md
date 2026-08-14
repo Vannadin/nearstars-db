@@ -42,8 +42,28 @@ Belts require an intrinsic dynamo strong enough to trap particles. In the Solar
 System that is **7 bodies**: Earth, Jupiter, Saturn, Uranus, Neptune (planetary
 dynamos), Mercury (tiny), and Ganymede (embedded moon dynamo). **Venus, Mars, the
 Moon, Io, Europa, Callisto, Titan, Triton, Pluto** have no intrinsic global field →
-no belts → surface dose is the direct wind/GCR flux (`radiation_surface` only, no
-`RadiationModel` belt). They are out of scope here.
+no belts, so their radiation is the direct wind/GCR flux. They are out of scope for
+the belt audit.
+
+**They are not cfg-less, though** (corrected 2026-08-14). Kerbalism gives several of
+them a *pause-only* `RadiationModel` — a boundary with no belt fields — and those
+are worth knowing before assuming a body has nothing:
+
+| Model | Shape | Used by | Reading |
+|---|---|---|---|
+| `ionosphere` | pause 1.1 R, extension 0.2, no belts | **Venus** (`radiation_pause` −0.005), Titan (RSS.cfg) | the induced magnetosphere: no dynamo, so the solar wind ionizes the upper atmosphere into a thin conducting shell |
+| `irregular` | pause 1.25 R, compression 1.1, extension 0.75, **`pause_deform` 0.1** | **Mars** (upstream `Duna`, `radiation_pause` −0.003) | crustal remanent magnetism — the deform term is what makes it read as a lumpy, patchy weak field rather than a dipole |
+| `anomaly` | pause 0.5 R, extension 0.8, height 0.45, `pause_deform` 0.05 | Io | a sub-surface-scale patch, not a magnetosphere |
+| `solidiron` / `metallic` | small pause shells | Bop; unassigned in stock | placeholders for dense airless bodies |
+| `surface` | pause 1.075 R | (abused as a surface-dose shell) | not a field at all |
+
+**A distribution gap worth flagging.** ROKerbalism's `Support/RSS.cfg` renames
+`+RadiationBody[Duna] { @name = Mars }`, but its own `System/Radiation.cfg` — which
+replaces the upstream KerbalismConfig wholesale — defines no `Duna` body (verified
+2026-08-14 against `KSP-RO/ROKerbalism@master`). The copy therefore has no source,
+so under ROKerbalism **Mars ends up with no `RadiationBody` at all**, while upstream
+Kerbalism gives it the `irregular` model. Anyone who remembers seeing Mars' lumpy
+weak-field boundary in game was running the upstream config, not RSS.
 
 ## Reading the cfg correctly (two traps)
 

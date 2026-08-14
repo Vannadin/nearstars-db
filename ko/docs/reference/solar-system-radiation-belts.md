@@ -35,8 +35,27 @@ standoff가 63·24 바디 반경이라 계면을 프레임에 담으면 벨트�
 벨트가 생기려면 입자를 가둘 만큼 강한 고유 다이나모가 필요합니다. 태양계에서는 **7개 바디**
 입니다. 지구, 목성, 토성, 천왕성, 해왕성(행성 다이나모), 수성(아주 작음), 그리고 가니메데
 (임베디드 위성 다이나모)입니다. **금성, 화성, 달, Io, Europa, Callisto, Titan, Triton, 명왕성**
-은 고유 전역장이 없어 → 벨트가 없고 → 표면 선량이 곧 직접 풍/GCR 플럭스입니다
-(`radiation_surface`만, `RadiationModel` 벨트 없음). 여기서는 범위 밖입니다.
+은 고유 전역장이 없어 벨트가 없고, 방사선은 직접 풍/GCR 플럭스입니다. 벨트 감사의 범위 밖입니다.
+
+**다만 cfg가 없는 것은 아닙니다**(2026-08-14 정정). Kerbalism은 이들 중 여럿에 *pause만 있는*
+`RadiationModel`을 줍니다. 벨트 필드 없이 경계만 있는 형태이고, "이 바디엔 아무것도 없다"고
+넘기기 전에 알아둘 값입니다.
+
+| 모델 | 형상 | 쓰는 바디 | 읽는 법 |
+|---|---|---|---|
+| `ionosphere` | pause 1.1 R, extension 0.2, 벨트 없음 | **금성**(`radiation_pause` −0.005), 타이탄(RSS.cfg) | 유도 자기권. 다이나모가 없어 항성풍이 상층 대기를 이온화해 얇은 전도층을 만든다 |
+| `irregular` | pause 1.25 R, compression 1.1, extension 0.75, **`pause_deform` 0.1** | **화성**(업스트림 `Duna`, `radiation_pause` −0.003) | 지각 잔류 자기. deform 항이 쌍극이 아니라 울퉁불퉁한 얼룩 약장으로 보이게 만드는 원인이다 |
+| `anomaly` | pause 0.5 R, extension 0.8, height 0.45, `pause_deform` 0.05 | Io | 자기권이라기보다 표면 이하 규모의 패치 |
+| `solidiron` / `metallic` | 작은 pause 껍질 | Bop, 스톡 미할당 | 조밀한 무대기 바디용 자리채움 |
+| `surface` | pause 1.075 R | (표면 선량 껍질로 전용) | 자기장이 아님 |
+
+**짚어둘 배포 갭.** ROKerbalism의 `Support/RSS.cfg`는
+`+RadiationBody[Duna] { @name = Mars }`로 이름을 바꿔 복사하는데, 업스트림 KerbalismConfig를
+통째로 대체하는 그들 자신의 `System/Radiation.cfg`에는 `Duna` 정의가 없습니다
+(2026-08-14 `KSP-RO/ROKerbalism@master`로 확인). 복사의 원본이 없으니 **ROKerbalism 조합에서는
+화성에 `RadiationBody`가 아예 생기지 않습니다.** 업스트림 Kerbalism은 화성에 `irregular` 모델을
+줍니다. 인게임에서 화성의 울퉁불퉁한 약장 경계를 본 기억이 있다면 RSS 조합이 아니라 업스트림
+설정으로 돌린 경우입니다.
 
 ## cfg를 올바로 읽기 (함정 둘)
 

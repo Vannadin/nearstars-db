@@ -63,6 +63,19 @@ BODIES={
    'pause':{'radiation':-0.001,'rad':2.03,'comp':1.4,'ext':0.05,'hscale':1.0,'deform':0.1,
             'shue_alpha':0.5,'shue_nose':1.45}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
+ # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
+ # ROKerbalism: RadiationBody[Eve]→Venus, radiation_model = ionosphere, radiation_pause = -0.005.
+ # ionosphere 모델 = pause_radius 1.1 / extension 0.2 (System/Radiation.cfg). 벨트 필드 자체가 없다.
+ 'venus_stock':{'title':'Venus — stock (ROKerbalism)','sub':'ionosphere model: pause 1.1/ext 0.2, no belts (induced magnetosphere)','R':3,'tilt':0,
+   'pause':{'radiation':-0.005,'rad':1.1,'ext':0.2,'hscale':1.0}},
+
+ # ---- MARS: 지각 잔류 자기(다극·약장) → irregular 모델 (pause_deform 0.1 로 울퉁불퉁) ----
+ # 업스트림 Kerbalism: RadiationBody[Duna] = irregular, radiation_pause = -0.003.
+ # ROKerbalism 의 RSS.cfg 는 +RadiationBody[Duna]{@name = Mars} 로 복사하지만, 그들 자신의
+ # System/Radiation.cfg 에는 Duna 정의가 없다 → 그 조합에서는 화성에 RadiationBody 가 안 생긴다(배포 갭).
+ 'mars_stock':{'title':'Mars — stock (Kerbalism irregular)','sub':'irregular model: pause 1.25/comp 1.1/ext 0.75/deform 0.1 — crustal-anomaly look; no belts','R':3,'tilt':0,
+   'pause':{'radiation':-0.003,'rad':1.25,'comp':1.1,'ext':0.75,'hscale':1.0,'deform':0.1}},
+
  # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----
  'earth_stock':{'title':'Earth — stock (ROKerbalism)','sub':'inner 0.81/0.70 (D), outer 2.63/2.48 (O), pause 15','R':12,'tilt':11,
    'inner':{'radiation':10.376,'grad':3.3,'dist':0.813,'rad':0.70,'dxy':0.572,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':0.915,'bdxy':0.5},

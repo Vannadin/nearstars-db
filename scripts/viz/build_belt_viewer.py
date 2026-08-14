@@ -12,10 +12,10 @@ from render_belts_bodies import BODIES  # noqa: E402
 TEMPLATE = os.path.join(D, 'belt_viewer_template.html')
 OUT = os.path.join(D, '..', '..', 'docs', 'belt-viewer.html')
 
-KO = {'earth': '지구', 'jupiter': '목성', 'saturn': '토성', 'uranus': '천왕성',
+KO = {'venus': '금성', 'mars': '화성', 'earth': '지구', 'jupiter': '목성', 'saturn': '토성', 'uranus': '천왕성',
       'neptune': '해왕성', 'mercury': '수성', 'ganymede': '가니메데',
       'proxima_d': '프록시마 d'}
-EN = {'earth': 'Earth', 'jupiter': 'Jupiter', 'saturn': 'Saturn', 'uranus': 'Uranus',
+EN = {'venus': 'Venus', 'mars': 'Mars', 'earth': 'Earth', 'jupiter': 'Jupiter', 'saturn': 'Saturn', 'uranus': 'Uranus',
       'neptune': 'Neptune', 'mercury': 'Mercury', 'ganymede': 'Ganymede',
       'proxima_d': 'Proxima d'}
 OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
