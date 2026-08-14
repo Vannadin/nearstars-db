@@ -1,6 +1,8 @@
 # 검증된 벨트 데이터(render_belts_bodies.BODIES)를 인터랙티브 뷰어 템플릿에 주입해 docs/belt-viewer.html 생성
 import json
+import math
 import os
+import re
 import sys
 
 D = os.path.dirname(os.path.abspath(__file__))
@@ -19,6 +21,16 @@ EN = {'earth': 'Earth', 'jupiter': 'Jupiter', 'saturn': 'Saturn', 'uranus': 'Ura
 OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 
 
+def shue_alpha(pause):
+    """Shue α = log2(pause_compression) — 방법론 Part C 의 레거시 환산.
+
+    물리/NearStars 프리셋은 이 값으로 Shue 기준선을 기본 표시한다(스톡은 끈다):
+    스톡 cfg 는 '실제 형상' 주장이 아니라 배포값 재현이라 비교선이 오해를 준다.
+    """
+    c = pause.get('comp', 1.0) if pause else 1.0
+    return round(math.log2(c), 3) if c > 1.001 else 0.58
+
+
 def conv(key, b):
     body, kind = key.rsplit('_', 1)
     # 그룹 라벨이 stock/phys 를 이미 말해주므로 버튼에는 천체명만 남긴다.
@@ -32,14 +44,22 @@ def conv(key, b):
     return p
 
 
+SOL_KO, SOL_EN = '태양계', 'Solar System'
 presets = {}
 for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys 쌍)
-    presets[key] = conv(key, b)
+    p = conv(key, b)
+    p['sys'] = 'sol_' + p['group']
+    p['sys_label'] = f"{SOL_KO} · {'스톡' if p['group'] == 'stock' else '물리'}"
+    p['sys_label_en'] = f"{SOL_EN} · {'stock' if p['group'] == 'stock' else 'physical'}"
+    p['depth'] = 0
+    if p['group'] == 'phys':           # 물리 프리셋만 Shue 기준선을 기본으로 켠다
+        p['view']['shue'] = shue_alpha(p.get('pause'))
+    presets[key] = p
 
-# 지구 쌍: Shue 기준을 실측 물리값에 고정 (Shue 1998 α=0.58, nose 10 R_E, 꼬리 관측 ~200 R_E)
-for key in ('earth_stock', 'earth_phys'):
-    if key in presets:
-        presets[key]['view'].update({'shue': 0.58, 'shue_r0': 10, 'shue_L': 200})
+# 지구 물리: Shue 기준을 실측값에 고정 (Shue 1998 α=0.58, nose 10 R_E, 꼬리 관측 ~200 R_E).
+# 스톡 지구는 켜지 않는다 — 스톡 프리셋은 배포 cfg 재현이지 형상 주장이 아니다.
+if 'earth_phys' in presets:
+    presets['earth_phys']['view'].update({'shue': 0.58, 'shue_r0': 10, 'shue_L': 200})
 
 # NearStars 프리셋: 게이트된 phase4 보드에서 (emitter와 동일 소스)
 sys.path.insert(0, os.path.join(D, '..', 'pipeline'))
@@ -49,9 +69,38 @@ CFG2VIEW = {'dist': 'dist', 'radius': 'rad', 'deform_xy': 'dxy', 'compression': 
             'extension': 'ext', 'border_dist': 'bdist', 'border_radius': 'brad',
             'border_deform_xy': 'bdxy', 'deform': 'deform'}
 
+import yaml  # noqa: E402
+
+ROMAN = re.compile(r'\s+(I{1,3}|IV|V|VI{0,3}|IX|X)$')
+SYS_LABEL = {'alpha_centauri': ('알파 센타우리', 'Alpha Centauri'),
+             'proxima_cen': ('프록시마 센타우리', 'Proxima Centauri')}
+
+
+def designations(board_file):
+    """보드의 identity 행에서 body → designation 을 모은다 (계층 판정용)."""
+    doc = yaml.safe_load(open(os.path.join(D, '..', '..', 'phase4', board_file)))
+    out = {}
+    for row in doc.get('decisions', []):
+        if row.get('axis') == 'identity':
+            for fl in row.get('fields', []):
+                if fl.get('name') == 'designation':
+                    out[row['body']] = str(fl.get('value', '')).split(' (')[0]
+    return out
+
+
+_desig_cache = {}
 for name, spec in load_nearstars_specs().items():
     m, bd = spec['model'], spec['body']
+    sysfile = spec['system']
+    syskey = sysfile.replace('.yaml', '')
+    _desig_cache.setdefault(sysfile, designations(sysfile))
+    desig = _desig_cache[sysfile].get(name, name)
+    ko_sys, en_sys = SYS_LABEL.get(syskey, (syskey, syskey))
+    is_moon = bool(ROMAN.search(desig))
     p = {'label': name, 'label_en': name, 'group': 'nearstars',
+         'sys': syskey, 'sys_label': ko_sys, 'sys_label_en': en_sys,
+         'depth': 1 if is_moon else 0, 'desig': desig,
+         'parent': ROMAN.sub('', desig) if is_moon else None,
          'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
     extent = 5.0
     for kind, grad in (('inner', 3.3), ('outer', 2.2)):
@@ -77,12 +126,24 @@ for name, spec in load_nearstars_specs().items():
         p['view']['shue'] = pend['pause_alpha']
         p['view']['shue_r0'] = pend.get('pause_nose', 0)
         p['view']['shue_L'] = pend.get('pause_tail', 0)
+    else:
+        p['view']['shue'] = shue_alpha(p['pause'])
     presets[name.lower()] = p
+# Proxima d 는 보드 행이 없어 render_belts_bodies 에 값이 있지만, 계 소속은 프록시마다.
+if 'proxima_d_phys' in presets:
+    pd = presets['proxima_d_phys']
+    pd.update({'group': 'nearstars', 'sys': 'proxima_cen',
+               'sys_label': SYS_LABEL['proxima_cen'][0], 'sys_label_en': SYS_LABEL['proxima_cen'][1],
+               'depth': 0, 'desig': 'Proxima Centauri d',
+               'label': 'Proxima Cen d', 'label_en': 'Proxima Cen d'})
+    presets['proxima_cen_d'] = presets.pop('proxima_d_phys')
+
 # Shue 데모: 지구 물리 파라미터 + 넓은 뷰 + α 오버레이
 shue = conv('earth_shue', dict(BODIES['earth_phys'], tilt=0))
 shue['label'] = 'Shue 데모'
 shue['label_en'] = 'Shue demo'
 shue['group'] = 'demo'          # 지구 물리와 같은 줄에 서면 중복처럼 보인다
+shue.update({'sys': 'demo', 'sys_label': '데모', 'sys_label_en': 'Demo', 'depth': 0})
 shue['view'].update({'R': 210, 'shue': 0.58})
 shue['pause']['alpha'] = 0.35
 presets['shueDemo'] = shue
