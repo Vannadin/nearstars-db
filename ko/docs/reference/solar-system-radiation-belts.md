@@ -49,6 +49,30 @@ standoff가 63·24 바디 반경이라 계면을 프레임에 담으면 벨트�
 | `solidiron` / `metallic` | 작은 pause 껍질 | Bop, 스톡 미할당 | 조밀한 무대기 바디용 자리채움 |
 | `surface` | pause 1.075 R | (표면 선량 껍질로 전용) | 자기장이 아님 |
 
+### 금성 — 유도 갈래를 계산한 결과
+
+| 스톡 | 물리 |
+|---|---|
+| ![venus 스톡](../../../docs/img/belts/venus_stock.png) | ![venus 물리](../../../docs/img/belts/venus_phys.png) |
+
+물리 프리셋은 쌍극자 레시피가 아니라 유도 자기권 레시피로 계산했습니다. 금성의 평균 이오노포즈는
+직하점 위 330 km, 황혼 명암경계선 700 km, 새벽 1000 km이고(Brace 1980,
+[`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)), `R_V` 6051.8 km 기준으로 **노즈 1.055 R_V, 명암경계선 평균
+1.140 R_V**입니다. cfg 의미론(`노즈 = pause_radius/compression`, 플랭크 = `pause_radius`,
+꼬리 = `pause_radius/extension`)으로 옮기면 `pause_radius` **1.140**, `compression` **1.081**,
+`extension` **0.1037**이고, 마지막 값은 꼬리를 **11 R_V**에서 닫은 결과입니다. Pioneer Venus가
+원거리 꼬리를 횡단한 5~11 R_V의 바깥 끝입니다(Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)).
+벨트는 없고 `radiation_pause`는 배포값 −0.005를 유지합니다. 유도 경계는 쌍극 자기권계면보다 GCR을
+훨씬 덜 가리기 때문입니다.
+
+스톡과 비교하면 도출한 주간면이 행성에 더 바짝 붙고(1.05 대 균일 1.1 R), 꼬리는 두 배로 깁니다
+(11 대 5.5 R_V).
+
+**화성은 아직입니다.** 화성의 경계는 자기 파일업 경계(MPB)이고 그 정준 적합(Vignes 2000,
+[`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V))은 preprint 없이 유료이며, 직하 거리 값이 지금까지 찾은 공개
+문헌에 인용돼 있지 않습니다. 그 숫자를 확인할 때까지 스톡 `irregular` 모델을 그대로 둡니다.
+짐작으로 채우지 않습니다.
+
 **짚어둘 배포 갭.** ROKerbalism의 `Support/RSS.cfg`는
 `+RadiationBody[Duna] { @name = Mars }`로 이름을 바꿔 복사하는데, 업스트림 KerbalismConfig를
 통째로 대체하는 그들 자신의 `System/Radiation.cfg`에는 `Duna` 정의가 없습니다

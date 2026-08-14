@@ -69,6 +69,15 @@ BODIES={
  'venus_stock':{'title':'Venus — stock (ROKerbalism)','sub':'ionosphere model: pause 1.1/ext 0.2, no belts (induced magnetosphere)','R':3,'tilt':0,
    'pause':{'radiation':-0.005,'rad':1.1,'ext':0.2,'hscale':1.0}},
 
+ # phys = 방법론 Part A '유도 자기권' 절로 계산. 이오노포즈는 실측 스케일을 쓴다(압력균형이 열압 대
+ # 항성풍이라 ^(1/6) 법칙 부적용). Brace 1980(PVO): 평균 이오노포즈 직하 330 km, 황혼 700 km,
+ # 새벽 1000 km → R_V 6051.8 km 기준 nose 1.0545, 명암경계선 평균 1.1405 R_V.
+ # Kerbalism 의미론: pause_radius=플랭크=1.140, compression=플랭크/노즈=1.081 (→ 노즈 1.0545 복원),
+ # extension=플랭크/꼬리=0.1037 (꼬리 11 R_V = Saunders 1986 이 PVO 로 5~11 R_V 에서 횡단한 원거리 꼬리).
+ # 벨트 없음(고유 다이나모 부재), radiation_pause 는 유도 경계라 쌍극보다 약한 스톡 스케일 -0.005 유지.
+ 'venus_phys':{'title':'Venus — physical (induced)','sub':'ionopause: nose 1.05 R_V (330 km), terminator 1.14, tail 11 R_V; no belts','R':3,'tilt':0,
+   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.081,'ext':0.1037,'hscale':1.0}},
+
  # ---- MARS: 지각 잔류 자기(다극·약장) → irregular 모델 (pause_deform 0.1 로 울퉁불퉁) ----
  # 업스트림 Kerbalism: RadiationBody[Duna] = irregular, radiation_pause = -0.003.
  # ROKerbalism 의 RSS.cfg 는 +RadiationBody[Duna]{@name = Mars} 로 복사하지만, 그들 자신의

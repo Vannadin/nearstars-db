@@ -57,6 +57,33 @@ are worth knowing before assuming a body has nothing:
 | `solidiron` / `metallic` | small pause shells | Bop; unassigned in stock | placeholders for dense airless bodies |
 | `surface` | pause 1.075 R | (abused as a surface-dose shell) | not a field at all |
 
+### Venus — the induced branch, derived
+
+| Stock | Physical |
+|---|---|
+| ![venus Stock](../img/belts/venus_stock.png) | ![venus Physical](../img/belts/venus_phys.png) |
+
+The physical preset is computed with the induced-magnetosphere recipe rather than
+the dipole one. Venus' mean ionopause sits 330 km above the subsolar point, 700 km
+at the dusk terminator and 1000 km at dawn (Brace 1980, [`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)), which
+on `R_V` 6051.8 km is a **nose at 1.055 R_V and a terminator mean of 1.140 R_V**.
+Mapped through the cfg semantics (`nose = pause_radius/compression`,
+flank = `pause_radius`, tail = `pause_radius/extension`) that is
+`pause_radius` **1.140**, `compression` **1.081**, `extension` **0.1037**, the last
+from a tail closed at **11 R_V** — the far end of the range where Pioneer Venus
+crossed the distant tail (Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S), 5–11 R_V). No belts,
+and `radiation_pause` stays at the shipped −0.005: an induced boundary screens GCR
+far less than a dipole magnetopause.
+
+Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
+1.1 R) and the tail runs twice as long (11 vs 5.5 R_V).
+
+**Mars is not done yet.** Its boundary is the magnetic pileup boundary, whose
+canonical fit (Vignes 2000, [`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V)) is paywalled with no preprint,
+and the subsolar value is not quoted in any open text found so far. The stock
+`irregular` model stands in until that number is verified — deliberately not
+guessed.
+
 **A distribution gap worth flagging.** ROKerbalism's `Support/RSS.cfg` renames
 `+RadiationBody[Duna] { @name = Mars }`, but its own `System/Radiation.cfg` — which
 replaces the upstream KerbalismConfig wholesale — defines no `Duna` body (verified
