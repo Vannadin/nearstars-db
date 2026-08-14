@@ -52,3 +52,43 @@ The derived values are not in the boards yet — belt geometry's single source o
 `render_belts_bodies.py` `*_phys` plus the phase4 rows, and changing either is a visible
 change to a gated row. Waiting on the owner, together with the gradient values from the
 previous pass.
+
+## Induced-boundary shape function — three wrong answers before the right one (2026-08-14)
+
+Venus and Mars have no dynamo, so their boundary is an induced one, and it needed a shape
+function for the overlay. The sequence, recorded because each step looked correct at the time.
+
+1. **Shue with a softened closure.** Rejected: Shue's single α sets the terminator width
+   (`r₀·2^α`) *and* the tail behaviour (`ρ ∝ u^(1−2α)`, cylindrical at exactly α = 0.5).
+   Venus needs a tight waist plus a widening tail, which no single α provides.
+2. **Two-α Shue** (α_day, α_night blended at 90°). Worked visually, but invented a knob, and
+   α_night was picked to suppress a mid-tail bulge — a criterion with no measurement behind it.
+3. **Conic section.** Adopted on the strength of "this is the form the literature fits".
+   True, but for the **bow shock**, not the boundary. Three failures: a conic through nose and
+   terminator overshoots the tail (5.05 vs 3.15 R_V at −20); forced closed as an ellipse it
+   bulges to 1.5–1.8× the terminator width at the ellipse centre, which is pure geometry
+   (max half-width = semi-minor axis `b`) sited where no crossings exist; and at Venus it dips
+   to 0.9745 R_V, below the surface. The owner caught both the bulge and the surface breach.
+4. **Circle + cone** — what Martinecz 2009 actually published for the IMB, "a circle on the
+   dayside and a straight line on the nightside", validated unchanged to ≥20 R_V by Edberg
+   2024 (arXiv 2410.21856). No invented parameters, and the circle cannot pierce a nose that
+   is above the surface.
+
+The methodological lesson, worth generalising: **step 3 failed because a fitted form was
+lifted across boundaries.** "The literature fits conics at Venus" was true of a different
+surface. Before adopting a functional form, check which boundary it was fitted to — the
+answer was one sentence away in the same paper (Edberg §1: conics for the BS, circle+line
+for the IMB).
+
+Second lesson: **an invented constraint is worse than a missing one.** The ellipse only
+appeared because a tail closure at 11 R_V was fed in as if measured; that single fabricated
+number forced `e` < 1 and produced every downstream defect. The real state of knowledge is
+that the boundary does not close within the observed domain, and the engine's closure is
+declared as an engine requirement instead.
+
+Currency check that settled Mars: Vignes 2000's own abstract calls the nightside MPB "highly
+variable", and Němec 2020 says MAVEN-era models are "unreliable beyond the terminator". So
+Mars' nightside is Venus' flare scaled by terminator radius, justified by a Phobos-2 / PVO
+comparison finding no structural difference between the two tails — labelled an analogy.
+It passes one check nobody designed for: dayside circle slope 0.135 vs cone 0.131 at the
+terminator, smooth to 3%.

@@ -81,26 +81,32 @@ def render(body, out, size=1120, z=0.0):
     #    r(θ) = r0·((1+ε)/(ε+cos²(θ/2)))^α,  ε = 1/((L/r0)^(1/α)−1);  ε→0이면 순수 Shue
     #    α 는 '적합된 값이 있을 때만' 그린다 — pause_compression 환산은 적합이 아니라 저작값이라
     #    자이언트에 쓰면 없는 숫자를 만들어 낸다(방법론 Part C 의 α 표 참조).
-    if pause and pause.get('on',True) and pause.get('conic_L'):
-        # 원뿔 단면: 이 천체들의 경계를 문헌이 실제로 적합하는 형식(Vignes 2000 화성 MPB 등).
-        # e<1 이면 타원이라 꼬리가 저절로 닫힌다 — Shue 처럼 ε 를 얹어 닫을 필요가 없고,
-        # (X0, e, L) 세 값이 노즈·플랭크·꼬리를 서로 독립으로 정한다.
-        X0, ec, Lc = pause['conic_X0'], pause['conic_e'], pause['conic_L']
-        th = np.radians(np.linspace(-179.5,179.5,721))
-        rr_ = Lc/(1+ec*np.cos(th))
+    if pause and pause.get('on',True) and pause.get('imb_term'):
+        # 유도 자기권 경계(IMB/MPB): 문헌이 이 경계에 실제로 쓰는 형식은 원뿔이 아니라
+        # 「주간면 원 + 야간면 직선」이다(Martinecz 2009; Edberg 2024 가 20 R_V 까지 유효 확인).
+        # 원뿔 단면은 활머리충격파 전용이고, 노즈·명암경계선을 지나는 원뿔은 꼬리가 지나치게
+        # 벌어진다(금성 −20 R_V 에서 5.05 대 실측 3.15). 닫히지 않으므로 관측 한계에서 끊는다.
+        nose, term = pause['imb_nose'], pause['imb_term']
+        slope, lim = pause['imb_slope'], pause.get('imb_limit', R)
+        Rc = (term*term + nose*nose)/(2*nose); xc = nose - Rc     # 노즈·명암경계선을 지나는 원
         oy = c - off*ppr
-        px = c + (X0 + rr_*np.cos(th))*ppr
-        py = oy - rr_*np.sin(th)*ppr
-        for i in range(0,len(px)-1,2):
-            if (i//2) % 3 == 2: continue
-            if max(abs(px[i]),abs(py[i])) > 4*size: continue
-            dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=S(2))
-        nose = X0 + Lc/(1+ec)
+        th = np.radians(np.linspace(-90,90,361))                  # 주간면 반원(x ≥ 0)
+        px = c + (xc + Rc*np.cos(th))*ppr; py = oy - Rc*np.sin(th)*ppr
+        seg = [(px,py)]
+        for sgn in (1,-1):                                        # 야간면 원뿔 두 면
+            xs = np.linspace(0,-lim,361); ys = sgn*(term + slope*(-xs))
+            seg.append((c + xs*ppr, oy - ys*ppr))
+        for j,(px_,py_) in enumerate(seg):
+            for i in range(0,len(px_)-1,2):
+                if (i//2) % 3 == 2: continue
+                if max(abs(px_[i]),abs(py_[i])) > 4*size: continue
+                # 야간면은 하류로 갈수록 흐려진다 — 먼 꼬리에서 경계 자체가 뚜렷하지 않다
+                # ("not obvious or abrupt", Edberg 2024). 무한히 벌어진다는 오독을 막는다.
+                a = 255 if j==0 else int(255*(1 - 0.8*i/(len(px_)-1)))
+                dr.line([px_[i],py_[i],px_[i+1],py_[i+1]],fill=(255,154,82,a),width=S(2))
         dr.ellipse([c+nose*ppr-S(3),oy-S(3),c+nose*ppr+S(3),oy+S(3)],fill=(255,154,82))
-        lbl = pause.get('conic_label','conic') + f"  X0 {X0:.2f} e {ec:.2f} L {Lc:.2f}"
-        lw = dr.textlength(lbl,font=fnt); lx = c+nose*ppr+S(6)
-        if lx+lw > size-S(6): lx = c+nose*ppr-S(6)-lw
-        dr.text((max(lx,S(4)),oy-S(16)),lbl,fill=(255,154,82),font=fnt)
+        # 라벨은 제목 밑줄에 둔다 — 노즈 옆은 반지름 눈금 행과 겹친다
+        dr.text((S(10),S(46)),pause.get('imb_label','IMB'),fill=(255,154,82),font=fnt)
     elif pause and pause.get('on',True) and pause.get('shue_alpha'):
         comp = pause.get('comp',1.0)
         r0 = pause.get('shue_nose', pause['rad']/comp)

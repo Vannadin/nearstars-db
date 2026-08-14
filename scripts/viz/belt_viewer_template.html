@@ -589,26 +589,39 @@ function render(){
   ctx.moveTo(0,c);ctx.lineTo(SZ,c);ctx.moveTo(c,0);ctx.lineTo(c,SZ);ctx.stroke();
   // Shue 기준 곡선 r(θ)=r0·(2/(1+cosθ))^α — 항성정렬 프레임(tilt 무관), r0=현재 pause 노즈
   // 꼬리마감 L>r0이면: 연화 Shue 폐곡선(C∞ 단일식) + 순수 Shue 대조
-  // 원뿔 오버레이 — 유도 경계(금성·화성)는 문헌이 원뿔로 적합한다. e<1 이면 저절로 닫힌다.
+  // 유도 경계 오버레이 — 문헌 형식은 주간면 원 + 야간면 직선(Martinecz 2009 / Edberg 2024).
+  // 원뿔은 활머리충격파 전용이라 쓰지 않는다. 닫히지 않으므로 관측 한계에서 끊는다.
   const cn=state.view;
-  if(cn.conic_L>0 && state.pause.on){
-    const X0=cn.conic_X0||0, ec=cn.conic_e||0, Lc=cn.conic_L;
+  if(cn.imb_term>0 && state.pause.on){
+    const nose=cn.imb_nose, term=cn.imb_term, sl=cn.imb_slope, lim=cn.imb_limit||R;
+    const Rc=(term*term+nose*nose)/(2*nose), xc=nose-Rc;
     const oy=c-(cn.offset||0)*ppr;
     ctx.strokeStyle='rgba(255,154,82,.95)'; ctx.setLineDash([6,4]); ctx.lineWidth=1.5;
     ctx.beginPath();
     let f0=true;
-    for(let deg=-179.5; deg<=179.5; deg+=0.5){
-      const th=deg*Math.PI/180, rr=Lc/(1+ec*Math.cos(th));
-      const px=c+(X0+rr*Math.cos(th))*ppr, py=oy-rr*Math.sin(th)*ppr;
+    for(let deg=-90; deg<=90; deg+=0.5){          // 주간면 원
+      const th=deg*Math.PI/180;
+      const px=c+(xc+Rc*Math.cos(th))*ppr, py=oy-Rc*Math.sin(th)*ppr;
       if(f0){ctx.moveTo(px,py);f0=false;} else ctx.lineTo(px,py);
     }
-    ctx.stroke(); ctx.setLineDash([]);
-    const nose=X0+Lc/(1+ec);
+    ctx.stroke();
+    // 야간면은 하류로 갈수록 흐려진다 — 먼 꼬리에서 경계가 뚜렷하지 않다("not obvious
+    // or abrupt", Edberg 2024). 무한히 벌어진다는 오독을 막기 위한 표현.
+    const gd=ctx.createLinearGradient(c,0,c-lim*ppr,0);
+    gd.addColorStop(0,'rgba(255,154,82,.95)'); gd.addColorStop(1,'rgba(255,154,82,.15)');
+    ctx.strokeStyle=gd;
+    for(const sg of [1,-1]){                       // 야간면 원뿔 두 면
+      ctx.beginPath();
+      ctx.moveTo(c, oy-sg*term*ppr);
+      ctx.lineTo(c-lim*ppr, oy-sg*(term+sl*lim)*ppr);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
     ctx.fillStyle='rgba(255,154,82,.95)';
     ctx.beginPath(); ctx.arc(c+nose*ppr,oy,2.5,0,7); ctx.fill();
     ctx.font='10px ui-monospace,monospace';
-    ctx.fillText((cn.conic_label||'conic')+'  X0='+X0.toFixed(2)+' e='+ec.toFixed(2)+' L='+Lc.toFixed(2),
-                 c+nose*ppr+5, oy-6);
+    ctx.fillText((cn.imb_label||'IMB')+'  nose='+nose.toFixed(2)+' term='+term.toFixed(2)
+                 +' flare='+(Math.atan(sl)*180/Math.PI).toFixed(1)+'°', c+nose*ppr+5, oy-6);
   }
   const alS=state.view.shue;
   if(alS>0.05 && state.pause.on){

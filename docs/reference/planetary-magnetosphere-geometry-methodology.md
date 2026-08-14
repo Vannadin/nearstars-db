@@ -79,50 +79,75 @@ turns nearly radial, and by extension under the extreme wind pressures of a clos
 orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
 rather than assuming a permanent boundary.
 
-**Shape function: use a conic, not Shue.** The Shue family is the wrong tool here, and
-the literature already says which is right. Shue ties the dayside flaring and the tail
-to a single α, so with Venus' measured flaring (1.14/1.055 = 1.08) the curve becomes a
-sphere that reaches its 11 R_V tail only at θ = 179.9964°. Patching that — closing the
-tail with an `ε` term, then letting α vary past the terminator — does work, but it
-invents knobs. Meanwhile **the boundaries of these bodies are actually fitted with
-conic sections**:
+**Shape function: dayside circle plus a nightside cone.** The literature has a
+standard form for this boundary and it is neither Shue nor a conic section:
 
-    r(θ) = L / (1 + e·cos θ)        about a focus at (X₀, 0, 0)
+    dayside  (x ≥ 0):  circle of radius R centred at (x_c, 0), fitted to nose and terminator
+    nightside (x < 0):  straight line  ρ = ρ_term + s·(−x)
 
-That is Vignes' own form for Mars' MPB, and the standard for planetary obstacles
-generally (Slavin & Holzer 1981, [`1981JGR....8611401S`](https://ui.adsabs.harvard.edu/abs/1981JGR....8611401S)). Three properties make it a
-better fit for this branch than anything Shue-derived:
+That is the induced-magnetosphere-boundary model of Martinecz 2009
+([`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M)) — "the IMB shape was represented by a circle on the dayside
+and a straight line on the nightside" — and Edberg 2024
+([`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)) tested it against Solar
+Orbiter, BepiColombo and Parker Solar Probe crossings and found it **still valid to at
+least 20 R_V without adjustment** (a refit moves the slope 0.101 → 0.097 and the offset
+1.13 → 1.10 R_V, which at 20 R_V displaces the boundary by 0.1 R_V). Conic sections
+*are* used at these planets — for the **bow shock**, not the IMB.
 
-1. **It closes by itself.** With `e < 1` the conic is an ellipse, so the tail shuts at
-   `r(180°) = L/(1−e)` with no added term. The engine needs a bounded volume anyway,
-   and here the closure comes from the fitted eccentricity instead of being imposed.
-2. **`X₀`, `e`, `L` decouple what needs decoupling** — nose, terminator width and tail
-   length are three independent constraints on three parameters, which is exactly the
-   freedom the induced branch needs and the freedom one α lacks.
-3. **It is what the data was fitted with**, so no re-parametrization step can distort
-   it.
+Both alternatives fail, and it is worth recording why, because both were tried here
+first.
 
-Adopted values: **Mars** takes Vignes 2000's published conic unchanged
-(`X₀` 0.78, `e` 0.90, `L` 0.96). **Venus** has no published conic, so one is solved
-through its three measured constraints — nose 1.0545, terminator width 1.1405, tail
-11 R_V — giving `X₀` 0.7071, `e` 0.9424, `L` 0.6748, an exact fit to all three.
+**Shue cannot do it — two parameters against three constraints.** Its tail width
+behaves as `ρ ∝ u^(1−2α)` for `u = π − θ`, so α = 0.5 is exactly the cylindrical-tail
+threshold: below it the tail closes, above it the tail flares without bound. But the
+same α also fixes the terminator width, `ρ(90°) = r₀·2^α`. One knob, two jobs. At
+Venus that is fatal: α 0.10 reproduces the measured terminator width 1.13 and then
+shuts the tail immediately, while α 0.58 reproduces the measured width at −20 R_V
+(3.16 against 3.15) and overshoots the terminator by 40% (1.58 against 1.13). The
+induced boundary has a **tight waist and a steadily widening tail**; Shue's single α
+cannot hold those apart at any value.
 
-**A correction this forces.** An earlier revision tuned the two-α form to avoid a
-mid-tail bulge, adopting `α_night` 0.34 because larger values widened the tail to
-1.1–1.4× its terminator width. That criterion was wrong: Vignes' own conic flares to
-**2.20 R_M, about 1.5× the terminator width, at x ≈ −5 R_M** before closing. The
-downstream flare is a real feature of the fitted boundary (and the "flaring with
-altitude" Pioneer Venus reported at Venus, Saunders 1986,
-[`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)), not an artifact to suppress. The conic reproduces it without
-tuning.
+**A conic cannot do it either.** Fit `r(θ) = L/(1 + e·cos θ)` about a focus at (X₀,0,0)
+to the nose and terminator and the curvature forces the tail far too wide — 5.05 R_V at
+x = −20 against the measured 3.15, even at the parabolic limit `e` = 1. Push `e` below 1
+to close the tail and the ellipse's semi-minor axis becomes a mid-tail bulge of
+1.5–1.8× the terminator width, sited at the ellipse centre where no crossings exist.
+At Venus it fails outright: the ellipse solved through nose 1.0545, terminator 1.1405
+and an 11 R_V tail **dips to 0.9745 R_V at θ = 96°, below the planet's surface.**
 
-**One honest limit.** The ellipse's far-tail closure is extrapolation, not
-measurement: Vignes notes that beyond `X'` ≈ −2 R_M the MPB is "a weak and gradual
-transition", and their crossings are concentrated on the dayside and terminator. The
-nose and flank are measured; the tail shape is the fit's continuation.
+Adopted values:
 
-The two-α Shue construction is retained in the renderer as a fallback for a body with
-no conic fit and no published α, and is labelled as ours wherever it is drawn.
+| | nose | terminator | nightside flare | dayside circle |
+|---|---|---|---|---|
+| Venus | 1.055 R_V | 1.130 R_V | `s` 0.101 → **5.77°** | R 1.1327, centre x −0.0777 |
+| Mars | 1.285 R_M | 1.470 R_M | `s` 0.1314 → **7.49°** | R 1.4833, centre x −0.1983 |
+
+Venus is fully measured: the nose and terminator come from Brace 1980's PVO ionopause
+heights, the flare from Martinecz's fitted line as validated by Edberg. Mars takes its
+dayside from Vignes 2000 ([`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V), Table 2, N = 488) but **not** its
+nightside: that paper's own abstract states the "nightside MPB position [is] highly
+variable", and Němec 2020 ([`2020JGRA..12528509N`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12528509N)) says even the MAVEN-based models
+"are deemed unreliable beyond the terminator". So Mars' flare is Venus' flare scaled by
+terminator radius, justified by the Phobos-2 / Pioneer Venus comparison finding no
+significant difference between the two induced magnetotails' structure
+([`2001AGUSM..SM32D06K`](https://ui.adsabs.harvard.edu/abs/2001AGUSM..SM32D06K)) — an **analogy, not a Mars measurement**, and it must be
+labelled as one. It does earn one unprompted check: at that angle Mars' dayside circle
+arrives at the terminator with slope 0.135 against the cone's 0.131, joining smoothly to
+within 3%, which nothing in the construction arranged.
+
+The circle also removes the surface-piercing failure by construction: its distance from
+the planet's centre runs monotonically from the nose to the terminator width, so it can
+never cut inside a nose that is itself above the surface.
+
+**One honest limit — this boundary does not close.** A 5.8° cone runs to infinity, and
+within the observed domain that is what the data show. Kerbalism needs a bounded
+volume, so the engine's `pause_extension` closes the tail at the **farthest confirmed
+crossing**: 20 R_V for Venus (Edberg 2024), and the same distance in planetary radii for
+Mars under the same analogy. The overlay, by contrast, is drawn to the observational
+limit and simply stops there rather than faking a closure.
+
+The two-α Shue construction is retained in the renderer only as a fallback for a body
+with no measured boundary and no published α, and is labelled as ours wherever drawn.
 
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long

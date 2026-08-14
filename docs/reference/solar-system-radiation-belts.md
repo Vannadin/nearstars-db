@@ -69,24 +69,37 @@ at the dusk terminator and 1000 km at dawn (Brace 1980, [`1980JGR....85.7663B`](
 on `R_V` 6051.8 km is a **nose at 1.055 R_V and a terminator mean of 1.140 R_V**.
 Mapped through the cfg semantics (`nose = pause_radius/compression`,
 flank = `pause_radius`, tail = `pause_radius/extension`) that is
-`pause_radius` **1.140**, `compression` **1.081**, `extension` **0.1037**, the last
-from a tail closed at **11 R_V** — the far end of the range where Pioneer Venus
-crossed the distant tail (Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S), 5–11 R_V). No belts,
-and `radiation_pause` stays at the shipped −0.005: an induced boundary screens GCR
-far less than a dipole magnetopause.
+`pause_radius` **1.140**, `compression` **1.081**, `extension` **0.057**, the last
+from a tail closed at **20 R_V** — the farthest confirmed crossing of the induced
+magnetospheric boundary (Edberg 2024, [`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E),
+[2410.21856](https://arxiv.org/abs/2410.21856)). No belts, and `radiation_pause` stays at the shipped
+−0.005: an induced boundary screens GCR far less than a dipole magnetopause.
 
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
-1.1 R) and the tail runs twice as long (11 vs 5.5 R_V).
+1.1 R) and the tail runs far longer (20 vs 5.5 R_V).
 
-**The overlay is a conic, not Shue.** These boundaries are fitted with conic
-sections in the literature, and with `e` < 1 a conic closes on its own — no added
-term, and nose, terminator and tail land on three independent parameters. Venus has
-no published conic, so one is solved through its three measured constraints:
-`X₀` 0.7071, `e` 0.9424, `L` 0.6748, exact on nose 1.0545, terminator 1.1405 and
-tail 11 R_V. Why not Shue: its single α ties dayside to tail, and the measured
-flaring gives an α that reaches 11 R_V only at θ = 179.9964°.
+**The overlay is a circle plus a cone — not Shue, and not a conic.** The published
+IMB model is exactly that shape: "a circle on the dayside and a straight line on the
+nightside" (Martinecz 2009, [`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M)), the nightside line being
+`ρ = 1.13 − 0.101·X'`, which Edberg 2024 tested against Solar Orbiter, BepiColombo
+and Parker Solar Probe crossings and found valid to at least 20 R_V unchanged. So the
+overlay is a **dayside circle of radius 1.1327 centred at x −0.0777** joined to a
+**5.77° cone**. Conic sections are used at Venus for the *bow shock*, not this
+boundary.
 
-### Mars — the MPB conic, derived
+Both alternatives were tried here first and both fail. Shue has two parameters against
+three constraints — α 0.10 matches the terminator width and then shuts the tail at
+once, α 0.58 matches the width at −20 R_V (3.16 vs 3.15) and overshoots the terminator
+by 40%. A conic fitted to nose and terminator overshoots the tail (5.05 vs 3.15 at
+−20 R_V) and, forced closed as an ellipse, **dipped to 0.9745 R_V — below the
+surface.** Full argument in the methodology's Part A.
+
+The nightside line is drawn fading downstream on purpose. It does not widen forever:
+far downtail the transition is "not obvious or abrupt… similar to those normally seen"
+in the solar wind (Edberg 2024), so the boundary stops being a boundary rather than
+curving back.
+
+### Mars — the MPB dayside, derived
 
 | Stock | Physical |
 |---|---|
@@ -100,18 +113,30 @@ directly: `X₀` 0.78 ± 0.01, eccentricity 0.90 ± 0.01, semi-latus rectum `L`
 
 - `pause_radius` = flank = **1.47**, `compression` = 1.47/1.29 = **1.1395** (which
   recovers the 1.29 nose);
-- the tail comes from their own conic — with `e` < 1 it closes, `r(180°) = L/(1−e)`
-  = 9.60 R_M from a focus at `X₀` 0.78, i.e. **8.82 R_M** behind the centre, so
-  `extension` = 1.47/8.82 = **0.1667**;
-- the overlay is Vignes' own conic, unchanged: `X₀` 0.78, `e` 0.90, `L` 0.96. It
-  flares to 2.20 R_M (≈1.5× the terminator width) around x ≈ −5 R_M before closing —
-  a real feature of the fit, which an earlier two-α tuning had suppressed.
+- the dayside overlay is a circle through those two points: **radius 1.4833 centred at
+  x −0.1983**;
+- the nightside is **not** taken from their conic. Vignes' own abstract calls the
+  "nightside MPB position… highly variable", and Němec 2020
+  ([`2020JGRA..12528509N`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12528509N)) states that even the MAVEN-based models "are deemed
+  unreliable beyond the terminator". Extended into that gap, their ellipse bulges to
+  2.20 R_M — 1.5× the terminator width — at x ≈ −3.8 and closes at −8.8, both in a
+  region with no crossings.
+
+Instead the nightside uses Venus' measured flare scaled by terminator radius, giving
+**7.49°**, on the strength of a Phobos-2 / Pioneer Venus comparison that found no
+significant difference between the two planets' induced magnetotail structure
+([`2001AGUSM..SM32D06K`](https://ui.adsabs.harvard.edu/abs/2001AGUSM..SM32D06K)). That is an **analogy, not a Mars measurement**, and is
+labelled as one in the render. One check it was not designed to pass: at that angle the
+dayside circle meets the terminator with slope 0.135 against the cone's 0.131, joining
+smoothly to within 3%. `extension` = **0.0735** closes the engine volume at 20 R_M, the
+same distance in planetary radii as Venus' farthest confirmed crossing, under the same
+analogy.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
 amplitude is inherited rather than derived — flagged, not fabricated. Against stock,
 the derived boundary stands further off (1.29 vs 1.25 nose, 1.47 vs a rounder
-flank) and trails a much longer tail (8.8 vs 1.7 R_M).
+flank) and trails a much longer tail (20 vs 1.7 R_M).
 
 Both Venus and Mars remain belt-free: no dynamo, no trapping.
 
