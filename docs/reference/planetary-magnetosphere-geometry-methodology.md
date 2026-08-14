@@ -101,15 +101,30 @@ The smoothstep makes α continuous in value *and* slope at the terminator, so th
 curve stays smooth where the two regimes meet, and `ε` still closes the tail at `L`.
 Now the constraints land on separate parameters: **`r0` and `α_day` are pinned by the
 measured nose and terminator, `L` by the observed tail length, and `α_night` sets how
-the tail flares between them.** For Venus, `α_day` 0.113 with `α_night` 0.5 keeps the
-tail 1.2–1.5 R_V wide out to ~7 R_V before closing at 11 — the "flaring with altitude"
-Pioneer Venus reported (Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)).
+the tail flares between them.** **Choosing `α_night`, and the artifact to watch.** Because `ε` closes the tail at a
+finite `L`, the width always rises and then necks — only the size of the bulge is
+tunable, and a large `α_night` turns the tail into a visible lens. Measured on the
+width profile:
 
-**Honesty about `α_night`.** It is *not* pinned. `r0`, `α_day` and `L` come from
-measurements; `α_night` was chosen to reproduce a qualitative statement ("flaring
-with altitude"), because no tail-width-versus-distance number has been pulled yet.
-Treat it as a shape knob with a stated default (0.5), not a derived quantity, and
-pin it when a tail-radius profile is available.
+| `α_night` | max tail width (Venus) | vs terminator | where |
+|---|---|---|---|
+| 0.30 | 1.16 R_V | 1.01× | just past the terminator |
+| **0.34** | **1.16 R_V** | **1.02×** | x ≈ 0.5 R_V |
+| 0.40 | 1.26 R_V | 1.10× | x ≈ 2.6 R_V |
+| 0.50 | 1.56 R_V | 1.37× | x ≈ 4.4 R_V |
+
+The adopted rule is **the largest `α_night` that keeps the maximum tail width within
+a few percent of the terminator width**, so the tail reads as a near-cylindrical
+wake that closes gently rather than a bulge. That is **0.34** for both Venus and
+Mars (Mars: 1.04× at 0.34, 1.22× at 0.5), and it is the value the owner picked by
+eye before the profile was measured.
+
+Honesty about it: `r0`, `α_day` and `L` come from measurements; `α_night` does not.
+It is a shape knob set by the criterion above, not a derived quantity, and the
+underlying flaring reported by Pioneer Venus (Saunders 1986,
+[`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)) is qualitative. Pin it properly when a tail-radius-versus-
+distance profile is available; a monotone flare would also require dropping the
+finite closure, which the engine needs for a bounded volume.
 
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long

@@ -337,15 +337,30 @@ The smoothstep makes α continuous in value *and* slope at the terminator, so th
 curve stays smooth where the two regimes meet, and `ε` still closes the tail at `L`.
 Now the constraints land on separate parameters: **`r0` and `α_day` are pinned by the
 measured nose and terminator, `L` by the observed tail length, and `α_night` sets how
-the tail flares between them.** For Venus, `α_day` 0.113 with `α_night` 0.5 keeps the
-tail 1.2–1.5 R_V wide out to ~7 R_V before closing at 11 — the "flaring with altitude"
-Pioneer Venus reported (Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)).
+the tail flares between them.** **Choosing `α_night`, and the artifact to watch.** Because `ε` closes the tail at a
+finite `L`, the width always rises and then necks — only the size of the bulge is
+tunable, and a large `α_night` turns the tail into a visible lens. Measured on the
+width profile:
 
-**Honesty about `α_night`.** It is *not* pinned. `r0`, `α_day` and `L` come from
-measurements; `α_night` was chosen to reproduce a qualitative statement ("flaring
-with altitude"), because no tail-width-versus-distance number has been pulled yet.
-Treat it as a shape knob with a stated default (0.5), not a derived quantity, and
-pin it when a tail-radius profile is available.
+| `α_night` | max tail width (Venus) | vs terminator | where |
+|---|---|---|---|
+| 0.30 | 1.16 R_V | 1.01× | just past the terminator |
+| **0.34** | **1.16 R_V** | **1.02×** | x ≈ 0.5 R_V |
+| 0.40 | 1.26 R_V | 1.10× | x ≈ 2.6 R_V |
+| 0.50 | 1.56 R_V | 1.37× | x ≈ 4.4 R_V |
+
+The adopted rule is **the largest `α_night` that keeps the maximum tail width within
+a few percent of the terminator width**, so the tail reads as a near-cylindrical
+wake that closes gently rather than a bulge. That is **0.34** for both Venus and
+Mars (Mars: 1.04× at 0.34, 1.22× at 0.5), and it is the value the owner picked by
+eye before the profile was measured.
+
+Honesty about it: `r0`, `α_day` and `L` come from measurements; `α_night` does not.
+It is a shape knob set by the criterion above, not a derived quantity, and the
+underlying flaring reported by Pioneer Venus (Saunders 1986,
+[`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)) is qualitative. Pin it properly when a tail-radius-versus-
+distance profile is available; a monotone flare would also require dropping the
+finite closure, which the engine needs for a bounded volume.
 
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long
@@ -1169,14 +1184,27 @@ a documented regime call rather than a computed number.
 smoothstep 덕분에 α가 명암경계선에서 값과 기울기 모두 연속이라 두 영역이 만나는 자리가 매끄럽고,
 `ε`은 여전히 꼬리를 `L`에서 닫습니다. 이제 제약이 서로 다른 파라미터에 얹힙니다. **`r0`와
 `α_day`는 실측 노즈·명암경계선이, `L`은 관측된 꼬리 길이가 고정하고, `α_night`이 그 사이에서
-꼬리가 벌어지는 정도를 정합니다.** 금성은 `α_day` 0.113에 `α_night` 0.5면 꼬리가 ~7 R_V까지
-1.2~1.5 R_V 폭을 유지하다 11에서 닫힙니다. Pioneer Venus가 보고한 "고도에 따라 벌어지는" 꼬리와
-맞습니다(Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)).
+꼬리가 벌어지는 정도를 정합니다.** **`α_night` 고르기, 그리고 주의할 인공물.** `ε`이 꼬리를 유한한 `L`에서 닫기 때문에 폭은 늘 커졌다가
+목이 잘립니다. 조절할 수 있는 것은 불룩함의 크기뿐이고, `α_night`이 크면 꼬리가 눈에 띄는 렌즈가
+됩니다. 폭 프로파일을 재면 이렇습니다.
 
-**`α_night`에 대한 정직한 표시.** 이 값은 고정되지 않았습니다. `r0`·`α_day`·`L`은 측정에서
-오지만, `α_night`은 "고도에 따라 벌어진다"는 정성 서술을 재현하려고 고른 값입니다. 꼬리 폭 대
-거리 수치를 아직 확보하지 못했기 때문입니다. 도출량이 아니라 기본값(0.5)이 명시된 형상 손잡이로
-다루고, 꼬리 반경 프로파일이 생기면 그때 고정하십시오.
+| `α_night` | 최대 꼬리 폭(금성) | 명암경계선 대비 | 위치 |
+|---|---|---|---|
+| 0.30 | 1.16 R_V | 1.01배 | 명암경계선 바로 뒤 |
+| **0.34** | **1.16 R_V** | **1.02배** | x ≈ 0.5 R_V |
+| 0.40 | 1.26 R_V | 1.10배 | x ≈ 2.6 R_V |
+| 0.50 | 1.56 R_V | 1.37배 | x ≈ 4.4 R_V |
+
+채택 기준은 **최대 꼬리 폭이 명암경계선 폭의 몇 % 안에 머무는 가장 큰 `α_night`**입니다. 그래야
+꼬리가 불룩한 렌즈가 아니라 거의 원통형 항적이 완만히 닫히는 모양으로 읽힙니다. 금성·화성 모두
+**0.34**이고(화성은 0.34에서 1.04배, 0.5에서 1.22배), 프로파일을 재기 전에 오너가 눈으로 고른 값과
+같습니다.
+
+정직하게 적어 둡니다. `r0`·`α_day`·`L`은 측정에서 오지만 `α_night`은 아닙니다. 위 기준으로 정한
+형상 손잡이일 뿐이고, Pioneer Venus가 보고한 벌어짐(Saunders 1986,
+[`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S))도 정성 서술입니다. 꼬리 반경 대 거리 프로파일이 생기면 제대로
+고정하십시오. 단조롭게 벌어지는 꼬리를 원한다면 유한 닫힘 자체를 버려야 하는데, 엔진은 유계
+부피가 필요합니다.
 
 **Kerbalism 매핑.** 엔진에 이미 이 갈래가 있습니다. `ionosphere` 모델은 **pause만 있는** 껍질로,
 `pause_radius` 1.1 R에 `pause_extension` 0.2(긴 유도 꼬리)이며 벨트 필드가 아예 없고

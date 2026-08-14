@@ -81,7 +81,7 @@ BODIES={
  # 값으로 골랐고, 꼬리 폭 실측치로 핀되지 않았다(미고정 표시).
  'venus_phys':{'title':'Venus — physical (induced)','sub':'ionopause: nose 1.05 R_V (330 km), terminator 1.14, tail 11 R_V; no belts','R':3,'tilt':0,
    'pause':{'radiation':-0.005,'rad':1.14,'comp':1.081,'ext':0.1037,'hscale':1.0,
-            'shue_alpha':0.113,'shue_alpha_night':0.5,'shue_nose':1.0545,'shue_tail':11.0}},
+            'shue_alpha':0.113,'shue_alpha_night':0.34,'shue_nose':1.0545,'shue_tail':11.0}},
 
  # ---- MARS: 지각 잔류 자기(다극·약장) → irregular 모델 (pause_deform 0.1 로 울퉁불퉁) ----
  # 업스트림 Kerbalism: RadiationBody[Duna] = irregular, radiation_pause = -0.003.
@@ -95,12 +95,13 @@ BODIES={
  # Kerbalism 의미론으로: pause_radius = 플랭크 = 1.47, compression = 1.47/1.29 = 1.1395 (→ 노즈 1.29 복원),
  # 꼬리는 그들의 원뿔에서 직접 나온다. e<1 이라 닫힌 타원이고 r(180°) = L/(1-e) = 9.60 R_M,
  # 초점이 X0=0.78 에 있으므로 중심 기준 8.82 R_M → extension = 1.47/8.82 = 0.1667.
- # Shue 2-α: α_day = log2(1.47/1.29) = 0.188 (실측 고정), α_night 0.5 는 금성과 같은 근거로 미고정 선택.
+ # Shue 2-α: α_day = log2(1.47/1.29) = 0.188 (실측 고정), α_night 0.34 는 금성과 같은 기준
+ # (최대 폭이 명암경계선 폭의 1.04배 이내 — 0.5 면 1.22배로 불룩해진다). 미고정 값.
  # pause_deform 0.1 은 스톡 irregular 에서 물려받은 값이다 — 지각 잔류자기의 비축대칭성을 뜻하지만
  # 크기는 도출하지 않았다(Vignes 는 남북 비대칭을 정량화하지 않는다).
  'mars_phys':{'title':'Mars — physical (MPB fit)','sub':'Vignes 2000 MPB conic: nose 1.29 R_M, terminator 1.47, tail 8.8 R_M; crustal-anomaly deform; no belts','R':3,'tilt':0,
    'pause':{'radiation':-0.003,'rad':1.47,'comp':1.1395,'ext':0.1667,'hscale':1.0,'deform':0.1,
-            'shue_alpha':0.188,'shue_alpha_night':0.5,'shue_nose':1.29,'shue_tail':8.82}},
+            'shue_alpha':0.188,'shue_alpha_night':0.34,'shue_nose':1.29,'shue_tail':8.82}},
 
  # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----
  'earth_stock':{'title':'Earth — stock (ROKerbalism)','sub':'inner 0.81/0.70 (D), outer 2.63/2.48 (O), pause 15','R':12,'tilt':11,

@@ -82,8 +82,9 @@ Against stock, the derived dayside hugs the planet more tightly (1.05 vs a unifo
 dayside flaring and a long tail, and an induced magnetosphere has exactly that
 combination — α from the measured flaring is 0.113, which would reach the 11 R_V
 tail only at θ = 179.9964°. So the exponent varies with angle: `α_day` 0.113 pinned
-by the measured nose and terminator, `α_night` 0.5 setting how the tail flares, `L`
-11 R_V from the observations. `α_night` is a shape knob, not a measurement — see the
+by the measured nose and terminator, `α_night` 0.34 setting how the tail flares (the largest value that keeps the tail
+within ~2 % of the terminator width, so it does not bulge), `L` 11 R_V from the
+observations. `α_night` is a shape knob, not a measurement — see the
 methodology's induced subsection.
 
 ### Mars — the MPB conic, derived
@@ -103,8 +104,8 @@ directly: `X₀` 0.78 ± 0.01, eccentricity 0.90 ± 0.01, semi-latus rectum `L`
 - the tail comes from their own conic — with `e` < 1 it closes, `r(180°) = L/(1−e)`
   = 9.60 R_M from a focus at `X₀` 0.78, i.e. **8.82 R_M** behind the centre, so
   `extension` = 1.47/8.82 = **0.1667**;
-- two-α overlay as at Venus: `α_day` 0.188 from the measured flaring, `α_night` 0.5
-  (unpinned shape knob), tail 8.82 R_M.
+- two-α overlay as at Venus: `α_day` 0.188 from the measured flaring, `α_night` 0.34
+  (unpinned shape knob, same no-bulge criterion), tail 8.82 R_M.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
