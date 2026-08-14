@@ -48,6 +48,52 @@ the atmosphere/surface (`R_inner ≈ 1.1–2 R_p`). A stronger field → larger 
 → room for belts farther out. This is the one place field strength directly sizes
 the belts.
 
+### Induced magnetospheres — the no-dynamo branch
+
+Everything above assumes an intrinsic dipole. A body with **no dynamo but an
+atmosphere** still gets a magnetosphere-like structure: sunlight photoionizes the
+upper atmosphere, the conducting ionosphere excludes the wind's draped field, and
+the boundary that forms is the **ionopause / induced magnetosphere boundary**
+(Bertucci 2011, [`2011SSRv..162..113B`](https://ui.adsabs.harvard.edu/abs/2011SSRv..162..113B), the Mars/Venus/Titan review; Luhmann 1991,
+[`1991SSRv...55..201L`](https://ui.adsabs.harvard.edu/abs/1991SSRv...55..201L)). It is a near-permanent feature, not an occasional one
+(Zhang 2009, [`2009GeoRL..3620203Z`](https://ui.adsabs.harvard.edu/abs/2009GeoRL..3620203Z)).
+
+**Standoff.** The balance is ionospheric *thermal* pressure against the shocked-wind
+pressure, not magnetic pressure against ram pressure, so Part A's `^(1/6)` law does
+not apply. Use the measured scale instead: at Venus the mean ionopause sits **330 km
+above the subsolar point, 700 km at the dusk terminator and 1000 km at dawn**, and it
+expands and contracts with wind pressure (Brace 1980, [`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)) — that
+is **1.05 R_V subsolar, 1.12–1.17 R_V at the terminator**. Adopt `1.05–1.2 R_p` for
+an Earth-to-Venus-class atmosphere and say which end you took; there is no useful
+field parameter to derive it from.
+
+**Which branch a body takes.** Not simply "does it have a dynamo": a *weak* dipole
+can be worse than none. In hybrid simulations of a Mars-sized planet, increasing the
+field **increases** ion escape until the dipole's standoff exceeds the induced
+boundary, and only past that does a field start shielding (Egan 2019,
+[`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)). So the crossover test is `R_mp(B_eq) > r_ionopause`, not
+`B_eq > 0`. Below it, treat the body as induced.
+
+**Close-in caution.** The induced magnetosphere can disappear outright when the IMF
+turns nearly radial, and by extension under the extreme wind pressures of a close-in
+orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
+rather than assuming a permanent boundary.
+
+**Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
+a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long
+induced tail) and no belt fields at all, carrying `radiation_pause` ≈ −0.005 —
+weaker than a dipole magnetopause, which is right, since an induced boundary screens
+GCR far less. Venus and Titan ship with it. For NearStars:
+
+- **no dynamo + atmosphere** → `ionosphere`-style pause at the ionopause estimate,
+  no belts, small negative `radiation_pause`;
+- **no dynamo + airless** → no `RadiationModel` at all; the surface dose is the
+  direct wind/GCR flux (that chain is `surface-radiation-dose-methodology.md`);
+- **weak dynamo** → run the crossover test above before assuming belts exist at all.
+
+Per-model cfg values and the bodies that use them are tabulated in
+[`solar-system-radiation-belts.md`](solar-system-radiation-belts.md).
+
 ## Part B — belt intensity is multi-factor (NOT field strength)
 
 Belt intensity is a **source − loss balance, capped by a field/plasma ceiling**:
@@ -642,7 +688,8 @@ aurora — not a surface one.
      magnetic pressure to a few R_moon; ≳15–20× dominance → mostly closed → a real
      CRAND belt (if it has an atmosphere), moderated by parent GCR-screening. Strong
      shield **plus** a genuine orbital-altitude belt. No Solar-System exemplar (low conf).
-4. **Induced / no dynamo** (Venus, Io, a dead rocky planet): no intrinsic trapping,
+4. **Induced / no dynamo** (Venus, Io, a dead rocky planet) — recipe in Part A's
+   induced-magnetosphere subsection: no intrinsic trapping,
    no belts; the interaction is ionospheric/induced and the surface dose is the
    direct wind + GCR flux.
 5. **Weak/airless**: `B_eq < 0.1× Earth` → no stable belts; surface dose direct.
@@ -739,6 +786,15 @@ a documented regime call rather than a computed number.
   giant planet's magnetosphere — the shield-vs-radiation-belt tension, and the note that
   Earth-mass strong-field moons are formation-unlikely. Grounds the strong-field
   embedded-moon (sub-regime 3b) as coherent-but-unprecedented (fiction-premise).
+- **Bertucci et al. 2011**, SSRv 162, 113 ([`2011SSRv..162..113B`](https://ui.adsabs.harvard.edu/abs/2011SSRv..162..113B)); **Luhmann 1991**, SSRv
+  55, 201 ([`1991SSRv...55..201L`](https://ui.adsabs.harvard.edu/abs/1991SSRv...55..201L)); **Brace et al. 1980**, JGR 85, 7663
+  ([`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)); **Zhang et al. 2009**, GRL 36, L20203
+  ([`2009GeoRL..3620203Z`](https://ui.adsabs.harvard.edu/abs/2009GeoRL..3620203Z)); **Egan et al. 2019**, MNRAS 488, 2108
+  ([`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)). The induced-magnetosphere branch: the review, the Venus
+  ionospheric field, the measured ionopause heights, its disappearance under a radial
+  IMF (with the close-in-exoplanet implication), and the weak-dipole crossover where a
+  field starts shielding instead of enhancing escape.
+
 - **Griessmeier et al. 2004**, A&A 425, 753 ([`2004A&A...425..753G`](https://ui.adsabs.harvard.edu/abs/2004A%26A...425..753G)); **Vidotto et al.
   2013**, A&A 557, A67 ([`2013A&A...557A..67V`](https://ui.adsabs.harvard.edu/abs/2013A%26A...557A..67V)). Exoplanet magnetosphere size vs
   stellar wind / tidal locking — the close-in-planet standoff application.
