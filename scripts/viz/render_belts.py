@@ -79,12 +79,12 @@ def render(body, out, size=1120, z=0.0):
     dr.line([0,c,size,c],fill=(255,255,255,26),width=S(1)); dr.line([c,0,c,size],fill=(255,255,255,26),width=S(1))
     # ── Shue 자기권계면 기준선 (주황 파선) — 항성정렬 프레임, 연화형 폐곡선 ──
     #    r(θ) = r0·((1+ε)/(ε+cos²(θ/2)))^α,  ε = 1/((L/r0)^(1/α)−1);  ε→0이면 순수 Shue
-    #    r0 = pause 노즈 = pause_radius/comp,  L = 꼬리 = pause_radius/ext,  α = log2(comp)
-    #    (레거시 환산은 방법론 Part C. 보드가 ⚗ pause_nose/alpha/tail을 들고 있으면 그 값 우선)
-    if pause and pause.get('on',True):
+    #    α 는 '적합된 값이 있을 때만' 그린다 — pause_compression 환산은 적합이 아니라 저작값이라
+    #    자이언트에 쓰면 없는 숫자를 만들어 낸다(방법론 Part C 의 α 표 참조).
+    if pause and pause.get('on',True) and pause.get('shue_alpha'):
         comp = pause.get('comp',1.0)
         r0 = pause.get('shue_nose', pause['rad']/comp)
-        al = pause.get('shue_alpha', np.log2(comp) if comp>1.001 else 0.58)
+        al = pause['shue_alpha']
         Ltail = pause.get('shue_tail', pause['rad']/max(pause.get('ext',1.0),1e-3))
         if r0>0.3 and al>0.05:
             if Ltail > r0*1.05:
@@ -95,17 +95,19 @@ def render(body, out, size=1120, z=0.0):
                 eps = 0.0
                 th = np.radians(np.linspace(-150,150,401))
                 rr_ = r0*(2.0/(1.0+np.cos(th)))**al
-            px = c + rr_*np.cos(th)*ppr; py = c - rr_*np.sin(th)*ppr
+            # 계면 SDF 와 같은 원점에서 그린다 — geomagnetic_offset 은 이 프레임(자전축)에서도 적용된다
+            px = c + rr_*np.cos(th)*ppr; py = c - (rr_*np.sin(th) + off)*ppr
             for i in range(0,len(px)-1,2):          # 파선: 두 칸 그리고 한 칸 띄움
                 if (i//2) % 3 == 2: continue
                 if max(abs(px[i]),abs(py[i]),abs(px[i+1]),abs(py[i+1])) > 4*size: continue
                 dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=S(2))
-            dr.ellipse([c+r0*ppr-S(3),c-S(3),c+r0*ppr+S(3),c+S(3)],fill=(255,154,82))
+            oy = c - off*ppr
+            dr.ellipse([c+r0*ppr-S(3),oy-S(3),c+r0*ppr+S(3),oy+S(3)],fill=(255,154,82))
             lbl=f"Shue r0 {r0:.1f} α {al:.2f}"
             lw=dr.textlength(lbl,font=fnt)
             lx=c+r0*ppr+S(6)
             if lx+lw > size-S(6): lx=c+r0*ppr-S(6)-lw               # 프레임 밖으로 나가면 왼쪽에
-            dr.text((max(lx,S(4)),c-S(16)),lbl,fill=(255,154,82),font=fnt)
+            dr.text((max(lx,S(4)),oy-S(16)),lbl,fill=(255,154,82),font=fnt)
     dr.text((S(10),S(8)),body['title'],fill=(230,235,245),font=fbig)
     dr.text((S(10),S(30)),body.get('sub',''),fill=(140,160,190),font=fnt)
     dr.text((size-S(96),size-S(20)),"☀ star →",fill=(255,154,82),font=fnt)

@@ -29,7 +29,10 @@ OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 SHUE_GROUNDED = {
     # body: (α, nose r0, tail L, 출처)
     'earth': (0.58, 10, 200, 'Shue 1998'),
-    'mercury': (0.5, 1.45, 0, 'Winslow 2013 (MESSENGER, Shue 형식 적합: R_ss 1.45 R_M, α 0.5)'),
+    'mercury': (0.5, 1.45, 0, 'Winslow 2013 (MESSENGER 통과 적합: R_ss 1.45 R_M, α 0.5)'),
+    # 목성: Rutala 2025 의 S97* 적합. α = 0.28 + 1.08·p_SW, r_SS = 38.0·p_SW^-0.25 [R_J].
+    # 우리 프리셋 노즈 63 R_J(Joy 2002 압축 상태)를 그 r_SS 관계에 넣으면 p_SW 0.132 nPa → α 0.423.
+    'jupiter': (0.423, 63, 0, 'Rutala 2025 S97* (α=0.28+1.08·p_SW, 노즈 63 R_J ⇒ p 0.132 nPa)'),
 }
 
 

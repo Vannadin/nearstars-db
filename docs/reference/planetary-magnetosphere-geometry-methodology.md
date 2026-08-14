@@ -477,14 +477,30 @@ free: `α = log₂(compression)`, `r0 = pause_radius / compression`,
 `L = pause_radius / extension`. It is shape-faithful for Earth-style configs only —
 RSS Jupiter's `compression` 1.05 converts to α 0.07, an unphysically spherical
 dayside, so giants need α re-tuned after conversion rather than converted blindly.
-The deeper reason is that **giant magnetopauses are not fitted in the Shue form at
-all**: Jupiter's is a pressure-parameterized polynomial (Joy 2002,
-[`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J)) and Saturn's a Newtonian pressure-balance shape
-(Kanani 2010, [`2010JGRA..115.6207K`](https://ui.adsabs.harvard.edu/abs/2010JGRA..115.6207K); Achilleos 2008,
-[`2008JGRA..11311209A`](https://ui.adsabs.harvard.edu/abs/2008JGRA..11311209A)), so converting a cfg compression into an α there
-manufactures a number nobody measured. Where a Shue-form α *does* exist, use it:
-Earth 0.58 (Shue 1998) and Mercury **0.5** with `R_ss` 1.45 R_M, fitted to
-MESSENGER crossings (Winslow 2013, [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W)).
+(An earlier revision of this paragraph claimed giant magnetopauses are never
+fitted in the Shue form. That was wrong and is retracted — see the fitted α table
+below.)
+
+**Fitted α by body.** Use a published α wherever one exists; only fall back to the
+compression conversion when none does, and say so.
+
+| Body | α | Source |
+|---|---|---|
+| Earth | 0.58 (quiet wind; Dp/Bz-dependent) | Shue 1998, [`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S) |
+| Mercury | **0.5**, `R_ss` 1.45 R_M | Winslow 2013, [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W) — MESSENGER crossings fitted in exactly this form |
+| Jupiter | **α = 0.28 + 1.08·p_SW** (nPa), with `r_SS = 38.0·p_SW^−0.25` R_J → 0.31–0.42 across the observed pressure range | Rutala 2025, [`2025JGRA..13033842R`](https://ui.adsabs.harvard.edu/abs/2025JGRA..13033842R) / [2502.09186](https://arxiv.org/abs/2502.09186), their "S97*" form, Table 2 |
+| Saturn | Shue-form fit exists; flaring **decreases** with rising Dp, size ∝ Dp^−1/4.3 | Arridge 2006, [`2006JGRA..11111227A`](https://ui.adsabs.harvard.edu/abs/2006JGRA..11111227A) — coefficients are in the paywalled text, not yet pulled |
+| Uranus, Neptune | no Shue-form fit found | — |
+
+The instructive part is the *direction*: Jupiter's flaring is **smaller** than
+Earth's (0.31–0.42 against 0.58), because a rotation-dominated, plasma-inflated
+magnetosphere sits closer to an axisymmetric ellipsoid than Earth's does. So a
+giant α below Earth's is not the error — reading it off `pause_compression` is,
+since that number is an authoring choice with no fit behind it. Jupiter's older
+polynomial model (Joy 2002, [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J)) and Saturn's
+pressure-balance shape (Kanani 2010, [`2010JGRA..115.6207K`](https://ui.adsabs.harvard.edu/abs/2010JGRA..115.6207K); Achilleos 2008,
+[`2008JGRA..11311209A`](https://ui.adsabs.harvard.edu/abs/2008JGRA..11311209A)) remain the alternatives where a Shue-form α is not
+wanted.
 
 **`pause_offset`** is the cheap fallback if the full Shue mode is rejected: shift
 the sphere centre tailward before the scaling (`p.x += pause_offset`), which fixes

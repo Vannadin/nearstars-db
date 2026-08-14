@@ -415,14 +415,27 @@ Kerbalism의 pause는 구를 x방향으로 구간별 스케일한 것이라 노�
 기존 필드에서의 환산은 별도 비용이 없습니다. `α = log₂(compression)`, `r0 = pause_radius / compression`,
 `L = pause_radius / extension`. 다만 이 환산이 형상을 보존하는 것은 지구형 cfg뿐입니다. RSS
 목성의 `compression` 1.05는 α 0.07로 환산되어 주야면이 비물리적으로 구에 가까워지므로,
-자이언트는 환산 후 α를 다시 조율해야 합니다. 더 근본적인 이유는 **자이언트 자기권계면이
-애초에 Shue 형식으로 적합되지 않는다**는 것입니다. 목성은 압력으로 매개된 다항식
-(Joy 2002, [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J)), 토성은 뉴턴 압력균형 형상
+자이언트는 환산 후 α를 다시 조율해야 합니다. (이 문단의 이전 개정본은 "자이언트 자기권계면은 Shue 형식으로 적합되지 않는다"고 단정했습니다.
+틀렸으므로 철회하고, 아래 적합 α 표로 대체합니다.)
+
+**바디별 적합 α.** 발표된 α가 있으면 그것을 쓰고, 없을 때만 compression 환산으로 내려가되 그
+사실을 밝히십시오.
+
+| 바디 | α | 출처 |
+|---|---|---|
+| 지구 | 0.58 (조용한 항성풍. Dp·Bz 의존) | Shue 1998, [`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S) |
+| 수성 | **0.5**, `R_ss` 1.45 R_M | Winslow 2013, [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W) — MESSENGER 통과를 바로 이 형식으로 적합 |
+| 목성 | **α = 0.28 + 1.08·p_SW** (nPa), `r_SS = 38.0·p_SW^−0.25` R_J → 관측 압력대에서 0.31–0.42 | Rutala 2025, [`2025JGRA..13033842R`](https://ui.adsabs.harvard.edu/abs/2025JGRA..13033842R) / [2502.09186](https://arxiv.org/abs/2502.09186), 그들의 "S97*" 형식 Table 2 |
+| 토성 | Shue 형식 적합 있음. Dp가 오르면 flaring이 **감소**, 크기 ∝ Dp^−1/4.3 | Arridge 2006, [`2006JGRA..11111227A`](https://ui.adsabs.harvard.edu/abs/2006JGRA..11111227A) — 계수는 유료 본문에 있어 아직 확보 못 함 |
+| 천왕성·해왕성 | Shue 형식 적합 못 찾음 | — |
+
+배울 점은 *방향*입니다. 목성의 flaring은 지구보다 **작습니다**(0.31–0.42 대 0.58). 자전이
+지배하고 플라스마로 부푼 자기권이 지구보다 축대칭 타원체에 가깝기 때문입니다. 따라서 자이언트의
+α가 지구보다 작은 것 자체는 오류가 아닙니다. 오류는 그 값을 `pause_compression`에서 읽는 것이고,
+그 숫자는 적합이 아니라 저작 선택입니다. Shue 형식을 원치 않을 때의 대안으로 목성의 옛 다항식
+모델(Joy 2002, [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J))과 토성의 압력균형 형상
 (Kanani 2010, [`2010JGRA..115.6207K`](https://ui.adsabs.harvard.edu/abs/2010JGRA..115.6207K); Achilleos 2008,
-[`2008JGRA..11311209A`](https://ui.adsabs.harvard.edu/abs/2008JGRA..11311209A))이라, 거기서 cfg compression을 α로 환산하면
-아무도 측정하지 않은 숫자를 만들어 내는 셈입니다. Shue 형식 α가 실제로 있는 곳에서는 그 값을
-쓰십시오. 지구 0.58(Shue 1998), 그리고 MESSENGER 통과 관측에 적합한 수성 **0.5**,
-`R_ss` 1.45 R_M(Winslow 2013, [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W))입니다.
+[`2008JGRA..11311209A`](https://ui.adsabs.harvard.edu/abs/2008JGRA..11311209A))이 남아 있습니다.
 
 **`pause_offset`**은 전체 Shue 모드가 기각될 때의 값싼 대안입니다. 스케일 전에 구의 중심을
 꼬리쪽으로 옮기면(`p.x += pause_offset`) "최대 폭이 바디 평면에 박힌다"는 결함이 한 줄로
