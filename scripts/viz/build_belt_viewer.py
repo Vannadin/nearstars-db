@@ -71,8 +71,8 @@ for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys �
                           'shue_an': pz.get('shue_alpha_night', 0)})
     if p['variant'] == 'phys' and pz.get('imb_term'):       # 유도 경계 오버레이(원 + 원뿔)
         p['view'].update({'imb_nose': pz['imb_nose'], 'imb_term': pz['imb_term'],
-                          'imb_slope': pz['imb_slope'], 'imb_close': pz.get('imb_close', 25),
-                          'imb_m': pz.get('imb_m', 20),
+                          'imb_slope': pz['imb_slope'], 'imb_close': pz.get('imb_close', 40),
+                          'imb_k': pz.get('imb_k', 2), 'imb_d0': pz.get('imb_d0', 20),
                           'imb_label': pz.get('imb_label', 'IMB'), 'shue': 0})
     presets[key] = p
 

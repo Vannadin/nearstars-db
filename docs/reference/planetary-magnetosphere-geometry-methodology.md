@@ -152,24 +152,29 @@ never cut inside a nose that is itself above the surface.
 **Closing it — a required step, not an optional one.** A 5.8° cone runs to infinity, and
 within the observed domain that is what the data show. But the consumer of this shape is
 an engine: it has to become a bounded cfg volume, so a shape that does not close cannot
-be used at all. Multiply the measured cone by a closure factor:
+be used at all. Keep the measured cone verbatim to the observational limit `d₀`, then cap
+it:
 
-    ρ(d) = (ρ_term + s·d) · (1 − (d/X)^m)        d = −x ≥ 0,  ρ = 0 at d = X
+    d ≤ d₀ :  ρ = ρ_term + s·d                          (the measured cone, untouched)
+    d > d₀ :  ρ = (ρ_term + s·d)·(1 − u^k),  u = (d−d₀)/(X−d₀)
 
-with **`X` = 25 R_p and `m` = 20**. This is the same move as the `ε` term that closes the
-Shue form elsewhere in this doc, and it is deliberately blunt-free: a large `m` pins the
-factor to 1 across the measured range (error **0.00%** inside 15 R_p, **1.15%** at the
-outermost measured point) and the exponent 1 rather than ½ gives the tail a finite end
-tangent, so it tapers to a point instead of stopping against a hemispherical wall. The
-shape *at* the closure carries no physical claim; only the closure itself is required.
+with **`d₀` = 20 R_p, `X` = 40 R_p, `k` = 2**. Separating "where the data ends" from "how
+long the cap is" matters: a single-parameter closure `(1 − (d/X)^m)` ties the two
+together, and pulling its turnover forward wrecks the measured range — putting the
+turnover at half the length costs **23%** error at 20 R_p. Split, the measured range is
+exact (**0.00%**, since the factor is identically 1 there), closure *begins* at the
+midpoint of the total length, the peak sits at d ≈ 25, and `k` ≥ 2 makes the join
+continuous in value *and* slope while leaving the end tangent finite, so the tail tapers
+to a point rather than stopping against a hemispherical wall.
 
-`X` = 25 R_p sits just past Venus' farthest confirmed crossing (20 R_V) rather than at a
-comfortable 40, deliberately: at 40 the outermost measured point improves to 0.78%, but
-the boundary is then asserted to twice the confirmed extent. The 1.15% forfeited is
-0.04 R_V, far below the crossing uncertainty — Edberg assigns ~1-hour intervals to these
-far-tail identifications and has only three IMB crossings beyond 10 R_V.
+Sample widths for Venus: 1.13 at the terminator, 2.14 at 10, **3.15 at 20** (the last
+measured point), 3.43 at 25, 3.12 at 30, 2.04 at 35, closed at 40.
 
-`pause_extension` follows from the same `X`: **0.0456** for Venus, **0.0588** for Mars.
+The 20 → 40 R_p stretch is **not a claim about the boundary** — it is a declared cap, and
+`d₀` is where the epistemic statement lives. The cap does widen 9% past the last measured
+width before turning over, which is unavoidable for any smooth cap that inherits the
+cone's slope at `d₀`. `pause_extension` follows from `X`: **0.0285** for Venus, **0.0368**
+for Mars.
 
 **Why not close it the way Shue is closed.** Shue's closure adds `ε` to a denominator so
 it cannot reach zero, and the equivalent exists here — the cone's polar form is

@@ -388,24 +388,29 @@ never cut inside a nose that is itself above the surface.
 **Closing it — a required step, not an optional one.** A 5.8° cone runs to infinity, and
 within the observed domain that is what the data show. But the consumer of this shape is
 an engine: it has to become a bounded cfg volume, so a shape that does not close cannot
-be used at all. Multiply the measured cone by a closure factor:
+be used at all. Keep the measured cone verbatim to the observational limit `d₀`, then cap
+it:
 
-    ρ(d) = (ρ_term + s·d) · (1 − (d/X)^m)        d = −x ≥ 0,  ρ = 0 at d = X
+    d ≤ d₀ :  ρ = ρ_term + s·d                          (the measured cone, untouched)
+    d > d₀ :  ρ = (ρ_term + s·d)·(1 − u^k),  u = (d−d₀)/(X−d₀)
 
-with **`X` = 25 R_p and `m` = 20**. This is the same move as the `ε` term that closes the
-Shue form elsewhere in this doc, and it is deliberately blunt-free: a large `m` pins the
-factor to 1 across the measured range (error **0.00%** inside 15 R_p, **1.15%** at the
-outermost measured point) and the exponent 1 rather than ½ gives the tail a finite end
-tangent, so it tapers to a point instead of stopping against a hemispherical wall. The
-shape *at* the closure carries no physical claim; only the closure itself is required.
+with **`d₀` = 20 R_p, `X` = 40 R_p, `k` = 2**. Separating "where the data ends" from "how
+long the cap is" matters: a single-parameter closure `(1 − (d/X)^m)` ties the two
+together, and pulling its turnover forward wrecks the measured range — putting the
+turnover at half the length costs **23%** error at 20 R_p. Split, the measured range is
+exact (**0.00%**, since the factor is identically 1 there), closure *begins* at the
+midpoint of the total length, the peak sits at d ≈ 25, and `k` ≥ 2 makes the join
+continuous in value *and* slope while leaving the end tangent finite, so the tail tapers
+to a point rather than stopping against a hemispherical wall.
 
-`X` = 25 R_p sits just past Venus' farthest confirmed crossing (20 R_V) rather than at a
-comfortable 40, deliberately: at 40 the outermost measured point improves to 0.78%, but
-the boundary is then asserted to twice the confirmed extent. The 1.15% forfeited is
-0.04 R_V, far below the crossing uncertainty — Edberg assigns ~1-hour intervals to these
-far-tail identifications and has only three IMB crossings beyond 10 R_V.
+Sample widths for Venus: 1.13 at the terminator, 2.14 at 10, **3.15 at 20** (the last
+measured point), 3.43 at 25, 3.12 at 30, 2.04 at 35, closed at 40.
 
-`pause_extension` follows from the same `X`: **0.0456** for Venus, **0.0588** for Mars.
+The 20 → 40 R_p stretch is **not a claim about the boundary** — it is a declared cap, and
+`d₀` is where the epistemic statement lives. The cap does widen 9% past the last measured
+width before turning over, which is unavoidable for any smooth cap that inherits the
+cone's slope at `d₀`. `pause_extension` follows from `X`: **0.0285** for Venus, **0.0368**
+for Mars.
 
 **Why not close it the way Shue is closed.** Shue's closure adds `ε` to a denominator so
 it cannot reach zero, and the equivalent exists here — the cone's polar form is
@@ -1296,22 +1301,25 @@ Edberg가 검증한 Martinecz의 적합 직선에서 왔습니다. 화성은 주
 
 **닫는 것은 선택이 아니라 필수 단계입니다.** 5.8° 원뿔은 무한히 뻗고, 관측된 영역 안에서는 자료가
 실제로 그렇게 말합니다. 그런데 이 형상의 소비자는 엔진입니다. 유계 cfg 부피가 되어야 하므로, 닫히지
-않는 형상은 애초에 쓸 수가 없습니다. 측정된 원뿔에 폐곡선 인수를 곱합니다.
+않는 형상은 애초에 쓸 수가 없습니다. 측정 한계 `d₀`까지는 원뿔을 그대로 두고, 그 뒤에만 캡을 씌웁니다.
 
-    ρ(d) = (ρ_term + s·d) · (1 − (d/X)^m)        d = −x ≥ 0,  d = X 에서 ρ = 0
+    d ≤ d₀ :  ρ = ρ_term + s·d                          (측정된 원뿔, 손대지 않음)
+    d > d₀ :  ρ = (ρ_term + s·d)·(1 − u^k),  u = (d−d₀)/(X−d₀)
 
-`X` = **25 R_p**, `m` = **20** 입니다. 이 문서 다른 곳에서 Shue 형식을 닫는 `ε` 항과 같은 수법이고,
-뭉툭해지지 않도록 의도한 구성입니다. `m`이 크면 인수가 측정 구간 내내 1에 붙어 있고(15 R_p 안쪽 오차
-**0.00%**, 최외곽 측정점에서 **1.15%**), 지수를 ½ 대신 1로 두면 끝 접선이 유한해져 반구형 벽에 부딪는
-대신 뾰족하게 잦아듭니다. 닫히는 지점*에서의* 형태는 어떤 물리적 주장도 담지 않습니다. 요구되는 것은
-닫힘 그 자체뿐입니다.
+`d₀` = **20 R_p**, `X` = **40 R_p**, `k` = **2** 입니다. "자료가 어디서 끝나는지"와 "캡이 얼마나
+긴지"를 분리하는 것이 핵심입니다. 파라미터 하나로 묶은 `(1 − (d/X)^m)` 형식은 이 둘이 붙어 있어서
+꺾임을 앞으로 당길 때마다 측정 구간이 망가집니다. 꺾임을 길이 절반에 두면 20 R_p에서 **23%** 오차가
+납니다. 분리하면 측정 구간이 정확해지고(인수가 그 구간에서 항등적으로 1이므로 **0.00%**), 닫힘이
+*시작되는* 지점이 전체 길이의 정확히 절반이 되며, 최대폭은 d ≈ 25에 놓입니다. `k` ≥ 2면 이음부가 값과
+기울기 모두 연속이면서 끝 접선은 유한하게 남아, 반구형 벽에 부딪는 대신 뾰족하게 잦아듭니다.
 
-`X`를 넉넉한 40이 아니라 금성의 가장 먼 확인 통과(20 R_V) 바로 밖인 25 R_p로 둔 것은 의도적입니다.
-40이면 최외곽 측정점 오차가 0.78%로 좋아지지만, 확인된 범위의 두 배까지 경계를 주장하게 됩니다.
-포기하는 1.15%는 0.04 R_V이고, 통과 위치의 불확실성보다 훨씬 작습니다. Edberg는 이 원거리 판정들에
-~1시간 구간을 배정하며 10 R_V 밖 IMB 통과는 세 개뿐입니다.
+금성의 폭 표본입니다. 명암경계선 1.13, 10에서 2.14, **20에서 3.15**(마지막 측정점), 25에서 3.43,
+30에서 3.12, 35에서 2.04, 40에서 닫힙니다.
 
-`pause_extension`은 같은 `X`에서 따라 나옵니다. 금성 **0.0456**, 화성 **0.0588** 입니다.
+20 → 40 R_p 구간은 **경계에 대한 주장이 아닙니다.** 선언된 캡이고, 인식적 진술은 `d₀`가 담당합니다.
+캡이 꺾이기 전에 마지막 측정폭보다 9% 넓어지기는 하는데, `d₀`에서 원뿔의 기울기를 물려받는 매끄러운
+캡이라면 어떤 형태든 피할 수 없습니다. `pause_extension`은 `X`에서 따라 나옵니다. 금성 **0.0285**,
+화성 **0.0368** 입니다.
 
 **Shue를 닫는 방식으로 닫지 않는 이유.** Shue의 폐곡선 처리는 분모가 0에 닿지 못하도록 `ε`을 더하는
 것이고, 여기에도 대응물이 있습니다. 원뿔의 극형식은 `r(θ) = ρ_term/(sin θ + s·cos θ)`로

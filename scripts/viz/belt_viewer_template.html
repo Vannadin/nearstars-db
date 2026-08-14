@@ -607,12 +607,12 @@ function render(){
     ctx.stroke();
     // 야간면: 측정된 원뿔 x 폐곡선 항. 엔진은 닫힌 부피를 요구하므로(cfg 로 번역돼야 한다)
     // 열린 원뿔을 그대로 둘 수 없다 — 연화 Shue 에 eps 를 얹은 것과 같은 수법이다.
-    const Xcl=cn.imb_close||25, mcl=cn.imb_m||20;
+    const Xcl=cn.imb_close||40, kcl=cn.imb_k||2, d0=cn.imb_d0||20;
     ctx.beginPath();
     for(const sg of [1,-1]){
       let first=true;
       for(let i=0;i<=400;i++){
-        const d=Xcl*i/400, v=1-Math.pow(d/Xcl,mcl);
+        const d=Xcl*i/400, uu=Math.max(0,(d-d0)/(Xcl-d0)), v=1-Math.pow(uu,kcl);
         const rho=v>0?(term+sl*d)*v:0;
         const px=c-d*ppr, py=oy-sg*rho*ppr;
         if(first){ctx.moveTo(px,py);first=false;} else ctx.lineTo(px,py);

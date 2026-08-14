@@ -88,20 +88,24 @@ def render(body, out, size=1120, z=0.0):
         # 벌어진다(금성 −20 R_V 에서 5.05 대 실측 3.15). 닫히지 않으므로 관측 한계에서 끊는다.
         nose, term = pause['imb_nose'], pause['imb_term']
         slope = pause['imb_slope']
-        Xcl, mcl = pause.get('imb_close',40.0), pause.get('imb_m',6.0)
+        d0 = pause.get('imb_d0',20.0)          # 측정 한계 — 여기까지는 원뿔 그대로
+        Xcl, kcl = pause.get('imb_close',40.0), pause.get('imb_k',2.0)
         Rc = (term*term + nose*nose)/(2*nose); xc = nose - Rc     # 노즈·명암경계선을 지나는 원
         oy = c - off*ppr
         th = np.radians(np.linspace(-90,90,361))                  # 주간면 반원(x ≥ 0)
         px = c + (xc + Rc*np.cos(th))*ppr; py = oy - Rc*np.sin(th)*ppr
         seg = [(px,py)]
-        # 야간면: 측정된 원뿔 × 폐곡선 항 (1-(d/X)^m). 엔진은 닫힌 부피를 요구하므로
-        # 열린 원뿔을 그대로 둘 수 없다 — 연화 Shue 에 ε 를 얹은 것과 같은 수법이다.
-        # m 이 크면 측정 구간에서 인수가 1 에 붙어 원뿔이 보존된다: X=25, m=20 이면
-        # 15 R_p 안쪽 오차 0.00%, 최외곽 측정점 20 R_p 에서 1.15%.
-        # 닫히는 지점의 형태는 물리가 아니다(닫힘 자체만 요구사항). 지수 1 은 끝 접선을
-        # 유한하게 만들어 뾰족하게 닫는다 — 제곱근은 뭉툭한 뚜껑이 되어 '벽'처럼 읽힌다.
-        d = np.linspace(0,Xcl,721)
-        rho = (term + slope*d)*np.clip(1-(d/Xcl)**mcl,0,None)
+        # 야간면: 측정 한계 d0 까지는 원뿔 그대로, 그 뒤에만 캡을 씌워 닫는다.
+        # 엔진은 닫힌 부피를 요구하므로(cfg 로 번역돼야 한다) 열린 원뿔을 둘 수 없다 —
+        # 연화 Shue 에 ε 를 얹은 것과 같은 수법이지만, '언제 닫기 시작하는지'(d0)와
+        # '얼마나 긴 캡인지'(X)를 분리한다. 하나로 묶으면(1-(d/X)^m) 꺾임을 앞으로 당길
+        # 때마다 측정 구간이 망가진다(꺾임을 길이 절반에 두면 20 R_p 오차 23%).
+        # d0=20, X=40, k=2 → 측정 구간 오차 정확히 0.00%, 닫힘 개시가 길이의 정확히 절반,
+        # 최대폭 d≈25, 이음부 C1, 끝은 뾰족(k≥2 라 기울기도 연속).
+        # 캡의 형태는 물리가 아니다 — 요구사항은 닫힘 자체뿐이다.
+        d = np.linspace(0,Xcl,961)
+        u = np.clip((d-d0)/(Xcl-d0),0,None)
+        rho = (term + slope*d)*np.clip(1-u**kcl,0,None)
         for sgn in (1,-1):
             seg.append((c - d*ppr, oy - sgn*rho*ppr))
         for px_,py_ in seg:
