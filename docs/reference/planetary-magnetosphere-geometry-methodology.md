@@ -477,6 +477,14 @@ free: `α = log₂(compression)`, `r0 = pause_radius / compression`,
 `L = pause_radius / extension`. It is shape-faithful for Earth-style configs only —
 RSS Jupiter's `compression` 1.05 converts to α 0.07, an unphysically spherical
 dayside, so giants need α re-tuned after conversion rather than converted blindly.
+The deeper reason is that **giant magnetopauses are not fitted in the Shue form at
+all**: Jupiter's is a pressure-parameterized polynomial (Joy 2002,
+[`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J)) and Saturn's a Newtonian pressure-balance shape
+(Kanani 2010, [`2010JGRA..115.6207K`](https://ui.adsabs.harvard.edu/abs/2010JGRA..115.6207K); Achilleos 2008,
+[`2008JGRA..11311209A`](https://ui.adsabs.harvard.edu/abs/2008JGRA..11311209A)), so converting a cfg compression into an α there
+manufactures a number nobody measured. Where a Shue-form α *does* exist, use it:
+Earth 0.58 (Shue 1998) and Mercury **0.5** with `R_ss` 1.45 R_M, fitted to
+MESSENGER crossings (Winslow 2013, [`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W)).
 
 **`pause_offset`** is the cheap fallback if the full Shue mode is rejected: shift
 the sphere centre tailward before the scaling (`p.x += pause_offset`), which fixes

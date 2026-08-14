@@ -21,14 +21,16 @@ EN = {'earth': 'Earth', 'jupiter': 'Jupiter', 'saturn': 'Saturn', 'uranus': 'Ura
 OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 
 
-def shue_alpha(pause):
-    """Shue α = log2(pause_compression) — 방법론 Part C 의 레거시 환산.
-
-    물리/NearStars 프리셋은 이 값으로 Shue 기준선을 기본 표시한다(스톡은 끈다):
-    스톡 cfg 는 '실제 형상' 주장이 아니라 배포값 재현이라 비교선이 오해를 준다.
-    """
-    c = pause.get('comp', 1.0) if pause else 1.0
-    return round(math.log2(c), 3) if c > 1.001 else 0.58
+# Shue 기준선은 α 가 실제로 근거 있는 바디에서만 기본 표시한다.
+# log2(pause_compression) 환산은 지구형 cfg 에서만 형상 충실이고(방법론 Part C),
+# 자이언트에 쓰면 flank/nose 1.2 = 지구보다 덜 벌어진 주간면이라는 비물리 값이 된다.
+# 자이언트 자기권계면은 애초에 Shue 형식으로 적합하지 않는다: 목성은 Joy 2002 의 다항식,
+# 토성은 Kanani 2010 / Achilleos 2008 의 압력균형 형상이다 → α 를 만들어 내지 않고 끈다.
+SHUE_GROUNDED = {
+    # body: (α, nose r0, tail L, 출처)
+    'earth': (0.58, 10, 200, 'Shue 1998'),
+    'mercury': (0.5, 1.45, 0, 'Winslow 2013 (MESSENGER, Shue 형식 적합: R_ss 1.45 R_M, α 0.5)'),
+}
 
 
 def conv(key, b):
@@ -53,14 +55,12 @@ for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys �
     p['body_key'] = key.rsplit('_', 1)[0]     # earth_stock / earth_phys → earth
     p['variant'] = p['group']                 # stock | phys — 같은 천체의 두 판본
     p['depth'] = 0
-    if p['group'] == 'phys':           # 물리 프리셋만 Shue 기준선을 기본으로 켠다
-        p['view']['shue'] = shue_alpha(p.get('pause'))
+    g = SHUE_GROUNDED.get(p['body_key'])
+    if p['variant'] == 'phys' and g:   # 근거 있는 α 가 있는 바디만 기본 표시
+        a, r0, L, src = g
+        p['view'].update({'shue': a, 'shue_r0': r0, 'shue_L': L})
+        p['shue_src'] = src
     presets[key] = p
-
-# 지구 물리: Shue 기준을 실측값에 고정 (Shue 1998 α=0.58, nose 10 R_E, 꼬리 관측 ~200 R_E).
-# 스톡 지구는 켜지 않는다 — 스톡 프리셋은 배포 cfg 재현이지 형상 주장이 아니다.
-if 'earth_phys' in presets:
-    presets['earth_phys']['view'].update({'shue': 0.58, 'shue_r0': 10, 'shue_L': 200})
 
 # NearStars 프리셋: 게이트된 phase4 보드에서 (emitter와 동일 소스)
 sys.path.insert(0, os.path.join(D, '..', 'pipeline'))
@@ -128,8 +128,7 @@ for name, spec in load_nearstars_specs().items():
         p['view']['shue'] = pend['pause_alpha']
         p['view']['shue_r0'] = pend.get('pause_nose', 0)
         p['view']['shue_L'] = pend.get('pause_tail', 0)
-    else:
-        p['view']['shue'] = shue_alpha(p['pause'])
+    # 보드가 α 를 게이트하지 않았으면 켜지 않는다(만들어 낸 값이 되므로)
     presets[name.lower()] = p
 # Proxima d 는 보드 행이 없어 render_belts_bodies 에 값이 있지만, 계 소속은 프록시마다.
 if 'proxima_d_phys' in presets:
