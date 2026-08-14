@@ -532,8 +532,10 @@ function doseAt(x,y){ // world coords -> {dose, zone}
   if(state.outer.on){ const d=torusSDF(xr,yr,z,state.outer);
     if(d<0){ dose+=clamp(state.outer.grad*(-d)/state.outer.rad,0,1)*state.outer.radiation; zone.push(t('zOuter')); } }
   let pd=1;
-  // 계면은 항성풍이 정하는 형상 — 다이폴 틸트/이탈과 무관하게 항성정렬 프레임에서 평가
-  if(state.pause.on){ pd=pauseSDF(x,y,z,state.pause);
+  // 계면은 항성정렬(untilted) 프레임에서 평가한다 — 단 geomagnetic_offset 은 엔진이 두 프레임 모두에
+  // 적용한다(Radiation.cs Gsm_space 말미). 그 프레임의 y축은 자전축이므로 계면은 자전축 방향으로,
+  // 벨트는 자기축 방향으로 밀린다(틸트가 크면 서로 다른 방향).
+  if(state.pause.on){ pd=pauseSDF(x,y-(v.offset||0),z,state.pause);
     if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation; if(!zone.length)zone.push(t('zMag')); } }
   return {dose,zone:zone.join('+')||'—',mag,pd};
 }
@@ -560,7 +562,7 @@ function render(){
       if(state.inner.on){const s=torusSDF(xr,yr,z,state.inner); if(s<0)dose+=clamp(state.inner.grad*(-s)/state.inner.rad,0,1)*state.inner.radiation;}
       if(state.outer.on){const s=torusSDF(xr,yr,z,state.outer); if(s<0)dose+=clamp(state.outer.grad*(-s)/state.outer.rad,0,1)*state.outer.radiation;}
       let pd=1;
-      if(state.pause.on) pd=pauseSDF(x,y,z,state.pause); // 계면은 항성정렬 (틸트 미적용)
+      if(state.pause.on) pd=pauseSDF(x,y-off,z,state.pause); // 계면=항성정렬 프레임, offset 은 자전축 방향
       // base: space + faint magnetosphere interior (불투명도 pa 반영)
       r=5;g=7;b=13;
       if(state.pause.on && pd<0){ r+=(10-r)*pa; g+=(16-g)*pa; b+=(30-b)*pa; }
