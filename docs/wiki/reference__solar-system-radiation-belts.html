@@ -314,12 +314,13 @@ far less than a dipole magnetopause.
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
 1.1 R) and the tail runs twice as long (11 vs 5.5 R_V).
 
-**No Shue overlay here, and the reason is structural.** Deriving α from the measured
-flaring gives 0.113 — an α that reaches the 11 R_V tail only at θ = 179.9964°, i.e.
-a near-sphere that snaps shut at the last fraction of a degree. One α cannot serve
-both a small dayside flaring and a long tail, and an induced magnetosphere has
-exactly that combination. The cfg form does better precisely because `compression`
-and `extension` are independent. (Details in the methodology's induced subsection.)
+**The overlay here uses the two-α form.** A single α cannot serve both a small
+dayside flaring and a long tail, and an induced magnetosphere has exactly that
+combination — α from the measured flaring is 0.113, which would reach the 11 R_V
+tail only at θ = 179.9964°. So the exponent varies with angle: `α_day` 0.113 pinned
+by the measured nose and terminator, `α_night` 0.5 setting how the tail flares, `L`
+11 R_V from the observations. `α_night` is a shape knob, not a measurement — see the
+methodology's induced subsection.
 
 ### Mars — the MPB conic, derived
 
@@ -338,8 +339,8 @@ directly: `X₀` 0.78 ± 0.01, eccentricity 0.90 ± 0.01, semi-latus rectum `L`
 - the tail comes from their own conic — with `e` < 1 it closes, `r(180°) = L/(1−e)`
   = 9.60 R_M from a focus at `X₀` 0.78, i.e. **8.82 R_M** behind the centre, so
   `extension` = 1.47/8.82 = **0.1667**;
-- no Shue overlay, for the same structural reason as Venus: α from the flaring is
-  0.188, which reaches the 8.82 R_M tail only at θ = 179.31°.
+- two-α overlay as at Venus: `α_day` 0.188 from the measured flaring, `α_night` 0.5
+  (unpinned shape knob), tail 8.82 R_M.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
@@ -689,11 +690,11 @@ standoff가 63·24 바디 반경이라 계면을 프레임에 담으면 벨트�
 스톡과 비교하면 도출한 주간면이 행성에 더 바짝 붙고(1.05 대 균일 1.1 R), 꼬리는 두 배로 깁니다
 (11 대 5.5 R_V).
 
-**여기에는 Shue 오버레이를 넣지 않습니다. 이유가 구조적입니다.** 측정된 벌어짐에서 α를 뽑으면
-0.113인데, 그 α로는 꼬리 11 R_V에 θ = 179.9964°에서야 닿습니다. 사실상 구이고 마지막 각도에서
-급히 닫힙니다. α 하나로 작은 주간면 벌어짐과 긴 꼬리를 동시에 낼 수 없는데, 유도 자기권이 바로
-그 조합입니다. cfg 형식이 오히려 낫습니다. `compression`과 `extension`이 독립이기 때문입니다.
-(자세한 것은 방법론의 유도 자기권 절.)
+**여기 오버레이는 2-α 형태를 씁니다.** α 하나로는 작은 주간면 벌어짐과 긴 꼬리를 동시에 낼 수
+없고, 유도 자기권이 바로 그 조합입니다(측정 벌어짐의 α 0.113로는 꼬리 11 R_V에 θ = 179.9964°
+에서야 닿습니다). 그래서 지수를 각도의 함수로 둡니다. `α_day` 0.113은 실측 노즈·명암경계선이
+고정하고, `α_night` 0.5가 꼬리가 벌어지는 정도를, `L` 11 R_V는 관측이 정합니다. `α_night`은
+측정값이 아니라 형상 손잡이입니다. 방법론의 유도 자기권 절을 보십시오.
 
 ### 화성 — MPB 원뿔을 계산한 결과
 
@@ -709,8 +710,8 @@ Table 2, MGS 488회 통과 직접 적합)이 원뿔을 그대로 줍니다. `X�
 - `pause_radius` = 플랭크 = **1.47**, `compression` = 1.47/1.29 = **1.1395**(노즈 1.29 복원)
 - 꼬리는 그들의 원뿔에서 바로 나옵니다. `e` < 1이라 닫히고 `r(180°) = L/(1−e)` = 9.60 R_M,
   초점이 `X₀` 0.78이므로 중심 기준 **8.82 R_M** → `extension` = 1.47/8.82 = **0.1667**
-- Shue 오버레이 없음. 금성과 같은 구조적 이유이고, 벌어짐에서 나온 α 0.188로는 꼬리 8.82 R_M에
-  θ = 179.31°에서야 닿는다
+- 금성과 같은 2-α 오버레이. `α_day` 0.188은 실측 벌어짐, `α_night` 0.5는 미고정 형상 손잡이,
+  꼬리 8.82 R_M
 
 `pause_deform`은 스톡 `irregular`의 0.1을 그대로 둡니다. 지각 잔류자기가 실제로 비축대칭인 것은
 맞지만 Vignes가 그 비대칭을 정량화하지 않으므로, 진폭은 도출이 아니라 상속입니다. 지어내지 않고

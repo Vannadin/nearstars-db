@@ -32,8 +32,7 @@ SHUE_GROUNDED = {
     'mercury': (0.5, 1.45, 0, 'Winslow 2013 (MESSENGER 통과 적합: R_ss 1.45 R_M, α 0.5)'),
     # 목성: Rutala 2025 의 S97* 적합. α = 0.28 + 1.08·p_SW, r_SS = 38.0·p_SW^-0.25 [R_J].
     # 우리 프리셋 노즈 63 R_J(Joy 2002 압축 상태)를 그 r_SS 관계에 넣으면 p_SW 0.132 nPa → α 0.423.
-    # 금성·화성(유도 경계)은 넣지 않는다: α 하나가 주간면 벌어짐과 꼬리를 동시에 지배하는 Shue 형식으로는
-    # '벌어짐은 작고 꼬리는 긴' 유도 자기권을 표현할 수 없다. 측정 벌어짐에서 나온 α 로 그리면 사실상 구가 된다.
+    # 금성·화성은 여기 두지 않는다 — 2-α 값이 BODIES 의 pause 딕트에 직접 들어 있고 위에서 읽는다.
     'jupiter': (0.423, 63, 0, 'Rutala 2025 S97* (α=0.28+1.08·p_SW, 노즈 63 R_J ⇒ p 0.132 nPa)'),
 }
 
@@ -65,6 +64,11 @@ for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys �
         a, r0, L, src = g
         p['view'].update({'shue': a, 'shue_r0': r0, 'shue_L': L})
         p['shue_src'] = src
+    pz = b.get('pause') or {}
+    if p['variant'] == 'phys' and pz.get('shue_alpha'):    # 바디 테이블이 직접 든 값(2-α 포함)
+        p['view'].update({'shue': pz['shue_alpha'], 'shue_r0': pz.get('shue_nose', 0),
+                          'shue_L': pz.get('shue_tail', 0),
+                          'shue_an': pz.get('shue_alpha_night', 0)})
     presets[key] = p
 
 # NearStars 프리셋: 게이트된 phase4 보드에서 (emitter와 동일 소스)

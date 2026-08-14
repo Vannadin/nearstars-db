@@ -315,18 +315,37 @@ turns nearly radial, and by extension under the extreme wind pressures of a clos
 orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
 rather than assuming a permanent boundary.
 
-**The Shue form cannot represent this branch.** Worth stating plainly, because the
-temptation is to reuse the machinery: in Shue's family a *single* α sets both the
-dayside flaring and the tail, since `r(θ) = r0 (2/(1+cos θ))^α`. An induced
-magnetosphere decouples those two — its nose-to-terminator flaring is *small*
-(Venus 1.14/1.055 = 1.08) while its tail is *long* (5–11 R_V), because the tail is
-built by draped field lines and mass loading rather than by the same flaring that
-shapes the dayside. Fit α to the terminator and you get 0.113, which reaches
-11 R_V only at θ = 179.9964° — a sphere that snaps shut at the last hair of angle.
-Fit it to the tail instead and the dayside balloons. Kerbalism's own squashed
-sphere is the better match here precisely because `compression` and `extension` are
-independent knobs. So: derive the cfg fields, and do not draw a Shue reference for
-an induced boundary.
+**A one-α Shue cannot represent this branch — a two-α form can.** Worth working
+through, because the temptation is to reuse the machinery as-is. In Shue's family a
+*single* α sets both the dayside flaring and the tail, since
+`r(θ) = r0 (2/(1+cos θ))^α`. An induced magnetosphere decouples those: its
+nose-to-terminator flaring is *small* (Venus 1.14/1.055 = 1.08) while its tail is
+*long* (5–11 R_V), because the tail is built by draped field lines and mass loading
+rather than by whatever spreads the dayside. Fit α to the terminator and you get
+0.113, which reaches 11 R_V only at θ = 179.9964° — a sphere that snaps shut at the
+last hair of angle. Fit it to the tail and the dayside balloons.
+
+The fix is to let the exponent vary with angle, which keeps the whole family and
+adds one knob (**our own extension, not a published model**):
+
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α(θ)
+    α(θ) = α_day                                     θ ≤ 90°
+         = α_day + (α_night − α_day)·u²(3−2u),       u = (θ−90°)/90°
+    ε    = 1 / ( (L/r0)^(1/α_night) − 1 )
+
+The smoothstep makes α continuous in value *and* slope at the terminator, so the
+curve stays smooth where the two regimes meet, and `ε` still closes the tail at `L`.
+Now the constraints land on separate parameters: **`r0` and `α_day` are pinned by the
+measured nose and terminator, `L` by the observed tail length, and `α_night` sets how
+the tail flares between them.** For Venus, `α_day` 0.113 with `α_night` 0.5 keeps the
+tail 1.2–1.5 R_V wide out to ~7 R_V before closing at 11 — the "flaring with altitude"
+Pioneer Venus reported (Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)).
+
+**Honesty about `α_night`.** It is *not* pinned. `r0`, `α_day` and `L` come from
+measurements; `α_night` was chosen to reproduce a qualitative statement ("flaring
+with altitude"), because no tail-width-versus-distance number has been pulled yet.
+Treat it as a shape knob with a stated default (0.5), not a derived quantity, and
+pin it when a tail-radius profile is available.
 
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long
@@ -1131,15 +1150,33 @@ a documented regime call rather than a computed number.
 근접 궤도의 극단적 풍압에서도 같은 일이 예상됩니다. 0.1 AU 안쪽의 조석고정 행성이라면 경계가 상시
 존재한다고 가정하지 말고 이 단서를 함께 적으십시오.
 
-**이 갈래는 Shue 형식으로 표현할 수 없습니다.** 기존 기계를 재사용하고 싶어지므로 분명히 적어
-둡니다. Shue 계열에서는 `r(θ) = r0 (2/(1+cos θ))^α`라 **α 하나**가 주간면 벌어짐과 꼬리를 동시에
-지배합니다. 그런데 유도 자기권은 그 둘이 분리돼 있습니다. 노즈→명암경계선 벌어짐은 *작고*
-(금성 1.14/1.055 = 1.08) 꼬리는 *깁니다*(5~11 R_V). 꼬리가 주간면의 벌어짐이 아니라 끌려온
-자기력선의 드레이핑과 질량적재로 만들어지기 때문입니다. 명암경계선에 맞춰 α를 잡으면 0.113이
-나오는데, 그 α로는 11 R_V에 θ = 179.9964°에서야 닿습니다. 사실상 구이고 마지막 각도에서 급히
-닫힙니다. 반대로 꼬리에 맞추면 주간면이 부풀어 오릅니다. 여기서는 Kerbalism의 눌린 구가 오히려
-더 맞습니다. `compression`과 `extension`이 서로 독립이기 때문입니다. 그러므로 cfg 값은 도출하되,
-유도 경계에는 Shue 기준선을 그리지 않습니다.
+**단일 α Shue로는 표현할 수 없지만, 2-α 형태면 됩니다.** 기존 기계를 그대로 쓰고 싶어지므로 짚고
+갑니다. Shue 계열은 `r(θ) = r0 (2/(1+cos θ))^α`라 **α 하나**가 주간면 벌어짐과 꼬리를 동시에
+지배합니다. 유도 자기권은 그 둘이 분리돼 있습니다. 노즈→명암경계선 벌어짐은 *작고*
+(금성 1.14/1.055 = 1.08) 꼬리는 *깁니다*(5~11 R_V). 꼬리를 만드는 것이 주간면의 벌어짐이 아니라
+끌려온 자기력선의 드레이핑과 질량적재이기 때문입니다. 명암경계선에 맞춰 α를 잡으면 0.113이고,
+그 값으로는 11 R_V에 θ = 179.9964°에서야 닿습니다. 사실상 구이고 마지막 각도에서 급히 닫힙니다.
+반대로 꼬리에 맞추면 주간면이 부풀어 오릅니다.
+
+해법은 지수를 각도의 함수로 두는 것입니다. 계열은 그대로 두고 손잡이 하나만 늘립니다
+(**우리 확장이고 발표된 모델이 아닙니다**).
+
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α(θ)
+    α(θ) = α_day                                     θ ≤ 90°
+         = α_day + (α_night − α_day)·u²(3−2u),       u = (θ−90°)/90°
+    ε    = 1 / ( (L/r0)^(1/α_night) − 1 )
+
+smoothstep 덕분에 α가 명암경계선에서 값과 기울기 모두 연속이라 두 영역이 만나는 자리가 매끄럽고,
+`ε`은 여전히 꼬리를 `L`에서 닫습니다. 이제 제약이 서로 다른 파라미터에 얹힙니다. **`r0`와
+`α_day`는 실측 노즈·명암경계선이, `L`은 관측된 꼬리 길이가 고정하고, `α_night`이 그 사이에서
+꼬리가 벌어지는 정도를 정합니다.** 금성은 `α_day` 0.113에 `α_night` 0.5면 꼬리가 ~7 R_V까지
+1.2~1.5 R_V 폭을 유지하다 11에서 닫힙니다. Pioneer Venus가 보고한 "고도에 따라 벌어지는" 꼬리와
+맞습니다(Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)).
+
+**`α_night`에 대한 정직한 표시.** 이 값은 고정되지 않았습니다. `r0`·`α_day`·`L`은 측정에서
+오지만, `α_night`은 "고도에 따라 벌어진다"는 정성 서술을 재현하려고 고른 값입니다. 꼬리 폭 대
+거리 수치를 아직 확보하지 못했기 때문입니다. 도출량이 아니라 기본값(0.5)이 명시된 형상 손잡이로
+다루고, 꼬리 반경 프로파일이 생기면 그때 고정하십시오.
 
 **Kerbalism 매핑.** 엔진에 이미 이 갈래가 있습니다. `ionosphere` 모델은 **pause만 있는** 껍질로,
 `pause_radius` 1.1 R에 `pause_extension` 0.2(긴 유도 꼬리)이며 벨트 필드가 아예 없고

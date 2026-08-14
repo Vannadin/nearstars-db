@@ -79,18 +79,37 @@ turns nearly radial, and by extension under the extreme wind pressures of a clos
 orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
 rather than assuming a permanent boundary.
 
-**The Shue form cannot represent this branch.** Worth stating plainly, because the
-temptation is to reuse the machinery: in Shue's family a *single* α sets both the
-dayside flaring and the tail, since `r(θ) = r0 (2/(1+cos θ))^α`. An induced
-magnetosphere decouples those two — its nose-to-terminator flaring is *small*
-(Venus 1.14/1.055 = 1.08) while its tail is *long* (5–11 R_V), because the tail is
-built by draped field lines and mass loading rather than by the same flaring that
-shapes the dayside. Fit α to the terminator and you get 0.113, which reaches
-11 R_V only at θ = 179.9964° — a sphere that snaps shut at the last hair of angle.
-Fit it to the tail instead and the dayside balloons. Kerbalism's own squashed
-sphere is the better match here precisely because `compression` and `extension` are
-independent knobs. So: derive the cfg fields, and do not draw a Shue reference for
-an induced boundary.
+**A one-α Shue cannot represent this branch — a two-α form can.** Worth working
+through, because the temptation is to reuse the machinery as-is. In Shue's family a
+*single* α sets both the dayside flaring and the tail, since
+`r(θ) = r0 (2/(1+cos θ))^α`. An induced magnetosphere decouples those: its
+nose-to-terminator flaring is *small* (Venus 1.14/1.055 = 1.08) while its tail is
+*long* (5–11 R_V), because the tail is built by draped field lines and mass loading
+rather than by whatever spreads the dayside. Fit α to the terminator and you get
+0.113, which reaches 11 R_V only at θ = 179.9964° — a sphere that snaps shut at the
+last hair of angle. Fit it to the tail and the dayside balloons.
+
+The fix is to let the exponent vary with angle, which keeps the whole family and
+adds one knob (**our own extension, not a published model**):
+
+    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α(θ)
+    α(θ) = α_day                                     θ ≤ 90°
+         = α_day + (α_night − α_day)·u²(3−2u),       u = (θ−90°)/90°
+    ε    = 1 / ( (L/r0)^(1/α_night) − 1 )
+
+The smoothstep makes α continuous in value *and* slope at the terminator, so the
+curve stays smooth where the two regimes meet, and `ε` still closes the tail at `L`.
+Now the constraints land on separate parameters: **`r0` and `α_day` are pinned by the
+measured nose and terminator, `L` by the observed tail length, and `α_night` sets how
+the tail flares between them.** For Venus, `α_day` 0.113 with `α_night` 0.5 keeps the
+tail 1.2–1.5 R_V wide out to ~7 R_V before closing at 11 — the "flaring with altitude"
+Pioneer Venus reported (Saunders 1986, [`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)).
+
+**Honesty about `α_night`.** It is *not* pinned. `r0`, `α_day` and `L` come from
+measurements; `α_night` was chosen to reproduce a qualitative statement ("flaring
+with altitude"), because no tail-width-versus-distance number has been pulled yet.
+Treat it as a shape knob with a stated default (0.5), not a derived quantity, and
+pin it when a tail-radius profile is available.
 
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long

@@ -78,12 +78,13 @@ far less than a dipole magnetopause.
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
 1.1 R) and the tail runs twice as long (11 vs 5.5 R_V).
 
-**No Shue overlay here, and the reason is structural.** Deriving α from the measured
-flaring gives 0.113 — an α that reaches the 11 R_V tail only at θ = 179.9964°, i.e.
-a near-sphere that snaps shut at the last fraction of a degree. One α cannot serve
-both a small dayside flaring and a long tail, and an induced magnetosphere has
-exactly that combination. The cfg form does better precisely because `compression`
-and `extension` are independent. (Details in the methodology's induced subsection.)
+**The overlay here uses the two-α form.** A single α cannot serve both a small
+dayside flaring and a long tail, and an induced magnetosphere has exactly that
+combination — α from the measured flaring is 0.113, which would reach the 11 R_V
+tail only at θ = 179.9964°. So the exponent varies with angle: `α_day` 0.113 pinned
+by the measured nose and terminator, `α_night` 0.5 setting how the tail flares, `L`
+11 R_V from the observations. `α_night` is a shape knob, not a measurement — see the
+methodology's induced subsection.
 
 ### Mars — the MPB conic, derived
 
@@ -102,8 +103,8 @@ directly: `X₀` 0.78 ± 0.01, eccentricity 0.90 ± 0.01, semi-latus rectum `L`
 - the tail comes from their own conic — with `e` < 1 it closes, `r(180°) = L/(1−e)`
   = 9.60 R_M from a focus at `X₀` 0.78, i.e. **8.82 R_M** behind the centre, so
   `extension` = 1.47/8.82 = **0.1667**;
-- no Shue overlay, for the same structural reason as Venus: α from the flaring is
-  0.188, which reaches the 8.82 R_M tail only at θ = 179.31°.
+- two-α overlay as at Venus: `α_day` 0.188 from the measured flaring, `α_night` 0.5
+  (unpinned shape knob), tail 8.82 R_M.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the

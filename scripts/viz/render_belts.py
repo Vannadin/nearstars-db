@@ -85,12 +85,20 @@ def render(body, out, size=1120, z=0.0):
         comp = pause.get('comp',1.0)
         r0 = pause.get('shue_nose', pause['rad']/comp)
         al = pause['shue_alpha']
+        al_n = pause.get('shue_alpha_night')      # 2-α 확장: 야간면만 다른 α (유도 경계용)
         Ltail = pause.get('shue_tail', pause['rad']/max(pause.get('ext',1.0),1e-3))
         if r0>0.3 and al>0.05:
             if Ltail > r0*1.05:
-                eps = 1.0/((Ltail/r0)**(1.0/al) - 1.0)
+                # α(θ): 주간면 al, 90° 부터 smoothstep 으로 al_n 까지. 90°에서 값·기울기 모두 연속.
+                a_eff = al_n if al_n else al
+                eps = 1.0/((Ltail/r0)**(1.0/max(a_eff,1e-6)) - 1.0)
                 th = np.radians(np.linspace(-180,180,481))
-                rr_ = r0*((1+eps)/(eps+np.cos(th/2)**2))**al
+                if al_n:
+                    u = np.clip((np.abs(np.degrees(th))-90.0)/90.0, 0, 1)
+                    a_th = al + (al_n-al)*(u*u*(3-2*u))
+                else:
+                    a_th = al
+                rr_ = r0*((1+eps)/(eps+np.cos(th/2)**2))**a_th
             else:
                 eps = 0.0
                 th = np.radians(np.linspace(-150,150,401))
