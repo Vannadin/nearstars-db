@@ -24,15 +24,15 @@ OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 # Shue 기준선은 α 가 실제로 근거 있는 바디에서만 기본 표시한다.
 # log2(pause_compression) 환산은 지구형 cfg 에서만 형상 충실이고(방법론 Part C),
 # 자이언트에 쓰면 flank/nose 1.2 = 지구보다 덜 벌어진 주간면이라는 비물리 값이 된다.
-# 자이언트 자기권계면은 애초에 Shue 형식으로 적합하지 않는다: 목성은 Joy 2002 의 다항식,
-# 토성은 Kanani 2010 / Achilleos 2008 의 압력균형 형상이다 → α 를 만들어 내지 않고 끈다.
+# 자이언트도 Shue 형식 적합이 존재하는 경우엔 쓴다(목성=Rutala 2025 S97*). 없는 천체는
+# 만들어 내지 않고 끈다(토성 적합은 있으나 계수가 유료 장벽, 얼음 자이언트는 적합 자체가 없음).
 SHUE_GROUNDED = {
     # body: (α, nose r0, tail L, 출처)
     'earth': (0.58, 10, 200, 'Shue 1998'),
     'mercury': (0.5, 1.45, 0, 'Winslow 2013 (MESSENGER 통과 적합: R_ss 1.45 R_M, α 0.5)'),
     # 목성: Rutala 2025 의 S97* 적합. α = 0.28 + 1.08·p_SW, r_SS = 38.0·p_SW^-0.25 [R_J].
     # 우리 프리셋 노즈 63 R_J(Joy 2002 압축 상태)를 그 r_SS 관계에 넣으면 p_SW 0.132 nPa → α 0.423.
-    # 금성·화성은 여기 두지 않는다 — 2-α 값이 BODIES 의 pause 딕트에 직접 들어 있고 위에서 읽는다.
+    # 금성·화성은 여기 두지 않는다 — 유도 경계라 Shue 가 아니라 원+원뿔 형식을 쓴다(imb_* 키).
     'jupiter': (0.423, 63, 0, 'Rutala 2025 S97* (α=0.28+1.08·p_SW, 노즈 63 R_J ⇒ p 0.132 nPa)'),
 }
 
@@ -71,7 +71,8 @@ for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys �
                           'shue_an': pz.get('shue_alpha_night', 0)})
     if p['variant'] == 'phys' and pz.get('imb_term'):       # 유도 경계 오버레이(원 + 원뿔)
         p['view'].update({'imb_nose': pz['imb_nose'], 'imb_term': pz['imb_term'],
-                          'imb_slope': pz['imb_slope'], 'imb_limit': pz.get('imb_limit', 20),
+                          'imb_slope': pz['imb_slope'], 'imb_close': pz.get('imb_close', 25),
+                          'imb_m': pz.get('imb_m', 20),
                           'imb_label': pz.get('imb_label', 'IMB'), 'shue': 0})
     presets[key] = p
 

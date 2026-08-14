@@ -66,31 +66,36 @@ BODIES={
  # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
  # ROKerbalism: RadiationBody[Eve]→Venus, radiation_model = ionosphere, radiation_pause = -0.005.
  # ionosphere 모델 = pause_radius 1.1 / extension 0.2 (System/Radiation.cfg). 벨트 필드 자체가 없다.
- 'venus_stock':{'title':'Venus — stock (ROKerbalism)','sub':'ionosphere model: pause 1.1/ext 0.2, no belts (induced magnetosphere)','R':9,'tilt':0,
+ 'venus_stock':{'title':'Venus — stock (ROKerbalism)','sub':'ionosphere model: pause 1.1/ext 0.2, no belts (induced magnetosphere)','R':28,'tilt':0,
    'pause':{'radiation':-0.005,'rad':1.1,'ext':0.2,'hscale':1.0}},
 
  # phys = 방법론 Part A '유도 자기권' 절로 계산. 이오노포즈는 실측 스케일을 쓴다(압력균형이 열압 대
  # 항성풍이라 ^(1/6) 법칙 부적용). Brace 1980(PVO): 평균 이오노포즈 직하 330 km, 황혼 700 km,
  # 새벽 1000 km → R_V 6051.8 km 기준 nose 1.0545, 명암경계선 평균 1.1405 R_V.
  # Kerbalism 의미론: pause_radius=플랭크=1.140, compression=플랭크/노즈=1.081 (→ 노즈 1.0545 복원),
- # extension=플랭크/꼬리=0.057 (꼬리 20 R_V = Edberg 2024 의 최원거리 확정 IMB 횡단).
+ # extension=플랭크/꼬리=0.0456 (폐곡선 X=25 R_V — 확정 횡단 20 R_V 바로 밖, 엔진 요구 파라미터).
  # 벨트 없음(고유 다이나모 부재), radiation_pause 는 유도 경계라 쌍극보다 약한 스톡 스케일 -0.005 유지.
  # 오버레이 = Martinecz et al. 2009 의 IMB 모델 형식 그대로: 주간면 원 + 야간면 직선.
  # 야간면 직선 ρ = 1.13 − 0.101·X' (Edberg 2024 arXiv:2410.21856 §4.2 가 20 R_V 까지 유효 확인,
  # 재적합 0.097/1.10 과의 차이는 20 R_V 에서 0.1 R_V). 벌어짐 각 arctan(0.101) = 5.77°.
  # 원뿔 단면은 쓰지 않는다 — 그건 활머리충격파용 형식이고, 노즈·명암경계선을 지나는 원뿔은
  # 꼬리가 실측의 1.6배로 벌어진다(−20 R_V 에서 5.05 대 3.15). 자세한 기각 근거는 방법론 Part C.
- # 엔진 ext: 유도 꼬리는 관측 범위 안에서 닫히지 않으므로, 최원거리 확정 횡단(20 R_V)에서 닫는다.
- 'venus_phys':{'title':'Venus — physical (induced)','sub':'nose 1.05 R_V (330 km), terminator 1.13, flare 5.8° out to >=20 R_V; no belts','R':9,'tilt':0,
-   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.081,'ext':0.057,'hscale':1.0,
-            'imb_nose':1.055,'imb_term':1.13,'imb_slope':0.101,'imb_limit':20,
+ # 엔진은 닫힌 부피를 요구한다(cfg 로 번역돼야 하므로 페이드아웃은 쓸 수 없다). 측정된 원뿔에
+# 폐곡선 항 (1-(d/X)^m) 을 곱해 닫는다 — X=25, m=20 이면 15 R_V 안쪽 오차 0.00%,
+# 최외곽 측정점(20 R_V)에서 1.15% 로 Edberg 의 통과 불확실성(~1시간 구간)보다 훨씬 작다.
+# X 를 40 까지 늘리면 그 점이 더 좋아지지만 확정 범위의 2배까지 외삽하게 된다 → 25 를 택한다.
+# 닫힌 면이 벌어지면 최대폭이 반드시 생긴다. 여기서는 d≈21(측정 범위 바로 밖)이고,
+# 기각한 타원은 d=5(측정 범위 안)였다 — 그게 둘의 차이다.
+ 'venus_phys':{'title':'Venus — physical (induced)','sub':'nose 1.05 R_V (330 km), terminator 1.13, flare 5.8° (measured to 20), closed at 25 R_V; no belts','R':28,'tilt':0,
+   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.081,'ext':0.0456,'hscale':1.0,
+            'imb_nose':1.055,'imb_term':1.13,'imb_slope':0.101,'imb_close':25,'imb_m':20,
             'imb_label':'Martinecz 2009 / Edberg 2024'}},
 
  # ---- MARS: 지각 잔류 자기(다극·약장) → irregular 모델 (pause_deform 0.1 로 울퉁불퉁) ----
  # 업스트림 Kerbalism: RadiationBody[Duna] = irregular, radiation_pause = -0.003.
  # ROKerbalism 의 RSS.cfg 는 +RadiationBody[Duna]{@name = Mars} 로 복사하지만, 그들 자신의
  # System/Radiation.cfg 에는 Duna 정의가 없다 → 그 조합에서는 화성에 RadiationBody 가 안 생긴다(배포 갭).
- 'mars_stock':{'title':'Mars — stock (Kerbalism irregular)','sub':'irregular model: pause 1.25/comp 1.1/ext 0.75/deform 0.1 — crustal-anomaly look; no belts','R':9,'tilt':0,
+ 'mars_stock':{'title':'Mars — stock (Kerbalism irregular)','sub':'irregular model: pause 1.25/comp 1.1/ext 0.75/deform 0.1 — crustal-anomaly look; no belts','R':28,'tilt':0,
    'pause':{'radiation':-0.003,'rad':1.25,'comp':1.1,'ext':0.75,'hscale':1.0,'deform':0.1}},
 
  # phys = Vignes et al. 2000 (GRL 27, 49) Table 2 의 MPB 원뿔 적합, 직접 적합 N=488:
@@ -105,9 +110,9 @@ BODIES={
  # 검증: 그 각도면 주간면 원의 명암경계선 기울기 0.135 와 야간면 원뿔 0.131 이 3% 안에서 접합된다(설계 아님).
  # pause_deform 0.1 은 스톡 irregular 에서 물려받은 값이다 — 지각 잔류자기의 비축대칭성을 뜻하지만
  # 크기는 도출하지 않았다(Vignes 는 남북 비대칭을 정량화하지 않는다).
- 'mars_phys':{'title':'Mars — physical (MPB fit)','sub':'dayside nose 1.29 R_M, terminator 1.47; nightside flare 7.5° (Venus analogue); no belts','R':9,'tilt':0,
-   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.1395,'ext':0.0735,'hscale':1.0,'deform':0.1,
-            'imb_nose':1.285,'imb_term':1.47,'imb_slope':0.1314,'imb_limit':20,
+ 'mars_phys':{'title':'Mars — physical (MPB fit)','sub':'dayside nose 1.29 R_M, terminator 1.47; nightside flare 7.5° (Venus analogue), closed at 25 R_M; no belts','R':28,'tilt':0,
+   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.1395,'ext':0.0588,'hscale':1.0,'deform':0.1,
+            'imb_nose':1.285,'imb_term':1.47,'imb_slope':0.1314,'imb_close':25,'imb_m':20,
             'imb_label':'Vignes 2000 dayside + Venus-analogue flare'}},
 
  # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----

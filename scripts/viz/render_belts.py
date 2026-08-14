@@ -87,23 +87,28 @@ def render(body, out, size=1120, z=0.0):
         # 원뿔 단면은 활머리충격파 전용이고, 노즈·명암경계선을 지나는 원뿔은 꼬리가 지나치게
         # 벌어진다(금성 −20 R_V 에서 5.05 대 실측 3.15). 닫히지 않으므로 관측 한계에서 끊는다.
         nose, term = pause['imb_nose'], pause['imb_term']
-        slope, lim = pause['imb_slope'], pause.get('imb_limit', R)
+        slope = pause['imb_slope']
+        Xcl, mcl = pause.get('imb_close',40.0), pause.get('imb_m',6.0)
         Rc = (term*term + nose*nose)/(2*nose); xc = nose - Rc     # 노즈·명암경계선을 지나는 원
         oy = c - off*ppr
         th = np.radians(np.linspace(-90,90,361))                  # 주간면 반원(x ≥ 0)
         px = c + (xc + Rc*np.cos(th))*ppr; py = oy - Rc*np.sin(th)*ppr
         seg = [(px,py)]
-        for sgn in (1,-1):                                        # 야간면 원뿔 두 면
-            xs = np.linspace(0,-lim,361); ys = sgn*(term + slope*(-xs))
-            seg.append((c + xs*ppr, oy - ys*ppr))
-        for j,(px_,py_) in enumerate(seg):
+        # 야간면: 측정된 원뿔 × 폐곡선 항 (1-(d/X)^m). 엔진은 닫힌 부피를 요구하므로
+        # 열린 원뿔을 그대로 둘 수 없다 — 연화 Shue 에 ε 를 얹은 것과 같은 수법이다.
+        # m 이 크면 측정 구간에서 인수가 1 에 붙어 원뿔이 보존된다: X=25, m=20 이면
+        # 15 R_p 안쪽 오차 0.00%, 최외곽 측정점 20 R_p 에서 1.15%.
+        # 닫히는 지점의 형태는 물리가 아니다(닫힘 자체만 요구사항). 지수 1 은 끝 접선을
+        # 유한하게 만들어 뾰족하게 닫는다 — 제곱근은 뭉툭한 뚜껑이 되어 '벽'처럼 읽힌다.
+        d = np.linspace(0,Xcl,721)
+        rho = (term + slope*d)*np.clip(1-(d/Xcl)**mcl,0,None)
+        for sgn in (1,-1):
+            seg.append((c - d*ppr, oy - sgn*rho*ppr))
+        for px_,py_ in seg:
             for i in range(0,len(px_)-1,2):
                 if (i//2) % 3 == 2: continue
                 if max(abs(px_[i]),abs(py_[i])) > 4*size: continue
-                # 야간면은 하류로 갈수록 흐려진다 — 먼 꼬리에서 경계 자체가 뚜렷하지 않다
-                # ("not obvious or abrupt", Edberg 2024). 무한히 벌어진다는 오독을 막는다.
-                a = 255 if j==0 else int(255*(1 - 0.8*i/(len(px_)-1)))
-                dr.line([px_[i],py_[i],px_[i+1],py_[i+1]],fill=(255,154,82,a),width=S(2))
+                dr.line([px_[i],py_[i],px_[i+1],py_[i+1]],fill=(255,154,82),width=S(2))
         dr.ellipse([c+nose*ppr-S(3),oy-S(3),c+nose*ppr+S(3),oy+S(3)],fill=(255,154,82))
         # 라벨은 제목 밑줄에 둔다 — 노즈 옆은 반지름 눈금 행과 겹친다
         dr.text((S(10),S(46)),pause.get('imb_label','IMB'),fill=(255,154,82),font=fnt)

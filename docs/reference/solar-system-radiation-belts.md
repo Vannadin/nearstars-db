@@ -25,8 +25,10 @@ is reproduced from [`src/Kerbalism/Radiation/Radiation.cs`](https://github.com/K
 for the field-shape schema.
 
 **Reading the renders.** Colour = dose (inferno), cyan = the cfg's magnetopause, orange
-dashed = the **Shue magnetopause** for the same standoff (the empirical spacecraft-fit
-shape, drawn for comparison; the dot marks `r0`), grey = the body, rings = body radii,
+dashed = the **literature boundary** for the same standoff, drawn for comparison with the
+dot marking the nose: the empirical spacecraft-fit Shue shape on magnetized bodies, and
+the published circle-plus-cone IMB form on the induced ones (Venus, Mars). Grey = the
+body, rings = body radii,
 star toward +x. Belts are drawn in the tilted magnetic frame and the magnetopause in the
 star-aligned one, which is how Kerbalism itself evaluates them — it renders and doses the
 pause from `Gsm_space(rb, false)` and reserves the tilted frame for the belts. Since
@@ -69,14 +71,15 @@ at the dusk terminator and 1000 km at dawn (Brace 1980, [`1980JGR....85.7663B`](
 on `R_V` 6051.8 km is a **nose at 1.055 R_V and a terminator mean of 1.140 R_V**.
 Mapped through the cfg semantics (`nose = pause_radius/compression`,
 flank = `pause_radius`, tail = `pause_radius/extension`) that is
-`pause_radius` **1.140**, `compression` **1.081**, `extension` **0.057**, the last
-from a tail closed at **20 R_V** — the farthest confirmed crossing of the induced
-magnetospheric boundary (Edberg 2024, [`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E),
-[2410.21856](https://arxiv.org/abs/2410.21856)). No belts, and `radiation_pause` stays at the shipped
-−0.005: an induced boundary screens GCR far less than a dipole magnetopause.
+`pause_radius` **1.140**, `compression` **1.081**, `extension` **0.0456**, the last
+from a tail closed at **25 R_V** — just past the farthest confirmed crossing of the
+induced magnetospheric boundary at 20 R_V (Edberg 2024,
+[`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)). No belts, and
+`radiation_pause` stays at the shipped −0.005: an induced boundary screens GCR far less
+than a dipole magnetopause.
 
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
-1.1 R) and the tail runs far longer (20 vs 5.5 R_V).
+1.1 R) and the tail runs far longer (25 vs 5.5 R_V).
 
 **The overlay is a circle plus a cone — not Shue, and not a conic.** The published
 IMB model is exactly that shape: "a circle on the dayside and a straight line on the
@@ -94,10 +97,15 @@ by 40%. A conic fitted to nose and terminator overshoots the tail (5.05 vs 3.15 
 −20 R_V) and, forced closed as an ellipse, **dipped to 0.9745 R_V — below the
 surface.** Full argument in the methodology's Part A.
 
-The nightside line is drawn fading downstream on purpose. It does not widen forever:
-far downtail the transition is "not obvious or abrupt… similar to those normally seen"
-in the solar wind (Edberg 2024), so the boundary stops being a boundary rather than
-curving back.
+The cone is closed, because the shape has to become a bounded cfg volume: the measured
+cone is multiplied by `(1 − (d/X)^m)` with `X` 25 R_p and `m` 20, which leaves the
+measured range untouched (0.00% inside 15 R_p, 1.15% at 20) and tapers to a point rather
+than a wall. Closing it the way Shue is closed was tried and fails — that trick needs
+`ε` > the flare parameter, which erases the flare. Details in the methodology's Part A.
+
+Note the engine surface (cyan) sitting inside the measured boundary (orange) down the
+tail. Kerbalism's pause is a squashed sphere and cannot flare; no value of
+`pause_extension` fixes that, and it is on the Harmony-patch backlog.
 
 ### Mars — the MPB dayside, derived
 
@@ -128,15 +136,14 @@ significant difference between the two planets' induced magnetotail structure
 ([`2001AGUSM..SM32D06K`](https://ui.adsabs.harvard.edu/abs/2001AGUSM..SM32D06K)). That is an **analogy, not a Mars measurement**, and is
 labelled as one in the render. One check it was not designed to pass: at that angle the
 dayside circle meets the terminator with slope 0.135 against the cone's 0.131, joining
-smoothly to within 3%. `extension` = **0.0735** closes the engine volume at 20 R_M, the
-same distance in planetary radii as Venus' farthest confirmed crossing, under the same
-analogy.
+smoothly to within 3%. `extension` = **0.0588** closes the engine volume at 25 R_M, the
+same distance in planetary radii as Venus' closure, under the same analogy.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
 amplitude is inherited rather than derived — flagged, not fabricated. Against stock,
 the derived boundary stands further off (1.29 vs 1.25 nose, 1.47 vs a rounder
-flank) and trails a much longer tail (20 vs 1.7 R_M).
+flank) and trails a much longer tail (25 vs 1.7 R_M).
 
 Both Venus and Mars remain belt-free: no dynamo, no trapping.
 

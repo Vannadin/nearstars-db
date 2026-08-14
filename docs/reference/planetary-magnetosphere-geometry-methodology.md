@@ -103,9 +103,19 @@ threshold: below it the tail closes, above it the tail flares without bound. But
 same α also fixes the terminator width, `ρ(90°) = r₀·2^α`. One knob, two jobs. At
 Venus that is fatal: α 0.10 reproduces the measured terminator width 1.13 and then
 shuts the tail immediately, while α 0.58 reproduces the measured width at −20 R_V
-(3.16 against 3.15) and overshoots the terminator by 40% (1.58 against 1.13). The
-induced boundary has a **tight waist and a steadily widening tail**; Shue's single α
-cannot hold those apart at any value.
+(3.16 against 3.15) and overshoots the terminator by 40% (1.58 against 1.13).
+
+The *softened* Shue form used elsewhere in this doc carries a third parameter, the tail
+length `L`, so it deserves a fair test — and it fails structurally. Its closure term
+`ε = 1/((L/r₀)^(1/α) − 1)` is vanishingly small whenever `L ≫ r₀`, and once ε ≪ 0.5 the
+terminator width collapses back to `r₀·2^α`. A brute-force grid over α and `L` against
+all three Venus constraints bottoms out at **32.5% error** — α 0.505, `L` 103, with the
+terminator +32.5% and the width at −20 R_V −32.5%, splitting the difference evenly
+because that is the best a single α can do. The third parameter buys closure, not a
+waist. The adopted form, with one closure parameter of its own, lands at **0.8%**.
+
+The induced boundary has a **tight waist and a steadily widening tail**; no member of
+the Shue family holds those apart at any parameter values.
 
 **A conic cannot do it either.** Fit `r(θ) = L/(1 + e·cos θ)` about a focus at (X₀,0,0)
 to the nose and terminator and the curvature forces the tail far too wide — 5.05 R_V at
@@ -139,12 +149,45 @@ The circle also removes the surface-piercing failure by construction: its distan
 the planet's centre runs monotonically from the nose to the terminator width, so it can
 never cut inside a nose that is itself above the surface.
 
-**One honest limit — this boundary does not close.** A 5.8° cone runs to infinity, and
-within the observed domain that is what the data show. Kerbalism needs a bounded
-volume, so the engine's `pause_extension` closes the tail at the **farthest confirmed
-crossing**: 20 R_V for Venus (Edberg 2024), and the same distance in planetary radii for
-Mars under the same analogy. The overlay, by contrast, is drawn to the observational
-limit and simply stops there rather than faking a closure.
+**Closing it — a required step, not an optional one.** A 5.8° cone runs to infinity, and
+within the observed domain that is what the data show. But the consumer of this shape is
+an engine: it has to become a bounded cfg volume, so a shape that does not close cannot
+be used at all. Multiply the measured cone by a closure factor:
+
+    ρ(d) = (ρ_term + s·d) · (1 − (d/X)^m)        d = −x ≥ 0,  ρ = 0 at d = X
+
+with **`X` = 25 R_p and `m` = 20**. This is the same move as the `ε` term that closes the
+Shue form elsewhere in this doc, and it is deliberately blunt-free: a large `m` pins the
+factor to 1 across the measured range (error **0.00%** inside 15 R_p, **1.15%** at the
+outermost measured point) and the exponent 1 rather than ½ gives the tail a finite end
+tangent, so it tapers to a point instead of stopping against a hemispherical wall. The
+shape *at* the closure carries no physical claim; only the closure itself is required.
+
+`X` = 25 R_p sits just past Venus' farthest confirmed crossing (20 R_V) rather than at a
+comfortable 40, deliberately: at 40 the outermost measured point improves to 0.78%, but
+the boundary is then asserted to twice the confirmed extent. The 1.15% forfeited is
+0.04 R_V, far below the crossing uncertainty — Edberg assigns ~1-hour intervals to these
+far-tail identifications and has only three IMB crossings beyond 10 R_V.
+
+`pause_extension` follows from the same `X`: **0.0456** for Venus, **0.0588** for Mars.
+
+**Why not close it the way Shue is closed.** Shue's closure adds `ε` to a denominator so
+it cannot reach zero, and the equivalent exists here — the cone's polar form is
+`r(θ) = ρ_term/(sin θ + s·cos θ)`, which diverges at `θ` = 180° − arctan(s) = 174.2°, and
+adding `ε` there closes it at `r(180°) = ρ_term/(ε − s)`. It was tried and it fails
+structurally: closure requires **`ε` > `s`**, so the correction term can never be small
+compared with the flare it is perturbing. At `L` = 25 the terminator comes out 12.8% low
+and the width at 20 R_V 92.8% low; raising `L` does not rescue it, converging instead on a
+cylinder of half-width 1.1 with the flare erased (64.9% low at 20 R_V). Shue's `ε` is
+cheap only because Shue's tail is **axial** — its asymptote is exactly θ = 180°, so `ε`
+can be made arbitrarily small. A flaring boundary's asymptote is off-axis, and that is
+the whole difference.
+
+**A known engine limitation, visible in the renders.** Kerbalism's pause is a squashed
+sphere, which cannot flare, so beyond ~2 R_p the engine surface sits inside the measured
+boundary however `pause_extension` is set. That is the same class of gap as the pending
+Shue-native fields below, and belongs to the Harmony-patch backlog rather than to any
+choice of shape function.
 
 The two-α Shue construction is retained in the renderer only as a fallback for a body
 with no measured boundary and no published α, and is labelled as ours wherever drawn.
