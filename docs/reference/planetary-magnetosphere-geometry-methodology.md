@@ -79,6 +79,19 @@ turns nearly radial, and by extension under the extreme wind pressures of a clos
 orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
 rather than assuming a permanent boundary.
 
+**The Shue form cannot represent this branch.** Worth stating plainly, because the
+temptation is to reuse the machinery: in Shue's family a *single* α sets both the
+dayside flaring and the tail, since `r(θ) = r0 (2/(1+cos θ))^α`. An induced
+magnetosphere decouples those two — its nose-to-terminator flaring is *small*
+(Venus 1.14/1.055 = 1.08) while its tail is *long* (5–11 R_V), because the tail is
+built by draped field lines and mass loading rather than by the same flaring that
+shapes the dayside. Fit α to the terminator and you get 0.113, which reaches
+11 R_V only at θ = 179.9964° — a sphere that snaps shut at the last hair of angle.
+Fit it to the tail instead and the dayside balloons. Kerbalism's own squashed
+sphere is the better match here precisely because `compression` and `extension` are
+independent knobs. So: derive the cfg fields, and do not draw a Shue reference for
+an induced boundary.
+
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long
 induced tail) and no belt fields at all, carrying `radiation_pause` ≈ −0.005 —

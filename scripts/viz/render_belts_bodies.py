@@ -75,12 +75,12 @@ BODIES={
  # Kerbalism 의미론: pause_radius=플랭크=1.140, compression=플랭크/노즈=1.081 (→ 노즈 1.0545 복원),
  # extension=플랭크/꼬리=0.1037 (꼬리 11 R_V = Saunders 1986 이 PVO 로 5~11 R_V 에서 횡단한 원거리 꼬리).
  # 벨트 없음(고유 다이나모 부재), radiation_pause 는 유도 경계라 쌍극보다 약한 스톡 스케일 -0.005 유지.
- # Shue 삼중값은 같은 실측에서 도출: α = log2(플랭크/노즈) = log2(1.1405/1.0545) = 0.113.
- # 유도 경계를 Shue 형식으로 '적합'한 문헌은 없으므로, 이는 측정된 노즈→명암경계선 벌어짐을
- # 같은 형식으로 매개화한 것이라는 점을 문서에 명시한다(자이언트의 cfg 환산과는 성격이 다르다).
+ # Shue 오버레이는 여기 붙이지 않는다. 측정 벌어짐에서 α=0.113 이 나오는데, 그 α 로는 꼬리가
+ # 11 R_V 에 θ=179.9964° 에서야 닿는다 — 그릴 수 있는 범위에서는 사실상 구이고 끝에서 급히 닫힌다.
+ # Shue 는 α 하나가 주간면 벌어짐과 꼬리 길이를 동시에 지배하는데, 유도 경계는 그 둘이 분리돼 있다
+ # (벌어짐은 작고 꼬리는 길다). 구조적으로 표현 불가라 오버레이를 생략한다(방법론 Part A 참조).
  'venus_phys':{'title':'Venus — physical (induced)','sub':'ionopause: nose 1.05 R_V (330 km), terminator 1.14, tail 11 R_V; no belts','R':3,'tilt':0,
-   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.081,'ext':0.1037,'hscale':1.0,
-            'shue_alpha':0.113,'shue_nose':1.0545,'shue_tail':11.0}},
+   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.081,'ext':0.1037,'hscale':1.0}},
 
  # ---- MARS: 지각 잔류 자기(다극·약장) → irregular 모델 (pause_deform 0.1 로 울퉁불퉁) ----
  # 업스트림 Kerbalism: RadiationBody[Duna] = irregular, radiation_pause = -0.003.
@@ -94,12 +94,11 @@ BODIES={
  # Kerbalism 의미론으로: pause_radius = 플랭크 = 1.47, compression = 1.47/1.29 = 1.1395 (→ 노즈 1.29 복원),
  # 꼬리는 그들의 원뿔에서 직접 나온다. e<1 이라 닫힌 타원이고 r(180°) = L/(1-e) = 9.60 R_M,
  # 초점이 X0=0.78 에 있으므로 중심 기준 8.82 R_M → extension = 1.47/8.82 = 0.1667.
- # Shue 형식 매개화: α = log2(1.47/1.29) = 0.188 (적합이 아니라 측정된 벌어짐의 재매개화).
+ # Shue 오버레이 없음: α=0.188 로는 꼬리 8.82 R_M 에 θ=179.31° 에서야 닿아 사실상 구가 된다(금성과 동일 이유).
  # pause_deform 0.1 은 스톡 irregular 에서 물려받은 값이다 — 지각 잔류자기의 비축대칭성을 뜻하지만
  # 크기는 도출하지 않았다(Vignes 는 남북 비대칭을 정량화하지 않는다).
  'mars_phys':{'title':'Mars — physical (MPB fit)','sub':'Vignes 2000 MPB conic: nose 1.29 R_M, terminator 1.47, tail 8.8 R_M; crustal-anomaly deform; no belts','R':3,'tilt':0,
-   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.1395,'ext':0.1667,'hscale':1.0,'deform':0.1,
-            'shue_alpha':0.188,'shue_nose':1.29,'shue_tail':8.82}},
+   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.1395,'ext':0.1667,'hscale':1.0,'deform':0.1}},
 
  # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----
  'earth_stock':{'title':'Earth — stock (ROKerbalism)','sub':'inner 0.81/0.70 (D), outer 2.63/2.48 (O), pause 15','R':12,'tilt':11,
