@@ -298,8 +298,11 @@ function torusSDF(x,y,z,P){
   return v;
 }
 function pauseSDF(x,y,z,P){
-  let px = x + (P.off||0);            // 실험용 병진(비-cfg): 형태 전체를 꼬리쪽으로 물림
-  px = px*(px<0?P.ext:P.comp);
+  // 스톡 계면 + 두 일반화. waist=smooth=0 이면 스톡과 동일.
+  //   waist  : 두 반구를 가르는(=최대 단면) 평면의 x 위치. + 는 항성 방향.
+  //   smooth : x=0 의 기울기 점프(C0/비C1)를 쌍곡선으로 뭉갠다 → C∞.
+  const u = x - (P.waist||0), c = P.comp, e = P.ext, w = P.smooth||0;
+  const px = 0.5*(c+e)*u + 0.5*(c-e)*Math.sqrt(u*u + w*w);
   const py = y*P.hscale;
   let v = Math.sqrt(px*px+py*py+z*z)-P.rad;
   if(P.deform>0.001){const S=(P.dscale==null?1:P.dscale); v += Math.sin(px*5*S)*Math.sin(py*7*S)*Math.sin(z*6*S)*P.deform;}
@@ -315,7 +318,7 @@ function inferno(t){t=clamp(t,0,1)*9;const i=Math.floor(t),f=t-i,a=STOPS[i],b=ST
 function belt(pre){return Object.assign({on:true,rad:0,radiation:0,grad:3.3,dist:1,dxy:1,comp:1,ext:1,bdist:0.0001,brad:0,bdxy:1,deform:0,dscale:1},pre);}
 const state={
   inner:belt({}), outer:belt({}),
-  pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,off:0,alpha:0.6},
+  pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,waist:0,smooth:0,alpha:0.6},
   view:{R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0}
 };
 
@@ -340,7 +343,8 @@ const GROUPS=[
    rows:[F("rad","pause_radius",0,70,0.1),F("radiation","radiation_pause",-0.05,0,0.001),
      F("comp","pause_compression",1,2,0.01),F("ext","pause_extension",0.02,1.5,0.005),
      F("hscale","pause_height_scale",0.5,2,0.01),F("deform","pause_deform",0,0.5,0.005),F("dscale","pause_deform_scale ⚗non-cfg",0.1,2,0.01),
-     F("alpha","불투명도 (viz)",0,1,0.05,"opacity (viz)"),F("off","pause_offset ⚗non-cfg",0,30,0.1)]},
+     F("alpha","불투명도 (viz)",0,1,0.05,"opacity (viz)"),
+     F("waist","pause_waist ⚗non-cfg",-30,5,0.1),F("smooth","pause_smooth ⚗non-cfg",0,30,0.1)]},
   {id:"view",title:"뷰 / 배향",title_en:"view / orientation",cls:"g-view",toggle:false,
    rows:[F("R","view_halfwidth (R)",2,70,0.5),F("tilt","dipole_tilt (°)",0,90,0.5),F("offset","geomagnetic_offset",0,1,0.005),F("z","slice_z",0,6,0.05),
      F("shue","Shue α 오버레이 (0=끔)",0,0.7,0.01,"Shue α overlay (0=off)"),
@@ -397,7 +401,7 @@ function sceneExtent(){
     e=Math.max(e, m/Math.min(B.comp,B.ext,1), m); };
   belt(state.inner); belt(state.outer);
   if(state.pause.on){ const P=state.pause;
-    e=Math.max(e, P.rad/P.comp, P.rad/P.ext+(P.off||0), P.rad/P.hscale); }
+    e=Math.max(e, P.rad/P.comp+Math.abs(P.waist||0), P.rad/P.ext+Math.abs(P.waist||0), P.rad/P.hscale); }
   return Math.ceil(e*1.06);
 }
 function updateViewMax(){
@@ -444,7 +448,8 @@ function toCfg(){
   const s=state,I=s.inner,O=s.outer,P=s.pause,L=[];
   L.push('// NearStars belt-viewer 내보내기 — 단위: 바디 반경, rad/h');
   L.push('// Kerbalism MM 패치에 붙여넣고 name + :NEEDS[...] 지정');
-  if((P.off||0)>0.001) L.push('// ⚗ pause_offset '+nm(P.off)+' 는 뷰어 전용 실험 필드(실 cfg 아님) → 제외');
+  if(Math.abs(P.waist||0)>0.001) L.push('// ⚗ pause_waist '+nm(P.waist)+' 는 스톡 함수 일반화 필드(하모니 패치 대기) → cfg emit 불가');
+  if((P.smooth||0)>0.001) L.push('// ⚗ pause_smooth '+nm(P.smooth)+' 는 스톡 함수 일반화 필드(하모니 패치 대기) → cfg emit 불가');
   const belt=(B,pre)=>{
     L.push('  has_'+pre+' = '+(B.on?'true':'false'));
     if(!B.on) return;
@@ -500,11 +505,16 @@ let currentPreset=null;
 function deepset(preset){
   const P=PRESETS[preset];
   state.inner=belt(P.inner); state.outer=belt(P.outer);
-  state.pause=Object.assign({on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,off:0,alpha:0.6},P.pause);
+  state.pause=Object.assign({on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,waist:0,smooth:0,alpha:0.6},P.pause);
   state.view=Object.assign({R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0},P.view);
 }
-function applyPreset(p){
-  currentPreset=p; deepset(p); syncControls();
+function applyPreset(p,{keepZoom=false}={}){
+  // stock↔physical 토글은 같은 천체의 두 판본이므로 줌을 유지한다 — 프리셋 R 로 되돌리면
+  // 확대해서 보던 자리를 매번 잃는다. 천체/계를 바꿀 때는 프리셋 스케일을 그대로 쓴다.
+  const prevR = keepZoom && state.view ? state.view.R : null;
+  currentPreset=p; deepset(p);
+  if(prevR) state.view.R=prevR;
+  syncControls();
   const meta=PRESETS[p];
   if(meta && typeof curBody!=='undefined'){
     curBody=meta.body_key||p; curVar=meta.variant||'only';
@@ -589,52 +599,16 @@ function render(){
   ctx.moveTo(0,c);ctx.lineTo(SZ,c);ctx.moveTo(c,0);ctx.lineTo(c,SZ);ctx.stroke();
   // Shue 기준 곡선 r(θ)=r0·(2/(1+cosθ))^α — 항성정렬 프레임(tilt 무관), r0=현재 pause 노즈
   // 꼬리마감 L>r0이면: 연화 Shue 폐곡선(C∞ 단일식) + 순수 Shue 대조
-  // 유도 경계 오버레이 — 문헌 형식은 주간면 원 + 야간면 직선(Martinecz 2009 / Edberg 2024).
-  // 원뿔은 활머리충격파 전용이라 쓰지 않는다. 닫히지 않으므로 관측 한계에서 끊는다.
   const cn=state.view;
-  if(cn.imb_term>0 && state.pause.on){
-    const nose=cn.imb_nose, term=cn.imb_term, sl=cn.imb_slope, lim=cn.imb_limit||R;
-    const Rc=(term*term+nose*nose)/(2*nose), xc=nose-Rc;
-    const oy=c-(cn.offset||0)*ppr;
-    ctx.strokeStyle='rgba(255,154,82,.95)'; ctx.setLineDash([6,4]); ctx.lineWidth=1.5;
-    ctx.beginPath();
-    let f0=true;
-    for(let deg=-90; deg<=90; deg+=0.5){          // 주간면 원
-      const th=deg*Math.PI/180;
-      const px=c+(xc+Rc*Math.cos(th))*ppr, py=oy-Rc*Math.sin(th)*ppr;
-      if(f0){ctx.moveTo(px,py);f0=false;} else ctx.lineTo(px,py);
-    }
-    ctx.stroke();
-    // 야간면: 측정된 원뿔 x 폐곡선 항. 엔진은 닫힌 부피를 요구하므로(cfg 로 번역돼야 한다)
-    // 열린 원뿔을 그대로 둘 수 없다 — 연화 Shue 에 eps 를 얹은 것과 같은 수법이다.
-    const Xcl=cn.imb_close||40, kcl=cn.imb_k||2, d0=cn.imb_d0||20;
-    ctx.beginPath();
-    for(const sg of [1,-1]){
-      let first=true;
-      for(let i=0;i<=400;i++){
-        const d=Xcl*i/400, uu=Math.max(0,(d-d0)/(Xcl-d0)), v=1-Math.pow(uu,kcl);
-        const rho=v>0?(term+sl*d)*v:0;
-        const px=c-d*ppr, py=oy-sg*rho*ppr;
-        if(first){ctx.moveTo(px,py);first=false;} else ctx.lineTo(px,py);
-      }
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle='rgba(255,154,82,.95)';
-    ctx.beginPath(); ctx.arc(c+nose*ppr,oy,2.5,0,7); ctx.fill();
-    ctx.font='10px ui-monospace,monospace';
-    ctx.fillText((cn.imb_label||'IMB')+'  nose='+nose.toFixed(2)+' term='+term.toFixed(2)
-                 +' flare='+(Math.atan(sl)*180/Math.PI).toFixed(1)+'°', c+nose*ppr+5, oy-6);
-  }
   const alS=state.view.shue;
   if(alS>0.05 && state.pause.on){
     const P=state.pause;
     // 고정 앵커(보드 ⚗ pause_nose/tail)가 있으면 그 물리값 사용 — pause 슬라이더를 움직여도 Shue 기준은 불변
     const fixed=state.view.shue_r0>0;
-    const nose=fixed?state.view.shue_r0:P.rad/P.comp-(P.off||0);
+    const nose=fixed?state.view.shue_r0:P.rad/P.comp+(P.waist||0);
     const oy=c-(state.view.offset||0)*ppr;   // 계면 SDF 와 같은 원점 — geomagnetic_offset 적용
     if(nose>0.3){
-      const L=(fixed&&state.view.shue_L>0)?state.view.shue_L:P.rad/P.ext+(P.off||0);
+      const L=(fixed&&state.view.shue_L>0)?state.view.shue_L:P.rad/P.ext-(P.waist||0);
       const m=1;                          // 테이퍼 m=1 고정 (기저형, 노브 없음 — 오너 확정 2026-07-23)
       ctx.lineWidth=1.5;
       ctx.font='10px ui-monospace,monospace';
@@ -712,7 +686,7 @@ uniform vec2 uRes;uniform float uYaw,uPitch,uDistCam,uTilt,uMaxI,uBR;
 uniform float uInnerOn,uOuterOn,uPauseOn,uOff;
 uniform float iD,iR,iXY,iC,iE,iBD,iBR2,iBXY,iDef,iInt,iGr;
 uniform float oD,oR,oXY,oC,oE,oBD,oBR2,oBXY,oDef,oInt,oGr;
-uniform float pR,pC,pE,pH,pDef,pDS,pOff,pAlpha;
+uniform float pR,pC,pE,pH,pDef,pDS,pWaist,pSmooth,pAlpha;
 uniform float iDS,oDS;
 vec3 inferno(float t){t=clamp(t,0.,1.);
  const vec3 c0=vec3(0.000218940,0.001651005,-0.019480898);
@@ -733,8 +707,8 @@ float torus(vec3 p,float D,float R,float XY,float C,float E,float BD,float BR2,f
  if(DEF>0.001)v+=sin(p.x*5.*DS)*sin(p.y*7.*DS)*sin(p.z*6.*DS)*DEF;
  return v;}
 float pauseF(vec3 p){
- p.x+=pOff;
- p.x*=p.x<0.0?pE:pC; p.y*=pH;
+ float u=p.x-pWaist;
+ p.x=0.5*(pC+pE)*u+0.5*(pC-pE)*sqrt(u*u+pSmooth*pSmooth); p.y*=pH;
  float v=length(p)-pR;
  if(pDef>0.001)v+=sin(p.x*5.*pDS)*sin(p.y*7.*pDS)*sin(p.z*6.*pDS)*pDef;
  return v;}
@@ -807,7 +781,7 @@ function glInit(){
  ['uRes','uYaw','uPitch','uDistCam','uTilt','uMaxI','uBR','uInnerOn','uOuterOn','uPauseOn','uOff',
   'iD','iR','iXY','iC','iE','iBD','iBR2','iBXY','iDef','iDS','iInt','iGr',
   'oD','oR','oXY','oC','oE','oBD','oBR2','oBXY','oDef','oDS','oInt','oGr',
-  'pR','pC','pE','pH','pDef','pDS','pOff','pAlpha'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
+  'pR','pC','pE','pH','pDef','pDS','pWaist','pSmooth','pAlpha'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
  return true;
 }
 function resize3d(){
@@ -840,7 +814,7 @@ function render3d(){
  gl.uniform1f(U.oInt,O.radiation);gl.uniform1f(U.oGr,O.grad);
  gl.uniform1f(U.pR,P.rad);gl.uniform1f(U.pC,P.comp);gl.uniform1f(U.pE,P.ext);
  gl.uniform1f(U.pH,P.hscale);gl.uniform1f(U.pDef,P.deform);gl.uniform1f(U.pDS,P.dscale==null?1:P.dscale);
- gl.uniform1f(U.pOff,P.off||0);gl.uniform1f(U.pAlpha,P.alpha!=null?P.alpha:0.6);
+ gl.uniform1f(U.pWaist,P.waist||0);gl.uniform1f(U.pSmooth,P.smooth||0);gl.uniform1f(U.pAlpha,P.alpha!=null?P.alpha:0.6);
  gl.drawArrays(gl.TRIANGLES,0,3);
  document.getElementById('scaleHi').textContent=fmt(maxI);
 }
@@ -901,7 +875,7 @@ const FOOT_KO=
  '충실도: <code>Inner/Outer_func</code>=토러스 SDF <code>max(d1,−d2)</code>(border 차집합), <code>Pause_func</code>=눌린 구, dose=<code>clamp(gradient·(−SDF)/radius,0,1)·intensity</code> — 전부 <code>src/Kerbalism/Radiation/Radiation.cs</code> 원문 그대로. '+
  '<code>deform</code>은 sin(x·5)sin(y·7)sin(z·6)이라 좌표평면 위에선 항등 0 — 2D에서 처음 켜면 <code>slice_z</code>가 최대 진폭 0.26으로 자동 설정됩니다(3D에선 그대로 보임). '+
  '3D 모드 = 같은 SDF를 GLSL로 이식해 볼륨 레이마칭(110스텝, 색=dose 방출·청록=계면 껍질). 드래그 회전·휠 줌. '+
- '<code>pause_offset</code> ⚗ = 실험용 병진 지오메트리(전체를 꼬리쪽으로 물림) — <b>Kerbalism cfg에 없는 필드</b>라 emit 불가, comp 방식과의 비교용. '+
+ '<code>pause_waist</code>·<code>pause_smooth</code> ⚗ = 스톡 계면 함수를 일반화한 두 필드(0이면 스톡과 동일) — waist는 두 반구를 가르는 최대 단면 평면을 옮기고, smooth는 x=0의 기울기 꺾임을 없앤다. <b>아직 Kerbalism cfg에 없어</b> emit 불가, 하모니 패치 대기. '+
  'Shue 오버레이 = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0=현재 노즈(pause_radius/comp−offset), 항성정렬 프레임이라 tilt=0에서 비교 정확. '+
  '주황 = <b>연화 Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — 단일 C∞ 폐곡선(이음매·크리스 없음), 테이퍼 m=1 고정(기저형, 노브 없음). 꼬리 길이 L은 <b>Kerbalism 계면 꼬리에 연동</b>(pause_radius/extension+offset), ε=1/((L/r0)^{1/α}−1)로 정확히 L서 닫힘. L 연동 덕에 주간측은 순수 Shue와 ~0.3% 이내(흰 점선 대조). plugins/KerbalismShuePause 권장안. 「Shue 데모」 프리셋이 원클릭. '+
  '값은 슬라이더 또는 우측 숫자칸 직접 입력(범위 초과 허용). 뷰 반너비 슬라이더의 최대값은 장면 전체가 들어오는 크기로 자동 갱신(끝까지 밀면 전체 보기). '+
@@ -910,7 +884,7 @@ const FOOT_EN=
  'Fidelity: <code>Inner/Outer_func</code> = torus SDF <code>max(d1,−d2)</code> (border subtraction), <code>Pause_func</code> = squashed sphere, dose = <code>clamp(gradient·(−SDF)/radius,0,1)·intensity</code> — all verbatim from <code>src/Kerbalism/Radiation/Radiation.cs</code>. '+
  '<code>deform</code> is sin(x·5)sin(y·7)sin(z·6), identically 0 on coordinate planes — turning it on in 2D auto-sets <code>slice_z</code> to the max-amplitude 0.26 (visible as-is in 3D). '+
  '3D mode ports the same SDFs to GLSL volume raymarching (110 steps; color = dose emission, cyan = pause shell). Drag to rotate, wheel to zoom. '+
- '<code>pause_offset</code> ⚗ = experimental translation geometry (pulls the whole shape tailward) — <b>not a Kerbalism cfg field</b>, so it cannot be emitted; kept for comparison with the compression approach. '+
+ '<code>pause_waist</code> and <code>pause_smooth</code> ⚗ generalize the stock pause function (0 for either reproduces stock exactly) — waist moves the plane that splits the two hemispheres and carries the widest cross-section, smooth removes the slope kink at x=0. <b>Not Kerbalism cfg fields yet</b>, so they cannot be emitted; awaiting the Harmony patch. '+
  'Shue overlay = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0 = current nose (pause_radius/comp−offset), evaluated in the star-aligned frame so the comparison is exact at tilt=0. '+
  'Orange = <b>softened Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — a single C∞ closed curve (no seam or crease), taper pinned at m=1 (base form, no knob). Tail length L <b>tracks the Kerbalism pause tail</b> (pause_radius/extension+offset), with ε=1/((L/r0)^{1/α}−1) closing exactly at L. Thanks to the L link the dayside stays within ~0.3% of pure Shue (white dashed reference). Recommended for plugins/KerbalismShuePause; the "Shue demo" preset is one click. '+
  'Set values with the sliders or by typing in the number boxes (out-of-range allowed). The view half-width slider\'s max auto-grows to fit the whole scene (push to the end for a full view). '+
@@ -1004,7 +978,7 @@ sysTabs.addEventListener('keydown',e=>{                       // 탭은 좌우 �
 bodyBtns.addEventListener('click',e=>{ const b=e.target.closest('button[data-body]'); if(b) selectBody(b.dataset.body,{keepVariant:true}); });
 variantSeg.addEventListener('click',e=>{
   const b=e.target.closest('button[data-var]'); if(!b) return;
-  curVar=b.dataset.var; applyPreset(presetFor(curBody,curVar)); labelPicker();
+  curVar=b.dataset.var; applyPreset(presetFor(curBody,curVar),{keepZoom:true}); labelPicker();
 });
 
 // ---- language switch ----

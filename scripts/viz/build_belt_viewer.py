@@ -32,7 +32,7 @@ SHUE_GROUNDED = {
     'mercury': (0.5, 1.45, 0, 'Winslow 2013 (MESSENGER 통과 적합: R_ss 1.45 R_M, α 0.5)'),
     # 목성: Rutala 2025 의 S97* 적합. α = 0.28 + 1.08·p_SW, r_SS = 38.0·p_SW^-0.25 [R_J].
     # 우리 프리셋 노즈 63 R_J(Joy 2002 압축 상태)를 그 r_SS 관계에 넣으면 p_SW 0.132 nPa → α 0.423.
-    # 금성·화성은 여기 두지 않는다 — 유도 경계라 Shue 가 아니라 원+원뿔 형식을 쓴다(imb_* 키).
+    # 금성·화성은 여기 두지 않는다 — α 가 BODIES 의 pause 딕트에 직접 들어 있고 아래에서 읽는다.
     'jupiter': (0.423, 63, 0, 'Rutala 2025 S97* (α=0.28+1.08·p_SW, 노즈 63 R_J ⇒ p 0.132 nPa)'),
 }
 
@@ -69,11 +69,6 @@ for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys �
         p['view'].update({'shue': pz['shue_alpha'], 'shue_r0': pz.get('shue_nose', 0),
                           'shue_L': pz.get('shue_tail', 0),
                           'shue_an': pz.get('shue_alpha_night', 0)})
-    if p['variant'] == 'phys' and pz.get('imb_term'):       # 유도 경계 오버레이(원 + 원뿔)
-        p['view'].update({'imb_nose': pz['imb_nose'], 'imb_term': pz['imb_term'],
-                          'imb_slope': pz['imb_slope'], 'imb_close': pz.get('imb_close', 40),
-                          'imb_k': pz.get('imb_k', 2), 'imb_d0': pz.get('imb_d0', 20),
-                          'imb_label': pz.get('imb_label', 'IMB'), 'shue': 0})
     presets[key] = p
 
 # NearStars 프리셋: 게이트된 phase4 보드에서 (emitter와 동일 소스)

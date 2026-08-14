@@ -1,9 +1,57 @@
-# Kerbalism — Shue-model magnetopause (DEFERRED / future feature)
+# Kerbalism — magnetopause geometry (DEFERRED / future feature)
 
 Status: **planned, not implemented.** Locked in as a future candidate on 2026-07-23
 (same backlog tier as `NearStarsFluxTube`). No prototype yet — this is the brief.
 Delivery route is an open decision: **(a)** NearStars-local Harmony patch, or
 **(b)** upstream pull request to `Kerbalism/Kerbalism`.
+
+**Priority order changed on 2026-08-14.** The owner's call is to *fix the stock function*
+rather than add a shape family beside it, so the first deliverable is now the two-field
+generalization in the next section — a single edit to `Pause_func`, both fields
+zero-default. Full Shue remains documented below as the larger, later option; it is no
+longer the lead item, and the plugin name is historical.
+
+## Deliverable 1 — generalize the stock pause function (`pause_waist`, `pause_smooth`)
+
+Stock is `px = x·(x < 0 ? extension : compression)`, then
+`√(px² + (y·height_scale)² + z²) − radius`. Two defects, both visible in a cross-section:
+`px` is continuous at `x = 0` but its slope is not, so the hemispheres meet at a **corner**;
+and because the switch sits exactly at the body plane, the **widest cross-section is pinned
+to the planet's centre**, while a real boundary's waist is downstream.
+
+Replace the piecewise absolute value with its hyperbolic smoothing and let the switch plane
+move:
+
+    u  = x − pause_waist
+    px = 0.5f*(comp+ext)*u + 0.5f*(comp-ext)*Mathf.Sqrt(u*u + smooth*smooth)
+
+`u → ±∞` recovers `comp·u` and `ext·u`, so both half-scales keep their stock meaning, and
+**`pause_waist` = `pause_smooth` = 0 must reproduce stock bit-for-bit.** That is the
+acceptance test: re-render every stock preset and diff the PNGs (we did, md5-identical).
+`pause_waist` is signed, positive sunward, in body radii; `pause_smooth` is a width in body
+radii. Neither name is taken: the [modding docs](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html)
+list exactly six `pause_` fields — `radius`, `compression`, `extension`, `height_scale`,
+`deform`, `quality` — and none of them controls a waist or a junction smoothing
+(checked 2026-08-14). Note for cfg authors: with a non-zero waist, `pause_radius` is the radius **at the
+waist**, not at the terminator, and the nose becomes
+`pause_radius/compression + pause_waist`.
+
+`pause_waist` **supersedes the experimental `pause_offset`** described further down — same
+operation, opposite sign. The emitter keeps the old key only for board compatibility.
+
+Values already derived and shipped in the viewer/renders (induced bodies; derivation in
+`docs/reference/planetary-magnetosphere-geometry-methodology.md`, Part A and Part C ⚗):
+
+| | radius | compression | extension | smooth | waist |
+|---|---|---|---|---|---|
+| Venus | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
+| Mars | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
+
+The hard constraint behind those numbers is **no bulge behind the terminator**. Width is
+`√(radius² − px²)` and so cannot exceed `radius`; setting `radius` to the measured
+terminator width makes a rear bulge impossible by construction and leaves the profile
+monotone behind the shoulder. Nose and terminator then land exactly, and the tail closes at
+20 body radii.
 
 ## What it is
 

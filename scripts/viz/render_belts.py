@@ -25,7 +25,19 @@ def torus_sdf(x,y,z,B):
     return v
 
 def pause_sdf(x,y,z,P):
-    px = x*np.where(x<0,P.get('ext',1),P.get('comp',1)); py = y*P.get('hscale',1)
+    """스톡 Kerbalism 계면 + 두 가지 일반화 (waist / smooth). 둘이 0 이면 스톡과 동일하다.
+
+    스톡은  px = x·(x<0 ? ext : comp)  이라 x=0 에서 기울기가 튀고(C0, C1 아님) 최대 단면이
+    항상 행성 중심에 고정된다. 실제 자기권계면은 가장 넓은 곳이 하류에 있다.
+      waist  : 두 반구를 가르는(=최대 단면) 평면을 x 축으로 이동. + 는 항성 방향.
+      smooth : 절댓값 꺾임을 쌍곡선으로 뭉갠다 → C∞. 폭이 smooth.
+    g(u) = ½(comp+ext)·u + ½(comp−ext)·√(u²+smooth²)  는 u→±∞ 에서 각각 comp·u, ext·u 로
+    가므로 스톡의 두 반쪽 스케일을 그대로 보존한다.
+    """
+    u = x - P.get('waist',0.0)
+    c, e, w = P.get('comp',1), P.get('ext',1), P.get('smooth',0.0)
+    px = 0.5*(c+e)*u + 0.5*(c-e)*np.sqrt(u*u + w*w)
+    py = y*P.get('hscale',1)
     return np.sqrt(px*px+py*py+z*z)-P['rad']
 
 def render(body, out, size=1120, z=0.0):
@@ -81,42 +93,7 @@ def render(body, out, size=1120, z=0.0):
     #    r(θ) = r0·((1+ε)/(ε+cos²(θ/2)))^α,  ε = 1/((L/r0)^(1/α)−1);  ε→0이면 순수 Shue
     #    α 는 '적합된 값이 있을 때만' 그린다 — pause_compression 환산은 적합이 아니라 저작값이라
     #    자이언트에 쓰면 없는 숫자를 만들어 낸다(방법론 Part C 의 α 표 참조).
-    if pause and pause.get('on',True) and pause.get('imb_term'):
-        # 유도 자기권 경계(IMB/MPB): 문헌이 이 경계에 실제로 쓰는 형식은 원뿔이 아니라
-        # 「주간면 원 + 야간면 직선」이다(Martinecz 2009; Edberg 2024 가 20 R_V 까지 유효 확인).
-        # 원뿔 단면은 활머리충격파 전용이고, 노즈·명암경계선을 지나는 원뿔은 꼬리가 지나치게
-        # 벌어진다(금성 −20 R_V 에서 5.05 대 실측 3.15). 닫히지 않으므로 관측 한계에서 끊는다.
-        nose, term = pause['imb_nose'], pause['imb_term']
-        slope = pause['imb_slope']
-        d0 = pause.get('imb_d0',20.0)          # 측정 한계 — 여기까지는 원뿔 그대로
-        Xcl, kcl = pause.get('imb_close',40.0), pause.get('imb_k',2.0)
-        Rc = (term*term + nose*nose)/(2*nose); xc = nose - Rc     # 노즈·명암경계선을 지나는 원
-        oy = c - off*ppr
-        th = np.radians(np.linspace(-90,90,361))                  # 주간면 반원(x ≥ 0)
-        px = c + (xc + Rc*np.cos(th))*ppr; py = oy - Rc*np.sin(th)*ppr
-        seg = [(px,py)]
-        # 야간면: 측정 한계 d0 까지는 원뿔 그대로, 그 뒤에만 캡을 씌워 닫는다.
-        # 엔진은 닫힌 부피를 요구하므로(cfg 로 번역돼야 한다) 열린 원뿔을 둘 수 없다 —
-        # 연화 Shue 에 ε 를 얹은 것과 같은 수법이지만, '언제 닫기 시작하는지'(d0)와
-        # '얼마나 긴 캡인지'(X)를 분리한다. 하나로 묶으면(1-(d/X)^m) 꺾임을 앞으로 당길
-        # 때마다 측정 구간이 망가진다(꺾임을 길이 절반에 두면 20 R_p 오차 23%).
-        # d0=20, X=40, k=2 → 측정 구간 오차 정확히 0.00%, 닫힘 개시가 길이의 정확히 절반,
-        # 최대폭 d≈25, 이음부 C1, 끝은 뾰족(k≥2 라 기울기도 연속).
-        # 캡의 형태는 물리가 아니다 — 요구사항은 닫힘 자체뿐이다.
-        d = np.linspace(0,Xcl,961)
-        u = np.clip((d-d0)/(Xcl-d0),0,None)
-        rho = (term + slope*d)*np.clip(1-u**kcl,0,None)
-        for sgn in (1,-1):
-            seg.append((c - d*ppr, oy - sgn*rho*ppr))
-        for px_,py_ in seg:
-            for i in range(0,len(px_)-1,2):
-                if (i//2) % 3 == 2: continue
-                if max(abs(px_[i]),abs(py_[i])) > 4*size: continue
-                dr.line([px_[i],py_[i],px_[i+1],py_[i+1]],fill=(255,154,82),width=S(2))
-        dr.ellipse([c+nose*ppr-S(3),oy-S(3),c+nose*ppr+S(3),oy+S(3)],fill=(255,154,82))
-        # 라벨은 제목 밑줄에 둔다 — 노즈 옆은 반지름 눈금 행과 겹친다
-        dr.text((S(10),S(46)),pause.get('imb_label','IMB'),fill=(255,154,82),font=fnt)
-    elif pause and pause.get('on',True) and pause.get('shue_alpha'):
+    if pause and pause.get('on',True) and pause.get('shue_alpha'):
         comp = pause.get('comp',1.0)
         r0 = pause.get('shue_nose', pause['rad']/comp)
         al = pause['shue_alpha']

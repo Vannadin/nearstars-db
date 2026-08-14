@@ -28,6 +28,9 @@ MODEL_KEYS = [
 # ⚗ 보드가 담지만 스톡 Kerbalism이 소비하지 않는 키 — 자기권계면 플러그인 대기.
 # emit에서는 주석으로만 흘려보내고 실제 cfg 라인으로 쓰지 않는다.
 PENDING_MODEL_KEYS = ['pause_deform_scale', 'pause_nose', 'pause_alpha', 'pause_tail',
+                      # 스톡 계면 함수 일반화 (둘 다 0 이면 스톡과 동일) — 방법론 Part C ⚗ 절
+                      'pause_waist', 'pause_smooth',
+                      # pause_offset 은 pause_waist 로 흡수됐다(같은 연산, 부호 반대). 옛 보드 호환용.
                       'pause_offset', 'pause_offset_radius',
                       'pause_offset_compression', 'pause_offset_extension']
 BODY_KEYS = ['radiation_inner', 'radiation_inner_gradient',

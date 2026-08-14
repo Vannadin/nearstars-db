@@ -79,123 +79,55 @@ turns nearly radial, and by extension under the extreme wind pressures of a clos
 orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
 rather than assuming a permanent boundary.
 
-**Shape function: dayside circle plus a nightside cone.** The literature has a
-standard form for this boundary and it is neither Shue nor a conic section:
+**Shape function: the stock pause function, generalized.** The literature has its own
+form for this boundary and it is not Shue: the published induced-magnetosphere-boundary
+model is "a circle on the dayside and a straight line on the nightside" (Martinecz 2009,
+[`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M)), which Edberg 2024 ([`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E),
+[2410.21856](https://arxiv.org/abs/2410.21856)) tested against Solar Orbiter, BepiColombo and Parker
+Solar Probe crossings and found valid to at least 20 R_V unchanged, the nightside line
+being `ρ = 1.13 − 0.101·X'` — a 5.77° flare. Conic sections are used at these planets for
+the *bow shock*, not for this boundary.
 
-    dayside  (x ≥ 0):  circle of radius R centred at (x_c, 0), fitted to nose and terminator
-    nightside (x < 0):  straight line  ρ = ρ_term + s·(−x)
+That form is **not implemented**. Carrying a second shape family into the game — one for
+magnetized bodies and another for induced ones — was judged not worth the cost; instead the
+shipped Kerbalism pause function is generalized in place by two fields that reproduce stock
+exactly when zero (owner decisions, 2026-08-14). The fields and their derivation live in
+Part C's ⚗ section; the values are:
 
-That is the induced-magnetosphere-boundary model of Martinecz 2009
-([`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M)) — "the IMB shape was represented by a circle on the dayside
-and a straight line on the nightside" — and Edberg 2024
-([`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)) tested it against Solar
-Orbiter, BepiColombo and Parker Solar Probe crossings and found it **still valid to at
-least 20 R_V without adjustment** (a refit moves the slope 0.101 → 0.097 and the offset
-1.13 → 1.10 R_V, which at 20 R_V displaces the boundary by 0.1 R_V). Conic sections
-*are* used at these planets — for the **bow shock**, not the IMB.
+| | radius | compression | extension | smooth | waist |
+|---|---|---|---|---|---|
+| Venus | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
+| Mars | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
 
-Both alternatives fail, and it is worth recording why, because both were tried here
-first.
+The binding constraint is that **the boundary must not bulge behind the terminator**. The
+width is `√(radius² − px²)` and so can never exceed `radius`; setting `radius` = the
+measured terminator width therefore makes a rear bulge structurally impossible, and the
+profile is monotone behind the shoulder. Nose and terminator then come out exact, the tail
+closes at 20 R_p, and the bulge is 0.000%. The cost is wake width — 15% narrow at 2 R_p,
+33% at 5, 54% at 10 against the measured cone.
 
-**Shue cannot do it — two parameters against three constraints.** Its tail width
-behaves as `ρ ∝ u^(1−2α)` for `u = π − θ`, so α = 0.5 is exactly the cylindrical-tail
-threshold: below it the tail closes, above it the tail flares without bound. But the
-same α also fixes the terminator width, `ρ(90°) = r₀·2^α`. One knob, two jobs. At
-Venus that is fatal: α 0.10 reproduces the measured terminator width 1.13 and then
-shuts the tail immediately, while α 0.58 reproduces the measured width at −20 R_V
-(3.16 against 3.15) and overshoots the terminator by 40% (1.58 against 1.13).
+Every alternative was measured before this one was adopted, and each is recorded so it is
+not re-attempted:
 
-The *softened* Shue form used elsewhere in this doc carries a third parameter, the tail
-length `L`, so it deserves a fair test — and it fails structurally. Its closure term
-`ε = 1/((L/r₀)^(1/α) − 1)` is vanishingly small whenever `L ≫ r₀`, and once ε ≪ 0.5 the
-terminator width collapses back to `r₀·2^α`. A brute-force grid over α and `L` against
-all three Venus constraints bottoms out at **32.5% error** — α 0.505, `L` 103, with the
-terminator +32.5% and the width at −20 R_V −32.5%, splitting the difference evenly
-because that is the best a single α can do. The third parameter buys closure, not a
-waist. The adopted form, with one closure parameter of its own, lands at **0.8%**.
-
-The induced boundary has a **tight waist and a steadily widening tail**; no member of
-the Shue family holds those apart at any parameter values.
-
-**A conic cannot do it either.** Fit `r(θ) = L/(1 + e·cos θ)` about a focus at (X₀,0,0)
-to the nose and terminator and the curvature forces the tail far too wide — 5.05 R_V at
-x = −20 against the measured 3.15, even at the parabolic limit `e` = 1. Push `e` below 1
-to close the tail and the ellipse's semi-minor axis becomes a mid-tail bulge of
-1.5–1.8× the terminator width, sited at the ellipse centre where no crossings exist.
-At Venus it fails outright: the ellipse solved through nose 1.0545, terminator 1.1405
-and an 11 R_V tail **dips to 0.9745 R_V at θ = 96°, below the planet's surface.**
-
-Adopted values:
-
-| | nose | terminator | nightside flare | dayside circle |
+| candidate | nose | terminator | wake | verdict |
 |---|---|---|---|---|
-| Venus | 1.055 R_V | 1.130 R_V | `s` 0.101 → **5.77°** | R 1.1327, centre x −0.0777 |
-| Mars | 1.285 R_M | 1.470 R_M | `s` 0.1314 → **7.49°** | R 1.4833, centre x −0.1983 |
+| stock, unmodified | −15% | +47% | −47% | both measured values wrong |
+| Shue, α = log₂(comp) | 0.00% | +0.9% | −83% … −100% | tail vanishes 2 R_p behind the planet |
+| Shue, α ≈ 0.44 (min-max fit) | 0.00% | +23% | ±31% | `pause_alpha` and `pause_compression` would describe different daysides |
+| softened Shue, α and L fitted | 0.00% | +32.5% | −32.5% | best the family allows; ε ≪ 0.5 whenever L ≫ r₀, so the terminator collapses to r₀·2^α |
+| conic about a focus | — | — | +60% | closed as an ellipse it dips to 0.9745 R_V, **below the surface** |
+| circle + cone + closure cap | 0.00% | 0.00% | 0.00% | exact, but needs a shape family of its own |
+| **generalized stock** | **0.00%** | **0.00%** | −15% … −54% | adopted |
 
-Venus is fully measured: the nose and terminator come from Brace 1980's PVO ionopause
-heights, the flare from Martinecz's fitted line as validated by Edberg. Mars takes its
-dayside from Vignes 2000 ([`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V), Table 2, N = 488) but **not** its
-nightside: that paper's own abstract states the "nightside MPB position [is] highly
-variable", and Němec 2020 ([`2020JGRA..12528509N`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12528509N)) says even the MAVEN-based models
-"are deemed unreliable beyond the terminator". So Mars' flare is Venus' flare scaled by
-terminator radius, justified by the Phobos-2 / Pioneer Venus comparison finding no
-significant difference between the two induced magnetotails' structure
-([`2001AGUSM..SM32D06K`](https://ui.adsabs.harvard.edu/abs/2001AGUSM..SM32D06K)) — an **analogy, not a Mars measurement**, and it must be
-labelled as one. It does earn one unprompted check: at that angle Mars' dayside circle
-arrives at the terminator with slope 0.135 against the cone's 0.131, joining smoothly to
-within 3%, which nothing in the construction arranged.
+Why no Shue member can do better, structurally: its tail width goes as `ρ ∝ u^(1−2α)` for
+`u = π − θ`, so α = 0.5 is exactly the cylindrical-tail threshold, while the *same* α fixes
+the terminator width at `r₀·2^α`. One knob, two jobs, and an induced boundary needs a tight
+waist together with a widening tail.
 
-The circle also removes the surface-piercing failure by construction: its distance from
-the planet's centre runs monotonically from the nose to the terminator width, so it can
-never cut inside a nose that is itself above the surface.
-
-**Closing it — a required step, not an optional one.** A 5.8° cone runs to infinity, and
-within the observed domain that is what the data show. But the consumer of this shape is
-an engine: it has to become a bounded cfg volume, so a shape that does not close cannot
-be used at all. Keep the measured cone verbatim to the observational limit `d₀`, then cap
-it:
-
-    d ≤ d₀ :  ρ = ρ_term + s·d                          (the measured cone, untouched)
-    d > d₀ :  ρ = (ρ_term + s·d)·(1 − u^k),  u = (d−d₀)/(X−d₀)
-
-with **`d₀` = 20 R_p, `X` = 40 R_p, `k` = 2**. Separating "where the data ends" from "how
-long the cap is" matters: a single-parameter closure `(1 − (d/X)^m)` ties the two
-together, and pulling its turnover forward wrecks the measured range — putting the
-turnover at half the length costs **23%** error at 20 R_p. Split, the measured range is
-exact (**0.00%**, since the factor is identically 1 there), closure *begins* at the
-midpoint of the total length, the peak sits at d ≈ 25, and `k` ≥ 2 makes the join
-continuous in value *and* slope while leaving the end tangent finite, so the tail tapers
-to a point rather than stopping against a hemispherical wall.
-
-Sample widths for Venus: 1.13 at the terminator, 2.14 at 10, **3.15 at 20** (the last
-measured point), 3.43 at 25, 3.12 at 30, 2.04 at 35, closed at 40.
-
-The 20 → 40 R_p stretch is **not a claim about the boundary** — it is a declared cap, and
-`d₀` is where the epistemic statement lives. The cap does widen 9% past the last measured
-width before turning over, which is unavoidable for any smooth cap that inherits the
-cone's slope at `d₀`. `pause_extension` follows from `X`: **0.0285** for Venus, **0.0368**
-for Mars.
-
-**Why not close it the way Shue is closed.** Shue's closure adds `ε` to a denominator so
-it cannot reach zero, and the equivalent exists here — the cone's polar form is
-`r(θ) = ρ_term/(sin θ + s·cos θ)`, which diverges at `θ` = 180° − arctan(s) = 174.2°, and
-adding `ε` there closes it at `r(180°) = ρ_term/(ε − s)`. It was tried and it fails
-structurally: closure requires **`ε` > `s`**, so the correction term can never be small
-compared with the flare it is perturbing. At `L` = 25 the terminator comes out 12.8% low
-and the width at 20 R_V 92.8% low; raising `L` does not rescue it, converging instead on a
-cylinder of half-width 1.1 with the flare erased (64.9% low at 20 R_V). Shue's `ε` is
-cheap only because Shue's tail is **axial** — its asymptote is exactly θ = 180°, so `ε`
-can be made arbitrarily small. A flaring boundary's asymptote is off-axis, and that is
-the whole difference.
-
-**A known engine limitation, visible in the renders.** Kerbalism's pause is a squashed
-sphere, which cannot flare, so beyond ~2 R_p the engine surface sits inside the measured
-boundary however `pause_extension` is set. That is the same class of gap as the pending
-Shue-native fields below, and belongs to the Harmony-patch backlog rather than to any
-choice of shape function.
-
-The two-α Shue construction is retained in the renderer only as a fallback for a body
-with no measured boundary and no published α, and is labelled as ours wherever drawn.
+Mars keeps its dayside from Vignes 2000 ([`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V), Table 2, N = 488)
+and takes nothing from its nightside: that paper's own abstract calls the "nightside MPB
+position… highly variable", and Němec 2020 ([`2020JGRA..12528509N`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12528509N)) states the
+MAVEN-era models "are deemed unreliable beyond the terminator".
 
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long
@@ -598,7 +530,7 @@ the fields above are all downstream of four or five physical numbers.
 
 ### ⚗ Fields that do not exist yet — the KerbalismShuePause plugin
 
-Three of the knobs the belt viewer exposes are **not consumed by any shipped
+Five of the knobs the belt viewer exposes are **not consumed by any shipped
 Kerbalism**. They are derived and recorded now, and wait on an in-house Harmony 2
 patch (or an upstream PR) — the brief, including the rejected alternatives, is
 [`plugins/KerbalismShuePause/README.md`](../../plugins/KerbalismShuePause/README.md).
@@ -621,6 +553,50 @@ with `ℓ` the dominant spherical-harmonic degree of the field (from the dynamo
 recipe's regime call). A dynamo with power out to `ℓ = 4` at `R_mp` 1.54 wants
 `k ≈ 2.6`, i.e. `deform_scale ≈ 0.52`. Amplitude and scale are orthogonal: `A` is
 how far the boundary wanders, `scale` is how many lobes it wanders in.
+
+**Generalized stock pause** (`pause_waist`, `pause_smooth`) — the **preferred** route,
+and the one the induced bodies now use. Rather than adding a second shape family, it
+fixes two defects in the shipped function, which is
+
+    px = x·(x < 0 ? extension : compression);   √(px² + (y·height_scale)² + z²) − radius
+
+Both defects are visible: `px` is continuous at `x = 0` but its slope is not, so the two
+hemispheres meet at a corner; and because the scale switches exactly at the body plane,
+the **widest cross-section is pinned to the planet's centre**, whereas a real boundary's
+waist sits downstream. The generalization replaces the piecewise absolute value with its
+hyperbolic smoothing and lets the switch plane move:
+
+    u = x − pause_waist
+    px = ½(comp+ext)·u + ½(comp−ext)·√(u² + pause_smooth²)
+
+`u → ±∞` recovers `comp·u` and `ext·u`, so the two half-scales keep their stock meaning,
+and **`pause_waist` = `pause_smooth` = 0 reproduces stock exactly** — verified by
+re-rendering every stock preset to a byte-identical PNG. Neither field exists today: the
+[Kerbalism modding docs](https://kerbalism.readthedocs.io/en/latest/modders/radiation.html)
+list exactly six `pause_` fields on a `RadiationModel` — `pause_radius`,
+`pause_compression`, `pause_extension`, `pause_height_scale`, `pause_deform`,
+`pause_quality` — with nothing for a waist offset, a split-plane position, or a smoothing
+of the hemisphere junction (checked 2026-08-14). `pause_waist` is signed, positive
+sunward. It supersedes the older experimental `pause_offset`, which applied the same
+operation with the opposite sign; the emitter keeps the old key for board compatibility.
+
+Deriving them for an induced boundary, with the constraint that **the tail must not bulge**
+(owner call, 2026-08-14): the width is `√(radius² − px²)`, which can never exceed `radius`,
+so setting `radius` = the measured terminator width makes a rear bulge structurally
+impossible and the profile monotone behind the shoulder. Then `compression` and `extension`
+solve for the measured nose and the chosen tail length, and `pause_smooth` moves the flat
+shoulder back to erase the corner at no cost, since the width ceiling is unchanged.
+
+| | radius | compression | extension | smooth | waist |
+|---|---|---|---|---|---|
+| Venus | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
+| Mars | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
+
+Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
+20 R_p, and the bulge is 0.000%. The cost is wake width: against the measured cone the
+boundary is 15% narrow at 2 R_p, 33% at 5 and 54% at 10 — accepted, because no-bulge
+outranks wake fidelity here, and because every Shue parameterization does far worse
+(−83% to −100%; see Part A).
 
 **Shue-native pause** (`pause_shue`, `pause_nose` = r0, `pause_alpha` = α,
 `pause_tail` = L). Kerbalism's pause is a sphere with piecewise x-scaling, which is

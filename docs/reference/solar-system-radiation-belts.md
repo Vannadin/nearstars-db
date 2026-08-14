@@ -25,10 +25,8 @@ is reproduced from [`src/Kerbalism/Radiation/Radiation.cs`](https://github.com/K
 for the field-shape schema.
 
 **Reading the renders.** Colour = dose (inferno), cyan = the cfg's magnetopause, orange
-dashed = the **literature boundary** for the same standoff, drawn for comparison with the
-dot marking the nose: the empirical spacecraft-fit Shue shape on magnetized bodies, and
-the published circle-plus-cone IMB form on the induced ones (Venus, Mars). Grey = the
-body, rings = body radii,
+dashed = the **Shue magnetopause** for the same standoff (the empirical spacecraft-fit
+shape, drawn for comparison; the dot marks `r0`), grey = the body, rings = body radii,
 star toward +x. Belts are drawn in the tilted magnetic frame and the magnetopause in the
 star-aligned one, which is how Kerbalism itself evaluates them — it renders and doses the
 pause from `Gsm_space(rb, false)` and reserves the tilted frame for the belts. Since
@@ -71,42 +69,34 @@ at the dusk terminator and 1000 km at dawn (Brace 1980, [`1980JGR....85.7663B`](
 on `R_V` 6051.8 km is a **nose at 1.055 R_V and a terminator mean of 1.140 R_V**.
 Mapped through the cfg semantics (`nose = pause_radius/compression`,
 flank = `pause_radius`, tail = `pause_radius/extension`) that is
-`pause_radius` **1.140**, `compression` **1.081**, `extension` **0.0285**, the last
-from a tail capped closed at **40 R_V**, with the measured cone running unmodified to the
-farthest confirmed crossing at 20 R_V (Edberg 2024,
+`pause_radius` **1.14**, `compression` **1.0197**, `extension` **0.0567**, plus the two
+generalizing fields `pause_smooth` **0.5** and `pause_waist` **0** (neither exists in stock
+Kerbalism; see below). Nose 1.055 and terminator 1.13 come out exact and the tail closes at
+20 R_V, the farthest confirmed crossing of the induced magnetospheric boundary (Edberg 2024,
 [`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)). No belts, and
-`radiation_pause` stays at the shipped −0.005: an induced boundary screens GCR far less
-than a dipole magnetopause.
+`radiation_pause` stays at the shipped −0.005: an induced boundary screens GCR far less than
+a dipole magnetopause.
 
-Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
-1.1 R) and the tail runs far longer (40 vs 5.5 R_V).
+Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform 1.1 R)
+and the tail runs far longer (20 vs 5.5 R_V).
 
-**The overlay is a circle plus a cone — not Shue, and not a conic.** The published
-IMB model is exactly that shape: "a circle on the dayside and a straight line on the
-nightside" (Martinecz 2009, [`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M)), the nightside line being
-`ρ = 1.13 − 0.101·X'`, which Edberg 2024 tested against Solar Orbiter, BepiColombo
-and Parker Solar Probe crossings and found valid to at least 20 R_V unchanged. So the
-overlay is a **dayside circle of radius 1.1327 centred at x −0.0777** joined to a
-**5.77° cone**. Conic sections are used at Venus for the *bow shock*, not this
-boundary.
+**The shape is the stock function generalized, not a new one.** The literature's own model
+for this boundary is a dayside circle joined to a 5.77° nightside cone (Martinecz 2009,
+[`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M), validated unchanged to 20 R_V by Edberg 2024), and
+reproducing it would mean carrying a second shape family in-game. Instead two fields fix the
+shipped function in place: `pause_smooth` removes the slope corner where the two hemispheres
+meet, and `pause_waist` unpins the widest cross-section from the planet's centre. Both are
+zero-default, so stock behaviour is bit-for-bit unchanged — every stock preset re-renders to
+an identical PNG. Neither is read by any shipped Kerbalism yet; they wait on the Harmony
+patch, and the emitter keeps them out of cfg.
 
-Both alternatives were tried here first and both fail. Shue has two parameters against
-three constraints — α 0.10 matches the terminator width and then shuts the tail at
-once, α 0.58 matches the width at −20 R_V (3.16 vs 3.15) and overshoots the terminator
-by 40%. A conic fitted to nose and terminator overshoots the tail (5.05 vs 3.15 at
-−20 R_V) and, forced closed as an ellipse, **dipped to 0.9745 R_V — below the
-surface.** Full argument in the methodology's Part A.
-
-The cone is closed, because the shape has to become a bounded cfg volume: it runs
-unmodified to the observational limit at 20 R_p and is then capped by `(1 − u²)` with
-`u = (d − 20)/20`, closing at 40 R_p. The measured range is therefore exact (0.00%), the
-closure begins at the midpoint of the total length, and the tail tapers to a point rather
-than a wall. Closing it the way Shue is closed was tried and fails — that trick needs
-`ε` > the flare parameter, which erases the flare. Details in the methodology's Part A.
-
-Note the engine surface (cyan) sitting inside the measured boundary (orange) down the
-tail. Kerbalism's pause is a squashed sphere and cannot flare; no value of
-`pause_extension` fixes that, and it is on the Harmony-patch backlog.
+The binding requirement was that **the boundary must not bulge behind the terminator**.
+Since the width is `√(radius² − px²)`, it can never exceed `radius`, so setting `radius` to
+the measured terminator width makes a rear bulge impossible by construction. The cost is
+wake width: 15% narrow at 2 R_V, 33% at 5, 54% at 10 against the measured cone. Every Shue
+parameterization does far worse there (−83% to −100%), and the full candidate table — six
+shapes measured, including a conic that dipped below the planet's surface — is in the
+methodology's Part A.
 
 ### Mars — the MPB dayside, derived
 
@@ -137,14 +127,16 @@ significant difference between the two planets' induced magnetotail structure
 ([`2001AGUSM..SM32D06K`](https://ui.adsabs.harvard.edu/abs/2001AGUSM..SM32D06K)). That is an **analogy, not a Mars measurement**, and is
 labelled as one in the render. One check it was not designed to pass: at that angle the
 dayside circle meets the terminator with slope 0.135 against the cone's 0.131, joining
-smoothly to within 3%. `extension` = **0.0368** closes the engine volume at 40 R_M, the
-same distance in planetary radii as Venus' cap, under the same analogy.
+smoothly to within 3%, but that check belongs to the circle-plus-cone form, which is not
+what ships. The shipped numbers are `pause_radius` **1.47**, `compression` **1.1063**,
+`extension` **0.0737** with `pause_smooth` **0.5**, putting the tail at 20 R_M — the same
+distance in planetary radii as Venus' confirmed extent, under the same analogy.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
 amplitude is inherited rather than derived — flagged, not fabricated. Against stock,
 the derived boundary stands further off (1.29 vs 1.25 nose, 1.47 vs a rounder
-flank) and trails a much longer tail (40 vs 1.7 R_M).
+flank) and trails a much longer tail (20 vs 1.7 R_M).
 
 Both Venus and Mars remain belt-free: no dynamo, no trapping.
 
