@@ -5,13 +5,14 @@ Status: **planned, not implemented.** Locked in as a future candidate on 2026-07
 Delivery route is an open decision: **(a)** NearStars-local Harmony patch, or
 **(b)** upstream pull request to `Kerbalism/Kerbalism`.
 
-**Priority order changed on 2026-08-14.** The owner's call is to *fix the stock function*
-rather than add a shape family beside it, so the first deliverable is now the two-field
-generalization in the next section — a single edit to `Pause_func`, both fields
-zero-default. Full Shue remains documented below as the larger, later option; it is no
-longer the lead item, and the plugin name is historical.
+**Scope clarified on 2026-08-14.** Both modes are wanted, with a policy deciding which body
+gets which: **unify on Shue wherever a fitted α exists**, and fall back to the stock
+function generalized by two fields **only where Shue geometrically cannot represent the
+boundary** (the induced branch — Venus, Mars) or where no fitted α is available. So the
+plugin has two deliverables, and the small one below is the cheaper half, not a replacement
+for Shue.
 
-## Deliverable 1 — generalize the stock pause function (`pause_waist`, `pause_smooth`)
+## Deliverable 1 (smaller) — generalize the stock pause function (`pause_waist`, `pause_smooth`)
 
 Stock is `px = x·(x < 0 ? extension : compression)`, then
 `√(px² + (y·height_scale)² + z²) − radius`. Two defects, both visible in a cross-section:
@@ -44,8 +45,8 @@ Values already derived and shipped in the viewer/renders (induced bodies; deriva
 
 | | radius | compression | extension | smooth | waist |
 |---|---|---|---|---|---|
-| Venus | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
-| Mars | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
+| Venus | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
+| Mars | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
 
 The hard constraint behind those numbers is **no bulge behind the terminator**. Width is
 `√(radius² − px²)` and so cannot exceed `radius`; setting `radius` to the measured

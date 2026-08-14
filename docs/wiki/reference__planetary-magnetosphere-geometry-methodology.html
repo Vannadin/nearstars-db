@@ -324,16 +324,70 @@ Solar Probe crossings and found valid to at least 20 R_V unchanged, the nightsid
 being `ρ = 1.13 − 0.101·X'` — a 5.77° flare. Conic sections are used at these planets for
 the *bow shock*, not for this boundary.
 
-That form is **not implemented**. Carrying a second shape family into the game — one for
-magnetized bodies and another for induced ones — was judged not worth the cost; instead the
-shipped Kerbalism pause function is generalized in place by two fields that reproduce stock
-exactly when zero (owner decisions, 2026-08-14). The fields and their derivation live in
-Part C's ⚗ section; the values are:
+That form is **not implemented**, and this is where the project's shape policy applies
+(owner decisions, 2026-08-14):
+
+> Unify on Shue wherever possible. Fall back to the generalized stock function **only where
+> Shue geometrically cannot represent the boundary**, or where no fitted α exists to use.
+
+| condition | shape | bodies |
+|---|---|---|
+| a fitted α exists | **Shue** | Mercury, Earth, Jupiter, Saturn |
+| an α adopted by analogy | **Shue**, labelled as an analogy | Uranus, Neptune |
+| Shue geometrically impossible | generalized stock (`pause_waist` / `pause_smooth`) | **Venus, Mars** — the induced branch |
+
+**Every α is now verified against full text** (papers cached under `docs/phase3/_papers/`),
+and each body's `pause_compression` is set to `2^α` so that `log₂(compression)` recovers it
+exactly, with `pause_radius` = nose × `2^α`:
+
+| body | α | nose | flank = nose·2^α | source |
+|---|---|---|---|---|
+| Mercury | 0.500 | 1.45 R_M | 2.051 | Winslow 2013 ([`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W)) — `R_ss` 1.45 R_M, flaring 0.5 at mean `P_Ram` 14.3 nPa |
+| Earth | 0.580 | 10 R_E | 14.948 | Shue 1998 ([`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)) eq. (11): `α = (0.58 − 0.007 Bz)[1 + 0.024 ln Dp]` |
+| Jupiter | 0.423 | 63 R_J | 84.465 | Rutala 2025 ([2502.09186](https://arxiv.org/abs/2502.09186)) S97* Table 2: `α = 0.28 + 1.08 p_SW`, `r_SS = 38.0 p_SW^−0.25` |
+| Saturn | 0.736 | 24 R_S | 39.968 | Kanani 2010 ([`2010JGRA..115.6207K`](https://ui.adsabs.harvard.edu/abs/2010JGRA..115.6207K)) eq. (12): `α = 0.73 ± 0.07 + (0.4 ± 0.5) Dp` |
+| Uranus | 0.580 | 18 R_U | 26.907 | **analogy** — Earth's α, on the grounds below |
+| Neptune | 0.580 | 26.5 R_N | 39.614 | **analogy** — Earth's α, on the grounds below |
+
+Saturn earns a genuine cross-check: Kanani's `a₄` = 0.4 ± 0.5 is not distinguishable from
+zero, so α is effectively pressure-independent at 0.73, while the earlier Arridge 2006 fit
+([`2006JGRA..11111227A`](https://ui.adsabs.harvard.edu/abs/2006JGRA..11111227A)) has the *opposite* pressure sign, `α = 0.77 − 1.5 Dp`. Both
+nevertheless land on **0.7356 and 0.7358** at our adopted 24 R_S nose — two fits with
+different coefficients and different crossing sets agreeing to 0.0002. Kanani is taken as
+primary: it uses 191 crossings against 64, adds magnetospheric plasma pressure, and its
+higher RMS is a dataset effect, not a regression (the paper notes that A06's coefficients on
+the new crossings give RMS 3.82 against the new model's 3.603).
+
+**Why Uranus and Neptune take Earth's α by analogy.** No Shue-form fit exists for either
+planet, and the four fitted anchors do not support extrapolation: ordered by dynamic
+pressure they run 14.3 nPa → 0.500, 1 → 0.580, 0.132 → **0.423**, 0.0146 → 0.736. Jupiter
+breaks the ordering — the lowest α at an intermediate pressure — because α is governed by
+internal plasma loading as much as by the wind, and Jupiter's Io torus inflates a
+magnetodisc that suppresses flaring. So there is no α(pressure) law to extrapolate along.
+What can be argued is the *loading*: Voyager 2 found the ice giants to be the emptiest
+magnetospheres measured. At Uranus "the Uranian moons do not appear to be a significant
+plasma source", with a peak density near 2 cm⁻³ (Bridge 1986,
+[`1986Sci...233...89B`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...89B)); at Neptune the maximum density is 1.4 cm⁻³, "the smallest
+observed by Voyager in any magnetosphere" (Belcher 1989, [`1989Sci...246.1478B`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1478B)). With
+no Io- or Enceladus-class source, their loading sits nearer Earth's than the gas giants', so
+Earth's α is the defensible stand-in. It is an **analogy, not a fit**, and is labelled as
+one wherever it appears.
+
+**One thing this does not fix.** `pause_extension` was recomputed only to preserve each
+body's existing tail length, which is an inherited placeholder with no grounding behind it
+(Jupiter's works out to 1512 R_J). Tail length is parked as its own problem; the criterion
+is where the lobe pressure falls to the ambient solar-wind static pressure, and at Earth
+Slavin 1985 ([`1985JGR....9010875S`](https://ui.adsabs.harvard.edu/abs/1985JGR....9010875S)) puts flaring cessation at 120 ± 10 R_E with the
+distant neutral line at 100–140 R_E — against the 200 R_E we currently carry.
+
+Venus and Mars fall into the last row because Shue's single α cannot hold a tight waist
+and a widening tail apart at any value — the measured failure modes are tabulated below.
+Their fields and derivation live in Part C's ⚗ section; the values are:
 
 | | radius | compression | extension | smooth | waist |
 |---|---|---|---|---|---|
-| Venus | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
-| Mars | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
+| Venus | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
+| Mars | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
 
 The binding constraint is that **the boundary must not bulge behind the terminator**. The
 width is `√(radius² − px²)` and so can never exceed `radius`; setting `radius` = the
@@ -790,8 +844,9 @@ recipe's regime call). A dynamo with power out to `ℓ = 4` at `R_mp` 1.54 wants
 `k ≈ 2.6`, i.e. `deform_scale ≈ 0.52`. Amplitude and scale are orthogonal: `A` is
 how far the boundary wanders, `scale` is how many lobes it wanders in.
 
-**Generalized stock pause** (`pause_waist`, `pause_smooth`) — the **preferred** route,
-and the one the induced bodies now use. Rather than adding a second shape family, it
+**Generalized stock pause** (`pause_waist`, `pause_smooth`) — the **fallback** route, used
+only where Shue geometrically cannot represent the boundary (see the shape policy in
+Part A). Today that is Venus and Mars. Rather than adding a second shape family, it
 fixes two defects in the shipped function, which is
 
     px = x·(x < 0 ? extension : compression);   √(px² + (y·height_scale)² + z²) − radius
@@ -823,10 +878,17 @@ impossible and the profile monotone behind the shoulder. Then `compression` and 
 solve for the measured nose and the chosen tail length, and `pause_smooth` moves the flat
 shoulder back to erase the corner at no cost, since the width ceiling is unchanged.
 
+`pause_smooth` is **a convention, not a derived value** — the residual against the
+literature target is nearly flat in it (Venus RMS 18.6% at 0 against 18.5% at the optimum),
+because removing the corner is a C¹ continuity property rather than a fit. The convention is
+**`pause_smooth` = 0.5 × `pause_radius`**, adopted because the shallow optima computed
+independently for three bodies land at 0.50, 0.54 and 0.57 × radius (Venus, Mars, Mercury).
+`compression` is then re-solved so the nose stays exact at that smoothing.
+
 | | radius | compression | extension | smooth | waist |
 |---|---|---|---|---|---|
-| Venus | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
-| Mars | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
+| Venus | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
+| Mars | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
 
 Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
 20 R_p, and the bulge is 0.000%. The cost is wake width: against the measured cone the
@@ -1220,15 +1282,66 @@ Orbiter·BepiColombo·Parker Solar Probe 통과 자료로 시험해 손볼 것 �
 확인했습니다. 야간면 직선은 `ρ = 1.13 − 0.101·X'`, 즉 5.77° 벌어짐입니다. 이 행성들에서 원뿔 단면이
 쓰이는 것은 *bow shock*이고 이 경계가 아닙니다.
 
-**그 형식은 구현하지 않습니다.** 자기화된 천체용과 유도 천체용으로 형상 계열을 둘씩 게임에 들고
-가는 비용이 그만한 값을 하지 않는다고 판단했습니다. 대신 배포되는 Kerbalism pause 함수를, 값이 0이면
-스톡을 그대로 재현하는 필드 둘로 제자리에서 일반화합니다(오너 결정, 2026-08-14). 필드와 그 도출은
-Part C의 ⚗ 절에 있고, 값은 이렇습니다.
+**그 형식은 구현하지 않습니다.** 그리고 여기서 프로젝트의 형상 정책이 적용됩니다(오너 결정,
+2026-08-14).
+
+> 가능한 곳은 모두 Shue로 통일합니다. 일반화한 스톡 함수는 **Shue가 기하적으로 그 경계를 표현할 수
+> 없는 곳**, 또는 쓸 수 있는 피팅된 α가 없는 곳에서만 대체 수단으로 씁니다.
+
+| 조건 | 형상 | 천체 |
+|---|---|---|
+| 피팅된 α가 있음 | **Shue** | 수성, 지구, 목성, 토성 |
+| 유추로 채택한 α | **Shue**, 단 유추임을 표기 | 천왕성, 해왕성 |
+| Shue가 기하적으로 불가능 | 일반화한 스톡(`pause_waist` / `pause_smooth`) | **금성, 화성** — 유도 갈래 |
+
+**이제 모든 α를 전문으로 검증했습니다**(논문은 `docs/phase3/_papers/`에 캐시해 두었습니다). 그리고
+천체마다 `pause_compression`을 `2^α`로 두어 `log₂(compression)`이 α를 정확히 되돌려주게 했고,
+`pause_radius`는 노즈 × `2^α`입니다.
+
+| 천체 | α | 노즈 | 측면 = 노즈·2^α | 출처 |
+|---|---|---|---|---|
+| 수성 | 0.500 | 1.45 R_M | 2.051 | Winslow 2013 ([`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W)) — `R_ss` 1.45 R_M, 평균 `P_Ram` 14.3 nPa에서 벌어짐 0.5 |
+| 지구 | 0.580 | 10 R_E | 14.948 | Shue 1998 ([`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)) 식 (11): `α = (0.58 − 0.007 Bz)[1 + 0.024 ln Dp]` |
+| 목성 | 0.423 | 63 R_J | 84.465 | Rutala 2025 ([2502.09186](https://arxiv.org/abs/2502.09186)) S97* Table 2: `α = 0.28 + 1.08 p_SW`, `r_SS = 38.0 p_SW^−0.25` |
+| 토성 | 0.736 | 24 R_S | 39.968 | Kanani 2010 ([`2010JGRA..115.6207K`](https://ui.adsabs.harvard.edu/abs/2010JGRA..115.6207K)) 식 (12): `α = 0.73 ± 0.07 + (0.4 ± 0.5) Dp` |
+| 천왕성 | 0.580 | 18 R_U | 26.907 | **유추** — 지구의 α, 근거는 아래 |
+| 해왕성 | 0.580 | 26.5 R_N | 39.614 | **유추** — 지구의 α, 근거는 아래 |
+
+토성은 제대로 된 교차검증이 되는 경우입니다. Kanani의 `a₄` = 0.4 ± 0.5는 0과 구별되지 않으므로 α는
+사실상 압력과 무관한 0.73인데, 앞선 Arridge 2006 피팅
+([`2006JGRA..11111227A`](https://ui.adsabs.harvard.edu/abs/2006JGRA..11111227A))은 압력 항의 부호가 *반대*인 `α = 0.77 − 1.5 Dp`입니다. 그런데도
+우리가 채택한 노즈 24 R_S에서 두 식은 각각 **0.7356과 0.7358**로 떨어집니다. 계수도 다르고 통과
+자료 집합도 다른 두 피팅이 0.0002까지 일치하는 셈입니다. 주 출처는 Kanani로 잡았습니다. 통과 수가
+64개 대 191개이고, 자기권 플라스마 압력을 포함하며, RMS가 더 큰 것은 회귀 악화가 아니라 자료 집합의
+차이이기 때문입니다(논문 자체가 A06의 계수를 새 통과 자료에 적용하면 RMS 3.82로, 새 모델의 3.603
+보다 크다고 밝힙니다).
+
+**천왕성과 해왕성이 지구의 α를 유추로 가져오는 까닭.** 두 행성 모두 Shue 형식의 피팅이 없고, 피팅된
+네 기준점은 외삽을 지지하지 않습니다. 동압 순으로 늘어놓으면 14.3 nPa → 0.500, 1 → 0.580,
+0.132 → **0.423**, 0.0146 → 0.736입니다. 목성이 순서를 깨뜨립니다 — 중간 압력에서 α가 가장 낮습니다 —
+α가 항성풍만큼이나 내부 플라스마 적재에 좌우되고, 목성의 Io 토러스가 벌어짐을 억누르는 magnetodisc를
+부풀리기 때문입니다. 그러니 외삽할 α(압력) 법칙이 애초에 없습니다. 대신 논증할 수 있는 것은 *적재*
+쪽입니다. Voyager 2가 관측한 자기권 중 가장 텅 빈 것이 얼음거대행성 둘이었습니다. 천왕성에서는
+"천왕성 위성들은 유의미한 플라스마 공급원으로 보이지 않으며" 밀도 최대가 2 cm⁻³ 근처였고(Bridge
+1986, [`1986Sci...233...89B`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...89B)), 해왕성에서는 최대 밀도가 1.4 cm⁻³로 "Voyager가 어떤
+자기권에서 관측한 것보다도 작은" 값이었습니다(Belcher 1989, [`1989Sci...246.1478B`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1478B)). Io급이나
+Enceladus급 공급원이 없으니 적재 수준은 거대행성보다 지구에 가깝고, 따라서 지구의 α가 변론 가능한
+대역입니다. 어디까지나 **피팅이 아니라 유추**이며, 등장하는 자리마다 그렇게 표기합니다.
+
+**이것으로 해결되지 않는 하나.** `pause_extension`은 각 천체의 기존 꼬리 길이를 그대로 보존하기
+위해서만 다시 계산했고, 그 꼬리 길이는 근거 없이 물려받은 임시값입니다(목성 것은 계산하면 1512 R_J
+가 됩니다). 꼬리 길이는 별개의 문제로 미뤄 두었습니다. 판정 기준은 lobe 압력이 주변 항성풍 정압까지
+떨어지는 지점이고, 지구에서는 Slavin 1985([`1985JGR....9010875S`](https://ui.adsabs.harvard.edu/abs/1985JGR....9010875S))가 벌어짐이 멈추는
+곳을 120 ± 10 R_E, 원거리 중성선을 100–140 R_E로 잡습니다 — 지금 우리가 쓰는 200 R_E와 어긋납니다.
+
+금성과 화성이 마지막 줄에 들어가는 까닭은, Shue의 단일 α로는 어떤 값을 넣어도 좁은 허리와 벌어지는
+꼬리를 동시에 잡을 수 없기 때문입니다. 실측한 실패 양상은 아래 표에 있습니다. 두 천체의 필드와 그
+도출은 Part C의 ⚗ 절에 있고, 값은 이렇습니다.
 
 | | radius | compression | extension | smooth | waist |
 |---|---|---|---|---|---|
-| 금성 | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
-| 화성 | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
+| 금성 | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
+| 화성 | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
 
 구속 조건은 **경계가 명암경계선 뒤에서 불룩해지지 않아야 한다**는 것입니다. 폭이
 `√(radius² − px²)`라 `radius`를 넘을 수 없으므로, `radius`를 실측 명암경계선 폭으로 두면 후방
@@ -1628,9 +1741,9 @@ lobe를 만드는데, dynamo 레시피가 실제로 내놓는 다극장보다 �
 진폭과 scale은 서로 독립입니다. `A`는 경계가 얼마나 멀리 흔들리는지, scale은 몇 개의 lobe로
 흔들리는지입니다.
 
-**일반화한 스톡 pause** (`pause_waist`, `pause_smooth`). **권장** 경로이고, 유도 천체가 지금 쓰는
-방식입니다. 형상 계열을 하나 더 붙이는 대신, 배포된 함수의 결함 둘을 고칩니다. 배포된 함수는
-이렇습니다.
+**일반화한 스톡 pause** (`pause_waist`, `pause_smooth`). **대체** 경로이고, Shue가 기하적으로 그
+경계를 표현할 수 없는 곳에서만 씁니다(Part A의 형상 정책 참고). 현재로서는 금성과 화성입니다. 형상
+계열을 하나 더 붙이는 대신, 배포된 함수의 결함 둘을 고칩니다. 배포된 함수는 이렇습니다.
 
     px = x·(x < 0 ? extension : compression);   √(px² + (y·height_scale)² + z²) − radius
 
@@ -1654,10 +1767,16 @@ lobe를 만드는데, dynamo 레시피가 실제로 내놓는 다극장보다 �
 과 `extension`이 실측 노즈와 선택한 꼬리 길이로 풀리고, `pause_smooth`는 폭 상한을 건드리지 않으므로
 평평한 어깨를 뒤로 밀어 꺾임을 공짜로 없앱니다.
 
+`pause_smooth`는 **도출값이 아니라 관행**입니다. 문헌 목표치에 대한 잔차가 이 값에 거의 무관하기
+때문입니다(금성 RMS는 0에서 18.6%, 최적값에서 18.5%). 꺾임을 없애는 것은 피팅이 아니라 C¹ 연속성의
+문제이기 때문입니다. 채택한 관행은 **`pause_smooth` = 0.5 × `pause_radius`**이고, 세 천체에 대해
+독립적으로 계산한 완만한 최적값이 반지름의 0.50, 0.54, 0.57배(금성, 화성, 수성)에 떨어졌다는 것이
+근거입니다. 그 완화값에서 노즈가 정확히 유지되도록 `compression`을 다시 풉니다.
+
 | | radius | compression | extension | smooth | waist |
 |---|---|---|---|---|---|
-| 금성 | 1.14 | 1.0197 | 0.0567 | 0.5 | 0 |
-| 화성 | 1.47 | 1.1063 | 0.0737 | 0.5 | 0 |
+| 금성 | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
+| 화성 | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
 
 노즈(1.055 / 1.285)와 명암경계선(1.13 / 1.47)이 정확히 떨어지고, 꼬리는 20 R_p에서 닫히며 불룩함은
 0.000%입니다. 대가는 후류 폭입니다. 실측 원뿔과 비교해 2 R_p에서 15%, 5에서 33%, 10에서 54% 좁습니다.

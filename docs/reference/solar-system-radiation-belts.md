@@ -36,6 +36,20 @@ the recipes, and what they overturn, are in the methodology doc's Part C. Jupite
 Saturn's magnetopause stands off at 63 and 24 body radii, far enough that fitting it in
 frame would shrink the belts past readability, so those two stay zoomed on the belts.
 
+**The magnetopause flaring is grounded as of 2026-08-14.** Every magnetized body's physical
+preset now sets `pause_compression` = `2^α` for a **full-text-verified** Shue flaring
+parameter, so `log₂(compression)` recovers α exactly and `pause_radius` = nose × `2^α`:
+Mercury 0.500 (Winslow 2013), Earth 0.580 (Shue 1998 eq. 11), Jupiter 0.423 (Rutala 2025
+S97*), Saturn 0.736 (Kanani 2010, cross-checked against Arridge 2006 to 0.0002 at the same
+nose). Uranus and Neptune have no published fit and take Earth's 0.580 **by analogy**,
+justified by Voyager 2 finding them the emptiest magnetospheres measured — no Io- or
+Enceladus-class plasma source, so their loading sits nearer Earth's than the gas giants'.
+The previous `compression` 1.2 on all four outer planets was a placeholder, and it
+understated the flank by 25–39%. Derivations, citations and the reason no α(pressure) law
+extrapolates are in the methodology's Part A. `pause_extension` was recomputed only to hold
+each body's existing tail length, which remains an ungrounded placeholder — tail length is
+parked as its own problem.
+
 ## Scope — only magnetized bodies
 
 Belts require an intrinsic dynamo strong enough to trap particles. In the Solar
@@ -69,8 +83,8 @@ at the dusk terminator and 1000 km at dawn (Brace 1980, [`1980JGR....85.7663B`](
 on `R_V` 6051.8 km is a **nose at 1.055 R_V and a terminator mean of 1.140 R_V**.
 Mapped through the cfg semantics (`nose = pause_radius/compression`,
 flank = `pause_radius`, tail = `pause_radius/extension`) that is
-`pause_radius` **1.14**, `compression` **1.0197**, `extension` **0.0567**, plus the two
-generalizing fields `pause_smooth` **0.5** and `pause_waist` **0** (neither exists in stock
+`pause_radius` **1.14**, `compression` **1.0151**, `extension` **0.0567**, plus the two
+generalizing fields `pause_smooth` **0.57** and `pause_waist` **0** (neither exists in stock
 Kerbalism; see below). Nose 1.055 and terminator 1.13 come out exact and the tail closes at
 20 R_V, the farthest confirmed crossing of the induced magnetospheric boundary (Edberg 2024,
 [`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)). No belts, and
@@ -80,8 +94,11 @@ a dipole magnetopause.
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform 1.1 R)
 and the tail runs far longer (20 vs 5.5 R_V).
 
-**The shape is the stock function generalized, not a new one.** The literature's own model
-for this boundary is a dayside circle joined to a 5.77° nightside cone (Martinecz 2009,
+**The shape is the stock function generalized — the fallback, not the default.** Project
+policy is to use Shue wherever a fitted α exists (Earth, Mercury, Jupiter) and to fall back
+to the generalized stock function only where Shue geometrically cannot represent the
+boundary. Venus and Mars are that exception. The literature's own model for this boundary is
+a dayside circle joined to a 5.77° nightside cone (Martinecz 2009,
 [`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M), validated unchanged to 20 R_V by Edberg 2024), and
 reproducing it would mean carrying a second shape family in-game. Instead two fields fix the
 shipped function in place: `pause_smooth` removes the slope corner where the two hemispheres
@@ -128,8 +145,8 @@ significant difference between the two planets' induced magnetotail structure
 labelled as one in the render. One check it was not designed to pass: at that angle the
 dayside circle meets the terminator with slope 0.135 against the cone's 0.131, joining
 smoothly to within 3%, but that check belongs to the circle-plus-cone form, which is not
-what ships. The shipped numbers are `pause_radius` **1.47**, `compression` **1.1063**,
-`extension` **0.0737** with `pause_smooth` **0.5**, putting the tail at 20 R_M — the same
+what ships. The shipped numbers are `pause_radius` **1.47**, `compression` **1.0684**,
+`extension` **0.0737** with `pause_smooth` **0.735**, putting the tail at 20 R_M — the same
 distance in planetary radii as Venus' confirmed extent, under the same analogy.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
