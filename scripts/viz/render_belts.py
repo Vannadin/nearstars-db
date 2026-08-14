@@ -81,7 +81,27 @@ def render(body, out, size=1120, z=0.0):
     #    r(θ) = r0·((1+ε)/(ε+cos²(θ/2)))^α,  ε = 1/((L/r0)^(1/α)−1);  ε→0이면 순수 Shue
     #    α 는 '적합된 값이 있을 때만' 그린다 — pause_compression 환산은 적합이 아니라 저작값이라
     #    자이언트에 쓰면 없는 숫자를 만들어 낸다(방법론 Part C 의 α 표 참조).
-    if pause and pause.get('on',True) and pause.get('shue_alpha'):
+    if pause and pause.get('on',True) and pause.get('conic_L'):
+        # 원뿔 단면: 이 천체들의 경계를 문헌이 실제로 적합하는 형식(Vignes 2000 화성 MPB 등).
+        # e<1 이면 타원이라 꼬리가 저절로 닫힌다 — Shue 처럼 ε 를 얹어 닫을 필요가 없고,
+        # (X0, e, L) 세 값이 노즈·플랭크·꼬리를 서로 독립으로 정한다.
+        X0, ec, Lc = pause['conic_X0'], pause['conic_e'], pause['conic_L']
+        th = np.radians(np.linspace(-179.5,179.5,721))
+        rr_ = Lc/(1+ec*np.cos(th))
+        oy = c - off*ppr
+        px = c + (X0 + rr_*np.cos(th))*ppr
+        py = oy - rr_*np.sin(th)*ppr
+        for i in range(0,len(px)-1,2):
+            if (i//2) % 3 == 2: continue
+            if max(abs(px[i]),abs(py[i])) > 4*size: continue
+            dr.line([px[i],py[i],px[i+1],py[i+1]],fill=(255,154,82),width=S(2))
+        nose = X0 + Lc/(1+ec)
+        dr.ellipse([c+nose*ppr-S(3),oy-S(3),c+nose*ppr+S(3),oy+S(3)],fill=(255,154,82))
+        lbl = pause.get('conic_label','conic') + f"  X0 {X0:.2f} e {ec:.2f} L {Lc:.2f}"
+        lw = dr.textlength(lbl,font=fnt); lx = c+nose*ppr+S(6)
+        if lx+lw > size-S(6): lx = c+nose*ppr-S(6)-lw
+        dr.text((max(lx,S(4)),oy-S(16)),lbl,fill=(255,154,82),font=fnt)
+    elif pause and pause.get('on',True) and pause.get('shue_alpha'):
         comp = pause.get('comp',1.0)
         r0 = pause.get('shue_nose', pause['rad']/comp)
         al = pause['shue_alpha']

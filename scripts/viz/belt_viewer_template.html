@@ -589,6 +589,27 @@ function render(){
   ctx.moveTo(0,c);ctx.lineTo(SZ,c);ctx.moveTo(c,0);ctx.lineTo(c,SZ);ctx.stroke();
   // Shue 기준 곡선 r(θ)=r0·(2/(1+cosθ))^α — 항성정렬 프레임(tilt 무관), r0=현재 pause 노즈
   // 꼬리마감 L>r0이면: 연화 Shue 폐곡선(C∞ 단일식) + 순수 Shue 대조
+  // 원뿔 오버레이 — 유도 경계(금성·화성)는 문헌이 원뿔로 적합한다. e<1 이면 저절로 닫힌다.
+  const cn=state.view;
+  if(cn.conic_L>0 && state.pause.on){
+    const X0=cn.conic_X0||0, ec=cn.conic_e||0, Lc=cn.conic_L;
+    const oy=c-(cn.offset||0)*ppr;
+    ctx.strokeStyle='rgba(255,154,82,.95)'; ctx.setLineDash([6,4]); ctx.lineWidth=1.5;
+    ctx.beginPath();
+    let f0=true;
+    for(let deg=-179.5; deg<=179.5; deg+=0.5){
+      const th=deg*Math.PI/180, rr=Lc/(1+ec*Math.cos(th));
+      const px=c+(X0+rr*Math.cos(th))*ppr, py=oy-rr*Math.sin(th)*ppr;
+      if(f0){ctx.moveTo(px,py);f0=false;} else ctx.lineTo(px,py);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+    const nose=X0+Lc/(1+ec);
+    ctx.fillStyle='rgba(255,154,82,.95)';
+    ctx.beginPath(); ctx.arc(c+nose*ppr,oy,2.5,0,7); ctx.fill();
+    ctx.font='10px ui-monospace,monospace';
+    ctx.fillText((cn.conic_label||'conic')+'  X0='+X0.toFixed(2)+' e='+ec.toFixed(2)+' L='+Lc.toFixed(2),
+                 c+nose*ppr+5, oy-6);
+  }
   const alS=state.view.shue;
   if(alS>0.05 && state.pause.on){
     const P=state.pause;

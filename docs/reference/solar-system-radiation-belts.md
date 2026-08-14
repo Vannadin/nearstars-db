@@ -78,14 +78,13 @@ far less than a dipole magnetopause.
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
 1.1 R) and the tail runs twice as long (11 vs 5.5 R_V).
 
-**The overlay here uses the two-α form.** A single α cannot serve both a small
-dayside flaring and a long tail, and an induced magnetosphere has exactly that
-combination — α from the measured flaring is 0.113, which would reach the 11 R_V
-tail only at θ = 179.9964°. So the exponent varies with angle: `α_day` 0.113 pinned
-by the measured nose and terminator, `α_night` 0.34 setting how the tail flares (the largest value that keeps the tail
-within ~2 % of the terminator width, so it does not bulge), `L` 11 R_V from the
-observations. `α_night` is a shape knob, not a measurement — see the
-methodology's induced subsection.
+**The overlay is a conic, not Shue.** These boundaries are fitted with conic
+sections in the literature, and with `e` < 1 a conic closes on its own — no added
+term, and nose, terminator and tail land on three independent parameters. Venus has
+no published conic, so one is solved through its three measured constraints:
+`X₀` 0.7071, `e` 0.9424, `L` 0.6748, exact on nose 1.0545, terminator 1.1405 and
+tail 11 R_V. Why not Shue: its single α ties dayside to tail, and the measured
+flaring gives an α that reaches 11 R_V only at θ = 179.9964°.
 
 ### Mars — the MPB conic, derived
 
@@ -104,8 +103,9 @@ directly: `X₀` 0.78 ± 0.01, eccentricity 0.90 ± 0.01, semi-latus rectum `L`
 - the tail comes from their own conic — with `e` < 1 it closes, `r(180°) = L/(1−e)`
   = 9.60 R_M from a focus at `X₀` 0.78, i.e. **8.82 R_M** behind the centre, so
   `extension` = 1.47/8.82 = **0.1667**;
-- two-α overlay as at Venus: `α_day` 0.188 from the measured flaring, `α_night` 0.34
-  (unpinned shape knob, same no-bulge criterion), tail 8.82 R_M.
+- the overlay is Vignes' own conic, unchanged: `X₀` 0.78, `e` 0.90, `L` 0.96. It
+  flares to 2.20 R_M (≈1.5× the terminator width) around x ≈ −5 R_M before closing —
+  a real feature of the fit, which an earlier two-α tuning had suppressed.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the

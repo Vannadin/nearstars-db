@@ -65,10 +65,14 @@ for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys �
         p['view'].update({'shue': a, 'shue_r0': r0, 'shue_L': L})
         p['shue_src'] = src
     pz = b.get('pause') or {}
-    if p['variant'] == 'phys' and pz.get('shue_alpha'):    # 바디 테이블이 직접 든 값(2-α 포함)
+    if p['variant'] == 'phys' and pz.get('shue_alpha'):    # 바디 테이블이 직접 든 Shue 값
         p['view'].update({'shue': pz['shue_alpha'], 'shue_r0': pz.get('shue_nose', 0),
                           'shue_L': pz.get('shue_tail', 0),
                           'shue_an': pz.get('shue_alpha_night', 0)})
+    if p['variant'] == 'phys' and pz.get('conic_L'):        # 원뿔 오버레이(유도 경계)
+        p['view'].update({'conic_X0': pz.get('conic_X0', 0), 'conic_e': pz.get('conic_e', 0),
+                          'conic_L': pz['conic_L'], 'conic_label': pz.get('conic_label', 'conic'),
+                          'shue': 0})
     presets[key] = p
 
 # NearStars 프리셋: 게이트된 phase4 보드에서 (emitter와 동일 소스)

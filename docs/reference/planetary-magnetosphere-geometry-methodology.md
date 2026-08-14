@@ -79,69 +79,50 @@ turns nearly radial, and by extension under the extreme wind pressures of a clos
 orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
 rather than assuming a permanent boundary.
 
-**A one-α Shue cannot represent this branch — a two-α form can.** Worth working
-through, because the temptation is to reuse the machinery as-is. In Shue's family a
-*single* α sets both the dayside flaring and the tail, since
-`r(θ) = r0 (2/(1+cos θ))^α`. An induced magnetosphere decouples those: its
-nose-to-terminator flaring is *small* (Venus 1.14/1.055 = 1.08) while its tail is
-*long* (5–11 R_V), because the tail is built by draped field lines and mass loading
-rather than by whatever spreads the dayside. Fit α to the terminator and you get
-0.113, which reaches 11 R_V only at θ = 179.9964° — a sphere that snaps shut at the
-last hair of angle. Fit it to the tail and the dayside balloons.
+**Shape function: use a conic, not Shue.** The Shue family is the wrong tool here, and
+the literature already says which is right. Shue ties the dayside flaring and the tail
+to a single α, so with Venus' measured flaring (1.14/1.055 = 1.08) the curve becomes a
+sphere that reaches its 11 R_V tail only at θ = 179.9964°. Patching that — closing the
+tail with an `ε` term, then letting α vary past the terminator — does work, but it
+invents knobs. Meanwhile **the boundaries of these bodies are actually fitted with
+conic sections**:
 
-The fix is to let the exponent vary with angle, which keeps the whole family and
-adds one knob (**our own extension, not a published model**):
+    r(θ) = L / (1 + e·cos θ)        about a focus at (X₀, 0, 0)
 
-    r(θ) = r0 · [ (1+ε) / (ε + cos²(θ/2)) ]^α(θ)
-    α(θ) = α_day                                     θ ≤ 90°
-         = α_day + (α_night − α_day)·u²(3−2u),       u = (θ−90°)/90°
-    ε    = 1 / ( (L/r0)^(1/α_night) − 1 )
+That is Vignes' own form for Mars' MPB, and the standard for planetary obstacles
+generally (Slavin & Holzer 1981, [`1981JGR....8611401S`](https://ui.adsabs.harvard.edu/abs/1981JGR....8611401S)). Three properties make it a
+better fit for this branch than anything Shue-derived:
 
-The smoothstep makes α continuous in value *and* slope at the terminator, so the
-curve stays smooth where the two regimes meet, and `ε` still closes the tail at `L`.
-Now the constraints land on separate parameters: **`r0` and `α_day` are pinned by the
-measured nose and terminator, `L` by the observed tail length, and `α_night` sets how
-the tail flares between them.** **What is still Shue, and what is not.** Worth being exact, because three different
-things now share one curve family, and only the first is a published model:
+1. **It closes by itself.** With `e < 1` the conic is an ellipse, so the tail shuts at
+   `r(180°) = L/(1−e)` with no added term. The engine needs a bounded volume anyway,
+   and here the closure comes from the fitted eccentricity instead of being imposed.
+2. **`X₀`, `e`, `L` decouple what needs decoupling** — nose, terminator width and tail
+   length are three independent constraints on three parameters, which is exactly the
+   freedom the induced branch needs and the freedom one α lacks.
+3. **It is what the data was fitted with**, so no re-parametrization step can distort
+   it.
 
-| Tier | Form | Deviation from pure Shue | Used for |
-|---|---|---|---|
-| **Shue 1997/98** | `r = r0 (2/(1+cos θ))^α`, open tail | none — it *is* the model | Mercury, Jupiter (α from their own fits) |
-| **Shue + closure** | adds `ε` so the tail shuts at `L` | dayside ≤ 0.33 % (Earth, at the flank); the tail is qualitatively different — closed, not open | Earth |
-| **2α wake form (ours)** | `α` varies with angle past the terminator | dayside ≤ 0.07 % (Venus 0.011 %, Mars 0.066 %); **the nightside is not Shue at all** | Venus, Mars |
+Adopted values: **Mars** takes Vignes 2000's published conic unchanged
+(`X₀` 0.78, `e` 0.90, `L` 0.96). **Venus** has no published conic, so one is solved
+through its three measured constraints — nose 1.0545, terminator width 1.1405, tail
+11 R_V — giving `X₀` 0.7071, `e` 0.9424, `L` 0.6748, an exact fit to all three.
 
-Two honest points follow. First, Shue's own formula is an *empirical fit* to Earth
-magnetopause crossings, not a derivation from first principles, so "modifying it"
-is not breaking a physical law — it is changing which data a shape function was
-tuned to. Second, that is exactly why the labelling matters: the dayside stays
-faithful in every tier (a fraction of a percent), but calling the induced-body
-nightside "Shue" would be wrong. The renders and the viewer therefore name each
-curve by its tier rather than calling everything Shue.
+**A correction this forces.** An earlier revision tuned the two-α form to avoid a
+mid-tail bulge, adopting `α_night` 0.34 because larger values widened the tail to
+1.1–1.4× its terminator width. That criterion was wrong: Vignes' own conic flares to
+**2.20 R_M, about 1.5× the terminator width, at x ≈ −5 R_M** before closing. The
+downstream flare is a real feature of the fitted boundary (and the "flaring with
+altitude" Pioneer Venus reported at Venus, Saunders 1986,
+[`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)), not an artifact to suppress. The conic reproduces it without
+tuning.
 
-**Choosing `α_night`, and the artifact to watch.** Because `ε` closes the tail at a
-finite `L`, the width always rises and then necks — only the size of the bulge is
-tunable, and a large `α_night` turns the tail into a visible lens. Measured on the
-width profile:
+**One honest limit.** The ellipse's far-tail closure is extrapolation, not
+measurement: Vignes notes that beyond `X'` ≈ −2 R_M the MPB is "a weak and gradual
+transition", and their crossings are concentrated on the dayside and terminator. The
+nose and flank are measured; the tail shape is the fit's continuation.
 
-| `α_night` | max tail width (Venus) | vs terminator | where |
-|---|---|---|---|
-| 0.30 | 1.16 R_V | 1.01× | just past the terminator |
-| **0.34** | **1.16 R_V** | **1.02×** | x ≈ 0.5 R_V |
-| 0.40 | 1.26 R_V | 1.10× | x ≈ 2.6 R_V |
-| 0.50 | 1.56 R_V | 1.37× | x ≈ 4.4 R_V |
-
-The adopted rule is **the largest `α_night` that keeps the maximum tail width within
-a few percent of the terminator width**, so the tail reads as a near-cylindrical
-wake that closes gently rather than a bulge. That is **0.34** for both Venus and
-Mars (Mars: 1.04× at 0.34, 1.22× at 0.5), and it is the value the owner picked by
-eye before the profile was measured.
-
-Honesty about it: `r0`, `α_day` and `L` come from measurements; `α_night` does not.
-It is a shape knob set by the criterion above, not a derived quantity, and the
-underlying flaring reported by Pioneer Venus (Saunders 1986,
-[`1986JGR....91.5589S`](https://ui.adsabs.harvard.edu/abs/1986JGR....91.5589S)) is qualitative. Pin it properly when a tail-radius-versus-
-distance profile is available; a monotone flare would also require dropping the
-finite closure, which the engine needs for a bounded volume.
+The two-α Shue construction is retained in the renderer as a fallback for a body with
+no conic fit and no published α, and is labelled as ours wherever it is drawn.
 
 **Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
 a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long
