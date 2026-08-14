@@ -314,11 +314,39 @@ far less than a dipole magnetopause.
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
 1.1 R) and the tail runs twice as long (11 vs 5.5 R_V).
 
-**Mars is not done yet.** Its boundary is the magnetic pileup boundary, whose
-canonical fit (Vignes 2000, [`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V)) is paywalled with no preprint,
-and the subsolar value is not quoted in any open text found so far. The stock
-`irregular` model stands in until that number is verified — deliberately not
-guessed.
+The Shue-form triple is derivable here too, and is carried as the ⚗ overlay:
+`α = log₂(1.1405/1.0545) = 0.113`, nose 1.055, tail 11. Note what it is — a
+*re-parametrization of the measured nose-to-terminator flaring* in the Shue form,
+not a Shue fit of an induced boundary, which nobody has published. That is a
+different thing from reading α off a cfg's `compression`, which has no measurement
+behind it at all.
+
+### Mars — the MPB conic, derived
+
+| Stock | Physical |
+|---|---|
+| ![mars Stock](../img/belts/mars_stock.png) | ![mars Physical](../img/belts/mars_phys.png) |
+
+Mars' boundary is the **magnetic pileup boundary**, and Vignes 2000
+([`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V), Table 2, direct fit over 488 MGS crossings) gives the conic
+directly: `X₀` 0.78 ± 0.01, eccentricity 0.90 ± 0.01, semi-latus rectum `L`
+0.96 ± 0.01, **subsolar `R_SD` 1.29 ± 0.04 R_M** and **terminator `R_TD`
+1.47 ± 0.08 R_M**. Mapping those:
+
+- `pause_radius` = flank = **1.47**, `compression` = 1.47/1.29 = **1.1395** (which
+  recovers the 1.29 nose);
+- the tail comes from their own conic — with `e` < 1 it closes, `r(180°) = L/(1−e)`
+  = 9.60 R_M from a focus at `X₀` 0.78, i.e. **8.82 R_M** behind the centre, so
+  `extension` = 1.47/8.82 = **0.1667**;
+- Shue parametrization `α = log₂(1.47/1.29)` = **0.188**, nose 1.29, tail 8.82.
+
+`pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
+is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
+amplitude is inherited rather than derived — flagged, not fabricated. Against stock,
+the derived boundary stands further off (1.29 vs 1.25 nose, 1.47 vs a rounder
+flank) and trails a much longer tail (8.8 vs 1.7 R_M).
+
+Both Venus and Mars remain belt-free: no dynamo, no trapping.
 
 **A distribution gap worth flagging.** ROKerbalism's `Support/RSS.cfg` renames
 `+RadiationBody[Duna] { @name = Mars }`, but its own `System/Radiation.cfg` — which
@@ -660,10 +688,34 @@ standoff가 63·24 바디 반경이라 계면을 프레임에 담으면 벨트�
 스톡과 비교하면 도출한 주간면이 행성에 더 바짝 붙고(1.05 대 균일 1.1 R), 꼬리는 두 배로 깁니다
 (11 대 5.5 R_V).
 
-**화성은 아직입니다.** 화성의 경계는 자기 파일업 경계(MPB)이고 그 정준 적합(Vignes 2000,
-[`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V))은 preprint 없이 유료이며, 직하 거리 값이 지금까지 찾은 공개
-문헌에 인용돼 있지 않습니다. 그 숫자를 확인할 때까지 스톡 `irregular` 모델을 그대로 둡니다.
-짐작으로 채우지 않습니다.
+Shue 삼중값도 같은 실측에서 나오고 ⚗ 오버레이로 싣습니다.
+`α = log₂(1.1405/1.0545) = 0.113`, 노즈 1.055, 꼬리 11입니다. 다만 성격을 분명히 해둡니다. 이것은
+*측정된 노즈→명암경계선 벌어짐을 Shue 형식으로 재매개화한 것*이지, 유도 경계를 Shue로 적합한
+결과가 아닙니다(그런 적합은 발표된 바 없습니다). 아무 측정도 뒤에 없는 cfg `compression` 환산과는
+성격이 다릅니다.
+
+### 화성 — MPB 원뿔을 계산한 결과
+
+| 스톡 | 물리 |
+|---|---|
+| ![mars 스톡](../img/belts/mars_stock.png) | ![mars 물리](../img/belts/mars_phys.png) |
+
+화성의 경계는 **자기 파일업 경계(MPB)**이고, Vignes 2000([`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V),
+Table 2, MGS 488회 통과 직접 적합)이 원뿔을 그대로 줍니다. `X₀` 0.78 ± 0.01, 이심률 0.90 ± 0.01,
+반통경 `L` 0.96 ± 0.01, **직하 `R_SD` 1.29 ± 0.04 R_M**, **명암경계선 `R_TD` 1.47 ± 0.08 R_M**
+입니다. 옮기면 이렇습니다.
+
+- `pause_radius` = 플랭크 = **1.47**, `compression` = 1.47/1.29 = **1.1395**(노즈 1.29 복원)
+- 꼬리는 그들의 원뿔에서 바로 나옵니다. `e` < 1이라 닫히고 `r(180°) = L/(1−e)` = 9.60 R_M,
+  초점이 `X₀` 0.78이므로 중심 기준 **8.82 R_M** → `extension` = 1.47/8.82 = **0.1667**
+- Shue 매개화 `α = log₂(1.47/1.29)` = **0.188**, 노즈 1.29, 꼬리 8.82
+
+`pause_deform`은 스톡 `irregular`의 0.1을 그대로 둡니다. 지각 잔류자기가 실제로 비축대칭인 것은
+맞지만 Vignes가 그 비대칭을 정량화하지 않으므로, 진폭은 도출이 아니라 상속입니다. 지어내지 않고
+표시만 해 둡니다. 스톡과 비교하면 도출 경계가 더 멀리 서고(노즈 1.29 대 1.25, 플랭크는 1.47 대
+둥근 형태) 꼬리가 훨씬 깁니다(8.8 대 1.7 R_M).
+
+금성과 화성 모두 벨트는 없습니다. 다이나모가 없으니 포획도 없습니다.
 
 **짚어둘 배포 갭.** ROKerbalism의 `Support/RSS.cfg`는
 `+RadiationBody[Duna] { @name = Mars }`로 이름을 바꿔 복사하는데, 업스트림 KerbalismConfig를

@@ -78,11 +78,39 @@ far less than a dipole magnetopause.
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform
 1.1 R) and the tail runs twice as long (11 vs 5.5 R_V).
 
-**Mars is not done yet.** Its boundary is the magnetic pileup boundary, whose
-canonical fit (Vignes 2000, [`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V)) is paywalled with no preprint,
-and the subsolar value is not quoted in any open text found so far. The stock
-`irregular` model stands in until that number is verified — deliberately not
-guessed.
+The Shue-form triple is derivable here too, and is carried as the ⚗ overlay:
+`α = log₂(1.1405/1.0545) = 0.113`, nose 1.055, tail 11. Note what it is — a
+*re-parametrization of the measured nose-to-terminator flaring* in the Shue form,
+not a Shue fit of an induced boundary, which nobody has published. That is a
+different thing from reading α off a cfg's `compression`, which has no measurement
+behind it at all.
+
+### Mars — the MPB conic, derived
+
+| Stock | Physical |
+|---|---|
+| ![mars Stock](../img/belts/mars_stock.png) | ![mars Physical](../img/belts/mars_phys.png) |
+
+Mars' boundary is the **magnetic pileup boundary**, and Vignes 2000
+([`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V), Table 2, direct fit over 488 MGS crossings) gives the conic
+directly: `X₀` 0.78 ± 0.01, eccentricity 0.90 ± 0.01, semi-latus rectum `L`
+0.96 ± 0.01, **subsolar `R_SD` 1.29 ± 0.04 R_M** and **terminator `R_TD`
+1.47 ± 0.08 R_M**. Mapping those:
+
+- `pause_radius` = flank = **1.47**, `compression` = 1.47/1.29 = **1.1395** (which
+  recovers the 1.29 nose);
+- the tail comes from their own conic — with `e` < 1 it closes, `r(180°) = L/(1−e)`
+  = 9.60 R_M from a focus at `X₀` 0.78, i.e. **8.82 R_M** behind the centre, so
+  `extension` = 1.47/8.82 = **0.1667**;
+- Shue parametrization `α = log₂(1.47/1.29)` = **0.188**, nose 1.29, tail 8.82.
+
+`pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
+is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
+amplitude is inherited rather than derived — flagged, not fabricated. Against stock,
+the derived boundary stands further off (1.29 vs 1.25 nose, 1.47 vs a rounder
+flank) and trails a much longer tail (8.8 vs 1.7 R_M).
+
+Both Venus and Mars remain belt-free: no dynamo, no trapping.
 
 **A distribution gap worth flagging.** ROKerbalism's `Support/RSS.cfg` renames
 `+RadiationBody[Duna] { @name = Mars }`, but its own `System/Radiation.cfg` — which
