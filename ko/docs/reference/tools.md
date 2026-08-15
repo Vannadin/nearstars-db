@@ -24,6 +24,27 @@
 | 16 | 자기장 기하(쌍극 vs 다중극) | 자오면 자기력선 + 표면 B_r 지도 + 열린 자기력선 추적 오로라 발자국. Ro_l 게이트의 *형태* 귀결 | `scripts/viz/render_field_geometry.py` |
 | 17 | 사이트맵 + 연결성 감사 | 발행 페이지 인벤토리, 허브, 고아·막다른·CDN 결함 | `scripts/build_sitemap.py` |
 
+## 일회성 설명물 — 인덱스
+
+이 저장소의 시각화는 두 종류이고 관리 방식이 다릅니다. **상시 도구**는 입력이 바뀌면 다시 생성됩니다.
+DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다. **일회성 설명물**은 큐레이션 중 한 가지
+논점을 매듭짓기 위해 만든 것이고 데이터가 움직여도 다시 만들지 않습니다. 각각은 그때 그 논증의
+스냅숏이며, 도출값 뒤의 근거를 눈으로 확인할 수 있어야 하기에 남겨 둡니다. 이 인덱스는 두 번째
+종류를 모은 것입니다. 각 항목은 아래 해당 그룹에도 문서화돼 있고, 전부
+[`docs/tools.html`](../../../docs/tools.html)에서 같은 구분으로 열립니다.
+
+| 설명물 | 산출물 | 매듭지은 질문 | 그룹 |
+|---|---|---|:-:|
+| 천왕성 pole-on 기하 | [`uranus-geometry.html`](../../../docs/uranus-geometry.html) | Voyager 2 단일 통과가 천왕성 자기꼬리를 대표하지 못할 수 있는 이유 | 14 |
+| 자기장 형상 — 쌍극 vs 다중극 | [`img/field-geometry.png`](../../../docs/img/field-geometry.png) | 다중극 자기장이 세기가 아니라 *모양*으로 어떻게 보이는가 | 14 |
+| 프록시마 d 알펜 윙 | [`img/proxima-d-alfven-wing.png`](../../../docs/img/proxima-d-alfven-wing.png) | sub-Alfvénic 항성-행성 상호작용 기하. 꼬리가 아니라 날개 | 14 |
+| 위성 대기 보유 가능성 | [`img/moon-atmosphere-feasibility.png`](../../../docs/img/moon-atmosphere-feasibility.png) | 프록시마 c I 이 대기를 붙잡을 수 있는가 | 4 |
+| 프록시마 c 계 실척 | [`img/proxima-c-system-to-scale.png`](../../../docs/img/proxima-c-system-to-scale.png) | 고리·벨트·위성 궤도가 실제로 서로 어떻게 놓이는가 | 4 |
+| 프록시마 c I 궤도 — edge 비교 | [`img/proxima-c-i-orbit-edge-compare.png`](../../../docs/img/proxima-c-i-orbit-edge-compare.png) | c I 의 내측 대 외측 벨트 가장자리 궤도와 각각이 만드는 편평도 | 4 |
+
+`img/field-geometry-proxima-c.png` 도 존재하지만 어디서도 참조되지 않습니다. 누가 쓰겠다고 하기
+전까지는 잔여물로 봅니다.
+
 ## 검증 & QA — 인덱스
 
 정확성 검사 도구들은 기능별 묶음 여러 곳에 흩어져 있습니다. 이 표는 그것들을 한 자리에 모아 가시성을 확보합니다 — 각 툴은 자기 묶음 섹션에도 그대로 등장합니다.

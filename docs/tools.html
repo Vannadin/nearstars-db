@@ -115,10 +115,6 @@ main { max-width: 980px }
       <div class="tname" data-i18n="t_belts"></div>
       <div class="tdesc" data-i18n="d_belts"></div>
     </a>
-    <a class="tool" href="uranus-geometry.html">
-      <div class="tname" data-i18n="t_uranus"></div>
-      <div class="tdesc" data-i18n="d_uranus"></div>
-    </a>
     <a class="tool" href="ice-stability.html">
       <div class="tname" data-i18n="t_ice"></div>
       <div class="tdesc" data-i18n="d_ice"></div>
@@ -130,6 +126,39 @@ main { max-width: 980px }
     <a class="tool" href="phase4/orbit-viewers/alpha-centauri-validation/index.html">
       <div class="tname" data-i18n="t_valid"></div>
       <div class="tdesc" data-i18n="d_valid"></div>
+    </a>
+  </div>
+</section>
+
+<section>
+  <h2 data-i18n="oneoff_title"></h2>
+  <div class="card">
+    <p class="intro" data-i18n="oneoff_intro"></p>
+  </div>
+  <div class="tool-grid">
+    <a class="tool" href="uranus-geometry.html">
+      <div class="tname" data-i18n="t_uranus"></div>
+      <div class="tdesc" data-i18n="d_uranus"></div>
+    </a>
+    <a class="tool" href="img/field-geometry.png">
+      <div class="tname" data-i18n="t_fieldgeo"></div>
+      <div class="tdesc" data-i18n="d_fieldgeo"></div>
+    </a>
+    <a class="tool" href="img/proxima-d-alfven-wing.png">
+      <div class="tname" data-i18n="t_alfven"></div>
+      <div class="tdesc" data-i18n="d_alfven"></div>
+    </a>
+    <a class="tool" href="img/moon-atmosphere-feasibility.png">
+      <div class="tname" data-i18n="t_moonatm"></div>
+      <div class="tdesc" data-i18n="d_moonatm"></div>
+    </a>
+    <a class="tool" href="img/proxima-c-system-to-scale.png">
+      <div class="tname" data-i18n="t_pcscale"></div>
+      <div class="tdesc" data-i18n="d_pcscale"></div>
+    </a>
+    <a class="tool" href="img/proxima-c-i-orbit-edge-compare.png">
+      <div class="tname" data-i18n="t_pcedge"></div>
+      <div class="tdesc" data-i18n="d_pcedge"></div>
     </a>
   </div>
 </section>
@@ -145,6 +174,18 @@ const T = {
     title: "NearStars · Tools",
     section_title: "Standalone tools",
     intro: "Interactive visualizations and calculators that stand apart from the per-body report chain. Each opens in place; use the nav above to get back.",
+    oneoff_title: "One-off explainers",
+    oneoff_intro: "Figures and pages built to settle a single question during curation. They are not regenerated when data changes \u2014 each is a snapshot of the argument it was made for, kept because the reasoning behind a derived value is worth being able to look at.",
+    t_fieldgeo: "Field shape \u2014 dipole vs multipole",
+    d_fieldgeo: "Meridional field lines, surface B_r map and auroral footprints, showing the *shape* of a planetary field rather than its strength.",
+    t_alfven: "Proxima d Alfv\u00e9n wing",
+    d_alfven: "Sub-Alfv\u00e9nic star-planet interaction geometry (Neubauer 1980; Saur 2013) \u2014 orbital-plane and meridional close-up.",
+    t_moonatm: "Moon atmosphere feasibility",
+    d_moonatm: "Whether a large moon can hold an atmosphere: Jeans retention limit, synchronous-orbit constraint, and measured precedents to scale.",
+    t_pcscale: "Proxima c system to scale",
+    d_pcscale: "The Proxima c system drawn at true relative scale.",
+    t_pcedge: "Proxima c I orbit \u2014 edge-on comparison",
+    d_pcedge: "Edge-on orbit geometry compared against alternatives considered during curation.",
     t_starmap: "3D star map",
     d_starmap: "Every curated system within 50 light-years, with spin axes, astrospheres, interstellar wind, and the 1314-star field layer.",
     t_colors: "Element & plasma colors",
@@ -165,6 +206,18 @@ const T = {
     title: "NearStars · 도구",
     section_title: "단독 도구",
     intro: "천체별 보고서 사슬과 별개로 도는 인터랙티브 시각화·계산기 모음입니다. 각 도구에서 위 내비게이션으로 돌아올 수 있습니다.",
+    oneoff_title: "일회성 설명물",
+    oneoff_intro: "큐레이션 중 한 가지 논점을 매듭짓기 위해 만든 그림과 페이지입니다. 데이터가 바뀌어도 다시 생성하지 않습니다. 각각은 그때 그 논증의 스냅숏이고, 도출값 뒤의 근거를 눈으로 확인할 수 있도록 남겨 둡니다.",
+    t_fieldgeo: "자기장 형상 \u2014 쌍극 vs 다중극",
+    d_fieldgeo: "자오면 자기력선, 표면 B_r 지도, 오로라 발자국. 자기장의 세기가 아니라 *모양*을 보여줍니다.",
+    t_alfven: "프록시마 d 알펜 윙",
+    d_alfven: "sub-Alfv\u00e9nic 항성-행성 상호작용 기하(Neubauer 1980, Saur 2013). 궤도면 뷰와 자오면 근접 뷰입니다.",
+    t_moonatm: "위성 대기 보유 가능성",
+    d_moonatm: "대형 위성이 대기를 붙잡을 수 있는지. Jeans 보유 한계, 동기궤도 제약, 실측 선례를 같은 축척으로 놓았습니다.",
+    t_pcscale: "프록시마 c 계 실척",
+    d_pcscale: "프록시마 c 계를 실제 상대 크기로 그린 그림입니다.",
+    t_pcedge: "프록시마 c I 궤도 \u2014 edge-on 비교",
+    d_pcedge: "큐레이션 중 검토한 대안들과 edge-on 궤도 기하를 비교합니다.",
     t_starmap: "3D 성도",
     d_starmap: "50광년 이내 큐레이션 항성계 전부. 자전축, 항성권, 성간풍, 1314개 별 필드 레이어 포함.",
     t_colors: "원소·플라스마 발광색",

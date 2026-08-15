@@ -24,6 +24,29 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 16 | Magnetic field geometry (dipolar vs multipolar) | Meridional field lines + surface B_r map + traced open-field auroral footprint, for the Ro_l gate's *shape* consequence | `scripts/viz/render_field_geometry.py` |
 | 17 | Site map + connectivity audit | Published-page inventory, hubs, orphan/dead-end/CDN defects | `scripts/build_sitemap.py` |
 
+## One-off explainers — index
+
+Two kinds of visualization live in this repo and they are maintained differently. **Standing
+tools** are regenerated whenever their inputs change — the DB browser, the star map, the belt
+viewer, the colour and ice calculators. **One-off explainers** were built to settle a single
+question during curation and are *not* regenerated when data moves: each is a snapshot of the
+argument it was made for, kept because the reasoning behind a derived value is worth being
+able to look at. This index gathers the second kind; each is also documented in its parent
+group below, and all of them are reachable from
+[`docs/tools.html`](../tools.html) under the same split.
+
+| Explainer | Output | Question it settled | Group |
+|---|---|---|:-:|
+| Uranus pole-on geometry | [`uranus-geometry.html`](../uranus-geometry.html) | Why a single Voyager 2 flyby may not represent Uranus' magnetotail | 14 |
+| Field shape — dipole vs multipole | [`img/field-geometry.png`](../img/field-geometry.png) | What a multipolar field *looks* like, as opposed to how strong it is | 14 |
+| Proxima d Alfvén wing | [`img/proxima-d-alfven-wing.png`](../img/proxima-d-alfven-wing.png) | Sub-Alfvénic star–planet interaction geometry: wings, not a tail | 14 |
+| Moon atmosphere feasibility | [`img/moon-atmosphere-feasibility.png`](../img/moon-atmosphere-feasibility.png) | Whether Proxima c I could hold an atmosphere | 4 |
+| Proxima c system to scale | [`img/proxima-c-system-to-scale.png`](../img/proxima-c-system-to-scale.png) | How the rings, belt and moon orbits actually sit relative to each other | 4 |
+| Proxima c I orbit — edge comparison | [`img/proxima-c-i-orbit-edge-compare.png`](../img/proxima-c-i-orbit-edge-compare.png) | Inner vs outer belt-edge orbit for c I, and the flattening each implies | 4 |
+
+`img/field-geometry-proxima-c.png` also exists but is referenced nowhere; treat it as a
+leftover until someone claims it.
+
 ## Verification & QA — index
 
 Correctness checks live across several functional groups. This index gathers them in one place for visibility — each tool is also documented in its parent group.
