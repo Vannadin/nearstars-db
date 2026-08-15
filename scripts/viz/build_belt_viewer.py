@@ -14,10 +14,15 @@ OUT = os.path.join(D, '..', '..', 'docs', 'belt-viewer.html')
 
 KO = {'venus': '금성', 'mars': '화성', 'earth': '지구', 'jupiter': '목성', 'saturn': '토성', 'uranus': '천왕성',
       'neptune': '해왕성', 'mercury': '수성', 'ganymede': '가니메데',
-      'proxima_d': '프록시마 d'}
+      'proxima_d': '프록시마 d',
+      # NearStars 재게이트 짝 — 그룹 토글이 '재게이트 전 / 후'로 읽힌다
+      'polyphemus': '폴리페무스', 'pandora': '판도라',
+      'proxima_b': '프록시마 b', 'proxima_c': '프록시마 c'}
 EN = {'venus': 'Venus', 'mars': 'Mars', 'earth': 'Earth', 'jupiter': 'Jupiter', 'saturn': 'Saturn', 'uranus': 'Uranus',
       'neptune': 'Neptune', 'mercury': 'Mercury', 'ganymede': 'Ganymede',
-      'proxima_d': 'Proxima d'}
+      'proxima_d': 'Proxima d',
+      'polyphemus': 'Polyphemus', 'pandora': 'Pandora',
+      'proxima_b': 'Proxima b', 'proxima_c': 'Proxima c'}
 OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 
 # 위성 궤도 반장축(모행성 반경 단위). 자기꼬리 길이를 위성계와 견주어 읽기 위한 오버레이용이고,
@@ -31,6 +36,8 @@ MOON_ORBITS = {
     'uranus': [('Miranda', 5.12), ('Ariel', 7.53), ('Umbriel', 10.49),
                ('Titania', 17.20), ('Oberon', 23.01)],
     'neptune': [('Triton', 14.41), ('Nereid', 223.94)],
+    'polyphemus': [('Dante', 1.54), ('Hades', 2.07), ('Pandora', 3.53),
+                   ('Cassandra', 8.40), ('Chaos', 21.0)],
 }
 
 # 바디 자신의 모천체 궤도 반경(바디 반경 단위) + 모천체 이름. 자기꼬리 길이를 이 궤도반경과
@@ -46,6 +53,10 @@ BODY_ORBITS = {
     'uranus':   (113360, '태양', 'Sun'),
     'neptune':  (182699, '태양', 'Sun'),
     'ganymede': (406, '목성', 'Jupiter'),
+    'polyphemus': (3348, '알파 센타우리 A', 'Alpha Cen A'),   # 1.6 AU
+    'pandora':    (44, '폴리페무스', 'Polyphemus'),   # 3.53 R_p
+    'proxima_b':  (1064, '프록시마 센타우리', 'Proxima Cen'),  # 0.04848 AU
+    'proxima_c':  (13045, '프록시마 센타우리', 'Proxima Cen'), # 1.5 AU
 }
 
 
@@ -68,6 +79,9 @@ SHUE_GROUNDED = {
 
 def conv(key, b):
     body, kind = key.rsplit('_', 1)
+    # NearStars 재게이트 프리셋은 stock/phys 대신 pre/regate 로 짝짓는다. 뜻은 같은 축이라
+    # (저작·상속값 대 물리 도출값) 기존 두 그룹 토글에 그대로 태운다.
+    kind = {'pre': 'stock', 'regate': 'phys'}.get(kind, kind)
     # 그룹 라벨이 stock/phys 를 이미 말해주므로 버튼에는 천체명만 남긴다.
     p = {'label': KO[body], 'label_en': EN[body],
          'group': 'stock' if kind == 'stock' else 'phys',
@@ -79,15 +93,41 @@ def conv(key, b):
     return p
 
 
+SYS_LABEL = {'alpha_centauri': ('알파 센타우리', 'Alpha Centauri'),
+             'proxima_cen': ('프록시마 센타우리', 'Proxima Centauri')}
+
 SOL_KO, SOL_EN = '태양계', 'Solar System'
+
+# 재게이트 전 스냅샷. 현재값은 phase4 보드에서 자동으로 실리므로(아래 load_nearstars_specs 블록)
+# 여기 손으로 두는 것은 '무엇이 어떻게 바뀌었나'를 나란히 보기 위한 비교판뿐이다. 이 표가 그 스냅샷을
+# 태양계 탭이 아니라 제 계 탭으로 보내고, 보드판과 같은 body_key 로 묶어 stock/phys 토글에 태운다.
+# key = BODIES 의 body_key, 값 = (계, 표시명, depth, 보드 프리셋과 묶일 body_key)
+# 네 번째 항목이 필요한 이유: 보드 프리셋은 kopernicus 이름을 소문자화해 키를 잡으므로
+# 같은 천체라도 이름이 다를 수 있다(Proxima Cen c → proxima_cen_c).
+NEARSTARS_PRE = {
+    'polyphemus': ('alpha_centauri', 'Alpha Centauri A b', 0, 'polyphemus'),
+    'pandora':    ('alpha_centauri', 'Pandora', 1, 'pandora'),
+    'proxima_b':  ('proxima_cen', 'Proxima Cen b', 0, 'proxima_b'),
+    'proxima_c':  ('proxima_cen', 'Proxima Cen c', 0, 'proxima_cen_c'),
+    'proxima_d':  ('proxima_cen', 'Proxima Cen d', 0, 'proxima_d'),
+}
 presets = {}
 for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys 쌍)
     p = conv(key, b)
-    p['sys'] = 'sol'
-    p['sys_label'], p['sys_label_en'] = SOL_KO, SOL_EN
     p['body_key'] = key.rsplit('_', 1)[0]     # earth_stock / earth_phys → earth
     p['variant'] = p['group']                 # stock | phys — 같은 천체의 두 판본
-    p['depth'] = 0
+    pre = NEARSTARS_PRE.get(p['body_key'])
+    if pre:
+        syskey, board_name, depth, board_key = pre
+        ko_sys, en_sys = SYS_LABEL[syskey]
+        p['sys'], p['sys_label'], p['sys_label_en'] = syskey, ko_sys, en_sys
+        p['depth'] = depth
+        p['label'] = p['label_en'] = board_name
+        p['body_key'] = board_key
+    else:
+        p['sys'] = 'sol'
+        p['sys_label'], p['sys_label_en'] = SOL_KO, SOL_EN
+        p['depth'] = 0
     g = SHUE_GROUNDED.get(p['body_key'])
     if p['variant'] == 'phys' and g:   # 근거 있는 α 가 있는 바디만 기본 표시
         a, r0, L, src = g
@@ -111,8 +151,6 @@ CFG2VIEW = {'dist': 'dist', 'radius': 'rad', 'deform_xy': 'dxy', 'compression': 
 import yaml  # noqa: E402
 
 ROMAN = re.compile(r'\s+(I{1,3}|IV|V|VI{0,3}|IX|X)$')
-SYS_LABEL = {'alpha_centauri': ('알파 센타우리', 'Alpha Centauri'),
-             'proxima_cen': ('프록시마 센타우리', 'Proxima Centauri')}
 
 
 def designations(board_file):
@@ -139,7 +177,7 @@ for name, spec in load_nearstars_specs().items():
     p = {'label': name, 'label_en': name, 'group': 'nearstars',
          'sys': syskey, 'sys_label': ko_sys, 'sys_label_en': en_sys,
          'depth': 1 if is_moon else 0, 'desig': desig,
-         'body_key': name.lower().replace(' ', '_'), 'variant': None,
+         'body_key': name.lower().replace(' ', '_'), 'variant': 'phys',
          'parent': ROMAN.sub('', desig) if is_moon else None,
          'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
     extent = 5.0

@@ -29,7 +29,9 @@ MODEL_KEYS = [
 # emit에서는 주석으로만 흘려보내고 실제 cfg 라인으로 쓰지 않는다.
 PENDING_MODEL_KEYS = ['pause_deform_scale', 'pause_nose', 'pause_alpha', 'pause_tail',
                       # 스톡 계면 함수 일반화 (둘 다 0 이면 스톡과 동일) — 방법론 Part C ⚗ 절
+                      # 일반화 스톡 pause 는 네 값이 한 세트다 — smooth 만 적용하면 형상이 깨진다.
                       'pause_waist', 'pause_smooth',
+                      'pause_radius_smoothed', 'pause_extension_smoothed',
                       # pause_offset 은 pause_waist 로 흡수됐다(같은 연산, 부호 반대). 옛 보드 호환용.
                       'pause_offset', 'pause_offset_radius',
                       'pause_offset_compression', 'pause_offset_extension']
@@ -218,28 +220,51 @@ def check(text):
 
 
 def load_nearstars_specs():
-    """phase4 보드에서 gated magnetism.radiation_belts 행을 읽어 emit 스펙으로 변환.
+    """phase4 보드에서 gated 자기권 행을 읽어 emit 스펙으로 변환.
+
+    두 축을 함께 읽는다. 대부분의 천체는 pause 필드를 magnetism.radiation_belts 에
+    싣지만, 벨트가 없거나 아직 벨트 행이 없는 천체(Proxima b·d)는 같은 값을
+    magnetism.magnetic_field 에 단다. 한 축만 읽으면 그런 천체의 계면이 조용히
+    누락되므로(2026-08-16 발견), body 단위로 두 축을 병합한다. 충돌 시에는
+    보드 문서 순서상 뒤에 오는 radiation_belts 가 이긴다.
+
     반환: {kopernicus_name: {'model': {...}, 'body': {...}, 'row': row}} (보드 순서)."""
     import yaml
+    CFG_AXES = ('magnetism.magnetic_field', 'magnetism.radiation_belts')
     specs = {}
     for fn in sorted(os.listdir(PHASE4_DIR)):
         if not fn.endswith('.yaml'):
             continue
         board = yaml.safe_load(open(os.path.join(PHASE4_DIR, fn)))
+        merged = {}                       # body → 병합 결과 (보드 순서 유지)
         for row in board.get('decisions', []):
-            if row.get('axis') != 'magnetism.radiation_belts' or row.get('status') != 'gated':
+            if row.get('axis') not in CFG_AXES or row.get('status') != 'gated':
                 continue
             fields = {f['name']: f['value'] for f in row.get('fields', [])}
-            if 'radiation_model' not in fields:
+            if row['axis'] == 'magnetism.radiation_belts' and 'radiation_model' not in fields:
                 raise SystemExit(f"{fn} {row['body']}: radiation_belts row has no "
                                  "individual cfg fields (legacy packed format?)")
-            name = row.get('kopernicus_name', row['body'])
-            model = {k: fields[k] for k in MODEL_KEYS if k in fields}
-            body = {k: fields[k] for k in BODY_KEYS if k in fields}
-            pending = {k: fields[k] for k in PENDING_MODEL_KEYS if k in fields}
-            specs[name] = {'model_name': fields['radiation_model'], 'model': model,
-                           'body': body, 'pending': pending,
-                           'refs': row.get('refs', []), 'system': fn}
+            if row['axis'] == 'magnetism.magnetic_field' and not any(
+                    k.startswith('pause_') for k in fields):
+                continue                  # 서술만 있는 자기장 행 — cfg 기여 없음
+            e = merged.setdefault(row['body'], {'fields': {}, 'refs': [], 'row': row,
+                                                'kop': None})
+            e['fields'].update(fields)
+            e['refs'] += [r for r in row.get('refs', []) if r not in e['refs']]
+            if row.get('kopernicus_name'):
+                e['kop'] = row['kopernicus_name']
+            if row['axis'] == 'magnetism.radiation_belts':
+                e['row'] = row            # 벨트 행이 대표 행
+        for body, e in merged.items():
+            fields = e['fields']
+            if 'radiation_model' not in fields:
+                continue                  # 계면도 벨트도 없는 천체
+            name = e['kop'] or body
+            specs[name] = {'model_name': fields['radiation_model'],
+                           'model': {k: fields[k] for k in MODEL_KEYS if k in fields},
+                           'body': {k: fields[k] for k in BODY_KEYS if k in fields},
+                           'pending': {k: fields[k] for k in PENDING_MODEL_KEYS if k in fields},
+                           'refs': e['refs'], 'system': fn}
     return specs
 
 

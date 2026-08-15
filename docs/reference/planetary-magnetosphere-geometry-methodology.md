@@ -826,6 +826,40 @@ independently for three bodies land at 0.50, 0.54 and 0.57 × radius (Venus, Mar
 | Venus | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
 | Mars | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
 
+**Applied to the Shue bodies too, as of 2026-08-16.** The smoothing was written for the
+induced branch, but nothing about it is specific to that branch: every stock-encoded pause
+carries the same defect, a curvature discontinuity where the dayside `compression` scaling
+hands over to the nightside `extension` one. The boundary width is C¹ there but not C², and
+for a Shue body the jump is enormous — the second derivative changes by a factor of ~2.2e4
+across `x` = 0, which reads as a rounded nose turning into a near-cylinder in one step.
+Smoothing brings that ratio to about 1.
+
+The four values move as **one set**, because the stock engine reads `pause_radius` and
+`pause_extension` but not `pause_smooth`: applying the smoothing without its paired radius
+and extension deforms the shape rather than smoothing it. Recorded as ⚗ pending
+(`pause_smooth`, `pause_waist`, `pause_radius_smoothed`, `pause_extension_smoothed`) so the
+live fields keep shipping the stock-compatible encoding until plugin Deliverable 1 lands.
+`pause_smooth` = 0.5 × `pause_radius` is solved as a fixed point, since the radius itself
+depends on the smoothing. Nose and the 150 × nose tail close are preserved exactly.
+
+| body | nose | smooth | radius | extension |
+|---|---|---|---|---|
+| Mercury | 1.45 | 1.1703 | 2.3407 | 0.0107720 |
+| Earth | 10 | 8.6751 | 17.3503 | 0.0115793 |
+| Jupiter | 63 | 47.5273 | 95.0546 | 0.0100671 |
+| Saturn | 24 | 24.1309 | 48.2618 | 0.0134246 |
+| Uranus | 18 | 15.6153 | 31.2305 | 0.0115793 |
+| Neptune | 26.5 | 22.9891 | 45.9782 | 0.0115793 |
+| Polyphemus | 35.33 | 26.5838 | 53.1677 | 0.0100409 |
+| Proxima b | 1.023 | 0.8257 | 1.6514 | 0.0107720 |
+| Proxima c | 11.942 | 10.3599 | 20.7197 | 0.0115793 |
+| Proxima d | 7.517 | 6.5211 | 13.0422 | 0.0115793 |
+
+This does **not** fix the tail-width deficit — that needs the Shue-native mode. A first
+attempt to use `pause_smooth` for the width, by fitting it against the Shue curve rather
+than against the corner, drove it to 3 × nose and turned the piecewise-linear `px` into a
+quadratic. That is a change of function family, not a smoothing, and was rejected.
+
 Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
 20 R_p, and the bulge is 0.000%. The cost is wake width: against the measured cone the
 boundary is 15% narrow at 2 R_p, 33% at 5 and 54% at 10 — accepted, because no-bulge

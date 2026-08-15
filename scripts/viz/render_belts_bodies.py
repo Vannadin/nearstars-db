@@ -75,7 +75,12 @@ BODIES={
    # Rutala 2025 S97* 적합: α = 0.28 + 1.08·p_SW, r_SS = 38.0·p_SW^-0.25 [R_J].
    # 노즈 63 R_J(Joy 2002 압축 상태) ⇒ p_SW 0.132 nPa ⇒ α 0.423.
    'pause':{'radiation':-0.01,'rad':84.4649,'comp':1.3407,'ext':0.0089380,'hscale':1.15,
-            'shue_alpha':0.423,'shue_nose':63,'shue_tail':9450}},  # nose 63 R_J (Joy 2002)
+            'shue_alpha':0.423,'shue_nose':63,'shue_tail':9450,
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
+            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 63.0·꼬리 150×노즈는 정확히 보존되고,
+            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
+            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
+            'pending_smooth':47.5273,'pending_rad':95.0546,'pending_ext':0.0100671}},  # nose 63 R_J (Joy 2002)
 
  # ---- SATURN: 스톡=외대만, 물리=고리가 내대 소거→외대만(축대칭), CRAND 약함 ----
  # 스톡 값 검증: KSP-RO/ROKerbalism Support/RSS.cfg `saturn` 모델 (2026-07-24 재검증)
@@ -98,7 +103,12 @@ BODIES={
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). eps 0.002 → 대칭. grad: 자기 프로파일 근거 없어 CRAND 아날로그(지구 외대)
    'outer':{'radiation':10,'grad':2.15,'dist':2.6173,'rad':2.3184,'dxy':0.6735,'comp':1.0,'ext':0.998,'bdist':0.9889,'brad':0.8883,'bdxy':0.6616},  # 고리 바깥 단일 초승달
    'pause':{'radiation':-0.011,'rad':39.9677,'comp':1.6653,'ext':0.0111020,'hscale':1.1,
-            'shue_alpha':0.7358,'shue_nose':24,'shue_tail':3600}},  # nose 24 R_S (Achilleos 2008)
+            'shue_alpha':0.7358,'shue_nose':24,'shue_tail':3600,
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
+            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 24.0·꼬리 150×노즈는 정확히 보존되고,
+            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
+            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
+            'pending_smooth':24.1309,'pending_rad':48.2618,'pending_ext':0.0134246}},  # nose 24 R_S (Achilleos 2008)
 
  # ---- URANUS: 극단 tilt 59° + offset 0.3 ----
  # 스톡=generic `saturn` 모델 재사용(외대 7/7만; radiation_inner 75는 has_inner=false라 미사용 죽은 값)
@@ -121,7 +131,12 @@ BODIES={
    'inner':{'radiation':40,'grad':1.57,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.001,'ext':0.997,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
    'outer':{'radiation':8,'grad':1.85,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.005,'ext':0.977,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
    'pause':{'radiation':-0.010,'rad':26.9073,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
-            'shue_alpha':0.58,'shue_nose':18,'shue_tail':2700}},  # nose 18 R_U (Ness 1986)
+            'shue_alpha':0.58,'shue_nose':18,'shue_tail':2700,
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
+            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 18.0·꼬리 150×노즈는 정확히 보존되고,
+            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
+            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
+            'pending_smooth':15.6153,'pending_rad':31.2305,'pending_ext':0.0115793}},  # nose 18 R_U (Ness 1986)
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
  # 스톡=generic `saturn` 모델 재사용(pause 20 — 26.5 아님; radiation_inner 39 미사용 죽은 값)
@@ -142,7 +157,12 @@ BODIES={
    'inner':{'radiation':30,'grad':2.09,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.0,'ext':0.999,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
    'outer':{'radiation':6,'grad':2.63,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.004,'ext':0.98,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
    'pause':{'radiation':-0.007,'rad':39.6135,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
-            'shue_alpha':0.58,'shue_nose':26.5,'shue_tail':3975}},  # nose 26.5 R_N (Ness 1989)
+            'shue_alpha':0.58,'shue_nose':26.5,'shue_tail':3975,
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
+            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 26.5·꼬리 150×노즈는 정확히 보존되고,
+            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
+            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
+            'pending_smooth':22.9891,'pending_rad':45.9782,'pending_ext':0.0115793}},  # nose 26.5 R_N (Ness 1989)
 
  # ---- MERCURY: 벨트 없음, 초소형 offset 자기권 (표면 직격) ----
  # 스톡은 저작값이고 물리 도출이 아니다(전용 `mercury` 모델). pause 1.6/comp 1.4 → 노즈 1.14.
@@ -158,7 +178,12 @@ BODIES={
    #   extension = pause_radius/(150·노즈) = 0.0094280  ← L = 150×노즈 관례(도출 아님).
    # deform 0.1 은 스톡에서 상속(다중극 비축대칭은 실재하나 진폭은 도출하지 않았다).
    'pause':{'radiation':-0.001,'rad':2.0506,'comp':1.4142,'ext':0.0094280,'hscale':1.0,'deform':0.1,
-            'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':217.5}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
+            'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':217.5,
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
+            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 1.45·꼬리 150×노즈는 정확히 보존되고,
+            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
+            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
+            'pending_smooth':1.1703,'pending_rad':2.3407,'pending_ext':0.010772}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
  # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
  # ROKerbalism: RadiationBody[Eve]→Venus, radiation_model = ionosphere, radiation_pause = -0.005.
@@ -249,7 +274,12 @@ BODIES={
    #   pause_radius = 노즈·2^α = 14.9485, compression = 2^α = 1.4948,
    #   extension = pause_radius/(150·노즈) = 0.0099653  ← L = 150×노즈 관례(도출 아님).
    'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
-            'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
+            'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500,
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
+            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 10.0·꼬리 150×노즈는 정확히 보존되고,
+            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
+            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
+            'pending_smooth':8.6751,'pending_rad':17.3503,'pending_ext':0.0115793}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  # 스톡은 저작값이고 물리 도출이 아니다(전용 `ganymede` 모델). 계면 자체가 없다(has_pause 미정의).
@@ -291,12 +321,67 @@ BODIES={
  #   2×10²-10⁶ rad/h. dipole tilt 미지 → 지구형 10° 가정 명기.
  # 도출 사슬(pause): 노즈 7 R_d = Chapman-Ferraro (위 계산). comp 1.5 · ext 0.07474 는 지구 스톡
  #   pause 형상(15/1.5)을 그대로 스케일한 값이고 이 바디의 α 는 적합되지 않았다 — 근거 미확인.
- 'proxima_d_phys':{'title':'Proxima Cen d — physical (16 G SPI)','sub':'B_p 16 G → mp nose ~7 R_d (4-18 over 3-280 G); shells L 1.2-2 / 3-5.5; dose anchor-interp (low conf); tilt unknown (10° drawn)','R':12,'tilt':10,
+ 'proxima_d_pre':{'title':'Proxima Cen d — pre-regate board','sub':'B_p 16 G → mp nose ~7 R_d (4-18 over 3-280 G); shells L 1.2-2 / 3-5.5; dose anchor-interp (low conf); tilt unknown (10° drawn)','R':12,'tilt':10,
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). 지구 프리셋서 복사돼 있던 comp/ext를 교체:
    # 외대 핵심이 nose의 47%(eps 0.107)라 이 바디는 실제로 비대칭이어야 한다 → 1.053/0.901. grad는 지구 아날로그.
    'inner':{'radiation':5000,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.002,'ext':0.996,'bdist':1e-4,'brad':1.0,'bdxy':1.0},  # 무대기 → 하부 컷=표면 r=1.0 (지구 1000km loss-cone 경계는 대기 흡수 산물이라 부적용)
    'outer':{'radiation':1000,'grad':2.15,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.053,'ext':0.901,'bdist':1.2,'brad':1.0,'bdxy':0.6748},  # L 3-5.5 (nose 7 안쪽)
    'pause':{'radiation':-0.01,'rad':10.5,'comp':1.5,'ext':0.07474,'hscale':1.1}},  # nose 10.5/1.5 = 7 R_d
+
+ # 재게이트: 노즈 7.517 = Chapman-Ferraro (B_eq 800 uT vs 5648 nPa, Garraffo 하한을 b 에서 r^-2 내삽).
+ #   기록값 7 이 이제 재현된다 — 구 도출은 어느 압력으로도 7 을 주지 못했다(보드 스케일링은 11.33).
+ # alpha 0.58 = 지구 유추. b 는 standoff 가 수성 범위라 수성을, d 는 지구 범위라 지구를 받는다.
+ # 오너 결정으로 알펜 날개 가지는 적용하지 않는다. 다만 d 의 자기장 근거인 SPI 위상고정 플레어는
+ #   sub-Alfvenic 결합을 요구하므로, 채택 형상과 채택 근거가 어긋난다는 점은 보드에 기록돼 있다.
+ # ================= NEARSTARS — 2026-08-16 자기권계면 재게이트 (전/후 비교) =================
+ # 짝지어 읽는다: *_pre = 재게이트 전 보드값, *_regate = 방법론대로 다시 구한 값.
+ # 도출·근거는 phase4/magnetopause-regate/context-notes.md, 재현은
+ #   scripts/refs/magnetopause_geometry.py.
+
+ # ---- POLYPHEMUS (Alpha Centauri A b): 노즈가 magnetodisc 팽창으로 23.5 → 35.33 ----
+ # 진공 쌍극자 Chapman-Ferraro 는 22.14 를 준다. 목성에서 Rutala 2025 실측피팅이 그 식을
+ #   1.6-2.0배 넘어서므로(디스크가 경계를 밀어낸다) 같은 압력에서의 인자 1.596 을 곱했다.
+ # alpha 0.42 = 목성 피팅 상한 클램프. 선형 외삽하면 0.702 지만 보정범위 3배 밖이다.
+ 'polyphemus_pre':{'title':'Polyphemus — pre-regate board','sub':'nose 23.5 (unreproducible), comp 1.2 (no fitted alpha), hs 1.1','R':50,'tilt':10,
+   'inner':{'radiation':300,'grad':1.65,'dist':1.3793,'rad':1.159,'dxy':0.7142,'comp':1.0,'ext':1.0,'bdist':0.2656,'brad':0.7491,'bdxy':0.6384},
+   'outer':{'radiation':30,'grad':2.15,'dist':4.2824,'rad':3.8588,'dxy':0.659,'comp':1.002,'ext':0.989,'bdist':2.0738,'brad':1.6687,'bdxy':0.8079},
+   'pause':{'radiation':-0.01,'rad':28.2,'comp':1.2,'ext':0.05,'hscale':1.1}},
+ # ---- PANDORA (A b III): Shue 꼬리 → 알펜 날개 정구 ----
+ # 3.53 R_p 궤도는 sub-Alfvenic 이다(M_A=1 이려면 Io 토러스 피크의 216배가 필요).
+ #   sub-Alfvenic 흐름은 활머리충격파도 끌린 꼬리도 만들지 않는다 — 가니메데와 같은 판정.
+ # standoff 도 다시 구했다: 모체 자기압 5.943 uPa 가 램압 0.001 uPa 를 6000배 압도하는데
+ #   구값 2.6 은 램압만으로 균형을 잡고 있었다 → 3.386.
+ 'pandora_pre':{'title':'Pandora — pre-regate board','sub':'standoff 2.6 from ram alone; ext 0.6 draws a tail the flow cannot make','R':6,'tilt':10,
+   'inner':{'radiation':4.0,'grad':2.09,'dist':1.0193,'rad':0.8489,'dxy':0.7196,'comp':1.015,'ext':0.961,'bdist':0.0971,'brad':0.9349,'bdxy':0.8829},
+   'pause':{'radiation':-0.01,'rad':2.99,'comp':1.15,'ext':0.6,'hscale':1.0}},
+ # ---- PROXIMA CEN b: 스톡 irregular 템플릿 → 수성 아날로그 Shue ----
+ # 구값은 dynamo 가 '없는' 화성 잔류 지각자기용 템플릿이라 b 자신의 활성 dynamo 행과 모순이었다.
+ #   게다가 템플릿 1.25/1.1 은 노즈 1.14 를 주는데 보드 기록 standoff 는 1.54 였다.
+ # standoff 1.54 가 수성 1.45 와 거의 같고, 수성은 Shue alpha 가 피팅된 유일한 소형 자기권이다
+ #   (0.5, Winslow 2013, https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W).
+ 'proxima_b_pre':{'title':'Proxima Cen b — pre-regate board','sub':'stock irregular template (Mars crustal, no dynamo); template nose 1.14 vs recorded standoff 1.54','R':3,'tilt':30,'offset':0.25,
+   'pause':{'radiation':-0.005,'rad':1.25,'comp':1.1,'ext':0.75,'hscale':1.0,'deform':0.1}},
+ # ---- PROXIMA CEN c: alpha 0.5 → 0.58, 꼬리 125 → 1791 ----
+ # 노즈는 그대로 재현된다(11.942 대 기록 11.905). 움직인 것은 alpha 뿐이다.
+ # 빙거성 대체값을 지구 피팅값으로 확정: 보이저 2호가 천왕성·해왕성을 측정된 자기권 중 가장
+ #   비어 있는 것으로 확인했고(Bridge 1986 / Belcher 1989), Io·엔켈라두스급 공급원이 없으니
+ #   적재량이 가스자이언트보다 지구 쪽에 가깝다. 피팅이 아니라 유추다.
+
+ # b·d 재게이트판은 손으로 둔다. 폴리페무스·판도라·c 와 달리 이 둘은 pause 를 magnetism.magnetic_field
+ # 행에 달고 있는데, emitter(load_nearstars_specs)는 magnetism.radiation_belts 행만 읽는다. 즉 보드에
+ # 기록은 됐지만 cfg 로는 아직 나가지 않는다 — 이 프리셋이 그 값을 눈으로 확인하는 유일한 경로다.
+ 'proxima_b_regate':{'title':'Proxima Cen b — re-gated (not yet emitted)','sub':'Mercury analog alpha 0.5; nose 1.023 at the Garraffo 2016 pressure FLOOR (2000 nPa) — skin-tight, and crushed below the surface at the top of the distribution','R':3,'tilt':30,'offset':0.25,
+   'pause':{'radiation':-0.005,'rad':1.4467,'comp':1.4142,'ext':0.0094281,'hscale':1.0,'deform':0.1,
+            'shue_alpha':0.5,'shue_nose':1.023,'shue_tail':153.4}},
+ 'proxima_d_regate':{'title':'Proxima Cen d — re-gated (not yet emitted)','sub':'nose 7.517 (the recorded 7 now reproduces); alpha 0.58 Earth analogy; Alfven-wing branch declined by owner','R':12,'tilt':10,
+   'inner':{'radiation':5000,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.002,'ext':0.996,'bdist':1e-4,'brad':1.0,'bdxy':1.0},
+   'outer':{'radiation':1000,'grad':2.15,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.053,'ext':0.901,'bdist':1.2,'brad':1.0,'bdxy':0.6748},
+   'pause':{'radiation':-0.01,'rad':11.2362,'comp':1.4948,'ext':0.0099657,'hscale':1.0,
+            'shue_alpha':0.58,'shue_nose':7.517,'shue_tail':1127.5}},
+ 'proxima_c_pre':{'title':'Proxima Cen c — pre-regate board','sub':'alpha 0.5 borrowed from Earth; tail 125 by judgement','R':22,'tilt':50,'offset':0.4,
+   'inner':{'radiation':8.0,'grad':2.09,'dist':1.5,'rad':0.86,'dxy':0.66,'comp':1.002,'ext':0.997,'bdist':0.0001,'brad':1.0,'bdxy':0.5},
+   'outer':{'radiation':1.2,'grad':2.15,'dist':2.8,'rad':2.5,'dxy':0.66,'comp':1.01,'ext':0.979,'bdist':1.54,'brad':1.42,'bdxy':0.66},
+   'pause':{'radiation':-0.01,'rad':16.84,'comp':1.414,'ext':0.135,'hscale':1.0}},
 }
 
 if __name__=='__main__':
