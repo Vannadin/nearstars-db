@@ -137,19 +137,40 @@ no Io- or Enceladus-class source, their loading sits nearer Earth's than the gas
 Earth's α is the defensible stand-in. It is an **analogy, not a fit**, and is labelled as
 one wherever it appears.
 
-**Tail length (`L`) is an engine artifact, and it is still unset.** `L` is where the bounded
-cfg volume closes. Shue has no counterpart for it — the family has exactly two parameters,
-`r₀` and `α`, and no α gives a finite endpoint (α < 0.5 decays to zero asymptotically,
-α = 0.5 is a cylinder of radius `2 r₀`, α > 0.5 diverges; Winslow 2013 states the same
-threshold). So `L` cannot be derived, and six attempts to derive it are tabulated below as
-dead ends.
+**Tail length: `L` = 150 × nose, a stated convention.** `L` is where the bounded cfg volume
+closes. Shue has no counterpart for it — the family has exactly two parameters, `r₀` and
+`α`, and no α gives a finite endpoint (α < 0.5 decays to zero asymptotically, α = 0.5 is a
+cylinder of radius `2 r₀`, α > 0.5 diverges; Winslow 2013 states the same threshold). The
+physical end of a magnetotail has never been measured at any planet. Six attempts to derive
+`L` are tabulated below as dead ends.
 
-The values currently shipped are **inherited and ungrounded**: `pause_extension` was
-recomputed only to preserve each body's pre-existing tail, which for the four outer planets
-was itself an arbitrary `rad` divided by a stock `ext`. Mercury (32 R_M) and Earth (200 R_E)
-carry the stock numbers unchanged.
+So it is fixed by convention, under one constraint: **contradict no measurement.** Every
+published tail extent is a spacecraft-coverage lower bound, and the farthest is Jupiter's,
+at least 9000 R_J (Lepping 1983, [`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) — 142.9 × its 63 R_J nose.
+Rounding up gives **`L` = 150 × nose**, which clears every lower bound on record: Jupiter
+143×, Earth 22.5× (ISEE-3 to 225 R_E), Venus 19× (Edberg 2024), Mercury 2.1×.
 
-Two things are measured and must not be confused with `L`:
+| body | nose | `L` | in AU |
+|---|---|---|---|
+| Mercury | 1.45 R_M | 217.5 | 0.004 |
+| Venus | 1.055 R_V | 158.2 | 0.006 |
+| Earth | 10 R_E | 1500 | 0.064 |
+| Mars | 1.285 R_M | 192.8 | 0.004 |
+| Jupiter | 63 R_J | 9450 | **4.516** |
+| Saturn | 24 R_S | 3600 | 1.450 |
+| Uranus | 18 R_U | 2700 | 0.458 |
+| Neptune | 26.5 R_N | 3975 | 0.654 |
+
+Because the ratio is the same for every body, no body is singled out; the ordering is simply
+the ordering of magnetosphere size. Jupiter's 4.516 AU reaches 9.72 AU from the Sun, past
+Saturn's orbit at 9.58 AU — which is what was actually observed, Voyager 2 detecting the
+Jovian tail to ~4.5 AU downstream (Kurth 1982, [`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) and Saturn
+itself becoming immersed in it (Desch 1983, [`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)).
+
+Not applied to Ganymede, whose obstacle sits in Jovian plasma rather than a stellar wind
+(Alfvén-wing regime), nor to NearStars bodies, whose source of truth is the phase 4 board.
+
+**What `L` is not.** Two distances are measured and must not be confused with it:
 
 | body | flaring ceases at | source |
 |---|---|---|
@@ -158,10 +179,9 @@ Two things are measured and must not be confused with `L`:
 
 That is where the **shape** stops changing, not where the tail ends; beyond it the boundary
 continues as a constant-radius cylinder. Setting `L` to those distances was tried and is
-wrong: at Earth it drives the width to zero at exactly the place Slavin measures a 30 R_E
-radius. `L` must sit outside the measured range, and the further out it sits the better the
-measured widths are reproduced (at Earth, `L` 200 gives 12.1 R_E at −180 against a measured
-30; `L` 1500 gives 29.4).
+wrong — at Earth it drives the width to zero at exactly the place Slavin measures a 30 R_E
+radius. `L` must sit outside the measured range, which is precisely what the 150 × nose
+convention guarantees.
 
 Both anchors do confirm the α-derived **shape**, which was not fitted to them: at x = −3 R_M
 Winslow reports a nearly cylindrical radius of ~2.7 R_M and our surface gives **2.71**; at

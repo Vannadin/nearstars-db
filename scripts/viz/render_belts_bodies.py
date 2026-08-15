@@ -18,24 +18,18 @@ OUT=os.path.join(D,'wiki-img'); os.makedirs(OUT,exist_ok=True)
 #                부하가 지구급이라는 점 — Bridge 1986 "The Uranian moons do not appear to be a
 #                significant plasma source"(피크 2 cm^-3), Belcher 1989 해왕성 최대밀도 1.4 cm^-3
 #                "the smallest observed by Voyager in any magnetosphere". 유추이며 적합이 아니다.
-# ---- 꼬리 길이 (2026-08-15) ----
-# pause_extension 이 정하는 꼬리 L 은 '엔진이 부피를 닫는 지점'이지 물리적 꼬리 끝이 아니다.
-# 둘을 혼동해 한 번 틀렸다: 벌어짐 종료 거리를 L 로 썼더니 실측이 반지름 30 R_E 라고 말하는
-# 바로 그 지점에서 폭이 0 이 됐다. 벌어짐 종료는 '형상이 변하기를 멈추는 곳'이고 꼬리는 그 뒤로
-# 일정 반지름 원통으로 계속된다. 금성·화성에서 이미 배운 교훈(닫힘 지점을 측정 범위 안에 두면
-# 측정값이 파괴된다)을 반복한 것이다.
-# 규칙: L 은 최원거리 실측보다 충분히 밖에 두어 닫힘 항이 측정된 폭을 ~5% 넘게 왜곡하지 않게 한다.
-#   수성  L 20 R_M   실측 x=−3 R_M 반지름 ~2.7 (Winslow 2013) → 우리 면 2.66 (−1%)
-#                    벌어짐 종료 자체는 ~2 R_ss = 2.9 R_M 이고, 그건 형상(α)이 이미 만든다.
-#   지구  L 1000 R_E 실측 |X| 130~225 반지름 30 ± 2.5 (Slavin 1985) → 28.0 / 29.0 / 29.5 (−7~−2%)
-#                    벌어짐 종료 120 ± 10 R_E 도 마찬가지로 α 가 만든다.
-# 목성·토성·천왕성·해왕성은 측정이 없어 상속 자리표를 그대로 둔다(목성 1512 R_J 등, 미근거).
-# 외삽하지 않는 이유: 두 앵커의 노즈 배수가 2 R_ss 대 10~12 R_ss 로 5~6배 다른데 α 로 설명되는
-# 몫은 3.6배뿐이고, Winslow 자신이 "The factors determining the location where tail flaring
-# ceases are not well understood" 라며 재결합에 의한 플라스마 시트 분리를 지목한다.
-# 참고: SOI 밖 꼬리는 틀린 게 아니라 불활성이다. Kerbalism Radiation.Compute 는 부모 사슬만
-# 거슬러 오르므로(body = body.referenceBody, SOI 검사 없음) SOI 를 벗어나면 그 천체가 사슬에서
-# 빠져 필드가 평가되지 않는다.
+# ---- 꼬리 길이 L = 150 · 노즈 (2026-08-15 확정) ----
+# L(= pause_radius/pause_extension)은 엔진이 부피를 닫는 지점이고 물리량이 아니다. Shue 는
+# 파라미터가 r₀ 와 α 둘뿐이라 길이를 주지 않고(α<0.5 는 0 으로 점근, =0.5 는 원통, >0.5 는 발산),
+# 물리적 꼬리 끝은 어느 행성에서도 측정된 적이 없다. 도출 시도 여섯 개는 방법론 Part A 에 기각 표로.
+# 그래서 관례로 정하되 조건 하나를 만족시킨다 — 어떤 실측과도 모순되지 않을 것.
+# 발표된 꼬리 도달 범위는 전부 탐사 범위가 만든 하한이고, 가장 먼 것이 목성 ≥9000 R_J
+# (Lepping 1983) = 노즈 63 R_J 의 142.9 배다. 그래서 L = 150 × 노즈 로 둔다.
+#   실측 하한 검사: 목성 143× ✓  지구 22.5× ✓  금성 19× ✓  수성 2.1× ✓
+# 결과(꼬리를 AU 로): 목성 4.516 AU 로 토성 궤도(9.58 AU)를 넘는다 — Voyager 2 가 4.5 AU 하류에서
+# 검출하고(Kurth 1982) 토성이 그 안에 잠기는 것까지 관측된(Desch 1983) 그 현상과 맞는다.
+# 주의: 가니메데(알프벤 날개 영역, 태양풍이 아니라 목성 플라스마가 흐름)와 NearStars 바디는
+# 적용하지 않았다. 후자는 phase4 보드가 소스이므로 거기서 바꿔야 한다.
 BODIES={
  # ---- JUPITER: 스톡=원거리 통짜 동심, 물리=근접 D형 내대+납작 자기원반 ----
  'jupiter_stock':{'title':'Jupiter — stock (ROKerbalism)','sub':'inner 6/1, outer 6.5/6.5 concentric','R':16,'tilt':10.3,
@@ -50,8 +44,8 @@ BODIES={
    'outer':{'radiation':150,'grad':2.15,'dist':3.2565,'rad':3.2269,'dxy':0.1483,'comp':1.0,'ext':0.998,'bdist':1e-4,'brad':4.238,'bdxy':1.85},  # 자기원반=적도 전류시트(렌즈형, 반두께 3=Khurana; 3-16은 프레임 절단)
    # Rutala 2025 S97* 적합: α = 0.28 + 1.08·p_SW, r_SS = 38.0·p_SW^-0.25 [R_J].
    # 노즈 63 R_J(Joy 2002 압축 상태) ⇒ p_SW 0.132 nPa ⇒ α 0.423.
-   'pause':{'radiation':-0.01,'rad':84.4649,'comp':1.3407,'ext':0.05586,'hscale':1.15,
-            'shue_alpha':0.423,'shue_nose':63,'shue_tail':1512}},  # nose 63 R_J (Joy 2002)
+   'pause':{'radiation':-0.01,'rad':84.4649,'comp':1.3407,'ext':0.0089380,'hscale':1.15,
+            'shue_alpha':0.423,'shue_nose':63,'shue_tail':9450}},  # nose 63 R_J (Joy 2002)
 
  # ---- SATURN: 스톡=외대만, 물리=고리가 내대 소거→외대만(축대칭), CRAND 약함 ----
  # 스톡 값 검증: KSP-RO/ROKerbalism Support/RSS.cfg `saturn` 모델 (2026-07-24 재검증)
@@ -61,8 +55,8 @@ BODIES={
  'saturn_phys':{'title':'Saturn — physical (SDF fit)','sub':'rings absorb inner belt; CRAND shell L 2.3-6 (IoU .98); ~0° tilt','R':16,'tilt':0.01,
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). eps 0.002 → 대칭. grad: 자기 프로파일 근거 없어 CRAND 아날로그(지구 외대)
    'outer':{'radiation':10,'grad':2.15,'dist':2.6173,'rad':2.3184,'dxy':0.6735,'comp':1.0,'ext':0.998,'bdist':0.9889,'brad':0.8883,'bdxy':0.6616},  # 고리 바깥 단일 초승달
-   'pause':{'radiation':-0.011,'rad':39.9677,'comp':1.6653,'ext':0.06939,'hscale':1.1,
-            'shue_alpha':0.7358,'shue_nose':24,'shue_tail':576}},  # nose 24 R_S (Achilleos 2008)
+   'pause':{'radiation':-0.011,'rad':39.9677,'comp':1.6653,'ext':0.0111020,'hscale':1.1,
+            'shue_alpha':0.7358,'shue_nose':24,'shue_tail':3600}},  # nose 24 R_S (Achilleos 2008)
 
  # ---- URANUS: 극단 tilt 59° + offset 0.3 ----
  # 스톡=generic `saturn` 모델 재사용(외대 7/7만; radiation_inner 75는 has_inner=false라 미사용 죽은 값)
@@ -75,8 +69,8 @@ BODIES={
    # 피크가 껍질 핵심 → 컷 이후 최심점으로 클램프한 하한값. 1.0을 그대로 넣으면 포화 지점이 없어 실효 강도가 0.64배로 깎임.
    'inner':{'radiation':40,'grad':1.57,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.001,'ext':0.997,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
    'outer':{'radiation':8,'grad':1.85,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.005,'ext':0.977,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
-   'pause':{'radiation':-0.010,'rad':26.9073,'comp':1.4948,'ext':0.12457,'hscale':1.1,
-            'shue_alpha':0.58,'shue_nose':18,'shue_tail':216}},  # nose 18 R_U (Ness 1986)
+   'pause':{'radiation':-0.010,'rad':26.9073,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
+            'shue_alpha':0.58,'shue_nose':18,'shue_tail':2700}},  # nose 18 R_U (Ness 1986)
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
  # 스톡=generic `saturn` 모델 재사용(pause 20 — 26.5 아님; radiation_inner 39 미사용 죽은 값)
@@ -87,16 +81,16 @@ BODIES={
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). grad 외대: 피크 L7 (Stone 1989), 내대: 프로파일 없어 지구 내대 아날로그
    'inner':{'radiation':30,'grad':2.09,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.0,'ext':0.999,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
    'outer':{'radiation':6,'grad':2.63,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.004,'ext':0.98,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
-   'pause':{'radiation':-0.007,'rad':39.6135,'comp':1.4948,'ext':0.09966,'hscale':1.1,
-            'shue_alpha':0.58,'shue_nose':26.5,'shue_tail':397.5}},  # nose 26.5 R_N (Ness 1989)
+   'pause':{'radiation':-0.007,'rad':39.6135,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
+            'shue_alpha':0.58,'shue_nose':26.5,'shue_tail':3975}},  # nose 26.5 R_N (Ness 1989)
 
  # ---- MERCURY: 벨트 없음, 초소형 offset 자기권 (표면 직격) ----
  'mercury_stock':{'title':'Mercury — stock (ROKerbalism)','sub':'no belt; pause 1.6/1.4 (nose 1.14), pole_lat 96, offset 0.208, deform 0.1','R':3,'tilt':6,'offset':0.208,
    'pause':{'radiation':-0.001,'rad':1.6,'comp':1.4,'ext':0.05,'hscale':1.0,'deform':0.1}},  # pause_deform=0.1 그대로 반영 (2026-08-04 누락 수정): 다중극 경계의 비축대칭 로브
  'mercury_phys':{'title':'Mercury — physical','sub':'no stable belt; mp nose 1.45 R_M, offset 0.20 north, tilt <3°, deform 0.1','R':3,'tilt':2,'offset':0.20,
    # Winslow 2013 은 MESSENGER 통과를 Shue 형식으로 적합했다: R_ss 1.45 R_M, flaring α 0.5
-   'pause':{'radiation':-0.001,'rad':2.0506,'comp':1.4142,'ext':0.0640813,'hscale':1.0,'deform':0.1,
-            'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':32}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
+   'pause':{'radiation':-0.001,'rad':2.0506,'comp':1.4142,'ext':0.0094280,'hscale':1.0,'deform':0.1,
+            'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':217.5}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
  # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
  # ROKerbalism: RadiationBody[Eve]→Venus, radiation_model = ionosphere, radiation_pause = -0.005.
@@ -125,7 +119,7 @@ BODIES={
  # 후류 폭은 실측 원뿔(Martinecz 2009 / Edberg 2024, arXiv:2410.21856)보다 좁다(d2 −15%,
  # d5 −33%, d10 −54%). 불룩함 금지가 우선이라 받아들인 값이다. 방법론 Part A 참조.
  'venus_phys':{'title':'Venus — physical (induced)','sub':'generalized stock pause: nose 1.055 / terminator 1.13 exact, tail 20 R_V, no rear bulge; no belts','R':22,'tilt':0,
-   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.0151,'ext':0.0567,'hscale':1.0,
+   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.0151,'ext':0.0072038,'hscale':1.0,
             'smooth':0.57,'waist':0.0}},
 
  # ---- MARS: 지각 잔류 자기(다극·약장) → irregular 모델 (pause_deform 0.1 로 울퉁불퉁) ----
@@ -148,7 +142,7 @@ BODIES={
  # pause_deform 0.1 은 스톡 irregular 에서 물려받은 값이다 — 지각 잔류자기의 비축대칭성을 뜻하지만
  # 크기는 도출하지 않았다(Vignes 는 남북 비대칭을 정량화하지 않는다).
  'mars_phys':{'title':'Mars — physical (MPB fit)','sub':'generalized stock pause: nose 1.285 / terminator 1.47 exact, tail 20 R_M, no rear bulge; no belts','R':22,'tilt':0,
-   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.0684,'ext':0.0737,'hscale':1.0,'deform':0.1,
+   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.0684,'ext':0.0076265,'hscale':1.0,'deform':0.1,
             'smooth':0.735,'waist':0.0}},
 
  # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----
@@ -162,8 +156,8 @@ BODIES={
    'inner':{'radiation':10.376,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.001,'ext':0.999,'bdist':1e-4,'brad':1.1836,'bdxy':1.0505},  # 내대 하한=1000km(loss-cone 고갈 경계). grad: 피크 L1.5(Ginet 2013)
    'outer':{'radiation':2.214,'grad':2.15,'dist':3.0123,'rad':2.7018,'dxy':0.662,'comp':1.025,'ext':0.953,'bdist':1.3175,'brad':1.1596,'bdxy':0.6748},  # L3-7, 보더 카브=슬롯. grad: heart L4.5 → 배포 2.2 복원
    # Shue 기준선: 적합값이 있는 바디에만 넣는다(Shue 1998 지구 α 0.58, 노즈 10 R_E, 꼬리 관측 ~200)
-   'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0747425,'hscale':1.1,
-            'shue_alpha':0.58,'shue_nose':10,'shue_tail':200}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
+   'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
+            'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  'ganymede_stock':{'title':'Ganymede — stock (ROKerbalism)','sub':'inner 0.8/0.6, no pause defined','R':4,'tilt':4,
