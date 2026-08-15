@@ -147,6 +147,11 @@
     padding:7px 10px;pointer-events:none;line-height:1.65;backdrop-filter:blur(2px)}
   .readout b{color:var(--accent);font-weight:600}
   .readout .z{color:var(--accent-warm)}
+  .readout .pz{color:var(--pause)}
+  .legend .k.pausedose{color:var(--pause)}
+  .swatch.moon{background:repeating-linear-gradient(90deg,#7ee7b2 0 2px,transparent 2px 6px)}
+  .swatch.orbit{background:repeating-linear-gradient(90deg,#b98cff 0 4px,transparent 4px 7px)}
+  .legend .k.tailratio{color:#b98cff}
   .sun{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:11px;
     color:var(--accent-warm);background:rgba(5,7,13,.5);border-radius:8px;padding:5px 9px;pointer-events:none}
   .mode{position:absolute;bottom:10px;right:12px;display:flex;border:1px solid var(--line);
@@ -242,6 +247,10 @@
         <span class="k"><span class="swatch"></span> <span data-l="legPause">자기권계면</span></span>
         <span class="k"><span class="swatch" style="background:repeating-linear-gradient(90deg,var(--accent-warm) 0 5px,transparent 5px 8px)"></span> <span data-l="legShue">Shue 기준</span></span>
         <span class="k"><span class="swatch body"></span> <span data-l="legBody">바디</span></span>
+        <span class="k"><span class="swatch moon"></span> <span data-l="legMoons">위성 궤도</span></span>
+        <span class="k"><span class="swatch orbit"></span> <span data-l="legOrbit">모천체 궤도</span></span>
+        <span class="k pausedose" id="pauseDoseK" hidden><span class="swatch"></span> <span id="pauseDoseT"></span></span>
+        <span class="k tailratio" id="tailRatioK" hidden><span id="tailRatioT"></span></span>
       </div>
     </div>
 
@@ -263,6 +272,10 @@ const T = {
     hover:'커서를 올려보세요', drag3d:'드래그 = 회전 · 휠 = 줌',
     sun:'☀ 항성 → +x (오른쪽)', mode2d:'단면',
     legPause:'자기권계면', legShue:'Shue 기준', legBody:'바디', show:'표시',
+    legMoons:'위성 궤도', moonOrbits:'궤도 오버레이 (위성 · 모천체)',
+    legOrbit:'모천체 궤도', orbitOf:'궤도', tailRatio:'꼬리 / 궤도반경',
+    pauseDose:'계면 내부 radiation_pause',
+    pauseOnly:'계면 안 · 두 벨트 밖 — 유일한 기여는 radiation_pause',
     webgl:'WebGL을 사용할 수 없습니다',
     deformNote:'deform은 z=0 평면에서 항상 0 → <b>slice_z=0.26</b> 자동 설정',
     pos:'위치', inBody:'바디 내부', zone:'구역',
@@ -277,6 +290,10 @@ const T = {
     hover:'Hover the canvas', drag3d:'drag = rotate · wheel = zoom',
     sun:'☀ star → +x (right)', mode2d:'section',
     legPause:'magnetopause', legShue:'Shue reference', legBody:'body', show:'show',
+    legMoons:'moon orbits', moonOrbits:'orbit overlays (moons, parent)',
+    legOrbit:'parent orbit', orbitOf:'orbit around', tailRatio:'tail / orbital radius',
+    pauseDose:'inside pause: radiation_pause',
+    pauseOnly:'inside pause, outside both belts — only contribution is radiation_pause',
     webgl:'WebGL is unavailable',
     deformNote:'deform is identically 0 on the z=0 plane → <b>slice_z=0.26</b> set automatically',
     pos:'position', inBody:'inside body', zone:'zone',
@@ -319,7 +336,11 @@ function belt(pre){return Object.assign({on:true,rad:0,radiation:0,grad:3.3,dist
 const state={
   inner:belt({}), outer:belt({}),
   pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,waist:0,smooth:0,alpha:0.6},
-  view:{R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0}
+  view:{R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0},
+  // 위성 궤도 오버레이. on 은 토글이 읽고(.sw[data-tg="moons"]), list 는 프리셋이 채운다.
+  moons:{on:true, list:[]},
+  // 바디 자신의 모천체 궤도({r, ko, en}) — 같은 토글을 쓴다(오버레이 스위치를 늘리지 않는다).
+  orbit:null
 };
 
 const PRESETS=__PRESETS__;
@@ -346,6 +367,7 @@ const GROUPS=[
      F("alpha","불투명도 (viz)",0,1,0.05,"opacity (viz)"),
      F("waist","pause_waist ⚗non-cfg",-30,5,0.1),F("smooth","pause_smooth ⚗non-cfg",0,30,0.1)]},
   {id:"view",title:"뷰 / 배향",title_en:"view / orientation",cls:"g-view",toggle:false,
+   toggle2:{id:"moons",l:"moonOrbits",label:"위성 궤도"},
    rows:[F("R","view_halfwidth (R)",2,70,0.5),F("tilt","dipole_tilt (°)",0,90,0.5),F("offset","geomagnetic_offset",0,1,0.005),F("z","slice_z",0,6,0.05),
      F("shue","Shue α 오버레이 (0=끔)",0,0.7,0.01,"Shue α overlay (0=off)"),
      F("shue_r0","Shue r0 고정 (0=pause 연동)",0,50,0.1,"Shue r0 pin (0=track pause)"),
@@ -367,6 +389,11 @@ GROUPS.forEach((g,gi)=>{
   if(g.toggle){
     const tr=document.createElement("div"); tr.className="toggle-row";
     tr.innerHTML=`<span data-l="show">표시</span><div class="sw" data-tg="${g.id}"></div>`;
+    box.appendChild(tr);
+  }
+  if(g.toggle2){                     // 그룹 자체가 아니라 부가 오버레이를 켜고 끄는 토글
+    const tr=document.createElement("div"); tr.className="toggle-row";
+    tr.innerHTML=`<span data-l="${g.toggle2.l}">${g.toggle2.label}</span><div class="sw" data-tg="${g.toggle2.id}"></div>`;
     box.appendChild(tr);
   }
   g.rows.forEach(r=>{
@@ -393,7 +420,7 @@ function syncControls(){
   updateViewMax();
 }
 // 장면 전체(벨트·계면 꼬리·Shue 닫힘)가 들어오는 반너비 → 뷰 슬라이더 최대값에 반영
-let RMAX=70;
+let RMAX=70, RWHEEL=70;   // RMAX=슬라이더 상한(장면 크기), RWHEEL=휠 상한(궤도 고리까지)
 function sceneExtent(){
   let e=5;
   const belt=B=>{ if(!B.on)return;
@@ -406,6 +433,10 @@ function sceneExtent(){
 }
 function updateViewMax(){
   RMAX=Math.max(10, sceneExtent());
+  // 궤도 고리는 수만 바디반경이라 슬라이더 상한으로 쓰면 눈금이 못 쓰게 거칠어진다.
+  // 슬라이더는 장면 크기까지만 두고, 휠 축소만 궤도 너머까지 갈 수 있게 따로 잡는다.
+  const orb=(state.orbit&&state.orbit.r)||0;
+  RWHEEL=Math.max(RMAX, orb*1.15);
   const el=document.querySelector('input[type=range][data-g="view"][data-k="R"]');
   if(el) el.max=RMAX;
 }
@@ -507,6 +538,8 @@ function deepset(preset){
   state.inner=belt(P.inner); state.outer=belt(P.outer);
   state.pause=Object.assign({on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,waist:0,smooth:0,alpha:0.6},P.pause);
   state.view=Object.assign({R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0},P.view);
+  state.moons.list=P.moons||[];   // on 은 사용자 설정이므로 프리셋을 바꿔도 유지한다
+  state.orbit=P.orbit||null;
 }
 function applyPreset(p,{keepZoom=false}={}){
   // stock↔physical 토글은 같은 천체의 두 판본이므로 줌을 유지한다 — 프리셋 R 로 되돌리면
@@ -527,10 +560,20 @@ function applyPreset(p,{keepZoom=false}={}){
 // ---- rendering ----
 const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
 const ro=document.getElementById('ro');
-let SZ=420, img=null;
+// SZ = SDF 를 계산하는 래스터 해상도(픽셀당 한 번 평가하므로 비용 지배).
+// CW = CSS 상 캔버스 크기, DPR = 디스플레이 배율. 백스토어는 CW×DPR 로 잡고 오버레이(눈금·글자·
+// 곡선)는 그 해상도로 그린다. 래스터만 오프스크린에서 확대 합성 → 선과 글자가 선명해진다.
+let SZ=560, CW=420, DPR=1, img=null, rasterCv=null, rasterCtx=null;
 function resize(){
-  const w=cv.clientWidth||420; SZ=Math.max(240,Math.min(460,Math.round(w)));
-  cv.width=SZ; cv.height=SZ; img=ctx.createImageData(SZ,SZ); scheduleRender();
+  CW=Math.max(240,Math.round(cv.clientWidth||420));
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  SZ=Math.max(320,Math.min(720,Math.round(CW*Math.min(DPR,1.5))));
+  cv.width=Math.round(CW*DPR); cv.height=Math.round(CW*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);          // 이후 좌표는 CSS 픽셀 기준
+  ctx.imageSmoothingEnabled=true;
+  if(!rasterCv){ rasterCv=document.createElement('canvas'); rasterCtx=rasterCv.getContext('2d'); }
+  rasterCv.width=SZ; rasterCv.height=SZ;
+  img=rasterCtx.createImageData(SZ,SZ); scheduleRender();
 }
 function doseAt(x,y){ // world coords -> {dose, zone}
   const v=state.view, tr=v.tilt*Math.PI/180, ca=Math.cos(tr), sa=Math.sin(tr);
@@ -542,13 +585,14 @@ function doseAt(x,y){ // world coords -> {dose, zone}
     if(d<0){ dose+=clamp(state.inner.grad*(-d)/state.inner.rad,0,1)*state.inner.radiation; zone.push(t('zInner')); } }
   if(state.outer.on){ const d=torusSDF(xr,yr,z,state.outer);
     if(d<0){ dose+=clamp(state.outer.grad*(-d)/state.outer.rad,0,1)*state.outer.radiation; zone.push(t('zOuter')); } }
-  let pd=1;
+  let pd=1, pauseOnly=false;   // 계면 안이면서 두 벨트 밖 = 기여가 radiation_pause 하나뿐인 구역
   // 계면은 항성정렬(untilted) 프레임에서 평가한다 — 단 geomagnetic_offset 은 엔진이 두 프레임 모두에
   // 적용한다(Radiation.cs Gsm_space 말미). 그 프레임의 y축은 자전축이므로 계면은 자전축 방향으로,
   // 벨트는 자기축 방향으로 밀린다(틸트가 크면 서로 다른 방향).
   if(state.pause.on){ pd=pauseSDF(x,y-(v.offset||0),z,state.pause);
-    if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation; if(!zone.length)zone.push(t('zMag')); } }
-  return {dose,zone:zone.join('+')||'—',mag,pd};
+    if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation;
+      if(!zone.length){ zone.push(t('zMag')); pauseOnly=true; } } }
+  return {dose,zone:zone.join('+')||'—',mag,pd,pauseOnly};
 }
 function render(){
   if(!img)return;
@@ -583,20 +627,67 @@ function render(){
       d[idx]=r;d[idx+1]=g;d[idx+2]=b;d[idx+3]=255;
     }
   }
-  ctx.putImageData(img,0,0);
+  rasterCtx.putImageData(img,0,0);
+  ctx.drawImage(rasterCv,0,0,SZ,SZ,0,0,CW,CW);
   // overlay: rings + axes
   ctx.save();
   ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.fillStyle='rgba(255,255,255,.35)';
   ctx.font='10px ui-monospace,monospace'; ctx.lineWidth=1;
-  const c=SZ/2, ppr=SZ/(2*R);
-  const step = R<=4?1 : R<=10?2 : R<=25?5 : 10;
-  for(let rr=step;rr<=R;rr+=step){
+  const c=CW/2, ppr=CW/(2*R);
+  // 눈금 간격은 1·2·5×10^k 중에서 고리가 4~9개가 되도록 고른다. 예전에는 상한이 10 이라
+  // 축소하면 고리가 수백 개로 겹쳤다.
+  const raw=R/6, mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const n=raw/mag, step=(n<1.5?1:n<3.5?2:n<7.5?5:10)*mag;
+  const dec=step<1?Math.max(0,-Math.floor(Math.log10(step))):0;
+  for(let rr=step;rr<=R*1.0001;rr+=step){
     ctx.beginPath(); ctx.setLineDash([2,4]); ctx.arc(c,c,rr*ppr,0,7); ctx.stroke();
-    ctx.setLineDash([]); ctx.fillText(rr+'',c+rr*ppr+2,c-2);
+    ctx.setLineDash([]); ctx.fillText(rr.toFixed(dec),c+rr*ppr+2,c-2);
+  }
+  // 위성 궤도 — 반경 눈금(흰 점선)과 헷갈리지 않게 다른 색조로 그리고 숫자 대신 위성 이름을 붙인다.
+  // 자기꼬리가 어느 위성까지 닿는지 눈으로 견주는 용도. 뷰 밖으로 나가는 궤도는 건너뛴다.
+  if(state.moons.on && state.moons.list.length){
+    ctx.save();
+    ctx.lineWidth=1; ctx.font='10px ui-monospace,monospace';
+    ctx.strokeStyle='rgba(126,231,178,.40)'; ctx.fillStyle='rgba(126,231,178,.78)';
+    state.moons.list.forEach(mo=>{
+      const sma=mo[1]; if(!(sma>0) || sma>R) return;
+      ctx.beginPath(); ctx.setLineDash([1,5]); ctx.arc(c,c,sma*ppr,0,7); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillText(mo[0], c-ctx.measureText(mo[0]).width-3, c-sma*ppr-3);
+    });
+    ctx.restore();
+  }
+  // 바디 자신의 모천체 궤도 — 모천체는 +x 방향 거리 a 에 있으므로 궤도는 그 점을 중심으로 한
+  // 반지름 a 의 원이고, 바디(원점)를 지난다. 그래서 바디 중심의 고리가 아니라 화면을 가로지르는
+  // 원호로 그린다: 기본 줌에서는 바디를 지나는 거의 곧은 선, 축소할수록 +x 로 휘어 모천체를
+  // 감는 곡선이 드러난다. 자기꼬리(−x 방향)가 이 궤도반경의 몇 %까지 뻗는지가 비교 대상이다.
+  // 모식이라는 점은 유의 — 이 단면은 항성 방향과 자전축이 만드는 자오면이라 실제 궤도면과
+  // 일반적으로 어긋난다(저경사 바디의 궤도운동은 대체로 ±z 성분이다).
+  // 위성 궤도와 같은 토글을 쓰되 색을 달리해 반경 눈금·위성 고리와 구분한다.
+  if(state.moons.on && state.orbit && state.orbit.r>0){
+    ctx.save();
+    const aOrb=state.orbit.r;
+    // 화면에 들어올 수 있는 각폭만 표본화한다(|P| = 2a·sin(φ/2) ≤ 화면 대각 여유).
+    const half=2*Math.asin(Math.min(1, R*1.6/(2*aOrb)));
+    ctx.lineWidth=1.2; ctx.font='10px ui-monospace,monospace';
+    ctx.strokeStyle='rgba(185,140,255,.55)';
+    ctx.setLineDash([5,4]); ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const ph=-half+2*half*i/200;
+      const oxp=c+aOrb*(1-Math.cos(ph))*ppr, oyp=c-aOrb*Math.sin(ph)*ppr;
+      if(i) ctx.lineTo(oxp,oyp); else ctx.moveTo(oxp,oyp);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(185,140,255,.88)';
+    ctx.fillText(orbitLabel(), c+6, 11);
+    if(aOrb<=R){                      // 모천체(그 원의 중심)가 프레임에 들어오면 위치도 찍는다
+      ctx.beginPath(); ctx.arc(c+aOrb*ppr,c,3,0,7); ctx.fill();
+    }
+    ctx.restore();
   }
   // axes
   ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.beginPath();
-  ctx.moveTo(0,c);ctx.lineTo(SZ,c);ctx.moveTo(c,0);ctx.lineTo(c,SZ);ctx.stroke();
+  ctx.moveTo(0,c);ctx.lineTo(CW,c);ctx.moveTo(c,0);ctx.lineTo(c,CW);ctx.stroke();
   // Shue 기준 곡선 r(θ)=r0·(2/(1+cosθ))^α — 항성정렬 프레임(tilt 무관), r0=현재 pause 노즈
   // 꼬리마감 L>r0이면: 연화 Shue 폐곡선(C∞ 단일식) + 순수 Shue 대조
   const cn=state.view;
@@ -672,8 +763,29 @@ function render(){
   ctx.restore();
   document.getElementById('scaleHi').textContent=fmt(maxI);
 }
+// 계면 안쪽에 걸리는 radiation_pause(음수 = GCR 차폐)는 그림만 봐서는 읽히지 않는다 → 범례에 값으로 적는다.
+function pauseDoseTxt(){ return '−'+Math.abs(state.pause.radiation||0).toFixed(3)+' rad/h'; }
+// 모천체 궤도 고리의 캔버스 라벨 — 한국어는 「태양 궤도」, 영어는 「orbit around Sun」.
+function orbitLabel(){
+  const o=state.orbit; if(!o) return '';
+  return lang==='ko' ? (o.ko+' '+t('orbitOf')) : (t('orbitOf')+' '+o.en);
+}
+// 꼬리 닫힘(pause_radius/pause_extension) 대 모천체 궤도반경. 축소하지 않고도 읽히도록
+// 범례에 상시 표시한다 — 이 비율이 두 고리를 견주는 이유 그 자체다.
+function tailRatioTxt(){
+  const o=state.orbit, P=state.pause;
+  if(!o || !(o.r>0) || !P.on || !(P.ext>0)) return null;
+  return t('tailRatio')+' = '+((P.rad/P.ext)/o.r*100).toFixed(1)+'%';
+}
+function updatePauseLegend(){
+  const k=document.getElementById('pauseDoseK'); if(!k)return;
+  k.hidden=!state.pause.on;
+  if(state.pause.on) document.getElementById('pauseDoseT').textContent=t('pauseDose')+' '+pauseDoseTxt();
+  const rk=document.getElementById('tailRatioK');
+  if(rk){ const s=tailRatioTxt(); rk.hidden=!s; if(s) document.getElementById('tailRatioT').textContent=s; }
+}
 let raf=null;
-function scheduleRender(){ if(raf)return; raf=requestAnimationFrame(()=>{raf=null; viewMode==='3d'?render3d():render();}); }
+function scheduleRender(){ if(raf)return; raf=requestAnimationFrame(()=>{raf=null; viewMode==='3d'?render3d():render(); updatePauseLegend();}); }
 
 // ================= 3D volume raymarcher (same SDFs, in GLSL) =================
 let viewMode='2d';
@@ -842,7 +954,7 @@ window.addEventListener('mousemove',e=>{
 window.addEventListener('mouseup',()=>drag=null);
 cv3.addEventListener('wheel',e=>{
  e.preventDefault();
- state.view.R=clamp(state.view.R*(e.deltaY>0?1.12:0.89),2,RMAX);
+ state.view.R=clamp(state.view.R*(e.deltaY>0?1.12:0.89),2,RWHEEL);
  syncControls(); scheduleRender();
 },{passive:false});
 cv3.addEventListener('touchstart',e=>{if(e.touches.length===1)drag={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
@@ -860,13 +972,14 @@ new ResizeObserver(()=>{if(viewMode==='3d'){resize3d();scheduleRender();}}).obse
 // hover readout
 cv.addEventListener('mousemove',e=>{
   const rect=cv.getBoundingClientRect();
-  const px=(e.clientX-rect.left)/rect.width*SZ, py=(e.clientY-rect.top)/rect.height*SZ;
-  const R=state.view.R, wpp=(2*R)/SZ;
-  const x=(px-SZ/2)*wpp, y=(SZ/2-py)*wpp;
+  const fx=(e.clientX-rect.left)/rect.width, fy=(e.clientY-rect.top)/rect.height;
+  const R=state.view.R;
+  const x=(fx-0.5)*2*R, y=(0.5-fy)*2*R;
   const res=doseAt(x,y);
   if(res.zone==='body'){ ro.innerHTML=`${t('pos')} <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R<br>${t('inBody')}`; return; }
   ro.innerHTML=`${t('pos')} <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R · |r|=${res.mag.toFixed(2)}<br>`+
     `dose <b>${res.dose.toFixed(2)}</b> rad/h · ${t('zone')} ${res.zone}`+
+    (res.pauseOnly?`<br><span class="pz">${t('pauseOnly')} ${pauseDoseTxt()}</span>`:'')+
     (state.view.z>0?`<br><span class="z">slice z=${state.view.z.toFixed(2)}</span>`:'');
 });
 cv.addEventListener('mouseleave',()=>ro.innerHTML=t('hover'));

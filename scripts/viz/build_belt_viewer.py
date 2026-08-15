@@ -20,6 +20,34 @@ EN = {'venus': 'Venus', 'mars': 'Mars', 'earth': 'Earth', 'jupiter': 'Jupiter', 
       'proxima_d': 'Proxima d'}
 OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 
+# 위성 궤도 반장축(모행성 반경 단위). 자기꼬리 길이를 위성계와 견주어 읽기 위한 오버레이용이고,
+# 물리 계산에는 쓰이지 않는다. body_key 로 키를 잡으므로 같은 천체의 stock/phys 프리셋이 같은 값을
+# 받는다. 표에 없는 천체는 오버레이가 그려지지 않는다.
+MOON_ORBITS = {
+    'earth': [('Moon', 60.34)],
+    'mars': [('Phobos', 2.77), ('Deimos', 6.92)],
+    'jupiter': [('Io', 5.90), ('Europa', 9.39), ('Ganymede', 14.97), ('Callisto', 26.33)],
+    'saturn': [('Enceladus', 3.95), ('Rhea', 8.75), ('Titan', 20.27), ('Iapetus', 59.08)],
+    'uranus': [('Miranda', 5.12), ('Ariel', 7.53), ('Umbriel', 10.49),
+               ('Titania', 17.20), ('Oberon', 23.01)],
+    'neptune': [('Triton', 14.41), ('Nereid', 223.94)],
+}
+
+# 바디 자신의 모천체 궤도 반경(바디 반경 단위) + 모천체 이름. 자기꼬리 길이를 이 궤도반경과
+# 견주는 것이 이 오버레이의 목적이라 기본 줌에서는 항상 화면 밖이고, 사용자가 축소해 둘을 한
+# 프레임에 담는다. MOON_ORBITS 와 같은 규칙 — body_key 로 붙고, 물리 계산에는 쓰이지 않는다.
+BODY_ORBITS = {
+    'mercury':  (23733, '태양', 'Sun'),
+    'venus':    (17880, '태양', 'Sun'),
+    'earth':    (23481, '태양', 'Sun'),
+    'mars':     (67239, '태양', 'Sun'),
+    'jupiter':  (10890, '태양', 'Sun'),
+    'saturn':   (23786, '태양', 'Sun'),
+    'uranus':   (113360, '태양', 'Sun'),
+    'neptune':  (182699, '태양', 'Sun'),
+    'ganymede': (406, '목성', 'Jupiter'),
+}
+
 
 # Shue 기준선은 α 가 실제로 근거 있는 바디에서만 기본 표시한다.
 # log2(pause_compression) 환산은 지구형 cfg 에서만 형상 충실이고(방법론 Part C),
@@ -159,6 +187,13 @@ shue.update({'sys': 'demo', 'sys_label': '데모', 'sys_label_en': 'Demo', 'dept
 shue['view'].update({'R': 210, 'shue': 0.58})
 shue['pause']['alpha'] = 0.35
 presets['shueDemo'] = shue
+
+# 위성 궤도는 프리셋마다 body_key 로 붙인다(없으면 빈 목록).
+for p in presets.values():
+    bk = p.get('body_key') or ''
+    p['moons'] = [[n, a] for n, a in MOON_ORBITS.get(bk, [])]
+    orb = BODY_ORBITS.get(bk)
+    p['orbit'] = {'r': orb[0], 'ko': orb[1], 'en': orb[2]} if orb else None
 
 tpl = open(TEMPLATE).read()
 assert '__PRESETS__' in tpl
