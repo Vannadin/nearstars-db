@@ -148,6 +148,7 @@
   .readout b{color:var(--accent);font-weight:600}
   .readout .z{color:var(--accent-warm)}
   .readout .pz{color:var(--pause)}
+  .readout .bg{color:#8b93a7}
   .legend .k.pausedose{color:var(--pause)}
   .swatch.moon{background:repeating-linear-gradient(90deg,#7ee7b2 0 2px,transparent 2px 6px)}
   .swatch.orbit{background:repeating-linear-gradient(90deg,#b98cff 0 4px,transparent 4px 7px)}
@@ -279,7 +280,8 @@ const T = {
     webgl:'WebGL을 사용할 수 없습니다',
     deformNote:'deform은 z=0 평면에서 항상 0 → <b>slice_z=0.26</b> 자동 설정',
     pos:'위치', inBody:'바디 내부', zone:'구역',
-    zInner:'내대', zOuter:'외대', zMag:'자기권 내',
+    zInner:'내대', zOuter:'외대', zMag:'자기권 내', zOutside:'계면 밖 (배경 GCR)',
+    bgTerm:'배경', minusShield:'− 계면차폐', beltTerm:'벨트',
     shueSoft:'연화 Shue (C∞)', shueTwo:'2α 항적형 (우리 확장)', boardFix:'(보드 고정)', pauseLink:'(pause 연동)',
     shueDash:'흰 점선 = 순수 Shue(열림) 대조'
   },
@@ -297,7 +299,8 @@ const T = {
     webgl:'WebGL is unavailable',
     deformNote:'deform is identically 0 on the z=0 plane → <b>slice_z=0.26</b> set automatically',
     pos:'position', inBody:'inside body', zone:'zone',
-    zInner:'inner belt', zOuter:'outer belt', zMag:'inside magnetosphere',
+    zInner:'inner belt', zOuter:'outer belt', zMag:'inside magnetosphere', zOutside:'outside the pause (background GCR)',
+    bgTerm:'background', minusShield:'− pause shield', beltTerm:'belts',
     shueSoft:'softened Shue (C∞)', shueTwo:'2α wake form (our extension)', boardFix:'(board-pinned)', pauseLink:'(tracks pause)',
     shueDash:'white dashes = pure (open) Shue reference'
   }
@@ -575,12 +578,17 @@ function resize(){
   rasterCv.width=SZ; rasterCv.height=SZ;
   img=rasterCtx.createImageData(SZ,SZ); scheduleRender();
 }
-function doseAt(x,y){ // world coords -> {dose, zone}
+// 엔진 상수(Radiation.cs) — 바디 필드 누적이 끝난 뒤 배경이 더해지고, 마지막에 바닥값으로 잘린다.
+// 이 두 항이 없으면 음수 radiation_pause 가 화면상 0 으로 뭉개져서 차폐가 아예 안 보인다.
+const EXTERN=0.04;      // Settings.ExternRadiation 기본값 (rad/h) — 은하우주선 배경
+const NOMINAL=0.0003;   // Radiation.Nominal — 최종 clamp 바닥
+function doseAt(x,y){ // world coords -> {field, dose, zone}
   const v=state.view, tr=v.tilt*Math.PI/180, ca=Math.cos(tr), sa=Math.sin(tr);
   const xr=x*ca - y*sa, yr=x*sa + y*ca - (v.offset||0), z=v.z;
   let dose=0, zone=[];
   const mag=Math.sqrt(x*x+y*y+z*z);
   if(mag<1) return {dose:NaN,zone:'body',mag};
+  let shield=0;   // 계면 기여만 따로 — 판독에서 배경 − 차폐 로 쪼개 보여주려고
   if(state.inner.on){ const d=torusSDF(xr,yr,z,state.inner);
     if(d<0){ dose+=clamp(state.inner.grad*(-d)/state.inner.rad,0,1)*state.inner.radiation; zone.push(t('zInner')); } }
   if(state.outer.on){ const d=torusSDF(xr,yr,z,state.outer);
@@ -590,9 +598,12 @@ function doseAt(x,y){ // world coords -> {dose, zone}
   // 적용한다(Radiation.cs Gsm_space 말미). 그 프레임의 y축은 자전축이므로 계면은 자전축 방향으로,
   // 벨트는 자기축 방향으로 밀린다(틸트가 크면 서로 다른 방향).
   if(state.pause.on){ pd=pauseSDF(x,y-(v.offset||0),z,state.pause);
-    if(pd<0){ dose+=clamp(pd/-0.1332,0,1)*state.pause.radiation;
+    if(pd<0){ shield=clamp(pd/-0.1332,0,1)*state.pause.radiation; dose+=shield;
       if(!zone.length){ zone.push(t('zMag')); pauseOnly=true; } } }
-  return {dose,zone:zone.join('+')||'—',mag,pd,pauseOnly};
+  // 엔진과 같은 순서: 바디 필드 합 → 배경 가산 → 바닥 clamp. 계면 밖이면 차폐항이 사라져 배경 전량을 받는다.
+  const total=Math.max(dose+EXTERN,NOMINAL);
+  if(!zone.length) zone.push(t('zOutside'));
+  return {field:dose,dose:total,shield,zone:zone.join('+'),mag,pd,pauseOnly};
 }
 function render(){
   if(!img)return;
@@ -977,8 +988,13 @@ cv.addEventListener('mousemove',e=>{
   const x=(fx-0.5)*2*R, y=(0.5-fy)*2*R;
   const res=doseAt(x,y);
   if(res.zone==='body'){ ro.innerHTML=`${t('pos')} <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R<br>${t('inBody')}`; return; }
+  // 배경(0.04)과 벨트(수백)가 6자리 스케일 차이라 유효자릿수를 값에 맞춘다
+  const fmt=d=>d<1?d.toFixed(4):d.toFixed(2);
   ro.innerHTML=`${t('pos')} <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R · |r|=${res.mag.toFixed(2)}<br>`+
-    `dose <b>${res.dose.toFixed(2)}</b> rad/h · ${t('zone')} ${res.zone}`+
+    `dose <b>${fmt(res.dose)}</b> rad/h · ${t('zone')} ${res.zone}<br>`+
+    `<span class="bg">${t('bgTerm')} ${EXTERN.toFixed(3)}`+
+      (res.shield<0?` ${t('minusShield')} ${(-res.shield).toFixed(4)}`:'')+
+      (res.field-res.shield>1e-4?` + ${t('beltTerm')} ${fmt(res.field-res.shield)}`:'')+`</span>`+
     (res.pauseOnly?`<br><span class="pz">${t('pauseOnly')} ${pauseDoseTxt()}</span>`:'')+
     (state.view.z>0?`<br><span class="z">slice z=${state.view.z.toFixed(2)}</span>`:'');
 });
