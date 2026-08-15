@@ -46,9 +46,14 @@ justified by Voyager 2 finding them the emptiest magnetospheres measured — no 
 Enceladus-class plasma source, so their loading sits nearer Earth's than the gas giants'.
 The previous `compression` 1.2 on all four outer planets was a placeholder, and it
 understated the flank by 25–39%. Derivations, citations and the reason no α(pressure) law
-extrapolates are in the methodology's Part A. `pause_extension` was recomputed only to hold
-each body's existing tail length, which remains an ungrounded placeholder — tail length is
-parked as its own problem.
+extrapolates are in the methodology's Part A. Tail length is now measured where a measurement
+exists: **Mercury 2.9 R_M** (Winslow 2013, flaring ceases by ~2 R_ss) and **Earth 120 R_E**
+(Slavin 1985, 120 ± 10). Both come with a published tail width, and the α-surface reproduces
+both without being fitted to them — 2.71 R_M against Winslow's ~2.7 at x = −3, and 28.1 R_E
+in radius against Slavin's 60 ± 5 diameter. The four outer planets keep inherited
+placeholders; the two anchors are 5–6× apart in nose units where α explains only 3.6×, and
+Winslow states the governing factors "are not well understood", so nothing supports an
+extrapolation.
 
 ## Scope — only magnetized bodies
 

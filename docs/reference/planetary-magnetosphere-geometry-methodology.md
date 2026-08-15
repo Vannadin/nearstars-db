@@ -137,12 +137,40 @@ no Io- or Enceladus-class source, their loading sits nearer Earth's than the gas
 Earth's α is the defensible stand-in. It is an **analogy, not a fit**, and is labelled as
 one wherever it appears.
 
-**One thing this does not fix.** `pause_extension` was recomputed only to preserve each
-body's existing tail length, which is an inherited placeholder with no grounding behind it
-(Jupiter's works out to 1512 R_J). Tail length is parked as its own problem; the criterion
-is where the lobe pressure falls to the ambient solar-wind static pressure, and at Earth
-Slavin 1985 ([`1985JGR....9010875S`](https://ui.adsabs.harvard.edu/abs/1985JGR....9010875S)) puts flaring cessation at 120 ± 10 R_E with the
-distant neutral line at 100–140 R_E — against the 200 R_E we currently carry.
+**Tail length: measured where it exists, untouched where it does not.** The tail runs to
+where **flaring ceases** — beyond that the boundary is a constant-radius cylinder, so the
+shape stops changing and truncating there costs nothing. Two bodies have that distance
+measured, and both are now set from it:
+
+| body | tail | source |
+|---|---|---|
+| Mercury | **2.9 R_M** (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
+| Earth | **120 R_E** (12 R_ss) | Slavin 1985 — flaring ceases at \|X\| = 120 ± 10 R_E |
+
+Both come with a width the fitted α-surface can be checked against, and it passes: at
+x = −3 R_M Winslow reports a nearly cylindrical tail of radius ~2.7 R_M and our surface
+gives **2.71**; at x = −120 R_E Slavin reports a diameter of 60 ± 5 R_E and ours gives
+**28.1** in radius. The flaring parameter is doing real work here — these widths were not
+fitted to, they fall out of α.
+
+Jupiter, Saturn, Uranus and Neptune keep their inherited placeholders (Jupiter's works out
+to 1512 R_J) because **no extrapolation is defensible**. The two anchors sit at 2 R_ss and
+10–12 R_ss — a factor of 5–6 apart, of which α explains only 3.6 — and the literature does
+not close the gap: Winslow states plainly that "the factors determining the location where
+tail flaring ceases are not well understood", pointing instead at the distance where the
+plasma sheet is disconnected by reconnection. That is a flux-transport problem, not the
+pressure balance a relation could be built on. An earlier revision of this section proposed
+a 12 × nose rule calibrated on Earth; Mercury's anchor falsifies it, and the "independent
+check" it claimed at Jupiter used the wrong quantity — Kurth 1981's ">700 R_J" is a
+lower bound on brief encounters, while Lepping 1983 ([`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) documents a
+Jovian tail reaching **at least 9000 R_J**, with Voyager 2 detecting it out to ~4.5 AU
+(Kurth 1982, [`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) and Saturn itself immersed in it (Desch 1983,
+[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)).
+
+**A tail longer than the body's SOI is inert, not wrong.** `Radiation.Compute` walks only
+the parent chain (`body = body.referenceBody`) with no SOI test, so once a vessel leaves a
+body's sphere of influence that body drops out of the chain and its field is never sampled.
+Values beyond the SOI therefore cost nothing and claim nothing.
 
 Venus and Mars fall into the last row because Shue's single α cannot hold a tight waist
 and a widening tail apart at any value — the measured failure modes are tabulated below.
@@ -197,6 +225,93 @@ GCR far less. Venus and Titan ship with it. For NearStars:
 
 Per-model cfg values and the bodies that use them are tabulated in
 [`solar-system-radiation-belts.md`](solar-system-radiation-belts.md).
+
+### Near-tail X-line distance — the one magnetotail scale that generalises
+
+The magnetotail's **near reconnection line** — Earth's near-Earth neutral line (NENL), and
+its counterpart at every other magnetised planet — sits at a distance that scales with the
+subsolar standoff, and it is the only tail structure with enough measurements to build a
+recipe on. Five planets have it:
+
+| body | `r₀` | near X-line | `X/r₀` | source |
+|---|---|---|---|---|
+| Mercury | 1.45 R_M | 2–3 R_M | 1.38–2.07 | Poh 2017 ([`2017GeoRL..44..678P`](https://ui.adsabs.harvard.edu/abs/2017GeoRL..44..678P)) "average X-line location at −3 R_M"; Sun 2016 ([`2016JGRA..121.7590S`](https://ui.adsabs.harvard.edu/abs/2016JGRA..121.7590S)) −2 to −3 (NMNL) |
+| Earth | 10 R_E | 20–30 R_E | 2.00–3.00 | Nagai 2021 ([`2021JGRA..12629691N`](https://ui.adsabs.harvard.edu/abs/2021JGRA..12629691N)), >50 Geotail encounters; Baumjohann 1999 ([`1999JGR...10424995B`](https://ui.adsabs.harvard.edu/abs/1999JGR...10424995B)) narrows to 21–26 |
+| Saturn | 24 R_S | 20–30 R_S | 0.83–1.25 | Smith 2016 ([`2016JGRA..121.2984S`](https://ui.adsabs.harvard.edu/abs/2016JGRA..121.2984S)) |
+| Jupiter | 63 R_J | 80 R_J | 1.27 | Ge 2010 ([`2010P&SS...58.1455G`](https://ui.adsabs.harvard.edu/abs/2010P%26SS...58.1455G)) |
+| Uranus | 18 R_U | ~54 R_U | 3.00 | DiBraccio 2019 ([`2019AGUFMSM33E3247D`](https://ui.adsabs.harvard.edu/abs/2019AGUFMSM33E3247D)), Voyager 2 plasmoid |
+
+**The comparison only works if the same structure is compared.** An earlier pass put Earth's
+*distant* neutral line (100–140 R_E, 10–14 `r₀`) beside everyone else's *near* line and
+concluded the scatter was 12×, which killed several candidate recipes. The names carried the
+answer: Mercury's is literally the "Near-Mercury Neutral Line". Compared like with like the
+spread is **1.04–3.00, a factor of 2.9**, and Earth's distant line is a separate structure
+measured nowhere else.
+
+Two refinements are available, and they differ in how much they can be trusted.
+
+**Grouped constant.** The two gas giants sit at 1.04 and 1.27, everything else at 1.72–3.00.
+Taking `X ≈ 1.16 r₀` for Jupiter and Saturn is a two-point average with a clear physical
+reading — heavy internal plasma (Io, Enceladus) plus fast rotation drives Vasyliunas-cycle
+reconnection just behind the standoff distance.
+
+**Size-dependent fit for the rest.** Across three orders of magnitude in `r₀` the remaining
+three fall on a line:
+
+    X/r₀ = −0.420 + 0.6055 · log₁₀(r₀ [km])        residuals ≤ 0.011
+
+Mercury 1.72 (fit 1.73), Earth 2.50 (2.49), Uranus 3.00 (3.01). Neptune, which has no
+measurement, is predicted at **3.10 `r₀` = 82 R_N**.
+
+**How much that residual is worth.** With three points and two parameters there is one
+degree of freedom, so any variable ordering the bodies the same way will fit *somehow*. It
+was tested: refitting against planet mass gives a worst residual of 0.075, planet radius
+0.167, rotation period 0.218, heliocentric distance 0.285. `r₀` beats them by 7–26×, so the
+choice of variable is not arbitrary — but the fit still reproduces only the points it was
+built from.
+
+**Grade: empirical, anchors reproduced, predictive power unverified.** Two things keep it
+from being more. There is no fourth body to test it on — Neptune's tail has no plasmoid or
+X-line measurement (searched 2026-08-15). And the grouping rationale is contested: Turner
+2024 ([`2024JGRA..12932723T`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932723T)) places Uranus in a **third** category, "unlike the other
+magnetospheric systems that are Dungey-cycle driven (i.e., Mercury and Earth) or
+rotationally driven (Jupiter and Saturn)", and Gershman 2020 ([`2020EPSC...14..258G`](https://ui.adsabs.harvard.edu/abs/2020EPSC...14..258G))
+reports Voyager 2 measuring `M_A` ~23 at Uranus with a plasmoid "suggestive of more internal
+planetary plasma driven" transport. So Uranus may not belong with Mercury and Earth at all,
+even though it lands on their line. Neptune is the first test if a measurement ever appears.
+
+For an exoplanet the recipe needs nothing but `r₀`, which Part A already produces:
+
+    strong internal plasma source (Io/Enceladus-class torus + fast rotation)
+        X ≈ 1.16 · r₀
+    otherwise
+        X ≈ (−0.420 + 0.6055 · log₁₀ r₀[km]) · r₀        fall back to 1.9 · r₀ if unsure
+
+**This is not the tail length, and Shue has no tail length.** The Shue family has exactly two
+parameters, `r₀` and `α`: `r₀ · 2^α` is the terminator width, and α alone fixes the far-tail
+behaviour — below 0.5 the width decays to zero asymptotically, at exactly 0.5 the tail is a
+cylinder of radius `2 r₀`, above 0.5 it diverges (Winslow 2013 states the same threshold:
+"a … governs whether the magnetotail is closed (a<0.5) or open (a≥0.5)"). **No α yields a
+finite endpoint.** `pause_extension`'s `L` is therefore an engine artifact — the place the
+bounded cfg volume closes — not a physical quantity, and it must be placed outside the
+measured range or it destroys the widths α reproduces.
+
+**Criteria tried and rejected**, recorded so none is re-attempted:
+
+| criterion | why it failed |
+|---|---|
+| lobe pressure = ambient static pressure | pressure balance is satisfied indefinitely; beyond flaring cessation the tail is a constant-radius cylinder (Slavin 1985: `B_L` fixed at 9.2 nT past 120 R_E) |
+| flaring cessation as `L` | it is where the *shape* stops changing, not where the tail closes; setting `L` = 120 R_E drove Earth's width to zero exactly where 30 R_E is measured |
+| nose-contrast threshold | the contrast excess at cessation is 5.3% at Earth against 32.7% at Mercury |
+| "fully interior region vanishes" (contrast × cross-section) | the only criterion that stays finite for every α, and the closest yet — but Earth 1.57% vs Mercury 5.94%, and Saturn's α 0.736 pushes its answer to 676 `r₀` |
+| 12 × nose, Earth-calibrated | falsified by Mercury; its claimed Jupiter check used Kurth 1981's ">700 R_J" (a lower bound on brief encounters) when Lepping 1983 ([`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) documents ≥9000 R_J |
+
+**One side result worth keeping.** At the stagnation point the balance is
+`B²/2μ₀ = k·P_dyn`, so the pressure contrast against the ambient static pressure is
+`k·P_dyn/P_static` — and because both scale as `r⁻²` with heliocentric distance, that ratio
+is **the same 48.7× at every planet**. It gives the magnetopause nose field directly for any
+body, `B = √(2μ₀ k P_dyn)`, which returns 62 nT at Earth against an observed 60–70 nT.
+Useful for exoplanets, where `P_dyn` follows from the stellar wind.
 
 ## Part B — belt intensity is multi-factor (NOT field strength)
 
