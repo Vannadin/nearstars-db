@@ -95,8 +95,8 @@ BODIES={
    'pause':{'radiation':-0.001,'rad':1.6,'comp':1.4,'ext':0.05,'hscale':1.0,'deform':0.1}},  # pause_deform=0.1 그대로 반영 (2026-08-04 누락 수정): 다중극 경계의 비축대칭 로브
  'mercury_phys':{'title':'Mercury — physical','sub':'no stable belt; mp nose 1.45 R_M, offset 0.20 north, tilt <3°, deform 0.1','R':3,'tilt':2,'offset':0.20,
    # Winslow 2013 은 MESSENGER 통과를 Shue 형식으로 적합했다: R_ss 1.45 R_M, flaring α 0.5
-   'pause':{'radiation':-0.001,'rad':2.0506,'comp':1.4142,'ext':0.10253,'hscale':1.0,'deform':0.1,
-            'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':20}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
+   'pause':{'radiation':-0.001,'rad':2.0506,'comp':1.4142,'ext':0.0640813,'hscale':1.0,'deform':0.1,
+            'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':32}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
  # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
  # ROKerbalism: RadiationBody[Eve]→Venus, radiation_model = ionosphere, radiation_pause = -0.005.
@@ -155,15 +155,15 @@ BODIES={
  'earth_stock':{'title':'Earth — stock (ROKerbalism)','sub':'inner 0.81/0.70 (D), outer 2.63/2.48 (O), pause 15','R':12,'tilt':11,
    'inner':{'radiation':10.376,'grad':3.3,'dist':0.813,'rad':0.70,'dxy':0.572,'comp':1.01,'ext':1.0,'bdist':1e-4,'brad':0.915,'bdxy':0.5},
    'outer':{'radiation':2.214,'grad':2.2,'dist':2.6338,'rad':2.48,'dxy':0.7225,'comp':1.01,'ext':1.0,'bdist':1.4412,'brad':1.4875,'bdxy':0.7225},
-   'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0149485,'hscale':1.1}},
+   'pause':{'radiation':-0.01,'rad':15,'comp':1.5,'ext':0.075,'hscale':1.1}},
  'earth_phys':{'title':'Earth — physical (SDF fit)','sub':'shells L 1.1-2 (>1000 km) / L 3-7, slot between (IoU .99/.98); mp nose 10','R':12,'tilt':11,
    # grad/comp/ext = 자기권 기하 방법론 Part C 도출값 (2026-08-13). grad=rad/d*(피크 깊이, d_max 클램프),
    # comp/ext = pause 비대칭 × eps=(r_core/nose)³. 아래 IoU 수치는 L-셸 피팅(dist/rad/dxy/border) 기준이라 무영향.
    'inner':{'radiation':10.376,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.001,'ext':0.999,'bdist':1e-4,'brad':1.1836,'bdxy':1.0505},  # 내대 하한=1000km(loss-cone 고갈 경계). grad: 피크 L1.5(Ginet 2013)
    'outer':{'radiation':2.214,'grad':2.15,'dist':3.0123,'rad':2.7018,'dxy':0.662,'comp':1.025,'ext':0.953,'bdist':1.3175,'brad':1.1596,'bdxy':0.6748},  # L3-7, 보더 카브=슬롯. grad: heart L4.5 → 배포 2.2 복원
    # Shue 기준선: 적합값이 있는 바디에만 넣는다(Shue 1998 지구 α 0.58, 노즈 10 R_E, 꼬리 관측 ~200)
-   'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0149485,'hscale':1.1,
-            'shue_alpha':0.58,'shue_nose':10,'shue_tail':1000}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
+   'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0747425,'hscale':1.1,
+            'shue_alpha':0.58,'shue_nose':10,'shue_tail':200}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  'ganymede_stock':{'title':'Ganymede — stock (ROKerbalism)','sub':'inner 0.8/0.6, no pause defined','R':4,'tilt':4,

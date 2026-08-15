@@ -373,40 +373,43 @@ no Io- or Enceladus-class source, their loading sits nearer Earth's than the gas
 Earth's α is the defensible stand-in. It is an **analogy, not a fit**, and is labelled as
 one wherever it appears.
 
-**Tail length: measured where it exists, untouched where it does not.** The tail runs to
-where **flaring ceases** — beyond that the boundary is a constant-radius cylinder, so the
-shape stops changing and truncating there costs nothing. Two bodies have that distance
-measured, and both are now set from it:
+**Tail length (`L`) is an engine artifact, and it is still unset.** `L` is where the bounded
+cfg volume closes. Shue has no counterpart for it — the family has exactly two parameters,
+`r₀` and `α`, and no α gives a finite endpoint (α < 0.5 decays to zero asymptotically,
+α = 0.5 is a cylinder of radius `2 r₀`, α > 0.5 diverges; Winslow 2013 states the same
+threshold). So `L` cannot be derived, and six attempts to derive it are tabulated below as
+dead ends.
 
-| body | tail | source |
+The values currently shipped are **inherited and ungrounded**: `pause_extension` was
+recomputed only to preserve each body's pre-existing tail, which for the four outer planets
+was itself an arbitrary `rad` divided by a stock `ext`. Mercury (32 R_M) and Earth (200 R_E)
+carry the stock numbers unchanged.
+
+Two things are measured and must not be confused with `L`:
+
+| body | flaring ceases at | source |
 |---|---|---|
-| Mercury | **2.9 R_M** (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
-| Earth | **120 R_E** (12 R_ss) | Slavin 1985 — flaring ceases at \|X\| = 120 ± 10 R_E |
+| Mercury | 2.9 R_M (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
+| Earth | 120 R_E (12 R_ss) | Slavin 1985 — flaring ceases at \|X\| = 120 ± 10 R_E |
 
-Both come with a width the fitted α-surface can be checked against, and it passes: at
-x = −3 R_M Winslow reports a nearly cylindrical tail of radius ~2.7 R_M and our surface
-gives **2.71**; at x = −120 R_E Slavin reports a diameter of 60 ± 5 R_E and ours gives
-**28.1** in radius. The flaring parameter is doing real work here — these widths were not
-fitted to, they fall out of α.
+That is where the **shape** stops changing, not where the tail ends; beyond it the boundary
+continues as a constant-radius cylinder. Setting `L` to those distances was tried and is
+wrong: at Earth it drives the width to zero at exactly the place Slavin measures a 30 R_E
+radius. `L` must sit outside the measured range, and the further out it sits the better the
+measured widths are reproduced (at Earth, `L` 200 gives 12.1 R_E at −180 against a measured
+30; `L` 1500 gives 29.4).
 
-Jupiter, Saturn, Uranus and Neptune keep their inherited placeholders (Jupiter's works out
-to 1512 R_J) because **no extrapolation is defensible**. The two anchors sit at 2 R_ss and
-10–12 R_ss — a factor of 5–6 apart, of which α explains only 3.6 — and the literature does
-not close the gap: Winslow states plainly that "the factors determining the location where
-tail flaring ceases are not well understood", pointing instead at the distance where the
-plasma sheet is disconnected by reconnection. That is a flux-transport problem, not the
-pressure balance a relation could be built on. An earlier revision of this section proposed
-a 12 × nose rule calibrated on Earth; Mercury's anchor falsifies it, and the "independent
-check" it claimed at Jupiter used the wrong quantity — Kurth 1981's ">700 R_J" is a
-lower bound on brief encounters, while Lepping 1983 ([`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) documents a
-Jovian tail reaching **at least 9000 R_J**, with Voyager 2 detecting it out to ~4.5 AU
-(Kurth 1982, [`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) and Saturn itself immersed in it (Desch 1983,
-[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)).
+Both anchors do confirm the α-derived **shape**, which was not fitted to them: at x = −3 R_M
+Winslow reports a nearly cylindrical radius of ~2.7 R_M and our surface gives **2.71**; at
+x = −120 R_E Slavin reports a diameter of 60 ± 5 R_E and ours gives **28.1** in radius.
 
-**A tail longer than the body's SOI is inert, not wrong.** `Radiation.Compute` walks only
-the parent chain (`body = body.referenceBody`) with no SOI test, so once a vessel leaves a
-body's sphere of influence that body drops out of the chain and its field is never sampled.
-Values beyond the SOI therefore cost nothing and claim nothing.
+Every published tail extent is a spacecraft-coverage **lower bound**, not an endpoint — the
+largest is Jupiter's, at least 9000 R_J = 143 `r₀` (Lepping 1983,
+[`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L); Voyager 2 detected it to ~4.5 AU, Kurth 1982
+[`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K), with Saturn itself immersed in it, Desch 1983
+[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)). A convention that contradicts none of them therefore has to
+put `L` beyond 143 `r₀`. **The convention is not yet chosen**; the leading candidate is
+`L = 150 r₀`, which depends only on `r₀` and so inherits no unverified relation.
 
 Venus and Mars fall into the last row because Shue's single α cannot hold a tight waist
 and a widening tail apart at any value — the measured failure modes are tabulated below.
@@ -1443,35 +1446,39 @@ Orbiter·BepiColombo·Parker Solar Probe 통과 자료로 시험해 손볼 것 �
 Enceladus급 공급원이 없으니 적재 수준은 거대행성보다 지구에 가깝고, 따라서 지구의 α가 변론 가능한
 대역입니다. 어디까지나 **피팅이 아니라 유추**이며, 등장하는 자리마다 그렇게 표기합니다.
 
-**꼬리 길이는 측정된 곳만 고치고, 없는 곳은 두었습니다.** 꼬리는 **벌어짐이 멈추는 지점**까지로
-잡습니다. 그 뒤로는 일정 반지름 원통이라 형상이 더 변하지 않고, 거기서 자르는 비용이 없습니다. 그
-거리가 측정된 천체는 둘이고, 둘 다 그 값으로 설정했습니다.
+**꼬리 길이 `L`은 엔진 인공물이고, 아직 정하지 않았습니다.** `L`은 유계 cfg 부피가 닫히는
+지점입니다. Shue에는 대응물이 없습니다. 파라미터가 `r₀`와 `α` 둘뿐이고, 어떤 α도 유한한 끝점을
+주지 않습니다(α < 0.5는 0으로 점근, α = 0.5는 반지름 `2 r₀`의 원통, α > 0.5는 발산. Winslow 2013이
+같은 문턱을 명시합니다). 그래서 `L`은 도출할 수 없고, 시도했다 실패한 여섯 기준을 아래 표에 남깁니다.
 
-| 바디 | 꼬리 | 출처 |
+지금 실려 있는 값은 **상속된 미근거값**입니다. `pause_extension`은 각 천체의 기존 꼬리를 보존하도록
+역산했을 뿐이고, 외행성 넷의 그 기존 꼬리는 임의의 `rad`를 스톡 `ext`로 나눈 값이었습니다. 수성
+(32 R_M)과 지구(200 R_E)는 스톡값 그대로입니다.
+
+측정된 양이 둘 있는데, `L`과 혼동하면 안 됩니다.
+
+| 바디 | 벌어짐이 멈추는 곳 | 출처 |
 |---|---|---|
-| 수성 | **2.9 R_M** (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
-| 지구 | **120 R_E** (12 R_ss) | Slavin 1985 — 벌어짐 종료 \|X\| = 120 ± 10 R_E |
+| 수성 | 2.9 R_M (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
+| 지구 | 120 R_E (12 R_ss) | Slavin 1985 — 벌어짐 종료 \|X\| = 120 ± 10 R_E |
 
-두 논문 모두 그 지점의 꼬리 폭을 함께 주는데, α로 세운 면이 맞춥니다. x = −3 R_M에서 Winslow는
-거의 원통형 꼬리 반지름 ~2.7 R_M을 보고하고 우리 면은 **2.71**이며, x = −120 R_E에서 Slavin은
-지름 60 ± 5 R_E를 보고하고 우리 면은 반지름 **28.1**입니다. 이 폭들은 맞춘 값이 아니라 α에서
-그냥 나온 값입니다.
+이것은 **형상**이 변하기를 멈추는 지점이지 꼬리가 끝나는 곳이 아닙니다. 그 뒤로 경계는 일정 반지름
+원통으로 이어집니다. `L`을 그 거리로 두는 것은 시도했고 틀렸습니다. 지구에서는 Slavin이 반지름
+30 R_E를 측정한 바로 그 지점에서 폭이 0이 됩니다. `L`은 측정 범위 밖에 있어야 하고, 멀수록 측정된
+폭을 잘 재현합니다(지구에서 `L` 200은 −180에서 12.1 R_E, 실측 30에 크게 못 미치고, `L` 1500은
+29.4입니다).
 
-목성·토성·천왕성·해왕성은 물려받은 임시값을 그대로 둡니다(목성 것은 계산하면 1512 R_J). **외삽할
-근거가 없기 때문입니다.** 두 앵커가 노즈 배수로 2 R_ss와 10~12 R_ss로 5~6배 어긋나는데 α가 설명하는
-몫은 3.6배뿐이고, 문헌도 간극을 메우지 못합니다. Winslow는 "the factors determining the location
-where tail flaring ceases are not well understood"라고 적으며 재결합으로 플라스마 시트가 끊기는
-거리를 지목합니다. 그것은 자속 수송 문제이지 관계식을 세울 압력 균형이 아닙니다. 이전 개정판은
-지구로 보정한 12 × 노즈 규칙을 제안했는데, 수성 앵커가 그것을 반증합니다. 그 규칙이 내세운 목성
-"독립 검증"도 양을 잘못 잡은 것이었습니다 — Kurth 1981의 ">700 R_J"는 짧은 조우의 하한이고,
-Lepping 1983([`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L))은 목성 꼬리가 **최소 9000 R_J**에 이른다고
-기록합니다. Voyager 2가 ~4.5 AU까지 검출했고(Kurth 1982,
-[`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) 토성 자신이 그 안에 잠겼습니다(Desch 1983,
-[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)).
+두 앵커는 α로 세운 **형상**은 확인해 줍니다. 맞춘 값이 아닌데도 x = −3 R_M에서 Winslow의 거의
+원통형 반지름 ~2.7 R_M에 우리 면이 **2.71**이고, x = −120 R_E에서 Slavin의 지름 60 ± 5 R_E에
+우리 면이 반지름 **28.1**입니다.
 
-**SOI보다 긴 꼬리는 틀린 게 아니라 불활성입니다.** `Radiation.Compute`는 부모 사슬만 거슬러 오르고
-(`body = body.referenceBody`) SOI 검사가 없으므로, 비행체가 어떤 천체의 영향권을 벗어나면 그 천체가
-사슬에서 빠지고 필드는 평가되지 않습니다. 따라서 SOI 밖의 값은 비용도 주장도 없습니다.
+발표된 꼬리 도달 범위는 전부 탐사 범위가 만든 **하한**이지 끝점이 아닙니다. 가장 큰 것이 목성으로
+최소 9000 R_J = 143 `r₀` 입니다(Lepping 1983,
+[`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L). Voyager 2가 ~4.5 AU까지 검출했고(Kurth 1982,
+[`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) 토성 자신이 그 안에 잠겼습니다. Desch 1983,
+[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)). 어느 실측과도 모순되지 않으려면 `L`을 143 `r₀` 밖에 두어야
+합니다. **관례는 아직 선택하지 않았습니다.** 유력 후보는 `L = 150 r₀`이며, `r₀`에만 의존하므로
+검증되지 않은 관계식을 물려받지 않습니다.
 
 금성과 화성이 마지막 줄에 들어가는 까닭은, Shue의 단일 α로는 어떤 값을 넣어도 좁은 허리와 벌어지는
 꼬리를 동시에 잡을 수 없기 때문입니다. 실측한 실패 양상은 아래 표에 있습니다. 두 천체의 필드와 그

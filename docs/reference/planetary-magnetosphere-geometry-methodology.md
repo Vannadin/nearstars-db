@@ -137,40 +137,43 @@ no Io- or Enceladus-class source, their loading sits nearer Earth's than the gas
 Earth's α is the defensible stand-in. It is an **analogy, not a fit**, and is labelled as
 one wherever it appears.
 
-**Tail length: measured where it exists, untouched where it does not.** The tail runs to
-where **flaring ceases** — beyond that the boundary is a constant-radius cylinder, so the
-shape stops changing and truncating there costs nothing. Two bodies have that distance
-measured, and both are now set from it:
+**Tail length (`L`) is an engine artifact, and it is still unset.** `L` is where the bounded
+cfg volume closes. Shue has no counterpart for it — the family has exactly two parameters,
+`r₀` and `α`, and no α gives a finite endpoint (α < 0.5 decays to zero asymptotically,
+α = 0.5 is a cylinder of radius `2 r₀`, α > 0.5 diverges; Winslow 2013 states the same
+threshold). So `L` cannot be derived, and six attempts to derive it are tabulated below as
+dead ends.
 
-| body | tail | source |
+The values currently shipped are **inherited and ungrounded**: `pause_extension` was
+recomputed only to preserve each body's pre-existing tail, which for the four outer planets
+was itself an arbitrary `rad` divided by a stock `ext`. Mercury (32 R_M) and Earth (200 R_E)
+carry the stock numbers unchanged.
+
+Two things are measured and must not be confused with `L`:
+
+| body | flaring ceases at | source |
 |---|---|---|
-| Mercury | **2.9 R_M** (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
-| Earth | **120 R_E** (12 R_ss) | Slavin 1985 — flaring ceases at \|X\| = 120 ± 10 R_E |
+| Mercury | 2.9 R_M (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
+| Earth | 120 R_E (12 R_ss) | Slavin 1985 — flaring ceases at \|X\| = 120 ± 10 R_E |
 
-Both come with a width the fitted α-surface can be checked against, and it passes: at
-x = −3 R_M Winslow reports a nearly cylindrical tail of radius ~2.7 R_M and our surface
-gives **2.71**; at x = −120 R_E Slavin reports a diameter of 60 ± 5 R_E and ours gives
-**28.1** in radius. The flaring parameter is doing real work here — these widths were not
-fitted to, they fall out of α.
+That is where the **shape** stops changing, not where the tail ends; beyond it the boundary
+continues as a constant-radius cylinder. Setting `L` to those distances was tried and is
+wrong: at Earth it drives the width to zero at exactly the place Slavin measures a 30 R_E
+radius. `L` must sit outside the measured range, and the further out it sits the better the
+measured widths are reproduced (at Earth, `L` 200 gives 12.1 R_E at −180 against a measured
+30; `L` 1500 gives 29.4).
 
-Jupiter, Saturn, Uranus and Neptune keep their inherited placeholders (Jupiter's works out
-to 1512 R_J) because **no extrapolation is defensible**. The two anchors sit at 2 R_ss and
-10–12 R_ss — a factor of 5–6 apart, of which α explains only 3.6 — and the literature does
-not close the gap: Winslow states plainly that "the factors determining the location where
-tail flaring ceases are not well understood", pointing instead at the distance where the
-plasma sheet is disconnected by reconnection. That is a flux-transport problem, not the
-pressure balance a relation could be built on. An earlier revision of this section proposed
-a 12 × nose rule calibrated on Earth; Mercury's anchor falsifies it, and the "independent
-check" it claimed at Jupiter used the wrong quantity — Kurth 1981's ">700 R_J" is a
-lower bound on brief encounters, while Lepping 1983 ([`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) documents a
-Jovian tail reaching **at least 9000 R_J**, with Voyager 2 detecting it out to ~4.5 AU
-(Kurth 1982, [`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) and Saturn itself immersed in it (Desch 1983,
-[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)).
+Both anchors do confirm the α-derived **shape**, which was not fitted to them: at x = −3 R_M
+Winslow reports a nearly cylindrical radius of ~2.7 R_M and our surface gives **2.71**; at
+x = −120 R_E Slavin reports a diameter of 60 ± 5 R_E and ours gives **28.1** in radius.
 
-**A tail longer than the body's SOI is inert, not wrong.** `Radiation.Compute` walks only
-the parent chain (`body = body.referenceBody`) with no SOI test, so once a vessel leaves a
-body's sphere of influence that body drops out of the chain and its field is never sampled.
-Values beyond the SOI therefore cost nothing and claim nothing.
+Every published tail extent is a spacecraft-coverage **lower bound**, not an endpoint — the
+largest is Jupiter's, at least 9000 R_J = 143 `r₀` (Lepping 1983,
+[`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L); Voyager 2 detected it to ~4.5 AU, Kurth 1982
+[`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K), with Saturn itself immersed in it, Desch 1983
+[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)). A convention that contradicts none of them therefore has to
+put `L` beyond 143 `r₀`. **The convention is not yet chosen**; the leading candidate is
+`L = 150 r₀`, which depends only on `r₀` and so inherits no unverified relation.
 
 Venus and Mars fall into the last row because Shue's single α cannot hold a tight waist
 and a widening tail apart at any value — the measured failure modes are tabulated below.
