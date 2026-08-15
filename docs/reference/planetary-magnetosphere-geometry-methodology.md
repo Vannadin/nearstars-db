@@ -518,12 +518,21 @@ better anchor than stock Kerbin/Jool (ROKerbalism `KerbalismConfig/System/Radiat
 
 | Body | geometry (R_body) | `radiation_inner / outer / pause` | note |
 |---|---|---|---|
-| Sun | heliopause, `pause_radius` 1000 | surface 46.5, cycle 11 yr | dose source + GCR shield |
+| Sun | heliopause, `pause_radius` **16000** (= 74.4 AU) | surface 46.5, **−0.010**, cycle 11 yr | dose source + GCR shield |
 | Earth | inner 0.81/0.70, outer 2.63/2.48, pause 15 | 10.4 / 2.2 / **−0.010**, pole 80.4 | **separated** belts |
 | Jupiter | inner 6.0/1.0, outer 6.5/6.5, pause 60 | 300 / 50 / **−0.010**, pole −81 | **concentric** (inner at the outer shell's inner edge) |
 | Saturn | outer 7/7 only (**no inner**), pause 20 | — / 150 / **−0.011** | inner belt absent — **rings sweep it** (Cooper 1983) |
 | Uranus | offset dipole | 75 / 4 / −0.010, pole 31, `geomagnetic_offset` 0.3 | tilted/offset |
 | Neptune | offset dipole | 39 / 2.5 / −0.007, pole 43, `geomagnetic_offset` 0.55 | strongly offset |
+
+**Read `Support/RSS.cfg`, not just `Radiation.cfg`.** The `heliopause` model in
+`Radiation.cfg` carries `pause_radius = 1000`, which at the real solar radius is only
+4.65 AU — inside Saturn's orbit. That value never reaches a running RSS game:
+`KerbalismConfig/Support/RSS.cfg` (shipped identically by base Kerbalism and ROKerbalism)
+patches `@RadiationModel[heliopause]:NEEDS[RealSolarSystem] { @pause_radius = 16000.0 }`,
+giving a 74.4 AU nose and, at `pause_extension` 0.25, a 297.6 AU tail. That is the same
+order as Voyager 1's measured crossing at 121.6 AU. Any audit of stock geometry has to
+apply the `Support/` MM patches before quoting a number.
 
 Three facts this settles for NearStars:
 1. **`radiation_pause` ≈ −0.01 for every body** (Earth/Jupiter −0.010, Saturn −0.011,
