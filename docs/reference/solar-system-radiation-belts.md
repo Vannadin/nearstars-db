@@ -88,16 +88,17 @@ at the dusk terminator and 1000 km at dawn (Brace 1980, [`1980JGR....85.7663B`](
 on `R_V` 6051.8 km is a **nose at 1.055 R_V and a terminator mean of 1.140 R_V**.
 Mapped through the cfg semantics (`nose = pause_radius/compression`,
 flank = `pause_radius`, tail = `pause_radius/extension`) that is
-`pause_radius` **1.14**, `compression` **1.0151**, `extension` **0.0567**, plus the two
+`pause_radius` **1.14**, `compression` **1.0151**, `extension` **0.0072038**, plus the two
 generalizing fields `pause_smooth` **0.57** and `pause_waist` **0** (neither exists in stock
-Kerbalism; see below). Nose 1.055 and terminator 1.13 come out exact and the tail closes at
-20 R_V, the farthest confirmed crossing of the induced magnetospheric boundary (Edberg 2024,
+Kerbalism; see below). Nose 1.055 and terminator 1.13 come out exact, and the tail closes at
+158 R_V under the project-wide `L` = 150 × nose convention — comfortably beyond the farthest
+confirmed crossing of the induced magnetospheric boundary at 20 R_V (Edberg 2024,
 [`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)). No belts, and
 `radiation_pause` stays at the shipped −0.005: an induced boundary screens GCR far less than
 a dipole magnetopause.
 
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform 1.1 R)
-and the tail runs far longer (20 vs 5.5 R_V).
+and the tail runs far longer (158 vs 5.5 R_V).
 
 **The shape is the stock function generalized — the fallback, not the default.** Project
 policy is to use Shue wherever a fitted α exists (Earth, Mercury, Jupiter) and to fall back
@@ -151,14 +152,14 @@ labelled as one in the render. One check it was not designed to pass: at that an
 dayside circle meets the terminator with slope 0.135 against the cone's 0.131, joining
 smoothly to within 3%, but that check belongs to the circle-plus-cone form, which is not
 what ships. The shipped numbers are `pause_radius` **1.47**, `compression` **1.0684**,
-`extension` **0.0737** with `pause_smooth` **0.735**, putting the tail at 20 R_M — the same
-distance in planetary radii as Venus' confirmed extent, under the same analogy.
+`extension` **0.0076265** with `pause_smooth` **0.735**, putting the tail at 193 R_M under
+the same `L` = 150 × nose convention.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
 amplitude is inherited rather than derived — flagged, not fabricated. Against stock,
 the derived boundary stands further off (1.29 vs 1.25 nose, 1.47 vs a rounder
-flank) and trails a much longer tail (20 vs 1.7 R_M).
+flank) and trails a much longer tail (193 vs 1.7 R_M).
 
 Both Venus and Mars remain belt-free: no dynamo, no trapping.
 

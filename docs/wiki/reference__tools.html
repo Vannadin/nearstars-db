@@ -548,6 +548,12 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   `docs/belt-viewer.html`, the interactive in-browser viewer (live SDF cross-section +
   3D raymarch, per-field sliders, 17 presets injected from `render_belts_bodies.BODIES`,
   Shue overlay, one-click cfg export); linked from the wiki Radiation-Belts page
+- `scripts/viz/build_uranus_geometry.py` (+ `uranus_geometry_template.html`) — builds
+  [`docs/uranus-geometry.html`](../uranus-geometry.html), a three.js page comparing Earth's
+  ordinary magnetosphere against Uranus' pole-on one. It exists to make one thing visible:
+  at the Voyager 2 encounter Uranus' rotation axis pointed within ~8° of the Sun, so a 59°
+  dipole tilt sweeps the current sheet through 355° per rotation (Earth flaps 24°), which is
+  why a single flyby's X-line measurement there may not be representative
 - `scripts/refs/kp_limit.py` — Kennel–Petschek trapped-flux ceiling calculator: a
   validated Python port of Mauk & Fox's own Zenodo implementation (11 printed
   intermediates reproduced ≤0.05%); used as the belt-intensity upper-bound check in
@@ -1000,6 +1006,12 @@ the auroral footprint overlaid.
   `docs/belt-viewer.html` 빌드. 브라우저 인터랙티브 뷰어(실시간 SDF 단면 + 3D
   레이마칭, 필드별 슬라이더, `render_belts_bodies.BODIES`에서 주입한 17개 프리셋,
   Shue 오버레이, 원클릭 cfg 내보내기). 위키 Radiation-Belts 페이지에서 링크.
+- `scripts/viz/build_uranus_geometry.py` (+ `uranus_geometry_template.html`) —
+  [`docs/uranus-geometry.html`](../uranus-geometry.html) 빌드. 지구의 평범한
+  자기권과 천왕성의 극-정면(pole-on) 자기권을 나란히 비교하는 three.js 페이지. 목적은 딱
+  하나를 눈에 보이게 하는 것. 보이저 2호 조우 당시 천왕성 자전축은 태양 방향에서 ~8° 안쪽을
+  향했고, 그래서 59° 쌍극자 기울기가 자전 한 바퀴마다 전류판을 355°나 휘젓는다(지구는 24°만
+  펄럭인다). 그곳에서 단 한 번의 플라이바이로 잰 X-line 값이 대표성을 갖지 못할 수 있는 이유다.
 - `scripts/refs/kp_limit.py` — Kennel–Petschek 포획 플럭스 상한 계산기. Mauk & Fox
   원저자 Zenodo 구현의 검증된 파이썬 포팅(인쇄 중간값 11개 ≤0.05% 재현). 자기권
   지오메트리 방법론 Part B의 벨트 강도 상한 체크에 사용.

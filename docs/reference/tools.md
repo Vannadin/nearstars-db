@@ -312,6 +312,12 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   `docs/belt-viewer.html`, the interactive in-browser viewer (live SDF cross-section +
   3D raymarch, per-field sliders, 17 presets injected from `render_belts_bodies.BODIES`,
   Shue overlay, one-click cfg export); linked from the wiki Radiation-Belts page
+- `scripts/viz/build_uranus_geometry.py` (+ `uranus_geometry_template.html`) — builds
+  [`docs/uranus-geometry.html`](../uranus-geometry.html), a three.js page comparing Earth's
+  ordinary magnetosphere against Uranus' pole-on one. It exists to make one thing visible:
+  at the Voyager 2 encounter Uranus' rotation axis pointed within ~8° of the Sun, so a 59°
+  dipole tilt sweeps the current sheet through 355° per rotation (Earth flaps 24°), which is
+  why a single flyby's X-line measurement there may not be representative
 - `scripts/refs/kp_limit.py` — Kennel–Petschek trapped-flux ceiling calculator: a
   validated Python port of Mauk & Fox's own Zenodo implementation (11 printed
   intermediates reproduced ≤0.05%); used as the belt-intensity upper-bound check in

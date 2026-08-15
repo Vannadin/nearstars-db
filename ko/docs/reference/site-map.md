@@ -2,26 +2,26 @@
 # 사이트맵: 발행 문서 표면
 
 > `python3 scripts/build_sitemap.py`로 생성. 손으로 고치지 말 것.
-> 페이지 272개, 합계 23.2 MB, 내부 링크 5522개.
+> 페이지 273개, 합계 23.7 MB, 내부 링크 5530개.
 > gitignore된 논문 캐시(`docs/phase3/_papers/`)는 사이트가 아니라 로컬 캐시라 제외한다.
 
 ## 구조
 
 | 구획 | 페이지 | 용량 | 역할 |
 |---|---:|---:|---|
-| `root` | 7 | 2.5 MB | Top-level surfaces |
-| `wiki` | 59 | 3.2 MB | Rendered reference docs + plans |
+| `root` | 8 | 2.5 MB | Top-level surfaces |
+| `wiki` | 59 | 3.6 MB | Rendered reference docs + plans |
 | `phase2` | 77 | 1.6 MB | Per-host measurement reports |
 | `phase3` | 81 | 6.3 MB | Per-planet synthesis reports |
 | `phase4` | 48 | 9.7 MB | Decision boards + orbit viewers |
 
 **허브**(아웃바운드 링크 최다):
 - `reports.html` → 186
-- `wiki/index.html` → 64
-- `wiki/plans__derived-value-grounding-audit.html` → 64
-- `wiki/plans__doc-tool-sprawl-audit.html` → 64
-- `wiki/plans__nearby-field-viewer.html` → 64
-- `wiki/plans__paper-scoping.html` → 64
+- `wiki/guide__data-and-methodology.html` → 64
+- `wiki/guide__faq.html` → 64
+- `wiki/guide__installation.html` → 64
+- `wiki/guide__overview.html` → 64
+- `wiki/guide__showcase.html` → 64
 
 주의: `index.html`은 목록을 `reports-manifest.json`에서 런타임에 만들기 때문에 정적 href가 거의 없다. 실제로는 phase2/phase3 리포트 전부로 이어지는 최대 허브다. 위키 페이지들이 61개씩 갖는 아웃바운드는 페이지마다 실린 전체 사이드바다.
 
@@ -45,8 +45,8 @@
 - `phase4/orbit-viewers/alpha-centauri/interactive.html` — 1024 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_leapfrog.html` — 1020 KB
 - `phase4/orbit-viewers/alpha-centauri-validation/moon_megno.html` — 1018 KB
-- `firefly-colors.html` — 941 KB
+- `firefly-colors.html` — 942 KB
 - `phase4/orbit-viewers/barnards-star/interactive.html` — 778 KB
 - `phase4/orbit-viewers/tau-cet/interactive.html` — 770 KB
 
-<!-- generated 2026-08-10 17:44 -->
+<!-- generated 2026-08-15 21:52 -->
