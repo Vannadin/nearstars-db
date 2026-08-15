@@ -35,6 +35,26 @@ the **stellar wind** for a planet, or the **parent's co-rotating magnetospheric
 plasma** for an embedded moon (see regimes). The `^(1/6)` power makes the standoff
 very robust to input error: an 8× error in either B or P moves R_mp by only 2×.
 
+**Magnetodisc giants need an inflation factor on top.** The balance above assumes the
+field is a vacuum dipole all the way to the boundary. A giant that spins fast and carries
+a heavy plasma load stretches its field into a rotating magnetodisc, which pushes the
+boundary well past the vacuum answer. The size of the error is measurable at Jupiter,
+where Rutala 2025 ([`2025JGRA..13033842R`](https://ui.adsabs.harvard.edu/abs/2025JGRA..13033842R) / [2502.09186](https://arxiv.org/abs/2502.09186)) fits
+`r_SS = 38.0 · p_SW^−0.25` R_J to the observed crossings:
+
+| `p_SW` (nPa) | Chapman–Ferraro | Rutala fit | ratio |
+|---|---|---|---|
+| 0.03 | 46.2 R_J | 91.3 R_J | 1.98 |
+| 0.13 | 36.2 R_J | 63.3 R_J | 1.75 |
+| 0.39 | 30.1 R_J | 48.1 R_J | 1.60 |
+
+The factor is not a constant: Chapman–Ferraro goes as `p^−1/6` and the fit as `p^−1/4`,
+so the inflation falls as `p^−1/12`. That reads correctly — a harder wind squeezes the
+disc out of the magnetosphere and drives the boundary back toward the vacuum answer.
+Apply it as `R_mp = k(p) · R_CF` with `k(p) = 38.0 p^−0.25 / R_CF(Jupiter, p)`, and state
+that the transplant assumes a Jupiter-like disc. A body with a heavier plasma source than
+Io's gets a **floor**, not an estimate. (Worked case: Polyphemus, `scripts/refs/magnetopause_geometry.py`.)
+
 Only the **equatorial (sub-solar) field** enters — the magnetopause nose is on the
 magnetic equator. The polar field never appears here; for a pure dipole it is just
 `2·B_eq` and carries no independent geometric information (it becomes informative
@@ -168,7 +188,9 @@ Jovian tail to ~4.5 AU downstream (Kurth 1982, [`1982JGR....8710373K`](https://u
 itself becoming immersed in it (Desch 1983, [`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)).
 
 Not applied to Ganymede, whose obstacle sits in Jovian plasma rather than a stellar wind
-(Alfvén-wing regime), nor to NearStars bodies, whose source of truth is the phase 4 board.
+(Alfvén-wing regime). It **is** applied to the NearStars bodies as of the 2026-08-16
+re-gate: Polyphemus `L` 5300 R_p, Proxima b 231 R_p, Proxima c 1791 R_c. The phase 4
+board remains their source of truth, and now records these values.
 
 **What `L` is not.** Two distances are measured and must not be confused with it:
 
@@ -192,8 +214,8 @@ largest is Jupiter's, at least 9000 R_J = 143 `r₀` (Lepping 1983,
 [`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L); Voyager 2 detected it to ~4.5 AU, Kurth 1982
 [`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K), with Saturn itself immersed in it, Desch 1983
 [`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)). A convention that contradicts none of them therefore has to
-put `L` beyond 143 `r₀`. **The convention is not yet chosen**; the leading candidate is
-`L = 150 r₀`, which depends only on `r₀` and so inherits no unverified relation.
+put `L` beyond 143 `r₀`. `L = 150 r₀` is the adopted convention (owner decision
+2026-08-14); it depends only on `r₀` and so inherits no unverified relation.
 
 Venus and Mars fall into the last row because Shue's single α cannot hold a tight waist
 and a widening tail apart at any value — the measured failure modes are tabulated below.

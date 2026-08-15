@@ -320,6 +320,14 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   shock; the wing pair (one branch starward, one anti-starward, tilt arctan M_A ≈ 17°)
   carries the star–planet magnetic connection behind the phase-locked flares, plus a
   close-up with the closed dipole core, Shue nose 7 R_d, and the weathered polar caps.
+- `scripts/refs/magnetopause_geometry.py` — magnetopause geometry from the field, and the
+  single reproducible source for every NearStars pause: Chapman-Ferraro nose (with the
+  magnetodisc inflation factor for giants, measured at Jupiter as the Rutala 2025 fit over
+  the vacuum-dipole prediction, falling as p^-1/12), the regime call (Alfvén Mach number
+  for an embedded moon, reported as the density needed to reach M_A = 1 so the uncertain
+  torus profile stays out of the conclusion), the four Kerbalism pause fields from α, and
+  `fit_offset_emulation()`, a least-squares fit of the offset-sphere fallback to the
+  softened Shue curve. Run with no arguments for the whole table.
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
   Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
   ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G

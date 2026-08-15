@@ -311,6 +311,12 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
   bow shock 없음. 별 쪽/반대쪽 두 가닥 윙(기울기 arctan M_A ≈ 17°)이 phase-lock
   플레어를 만드는 별-행성 자기 연결 통로임을 그리고, 근접 뷰에 닫힌 쌍극자 코어,
   Shue nose 7 R_d, 풍화 극관을 함께 표시.
+- `scripts/refs/magnetopause_geometry.py` — 자기장에서 자기권계면 형상을 구하는 계산기이자,
+  NearStars 모든 pause 값의 단일 재현 출처. Chapman-Ferraro 노즈(자이언트는 magnetodisc 팽창
+  인자를 곱한다. 목성에서 Rutala 2025 피팅 대 진공 쌍극자 예측의 비로 실측되며 p^−1/12로 감소),
+  레짐 판정(내장 위성은 알펜 마하수로 가르되, 불확실한 토러스 프로파일이 결론에 끼어들지 않도록
+  M_A=1에 필요한 밀도로 뒤집어 보고), α에서 나오는 Kerbalism pause 4필드, 그리고 연화 Shue 곡선에
+  offset 구 근사를 최소제곱으로 맞추는 `fit_offset_emulation()`. 인자 없이 실행하면 전체 표가 나온다.
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d 벨트 선량 도출(방법론 Part B).
   dose-anchor 보간 10.4×(B_eq/31 µT)^1.9 → 내대 ~5×10³ / 외대 ~1×10³ rad/h(신뢰
   낮음, 목성 앵커 1.9배 밖 외삽; 장 범위 3–280 G면 2×10²–10⁶), `kp_limit.py`
