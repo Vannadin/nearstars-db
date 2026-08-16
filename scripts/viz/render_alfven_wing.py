@@ -113,6 +113,42 @@ def straightness_profile(path, R_tube):
             'ten_pct': crossing(0.10 * s[-1])}
 
 
+def downsample_path(path, samples, radius_tol=0.03, angle_tol=0.035):
+    """Thin a path for rendering, keeping detail where the shape actually moves.
+
+    Two failures this avoids, both learned the hard way. `path[::step]` drops
+    the endpoint whenever the length is not a multiple of the step, which cost
+    the Petrova beam its last 112 target radii — invisible in the numbers,
+    glaring in the picture. And uniform thinning spends its budget evenly along
+    a path whose interesting parts are not evenly spread: the Petrova funnel
+    collapses by a factor of 500 within two stellar radii, and four straight
+    frusta across that stretch render as a stack of rings.
+
+    So keep a vertex when the radius has moved by `radius_tol` or the direction
+    has turned by `angle_tol` radians since the last one kept, and thin the
+    quiet stretches by however much is left of the budget.
+    """
+    if len(path) <= samples:
+        return list(path)
+    step = max(1, len(path) // samples)
+    out = [path[0]]
+    ref_r = path[0][1]
+    ref_dir = None
+    for i in range(1, len(path) - 1):
+        p, r = path[i][0], path[i][1]
+        prev = out[-1][0]
+        d = math.dist(p, prev) or 1e-12
+        direction = tuple((p[k] - prev[k]) / d for k in range(3))
+        turned = (ref_dir is not None
+                  and sum(direction[k] * ref_dir[k] for k in range(3)) < math.cos(angle_tol))
+        moved = abs(r - ref_r) > radius_tol * max(r, ref_r, 1e-12)
+        if turned or moved or i % step == 0:
+            out.append(path[i])
+            ref_r, ref_dir = r, direction
+    out.append(path[-1])
+    return out
+
+
 def path_sdf_np(P, pts, rads, chunk=24000):
     """Swept-sphere polyline distance, vectorized over both points and segments.
 
@@ -429,11 +465,12 @@ def make_sdf(spec, full, fatten=1.0, fillet_scale=None):
                                spec['field_sign'], blend)
         return sdf
 
-    # 렌더용 다운샘플: 260 세그먼트는 형상에 필요 없고 마칭만 40배 느려진다.
-    step = max(1, len(spec['paths'][0]) // 90)
-    arrs = [(np.array([p for p, _ in path[::step]], dtype=np.float64),
-             np.array([r * fatten for _, r in path[::step]], dtype=np.float64))
-            for path in spec['paths']]
+    # 렌더용 다운샘플: 520 세그먼트는 형상에 필요 없고 마칭만 몇 배 느려진다.
+    arrs = []
+    for path in spec['paths']:
+        thin = downsample_path(path, 90)
+        arrs.append((np.array([p for p, _ in thin], dtype=np.float64),
+                     np.array([r * fatten for _, r in thin], dtype=np.float64)))
     pr, pc = spec['parent_radius'], spec['parent_centre']
 
     # 착지 필렛: 관과 모천체가 만나는 모서리를 스케일 높이만큼 부드럽게 잇는다.

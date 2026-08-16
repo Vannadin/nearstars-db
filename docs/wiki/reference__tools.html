@@ -580,6 +580,22 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   blue and the bent remainder orange, so where it stops being straight is a thing you look
   at rather than a number in a caption. `--selftest` asserts the numpy field matches the
   scalar one in `magnetopause_geometry.py` to 1e-9.
+- `scripts/refs/petrova_line_geometry.py` + `scripts/viz/render_petrova_line.py` — the
+  *Project Hail Mary* Petrova line, built to the same contract and sharing the tube
+  renderer, as the first test that the machinery generalises past magnetic geometry. The
+  path is **one continuous curve** — leaving along the spin axis, peaking where the target
+  is easiest to read, arriving on its bearing — with a beam opening to the target's
+  diameter. It needs no coefficient. The target's angular gap from the star's limb is
+  **not monotonic** — climbing lifts it off the limb but also swings it toward the
+  downward axis — so there is a best height, `H = √(R_star·a)`, the geometric mean of the
+  star's radius and the orbit (12.5 R_☉ and 81° of clear sky for Sol → Venus), and the
+  curve's control height is solved to put its apex exactly there. A first build banked the
+  turn into a corner and a second into a tangent arc; both are wrong in spirit, since the
+  clearance being steered by improves the whole way. At light
+  speed the transit is 6 minutes, which bends the path by 24 arcsec (invisible) but puts the
+  aim point 2.09 target diameters ahead of the *apparent* target, since the light navigated
+  by is equally stale. Long-term consumer: the separate visualisation mod
+  ([`plugins/NearStarsFluxTube`](https://github.com/Vannadin/nearstars-db/blob/main/plugins/NearStarsFluxTube/README.md)).
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
   Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
   ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G
@@ -1077,6 +1093,16 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
   모천체까지 가는 전 구간을 보여주며, 직선 구간은 파랑·꺾인 구간은 주황으로 칠해 어디서 꺾이는지를
   캡션 숫자가 아니라 그림으로 보게 한다. `--selftest`는 numpy 필드가 `magnetopause_geometry.py`의
   스칼라 구현과 1e-9까지 일치하는지 검사한다.
+- `scripts/refs/petrova_line_geometry.py` + `scripts/viz/render_petrova_line.py` — 『프로젝트
+  헤일 메리』의 페트로바선. 같은 계약으로 짓고 튜브 렌더러를 공유해, 이 기계가 자기 기하 밖으로도
+  일반화되는지 확인하는 첫 시험대다. 경로는 자전축 상승 → 아크 → 목표 지름으로 벌어지며 직진.
+  꺾임점에 문턱값이 필요 없다. 목표가 항성 림에서 떨어진 각도는 **비단조**라(올라가면 림에서
+  떨어지지만 동시에 아래쪽 축으로 쏠린다) 최대가 존재하고, 그 높이가 `H = √(R★·a)` — 항성 반경과
+  궤도의 기하평균이다(솔→금성 12.5 R☉, 여유 81°). 꺾임이 모서리가 아닌 이유도 같은 곡선에서 나온다.
+  최대 부근이 넓어서(최대의 99% 이상이 8.3~19.1 R☉) 돌아야 할 단일 높이가 없고, 그 밴드 폭이 곧
+  선회 반경이 된다. 광속 이동이라 6분 비행 중 경로가 24초각 휘는 건 안 보이지만, 보는 빛도 그만큼
+  묵은 것이라 **겨냥점은 보이는 위치보다 목표 지름 2.09개 앞**이다. 장기 소비자 = 별도 시각화 모드
+  ([`plugins/NearStarsFluxTube`](https://github.com/Vannadin/nearstars-db/blob/main/plugins/NearStarsFluxTube/README.md)).
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d 벨트 선량 도출(방법론 Part B).
   dose-anchor 보간 10.4×(B_eq/31 µT)^1.9 → 내대 ~5×10³ / 외대 ~1×10³ rad/h(신뢰
   낮음, 목성 앵커 1.9배 밖 외삽; 장 범위 3–280 G면 2×10²–10⁶), `kp_limit.py`

@@ -343,6 +343,22 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   blue and the bent remainder orange, so where it stops being straight is a thing you look
   at rather than a number in a caption. `--selftest` asserts the numpy field matches the
   scalar one in `magnetopause_geometry.py` to 1e-9.
+- `scripts/refs/petrova_line_geometry.py` + `scripts/viz/render_petrova_line.py` — the
+  *Project Hail Mary* Petrova line, built to the same contract and sharing the tube
+  renderer, as the first test that the machinery generalises past magnetic geometry. The
+  path is **one continuous curve** — leaving along the spin axis, peaking where the target
+  is easiest to read, arriving on its bearing — with a beam opening to the target's
+  diameter. It needs no coefficient. The target's angular gap from the star's limb is
+  **not monotonic** — climbing lifts it off the limb but also swings it toward the
+  downward axis — so there is a best height, `H = √(R_star·a)`, the geometric mean of the
+  star's radius and the orbit (12.5 R_☉ and 81° of clear sky for Sol → Venus), and the
+  curve's control height is solved to put its apex exactly there. A first build banked the
+  turn into a corner and a second into a tangent arc; both are wrong in spirit, since the
+  clearance being steered by improves the whole way. At light
+  speed the transit is 6 minutes, which bends the path by 24 arcsec (invisible) but puts the
+  aim point 2.09 target diameters ahead of the *apparent* target, since the light navigated
+  by is equally stale. Long-term consumer: the separate visualisation mod
+  ([`plugins/NearStarsFluxTube`](../../plugins/NearStarsFluxTube/README.md)).
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
   Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
   ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G
