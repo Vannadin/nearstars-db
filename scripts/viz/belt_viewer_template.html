@@ -484,7 +484,7 @@ presetBar.addEventListener('click',e=>{
   // 하드코딩 earth_phys 로 떨어지지 않도록, 현재 프리셋이 없으면 피커가 가리키는 것을 쓴다.
   if(b.dataset.act==='reset'){
     const cur=currentPreset||(typeof curBody!=='undefined'&&curBody?presetFor(curBody,curVar):'earth_phys');
-    applyPreset(cur,{keepZoom:true,keepSlice:true}); return;
+    applyPreset(cur,{keepZoom:true,keepSlice:true,keepShue:true}); return;
   }
   if(b.dataset.lang){ lang=b.dataset.lang; localStorage.setItem('nearstars-lang',lang); applyLang(); return; }
   applyPreset(b.dataset.p);
@@ -559,15 +559,21 @@ function deepset(preset){
   state.pending=P.pending||null;
   const pb=document.getElementById('pendBtn'); if(pb) pb.hidden=!state.pending;
 }
-function applyPreset(p,{keepZoom=false,keepSlice=false}={}){
+function applyPreset(p,{keepZoom=false,keepSlice=false,keepShue=false}={}){
   // stock↔physical 토글은 같은 천체의 두 판본이므로 줌을 유지한다 — 프리셋 R 로 되돌리면
   // 확대해서 보던 자리를 매번 잃는다. 천체/계를 바꿀 때는 프리셋 스케일을 그대로 쓴다.
   // keepSlice 는 '현재값 초기화' 전용이다. slice_z 도 값이 아니라 보는 자리라서 유지한다.
   const prevR = keepZoom && state.view ? state.view.R : null;
   const prevZ = keepSlice && state.view ? state.view.z : null;
+  // Shue 오버레이(α·r0 핀·꼬리 핀·야간 α)도 값이 아니라 탐색 상태다 — 초기화가 지우면
+  // 슬라이더로 맞춰 보던 기준선을 매번 다시 세워야 한다.
+  const prevS = keepShue && state.view
+    ? {shue:state.view.shue, shue_r0:state.view.shue_r0,
+       shue_L:state.view.shue_L, shue_an:state.view.shue_an} : null;
   currentPreset=p; deepset(p);
   if(prevR) state.view.R=prevR;
   if(prevZ!==null) state.view.z=prevZ;
+  if(prevS) Object.assign(state.view, prevS);
   syncControls();
   const meta=PRESETS[p];
   if(meta && typeof curBody!=='undefined'){
@@ -759,8 +765,14 @@ function render(){
         ctx.fillStyle='rgba(255,154,82,.055)';
         ctx.beginPath();
         f2=true;
-        for(let i=0;i<=240;i++){
-          const deg=-180+i*1.5;
+        // θ 균등 표본은 꼬리에서 무너진다. r 이 θ→180° 에서 발산하므로 같은 각도 폭이 훨씬 긴
+        // 거리를 덮고, 지구·L 1500 기준 마지막 선분 하나가 화면에서 91 px 이 된다(각져 보인다).
+        // u = π−θ 를 제곱으로 몰아 꼬리에 표본을 모으면 9.9 px 로 내려간다. 지수를 3 으로 더
+        // 올리면 꼬리는 8 px 까지 가지만 노즈가 6.2→10.9 px 로 나빠진다 — 제곱이 양쪽 최적점이다.
+        const NS=240;
+        for(let i=-NS;i<=NS;i++){
+          const sgn=i<0?-1:1, sv=Math.abs(i)/NS;
+          const deg=sgn*(180-180*Math.pow(1-sv,2));
           const cu=Math.cos(deg*Math.PI/360);          // cos(θ/2)
           const rr2=nose*Math.pow((1+eps)/(eps+Math.pow(cu*cu,m)),aOf(deg)/m);
           const th=deg*Math.PI/180;
@@ -778,7 +790,9 @@ function render(){
         ctx.strokeStyle='rgba(255,154,82,.85)'; ctx.setLineDash([6,4]);
         ctx.beginPath();
         let first=true;
-        for(let deg=-152;deg<=152;deg+=2){
+        for(let i=-160;i<=160;i++){
+          const sgn=i<0?-1:1, sv=Math.abs(i)/160;
+          const deg=sgn*(152-152*Math.pow(1-sv,2));
           const th=deg*Math.PI/180;
           const rr2=nose*Math.pow(2/(1+Math.cos(th)),alS);
           const px2=c+rr2*Math.cos(th)*ppr, py2=oy-rr2*Math.sin(th)*ppr;

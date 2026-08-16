@@ -290,3 +290,84 @@ def _report():
 
 if __name__ == '__main__':
     _report()
+
+
+# ---------------------------------------------------- Shue → 스톡 인코딩 변환
+
+def _px_gen(x, comp, ext, waist, smooth):
+    u = x - waist
+    if smooth <= 0:
+        return u * (ext if u < 0 else comp)
+    return 0.5 * (comp + ext) * u + 0.5 * (comp - ext) * math.sqrt(u * u + smooth * smooth)
+
+
+def _width_gen(x, rad, comp, ext, waist, smooth):
+    q = rad * rad - _px_gen(x, comp, ext, waist, smooth) ** 2
+    return math.sqrt(q) if q > 0 else 0.0
+
+
+def _constrain(r0, L, rad, smooth, comp=1.0):
+    """노즈 px(r0)=rad 와 꼬리 px(-L)=-rad 를 waist·ext 에 대해 교대 수렴."""
+    waist, ext = -0.5 * r0, rad / L
+    for _ in range(60):
+        lo, hi = -40 * r0, r0 - 1e-12
+        for _ in range(100):
+            m = (lo + hi) / 2
+            if _px_gen(r0, comp, ext, m, smooth) < rad:
+                hi = m
+            else:
+                lo = m
+        waist = (lo + hi) / 2
+        elo, ehi = 1e-14, comp
+        for _ in range(100):
+            m = (elo + ehi) / 2
+            if _px_gen(-L, comp, m, waist, smooth) > -rad:
+                elo = m
+            else:
+                ehi = m
+        ext = (elo + ehi) / 2
+    return waist, ext
+
+
+def shue_to_stock(r0, alpha, tail_ratio=150.0, samples=500, grid=(101, 61), span=4.0):
+    """Fit the generalised stock pause to a softened Shue surface.
+
+    This *is* how the project implements Shue. Rather than evaluate `r(θ)` in the
+    engine — which would need a polar form converted to a Cartesian signed
+    distance, plus new domain and offset formulas, plus a re-check of the
+    particle-mesh shell — the four stock fields are fitted to the Shue surface
+    once, offline. `compression` is retired to 1.0 and `waist` carries the
+    asymmetry, because compression pins the widest cross-section to the body
+    plane while Shue puts it behind the planet.
+
+    The result depends only on alpha: normalise by `r0` and bodies sharing an
+    alpha get identical `rad/r0`, `waist/r0`, `ext` and `smooth/rad`.
+
+    Residual against the target is a few percent, smaller than the physical
+    spread in alpha itself — Shue 1998 has alpha = (0.58 − 0.007·Bz)(1 + 0.024·ln Dp),
+    so a ±5 nT swing in IMF Bz moves the tail width by about ±20%.
+    """
+    L = tail_ratio * r0
+    target = []
+    for i in range(1, samples):
+        th = math.pi * i / samples
+        r = softened_shue_r(th, r0, alpha, L)
+        target.append((r * math.cos(th), r * math.sin(th)))
+
+    nr, ns = grid
+    best = None
+    for ri in range(nr):
+        rad = r0 * (1 + ri * 0.05)
+        for si in range(ns):
+            smooth = rad * (si / (ns - 1.0) * span)
+            waist, ext = _constrain(r0, L, rad, smooth)
+            if abs(_width_gen(r0, rad, 1.0, ext, waist, smooth)) > 1e-4:
+                continue
+            err = math.sqrt(sum((_width_gen(x, rad, 1.0, ext, waist, smooth) - y) ** 2
+                                for x, y in target) / len(target))
+            if best is None or err < best[0]:
+                best = (err, rad, ext, waist, smooth)
+    err, rad, ext, waist, smooth = best
+    return {'pause_radius': rad, 'pause_compression': 1.0, 'pause_extension': ext,
+            'pause_waist': waist, 'pause_smooth': smooth,
+            'pause_height_scale': 1.0, 'tail_L': L, 'rms': err}

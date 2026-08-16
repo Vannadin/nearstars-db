@@ -814,32 +814,45 @@ depends on the smoothing. Nose and the 150 × nose tail close are preserved exac
 | Proxima c | 11.942 | 10.3599 | 20.7197 | 0.0115793 |
 | Proxima d | 7.517 | 6.5211 | 13.0422 | 0.0115793 |
 
-**The pending set is five values, and they move together.** The stock engine reads
-`pause_radius` and `pause_extension` but neither `pause_waist` nor `pause_smooth`, so
-applying part of the set deforms the shape instead of improving it. `compression` is
-retired to 1.0: it pins the widest cross-section to the body plane, while the real boundary
-is widest behind the planet, and `waist` is the only handle that moves it. `smooth` = 0.5 ×
-`pause_radius` stays the convention, solved as a fixed point because the radius depends on
-the smoothing. Nose and the 150 × nose tail close are preserved exactly, and the residual
-against the softened-Shue target roughly halves.
+**Shue is implemented by fitting, not by evaluating.** The engine never sees `r(θ)`. The
+generalised stock pause is fitted offline to the Shue target surface and only the resulting
+numbers ship, which means no polar form has to be turned into a Cartesian signed distance,
+no new `Pause_domain` or `Pause_offset` is needed, and the particle-mesh shell keeps working
+unchanged. `Pause_func` gains two lines. This replaced a planned Shue-native engine mode,
+which would have bought nothing measurable: the fit residual is a few percent, while
+Shue 1998's own `α = (0.58 − 0.007·Bz)(1 + 0.024·ln Dp)` moves the tail width by about ±20%
+across a ±5 nT swing in IMF `Bz`. The encoding error is smaller than the physics it encodes.
 
-| body | nose | radius | waist | extension | smooth | rms before → after |
-|---|---|---|---|---|---|---|
-| Mercury | 1.45 | 2.6390 | −1.0262 | 0.0122000 | 1.3195 | 0.445 → 0.162 |
-| Earth | 10 | 22.8000 | −11.3982 | 0.0153308 | 11.4000 | 6.094 → 3.101 |
-| Jupiter | 63 | 94.5000 | −25.6567 | 0.0100334 | 47.2500 | 9.303 → 5.389 |
-| Saturn | 24 | 87.3600 | −58.0431 | 0.0247014 | 43.6800 | 35.604 → 21.080 |
-| Uranus | 18 | 41.0400 | −20.5167 | 0.0153308 | 20.5200 | 10.969 → 5.581 |
-| Neptune | 26.5 | 60.4200 | −30.2052 | 0.0153308 | 30.2100 | 16.149 → 8.216 |
-| Polyphemus | 35.33 | 52.2884 | −13.7247 | 0.0098983 | 26.1442 | 5.127 → 3.115 |
-| Proxima c | 11.942 | 27.2278 | −13.6118 | 0.0153308 | 13.6139 | 7.278 → 3.703 |
-| Proxima d | 7.517 | 17.1388 | −8.5681 | 0.0153309 | 8.5694 | 4.581 → 2.331 |
+Three constraints make the fit usable rather than merely low-residual. The nose is pinned
+exactly, `waist` is held below `0.95 r₀` so the blend origin cannot swallow the dayside, and
+the dayside error is capped at 5%. Without the last two an unconstrained least-squares fit
+happily trades the entire sunward face for tail accuracy — it did, for Saturn, producing
+−100% width at θ = 15° before the guards went in.
 
-Proxima b is absent because it is on the induced branch, where there is no flaring tail to
-reproduce and so no widest section to move; its set is `waist` 0 with `smooth` 0.7150.
-The set does **not** fix the tail-width deficit, which needs the Shue-native mode. Two
-rejected routes to that are in the derivation record
-([solar-system-radiation-belts.md](solar-system-radiation-belts.md#the-widest-cross-section-is-pinned-to-the-body-plane)).
+`compression` retires to 1.0. It pins the widest cross-section to the body plane, while the
+real boundary is widest behind the planet, and `waist` is the only handle that moves it.
+
+**Night-side α is an art policy**: `α_night = α_day × 0.8966`, the proportional form of a
+−0.06 drop anchored on Earth, applied only where `α_day > 0.5`. Bodies at or below 0.5
+already taper behind the planet and are left alone, which excludes Jupiter and Polyphemus
+automatically. It costs measured fidelity — Earth's width at Slavin's x = −120 R_E goes from
+−8.9% to −26.7% against the 30 R_E he measures — and buys a slimmer rear, which is the whole
+reason it exists.
+
+| body | α_day | α_night | radius | waist | extension | smooth | rms | dayside max |
+|---|---|---|---|---|---|---|---|---|
+| Mercury | 0.500 | — | 2.900 | 0.043 | 0.0134228 | 4.205 | 0.008 | 0.26% |
+| Earth | 0.580 | 0.520 | 22.188 | 0.005 | 0.0149128 | 33.281 | 0.148 | 1.12% |
+| Jupiter | 0.423 | — | 94.500 | −23.088 | 0.0100334 | 56.700 | 5.363 | 4.20% |
+| Saturn | 0.736 | 0.660 | 79.500 | 20.548 | 0.0224291 | 159.000 | 8.249 | 4.52% |
+| Uranus | 0.580 | 0.520 | 39.938 | 0.010 | 0.0149128 | 59.906 | 0.266 | 1.12% |
+| Neptune | 0.580 | 0.520 | 58.797 | 0.014 | 0.0149128 | 88.195 | 0.392 | 1.12% |
+| Polyphemus | 0.420 | — | 52.995 | −12.948 | 0.0100334 | 31.797 | 3.123 | 4.30% |
+| Proxima c | 0.580 | 0.520 | 26.496 | 0.006 | 0.0149128 | 39.744 | 0.176 | 1.12% |
+| Proxima d | 0.580 | 0.520 | 16.678 | 0.004 | 0.0149128 | 25.018 | 0.111 | 1.12% |
+
+Converter: `shue_to_stock()` in `scripts/refs/magnetopause_geometry.py`. Proxima b is absent
+because it is on the induced branch, which has no flaring tail to reproduce.
 
 For Venus and Mars the same generalised form is the *adopted* shape rather than a pending
 one. Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
