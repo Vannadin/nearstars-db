@@ -1238,27 +1238,46 @@ decisions:
   # ── 항성 자전축/J2/발견성 — 2026-07-12 silent-passthrough 점검서 신설 ──────────
   - body: Alpha Centauri A
     axis: bulk.spin_axis_orientation
-    status: gated                     # 2026-07-12 오너 선택 — 측정 없음 (silent-passthrough 해소)
-    driver: [art-direction]
+    status: gated                     # 2026-08-16 재게이트 — i★ 결합법 도출로 격상 (구: 임의 태양 유비)
+    driver: [window-selection]
     narrative: >
-      No i★ measurement. An arbitrary value: a Sun-like small ~7° tilt from the AB orbital-plane normal (analogy
-      to the Sun-ecliptic 7.25°). The visual effect is minor.
+      The star's spin axis leans toward us at roughly 74 degrees, read from how fast its surface actually turns:
+      the spectral lines say how fast it spins toward us, the brightness cycle says how long a full turn takes, and
+      together with the measured size they pin the viewing angle. That angle sits right where the companion's
+      orbital plane is (79 degrees), so the star's equator and the binary's orbit appear to lie in the same plane.
+      The adopted small ~7° tilt off that plane's pole stays, now as the residual the numbers allow rather than a
+      borrowed solar habit.
     narrative_ko: >
-      i★ 측정 없음. 임의 값. AB 궤도면 법선에서 태양과 비슷한 ~7° 소기울기(태양-황도 7.25° 유비).
-      시각 효과는 미미하다.
+      이 별의 자전축은 우리 쪽으로 약 74도 기울어 있다. 표면이 실제로 도는 속도에서 읽은 값이다. 스펙트럼 선폭이
+      우리 쪽으로 도는 속도를, 밝기 주기가 한 바퀴 시간을 말해 주고, 측정된 크기와 합치면 보는 각도가 잡힌다.
+      그 각도는 동반성 궤도면이 놓인 자리(79도)와 겹친다. 즉 별의 적도와 쌍성 궤도가 같은 평면에 있는 것으로
+      보인다. 그 평면의 극에서 ~7° 기울인 채택값은 그대로 두되, 이제는 빌려온 태양 습관이 아니라 숫자가
+      허용하는 잔여 기울기다.
     fields:
-      - { name: spin_axis_orientation, value: "The AB orbital-plane normal plus a ~7° tilt (azimuth free; converted to ICRS pole RA/Dec at emit)", value_ko: "AB 궤도면 법선 + ~7° tilt (방위각 자유, ICRS 극 RA/Dec 변환 at emit)", op: set }
+      - { name: spin_axis_orientation, value: "i★ ≈ 74° nominal (38–90° bracket, derived); consistent with spin-orbit alignment: the AB orbital-plane normal plus a ~7° tilt (azimuth free; converted to ICRS pole RA/Dec at emit)", value_ko: "i★ ≈ 74° 명목(구간 38–90°, 도출) · 자전-궤도 정렬과 정합, AB 궤도면 법선 + ~7° tilt (방위각 자유, ICRS 극 RA/Dec 변환 at emit)", op: set }
       - { name: obliquity, value: 7, unit: deg, op: set }
+    provenance: >
+      2026-07-12 gated as an arbitrary Sun-analogy ~7° tilt (no measurement). 2026-08-16 re-gated: the
+      spin-axis-inclination methodology (v sin i 2.7±0.7 km/s Saar & Osten 1997 · P 22±3 d DeWarf 2010 ·
+      R 1.2234 R_sun Kervella 2017) yields i★ ≈ 74° nominal, 38–90° bracket — the alignment reading is now
+      methodology-supported; the emitted value (orbital normal + ~7°) is unchanged.
     gate:
-      criterion: [physics]
-      verdict: pass-in-window
+      criterion: [derived-grounding]
+      verdict: methodology-derived
       evidence: >
-        With no measurement, only a physical-range gate: alignment is the default expectation from close-pair formation·tidal evolution, and a small tilt (≲10°) is
-        unobjectionable by analogy to the Sun (7.25°). Consistent with all observations. The pole azimuth
-        is free at emit orientation (the ICRS pole RA/Dec conversion happens at the emit stage).
+        The alignment choice is methodology-supported, not arbitrary: sin i★ = v sin i · P / 2πR with
+        v sin i 2.7±0.7 km/s, P 22±3 d, R 1.2234 R_sun gives v_eq 2.81 km/s and i★ ≈ 74° nominal
+        (38–90° edge-to-edge), containing the orbital inclination 79°. And Bazot 2007 ran the same relation
+        in reverse (assume i = 79° → predict P 22.5±5.9 d, matching the photometric 22 d). Caveat: v_eq sits
+        only just above the ~2–2.5 km/s slow-rotator floor where the v sin i technique degrades, so the
+        bracket is wide and the nominal should not be over-read.
       evidence_ko: >
-        측정 부재라 물리 범위 게이트만: 근접쌍 형성·조석 진화상 정렬 기대가 기본이고 소기울기(≲10°)는 태양
-        (7.25°) 유비로 무난. 어떤 관측과도 충돌 없음. 극 방위각은 emit 배향 자유(ICRS 극 RA/Dec 변환은 emit 단계).
+        정렬 선택은 이제 임의가 아니라 방법론이 지지한다. sin i★ = v sin i · P / 2πR에 v sin i 2.7±0.7 km/s,
+        P 22±3일, R 1.2234 R☉을 넣으면 v_eq 2.81 km/s, i★ 명목 ≈ 74°(끝값 전파 38–90°)로 궤도 경사 79°를
+        구간 안에 담는다. Bazot 2007은 같은 식을 거꾸로 돌려(i = 79° 가정 → P 22.5±5.9일 예측) 측광 22일과
+        맞췄다. 주의: v_eq가 v sin i 기법이 무너지는 ~2–2.5 km/s 바닥 바로 위라 구간이 넓고, 명목값을
+        과신하면 안 된다.
+    refs: ["docs/reference/spin-axis-inclination-methodology.md"]
 
   - body: Alpha Centauri B
     axis: bulk.spin_axis_orientation
