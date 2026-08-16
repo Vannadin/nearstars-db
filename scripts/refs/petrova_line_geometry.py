@@ -216,7 +216,8 @@ def _solve_control(P0, P2, apex_target, lo=None, hi=None):  # noqa: D401
 
 
 def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
-                 start_radius_m=None, steps=1400, funnel_scale=0.8):
+                 start_radius_m=None, steps=1400, funnel_scale=0.8,
+                 funnel_power=0.0):
     """The line as (point, radius) samples, in metres, star-centred.
 
     Frame: y is the spin axis, the target sits at x = a in the equatorial
@@ -254,6 +255,8 @@ def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
     # 입이 극점 위에 지름 2 R_star 짜리 원반으로 떠서 테두리가 링으로 보인다.
     # 중심에서 시작하면 넓은 구간이 항성 안에 묻히고, 표면 위로 나오는 부분만
     # 깔때기로 읽힌다.
+    amplitude = funnel_amplitude(funnel_scale, funnel_power)
+
     P0 = (0.0, 0.0)
     # 도착점은 표면이 아니라 목표 중심 — 빔이 원반 전체를 덮는다는 서술과
     # 맞으려면 관의 축이 중심까지 가야 하고, 그래야 끝 반경 R_target 이 정확히
@@ -292,7 +295,13 @@ def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
         # 목표 지점에서 y 가 다시 0 이 되어 아가리가 재개방된다(패널이 통째로
         # 주황이 되어 발견).
         d_star = math.hypot(x, y)
-        funnel = R_star_m * math.exp(-d_star / (funnel_scale * R_star_m))
+        u = d_star / R_star_m
+        # 지수 꼬리는 너무 빨리 사라져 목 위쪽이 실처럼 보인다. 거듭제곱 꼬리
+        # 1/(1+(u/L)^p) 는 초반 조임은 같고 꼬리만 두껍게 남는다(형상 선택).
+        # 진폭 A 는 고르지 않는다 — 극 전에 항성 표면을 뚫지 않는 최대값이다.
+        shape = (math.exp(-u / funnel_scale) if funnel_power <= 0
+                 else 1.0 / (1.0 + (u / funnel_scale) ** funnel_power))
+        funnel = amplitude * R_star_m * shape
 
         # 부드러운 최대값으로 두 항을 잇는다 — 단순 max 는 이음매에 각이 생긴다.
         # 두 항을 따로 들고 나간다: 렌더러가 실 같은 beam 만 굵게 그릴 수 있어야
@@ -301,15 +310,26 @@ def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
     return path, H_best
 
 
-def _bell_amplitude(L_in_R, samples=2000):
-    """Amplitude of the tightest exponential bell that still clears the star.
+def funnel_amplitude(L_in_R, power=0.0, samples=4000, edge=0.99):
+    """The widest funnel that does not break the star's surface before the pole.
 
-    A e^{-y/L} >= sqrt(R^2 - y^2) on 0 <= y <= R, solved for the smallest A.
-    Picking A by eye would be one more coefficient; this way the mouth width
-    follows from the decay length, and the decay length is the only choice.
+    A solid tube emerging through a sphere always shows a rim, and if it
+    emerges well below the pole that rim is a wide collar with a visible crease
+    — a fillet cannot hide it, because the two surfaces cross at a shallow
+    angle over a long arc rather than meeting at an edge. Keeping the profile
+    inside the silhouette until the pole moves the crossing to a point, where
+    there is nothing to see.
+
+    So the amplitude is not chosen: it is the largest A with
+    A f(d) <= sqrt(R^2 - d^2) on the star, and it comes out the same 0.14 R
+    at the pole for every shape, since that constraint is what binds. Only the
+    tail is a choice.
     """
-    return max(math.sqrt(1 - u * u) * math.exp(u / L_in_R)
-               for u in (i / samples for i in range(samples + 1)))
+    def shape(u):
+        return (math.exp(-u / L_in_R) if power <= 0
+                else 1.0 / (1.0 + (u / L_in_R) ** power))
+    return min(math.sqrt(1 - u * u) / shape(u)
+               for u in (i / samples * edge for i in range(1, samples + 1)))
 
 
 def combine_radius(funnel, beam, n=4.0):

@@ -39,11 +39,12 @@ SYSTEMS = {
 }
 
 
-def build(name, gap_deg, start_frac):
+def build(name, gap_deg, start_frac, funnel_scale=0.7, funnel_power=1.5):
     s = dict(SYSTEMS[name])
     start_radius = start_frac * s['R_target_m']
     path, H = pg.petrova_path(s['R_star_m'], s['a_m'], s['R_target_m'],
-                              gap_deg=gap_deg, start_radius_m=start_radius)
+                              gap_deg=gap_deg, start_radius_m=start_radius,
+                              funnel_scale=funnel_scale, funnel_power=funnel_power)
     d = pg.describe(s['R_star_m'], s['a_m'], s['R_target_m'], s['v_orbit_m_s'],
                     gap_deg=gap_deg, start_radius_m=start_radius)
     # 렌더 단위 = 항성 반경. 별·행성·빔이 한 좌표계에 들어와야 한다.
@@ -63,15 +64,24 @@ def beam_radii(thin, fatten):
     return np.array([pg.combine_radius(fn, bm * fatten) for _, _, fn, bm in thin])
 
 
-def make_sdf(spec, fatten=1.0, samples=240):
+def make_sdf(spec, fatten=1.0, samples=240, joint_fillet=0.0):
     thin = downsample_path(spec['path'], samples)
     pts = np.array([p for p, _, _, _ in thin])
     rads = beam_radii(thin, fatten)
     tc, tr = spec['target_centre'], spec['target_radius']
 
+    # 항성과 깔때기 이음매를 필렛한다. 구면은 극에서 수평으로 끝나는데 유한한
+    # 굵기의 관이 거기서 솟으므로, 단순 합집합이면 반드시 모서리가 남는다.
+    fillet = spec['star_radius'] * joint_fillet
+
     def sdf(P):
-        d = np.linalg.norm(P, axis=-1) - spec['star_radius']
-        d = np.minimum(d, path_sdf_np(P, pts, rads))
+        star = np.linalg.norm(P, axis=-1) - spec['star_radius']
+        tube = path_sdf_np(P, pts, rads)
+        if fillet > 0:
+            h = np.clip(0.5 + 0.5 * (star - tube) / fillet, 0.0, 1.0)
+            d = star * (1 - h) + tube * h - fillet * h * (1 - h)
+        else:
+            d = np.minimum(star, tube)
         return np.minimum(d, np.linalg.norm(P - tc, axis=-1) - tr)
     return sdf
 
@@ -99,8 +109,9 @@ def _classify(P, spec, fatten, samples=240):
     return ~(star | targ), star, targ
 
 
-def render_view(spec, view, span, size, centre, fatten=1.0, steps=260):
-    sdf = make_sdf(spec, fatten)
+def render_view(spec, view, span, size, centre, fatten=1.0, steps=260,
+                joint_fillet=0.0):
+    sdf = make_sdf(spec, fatten, joint_fillet=joint_fillet)
     origin, direction, right, up = _camera(view, span, size)
     origin = origin + np.asarray(centre, dtype=float)
     # 빔이 화면에서 몇 픽셀밖에 안 되므로 마칭 허용오차를 픽셀 크기에 맞춘다 —
@@ -140,11 +151,17 @@ def main():
     ap.add_argument('--gap-deg', type=float, default=None,
                     help='force a limb gap instead of using the height of '
                          'maximum clearance (the derived default)')
+    ap.add_argument('--funnel-scale', type=float, default=0.7,
+                    help='funnel decay length in stellar radii')
+    ap.add_argument('--funnel-power', type=float, default=1.5,
+                    help='0 = exponential tail; p > 0 uses 1/(1+u^p), which '
+                         'pinches as fast but leaves a thicker neck')
     ap.add_argument('--start-frac', type=float, default=0.25,
                     help='beam radius at the pole, in target radii')
     a = ap.parse_args()
 
-    spec = build(a.system, a.gap_deg, a.start_frac)
+    spec = build(a.system, a.gap_deg, a.start_frac,
+                 a.funnel_scale, a.funnel_power)
     tx = float(spec['target_centre'][0])
     waist = min(r for _, r, _, _ in spec['path'])
 
@@ -163,7 +180,7 @@ def main():
          f'curvature is continuous everywhere; beam x{fat_knee:.0f}'),
         ('flow', spec['star_radius'] * 3.4, np.array([0.0, spec['star_radius'] * 1.5, 0.0]),
          1.0, '3. the funnel off the pole, true scale',
-         'hugs the star below the pole, then pinches within 3 R_star'),
+         'amplitude derived, so it clears the pole with no collar'),
         ('flow', spec['target_radius'] * 3.2,
          spec['target_centre'] - np.array([spec['target_radius'] * 1.3, 0.0, 0.0]),
          1.0, '4. arrival, true scale',
@@ -191,7 +208,8 @@ def main():
             f"the apex there",
             fill=(186, 166, 158), font=fnt)
     dr.text((pad, 48),
-            f"wide at both ends: a funnel over the whole stellar disc pinched within 2 R_star, a "
+            f"wide at both ends: a funnel off the pole, widest it can be without breaking the "
+            f"star's surface, a "
             f"{spec['start_radius_m'] / 1e3:,.0f} km waist, then open again to "
             f"{spec['end_radius_m'] / 1e3:,.0f} km = the target's disc   |   "
             f"transit {spec['transit_s'] / 60:.1f} min at c, so the aim leads the *apparent* "
