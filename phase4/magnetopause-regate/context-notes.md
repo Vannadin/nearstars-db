@@ -223,3 +223,46 @@ the board and silently dropped before cfg. Fixed by merging both axes per body.
 
 `pause_deform` was in `MODEL_KEYS` but missing from the emitter's pause writer,
 so the lobes of any multipolar body vanished from the output. Fixed.
+
+## 13. The tail-length question, closed by a three-agent sweep (2026-08-16)
+
+Three narrow literature agents, run on the owner's instruction, on the question
+"if nothing goes to zero, what defines the end and at what value".
+
+**There is no published magnetotail termination criterion.** Confirmed by an
+explicit search for the phrasing. What exists is "extends at least to" detection
+limits, and confirmation of the non-decay we had already computed: Slavin 1985
+measures the lobe field flat at 9.2 nT from 120 to 225 R_E.
+
+**The Earth detection record is 3100 R_E, not 225.** Intriligator 1979
+(1979GeoRL...6..585I, Pioneer 7 plasma), with 1000 R_E on a plasma probe (Wolfe
+1967) and 500 R_E on a magnetometer (Mariani 1969) below it. This breaks the sole
+justification for `L = 150 x nose`, which gives Earth 1500 R_E. Kept anyway on
+the owner's call; the doc now says plainly that it clears every magnetic
+detection and is exceeded by one plasma detection.
+
+**A real mechanism was found: current-sheet severance.** Kurth 1982 conjectured
+disconnection of the distant Jovian tail; Goldstein 1985 confirmed it with a
+sector crossing in the simultaneous Voyager 1 wind data. Topological, not
+diffusive. It yields `L = v_wind x T_sector` with T_sector the synodic period of
+the two-sector pattern against the orbit: every Solar-System planet lands near
+3 AU, matching where the distant detections sit.
+
+Computed for every body and **not adopted** (owner call). It matches 150 x nose
+for giants and diverges by 2-3 orders for small bodies because it is an absolute
+distance, and it is a duty cycle rather than a wall - severed tails keep
+travelling, which is how comet 153P was seen 6.5 AU downstream.
+
+**The flux budget fails too**, and its premise is false rather than merely
+unhelpful: lobe flux does not drain downtail. Milan 2004 built the model and got
+a length that swings 400 to 4000 R_E in three hours.
+
+**Heliotail research is the only field that solved this**, and only by invoking
+charge exchange with interstellar neutrals - jumps vanish at ~3000 AU, plasma
+converges at 20,000-40,000 AU. Their phrase for the situation is the one to
+keep: the downwind boundary "has diffusive nature". A planetary tail sits in
+fully ionised plasma and has no such sink.
+
+Net: the question is closed as unanswerable-in-principle for the diffusive
+framing, with one topological mechanism that gives a number we chose not to use.
+No further attempts.

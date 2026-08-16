@@ -168,7 +168,16 @@ So it is fixed by convention, under one constraint: **contradict no measurement.
 published tail extent is a spacecraft-coverage lower bound, and the farthest is Jupiter's,
 at least 9000 R_J (Lepping 1983, [`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) — 142.9 × its 63 R_J nose.
 Rounding up gives **`L` = 150 × nose**, which clears every lower bound on record: Jupiter
-143×, Earth 22.5× (ISEE-3 to 225 R_E), Venus 19× (Edberg 2024), Mercury 2.1×.
+143×, Venus 19× (Edberg 2024), Mercury 2.1× — **but not Earth**. The Earth figure used
+here was ISEE-3's 225 R_E; the actual record is **~3100 R_E** (Intriligator 1979,
+[`1979GeoRL...6..585I`](https://ui.adsabs.harvard.edu/abs/1979GeoRL...6..585I), Pioneer 7, tail-associated plasma, "the most extended
+positive observational information of the extended nature of the geomagnetic tail"), with
+500 R_E on a magnetometer (Mariani 1969, [`1969JGR....74.5633M`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.5633M)) and ~1000 R_E on a
+plasma probe (Wolfe 1967, [`1967JGR....72.4577W`](https://ui.adsabs.harvard.edu/abs/1967JGR....72.4577W)) in between. So `L` = 150 × nose gives
+Earth 1500 R_E and **is contradicted by a measurement after all** — by a factor of two,
+against a plasma-void detection rather than a field one. The convention is kept anyway
+(owner decision 2026-08-16), so the honest statement is that it clears every *magnetic*
+detection and is exceeded by one *plasma* detection at Earth.
 
 | body | nose | `L` | in AU |
 |---|---|---|---|
@@ -224,6 +233,55 @@ rate `S = R_T / L` out of the published tail extents and read the spread (Earth 
 Jupiter 0.014) as a physical difference in tail length. It is not. Every `L` is a
 spacecraft-coverage bound, so every `S` is an upper bound, and the spread measures how far
 each mission flew, not how long each tail is.
+
+**A real termination mechanism does exist, and it is topological rather than diffusive**
+(three-agent literature sweep, 2026-08-16). The tail is not erased by fading; it is *cut*.
+Kurth 1982 ([`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) conjectured a "pinch-off or disconnection" of the
+distant Jovian tail, and Goldstein 1985 ([`1985JGR....90.8223G`](https://ui.adsabs.harvard.edu/abs/1985JGR....90.8223G)) confirmed it: an
+interplanetary sector crossing appeared in the Voyager 1 solar-wind data during the event,
+"as predicted by Kurth et al. (1982). This supports their conjecture that the tail had
+disconnected from Jupiter." This is the planetary counterpart of a cometary disconnection
+event. The same paper finds the distant-tail magnetic spectra at 6000–7500 R_J follow
+`f^−5/3`, indistinguishable from the ambient wind.
+
+That gives a computable length: the attached tail can only grow for as long as the planet
+goes between current-sheet crossings, so `L = v_wind × T_sector`, where `T_sector` is the
+synodic period of the two-sector pattern (stellar rotation / 2) against the orbit. Every
+Solar-System planet lands near **3 AU** (12.7–13.5 d sector period against a 400 km/s
+wind), which is where the distant detections actually sit — Jupiter 4.5 AU, comet Hyakutake
+3.8 AU. NearStars: Polyphemus 2.58 AU, Proxima b 12.83, Proxima c 35.5, Proxima d 4.89.
+
+**Computed and deliberately not adopted** (owner decision 2026-08-16). Two reasons. It
+agrees with `150 × nose` for the giants (Jupiter 6157 against 9450 R_J, Polyphemus 5398
+against 5300) and diverges by two to three orders of magnitude for small bodies, because it
+is an absolute distance rather than a multiple of the nose — Venus would go from 158 to
+76,868 R_V, whose `extension` of 1.5e-5 is a cylinder that never visibly closes. And the
+mechanism is a *duty cycle*, not a wall: the severed tail keeps travelling, which is why
+comet 153P was detected 6.5 AU downstream (Jones 2022, [2006.00500](https://arxiv.org/abs/2006.00500)) and why
+Jones argues some ion tails "may survive as recognizable structures to the edge of the
+heliosphere."
+
+**The flux budget does not terminate the tail either.** The premise — that the tail ends
+where its finite open flux has all reconnected — fails on measurement: Slavin 1985
+([`1985JGR....9010875S`](https://ui.adsabs.harvard.edu/abs/1985JGR....9010875S)) finds flaring ceases at |X| = 120 ± 10 R_E with `B_L` = 9.2 nT
+and a 60 R_E diameter both **constant out to 225 R_E**, so the lobe flux is flat at the full
+polar-cap value rather than draining. Milan 2004 ([`2004JGRA..109.7210M`](https://ui.adsabs.harvard.edu/abs/2004JGRA..109.7210M)) built the
+model anyway and reports the length "can vary by almost a factor of 10, between ~400 and
+4000 R_E, in just a few hours", adding that "a much longer disconnected tail and wake can
+exist beyond this". A quantity that moves 3600 R_E in three hours is not an edge. It does
+leave a useful internal marker: the boundary between the Dungey-connected tail and the
+disconnected wake, 400–4000 R_E at Earth, which brackets our 1500.
+
+**The one field that has solved this problem is heliotail research, and its solution does
+not transfer.** Izmodenov & Alexashov 2003 ([astro-ph/0308211](https://arxiv.org/abs/astro-ph/0308211)) state the difficulty
+in our own terms — "in the heliotail we cannot assume the heliopause to be the heliospheric
+boundary … the solar wind fills the whole space into the downwind direction" — and then get
+numbers only by invoking charge exchange with interstellar neutrals: the density and
+tangential-velocity jumps vanish at **~3000 AU**, and the plasma converges to interstellar
+values at **20,000–40,000 AU**. Their summary sentence is the one to carry: "unlike the
+upwind direction the solar system boundary has **diffusive nature** in the heliotail." A
+planetary magnetotail sits in a fully ionised magnetosheath and has no comparable neutral
+sink, which is exactly why no equivalent number exists for planets.
 
 **What `L` is not.** Two distances are measured and must not be confused with it:
 
