@@ -139,3 +139,87 @@ Open question carried to the owner: `pause_deform 0.1`. It was removed from
 Proxima c on the owner's judgement that multipolar fine structure reaching the
 magnetopause is implausible. The same argument applies here, but b's board
 treats the deformation as the point of the choice, so it is not mine to drop.
+
+## 9. The waist beats compression, and by a lot
+
+`pause_compression` pins the widest cross-section to the body plane. The real
+boundary is widest *behind* the planet, and `pause_waist` is the only handle
+that moves it. Dropping compression to 1 and letting the waist do the work
+halves the residual against the Shue target:
+
+| body | rms with compression | rms with waist | gain |
+|---|---|---|---|
+| Mercury | 0.445 | 0.162 | 64% |
+| Earth | 6.094 | 3.101 | 49% |
+| Jupiter | 9.303 | 5.389 | 42% |
+| Saturn | 35.604 | 21.080 | 41% |
+| Uranus | 10.969 | 5.581 | 49% |
+| Neptune | 16.149 | 8.216 | 49% |
+| Polyphemus | 5.127 | 3.115 | 39% |
+| Proxima c | 7.278 | 3.703 | 49% |
+| Proxima d | 4.581 | 2.331 | 49% |
+
+Owner's idea, and it lands. An earlier attempt to close the same gap with
+`pause_smooth` alone bought 9%, and only by driving smooth to 3x the nose,
+which turns the piecewise-linear `px` into a quadratic. That is a change of
+function family and was rejected; the waist does the job properly.
+
+A separate correction on the way: `pause_smooth` is not a Shue-matching tool at
+all. It exists to round the curvature discontinuity in the *cfg boundary itself*
+at the terminator, where the second derivative jumps by ~2.2e4. Measuring it
+against the Shue curve was the wrong question.
+
+## 10. Proxima b: induced branch, tangent-anchored
+
+b's clearance budget is 0.023 R_p and every decoration costs more than that:
+`geomagnetic_offset` 0.25 alone drops the minimum to 0.9867, `pause_deform` 0.1
+to 0.9958. Neither can be absorbed at a nose of 1.023.
+
+Deriving the induced-boundary altitude did not help either: at the Garraffo
+floor the neutral atmosphere reaches wind pressure at 164 km, at the Dong 2017
+pressures 130 to 141 km, and the real ionopause sits *below* the neutral match
+(calibrated on Venus, where the neutral match is 563 km against a measured 300).
+So the boundary is at ~1.02 R_p whichever branch it is on.
+
+Resolved by anchoring the thickness on the **tangent** radius rather than the
+nose (owner call): the boundary has to be thick enough to carry the offset and
+the deform, and that fixes nose 1.20 / tangent 1.373, clearance 1.049.
+
+The branch itself is settled by Dong 2017 ([2017ApJ...837L..26D](https://ui.adsabs.harvard.edu/abs/2017ApJ...837L..26D)),
+which finds b's dipole "not strong enough to fully protect the exoplanet" and
+models it with a code built for Venus and Mars. The flaring ratio is therefore
+the measured induced one, 1.144 (Mars), not Shue's 1.414.
+
+**Recording 1.144 as a Shue alpha was tried and rejected.** log2(1.144) = 0.194
+is below 0.5, and a Shue tail with alpha < 0.5 pinches itself shut - the owner
+spotted it in the render. That contradicts the >=20 R_V induced tail measured at
+Venus. The ratio is a local nose-to-terminator measurement and does not
+generalise to a global exponent; same category error as fitting a bow-shock
+conic to an induced boundary.
+
+## 11. Multipolar and induced coexist, and Mars measures it
+
+The question of what happens when a body has both was answered by Crider 2002
+([2002GeoRL..29.1170C](https://ui.adsabs.harvard.edu/abs/2002GeoRL..29.1170C))
+and Edberg 2008 ([2008JGRA..113.8206E](https://ui.adsabs.harvard.edu/abs/2008JGRA..113.8206E)):
+crossings over strong crustal-field regions sit further out, by "local diversion
+of shocked solar wind flow". The multipolar field lifts the induced boundary
+**locally**, it does not displace it globally.
+
+That splits the two cfg fields cleanly. `geomagnetic_offset` is the axisymmetric
+component (dipole plus quadrupole, mathematically an offset dipole) and stays.
+`pause_deform` is the non-axisymmetric component and is exactly the right
+encoding for the local lifting. Both are kept for b.
+
+An earlier claim in this session that "offset is not what a multipolar field
+does" was wrong and is retracted. The Mars evidence is about the
+non-axisymmetric part.
+
+## 12. Two emitter bugs found while wiring this up
+
+`load_nearstars_specs` read only `magnetism.radiation_belts` rows, so Proxima b
+and d - which carry their pause on `magnetism.magnetic_field` - were recorded on
+the board and silently dropped before cfg. Fixed by merging both axes per body.
+
+`pause_deform` was in `MODEL_KEYS` but missing from the emitter's pause writer,
+so the lobes of any multipolar body vanished from the output. Fixed.

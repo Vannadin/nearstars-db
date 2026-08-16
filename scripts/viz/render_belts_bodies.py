@@ -76,11 +76,12 @@ BODIES={
    # 노즈 63 R_J(Joy 2002 압축 상태) ⇒ p_SW 0.132 nPa ⇒ α 0.423.
    'pause':{'radiation':-0.01,'rad':84.4649,'comp':1.3407,'ext':0.0089380,'hscale':1.15,
             'shue_alpha':0.423,'shue_nose':63,'shue_tail':9450,
-            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
-            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 63.0·꼬리 150×노즈는 정확히 보존되고,
-            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
-            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
-            'pending_smooth':47.5273,'pending_rad':95.0546,'pending_ext':0.0100671}},  # nose 63 R_J (Joy 2002)
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
+            #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
+            #   x=0 에 못 박는 것이 Shue 대비 최대 오차원이었다. rms 9.303 → 5.389.
+            #   smooth = 0.5×rad 관례, 노즈 63.0 와 꼬리 150×노즈는 정확히 보존.
+            #   스톡 엔진은 waist/smooth 를 읽지 않으므로 네 값을 반드시 함께 적용할 것.
+            'pending_comp':1.0,'pending_rad':94.5,'pending_ext':0.0100334,'pending_waist':-25.6567,'pending_smooth':47.25}},  # nose 63 R_J (Joy 2002)
 
  # ---- SATURN: 스톡=외대만, 물리=고리가 내대 소거→외대만(축대칭), CRAND 약함 ----
  # 스톡 값 검증: KSP-RO/ROKerbalism Support/RSS.cfg `saturn` 모델 (2026-07-24 재검증)
@@ -104,11 +105,12 @@ BODIES={
    'outer':{'radiation':10,'grad':2.15,'dist':2.6173,'rad':2.3184,'dxy':0.6735,'comp':1.0,'ext':0.998,'bdist':0.9889,'brad':0.8883,'bdxy':0.6616},  # 고리 바깥 단일 초승달
    'pause':{'radiation':-0.011,'rad':39.9677,'comp':1.6653,'ext':0.0111020,'hscale':1.1,
             'shue_alpha':0.7358,'shue_nose':24,'shue_tail':3600,
-            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
-            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 24.0·꼬리 150×노즈는 정확히 보존되고,
-            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
-            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
-            'pending_smooth':24.1309,'pending_rad':48.2618,'pending_ext':0.0134246}},  # nose 24 R_S (Achilleos 2008)
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
+            #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
+            #   x=0 에 못 박는 것이 Shue 대비 최대 오차원이었다. rms 35.604 → 21.08.
+            #   smooth = 0.5×rad 관례, 노즈 24.0 와 꼬리 150×노즈는 정확히 보존.
+            #   스톡 엔진은 waist/smooth 를 읽지 않으므로 네 값을 반드시 함께 적용할 것.
+            'pending_comp':1.0,'pending_rad':87.36,'pending_ext':0.0247014,'pending_waist':-58.0431,'pending_smooth':43.68}},  # nose 24 R_S (Achilleos 2008)
 
  # ---- URANUS: 극단 tilt 59° + offset 0.3 ----
  # 스톡=generic `saturn` 모델 재사용(외대 7/7만; radiation_inner 75는 has_inner=false라 미사용 죽은 값)
@@ -132,11 +134,12 @@ BODIES={
    'outer':{'radiation':8,'grad':1.85,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.005,'ext':0.977,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
    'pause':{'radiation':-0.010,'rad':26.9073,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
             'shue_alpha':0.58,'shue_nose':18,'shue_tail':2700,
-            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
-            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 18.0·꼬리 150×노즈는 정확히 보존되고,
-            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
-            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
-            'pending_smooth':15.6153,'pending_rad':31.2305,'pending_ext':0.0115793}},  # nose 18 R_U (Ness 1986)
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
+            #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
+            #   x=0 에 못 박는 것이 Shue 대비 최대 오차원이었다. rms 10.969 → 5.581.
+            #   smooth = 0.5×rad 관례, 노즈 18.0 와 꼬리 150×노즈는 정확히 보존.
+            #   스톡 엔진은 waist/smooth 를 읽지 않으므로 네 값을 반드시 함께 적용할 것.
+            'pending_comp':1.0,'pending_rad':41.04,'pending_ext':0.0153308,'pending_waist':-20.5167,'pending_smooth':20.52}},  # nose 18 R_U (Ness 1986)
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
  # 스톡=generic `saturn` 모델 재사용(pause 20 — 26.5 아님; radiation_inner 39 미사용 죽은 값)
@@ -158,11 +161,12 @@ BODIES={
    'outer':{'radiation':6,'grad':2.63,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.004,'ext':0.98,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
    'pause':{'radiation':-0.007,'rad':39.6135,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
             'shue_alpha':0.58,'shue_nose':26.5,'shue_tail':3975,
-            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
-            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 26.5·꼬리 150×노즈는 정확히 보존되고,
-            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
-            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
-            'pending_smooth':22.9891,'pending_rad':45.9782,'pending_ext':0.0115793}},  # nose 26.5 R_N (Ness 1989)
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
+            #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
+            #   x=0 에 못 박는 것이 Shue 대비 최대 오차원이었다. rms 16.149 → 8.216.
+            #   smooth = 0.5×rad 관례, 노즈 26.5 와 꼬리 150×노즈는 정확히 보존.
+            #   스톡 엔진은 waist/smooth 를 읽지 않으므로 네 값을 반드시 함께 적용할 것.
+            'pending_comp':1.0,'pending_rad':60.42,'pending_ext':0.0153308,'pending_waist':-30.2052,'pending_smooth':30.21}},  # nose 26.5 R_N (Ness 1989)
 
  # ---- MERCURY: 벨트 없음, 초소형 offset 자기권 (표면 직격) ----
  # 스톡은 저작값이고 물리 도출이 아니다(전용 `mercury` 모델). pause 1.6/comp 1.4 → 노즈 1.14.
@@ -179,11 +183,12 @@ BODIES={
    # deform 0.1 은 스톡에서 상속(다중극 비축대칭은 실재하나 진폭은 도출하지 않았다).
    'pause':{'radiation':-0.001,'rad':2.0506,'comp':1.4142,'ext':0.0094280,'hscale':1.0,'deform':0.1,
             'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':217.5,
-            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
-            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 1.45·꼬리 150×노즈는 정확히 보존되고,
-            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
-            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
-            'pending_smooth':1.1703,'pending_rad':2.3407,'pending_ext':0.010772}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
+            #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
+            #   x=0 에 못 박는 것이 Shue 대비 최대 오차원이었다. rms 0.445 → 0.162.
+            #   smooth = 0.5×rad 관례, 노즈 1.45 와 꼬리 150×노즈는 정확히 보존.
+            #   스톡 엔진은 waist/smooth 를 읽지 않으므로 네 값을 반드시 함께 적용할 것.
+            'pending_comp':1.0,'pending_rad':2.639,'pending_ext':0.0122,'pending_waist':-1.0262,'pending_smooth':1.3195}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
  # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
  # ROKerbalism: RadiationBody[Eve]→Venus, radiation_model = ionosphere, radiation_pause = -0.005.
@@ -275,11 +280,12 @@ BODIES={
    #   extension = pause_radius/(150·노즈) = 0.0099653  ← L = 150×노즈 관례(도출 아님).
    'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
             'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500,
-            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트. 관례 smooth = 0.5×rad 를
-            #   고정점으로 풀었다(rad 가 smooth 에 의존하므로). 노즈 10.0·꼬리 150×노즈는 정확히 보존되고,
-            #   명암경계선 곡률 점프가 ~2.2e4 배에서 1 근방으로 내려간다. 스톡 엔진은 smooth 를 읽지 않으므로
-            #   셋을 따로 넣으면 형상이 깨진다 — 반드시 함께 적용할 것.
-            'pending_smooth':8.6751,'pending_rad':17.3503,'pending_ext':0.0115793}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
+            # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
+            #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
+            #   x=0 에 못 박는 것이 Shue 대비 최대 오차원이었다. rms 6.094 → 3.101.
+            #   smooth = 0.5×rad 관례, 노즈 10.0 와 꼬리 150×노즈는 정확히 보존.
+            #   스톡 엔진은 waist/smooth 를 읽지 않으므로 네 값을 반드시 함께 적용할 것.
+            'pending_comp':1.0,'pending_rad':22.8,'pending_ext':0.0153308,'pending_waist':-11.3982,'pending_smooth':11.4}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  # 스톡은 저작값이고 물리 도출이 아니다(전용 `ganymede` 모델). 계면 자체가 없다(has_pause 미정의).
@@ -370,9 +376,11 @@ BODIES={
  # b·d 재게이트판은 손으로 둔다. 폴리페무스·판도라·c 와 달리 이 둘은 pause 를 magnetism.magnetic_field
  # 행에 달고 있는데, emitter(load_nearstars_specs)는 magnetism.radiation_belts 행만 읽는다. 즉 보드에
  # 기록은 됐지만 cfg 로는 아직 나가지 않는다 — 이 프리셋이 그 값을 눈으로 확인하는 유일한 경로다.
- 'proxima_b_regate':{'title':'Proxima Cen b — re-gated (not yet emitted)','sub':'Mercury analog alpha 0.5; nose 1.023 at the Garraffo 2016 pressure FLOOR (2000 nPa) — skin-tight, and crushed below the surface at the top of the distribution','R':3,'tilt':30,'offset':0.25,
-   'pause':{'radiation':-0.005,'rad':1.4467,'comp':1.4142,'ext':0.0094281,'hscale':1.0,'deform':0.1,
-            'shue_alpha':0.5,'shue_nose':1.023,'shue_tail':153.4}},
+ # 유도 가지로 이전(2026-08-16). Dong 2017 이 b 의 쌍극자가 항성풍을 막지 못한다고 밝히고
+ #   금성·화성용 MHD 모델로 계산한다. 형상 비 1.144 는 화성 실측(Shue 의 1.414 가 아니다).
+ # 두께는 노즈가 아니라 접선 기준 — offset 0.25 와 deform 0.1 을 지표를 뚫지 않고 담아야 한다.
+ 'proxima_b_regate':{'title':'Proxima Cen b — re-gated (induced branch)','sub':'nose 1.20, tangent 1.373, comp 1.144 = the Mars-measured induced flaring ratio; deform 0.1 and offset 0.25 both retained, clearance 1.049','R':3,'tilt':30,'offset':0.25,
+   'pause':{'radiation':-0.005,'rad':1.3728,'comp':1.144,'ext':0.0076267,'hscale':1.0,'deform':0.1}},
  'proxima_d_regate':{'title':'Proxima Cen d — re-gated (not yet emitted)','sub':'nose 7.517 (the recorded 7 now reproduces); alpha 0.58 Earth analogy; Alfven-wing branch declined by owner','R':12,'tilt':10,
    'inner':{'radiation':5000,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.002,'ext':0.996,'bdist':1e-4,'brad':1.0,'bdxy':1.0},
    'outer':{'radiation':1000,'grad':2.15,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.053,'ext':0.901,'bdist':1.2,'brad':1.0,'bdxy':0.6748},

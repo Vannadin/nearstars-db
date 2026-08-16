@@ -192,6 +192,39 @@ Not applied to Ganymede, whose obstacle sits in Jovian plasma rather than a stel
 re-gate: Polyphemus `L` 5300 R_p, Proxima b 231 R_p, Proxima c 1791 R_c. The phase 4
 board remains their source of truth, and now records these values.
 
+**Seventh attempt, 2026-08-16: the boundary never fades, so there is no fade point.**
+The idea was to end the tail where the inside/outside contrast blurs, and to let a
+weak-field body get a proportionally shorter tail than a strong one. Three calculations
+kill it.
+
+The lobe field is set by pressure balance, `B_lobe = sqrt(2 mu0 P_ext)`, which depends on
+the ambient wind at that orbital distance and **not at all on the planet's own field**. It
+therefore does not decay downtail: at each station the boundary re-balances against the
+same external pressure.
+
+The lobes are Kelvin-Helmholtz stable. With the lobe field aligned to the flow, the
+instability threshold `dv^2 > (1/mu0)(1/rho_1 + 1/rho_2)(B_1^2 + B_2^2)` puts the critical
+shear at 1540 to 1880 km/s along Earth's distant tail, against a magnetosheath flow of
+~400. The boundary layer does not turbulently thicken, so a mixing-layer criterion never
+consumes the tail radius (Miura 1987, [`1987JGR....92.3195M`](https://ui.adsabs.harvard.edu/abs/1987JGR....92.3195M);
+Walker 1981, [`1981P&SS...29.1119W`](https://ui.adsabs.harvard.edu/abs/1981P%26SS...29.1119W)).
+
+And the contrast itself is scale-free: dividing the two expressions gives
+`B_lobe / B_IMF = sqrt(2) * M_A`, a **constant along the tail**, because both fields fall
+off the same way. Earth 13.5x, Jupiter 14.7x, Polyphemus 13.5x. The tail interior stays
+an order of magnitude above its surroundings forever.
+
+One byproduct is worth keeping: `sqrt(2) * M_A` is a cheap contrast diagnostic that needs
+no field model. Proxima b scores **4.5x** against everyone else's 13 to 15, because its
+wind is nearly Alfvenic (M_A ~ 3) - its tail is a genuinely faint structure, even though it
+is not a short one.
+
+Also retracted here: an intermediate step in that attempt backed a shear-layer spreading
+rate `S = R_T / L` out of the published tail extents and read the spread (Earth 0.13,
+Jupiter 0.014) as a physical difference in tail length. It is not. Every `L` is a
+spacecraft-coverage bound, so every `S` is an upper bound, and the spread measures how far
+each mission flew, not how long each tail is.
+
 **What `L` is not.** Two distances are measured and must not be confused with it:
 
 | body | flaring ceases at | source |
@@ -223,8 +256,8 @@ Their fields and derivation live in Part C's ⚗ section; the values are:
 
 | | radius | compression | extension | smooth | waist |
 |---|---|---|---|---|---|
-| Venus | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
-| Mars | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
+| Venus | 1.14 | 1.0151 | 0.0072038 | 0.57 | 0 |
+| Mars | 1.47 | 1.0684 | 0.0076265 | 0.735 | 0 |
 
 The binding constraint is that **the boundary must not bulge behind the terminator**. The
 width is `√(radius² − px²)` and so can never exceed `radius`; setting `radius` = the
@@ -823,8 +856,8 @@ independently for three bodies land at 0.50, 0.54 and 0.57 × radius (Venus, Mar
 
 | | radius | compression | extension | smooth | waist |
 |---|---|---|---|---|---|
-| Venus | 1.14 | 1.0151 | 0.0567 | 0.57 | 0 |
-| Mars | 1.47 | 1.0684 | 0.0737 | 0.735 | 0 |
+| Venus | 1.14 | 1.0151 | 0.0072038 | 0.57 | 0 |
+| Mars | 1.47 | 1.0684 | 0.0076265 | 0.735 | 0 |
 
 **Applied to the Shue bodies too, as of 2026-08-16.** The smoothing was written for the
 induced branch, but nothing about it is specific to that branch: every stock-encoded pause
@@ -861,7 +894,9 @@ than against the corner, drove it to 3 × nose and turned the piecewise-linear `
 quadratic. That is a change of function family, not a smoothing, and was rejected.
 
 Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
-20 R_p, and the bulge is 0.000%. The cost is wake width: against the measured cone the
+158 / 193 R_p (the 150 x nose convention; an earlier revision of this table carried
+`extension` 0.0567 / 0.0737, a 20 R_p closure from before that convention existed, which
+the shipped presets had already moved past), and the bulge is 0.000%. The cost is wake width: against the measured cone the
 boundary is 15% narrow at 2 R_p, 33% at 5 and 54% at 10 — accepted, because no-bulge
 outranks wake fidelity here, and because every Shue parameterization does far worse
 (−83% to −100%; see Part A).

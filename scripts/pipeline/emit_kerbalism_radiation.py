@@ -295,7 +295,10 @@ def emit_nearstars(specs):
         if 'pause_radius' in m:
             L.append("")
             L.append("  has_pause = true")
-            for k in ('pause_radius', 'pause_compression', 'pause_extension', 'pause_height_scale'):
+            # pause_deform 은 MODEL_KEYS 에 있으면서도 이 목록에서 빠져 있었다 —
+            # 다중극 경계를 가진 천체(Proxima b)의 로브가 조용히 cfg 에서 사라졌다. 2026-08-16 수정.
+            for k in ('pause_radius', 'pause_compression', 'pause_extension',
+                      'pause_height_scale', 'pause_deform'):
                 if k in m:
                     L.append(f"  {k} = {fmt(m[k])}")
             L.append(f"  pause_quality = {fmt(QUALITY['pause'])}")
