@@ -133,9 +133,11 @@ decisions:
         value: "~3-5% (moderate to somewhat high; 83 d rotational modulation detected)"
         value_ko: "~3–5% (보통~다소 많음; 83d 자전 변조 검출)"
         op: set
-      - name: flares
+      - name: flare_colour
         value: "#ff5e2a (H-α, for reference; dynamic flares cannot be rendered from cfg, visual passthrough)"
         value_ko: "#ff5e2a (Hα, 참조용; 동적 플레어 cfg 렌더 불가, visual passthrough)"
+        note: "Renamed from `flares` on 2026-08-16: the star carries a second `flares` field on environment.activity holding the rate, and two axes sharing a field name is a hazard now that the emitter merges axes per body. This one is the colour."
+        note_ko: "2026-08-16 에 `flares` 에서 개명. 이 항성은 environment.activity 에도 빈도를 담은 `flares` 를 갖고 있고, emitter 가 바디 단위로 축을 병합하게 된 지금 두 축이 필드명을 공유하는 것은 위험하다. 이쪽은 색이다."
         op: set
     gate:
       criterion: [observation]
@@ -2001,7 +2003,7 @@ decisions:
         value_ko: "~0.1–0.5 G (빙거성 아날로그, 비쌍극·tilted ~47–59°); conf low"
         op: set
       - { name: field_geometry, value: "Tilted and offset multipolar (ice-giant type)", value_ko: "기울고 중심 이탈한 다중극 (빙거성형)", op: set, note: "Convection in a thin conducting shell. Shape diagram: docs/img/field-geometry-proxima-c.png", note_ko: "얇은 전도층 대류. 형상 도식 docs/img/field-geometry-proxima-c.png" }
-      - { name: radiation_model, value: "Ice-giant type (CRAND inner belt, wind-fed outer belt, and the boundary between)", value_ko: "빙거성형 (CRAND 내대 + 항성풍 외대 + 계면)", op: set, note: "Follows the measured Uranus and Neptune, which both carry a proton inner belt and an electron outer belt. Details are in the radiation_belts row", note_ko: "실측 천왕성·해왕성이 양성자 내대와 전자 외대를 모두 가지는 것을 따른다. 상세는 radiation_belts 행" }
+      - { name: belt_architecture, value: "Ice-giant type (CRAND inner belt, wind-fed outer belt, and the boundary between)", value_ko: "빙거성형 (CRAND 내대 + 항성풍 외대 + 계면)", op: set, note: "Prose description of the belt architecture, not a cfg node name — the cfg identifier is radiation_model on the radiation_belts row, and the two used to share a field name. Follows the measured Uranus and Neptune, which both carry a proton inner belt and an electron outer belt", note_ko: "벨트 구조에 대한 서술이지 cfg 노드 이름이 아니다. cfg 식별자는 radiation_belts 행의 radiation_model 이고, 둘이 같은 필드명을 쓰고 있었다. 실측 천왕성·해왕성이 양성자 내대와 전자 외대를 모두 가지는 것을 따른다" }
       - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "A 50° tilt, between Uranus' 58.6 and Neptune's 47", note_ko: "기울기 50°. 천왕성 58.6°·해왕성 47° 사이" }
       - { name: geomagnetic_offset, value: 0.4, op: set, note: "Offset from center, between Uranus' 0.3 and Neptune's 0.55", note_ko: "중심 이탈. 천왕성 0.3·해왕성 0.55 사이" }
     gate:
@@ -2087,8 +2089,6 @@ decisions:
       - { name: pause_tail, value: 1188.0, op: set, note: "Shue-native. Tail cut at 150 x nose, the stated convention: every published tail extent is a spacecraft-coverage lower bound, and 150 clears the farthest of them (Jupiter, 143 r0)", note_ko: "⚗ Shue-native. 꼬리 컷 = 150 × 노즈, 명시된 관행. 발표된 꼬리 길이는 전부 탐사선 관측 하한이고, 150은 그중 가장 먼 것(목성 143 r₀)을 넘어선다" }
       - { name: pause_alpha_night, value: 0.52, op: set, note: "Shue-native. Art policy alpha_night = alpha_day x 0.8966, the proportional form of a -0.06 drop anchored on Earth, applied only where alpha_day > 0.5 so bodies that already taper are left alone. It slims the rear at a measured cost: Earth's width at Slavin 1985's x = -120 R_E goes from -8.9% to -26.7% against the 30 R_E he measures", note_ko: "⚗ Shue-native. 아트 정책 alpha_night = alpha_day × 0.8966 으로, 지구 −0.06 앵커를 비례 확장한 값이며 alpha_day > 0.5 인 바디에만 적용한다. 이미 뒤가 좁아지는 바디는 건드리지 않는다. 뒤를 날씬하게 만드는 대가는 측정된다. 지구 폭이 Slavin 1985 의 x = −120 R_E 에서 실측 30 R_E 대비 −8.9%에서 −26.7%가 된다" }
       - { name: pause_offset, value: null, na_reason: "Retired: the offset-sphere emulation cannot approximate a Shue boundary once the tail is long (40% worst residual at L = 150 x nose). The four-field stock encoding is the fallback instead.", op: set, note: "RETIRED 2026-08-16. The offset-sphere emulation of a Shue boundary only works for a short tail. Refitting it to the new nose 11.942 / alpha 0.58 / tail 1791 gives rms 2.56 and a worst residual of 10.9 R_c against curve widths of 18-29 R_c, about 40% off. Validation of the fitter: rerun against the retired nose 11.905 / alpha 0.5 / tail 125 and it reproduces the previous set (20.8 / 21.7 / 0.664 / 0.209 against the recorded 19.7 / 21.5 / 0.68 / 0.204) at rms 0.27, so the degradation is the tail length, not the fit. The four-field stock encoding above remains the fallback if KerbalismShuePause is rejected. Reproduce: scripts/refs/magnetopause_geometry.py fit_offset_emulation()", note_ko: "⚗ 2026-08-16 폐기. 구 중심 이동으로 Shue 경계를 흉내내는 방식은 꼬리가 짧을 때만 통한다. 새 노즈 11.942 / alpha 0.58 / 꼬리 1791로 다시 맞추면 rms 2.56, 최대 잔차 10.9 R_c가 나오는데 곡선 폭이 18~29 R_c이므로 약 40% 어긋난다. 피팅 검증: 폐기된 노즈 11.905 / alpha 0.5 / 꼬리 125로 돌리면 기존 세트를 재현한다(20.8 / 21.7 / 0.664 / 0.209 대 기록값 19.7 / 21.5 / 0.68 / 0.204, rms 0.27). 즉 열화의 원인은 피팅이 아니라 꼬리 길이다. KerbalismShuePause가 거부될 경우의 대체는 위의 4필드 스톡 인코딩이 그대로 맡는다. 재현: scripts/refs/magnetopause_geometry.py fit_offset_emulation()" }
-      - { name: geomagnetic_pole_lat, value: 40, unit: deg, op: set, note: "A 50° tilt", note_ko: "기울기 50°" }
-      - { name: geomagnetic_offset, value: 0.4, op: set }
     refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/solar-system-radiation-belts.md"]
     provenance: >
       2026-08-04 초판은 세기를 스톡 uranus/neptune cfg에 앵커해 외대 2.0 rad/h 단일 벨트로 잡았다. 같은 날 오너
