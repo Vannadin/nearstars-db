@@ -814,45 +814,49 @@ depends on the smoothing. Nose and the 150 × nose tail close are preserved exac
 | Proxima c | 11.942 | 10.3599 | 20.7197 | 0.0115793 |
 | Proxima d | 7.517 | 6.5211 | 13.0422 | 0.0115793 |
 
-**Shue is implemented by fitting, not by evaluating.** The engine never sees `r(θ)`. The
-generalised stock pause is fitted offline to the Shue target surface and only the resulting
-numbers ship, which means no polar form has to be turned into a Cartesian signed distance,
-no new `Pause_domain` or `Pause_offset` is needed, and the particle-mesh shell keeps working
-unchanged. `Pause_func` gains two lines. This replaced a planned Shue-native engine mode,
-which would have bought nothing measurable: the fit residual is a few percent, while
-Shue 1998's own `α = (0.58 − 0.007·Bz)(1 + 0.024·ln Dp)` moves the tail width by about ±20%
-across a ±5 nT swing in IMF `Bz`. The encoding error is smaller than the physics it encodes.
+**Two shape families, and they do not substitute for each other.** A Shue body gets the
+Shue-native fields (`pause_nose`, `pause_alpha`, `pause_alpha_night`, `pause_tail`); an
+induced body gets the generalised stock pause (`pause_waist`, `pause_smooth` and the paired
+radius / compression / extension). That split was the owner's original policy and it survived
+a direct test.
 
-Three constraints make the fit usable rather than merely low-residual. The nose is pinned
-exactly, `waist` is held below `0.95 r₀` so the blend origin cannot swallow the dayside, and
-the dayside error is capped at 5%. Without the last two an unconstrained least-squares fit
-happily trades the entire sunward face for tail accuracy — it did, for Saturn, producing
-−100% width at θ = 15° before the guards went in.
+The test: fit the generalised stock form to the Shue surface and drop the Shue-native mode
+altogether. It works beautifully at α ≈ 0.5 and falls apart away from it, because the stock
+width `√(radius² − px²)` is naturally a cylinder while Shue's tail goes as `u^(1−2α)`:
 
-`compression` retires to 1.0. It pins the widest cross-section to the body plane, while the
-real boundary is widest behind the planet, and `waist` is the only handle that moves it.
+| body | α | 1−2α | tail width error at 0.9 L |
+|---|---|---|---|
+| Jupiter, Polyphemus | 0.42 | +0.15 | **+70%** (too fat) |
+| Mercury | 0.500 | 0.00 | +0.7% |
+| Earth class | 0.580 | −0.16 | −5.7% |
+| Saturn | 0.736 | −0.47 | **−42%** |
 
-**Night-side α is an art policy**: `α_night = α_day × 0.8966`, the proportional form of a
-−0.06 drop anchored on Earth, applied only where `α_day > 0.5`. Bodies at or below 0.5
-already taper behind the planet and are left alone, which excludes Jupiter and Polyphemus
+Two of the four α classes miss by more than the ±20% that IMF `Bz` swings the real boundary,
+so the approximation is not free. Rejected; the fitted sets and the guard conditions the
+attempt produced are in the derivation record.
+
+Shue-native also turned out to be cheap, contrary to an earlier claim here that it needed a
+polar form converted to a true Cartesian signed distance. **Kerbalism never needs a true
+distance** — the stock pause is itself a pseudo-distance, since scaling `x` by `compression`
+breaks the metric. Anything negative inside and positive outside works, so `Pause_func`
+becomes five lines:
+
+    float r  = p.magnitude;
+    float ct = p.x / max(r, 1e-6);
+    float c2 = 0.5 * (1 + ct);                                  // cos²(θ/2)
+    float rs = pause_nose * pow((1+eps)/(eps+c2), pause_alpha);
+    return r - rs;
+
+The one genuine addition is `Pause_domain()`, which needs the bounding box of a curve with
+no closed form for its maximum width. Either scan it once at load, or precompute it offline
+and ship it as a field.
+
+**Night-side α is an adopted art policy**: `α_night = α_day × 0.8966`, the proportional form
+of a −0.06 drop anchored on Earth, applied only where `α_day > 0.5`. Bodies at or below 0.5
+already taper behind the planet, so Mercury, Jupiter and Polyphemus are excluded
 automatically. It costs measured fidelity — Earth's width at Slavin's x = −120 R_E goes from
-−8.9% to −26.7% against the 30 R_E he measures — and buys a slimmer rear, which is the whole
-reason it exists.
-
-| body | α_day | α_night | radius | waist | extension | smooth | rms | dayside max |
-|---|---|---|---|---|---|---|---|---|
-| Mercury | 0.500 | — | 2.900 | 0.043 | 0.0134228 | 4.205 | 0.008 | 0.26% |
-| Earth | 0.580 | 0.520 | 22.188 | 0.005 | 0.0149128 | 33.281 | 0.148 | 1.12% |
-| Jupiter | 0.423 | — | 94.500 | −23.088 | 0.0100334 | 56.700 | 5.363 | 4.20% |
-| Saturn | 0.736 | 0.660 | 79.500 | 20.548 | 0.0224291 | 159.000 | 8.249 | 4.52% |
-| Uranus | 0.580 | 0.520 | 39.938 | 0.010 | 0.0149128 | 59.906 | 0.266 | 1.12% |
-| Neptune | 0.580 | 0.520 | 58.797 | 0.014 | 0.0149128 | 88.195 | 0.392 | 1.12% |
-| Polyphemus | 0.420 | — | 52.995 | −12.948 | 0.0100334 | 31.797 | 3.123 | 4.30% |
-| Proxima c | 0.580 | 0.520 | 26.496 | 0.006 | 0.0149128 | 39.744 | 0.176 | 1.12% |
-| Proxima d | 0.580 | 0.520 | 16.678 | 0.004 | 0.0149128 | 25.018 | 0.111 | 1.12% |
-
-Converter: `shue_to_stock()` in `scripts/refs/magnetopause_geometry.py`. Proxima b is absent
-because it is on the induced branch, which has no flaring tail to reproduce.
+−8.9% to −26.7% against the 30 R_E he measures — and buys the slimmer rear it exists for.
+Values: Earth, Uranus, Neptune, Proxima c and d at 0.520; Saturn at 0.660.
 
 For Venus and Mars the same generalised form is the *adopted* shape rather than a pending
 one. Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at

@@ -916,6 +916,52 @@ if this is revisited.
 - Published page (renders included): [Solar-System radiation belts](https://vannadin.github.io/nearstars-db/wiki/reference__solar-system-radiation-belts.html)
   (cross-section images).
 - [methodology-index](reference__methodology-index.html).
+
+## Fitting the stock form to Shue, and why it was rejected
+
+Tried 2026-08-16 as a way to delete the Shue-native engine mode entirely: fit the
+generalised stock pause offline to the Shue target surface and ship only the four
+numbers. It very nearly worked, and the reason it does not is worth keeping.
+
+Normalised by `r0`, the fit is a pure function of alpha — bodies sharing an alpha
+land on identical `rad/r0`, `waist/r0`, `ext` and `smooth/rad` to four figures,
+which is the check that the optimiser is finding structure rather than noise.
+`compression` retires to 1.0 in every case, because it pins the widest
+cross-section to the body plane while the real boundary is widest behind the
+planet, and `waist` is the only handle that moves it.
+
+Quality depends entirely on how far alpha sits from 0.5, because the stock width
+`√(radius² − px²)` is naturally a cylinder and Shue's tail goes as `u^(1−2α)`:
+
+| body | alpha | 1−2alpha | dayside max error | tail error at 0.9 L |
+|---|---|---|---|---|
+| Jupiter, Polyphemus | 0.42 | +0.15 | 4.2% | **+70%** |
+| Mercury | 0.500 | 0.00 | 0.26% | +0.7% |
+| Earth, Uranus, Neptune, Proxima c/d | 0.580 | −0.16 | 1.12% | −5.7% |
+| Saturn | 0.736 | −0.47 | 4.5% | **−42%** |
+
+Two of four alpha classes miss by more than the ±20% that IMF `Bz` swings the
+real boundary, so the claim that "the encoding error is smaller than the physics
+it encodes" holds only near alpha 0.5. Rejected.
+
+Three guards came out of the attempt and are worth reusing on any future fit of
+this kind. Without them an unconstrained least-squares fit trades the sunward
+face for tail accuracy: Saturn came out at −100% width at θ = 15°, the entire
+dayside gone, while scoring a better total rms. Pin the nose exactly, hold
+`waist` below `0.95 r0` so the blend origin cannot swallow the dayside, and cap
+the dayside error explicitly.
+
+The attempt also rested on a wrong premise about the alternative, corrected here:
+Shue-native was described as needing a polar form converted to a true Cartesian
+signed distance. Kerbalism never needs a true distance. The stock pause is itself
+a pseudo-distance — scaling `x` by `compression` breaks the metric — so anything
+negative inside and positive outside will do, and `Pause_func` for Shue is five
+lines. The only real addition is `Pause_domain()`, whose bounding box has no
+closed form for a softened Shue curve.
+
+Converter retained as `shue_to_stock()` in
+`scripts/refs/magnetopause_geometry.py`, since it is the tool that measured all
+of the above.
 </script>
 <script type="text/markdown" id="md-ko"><!-- 자기권 레시피의 증거·도출 기록. Part 1 = 태양계 7천체 스톡 대 물리 감사, Part 2 = 도출 과정과 기각된 접근 -->
 # 자기권 증거·도출 기록
@@ -1542,6 +1588,44 @@ not a NearStars quirk.
 - 발행 페이지(렌더 포함): [태양계 방사선대](https://vannadin.github.io/nearstars-db/wiki/reference__solar-system-radiation-belts.html)
   (단면 이미지).
 - [methodology-index](reference__methodology-index.html).
+
+## Fitting the stock form to Shue, and why it was rejected
+
+2026-08-16 시도. Shue-native 엔진 모드를 통째로 없애려는 시도였습니다. 일반화 스톡 pause 를 Shue
+목표 곡면에 오프라인으로 피팅해 네 숫자만 내보내자는 것이었고, 거의 성공했습니다. 실패한 이유가
+남길 만합니다.
+
+`r0` 로 정규화하면 이 피팅은 α 만의 함수입니다. α 가 같은 바디들이 `rad/r0`·`waist/r0`·`ext`·
+`smooth/rad` 네 값 모두 소수 넷째 자리까지 일치합니다. 최적화가 잡음이 아니라 구조를 찾고 있다는
+검증입니다. `compression` 은 모든 경우에 1.0 으로 은퇴합니다. 최대 단면을 바디 평면에 못 박는데
+실제 경계의 최대폭은 행성 뒤에 있고, 그 지점을 옮길 수 있는 손잡이는 `waist` 뿐이기 때문입니다.
+
+품질은 α 가 0.5 에서 얼마나 떨어져 있느냐에 전적으로 달렸습니다. 스톡의 폭 `√(radius² − px²)` 은
+본래 원기둥인데 Shue 의 꼬리는 `u^(1−2α)` 로 가기 때문입니다.
+
+| 바디 | α | 1−2α | 주간면 최대오차 | 0.9 L 꼬리 오차 |
+|---|---|---|---|---|
+| 목성·폴리페무스 | 0.42 | +0.15 | 4.2% | **+70%** |
+| 수성 | 0.500 | 0.00 | 0.26% | +0.7% |
+| 지구·천왕성·해왕성·프록시마 c/d | 0.580 | −0.16 | 1.12% | −5.7% |
+| 토성 | 0.736 | −0.47 | 4.5% | **−42%** |
+
+네 α 등급 중 둘이 IMF `Bz` 가 실제 경계를 흔드는 ±20% 보다 크게 빗나갑니다. "인코딩 오차가
+인코딩 대상보다 작다" 는 주장은 α 0.5 근처에서만 참이었습니다. 기각.
+
+가드 셋이 이 시도에서 나왔고, 앞으로 이런 종류의 피팅에는 재사용할 만합니다. 없으면 제약 없는
+최소제곱이 주간면을 꼬리 정확도와 맞바꿉니다. 토성이 θ = 15° 에서 폭 −100%, 즉 주간면 전체가
+사라진 채로 총 rms 는 더 좋은 해가 나왔습니다. 노즈를 정확히 고정하고, `waist` 를 `0.95 r0` 아래로
+묶어 혼합 원점이 주간면을 삼키지 못하게 하고, 주간면 오차에 명시적 상한을 걸어야 합니다.
+
+이 시도는 대안에 대한 틀린 전제 위에 서 있기도 했고, 여기서 정정합니다. Shue-native 가 극형식을
+진짜 직교 부호거리로 바꿔야 한다고 적혀 있었는데, Kerbalism 은 진짜 거리를 요구하지 않습니다.
+스톡 pause 자체가 유사거리입니다(`compression` 으로 `x` 를 늘리면 계량이 깨집니다). 안에서 음수·
+밖에서 양수면 되므로 Shue 의 `Pause_func` 은 다섯 줄입니다. 진짜 추가는 `Pause_domain()` 하나이고,
+연화 Shue 곡선의 바운딩 박스는 닫힌 형태가 없습니다.
+
+변환기는 `scripts/refs/magnetopause_geometry.py` 의 `shue_to_stock()` 로 남깁니다. 위 내용을 전부
+측정한 도구입니다.
 </script>
 <script>
 const srcs = {};

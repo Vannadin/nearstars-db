@@ -680,3 +680,49 @@ if this is revisited.
 - Published page (renders included): [Solar-System radiation belts](https://vannadin.github.io/nearstars-db/wiki/reference__solar-system-radiation-belts.html)
   (cross-section images).
 - [methodology-index](methodology-index.md).
+
+## Fitting the stock form to Shue, and why it was rejected
+
+Tried 2026-08-16 as a way to delete the Shue-native engine mode entirely: fit the
+generalised stock pause offline to the Shue target surface and ship only the four
+numbers. It very nearly worked, and the reason it does not is worth keeping.
+
+Normalised by `r0`, the fit is a pure function of alpha — bodies sharing an alpha
+land on identical `rad/r0`, `waist/r0`, `ext` and `smooth/rad` to four figures,
+which is the check that the optimiser is finding structure rather than noise.
+`compression` retires to 1.0 in every case, because it pins the widest
+cross-section to the body plane while the real boundary is widest behind the
+planet, and `waist` is the only handle that moves it.
+
+Quality depends entirely on how far alpha sits from 0.5, because the stock width
+`√(radius² − px²)` is naturally a cylinder and Shue's tail goes as `u^(1−2α)`:
+
+| body | alpha | 1−2alpha | dayside max error | tail error at 0.9 L |
+|---|---|---|---|---|
+| Jupiter, Polyphemus | 0.42 | +0.15 | 4.2% | **+70%** |
+| Mercury | 0.500 | 0.00 | 0.26% | +0.7% |
+| Earth, Uranus, Neptune, Proxima c/d | 0.580 | −0.16 | 1.12% | −5.7% |
+| Saturn | 0.736 | −0.47 | 4.5% | **−42%** |
+
+Two of four alpha classes miss by more than the ±20% that IMF `Bz` swings the
+real boundary, so the claim that "the encoding error is smaller than the physics
+it encodes" holds only near alpha 0.5. Rejected.
+
+Three guards came out of the attempt and are worth reusing on any future fit of
+this kind. Without them an unconstrained least-squares fit trades the sunward
+face for tail accuracy: Saturn came out at −100% width at θ = 15°, the entire
+dayside gone, while scoring a better total rms. Pin the nose exactly, hold
+`waist` below `0.95 r0` so the blend origin cannot swallow the dayside, and cap
+the dayside error explicitly.
+
+The attempt also rested on a wrong premise about the alternative, corrected here:
+Shue-native was described as needing a polar form converted to a true Cartesian
+signed distance. Kerbalism never needs a true distance. The stock pause is itself
+a pseudo-distance — scaling `x` by `compression` breaks the metric — so anything
+negative inside and positive outside will do, and `Pause_func` for Shue is five
+lines. The only real addition is `Pause_domain()`, whose bounding box has no
+closed form for a softened Shue curve.
+
+Converter retained as `shue_to_stock()` in
+`scripts/refs/magnetopause_geometry.py`, since it is the tool that measured all
+of the above.

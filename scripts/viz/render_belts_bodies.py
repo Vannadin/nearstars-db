@@ -80,13 +80,9 @@ BODIES={
    # 노즈 63 R_J(Joy 2002 압축 상태) ⇒ p_SW 0.132 nPa ⇒ α 0.423.
    'pause':{'radiation':-0.01,'rad':84.4649,'comp':1.3407,'ext':0.0089380,'hscale':1.0,
             'shue_alpha':0.423,'shue_nose':63,'shue_tail':9450,
-            # ⚗ Shue 구현 세트. Shue 식을 엔진에서 평가하지 않는다. 목표 곡면에 일반화 스톡
-            #   형식을 오프라인으로 피팅해 네 숫자로 넘기고, 엔진은 α 를 모른다 — 극형식을 직교
-            #   부호거리로 바꾸는 일이 사라지므로 Pause_func 두 줄이면 끝난다.
-            #   목표: 주간 α 0.423, α_day 0.423 가 0.5 이하라 야간 α 미적용 — 단일 α. 잔차 rms 5.363.
-            #   compression 은 1 로 은퇴한다 — 최대 단면을 바디 평면에 못 박기 때문이고, 그 일은
-            #   waist 가 맡는다. 정규화하면 α 만의 함수: rad/r0 1.5000, smooth/rad 0.600.
-            'pending_comp':1.0,'pending_rad':94.5,'pending_ext':0.0100334,'pending_waist':-23.0879,'pending_smooth':56.7}},  # nose 63 R_J (Joy 2002)
+            # α_day ≤ 0.5 라 야간 α 미적용. 일반화 스톡 근사안은 2026-08-16 기각
+            #   (이 α 대역에서 꼬리가 +70% 어긋난다).
+            'shue_alpha_night':0}},  # nose 63 R_J (Joy 2002)
 
  # ---- SATURN: 스톡=외대만, 물리=고리가 내대 소거→외대만(축대칭), CRAND 약함 ----
  # 스톡 값 검증: KSP-RO/ROKerbalism Support/RSS.cfg `saturn` 모델 (2026-07-24 재검증)
@@ -110,13 +106,12 @@ BODIES={
    'outer':{'radiation':10,'grad':2.15,'dist':2.6173,'rad':2.3184,'dxy':0.6735,'comp':1.0,'ext':0.998,'bdist':0.9889,'brad':0.8883,'bdxy':0.6616},  # 고리 바깥 단일 초승달
    'pause':{'radiation':-0.011,'rad':39.9677,'comp':1.6653,'ext':0.0111020,'hscale':1.0,
             'shue_alpha':0.7358,'shue_nose':24,'shue_tail':3600,
-            # ⚗ Shue 구현 세트. Shue 식을 엔진에서 평가하지 않는다. 목표 곡면에 일반화 스톡
-            #   형식을 오프라인으로 피팅해 네 숫자로 넘기고, 엔진은 α 를 모른다 — 극형식을 직교
-            #   부호거리로 바꾸는 일이 사라지므로 Pause_func 두 줄이면 끝난다.
-            #   목표: 주간 α 0.736, α_night = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장) 으로 0.6599 적용. 잔차 rms 8.249.
-            #   compression 은 1 로 은퇴한다 — 최대 단면을 바디 평면에 못 박기 때문이고, 그 일은
-            #   waist 가 맡는다. 정규화하면 α 만의 함수: rad/r0 3.3125, smooth/rad 2.000.
-            'pending_comp':1.0,'pending_rad':79.5,'pending_ext':0.0224291,'pending_waist':20.5478,'pending_smooth':159.0}},  # nose 24 R_S (Achilleos 2008)
+            # 야간 α = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장, 아트 정책). α_day ≤ 0.5 인
+            #   바디는 이미 뒤가 좁아지므로 적용하지 않는다 — 수성·목성·폴리페무스가 자동 제외된다.
+            # 이 형상을 일반화 스톡(waist/smooth)으로 근사하는 안은 2026-08-16 에 기각했다.
+            #   α≈0.5 에서만 맞고 꼬리가 목성급 +70%, 토성급 −42% 로 어긋난다. 두 슬라이더는
+            #   원래 용도인 유도 가지(금성·화성)에 남는다.
+            'shue_alpha_night':0.6599}},  # nose 24 R_S (Achilleos 2008)
 
  # ---- URANUS: 극단 tilt 59° + offset 0.3 ----
  # 스톡=generic `saturn` 모델 재사용(외대 7/7만; radiation_inner 75는 has_inner=false라 미사용 죽은 값)
@@ -140,13 +135,12 @@ BODIES={
    'outer':{'radiation':8,'grad':1.85,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.005,'ext':0.977,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
    'pause':{'radiation':-0.010,'rad':26.9073,'comp':1.4948,'ext':0.0099653,'hscale':1.0,
             'shue_alpha':0.58,'shue_nose':18,'shue_tail':2700,
-            # ⚗ Shue 구현 세트. Shue 식을 엔진에서 평가하지 않는다. 목표 곡면에 일반화 스톡
-            #   형식을 오프라인으로 피팅해 네 숫자로 넘기고, 엔진은 α 를 모른다 — 극형식을 직교
-            #   부호거리로 바꾸는 일이 사라지므로 Pause_func 두 줄이면 끝난다.
-            #   목표: 주간 α 0.58, α_night = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장) 으로 0.52 적용. 잔차 rms 0.266.
-            #   compression 은 1 로 은퇴한다 — 최대 단면을 바디 평면에 못 박기 때문이고, 그 일은
-            #   waist 가 맡는다. 정규화하면 α 만의 함수: rad/r0 2.2188, smooth/rad 1.500.
-            'pending_comp':1.0,'pending_rad':39.9375,'pending_ext':0.0149128,'pending_waist':0.0097,'pending_smooth':59.9062}},  # nose 18 R_U (Ness 1986)
+            # 야간 α = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장, 아트 정책). α_day ≤ 0.5 인
+            #   바디는 이미 뒤가 좁아지므로 적용하지 않는다 — 수성·목성·폴리페무스가 자동 제외된다.
+            # 이 형상을 일반화 스톡(waist/smooth)으로 근사하는 안은 2026-08-16 에 기각했다.
+            #   α≈0.5 에서만 맞고 꼬리가 목성급 +70%, 토성급 −42% 로 어긋난다. 두 슬라이더는
+            #   원래 용도인 유도 가지(금성·화성)에 남는다.
+            'shue_alpha_night':0.52}},  # nose 18 R_U (Ness 1986)
 
  # ---- NEPTUNE: tilt 47° + offset 0.55, 외곽 Triton 컷 ----
  # 스톡=generic `saturn` 모델 재사용(pause 20 — 26.5 아님; radiation_inner 39 미사용 죽은 값)
@@ -168,13 +162,12 @@ BODIES={
    'outer':{'radiation':6,'grad':2.63,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.004,'ext':0.98,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
    'pause':{'radiation':-0.007,'rad':39.6135,'comp':1.4948,'ext':0.0099653,'hscale':1.0,
             'shue_alpha':0.58,'shue_nose':26.5,'shue_tail':3975,
-            # ⚗ Shue 구현 세트. Shue 식을 엔진에서 평가하지 않는다. 목표 곡면에 일반화 스톡
-            #   형식을 오프라인으로 피팅해 네 숫자로 넘기고, 엔진은 α 를 모른다 — 극형식을 직교
-            #   부호거리로 바꾸는 일이 사라지므로 Pause_func 두 줄이면 끝난다.
-            #   목표: 주간 α 0.58, α_night = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장) 으로 0.52 적용. 잔차 rms 0.392.
-            #   compression 은 1 로 은퇴한다 — 최대 단면을 바디 평면에 못 박기 때문이고, 그 일은
-            #   waist 가 맡는다. 정규화하면 α 만의 함수: rad/r0 2.2188, smooth/rad 1.500.
-            'pending_comp':1.0,'pending_rad':58.7969,'pending_ext':0.0149128,'pending_waist':0.0143,'pending_smooth':88.1953}},  # nose 26.5 R_N (Ness 1989)
+            # 야간 α = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장, 아트 정책). α_day ≤ 0.5 인
+            #   바디는 이미 뒤가 좁아지므로 적용하지 않는다 — 수성·목성·폴리페무스가 자동 제외된다.
+            # 이 형상을 일반화 스톡(waist/smooth)으로 근사하는 안은 2026-08-16 에 기각했다.
+            #   α≈0.5 에서만 맞고 꼬리가 목성급 +70%, 토성급 −42% 로 어긋난다. 두 슬라이더는
+            #   원래 용도인 유도 가지(금성·화성)에 남는다.
+            'shue_alpha_night':0.52}},  # nose 26.5 R_N (Ness 1989)
 
  # ---- MERCURY: 벨트 없음, 초소형 offset 자기권 (표면 직격) ----
  # 스톡은 저작값이고 물리 도출이 아니다(전용 `mercury` 모델). pause 1.6/comp 1.4 → 노즈 1.14.
@@ -191,13 +184,9 @@ BODIES={
    # deform 0.1 은 스톡에서 상속(다중극 비축대칭은 실재하나 진폭은 도출하지 않았다).
    'pause':{'radiation':-0.001,'rad':2.0506,'comp':1.4142,'ext':0.0094280,'hscale':1.0,'deform':0.1,
             'shue_alpha':0.5,'shue_nose':1.45,'shue_tail':217.5,
-            # ⚗ Shue 구현 세트. Shue 식을 엔진에서 평가하지 않는다. 목표 곡면에 일반화 스톡
-            #   형식을 오프라인으로 피팅해 네 숫자로 넘기고, 엔진은 α 를 모른다 — 극형식을 직교
-            #   부호거리로 바꾸는 일이 사라지므로 Pause_func 두 줄이면 끝난다.
-            #   목표: 주간 α 0.5, α_day 0.5 가 0.5 이하라 야간 α 미적용 — 단일 α. 잔차 rms 0.008.
-            #   compression 은 1 로 은퇴한다 — 최대 단면을 바디 평면에 못 박기 때문이고, 그 일은
-            #   waist 가 맡는다. 정규화하면 α 만의 함수: rad/r0 2.0000, smooth/rad 1.450.
-            'pending_comp':1.0,'pending_rad':2.9,'pending_ext':0.0134228,'pending_waist':0.0434,'pending_smooth':4.205}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
+            # α_day ≤ 0.5 라 야간 α 미적용. 일반화 스톡 근사안은 2026-08-16 기각
+            #   (이 α 대역에서 꼬리가 +70% 어긋난다).
+            'shue_alpha_night':0}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
  # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
  # ROKerbalism: RadiationBody[Eve]→Venus, radiation_model = ionosphere, radiation_pause = -0.005.
@@ -289,13 +278,12 @@ BODIES={
    #   extension = pause_radius/(150·노즈) = 0.0099653  ← L = 150×노즈 관례(도출 아님).
    'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0099653,'hscale':1.0,
             'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500,
-            # ⚗ Shue 구현 세트. Shue 식을 엔진에서 평가하지 않는다. 목표 곡면에 일반화 스톡
-            #   형식을 오프라인으로 피팅해 네 숫자로 넘기고, 엔진은 α 를 모른다 — 극형식을 직교
-            #   부호거리로 바꾸는 일이 사라지므로 Pause_func 두 줄이면 끝난다.
-            #   목표: 주간 α 0.58, α_night = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장) 으로 0.52 적용. 잔차 rms 0.148.
-            #   compression 은 1 로 은퇴한다 — 최대 단면을 바디 평면에 못 박기 때문이고, 그 일은
-            #   waist 가 맡는다. 정규화하면 α 만의 함수: rad/r0 2.2188, smooth/rad 1.500.
-            'pending_comp':1.0,'pending_rad':22.1875,'pending_ext':0.0149128,'pending_waist':0.0054,'pending_smooth':33.2812}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
+            # 야간 α = α_day × 0.8966 (지구 −0.06 앵커의 비례 확장, 아트 정책). α_day ≤ 0.5 인
+            #   바디는 이미 뒤가 좁아지므로 적용하지 않는다 — 수성·목성·폴리페무스가 자동 제외된다.
+            # 이 형상을 일반화 스톡(waist/smooth)으로 근사하는 안은 2026-08-16 에 기각했다.
+            #   α≈0.5 에서만 맞고 꼬리가 목성급 +70%, 토성급 −42% 로 어긋난다. 두 슬라이더는
+            #   원래 용도인 유도 가지(금성·화성)에 남는다.
+            'shue_alpha_night':0.52}},  # nose 15/1.5=10 R_E — 스톡과 동일(스톡이 이미 정확)
 
  # ---- GANYMEDE: 약장 임베디드 미니자기권 (Kivelson 2002: 719nT, standoff ~2 R_G, open caps) ----
  # 스톡은 저작값이고 물리 도출이 아니다(전용 `ganymede` 모델). 계면 자체가 없다(has_pause 미정의).
