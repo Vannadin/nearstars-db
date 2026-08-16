@@ -187,7 +187,7 @@ def main():
     ap.add_argument('--gap-deg', type=float, default=None,
                     help='force a limb gap instead of using the height of '
                          'maximum clearance (the derived default)')
-    ap.add_argument('--gain', type=float, default=9.0,
+    ap.add_argument('--gain', type=float, default=70.0,
                     help='emission gain for the aurora fill')
     ap.add_argument('--aurora', action='store_true',
                     help='emission-only volumetric fill instead of a surface')
@@ -320,6 +320,29 @@ def _axis_frames(pts):
     return t, u, v
 
 
+# 심홍을 최대 채널로 정규화한 것 — 이 색에 노출을 곱해 채널별로 롤오프한다.
+HUE = CRIMSON / CRIMSON.max()
+
+
+def tone_map(e, exposure=1.0):
+    """Accumulated emission to colour, rolled off per channel.
+
+    Two failures to avoid, and they pull opposite ways. Clamping the ramp at a
+    stop turns everything above it into one flat slab — the magenta cut-out.
+    Removing the peak instead flattens the highlights and the picture goes
+    lifeless. What is wanted is a peak that exists but occupies almost no area,
+    which is what an HDR image does and what clipping cannot fake.
+
+    Per-channel Reinhard gives exactly that for free. The red channel saturates
+    first, so the curtain runs crimson to rose to a warm pink as it thickens,
+    and only where the column depth is an order of magnitude past that do green
+    and blue catch up and the core reach white. The white region is therefore
+    small because the maths makes it small, not because it was cut off.
+    """
+    lin = HUE * (e * exposure)[..., None]
+    return lin / (1.0 + lin)
+
+
 def _hash01(n, k):
     """Cheap deterministic hash in [0,1). Sine-based on purpose — a shader can
     evaluate the same thing per step, and a texture cannot travel with a
@@ -340,10 +363,15 @@ def sheet_params(j):
     return {
         'theta': 2 * math.pi * (j + 0.62 * (h[0] - 0.5)) / SHEETS,
         'q': 0.30 + 0.62 * h[1],                    # 반경 방향 위치 → 층이 생긴다
-        'f': (0.21 + 0.9 * h[2], 0.53 + 1.7 * h[3], 1.31 + 3.1 * h[4]),
+        # sigma 방향 주파수는 낮게 — 높으면 주름이 축을 따라 짧게 끊겨 뭉툭해진다.
+        # 축으로 길게 늘어지는 결이 나오려면 방위각 구조보다 훨씬 완만해야 한다.
+        'f': (0.055 + 0.24 * h[2], 0.14 + 0.45 * h[3], 0.35 + 0.82 * h[4]),
         'a': (0.30 + 0.55 * h[5], 0.18 + 0.30 * h[6], 0.06 + 0.14 * h[7]),
-        'w': 0.13 + 0.16 * h[8],
-        'gain': 0.55 + 0.9 * h[(j + 3) % 9],
+        # 얇을수록 좋다. 시트가 두꺼우면 수직으로 지나는 광선도 많이 쌓여
+        # 바닥이 올라가고, 결국 전체가 균일하게 밝아져 피크가 사라진다. 얇게
+        # 두면 모서리로 맞은 광선만 크게 쌓여 다이내믹 레인지가 벌어진다.
+        'w': 0.055 + 0.075 * h[8],
+        'gain': 1.1 + 1.8 * h[(j + 3) % 9],
     }
 
 
@@ -407,11 +435,11 @@ def aurora_density(P, pts, rads, arc, frames, reduced, radial_width=0.26):
                   + amp[2] * np.sin(f[2] * sigma + 0.7))
         dth = np.arctan2(np.sin(theta - centre), np.cos(theta - centre))
         radial = np.exp(-((q - sh['q']) / radial_width) ** 2)
-        along = 0.55 + 0.45 * np.sin(f[1] * 0.8 * sigma + 3.0 * sh['q'])
+        along = 0.62 + 0.38 * np.sin(f[1] * 0.55 * sigma + 3.0 * sh['q'])
         dens = dens + sh['gain'] * along * radial * np.exp(-(dth / sh['w']) ** 2)
 
     envelope = np.clip(1.0 - q * q, 0.0, 1.0) ** 0.8
-    return (envelope * (0.06 + dens)).reshape(P.shape[:-1])
+    return (envelope * (0.02 + dens)).reshape(P.shape[:-1])
 
 
 def sheet_centreline(s, j):
@@ -488,7 +516,7 @@ def interior_camera(spec, at_arc, size, fov=1.15, tilt_deg=26.0,
     return np.broadcast_to(eye, d.shape).copy(), d
 
 
-def render_aurora_interior(spec, at_arc, size, depth, steps=170, gain=9.0,
+def render_aurora_interior(spec, at_arc, size, depth, steps=170, gain=22.0,
                            segments=110, window=None, tilt_deg=26.0,
                            offset_frac=0.55):
     """Emission march from inside the line, looking down its length."""
@@ -511,14 +539,12 @@ def render_aurora_interior(spec, at_arc, size, depth, steps=170, gain=9.0,
         Q = origin + (0.02 * depth + i * dt) * direction
         acc += aurora_density(Q, pts, rads, arc, frames, reduced) * dt
     e = np.clip(acc * gain / max(rads.max(), 1e-9), 0.0, None)
-    a1 = 1.0 - np.exp(-e)
-    a2 = np.clip((e - 0.55) / 1.9, 0.0, 1.0) ** 1.3
-    col = CRIMSON * a1[..., None] + (MID - CRIMSON) * a2[..., None]
+    col = tone_map(e)
     return np.clip(col + np.array([0.012, 0.012, 0.02]), 0, 1)
 
 
 def render_aurora(spec, view, span, size, centre, window=9.0, steps=150,
-                  gain=9.0, segments=48):
+                  gain=70.0, segments=48):
     """Emission-only march. No surfaces, no lighting: the picture is the
     integral of the curtain's own glow along each ray, so thin parts stay
     translucent and stars would show through."""
@@ -557,11 +583,7 @@ def render_aurora(spec, view, span, size, centre, window=9.0, steps=150,
     e = np.clip(acc * gain / max(rads.max(), 1e-9), 0.0, None)
 
     # 밝기 → 색: 심홍에서 시작해 두꺼운 곳이 흰 코어로 간다(참조 이미지의 램프).
-    # 흰색 피크는 뺀다(오너 지시). 두꺼운 곳이 흰 코어로 가는 대신 심홍에서
-    # 밝은 장미빛까지만 오르고 거기서 포화한다.
-    a1 = 1.0 - np.exp(-e)
-    a2 = np.clip((e - 0.55) / 1.9, 0.0, 1.0) ** 1.3
-    col = CRIMSON * a1[..., None] + (MID - CRIMSON) * a2[..., None]
+    col = tone_map(e)
 
     # 광구는 배경으로 깔고 커튼을 그 위에 가산한다.
     star_face = np.where(np.isfinite(t_star)[..., None],
