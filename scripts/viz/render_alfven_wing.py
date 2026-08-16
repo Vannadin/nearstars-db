@@ -295,12 +295,14 @@ def _project(world, centre, right, up, span, size):
             size / 2 - (d @ up) / span * size / 2)
 
 
-def render_anatomy(name, out, size=380, fatten=None):
+def render_anatomy(name, out, size=380, fatten=None, fillet_scale=None):
     """One sheet answering the three shape questions, each in its own panel."""
     from PIL import ImageDraw, ImageFont
     spec = geometry_for(name)
     st = spec['straightness']
     prof = wing_profile(spec)
+    fs = mg.FILLET_SCALE_DEFAULT if fillet_scale is None else fillet_scale
+    fillet_km = fs * spec['scale_height_m'] / 1e3
 
     near = 2.35 * st['one_radius']
     nc = np.array([near * 0.22, 0.0, 0.0])
@@ -321,14 +323,15 @@ def render_anatomy(name, out, size=380, fatten=None):
         ('field', far, mid, fat,
          f"3. lead — {prof['phi'][-1]:+.1f} deg of azimuth",
          'from over the parent pole; flow to the right'),
-        ('flow', max(7.0 * prof['R_abs'][-1], 1e-3), np.array(spec['paths'][0][-1][0]), 1.0,
+        ('flow', max(4.5 * (prof['R_abs'][-1] + fs * spec['landing_floor']), 1e-3),
+         np.array(spec['paths'][0][-1][0]), 1.0,
          f"4. contact — lands {prof['R_abs'][-1]:.3g} R wide, true scale",
-         (f"floored by the {spec['scale_height_m'] / 1e3:.0f} km scale height "
-          f"from f={spec['floor_starts_at']:.2f}, filleted at the same length"
+         (f"floor {spec['scale_height_m'] / 1e3:.0f} km (1 H) from "
+          f"f={spec['floor_starts_at']:.2f}; fillet {fs:g} H = {fillet_km:.0f} km"
           if spec['floor_binds'] else
-          f"flux-limited to the surface; half-angle "
-          f"{spec['contact_half_angle_deg']:.2f} deg, fillet "
-          f"{spec['scale_height_m'] / 1e3:.0f} km")),
+          f"flux-limited to the surface, half-angle "
+          f"{spec['contact_half_angle_deg']:.2f} deg; fillet {fs:g} H "
+          f"= {fillet_km:.0f} km")),
     ]
 
     pad, head = 12, 84
@@ -354,7 +357,8 @@ def render_anatomy(name, out, size=380, fatten=None):
 
     for idx, (view, span, ctr, fat, title, sub) in enumerate(panels):
         img, right, up = render_view(spec, view, span, size, full=True,
-                                     centre=ctr, fatten=fat)
+                                     centre=ctr, fatten=fat,
+                                     fillet_scale=fillet_scale)
         tile = Image.fromarray((img * 255).astype(np.uint8))
         x, y = pad + idx * (size + pad), head + pad
         sheet.paste(tile, (x, y))
@@ -414,7 +418,7 @@ def path_arclength_np(P, paths):
     return best_s.reshape(P.shape[:-1])
 
 
-def make_sdf(spec, full, fatten=1.0):
+def make_sdf(spec, full, fatten=1.0, fillet_scale=None):
     """Near-field uses the straight-tube approximation; `full` marches the real
     curved flux tubes all the way to the parent, parent body included."""
     blend = 0.5 * spec['R_obst']
@@ -434,7 +438,9 @@ def make_sdf(spec, full, fatten=1.0):
 
     # 착지 필렛: 관과 모천체가 만나는 모서리를 스케일 높이만큼 부드럽게 잇는다.
     # 임의 스무딩이 아니라 관이 녹아드는 층의 두께 그 자체다.
-    fillet = spec['landing_floor'] * fatten
+    if fillet_scale is None:
+        fillet_scale = mg.FILLET_SCALE_DEFAULT
+    fillet = spec['landing_floor'] * fillet_scale * fatten
 
     def sdf(P):
         d = np.linalg.norm(P, axis=-1) - spec['R_obst']
@@ -448,8 +454,9 @@ def make_sdf(spec, full, fatten=1.0):
     return sdf
 
 
-def render_view(spec, view, span, size, full=False, centre=None, fatten=1.0):
-    sdf = make_sdf(spec, full, fatten)
+def render_view(spec, view, span, size, full=False, centre=None, fatten=1.0,
+                fillet_scale=None):
+    sdf = make_sdf(spec, full, fatten, fillet_scale)
     if centre is None:
         theta = math.radians(spec['theta_A_deg'])
         centre = np.array([0.0, 0.0,
@@ -499,6 +506,9 @@ def main():
                     help='tube radius multiplier in the full-run panels; '
                          '1 = true scale, 0 = pick one per body so the tube '
                          'never outgrows the parent')
+    ap.add_argument('--fillet-scale', type=float, default=None,
+                    help='landing fillet in ionospheric scale heights; the '
+                         'defensible window is 1-3, default 3')
     ap.add_argument('--anatomy', action='store_true',
                     help='one sheet: tilt, thickness, lead, plus the profiles')
     ap.add_argument('--profile', action='store_true',
@@ -516,7 +526,8 @@ def main():
 
     if a.anatomy:
         print(render_anatomy(a.body, a.out, size=a.size,
-                             fatten=a.fatten if a.fatten > 0 else None))
+                             fatten=a.fatten if a.fatten > 0 else None,
+                             fillet_scale=a.fillet_scale))
         return
 
     spec = geometry_for(a.body)

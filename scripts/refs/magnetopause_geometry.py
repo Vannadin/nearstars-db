@@ -371,6 +371,14 @@ def surface_gravity(mass_kg, radius_m):
     return G * mass_kg / radius_m ** 2
 
 
+# 착지 필렛은 H 의 몇 배인가. 바닥값(관이 그보다 가늘 수 없는 두께)은 H 한 장이지만,
+# 전류가 닫히는 전도층 자체는 한 장이 아니라 여러 장에 걸쳐 있다 — 전도도 프로파일은
+# 스케일 높이 규모의 폭을 가진 봉우리이고, 그 봉우리의 어깨까지가 관이 풀리는 구간이다.
+# 그래서 물리적으로 방어되는 창은 1~3 H 이고, 그 안에서 어디를 쓸지는 아트 선택이다.
+FILLET_SCALE_WINDOW = (1.0, 3.0)
+FILLET_SCALE_DEFAULT = 3.0
+
+
 def dipole_wing_path(L_shell, parent_radius_m, moon_radius_m, M_A_local,
                      parent_mass_kg, parent_spin_s, parent_B_eq_uT,
                      rho, R_tube, hemisphere=1.0, flow_sign=1.0, steps=260,
