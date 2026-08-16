@@ -201,88 +201,14 @@ Not applied to Ganymede, whose obstacle sits in Jovian plasma rather than a stel
 re-gate: Polyphemus `L` 5300 R_p, Proxima b 231 R_p, Proxima c 1791 R_c. The phase 4
 board remains their source of truth, and now records these values.
 
-**Seventh attempt, 2026-08-16: the boundary never fades, so there is no fade point.**
-The idea was to end the tail where the inside/outside contrast blurs, and to let a
-weak-field body get a proportionally shorter tail than a strong one. Three calculations
-kill it.
-
-The lobe field is set by pressure balance, `B_lobe = sqrt(2 mu0 P_ext)`, which depends on
-the ambient wind at that orbital distance and **not at all on the planet's own field**. It
-therefore does not decay downtail: at each station the boundary re-balances against the
-same external pressure.
-
-The lobes are Kelvin-Helmholtz stable. With the lobe field aligned to the flow, the
-instability threshold `dv^2 > (1/mu0)(1/rho_1 + 1/rho_2)(B_1^2 + B_2^2)` puts the critical
-shear at 1540 to 1880 km/s along Earth's distant tail, against a magnetosheath flow of
-~400. The boundary layer does not turbulently thicken, so a mixing-layer criterion never
-consumes the tail radius (Miura 1987, [`1987JGR....92.3195M`](https://ui.adsabs.harvard.edu/abs/1987JGR....92.3195M);
-Walker 1981, [`1981P&SS...29.1119W`](https://ui.adsabs.harvard.edu/abs/1981P%26SS...29.1119W)).
-
-And the contrast itself is scale-free: dividing the two expressions gives
-`B_lobe / B_IMF = sqrt(2) * M_A`, a **constant along the tail**, because both fields fall
-off the same way. Earth 13.5x, Jupiter 14.7x, Polyphemus 13.5x. The tail interior stays
-an order of magnitude above its surroundings forever.
-
-One byproduct is worth keeping: `sqrt(2) * M_A` is a cheap contrast diagnostic that needs
-no field model. Proxima b scores **4.5x** against everyone else's 13 to 15, because its
-wind is nearly Alfvenic (M_A ~ 3) - its tail is a genuinely faint structure, even though it
-is not a short one.
-
-Also retracted here: an intermediate step in that attempt backed a shear-layer spreading
-rate `S = R_T / L` out of the published tail extents and read the spread (Earth 0.13,
-Jupiter 0.014) as a physical difference in tail length. It is not. Every `L` is a
-spacecraft-coverage bound, so every `S` is an upper bound, and the spread measures how far
-each mission flew, not how long each tail is.
-
-**A real termination mechanism does exist, and it is topological rather than diffusive**
-(three-agent literature sweep, 2026-08-16). The tail is not erased by fading; it is *cut*.
-Kurth 1982 ([`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) conjectured a "pinch-off or disconnection" of the
-distant Jovian tail, and Goldstein 1985 ([`1985JGR....90.8223G`](https://ui.adsabs.harvard.edu/abs/1985JGR....90.8223G)) confirmed it: an
-interplanetary sector crossing appeared in the Voyager 1 solar-wind data during the event,
-"as predicted by Kurth et al. (1982). This supports their conjecture that the tail had
-disconnected from Jupiter." This is the planetary counterpart of a cometary disconnection
-event. The same paper finds the distant-tail magnetic spectra at 6000–7500 R_J follow
-`f^−5/3`, indistinguishable from the ambient wind.
-
-That gives a computable length: the attached tail can only grow for as long as the planet
-goes between current-sheet crossings, so `L = v_wind × T_sector`, where `T_sector` is the
-synodic period of the two-sector pattern (stellar rotation / 2) against the orbit. Every
-Solar-System planet lands near **3 AU** (12.7–13.5 d sector period against a 400 km/s
-wind), which is where the distant detections actually sit — Jupiter 4.5 AU, comet Hyakutake
-3.8 AU. NearStars: Polyphemus 2.58 AU, Proxima b 12.83, Proxima c 35.5, Proxima d 4.89.
-
-**Computed and deliberately not adopted** (owner decision 2026-08-16). Two reasons. It
-agrees with `150 × nose` for the giants (Jupiter 6157 against 9450 R_J, Polyphemus 5398
-against 5300) and diverges by two to three orders of magnitude for small bodies, because it
-is an absolute distance rather than a multiple of the nose — Venus would go from 158 to
-76,868 R_V, whose `extension` of 1.5e-5 is a cylinder that never visibly closes. And the
-mechanism is a *duty cycle*, not a wall: the severed tail keeps travelling, which is why
-comet 153P was detected 6.5 AU downstream (Jones 2022, [2006.00500](https://arxiv.org/abs/2006.00500)) and why
-Jones argues some ion tails "may survive as recognizable structures to the edge of the
-heliosphere."
-
-**The flux budget does not terminate the tail either.** The premise — that the tail ends
-where its finite open flux has all reconnected — fails on measurement: Slavin 1985
-([`1985JGR....9010875S`](https://ui.adsabs.harvard.edu/abs/1985JGR....9010875S)) finds flaring ceases at |X| = 120 ± 10 R_E with `B_L` = 9.2 nT
-and a 60 R_E diameter both **constant out to 225 R_E**, so the lobe flux is flat at the full
-polar-cap value rather than draining. Milan 2004 ([`2004JGRA..109.7210M`](https://ui.adsabs.harvard.edu/abs/2004JGRA..109.7210M)) built the
-model anyway and reports the length "can vary by almost a factor of 10, between ~400 and
-4000 R_E, in just a few hours", adding that "a much longer disconnected tail and wake can
-exist beyond this". A quantity that moves 3600 R_E in three hours is not an edge. It does
-leave a useful internal marker: the boundary between the Dungey-connected tail and the
-disconnected wake, 400–4000 R_E at Earth, which brackets our 1500.
-
-**The one field that has solved this problem is heliotail research, and its solution does
-not transfer.** Izmodenov & Alexashov 2003 ([astro-ph/0308211](https://arxiv.org/abs/astro-ph/0308211)) state the difficulty
-in our own terms — "in the heliotail we cannot assume the heliopause to be the heliospheric
-boundary … the solar wind fills the whole space into the downwind direction" — and then get
-numbers only by invoking charge exchange with interstellar neutrals: the density and
-tangential-velocity jumps vanish at **~3000 AU**, and the plasma converges to interstellar
-values at **20,000–40,000 AU**. Their summary sentence is the one to carry: "unlike the
-upwind direction the solar system boundary has **diffusive nature** in the heliotail." A
-planetary magnetotail sits in a fully ionised magnetosheath and has no comparable neutral
-sink, which is exactly why no equivalent number exists for planets.
-
+**Eight attempts to derive `L` have failed, and the eighth established that they had to.**
+The tail does not fade: the lobe field is fixed by pressure balance and so does not decay
+downtail, the lobes are Kelvin-Helmholtz stable, and the contrast `B_lobe / B_IMF` works
+out to `sqrt(2) * M_A`, a constant along the tail. The one real mechanism is topological
+(current-sheet severance, observed at Jupiter), and the length it gives was computed and
+deliberately not adopted. Full record, with the flux-budget and heliotail results and
+every rejected criterion, in the derivation record
+([solar-system-radiation-belts.md](solar-system-radiation-belts.md#why-the-tail-has-no-derivable-length)).
 **What `L` is not.** Two distances are measured and must not be confused with it:
 
 | body | flaring ceases at | source |
@@ -324,19 +250,9 @@ profile is monotone behind the shoulder. Nose and terminator then come out exact
 closes at 20 R_p, and the bulge is 0.000%. The cost is wake width — 15% narrow at 2 R_p,
 33% at 5, 54% at 10 against the measured cone.
 
-Every alternative was measured before this one was adopted, and each is recorded so it is
-not re-attempted:
-
-| candidate | nose | terminator | wake | verdict |
-|---|---|---|---|---|
-| stock, unmodified | −15% | +47% | −47% | both measured values wrong |
-| Shue, α = log₂(comp) | 0.00% | +0.9% | −83% … −100% | tail vanishes 2 R_p behind the planet |
-| Shue, α ≈ 0.44 (min-max fit) | 0.00% | +23% | ±31% | `pause_alpha` and `pause_compression` would describe different daysides |
-| softened Shue, α and L fitted | 0.00% | +32.5% | −32.5% | best the family allows; ε ≪ 0.5 whenever L ≫ r₀, so the terminator collapses to r₀·2^α |
-| conic about a focus | — | — | +60% | closed as an ellipse it dips to 0.9745 R_V, **below the surface** |
-| circle + cone + closure cap | 0.00% | 0.00% | 0.00% | exact, but needs a shape family of its own |
-| **generalized stock** | **0.00%** | **0.00%** | −15% … −54% | adopted |
-
+Every alternative shape family was measured before this one was adopted; the comparison
+table is in the derivation record
+([solar-system-radiation-belts.md](solar-system-radiation-belts.md#induced-boundary-shape-families-measured-and-rejected)).
 Why no Shue member can do better, structurally: its tail width goes as `ρ ∝ u^(1−2α)` for
 `u = π − θ`, so α = 0.5 is exactly the cylindrical-tail threshold, while the *same* α fixes
 the terminator width at `r₀·2^α`. One knob, two jobs, and an induced boundary needs a tight
@@ -377,14 +293,9 @@ recipe on. Five planets have it:
 | Jupiter | 63 R_J | 80 R_J | 1.27 | Ge 2010 ([`2010P&SS...58.1455G`](https://ui.adsabs.harvard.edu/abs/2010P%26SS...58.1455G)) |
 | Uranus | 18 R_U | ~54 R_U | 3.00 | DiBraccio 2019 ([`2019AGUFMSM33E3247D`](https://ui.adsabs.harvard.edu/abs/2019AGUFMSM33E3247D)), Voyager 2 plasmoid |
 
-**The comparison only works if the same structure is compared.** An earlier pass put Earth's
-*distant* neutral line (100–140 R_E, 10–14 `r₀`) beside everyone else's *near* line and
-concluded the scatter was 12×, which killed several candidate recipes. The names carried the
-answer: Mercury's is literally the "Near-Mercury Neutral Line". Compared like with like the
-spread is **1.04–3.00, a factor of 2.9**, and Earth's distant line is a separate structure
-measured nowhere else.
-
-Two refinements are available, and they differ in how much they can be trusted.
+The comparison only works if the same structure is compared; an earlier pass did not, and
+the correction is recorded in the derivation record
+([solar-system-radiation-belts.md](solar-system-radiation-belts.md#the-near-tail-x-line)).
 
 **Grouped constant.** The two gas giants sit at 1.04 and 1.27, everything else at 1.72–3.00.
 Taking `X ≈ 1.16 r₀` for Jupiter and Saturn is a two-point average with a clear physical
@@ -406,52 +317,9 @@ was tested: refitting against planet mass gives a worst residual of 0.075, plane
 choice of variable is not arbitrary — but the fit still reproduces only the points it was
 built from.
 
-**Grade: empirical, anchors reproduced, predictive power unverified.** Two things keep it
-from being more. There is no fourth body to test it on — Neptune's tail has no plasmoid or
-X-line measurement (searched 2026-08-15). And the grouping rationale is contested: Turner
-2024 ([`2024JGRA..12932723T`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932723T)) places Uranus in a **third** category, "unlike the other
-magnetospheric systems that are Dungey-cycle driven (i.e., Mercury and Earth) or
-rotationally driven (Jupiter and Saturn)", and Gershman 2020 ([`2020EPSC...14..258G`](https://ui.adsabs.harvard.edu/abs/2020EPSC...14..258G))
-reports Voyager 2 measuring `M_A` ~23 at Uranus with a plasmoid "suggestive of more internal
-planetary plasma driven" transport. That encounter's geometry is itself extreme — the
-rotation axis pointed within ~8° of the Sun, so the 59° dipole tilt swept the current sheet
-through a full turn each rotation, against a 24° flap at Earth; it is laid out in
-[`uranus-geometry.html`](../uranus-geometry.html). So Uranus may not belong with Mercury and Earth at all,
-even though it lands on their line. Neptune is the first test if a measurement ever appears.
-
-For an exoplanet the recipe needs nothing but `r₀`, which Part A already produces:
-
-    strong internal plasma source (Io/Enceladus-class torus + fast rotation)
-        X ≈ 1.16 · r₀
-    otherwise
-        X ≈ (−0.420 + 0.6055 · log₁₀ r₀[km]) · r₀        fall back to 1.9 · r₀ if unsure
-
-**This is not the tail length, and Shue has no tail length.** The Shue family has exactly two
-parameters, `r₀` and `α`: `r₀ · 2^α` is the terminator width, and α alone fixes the far-tail
-behaviour — below 0.5 the width decays to zero asymptotically, at exactly 0.5 the tail is a
-cylinder of radius `2 r₀`, above 0.5 it diverges (Winslow 2013 states the same threshold:
-"a … governs whether the magnetotail is closed (a<0.5) or open (a≥0.5)"). **No α yields a
-finite endpoint.** `pause_extension`'s `L` is therefore an engine artifact — the place the
-bounded cfg volume closes — not a physical quantity, and it must be placed outside the
-measured range or it destroys the widths α reproduces.
-
-**Criteria tried and rejected**, recorded so none is re-attempted:
-
-| criterion | why it failed |
-|---|---|
-| lobe pressure = ambient static pressure | pressure balance is satisfied indefinitely; beyond flaring cessation the tail is a constant-radius cylinder (Slavin 1985: `B_L` fixed at 9.2 nT past 120 R_E) |
-| flaring cessation as `L` | it is where the *shape* stops changing, not where the tail closes; setting `L` = 120 R_E drove Earth's width to zero exactly where 30 R_E is measured |
-| nose-contrast threshold | the contrast excess at cessation is 5.3% at Earth against 32.7% at Mercury |
-| "fully interior region vanishes" (contrast × cross-section) | the only criterion that stays finite for every α, and the closest yet — but Earth 1.57% vs Mercury 5.94%, and Saturn's α 0.736 pushes its answer to 676 `r₀` |
-| 12 × nose, Earth-calibrated | falsified by Mercury; its claimed Jupiter check used Kurth 1981's ">700 R_J" (a lower bound on brief encounters) when Lepping 1983 ([`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) documents ≥9000 R_J |
-
-**One side result worth keeping.** At the stagnation point the balance is
-`B²/2μ₀ = k·P_dyn`, so the pressure contrast against the ambient static pressure is
-`k·P_dyn/P_static` — and because both scale as `r⁻²` with heliocentric distance, that ratio
-is **the same 48.7× at every planet**. It gives the magnetopause nose field directly for any
-body, `B = √(2μ₀ k P_dyn)`, which returns 62 nT at Earth against an observed 60–70 nT.
-Useful for exoplanets, where `P_dyn` follows from the stellar wind.
-
+Grade: empirical, anchors reproduced, predictive power unverified. The grading, the
+criteria tried and rejected, and the one side result worth keeping are in the derivation
+record ([solar-system-radiation-belts.md](solar-system-radiation-belts.md#the-near-tail-x-line)).
 ## Part B — belt intensity is multi-factor (NOT field strength)
 
 Belt intensity is a **source − loss balance, capped by a field/plasma ceiling**:
@@ -946,18 +814,39 @@ depends on the smoothing. Nose and the 150 × nose tail close are preserved exac
 | Proxima c | 11.942 | 10.3599 | 20.7197 | 0.0115793 |
 | Proxima d | 7.517 | 6.5211 | 13.0422 | 0.0115793 |
 
-This does **not** fix the tail-width deficit — that needs the Shue-native mode. A first
-attempt to use `pause_smooth` for the width, by fitting it against the Shue curve rather
-than against the corner, drove it to 3 × nose and turned the piecewise-linear `px` into a
-quadratic. That is a change of function family, not a smoothing, and was rejected.
+**The pending set is five values, and they move together.** The stock engine reads
+`pause_radius` and `pause_extension` but neither `pause_waist` nor `pause_smooth`, so
+applying part of the set deforms the shape instead of improving it. `compression` is
+retired to 1.0: it pins the widest cross-section to the body plane, while the real boundary
+is widest behind the planet, and `waist` is the only handle that moves it. `smooth` = 0.5 ×
+`pause_radius` stays the convention, solved as a fixed point because the radius depends on
+the smoothing. Nose and the 150 × nose tail close are preserved exactly, and the residual
+against the softened-Shue target roughly halves.
 
-Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
-158 / 193 R_p (the 150 x nose convention; an earlier revision of this table carried
-`extension` 0.0567 / 0.0737, a 20 R_p closure from before that convention existed, which
-the shipped presets had already moved past), and the bulge is 0.000%. The cost is wake width: against the measured cone the
-boundary is 15% narrow at 2 R_p, 33% at 5 and 54% at 10 — accepted, because no-bulge
-outranks wake fidelity here, and because every Shue parameterization does far worse
-(−83% to −100%; see Part A).
+| body | nose | radius | waist | extension | smooth | rms before → after |
+|---|---|---|---|---|---|---|
+| Mercury | 1.45 | 2.6390 | −1.0262 | 0.0122000 | 1.3195 | 0.445 → 0.162 |
+| Earth | 10 | 22.8000 | −11.3982 | 0.0153308 | 11.4000 | 6.094 → 3.101 |
+| Jupiter | 63 | 94.5000 | −25.6567 | 0.0100334 | 47.2500 | 9.303 → 5.389 |
+| Saturn | 24 | 87.3600 | −58.0431 | 0.0247014 | 43.6800 | 35.604 → 21.080 |
+| Uranus | 18 | 41.0400 | −20.5167 | 0.0153308 | 20.5200 | 10.969 → 5.581 |
+| Neptune | 26.5 | 60.4200 | −30.2052 | 0.0153308 | 30.2100 | 16.149 → 8.216 |
+| Polyphemus | 35.33 | 52.2884 | −13.7247 | 0.0098983 | 26.1442 | 5.127 → 3.115 |
+| Proxima c | 11.942 | 27.2278 | −13.6118 | 0.0153308 | 13.6139 | 7.278 → 3.703 |
+| Proxima d | 7.517 | 17.1388 | −8.5681 | 0.0153309 | 8.5694 | 4.581 → 2.331 |
+
+Proxima b is absent because it is on the induced branch, where there is no flaring tail to
+reproduce and so no widest section to move; its set is `waist` 0 with `smooth` 0.7150.
+The set does **not** fix the tail-width deficit, which needs the Shue-native mode. Two
+rejected routes to that are in the derivation record
+([solar-system-radiation-belts.md](solar-system-radiation-belts.md#the-widest-cross-section-is-pinned-to-the-body-plane)).
+
+For Venus and Mars the same generalised form is the *adopted* shape rather than a pending
+one. Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
+158 / 193 R_p on the 150 × nose convention, and the bulge is 0.000%. The cost is wake
+width: against the measured cone the boundary is 15% narrow at 2 R_p, 33% at 5 and 54% at
+10 — accepted, because no-bulge outranks wake fidelity here, and because every Shue
+parameterisation does far worse (−83% to −100%).
 
 **Shue-native pause** (`pause_shue`, `pause_nose` = r0, `pause_alpha` = α,
 `pause_tail` = L). Kerbalism's pause is a sphere with piecewise x-scaling, which is
@@ -1003,16 +892,10 @@ pressure-balance shape (Kanani 2010, [`2010JGRA..115.6207K`](https://ui.adsabs.h
 [`2008JGRA..11311209A`](https://ui.adsabs.harvard.edu/abs/2008JGRA..11311209A)) remain the alternatives where a Shue-form α is not
 wanted.
 
-**`pause_offset`** is the cheap fallback if the full Shue mode is rejected: shift
-the sphere centre tailward before the scaling (`p.x += pause_offset`), which fixes
-the "widest at the body plane" defect in one line. A least-squares fit against the
-softened Shue curve for Proxima c (nose 11.905, α 0.5, tail 125) reproduces the
-nose, the body-plane width, the maximum width and the tail closure within a few
-percent at `pause_offset` 19.7 / radius 21.5 / compression 0.68 / extension 0.204.
-Every shipped stock and ROKerbalism pause underrepresents tail width the same way
-(Earth flank 15 vs an observed 25–30 R_E tail radius), so this is a general defect,
-not a NearStars quirk.
-
+**`pause_offset`** is the cheap fallback if the Shue mode is rejected, and it has since
+been absorbed into `pause_waist` (same operation, opposite sign). Its fit history and the
+general tail-width defect it addresses are in the derivation record
+([solar-system-radiation-belts.md](solar-system-radiation-belts.md#the-widest-cross-section-is-pinned-to-the-body-plane)).
 ## Part D — moon ↔ parent interaction (embedded magnetospheres)
 
 A moon orbiting *inside* a giant's magnetosphere is a common NearStars case (every
