@@ -154,6 +154,336 @@ def confining_pressure_Pa(B_parent_T, rho, v_rel):
     return p_mag + p_ram, p_mag, p_ram
 
 
+# ------------------------------------------------- Alfven wings (3D geometry)
+#
+# A sub-Alfvenic obstacle raises no bow shock and no swept tail. What it raises
+# instead is a pair of standing Alfven waves — the wings — and their geometry is
+# fully determined by three numbers we already compute per body: the Alfven Mach
+# number (tilt), the obstacle size (cross-section), and the parent's field-line
+# curvature (how far the straight-tube description survives).
+#
+# Sources, all read in full:
+#   Neubauer 1980, 1980JGR....85.1171N — the wing model; currents follow the
+#     Alfven characteristics.
+#   Saur review 1908.06446 §4.2 — "The wings are inclined with respect to the
+#     background magnetic field by an angle tan^-1 M_A (Neubauer, 1980)", the
+#     Elsasser characteristics z+- = v +- B/sqrt(mu0 rho), and (their Figure 3)
+#     "the purple tube characterizes the boundary of the main wing which
+#     corresponds to the size of the source, i.e. the moon".
+#   Saur 2013 eq. 57, quoted by Fischer & Saur 2019 (1901.02747) — the effective
+#     obstacle radius R_eff = k R_obst, with k = sqrt(3) when the body's dipole
+#     is parallel to the ambient field.
+
+
+def alfven_mach_number(v_rel, B_T, rho):
+    """M_A = |v_rel| / v_A — the number the whole regime call turns on."""
+    return v_rel / alfven_speed(B_T, rho)
+
+
+def alfven_wing_angle(M_A):
+    """Tilt of each wing away from the background field, in radians.
+
+    tan(theta_A) = M_A: the wave travels along B0 at v_A while the flow carries
+    it downstream at v_0, so the standing structure leans by the ratio.
+    """
+    return math.atan(M_A)
+
+
+def wing_tube_radius(R_obst):
+    """Geometric radius of the wing tube — equal to the obstacle radius.
+
+    Two independent statements give the same answer. Flux conservation: an
+    obstacle of radius R_obst excludes B0 pi R_obst^2 of ambient flux, and the
+    ambient field is uniform outside, so the tube carrying that flux has the
+    same radius. And the Saur review's Figure 3 caption, describing the drawn
+    wing boundary: "The purple tube characterizes the boundary of the main wing
+    which corresponds to the size of the source, i.e., the moon."
+
+    Do **not** use `alfven_effective_radius` for the shape; that is a different
+    quantity (see its docstring).
+    """
+    return R_obst
+
+
+def alfven_effective_radius(R_obst, k=math.sqrt(3.0)):
+    """Flux-equivalent obstacle radius for the *Poynting flux*, Saur 2013 eq. 57.
+
+    R_eff = k R_obst is defined so that the wing's energy flux comes out right;
+    it is larger than the tube the wing actually occupies because the ambient
+    field lines are focused toward a magnetized obstacle. It sizes the power,
+    not the surface — `wing_tube_radius` sizes the surface.
+
+    k = sqrt(3) is the parallel-dipole maximum. An unmagnetized conducting
+    obstacle (Io-like) takes k = 1 with R_obst the ionospheric radius. The
+    anti-parallel case — Ganymede's, where the moon's moment opposes the
+    ambient field — is measured *larger* than the aligned one in the MHD fits
+    (Strugarek 2016, 1610.05705 §3.3), so sqrt(3) is a floor there, not a cap.
+    """
+    return k * R_obst
+
+
+def dipole_curvature_radius(L_shell_m):
+    """Radius of curvature of a dipole field line at its equatorial crossing.
+
+    r = r_eq cos^2(lat) has curvature radius r_eq / 3 at the equator. This is
+    what bends the wing away from a straight tube.
+    """
+    return L_shell_m / 3.0
+
+
+def wing_straight_length(R_wing_m, R_curv_m):
+    """How far the straight-tube description holds, in metres.
+
+    The wing follows the parent's field line, which departs from its own
+    tangent by ~l^2 / (2 R_curv). Setting that departure equal to the wing's
+    own radius gives the length at which the tube has visibly bent:
+
+        l = sqrt(2 R_wing R_curv)
+
+    Past it the wing continues — undamped, all the way to the parent's
+    ionosphere — but as a curved flux tube, not as this cylinder.
+    """
+    return math.sqrt(2.0 * R_wing_m * R_curv_m)
+
+
+def alfven_wing_axes(M_A, flow_sign=1.0, field_sign=1.0):
+    """Unit vectors of the two wings in the Kerbalism gsm frame.
+
+    Frame, for a moon whose RadiationBody sets `reference` to its parent:
+    x = toward the parent, y = spin axis (= the parent's field direction at the
+    moon, up to sign), z = x cross y = the orbital direction. The corotating
+    plasma overtakes a moon outside synchronous orbit, so the flow runs along
+    +z there and -z inside it — that is `flow_sign`. `field_sign` is +1 when
+    the ambient field points along +y (Earth-like parent) and -1 when it points
+    along -y (Jupiter-like, whose dipole is reversed).
+
+    Returns (w_plus, w_minus) as (x, y, z) tuples, from the characteristics
+    c+- = v0 +- v_A Bhat normalized: direction ∝ M_A vhat +- Bhat. Both carry
+    the same downstream component, so both wings lean downstream.
+    """
+    v = (0.0, 0.0, flow_sign)
+    b = (0.0, field_sign, 0.0)
+    out = []
+    for s in (1.0, -1.0):
+        w = tuple(M_A * v[i] + s * b[i] for i in range(3))
+        n = math.sqrt(sum(c * c for c in w))
+        out.append(tuple(c / n for c in w))
+    return out[0], out[1]
+
+
+def sub_alfvenic_compression(M_A):
+    """Day-night standoff asymmetry of a sub-Alfvenic obstacle.
+
+    The confinement is magnetic pressure B0^2/2mu0 everywhere plus ram
+    rho v^2 on the upstream side only; their ratio is 2 M_A^2, and the standoff
+    goes as p^(-1/6), so the upstream side is closer in by (1 + 2 M_A^2)^(1/6).
+    This is the number that licenses drawing the obstacle as a sphere: at
+    M_A 0.5 it is 8%, and it falls to nothing as the flow slows.
+    """
+    return (1.0 + 2.0 * M_A * M_A) ** (1.0 / 6.0)
+
+
+def derive_wing_geometry(parent_mass_kg, parent_radius_m, parent_spin_s,
+                         parent_B_eq_uT, L_shell, moon_radius_m,
+                         moon_B_eq_uT=0.0, plasma_cm3=IO_TORUS_PEAK_CM3 * 0.02,
+                         ion_amu=IO_TORUS_ION_AMU, ionosphere_radii=1.0,
+                         parent_field_sign=-1.0):
+    """Every number the 3D wing shape needs, from physical inputs only.
+
+    Nothing here is authored: the tilt comes from the Mach number, the tube
+    radius from the obstacle, the straight length from the parent's field-line
+    curvature. Lengths in the returned dict are in *moon radii*, which is the
+    unit Kerbalism's SDF works in.
+
+    `ionosphere_radii` is the obstacle size for an unmagnetized moon (Io-like);
+    it is ignored when the moon has a field of its own, where the obstacle is
+    the Chapman-Ferraro standoff against the total confining pressure.
+    """
+    r = L_shell * parent_radius_m
+    v_rel, v_corot, v_kep = corotation_relative_speed(
+        parent_mass_kg, parent_spin_s, r)
+    B_local = parent_field_T(parent_B_eq_uT, L_shell)
+    rho = plasma_cm3 * 1e6 * ion_amu * AMU
+    v_A = alfven_speed(B_local, rho)
+    M_A = v_rel / v_A
+
+    if moon_B_eq_uT > 0:
+        p_tot, _, _ = confining_pressure_Pa(B_local, rho, v_rel)
+        R_obst = nose_radii(moon_B_eq_uT, p_tot)
+    else:
+        R_obst = ionosphere_radii
+
+    R_tube = wing_tube_radius(R_obst)
+    R_curv = dipole_curvature_radius(r)
+    length = wing_straight_length(R_tube * moon_radius_m, R_curv) / moon_radius_m
+    # 동기궤도 밖이면 플라스마가 위성을 추월한다 → 흐름은 +z(공전 방향).
+    flow_sign = 1.0 if r > synchronous_radius_m(parent_mass_kg, parent_spin_s) else -1.0
+
+    return {
+        'v_rel_km_s': v_rel / 1e3,
+        'v_corot_km_s': v_corot / 1e3,
+        'v_kep_km_s': v_kep / 1e3,
+        'B_local_nT': B_local * 1e9,
+        'v_A_km_s': v_A / 1e3,
+        'M_A': M_A,
+        'sub_alfvenic': M_A < 1.0,
+        'theta_A_deg': math.degrees(alfven_wing_angle(M_A)),
+        'R_obst': R_obst,
+        'R_tube': R_tube,
+        'R_eff_flux': alfven_effective_radius(R_obst),
+        'compression': sub_alfvenic_compression(M_A),
+        'R_curv_parent_radii': R_curv / parent_radius_m,
+        'length': length,
+        'flow_sign': flow_sign,
+        'field_sign': parent_field_sign,
+        'axes': alfven_wing_axes(M_A, flow_sign, parent_field_sign),
+    }
+
+
+def dipole_wing_path(L_shell, parent_radius_m, moon_radius_m, M_A_local,
+                     parent_mass_kg, parent_spin_s, parent_B_eq_uT,
+                     rho, R_tube, hemisphere=1.0, flow_sign=1.0, steps=260):
+    """The wing as it actually runs: a curved, narrowing flux tube to the parent.
+
+    A wing does not end in space. It follows the parent's field line through the
+    moon, and that line lands on the parent's ionosphere — the auroral footprint
+    the wing paints there is the observable end of the structure (Neubauer 1980;
+    the review 1908.06446 §3.3 for the reflection that follows). Two things
+    happen along the way, both derivable:
+
+    * **It bends.** The dipole line curves, r = r_eq cos^2(lat), and the local
+      Alfven tilt rides on top of it. The tilt is not constant: v_A rises steeply
+      as the field strengthens toward the parent, so M_A falls and the wing
+      straightens onto the field line. We integrate the local tilt rather than
+      assume the one measured at the moon, holding rho fixed along the tube (the
+      one assumption here, and the reason the far end is the rough part).
+
+    * **It narrows.** Magnetic flux is conserved, so the tube radius goes as
+      1/sqrt(B). By the ionosphere the field is orders of magnitude stronger and
+      the tube has closed to a spot — which is why the footprint is a spot.
+
+    Returns a list of (point, radius) with the point in moon radii in the gsm
+    frame and the radius in moon radii too. `hemisphere` +1 runs to the parent's
+    north, -1 to its south; those are the two wings. The path is a geometric
+    curve, so it does not depend on which way the parent's field points — only
+    the Elsasser label (which wing is z+) does.
+    """
+    r_eq = L_shell * parent_radius_m
+    B_moon = parent_field_T(parent_B_eq_uT, L_shell)
+    lat_max = math.acos(math.sqrt(min(1.0, parent_radius_m / r_eq)))
+
+    path, s, phi = [], 0.0, 0.0
+    prev = None
+    for i in range(steps + 1):
+        lat = hemisphere * lat_max * i / steps
+        r = r_eq * math.cos(lat) ** 2
+        rho_cyl, Y = r * math.cos(lat), r * math.sin(lat)   # 자전축까지 거리, 축방향
+        B = parent_B_eq_uT * 1e-6 * math.sqrt(1 + 3 * math.sin(lat) ** 2) \
+            / (r / parent_radius_m) ** 3
+
+        # 하류 변위는 자전축 둘레의 **방위각 회전**이다. 평행이동으로 넣으면
+        # 끝이 전리층을 벗어나 허공에 뜬다 — 실제로는 자전축 대칭이므로 회전된
+        # 동일 자기력선 위에 남고, 착지점만 경도로 밀린다(Io 발자국의 lead angle).
+        if prev is not None:
+            ds = math.dist((rho_cyl, Y), prev)
+            v_rel, _, _ = corotation_relative_speed(parent_mass_kg, parent_spin_s, r)
+            M = v_rel / alfven_speed(B, rho)
+            s += ds
+            phi += ds * math.sin(alfven_wing_angle(M)) / max(rho_cyl, 1e-9)
+        prev = (rho_cyl, Y)
+
+        X_p, Z_p = rho_cyl * math.cos(phi), rho_cyl * math.sin(phi)
+        p = (-(X_p - r_eq) / moon_radius_m,
+             Y / moon_radius_m,
+             flow_sign * Z_p / moon_radius_m)
+
+        # 플럭스 보존: 관 반경 ∝ 1/sqrt(B)
+        path.append((p, R_tube * math.sqrt(B_moon / B)))
+    return _resample_by_arclength(path, steps)
+
+
+def _resample_by_arclength(path, count):
+    """Even spacing along the curve.
+
+    Sampling uniformly in latitude puts the long segments right at the moon,
+    where the shape needs the resolution, and wastes them near the pole. The
+    renderer's polyline shows that as a crease at the joint.
+    """
+    pts = [p for p, _ in path]
+    acc = [0.0]
+    for a, b in zip(pts, pts[1:]):
+        acc.append(acc[-1] + math.dist(a, b))
+    total = acc[-1]
+    if total <= 0:
+        return path
+
+    out, j = [], 0
+    for i in range(count + 1):
+        target = total * i / count
+        while j < len(acc) - 2 and acc[j + 1] < target:
+            j += 1
+        span = acc[j + 1] - acc[j]
+        f = 0.0 if span <= 0 else (target - acc[j]) / span
+        (pa, ra), (pb, rb) = path[j], path[j + 1]
+        out.append((tuple(pa[k] + (pb[k] - pa[k]) * f for k in range(3)),
+                    ra + (rb - ra) * f))
+    return out
+
+
+def wing_path_sdf(p, path, cap_index=None):
+    """Distance to a swept-sphere polyline — the curved tube `dipole_wing_path`
+    describes. `cap_index` truncates the path, for near-field renders."""
+    pts = path if cap_index is None else path[:cap_index]
+    best = float('inf')
+    for (a, ra), (b, rb) in zip(pts, pts[1:]):
+        ab = tuple(b[i] - a[i] for i in range(3))
+        ap = tuple(p[i] - a[i] for i in range(3))
+        den = sum(c * c for c in ab) or 1e-12
+        t = max(0.0, min(1.0, sum(ap[i] * ab[i] for i in range(3)) / den))
+        d = math.sqrt(sum((ap[i] - t * ab[i]) ** 2 for i in range(3)))
+        best = min(best, d - (ra + (rb - ra) * t))
+    return best
+
+
+def _capsule_sdf(p, axis, length, radius):
+    """Signed distance to a capsule from the origin along `axis` for `length`."""
+    t = sum(p[i] * axis[i] for i in range(3))
+    t = 0.0 if t < 0.0 else (length if t > length else t)
+    d = math.sqrt(sum((p[i] - t * axis[i]) ** 2 for i in range(3)))
+    return d - radius
+
+
+def _smin(a, b, k):
+    """Polynomial smooth minimum — the wings join the obstacle, they do not
+    intersect it with a crease."""
+    if k <= 0.0:
+        return min(a, b)
+    h = max(0.0, min(1.0, 0.5 + 0.5 * (b - a) / k))
+    return b * (1 - h) + a * h - k * h * (1 - h)
+
+
+def alfven_wing_sdf(p, R_obst, R_wing, M_A, length,
+                    flow_sign=1.0, field_sign=1.0, blend=None):
+    """The exact 3D signed distance of an Alfven-wing boundary.
+
+    Union of the obstacle — a sphere, because a sub-Alfvenic obstacle is not
+    compressed on any side — with the two wing tubes, blended so the surface is
+    smooth where they meet. `p` is in body radii in the gsm frame; every length
+    argument is in body radii too.
+
+    `blend` defaults to half the obstacle radius. It is a convention, not a
+    derived value: the wing attaches to the interaction region continuously,
+    but no published fit gives the fillet.
+    """
+    if blend is None:
+        blend = 0.5 * R_obst
+    wp, wm = alfven_wing_axes(M_A, flow_sign, field_sign)
+    d = math.sqrt(p[0] ** 2 + p[1] ** 2 + p[2] ** 2) - R_obst
+    for axis in (wp, wm):
+        d = _smin(d, _capsule_sdf(p, axis, length, R_wing), blend)
+    return d
+
+
 def softened_shue_r(theta, r0, alpha, L):
     """r(theta) of the closed Shue variant the project adopted.
 

@@ -564,7 +564,21 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   for an embedded moon, reported as the density needed to reach M_A = 1 so the uncertain
   torus profile stays out of the conclusion), the four Kerbalism pause fields from α, and
   `fit_offset_emulation()`, a least-squares fit of the offset-sphere fallback to the
-  softened Shue curve. Run with no arguments for the whole table.
+  softened Shue curve. Run with no arguments for the whole table. It also carries the
+  **Alfvén-wing geometry**, derived rather than sketched: the tilt `arctan M_A`, the tube
+  radius (= the obstacle radius, from flux conservation — *not* the Poynting-flux
+  `R_eff = √3 R_obst`, which sizes the power and nothing else), the straight run
+  `√(2 R_tube R_curv)`, and `dipole_wing_path()`, the real curved flux tube that bends onto
+  the parent's field line, narrows as `1/√B`, and lands on the parent's ionosphere as the
+  auroral footprint. The downstream displacement is an **azimuthal rotation** about the
+  parent's spin axis, not a translation; adding it as a translation floats the far end off
+  the ionosphere (caught 2026-08-16, 78 R_moon of error at Ganymede).
+- `scripts/viz/render_alfven_wing.py` — sphere-traces that field in 3D, because the 2D
+  slice renders cut the one plane the wings do not live in. Four panels: near field in the
+  B–v plane and three-quarter, then the full run to the parent. The straight run is tinted
+  blue and the bent remainder orange, so where it stops being straight is a thing you look
+  at rather than a number in a caption. `--selftest` asserts the numpy field matches the
+  scalar one in `magnetopause_geometry.py` to 1e-9.
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
   Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
   ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G
@@ -1050,6 +1064,17 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
   레짐 판정(내장 위성은 알펜 마하수로 가르되, 불확실한 토러스 프로파일이 결론에 끼어들지 않도록
   M_A=1에 필요한 밀도로 뒤집어 보고), α에서 나오는 Kerbalism pause 4필드, 그리고 연화 Shue 곡선에
   offset 구 근사를 최소제곱으로 맞추는 `fit_offset_emulation()`. 인자 없이 실행하면 전체 표가 나온다.
+  **알펜 날개 기하**도 여기 있다. 스케치가 아니라 도출이다. 기울기 `arctan M_A`, 관 반경(= 장애물
+  반경. 플럭스 보존에서 나오며, 포인팅 플럭스용 `R_eff = √3 R_obst`와는 다른 양이다. 후자는 출력만
+  정한다), 직선 구간 `√(2 R_tube R_curv)`, 그리고 모천체 자기력선을 타고 휘어 `1/√B`로 좁아지다
+  전리층에 오로라 발자국으로 착지하는 실제 곡선 플럭스관 `dipole_wing_path()`. 하류 변위는 모천체
+  자전축 둘레의 **방위각 회전**이지 평행이동이 아니다. 평행이동으로 넣으면 끝이 전리층을 벗어나
+  허공에 뜬다(2026-08-16 발견, 가니메데에서 78 R_moon 오차).
+- `scripts/viz/render_alfven_wing.py` — 위 필드를 3D 스피어 트레이싱으로 렌더. 2D 슬라이스 렌더가
+  자르는 평면이 하필 날개가 없는 평면이라 따로 만들었다. 4패널로 근거리(B–v 평면 + 3/4 뷰)와
+  모천체까지 가는 전 구간을 보여주며, 직선 구간은 파랑·꺾인 구간은 주황으로 칠해 어디서 꺾이는지를
+  캡션 숫자가 아니라 그림으로 보게 한다. `--selftest`는 numpy 필드가 `magnetopause_geometry.py`의
+  스칼라 구현과 1e-9까지 일치하는지 검사한다.
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d 벨트 선량 도출(방법론 Part B).
   dose-anchor 보간 10.4×(B_eq/31 µT)^1.9 → 내대 ~5×10³ / 외대 ~1×10³ rad/h(신뢰
   낮음, 목성 앵커 1.9배 밖 외삽; 장 범위 3–280 G면 2×10²–10⁶), `kp_limit.py`

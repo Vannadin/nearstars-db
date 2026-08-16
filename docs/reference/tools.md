@@ -327,7 +327,21 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   for an embedded moon, reported as the density needed to reach M_A = 1 so the uncertain
   torus profile stays out of the conclusion), the four Kerbalism pause fields from α, and
   `fit_offset_emulation()`, a least-squares fit of the offset-sphere fallback to the
-  softened Shue curve. Run with no arguments for the whole table.
+  softened Shue curve. Run with no arguments for the whole table. It also carries the
+  **Alfvén-wing geometry**, derived rather than sketched: the tilt `arctan M_A`, the tube
+  radius (= the obstacle radius, from flux conservation — *not* the Poynting-flux
+  `R_eff = √3 R_obst`, which sizes the power and nothing else), the straight run
+  `√(2 R_tube R_curv)`, and `dipole_wing_path()`, the real curved flux tube that bends onto
+  the parent's field line, narrows as `1/√B`, and lands on the parent's ionosphere as the
+  auroral footprint. The downstream displacement is an **azimuthal rotation** about the
+  parent's spin axis, not a translation; adding it as a translation floats the far end off
+  the ionosphere (caught 2026-08-16, 78 R_moon of error at Ganymede).
+- `scripts/viz/render_alfven_wing.py` — sphere-traces that field in 3D, because the 2D
+  slice renders cut the one plane the wings do not live in. Four panels: near field in the
+  B–v plane and three-quarter, then the full run to the parent. The straight run is tinted
+  blue and the bent remainder orange, so where it stops being straight is a thing you look
+  at rather than a number in a caption. `--selftest` asserts the numpy field matches the
+  scalar one in `magnetopause_geometry.py` to 1e-9.
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
   Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
   ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G
