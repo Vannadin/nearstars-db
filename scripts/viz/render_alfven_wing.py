@@ -211,6 +211,71 @@ def _normal(P, sdf, h=2e-3):
     return n / np.maximum(np.linalg.norm(n, axis=-1, keepdims=True), 1e-9)
 
 
+def wing_profile(spec):
+    """Thickness and lead angle against fraction of the run — the two things the
+    3D views cannot show, because both vary by orders of magnitude."""
+    path = spec['paths'][0]
+    P = np.array([p for p, _ in path])
+    R = np.array([r for _, r in path])
+    s = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))])
+    # 위성 gsm 좌표에서 모천체 방위각을 되돌린다.
+    Xp = spec['parent_centre'][0] - P[:, 0]
+    Zp = P[:, 2] * spec['flow_sign']
+    phi = np.degrees(np.arctan2(Zp, Xp))
+    return {'f': s / s[-1], 's': s, 'R': R / R[0], 'phi': phi,
+            'R_abs': R, 'lag': P[:, 2]}
+
+
+def render_profile(names, out, size=(880, 470)):
+    from PIL import ImageDraw, ImageFont
+    W, H = size
+    img = Image.new('RGB', (W, H), (8, 9, 14))
+    dr = ImageDraw.Draw(img)
+    try:
+        fnt = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 11)
+        fbig = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 14)
+    except OSError:                                   # pragma: no cover
+        fnt = fbig = ImageFont.load_default()
+    colours = [(122, 168, 255), (255, 154, 82), (126, 214, 160)]
+
+    specs = [(n, geometry_for(n)) for n in names]
+    profs = [(n, g, wing_profile(g)) for n, g in specs]
+    phimax = max(max(abs(p['phi'])) for _, _, p in profs) or 1.0
+
+    panels = [('tube diameter / diameter at the moon', 'R', 1.0),
+              ('lead angle from the moon meridian (deg)', 'phi', phimax)]
+    pw, ph = (W - 90) // 2, H - 150
+    for k, (title, key, top) in enumerate(panels):
+        ox, oy = 52 + k * (pw + 38), 106
+        dr.rectangle([ox, oy, ox + pw, oy + ph], outline=(46, 54, 72))
+        dr.text((ox, oy - 18), title, fill=(196, 210, 232), font=fnt)
+        for frac in (0.0, 0.25, 0.5, 0.75, 1.0):
+            y = oy + ph - frac * ph
+            dr.line([ox, y, ox + pw, y], fill=(26, 31, 43))
+            dr.text((ox - 46, y - 6), f'{frac * top:6.2f}', fill=(112, 126, 148), font=fnt)
+            x = ox + frac * pw
+            dr.line([x, oy, x, oy + ph], fill=(26, 31, 43))
+            dr.text((x - 10, oy + ph + 5), f'{frac:.2f}', fill=(112, 126, 148), font=fnt)
+        dr.text((ox + pw // 2 - 60, oy + ph + 20),
+                'fraction of the run to the parent', fill=(140, 158, 186), font=fnt)
+        for i, (_, g, p) in enumerate(profs):
+            pts = [(ox + f * pw, oy + ph - min(v / top, 1.0) * ph)
+                   for f, v in zip(p['f'], p[key])]
+            dr.line(pts, fill=colours[i % len(colours)], width=2)
+
+    dr.text((14, 10), 'Alfven wing — how the tube changes along its run',
+            fill=(232, 238, 248), font=fbig)
+    for i, (_, g, p) in enumerate(profs):
+        dr.text((14, 30 + i * 15),
+                f"{g['title']:22s} tilt {g['theta_A_deg']:4.1f} deg   "
+                f"lands at {p['R'][-1] * 100:5.1f}% of its starting diameter   "
+                f"lead {p['phi'][-1]:5.2f} deg",
+                fill=colours[i % len(colours)], font=fnt)
+    os.makedirs(os.path.dirname(out) or '.', exist_ok=True)
+    img.save(out)
+    return out
+
+
 def path_arclength_np(P, paths):
     """Arc length of the nearest sample over *both* wings — the tint has to be
     per-wing, or the southern wing gets coloured by the northern one's run."""
@@ -304,11 +369,17 @@ def main():
     ap.add_argument('--fatten', type=float, default=8.0,
                     help='tube radius multiplier in the full-run panels only, '
                          'where the true tube is thinner than a pixel')
+    ap.add_argument('--profile', action='store_true',
+                    help='thickness and lead-angle profiles instead of the 3D views')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
 
     if a.selftest:
         _selftest()
+        return
+
+    if a.profile:
+        print(render_profile(sorted(BODIES), a.out))
         return
 
     spec = geometry_for(a.body)
