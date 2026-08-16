@@ -49,6 +49,10 @@ OUT=os.path.join(D,'wiki-img'); os.makedirs(OUT,exist_ok=True)
 # metallic·solidiron·anomaly 처럼 이름부터 KSP 가상 천체용 범용 모델이고, ROKerbalism 은 그걸 실제
 # 행성에 재바인딩만 한다 — 토성·천왕성·해왕성이 같은 `saturn` 모델을 공유하는 이유다.
 # 이것이 우리가 phys 프리셋을 전부 다시 도출한 이유이고, 아래 각 stock 항목의 주석은 그 대조다.
+# pause_height_scale 은 물리 프리셋에서 전부 1.0 이다. Shue 는 축대칭이고, 스톡이 쓰는 1.1 은
+# 자오면 폭을 1/1.1 로 눌러 인코딩하려던 곡선 자체에서 벗어난다(방법론 Part C). 2026-08-16 에
+# 태양계 물리 프리셋 다섯 개(지구·목성·토성·천왕성·해왕성)를 1.0 으로 맞춰 NearStars 쪽과 통일했다.
+# *_stock 과 *_pre 는 당시 값을 기록하는 프리셋이라 손대지 않는다.
 BODIES={
  # ---- JUPITER: 스톡=원거리 통짜 동심, 물리=근접 D형 내대+납작 자기원반 ----
  # 스톡은 Kerbalism/ROKerbalism 저작값이고 물리 도출이 아니다(전용 `jupiter` 모델).
@@ -74,7 +78,7 @@ BODIES={
    'outer':{'radiation':150,'grad':2.15,'dist':3.2565,'rad':3.2269,'dxy':0.1483,'comp':1.0,'ext':0.998,'bdist':1e-4,'brad':4.238,'bdxy':1.85},  # 자기원반=적도 전류시트(렌즈형, 반두께 3=Khurana; 3-16은 프레임 절단)
    # Rutala 2025 S97* 적합: α = 0.28 + 1.08·p_SW, r_SS = 38.0·p_SW^-0.25 [R_J].
    # 노즈 63 R_J(Joy 2002 압축 상태) ⇒ p_SW 0.132 nPa ⇒ α 0.423.
-   'pause':{'radiation':-0.01,'rad':84.4649,'comp':1.3407,'ext':0.0089380,'hscale':1.15,
+   'pause':{'radiation':-0.01,'rad':84.4649,'comp':1.3407,'ext':0.0089380,'hscale':1.0,
             'shue_alpha':0.423,'shue_nose':63,'shue_tail':9450,
             # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
             #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
@@ -103,7 +107,7 @@ BODIES={
  'saturn_phys':{'title':'Saturn — physical (SDF fit)','sub':'rings absorb inner belt; CRAND shell L 2.3-6 (IoU .98); ~0° tilt','R':16,'tilt':0.01,
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). eps 0.002 → 대칭. grad: 자기 프로파일 근거 없어 CRAND 아날로그(지구 외대)
    'outer':{'radiation':10,'grad':2.15,'dist':2.6173,'rad':2.3184,'dxy':0.6735,'comp':1.0,'ext':0.998,'bdist':0.9889,'brad':0.8883,'bdxy':0.6616},  # 고리 바깥 단일 초승달
-   'pause':{'radiation':-0.011,'rad':39.9677,'comp':1.6653,'ext':0.0111020,'hscale':1.1,
+   'pause':{'radiation':-0.011,'rad':39.9677,'comp':1.6653,'ext':0.0111020,'hscale':1.0,
             'shue_alpha':0.7358,'shue_nose':24,'shue_tail':3600,
             # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
             #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
@@ -132,7 +136,7 @@ BODIES={
    # 피크가 껍질 핵심 → 컷 이후 최심점으로 클램프한 하한값. 1.0을 그대로 넣으면 포화 지점이 없어 실효 강도가 0.64배로 깎임.
    'inner':{'radiation':40,'grad':1.57,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.001,'ext':0.997,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
    'outer':{'radiation':8,'grad':1.85,'dist':4.3078,'rad':3.8644,'dxy':0.6644,'comp':1.005,'ext':0.977,'bdist':2.3256,'brad':1.9463,'bdxy':0.7307},
-   'pause':{'radiation':-0.010,'rad':26.9073,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
+   'pause':{'radiation':-0.010,'rad':26.9073,'comp':1.4948,'ext':0.0099653,'hscale':1.0,
             'shue_alpha':0.58,'shue_nose':18,'shue_tail':2700,
             # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
             #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
@@ -159,7 +163,7 @@ BODIES={
    # grad/comp/ext = 방법론 Part C 도출값 (2026-08-13). grad 외대: 피크 L7 (Stone 1989), 내대: 프로파일 없어 지구 내대 아날로그
    'inner':{'radiation':30,'grad':2.09,'dist':2.1836,'rad':1.93,'dxy':0.6732,'comp':1.0,'ext':0.999,'bdist':0.0563,'brad':0.8488,'bdxy':0.3727},
    'outer':{'radiation':6,'grad':2.63,'dist':5.9998,'rad':5.4076,'dxy':0.6573,'comp':1.004,'ext':0.98,'bdist':2.5862,'brad':1.9982,'bdxy':0.8656},  # peak ~L7, 외곽 ~14(Triton)
-   'pause':{'radiation':-0.007,'rad':39.6135,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
+   'pause':{'radiation':-0.007,'rad':39.6135,'comp':1.4948,'ext':0.0099653,'hscale':1.0,
             'shue_alpha':0.58,'shue_nose':26.5,'shue_tail':3975,
             # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
             #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
@@ -278,7 +282,7 @@ BODIES={
    # 도출 사슬(pause): 노즈 10 R_E (Shue 1997/1998) + α 0.58 (Shue 1998 식 11) →
    #   pause_radius = 노즈·2^α = 14.9485, compression = 2^α = 1.4948,
    #   extension = pause_radius/(150·노즈) = 0.0099653  ← L = 150×노즈 관례(도출 아님).
-   'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0099653,'hscale':1.1,
+   'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0099653,'hscale':1.0,
             'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500,
             # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
             #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을

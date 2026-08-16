@@ -226,6 +226,7 @@
       </div>
     </div>
     <span class="sep"></span>
+    <button data-act="pending" id="pendBtn" hidden>⚗ 플러그인 값 적용</button>
     <button data-act="reset" id="resetBtn">현재값 초기화</button>
     <button data-act="copy" class="copy" id="copyBtn">📋 Kerbalism cfg 복사</button>
     <div class="seg" id="langSeg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div>
@@ -269,7 +270,7 @@ const T = {
   ko:{
     h1:'Kerbalism 방사선대 단면 뷰어',
     intro:'인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.',
-    vStock:'스톡', vPhys:'물리', reset:'현재값 초기화', copy:'📋 Kerbalism cfg 복사', copied:'✓ 복사됨',
+    vStock:'스톡', vPhys:'물리', reset:'현재값 초기화', pending:'⚗ 플러그인 값 적용', copy:'📋 Kerbalism cfg 복사', copied:'✓ 복사됨',
     hover:'커서를 올려보세요', drag3d:'드래그 = 회전 · 휠 = 줌',
     sun:'☀ 항성 → +x (오른쪽)', mode2d:'단면',
     legPause:'자기권계면', legShue:'Shue 기준', legBody:'바디', show:'표시',
@@ -288,7 +289,7 @@ const T = {
   en:{
     h1:'Kerbalism radiation belt section viewer',
     intro:'Meridional (z=0) section computed from the in-game <code>RadiationModel</code> SDFs verbatim. Color = dose (rad/h), cyan line = magnetopause. Unit = body radii.',
-    vStock:'Stock', vPhys:'Physical', reset:'Reset values', copy:'📋 Copy Kerbalism cfg', copied:'✓ copied',
+    vStock:'Stock', vPhys:'Physical', reset:'Reset values', pending:'⚗ apply plugin set', copy:'📋 Copy Kerbalism cfg', copied:'✓ copied',
     hover:'Hover the canvas', drag3d:'drag = rotate · wheel = zoom',
     sun:'☀ star → +x (right)', mode2d:'section',
     legPause:'magnetopause', legShue:'Shue reference', legBody:'body', show:'show',
@@ -364,11 +365,11 @@ const GROUPS=[
      F("bdist","outer_border_dist",0,12,0.001),F("brad","outer_border_radius",0,10,0.005),
      F("bdxy","outer_border_deform_xy",0.2,2,0.01),F("deform","outer_deform",0,0.5,0.005),F("dscale","outer_deform_scale ⚗non-cfg",0.1,2,0.01)]},
   {id:"pause",title:"자기권계면 (pause)",title_en:"magnetopause (pause)",cls:"g-pause",toggle:true,
-   rows:[F("rad","pause_radius",0,70,0.1),F("radiation","radiation_pause",-0.05,0,0.001),
+   rows:[F("rad","pause_radius",0,120,0.1),F("radiation","radiation_pause",-0.05,0,0.001),
      F("comp","pause_compression",1,2,0.01),F("ext","pause_extension",0.02,1.5,0.005),
      F("hscale","pause_height_scale",0.5,2,0.01),F("deform","pause_deform",0,0.5,0.005),F("dscale","pause_deform_scale ⚗non-cfg",0.1,2,0.01),
      F("alpha","불투명도 (viz)",0,1,0.05,"opacity (viz)"),
-     F("waist","pause_waist ⚗non-cfg",-30,5,0.1),F("smooth","pause_smooth ⚗non-cfg",0,30,0.1)]},
+     F("waist","pause_waist ⚗non-cfg",-80,5,0.1),F("smooth","pause_smooth ⚗non-cfg",0,100,0.1)]},
   {id:"view",title:"뷰 / 배향",title_en:"view / orientation",cls:"g-view",toggle:false,
    toggle2:{id:"moons",l:"moonOrbits",label:"위성 궤도"},
    rows:[F("R","view_halfwidth (R)",2,70,0.5),F("tilt","dipole_tilt (°)",0,90,0.5),F("offset","geomagnetic_offset",0,1,0.005),F("z","slice_z",0,6,0.05),
@@ -462,6 +463,13 @@ controls.addEventListener('change',e=>{
   if(Number.isFinite(v)) applyControl(inp.dataset.g, inp.dataset.k, v);   // 직접 입력: 슬라이더 범위 초과 허용
   else syncControls();
 });
+// ⚗ Deliverable 1 대기 세트를 한 번에 적용한다. 스톡 엔진은 waist/smooth 를 안 읽으므로
+// 다섯 값을 따로 넣으면 형상이 깨진다 — 그래서 슬라이더가 아니라 버튼 하나로 묶어 둔다.
+document.getElementById('pendBtn').addEventListener('click',()=>{
+  const q=state.pending; if(!q) return;
+  Object.entries(q).forEach(([k,v])=>{ state.pause[k]=v; });
+  syncControls(); scheduleRender();
+});
 controls.addEventListener('click',e=>{
   const sw=e.target.closest('.sw[data-tg]'); if(!sw)return;
   const s=state[sw.dataset.tg]; s.on=!s.on; sw.classList.toggle('on',s.on); scheduleRender();
@@ -543,6 +551,8 @@ function deepset(preset){
   state.view=Object.assign({R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0},P.view);
   state.moons.list=P.moons||[];   // on 은 사용자 설정이므로 프리셋을 바꿔도 유지한다
   state.orbit=P.orbit||null;
+  state.pending=P.pending||null;
+  const pb=document.getElementById('pendBtn'); if(pb) pb.hidden=!state.pending;
 }
 function applyPreset(p,{keepZoom=false}={}){
   // stock↔physical 토글은 같은 천체의 두 판본이므로 줌을 유지한다 — 프리셋 R 로 되돌리면
@@ -1115,6 +1125,7 @@ function applyLang(){
   document.getElementById('h1t').textContent=t('h1');
   document.getElementById('introT').innerHTML=t('intro');
   document.getElementById('resetBtn').textContent=t('reset');
+  document.getElementById('pendBtn').textContent=t('pending');
   document.getElementById('copyBtn').textContent=t('copy');
   document.getElementById('sunT').textContent=t('sun');
   document.getElementById('mode2d').textContent=t('mode2d');

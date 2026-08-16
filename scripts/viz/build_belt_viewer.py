@@ -134,6 +134,10 @@ for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys �
         p['view'].update({'shue': a, 'shue_r0': r0, 'shue_L': L})
         p['shue_src'] = src
     pz = b.get('pause') or {}
+    # ⚗ 플러그인 Deliverable 1 대기 세트 — 다섯 값이 한 벌이라 통째로 실어 보낸다
+    pend = {k[8:]: v for k, v in pz.items() if k.startswith('pending_')}
+    if pend:
+        p['pending'] = pend
     if p['variant'] == 'phys' and pz.get('shue_alpha'):    # 바디 테이블이 직접 든 Shue 값
         p['view'].update({'shue': pz['shue_alpha'], 'shue_r0': pz.get('shue_nose', 0),
                           'shue_L': pz.get('shue_tail', 0),
@@ -200,6 +204,15 @@ for name, spec in load_nearstars_specs().items():
                  'z': 0, 'offset': bd.get('geomagnetic_offset', 0)}
     # ⚗ Shue-native 보드값이 있으면 오버레이를 pause 슬라이더가 아니라 그 물리값에 고정
     pend = spec.get('pending', {})
+    ps = {}
+    for src, dst in (('pause_radius_smoothed', 'rad'), ('pause_compression_smoothed', 'comp'),
+                     ('pause_extension_smoothed', 'ext'), ('pause_waist', 'waist'),
+                     ('pause_smooth', 'smooth')):
+        if src in pend:
+            ps[dst] = pend[src]
+    if ps:
+        ps.setdefault('comp', 1.0)
+        p['pending'] = ps
     if 'pause_alpha' in pend:
         p['view']['shue'] = pend['pause_alpha']
         p['view']['shue_r0'] = pend.get('pause_nose', 0)
