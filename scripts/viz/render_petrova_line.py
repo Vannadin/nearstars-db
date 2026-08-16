@@ -203,8 +203,9 @@ def main():
         ext = render_aurora(spec, 'flow', spec['star_radius'] * 4.6, a.size,
                             np.array([0.0, spec['star_radius'] * 2.4, 0.0]),
                             gain=a.gain)
-        ins = render_aurora_interior(spec, at_arc=2.4, size=a.size, depth=7.0,
-                                     gain=a.gain)
+        ins = render_aurora(spec, 'flow', spec['star_radius'] * 1.9, a.size,
+                            np.array([0.35, spec['star_radius'] * 1.55, 0.0]),
+                            gain=a.gain * 1.25)
         pad = 10
         sheet = Image.new('RGB', (a.size * 2 + pad * 3, a.size + pad * 2 + 34),
                           (8, 9, 14))
@@ -214,8 +215,8 @@ def main():
         except OSError:                                   # pragma: no cover
             fnt = ImageFont.load_default()
         dr = ImageDraw.Draw(sheet)
-        for i, (img, lab) in enumerate(((ext, 'from outside — the curtain off the pole'),
-                                        (ins, 'from inside, looking down the line'))):
+        for i, (img, lab) in enumerate(((ext, 'the curtain off the pole, with the star'),
+                                        (ins, 'closer on the funnel'))):
             x = pad + i * (a.size + pad)
             sheet.paste(Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8)),
                         (x, pad + 26))
@@ -303,7 +304,8 @@ def main():
 # 안 나오므로 방출 적분(emission-only volumetric)으로 따로 그린다.
 CRIMSON = np.array([0.627, 0.106, 0.157])      # 참조 이미지 p50
 MID = np.array([0.867, 0.290, 0.373])          # p80
-HOT = np.array([0.996, 0.996, 0.988])          # p99.9
+# 참조 이미지의 흰 코어(p99.9, #fefefc)는 램프에서 뺐다 — 오너 지시로 피크가
+# 흰색까지 가지 않고 MID 에서 포화한다.
 
 
 def _axis_frames(pts):
@@ -510,10 +512,8 @@ def render_aurora_interior(spec, at_arc, size, depth, steps=170, gain=9.0,
         acc += aurora_density(Q, pts, rads, arc, frames, reduced) * dt
     e = np.clip(acc * gain / max(rads.max(), 1e-9), 0.0, None)
     a1 = 1.0 - np.exp(-e)
-    a2 = np.clip((e - 0.55) / 1.5, 0.0, 1.0) ** 1.4
-    a3 = np.clip((e - 1.5) / 2.2, 0.0, 1.0) ** 1.6
-    col = (CRIMSON * a1[..., None] + (MID - CRIMSON) * a2[..., None]
-           + (HOT - MID) * a3[..., None])
+    a2 = np.clip((e - 0.55) / 1.9, 0.0, 1.0) ** 1.3
+    col = CRIMSON * a1[..., None] + (MID - CRIMSON) * a2[..., None]
     return np.clip(col + np.array([0.012, 0.012, 0.02]), 0, 1)
 
 
@@ -557,12 +557,11 @@ def render_aurora(spec, view, span, size, centre, window=9.0, steps=150,
     e = np.clip(acc * gain / max(rads.max(), 1e-9), 0.0, None)
 
     # 밝기 → 색: 심홍에서 시작해 두꺼운 곳이 흰 코어로 간다(참조 이미지의 램프).
+    # 흰색 피크는 뺀다(오너 지시). 두꺼운 곳이 흰 코어로 가는 대신 심홍에서
+    # 밝은 장미빛까지만 오르고 거기서 포화한다.
     a1 = 1.0 - np.exp(-e)
-    a2 = np.clip((e - 0.55) / 1.5, 0.0, 1.0) ** 1.4
-    a3 = np.clip((e - 1.5) / 2.2, 0.0, 1.0) ** 1.6
-    col = (CRIMSON * a1[..., None]
-           + (MID - CRIMSON) * a2[..., None]
-           + (HOT - MID) * a3[..., None])
+    a2 = np.clip((e - 0.55) / 1.9, 0.0, 1.0) ** 1.3
+    col = CRIMSON * a1[..., None] + (MID - CRIMSON) * a2[..., None]
 
     # 광구는 배경으로 깔고 커튼을 그 위에 가산한다.
     star_face = np.where(np.isfinite(t_star)[..., None],
