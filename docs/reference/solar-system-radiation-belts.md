@@ -726,3 +726,41 @@ closed form for a softened Shue curve.
 Converter retained as `shue_to_stock()` in
 `scripts/refs/magnetopause_geometry.py`, since it is the tool that measured all
 of the above.
+
+## Particle-mesh sampling cost at long tails (noted, not fixed)
+
+Kerbalism draws a radiation field as 250,000 particles scattered in the boundary
+shell, found by rejection sampling (`src/Kerbalism/Renderer/ParticleMesh.cs`):
+
+    p = random point in the bounding box
+    D = dist_func(p)
+    if (D <= 0 && D > -thickness) keep it        // thickness = 1 / quality
+    stop at particle_count, or at particle_count * 1000 samples
+
+Points are thrown into the *whole bounding box* and only those landing in the
+thin shell are kept, so the cost scales with box volume while the yield scales
+with shell volume. `Pause_domain()` sizes the box from `rad/ext`, which the
+150 x nose tail convention makes very long, and we emit `pause_quality` 30 for
+every body regardless of scale — a shell 0.033 body radii thick whether the nose
+is at 1.2 or 63.
+
+Rough acceptance rates (cylindrical approximation of the shell, so
+order-of-magnitude only):
+
+| body | box x half-width | acceptance | particles from the 250M sample cap |
+|---|---|---|---|
+| Jupiter | 4757 | 0.062% | ~155,000, i.e. **62% of target** |
+| Saturn | 1812 | 0.130% | full |
+| Earth | 755 | 0.348% | full |
+| Mercury | 109 | 2.5% | full |
+
+Only Jupiter hits the cap, and the consequence is cosmetic: its magnetopause
+overlay renders sparse, and the load-time thread evaluates the SDF 250 million
+times getting there. **Dose is unaffected** — `Radiation.Compute()` evaluates the
+SDF directly and never touches the particle mesh.
+
+Note the counter-intuitive direction: higher `quality` means a *thinner* shell and
+a lower acceptance rate. Stock gives its heliopause `pause_quality` 0.01, a shell
+100 body radii thick, precisely because the structure is enormous. A per-body
+quality scaled against tail length would fix this; deferred as low priority
+(owner call 2026-08-16).

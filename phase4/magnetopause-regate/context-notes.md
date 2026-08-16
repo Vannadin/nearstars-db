@@ -266,3 +266,22 @@ fully ionised plasma and has no such sink.
 Net: the question is closed as unanswerable-in-principle for the diffusive
 framing, with one topological mechanism that gives a number we chose not to use.
 No further attempts.
+
+## 14. Two plugin-side items left open (2026-08-16)
+
+**`Pause_domain()` is the only real addition a Shue-native mode needs.** The SDF
+itself is five lines, because Kerbalism never needs a true distance — the stock
+pause is already a pseudo-distance, since scaling `x` by `compression` breaks the
+metric, so anything negative inside and positive outside works. What has no
+closed form is the bounding box: maximising `r(theta) * sin(theta)` for a
+softened Shue curve tangles alpha and epsilon. Either scan it once at load, per
+body rather than per frame, or precompute it offline and ship it as a field. The
+offline route adds no engine code and `shue_to_stock()` already does the geometry.
+
+**Particle-mesh sampling cost is noted and deferred** (owner call). Rejection
+sampling throws points into the whole bounding box and keeps only the shell, so
+the 150 x nose tail makes the box long while the yield stays thin. Jupiter is the
+only body that hits the 250M sample cap, filling to about 62% of its 250,000
+particles. Cosmetic only: dose comes from a direct SDF evaluation. Full numbers
+in the derivation record. The fix, if wanted, is a per-body `pause_quality`
+scaled against tail length rather than the flat 30 we emit today.

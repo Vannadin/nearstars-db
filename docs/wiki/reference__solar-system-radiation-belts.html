@@ -962,6 +962,44 @@ closed form for a softened Shue curve.
 Converter retained as `shue_to_stock()` in
 `scripts/refs/magnetopause_geometry.py`, since it is the tool that measured all
 of the above.
+
+## Particle-mesh sampling cost at long tails (noted, not fixed)
+
+Kerbalism draws a radiation field as 250,000 particles scattered in the boundary
+shell, found by rejection sampling (`src/Kerbalism/Renderer/ParticleMesh.cs`):
+
+    p = random point in the bounding box
+    D = dist_func(p)
+    if (D <= 0 && D > -thickness) keep it        // thickness = 1 / quality
+    stop at particle_count, or at particle_count * 1000 samples
+
+Points are thrown into the *whole bounding box* and only those landing in the
+thin shell are kept, so the cost scales with box volume while the yield scales
+with shell volume. `Pause_domain()` sizes the box from `rad/ext`, which the
+150 x nose tail convention makes very long, and we emit `pause_quality` 30 for
+every body regardless of scale — a shell 0.033 body radii thick whether the nose
+is at 1.2 or 63.
+
+Rough acceptance rates (cylindrical approximation of the shell, so
+order-of-magnitude only):
+
+| body | box x half-width | acceptance | particles from the 250M sample cap |
+|---|---|---|---|
+| Jupiter | 4757 | 0.062% | ~155,000, i.e. **62% of target** |
+| Saturn | 1812 | 0.130% | full |
+| Earth | 755 | 0.348% | full |
+| Mercury | 109 | 2.5% | full |
+
+Only Jupiter hits the cap, and the consequence is cosmetic: its magnetopause
+overlay renders sparse, and the load-time thread evaluates the SDF 250 million
+times getting there. **Dose is unaffected** — `Radiation.Compute()` evaluates the
+SDF directly and never touches the particle mesh.
+
+Note the counter-intuitive direction: higher `quality` means a *thinner* shell and
+a lower acceptance rate. Stock gives its heliopause `pause_quality` 0.01, a shell
+100 body radii thick, precisely because the structure is enormous. A per-body
+quality scaled against tail length would fix this; deferred as low priority
+(owner call 2026-08-16).
 </script>
 <script type="text/markdown" id="md-ko"><!-- 자기권 레시피의 증거·도출 기록. Part 1 = 태양계 7천체 스톡 대 물리 감사, Part 2 = 도출 과정과 기각된 접근 -->
 # 자기권 증거·도출 기록
@@ -1626,6 +1664,39 @@ not a NearStars quirk.
 
 변환기는 `scripts/refs/magnetopause_geometry.py` 의 `shue_to_stock()` 로 남깁니다. 위 내용을 전부
 측정한 도구입니다.
+
+## Particle-mesh sampling cost at long tails (noted, not fixed)
+
+Kerbalism 은 방사선장을 경계 껍질에 뿌린 입자 25만 개로 그리고, 그 입자는 거부 표집으로 찾습니다
+(`src/Kerbalism/Renderer/ParticleMesh.cs`).
+
+    p = 바운딩 박스 안의 난수점
+    D = dist_func(p)
+    if (D <= 0 && D > -thickness) 채택            // thickness = 1 / quality
+    particle_count 를 채우거나 particle_count * 1000 표본에서 중단
+
+점은 *박스 전체* 에 던지고 얇은 껍질에 든 것만 남기므로, 비용은 박스 부피에 비례하고 수확은 껍질
+부피에 비례합니다. `Pause_domain()` 이 박스를 `rad/ext` 로 잡는데 150×노즈 꼬리 관행이 그것을 아주
+길게 만들고, 우리는 스케일과 무관하게 모든 바디에 `pause_quality` 30 을 내보냅니다. 노즈가 1.2 든
+63 이든 두께 0.033 바디반경짜리 껍질입니다.
+
+대략적인 채택률입니다(껍질을 원기둥으로 근사했으므로 자릿수 수준의 값입니다).
+
+| 바디 | 박스 x 반폭 | 채택률 | 2.5억 표본 상한에서 얻는 입자 |
+|---|---|---|---|
+| 목성 | 4757 | 0.062% | ~155,000, 즉 **목표의 62%** |
+| 토성 | 1812 | 0.130% | 달성 |
+| 지구 | 755 | 0.348% | 달성 |
+| 수성 | 109 | 2.5% | 달성 |
+
+상한에 걸리는 것은 목성뿐이고 결과는 미관 문제입니다. 자기권계면 오버레이가 성기게 그려지고,
+로드 스레드가 거기까지 가느라 SDF 를 2.5 억 번 계산합니다. **선량에는 영향이 없습니다.**
+`Radiation.Compute()` 는 SDF 를 직접 계산하고 입자 메시를 쓰지 않습니다.
+
+방향이 직관과 반대라는 점도 적어 둡니다. `quality` 가 클수록 껍질이 *얇아져* 채택률이 떨어집니다.
+스톡이 heliopause 에 `pause_quality` 0.01, 즉 두께 100 바디반경짜리 껍질을 주는 것이 바로 그 구조가
+거대하기 때문입니다. 꼬리 길이에 맞춰 바디별로 quality 를 스케일하면 해결되지만, 우선순위가 낮아
+보류합니다(오너 결정 2026-08-16).
 </script>
 <script>
 const srcs = {};
