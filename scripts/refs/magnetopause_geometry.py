@@ -25,6 +25,7 @@ Run with no arguments to print the full NearStars + Sol table.
 import math
 
 MU0 = 4 * math.pi * 1e-7
+K_B = 1.380649e-23
 AMU = 1.66053907e-27
 G = 6.674e-11
 M_EARTH = 5.972e24
@@ -287,7 +288,8 @@ def derive_wing_geometry(parent_mass_kg, parent_radius_m, parent_spin_s,
                          parent_B_eq_uT, L_shell, moon_radius_m,
                          moon_B_eq_uT=0.0, plasma_cm3=IO_TORUS_PEAK_CM3 * 0.02,
                          ion_amu=IO_TORUS_ION_AMU, ionosphere_radii=1.0,
-                         parent_field_sign=-1.0):
+                         parent_field_sign=-1.0, parent_exo_T_K=1000.0,
+                         parent_exo_mu=1.0):
     """Every number the 3D wing shape needs, from physical inputs only.
 
     Nothing here is authored: the tilt comes from the Mach number, the tube
@@ -319,6 +321,9 @@ def derive_wing_geometry(parent_mass_kg, parent_radius_m, parent_spin_s,
     # 동기궤도 밖이면 플라스마가 위성을 추월한다 → 흐름은 +z(공전 방향).
     flow_sign = 1.0 if r > synchronous_radius_m(parent_mass_kg, parent_spin_s) else -1.0
 
+    g_parent = surface_gravity(parent_mass_kg, parent_radius_m)
+    H = ionospheric_scale_height_m(parent_exo_T_K, parent_exo_mu, g_parent)
+
     return {
         'v_rel_km_s': v_rel / 1e3,
         'v_corot_km_s': v_corot / 1e3,
@@ -336,13 +341,40 @@ def derive_wing_geometry(parent_mass_kg, parent_radius_m, parent_spin_s,
         'length': length,
         'flow_sign': flow_sign,
         'field_sign': parent_field_sign,
+        'parent_gravity': g_parent,
+        'scale_height_m': H,
+        'landing_floor': H / moon_radius_m,
         'axes': alfven_wing_axes(M_A, flow_sign, parent_field_sign),
     }
 
 
+def ionospheric_scale_height_m(T_K, mu_amu, g_m_s2):
+    """H = kT / (mu m_u g) — the thickness of the layer the wing lands in.
+
+    This is the one length that keeps the landing honest. Flux conservation
+    alone would have the tube meet a mathematical surface at a mathematical
+    edge, but the conductor it actually terminates on is a shell hundreds of
+    kilometres deep, and the wing dissolves into it rather than striking it.
+    So H does two jobs: it is the fillet radius at the junction, and it is the
+    floor on the tube radius, because a tube cannot stay thinner than the layer
+    it is diffusing into.
+
+    Take the *upper* ionosphere's composition — atomic H at Jupiter, not H2.
+    That is the deeper layer and therefore the generous end of the estimate,
+    which is the right side to err on for a boundary we are drawing rather than
+    measuring.
+    """
+    return K_B * T_K / (mu_amu * AMU * g_m_s2)
+
+
+def surface_gravity(mass_kg, radius_m):
+    return G * mass_kg / radius_m ** 2
+
+
 def dipole_wing_path(L_shell, parent_radius_m, moon_radius_m, M_A_local,
                      parent_mass_kg, parent_spin_s, parent_B_eq_uT,
-                     rho, R_tube, hemisphere=1.0, flow_sign=1.0, steps=260):
+                     rho, R_tube, hemisphere=1.0, flow_sign=1.0, steps=260,
+                     min_radius=0.0):
     """The wing as it actually runs: a curved, narrowing flux tube to the parent.
 
     A wing does not end in space. It follows the parent's field line through the
@@ -361,6 +393,10 @@ def dipole_wing_path(L_shell, parent_radius_m, moon_radius_m, M_A_local,
     * **It narrows.** Magnetic flux is conserved, so the tube radius goes as
       1/sqrt(B). By the ionosphere the field is orders of magnitude stronger and
       the tube has closed to a spot — which is why the footprint is a spot.
+
+    `min_radius` is the floor from `ionospheric_scale_height_m` (in moon radii);
+    below it the tube is thinner than the layer it lands in, which the flux
+    argument has no way to know.
 
     Returns a list of (point, radius) with the point in moon radii in the gsm
     frame and the radius in moon radii too. `hemisphere` +1 runs to the parent's
@@ -397,8 +433,8 @@ def dipole_wing_path(L_shell, parent_radius_m, moon_radius_m, M_A_local,
              Y / moon_radius_m,
              flow_sign * Z_p / moon_radius_m)
 
-        # 플럭스 보존: 관 반경 ∝ 1/sqrt(B)
-        path.append((p, R_tube * math.sqrt(B_moon / B)))
+        # 플럭스 보존: 관 반경 ∝ 1/sqrt(B). 다만 착지층 두께 아래로는 못 내려간다.
+        path.append((p, max(R_tube * math.sqrt(B_moon / B), min_radius)))
     return _resample_by_arclength(path, steps)
 
 

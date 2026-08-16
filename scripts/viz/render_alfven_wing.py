@@ -69,15 +69,23 @@ def geometry_for(name):
                             spec['moon_radius_m'], g['M_A'],
                             spec['parent_mass_kg'], spec['parent_spin_s'],
                             spec['parent_B_eq_uT'], rho, g['R_tube'],
-                            hemisphere=h, flow_sign=g['flow_sign'], steps=520)
+                            hemisphere=h, flow_sign=g['flow_sign'], steps=520,
+                            min_radius=g['landing_floor'])
         for h in (1.0, -1.0)]
     g['parent_radius'] = spec['parent_radius_m'] / spec['moon_radius_m']
     g['parent_centre'] = np.array(
         [spec['L_shell'] * spec['parent_radius_m'] / spec['moon_radius_m'], 0.0, 0.0])
     g['straightness'] = straightness_profile(g['paths'][0], g['R_tube'])
     pr = wing_profile(g)
-    dr_ds = ((pr['R_abs'][-1] - pr['R_abs'][-6]) / (pr['s'][-1] - pr['s'][-6]))
-    g['contact_half_angle_deg'] = math.degrees(math.atan(-dr_ds))
+    # 바닥값이 물리기 직전 구간에서 테이퍼 각을 잰다 — 바닥에 걸린 뒤로는 원통이라 0이다.
+    free = np.nonzero(pr['R_abs'] > g['landing_floor'] * 1.001)[0]
+    j = free[-1] if len(free) > 2 else len(pr['R_abs']) - 1
+    i = max(0, j - 5)
+    ds = pr['s'][j] - pr['s'][i]
+    g['contact_half_angle_deg'] = math.degrees(math.atan(
+        -(pr['R_abs'][j] - pr['R_abs'][i]) / ds)) if ds > 0 else 0.0
+    g['floor_starts_at'] = float(pr['f'][j]) if len(free) else 1.0
+    g['floor_binds'] = bool(len(free) and free[-1] < len(pr['R_abs']) - 2)
     return g
 
 
@@ -313,9 +321,14 @@ def render_anatomy(name, out, size=380, fatten=None):
         ('field', far, mid, fat,
          f"3. lead — {prof['phi'][-1]:+.1f} deg of azimuth",
          'from over the parent pole; flow to the right'),
-        ('flow', max(6.0 * prof['R_abs'][-1], 1e-3), np.array(spec['paths'][0][-1][0]), 1.0,
+        ('flow', max(7.0 * prof['R_abs'][-1], 1e-3), np.array(spec['paths'][0][-1][0]), 1.0,
          f"4. contact — lands {prof['R_abs'][-1]:.3g} R wide, true scale",
-         f"half-angle {spec['contact_half_angle_deg']:.2f} deg: a needle, not a cone"),
+         (f"floored by the {spec['scale_height_m'] / 1e3:.0f} km scale height "
+          f"from f={spec['floor_starts_at']:.2f}, filleted at the same length"
+          if spec['floor_binds'] else
+          f"flux-limited to the surface; half-angle "
+          f"{spec['contact_half_angle_deg']:.2f} deg, fillet "
+          f"{spec['scale_height_m'] / 1e3:.0f} km")),
     ]
 
     pad, head = 12, 84
@@ -419,11 +432,19 @@ def make_sdf(spec, full, fatten=1.0):
             for path in spec['paths']]
     pr, pc = spec['parent_radius'], spec['parent_centre']
 
+    # 착지 필렛: 관과 모천체가 만나는 모서리를 스케일 높이만큼 부드럽게 잇는다.
+    # 임의 스무딩이 아니라 관이 녹아드는 층의 두께 그 자체다.
+    fillet = spec['landing_floor'] * fatten
+
     def sdf(P):
         d = np.linalg.norm(P, axis=-1) - spec['R_obst']
         for pts, rads in arrs:
             d = np.minimum(d, path_sdf_np(P, pts, rads))
-        return np.minimum(d, np.linalg.norm(P - pc, axis=-1) - pr)
+        body = np.linalg.norm(P - pc, axis=-1) - pr
+        if fillet <= 0:
+            return np.minimum(d, body)
+        h = np.clip(0.5 + 0.5 * (body - d) / fillet, 0.0, 1.0)
+        return body * (1 - h) + d * h - fillet * h * (1 - h)
     return sdf
 
 
