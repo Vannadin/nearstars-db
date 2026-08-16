@@ -228,6 +228,7 @@ html[lang="ko"] .l-ko { display: inline }
 <a class="nav-i" href="reference__cultural-context.html"><span class="l-en">Cultural context — NS systems in science fiction</span><span class="l-ko">Cultural context — NS 시스템의 사이파이 레퍼런스</span></a>
 <a class="nav-i" href="reference__element-plasma-colors.html"><span class="l-en">Element plasma colors</span><span class="l-ko">원소별 플라즈마 색상</span></a>
 <a class="nav-i" href="reference__lism-kinematics.html"><span class="l-en">Local Interstellar Medium kinematics &amp; the heliosphere/ISM-wind viewer</span><span class="l-ko">국부 성간물질(LISM) 운동학과 태양권/성간풍 뷰어</span></a>
+<a class="nav-i" href="reference__petrova-line-geometry.html"><span class="l-en">The Petrova line — geometry and look</span><span class="l-ko">페트로바선 — 기하와 룩</span></a>
 <a class="nav-i" href="reference__solar-system-radiation-belts.html"><span class="l-en">Magnetosphere evidence and derivation record</span><span class="l-ko">자기권 증거·도출 기록</span></a>
 </nav>
 <div class="content-wrap">
@@ -356,6 +357,60 @@ That form is **not implemented**, and this is where the project's shape policy a
 | a fitted α exists | **Shue** | Mercury, Earth, Jupiter, Saturn |
 | an α adopted by analogy | **Shue**, labelled as an analogy | Uranus, Neptune |
 | Shue geometrically impossible | generalized stock (`pause_waist` / `pause_smooth`) | **Venus, Mars** — the induced branch |
+| the flow is sub-Alfvénic | **Alfvén wings** (below) | Ganymede, A b III |
+
+### The fourth shape family — Alfvén wings
+
+A sub-Alfvénic obstacle raises no bow shock and no swept tail, so none of the three families
+above applies to it. What it raises instead is a pair of standing Alfvén waves, and their
+geometry is fixed by three numbers already on the board: the Alfvén Mach number, the
+obstacle size, and the parent's field-line curvature. Nothing is authored.
+
+![Alfvén-wing anatomy at Ganymede](../img/alfven-wing-anatomy-ganymede.png)
+
+*Ganymede, from `scripts/viz/render_alfven_wing.py`. Blue is the run over which the wing is
+still straight, orange the remainder, grey the parent. Left to right: the tilt against the
+field axis, the thickness over the whole run, the lead seen from over Jupiter's pole, and the
+contact at true scale.*
+
+**Tilt.** Each wing leans away from the background field by `arctan M_A` — the wave travels
+along `B₀` at `v_A` while the flow carries it downstream at `v₀` (Neubauer 1980,
+[`1980JGR....85.1171N`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.1171N); quoted in that form by the Saur
+review, [1908.06446](https://arxiv.org/abs/1908.06446) §4.2). At Ganymede that is 25.6°, so the two wings
+open 128.8° apart.
+
+**Tube radius = the obstacle radius.** Flux conservation gives it directly — an obstacle of
+radius `R_obst` excludes `B₀πR_obst²`, and the ambient field is uniform outside — and the
+same review's Figure 3 describes the drawn wing as "the size of the source". The Saur 2013
+eq. 57 effective radius `R_eff = √3 R_obst` is a **different quantity**: it sizes the
+Poynting flux, not the surface.
+
+**Straight run.** The wing follows the parent's field line, which departs from its own
+tangent by about `ℓ²/2R_curv`; setting that equal to one tube radius gives
+`ℓ = √(2 R_tube R_curv)` with `R_curv = r/3` at a dipole's equator. It reproduces the
+departure measured on the curved path to within 18% at Ganymede and 3% at A b III and A b I.
+The wing is straight for only 5% of its run.
+
+**It does not end in space.** Past that the tube bends onto the field line, narrows as
+`1/√B`, and lands on the parent's ionosphere as the auroral footprint — 68 km across at
+Ganymede before the floor below applies. The downstream displacement is an **azimuthal
+rotation** about the parent's spin axis, not a translation: putting it in as a translation
+floats the far end 78 R_moon clear of the ionosphere. Accumulated lead 12.5° at Ganymede,
+though Bonfond 2009 ([`2009JGRA..114.7224B`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.7224B)) cautions that the
+measured lead angle is not a reliable check on interaction models.
+
+**Landing.** The conductor the wing terminates on is a shell, not a surface, so the
+ionospheric scale height `H = kT/(μ m_u g)` both floors the tube radius — a tube cannot stay
+thinner than the layer it diffuses into — and sets the fillet at the junction. Taking the
+upper ionosphere's atomic H at 1000 K, that is 335 km at Jupiter and 889 km at Polyphemus.
+The floor binds from 91% of the run at Ganymede (68 → 335 km), 99% at A b I, and not at all
+at A b III, whose footprint is already wider than the layer. Nothing supports a narrower
+end: 68 km was 94× the ion inertial length there, and the field meets the surface 7.6° off
+vertical, stretching the footprint ellipse by 0.9%.
+
+The obstacle itself stays a **sphere**. Confinement is magnetic pressure everywhere plus ram
+on the upstream side only, and their ratio is `2M_A²`, so with the `p^(-1/6)` standoff the
+day–night asymmetry is `(1 + 2M_A²)^(1/6)` — 8% at `M_A` 0.5 and falling.
 
 **Every α is now verified against full text** (papers cached under `docs/phase3/_papers/`),
 and each body's `pause_compression` is set to `2^α` so that `log₂(compression)` recovers it
@@ -1569,6 +1624,53 @@ Orbiter·BepiColombo·Parker Solar Probe 통과 자료로 시험해 손볼 것 �
 | 피팅된 α가 있음 | **Shue** | 수성, 지구, 목성, 토성 |
 | 유추로 채택한 α | **Shue**, 단 유추임을 표기 | 천왕성, 해왕성 |
 | Shue가 기하적으로 불가능 | 일반화한 스톡(`pause_waist` / `pause_smooth`) | **금성, 화성** — 유도 갈래 |
+| 흐름이 아음속(sub-Alfvénic) | **알펜 날개**(아래) | 가니메데, A b III |
+
+### 네 번째 형상 계열 — 알펜 날개
+
+아음속 장애물은 bow shock 도 쓸린 꼬리도 만들지 않습니다. 그래서 위 세 계열이 하나도 안 맞습니다.
+대신 정상파 알펜 파동 한 쌍이 서는데, 그 기하는 보드에 이미 있는 세 값 — 알펜 마하수, 장애물 크기,
+모천체 자기력선 곡률 — 으로 완전히 정해집니다. 저작한 값이 없습니다.
+
+![가니메데 알펜 날개 해부](../img/alfven-wing-anatomy-ganymede.png)
+
+*가니메데, `scripts/viz/render_alfven_wing.py` 산출. 파랑이 아직 직선인 구간, 주황이 그 뒤, 회색이
+모천체입니다. 왼쪽부터 자기장 축 대비 기울기, 전 구간 굵기 변화, 목성 극 위에서 본 처짐, 실제 배율
+접촉부입니다.*
+
+**기울기.** 날개는 배경 자기장에서 `arctan M_A` 만큼 기웁니다. 파동이 `B₀` 를 따라 `v_A` 로 가는
+동안 흐름이 `v₀` 로 하류로 실어 나르기 때문입니다(Neubauer 1980,
+[`1980JGR....85.1171N`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.1171N). Saur 리뷰
+[1908.06446](https://arxiv.org/abs/1908.06446) §4.2 가 이 형태로 인용). 가니메데는 25.6°, 두 날개가 128.8° 로
+벌어집니다.
+
+**관 반경 = 장애물 반경.** 플럭스 보존에서 바로 나옵니다. 반경 `R_obst` 인 장애물이 `B₀πR_obst²` 를
+배제하고 바깥 자기장은 균일하니, 그 플럭스를 나르는 관도 같은 반경입니다. 같은 리뷰 Figure 3 캡션도
+그려진 날개를 "the size of the source" 라고 씁니다. Saur 2013 식 57 의 유효 반경 `R_eff = √3 R_obst`
+는 **다른 양**입니다 — 표면이 아니라 포인팅 플럭스의 크기입니다.
+
+**직선 구간.** 날개는 모천체 자기력선을 따르고, 그 선은 자기 접선에서 대략 `ℓ²/2R_curv` 만큼
+벗어납니다. 이걸 관 반경 하나와 같게 두면 `ℓ = √(2 R_tube R_curv)` 이고, 쌍극자 적도에서
+`R_curv = r/3` 입니다. 곡선 경로에서 실측한 이탈 지점을 가니메데 18%, A b III·A b I 3% 이내로
+재현합니다. 날개가 직선인 건 전체 주행의 5% 뿐입니다.
+
+**허공에서 끝나지 않습니다.** 그 뒤로 관은 자기력선을 타고 휘며 `1/√B` 로 좁아져, 모천체 전리층에
+오로라 발자국으로 착지합니다 — 가니메데 기준 68 km(아래 바닥값 적용 전). 하류 변위는 평행이동이
+아니라 모천체 자전축 둘레의 **방위각 회전**입니다. 평행이동으로 넣으면 끝이 전리층을 78 R_moon
+벗어나 허공에 뜹니다. 누적 처짐은 가니메데 12.5° 인데, Bonfond 2009
+([`2009JGRA..114.7224B`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.7224B)) 는 측정된 lead angle 이 상호작용
+모델 검증에 신뢰할 만한 양이 아니라고 경고합니다.
+
+**착지.** 날개가 끝나는 전도체는 면이 아니라 두께를 가진 층이라, 전리층 스케일 높이
+`H = kT/(μ m_u g)` 가 두 가지를 정합니다 — 관 반경의 바닥값(관이 자기가 녹아드는 층보다 가늘 수는
+없습니다)과 이음매 필렛입니다. 상층 전리층 조성인 원자 H, 1000 K 로 잡으면 목성 335 km, 폴리페무스
+889 km. 바닥값이 무는 지점은 가니메데가 주행의 91%(68 → 335 km), A b I 가 99%, A b III 는 발자국이
+이미 층보다 넓어 안 뭅니다. 더 좁게 잡을 근거는 없었습니다 — 68 km 는 거기 이온 관성길이의 94배이고,
+자기력선이 표면 법선에서 7.6° 기울어 들어가 발자국 타원이 0.9% 늘어나는 정도입니다.
+
+장애물 자체는 **구** 그대로입니다. 구속은 어디서나 자기압이고 상류에만 램압이 더해지는데 그 비가
+`2M_A²` 이며, standoff 가 `p^(-1/6)` 이므로 주야 비대칭이 `(1 + 2M_A²)^(1/6)` — `M_A` 0.5 에서 8%,
+그보다 느려지면 더 작아집니다.
 
 **이제 모든 α를 전문으로 검증했습니다**(논문은 `docs/phase3/_papers/`에 캐시해 두었습니다). 그리고
 천체마다 `pause_compression`을 `2^α`로 두어 `log₂(compression)`이 α를 정확히 되돌려주게 했고,

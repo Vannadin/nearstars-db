@@ -119,6 +119,60 @@ That form is **not implemented**, and this is where the project's shape policy a
 | a fitted α exists | **Shue** | Mercury, Earth, Jupiter, Saturn |
 | an α adopted by analogy | **Shue**, labelled as an analogy | Uranus, Neptune |
 | Shue geometrically impossible | generalized stock (`pause_waist` / `pause_smooth`) | **Venus, Mars** — the induced branch |
+| the flow is sub-Alfvénic | **Alfvén wings** (below) | Ganymede, A b III |
+
+### The fourth shape family — Alfvén wings
+
+A sub-Alfvénic obstacle raises no bow shock and no swept tail, so none of the three families
+above applies to it. What it raises instead is a pair of standing Alfvén waves, and their
+geometry is fixed by three numbers already on the board: the Alfvén Mach number, the
+obstacle size, and the parent's field-line curvature. Nothing is authored.
+
+![Alfvén-wing anatomy at Ganymede](../img/alfven-wing-anatomy-ganymede.png)
+
+*Ganymede, from `scripts/viz/render_alfven_wing.py`. Blue is the run over which the wing is
+still straight, orange the remainder, grey the parent. Left to right: the tilt against the
+field axis, the thickness over the whole run, the lead seen from over Jupiter's pole, and the
+contact at true scale.*
+
+**Tilt.** Each wing leans away from the background field by `arctan M_A` — the wave travels
+along `B₀` at `v_A` while the flow carries it downstream at `v₀` (Neubauer 1980,
+[`1980JGR....85.1171N`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.1171N); quoted in that form by the Saur
+review, [1908.06446](https://arxiv.org/abs/1908.06446) §4.2). At Ganymede that is 25.6°, so the two wings
+open 128.8° apart.
+
+**Tube radius = the obstacle radius.** Flux conservation gives it directly — an obstacle of
+radius `R_obst` excludes `B₀πR_obst²`, and the ambient field is uniform outside — and the
+same review's Figure 3 describes the drawn wing as "the size of the source". The Saur 2013
+eq. 57 effective radius `R_eff = √3 R_obst` is a **different quantity**: it sizes the
+Poynting flux, not the surface.
+
+**Straight run.** The wing follows the parent's field line, which departs from its own
+tangent by about `ℓ²/2R_curv`; setting that equal to one tube radius gives
+`ℓ = √(2 R_tube R_curv)` with `R_curv = r/3` at a dipole's equator. It reproduces the
+departure measured on the curved path to within 18% at Ganymede and 3% at A b III and A b I.
+The wing is straight for only 5% of its run.
+
+**It does not end in space.** Past that the tube bends onto the field line, narrows as
+`1/√B`, and lands on the parent's ionosphere as the auroral footprint — 68 km across at
+Ganymede before the floor below applies. The downstream displacement is an **azimuthal
+rotation** about the parent's spin axis, not a translation: putting it in as a translation
+floats the far end 78 R_moon clear of the ionosphere. Accumulated lead 12.5° at Ganymede,
+though Bonfond 2009 ([`2009JGRA..114.7224B`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.7224B)) cautions that the
+measured lead angle is not a reliable check on interaction models.
+
+**Landing.** The conductor the wing terminates on is a shell, not a surface, so the
+ionospheric scale height `H = kT/(μ m_u g)` both floors the tube radius — a tube cannot stay
+thinner than the layer it diffuses into — and sets the fillet at the junction. Taking the
+upper ionosphere's atomic H at 1000 K, that is 335 km at Jupiter and 889 km at Polyphemus.
+The floor binds from 91% of the run at Ganymede (68 → 335 km), 99% at A b I, and not at all
+at A b III, whose footprint is already wider than the layer. Nothing supports a narrower
+end: 68 km was 94× the ion inertial length there, and the field meets the surface 7.6° off
+vertical, stretching the footprint ellipse by 0.9%.
+
+The obstacle itself stays a **sphere**. Confinement is magnetic pressure everywhere plus ram
+on the upstream side only, and their ratio is `2M_A²`, so with the `p^(-1/6)` standoff the
+day–night asymmetry is `(1 + 2M_A²)^(1/6)` — 8% at `M_A` 0.5 and falling.
 
 **Every α is now verified against full text** (papers cached under `docs/phase3/_papers/`),
 and each body's `pause_compression` is set to `2^α` so that `log₂(compression)` recovers it

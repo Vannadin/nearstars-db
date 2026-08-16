@@ -40,6 +40,10 @@ group below, and all of them are reachable from
 | Uranus pole-on geometry | [`uranus-geometry.html`](../uranus-geometry.html) | Why a single Voyager 2 flyby may not represent Uranus' magnetotail | 14 |
 | Field shape — dipole vs multipole | [`img/field-geometry.png`](../img/field-geometry.png) | What a multipolar field *looks* like, as opposed to how strong it is | 14 |
 | Proxima d Alfvén wing | [`img/proxima-d-alfven-wing.png`](../img/proxima-d-alfven-wing.png) | Sub-Alfvénic star–planet interaction geometry: wings, not a tail | 14 |
+| Alfvén-wing anatomy | [`img/alfven-wing-anatomy-ganymede.png`](../img/alfven-wing-anatomy-ganymede.png) | Tilt, thickness, lead and contact of a wing, in one sheet | 14 |
+| Petrova line — geometry | [`img/petrova/petrova-geometry.png`](../img/petrova/petrova-geometry.png) | Where the knee sits, and why it needs no threshold | 14 |
+| Petrova line — the fill | [`img/petrova/petrova-aurora-exterior.png`](../img/petrova/petrova-aurora-exterior.png) | Curtain drapery from a volumetric march, matched to the film frame | 14 |
+| Petrova line — the waist | [`img/petrova/petrova-waist.png`](../img/petrova/petrova-waist.png) | The thinnest section, from the side and from inside | 14 |
 | Moon atmosphere feasibility | [`img/moon-atmosphere-feasibility.png`](../img/moon-atmosphere-feasibility.png) | Whether Proxima c I could hold an atmosphere | 4 |
 | Proxima c system to scale | [`img/proxima-c-system-to-scale.png`](../img/proxima-c-system-to-scale.png) | How the rings, belt and moon orbits actually sit relative to each other | 4 |
 | Proxima c I orbit — edge comparison | [`img/proxima-c-i-orbit-edge-compare.png`](../img/proxima-c-i-orbit-edge-compare.png) | Inner vs outer belt-edge orbit for c I, and the flattening each implies | 4 |
@@ -361,7 +365,7 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   clearance being steered by improves the whole way. At light
   speed the transit is 6 minutes, which bends the path by 24 arcsec (invisible) but puts the
   aim point 2.09 target diameters ahead of the *apparent* target, since the light navigated
-  by is equally stale. Long-term consumer: the separate visualisation mod
+  by is equally stale. Written up with its figures in [`petrova-line-geometry.md`](petrova-line-geometry.md). Long-term consumer: the separate visualisation mod
   ([`plugins/NearStarsFluxTube`](../../plugins/NearStarsFluxTube/README.md)).
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
   Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer

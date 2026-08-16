@@ -38,6 +38,10 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
 | 천왕성 pole-on 기하 | [`uranus-geometry.html`](../../../docs/uranus-geometry.html) | Voyager 2 단일 통과가 천왕성 자기꼬리를 대표하지 못할 수 있는 이유 | 14 |
 | 자기장 형상 — 쌍극 vs 다중극 | [`img/field-geometry.png`](../../../docs/img/field-geometry.png) | 다중극 자기장이 세기가 아니라 *모양*으로 어떻게 보이는가 | 14 |
 | 프록시마 d 알펜 윙 | [`img/proxima-d-alfven-wing.png`](../../../docs/img/proxima-d-alfven-wing.png) | sub-Alfvénic 항성-행성 상호작용 기하. 꼬리가 아니라 날개 | 14 |
+| 알펜 날개 해부 | [`img/alfven-wing-anatomy-ganymede.png`](../../../docs/img/alfven-wing-anatomy-ganymede.png) | 날개의 기울기·굵기·처짐·접촉부를 한 장에 | 14 |
+| 페트로바선 — 기하 | [`img/petrova/petrova-geometry.png`](../../../docs/img/petrova/petrova-geometry.png) | 꺾임점이 어디이고 왜 문턱값이 필요 없는가 | 14 |
+| 페트로바선 — 채움 | [`img/petrova/petrova-aurora-exterior.png`](../../../docs/img/petrova/petrova-aurora-exterior.png) | 볼류메트릭 마칭으로 낸 커튼 드레이프, 영화 스틸에 맞춤 | 14 |
+| 페트로바선 — 허리 | [`img/petrova/petrova-waist.png`](../../../docs/img/petrova/petrova-waist.png) | 가장 얇은 구간을 옆에서·안에서 | 14 |
 | 위성 대기 보유 가능성 | [`img/moon-atmosphere-feasibility.png`](../../../docs/img/moon-atmosphere-feasibility.png) | 프록시마 c I 이 대기를 붙잡을 수 있는가 | 4 |
 | 프록시마 c 계 실척 | [`img/proxima-c-system-to-scale.png`](../../../docs/img/proxima-c-system-to-scale.png) | 고리·벨트·위성 궤도가 실제로 서로 어떻게 놓이는가 | 4 |
 | 프록시마 c I 궤도 — edge 비교 | [`img/proxima-c-i-orbit-edge-compare.png`](../../../docs/img/proxima-c-i-orbit-edge-compare.png) | c I 의 내측 대 외측 벨트 가장자리 궤도와 각각이 만드는 편평도 | 4 |
@@ -337,7 +341,7 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
   궤도의 기하평균이다(솔→금성 12.5 R☉, 여유 81°). 꺾임이 모서리가 아닌 이유도 같은 곡선에서 나온다.
   최대 부근이 넓어서(최대의 99% 이상이 8.3~19.1 R☉) 돌아야 할 단일 높이가 없고, 그 밴드 폭이 곧
   선회 반경이 된다. 광속 이동이라 6분 비행 중 경로가 24초각 휘는 건 안 보이지만, 보는 빛도 그만큼
-  묵은 것이라 **겨냥점은 보이는 위치보다 목표 지름 2.09개 앞**이다. 장기 소비자 = 별도 시각화 모드
+  묵은 것이라 **겨냥점은 보이는 위치보다 목표 지름 2.09개 앞**이다. 그림과 함께 [`petrova-line-geometry.md`](petrova-line-geometry.md) 에 정리했다. 장기 소비자 = 별도 시각화 모드
   ([`plugins/NearStarsFluxTube`](../../../plugins/NearStarsFluxTube/README.md)).
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d 벨트 선량 도출(방법론 Part B).
   dose-anchor 보간 10.4×(B_eq/31 µT)^1.9 → 내대 ~5×10³ / 외대 ~1×10³ rad/h(신뢰
