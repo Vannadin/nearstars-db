@@ -1,0 +1,174 @@
+# Luhman 16 (WISE J104915.57-531906.1) Phase 4 결정 보드 — 최근접 갈색왜성 쌍 (L7.5 + T0.5, 2.0 pc). (body × axis) 행별 상태. DB 불변, staging.
+# 실관측 시스템 → 측정 passthrough + 방법론 도출(자전축·자기장·색) + 오너 아트(색 계열·B 날씨). grounding=docs/phase3/luhman-16-*.md
+# 아트 스크래치=phase4/art-direction/luhman-16-art-direction.md, 작업 노트=phase4/luhman16-board/
+schema_version: 2
+system: luhman_16
+status: staged
+updated: 2026-08-17          # 최초 작성 (오너 facet-walk 2026-08-16~17)
+
+decisions:
+  # ── Luhman 16 A (L7.5 주성, 조용한 쪽) ──────────────────────────────────
+  - body: Luhman 16 A
+    axis: identity
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      The nearer half of the closest brown dwarf pair to the Sun, and the third-closest
+      system of any kind. It is a failed star: at 33.5 Jupiter masses it never lit
+      hydrogen, and the lithium that a true star would have burned away is still there
+      to prove it. What warmth it has is leftover contraction heat, radiated from
+      1310-kelvin cloud tops as a dim magenta glow. Next to its restless companion it
+      is the calm one, a smooth, quietly fading ember of a world that almost became
+      a sun. In-game it anchors the system as the primary the pair swings around.
+    narrative_ko: >
+      태양에서 가장 가까운 갈색왜성 쌍 중 가까운 쪽이고, 시스템으로 치면 알파
+      센타우리와 바너드 다음, 세 번째 이웃이다. 별이 되다 만 천체다. 목성 질량
+      33.5배로는 수소를 태우지 못했고, 진짜 별이라면 진작 태워 없앴을 리튬이
+      아직 남아 그걸 증명한다. 가진 온기라곤 수축하며 남긴 잔열뿐이라, 1310켈빈
+      구름 꼭대기가 어둑한 마젠타빛으로 새어 나오는 게 전부다. 들썩이는 짝 옆에서
+      이쪽은 차분한 쪽. 조용히 식어 가는, 하마터면 태양이 될 뻔한 세계의
+      잉걸불이다. 인게임에서는 쌍의 중심을 잡는 주성 노릇을 한다.
+    fields:
+      - { name: body_type, value: "L7.5 brown dwarf, the quiet and smoothly clouded primary of the nearest BD binary", value_ko: "L7.5 갈색왜성, 최근접 갈색왜성 쌍의 조용하고 매끈한 주성", op: set }
+      - { name: designation, value: "Luhman 16 A (WISE J104915.57-531906.1 A)", op: set }
+      - { name: naked_eye, value: false, op: set, note: "V ~ 23; invisible without instruments despite 2 pc", note_ko: "V ~ 23. 2 pc인데도 맨눈 불가" }
+    gate:
+      criterion: [classification, observation]
+      verdict: pass-in-window
+      evidence: >
+        Owner facet-walk 2026-08-16: the "quiet ember" identity adopted, with the color
+        noun updated to magenta after the brown-dwarf color regime superseded the
+        Planck-ember reading. Classification chain: L7.5 (Burgasser 2013 resolved NIR),
+        substellar by dynamical mass 33.5 M_Jup + the lithium test (Faherty 2014,
+        EW 8.0 A). Distance rank checked against the DB (2.0 pc, after alpha Cen and
+        Barnard).
+      evidence_ko: >
+        오너 facet-walk 2026-08-16. "조용한 잉걸불" 정체성을 채택하되, 갈색왜성 색
+        분기가 Planck 엠버 읽기를 대체한 뒤라 색 명사는 마젠타로 갱신. 분류 사슬은
+        L7.5(Burgasser 2013 분해 근적외 분광), 역학 질량 33.5 M_Jup + 리튬 테스트
+        (Faherty 2014, EW 8.0 Å)로 준항성 확증. 거리 순위는 DB로 확인(2.0 pc,
+        알파 센타우리·바너드 다음).
+    refs: [2014ApJ...790...90F, 2018A&A...618A.111L]
+
+  - body: Luhman 16 A
+    axis: bulk                        # §3.2 템플릿 앵커 — DB/Phase3 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    body_class: free_rotator
+    status: passthrough
+    narrative: >
+      The measured body, gathered in one place: 33.5 Jupiter masses weighed directly
+      from the pair's 27.5-year orbit, a Jupiter-sized globe of 0.090 solar radii,
+      1310 kelvin at the cloud tops, and a faint two-hundredths of a percent of the
+      Sun's light, nearly all of it infrared. Surface pull is a crushing 110 g: the
+      mass of thirty Jupiters packed into one Jupiter's volume. The system is young,
+      about half a billion years, carried by its membership in the Oceanus moving
+      group. One turn takes 6.94 hours, a tentative reading and the least certain
+      number on this body.
+    narrative_ko: >
+      측정된 값들을 한자리에 모은 행이다. 질량은 쌍이 그리는 27.5년 궤도에서 직접
+      잰 목성 33.5배. 덩치는 태양 반지름의 9%, 딱 목성만 하다. 구름 꼭대기는
+      1310켈빈, 내는 빛은 태양의 0.002%가 전부인데 그마저 거의 적외선이다. 목성
+      서른 개를 목성 하나 크기에 우겨 넣은 셈이라 표면 중력이 110g에 달한다.
+      나이는 오케아누스 이동군에 묶여 약 5억 년, 갈색왜성치고 젊다. 자전은
+      6.94시간에 한 바퀴인데 이것만은 잠정 판독이라, 이 천체의 숫자 가운데
+      가장 부정확하다.
+    fields:
+      - { name: mass, value: 0.0320, unit: M_sun, op: passthrough, note: "±0.0003 = 33.5 M_Jup (Lazorenko & Sahlmann 2018 astrometric orbit)" }
+      - { name: radius, value: 0.090, unit: R_sun, op: passthrough, note: "±0.01 = 0.9 R_Jup assumed field-BD degenerate radius (Faherty 2014); no L/T dwarf has a measured radius", note_ko: "±0.01 = 0.9 R_Jup, 필드 갈색왜성 축퇴 반지름 가정(Faherty 2014). 반지름이 측정된 L/T 왜성은 없다" }
+      - { name: gravity, value: 1084, unit: m/s2, op: passthrough, phase3_default: "GM/R² derived echo (~110 g)", phase3_default_ko: "GM/R² 파생 에코 (~110 g)" }
+      - { name: internal_heat, value: 2.14e-5, unit: L_sun, op: passthrough, note: "self-luminous: contraction heat, log L = -4.67 (Faherty 2014); this IS the body's light source", note_ko: "자발광. 수축열, log L = −4.67 (Faherty 2014). 이 광도가 곧 광원" }
+      - { name: age, value: 0.5, unit: Gyr, op: passthrough, note: "Phase 3 resolved: Oceanus moving group (Gagné 2023), corroborated by 12C/13C = 74 (de Regt 2026); supersedes the Faherty 2014 field guess 1.5", note_ko: "Phase 3 해결값. 오케아누스 이동군(Gagné 2023), ¹²C/¹³C = 74 교차지지(de Regt 2026). Faherty 2014 필드 추정 1.5를 대체" }
+      - { name: rotation_period, value: 0.2892, unit: d, op: passthrough, note: "6.94 hr, tentative TESS attribution (Apai 2021), owner-confirmed 2026-08-16; alternatives ~5-8 hr", note_ko: "6.94시간, TESS 잠정 귀속(Apai 2021), 오너 확정 2026-08-16. 대안 ~5–8시간" }
+      - { name: obliquity, value: null, na_reason: "No constraint; the spin-axis row carries the derived line-of-sight inclination instead", na_reason_ko: "구속 없음. 시선경사 도출값은 자전축 전용 행이 담당" }
+      - { name: geopotential_c22, value: null, na_reason: "A freely rotating fluid body is axisymmetric; no tidal triaxiality (rotational J2 gets its own row)", na_reason_ko: "자유 회전 유체 천체라 축대칭. 조석 삼축 없음 (회전 J2는 전용 행)" }
+    refs: ["2018A&A...618A.111L", "2014ApJ...790...90F", "2021ApJ...906...64A", "2602.03409"]
+
+  - body: Luhman 16 A
+    axis: bulk.spin_axis_orientation
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      We view this body nearly along its equator: the spectral lines say how fast it
+      spins toward us, the brightness cycle says how long a turn takes, and with the
+      radius those two numbers pin the viewing angle above 62 degrees. That is the
+      same neighborhood as the pair's orbital plane, seen at 79 degrees, and the
+      companion's spin sits there too. The tidy reading is that both worlds and their
+      mutual orbit still share the plane they were born in, so the axis is drawn
+      aligned to the orbit. Since the rotation period itself is tentative, the angle
+      inherits that caution.
+    narrative_ko: >
+      우리는 이 천체를 거의 옆에서, 적도에 가까운 방향으로 보고 있다. 스펙트럼
+      선이 넓어진 정도에서 자전 속도가, 밝기 변화의 주기에서 한 바퀴 도는 시간이
+      나오고, 반지름까지 합치면 시선이 적도면에서 28도 이내로 좁혀진다. 쌍의
+      궤도면도 79도로 기울어 보이니 사실상 같은 자리이고, 짝의 자전축 역시
+      마찬가지다. 두 천체와 궤도가 태어날 때의 평면을 지금껏 그대로 공유한다는
+      그림이 가장 자연스러워서, 자전축은 궤도에 정렬해 그린다. 다만 바탕이 된
+      자전주기가 아직 잠정값이라, 이 각도 역시 확정이라기보다는 유력한 추정에
+      가깝다.
+    fields:
+      - { name: spin_axis_orientation, value: "i★ > 62° (derived bracket 62-90°); drawn aligned with the AB orbital plane (i_orb 79.2°), azimuth free, ICRS pole at emit", value_ko: "i★ > 62°(도출 구간 62–90°) · AB 궤도면(i_orb 79.2°) 정렬로 그림, 방위각 자유, ICRS 극 변환은 emit", op: set }
+    provenance: >
+      2026-08-16 first gated in the same facet-walk that commissioned the
+      spin-axis-inclination methodology; the derived bracket reproduces Apai 2021
+      sec 6.2 (A within 28 deg of equator-on) and the alignment reading follows
+      their spin-spin-orbit note.
+    gate:
+      criterion: [derived-grounding]
+      verdict: methodology-derived
+      evidence: >
+        sin i★ = v sin i · P / 2πR with v sin i 17.6±0.1 km/s (Crossfield 2014),
+        P 6.94 hr (Apai 2021, tentative, owner-adopted), R 0.90-1.10 R_Jup gives
+        v_eq 16.2-19.8 km/s and i★ > 62°, reproducing Apai 2021's own published
+        bracket. Alignment with the orbit (Bedin 2017 i 79.21°; the curated L&S 2018
+        100.26° is the same plane under the opposite node convention) is Apai 2021's
+        reading, adopted. Caveat: conditional on the tentative 6.94 hr period; an
+        ~8 hr period would push the nominal angle higher, still inside the bracket.
+      evidence_ko: >
+        sin i★ = v sin i · P / 2πR에 v sin i 17.6±0.1 km/s(Crossfield 2014),
+        P 6.94시간(Apai 2021 잠정, 오너 채택), R 0.90–1.10 R_Jup을 넣으면 v_eq
+        16.2–19.8 km/s, i★ > 62°. Apai 2021이 발표한 구간이 그대로 재현된다.
+        궤도 정렬(Bedin 2017 i 79.21°. 큐레이션된 L&S 2018의 100.26°는 노드 규약이
+        반대인 같은 평면)은 Apai 2021의 읽기를 채택. 주의: 잠정 주기 6.94시간에
+        조건부이며, ~8시간이면 명목 각도가 더 올라가지만 구간 안에 머문다.
+    refs: ["docs/reference/spin-axis-inclination-methodology.md", "2021ApJ...906...64A"]
+
+  - body: Luhman 16 A
+    axis: bulk.geopotential_j2
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      A turn every seven hours leaves a mark on the figure: the equator bulges out
+      by about a quarter of a percent. Subtle next to Jupiter's visible squash, but
+      enormous by stellar standards, over a thousand times the Sun's flattening
+      term. The body is a fully convective, degenerate globe, so how much it
+      deforms per unit of spin follows the same structural branch as the roster's
+      red dwarfs and white dwarf.
+    narrative_ko: >
+      일곱 시간마다 한 바퀴 도는 자전은 몸매에 흔적을 남긴다. 적도가 0.2%쯤 부풀어
+      있다. 목성의 눈에 띄는 눌림에 비하면 미미하지만 별의 기준으로는 태양의
+      1400배에 달하는 큰 값이다. 완전히 대류하는 축퇴 구체라, 자전 대비 얼마나
+      찌그러지는지는 로스터의 적색왜성·백색왜성과 같은 구조 분기를 탄다.
+    fields:
+      - { name: geopotential_j2, value: 3.07e-4, op: set, note: "= 0.084 x q (n=3/2 polytrope Radau-Darwin branch), q = 3.66e-3 at P 6.94 hr", note_ko: "= 0.084 × q (n=3/2 폴리트로프 Radau–Darwin 분기), P 6.94시간에서 q = 3.66e-3" }
+      - { name: reference_radius, value: 62613, unit: km, op: set, note: "= mean radius (0.090 R_sun), the Principia pair convention", note_ko: "= 평균 반지름(0.090 R☉), Principia 짝 규약" }
+      - { name: flattening, value: 2.29e-3, op: set, note: "= (3J2+q)/2 derived echo; the visual oblate-mesh slot", note_ko: "= (3J₂+q)/2 파생 에코. 시각 oblate 메시 슬롯" }
+    provenance: >
+      2026-08-17 first computed at the owner-adopted tentative P 6.94 hr; scales as
+      P^-2 (q 2.7e-3, J2 2.3e-4, f 1.7e-3 at 8 hr) if the period moves.
+    gate:
+      criterion: [derived-grounding]
+      verdict: methodology-derived
+      evidence: >
+        q = Omega^2 R^3 / GM = 3.656e-3 (P 6.94 hr, R 0.090 R_sun, M 0.0320 M_sun);
+        J2 = 0.084 q on the fully-convective/degenerate n=3/2 polytrope branch
+        (NMoI 0.205, same branch as TRAPPIST-1 and 40 Eri B on their boards);
+        f = (3 J2 + q)/2 = 2.29e-3. Standing owner policy: stellar-class J2 is
+        always computed and emitted, never waved off as negligible. Caveat: P is
+        tentative and R assumed, so treat as +-40% on J2; the branch itself is the
+        stable part.
+      evidence_ko: >
+        q = Ω²R³/GM = 3.656e-3 (P 6.94시간, R 0.090 R☉, M 0.0320 M☉).
+        완전대류·축퇴 n=3/2 폴리트로프 분기(NMoI 0.205, TRAPPIST-1·40 Eri B와 같은
+        분기)에서 J₂ = 0.084 q, f = (3J₂+q)/2 = 2.29e-3. 항성급 J₂는 무시가능로
+        접지 않고 상시 계산·emit한다는 오너 정책 그대로. 주의: P가 잠정이고 R이
+        가정이라 J₂는 ±40%로 볼 것. 분기 선택 자체가 안정적인 부분이다.
+    refs: ["docs/reference/body-figure-methodology.md"]
