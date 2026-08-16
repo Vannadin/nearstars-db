@@ -6,6 +6,8 @@
 >
 > And thank you to everyone who has cast an eye on this small project.
 
+## NOTICE: This project is developed using Claude Code (Fable and Opus models)
+
 A data pipeline and database for adding real nearby star systems to **Kerbal Space Program 1.12.x**, grounded in actual astronomical measurements.
 
 This repository is the **data engine** of the mod. It fetches observational data from public astronomical catalogs, assembles it into structured per-system JSON files, and validates them for downstream consumption by Kopernicus and Principia config writers.
