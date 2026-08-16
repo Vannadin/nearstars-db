@@ -499,6 +499,61 @@ is the **molecular-band-corrected output** that replaces it for cool dwarfs.
    - **Strong-lined / chemically peculiar stars** (Ap/Bp, strong-CN giants, etc.):
      heavy line blanketing shifts the color away from the blackbody; not blackbody-
      valid. None are in the current NearStars roster, but flag if added.
+4. **Brown dwarfs (L/T/Y) → the blackbody is the wrong estimator entirely; the
+   physical hue family is magenta/violet.** See the subsection below.
+
+### Brown dwarfs (regime 4): the alkali-carved magenta/violet family
+
+A brown dwarf's visible light is *emission with the middle torn out*, not a
+smooth continuum. The pressure-broadened Na I D resonance wings absorb most of
+the green-yellow (520–660 nm; flux suppressed by factors of ~10³ in 900–1300 K
+models) and K I 766/770 nm carves the far red, leaving two windows: a red leak
+longward of ~660 nm and a blue-violet window at 400–520 nm where the Na I
+cross-section has a local minimum and flux escapes from deeper, hotter layers.
+Burrows et al. 2001 (§VI.2) identified the mechanism — "a mixture of red and
+the complementary color to the yellow of the Na D line" — and Cranmer 2021
+computed it systematically: brown dwarfs at Teff 400–2000 K "may appear violet
+to human eyes." A Planck hue at these Teff (deep red ember) is therefore
+**not** the physical color; it misses the carved spectrum entirely.
+
+Three independent lines, one hue family (the project's triangulation,
+2026-08-16; reproduce with `scripts/refs/bd_visual_color.py`):
+
+| source | kind | ~900 K (T6) | ~1300 K (L/T transition) | character |
+|---|---|---|---|---|
+| Burrows 2001 / Reid 2000a | **observed** L5 (0.4–1.0 µm Keck) | — | R:G:B = 1.0:0.3:0.42 → `#ff4c6b`–`#ff95ad` (gamma reading) | soft, R-dominant magenta |
+| Cranmer 2021 (Zenodo table) | Sonora / ATMO models | (79,32,166) = `#4f20a6` | (79,31,164) = `#4f1fa4` | dark blue-violet |
+| this project | BT-Settl (SVO) × §7 engine | hue `#a300ff` | hue `#a632ff` | red-violet, saturation at model maximum |
+
+Reporting discipline for the derived value:
+
+- **Hue is robust** — all three lines land in magenta/violet across
+  800–1400 K and logg 4.5–5.5; the choice of *family* is grounded.
+- **Saturation is a model upper bound, low confidence.** It is set by how much
+  deep-layer flux escapes the 400–520 nm window, which has **no observational
+  anchor at T types** (no published T-dwarf spectrum reaches the blue).
+  The only observed anchor — the L5 — is far softer (G = 0.3 survives) than
+  any model. Quote model saturation as a ceiling, never as the value.
+- **The blue-window flux is also why models disagree**: BT-Settl at 1700 K
+  yields orange (fails to reproduce the observed magenta L5), while
+  Cranmer's grids stay violet at the same Teff — the treatments of
+  alkali-wing opacity and condensates differ (Cranmer 2021 says exactly
+  this). Below ~1400 K the carving saturates and all grids agree on family.
+- **Luminance caveat**: these are photopic chromaticities. At the actual
+  surface brightness of a 900–1300 K photosphere the human eye is mesopic /
+  scotopic and would wash the color out; render engines display photopically,
+  so the hex is the right cfg quantity, but never claim "this is what you
+  would see."
+- Below ~400 K (late Y) sodium condenses out, the carving disappears, and the
+  color returns toward the red Planck locus (Cranmer 2021) — the magenta
+  family has a cool edge.
+
+NearStars consequences: eps Ind Bb (T6, 910 K) hue anchor `#a300ff` with the
+saturation ceiling above; Luhman 16 A/B (1310/1280 K) are physically in the
+same family, superseding the Planck-ember reading their Phase 3 reports
+carried (owner art call 2026-08-16: render as the **soft R-dominant magenta**
+of the observed-L5 anchor, the blackbody-adjacent end of the family, with the
+model violets as the far edge of the window).
 
 ---
 
@@ -691,6 +746,26 @@ topic here (Teff scales, model atmospheres, metallicity-color, M-dwarf molecular
 bands) has a clear high-citation canonical work, listed above.
 
 ---
+
+### Brown-dwarf branch additions (2026-08-16)
+
+- **Burrows, A., Hubbard, W. B., Lunine, J. I. & Liebert, J. (2001)**: *RvMP* 73, 719
+  (arXiv [astro-ph/0103383](https://arxiv.org/abs/astro-ph/0103383), **cached**). §VI.2:
+  the Na-D-carving mechanism and the only **observation-based** brown-dwarf visual
+  color — the L5 2MASSW J1507 (Keck 0.4–1.0 µm spectrum, Reid et al. 2000a) integrates
+  to R:G:B = 1.0:0.3:0.42, a soft R-dominant magenta. (791 cites.)
+- **Cranmer, S. R. (2021)**: *RNAAS* 5, 201 ([`2021RNAAS...5..201C`](https://ui.adsabs.harvard.edu/abs/2021RNAAS...5..201C),
+  DOI [10.3847/2515-5172/ac225c](https://doi.org/10.3847/2515-5172/ac225c); **no arXiv** —
+  verified via the IOP full text, a non-ADS-cache exception). *Brown Dwarfs are Violet*:
+  systematic CIE/RGB colors for 400–41 400 K including brown dwarfs; the published
+  per-Teff RGB table is the validation anchor for our BT-Settl integration. Data:
+  Zenodo [10.5281/zenodo.5293307](https://doi.org/10.5281/zenodo.5293307)
+  (`cranmer_xyz_rgb_stars.dat`). Underlying BD grids: ATMO 2020 (Phillips et al. 2020,
+  [`2020A&A...637A..38P`](https://ui.adsabs.harvard.edu/abs/2020A%26A...637A..38P)) and Sonora Bobcat (Marley et al. 2021,
+  arXiv [2107.07434](https://arxiv.org/abs/2107.07434)).
+- **Allard, F. & Homeier, D. (2012 BT-Settl, via SVO)**: the model grid actually
+  integrated by `scripts/refs/bd_visual_color.py` (SVO theoretical spectra service,
+  `bt-settl`); already annotated in the main list as Allard et al. 2011/2012.
 
 ## Related
 
@@ -942,6 +1017,54 @@ M4–M5에서는 실제 SED가 흑체보다 오히려 미세하게 **더 옅다*
      모델 대기가 필요하다. *표시* 색조는 어느 쪽이든 견고하게 청백이다.
    - **강선 / 화학특이 별**(Ap/Bp, 강-CN 거성 등): 무거운 line blanketing이 색을 흑체에서
      밀어낸다. 흑체-유효가 아니다. 현재 NearStars 로스터에는 없지만, 추가되면 플래그한다.
+4. **갈색왜성(L/T/Y) → 흑체는 아예 틀린 추정기이고, 물리 색조 계열은 마젠타/보라다.**
+   아래 소절 참조.
+
+### 갈색왜성 (분기 4): 알칼리가 깎아낸 마젠타/보라 계열
+
+갈색왜성의 가시광은 매끈한 연속광이 아니라 *가운데가 뜯겨나간 발광*이다. 압력폭증된
+Na I D 공명선 날개가 초록·노랑(520–660 nm)을 대부분 흡수하고(900–1300 K 모델에서
+플럭스가 ~10³배 억제), K I 766/770 nm이 근적색을 깎아 창이 둘만 남는다 — ~660 nm
+너머의 적색 누출과, Na I 단면이 국소 극소를 갖는 400–520 nm의 청보라 창(더 깊고
+뜨거운 층의 빛이 새어 나온다). Burrows et al. 2001(§VI.2)이 메커니즘을 짚었고 —
+"빨강 + Na D 노랑의 보색의 혼합" — Cranmer 2021이 체계적으로 계산했다. Teff
+400–2000 K 갈색왜성은 "사람 눈에 보라로 보일 수 있다". 이 온도의 Planck 색조
+(딥 레드 엠버)는 따라서 물리색이 **아니다** — 깎인 스펙트럼을 통째로 놓친다.
+
+독립된 세 계보, 하나의 색조 계열 (프로젝트 삼각측량, 2026-08-16;
+재현은 `scripts/refs/bd_visual_color.py`).
+
+| 출처 | 종류 | ~900 K (T6) | ~1300 K (L/T 전이) | 성격 |
+|---|---|---|---|---|
+| Burrows 2001 / Reid 2000a | **실측** L5 (Keck 0.4–1.0 µm) | — | R:G:B = 1.0:0.3:0.42 → `#ff4c6b`–`#ff95ad` (감마 해석) | 부드러운 R-우세 마젠타 |
+| Cranmer 2021 (Zenodo 표) | Sonora / ATMO 모델 | (79,32,166) = `#4f20a6` | (79,31,164) = `#4f1fa4` | 어두운 남보라 |
+| 이 프로젝트 | BT-Settl (SVO) × §7 엔진 | 색조 `#a300ff` | 색조 `#a632ff` | 붉은 보라, 채도는 모델 최대치 |
+
+도출값 보고 규율.
+
+- **색조는 견고하다** — 세 계보 모두 800–1400 K·logg 4.5–5.5 전역에서
+  마젠타/보라에 떨어진다. *계열* 선택은 근거가 있다.
+- **채도는 모델 상한이고 신뢰도가 낮다.** 채도는 400–520 nm 창으로 새어 나오는
+  심층 플럭스 양이 정하는데, T형에서 이 구간은 **관측 앵커가 없다**(파랑까지
+  닿는 T왜성 스펙트럼은 발표된 것이 없다). 유일한 실측 앵커인 L5는 어떤 모델보다
+  훨씬 부드럽다(G = 0.3이 살아 있다). 모델 채도는 상한으로만 인용하고, 값으로
+  인용하지 않는다.
+- **청색 창 플럭스는 모델들이 갈리는 이유이기도 하다.** BT-Settl은 1700 K에서
+  주황을 내고(실측 마젠타 L5 재현 실패), Cranmer의 그리드는 같은 온도에서 보라를
+  유지한다 — 알칼리 날개 불투명도와 응결 처리의 차이다(Cranmer 2021이 정확히
+  이렇게 적는다). ~1400 K 아래에서는 깎임이 포화해 모든 그리드가 계열에 합의한다.
+- **휘도 주의**: 이 값들은 명소시 색도다. 900–1300 K 광구의 실제 표면휘도에서
+  사람 눈은 박명시/암소시로 넘어가 색이 씻겨 나간다. 렌더 엔진은 명소시로
+  표시하므로 hex가 맞는 cfg 물리량이지만, "눈에 이렇게 보인다"고는 주장하지
+  않는다.
+- ~400 K 아래(후기 Y)에서는 나트륨이 분자로 응결해 깎임이 사라지고 색이 붉은
+  Planck 궤적 쪽으로 돌아온다(Cranmer 2021) — 마젠타 계열에는 차가운 끝이 있다.
+
+NearStars 귀결: eps Ind Bb(T6, 910 K)의 색조 앵커는 `#a300ff`(위의 채도 상한
+단서와 함께). Luhman 16 A/B(1310/1280 K)도 물리적으로 같은 계열이라, Phase 3
+리포트가 담고 있던 Planck-엠버 읽기를 대체한다(오너 아트 결정 2026-08-16:
+계열의 흑체 인접 끝인 **실측 L5 앵커의 부드러운 R-우세 마젠타**로 렌더하고,
+모델 보라들은 허용 폭의 먼 끝으로 둔다).
 
 ---
 
@@ -1107,6 +1230,25 @@ Eri C `#ffd587`)을 보이는 워크드 증명이다.
 척도, 모델 대기, 금속함량-색, M왜성 분자밴드)에는 위에 열거한 명확한 고피인용 표준 저작이 있다.
 
 ---
+
+### 갈색왜성 분기 추가분 (2026-08-16)
+
+- **Burrows, A., Hubbard, W. B., Lunine, J. I. & Liebert, J. (2001)**: *RvMP* 73, 719
+  (arXiv [astro-ph/0103383](https://arxiv.org/abs/astro-ph/0103383), **캐시됨**). §VI.2 —
+  Na D 깎임 메커니즘과 유일한 **관측 기반** 갈색왜성 지각색. L5 2MASSW J1507(Keck
+  0.4–1.0 µm, Reid et al. 2000a)이 R:G:B = 1.0:0.3:0.42, 부드러운 R-우세 마젠타로
+  적분된다. (791회 인용.)
+- **Cranmer, S. R. (2021)**: *RNAAS* 5, 201 ([`2021RNAAS...5..201C`](https://ui.adsabs.harvard.edu/abs/2021RNAAS...5..201C),
+  DOI [10.3847/2515-5172/ac225c](https://doi.org/10.3847/2515-5172/ac225c); **arXiv 없음** —
+  IOP 전문으로 검증, 비-ADS 캐시 예외). *Brown Dwarfs are Violet* — 갈색왜성을 포함한
+  400–41 400 K의 체계적 CIE/RGB 색. 발표된 Teff별 RGB 표가 우리 BT-Settl 적분의 검증
+  앵커다. 데이터: Zenodo [10.5281/zenodo.5293307](https://doi.org/10.5281/zenodo.5293307)
+  (`cranmer_xyz_rgb_stars.dat`). 기반 그리드: ATMO 2020(Phillips et al. 2020,
+  [`2020A&A...637A..38P`](https://ui.adsabs.harvard.edu/abs/2020A%26A...637A..38P))과 Sonora Bobcat(Marley et al. 2021,
+  arXiv [2107.07434](https://arxiv.org/abs/2107.07434)).
+- **Allard, F. & Homeier, D. (2012 BT-Settl, SVO 경유)**: `scripts/refs/bd_visual_color.py`가
+  실제로 적분하는 모델 그리드(SVO 이론 스펙트럼 서비스, `bt-settl`). 본문 목록의
+  Allard et al. 2011/2012 항목에 이미 주석돼 있다.
 
 ## 관련 문서
 
