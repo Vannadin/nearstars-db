@@ -1,5 +1,11 @@
 # NearStars
 
+> Since antiquity, humanity has looked up at the sky. Countless pioneers have captured the light of places beyond our reach, recording it in numbers, tables, and papers. This project is built on the observations and calculations they devoted their lives to. I have deep respect for the many researchers who have explored what lies far beyond the sky. I am grateful to stand on the shoulders of these giants, and every source used is cited.
+>
+> I am neither an astronomer nor a developer — just a gamer who studied film and loves science fiction. I do not claim to have developed this AI-made "slop" myself; I am merely a producer who, alongside a very capable developer and with imperfect knowledge, plans the road toward the stars.
+>
+> And to everyone who has cast an eye on this small project — thank you.
+
 A data pipeline and database for adding real nearby star systems to **Kerbal Space Program 1.12.x**, grounded in actual astronomical measurements.
 
 This repository is the **data engine** of the mod. It fetches observational data from public astronomical catalogs, assembles it into structured per-system JSON files, and validates them for downstream consumption by Kopernicus and Principia config writers.
