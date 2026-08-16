@@ -386,7 +386,7 @@ def build() -> None:
               'and papers. This project is built on the observations and calculations they '
               'devoted their lives to. I have deep respect for the many researchers who have '
               'explored what lies far beyond the sky. I am grateful to stand on the shoulders '
-              'of these giants, and every source used is cited.\n>\n'
+              'of these giants, and every work of theirs used in this project is cited.\n>\n'
               '> I do not define myself as an astronomer, nor as a developer. I am just a gamer '
               'who studied film and loves science fiction. I do not claim to have developed '
               'this AI made "slop" myself; I am merely a producer who, alongside a very capable '

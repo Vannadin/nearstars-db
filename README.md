@@ -1,6 +1,6 @@
 # NearStars
 
-> Since antiquity, humanity has looked up at the sky. Countless pioneers have captured the light of places beyond our reach, recording it in numbers, tables, and papers. This project is built on the observations and calculations they devoted their lives to. I have deep respect for the many researchers who have explored what lies far beyond the sky. I am grateful to stand on the shoulders of these giants, and every source used is cited.
+> Since antiquity, humanity has looked up at the sky. Countless pioneers have captured the light of places beyond our reach, recording it in numbers, tables, and papers. This project is built on the observations and calculations they devoted their lives to. I have deep respect for the many researchers who have explored what lies far beyond the sky. I am grateful to stand on the shoulders of these giants, and every work of theirs used in this project is cited.
 >
 > I do not define myself as an astronomer, nor as a developer. I am just a gamer who studied film and loves science fiction. I do not claim to have developed this AI made "slop" myself; I am merely a producer who, alongside a very capable developer and with imperfect knowledge, plans the road toward the stars.
 >
