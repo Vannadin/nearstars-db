@@ -28,6 +28,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'refs'))
 import magnetopause_geometry as mg  # noqa: E402
+from render_outputs import save_versioned  # noqa: E402
 
 
 # 물리 입력만 적는다 — 형상 수치(기울기·관 반경·직선 길이)는 전부 여기서 도출된다.
@@ -321,6 +322,7 @@ def render_profile(names, out, size=(880, 470)):
                 fill=colours[i % len(colours)], font=fnt)
     os.makedirs(os.path.dirname(out) or '.', exist_ok=True)
     img.save(out)
+    save_versioned(img, 'alfven-profile')
     return out
 
 
@@ -430,6 +432,7 @@ def render_anatomy(name, out, size=380, fatten=None, fillet_scale=None):
     os.remove(chart)
     os.makedirs(os.path.dirname(out) or '.', exist_ok=True)
     sheet.save(out)
+    save_versioned(sheet, f'alfven-anatomy-{name}')
     return out
 
 
@@ -614,6 +617,7 @@ def main():
 
     os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
     sheet.save(a.out)
+    save_versioned(sheet, f'alfven-wing-{a.body}')
     print(a.out)
 
 

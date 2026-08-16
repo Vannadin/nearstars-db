@@ -29,6 +29,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'refs'))
 import petrova_line_geometry as pg                      # noqa: E402
 from render_alfven_wing import (downsample_path, _camera,  # noqa: E402
                                 _march, _normal)
+from render_outputs import save_versioned                    # noqa: E402
 
 
 # 물리 입력만. 형상은 전부 petrova_line_geometry 가 도출한다.
@@ -223,7 +224,7 @@ def main():
             dr.text((x, pad + 8), lab, fill=(214, 186, 186), font=fnt)
         os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
         sheet.save(a.out)
-        print(a.out)
+        print(a.out, save_versioned(sheet, 'petrova-aurora', f'g{a.gain:g}'))
         return
 
     spec = build(a.system, a.gap_deg, a.start_frac, a.tangent_deg)
@@ -292,7 +293,7 @@ def main():
 
     os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
     sheet.save(a.out)
-    print(a.out)
+    print(a.out, save_versioned(sheet, 'petrova-line', f'phi{a.tangent_deg:g}'))
 
 
 
