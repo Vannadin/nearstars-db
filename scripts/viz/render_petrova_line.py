@@ -27,7 +27,7 @@ from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'refs'))
 import petrova_line_geometry as pg                      # noqa: E402
-from render_alfven_wing import (path_sdf_np, downsample_path, _camera,  # noqa: E402
+from render_alfven_wing import (downsample_path, _camera,  # noqa: E402
                                 _march, _normal)
 
 
@@ -39,12 +39,47 @@ SYSTEMS = {
 }
 
 
-def build(name, gap_deg, start_frac, funnel_scale=0.7, funnel_power=1.5):
+def sweep_profile_sdf_np(P, pts, rads, chunk=16000):
+    """Distance to a radius profile swept along a curve — not a swept sphere.
+
+    Swept spheres were the whole trouble. Where the radius changes faster than
+    the curve advances, each sphere swallows the next and the surface becomes
+    the hull of a few big balls instead of the profile that was written down;
+    the funnel drops from 0.87 to 0.06 stellar radii over one stellar radius,
+    so it was never going to survive that. Here the *nearest point on the
+    curve* is found first, purely geometrically, and only then is the radius
+    read off at that arc length. The surface is then exactly rho = r(s),
+    whatever the taper does.
+    """
+    a, b = pts[:-1], pts[1:]
+    ab = b - a
+    seg = np.sqrt((ab * ab).sum(-1))
+    den = np.maximum((ab * ab).sum(-1), 1e-30)
+    s0 = np.concatenate([[0.0], np.cumsum(seg)])
+    s_at = np.concatenate([[0.0], np.cumsum(seg)])
+
+    flat = P.reshape(-1, 3)
+    out = np.empty(len(flat))
+    for i in range(0, len(flat), chunk):
+        q = flat[i:i + chunk][:, None, :]
+        ap = q - a[None]
+        t = np.clip((ap * ab[None]).sum(-1) / den[None], 0.0, 1.0)
+        perp = ap - t[..., None] * ab[None]
+        dist = np.sqrt((perp * perp).sum(-1))
+        k = np.argmin(dist, axis=1)
+        rows = np.arange(len(k))
+        rho = dist[rows, k]
+        s = s0[k] + t[rows, k] * seg[k]
+        out[i:i + chunk] = rho - np.interp(s, s_at, rads)
+    return out.reshape(P.shape[:-1])
+
+
+def build(name, gap_deg, start_frac, tangent_deg=60.0):
     s = dict(SYSTEMS[name])
     start_radius = start_frac * s['R_target_m']
     path, H = pg.petrova_path(s['R_star_m'], s['a_m'], s['R_target_m'],
                               gap_deg=gap_deg, start_radius_m=start_radius,
-                              funnel_scale=funnel_scale, funnel_power=funnel_power)
+                              funnel_tangent_deg=tangent_deg)
     d = pg.describe(s['R_star_m'], s['a_m'], s['R_target_m'], s['v_orbit_m_s'],
                     gap_deg=gap_deg, start_radius_m=start_radius)
     # 렌더 단위 = 항성 반경. 별·행성·빔이 한 좌표계에 들어와야 한다.
@@ -56,6 +91,7 @@ def build(name, gap_deg, start_frac, funnel_scale=0.7, funnel_power=1.5):
     d['star_radius'] = 1.0
     d['target_centre'] = np.array([s['a_m'] / u, 0.0, 0.0])
     d['target_radius'] = s['R_target_m'] / u
+    d['tangent_deg'] = tangent_deg
     return d
 
 
@@ -76,7 +112,7 @@ def make_sdf(spec, fatten=1.0, samples=240, joint_fillet=0.0):
 
     def sdf(P):
         star = np.linalg.norm(P, axis=-1) - spec['star_radius']
-        tube = path_sdf_np(P, pts, rads)
+        tube = sweep_profile_sdf_np(P, pts, rads)
         if fillet > 0:
             h = np.clip(0.5 + 0.5 * (star - tube) / fillet, 0.0, 1.0)
             d = star * (1 - h) + tube * h - fillet * h * (1 - h)
@@ -98,7 +134,7 @@ def _classify(P, spec, fatten, samples=240):
     rads = beam_radii(thin, fatten)
     d_star = np.linalg.norm(P, axis=-1) - spec['star_radius']
     d_targ = np.linalg.norm(P - spec['target_centre'], axis=-1) - spec['target_radius']
-    d_beam = path_sdf_np(P, pts, rads)
+    d_beam = sweep_profile_sdf_np(P, pts, rads)
     # 도착점이 목표 중심이라 관의 끝 캡과 목표 구면이 정확히 겹친다. 동률은
     # 목표에 준다 — 그래야 원반이 보이고, 그 원반을 정확히 채우는 관이 읽힌다.
     # 두 면이 정확히 겹치므로 부동소수 잡음만으로 픽셀이 갈려 줄무늬가 생긴다.
@@ -151,17 +187,14 @@ def main():
     ap.add_argument('--gap-deg', type=float, default=None,
                     help='force a limb gap instead of using the height of '
                          'maximum clearance (the derived default)')
-    ap.add_argument('--funnel-scale', type=float, default=0.7,
-                    help='funnel decay length in stellar radii')
-    ap.add_argument('--funnel-power', type=float, default=1.5,
-                    help='0 = exponential tail; p > 0 uses 1/(1+u^p), which '
-                         'pinches as fast but leaves a thicker neck')
+    ap.add_argument('--tangent-deg', type=float, default=60.0,
+                    help='latitude from the pole at which the funnel is '
+                         'tangent to the star; sets the mouth and the flare')
     ap.add_argument('--start-frac', type=float, default=0.25,
                     help='beam radius at the pole, in target radii')
     a = ap.parse_args()
 
-    spec = build(a.system, a.gap_deg, a.start_frac,
-                 a.funnel_scale, a.funnel_power)
+    spec = build(a.system, a.gap_deg, a.start_frac, a.tangent_deg)
     tx = float(spec['target_centre'][0])
     waist = min(r for _, r, _, _ in spec['path'])
 
@@ -179,8 +212,8 @@ def main():
          fat_knee, f'2. the apex at {spec["apex_in_R_star"]:.1f} R_star',
          f'curvature is continuous everywhere; beam x{fat_knee:.0f}'),
         ('flow', spec['star_radius'] * 3.4, np.array([0.0, spec['star_radius'] * 1.5, 0.0]),
-         1.0, '3. the funnel off the pole, true scale',
-         'amplitude derived, so it clears the pole with no collar'),
+         1.0, '3. the funnel, true scale',
+         f'tangent to the star at {spec["tangent_deg"]:.0f} deg from the pole'),
         ('flow', spec['target_radius'] * 3.2,
          spec['target_centre'] - np.array([spec['target_radius'] * 1.3, 0.0, 0.0]),
          1.0, '4. arrival, true scale',
@@ -208,8 +241,8 @@ def main():
             f"the apex there",
             fill=(186, 166, 158), font=fnt)
     dr.text((pad, 48),
-            f"wide at both ends: a funnel off the pole, widest it can be without breaking the "
-            f"star's surface, a "
+            f"wide at both ends: a funnel tangent to the star at "
+            f"{spec['tangent_deg']:.0f} deg from the pole (a cfg field), a "
             f"{spec['start_radius_m'] / 1e3:,.0f} km waist, then open again to "
             f"{spec['end_radius_m'] / 1e3:,.0f} km = the target's disc   |   "
             f"transit {spec['transit_s'] / 60:.1f} min at c, so the aim leads the *apparent* "

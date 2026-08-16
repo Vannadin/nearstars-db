@@ -584,8 +584,12 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   *Project Hail Mary* Petrova line, built to the same contract and sharing the tube
   renderer, as the first test that the machinery generalises past magnetic geometry. The
   path is **one continuous curve** — leaving along the spin axis, peaking where the target
-  is easiest to read, arriving on its bearing — with a beam opening to the target's
-  diameter. It needs no coefficient. The target's angular gap from the star's limb is
+  is easiest to read, arriving on its bearing — with a funnel at the star, a waist, and a
+  mouth opening to the target's diameter. The path needs no coefficient; the funnel takes
+  exactly one, `funnel_tangent_deg`, **settable per system from cfg**: the latitude from the
+  pole at which the funnel touches the star. Mouth, touch height and decay rate all follow
+  from it, because the decay is fixed by requiring the curve to leave the surface
+  *tangentially* rather than cut across it. 60° is the adopted default. The target's angular gap from the star's limb is
   **not monotonic** — climbing lifts it off the limb but also swings it toward the
   downward axis — so there is a best height, `H = √(R_star·a)`, the geometric mean of the
   star's radius and the orbit (12.5 R_☉ and 81° of clear sky for Sol → Venus), and the

@@ -164,23 +164,6 @@ def gap_band(R_star_m, a_m, frac=0.99, samples=40000):
     return lo, hi, H_best, g_best
 
 
-def _arc_to_target(H_lo, radius, a_m, iters=80):
-    """Circular arc leaving the axis at H_lo, tangent to the climb, turning
-    until it points at the target. Returns (centre, turn angle, exit point).
-
-    Tangency at both ends is what makes it read as one continuous line rather
-    than two segments with a fillet dropped over the join.
-    """
-    C = (radius, H_lo)
-    psi = math.pi / 2
-    for _ in range(iters):
-        E = (C[0] - radius * math.cos(psi), C[1] + radius * math.sin(psi))
-        # 목표 방위와 접선이 같아지는 psi 로 수렴시킨다.
-        psi = math.atan2(a_m - E[0], -E[1]) % (2 * math.pi)
-    E = (C[0] - radius * math.cos(psi), C[1] + radius * math.sin(psi))
-    return C, psi, E
-
-
 def aim_lead_m(a_m, v_orbit_m_s, speed_frac_c=1.0):
     """How far ahead of the *apparent* target position the beam must aim.
 
@@ -216,8 +199,7 @@ def _solve_control(P0, P2, apex_target, lo=None, hi=None):  # noqa: D401
 
 
 def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
-                 start_radius_m=None, steps=1400, funnel_scale=0.8,
-                 funnel_power=0.0):
+                 start_radius_m=None, steps=1400, funnel_tangent_deg=60.0):
     """The line as (point, radius) samples, in metres, star-centred.
 
     Frame: y is the spin axis, the target sits at x = a in the equatorial
@@ -233,6 +215,13 @@ def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
     fixes everything at once: it leaves the pole along the spin axis, it peaks
     where the target is easiest to read, it arrives on the target's bearing,
     and its curvature is continuous end to end.
+
+    `funnel_tangent_deg` is the latitude, measured from the pole, at which the
+    funnel touches the star. It is the shape's one free coefficient and is
+    meant to be set per system from cfg. Everything else about the funnel
+    follows from it: the mouth is R sin(phi), the touch height R cos(phi), and
+    the decay rate cos(phi) / (R sin^2(phi)) is whatever makes the curve leave
+    the surface tangentially rather than cutting across it.
 
     The cross-section is wide at **both** ends and narrow between. At the star
     it opens into a funnel a stellar radius across — the stream gathers off the
@@ -255,7 +244,9 @@ def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
     # 입이 극점 위에 지름 2 R_star 짜리 원반으로 떠서 테두리가 링으로 보인다.
     # 중심에서 시작하면 넓은 구간이 항성 안에 묻히고, 표면 위로 나오는 부분만
     # 깔때기로 읽힌다.
-    amplitude = funnel_amplitude(funnel_scale, funnel_power)
+    phi = math.radians(funnel_tangent_deg)
+    s_t, r_t = R_star_m * math.cos(phi), R_star_m * math.sin(phi)
+    rate = math.cos(phi) / (R_star_m * math.sin(phi) ** 2)
 
     P0 = (0.0, 0.0)
     # 도착점은 표면이 아니라 목표 중심 — 빔이 원반 전체를 덮는다는 서술과
@@ -283,53 +274,22 @@ def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
         w = f * f * (3 - 2 * f)
         beam = start_radius_m + (R_target_m - start_radius_m) * w
 
-        # 출발부: 항성에서 모여 극 위로 빠져나가는 깔때기.
+        # 출발부: 항성 표면에 **접하는** 깔때기.
         #
-        # 지수 감쇠 A e^{-y/L} 을 쓰되 A 는 고르지 않는다 — 항성을 스치며 지나가는
-        # 가장 조인 지수, 즉 0<=y<=R 에서 sqrt(R^2-y^2) 이상인 최소 A 로 잡는다.
-        # 그러면 아가리 너비가 L 하나에서 따라 나온다. 자유 계수는 L 뿐이다.
+        # 앞선 시도들은 전부 이음매가 안 매끄러웠다. 관을 별 안에 넣어 극에서만
+        # 내보내면 그 지점에서 벽이 표면과 90 도로 만나고, 넓게 내보내면 옆구리를
+        # 뚫고 나와 칼라가 생긴다. 어느 쪽이든 접선이 안 맞는다.
         #
-        # 그리고 극 아래에서는 항성 실루엣으로 잘라낸다. 자르지 않으면 관이 별을
-        # 감싸는 게 아니라 별보다 큰 반구를 극 위에 씌운 꼴이 된다(직접 보고 잡음).
-        # 감쇠는 높이가 아니라 **항성 중심으로부터의 거리**로 잰다. 높이로 재면
-        # 목표 지점에서 y 가 다시 0 이 되어 아가리가 재개방된다(패널이 통째로
-        # 주황이 되어 발견).
-        d_star = math.hypot(x, y)
-        u = d_star / R_star_m
-        # 지수 꼬리는 너무 빨리 사라져 목 위쪽이 실처럼 보인다. 거듭제곱 꼬리
-        # 1/(1+(u/L)^p) 는 초반 조임은 같고 꼬리만 두껍게 남는다(형상 선택).
-        # 진폭 A 는 고르지 않는다 — 극 전에 항성 표면을 뚫지 않는 최대값이다.
-        shape = (math.exp(-u / funnel_scale) if funnel_power <= 0
-                 else 1.0 / (1.0 + (u / funnel_scale) ** funnel_power))
-        funnel = amplitude * R_star_m * shape
+        # 깔때기: 항성 표면에 접하는 지수. 호길이로 재므로 경로가 휘면 같이 휜다.
+        # 별 근처에서는 경로가 사실상 수직이라 s ~= y 이고, 접선 조건이 그대로
+        # 성립한다. 접점 아래(s < s_t)는 별 자신이 채우므로 그리지 않는다.
+        if run >= s_t:
+            funnel = r_t * math.exp(-(run - s_t) * rate)
+        else:
+            funnel = 0.0
 
-        # 부드러운 최대값으로 두 항을 잇는다 — 단순 max 는 이음매에 각이 생긴다.
-        # 두 항을 따로 들고 나간다: 렌더러가 실 같은 beam 만 굵게 그릴 수 있어야
-        # 하고, 이미 항성만 한 funnel 까지 같이 부풀리면 그림이 무너진다.
         path.append(((x, y, 0.0), combine_radius(funnel, beam), funnel, beam))
     return path, H_best
-
-
-def funnel_amplitude(L_in_R, power=0.0, samples=4000, edge=0.99):
-    """The widest funnel that does not break the star's surface before the pole.
-
-    A solid tube emerging through a sphere always shows a rim, and if it
-    emerges well below the pole that rim is a wide collar with a visible crease
-    — a fillet cannot hide it, because the two surfaces cross at a shallow
-    angle over a long arc rather than meeting at an edge. Keeping the profile
-    inside the silhouette until the pole moves the crossing to a point, where
-    there is nothing to see.
-
-    So the amplitude is not chosen: it is the largest A with
-    A f(d) <= sqrt(R^2 - d^2) on the star, and it comes out the same 0.14 R
-    at the pole for every shape, since that constraint is what binds. Only the
-    tail is a choice.
-    """
-    def shape(u):
-        return (math.exp(-u / L_in_R) if power <= 0
-                else 1.0 / (1.0 + (u / L_in_R) ** power))
-    return min(math.sqrt(1 - u * u) / shape(u)
-               for u in (i / samples * edge for i in range(1, samples + 1)))
 
 
 def combine_radius(funnel, beam, n=4.0):
