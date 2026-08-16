@@ -317,7 +317,17 @@ NearStars consequences (we do not run their full Bayesian machinery):
    evolutionary-model radius where curated (Filippazzo et al. 2015,
    [`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F)).
    Propagate the full radius range into the i★ bracket.
-4. **No period, or no v sin i**: the recipe does not apply. An isotropic
+4. **Slow rotators, v_eq ≲ 2–2.5 km/s**: the recipe fails *in principle*, not
+   just in precision — spectroscopic v sin i is unreliable below ~2–2.5 km/s
+   (turbulent/instrumental broadening dominates; Dumusque 2014,
+   [`2014ApJ...796..133D`](https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D)),
+   and slow rotators sit entirely under that floor. Use an alternative route:
+   activity/RV modeling (SOAP — Dumusque 2014's α Cen B i★ = 45°(+9/−19)) or
+   Zeeman-Doppler imaging (Klein 2021's Proxima i★ = 47°±7°). NearStars
+   examples: α Cen B (v_eq 1.07 km/s) and Proxima (0.085 km/s) — both keep
+   their measured alternative-route values; the combination method cannot
+   check them.
+5. **No period, or no v sin i**: the recipe does not apply. An isotropic
    prior (flat in cos i★) is the honest state; any adopted orientation is an
    owner art choice (owner-override), not a derivation.
 
@@ -355,6 +365,18 @@ node/direction convention, 180° − 100.26° = 79.74°). Apai 2021 note the two
 spin axes and the orbit normal "may be well aligned" — three planes within
 ~28° of each other, with no evidence for misalignment.
 
+## Worked example — α Centauri A (regime-2 star)
+
+Inputs: v sin i 2.7 ± 0.7 km/s (Saar & Osten 1997), P 22 ± 3 d (DeWarf 2010,
+DB recommended), R 1.2234 R☉ (Kervella 2017). v_eq = 2.81 km/s (2.48–3.26
+over the period range) → sin i★ = 0.96 nominal → **i★ ≈ 74°, bracket
+38°–90°** (edge-to-edge). Consistent with spin-orbit alignment (AB orbital
+inclination 79°); Bazot et al. 2007 ran the same relation in reverse —
+assuming i = 79° alignment, v sin i predicts P = 22.5 ± 5.9 d, matching the
+photometric 22 d. The two directions closing on the same numbers is the
+cross-check. Contrast the companions: α Cen B (v_eq 1.07 km/s) and Proxima
+(0.085 km/s) are regime-4 slow rotators where this recipe cannot run.
+
 ## Citations
 
 - **Vos, Allers & Biller 2017**, ApJ 842, 78 ([`2017ApJ...842...78V`](https://ui.adsabs.harvard.edu/abs/2017ApJ...842...78V),
@@ -380,6 +402,14 @@ spin axes and the orbit normal "may be well aligned" — three planes within
 - **Filippazzo et al. 2015**, ApJ 810, 158 ([`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F),
   arXiv [1508.01767](https://arxiv.org/abs/1508.01767)). Per-object
   evolutionary-model radii, preferred over the generic bracket when curated.
+- **Dumusque 2014**, ApJ 796, 133 ([`2014ApJ...796..133D`](https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D),
+  arXiv [1409.3593](https://arxiv.org/abs/1409.3593)). The slow-rotator floor
+  (v sin i unreliable below ~2–2.5 km/s) and the SOAP alternative route
+  (α Cen B i★ = 45°).
+- **Saar & Osten 1997**, MNRAS 284, 803 ([`1997MNRAS.284..803S`](https://ui.adsabs.harvard.edu/abs/1997MNRAS.284..803S)).
+  v sin i for α Cen A (2.7 ± 0.7 km/s; quoted verbatim in the cached Bazot
+  2007, arXiv [0706.1682](https://arxiv.org/abs/0706.1682)). *1997 MNRAS, no
+  arXiv preprint*: verified by bibcode + the cached secondary quote.
 - **Bedin et al. 2017**, MNRAS 470, 1140 ([`2017MNRAS.470.1140B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.1140B),
   arXiv [1706.00657](https://arxiv.org/abs/1706.00657)). Luhman 16 AB orbital
   inclination used in the spin-orbit alignment note.
@@ -470,7 +500,16 @@ NearStars에서의 귀결(전체 베이지언 계산은 돌리지 않습니다).
    진화모델 반지름(Filippazzo et al. 2015,
    [`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F))을
    우선합니다. 반지름 범위 전체를 i★ 구간에 전파합니다.
-4. **주기나 v sin i가 없는 경우**: 레시피가 적용되지 않습니다. 등방 사전분포
+4. **느린 회전자, v_eq ≲ 2–2.5 km/s**: 정밀도 문제가 아니라 *원리적으로*
+   레시피가 무너집니다. 분광 v sin i는 ~2–2.5 km/s 아래에서 신뢰할 수
+   없고(난류·기기 선폭이 지배, Dumusque 2014,
+   [`2014ApJ...796..133D`](https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D)),
+   느린 회전자는 통째로 그 바닥 밑에 있습니다. 대체 경로를 씁니다 —
+   활동/시선속도 모델링(SOAP: Dumusque 2014의 α Cen B i★ = 45°(+9/−19))
+   또는 Zeeman-Doppler 이미징(Klein 2021의 Proxima i★ = 47°±7°).
+   NearStars 사례: α Cen B(v_eq 1.07 km/s)와 Proxima(0.085 km/s)는 측정된
+   대체 경로 값을 유지하며, 결합법으로는 검증 자체가 불가능합니다.
+5. **주기나 v sin i가 없는 경우**: 레시피가 적용되지 않습니다. 등방 사전분포
    (cos i★ 평탄)가 정직한 상태이며, 그 위에 얹는 배향은 도출이 아니라 오너
    아트 선택(owner-override)입니다.
 
@@ -506,6 +545,17 @@ Sahlmann 2018 궤도의 100.26°는 노드/방향 규약이 반대인 같은 평
 있을 수 있다"고 적습니다 — 세 평면이 서로 ~28° 안에 있고, 비정렬의 증거는
 없습니다.
 
+## 계산 예 — α Centauri A (분기 2의 항성)
+
+입력: v sin i 2.7 ± 0.7 km/s (Saar & Osten 1997), P 22 ± 3일 (DeWarf 2010,
+DB recommended), R 1.2234 R☉ (Kervella 2017). v_eq = 2.81 km/s(주기 범위에서
+2.48–3.26) → 명목 sin i★ = 0.96 → **i★ ≈ 74°, 구간 38°–90°**(끝값 전파).
+자전-궤도 정렬(AB 궤도 경사 79°)과 정합합니다. Bazot et al. 2007은 같은
+관계식을 거꾸로 돌렸습니다 — i = 79° 정렬을 가정하면 v sin i가 P = 22.5 ±
+5.9일을 예측하고, 측광 22일과 맞습니다. 양방향이 같은 숫자로 닫히는 것이
+교차검증입니다. 동반성들과 대비하면, α Cen B(v_eq 1.07 km/s)와 Proxima
+(0.085 km/s)는 이 레시피가 돌 수 없는 분기 4의 느린 회전자입니다.
+
 ## 인용
 
 - **Vos, Allers & Biller 2017**, ApJ 842, 78 ([`2017ApJ...842...78V`](https://ui.adsabs.harvard.edu/abs/2017ApJ...842...78V),
@@ -528,6 +578,14 @@ Sahlmann 2018 궤도의 100.26°는 노드/방향 규약이 반대인 같은 평
 - **Filippazzo et al. 2015**, ApJ 810, 158 ([`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F),
   arXiv [1508.01767](https://arxiv.org/abs/1508.01767)). 천체별 진화모델
   반지름 — 큐레이션돼 있으면 일반 구간보다 우선.
+- **Dumusque 2014**, ApJ 796, 133 ([`2014ApJ...796..133D`](https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D),
+  arXiv [1409.3593](https://arxiv.org/abs/1409.3593)). 느린 회전자 바닥
+  (v sin i는 ~2–2.5 km/s 아래에서 신뢰 불가)과 SOAP 대체 경로
+  (α Cen B i★ = 45°).
+- **Saar & Osten 1997**, MNRAS 284, 803 ([`1997MNRAS.284..803S`](https://ui.adsabs.harvard.edu/abs/1997MNRAS.284..803S)).
+  α Cen A의 v sin i(2.7 ± 0.7 km/s; 캐시된 Bazot 2007,
+  arXiv [0706.1682](https://arxiv.org/abs/0706.1682)가 원문 인용). *1997
+  MNRAS, arXiv 프리프린트 없음*: bibcode + 캐시된 2차 인용으로 검증.
 - **Bedin et al. 2017**, MNRAS 470, 1140 ([`2017MNRAS.470.1140B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.1140B),
   arXiv [1706.00657](https://arxiv.org/abs/1706.00657)). 자전-궤도 정렬
   노트에 쓴 Luhman 16 AB 궤도 경사.

@@ -80,7 +80,17 @@ NearStars consequences (we do not run their full Bayesian machinery):
    evolutionary-model radius where curated (Filippazzo et al. 2015,
    [`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F)).
    Propagate the full radius range into the i★ bracket.
-4. **No period, or no v sin i**: the recipe does not apply. An isotropic
+4. **Slow rotators, v_eq ≲ 2–2.5 km/s**: the recipe fails *in principle*, not
+   just in precision — spectroscopic v sin i is unreliable below ~2–2.5 km/s
+   (turbulent/instrumental broadening dominates; Dumusque 2014,
+   [`2014ApJ...796..133D`](https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D)),
+   and slow rotators sit entirely under that floor. Use an alternative route:
+   activity/RV modeling (SOAP — Dumusque 2014's α Cen B i★ = 45°(+9/−19)) or
+   Zeeman-Doppler imaging (Klein 2021's Proxima i★ = 47°±7°). NearStars
+   examples: α Cen B (v_eq 1.07 km/s) and Proxima (0.085 km/s) — both keep
+   their measured alternative-route values; the combination method cannot
+   check them.
+5. **No period, or no v sin i**: the recipe does not apply. An isotropic
    prior (flat in cos i★) is the honest state; any adopted orientation is an
    owner art choice (owner-override), not a derivation.
 
@@ -118,6 +128,18 @@ node/direction convention, 180° − 100.26° = 79.74°). Apai 2021 note the two
 spin axes and the orbit normal "may be well aligned" — three planes within
 ~28° of each other, with no evidence for misalignment.
 
+## Worked example — α Centauri A (regime-2 star)
+
+Inputs: v sin i 2.7 ± 0.7 km/s (Saar & Osten 1997), P 22 ± 3 d (DeWarf 2010,
+DB recommended), R 1.2234 R☉ (Kervella 2017). v_eq = 2.81 km/s (2.48–3.26
+over the period range) → sin i★ = 0.96 nominal → **i★ ≈ 74°, bracket
+38°–90°** (edge-to-edge). Consistent with spin-orbit alignment (AB orbital
+inclination 79°); Bazot et al. 2007 ran the same relation in reverse —
+assuming i = 79° alignment, v sin i predicts P = 22.5 ± 5.9 d, matching the
+photometric 22 d. The two directions closing on the same numbers is the
+cross-check. Contrast the companions: α Cen B (v_eq 1.07 km/s) and Proxima
+(0.085 km/s) are regime-4 slow rotators where this recipe cannot run.
+
 ## Citations
 
 - **Vos, Allers & Biller 2017**, ApJ 842, 78 ([`2017ApJ...842...78V`](https://ui.adsabs.harvard.edu/abs/2017ApJ...842...78V),
@@ -143,6 +165,14 @@ spin axes and the orbit normal "may be well aligned" — three planes within
 - **Filippazzo et al. 2015**, ApJ 810, 158 ([`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F),
   arXiv [1508.01767](https://arxiv.org/abs/1508.01767)). Per-object
   evolutionary-model radii, preferred over the generic bracket when curated.
+- **Dumusque 2014**, ApJ 796, 133 ([`2014ApJ...796..133D`](https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D),
+  arXiv [1409.3593](https://arxiv.org/abs/1409.3593)). The slow-rotator floor
+  (v sin i unreliable below ~2–2.5 km/s) and the SOAP alternative route
+  (α Cen B i★ = 45°).
+- **Saar & Osten 1997**, MNRAS 284, 803 ([`1997MNRAS.284..803S`](https://ui.adsabs.harvard.edu/abs/1997MNRAS.284..803S)).
+  v sin i for α Cen A (2.7 ± 0.7 km/s; quoted verbatim in the cached Bazot
+  2007, arXiv [0706.1682](https://arxiv.org/abs/0706.1682)). *1997 MNRAS, no
+  arXiv preprint*: verified by bibcode + the cached secondary quote.
 - **Bedin et al. 2017**, MNRAS 470, 1140 ([`2017MNRAS.470.1140B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.1140B),
   arXiv [1706.00657](https://arxiv.org/abs/1706.00657)). Luhman 16 AB orbital
   inclination used in the spin-orbit alignment note.
