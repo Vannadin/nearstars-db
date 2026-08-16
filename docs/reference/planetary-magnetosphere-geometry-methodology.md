@@ -896,11 +896,39 @@ Saturn **1.35**, Earth **1.05** — the inverse ordering of their α. Jupiter's 
 orders of magnitude stronger a plasma source than Saturn's Enceladus, so its disc inflates
 more and its relative flaring is lower.
 
-One caveat is open. Saturn's 0.736 exceeds Earth's 0.58, which is odd for a
-rotation-dominated giant, and Saturn is also the only body of the three whose flaring
-*decreases* with rising dynamic pressure. The value itself is solid — two independent fits
-with opposite pressure signs agree to four figures (Arridge 0.7356, Kanani 0.7358) — but the
-coefficients behind the pressure dependence are in paywalled text we have not pulled.
+**Saturn's coefficients, pulled 2026-08-16.** They were previously logged as unavailable;
+both papers are in the local cache. Arridge 2006 fits `r₀ = a₁·Dp^(−a₂)` and `K = a₃ + a₄·Dp`
+with `K` the Shue exponent, and Kanani 2010 prints both models side by side:
+
+| coefficient | Arridge 2006 | Kanani 2010 |
+|---|---|---|
+| a₁ | 9.7 ± 1.0 | 10.3 ± 1.7 |
+| a₂ | 0.24 ± 0.02 | 0.20 ± 0.03 |
+| a₃ | 0.77 ± 0.03 | 0.73 ± 0.07 |
+| a₄ | **−1.5 ± 0.3** | **+0.4 ± 0.5** |
+
+Our recorded 0.736 reproduces exactly: at the 0.0229 nPa that also reproduces the 24 R_S
+nose, `K` = 0.77 − 1.5 × 0.0229 = **0.7357**.
+
+Two corrections come with them. The pair has been described here as "two independent fits
+with opposite pressure signs"; that overstates it. Kanani's `a₄` = +0.4 ± 0.5 has an
+uncertainty larger than the value, so it is not a measurement of the opposite sign but a
+non-detection. What genuinely cross-validates is the *intercept*: `a₃` agrees within error
+(0.77 against 0.73), and at Saturn's low orbital ram the `a₄` term contributes only −0.034
+against +0.009, so both fits land near α ≈ 0.74 regardless.
+
+And the magnetodisc-inflation story above explains Jupiter against Saturn but **not** Saturn
+against Earth: Saturn is the more inflated of those two (1.35 against 1.05) and yet has the
+larger α. `a₃` = 0.77 is an intrinsic flaring at zero pressure, and Saturn simply has more
+of it. Arridge attributes that to the stress distribution rather than to size, reading it as
+"a different distribution of fields and particles stresses which has more in common with the
+jovian magnetosphere compared with the terrestrial situation" — that is, Saturn's *pressure
+response* is Jupiter-like, which is a separate statement from where its α sits.
+
+One number does follow from the relation and is worth having: `K` reaches the cylindrical
+0.5 at Dp = **0.18 nPa**, eight times Saturn's orbital value. Saturn's tail is a flaring
+funnel at every pressure it actually experiences, and would only taper under a wind it never
+sees.
 
 **Fitted α by body.** Use a published α wherever one exists; only fall back to the
 compression conversion when none does, and say so.

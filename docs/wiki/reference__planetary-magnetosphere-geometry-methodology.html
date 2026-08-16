@@ -1132,11 +1132,39 @@ Saturn **1.35**, Earth **1.05** — the inverse ordering of their α. Jupiter's 
 orders of magnitude stronger a plasma source than Saturn's Enceladus, so its disc inflates
 more and its relative flaring is lower.
 
-One caveat is open. Saturn's 0.736 exceeds Earth's 0.58, which is odd for a
-rotation-dominated giant, and Saturn is also the only body of the three whose flaring
-*decreases* with rising dynamic pressure. The value itself is solid — two independent fits
-with opposite pressure signs agree to four figures (Arridge 0.7356, Kanani 0.7358) — but the
-coefficients behind the pressure dependence are in paywalled text we have not pulled.
+**Saturn's coefficients, pulled 2026-08-16.** They were previously logged as unavailable;
+both papers are in the local cache. Arridge 2006 fits `r₀ = a₁·Dp^(−a₂)` and `K = a₃ + a₄·Dp`
+with `K` the Shue exponent, and Kanani 2010 prints both models side by side:
+
+| coefficient | Arridge 2006 | Kanani 2010 |
+|---|---|---|
+| a₁ | 9.7 ± 1.0 | 10.3 ± 1.7 |
+| a₂ | 0.24 ± 0.02 | 0.20 ± 0.03 |
+| a₃ | 0.77 ± 0.03 | 0.73 ± 0.07 |
+| a₄ | **−1.5 ± 0.3** | **+0.4 ± 0.5** |
+
+Our recorded 0.736 reproduces exactly: at the 0.0229 nPa that also reproduces the 24 R_S
+nose, `K` = 0.77 − 1.5 × 0.0229 = **0.7357**.
+
+Two corrections come with them. The pair has been described here as "two independent fits
+with opposite pressure signs"; that overstates it. Kanani's `a₄` = +0.4 ± 0.5 has an
+uncertainty larger than the value, so it is not a measurement of the opposite sign but a
+non-detection. What genuinely cross-validates is the *intercept*: `a₃` agrees within error
+(0.77 against 0.73), and at Saturn's low orbital ram the `a₄` term contributes only −0.034
+against +0.009, so both fits land near α ≈ 0.74 regardless.
+
+And the magnetodisc-inflation story above explains Jupiter against Saturn but **not** Saturn
+against Earth: Saturn is the more inflated of those two (1.35 against 1.05) and yet has the
+larger α. `a₃` = 0.77 is an intrinsic flaring at zero pressure, and Saturn simply has more
+of it. Arridge attributes that to the stress distribution rather than to size, reading it as
+"a different distribution of fields and particles stresses which has more in common with the
+jovian magnetosphere compared with the terrestrial situation" — that is, Saturn's *pressure
+response* is Jupiter-like, which is a separate statement from where its α sits.
+
+One number does follow from the relation and is worth having: `K` reaches the cylindrical
+0.5 at Dp = **0.18 nPa**, eight times Saturn's orbital value. Saturn's tail is a flaring
+funnel at every pressure it actually experiences, and would only taper under a wind it never
+sees.
 
 **Fitted α by body.** Use a published α wherever one exists; only fall back to the
 compression conversion when none does, and say so.
@@ -2238,10 +2266,35 @@ Chapman–Ferraro 예측과 견주면 팽창비가 목성 **1.58**, 토성 **1.3
 정확히 역입니다. 목성의 Io 토러스가 토성의 엔켈라두스보다 몇 자릿수 강한 플라스마 공급원이라 디스크가
 더 부풀고 상대 벌어짐이 더 낮습니다.
 
-미결이 하나 있습니다. 토성의 0.736 은 지구의 0.58 을 넘는데, 자전 지배 자이언트치고 의외이고, 셋 중
-유일하게 동압이 오를 때 벌어짐이 *감소*하는 천체이기도 합니다. 값 자체는 튼튼합니다 — 압력 의존
-부호가 반대인 두 독립 피팅이 네 자리까지 일치합니다(Arridge 0.7356, Kanani 0.7358). 다만 그 압력
-의존의 계수는 아직 못 읽은 유료 전문에 있습니다.
+**토성 계수, 2026-08-16 확보.** 이전에는 접근 불가로 기록돼 있었으나 두 논문 모두 로컬 캐시에
+있었습니다. Arridge 2006 은 `r₀ = a₁·Dp^(−a₂)` 와 `K = a₃ + a₄·Dp` 를 피팅하며 `K` 가 Shue 지수이고,
+Kanani 2010 이 두 모델을 나란히 싣습니다.
+
+| 계수 | Arridge 2006 | Kanani 2010 |
+|---|---|---|
+| a₁ | 9.7 ± 1.0 | 10.3 ± 1.7 |
+| a₂ | 0.24 ± 0.02 | 0.20 ± 0.03 |
+| a₃ | 0.77 ± 0.03 | 0.73 ± 0.07 |
+| a₄ | **−1.5 ± 0.3** | **+0.4 ± 0.5** |
+
+우리 기록 0.736 이 정확히 재현됩니다. 노즈 24 R_S 를 재현하는 것과 같은 0.0229 nPa 에서
+`K` = 0.77 − 1.5 × 0.0229 = **0.7357** 입니다.
+
+정정이 둘 따라옵니다. 이 두 피팅을 여기서 "압력 의존 부호가 반대인 두 독립 피팅"으로 적어 왔는데,
+과한 표현이었습니다. Kanani 의 `a₄` = +0.4 ± 0.5 는 불확실도가 값보다 커서, 반대 부호의 측정이
+아니라 비검출입니다. 실제로 교차검증되는 것은 *절편* 입니다. `a₃` 가 오차 안에서 일치하고(0.77 대
+0.73), 토성의 낮은 궤도 램압에서는 `a₄` 항의 기여가 −0.034 대 +0.009 에 그쳐 두 피팅 모두 α ≈ 0.74
+근처에 떨어집니다.
+
+그리고 위의 magnetodisc 팽창 설명은 목성 대 토성은 설명하지만 토성 대 지구는 **설명하지 못합니다**.
+둘 중에서는 토성이 더 부풀었는데(1.35 대 1.05) α 도 더 큽니다. `a₃` = 0.77 은 압력 0 에서의 고유
+벌어짐이고, 토성은 그것을 더 많이 가졌을 뿐입니다. Arridge 는 그 원인을 크기가 아니라 응력 분포로
+돌리며 "지구 상황보다 목성 자기권과 공통점이 많은, 다른 장·입자 응력 분포"로 읽습니다. 즉 토성의
+*압력 응답* 이 목성형이라는 말이고, α 가 어디에 놓이는가와는 별개의 진술입니다.
+
+관계식에서 따라 나오는 숫자 하나는 챙길 만합니다. `K` 가 원기둥 값 0.5 에 도달하는 압력이
+**0.18 nPa** 로, 토성 궤도값의 여덟 배입니다. 토성 꼬리는 실제로 겪는 모든 압력에서 벌어지는
+깔때기이고, 겪을 일 없는 바람에서나 좁아집니다.
 
 **바디별 적합 α.** 발표된 α가 있으면 그것을 쓰고, 없을 때만 compression 환산으로 내려가되 그
 사실을 밝히십시오.
