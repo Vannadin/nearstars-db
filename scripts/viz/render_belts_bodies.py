@@ -283,11 +283,7 @@ BODIES={
    #   pause_radius = 노즈·2^α = 14.9485, compression = 2^α = 1.4948,
    #   extension = pause_radius/(150·노즈) = 0.0099653  ← L = 150×노즈 관례(도출 아님).
    'pause':{'radiation':-0.01,'rad':14.9485,'comp':1.4948,'ext':0.0099653,'hscale':1.0,
-            'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500,'shue_alpha_night':0.52,
-            # 야간면 α 를 주간면과 분리한다(오너 아트 결정 2026-08-16). 0.52 는 α=0.5 원기둥
-            #   임계 바로 위라 꼬리가 거의 원기둥으로 뻗다가 스스로 닫힌다. Slavin 1985 가 재는
-            #   x=−120 R_E 반경 30 대비 0.58 은 −6.4%, 0.52 는 −26.9% — 실측 정합을 내주고
-            #   뒤쪽 부피를 줄이는 교환이다. 0.48 안은 −40% 라 기각했다.
+            'shue_alpha':0.58,'shue_nose':10,'shue_tail':1500,
             # ⚗ 플러그인 Deliverable 1(일반화 스톡 pause) 채택 시의 한 세트.
             #   compression 을 버리고 waist 로 최대폭 지점을 꼬리쪽으로 옮긴다 — 스톡이 그 지점을
             #   x=0 에 못 박는 것이 Shue 대비 최대 오차원이었다. rms 6.094 → 3.101.

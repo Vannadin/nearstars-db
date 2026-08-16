@@ -614,6 +614,39 @@ Every shipped stock and ROKerbalism pause underrepresents tail width the same wa
 not a NearStars quirk.
 
 
+## Night-side alpha, trialled and rolled back
+
+Tried 2026-08-16, rejected the same day. The aim was art: reduce the tail width behind the
+planet, which the owner found too fat, by giving the night side a lower Shue α than the
+fitted dayside value.
+
+Three variants were built and measured against Slavin 1985's 30 R_E radius at x = −120 R_E,
+the only place a planetary tail width is actually measured:
+
+| variant | how α is blended | width at x = −120 | vs measured |
+|---|---|---|---|
+| single α 0.58 | — | 27.9 | −7.0% |
+| night α 0.48, by angle | smoothstep over θ 90°→180° | ~18.0 | −40.1% |
+| night α 0.52, by angle | same | 22.1 | −26.5% |
+| night α 0.52, by distance, onset at 0.66 L | untouched until 34% down the tail | 27.9 | −7.0% |
+| night α 0.52, by distance, complete by 0.66 L | blend finishes 34% down the tail | 27.0 | −10.1% |
+
+The angle-based blend was the original implementation and is the reason the boundary
+appeared to pinch immediately behind the planet: most of the θ 90°→180° range maps to the
+near tail, so at θ = 120° (x = −11 R_E for Earth) the blend is already 33% applied. Moving
+the blend onto downtail *distance* fixes that, and either distance variant keeps the Slavin
+agreement.
+
+It still did not look right, and the reason turned out not to be α at all. The softened
+Shue closure taper is fixed at `m` = 1, which spreads the closing over half the tail — the
+width is already down 19% at 70% of L. That, not the α blend, is what reads as "narrowing in
+the middle". Raising `m` holds the width out to 80% of L and then closes sharply, but `m` is
+pinned at 1 by an earlier owner decision and reopening it was out of scope.
+
+Rolled back in full: every body keeps a single α, and the night-side slider stays in the
+viewer as an exploration knob with no body setting it. The `m` finding is the one to pick up
+if this is revisited.
+
 ## Citations (ADS-pinned, by body)
 
 - **Jupiter**: Joy 2002 [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J); Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D);

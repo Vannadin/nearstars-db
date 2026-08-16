@@ -871,17 +871,15 @@ dayside, so giants need α re-tuned after conversion rather than converted blind
 fitted in the Shue form. That was wrong and is retracted — see the fitted α table
 below.)
 
-**Night-side α is a separate knob, and Earth uses it.** `α` = 0.5 is exactly the
-cylindrical-tail threshold — width goes as `u^(1−2α)` for `u = π − θ`, so below 0.5 the tail
-closes on its own and above it flares without limit. That threshold is not an abstraction:
-Slavin 1985 measures Earth's distant tail as a *cylinder*, `B_L` 9.2 nT and 60 R_E diameter
-constant from 120 to 225 R_E, which is the α = 0.5 behaviour.
+**α = 0.5 is the cylindrical-tail threshold**, and it is not an abstraction: width goes as
+`u^(1−2α)` for `u = π − θ`, so below 0.5 the tail closes on its own and above it flares
+without limit. Slavin 1985 measures Earth's distant tail as a *cylinder* — `B_L` 9.2 nT and
+60 R_E diameter constant from 120 to 225 R_E — which is the α = 0.5 behaviour.
 
-Earth therefore carries `shue_alpha_night` = **0.52** (owner art decision 2026-08-16),
-just above the threshold: the tail runs near-cylindrical and then shuts by itself, without
-leaning on the `ε` softening term. The cost is measured — against Slavin's 30 R_E radius at
-x = −120 R_E the dayside α of 0.58 gives 28.1 (−6.4%) and 0.52 gives 21.9 (−26.9%). A
-proposal of 0.48 was rejected at −40.1%.
+A separate night-side α was trialled against that threshold on 2026-08-16 and rolled back;
+see the derivation record
+([solar-system-radiation-belts.md](solar-system-radiation-belts.md#night-side-alpha-trialled-and-rolled-back)).
+Every body keeps a single α.
 
 **The two giants sit on opposite sides of that threshold, which is why they look nothing
 alike.** Jupiter's fitted 0.423 puts the exponent at +0.154, so its tail tapers to a point:

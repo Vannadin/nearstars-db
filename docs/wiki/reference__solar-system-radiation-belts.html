@@ -850,6 +850,39 @@ Every shipped stock and ROKerbalism pause underrepresents tail width the same wa
 not a NearStars quirk.
 
 
+## Night-side alpha, trialled and rolled back
+
+Tried 2026-08-16, rejected the same day. The aim was art: reduce the tail width behind the
+planet, which the owner found too fat, by giving the night side a lower Shue α than the
+fitted dayside value.
+
+Three variants were built and measured against Slavin 1985's 30 R_E radius at x = −120 R_E,
+the only place a planetary tail width is actually measured:
+
+| variant | how α is blended | width at x = −120 | vs measured |
+|---|---|---|---|
+| single α 0.58 | — | 27.9 | −7.0% |
+| night α 0.48, by angle | smoothstep over θ 90°→180° | ~18.0 | −40.1% |
+| night α 0.52, by angle | same | 22.1 | −26.5% |
+| night α 0.52, by distance, onset at 0.66 L | untouched until 34% down the tail | 27.9 | −7.0% |
+| night α 0.52, by distance, complete by 0.66 L | blend finishes 34% down the tail | 27.0 | −10.1% |
+
+The angle-based blend was the original implementation and is the reason the boundary
+appeared to pinch immediately behind the planet: most of the θ 90°→180° range maps to the
+near tail, so at θ = 120° (x = −11 R_E for Earth) the blend is already 33% applied. Moving
+the blend onto downtail *distance* fixes that, and either distance variant keeps the Slavin
+agreement.
+
+It still did not look right, and the reason turned out not to be α at all. The softened
+Shue closure taper is fixed at `m` = 1, which spreads the closing over half the tail — the
+width is already down 19% at 70% of L. That, not the α blend, is what reads as "narrowing in
+the middle". Raising `m` holds the width out to 80% of L and then closes sharply, but `m` is
+pinned at 1 by an earlier owner decision and reopening it was out of scope.
+
+Rolled back in full: every body keeps a single α, and the night-side slider stays in the
+viewer as an exploration knob with no body setting it. The `m` finding is the one to pick up
+if this is revisited.
+
 ## Citations (ADS-pinned, by body)
 
 - **Jupiter**: Joy 2002 [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J); Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D);
@@ -1447,6 +1480,34 @@ Every shipped stock and ROKerbalism pause underrepresents tail width the same wa
 (Earth flank 15 vs an observed 25–30 R_E tail radius), so this is a general defect,
 not a NearStars quirk.
 
+
+## Night-side alpha, trialled and rolled back
+
+2026-08-16 시도, 같은 날 기각. 목적은 아트였습니다. 오너가 행성 뒤 꼬리가 너무 뚱뚱하다고 보아,
+야간면에 주간면 피팅값보다 낮은 Shue α 를 주어 폭을 줄이려 했습니다.
+
+세 변형을 만들어, 행성 꼬리 폭이 실제로 측정된 유일한 지점인 Slavin 1985 의 x = −120 R_E 반경 30 에
+견주었습니다.
+
+| 변형 | α 혼합 방식 | x = −120 폭 | 실측 대비 |
+|---|---|---|---|
+| 단일 α 0.58 | — | 27.9 | −7.0% |
+| 야간 0.48, 각도 기준 | θ 90°→180° smoothstep | ~18.0 | −40.1% |
+| 야간 0.52, 각도 기준 | 같음 | 22.1 | −26.5% |
+| 야간 0.52, 거리 기준, 0.66 L 에서 시작 | 꼬리 34% 지점까지 무손상 | 27.9 | −7.0% |
+| 야간 0.52, 거리 기준, 0.66 L 에서 완료 | 꼬리 34% 지점에서 혼합 종료 | 27.0 | −10.1% |
+
+각도 기준 혼합이 원래 구현이었고, 경계가 행성 바로 뒤에서 좁아지는 것처럼 보이던 원인입니다.
+θ 90°→180° 의 대부분이 근꼬리에 대응해, θ = 120°(지구 x = −11 R_E)에서 이미 혼합이 33% 진행됩니다.
+혼합을 하류 *거리* 로 옮기면 그 쏠림이 사라지고, 거리 기준 두 변형 모두 Slavin 정합을 지킵니다.
+
+그래도 보기 좋지 않았고, 원인은 α 가 아니었습니다. 연화 Shue 의 닫힘 테이퍼가 `m` = 1 로 고정돼 있어
+닫힘이 꼬리 절반에 걸쳐 진행됩니다 — L 의 70% 지점에서 이미 폭이 19% 줄어듭니다. "중간에서 좁아진다"고
+읽히는 것은 α 혼합이 아니라 그것입니다. `m` 을 키우면 L 의 80% 까지 폭을 유지하다 급히 닫히지만,
+`m` 은 이전 오너 결정으로 1 에 고정돼 있어 다시 여는 것은 범위 밖이었습니다.
+
+전면 롤백. 모든 천체가 단일 α 를 유지하고, 야간면 슬라이더는 어떤 천체도 설정하지 않는 탐색용 노브로
+뷰어에 남습니다. 다시 볼 일이 생기면 집어들 것은 `m` 쪽입니다.
 
 ## 인용 (ADS 핀, 바디별)
 
