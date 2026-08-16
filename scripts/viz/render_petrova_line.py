@@ -187,12 +187,43 @@ def main():
     ap.add_argument('--gap-deg', type=float, default=None,
                     help='force a limb gap instead of using the height of '
                          'maximum clearance (the derived default)')
+    ap.add_argument('--gain', type=float, default=9.0,
+                    help='emission gain for the aurora fill')
+    ap.add_argument('--aurora', action='store_true',
+                    help='emission-only volumetric fill instead of a surface')
     ap.add_argument('--tangent-deg', type=float, default=60.0,
                     help='latitude from the pole at which the funnel is '
                          'tangent to the star; sets the mouth and the flare')
     ap.add_argument('--start-frac', type=float, default=0.25,
                     help='beam radius at the pole, in target radii')
     a = ap.parse_args()
+
+    if a.aurora:
+        spec = build(a.system, a.gap_deg, a.start_frac, a.tangent_deg)
+        ext = render_aurora(spec, 'flow', spec['star_radius'] * 4.6, a.size,
+                            np.array([0.0, spec['star_radius'] * 2.4, 0.0]),
+                            gain=a.gain)
+        ins = render_aurora_interior(spec, at_arc=2.4, size=a.size, depth=7.0,
+                                     gain=a.gain)
+        pad = 10
+        sheet = Image.new('RGB', (a.size * 2 + pad * 3, a.size + pad * 2 + 34),
+                          (8, 9, 14))
+        from PIL import ImageDraw, ImageFont
+        try:
+            fnt = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 12)
+        except OSError:                                   # pragma: no cover
+            fnt = ImageFont.load_default()
+        dr = ImageDraw.Draw(sheet)
+        for i, (img, lab) in enumerate(((ext, 'from outside — the curtain off the pole'),
+                                        (ins, 'from inside, looking down the line'))):
+            x = pad + i * (a.size + pad)
+            sheet.paste(Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8)),
+                        (x, pad + 26))
+            dr.text((x, pad + 8), lab, fill=(214, 186, 186), font=fnt)
+        os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
+        sheet.save(a.out)
+        print(a.out)
+        return
 
     spec = build(a.system, a.gap_deg, a.start_frac, a.tangent_deg)
     tx = float(spec['target_centre'][0])
@@ -261,6 +292,282 @@ def main():
     os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
     sheet.save(a.out)
     print(a.out)
+
+
+
+
+# ---------------------------------------------------------------- aurora fill
+#
+# 참조 이미지(영화 스틸)의 룩: 겹겹의 반투명 커튼, 모서리로 볼 때 밝아지는 필라멘트,
+# 심홍 바탕에 흰 코어, 얇은 데로는 별이 비친다. 불투명 표면 트레이서로는 원리적으로
+# 안 나오므로 방출 적분(emission-only volumetric)으로 따로 그린다.
+CRIMSON = np.array([0.627, 0.106, 0.157])      # 참조 이미지 p50
+MID = np.array([0.867, 0.290, 0.373])          # p80
+HOT = np.array([0.996, 0.996, 0.988])          # p99.9
+
+
+def _axis_frames(pts):
+    """Tangent and in-plane normal per vertex. The line lies in x-y, so the
+    out-of-plane axis is z everywhere and the frame never twists."""
+    t = np.gradient(pts, axis=0)
+    t /= np.maximum(np.linalg.norm(t, axis=-1, keepdims=True), 1e-30)
+    u = np.zeros_like(t)
+    u[:, 2] = 1.0
+    v = np.cross(t, u)
+    v /= np.maximum(np.linalg.norm(v, axis=-1, keepdims=True), 1e-30)
+    return t, u, v
+
+
+def _hash01(n, k):
+    """Cheap deterministic hash in [0,1). Sine-based on purpose — a shader can
+    evaluate the same thing per step, and a texture cannot travel with a
+    formula."""
+    return (math.sin(n * 127.1 + k * 311.7) * 43758.5453) % 1.0
+
+
+def sheet_params(j):
+    """Everything that makes one curtain unlike its neighbours.
+
+    Evenly spaced sheets with a phase that ramps linearly in j read as a comb:
+    the eye finds the period immediately. So azimuth, radius, fold frequencies,
+    fold amplitudes, width and brightness are each jittered from a hash of j,
+    and the fold frequencies are deliberately incommensurate so the drapery
+    never comes back into step along the line.
+    """
+    h = [_hash01(j + 1, k) for k in range(9)]
+    return {
+        'theta': 2 * math.pi * (j + 0.62 * (h[0] - 0.5)) / SHEETS,
+        'q': 0.30 + 0.62 * h[1],                    # 반경 방향 위치 → 층이 생긴다
+        'f': (0.21 + 0.9 * h[2], 0.53 + 1.7 * h[3], 1.31 + 3.1 * h[4]),
+        'a': (0.30 + 0.55 * h[5], 0.18 + 0.30 * h[6], 0.06 + 0.14 * h[7]),
+        'w': 0.13 + 0.16 * h[8],
+        'gain': 0.55 + 0.9 * h[(j + 3) % 9],
+    }
+
+
+SHEETS = 13
+SHEET_SET = None
+
+
+def _sheets():
+    global SHEET_SET
+    if SHEET_SET is None:
+        SHEET_SET = [sheet_params(j) for j in range(SHEETS)]
+    return SHEET_SET
+
+
+def reduced_arc(arc, rads):
+    """Arc length measured in local tube radii — the scale the structure lives on."""
+    ds = np.diff(arc)
+    rm = 0.5 * (rads[1:] + rads[:-1])
+    return np.concatenate([[0.0], np.cumsum(ds / np.maximum(rm, 1e-30))])
+
+
+def aurora_density(P, pts, rads, arc, frames, reduced, radial_width=0.26):
+    """Emissivity of the curtain at a set of points.
+
+    Sheets, not a filled tube: the emission sits on folded surfaces running
+    along the line, which is what makes a real aurora read as drapery. Seeing
+    one edge-on lengthens the path through it, so the integral along the ray
+    brightens by itself — the white filaments are that, not a separate
+    highlight.
+    """
+    t_ax, u_ax, v_ax = frames
+    a, b = pts[:-1], pts[1:]
+    ab = b - a
+    seg = np.sqrt((ab * ab).sum(-1))
+    den = np.maximum((ab * ab).sum(-1), 1e-30)
+
+    flat = P.reshape(-1, 3)
+    ap = flat[:, None, :] - a[None]
+    tt = np.clip((ap * ab[None]).sum(-1) / den[None], 0.0, 1.0)
+    perp = ap - tt[..., None] * ab[None]
+    dist = np.sqrt((perp * perp).sum(-1))
+    k = np.argmin(dist, axis=1)
+    rows = np.arange(len(k))
+
+    off = perp[rows, k]
+    s = arc[k] + tt[rows, k] * seg[k]
+    r = np.interp(s, arc, rads)
+    # 접힘 파장을 절대 호길이에 걸면 관이 가는 구간에서 반경 수천 개에 걸쳐
+    # 균일해져 구조가 사라진다. 국소 반경으로 잰 축길이 sigma = int ds/r 를 쓰면
+    # 어느 배율에서 봐도 같은 결이 나온다 — 난류 매질이 실제로 그렇다.
+    sigma = np.interp(s, arc, reduced)
+    q = np.sqrt((off * off).sum(-1)) / np.maximum(r, 1e-30)
+    theta = np.arctan2((off * u_ax[k]).sum(-1), (off * v_ax[k]).sum(-1))
+
+    dens = np.zeros_like(q)
+    for sh in _sheets():
+        f, amp = sh['f'], sh['a']
+        centre = (sh['theta']
+                  + amp[0] * np.sin(f[0] * sigma + 2.1 * sh['q'])
+                  + amp[1] * np.sin(f[1] * sigma - 1.3)
+                  + amp[2] * np.sin(f[2] * sigma + 0.7))
+        dth = np.arctan2(np.sin(theta - centre), np.cos(theta - centre))
+        radial = np.exp(-((q - sh['q']) / radial_width) ** 2)
+        along = 0.55 + 0.45 * np.sin(f[1] * 0.8 * sigma + 3.0 * sh['q'])
+        dens = dens + sh['gain'] * along * radial * np.exp(-(dth / sh['w']) ** 2)
+
+    envelope = np.clip(1.0 - q * q, 0.0, 1.0) ** 0.8
+    return (envelope * (0.06 + dens)).reshape(P.shape[:-1])
+
+
+def sheet_centreline(s, j):
+    """Azimuth and radius of curtain j at arc length s — the ribbon route."""
+    sh = _sheets()[j]
+    f, amp = sh['f'], sh['a']
+    return (sh['theta']
+            + amp[0] * np.sin(f[0] * s + 2.1 * sh['q'])
+            + amp[1] * np.sin(f[1] * s - 1.3)
+            + amp[2] * np.sin(f[2] * s + 0.7)), sh['q']
+
+
+def sheet_ribbons(spec, window=9.0, segments=64, n_sheets=SHEETS):
+    """The curtains as ribbon centrelines — the in-game payload.
+
+    Each entry is one strip: (point, radius) along the line at that curtain's
+    folded azimuth. Raymarching the density is the primary in-game route and is
+    known to work in KSP, so this is the cheaper alternative rather than the
+    fallback of necessity: a plugin can build a two-triangle-wide mesh per
+    curtain, blend additively and write no depth. Both come out of the same
+    expression, which is the point.
+    """
+    keep = [e for e in spec['path'] if np.hypot(e[0][0], e[0][1]) <= window]
+    keep = keep[:: max(1, len(keep) // segments)] or spec['path'][:2]
+    pts = np.array([p for p, _, _, _ in keep])
+    rads = np.array([r for _, r, _, _ in keep])
+    arc = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
+    _, u_ax, v_ax = _axis_frames(pts)
+
+    out = []
+    for j in range(n_sheets):
+        th, qf = sheet_centreline(arc, j)
+        rad = rads * qf
+        centre = pts + rad[:, None] * (np.cos(th)[:, None] * v_ax
+                                       + np.sin(th)[:, None] * u_ax)
+        out.append((centre, rad))
+    return out
+
+
+def interior_camera(spec, at_arc, size, fov=1.15, tilt_deg=26.0,
+                    offset_frac=0.55):
+    """A perspective camera sitting *inside* the line, looking along it.
+
+    The reference frame is shot from in there, and it is the view that tells
+    you whether the fill reads as drapery or as fog — from outside, a thin tube
+    looks like a plume whatever is inside it.
+    """
+    pts = np.array([p for p, _, _, _ in spec['path']])
+    arc = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
+    i = int(np.argmin(np.abs(arc - at_arc)))
+    axis = pts[min(i + 4, len(pts) - 1)] - pts[max(i - 4, 0)]
+    axis = axis / np.linalg.norm(axis)
+    up0 = np.array([0.0, 0.0, 1.0])
+    side = np.cross(axis, up0)
+    side /= np.linalg.norm(side)
+
+    # 축을 정면으로 보면 커튼이 전부 소실점으로 모여 바퀴살처럼 읽힌다. 참조
+    # 프레임처럼 드레이프가 화면을 가로지르게 하려면 시선을 기울이고 눈을 축에서
+    # 띄워야 한다 — 배가 관 한복판에 정지해 있는 그림이 아니다.
+    rad = float(np.interp(arc[i], arc, [r for _, r, _, _ in spec['path']][:len(arc)]))
+    eye = pts[i] + offset_frac * rad * np.cross(axis, side)
+    tilt = math.radians(tilt_deg)
+    fwd = math.cos(tilt) * axis + math.sin(tilt) * side
+    fwd /= np.linalg.norm(fwd)
+    right = np.cross(fwd, up0)
+    right /= np.linalg.norm(right)
+    up = np.cross(right, fwd)
+
+    j, k = np.meshgrid(np.arange(size), np.arange(size), indexing='xy')
+    sx = (j / (size - 1) - 0.5) * 2 * fov
+    sy = (0.5 - k / (size - 1)) * 2 * fov
+    d = fwd + sx[..., None] * right + sy[..., None] * up
+    d /= np.linalg.norm(d, axis=-1, keepdims=True)
+    return np.broadcast_to(eye, d.shape).copy(), d
+
+
+def render_aurora_interior(spec, at_arc, size, depth, steps=170, gain=9.0,
+                           segments=110, window=None, tilt_deg=26.0,
+                           offset_frac=0.55):
+    """Emission march from inside the line, looking down its length."""
+    win = window if window is not None else at_arc + depth * 1.2
+    keep = [e for e in spec['path']
+            if np.hypot(e[0][0], e[0][1]) <= win]
+    keep = keep[:: max(1, len(keep) // segments)] or spec['path'][:2]
+    pts = np.array([p for p, _, _, _ in keep])
+    rads = np.array([r for _, r, _, _ in keep])
+    arc = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
+    frames = _axis_frames(pts)
+    reduced = reduced_arc(arc, rads)
+
+    origin, direction = interior_camera(spec, at_arc, size,
+                                        tilt_deg=tilt_deg,
+                                        offset_frac=offset_frac)
+    dt = depth / steps
+    acc = np.zeros((size, size))
+    for i in range(steps):
+        Q = origin + (0.02 * depth + i * dt) * direction
+        acc += aurora_density(Q, pts, rads, arc, frames, reduced) * dt
+    e = np.clip(acc * gain / max(rads.max(), 1e-9), 0.0, None)
+    a1 = 1.0 - np.exp(-e)
+    a2 = np.clip((e - 0.55) / 1.5, 0.0, 1.0) ** 1.4
+    a3 = np.clip((e - 1.5) / 2.2, 0.0, 1.0) ** 1.6
+    col = (CRIMSON * a1[..., None] + (MID - CRIMSON) * a2[..., None]
+           + (HOT - MID) * a3[..., None])
+    return np.clip(col + np.array([0.012, 0.012, 0.02]), 0, 1)
+
+
+def render_aurora(spec, view, span, size, centre, window=9.0, steps=150,
+                  gain=9.0, segments=48):
+    """Emission-only march. No surfaces, no lighting: the picture is the
+    integral of the curtain's own glow along each ray, so thin parts stay
+    translucent and stars would show through."""
+    keep = [e for e in spec['path'] if np.hypot(e[0][0], e[0][1]) <= window]
+    keep = keep[:: max(1, len(keep) // segments)] or spec['path'][:2]
+    pts = np.array([p for p, _, _, _ in keep])
+    rads = np.array([r for _, r, _, _ in keep])
+    arc = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
+    frames = _axis_frames(pts)
+    reduced = reduced_arc(arc, rads)
+
+    origin, direction, right, up = _camera(view, span, size)
+    origin = origin + np.asarray(centre, dtype=float)
+    t0, t1 = span * 2.4, span * 5.6
+
+    # 광구는 불투명하다 — 광선을 거기서 멈춘다. 안 그러면 별 뒤쪽 커튼까지
+    # 더해져서 별이 커튼 안에 잠긴 것처럼 보인다.
+    oc = origin
+    b = (oc * direction).sum(-1)
+    c = (oc * oc).sum(-1) - spec['star_radius'] ** 2
+    disc = b * b - c
+    hit_star = disc > 0
+    t_star = np.where(hit_star, -b - np.sqrt(np.maximum(disc, 0.0)), np.inf)
+    t_star = np.where(t_star > 0, t_star, np.inf)
+    t_end = np.minimum(t1, t_star)
+
+    dt = (t1 - t0) / steps
+    acc = np.zeros((size, size))
+    for i in range(steps):
+        t = t0 + i * dt
+        Q = origin + t * direction
+        live = t < t_end
+        if not live.any():
+            break
+        acc += np.where(live, aurora_density(Q, pts, rads, arc, frames, reduced), 0.0) * dt
+    e = np.clip(acc * gain / max(rads.max(), 1e-9), 0.0, None)
+
+    # 밝기 → 색: 심홍에서 시작해 두꺼운 곳이 흰 코어로 간다(참조 이미지의 램프).
+    a1 = 1.0 - np.exp(-e)
+    a2 = np.clip((e - 0.55) / 1.5, 0.0, 1.0) ** 1.4
+    a3 = np.clip((e - 1.5) / 2.2, 0.0, 1.0) ** 1.6
+    col = (CRIMSON * a1[..., None]
+           + (MID - CRIMSON) * a2[..., None]
+           + (HOT - MID) * a3[..., None])
+
+    # 광구는 배경으로 깔고 커튼을 그 위에 가산한다.
+    star_face = np.where(np.isfinite(t_star)[..., None],
+                         np.array([1.0, 0.87, 0.60]), 0.0)
+    return np.clip(col + star_face + np.array([0.012, 0.012, 0.02]), 0, 1)
 
 
 if __name__ == '__main__':
