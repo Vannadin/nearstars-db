@@ -152,8 +152,8 @@ def main():
     # 스팬 기준으로 잡아 어느 축척에서도 같은 굵기로 읽히게 한다.
     span_wide = tx * 0.60
     span_knee = spec['apex_in_R_star'] * 2.4
-    fat_wide = (spec['star_radius'] * 0.30) / waist
-    fat_knee = (spec['star_radius'] * 0.10) / waist
+    fat_wide = (spec['star_radius'] * 0.55) / waist
+    fat_knee = (spec['star_radius'] * 0.22) / waist
     panels = [
         ('flow', span_wide, np.array([span_wide * 0.86, spec['apex_in_R_star'] * 0.5, 0.0]),
          fat_wide, '1. the whole line',
@@ -161,9 +161,9 @@ def main():
         ('flow', span_knee, np.array([span_knee * 0.62, spec['apex_in_R_star'] * 0.42, 0.0]),
          fat_knee, f'2. the apex at {spec["apex_in_R_star"]:.1f} R_star',
          f'curvature is continuous everywhere; beam x{fat_knee:.0f}'),
-        ('flow', spec['star_radius'] * 3.2, np.array([0.0, spec['star_radius'] * 1.7, 0.0]),
-         1.0, '3. the funnel over the star, true scale',
-         'mouth covers the disc, pinched to the waist inside 2 R_star'),
+        ('flow', spec['star_radius'] * 3.4, np.array([0.0, spec['star_radius'] * 1.5, 0.0]),
+         1.0, '3. the funnel off the pole, true scale',
+         'hugs the star below the pole, then pinches within 3 R_star'),
         ('flow', spec['target_radius'] * 3.2,
          spec['target_centre'] - np.array([spec['target_radius'] * 1.3, 0.0, 0.0]),
          1.0, '4. arrival, true scale',

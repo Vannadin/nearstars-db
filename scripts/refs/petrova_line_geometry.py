@@ -216,7 +216,7 @@ def _solve_control(P0, P2, apex_target, lo=None, hi=None):  # noqa: D401
 
 
 def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
-                 start_radius_m=None, steps=1400, funnel_scale=0.45):
+                 start_radius_m=None, steps=1400, funnel_scale=0.8):
     """The line as (point, radius) samples, in metres, star-centred.
 
     Frame: y is the spin axis, the target sits at x = a in the equatorial
@@ -280,18 +280,36 @@ def petrova_path(R_star_m, a_m, R_target_m, gap_deg=None,
         w = f * f * (3 - 2 * f)
         beam = start_radius_m + (R_target_m - start_radius_m) * w
 
-        # 출발부: 항성을 덮는 깔때기. 지수 감쇠라 입은 항성을 다 덮고 목은 바로
-        # 잡힌다 — 정점 높이에 걸쳐 smoothstep 으로 닫으면 깔때기가 아니라 긴
-        # 나팔이 된다. 감쇠 길이는 모이는 영역의 크기이고, 항성 반경 말고는
-        # 걸어둘 척도가 없어 그 배수로 둔다(형상 계수, 도출값 아님).
-        above = max(0.0, run - R_star_m)
-        funnel = R_star_m * math.exp(-above / (funnel_scale * R_star_m))
+        # 출발부: 항성에서 모여 극 위로 빠져나가는 깔때기.
+        #
+        # 지수 감쇠 A e^{-y/L} 을 쓰되 A 는 고르지 않는다 — 항성을 스치며 지나가는
+        # 가장 조인 지수, 즉 0<=y<=R 에서 sqrt(R^2-y^2) 이상인 최소 A 로 잡는다.
+        # 그러면 아가리 너비가 L 하나에서 따라 나온다. 자유 계수는 L 뿐이다.
+        #
+        # 그리고 극 아래에서는 항성 실루엣으로 잘라낸다. 자르지 않으면 관이 별을
+        # 감싸는 게 아니라 별보다 큰 반구를 극 위에 씌운 꼴이 된다(직접 보고 잡음).
+        # 감쇠는 높이가 아니라 **항성 중심으로부터의 거리**로 잰다. 높이로 재면
+        # 목표 지점에서 y 가 다시 0 이 되어 아가리가 재개방된다(패널이 통째로
+        # 주황이 되어 발견).
+        d_star = math.hypot(x, y)
+        funnel = R_star_m * math.exp(-d_star / (funnel_scale * R_star_m))
 
         # 부드러운 최대값으로 두 항을 잇는다 — 단순 max 는 이음매에 각이 생긴다.
         # 두 항을 따로 들고 나간다: 렌더러가 실 같은 beam 만 굵게 그릴 수 있어야
         # 하고, 이미 항성만 한 funnel 까지 같이 부풀리면 그림이 무너진다.
         path.append(((x, y, 0.0), combine_radius(funnel, beam), funnel, beam))
     return path, H_best
+
+
+def _bell_amplitude(L_in_R, samples=2000):
+    """Amplitude of the tightest exponential bell that still clears the star.
+
+    A e^{-y/L} >= sqrt(R^2 - y^2) on 0 <= y <= R, solved for the smallest A.
+    Picking A by eye would be one more coefficient; this way the mouth width
+    follows from the decay length, and the decay length is the only choice.
+    """
+    return max(math.sqrt(1 - u * u) * math.exp(u / L_in_R)
+               for u in (i / samples for i in range(samples + 1)))
 
 
 def combine_radius(funnel, beam, n=4.0):
