@@ -173,4 +173,6 @@ g를 위해.
   천체가 애초에 고정(Cassini 후보)되었는지 여부.
 - [`principia-geopotential-data.md`](principia-geopotential-data.md): J₂/C₂₂의 cfg 형식; 자전축
   방향은 Principia/Kopernicus 극에 들어갑니다.
+- [`spin-axis-inclination-methodology.md`](spin-axis-inclination-methodology.md): *자유*
+  회전체(항성/갈색왜성)의 관측 시선 자전축 경사 — 조석 감쇠가 없는 쪽의 상대편. 교차 적용 금지.
 - [`methodology-index.md`](methodology-index.md): 전체 방법론 인덱스.

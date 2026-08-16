@@ -200,4 +200,7 @@ state-2 solution exists.
   whether the body is locked (a Cassini candidate) at all.
 - [`principia-geopotential-data.md`](principia-geopotential-data.md): the cfg form
   of J₂/C₂₂; spin-axis orientation feeds the Principia/Kopernicus pole.
+- [`spin-axis-inclination-methodology.md`](spin-axis-inclination-methodology.md): the
+  observed line-of-sight spin inclination of *free* rotators (stars/BDs) — the
+  non-tidally-damped counterpart; do not cross-apply.
 - [`methodology-index.md`](methodology-index.md): the full methodology index.

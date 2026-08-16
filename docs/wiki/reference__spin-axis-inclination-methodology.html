@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Viewers Gallery · NearStars docs</title>
+<title>Spin-axis inclination grounding: i★ from v sin i + rotation period + radius · NearStars docs</title>
 <link rel="stylesheet" href="../assets/fonts/geist.css">
 <link rel="stylesheet" href="../assets/github-markdown-dark.min.css" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="../assets/github-markdown-light.min.css" media="(prefers-color-scheme: light)">
@@ -172,7 +172,7 @@ html[lang="ko"] .l-ko { display: inline }
 <a class="nav-i" href="guide__overview.html"><span class="l-en">Overview</span><span class="l-ko">개요</span></a>
 <a class="nav-i" href="guide__showcase.html"><span class="l-en">Showcase</span><span class="l-ko">쇼케이스</span></a>
 <a class="nav-i" href="guide__star-systems.html"><span class="l-en">Star Systems</span><span class="l-ko">항성계</span></a>
-<a class="nav-i on" href="guide__viewers.html"><span class="l-en">Viewers Gallery</span><span class="l-ko">뷰어 갤러리</span></a>
+<a class="nav-i" href="guide__viewers.html"><span class="l-en">Viewers Gallery</span><span class="l-ko">뷰어 갤러리</span></a>
 <div class="nav-grp"><span class="l-en">Methodology</span><span class="l-ko">방법론</span></div>
 <a class="nav-i" href="reference__atmosphere-reflected-color-methodology.html"><span class="l-en">Atmosphere Reflected-Color Methodology: Composition → Spectrum → sRGB</span><span class="l-ko">대기 반사색 방법론: 조성 → 스펙트럼 → sRGB</span></a>
 <a class="nav-i" href="reference__body-figure-methodology.html"><span class="l-en">Body figure grounding: rotational oblateness (J₂) and tidal triaxiality (C₂₂)</span><span class="l-ko">천체 형상 근거화: 자전 편평도(J₂)와 조석 삼축성(C₂₂)</span></a>
@@ -194,7 +194,7 @@ html[lang="ko"] .l-ko { display: inline }
 <a class="nav-i" href="reference__planetary-magnetosphere-geometry-methodology.html"><span class="l-en">Planetary magnetosphere geometry grounding: standoff, belts, and Kerbalism mapping</span><span class="l-ko">행성 자기권 지오메트리 근거화: standoff·방사선대·Kerbalism 매핑</span></a>
 <a class="nav-i" href="reference__plasma-color-methodology-review.html"><span class="l-en">Plasma-color methodology review</span><span class="l-ko">플라스마 발광색 방법론 검증 리뷰</span></a>
 <a class="nav-i" href="reference__rocky-planet-dynamo-methodology.html"><span class="l-en">Rocky-planet magnetic-field grounding: internal-structure + OC06 dynamo scaling</span><span class="l-ko">암석형 행성 자기장 근거화: 내부구조 + OC06 다이나모 스케일링</span></a>
-<a class="nav-i" href="reference__spin-axis-inclination-methodology.html"><span class="l-en">Spin-axis inclination grounding: i★ from v sin i + rotation period + radius</span><span class="l-ko">자전축 시선경사 근거화 — v sin i + 자전주기 + 반지름 결합법</span></a>
+<a class="nav-i on" href="reference__spin-axis-inclination-methodology.html"><span class="l-en">Spin-axis inclination grounding: i★ from v sin i + rotation period + radius</span><span class="l-ko">자전축 시선경사 근거화 — v sin i + 자전주기 + 반지름 결합법</span></a>
 <a class="nav-i" href="reference__stellar-photospheric-color-methodology.html"><span class="l-en">Stellar Photospheric-Color Methodology: Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB</span><span class="l-ko">항성 광구색 방법론: Teff (+ [Fe/H], M왜성 분자밴드) → sRGB</span></a>
 <a class="nav-i" href="reference__surface-color-albedo-methodology.html"><span class="l-en">Surface Color &amp; Albedo Methodology: Composition → Reflectance → sRGB + Bond Albedo</span><span class="l-ko">표면색·알베도 방법론: 조성 → 반사율 → sRGB + Bond 알베도</span></a>
 <a class="nav-i" href="reference__surface-radiation-dose-methodology.html"><span class="l-en">Surface radiation dose grounding: stellar particle events through an atmospheric column</span><span class="l-ko">지표 방사선 선량 근거: 대기 기둥을 통과하는 항성 입자 사건</span></a>
@@ -235,80 +235,311 @@ html[lang="ko"] .l-ko { display: inline }
   <article class="markdown-body" id="content"></article>
 </div>
 </div>
-<script type="text/markdown" id="md-en"><!-- 브라우저에서 바로 열리는 뷰어·보고서 목록 -->
-# Viewers Gallery
+<script type="text/markdown" id="md-en"><!-- 미측정 항성/갈색왜성 자전축 시선경사 i★를 v sin i + 자전주기 + 반지름 결합으로 도출하는 방법(논문 근거) -->
+# Spin-axis inclination grounding: i★ from v sin i + rotation period + radius
 
-You do not have to wait for a release to see the project. Everything it produces is browsable in your browser today, and all of it is static HTML generated straight from the database, so what you are looking at is exactly what the mod will be built from. Here is what is worth opening, roughly from the widest view down to the paper trail.
+Method reference for deriving the **line-of-sight spin inclination i★** of a
+star or brown dwarf that has **no direct i★ measurement**, by combining three
+observables: the projected rotation velocity (v sin i, spectroscopic), the
+rotation period (P, photometric), and the radius (R). Bodies with a *measured*
+i★ (interferometric like tau Cet / Fomalhaut, or Doppler-imaging) passthrough
+that measurement instead — this recipe is only for the combination route.
 
-## [3D star map](https://vannadin.github.io/nearstars-db/starmap.html)
+First consumer: the Luhman 16 A/B Phase 4 board (spin-axis rows).
 
-The whole research database laid out in space: every curated system within ~50 ly, positioned from Gaia astrometry. Click a system to drop into an AU-scale view with planet orbits (the Solar System is included for scale). You can toggle heliospheres (per-star astrosphere bubbles), interstellar wind vectors, stellar spin axes (measured versus assumed), space velocities, and a background layer of all ~1,300 field stars within 50 ly. A Korean/English toggle is built in.
+## The relation
 
-## [Database viewer](https://vannadin.github.io/nearstars-db/)
+Treating the body as a rigid rotating sphere, the true equatorial velocity is
 
-The tabular front-end: every system, star, and planet with its measurements, provenance, and derived values, all filterable and sortable. This is the actual `db/systems/` content rendered, not a summary of it.
+    v_eq = 2π R / P
 
-## [Orbit viewers](https://vannadin.github.io/nearstars-db/phase4/orbit-viewers/)
+and the spectroscopic broadening measures its projection, so
 
-Interactive 3D (Plotly) renders of our N-body simulation output for the six planetary systems of the roster. Rotate, zoom, and inspect the very orbits the stability runs produced; the [Star Systems](guide__star-systems.html) page has the per-system results that go with them.
+    sin i★ = v sin i / v_eq = (v sin i · P) / (2π R)
 
-## [Radiation-belt viewer](https://vannadin.github.io/nearstars-db/belt-viewer.html)
+This is textbook geometry (the allowed exception class), but its *use as an
+inclination estimator* is standard practice in the brown-dwarf variability
+literature — Vos, Allers & Biller 2017 ([`2017ApJ...842...78V`](https://ui.adsabs.harvard.edu/abs/2017ApJ...842...78V),
+arXiv [1705.06045](https://arxiv.org/abs/1705.06045), cached) state the
+procedure and its assumptions explicitly (rigid rotation; Jupiter's
+core-vs-cloud period difference of ~5 min justifies the rigid-sphere
+approximation at photometric-period precision) and apply it to 19 variable
+brown dwarfs.
 
-Kerbalism's radiation fields, computed live: the exact in-game signed-distance-field
-model with a slider for every cfg parameter, presets for all seven magnetized
-solar-system bodies (shipped stock cfg vs our physics-fitted version, side by side)
-plus the NearStars bodies, a 3D volume-raymarched mode, and a one-click export of the
-current shape as a Kerbalism cfg block. The [Radiation Belts](reference__solar-system-radiation-belts.html) page
-has the physics behind every preset.
+## Practical formula
 
-## [Curation reports](https://vannadin.github.io/nearstars-db/reports.html)
+With R in Jupiter radii (R_Jup = 71 492 km) and P in hours:
 
-The paper trail. Phase 2 reports give every measurement with its source paper, and Phase 3 reports give every in-game decision with its basis, its confidence, and, wherever the mod diverges from the canonical reading, a documented alternatives section. Each report has an English/Korean toggle.
+    v_eq [km/s] = 124.78 · (R / R_Jup) / P_hr
+    sin i★      = v sin i / v_eq
 
-## [Phase 4 boards](https://vannadin.github.io/nearstars-db/phase4/)
+Conventions: i★ = 90° is equator-on, i★ = 0° pole-on. Spectral broadening
+cannot distinguish i from 180° − i (north pole vs south pole toward us), so
+results are quoted in 0–90° (Masuda & Winn 2020, §II).
 
-The art-direction layer: per-body boards where the owner's final in-game choices are frozen, each one gated against the Phase 2/3 evidence window.
+## Statistical discipline (Masuda & Winn 2020)
 
-## [Reference library (rendered)](https://vannadin.github.io/nearstars-db/wiki/)
+Masuda & Winn 2020 ([`2020AJ....159...81M`](https://ui.adsabs.harvard.edu/abs/2020AJ....159...81M),
+arXiv [2001.04973](https://arxiv.org/abs/2001.04973), cached) show that the
+naive Monte Carlo — sampling v sin i and v_eq independently from their error
+bars and histogramming sin i — is **wrong**, because v sin i and v_eq are not
+statistically independent (v sin i ≤ v_eq always). The naive procedure
+"severely overestimates the probability density for cos i ≈ 1" (pole-on) and
+underestimates equator-on. The correct object is the posterior of **cos i**
+(flat for an isotropic axis), computed from the joint likelihood.
 
-HTML renders of the repository's internal reference and planning documents, the same files the [Methodology Library](reference__methodology-index.html) indexes, plus the research notes behind them.
+NearStars consequences (we do not run their full Bayesian machinery):
+
+1. **Report i★ as a bound or bracket, not a Gaussian.** Propagate the input
+   ranges through the formula edge-to-edge (min/max of R and P) and state the
+   result as "i★ > X°" or "X°–90°" — the shape our consumers (board rows,
+   viewer layers) can actually use.
+2. **Nominal sin i★ > 1 is not an error** when v sin i ≈ v_eq within
+   uncertainties — it means equator-on (i★ ≈ 90°) with the excess absorbed by
+   the input error bars. Never "clip" it into a fake precise 90° ± small.
+3. **Low-inclination claims need extra care** (the naive method's bias is
+   worst there); an equator-on conclusion is robust, a pole-on one is not.
+
+## Domain of validity / regimes
+
+1. **Direct i★ measurement exists** (interferometric rotation solution,
+   Doppler-imaging fit): passthrough the measurement; do not derive.
+   (NearStars: tau Cet 7°±7° Korolik 2023; Fomalhaut 90°±9° Hadjara 2014.)
+2. **All three inputs measured** (v sin i + P + R): apply the formula with
+   the statistical discipline above. Confidence = the weakest input's
+   confidence; a disputed period makes i★ conditional on the period choice,
+   and the row must say which period it assumed.
+3. **Radius not measured** — the universal brown-dwarf case (no L/T dwarf has
+   a directly measured radius): use the electron-degeneracy field-BD radius
+   0.8–1.2 R_Jup (Burrows et al. 2001,
+   [`2001RvMP...73..719B`](https://ui.adsabs.harvard.edu/abs/2001RvMP...73..719B);
+   radius nearly mass-independent at field ages), or the object's own
+   evolutionary-model radius where curated (Filippazzo et al. 2015,
+   [`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F)).
+   Propagate the full radius range into the i★ bracket.
+4. **No period, or no v sin i**: the recipe does not apply. An isotropic
+   prior (flat in cos i★) is the honest state; any adopted orientation is an
+   owner art choice (owner-override), not a derivation.
+
+Caveats that stay caveats: differential rotation (bounded by the Jupiter
+5-minute argument above); photometric periods from evolving weather can drift
+between epochs (Apai 2021's Luhman 16 B period splitting) — use the canonical
+period and note the spread; the derived i★ says nothing about the spin-axis
+*position angle* on the sky (a separate, usually free, emit orientation).
+
+## Worked example — Luhman 16 A & B (the first consumers)
+
+Inputs: v sin i 17.6 ± 0.1 km/s (A), 26.1 ± 0.2 km/s (B) (Crossfield et al.
+2014, cached); P_A = 6.94 hr (Apai et al. 2021, tentative), P_B = 4.87 hr
+(Gillon et al. 2013) with the Apai 2021 TESS analysis spanning 4.9–5.3 hr;
+R = 0.90–1.10 R_Jup (Burrows 2001 degenerate radius, the bracket Apai 2021
+adopt).
+
+| body | P (hr) | v_eq over R 0.90–1.10 R_Jup | sin i★ = v sin i / v_eq | i★ |
+|---|---|---|---|---|
+| A | 6.94 | 16.2–19.8 km/s | 0.89–1.09 | **> 62°** (equator-ward) |
+| B | 5.28 (TESS) | 21.3–26.0 km/s | 1.00–1.23 | **≈ 90°** (equator-on) |
+
+Validation: these reproduce Apai et al. 2021 §6.2's own published numbers —
+their v_eq brackets (A 16.3–19.9, B 21.2–25.9 km/s; ours differ only in the
+last-digit rounding of R_Jup) and their conclusions "Luhman 16 A is viewed
+within 28° of its equatorial plane (i > 62°)" and "B is viewed almost exactly
+equatorially (i ≃ 90°)". B's nominal sin i★ reaching 1.23 at the small-radius
+edge is the rule-2 case: equator-on, excess absorbed by the radius bracket.
+
+System bonus: the AB orbital inclination is 79.21° ± 0.45° (Bedin et al. 2017,
+[`2017MNRAS.470.1140B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.1140B),
+arXiv [1706.00657](https://arxiv.org/abs/1706.00657); the curated Lazorenko &
+Sahlmann 2018 orbit's 100.26° is the same plane under the opposite
+node/direction convention, 180° − 100.26° = 79.74°). Apai 2021 note the two
+spin axes and the orbit normal "may be well aligned" — three planes within
+~28° of each other, with no evidence for misalignment.
+
+## Citations
+
+- **Vos, Allers & Biller 2017**, ApJ 842, 78 ([`2017ApJ...842...78V`](https://ui.adsabs.harvard.edu/abs/2017ApJ...842...78V),
+  arXiv [1705.06045](https://arxiv.org/abs/1705.06045), **cached**). The
+  standard BD application of the combination method: procedure, rigid-sphere
+  justification, field-BD radius prescription (0.8–1.2 R_Jup), 19-object
+  sample.
+- **Masuda & Winn 2020**, AJ 159, 81 ([`2020AJ....159...81M`](https://ui.adsabs.harvard.edu/abs/2020AJ....159...81M),
+  arXiv [2001.04973](https://arxiv.org/abs/2001.04973), **cached**). The
+  statistical treatment: v sin i and v_eq are correlated; naive sampling
+  biases toward pole-on; work in cos i. Source of the reporting discipline.
+- **Apai et al. 2021**, ApJ 906, 64 ([`2021ApJ...906...64A`](https://ui.adsabs.harvard.edu/abs/2021ApJ...906...64A),
+  arXiv [2101.02253](https://arxiv.org/abs/2101.02253), **cached**). Applies
+  the method to Luhman 16 A/B (§6.2) — the validation anchor and the values
+  the Phase 4 board consumes.
+- **Crossfield et al. 2014**, Nature 505, 654 ([`2014Natur.505..654C`](https://ui.adsabs.harvard.edu/abs/2014Natur.505..654C),
+  arXiv [1401.8145](https://arxiv.org/abs/1401.8145), **cached**). The
+  v sin i measurements for both Luhman 16 components.
+- **Burrows et al. 2001**, RvMP 73, 719 ([`2001RvMP...73..719B`](https://ui.adsabs.harvard.edu/abs/2001RvMP...73..719B),
+  arXiv [astro-ph/0103383](https://arxiv.org/abs/astro-ph/0103383)). The
+  electron-degeneracy radius plateau behind the 0.8–1.2 R_Jup field-BD
+  prescription.
+- **Filippazzo et al. 2015**, ApJ 810, 158 ([`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F),
+  arXiv [1508.01767](https://arxiv.org/abs/1508.01767)). Per-object
+  evolutionary-model radii, preferred over the generic bracket when curated.
+- **Bedin et al. 2017**, MNRAS 470, 1140 ([`2017MNRAS.470.1140B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.1140B),
+  arXiv [1706.00657](https://arxiv.org/abs/1706.00657)). Luhman 16 AB orbital
+  inclination used in the spin-orbit alignment note.
+
+## Related
+
+- [cassini-state-obliquity-methodology](reference__cassini-state-obliquity-methodology.html) —
+  the *equilibrium tilt* counterpart for tidally-damped bodies; this doc is the
+  *observed line-of-sight* inclination for free rotators. Do not cross-apply.
+- [body-figure-methodology](reference__body-figure-methodology.html) — consumes measured
+  i★ (Fomalhaut worked example) for full 3-D rotation solutions and J₂.
+- [methodology-index](reference__methodology-index.html) — the living index of all
+  derived-value recipes.
 </script>
-<script type="text/markdown" id="md-ko"><!-- 브라우저에서 바로 열리는 뷰어·보고서 목록 -->
-# 뷰어 갤러리
+<script type="text/markdown" id="md-ko"><!-- 미측정 항성/갈색왜성 자전축 시선경사 i★를 v sin i + 자전주기 + 반지름 결합으로 도출하는 방법(논문 근거) -->
+# 자전축 시선경사 근거화 — v sin i + 자전주기 + 반지름 결합법
 
-정식 릴리스를 기다릴 필요가 없습니다. 이 프로젝트가 만들어내는 모든 결과물은 지금 당장 브라우저로 볼 수 있고, 전부 데이터베이스에서 직접 생성한 정적 HTML이라서 지금 보고 있는 화면이 곧 모드가 빌드될 원본 그대로입니다. 가장 넓은 시야에서 시작해 근거 자료로 좁혀가며, 열어볼 만한 것들을 순서대로 소개합니다.
+**직접 측정된 i★가 없는** 항성/갈색왜성의 **자전축 시선경사 i★**를 세 관측량 —
+투영 자전속도(v sin i, 분광), 자전주기(P, 측광), 반지름(R) — 의 결합으로
+도출하는 방법 레퍼런스입니다. i★ *측정치*가 있는 바디(tau Cet·Fomalhaut의
+간섭계 해, 도플러 이미징 피팅)는 그 측정을 passthrough하며, 이 레시피는
+결합 경로 전용입니다.
 
-## [3D 성도](https://vannadin.github.io/nearstars-db/starmap.html)
+첫 소비자는 Luhman 16 A/B Phase 4 보드의 자전축 행입니다.
 
-연구 데이터베이스 전체를 공간에 펼쳐 놓은 화면입니다. 50광년 이내에 큐레이션된 모든 항성계가 Gaia 측성 데이터를 바탕으로 배치되어 있습니다. 항성계를 클릭하면 행성 궤도가 표시되는 AU 단위 화면으로 들어가며(비교를 위해 태양계도 포함되어 있습니다), 항성권(별마다의 astrosphere 거품), 성간풍 벡터, 항성 자전축(측정값과 가정값 구분), 공간 속도, 그리고 50광년 이내 약 1,300개 배경 항성 레이어를 각각 켜고 끌 수 있습니다. 한/영 토글도 내장되어 있습니다.
+## 관계식
 
-## [데이터베이스 뷰어](https://vannadin.github.io/nearstars-db/)
+강체 회전 구로 보면 실제 적도 속도는
 
-표 형태의 프론트엔드입니다. 모든 항성계, 별, 행성의 측정값, 출처, 도출값을 필터링하고 정렬할 수 있게 보여줍니다. 요약이 아니라 실제 `db/systems/` 내용을 그대로 렌더링한 것입니다.
+    v_eq = 2π R / P
 
-## [궤도 뷰어](https://vannadin.github.io/nearstars-db/phase4/orbit-viewers/)
+이고 분광 선폭은 그 투영을 재므로
 
-로스터에 포함된 6개 행성계의 n-body 시뮬레이션 결과를 Plotly로 인터랙티브 3D 렌더링한 것입니다. 회전하고 확대하며 안정성 시뮬레이션이 실제로 만들어낸 궤도를 직접 살펴볼 수 있습니다. 항성계별 결과는 [항성계 소개](guide__star-systems.html) 페이지에서 확인할 수 있습니다.
+    sin i★ = v sin i / v_eq = (v sin i · P) / (2π R)
 
-## [방사선대 뷰어](https://vannadin.github.io/nearstars-db/belt-viewer.html)
+기하 자체는 교과서(허용 예외)지만, *경사 추정기로서의 사용*은 갈색왜성 변광
+문헌의 표준 절차입니다. Vos, Allers & Biller 2017
+([`2017ApJ...842...78V`](https://ui.adsabs.harvard.edu/abs/2017ApJ...842...78V),
+arXiv [1705.06045](https://arxiv.org/abs/1705.06045), 캐시됨)이 절차와 가정을
+명시하고(강체 회전 — 목성의 핵/구름 주기차가 ~5분에 불과해 측광 주기 정밀도
+수준에서 정당) 변광 갈색왜성 19개에 적용했습니다.
 
-Kerbalism 방사선장을 실시간으로 계산합니다. 인게임 signed-distance-field 모델
-그대로에 모든 cfg 파라미터 슬라이더, 자화된 태양계 7개 천체 프리셋(실배포 스톡
-cfg vs 물리 피팅판 나란히) + NearStars 바디, 3D 볼륨 레이마칭 모드, 현재 모양을
-Kerbalism cfg 블록으로 내보내는 원클릭 복사까지 들어 있습니다. 각 프리셋의 물리
-근거는 [방사선대](reference__solar-system-radiation-belts.html) 페이지에 있습니다.
+## 실용 공식
 
-## [큐레이션 리포트](https://vannadin.github.io/nearstars-db/reports.html)
+R을 목성 반지름(R_Jup = 71 492 km), P를 시간 단위로 쓰면
 
-근거 자료 모음입니다. Phase 2 리포트는 모든 측정값을 출처 논문과 함께 제시하고, Phase 3 리포트는 모든 인게임 결정을 그 근거, 신뢰도와 함께 제시하며, 모드가 정설(canonical) 해석에서 벗어난 경우에는 그 대안을 문서화한 섹션도 함께 담고 있습니다. 각 리포트에는 영/한 토글이 있습니다.
+    v_eq [km/s] = 124.78 · (R / R_Jup) / P_hr
+    sin i★      = v sin i / v_eq
 
-## [Phase 4 보드](https://vannadin.github.io/nearstars-db/phase4/)
+규약: i★ = 90°가 적도방향(equator-on), 0°가 극방향(pole-on)입니다. 분광
+선폭은 i와 180° − i(북극이 보이는지 남극이 보이는지)를 구분하지 못하므로
+결과는 0–90°로 적습니다(Masuda & Winn 2020 §II).
 
-아트 디렉션 레이어입니다. 오너가 내린 최종 인게임 선택을 바디별 보드에 확정해 두었고, 각 선택은 Phase 2/3 근거 범위에 맞춰 게이트를 통과한 것입니다.
+## 통계 규율 (Masuda & Winn 2020)
 
-## [레퍼런스 라이브러리(렌더)](https://vannadin.github.io/nearstars-db/wiki/)
+Masuda & Winn 2020
+([`2020AJ....159...81M`](https://ui.adsabs.harvard.edu/abs/2020AJ....159...81M),
+arXiv [2001.04973](https://arxiv.org/abs/2001.04973), 캐시됨)은 v sin i와
+v_eq를 각자의 오차에서 독립으로 뽑아 sin i 히스토그램을 만드는 소박한 몬테
+카를로가 **틀렸음**을 보였습니다. 두 양은 통계적으로 독립이 아니고(항상
+v sin i ≤ v_eq), 소박한 절차는 "cos i ≈ 1(극방향) 확률밀도를 심하게
+과대평가"합니다. 올바른 대상은 **cos i**의 사후분포(등방 축이면 평탄)입니다.
 
-저장소 내부의 레퍼런스 문서와 계획 문서를 HTML로 렌더링한 것으로, [방법론 라이브러리](reference__methodology-index.html)가 색인하는 것과 동일한 파일에 그 바탕이 된 연구 노트까지 함께 담고 있습니다.
+NearStars에서의 귀결(전체 베이지언 계산은 돌리지 않습니다).
+
+1. **i★는 가우시안이 아니라 한계 또는 구간으로 보고합니다.** 입력 범위(R·P의
+   최소/최대)를 공식에 끝값끼리 통과시켜 "i★ > X°" 또는 "X°–90°"로 적습니다.
+   보드 행과 뷰어 레이어가 실제로 쓸 수 있는 형태입니다.
+2. **명목 sin i★ > 1은 오류가 아닙니다.** 불확도 안에서 v sin i ≈ v_eq라는
+   뜻이며, 적도방향(i★ ≈ 90°)으로 읽고 초과분은 입력 오차가 흡수합니다.
+   가짜 정밀도의 90° ± 소량으로 "클리핑"하지 않습니다.
+3. **낮은 경사 주장은 특히 조심합니다**(소박한 방법의 편향이 그쪽에서 가장
+   큽니다). 적도방향 결론은 견고하지만 극방향 결론은 그렇지 않습니다.
+
+## 유효 영역 / 분기
+
+1. **직접 i★ 측정이 있는 경우**(간섭계 회전 해, 도플러 이미징): 측정을
+   passthrough하고 도출하지 않습니다. (NearStars: tau Cet 7°±7° Korolik
+   2023, Fomalhaut 90°±9° Hadjara 2014.)
+2. **세 입력이 모두 측정된 경우**(v sin i + P + R): 위 통계 규율과 함께
+   공식을 적용합니다. 신뢰도는 가장 약한 입력을 따르고, 주기가 논쟁 중이면
+   i★는 주기 선택에 조건부가 되므로 행에 어느 주기를 가정했는지 명기합니다.
+3. **반지름 미측정** — 갈색왜성의 보편 상황(직접 측정된 반지름을 가진 L/T
+   왜성은 없음): 전자 축퇴의 필드 갈색왜성 반지름 0.8–1.2 R_Jup을 씁니다
+   (Burrows et al. 2001,
+   [`2001RvMP...73..719B`](https://ui.adsabs.harvard.edu/abs/2001RvMP...73..719B);
+   필드 나이에서 반지름은 질량과 거의 무관). 큐레이션된 경우 해당 천체의
+   진화모델 반지름(Filippazzo et al. 2015,
+   [`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F))을
+   우선합니다. 반지름 범위 전체를 i★ 구간에 전파합니다.
+4. **주기나 v sin i가 없는 경우**: 레시피가 적용되지 않습니다. 등방 사전분포
+   (cos i★ 평탄)가 정직한 상태이며, 그 위에 얹는 배향은 도출이 아니라 오너
+   아트 선택(owner-override)입니다.
+
+남는 주의점들. 차등회전(위 목성 5분 논거로 상한이 잡힘), 변하는 날씨에서 나온
+측광 주기는 에포크마다 표류할 수 있음(Apai 2021의 Luhman 16 B 주기 분열 —
+정본 주기를 쓰고 산포를 병기), 그리고 도출된 i★는 하늘에서의 자전축
+*방위각*에 대해서는 아무것도 말하지 않습니다(별도의, 보통 자유로운 emit
+배향).
+
+## 계산 예 — Luhman 16 A·B (첫 소비자)
+
+입력: v sin i 17.6 ± 0.1 km/s (A), 26.1 ± 0.2 km/s (B) (Crossfield et al.
+2014, 캐시됨); P_A = 6.94시간(Apai et al. 2021, 잠정), P_B = 4.87시간
+(Gillon et al. 2013, Apai 2021 TESS 분석은 4.9–5.3시간 산포);
+R = 0.90–1.10 R_Jup (Burrows 2001 축퇴 반지름, Apai 2021이 채택한 구간).
+
+| 바디 | P (hr) | v_eq (R 0.90–1.10 R_Jup) | sin i★ = v sin i / v_eq | i★ |
+|---|---|---|---|---|
+| A | 6.94 | 16.2–19.8 km/s | 0.89–1.09 | **> 62°** (적도 쪽) |
+| B | 5.28 (TESS) | 21.3–26.0 km/s | 1.00–1.23 | **≈ 90°** (적도방향) |
+
+검증: Apai et al. 2021 §6.2의 발표값을 그대로 재현합니다 — v_eq 구간
+(A 16.3–19.9, B 21.2–25.9 km/s; 차이는 R_Jup 반올림 자리뿐)과 결론 "Luhman
+16 A는 적도면에서 28° 안에서 보인다(i > 62°)", "B는 거의 정확히 적도방향
+(i ≃ 90°)". B의 명목 sin i★가 작은 반지름 끝에서 1.23까지 가는 것이 규율
+2번의 사례입니다 — 적도방향이고 초과분은 반지름 구간이 흡수합니다.
+
+시스템 보너스: AB 궤도 경사는 79.21° ± 0.45°입니다(Bedin et al. 2017,
+[`2017MNRAS.470.1140B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.1140B),
+arXiv [1706.00657](https://arxiv.org/abs/1706.00657); 큐레이션된 Lazorenko &
+Sahlmann 2018 궤도의 100.26°는 노드/방향 규약이 반대인 같은 평면으로,
+180° − 100.26° = 79.74°). Apai 2021은 두 자전축과 궤도 법선이 "잘 정렬돼
+있을 수 있다"고 적습니다 — 세 평면이 서로 ~28° 안에 있고, 비정렬의 증거는
+없습니다.
+
+## 인용
+
+- **Vos, Allers & Biller 2017**, ApJ 842, 78 ([`2017ApJ...842...78V`](https://ui.adsabs.harvard.edu/abs/2017ApJ...842...78V),
+  arXiv [1705.06045](https://arxiv.org/abs/1705.06045), **캐시됨**). 결합법의
+  갈색왜성 표준 적용 — 절차, 강체 구 정당화, 필드 갈색왜성 반지름 처방
+  (0.8–1.2 R_Jup), 19천체 표본.
+- **Masuda & Winn 2020**, AJ 159, 81 ([`2020AJ....159...81M`](https://ui.adsabs.harvard.edu/abs/2020AJ....159...81M),
+  arXiv [2001.04973](https://arxiv.org/abs/2001.04973), **캐시됨**). 통계
+  처리 — v sin i와 v_eq는 상관돼 있고, 소박한 샘플링은 극방향으로 편향되며,
+  cos i에서 작업할 것. 보고 규율의 출처.
+- **Apai et al. 2021**, ApJ 906, 64 ([`2021ApJ...906...64A`](https://ui.adsabs.harvard.edu/abs/2021ApJ...906...64A),
+  arXiv [2101.02253](https://arxiv.org/abs/2101.02253), **캐시됨**). Luhman
+  16 A/B에 이 방법을 적용(§6.2) — 검증 앵커이자 Phase 4 보드가 소비하는 값.
+- **Crossfield et al. 2014**, Nature 505, 654 ([`2014Natur.505..654C`](https://ui.adsabs.harvard.edu/abs/2014Natur.505..654C),
+  arXiv [1401.8145](https://arxiv.org/abs/1401.8145), **캐시됨**). 두 성분의
+  v sin i 측정.
+- **Burrows et al. 2001**, RvMP 73, 719 ([`2001RvMP...73..719B`](https://ui.adsabs.harvard.edu/abs/2001RvMP...73..719B),
+  arXiv [astro-ph/0103383](https://arxiv.org/abs/astro-ph/0103383)).
+  0.8–1.2 R_Jup 필드 갈색왜성 처방의 근거인 전자 축퇴 반지름 평탄역.
+- **Filippazzo et al. 2015**, ApJ 810, 158 ([`2015ApJ...810..158F`](https://ui.adsabs.harvard.edu/abs/2015ApJ...810..158F),
+  arXiv [1508.01767](https://arxiv.org/abs/1508.01767)). 천체별 진화모델
+  반지름 — 큐레이션돼 있으면 일반 구간보다 우선.
+- **Bedin et al. 2017**, MNRAS 470, 1140 ([`2017MNRAS.470.1140B`](https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.1140B),
+  arXiv [1706.00657](https://arxiv.org/abs/1706.00657)). 자전-궤도 정렬
+  노트에 쓴 Luhman 16 AB 궤도 경사.
+
+## Related
+
+- [cassini-state-obliquity-methodology](reference__cassini-state-obliquity-methodology.html) —
+  조석 감쇠 천체의 *평형 기울기* 상대편. 이 문서는 자유 회전체의 *관측 시선*
+  경사입니다. 교차 적용 금지.
+- [body-figure-methodology](reference__body-figure-methodology.html) — 측정된 i★를 3-D
+  회전 해와 J₂에 소비(Fomalhaut 계산 예).
+- [methodology-index](reference__methodology-index.html) — derived-value 레시피 전체 인덱스.
 </script>
 <script>
 const srcs = {};

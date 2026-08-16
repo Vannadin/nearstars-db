@@ -24,6 +24,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 | [tidal-heating-methodology](tidal-heating-methodology.md) | 조석가열 플럭스 (Io/Enceladus 캘리브레이션) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
 | [body-figure-methodology](body-figure-methodology.md) | 자전 편평 J₂ + 조석 triaxial C₂₂ (Principia 중력모델) | Helled 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan 앵커 |
 | [cassini-state-obliquity-methodology](cassini-state-obliquity-methodology.md) | 조석으로 감쇠된 천체의 평형 자전축 기울기 (고정됐다고 기울기 0은 아님) | Peale 1969; Ward 1975; Ward & Hamilton 2004; Bills 2005; Baland 2011; Margot 2007 (수성 앵커) |
+| [spin-axis-inclination-methodology](spin-axis-inclination-methodology.md) | 자유 회전체(항성/갈색왜성)의 자전축 시선경사 i★ — v sin i + 주기 + 반지름 결합 | Vos, Allers & Biller 2017 ([arXiv:1705.06045](https://arxiv.org/abs/1705.06045)); Masuda & Winn 2020 ([arXiv:2001.04973](https://arxiv.org/abs/2001.04973)); Apai 2021; Burrows 2001 |
 
 ## 궤도·에포크
 
