@@ -75,6 +75,9 @@ def geometry_for(name):
     g['parent_centre'] = np.array(
         [spec['L_shell'] * spec['parent_radius_m'] / spec['moon_radius_m'], 0.0, 0.0])
     g['straightness'] = straightness_profile(g['paths'][0], g['R_tube'])
+    pr = wing_profile(g)
+    dr_ds = ((pr['R_abs'][-1] - pr['R_abs'][-6]) / (pr['s'][-1] - pr['s'][-6]))
+    g['contact_half_angle_deg'] = math.degrees(math.atan(-dr_ds))
     return g
 
 
@@ -201,6 +204,7 @@ def _march(origin, direction, sdf, steps=130, far=None, tol=1e-3):
 
 
 def _normal(P, sdf, h=2e-3):
+    """Central-difference gradient. P is a flat (N,3) list of surface hits."""
     o = np.zeros_like(P)
     g = []
     for ax in range(3):
@@ -276,6 +280,106 @@ def render_profile(names, out, size=(880, 470)):
     return out
 
 
+def _project(world, centre, right, up, span, size):
+    """World point → panel pixel, for drawing annotations over a rendered view."""
+    d = np.asarray(world, dtype=float) - centre
+    return (size / 2 + (d @ right) / span * size / 2,
+            size / 2 - (d @ up) / span * size / 2)
+
+
+def render_anatomy(name, out, size=380, fatten=None):
+    """One sheet answering the three shape questions, each in its own panel."""
+    from PIL import ImageDraw, ImageFont
+    spec = geometry_for(name)
+    st = spec['straightness']
+    prof = wing_profile(spec)
+
+    near = 2.35 * st['one_radius']
+    nc = np.array([near * 0.22, 0.0, 0.0])
+    far = 0.60 * float(spec['parent_centre'][0]) + spec['parent_radius']
+    mid = np.array([far * 0.66, 0.0, 0.0])
+    # 굵기 배율은 천체마다 다르게 잡는다 — 고정 x8 은 이미 모천체의 27% 를 차지하는
+    # 판도라의 관을 행성보다 굵게 그려서, 비율을 물어보게 만든다.
+    fat = fatten if fatten is not None else max(
+        1.0, min(8.0, 0.45 * spec['parent_radius'] / spec['R_tube']))
+
+    panels = [
+        ('parent', near, nc, 1.0,
+         f"1. tilt — theta_A = arctan M_A = {spec['theta_A_deg']:.1f} deg",
+         'the B-v plane, seen down the parent direction'),
+        ('flow', far, mid, fat,
+         '2. thickness — a horn in the middle of the run',
+         f'full run; tube drawn x{fat:.1f}, so the taper is relative'),
+        ('field', far, mid, fat,
+         f"3. lead — {prof['phi'][-1]:+.1f} deg of azimuth",
+         'from over the parent pole; flow to the right'),
+        ('flow', max(6.0 * prof['R_abs'][-1], 1e-3), np.array(spec['paths'][0][-1][0]), 1.0,
+         f"4. contact — lands {prof['R_abs'][-1]:.3g} R wide, true scale",
+         f"half-angle {spec['contact_half_angle_deg']:.2f} deg: a needle, not a cone"),
+    ]
+
+    pad, head = 12, 84
+    W = size * 4 + pad * 5
+    H = size + head + pad * 2 + 268
+    sheet = Image.new('RGB', (W, H), (8, 9, 14))
+    dr = ImageDraw.Draw(sheet)
+    try:
+        fnt = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 11)
+        fmid = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 13)
+        fbig = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 16)
+    except OSError:                                   # pragma: no cover
+        fnt = fmid = fbig = ImageFont.load_default()
+
+    dr.text((pad, 10), f"{spec['title']} — Alfven wing anatomy",
+            fill=(232, 238, 248), font=fbig)
+    dr.text((pad, 32),
+            f"M_A {spec['M_A']:.2f}   obstacle {spec['R_obst']:.2f} R   "
+            f"straight for {st['one_radius']:.0f} R of a {st['total']:.0f} R run   "
+            f"lands at {prof['R'][-1] * 100:.1f}% diameter, {prof['phi'][-1]:+.1f} deg of lead   "
+            f"|  blue = straight, orange = bent, grey = parent",
+            fill=(140, 158, 186), font=fnt)
+
+    for idx, (view, span, ctr, fat, title, sub) in enumerate(panels):
+        img, right, up = render_view(spec, view, span, size, full=True,
+                                     centre=ctr, fatten=fat)
+        tile = Image.fromarray((img * 255).astype(np.uint8))
+        x, y = pad + idx * (size + pad), head + pad
+        sheet.paste(tile, (x, y))
+        dr.text((x, y - 34), title, fill=(226, 234, 248), font=fmid)
+        dr.text((x, y - 17), sub, fill=(130, 148, 176), font=fnt)
+
+        od = ImageDraw.Draw(sheet)
+        if view == 'parent':                       # 자기장 축과 끼인각을 겹쳐 그린다
+            for s in (1, -1):
+                a = _project((0, 0, 0), ctr, right, up, span, size)
+                b = _project((0, s * span * 0.9, 0), ctr, right, up, span, size)
+                for k in range(0, 30, 2):          # 점선
+                    t0, t1 = k / 30, (k + 1) / 30
+                    od.line([x + a[0] + (b[0] - a[0]) * t0, y + a[1] + (b[1] - a[1]) * t0,
+                             x + a[0] + (b[0] - a[0]) * t1, y + a[1] + (b[1] - a[1]) * t1],
+                            fill=(96, 108, 132), width=1)
+            lab = _project((0, span * 0.62, 0), ctr, right, up, span, size)
+            od.text((x + lab[0] + 6, y + lab[1]), 'B (field axis)',
+                    fill=(120, 134, 160), font=fnt)
+            ar = _project((0, -span * 0.55, spec['flow_sign'] * span * 0.30),
+                          ctr, right, up, span, size)
+            od.text((x + ar[0], y + ar[1]), '→ flow', fill=(150, 168, 200), font=fnt)
+        if view == 'field':
+            pc = _project(spec['parent_centre'], ctr, right, up, span, size)
+            od.text((x + pc[0] - 22, y + pc[1] - 30), 'parent',
+                    fill=(160, 168, 184), font=fnt)
+            mo = _project((0, 0, 0), ctr, right, up, span, size)
+            od.text((x + mo[0] - 10, y + mo[1] + 12), 'moon',
+                    fill=(160, 168, 184), font=fnt)
+
+    chart = render_profile([name], out + '.tmp.png', size=(W - pad * 2, 250))
+    sheet.paste(Image.open(chart), (pad, head + pad + size + 14))
+    os.remove(chart)
+    os.makedirs(os.path.dirname(out) or '.', exist_ok=True)
+    sheet.save(out)
+    return out
+
+
 def path_arclength_np(P, paths):
     """Arc length of the nearest sample over *both* wings — the tint has to be
     per-wing, or the southern wing gets coloured by the northern one's run."""
@@ -332,7 +436,14 @@ def render_view(spec, view, span, size, full=False, centre=None, fatten=1.0):
     origin, direction, right, up = _camera(view, span, size)
     origin = origin + centre
     t, hit = _march(origin, direction, sdf, far=span * 9)
-    P = origin + t[..., None] * direction
+
+    # 셰이딩은 맞은 픽셀에만. 배경까지 법선 6회 + 최근접 경로 탐색을 돌리면
+    # 고해상도에서 시간의 대부분이 빈 하늘에 쓰인다.
+    img = np.tile(np.array([0.031, 0.036, 0.055]), (size, size, 1))
+    idx = np.nonzero(hit)
+    if not len(idx[0]):
+        return img, right, up
+    P = origin[idx] + t[idx][:, None] * direction[idx]
     n = _normal(P, sdf)
 
     # 광원은 카메라에 물린다 — 뷰마다 조명을 새로 잡으면 형상 비교가 안 된다.
@@ -343,21 +454,18 @@ def render_view(spec, view, span, size, full=False, centre=None, fatten=1.0):
 
     # 직선 구간과 꺾인 구간을 색으로 가른다 — 전이점이 결론이라 캡션보다 그림이 낫다.
     ess = path_arclength_np(P, spec['paths'])
-    straight = ess <= spec['straightness']['one_radius']
     on_parent = (np.linalg.norm(P - spec['parent_centre'], axis=-1)
-                 <= spec['parent_radius'] * 1.02)
-    body = np.where(straight[..., None],
+                 <= spec['parent_radius'] * 1.004)
+    straight = (ess <= spec['straightness']['one_radius']) & ~on_parent
+    body = np.where(straight[:, None],
                     np.array([0.34, 0.52, 0.80]), np.array([0.74, 0.46, 0.30]))
-    body = np.where(on_parent[..., None], np.array([0.40, 0.40, 0.44]), body)
-    straight = straight & ~on_parent
+    body = np.where(on_parent[:, None], np.array([0.40, 0.40, 0.44]), body)
 
-    img = np.zeros((size, size, 3))
-    img += (body * lam[..., None] ** 0.85) * 0.92
-    img += np.where(straight[..., None], np.array([0.42, 0.62, 1.0]),
-                    np.array([1.0, 0.66, 0.42])) * rim[..., None] * 0.55
-    img += np.array([0.05, 0.07, 0.13])
-    img = np.where(hit[..., None], img, np.array([0.031, 0.036, 0.055]))
-    return np.clip(img, 0, 1), right, up
+    shade = (body * lam[:, None] ** 0.85) * 0.92
+    shade = shade + np.where(straight[:, None], np.array([0.42, 0.62, 1.0]),
+                             np.array([1.0, 0.66, 0.42])) * rim[:, None] * 0.55
+    img[idx] = np.clip(shade + np.array([0.05, 0.07, 0.13]), 0, 1)
+    return img, right, up
 
 
 def main():
@@ -366,9 +474,12 @@ def main():
     ap.add_argument('-o', '--out', default='dist/_scratch/alfven-wing.png')
     ap.add_argument('--size', type=int, default=460)
     ap.add_argument('--span', type=float, default=None)
-    ap.add_argument('--fatten', type=float, default=8.0,
-                    help='tube radius multiplier in the full-run panels only, '
-                         'where the true tube is thinner than a pixel')
+    ap.add_argument('--fatten', type=float, default=0.0,
+                    help='tube radius multiplier in the full-run panels; '
+                         '1 = true scale, 0 = pick one per body so the tube '
+                         'never outgrows the parent')
+    ap.add_argument('--anatomy', action='store_true',
+                    help='one sheet: tilt, thickness, lead, plus the profiles')
     ap.add_argument('--profile', action='store_true',
                     help='thickness and lead-angle profiles instead of the 3D views')
     ap.add_argument('--selftest', action='store_true')
@@ -382,10 +493,15 @@ def main():
         print(render_profile(sorted(BODIES), a.out))
         return
 
+    if a.anatomy:
+        print(render_anatomy(a.body, a.out, size=a.size,
+                             fatten=a.fatten if a.fatten > 0 else None))
+        return
+
     spec = geometry_for(a.body)
     far = 0.62 * float(spec['parent_centre'][0]) + spec['parent_radius']
     mid = np.array([far * 0.62, 0.0, 0.0])
-    fat = a.fatten
+    fat = a.fatten or 8.0
     st = spec['straightness']
     near = a.span or 1.9 * st['one_radius']
     nc = np.array([near * 0.30, 0.0, 0.0])
