@@ -257,6 +257,30 @@ stability-sim reports (+ ko mirrors), ~300 replacements.
 
 ---
 
+### 5.6 Where a physical value lives — one source per body class
+**Rule:** **NearStars bodies:** the physical values live in `phase4/<system>.yaml`; the viewer
+and the emitter both read the board, and edits are made *on the board*, never on a preset.
+**Sol bodies:** they are a by-product of the methodology, not NearStars content, so they get
+**no Phase 4 board**. Their record is
+[`docs/reference/solar-system-radiation-belts.md`](docs/reference/solar-system-radiation-belts.md)
+(evidence + derivation, per body, with citations) and their machine values live in the
+`BODIES` table in `scripts/viz/render_belts_bodies.py`, which feeds the viewer *and*
+`NearStars-SolarSystemRadiation.cfg`. **Stock presets** are authored only where a comparison
+is wanted, and are held by the viewer in the same table. `*_pre` presets are neither: they
+are pre-re-gate snapshots kept for the before/after pairing.
+
+**Why:** two failures on 2026-08-17, both the same shape — a value written to one surface and
+not the others. A hand `pandora_regate` preset was added while the board was already feeding
+the viewer, creating a second source for the same numbers; and Ganymede's pending plan was
+written into the belts document's prose but not into its preset, so the viewer showed
+`pause_waist`/`pause_smooth` as unset and never offered the plugin-set button.
+
+**Details:** a magnetosphere value has **four surfaces** and a change is not finished until
+each is checked: the record (board row, or the belts document for Sol), the emitted cfg, the
+viewer preset, and the reference page. `./scripts/check.sh` catches mirror and freshness
+drift but not this, so it is a habit rather than a gate. When a Sol physical value changes,
+the belts document and the `BODIES` table move together.
+
 ## 6. Rolled-Back Patterns — Do Not Re-Propose
 
 ### 6.1 LLM wiki (Karpathy pattern) — rolled back 2026-05-25

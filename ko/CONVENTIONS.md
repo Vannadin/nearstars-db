@@ -244,6 +244,26 @@ A b I~V. 2026-07-30에 docs/reference·plans·stability-sim 리포트(+한글 �
 
 ---
 
+### 5.6 물리값이 사는 자리 — 천체 부류당 출처 하나
+**규칙:** **NearStars 천체**는 물리값이 `phase4/<system>.yaml` 에 있다. 뷰어와 emitter 가 둘 다
+보드를 읽고, 수정은 *보드 쪽에서* 한다. 프리셋을 고치지 않는다.
+**태양계 천체**는 방법론의 부산물이지 NearStars 콘텐츠가 아니므로 **Phase 4 보드를 만들지 않는다.**
+기록은 [`docs/reference/solar-system-radiation-belts.md`](docs/reference/solar-system-radiation-belts.md)
+(천체별 근거 + 도출, 인용 포함)이고, 기계값은 `scripts/viz/render_belts_bodies.py` 의 `BODIES` 표에
+있다. 그 표가 뷰어와 `NearStars-SolarSystemRadiation.cfg` 를 함께 먹인다. **스톡 프리셋**은 비교가
+필요할 때만 만들고 같은 표에 뷰어가 들고 있는다. `*_pre` 프리셋은 물리도 스톡도 아니라 재게이트 전
+스냅샷이며, 전/후 짝짓기용으로 남긴다.
+
+**왜:** 2026-08-17 에 같은 모양으로 두 번 물렸다 — 값을 한 표면에만 적고 나머지를 안 맞춘 것.
+보드가 이미 뷰어를 먹이고 있는데 `pandora_regate` 프리셋을 손으로 추가해 같은 숫자의 출처를 둘로
+만들었고, 가니메데의 계획값은 벨트 문서 산문에만 적어서 뷰어에는 `pause_waist`/`pause_smooth` 가
+미적용으로 보이고 plugin-set 버튼도 안 떴다.
+
+**세부:** 자기권 값에는 **표면이 넷** 있고, 넷 다 확인하기 전엔 작업이 끝난 게 아니다 — 기록(보드 행,
+태양계는 벨트 문서), emit 된 cfg, 뷰어 프리셋, 레퍼런스 페이지. `./scripts/check.sh` 는 미러와 신선도
+드리프트는 잡지만 이건 못 잡는다. 게이트가 아니라 습관이다. 태양계 물리값을 고칠 때는 벨트 문서와
+`BODIES` 표를 같이 움직인다.
+
 ## 6. 롤백된 패턴 — 재제안 금지
 
 ### 6.1 LLM 위키(Karpathy 패턴) — 2026-05-25 롤백
