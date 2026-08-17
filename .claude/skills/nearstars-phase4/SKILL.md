@@ -89,6 +89,18 @@ Most axes on most bodies are `passthrough` (Phase 3 default emits unchanged);
 Phase 4 records **only the deltas** — plus explicit `passthrough`-confirm rows
 where a measurement-less axis would otherwise take a silent engine default.
 
+## Step 0 — First run on a body? Follow the first-run standard
+
+Authoring a body's rows for the first time is NOT freeform per-decision work:
+it follows the fixed procedure in
+[`references/first-run-standard.md`](references/first-run-standard.md) —
+coverage table first (all 11 axes dispositioned before any row), fixed block
+order (identity → bulk → orbit(+validated 1950.0 phase) → … → gameplay last),
+methodology-first rule, one-block-at-a-time owner loop with prose feedback both
+ways, orbit-counted validation durations, and the schema-gotcha list. Ad-hoc
+first runs each miss different things (2026-08-17 lesson); the standard exists
+so they stop doing that.
+
 ## Step 1 — Pre-flight: pick the decision, open the board
 
 - Confirm Phase 3 is done for the body (there is a `docs/phase3/<slug>.html`
