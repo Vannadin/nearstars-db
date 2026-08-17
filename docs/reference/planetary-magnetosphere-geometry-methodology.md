@@ -119,7 +119,106 @@ That form is **not implemented**, and this is where the project's shape policy a
 | a fitted α exists | **Shue** | Mercury, Earth, Jupiter, Saturn |
 | an α adopted by analogy | **Shue**, labelled as an analogy | Uranus, Neptune |
 | Shue geometrically impossible | generalized stock (`pause_waist` / `pause_smooth`) | **Venus, Mars** — the induced branch |
-| the flow is sub-Alfvénic | **Alfvén wings** (below) | Ganymede, A b III |
+| the flow is sub-Alfvénic | **Shue**, tail shortened by M_A (below) | Ganymede, A b III |
+
+### Sub-Alfvénic bodies — a shorter Shue tail
+
+A sub-Alfvénic obstacle raises no bow shock and cannot draw a long tail: the downstream lean
+of the structure is `arctan M_A`, so a flow that cannot drag cannot stretch. **In game that
+is the whole of it** (owner decision, 2026-08-17). The shape stays Shue, and the only change
+is the tail ratio:
+
+```
+L = 150^M_A × nose                  →  pause_extension = 2^α / 150^M_A
+```
+
+The ratio interpolates *geometrically* between a sphere and the ordinary 150, so it costs no
+new coefficient — `M_A` is already computed for the regime test — and lands exactly on both
+ends: `M_A` 0 gives 1, a sphere, and `M_A` 1 gives 150. Scaling 150 linearly by `M_A` was
+tried first and is wrong at the small end, asking for a 44% tail at A b III where the
+physical day–night asymmetry is 0.01%.
+
+| body | M_A | nose | tail ratio | `pause_radius` | `pause_extension` | tail closes at |
+|---|---|---|---|---|---|---|
+| Ganymede | 0.479 | 2.110 R_G | 11.03 × | 2.9834 | 0.12826 | 23.3 R_G |
+| A b III (Pandora) | 0.0096 | 3.386 R_moon | 1.05 × | 4.7880 | 1.34763 | 3.55 R_moon |
+
+Compression is `2^α` = 1.4142 in both. A b I owns no field, so no pause is emitted for it at
+all; its `M_A` ~ 0 is the sphere limit of the same rule.
+
+α comes by analogy at 0.5, the cylindrical threshold, since no sub-Alfvénic magnetopause has
+a fitted one.
+
+The obstacle itself is a **sphere**: confinement is magnetic pressure everywhere plus ram on
+the upstream side only, their ratio is `2M_A²`, and with the `p^(-1/6)` standoff the day–night
+asymmetry is `(1 + 2M_A²)^(1/6)` — 8% at `M_A` 0.5 and falling.
+
+Everything else about a wing — the tube along the Alfvén characteristic, its landing on the
+parent's ionosphere, the reflected fan downstream — is **visualisation material and reaches
+no cfg**. The geometry is derived in `scripts/refs/magnetopause_geometry.py` and drawn by
+`scripts/viz/render_alfven_wing.py`; see the explainer row in
+[`tools.md`](tools.md#one-off-explainers--index).
+
+### Belt extent
+
+Trapped particles ride closed dipole field lines (L-shells), so the belts are
+**bounded outside by the magnetopause** (`R_outer ≲ 0.6–0.8 R_mp`) and inside by
+the atmosphere/surface (`R_inner ≈ 1.1–2 R_p`). A stronger field → larger standoff
+→ room for belts farther out. This is the one place field strength directly sizes
+the belts.
+
+### Induced magnetospheres — the no-dynamo branch
+
+Everything above assumes an intrinsic dipole. A body with **no dynamo but an
+atmosphere** still gets a magnetosphere-like structure: sunlight photoionizes the
+upper atmosphere, the conducting ionosphere excludes the wind's draped field, and
+the boundary that forms is the **ionopause / induced magnetosphere boundary**
+(Bertucci 2011, [`2011SSRv..162..113B`](https://ui.adsabs.harvard.edu/abs/2011SSRv..162..113B), the Mars/Venus/Titan review; Luhmann 1991,
+[`1991SSRv...55..201L`](https://ui.adsabs.harvard.edu/abs/1991SSRv...55..201L)). It is a near-permanent feature, not an occasional one
+(Zhang 2009, [`2009GeoRL..3620203Z`](https://ui.adsabs.harvard.edu/abs/2009GeoRL..3620203Z)).
+
+**Standoff.** The balance is ionospheric *thermal* pressure against the shocked-wind
+pressure, not magnetic pressure against ram pressure, so Part A's `^(1/6)` law does
+not apply. Use the measured scale instead: at Venus the mean ionopause sits **330 km
+above the subsolar point, 700 km at the dusk terminator and 1000 km at dawn**, and it
+expands and contracts with wind pressure (Brace 1980, [`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)) — that
+is **1.05 R_V subsolar, 1.12–1.17 R_V at the terminator**. Adopt `1.05–1.2 R_p` for
+an Earth-to-Venus-class atmosphere and say which end you took; there is no useful
+field parameter to derive it from.
+
+**Which branch a body takes.** Not simply "does it have a dynamo": a *weak* dipole
+can be worse than none. In hybrid simulations of a Mars-sized planet, increasing the
+field **increases** ion escape until the dipole's standoff exceeds the induced
+boundary, and only past that does a field start shielding (Egan 2019,
+[`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)). So the crossover test is `R_mp(B_eq) > r_ionopause`, not
+`B_eq > 0`. Below it, treat the body as induced.
+
+**Close-in caution.** The induced magnetosphere can disappear outright when the IMF
+turns nearly radial, and by extension under the extreme wind pressures of a close-in
+orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
+rather than assuming a permanent boundary.
+
+**Shape function: the stock pause function, generalized.** The literature has its own
+form for this boundary and it is not Shue: the published induced-magnetosphere-boundary
+model is "a circle on the dayside and a straight line on the nightside" (Martinecz 2009,
+[`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M)), which Edberg 2024 ([`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E),
+[2410.21856](https://arxiv.org/abs/2410.21856)) tested against Solar Orbiter, BepiColombo and Parker
+Solar Probe crossings and found valid to at least 20 R_V unchanged, the nightside line
+being `ρ = 1.13 − 0.101·X'` — a 5.77° flare. Conic sections are used at these planets for
+the *bow shock*, not for this boundary.
+
+That form is **not implemented**, and this is where the project's shape policy applies
+(owner decisions, 2026-08-14):
+
+> Unify on Shue wherever possible. Fall back to the generalized stock function **only where
+> Shue geometrically cannot represent the boundary**, or where no fitted α exists to use.
+
+| condition | shape | bodies |
+|---|---|---|
+| a fitted α exists | **Shue** | Mercury, Earth, Jupiter, Saturn |
+| an α adopted by analogy | **Shue**, labelled as an analogy | Uranus, Neptune |
+| Shue geometrically impossible | generalized stock (`pause_waist` / `pause_smooth`) | **Venus, Mars** — the induced branch |
+| the flow is sub-Alfvénic | **Shue**, tail shortened by M_A (below) | Ganymede, A b III |
 
 ### The fourth shape family — Alfvén wings
 

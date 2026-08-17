@@ -97,11 +97,34 @@ def cfg_fields(nose, alpha, tail_ratio=150.0):
     }
 
 
-def sphere_fields(standoff):
-    """The Alfven-wing case: a true sphere at the measured standoff.
+def wing_tail_ratio(M_A, base=150.0):
+    """Tail length ratio for a sub-Alfvenic body, in nose radii.
 
-    Ganymede precedent — sub-Alfvenic flow means no bow shock and no swept
-    tail, so compression, extension and height_scale are all unity.
+    Owner decision 2026-08-17: an Alfven wing enters the game as nothing more
+    than **a shorter Shue tail**. The wing's own geometry — the tube, the
+    landing on the parent's ionosphere, the reflected fan — is visualisation
+    material and does not reach a cfg.
+
+    The ratio interpolates geometrically between a sphere and the ordinary
+    `base`, which costs no new coefficient and lands exactly on both ends:
+
+        ratio = base ** M_A          ratio(0) = 1 (sphere), ratio(1) = base
+
+    Scaling `base` *linearly* by M_A was the first attempt and is wrong at the
+    small end: at A b III's M_A 0.0096 it asks for a tail 44% longer than the
+    nose, where the physical day-night asymmetry is 0.01%. The geometric form
+    gives 5% there, and 11 nose radii at Ganymede's M_A 0.48 against the usual
+    150 — short, as intended, and reached continuously rather than by a switch.
+    """
+    return float(base) ** float(M_A)
+
+
+def sphere_fields(standoff):
+    """A true sphere at the measured standoff — the M_A -> 0 limit.
+
+    Kept for the degenerate case and for boards written before the tail-ratio
+    rule above; `cfg_fields(nose, alpha, wing_tail_ratio(M_A))` reaches the same
+    place continuously and is what new work should use.
     """
     return {
         'pause_radius': standoff,

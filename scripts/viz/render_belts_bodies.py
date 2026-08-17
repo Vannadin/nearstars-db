@@ -311,7 +311,7 @@ BODIES={
    # 자기권이 서고, 그런 흐름은 뒤로 접힌 꼬리 로브를 만들지 않는다. 그래서 ext = comp 로 야간면을
    # 주간면과 대칭으로 닫고(닫힘 2.0 R_G = 노즈와 같음), 이 바디에는 L = 150×노즈 관례도 적용하지
    # 않는다(파일 머리말의 제외 항목).
-   'pause':{'radiation':-0.01,'rad':2.0,'comp':1.0,'ext':1.0,'hscale':1.0}},
+   'pause':{'radiation':-0.01,'rad':2.9834,'comp':1.4142,'ext':0.12826,'hscale':1.0}},  # 2026-08-17: 구 → M_A 로 줄인 Shue 꼬리 (L = 150^M_A x nose, M_A 0.479 → 11.03x)
 
  # ---- PROXIMA d: 16 G SPI 관측장 (Zapatero Osorio 2026) → 지구급 자기권 + 강한 포획 벨트 ----
  # 기하 도출(자기권 기하 방법론 Chapman-Ferraro): B_eq = 극장 16 G / 2 = 8 G;
@@ -363,6 +363,12 @@ BODIES={
  #   게다가 템플릿 1.25/1.1 은 노즈 1.14 를 주는데 보드 기록 standoff 는 1.54 였다.
  # standoff 1.54 가 수성 1.45 와 거의 같고, 수성은 Shue alpha 가 피팅된 유일한 소형 자기권이다
  #   (0.5, Winslow 2013, https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W).
+ # ---- PANDORA 재게이트: 짧은 꼬리 (오너 결정 2026-08-17) ----
+ # 아음속은 별도 형상 계열이 아니라 Shue 꼬리를 M_A 로 줄이는 것으로만 인게임에 들어온다.
+ #   L = 150^M_A x nose. M_A 0.0096 → 1.049x, 즉 노즈 3.386 에 꼬리 3.55 (거의 구).
+ 'pandora_regate':{'title':'Pandora — re-gated (short tail)','sub':'nose 3.386 against the TOTAL confining pressure; alpha 0.5 by analogy, tail ratio 150^M_A = 1.05 so the tail closes at 3.55 R_moon','R':6,'tilt':10,
+   'inner':{'radiation':4.0,'grad':2.09,'dist':1.0193,'rad':0.8489,'dxy':0.7196,'comp':1.015,'ext':0.961,'bdist':0.0971,'brad':0.9349,'bdxy':0.8829},
+   'pause':{'radiation':-0.01,'rad':4.788,'comp':1.4142,'ext':1.34763,'hscale':1.0}},
  'proxima_b_pre':{'title':'Proxima Cen b — pre-regate board','sub':'stock irregular template (Mars crustal, no dynamo); template nose 1.14 vs recorded standoff 1.54','R':3,'tilt':30,'offset':0.25,
    'pause':{'radiation':-0.005,'rad':1.25,'comp':1.1,'ext':0.75,'hscale':1.0,'deform':0.1}},
  # ---- PROXIMA CEN c: alpha 0.5 → 0.58, 꼬리 125 → 1791 ----
