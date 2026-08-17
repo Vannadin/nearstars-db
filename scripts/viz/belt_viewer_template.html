@@ -329,6 +329,20 @@ function pauseSDF(x,y,z,P){
   if(P.deform>0.001){const S=(P.dscale==null?1:P.dscale); v += Math.sin(px*5*S)*Math.sin(py*7*S)*Math.sin(z*6*S)*P.deform;}
   return v;
 }
+// 계면의 노즈(항성 쪽 거리)와 꼬리 길이. 스톡에서는 rad/comp · rad/ext 지만 smooth 를 켜면
+// 그 두 나눗셈이 더는 맞지 않는다 — |px| = rad 를 u 에 대해 그대로 푼다. 판독·오버레이·cfg
+// 역산이 전부 이 함수를 거쳐야 슬라이더가 그리는 형상과 숫자가 같은 것을 말한다.
+//   A·u + B·√(u²+w²) = ±rad,  A=(c+e)/2, B=(c−e)/2  →  u = (A·rad ∓ |B|√(rad²+c·e·w²)) / (c·e)
+// (판별식이 B²(rad²+c·e·w²) 로 떨어져 닫힌 해다. w=0 이면 rad/comp · rad/ext 로 환원된다.)
+// waist 는 형상을 통째로 옮기는 항이라 u 를 푼 뒤에 더한다(노즈는 +, 꼬리는 −).
+function pauseNoseTail(P){
+  const c=P.comp, e=P.ext, w=P.smooth||0, ce=c*e;
+  if(!(ce>0)) return {nose:0, tail:0, uNose:0, uTail:0};
+  const A=0.5*(c+e), B=Math.abs(0.5*(c-e));
+  const s=B*Math.sqrt(P.rad*P.rad + ce*w*w), W=P.waist||0;
+  const uN=(A*P.rad-s)/ce, uT=(A*P.rad+s)/ce;
+  return {uNose:uN, uTail:uT, nose:uN+W, tail:uT-W};
+}
 const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
 // inferno colormap
 const STOPS=[[0,0,4],[27,12,65],[74,12,107],[120,28,109],[165,44,96],[207,68,70],[237,105,37],[251,155,6],[247,209,61],[252,255,164]];
@@ -431,8 +445,8 @@ function sceneExtent(){
     const m=B.dist+B.rad;
     e=Math.max(e, m/Math.min(B.comp,B.ext,1), m); };
   belt(state.inner); belt(state.outer);
-  if(state.pause.on){ const P=state.pause;
-    e=Math.max(e, P.rad/P.comp+Math.abs(P.waist||0), P.rad/P.ext+Math.abs(P.waist||0), P.rad/P.hscale); }
+  if(state.pause.on){ const P=state.pause, nt=pauseNoseTail(P);
+    e=Math.max(e, Math.abs(nt.nose), Math.abs(nt.tail), P.rad/P.hscale); }
   return Math.ceil(e*1.06);
 }
 function updateViewMax(){
@@ -532,9 +546,12 @@ function toCfg(){
   const tilt=s.view.tilt; if(Math.abs(tilt)>1e-4) L.push('  geomagnetic_pole_lat = '+nm(90-tilt));
   const goff=s.view.offset||0; if(goff>1e-4) L.push('  geomagnetic_offset = '+nm(goff));
   L.push('}');
-  if(P.on){ const V=state.view, fx=V.shue_r0>0;
-    L.push('// Shue-native pause (KerbalismShuePause PR 채택 시): pause_nose = '+nm(fx?V.shue_r0:P.rad/P.comp)+
-    ' · pause_alpha = '+nm(fx?V.shue:Math.log2(P.comp))+' · pause_tail = '+nm(fx&&V.shue_L>0?V.shue_L:P.rad/P.ext)+
+  if(P.on){ const V=state.view, fx=V.shue_r0>0, nt=pauseNoseTail(P);
+    // 역산값은 smooth·waist 가 든 실제 형상에서 읽는다. α 는 방법론 Part C 의 log2(compression)
+    // 인데, 일반화형에서는 compression 이 1.0 으로 은퇴하므로 형상이 주는 실효 압축비
+    // rad/u_nose 를 넣는다(w=0·waist=0 이면 P.comp 로 환원 → 옛 출력과 동일).
+    L.push('// Shue-native pause (KerbalismShuePause PR 채택 시): pause_nose = '+nm(fx?V.shue_r0:nt.nose)+
+    ' · pause_alpha = '+nm(fx?V.shue:Math.log2(P.rad/nt.uNose))+' · pause_tail = '+nm(fx&&V.shue_L>0?V.shue_L:nt.tail)+
     (fx?' (보드 고정값)':' (pause 역산값)')); }
   return L.join('\n');
 }
@@ -733,11 +750,11 @@ function render(){
   if(alS>0.05 && state.pause.on){
     const P=state.pause;
     // 고정 앵커(보드 ⚗ pause_nose/tail)가 있으면 그 물리값 사용 — pause 슬라이더를 움직여도 Shue 기준은 불변
-    const fixed=state.view.shue_r0>0;
-    const nose=fixed?state.view.shue_r0:P.rad/P.comp+(P.waist||0);
+    const fixed=state.view.shue_r0>0, nt=pauseNoseTail(P);
+    const nose=fixed?state.view.shue_r0:nt.nose;
     const oy=c-(state.view.offset||0)*ppr;   // 계면 SDF 와 같은 원점 — geomagnetic_offset 적용
     if(nose>0.3){
-      const L=(fixed&&state.view.shue_L>0)?state.view.shue_L:P.rad/P.ext-(P.waist||0);
+      const L=(fixed&&state.view.shue_L>0)?state.view.shue_L:nt.tail;
       const m=1;                          // 테이퍼 m=1 고정 (기저형, 노브 없음 — 오너 확정 2026-07-23)
       ctx.lineWidth=1.5;
       ctx.font='10px ui-monospace,monospace';
@@ -818,12 +835,12 @@ function orbitLabel(){
   const o=state.orbit; if(!o) return '';
   return lang==='ko' ? (o.ko+' '+t('orbitOf')) : (t('orbitOf')+' '+o.en);
 }
-// 꼬리 닫힘(pause_radius/pause_extension) 대 모천체 궤도반경. 축소하지 않고도 읽히도록
+// 꼬리 닫힘(pauseNoseTail) 대 모천체 궤도반경. 축소하지 않고도 읽히도록
 // 범례에 상시 표시한다 — 이 비율이 두 고리를 견주는 이유 그 자체다.
 function tailRatioTxt(){
   const o=state.orbit, P=state.pause;
   if(!o || !(o.r>0) || !P.on || !(P.ext>0)) return null;
-  return t('tailRatio')+' = '+((P.rad/P.ext)/o.r*100).toFixed(1)+'%';
+  return t('tailRatio')+' = '+(pauseNoseTail(P).tail/o.r*100).toFixed(1)+'%';
 }
 function updatePauseLegend(){
   const k=document.getElementById('pauseDoseK'); if(!k)return;

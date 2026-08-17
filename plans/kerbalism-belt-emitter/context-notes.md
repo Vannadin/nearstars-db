@@ -105,3 +105,38 @@ factor is now mechanistic and pinned.
   below (paper: ~30). Their Jupiter L=3 ">=20x below KP" statement also
   directly confirms our "deep strong-field inner belts are not K-P-bound"
   regime call. B_nT direct-field + D override params added for these cases.
+
+## 2026-08-17 — the viewer read the pause nose/tail as if smooth were 0
+
+Every number the belt viewer derived from the pause used the stock closed
+forms `pause_radius / pause_compression` (nose) and `pause_radius /
+pause_extension` (tail). Those hold only when `pause_smooth = 0`. With
+smoothing on, the raster/shader drew the right surface (both evaluate the
+generalized SDF) while the Shue overlay anchor, the scene-extent autoscale,
+the tail-vs-orbit legend and the Shue-native cfg back-computation all quoted
+a body that does not exist. Proxima Cen b read nose 1.345 R_p where the board
+gates 1.25, Pandora 3.64 R_moon against a gated 3.3857, Mercury 2.98 R_M
+against Winslow's 1.45 — the smoothed sets themselves were fine, only the
+read-back was wrong.
+
+Closed form, from solving |px| = pause_radius on the axis:
+
+    A = (comp+ext)/2,  B = |comp-ext|/2,  u = (A*rad -/+ B*sqrt(rad^2 + comp*ext*smooth^2)) / (comp*ext)
+
+nose = u_minus + waist, tail = u_plus - waist. The discriminant collapses to
+B^2 (rad^2 + comp*ext*smooth^2), so no iteration is needed, and at smooth = 0
+it reduces exactly to the two stock divisions. `pauseNoseTail()` is now the
+single source for all four call sites; a headless pass bisects the SDF for
+every preset (both the base and the applied ⚗ plugin set) and matches to
+1e-3, with all smooth = 0 presets bit-identical to the old output.
+
+waist was already carried correctly (it translates the whole surface, so it
+is added after u is solved, + on the nose and - on the tail) — it needed no
+change beyond travelling through the new helper.
+
+The Shue-native `pause_alpha` back-computation was the one place the fix is
+not purely mechanical: methodology Part C maps alpha = log2(compression), but
+the generalized form retires compression to 1.0 and log2(1) = 0. It now feeds
+the shape's effective compression rad/u_nose, which reproduces the gated stock
+compression exactly where both exist (Proxima Cen b: 1.43/1.2507 = 1.1434 vs
+gated 1.144) and reduces to log2(comp) when smooth = waist = 0.
