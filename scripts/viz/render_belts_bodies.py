@@ -363,12 +363,9 @@ BODIES={
  #   게다가 템플릿 1.25/1.1 은 노즈 1.14 를 주는데 보드 기록 standoff 는 1.54 였다.
  # standoff 1.54 가 수성 1.45 와 거의 같고, 수성은 Shue alpha 가 피팅된 유일한 소형 자기권이다
  #   (0.5, Winslow 2013, https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W).
- # ---- PANDORA 재게이트: 짧은 꼬리 (오너 결정 2026-08-17) ----
- # 아음속은 별도 형상 계열이 아니라 Shue 꼬리를 M_A 로 줄이는 것으로만 인게임에 들어온다.
- #   L = 150^M_A x nose. M_A 0.0096 → 1.049x, 즉 노즈 3.386 에 꼬리 3.55 (거의 구).
- 'pandora_regate':{'title':'Pandora — re-gated (short tail)','sub':'nose 3.386 against the TOTAL confining pressure; alpha 0.5 by analogy, tail ratio 150^M_A = 1.05 so the tail closes at 3.55 R_moon','R':6,'tilt':10,
-   'inner':{'radiation':4.0,'grad':2.09,'dist':1.0193,'rad':0.8489,'dxy':0.7196,'comp':1.015,'ext':0.961,'bdist':0.0971,'brad':0.9349,'bdxy':0.8829},
-   'pause':{'radiation':-0.01,'rad':4.788,'comp':1.4142,'ext':1.34763,'hscale':1.0}},
+ # PANDORA 재게이트 프리셋은 여기 두지 않는다 — 판도라는 phase4 보드에서
+ # load_nearstars_specs() 로 자동 유입된다(build_belt_viewer.py). 손 프리셋을 나란히 두면
+ # 출처가 둘이 되어 보드를 고칠 때 갈라진다. 태양계는 이 표, NearStars 는 보드가 단일 출처.
  'proxima_b_pre':{'title':'Proxima Cen b — pre-regate board','sub':'stock irregular template (Mars crustal, no dynamo); template nose 1.14 vs recorded standoff 1.54','R':3,'tilt':30,'offset':0.25,
    'pause':{'radiation':-0.005,'rad':1.25,'comp':1.1,'ext':0.75,'hscale':1.0,'deform':0.1}},
  # ---- PROXIMA CEN c: alpha 0.5 → 0.58, 꼬리 125 → 1791 ----
