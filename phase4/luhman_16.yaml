@@ -242,6 +242,14 @@ decisions:
       searches ever pointed at a brown dwarf found nothing, and the two facts do
       not clash: the upper atmosphere is too cold and neutral to couple to the
       field, so a kilogauss magnet can sit under the clouds in perfect silence.
+      And this dynamo does the job a stellar wind would do, supplying the magnetic
+      pressure itself. Because the pair plows through interstellar gas at 26 km/s,
+      the boundary where that pressure meets the interstellar ram stands at 490
+      body radii, a fifth of an astronomical unit. The flow barely exceeds the
+      local magnetosonic speed, so only a weak wave forms ahead of the boundary,
+      and the tail streams thirty astronomical units downwind alongside its
+      companion's. It also keeps one proton belt, fed the same way Earth's inner
+      belt is.
     narrative_ko: >
       이 천체의 자기장을 측정한 기록은 없지만, 열수지를 통해 값을 유추할 수 있다.
       빠르게 도는 대류 구체에서는 내부를 관통하는 동력의 양이 자기장 세기를
@@ -249,32 +257,63 @@ decisions:
       갈색왜성을 겨눈 역대 가장 깊은 전파·X선 수색은 아무것도 찾지 못했지만,
       두 사실은 서로 상충하지 않는다. 상층 대기가 지나치게 차갑고 중성이라
       자기장과 엮이지 못해, 킬로가우스 급의 자기장이 구름 밑에 침묵하고 있을 수
-      있다.
+      있다. 그리고 이 다이나모는 항성풍을 대신해 자기압을 만들어낸다. 쌍성이
+      성간 가스를 초속 26 km로 헤치고 나아가므로, 자기압과 성간 램압이 만나는
+      경계가 천체 반지름의 490배, 0.2 천문단위에 선다. 흐름이 국소 자기음속을
+      살짝 넘는 정도라 경계 앞에는 약한 파도만 서고, 꼬리는 하류로 30 천문단위를
+      뻗어 짝의 꼬리와 나란히 흐른다. 또한 지구 내대와 같은 원리의 양성자 벨트도
+      하나 보유하고 있다.
     fields:
       - { name: magnetic_field, value: 1250, unit: G, op: set, note: "B_dyn = 4.8 (M L^2 / R^7)^(1/6) kG, BD branch (dynamo near the surface); R 0.08-0.10 spread gives 1100-1430 G", note_ko: "B_dyn = 4.8 (M L²/R⁷)^(1/6) kG, 갈색왜성 분기(표면 근처 dynamo). R 0.08–0.10이면 1100–1430 G" }
-      - { name: magnetosphere, value: "present but non-emitting; no standoff modeled (no wind ram pressure worth the name at 2 pc isolation)", value_ko: "존재하되 비발광. standoff 미모델(고립계라 이렇다 할 항성풍 램압 없음)", op: set }
-      - { name: radiation_belts, value: "none", op: set, note: "no trapped-particle emission at the Osten 2015 limits; no external plasma source", note_ko: "Osten 2015 상한에서 포획입자 방출 없음. 외부 플라스마원도 없음" }
+      - { name: pause_radius, value: 654.9, unit: R_bd, op: set, note: "= nose x 2^alpha; ISM-ram Chapman-Ferraro. Reproduce: scripts/refs/magnetopause_geometry.py (BROWN DWARFS section)", note_ko: "= 노즈 × 2^α. 성간 램압 Chapman–Ferraro. 재현: scripts/refs/magnetopause_geometry.py (BROWN DWARFS 절)" }
+      - { name: pause_compression, value: 1.3379, op: set, note: "= 2^0.42" }
+      - { name: pause_extension, value: 0.0089195, op: set, note: "= 2^alpha / 150" }
+      - { name: pause_height_scale, value: 1.0, op: set, note: "Shue is axisymmetric", note_ko: "Shue는 축대칭" }
+      - { name: pause_nose, value: 490, unit: R_bd, op: set, note: "0.205 AU; B_eq 441 G (= B_dyn / 2 sqrt 2) vs ISM ram (n 0.2 /cc, v_rel 26 km/s from the LISM cloud vectors)", note_ko: "0.205 AU. B_eq 441 G(= B_dyn/2√2) 대 성간 램압(n 0.2 /cc, v_rel 26 km/s, LISM 구름 벡터)" }
+      - { name: pause_alpha, value: 0.42, op: set, note: "rotation-dominated magnetosphere: Jupiter's fitted ceiling, clamped (the Polyphemus precedent)", note_ko: "회전지배 자기권. 목성 피팅 상한 클램프(폴리페무스 선례)" }
+      - { name: pause_tail, value: 73426, unit: R_bd, op: set, note: "L = 150 x nose = 30.7 AU convention", note_ko: "L = 150 × 노즈 = 30.7 AU 관례" }
+      - { name: radiation_inner, value: 10, unit: "rad/h", op: set, note: "CRAND-fed proton belt, Earth-inner analog (same feeding mechanism); unmodulated interstellar GCR could raise it a few-fold; kept faint under the Osten 2015 null", note_ko: "CRAND 공급 양성자 벨트, 지구 내대 유추(같은 공급 기제). 비변조 성간 우주선이면 몇 배 위. Osten 2015 무음 아래로 약하게 유지" }
+      - { name: radiation_inner_gradient, value: 2.09, op: set, note: "Earth-inner analog profile", note_ko: "지구 내대 유추 프로파일" }
+      - { name: radiation_outer, value: null, na_reason: "No outer belt: a wind/torus-fed population has no source here (no stellar wind, no volcanic moon)", na_reason_ko: "외대 없음. 항성풍·화산위성 공급원이 없어 채울 입자가 없다" }
+    provenance: >
+      2026-08-17 first gated with magnetosphere/belts as prose ("present but
+      non-emitting" / "none"). Re-gated the same day: owner sent it back through
+      the magnetosphere-geometry methodology; the ISM-ram branch was added to
+      magnetopause_geometry.py, and belts moved from none to a faint CRAND proton
+      belt after the 2023 UCD radiation-belt imaging (and the 2025 binarity
+      enhancement) made the class precedent observational.
     gate:
       criterion: [derived-grounding]
       verdict: methodology-derived
       evidence: >
-        Energy-flux dynamo scaling (Reiners & Christensen 2010 form) with measured
-        M 0.0320 M_sun and L 2.14e-5 L_sun, assumed R 0.090 R_sun: B_dyn 1246 G,
-        bracket 1100-1430 G over R 0.08-0.10. Consistency check with observation:
-        Osten 2015's non-detections (log Lr/Lbol < -18.1, log Lx/Lbol < -5.7) are
-        explicitly compatible with a ~kG dynamo field, since the cool neutral
-        atmosphere decouples matter from field; the paper itself cites the same
-        Christensen scaling predicting ~1 kG for this class. Caveat: no direct
-        field measurement exists; the value is a recipe output on measured inputs.
+        Field: energy-flux dynamo scaling (Reiners & Christensen 2010 form) on
+        measured M and L, assumed R: B_dyn 1246 G, bracket 1100-1430 over R
+        0.08-0.10; compatible with the Osten 2015 non-detection (neutral
+        atmosphere decouples matter from field; the paper cites the same scaling
+        predicting ~1 kG for this class). Geometry: the magnetosphere-geometry
+        recipe on the ISM-ram branch, nose 490 R_bd from B_eq 441 G vs rho v^2
+        (n 0.2 cm-3, v_rel 26 km/s from the LISM cloud vectors, G/LIC/Blue span
+        24-28), M_A 1.77 super-Alfvenic so the Shue form with the
+        rotation-dominated alpha 0.42 clamp applies; the cfg set is emitted by
+        the same script. Belt: the class precedent is imaged (Kao 2023 Nature;
+        Climent 2023 Science) and binaries show belt emission more often (Kao
+        2025); the dose is an Earth-inner CRAND analog, order-of-magnitude,
+        kept faint under the Osten synchrotron null. Caveat: n_ism and the dose
+        anchor are the soft inputs; the nose scales as (n v^2)^(-1/6), so even
+        a factor 4 in pressure moves it only ~20%.
       evidence_ko: >
-        에너지플럭스 dynamo 스케일링(Reiners & Christensen 2010 형)에 측정
-        M 0.0320 M☉·L 2.14e-5 L☉, 가정 R 0.090 R☉을 넣어 B_dyn 1246 G, R
-        0.08–0.10 전파 시 1100–1430 G. 관측 정합성: Osten 2015의 불검출
-        (log Lr/Lbol < −18.1, log Lx/Lbol < −5.7)은 차가운 중성 대기가 물질과
-        자기장을 분리하므로 ~kG dynamo와 명시적으로 양립하며, 그 논문 스스로 같은
-        Christensen 스케일링이 이 부류에 ~1 kG를 예측한다고 인용한다. 주의: 직접
-        측정은 없고, 측정 입력 위에서 돌린 레시피 출력이다.
-    refs: ["docs/reference/planetary-dynamo-scaling.md", "2015ApJ...805L...3O"]
+        자기장: 에너지플럭스 dynamo 스케일링(Reiners & Christensen 2010 형)에
+        측정 M·L과 가정 R로 B_dyn 1246 G, R 0.08–0.10 전파 시 1100–1430 G.
+        Osten 2015 불검출과 양립(중성 대기가 물질과 자기장을 분리. 논문 스스로
+        같은 스케일링의 ~1 kG 예측을 인용). 기하: 자기권 기하 레시피의 성간
+        램압 분기로 B_eq 441 G 대 ρv²(n 0.2 cm⁻³, v_rel 26 km/s, LISM 구름 벡터
+        G/LIC/Blue 24–28)에서 노즈 490 R_bd. M_A 1.77 초알펜이라 회전지배 α 0.42
+        클램프의 Shue 형식이 성립하고, cfg 세트는 같은 스크립트가 낸다. 벨트:
+        부류 선례가 영상으로 확인됐고(Kao 2023 Nature, Climent 2023 Science)
+        쌍성에서 더 잦다(Kao 2025). 선량은 지구 내대 CRAND 유추의 자릿수 값이며
+        Osten 싱크로트론 무음 아래로 약하게 유지. 주의: n_ism과 선량 앵커가 무른
+        입력이지만 노즈는 (nv²)^(-1/6)이라 압력이 4배 틀려도 ~20%만 움직인다.
+    refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/planetary-dynamo-scaling.md", "2015ApJ...805L...3O", "2023Natur.619..272K", "2023Sci...381.1120C", "2403.08860"]
 
   - body: Luhman 16 A
     axis: environment

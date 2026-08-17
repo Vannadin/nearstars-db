@@ -646,6 +646,45 @@ def _report():
 
     print()
     print('=' * 78)
+    print('BROWN DWARFS — isolated pair, ISM ram, astrosphere-style Shue branch')
+    print('=' * 78)
+    # Luhman 16: no stellar wind — the obstacle pressure is the pair's own motion
+    # through the LISM. v_rel from db/refs/lism_kinematics.yaml cloud vectors
+    # (G/LIC/Blue span 24-28 km/s); n from the warm-cloud range, 0.2 cm-3 nominal.
+    # B_eq = equatorial dipole = B_dyn / (2 sqrt 2) with B_dyn from the
+    # planetary-dynamo-scaling BD branch (dynamo at the surface).
+    LIC_B_T = 3e-10          # ~3 uG local-cloud field (IBEX-ribbon scale)
+    n_ism_cm3 = 0.2
+    v_rel_ms = 26e3
+    rho_ism = n_ism_cm3 * 1e6 * AMU   # H-dominated
+    p_ism_Pa = rho_ism * v_rel_ms ** 2
+    v_A_ism = alfven_speed(LIC_B_T, rho_ism)
+    bds = [
+        # name, B_dyn G (dynamo BD branch), R_body m
+        ('Luhman 16 A', 1246.0, 62_613e3),
+        ('Luhman 16 B', 1177.0, 62_613e3),
+    ]
+    print(f'\nISM: n {n_ism_cm3} cm-3, v_rel {v_rel_ms/1e3:.0f} km/s -> '
+          f'p_ram {p_ism_Pa*1e9:.4g} nPa | v_A(LIC) {v_A_ism/1e3:.1f} km/s '
+          f'-> M_A {v_rel_ms/v_A_ism:.2f} (super-Alfvenic: real tail, Shue branch)')
+    for name, B_dyn_G, R_bd in bds:
+        B_eq_uT = B_dyn_G * 100.0 / (2.0 * math.sqrt(2.0))
+        nose = nose_radii(B_eq_uT, p_ism_Pa)
+        alpha = 0.42   # rotation-dominated magnetosphere -> Jupiter's fitted
+                       # ceiling, clamped (same owner call as Polyphemus)
+        f = cfg_fields(nose, alpha)
+        au = nose * R_bd / 1.495978707e11
+        print(f'\n{name}')
+        print(f'  B_dyn {B_dyn_G:.0f} G -> B_eq {B_eq_uT:.0f} uT')
+        print(f'  Chapman-Ferraro nose = {nose:.0f} R_body = {au:.3f} AU')
+        print(f'  alpha = {alpha} (Jupiter fitted ceiling by analogy, '
+              'rotation-dominated)')
+        print(f"  radius {f['pause_radius']:.1f}  comp {f['pause_compression']:.4f}  "
+              f"ext {f['pause_extension']:.7f}  hs 1.0  | L = {f['tail_L']:.0f} R_body"
+              f" = {f['tail_L']*R_bd/1.495978707e11:.1f} AU")
+
+    print()
+    print('=' * 78)
     print('MOONS — embedded in Polyphemus, Alfven-wing test')
     print('=' * 78)
     M_par = 120 * M_EARTH
