@@ -398,8 +398,11 @@ from "forgotten", every body's bulk coverage now follows a **class template**:
   `star | tidally_locked | free_rotator`.
 - **Core fields (all classes):** `mass`, `radius`, `gravity`, `rotation_period`,
   `spin_axis_orientation`, `geopotential_j2`, `reference_radius`, `flattening`, `age`.
-- **star** = core. (`cooling_age` satisfies the age slot for WDs; no obliquity —
-  the spin axis itself is the decision — and no c22/internal_heat slots.)
+- **star** = core + `intrinsic_luminosity` (a self-luminous body's emit-critical
+  number; `internal_heat` satisfies the slot; added 2026-08-17 after an audit found
+  it drifting — boarded on some stars, missing on others). (`cooling_age` satisfies
+  the age slot for WDs; no obliquity — the spin axis itself is the decision — and no
+  c22 slot.)
 - **tidally_locked** = core + `obliquity` (≈0 confirm) + `geopotential_c22` +
   `internal_heat` (+ optional `tidal_heating`/`tidal_surface_flux` for Io-types).
 - **free_rotator** = core + `obliquity` (a real choice) + `internal_heat`;

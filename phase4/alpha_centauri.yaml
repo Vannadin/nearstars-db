@@ -1383,6 +1383,7 @@ decisions:
     fields:
       - { name: mass, value: 1.1055, unit: M_sun, op: passthrough }
       - { name: radius, value: 1.2234, unit: R_sun, op: passthrough }
+      - { name: intrinsic_luminosity, value: 1.521, unit: L_sun, op: passthrough, note: "±0.013 (Kervella 2017); template slot backfilled 2026-08-17 (star-luminosity audit)", note_ko: "±0.013 (Kervella 2017). 2026-08-17 별-광도 감사에서 슬롯 백필" }
       - { name: gravity, value: 202, unit: m/s2, op: passthrough, phase3_default: "derived echo of GM/R^2", phase3_default_ko: "GM/R² 파생 에코" }
       - { name: flattening, value: 2.4e-5, op: set, note: "= (3J₂+q)/2 derived echo (J₂ 4.8e-7, q 4.6e-5); the visual oblateness slot", note_ko: "= (3J₂+q)/2 파생 에코 (J₂ 4.8e-7, q 4.6e-5); 시각 oblate 슬롯" }
       - { name: rotation_period, value: 22, unit: d, op: passthrough }
@@ -1402,6 +1403,7 @@ decisions:
     fields:
       - { name: mass, value: 0.9373, unit: M_sun, op: passthrough }
       - { name: radius, value: 0.8632, unit: R_sun, op: passthrough }
+      - { name: intrinsic_luminosity, value: 0.503, unit: L_sun, op: passthrough, note: "±0.007 (Kervella 2017); template slot backfilled 2026-08-17 (star-luminosity audit)", note_ko: "±0.007 (Kervella 2017). 2026-08-17 별-광도 감사에서 슬롯 백필" }
       - { name: gravity, value: 345, unit: m/s2, op: passthrough, phase3_default: "derived echo of GM/R^2", phase3_default_ko: "GM/R² 파생 에코" }
       - { name: flattening, value: 2.8e-6, op: set, note: "= (3J₂+q)/2 derived echo (J₂ 5.7e-8, q 5.5e-6); the visual oblateness slot", note_ko: "= (3J₂+q)/2 파생 에코 (J₂ 5.7e-8, q 5.5e-6); 시각 oblate 슬롯" }
       - { name: rotation_period, value: 41, unit: d, op: passthrough }

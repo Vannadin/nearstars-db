@@ -106,11 +106,12 @@ BODY_CLASSES = {"star", "tidally_locked", "free_rotator"}
 BULK_CORE = {"mass", "radius", "gravity", "rotation_period", "spin_axis_orientation",
              "geopotential_j2", "reference_radius", "flattening", "age"}
 BULK_TEMPLATE = {
-    "star": BULK_CORE,
+    "star": BULK_CORE | {"intrinsic_luminosity"},
     "tidally_locked": BULK_CORE | {"obliquity", "geopotential_c22", "internal_heat"},
     "free_rotator": BULK_CORE | {"obliquity", "geopotential_c22", "internal_heat"},
 }
-BULK_SLOT_ALTERNATES = {"age": {"cooling_age"}, "internal_heat": {"intrinsic_luminosity"}}
+BULK_SLOT_ALTERNATES = {"age": {"cooling_age"}, "internal_heat": {"intrinsic_luminosity"},
+                        "intrinsic_luminosity": {"internal_heat"}}
 
 
 def nonempty(v):

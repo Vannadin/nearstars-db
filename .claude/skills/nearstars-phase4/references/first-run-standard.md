@@ -42,6 +42,24 @@ standard). Follow it in order; do not improvise the sequence.
 10. `rings`, `satellites` (explicit none is fine)
 11. `gameplay` last (biome shape per the SPEC three-part rule)
 
+## 1b. Anchor composition (thin-anchor style, new boards)
+
+The union rule lets a template slot live in the anchor OR a dedicated row,
+which historically split the boards into "fat anchor" (everything inline) and
+"thin anchor" styles. **New boards use the thin-anchor style**:
+
+- The anchor carries the measured passthrough echoes: mass, radius, gravity,
+  intrinsic_luminosity (stars/BDs) or internal_heat, age, rotation_period,
+  plus the class na fields (obliquity/c22 where they are structurally absent).
+- `bulk.spin_axis_orientation` and `bulk.geopotential_j2` (+ reference_radius
+  + flattening) are ALWAYS dedicated rows — they carry real derivations and
+  deserve their own narrative.
+- Field order inside any bulk row: mass, radius, gravity, flattening,
+  intrinsic_luminosity/internal_heat, age, rotation_period, obliquity,
+  geopotential_* , reference_radius, spin_axis_orientation. (Cosmetic, but it
+  makes cross-body diffs readable.)
+- Existing fat-anchor boards are left as they are; do not churn them.
+
 ## 2. The owner loop (per block)
 
 - Propose ONE block at a time: full row YAML including narrative in both
