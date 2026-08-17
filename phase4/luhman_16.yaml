@@ -392,3 +392,61 @@ decisions:
         기준 무음은 오로라 전류의 부재 증명이 아니다. 부류 선례: T왜성을 포함한
         극저온왜성에서 오로라 방출 확인(Hallinan 2015, Kao 2016, 검출률 ~1할).
     refs: ["2015ApJ...805L...3O", "2015Natur.523..568H", "2016ApJ...818...24K"]
+
+  - body: Luhman 16 A
+    axis: orbit
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      The pair completes a mutual orbit every 27.5 years, swinging between about
+      2.3 and 4.8 astronomical units apart on a moderately stretched path. Every
+      element is measured, read from twelve years of precision astrometry, so the
+      dance needs no invention: the plane, the stretch, the timing of closest
+      approach are all data. Seen from Earth the orbit stands nearly edge-on, the
+      same tilt the two bodies' own spins share. The game clock starts in 1950,
+      two and a half turns before the measured 2017 closest approach, and the
+      starting positions are wound back along the measured orbit to that moment.
+    narrative_ko: >
+      두 천체는 27.5년에 한 번 서로를 돈다. 사이는 2.3에서 4.8 천문단위를 오가는,
+      적당히 늘어난 길이다. 이 궤도의 모든 요소는 12년치 정밀 위치측정에서 읽어낸
+      측정값이라 지어낼 것이 없다. 평면도, 늘어남도, 최근접 시점도 전부 데이터다.
+      지구에서 보면 궤도가 거의 옆으로 서 있는데, 두 천체의 자전축도 같은 기울기를
+      나눠 갖는다. 게임의 시계는 1950년에 시작하므로, 측정된 2017년 최근접에서
+      두 바퀴 반을 되감아 그 시점의 자리에서 출발시킨다.
+    fields:
+      - { name: semi_major_axis_au, value: 3.557, op: passthrough, note: "relative orbit (Lazorenko & Sahlmann 2018)" }
+      - { name: eccentricity, value: 0.343, op: passthrough, note: "±0.005; already non-circular, nothing to de-perfect", note_ko: "±0.005. 이미 비원형이라 손볼 것 없음" }
+      - { name: inclination_deg, value: 100.26, op: passthrough, note: "±0.05 (equivalently 79.74 under the opposite node convention)", note_ko: "±0.05 (노드 규약 반대면 79.74)" }
+      - { name: longitude_ascending_node, value: 139.67, unit: deg, op: passthrough, note: "J2000 equinox (L&S 2018)" }
+      - { name: argument_periapsis, value: 128.1, unit: deg, op: passthrough, note: "±1.5" }
+      - { name: mean_anomaly, value: 194.0, unit: deg, op: set, note: "at the game epoch JD 2433282.5 (1950.0): rewound 2.4611 orbits from T_peri JD 2458039.1 (2017.78, L&S 2018); P ±0.4 yr propagates to ±13°", note_ko: "게임 에포크 JD 2433282.5(1950.0) 기준. 근점 JD 2458039.1(2017.78)에서 2.4611바퀴 되감기. P ±0.4년이 ±13°로 전파" }
+      - { name: spin_orbit_resonance, value: "none (free rotators; 6.94 h and 4.87 h spins vs a 27.5 yr orbit)", value_ko: "없음 (자유 회전. 자전 6.94/4.87시간 대 궤도 27.5년)", op: passthrough }
+      - { name: lagrange_placement, value: "none", op: passthrough }
+    provenance: >
+      2026-08-17 authored with the epoch phase validated by the standard
+      two-integrator run (owner instruction): the 1950.0 state was integrated
+      forward and reproduced the observed 2017.78 periastron before freezing.
+    gate:
+      criterion: [observation, derived-grounding, stability]
+      verdict: methodology-derived
+      evidence: >
+        Elements are the Lazorenko & Sahlmann 2018 astrometric solution
+        unchanged; the one derived number is the epoch phase, M(1950.0) =
+        194.0 deg by the standard rewind M = 360 (JD_epoch - T_peri)/P mod 360.
+        Validated by round trip: integrating the 1950.0 state forward 67.78 yr
+        in both IAS15 and leapfrog lands on the observed periastron (residual
+        0.29 deg, separation 2.337 AU = a(1-e) exact), MEGNO <Y> = 1.976 over
+        1e4 yr (regular, no chaos), leapfrog element drift 0.000 % - full run
+        in the stability report. Caveat: 2.46 orbits of back-propagation turns
+        the P uncertainty into +-13 deg of phase; the elements carry no such
+        inflation.
+      evidence_ko: >
+        요소는 Lazorenko & Sahlmann 2018 위치측정 해 그대로. 도출값은 에포크
+        위상 하나로, M(1950.0) = 194.0° = 360·(JD_epoch − T_peri)/P mod 360
+        표준 되감기다. 왕복 검증 완료: 1950.0 상태를 IAS15·leapfrog 양쪽으로
+        67.78년 순방향 적분하면 관측된 근점에 안착하고(잔차 0.29°, 근접거리
+        2.337 AU = a(1−e) 정확), 10⁴년 MEGNO ⟨Y⟩ = 1.976(규칙적, 카오스 없음),
+        leapfrog 요소 표류 0.000%다. 전체 수치는 안정성 리포트에. 주의:
+        2.46바퀴 역산이라 P 불확도가 위상 ±13°로 불어난다. 요소 자체에는 그런
+        부풀림이 없다.
+    refs: ["2018A&A...618A.111L", "docs/reference/emit-orbit-phase-match-methodology.md", "docs/reference/binary-epoch-pipeline.md", "phase3/stability-sim/STABILITY_REPORT.md"]

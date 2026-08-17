@@ -412,6 +412,28 @@ star–planets–moons hierarchy** in one N-body sim: stellar tide on the moon,
 mutual planet perturbations, and the moon's gravity back on its parent are all
 tracked. (A deliberately-unstable demo; output in `results/with_moons/`.)
 
+## Luhman 16 AB — 1950.0 epoch-rewind validation (2026-08-17)
+
+Phase 4 board (orbit row, Luhman 16 A) rewinds the measured relative orbit
+(Lazorenko & Sahlmann 2018: P 27.54 yr, a 3.557 AU, e 0.343, i 100.26 deg,
+Omega 139.67, omega 128.1, T_peri JD 2458039.1) to the game epoch
+JD 2433282.5 (1950.0), giving M(1950.0) = 194.0 deg (2.4611 orbits back;
+P +-0.4 yr propagates to +-13 deg of phase).
+
+Standard two-integrator validation (REBOUND 5.0.0, units yr/AU/Msun,
+masses 0.0320 + 0.0273):
+
+| check | integrator | result |
+|---|---|---|
+| forward 67.78 yr from the 1950 state | IAS15 | M = 359.71 deg at 2017.78 (periastron residual 0.29 deg); separation 2.337 AU = a(1-e) exact; a/e/i preserved to 4 decimals |
+| same, in-game analog | leapfrog (dt = P/1000) | identical to IAS15 at the printed precision |
+| chaos indicator, 1e4 yr | IAS15 + MEGNO | <Y> = 1.976 (2.0 = regular; no chaos, as expected for a clean two-body pair) |
+| long-run element drift, 1e4 yr | leapfrog | a drift +0.000 %, e drift +0.00000, i unchanged |
+
+Verdict: the 1950.0 state reproduces the observed 2017.78 periastron in both
+integrators; the emit phase M = 194.0 deg is safe to freeze. The only real
+uncertainty is the period itself (+-13 deg of phase), not the dynamics.
+
 ## Solar System — validation against secular theory
 
 A `solar_system` run (8 planets at J2000 elements + masses, Earth+Moon merged;
