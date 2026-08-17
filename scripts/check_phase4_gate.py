@@ -74,6 +74,13 @@ STATUS = {"passthrough", "open", "art-directed", "gated", "emitted", "superseded
 
 # SPEC §1 decision-taxonomy classes — the fixed driver vocabulary (2026-07-28)
 DRIVER_TOKENS = {"window-selection", "engine", "synthetic", "fiction", "art-direction"}
+# gate-criteria.md closed criterion vocabulary (2026-08-17 expansion + normalization)
+CRITERION_TOKENS = {"stability", "error-bar", "dynamical-ceiling", "observation",
+                    "classification", "derived-grounding", "hill-stability",
+                    "composition", "culture", "physics", "visual-checklist",
+                    "canon-consistency", "gameplay", "art"}
+GATE_KEYS = {"criterion", "verdict", "evidence", "evidence_ko",
+             "divergence_note", "divergence_note_ko", "value"}
 
 # SPEC §3.1 prose-hygiene guards over *rendered* fields (2026-07-28): the board
 # viewer shows these slots, so em-dashes, emphasis markup and banned calques
@@ -256,6 +263,27 @@ def check_v2(path, doc):
         if drv is not None:
             toks = [drv] if isinstance(drv, str) else list(drv)
             bad_driver_rows += any(t not in DRIVER_TOKENS for t in toks)
+
+        # gate-criteria.md: closed criterion vocabulary + exact gate keys;
+        # SPEC §3.1: bilingual prose contract (per-row warnings, 2026-08-17)
+        gate = row.get("gate") or {}
+        if isinstance(gate, dict):
+            unknown = set(gate) - GATE_KEYS
+            if unknown:
+                warns.append(f"{loc}: unknown gate key(s) {sorted(unknown)} — "
+                             "gate keys are exactly criterion/verdict/evidence/divergence_note")
+            crit = gate.get("criterion")
+            if crit is not None:
+                ctoks = [crit] if isinstance(crit, str) else list(crit)
+                off = [t for t in ctoks if t not in CRITERION_TOKENS]
+                if off:
+                    warns.append(f"{loc}: criterion token(s) {off} outside the "
+                                 "gate-criteria.md vocabulary")
+        for en_key, ko_key in (("narrative", "narrative_ko"),):
+            if row.get(en_key) and not row.get(ko_key):
+                warns.append(f"{loc}: {en_key} has no {ko_key} pair (SPEC §3.1 bilingual contract)")
+        if isinstance(gate, dict) and gate.get("evidence") and not gate.get("evidence_ko"):
+            warns.append(f"{loc}: gate.evidence has no evidence_ko pair (SPEC §3.1 bilingual contract)")
 
         # SPEC §3.1 prose hygiene over rendered fields (aggregated per file)
         kinds = set()

@@ -694,7 +694,7 @@ decisions:
       - {name: eccentricity, value: 0.04, op: set, note: "변동 ~0.09 max"}
       - {name: inclination_deg, value: 1.5, unit: deg, op: set, note: "상호경사; d와 근접 2:1 (P_d/P_c≈1.99), b와 비공명 1.79; REBOUND MEGNO 2.000 STABLE"}
     gate:
-      criterion: [classification, dynamics]
+      criterion: [classification, stability]
       verdict: owner-override
       evidence: >
         오너 c2 확정 2026-06-25 — a 0.40 AU(2번째)·P~105d·e~0.04·상호경사 1.5°. d와 근접 2:1(near-resonant), b와 비공명(1.79). REBOUND 1e5yr
@@ -898,7 +898,7 @@ decisions:
       - {name: eccentricity, value: 0.04, op: set, note: "변동 0.013–0.048"}
       - {name: inclination_deg, value: 2.5, unit: deg, op: set, note: "상호경사; c와 근접 2:1 (a_d/a_c=1.587), b-c 비공명 2.39; REBOUND MEGNO 2.000 STABLE"}
     gate:
-      criterion: [classification, dynamics]
+      criterion: [classification, stability]
       verdict: owner-override
       evidence: >
         오너 G2 최종확정 2026-06-25 — a 0.635 AU(3번째 canon)·P 209d·e~0.04·상호경사 2.5°. c와 근접 2:1(near-resonant, deep-lock 아님; b-c

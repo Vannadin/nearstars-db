@@ -607,7 +607,7 @@ decisions:
       - { name: aurora, value: "A bright rose-magenta main auroral oval at the poles (H Balmer-α red plus H₂ Fulcher and Balmer-β/γ violet; driven by the internal torus)", value_ko: "극 rose-magenta 밝은 메인 오벌 (H Balmer-α 적색 + H2 Fulcher/Balmer-β/γ 보라; 내부 토러스-구동)", op: set, phase3_default: "aurora_present = false (medium; a value that only evaluated the stellar-wind channel)", phase3_default_ko: "aurora_present=false (medium; 항성풍 채널만 평가한 값)" }
     refs: ["docs/reference/element-plasma-colors.md", "docs/reference/solar-system-radiation-belts.md"]
     gate:
-      criterion: [composition-lock, derived-grounding]
+      criterion: [composition, derived-grounding]
       verdict: pass-in-window
       evidence: >
         The H2/He atmosphere fixes the color (not a choice): H Balmer-α red + H2 Fulcher / Balmer-β/γ violet. No
@@ -1021,7 +1021,7 @@ decisions:
     fields:
       - { name: magnetic_field, value: "~1–2 G (large-scale surface, solar-twin proxy)", op: set }
     gate:
-      criterion: [activity-proxy]
+      criterion: [derived-grounding]
       verdict: pass-in-window
       evidence: >
         No direct ZDI (α Cen is southern-sky, so absent from the BCool/Marsden2014 table). log R'HK −4.95 + Rossby≈1.8 (≈Sun) → proxied to the solar
@@ -1152,7 +1152,7 @@ decisions:
     fields:
       - { name: magnetic_field, value: "~2-4 G (large-scale surface field, stronger than A's)", value_ko: "~2–4 G (large-scale surface, A보다 강함)", op: set }
     gate:
-      criterion: [activity-proxy]
+      criterion: [derived-grounding]
       verdict: pass-in-window
       evidence: >
         K1V has a longer τ_conv, Rossby≈1.4<A → a more efficient dynamo (corroborated by the clean 8.84yr cycle periodicity + X-ray log Lx 27.04 >
@@ -2438,7 +2438,7 @@ decisions:
         note_ko: "면적가중 기하 알베도; Bond 0.3은 surface 행"
     refs: ["docs/reference/element-plasma-colors.md", "docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     gate:
-      criterion: [visual-checklist, composition-lock]
+      criterion: [visual-checklist, composition]
       verdict: pass-in-window
       evidence: >
         Vegetation is Earth-style green and the aurora is intense. The aurora color is composition-fixed (O₂ green 557.7nm + red 630nm,
@@ -3243,7 +3243,7 @@ decisions:
       읽으면 Hades가 백 년 안에 튕겨 나간다. 그래서 그 드라마는 Io가 타는 방식과 같은, 유지되는 약한 이심률 +
       작은 소위성들로 다시 캐스팅됐다. 각 위성의 신상명세와 시작 궤도는 아래 구조화된 목록에 있다.
     gate:
-      criterion: [stability, hill-stability, resonance]
+      criterion: [stability, hill-stability]
       verdict: pass-in-window
       evidence: >
         Avatar-game-literal "Hades grazes Dante" (e=0.30) → ejection within 100yr; tidal heating recast as a sustained

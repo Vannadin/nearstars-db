@@ -60,15 +60,18 @@ decisions:
       epoch: 0
       mass_kg: 8.0e21
       radius_km: 900
+  narrative_ko: >                # mandatory pair — composed Korean, not a translation
+    (한국어 산문. 영어와 같은 구조, 자연스러운 재구성)
   gate:
-    criterion: [observation]     # see gate-criteria.md
-    verdict: pass-in-window      # pass-in-window | documented-divergence
+    criterion: [observation]     # see gate-criteria.md (closed vocabulary)
+    verdict: pass-in-window      # pass-in-window | methodology-derived | documented-divergence | owner-override
     evidence: >
       conclusion in one sentence, then the check actually performed
       (tool / comparison / the numbers), then one honest caveat only if
       a real one exists (SPEC §3.1 fixed shape; no em-dash, no **markup**)
     divergence_note: null        # required (non-null) iff row verdict == documented-divergence
-  refs: ["2508.03814"]           # bibcodes / arXiv ids, machine-readable list (no author names)
+  refs: ["2508.03814"]           # bibcodes / arXiv ids / repo doc paths (methodology docs, sim
+                                 # reports) — machine-readable list, no author names
   fictional: true                # identity axis only — body is not a real catalogued
                                  # object, so the db-parity gate skips it
 ```
@@ -81,9 +84,11 @@ anchor row** tagged `body_class: star | tidally_locked | free_rotator`. Required
 - core (all classes): `mass` `radius` `gravity` `rotation_period`
   `spin_axis_orientation` `geopotential_j2` `reference_radius` `flattening` `age`
 - `tidally_locked` / `free_rotator`: core + `obliquity` + `geopotential_c22` +
-  `internal_heat` (`star` = core only)
-- alternates: `cooling_age` satisfies the age slot, `intrinsic_luminosity` the
-  internal_heat slot.
+  `internal_heat`
+- `star`: core + `intrinsic_luminosity` (added 2026-08-17 — a self-luminous
+  body's emit-critical number)
+- alternates: `cooling_age` satisfies the age slot; `intrinsic_luminosity` and
+  `internal_heat` satisfy each other's slot.
 
 **Union rule** — a slot counts if it appears in the anchor's `fields[]` OR in a live
 dedicated `bulk.<name>` row for the same body (including that row's inner fields,
@@ -105,7 +110,7 @@ Cassandra / Chaos, tidally_locked Dante / Hades / Pandora).
 | field | allowed |
 |---|---|
 | `status` | `passthrough` · `open` · `art-directed` · `gated` · `emitted` · `superseded` |
-| `gate.verdict` / `fields[].verdict` | `pass-in-window` · `documented-divergence` (+ `refs[]`) · `owner-override` |
+| `gate.verdict` / `fields[].verdict` | `pass-in-window` · `methodology-derived` (refs[] = the methodology doc) · `documented-divergence` (+ `divergence_note` + `refs[]`) · `owner-override` |
 | `op` | `set` · `scale` · `passthrough` |
 | `body_class` (bulk anchors) | `star` · `tidally_locked` · `free_rotator` |
 | `axis` group | `identity` `orbit` `bulk` `atmosphere` `surface` `appearance` `magnetism` `environment` `rings` `satellites` `gameplay` |
@@ -129,8 +134,13 @@ Cassandra / Chaos, tidally_locked Dante / Hades / Pandora).
   not yet walked is a WARNING — coverage is open work, structure is hard.)
 
 **WARN (non-fatal):** empty `gate.evidence`; a gated row with no machine-readable
-value/`fields`; a gated row with no `refs`; an `axis` name not in the §0 menu;
-an empty `decisions` list.
+value/`fields`; a gated row with no `refs` (absence rows — all fields none/null —
+are exempt, as are `gameplay`/`identity`); an `axis` name not in the §0 menu; an
+empty `decisions` list; a `driver` token outside the closed 5-token set; a
+`criterion` token outside the gate-criteria vocabulary; a rendered field with an
+em-dash, `**` markup, or a banned calque (캐넌/캐논/구름덱/가스자이언트); a
+`gameplay.difficulty` field (deferred axis); missing `narrative_ko`/`evidence_ko`
+on a row that has the English side; an unknown key inside `gate:`.
 
 `schema_version` is normalized: `2`, `2.0`, and `"2"` all count as v2 — a quoting
 slip cannot silently downgrade a board to the legacy soft path.

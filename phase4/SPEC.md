@@ -21,8 +21,9 @@ format**, the **decision record schema**, and the **cfg connection**.
 **HARD RULES (never violated by Phase 4):**
 1. Phase 2 (the curated DB) and Phase 3 reports are **never mutated** by Phase 4.
 2. Emission stays deterministic: `cfg = f(db/systems, phase3, phase4)`.
-3. Every emitted Phase 4 value is either **inside the Phase 3 window** or carries a
-   **documented divergence** record. No silent departures from canonical.
+3. Every emitted Phase 4 value is either **inside the Phase 3 window**, **computed
+   by a grounded methodology**, or carries a **documented divergence / owner-override**
+   record (§2). No silent departures from canonical.
 
 ---
 
@@ -36,7 +37,8 @@ each decision flows on its own clock through two **roles**:
 - **4a — art-direction (owner).** State the intent for that one axis. May be empty
   ("no art-direction") — then the axis just rides the Phase 3 default.
 - **4b — gate (agent).** Check that one 4a target against Phase 2 + Phase 3 →
-  `pass-in-window` / `documented-divergence` (§2), and write the cfg-ready value.
+  one of the four §2 verdicts (`pass-in-window` / `methodology-derived` /
+  `documented-divergence` / `owner-override`), and write the cfg-ready value.
 
 There is no project-wide "4a is done" moment. The only meaningful question is
 per-row: *what state is this (body, axis) in?* So 4a says *what we want* for a cell;

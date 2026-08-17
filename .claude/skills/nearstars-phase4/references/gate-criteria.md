@@ -6,7 +6,7 @@ automatically; perceptual axes are a human checklist. Every decision resolves to
 
 | Axis group | Criterion | Automated? | Tool / source of the check |
 |---|---|---|---|
-| Orbital (`orbit.a` / `.eccentricity` / `.inclination_deg`) | dynamical stability (survives the play window **and** Principia fixed-step fidelity) **and** within Phase 2 error bars | **yes** | `phase3/stability-sim/scripts/run.py --set/--scale`; verdict + numbers in `STABILITY_REPORT.md`; error-bar bound from the DB |
+| Orbital (`orbit.a` / `.eccentricity` / `.inclination_deg`) | dynamical stability (survives the orbit-counted duration standard in `phase3/stability-sim/STABILITY_REPORT.md` **and** shows bounded drift under leapfrog fixed-step, the Principia proxy) **and** within Phase 2 error bars | **yes** | `phase3/stability-sim/scripts/run.py --set/--scale`; verdict + numbers in `STABILITY_REPORT.md`; error-bar bound from the DB |
 | `bulk.mass` | within M·sin i → true-mass envelope; below the dynamical ceiling | **yes** | isotropic-prior median (×1/sin i); stability ceiling check |
 | `bulk.geopotential_j2` / figure | hydrostatic (Radau–Darwin) at the adopted mass/rotation | derived-grounding | `docs/reference/body-figure-methodology.md`; `phase4/figure/values.md` ledger |
 | `atmosphere.*` (composition / pressure / temperature) | physical & chemical consistency with the Phase 3 synthesis bounds | checklist | Phase 3 report; retention / cosmic-shoreline reasoning |
@@ -27,7 +27,7 @@ Distinguish divergence **from a paper** vs **from a non-paper baseline** — nev
   The test: *is there a paper whose value/model we are contradicting?*
 - **`methodology-derived`** — computed by one of our ADS-grounded methodology recipes
   (`docs/reference/methodology-index.md`). Neither a departure nor an art pick — a
-  grounded derivation. `refs[]` = the methodology's grounding paper(s); the recipe and
+  grounded derivation. `refs[]` = the methodology doc itself (never the papers inside it); the recipe and
   any assumed inputs go in `narrative`. e.g. figure J2 via Radau-Darwin, dynamo B-field,
   Cassini obliquity, tidally-locked T_eq.
 - **`owner-override`** — the value departs from a **non-paper baseline**: a prior
@@ -41,10 +41,15 @@ Distinguish divergence **from a paper** vs **from a non-paper baseline** — nev
 
 ## Criterion vocabulary
 
-Prefer the SPEC §2 set: `stability`, `error-bar`, `dynamical-ceiling`,
-`observation`, `classification`, `derived-grounding`, `hill-stability`,
-`composition`, `culture` (identity/naming only — never a physical-value gate).
-Keep the list tight so a future strict validator can check it.
+The closed set (validator-warned since 2026-08-17): `stability`, `error-bar`,
+`dynamical-ceiling`, `observation`, `classification`, `derived-grounding`,
+`hill-stability`, `composition`, `culture` (identity/naming only — never a
+physical-value gate), `physics` (a physical-range plausibility bound),
+`visual-checklist` (perceptual axes), `canon-consistency` ([CANON]/[GAME]
+agreement), `gameplay` (KSP-facing tuning), `art` (owner aesthetic pick inside
+a physical window). The 2026-08-17 normalization mapped the strays:
+dynamics→stability, resonance→stability, composition-lock→composition,
+activity-proxy→derived-grounding, retention→physics, fiction→canon-consistency.
 
 ## The orbit-gate seam (important)
 

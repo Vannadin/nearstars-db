@@ -33,7 +33,7 @@ decision row — never to invent the art-direction, and never to let an
 un-chosen axis silently take an engine default.
 
 > **Scope.** The authoritative data contract is [`phase4/SPEC.md`](../../../phase4/SPEC.md):
-> the fixed axis menu (§0), the decision taxonomy A–E (§1), the two gate verdicts
+> the fixed axis menu (§0), the decision taxonomy A–E (§1), the four gate verdicts
 > (§2), and the **schema v2** record shape (§3.1). This skill assumes that contract
 > is known and focuses on the *when* and *how* of running one decision. Do not
 > restate the axis menu or the record schema here — link to SPEC.
@@ -44,9 +44,10 @@ Phase 4 is **partially built**, not fully wired:
 
 - ✅ Contract (`phase4/SPEC.md`), validator (`scripts/check_phase4_gate.py` =
   check.sh gate 8), per-body viewer (`scripts/phase4/build_phase4_html.py`).
-- ✅ Boards exist for 6 confirmed systems; **only `alpha_centauri.yaml` is
-  schema v2** — the other five are legacy v1 and must be migrated before they
-  are emit-parseable. `trappist_1` and `luhman_16` have **no board yet**.
+- ✅ Boards exist for 7 systems and **all are schema v2** (the v1 migration
+  finished; `luhman_16.yaml` was first authored 2026-08-17). `trappist_1`
+  still has **no board**. Check `grep schema_version phase4/*.yaml` rather
+  than trusting this line — it has gone stale before.
 - ⚠️ **Emit wiring is aspirational: no writer reads the Phase 4 layer yet.**
   SPEC §4/§6 say the cfg writers consume it, but `kopernicus`/`principia`/`firefly`
   do not. `researchbodies-cfg` used to be the one partial consumer; the boards'
@@ -75,6 +76,7 @@ pick (body × axis) from the fixed §0 menu
    │
    ├─ 4b  gate against Phase 2 (DB) + Phase 3 (window / alternatives)
    │        → pass-in-window   (inside the defensible window)
+   │        → methodology-derived (computed by an ADS-grounded recipe; refs[] = the methodology doc)
    │        → documented-divergence (departs a paper; + note + refs[])
    │        → owner-override   (departs an art choice / AI default / canon; rationale in narrative)
    │
@@ -106,9 +108,12 @@ so they stop doing that.
 - Confirm Phase 3 is done for the body (there is a `docs/phase3/<slug>.html`
   report to read the window/alternatives from). If not, route to `nearstars-phase3`.
 - Open or create `phase4/<system>.yaml`. **The board filename is the db system
-  slug** — `to_file_slug(system_name)` from `scripts/pipeline/_naming.py`, always
-  identical to the db filename (`tau_cet.yaml` ↔ `tau_cet.json`). Never slug from
-  a display name (the old `tau_ceti.yaml` divergence was unified 2026-07-20).
+  slug** — `to_file_slug(system_name)` from `scripts/pipeline/_naming.py`. For a
+  single-star system it matches the db filename (`tau_cet.yaml` ↔ `tau_cet.json`);
+  for a multiple it is the *system* slug, one board covering all components whose
+  db files are per-component (`luhman_16.yaml` ↔ `luhman_16_a.json` + `_b.json`).
+  Never slug from a display name (the old `tau_ceti.yaml` divergence was unified
+  2026-07-20).
   `body:` row keys must equal db `stars[].name` / `planets[].name` exactly —
   that string is the emit join key (SPEC §3 naming contract).
 - New board? Start it with `schema_version: 2`, `system:`, `status: staged`.
@@ -129,7 +134,7 @@ so they stop doing that.
 
 ## Step 3 — 4b: run the 고증 gate
 
-Resolve every decision to one of three verdicts (SPEC §2). Distinguish divergence
+Resolve every decision to one of the four verdicts (SPEC §2). Distinguish divergence
 **from a paper** vs **from a non-paper baseline** — never collapse them:
 
 - **`pass-in-window`** — the value lies inside the Phase 3 window (an error bar,
@@ -220,8 +225,9 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   panel). The per-fact tier map = the system's art-direction doc. Simulation-derived values (stability windows, gap-clearing, phase-match) cite
   the sim report (`phase3/stability-sim/*.md`) in `refs[]`, not just a paper.
 - Gate block keys are exactly `criterion` / `verdict` / `evidence` /
-  `divergence_note`. Source citations → a machine-readable `refs:` list (bibcodes
-  / arXiv ids only). Do **not** use `note`/`paper`/`rationale`.
+  `divergence_note`. Source citations → a machine-readable `refs:` list (bibcodes,
+  arXiv ids, or repo doc paths — methodology docs / sim reports are cited by
+  path, per the provenance rules above). Do **not** use `note`/`paper`/`rationale`.
 - **`refs` must reveal provenance** — what kind of basis a value stands on:
   - **`passthrough` (a measured value flowing straight to emit)** → cite **all**
     the Phase 2/3 measurement papers behind it (every bibcode/arXiv id), not one
@@ -241,10 +247,11 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   A `passthrough` row carries **no** gate block. A replaced decision becomes
   `superseded` (kept for provenance, never emitted) and the replacement is a
   separate live row.
-- The **v2 authoring exemplar is `phase4/alpha_centauri.yaml`** (the migrated
-  many-axis v2 board) — model every new row's shape on it. `phase4/barnards_star.yaml`
-  is **legacy v1** (uses gate keys like `rationale:` that are illegal in v2); cite it
-  only for decision hygiene (the `reproduce:` pointer idea), never copy its row shape.
+- The **v2 authoring exemplars are `phase4/alpha_centauri.yaml`** (the many-axis
+  board) and `phase4/luhman_16.yaml` (a thin-anchor first-run product) — model new
+  rows on them. All boards are v2 now; older ones (`40_eridani`, `barnards_star`,
+  `fomalhaut`, `tau_cet`) still carry pre-normalization driver tokens, so copy row
+  *shape* from them freely but not their `driver:` values.
 
 ## Step 5 — Validate
 

@@ -546,7 +546,7 @@ decisions:
         value_ko: "shoreline 아래(중력 허용치의 23배 초과)이나 호수 세계 전제로 보유 채택"
         op: set
     gate:
-      criterion: [classification, retention, error-bar]
+      criterion: [classification, physics, error-bar]
       verdict: documented-divergence
       divergence_note: >
         On the empirical cosmic shoreline (Zahnle & Catling 2017, v_esc ∝ I_XUV^¼) this planet falls on the
@@ -732,7 +732,7 @@ decisions:
         note: "Area-weighted geometric (visual) albedo; the Bond value 0.33 for the energy budget stays on the surface row."
         note_ko: "면적가중 기하(시각) 알베도; 에너지 수지용 Bond 0.33은 surface 행"
     gate:
-      criterion: [visual-checklist, composition-lock]
+      criterion: [visual-checklist, composition]
       verdict: owner-override
       evidence: >
         The adopted look is a warm ochre and red-brown disk, brightest at the substellar cloud swirl, carrying
@@ -1217,7 +1217,7 @@ decisions:
       inline citations moved to evidence; verdict migrated pass-in-window ->
       methodology-derived (Gate 1 recipe output). No value changed.
     gate:
-      criterion: [retention]
+      criterion: [physics]
       verdict: methodology-derived
       evidence: >
         Airless is the grounded default. Verified: the planet sits below Gate 1's cosmic shoreline in the
@@ -1960,7 +1960,7 @@ decisions:
         note: "Cloud-top geometric albedo (Uranus 0.51 / Neptune 0.41 band)."
         note_ko: "구름 상부 기하 알베도(천왕성 0.51·해왕성 0.41 대역)"
     gate:
-      criterion: [visual-checklist, composition-lock]
+      criterion: [visual-checklist, composition]
       verdict: pass-in-window
       evidence: >
         The adopted value is a pale grey-blue disk with the intrinsic color #c4d0d8. Verified: this was checked
@@ -2325,7 +2325,7 @@ decisions:
       typed fields를 채웠다. Hill 반경과 안정 한계를 수치로 박아 "안정 위성 가능"이라는 종전의 말뿐인 근거를
       검증 가능한 형태로 바꿨다.
     gate:
-      criterion: [fiction, stability, hill-stability]
+      criterion: [canon-consistency, stability, hill-stability]
       verdict: owner-override
       evidence: >
         The adopted value is one fictional moon, and this row is the honesty record of that decision. Verified:
@@ -2423,7 +2423,7 @@ decisions:
         value_ko: "Proxima Centauri c I (고유명 없음)"
         op: set
     gate:
-      criterion: [classification, fiction]
+      criterion: [classification, canon-consistency]
       verdict: pass-in-window
       evidence: "Owner-confirmed 2026-06-23. An art-first fictional moon (fictional moons = FFFF). The Charon analog is physically consistent (Charon is ~50 K water ice with tholin polar caps and no atmosphere; at 652 km an atmosphere cannot be retained, so Charon rather than Pluto is the right counterpart)."
       evidence_ko: "오너 G1 확정 2026-06-23. art-first 픽션 위성(fictional moons=FFFF). 카론 아날로그는 물리 정합(카론=~50K 물얼음 + 톨린 극관 + 무대기, 652 km에서 대기 보유 불가라 명왕성이 아니라 카론이 맞는 짝)."
@@ -2597,7 +2597,7 @@ decisions:
       의존하므로 0.0217 → 5.34e-3으로 4배 줄었고, J₂ 4.70e-3·C̄₂₂ 1.41e-3·flattening 1.18%가 되어 가시 임계 2%
       아래로 내려갔다. 계란형 메쉬 emit 대상에서 제외. 자전은 공전과 같아 17.7 → 35.7시간.
     gate:
-      criterion: [fiction, error-bar]
+      criterion: [canon-consistency, error-bar]
       verdict: pass-in-window
       evidence: >
         The adopted values are a diameter of 652 km, a density of 1.6 g/cm³, a mass of 2.32e20 kg, g 0.146 m/s²

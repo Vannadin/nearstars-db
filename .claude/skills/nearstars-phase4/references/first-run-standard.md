@@ -1,6 +1,9 @@
 # Phase 4 first-run standard — authoring a body's board from zero
 
-The fixed procedure for the FIRST authoring pass of a (body, board). It exists
+The fixed procedure for the FIRST authoring pass of a body — "first run" =
+**that body has zero live rows on its board** (a half-authored body resumes at
+its first missing block in the §1 order, with the coverage table rebuilt from
+what exists; a fully-walked body is per-decision work, not a first run). It exists
 because ad-hoc first runs each miss different things (observed 2026-08-17,
 Luhman 16: the orbit axis was forgotten until the owner flagged it, magnetism
 was first gated as prose without running the geometry methodology, and the
@@ -24,7 +27,10 @@ standard). Follow it in order; do not improvise the sequence.
 
 ## 1. Block order (fixed)
 
-1. `identity`
+1. `identity` + the `bulk` anchor, written as ONE validation unit — an
+   identity-only body hard-fails the validator (no live bulk anchor), so the
+   first checkpoint comes after both rows exist. Owner review still happens
+   per block; only the validator run is joint.
 2. `bulk` anchor (§3.2; body_class from {star, free_rotator, tidally_locked})
 3. `orbit` — including the **epoch phase**: rewind to JD 2433282.5 (1950.0)
    per the phase-match methodology step 3, then **validate round-trip** with
@@ -35,9 +41,12 @@ standard). Follow it in order; do not improvise the sequence.
 6. `surface` (or explicit n/a)
 7. `appearance` (+ split rows like `appearance.aurora` where the owner
    diverges)
-8. `magnetism` — **the geometry methodology + `magnetopause_geometry.py` are
-   mandatory**, never prose-only ("present but non-emitting" is not a row);
-   belts decided with the current class precedents in refs
+8. `magnetism` — mandatory tooling, never prose-only ("present but
+   non-emitting" is not a row): the recipe is
+   `docs/reference/planetary-magnetosphere-geometry-methodology.md` and the
+   calculator is `scripts/refs/magnetopause_geometry.py` (run it; add the
+   body to its report registry so the numbers reproduce); belts decided with
+   the current class precedents in refs
 9. `environment`
 10. `rings`, `satellites` (explicit none is fine)
 11. `gameplay` last (biome shape per the SPEC three-part rule)
@@ -76,9 +85,12 @@ which historically split the boards into "fat anchor" (everything inline) and
 
 - `python3 scripts/check_phase4_gate.py` after EVERY row write; fix to
   0 errors before proposing the next block.
-- Stability runs use the **orbit-counted** duration standard from
-  `phase3/stability-sim/STABILITY_REPORT.md` (duration changes verdicts;
-  10^4 yr is a satellite-system number, not a universal default). Two
+- Stability runs use the **orbit-counted** duration standard: read the
+  "Duration by hierarchy" section of `phase3/stability-sim/STABILITY_REPORT.md`
+  *for the number* before integrating (satellite systems 1e4 yr; two-body /
+  planetary hierarchies: enough orbits that the verdict is duration-stable,
+  >=1e4 orbits as the floor — a 1e4-yr run on a 27-yr binary is 363 orbits and
+  fails the standard). Two
   integrators (IAS15+MEGNO, leapfrog) per the validation standard; process
   and numbers go to the STABILITY_REPORT, the conclusion goes to the row,
   and the report path goes in `refs[]`.
@@ -103,7 +115,8 @@ which historically split the boards into "fat anchor" (everything inline) and
 
 - Coverage table fully dispositioned: no `open` rows left except ones the
   owner explicitly parked.
-- `check_phase4_gate.py`: 0 errors, 0 warnings (or each warning triaged with
-  the owner).
+- `check_phase4_gate.py`: 0 errors, and 0 warnings **attributed to this
+  board** (the validator prints all boards; other systems' warnings are not
+  this run's exit blocker and their boards are not to be churned).
 - Board HTML built and eyeballed; checklist.md ticked; context-notes.md
   carries the decisions-with-reasons; one commit per logical unit throughout.
