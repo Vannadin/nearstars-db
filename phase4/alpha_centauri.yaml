@@ -2759,6 +2759,9 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-27: 차폐 주장에 적용 범위와 유사체를 붙임(가니메데형 부분 차폐, 극 노출).
       Pandora 대비 문구와 magnetosphere 필드 신규. 자기장 세기는 여전히 미도출.
+      2026-08-17: 레짐 정정 + pause 4필드·radiation_model·radiation_pause 신규(이제 cfg 로 나간다). 밀도를 공급원 거리 정규화로 도출(Bagenal 2016 의 32 R_J
+      앵커 0.05 × 1200 공급원 = 60 ions/cm³) → M_A 0.509 아음속. 2026-08-16 의 super-Alfvenic 판정은 밀도를
+      절대 L 로 읽은 것이고, standoff 1.34 와도 어긋났다. standoff 1.34 → 1.313.
       2026-07-28: 세기 도출(오너 결정 ④a, 감사 C7) — RM22 사다리, 가니메데 앵커 ℳ≈2×10⁻³ ℳ⊕ →
       B_eq ≈ 0.4 µT(밴드 0.2~1.2). standoff ~1.1 R_moon이라 서사의 "외대를 막아낸다"를
       "저위도 소폭 저감"으로 하향. 도출 전엔 criterion=derived-grounding이 실행 안 된 게이트였음.
@@ -2774,8 +2777,14 @@ decisions:
       밀어내지는 못하고 저위도의 선량을 조금 깎아줄 뿐이며, 극은 플럭스를 고스란히 받는다.
     fields:
       - { name: magnetic_field, value: "~0.4 µT equatorial / ~0.8 µT polar (a Ganymede-class intrinsic dipole; an iron-rich core with free 39 h rotation, M ~ 2e-3 M⊕)", value_ko: "~0.4 µT eq / ~0.8 µT polar (가니메데급 고유 dipole; 철-부유 핵 + 자유 자전 39h, ℳ≈2×10⁻³ ℳ⊕)", op: set, note: "Derived from the RM22 ladder on 2026-07-28, band 0.2-1.2 µT; about 1/200 of Pandora's 75 µT", note_ko: "RM22 사다리 도출 2026-07-28, 밴드 0.2~1.2 µT; Pandora 75 µT의 ~1/200" }
-      - { name: magnetosphere, value: "A mini-magnetosphere, standoff 1.34 moon radii (a satellite magnetosphere inside Polyphemus'; closed at low latitudes, open at the poles). Unlike the inner moons this one is SUPER-Alfvenic, so it owns a real bow shock and swept tail rather than Ganymede's Alfven wings", value_ko: "미니 자기권, standoff 1.34 R_moon (폴리페무스 자기권 안의 위성 자기권; 저위도 닫힘·극 열림). 안쪽 위성들과 달리 여기는 super-Alfvenic이라, 가니메데식 알펜 날개가 아니라 진짜 활머리충격파와 끌린 꼬리를 가진다", op: set, note: "Re-derived 2026-08-16. At 8.4 R_p the corotating plasma passes at 92.3 km/s against a parent field of only 0.287 uT, so M_A reaches 1 at just 231 ions/cm3, a tenth of the peak Io torus density, which a ~1200x Io source clears easily. Standoff from the total confining pressure 0.044 uPa (magnetic 0.033 + ram 0.011): the one moon where ram is not negligible. The old ~1.1 was a Ganymede analogy, not a derivation", note_ko: "2026-08-16 재도출. 8.4 R_p에서 공전 플라즈마가 92.3 km/s로 지나가는데 모체 자기장은 0.287 µT뿐이라, M_A는 겨우 231 ions/cm³에서 1에 도달한다. Io 토러스 피크의 1/10이고 ~1200배 공급원이면 쉽게 넘는다. standoff는 총 구속압 0.044 µPa(자기 0.033 + 램 0.011) 기준. 램압이 무시되지 않는 유일한 위성이다. 구값 ~1.1은 도출이 아니라 가니메데 유추였다" }
-    refs: ["docs/reference/rocky-planet-dynamo-methodology.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md"]
+      - { name: magnetosphere, value: "A mini-magnetosphere, standoff 1.313 moon radii (a satellite magnetosphere inside Polyphemus'; closed at low latitudes, open at the poles). Sub-Alfvenic like the inner moons, but only just: M_A 0.51 against 1", value_ko: "미니 자기권, standoff 1.313 R_moon (폴리페무스 자기권 안의 위성 자기권; 저위도 닫힘·극 열림). 안쪽 위성들처럼 아음속이지만 여유가 크지 않다. M_A 0.51 대 1", op: set, note: "Density derived 2026-08-17 rather than assumed. A torus is fed at its source moon's orbit and thins outward from THERE, so the comparison is in source distances: Cassandra sits 5.45 source radii out (8.4 R_p over Dante's 1.54), which maps onto 32 R_J at Jupiter, where Bagenal 2016 (2016JGRE..121..871B) measures 0.05 ions/cm3. Scaled by this board's ~1200x Io source that is 60 ions/cm3, giving M_A 0.509 and a standoff of 1.313 R_moon against the total confining pressure (parent magnetic 32.73 + ram 17.30 nPa). The 2026-08-16 SUPER-Alfvenic call read the density off ABSOLUTE L instead, where 8.4 R_p reads like 8.4 R_J just outside the Io torus (~300 ions/cm3); it also left the row inconsistent, quoting a 1.34 standoff that only follows from a sub-Alfvenic density", note_ko: "2026-08-17 밀도를 가정이 아니라 도출로 바꿨다. 토러스는 공급 위성 궤도에서 먹여지고 **거기서부터** 옅어지므로 비교는 공급원 거리 배수로 해야 한다. Cassandra는 공급원 기준 5.45배(8.4 R_p ÷ Dante 1.54)이고 목성 환산 32 R_J, Bagenal 2016(2016JGRE..121..871B)이 그 자리에서 0.05 ions/cm3을 측정한다. 이 보드의 ~1200배 Io 공급원으로 스케일하면 60 ions/cm3, M_A 0.509, 총 구속압(모체 자기 32.73 + 램 17.30 nPa) 기준 standoff 1.313 R_moon이다. 2026-08-16의 초알펜 판정은 밀도를 **절대 L**로 읽은 것이다. 8.4 R_p를 8.4 R_J처럼 보면 Io 토러스 바로 밖(~300 ions/cm3)이 된다. 그 행은 내부 불일치도 있었다. 인용한 standoff 1.34는 아음속 밀도에서만 나오는 값이다" }
+      - { name: pause_radius, value: 1.8567, unit: R_moon, op: set, note: "= nose 1.3129 x compression 1.4142", note_ko: "= 노즈 1.3129 x compression 1.4142" }
+      - { name: pause_compression, value: 1.4142, op: set, note: "= 2^alpha with alpha 0.5 by analogy, the same reading every sub-Alfvenic body takes (the cylindrical threshold; none has a fitted alpha)", note_ko: "= 2^alpha, alpha 0.5 유사적용. 모든 아음속 천체가 같은 값을 쓴다(원통 문턱. 적합된 alpha가 없다)" }
+      - { name: pause_extension, value: 0.11012, op: set, note: "= compression / 150^M_A. At M_A 0.509 the ratio is 12.84, so the tail closes at 16.9 R_moon instead of the 197 the 150x convention would give", note_ko: "= compression / 150^M_A. M_A 0.509에서 비율이 12.84이므로 꼬리가 150배 관례의 197 대신 16.9 R_moon에서 닫힌다" }
+      - { name: pause_height_scale, value: 1.0, op: set, note: "Shue is axisymmetric", note_ko: "Shue는 축대칭" }
+      - { name: radiation_model, value: nearstars_cassandra, op: set, note: "Pause-only model: the moon's own belt is Ganymede-negligible, so there are no belt fields to carry", note_ko: "pause 전용 모델. 위성 자신의 벨트는 가니메데급으로 무시할 수준이라 벨트 필드가 없다" }
+      - { name: radiation_pause, value: -0.01, unit: "rad/h", op: set, note: "The stock-uniform value, not a shield magnitude. Kerbalism takes the shield from HAVING a pause at pause_radius; the term itself is body-independent (Earth/Jupiter -0.010, Saturn -0.011, Neptune -0.007), so a thin standoff is expressed by pause_radius 1.8567 rather than by a weaker number here", note_ko: "스톡 균일값이며 차폐 세기가 아니다. Kerbalism은 pause_radius에 경계가 **존재한다는 사실**에서 차폐를 가져오고, 이 항 자체는 천체와 무관하다(지구/목성 -0.010, 토성 -0.011, 해왕성 -0.007). 그래서 얇은 standoff는 여기 값을 줄이는 게 아니라 pause_radius 1.8567이 표현한다" }
+    refs: ["docs/reference/rocky-planet-dynamo-methodology.md", "docs/reference/planetary-magnetosphere-geometry-methodology.md", "2016JGRE..121..871B"]
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
@@ -2793,6 +2802,14 @@ decisions:
         low-latitude lines shield while open polar lines funnel plasma straight in (its
         irradiation-darkened poles are the fingerprint), so the moon is protected except at the poles,
         never "holds the outer belt off".
+        Regime check: the local plasma density is derived, not assumed. A torus thins outward from the
+        orbit that feeds it, so Cassandra's distance is counted in source radii, 5.45 of them, which maps
+        onto 32 R_J where Galileo measured 0.05 ions/cm3; scaled by this board's ~1200x Io source that is
+        60, and M_A = 0.509. Sub-Alfvenic, so the boundary takes the same shortened-tail encoding as the
+        inner moons, 150^M_A = 12.84 nose radii rather than 150.
+        Caveat: the margin is thin. M_A reaches 1 at 231 ions/cm3, under four times the derived density,
+        so Cassandra is the one moon here whose regime a different torus profile could flip; the inner
+        moons need hundreds of times theirs.
         Caveat on scope: the field is credited with trimming the surface particle dose only, never with
         protecting the atmosphere from stellar-wind stripping, the claim Ramstad & Barabash 2021 refute
         and the atmosphere methodology's Gate 4 forbids leaning on.
@@ -2807,6 +2824,12 @@ decisions:
         (0.4/0.29)^(1/3) ≈ 1.1 R_moon(Pandora의 2.6과 같은 압력 균형 관례). 가니메데의 관측 결과가 그대로
         옮겨온다. 닫힌 저위도 자력선은 지키고 열린 극 자력선은 플라스마를 그대로 끌어들이므로(조사로 어둡게
         변색된 가니메데의 극이 그 지문이다) 극만 노출된 채 보호되는 것이지, "외대를 막아내는" 것이 아니다.
+        레짐 확인. 국소 플라스마 밀도를 가정이 아니라 도출했다. 토러스는 자신을 먹이는 궤도에서부터 옅어지므로
+        Cassandra의 거리는 공급원 반경 배수로 센다. 5.45배이고 목성 환산 32 R_J인데 Galileo가 그 자리에서
+        0.05 ions/cm³을 측정했다. 이 보드의 ~1200배 Io 공급원으로 스케일하면 60이고 M_A = 0.509다. 아음속이므로
+        경계는 안쪽 위성들과 같은 단축 꼬리 인코딩을 쓴다. 150 대신 150^M_A = 노즈의 12.84배다.
+        유보. 여유가 얇다. M_A는 231 ions/cm³에서 1에 닿는데 도출 밀도의 네 배가 안 된다. 여기서 다른 토러스
+        프로파일이 레짐을 뒤집을 수 있는 위성은 Cassandra뿐이고, 안쪽 위성들은 수백 배가 필요하다.
         유보(적용 범위). 이 자기장에 인정하는 것은 지표 입자 선량 저감뿐이며, 항성풍의 대기 침식을 막아준다는
         주장은 인정하지 않는다. Ramstad & Barabash 2021이 반박했고 대기 방법론 관문 4가 기대는 것을 금지한다.
 
