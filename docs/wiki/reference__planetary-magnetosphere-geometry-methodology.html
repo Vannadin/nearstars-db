@@ -372,20 +372,17 @@ L = 150^M_A × nose                  →  pause_extension = 2^α / 150^M_A
 
 The ratio interpolates *geometrically* between a sphere and the ordinary 150, so it costs no
 new coefficient — `M_A` is already computed for the regime test — and lands exactly on both
-ends: `M_A` 0 gives 1, a sphere, and `M_A` 1 gives 150. Scaling 150 linearly by `M_A` was
-tried first and is wrong at the small end, asking for a 44% tail at A b III where the
-physical day–night asymmetry is 0.01%.
+ends: `M_A` 0 gives 1, a sphere, and `M_A` 1 gives 150. (A linear form was tried first and
+fails at the small end — [derivation record](reference__solar-system-radiation-belts.html#retractions-and-first-attempts-that-were-wrong).)
 
 | body | M_A | nose | tail ratio | `pause_radius` | `pause_extension` | tail closes at |
 |---|---|---|---|---|---|---|
 | Ganymede | 0.479 | 2.110 R_G | 11.03 × | 2.9834 | 0.12826 | 23.3 R_G |
 | A b III (Pandora) | 0.0096 | 3.386 R_moon | 1.05 × | 4.7880 | 1.34763 | 3.55 R_moon |
 
-Compression is `2^α` = 1.4142 in both. A b I owns no field, so no pause is emitted for it at
-all; its `M_A` ~ 0 is the sphere limit of the same rule.
-
-α comes by analogy at 0.5, the cylindrical threshold, since no sub-Alfvénic magnetopause has
-a fitted one.
+Compression is `2^α` = 1.4142 in both, α 0.5 by analogy (the cylindrical threshold; no
+sub-Alfvénic magnetopause has a fitted one). A b I owns no field, so no pause is emitted for
+it at all; its `M_A` ~ 0 is the sphere limit of the same rule.
 
 The obstacle itself is a **sphere**: confinement is magnetic pressure everywhere plus ram on
 the upstream side only, their ratio is `2M_A²`, and with the `p^(-1/6)` standoff the day–night
@@ -396,278 +393,6 @@ parent's ionosphere, the reflected fan downstream — is **visualisation materia
 no cfg**. The geometry is derived in `scripts/refs/magnetopause_geometry.py` and drawn by
 `scripts/viz/render_alfven_wing.py`; see the explainer row in
 [`tools.md`](reference__tools.html#one-off-explainers--index).
-
-### Belt extent
-
-Trapped particles ride closed dipole field lines (L-shells), so the belts are
-**bounded outside by the magnetopause** (`R_outer ≲ 0.6–0.8 R_mp`) and inside by
-the atmosphere/surface (`R_inner ≈ 1.1–2 R_p`). A stronger field → larger standoff
-→ room for belts farther out. This is the one place field strength directly sizes
-the belts.
-
-### Induced magnetospheres — the no-dynamo branch
-
-Everything above assumes an intrinsic dipole. A body with **no dynamo but an
-atmosphere** still gets a magnetosphere-like structure: sunlight photoionizes the
-upper atmosphere, the conducting ionosphere excludes the wind's draped field, and
-the boundary that forms is the **ionopause / induced magnetosphere boundary**
-(Bertucci 2011, [`2011SSRv..162..113B`](https://ui.adsabs.harvard.edu/abs/2011SSRv..162..113B), the Mars/Venus/Titan review; Luhmann 1991,
-[`1991SSRv...55..201L`](https://ui.adsabs.harvard.edu/abs/1991SSRv...55..201L)). It is a near-permanent feature, not an occasional one
-(Zhang 2009, [`2009GeoRL..3620203Z`](https://ui.adsabs.harvard.edu/abs/2009GeoRL..3620203Z)).
-
-**Standoff.** The balance is ionospheric *thermal* pressure against the shocked-wind
-pressure, not magnetic pressure against ram pressure, so Part A's `^(1/6)` law does
-not apply. Use the measured scale instead: at Venus the mean ionopause sits **330 km
-above the subsolar point, 700 km at the dusk terminator and 1000 km at dawn**, and it
-expands and contracts with wind pressure (Brace 1980, [`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)) — that
-is **1.05 R_V subsolar, 1.12–1.17 R_V at the terminator**. Adopt `1.05–1.2 R_p` for
-an Earth-to-Venus-class atmosphere and say which end you took; there is no useful
-field parameter to derive it from.
-
-**Which branch a body takes.** Not simply "does it have a dynamo": a *weak* dipole
-can be worse than none. In hybrid simulations of a Mars-sized planet, increasing the
-field **increases** ion escape until the dipole's standoff exceeds the induced
-boundary, and only past that does a field start shielding (Egan 2019,
-[`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)). So the crossover test is `R_mp(B_eq) > r_ionopause`, not
-`B_eq > 0`. Below it, treat the body as induced.
-
-**Close-in caution.** The induced magnetosphere can disappear outright when the IMF
-turns nearly radial, and by extension under the extreme wind pressures of a close-in
-orbit (Zhang 2009) — worth stating for any tidally-locked planet inside ~0.1 AU
-rather than assuming a permanent boundary.
-
-**Shape function: the stock pause function, generalized.** The literature has its own
-form for this boundary and it is not Shue: the published induced-magnetosphere-boundary
-model is "a circle on the dayside and a straight line on the nightside" (Martinecz 2009,
-[`2009JGRA..114.0B30M`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.0B30M)), which Edberg 2024 ([`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E),
-[2410.21856](https://arxiv.org/abs/2410.21856)) tested against Solar Orbiter, BepiColombo and Parker
-Solar Probe crossings and found valid to at least 20 R_V unchanged, the nightside line
-being `ρ = 1.13 − 0.101·X'` — a 5.77° flare. Conic sections are used at these planets for
-the *bow shock*, not for this boundary.
-
-That form is **not implemented**, and this is where the project's shape policy applies
-(owner decisions, 2026-08-14):
-
-> Unify on Shue wherever possible. Fall back to the generalized stock function **only where
-> Shue geometrically cannot represent the boundary**, or where no fitted α exists to use.
-
-| condition | shape | bodies |
-|---|---|---|
-| a fitted α exists | **Shue** | Mercury, Earth, Jupiter, Saturn |
-| an α adopted by analogy | **Shue**, labelled as an analogy | Uranus, Neptune |
-| Shue geometrically impossible | generalized stock (`pause_waist` / `pause_smooth`) | **Venus, Mars** — the induced branch |
-| the flow is sub-Alfvénic | **Shue**, tail shortened by M_A (below) | Ganymede, A b III |
-
-### The fourth shape family — Alfvén wings
-
-A sub-Alfvénic obstacle raises no bow shock and no swept tail, so none of the three families
-above applies to it. What it raises instead is a pair of standing Alfvén waves, and their
-geometry is fixed by three numbers already on the board: the Alfvén Mach number, the
-obstacle size, and the parent's field-line curvature. Nothing is authored.
-
-[![Alfvén-wing anatomy at Ganymede](../img/alfven-wing-anatomy-ganymede.png)](../img/alfven-wing-anatomy-ganymede.png)
-
-*Ganymede, from `scripts/viz/render_alfven_wing.py`. Blue is the run over which the wing is
-still straight, orange the remainder, grey the parent. Left to right: the tilt against the
-field axis, the thickness over the whole run, the lead seen from over Jupiter's pole, and the
-contact at true scale.*
-
-**Tilt.** Each wing leans away from the background field by `arctan M_A` — the wave travels
-along `B₀` at `v_A` while the flow carries it downstream at `v₀` (Neubauer 1980,
-[`1980JGR....85.1171N`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.1171N); quoted in that form by the Saur
-review, [1908.06446](https://arxiv.org/abs/1908.06446) §4.2). At Ganymede that is 25.6°, so the two wings
-open 128.8° apart.
-
-**Tube radius = the obstacle radius.** Flux conservation gives it directly — an obstacle of
-radius `R_obst` excludes `B₀πR_obst²`, and the ambient field is uniform outside — and the
-same review's Figure 3 describes the drawn wing as "the size of the source". The Saur 2013
-eq. 57 effective radius `R_eff = √3 R_obst` is a **different quantity**: it sizes the
-Poynting flux, not the surface.
-
-**Straight run.** The wing follows the parent's field line, which departs from its own
-tangent by about `ℓ²/2R_curv`; setting that equal to one tube radius gives
-`ℓ = √(2 R_tube R_curv)` with `R_curv = r/3` at a dipole's equator. It reproduces the
-departure measured on the curved path to within 18% at Ganymede and 3% at A b III and A b I.
-The wing is straight for only 5% of its run.
-
-**It does not end in space.** Past that the tube bends onto the field line, narrows as
-`1/√B`, and lands on the parent's ionosphere as the auroral footprint — 68 km across at
-Ganymede before the floor below applies. The downstream displacement is an **azimuthal
-rotation** about the parent's spin axis, not a translation: putting it in as a translation
-floats the far end 78 R_moon clear of the ionosphere. Accumulated lead 12.5° at Ganymede,
-though Bonfond 2009 ([`2009JGRA..114.7224B`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.7224B)) cautions that the
-measured lead angle is not a reliable check on interaction models.
-
-**Landing.** The conductor the wing terminates on is a shell, not a surface, so the
-ionospheric scale height `H = kT/(μ m_u g)` both floors the tube radius — a tube cannot stay
-thinner than the layer it diffuses into — and sets the fillet at the junction. Taking the
-upper ionosphere's atomic H at 1000 K, that is 335 km at Jupiter and 889 km at Polyphemus.
-The floor binds from 91% of the run at Ganymede (68 → 335 km), 99% at A b I, and not at all
-at A b III, whose footprint is already wider than the layer. Nothing supports a narrower
-end: 68 km was 94× the ion inertial length there, and the field meets the surface 7.6° off
-vertical, stretching the footprint ellipse by 0.9%.
-
-The obstacle itself stays a **sphere**. Confinement is magnetic pressure everywhere plus ram
-on the upstream side only, and their ratio is `2M_A²`, so with the `p^(-1/6)` standoff the
-day–night asymmetry is `(1 + 2M_A²)^(1/6)` — 8% at `M_A` 0.5 and falling.
-
-**Every α is now verified against full text** (papers cached under `docs/phase3/_papers/`),
-and each body's `pause_compression` is set to `2^α` so that `log₂(compression)` recovers it
-exactly, with `pause_radius` = nose × `2^α`:
-
-| body | α | nose | flank = nose·2^α | source |
-|---|---|---|---|---|
-| Mercury | 0.500 | 1.45 R_M | 2.051 | Winslow 2013 ([`2013JGRA..118.2213W`](https://ui.adsabs.harvard.edu/abs/2013JGRA..118.2213W)) — `R_ss` 1.45 R_M, flaring 0.5 at mean `P_Ram` 14.3 nPa |
-| Earth | 0.580 | 10 R_E | 14.948 | Shue 1998 ([`1998JGR...10317691S`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317691S)) eq. (11): `α = (0.58 − 0.007 Bz)[1 + 0.024 ln Dp]` |
-| Jupiter | 0.423 | 63 R_J | 84.465 | Rutala 2025 ([2502.09186](https://arxiv.org/abs/2502.09186)) S97* Table 2: `α = 0.28 + 1.08 p_SW`, `r_SS = 38.0 p_SW^−0.25` |
-| Saturn | 0.736 | 24 R_S | 39.968 | Kanani 2010 ([`2010JGRA..115.6207K`](https://ui.adsabs.harvard.edu/abs/2010JGRA..115.6207K)) eq. (12): `α = 0.73 ± 0.07 + (0.4 ± 0.5) Dp` |
-| Uranus | 0.580 | 18 R_U | 26.907 | **analogy** — Earth's α, on the grounds below |
-| Neptune | 0.580 | 26.5 R_N | 39.614 | **analogy** — Earth's α, on the grounds below |
-
-Saturn earns a genuine cross-check: Kanani's `a₄` = 0.4 ± 0.5 is not distinguishable from
-zero, so α is effectively pressure-independent at 0.73, while the earlier Arridge 2006 fit
-([`2006JGRA..11111227A`](https://ui.adsabs.harvard.edu/abs/2006JGRA..11111227A)) has the *opposite* pressure sign, `α = 0.77 − 1.5 Dp`. Both
-nevertheless land on **0.7356 and 0.7358** at our adopted 24 R_S nose — two fits with
-different coefficients and different crossing sets agreeing to 0.0002. Kanani is taken as
-primary: it uses 191 crossings against 64, adds magnetospheric plasma pressure, and its
-higher RMS is a dataset effect, not a regression (the paper notes that A06's coefficients on
-the new crossings give RMS 3.82 against the new model's 3.603).
-
-**Why Uranus and Neptune take Earth's α by analogy.** No Shue-form fit exists for either
-planet, and the four fitted anchors do not support extrapolation: ordered by dynamic
-pressure they run 14.3 nPa → 0.500, 1 → 0.580, 0.132 → **0.423**, 0.0146 → 0.736. Jupiter
-breaks the ordering — the lowest α at an intermediate pressure — because α is governed by
-internal plasma loading as much as by the wind, and Jupiter's Io torus inflates a
-magnetodisc that suppresses flaring. So there is no α(pressure) law to extrapolate along.
-What can be argued is the *loading*: Voyager 2 found the ice giants to be the emptiest
-magnetospheres measured. At Uranus "the Uranian moons do not appear to be a significant
-plasma source", with a peak density near 2 cm⁻³ (Bridge 1986,
-[`1986Sci...233...89B`](https://ui.adsabs.harvard.edu/abs/1986Sci...233...89B)); at Neptune the maximum density is 1.4 cm⁻³, "the smallest
-observed by Voyager in any magnetosphere" (Belcher 1989, [`1989Sci...246.1478B`](https://ui.adsabs.harvard.edu/abs/1989Sci...246.1478B)). With
-no Io- or Enceladus-class source, their loading sits nearer Earth's than the gas giants', so
-Earth's α is the defensible stand-in. It is an **analogy, not a fit**, and is labelled as
-one wherever it appears.
-
-**Tail length: `L` = 150 × nose, a stated convention.** `L` is where the bounded cfg volume
-closes. Shue has no counterpart for it — the family has exactly two parameters, `r₀` and
-`α`, and no α gives a finite endpoint (α < 0.5 decays to zero asymptotically, α = 0.5 is a
-cylinder of radius `2 r₀`, α > 0.5 diverges; Winslow 2013 states the same threshold). The
-physical end of a magnetotail has never been measured at any planet. Six attempts to derive
-`L` are tabulated below as dead ends.
-
-So it is fixed by convention, under one constraint: **contradict no measurement.** Every
-published tail extent is a spacecraft-coverage lower bound, and the farthest is Jupiter's,
-at least 9000 R_J (Lepping 1983, [`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L)) — 142.9 × its 63 R_J nose.
-Rounding up gives **`L` = 150 × nose**, which clears every lower bound on record: Jupiter
-143×, Venus 19× (Edberg 2024), Mercury 2.1× — **but not Earth**. The Earth figure used
-here was ISEE-3's 225 R_E; the actual record is **~3100 R_E** (Intriligator 1979,
-[`1979GeoRL...6..585I`](https://ui.adsabs.harvard.edu/abs/1979GeoRL...6..585I), Pioneer 7, tail-associated plasma, "the most extended
-positive observational information of the extended nature of the geomagnetic tail"), with
-500 R_E on a magnetometer (Mariani 1969, [`1969JGR....74.5633M`](https://ui.adsabs.harvard.edu/abs/1969JGR....74.5633M)) and ~1000 R_E on a
-plasma probe (Wolfe 1967, [`1967JGR....72.4577W`](https://ui.adsabs.harvard.edu/abs/1967JGR....72.4577W)) in between. So `L` = 150 × nose gives
-Earth 1500 R_E and **is contradicted by a measurement after all** — by a factor of two,
-against a plasma-void detection rather than a field one. The convention is kept anyway
-(owner decision 2026-08-16), so the honest statement is that it clears every *magnetic*
-detection and is exceeded by one *plasma* detection at Earth.
-
-| body | nose | `L` | in AU |
-|---|---|---|---|
-| Mercury | 1.45 R_M | 217.5 | 0.004 |
-| Venus | 1.055 R_V | 158.2 | 0.006 |
-| Earth | 10 R_E | 1500 | 0.064 |
-| Mars | 1.285 R_M | 192.8 | 0.004 |
-| Jupiter | 63 R_J | 9450 | **4.516** |
-| Saturn | 24 R_S | 3600 | 1.450 |
-| Uranus | 18 R_U | 2700 | 0.458 |
-| Neptune | 26.5 R_N | 3975 | 0.654 |
-
-Because the ratio is the same for every body, no body is singled out; the ordering is simply
-the ordering of magnetosphere size. Jupiter's 4.516 AU reaches 9.72 AU from the Sun, past
-Saturn's orbit at 9.58 AU — which is what was actually observed, Voyager 2 detecting the
-Jovian tail to ~4.5 AU downstream (Kurth 1982, [`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K)) and Saturn
-itself becoming immersed in it (Desch 1983, [`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)).
-
-Not applied to Ganymede, whose obstacle sits in Jovian plasma rather than a stellar wind
-(Alfvén-wing regime). It **is** applied to the NearStars bodies as of the 2026-08-16
-re-gate: Polyphemus `L` 5300 R_p, Proxima b 231 R_p, Proxima c 1791 R_c. The phase 4
-board remains their source of truth, and now records these values.
-
-**Eight attempts to derive `L` have failed, and the eighth established that they had to.**
-The tail does not fade: the lobe field is fixed by pressure balance and so does not decay
-downtail, the lobes are Kelvin-Helmholtz stable, and the contrast `B_lobe / B_IMF` works
-out to `sqrt(2) * M_A`, a constant along the tail. The one real mechanism is topological
-(current-sheet severance, observed at Jupiter), and the length it gives was computed and
-deliberately not adopted. Full record, with the flux-budget and heliotail results and
-every rejected criterion, in the derivation record
-([solar-system-radiation-belts.md](reference__solar-system-radiation-belts.html#why-the-tail-has-no-derivable-length)).
-**What `L` is not.** Two distances are measured and must not be confused with it:
-
-| body | flaring ceases at | source |
-|---|---|---|
-| Mercury | 2.9 R_M (2 R_ss) | Winslow 2013 — "the downstream flaring of Mercury's tail ceases by ~2 R_ss" |
-| Earth | 120 R_E (12 R_ss) | Slavin 1985 — flaring ceases at \|X\| = 120 ± 10 R_E |
-
-That is where the **shape** stops changing, not where the tail ends; beyond it the boundary
-continues as a constant-radius cylinder. Setting `L` to those distances was tried and is
-wrong — at Earth it drives the width to zero at exactly the place Slavin measures a 30 R_E
-radius. `L` must sit outside the measured range, which is precisely what the 150 × nose
-convention guarantees.
-
-Both anchors do confirm the α-derived **shape**, which was not fitted to them: at x = −3 R_M
-Winslow reports a nearly cylindrical radius of ~2.7 R_M and our surface gives **2.71**; at
-x = −120 R_E Slavin reports a diameter of 60 ± 5 R_E and ours gives **28.1** in radius.
-
-Every published tail extent is a spacecraft-coverage **lower bound**, not an endpoint — the
-largest is Jupiter's, at least 9000 R_J = 143 `r₀` (Lepping 1983,
-[`1983JGR....88.8801L`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.8801L); Voyager 2 detected it to ~4.5 AU, Kurth 1982
-[`1982JGR....8710373K`](https://ui.adsabs.harvard.edu/abs/1982JGR....8710373K), with Saturn itself immersed in it, Desch 1983
-[`1983JGR....88.6904D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6904D)). A convention that contradicts none of them therefore has to
-put `L` beyond 143 `r₀`. `L = 150 r₀` is the adopted convention (owner decision
-2026-08-14); it depends only on `r₀` and so inherits no unverified relation.
-
-Venus and Mars fall into the last row because Shue's single α cannot hold a tight waist
-and a widening tail apart at any value — the measured failure modes are tabulated below.
-Their fields and derivation live in Part C's ⚗ section; the values are:
-
-| | radius | compression | extension | smooth | waist |
-|---|---|---|---|---|---|
-| Venus | 1.14 | 1.0151 | 0.0072038 | 0.57 | 0 |
-| Mars | 1.47 | 1.0684 | 0.0076265 | 0.735 | 0 |
-
-The binding constraint is that **the boundary must not bulge behind the terminator**. The
-width is `√(radius² − px²)` and so can never exceed `radius`; setting `radius` = the
-measured terminator width therefore makes a rear bulge structurally impossible, and the
-profile is monotone behind the shoulder. Nose and terminator then come out exact, the tail
-closes at 20 R_p, and the bulge is 0.000%. The cost is wake width — 15% narrow at 2 R_p,
-33% at 5, 54% at 10 against the measured cone.
-
-Every alternative shape family was measured before this one was adopted; the comparison
-table is in the derivation record
-([solar-system-radiation-belts.md](reference__solar-system-radiation-belts.html#induced-boundary-shape-families-measured-and-rejected)).
-Why no Shue member can do better, structurally: its tail width goes as `ρ ∝ u^(1−2α)` for
-`u = π − θ`, so α = 0.5 is exactly the cylindrical-tail threshold, while the *same* α fixes
-the terminator width at `r₀·2^α`. One knob, two jobs, and an induced boundary needs a tight
-waist together with a widening tail.
-
-Mars keeps its dayside from Vignes 2000 ([`2000GeoRL..27...49V`](https://ui.adsabs.harvard.edu/abs/2000GeoRL..27...49V), Table 2, N = 488)
-and takes nothing from its nightside: that paper's own abstract calls the "nightside MPB
-position… highly variable", and Němec 2020 ([`2020JGRA..12528509N`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12528509N)) states the
-MAVEN-era models "are deemed unreliable beyond the terminator".
-
-**Kerbalism mapping.** The engine already has this branch: the `ionosphere` model is
-a **pause-only** shell, `pause_radius` 1.1 R with `pause_extension` 0.2 (a long
-induced tail) and no belt fields at all, carrying `radiation_pause` ≈ −0.005 —
-weaker than a dipole magnetopause, which is right, since an induced boundary screens
-GCR far less. Venus and Titan ship with it. For NearStars:
-
-- **no dynamo + atmosphere** → `ionosphere`-style pause at the ionopause estimate,
-  no belts, small negative `radiation_pause`;
-- **no dynamo + airless** → no `RadiationModel` at all; the surface dose is the
-  direct wind/GCR flux (that chain is `surface-radiation-dose-methodology.md`);
-- **weak dynamo** → run the crossover test above before assuming belts exist at all.
-
-Per-model cfg values and the bodies that use them are tabulated in
-[`solar-system-radiation-belts.md`](reference__solar-system-radiation-belts.html).
 
 ### Near-tail X-line distance — the one magnetotail scale that generalises
 
@@ -804,7 +529,7 @@ Jupiter-architecture system, interpolate between the two audited saturated
 *dose anchors* — Earth 31 µT → 10.4 rad/h, Jupiter 428 µT → ~1500 rad/h —
 `dose ≈ 10.4 × (B_eq/31 µT)^1.9`. This is an **empirical dose-anchor
 interpolation** that bundles the hardness + belt-size effects; it is *not*
-the K–P scaling (an earlier revision mislabeled it so — retracted). Outer/inner
+the K–P scaling. Outer/inner
 ratio ~0.1 torus-driven (Jupiter), ~0.2 wind-fed (Earth). Then apply the two
 hard checks: (a) the chosen intensity must sit below the computed K–P ceiling
 at the belt's (B, L, n_cold) via `kp_limit.py` (A b 300 rad/h ≈ 29×
@@ -858,8 +583,8 @@ stock values from `KerbalismConfig/System/Radiation.cfg`):
   that way: `mercury` and the model literally named `irregular` both carry
   `pause_deform = 0.1`, and `metallic` / `solidiron` / `anomaly` use 0.04–0.1
   (`KSP-RO/ROKerbalism`, `GameData/KerbalismConfig/System/Radiation.cfg`). Kerbalism's own
-  modding docs describe it only as "deform the surface using a sum of sine waves", which is
-  what led an earlier revision of this doc to call it cosmetic.
+  modding docs describe it only as "deform the surface using a sum of sine waves", but
+  ROKerbalism uses it as physics.
 - Intensities + axis live on the `RadiationBody`: `radiation_inner/outer/pause` (rad/h, pause negative), `geomagnetic_pole_lat/lon`.
 
 **`inner` and `outer` are always two tori with `inner_dist < outer_dist`** — but whether
@@ -1164,10 +889,9 @@ impossible and the profile monotone behind the shoulder. Then `compression` and 
 solve for the measured nose and the chosen tail length, and `pause_smooth` moves the flat
 shoulder back to erase the corner at no cost, since the width ceiling is unchanged.
 
-**Which plan a body gets is decided by α, and it is not a preference.** Fitting the
-generalized stock form to a body's own softened Shue surface only succeeds near the
-cylindrical threshold, so `pause_waist` / `pause_smooth` are recorded for exactly the bodies
-that can use them:
+**Which plan a body gets is decided by α.** Fitting the generalized stock form to a body's
+own softened Shue surface only succeeds near the cylindrical threshold, so `pause_waist` /
+`pause_smooth` are recorded for exactly the bodies that can use them:
 
 | body | α | fit rms | plan recorded |
 |---|---|---|---|
@@ -1188,7 +912,8 @@ values that replace `pause_radius` / `pause_compression` / `pause_extension` onc
 lands. Compression retires to 1.0 there, because it pins the widest cross-section to the body
 plane and `pause_waist` takes over the asymmetry.
 
-`pause_smooth` is **a convention, not a derived value** — the residual against the
+`pause_smooth` is **a convention, not a derived value** on the induced branch (it does not
+generalise — see the [derivation record](reference__solar-system-radiation-belts.html#retractions-and-first-attempts-that-were-wrong)) — the residual against the
 literature target is nearly flat in it (Venus RMS 18.6% at 0 against 18.5% at the optimum),
 because removing the corner is a C¹ continuity property rather than a fit. The convention is
 **`pause_smooth` = 0.5 × `pause_radius`**, adopted because the shallow optima computed
@@ -1299,19 +1024,14 @@ free: `α = log₂(compression)`, `r0 = pause_radius / compression`,
 `L = pause_radius / extension`. It is shape-faithful for Earth-style configs only —
 RSS Jupiter's `compression` 1.05 converts to α 0.07, an unphysically spherical
 dayside, so giants need α re-tuned after conversion rather than converted blindly.
-(An earlier revision of this paragraph claimed giant magnetopauses are never
-fitted in the Shue form. That was wrong and is retracted — see the fitted α table
-below.)
 
 **α = 0.5 is the cylindrical-tail threshold**, and it is not an abstraction: width goes as
 `u^(1−2α)` for `u = π − θ`, so below 0.5 the tail closes on its own and above it flares
 without limit. Slavin 1985 measures Earth's distant tail as a *cylinder* — `B_L` 9.2 nT and
 60 R_E diameter constant from 120 to 225 R_E — which is the α = 0.5 behaviour.
 
-A separate night-side α was trialled against that threshold on 2026-08-16 and rolled back;
-see the derivation record
-([solar-system-radiation-belts.md](reference__solar-system-radiation-belts.html#night-side-alpha-trialled-and-rolled-back)).
-Every body keeps a single α.
+**Every body keeps a single α** — a separate night-side value was trialled and rolled back
+([derivation record](reference__solar-system-radiation-belts.html#night-side-alpha-trialled-and-rolled-back)).
 
 **The two giants sit on opposite sides of that threshold, which is why they look nothing
 alike.** Jupiter's fitted 0.423 puts the exponent at +0.154, so its tail tapers to a point:
@@ -1761,8 +1481,7 @@ L = 150^M_A × nose                  →  pause_extension = 2^α / 150^M_A
 
 비율이 구와 통상 150 사이를 **기하적으로** 보간합니다. 그래서 새 계수가 들지 않고(`M_A` 는 레짐
 판정에서 이미 나온 값), 양 끝에 정확히 닿습니다 — `M_A` 0 이면 1(구), 1 이면 150. 150 을 `M_A` 로
-선형 축소하는 걸 먼저 해봤는데 작은 쪽에서 틀립니다. A b III 에 꼬리를 44% 붙이는데 물리적 주야
-비대칭은 0.01% 입니다.
+(선형 축소를 먼저 해봤고 작은 쪽에서 틀립니다 — [도출 기록](reference__solar-system-radiation-belts.html#틀렸던-첫-시도와-철회).)
 
 | 천체 | M_A | 노즈 | 꼬리 비율 | `pause_radius` | `pause_extension` | 꼬리 닫힘 |
 |---|---|---|---|---|---|---|
@@ -1950,7 +1669,7 @@ eqs A4–A8) → A1/A2 적분에서 나오는 whistler 성장률 → 한계 안�
 *선량 앵커* — 지구 31 µT → 10.4 rad/h, 목성 428 µT → ~1500 rad/h — 사이를 보간합니다.
 `dose ≈ 10.4 × (B_eq/31 µT)^1.9`. 이것은 경도 + 벨트-크기 효과를 뭉뚱그린 **경험적
 선량-앵커 보간**이지 K–P 스케일링이 *아닙니다*(이전 개정판이 그렇게 잘못 라벨한 것을
-철회). 외/내 비는 토러스-구동(목성)이 ~0.1, 항성풍-공급(지구)이 ~0.2. 그다음 두 하드
+외/내 비는 토러스-구동(목성)이 ~0.1, 항성풍-공급(지구)이 ~0.2. 그다음 두 하드
 체크를 적용합니다. (a) 고른 강도는 그 벨트의 (B, L, n_cold)에서 `kp_limit.py`로 계산한
 K–P 천장 아래에 있어야 하고(A b 300 rad/h ≈ 지구 29배 ≪ 가장 조밀한 토러스에서도
 천장 ≥ 지구 5×10²배 — 통과), (b) 공급원 기아·gap 기아 벨트는 이 모든 것 *아래*에 있으며
@@ -2258,7 +1977,7 @@ lobe를 만드는데, dynamo 레시피가 실제로 내놓는 다극장보다 �
 과 `extension`이 실측 노즈와 선택한 꼬리 길이로 풀리고, `pause_smooth`는 폭 상한을 건드리지 않으므로
 평평한 어깨를 뒤로 밀어 꺾임을 공짜로 없앱니다.
 
-**어느 계획을 받는지는 α 가 정하고, 취향 문제가 아닙니다.** 일반화 스톡 형식을 그 천체 자신의
+**어느 계획을 받는지는 α 가 정합니다.** 일반화 스톡 형식을 그 천체 자신의
 연화 Shue 면에 적합하는 건 원통 문턱 근처에서만 성공합니다. 그래서 `pause_waist` / `pause_smooth`
 는 그걸 쓸 수 있는 천체에만 기록합니다.
 
@@ -2344,14 +2063,14 @@ Kerbalism의 pause는 구를 x방향으로 구간별 스케일한 것이라 노�
 `L = pause_radius / extension`. 다만 이 환산이 형상을 보존하는 것은 지구형 cfg뿐입니다. RSS
 목성의 `compression` 1.05는 α 0.07로 환산되어 주야면이 비물리적으로 구에 가까워지므로,
 자이언트는 환산 후 α를 다시 조율해야 합니다. (이 문단의 이전 개정본은 "자이언트 자기권계면은 Shue 형식으로 적합되지 않는다"고 단정했습니다.
-틀렸으므로 철회하고, 아래 적합 α 표로 대체합니다.)
+
 
 **α = 0.5 가 원기둥 꼬리의 임계**이고, 추상이 아닙니다. 폭이 `u^(1−2α)`(`u = π − θ`)로 가므로
 0.5 아래면 꼬리가 스스로 닫히고 위면 한없이 벌어집니다. Slavin 1985 가 지구 원거리 꼬리를
 *원기둥*으로 측정합니다 — `B_L` 9.2 nT 와 지름 60 R_E 가 120 에서 225 R_E 까지 일정하고, 그것이
 α = 0.5 의 거동입니다.
 
-이 임계를 겨냥해 야간면 α 를 따로 두는 안을 2026-08-16 에 시험했다가 롤백했습니다. 경위는 도출 기록
+**모든 천체는 α 를 하나만 씁니다** — 야간면 α 를 따로 두는 안은 시험했다가 롤백했습니다. 경위는 도출 기록
 ([solar-system-radiation-belts.md](reference__solar-system-radiation-belts.html#night-side-alpha-trialled-and-rolled-back))에
 있습니다. 모든 천체가 단일 α 를 유지합니다.
 

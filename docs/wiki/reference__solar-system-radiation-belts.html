@@ -893,6 +893,37 @@ Rolled back in full: every body keeps a single α, and the night-side slider sta
 viewer as an exploration knob with no body setting it. The `m` finding is the one to pick up
 if this is revisited.
 
+## Retractions and first attempts that were wrong
+
+Kept here so the methodology can state conclusions without carrying its own history.
+
+**The sub-Alfvénic tail ratio, scaled linearly.** The first form was
+`ratio = max(150·M_A, 1)`. It is right at the top end and wrong at the bottom: A b III's
+`M_A` 0.0096 asks for a tail 44% longer than the nose, where the day–night pressure ratio
+`(1 + 2M_A²)^(1/6)` implies 0.01%. The adopted `150^M_A` gives 5% there and 11 nose radii at
+Ganymede, and lands exactly on a sphere at `M_A` 0 (2026-08-17).
+
+**`pause_smooth` = 0.5 × radius, generalised.** That convention was measured on the induced
+branch and does not transfer. The fitted optimum rises as the tail shortens: 1.47× at
+Mercury, 1.6× at Ganymede, 4.0× at A b III (2026-08-17).
+
+**"The generalized stock form misses the tail by 70% in this α band"**, written in Mercury's
+viewer preset. The 70% is Jupiter's, at α 0.423. α 0.5 is precisely where the form works —
+Mercury fits to 0.88% rms — so Mercury carries both plans (2026-08-17).
+
+**The dose-anchor interpolation, called the K–P scaling.** `dose ≈ 10.4 × (B_eq/31 µT)^1.9`
+is an empirical interpolation between two audited saturated dose anchors and bundles the
+hardness and belt-size effects together. It is not Kennel–Petschek.
+
+**"Giant magnetopauses are never fitted in the Shue form."** Wrong: Rutala 2025 fits Jupiter
+in exactly that form, and Arridge 2006 fits Saturn. The fitted-α table in the methodology is
+the correction.
+
+**`pause_deform`, called cosmetic.** Kerbalism's modding docs describe it only as "deform the
+surface using a sum of sine waves", which is what the earlier reading rested on. ROKerbalism
+uses it as physics: `mercury` and the model named `irregular` both carry 0.1, and
+`metallic` / `solidiron` / `anomaly` use 0.04–0.1.
+
 ## Citations (ADS-pinned, by body)
 
 - **Jupiter**: Joy 2002 [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J); Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D);
@@ -1609,6 +1640,33 @@ not a NearStars quirk.
 
 전면 롤백. 모든 천체가 단일 α 를 유지하고, 야간면 슬라이더는 어떤 천체도 설정하지 않는 탐색용 노브로
 뷰어에 남습니다. 다시 볼 일이 생기면 집어들 것은 `m` 쪽입니다.
+
+## 틀렸던 첫 시도와 철회
+
+방법론 문서가 자기 역사를 들고 다니지 않아도 결론만 말할 수 있게, 여기 모아 둡니다.
+
+**아음속 꼬리 비율을 선형으로 줄인 것.** 첫 형태는 `ratio = max(150·M_A, 1)` 였습니다. 위쪽 끝은
+맞고 아래쪽이 틀립니다 — A b III 의 `M_A` 0.0096 이 노즈보다 44% 긴 꼬리를 요구하는데, 주야 압력비
+`(1 + 2M_A²)^(1/6)` 가 함의하는 값은 0.01% 입니다. 채택한 `150^M_A` 는 거기서 5%, 가니메데에서 노즈의
+11배를 주고, `M_A` 0 에서 정확히 구가 됩니다(2026-08-17).
+
+**`pause_smooth` = 0.5 × radius 를 일반화한 것.** 그 관례는 유도 갈래에서 잰 값이고 옮겨가지 않습니다.
+적합 최적은 꼬리가 짧아질수록 커집니다 — 수성 1.47배, 가니메데 1.6배, A b III 4.0배(2026-08-17).
+
+**"일반화 스톡은 이 α 대역에서 꼬리가 70% 어긋난다"** — 수성 뷰어 프리셋 주석. 70% 는 목성(α 0.423)의
+값입니다. α 0.5 는 오히려 그 형식이 맞는 지점이라 수성은 rms 0.88% 로 적합되고, 그래서 두 계획을 다
+들고 갑니다(2026-08-17).
+
+**dose-anchor 보간을 K–P 스케일링이라 부른 것.** `dose ≈ 10.4 × (B_eq/31 µT)^1.9` 는 감사된 포화
+dose 앵커 두 개 사이의 경험적 보간이고 경도(hardness)와 벨트 크기 효과를 함께 묶은 값입니다.
+Kennel–Petschek 이 아닙니다.
+
+**"자이언트 자기권계면은 Shue 형식으로 적합된 적이 없다."** 틀렸습니다. Rutala 2025 가 목성을 바로 그
+형식으로 적합하고 Arridge 2006 이 토성을 적합합니다. 방법론의 적합 α 표가 그 정정입니다.
+
+**`pause_deform` 을 장식이라고 본 것.** Kerbalism 모딩 문서가 "사인파 합으로 표면을 변형"이라고만
+써 둔 데서 온 오독입니다. ROKerbalism 은 물리로 씁니다 — `mercury` 와 `irregular` 모델이 둘 다 0.1,
+`metallic` / `solidiron` / `anomaly` 가 0.04~0.1 입니다.
 
 ## 인용 (ADS 핀, 바디별)
 

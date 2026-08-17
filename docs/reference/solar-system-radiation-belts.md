@@ -655,6 +655,37 @@ Rolled back in full: every body keeps a single α, and the night-side slider sta
 viewer as an exploration knob with no body setting it. The `m` finding is the one to pick up
 if this is revisited.
 
+## Retractions and first attempts that were wrong
+
+Kept here so the methodology can state conclusions without carrying its own history.
+
+**The sub-Alfvénic tail ratio, scaled linearly.** The first form was
+`ratio = max(150·M_A, 1)`. It is right at the top end and wrong at the bottom: A b III's
+`M_A` 0.0096 asks for a tail 44% longer than the nose, where the day–night pressure ratio
+`(1 + 2M_A²)^(1/6)` implies 0.01%. The adopted `150^M_A` gives 5% there and 11 nose radii at
+Ganymede, and lands exactly on a sphere at `M_A` 0 (2026-08-17).
+
+**`pause_smooth` = 0.5 × radius, generalised.** That convention was measured on the induced
+branch and does not transfer. The fitted optimum rises as the tail shortens: 1.47× at
+Mercury, 1.6× at Ganymede, 4.0× at A b III (2026-08-17).
+
+**"The generalized stock form misses the tail by 70% in this α band"**, written in Mercury's
+viewer preset. The 70% is Jupiter's, at α 0.423. α 0.5 is precisely where the form works —
+Mercury fits to 0.88% rms — so Mercury carries both plans (2026-08-17).
+
+**The dose-anchor interpolation, called the K–P scaling.** `dose ≈ 10.4 × (B_eq/31 µT)^1.9`
+is an empirical interpolation between two audited saturated dose anchors and bundles the
+hardness and belt-size effects together. It is not Kennel–Petschek.
+
+**"Giant magnetopauses are never fitted in the Shue form."** Wrong: Rutala 2025 fits Jupiter
+in exactly that form, and Arridge 2006 fits Saturn. The fitted-α table in the methodology is
+the correction.
+
+**`pause_deform`, called cosmetic.** Kerbalism's modding docs describe it only as "deform the
+surface using a sum of sine waves", which is what the earlier reading rested on. ROKerbalism
+uses it as physics: `mercury` and the model named `irregular` both carry 0.1, and
+`metallic` / `solidiron` / `anomaly` use 0.04–0.1.
+
 ## Citations (ADS-pinned, by body)
 
 - **Jupiter**: Joy 2002 [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J); Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D);
