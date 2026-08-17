@@ -450,3 +450,77 @@ decisions:
         2.46바퀴 역산이라 P 불확도가 위상 ±13°로 불어난다. 요소 자체에는 그런
         부풀림이 없다.
     refs: ["2018A&A...618A.111L", "docs/reference/emit-orbit-phase-match-methodology.md", "docs/reference/binary-epoch-pipeline.md", "phase3/stability-sim/STABILITY_REPORT.md"]
+
+  - body: Luhman 16 A
+    axis: atmosphere
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      The surface is defined where the eye stops: the photosphere. High-resolution
+      spectroscopy has measured where that is, a few bars of pressure, with the
+      silicate cloud bases anchored near thirteen bars below. The gas above is
+      hydrogen and helium; sodium and potassium vapor drink the visible light,
+      water shapes the infrared, and iron-bearing molecules trace the mineral
+      dust the clouds are made of. Below the visible face the envelope simply
+      thickens until it turns to fluid.
+    narrative_ko: >
+      표면은 시선이 멈추는 곳, 곧 광구로 정의한다. 고분해 분광이 그 위치를
+      실제로 재 놓았다. 기압으로 몇 bar,
+      규산염 구름의 바닥은 그 아래 13 bar 부근이다. 그 위의 기체는 수소와
+      헬륨이다. 나트륨·칼륨 증기가 가시광을 마셔 버리고, 물이 적외선의 형태를
+      빚으며, 철을 품은 분자들이 구름의 재료가 광물 먼지임을 알려 준다. 보이는
+      낯 아래로 외피는 그저 두꺼워지다가 유체로 바뀔 뿐이다.
+    fields:
+      - { name: composition, value: "H/He envelope; pressure-broadened Na/K resonance absorption dominates the optical; H2O + FeH + HF detected (CRIRES+ J-band); silicate (MgSiO3/Mg2SiO4) condensate clouds, iron rained out below", value_ko: "수소·헬륨 외피. 압력폭증 Na/K 공명 흡수가 가시광 지배, H₂O·FeH·HF 검출(CRIRES⁺ J밴드), 규산염(MgSiO₃/Mg₂SiO₄) 응결 구름, 철은 그 아래로 침전", op: passthrough }
+      - { name: pressure, value: 2.6, unit: bar, op: set, note: "surface = photosphere policy (owner 2026-08-17): log-midpoint of the retrieved photospheric window 0.6-11 bar (de Regt 2025 CRIRES+ retrieval); cloud base 13.3 (+1.3/-1.2) bar", note_ko: "표면=광구 정책(오너 2026-08-17). 리트리벌 광구 창 0.6–11 bar(de Regt 2025 CRIRES⁺)의 로그 중앙값. 구름 바닥 13.3(+1.3/−1.2) bar" }
+      - { name: temperature, value: 1310, unit: K, op: passthrough, note: "tau ~ 1 photosphere = the rendered face (Faherty 2014)", note_ko: "광학깊이 ~1 광구 = 렌더되는 낯(Faherty 2014)" }
+      - { name: scale_height, value: 24, unit: km, op: set, note: "H = kT/(mu m_H g), mu 2.35, T 1310 K, g 1084 m/s2 - derived echo", note_ko: "H = kT/(μ m_H g), μ 2.35·T 1310 K·g 1084 m/s²의 파생 에코" }
+      - { name: breathability, value: "none", op: passthrough }
+      - { name: escape, value: "none", op: passthrough, note: "110 g surface gravity; nothing leaves", note_ko: "표면 중력 110 g. 아무것도 못 떠난다" }
+    gate:
+      criterion: [observation, derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        The photosphere-as-surface policy gets a measured anchor: the CRIRES+
+        retrieval places the Luhman 16 photospheres at 0.6-11 bar and A's
+        silicate cloud base at 13.3 bar (de Regt 2025); the adopted 2.6 bar is
+        the log-midpoint of that window. Cross-check: the grey-photosphere
+        condition P ~ g/kappa with g 1084 m/s2 and a ~0.03 cm2/g Rosseland
+        opacity gives ~3-4 bar, the same order. Caveat: the window spans a
+        factor 18 because different wavelengths see different depths; the
+        single number is a rendering convention, not a sharp boundary.
+      evidence_ko: >
+        광구=표면 정책이 측정 앵커를 얻었다. CRIRES⁺ 리트리벌이 Luhman 16 광구를
+        0.6–11 bar에, A의 규산염 구름 바닥을 13.3 bar에 놓는다(de Regt 2025).
+        채택한 2.6 bar는 그 창의 로그 중앙값. 교차검증: 회색 광구 조건 P ~ g/κ에
+        g 1084 m/s², 로슬란드 불투명도 ~0.03 cm²/g을 넣으면 3~4 bar로 같은
+        자릿수다. 주의: 파장마다 보이는 깊이가 달라 창이 18배에 걸치므로, 단일
+        숫자는 예리한 경계가 아니라 렌더 관례다.
+    refs: ["2503.21266", "2014ApJ...790...90F"]
+
+  - body: Luhman 16 A
+    axis: surface
+    status: passthrough
+    narrative: >
+      The "ground" of this world is the photosphere the atmosphere row defines;
+      everything below it is fluid hydrogen under growing pressure.
+    narrative_ko: >
+      이 세계의 "지면"은 대기 행이 정의한 광구이고, 그 아래는 압력이 쌓여 가는
+      유체 수소뿐이다.
+    fields:
+      - { name: surface_type, value: "none (photosphere is the rendered face; see atmosphere)", value_ko: "없음 (렌더되는 낯은 광구. 대기 행 참조)", op: passthrough }
+
+  - body: Luhman 16 A
+    axis: satellites
+    status: passthrough
+    narrative: >
+      No companions of its own: twelve years of precision astrometry that
+      weighed the pair to a percent would have betrayed any moon of substance,
+      and none appears.
+    narrative_ko: >
+      제 몫의 동반체는 없다. 쌍의 질량을 1% 수준까지 잰 12년치 정밀 위치측정이
+      묵직한 위성이라면 들켰을 텐데, 아무것도 나타나지 않는다.
+    fields:
+      - { name: satellites, value: "none", op: passthrough, note: "no astrometric residual companion (L&S 2018)", note_ko: "위치측정 잔차 동반체 없음 (L&S 2018)" }
+      - { name: co_orbitals, value: "none", op: passthrough }
+    refs: ["2018A&A...618A.111L"]

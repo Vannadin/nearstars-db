@@ -291,8 +291,8 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header></div>
 <div class="wrap">
-<div class="summary"><span class="body-meta">9 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 7 gated · 1 divergence</span></div>
-<nav class="axis-toc" aria-label="Decisions on this page"><a href="#identity">identity</a><a href="#bulk">bulk</a><a href="#bulk.spin_axis_orientation">bulk.spin_axis_orientation</a><a href="#bulk.geopotential_j2">bulk.geopotential_j2</a><a href="#appearance">appearance</a><a href="#magnetism">magnetism</a><a href="#environment">environment</a><a href="#appearance.aurora">appearance.aurora</a><a href="#orbit">orbit</a></nav>
+<div class="summary"><span class="body-meta">12 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 8 gated · 1 divergence</span></div>
+<nav class="axis-toc" aria-label="Decisions on this page"><a href="#identity">identity</a><a href="#bulk">bulk</a><a href="#bulk.spin_axis_orientation">bulk.spin_axis_orientation</a><a href="#bulk.geopotential_j2">bulk.geopotential_j2</a><a href="#appearance">appearance</a><a href="#magnetism">magnetism</a><a href="#environment">environment</a><a href="#appearance.aurora">appearance.aurora</a><a href="#orbit">orbit</a><a href="#atmosphere">atmosphere</a><a href="#surface">surface</a><a href="#satellites">satellites</a></nav>
 <details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
 <dl>
   <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
@@ -408,9 +408,42 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>요소는 Lazorenko &amp; Sahlmann 2018 위치측정 해 그대로. 도출값은 에포크 위상 하나로, M(1950.0) = 194.0° = 360·(JD_epoch − T_peri)/P mod 360 표준 되감기다. 왕복 검증 완료: 1950.0 상태를 IAS15·leapfrog 양쪽으로 67.78년 순방향 적분하면 관측된 근점에 안착하고(잔차 0.29°, 근접거리 2.337 AU = a(1−e) 정확), 10⁶년 = 36,300궤도의 MEGNO ⟨Y⟩ = 2.005 (규칙적, 카오스 없음), 같은 구간 leapfrog 요소 표류 0.0000%다. 전체 수치는 안정성 리포트에. 주의: 2.46바퀴 역산이라 P 불확도가 위상 ±13°로 불어난다. 요소 자체에는 그런 부풀림이 없다.<br></span><span data-en hidden>Elements are the Lazorenko &amp; Sahlmann 2018 astrometric solution unchanged; the one derived number is the epoch phase, M(1950.0) = 194.0 deg by the standard rewind M = 360 (JD_epoch - T_peri)/P mod 360. Validated by round trip: integrating the 1950.0 state forward 67.78 yr in both IAS15 and leapfrog lands on the observed periastron (residual 0.29 deg, separation 2.337 AU = a(1-e) exact), MEGNO &lt;Y&gt; = 2.005 over 1e6 yr = 36,300 orbits (regular, no chaos), leapfrog element drift 0.0000 % over the same span - full run in the stability report. Caveat: 2.46 orbits of back-propagation turns the P uncertainty into +-13 deg of phase; the elements carry no such inflation.<br></span></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2018A%26A...618A.111L" target="_blank" rel="noopener">2018A&amp;A...618A.111L</a><a class="ref" href="../../wiki/reference__emit-orbit-phase-match-methodology.html" target="_blank" rel="noopener">emit-orbit-phase-match-methodology.md</a><a class="ref" href="../../wiki/reference__binary-epoch-pipeline.html" target="_blank" rel="noopener">binary-epoch-pipeline.md</a><a class="ref" href="https://github.com/Vannadin/nearstars-db/blob/main/phase3/stability-sim/STABILITY_REPORT.md" target="_blank" rel="noopener">STABILITY_REPORT.md</a></div>
+</article>
+<article class="dec" id="atmosphere">
+  <div class="dec-head">
+    <code class="axis">atmosphere</code>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
+  </div>
+  <p class="narrative"><span data-i18n>표면은 시선이 멈추는 곳, 곧 광구로 정의한다. 고분해 분광이 그 위치를 실제로 재 놓았다. 기압으로 몇 bar, 규산염 구름의 바닥은 그 아래 13 bar 부근이다. 그 위의 기체는 수소와 헬륨이다. 나트륨·칼륨 증기가 가시광을 마셔 버리고, 물이 적외선의 형태를 빚으며, 철을 품은 분자들이 구름의 재료가 광물 먼지임을 알려 준다. 보이는 낯 아래로 외피는 그저 두꺼워지다가 유체로 바뀔 뿐이다.<br></span><span data-en hidden>The surface is defined where the eye stops: the photosphere. High-resolution spectroscopy has measured where that is, a few bars of pressure, with the silicate cloud bases anchored near thirteen bars below. The gas above is hydrogen and helium; sodium and potassium vapor drink the visible light, water shapes the infrared, and iron-bearing molecules trace the mineral dust the clouds are made of. Below the visible face the envelope simply thickens until it turns to fluid.<br></span></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">composition</td><td class="v"><span data-i18n>수소·헬륨 외피. 압력폭증 Na/K 공명 흡수가 가시광 지배, H₂O·FeH·HF 검출(CRIRES⁺ J밴드), 규산염(MgSiO₃/Mg₂SiO₄) 응결 구름, 철은 그 아래로 침전</span><span data-en hidden>H/He envelope; pressure-broadened Na/K resonance absorption dominates the optical; H2O + FeH + HF detected (CRIRES+ J-band); silicate (MgSiO3/Mg2SiO4) condensate clouds, iron rained out below</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">pressure</td><td class="v">2.6 <span class="u">bar</span><div class="fnote"><span data-i18n>표면=광구 정책(오너 2026-08-17). 리트리벌 광구 창 0.6–11 bar(de Regt 2025 CRIRES⁺)의 로그 중앙값. 구름 바닥 13.3(+1.3/−1.2) bar</span><span data-en hidden>surface = photosphere policy (owner 2026-08-17): log-midpoint of the retrieved photospheric window 0.6-11 bar (de Regt 2025 CRIRES+ retrieval); cloud base 13.3 (+1.3/-1.2) bar</span></div></td><td class="o"></td></tr><tr><td class="k">temperature</td><td class="v">1310 <span class="u">K</span><div class="fnote"><span data-i18n>광학깊이 ~1 광구 = 렌더되는 낯(Faherty 2014)</span><span data-en hidden>tau ~ 1 photosphere = the rendered face (Faherty 2014)</span></div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">scale_height</td><td class="v">24 <span class="u">km</span><div class="fnote"><span data-i18n>H = kT/(μ m_H g), μ 2.35·T 1310 K·g 1084 m/s²의 파생 에코</span><span data-en hidden>H = kT/(mu m_H g), mu 2.35, T 1310 K, g 1084 m/s2 - derived echo</span></div></td><td class="o"></td></tr><tr><td class="k">breathability</td><td class="v">none</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">escape</td><td class="v">none<div class="fnote"><span data-i18n>표면 중력 110 g. 아무것도 못 떠난다</span><span data-en hidden>110 g surface gravity; nothing leaves</span></div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>광구=표면 정책이 측정 앵커를 얻었다. CRIRES⁺ 리트리벌이 Luhman 16 광구를 0.6–11 bar에, A의 규산염 구름 바닥을 13.3 bar에 놓는다(de Regt 2025). 채택한 2.6 bar는 그 창의 로그 중앙값. 교차검증: 회색 광구 조건 P ~ g/κ에 g 1084 m/s², 로슬란드 불투명도 ~0.03 cm²/g을 넣으면 3~4 bar로 같은 자릿수다. 주의: 파장마다 보이는 깊이가 달라 창이 18배에 걸치므로, 단일 숫자는 예리한 경계가 아니라 렌더 관례다.<br></span><span data-en hidden>The photosphere-as-surface policy gets a measured anchor: the CRIRES+ retrieval places the Luhman 16 photospheres at 0.6-11 bar and A&#x27;s silicate cloud base at 13.3 bar (de Regt 2025); the adopted 2.6 bar is the log-midpoint of that window. Cross-check: the grey-photosphere condition P ~ g/kappa with g 1084 m/s2 and a ~0.03 cm2/g Rosseland opacity gives ~3-4 bar, the same order. Caveat: the window spans a factor 18 because different wavelengths see different depths; the single number is a rendering convention, not a sharp boundary.<br></span></div>
+  <div class="refs"><a class="ref" href="https://arxiv.org/abs/2503.21266" target="_blank" rel="noopener">2503.21266</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2014ApJ...790...90F" target="_blank" rel="noopener">2014ApJ...790...90F</a></div>
+</article>
+<article class="dec" id="surface">
+  <div class="dec-head">
+    <code class="axis">surface</code>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
+  </div>
+  <p class="narrative"><span data-i18n>이 세계의 &quot;지면&quot;은 대기 행이 정의한 광구이고, 그 아래는 압력이 쌓여 가는 유체 수소뿐이다.<br></span><span data-en hidden>The &quot;ground&quot; of this world is the photosphere the atmosphere row defines; everything below it is fluid hydrogen under growing pressure.<br></span></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v"><span data-i18n>없음 (렌더되는 낯은 광구. 대기 행 참조)</span><span data-en hidden>none (photosphere is the rendered face; see atmosphere)</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
+  
+  
+</article>
+<article class="dec" id="satellites">
+  <div class="dec-head">
+    <code class="axis">satellites</code>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>손대지 않음</span><span data-en hidden>Passthrough</span></span></span>
+  </div>
+  <p class="narrative"><span data-i18n>제 몫의 동반체는 없다. 쌍의 질량을 1% 수준까지 잰 12년치 정밀 위치측정이 묵직한 위성이라면 들켰을 텐데, 아무것도 나타나지 않는다.<br></span><span data-en hidden>No companions of its own: twelve years of precision astrometry that weighed the pair to a percent would have betrayed any moon of substance, and none appears.<br></span></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">satellites</td><td class="v">none<div class="fnote"><span data-i18n>위치측정 잔차 동반체 없음 (L&amp;S 2018)</span><span data-en hidden>no astrometric residual companion (L&amp;S 2018)</span></div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">co_orbitals</td><td class="v">none</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
+  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2018A%26A...618A.111L" target="_blank" rel="noopener">2018A&amp;A...618A.111L</a></div>
 </article></div>
 
-<div class="stamp">빌드 2026-08-17 17:56 · 8dc386f4+미커밋</div></div>
+<div class="stamp">빌드 2026-08-17 18:48 · 71558071+미커밋</div></div>
 <script>
 const b=document.body;
 function setLang(en){
