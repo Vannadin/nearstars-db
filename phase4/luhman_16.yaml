@@ -172,3 +172,184 @@ decisions:
         접지 않고 상시 계산·emit한다는 오너 정책 그대로. 주의: P가 잠정이고 R이
         가정이라 J₂는 ±40%로 볼 것. 분기 선택 자체가 안정적인 부분이다.
     refs: ["docs/reference/body-figure-methodology.md"]
+
+  - body: Luhman 16 A
+    axis: appearance
+    status: gated
+    driver: [art-direction, window-selection]
+    narrative: >
+      Three layers make the look. Underneath, the hot interior glows a deep
+      temperature-red, and it shows wherever the cloud deck thins. The deck itself
+      is the darkest thing on the globe: thick silicate and iron cloud, cool on top,
+      a near-black lid over the fire. And where the deck breaks or thins at its
+      edges, the escaping light comes through with its middle colors eaten away,
+      so the seams glow a soft magenta. On this quiet half of the pair the deck is
+      smooth and nearly unbroken; the fire stays buried, the seams are rare and
+      faint, and the globe reads as a dark, slowly breathing ember laced with the
+      thinnest pink light.
+    narrative_ko: >
+      생김새는 세 겹이다. 맨 아래에는 뜨거운 내부가 제 온도만큼의 짙은 붉은빛으로
+      타고 있고, 구름층이 얇아지는 곳마다 그 빛이 비친다. 구름층 자체는 이 구체에서
+      가장 어두운 존재다. 규산염과 철 구름이 두껍게 덮여 위가 차갑고, 불 위에 얹힌
+      거의 검은 뚜껑처럼 보인다. 그리고 구름이 갈라지거나 가장자리가 얇아지는
+      자리에서는, 빠져나오는 빛이 가운데 색을 다 뜯긴 채라 이음매가 은은한
+      마젠타로 빛난다. 조용한 쪽인 이 천체는 구름층이 매끈하고 거의 갈라지지
+      않아서, 불은 묻혀 있고 이음매는 드물고 희미하다. 전체적으로는 가느다란
+      분홍빛이 실처럼 얹힌, 어둡게 숨 쉬는 잉걸불로 보인다.
+    fields:
+      - { name: banding, value: "#29140f", op: set, note: "cloud-deck base: near-black warm maroon (thick silicate/iron deck, cool tops)", note_ko: "구름층 베이스. 거의 검은 따뜻한 적갈색(두꺼운 규산염·철 구름, 윗면이 차가움)" }
+      - { name: emission_glow, value: "#993500", op: set, note: "interior glow through thin spots: 1310 K Planck hue #ff5900 at 60% value; self-luminous, intrinsic emission color", note_ko: "얇은 자리로 비치는 내부 발광. 1310 K Planck 색조 #ff5900의 60% 명도. 자발광 고유색" }
+      - { name: clouds, value: "rim glow #d94a63 on deck edges/seams", value_ko: "구름 가장자리·이음매의 테두리 발광 #d94a63", op: set, note: "soft R-dominant magenta (observed-L5 anchor family, owner pick); faint and sparse on A", note_ko: "부드러운 R-우세 마젠타(실측 L5 앵커 계열, 오너 선택). A에서는 희미하고 드묾" }
+      - { name: haze, value: "single thick low-contrast layer, very slow evolution; wavelength-layered subtle variability <4.5%", value_ko: "두껍고 대비 낮은 단일층, 매우 느린 변화. 파장별로 층이 갈리는 미세 변광 <4.5%", op: set }
+      - { name: rings, value: "none", op: set }
+    provenance: >
+      2026-08-16 owner color call: the soft R-dominant magenta (observed-L5 end)
+      over the saturated model violets; supersedes the Phase 3 Planck-ember
+      #662400. 2026-08-17 owner three-layer refinement: red interior, dark deck,
+      magenta rims.
+    gate:
+      criterion: [derived-grounding, art]
+      verdict: methodology-derived
+      evidence: >
+        Hue family from the brown-dwarf color regime (BT-Settl x CIE integration,
+        triangulated against Burrows 2001's observed L5 and Cranmer 2021's published
+        table); the owner's soft R-dominant pick sits at the observed-anchor end of
+        that window, and the rim placement matches the physics (a thinning cloud
+        column is where alkali-carved transmitted light escapes). Deck darkness is
+        relative: at 1310 K the cloud tops still glow faintly. Morphology constraint
+        honored: polarimetry requires constant longitudinal banding on A
+        (Millar-Blanchaer 2020), so the deck carries low-contrast bands rather than
+        a featureless skin.
+      evidence_ko: >
+        색조 계열은 갈색왜성 색 분기에서(BT-Settl × CIE 적분, Burrows 2001 실측
+        L5와 Cranmer 2021 발표 표로 삼각측량). 오너의 부드러운 R-우세 선택은 그
+        허용 폭에서 실측 앵커 쪽 끝에 있고, 테두리 배치는 물리와도 맞는다(구름
+        기둥이 얇아지는 곳이 알칼리에 깎인 투과광이 새는 자리). 구름층의 어두움은
+        상대적이다. 1310 K라 구름 윗면도 희미하게는 빛난다. 형태 구속도 지켰다.
+        편광 관측이 A에 상시 위도 띠를 요구하므로(Millar-Blanchaer 2020) 구름층은
+        민무늬가 아니라 대비 낮은 띠를 갖는다.
+    refs: ["docs/reference/stellar-photospheric-color-methodology.md", "2020ApJ...894...42M", "2015ApJ...805L...3O"]
+
+  - body: Luhman 16 A
+    axis: magnetism
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      No one has measured this body's magnetic field, but its own heat budget sets
+      one: in a fast-spinning convective globe the field strength follows from how
+      much internal power threads the interior, and here that gives a surface field
+      around 1250 gauss, several times Jupiter's. The deepest radio and X-ray
+      searches ever pointed at a brown dwarf found nothing, and the two facts do
+      not clash: the upper atmosphere is too cold and neutral to couple to the
+      field, so a kilogauss magnet can sit under the clouds in perfect silence.
+    narrative_ko: >
+      이 천체의 자기장을 측정한 기록은 없지만, 열수지를 통해 값을 유추할 수 있다.
+      빠르게 도는 대류 구체에서는 내부를 관통하는 동력의 양이 자기장 세기를
+      결정하는데, 여기서는 표면 기준 1250가우스쯤, 목성의 몇 배가 나온다.
+      갈색왜성을 겨눈 역대 가장 깊은 전파·X선 수색은 아무것도 찾지 못했지만,
+      두 사실은 서로 상충하지 않는다. 상층 대기가 지나치게 차갑고 중성이라
+      자기장과 엮이지 못해, 킬로가우스 급의 자기장이 구름 밑에 침묵하고 있을 수
+      있다.
+    fields:
+      - { name: magnetic_field, value: 1250, unit: G, op: set, note: "B_dyn = 4.8 (M L^2 / R^7)^(1/6) kG, BD branch (dynamo near the surface); R 0.08-0.10 spread gives 1100-1430 G", note_ko: "B_dyn = 4.8 (M L²/R⁷)^(1/6) kG, 갈색왜성 분기(표면 근처 dynamo). R 0.08–0.10이면 1100–1430 G" }
+      - { name: magnetosphere, value: "present but non-emitting; no standoff modeled (no wind ram pressure worth the name at 2 pc isolation)", value_ko: "존재하되 비발광. standoff 미모델(고립계라 이렇다 할 항성풍 램압 없음)", op: set }
+      - { name: radiation_belts, value: "none", op: set, note: "no trapped-particle emission at the Osten 2015 limits; no external plasma source", note_ko: "Osten 2015 상한에서 포획입자 방출 없음. 외부 플라스마원도 없음" }
+    gate:
+      criterion: [derived-grounding]
+      verdict: methodology-derived
+      evidence: >
+        Energy-flux dynamo scaling (Reiners & Christensen 2010 form) with measured
+        M 0.0320 M_sun and L 2.14e-5 L_sun, assumed R 0.090 R_sun: B_dyn 1246 G,
+        bracket 1100-1430 G over R 0.08-0.10. Consistency check with observation:
+        Osten 2015's non-detections (log Lr/Lbol < -18.1, log Lx/Lbol < -5.7) are
+        explicitly compatible with a ~kG dynamo field, since the cool neutral
+        atmosphere decouples matter from field; the paper itself cites the same
+        Christensen scaling predicting ~1 kG for this class. Caveat: no direct
+        field measurement exists; the value is a recipe output on measured inputs.
+      evidence_ko: >
+        에너지플럭스 dynamo 스케일링(Reiners & Christensen 2010 형)에 측정
+        M 0.0320 M☉·L 2.14e-5 L☉, 가정 R 0.090 R☉을 넣어 B_dyn 1246 G, R
+        0.08–0.10 전파 시 1100–1430 G. 관측 정합성: Osten 2015의 불검출
+        (log Lr/Lbol < −18.1, log Lx/Lbol < −5.7)은 차가운 중성 대기가 물질과
+        자기장을 분리하므로 ~kG dynamo와 명시적으로 양립하며, 그 논문 스스로 같은
+        Christensen 스케일링이 이 부류에 ~1 kG를 예측한다고 인용한다. 주의: 직접
+        측정은 없고, 측정 입력 위에서 돌린 레시피 출력이다.
+    refs: ["docs/reference/planetary-dynamo-scaling.md", "2015ApJ...805L...3O"]
+
+  - body: Luhman 16 A
+    axis: environment
+    status: passthrough
+    narrative: >
+      The quietest kind of neighborhood. The deepest radio and X-ray searches ever
+      aimed at a brown dwarf watched this pair through multiple rotations and saw
+      nothing at all. There is no wind worth the name either; all a visiting craft
+      receives here is the body's own faint thermal glow.
+    narrative_ko: >
+      더없이 차분한 천체다. 갈색왜성을 겨눈 역대 가장 깊은 전파·X선 수색이 이 쌍을
+      여러 자전에 걸쳐 관측했지만 어떠한 현상도 발견하지 못했다. 항성풍이라 부를
+      만한 것도 없으며, 이곳에 도달한 탐사선이 받을 것은 약하게 뿜어내는 복사열이
+      전부다.
+    fields:
+      - { name: activity, value: "radio log(Lr/Lbol) < -18.1 (5.5 GHz) / < -17.9 (9 GHz); X-ray log(Lx/Lbol) < -5.7; no flares over multiple rotations", value_ko: "전파 log(Lr/Lbol) < −18.1(5.5 GHz) / < −17.9(9 GHz), X선 log(Lx/Lbol) < −5.7. 여러 자전 동안 플레어 없음", op: passthrough, note: "deepest fractional UCD limits (Osten 2015 ATCA + Chandra)", note_ko: "극저온왜성 최심 상한(Osten 2015 ATCA+Chandra)" }
+      - { name: flares, value: "none detected", value_ko: "검출 없음", op: passthrough }
+      - { name: uv_xray_flux, value: "negligible (log Lx < 23.0 erg/s)", value_ko: "무시 가능(log Lx < 23.0 erg/s)", op: passthrough }
+      - { name: stellar_wind, value: "none modeled", value_ko: "모델 없음", op: passthrough, note: "no measurable outflow; nothing for Kerbalism to carry", note_ko: "측정 가능한 유출 없음. Kerbalism이 실어 나를 것도 없음" }
+      - { name: radiation, value: "thermal only", value_ko: "열복사뿐", op: passthrough }
+      - { name: habitable_zone, value: null, na_reason: "At L = 2.1e-5 L_sun the liquid-water distance lies inside ~0.005 AU, under the Roche limit for any real companion; no usable zone exists", na_reason_ko: "L = 2.1e-5 L☉이면 액체 물 거리가 ~0.005 AU 안쪽, 실존 동반체의 로슈 한계 밑이라 쓸 만한 영역이 없음" }
+    refs: ["2015ApJ...805L...3O"]
+
+  - body: Luhman 16 A
+    axis: appearance.aurora
+    status: gated
+    driver: [art-direction]
+    narrative: >
+      A faint magenta-pink auroral ring sits over each pole. Brown dwarfs can
+      light aurorae on their own, driving currents out of their spinning
+      magnetospheres with no star to feed them, and the phenomenon has been
+      observed on bodies of this class. The dedicated search at this pair found
+      nothing, but auroral radio is a narrowly beamed emission, so for a body
+      viewed almost edge-on that silence cannot be read as proof of absence.
+    narrative_ko: >
+      극에 희미한 마젠타-분홍 오로라 고리가 존재한다. 갈색왜성은 스스로의
+      자기권에서 전류를 만들어 오로라를 발광시킬 수 있으며, 실제로 그러한 현상이
+      관측된 바 있다. 이 천체를 향한 관측에서는 발견하지 못했지만, 오로라 전파는
+      좁게 뻗는 빔이라 거의 옆에서 보는 천체에서 그 무음을 부재의 증거로 볼 수
+      없다.
+    fields:
+      - { name: aurora, value: "faint narrow polar ring, magenta-pink #d94a63 family, low altitude, both poles", value_ko: "희미하고 좁은 극 고리, 마젠타-분홍 #d94a63 계열, 낮은 고도, 양극", op: set }
+    provenance: >
+      2026-08-17 owner call: art aurora adopted over the strict observational
+      "none", using the ECM beaming loophole; supersedes the aurora: none field
+      the appearance row briefly carried.
+    gate:
+      criterion: [observation, art]
+      verdict: documented-divergence
+      evidence: >
+        Physically coherent with the rest of the board: the dynamo row's ~1.25 kG
+        field is ample for auroral ECM, and the class shows aurorae at T types
+        (Kao 2016 detections at kG-scale fields). Checked against the observation:
+        Osten 2015's limits constrain emission toward Earth, not the existence of
+        auroral currents; the divergence is confined to that beaming loophole.
+        Caveat: rendered faint and narrow so the art stays inside what the null
+        allows.
+      evidence_ko: >
+        보드의 다른 행들과 물리적으로 맞물린다. dynamo 행의 ~1.25 kG 자기장은
+        오로라 ECM에 충분하고, 부류 차원에서는 T형에서도 kG급 자기장과 함께
+        오로라가 검출됐다(Kao 2016). 관측과의 대조도 확인했다. Osten 2015 상한이
+        구속하는 것은 지구 방향 방출이지 오로라 전류의 존재가 아니므로, 이탈은
+        빔 기하 구멍 안으로 한정된다. 주의: 무음이 허용하는 범위에 머물도록
+        어둡고 좁게만 그린다.
+      divergence_note: >
+        Departs the Osten 2015 non-detection (deepest UCD auroral-radio limits,
+        log Lr/Lbol < -18.1, multi-rotation coverage): drawn as present-but-faint
+        anyway. The loophole is physical: ECM auroral radio is narrowly beamed,
+        so a null at Earth does not exclude auroral currents on a body viewed
+        near equator-on. Class precedent: auroral emission is confirmed on UCDs
+        including T dwarfs (Hallinan 2015; Kao 2016, ~10% detection rate).
+      divergence_note_ko: >
+        Osten 2015 불검출(극저온왜성 최심 오로라 전파 상한, log Lr/Lbol < −18.1,
+        여러 자전 커버)에서 이탈해 "있되 희미함"으로 그린다. 구멍은 물리적이다.
+        ECM 오로라 전파는 좁게 빔이 지므로, 거의 적도 방향에서 보는 천체의 지구
+        기준 무음은 오로라 전류의 부재 증명이 아니다. 부류 선례: T왜성을 포함한
+        극저온왜성에서 오로라 방출 확인(Hallinan 2015, Kao 2016, 검출률 ~1할).
+    refs: ["2015ApJ...805L...3O", "2015Natur.523..568H", "2016ApJ...818...24K"]
