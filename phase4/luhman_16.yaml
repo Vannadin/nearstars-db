@@ -570,3 +570,174 @@ decisions:
         구도는 유일한 지도 구속(Millar-Blanchaer 2020 상시 위도 띠)과 정합.
         ScienceValues와 발견 모드 등급은 하류 writer 몫으로 남긴다.
     refs: []
+
+  # ── Luhman 16 B (T0.5 반성, 들썩이는 쪽) ──────────────────────────────────
+  - body: Luhman 16 B
+    axis: identity
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      The famous half of the pair: the first world beyond the Solar System to
+      have its weather mapped. Slightly lighter than its companion at 28.5
+      Jupiter masses, and confirmed substellar by the same lithium test, it sits
+      just past the boundary where the thick silicate clouds begin to tear open.
+      Standing on that boundary is its entire character. Its brightness swings
+      by a tenth as dark cloud and bright clearings wheel past every 4.9 hours,
+      weather changing from one night to the next. If its companion is a quiet
+      ember, this is the storm.
+    narrative_ko: >
+      쌍에서 유명한 쪽이다. 태양계 밖에서는 처음으로 날씨 지도가 그려진 천체다.
+      목성 질량 28.5배로 짝보다 조금 가볍고, 같은 리튬 검사로 준항성임이
+      확인됐으며, 두꺼운 규산염 구름이 찢어지기 시작하는 경계를 막 지났다.
+      이 경계 위에 서 있다는 사실이 성격의 전부를 정한다. 어두운 구름과 밝은
+      클리어링이 4.9시간마다 돌아 지나가며 밝기가 1할씩 출렁이고, 날씨는 하룻밤
+      사이에 얼굴을 바꾼다. 짝이 고요한 잉걸불이라면, 이쪽은 폭풍이다.
+    fields:
+      - { name: body_type, value: "T0.5 brown dwarf, the restless weather-mapped secondary of the nearest BD binary", value_ko: "T0.5 갈색왜성, 최근접 갈색왜성 쌍의 들썩이는 날씨 지도 반성", op: set }
+      - { name: designation, value: "Luhman 16 B (WISE J104915.57-531906.1 B)", op: set }
+      - { name: naked_eye, value: false, op: set, note: "as for A: invisible without instruments despite 2 pc", note_ko: "A와 같음. 2 pc인데도 맨눈 불가" }
+    gate:
+      criterion: [classification, observation]
+      verdict: pass-in-window
+      evidence: >
+        Owner facet-walk 2026-08-16/17. Classification chain: T0.5 (Burgasser
+        2013 resolved NIR), dynamical mass 28.5 M_Jup + lithium detection (the
+        first in a T dwarf, Faherty 2014 EW 3.8 A). The identity claims are
+        observational: first BD surface map (Crossfield 2014), ~11%
+        peak-to-peak variability and night-to-night evolution (Gillon 2013),
+        P 4.87 h.
+      evidence_ko: >
+        오너 facet-walk 2026-08-16/17. 분류 사슬은 T0.5(Burgasser 2013 분해
+        근적외), 역학 질량 28.5 M_Jup + 리튬 검출(T왜성 최초, Faherty 2014
+        EW 3.8 Å). 정체성 주장들은 관측 사실이다. 갈색왜성 최초 표면 지도
+        (Crossfield 2014), 피크간 ~11% 변광과 하룻밤 단위 변화(Gillon 2013),
+        P 4.87시간.
+    refs: ["2014ApJ...790...90F", "2018A&A...618A.111L", "2014Natur.505..654C", "2013A&A...555L...5G"]
+
+  - body: Luhman 16 B
+    axis: bulk                        # §3.2 템플릿 앵커 — 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    body_class: free_rotator
+    status: passthrough
+    narrative: >
+      The measured body: 28.5 Jupiter masses from the pair's mutual orbit, the
+      same assumed Jupiter-size globe as its companion, 1280 kelvin at the cloud
+      tops, and a shade less light. Surface pull is 94 g. The half-billion-year
+      Oceanus age is shared with the primary. The one number this body owns
+      outright is its spin: 4.87 hours, read cleanly from the turning weather,
+      and the best-measured rotation in the system.
+    narrative_ko: >
+      측정된 값들이다. 질량은 상호 궤도에서 잰 목성 28.5배, 덩치는 짝과 같은
+      목성급 가정 반지름, 구름 꼭대기는 1280켈빈에 빛은 짝보다 한 끗 어둡다.
+      표면 중력은 94 g. 오케아누스 이동군의 5억 년 나이는 주성과 공유한다.
+      이 천체가 온전히 제 것으로 가진 숫자는 자전 하나다. 돌아가는 날씨에서
+      깨끗하게 읽어낸 4.87시간, 이 시스템에서 가장 잘 측정된 자전이다.
+    fields:
+      - { name: mass, value: 0.0273, unit: M_sun, op: passthrough, note: "±0.0003 = 28.5 M_Jup (Lazorenko & Sahlmann 2018 astrometric orbit)" }
+      - { name: radius, value: 0.090, unit: R_sun, op: passthrough, note: "±0.01 = 0.9 R_Jup assumed field-BD degenerate radius (Faherty 2014)", note_ko: "±0.01 = 0.9 R_Jup, 필드 갈색왜성 축퇴 반지름 가정(Faherty 2014)" }
+      - { name: gravity, value: 924, unit: m/s2, op: passthrough, phase3_default: "GM/R² derived echo (~94 g)", phase3_default_ko: "GM/R² 파생 에코 (~94 g)" }
+      - { name: internal_heat, value: 1.95e-5, unit: L_sun, op: passthrough, note: "self-luminous: contraction heat, log L = -4.71 (Faherty 2014)", note_ko: "자발광. 수축열, log L = −4.71 (Faherty 2014)" }
+      - { name: age, value: 0.5, unit: Gyr, op: passthrough, note: "shared system age: Oceanus moving group (Gagné 2023), 12C/13C corroboration (de Regt 2026)", note_ko: "시스템 공유 나이. 오케아누스 이동군(Gagné 2023), ¹²C/¹³C 교차지지(de Regt 2026)" }
+      - { name: rotation_period, value: 0.2029, unit: d, op: passthrough, note: "4.87 ± 0.01 hr (Gillon 2013, high confidence); TESS jet-drift spread 4.9-5.3 hr noted (Apai 2021)", note_ko: "4.87 ± 0.01시간(Gillon 2013, 고신뢰). TESS 제트 표류 산포 4.9–5.3시간 병기(Apai 2021)" }
+      - { name: obliquity, value: null, na_reason: "No constraint; the spin-axis row carries the derived line-of-sight inclination instead", na_reason_ko: "구속 없음. 시선경사 도출값은 자전축 전용 행이 담당" }
+      - { name: geopotential_c22, value: null, na_reason: "A freely rotating fluid body is axisymmetric; no tidal triaxiality (rotational J2 gets its own row)", na_reason_ko: "자유 회전 유체 천체라 축대칭. 조석 삼축 없음 (회전 J2는 전용 행)" }
+    refs: ["2018A&A...618A.111L", "2014ApJ...790...90F", "2013A&A...555L...5G", "2602.03409"]
+
+  - body: Luhman 16 B
+    axis: orbit
+    status: passthrough
+    narrative: >
+      The mutual orbit is one object, recorded once on the primary's row: the
+      27.5-year, moderately eccentric path and its validated 1950 starting
+      phase. Each body still gets its own starting state: the barycenter splits
+      that one relative orbit by the mass ratio, and both positions and
+      velocities at the game epoch already sit in the database, computed by the
+      binary-epoch pipeline. This row exists to say that split is deliberate,
+      not missing.
+    narrative_ko: >
+      상호 궤도는 하나의 실체라 주성 행에 한 번만 적는다. 27.5년짜리 적당히
+      찌그러진 길도, 검증을 마친 1950년 출발 위상도 거기에 있다. 그래도 출발
+      상태는 천체마다 제 몫이 있다. 무게중심이 그 상대궤도 하나를 질량비로
+      갈라 두 천체의 위치·속도를 만들고, 게임 에포크 기준 값 양쪽 다 다성계
+      에포크 파이프라인이 계산해 데이터베이스에 이미 들어 있다. 이 행은 그
+      분해가 누락이 아니라 의도임을 적어 두는 자리다.
+    fields:
+      - { name: orbit_ref, value: "see Luhman 16 A / orbit (the AB relative orbit, L&S 2018; M(1950.0) = 194.0 deg validated)", value_ko: "Luhman 16 A / orbit 참조 (AB 상대궤도, L&S 2018. M(1950.0)=194.0° 검증 완료)", op: passthrough }
+      - { name: barycentric_split, value: "r_B = +(m_A/M_tot) x r_rel, r_A = -(m_B/M_tot) x r_rel; per-component ICRS states at B1950.0 in db/systems/luhman_16_{a,b}.json derived (kepler_thiele_innes)", value_ko: "r_B = +(m_A/M_tot)·r_rel, r_A = −(m_B/M_tot)·r_rel. 성분별 B1950.0 ICRS 상태는 db/systems/luhman_16_{a,b}.json derived에 (kepler_thiele_innes)", op: passthrough }
+      - { name: spin_orbit_resonance, value: "none (free rotator; 4.87 h spin vs a 27.5 yr orbit)", value_ko: "없음 (자유 회전. 자전 4.87시간 대 궤도 27.5년)", op: passthrough }
+      - { name: lagrange_placement, value: "none", op: passthrough }
+    refs: ["2018A&A...618A.111L", "docs/reference/binary-epoch-pipeline.md"]
+
+  - body: Luhman 16 B
+    axis: bulk.spin_axis_orientation
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      We see this body almost exactly along its equator. The spin speed read
+      from its lines matches the full circumference-per-4.87-hours pace so
+      tightly that no room is left for a tilt: the viewing angle computes to
+      ninety degrees within a few. Its axis stands in the same plane as its
+      companion's axis and the mutual orbit. This is also why the weather shows
+      so well; seen equator-on, one rotation carries the entire face past the
+      line of sight.
+    narrative_ko: >
+      이 천체는 거의 정확히 적도 방향에서 보인다. 선폭에서 읽은 자전 속도가
+      4.87시간에 한 바퀴라는 속도와 빈틈없이 맞아떨어져, 기울어 있을 여지가
+      남지 않는다. 계산하면 시선각이 90도에서 몇 도 안쪽이다. 자전축은 짝의
+      자전축, 상호 궤도와 같은 평면에 서 있다. 날씨가 그토록 잘 보이는 것도
+      이 덕분이다. 적도방향에서는 자전 한 바퀴에 표면 전체가 시야를 지나간다.
+    fields:
+      - { name: spin_axis_orientation, value: "i★ ≈ 90° (derived; nominal sin i★ reaches 1.0-1.23 across the radius bracket, read as equator-on); aligned with the AB orbital plane, azimuth free, ICRS pole at emit", value_ko: "i★ ≈ 90°(도출. 반지름 구간에서 명목 sin i★ 1.0–1.23 → 적도방향으로 읽음) · AB 궤도면 정렬, 방위각 자유, ICRS 극 변환은 emit", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: methodology-derived
+      evidence: >
+        sin i★ = v sin i · P / 2πR with v sin i 26.1±0.2 km/s (Crossfield 2014),
+        P 5.28 h (TESS) over R 0.90-1.10 R_Jup gives v_eq 21.3-26.0 km/s and
+        nominal sin i★ 1.00-1.23: the methodology's rule for nominal sin > 1
+        reads this as equator-on, reproducing Apai 2021's published "within a
+        few degrees of 90". Doppler-map fits agree (Karalidi 2016: 69±8°;
+        Crossfield 2014: i > 60°). Caveat: the exact degree is soft; "near 90,
+        not below ~60" is the defensible statement.
+      evidence_ko: >
+        sin i★ = v sin i · P / 2πR에 v sin i 26.1±0.2 km/s(Crossfield 2014),
+        P 5.28시간(TESS), R 0.90–1.10 R_Jup을 넣으면 v_eq 21.3–26.0 km/s, 명목
+        sin i★ 1.00–1.23. 방법론의 규칙대로 명목 1 초과는 적도방향으로 읽으며,
+        Apai 2021이 발표한 "90도에서 몇 도 이내"가 재현된다. 도플러 맵 피팅도
+        정합(Karalidi 2016 69±8°, Crossfield 2014 i > 60°). 주의: 정확한 도수는
+        무르고, "90 근처, ~60 아래는 아님"까지가 방어 가능한 진술이다.
+    refs: ["docs/reference/spin-axis-inclination-methodology.md", "2021ApJ...906...64A"]
+
+  - body: Luhman 16 B
+    axis: bulk.geopotential_j2
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      A turn every 4.87 hours squashes this globe visibly more than its
+      companion: the equator bulges by about half a percent, two and a half
+      times the primary's figure. Same structural branch, faster spin, and this
+      time the period underneath is solidly measured, so the number is the
+      firmest figure value in the system.
+    narrative_ko: >
+      4.87시간에 한 바퀴 도는 자전은 이 구체를 짝보다 눈에 띄게 더 누른다.
+      적도가 0.5%쯤 부풀어, 주성의 두 배 반이다. 구조 분기는 같고 자전만 더
+      빠른데, 이번에는 바탕이 되는 주기가 단단한 측정값이라 이 숫자는 시스템에서
+      가장 굳은 형상값이다.
+    fields:
+      - { name: geopotential_j2, value: 7.31e-4, op: set, note: "= 0.084 x q (n=3/2 polytrope Radau-Darwin branch), q = 8.70e-3 at P 4.87 hr", note_ko: "= 0.084 × q (n=3/2 폴리트로프 Radau–Darwin 분기), P 4.87시간에서 q = 8.70e-3" }
+      - { name: reference_radius, value: 62613, unit: km, op: set, note: "= mean radius (0.090 R_sun), the Principia pair convention", note_ko: "= 평균 반지름(0.090 R☉), Principia 짝 규약" }
+      - { name: flattening, value: 5.45e-3, op: set, note: "= (3J2+q)/2 derived echo; the visual oblate-mesh slot", note_ko: "= (3J₂+q)/2 파생 에코. 시각 oblate 메시 슬롯" }
+    gate:
+      criterion: [derived-grounding]
+      verdict: methodology-derived
+      evidence: >
+        q = Omega^2 R^3 / GM = 8.702e-3 (P 4.87 hr measured, R 0.090 R_sun,
+        M 0.0273 M_sun); J2 = 0.084 q on the n=3/2 polytrope branch, f =
+        (3 J2 + q)/2 = 5.45e-3. Unlike the primary, P is a high-confidence
+        measurement, so the residual uncertainty is the assumed radius
+        (R 0.08-0.10 moves J2 by roughly -25/+40%).
+      evidence_ko: >
+        q = Ω²R³/GM = 8.702e-3 (측정 P 4.87시간, R 0.090 R☉, M 0.0273 M☉).
+        n=3/2 폴리트로프 분기에서 J₂ = 0.084 q, f = (3J₂+q)/2 = 5.45e-3.
+        주성과 달리 P가 고신뢰 측정이라 남는 불확도는 가정 반지름뿐이다
+        (R 0.08–0.10이면 J₂가 약 −25/+40% 움직인다).
+    refs: ["docs/reference/body-figure-methodology.md"]
