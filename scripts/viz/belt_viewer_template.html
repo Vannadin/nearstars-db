@@ -487,7 +487,10 @@ presetBar.addEventListener('click',e=>{
     applyPreset(cur,{keepZoom:true,keepSlice:true,keepShue:true}); return;
   }
   if(b.dataset.lang){ lang=b.dataset.lang; localStorage.setItem('nearstars-lang',lang); applyLang(); return; }
-  applyPreset(b.dataset.p);
+  // 이 바 안에는 천체 피커와 변형 토글도 들어 있고, 그 버튼들엔 data-p 가 없다.
+  // 가드가 없으면 그것들도 applyPreset(undefined) 를 타서 PRESETS[undefined].inner 로 던진다
+  // (화면은 전용 핸들러가 살려놓으므로 콘솔에만 남았다 — 2026-08-17 헤드리스 점검에서 발견).
+  if(b.dataset.p) applyPreset(b.dataset.p);
 });
 // 현재 상태 → Kerbalism cfg (레거시 필드, 오늘 작동하는 스키마)
 function nm(v){ return Math.round(v*1e5)/1e5; }
