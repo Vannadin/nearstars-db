@@ -218,18 +218,24 @@ BODIES={
  #   smooth : x=0 의 기울기 점프(C0 이고 C1 아님)를 쌍곡선으로 뭉개 C∞ 로 만든다.
  # 요구사항: 뒤쪽이 불룩해지지 않을 것. 폭은 √(rad²−g²) 이므로 rad 를 넘을 수 없다 →
  # rad = 명암경계선 폭으로 두면 최대폭이 정확히 그 값이고 뒤로는 단조 감소한다(불룩함 0.000%).
- # comp/ext 는 노즈와 꼬리끝에 맞춰 풀었다: 노즈 1.055 정확, 명암경계선 1.13 정확, 꼬리 20 R_V.
+ # comp/ext 는 노즈와 꼬리끝에 맞춰 풀었다: 노즈 1.0545 정확, 폭 상한 = 실측 명암경계선.
  # smooth 는 적합으로 결정되지 않는다(RMS 가 거의 평평). 관례로 smooth = 0.5×rad 를 쓴다 —
  # 금성·화성·수성에서 독립적으로 구한 얕은 최적점이 0.50·0.54·0.57×rad 로 일치한다. 도출이 아니라
  # 관례이고, comp 는 그 smooth 에서 노즈가 정확해지도록 다시 풀었다. 폭 상한이 rad 라 대가는 없다.
+ # 최대폭 평면은 스톡(waist=0)에서는 x=0 이지만 smooth 를 켜면 −½(comp−ext)·smooth/√(comp·ext)
+ # 로 하류에 놓인다(여기서 −3.35 R_V). 그래서 x=0 단면은 상한 1.140 이 아니라 1.1034 —
+ # Brace 의 명암경계선 1.1405 보다 3.3% 좁다. 불룩함 금지(폭 ≤ 실측 명암경계선)를 지키는 대가이고,
+ # waist 로 최대폭 평면을 x=0 까지 끌어오는 것은 이 꼬리 길이에서는 불가능하다(노즈가 무너진다).
  # 후류 폭은 실측 원뿔(Martinecz 2009 / Edberg 2024, arXiv:2410.21856)보다 좁다(d2 −15%,
  # d5 −33%, d10 −54%). 불룩함 금지가 우선이라 받아들인 값이다. 방법론 Part A 참조.
- # 도출 사슬(pause): rad = 명암경계선 1.14 R_V (Brace 1980), comp 1.0151 = 그 smooth 에서 노즈
- #   1.055 가 정확해지도록 푼 값, ext = rad/(150·노즈) = 0.0072038 → 꼬리 158 R_V.
+ # 도출 사슬(pause): rad = 명암경계선 1.14 R_V (Brace 1980), comp 1.0123576 = 그 smooth 에서 노즈
+ #   1.0545 가 정확해지도록 |px| = rad 를 닫힌형으로 푼 값, ext = rad/(150·노즈) = 0.0072072
+ #   → 꼬리 158 R_V. (2026-08-17: 옛 comp 1.0151 은 노즈를 1.0513 으로 놓아 0.31% 어긋나 있었다.
+ #    스톡 항등식 rad/comp 는 smooth 가 켜지면 성립하지 않는다 — belt-viewer 의 pauseNoseTail 참조.)
  #   (위 문단의 "꼬리 20 R_V" 는 L 관례 확정 전 표현이다. 20 R_V 는 확정 IMB 횡단의 최원거리
  #    하한이고, 158 은 그 하한을 넘기는 L = 150×노즈 관례값이다.)
- 'venus_phys':{'title':'Venus — physical (induced)','sub':'generalized stock pause: nose 1.055 / terminator 1.13 exact, tail 20 R_V, no rear bulge; no belts','R':22,'tilt':0,
-   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.0151,'ext':0.0072038,'hscale':1.0,
+ 'venus_phys':{'title':'Venus — physical (induced)','sub':'generalized stock pause: nose 1.0545 exact, cap 1.1405 = terminator, tail 158 R_V','R':22,'tilt':0,
+   'pause':{'radiation':-0.005,'rad':1.14,'comp':1.0123576,'ext':0.0072072,'hscale':1.0,
             'smooth':0.57,'waist':0.0}},
 
  # ---- MARS: 지각 잔류 자기(다극·약장) → irregular 모델 (pause_deform 0.1 로 울퉁불퉁) ----
@@ -255,10 +261,13 @@ BODIES={
  # 검증: 그 각도면 주간면 원의 명암경계선 기울기 0.135 와 야간면 원뿔 0.131 이 3% 안에서 접합된다(설계 아님).
  # pause_deform 0.1 은 스톡 irregular 에서 물려받은 값이다 — 지각 잔류자기의 비축대칭성을 뜻하지만
  # 크기는 도출하지 않았다(Vignes 는 남북 비대칭을 정량화하지 않는다).
- # 도출 사슬(pause): rad = 명암경계선 1.47 R_M (Vignes 2000), comp 1.0684 = smooth 0.735 에서
- #   노즈 1.285 가 나오도록 푼 값, ext = rad/(150·노즈) = 0.0076265 → 꼬리 193 R_M (L 관례).
- 'mars_phys':{'title':'Mars — physical (MPB fit)','sub':'generalized stock pause: nose 1.285 / terminator 1.47 exact, tail 20 R_M, no rear bulge; no belts','R':22,'tilt':0,
-   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.0684,'ext':0.0076265,'hscale':1.0,'deform':0.1,
+ # 도출 사슬(pause): rad = 명암경계선 1.47 R_M (Vignes 2000), comp 1.0601082 = smooth 0.735 에서
+ #   노즈 1.29 가 정확해지도록 |px| = rad 를 닫힌형으로 푼 값, ext = rad/(150·노즈) = 0.0075969
+ #   → 꼬리 194 R_M (L 관례). 금성과 같은 이유로 x=0 단면은 상한 1.47 이 아니라 1.4182 (−3.5%).
+ #   (2026-08-17: 옛 comp 1.0684 는 노즈를 1.2785 로 놓아 Vignes 의 1.29 에서 0.89% 어긋나 있었다.
+ #    문서에 남아 있던 "노즈 1.285" 는 목표가 아니라 그 어긋난 값이었다.)
+ 'mars_phys':{'title':'Mars — physical (MPB fit)','sub':'generalized stock pause: nose 1.29 exact, cap 1.47 = terminator, tail 194 R_M','R':22,'tilt':0,
+   'pause':{'radiation':-0.003,'rad':1.47,'comp':1.0601082,'ext':0.0075969,'hscale':1.0,'deform':0.1,
             'smooth':0.735,'waist':0.0}},
 
  # ---- EARTH: 앵커 (스톡=튜닝 모델) vs 물리 (standoff 10, 외대 heart L~4.5) ----

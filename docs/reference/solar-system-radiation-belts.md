@@ -96,16 +96,26 @@ The physical preset is computed with the induced-magnetosphere recipe rather tha
 the dipole one. Venus' mean ionopause sits 330 km above the subsolar point, 700 km
 at the dusk terminator and 1000 km at dawn (Brace 1980, [`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)), which
 on `R_V` 6051.8 km is a **nose at 1.055 R_V and a terminator mean of 1.140 R_V**.
-Mapped through the cfg semantics (`nose = pause_radius/compression`,
-flank = `pause_radius`, tail = `pause_radius/extension`) that is
-`pause_radius` **1.14**, `compression` **1.0151**, `extension` **0.0072038**, plus the two
+Mapped through the cfg semantics that is
+`pause_radius` **1.14**, `compression` **1.0123576**, `extension` **0.0072072**, plus the two
 generalizing fields `pause_smooth` **0.57** and `pause_waist` **0** (neither exists in stock
-Kerbalism; see below). Nose 1.055 and terminator 1.13 come out exact, and the tail closes at
+Kerbalism; see below). Note that the stock identities `nose = pause_radius/compression` and
+`tail = pause_radius/extension` hold **only at `pause_smooth` = 0**; with smoothing on, the
+nose is the root of `|px| = pause_radius` on the axis (closed form under Part C), which is
+what these two values are solved against. Nose 1.0545 comes out exact and the tail closes at
 158 R_V under the project-wide `L` = 150 × nose convention — comfortably beyond the farthest
 confirmed crossing of the induced magnetospheric boundary at 20 R_V (Edberg 2024,
 [`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)). No belts, and
 `radiation_pause` stays at the shipped −0.005: an induced boundary screens GCR far less than
 a dipole magnetopause.
+
+The terminator does **not** come out exact, and the reason is worth stating. `pause_radius`
+caps the width everywhere, so setting it to the measured terminator mean guarantees the
+boundary never exceeds the measurement — but the plane that actually carries that widest
+section sits at `−½(compression−extension)·pause_smooth/√(compression·extension)`, which for
+this tail length is 3.35 R_V downstream. The `x` = 0 section is therefore 1.1034, 3.3% narrower
+than Brace's 1.1405. Pulling the widest plane back to the terminator with `pause_waist` is not
+available here: at this tail length the required shift collapses the nose.
 
 Against stock, the derived dayside hugs the planet more tightly (1.05 vs a uniform 1.1 R)
 and the tail runs far longer (158 vs 5.5 R_V).
@@ -161,15 +171,16 @@ significant difference between the two planets' induced magnetotail structure
 labelled as one in the render. One check it was not designed to pass: at that angle the
 dayside circle meets the terminator with slope 0.135 against the cone's 0.131, joining
 smoothly to within 3%, but that check belongs to the circle-plus-cone form, which is not
-what ships. The shipped numbers are `pause_radius` **1.47**, `compression` **1.0684**,
-`extension` **0.0076265** with `pause_smooth` **0.735**, putting the tail at 193 R_M under
-the same `L` = 150 × nose convention.
+what ships. The shipped numbers are `pause_radius` **1.47**, `compression` **1.0601082**,
+`extension` **0.0075969** with `pause_smooth` **0.735**, recovering Vignes' 1.29 nose exactly
+and putting the tail at 194 R_M under the same `L` = 150 × nose convention. As at Venus, the
+`x` = 0 section reads 1.4182 rather than the 1.47 cap — 3.5% narrow, for the same reason.
 
 `pause_deform` stays at the stock `irregular` value 0.1: the crustal remanent field
 is genuinely non-axisymmetric, but Vignes does not quantify that asymmetry, so the
 amplitude is inherited rather than derived — flagged, not fabricated. Against stock,
 the derived boundary stands further off (1.29 vs 1.25 nose, 1.47 vs a rounder
-flank) and trails a much longer tail (193 vs 1.7 R_M).
+flank) and trails a much longer tail (194 vs 1.7 R_M).
 
 Both Venus and Mars remain belt-free: no dynamo, no trapping.
 
@@ -602,10 +613,15 @@ attempt to use `pause_smooth` for the width, by fitting it against the Shue curv
 than against the corner, drove it to 3 × nose and turned the piecewise-linear `px` into a
 quadratic. That is a change of function family, not a smoothing, and was rejected.
 
-Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
-158 / 193 R_p (the 150 x nose convention; an earlier revision of this table carried
+The nose comes out exact (1.0545 / 1.29) and the tail closes at
+158 / 194 R_p (the 150 x nose convention; an earlier revision of this table carried
 `extension` 0.0567 / 0.0737, a 20 R_p closure from before that convention existed, which
-the shipped presets had already moved past), and the bulge is 0.000%. The cost is wake width: against the measured cone the
+the shipped presets had already moved past), and the bulge is 0.000% against the
+`pause_radius` cap. The terminator section is 3.3% / 3.5% narrower than the cap, because
+smoothing moves the widest plane downstream; both were previously stated as exact, an error
+that came from applying the smooth-free identity `nose = pause_radius/compression` to a
+smoothed surface (found 2026-08-17, together with the same bug in the viewer's read-back).
+The other cost is wake width: against the measured cone the
 boundary is 15% narrow at 2 R_p, 33% at 5 and 54% at 10 — accepted, because no-bulge
 outranks wake fidelity here, and because every Shue parameterization does far worse
 (−83% to −100%; see Part A).

@@ -72,15 +72,24 @@ standoff가 63·24 바디 반경이라 계면을 프레임에 담으면 벨트�
 물리 프리셋은 쌍극자 레시피가 아니라 유도 자기권 레시피로 계산했습니다. 금성의 평균 이오노포즈는
 직하점 위 330 km, 황혼 명암경계선 700 km, 새벽 1000 km이고(Brace 1980,
 [`1980JGR....85.7663B`](https://ui.adsabs.harvard.edu/abs/1980JGR....85.7663B)), `R_V` 6051.8 km 기준으로 **노즈 1.055 R_V, 명암경계선 평균
-1.140 R_V**입니다. cfg 의미론(`노즈 = pause_radius/compression`, 플랭크 = `pause_radius`,
-꼬리 = `pause_radius/extension`)으로 옮기면 `pause_radius` **1.14**, `compression` **1.0151**,
-`extension` **0.0072038**이고, 여기에 일반화 필드 둘 `pause_smooth` **0.57**과 `pause_waist` **0**이
-붙습니다(둘 다 스톡 Kerbalism에는 없는 필드입니다. 아래를 보세요). 노즈 1.055와 명암경계선 1.13은
+1.140 R_V**입니다. cfg 의미론으로 옮기면 `pause_radius` **1.14**, `compression` **1.0123576**,
+`extension` **0.0072072**이고, 여기에 일반화 필드 둘 `pause_smooth` **0.57**과 `pause_waist` **0**이
+붙습니다(둘 다 스톡 Kerbalism에는 없는 필드입니다. 아래를 보세요). 여기서 주의할 것이 있습니다.
+스톡 항등식 `노즈 = pause_radius/compression`과 `꼬리 = pause_radius/extension`은 **`pause_smooth`가
+0일 때만** 성립합니다. 스무딩을 켜면 노즈는 축 위에서 `|px| = pause_radius`의 근이고(Part C의 닫힌
+형식), 위 두 값도 그쪽으로 풀었습니다. 노즈 1.0545는
 정확히 떨어지고, 꼬리는 프로젝트 공통 `L` = 150 × 노즈 규약에 따라 158 R_V에서 닫힙니다. 유도 자기권
 경계의 가장 먼 확인 통과 지점인 20 R_V보다 넉넉히 바깥입니다(Edberg 2024,
 [`2024JGRA..12932603E`](https://ui.adsabs.harvard.edu/abs/2024JGRA..12932603E), [2410.21856](https://arxiv.org/abs/2410.21856)).
 벨트는 없고 `radiation_pause`는 배포값 −0.005를 유지합니다. 유도 경계는 쌍극 자기권계면보다 GCR을
 훨씬 덜 가리기 때문입니다.
+
+명암경계선은 정확히 떨어지지 **않고**, 그 이유는 적어둘 만합니다. `pause_radius`는 모든 지점의 폭
+상한이라, 이것을 실측 명암경계선 평균으로 두면 경계가 측정치를 넘는 일이 없습니다. 그런데 그 최대
+단면을 실제로 담는 평면은 `−½(compression−extension)·pause_smooth/√(compression·extension)`에
+놓이고, 이 꼬리 길이에서는 하류 3.35 R_V입니다. 그래서 `x` = 0 단면은 1.1034로, Brace의 1.1405보다
+3.3% 좁습니다. `pause_waist`로 최대폭 평면을 명암경계선까지 끌어오는 길은 여기서는 막혀 있습니다.
+이 꼬리 길이에서 필요한 이동량이면 노즈가 무너집니다.
 
 스톡과 비교하면 도출한 주간면이 행성에 더 바짝 붙고(1.05 대 균일 1.1 R), 꼬리는 훨씬 깁니다
 (158 대 5.5 R_V).
@@ -128,13 +137,14 @@ Table 2, MGS 488회 통과 직접 적합)이 원뿔을 그대로 줍니다. `X�
 아니며**, 렌더에도 그렇게 라벨해 둡니다. 통과하도록 설계하지 않았는데 통과한 검증 하나가 있습니다.
 그 각도에서 주간면 원은 명암경계선에 기울기 0.135로 만나고 원뿔 쪽은 0.131이라, 3% 안에서 매끄럽게
 이어집니다. 다만 이 검증은 배포하지 않는 원 + 원뿔 형식에 속한 것입니다. 실제로 배포하는 값은
-`pause_radius` **1.47**, `compression` **1.0684**, `extension` **0.0076265**에 `pause_smooth` **0.735**이고,
-같은 `L` = 150 × 노즈 규약에 따라 꼬리는 193 R_M에 놓입니다.
+`pause_radius` **1.47**, `compression` **1.0601082**, `extension` **0.0075969**에 `pause_smooth` **0.735**이고,
+Vignes의 노즈 1.29를 정확히 복원하면서 같은 `L` = 150 × 노즈 규약에 따라 꼬리는 194 R_M에 놓입니다.
+금성과 같은 이유로 `x` = 0 단면은 상한 1.47이 아니라 1.4182로 3.5% 좁습니다.
 
 `pause_deform`은 스톡 `irregular`의 0.1을 그대로 둡니다. 지각 잔류자기가 실제로 비축대칭인 것은
 맞지만 Vignes가 그 비대칭을 정량화하지 않으므로, 진폭은 도출이 아니라 상속입니다. 지어내지 않고
 표시만 해 둡니다. 스톡과 비교하면 도출 경계가 더 멀리 서고(노즈 1.29 대 1.25, 플랭크는 1.47 대
-둥근 형태) 꼬리가 훨씬 깁니다(193 대 1.7 R_M).
+둥근 형태) 꼬리가 훨씬 깁니다(194 대 1.7 R_M).
 
 금성과 화성 모두 벨트는 없습니다. 다이나모가 없으니 포획도 없습니다.
 
@@ -549,10 +559,15 @@ attempt to use `pause_smooth` for the width, by fitting it against the Shue curv
 than against the corner, drove it to 3 × nose and turned the piecewise-linear `px` into a
 quadratic. That is a change of function family, not a smoothing, and was rejected.
 
-Nose (1.055 / 1.285) and terminator (1.13 / 1.47) come out exact, the tail closes at
-158 / 193 R_p (the 150 x nose convention; an earlier revision of this table carried
+The nose comes out exact (1.0545 / 1.29) and the tail closes at
+158 / 194 R_p (the 150 x nose convention; an earlier revision of this table carried
 `extension` 0.0567 / 0.0737, a 20 R_p closure from before that convention existed, which
-the shipped presets had already moved past), and the bulge is 0.000%. The cost is wake width: against the measured cone the
+the shipped presets had already moved past), and the bulge is 0.000% against the
+`pause_radius` cap. The terminator section is 3.3% / 3.5% narrower than the cap, because
+smoothing moves the widest plane downstream; both were previously stated as exact, an error
+that came from applying the smooth-free identity `nose = pause_radius/compression` to a
+smoothed surface (found 2026-08-17, together with the same bug in the viewer's read-back).
+The other cost is wake width: against the measured cone the
 boundary is 15% narrow at 2 R_p, 33% at 5 and 54% at 10 — accepted, because no-bulge
 outranks wake fidelity here, and because every Shue parameterization does far worse
 (−83% to −100%; see Part A).
