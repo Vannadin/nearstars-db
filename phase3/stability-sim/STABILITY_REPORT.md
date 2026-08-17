@@ -427,8 +427,12 @@ masses 0.0320 + 0.0273):
 |---|---|---|
 | forward 67.78 yr from the 1950 state | IAS15 | M = 359.71 deg at 2017.78 (periastron residual 0.29 deg); separation 2.337 AU = a(1-e) exact; a/e/i preserved to 4 decimals |
 | same, in-game analog | leapfrog (dt = P/1000) | identical to IAS15 at the printed precision |
-| chaos indicator, 1e4 yr | IAS15 + MEGNO | <Y> = 1.976 (2.0 = regular; no chaos, as expected for a clean two-body pair) |
-| long-run element drift, 1e4 yr | leapfrog | a drift +0.000 %, e drift +0.00000, i unchanged |
+| chaos indicator, 1e6 yr (~36,300 orbits) | IAS15 + MEGNO | <Y> = 2.005 (2.0 = regular; no chaos, as expected for an integrable two-body pair) |
+| long-run element drift, 1e6 yr | leapfrog (dt = P/1000) | a drift -0.0000 %, e drift -0.000000, i unchanged |
+
+Duration per the orbit-counted standard: 1e6 yr = 36,300 mutual orbits (a 1e4-yr
+first pass was only 363 orbits and was superseded; two-body dynamics is
+integrable, so longer runs only tighten the drift bound).
 
 Verdict: the 1950.0 state reproduces the observed 2017.78 periastron in both
 integrators; the emit phase M = 194.0 deg is safe to freeze. The only real

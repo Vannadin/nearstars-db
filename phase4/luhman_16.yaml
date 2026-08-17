@@ -435,9 +435,9 @@ decisions:
         194.0 deg by the standard rewind M = 360 (JD_epoch - T_peri)/P mod 360.
         Validated by round trip: integrating the 1950.0 state forward 67.78 yr
         in both IAS15 and leapfrog lands on the observed periastron (residual
-        0.29 deg, separation 2.337 AU = a(1-e) exact), MEGNO <Y> = 1.976 over
-        1e4 yr (regular, no chaos), leapfrog element drift 0.000 % - full run
-        in the stability report. Caveat: 2.46 orbits of back-propagation turns
+        0.29 deg, separation 2.337 AU = a(1-e) exact), MEGNO <Y> = 2.005 over
+        1e6 yr = 36,300 orbits (regular, no chaos), leapfrog element drift
+        0.0000 % over the same span - full run in the stability report. Caveat: 2.46 orbits of back-propagation turns
         the P uncertainty into +-13 deg of phase; the elements carry no such
         inflation.
       evidence_ko: >
@@ -445,8 +445,8 @@ decisions:
         위상 하나로, M(1950.0) = 194.0° = 360·(JD_epoch − T_peri)/P mod 360
         표준 되감기다. 왕복 검증 완료: 1950.0 상태를 IAS15·leapfrog 양쪽으로
         67.78년 순방향 적분하면 관측된 근점에 안착하고(잔차 0.29°, 근접거리
-        2.337 AU = a(1−e) 정확), 10⁴년 MEGNO ⟨Y⟩ = 1.976(규칙적, 카오스 없음),
-        leapfrog 요소 표류 0.000%다. 전체 수치는 안정성 리포트에. 주의:
+        2.337 AU = a(1−e) 정확), 10⁶년 = 36,300궤도의 MEGNO ⟨Y⟩ = 2.005
+        (규칙적, 카오스 없음), 같은 구간 leapfrog 요소 표류 0.0000%다. 전체 수치는 안정성 리포트에. 주의:
         2.46바퀴 역산이라 P 불확도가 위상 ±13°로 불어난다. 요소 자체에는 그런
         부풀림이 없다.
     refs: ["2018A&A...618A.111L", "docs/reference/emit-orbit-phase-match-methodology.md", "docs/reference/binary-epoch-pipeline.md", "phase3/stability-sim/STABILITY_REPORT.md"]
