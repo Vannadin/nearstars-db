@@ -150,6 +150,20 @@ The obstacle itself is a **sphere**: confinement is magnetic pressure everywhere
 the upstream side only, their ratio is `2M_A²`, and with the `p^(-1/6)` standoff the day–night
 asymmetry is `(1 + 2M_A²)^(1/6)` — 8% at `M_A` 0.5 and falling.
 
+**The wing's root is not a dose feature.** Its deposit at the moon is bounded without knowing
+the interaction strength, since `P = 4π ᾱ(1−ᾱ) M_A R_eff² E₀B₀/μ₀` (Neubauer 1980, quoted in
+the Saur review [1908.06446](https://arxiv.org/abs/1908.06446) §4.1.4) is maximal at ᾱ = ½, giving
+`P_max = π M_A R_eff² E₀B₀/μ₀` with `E₀ = v_rel B₀`. This is the one place `R_eff = √3 R_obst`
+belongs — it sizes power, not surface. Spread over the moon's open caps (poleward of ~45°)
+that is 0.012 W/m² at Ganymede and 0.097 W/m² at A b III, three to four orders below local
+insolation. And it arrives as soft electrons — Bonfond 2009
+([`2009JGRA..114.7224B`](https://ui.adsabs.harvard.edu/abs/2009JGRA..114.7224B)) fits the Io footprint tail with a
+kappa distribution of characteristic energy ~70 eV, which stops in the top nanometres. So the
+polar-cap effect is **surface weathering, not dose** — which is how Ganymede's caps are
+explained in the first place (Khurana 2007,
+[`2007Icar..191..193K`](https://ui.adsabs.harvard.edu/abs/2007Icar..191..193K)) — and it belongs to the appearance
+axis rather than to any `radiation_*` field. No polar dose region is emitted.
+
 Everything else about a wing — the tube along the Alfvén characteristic, its landing on the
 parent's ionosphere, the reflected fan downstream — is **visualisation material and reaches
 no cfg**. The geometry is derived in `scripts/refs/magnetopause_geometry.py` and drawn by
