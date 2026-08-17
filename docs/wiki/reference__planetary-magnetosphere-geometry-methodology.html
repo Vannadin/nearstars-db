@@ -1164,6 +1164,30 @@ impossible and the profile monotone behind the shoulder. Then `compression` and 
 solve for the measured nose and the chosen tail length, and `pause_smooth` moves the flat
 shoulder back to erase the corner at no cost, since the width ceiling is unchanged.
 
+**Which plan a body gets is decided by α, and it is not a preference.** Fitting the
+generalized stock form to a body's own softened Shue surface only succeeds near the
+cylindrical threshold, so `pause_waist` / `pause_smooth` are recorded for exactly the bodies
+that can use them:
+
+| body | α | fit rms | plan recorded |
+|---|---|---|---|
+| Mercury | 0.50 | 0.9% | generalized stock |
+| Ganymede | 0.50 | 1.9% | generalized stock |
+| A b III (Pandora) | 0.50 | 5.8% | generalized stock |
+| Proxima c / d | 0.58 | 90 / 95% | **Shue-native** |
+| Polyphemus | 0.42 | 312% | **Shue-native** |
+
+Shue has no slope corner, so a body on the Shue-native plan needs no smoothing at all — the
+field only exists to repair a defect of the stock function. Venus and Mars are on the
+generalized stock plan by geometry rather than by α, since Shue cannot represent an induced
+boundary at any exponent.
+
+Each plan is recorded **alongside** the shipping fields, not instead of them:
+`pause_radius_smoothed`, `pause_compression_smoothed` and `pause_extension_smoothed` carry the
+values that replace `pause_radius` / `pause_compression` / `pause_extension` once the plugin
+lands. Compression retires to 1.0 there, because it pins the widest cross-section to the body
+plane and `pause_waist` takes over the asymmetry.
+
 `pause_smooth` is **a convention, not a derived value** — the residual against the
 literature target is nearly flat in it (Venus RMS 18.6% at 0 against 18.5% at the optimum),
 because removing the corner is a C¹ continuity property rather than a fit. The convention is
@@ -2233,6 +2257,28 @@ lobe를 만드는데, dynamo 레시피가 실제로 내놓는 다극장보다 �
 두면 후방 불룩함이 구조적으로 불가능해지고 어깨 뒤쪽 단면은 단조롭게 줄어듭니다. 그러면 `compression`
 과 `extension`이 실측 노즈와 선택한 꼬리 길이로 풀리고, `pause_smooth`는 폭 상한을 건드리지 않으므로
 평평한 어깨를 뒤로 밀어 꺾임을 공짜로 없앱니다.
+
+**어느 계획을 받는지는 α 가 정하고, 취향 문제가 아닙니다.** 일반화 스톡 형식을 그 천체 자신의
+연화 Shue 면에 적합하는 건 원통 문턱 근처에서만 성공합니다. 그래서 `pause_waist` / `pause_smooth`
+는 그걸 쓸 수 있는 천체에만 기록합니다.
+
+| 천체 | α | 적합 rms | 기록된 계획 |
+|---|---|---|---|
+| 수성 | 0.50 | 0.9% | 일반화 스톡 |
+| 가니메데 | 0.50 | 1.9% | 일반화 스톡 |
+| A b III (판도라) | 0.50 | 5.8% | 일반화 스톡 |
+| 프록시마 c / d | 0.58 | 90 / 95% | **Shue-native** |
+| 폴리페무스 | 0.42 | 312% | **Shue-native** |
+
+Shue 에는 기울기 코너가 없으므로 Shue-native 계획인 천체는 스무딩이 아예 필요 없습니다. 이 필드는
+스톡 함수의 결함을 메우려고 존재하는 것뿐입니다. 금성과 화성은 α 가 아니라 기하 때문에 일반화 스톡
+계획입니다 — Shue 는 어떤 지수에서도 유도 경계를 표현하지 못합니다.
+
+각 계획은 출하 필드를 **대체하지 않고 나란히** 기록합니다. `pause_radius_smoothed`,
+`pause_compression_smoothed`, `pause_extension_smoothed` 가 플러그인 도착 시
+`pause_radius` / `pause_compression` / `pause_extension` 을 대체할 값을 들고 있습니다. 거기서
+compression 은 1.0 으로 은퇴합니다 — 최대 단면을 천체 평면에 고정시키는 항이라, 비대칭은
+`pause_waist` 가 받습니다.
 
 `pause_smooth`는 **도출값이 아니라 관행**입니다. 문헌 목표치에 대한 잔차가 이 값에 거의 무관하기
 때문입니다(금성 RMS는 0에서 18.6%, 최적값에서 18.5%). 꺾임을 없애는 것은 피팅이 아니라 C¹ 연속성의

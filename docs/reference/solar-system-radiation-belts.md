@@ -385,6 +385,14 @@ pause_radius as the standoff) had it.
 | open caps | — | **poleward of 30–45°** (leaky) | Pappalardo 1998 [`1998DPS....30.5401P`](https://ui.adsabs.harvard.edu/abs/1998DPS....30.5401P) |
 | net role | — | **shield −50–60%** of ambient | Allioux 2013 |
 
+**Plan for the pending fields** (⚗ — none of these exist in shipped Kerbalism). Ganymede's
+α is 0.5, so the generalized stock form *can* represent its boundary and that is the plan it
+gets: `pause_radius_smoothed` **3.9026**, `pause_compression_smoothed` **1.0**,
+`pause_extension_smoothed` **0.18183**, `pause_waist` **0.0558**, `pause_smooth` **6.2441**
+(= 1.6 × radius), fitted to its own softened Shue surface at 1.9% rms. The shipping three
+stay as they are until the plugin lands. Tail ratio 11.0 × nose rather than the usual 150,
+from `150^M_A` at M_A 0.479 — the sub-Alfvénic rule.
+
 The Solar System's only **weak-field embedded moon** — a dynamo inside a giant's
 magnetosphere (the weak-field sub-regime of the geometry methodology). Ganymede's 719 nT
 only modestly exceeds the local Jovian field → small ~2 R_G standoff, **open polar caps**

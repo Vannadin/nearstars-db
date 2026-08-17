@@ -31,7 +31,10 @@ PENDING_MODEL_KEYS = ['pause_deform_scale', 'pause_nose', 'pause_alpha', 'pause_
                       # 스톡 계면 함수 일반화 (둘 다 0 이면 스톡과 동일) — 방법론 Part C ⚗ 절
                       # 일반화 스톡 pause 는 네 값이 한 세트다 — smooth 만 적용하면 형상이 깨진다.
                       'pause_waist', 'pause_smooth',
-                      'pause_radius_smoothed', 'pause_extension_smoothed',
+                      # 일반화 스톡 계획에서 compression 은 1.0 으로 은퇴하고 비대칭을
+                      # waist 가 받는다 — 그 1.0 도 적어둘 자리가 있어야 계획이 완결된다.
+                      'pause_radius_smoothed', 'pause_compression_smoothed',
+                      'pause_extension_smoothed',
                       # pause_offset 은 pause_waist 로 흡수됐다(같은 연산, 부호 반대). 옛 보드 호환용.
                       'pause_offset', 'pause_offset_radius',
                       'pause_offset_compression', 'pause_offset_extension']

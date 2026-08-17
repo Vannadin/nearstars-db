@@ -338,6 +338,13 @@ L-범위에 걸쳐 벨트를 쓸어냅니다(Stone 1986 [`1986Sci...233...93S`](
 | open caps | — | **poleward of 30–45°** (leaky) | Pappalardo 1998 [`1998DPS....30.5401P`](https://ui.adsabs.harvard.edu/abs/1998DPS....30.5401P) |
 | net role | — | **shield −50–60%** of ambient | Allioux 2013 |
 
+**pending 필드 계획** (⚗ — 아래 어느 것도 출하 Kerbalism 에 없습니다). 가니메데의 α 가 0.5 라서
+일반화 스톡 형식이 이 경계를 표현할 수 있고, 그래서 이 계획을 받습니다. `pause_radius_smoothed`
+**3.9026**, `pause_compression_smoothed` **1.0**, `pause_extension_smoothed` **0.18183**,
+`pause_waist` **0.0558**, `pause_smooth` **6.2441**(= radius 의 1.6배). 자신의 연화 Shue 면에
+rms 1.9% 로 적합한 값입니다. 출하 3필드는 플러그인이 오기 전까지 그대로 둡니다. 꼬리 비율은 통상
+150 이 아니라 노즈의 11.0배로, `150^M_A`(M_A 0.479)에서 나온 아음속 규칙 값입니다.
+
 태양계 유일의 **약장 임베디드 위성** — 거대행성 자기권 안의 다이나모입니다(지오메트리
 방법론의 약장 sub-regime). 가니메데의 719 nT는 국소 목성 場을 살짝 넘길 뿐이라 →
 작은 ~2 R_G standoff, **열린 극관**(목성과의 재결합), bow shock 없음(sub-Alfvénic → Alfvén

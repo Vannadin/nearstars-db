@@ -926,6 +926,30 @@ impossible and the profile monotone behind the shoulder. Then `compression` and 
 solve for the measured nose and the chosen tail length, and `pause_smooth` moves the flat
 shoulder back to erase the corner at no cost, since the width ceiling is unchanged.
 
+**Which plan a body gets is decided by α, and it is not a preference.** Fitting the
+generalized stock form to a body's own softened Shue surface only succeeds near the
+cylindrical threshold, so `pause_waist` / `pause_smooth` are recorded for exactly the bodies
+that can use them:
+
+| body | α | fit rms | plan recorded |
+|---|---|---|---|
+| Mercury | 0.50 | 0.9% | generalized stock |
+| Ganymede | 0.50 | 1.9% | generalized stock |
+| A b III (Pandora) | 0.50 | 5.8% | generalized stock |
+| Proxima c / d | 0.58 | 90 / 95% | **Shue-native** |
+| Polyphemus | 0.42 | 312% | **Shue-native** |
+
+Shue has no slope corner, so a body on the Shue-native plan needs no smoothing at all — the
+field only exists to repair a defect of the stock function. Venus and Mars are on the
+generalized stock plan by geometry rather than by α, since Shue cannot represent an induced
+boundary at any exponent.
+
+Each plan is recorded **alongside** the shipping fields, not instead of them:
+`pause_radius_smoothed`, `pause_compression_smoothed` and `pause_extension_smoothed` carry the
+values that replace `pause_radius` / `pause_compression` / `pause_extension` once the plugin
+lands. Compression retires to 1.0 there, because it pins the widest cross-section to the body
+plane and `pause_waist` takes over the asymmetry.
+
 `pause_smooth` is **a convention, not a derived value** — the residual against the
 literature target is nearly flat in it (Venus RMS 18.6% at 0 against 18.5% at the optimum),
 because removing the corner is a C¹ continuity property rather than a fit. The convention is
