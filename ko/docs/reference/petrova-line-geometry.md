@@ -12,7 +12,7 @@
 
 ## 형상
 
-![페트로바선 기하](../../../docs/img/petrova/petrova-geometry.png)
+[![페트로바선 기하](../../../docs/img/petrova/petrova-geometry.png)](../../../docs/img/petrova/petrova-geometry.png)
 
 *솔 → 금성. 0.726 AU 짜리 끊김 없는 단일 곡선. 자전축 방향으로 출발해, 목표가 가장 잘 보이는
 높이에서 정점을 찍고, 목표 방위로 도착합니다.*
@@ -57,7 +57,7 @@ H_best = √(R★ · a)
 
 ## 허리
 
-![페트로바선의 허리](../../../docs/img/petrova/petrova-waist.png)
+[![페트로바선의 허리](../../../docs/img/petrova/petrova-waist.png)](../../../docs/img/petrova/petrova-waist.png)
 
 *가장 얇은 구간. 주행의 6.5% 지점인 10.6 R☉ 에서 깔때기가 다 좁아져 빔과 만납니다. 반경 1,588 km 로
 목표 반경의 1/4입니다. 두 프레임 다 실제 배율입니다.*
@@ -67,7 +67,7 @@ H_best = √(R★ · a)
 
 ## 채움
 
-![오로라 커튼으로 채운 페트로바선](../../../docs/img/petrova/petrova-aurora-exterior.png)
+[![오로라 커튼으로 채운 페트로바선](../../../docs/img/petrova/petrova-aurora-exterior.png)](../../../docs/img/petrova/petrova-aurora-exterior.png)
 
 *방출 전용 볼류메트릭 마칭. 외부 노출 70, 근접 프레임은 그 1.25배입니다.*
 

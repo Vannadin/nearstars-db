@@ -114,7 +114,7 @@ Orbiter·BepiColombo·Parker Solar Probe 통과 자료로 시험해 손볼 것 �
 대신 정상파 알펜 파동 한 쌍이 서는데, 그 기하는 보드에 이미 있는 세 값 — 알펜 마하수, 장애물 크기,
 모천체 자기력선 곡률 — 으로 완전히 정해집니다. 저작한 값이 없습니다.
 
-![가니메데 알펜 날개 해부](../../../docs/img/alfven-wing-anatomy-ganymede.png)
+[![가니메데 알펜 날개 해부](../../../docs/img/alfven-wing-anatomy-ganymede.png)](../../../docs/img/alfven-wing-anatomy-ganymede.png)
 
 *가니메데, `scripts/viz/render_alfven_wing.py` 산출. 파랑이 아직 직선인 구간, 주황이 그 뒤, 회색이
 모천체입니다. 왼쪽부터 자기장 축 대비 기울기, 전 구간 굵기 변화, 목성 극 위에서 본 처짐, 실제 배율

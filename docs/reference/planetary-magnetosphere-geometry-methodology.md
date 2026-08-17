@@ -128,7 +128,7 @@ above applies to it. What it raises instead is a pair of standing Alfvén waves,
 geometry is fixed by three numbers already on the board: the Alfvén Mach number, the
 obstacle size, and the parent's field-line curvature. Nothing is authored.
 
-![Alfvén-wing anatomy at Ganymede](../img/alfven-wing-anatomy-ganymede.png)
+[![Alfvén-wing anatomy at Ganymede](../img/alfven-wing-anatomy-ganymede.png)](../img/alfven-wing-anatomy-ganymede.png)
 
 *Ganymede, from `scripts/viz/render_alfven_wing.py`. Blue is the run over which the wing is
 still straight, orange the remainder, grey the parent. Left to right: the tilt against the

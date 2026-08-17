@@ -13,7 +13,7 @@ out of `scripts/viz/render_petrova_line.py`.
 
 ## The shape
 
-![Petrova line geometry](../img/petrova/petrova-geometry.png)
+[![Petrova line geometry](../img/petrova/petrova-geometry.png)](../img/petrova/petrova-geometry.png)
 
 *Sol to Venus. One continuous curve, 0.726 AU: it leaves along the spin axis, peaks where
 the target is easiest to read, and arrives on its bearing.*
@@ -65,7 +65,7 @@ taper.
 
 ## The waist
 
-![The waist of the Petrova line](../img/petrova/petrova-waist.png)
+[![The waist of the Petrova line](../img/petrova/petrova-waist.png)](../img/petrova/petrova-waist.png)
 
 *The thinnest section, at 10.6 R☉ along the run — 6.5% of it — where the funnel has finished
 closing and meets the beam. Radius 1,588 km, a quarter of the target's. Both frames true
@@ -77,7 +77,7 @@ waist, then a mouth opening again to cover the target's disc. The axis runs to t
 
 ## The fill
 
-![The Petrova line as an aurora curtain](../img/petrova/petrova-aurora-exterior.png)
+[![The Petrova line as an aurora curtain](../img/petrova/petrova-aurora-exterior.png)](../img/petrova/petrova-aurora-exterior.png)
 
 *Emission-only volumetric march. Exposure 70 outside; the closer frame runs 1.25× that.*
 
