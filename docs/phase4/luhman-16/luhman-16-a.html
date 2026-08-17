@@ -291,8 +291,8 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header></div>
 <div class="wrap">
-<div class="summary"><span class="body-meta">12 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 8 gated · 1 divergence</span></div>
-<nav class="axis-toc" aria-label="Decisions on this page"><a href="#identity">identity</a><a href="#bulk">bulk</a><a href="#bulk.spin_axis_orientation">bulk.spin_axis_orientation</a><a href="#bulk.geopotential_j2">bulk.geopotential_j2</a><a href="#appearance">appearance</a><a href="#magnetism">magnetism</a><a href="#environment">environment</a><a href="#appearance.aurora">appearance.aurora</a><a href="#orbit">orbit</a><a href="#atmosphere">atmosphere</a><a href="#surface">surface</a><a href="#satellites">satellites</a></nav>
+<div class="summary"><span class="body-meta">13 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 9 gated · 1 divergence</span></div>
+<nav class="axis-toc" aria-label="Decisions on this page"><a href="#identity">identity</a><a href="#bulk">bulk</a><a href="#bulk.spin_axis_orientation">bulk.spin_axis_orientation</a><a href="#bulk.geopotential_j2">bulk.geopotential_j2</a><a href="#appearance">appearance</a><a href="#magnetism">magnetism</a><a href="#environment">environment</a><a href="#appearance.aurora">appearance.aurora</a><a href="#orbit">orbit</a><a href="#atmosphere">atmosphere</a><a href="#surface">surface</a><a href="#satellites">satellites</a><a href="#gameplay">gameplay</a></nav>
 <details class="legend"><summary><span data-i18n>표시 읽는 법</span><span data-en hidden>How to read the badges</span></summary>
 <dl>
   <dt><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span></dt>
@@ -441,9 +441,20 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2018A%26A...618A.111L" target="_blank" rel="noopener">2018A&amp;A...618A.111L</a></div>
+</article>
+<article class="dec" id="gameplay">
+  <div class="dec-head">
+    <code class="axis">gameplay</code>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>허용 범위 내</span><span data-en hidden>In-window</span></span></span>
+  </div>
+  <p class="narrative"><span data-i18n>여기서의 비행은 광원 안을 나는 일이다. 기체 아래에서는 구름층이 얇아지는 자리마다 내부의 빛이 배어 나오고, 지평선은 태양이 아니라 발밑에서부터 밝아 온다. 바이옴은 위도로 셋이다. 적도 구름 밴드, 띠 무늬가 가장 정갈한 매끈한 저위도 구름층. 중위도 이음매, 구름층이 얇아지고 갈라져 마젠타빛 가장자리가 서는 띠. 그리고 극 오로라 관, 희미한 오로라 고리 아래의 어두운 고위도. 가 볼 만한 자리는 중위도 이음매다. 아래로는 붉은 불빛, 앞으로는 마젠타 테두리, 일곱 시간에 한 번 도는 세계 위에서.<br></span><span data-en hidden>Flying here means flying inside the light source: below the craft the interior glows through every thinning of the deck, and the horizon is lit from underneath, not from any sun. Three biomes split the globe by latitude. Equatorial Cloud Bands, the smooth low-latitude deck where the banding is cleanest; Midlatitude Seams, the belt where the deck thins and cracks into magenta-lit edges; and the Polar Auroral Caps, dark high latitudes under the faint auroral rings. The place worth the trip is a midlatitude seam: red firelight below, magenta rim ahead, on a world that turns once every seven hours.<br></span></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">science_biomes</td><td class="v"><span data-i18n>적도 구름 밴드 / 중위도 이음매 / 극 오로라 관 (위도 3분할)</span><span data-en hidden>Equatorial Cloud Bands / Midlatitude Seams / Polar Auroral Caps (3, latitude-banded)</span></td><td class="o"></td></tr><tr><td class="k">sphere_of_influence_tuning</td><td class="v"><span data-i18n>스톡 (질량 유도값)</span><span data-en hidden>stock (mass-derived)</span></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">timewarp_limits</td><td class="v">stock</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>바이옴 경계는 확정된 appearance 구조(띠 구름층·이음매 띠·극 오로라)를 그대로 재사용하므로 과학 지도와 시각 지도가 어긋날 수 없다. 위도 띠 구도는 유일한 지도 구속(Millar-Blanchaer 2020 상시 위도 띠)과 정합. ScienceValues와 발견 모드 등급은 하류 writer 몫으로 남긴다.<br></span><span data-en hidden>Biome boundaries reuse the gated appearance structure (banded deck, seam belt, polar aurora), so the science map and the visual map cannot contradict each other. Latitude banding matches the only mapped constraint (Millar-Blanchaer 2020 longitudinal bands). ScienceValues and any discovery-mod grading stay downstream with the writer mods.<br></span></div>
+  
 </article></div>
 
-<div class="stamp">빌드 2026-08-17 18:48 · 71558071+미커밋</div></div>
+<div class="stamp">빌드 2026-08-17 18:55 · e58c5ffd+미커밋</div></div>
 <script>
 const b=document.body;
 function setLang(en){
