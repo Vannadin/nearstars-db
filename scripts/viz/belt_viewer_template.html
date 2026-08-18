@@ -270,7 +270,7 @@ const T = {
   ko:{
     h1:'Kerbalism 방사선대 단면 뷰어',
     intro:'인게임 <code>RadiationModel</code> SDF를 그대로 계산한 자오면(z=0) 단면. 색 = dose(rad/h), 청록선 = 자기권계면(pause). 단위 = 바디 반경.',
-    vStock:'스톡', vPhys:'물리', reset:'현재값 초기화', pending:'⚗ 플러그인 값 적용', copy:'📋 Kerbalism cfg 복사', copied:'✓ 복사됨',
+    vStock:'스톡', vPhys:'물리', reset:'현재값 초기화', pending:'⚗ 플러그인 값 적용', pendingOff:'⚗ 스톡 값으로 되돌리기', copy:'📋 Kerbalism cfg 복사', copied:'✓ 복사됨',
     hover:'커서를 올려보세요', drag3d:'드래그 = 회전 · 휠 = 줌',
     sun:'☀ 항성 → +x (오른쪽)', mode2d:'단면',
     legPause:'자기권계면', legShue:'Shue 기준', legBody:'바디', show:'표시',
@@ -289,7 +289,7 @@ const T = {
   en:{
     h1:'Kerbalism radiation belt section viewer',
     intro:'Meridional (z=0) section computed from the in-game <code>RadiationModel</code> SDFs verbatim. Color = dose (rad/h), cyan line = magnetopause. Unit = body radii.',
-    vStock:'Stock', vPhys:'Physical', reset:'Reset values', pending:'⚗ apply plugin set', copy:'📋 Copy Kerbalism cfg', copied:'✓ copied',
+    vStock:'Stock', vPhys:'Physical', reset:'Reset values', pending:'⚗ apply plugin set', pendingOff:'⚗ revert to stock', copy:'📋 Copy Kerbalism cfg', copied:'✓ copied',
     hover:'Hover the canvas', drag3d:'drag = rotate · wheel = zoom',
     sun:'☀ star → +x (right)', mode2d:'section',
     legPause:'magnetopause', legShue:'Shue reference', legBody:'body', show:'show',
@@ -477,13 +477,22 @@ controls.addEventListener('change',e=>{
   if(Number.isFinite(v)) applyControl(inp.dataset.g, inp.dataset.k, v);   // 직접 입력: 슬라이더 범위 초과 허용
   else syncControls();
 });
-// ⚗ Deliverable 1 대기 세트를 한 번에 적용한다. 스톡 엔진은 waist/smooth 를 안 읽으므로
-// 다섯 값을 따로 넣으면 형상이 깨진다 — 그래서 슬라이더가 아니라 버튼 하나로 묶어 둔다.
-document.getElementById('pendBtn').addEventListener('click',()=>{
-  const q=state.pending; if(!q) return;
+// ⚗ Deliverable 1 대기 세트. 다섯 값(rad·comp·ext·waist·smooth)이 한 벌이라 따로 넣으면 형상이
+// 깨진다 — 그래서 슬라이더가 아니라 버튼 하나로 묶어 둔다. 2026-08-18 부터 기본이 '적용된 상태'다:
+// 보드가 게이트한 형상이 그 세트이므로 로드 즉시 그것을 보여주고, 버튼은 스톡으로 되돌리는 쪽이 된다.
+let pendOn=false;                     // 지금 화면이 대기 세트인가 (프리셋마다 deepset 에서 다시 잡는다)
+function applyPendSet(on){
+  const q=on?state.pending:state.pauseStock; if(!q) return;
   Object.entries(q).forEach(([k,v])=>{ state.pause[k]=v; });
-  syncControls(); scheduleRender();
-});
+  pendOn=on; labelPend(); syncControls(); scheduleRender();
+}
+function labelPend(){
+  const pb=document.getElementById('pendBtn'); if(!pb) return;
+  pb.hidden=!state.pending;
+  pb.textContent=t(pendOn?'pendingOff':'pending');
+  pb.classList.toggle('on', pendOn);
+}
+document.getElementById('pendBtn').addEventListener('click',()=>{ applyPendSet(!pendOn); });
 controls.addEventListener('click',e=>{
   const sw=e.target.closest('.sw[data-tg]'); if(!sw)return;
   const s=state[sw.dataset.tg]; s.on=!s.on; sw.classList.toggle('on',s.on); scheduleRender();
@@ -513,7 +522,13 @@ function toCfg(){
   L.push('// NearStars belt-viewer 내보내기 — 단위: 바디 반경, rad/h');
   L.push('// Kerbalism MM 패치에 붙여넣고 name + :NEEDS[...] 지정');
   if(Math.abs(P.waist||0)>0.001) L.push('// ⚗ pause_waist '+nm(P.waist)+' 는 스톡 함수 일반화 필드(하모니 패치 대기) → cfg emit 불가');
-  if((P.smooth||0)>0.001) L.push('// ⚗ pause_smooth '+nm(P.smooth)+' 는 스톡 함수 일반화 필드(하모니 패치 대기) → cfg emit 불가');
+  if((P.smooth||0)>0.001){
+    L.push('// ⚗ pause_smooth '+nm(P.smooth)+' 는 스톡 함수 일반화 필드(하모니 패치 대기) → cfg emit 불가');
+    // 그 두 필드를 못 싣는다는 것은 아래 세 값이 스톡에서 다른 형상이 된다는 뜻이다 — 여기가
+    // 조용히 어긋나기 쉬운 자리라 노즈를 양쪽 다 적어 둔다(뷰어 기본이 대기 세트라 더 그렇다).
+    L.push('// ⚗ 스톡 엔진은 그 둘을 무시하므로 아래 pause_radius/compression 은 노즈 '+
+      nm(pauseNoseTail(P).nose)+' 가 아니라 '+nm(P.rad/P.comp)+' 로 렌더된다 — 출하용은 보드의 비-smoothed 값을 쓸 것');
+  }
   const belt=(B,pre)=>{
     L.push('  has_'+pre+' = '+(B.on?'true':'false'));
     if(!B.on) return;
@@ -577,7 +592,15 @@ function deepset(preset){
   state.moons.list=P.moons||[];   // on 은 사용자 설정이므로 프리셋을 바꿔도 유지한다
   state.orbit=P.orbit||null;
   state.pending=P.pending||null;
-  const pb=document.getElementById('pendBtn'); if(pb) pb.hidden=!state.pending;
+  // 되돌리기용 스톡 값은 세트를 얹기 전에 떠 둔다(같은 키만).
+  state.pauseStock=null; pendOn=false;
+  if(state.pending){
+    state.pauseStock={};
+    Object.keys(state.pending).forEach(k=>{ state.pauseStock[k]=state.pause[k]; });
+    Object.entries(state.pending).forEach(([k,v])=>{ state.pause[k]=v; });
+    pendOn=true;
+  }
+  labelPend();
 }
 function applyPreset(p,{keepZoom=false,keepSlice=false,keepShue=false}={}){
   // stock↔physical 토글은 같은 천체의 두 판본이므로 줌을 유지한다 — 프리셋 R 로 되돌리면
@@ -1058,18 +1081,18 @@ const FOOT_KO=
  '충실도: <code>Inner/Outer_func</code>=토러스 SDF <code>max(d1,−d2)</code>(border 차집합), <code>Pause_func</code>=눌린 구, dose=<code>clamp(gradient·(−SDF)/radius,0,1)·intensity</code> — 전부 <code>src/Kerbalism/Radiation/Radiation.cs</code> 원문 그대로. '+
  '<code>deform</code>은 sin(x·5)sin(y·7)sin(z·6)이라 좌표평면 위에선 항등 0 — 2D에서 처음 켜면 <code>slice_z</code>가 최대 진폭 0.26으로 자동 설정됩니다(3D에선 그대로 보임). '+
  '3D 모드 = 같은 SDF를 GLSL로 이식해 볼륨 레이마칭(110스텝, 색=dose 방출·청록=계면 껍질). 드래그 회전·휠 줌. '+
- '<code>pause_waist</code>·<code>pause_smooth</code> ⚗ = 스톡 계면 함수를 일반화한 두 필드(0이면 스톡과 동일) — waist는 두 반구를 가르는 최대 단면 평면을 옮기고, smooth는 x=0의 기울기 꺾임을 없앤다. <b>아직 Kerbalism cfg에 없어</b> emit 불가, 하모니 패치 대기. '+
- 'Shue 오버레이 = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0=현재 노즈(pause_radius/comp−offset), 항성정렬 프레임이라 tilt=0에서 비교 정확. '+
- '주황 = <b>연화 Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — 단일 C∞ 폐곡선(이음매·크리스 없음), 테이퍼 m=1 고정(기저형, 노브 없음). 꼬리 길이 L은 <b>Kerbalism 계면 꼬리에 연동</b>(pause_radius/extension+offset), ε=1/((L/r0)^{1/α}−1)로 정확히 L서 닫힘. L 연동 덕에 주간측은 순수 Shue와 ~0.3% 이내(흰 점선 대조). plugins/KerbalismShuePause 권장안. 「Shue 데모」 프리셋이 원클릭. '+
+ '<code>pause_waist</code>·<code>pause_smooth</code> ⚗ = 스톡 계면 함수를 일반화한 두 필드(0이면 스톡과 동일) — waist는 두 반구를 가르는 최대 단면 평면을 옮기고, smooth는 x=0의 기울기 꺾임을 없앤다. <b>아직 Kerbalism cfg에 없어</b> emit 불가, 하모니 패치 대기. 보드가 그 세트를 게이트한 천체는 <b>그 형상이 기본으로 실린다</b>(다섯 값이 한 벌이라 통째로) — <code>⚗ 스톡 값으로 되돌리기</code>로 배포되는 스톡 형상과 견줄 수 있다. '+
+ 'Shue 오버레이 = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0=현재 노즈(축 위 |px|=pause_radius 의 근, smooth=0이면 pause_radius/comp), 항성정렬 프레임이라 tilt=0에서 비교 정확. '+
+ '주황 = <b>연화 Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — 단일 C∞ 폐곡선(이음매·크리스 없음), 테이퍼 m=1 고정(기저형, 노브 없음). 꼬리 길이 L은 <b>Kerbalism 계면 꼬리에 연동</b>(같은 근의 반대쪽, smooth=0이면 pause_radius/extension), ε=1/((L/r0)^{1/α}−1)로 정확히 L서 닫힘. L 연동 덕에 주간측은 순수 Shue와 ~0.3% 이내(흰 점선 대조). plugins/KerbalismShuePause 권장안. 「Shue 데모」 프리셋이 원클릭. '+
  '값은 슬라이더 또는 우측 숫자칸 직접 입력(범위 초과 허용). 뷰 반너비 슬라이더의 최대값은 장면 전체가 들어오는 크기로 자동 갱신(끝까지 밀면 전체 보기). '+
  '스톡 프리셋 = KSP-RO/ROKerbalism 실배포 cfg(2026-07-24 검증), 물리 프리셋 = 쌍극자 L-셸 수치 피팅(fit_belts.py, 캡션의 IoU), NearStars 프리셋 = Phase 4 도출. Shue 기준선(주황)은 α가 실제로 적합된 바디에서만 기본 표시한다(지구 Shue 1998, 수성 Winslow 2013, 그리고 보드가 α를 게이트한 NearStars 바디). 자이언트는 자기권계면을 Shue 형식으로 적합하지 않으므로(목성 Joy 2002 다항식, 토성 Kanani 2010 압력균형) cfg compression에서 α를 만들어 내지 않고 꺼 둔다. 슬라이더로 직접 켤 수는 있다. 근거·렌더: <a href="wiki/reference__solar-system-radiation-belts.html">태양계 방사선대 문서</a>(단면 렌더 포함)';
 const FOOT_EN=
  'Fidelity: <code>Inner/Outer_func</code> = torus SDF <code>max(d1,−d2)</code> (border subtraction), <code>Pause_func</code> = squashed sphere, dose = <code>clamp(gradient·(−SDF)/radius,0,1)·intensity</code> — all verbatim from <code>src/Kerbalism/Radiation/Radiation.cs</code>. '+
  '<code>deform</code> is sin(x·5)sin(y·7)sin(z·6), identically 0 on coordinate planes — turning it on in 2D auto-sets <code>slice_z</code> to the max-amplitude 0.26 (visible as-is in 3D). '+
  '3D mode ports the same SDFs to GLSL volume raymarching (110 steps; color = dose emission, cyan = pause shell). Drag to rotate, wheel to zoom. '+
- '<code>pause_waist</code> and <code>pause_smooth</code> ⚗ generalize the stock pause function (0 for either reproduces stock exactly) — waist moves the plane that splits the two hemispheres and carries the widest cross-section, smooth removes the slope kink at x=0. <b>Not Kerbalism cfg fields yet</b>, so they cannot be emitted; awaiting the Harmony patch. '+
- 'Shue overlay = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0 = current nose (pause_radius/comp−offset), evaluated in the star-aligned frame so the comparison is exact at tilt=0. '+
- 'Orange = <b>softened Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — a single C∞ closed curve (no seam or crease), taper pinned at m=1 (base form, no knob). Tail length L <b>tracks the Kerbalism pause tail</b> (pause_radius/extension+offset), with ε=1/((L/r0)^{1/α}−1) closing exactly at L. Thanks to the L link the dayside stays within ~0.3% of pure Shue (white dashed reference). Recommended for plugins/KerbalismShuePause; the "Shue demo" preset is one click. '+
+ '<code>pause_waist</code> and <code>pause_smooth</code> ⚗ generalize the stock pause function (0 for either reproduces stock exactly) — waist moves the plane that splits the two hemispheres and carries the widest cross-section, smooth removes the slope kink at x=0. <b>Not Kerbalism cfg fields yet</b>, so they cannot be emitted; awaiting the Harmony patch. Where a board gates that set, <b>the viewer loads that shape by default</b> (all five values together, since they are one set) — <code>⚗ revert to stock</code> puts the shipped stock shape back for comparison. '+
+ 'Shue overlay = r(θ)=r0·(2/(1+cosθ))^α (1997JGR...102.9497S), r0 = current nose (root of |px| = pause_radius on the axis; pause_radius/comp when smooth = 0), evaluated in the star-aligned frame so the comparison is exact at tilt=0. '+
+ 'Orange = <b>softened Shue</b> r(θ)=r0·((1+ε)/(ε+cos²(θ/2)))^α — a single C∞ closed curve (no seam or crease), taper pinned at m=1 (base form, no knob). Tail length L <b>tracks the Kerbalism pause tail</b> (the other root; pause_radius/extension when smooth = 0), with ε=1/((L/r0)^{1/α}−1) closing exactly at L. Thanks to the L link the dayside stays within ~0.3% of pure Shue (white dashed reference). Recommended for plugins/KerbalismShuePause; the "Shue demo" preset is one click. '+
  'Set values with the sliders or by typing in the number boxes (out-of-range allowed). The view half-width slider\'s max auto-grows to fit the whole scene (push to the end for a full view). '+
  'Stock presets = deployed KSP-RO/ROKerbalism cfg (verified 2026-07-24); phys presets = numeric dipole L-shell fits (fit_belts.py, IoU in the caption); NearStars presets = Phase 4 derivations. The Shue reference (orange) is shown by default only where α was actually fitted (Earth, Shue 1998; Mercury, Winslow 2013; and NearStars bodies whose board gates an α). Giants are shown only where a Shue-form fit exists (Jupiter: Rutala 2025 S97*, α 0.423 at the Joy 2002 compressed nose); where none does, no α is invented from cfg compression — the slider still turns it on. Venus and Mars are induced boundaries and use the published circle-plus-cone IMB form (Martinecz 2009; Edberg 2024) with a declared closure, not Shue. Grounding and renders: <a href="wiki/reference__solar-system-radiation-belts.html">Solar-System radiation belts</a> (renders included)';
 
@@ -1169,7 +1192,7 @@ function applyLang(){
   document.getElementById('h1t').textContent=t('h1');
   document.getElementById('introT').innerHTML=t('intro');
   document.getElementById('resetBtn').textContent=t('reset');
-  document.getElementById('pendBtn').textContent=t('pending');
+  labelPend();
   document.getElementById('copyBtn').textContent=t('copy');
   document.getElementById('sunT').textContent=t('sun');
   document.getElementById('mode2d').textContent=t('mode2d');

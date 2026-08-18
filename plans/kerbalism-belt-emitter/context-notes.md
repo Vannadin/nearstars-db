@@ -140,3 +140,37 @@ the generalized form retires compression to 1.0 and log2(1) = 0. It now feeds
 the shape's effective compression rad/u_nose, which reproduces the gated stock
 compression exactly where both exist (Proxima Cen b: 1.43/1.2507 = 1.1434 vs
 gated 1.144) and reduces to log2(comp) when smooth = waist = 0.
+
+## 2026-08-18 — the gated smooth set is now the viewer's default shape
+
+Owner report: "the smooth value reads 0 for everything I click." It did. Of
+the 32 presets, 26 carry no smooth at all (their boards took the Shue-native
+branch, so 0 is correct there), 2 carry it live in `pause` (Venus, Mars), and
+4 parked it in `pending` behind the ⚗ button — Mercury, Ganymede, Pandora,
+Proxima Cen b. Clicking any of those four showed the un-smoothed stock shape
+with the slider at 0.
+
+The parking came from the emitter: `pause_smooth` sits in PENDING_MODEL_KEYS
+because stock Kerbalism cannot consume it, and the viewer inherited that
+classification as "hide until the Harmony patch lands". But cfg-emittability
+and what the viewer should *draw* are different questions, and the split was
+not even self-consistent — Venus and Mars are the same induced branch and
+were applied on load, while Proxima Cen b, whose board gates the set with no
+`pending: true` flag (unlike Pandora's rows, which say "PLAN, not shipped"),
+was hidden behind the button.
+
+Owner's call: apply the set on load for all four, and invert the button to
+"revert to stock". Rationale — the gated set is the shape the board decided
+on, so it is what the viewer should open with; the stock shape is the
+comparison, not the baseline. `deepset` now snapshots the stock values of the
+same keys into `state.pauseStock` before overlaying `state.pending`, so the
+toggle round-trips exactly (verified headlessly on all four).
+
+One foot-gun this creates: "Copy Kerbalism cfg" now exports the smoothed
+`pause_radius`/`compression` by default, and stock Kerbalism ignoring
+`pause_smooth` would render a different nose from those same numbers. The
+export now prints both — the true nose and the nose the stock engine will
+produce — and says to use the board's non-smoothed values for shipping.
+
+Also corrected in the help text: it still defined the overlay's r0 as
+`pause_radius/comp`, the identity that yesterday's fix retired.
