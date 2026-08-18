@@ -408,3 +408,27 @@ carrying the whole interpolated scale in one.
 Worth noting what this does not change: the peak-depth argument (no hiss removes the
 inner-zone loss that bounds Earth's belt from below, so the peak sits inside Earth's
 0.45 R_mp fraction) is independent of CRAND and unaffected.
+
+## 2026-08-18 — d's tilt drawn, and c's magnetic axis was being dropped by the emitter
+
+Two things, and the second was a pipeline bug rather than a missing value.
+
+**d's tilt.** Owner asked for a draw in 30-45 rather than the round 45. The band is
+what the ice-giant analogy supports; nothing in the evidence picks a point inside it, so
+the point is a seeded draw rather than a number chosen to look chosen:
+`random.Random('Proxima Cen d dipole tilt 2026-08-18').uniform(30, 45)` = 32.3 deg, i.e.
+`geomagnetic_pole_lat` 57.7. The seed string is on the board so the draw reproduces.
+
+**c's axis was gated and never shipped.** Proxima Cen c carries `geomagnetic_pole_lat`
+40 and `geomagnetic_offset` 0.4 on its `magnetism.magnetic_field` row, and the emitted
+RadiationBody had no geomagnetic line at all. The cause is in `load_nearstars_specs`:
+it skips a magnetic_field row that carries no `pause_` field, on the theory that such a
+row is descriptive only. But `geomagnetic_*` are BODY_KEYS, i.e. real cfg output, so any
+body that put its axis on a descriptive field row lost it silently. The guard now tests
+`pause_` **or** a BODY_KEYS field. A scan of every gated board found exactly one row
+affected, c's, so nothing else moved.
+
+Worth noting the shape of this bug: the value was gated, visible on the board, visible in
+the viewer's pre-regate snapshot, and simply absent downstream. Nothing failed loudly.
+The general lesson for the emitter is that "does this row contribute to cfg" should be
+asked against the field lists that define cfg output, never against a name prefix.

@@ -1500,6 +1500,8 @@ decisions:
       2.15(지구 외대 평탄부 비율)에서 각 껍질의 하한(1.157 / 1.496)으로 내렸다. 하한이 봉우리 하나짜리 프로파일을
       주는 값이라 토러스 모형과 맞는다. 이 규칙도 방법론 Part B에 적었다. 같은 날 geomagnetic_pole_lat 45 와
       geomagnetic_offset 0.25 를 신설했다. 그전까지 d 는 자기축이 게이트되지 않아 정렬 쌍극자로 나갔다.
+      기울기는 처음 45°로 뒀다가 같은 날 오너 지시로 30~45 대역 안의 시드 고정 추출값 32.3°로 바꿨다.
+      대역은 빙거성 유추가 정하고, 대역 안의 점은 증거가 고르지 못해 재현 가능한 추출에 맡긴다.
     status: gated
     driver: [window-selection]
     narrative: >
@@ -1522,7 +1524,7 @@ decisions:
       실어다 준 입자는 붙잡힌 그 자리에 남는다.
     fields:
       - { name: radiation_model, value: nearstars_proxima_d, op: set, note: "Shares the model the magnetopause row already names, now carrying belts as well", note_ko: "계면 행이 이미 지정한 모델을 그대로 쓰고, 거기에 벨트를 얹는다" }
-      - { name: geomagnetic_pole_lat, value: 45, unit: deg, op: set, note: "Dipole tilt 45 deg, by analogy with the ice giants (Uranus 59, Neptune 47) rather than with Earth. The reason is the anomaly itself: 16 G on a 0.3 M_E slow rotator is far outside what an Earth-style compositional dynamo produces, and the Solar System's non-Earth dynamo geometries are precisely the ones that run strong and badly tilted. An analogy, not a measurement, and the axis is unobserved", note_ko: "쌍극자 기울기 45°. 지구가 아니라 빙거성(천왕성 59°, 해왕성 47°)에 유추한 값이다. 근거는 이 천체의 이상 그 자체다. 0.3 M⊕ 느린 자전체에서 16 G는 지구식 조성 다이나모가 낼 수 있는 범위를 한참 벗어나고, 태양계에서 지구식이 아닌 다이나모 기하는 정확히 강하면서 크게 기운 것들이다. 측정이 아니라 유추이며 자기축은 관측되지 않았다" }
+      - { name: geomagnetic_pole_lat, value: 57.7, unit: deg, op: set, note: "Dipole tilt 32.3 deg. The band 30-45 is an ice-giant analogy (Uranus 59, Neptune 47) rather than an Earth one, because the anomaly itself points that way: 16 G on a 0.3 M_E slow rotator is far outside what an Earth-style compositional dynamo produces, and the Solar System's non-Earth dynamo geometries are precisely the ones that run strong and badly tilted. The value inside the band is a seeded draw rather than a round number, since nothing in the evidence picks a point in it: random.Random('Proxima Cen d dipole tilt 2026-08-18').uniform(30, 45). An analogy with a reproducible draw, not a measurement, and the axis is unobserved", note_ko: "쌍극자 기울기 32.3°. 30~45 대역은 지구가 아니라 빙거성(천왕성 59°, 해왕성 47°)에 유추한 것이고, 근거는 이 천체의 이상 그 자체다. 0.3 M⊕ 느린 자전체에서 16 G는 지구식 조성 다이나모가 낼 수 있는 범위를 한참 벗어나며, 태양계에서 지구식이 아닌 다이나모 기하는 정확히 강하면서 크게 기운 것들이다. 대역 안의 한 점은 증거가 고르지 못하므로 둥근 수 대신 시드 고정 추출로 뽑았다. random.Random('Proxima Cen d dipole tilt 2026-08-18').uniform(30, 45). 재현 가능한 추출을 붙인 유추이지 측정이 아니며, 자기축은 관측되지 않았다" }
       - { name: geomagnetic_offset, value: 0.25, unit: R_p, op: set, note: "Dipole centre displaced along the axis, again the ice-giant/Mercury pattern (Uranus 0.3, Neptune 0.55, Mercury 0.198). It pushes the deep shell into the ground on one side, so surface dose is hemispherically asymmetric, which is the same structure the surface row's two-tone polar caps describe", note_ko: "쌍극자 중심이 축 방향으로 밀린 값. 이것도 빙거성·수성 패턴이다(천왕성 0.3, 해왕성 0.55, 수성 0.198). 깊은 껍질을 한쪽에서 지면으로 밀어 넣어 표면 선량이 반구 비대칭이 되고, 이는 surface 행이 말하는 두 톤 극관과 같은 구조다" }
       - { name: outer_dist, value: 2.1874, op: set, note: "fit_belts.py against the whole trapping region at once, L 1.0-5.0, IoU 0.986. One shell rather than two: without a slot there is a single population, and one shell with its gradient at the floor already renders it as a torus with a single peak", note_ko: "fit_belts.py로 포획 영역 전체를 한 번에 적합, L 1.0-5.0, IoU 0.986. 두 껍질이 아니라 하나다. 슬롯이 없으면 집단이 하나뿐이고, gradient를 하한에 둔 껍질 하나로 이미 봉우리 하나짜리 토러스가 나온다" }
       - { name: outer_radius, value: 1.9314, op: set }

@@ -247,8 +247,12 @@ def load_nearstars_specs():
             if row['axis'] == 'magnetism.radiation_belts' and 'radiation_model' not in fields:
                 raise SystemExit(f"{fn} {row['body']}: radiation_belts row has no "
                                  "individual cfg fields (legacy packed format?)")
+            # 서술만 있는 자기장 행은 건너뛴다. 단 '서술만'의 기준이 pause_ 접두사였던 탓에
+            # geomagnetic_* 를 이 행에 단 바디는 값이 조용히 사라졌다(2026-08-18 발견:
+            # Proxima Cen c 의 기울기 40·offset 0.4 가 보드에는 게이트돼 있는데 cfg 에는
+            # geomagnetic 줄이 아예 없었다). BODY_KEYS 기여도 함께 본다.
             if row['axis'] == 'magnetism.magnetic_field' and not any(
-                    k.startswith('pause_') for k in fields):
+                    k.startswith('pause_') or k in BODY_KEYS for k in fields):
                 continue                  # 서술만 있는 자기장 행 — cfg 기여 없음
             e = merged.setdefault(row['body'], {'fields': {}, 'refs': [], 'row': row,
                                                 'kop': None})
