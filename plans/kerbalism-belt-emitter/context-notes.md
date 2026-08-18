@@ -699,3 +699,40 @@ to judge whether our cfg's bounds are too narrow. Those bounds are already cited
 at the 1000 km AP9 loss-cone floor, slot from Ripoll 2016, outer belt L 3-7 from
 Reeves 2013), and where the proxy and the cfg were compared the peaks agreed to a few
 percent.
+
+## 2026-08-18 — Earth's inner belt: the bound was miscited, the value stands
+
+Owner looked at the physical-vs-cfg drawing and said the inner belt's outer diameter
+looked wider in the physical one. It did, and chasing that turned out to be the useful
+thread of the day, because the *citation* was wrong even though the *value* is right.
+
+First, a correction to my own earlier framing: the two panels in that drawing were not
+comparable. One shaded the region by a pitch-angle proxy and the other by shell depth, so
+the same region looked like a flat ellipse in one and a fat ring in the other. Overlaying
+the regions alone shows they are the same shape, IoU 0.993 inner and 0.979 outer. The
+shape was never off.
+
+What was off: the inner belt's outer bound L = 2.0 was attributed in the reference table
+to "(AP9; Ripoll 2016)", and Ripoll 2016 is the **electron slot** paper. The inner belt's
+dose is proton-borne (Fennell 2015: no MeV electrons in the inner zone at all), so an
+electron-slot boundary is the wrong particle to bound it with. The proton observations say
+the belt reaches further: Selesnick 2016 puts the CRAND intensity maximum at L 1.5 with a
+trapped-solar-proton component at L 2, and Claudepierre 2019 finds energetic inner-belt
+protons out to L < 3.
+
+The bound stays at 2.0, and now for a stated reason rather than a borrowed one. One shell
+carries one intensity, and the engine puts the dose peak at the shell's deepest point, so
+widening the target drags the modelled peak off the observed maximum:
+
+| target | IoU | modelled dose peak |
+|---|---|---|
+| L 1.1-2.0 | .994 | L 1.52  (observed max 1.5) |
+| L 1.1-2.5 | .997 | L 1.62 |
+| L 1.1-3.0 | .995 | L 1.67 |
+
+So the low-flux tail out to L 3 is real and is the part this encoding cannot carry. That is
+now written on the row instead of a citation that was never about protons.
+
+Selesnick 2014, the paper that would pin the outer edge directly, is paywalled (HTTP 402)
+and ADS returns no body highlighting for it; the 2016 follow-up is open access and carries
+the numbers used here.

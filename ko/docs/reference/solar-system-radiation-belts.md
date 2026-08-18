@@ -213,7 +213,7 @@ Vignes의 노즈 1.29를 정확히 복원하면서 같은 `L` = 150 × 노즈 �
 | Field | Stock (`earth`) | Physical | Source |
 |---|---|---|---|
 | pause | 15 / comp 1.5 → **코 10 R_E** | ~10 R_E sub-solar ✓ | Shue 1997 [`1997JGR...102.9497S`](https://ui.adsabs.harvard.edu/abs/1997JGR...102.9497S), Fairfield 1971 [`1971JGR....76.6700F`](https://ui.adsabs.harvard.edu/abs/1971JGR....76.6700F) |
-| inner belt | 0.813/0.70 dxy 0.572, border 0.915 → 적도 **1.29–2.0 R_E** | 피크 **L≈1.5**, ~1.1–2 R_E, 하한 ~1000 km(그 아래는 loss-cone 고갈. SAA에선 dipole offset 때문에 ~200 km까지 내려옴) ✓ | (AP9; Ripoll 2016) |
+| inner belt | 0.813/0.70 dxy 0.572, border 0.915 → 적도 **1.29–2.0 R_E** | 피크 **L≈1.5**, ~1.1–2 R_E, 하한 ~1000 km(그 아래는 loss-cone 고갈. SAA에선 dipole offset 때문에 ~200 km까지 내려옴) ✓. 바깥 경계는 **벨트의 끝이 아니라 모형화의 절충**입니다. 에너지 있는 양성자는 L<3까지 닿지만(Claudepierre 2019), 껍질 하나가 세기 하나를 지므로 타깃을 넓히면 모형의 선량 봉우리가 관측 최대 L 1.5에서 밀려납니다 | Selesnick 2016 [`2016JGRA..121.1969S`](https://ui.adsabs.harvard.edu/abs/2016JGRA..121.1969S)(CRAND 최대 L 1.5, 태양 양성자 성분 L 2), Claudepierre 2019 [`2019JGRA..124..934C`](https://ui.adsabs.harvard.edu/abs/2019JGRA..124..934C), Fennell 2015 [`2015GeoRL..42.1283F`](https://ui.adsabs.harvard.edu/abs/2015GeoRL..42.1283F)(내대에 MeV 전자 없음 → 선량은 양성자가 진다) |
 | outer belt | 2.63/2.48 dxy 0.7225, border 도려냄 → 적도 **3.45–6.0 R_E** | **heart L≈4–5**, L 3–7 (≈; 가장자리 6 vs 7) | Reeves 2013 [`2013Sci...341..991R`](https://ui.adsabs.harvard.edu/abs/2013Sci...341..991R), Thorne 2013 [`2013Natur.504..411T`](https://ui.adsabs.harvard.edu/abs/2013Natur.504..411T) |
 | slot region | 2.0–3.45 R_E 간극 ✓ | **L≈2–3** (hiss가 비움) | Ripoll 2016 [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R) |
 | radiation_inner/outer | 10.376 / 2.214 | 자릿수 일치 | — |

@@ -119,6 +119,16 @@ def diag_png(spec, params, path, extent=None, size=480):
 
 TARGETS = {
     # Earth: inner proton belt L~1.1-2 (peak 1.5), outer electron belt L~3-7 (heart 4-5)
+    # 2026-08-18: the inner belt's outer bound had been attributed to Ripoll 2016, which is
+    # the ELECTRON slot paper -- the wrong particle for a belt whose dose is proton-borne
+    # (Fennell 2015: no MeV electrons in the inner zone at all). The proton observations say
+    # the belt reaches further than 2: Selesnick 2016 (2016JGRA..121.1969S) puts the CRAND
+    # intensity maximum at L 1.5 with a trapped-solar-proton component at L 2, and
+    # Claudepierre 2019 (2019JGRA..124..934C) finds energetic inner-belt protons out to L<3.
+    # The bound stays at 2.0 anyway, and that is a stated trade rather than the old citation:
+    # one shell carries one intensity, so widening the target drags the modelled dose peak off
+    # the observed maximum (1.1-2.0 peaks at L 1.52, 1.1-2.5 at 1.62, 1.1-3.0 at 1.67). The
+    # low-flux tail out to 3 is real and is the part this encoding cannot carry.
     # inner rcut = 1000 km altitude (r~1.16): the inner-belt lower boundary, not the
     # atmosphere top -- trapped flux below ~1000 km is loss-cone-depleted (AP9 picture;
     # the offset dipole dips it to ~200 km only in the SAA, which geomagnetic_offset carries)
