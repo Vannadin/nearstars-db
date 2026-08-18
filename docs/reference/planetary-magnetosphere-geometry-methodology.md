@@ -90,19 +90,26 @@ So the slot is a **conditional** feature, and the condition is a plasmasphere:
   belt, and Uranus/Neptune have moon-carved minima at specific `L`-shells rather than a
   hiss-cleared band.
 
-Practical consequence for a Kerbalism board: an **airless** body does not get Earth's
-`has_inner` + gap + `has_outer` layout. **Use one shell** — the Ganymede treatment —
+Practical consequence for a Kerbalism board. The rule is **not** "airless bodies get one
+shell" — that over-generalises from a single case. It is: **render a gap only when you can
+name what carves it.** Earth's slot is named (hiss, needing a plasmasphere, hence absent on
+an airless body); Saturn's and Uranus' gaps are named (ring and moon sweeping at specific
+`L`); Ganymede's single shell is named too, but by its ~2 R_G standoff rather than by any
+gap argument. An airless body with sweeping moons would still get a carved gap, and a body
+with two genuinely distinct source populations still gets two shells. What an airless body
+loses is only the *hiss-cleared slot*.
+
+Where nothing carves and there is one population, **use one shell**
 fitted to the whole trapping region at once, with its `gradient` at the floor
 `*_radius / d_max` (Part C's gradient recipe). That floor is not merely the legal
 minimum here: it is the value whose plateau shrinks to a single point at the shell's
 deepest interior, so the shell renders as a torus peaking at one radius and ramping
 linearly away on both sides. Above the floor the shell grows a flat top instead; below
 it, the belt never reaches its stated `radiation_*` anywhere. One shell plus that
-gradient already gives the observed morphology, and without a slot there is only one
-population to render, so a second shell has to justify itself.
+gradient already gives the observed morphology, so a second shell has to justify itself by
+a named gap or a named second population, not by symmetry with Earth's cfg.
 
-**And if two shells are genuinely needed** (two distinct source populations, not one
-population's flanks), overlap them — do not let their bounds merely touch. Each shell's
+**And when two shells are genuinely needed**, overlap them — do not let their bounds merely touch. Each shell's
 dose ramps from zero at its *own* boundary, so shells that meet are both at zero exactly
 where they join: Proxima Cen d was first gated with `L` 1.0–2.5 against 2.5–5.0 and the
 profile collapsed to 5 rad/h at 2.5 R_p between flanks of 1000 and 5000, a thousandfold
@@ -378,8 +385,16 @@ source term rather than the field.
 
 Earth's inner belt is a **CRAND** belt: cosmic rays strike the *atmosphere*, and the
 albedo neutrons splash back and decay into trapped protons (Lenchek 1961,
-[`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)). Remove the atmosphere and that source is removed with it, and
-nothing else fills the deep shell preferentially — wind-fed and diffusion-fed
+[`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)). Remove the atmosphere and that source is not removed but it *is*
+unquantified: a regolith is also a cosmic-ray target and its albedo neutrons are
+routinely measured, which is how orbital neutron spectrometry maps airless surfaces at
+all (Mercury: Lawrence 2013, [`2013Sci...339..292L`](https://ui.adsabs.harvard.edu/abs/2013Sci...339..292L)). What is missing is any body where
+that source is known to *build* a trapped belt — the two airless magnetized bodies we
+can check both fail for unrelated reasons, Mercury because its magnetosphere is too small
+and dynamic to trap at all and Ganymede because its ~2 R_G standoff leaves room for one
+shell either way (Williams 1998, [`1998JGR...10317523W`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317523W)). So treat a deep CRAND belt on an
+airless body as **possible but unscaled**, not as absent. Meanwhile nothing else fills the
+deep shell preferentially — wind-fed and diffusion-fed
 populations are injected at the *outer* boundary and energised on the way in, so
 their peak sits at intermediate `L`, not at the surface (Earth's own outer belt
 peaks near `L` 4–5, i.e. ~0.45 `R_mp`; Schulz & Lanzerotti 1974,
@@ -1175,6 +1190,10 @@ a documented regime call rather than a computed number.
   15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). Where each belt's flux actually peaks — Earth's inner-belt
   peak and slot, and Uranus' broad maxima between moon-swept minima. These are the
   profile shapes the `radiation_*_gradient` recipe reads `d*` from.
+- **Lawrence et al. 2013**, Science 339, 292 ([`2013Sci...339..292L`](https://ui.adsabs.harvard.edu/abs/2013Sci...339..292L)); **Williams et al. 1998**,
+  JGR 103, 17523 ([`1998JGR...10317523W`](https://ui.adsabs.harvard.edu/abs/1998JGR...10317523W)). Why an airless CRAND belt is unscaled rather than
+  absent (orbital neutron spectrometry works *because* a regolith emits albedo neutrons),
+  and why Ganymede's single shell is a standoff result rather than a slot argument.
 - **Kao et al. 2023**, Nature 619, 272 ([`2023Natur.619..272K`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..272K)); **Climent et al. 2023**,
   Science 381, 1120 ([`2023Sci...381.1120C`](https://ui.adsabs.harvard.edu/abs/2023Sci...381.1120C)). The only *resolved* extrasolar radiation belt
   and its brown-dwarf counterpart: a double-lobed Jovian-morphology torus standing ~9

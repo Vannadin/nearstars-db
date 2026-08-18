@@ -378,3 +378,33 @@ of two genuinely distinct source populations, plus the peak-depth argument above
 
 Renders cleaner too: each lobe is a filled blob with a hot core rather than the crescent
 with a dark centre the two-shell version drew.
+
+## 2026-08-18 — "airless means one shell" was over-generalised
+
+Owner asked whether one shell really is the default for airless bodies. It is not, and
+the rule as written yesterday generalised from a single case. Two corrections.
+
+**The rule.** What an airless body actually loses is the *hiss-cleared slot*, because
+that one needs a plasmasphere. It does not lose the ability to have a gap: Saturn's and
+Uranus' gaps are cut by ring and moon sweeping at specific L, and an airless body with
+sweeping moons would get the same. Nor was Ganymede ever evidence for the rule, since
+its single shell follows from a ~2 R_G standoff leaving room for one shell either way
+(Williams 1998), not from any slot argument. And two distinct source populations still
+warrant two shells. So the rule is now stated as: **render a gap only when you can name
+what carves it**, with one shell as what you get when nothing carves and there is one
+population. Same conclusion for Proxima d, arrived at honestly instead of by a rule that
+would have mislabelled the next body.
+
+**The CRAND claim was too strong.** "Airless, so no CRAND source" is wrong: a regolith
+is also a cosmic-ray target and its albedo neutrons are routinely measured, which is how
+orbital neutron spectrometry maps airless surfaces at all (Mercury, Lawrence 2013). What
+is missing is any body where that source is known to *build* a trapped belt, and the two
+airless magnetized bodies available both fail for unrelated reasons (Mercury cannot trap
+at all; Ganymede has room for one shell regardless). So a deep CRAND belt on an airless
+body is **possible but unscaled**, not absent, and the board note now says that. d's
+single shell still stands, since inventing an unscaled second population is worse than
+carrying the whole interpolated scale in one.
+
+Worth noting what this does not change: the peak-depth argument (no hiss removes the
+inner-zone loss that bounds Earth's belt from below, so the peak sits inside Earth's
+0.45 R_mp fraction) is independent of CRAND and unaffected.
