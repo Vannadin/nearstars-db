@@ -501,6 +501,9 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
+.sec-h { font-size:13px; font-weight:600; color:var(--fg2); margin:26px 0 10px;
+  padding-top:18px; border-top:1px solid var(--bd1) }
+.bc-desc { font-size:12px; color:var(--fg3); line-height:1.55; margin-bottom:9px }
 /* index grid */
 .body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
 .body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
@@ -643,6 +646,31 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 """
 
 
+VIEWERS = [
+    ("../belt-viewer.html", "방사선대 · 자기권", "Radiation belts · magnetosphere",
+     "자기권 단면과 포획 방사선대. 자기장 세기·경사·standoff 결정이 어떤 영역을 만드는지 봅니다.",
+     "Magnetosphere cross-section and trapped belts — what the field-strength, tilt and "
+     "standoff decisions actually carve out.",
+     "kerbalism"),
+    ("orbit-viewers/index.html", "궤도 뷰어", "Orbit viewers",
+     "각 계를 Principia와 같은 고정 스텝 leapfrog로 재실행한 결과. 인터랙티브·3D 애니메이션.",
+     "Every system re-run with Principia's own fixed-step leapfrog — interactive panels "
+     "and a 3D orbit-evolution animation.",
+     "principia"),
+    ("orbit-viewers/validation.html", "궤도 검증 세트", "Orbit validation sets",
+     "계층별로 두 적분기를 교차 실행해 카오스와 장기 생존을 판정한 매트릭스.",
+     "The cross-integrator matrix per hierarchy — deterministic chaos and long-term "
+     "survival, judged two ways.",
+     "n-body"),
+]
+
+VIEWER_CARDS = "".join(f"""<a class="body-card" href="{href}">
+  <div class="bc-head"><span class="bc-name">{bi(en, ko)}</span></div>
+  <div class="bc-desc">{bi(desc_en, desc_ko)}</div>
+  <div class="bc-badges"><span class="mini-pill p">{tag}</span></div>
+</a>""" for href, ko, en, desc_ko, desc_en, tag in VIEWERS)
+
+
 def render_hub():
     """Top-level docs/phase4/ landing page across every v2 board.
 
@@ -698,7 +726,9 @@ def render_hub():
   <span><b>{sum(x[4] for x in boards)}</b> documented-divergence</span>
 </div>
 <div class="body-grid">{"".join(cards)}</div>
-<p class="intro"><a href="orbit-viewers/index.html"><span data-i18n>궤도 뷰어 갤러리 →</span><span data-en hidden>Orbit viewer gallery →</span></a></p>"""
+<h2 class="sec-h"><span data-i18n>뷰어</span><span data-en hidden>Viewers</span></h2>
+<p class="intro"><span data-i18n>보드가 확정한 값이 실제로 어떤 모양이 되는지 보는 곳입니다. 자기권과 궤도는 숫자만으로는 판단이 어려워 따로 그려 둡니다.</span><span data-en hidden>Where the values these boards freeze turn back into shapes. Magnetospheres and orbits are hard to judge as numbers alone, so they get drawn.</span></p>
+<div class="body-grid">{VIEWER_CARDS}</div>"""
     return page("Phase 4 — NearStars decision boards", content, depth=1)
 
 
