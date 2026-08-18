@@ -107,10 +107,26 @@ SOL_KO, SOL_EN = '태양계', 'Solar System'
 NEARSTARS_PRE = {
     'polyphemus': ('alpha_centauri', 'Alpha Centauri A b', 0, 'polyphemus'),
     'pandora':    ('alpha_centauri', 'Pandora', 1, 'pandora'),
-    'proxima_b':  ('proxima_cen', 'Proxima Cen b', 0, 'proxima_b'),
+    # b·d 는 2026-08-18 까지 보드 키(proxima_cen_b/d)가 아니라 제 BODIES 키로 묶여 있어서
+    # 피커에 같은 이름 버튼이 두 개씩 떴다(c 만 제대로 묶여 있었다). 넷째 항목은 반드시
+    # 보드 프리셋의 body_key 여야 stock/phys 토글 한 쌍으로 합쳐진다.
+    'proxima_b':  ('proxima_cen', 'Proxima Cen b', 0, 'proxima_cen_b'),
     'proxima_c':  ('proxima_cen', 'Proxima Cen c', 0, 'proxima_cen_c'),
-    'proxima_d':  ('proxima_cen', 'Proxima Cen d', 0, 'proxima_d'),
+    'proxima_d':  ('proxima_cen', 'Proxima Cen d', 0, 'proxima_cen_d'),
 }
+# 합치고 나면 *_regate 두 개는 피커에서 밀려난다(보드 프리셋이 같은 phys 자리를 나중에 덮는다).
+# 잃는 것이 없는지 확인한 결과를 남긴다.
+#   proxima_b_regate : pause 가 보드 행과 완전히 같다(1.3728 / 1.144 / 0.0076267 / deform 0.1).
+#                      보드 쪽은 여기에 ⚗ 대기 세트까지 들고 있으므로 순수한 상위집합이다.
+#   proxima_d_regate : pause 도 Shue 값도 보드와 같지만, 보드에 없는 벨트(5000 / 1000 rad/h)를
+#                      들고 있다. 그 벨트는 게이트된 적이 없다 — 보드의 d 는 magnetism.magnetic_field
+#                      행뿐이고 출하 cfg 에도 has_inner/has_outer 가 없다. 그래서 피커의 phys 는
+#                      출하되는 것(벨트 없음)을 보여주는 게 맞고, 이 엔트리는 아직 게이트되지 않은
+#                      판단의 기록으로만 남는다. 다만 이건 보드 안의 모순이다 — d 의 environment /
+#                      gameplay 행은 "trapped belts", "radiation belts of Jupiter's kind" 라고
+#                      서술하는데 magnetism 축에 벨트 행이 없어서 cfg 에는 계면만 나간다.
+#                      벨트 게이팅은 Phase 4 오너 결정이라 여기서 만들어 넣지 않는다(2026-08-18 보고).
+
 presets = {}
 for key, b in BODIES.items():          # 소스 dict 순서 유지 (stock/phys 쌍)
     p = conv(key, b)
