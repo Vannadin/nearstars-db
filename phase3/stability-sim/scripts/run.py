@@ -143,16 +143,19 @@ def run_integration(sim: rebound.Simulation, meta: dict, t_end_yr: float, n_snap
     hill_track = {h["name"]: {"frac_max": 0.0, "bound": True} for h in meta.get("hypotheticals", []) if h["type"] == "moon"}
 
     t0 = time.time()
-    # progress cadence: ~20 updates over the run (min every chunk), flushed so a
-    # long TRACE/IAS15 integration streams "how far" to the log instead of going
-    # silent until the end.
-    prog_every = max(1, n_snapshots // 20)
+    # progress cadence: every 5% of integrated TIME, flushed, so a long TRACE/IAS15
+    # integration streams "how far" instead of going silent until the end. Keyed on time
+    # rather than on a snapshot count because a dense head puts almost every snapshot in
+    # the first fraction of the run — a count-based cadence then prints nothing at all
+    # across the entire sparse tail.
+    next_report = 0.05
     for ci, t in enumerate(times):
         sim.integrate(t, exact_finish_time=0)
-        if (ci + 1) % prog_every == 0 or ci == n_snapshots - 1:
+        frac = (t / t_end_yr) if t_end_yr else 1.0
+        if frac >= next_report or ci == n_snapshots - 1:
+            next_report = frac + 0.05
             el = time.time() - t0
-            frac = (ci + 1) / n_snapshots
-            eta = el / frac * (1 - frac)
+            eta = el / frac * (1 - frac) if frac > 0 else 0.0
             print(f"  … {t:,.0f} yr  ({frac*100:.0f}%)  elapsed {el:.0f}s  eta {eta:.0f}s",
                   flush=True)
         for name in bodies[1:]:
