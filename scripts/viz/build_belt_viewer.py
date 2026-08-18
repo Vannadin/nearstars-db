@@ -308,6 +308,48 @@ for p in presets.values():
     orb = BODY_ORBITS.get(bk)
     p['orbit'] = {'r': orb[0], 'ko': orb[1], 'en': orb[2]} if orb else None
 
+# ---- 손 표 결속 점검 ----
+# body_key 는 보드의 body 키에서 나오므로 이름이 바뀌면 같이 움직인다. 그 키로 붙는 손 표가
+# 따라오지 못하면 아무것도 실패하지 않고 오버레이·라벨만 조용히 빠진다 — 2026-08-18 하루에
+# 세 번(자기축, 피커, 궤도 고리) 그렇게 됐다. 그래서 빌드마다 결속을 확인하고 경고한다.
+def _audit_tables(presets):
+    preset_bk = {p['body_key'] for p in presets.values()}
+    bodies_bk = {k.rsplit('_', 1)[0] for k in BODIES}
+    warn = []
+    for name, keys, universe, what in (
+            ('SHUE_GROUNDED', set(SHUE_GROUNDED), preset_bk, 'preset body_key'),
+            ('MOON_ORBITS', set(MOON_ORBITS), preset_bk, 'preset body_key'),
+            ('KO', set(KO), bodies_bk, 'BODIES body key'),
+            ('EN', set(EN), bodies_bk, 'BODIES body key'),
+            ('NEARSTARS_PRE', set(NEARSTARS_PRE), bodies_bk, 'BODIES body key')):
+        dead = sorted(keys - universe)
+        if dead:
+            warn.append(f"  {name}: key(s) bind to no {what}: {dead}")
+    dead = sorted(v[3] for v in NEARSTARS_PRE.values() if v[3] not in preset_bk)
+    if dead:
+        warn.append(f"  NEARSTARS_PRE board keys bind to no preset body_key: {dead}")
+    # BODY_ORBITS 는 아직 프리셋이 없는 위성까지 미리 담으므로 미결속을 경고하지 않는다.
+    # 대신 반대 방향 — 고리도 라벨도 없는 천체가 생기면 그것이 결손이다.
+    for bk in sorted(preset_bk):
+        p = next(p for p in presets.values() if p['body_key'] == bk)
+        if p.get('sys') != 'demo' and bk not in BODY_ORBITS:
+            warn.append(f"  BODY_ORBITS: no parent-orbit ring for '{bk}' ({p['label']})")
+    # 피커 무결성: 한 계 안에서 같은 라벨이 두 버튼으로 갈리면 그것이 중복 증상이다
+    # (프록시마 b·d 가 2026-08-18 에 두 번 그렇게 갈렸다).
+    seen = {}
+    for p in presets.values():
+        seen.setdefault((p.get('sys'), p['label']), set()).add(p['body_key'])
+    for (sysk, label), bks in sorted(seen.items()):
+        if len(bks) > 1:
+            warn.append(f"  picker: '{label}' in {sysk} splits into {sorted(bks)}")
+    if warn:
+        print("WARNING: hand-keyed table(s) no longer bind to the data:", file=sys.stderr)
+        for w in warn:
+            print(w, file=sys.stderr)
+
+
+_audit_tables(presets)
+
 tpl = open(TEMPLATE).read()
 assert '__PRESETS__' in tpl
 html = tpl.replace('__PRESETS__', json.dumps(presets, ensure_ascii=False))

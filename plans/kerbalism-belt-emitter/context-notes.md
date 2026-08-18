@@ -625,3 +625,35 @@ designation ends in a Roman numeral.
 Three regressions in one day from the same shape (a hand-keyed side table tracking a key
 that moved) is the pattern worth naming: anything keyed by `body_key` outside the builder
 should be derived, not written down.
+
+## 2026-08-18 — swept the remaining hand-keyed tables, and made the check automatic
+
+After three regressions of the same shape in one day, swept everything else keyed by a
+name that can move. Current state, checked against the real dicts rather than by reading:
+
+| table | keys | binds |
+|---|---|---|
+| SHUE_GROUNDED | 3 | all to a preset body_key |
+| MOON_ORBITS | 7 | all |
+| BODY_ORBITS | 18 | all live ones; Dante, Hades and Chaos are pre-populated for moons that have no belt preset yet |
+| KO / EN | 14 each | all to a BODIES body key |
+| NEARSTARS_PRE | 5 + 5 board keys | all |
+| SOLAR (emitter) | 7 | all to BODIES keys |
+
+Reverse direction is clean too: no body lacks a label, and no body lacks a parent-orbit
+ring. Documentation references were checked on the same principle, since a doc citing a
+preset key is the same failure mode: all 18 belt images referenced across docs/ and ko/
+resolve to a BODIES key, every reference has a file, and every file has a reference.
+
+The finding is that the sweep should not have to be run by hand, so `build_belt_viewer`
+now audits at build time and warns on stderr. Two properties:
+
+- **binding** — every hand-table key resolves, and every body that should have a
+  parent-orbit ring has one;
+- **picker integrity** — no label in a system splits across two body_keys, which is the
+  exact symptom the duplicate-button bug produced twice.
+
+Both were tested by deliberately reverting the Polyphemus mapping to its old key; the
+guard prints the missing ring and the split label, and goes silent when restored. It runs
+in the same place the emitter's unclassified-field warning does, so a rename announces
+itself on the next build rather than after someone notices a missing overlay.
