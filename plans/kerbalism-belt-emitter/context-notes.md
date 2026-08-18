@@ -432,3 +432,38 @@ Worth noting the shape of this bug: the value was gated, visible on the board, v
 the viewer's pre-regate snapshot, and simply absent downstream. Nothing failed loudly.
 The general lesson for the emitter is that "does this row contribute to cfg" should be
 asked against the field lists that define cfg output, never against a name prefix.
+
+## 2026-08-18 — sweeping the same bug class, and making it loud
+
+Owner asked whether this will keep happening. It would have. Auditing every gated
+magnetism field on every board against the emitter's key lists found two more values in
+the same state as c's axis (gated, visible, absent downstream):
+
+- **`pause_alpha_night` 0.52 on both Proxima c and d.** A real Shue-native plugin
+  parameter, sibling to `pause_alpha` / `pause_nose` / `pause_tail` which are all in
+  PENDING_MODEL_KEYS, and simply missing from that list. It reached neither the emit
+  comments nor the viewer's overlay. Added to the list, and `build_belt_viewer` now
+  reads it into `view.shue_an` from the board `pending` block, which it had only ever
+  done through the Solar-System BODIES dict. Six presets now carry the 2-alpha wake
+  form where four did before.
+- **`magnetosphere` on Cassandra**, which is narrative and correctly not emitted, but was
+  indistinguishable from a dropped value until it was classified.
+
+The structural fix is a fourth list, `DESCRIPTIVE_KEYS`, plus a warning in
+`load_nearstars_specs`: any field on a gated magnetism row that lands in none of
+MODEL_KEYS / BODY_KEYS / PENDING_MODEL_KEYS / DESCRIPTIVE_KEYS is now printed to stderr
+by name and body. It fires in both consumers, the emitter and the viewer build, so a new
+field name announces itself the first time anyone builds. It earned itself immediately:
+`magnetosphere` was found by the guard, not by the audit that motivated it.
+
+Two other drop paths checked and clean: no gated body carries cfg fields without a
+`radiation_model` (which would drop the body entirely), and the six emitted specs match
+the six the boards define.
+
+**One coupling remains unguarded.** Five of the six bodies have no `kopernicus_name` and
+emit under their board name, so the cfg's `name =` is only correct as long as the board
+name equals the in-game body name. Checking that against the DB does not work today,
+because Polyphemus, Pandora and Cassandra are fictional and correctly absent from it,
+and the boards carry no `fictional` flag to key on. There is nothing to reconcile
+against until the Kopernicus writer exists, so the right place to close this is that
+writer, and it is written down here rather than guessed at now.

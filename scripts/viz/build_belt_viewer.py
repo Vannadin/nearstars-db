@@ -233,6 +233,9 @@ for name, spec in load_nearstars_specs().items():
         p['view']['shue'] = pend['pause_alpha']
         p['view']['shue_r0'] = pend.get('pause_nose', 0)
         p['view']['shue_L'] = pend.get('pause_tail', 0)
+        # 야간면 α(2-α 후류). 2026-08-18 까지 여기서 안 읽어서 보드가 게이트한 값이
+        # 오버레이에 닿지 않았다 — 태양계 프리셋만 BODIES 딕트 경로로 받고 있었다.
+        p['view']['shue_an'] = pend.get('pause_alpha_night', 0)
     # 보드가 α 를 게이트하지 않았으면 켜지 않는다(만들어 낸 값이 되므로)
     presets[name.lower()] = p
 # Proxima d 는 보드 행이 없어 render_belts_bodies 에 값이 있지만, 계 소속은 프록시마다.

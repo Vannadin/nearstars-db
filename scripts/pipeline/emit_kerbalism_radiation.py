@@ -28,6 +28,9 @@ MODEL_KEYS = [
 # ⚗ 보드가 담지만 스톡 Kerbalism이 소비하지 않는 키 — 자기권계면 플러그인 대기.
 # emit에서는 주석으로만 흘려보내고 실제 cfg 라인으로 쓰지 않는다.
 PENDING_MODEL_KEYS = ['pause_deform_scale', 'pause_nose', 'pause_alpha', 'pause_tail',
+                      # 야간면 α (2-α 후류 형상). 2026-08-18 까지 이 목록에 없어서 c·d 가
+                      # 게이트한 0.52 가 emit 주석에도 뷰어 오버레이에도 닿지 않았다.
+                      'pause_alpha_night',
                       # 스톡 계면 함수 일반화 (둘 다 0 이면 스톡과 동일) — 방법론 Part C ⚗ 절
                       # 일반화 스톡 pause 는 네 값이 한 세트다 — smooth 만 적용하면 형상이 깨진다.
                       'pause_waist', 'pause_smooth',
@@ -41,6 +44,12 @@ PENDING_MODEL_KEYS = ['pause_deform_scale', 'pause_nose', 'pause_alpha', 'pause_
 BODY_KEYS = ['radiation_inner', 'radiation_inner_gradient',
              'radiation_outer', 'radiation_outer_gradient', 'radiation_pause',
              'geomagnetic_pole_lat', 'geomagnetic_pole_lon', 'geomagnetic_offset']
+# cfg 로 나가지 않는 것이 정상인 서술/물리량 필드. 위 세 목록 어디에도 없고 여기에도 없는
+# 이름이 게이트된 magnetism 행에 나타나면 그것은 '조용히 버려지는 값'이므로 경고한다
+# (2026-08-18: c 의 geomagnetic_* 와 c·d 의 pause_alpha_night 가 실제로 그렇게 사라져 있었다).
+DESCRIPTIVE_KEYS = ['magnetic_field', 'magnetic_field_polar', 'field_geometry',
+                    'belt_architecture', 'magnetosphere', 'radiation_model',
+                    'magnetopause_standoff_rp']
 
 # 벨트 dict 키 → cfg 필드 (렌더 전용 키 radiation/grad 제외)
 BELT_FIELDS = [('dist', 'dist'), ('radius', 'rad'), ('deform_xy', 'dxy'),
@@ -233,6 +242,7 @@ def load_nearstars_specs():
 
     반환: {kopernicus_name: {'model': {...}, 'body': {...}, 'row': row}} (보드 순서)."""
     import yaml
+    unclassified = {}                 # 이름 → [보드/바디] (아래에서 경고로 흘린다)
     CFG_AXES = ('magnetism.magnetic_field', 'magnetism.radiation_belts')
     specs = {}
     for fn in sorted(os.listdir(PHASE4_DIR)):
@@ -244,6 +254,10 @@ def load_nearstars_specs():
             if row.get('axis') not in CFG_AXES or row.get('status') != 'gated':
                 continue
             fields = {f['name']: f['value'] for f in row.get('fields', [])}
+            for k in fields:
+                if not (k in MODEL_KEYS or k in BODY_KEYS or k in PENDING_MODEL_KEYS
+                        or k in DESCRIPTIVE_KEYS):
+                    unclassified.setdefault(k, []).append(f"{fn}/{row['body']}")
             if row['axis'] == 'magnetism.radiation_belts' and 'radiation_model' not in fields:
                 raise SystemExit(f"{fn} {row['body']}: radiation_belts row has no "
                                  "individual cfg fields (legacy packed format?)")
@@ -272,6 +286,12 @@ def load_nearstars_specs():
                            'body': {k: fields[k] for k in BODY_KEYS if k in fields},
                            'pending': {k: fields[k] for k in PENDING_MODEL_KEYS if k in fields},
                            'refs': e['refs'], 'system': fn}
+    if unclassified:
+        print("WARNING: gated magnetism field(s) reach no consumer -- add them to "
+              "MODEL_KEYS / BODY_KEYS / PENDING_MODEL_KEYS, or to DESCRIPTIVE_KEYS if "
+              "they are narrative only:", file=sys.stderr)
+        for k, where in sorted(unclassified.items()):
+            print(f"  {k}: {', '.join(sorted(set(where)))}", file=sys.stderr)
     return specs
 
 
