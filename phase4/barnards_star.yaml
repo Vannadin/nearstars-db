@@ -37,6 +37,7 @@ decisions:
       spin_axis_orientation·geopotential_j2(+reference_radius)는 전용 행이 담당(union rule). 전부 고신뢰 측정 →
       emit 그대로.
     fields:
+      - { name: kopernicus_name, value: "Barnard's star", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 0.162, unit: M_sun, op: passthrough, note: "±0.007 (Schweitzer2019)" }
       - { name: radius, value: 0.187, unit: R_sun, op: passthrough, note: "±0.001 (Schweitzer2019, 각지름 0.952 mas)" }
       - { name: gravity, value: 1271, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }

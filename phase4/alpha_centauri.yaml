@@ -343,6 +343,7 @@ decisions:
       남은 벌크 사실들을 한자리에 모았다. 행성은 지구 질량 120배이고, 별에게서 53억 년 나이를 물려받았으며, 내부의 불이 아니라 햇빛으로 산다. 자발광하는 eps Ind A b의 정반대다. 다만
       희미하게 남은 내부 온기도 띠와 날씨를 젓는 데는 한몫한다. 자유롭게 정할 수 있는 값은 기운 자전축의 방위 하나뿐이고, Pandora의 일식이 잦게 유지되는 범위 안에서 고른다.
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri A b", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }
       - { name: gravity, value: 9.36, unit: m/s2, op: set, phase3_default: "derived echo of GM/R^2 (referenced to the 1-bar radius 71,492 km)", phase3_default_ko: "GM/R² 파생 에코 (1-bar 반경 71492 km 기준)" }
       - { name: flattening, value: 0.13, op: set, note: "= (3J₂+q)/2 derived echo (J₂ 0.023, q 0.19); the visual oblateness slot. q is large here, so the first-order expression runs a little low", note_ko: "= (3J₂+q)/2 파생 에코 (J₂ 0.023, q 0.19), 시각 oblate 슬롯; 대형 q라 1차식이 다소 하한" }
@@ -1381,6 +1382,7 @@ decisions:
       mass 1.1055 M⊙ · radius 1.2234 R⊙(8.511e8 m) · P_rot 22 d · age 5.3 Gyr · gravity 202 m/s².
       전부 관측으로 측정되어 있다.
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri A", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 1.1055, unit: M_sun, op: passthrough }
       - { name: radius, value: 1.2234, unit: R_sun, op: passthrough }
       - { name: intrinsic_luminosity, value: 1.521, unit: L_sun, op: passthrough, note: "±0.013 (Kervella 2017); template slot backfilled 2026-08-17 (star-luminosity audit)", note_ko: "±0.013 (Kervella 2017). 2026-08-17 별-광도 감사에서 슬롯 백필" }
@@ -1401,6 +1403,7 @@ decisions:
       mass 0.9373 M⊙ · radius 0.8632 R⊙(6.005e8 m) · P_rot 41 d · age 5.3 Gyr · gravity 345 m/s².
       전부 관측으로 측정되어 있다.
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri B", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 0.9373, unit: M_sun, op: passthrough }
       - { name: radius, value: 0.8632, unit: R_sun, op: passthrough }
       - { name: intrinsic_luminosity, value: 0.503, unit: L_sun, op: passthrough, note: "±0.007 (Kervella 2017); template slot backfilled 2026-08-17 (star-luminosity audit)", note_ko: "±0.007 (Kervella 2017). 2026-08-17 별-광도 감사에서 슬롯 백필" }
@@ -1455,6 +1458,7 @@ decisions:
       않아 계절이 없다. 화산을 굴리는 조석의 힘으로 인해 시각적으로 보일 정도로 잡아당겨져 계란 형태를 띠고 있다.
       궤도는 로슈 한계 바깥에 넉넉히 자리하고, 내부는 조석으로 뜨겁게 유지된다.
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri A b I", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 8.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 900, unit: km, op: set, note: "INVENTED" }
       - { name: gravity, value: 0.659, unit: m/s2, op: set, note: "derived echo of GM/R^2", note_ko: "GM/R² 파생 에코" }
@@ -1812,6 +1816,7 @@ decisions:
       둘째 위성으로서 Polyphemus에 조석고정되어 내부가 따뜻하게 데워진다.
     refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri A b II", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 5.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 750, unit: km, op: set, note: "INVENTED" }
       - { name: gravity, value: 0.593, unit: m/s2, op: set, note: "derived echo of GM/R^2", note_ko: "GM/R² 파생 에코" }
@@ -2112,6 +2117,7 @@ decisions:
       열원으로 돌린다. 조석은 달을 아주 살짝 계란 모양으로 잡아당기는데, 시각적으로는 보이지 않지만 프린키피아
       궤도에는 영향을 준다.
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri A b III", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: radius, value: 5724, unit: km, op: set, note: "Diameter 11,447 km in the film's setting", note_ko: "canon 지름 11,447" }
       - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "Option B: fix 0.8 g → 0.645 M⊕", phase3_default_ko: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
       - { name: gravity, value: 7.84, unit: m/s2, op: set, note: "= 0.8 g, the value the film's setting has people feel; consistent with GM/R^2", note_ko: "= 0.8 g, 영화 설정 체감값; GM/R² 일치" }
@@ -2561,6 +2567,7 @@ decisions:
       존재한다.
     refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri A b IV", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 9.0e23, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 3400, unit: km, op: set }
       - { name: gravity, value: 5.20, unit: m/s2, op: set, note: "= 0.53 g; derived echo of GM/R^2", note_ko: "= 0.53 g; GM/R² 파생 에코" }
@@ -2969,6 +2976,7 @@ decisions:
       못했고, 그래서 9.5시간마다 한 바퀴를 돈다. 자전축도 세워지지 않아 15도쯤 기울어 있다. 이 회전이 천체를
       적도 쪽으로 부풀려, 적도 지름이 극 지름보다 7퍼센트쯤 크다. 내부에서 나오는 열은 사실상 없다.
     fields:
+      - { name: kopernicus_name, value: "Alpha Centauri A b V", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 5.4e20, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 400, unit: km, op: set }
       - { name: gravity, value: 0.225, unit: m/s2, op: set, note: "= 0.023 g; derived echo of GM/R^2", note_ko: "= 0.023 g; GM/R² 파생 에코" }

@@ -72,6 +72,7 @@ decisions:
       6.94시간에 한 바퀴인데 이것만은 잠정 판독이라, 이 천체의 숫자 가운데
       가장 부정확하다.
     fields:
+      - { name: kopernicus_name, value: "Luhman 16 A", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 0.0320, unit: M_sun, op: passthrough, note: "±0.0003 = 33.5 M_Jup (Lazorenko & Sahlmann 2018 astrometric orbit)" }
       - { name: radius, value: 0.090, unit: R_sun, op: passthrough, note: "±0.01 = 0.9 R_Jup assumed field-BD degenerate radius (Faherty 2014); no L/T dwarf has a measured radius", note_ko: "±0.01 = 0.9 R_Jup, 필드 갈색왜성 축퇴 반지름 가정(Faherty 2014). 반지름이 측정된 L/T 왜성은 없다" }
       - { name: gravity, value: 1084, unit: m/s2, op: passthrough, phase3_default: "GM/R² derived echo (~110 g)", phase3_default_ko: "GM/R² 파생 에코 (~110 g)" }
@@ -632,6 +633,7 @@ decisions:
       이 천체가 온전히 제 것으로 가진 숫자는 자전 하나다. 돌아가는 날씨에서
       깨끗하게 읽어낸 4.87시간, 이 시스템에서 가장 잘 측정된 자전이다.
     fields:
+      - { name: kopernicus_name, value: "Luhman 16 B", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 0.0273, unit: M_sun, op: passthrough, note: "±0.0003 = 28.5 M_Jup (Lazorenko & Sahlmann 2018 astrometric orbit)" }
       - { name: radius, value: 0.090, unit: R_sun, op: passthrough, note: "±0.01 = 0.9 R_Jup assumed field-BD degenerate radius (Faherty 2014)", note_ko: "±0.01 = 0.9 R_Jup, 필드 갈색왜성 축퇴 반지름 가정(Faherty 2014)" }
       - { name: gravity, value: 924, unit: m/s2, op: passthrough, phase3_default: "GM/R² derived echo (~94 g)", phase3_default_ko: "GM/R² 파생 에코 (~94 g)" }

@@ -59,6 +59,7 @@ decisions:
       태양과 비슷하지만 운동학으로 얻은 값이라, α Cen AB에 나중에 붙잡힌 것인지 함께 태어난 것인지는 아직
       갈리지 않는다. 값은 모두 신뢰도 높은 실측이다.
     fields:
+      - { name: kopernicus_name, value: "Proxima Centauri", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - name: mass
         value: 0.1221
         unit: M_sun
@@ -383,6 +384,7 @@ decisions:
       이 기울기는 가정이 아니라 평형 상태를 계산해 얻은 값이다. 느린 자전 탓에 적도가 부푸는 정도는 무시할 만하며,
       내부에서 올라오는 열도 표면 온도를 바꾸지 못할 만큼 적다. 다만 그 적은 열이 이 행성의 약한 자기장을 돌린다.
     fields:
+      - { name: kopernicus_name, value: "Proxima Centauri b", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - name: mass
         value: 1.22
         unit: M_earth
@@ -1108,6 +1110,7 @@ decisions:
       너무 적다. 다만 이 행성의 강한 자기장이 무엇으로 도는지는 예측이 아니라 관측의 몫인데, 이만큼 작고 늙은
       세계라면 진작 식어 다이너모가 멎었어야 하기 때문이다.
     fields:
+      - { name: kopernicus_name, value: "Proxima Centauri d", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - name: mass
         value: 0.30
         unit: M_earth
@@ -1857,6 +1860,7 @@ decisions:
       새겨질 만큼 부풀린다. 자전축은 궤도면에서 17도 기울어 있다. 내부에서 올라오는 열은 해왕성만큼 있어 표면
       온도를 40 K에서 50 K대로 밀어 올리지만, 그래도 휘발성은 여전히 얼어 있다.
     fields:
+      - { name: kopernicus_name, value: "Proxima Centauri c", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - name: mass
         value: 8
         unit: M_earth
@@ -2641,6 +2645,7 @@ decisions:
       않았으니 속을 주무를 힘도 없다. 엔셀라두스는 뜨겁고 이 위성은 차가운 이유가 그 하나다. 행성의 인력이 몸을
       늘이기는 하지만 1퍼센트 남짓이라 별을 배경으로 알아볼 수 없고, 중력장에만 드러난다.
     fields:
+      - { name: kopernicus_name, value: "Proxima Centauri c I", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - name: radius
         value: 326
         unit: km

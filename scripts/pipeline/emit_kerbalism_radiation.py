@@ -249,6 +249,17 @@ def load_nearstars_specs():
         if not fn.endswith('.yaml'):
             continue
         board = yaml.safe_load(open(os.path.join(PHASE4_DIR, fn)))
+        # cfg 바디명의 단일 진실원 = bulk 축의 kopernicus_name (2026-08-18 소급 적용).
+        # 그전에는 magnetism 행의 row-level 키였고, 없으면 보드의 body 키를 그대로 썼다.
+        # 여섯 중 다섯이 후자여서 보드 표기와 인게임 이름이 갈리면 조용히 어긋났다.
+        # 옛 row-level 키도 계속 읽어 주되 bulk 가 우선한다.
+        kop_names = {}
+        for row in board.get('decisions', []):
+            if row.get('axis') != 'bulk':
+                continue
+            for fl in row.get('fields', []):
+                if fl.get('name') == 'kopernicus_name':
+                    kop_names[row['body']] = fl.get('value')
         merged = {}                       # body → 병합 결과 (보드 순서 유지)
         for row in board.get('decisions', []):
             if row.get('axis') not in CFG_AXES or row.get('status') != 'gated':
@@ -280,7 +291,7 @@ def load_nearstars_specs():
             fields = e['fields']
             if 'radiation_model' not in fields:
                 continue                  # 계면도 벨트도 없는 천체
-            name = e['kop'] or body
+            name = kop_names.get(body) or e['kop'] or body
             specs[name] = {'model_name': fields['radiation_model'],
                            'model': {k: fields[k] for k in MODEL_KEYS if k in fields},
                            'body': {k: fields[k] for k in BODY_KEYS if k in fields},

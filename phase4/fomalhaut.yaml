@@ -42,6 +42,7 @@ decisions:
       [2026-07-12: 구 "j2(중력) OMIT" 문구는 항성 J2 상시-emit 오너 정책으로 대체 — 아래 bulk.geopotential_j2 행이 live.
       spin_axis도 별도 행으로 분리.] gravity 155 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯).
     fields:
+      - { name: kopernicus_name, value: "Fomalhaut", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
       - { name: mass, value: 1.92, unit: M_sun, op: passthrough, note: "Mamajek 2012 (excess-corrected)" }
       - { name: radius, value: 1.842, unit: R_sun, op: passthrough, note: "적도반경; alt=Davis2005 1.744 (excess 미보정) 병기" }
       - { name: gravity, value: 155, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }

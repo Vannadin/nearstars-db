@@ -467,3 +467,33 @@ because Polyphemus, Pandora and Cassandra are fictional and correctly absent fro
 and the boards carry no `fictional` flag to key on. There is nothing to reconcile
 against until the Kopernicus writer exists, so the right place to close this is that
 writer, and it is written down here rather than guessed at now.
+
+## 2026-08-18 — kopernicus_name applied retroactively, from the bulk row
+
+The one coupling left unguarded yesterday is closed. Every body's cfg name now comes
+from a `kopernicus_name` field on its `bulk` row, 24 of them across the seven boards,
+and `load_nearstars_specs` reads it there (the old row-level key still works and the
+board body key is still the last resort, but neither is reached now).
+
+The name is the **formal designation verbatim**, which settled two questions:
+
+- **Designation, not culture name.** `Alpha Centauri A b III`, not `Pandora`. Kopernicus
+  keeps the player-facing label in a separate field (`Properties { displayName }`), so
+  the internal name is free to be the designation.
+- **The whole designation, not its tail.** The short form the owner first sketched
+  (`AbI`, `AbII`, ...) collides: `Alpha Centauri A b` and `40 Eridani A b` both reduce to
+  `A b`, and once 40 Eri A b has moons their numerals collide too. Checked all 22
+  designations for this; the full form is unique, 24 names with no duplicate.
+- **Case is the repo's own.** The satellite numeral stays upper case per CONVENTIONS
+  §5.2b (`A b I`-`A b V`) and IAU satellite practice (`Jupiter I` = Io). Owner asked
+  twice about this and then asked for the existing convention, which is what this is.
+
+`to_kopernicus_name` lives in `_naming.py` with the other canonical converters and is
+deliberately an identity function: writers import one place instead of each inventing a
+transform, and the three rules sit next to the thing they govern.
+
+Six emitted bodies changed name: Polyphemus to Alpha Centauri A b, Pandora to
+Alpha Centauri A b III, Cassandra to Alpha Centauri A b IV, and the three Proxima
+planets from the board's `Proxima Cen x` shorthand to `Proxima Centauri x`. That last one
+is the case this was meant to catch, since the board key and the designation genuinely
+differed and the cfg had been shipping the board key.

@@ -60,3 +60,36 @@ def to_file_slug(name: str) -> str:
 def to_filename(name: str) -> str:
     """db/systems/<...>.json filename. Thin wrapper over to_file_slug."""
     return to_file_slug(name) + ".json"
+
+
+
+
+def to_kopernicus_name(designation: str) -> str:
+    """Canonical Kopernicus body `name` — the formal designation, verbatim.
+
+    This is the identifier every cfg writer joins on, so it has to be unique across the
+    whole mod and stable once shipped. Three rules, one reason each:
+
+      1. **The formal designation, never the culture name.** `Alpha Centauri A b III`,
+         not `Pandora`. The in-game label is a separate Kopernicus field
+         (`Properties { displayName }`), so the internal name is free to carry the
+         designation and should.
+      2. **The whole designation, not its tail.** The tail alone collides:
+         `Alpha Centauri A b` and `40 Eridani A b` both reduce to `A b`, and their moons
+         would both be `A b I` (2026-08-18 audit). The system prefix is what makes it
+         unique.
+      3. **Verbatim, including case.** The satellite numeral stays upper case, per
+         CONVENTIONS §5.2b (`A b I`–`A b V`) and IAU satellite practice (`Jupiter I` =
+         Io). The stellar component is upper case and the planet letter lower case for
+         the same reason: that is what the designation already is.
+
+    So this is deliberately an identity function. It exists so that writers have one
+    place to import rather than each inventing a transform, and so the rules above sit
+    next to the thing they govern.
+
+    Examples:
+      "Alpha Centauri A b III" → "Alpha Centauri A b III"
+      "40 Eridani A b"         → "40 Eridani A b"
+      "Proxima Centauri c I"   → "Proxima Centauri c I"
+    """
+    return designation.strip()
