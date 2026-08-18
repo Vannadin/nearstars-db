@@ -284,6 +284,13 @@ def decision_html(d, system, rows):
 
 
 IMG_RE = re.compile(r"docs/img/[\w./-]+\.(?:png|jpg|jpeg|svg)")
+# Pulled from the board rows for now (owner, 2026-08-19). The boards still cite them, so
+# the provenance stays in the prose; they just do not render as a row figure. Drop an
+# entry here to put one back.
+FIGURE_EXCLUDE = {
+    "docs/img/field-geometry.png",              # dipole vs multipole schematic
+    "docs/img/field-geometry-proxima-c.png",    # tilted/offset multipole schematic
+}
 _PRESET_RE = re.compile(r"const PRESETS\s*=\s*(\{.*?\});", re.S)
 # The magnetosphere still lands on the most specific magnetism row a body has —
 # it draws the belts, so a radiation_belts row owns it ahead of the field row.
@@ -349,7 +356,7 @@ def cited_figures(d):
     out = []
     blob = yaml.safe_dump(d, allow_unicode=True, default_flow_style=False)
     for path in IMG_RE.findall(blob):
-        if path in out:
+        if path in out or path in FIGURE_EXCLUDE:
             continue
         if not (REPO / path).exists():
             print(f"[warn] {d.get('body','?')} / {d.get('axis','?')}: "
