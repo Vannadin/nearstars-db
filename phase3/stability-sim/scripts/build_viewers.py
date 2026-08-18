@@ -5,8 +5,8 @@ For each system in the manifest it:
   1. re-runs the sim the Principia way (fixed-step leapfrog, dt = 10 min) into
      results/_viewers/<system>/  — skipped if the summary is already fresh
      (newer than the manifest) unless --force.
-  2. renders the static 4-panel PNG (plot_moons.py) + the 3D animation
-     (animate_orbits.py) from that one run.
+  2. renders the static 4-panel PNG (plot_moons.py, in both site palettes) + the
+     3D animation (animate_orbits.py) from that one run.
   3. copies both into docs/phase4/orbit-viewers/<slug>/ and writes a bilingual
      gallery index.
 
@@ -107,11 +107,19 @@ def run_sim(name, cfg, defaults, out_dir, quick):
 
 def render(name, cfg, out_dir):
     center = cfg.get("center")
-    for viz in ("plot_moons.py", "animate_orbits.py", "plot_interactive.py"):
-        cmd = [PY, str(SCRIPTS / viz), "--dir", str(out_dir), "--label", name]
+
+    def viz(script, *extra):
+        cmd = [PY, str(SCRIPTS / script), "--dir", str(out_dir), "--label", name]
         if center:
             cmd += ["--center", center]
-        subprocess.run(cmd, check=True)
+        subprocess.run(cmd + list(extra), check=True)
+
+    # the static panel is drawn twice — the gallery serves the pair through <picture>,
+    # since the site follows the reader's prefers-color-scheme
+    for theme in ("dark", "light"):
+        viz("plot_moons.py", "--theme", theme)
+    viz("animate_orbits.py")
+    viz("plot_interactive.py")
 
 
 def collect(name, out_dir):
@@ -119,6 +127,9 @@ def collect(name, out_dir):
     dst = GALLERY / slug(name)
     dst.mkdir(parents=True, exist_ok=True)
     shutil.copy2(out_dir / f"{name}_orbits.png", dst / "orbits.png")
+    light = out_dir / f"{name}_orbits_light.png"
+    if light.exists():
+        shutil.copy2(light, dst / "orbits_light.png")
     shutil.copy2(out_dir / f"{name}_orbit3d.html", dst / "orbit3d.html")
     shutil.copy2(out_dir / f"{name}_interactive.html", dst / "interactive.html")
     inject_crumb(dst / "orbit3d.html")
@@ -127,6 +138,7 @@ def collect(name, out_dir):
     integ = summary["integration"]
     return {
         "name": name, "slug": slug(name),
+        "light": (dst / "orbits_light.png").exists(),
         "system": summary["system"],
         "verdict": summary["judgment"]["overall"],
         "n_planets": len(summary.get("planets", [])),
@@ -145,8 +157,12 @@ def write_gallery(cards):
         bodies = (f'{c["n_planets"]} <span data-i18n>행성</span><span data-en hidden>planets</span>'
                   if c["n_moons"] == 0 else
                   f'{c["n_moons"]} <span data-i18n>위성</span><span data-en hidden>moons</span>')
+        img = f'<img src="{c["slug"]}/orbits.png" alt="{c["system"]}" loading="lazy">'
+        if c["light"]:
+            img = (f'<picture><source media="(prefers-color-scheme: light)" '
+                   f'srcset="{c["slug"]}/orbits_light.png">{img}</picture>')
         rows.append(f"""  <div class="card">
-    <a href="{c['slug']}/interactive.html"><img src="{c['slug']}/orbits.png" alt="{c['system']}" loading="lazy"></a>
+    <a href="{c['slug']}/interactive.html">{img}</a>
     <div class="meta"><h2>{c['system']}</h2>
       <span class="pill {vclass}">{c['verdict']}</span>
       <span class="sub">{bodies} · {c['integrator']} dt={c['dt_min']}min · |ΔE/E|={c['dE']}</span>

@@ -26,7 +26,6 @@
     html.ns-light-ok body{background:#f5f6fa;color:rgba(9,12,22,.80)}
     html.ns-light-ok header{border-bottom-color:rgba(12,17,34,.13)}
     html.ns-light-ok h1{color:rgba(9,12,22,.95)}
-    html.ns-light-ok .meta h3{color:rgba(9,12,22,.88)}
     html.ns-light-ok .lead,html.ns-light-ok .sub,html.ns-light-ok .note{color:rgba(9,12,22,.60)}
     html.ns-light-ok .card{background:rgba(12,17,34,.030);border-color:rgba(12,17,34,.13)}
     html.ns-light-ok .card img{background:#f5f6fa}
@@ -121,11 +120,11 @@
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
   <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
   <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span>
-    <span data-i18n> 적분기 교차 검증은 <a href="alpha-centauri-validation/index.html" class="acc">알파센 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="alpha-centauri-validation/index.html" class="acc">Alpha Cen validation set</a>.</span></div>
+    <span data-i18n> 적분기 교차 검증은 <a href="validation.html" class="acc">궤도 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="validation.html" class="acc">orbit validation sets</a>.</span></div>
 </header>
 <div class="grid">
   <div class="card">
-    <a href="alpha-centauri/interactive.html"><img src="alpha-centauri/orbits.png" alt="Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]" loading="lazy"></a>
+    <a href="alpha-centauri/interactive.html"><picture><source media="(prefers-color-scheme: light)" srcset="alpha-centauri/orbits_light.png"><img src="alpha-centauri/orbits.png" alt="Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]" loading="lazy"></picture></a>
     <div class="meta"><h2>Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]</h2>
       <span class="pill ok">stable</span>
       <span class="sub">5 <span data-i18n>위성</span><span data-en hidden>moons</span> · leapfrog dt=10.0min · |ΔE/E|=3.9e-10</span>
@@ -133,7 +132,7 @@
         <a href="alpha-centauri/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
   </div>
   <div class="card">
-    <a href="proxima-cen/interactive.html"><img src="proxima-cen/orbits.png" alt="Proxima Cen" loading="lazy"></a>
+    <a href="proxima-cen/interactive.html"><picture><source media="(prefers-color-scheme: light)" srcset="proxima-cen/orbits_light.png"><img src="proxima-cen/orbits.png" alt="Proxima Cen" loading="lazy"></picture></a>
     <div class="meta"><h2>Proxima Cen</h2>
       <span class="pill ok">stable</span>
       <span class="sub">3 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=2.1e-10</span>
@@ -141,7 +140,7 @@
         <a href="proxima-cen/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
   </div>
   <div class="card">
-    <a href="40-eridani/interactive.html"><img src="40-eridani/orbits.png" alt="40 Eridani A" loading="lazy"></a>
+    <a href="40-eridani/interactive.html"><picture><source media="(prefers-color-scheme: light)" srcset="40-eridani/orbits_light.png"><img src="40-eridani/orbits.png" alt="40 Eridani A" loading="lazy"></picture></a>
     <div class="meta"><h2>40 Eridani A</h2>
       <span class="pill ok">stable</span>
       <span class="sub">3 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=1.4e-09</span>
@@ -149,7 +148,7 @@
         <a href="40-eridani/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
   </div>
   <div class="card">
-    <a href="tau-cet/interactive.html"><img src="tau-cet/orbits.png" alt="tau Cet" loading="lazy"></a>
+    <a href="tau-cet/interactive.html"><picture><source media="(prefers-color-scheme: light)" srcset="tau-cet/orbits_light.png"><img src="tau-cet/orbits.png" alt="tau Cet" loading="lazy"></picture></a>
     <div class="meta"><h2>tau Cet</h2>
       <span class="pill ok">stable</span>
       <span class="sub">4 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=7.5e-08</span>
@@ -157,7 +156,7 @@
         <a href="tau-cet/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
   </div>
   <div class="card">
-    <a href="barnards-star/interactive.html"><img src="barnards-star/orbits.png" alt="Barnard's star" loading="lazy"></a>
+    <a href="barnards-star/interactive.html"><picture><source media="(prefers-color-scheme: light)" srcset="barnards-star/orbits_light.png"><img src="barnards-star/orbits.png" alt="Barnard's star" loading="lazy"></picture></a>
     <div class="meta"><h2>Barnard's star</h2>
       <span class="pill ok">stable</span>
       <span class="sub">4 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=3.9e-06</span>
@@ -165,7 +164,7 @@
         <a href="barnards-star/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
   </div>
   <div class="card">
-    <a href="trappist-1/interactive.html"><img src="trappist-1/orbits.png" alt="TRAPPIST-1" loading="lazy"></a>
+    <a href="trappist-1/interactive.html"><picture><source media="(prefers-color-scheme: light)" srcset="trappist-1/orbits_light.png"><img src="trappist-1/orbits.png" alt="TRAPPIST-1" loading="lazy"></picture></a>
     <div class="meta"><h2>TRAPPIST-1</h2>
       <span class="pill ok">stable</span>
       <span class="sub">7 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=9.0e-08</span>
