@@ -174,3 +174,86 @@ produce — and says to use the board's non-smoothed values for shipping.
 
 Also corrected in the help text: it still defined the overlay's r0 as
 `pause_radius/comp`, the identity that yesterday's fix retired.
+
+## 2026-08-18 — literature check on Proxima Cen d's field, and what it does to the belts
+
+Owner asked three things after the belt row was gated: is there research on the
+inner/outer contrast, does our own methodology even allow d a dynamo, and what
+about the star's field acting on a metal-bearing d. All three landed on the same
+place, so they are recorded together.
+
+**Our own ladder gives d no magnetosphere at all.** RM22 (rocky-planet dynamo
+methodology) on the gated inputs: M 0.3 M_E, R 0.72 R_E, density 0.804 rho_E, tidally
+locked at 5.122 d, star ~5 Gyr. That density sits on the boundary of the doc's
+regime 5 (low-density dry, Mars-analog, "likely dynamo-dead by a few Gyr, M = 0").
+Taking the generous branch instead (alive, dry rocky class 1) and interpolating the
+base moment between the Mercury and Earth anchors gives M_base 0.039 M_E; the
+tidal-lock multipolar penalty (x0.06) leaves M 0.0023 M_E, i.e. B_eq 0.19 uT,
+B_pol 0.38 uT. The board gates 16 G polar. The ratio is 4.3e6.
+
+Fed through the same Chapman-Ferraro expression the board's standoff row uses
+(f = 2, ram 5648 nPa):
+
+| reading | B_pol | nose |
+|---|---|---|
+| RM22 ladder | 0.00038 G | 0.46 R_p (no magnetosphere; the wind reaches the ground) |
+| paper's low end | 3 G | 4.30 R_p |
+| gated (SPI median) | 16 G | 7.52 R_p |
+
+So the board's note that "the 3 G low end is the theory-consistent one" does not
+hold: 3 G is itself ~1e6 x the ladder. The honest statement is that the SPI field
+and our dynamo methodology do not overlap at any point of the quoted range.
+
+**The source paper is weaker on the field than the board reads it.** Zapatero
+Osorio 2026 (2605.22925) sec 5.2, read in full: their Lanza 2012 / Saur 2013 /
+Kavanagh 2022 formalisms (via Ilin 2024) require B_p ~1e3-1e4 G, which the authors
+themselves reject as "physically implausible" since it exceeds the stellar surface
+field and giant-exoplanet estimates (Cauley 2019). The 16.4 G survives only in
+Lanza 2013's flux-tube Poynting formalism, and only with a chosen intermediate
+geometry s = 2.5, a 600 G stellar field, a mean flare luminosity of 1e25 erg/s, and
+a Mars radius; they state it is "about half as large if Proxima d has an Earth-size
+radius", and our gated radius is 0.72 R_E, between the two. Crucially they also
+compute the unmagnetized case: 1e24 erg/s in stretch-and-brake against an observed
+6.5e24-4e26, i.e. short by ~6.5x at the low end, not excluded.
+
+**The owner's induction idea is a real published branch, with a decisive caveat.**
+Laine & Lin 2012 (2012ApJ...745....2L) treat close-in super-Earths as unipolar
+inductors: a rocky planet is more conductive than the stellar envelope, the flux
+tube slips, and the induced EMF drives an Io-Jupiter style DC current whose ohmic
+dissipation makes stellar hot spots and heats the planet, with no planetary dynamo
+required. But Lai 2012 (2012ApJ...757L...3L, 126 cit) puts an upper limit on that
+circuit: too little resistance twists the flux tube until the circuit breaks, and
+applying the limit, "for exoplanetary systems containing close-in Jupiters or
+super-Earths, the magnetic torque and energy dissipation induced by the orbital
+motion are negligible, except possibly during the early T Tauri phase, when the
+stellar magnetic field is stronger than 1e3 G". Proxima is ~5 Gyr old with a
+200 G large-scale field (Klein 2021; 600 G adopted by the SPI paper), so the pure
+unipolar branch is negligible for d today by that criterion.
+
+The related induction-heating literature (Kislyakova 2017 2017NatAs...1..878K
+TRAPPIST-1 magma oceans; Kislyakova 2018 2018ApJ...858..105K around strongly
+magnetized stars; Chyba 2021 2021Icar..36014360C analytic formulae) is a different
+effect: it heats the interior, it does not build a magnetosphere. And the
+conducting-interior induced-field template (Zimmer, Khurana & Kivelson 2000
+2000Icar..147..329Z; Kivelson 2000 2000Sci...289.1340K) needs a conducting shell
+in a time-varying external field, which for an airless bare rock is the deep
+interior rather than an ionosphere.
+
+**Why this decides the belt row.** An induced magnetosphere has no closed dipolar
+field lines, which is exactly why Venus and Mars carry no belts on this project's
+own boards. So the induction reading does not give d weaker belts, it gives it
+none, and the RM22 ladder does not give it belts either since the boundary never
+clears the surface. The gated belt row is correct given 16 G and wrong under either
+alternative; it is not a value that can be tuned between them.
+
+**On the inner/outer contrast (the caveat left open when the row was gated) there
+is now an observational anchor.** Kao 2023 (2023Natur.619..272K, Nature 619, 272)
+resolved a radiation belt around the ultracool dwarf LSR J1835+3259 at 8.4 GHz: a
+double-lobed, axisymmetric structure "similar in morphology to the Jovian radiation
+belts", lobes separated by up to 18 dwarf radii (so ~9 R each), 15 MeV electrons.
+Climent 2023 (2023Sci...381.1120C) reports the same for a brown dwarf. Both are
+Jupiter-shaped, a torus standing well off the body, rather than Earth-shaped with
+the peak deep. That favours the outer shell carrying the peak, against the
+Earth-anchored inner > outer split the Part B recipe hands down. Not applied: the
+recipe change belongs in the methodology first, and the prior question is whether
+d has belts at all.
