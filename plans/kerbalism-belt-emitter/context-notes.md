@@ -596,3 +596,32 @@ relation; the exact ratios are 1.42, 1.56 and 41.5.
 Verified in the viewer: all four bodies on this branch reproduce their nose and tail to
 better than 0.2%, no console errors. The smooth slider's ceiling went 100 -> 200, since
 A b III's 144 was pinned at the old maximum and read as clipped.
+
+## 2026-08-18 — the orbit rings had all fallen off the NearStars bodies
+
+Owner: the exoplanets are missing their parent-body orbit. They were, all of them except
+Pandora, and Alpha Centauri A b had lost its five moon rings too. Same cause as the picker
+regression: `MOON_ORBITS` and `BODY_ORBITS` are keyed by `body_key`, and the
+kopernicus_name work moved those keys (`polyphemus` to `alpha_centauri_a_b`, `proxima_b`
+to `proxima_cen_b`). Pandora survived only because its key happens not to have changed.
+Nothing failed; the overlay just silently stopped drawing.
+
+Re-keying the tables by hand would have set up the identical failure for the next rename,
+so the NearStars entries are computed from the boards instead. Planets take
+`semi_major_axis_au` from the orbit axis against `radius` from bulk; the A b moons take
+their parent-radii orbits from the MOON_ORBITS table against their own km radii, with the
+giant's radius sourced (1.0 R_Jup, the ring-model radius adopted in its Phase 3 report)
+rather than back-derived.
+
+The computation reproduces all three hand values exactly, which is the check that it is
+right: Proxima Cen b 1064, c 13045, Pandora 44. And it fills the two that never had one,
+Proxima Cen d at 941 and Cassandra at 177.
+
+One latent bug found while writing it: the star-orbit loop would have keyed Proxima Cen c I
+as orbiting the star, since it carries a `semi_major_axis_au` like the planets do. It has
+no belt preset today so nothing would have shown, but the loop now skips bodies whose
+designation ends in a Roman numeral.
+
+Three regressions in one day from the same shape (a hand-keyed side table tracking a key
+that moved) is the pattern worth naming: anything keyed by `body_key` outside the builder
+should be derived, not written down.

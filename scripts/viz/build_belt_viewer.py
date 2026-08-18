@@ -25,9 +25,15 @@ EN = {'venus': 'Venus', 'mars': 'Mars', 'earth': 'Earth', 'jupiter': 'Jupiter', 
       'proxima_b': 'Proxima b', 'proxima_c': 'Proxima c'}
 OFF_BELT = {'on': False, 'radiation': 0, 'dist': 1, 'rad': 0.5}
 
-# 위성 궤도 반장축(모행성 반경 단위). 자기꼬리 길이를 위성계와 견주어 읽기 위한 오버레이용이고,
-# 물리 계산에는 쓰이지 않는다. body_key 로 키를 잡으므로 같은 천체의 stock/phys 프리셋이 같은 값을
-# 받는다. 표에 없는 천체는 오버레이가 그려지지 않는다.
+# ---- 궤도 고리 오버레이 ----
+# 자기꼬리 길이를 위성계·모천체 궤도와 견주기 위한 오버레이이고, 물리 계산에는 쓰이지 않는다.
+# 둘 다 body_key 로 붙는다. NearStars 쪽은 손으로 키를 적어 두면 body_key 가 바뀔 때 조용히
+# 빠지므로(2026-08-18 에 kopernicus_name 소급 적용이 전부 떨어뜨렸다) 보드에서 계산한다.
+AU_KM, R_EARTH_KM, R_JUP_KM = 1.495978707e8, 6371.0, 71492.0
+# 폴리페무스 반경 = 1.0 R_Jup — Phase 3 리포트의 채택값(고리 모델 반경, Beichman §5.3).
+R_POLY_KM = 1.0 * R_JUP_KM
+
+# 위성 궤도 반장축(모행성 반경 단위). 태양계는 실측, A b 계는 보드/설정 앵커.
 MOON_ORBITS = {
     'earth': [('Moon', 60.34)],
     'mars': [('Phobos', 2.77), ('Deimos', 6.92)],
@@ -36,13 +42,12 @@ MOON_ORBITS = {
     'uranus': [('Miranda', 5.12), ('Ariel', 7.53), ('Umbriel', 10.49),
                ('Titania', 17.20), ('Oberon', 23.01)],
     'neptune': [('Triton', 14.41), ('Nereid', 223.94)],
-    'polyphemus': [('Dante', 1.54), ('Hades', 2.07), ('Pandora', 3.53),
-                   ('Cassandra', 8.40), ('Chaos', 21.0)],
+    'alpha_centauri_a_b': [('Dante', 1.54), ('Hades', 2.07), ('Pandora', 3.53),
+                           ('Cassandra', 8.40), ('Chaos', 21.0)],
 }
 
-# 바디 자신의 모천체 궤도 반경(바디 반경 단위) + 모천체 이름. 자기꼬리 길이를 이 궤도반경과
-# 견주는 것이 이 오버레이의 목적이라 기본 줌에서는 항상 화면 밖이고, 사용자가 축소해 둘을 한
-# 프레임에 담는다. MOON_ORBITS 와 같은 규칙 — body_key 로 붙고, 물리 계산에는 쓰이지 않는다.
+# 바디 자신의 모천체 궤도 반경(그 바디의 반경 단위) + 모천체 이름. 기본 줌에서는 늘 화면 밖이고,
+# 사용자가 축소해 자기꼬리와 한 프레임에 담는 것이 이 오버레이의 목적이다.
 BODY_ORBITS = {
     'mercury':  (23733, '태양', 'Sun'),
     'venus':    (17880, '태양', 'Sun'),
@@ -53,12 +58,51 @@ BODY_ORBITS = {
     'uranus':   (113360, '태양', 'Sun'),
     'neptune':  (182699, '태양', 'Sun'),
     'ganymede': (406, '목성', 'Jupiter'),
-    'polyphemus': (3348, '알파 센타우리 A', 'Alpha Cen A'),   # 1.6 AU
-    'pandora':    (44, '폴리페무스', 'Polyphemus'),   # 3.53 R_p
-    'proxima_b':  (1064, '프록시마 센타우리', 'Proxima Cen'),  # 0.04848 AU
-    'proxima_c':  (13045, '프록시마 센타우리', 'Proxima Cen'), # 1.5 AU
+    'alpha_centauri_a_b': (3348, '알파 센타우리 A', 'Alpha Cen A'),   # 1.6 AU
 }
 
+
+def _add_board_orbits():
+    """보드에서 NearStars 천체의 궤도 고리를 채운다.
+
+    행성은 orbit 축의 semi_major_axis_au 와 bulk 축의 radius 로, A b 의 위성은 위의
+    MOON_ORBITS(모행성 반경 단위)와 각자의 bulk radius 로 환산한다. 손 표를 두지 않는 이유는
+    body_key 가 보드 body 키에서 나오기 때문이다 — 이름이 한 번 바뀌면 손 표는 말없이 빠진다.
+    """
+    import yaml as _yaml
+    for fn, star_ko, star_en in (('proxima_cen.yaml', '프록시마 센타우리', 'Proxima Cen'),
+                                 ('alpha_centauri.yaml', '알파 센타우리 A', 'Alpha Cen A')):
+        doc = _yaml.safe_load(open(os.path.join(D, '..', '..', 'phase4', fn)))
+        a_au, rad = {}, {}
+        for row in doc.get('decisions', []):
+            for fl in row.get('fields', []):
+                if fl.get('name') == 'semi_major_axis_au' and row.get('axis') == 'orbit':
+                    a_au[row['body']] = fl.get('value')
+                if fl.get('name') == 'radius' and row.get('axis') == 'bulk':
+                    rad[row['body']] = (fl.get('value'), fl.get('unit'))
+        desig = designations(fn)
+        for body, a in a_au.items():
+            r, unit = rad.get(body, (None, None))
+            if not (a and r) or unit not in ('R_earth', 'km'):
+                continue                      # 별(R_sun)과 단위 없는 행은 대상이 아니다
+            if ROMAN.search(desig.get(body, body)):
+                continue                      # 위성 — 모천체가 별이 아니라 제 행성이다
+            r_km = r * R_EARTH_KM if unit == 'R_earth' else r
+            key = body.lower().replace(' ', '_')
+            BODY_ORBITS.setdefault(key, (round(a * AU_KM / r_km), star_ko, star_en))
+    # A b 의 위성: 모행성 반경 단위 궤도 → 위성 자신의 반경 단위
+    doc = _yaml.safe_load(open(os.path.join(D, '..', '..', 'phase4', 'alpha_centauri.yaml')))
+    moon_rad = {row['body']: fl.get('value')
+                for row in doc.get('decisions', []) if row.get('axis') == 'bulk'
+                for fl in row.get('fields', [])
+                if fl.get('name') == 'radius' and fl.get('unit') == 'km'}
+    for name, a_parent in MOON_ORBITS['alpha_centauri_a_b']:
+        if name in moon_rad:
+            BODY_ORBITS.setdefault(name.lower(), (round(a_parent * R_POLY_KM / moon_rad[name]),
+                                                  '폴리페무스', 'Polyphemus'))
+
+
+# 호출은 ROMAN / designations() 가 정의된 뒤로 미룬다(아래 _desig_cache 앞).
 
 # Shue 기준선은 α 가 실제로 근거 있는 바디에서만 기본 표시한다.
 # log2(pause_compression) 환산은 지구형 cfg 에서만 형상 충실이고(방법론 Part C),
@@ -186,6 +230,8 @@ def designations(board_file):
                     out[row['body']] = str(fl.get('value', '')).split(' (')[0]
     return out
 
+
+_add_board_orbits()      # ROMAN·designations() 가 필요하므로 여기서 호출한다
 
 _desig_cache = {}
 for name, spec in load_nearstars_specs().items():

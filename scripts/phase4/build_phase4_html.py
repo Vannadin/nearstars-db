@@ -314,7 +314,8 @@ def render_body(system, body, rows, alias, prev_link, next_link):
 
     content = f"""<nav class="crumb">
   <a href="../../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
-  <a href="index.html">Phase 4 · <span class="sys">{esc(system)}</span></a> ·
+  <a href="../index.html">Phase 4</a> ·
+  <a href="index.html"><span class="sys">{esc(system)}</span></a> ·
   <span class="here">{esc(body)}</span>{p3_link}
 </nav>
 <header>
@@ -356,7 +357,7 @@ def render_index(system, order, bodies, aliases):
 </a>""")
     content = f"""<nav class="crumb">
   <a href="../../wiki/reference__methodology-index.html"><span data-i18n>방법론</span><span data-en hidden>Methodology</span></a> ·
-  <span class="here">Phase 4 · <span class="sys">{esc(system)}</span></span>
+  <a href="../index.html">Phase 4</a> · <span class="here"><span class="sys">{esc(system)}</span></span>
 </nav>
 <header>
   <h1><span data-i18n>Phase 4 결정 보드</span><span data-en hidden>Phase 4 decision board</span> · <span class="sys">{esc(system)}</span></h1>
@@ -421,7 +422,7 @@ def page(title, content, depth=2):
 <style>{STYLE}</style>
 </head>
 <body>
-{global_bar('../' * depth, 'Phase 4')}
+{global_bar('../' * depth, 'Phase 4' if depth == 1 else None)}
 {_split_head(content)}
 {SCRIPT}
 </body>
