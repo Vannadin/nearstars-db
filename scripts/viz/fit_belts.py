@@ -125,10 +125,17 @@ TARGETS = {
     'earth_inner':   {'L': (1.1, 2.0), 'rcut': 1.157},
     'earth_outer':   {'L': (3.0, 7.0), 'rcut': 1.05},
     # Jupiter: dipolar inner belt peak ~1.5-2 R_J; outer = flat magnetodisc.
-    # Disc half-thickness 3.0 (Khurana 1989 canonical ~3-3.5); radial 3-16 is a
-    # frame truncation -- the physical disc extends past 50 R_J.
+    # Disc half-thickness 3.0 (Khurana 1989 canonical ~3-3.5). The radial cut is an
+    # encoding choice, since the physical disc runs past 50 R_J while the engine gives
+    # one intensity per shell, so the shell's edge is where the dose ramps out.
+    # 2026-08-18: moved 16 -> 24 (owner noticed the shape). At 16 the lens pinched to a
+    # 1.40 half-thickness right at Ganymede's 14.97, dropping it to 71.8 rad/h for a
+    # geometric reason rather than a physical one. 24 puts Ganymede at full intensity,
+    # keeps Callisto (26.33) outside where its measured environment belongs, and holds
+    # the half-thickness at 3.00 through r=16. Extents past 24 also clear Ganymede but
+    # start pulling Callisto in (at 30 it takes 99 rad/h).
     'jupiter_inner': {'L': (1.2, 3.0), 'rcut': 1.03},
-    'jupiter_disc':  {'slab': (3.0, 16.0, 3.0)},
+    'jupiter_disc':  {'slab': (3.0, 24.0, 3.0)},
     # Saturn: rings absorb inside ~2.3 R_S; weak CRAND belt out to ~6 (Dione filter)
     'saturn_outer':  {'L': (2.3, 6.0), 'rcut': 1.05},
     # Uranus: structural boundaries are the moon L-shells (Krimigis 1986 "except

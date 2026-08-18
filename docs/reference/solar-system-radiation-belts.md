@@ -278,7 +278,7 @@ cone at low altitude (POES observations; Liu 2024
 |---|---|---|---|
 | inner belt | 6.0/1.0 (no dxy) → equator **5–7 R_J** | dipolar shell **L 1.2–3** (peak ~1.5–2 R_J; fit IoU .98) | Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D) |
 | inner border | (none) | loss-cone D-cut at the atmosphere | (belt physics) |
-| outer belt | 6.5/6.5 (concentric blob) | **magnetodisc slab 3–16 R_J × ±3** (half-width ~3–3.5 R_J canonical; 3–16 is a frame truncation of a disc extending past 50 R_J) (fit IoU .87 — torus ceiling) | Khurana 1989 [`1989JGR....9411791K`](https://ui.adsabs.harvard.edu/abs/1989JGR....9411791K) |
+| outer belt | 6.5/6.5 (concentric blob) | **magnetodisc slab 3–24 R_J × ±3** (half-width ~3–3.5 R_J canonical; the physical disc runs past 50 R_J, so the shell's radial edge encodes where the dose ramps out, not where the disc ends — 24 keeps Ganymede at full intensity and Callisto outside, and holds the half-thickness at 3.0 through r=16) (fit IoU .88 — torus ceiling) | Khurana 1989 [`1989JGR....9411791K`](https://ui.adsabs.harvard.edu/abs/1989JGR....9411791K) |
 | pause | 60 / comp 1.05 → nose 57 | nose **63** (compressed; 92 expanded) | Joy 2002 [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J) |
 | radiation_inner | 300 | **~1500** (order 10³–10⁴; conf low) | Divine & Garrett 1983 |
 | geomagnetic_pole_lat | −81.4 | **−80** (tilt 10.3°, reversed) | Connerney 2022 JRM33 [`2022JGRE..12707055C`](https://ui.adsabs.harvard.edu/abs/2022JGRE..12707055C) |

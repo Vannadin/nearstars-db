@@ -236,7 +236,7 @@ L-shell을 재적합합니다(내대 L 1.1–2에 하한 ~1000 km, 외대 L 3–
 |---|---|---|---|
 | inner belt | 6.0/1.0 (dxy 없음) → 적도 **5–7 R_J** | 쌍극형 셸 **L 1.2–3** (피크 ~1.5–2 R_J; 적합 IoU .98) | Divine & Garrett 1983 [`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D) |
 | inner border | (none) | 대기에서의 loss-cone D-cut | (belt physics) |
-| outer belt | 6.5/6.5 (동심 블롭) | **자기원반 슬래브 3–16 R_J × ±3**(정준 반두께 ~3–3.5 R_J. 3–16은 50 R_J 너머까지 뻗는 원반의 프레임 절단)(피팅 IoU .87 — 토러스 한계) | Khurana 1989 [`1989JGR....9411791K`](https://ui.adsabs.harvard.edu/abs/1989JGR....9411791K) |
+| outer belt | 6.5/6.5 (동심 블롭) | **자기원반 슬래브 3–24 R_J × ±3**(정준 반두께 ~3–3.5 R_J. 실제 원반은 50 R_J 를 넘어 뻗으므로 껍질의 반경 끝은 원반이 끝나는 자리가 아니라 선량이 빠지는 자리를 뜻한다. 24는 가니메데를 만강도에 두고 칼리스토를 바깥에 두며, r=16까지 반두께 3.0을 유지한다)(피팅 IoU .88 — 토러스 한계) | Khurana 1989 [`1989JGR....9411791K`](https://ui.adsabs.harvard.edu/abs/1989JGR....9411791K) |
 | pause | 60 / comp 1.05 → 코 57 | 코 **63** (compressed; 92 expanded) | Joy 2002 [`2002JGRA..107.1309J`](https://ui.adsabs.harvard.edu/abs/2002JGRA..107.1309J) |
 | radiation_inner | 300 | **~1500** (order 10³–10⁴; conf low) | Divine & Garrett 1983 |
 | geomagnetic_pole_lat | −81.4 | **−80** (tilt 10.3°, reversed) | Connerney 2022 JRM33 [`2022JGRE..12707055C`](https://ui.adsabs.harvard.edu/abs/2022JGRE..12707055C) |

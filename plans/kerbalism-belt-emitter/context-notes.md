@@ -657,3 +657,45 @@ Both were tested by deliberately reverting the Polyphemus mapping to its old key
 guard prints the missing ring and the split label, and goes silent when restored. It runs
 in the same place the emitter's unclassified-field warning does, so a rename announces
 itself on the next build rather than after someone notices a missing overlay.
+
+## 2026-08-18 — Jupiter's disc: one defect fixed, the shape question parked
+
+Owner flagged the outer belt's shape. Two separate things came out of it, and only one
+is settled.
+
+**Settled and shipped.** At the old 3-16 truncation the lens pinched to a 1.40 R_J
+half-thickness right at Ganymede's 14.97, dropping that orbit to 71.8 rad/h for a
+geometric reason rather than a physical one. Moving the radial cut to 3-24 puts Ganymede
+at full intensity, keeps Callisto (26.33) outside where its measured environment belongs,
+holds the half-thickness at 3.00 through r=16, and scores marginally better against the
+same target (IoU .873 to .878). The cut is an encoding choice either way, since the
+physical disc runs past 50 R_J while the engine gives one intensity per shell.
+
+**Parked.** What the owner actually pointed at was the *inner* cut face, which is not a
+straight line but a notch: the border ellipsoid is taller (y semi-axis 4.24) than the disc
+is thick (~3), so the edge runs 3.12 at y=0, 2.75 at y=2, then jumps to 4.29 at y=2.8.
+Four alternatives were measured (box 3-24, wedge target, ring carve, pure lens) and none
+is clearly right, because the slab target itself is a box and a box has no counterpart in
+the physics.
+
+Drawing the real thing without any Kerbalism form settled what the shape actually is:
+Jupiter's trapped region is a wedge opening from the surface, its half-thickness growing
+with L until the current sheet caps it at ~2.5 R_J beyond L 6.5, with no inner boundary at
+all and only the narrow Amalthea/Thebe sweep gaps (Mead & Hess 1973; de Pater & Brecht
+1997). Earth drawn the same way is two dipole crescents with the hiss slot between, which
+is what our fit targets already encode, which is why Earth scores .99/.98 and Jupiter .87.
+
+The honest next step is to stop fitting boxes and fit an isodose contour of the physical
+distribution instead, so the inner face, the outer cut and the thickness profile all fall
+out of one choice. That needs a real flux model rather than the qualitative proxy used for
+the drawings, and AP9/AE9 is not obtainable here: it is a registration-gated AFRL
+distribution, there is no local copy and no spacepy, and no open-access paper found via ADS
+tabulates a radial profile. Owner would need to fetch the model, or supply a figure to
+digitise, before this can be done properly.
+
+Also worth recording, since it corrects something said in the moment: the proxy drawings
+are for shape intuition only. Their *widths* are chosen parameters, so they cannot be used
+to judge whether our cfg's bounds are too narrow. Those bounds are already cited (inner cut
+at the 1000 km AP9 loss-cone floor, slot from Ripoll 2016, outer belt L 3-7 from
+Reeves 2013), and where the proxy and the cfg were compared the peaks agreed to a few
+percent.
