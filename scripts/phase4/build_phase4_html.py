@@ -8,6 +8,7 @@ Usage: python3 scripts/phase4/build_phase4_html.py alpha_centauri
 Writes docs/phase4/<system-slug>/index.html + one <body-slug>.html per body.
 """
 import html
+import json
 import re
 import datetime
 import sys
@@ -208,7 +209,7 @@ def refs_html(refs):
         for r in refs) + "</div>"
 
 
-def decision_html(d):
+def decision_html(d, system, rows):
     status = d.get("status", "")
     gate = d.get("gate") or {}
     verdict = gate.get("verdict", "")
@@ -250,7 +251,7 @@ def decision_html(d):
   </div>
   {nar}
   {fields_table(fields_of(d))}
-  {figures_html(d)}
+  {figures_html(d, system, rows)}
   {moons_table(d.get('moons'))}
   {dep_html}{ev_html}{dn_html}
   {refs_html(d.get('refs'))}
@@ -258,15 +259,53 @@ def decision_html(d):
 
 
 IMG_RE = re.compile(r"docs/img/[\w./-]+\.(?:png|jpg|jpeg|svg)")
+_PRESET_RE = re.compile(r"const PRESETS\s*=\s*(\{.*?\});", re.S)
+# The magnetosphere still lands on the most specific magnetism row a body has —
+# it draws the belts, so a radiation_belts row owns it ahead of the field row.
+_MAG_PREFERENCE = ("magnetism.radiation_belts", "magnetism.magnetosphere",
+                   "magnetism.magnetic_field", "magnetism")
 
 
-def figures_of(d):
-    """Figures this decision cites, in first-mention order.
+def belt_keys():
+    """Board body name → belt-viewer body_key, read back off the built viewer.
 
-    Boards already name their diagrams inline — "Shape diagram:
-    docs/img/field-geometry-proxima-c.png" sits in the row's own note — so a figure
-    belongs to the row that raised it and no second mapping has to be curated. A
-    path that no longer resolves is dropped with a warning, not emitted broken.
+    The picker labels NearStars bodies with the board's own body name, so matching
+    on the name is exact and there is no second mapping to keep in sync.
+    """
+    if not hasattr(belt_keys, "_cache"):
+        out = {}
+        f = REPO / "docs" / "belt-viewer.html"
+        m = _PRESET_RE.search(f.read_text(encoding="utf-8")) if f.exists() else None
+        if m:
+            try:
+                for p in json.loads(m.group(1)).values():
+                    if p.get("sys") not in (None, "sol", "demo") and p.get("label"):
+                        out[p["label"]] = p.get("body_key") or p["label"]
+            except json.JSONDecodeError:
+                print("[warn] belt-viewer.html PRESETS unreadable — no belt stills",
+                      file=sys.stderr)
+        belt_keys._cache = out
+    return belt_keys._cache
+
+
+def orbit_run_bodies(system):
+    """Bodies the system's orbit-viewer run actually integrates."""
+    f = REPO / "phase3/stability-sim/results/_viewers" / system / f"{system}_summary.json"
+    if not f.exists():
+        return set()
+    d = json.loads(f.read_text(encoding="utf-8"))
+    names = {d.get("star", {}).get("name")}
+    names |= {p.get("name") for p in d.get("planets", [])}
+    names |= {h.get("name") for h in d.get("hypotheticals", [])}
+    return {n for n in names if n}
+
+
+def cited_figures(d):
+    """Figures this decision names inline, in first-mention order.
+
+    Boards already write "Shape diagram: docs/img/field-geometry-proxima-c.png" into
+    the row's own note, so a figure belongs to the row that raised it and nothing
+    extra has to be curated. An unresolvable path is dropped with a warning.
     """
     out = []
     blob = yaml.safe_dump(d, allow_unicode=True, default_flow_style=False)
@@ -281,17 +320,57 @@ def figures_of(d):
     return out
 
 
-def figures_html(d):
+def _mag_axis(rows):
+    """Which of this body's magnetism rows carries the cross-section."""
+    axes = {r.get("axis") for r in rows}
+    return next((a for a in _MAG_PREFERENCE if a in axes), None)
+
+
+def row_figures(d, system, rows):
+    """(dark_src, light_src|None) pairs to attach inside this decision.
+
+    Cited diagrams first, then the two figures the row is *about*: the
+    magnetosphere cross-section on the magnetism row, and the orbit run on the
+    orbit row. Both are drawn from the same data the row gates, so they belong
+    beside its values rather than in a gallery at the foot of the page.
+    """
+    body, axis = d.get("body", ""), d.get("axis", "")
+    figs = [("../../" + p[len("docs/"):], None) for p in cited_figures(d)]
+
+    if axis == _mag_axis(rows):
+        key = belt_keys().get(body)
+        still = REPO / "docs/img/belts/nearstars" / f"{key}.png" if key else None
+        if still and still.exists():
+            light = still.with_name(f"{key}_light.png")
+            figs.append((f"../../img/belts/nearstars/{key}.png",
+                         f"../../img/belts/nearstars/{key}_light.png"
+                         if light.exists() else None))
+
+    if axis == "orbit" and body in orbit_run_bodies(system):
+        slug = to_url_slug(system)
+        panel = REPO / "docs/phase4/orbit-viewers" / slug / "orbits.png"
+        if panel.exists():
+            light = panel.with_name("orbits_light.png")
+            figs.append((f"../orbit-viewers/{slug}/orbits.png",
+                         f"../orbit-viewers/{slug}/orbits_light.png"
+                         if light.exists() else None))
+    return figs
+
+
+def figures_html(d, system, rows):
     """The row's figures, attached inside it — thumbnail now, full size on click."""
-    figs = figures_of(d)
+    figs = row_figures(d, system, rows)
     if not figs:
         return ""
-    items = "".join(
-        f'<a class="fig" href="../../{path[len("docs/"):]}" target="_blank" rel="noopener">'
-        f'<img src="../../{path[len("docs/"):]}" alt="{esc(d.get("axis",""))} figure" '
-        f'loading="lazy"></a>'
-        for path in figs)
-    return f'<div class="figs">{items}</div>'
+    items = []
+    for dark, light in figs:
+        img = (f'<img src="{dark}" alt="{esc(d.get("axis",""))} figure" loading="lazy">')
+        if light:
+            img = (f'<picture><source media="(prefers-color-scheme: light)" '
+                   f'srcset="{light}">{img}</picture>')
+        items.append(f'<a class="fig" href="{dark}" target="_blank" rel="noopener">'
+                     f'{img}</a>')
+    return f'<div class="figs">{"".join(items)}</div>'
 
 
 def body_stats(rows):
@@ -326,7 +405,7 @@ def render_body(system, body, rows, alias, prev_link, next_link):
     meta = (f'{st["total"]} <span data-i18n>결정</span><span data-en hidden>decisions</span> · '
             f'{st["gated"]} gated · {st["divergence"]} divergence'
             + (f' · {st["open"]} open' if st["open"] else ""))
-    decs = "\n".join(decision_html(d) for d in rows)
+    decs = "\n".join(decision_html(d, system, rows) for d in rows)
     # 축 앵커 목차 — 보드가 길어 특정 축으로 바로 못 가던 문제(2026-08-10 UX 점검).
     axes = [d.get("axis", "") for d in rows if d.get("axis")]
     toc = ('<nav class="axis-toc" aria-label="Decisions on this page">'

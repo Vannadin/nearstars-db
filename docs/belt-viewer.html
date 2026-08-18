@@ -212,6 +212,11 @@
   html.embed .sys-tabs, html.embed .body-btns, html.embed .note { display:none }
   html.embed .wrap { padding:10px 12px }
   html.embed .pick-wrap { margin:0 }
+  /* still: the cross-section is being captured as a figure for a board row, so the
+     interactive affordances (hover readout, 2D/3D switch) would only be dead pixels. */
+  html.still .presets, html.still #ro, html.still #mode, html.still .panel { display:none }
+  html.still .wrap { padding:0 }
+  html.still .grid { display:block }
 </style>
 
 <div class="wrap">
@@ -1230,12 +1235,15 @@ function deepLinkTarget(){
                 const p = anyPreset(b);
                 return p.label === want || p.label_en === want;
               });
-  return key ? { key, variant: q.get('variant'), embed: q.get('embed') === '1' } : null;
+  return key ? { key, variant: q.get('variant'),
+                 embed: q.get('embed') === '1' || q.get('still') === '1',
+                 still: q.get('still') === '1' } : null;
 }
 
 const _deep = deepLinkTarget();
 if (_deep) {
   if (_deep.embed) document.documentElement.classList.add('embed');
+  if (_deep.still) document.documentElement.classList.add('still');
   curSys = anyPreset(_deep.key).sys || curSys;
   if (_deep.variant) curVar = _deep.variant;
   buildBodies();

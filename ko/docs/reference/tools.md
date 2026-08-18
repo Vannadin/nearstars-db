@@ -363,6 +363,11 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
   깊은 링크를 지원한다. `?body=<보드 천체명 또는 body_key>[&variant=stock|phys][&embed=1]`
   로 특정 천체에 바로 진입하고, `embed=1`은 페이지 크롬과 피커를 감춰 Phase 4 천체 페이지가
   그 천체로 한정해 iframe 할 수 있게 한다.
+- `scripts/viz/capture_belt_stills.py` — 벨트 뷰어의 단면을 NearStars 천체별 정지 이미지로
+  캡처해 두 팔레트로 `docs/img/belts/nearstars/`에 저장한다. `?body=<보드 천체명>&variant=phys&still=1`
+  로 뷰어를 몰아 피커·호버 리드아웃·2D/3D 토글·슬라이더 패널을 끄므로, 렌더러를 하나 더
+  만들어 동기화할 필요 없이 뷰어와 같은 그림이 나온다. Phase 4가 이 결과를 각 천체의 magnetism
+  결정 행 안에 붙인다. `playwright` 필요(캡처 전용 의존성).
 - `scripts/viz/build_uranus_geometry.py` (+ `uranus_geometry_template.html`) —
   [`docs/uranus-geometry.html`](../../../docs/uranus-geometry.html) 빌드. 지구의 평범한
   자기권과 천왕성의 극-정면(pole-on) 자기권을 나란히 비교하는 three.js 페이지. 목적은 딱

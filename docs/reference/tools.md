@@ -395,6 +395,12 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   Deep-linkable: `?body=<board body name or body_key>[&variant=stock|phys][&embed=1]`
   opens straight on one body, and `embed=1` drops the page chrome and the pickers so a
   Phase 4 body page can iframe it scoped to that body
+- `scripts/viz/capture_belt_stills.py` — screenshots the belt viewer's cross-section as a
+  still figure per NearStars body, in both site palettes, into `docs/img/belts/nearstars/`.
+  Drives the viewer with `?body=<board body name>&variant=phys&still=1`, which switches off
+  the pickers, hover readout, 2D/3D toggle and slider panel — so the still is the same
+  renderer the viewer uses, not a second one to keep in sync. Phase 4 attaches the result
+  inside each body's magnetism decision row. Needs `playwright` (capture-only dependency).
 - `scripts/viz/build_uranus_geometry.py` (+ `uranus_geometry_template.html`) — builds
   [`docs/uranus-geometry.html`](../uranus-geometry.html), a three.js page comparing Earth's
   ordinary magnetosphere against Uranus' pole-on one. It exists to make one thing visible:
