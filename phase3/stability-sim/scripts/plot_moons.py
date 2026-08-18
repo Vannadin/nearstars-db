@@ -12,6 +12,9 @@ leapfrog/trace runs (megno=None).
 Reads  <dir>/<label>_summary.json  +  <dir>/<label>_timeseries.csv
 Writes <dir>/<label>_orbits.png  (or <label>_orbits_light.png with --theme light,
 so both themes can sit side by side for a <picture> swap on the site).
+--highlight NAME draws that body last and dims the rest, and names the output
+<label>_orbits_<slug>.png — the per-body cut a board page attaches to its orbit row,
+where the point is that body's curve rather than the system's.
 
 Usage: python3 scripts/plot_moons.py --dir results/_principia2000_dense [--label alpha_centauri] [--center "TRAPPIST-1"] [--theme light]
 """
@@ -19,12 +22,16 @@ import argparse
 import csv
 import json
 import math
+import sys
 from collections import defaultdict
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts" / "pipeline"))
+from _naming import to_url_slug   # noqa: E402  — slugs are canonical, never re-derived
 
 import nsplot
 from nsplot import apply_theme, series_colors
@@ -40,6 +47,9 @@ ap.add_argument("--center", default=None,
                      "moons, else the star. Pass the star name to plot planets.")
 ap.add_argument("--theme", choices=["dark", "light"], default="dark",
                 help="site palette to draw in; light writes <label>_orbits_light.png")
+ap.add_argument("--highlight", default=None,
+                help="draw this body on top of the others (and dim them); writes a "
+                     "per-body <label>_orbits_<slug>.png")
 args = ap.parse_args()
 
 apply_theme(args.theme)
@@ -83,6 +93,18 @@ inc0 = {n: sorted(s)[0][3] for n, s in ts.items()}      # initial inclination (d
 a0disp = {n: sorted(s)[0][1] for n, s in ts.items()}     # initial a (display units)
 
 cmap = {n: c for n, c in zip(names, series_colors(len(names)))}
+# Plot order decides who is on top. With the highlight set, everyone else is drawn
+# first and faded, so the body whose page this is reads at a glance instead of being
+# buried under whichever body happened to come last in the run.
+hi = args.highlight if args.highlight in names else None
+if args.highlight and hi is None:
+    # Writing anyway would land on <label>_orbits.png and quietly replace the canonical
+    # system panel with an unhighlighted re-render. Nothing to cut here, so stop.
+    print(f"[skip] --highlight {args.highlight!r} not in this view: {names}")
+    raise SystemExit(0)
+order = ([n for n in names if n != hi] + [hi]) if hi else list(names)
+alpha = {n: (0.32 if hi and n != hi else 1.0) for n in names}
+width = {n: (2.1 if n == hi else 1.2) for n in names}
 short = {n: n.split()[-1] for n in names}                # legend-friendly short name
 
 fig, axs = plt.subplots(2, 2, figsize=(14, 11))
@@ -90,13 +112,13 @@ fig, axs = plt.subplots(2, 2, figsize=(14, 11))
 
 # --- panel 1: top-down orbits (initial elements, central body at focus) ---
 fa = [i * 2 * math.pi / 400 for i in range(401)]
-for n in names:
+for n in order:
     a, e = a0disp[n], sorted(ts[n])[0][2]
     xs = [a * (1 - e * e) / (1 + e * math.cos(t)) * math.cos(t) for t in fa]
     ys = [a * (1 - e * e) / (1 + e * math.cos(t)) * math.sin(t) for t in fa]
     lab = (f"{short[n]}  {a:.4f} {unit}  i={inc0.get(n, 0):.0f}°" if mode == "star"
            else f"{short[n]}  {a:.1f} {unit}  i={inc0.get(n, 0):.0f}°")
-    axo.plot(xs, ys, color=cmap[n], lw=1.6, label=lab)
+    axo.plot(xs, ys, color=cmap[n], lw=width[n] + 0.4, alpha=alpha[n], label=lab)
 if mode == "planet":
     axo.add_patch(plt.Circle((0, 0), 1.0, color="tan", alpha=0.7))       # planet at 1 R_p
     axo.plot(0, 0, marker="+", color=nsplot.FG_DIM, ms=10)
@@ -109,30 +131,31 @@ axo.legend(loc="upper right", fontsize=8)
 axo.grid(alpha=0.25)
 
 # --- panel 2: eccentricity vs time ---
-for n in names:
+for n in order:
     s = sorted(ts[n])
-    axe.plot([t for t, *_ in s], [e for _, _, e, _ in s], color=cmap[n], lw=1.2, label=short[n])
+    axe.plot([t for t, *_ in s], [e for _, _, e, _ in s], color=cmap[n], lw=width[n],
+             alpha=alpha[n], label=short[n])
 axe.set_xlabel("time (yr)"); axe.set_ylabel("eccentricity")
 axe.set_title("Eccentricity evolution")
 axe.set_ylim(bottom=0)
 axe.legend(loc="upper right", fontsize=8); axe.grid(alpha=0.25)
 
 # --- panel 3: semi-major-axis drift Δa/a0 vs time ---
-for n in names:
+for n in order:
     s = sorted(ts[n])
     a0 = s[0][1]
     axa.plot([t for t, *_ in s], [(a - a0) / a0 for _, a, _, _ in s],
-             color=cmap[n], lw=1.2, label=short[n])
+             color=cmap[n], lw=width[n], alpha=alpha[n], label=short[n])
 axa.axhline(0, color=nsplot.FG_DIM, lw=0.6, alpha=0.6)
 axa.set_xlabel("time (yr)"); axa.set_ylabel("Δa / a₀")
 axa.set_title("Semi-major-axis drift (bounded ⇒ stable)")
 axa.legend(loc="upper right", fontsize=8); axa.grid(alpha=0.25)
 
 # --- panel 4: inclination vs time (simulation reference frame) ---
-for n in names:
+for n in order:
     s = sorted(ts[n])
     axi.plot([t for t, *_ in s], [inc for _, _, _, inc in s],
-             color=cmap[n], lw=1.2, label=short[n])
+             color=cmap[n], lw=width[n], alpha=alpha[n], label=short[n])
 axi.set_xlabel("time (yr)"); axi.set_ylabel("inclination (deg)")
 axi.set_title("Inclination (simulation reference frame)")
 axi.legend(loc="upper right", fontsize=8); axi.grid(alpha=0.25)
@@ -151,7 +174,9 @@ fig.suptitle(
     f"|ΔE/E|={integ['energy_relative_error']:.1e}]\n{line2}",
     fontsize=12)
 fig.tight_layout(rect=[0, 0, 1, 0.95])
-out = d / (f"{args.label}_orbits.png" if args.theme == "dark"
-           else f"{args.label}_orbits_{args.theme}.png")
+stem = f"{args.label}_orbits"
+if hi:
+    stem += "_" + to_url_slug(hi)
+out = d / (f"{stem}.png" if args.theme == "dark" else f"{stem}_light.png")
 fig.savefig(out, dpi=130)
 print(f"wrote {out}  ({mode}-center '{center}', {len(names)} bodies, unit {unit})")

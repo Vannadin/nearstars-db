@@ -288,17 +288,31 @@ def belt_keys():
     return belt_keys._cache
 
 
-def orbit_run_bodies(system):
-    """Bodies the system's orbit-viewer run actually integrates."""
-    f = REPO / "phase3/stability-sim/results/_viewers" / system / f"{system}_summary.json"
-    if not f.exists():
-        return set()
-    d = json.loads(f.read_text(encoding="utf-8"))
-    names = {d.get("star", {}).get("name")}
-    names |= {p.get("name") for p in d.get("planets", [])}
-    names |= {h.get("name") for h in d.get("hypotheticals", [])}
-    return {n for n in names if n}
+def _pair(rel_dark):
+    """(dark, light) for a published figure, light dropped when it has no companion."""
+    light = rel_dark.replace(".png", "_light.png")
+    root = REPO / "docs"
+    return (rel_dark, light) if (root / light).exists() else (rel_dark, None)
 
+
+def orbit_figures(system, body):
+    """The body's orbit run, both validated ways — leapfrog first, then the accurate one.
+
+    Sourced from the validation set rather than the viewer gallery: the two methods are
+    the project's orbit contract, so a board row shows the pair or nothing. Whichever
+    hierarchy actually integrated this body supplies them, and a system whose cells have
+    not been run yet simply contributes no figure.
+    """
+    slug = to_url_slug(system)
+    vdir = REPO / "docs" / "phase4" / "orbit-viewers" / f"{slug}-validation"
+    if not vdir.is_dir():
+        return []
+    out = []
+    for hierarchy in ("moons", "planets"):
+        cuts = [f"{hierarchy}_{m}-{to_url_slug(body)}.png" for m in ("leapfrog", "accurate")]
+        if all((vdir / c).exists() for c in cuts):
+            return [_pair(f"phase4/orbit-viewers/{slug}-validation/{c}") for c in cuts]
+    return out
 
 def cited_figures(d):
     """Figures this decision names inline, in first-mention order.
@@ -335,25 +349,19 @@ def row_figures(d, system, rows):
     beside its values rather than in a gallery at the foot of the page.
     """
     body, axis = d.get("body", ""), d.get("axis", "")
-    figs = [("../../" + p[len("docs/"):], None) for p in cited_figures(d)]
+    rel = []
+    rel += [p[len("docs/"):] for p in cited_figures(d)]
 
     if axis == _mag_axis(rows):
+        # close-up first (structure: belts against the body), then the whole boundary
         key = belt_keys().get(body)
-        still = REPO / "docs/img/belts/nearstars" / f"{key}.png" if key else None
-        if still and still.exists():
-            light = still.with_name(f"{key}_light.png")
-            figs.append((f"../../img/belts/nearstars/{key}.png",
-                         f"../../img/belts/nearstars/{key}_light.png"
-                         if light.exists() else None))
+        for name in ((f"{key}.png", f"{key}_shape.png") if key else ()):
+            if (REPO / "docs/img/belts/nearstars" / name).exists():
+                rel.append(f"img/belts/nearstars/{name}")
 
-    if axis == "orbit" and body in orbit_run_bodies(system):
-        slug = to_url_slug(system)
-        panel = REPO / "docs/phase4/orbit-viewers" / slug / "orbits.png"
-        if panel.exists():
-            light = panel.with_name("orbits_light.png")
-            figs.append((f"../orbit-viewers/{slug}/orbits.png",
-                         f"../orbit-viewers/{slug}/orbits_light.png"
-                         if light.exists() else None))
+    figs = [_pair(r) for r in rel]
+    if axis == "orbit":
+        figs += orbit_figures(system, body)
     return figs
 
 
@@ -364,6 +372,7 @@ def figures_html(d, system, rows):
         return ""
     items = []
     for dark, light in figs:
+        dark, light = "../../" + dark, ("../../" + light if light else None)
         img = (f'<img src="{dark}" alt="{esc(d.get("axis",""))} figure" loading="lazy">')
         if light:
             img = (f'<picture><source media="(prefers-color-scheme: light)" '

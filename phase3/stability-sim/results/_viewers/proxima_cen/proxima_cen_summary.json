@@ -42,7 +42,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "leapfrog",
-    "elapsed_sec": 5.246791362762451,
+    "elapsed_sec": 7.849802017211914,
     "dt_yr": 1.901285268841737e-05,
     "innermost_period_yr": 0.013996548712213537,
     "energy_relative_error": 2.0736130070567248e-10,

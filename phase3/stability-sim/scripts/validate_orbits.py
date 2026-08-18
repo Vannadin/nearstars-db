@@ -227,16 +227,33 @@ def run_cells(jobs_list, jobs):
 
 
 def render(system, out_dir):
-    """Both palettes of the 4-panel PNG, plus the interactive HTML.
+    """Both palettes of the 4-panel PNG, per-body cuts, plus the interactive HTML.
 
-    The site follows the reader's prefers-color-scheme, so the pages serve the pair
-    through <picture> and a dark-only figure no longer punches a hole in a light page.
+    The site follows the reader's prefers-color-scheme, so the pages serve each figure
+    as a pair through <picture>. The per-body cuts draw one body on top and dim the
+    rest: a Phase 4 board page shows the two methods for the body whose page it is, and
+    in the system view that body is usually buried.
     """
-    for theme in ("dark", "light"):
-        subprocess.run([PY, str(SCRIPTS / "plot_moons.py"), "--dir", str(out_dir),
-                        "--label", system, "--theme", theme], check=True)
+    def panel(*extra):
+        for theme in ("dark", "light"):
+            subprocess.run([PY, str(SCRIPTS / "plot_moons.py"), "--dir", str(out_dir),
+                            "--label", system, "--theme", theme, *extra], check=True)
+
+    panel()
+    for body in cell_bodies(system, out_dir):
+        panel("--highlight", body)
     subprocess.run([PY, str(SCRIPTS / "plot_interactive.py"), "--dir", str(out_dir),
                     "--label", system], check=True)
+
+
+def cell_bodies(system, out_dir):
+    """The orbiting bodies this cell integrated (the star is not one of them)."""
+    f = out_dir / f"{system}_summary.json"
+    if not f.exists():
+        return []
+    d = json.loads(f.read_text())
+    return ([p["name"] for p in d.get("planets", [])]
+            + [h["name"] for h in d.get("hypotheticals", [])])
 
 
 # ---------------------------------------------------------------- reading results
@@ -380,6 +397,11 @@ def write_page(system, cfg, defaults, results):
                              (f"{system}_interactive.html", f'{r["key"]}.html')):
             if (src / name).exists():
                 (dst / target).write_bytes((src / name).read_bytes())
+        for cut in sorted(src.glob(f"{system}_orbits_*.png")):   # per-body cuts
+            tail = cut.name[len(f"{system}_orbits_"):]
+            if tail == "light.png":
+                continue
+            (dst / f'{r["key"]}-{tail}').write_bytes(cut.read_bytes())
 
     by_hier = {}
     for r in results:

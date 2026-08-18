@@ -217,6 +217,9 @@
   html.still .presets, html.still #ro, html.still #mode, html.still .panel { display:none }
   html.still .wrap { padding:0 }
   html.still .grid { display:block }
+  html.still .legend { font-size:21px; line-height:1.7; gap:10px 18px; padding:14px 16px }
+  html.still .legend .bar { width:120px; height:14px }
+  html.still .legend .swatch { width:18px; height:18px }
 </style>
 
 <div class="wrap">
@@ -365,7 +368,7 @@ function belt(pre){return Object.assign({on:true,rad:0,radiation:0,grad:3.3,dist
 const state={
   inner:belt({}), outer:belt({}),
   pause:{on:true,rad:15,radiation:-0.01,comp:1,ext:1,hscale:1,deform:0,dscale:1,waist:0,smooth:0,alpha:0.6},
-  view:{R:8,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0},
+  view:{R:8,cx:0,tilt:0,z:0,shue:0,shue_r0:0,shue_L:0,shue_an:0,offset:0},
   // 위성 궤도 오버레이. on 은 토글이 읽고(.sw[data-tg="moons"]), list 는 프리셋이 채운다.
   moons:{on:true, list:[]},
   // 바디 자신의 모천체 궤도({r, ko, en}) — 같은 토글을 쓴다(오버레이 스위치를 늘리지 않는다).
@@ -685,14 +688,14 @@ function doseAt(x,y){ // world coords -> {field, dose, zone}
 }
 function render(){
   if(!img)return;
-  const v=state.view, R=v.R, wpp=(2*R)/SZ, d=img.data;
+  const v=state.view, R=v.R, cx=v.cx||0, wpp=(2*R)/SZ, d=img.data;
   const maxI=Math.max(state.inner.on?state.inner.radiation:0, state.outer.on?state.outer.radiation:0, 1e-6);
   const pa=state.pause.alpha!=null?state.pause.alpha:0.6;
   const tr=v.tilt*Math.PI/180, ca=Math.cos(tr), sa=Math.sin(tr), z=v.z, off=v.offset||0;
   for(let j=0;j<SZ;j++){
     const y=(SZ/2 - j)*wpp;
     for(let i=0;i<SZ;i++){
-      const x=(i-SZ/2)*wpp;
+      const x=(i-SZ/2)*wpp + cx;
       const xr=x*ca - y*sa, yr=x*sa + y*ca - off;
       const idx=(j*SZ+i)*4;
       const mag=Math.sqrt(x*x+y*y+z*z);
@@ -722,15 +725,15 @@ function render(){
   ctx.save();
   ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.fillStyle='rgba(255,255,255,.35)';
   ctx.font='10px ui-monospace,monospace'; ctx.lineWidth=1;
-  const c=CW/2, ppr=CW/(2*R);
+  const c=CW/2, ppr=CW/(2*R), cX=c-cx*ppr;
   // 눈금 간격은 1·2·5×10^k 중에서 고리가 4~9개가 되도록 고른다. 예전에는 상한이 10 이라
   // 축소하면 고리가 수백 개로 겹쳤다.
   const raw=R/6, mag=Math.pow(10,Math.floor(Math.log10(raw)));
   const n=raw/mag, step=(n<1.5?1:n<3.5?2:n<7.5?5:10)*mag;
   const dec=step<1?Math.max(0,-Math.floor(Math.log10(step))):0;
   for(let rr=step;rr<=R*1.0001;rr+=step){
-    ctx.beginPath(); ctx.setLineDash([2,4]); ctx.arc(c,c,rr*ppr,0,7); ctx.stroke();
-    ctx.setLineDash([]); ctx.fillText(rr.toFixed(dec),c+rr*ppr+2,c-2);
+    ctx.beginPath(); ctx.setLineDash([2,4]); ctx.arc(cX,c,rr*ppr,0,7); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillText(rr.toFixed(dec),cX+rr*ppr+2,c-2);
   }
   // 위성 궤도 — 반경 눈금(흰 점선)과 헷갈리지 않게 다른 색조로 그리고 숫자 대신 위성 이름을 붙인다.
   // 자기꼬리가 어느 위성까지 닿는지 눈으로 견주는 용도. 뷰 밖으로 나가는 궤도는 건너뛴다.
@@ -739,10 +742,10 @@ function render(){
     ctx.lineWidth=1; ctx.font='10px ui-monospace,monospace';
     ctx.strokeStyle='rgba(126,231,178,.40)'; ctx.fillStyle='rgba(126,231,178,.78)';
     state.moons.list.forEach(mo=>{
-      const sma=mo[1]; if(!(sma>0) || sma>R) return;
-      ctx.beginPath(); ctx.setLineDash([1,5]); ctx.arc(c,c,sma*ppr,0,7); ctx.stroke();
+      const sma=mo[1]; if(!(sma>0) || sma>R+Math.abs(cx)) return;
+      ctx.beginPath(); ctx.setLineDash([1,5]); ctx.arc(cX,c,sma*ppr,0,7); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillText(mo[0], c-ctx.measureText(mo[0]).width-3, c-sma*ppr-3);
+      ctx.fillText(mo[0], cX-ctx.measureText(mo[0]).width-3, c-sma*ppr-3);
     });
     ctx.restore();
   }
@@ -763,20 +766,20 @@ function render(){
     ctx.setLineDash([5,4]); ctx.beginPath();
     for(let i=0;i<=200;i++){
       const ph=-half+2*half*i/200;
-      const oxp=c+aOrb*(1-Math.cos(ph))*ppr, oyp=c-aOrb*Math.sin(ph)*ppr;
+      const oxp=cX+aOrb*(1-Math.cos(ph))*ppr, oyp=c-aOrb*Math.sin(ph)*ppr;
       if(i) ctx.lineTo(oxp,oyp); else ctx.moveTo(oxp,oyp);
     }
     ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle='rgba(185,140,255,.88)';
-    ctx.fillText(orbitLabel(), c+6, 11);
+    ctx.fillText(orbitLabel(), Math.max(6, cX+6), 11);
     if(aOrb<=R){                      // 모천체(그 원의 중심)가 프레임에 들어오면 위치도 찍는다
-      ctx.beginPath(); ctx.arc(c+aOrb*ppr,c,3,0,7); ctx.fill();
+      ctx.beginPath(); ctx.arc(cX+aOrb*ppr,c,3,0,7); ctx.fill();
     }
     ctx.restore();
   }
   // axes
   ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.beginPath();
-  ctx.moveTo(0,c);ctx.lineTo(CW,c);ctx.moveTo(c,0);ctx.lineTo(c,CW);ctx.stroke();
+  ctx.moveTo(0,c);ctx.lineTo(CW,c);ctx.moveTo(cX,0);ctx.lineTo(cX,CW);ctx.stroke();
   // Shue 기준 곡선 r(θ)=r0·(2/(1+cosθ))^α — 항성정렬 프레임(tilt 무관), r0=현재 pause 노즈
   // 꼬리마감 L>r0이면: 연화 Shue 폐곡선(C∞ 단일식) + 순수 Shue 대조
   const cn=state.view;
@@ -786,7 +789,7 @@ function render(){
     // 고정 앵커(보드 ⚗ pause_nose/tail)가 있으면 그 물리값 사용 — pause 슬라이더를 움직여도 Shue 기준은 불변
     const fixed=state.view.shue_r0>0, nt=pauseNoseTail(P);
     const nose=fixed?state.view.shue_r0:nt.nose;
-    const oy=c-(state.view.offset||0)*ppr;   // 계면 SDF 와 같은 원점 — geomagnetic_offset 적용
+    const oy=c-(state.view.offset||0)*ppr;   // x 는 cX 기준   // 계면 SDF 와 같은 원점 — geomagnetic_offset 적용
     if(nose>0.3){
       const L=(fixed&&state.view.shue_L>0)?state.view.shue_L:nt.tail;
       const m=1;                          // 테이퍼 m=1 고정 (기저형, 노브 없음 — 오너 확정 2026-07-23)
@@ -810,7 +813,7 @@ function render(){
         for(let deg=-150;deg<=150;deg+=2){
           const th=deg*Math.PI/180;
           const rr2=nose*Math.pow(2/(1+Math.cos(th)),alS);
-          const px2=c+rr2*Math.cos(th)*ppr, py2=oy-rr2*Math.sin(th)*ppr;
+          const px2=cX+rr2*Math.cos(th)*ppr, py2=oy-rr2*Math.sin(th)*ppr;
           if(f2){ctx.moveTo(px2,py2);f2=false;} else ctx.lineTo(px2,py2);
         }
         ctx.stroke();
@@ -830,15 +833,15 @@ function render(){
           const cu=Math.cos(deg*Math.PI/360);          // cos(θ/2)
           const rr2=nose*Math.pow((1+eps)/(eps+Math.pow(cu*cu,m)),aOf(deg)/m);
           const th=deg*Math.PI/180;
-          const px2=c+rr2*Math.cos(th)*ppr, py2=oy-rr2*Math.sin(th)*ppr;
+          const px2=cX+rr2*Math.cos(th)*ppr, py2=oy-rr2*Math.sin(th)*ppr;
           if(f2){ctx.moveTo(px2,py2);f2=false;} else ctx.lineTo(px2,py2);
         }
         ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
         ctx.fillStyle='rgba(255,154,82,.95)';
-        ctx.beginPath(); ctx.arc(c+nose*ppr,oy,2.5,0,7); ctx.fill();
-        ctx.fillText((aN?t('shueTwo')+'  α='+alS.toFixed(2)+'/'+aN.toFixed(2):t('shueSoft')+'  α='+alS.toFixed(2))+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+(fixed?t('boardFix'):t('pauseLink'))+' ε='+eps.toFixed(4), c+nose*ppr+5, oy-6);
+        ctx.beginPath(); ctx.arc(cX+nose*ppr,oy,2.5,0,7); ctx.fill();
+        ctx.fillText((aN?t('shueTwo')+'  α='+alS.toFixed(2)+'/'+aN.toFixed(2):t('shueSoft')+'  α='+alS.toFixed(2))+' r0='+nose.toFixed(1)+' L='+L.toFixed(0)+(fixed?t('boardFix'):t('pauseLink'))+' ε='+eps.toFixed(4), cX+nose*ppr+5, oy-6);
         ctx.fillStyle='rgba(255,255,255,.5)';
-        ctx.fillText(t('shueDash'), c-L*ppr*0.9, c+16);
+        ctx.fillText(t('shueDash'), cX-L*ppr*0.9, c+16);
       } else {
         // ── 열린 Shue (기존 동작)
         ctx.strokeStyle='rgba(255,154,82,.85)'; ctx.setLineDash([6,4]);
@@ -849,13 +852,13 @@ function render(){
           const deg=sgn*(152-152*Math.pow(1-sv,2));
           const th=deg*Math.PI/180;
           const rr2=nose*Math.pow(2/(1+Math.cos(th)),alS);
-          const px2=c+rr2*Math.cos(th)*ppr, py2=oy-rr2*Math.sin(th)*ppr;
+          const px2=cX+rr2*Math.cos(th)*ppr, py2=oy-rr2*Math.sin(th)*ppr;
           if(first){ctx.moveTo(px2,py2);first=false;} else ctx.lineTo(px2,py2);
         }
         ctx.stroke(); ctx.setLineDash([]);
         ctx.fillStyle='rgba(255,154,82,.9)';
-        ctx.beginPath(); ctx.arc(c+nose*ppr,oy,2.5,0,7); ctx.fill();
-        ctx.fillText('Shue α='+alS.toFixed(2)+' (r0='+nose.toFixed(1)+')', c+nose*ppr+5, c-6);
+        ctx.beginPath(); ctx.arc(cX+nose*ppr,oy,2.5,0,7); ctx.fill();
+        ctx.fillText('Shue α='+alS.toFixed(2)+' (r0='+nose.toFixed(1)+')', cX+nose*ppr+5, c-6);
       }
     }
   }
@@ -1073,7 +1076,7 @@ cv.addEventListener('mousemove',e=>{
   const rect=cv.getBoundingClientRect();
   const fx=(e.clientX-rect.left)/rect.width, fy=(e.clientY-rect.top)/rect.height;
   const R=state.view.R;
-  const x=(fx-0.5)*2*R, y=(0.5-fy)*2*R;
+  const x=(fx-0.5)*2*R+(state.view.cx||0), y=(0.5-fy)*2*R;
   const res=doseAt(x,y);
   if(res.zone==='body'){ ro.innerHTML=`${t('pos')} <b>(${x.toFixed(2)}, ${y.toFixed(2)})</b> R<br>${t('inBody')}`; return; }
   // 배경(0.04)과 벨트(수백)가 6자리 스케일 차이라 유효자릿수를 값에 맞춘다
@@ -1237,7 +1240,10 @@ function deepLinkTarget(){
               });
   return key ? { key, variant: q.get('variant'),
                  embed: q.get('embed') === '1' || q.get('still') === '1',
-                 still: q.get('still') === '1' } : null;
+                 still: q.get('still') === '1',
+                 // R/cx frame the still: the shape pass centres the magnetopause's own
+                 // length rather than the body, which otherwise wastes half the frame.
+                 R: parseFloat(q.get('R')), cx: parseFloat(q.get('cx')) } : null;
 }
 
 const _deep = deepLinkTarget();
@@ -1248,6 +1254,9 @@ if (_deep) {
   if (_deep.variant) curVar = _deep.variant;
   buildBodies();
   selectBody(_deep.key);
+  if (Number.isFinite(_deep.R)) state.view.R = _deep.R;
+  if (Number.isFinite(_deep.cx)) state.view.cx = _deep.cx;
+  if (Number.isFinite(_deep.R) || Number.isFinite(_deep.cx)) { syncControls(); scheduleRender(); }
 } else {
   buildBodies();
   selectBody('earth');   // 기본 진입 = 태양계·지구·물리

@@ -367,7 +367,10 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
   캡처해 두 팔레트로 `docs/img/belts/nearstars/`에 저장한다. `?body=<보드 천체명>&variant=phys&still=1`
   로 뷰어를 몰아 피커·호버 리드아웃·2D/3D 토글·슬라이더 패널을 끄므로, 렌더러를 하나 더
   만들어 동기화할 필요 없이 뷰어와 같은 그림이 나온다. Phase 4가 이 결과를 각 천체의 magnetism
-  결정 행 안에 붙인다. `playwright` 필요(캡처 전용 의존성).
+  결정 행 안에 붙인다. 천체마다 두 프레이밍을 만든다. `<key>.png`는 프리셋 기본 줌의 클로즈업,
+  `<key>_shape.png`는 자기권계면 전체를 계면 자신의 길이 기준으로 잡는다(중심 x를 nose..tail 중점에
+  두며, 뷰어에 새로 생긴 `R`·`cx` 쿼리 파라미터를 쓴다). 위아래 빈 하늘은 잘라내되 5:1을 하한으로
+  두어 거대행성의 바늘 같은 꼬리도 읽히게 한다. `playwright`·`pillow` 필요(캡처 전용 의존성).
 - `scripts/viz/build_uranus_geometry.py` (+ `uranus_geometry_template.html`) —
   [`docs/uranus-geometry.html`](../../../docs/uranus-geometry.html) 빌드. 지구의 평범한
   자기권과 천왕성의 극-정면(pole-on) 자기권을 나란히 비교하는 three.js 페이지. 목적은 딱
