@@ -46,6 +46,10 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--dir", required=True, type=Path)
 ap.add_argument("--label", default="alpha_centauri")
 ap.add_argument("--frames", type=int, default=240, help="keyframes to embed (decimated)")
+ap.add_argument("--max-years", type=float, default=None,
+                help="animate only the first N years. Pair with run.py --dense-years: the "
+                     "run's head is densely sampled for this, the tail is coarse and would "
+                     "otherwise dominate the bins (which are taken by index, not by time).")
 ap.add_argument("--flattening", type=float, default=0.13,
                 help="central-body oblateness for the render (planet-center mode only)")
 ap.add_argument("--center", default=None,
@@ -91,6 +95,8 @@ raw = defaultdict(list)  # name -> [(t, a_disp, e, inc, node, peri)]
 center_first = None      # center body's own orbit (inc,node), for the reference-plane frame
 with (d / f"{args.label}_timeseries.csv").open() as f:
     for r in csv.DictReader(f):
+        if args.max_years and float(r["t_yr"]) > args.max_years:
+            continue
         if r["body"] in names:
             a_disp = (float(r["a_au"]) * AU_KM) / unit_km
             raw[r["body"]].append((float(r["t_yr"]), a_disp, float(r["e"]),

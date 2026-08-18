@@ -215,9 +215,9 @@ def viewer_links(d, system, rows):
         # one link to the set, not one per method: the two figures above already say
         # which methods ran, and the set page is where they are read side by side
         slug = to_url_slug(system)
-        vdir = REPO / "docs" / "phase4" / "orbit-viewers" / f"{slug}-validation"
+        vdir = REPO / "docs" / "phase4" / "orbit-viewers" / slug
         if (vdir / "index.html").exists() and any(vdir.glob(f"*-{to_url_slug(body)}.png")):
-            out.append((f"../orbit-viewers/{slug}-validation/index.html",
+            out.append((f"../orbit-viewers/{slug}/index.html",
                         bi("orbit validation set ↗", "궤도 검증 세트 ↗")))
     return out
 
@@ -333,14 +333,14 @@ def orbit_figures(system, body):
     not been run yet simply contributes no figure.
     """
     slug = to_url_slug(system)
-    vdir = REPO / "docs" / "phase4" / "orbit-viewers" / f"{slug}-validation"
+    vdir = REPO / "docs" / "phase4" / "orbit-viewers" / slug
     if not vdir.is_dir():
         return []
     out = []
     for hierarchy in ("moons", "planets"):
         cuts = [f"{hierarchy}_{m}-{to_url_slug(body)}.png" for m in ("leapfrog", "accurate")]
         if all((vdir / c).exists() for c in cuts):
-            return [_pair(f"phase4/orbit-viewers/{slug}-validation/{c}") for c in cuts]
+            return [_pair(f"phase4/orbit-viewers/{slug}/{c}") for c in cuts]
     return out
 
 def cited_figures(d):

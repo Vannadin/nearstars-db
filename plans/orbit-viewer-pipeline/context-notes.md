@@ -49,3 +49,20 @@ for those axes — complementary to the hand-crafted art viewers.
   trappist_1 / luhman_16 boards do not yet exist per memory).
 - Runtime: N systems × ~13 min dense. Manifest must cache/skip-if-fresh.
 - Some systems are single-planet → dynamics dull; may warrant static-only.
+
+## Merged into the validation suite (2026-08-19)
+
+This pipeline no longer exists as its own thing. `build_viewers.py` and
+`viewer-manifest.yaml` ran the same fixed-step leapfrog the validation suite's
+`*_leapfrog` cells run — the only differences were the horizon (2,000 yr against
+10,000) and the snapshot density (8,000 against 200), and the density existed solely
+so `animate_orbits.py` had enough samples to bin. So every system was integrated twice
+with one integrator to produce two views of one thing.
+
+`run.py` now takes `--dense-years` / `--dense-snapshots`: the leapfrog cells run 10^5 yr
+with the first 2,000 densely sampled, and the 3D animation is rendered from that head
+(`animate_orbits.py --max-years`). One run, both answers. `validate_orbits.py` absorbed
+the crumb/CDN publishing and writes the whole `docs/phase4/orbit-viewers/` surface;
+the two drivers and the two gallery pages are one each.
+
+Files here are kept as the record of how the viewer was built, not as live plans.

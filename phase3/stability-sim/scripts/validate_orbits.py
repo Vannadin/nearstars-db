@@ -40,6 +40,7 @@ import argparse
 import csv
 import json
 import math
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -133,10 +134,13 @@ def expand(system, cfg, defaults):
         orbits = float(cfg.get("long_inner_orbits", defaults["long_inner_orbits"]))
         long_years = orbits * inner_period_yr(system, planet_args)
 
+    dense_years = float(cfg.get("dense_years", defaults["dense_years"]))
+    dense_snaps = int(cfg.get("dense_snapshots", defaults["dense_snapshots"]))
     cells = [
         {"key": "planets_leapfrog", "hierarchy": "planets", "method": "leapfrog",
          "integrator": "leapfrog", "dt_minutes": float(defaults["dt_minutes"]),
-         "years": play, "snapshots": snaps, "args": planet_args},
+         "years": play, "snapshots": snaps, "args": planet_args,
+         "dense_years": dense_years, "dense_snapshots": dense_snaps},
         {"key": "planets_accurate", "hierarchy": "planets", "method": "accurate",
          "integrator": accurate, "dt_minutes": None,
          "years": long_years, "snapshots": snaps, "args": planet_args},
@@ -147,7 +151,8 @@ def expand(system, cfg, defaults):
         cells += [
             {"key": "moons_leapfrog", "hierarchy": "moons", "method": "leapfrog",
              "integrator": "leapfrog", "dt_minutes": float(defaults["dt_minutes"]),
-             "years": myears, "snapshots": snaps, "args": margs, "hypotheticals": hyp},
+             "years": play, "snapshots": snaps, "args": margs, "hypotheticals": hyp,
+             "dense_years": dense_years, "dense_snapshots": dense_snaps},
             {"key": "moons_accurate", "hierarchy": "moons", "method": "accurate",
              "integrator": accurate, "dt_minutes": None,
              "years": myears, "snapshots": snaps, "args": margs, "hypotheticals": hyp},
@@ -188,6 +193,9 @@ def cell_cmd(system, cell, out_dir):
            "--out-dir", str(out_dir)]
     if cell["dt_minutes"] is not None:
         cmd += ["--dt-minutes", str(cell["dt_minutes"])]
+    if cell.get("dense_snapshots"):
+        cmd += ["--dense-years", repr(cell["dense_years"]),
+                "--dense-snapshots", str(cell["dense_snapshots"])]
     if cell.get("hypotheticals"):
         cmd += ["--hypotheticals", str(cell["hypotheticals"])]
     return cmd + cell["args"]
@@ -226,7 +234,7 @@ def run_cells(jobs_list, jobs):
     return failed
 
 
-def render(system, out_dir):
+def render(system, out_dir, dense_years=None):
     """Both palettes of the 4-panel PNG, per-body cuts, plus the interactive HTML.
 
     The site follows the reader's prefers-color-scheme, so the pages serve each figure
@@ -244,6 +252,9 @@ def render(system, out_dir):
         panel("--highlight", body)
     subprocess.run([PY, str(SCRIPTS / "plot_interactive.py"), "--dir", str(out_dir),
                     "--label", system], check=True)
+    if dense_years:
+        subprocess.run([PY, str(SCRIPTS / "animate_orbits.py"), "--dir", str(out_dir),
+                        "--label", system, "--max-years", repr(dense_years)], check=True)
 
 
 def cell_bodies(system, out_dir):
@@ -293,6 +304,47 @@ def read_cell(system, cell):
         "system_label": s["system"],
     }
 
+
+# 복사되는 전체화면 뷰어(plotly·three)에 띄우는 되돌아가기 크럼. ?embed=1 이면 제거된다 —
+# Phase 4 천체 페이지가 iframe 으로 물 때 남의 페이지 안의 "뒤로" 링크는 함정이라서.
+_CRUMB_STYLE = "color:#7aa8ff;text-decoration:none"
+VIEWER_CRUMB = (
+    '<nav id="ns-crumb" style="position:fixed;top:8px;left:12px;z-index:1000;'
+    'font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);'
+    'padding:4px 10px;border-radius:6px">'
+    f'<a href="index.html" style="{_CRUMB_STYLE}">← Orbit viewers</a>'
+    f' &nbsp;·&nbsp; <a href="../../index.html" style="{_CRUMB_STYLE}">Phase 4</a>'
+    f' &nbsp;·&nbsp; <a href="../../../index.html" style="{_CRUMB_STYLE}">DB</a></nav>'
+    '<script>if(new URLSearchParams(location.search).get("embed")==="1")'
+    'document.getElementById("ns-crumb").remove()</script>')
+
+# docs/assets/ 사본으로 CDN 을 로컬화. three(ES 모듈)만 예외 — Chromium 계열이 file:// 모듈
+# 임포트를 CORS 로 막아 로컬 사본이 로드되지 않는다(클래식 <script>인 plotly 는 무관).
+_CDN_LOCAL = {
+    "https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js":
+        "../../../assets/plotly.min.js",
+    "../../../assets/three.module.js":
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "../../../assets/jsm/":
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+}
+
+
+def publish_viewer(src: Path, dst: Path):
+    """Copy a full-screen viewer page in, with the back-crumb and local CDN refs."""
+    html = src.read_text()
+    for cdn, local in _CDN_LOCAL.items():
+        html = html.replace(cdn, local)
+    if 'id="ns-crumb"' not in html:
+        new, n = re.subn(r"(<body[^>]*>)", r"\1" + VIEWER_CRUMB, html, count=1)
+        if n == 0 and "</head>" in html:
+            new = html.replace("</head>", "</head>" + VIEWER_CRUMB, 1)
+        elif n == 0 and "</style>" in html:      # 암시적 head/body 구조인 뷰어 페이지
+            new = html.replace("</style>", "</style>" + VIEWER_CRUMB, 1)
+        elif n == 0:
+            new = html + VIEWER_CRUMB
+        html = new
+    dst.write_text(html)
 
 # ---------------------------------------------------------------- page generation
 
@@ -382,21 +434,28 @@ def cards(dst, hier, cells):
             f'<div class="card"><a href="{r["key"]}.html">{figure(dst, r["key"], alt)}</a>'
             f'<div class="m"><h3>{title} · {fmt_years(r["t_end"])}</h3>'
             f'<div class="sub">{cell_summary_line(r)} · '
-            f'<a href="{r["key"]}.html">{i18n("인터랙티브", "interactive")}</a></div></div></div>')
+            f'<a href="{r["key"]}.html">{i18n("인터랙티브", "interactive")}</a>'
+            + (f' · <a href="{r["key"]}_orbit3d.html">{i18n("3D 애니메이션", "3D animation")}</a>'
+               if (dst / f'{r["key"]}_orbit3d.html').exists() else "")
+            + '</div></div></div>')
     return '<div class="grid">' + "".join(out) + "</div>"
 
 
 def write_page(system, cfg, defaults, results):
     """One system's validation page: the matrix, then a card pair per hierarchy."""
-    dst = GALLERY / f"{slug(system)}-validation"
+    dst = GALLERY / slug(system)
     dst.mkdir(parents=True, exist_ok=True)
     for r in results:
         src = cell_dir(system, {"key": r["key"]})
         for name, target in ((f"{system}_orbits.png", f'{r["key"]}.png'),
                              (f"{system}_orbits_light.png", f'{r["key"]}_light.png'),
-                             (f"{system}_interactive.html", f'{r["key"]}.html')):
+                             ):
             if (src / name).exists():
                 (dst / target).write_bytes((src / name).read_bytes())
+        for name, target in ((f"{system}_interactive.html", f'{r["key"]}.html'),
+                             (f"{system}_orbit3d.html", f'{r["key"]}_orbit3d.html')):
+            if (src / name).exists():
+                publish_viewer(src / name, dst / target)
         for cut in sorted(src.glob(f"{system}_orbits_*.png")):   # per-body cuts
             tail = cut.name[len(f"{system}_orbits_"):]
             if tail == "light.png":
@@ -430,7 +489,7 @@ def write_page(system, cfg, defaults, results):
 {global_bar('../../../', 'Phase 4')}
 <header>
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
-  <nav style="font-size:12px;margin-bottom:8px"><a href="../validation.html" style="color:#7aa8ff;text-decoration:none">← {i18n('검증 세트', 'Validation sets')}</a></nav>
+  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← {i18n('궤도 뷰어', 'Orbit viewers')}</a></nav>
   <h1>{title} — {i18n('궤도 안정성 검증', 'orbit stability validation')}</h1>
   <div class="lead">{i18n(lead['ko'], lead['en'])}</div>
 </header>
@@ -460,8 +519,8 @@ def write_index(entries):
             lines.append(f'<tr><td class="mono">{r["key"]}</td>'
                          f'<td class="mono">{fmt_years(r["t_end"])}</td>'
                          f'<td class="{cls}">{VERDICT_SHORT.get(r["verdict"], r["verdict"])}</td></tr>')
-        href = f'{slug(e["system"])}-validation/index.html'
-        vdir = GALLERY / f'{slug(e["system"])}-validation'
+        href = f'{slug(e["system"])}/index.html'
+        vdir = GALLERY / slug(e["system"])
         img = ""
         if thumb:
             fig = figure(vdir, thumb, f'{e["title"]} validation matrix')
@@ -486,8 +545,7 @@ def write_index(entries):
 {global_bar('../../', 'Phase 4')}
 <header>
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
-  <nav style="font-size:12px;margin-bottom:8px"><a href="index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a></nav>
-  <h1>{i18n('궤도 안정성 검증 세트', 'Orbit stability validation sets')}</h1>
+  <h1>{i18n('궤도 동역학 뷰어', 'Orbit dynamics viewers')}</h1>
   <div class="lead">{i18n(
       '시스템마다 계층(행성계·위성계)별로 두 방식을 교차 실행합니다. leapfrog(고정 10분 스텝)는 '
       'Principia 인게임 적분기와 정합하고, IAS15/TRACE+MEGNO는 결정론적 카오스와 장기 생존을 판정합니다. '
@@ -499,8 +557,8 @@ def write_index(entries):
 <main><div class="grid">{"".join(rows)}</div></main>
 {LANG_JS}
 """
-    (GALLERY / "validation.html").write_text(html)
-    print(f"  → wrote {GALLERY / 'validation.html'}  ({len(entries)} systems)")
+    (GALLERY / "index.html").write_text(html)
+    print(f"  → wrote {GALLERY / 'index.html'}  ({len(entries)} systems)")
 
 
 # ---------------------------------------------------------------- main
@@ -552,7 +610,7 @@ def main():
         if not args.pages_only:
             for cell in cells:
                 if (cell_dir(system, cell) / f"{system}_summary.json").exists():
-                    render(system, cell_dir(system, cell))
+                    render(system, cell_dir(system, cell), cell.get("dense_years"))
         results = [r for r in (read_cell(system, c) for c in cells) if r]
         if not results:
             print(f"  ! no results yet for {system}")

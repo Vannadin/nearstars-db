@@ -105,19 +105,23 @@ def scan_phase4(repo: Path) -> dict[str, str]:
 
 
 def scan_viewers(repo: Path) -> dict[str, str]:
-    """Map orbit-viewer dir name -> its interactive page path (docs-relative).
+    """Map orbit-viewer dir name -> its page (docs-relative).
 
     Viewer dirs are named by system url-slug (docs/phase4/orbit-viewers/<slug>/),
     so a host row matches when its slug equals the dir or extends it by a
     component suffix (alpha-centauri-a -> alpha-centauri).
+
+    The link is the system's index rather than one run's page: since the viewer
+    merged into the validation suite a system has several runs (leapfrog and the
+    accurate integrator, per hierarchy) and the index is where they are compared.
     """
     root = repo / 'docs' / 'phase4' / 'orbit-viewers'
     out: dict[str, str] = {}
     if not root.exists():
         return out
     for d in sorted(root.iterdir()):
-        if d.is_dir() and (d / 'interactive.html').exists():
-            out[d.name] = f'phase4/orbit-viewers/{d.name}/interactive.html'
+        if d.is_dir() and (d / 'index.html').exists():
+            out[d.name] = f'phase4/orbit-viewers/{d.name}/index.html'
     return out
 
 

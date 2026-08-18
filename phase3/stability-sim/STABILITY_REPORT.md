@@ -53,11 +53,17 @@ applies the geopotential in-game — see the Alpha Centauri A b (Polyphemus) J�
 The matrix is data, not a recipe: `validation-manifest.yaml` declares each system's
 parameters and `scripts/validate_orbits.py` expands them into the cells
 (`planets|moons` × `leapfrog|accurate`), runs the missing ones, renders each, and
-generates `docs/phase4/orbit-viewers/<slug>-validation/index.html` plus the
-[validation index](../../docs/phase4/orbit-viewers/validation.html).
+generates `docs/phase4/orbit-viewers/<slug>/index.html` plus the
+[orbit viewers](../../docs/phase4/orbit-viewers/index.html).
 
 Two quantities are **derived per system** rather than copied from α Cen:
 
+- **The leapfrog horizon stays in years** (10⁵), unlike the accurate one. Its cost is
+  linear in years at a fixed 10-minute step, and the play window is a game-time
+  quantity: converting it to inner orbits would give α Cen's moon system 54 yr, which
+  is not a fidelity check of anything. The first 2,000 yr are sampled densely
+  (`dense_years` / `dense_snapshots`) so the same run also feeds the 3D animation —
+  the viewer gallery used to re-run this integrator a second time purely for that.
 - **The accurate horizon**, from `long_inner_orbits` × that system's own innermost
   period. This is the "orbits, not years" rule made executable, and the standard is a
   round **10⁸ innermost orbits** — 1.92×10⁸ yr at α Cen's 1.925-yr inner planet,

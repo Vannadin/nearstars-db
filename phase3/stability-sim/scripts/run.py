@@ -110,15 +110,34 @@ def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = 
     return p_min
 
 
+def snapshot_times(t_end_yr: float, n_snapshots: int,
+                   dense_years: float | None = None, dense_snapshots: int = 0):
+    """Sample times, optionally dense over the head and coarse over the rest.
+
+    One run has to answer two questions at once: the 3D animation needs many samples
+    per secular cycle over the play window, and the drift verdict needs a long horizon.
+    Sampling the whole run densely would be enormous, so the head is dense and the tail
+    is coarse — same integration, two cadences.
+    """
+    if not dense_years or dense_snapshots <= 0 or dense_years >= t_end_yr:
+        return [t_end_yr * (i + 1) / n_snapshots for i in range(n_snapshots)]
+    head = [dense_years * (i + 1) / dense_snapshots for i in range(dense_snapshots)]
+    tail = [dense_years + (t_end_yr - dense_years) * (i + 1) / n_snapshots
+            for i in range(n_snapshots)]
+    return head + tail
+
+
 def run_integration(sim: rebound.Simulation, meta: dict, t_end_yr: float, n_snapshots: int,
-                    integrator: str = "whfast", dt_minutes: float | None = None):
+                    integrator: str = "whfast", dt_minutes: float | None = None,
+                    dense_years: float | None = None, dense_snapshots: int = 0):
     p_min = configure_integrator(sim, meta, integrator, dt_minutes=dt_minutes)
     e0 = sim.energy()
     bodies = [meta["star"]["name"]] + [p["name"] for p in meta["planets"]]
     bodies += [h["name"] for h in meta.get("hypotheticals", [])]
     primary_lookup = {h["name"]: h["parent"] for h in meta.get("hypotheticals", [])}
 
-    times = [t_end_yr * (i + 1) / n_snapshots for i in range(n_snapshots)]
+    times = snapshot_times(t_end_yr, n_snapshots, dense_years, dense_snapshots)
+    n_snapshots = len(times)
     rows = []  # (t, body, a, e)
     summary = {b: {"a_min": math.inf, "a_max": -math.inf, "e_min": math.inf, "e_max": -math.inf} for b in bodies[1:]}
     hill_track = {h["name"]: {"frac_max": 0.0, "bound": True} for h in meta.get("hypotheticals", []) if h["type"] == "moon"}
@@ -319,6 +338,12 @@ def main():
                          "ias15 (adaptive high-order gold standard + MEGNO, slow); "
                          "leapfrog (fixed-step symplectic in absolute coords — the "
                          "Principia-fidelity proxy, pair with --dt-minutes 10)")
+    ap.add_argument("--dense-years", type=float, default=None,
+                    help="sample the first N years densely (--dense-snapshots) and the "
+                         "rest at --snapshots. One run then serves both the animation "
+                         "(needs many samples per cycle) and the long drift verdict.")
+    ap.add_argument("--dense-snapshots", type=int, default=0,
+                    help="snapshot count for the --dense-years head")
     ap.add_argument("--dt-minutes", type=float, default=None,
                     help="force a fixed timestep in minutes (overrides P/50). Use 10 with "
                          "--integrator leapfrog to mimic Principia's 10 min ephemeris step.")
@@ -401,7 +426,9 @@ def main():
         out_label = f"{args.system}_i{int(round(args.mass_incl_deg))}"
 
     report = run_integration(sim, meta, args.years, args.snapshots, args.integrator,
-                             dt_minutes=args.dt_minutes)
+                             dt_minutes=args.dt_minutes,
+                             dense_years=args.dense_years,
+                             dense_snapshots=args.dense_snapshots)
     judgment = verdict(report, args.years)
     print_report(meta, report, judgment)
     paths = save_results(out_label, meta, report, judgment, args.out_dir.resolve())

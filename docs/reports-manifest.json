@@ -12,8 +12,7 @@
       "b": "phase4/40-eridani/40-eridani-a-b.html",
       "c": "phase4/40-eridani/40-eridani-a-c.html",
       "d": "phase4/40-eridani/40-eridani-a-d.html"
-    },
-    "viewer": "phase4/orbit-viewers/40-eridani/interactive.html"
+    }
   },
   "40 Eridani B": {
     "phase2": "phase2/40-eridani-b.html",
@@ -22,8 +21,7 @@
     },
     "phase4": {
       "★": "phase4/40-eridani/40-eridani-b.html"
-    },
-    "viewer": "phase4/orbit-viewers/40-eridani/interactive.html"
+    }
   },
   "40 Eridani C": {
     "phase2": "phase2/40-eridani-c.html",
@@ -32,8 +30,7 @@
     },
     "phase4": {
       "★": "phase4/40-eridani/40-eridani-c.html"
-    },
-    "viewer": "phase4/orbit-viewers/40-eridani/interactive.html"
+    }
   },
   "47 UMa": {
     "phase2": "phase2/47-uma.html",
@@ -92,7 +89,7 @@
       "★": "phase4/alpha-centauri/alpha-centauri-a.html",
       "b": "phase4/alpha-centauri/alpha-centauri-a-b.html"
     },
-    "viewer": "phase4/orbit-viewers/alpha-centauri/interactive.html"
+    "viewer": "phase4/orbit-viewers/alpha-centauri/index.html"
   },
   "Alpha Centauri B": {
     "phase2": "phase2/alpha-centauri-b.html",
@@ -102,7 +99,7 @@
     "phase4": {
       "★": "phase4/alpha-centauri/alpha-centauri-b.html"
     },
-    "viewer": "phase4/orbit-viewers/alpha-centauri/interactive.html"
+    "viewer": "phase4/orbit-viewers/alpha-centauri/index.html"
   },
   "Altair": {
     "phase2": "phase2/altair.html",
@@ -136,8 +133,7 @@
     },
     "phase4": {
       "★": "phase4/barnards-star/barnards-star.html"
-    },
-    "viewer": "phase4/orbit-viewers/barnards-star/interactive.html"
+    }
   },
   "Capella": {
     "phase2": "phase2/capella.html",
@@ -395,14 +391,18 @@
     "phase3": {
       "★": "phase3/luhman-16-a.html"
     },
-    "phase4": {}
+    "phase4": {
+      "★": "phase4/luhman-16/luhman-16-a.html"
+    }
   },
   "Luhman 16 B": {
     "phase2": "phase2/luhman-16-b.html",
     "phase3": {
       "★": "phase3/luhman-16-b.html"
     },
-    "phase4": {}
+    "phase4": {
+      "★": "phase4/luhman-16/luhman-16-b.html"
+    }
   },
   "Procyon A": {
     "phase2": "phase2/procyon-a.html",
@@ -427,8 +427,7 @@
       "b": "phase4/proxima-cen/proxima-cen-b.html",
       "c": "phase4/proxima-cen/proxima-cen-c.html",
       "d": "phase4/proxima-cen/proxima-cen-d.html"
-    },
-    "viewer": "phase4/orbit-viewers/proxima-cen/interactive.html"
+    }
   },
   "Ross 128": {
     "phase2": "phase2/ross-128.html",
@@ -456,8 +455,7 @@
     },
     "phase4": {
       "★": "phase4/tau-cet/tau-cet.html"
-    },
-    "viewer": "phase4/orbit-viewers/tau-cet/interactive.html"
+    }
   },
   "Teegarden's Star": {
     "phase2": "phase2/teegardens-star.html",
@@ -481,8 +479,7 @@
       "g": "phase3/trappist-1-g.html",
       "h": "phase3/trappist-1-h.html"
     },
-    "phase4": {},
-    "viewer": "phase4/orbit-viewers/trappist-1/interactive.html"
+    "phase4": {}
   },
   "ups And": {
     "phase2": "phase2/ups-and.html",
