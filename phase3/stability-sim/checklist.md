@@ -63,6 +63,7 @@ on every system, and put Proxima Cen through it.
 - [x] Validation index page + link from the orbit-viewer gallery and tools
 - [x] STABILITY_REPORT.md + `docs/reference/tools.md` (+ ko mirror)
 - [x] `--jobs N` parallel cells (one core each; REBOUND is single-threaded per run)
+- [x] Plots rendered in both palettes; pages swap them via `<picture>` on `prefers-color-scheme`
 - [x] Light/dark verified by headless capture on both pages, no console errors
 - [x] `./scripts/check.sh` clean
 - [ ] **Run on the desktop:** `validate_orbits.py --systems proxima_cen`

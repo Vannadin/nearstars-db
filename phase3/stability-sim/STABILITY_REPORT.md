@@ -78,6 +78,10 @@ and because raising the standard must not leave under-length runs silently passi
 check. `--force` re-runs regardless, `--dry-run` prints the plan with each system's
 derived horizon, `--pages-only` regenerates the HTML from existing runs.
 
+Each cell is rendered in both site palettes (`plot_moons.py --theme light` writes the
+`_light.png` companion) and the pages serve the pair through `<picture>` keyed on
+`prefers-color-scheme`, so a figure never punches a hole in the reader's theme.
+
 Cells are independent — REBOUND is single-threaded per simulation (this build has no
 OpenMP, and these integrators are serial regardless) and each cell writes its own
 directory — so `--jobs N` runs N of them at a time, one core each. Parallel cells log

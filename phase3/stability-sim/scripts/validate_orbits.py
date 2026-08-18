@@ -227,9 +227,16 @@ def run_cells(jobs_list, jobs):
 
 
 def render(system, out_dir):
-    for viz in ("plot_moons.py", "plot_interactive.py"):
-        subprocess.run([PY, str(SCRIPTS / viz), "--dir", str(out_dir), "--label", system],
-                       check=True)
+    """Both palettes of the 4-panel PNG, plus the interactive HTML.
+
+    The site follows the reader's prefers-color-scheme, so the pages serve the pair
+    through <picture> and a dark-only figure no longer punches a hole in a light page.
+    """
+    for theme in ("dark", "light"):
+        subprocess.run([PY, str(SCRIPTS / "plot_moons.py"), "--dir", str(out_dir),
+                        "--label", system, "--theme", theme], check=True)
+    subprocess.run([PY, str(SCRIPTS / "plot_interactive.py"), "--dir", str(out_dir),
+                    "--label", system], check=True)
 
 
 # ---------------------------------------------------------------- reading results
@@ -337,7 +344,16 @@ def matrix_table(rows, notes):
     return '<table class="matrix">' + head + "".join(body) + "</table>"
 
 
-def cards(hier, cells):
+def figure(dst, key, alt):
+    """<picture> when a light companion exists, plain <img> otherwise."""
+    img = f'<img src="{key}.png" alt="{alt}" loading="lazy">'
+    if (dst / f"{key}_light.png").exists():
+        return (f'<picture><source media="(prefers-color-scheme: light)" '
+                f'srcset="{key}_light.png">{img}</picture>')
+    return img
+
+
+def cards(dst, hier, cells):
     out = []
     for method in ("leapfrog", "accurate"):
         r = cells.get(method)
@@ -346,8 +362,7 @@ def cards(hier, cells):
         title = ("leapfrog" if method == "leapfrog" else f'{r["integrator"].upper()}+MEGNO')
         alt = f'{HIERARCHY[hier][1]} orbital elements, {r["integrator"]} integrator'
         out.append(
-            f'<div class="card"><a href="{r["key"]}.html">'
-            f'<img src="{r["key"]}.png" alt="{alt}" loading="lazy"></a>'
+            f'<div class="card"><a href="{r["key"]}.html">{figure(dst, r["key"], alt)}</a>'
             f'<div class="m"><h3>{title} · {fmt_years(r["t_end"])}</h3>'
             f'<div class="sub">{cell_summary_line(r)} · '
             f'<a href="{r["key"]}.html">{i18n("인터랙티브", "interactive")}</a></div></div></div>')
@@ -360,10 +375,11 @@ def write_page(system, cfg, defaults, results):
     dst.mkdir(parents=True, exist_ok=True)
     for r in results:
         src = cell_dir(system, {"key": r["key"]})
-        for ext in ("png", "html"):
-            f = src / f"{system}_orbits.png" if ext == "png" else src / f"{system}_interactive.html"
-            if f.exists():
-                (dst / f'{r["key"]}.{ext}').write_bytes(f.read_bytes())
+        for name, target in ((f"{system}_orbits.png", f'{r["key"]}.png'),
+                             (f"{system}_orbits_light.png", f'{r["key"]}_light.png'),
+                             (f"{system}_interactive.html", f'{r["key"]}.html')):
+            if (src / name).exists():
+                (dst / target).write_bytes((src / name).read_bytes())
 
     by_hier = {}
     for r in results:
@@ -375,7 +391,7 @@ def write_page(system, cfg, defaults, results):
     sections = []
     for h in order:
         ko, en = HIERARCHY[h]
-        sections.append(f"<h2>{i18n(ko, en)}</h2>" + cards(h, by_hier[h]))
+        sections.append(f"<h2>{i18n(ko, en)}</h2>" + cards(dst, h, by_hier[h]))
     bl = cfg.get("bottom_line")
     bottom = f'<p class="note">{i18n(bl["ko"], bl["en"])}</p>' if bl else ""
     nt = cfg.get("note")
@@ -423,8 +439,12 @@ def write_index(entries):
                          f'<td class="mono">{fmt_years(r["t_end"])}</td>'
                          f'<td class="{cls}">{VERDICT_SHORT.get(r["verdict"], r["verdict"])}</td></tr>')
         href = f'{slug(e["system"])}-validation/index.html'
-        img = (f'<a href="{href}"><img src="{slug(e["system"])}-validation/{thumb}.png" '
-               f'alt="{e["title"]} validation matrix" loading="lazy"></a>' if thumb else "")
+        vdir = GALLERY / f'{slug(e["system"])}-validation'
+        img = ""
+        if thumb:
+            fig = figure(vdir, thumb, f'{e["title"]} validation matrix')
+            fig = fig.replace(f'"{thumb}', f'"{vdir.name}/{thumb}')
+            img = f'<a href="{href}">{fig}</a>'
         rows.append(f'<div class="card">{img}<div class="m">'
                     f'<h3><a href="{href}">{e["title"]}</a></h3>'
                     f'<table class="cells">{"".join(lines)}</table></div></div>')

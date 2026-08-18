@@ -10,9 +10,10 @@ else the star. Unlike plot_orbits.py (planet-only, MEGNO-required) it tolerates
 leapfrog/trace runs (megno=None).
 
 Reads  <dir>/<label>_summary.json  +  <dir>/<label>_timeseries.csv
-Writes <dir>/<label>_orbits.png
+Writes <dir>/<label>_orbits.png  (or <label>_orbits_light.png with --theme light,
+so both themes can sit side by side for a <picture> swap on the site).
 
-Usage: python3 scripts/plot_moons.py --dir results/_principia2000_dense [--label alpha_centauri] [--center "TRAPPIST-1"]
+Usage: python3 scripts/plot_moons.py --dir results/_principia2000_dense [--label alpha_centauri] [--center "TRAPPIST-1"] [--theme light]
 """
 import argparse
 import csv
@@ -25,9 +26,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from nsplot import apply_dark
-
-apply_dark()
+import nsplot
+from nsplot import apply_theme, series_colors
 
 RJUP_KM = 71492.0
 AU_KM = 1.495978707e8
@@ -38,7 +38,11 @@ ap.add_argument("--label", default="alpha_centauri")
 ap.add_argument("--center", default=None,
                 help="central body name. Default: the moon parent if the run has "
                      "moons, else the star. Pass the star name to plot planets.")
+ap.add_argument("--theme", choices=["dark", "light"], default="dark",
+                help="site palette to draw in; light writes <label>_orbits_light.png")
 args = ap.parse_args()
+
+apply_theme(args.theme)
 
 d = args.dir if args.dir.is_absolute() else (Path(__file__).resolve().parent.parent / args.dir)
 summary = json.loads((d / f"{args.label}_summary.json").read_text())
@@ -78,8 +82,7 @@ with (d / f"{args.label}_timeseries.csv").open() as f:
 inc0 = {n: sorted(s)[0][3] for n, s in ts.items()}      # initial inclination (deg), labels
 a0disp = {n: sorted(s)[0][1] for n, s in ts.items()}     # initial a (display units)
 
-colors = plt.cm.plasma([0.12 + 0.76 * i / max(1, len(names) - 1) for i in range(len(names))])
-cmap = {n: c for n, c in zip(names, colors)}
+cmap = {n: c for n, c in zip(names, series_colors(len(names)))}
 short = {n: n.split()[-1] for n in names}                # legend-friendly short name
 
 fig, axs = plt.subplots(2, 2, figsize=(14, 11))
@@ -96,7 +99,7 @@ for n in names:
     axo.plot(xs, ys, color=cmap[n], lw=1.6, label=lab)
 if mode == "planet":
     axo.add_patch(plt.Circle((0, 0), 1.0, color="tan", alpha=0.7))       # planet at 1 R_p
-    axo.plot(0, 0, marker="+", color="k", ms=10)
+    axo.plot(0, 0, marker="+", color=nsplot.FG_DIM, ms=10)
 else:
     axo.plot(0, 0, marker="*", color="#e8b923", ms=20)                    # star at focus
 axo.set_aspect("equal")
@@ -120,7 +123,7 @@ for n in names:
     a0 = s[0][1]
     axa.plot([t for t, *_ in s], [(a - a0) / a0 for _, a, _, _ in s],
              color=cmap[n], lw=1.2, label=short[n])
-axa.axhline(0, color="k", lw=0.6, alpha=0.4)
+axa.axhline(0, color=nsplot.FG_DIM, lw=0.6, alpha=0.6)
 axa.set_xlabel("time (yr)"); axa.set_ylabel("Δa / a₀")
 axa.set_title("Semi-major-axis drift (bounded ⇒ stable)")
 axa.legend(loc="upper right", fontsize=8); axa.grid(alpha=0.25)
@@ -148,6 +151,7 @@ fig.suptitle(
     f"|ΔE/E|={integ['energy_relative_error']:.1e}]\n{line2}",
     fontsize=12)
 fig.tight_layout(rect=[0, 0, 1, 0.95])
-out = d / f"{args.label}_orbits.png"
+out = d / (f"{args.label}_orbits.png" if args.theme == "dark"
+           else f"{args.label}_orbits_{args.theme}.png")
 fig.savefig(out, dpi=130)
 print(f"wrote {out}  ({mode}-center '{center}', {len(names)} bodies, unit {unit})")
