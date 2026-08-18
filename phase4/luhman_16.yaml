@@ -741,3 +741,159 @@ decisions:
         주성과 달리 P가 고신뢰 측정이라 남는 불확도는 가정 반지름뿐이다
         (R 0.08–0.10이면 J₂가 약 −25/+40% 움직인다).
     refs: ["docs/reference/body-figure-methodology.md"]
+
+  - body: Luhman 16 B
+    axis: atmosphere
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      The surface is the photosphere here too, measured to the same few bars as
+      its companion, but the air above it has crossed a chemical line: methane
+      is strengthening in the infrared as the atmosphere cools past the
+      transition, and the silicate cloud, anchored near eighteen bars, is no
+      longer a closed lid. Where it tears, hotter gas about fifty kelvin deeper
+      shows through, and that ever-opening, ever-closing patchwork of cloud is
+      the atmosphere's ordinary state.
+    narrative_ko: >
+      여기서도 표면은 광구이고, 위치도 짝과 같은 몇 bar로 측정돼 있다. 다만
+      그 위의 공기는 화학적 경계 하나를 이미 넘었다. 대기가 전이를 지나
+      식으면서 적외선에서는 메테인이 짙어지는 중이고, 18 bar 부근에 닻을 내린
+      규산염 구름은 더 이상 닫힌 뚜껑이 아니다. 찢어진 자리에서는 50켈빈쯤 더
+      뜨거운 심층 기체가 들여다보이고, 그렇게 열리고 닫히기를 반복하는 구름의
+      조각보가 이 대기의 평소 모습이다.
+    fields:
+      - { name: composition, value: "H/He envelope; Na/K resonance absorption in the optical; CH4 strengthening at 1.15/2.2 um (early-T); H2O + FeH + HF detected (CRIRES+); patchy silicate clouds, clearings expose ~50 K hotter gas", value_ko: "수소·헬륨 외피. 가시광은 Na/K 공명 흡수, 1.15/2.2 µm 메테인 강화(초기 T형), H₂O·FeH·HF 검출(CRIRES⁺), 조각난 규산염 구름, 클리어링은 ~50 K 더 뜨거운 기체 노출", op: passthrough }
+      - { name: pressure, value: 2.6, unit: bar, op: set, note: "surface = photosphere policy: log-midpoint of the retrieved photospheric window 0.6-11 bar (de Regt 2025, both components); B's cloud base 18.3 (+1.4/-1.1) bar", note_ko: "표면=광구 정책. 리트리벌 광구 창 0.6–11 bar(de Regt 2025, 두 성분 공통)의 로그 중앙값. B의 구름 바닥 18.3(+1.4/−1.1) bar" }
+      - { name: temperature, value: 1280, unit: K, op: passthrough, note: "tau ~ 1 photosphere (Faherty 2014); clearings run ~50 K hotter", note_ko: "광학깊이 ~1 광구(Faherty 2014). 클리어링은 ~50 K 더 뜨거움" }
+      - { name: scale_height, value: 27, unit: km, op: set, note: "H = kT/(mu m_H g), mu 2.35, T 1280 K, g 924 m/s2 - derived echo", note_ko: "H = kT/(μ m_H g), μ 2.35·T 1280 K·g 924 m/s²의 파생 에코" }
+      - { name: breathability, value: "none", op: passthrough }
+      - { name: escape, value: "none", op: passthrough }
+    gate:
+      criterion: [observation, derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        Same measured anchor as the primary: the CRIRES+ retrieval spans both
+        photospheres at 0.6-11 bar and places B's silicate cloud base at 18.3
+        bar; 2.6 bar is the log-midpoint convention. The patchy-cloud reading
+        and the ~50 K hotter clearings are Faherty 2014's measurement; the CH4
+        strengthening is their band comparison against A. Caveat: as for A,
+        the single pressure is a rendering convention across an 18x window.
+      evidence_ko: >
+        주성과 같은 측정 앵커다. CRIRES⁺ 리트리벌이 두 광구를 0.6–11 bar에
+        걸치게 놓고 B의 규산염 구름 바닥을 18.3 bar에 둔다. 2.6 bar는 로그
+        중앙값 관례. 조각난 구름과 ~50 K 더 뜨거운 클리어링은 Faherty 2014의
+        측정이고, 메테인 강화는 같은 논문의 A 대비 밴드 비교다. 주의: A와
+        마찬가지로 단일 기압은 18배 창 위의 렌더 관례다.
+    refs: ["2503.21266", "2014ApJ...790...90F"]
+
+  - body: Luhman 16 B
+    axis: surface
+    status: passthrough
+    narrative: >
+      The "ground" is the photosphere the atmosphere row defines; below it the
+      envelope thickens into fluid hydrogen.
+    narrative_ko: >
+      "지면"은 대기 행이 정의한 광구이고, 그 아래로 외피는 유체 수소로
+      두꺼워질 뿐이다.
+    fields:
+      - { name: surface_type, value: "none (photosphere is the rendered face; see atmosphere)", value_ko: "없음 (렌더되는 낯은 광구. 대기 행 참조)", op: passthrough }
+
+  - body: Luhman 16 B
+    axis: appearance
+    status: gated
+    driver: [art-direction, window-selection]
+    narrative: >
+      The same three layers as the primary, torn open. The deck is the same
+      near-black lid, but here it is broken into bands and patches, and every
+      opening shows the interior: red glow in the clearing floors, running a
+      shade hotter and brighter than anything on the calm companion, with soft
+      magenta burning along every edge. The layout is not invented; the first
+      map ever drawn of a world outside the Solar System fixed its skeleton, a
+      great dark region at mid-latitudes, a brighter cap near the pole, mottling
+      along the equator. Jets carry the features around at slightly different
+      speeds by latitude, so the face never repeats: the map is the anchor, the
+      motion is the character.
+    narrative_ko: >
+      주성과 같은 세 겹인데, 찢어져 열려 있다. 구름층은 똑같이 거의 검은
+      뚜껑이지만 여기서는 띠와 조각으로 갈라져 있고, 열린 자리마다 내부가
+      드러난다. 클리어링 바닥의 붉은 불빛은 차분한 짝의 어떤 곳보다 한 끗 더
+      뜨겁고 밝으며, 모든 가장자리를 따라 은은한 마젠타가 탄다. 배치는 지어낸
+      것이 아니다. 태양계 밖 천체 최초의 지도가 골격을 박아 두었다. 중위도의
+      거대한 암부, 극 근방의 더 밝은 관, 적도를 따라 이어지는 얼룩. 제트가
+      위도마다 조금씩 다른 속도로 이 지형들을 실어 나르니 같은 얼굴이 두 번
+      나오지 않는다. 지도가 닻이고, 움직임이 성격이다.
+    fields:
+      - { name: banding, value: "#29140f", op: set, note: "cloud-deck base, shared palette with A; broken into bands/patches here", note_ko: "구름층 베이스, A와 공유 팔레트. 여기서는 띠·조각으로 갈라짐" }
+      - { name: emission_glow, value: "#a63a00", op: set, note: "clearing floors: interior glow ~50 K hotter than A's seams (1280 K deck, hotter gas below), one step brighter than A's #993500", note_ko: "클리어링 바닥. A의 이음매보다 ~50 K 뜨거운 내부 발광, A의 #993500보다 한 단계 밝음" }
+      - { name: clouds, value: "Crossfield 2014 Doppler map as the base-texture skeleton (mid-latitude dark region, bright near-polar area, equatorial mottling); rim glow #d94a63 on all deck edges, dense and prominent", value_ko: "베이스 텍스처 골격 = Crossfield 2014 도플러 맵(중위도 암부, 극 근방 밝은 영역, 적도 얼룩). 모든 구름 가장자리에 테두리 발광 #d94a63, 촘촘하고 뚜렷함", op: set }
+      - { name: haze, value: "2-3 differential cloud layers (EVE), latitude-dependent drift emulating the zonal jets; ~11% brightness swing per 4.87 h rotation, night-to-night evolution", value_ko: "차등 이동 구름 레이어 2–3장(EVE), 위도별 속도차로 제트 재현. 자전(4.87시간)당 밝기 ~11% 출렁임, 하룻밤 단위 변화", op: set }
+      - { name: rings, value: "none", op: set }
+    provenance: >
+      2026-08-16 owner call: keep both anchors, the Crossfield map as the
+      static skeleton and the Apai jets as the motion model; colors follow the
+      2026-08-16/17 soft-magenta three-layer decision shared with A.
+    gate:
+      criterion: [observation, art]
+      verdict: pass-in-window
+      evidence: >
+        Every structural claim is observed: the map skeleton is Crossfield
+        2014's Doppler image, the drifting multi-period motion is Apai 2021's
+        jets/planetary-wave reading, the 11% swing and night-to-night evolution
+        are Gillon 2013, the hotter clearings Faherty 2014, and persistent
+        top-of-atmosphere features (map anchoring is legitimate) Chen 2024.
+        Colors sit in the brown-dwarf regime window at the owner's
+        observed-anchor end. Caveat: any fixed texture is one epoch of a
+        changing face; the differential layers are what keep it honest.
+      evidence_ko: >
+        구조 주장 전부가 관측이다. 골격은 Crossfield 2014 도플러 영상, 다중
+        주기가 표류하는 운동은 Apai 2021의 제트/행성규모 파동 해석, 11% 출렁임과
+        하룻밤 변화는 Gillon 2013, 더 뜨거운 클리어링은 Faherty 2014, 그리고
+        지속성 상층 지형(지도를 닻으로 삼는 근거)은 Chen 2024다. 색은 갈색왜성
+        분기 허용 폭에서 오너가 고른 실측 앵커 끝. 주의: 고정 텍스처는 변하는
+        얼굴의 한 에포크일 뿐이며, 차등 레이어가 그 정직함을 지킨다.
+    refs: ["2014Natur.505..654C", "2021ApJ...906...64A", "2013A&A...555L...5G", "2024MNRAS.533.3114C", "docs/reference/stellar-photospheric-color-methodology.md"]
+
+  - body: Luhman 16 B
+    axis: appearance.aurora
+    status: gated
+    driver: [art-direction]
+    narrative: >
+      A faint magenta-pink auroral ring over each pole, the same treatment as
+      the primary. The argument is even stronger here: we view this body
+      exactly along its equator, the worst possible geometry for catching a
+      polar radio beam, so the dedicated search's silence constrains this
+      aurora least of all.
+    narrative_ko: >
+      극마다 희미한 마젠타-분홍 오로라 고리를 두른다. 주성과 같은 처리다.
+      근거는 여기서 오히려 더 강하다. 이 천체는 정확히 적도 방향에서 보이는데,
+      그 기하는 극의 전파 빔을 붙잡기에 가장 나쁜 각도라서, 전용 수색의 무음이
+      이 오로라를 가장 덜 구속한다.
+    fields:
+      - { name: aurora, value: "faint narrow polar ring, magenta-pink #d94a63 family, low altitude, both poles; matched pair with A", value_ko: "희미하고 좁은 극 고리, 마젠타-분홍 #d94a63 계열, 낮은 고도, 양극. A와 짝 맞춤", op: set }
+    provenance: >
+      2026-08-18 owner call: aurora on both components, both faint (the pair
+      stays symmetric in treatment).
+    gate:
+      criterion: [observation, art]
+      verdict: documented-divergence
+      evidence: >
+        Same physical coherence as A's row: the ~1.2 kG dynamo field supports
+        auroral ECM, T-type precedent is imaged (Kao 2016 detections), and the
+        equator-on viewing geometry (i near 90) makes a polar beam missing
+        Earth the default expectation, not a coincidence. Kept faint and narrow
+        inside what the Osten null allows.
+      evidence_ko: >
+        A 행과 같은 물리 정합이다. ~1.2 kG dynamo 자기장은 오로라 ECM을
+        지지하고, T형 선례가 검출돼 있으며(Kao 2016), 적도방향 시선(i ≈ 90)에서는
+        극의 빔이 지구를 비켜가는 것이 우연이 아니라 기본 기대다. Osten 무음이
+        허용하는 범위 안에서 어둡고 좁게만 그린다.
+      divergence_note: >
+        Departs the Osten 2015 non-detection (deepest UCD auroral-radio limits,
+        multi-rotation coverage): drawn present-but-faint via the ECM beaming
+        loophole, strongest for this equator-on component. Class precedent:
+        Hallinan 2015; Kao 2016.
+      divergence_note_ko: >
+        Osten 2015 불검출(극저온왜성 최심 오로라 전파 상한, 여러 자전 커버)에서
+        이탈해 "있되 희미함"으로 그린다. ECM 빔 기하 구멍은 적도방향인 이
+        성분에서 가장 강하게 성립한다. 부류 선례: Hallinan 2015, Kao 2016.
+    refs: ["2015ApJ...805L...3O", "2015Natur.523..568H", "2016ApJ...818...24K"]
