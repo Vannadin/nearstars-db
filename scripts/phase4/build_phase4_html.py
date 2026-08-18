@@ -212,16 +212,13 @@ def viewer_links(d, system, rows):
         out.append((f"../../belt-viewer.html?body={quote(body)}",
                     bi("belt viewer ↗", "벨트 뷰어 ↗")))
     if axis == "orbit":
+        # one link to the set, not one per method: the two figures above already say
+        # which methods ran, and the set page is where they are read side by side
         slug = to_url_slug(system)
         vdir = REPO / "docs" / "phase4" / "orbit-viewers" / f"{slug}-validation"
-        for hierarchy in ("moons", "planets"):
-            cells = [f"{hierarchy}_{m}" for m in ("leapfrog", "accurate")]
-            if all((vdir / f"{c}-{to_url_slug(body)}.png").exists() for c in cells):
-                for c, label in zip(cells, ("leapfrog", "IAS15/TRACE")):
-                    if (vdir / f"{c}.html").exists():
-                        out.append((f"../orbit-viewers/{slug}-validation/{c}.html",
-                                    esc(f"{label} ↗")))
-                break
+        if (vdir / "index.html").exists() and any(vdir.glob(f"*-{to_url_slug(body)}.png")):
+            out.append((f"../orbit-viewers/{slug}-validation/index.html",
+                        bi("orbit validation set ↗", "궤도 검증 세트 ↗")))
     return out
 
 def refs_html(refs, viewers=()):
