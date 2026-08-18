@@ -571,3 +571,28 @@ solution does not need. The closed form reproduces each body's nose and tail whi
 landing on the curve to ~1e-6. Not touched, because they are gated values on three
 bodies and that is an owner call, but the tool's self-test now prints both numbers side
 by side so the gap is visible rather than remembered.
+
+## 2026-08-18 — the other three sets replaced with the closed form
+
+Owner took the offer, so Mercury, Ganymede and Alpha Centauri A b III now carry the exact
+alpha = 0.5 solution instead of their hand fits. Each keeps its own nose and tail, which
+is what the closed form is anchored on, and each drops the nonzero waist that the exact
+solution does not need.
+
+| body | waist | smooth | radius | extension | rms was |
+|---|---|---|---|---|---|
+| Mercury | 0.0777 -> 0 | 4.2533 -> 4.1015 | 2.9 -> 2.8808 | 0.01342 -> 0.013333 | 3.4e-3 |
+| Ganymede | 0.0558 -> 0 | 6.2441 -> 6.0411 | 3.9026 -> 3.8683 | 0.18183 -> 0.179943 | 4.7e-3 |
+| A b III | 0.2528 -> 0 | 13.5428 -> 144.012 | 3.3857 -> 3.4672 | 0.95304 -> 0.998841 | 1.5e-2 |
+
+A b III moves the most and is worth understanding rather than distrusting: its boundary is
+nearly a sphere (tail 3.553 against nose 3.386, a ratio of 1.05), and the closed form
+answers a near-sphere with a large smooth and an extension near 1. The hand fit had found
+a different, worse shape with the same nose and tail. The board note claiming
+`smooth = 4.0 x radius`, and the ratio ladder it sat in (1.47x Mercury, 1.6x Ganymede,
+4.0x here, "rising as the tail shortens"), was an artefact of hand-fitting rather than a
+relation; the exact ratios are 1.42, 1.56 and 41.5.
+
+Verified in the viewer: all four bodies on this branch reproduce their nose and tail to
+better than 0.2%, no console errors. The smooth slider's ceiling went 100 -> 200, since
+A b III's 144 was pinned at the old maximum and read as clipped.

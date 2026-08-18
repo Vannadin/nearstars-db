@@ -187,10 +187,13 @@ BODIES={
             # α_day ≤ 0.5 라 야간 α 미적용.
             # 2026-08-17 주석 정정: "일반화 스톡은 이 α 대역에서 꼬리가 +70% 어긋난다"고
             #   적혀 있었는데, +70% 는 목성(α 0.423)의 값이고 수성이 아니다. α 0.5 는
-            #   일반화 스톡이 Shue 를 표현할 수 있는 바로 그 지점이라 rms 0.88% 로 맞는다.
+            #   일반화 스톡이 Shue 를 표현할 수 있는 바로 그 지점이다.
             #   그래서 Shue-native 와 일반화 스톡 계획을 둘 다 들고 간다.
-            'pending_rad':2.9000,'pending_comp':1.0,'pending_ext':0.01342,
-            'pending_waist':0.0777,'pending_smooth':4.2533,
+            # 2026-08-18: 수기 적합(waist 0.0777 / smooth 4.2533, rms 3.4e-3)을 닫힌 해로 교체.
+            #   α 0.5 에서 두 곡면은 근사가 아니라 같은 곡면이고 waist 가 0 이다
+            #   (scripts/refs/fit_generalized_pause.py). 노즈 1.45·꼬리 217.5 는 그대로.
+            'pending_rad':2.8808,'pending_comp':1.0,'pending_ext':0.013333,
+            'pending_waist':0.0,'pending_smooth':4.1015,
             'shue_alpha_night':0}},  # nose 1.45 R_M (Winslow 2013); deform 유지 — 실제 자기장이 offset dipole + 고차 다중극
 
  # ---- VENUS: 다이나모 없음 → 유도 자기권(전리층 pause만, 벨트 없음) ----
@@ -325,11 +328,13 @@ BODIES={
    # 자기권이 서고, 그런 흐름은 뒤로 접힌 꼬리 로브를 만들지 않는다. 그래서 ext = comp 로 야간면을
    # 주간면과 대칭으로 닫고(닫힘 2.0 R_G = 노즈와 같음), 이 바디에는 L = 150×노즈 관례도 적용하지
    # 않는다(파일 머리말의 제외 항목).
-   # 계획값(⚗): α 0.5 라 일반화 스톡이 이 경계를 표현할 수 있다 — 자신의 연화 Shue 면에
-   #   rms 1.9% 로 적합. compression 은 1.0 으로 은퇴하고 비대칭을 waist 가 받는다.
+   # 계획값(⚗): α 0.5 라 일반화 스톡이 이 경계를 표현할 수 있다. 2026-08-18 에 수기 적합
+   #   (waist 0.0558 / smooth 6.2441, rms 4.7e-3)을 닫힌 해로 교체했다 — α 0.5 에서 두 곡면은
+   #   근사가 아니라 같은 곡면이고 waist 가 0 이라, compression 이 1.0 으로 은퇴하는 것도
+   #   관례가 아니라 정확한 값이다(scripts/refs/fit_generalized_pause.py).
    'pause':{'radiation':-0.01,'rad':2.9834,'comp':1.4142,'ext':0.12826,'hscale':1.0,
-            'pending_rad':3.9026,'pending_comp':1.0,'pending_ext':0.18183,
-            'pending_waist':0.0558,'pending_smooth':6.2441}},  # 2026-08-17: 구 → M_A 로 줄인 Shue 꼬리 (L = 150^M_A x nose, M_A 0.479 → 11.03x)
+            'pending_rad':3.8683,'pending_comp':1.0,'pending_ext':0.179943,
+            'pending_waist':0.0,'pending_smooth':6.0411}},  # 2026-08-17: 구 → M_A 로 줄인 Shue 꼬리 (L = 150^M_A x nose, M_A 0.479 → 11.03x)
 
  # ---- PROXIMA d: 16 G SPI 관측장 (Zapatero Osorio 2026) → 지구급 자기권 + 강한 포획 벨트 ----
  # 기하 도출(자기권 기하 방법론 Chapman-Ferraro): B_eq = 극장 16 G / 2 = 8 G;
