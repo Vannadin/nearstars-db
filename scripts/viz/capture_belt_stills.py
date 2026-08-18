@@ -14,7 +14,9 @@ Two framings, because they answer different questions:
             the body: the nose sits a few radii sunward and the tail runs tens of radii
             the other way, so a body-centred frame spends half its width on empty space
             and still shrinks the tail. Centre x is put at the midpoint of nose..tail and
-            the half-width widened until any orbit ring still fits.
+            the half-width widened until any orbit ring still fits. The frame stays
+            square — the figures sit side by side in a decision row and a cropped band
+            would not match the close-up beside it.
 
 Both site palettes are captured, since the boards serve figures through <picture>.
 
@@ -61,48 +63,8 @@ SHAPE_FRAME = """() => {
   let ring = 1;
   (state.moons.list || []).forEach(m => { if (m[1] > 0) ring = Math.max(ring, m[1]); });
   const R = Math.max((nose + tail) / 2, ring + Math.abs(cx)) * 1.04;
-  // How tall the boundary actually is, as a fraction of the square frame. A giant's
-  // tail runs hundreds of radii while the boundary stays a few radii wide, so a square
-  // crop would be a hairline in a field of black; the capture keeps only this band.
-  let maxY = 1;
-  for (let i = 0; i <= 400; i++) {
-    const x = cx - R + (2 * R) * i / 400;
-    let lo = 0, hi = R;
-    if (pauseSDF(x, 0, 0, P) > 0) continue;          // boundary does not reach this x
-    for (let k = 0; k < 40; k++) {
-      const mid = (lo + hi) / 2;
-      if (pauseSDF(x, mid, 0, P) <= 0) lo = mid; else hi = mid;
-    }
-    maxY = Math.max(maxY, lo);
-  }
-  (state.moons.list || []).forEach(m => { if (m[1] > 0) maxY = Math.max(maxY, m[1]); });
-  return {R, cx, yFrac: Math.min(1, (maxY * 1.15) / R)};
+  return {R, cx};
 }"""
-
-
-def crop_to_band(path, page, y_frac):
-    """Trim the empty sky above and below the boundary, keeping the legend attached.
-
-    The canvas is square and the shape pass frames the magnetopause's length, so a wide
-    boundary leaves most of the frame black. Cut the canvas down to the band the
-    boundary occupies and re-stack the legend under it.
-    """
-    if y_frac >= 0.92:
-        return
-    from PIL import Image
-    canvas_h = page.evaluate("() => document.getElementById('cv').getBoundingClientRect().height")
-    card_h = page.evaluate("() => document.querySelector('.grid .card').getBoundingClientRect().height")
-    im = Image.open(path)
-    scale = im.height / card_h
-    cpx = canvas_h * scale
-    # never thinner than 5:1 — a 150:1 boundary cropped to its true height is a hairline
-    # with no context left, so the extreme cases keep some sky and read as a needle.
-    band = max(im.width // 5, int(cpx * y_frac))
-    top = int(cpx / 2 - band / 2)
-    out = Image.new(im.mode, (im.width, band + (im.height - int(cpx))))
-    out.paste(im.crop((0, top, im.width, top + band)), (0, 0))
-    out.paste(im.crop((0, int(cpx), im.width, im.height)), (0, band))
-    out.save(path)
 
 
 def main():
@@ -133,9 +95,8 @@ def main():
                     path=str(OUT / f"{key}{suffix}.png"))
                 page.goto(f"{base}&R={frame['R']:.3f}&cx={frame['cx']:.3f}")
                 page.wait_for_timeout(900)
-                shape = OUT / f"{key}_shape{suffix}.png"
-                page.query_selector(".grid .card").screenshot(path=str(shape))
-                crop_to_band(shape, page, frame["yFrac"])
+                page.query_selector(".grid .card").screenshot(
+                    path=str(OUT / f"{key}_shape{suffix}.png"))
                 ctx.close()
             print(f"  ✓ {label} → {key}[_shape][_light].png"
                   f"  (shape R={frame['R']:.1f}, cx={frame['cx']:+.1f})")

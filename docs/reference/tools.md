@@ -402,9 +402,9 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   renderer the viewer uses, not a second one to keep in sync. Phase 4 attaches the result
   inside each body's magnetism decision row. Two framings per body: `<key>.png` is the preset's
   own close-up, `<key>_shape.png` frames the whole magnetopause on *its* length (centre x at the
-  midpoint of nose..tail, via the viewer's new `R`/`cx` query params) and crops the empty sky above
-  and below, floored at 5:1 so a giant's needle-thin tail still reads. Needs `playwright` and
-  `pillow` (capture-only dependencies).
+  midpoint of nose..tail, via the viewer's new `R`/`cx` query params). Both keep the viewer's square
+  frame so the pair matches where a decision row shows them side by side. Needs `playwright`
+  (capture-only dependency).
 - `scripts/viz/build_uranus_geometry.py` (+ `uranus_geometry_template.html`) — builds
   [`docs/uranus-geometry.html`](../uranus-geometry.html), a three.js page comparing Earth's
   ordinary magnetosphere against Uranus' pole-on one. It exists to make one thing visible:
