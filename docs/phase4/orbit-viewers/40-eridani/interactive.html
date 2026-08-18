@@ -23,7 +23,7 @@
   #theme{position:fixed;top:8px;right:12px;z-index:10;background:#eef1f6;color:#1a1a1a;
     border:1px solid #c8cfdb;border-radius:6px;padding:5px 11px;cursor:pointer;font:13px system-ui}
   body.dark #theme{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border-color:rgba(255,255,255,.13)}
-</style><nav style="position:fixed;top:8px;left:12px;z-index:1000;font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);padding:4px 10px;border-radius:6px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a> &nbsp;·&nbsp; <a href="../../index.html" style="color:#7aa8ff;text-decoration:none">Phase 4</a> &nbsp;·&nbsp; <a href="../../../index.html" style="color:#7aa8ff;text-decoration:none">DB</a></nav>
+</style><nav id="ns-crumb" style="position:fixed;top:8px;left:12px;z-index:1000;font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);padding:4px 10px;border-radius:6px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← Orbit viewers</a> &nbsp;·&nbsp; <a href="../../index.html" style="color:#7aa8ff;text-decoration:none">Phase 4</a> &nbsp;·&nbsp; <a href="../../../index.html" style="color:#7aa8ff;text-decoration:none">DB</a></nav><script>if(new URLSearchParams(location.search).get("embed")==="1")document.getElementById("ns-crumb").remove()</script>
 <script src="../../../assets/plotly.min.js"></script>
 <button id="theme">🌙 Dark</button>
 <div id="p"></div>

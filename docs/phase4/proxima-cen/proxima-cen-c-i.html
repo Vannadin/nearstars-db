@@ -77,6 +77,15 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .fig img { display:block; width:100%; height:auto; background:var(--s2) }
 .fig figcaption { padding:9px 13px; font-size:12px; color:var(--fg3); line-height:1.55 }
 .fig figcaption code { font-size:11.5px }
+/* embedded viewers */
+.viewer { margin:0 0 18px }
+.vw-head { display:flex; align-items:baseline; gap:10px; margin-bottom:4px }
+.vw-title { font-size:13px; font-weight:600; color:var(--fg2) }
+.vw-open { font-size:11.5px; color:var(--accent); text-decoration:none; margin-left:auto }
+.vw-open:hover { text-decoration:underline }
+.vw-desc { color:var(--fg3); font-size:12.5px; line-height:1.6; margin:0 0 9px; max-width:720px }
+.viewer iframe { display:block; width:100%; border:1px solid var(--bd2); border-radius:12px;
+  background:var(--s1) }
 /* index grid */
 .body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
 .body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
@@ -442,8 +451,9 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <h2 class="sec-h"><span data-i18n>자료</span><span data-en hidden>Figures</span></h2><p class="intro"><span data-i18n>이 천체의 결정들이 인용한 도식입니다. 행이 등장하는 순서대로 놓았습니다.</span><span data-en hidden>The diagrams this body&#x27;s decisions cite, in the order the rows raise them.</span></p><div class="figs"><figure class="fig"><a href="../../img/proxima-c-i-orbit-edge-compare.png"><img src="../../img/proxima-c-i-orbit-edge-compare.png" alt="orbit figure" loading="lazy"></a><figcaption><a href="#orbit"><code>orbit</code></a> <span data-i18n>이 결정이 인용</span><span data-en hidden>cited by this decision</span></figcaption></figure><figure class="fig"><a href="../../img/moon-atmosphere-feasibility.png"><img src="../../img/moon-atmosphere-feasibility.png" alt="atmosphere figure" loading="lazy"></a><figcaption><a href="#atmosphere"><code>atmosphere</code></a> <span data-i18n>이 결정이 인용</span><span data-en hidden>cited by this decision</span></figcaption></figure></div>
+
 <div class="bodynav"><a class="navlink" href="proxima-cen-c.html">← Proxima Cen c</a></div>
-<div class="stamp">빌드 2026-08-18 19:49 · 4bf29a2f</div></div>
+<div class="stamp">빌드 2026-08-18 20:18 · 09565fea</div></div>
 <script>
 const b=document.body;
 function setLang(en){

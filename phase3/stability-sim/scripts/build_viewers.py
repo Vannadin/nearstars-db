@@ -43,13 +43,17 @@ from _nav import global_bar  # noqa: E402  (공용 1줄 바)
 
 # 복사되는 뷰어 페이지(plotly 전체화면)에 띄우는 되돌아가기 크럼 오버레이.
 _CRUMB_STYLE = 'color:#7aa8ff;text-decoration:none'
+# The crumb is dropped under ?embed=1 — a Phase 4 body page iframes these viewers,
+# and a "back to Orbit viewers" link floating inside someone else's page is a trap.
 VIEWER_CRUMB = (
-    '<nav style="position:fixed;top:8px;left:12px;z-index:1000;'
+    '<nav id="ns-crumb" style="position:fixed;top:8px;left:12px;z-index:1000;'
     'font:12px system-ui,sans-serif;background:rgba(10,12,18,.78);'
     'padding:4px 10px;border-radius:6px">'
     f'<a href="../index.html" style="{_CRUMB_STYLE}">← Orbit viewers</a>'
     f' &nbsp;·&nbsp; <a href="../../index.html" style="{_CRUMB_STYLE}">Phase 4</a>'
-    f' &nbsp;·&nbsp; <a href="../../../index.html" style="{_CRUMB_STYLE}">DB</a></nav>')
+    f' &nbsp;·&nbsp; <a href="../../../index.html" style="{_CRUMB_STYLE}">DB</a></nav>'
+    '<script>if(new URLSearchParams(location.search).get("embed")==="1")'
+    'document.getElementById("ns-crumb").remove()</script>')
 
 
 # docs/assets/에 vendoring된 사본으로 CDN 참조를 로컬화 (뷰어 페이지 기준 상대경로).
@@ -72,7 +76,7 @@ def inject_crumb(path: Path, crumb: str = VIEWER_CRUMB):
     for cdn, local in _CDN_LOCAL.items():
         html = html.replace(cdn, local)
     path.write_text(html)
-    if 'Orbit viewers</a>' in html:
+    if 'id="ns-crumb"' in html:
         return
     new, n = re.subn(r'(<body[^>]*>)', r'\1' + crumb, html, count=1)
     if n == 0 and '</head>' in html:

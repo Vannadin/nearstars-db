@@ -206,6 +206,12 @@
   .note code{font-family:var(--mono);color:var(--accent)}
   footer{color:var(--muted);font-size:11.5px;margin-top:18px;line-height:1.6}
   footer code{font-family:var(--mono);color:var(--accent)}
+  /* embed: iframed from a Phase 4 body page, already scoped to one body — the page
+     chrome and the system/body pickers would only repeat what the host page says. */
+  html.embed .ns-bar, html.embed header, html.embed footer,
+  html.embed .sys-tabs, html.embed .body-btns, html.embed .note { display:none }
+  html.embed .wrap { padding:10px 12px }
+  html.embed .pick-wrap { margin:0 }
 </style>
 
 <div class="wrap">
@@ -1208,7 +1214,36 @@ function applyLang(){
 
 // init
 new ResizeObserver(resize).observe(cv);
-buildBodies(); selectBody('earth');   // 기본 진입 = 태양계·지구·물리
+// ---- deep link + embed ----------------------------------------------------
+// A Phase 4 body page iframes this viewer scoped to one body:
+//   belt-viewer.html?body=Proxima%20Cen%20b&embed=1[&variant=stock]
+// `body` accepts either the internal body_key or the picker label (= the board's
+// body name), so the caller does not have to reproduce the key rule. `embed`
+// drops the page chrome and the pickers, leaving the cross-section plus the
+// stock/phys toggle — the comparison this viewer exists for.
+function deepLinkTarget(){
+  const q = new URLSearchParams(location.search || location.hash.replace(/^#/, '?'));
+  const want = q.get('body');
+  if (!want) return null;
+  const key = BY_BODY[want] ? want
+            : Object.keys(BY_BODY).find(b => {
+                const p = anyPreset(b);
+                return p.label === want || p.label_en === want;
+              });
+  return key ? { key, variant: q.get('variant'), embed: q.get('embed') === '1' } : null;
+}
+
+const _deep = deepLinkTarget();
+if (_deep) {
+  if (_deep.embed) document.documentElement.classList.add('embed');
+  curSys = anyPreset(_deep.key).sys || curSys;
+  if (_deep.variant) curVar = _deep.variant;
+  buildBodies();
+  selectBody(_deep.key);
+} else {
+  buildBodies();
+  selectBody('earth');   // 기본 진입 = 태양계·지구·물리
+}
 applyLang();
 resize();
 </script>
