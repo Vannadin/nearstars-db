@@ -62,12 +62,17 @@ on every system, and put Proxima Cen through it.
 - [x] Regenerate the α Cen page from the manifest — matrix numbers unchanged
 - [x] Validation index page + link from the orbit-viewer gallery and tools
 - [x] STABILITY_REPORT.md + `docs/reference/tools.md` (+ ko mirror)
+- [x] `--jobs N` parallel cells (one core each; REBOUND is single-threaded per run)
+- [x] Light/dark verified by headless capture on both pages, no console errors
 - [x] `./scripts/check.sh` clean
 - [ ] **Run on the desktop:** `validate_orbits.py --systems proxima_cen`
       (planets_leapfrog ~30 s, planets_accurate 1.4×10⁶ yr ≈ 6.6 h)
 - [ ] **Run on the desktop:** α Cen `--cells planets_accurate` to the new
       1e8-orbit standard (1.92×10⁸ yr ≈ 7 h; the stored 10⁸ yr run is 5.2×10⁷ orbits)
 - [ ] Re-run `validate_orbits.py --pages-only` afterwards to refresh both pages
+
+Both queued cells are independent, so one `validate_orbits.py --jobs 2` covers them in
+~7 h wall clock rather than ~14 h serial.
 
 Note: `STABILITY_REPORT.md` lives under `phase3/`, outside the `ko/` mirror scope
 (`docs/`, `plans/`, root `README.md`, `CONVENTIONS.md`), so it has no Korean mirror.

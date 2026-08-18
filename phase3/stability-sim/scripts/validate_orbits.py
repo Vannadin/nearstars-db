@@ -27,8 +27,14 @@ Usage:
   python scripts/validate_orbits.py --systems proxima_cen
   python scripts/validate_orbits.py --cells planets_leapfrog
   python scripts/validate_orbits.py --force              # re-run even if results exist
+  python scripts/validate_orbits.py --jobs 6             # run up to 6 cells concurrently
   python scripts/validate_orbits.py --pages-only         # regenerate the HTML from existing runs
   python scripts/validate_orbits.py --dry-run            # print the plan (with horizons) and stop
+
+REBOUND is single-threaded per simulation (no OpenMP in this build, and these integrators
+are serial anyway), and every cell writes its own directory, so cells are embarrassingly
+parallel — `--jobs N` runs N at a time, one core each. Each parallel cell logs to
+`<cell-dir>/run.log` instead of the terminal, since interleaved progress is unreadable.
 """
 import argparse
 import csv
@@ -175,7 +181,7 @@ def cell_state(system, cell):
     return ("have" if got >= cell["years"] * 0.99 else "stale"), got
 
 
-def run_cell(system, cell, out_dir):
+def cell_cmd(system, cell, out_dir):
     cmd = [PY, str(SCRIPTS / "run.py"), "--system", system,
            "--integrator", cell["integrator"],
            "--years", repr(cell["years"]), "--snapshots", str(cell["snapshots"]),
@@ -184,8 +190,40 @@ def run_cell(system, cell, out_dir):
         cmd += ["--dt-minutes", str(cell["dt_minutes"])]
     if cell.get("hypotheticals"):
         cmd += ["--hypotheticals", str(cell["hypotheticals"])]
-    cmd += cell["args"]
-    subprocess.run(cmd, check=True)
+    return cmd + cell["args"]
+
+
+def run_cells(jobs_list, jobs):
+    """Run the queued cells, at most `jobs` at a time. One core each.
+
+    Serial runs stream progress to the terminal as before; parallel ones go to
+    <cell-dir>/run.log, because N interleaved progress streams are unreadable.
+    """
+    failed = []
+    if jobs <= 1:
+        for system, cell, out_dir in jobs_list:
+            print(f"  ▶ {system} / {cell['key']}")
+            if subprocess.run(cell_cmd(system, cell, out_dir)).returncode != 0:
+                failed.append((system, cell["key"]))
+        return failed
+
+    queue, running = list(jobs_list), []
+    while queue or running:
+        while queue and len(running) < jobs:
+            system, cell, out_dir = queue.pop(0)
+            log = (out_dir / "run.log").open("w")
+            print(f"  ▶ {system} / {cell['key']}  → {out_dir / 'run.log'}")
+            running.append((system, cell,
+                            subprocess.Popen(cell_cmd(system, cell, out_dir),
+                                             stdout=log, stderr=subprocess.STDOUT), log))
+        system, cell, proc, log = running.pop(0)
+        rc = proc.wait()
+        log.close()
+        status = "done" if rc == 0 else f"FAILED (rc={rc})"
+        print(f"  ■ {system} / {cell['key']} {status}")
+        if rc != 0:
+            failed.append((system, cell["key"]))
+    return failed
 
 
 def render(system, out_dir):
@@ -239,6 +277,8 @@ CSS = (SIM / "assets" / "validation-page.css").read_text()
 VERDICT_CLASS = {"stable": "v-ok", "chaotic_but_hill_stable": "v-warn", "flagged": "v-warn"}
 VERDICT_TEXT = {"stable": "STABLE", "chaotic_but_hill_stable": "CHAOTIC · HILL-STABLE",
                 "flagged": "FLAGGED", "unstable": "UNSTABLE"}
+# The index lists four cells per card, so it uses the short form of the same verdicts.
+VERDICT_SHORT = {**VERDICT_TEXT, "chaotic_but_hill_stable": "CHAOTIC"}
 HIERARCHY = {"planets": ("행성계", "Planet orbit"), "moons": ("위성계", "Moon system")}
 LANG_JS = """<script>
 const ko=document.getElementById('ko'),en=document.getElementById('en');
@@ -369,23 +409,38 @@ def write_page(system, cfg, defaults, results):
 
 
 def write_index(entries):
-    """The landing page listing every validated system."""
+    """The landing page listing every validated system, one image card each."""
     rows = []
     for e in entries:
-        pills = []
+        by_key = {r["key"]: r for r in e["results"]}
+        # thumbnail: the hierarchy the player actually inhabits, if the system has one
+        thumb = next((k for k in ("moons_leapfrog", "planets_leapfrog", "moons_accurate",
+                                  "planets_accurate") if k in by_key), None)
+        lines = []
         for r in e["results"]:
             cls = VERDICT_CLASS.get(r["verdict"], "v-bad")
-            pills.append(f'<span class="mono">{r["key"]}</span> '
-                         f'<span class="{cls}">{VERDICT_TEXT.get(r["verdict"], r["verdict"])}</span>')
-        rows.append(f'<div class="card"><div class="m">'
-                    f'<h3><a href="{slug(e["system"])}-validation/index.html">{e["title"]}</a></h3>'
-                    f'<div class="sub">{"<br>".join(pills)}</div></div></div>')
+            lines.append(f'<tr><td class="mono">{r["key"]}</td>'
+                         f'<td class="mono">{fmt_years(r["t_end"])}</td>'
+                         f'<td class="{cls}">{VERDICT_SHORT.get(r["verdict"], r["verdict"])}</td></tr>')
+        href = f'{slug(e["system"])}-validation/index.html'
+        img = (f'<a href="{href}"><img src="{slug(e["system"])}-validation/{thumb}.png" '
+               f'alt="{e["title"]} validation matrix" loading="lazy"></a>' if thumb else "")
+        rows.append(f'<div class="card">{img}<div class="m">'
+                    f'<h3><a href="{href}">{e["title"]}</a></h3>'
+                    f'<table class="cells">{"".join(lines)}</table></div></div>')
     html = f"""<!-- 궤도 검증 세트 인덱스 (자동 생성, scripts/validate_orbits.py) -->
 <!doctype html><html lang="en" class="ns-light-ok"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NearStars — orbit stability validation sets</title>
 <style>
-{CSS}</style>
+{CSS}
+  table.cells{{border-collapse:collapse;margin-top:7px;font-size:12px}}
+  table.cells td{{padding:2px 10px 2px 0;vertical-align:top;white-space:nowrap}}
+  table.cells td:nth-child(2){{color:rgba(255,255,255,.52);text-align:right}}
+  @media (prefers-color-scheme: light) {{
+    html.ns-light-ok table.cells td:nth-child(2){{color:rgba(9,12,22,.60)}}
+  }}
+</style>
 {global_bar('../../', 'Phase 4')}
 <header>
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
@@ -394,10 +449,10 @@ def write_index(entries):
   <div class="lead">{i18n(
       '시스템마다 계층(행성계·위성계)별로 두 방식을 교차 실행합니다. leapfrog(고정 10분 스텝)는 '
       'Principia 인게임 적분기와 정합하고, IAS15/TRACE+MEGNO는 결정론적 카오스와 장기 생존을 판정합니다. '
-      '장기 구간은 연수가 아니라 안쪽 궤도 바퀴 수로 맞춥니다.',
+      '장기 구간은 연수가 아니라 안쪽 궤도 바퀴 수(기준 10⁸바퀴)로 맞춥니다.',
       'Each system is run both ways on every hierarchy it has. Leapfrog (fixed 10-min step) '
       "matches Principia's in-game integrator; IAS15/TRACE+MEGNO judges deterministic chaos and "
-      'long-term survival. Long horizons are matched in inner-orbit count, not years.')}</div>
+      'long-term survival. Long horizons are matched in inner-orbit count (10⁸ orbits), not years.')}</div>
 </header>
 <main><div class="grid">{"".join(rows)}</div></main>
 {LANG_JS}
@@ -413,6 +468,8 @@ def main():
     ap.add_argument("--systems", nargs="*", help="subset of manifest system keys")
     ap.add_argument("--cells", nargs="*", help="subset of cell keys (e.g. planets_leapfrog)")
     ap.add_argument("--force", action="store_true", help="re-run cells that already have results")
+    ap.add_argument("--jobs", type=int, default=1,
+                    help="run up to N cells concurrently (one CPU core each; default 1)")
     ap.add_argument("--pages-only", action="store_true", help="regenerate HTML from existing runs")
     ap.add_argument("--dry-run", action="store_true", help="print the plan and stop")
     args = ap.parse_args()
@@ -421,37 +478,47 @@ def main():
     defaults, systems = man["defaults"], man["systems"]
     keys = args.systems or list(systems)
 
-    entries = []
+    planned, queued = [], []
     for system in keys:
         cfg = systems[system] or {}
         print(f"■ {system}")
         cells = expand(system, cfg, defaults)
         if args.cells:
             cells = [c for c in cells if c["key"] in args.cells]
+        planned.append((system, cfg, cells))
         for cell in cells:
-            out_dir = cell_dir(system, cell)
             state, got = cell_state(system, cell)
             tag = {"have": "[have]", "run": "[run]",
                    "stale": f"[stale: {fmt_years(got or 0)} stored]"}[state]
             print(f'  {cell["key"]:18s} {cell["integrator"]:9s} '
                   f'{fmt_years(cell["years"]):>12s}  {tag}')
-            if args.dry_run:
-                continue
-            if not args.pages_only:
-                if state != "have" or args.force:
-                    out_dir.mkdir(parents=True, exist_ok=True)
-                    run_cell(system, cell, out_dir)
-                render(system, out_dir)
-        if args.dry_run:
-            continue
+            if not args.dry_run and not args.pages_only and (state != "have" or args.force):
+                out_dir = cell_dir(system, cell)
+                out_dir.mkdir(parents=True, exist_ok=True)
+                queued.append((system, cell, out_dir))
+    if args.dry_run:
+        return
+
+    if queued:
+        print(f"\n▶ {len(queued)} cell(s), {args.jobs} at a time")
+        failed = run_cells(queued, args.jobs)
+        if failed:
+            print("\n! failed cells: " + ", ".join(f"{s}/{k}" for s, k in failed))
+
+    entries = []
+    for system, cfg, cells in planned:
+        if not args.pages_only:
+            for cell in cells:
+                if (cell_dir(system, cell) / f"{system}_summary.json").exists():
+                    render(system, cell_dir(system, cell))
         results = [r for r in (read_cell(system, c) for c in cells) if r]
         if not results:
-            print("  ! no results yet")
+            print(f"  ! no results yet for {system}")
             continue
         write_page(system, cfg, defaults, results)
         entries.append({"system": system, "title": cfg.get("title", system), "results": results})
 
-    if entries and not args.dry_run:
+    if entries:
         write_index(entries)
 
 

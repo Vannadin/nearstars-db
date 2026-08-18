@@ -78,6 +78,11 @@ and because raising the standard must not leave under-length runs silently passi
 check. `--force` re-runs regardless, `--dry-run` prints the plan with each system's
 derived horizon, `--pages-only` regenerates the HTML from existing runs.
 
+Cells are independent — REBOUND is single-threaded per simulation (this build has no
+OpenMP, and these integrators are serial regardless) and each cell writes its own
+directory — so `--jobs N` runs N of them at a time, one core each. Parallel cells log
+to `<cell-dir>/run.log` rather than the terminal.
+
 ## Three diagnostics — survival, chaos, eccentricity
 
 The verdict separates *what actually happened* from *chaos risk* from *how
@@ -496,6 +501,7 @@ mass), which drive Mercury's long-term chaotic diffusion.
 # The validation suite — the two-method matrix for every manifest system
 .venv/bin/python phase3/stability-sim/scripts/validate_orbits.py --dry-run   # plan + horizons
 .venv/bin/python phase3/stability-sim/scripts/validate_orbits.py --systems proxima_cen
+.venv/bin/python phase3/stability-sim/scripts/validate_orbits.py --jobs 6   # whole suite
 
 # Fast first-pass screen (WHFast + MEGNO)
 .venv/bin/python phase3/stability-sim/scripts/run.py --system trappist_1 --years 10000
