@@ -1,0 +1,45 @@
+/* 궤도 검증 세트 페이지 공용 스타일 (scripts/validate.py 가 인라인으로 삽입). */
+  body{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.65 system-ui,sans-serif}
+  header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.09)}
+  h1{margin:0;font-size:20px;font-weight:600;letter-spacing:-.01em} .lead{color:rgba(255,255,255,.52);font-size:13px;margin-top:6px;max-width:80ch}
+  main{padding:22px;max-width:1100px}
+  table.matrix{border-collapse:collapse;margin:6px 0 22px}
+  table.matrix th,table.matrix td{border:1px solid rgba(255,255,255,.09);padding:9px 13px;text-align:left;vertical-align:top}
+  table.matrix th{background:rgba(255,255,255,.03);font-size:12px;color:rgba(255,255,255,.52)}
+  .v-ok{color:#4ec9b0;font-weight:600} .v-warn{color:#e0b070;font-weight:600}
+  .v-bad{color:#e090d0;font-weight:600}
+  .mono{font-family:ui-monospace,monospace;font-size:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+  .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;overflow:hidden}
+  .card img{width:100%;display:block;background:#06070a}
+  .card .m{padding:11px 13px} .card h3{margin:0 0 4px;font-size:14px}
+  .card .sub{color:rgba(255,255,255,.52);font-size:12px} .card a{color:#7aa8ff;text-decoration:none;font-size:12px}
+  .card a:hover{text-decoration:underline}
+  h2{font-size:15px;margin:26px 0 10px;border-top:1px solid rgba(255,255,255,.09);padding-top:18px}
+  .note{color:rgba(255,255,255,.52);font-size:12.5px;max-width:80ch}
+  header .seg{float:right}
+
+  @media (prefers-color-scheme: light) {
+    html.ns-light-ok body{background:#f5f6fa;color:rgba(9,12,22,.80)}
+    html.ns-light-ok header{border-bottom-color:rgba(12,17,34,.13)}
+    html.ns-light-ok h1{color:rgba(9,12,22,.95)}
+    html.ns-light-ok .lead,html.ns-light-ok .sub,html.ns-light-ok .note{color:rgba(9,12,22,.60)}
+    /* .card .sub 가 더 구체적이라 위 규칙에 안 걸린다 */
+    html.ns-light-ok .card .sub{color:rgba(9,12,22,.60)}
+    html.ns-light-ok .card{background:rgba(12,17,34,.030);border-color:rgba(12,17,34,.13)}
+    html.ns-light-ok .card img{background:#f5f6fa}
+    html.ns-light-ok .card a,html.ns-light-ok .crumb a,html.ns-light-ok .links a,
+    html.ns-light-ok header a{color:#114edd}
+    html.ns-light-ok .v-ok{color:#1e6657} html.ns-light-ok .v-warn{color:#765419}
+    html.ns-light-ok .v-bad{color:#992c83}
+    html.ns-light-ok .links a{border-color:rgba(12,17,34,.18)}
+    html.ns-light-ok h2{border-top-color:rgba(12,17,34,.13)}
+    html.ns-light-ok table.matrix td,html.ns-light-ok table.matrix th{border-color:rgba(12,17,34,.13)}
+    html.ns-light-ok table.matrix th{background:rgba(12,17,34,.045);color:rgba(9,12,22,.60)}
+    html.ns-light-ok code,html.ns-light-ok .k{color:rgba(9,12,22,.78)}
+  }
+@media (max-width:700px){
+  header a{min-height:38px;display:inline-flex;align-items:center}
+  .grid{grid-template-columns:1fr;gap:12px} main{padding:14px}
+  table.matrix{display:block;overflow-x:auto}
+}

@@ -46,6 +46,32 @@
 - [ ] Sanity check: MEGNO ≈ 2 for known-stable systems
 - [ ] Compare TRAPPIST-1 result to Agol+2021's reported stability claim
 
+
+## Validation suite promotion (2026-08-18)
+
+Promote the one-off α Cen validation runs into a manifest-driven suite that runs
+on every system, and put Proxima Cen through it.
+
+- [x] `validation-manifest.yaml` — per-system matrix params + page prose
+- [x] `scripts/validate_orbits.py` — build cells, run, render, generate pages
+- [x] Long horizon derived from `long_inner_orbits` (orbits, not years); standard
+      set to a round 1e8 innermost orbits, satellite hierarchy keeps 10⁴ yr
+- [x] A cell short of its manifest horizon reports `[stale]` and re-runs
+- [x] Moon mass auto-folded into the parent for the planetary rows
+- [x] Migrate the four existing α Cen result dirs into the generated layout
+- [x] Regenerate the α Cen page from the manifest — matrix numbers unchanged
+- [x] Validation index page + link from the orbit-viewer gallery and tools
+- [x] STABILITY_REPORT.md + `docs/reference/tools.md` (+ ko mirror)
+- [x] `./scripts/check.sh` clean
+- [ ] **Run on the desktop:** `validate_orbits.py --systems proxima_cen`
+      (planets_leapfrog ~30 s, planets_accurate 1.4×10⁶ yr ≈ 6.6 h)
+- [ ] **Run on the desktop:** α Cen `--cells planets_accurate` to the new
+      1e8-orbit standard (1.92×10⁸ yr ≈ 7 h; the stored 10⁸ yr run is 5.2×10⁷ orbits)
+- [ ] Re-run `validate_orbits.py --pages-only` afterwards to refresh both pages
+
+Note: `STABILITY_REPORT.md` lives under `phase3/`, outside the `ko/` mirror scope
+(`docs/`, `plans/`, root `README.md`, `CONVENTIONS.md`), so it has no Korean mirror.
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

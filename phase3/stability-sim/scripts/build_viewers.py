@@ -207,7 +207,7 @@ def write_gallery(cards):
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
   <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
   <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span>
-    <span data-i18n> 적분기 교차 검증은 <a href="alpha-centauri-validation/index.html" class="acc">알파센 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="alpha-centauri-validation/index.html" class="acc">Alpha Cen validation set</a>.</span></div>
+    <span data-i18n> 적분기 교차 검증은 <a href="validation.html" class="acc">궤도 검증 세트</a>에.</span><span data-en hidden> Integrator cross-checks live in the <a href="validation.html" class="acc">orbit validation sets</a>.</span></div>
 </header>
 <div class="grid">
 {chr(10).join(rows)}

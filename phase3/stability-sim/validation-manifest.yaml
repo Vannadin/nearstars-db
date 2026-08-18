@@ -1,0 +1,86 @@
+# 궤도 검증 세트 매니페스트 — 시스템별 "2방식 × 계층" 검증 매트릭스의 단일 소스.
+#
+# The two-method validation contract (STABILITY_REPORT.md, owner 2026-07-19) says every
+# system that ships runs BOTH methods on EACH hierarchy it has:
+#   * accurate  — IAS15 (or TRACE for close-encounter-driven systems) + MEGNO. The physics
+#                 baseline: deterministic chaos + long-term survival.
+#   * leapfrog  — fixed 10-minute step, Principia's real ephemeris step. In-game fidelity;
+#                 no variational equations, so the verdict is a/e-drift boundedness.
+# scripts/validate_orbits.py expands this file into those cells, runs them, renders them, and
+# generates docs/phase4/orbit-viewers/<slug>-validation/index.html.
+#
+# HORIZONS. "Long" is counted in ORBITS, not years — a year count copied between systems
+# is meaningless (10^8 yr is 3.7 h at α Cen's 1.9-yr inner planet and ~20 days at
+# Proxima's 5.1-day one). The standard is a round **1e8 innermost orbits**, and each
+# system's year count is derived from its own innermost period. A cell whose existing run
+# does not reach its manifest horizon is reported stale and re-run.
+#
+# The satellite hierarchy keeps the documented 10^4 yr exception rather than 1e8 orbits:
+# α Cen's inner moon is at 0.38 d, so 10^4 yr is already ~1e7 orbits and 1e8 would cost
+# >200 h of IAS15. The leapfrog cells stay at the play window (10^4 yr) too — dt is fixed
+# at 10 min, so a long-horizon leapfrog run is step-bound and meaningless as a fidelity
+# check. Override a system with `long_years:` only to pin a deliberate exception.
+
+defaults:
+  accurate_integrator: ias15
+  dt_minutes: 10
+  play_window_years: 10000
+  long_inner_orbits: 1.0e8
+  moon_years: 10000
+  snapshots: 200
+  lead:
+    ko: >-
+      위성계와 행성계를 각각 두 방식으로 교차 검증했습니다. leapfrog(고정 10분 스텝)는
+      Principia 인게임 적분기와 정합하고, IAS15+MEGNO는 결정론적 카오스를 판정합니다(MEGNO≈2
+      정칙, &gt;5 카오스).
+    en: >-
+      Both the moon system and the planet orbit are cross-checked two ways. Leapfrog
+      (fixed 10-min step) matches Principia's in-game integrator; IAS15+MEGNO diagnoses
+      deterministic chaos (MEGNO≈2 regular, &gt;5 chaotic).
+
+systems:
+  # α Cen — the system the contract was established on. Its moon cells are adopted from the
+  # original runs (21 h of IAS15); the planetary accurate cell was run to 1e8 yr, which is
+  # 5.2e7 inner orbits — short of the 1e8-orbit standard, so the driver reports it stale and
+  # it re-runs to ~1.92e8 yr (~7 h).
+  alpha_centauri:
+    title: Alpha Centauri A b (Polyphemus)
+    args: ["--acen-a-au", "1.6", "--acen-e", "0.1", "--acen-incl-deg", "16"]
+    moons:
+      hypotheticals: hypotheticals/alpha_centauri.json
+      args: ["--j2", "0.023", "--j2-obliquity-deg", "5"]
+    cells:
+      moons_accurate:
+        note:
+          ko: 거의 정칙 — 위성 5개 전부 Hill-bound
+          en: near-regular — all 5 moons Hill-bound
+      planets_accurate:
+        note:
+          ko: 카오스지만 a·e 봉투 유계 (동반성 B 강섭동)
+          en: chaotic but a·e envelope bounded (strong companion-B forcing)
+    bottom_line:
+      ko: >-
+        <b>요점.</b> 플레이어가 실제 머무는 위성계는 거의 정칙(MEGNO 3.65)으로 안정적이고, 바깥
+        행성 궤도만 장기적으로 결정론적 카오스입니다 — 단 궤도 범위(장반축·이심률)는 1억 년 내내
+        유계라 이탈하지 않습니다. 두 방식이 상보적으로 "게임 시간대엔 안정, 장기엔 카오스지만
+        발산 없음"을 뒷받침합니다.
+      en: >-
+        <b>Bottom line.</b> The moon system the player actually inhabits is near-regular
+        (MEGNO 3.65) and stable; only the outer planet orbit is deterministically chaotic on
+        long timescales — yet its orbital envelope (a, e) stays bounded across 100 Myr, so it
+        never escapes. The two methods jointly support "stable over the play window, chaotic-
+        but-non-divergent over the long term."
+    note:
+      ko: >-
+        주: 행성계 런은 위성 질량(0.87 M⊕)을 행성 b에 합산해 위성을 제거하고 돌렸습니다(빠른
+        내위성 스텝 회피 — 표준 관행). 위성계 IAS15 10⁸ 년은 내위성 주기(0.38일)에 스텝이 묶여
+        ~수백 일 걸리므로 비현실적이라, 위성계는 궤도 수로 대등한 10⁴ 년으로 판정했습니다.
+      en: >-
+        Note: the planet-orbit runs fold the moon mass (0.87 M⊕) into planet b and drop the
+        moons (avoids the fast inner-moon step — standard practice). A 10⁸-yr IAS15 moon run
+        is infeasible (~hundreds of days, step bound by the 0.38-day inner moon), so the moon
+        system is judged at 10⁴ yr — comparable in orbit count.
+
+  # Proxima Cen — 3 planets, no design-of-record moons, so the planetary row only.
+  proxima_cen:
+    title: Proxima Centauri

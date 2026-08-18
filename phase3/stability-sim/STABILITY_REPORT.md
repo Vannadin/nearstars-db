@@ -48,6 +48,36 @@ Measure real wall-clock per run instead of extrapolating. Moon-system runs
 include the parent's J₂ when it is on the board (`run.py --j2`), since Principia
 applies the geopotential in-game — see the Alpha Centauri A b (Polyphemus) J₂ section.
 
+### Running it — the validation suite
+
+The matrix is data, not a recipe: `validation-manifest.yaml` declares each system's
+parameters and `scripts/validate_orbits.py` expands them into the cells
+(`planets|moons` × `leapfrog|accurate`), runs the missing ones, renders each, and
+generates `docs/phase4/orbit-viewers/<slug>-validation/index.html` plus the
+[validation index](../../docs/phase4/orbit-viewers/validation.html).
+
+Two quantities are **derived per system** rather than copied from α Cen:
+
+- **The accurate horizon**, from `long_inner_orbits` × that system's own innermost
+  period. This is the "orbits, not years" rule made executable, and the standard is a
+  round **10⁸ innermost orbits** — 1.92×10⁸ yr at α Cen's 1.925-yr inner planet,
+  1.4×10⁶ yr at Proxima's 5.1-day one (~6.6 h of IAS15 each). A literal year count
+  ported between the two would be meaningless: 10⁸ yr is 3.7 h at α Cen and ~20 days
+  at Proxima. The satellite hierarchy keeps its documented 10⁴ yr exception rather
+  than 10⁸ orbits (α Cen's 0.38-day inner moon already reaches ~10⁷ orbits there, and
+  10⁸ would cost >200 h). `long_years:` pins a deliberate per-system exception.
+- **The folded moon mass** for the planetary rows, summed from the hypotheticals per
+  parent. α Cen's hand-run used a literal `mass_mearth=120.873`; the driver now
+  reproduces that value and gives every other system the same treatment.
+
+A cell is skipped only when its stored run **reaches** the manifest horizon; a run that
+falls short is reported `[stale]` and re-run. Freshness is judged on the run itself, not
+on file mtimes, because the accurate cells cost hours (α Cen: 3.7 h planets, 21 h moons)
+and because raising the standard must not leave under-length runs silently passing —
+α Cen's original 10⁸ yr planetary run is 5.2×10⁷ orbits and is flagged by exactly this
+check. `--force` re-runs regardless, `--dry-run` prints the plan with each system's
+derived horizon, `--pages-only` regenerates the HTML from existing runs.
+
 ## Three diagnostics — survival, chaos, eccentricity
 
 The verdict separates *what actually happened* from *chaos risk* from *how
@@ -463,6 +493,10 @@ mass), which drive Mercury's long-term chaotic diffusion.
 ## How to use
 
 ```bash
+# The validation suite — the two-method matrix for every manifest system
+.venv/bin/python phase3/stability-sim/scripts/validate_orbits.py --dry-run   # plan + horizons
+.venv/bin/python phase3/stability-sim/scripts/validate_orbits.py --systems proxima_cen
+
 # Fast first-pass screen (WHFast + MEGNO)
 .venv/bin/python phase3/stability-sim/scripts/run.py --system trappist_1 --years 10000
 
@@ -523,6 +557,10 @@ single-star `db/systems/<system>.json`.
 
 ## Files
 
+- `validation-manifest.yaml` — per-system validation matrix parameters + page prose.
+- `scripts/validate_orbits.py` — validation-suite driver; expands the matrix, runs/renders
+  the cells, writes the per-system page and the validation index.
+- `results/_validation/<system>/<cell>/` — one directory per matrix cell.
 - `scripts/load.py` — DB JSON → REBOUND loader (handles list/dict `physical`;
   derives a from period when no curated semi-major axis).
 - `scripts/run.py` — main entry; `--integrator {whfast,trace,ias15,leapfrog}`,

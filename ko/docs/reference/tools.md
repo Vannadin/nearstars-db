@@ -147,6 +147,8 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
 - `phase3/stability-sim/scripts/plot_interactive.py` — **인터랙티브** 4패널 뷰어(Plotly, self-contained HTML). plot_moons.py와 같은 패널·데이터지만 범례 클릭으로 천체를 전 패널 동시 토글, 호버로 정확한 값, 박스줌·팬으로 조밀한 내위성 분리. 라이트/다크 토글, plasma 팔레트(다른 뷰어와 통일). `--dir <결과폴더> [--label <시스템>] [--center <천체>]`.
 - `phase3/stability-sim/viewer-manifest.yaml` — 시스템별 뷰어 sim 파라미터 단일 소스(Principia 동등 leapfrog dt=10분·years·snapshots·hypotheticals·overrides).
 - `phase3/stability-sim/scripts/build_viewers.py` — 배치 드라이버. 매니페스트를 읽어 각 시스템을 Principia 방식으로 재실행(skip-if-fresh)하고 정적 PNG + 3D 애니메이션을 렌더한 뒤 이중언어 갤러리 `docs/phase4/orbit-viewers/index.html`를 씀. `--systems`·`--force`·`--quick`·`--gallery-only`.
+- `phase3/stability-sim/validation-manifest.yaml` — 시스템별 **검증 매트릭스** 단일 소스. 어떤 계층을 가진 시스템인지, 정확 적분기는 무엇인지, 플레이 구간은 얼마인지, 그리고 `long_inner_orbits`(장기 구간은 연수가 아니라 가장 안쪽 궤도 바퀴 수로 세며 기준은 딱 떨어지는 1e8. 위성 계층은 10⁴년 예외 유지)를 담습니다. 페이지 산문(한/영)도 여기 들어갑니다.
+- `phase3/stability-sim/scripts/validate_orbits.py` — 검증 세트 드라이버. 매니페스트의 각 시스템을 `행성계|위성계 × leapfrog|정확적분` 셀로 펼쳐, 기준 구간에 못 미치는 셀만 다시 돌리고(정확 셀은 몇 시간씩 걸리므로 도달 연수로 stale 판정), 각각을 렌더한 뒤 `docs/phase4/orbit-viewers/<slug>-validation/index.html`와 인덱스 `validation.html`을 씁니다. 장기 구간과 위성 질량 합산은 시스템마다 유도합니다. `--systems`·`--cells`·`--force`·`--pages-only`·`--dry-run`.
 - `phase3/stability-sim/hypotheticals/<system>.json` — 추가 바디 스펙
 
 **스택.** `.venv/` 의 REBOUND 5.0, AU / yr / Msun 단위, 기본 horizon 10⁴ 년. Principia와 동일한 방식의 런은 `--integrator leapfrog --dt-minutes 10`(Principia의 고정 10분 ephemeris 스텝 모사)을 씁니다.

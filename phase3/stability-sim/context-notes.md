@@ -421,6 +421,59 @@ off-resonance so insensitive, the lock is dead at central so a bound-test sweep 
 rescue it). Desktop (7900X/WSL2) staged in another session for future heavy sweeps —
 `DESKTOP_WSL_SETUP.md`.
 
+## Validation suite — from one-off α Cen runs to a per-system matrix (2026-08-18)
+
+The two-method contract (accurate integrator + MEGNO / leapfrog at Principia's 10-min
+step, run per hierarchy) was established on α Cen but executed by hand: four ad-hoc
+`run.py` invocations and a hand-written results page. Promoting it to a suite means the
+matrix itself becomes data — `validation-manifest.yaml` — and `scripts/validate_orbits.py`
+expands each system into its cells, runs them, renders them, and generates the page.
+Same shape as the existing `viewer-manifest.yaml` + `build_viewers.py` pair, so the
+workspace keeps one idiom rather than two.
+
+**The horizon had to be derived, not copied.** α Cen's accurate planetary run is 10⁸ yr,
+but that number is not portable: at Proxima's 5.1-day inner planet, IAS15 costs 17 s per
+1000 yr, so 10⁸ yr is ~20 days of wall clock. The report's own rule resolves it — "long"
+is counted in **orbits, not years** — so the manifest carries `long_inner_orbits` and each
+system's year count comes from its own innermost period.
+
+The first draft set that to 5.2e7, which is simply what α Cen's existing run happened to
+reach. The owner's call was to make it a round **1e8 orbits** instead, and that is the
+better standard: the manifest number is then a stated contract rather than a back-derived
+accident, and two systems compared under it are compared on exactly the same yardstick.
+The cost is that α Cen's planetary cell no longer qualifies — 1e8 orbits is 1.92e8 yr there
+(~7 h against the 3.7 h already spent) — and Proxima lands at 1.4e6 yr (~6.6 h). Both are
+overnight runs, so the round number is worth the re-run.
+
+The satellite hierarchy is deliberately **not** on the orbit standard. α Cen's inner moon
+sits at 0.38 d, so the documented 10⁴ yr already buys ~1e7 orbits, and 1e8 would cost over
+200 h of IAS15 while discarding a 21 h run that already answered the question. The report
+carved out that exception before this change; the manifest keeps it.
+
+Raising the standard also forced the freshness rule to get smarter. Existence-based
+skipping would have let α Cen's now-under-length run pass silently, so a cell is fresh only
+when its stored timeseries actually **reaches** the manifest horizon; anything short prints
+`[stale: <reached> stored]` and re-runs. The suite therefore re-polices itself whenever the
+standard moves, which is the whole point of making the standard data.
+
+**Moon mass folding is computed, not hard-coded.** The planetary rows drop the moons and
+fold their mass into the parent; α Cen's runs recorded this as a literal
+`mass_mearth=120.873`. The driver now sums the hypotheticals' masses per parent and emits
+the `--set` itself — it reproduces 120.87296808 exactly, so the migrated α Cen results stay
+comparable while every other system gets the same treatment for free.
+
+**Existing α Cen results are migrated, not re-run.** The moon-hierarchy IAS15 cell cost
+75,334 s (21 h) and the planetary one 13,405 s (3.7 h); re-deriving them to prove the driver
+works would burn a day for no new information. They move into the generated layout as-is,
+and the driver skips any cell whose summary already exists (`--force` to override). This is
+why freshness is existence-based rather than mtime-vs-manifest like `build_viewers.py`:
+with multi-hour cells, an accidental invalidation is expensive.
+
+**Page prose lives in the manifest.** The α Cen page's bottom-line and caveat paragraphs are
+owner-reviewed text, so the generator does not author them — it lays out the matrix and the
+cards and interpolates prose the manifest supplies per system, bilingual. A system with no
+prose gets the matrix alone.
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
