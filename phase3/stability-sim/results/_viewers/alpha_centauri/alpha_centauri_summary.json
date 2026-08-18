@@ -82,7 +82,7 @@
   ],
   "integration": {
     "integrator": "leapfrog",
-    "elapsed_sec": 728.7223930358887,
+    "elapsed_sec": 1063.9677941799164,
     "dt_yr": 1.901285268841737e-05,
     "innermost_period_yr": 0.0010504127262220097,
     "energy_relative_error": 3.8685473597991084e-10,

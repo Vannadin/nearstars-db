@@ -130,7 +130,7 @@ sub = (f"{integ['integrator']} · dt={dt_min:.1f} min · {tspan:,} yr · "
        f"|ΔE/E|={integ['energy_relative_error']:.1e}"
        + (f" · MEGNO={megno:.2f}" if megno is not None else " · MEGNO n/a (drift verdict)"))
 
-# ── theme palettes (base layout = light; a button swaps to dark at runtime) ──
+# ── theme palettes (base layout = light; the page swaps to dark to match the reader) ──
 LIGHT = {"paper": "#ffffff", "plot": "#ffffff", "font": "#1a1a1a",
          "grid": "#dfe3ea", "zero": "#b8c0cc", "zero_hi": "#8a93a3",
          "sub": "#5a6473", "legend_bg": "rgba(255,255,255,.65)"}
@@ -198,7 +198,6 @@ HTML = """<!-- __TITLE__ : 안정성 런 인터랙티브 4패널 (자동 생성,
   @media (max-width:700px){
     nav{font-size:13px !important}
     nav a{min-height:38px;display:inline-flex;align-items:center;padding:0 6px}
-    #theme{min-height:38px;padding:0 13px}
     /* plotly 자체 모드바도 터치 규격으로 */
     .modebar-btn{min-width:38px !important;min-height:38px !important}
     .modebar-btn svg{transform:scale(1.15)}
@@ -212,25 +211,24 @@ HTML = """<!-- __TITLE__ : 안정성 런 인터랙티브 4패널 (자동 생성,
     scroll-behavior:auto !important } }
   body.dark{background:#06070a}
   #p{width:100%;height:100vh;height:100dvh}
-  #theme{position:fixed;top:8px;right:12px;z-index:10;background:#eef1f6;color:#1a1a1a;
-    border:1px solid #c8cfdb;border-radius:6px;padding:5px 11px;cursor:pointer;font:13px system-ui}
-  body.dark #theme{background:rgba(255,255,255,.06);color:rgba(255,255,255,.82);border-color:rgba(255,255,255,.13)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
-<button id="theme">🌙 Dark</button>
 <div id="p"></div>
 <script>
 const THEMES = __THEMES__;
 Plotly.newPlot('p', __TRACES__, __LAYOUT__,
   {responsive:true, displaylogo:false, scrollZoom:true,
    modeBarButtonsToRemove:['select2d','lasso2d']});
-let dark=false;
-document.getElementById('theme').onclick=function(){
-  dark=!dark;
-  document.body.classList.toggle('dark',dark);
-  this.textContent = dark ? '☀️ Light' : '🌙 Dark';
-  Plotly.relayout('p', dark ? THEMES.dark : THEMES.light);
-};
+// The rest of the site follows the reader's prefers-color-scheme, so this page does
+// too rather than asking again with a button. It also follows a live change, which a
+// manual toggle could not.
+const mq = matchMedia('(prefers-color-scheme: dark)');
+function applyTheme(){
+  document.body.classList.toggle('dark', mq.matches);
+  Plotly.relayout('p', mq.matches ? THEMES.dark : THEMES.light);
+}
+applyTheme();
+mq.addEventListener('change', applyTheme);
 </script>
 """
 title = f"{summary['system']} — interactive orbit analysis"
