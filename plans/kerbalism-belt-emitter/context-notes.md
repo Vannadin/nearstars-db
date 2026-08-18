@@ -303,3 +303,46 @@ Not touched: the environment and gameplay narratives, which still read true (the
 belts are still there and orbiting is still not free) and are owner-approved prose.
 If the corridor structure is worth calling out to the player, that is a gameplay-row
 edit for the owner to make.
+
+## 2026-08-18 — the touching shells were wrong, and d finally has a magnetic axis
+
+Owner asked whether the two shells sitting flush against each other was right, and
+it was not. Each shell's dose ramps from zero at its *own* boundary
+(`gradient·(-SDF)/radius`), so two shells that merely meet are both at zero exactly
+where they join. The gated arrangement's equatorial profile collapsed to 5 rad/h at
+2.5 R_p between flanks of 1000 and 5000 — a thousandfold notch that no source-loss
+balance puts there, and an artifact of the engine's per-shell ramp rather than
+anything physical.
+
+The engine sums the shells, so overlapping them fills the region from both sides.
+Refit to `L` 1.0-3.5 against 2.0-5.0 (IoU 0.988 / 0.977) and dropped both gradients
+from 2.15 to their own floors, `*_radius / d_max` = 1.157 and 1.496. The floor is the
+right value here rather than merely the legal minimum: its plateau shrinks to a single
+point at the shell's deepest interior, giving a profile that peaks at one radius and
+ramps linearly away, which is the torus being modelled. Above the floor the shell
+grows a flat top instead.
+
+Result, in the shells' own frame: a single peak of 5037 rad/h at 3.45 R_p = 0.46 R_mp,
+no interior notch, against Earth's outer belt at 0.40-0.50 R_mp. Both rules are now in
+methodology Part B (overlap, not touch; gradients at the floor) since the same trap is
+waiting for every future airless body.
+
+Candidates measured before choosing: a single broad shell (`L` 1.0-5.0, IoU 0.986)
+also gives a clean single peak but puts it at 0.35 R_mp, and one shell cannot carry
+both the torus and an inner floor. The overlap wins on the peak location.
+
+**Magnetic axis, previously not gated at all.** d shipped with no
+`geomagnetic_pole_lat`, i.e. a dipole aligned with the spin axis, while Proxima b
+carries 60 with a 0.25 offset and every solar body has one. Gated 45 degrees of tilt
+and a 0.25 R_p offset, by analogy with the ice giants (Uranus 59 and 0.3, Neptune 47
+and 0.55, Mercury 0.198) rather than with Earth. The argument is the anomaly itself:
+16 G on a 0.3 M_E slow rotator is far outside what an Earth-style compositional dynamo
+produces, and the Solar System's non-Earth dynamo geometries are precisely the ones
+that run strong and badly tilted. It is an analogy and the row says so; nothing about
+the axis is observed.
+
+Two things it buys. Orbital inclination now matters, since an orbit in the rotational
+equator cuts the tilted belt obliquely instead of running down its middle. And the
+offset pushes the deep shell into the ground on one hemisphere, so surface dose is
+hemispherically asymmetric, which is the structure the surface row's two-tone polar
+caps already describe.

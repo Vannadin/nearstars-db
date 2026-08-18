@@ -92,9 +92,26 @@ So the slot is a **conditional** feature, and the condition is a plasmasphere:
 
 Practical consequence for a Kerbalism board: an **airless** body does not get Earth's
 `has_inner` + gap + `has_outer` layout. Either give it one shell (Ganymede) or, when the
-radial intensity profile is worth carrying, two **adjacent** shells whose bounds touch,
-which renders as one continuous zone with a step in dose rather than two separated
-belts. Worked case: Proxima Cen d, inner `L` 1.0–2.5 against outer `L` 2.5–5.0.
+radial intensity profile is worth carrying, two **overlapping** shells.
+
+Overlapping, not touching — this is the trap. Each shell's dose ramps from zero at its
+*own* boundary (`gradient·(−SDF)/radius`), so two shells whose bounds merely meet both
+sit at zero exactly where they join, and the profile collapses at the junction: Proxima
+Cen d's first gated arrangement (`L` 1.0–2.5 against 2.5–5.0) dropped to 5 rad/h at
+2.5 R_p between flanks of 1000 and 5000, a thousandfold notch that no source-loss balance
+puts there. Because the engine **sums** the shells' contributions, overlapping them
+instead fills that region from both sides and yields one smooth single-peaked profile.
+Two rules follow:
+
+- **overlap by roughly half a shell**, so each one's ramp is well inside the other;
+- **set each `gradient` at its floor** `*_radius / d_max` (Part C's gradient recipe). The
+  floor is the value whose plateau is a single point at the shell's deepest interior, i.e.
+  a profile that peaks at one radius and ramps linearly away — which is the torus shape
+  being modelled. Above the floor the shell develops a flat-topped plateau instead;
+  below it, the belt never reaches its stated `radiation_*` anywhere.
+
+Worked case: Proxima Cen d, inner `L` 1.0–3.5 against outer `L` 2.0–5.0, gradients 1.157
+and 1.496, which puts the summed peak at 0.46 `R_mp` with no interior notch.
 
 ### Induced magnetospheres — the no-dynamo branch
 
@@ -387,7 +404,7 @@ so confidence is low, and the 3–280 G field range spans 2×10²–10⁶ rad/h.
 planet feeds no ionospheric plasmasphere) gives CmCk ≪ 1 at every density: the
 K–P ceiling never binds and the belts are source/loss-set, the same structural
 regime as every strong-field small-L case. Gated on the board 2026-08-18 with the
-shells refit (`fit_belts.py`, `L` 1.0–2.5 and 2.5–5.0, IoU 0.996 / 0.979); until then
+shells refit (`fit_belts.py`, `L` 1.0–3.5 and 2.0–5.0 overlapping, IoU 0.988 / 0.977); until then
 the body had a magnetopause row but no belt row, so the cfg shipped no belts at all
 while the board's own environment text described them.
 

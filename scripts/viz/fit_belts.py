@@ -164,8 +164,12 @@ TARGETS = {
     #                 shells are therefore adjacent (2.5 = 2.5), rendering one continuous
     #                 zone with an intensity step rather than Earth's separated pair.
     #   outer edge 5.0 = 0.67 x standoff, inside the 0.6-0.8 R_mp bound (Part A).
-    'proxima_d_inner': {'L': (1.0, 2.5), 'rcut': 1.0},
-    'proxima_d_outer': {'L': (2.5, 5.0), 'rcut': 1.0},
+    #   overlap     — 2026-08-18: the first arrangement had the two shells merely touching
+    #                 at 2.5, and each shell's dose ramps from zero at its own boundary, so
+    #                 the profile collapsed to 5 rad/h there between flanks of 1000 and 5000.
+    #                 The engine sums shells, so they overlap now and the notch is gone.
+    'proxima_d_inner': {'L': (1.0, 3.5), 'rcut': 1.0},
+    'proxima_d_outer': {'L': (2.0, 5.0), 'rcut': 1.0},
 }
 
 if __name__ == '__main__':
