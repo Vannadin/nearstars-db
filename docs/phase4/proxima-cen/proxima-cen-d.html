@@ -68,6 +68,15 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
+/* cited figures */
+.sec-h { font-size:13px; font-weight:600; color:var(--fg2); margin:30px 0 8px;
+  padding-top:20px; border-top:1px solid var(--bd1) }
+.figs { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px }
+.fig { margin:0; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
+  overflow:hidden }
+.fig img { display:block; width:100%; height:auto; background:var(--s2) }
+.fig figcaption { padding:9px 13px; font-size:12px; color:var(--fg3); line-height:1.55 }
+.fig figcaption code { font-size:11.5px }
 /* index grid */
 .body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
 .body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
@@ -443,8 +452,9 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>biome 스킴 = 하이브리드 7구획(수성 지질 + 1:1 열구조 결합; 2026-06-23 오너 선택, RSS 수성 3:2 사례 확인 후 직하 핫스팟·야간면 추가). splashdown 없음(무액체), 대기비행 없음(무대기, 동력/탄도만), breathability 불가. ScienceValues 전체 채움(landed/flying-low=탄도/in-space; splashed=토큰 inert), SOI는 질량 자동. 방사선 해저드 tier는 environment 행을 따르고(내대 중앙값 5×10³ rad/h), cfg emit (biome map·ScienceValues)은 프로젝트 말미 일괄.<br></span><span data-en hidden>The biome scheme is the hybrid seven zones (Mercury geology combined with the 1:1 thermal structure; owner choice 2026-06-23, adding the substellar hotspot and night side after reviewing the RSS Mercury 3:2 case). No splashdown (no liquids), no atmospheric flight (airless, powered and ballistic only), breathability impossible. ScienceValues are filled throughout (landed/flying-low = ballistic/in-space; splashed is an inert token), and SOI follows automatically from the mass. The radiation hazard tier follows the environment row (inner-belt central value 5×10³ rad/h), and the cfg emit (biome map, ScienceValues) is batched at the end of the project.<br></span></div>
   
 </article></div>
+
 <div class="bodynav"><a class="navlink" href="proxima-cen-b.html">← Proxima Cen b</a><a class="navlink" href="proxima-cen-c.html">Proxima Cen c →</a></div>
-<div class="stamp">빌드 2026-08-18 16:53 · 39dda601</div></div>
+<div class="stamp">빌드 2026-08-18 19:49 · 4bf29a2f</div></div>
 <script>
 const b=document.body;
 function setLang(en){

@@ -256,6 +256,52 @@ def decision_html(d):
 </article>"""
 
 
+IMG_RE = re.compile(r"docs/img/[\w./-]+\.(?:png|jpg|jpeg|svg)")
+
+
+def figures_of(rows, body):
+    """Figures this body's decisions cite, in row order, first citer wins.
+
+    Boards already name their diagrams inline — `Shape diagram:
+    docs/img/field-geometry-proxima-c.png` sits in the row's own note — so the
+    figure's owner is wherever it was cited, and no second body↔image mapping has
+    to be curated (or kept in sync). A path that no longer resolves is dropped
+    with a warning rather than emitted as a broken image.
+    """
+    seen = {}
+    for d in rows:
+        blob = yaml.safe_dump(d, allow_unicode=True, default_flow_style=False)
+        for path in IMG_RE.findall(blob):
+            if path in seen:
+                continue
+            if not (REPO / path).exists():
+                print(f"[warn] {body}: cited figure not found — {path}", file=sys.stderr)
+                continue
+            seen[path] = d.get("axis", "")
+    return list(seen.items())
+
+
+def figures_html(figs):
+    """The cited figures as a captioned grid, each caption anchored to its row."""
+    if not figs:
+        return ""
+    items = []
+    for path, axis in figs:
+        src = "../../" + path[len("docs/"):]
+        cap = (f'<a href="#{esc(axis)}"><code>{esc(axis)}</code></a> '
+               + bi("cited by this decision", "이 결정이 인용")) if axis else ""
+        items.append(
+            f'<figure class="fig">'
+            f'<a href="{src}"><img src="{src}" alt="{esc(axis)} figure" loading="lazy"></a>'
+            f'<figcaption>{cap}</figcaption>'
+            f'</figure>')
+    head = ('<h2 class="sec-h">' + bi("Figures", "자료") + '</h2>'
+            + '<p class="intro">'
+            + bi("The diagrams this body's decisions cite, in the order the rows raise them.",
+                 "이 천체의 결정들이 인용한 도식입니다. 행이 등장하는 순서대로 놓았습니다.")
+            + '</p>')
+    return head + '<div class="figs">' + "".join(items) + '</div>'
+
 def body_stats(rows):
     ng = sum(1 for d in rows if d.get("status") in ("gated", "emitted"))
     npt = sum(1 for d in rows if d.get("status") == "passthrough")
@@ -328,6 +374,7 @@ def render_body(system, body, rows, alias, prev_link, next_link):
 {toc}
 {LEGEND}
 <div class="decisions">{decs}</div>
+{figures_html(figures_of(rows, body))}
 {nav_html}
 {build_stamp()}"""
     return page(f"Phase 4 — {system} / {body}", content)
@@ -501,6 +548,15 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
+/* cited figures */
+.sec-h { font-size:13px; font-weight:600; color:var(--fg2); margin:30px 0 8px;
+  padding-top:20px; border-top:1px solid var(--bd1) }
+.figs { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px }
+.fig { margin:0; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
+  overflow:hidden }
+.fig img { display:block; width:100%; height:auto; background:var(--s2) }
+.fig figcaption { padding:9px 13px; font-size:12px; color:var(--fg3); line-height:1.55 }
+.fig figcaption code { font-size:11.5px }
 /* index grid */
 .body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
 .body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
