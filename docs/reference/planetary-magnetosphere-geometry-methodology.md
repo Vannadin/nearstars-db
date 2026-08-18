@@ -343,9 +343,45 @@ regime calls (Alpha Centauri A b III (Pandora) 0.4× Earth). Confidence remains 
 exponent is a two-anchor fit, and n_cold for a fiction torus is a stated
 assumption — but every factor is now mechanistic, pinned, and bounded.
 
+### Which shell carries the peak — the Earth split does not generalise
+
+The recipe above hands down an intensity *scale* and an outer/inner *ratio*, and
+both anchors it takes that ratio from put the peak in the **deep** shell: Earth's
+inner belt is 10.4 rad/h against 2.2 outside it, and Jupiter's inner belt likewise
+dominates its own disc. Read literally that says a vessel is safest far out and dies
+low, on every body. It does not generalise, for a reason that is visible in the
+source term rather than the field.
+
+Earth's inner belt is a **CRAND** belt: cosmic rays strike the *atmosphere*, and the
+albedo neutrons splash back and decay into trapped protons (Lenchek 1961,
+[`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)). Remove the atmosphere and that source is removed with it, and
+nothing else fills the deep shell preferentially — wind-fed and diffusion-fed
+populations are injected at the *outer* boundary and energised on the way in, so
+their peak sits at intermediate `L`, not at the surface (Earth's own outer belt
+peaks near `L` 4–5, i.e. ~0.45 `R_mp`; Schulz & Lanzerotti 1974,
+[`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
+
+The extrasolar observations available now say the same thing for strong-field
+bodies. Kao 2023 ([`2023Natur.619..272K`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..272K), Nature 619, 272) **resolved** a radiation belt
+around the ultracool dwarf LSR J1835+3259 at 8.4 GHz: a double-lobed, axisymmetric
+structure explicitly "similar in morphology to the Jovian radiation belts", with the
+two lobes separated by up to 18 dwarf radii — a torus standing ~9 radii off the
+body, stable across three epochs spanning more than a year, carrying ~15 MeV
+electrons. Climent 2023 ([`2023Sci...381.1120C`](https://ui.adsabs.harvard.edu/abs/2023Sci...381.1120C), Science 381, 1120) reports a belt around
+a brown dwarf on the same picture. Neither is Earth-shaped.
+
+**Rule.** Apply the outer/inner ratio as written only where the deep shell has a
+CRAND source, i.e. where there is an atmosphere for the cosmic rays to hit. On an
+**airless** body, invert it: the interpolated intensity belongs to the **outer**
+shell, and the deep shell carries the ratio. The scale is unchanged — this decides
+*where* the peak sits, not how big it is — and the result is the observed
+morphology, a torus with a quieter region inside it, rather than a monotonic ramp
+into the ground.
+
 **Worked case — Proxima d (16 G SPI polar field, wind/flare-fed, no torus).**
-B_eq = 800 µT → the anchor interpolation gives inner ~5×10³ rad/h and outer
-~1×10³ (wind-fed 0.2 ratio). This extrapolates 1.9× beyond the Jupiter anchor,
+B_eq = 800 µT → the anchor interpolation gives ~5×10³ rad/h, and by the airless rule
+above that scale belongs to the **outer** shell with the deep shell at the 0.2 ratio,
+~1×10³ (d is bare rock, so it has no CRAND source to load the inner shell). This extrapolates 1.9× beyond the Jupiter anchor,
 so confidence is low, and the 3–280 G field range spans 2×10²–10⁶ rad/h.
 `kp_limit.py` at L = 4 (B_local 1.25×10⁴ nT; n_cold 1–100 cm⁻³ — an airless
 planet feeds no ionospheric plasmasphere) gives CmCk ≪ 1 at every density: the
@@ -1115,6 +1151,11 @@ a documented regime call rather than a computed number.
   15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). Where each belt's flux actually peaks — Earth's inner-belt
   peak and slot, and Uranus' broad maxima between moon-swept minima. These are the
   profile shapes the `radiation_*_gradient` recipe reads `d*` from.
+- **Kao et al. 2023**, Nature 619, 272 ([`2023Natur.619..272K`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..272K)); **Climent et al. 2023**,
+  Science 381, 1120 ([`2023Sci...381.1120C`](https://ui.adsabs.harvard.edu/abs/2023Sci...381.1120C)). The only *resolved* extrasolar radiation belt
+  and its brown-dwarf counterpart: a double-lobed Jovian-morphology torus standing ~9
+  radii off the body, ~15 MeV electrons, stable over a year. The observational anchor
+  for putting the peak in the outer shell on airless strong-field bodies.
 - **Ginet et al. 2013**, SSRv 179, 579 ([`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G)). AE9/AP9/SPM, the current
   standard trapped-flux specification — the successor to AE8/AP8 and the model to read a
   radial profile off for Earth. Cite this rather than "AP9" loosely.

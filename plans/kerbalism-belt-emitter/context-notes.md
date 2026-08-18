@@ -257,3 +257,49 @@ the peak deep. That favours the outer shell carrying the peak, against the
 Earth-anchored inner > outer split the Part B recipe hands down. Not applied: the
 recipe change belongs in the methodology first, and the prior question is whether
 d has belts at all.
+
+## 2026-08-18 — owner kept the 16 G field, and the peak moved outward
+
+Owner's call on the three readings: keep 16 G, and make it more interesting. That
+settles the field question by adoption rather than by agreement, so two things
+followed.
+
+First the honesty side. The magnetic_field row's evidence claimed the bottom of the
+published range, ~3 G, was the theory-consistent end. It is not: 3 G is still about
+a million times what our rocky-dynamo ladder returns for this body, and the ladder's
+own answer (0.38 uT polar) would put the boundary at 0.46 R_d, inside the planet, so
+no magnetosphere at all. The row now states that, states that the paper's other
+formulations need 1000-10000 G and are rejected by its own authors as implausible,
+and states plainly that the adoption is an owner call for the more interesting body
+rather than a point where the two lines of evidence meet. The dynamo methodology is
+now cited alongside the SPI paper on that row.
+
+Then the interesting side, which the Kao 2023 anchor had already set up. The Part B
+recipe hands down an intensity scale and an outer/inner ratio, and both of its
+anchors put the peak in the deep shell. That is an Earth artefact: Earth's inner
+belt is CRAND-fed, cosmic rays hitting *air*, and a bare rock has no such source,
+while wind- and diffusion-fed populations are injected at the outer boundary and
+peak at intermediate L. The only resolved extrasolar belt agrees. So Part B gains a
+rule (the peak belongs to the outer shell on airless bodies, the deep shell takes
+the ratio; the scale is unchanged) and d's two intensities swapped: inner 1000,
+outer 5000.
+
+The resulting equatorial profile is worth recording, because it is now a structure
+rather than a ramp:
+
+| r (R_p) | dose (rad/h) |
+|---|---|
+| 1.0 | 7 |
+| 1.5-1.75 | 1000 |
+| 2.5 | 256 |
+| 3.5-3.75 | 5000 |
+| 5.0 and out | 0 (inside the pause, shielded) |
+
+Two quiet corridors, one hugging the surface and one at the 2.5 R_p shell junction,
+separated by hazard bands, with the killing torus at 3-4.5. The section render shows
+the double-lobed morphology Kao imaged. Nobody has to fly the same altitude twice.
+
+Not touched: the environment and gameplay narratives, which still read true (the
+belts are still there and orbiting is still not free) and are owner-approved prose.
+If the corridor structure is worth calling out to the player, that is a gameplay-row
+edit for the owner to make.

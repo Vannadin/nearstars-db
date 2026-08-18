@@ -581,9 +581,45 @@ regime calls (Alpha Centauri A b III (Pandora) 0.4× Earth). Confidence remains 
 exponent is a two-anchor fit, and n_cold for a fiction torus is a stated
 assumption — but every factor is now mechanistic, pinned, and bounded.
 
+### Which shell carries the peak — the Earth split does not generalise
+
+The recipe above hands down an intensity *scale* and an outer/inner *ratio*, and
+both anchors it takes that ratio from put the peak in the **deep** shell: Earth's
+inner belt is 10.4 rad/h against 2.2 outside it, and Jupiter's inner belt likewise
+dominates its own disc. Read literally that says a vessel is safest far out and dies
+low, on every body. It does not generalise, for a reason that is visible in the
+source term rather than the field.
+
+Earth's inner belt is a **CRAND** belt: cosmic rays strike the *atmosphere*, and the
+albedo neutrons splash back and decay into trapped protons (Lenchek 1961,
+[`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)). Remove the atmosphere and that source is removed with it, and
+nothing else fills the deep shell preferentially — wind-fed and diffusion-fed
+populations are injected at the *outer* boundary and energised on the way in, so
+their peak sits at intermediate `L`, not at the surface (Earth's own outer belt
+peaks near `L` 4–5, i.e. ~0.45 `R_mp`; Schulz & Lanzerotti 1974,
+[`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
+
+The extrasolar observations available now say the same thing for strong-field
+bodies. Kao 2023 ([`2023Natur.619..272K`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..272K), Nature 619, 272) **resolved** a radiation belt
+around the ultracool dwarf LSR J1835+3259 at 8.4 GHz: a double-lobed, axisymmetric
+structure explicitly "similar in morphology to the Jovian radiation belts", with the
+two lobes separated by up to 18 dwarf radii — a torus standing ~9 radii off the
+body, stable across three epochs spanning more than a year, carrying ~15 MeV
+electrons. Climent 2023 ([`2023Sci...381.1120C`](https://ui.adsabs.harvard.edu/abs/2023Sci...381.1120C), Science 381, 1120) reports a belt around
+a brown dwarf on the same picture. Neither is Earth-shaped.
+
+**Rule.** Apply the outer/inner ratio as written only where the deep shell has a
+CRAND source, i.e. where there is an atmosphere for the cosmic rays to hit. On an
+**airless** body, invert it: the interpolated intensity belongs to the **outer**
+shell, and the deep shell carries the ratio. The scale is unchanged — this decides
+*where* the peak sits, not how big it is — and the result is the observed
+morphology, a torus with a quieter region inside it, rather than a monotonic ramp
+into the ground.
+
 **Worked case — Proxima d (16 G SPI polar field, wind/flare-fed, no torus).**
-B_eq = 800 µT → the anchor interpolation gives inner ~5×10³ rad/h and outer
-~1×10³ (wind-fed 0.2 ratio). This extrapolates 1.9× beyond the Jupiter anchor,
+B_eq = 800 µT → the anchor interpolation gives ~5×10³ rad/h, and by the airless rule
+above that scale belongs to the **outer** shell with the deep shell at the 0.2 ratio,
+~1×10³ (d is bare rock, so it has no CRAND source to load the inner shell). This extrapolates 1.9× beyond the Jupiter anchor,
 so confidence is low, and the 3–280 G field range spans 2×10²–10⁶ rad/h.
 `kp_limit.py` at L = 4 (B_local 1.25×10⁴ nT; n_cold 1–100 cm⁻³ — an airless
 planet feeds no ionospheric plasmasphere) gives CmCk ≪ 1 at every density: the
@@ -1353,6 +1389,11 @@ a documented regime call rather than a computed number.
   15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). Where each belt's flux actually peaks — Earth's inner-belt
   peak and slot, and Uranus' broad maxima between moon-swept minima. These are the
   profile shapes the `radiation_*_gradient` recipe reads `d*` from.
+- **Kao et al. 2023**, Nature 619, 272 ([`2023Natur.619..272K`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..272K)); **Climent et al. 2023**,
+  Science 381, 1120 ([`2023Sci...381.1120C`](https://ui.adsabs.harvard.edu/abs/2023Sci...381.1120C)). The only *resolved* extrasolar radiation belt
+  and its brown-dwarf counterpart: a double-lobed Jovian-morphology torus standing ~9
+  radii off the body, ~15 MeV electrons, stable over a year. The observational anchor
+  for putting the peak in the outer shell on airless strong-field bodies.
 - **Ginet et al. 2013**, SSRv 179, 579 ([`2013SSRv..179..579G`](https://ui.adsabs.harvard.edu/abs/2013SSRv..179..579G)). AE9/AP9/SPM, the current
   standard trapped-flux specification — the successor to AE8/AP8 and the model to read a
   radial profile off for Earth. Cite this rather than "AP9" loosely.
@@ -1760,8 +1801,37 @@ K–P 천장 아래에 있어야 하고(A b 300 rad/h ≈ 지구 29배 ≪ 가�
 지수가 2-앵커 적합이고 픽션 토러스의 n_cold는 명시된 가정이므로 — 그러나 이제 모든 요인이
 기계론적이고, 핀되고, 경계지어졌습니다.
 
+### 피크를 가지는 껍질 — 지구식 배분은 일반화되지 않는다
+
+위 레시피가 주는 것은 세기의 **크기**와 외/내 **비**인데, 그 비를 가져온 두 앵커가 모두 피크를
+**깊은** 껍질에 둡니다. 지구 내대가 10.4 rad/h이고 바깥은 2.2, 목성도 내대가 제 원반을 압도합니다.
+이걸 곧이곧대로 읽으면 어떤 천체에서든 "멀수록 안전하고 낮으면 죽는다"가 됩니다. 일반화되지
+않습니다. 이유는 자기장이 아니라 공급원 쪽에 보입니다.
+
+지구 내대는 **CRAND** 벨트입니다. 우주선이 **대기**를 때리고, 튕겨 나온 알베도 중성자가 붕괴해
+양성자로 포획됩니다(Lenchek 1961, [`1961JGR....66.4027L`](https://ui.adsabs.harvard.edu/abs/1961JGR....66.4027L)). 대기를 걷어내면 그 공급원도 함께
+사라지고, 깊은 껍질을 우선적으로 채워 줄 다른 것이 없습니다. 항성풍과 확산이 먹이는 집단은
+**바깥** 경계에서 주입돼 들어오면서 에너지를 얻으므로 피크가 중간 `L`에 놓입니다. 지구 외대부터가
+`L` 4–5, 즉 `R_mp`의 ~0.45 지점에서 피크입니다(Schulz & Lanzerotti 1974,
+[`1974pdrb.book.....S`](https://ui.adsabs.harvard.edu/abs/1974pdrb.book.....S)).
+
+지금 확보된 계외 관측도 강한 장 천체에 대해 같은 말을 합니다. Kao 2023
+([`2023Natur.619..272K`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..272K), Nature 619, 272)이 초저온왜성 LSR J1835+3259의 방사선대를 8.4 GHz에서
+**해상**했습니다. 쌍엽 축대칭 구조이고 논문이 명시적으로 "목성 방사선대와 형태가 비슷하다"고
+적으며, 두 엽의 간격이 최대 18 반경입니다. 몸체에서 ~9 반경 떨어져 선 토러스가 1년 넘는 세 관측에
+걸쳐 안정적으로 있었고, 전자 에너지는 ~15 MeV입니다. Climent 2023
+([`2023Sci...381.1120C`](https://ui.adsabs.harvard.edu/abs/2023Sci...381.1120C), Science 381, 1120)이 갈색왜성에서 같은 그림을 보고합니다. 어느 쪽도
+지구 형태가 아닙니다.
+
+**규칙.** 외/내 비를 적힌 그대로 쓰는 것은 깊은 껍질에 CRAND 공급원이 있는 경우, 즉 우주선이 때릴
+대기가 있는 경우로 한정합니다. **대기가 없는** 천체에서는 뒤집습니다. 보간으로 얻은 세기를
+**외대**에 주고, 깊은 껍질이 비를 받습니다. 크기는 그대로입니다. 이 규칙이 정하는 것은 피크가
+**어디**에 놓이냐이지 얼마나 크냐가 아니며, 결과는 관측된 형태 그대로 안쪽이 조용한 토러스이지
+지면으로 내리꽂는 단조 경사가 아닙니다.
+
 **작업 사례 — Proxima d (16 G SPI 극자기장, 항성풍/플레어 공급, 토러스 없음).**
-B_eq = 800 µT → 앵커 보간으로 내대 ~5×10³ rad/h, 외대 ~1×10³(wind-fed 0.2 비).
+B_eq = 800 µT → 앵커 보간이 ~5×10³ rad/h를 주고, 위의 무대기 규칙에 따라 그 크기는 **외대**가,
+0.2 비인 ~1×10³은 깊은 껍질이 가집니다(d는 맨바위라 내대를 실어 줄 CRAND 공급원이 없습니다).
 목성 앵커의 1.9배 밖 외삽이라 신뢰도는 낮고, 장 범위 3–280 G를 넣으면
 2×10²–10⁶ rad/h까지 벌어집니다. `kp_limit.py`를 L = 4에서 돌리면(B_local
 1.25×10⁴ nT; n_cold 1–100 cm⁻³ — 무대기 행성은 전리층발 플라스마권을 못 먹임)
@@ -2431,6 +2501,10 @@ Polyphemus의 GCR 차단 + gap 기아지만 진짜 지구-*류* 벨트), `radiat
 - **Divine & Garrett 1983**, JGR 88, 6889 ([`1983JGR....88.6889D`](https://ui.adsabs.harvard.edu/abs/1983JGR....88.6889D)); **Bagenal 1994**,
   JGR 99, 11043 ([`1994JGR....9911043B`](https://ui.adsabs.harvard.edu/abs/1994JGR....9911043B)). 목성 방사선 + Io 내부 플라스마원 — "강도는 場이
   아니라 공급원이 정한다"의 canonical 사례.
+- **Kao et al. 2023**, Nature 619, 272 ([`2023Natur.619..272K`](https://ui.adsabs.harvard.edu/abs/2023Natur.619..272K)); **Climent et al. 2023**,
+  Science 381, 1120 ([`2023Sci...381.1120C`](https://ui.adsabs.harvard.edu/abs/2023Sci...381.1120C)). 해상된 유일한 계외 방사선대와 갈색왜성 쪽
+  대응 사례입니다. 몸체에서 ~9 반경 떨어져 선 쌍엽 목성형 토러스, ~15 MeV 전자, 1년 넘게 안정.
+  대기 없는 강한 장 천체에서 피크를 외대에 두는 근거입니다.
 - **Ripoll et al. 2016**, GRL 43, 5616 ([`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R)); **Cheng et al. 1987**, JGR 92,
   15315 ([`1987JGR....9215315C`](https://ui.adsabs.harvard.edu/abs/1987JGR....9215315C)). 각 벨트의 플럭스가 실제로 어디서 최대인지. 지구 내대 피크와
   슬롯, 천왕성의 위성-소거 극소 사이 넓은 최대. `radiation_*_gradient` 레시피가 `d*`를 읽어오는
