@@ -611,6 +611,13 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   2×10²–10⁶), plus the `kp_limit.py` CmCk check showing the K–P ceiling never binds
   (source/loss-set). Gated on the phase4 board 2026-08-18 as a single shell carrying
   the whole scale, so the earlier inner/outer split no longer applies.
+- `scripts/refs/fit_generalized_pause.py` — the ⚗ generalized stock magnetopause
+  (`pause_waist` / `pause_smooth`) against a softened-Shue target. At **α = 0.5** the two
+  surfaces are identical with `pause_waist` = 0, so the module returns a closed form
+  rather than a fit; away from 0.5 it falls back to Nelder-Mead and the residual is real
+  (3.3% rms at 0.58, 9.6% at 0.40), which is why this branch is the sub-Alfvénic one. The
+  self-test measures the closed form and the hand-fitted sets gated before 2026-08-18
+  against the same curve.
 - `scripts/viz/fit_belts.py` — numerical fitter: dipole drift-shell targets (r = L cos²λ,
   loss-cone cut) → Kerbalism SDF parameters via Nelder-Mead, IoU-scored
 - `scripts/pipeline/emit_kerbalism_radiation.py` — emits

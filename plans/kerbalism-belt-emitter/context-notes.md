@@ -532,3 +532,42 @@ its culture name.
 
 Verified in the browser afterwards: 9 / 3 / 3 / 1 buttons, every preset applies without
 error, no console errors.
+
+## 2026-08-18 — Cassandra's smooth set, and the alpha = 0.5 identity
+
+Owner: Cassandra's smooth is not applied. It was not there to apply, and it should have
+been: the body is an embedded moon of Alpha Centauri A b with `pause_compression` 1.4142
+= 2^0.5, i.e. exactly the sub-Alfvenic alpha that the two generalized-stock fields were
+built for, the same branch as Alpha Centauri A b III and Ganymede.
+
+Deriving it turned up something better than the missing value. No fitting script was
+ever committed for this branch, only the hand-fitted numbers in the boards, so the tool
+had to be written (`scripts/refs/fit_generalized_pause.py`). Running it revealed that at
+**alpha = 0.5 the generalized stock surface and the softened Shue surface are the same
+surface**, with `pause_waist` = 0. Not a good approximation, the same surface. The
+derivation: the alpha=0.5 Shue curve satisfies `r^2 (2eps+1) + r x = 2 r0^2 (1+eps)`,
+the generalized form with compression 1 and waist 0 satisfies
+`r^2 + (1-e^2)/2 x (S-x) + k^2 w^2 = rad^2`, and requiring the second to reduce to the
+first forces `S - x = lambda r` on the surface with `lambda = 2/sqrt(1-e^2)`, which
+closes the system:
+
+    eps = 1/((L/r0)^2 - 1),  q = 2 eps + 1
+    extension = sqrt(1 - 1/q^2),  C = 2 r0^2 (1+eps)/q
+    smooth = 2 q sqrt(C),  radius = sqrt(C + ((1-extension)/2)^2 smooth^2)
+
+Checked against alpha 0.40 / 0.45 / 0.55 / 0.58 / 0.65 at the same nose and tail: the
+residual is 9.6% / 3.7% / 2.3% / 3.3% / 4.4% rms and only 0.5 collapses to zero. So the
+board note that has been sitting on Pandora's row, that sub-Alfvenic bodies are "exactly
+where the generalized stock form CAN represent Shue", is literally true, and now
+computable.
+
+Cassandra's set from the closed form: waist 0, smooth 3.7474, radius 2.4361,
+compression 1.0, extension 0.154796, preserving nose 1.3129 and tail 16.86 exactly. Gated
+as `pending` like the others, since the plugin does not exist yet.
+
+**The three sets gated earlier are hand-fits and sit off the curve**: Mercury 3.4e-3 rms,
+Ganymede 4.7e-3, Alpha Centauri A b III 1.5e-2, all with a nonzero waist that the exact
+solution does not need. The closed form reproduces each body's nose and tail while
+landing on the curve to ~1e-6. Not touched, because they are gated values on three
+bodies and that is an owner call, but the tool's self-test now prints both numbers side
+by side so the gap is visible rather than remembered.
