@@ -258,6 +258,55 @@ classic mistake this doc guards against.
 
 ## Part A — geometry (shape + size) from the field
 
+### Which boundary a body gets, and which curve draws it
+
+Two decisions get conflated because they usually correlate: *what holds the boundary up*
+(induced vs intrinsic) and *which curve family draws it* (generalized stock vs Shue). They
+are independent, and reading one off the other has produced wrong calls. Route in this
+order.
+
+**Step 0 — what is the obstacle?** An induced boundary is built by a **conducting
+ionosphere**, so it needs an atmosphere. An airless body has no ionopause available at
+all: the only obstacle is the field itself and the only floor is the surface, `1 R_p`.
+
+**Step 1 — which boundary wins.**
+
+- **With an atmosphere**, the crossover test is `R_mp(B_eq) > r_ionopause` (Egan 2019,
+  [`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)), **not** `B_eq > 0`. Above it the body is intrinsic; below it
+  the body is induced, and there a weak dipole is actively worse than none.
+- **Airless**, the same test reads against the surface: `R_mp(B_eq) > 1 R_p`. Above it,
+  intrinsic. Below it **nothing forms** and the wind reaches the ground, the Moon's case.
+
+|  | atmosphere | airless |
+|---|---|---|
+| the field clears the floor | Earth, Jupiter (intrinsic) | Mercury, Ganymede (intrinsic) |
+| it does not | **Venus, Mars, Proxima Cen b** (induced) | nothing forms (the Moon) |
+
+This is what separates **Mercury from Venus and Mars**, and it is not field strength:
+Mercury's dipole is ~1/100 of Earth's, weaker in relative terms than the crustal fields
+Mars has left, yet Mercury is on the intrinsic branch and Mars is not. Mercury is airless,
+so there is no ionopause for its dipole to lose to, and its measured 1.45 R_M standoff
+(Winslow 2013) clears the only floor it faces. Venus and Mars have atmospheres, so the
+ionopause exists at ~1.05–1.2 R_p and their fields do not reach it. Proxima Cen b sits on
+the induced side of the same test with an N₂ atmosphere and a field too weak to stand the
+wind off (Dong 2017), which is why its shape ratio is taken from Mars rather than from
+Shue.
+
+**Step 2 — pick α** (intrinsic branch only): a fitted α if one exists, otherwise an
+analogy that says it is one, and `0.5` with an `M_A`-shortened tail if the flow is
+sub-Alfvénic. The table in the induced-branch section below lists which body took which.
+
+**Step 3 — encode the shape.** This is the step that does *not* follow from step 1:
+
+- **induced** → generalized stock, because Shue geometrically cannot draw that boundary;
+- **α = 0.5** → generalized stock again, for the opposite reason: at that α it reproduces
+  Shue *exactly*, in closed form with `pause_waist` = 0 (`fit_generalized_pause.py`);
+- **any other α** → Shue-native where the plugin allows it, otherwise the stock
+  two-factor approximation.
+
+So the encoding is not a proxy for the physics. Venus and Ganymede both carry
+`pause_smooth`, one because Shue fails there and one because Shue is exact there.
+
 ### Magnetopause standoff (Chapman–Ferraro balance)
 
 The dayside magnetopause sits where the planetary magnetic pressure balances the
@@ -1509,6 +1558,51 @@ a documented regime call rather than a computed number.
 막는 전형적 실수입니다.
 
 ## Part A — 자기장에서 지오메트리(모양 + 크기)
+
+### 어떤 경계가 생기고, 어떤 곡선이 그것을 그리는가
+
+두 결정이 대개 같이 움직이는 탓에 자주 섞입니다. **무엇이 경계를 떠받치는가**(유도 대 고유)와
+**어떤 곡선족으로 그리는가**(일반화 스톡 대 Shue)입니다. 이 둘은 독립이고, 한쪽에서 다른 쪽을
+읽어내려다 잘못 판정한 적이 있습니다. 순서는 이렇습니다.
+
+**0단계 — 장애물이 무엇인가.** 유도 경계를 만드는 것은 **전도성 전리층**이므로 대기가 있어야
+합니다. 대기 없는 천체에는 이오노포즈라는 선택지 자체가 없습니다. 장애물은 자기장뿐이고 바닥은
+표면 `1 R_p` 하나입니다.
+
+**1단계 — 어느 경계가 이기는가.**
+
+- **대기가 있으면** 판정식은 `R_mp(B_eq) > r_ionopause`입니다(Egan 2019,
+  [`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)). `B_eq > 0`이 **아닙니다.** 넘으면 고유, 못 넘으면 유도이고,
+  그 아래에서는 약한 쌍극자가 없느니만 못합니다.
+- **대기가 없으면** 같은 판정식이 표면을 상대로 읽힙니다. `R_mp(B_eq) > 1 R_p`. 넘으면 고유,
+  못 넘으면 **아무것도 생기지 않고** 항성풍이 지면에 닿습니다. 달의 경우입니다.
+
+|  | 대기 있음 | 대기 없음 |
+|---|---|---|
+| 자기장이 바닥을 넘음 | 지구·목성(고유) | 수성·가니메데(고유) |
+| 못 넘음 | **금성·화성·프록시마 센타우리 b**(유도) | 아무것도 안 생김(달) |
+
+**수성이 금성·화성과 갈리는 지점이 여기**이고, 자기장 세기가 아닙니다. 수성의 쌍극자는 지구의
+1/100 수준으로, 상대적으로 보면 화성에 남은 지각 잔류자기보다도 약합니다. 그런데도 수성은 고유
+갈래이고 화성은 아닙니다. 수성은 대기가 없어 쌍극자가 내줄 이오노포즈 자체가 없고, 실측 standoff
+1.45 R_M(Winslow 2013)이 마주하는 유일한 바닥을 넘습니다. 금성과 화성은 대기가 있어 이오노포즈가
+~1.05~1.2 R_p에 서고, 그들의 자기장은 거기 못 미칩니다. 프록시마 센타우리 b도 같은 판정에서 유도
+쪽입니다. N₂ 대기가 있고 자기장은 항성풍을 세워 막기에 약합니다(Dong 2017). 그래서 이 천체의 형상
+비를 Shue가 아니라 화성 실측에서 가져옵니다.
+
+**2단계 — α를 고른다**(고유 갈래에만 해당). 적합된 α가 있으면 그것, 없으면 유추임을 밝힌 값,
+흐름이 아음속이면 `0.5`에 `M_A`로 단축한 꼬리입니다. 어느 천체가 무엇을 택했는지는 아래 유도 갈래
+절의 표에 있습니다.
+
+**3단계 — 형상을 인코딩한다.** 1단계에서 따라 나오지 **않는** 단계가 이것입니다.
+
+- **유도** → 일반화 스톡. Shue가 그 경계를 기하적으로 못 그리기 때문입니다.
+- **α = 0.5** → 역시 일반화 스톡인데, 이유가 정반대입니다. 그 α에서는 Shue를 **정확히** 재현하고
+  닫힌 해로 `pause_waist` = 0입니다(`fit_generalized_pause.py`).
+- **그 밖의 α** → 플러그인이 허용하는 곳은 Shue-native, 아니면 스톡 2계수 근사.
+
+그러므로 인코딩은 물리의 대리물이 아닙니다. 금성과 가니메데가 둘 다 `pause_smooth`를 들고 있는데,
+한쪽은 Shue가 실패해서이고 다른 쪽은 Shue가 정확해서입니다.
 
 ### 자기권계면 standoff (Chapman–Ferraro 균형)
 

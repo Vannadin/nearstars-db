@@ -20,6 +20,55 @@ classic mistake this doc guards against.
 
 ## Part A — geometry (shape + size) from the field
 
+### Which boundary a body gets, and which curve draws it
+
+Two decisions get conflated because they usually correlate: *what holds the boundary up*
+(induced vs intrinsic) and *which curve family draws it* (generalized stock vs Shue). They
+are independent, and reading one off the other has produced wrong calls. Route in this
+order.
+
+**Step 0 — what is the obstacle?** An induced boundary is built by a **conducting
+ionosphere**, so it needs an atmosphere. An airless body has no ionopause available at
+all: the only obstacle is the field itself and the only floor is the surface, `1 R_p`.
+
+**Step 1 — which boundary wins.**
+
+- **With an atmosphere**, the crossover test is `R_mp(B_eq) > r_ionopause` (Egan 2019,
+  [`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)), **not** `B_eq > 0`. Above it the body is intrinsic; below it
+  the body is induced, and there a weak dipole is actively worse than none.
+- **Airless**, the same test reads against the surface: `R_mp(B_eq) > 1 R_p`. Above it,
+  intrinsic. Below it **nothing forms** and the wind reaches the ground, the Moon's case.
+
+|  | atmosphere | airless |
+|---|---|---|
+| the field clears the floor | Earth, Jupiter (intrinsic) | Mercury, Ganymede (intrinsic) |
+| it does not | **Venus, Mars, Proxima Cen b** (induced) | nothing forms (the Moon) |
+
+This is what separates **Mercury from Venus and Mars**, and it is not field strength:
+Mercury's dipole is ~1/100 of Earth's, weaker in relative terms than the crustal fields
+Mars has left, yet Mercury is on the intrinsic branch and Mars is not. Mercury is airless,
+so there is no ionopause for its dipole to lose to, and its measured 1.45 R_M standoff
+(Winslow 2013) clears the only floor it faces. Venus and Mars have atmospheres, so the
+ionopause exists at ~1.05–1.2 R_p and their fields do not reach it. Proxima Cen b sits on
+the induced side of the same test with an N₂ atmosphere and a field too weak to stand the
+wind off (Dong 2017), which is why its shape ratio is taken from Mars rather than from
+Shue.
+
+**Step 2 — pick α** (intrinsic branch only): a fitted α if one exists, otherwise an
+analogy that says it is one, and `0.5` with an `M_A`-shortened tail if the flow is
+sub-Alfvénic. The table in the induced-branch section below lists which body took which.
+
+**Step 3 — encode the shape.** This is the step that does *not* follow from step 1:
+
+- **induced** → generalized stock, because Shue geometrically cannot draw that boundary;
+- **α = 0.5** → generalized stock again, for the opposite reason: at that α it reproduces
+  Shue *exactly*, in closed form with `pause_waist` = 0 (`fit_generalized_pause.py`);
+- **any other α** → Shue-native where the plugin allows it, otherwise the stock
+  two-factor approximation.
+
+So the encoding is not a proxy for the physics. Venus and Ganymede both carry
+`pause_smooth`, one because Shue fails there and one because Shue is exact there.
+
 ### Magnetopause standoff (Chapman–Ferraro balance)
 
 The dayside magnetopause sits where the planetary magnetic pressure balances the

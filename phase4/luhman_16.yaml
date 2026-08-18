@@ -899,3 +899,86 @@ decisions:
         이탈해 "있되 희미함"으로 그린다. ECM 빔 기하 구멍은 적도방향인 이
         성분에서 가장 강하게 성립한다. 부류 선례: Hallinan 2015, Kao 2016.
     refs: ["2015ApJ...805L...3O", "2015Natur.523..568H", "2016ApJ...818...24K"]
+
+  - body: Luhman 16 B
+    axis: magnetism
+    status: gated
+    driver: [window-selection]
+    narrative: >
+      The heat budget gives this body a field just shy of its companion's,
+      about 1180 gauss. The same deep searches found nothing here either: the
+      cold, neutral upper atmosphere does not interact even with a kilogauss
+      field. The magnetic bubble, blown by the same interstellar wind as the
+      primary's, reaches 0.2 AU to the nose and 30 AU to the end of the tail.
+    narrative_ko: >
+      열수지로 유추하면 이 천체의 자기장은 짝보다 약간 약한 1180가우스쯤이다.
+      이 천체 역시 동일한 심층 수색에서 아무것도 발견하지 못했다. 차갑고
+      중성인 상층 대기는 킬로가우스급 자기장과도 상호작용하지 않는다. 주성과
+      같은 성간풍이 만들어내는 자기 거품은 노즈까지 0.2 AU, 꼬리 끝은 30 AU에
+      이른다.
+    fields:
+      - { name: magnetic_field, value: 1180, unit: G, op: set, note: "B_dyn = 4.8 (M L^2 / R^7)^(1/6) kG, BD branch; R 0.08-0.10 spread gives 1040-1350 G", note_ko: "B_dyn = 4.8 (M L²/R⁷)^(1/6) kG, 갈색왜성 분기. R 0.08–0.10이면 1040–1350 G" }
+      - { name: pause_radius, value: 642.6, unit: R_bd, op: set, note: "= nose x 2^alpha; ISM-ram Chapman-Ferraro. Reproduce: scripts/refs/magnetopause_geometry.py (BROWN DWARFS section)", note_ko: "= 노즈 × 2^α. 성간 램압 Chapman–Ferraro. 재현: scripts/refs/magnetopause_geometry.py (BROWN DWARFS 절)" }
+      - { name: pause_compression, value: 1.3379, op: set, note: "= 2^0.42" }
+      - { name: pause_extension, value: 0.0089195, op: set, note: "= 2^alpha / 150" }
+      - { name: pause_height_scale, value: 1.0, op: set }
+      - { name: pause_nose, value: 480, unit: R_bd, op: set, note: "0.201 AU; B_eq 416 G (= B_dyn / 2 sqrt 2) vs the same ISM ram as A", note_ko: "0.201 AU. B_eq 416 G(= B_dyn/2√2) 대 A와 같은 성간 램압" }
+      - { name: pause_alpha, value: 0.42, op: set, note: "rotation-dominated: Jupiter's fitted ceiling, clamped", note_ko: "회전지배. 목성 피팅 상한 클램프" }
+      - { name: pause_tail, value: 72044, unit: R_bd, op: set, note: "L = 150 x nose = 30.2 AU convention", note_ko: "L = 150 × 노즈 = 30.2 AU 관례" }
+      - { name: radiation_inner, value: 10, unit: "rad/h", op: set, note: "CRAND-fed proton belt, Earth-inner analog, kept faint under the Osten 2015 null", note_ko: "CRAND 공급 양성자 벨트, 지구 내대 유추. Osten 2015 무음 아래로 약하게" }
+      - { name: radiation_inner_gradient, value: 2.09, op: set, note: "Earth-inner analog profile", note_ko: "지구 내대 유추 프로파일" }
+      - { name: radiation_outer, value: null, na_reason: "No outer belt: no wind/torus-fed source", na_reason_ko: "외대 없음. 항성풍·토러스 공급원 부재" }
+    gate:
+      criterion: [derived-grounding]
+      verdict: methodology-derived
+      evidence: >
+        Same recipes as the primary, B's inputs: dynamo scaling on measured M
+        0.0273 M_sun and L 1.95e-5 L_sun gives B_dyn 1177 G; the ISM-ram
+        geometry branch gives nose 480 R_bd (0.201 AU) at the shared n 0.2
+        cm-3 / v_rel 26 km/s, M_A 1.77, Shue alpha 0.42 clamp; cfg set emitted
+        by the registered script. Belt as on A (imaged class precedent, Kao
+        2023 / Climent 2023; binarity enhancement Kao 2025). Caveat: same soft
+        inputs as A (n_ism, dose anchor, assumed radius).
+      evidence_ko: >
+        주성과 같은 레시피에 B의 입력이다. dynamo 스케일링에 측정 M 0.0273 M☉·
+        L 1.95e-5 L☉으로 B_dyn 1177 G. 성간 램압 기하 분기로 공유 입력(n 0.2
+        cm⁻³, v_rel 26 km/s)에서 노즈 480 R_bd(0.201 AU), M_A 1.77, Shue α 0.42
+        클램프. cfg 세트는 등록 스크립트 산출. 벨트는 A와 동일 근거(영상 확인
+        선례 Kao 2023/Climent 2023, 쌍성 증진 Kao 2025). 주의: A와 같은 무른
+        입력(n_ism·선량 앵커·가정 반지름).
+    refs: ["docs/reference/planetary-magnetosphere-geometry-methodology.md", "docs/reference/planetary-dynamo-scaling.md", "2015ApJ...805L...3O", "2023Natur.619..272K", "2023Sci...381.1120C", "2403.08860"]
+
+  - body: Luhman 16 B
+    axis: environment
+    status: passthrough
+    narrative: >
+      The same verdict as the primary, from the same campaign: multiple
+      rotations of radio and X-ray watch, nothing found. Notably, its violent
+      weather runs entirely without magnetic activity; the storms are cloud
+      physics, not flares.
+    narrative_ko: >
+      같은 관측이 주성과 같은 판정을 내렸다. 전파·X선으로 여러 자전을 지켜봤지만
+      아무것도 없었다. 눈여겨볼 점은, 그 요란한 날씨가 자기 활동 없이 굴러간다는
+      것이다. 폭풍은 플레어가 아니라 구름의 물리다.
+    fields:
+      - { name: activity, value: "radio log(Lr/Lbol) < -18.1 (5.5 GHz) / < -17.9 (9 GHz); X-ray log(Lx/Lbol) < -5.7; no flares; variability explicitly decoupled from magnetism (Osten 2015)", value_ko: "전파 log(Lr/Lbol) < −18.1(5.5 GHz) / < −17.9(9 GHz), X선 log(Lx/Lbol) < −5.7. 플레어 없음. 변광은 자기활동과 무관함이 명시 확인(Osten 2015)", op: passthrough }
+      - { name: flares, value: "none detected", value_ko: "검출 없음", op: passthrough }
+      - { name: uv_xray_flux, value: "negligible (log Lx < 23.0 erg/s)", value_ko: "무시 가능(log Lx < 23.0 erg/s)", op: passthrough }
+      - { name: stellar_wind, value: "none modeled", value_ko: "모델 없음", op: passthrough }
+      - { name: radiation, value: "thermal only", value_ko: "열복사뿐", op: passthrough }
+      - { name: habitable_zone, value: null, na_reason: "As for A: the liquid-water distance lies under the Roche limit; no usable zone", na_reason_ko: "A와 같음. 액체 물 거리가 로슈 한계 밑이라 쓸 만한 영역 없음" }
+    refs: ["2015ApJ...805L...3O"]
+
+  - body: Luhman 16 B
+    axis: satellites
+    status: passthrough
+    narrative: >
+      No companions of its own; the same astrometry that split the pair's
+      masses shows no third body around either component.
+    narrative_ko: >
+      제 몫의 동반체는 없다. 쌍의 질량을 갈라 잰 위치측정이 어느 성분 곁에서도
+      제3의 천체를 보여 주지 않는다.
+    fields:
+      - { name: satellites, value: "none", op: passthrough, note: "no astrometric residual companion (L&S 2018)", note_ko: "위치측정 잔차 동반체 없음 (L&S 2018)" }
+      - { name: co_orbitals, value: "none", op: passthrough }
+    refs: ["2018A&A...618A.111L"]
