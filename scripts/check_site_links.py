@@ -47,7 +47,12 @@ def main() -> int:
         for raw in sorted(_targets(page)):
             if raw.startswith(SKIP_PREFIX) or '${' in raw or raw.startswith('#'):
                 continue
-            target = (page.parent / urllib.parse.unquote(raw)).resolve()
+            # a query string is not part of the path — belt-viewer.html?body=… is the
+            # same file, and the gate was reading the whole thing as a filename
+            path = raw.split("?", 1)[0]
+            if not path:                       # bare "?query" — same page
+                continue
+            target = (page.parent / urllib.parse.unquote(path)).resolve()
             inside = target.is_relative_to(DOCS)
             if not inside or not target.exists():
                 broken.append((page.relative_to(REPO), raw))

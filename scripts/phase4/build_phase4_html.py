@@ -199,14 +199,39 @@ def ref_label(r):
     return s.rsplit("/", 1)[-1] if s.endswith(".md") else s
 
 
-def refs_html(refs):
-    if not refs:
-        return ""
+def viewer_links(d, system, rows):
+    """Links to the live viewer each attached figure was drawn from.
+
+    They sit in the refs strip because that is where a row already says "here is
+    where this came from" — a still is a citation of the viewer the same way a
+    bibcode is a citation of a paper.
+    """
+    body, axis = d.get("body", ""), d.get("axis", "")
+    out = []
+    if axis == _mag_axis(rows) and body in belt_keys():
+        out.append((f"../../belt-viewer.html?body={quote(body)}",
+                    bi("belt viewer ↗", "벨트 뷰어 ↗")))
+    if axis == "orbit":
+        slug = to_url_slug(system)
+        vdir = REPO / "docs" / "phase4" / "orbit-viewers" / f"{slug}-validation"
+        for hierarchy in ("moons", "planets"):
+            cells = [f"{hierarchy}_{m}" for m in ("leapfrog", "accurate")]
+            if all((vdir / f"{c}-{to_url_slug(body)}.png").exists() for c in cells):
+                for c, label in zip(cells, ("leapfrog", "IAS15/TRACE")):
+                    if (vdir / f"{c}.html").exists():
+                        out.append((f"../orbit-viewers/{slug}-validation/{c}.html",
+                                    esc(f"{label} ↗")))
+                break
+    return out
+
+def refs_html(refs, viewers=()):
     if isinstance(refs, str):  # defensive — the validator rejects this, but never render per-char
         refs = [refs]
-    return '<div class="refs">' + "".join(
-        f'<a class="ref" href="{esc(ref_url(r))}" target="_blank" rel="noopener">{esc(ref_label(r))}</a>'
-        for r in refs) + "</div>"
+    chips = [f'<a class="ref" href="{esc(ref_url(r))}" target="_blank" rel="noopener">'
+             f'{esc(ref_label(r))}</a>' for r in (refs or [])]
+    chips += [f'<a class="ref viewer" href="{href}" target="_blank" rel="noopener">{label}</a>'
+              for href, label in viewers]
+    return '<div class="refs">' + "".join(chips) + "</div>" if chips else ""
 
 
 def decision_html(d, system, rows):
@@ -254,7 +279,7 @@ def decision_html(d, system, rows):
   {figures_html(d, system, rows)}
   {moons_table(d.get('moons'))}
   {dep_html}{ev_html}{dn_html}
-  {refs_html(d.get('refs'))}
+  {refs_html(d.get('refs'), viewer_links(d, system, rows))}
 </article>"""
 
 
@@ -505,6 +530,30 @@ LANG_SEG = ('<div class="seg"><button id="ko">한</button>'
 
 SCRIPT = """<script>
 const b=document.body;
+// Figures open in place: a new tab loses the row you were reading, and a still is the
+// argument for the value directly above it. Built before setLang runs so the dialog's
+// own labels get toggled with the rest of the page.
+(function(){
+  const dlg=document.createElement('dialog');
+  dlg.className='lb';
+  dlg.innerHTML='<img alt=""><div class="lb-bar">'
+    +'<a target="_blank" rel="noopener"><span data-i18n>새 탭에서 열기 \u2197</span>'
+    +'<span data-en hidden>Open in new tab \u2197</span></a>'
+    +'<button type="button"><span data-i18n>\ub2eb\uae30</span>'
+    +'<span data-en hidden>Close</span></button></div>';
+  b.appendChild(dlg);
+  const img=dlg.querySelector('img');
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('.figs .fig'); if(!a) return;
+    e.preventDefault();
+    const shown=a.querySelector('img');       // <picture> already chose the palette
+    img.src=shown.currentSrc||shown.src;
+    dlg.querySelector('.lb-bar a').href=a.href;
+    dlg.showModal();
+  });
+  dlg.querySelector('.lb-bar button').onclick=()=>dlg.close();
+  dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
+})();
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
@@ -741,6 +790,17 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ref { font-family:var(--mono); font-size:11px; color:var(--fg4); background:var(--s1);
   border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
 a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
+.ref.viewer { color:var(--accent); border-color:rgba(122,168,255,.28) }
+/* lightbox — a figure opens over the board, so the row you were reading stays put */
+dialog.lb { margin:auto; padding:0; border:none; background:transparent;
+  max-width:96vw; max-height:96vh }
+dialog.lb::backdrop { background:rgba(4,6,12,.86); backdrop-filter:blur(3px) }
+dialog.lb img { display:block; max-width:96vw; max-height:90vh; width:auto; height:auto;
+  border-radius:10px; box-shadow:0 18px 60px rgba(0,0,0,.6) }
+dialog.lb .lb-bar { display:flex; gap:12px; align-items:center; justify-content:flex-end;
+  padding:7px 2px 0; font-size:12px }
+dialog.lb .lb-bar a, dialog.lb .lb-bar button { color:var(--accent); background:none;
+  border:none; font:inherit; cursor:pointer; text-decoration:none; padding:0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }

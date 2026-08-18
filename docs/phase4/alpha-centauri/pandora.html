@@ -182,6 +182,17 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ref { font-family:var(--mono); font-size:11px; color:var(--fg4); background:var(--s1);
   border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
 a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
+.ref.viewer { color:var(--accent); border-color:rgba(122,168,255,.28) }
+/* lightbox — a figure opens over the board, so the row you were reading stays put */
+dialog.lb { margin:auto; padding:0; border:none; background:transparent;
+  max-width:96vw; max-height:96vh }
+dialog.lb::backdrop { background:rgba(4,6,12,.86); backdrop-filter:blur(3px) }
+dialog.lb img { display:block; max-width:96vw; max-height:90vh; width:auto; height:auto;
+  border-radius:10px; box-shadow:0 18px 60px rgba(0,0,0,.6) }
+dialog.lb .lb-bar { display:flex; gap:12px; align-items:center; justify-content:flex-end;
+  padding:7px 2px 0; font-size:12px }
+dialog.lb .lb-bar a, dialog.lb .lb-bar button { color:var(--accent); background:none;
+  border:none; font:inherit; cursor:pointer; text-decoration:none; padding:0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -399,7 +410,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="figs"><a class="fig" href="../../img/belts/nearstars/pandora.png" target="_blank" rel="noopener"><picture><source media="(prefers-color-scheme: light)" srcset="../../img/belts/nearstars/pandora_light.png"><img src="../../img/belts/nearstars/pandora.png" alt="magnetism.radiation_belts figure" loading="lazy"></picture></a><a class="fig" href="../../img/belts/nearstars/pandora_shape.png" target="_blank" rel="noopener"><picture><source media="(prefers-color-scheme: light)" srcset="../../img/belts/nearstars/pandora_shape_light.png"><img src="../../img/belts/nearstars/pandora_shape.png" alt="magnetism.radiation_belts figure" loading="lazy"></picture></a></div>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>물리는 자기권-지오메트리 방법론 Part D 강장 임베디드 sub-regime 3b를 따른다. 場교차 standoff (B_moon 75 / B_parent_local 3.9)^(1/3) ≈ 2.6 R_moon, 두꺼운 대기가 유지하는 실질 CRAND 벨트(지구-KIND이지 가니메데식 무시가능이 아님), Polyphemus GCR 차폐 + gap 기아로 4 rad/h(ROKerbalism 지구 10.4의 ~0.4배), 압축 자기권이라 지구식 2벨트가 못 들어가 단일 좁은 벨트, conf low이며 태양계 선례 없음(실제 약장 대조군은 가니메데 3a). 지오메트리 = 폐쇄 자력선 드리프트 셸 L 1.15–2.2 + 손실원뿔 컷 1.05를 fit_belts.py로 피팅(IoU 0.98, 태양계 감사와 동일 기준). pause = 감사된 노즈 의미론으로 인코딩, standoff 2.6 정확 보존(pause_radius 2.99 / compression 1.15). 패킹 문자열이던 radiation_model은 emitter가 직접 읽는 개별 cfg 필드로 구조화.<br></span><span data-en hidden>Physics per the magnetosphere-geometry methodology Part D, strong-field embedded sub-regime 3b: field-crossover standoff (B_moon 75 / B_parent_local 3.9)^(1/3) ≈ 2.6 R_moon, a real CRAND belt off the thick atmosphere (Earth-KIND, not Ganymede-negligible), GCR-screened by Polyphemus + gap-starved to 4 rad/h ≈ 0.4× ROKerbalism Earth&#x27;s 10.4, single narrow belt since the compressed magnetosphere has no room for Earth&#x27;s two, conf low with no Solar-System exemplar (Ganymede is the weak-field 3a contrast). Geometry = fit_belts.py fit of the closed-line drift shell L 1.15–2.2 with the 1.05 loss-cone cut (IoU 0.98, same standard as the solar-system audit); pause encoded with the audited nose semantics, standoff 2.6 preserved exactly (pause_radius 2.99 / compression 1.15); the packed radiation_model string became individual cfg fields the emitter reads directly.<br></span></div>
-  <div class="refs"><a class="ref" href="../../wiki/reference__planetary-magnetosphere-geometry-methodology.html" target="_blank" rel="noopener">planetary-magnetosphere-geometry-methodology.md</a><a class="ref" href="../../wiki/reference__solar-system-radiation-belts.html" target="_blank" rel="noopener">solar-system-radiation-belts.md</a></div>
+  <div class="refs"><a class="ref" href="../../wiki/reference__planetary-magnetosphere-geometry-methodology.html" target="_blank" rel="noopener">planetary-magnetosphere-geometry-methodology.md</a><a class="ref" href="../../wiki/reference__solar-system-radiation-belts.html" target="_blank" rel="noopener">solar-system-radiation-belts.md</a><a class="ref viewer" href="../../belt-viewer.html?body=Pandora" target="_blank" rel="noopener"><span data-i18n>벨트 뷰어 ↗</span><span data-en hidden>belt viewer ↗</span></a></div>
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -438,9 +449,33 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="hades.html">← Hades</a><a class="navlink" href="cassandra.html">Cassandra →</a></div>
-<div class="stamp">빌드 2026-08-19 00:23 · a2b1cdca</div></div>
+<div class="stamp">빌드 2026-08-19 01:02 · 59be53c0</div></div>
 <script>
 const b=document.body;
+// Figures open in place: a new tab loses the row you were reading, and a still is the
+// argument for the value directly above it. Built before setLang runs so the dialog's
+// own labels get toggled with the rest of the page.
+(function(){
+  const dlg=document.createElement('dialog');
+  dlg.className='lb';
+  dlg.innerHTML='<img alt=""><div class="lb-bar">'
+    +'<a target="_blank" rel="noopener"><span data-i18n>새 탭에서 열기 ↗</span>'
+    +'<span data-en hidden>Open in new tab ↗</span></a>'
+    +'<button type="button"><span data-i18n>닫기</span>'
+    +'<span data-en hidden>Close</span></button></div>';
+  b.appendChild(dlg);
+  const img=dlg.querySelector('img');
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('.figs .fig'); if(!a) return;
+    e.preventDefault();
+    const shown=a.querySelector('img');       // <picture> already chose the palette
+    img.src=shown.currentSrc||shown.src;
+    dlg.querySelector('.lb-bar a').href=a.href;
+    dlg.showModal();
+  });
+  dlg.querySelector('.lb-bar button').onclick=()=>dlg.close();
+  dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
+})();
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);

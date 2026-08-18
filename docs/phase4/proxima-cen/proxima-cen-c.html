@@ -182,6 +182,17 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ref { font-family:var(--mono); font-size:11px; color:var(--fg4); background:var(--s1);
   border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
 a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
+.ref.viewer { color:var(--accent); border-color:rgba(122,168,255,.28) }
+/* lightbox — a figure opens over the board, so the row you were reading stays put */
+dialog.lb { margin:auto; padding:0; border:none; background:transparent;
+  max-width:96vw; max-height:96vh }
+dialog.lb::backdrop { background:rgba(4,6,12,.86); backdrop-filter:blur(3px) }
+dialog.lb img { display:block; max-width:96vw; max-height:90vh; width:auto; height:auto;
+  border-radius:10px; box-shadow:0 18px 60px rgba(0,0,0,.6) }
+dialog.lb .lb-bar { display:flex; gap:12px; align-items:center; justify-content:flex-end;
+  padding:7px 2px 0; font-size:12px }
+dialog.lb .lb-bar a, dialog.lb .lb-bar button { color:var(--accent); background:none;
+  border:none; font:inherit; cursor:pointer; text-decoration:none; padding:0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -411,7 +422,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="figs"><a class="fig" href="../../img/belts/nearstars/proxima_cen_c.png" target="_blank" rel="noopener"><picture><source media="(prefers-color-scheme: light)" srcset="../../img/belts/nearstars/proxima_cen_c_light.png"><img src="../../img/belts/nearstars/proxima_cen_c.png" alt="magnetism.radiation_belts figure" loading="lazy"></picture></a><a class="fig" href="../../img/belts/nearstars/proxima_cen_c_shape.png" target="_blank" rel="noopener"><picture><source media="(prefers-color-scheme: light)" srcset="../../img/belts/nearstars/proxima_cen_c_shape_light.png"><img src="../../img/belts/nearstars/proxima_cen_c_shape.png" alt="magnetism.radiation_belts figure" loading="lazy"></picture></a></div>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>채택값은 CRAND 내대(1.5 R_c, 8.0 rad/h), 항성풍 외대(2.8 R_c, 1.2 rad/h), 자기권계면 nose 11.9 R_c다. 확인: 계면은 Chapman-Ferraro 균형(0.18 G, 1.5 AU 램압 2.09 nPa → 7.92 R_c, 6제곱근이라 입력 오차에 둔감). 외대 위치는 실측 천왕성 0.24·해왕성 0.23의 계면 대비 비율로 11.9 × 0.235 = 2.8 R_c. 세기는 방법론 Part B의 소스-손실 레짐 콜로 정했다. 외대는 포화 선량앵커 10.4×(18/31)^1.9 = 3.7 rad/h에 풍압 제한(1.5 AU 램압은 지구와 비슷한 수준, 해왕성 국지값의 ~900배)을 얹어 1.2 rad/h(범위 0.4~2), 내대는 비변조 GCR과 낮은 자기 차단강성이 CRAND 소스를 지구 이상으로 올리지만 다중극 포획 불안정이 깎아 지구 10.4의 0.8배인 8.0 rad/h. 두 값 모두 kp_limit.py로 계산한 K-P 천장 아래임을 확인했다(냉플라스마 0.3~50 cm⁻³ 스윕에서 천장이 지구 L=5의 6배~10¹¹배로 구속 조건이 아님). 내대를 두는 것은 실측 천왕성·해왕성이 양성자 내대를 실제로 가지는 것과 같은 물리다. 두 벨트의 안쪽 경계는 지구 모델 구조의 border 컷으로 팠다. 내대는 거울점이 대기에 잠기는 입자가 사라지는 손실원뿔 구면 컷(적도 1.41 R_c), 외대는 내대와의 사이 슬롯을 여는 내측 carve(적도 ~3.6 R_c)다. 계면 플랭크는 Shue 1998의 실측 형상(α=0.5, 플랭크 = nose×√2 = 16.8 R_c)에 맞췄고, SDF와 Shue-native가 같은 폭이 되도록 compression 1.4로 정렬했다. 유보: 벨트 세기는 방법론이 명시하듯 본질적으로 저신뢰 레짐 콜이고, 위성 c I가 자기 궤도의 입자를 쓸어 회랑을 팔 수 있는데 그 손실항은 위성 행이 확정된 뒤에야 넣을 수 있다.<br></span><span data-en hidden>The adopted values are a CRAND inner belt (1.5 R_c, 8.0 rad/h), a wind-fed outer belt (2.8 R_c, 1.2 rad/h) and a magnetopause nose at 11.9 R_c. Verified: the magnetopause is the Chapman-Ferraro balance (0.18 G against 2.09 nPa of ram pressure at 1.5 AU → 7.92 R_c, insensitive to input error thanks to the sixth root). The outer belt&#x27;s position uses the measured belt-to-magnetopause ratios of Uranus 0.24 and Neptune 0.23: 11.9 × 0.235 = 2.8 R_c. The intensities are the source-loss regime call of the methodology&#x27;s Part B. The outer belt takes the saturated dose anchor 10.4×(18/31)^1.9 = 3.7 rad/h with a wind-pressure limit applied (ram pressure at 1.5 AU is about Earth&#x27;s and ~900x Neptune&#x27;s local value), giving 1.2 rad/h (range 0.4–2); the inner belt has unmodulated GCR and low magnetic cutoff rigidity pushing the CRAND source above Earth&#x27;s while multipolar trapping instability cuts it back, giving 8.0 rad/h, 0.8x Earth&#x27;s 10.4. Both were confirmed below the K-P ceiling computed with kp_limit.py (across a cold-plasma sweep of 0.3–50 cm⁻³ the ceiling runs from 6x to 10¹¹x Earth&#x27;s L=5 value and is never the binding constraint). Having an inner belt at all is the same physics as the measured Uranus and Neptune, which do carry proton inner belts. The inner boundaries of both belts were carved with the Earth model&#x27;s border cut: for the inner belt a loss-cone spherical cut where mirroring particles sink into the atmosphere and vanish (equatorial 1.41 R_c), and for the outer belt an inner carve that opens the slot between them (equatorial ~3.6 R_c). The magnetopause flank was matched to Shue 1998&#x27;s measured shape (α = 0.5, flank = nose × √2 = 16.8 R_c), aligned with compression 1.4 so the SDF and Shue-native give the same width. Caveat: the belt intensities are, as the methodology states, an inherently low-confidence regime call, and the moon c I could sweep particles from its own orbit and carve a corridor, a loss term that can only be added once the moon&#x27;s rows are settled.<br></span></div>
-  <div class="refs"><a class="ref" href="../../wiki/reference__planetary-magnetosphere-geometry-methodology.html" target="_blank" rel="noopener">planetary-magnetosphere-geometry-methodology.md</a><a class="ref" href="../../wiki/reference__solar-system-radiation-belts.html" target="_blank" rel="noopener">solar-system-radiation-belts.md</a></div>
+  <div class="refs"><a class="ref" href="../../wiki/reference__planetary-magnetosphere-geometry-methodology.html" target="_blank" rel="noopener">planetary-magnetosphere-geometry-methodology.md</a><a class="ref" href="../../wiki/reference__solar-system-radiation-belts.html" target="_blank" rel="noopener">solar-system-radiation-belts.md</a><a class="ref viewer" href="../../belt-viewer.html?body=Proxima%20Cen%20c" target="_blank" rel="noopener"><span data-i18n>벨트 뷰어 ↗</span><span data-en hidden>belt viewer ↗</span></a></div>
 </article>
 <article class="dec" id="environment">
   <div class="dec-head">
@@ -462,9 +473,33 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="proxima-cen-d.html">← Proxima Cen d</a><a class="navlink" href="proxima-cen-c-i.html">Proxima Cen c I →</a></div>
-<div class="stamp">빌드 2026-08-19 00:23 · a2b1cdca</div></div>
+<div class="stamp">빌드 2026-08-19 01:02 · 59be53c0</div></div>
 <script>
 const b=document.body;
+// Figures open in place: a new tab loses the row you were reading, and a still is the
+// argument for the value directly above it. Built before setLang runs so the dialog's
+// own labels get toggled with the rest of the page.
+(function(){
+  const dlg=document.createElement('dialog');
+  dlg.className='lb';
+  dlg.innerHTML='<img alt=""><div class="lb-bar">'
+    +'<a target="_blank" rel="noopener"><span data-i18n>새 탭에서 열기 ↗</span>'
+    +'<span data-en hidden>Open in new tab ↗</span></a>'
+    +'<button type="button"><span data-i18n>닫기</span>'
+    +'<span data-en hidden>Close</span></button></div>';
+  b.appendChild(dlg);
+  const img=dlg.querySelector('img');
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('.figs .fig'); if(!a) return;
+    e.preventDefault();
+    const shown=a.querySelector('img');       // <picture> already chose the palette
+    img.src=shown.currentSrc||shown.src;
+    dlg.querySelector('.lb-bar a').href=a.href;
+    dlg.showModal();
+  });
+  dlg.querySelector('.lb-bar button').onclick=()=>dlg.close();
+  dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
+})();
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
