@@ -68,6 +68,34 @@ the atmosphere/surface (`R_inner ≈ 1.1–2 R_p`). A stronger field → larger 
 → room for belts farther out. This is the one place field strength directly sizes
 the belts.
 
+### The slot — only where there is a plasmasphere
+
+Earth's belts come in two, separated by the slot at `L ≈ 2–3`. That gap is not a
+gap in the source: it is **cleared by plasmaspheric hiss**, the whistler-mode
+emission that lives in the cold, dense plasma the ionosphere feeds into the
+plasmasphere, and that scatters MeV electrons into the loss cone faster than radial
+diffusion refills them (Ripoll 2016, [`2016GeoRL..43.5616R`](https://ui.adsabs.harvard.edu/abs/2016GeoRL..43.5616R); wave-loss review Ripoll 2020,
+[`2020JGRA..12526735R`](https://ui.adsabs.harvard.edu/abs/2020JGRA..12526735R)).
+
+So the slot is a **conditional** feature, and the condition is a plasmasphere:
+
+- **atmosphere → ionosphere → plasmasphere → hiss → slot.** Earth is the case the
+  textbook picture is drawn from, and it is the only Solar-System body with a clean one.
+- **no atmosphere → no plasmasphere → no hiss → no slot.** The trapping region is
+  then radially continuous from the surface out to the outer bound, with an intensity
+  profile rather than a gap. Ganymede is the Solar-System instance and is modelled here
+  as a single belt for exactly this reason.
+- The giants do not read as counter-examples: Jupiter's belts run continuously from
+  `L ≈ 1.2` outward because its cold plasma sits in the Io torus, far outside the inner
+  belt, and Uranus/Neptune have moon-carved minima at specific `L`-shells rather than a
+  hiss-cleared band.
+
+Practical consequence for a Kerbalism board: an **airless** body does not get Earth's
+`has_inner` + gap + `has_outer` layout. Either give it one shell (Ganymede) or, when the
+radial intensity profile is worth carrying, two **adjacent** shells whose bounds touch,
+which renders as one continuous zone with a step in dose rather than two separated
+belts. Worked case: Proxima Cen d, inner `L` 1.0–2.5 against outer `L` 2.5–5.0.
+
 ### Induced magnetospheres — the no-dynamo branch
 
 Everything above assumes an intrinsic dipole. A body with **no dynamo but an
@@ -322,8 +350,10 @@ so confidence is low, and the 3–280 G field range spans 2×10²–10⁶ rad/h.
 `kp_limit.py` at L = 4 (B_local 1.25×10⁴ nT; n_cold 1–100 cm⁻³ — an airless
 planet feeds no ionospheric plasmasphere) gives CmCk ≪ 1 at every density: the
 K–P ceiling never binds and the belts are source/loss-set, the same structural
-regime as every strong-field small-L case. Viz entry: `render_belts_bodies.py
-proxima_d_phys`.
+regime as every strong-field small-L case. Gated on the board 2026-08-18 with the
+shells refit (`fit_belts.py`, `L` 1.0–2.5 and 2.5–5.0, IoU 0.996 / 0.979); until then
+the body had a magnetopause row but no belt row, so the cfg shipped no belts at all
+while the board's own environment text described them.
 
 ## Part C — mapping to Kerbalism
 
@@ -596,8 +626,11 @@ of 1.36×, the right order for the well-known day–night asymmetry there. Where
 *disagrees* is instructive: the giants' shipped 1.05 / 0.9 is unreachable, because a
 belt at 8 R_J inside a 63 R_J standoff has `ε` 0.002 — those numbers are stylistic, not
 physical. The bodies where the term genuinely bites are the compressed ones: **Proxima d**
-(outer belt `ε` 0.107 → 1.05 / 0.90, against the Earth-copied 1.01 / 1.0 it carries
-today) and the embedded moons Ganymede and A b III (`ε` 0.099 → 1.015 / 0.96).
+and the embedded moons Ganymede and A b III (`ε` 0.099 → 1.015 / 0.96). Proxima d was
+gated on 2026-08-18 at `ε` 0.044 → 1.022 / 0.957 for the outer shell and 0.006 →
+1.003 / 0.994 for the inner, replacing Earth-copied constants; the `ε` 0.107 quoted in
+an earlier revision of this line was computed on the pre-fit geometry and the old 7.0
+nose, and the refit core circle (2.65) with the gated 7.517 nose supersedes it.
 
 Two habits that keep this reproducible: derive the belt geometry with
 `fit_belts.py` rather than by hand (it optimizes IoU against the actual SDF, so the

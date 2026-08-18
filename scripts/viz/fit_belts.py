@@ -154,6 +154,18 @@ TARGETS = {
     # compressed standoff 2.6 R_moon -> closed-line belt inside ~2.2; D-cut
     # above the thick atmosphere (1.05, per the gated board row).
     'pandora_belt': {'L': (1.15, 2.2), 'rcut': 1.05},
+    # ---- NearStars (phase4/proxima_cen, 2026-08-18) ----
+    # Proxima Cen d: 16 G SPI field (Zapatero Osorio 2026), airless bare rock,
+    # gated magnetopause standoff 7.517 R_p. Two choices differ from Earth:
+    #   rcut = 1.0  — airless, so the loss cone terminates at the surface itself
+    #                 (the Ganymede treatment above, not Earth's 1000 km cut).
+    #   no slot     — Earth's L 2-3 slot is maintained by plasmaspheric hiss, and an
+    #                 airless planet has no ionosphere to fill a plasmasphere. The two
+    #                 shells are therefore adjacent (2.5 = 2.5), rendering one continuous
+    #                 zone with an intensity step rather than Earth's separated pair.
+    #   outer edge 5.0 = 0.67 x standoff, inside the 0.6-0.8 R_mp bound (Part A).
+    'proxima_d_inner': {'L': (1.0, 2.5), 'rcut': 1.0},
+    'proxima_d_outer': {'L': (2.5, 5.0), 'rcut': 1.0},
 }
 
 if __name__ == '__main__':
