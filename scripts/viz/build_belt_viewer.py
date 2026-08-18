@@ -105,7 +105,9 @@ SOL_KO, SOL_EN = '태양계', 'Solar System'
 # 네 번째 항목이 필요한 이유: 보드 프리셋은 kopernicus 이름을 소문자화해 키를 잡으므로
 # 같은 천체라도 이름이 다를 수 있다(Proxima Cen c → proxima_cen_c).
 NEARSTARS_PRE = {
-    'polyphemus': ('alpha_centauri', 'Alpha Centauri A b', 0, 'polyphemus'),
+    # 넷째 항목은 보드의 body 키에서 나온 body_key 다(문화명이 아니라 보드가 그 천체를 부르는 이름).
+    # 폴리페무스는 보드가 'Alpha Centauri A b' 로 키를 잡는다.
+    'polyphemus': ('alpha_centauri', 'Alpha Centauri A b', 0, 'alpha_centauri_a_b'),
     'pandora':    ('alpha_centauri', 'Pandora', 1, 'pandora'),
     # b·d 는 2026-08-18 까지 보드 키(proxima_cen_b/d)가 아니라 제 BODIES 키로 묶여 있어서
     # 피커에 같은 이름 버튼이 두 개씩 떴다(c 만 제대로 묶여 있었다). 넷째 항목은 반드시
@@ -188,16 +190,20 @@ def designations(board_file):
 _desig_cache = {}
 for name, spec in load_nearstars_specs().items():
     m, bd = spec['model'], spec['body']
+    # name 은 emit 이름(kopernicus_name)이다. 라벨과 body_key 는 보드의 body 키로 잡는다 —
+    # 사람이 읽는 이름이 그쪽이고(Pandora vs Alpha Centauri A b III), emit 이름으로 잡으면
+    # kopernicus_name 을 고칠 때마다 pre 스냅샷과의 짝이 깨진다(2026-08-18 실제로 깨졌다).
+    board_body = spec['board_body']
     sysfile = spec['system']
     syskey = sysfile.replace('.yaml', '')
     _desig_cache.setdefault(sysfile, designations(sysfile))
-    desig = _desig_cache[sysfile].get(name, name)
+    desig = _desig_cache[sysfile].get(board_body, board_body)
     ko_sys, en_sys = SYS_LABEL.get(syskey, (syskey, syskey))
     is_moon = bool(ROMAN.search(desig))
-    p = {'label': name, 'label_en': name, 'group': 'nearstars',
+    p = {'label': board_body, 'label_en': board_body, 'group': 'nearstars',
          'sys': syskey, 'sys_label': ko_sys, 'sys_label_en': en_sys,
          'depth': 1 if is_moon else 0, 'desig': desig,
-         'body_key': name.lower().replace(' ', '_'), 'variant': 'phys',
+         'body_key': board_body.lower().replace(' ', '_'), 'variant': 'phys',
          'parent': ROMAN.sub('', desig) if is_moon else None,
          'inner': dict(OFF_BELT), 'outer': dict(OFF_BELT)}
     extent = 5.0
@@ -237,16 +243,7 @@ for name, spec in load_nearstars_specs().items():
         # 오버레이에 닿지 않았다 — 태양계 프리셋만 BODIES 딕트 경로로 받고 있었다.
         p['view']['shue_an'] = pend.get('pause_alpha_night', 0)
     # 보드가 α 를 게이트하지 않았으면 켜지 않는다(만들어 낸 값이 되므로)
-    presets[name.lower()] = p
-# Proxima d 는 보드 행이 없어 render_belts_bodies 에 값이 있지만, 계 소속은 프록시마다.
-if 'proxima_d_phys' in presets:
-    pd = presets['proxima_d_phys']
-    pd.update({'group': 'nearstars', 'sys': 'proxima_cen', 'body_key': 'proxima_cen_d', 'variant': None,
-               'sys_label': SYS_LABEL['proxima_cen'][0], 'sys_label_en': SYS_LABEL['proxima_cen'][1],
-               'depth': 0, 'desig': 'Proxima Centauri d',
-               'label': 'Proxima Cen d', 'label_en': 'Proxima Cen d'})
-    presets['proxima_cen_d'] = presets.pop('proxima_d_phys')
-
+    presets[board_body.lower()] = p
 # Shue 데모: 지구 물리 파라미터 + 넓은 뷰 + α 오버레이
 shue = conv('earth_shue', dict(BODIES['earth_phys'], tilt=0))
 shue['label'] = 'Shue 데모'

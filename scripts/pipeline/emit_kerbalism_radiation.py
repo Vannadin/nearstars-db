@@ -293,6 +293,11 @@ def load_nearstars_specs():
                 continue                  # 계면도 벨트도 없는 천체
             name = kop_names.get(body) or e['kop'] or body
             specs[name] = {'model_name': fields['radiation_model'],
+                           # 보드의 body 키. emit 이름(kopernicus_name)과 다를 수 있고,
+                           # 사람이 읽는 이름은 이쪽이다(Pandora vs Alpha Centauri A b III).
+                           # 소비자가 emit 이름으로 라벨을 잡으면 kopernicus_name 을 고칠 때마다
+                           # UI 가 따라 깨진다(2026-08-18 뷰어 피커가 실제로 그렇게 갈라졌다).
+                           'board_body': body,
                            'model': {k: fields[k] for k in MODEL_KEYS if k in fields},
                            'body': {k: fields[k] for k in BODY_KEYS if k in fields},
                            'pending': {k: fields[k] for k in PENDING_MODEL_KEYS if k in fields},

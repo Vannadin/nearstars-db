@@ -368,10 +368,11 @@ physics-grounded Kerbalism cfg patch. Audit doc: `solar-system-radiation-belts.m
   by is equally stale. Written up with its figures in [`petrova-line-geometry.md`](petrova-line-geometry.md). Long-term consumer: the separate visualisation mod
   ([`plugins/NearStarsFluxTube`](../../plugins/NearStarsFluxTube/README.md)).
 - `scripts/refs/proxima_d_belt_dose.py` — Proxima d belt-dose derivation (methodology
-  Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → inner ~5×10³ / outer
-  ~1×10³ rad/h (low confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G
-  range spans 2×10²–10⁶), plus the `kp_limit.py` CmCk check showing the K–P ceiling
-  never binds (source/loss-set). Feeds the `proxima_d_phys` viz entry.
+  Part B): dose-anchor interpolation 10.4×(B_eq/31 µT)^1.9 → ~5×10³ rad/h (low
+  confidence, extrapolates 1.9× past the Jupiter anchor; 3–280 G range spans
+  2×10²–10⁶), plus the `kp_limit.py` CmCk check showing the K–P ceiling never binds
+  (source/loss-set). Gated on the phase4 board 2026-08-18 as a single shell carrying
+  the whole scale, so the earlier inner/outer split no longer applies.
 - `scripts/viz/fit_belts.py` — numerical fitter: dipole drift-shell targets (r = L cos²λ,
   loss-cone cut) → Kerbalism SDF parameters via Nelder-Mead, IoU-scored
 - `scripts/pipeline/emit_kerbalism_radiation.py` — emits

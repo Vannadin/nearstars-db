@@ -392,19 +392,9 @@ BODIES={
  #   비어 있는 것으로 확인했고(Bridge 1986 / Belcher 1989), Io·엔켈라두스급 공급원이 없으니
  #   적재량이 가스자이언트보다 지구 쪽에 가깝다. 피팅이 아니라 유추다.
 
- # b·d 재게이트판은 손으로 둔다. 폴리페무스·판도라·c 와 달리 이 둘은 pause 를 magnetism.magnetic_field
- # 행에 달고 있는데, emitter(load_nearstars_specs)는 magnetism.radiation_belts 행만 읽는다. 즉 보드에
- # 기록은 됐지만 cfg 로는 아직 나가지 않는다 — 이 프리셋이 그 값을 눈으로 확인하는 유일한 경로다.
- # 유도 가지로 이전(2026-08-16). Dong 2017 이 b 의 쌍극자가 항성풍을 막지 못한다고 밝히고
- #   금성·화성용 MHD 모델로 계산한다. 형상 비 1.144 는 화성 실측(Shue 의 1.414 가 아니다).
- # 두께는 노즈가 아니라 접선 기준 — offset 0.25 와 deform 0.1 을 지표를 뚫지 않고 담아야 한다.
- 'proxima_b_regate':{'title':'Proxima Cen b — re-gated (induced branch)','sub':'nose 1.20, tangent 1.373, comp 1.144 = the Mars-measured induced flaring ratio; deform 0.1 and offset 0.25 both retained, clearance 1.049','R':3,'tilt':30,'offset':0.25,
-   'pause':{'radiation':-0.005,'rad':1.3728,'comp':1.144,'ext':0.0076267,'hscale':1.0,'deform':0.1}},
- 'proxima_d_regate':{'title':'Proxima Cen d — re-gated (not yet emitted)','sub':'nose 7.517 (the recorded 7 now reproduces); alpha 0.58 Earth analogy; Alfven-wing branch declined by owner','R':12,'tilt':10,
-   'inner':{'radiation':5000,'grad':2.09,'dist':0.9413,'rad':0.7698,'dxy':0.7314,'comp':1.002,'ext':0.996,'bdist':1e-4,'brad':1.0,'bdxy':1.0},
-   'outer':{'radiation':1000,'grad':2.15,'dist':2.7,'rad':2.3,'dxy':0.662,'comp':1.053,'ext':0.901,'bdist':1.2,'brad':1.0,'bdxy':0.6748},
-   'pause':{'radiation':-0.01,'rad':11.2362,'comp':1.4948,'ext':0.0099657,'hscale':1.0,
-            'shue_alpha':0.58,'shue_nose':7.517,'shue_tail':1127.5}},
+ # b·d 재게이트판은 2026-08-18 에 삭제했다. 이 자리에 손으로 둔 이유가 "보드에 기록은 됐지만 emitter
+ # 가 안 읽어서 눈으로 볼 길이 여기뿐"이었는데, 두 축 병합(2026-08-16)과 kopernicus_name 소급 적용으로
+ # 그 값들이 보드에서 그대로 cfg 로 나가고 뷰어도 보드 프리셋으로 그린다. 사본을 남기면 갈라진다.
  'proxima_c_pre':{'title':'Proxima Cen c — pre-regate board','sub':'alpha 0.5 borrowed from Earth; tail 125 by judgement','R':22,'tilt':50,'offset':0.4,
    'inner':{'radiation':8.0,'grad':2.09,'dist':1.5,'rad':0.86,'dxy':0.66,'comp':1.002,'ext':0.997,'bdist':0.0001,'brad':1.0,'bdxy':0.5},
    'outer':{'radiation':1.2,'grad':2.15,'dist':2.8,'rad':2.5,'dxy':0.66,'comp':1.01,'ext':0.979,'bdist':1.54,'brad':1.42,'bdxy':0.66},

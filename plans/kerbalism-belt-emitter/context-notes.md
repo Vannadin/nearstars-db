@@ -497,3 +497,38 @@ Alpha Centauri A b III, Cassandra to Alpha Centauri A b IV, and the three Proxim
 planets from the board's `Proxima Cen x` shorthand to `Proxima Centauri x`. That last one
 is the case this was meant to catch, since the board key and the designation genuinely
 differed and the cfg had been shipping the board key.
+
+## 2026-08-18 — cleanup, and a regression the cleanup caught
+
+Owner cleared three leftovers: delete the dead block, tidy the superseded snapshots,
+leave d's narratives alone.
+
+- `build_belt_viewer.py`'s `if 'proxima_d_phys' in presets:` block is gone. It had been
+  dead since the BODIES key was renamed to `proxima_d_regate`.
+- `proxima_b_regate` and `proxima_d_regate` are gone from BODIES. The comment above them
+  said they existed because the emitter read only the belts axis, so the board's values
+  had no other way to be seen. The two-axis merge and the kopernicus_name work retired
+  that reason: those values now ship from the board and the viewer draws them from the
+  board preset. A hand copy left beside a live source only drifts.
+- `docs/img/belts/proxima_d_phys.png` deleted (orphan of the old key, no longer
+  regenerable, and its contents are the pre-gate geometry) and the stale
+  `proxima_d_phys` pointer in `tools.md` updated to the single-shell state.
+
+**The regression.** Rebuilding after the deletions showed the Proxima tab back to six
+buttons, and Alpha Centauri split too. Cause was mine, two commits earlier: the viewer
+builds its board presets by iterating `load_nearstars_specs()`, whose key is the emit
+name, and giving every body a `kopernicus_name` changed that key from `Proxima Cen d` to
+`Proxima Centauri d` and from `Polyphemus` to `Alpha Centauri A b`. The picker's
+hand-written pre-snapshot mapping still pointed at the old keys, so each planet split
+into two buttons again. check.sh and the phase4 validator both passed throughout, since
+neither looks at the viewer's picker.
+
+Fixed at the root rather than by re-syncing the mapping: `load_nearstars_specs` now
+returns `board_body` alongside the emit name, and the viewer takes its label and
+`body_key` from that. The emit name is free to change without touching the UI, which is
+the property that was missing. One mapping entry did need updating, Polyphemus to
+`alpha_centauri_a_b`, because the board keys that body by its designation rather than
+its culture name.
+
+Verified in the browser afterwards: 9 / 3 / 3 / 1 buttons, every preset applies without
+error, no console errors.
