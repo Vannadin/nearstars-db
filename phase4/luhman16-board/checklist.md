@@ -15,13 +15,17 @@ Luhman 16 B (T0.5). Phase 3 grounding: `docs/phase3/luhman-16-a.md` / `-b.md`.
       surface (absence), appearance + aurora (documented-divergence), magnetism
       (ISM-ram geometry + CRAND belt), environment, satellites (absence),
       gameplay (3 latitude biomes).
-- [ ] Luhman 16 B: same walk (inputs already gathered: P 4.87 h high-conf,
-      i* ~ 90 deg, B_dyn 1177 G, figure q 8.7e-3, Crossfield+Apai weather).
+- [x] **Luhman 16 B: all 11 axis groups dispositioned (13 rows)** — identity,
+      bulk anchor, orbit (barycentric-split note), spin axis (equator-on),
+      J2/figure (firmest on the board), atmosphere, surface, appearance
+      (Crossfield skeleton + Apai motion), aurora (matched faint pair),
+      magnetism (twin bubble + belt), environment, satellites, gameplay
+      (3 mapped-feature biomes; polar biome name unified with A as Polar Caps).
 - [x] Dynamo B-field computed via planetary-dynamo-scaling BD branch (A 1250 G,
       B 1177 G), methodology doc cited.
-- [ ] `python3 scripts/check_phase4_gate.py` — 0 errors.
-- [ ] `python3 scripts/phase4/build_phase4_html.py luhman_16` + eyeball.
-- [ ] Commit per logical unit.
+- [x] `python3 scripts/check_phase4_gate.py` — 0 errors, 0 warnings (26 rows).
+- [x] `python3 scripts/phase4/build_phase4_html.py luhman_16` — index + 2 body pages.
+- [x] Commit per logical unit (board authored block-by-block across 8 commits).
 
 ## Constraints
 
