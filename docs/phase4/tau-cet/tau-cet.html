@@ -68,40 +68,12 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
-/* cited figures */
-.sec-h { font-size:13px; font-weight:600; color:var(--fg2); margin:30px 0 8px;
-  padding-top:20px; border-top:1px solid var(--bd1) }
-.figs { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px }
-.fig { margin:0; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  overflow:hidden }
-.fig img { display:block; width:100%; height:auto; background:var(--s2) }
-.fig figcaption { padding:9px 13px; font-size:12px; color:var(--fg3); line-height:1.55 }
-.fig figcaption code { font-size:11.5px }
-/* embedded viewers */
-.viewer { margin:0 0 18px }
-.vw-head { display:flex; align-items:baseline; gap:10px; margin-bottom:4px }
-.vw-title { font-size:13px; font-weight:600; color:var(--fg2) }
-.vw-open { font-size:11.5px; color:var(--accent); text-decoration:none; margin-left:auto }
-.vw-open:hover { text-decoration:underline }
-.vw-desc { color:var(--fg3); font-size:12.5px; line-height:1.6; margin:0 0 9px; max-width:720px }
-.viewer iframe { display:block; width:100%; border:1px solid var(--bd2); border-radius:12px;
-  background:var(--s1) }
-/* index grid */
-.body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
-.body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  padding:14px 16px; transition:.16s; box-shadow:inset 0 1px 0 rgba(255,255,255,.05) }
-.body-card:hover { background:var(--s2); border-color:rgba(122,168,255,.4); transform:translateY(-1px) }
-.bc-head { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:6px }
-.bc-name { font-size:15px; font-weight:600; color:var(--fg1) }
-.alias { color:var(--accent); font-size:12px; font-family:var(--mono) }
-.bc-count { font-family:var(--mono); font-size:11px; color:var(--fg4); margin-bottom:8px }
-.bc-badges { display:flex; gap:5px; flex-wrap:wrap }
-.mini-pill { font:600 9.5px/1.4 var(--sans); letter-spacing:.03em; text-transform:uppercase;
-  padding:2px 8px; border-radius:999px }
-.mini-pill.g { color:var(--ok); background:var(--ok-bg) }
-.mini-pill.d { color:var(--danger); background:var(--danger-bg) }
-.mini-pill.p { color:var(--fg4); background:var(--s2) }
-.mini-pill.o { color:var(--warn); background:var(--warn-bg) }
+/* figures attached inside a decision row — no chrome, just the picture */
+.figs { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 2px }
+.figs .fig { display:block; max-width:min(420px, 100%); border:1px solid var(--bd2);
+  border-radius:10px; overflow:hidden; background:var(--s2); line-height:0 }
+.figs .fig:hover { border-color:rgba(122,168,255,.4) }
+.figs .fig img { display:block; width:100%; height:auto }
 .axis-toc { display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 12px }
 .axis-toc a { font-family:var(--mono); font-size:11px; color:var(--fg3); text-decoration:none;
   background:var(--s1); border:1px solid var(--bd2); border-radius:6px; padding:3px 8px }
@@ -337,6 +309,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">body_type=**조용한 늙은 금속-빈약 G8.5V 솔라 아날로그**(태양보다 약간 차갑고 어둡고 철-빈약). 태양 최근접 **단일** Sun-like 별(3.65 pc), SETI 고전 타깃(Project Ozma 1960). designation=τ Ceti(HD 10700 · HIP 8102 · GJ 71).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">조용한 늙은 금속-빈약 G8.5V 솔라 아날로그</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">tau Ceti (HD 10700 · HIP 8102 · GJ 71)</td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배).</div>
   
 </article>
@@ -350,6 +323,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   
+  
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -358,6 +332,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">color=**물리색 `#ffeddf`** (Teff 5370K 흑체→sRGB 실측 `#ffecdd` + [Fe/H]−0.52 블루 nudge; 거의 흰-따뜻) — 색은 **Teff 5370K 지배**(태양 5772K보다 ~400K 낮아 더 노랑; sRGB 블루채널 Δ~13). **금속빈약은 line blanketing 약화로 sub-perceptual 블루 nudge**(+15~70K 등가, B−V ~0.02–0.03, sRGB 블루 +~2 — 역치 아래지만 방향 맞아 반영; Ramírez&amp;Meléndez2005·Casagrande2010·Huang2015 색-Teff-[Fe/H] 보정. [[feedback_skip_metallicity]] 정합). limb_darkening α 0.14(Korolik2023 H-band 간섭계 직접측정). spots/faculae=**매우 낮음**(log R&#x27;HK −4.977 극비활동; 장기 거동은 environment 행의 양립 표기 참조 — α Cen A보다 조용).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffeddf"></span><span class="hx">#ffeddf</span><div class="fnote p3">Phase 3: Teff 5370K 흑체 #ffecdd + 금속빈약 블루 nudge</div></td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.14<div class="fnote">α (Korolik2023 H-band 간섭계 직접측정)</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">very low (log R&#x27;HK −4.977 극비활동)</td><td class="o"></td></tr></tbody></table>
+  
   
   <div class="ev"><span class="tag">evidence</span> 오너 G3 확정·정정 2026-06-24 — 물리색만 기록(#ffeddf=흑체 실측+금속 nudge), 뷰어 채도-tint(#ffe9c8)는 미기록. emit 별색(광원=near-white/원반 art)은 deferred. 색은 Teff 지배·금속은 sub-perceptual nudge(방향 반영). limb/흑점=측정 passthrough.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K" target="_blank" rel="noopener">2023AJ....166..123K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G" target="_blank" rel="noopener">2021A&amp;A...646A..77G</a></div>
@@ -372,6 +347,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   
+  
 </article>
 <article class="dec" id="environment">
   <div class="dec-head">
@@ -380,6 +356,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">activity=**사실상 flat**(Baum2022 ~50yr 모니터링 — 가장 자기조용 Sun-like 중 하나; GdS2021은 약한 ~11yr 후보 +장기하락을 시사 — 양립 표기: &quot;무~극약 사이클&quot;, DB에 cycle 미큐레이션). X선 **log Lx 26.69 검출**(Schmitt &amp; Liefke 2004, DB recommended — 2026-07-12 점검: 구기록 &quot;EXOSAT 상한 ≤26.5(Schmitt1985)&quot;를 검출값으로 교체). stellar_wind=**약함** Ṁ ≤ 0.1 Ṁ☉(Wood2021 astrospheric Lyα 상한). heliosphere: ISM 유입 ~50 km/s, astrosphere standoff **≲19 AU**(작음). radiation_surface ~0.6×태양(낮음). 행성계 space weather 매우 온화(K·M왜성식 XUV-구동 대기손실 없음 → 내행성 손실은 thermal Jeans 기본). 측정/상한 → emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">log R&#x27;HK −4.977; 사실상 flat (Baum2022; GdS2021 약한 ~11yr 후보 양립); X-ray log Lx 26.69 (S&amp;L2004)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">stellar_wind</td><td class="v">0.1 <span class="u">Mdot_sun</span><div class="fnote">≤0.1 상한 (Wood2021)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">heliosphere</td><td class="v">astrosphere standoff ≲19 AU (ISM 유입 ~50 km/s)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radiation</td><td class="v">~0.6× 태양 (낮음, flat)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
   
   
   
@@ -392,6 +369,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">i★ = 7°±7° 측정 채택(Korolik2023 간섭계+v sin i — **거의 극향(pole-on)**). 디스크 경사 i~35° (MacGregor2016 ALMA)와 어긋나 **별-디스크 최소 비정렬 ~28°** — 둘 다 측정이라 실측 기반의 흥미로운 읽기 (Korolik2023 본문이 직접 논의한 misalignment). 행성 궤도 경사는 미측정 — emit 배향 시 행성면은 디스크면 기준이 자연스러움(디스크=행성계 강착면). 극 방위각: 디스크 PA 105° 활용 가능. ICRS 변환은 emit 단계.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 7°±7° (LOS 기준, 측정) · 디스크(i 35°, PA 105°)와 최소 ~28° 비정렬</td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> 측정값 그대로 채택(7°±7°, recommended). 별-디스크 비정렬은 두 측정의 직접 귀결 — 가정 아님(불확도 고려 시 최소 ~21°). 뷰어 i★ 레이어(측정=금색)와 정합.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K" target="_blank" rel="noopener">2023AJ....166..123K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016ApJ...828..113M" target="_blank" rel="noopener">2016ApJ...828..113M</a></div>
 </article>
@@ -403,13 +381,12 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">회전 편평 J2 = 4.2e-8. G8.5V(태양 유사 응집) → 태양앵커 q-스케일링(J2 = 0.0105·q, Pijpers 1998 앵커): q = ω²R³/GM = 4.04e-6 (M 0.783·R 0.793·P_rot 46±4d, 전부 DB recommended/Phase3 해결값) → J2 4.2e-8 (±~17%, P_rot 지배). reference_radius = 적도반경 5.517e8 m. 태양(2.2e-7)의 ~1/5 — 느린 자전(46d)+작은 반지름의 귀결. 방법 = body-figure-methodology.md §2 FGK 분기(αCen A/B와 동일).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">4.2e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">5.517e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> q(4.04e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 4.2e-8. FGK 유사구조 범위 내, 오너 정책(항성 J2 무시가능 처리 금지)대로 emit.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P" target="_blank" rel="noopener">1998MNRAS.297L..76P</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K" target="_blank" rel="noopener">2023AJ....166..123K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009A%26A...494..237T" target="_blank" rel="noopener">2009A&amp;A...494..237T</a></div>
 </article></div>
 
-<h2 class="sec-h"><span data-i18n>뷰어</span><span data-en hidden>Viewers</span></h2><section class="viewer"><div class="vw-head"><span class="vw-title"><span data-i18n>궤도 런</span><span data-en hidden>Orbit run</span></span><a class="vw-open" href="../orbit-viewers/tau-cet/interactive.html" target="_blank" rel="noopener"><span data-i18n>전체로 열기 ↗</span><span data-en hidden>open full ↗</span></a></div><p class="vw-desc"><span data-i18n>이 천체가 속한 계를 Principia와 같은 고정 스텝 leapfrog(dt 10분)로 적분한 결과입니다. 범례에서 이름을 누르면 네 패널에서 한 번에 분리해 볼 수 있습니다.</span><span data-en hidden>This body inside the system&#x27;s Principia-equivalent integration (fixed-step leapfrog, dt 10 min). Click its name in the legend to isolate it across all four panels.</span></p><iframe src="../orbit-viewers/tau-cet/interactive.html?embed=1" height="700" loading="lazy" title="tau Cet viewer"></iframe></section>
-
-<div class="stamp">빌드 2026-08-18 20:18 · 09565fea</div></div>
+<div class="stamp">빌드 2026-08-18 23:10 · db4bc167</div></div>
 <script>
 const b=document.body;
 function setLang(en){

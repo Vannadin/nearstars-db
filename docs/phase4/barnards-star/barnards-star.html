@@ -68,40 +68,12 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
-/* cited figures */
-.sec-h { font-size:13px; font-weight:600; color:var(--fg2); margin:30px 0 8px;
-  padding-top:20px; border-top:1px solid var(--bd1) }
-.figs { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px }
-.fig { margin:0; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  overflow:hidden }
-.fig img { display:block; width:100%; height:auto; background:var(--s2) }
-.fig figcaption { padding:9px 13px; font-size:12px; color:var(--fg3); line-height:1.55 }
-.fig figcaption code { font-size:11.5px }
-/* embedded viewers */
-.viewer { margin:0 0 18px }
-.vw-head { display:flex; align-items:baseline; gap:10px; margin-bottom:4px }
-.vw-title { font-size:13px; font-weight:600; color:var(--fg2) }
-.vw-open { font-size:11.5px; color:var(--accent); text-decoration:none; margin-left:auto }
-.vw-open:hover { text-decoration:underline }
-.vw-desc { color:var(--fg3); font-size:12.5px; line-height:1.6; margin:0 0 9px; max-width:720px }
-.viewer iframe { display:block; width:100%; border:1px solid var(--bd2); border-radius:12px;
-  background:var(--s1) }
-/* index grid */
-.body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
-.body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  padding:14px 16px; transition:.16s; box-shadow:inset 0 1px 0 rgba(255,255,255,.05) }
-.body-card:hover { background:var(--s2); border-color:rgba(122,168,255,.4); transform:translateY(-1px) }
-.bc-head { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:6px }
-.bc-name { font-size:15px; font-weight:600; color:var(--fg1) }
-.alias { color:var(--accent); font-size:12px; font-family:var(--mono) }
-.bc-count { font-family:var(--mono); font-size:11px; color:var(--fg4); margin-bottom:8px }
-.bc-badges { display:flex; gap:5px; flex-wrap:wrap }
-.mini-pill { font:600 9.5px/1.4 var(--sans); letter-spacing:.03em; text-transform:uppercase;
-  padding:2px 8px; border-radius:999px }
-.mini-pill.g { color:var(--ok); background:var(--ok-bg) }
-.mini-pill.d { color:var(--danger); background:var(--danger-bg) }
-.mini-pill.p { color:var(--fg4); background:var(--s2) }
-.mini-pill.o { color:var(--warn); background:var(--warn-bg) }
+/* figures attached inside a decision row — no chrome, just the picture */
+.figs { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 2px }
+.figs .fig { display:block; max-width:min(420px, 100%); border:1px solid var(--bd2);
+  border-radius:10px; overflow:hidden; background:var(--s2); line-height:0 }
+.figs .fig:hover { border-color:rgba(122,168,255,.4) }
+.figs .fig img { display:block; width:100%; height:auto }
 .axis-toc { display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 12px }
 .axis-toc a { font-family:var(--mono); font-size:11px; color:var(--fg3); text-decoration:none;
   background:var(--s1); border:1px solid var(--bd2); border-radius:6px; padding:3px 8px }
@@ -337,6 +309,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">body_type=M4.0Ve 적색왜성 — 로스터 최고령(8.5 Gyr)·최저활동 급의 조용한 노익성. designation=Barnard&#x27;s star (GJ 699). V 9.5로 맨눈에는 보이지 않고, 1916년 E.E. Barnard의 고유운동 측정으로 유명해진 망원경 천체다.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">M4.0Ve 적색왜성 (조용한 노익성)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Barnard&#x27;s star (GJ 699)</td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> V 9.5 → naked_eye 불가, category=confirmed(망원경 검출사 정합). Proxima(11등, confirmed)와 동일 정책.<br></div>
   
 </article>
@@ -350,6 +323,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   
+  
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -358,6 +332,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">color=M4.0V 물리색 #ffd487(옅은 따뜻한 주황 — 실측 Pickles M4 SED→CIE; 방법론 문서의 진단 예시가 정확히 이 온도대: 40 Eri C 3167K vs Barnard 3195K). granulation=M왜성 대류 granule. limb_darkening α~0.4 (Claret2018 M-dwarf 보간, Proxima와 동일 tie-break). **spots_faculae=소수 ~0.5–1%**(오너 결정 2026-07-12 — 극저활동 노익성이나 145d 광도 변조 검출 이력이 있어 완전 무점은 아님; α Cen A보다 조금 더 있는 수준). corona=미약(X선 log Lx 25.3 — 로스터 항성 중 최저급). flares=드묾(정온 노익성; France2020 FUV 소플레어 검출 이력은 있음 → &quot;아예 없음&quot; 아님).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffd487"></span><span class="hx">#ffd487</span><div class="fnote p3">Phase 3: M4.0V, Teff 3195K (Pickles SED 물리색)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">M왜성 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.4<div class="fnote">α~0.4 (Claret2018 M-dwarf 보간)</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">~0.5–1% 피복률 (소수 — 오너 결정)</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">faint (X-ray log Lx 25.3, 로스터 최저급)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (정온 노익성; FUV 소플레어 이력 있음)</td><td class="o"></td></tr></tbody></table>
+  
   
   <div class="ev"><span class="tag">evidence</span> 색=stellar-photospheric-color-methodology.md §8 워크드 값 그대로(#ffd487, M4 3195K). 흑점량=오너 위임 결정(텍스처용) 소수 ~0.5–1% — 145d 변조 검출(spot 존재)과 극저활동(R&#x27;HK −5.82) 사이의 절충, 물리 범위 내. corona/flares=측정(France2020 log Lx 25.3, FUV 플레어) 기반.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2024A%26A...690A..79G" target="_blank" rel="noopener">2024A&amp;A...690A..79G</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2020AJ....160..237F" target="_blank" rel="noopener">2020AJ....160..237F</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.5145T" target="_blank" rel="noopener">2019MNRAS.488.5145T</a></div>
@@ -372,6 +347,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   
+  
 </article>
 <article class="dec" id="environment.activity">
   <div class="dec-head">
@@ -380,6 +356,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">P_rot 145±15d(Toledo-Padrón2019 — 로스터 최장) · log R&#x27;HK −5.82±0.08(최저활동) · X선 log Lx 25.3 / log Rx −5.8(France2020). 활동 사이클은 DB 미큐레이션. 측정 emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">P_rot 145±15d, log R&#x27;HK −5.82±0.08, X-ray log Lx 25.3 (log Rx −5.8)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
   
   
   
@@ -394,6 +371,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   
+  
 </article>
 <article class="dec" id="environment.heliosphere">
   <div class="dec-head">
@@ -402,6 +380,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">고속 항성 고유운동 → 항성 기준 ISM 유입 121 km/s(LIC, 유입각 θ 43°, Wood2021 — αCen계 ~25 km/s의 ~5배) → 강하게 압축된 혜성형 astrosphere. standoff 수치는 DB 미큐레이션(풍이 상한뿐이라 하한 불가) — 유입 벡터만 emit(뷰어 heliosphere 레이어와 동일 소스).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">heliosphere</td><td class="v">압축 혜성형 astrosphere (ISM 유입 121 km/s, θ 43°, LIC — Wood2021)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
   
   
   
@@ -414,6 +393,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">i★ 측정 없음, 행성 궤도 경사도 미측정 → 오너 선택: **채택 궤도면 정렬**. 질량 행(&quot;*&quot; bulk.mass)이 이미 등방 prior 중앙 경사각 60°를 채택해 행성 궤도면이 사실상 i=60°로 emit되므로, 항성 적도도 같은 면에 정렬(i★=60°) — 보드의 경사 가정이 하나로 묶임(자기일관). 극 방위각은 emit 배향 자유(ICRS 변환 emit 단계).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 60° (채택 행성 궤도면 정렬 — 질량 행의 등방 prior 60°와 단일 가정) · PA 자유</td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> 측정 부재라 물리 범위 게이트만: 단독성+행성계의 스핀-궤도 정렬은 형성론 기본 기대. 질량 채택(×1.1547, i=60°)과 같은 가정을 공유해 보드 내 모순 없음. 어떤 관측과도 충돌 없음.<br></div>
   
 </article>
@@ -425,13 +405,12 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">회전 편평 J2 = 2.2e-9. 완전 대류 M왜성(0.162 M☉ ≪ 0.35 M☉ 경계) → Radau-Darwin, n=3/2 폴리트로프 NMoI 0.205(Chandrasekhar 1939) → J2/q = 0.084. q = ω²R³/GM = 2.58e-8 (M 0.162·R 0.187·P_rot 145d, 전부 DB recommended) → J2 2.2e-9 (±~20%, P_rot ±15d 지배). reference_radius = 적도반경 1.301e8 m. 방법 = body-figure-methodology.md §2 M왜성 분기(Proxima와 동일).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">2.2e-09</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">1.301e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> 로스터 최장 자전(145d)이라 q가 극소 — Proxima(3.7e-9)보다도 작은 로스터 최저 J2. 오너 정책(항성 J2 무시가능 처리 금지)대로 계산값 emit. 폴리트로프 계수 0.084는 완전대류 구조의 물리적 귀결.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939isss.book.....C" target="_blank" rel="noopener">1939isss.book.....C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2019A%26A...625A..68S" target="_blank" rel="noopener">2019A&amp;A...625A..68S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.5145T" target="_blank" rel="noopener">2019MNRAS.488.5145T</a></div>
 </article></div>
-
-<h2 class="sec-h"><span data-i18n>뷰어</span><span data-en hidden>Viewers</span></h2><section class="viewer"><div class="vw-head"><span class="vw-title"><span data-i18n>궤도 런</span><span data-en hidden>Orbit run</span></span><a class="vw-open" href="../orbit-viewers/barnards-star/interactive.html" target="_blank" rel="noopener"><span data-i18n>전체로 열기 ↗</span><span data-en hidden>open full ↗</span></a></div><p class="vw-desc"><span data-i18n>이 천체가 속한 계를 Principia와 같은 고정 스텝 leapfrog(dt 10분)로 적분한 결과입니다. 범례에서 이름을 누르면 네 패널에서 한 번에 분리해 볼 수 있습니다.</span><span data-en hidden>This body inside the system&#x27;s Principia-equivalent integration (fixed-step leapfrog, dt 10 min). Click its name in the legend to isolate it across all four panels.</span></p><iframe src="../orbit-viewers/barnards-star/interactive.html?embed=1" height="700" loading="lazy" title="Barnard&#x27;s star viewer"></iframe></section>
 <div class="bodynav"><a class="navlink" href="system-wide.html">* →</a></div>
-<div class="stamp">빌드 2026-08-18 20:18 · 09565fea</div></div>
+<div class="stamp">빌드 2026-08-18 23:10 · db4bc167</div></div>
 <script>
 const b=document.body;
 function setLang(en){

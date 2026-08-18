@@ -68,40 +68,12 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
-/* cited figures */
-.sec-h { font-size:13px; font-weight:600; color:var(--fg2); margin:30px 0 8px;
-  padding-top:20px; border-top:1px solid var(--bd1) }
-.figs { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px }
-.fig { margin:0; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  overflow:hidden }
-.fig img { display:block; width:100%; height:auto; background:var(--s2) }
-.fig figcaption { padding:9px 13px; font-size:12px; color:var(--fg3); line-height:1.55 }
-.fig figcaption code { font-size:11.5px }
-/* embedded viewers */
-.viewer { margin:0 0 18px }
-.vw-head { display:flex; align-items:baseline; gap:10px; margin-bottom:4px }
-.vw-title { font-size:13px; font-weight:600; color:var(--fg2) }
-.vw-open { font-size:11.5px; color:var(--accent); text-decoration:none; margin-left:auto }
-.vw-open:hover { text-decoration:underline }
-.vw-desc { color:var(--fg3); font-size:12.5px; line-height:1.6; margin:0 0 9px; max-width:720px }
-.viewer iframe { display:block; width:100%; border:1px solid var(--bd2); border-radius:12px;
-  background:var(--s1) }
-/* index grid */
-.body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
-.body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  padding:14px 16px; transition:.16s; box-shadow:inset 0 1px 0 rgba(255,255,255,.05) }
-.body-card:hover { background:var(--s2); border-color:rgba(122,168,255,.4); transform:translateY(-1px) }
-.bc-head { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:6px }
-.bc-name { font-size:15px; font-weight:600; color:var(--fg1) }
-.alias { color:var(--accent); font-size:12px; font-family:var(--mono) }
-.bc-count { font-family:var(--mono); font-size:11px; color:var(--fg4); margin-bottom:8px }
-.bc-badges { display:flex; gap:5px; flex-wrap:wrap }
-.mini-pill { font:600 9.5px/1.4 var(--sans); letter-spacing:.03em; text-transform:uppercase;
-  padding:2px 8px; border-radius:999px }
-.mini-pill.g { color:var(--ok); background:var(--ok-bg) }
-.mini-pill.d { color:var(--danger); background:var(--danger-bg) }
-.mini-pill.p { color:var(--fg4); background:var(--s2) }
-.mini-pill.o { color:var(--warn); background:var(--warn-bg) }
+/* figures attached inside a decision row — no chrome, just the picture */
+.figs { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 2px }
+.figs .fig { display:block; max-width:min(420px, 100%); border:1px solid var(--bd2);
+  border-radius:10px; overflow:hidden; background:var(--s2); line-height:0 }
+.figs .fig:hover { border-color:rgba(122,168,255,.4) }
+.figs .fig img { display:block; width:100%; height:auto }
 .axis-toc { display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 12px }
 .axis-toc a { font-family:var(--mono); font-size:11px; color:var(--fg3); text-decoration:none;
   background:var(--s1); border:1px solid var(--bd2); border-radius:6px; padding:3px 8px }
@@ -337,6 +309,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">body_type=**K0.5 V (Keid A)** — 40 Eri 삼중성의 최광 성분, 적당히 조용한 K왜성. 철회된 행성 b(**Vulcan/Erid**) 호스트. 비교적 젊음(~1.8 Gyr, 백색왜성 IFMR coeval age)·약간 금속-빈약([Fe/H] −0.29). 5.01 pc(~16.3 ly). designation= 40 Eridani A(Keid · HD 26965 · HR 1325 · GJ 166 A · o² Eri A).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">K0.5 V (Keid A)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">40 Eridani A (Keid · HD 26965 · HR 1325 · GJ 166 A · o² Eri A)</td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-24. 맨눈 별 naked_eye=T T T T. 문화=벌컨의 태양(Star Trek, Roddenberry1991 공인)+Erid의 태양(PHM 로키). 백색왜성 B+적색왜성 C와 삼중성.<br></div>
   
 </article>
@@ -350,6 +323,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   
+  
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -358,6 +332,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">color=**물리색 `#ffe9d5`**(Teff 5143K 흑체→sRGB 실측; 따뜻한 주황-크림 — 태양 #fff1ea·τ Ceti #ffecdd보다 더 주황, K왜성다움). [Fe/H] −0.29는 **sub-perceptual 블루 nudge**(τ Ceti −0.52보다도 작아 +~1, 무시급·방향만 반영; Ramírez&amp;Meléndez2005 계열 보정). 뷰어 채도-tint(#ffd5a8)는 미기록(물리색만, τ Ceti 선례). spots/faculae=**보통** — 37–43d 자전 변조가 실재 흑점(가짜 Vulcan 42d 신호의 원인); X선 log Lx ~27.5(τ Ceti보다 활동적이나 적당히 조용한 K왜성).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffe9d5"></span><span class="hx">#ffe9d5</span><div class="fnote">Teff 5143K 흑체→sRGB 실측; 따뜻한 주황-크림; [Fe/H] −0.29 sub-perceptual 블루 nudge</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">보통 (37–43d 자전 변조 실측 흑점; X선 log Lx ~27.5)</td><td class="o"></td></tr></tbody></table>
+  
   
   <div class="ev"><span class="tag">evidence</span> 오너 G3 확정 2026-06-24 — 물리색 #ffe9d5만 기록(뷰어 tint 미기록, τ Ceti 정합). 금속 sub-perceptual nudge·보통 흑점(자전변조 실측). emit 별색(광원=near-white/원반 art) deferred.<br></div>
   
@@ -372,6 +347,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   
+  
 </article>
 <article class="dec" id="environment">
   <div class="dec-head">
@@ -380,6 +356,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">radiation_surface ~3× 태양(X선 log Lx 27.2–27.5 = 태양 cycle-mean ~26.9의 2–4배; τ Ceti ~0.6×보다 활동적, 젊은 ~1.8 Gyr 정합). stellar_wind=**미구속**(Wood HST Lyα서 검출 astrosphere 없음, Ṁ 미측정). astrosphere standoff=미구속 — 단 **고속 이동**(V_ISM ~127 km/s)이라 ram 압축 강함(있다면 작은 astrosphere). 삼중성 맥락: C(M4.5Ve 플레어 별 DY Eri)+ B(백색왜성)는 ~400 AU 밖이라 A 환경엔 거의 무관. 측정/상한 → emit 그대로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">~3× 태양 (X선 log Lx 27.2–27.5)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">stellar_wind</td><td class="v">미구속 (Wood HST Lyα astrosphere 미검출, Ṁ 미측정)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">heliosphere</td><td class="v">standoff 미구속 (고속 이동 V_ISM ~127 km/s → ram 압축 강함)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
   
   
   
@@ -392,6 +369,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">i★ 측정 없음 → 오너 선택: **행성계(Erid 등) 궤도면 기준 + seeded 무작위 기울기 1–10°**. 고정 수치를 보드에 박지 않고 범위만 기록 — synthetic-orbit-noise 정책 패턴(시딩·물리 경계·emit 단계 적용·DB 불변)대로 emit 시 천체명 해시로 시딩. 극 방위각 자유(ICRS 변환 emit 단계). A는 BC쌍과 역학 분리된 단독 호스트라 BC면과는 무관.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">행성계 면 + seeded random tilt 1–10° (emit 시 시딩, synthetic-orbit-noise 패턴) · PA 자유</td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> 측정 부재라 물리 범위 게이트만: 행성 호스트의 스핀-궤도 소기울기(≲10°)는 태양(7.25°) 등 형성론 기대 범위. 무작위 폭 1–10°는 전부 그 안 — seeded라 재현성 invariant 보존.<br></div>
   
 </article>
@@ -403,13 +381,12 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">회전 편평 J2 = 5.4e-8. K0.5V(태양 유사 응집) → 태양앵커 q-스케일링(J2 = 0.0105·q, Pijpers 1998 앵커): q = ω²R³/GM = 5.1e-6 (M 0.78·R 0.806·P_rot 42d[DB recommended, Burrows2024]; 보드 범위 37–43d면 J2 5.1–6.9e-8) → J2 5.4e-8 (±~20%). reference_radius = 적도반경 5.609e8 m. 방법 = body-figure-methodology.md §2 FGK 분기.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">5.4e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">5.609e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
+  
   <div class="ev"><span class="tag">evidence</span> q(5.1e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 5.4e-8 — τ Ceti(4.2e-8)와 동급, αCen A(4.8e-7)의 ~1/9. FGK 유사구조 범위 내. 구 OMIT confirm은 정책 변경으로 대체.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P" target="_blank" rel="noopener">1998MNRAS.297L..76P</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B" target="_blank" rel="noopener">2012ApJ...757..112B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B" target="_blank" rel="noopener">2024AJ....167..243B</a></div>
 </article></div>
-
-<h2 class="sec-h"><span data-i18n>뷰어</span><span data-en hidden>Viewers</span></h2><section class="viewer"><div class="vw-head"><span class="vw-title"><span data-i18n>궤도 런</span><span data-en hidden>Orbit run</span></span><a class="vw-open" href="../orbit-viewers/40-eridani/interactive.html" target="_blank" rel="noopener"><span data-i18n>전체로 열기 ↗</span><span data-en hidden>open full ↗</span></a></div><p class="vw-desc"><span data-i18n>이 천체가 속한 계를 Principia와 같은 고정 스텝 leapfrog(dt 10분)로 적분한 결과입니다. 범례에서 이름을 누르면 네 패널에서 한 번에 분리해 볼 수 있습니다.</span><span data-en hidden>This body inside the system&#x27;s Principia-equivalent integration (fixed-step leapfrog, dt 10 min). Click its name in the legend to isolate it across all four panels.</span></p><iframe src="../orbit-viewers/40-eridani/interactive.html?embed=1" height="700" loading="lazy" title="40 Eridani A viewer"></iframe></section>
 <div class="bodynav"><a class="navlink" href="40-eridani-b.html">40 Eridani B →</a></div>
-<div class="stamp">빌드 2026-08-18 20:18 · 09565fea</div></div>
+<div class="stamp">빌드 2026-08-18 23:10 · db4bc167</div></div>
 <script>
 const b=document.body;
 function setLang(en){

@@ -8,7 +8,6 @@ Usage: python3 scripts/phase4/build_phase4_html.py alpha_centauri
 Writes docs/phase4/<system-slug>/index.html + one <body-slug>.html per body.
 """
 import html
-import json
 import re
 import datetime
 import sys
@@ -251,6 +250,7 @@ def decision_html(d):
   </div>
   {nar}
   {fields_table(fields_of(d))}
+  {figures_html(d)}
   {moons_table(d.get('moons'))}
   {dep_html}{ev_html}{dn_html}
   {refs_html(d.get('refs'))}
@@ -260,132 +260,38 @@ def decision_html(d):
 IMG_RE = re.compile(r"docs/img/[\w./-]+\.(?:png|jpg|jpeg|svg)")
 
 
-def figures_of(rows, body):
-    """Figures this body's decisions cite, in row order, first citer wins.
+def figures_of(d):
+    """Figures this decision cites, in first-mention order.
 
-    Boards already name their diagrams inline — `Shape diagram:
-    docs/img/field-geometry-proxima-c.png` sits in the row's own note — so the
-    figure's owner is wherever it was cited, and no second body↔image mapping has
-    to be curated (or kept in sync). A path that no longer resolves is dropped
-    with a warning rather than emitted as a broken image.
+    Boards already name their diagrams inline — "Shape diagram:
+    docs/img/field-geometry-proxima-c.png" sits in the row's own note — so a figure
+    belongs to the row that raised it and no second mapping has to be curated. A
+    path that no longer resolves is dropped with a warning, not emitted broken.
     """
-    seen = {}
-    for d in rows:
-        blob = yaml.safe_dump(d, allow_unicode=True, default_flow_style=False)
-        for path in IMG_RE.findall(blob):
-            if path in seen:
-                continue
-            if not (REPO / path).exists():
-                print(f"[warn] {body}: cited figure not found — {path}", file=sys.stderr)
-                continue
-            seen[path] = d.get("axis", "")
-    return list(seen.items())
+    out = []
+    blob = yaml.safe_dump(d, allow_unicode=True, default_flow_style=False)
+    for path in IMG_RE.findall(blob):
+        if path in out:
+            continue
+        if not (REPO / path).exists():
+            print(f"[warn] {d.get('body','?')} / {d.get('axis','?')}: "
+                  f"cited figure not found — {path}", file=sys.stderr)
+            continue
+        out.append(path)
+    return out
 
 
-def figures_html(figs):
-    """The cited figures as a captioned grid, each caption anchored to its row."""
+def figures_html(d):
+    """The row's figures, attached inside it — thumbnail now, full size on click."""
+    figs = figures_of(d)
     if not figs:
         return ""
-    items = []
-    for path, axis in figs:
-        src = "../../" + path[len("docs/"):]
-        cap = (f'<a href="#{esc(axis)}"><code>{esc(axis)}</code></a> '
-               + bi("cited by this decision", "이 결정이 인용")) if axis else ""
-        items.append(
-            f'<figure class="fig">'
-            f'<a href="{src}"><img src="{src}" alt="{esc(axis)} figure" loading="lazy"></a>'
-            f'<figcaption>{cap}</figcaption>'
-            f'</figure>')
-    head = ('<h2 class="sec-h">' + bi("Figures", "자료") + '</h2>'
-            + '<p class="intro">'
-            + bi("The diagrams this body's decisions cite, in the order the rows raise them.",
-                 "이 천체의 결정들이 인용한 도식입니다. 행이 등장하는 순서대로 놓았습니다.")
-            + '</p>')
-    return head + '<div class="figs">' + "".join(items) + '</div>'
-
-_PRESET_RE = re.compile(r"const PRESETS\s*=\s*(\{.*?\});", re.S)
-
-
-def belt_bodies():
-    """Board body names the belt viewer carries a preset for.
-
-    Read back off the built viewer rather than re-deriving its key rule here: the
-    picker labels NearStars bodies with the board's own body name, so a name match
-    is exact and there is no second mapping to keep in sync. If the viewer has not
-    been built, no body claims a belt embed.
-    """
-    if not hasattr(belt_bodies, "_cache"):
-        names = set()
-        f = REPO / "docs" / "belt-viewer.html"
-        m = _PRESET_RE.search(f.read_text(encoding="utf-8")) if f.exists() else None
-        if m:
-            try:
-                for p in json.loads(m.group(1)).values():
-                    if p.get("sys") not in (None, "sol", "demo") and p.get("label"):
-                        names.add(p["label"])
-            except json.JSONDecodeError:
-                print("[warn] belt-viewer.html PRESETS unreadable — no belt embeds",
-                      file=sys.stderr)
-        belt_bodies._cache = names
-    return belt_bodies._cache
-
-
-def orbit_run_bodies(system):
-    """Bodies that actually appear in this system's orbit-viewer run.
-
-    A board body absent from the integration (a distant companion the run omits, an
-    invented moon that postdates it) gets no orbit embed rather than one that never
-    shows it.
-    """
-    f = (REPO / "phase3/stability-sim/results/_viewers" / system / f"{system}_summary.json")
-    if not f.exists():
-        return set()
-    d = json.loads(f.read_text(encoding="utf-8"))
-    names = {d.get("star", {}).get("name")}
-    names |= {p.get("name") for p in d.get("planets", [])}
-    names |= {h.get("name") for h in d.get("hypotheticals", [])}
-    return {n for n in names if n}
-
-
-def viewers_html(system, body):
-    """This body's live viewers, embedded — the magnetosphere and the orbit run."""
-    panes = []
-    if body in belt_bodies():
-        src = f"../../belt-viewer.html?body={quote(body)}&amp;embed=1"
-        panes.append((
-            src, "../../belt-viewer.html", 900,
-            bi("Magnetosphere and trapped belts",
-               "자기권과 포획 방사선대"),
-            bi("The in-game RadiationModel cross-section for this body, stock against "
-               "physical. Drag the sliders to see what a gated value does to the field.",
-               "이 천체의 인게임 RadiationModel 단면입니다. 스톡과 물리를 나란히 두고, "
-               "슬라이더로 게이트된 값이 자기권을 어떻게 바꾸는지 볼 수 있습니다.")))
-    slug = to_url_slug(system)
-    orbit = REPO / "docs" / "phase4" / "orbit-viewers" / slug / "interactive.html"
-    if orbit.exists() and body in orbit_run_bodies(system):
-        src = f"../orbit-viewers/{slug}/interactive.html?embed=1"
-        panes.append((
-            src, f"../orbit-viewers/{slug}/interactive.html", 700,
-            bi("Orbit run", "궤도 런"),
-            bi("This body inside the system's Principia-equivalent integration "
-               "(fixed-step leapfrog, dt 10 min). Click its name in the legend to "
-               "isolate it across all four panels.",
-               "이 천체가 속한 계를 Principia와 같은 고정 스텝 leapfrog(dt 10분)로 적분한 "
-               "결과입니다. 범례에서 이름을 누르면 네 패널에서 한 번에 분리해 볼 수 있습니다.")))
-    if not panes:
-        return ""
-    blocks = []
-    for src, full, height, title, desc in panes:
-        blocks.append(
-            f'<section class="viewer">'
-            f'<div class="vw-head"><span class="vw-title">{title}</span>'
-            f'<a class="vw-open" href="{full}" target="_blank" rel="noopener">'
-            + bi("open full ↗", "전체로 열기 ↗") + '</a></div>'
-            f'<p class="vw-desc">{desc}</p>'
-            f'<iframe src="{src}" height="{height}" loading="lazy" '
-            f'title="{esc(body)} viewer"></iframe>'
-            f'</section>')
-    return ('<h2 class="sec-h">' + bi("Viewers", "뷰어") + '</h2>') + "".join(blocks)
+    items = "".join(
+        f'<a class="fig" href="../../{path[len("docs/"):]}" target="_blank" rel="noopener">'
+        f'<img src="../../{path[len("docs/"):]}" alt="{esc(d.get("axis",""))} figure" '
+        f'loading="lazy"></a>'
+        for path in figs)
+    return f'<div class="figs">{items}</div>'
 
 
 def body_stats(rows):
@@ -460,8 +366,6 @@ def render_body(system, body, rows, alias, prev_link, next_link):
 {toc}
 {LEGEND}
 <div class="decisions">{decs}</div>
-{figures_html(figures_of(rows, body))}
-{viewers_html(system, body)}
 {nav_html}
 {build_stamp()}"""
     return page(f"Phase 4 — {system} / {body}", content)
@@ -635,40 +539,12 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
   padding-bottom:14px; border-bottom:1px solid var(--bd1) }
 .summary b { color:var(--fg2); font-weight:500 }
 .body-meta { font-family:var(--mono); font-size:11.5px; color:var(--fg4) }
-/* cited figures */
-.sec-h { font-size:13px; font-weight:600; color:var(--fg2); margin:30px 0 8px;
-  padding-top:20px; border-top:1px solid var(--bd1) }
-.figs { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px }
-.fig { margin:0; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  overflow:hidden }
-.fig img { display:block; width:100%; height:auto; background:var(--s2) }
-.fig figcaption { padding:9px 13px; font-size:12px; color:var(--fg3); line-height:1.55 }
-.fig figcaption code { font-size:11.5px }
-/* embedded viewers */
-.viewer { margin:0 0 18px }
-.vw-head { display:flex; align-items:baseline; gap:10px; margin-bottom:4px }
-.vw-title { font-size:13px; font-weight:600; color:var(--fg2) }
-.vw-open { font-size:11.5px; color:var(--accent); text-decoration:none; margin-left:auto }
-.vw-open:hover { text-decoration:underline }
-.vw-desc { color:var(--fg3); font-size:12.5px; line-height:1.6; margin:0 0 9px; max-width:720px }
-.viewer iframe { display:block; width:100%; border:1px solid var(--bd2); border-radius:12px;
-  background:var(--s1) }
-/* index grid */
-.body-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px }
-.body-card { display:block; background:var(--s1); border:1px solid var(--bd2); border-radius:12px;
-  padding:14px 16px; transition:.16s; box-shadow:inset 0 1px 0 rgba(255,255,255,.05) }
-.body-card:hover { background:var(--s2); border-color:rgba(122,168,255,.4); transform:translateY(-1px) }
-.bc-head { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:6px }
-.bc-name { font-size:15px; font-weight:600; color:var(--fg1) }
-.alias { color:var(--accent); font-size:12px; font-family:var(--mono) }
-.bc-count { font-family:var(--mono); font-size:11px; color:var(--fg4); margin-bottom:8px }
-.bc-badges { display:flex; gap:5px; flex-wrap:wrap }
-.mini-pill { font:600 9.5px/1.4 var(--sans); letter-spacing:.03em; text-transform:uppercase;
-  padding:2px 8px; border-radius:999px }
-.mini-pill.g { color:var(--ok); background:var(--ok-bg) }
-.mini-pill.d { color:var(--danger); background:var(--danger-bg) }
-.mini-pill.p { color:var(--fg4); background:var(--s2) }
-.mini-pill.o { color:var(--warn); background:var(--warn-bg) }
+/* figures attached inside a decision row — no chrome, just the picture */
+.figs { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 2px }
+.figs .fig { display:block; max-width:min(420px, 100%); border:1px solid var(--bd2);
+  border-radius:10px; overflow:hidden; background:var(--s2); line-height:0 }
+.figs .fig:hover { border-color:rgba(122,168,255,.4) }
+.figs .fig img { display:block; width:100%; height:auto }
 .axis-toc { display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 12px }
 .axis-toc a { font-family:var(--mono); font-size:11px; color:var(--fg3); text-decoration:none;
   background:var(--s1); border:1px solid var(--bd2); border-radius:6px; padding:3px 8px }
