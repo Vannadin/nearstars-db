@@ -91,27 +91,34 @@ So the slot is a **conditional** feature, and the condition is a plasmasphere:
   hiss-cleared band.
 
 Practical consequence for a Kerbalism board: an **airless** body does not get Earth's
-`has_inner` + gap + `has_outer` layout. Either give it one shell (Ganymede) or, when the
-radial intensity profile is worth carrying, two **overlapping** shells.
+`has_inner` + gap + `has_outer` layout. **Use one shell** — the Ganymede treatment —
+fitted to the whole trapping region at once, with its `gradient` at the floor
+`*_radius / d_max` (Part C's gradient recipe). That floor is not merely the legal
+minimum here: it is the value whose plateau shrinks to a single point at the shell's
+deepest interior, so the shell renders as a torus peaking at one radius and ramping
+linearly away on both sides. Above the floor the shell grows a flat top instead; below
+it, the belt never reaches its stated `radiation_*` anywhere. One shell plus that
+gradient already gives the observed morphology, and without a slot there is only one
+population to render, so a second shell has to justify itself.
 
-Overlapping, not touching — this is the trap. Each shell's dose ramps from zero at its
-*own* boundary (`gradient·(−SDF)/radius`), so two shells whose bounds merely meet both
-sit at zero exactly where they join, and the profile collapses at the junction: Proxima
-Cen d's first gated arrangement (`L` 1.0–2.5 against 2.5–5.0) dropped to 5 rad/h at
-2.5 R_p between flanks of 1000 and 5000, a thousandfold notch that no source-loss balance
-puts there. Because the engine **sums** the shells' contributions, overlapping them
-instead fills that region from both sides and yields one smooth single-peaked profile.
-Two rules follow:
+**And if two shells are genuinely needed** (two distinct source populations, not one
+population's flanks), overlap them — do not let their bounds merely touch. Each shell's
+dose ramps from zero at its *own* boundary, so shells that meet are both at zero exactly
+where they join: Proxima Cen d was first gated with `L` 1.0–2.5 against 2.5–5.0 and the
+profile collapsed to 5 rad/h at 2.5 R_p between flanks of 1000 and 5000, a thousandfold
+notch that no source-loss balance puts there. The engine **sums** shells, so an overlap of
+roughly half a shell fills that region from both sides.
 
-- **overlap by roughly half a shell**, so each one's ramp is well inside the other;
-- **set each `gradient` at its floor** `*_radius / d_max` (Part C's gradient recipe). The
-  floor is the value whose plateau is a single point at the shell's deepest interior, i.e.
-  a profile that peaks at one radius and ramps linearly away — which is the torus shape
-  being modelled. Above the floor the shell develops a flat-topped plateau instead;
-  below it, the belt never reaches its stated `radiation_*` anywhere.
+**Where the peak lands, once there is no slot.** Do not reach for Earth's outer-belt
+fraction (~0.45 `R_mp`) as a target. Earth's outer belt is bounded *below* by the slot,
+and the same missing hiss that removes the slot also removes the dominant inner-zone
+loss, so an injected population diffusing inward survives deeper and keeps gaining energy
+as it goes (first-invariant conservation). The peak therefore sits **inside** Earth's
+fraction on an airless body, and the fitted single shell puts it there without being
+told: Proxima Cen d peaks at 0.35 `R_mp`, off the body but well inside 0.45.
 
-Worked case: Proxima Cen d, inner `L` 1.0–3.5 against outer `L` 2.0–5.0, gradients 1.157
-and 1.496, which puts the summed peak at 0.46 `R_mp` with no interior notch.
+Worked case: Proxima Cen d, one shell fitted to `L` 1.0–5.0 (IoU 0.986), gradient at its
+floor 1.005, peak 5000 rad/h at 2.65 R_p = 0.35 `R_mp`.
 
 ### Induced magnetospheres — the no-dynamo branch
 
@@ -404,7 +411,7 @@ so confidence is low, and the 3–280 G field range spans 2×10²–10⁶ rad/h.
 planet feeds no ionospheric plasmasphere) gives CmCk ≪ 1 at every density: the
 K–P ceiling never binds and the belts are source/loss-set, the same structural
 regime as every strong-field small-L case. Gated on the board 2026-08-18 with the
-shells refit (`fit_belts.py`, `L` 1.0–3.5 and 2.0–5.0 overlapping, IoU 0.988 / 0.977); until then
+the belt refit as one shell (`fit_belts.py`, `L` 1.0–5.0, IoU 0.986); until then
 the body had a magnetopause row but no belt row, so the cfg shipped no belts at all
 while the board's own environment text described them.
 

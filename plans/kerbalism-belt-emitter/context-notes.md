@@ -346,3 +346,35 @@ equator cuts the tilted belt obliquely instead of running down its middle. And t
 offset pushes the deep shell into the ground on one hemisphere, so surface dose is
 hemispherically asymmetric, which is the structure the surface row's two-tone polar
 caps already describe.
+
+## 2026-08-18 — one shell, because the second never earned itself
+
+Owner, after the overlap fix: if overlapping them just sums into one peak, why keep
+two? They hand-built a single-shell version in the viewer and reported it looked the
+same. Measured, and they were right on both counts.
+
+Their hand config (the fitted outer torus with the border carve opened inward and
+gradient 1.2) scores IoU 0.969 against the L 1.0-5.0 dipole shell; fitting one shell to
+that range directly gives 0.986, so the fit is kept rather than the hand values. Two
+details their version had slightly off, both instructive: gradient 1.2 sits above the
+floor 1.005, which grows a flat top (5000 across 2.5-3.0) instead of a single-radius
+peak; and their shell reaches down to 0.875 R_p, below the surface, so ground-level dose
+reads 428 rad/h against 14 for the fitted shell whose boundary is the surface itself.
+
+The physics also came out better, and the correction is on my earlier reasoning rather
+than theirs. I had justified moving the peak outward by Earth's outer-belt fraction,
+~0.45 R_mp. That is the wrong target for a slotless body: Earth's outer belt is bounded
+*below* by the slot, and the same missing hiss that removes the slot also removes the
+dominant inner-zone loss, so an inward-diffusing population survives deeper and keeps
+gaining energy as it goes. The peak should sit inside Earth's fraction, and the fitted
+single shell puts it at 0.35 R_mp without being told. So the two-shell arrangement was
+chasing a number that did not apply.
+
+Final geometry: one shell, L 1.0-5.0, IoU 0.986, gradient at its floor 1.005, peak
+5000 rad/h at 2.65 R_p = 0.35 R_mp, ramping to zero at the surface and at 5.01 R_p.
+`has_inner` is gone from the cfg. Methodology Part B now says one shell is the default
+for airless bodies (the Ganymede treatment) with the overlap rule kept only for the case
+of two genuinely distinct source populations, plus the peak-depth argument above.
+
+Renders cleaner too: each lobe is a filled blob with a hot core rather than the crescent
+with a dark centre the two-shell version drew.

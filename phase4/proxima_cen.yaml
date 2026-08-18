@@ -1485,12 +1485,16 @@ decisions:
       레시피로 재계산해 지구에서 복사돼 있던 1.01/1.0을 대체했다. 슬롯 없음 판정은 같은 날 방법론
       Part A에 절을 세워 근거화했다.
 
-      2026-08-18: 같은 날 세기 배분을 뒤집었다(내대 5000·외대 1000 → 내대 1000·외대 5000). 앵커 보간이 주는
+      2026-08-18: 같은 날 세기 배분을 뒤집었다(내대 5000·외대 1000 → 내대 1000·외대 5000. 이후 단일 껍질로
+      합쳐져 5000 하나만 남았다). 앵커 보간이 주는
       크기는 그대로이고 피크 위치만 바뀐다. 근거는 둘이다. 지구 내대를 채우는 CRAND는 우주선이 대기를 때려야
       생기는데 d는 맨바위라 그 공급원이 없고, 해상된 유일한 계외 방사선대(Kao 2023)가 몸체에서 떨어져 선
       목성형 토러스다. 규칙은 방법론 Part B에 절로 세웠다.
 
-      2026-08-18: 같은 날 셸 배치를 맞닿음(L 1.0-2.5 / 2.5-5.0)에서 겹침(L 1.0-3.5 / 2.0-5.0)으로 바꿨다. 오너가
+      2026-08-18: 같은 날 셸 배치를 맞닿음(L 1.0-2.5 / 2.5-5.0) → 겹침(L 1.0-3.5 / 2.0-5.0) → 단일 껍질(L 1.0-5.0)로
+      두 번 바꿨다. 오너 지적이 "겹쳐서 봉우리가 하나가 되면 내외대를 구분할 이유가 없다"였고, 측정해 보니 맞았다.
+      단일 껍질(IoU 0.986)이 gradient 하한 1.005에서 이미 봉우리 하나짜리 토러스를 주고, 봉우리가 0.35 R_mp로
+      지구 비율(0.45)보다 안쪽인 것도 슬롯이 없는 천체에서는 그래야 맞는 방향이다. 중간 단계 기록은 아래에 남긴다. 오너가
       "바짝 붙은 형상이 맞느냐"고 물어 프로파일을 뽑아 보니 이음매 2.5 R_p에서 5 rad/h로 붕괴하는 인공 홈이 있었다.
       껍질마다 선량이 자기 경계에서 0부터 오르기 때문이고, 엔진이 두 껍질을 더하므로 겹치면 메워진다. gradient 도
       2.15(지구 외대 평탄부 비율)에서 각 껍질의 하한(1.157 / 1.496)으로 내렸다. 하한이 봉우리 하나짜리 프로파일을
@@ -1520,59 +1524,53 @@ decisions:
       - { name: radiation_model, value: nearstars_proxima_d, op: set, note: "Shares the model the magnetopause row already names, now carrying belts as well", note_ko: "계면 행이 이미 지정한 모델을 그대로 쓰고, 거기에 벨트를 얹는다" }
       - { name: geomagnetic_pole_lat, value: 45, unit: deg, op: set, note: "Dipole tilt 45 deg, by analogy with the ice giants (Uranus 59, Neptune 47) rather than with Earth. The reason is the anomaly itself: 16 G on a 0.3 M_E slow rotator is far outside what an Earth-style compositional dynamo produces, and the Solar System's non-Earth dynamo geometries are precisely the ones that run strong and badly tilted. An analogy, not a measurement, and the axis is unobserved", note_ko: "쌍극자 기울기 45°. 지구가 아니라 빙거성(천왕성 59°, 해왕성 47°)에 유추한 값이다. 근거는 이 천체의 이상 그 자체다. 0.3 M⊕ 느린 자전체에서 16 G는 지구식 조성 다이나모가 낼 수 있는 범위를 한참 벗어나고, 태양계에서 지구식이 아닌 다이나모 기하는 정확히 강하면서 크게 기운 것들이다. 측정이 아니라 유추이며 자기축은 관측되지 않았다" }
       - { name: geomagnetic_offset, value: 0.25, unit: R_p, op: set, note: "Dipole centre displaced along the axis, again the ice-giant/Mercury pattern (Uranus 0.3, Neptune 0.55, Mercury 0.198). It pushes the deep shell into the ground on one side, so surface dose is hemispherically asymmetric, which is the same structure the surface row's two-tone polar caps describe", note_ko: "쌍극자 중심이 축 방향으로 밀린 값. 이것도 빙거성·수성 패턴이다(천왕성 0.3, 해왕성 0.55, 수성 0.198). 깊은 껍질을 한쪽에서 지면으로 밀어 넣어 표면 선량이 반구 비대칭이 되고, 이는 surface 행이 말하는 두 톤 극관과 같은 구조다" }
-      - { name: inner_dist, value: 1.5619, op: set, note: "fit_belts.py against L 1.0-3.5, IoU 0.988. Equatorial span after the cut is 0.994 to 3.504 R_p. The two shells overlap rather than touch: each shell's dose ramps from zero at its own boundary, so shells that merely meet leave a notch where they join", note_ko: "fit_belts.py로 L 1.0-3.5에 적합, IoU 0.988. 컷 적용 후 적도 구간 0.994~3.504 R_p. 두 껍질은 맞닿는 게 아니라 겹친다. 껍질의 선량은 자기 경계에서 0부터 올라가므로, 경계만 맞댄 배치는 만나는 자리에 홈을 남긴다" }
-      - { name: inner_radius, value: 1.3527, op: set }
-      - { name: inner_deform_xy, value: 0.6915, op: set }
-      - { name: inner_border_dist, value: 0.0001, op: set, note: "The loss-cone cut sits at the surface itself. Airless, so there is no atmospheric floor above it (the Ganymede treatment, not Earth's 1000 km cut)", note_ko: "손실원뿔 컷이 표면 자체에 놓인다. 대기가 없어 그 위에 걸릴 바닥이 없다(지구의 1000 km 컷이 아니라 가니메데 방식)" }
-      - { name: inner_border_radius, value: 1.0544, op: set }
-      - { name: inner_border_deform_xy, value: 1.1277, op: set }
-      - { name: inner_compression, value: 1.0077, op: set, note: "Derived: eps = (r_core/R_mp)^3 = 0.0156 at a core circle of 1.878 against the 7.517 R_p nose", note_ko: "도출값. 핵심 원 1.878 대 노즈 7.517 R_p에서 eps=(r_core/R_mp)³=0.0156" }
-      - { name: inner_extension, value: 0.9846, op: set, note: "Same eps against pause_extension 0.0099657", note_ko: "같은 eps를 pause_extension 0.0099657에 적용" }
-      - { name: outer_dist, value: 2.2178, op: set, note: "fit_belts.py against L 2.0-5.0, IoU 0.977. Overlaps the inner shell by about half a shell, and the engine sums the two, so the summed profile has a single peak", note_ko: "fit_belts.py로 L 2.0-5.0에 적합, IoU 0.977. 내대와 껍질 절반쯤 겹치고 엔진이 둘을 더하므로 합쳐진 프로파일의 봉우리가 하나다" }
-      - { name: outer_radius, value: 1.9353, op: set }
-      - { name: outer_deform_xy, value: 0.687, op: set }
-      - { name: outer_border_dist, value: 0.9943, op: set }
-      - { name: outer_border_radius, value: 0.7803, op: set }
-      - { name: outer_border_deform_xy, value: 0.792, op: set }
-      - { name: outer_compression, value: 1.0223, op: set, note: "Same recipe: eps 0.0451 at a core circle of 2.676. This is the shell the boundary asymmetry actually reaches", note_ko: "같은 레시피. 핵심 원 2.676에서 eps 0.0451. 경계 비대칭이 실제로 닿는 쪽은 이 껍질이다" }
-      - { name: outer_extension, value: 0.9553, op: set, note: "Same eps against pause_extension 0.0099657", note_ko: "같은 eps를 pause_extension 0.0099657에 적용" }
-      - { name: radiation_inner, value: 1000, unit: rad/h, op: set, note: "The 0.2 ratio, applied to the deep shell rather than to the outer one. Earth loads its inner belt by CRAND, cosmic rays hitting the atmosphere, and a bare rock has no such source", note_ko: "0.2 비를 외대가 아니라 깊은 껍질에 적용한 값. 지구가 내대를 채우는 것은 우주선이 대기를 때리는 CRAND인데, 맨바위에는 그 공급원이 없다" }
-      - { name: radiation_outer, value: 5000, unit: rad/h, op: set, note: "Part B dose-anchor interpolation 10.4 x (B_eq/31 uT)^1.9 at B_eq 800 uT, half the 16 G polar field, placed in the outer shell by the airless rule. Kao 2023's resolved belt is a torus standing off the body, not a deep peak", note_ko: "Part B 선량앵커 보간 10.4 × (B_eq/31 µT)^1.9, B_eq 800 µT(극장 16 G의 절반). 무대기 규칙에 따라 외대에 놓는다. Kao 2023이 해상한 벨트는 깊은 피크가 아니라 몸체에서 떨어져 선 토러스다" }
-      - { name: radiation_inner_gradient, value: 1.157, op: set, note: "Set at the floor radius/d_max, whose plateau is a single point at the shell's deepest interior: a profile that peaks at one radius and ramps linearly away, which is the torus being modelled. Above the floor the shell grows a flat top instead", note_ko: "하한 radius/d_max 에 둔다. 평탄부가 껍질 최심점 한 점으로 줄어드는 값이고, 한 반경에서 봉우리를 치고 양쪽으로 선형으로 내려가는 프로파일이다. 지금 모형화하는 토러스가 그 모양이다. 하한 위로 올리면 꼭대기가 평평해진다" }
-      - { name: radiation_outer_gradient, value: 1.496, op: set, note: "Same rule, this shell's own floor. The two summed put the peak at 3.45 R_p = 0.46 R_mp, against Earth's outer belt at 0.40-0.50 R_mp", note_ko: "같은 규칙, 이 껍질의 하한. 둘을 합친 봉우리가 3.45 R_p = 0.46 R_mp 에 놓이고, 지구 외대는 0.40~0.50 R_mp 다" }
+      - { name: outer_dist, value: 2.1874, op: set, note: "fit_belts.py against the whole trapping region at once, L 1.0-5.0, IoU 0.986. One shell rather than two: without a slot there is a single population, and one shell with its gradient at the floor already renders it as a torus with a single peak", note_ko: "fit_belts.py로 포획 영역 전체를 한 번에 적합, L 1.0-5.0, IoU 0.986. 두 껍질이 아니라 하나다. 슬롯이 없으면 집단이 하나뿐이고, gradient를 하한에 둔 껍질 하나로 이미 봉우리 하나짜리 토러스가 나온다" }
+      - { name: outer_radius, value: 1.9314, op: set }
+      - { name: outer_deform_xy, value: 0.6755, op: set }
+      - { name: outer_border_dist, value: 0.5964, op: set, note: "The loss-cone carve. Airless, so it ends at the surface itself rather than above an atmosphere (the Ganymede treatment, not Earth's 1000 km cut)", note_ko: "손실원뿔 carve. 대기가 없어 대기 위가 아니라 표면 자체에서 끝난다(지구의 1000 km 컷이 아니라 가니메데 방식)" }
+      - { name: outer_border_radius, value: 0.7997, op: set }
+      - { name: outer_border_deform_xy, value: 1.9637, op: set }
+      - { name: outer_compression, value: 1.0220, op: set, note: "Derived: eps = (r_core/R_mp)^3 = 0.0444 at a core circle of 2.661 against the 7.517 R_p nose", note_ko: "도출값. 핵심 원 2.661 대 노즈 7.517 R_p에서 eps=(r_core/R_mp)³=0.0444" }
+      - { name: outer_extension, value: 0.9561, op: set, note: "Same eps against pause_extension 0.0099657", note_ko: "같은 eps를 pause_extension 0.0099657에 적용" }
+      - { name: radiation_outer, value: 5000, unit: rad/h, op: set, note: "Part B dose-anchor interpolation 10.4 x (B_eq/31 uT)^1.9 at B_eq 800 uT, half the 16 G polar field. The whole scale sits in this one shell, since there is no CRAND source to load a separate deep belt and no slot to separate one", note_ko: "Part B 선량앵커 보간 10.4 × (B_eq/31 µT)^1.9, B_eq 800 µT(극장 16 G의 절반). 별도의 깊은 벨트를 실어 줄 CRAND 공급원도, 그것을 갈라 줄 슬롯도 없으므로 크기 전부가 이 껍질 하나에 놓인다" }
+      - { name: radiation_outer_gradient, value: 1.005, op: set, note: "Set at the floor radius/d_max, whose plateau is a single point at the shell's deepest interior: the dose peaks at one radius and ramps linearly away, which is the torus being modelled. The peak lands at 2.65 R_p = 0.35 R_mp, inside Earth's outer-belt fraction because the missing hiss that removes the slot also removes the inner-zone loss that bounds Earth's belt from below", note_ko: "하한 radius/d_max에 둔다. 평탄부가 껍질 최심점 한 점으로 줄어드는 값이라 선량이 한 반경에서 봉우리를 치고 양쪽으로 선형으로 내려간다. 지금 모형화하는 토러스가 그 모양이다. 봉우리는 2.65 R_p = 0.35 R_mp에 놓여 지구 외대 비율보다 안쪽인데, 슬롯을 없애는 그 없는 hiss가 지구 벨트의 아래쪽을 막아 주던 내부 손실도 같이 없애기 때문이다" }
     gate:
       criterion: [derived-grounding]
       verdict: methodology-derived
       evidence: >
-        The belts sit inside the gated standoff and are set by source and loss rather than capped. The fitted
-        shells span 1.000 to 2.500 and 2.510 to 5.010 R_p (IoU 0.996 and 0.979), putting the outer edge at 0.666
-        of the 7.517 R_p nose, inside the 0.6-0.8 bound. Running kp_limit.py at L 2 to 5 over cold-plasma
+        The belt sits inside the gated standoff and is set by source and loss rather than capped. The fitted shell
+        spans the surface out to 5.01 R_p (IoU 0.986), putting its outer edge at 0.666 of the 7.517 R_p nose,
+        inside the 0.6-0.8 bound. Running kp_limit.py at L 2 to 5 over cold-plasma
         densities 1 to 100 cm^-3 returns CmCk far below 1 everywhere, so the Kennel-Petschek ceiling never binds,
         the same regime as every strong-field small-L case in the methodology. The peak sits in the outer shell
         rather than the deep one because the deep shell has no CRAND source without an atmosphere, and because the
         only resolved extrasolar belt (Kao 2023, an ultracool dwarf imaged at 8.4 GHz) is a Jovian-morphology
         torus standing about nine radii off its body rather than an Earth-shaped deep peak. The honest caveat is
-        The two shells overlap rather than touch, because each shell's dose ramps from zero at its own boundary
-        and shells that merely meet leave a notch: the first gated arrangement dropped to 5 rad/h at 2.5 R_p
-        between flanks of 1000 and 5000, which no source-loss balance puts there. With the overlap and each
-        gradient at its floor the summed profile has a single peak, 5037 rad/h at 3.45 R_p = 0.46 R_mp, against
-        Earth's outer belt at 0.40-0.50 R_mp. The dipole axis is the weakest part of the row: 45 degrees of tilt
+        It is one shell because two never earned the second. Touching shells leave a notch where they join, since
+        each ramps from zero at its own boundary: the first gated arrangement dropped to 5 rad/h at 2.5 R_p between
+        flanks of 1000 and 5000. Overlapping them fixed that but bought nothing a single fitted shell does not
+        already give, which is a torus peaking at 5000 rad/h at 2.65 R_p = 0.35 R_mp and ramping away on both
+        sides. That peak is inside Earth's outer-belt fraction of 0.45 R_mp, as it should be: the missing hiss
+        that removes the slot also removes the inner-zone loss that bounds Earth's belt from below, so an inward
+        diffusing population survives deeper here. The dipole axis is the weakest part of the row: 45 degrees of tilt
         and a 0.25 R_p offset are an ice-giant analogy chosen because a 16 G field on this mass and rotation
         cannot be an Earth-style dynamo, and nothing about the axis is observed. The honest caveat is the
         intensity scale itself: the anchor interpolation extrapolates 1.9 times beyond its Jupiter anchor, and the reported
         3-280 G field range would span 200 to 1,000,000 rad/h.
       evidence_ko: >
         벨트는 게이트된 표준오프 안에 들어가고, 천장에 눌린 것이 아니라 소스와 손실이 세기를 정하는 상태다.
-        적합된 두 껍질은 적도에서 1.000~2.500과 2.510~5.010 R_p를 덮고(IoU 0.996과 0.979), 바깥날이 노즈
-        7.517 R_p의 0.666배라 0.6-0.8 한계 안이다. kp_limit.py를 L 2~5, 차가운 플라스마 밀도 1~100 cm⁻³로
+        적합된 껍질 하나가 표면부터 5.01 R_p까지 덮고(IoU 0.986), 바깥날이 노즈 7.517 R_p의 0.666배라
+        0.6-0.8 한계 안이다. kp_limit.py를 L 2~5, 차가운 플라스마 밀도 1~100 cm⁻³로
         돌리면 CmCk가 어디서나 1에 한참 못 미쳐 Kennel-Petschek 천장은 구속하지 않는다. 방법론이 다루는
         강한장·저L 사례들과 같은 레짐이다. 피크가 깊은 껍질이 아니라 외대에 놓이는 이유는 두 가지다. 대기가 없으면
         깊은 껍질에 CRAND 공급원이 없고, 해상된 유일한 계외 벨트(Kao 2023, 8.4 GHz로 찍은 초저온왜성)가 지구식
         깊은 피크가 아니라 몸체에서 아홉 반경쯤 떨어져 선 목성형 토러스이기 때문이다. 정직하게 남길 단서는 세기의
-        크기 자체다. 두 껍질은 맞닿는 게 아니라 겹친다. 껍질의 선량이 자기 경계에서 0부터 올라가므로 경계만 맞댄
-        배치는 홈을 남기는데, 첫 게이트 배치가 양쪽 1000과 5000 사이에서 2.5 R_p에 5 rad/h로 떨어졌다. 어떤 공급원·손실
-        균형도 거기에 두지 않는 값이다. 겹치게 두고 각 gradient를 하한에 두면 합쳐진 프로파일의 봉우리가 하나가 되고,
-        3.45 R_p = 0.46 R_mp에서 5037 rad/h다. 지구 외대는 0.40~0.50 R_mp에 있다. 이 행에서 가장 약한 대목은 자기축이다.
+        크기 자체다. 껍질이 하나인 것은 두 번째가 끝내 제 몫을 못 했기 때문이다. 맞닿은 두 껍질은 만나는 자리에 홈을
+        남긴다. 각자 자기 경계에서 0부터 오르기 때문이고, 첫 게이트 배치가 양쪽 1000과 5000 사이에서 2.5 R_p에
+        5 rad/h로 떨어졌다. 겹치면 그건 고쳐지지만, 적합한 껍질 하나가 이미 주는 것 이상을 사 오지는 못했다. 그것은
+        2.65 R_p = 0.35 R_mp에서 5000 rad/h로 봉우리를 치고 양쪽으로 내려가는 토러스다. 그 봉우리가 지구 외대 비율
+        0.45 R_mp보다 안쪽인 것은 그래야 맞다. 슬롯을 없애는 그 없는 hiss가 지구 벨트의 아래쪽을 막아 주던 내부 손실도
+        같이 없애므로, 안으로 확산하는 집단이 여기서는 더 깊이까지 살아남는다. 이 행에서 가장 약한 대목은 자기축이다.
         기울기 45°와 offset 0.25 R_p는 빙거성 유추이고, 그렇게 고른 이유는 이 질량과 자전에서 16 G가 지구식 다이나모일 수
         없다는 것이며, 자기축에 관해 관측된 것은 없다. 앵커 보간이 목성 앵커
         바깥으로 1.9배 외삽한 값이고, 보고된 장 범위 3-280 G를 그대로 넣으면 200에서 1,000,000 rad/h까지
