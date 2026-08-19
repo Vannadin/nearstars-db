@@ -1,7 +1,7 @@
-<!-- 궤도 검증 세트 인덱스 (자동 생성, scripts/validate_orbits.py) -->
+<!-- Proxima Centauri 궤도 안정성 검증 매트릭스 (자동 생성, scripts/validate_orbits.py) -->
 <!doctype html><html lang="en" class="ns-light-ok"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NearStars — orbit stability validation sets</title>
+<title>Proxima Centauri — orbit stability validation</title>
 <style>
 /* 궤도 검증 세트 페이지 공용 스타일 (scripts/validate.py 가 인라인으로 삽입). */
   body{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.65 system-ui,sans-serif}
@@ -48,13 +48,6 @@
   .grid{grid-template-columns:1fr;gap:12px} main{padding:14px}
   table.matrix{display:block;overflow-x:auto}
 }
-
-  table.cells{border-collapse:collapse;margin-top:7px;font-size:12px}
-  table.cells td{padding:2px 10px 2px 0;vertical-align:top;white-space:nowrap}
-  table.cells td:nth-child(2){color:rgba(255,255,255,.52);text-align:right}
-  @media (prefers-color-scheme: light) {
-    html.ns-light-ok table.cells td:nth-child(2){color:rgba(9,12,22,.60)}
-  }
 </style>
 <style>
 .ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
@@ -124,13 +117,19 @@
   *, *::before, *::after { animation-duration:.01ms !important;
     animation-iteration-count:1 !important; transition-duration:.01ms !important;
     scroll-behavior:auto !important } }
-</style><div class="ns-bar"><a class="ns-brand" href="../../index.html">NearStars</a><a href="../../index.html">DB</a><span class="ns-sep">·</span><a href="../../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../../tools.html">Tools</a><span class="ns-sep">·</span><a href="../../wiki/index.html">Wiki</a></div>
+</style><div class="ns-bar"><a class="ns-brand" href="../../../index.html">NearStars</a><a href="../../../index.html">DB</a><span class="ns-sep">·</span><a href="../../../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../../../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../../../tools.html">Tools</a><span class="ns-sep">·</span><a href="../../../wiki/index.html">Wiki</a></div>
 <header>
   <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
-  <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
-  <div class="lead"><span data-i18n>시스템마다 계층(행성계·위성계)별로 두 방식을 교차 실행합니다. leapfrog(고정 10분 스텝)는 Principia 인게임 적분기와 정합하고, IAS15/TRACE+MEGNO는 결정론적 카오스와 장기 생존을 판정합니다. 장기 구간은 연수가 아니라 안쪽 궤도 바퀴 수(기준 10⁸바퀴)로 맞춥니다.</span><span data-en hidden>Each system is run both ways on every hierarchy it has. Leapfrog (fixed 10-min step) matches Principia's in-game integrator; IAS15/TRACE+MEGNO judges deterministic chaos and long-term survival. Long horizons are matched in inner-orbit count (10⁸ orbits), not years.</span></div>
+  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← <span data-i18n>궤도 뷰어</span><span data-en hidden>Orbit viewers</span></a></nav>
+  <h1>Proxima Centauri — <span data-i18n>궤도 안정성 검증</span><span data-en hidden>orbit stability validation</span></h1>
+  <div class="lead"><span data-i18n>위성계와 행성계를 각각 두 방식으로 교차 검증했습니다. leapfrog(고정 10분 스텝)는 Principia 인게임 적분기와 정합하고, IAS15+MEGNO는 결정론적 카오스를 판정합니다(MEGNO≈2 정칙, &gt;5 카오스).</span><span data-en hidden>Both the moon system and the planet orbit are cross-checked two ways. Leapfrog (fixed 10-min step) matches Principia's in-game integrator; IAS15+MEGNO diagnoses deterministic chaos (MEGNO≈2 regular, &gt;5 chaotic).</span></div>
 </header>
-<main><div class="grid"><div class="card"><a href="alpha-centauri/index.html"><picture><source media="(prefers-color-scheme: light)" srcset="alpha-centauri/moons_leapfrog_light.png"><img src="alpha-centauri/moons_leapfrog.png" alt="Alpha Centauri A b (Polyphemus) validation matrix" loading="lazy"></picture></a><div class="m"><h3><a href="alpha-centauri/index.html">Alpha Centauri A b (Polyphemus)</a></h3><table class="cells"><tr><td class="mono">planets_leapfrog</td><td class="mono">10⁵ yr</td><td class="v-ok">STABLE</td></tr><tr><td class="mono">planets_accurate</td><td class="mono">1.9×10⁸ yr</td><td class="v-warn">CHAOTIC</td></tr><tr><td class="mono">moons_leapfrog</td><td class="mono">10⁵ yr</td><td class="v-bad">UNSTABLE</td></tr><tr><td class="mono">moons_accurate</td><td class="mono">10⁴ yr</td><td class="v-ok">STABLE</td></tr></table></div></div><div class="card"><a href="proxima-cen/index.html"><picture><source media="(prefers-color-scheme: light)" srcset="proxima-cen/planets_leapfrog_light.png"><img src="proxima-cen/planets_leapfrog.png" alt="Proxima Centauri validation matrix" loading="lazy"></picture></a><div class="m"><h3><a href="proxima-cen/index.html">Proxima Centauri</a></h3><table class="cells"><tr><td class="mono">planets_leapfrog</td><td class="mono">10⁵ yr</td><td class="v-ok">STABLE</td></tr><tr><td class="mono">planets_accurate</td><td class="mono">1.4×10⁶ yr</td><td class="v-ok">STABLE</td></tr></table></div></div></div></main>
+<main>
+  <table class="matrix"><tr><th></th><th>leapfrog · <span data-i18n>인게임 정합</span><span data-en hidden>in-game fidelity</span></th><th>IAS15/TRACE + MEGNO · <span data-i18n>카오스 판정</span><span data-en hidden>chaos diagnosis</span></th></tr><tr><th><span data-i18n>행성계</span><span data-en hidden>Planet orbit</span><br><span class="mono">3 bodies</span></th><td><span class="v-ok">STABLE</span><br><span class="mono">10⁵ yr · |ΔE/E|=2.4e-10</span></td><td><span class="v-ok">STABLE</span><br><span class="mono">1.4×10⁶ yr · MEGNO 4.04</span></td></tr></table>
+  
+  <h2><span data-i18n>행성계</span><span data-en hidden>Planet orbit</span></h2><div class="grid"><div class="card"><a href="planets_leapfrog.html"><picture><source media="(prefers-color-scheme: light)" srcset="planets_leapfrog_light.png"><img src="planets_leapfrog.png" alt="Planet orbit orbital elements, leapfrog integrator" loading="lazy"></picture></a><div class="m"><h3>leapfrog · 10⁵ yr</h3><div class="sub">10⁵ yr · |ΔE/E|=2.4e-10 · <a href="planets_leapfrog.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a> · <a href="planets_leapfrog_orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div></div><div class="card"><a href="planets_accurate.html"><picture><source media="(prefers-color-scheme: light)" srcset="planets_accurate_light.png"><img src="planets_accurate.png" alt="Planet orbit orbital elements, ias15 integrator" loading="lazy"></picture></a><div class="m"><h3>IAS15+MEGNO · 1.4×10⁶ yr</h3><div class="sub">1.4×10⁶ yr · MEGNO 4.04 · <a href="planets_accurate.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a></div></div></div></div>
+  
+</main>
 <script>
 const ko=document.getElementById('ko'),en=document.getElementById('en');
 function set(e){document.querySelectorAll('[data-i18n]').forEach(x=>x.hidden=e);document.querySelectorAll('[data-en]').forEach(x=>x.hidden=!e);ko.classList.toggle('on',!e);en.classList.toggle('on',e);}
