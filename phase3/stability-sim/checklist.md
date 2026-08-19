@@ -77,9 +77,12 @@ on every system, and put Proxima Cen through it.
 - [x] Measure why the moon leapfrog cell is slow — J2 Python callback, 69x
 - [x] `scripts/j2force.c` + `scripts/j2c.py` written and compiling
 - [x] Gated behind `STAB_J2_C=1`; the default path is unchanged
-- [ ] **Fix the stride bug**: pass `ctypes.sizeof(rebound.Particle)` into
-      `ns_j2_setup` and index by bytes (the C struct is 80 B, `reb_particle` is 112)
-- [ ] Cross-check against the Python force (a/e/inc per moon, ~2 yr) before enabling
+- [x] **Fix the stride bug**: `ctypes.sizeof(rebound.Particle)` passed into
+      `ns_j2_setup`, array walked by that stride in bytes
+- [x] Cross-check against the Python force — `scripts/verify_j2c.py`: leapfrog 5 yr
+      and ias15+MEGNO 2 yr, every particle's x/y/z/vx/vy/vz **bitwise identical**
+      (`-ffp-contract=off`, no double axis normalization); 27.6x / 9.2x measured
+- [x] Enabled by default (`STAB_J2_C=0` forces the Python callback)
 - [ ] Then re-run the satellite leapfrog cells — 10 h becomes ~10 min
 
 Do not install `reboundx`: it pins `rebound<5` and downgrades the engine.

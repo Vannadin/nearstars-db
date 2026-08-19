@@ -95,11 +95,11 @@ def add_j2(sim: rebound.Simulation, meta: dict, body_name: str, j2: float,
 
     # Prefer the compiled force: this is called once per timestep, so a Python callable
     # costs ~69x the integration itself (measured, α Cen moons). Same expression either
-    # way — `force` above stays as the fallback and as the readable reference.
-    # OPT-IN, not default: the C path still has an open bug (see j2c.py). Set
-    # STAB_J2_C=1 to try it; without it nothing changes for any run.
+    # way — `force` above stays as the fallback and as the readable reference, and
+    # verify_j2c.py shows the two produce bitwise-identical trajectories (leapfrog and
+    # ias15+MEGNO both). Default ON; STAB_J2_C=0 forces the Python callback.
     kind = "python"
-    if os.environ.get("STAB_J2_C"):
+    if os.environ.get("STAB_J2_C", "1") != "0":
         try:
             from j2c import install as _install_c
             if _install_c(sim, body_index, moon_idx, (ax, ay, az), j2, r_eq_au):

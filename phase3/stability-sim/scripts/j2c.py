@@ -14,14 +14,14 @@ is installed) cannot leave it reading freed memory.
 Falls back to the Python implementation when the library is missing or will not build,
 so a machine without a compiler still runs — slowly, but with identical physics.
 
-STATUS — NOT ENABLED. Opt in with STAB_J2_C=1; `j2.py` uses the Python callback
-otherwise. One bug is known and located: `struct particle_head` in j2force.c declares
-only the leading 10 doubles (80 bytes) while rebound's `reb_particle` is 112, so
-indexing `ps[i]` walks with the wrong stride and segfaults. The fix is to stop
-hardcoding the layout — pass `ctypes.sizeof(rebound.Particle)` into ns_j2_setup and
-index by bytes — which also keeps it correct if the struct grows in a later rebound.
-After that, cross-check against the Python force before trusting it: integrate both a
-couple of years from the same state and compare a/e/inc per moon.
+The C side never hardcodes rebound's particle layout: `ctypes.sizeof(rebound.Particle)`
+is passed into ns_j2_setup and the array is walked by that stride in bytes, so the code
+stays correct if the struct grows in a later rebound. (An earlier draft declared an
+80-byte prefix struct and indexed with ITS size — off-stride from the second particle.)
+
+Compiled with `-ffp-contract=off` so clang cannot fuse a*b+c into FMA: the point is
+bit-identical trajectories to the Python callback (verified by verify_j2c.py), and FMA's
+single rounding would break that for no meaningful speed gain here.
 """
 from __future__ import annotations
 
@@ -41,7 +41,8 @@ LIB = HERE / ("libnsj2.dylib" if sys.platform == "darwin" else "libnsj2.so")
 def _load():
     if not LIB.exists() or LIB.stat().st_mtime < SRC.stat().st_mtime:
         try:
-            subprocess.run(["cc", "-O3", "-fPIC", "-shared", "-o", str(LIB), str(SRC)],
+            subprocess.run(["cc", "-O3", "-ffp-contract=off", "-fPIC", "-shared",
+                            "-o", str(LIB), str(SRC)],
                            check=True, capture_output=True)
         except Exception as e:                       # no compiler, or it refused
             print(f"[warn] J2 C force unavailable ({e}); using the Python callback",
@@ -49,7 +50,7 @@ def _load():
             return None
     lib = ctypes.CDLL(str(LIB))
     lib.ns_j2_setup.argtypes = [ctypes.c_double] * 6 + [
-        ctypes.c_int, ctypes.POINTER(ctypes.c_int), ctypes.c_int]
+        ctypes.c_int, ctypes.POINTER(ctypes.c_int), ctypes.c_int, ctypes.c_size_t]
     lib.ns_j2_bind.argtypes = [ctypes.c_void_p]
     return lib
 
@@ -64,7 +65,8 @@ def install(sim: rebound.Simulation, body_index: int, moon_idx: list[int],
     lib.ns_j2_setup(ctypes.c_double(axis[0]), ctypes.c_double(axis[1]),
                     ctypes.c_double(axis[2]), ctypes.c_double(j2),
                     ctypes.c_double(r_eq_au), ctypes.c_double(sim.G),
-                    ctypes.c_int(body_index), arr, ctypes.c_int(len(moon_idx)))
+                    ctypes.c_int(body_index), arr, ctypes.c_int(len(moon_idx)),
+                    ctypes.c_size_t(ctypes.sizeof(rebound.Particle)))
     lib.ns_j2_bind(ctypes.c_void_p(
         ctypes.addressof(sim) + rebound.Simulation._particles.offset))
     # rebound casts whatever it is given through AFF = CFUNCTYPE(None, POINTER(Simulation));

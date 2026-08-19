@@ -507,6 +507,34 @@ stride and segfaults. Fix by passing `ctypes.sizeof(rebound.Particle)` in and in
 by bytes — which is also the version-proof form — then cross-check a/e/inc per moon
 against the Python force over a couple of years before trusting it.
 
+## J2 C force verified bitwise-identical and enabled by default (2026-08-19)
+
+The stride bug is fixed as planned — `ns_j2_setup` now receives
+`ctypes.sizeof(rebound.Particle)` and the C side walks the array by that many bytes,
+so the layout is never hardcoded and survives the struct growing in a later rebound.
+
+The acceptance bar was raised from "a/e/inc agree" to **bitwise-identical
+trajectories**, and met. Two things had to give for that, both cheap:
+
+- `-ffp-contract=off` at compile: clang otherwise fuses `a*b+c` into FMA, whose
+  single rounding diverges from Python's two-rounding arithmetic in the last bit.
+- The C setup no longer re-normalizes the spin axis. `j2.py` already passes a unit
+  vector; dividing by `sqrt(≈1)` a second time perturbed the last ulp.
+
+With those, `scripts/verify_j2c.py` (the real manifest-cell configuration: α Cen,
+a=1.6, e=0.1, incl 16°, five moons, J2=0.023, obliquity 5°) shows every particle's
+full state equal to the Python callback's, `==` on doubles, over both a 5-yr leapfrog
+run at the 10-min step and a 2-yr ias15+MEGNO run — the latter exercising the
+particles-array realloc after `init_megno`, which the bind-by-address survives.
+MEGNO itself also matches to the last printed digit. Measured end-to-end speedups:
+27.6x (leapfrog cell) and 9.2x (ias15+MEGNO); the pure force-crossing factor was 69x,
+the rest is integration that was never J2's to pay.
+
+Since the trajectories are provably identical, the C path is now the **default**;
+`STAB_J2_C=0` opts back into the Python callback (the readable reference and the
+no-compiler fallback, which also still engages automatically if `cc` is missing).
+No stored result changes meaning — the queued desktop re-runs just get cheaper.
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
