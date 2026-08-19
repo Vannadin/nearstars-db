@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import math
+import os
+import sys
 
 import rebound
 
@@ -91,8 +93,24 @@ def add_j2(sim: rebound.Simulation, meta: dict, body_name: str, j2: float,
             pl.ay -= rby / pl.m
             pl.az -= rbz / pl.m
 
-    sim.additional_forces = force
+    # Prefer the compiled force: this is called once per timestep, so a Python callable
+    # costs ~69x the integration itself (measured, α Cen moons). Same expression either
+    # way — `force` above stays as the fallback and as the readable reference.
+    # OPT-IN, not default: the C path still has an open bug (see j2c.py). Set
+    # STAB_J2_C=1 to try it; without it nothing changes for any run.
+    kind = "python"
+    if os.environ.get("STAB_J2_C"):
+        try:
+            from j2c import install as _install_c
+            if _install_c(sim, body_index, moon_idx, (ax, ay, az), j2, r_eq_au):
+                kind = "c"
+        except Exception as e:                     # loader problem → keep going in Python
+            print(f"[warn] J2 C force not installed ({e}); using the Python callback",
+                  file=sys.stderr)
+    if kind == "python":
+        sim.additional_forces = force
     sim.force_is_velocity_dependent = 0
     meta["j2"] = {"body": body_name, "J2": j2, "r_eq_au": r_eq_au,
-                  "axis": [ax, ay, az], "_force_ref": force}  # ref pins the closure
+                  "axis": [ax, ay, az], "impl": kind,
+                  "_force_ref": force}  # ref pins the closure
     return force

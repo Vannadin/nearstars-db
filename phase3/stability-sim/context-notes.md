@@ -474,6 +474,39 @@ owner-reviewed text, so the generator does not author them — it lays out the m
 cards and interpolates prose the manifest supplies per system, bilingual. A system with no
 prose gets the matrix alone.
 
+## J2 is the moon runs' cost, and it is a Python callback (2026-08-19)
+
+The α Cen `moons_leapfrog` cell took ~13 h for 10^5 yr and every estimate of mine was
+wrong until the cause was measured rather than guessed. It is not the snapshot count
+(8,000 element conversions cost 0.2 s against ~12 s of integration for the same span —
+1.4%), and it is not the body count. It is `--j2`: the oblateness force is a **Python
+callable** handed to `sim.additional_forces`, so REBOUND leaves C on every timestep.
+
+    α Cen moons, leapfrog dt = 10 min
+      without J2   186.1 yr/s
+      with J2        2.7 yr/s      69x
+
+At a 10-minute step, 10^5 yr is 5.26e9 timesteps, so the crossing cost dominates
+everything else by two orders of magnitude. Any satellite-hierarchy leapfrog cell pays
+this, and it is the single thing worth fixing before the next long moon run.
+
+**REBOUNDx is not the way.** It is the obvious answer — a C library of extra forces
+(J2/J4 harmonics, GR, tides) that plugs into any integrator — but `reboundx==4.6.2`
+pins `rebound<5` and installing it **silently downgraded rebound 5.0.0 → 4.6.0**. Every
+result in this workspace was produced on 5.0.0, and the downgrade also broke the loader
+outright (`sim.add(name=...)` is 5.x-only). Restored to 5.0.0 and uninstalled. Do not
+reinstall it without deciding to move the whole workspace to rebound 4.x.
+
+**The route taken instead** is `scripts/j2force.c` + `scripts/j2c.py`: the same
+expression compiled with `cc` and handed over as a ctypes function pointer, so nothing
+is added as a dependency and rebound stays where it is. It is written and compiles, and
+it is **not enabled** — `j2.py` still installs the Python callback unless `STAB_J2_C=1`.
+One bug is known and located: the C struct declares only the leading 10 doubles of
+`reb_particle` (80 bytes) while the real one is 112, so `ps[i]` walks with the wrong
+stride and segfaults. Fix by passing `ctypes.sizeof(rebound.Particle)` in and indexing
+by bytes — which is also the version-proof form — then cross-check a/e/inc per moon
+against the Python force over a couple of years before trusting it.
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
