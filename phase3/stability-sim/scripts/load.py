@@ -341,6 +341,62 @@ def build_alpha_cen_ab(db_root: Path, mutual_incl_deg: float = 50.0,
     return sim, meta
 
 
+def build_binary(db_path: Path) -> tuple[rebound.Simulation, dict]:
+    """Generic 2-body binary from a representative component file's `binary_orbit`.
+
+    Data-driven counterpart to the α Cen-specific loader: component names and
+    masses come from `binary_orbit.components`, the orbit from the first entry
+    of `binary_orbit.orbits`. The semi-major axis is taken as `a_au` when the
+    curation provides it, else `a_arcsec` × distance, else Kepler III from
+    `P_yr` and the component masses. Mean anomaly 0 (standard null-phase policy;
+    long-term stability does not depend on phase). No planets are added — use
+    this for planet-less binaries (e.g. Luhman 16); systems with curated planets
+    need their own loader logic like build_alpha_cen_ab.
+    """
+    d = _load_json(db_path)
+    binary = d["binary_orbit"]
+    orbit = binary["orbits"][0]
+    comps = binary["components"]
+    m_1, m_2 = (c["mass_msun"] for c in comps)
+    n_1, n_2 = (c["name"] for c in comps)
+
+    if orbit.get("a_au"):
+        a_au = orbit["a_au"]
+    elif orbit.get("a_arcsec"):
+        dist_pc = 1000.0 / d["stars"][0]["raw"]["parallax_mas"]
+        a_au = orbit["a_arcsec"] * dist_pc
+    else:
+        a_au = (( m_1 + m_2) * orbit["P_yr"] ** 2) ** (1.0 / 3.0)
+
+    sim = rebound.Simulation()
+    sim.units = ("AU", "yr", "Msun")
+    sim.add(m=m_1, name=n_1)
+    sim.add(
+        primary=sim.particles[0],
+        m=m_2,
+        a=a_au,
+        e=orbit["e"],
+        inc=math.radians(orbit["i_deg"]),
+        Omega=math.radians(orbit["Omega_deg"]),
+        omega=math.radians(orbit["omega_deg"]),
+        M=0.0,
+        name=n_2,
+    )
+    meta = {
+        "system": d.get("system_name", n_1.rsplit(" ", 1)[0]),
+        "star": {"name": n_1, "mass_msun": m_1},
+        "planets": [{
+            "name": n_2,
+            "mass_msun": m_2,
+            "mass_kind": "true",
+            "a_au": a_au,
+            "e": orbit["e"],
+            "inc_rad": math.radians(orbit["i_deg"]),
+        }],
+    }
+    return sim, meta
+
+
 def add_hypotheticals(sim: rebound.Simulation, meta: dict, hyp_path: Path) -> list[dict]:
     """Add moons / extra planets from a hypotheticals JSON. Returns list of body metadata."""
     if not hyp_path.exists():

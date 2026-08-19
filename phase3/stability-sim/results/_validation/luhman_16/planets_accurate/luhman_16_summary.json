@@ -1,0 +1,49 @@
+{
+  "system": "Luhman 16 A",
+  "star": {
+    "name": "Luhman 16 A",
+    "mass_msun": 0.032
+  },
+  "planets": [
+    {
+      "name": "Luhman 16 B",
+      "mass_msun": 0.0273,
+      "mass_kind": "true",
+      "a_au": 3.557,
+      "e": 0.343,
+      "inc_rad": 1.749867108049515
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "ias15",
+    "elapsed_sec": 6.724454879760742,
+    "dt_yr": 0.4090664921396105,
+    "innermost_period_yr": 37.502395613046275,
+    "energy_relative_error": 7.261734067136049e-10,
+    "megno_final": 1.999165913477077
+  },
+  "per_body": {
+    "Luhman 16 B": {
+      "a_min": 3.556999998000853,
+      "a_max": 3.5570000025254385,
+      "e_min": 0.3429999996237543,
+      "e_max": 0.34300000018899274
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Luhman 16 B": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.34300000018899274
+      }
+    },
+    "overall": "stable",
+    "ecc_class_max": "hot",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}

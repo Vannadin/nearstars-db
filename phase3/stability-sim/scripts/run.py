@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from load import (  # noqa: E402
     build_alpha_cen_ab,
+    build_binary,
     build_planetary_system,
     build_solar_system,
     add_hypotheticals,
@@ -42,6 +43,8 @@ SYSTEMS = {
     "teegardens_star": ("planetary", PROJECT_ROOT / "db/systems/teegardens_star.json"),
     "yz_cet": ("planetary", PROJECT_ROOT / "db/systems/yz_cet.json"),
     "40_eridani": ("planetary", PROJECT_ROOT / "db/systems/40_eridani_a.json"),
+    # Planet-less binaries via the generic loader (binary_orbit on the representative file).
+    "luhman_16": ("binary_generic", PROJECT_ROOT / "db/systems/luhman_16_a.json"),
     "solar_system": ("solar", None),   # Sun + 8 planets (J2000), real-mass benchmark
 }
 
@@ -53,6 +56,8 @@ def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_
         sim, meta = build_planetary_system(src, overrides=overrides)
     elif kind == "solar":
         sim, meta = build_solar_system()
+    elif kind == "binary_generic":
+        sim, meta = build_binary(src)
     else:
         sim, meta = build_alpha_cen_ab(src, mutual_incl_deg=acen_incl,
                                        a_override=acen_a, e_override=acen_e)
