@@ -187,9 +187,41 @@ frames = [
      "up": [0.0, 0.0, 1.0]},
 ]
 
+# ── barycentric split for a near-equal pure binary (same rule as plot_moons) ──
+# The stored elements are the RELATIVE orbit; for comparable masses both bodies
+# physically circle the barycenter, so animate two mass-scaled ellipses (primary's
+# periapsis 180° away) with phase-locked markers instead of B around a fixed A.
+phase0, rate_a = {}, {}
+center_disp = center
+if mode == "star" and len(names) == 1:
+    m1 = summary["star"].get("mass_msun") or 0.0
+    m2 = bodies_meta[0].get("mass_msun") or 0.0
+    if m1 > 0 and m2 / (m1 + m2) >= 0.05:
+        f_sec, f_pri = m1 / (m1 + m2), m2 / (m1 + m2)
+        sec = names[0]
+        rel = body_series[sec]
+        a_rel0 = rel[0][0]
+        body_series[sec] = [[round(a * f_sec, 6), e, ic, nd, pe]
+                            for a, e, ic, nd, pe in rel]
+        body_series[center] = [[round(a * f_pri, 6), e, ic, nd,
+                                round((pe + 180.0) % 360.0, 4)]
+                               for a, e, ic, nd, pe in rel]
+        names = [sec, center]
+        central_kind = "barycenter"
+        center_disp = f"{center} + {sec} barycenter"
+        # markers locked opposite: the primary's ellipse already carries the 180°
+        # periapsis flip, so the SAME anomaly phase puts the pair on opposite sides
+        # (adding π here too would double-flip them back together); both markers
+        # pace on the relative orbit's period
+        phase0 = {sec: 0.0, center: 0.0}
+        rate_a = {sec: a_rel0, center: a_rel0}
+        maxa = max(s[0] * (1 + s[1]) for n in names for s in body_series[n])
+
 # plasma-ish palette matching plot_moons.py order
 PALETTE = ["#7e03a8", "#b12a90", "#e16462", "#fca636", "#f0f921", "#0d0887", "#46039f"]
 colors = {n: PALETTE[i % len(PALETTE)] for i, n in enumerate(names)}
+if central_kind == "barycenter":
+    colors[names[1]] = "#e8b923"    # the primary in star-gold, like the static panel
 
 j = summary["judgment"]
 integ = summary["integration"]
@@ -212,7 +244,9 @@ data = {
     "frame_times": [round(t, 1) for t in frame_times],
     "bodies": [{"name": n, "color": colors[n],
                 "hill_max": round(hill.get(n, {}).get("frac_max", 0.0), 3) if hill.get(n) else None,
-                "series": body_series[n]} for n in names],
+                "series": body_series[n],
+                **({"phase0": phase0[n], "rate_a": round(rate_a[n], 6)} if n in phase0 else {})}
+               for n in names],
 }
 
 HTML = r"""<!-- __TITLE__ : 안정성 런 3D 궤도 세차 애니메이션 (자동 생성, animate_orbits.py). three@0.160 importmap. -->
@@ -337,6 +371,12 @@ if(DATA.central_kind==='planet'){
   content.add(new THREE.Line(
     new THREE.BufferGeometry().setFromPoints([SPIN.clone().multiplyScalar(-axL), SPIN.clone().multiplyScalar(axL)]),
     new THREE.LineBasicMaterial({color:0x66ccff, transparent:true, opacity:.75})));
+}else if(DATA.central_kind==='barycenter'){
+  // barycenter: nothing physical sits here — a small dim cross of two thin lines
+  const bmat=new THREE.LineBasicMaterial({color:0x8a93a3, transparent:true, opacity:.8});
+  for(const dv of [new THREE.Vector3(0.6,0,0), new THREE.Vector3(0,0,0.6)])
+    content.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(
+      [dv.clone().negate(), dv]), bmat));
 }else{
   // star: a small emissive dot + glow sprite at the focus (fixed scene size)
   const star=new THREE.Mesh(new THREE.SphereGeometry(0.5,24,16),
@@ -374,7 +414,8 @@ for(const m of DATA.bodies){
   content.add(ring);
   const mk=new THREE.Mesh(new THREE.SphereGeometry(0.28,16,12), new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.5}));
   content.add(mk);
-  bodies.push({...m, ring, mk, phase:Math.random()*6.283});
+  bodies.push({...m, ring, mk,
+    phase: (m.phase0!==undefined ? m.phase0 : Math.random()*6.283)});
 }
 
 // legend — keep a direct element reference per body (body names contain spaces,
@@ -405,8 +446,11 @@ function updateRing(m, el){
   for(let k=0;k<=N;k++){ const f=k/N*6.283185;
     const v=orbitVec(as,e,inc*DEG,node*DEG,peri*DEG,f); pos[k*3]=v.x;pos[k*3+1]=v.y;pos[k*3+2]=v.z; }
   m.ring.geometry.attributes.position.needsUpdate=true;
-  // decorative marker on illustrative phase, rate ∝ a^-1.5 (Kepler-ish, sped up)
-  m.phase += 0.06 * Math.pow(Math.max(as,1.0), -1.5) * 60;
+  // decorative marker on illustrative phase, rate ∝ a^-1.5 (Kepler-ish, sped up).
+  // A barycentric pair paces both markers on the RELATIVE orbit (rate_a), so the
+  // 180°-locked phases stay locked instead of drifting apart on their own a's.
+  const ra=(m.rate_a!==undefined ? m.rate_a*SC : as);
+  m.phase += 0.06 * Math.pow(Math.max(ra,1.0), -1.5) * 60;
   const v=orbitVec(as,e,inc*DEG,node*DEG,peri*DEG,m.phase); m.mk.position.copy(v);
   legRows[m.name].textContent=`i=${inc.toFixed(1)}°  e=${e.toFixed(3)}`;
 }
@@ -452,7 +496,7 @@ html = (HTML
         .replace("__DATA__", json.dumps(data))
         .replace("__TITLE__", title)
         .replace("__SYSTEM__", summary["system"])
-        .replace("__CENTER__", center)
+        .replace("__CENTER__", center_disp)
         .replace("__UNIT__", unit)
         .replace("__VERDICT__", j["overall"].upper())
         .replace("__INTEG__", integ["integrator"])

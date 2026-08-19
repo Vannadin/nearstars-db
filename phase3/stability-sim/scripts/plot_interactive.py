@@ -92,7 +92,7 @@ for n in names:
     SERIES[n] = {
         "t": [round(r[0], 2) for r in ts[n]],
         "e": [round(r[2], 6) for r in ts[n]],
-        "da": [round((r[1] - a0) / a0, 8) for r in ts[n]],
+        "da": [round((r[1] - a0) / a0, 10) for r in ts[n]],
         "inc": [round(r[3], 4) for r in ts[n]],
     }
 
@@ -101,12 +101,24 @@ for n in names:
 PALETTE = ["#7e03a8", "#b12a90", "#e16462", "#fca636", "#f0f921", "#0d0887", "#46039f"]
 short = {n: n.split()[-1] for n in names}
 
+# near-equal pure binary → panel 1 draws the pair about the BARYCENTER (same rule
+# and rationale as plot_moons): shared elements, mass-fraction split, primary's
+# ellipse point-reflected. The time panels keep the relative-orbit elements.
+bary = None                                     # (f_secondary, f_primary) or None
+if mode == "star" and len(names) == 1:
+    m1 = summary["star"].get("mass_msun") or 0.0
+    m2 = bodies_meta[0].get("mass_msun") or 0.0
+    if m1 > 0 and m2 / (m1 + m2) >= 0.05:
+        bary = (m1 / (m1 + m2), m2 / (m1 + m2))
+
 traces = []
 for i, n in enumerate(names):
     col = PALETTE[i % len(PALETTE)]
 
     # panel 1 (x/y): initial orbit ellipse — the one trace carrying the legend
     a, e = ts[n][0][1], ts[n][0][2]
+    if bary:
+        a *= bary[0]
     fa = [j * 2 * math.pi / 240 for j in range(241)]
     ox = [a * (1 - e * e) / (1 + e * math.cos(f)) * math.cos(f) for f in fa]
     oy = [a * (1 - e * e) / (1 + e * math.cos(f)) * math.sin(f) for f in fa]
@@ -122,13 +134,32 @@ for i, n in enumerate(names):
                        "line": {"color": col, "width": 1}, "xaxis": f"x{ax}", "yaxis": f"y{ax}",
                        "hovertemplate": f"{short[n]}<br>t=%{{x:.0f}} yr<br>{hover}<extra></extra>"})
 
-# central body marker in panel 1
-cmark = ("star" if mode == "star" else "cross")
-ccol = ("#e8b923" if mode == "star" else "#c9a06a")
-traces.append({"x": [0], "y": [0], "type": "scatter", "mode": "markers",
-               "name": center, "showlegend": False,
-               "marker": {"symbol": cmark, "size": 16, "color": ccol},
-               "hovertemplate": f"{center}<extra></extra>"})
+# central body marker in panel 1 (appended AFTER the per-body blocks so the
+# slider's 4·i+offset trace indexing stays valid)
+if bary:
+    # primary's mirror ellipse about the barycenter, plus a barycenter cross
+    n = names[0]
+    a = ts[n][0][1] * bary[1]
+    e = ts[n][0][2]
+    fa = [j * 2 * math.pi / 240 for j in range(241)]
+    traces.append({"x": [-a * (1 - e * e) / (1 + e * math.cos(f)) * math.cos(f) for f in fa],
+                   "y": [-a * (1 - e * e) / (1 + e * math.cos(f)) * math.sin(f) for f in fa],
+                   "type": "scatter", "mode": "lines",
+                   "name": center.split()[-1], "legendgroup": center,
+                   "line": {"color": "#e8b923", "width": 2},
+                   "hovertemplate": f"{center}<br>%{{x:.4g}}, %{{y:.4g}} {unit}<extra></extra>"})
+    traces.append({"x": [0], "y": [0], "type": "scatter", "mode": "markers",
+                   "name": "barycenter", "showlegend": False,
+                   "marker": {"symbol": "cross-thin", "size": 12,
+                              "color": "#8a93a3", "line": {"width": 1.5, "color": "#8a93a3"}},
+                   "hovertemplate": "barycenter<extra></extra>"})
+else:
+    cmark = ("star" if mode == "star" else "cross")
+    ccol = ("#e8b923" if mode == "star" else "#c9a06a")
+    traces.append({"x": [0], "y": [0], "type": "scatter", "mode": "markers",
+                   "name": center, "showlegend": False,
+                   "marker": {"symbol": cmark, "size": 16, "color": ccol},
+                   "hovertemplate": f"{center}<extra></extra>"})
 
 j = summary["judgment"]
 integ = summary["integration"]
@@ -148,7 +179,9 @@ DARK = {"paper": "#06070a", "plot": "#06070a", "font": "rgba(255,255,255,.82)",
         "sub": "rgba(255,255,255,.52)", "legend_bg": "rgba(10,12,18,.6)"}
 
 ANN = [
-    f"Orbits (top-down, initial) — {'star' if mode=='star' else 'parent'} {center}",
+    (f"Orbits (top-down, initial) — {center} + {short[names[0]]} about the barycenter"
+     if bary else
+     f"Orbits (top-down, initial) — {'star' if mode=='star' else 'parent'} {center}"),
     "Eccentricity",
     "Semi-major-axis drift Δa/a₀ (bounded ⇒ stable)",
     "Inclination (sim reference frame)",

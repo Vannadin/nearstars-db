@@ -120,6 +120,12 @@ if(DATA.central_kind==='planet'){
   content.add(new THREE.Line(
     new THREE.BufferGeometry().setFromPoints([SPIN.clone().multiplyScalar(-axL), SPIN.clone().multiplyScalar(axL)]),
     new THREE.LineBasicMaterial({color:0x66ccff, transparent:true, opacity:.75})));
+}else if(DATA.central_kind==='barycenter'){
+  // barycenter: nothing physical sits here — a small dim cross of two thin lines
+  const bmat=new THREE.LineBasicMaterial({color:0x8a93a3, transparent:true, opacity:.8});
+  for(const dv of [new THREE.Vector3(0.6,0,0), new THREE.Vector3(0,0,0.6)])
+    content.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(
+      [dv.clone().negate(), dv]), bmat));
 }else{
   // star: a small emissive dot + glow sprite at the focus (fixed scene size)
   const star=new THREE.Mesh(new THREE.SphereGeometry(0.5,24,16),
@@ -157,7 +163,8 @@ for(const m of DATA.bodies){
   content.add(ring);
   const mk=new THREE.Mesh(new THREE.SphereGeometry(0.28,16,12), new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.5}));
   content.add(mk);
-  bodies.push({...m, ring, mk, phase:Math.random()*6.283});
+  bodies.push({...m, ring, mk,
+    phase: (m.phase0!==undefined ? m.phase0 : Math.random()*6.283)});
 }
 
 // legend — keep a direct element reference per body (body names contain spaces,
@@ -188,8 +195,11 @@ function updateRing(m, el){
   for(let k=0;k<=N;k++){ const f=k/N*6.283185;
     const v=orbitVec(as,e,inc*DEG,node*DEG,peri*DEG,f); pos[k*3]=v.x;pos[k*3+1]=v.y;pos[k*3+2]=v.z; }
   m.ring.geometry.attributes.position.needsUpdate=true;
-  // decorative marker on illustrative phase, rate ∝ a^-1.5 (Kepler-ish, sped up)
-  m.phase += 0.06 * Math.pow(Math.max(as,1.0), -1.5) * 60;
+  // decorative marker on illustrative phase, rate ∝ a^-1.5 (Kepler-ish, sped up).
+  // A barycentric pair paces both markers on the RELATIVE orbit (rate_a), so the
+  // 180°-locked phases stay locked instead of drifting apart on their own a's.
+  const ra=(m.rate_a!==undefined ? m.rate_a*SC : as);
+  m.phase += 0.06 * Math.pow(Math.max(ra,1.0), -1.5) * 60;
   const v=orbitVec(as,e,inc*DEG,node*DEG,peri*DEG,m.phase); m.mk.position.copy(v);
   legRows[m.name].textContent=`i=${inc.toFixed(1)}°  e=${e.toFixed(3)}`;
 }

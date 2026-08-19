@@ -122,23 +122,50 @@ short = {n: n.split()[-1] for n in names}                # legend-friendly short
 fig, axs = plt.subplots(2, 2, figsize=(14, 11))
 (axo, axe), (axa, axi) = axs
 
+# near-equal pure binary → draw the pair about the BARYCENTER. The stored elements
+# describe the relative orbit (secondary about a fixed primary), which is the right
+# frame for planets around a star but misreads for comparable masses: physically both
+# bodies circle the barycenter. Elements are shared; the split is by mass fraction,
+# with the primary's ellipse point-reflected (periapsis 180° away).
+bary = None                                     # (f_secondary, f_primary) or None
+if mode == "star" and len(names) == 1:
+    m1 = summary["star"].get("mass_msun") or 0.0
+    m2 = bodies_meta[0].get("mass_msun") or 0.0
+    if m1 > 0 and m2 / (m1 + m2) >= 0.05:
+        bary = (m1 / (m1 + m2), m2 / (m1 + m2))
+
 # --- panel 1: top-down orbits (initial elements, central body at focus) ---
 fa = [i * 2 * math.pi / 400 for i in range(401)]
-for n in order:
-    a, e = a0disp[n], sorted(ts[n])[0][2]
-    xs = [a * (1 - e * e) / (1 + e * math.cos(t)) * math.cos(t) for t in fa]
-    ys = [a * (1 - e * e) / (1 + e * math.cos(t)) * math.sin(t) for t in fa]
-    lab = (f"{short[n]}  {a:.4f} {unit}  i={inc0.get(n, 0):.0f}°" if mode == "star"
-           else f"{short[n]}  {a:.1f} {unit}  i={inc0.get(n, 0):.0f}°")
-    axo.plot(xs, ys, color=cmap[n], lw=width[n] + 0.4, alpha=alpha[n], label=lab)
-if mode == "planet":
-    axo.add_patch(plt.Circle((0, 0), 1.0, color="tan", alpha=0.7))       # planet at 1 R_p
-    axo.plot(0, 0, marker="+", color=nsplot.FG_DIM, ms=10)
+if bary:
+    n = names[0]
+    a_rel, e = a0disp[n], sorted(ts[n])[0][2]
+    pri_col = "#e8b923"
+    for nm, frac, sign, col, lw_ in ((center, bary[1], -1, pri_col, width[n] + 0.4),
+                                     (n, bary[0], 1, cmap[n], width[n] + 0.4)):
+        a = a_rel * frac
+        xs = [sign * a * (1 - e * e) / (1 + e * math.cos(t)) * math.cos(t) for t in fa]
+        ys = [sign * a * (1 - e * e) / (1 + e * math.cos(t)) * math.sin(t) for t in fa]
+        axo.plot(xs, ys, color=col, lw=lw_,
+                 label=f"{nm.split()[-1]}  {a:.4f} {unit}  i={inc0.get(n, 0):.0f}°")
+    axo.plot(0, 0, marker="+", color=nsplot.FG_DIM, ms=10)               # barycenter
 else:
-    axo.plot(0, 0, marker="*", color="#e8b923", ms=20)                    # star at focus
+    for n in order:
+        a, e = a0disp[n], sorted(ts[n])[0][2]
+        xs = [a * (1 - e * e) / (1 + e * math.cos(t)) * math.cos(t) for t in fa]
+        ys = [a * (1 - e * e) / (1 + e * math.cos(t)) * math.sin(t) for t in fa]
+        lab = (f"{short[n]}  {a:.4f} {unit}  i={inc0.get(n, 0):.0f}°" if mode == "star"
+               else f"{short[n]}  {a:.1f} {unit}  i={inc0.get(n, 0):.0f}°")
+        axo.plot(xs, ys, color=cmap[n], lw=width[n] + 0.4, alpha=alpha[n], label=lab)
+    if mode == "planet":
+        axo.add_patch(plt.Circle((0, 0), 1.0, color="tan", alpha=0.7))   # planet at 1 R_p
+        axo.plot(0, 0, marker="+", color=nsplot.FG_DIM, ms=10)
+    else:
+        axo.plot(0, 0, marker="*", color="#e8b923", ms=20)                # star at focus
 axo.set_aspect("equal")
 axo.set_xlabel(unit); axo.set_ylabel(unit)
-axo.set_title(f"Orbits (top-down, initial) — {'parent' if mode == 'planet' else 'star'} {center}")
+axo.set_title("Orbits (top-down, initial) — "
+              + (f"{center} + {short[names[0]]} about the barycenter" if bary
+                 else f"{'parent' if mode == 'planet' else 'star'} {center}"))
 axo.legend(loc="upper right", fontsize=8)
 axo.grid(alpha=0.25)
 
