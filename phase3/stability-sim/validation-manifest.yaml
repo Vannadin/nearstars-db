@@ -19,23 +19,22 @@
 # α Cen's inner moon is at 0.38 d, so 10^4 yr is already ~1e7 orbits and 1e8 would cost
 # >200 h of IAS15. Override a system with `long_years:` only to pin a deliberate exception.
 #
-# The leapfrog cells run 1e5 yr with a DENSE HEAD: `dense_snapshots` samples over the
-# first `dense_years`, then `snapshots` over the rest. One run then answers both
-# questions — the 3D animation needs many samples per secular cycle over the play window,
-# the drift verdict wants the long horizon — instead of the old split where the viewer
-# gallery re-ran the same integrator a second time just to sample it more finely.
-# leapfrog cost is linear in years at fixed dt and cheap, so its window is longer than the
-# accurate cell's on the satellite hierarchy; IAS15 there is step-bound by the inner moon.
+# SNAPSHOTS are UNIFORM (owner decision 2026-08-19; the dense-head/coarse-tail split is
+# retired). The old 200-snapshot tail sampled the satellite precession at ~490 yr — worse
+# than aliasing, it erased the waveform — while snapshot cost is trivial (measured: 8,000
+# element conversions ≈ 0.2 s). 10,000 uniform snapshots resolve every hierarchy's secular
+# cycles, keep the interactive viewer's embedded series a few MB, and still give the 3D
+# animation ~200 frames over its 2,000-yr window (`anim_years`). Snapshot count does NOT
+# mark stored runs stale (freshness = horizon); new counts apply on each cell's next re-run.
 
 defaults:
   accurate_integrator: ias15
   dt_minutes: 10
   play_window_years: 100000
-  dense_years: 2000
-  dense_snapshots: 8000
+  anim_years: 2000
   long_inner_orbits: 1.0e8
   moon_years: 10000
-  snapshots: 200
+  snapshots: 10000
   lead:
     ko: >-
       위성계와 행성계를 각각 두 방식으로 교차 검증했습니다. leapfrog(고정 10분 스텝)는
@@ -92,3 +91,10 @@ systems:
   # Proxima Cen — 3 planets, no design-of-record moons, so the planetary row only.
   proxima_cen:
     title: Proxima Centauri
+
+  # Luhman 16 — planet-less brown-dwarf pair (generic binary loader). A 2-body system is a
+  # closed Kepler problem, so this is a loader/ephemeris sanity check, not a chaos hunt:
+  # 1e8 orbits of the 27.5-yr pair would be 2.75 Gyr of nothing, hence the long_years pin.
+  luhman_16:
+    title: Luhman 16 AB
+    long_years: 1.0e6

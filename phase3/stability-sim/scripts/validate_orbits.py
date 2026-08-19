@@ -134,13 +134,12 @@ def expand(system, cfg, defaults):
         orbits = float(cfg.get("long_inner_orbits", defaults["long_inner_orbits"]))
         long_years = orbits * inner_period_yr(system, planet_args)
 
-    dense_years = float(cfg.get("dense_years", defaults["dense_years"]))
-    dense_snaps = int(cfg.get("dense_snapshots", defaults["dense_snapshots"]))
+    anim_years = float(cfg.get("anim_years", defaults["anim_years"]))
     cells = [
         {"key": "planets_leapfrog", "hierarchy": "planets", "method": "leapfrog",
          "integrator": "leapfrog", "dt_minutes": float(defaults["dt_minutes"]),
          "years": play, "snapshots": snaps, "args": planet_args,
-         "dense_years": dense_years, "dense_snapshots": dense_snaps},
+         "anim_years": anim_years},
         {"key": "planets_accurate", "hierarchy": "planets", "method": "accurate",
          "integrator": accurate, "dt_minutes": None,
          "years": long_years, "snapshots": snaps, "args": planet_args},
@@ -152,7 +151,7 @@ def expand(system, cfg, defaults):
             {"key": "moons_leapfrog", "hierarchy": "moons", "method": "leapfrog",
              "integrator": "leapfrog", "dt_minutes": float(defaults["dt_minutes"]),
              "years": play, "snapshots": snaps, "args": margs, "hypotheticals": hyp,
-             "dense_years": dense_years, "dense_snapshots": dense_snaps},
+             "anim_years": anim_years},
             {"key": "moons_accurate", "hierarchy": "moons", "method": "accurate",
              "integrator": accurate, "dt_minutes": None,
              "years": myears, "snapshots": snaps, "args": margs, "hypotheticals": hyp},
@@ -193,9 +192,6 @@ def cell_cmd(system, cell, out_dir):
            "--out-dir", str(out_dir)]
     if cell["dt_minutes"] is not None:
         cmd += ["--dt-minutes", str(cell["dt_minutes"])]
-    if cell.get("dense_snapshots"):
-        cmd += ["--dense-years", repr(cell["dense_years"]),
-                "--dense-snapshots", str(cell["dense_snapshots"])]
     if cell.get("hypotheticals"):
         cmd += ["--hypotheticals", str(cell["hypotheticals"])]
     return cmd + cell["args"]
@@ -234,7 +230,7 @@ def run_cells(jobs_list, jobs):
     return failed
 
 
-def render(system, out_dir, dense_years=None):
+def render(system, out_dir, anim_years=None):
     """Both palettes of the 4-panel PNG, per-body cuts, plus the interactive HTML.
 
     The site follows the reader's prefers-color-scheme, so the pages serve each figure
@@ -252,9 +248,9 @@ def render(system, out_dir, dense_years=None):
         panel("--highlight", body)
     subprocess.run([PY, str(SCRIPTS / "plot_interactive.py"), "--dir", str(out_dir),
                     "--label", system], check=True)
-    if dense_years:
+    if anim_years:
         subprocess.run([PY, str(SCRIPTS / "animate_orbits.py"), "--dir", str(out_dir),
-                        "--label", system, "--max-years", repr(dense_years)], check=True)
+                        "--label", system, "--max-years", repr(anim_years)], check=True)
 
 
 def cell_bodies(system, out_dir):
@@ -605,19 +601,28 @@ def main():
         if failed:
             print("\n! failed cells: " + ", ".join(f"{s}/{k}" for s, k in failed))
 
-    entries = []
     for system, cfg, cells in planned:
         if not args.pages_only:
             for cell in cells:
                 if (cell_dir(system, cell) / f"{system}_summary.json").exists():
-                    render(system, cell_dir(system, cell), cell.get("dense_years"))
+                    render(system, cell_dir(system, cell), cell.get("anim_years"))
         results = [r for r in (read_cell(system, c) for c in cells) if r]
         if not results:
             print(f"  ! no results yet for {system}")
             continue
         write_page(system, cfg, defaults, results)
-        entries.append({"system": system, "title": cfg.get("title", system), "results": results})
 
+    # The landing page always lists EVERY manifest system that has stored results:
+    # --systems/--cells narrow what runs and which system pages re-render, but must
+    # not shrink the gallery — a filtered invocation used to overwrite the index
+    # with just its subset, dropping the other systems from the site.
+    entries = []
+    for system, cfg in ((s, systems[s] or {}) for s in systems):
+        results = [r for r in (read_cell(system, c)
+                               for c in expand(system, cfg, defaults)) if r]
+        if results:
+            entries.append({"system": system, "title": cfg.get("title", system),
+                            "results": results})
     if entries:
         write_index(entries)
 
