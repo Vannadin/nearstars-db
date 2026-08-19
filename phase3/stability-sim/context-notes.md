@@ -566,3 +566,48 @@ the moment we killed that cell), so for a few minutes two identical cells append
 one run.log. Result files were never at risk — run.py writes summary/timeseries only at
 completion — and the survivor was killed with its session before finishing; the clean
 re-run that produced this result started fresh at 17:48 with a single writer.
+
+## Uniform snapshots, the Hades control runs, and Luhman 16 (2026-08-19, evening)
+
+**Snapshot policy is now UNIFORM, 10,000 per cell (owner decision).** The dense-head/
+coarse-tail split (8,000 over the first 2 kyr + 200 over the rest) was retired: its
+490-yr tail sampled the satellites' kyr-scale precession at 2–6 points per cycle,
+which does not coarsen the waveform but erases it (the sawtooth in the old panels was
+sampling noise, not dynamics). The legacy runs had this right — 4,000 uniform at
+2.5 yr — and the suite migration silently regressed it because snapshot cost looked
+expensive before it was measured (8,000 element conversions ≈ 0.2 s). 10,000 uniform
+resolves every hierarchy's secular cycles, keeps the interactive viewer's embedded
+series at a few MB, and still feeds the 3D animation ~200 frames in its 2,000-yr
+window, so the dense-head special case is gone from the manifest and driver. Snapshot
+count does not mark stored runs stale; new counts apply on each cell's next re-run.
+One-off long runs follow "≥20 points per shortest secular cycle, cap 40,000".
+
+**The Hades ejection survived the half-step control.** At dt = 5 min (half the
+Principia-proxy step) Hades still goes unbound with the other four moons calm — but at
+98 kyr instead of 56 kyr. That pair of facts is the chaos signature: the ejection is
+real (not a fixed-step resolution artifact — the AU Mic failure mode), while the
+ejection DATE is trajectory-sensitive and should never be quoted as a prediction. The
+canonical statement is "Hades' current placement is chaotically unstable on the 1e5-yr
+horizon". The re-run of the standard cell at 10,000 uniform snapshots (same dt, same
+ICs — bit-identical trajectory) pins its ejection to 56,320–56,330 yr, ±10 yr where
+the old tail cadence left a ±490 yr window. IAS15 cross-check remains queued as the
+final stamp; the owner decides the design response on the phase4 board afterwards.
+
+**Luhman 16 joined the validation suite via a generic binary loader.** `build_binary`
+reads any representative component file's `binary_orbit` (names, masses, elements;
+a_au preferred, a_arcsec×distance and Kepler III as fallbacks) — no per-system
+hardcoding, per the generalize-over-hardcode rule. The pair is planet-less, so the
+1e8-innermost-orbit standard would demand 2.75 Gyr of a closed Kepler problem; the
+manifest pins `long_years: 1e6` with the reasoning in a comment. Result: textbook —
+a and e frozen to 4 decimals over both cells, MEGNO 1.999, |ΔE/E| ≤ 2.4e-8. The run
+doubles as the loader's acceptance test.
+
+**Two viewer defects surfaced by these runs are fixed.** (1) A `--systems`-filtered
+driver invocation used to rebuild the gallery index with only its subset, dropping
+every other system from the site; the index is now always built from the full
+manifest. (2) The static 4-panel plots broke on zero-variation series — a constant
+eccentricity sat exactly on the axis top (invisible), and a constant inclination
+rendered as a fake quantization step under matplotlib's offset notation. Flat series
+now get explicit headroom/padding, and the static panels also clip unbound bodies at
+escape with a dashed marker (the same policy the interactive viewer got earlier
+today), which un-collapses the α Cen moon cards' axes.

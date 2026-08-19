@@ -89,10 +89,24 @@ on every system, and put Proxima Cen through it.
       1e5-yr horizon changed a verdict: **Hades is ejected at ~56 kyr** (bound
       and calm, e ≤ 0.14, until then; the 1e4-yr run never saw it). Others stay
       bound; Chaos peaks at Hill fraction 0.139.
-- [ ] Decide what to do about Hades (owner call): confirm the ejection is not a
-      10-min-step artifact (STAB_DT_DIV finer-step re-run, or moons_accurate
-      IAS15 to ~6×10⁴ yr — now ~9x cheaper with the C J2), then either move/
-      drop the moon or accept and record it in the α Cen phase4 board
+- [x] Confirm the ejection is not a step artifact: dt=5 min control re-run —
+      Hades still ejected (98 kyr vs 56 kyr; date chaos-sensitive, outcome robust)
+- [ ] IAS15 cross-check past the ejection (final stamp): 6×10⁴ yr one-off ≈ 13.5 h,
+      or adopt the 1e8-orbit satellite standard (1.05×10⁵ yr ≈ 24 h) — owner picks
+- [ ] Decide what to do about Hades (owner call): move / drop / keep the ejection
+      as canon, recorded on the α Cen phase4 board
+
+## Standards + suite changes (2026-08-19, evening)
+
+- [x] Snapshot policy: UNIFORM, 10,000/cell (dense head retired; anim window 2,000 yr)
+- [x] moons_leapfrog re-run on the new spec — Hades ejection pinned to 56,320–56,330 yr
+- [x] Luhman 16 in the suite via generic `build_binary` (long_years 1e6 pin; both
+      cells stable, MEGNO 1.999 — doubles as the loader's acceptance test)
+- [x] Gallery index always lists every manifest system (filtered runs no longer
+      overwrite it with their subset)
+- [x] Static panels: flat-series axis headroom/padding + escape clipping/markers
+- [ ] Overnight one-off: moons_leapfrog 2×10⁶ yr, 40,000 snapshots (~7.5 h)
+- [ ] Satellite accurate cell at 1e8 orbits (~24 h) — pending owner decision
 
 Do not install `reboundx`: it pins `rebound<5` and downgrades the engine.
 
