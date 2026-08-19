@@ -101,15 +101,20 @@ for n in names:
 PALETTE = ["#7e03a8", "#b12a90", "#e16462", "#fca636", "#f0f921", "#0d0887", "#46039f"]
 short = {n: n.split()[-1] for n in names}
 
-# near-equal pure binary → panel 1 draws the pair about the BARYCENTER (same rule
-# and rationale as plot_moons): shared elements, mass-fraction split, primary's
-# ellipse point-reflected. The time panels keep the relative-orbit elements.
-bary = None                                     # (f_secondary, f_primary) or None
-if mode == "star" and len(names) == 1:
+# stellar-companion binary → panel 1 draws the pair about the BARYCENTER (same rule
+# and rationale as plot_moons): mass-split ellipses for the primary+companion, the
+# primary point-reflected, and any light bodies (planets) re-centered on the primary
+# so they visibly ride along with it. The time panels keep relative-orbit elements.
+bary = None                       # (companion, f_companion, f_primary) or None
+pax = 0.0                         # primary's schematic x-position (barycentric view)
+if mode == "star":
     m1 = summary["star"].get("mass_msun") or 0.0
-    m2 = bodies_meta[0].get("mass_msun") or 0.0
-    if m1 > 0 and m2 / (m1 + m2) >= 0.05:
-        bary = (m1 / (m1 + m2), m2 / (m1 + m2))
+    comps = [n for n, b in zip(names, bodies_meta)
+             if m1 > 0 and (b.get("mass_msun") or 0.0) / (m1 + (b.get("mass_msun") or 0.0)) >= 0.05]
+    if len(comps) == 1:
+        m2 = next(b["mass_msun"] for n, b in zip(names, bodies_meta) if n == comps[0])
+        bary = (comps[0], m1 / (m1 + m2), m2 / (m1 + m2))
+        pax = -ts[comps[0]][0][1] * bary[2] * (1 - ts[comps[0]][0][2])
 
 traces = []
 for i, n in enumerate(names):
@@ -117,10 +122,13 @@ for i, n in enumerate(names):
 
     # panel 1 (x/y): initial orbit ellipse — the one trace carrying the legend
     a, e = ts[n][0][1], ts[n][0][2]
-    if bary:
-        a *= bary[0]
+    x0 = 0.0
+    if bary and n == bary[0]:
+        a *= bary[1]
+    elif bary:
+        x0 = pax                                 # a planet, riding on the primary
     fa = [j * 2 * math.pi / 240 for j in range(241)]
-    ox = [a * (1 - e * e) / (1 + e * math.cos(f)) * math.cos(f) for f in fa]
+    ox = [x0 + a * (1 - e * e) / (1 + e * math.cos(f)) * math.cos(f) for f in fa]
     oy = [a * (1 - e * e) / (1 + e * math.cos(f)) * math.sin(f) for f in fa]
     traces.append({"x": ox, "y": oy, "type": "scatter", "mode": "lines",
                    "name": short[n], "legendgroup": n, "line": {"color": col, "width": 2},
@@ -137,10 +145,10 @@ for i, n in enumerate(names):
 # central body marker in panel 1 (appended AFTER the per-body blocks so the
 # slider's 4·i+offset trace indexing stays valid)
 if bary:
-    # primary's mirror ellipse about the barycenter, plus a barycenter cross
-    n = names[0]
-    a = ts[n][0][1] * bary[1]
-    e = ts[n][0][2]
+    # primary's mirror ellipse about the barycenter, its star marker, a barycenter cross
+    sec = bary[0]
+    a = ts[sec][0][1] * bary[2]
+    e = ts[sec][0][2]
     fa = [j * 2 * math.pi / 240 for j in range(241)]
     traces.append({"x": [-a * (1 - e * e) / (1 + e * math.cos(f)) * math.cos(f) for f in fa],
                    "y": [-a * (1 - e * e) / (1 + e * math.cos(f)) * math.sin(f) for f in fa],
@@ -148,6 +156,10 @@ if bary:
                    "name": center.split()[-1], "legendgroup": center,
                    "line": {"color": "#e8b923", "width": 2},
                    "hovertemplate": f"{center}<br>%{{x:.4g}}, %{{y:.4g}} {unit}<extra></extra>"})
+    traces.append({"x": [pax], "y": [0], "type": "scatter", "mode": "markers",
+                   "name": center, "showlegend": False,
+                   "marker": {"symbol": "star", "size": 13, "color": "#e8b923"},
+                   "hovertemplate": f"{center}<extra></extra>"})
     traces.append({"x": [0], "y": [0], "type": "scatter", "mode": "markers",
                    "name": "barycenter", "showlegend": False,
                    "marker": {"symbol": "cross-thin", "size": 12,
@@ -179,7 +191,7 @@ DARK = {"paper": "#06070a", "plot": "#06070a", "font": "rgba(255,255,255,.82)",
         "sub": "rgba(255,255,255,.52)", "legend_bg": "rgba(10,12,18,.6)"}
 
 ANN = [
-    (f"Orbits (top-down, initial) — {center} + {short[names[0]]} about the barycenter"
+    (f"Orbits (top-down, initial) — {center} + {bary[0].split()[-1]} about the barycenter"
      if bary else
      f"Orbits (top-down, initial) — {'star' if mode=='star' else 'parent'} {center}"),
     "Eccentricity",

@@ -187,18 +187,27 @@ frames = [
      "up": [0.0, 0.0, 1.0]},
 ]
 
-# ── barycentric split for a near-equal pure binary (same rule as plot_moons) ──
-# The stored elements are the RELATIVE orbit; for comparable masses both bodies
-# physically circle the barycenter, so animate two mass-scaled ellipses (primary's
-# periapsis 180° away) with phase-locked markers instead of B around a fixed A.
-phase0, rate_a = {}, {}
+# plasma-ish palette matching plot_moons.py order — assigned BEFORE any barycentric
+# reorder so each body keeps the color it has in the static and interactive panels
+PALETTE = ["#7e03a8", "#b12a90", "#e16462", "#fca636", "#f0f921", "#0d0887", "#46039f"]
+colors = {n: PALETTE[i % len(PALETTE)] for i, n in enumerate(names)}
+
+# ── barycentric split for a stellar-companion binary (same rule as plot_moons) ──
+# The stored elements are RELATIVE orbits; a comparable-mass companion and the
+# primary physically circle the barycenter, so animate two mass-scaled ellipses
+# (primary's periapsis 180° away) with phase-locked markers. Light bodies (planets)
+# keep their primary-relative ellipses, ANCHORED to the primary's marker so they
+# visibly ride along with it.
+phase0, rate_a, anchors = {}, {}, {}
 center_disp = center
-if mode == "star" and len(names) == 1:
+if mode == "star":
     m1 = summary["star"].get("mass_msun") or 0.0
-    m2 = bodies_meta[0].get("mass_msun") or 0.0
-    if m1 > 0 and m2 / (m1 + m2) >= 0.05:
+    comps = [n for n, b in zip(names, bodies_meta)
+             if m1 > 0 and (b.get("mass_msun") or 0.0) / (m1 + (b.get("mass_msun") or 0.0)) >= 0.05]
+    if len(comps) == 1:
+        sec = comps[0]
+        m2 = next(b["mass_msun"] for n, b in zip(names, bodies_meta) if n == sec)
         f_sec, f_pri = m1 / (m1 + m2), m2 / (m1 + m2)
-        sec = names[0]
         rel = body_series[sec]
         a_rel0 = rel[0][0]
         body_series[sec] = [[round(a * f_sec, 6), e, ic, nd, pe]
@@ -206,7 +215,10 @@ if mode == "star" and len(names) == 1:
         body_series[center] = [[round(a * f_pri, 6), e, ic, nd,
                                 round((pe + 180.0) % 360.0, 4)]
                                for a, e, ic, nd, pe in rel]
-        names = [sec, center]
+        # order matters: an anchored body must be updated after its anchor, so the
+        # primary precedes the planets in the payload
+        names = [sec, center] + [n for n in names if n != sec]
+        colors[center] = "#e8b923"      # the primary in star-gold, like the static panel
         central_kind = "barycenter"
         center_disp = f"{center} + {sec} barycenter"
         # markers locked opposite: the primary's ellipse already carries the 180°
@@ -215,13 +227,8 @@ if mode == "star" and len(names) == 1:
         # pace on the relative orbit's period
         phase0 = {sec: 0.0, center: 0.0}
         rate_a = {sec: a_rel0, center: a_rel0}
+        anchors = {n: center for n in names if n not in (sec, center)}
         maxa = max(s[0] * (1 + s[1]) for n in names for s in body_series[n])
-
-# plasma-ish palette matching plot_moons.py order
-PALETTE = ["#7e03a8", "#b12a90", "#e16462", "#fca636", "#f0f921", "#0d0887", "#46039f"]
-colors = {n: PALETTE[i % len(PALETTE)] for i, n in enumerate(names)}
-if central_kind == "barycenter":
-    colors[names[1]] = "#e8b923"    # the primary in star-gold, like the static panel
 
 j = summary["judgment"]
 integ = summary["integration"]
@@ -245,7 +252,8 @@ data = {
     "bodies": [{"name": n, "color": colors[n],
                 "hill_max": round(hill.get(n, {}).get("frac_max", 0.0), 3) if hill.get(n) else None,
                 "series": body_series[n],
-                **({"phase0": phase0[n], "rate_a": round(rate_a[n], 6)} if n in phase0 else {})}
+                **({"phase0": phase0[n], "rate_a": round(rate_a[n], 6)} if n in phase0 else {}),
+                **({"anchor": anchors[n]} if n in anchors else {})}
                for n in names],
 }
 
@@ -406,7 +414,7 @@ DATA.frames.forEach((fr,i)=>{
 applyFrame(0);  // default = invariable plane
 
 // per-body: evolving orbit ring + decorative body marker
-const N=160; const bodies=[];
+const N=160; const bodies=[]; const bodiesByName={};
 for(const m of DATA.bodies){
   const col=new THREE.Color(m.color);
   const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(new Float32Array((N+1)*3),3));
@@ -414,8 +422,9 @@ for(const m of DATA.bodies){
   content.add(ring);
   const mk=new THREE.Mesh(new THREE.SphereGeometry(0.28,16,12), new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.5}));
   content.add(mk);
-  bodies.push({...m, ring, mk,
-    phase: (m.phase0!==undefined ? m.phase0 : Math.random()*6.283)});
+  const bo={...m, ring, mk,
+    phase: (m.phase0!==undefined ? m.phase0 : Math.random()*6.283)};
+  bodies.push(bo); bodiesByName[m.name]=bo;
 }
 
 // legend — keep a direct element reference per body (body names contain spaces,
@@ -451,7 +460,12 @@ function updateRing(m, el){
   // 180°-locked phases stay locked instead of drifting apart on their own a's.
   const ra=(m.rate_a!==undefined ? m.rate_a*SC : as);
   m.phase += 0.06 * Math.pow(Math.max(ra,1.0), -1.5) * 60;
-  const v=orbitVec(as,e,inc*DEG,node*DEG,peri*DEG,m.phase); m.mk.position.copy(v);
+  const v=orbitVec(as,e,inc*DEG,node*DEG,peri*DEG,m.phase);
+  // anchored body (planet in a barycentric pair): its primary-relative ring and
+  // marker ride on the anchor's marker position (updated first — payload order)
+  if(m.anchor){ const off=bodiesByName[m.anchor].mk.position;
+    m.ring.position.copy(off); v.add(off); }
+  m.mk.position.copy(v);
   legRows[m.name].textContent=`i=${inc.toFixed(1)}°  e=${e.toFixed(3)}`;
 }
 

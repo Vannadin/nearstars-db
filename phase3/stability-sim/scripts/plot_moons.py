@@ -122,31 +122,47 @@ short = {n: n.split()[-1] for n in names}                # legend-friendly short
 fig, axs = plt.subplots(2, 2, figsize=(14, 11))
 (axo, axe), (axa, axi) = axs
 
-# near-equal pure binary → draw the pair about the BARYCENTER. The stored elements
-# describe the relative orbit (secondary about a fixed primary), which is the right
-# frame for planets around a star but misreads for comparable masses: physically both
-# bodies circle the barycenter. Elements are shared; the split is by mass fraction,
-# with the primary's ellipse point-reflected (periapsis 180° away).
-bary = None                                     # (f_secondary, f_primary) or None
-if mode == "star" and len(names) == 1:
+# stellar-companion binary → draw the pair about the BARYCENTER. The stored elements
+# describe relative orbits (everything about a fixed primary), the right frame for
+# planets but physically wrong to look at for a comparable-mass companion: the pair
+# circles the barycenter. When the star-centered view holds exactly one body whose
+# mass fraction is ≥ 0.05, that companion and the primary are drawn as mass-split
+# ellipses (primary point-reflected, periapsis 180° away) around a barycenter cross;
+# any remaining light bodies (planets) keep their A-relative ellipses, re-centered on
+# the primary's position so they visibly ride along with it.
+bary = None                       # (companion, f_companion, f_primary) or None
+if mode == "star":
     m1 = summary["star"].get("mass_msun") or 0.0
-    m2 = bodies_meta[0].get("mass_msun") or 0.0
-    if m1 > 0 and m2 / (m1 + m2) >= 0.05:
-        bary = (m1 / (m1 + m2), m2 / (m1 + m2))
+    comps = [n for n, b in zip(names, bodies_meta)
+             if m1 > 0 and (b.get("mass_msun") or 0.0) / (m1 + (b.get("mass_msun") or 0.0)) >= 0.05]
+    if len(comps) == 1:
+        m2 = next(b["mass_msun"] for n, b in zip(names, bodies_meta) if n == comps[0])
+        bary = (comps[0], m1 / (m1 + m2), m2 / (m1 + m2))
 
 # --- panel 1: top-down orbits (initial elements, central body at focus) ---
 fa = [i * 2 * math.pi / 400 for i in range(401)]
 if bary:
-    n = names[0]
-    a_rel, e = a0disp[n], sorted(ts[n])[0][2]
-    pri_col = "#e8b923"
-    for nm, frac, sign, col, lw_ in ((center, bary[1], -1, pri_col, width[n] + 0.4),
-                                     (n, bary[0], 1, cmap[n], width[n] + 0.4)):
+    sec, f_sec, f_pri = bary
+    a_rel, e_rel = a0disp[sec], sorted(ts[sec])[0][2]
+    # primary's schematic position = its mirrored ellipse's periapsis
+    pax = -a_rel * f_pri * (1 - e_rel)
+    for nm, frac, sign, col in ((center, f_pri, -1, "#e8b923"),
+                                (sec, f_sec, 1, cmap[sec])):
         a = a_rel * frac
-        xs = [sign * a * (1 - e * e) / (1 + e * math.cos(t)) * math.cos(t) for t in fa]
-        ys = [sign * a * (1 - e * e) / (1 + e * math.cos(t)) * math.sin(t) for t in fa]
-        axo.plot(xs, ys, color=col, lw=lw_,
-                 label=f"{nm.split()[-1]}  {a:.4f} {unit}  i={inc0.get(n, 0):.0f}°")
+        xs = [sign * a * (1 - e_rel * e_rel) / (1 + e_rel * math.cos(t)) * math.cos(t) for t in fa]
+        ys = [sign * a * (1 - e_rel * e_rel) / (1 + e_rel * math.cos(t)) * math.sin(t) for t in fa]
+        axo.plot(xs, ys, color=col, lw=width[sec] + 0.4,
+                 label=f"{nm.split()[-1]}  {a:.3f} {unit}  i={inc0.get(sec, 0):.0f}°")
+    for n in order:                            # planets, riding on the primary
+        if n == sec:
+            continue
+        a, e = a0disp[n], sorted(ts[n])[0][2]
+        xs = [pax + a * (1 - e * e) / (1 + e * math.cos(t)) * math.cos(t) for t in fa]
+        ys = [a * (1 - e * e) / (1 + e * math.cos(t)) * math.sin(t) for t in fa]
+        axo.plot(xs, ys, color=cmap[n], lw=width[n] + 0.4, alpha=alpha[n],
+                 label=f"{short[n]}  {a:.4f} {unit} (about {center.split()[-1]})  "
+                       f"i={inc0.get(n, 0):.0f}°")
+    axo.plot(pax, 0, marker="*", color="#e8b923", ms=14)                 # the primary
     axo.plot(0, 0, marker="+", color=nsplot.FG_DIM, ms=10)               # barycenter
 else:
     for n in order:
@@ -164,7 +180,7 @@ else:
 axo.set_aspect("equal")
 axo.set_xlabel(unit); axo.set_ylabel(unit)
 axo.set_title("Orbits (top-down, initial) — "
-              + (f"{center} + {short[names[0]]} about the barycenter" if bary
+              + (f"{center} + {bary[0].split()[-1]} about the barycenter" if bary
                  else f"{'parent' if mode == 'planet' else 'star'} {center}"))
 axo.legend(loc="upper right", fontsize=8)
 axo.grid(alpha=0.25)
