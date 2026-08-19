@@ -541,3 +541,28 @@ No stored result changes meaning — the queued desktop re-runs just get cheaper
 - [paper scoping note](../../plans/paper-scoping.md) — Pillar 3 consumer of this work
 - [Phase 4 Barnard decision board](../../phase4/barnards_star.yaml) — Barnard low-e candidate (process + scan tables now in STABILITY_REPORT.md)
 - [Phase 4 α Cen decision board](../../phase4/alpha_centauri.yaml) — satellites + bulk.geopotential_j2 axes consume this J2 result
+
+## The 1e5-yr moon horizon ejects Hades (2026-08-19)
+
+First production use of the compiled J2 force: the α Cen `moons_leapfrog` cell re-ran to
+its manifest horizon in ~20 min wall clock (~74 yr/s; the Python callback did 2.5 yr/s
+and the same cell cost ~13 h). The result is not just faster — it is different, which is
+the argument for the longer standard: **Hades**, bound and unremarkable for the entire
+stored 1e4-yr run and for its first 56 kyr here (e never above 0.14), is ejected between
+the snapshots at 55.9 and 56.4 kyr. Its Hill fraction stayed at 0.013 — this is not a
+Hill-sphere escape but something pumped (snapshot cadence in the tail is ~490 yr, so the
+final e-growth is unresolved; candidates are a slow secular/resonant channel with Dante
+or the J2-driven evection). The other four moons are calm; Chaos peaks at 0.139 R_Hill.
+
+Before any design reaction, the ejection should survive two checks it has not had yet:
+a finer-step leapfrog re-run (`STAB_DT_DIV`, the AU Mic lesson — fixed-step ejections
+can be resolution artifacts) and/or `moons_accurate` IAS15 pushed past 6×10⁴ yr, which
+the C force just made ~9x cheaper. Owner decides after that: move Hades, drop it, or
+keep the ejection as canon.
+
+Operational note for the record: the first re-run attempt raced a leftover babysitter
+from another session (`finish.sh` watching the old cell's PID relaunched the validator
+the moment we killed that cell), so for a few minutes two identical cells appended to
+one run.log. Result files were never at risk — run.py writes summary/timeseries only at
+completion — and the survivor was killed with its session before finishing; the clean
+re-run that produced this result started fresh at 17:48 with a single writer.

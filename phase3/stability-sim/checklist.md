@@ -66,11 +66,13 @@ on every system, and put Proxima Cen through it.
 - [x] Plots rendered in both palettes; pages swap them via `<picture>` on `prefers-color-scheme`
 - [x] Light/dark verified by headless capture on both pages, no console errors
 - [x] `./scripts/check.sh` clean
-- [ ] **Run on the desktop:** `validate_orbits.py --systems proxima_cen`
+- [x] **Run on the desktop:** `validate_orbits.py --systems proxima_cen`
       (planets_leapfrog ~30 s, planets_accurate 1.4×10⁶ yr ≈ 6.6 h)
-- [ ] **Run on the desktop:** α Cen `--cells planets_accurate` to the new
+- [x] **Run on the desktop:** α Cen `--cells planets_accurate` to the new
       1e8-orbit standard (1.92×10⁸ yr ≈ 7 h; the stored 10⁸ yr run is 5.2×10⁷ orbits)
-- [ ] Re-run `validate_orbits.py --pages-only` afterwards to refresh both pages
+- [x] Re-run `validate_orbits.py --pages-only` afterwards to refresh both pages
+      (proxima's figures had to be rendered first — the desktop runs shipped
+      summary+timeseries only, and check.sh 3b caught the dead viewer links)
 
 ## J2 force in C (handoff, 2026-08-19)
 
@@ -83,7 +85,14 @@ on every system, and put Proxima Cen through it.
       and ias15+MEGNO 2 yr, every particle's x/y/z/vx/vy/vz **bitwise identical**
       (`-ffp-contract=off`, no double axis normalization); 27.6x / 9.2x measured
 - [x] Enabled by default (`STAB_J2_C=0` forces the Python callback)
-- [ ] Then re-run the satellite leapfrog cells — 10 h becomes ~10 min
+- [x] Then re-run the satellite leapfrog cells — 20 min wall clock, and the
+      1e5-yr horizon changed a verdict: **Hades is ejected at ~56 kyr** (bound
+      and calm, e ≤ 0.14, until then; the 1e4-yr run never saw it). Others stay
+      bound; Chaos peaks at Hill fraction 0.139.
+- [ ] Decide what to do about Hades (owner call): confirm the ejection is not a
+      10-min-step artifact (STAB_DT_DIV finer-step re-run, or moons_accurate
+      IAS15 to ~6×10⁴ yr — now ~9x cheaper with the C J2), then either move/
+      drop the moon or accept and record it in the α Cen phase4 board
 
 Do not install `reboundx`: it pins `rebound<5` and downgrades the engine.
 
