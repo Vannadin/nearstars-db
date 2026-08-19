@@ -89,6 +89,18 @@ with (d / f"{args.label}_timeseries.csv").open() as f:
             ts[r["body"]].append((float(r["t_yr"]), float(r["a_au"]) * AU_KM / unit_km,
                                   float(r["e"]), float(r["inc_deg"])))
 
+# clip each body at its escape (e ≥ 1 or a ≤ 0) — same policy as plot_interactive:
+# post-escape hyperbolic elements are meaningless and would set every panel's axis range.
+escape_t = {}
+for n in names:
+    s = sorted(ts[n])
+    for k, (_, a_disp, e, _) in enumerate(s):
+        if e >= 1.0 or a_disp <= 0.0:
+            escape_t[n] = s[k][0]
+            s = s[:k]
+            break
+    ts[n] = s
+
 inc0 = {n: sorted(s)[0][3] for n, s in ts.items()}      # initial inclination (deg), labels
 a0disp = {n: sorted(s)[0][1] for n, s in ts.items()}     # initial a (display units)
 
@@ -137,7 +149,10 @@ for n in order:
              alpha=alpha[n], label=short[n])
 axe.set_xlabel("time (yr)"); axe.set_ylabel("eccentricity")
 axe.set_title("Eccentricity evolution")
-axe.set_ylim(bottom=0)
+# explicit headroom: a constant e (2-body Kepler) otherwise sits exactly on the
+# axis top and renders invisible
+e_max = max(e for s in ts.values() for _, _, e, _ in s)
+axe.set_ylim(bottom=0, top=max(e_max * 1.15, 0.01))
 axe.legend(loc="upper right", fontsize=8); axe.grid(alpha=0.25)
 
 # --- panel 3: semi-major-axis drift Δa/a0 vs time ---
@@ -158,7 +173,21 @@ for n in order:
              color=cmap[n], lw=width[n], alpha=alpha[n], label=short[n])
 axi.set_xlabel("time (yr)"); axi.set_ylabel("inclination (deg)")
 axi.set_title("Inclination (simulation reference frame)")
+# no offset notation, and pad near-constant inclinations: a body pinned to 1e-5 deg
+# otherwise renders as a fake quantization step under matplotlib's offset scaling
+axi.ticklabel_format(useOffset=False, axis="y")
+incs = [i for s in ts.values() for _, _, _, i in s]
+if max(incs) - min(incs) < 0.5:
+    mid = (max(incs) + min(incs)) / 2
+    axi.set_ylim(mid - 0.5, mid + 0.5)
 axi.legend(loc="upper right", fontsize=8); axi.grid(alpha=0.25)
+
+# escape markers on the time panels (same dashed convention as the interactive viewer)
+for n, t_esc in escape_t.items():
+    for ax in (axe, axa, axi):
+        ax.axvline(t_esc, color=cmap[n], lw=0.9, ls=":", alpha=0.8)
+    axe.annotate(f"✗ {short[n]} unbound", (t_esc, 1.0), xycoords=("data", "axes fraction"),
+                 ha="left", va="bottom", fontsize=7, color=cmap[n])
 
 j = summary["judgment"]
 integ = summary["integration"]
