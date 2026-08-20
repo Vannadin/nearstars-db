@@ -1,0 +1,50 @@
+[
+ {
+  "ma_deg": 140.0,
+  "direction": "backward",
+  "died_yr": 69100.00001667658,
+  "q_min_rp": 1.5331910093657863
+ },
+ {
+  "ma_deg": 0.0,
+  "direction": "backward",
+  "died_yr": 12100.000007030014,
+  "q_min_rp": 0.8032554633121983
+ },
+ {
+  "ma_deg": 75.0,
+  "direction": "backward",
+  "died_yr": null,
+  "q_min_rp": 1.096922267193098
+ },
+ {
+  "ma_deg": 215.0,
+  "direction": "backward",
+  "died_yr": 14150.00000443555,
+  "q_min_rp": 1.5840235288928965
+ },
+ {
+  "ma_deg": 140.0,
+  "direction": "forward",
+  "died_yr": 56350.00000433936,
+  "q_min_rp": 1.4929962881877878
+ },
+ {
+  "ma_deg": 0.0,
+  "direction": "forward",
+  "died_yr": 8700.0000108693,
+  "q_min_rp": 1.6108808457696422
+ },
+ {
+  "ma_deg": 75.0,
+  "direction": "forward",
+  "died_yr": 25600.00000881743,
+  "q_min_rp": 1.3107725377093706
+ },
+ {
+  "ma_deg": 215.0,
+  "direction": "forward",
+  "died_yr": 26150.000002992772,
+  "q_min_rp": 0.9731194479711051
+ }
+]
