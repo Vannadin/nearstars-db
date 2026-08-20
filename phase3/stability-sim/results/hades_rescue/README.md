@@ -19,6 +19,13 @@ interrupted scan resumes for free.
 
 35 candidates across 122,000–190,000 km. Three survive, none robustly.
 
+![Hades rescue scan survival landscape](rescue_scan.png)
+
+*Every candidate's maximum eccentricity over 10⁵ yr, above the comb of low-order
+resonances that explains the verdicts. Ejected candidates are clipped for display —
+their true eccentricity runs past 1 (a hyperbolic, unbound orbit). Regenerate both
+palettes with `scripts/plot_rescue_scan.py`; the light version is `rescue_scan_light.png`.*
+
 | a (km) | Δa | verdict | e_max | nearest low-order resonances | collateral |
 |---|---|---|---|---|---|
 | 122,000 | -17.6% | ejected | 9.999 | 5:4 Dante (7.0%) · 3:1 Pandora (0.8%) | Dante |
