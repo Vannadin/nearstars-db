@@ -68,12 +68,17 @@ FIELDS = {"a": "semi_major_axis_km", "e": "eccentricity",
           "i": "inclination_deg", "ma": "mean_anomaly_deg"}
 
 
+DT_MINUTES = 10.0          # set by --dt-minutes; halving it is the resolution test
+
+
 def run_candidate(spec: dict) -> dict:
     """One candidate = a dict of {short_field: value} overrides on Hades."""
     # a-only keeps the original `a_<km>` directory name so the 35 completed
     # semi-major-axis runs are reused rather than recomputed
     tag = (f"a_{spec['a']:g}" if list(spec) == ["a"]
            else "_".join(f"{k}{spec[k]:g}" for k in sorted(spec)))
+    if DT_MINUTES != 10.0:                 # keep the finer-step twin in its own dir
+        tag += f"_dt{DT_MINUTES:g}"
     out_dir = OUT / tag
     summary = out_dir / "alpha_centauri_summary.json"
     if not summary.exists():
@@ -85,8 +90,10 @@ def run_candidate(spec: dict) -> dict:
         out_dir.mkdir(parents=True, exist_ok=True)
         tmp = out_dir / "hypotheticals.json"
         tmp.write_text(json.dumps(hyp, indent=1))
+        cell = list(CELL_ARGS)
+        cell[cell.index("--dt-minutes") + 1] = f"{DT_MINUTES:g}"
         cmd = [PY, str(RUN), "--system", "alpha_centauri",
-               "--hypotheticals", str(tmp), *CELL_ARGS,
+               "--hypotheticals", str(tmp), *cell,
                "--years", YEARS, "--snapshots", SNAPSHOTS,
                "--out-dir", str(out_dir)]
         r = subprocess.run(cmd, capture_output=True, text=True)
@@ -119,7 +126,14 @@ def main():
                          "stay at their shipped values)")
     ap.add_argument("--combo", action="append", metavar="f=v,f=v",
                     help="one candidate with several fields set at once (repeatable)")
+    ap.add_argument("--dt-minutes", type=float, default=10.0,
+                    help="timestep for this invocation (default 10 = the Principia "
+                         "proxy). Halve it to test whether a survivor is real or a "
+                         "fixed-step artifact; results land in a separate `_dt<N>` dir.")
     args = ap.parse_args()
+
+    global DT_MINUTES
+    DT_MINUTES = args.dt_minutes
 
     specs = []
     if args.grid:

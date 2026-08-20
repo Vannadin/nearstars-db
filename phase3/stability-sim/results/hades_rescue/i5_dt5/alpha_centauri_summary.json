@@ -1,0 +1,221 @@
+{
+  "system": "Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5\u00b0]",
+  "star": {
+    "name": "Alpha Centauri A",
+    "mass_msun": 1.1055
+  },
+  "planets": [
+    {
+      "name": "Alpha Centauri B",
+      "mass_msun": 0.9092,
+      "mass_kind": "true",
+      "a_au": 23.675416374710288,
+      "e": 0.5179,
+      "inc_rad": 1.3823880340421086
+    },
+    {
+      "name": "Alpha Centauri A b",
+      "mass_msun": 0.0003603282183295457,
+      "mass_kind": "imaging_photometric_estimate",
+      "a_au": 1.6,
+      "e": 0.1,
+      "inc_rad": 1.103135353723016,
+      "mutual_incl_deg": 16.0
+    }
+  ],
+  "hypotheticals": [
+    {
+      "name": "Dante",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "mass_msun": 4.022283450314744e-09,
+      "a_au": 0.000735304583449529,
+      "a_km": 110000,
+      "e": 0.01,
+      "hill_fraction_initial": 0.009631069856241408,
+      "r_hill_km": 11421368.720393464
+    },
+    {
+      "name": "Hades",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "mass_msun": 2.513927156446715e-09,
+      "a_au": 0.00098931889409573,
+      "a_km": 148000,
+      "e": 0.05,
+      "hill_fraction_initial": 0.01295816671567026,
+      "r_hill_km": 11421368.720393464
+    },
+    {
+      "name": "Pandora",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "mass_msun": 2.1619773545441746e-06,
+      "a_au": 0.0016871429975506998,
+      "a_km": 252393,
+      "e": 0.0,
+      "hill_fraction_initial": 0.02209831467478489,
+      "r_hill_km": 11421368.720393464
+    },
+    {
+      "name": "Cassandra",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "mass_msun": 4.5250688816040867e-07,
+      "a_au": 0.0040107522733610675,
+      "a_km": 600000,
+      "e": 0.05,
+      "hill_fraction_initial": 0.05253310830677132,
+      "r_hill_km": 11421368.720393464
+    },
+    {
+      "name": "Chaos",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "mass_msun": 2.715041328962452e-10,
+      "a_au": 0.01002688068340267,
+      "a_km": 1500000,
+      "e": 0.02,
+      "hill_fraction_initial": 0.13133277076692831,
+      "r_hill_km": 11421368.720393464
+    }
+  ],
+  "integration": {
+    "integrator": "leapfrog",
+    "elapsed_sec": 2653.4116349220276,
+    "dt_yr": 9.506426344208684e-06,
+    "innermost_period_yr": 0.0010504127262220097,
+    "energy_relative_error": 3.48283680079481e-08,
+    "megno_final": null
+  },
+  "per_body": {
+    "Alpha Centauri B": {
+      "a_min": 23.513305240636306,
+      "a_max": 23.693045834667018,
+      "e_min": 0.5143678788085109,
+      "e_max": 0.5182591461737303
+    },
+    "Alpha Centauri A b": {
+      "a_min": 1.5888147342242955,
+      "a_max": 1.6202302698987832,
+      "e_min": 0.04189935163467931,
+      "e_max": 0.16347992781516874
+    },
+    "Dante": {
+      "a_min": 0.000711448465267042,
+      "a_max": 0.00073716478053712,
+      "e_min": 0.00023710551187386682,
+      "e_max": 0.05858061959625675
+    },
+    "Hades": {
+      "a_min": -0.0020300206612034488,
+      "a_max": 0.0010763001125226597,
+      "e_min": 0.0006959156411747458,
+      "e_max": 74663837.21187177
+    },
+    "Pandora": {
+      "a_min": 0.001680071947037104,
+      "a_max": 0.0016876770656137272,
+      "e_min": 4.53615642272605e-05,
+      "e_max": 0.016677325641090833
+    },
+    "Cassandra": {
+      "a_min": 0.003905577784440225,
+      "a_max": 0.004016560668614093,
+      "e_min": 0.023160656836610807,
+      "e_max": 0.07166100420833131
+    },
+    "Chaos": {
+      "a_min": 0.009918310884967176,
+      "a_max": 0.010610215143363392,
+      "e_min": 0.0005544108175706536,
+      "e_max": 0.06647639403596213
+    }
+  },
+  "hill_track": {
+    "Dante": {
+      "frac_max": 0.00965543484525442,
+      "bound": true
+    },
+    "Hades": {
+      "frac_max": 0.014097452679210363,
+      "bound": false
+    },
+    "Pandora": {
+      "frac_max": 0.022105309934897198,
+      "bound": true
+    },
+    "Cassandra": {
+      "frac_max": 0.052609187066095936,
+      "bound": true
+    },
+    "Chaos": {
+      "frac_max": 0.13897332552462918,
+      "bound": true
+    }
+  },
+  "judgment": {
+    "per_body": {
+      "Alpha Centauri B": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.5182591461737303
+      },
+      "Alpha Centauri A b": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.16347992781516874
+      },
+      "Dante": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.05858061959625675
+      },
+      "Hades": {
+        "flags": [
+          "e_max=74663837.212 \u2265 0.9 (orbit nearly unbound)",
+          "moon unbound from parent"
+        ],
+        "status": "unstable",
+        "ecc_class": "extreme",
+        "e_max": 74663837.21187177
+      },
+      "Pandora": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.016677325641090833
+      },
+      "Cassandra": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.07166100420833131
+      },
+      "Chaos": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.06647639403596213
+      }
+    },
+    "overall": "unstable",
+    "ecc_class_max": "extreme",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  },
+  "j2": {
+    "body": "Alpha Centauri A b",
+    "J2": 0.023,
+    "r_eq_au": 0.00047789450254521576,
+    "axis": [
+      -0.39020431580493653,
+      0.842547742142169,
+      0.37128680846258805
+    ],
+    "impl": "c"
+  }
+}

@@ -1,0 +1,95 @@
+[
+ {
+  "tag": "i5",
+  "spec": {
+   "i": 5.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.08389510680342585
+ },
+ {
+  "tag": "i7",
+  "spec": {
+   "i": 7.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07692328204789105
+ },
+ {
+  "tag": "i9",
+  "spec": {
+   "i": 9.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 43826932.98637546
+ },
+ {
+  "tag": "i13",
+  "spec": {
+   "i": 13.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 8427731205.036803
+ },
+ {
+  "tag": "e0",
+  "spec": {
+   "e": 0.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07759534602741289
+ },
+ {
+  "tag": "e0.01",
+  "spec": {
+   "e": 0.01
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.05517246319610971
+ },
+ {
+  "tag": "e0.02",
+  "spec": {
+   "e": 0.02
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.05682183845307087
+ },
+ {
+  "tag": "e0.01_i5",
+  "spec": {
+   "i": 5.0,
+   "e": 0.01
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.05896333479106318
+ },
+ {
+  "tag": "a150000_e0.01_i5",
+  "spec": {
+   "a": 150000.0,
+   "i": 5.0,
+   "e": 0.01
+  },
+  "res_dante": "5:3 Dante (4.7%)",
+  "res_pandora": "9:4 Pandora (3.1%)",
+  "hades_bound": true,
+  "hades_e_max": 0.06879963957465478
+ }
+]

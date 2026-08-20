@@ -1,0 +1,22 @@
+[
+ {
+  "tag": "e0.01_dt5",
+  "spec": {
+   "e": 0.01
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.10353143289088666
+ },
+ {
+  "tag": "i5_dt5",
+  "spec": {
+   "i": 5.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 74663837.21187177
+ }
+]

@@ -611,3 +611,58 @@ rendered as a fake quantization step under matplotlib's offset notation. Flat se
 now get explicit headroom/padding, and the static panels also clip unbound bodies at
 escape with a dashed marker (the same policy the interactive viewer got earlier
 today), which un-collapses the α Cen moon cards' axes.
+
+## The shipped Hades orbit is not a physical state (2026-08-20)
+
+The 56-kyr Hades impact turned into a full investigation, and the conclusion is stronger
+than "the orbit is unstable": **the shipped placement is unreachable in either time
+direction**, so it is an artifact of hand placement rather than a configuration a real
+satellite system could occupy. Details and tables in `results/hades_rescue/README.md`;
+the load-bearing findings:
+
+**"Ejection" is an impact.** The verdict flag says unbound, which misled the earlier
+sessions (and me, for most of a day). Tracked to the end, the apoapsis never exceeds
+~0.02 R_Hill and Hades never crosses Pandora; the PERIAPSIS collapses through the rocky
+Roche limit (1.31 R_p) and inside the planet (0.60 R_p) over ~50 yr. The sim has no
+collision detection, so REBOUND flings the point mass hyperbolically out of the close
+encounter and that is the e ≥ 1 we were reading. Hades is shredded and falls into
+Polyphemus — plausibly feeding the ring this system already has.
+
+**Semi-major axis cannot fix it.** 35 candidates over 122,000–190,000 km: three survive
+their first run, none survive a robustness battery. Pandora is the cause — 860× Hades'
+mass at a 1/170 ratio to the planet, so its low-order resonances tile the whole
+Dante-to-Pandora corridor and the gaps are too narrow to hold an orbit.
+
+**Backward integration closes the narrative escape.** REBOUND runs backward on a negative
+timestep and both integrators are time-symmetric, but the Lyapunov time is ~1.2e4 yr, so
+history is unrecoverable in detail — a 100-yr round trip already loses Hades' phase
+(~1e5 orbits per century) while retracing the orbit's shape. The answerable question is
+statistical, and it answers: Hades dies 4/4 forward and 3/4 backward. There is no stable
+past to have arrived from, so "recently captured" or "recently destabilised" has no
+support. Capture is independently impossible — an arriving body is hyperbolic and needs
+dissipation to bind (no disk left), and it would have to thread Chaos, Cassandra and
+Pandora to reach an inner circular orbit, the same crossings that would scatter it or
+wreck the existing moons. Solar-system captures are uniformly distant, eccentric, often
+retrograde; inner regular satellites form in situ.
+
+**The recommendation is the combo: i 5° + e 0.01, semi-major axis unchanged.** It is the
+only candidate where Hades survives every realization (5/5; 4/5 with no moon lost at all
+— one phase loses Dante instead), it passes the half-timestep test that inclination-only
+fails, and its e_rms lands on the board's existing values so the tidal-heating rows move
+by less than their own scatter. Two discipline notes that must travel with it: at n=5,
+3/5 and 4/5 are not distinguishable, so single-element routes must not be ranked against
+each other without 20–30 realizations each; and Dante's e_rms varies by 2× across
+surviving realizations of one candidate, so a tidal-heating row must cite the RANGE, never
+one run's value.
+
+**Process lesson: one simulation per process with the C J2 force.** Its parameters live in
+C file-scope globals, so a threaded probe running four sims in one process segfaulted —
+the callbacks read one sim's particle array. Every existing driver forks subprocesses and
+never hit it. Recorded in `j2c.py`'s docstring; the Python fallback is a per-sim closure
+and therefore thread-safe.
+
+Phase 4 re-run scope, once the owner picks an orbit: Hades `bulk.tidal_heating` and Dante
+`bulk.tidal_heating` (both take e_rms), Hades `identity`/`bulk` (the elements themselves),
+Polyphemus `satellites` (the moons table), and — only if the inclination changes —
+Polyphemus `bulk.obliquity`, whose evidence cites the inner moons' 9–11° shared-node
+design, plus the Pandora eclipse-duty numbers derived from it.

@@ -1,0 +1,68 @@
+[
+ {
+  "tag": "e0.01_ma0",
+  "spec": {
+   "e": 0.01,
+   "ma": 0.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 96994614.95775194
+ },
+ {
+  "tag": "e0.01_ma75",
+  "spec": {
+   "e": 0.01,
+   "ma": 75.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 1640950.7046421901
+ },
+ {
+  "tag": "e0.01_ma215",
+  "spec": {
+   "e": 0.01,
+   "ma": 215.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.09731256393087824
+ },
+ {
+  "tag": "i5_ma0",
+  "spec": {
+   "i": 5.0,
+   "ma": 0.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 4704210971451.545
+ },
+ {
+  "tag": "i5_ma75",
+  "spec": {
+   "i": 5.0,
+   "ma": 75.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 67974.55292746339
+ },
+ {
+  "tag": "i5_ma215",
+  "spec": {
+   "i": 5.0,
+   "ma": 215.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": false,
+  "hades_e_max": 308213233197.28033
+ }
+]

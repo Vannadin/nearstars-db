@@ -22,6 +22,13 @@ stays correct if the struct grows in a later rebound. (An earlier draft declared
 Compiled with `-ffp-contract=off` so clang cannot fuse a*b+c into FMA: the point is
 bit-identical trajectories to the Python callback (verified by verify_j2c.py), and FMA's
 single rounding would break that for no meaningful speed gain here.
+
+ONE SIMULATION PER PROCESS. The force's parameters (axis, J2, body/moon indices, the
+particles-pointer address) live in C file-scope globals, so a second `install()` in the
+same process overwrites the first and both callbacks then read one simulation's particle
+array — a segfault, not a wrong number. Parallelise with processes (subprocess, or
+ProcessPoolExecutor), never threads; every driver here does. Set STAB_J2_C=0 to fall back
+to the Python closure, which is per-simulation and therefore thread-safe.
 """
 from __future__ import annotations
 
