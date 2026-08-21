@@ -40,16 +40,16 @@
         "icrs_x_km": -31765730560286.445,
         "icrs_y_km": -161083916522118.53,
         "icrs_z_km": -82171967414726.06,
-        "icrs_vx_km_s": -10.85119408058569,
-        "icrs_vy_km_s": 16.940177818826783,
-        "icrs_vz_km_s": -30.397170390272866,
+        "icrs_vx_km_s": -10.643747704515238,
+        "icrs_vy_km_s": 16.73346182589155,
+        "icrs_vz_km_s": -29.30887918014428,
         "position_ulp_km": 0.03576781460393053,
         "icrs_x_j2000_km": -31782508861659.21,
         "icrs_y_j2000_km": -161057479338924.28,
         "icrs_z_j2000_km": -82218106983311.1,
-        "icrs_vx_j2000_km_s": -10.790153724515577,
-        "icrs_vy_j2000_km_s": 17.155279988261018,
-        "icrs_vz_j2000_km_s": -29.960756064664956,
+        "icrs_vx_j2000_km_s": -10.623674083308666,
+        "icrs_vy_j2000_km_s": 16.773229708328333,
+        "icrs_vz_j2000_km_s": -29.178401800617657,
         "orbit_id": "AB",
         "orbit_role": "primary",
         "mass_ratio_q": 0.49673202614379086,
@@ -74,7 +74,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -83,14 +83,14 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

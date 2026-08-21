@@ -101,16 +101,16 @@
         "icrs_x_km": 54684032299465.01,
         "icrs_y_km": -30382342371514.0,
         "icrs_z_km": -95410966187889.25,
-        "icrs_vx_km_s": -16.77063355676005,
-        "icrs_vy_km_s": 88.84414833899365,
-        "icrs_vz_km_s": 7.301615076470655,
+        "icrs_vx_km_s": -16.997507221514567,
+        "icrs_vy_km_s": 89.01644395203007,
+        "icrs_vz_km_s": 8.57623612713688,
         "position_ulp_km": 0.02118549029270539,
         "icrs_x_j2000_km": 54656873150616.086,
         "icrs_y_j2000_km": -30241774178302.105,
         "icrs_z_j2000_km": -95394835253595.52,
-        "icrs_vx_j2000_km_s": -18.724139238352766,
-        "icrs_vy_j2000_km_s": 91.70432112916451,
-        "icrs_vz_j2000_km_s": 11.766146078412028,
+        "icrs_vx_j2000_km_s": -18.942326851937658,
+        "icrs_vy_j2000_km_s": 92.07743952271798,
+        "icrs_vz_j2000_km_s": 12.010984607830249,
         "orbit_id": "BaBb",
         "orbit_role": "primary",
         "mass_ratio_q": 0.44289450741063646,
@@ -135,7 +135,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -144,7 +144,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -153,7 +153,7 @@
       "title": "Chen et al. 2022",
       "doi": "10.3847/1538-3881/ac66d2",
       "bibcode": "2022AJ....163..288C",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "eps Ind Ba mass (binary_orbit)"
       ]
@@ -162,14 +162,14 @@
       "title": "King et al. 2010",
       "doi": "10.1051/0004-6361/200912981",
       "bibcode": "2010A&A...510A..99K",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "eps Ind Ba radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-30",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -121,16 +121,16 @@
         "icrs_x_km": -34997470982142.82,
         "icrs_y_km": 11106404227018.594,
         "icrs_z_km": -49304067166961.69,
-        "icrs_vx_km_s": -7.296144512368878,
-        "icrs_vy_km_s": 30.762364751169226,
-        "icrs_vz_km_s": -15.014662248559723,
+        "icrs_vx_km_s": -7.438560477263225,
+        "icrs_vy_km_s": 30.516289751307937,
+        "icrs_vz_km_s": -15.459839627036946,
         "position_ulp_km": 0.010947702115285216,
         "icrs_x_j2000_km": -35009720316390.344,
         "icrs_y_j2000_km": 11153499179862.807,
         "icrs_z_j2000_km": -49330255478705.52,
-        "icrs_vx_j2000_km_s": -8.551612460228688,
-        "icrs_vy_j2000_km_s": 31.400762431503225,
-        "icrs_vz_j2000_km_s": -15.763806285581872,
+        "icrs_vx_j2000_km_s": -8.352324849207577,
+        "icrs_vy_j2000_km_s": 31.024915314181115,
+        "icrs_vz_j2000_km_s": -15.955346241400276,
         "orbit_id": "AB",
         "orbit_role": "primary",
         "mass_ratio_q": 0.46037099494097805,
@@ -155,7 +155,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -164,7 +164,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -173,7 +173,7 @@
       "title": "Lazorenko & Sahlmann 2018",
       "doi": "10.1051/0004-6361/201833626",
       "bibcode": "2018A&A...618A.111L",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "Luhman 16 A mass (binary_orbit)"
       ]
@@ -182,7 +182,7 @@
       "title": "Bedin et al. 2024",
       "doi": "10.1002/asna.20230158",
       "bibcode": "2024AN....34530158B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "Luhman 16 A mass (binary_orbit)"
       ]
@@ -191,7 +191,7 @@
       "title": "Garcia et al. 2017",
       "doi": "10.3847/1538-4357/aa844f",
       "bibcode": "2017ApJ...846...97G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "Luhman 16 A mass (binary_orbit)"
       ]
@@ -200,14 +200,14 @@
       "title": "Faherty et al. 2014",
       "doi": "10.1088/0004-637X/790/2/90",
       "bibcode": "2014ApJ...790...90F",
-      "accessed": "2026-06-16",
+      "accessed": "2026-08-21",
       "used_for": [
         "Luhman 16 A radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

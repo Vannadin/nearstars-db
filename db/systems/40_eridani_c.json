@@ -138,16 +138,16 @@
         "icrs_x_km": 67511638724380.91,
         "icrs_y_km": 137636162463756.39,
         "icrs_z_km": -20480885394900.465,
-        "icrs_vx_km_s": 25.34452801584152,
-        "icrs_vy_km_s": -73.052620103809,
-        "icrs_vz_km_s": -70.93827509165921,
+        "icrs_vx_km_s": 24.996344460581742,
+        "icrs_vy_km_s": -72.34429942901133,
+        "icrs_vz_km_s": -71.763781518951,
         "position_ulp_km": 0.03056136731766221,
         "icrs_x_j2000_km": 67550230453199.41,
         "icrs_y_j2000_km": 137521109267551.47,
         "icrs_z_j2000_km": -20595335973514.734,
-        "icrs_vx_j2000_km_s": 23.663869783700697,
-        "icrs_vy_j2000_km_s": -74.32451717297523,
-        "icrs_vz_j2000_km_s": -73.49976601915073,
+        "icrs_vx_j2000_km_s": 23.876345708225372,
+        "icrs_vy_j2000_km_s": -73.29193051133922,
+        "icrs_vz_j2000_km_s": -73.44042257529784,
         "orbit_id": "BC",
         "orbit_role": "secondary",
         "mass_ratio_q": 0.7380952380952381,
@@ -172,7 +172,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -181,7 +181,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -190,7 +190,7 @@
       "title": "Mason et al. 2021",
       "doi": "10.3847/1538-3881/abfaa2",
       "bibcode": "2021AJ....162...53M",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "40 Eridani C mass (binary_orbit)"
       ]
@@ -199,7 +199,7 @@
       "title": "Mason, Hartkopf & Miles 2017",
       "doi": "10.3847/1538-3881/aa803e",
       "bibcode": "2017AJ....154..200M",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "40 Eridani C mass (binary_orbit)"
       ]
@@ -208,14 +208,14 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "40 Eridani C radius (spectroscopic_calibration)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-30",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

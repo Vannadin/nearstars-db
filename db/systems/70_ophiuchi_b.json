@@ -71,16 +71,16 @@
         "icrs_x_km": 3739983139010.814,
         "icrs_y_km": -157497949092647.06,
         "icrs_z_km": 6918082378755.931,
-        "icrs_vx_km_s": 10.234890999283603,
-        "icrs_vy_km_s": 5.831347506532832,
-        "icrs_vz_km_s": -29.587129111849613,
+        "icrs_vx_km_s": 10.375830295324059,
+        "icrs_vy_km_s": 5.8120497529023725,
+        "icrs_vz_km_s": -29.68819707935567,
         "position_ulp_km": 0.03497156988277951,
         "icrs_x_j2000_km": 3751847623808.5894,
         "icrs_y_j2000_km": -157485203450753.97,
         "icrs_z_j2000_km": 6876489304582.906,
-        "icrs_vx_j2000_km_s": 3.317746920880384,
-        "icrs_vy_j2000_km_s": 8.3935253038849,
-        "icrs_vz_j2000_km_s": -23.52430264157136,
+        "icrs_vx_j2000_km_s": 4.338945710234528,
+        "icrs_vy_j2000_km_s": 7.684246997135755,
+        "icrs_vz_j2000_km_s": -24.645343905062116,
         "orbit_id": "AB",
         "orbit_role": "secondary",
         "mass_ratio_q": 0.55625,
@@ -105,7 +105,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -114,7 +114,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -123,7 +123,7 @@
       "title": "Eggenberger et al. 2008",
       "doi": "10.1051/0004-6361:20078624",
       "bibcode": "2008A&A...482..631E",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "70 Ophiuchi B mass (binary_orbit)"
       ]
@@ -132,14 +132,14 @@
       "title": "Boyajian et al. 2008",
       "doi": "10.1086/589554",
       "bibcode": "2008ApJ...683..424B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "70 Ophiuchi B radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-30",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

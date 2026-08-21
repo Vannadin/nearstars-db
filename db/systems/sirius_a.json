@@ -117,16 +117,16 @@
         "icrs_x_km": -15266821596265.031,
         "icrs_y_km": 76438841260663.19,
         "icrs_z_km": -23383863878034.645,
-        "icrs_vx_km_s": 12.23441101879144,
-        "icrs_vy_km_s": -5.399242921679956,
-        "icrs_vz_km_s": -14.395214275246804,
+        "icrs_vx_km_s": 12.10458329466801,
+        "icrs_vy_km_s": -5.496840198011435,
+        "icrs_vz_km_s": -14.347759774799457,
         "position_ulp_km": 0.01697283230865114,
         "icrs_x_j2000_km": -15253284947892.783,
         "icrs_y_j2000_km": 76425985938240.34,
         "icrs_z_j2000_km": -23404469606789.84,
-        "icrs_vx_j2000_km_s": 12.215068204316886,
-        "icrs_vy_j2000_km_s": -5.366476192252486,
-        "icrs_vz_j2000_km_s": -14.357073940513684,
+        "icrs_vx_j2000_km_s": 12.118498455369664,
+        "icrs_vy_j2000_km_s": -5.440330604036311,
+        "icrs_vz_j2000_km_s": -14.322602494898792,
         "orbit_id": "AB",
         "orbit_role": "primary",
         "mass_ratio_q": 0.3304122038299253,
@@ -151,7 +151,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -160,7 +160,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -169,7 +169,7 @@
       "title": "Bond et al. 2017 (HST astrometric orbit)",
       "doi": "10.3847/1538-4357/aa6af8",
       "bibcode": "2017ApJ...840...70B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "Sirius A mass (binary_orbit)"
       ]
@@ -178,14 +178,14 @@
       "title": "Kervella et al. 2003",
       "doi": "10.1051/0004-6361:20030994",
       "bibcode": "2003A&A...408..681K",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "Sirius A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-30",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -195,7 +195,10 @@ def solve_orbit_relative(orbit, dist_pc, t_jd):
     r  = a_au * (1.0 - e*math.cos(E))
     x_p = r * math.cos(nu)
     y_p = r * math.sin(nu)
-    n_a_factor = n_rad_yr * a_au / sqrt1me2     # AU/yr
+    # ẋ = −(na/(1−e·cosE))·sinE, ẏ = (na/(1−e·cosE))·√(1−e²)·cosE  (E-form).
+    # 과거 계수 na/√(1−e²) 는 ν-form 계수에 E 를 대입한 혼동 — 속도 크기가
+    # (1−e·cosE)/√(1−e²) 배 틀렸음 (2026-08-21 Principia 세션 발견).
+    n_a_factor = n_rad_yr * a_au / (1.0 - e*math.cos(E))     # AU/yr
     vx_p = -n_a_factor * math.sin(E)
     vy_p =  n_a_factor * sqrt1me2 * math.cos(E)
 

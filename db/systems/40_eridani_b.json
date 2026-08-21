@@ -99,16 +99,16 @@
         "icrs_x_km": 67508412959698.93,
         "icrs_y_km": 137631244029074.0,
         "icrs_z_km": -20485050219274.82,
-        "icrs_vx_km_s": 23.989370489321654,
-        "icrs_vy_km_s": -70.29578084721192,
-        "icrs_vz_km_s": -74.15121042773606,
+        "icrs_vx_km_s": 24.11291949280093,
+        "icrs_vy_km_s": -70.54712044149497,
+        "icrs_vz_km_s": -73.85828879224542,
         "position_ulp_km": 0.03056027520577631,
         "icrs_x_j2000_km": 67546761689720.11,
         "icrs_y_j2000_km": 137520249406518.25,
         "icrs_z_j2000_km": -20601158272338.12,
-        "icrs_vx_j2000_km_s": 24.585733087823236,
-        "icrs_vy_j2000_km_s": -69.84446253234648,
-        "icrs_vz_j2000_km_s": -73.24229429217455,
+        "icrs_vx_j2000_km_s": 24.510338404927385,
+        "icrs_vy_j2000_km_s": -70.21086425099152,
+        "icrs_vz_j2000_km_s": -73.26335164321912,
         "orbit_id": "BC",
         "orbit_role": "primary",
         "mass_ratio_q": 0.2619047619047619,
@@ -133,7 +133,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-20",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -142,7 +142,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-20",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -151,7 +151,7 @@
       "title": "Mason et al. 2021",
       "doi": "10.3847/1538-3881/abfaa2",
       "bibcode": "2021AJ....162...53M",
-      "accessed": "2026-06-20",
+      "accessed": "2026-08-21",
       "used_for": [
         "40 Eridani B mass (binary_orbit)"
       ]
@@ -160,14 +160,14 @@
       "title": "Bond et al. 2017",
       "doi": "10.3847/1538-4357/aa8a63",
       "bibcode": "2017ApJ...848...16B",
-      "accessed": "2026-06-20",
+      "accessed": "2026-08-21",
       "used_for": [
         "40 Eridani B mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-20",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

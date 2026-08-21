@@ -100,16 +100,16 @@
         "icrs_x_km": -45357632081171.586,
         "icrs_y_km": 98003004201605.78,
         "icrs_z_km": 9903485316681.473,
-        "icrs_vx_km_s": 9.123601833927971,
-        "icrs_vy_km_s": 1.5904083895917354,
-        "icrs_vz_km_s": -18.646343847893736,
+        "icrs_vx_km_s": 10.122762514814653,
+        "icrs_vy_km_s": 1.85303129539201,
+        "icrs_vz_km_s": -18.289946721630322,
         "position_ulp_km": 0.02176103834941174,
         "icrs_x_j2000_km": -45339124770949.29,
         "icrs_y_j2000_km": 98006825488783.12,
         "icrs_z_j2000_km": 9875253145034.78,
-        "icrs_vx_j2000_km_s": 10.89409591458771,
-        "icrs_vy_j2000_km_s": 4.0384484376306125,
-        "icrs_vz_j2000_km_s": -20.390460836110204,
+        "icrs_vx_j2000_km_s": 11.071355253207592,
+        "icrs_vy_j2000_km_s": 3.774975357062995,
+        "icrs_vz_j2000_km_s": -19.95571335188402,
         "orbit_id": "AB",
         "orbit_role": "primary",
         "mass_ratio_q": 0.2865302237029986,
@@ -134,7 +134,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -143,7 +143,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -152,7 +152,7 @@
       "title": "Bond et al. 2015 (HST astrometry)",
       "doi": "10.1088/0004-637X/813/2/106",
       "bibcode": "2015ApJ...813..106B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "Procyon A mass (binary_orbit)"
       ]
@@ -161,14 +161,14 @@
       "title": "Aufdenberg et al. 2005",
       "doi": "10.1086/452622",
       "bibcode": "2005ApJ...633..424A",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "Procyon A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-30",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

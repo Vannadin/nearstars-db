@@ -100,16 +100,16 @@
         "icrs_x_km": 61310483445617.67,
         "icrs_y_km": -57862589555684.12,
         "icrs_z_km": 67538841370822.15,
-        "icrs_vx_km_s": -13.305809536771056,
-        "icrs_vy_km_s": 106.75742479569016,
-        "icrs_vz_km_s": -1.1614176107357848,
+        "icrs_vx_km_s": -13.626929449583438,
+        "icrs_vy_km_s": 107.01645401415821,
+        "icrs_vz_km_s": -0.6327712803810245,
         "position_ulp_km": 0.014996635349278564,
         "icrs_x_j2000_km": 61288898640380.0,
         "icrs_y_j2000_km": -57693973794885.95,
         "icrs_z_j2000_km": 67538175497953.61,
-        "icrs_vx_j2000_km_s": -13.381256946422699,
-        "icrs_vy_j2000_km_s": 106.22152148714191,
-        "icrs_vz_j2000_km_s": -0.6610331465503184,
+        "icrs_vx_j2000_km_s": -13.737474781577484,
+        "icrs_vy_j2000_km_s": 106.73288582453014,
+        "icrs_vz_j2000_km_s": -0.2158233560537901,
         "orbit_id": "AB",
         "orbit_role": "secondary",
         "mass_ratio_q": 0.5042735042735043,
@@ -134,7 +134,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -143,7 +143,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -152,14 +152,14 @@
       "title": "Kervella et al. 2008",
       "doi": "10.1051/0004-6361:200810080",
       "bibcode": "2008A&A...488..667K",
-      "accessed": "2026-07-30",
+      "accessed": "2026-08-21",
       "used_for": [
         "61 Cygni B mass (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-30",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
