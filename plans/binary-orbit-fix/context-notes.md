@@ -99,3 +99,20 @@ e 0.50; peri 4,339 AU vs 4.3+1.1-0.9 kau). Our shipped combination (Gaia DR3
 pos/PM + HARPS RV) gives P=539 kyr, e=0.51, peri=4,215 AU, apo=12,927 AU.
 
 Shipped cfg after re-emit: AB inner P=78.94 yr unchanged; Proxima BOUND.
+
+## 2026-08-21 (follow-up 2): Phase 4 orbit rows re-derived
+
+Phase 4 alpha_centauri board carried sim-derived orbit values anchored to the
+pre-fix inputs. Assessment: the stability *decisions* (a=1.6 / e=0.1 / i_mut=16°,
+Kozai windows) stand — load.py builds the AB binary from orbital elements, so the
+velocity-formula bug never entered any sim; the m_B (+3.1%) and a_AB (−0.7%) input
+shifts are far below scanned window widths. But the *recorded emit-shaping values*
+(planet PA-match lan/argp/ma_1950, moons t=500 osculating table) are frame/phase-
+anchored and would not reproduce from the corrected DB (sim AB period 81.15→79.79 yr;
+500-yr phases fully decorrelate). Re-ran scan_pa_match.py + snapshot_elements.py:
+planet 273.10/122.38/90.05 → 211.76/129.39/151.49 (match err 0.16°→0.04°), moons
+table refreshed, both results logs regenerated, board HTML rebuilt. Narratives
+(owner-approved prose) untouched; evidence blocks carry the re-derivation provenance.
+No emit writer consumes these angles yet (Principia planets = MVP-skipped,
+Kopernicus planet bodies deferred), so nothing shipped was wrong — this was a
+reproducibility fix ahead of the planet/moon emit wiring.
