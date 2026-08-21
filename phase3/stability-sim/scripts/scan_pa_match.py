@@ -32,7 +32,7 @@ from j2 import add_j2, R_JUP_KM
 HYP = Path(__file__).parent.parent / "results/_snapshot500/alpha_centauri_massB_input.json"
 
 OBS_PA_DEG = 83.5
-DIST_PC = 1.3474909718104888
+DIST_PC = 1000.0 / 747.17   # Kervella 2016 orbital parallax (2026-08-21 data fix; was 742.12-based)
 DT_SCAN = 0.005            # yr, forward-only fine scan
 T_END = 8.0               # yr — crossing near the epoch (least precession drift)
 

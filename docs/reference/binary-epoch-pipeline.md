@@ -631,6 +631,13 @@ Notes:
 
 Elements (Akeson et al. 2021, ICRS J2000.0):
 
+> **Note (2026-08-21):** this example keeps the Akeson 2021 input set as an
+> illustration of the *method*; the shipped DB now adopts a different, mutually
+> consistent set (π = 747.17 mas, a = 17.57″, P = 79.91 yr, M = 1.1055/0.9373 M☉
+> — Kervella 2016 / Pourbaix & Boffin 2016). Do not copy numbers from this table
+> into the DB. (Historical aside: the old corrupt DB pair 1.1055/0.9092 was a
+> chimera of Kervella's M_A with this example's M_B.)
+
 | Element | Value |
 |---|---|
 | P | 79.762 yr |
