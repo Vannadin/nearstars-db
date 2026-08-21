@@ -319,6 +319,52 @@ for sys_name, entry in (binary_data or {}).items():
 if _thirdlaw_checked:
     ok(f"제3법칙 정합성 {_thirdlaw_checked}개 궤도 검사")
 
+# 계층(외곽) 궤도 속박 게이트: DB 에 궤도 행이 있다 = 문헌상 속박 주장.
+# 그런데 emit 상태(선형 폴백 포함)가 비속박이면 n-body 적분에서 동반성이 떠나간다.
+# 오너 Principia 커스텀 브랜치가 프록시마 속박을 전제하므로 회귀 시 FAIL (2026-08-21).
+GM_SUN_KM3_S2 = 1.32712440018e11
+_bound_checked = 0
+for sys_name, entry in (binary_data or {}).items():
+    if sys_name.startswith("_") or not isinstance(entry, dict):
+        continue
+    comps = {c.get("name"): c for c in entry.get("components", [])}
+    def _state(cname):
+        cdoc = next((d for d in docs.values() if d.get("system_name") == cname), None)
+        if not cdoc:
+            return None
+        der = cdoc["stars"][0].get("derived", {})
+        try:
+            return ([der[k] for k in ("icrs_x_km", "icrs_y_km", "icrs_z_km")],
+                    [der[k] for k in ("icrs_vx_km_s", "icrs_vy_km_s", "icrs_vz_km_s")])
+        except KeyError:
+            return None
+    for orbit in entry.get("orbits", []):
+        if "primary_is_barycenter_of" not in orbit:
+            continue
+        inner = orbit["primary_is_barycenter_of"]
+        sec   = orbit.get("secondary")
+        m_in  = [comps.get(n, {}).get("mass_msun") for n in inner]
+        m_sec = comps.get(sec, {}).get("mass_msun")
+        states = [_state(n) for n in inner]
+        s_sec  = _state(sec)
+        if s_sec is None or any(s is None for s in states) or m_sec is None or any(m is None for m in m_in):
+            continue
+        M_in = sum(m_in)
+        bp = [sum(m * s[0][i] for m, s in zip(m_in, states)) / M_in for i in range(3)]
+        bv = [sum(m * s[1][i] for m, s in zip(m_in, states)) / M_in for i in range(3)]
+        r = [s_sec[0][i] - bp[i] for i in range(3)]
+        v = [s_sec[1][i] - bv[i] for i in range(3)]
+        R = math.dist([0.0] * 3, r); V = math.dist([0.0] * 3, v)
+        mu = GM_SUN_KM3_S2 * (M_in + m_sec)
+        v_esc = math.sqrt(2.0 * mu / R)
+        _bound_checked += 1
+        if V >= v_esc:
+            fail("(binary)", f"{sys_name} {orbit.get('orbit_id')}: 문헌상 속박인데 emit 상태가 "
+                             f"비속박 (relv {V:.3f} ≥ v_esc {v_esc:.3f} km/s, sep "
+                             f"{R/1.495978707e8:.0f} AU) — barycenter/RV 측성 정합 확인")
+if _bound_checked:
+    ok(f"계층 궤도 속박 {_bound_checked}개 확인")
+
 
 # ── 4d. stellar_props_curated.json 스키마 ────────────────────────────────────
 print("\n── 4d. stellar_props_curated 스키마 ────────────────────────────────────")
