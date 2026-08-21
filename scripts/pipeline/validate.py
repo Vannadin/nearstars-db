@@ -250,6 +250,76 @@ if multi_component_count:
     ok(f"다성계 orbit-bound 컴포넌트 {multi_component_count}개 확인")
 
 
+# ── 4c-2. 다성계 동역학 정합성 (케플러 제3법칙 + 질량 필드 이중화) ──────────
+# 2026-08-21 도입: 궤도요소 (a, P) 가 함의하는 총질량 a_au³/P² 와 컴포넌트
+# mass_msun 합이 어긋나면 emit 된 상태벡터가 카탈로그 주기를 재현하지 못한다.
+# (a=4.74 전치 오류로 36 Oph 총질량이 0.07 M☉ 이 됐던 사고의 재발 방지 게이트.)
+print("\n── 4c-2. 다성계 동역학 정합성 ─────────────────────────────────────────")
+try:
+    with open(f"{DB}/astrometry_raw.json") as f:
+        _astro_raw = json.load(f)
+except FileNotFoundError:
+    _astro_raw = {}
+
+_thirdlaw_checked = 0
+for sys_name, entry in (binary_data or {}).items():
+    if sys_name.startswith("_") or not isinstance(entry, dict):
+        continue
+    comps = {c.get("name"): c for c in entry.get("components", [])}
+    for orbit in entry.get("orbits", []):
+        if "primary_is_barycenter_of" in orbit:
+            continue   # 외곽 계층 궤도 (a_au 직접 지정, phase_reliable=false 가 일반)
+        p_name, s_name = orbit.get("primary"), orbit.get("secondary")
+        P_yr = orbit.get("P_yr")
+        if not (p_name and s_name and P_yr):
+            continue
+        oid = f"{sys_name} {orbit.get('orbit_id')}"
+        # a → AU 환산 (a_au 직접 또는 a_arcsec × 거리)
+        if orbit.get("a_au") is not None:
+            a_au = orbit["a_au"]
+        elif orbit.get("a_arcsec") is not None:
+            plx = None
+            for n in (p_name, s_name):
+                rec = _astro_raw.get(n) or {}
+                if rec.get("parallax_mas"):
+                    plx = rec["parallax_mas"]; break
+            if not plx:
+                warn("(binary)", f"{oid}: parallax 미확보 — 제3법칙 검사 생략")
+                continue
+            a_au = orbit["a_arcsec"] * 1000.0 / plx
+        else:
+            continue
+        m_p, m_s = comps.get(p_name, {}).get("mass_msun"), comps.get(s_name, {}).get("mass_msun")
+        if m_p is None or m_s is None:
+            continue   # 4c 에서 이미 FAIL
+        m_cat     = m_p + m_s
+        m_implied = a_au ** 3 / P_yr ** 2
+        ratio = m_implied / m_cat
+        grade = orbit.get("grade") or 9
+        msg = (f"{oid}: 제3법칙 함의 질량 {m_implied:.3f} M☉ vs 컴포넌트 합 "
+               f"{m_cat:.3f} M☉ (x{ratio:.2f}) — a/P/parallax/질량 중 하나가 "
+               f"궤도해와 다른 출처")
+        if abs(ratio - 1.0) > 0.10:
+            (fail if grade <= 2 else warn)("(binary)", msg)
+        _thirdlaw_checked += 1
+        # 질량 필드 이중화: binary_orbits.mass_msun (질량비 q) vs
+        # db/systems principia GM (실제 중력) 이 다르면 궤도가 정확히 닫히지 않음.
+        GM_SUN = 1.32712440018e11
+        for cname in (p_name, s_name):
+            cdoc = next((d for d in docs.values() if d.get("system_name") == cname), None)
+            gm = ((cdoc or {}).get("stars", [{}])[0].get("principia", {})
+                  or {}).get("gravitational_parameter_km3_s2")
+            m_bin = comps.get(cname, {}).get("mass_msun")
+            if gm and m_bin:
+                m_gm = gm / GM_SUN
+                if abs(m_gm / m_bin - 1.0) > 0.02:
+                    warn("(binary)", f"{cname}: binary_orbits mass_msun={m_bin} vs "
+                                     f"principia GM 환산 {m_gm:.4f} M☉ — 질량 출처 이중화")
+
+if _thirdlaw_checked:
+    ok(f"제3법칙 정합성 {_thirdlaw_checked}개 궤도 검사")
+
+
 # ── 4d. stellar_props_curated.json 스키마 ────────────────────────────────────
 print("\n── 4d. stellar_props_curated 스키마 ────────────────────────────────────")
 try:
