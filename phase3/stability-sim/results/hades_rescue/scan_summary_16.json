@@ -1,0 +1,200 @@
+[
+ {
+  "tag": "e0.01_i5_ma20",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 20.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07780598023249266
+ },
+ {
+  "tag": "e0.01_i5_ma40",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 40.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07607302731836436
+ },
+ {
+  "tag": "e0.01_i5_ma60",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 60.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07302507440712107
+ },
+ {
+  "tag": "e0.01_i5_ma80",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 80.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07003910238934913
+ },
+ {
+  "tag": "e0.01_i5_ma100",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 100.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07380726067264452
+ },
+ {
+  "tag": "e0.01_i5_ma120",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 120.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.06726465239442166
+ },
+ {
+  "tag": "e0.01_i5_ma160",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 160.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.05328710613947964
+ },
+ {
+  "tag": "e0.01_i5_ma180",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 180.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.058863152315300385
+ },
+ {
+  "tag": "e0.01_i5_ma200",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 200.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.06169196208950589
+ },
+ {
+  "tag": "e0.01_i5_ma220",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 220.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07137774065798606
+ },
+ {
+  "tag": "e0.01_i5_ma240",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 240.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.09576781790582643
+ },
+ {
+  "tag": "e0.01_i5_ma260",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 260.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07993446563656205
+ },
+ {
+  "tag": "e0.01_i5_ma280",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 280.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "collateral": [
+   "Dante"
+  ],
+  "hades_bound": false,
+  "hades_e_max": 2243494.301436863
+ },
+ {
+  "tag": "e0.01_i5_ma300",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 300.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07784486190491248
+ },
+ {
+  "tag": "e0.01_i5_ma320",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 320.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.1275186727776641
+ },
+ {
+  "tag": "e0.01_i5_ma340",
+  "spec": {
+   "e": 0.01,
+   "i": 5.0,
+   "ma": 340.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "collateral": [
+   "Dante"
+  ],
+  "hades_bound": false,
+  "hades_e_max": 31769.610686613498
+ }
+]

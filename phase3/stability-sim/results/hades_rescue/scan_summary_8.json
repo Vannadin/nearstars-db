@@ -1,0 +1,104 @@
+[
+ {
+  "tag": "a110000_m1.3e+22_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 110000.0
+  },
+  "res_dante": "5:4 Dante (25.0%)",
+  "res_pandora": "3:1 Pandora (13.7%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07528539224567435
+ },
+ {
+  "tag": "a110000_m1.3e+22_ma0_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 110000.0,
+   "ma": 0.0
+  },
+  "res_dante": "5:4 Dante (25.0%)",
+  "res_pandora": "3:1 Pandora (13.7%)",
+  "hades_bound": true,
+  "hades_e_max": 0.05528701847000785
+ },
+ {
+  "tag": "a110000_m1.3e+22_ma75_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 110000.0,
+   "ma": 75.0
+  },
+  "res_dante": "5:4 Dante (25.0%)",
+  "res_pandora": "3:1 Pandora (13.7%)",
+  "hades_bound": true,
+  "hades_e_max": 0.06722688293390032
+ },
+ {
+  "tag": "a110000_m1.3e+22_ma215_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 110000.0,
+   "ma": 215.0
+  },
+  "res_dante": "5:4 Dante (25.0%)",
+  "res_pandora": "3:1 Pandora (13.7%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07709711731708593
+ },
+ {
+  "tag": "a148000_m1.3e+22_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 148000.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.06983846738359209
+ },
+ {
+  "tag": "a148000_m1.3e+22_ma0_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 148000.0,
+   "ma": 0.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.1114171123340413
+ },
+ {
+  "tag": "a148000_m1.3e+22_ma75_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 148000.0,
+   "ma": 75.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.08610887761912905
+ },
+ {
+  "tag": "a148000_m1.3e+22_ma215_r1048_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 148000.0,
+   "ma": 215.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.09194709949952078
+ }
+]

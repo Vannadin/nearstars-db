@@ -1,0 +1,55 @@
+[
+ {
+  "tag": "i169",
+  "spec": {
+   "i": 169.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.0711767751648906
+ },
+ {
+  "tag": "i175",
+  "spec": {
+   "i": 175.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.06901565806105663
+ },
+ {
+  "tag": "i169_ma0",
+  "spec": {
+   "i": 169.0,
+   "ma": 0.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.08982414917274285
+ },
+ {
+  "tag": "i169_ma75",
+  "spec": {
+   "i": 169.0,
+   "ma": 75.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.06725488258857693
+ },
+ {
+  "tag": "i169_ma215",
+  "spec": {
+   "i": 169.0,
+   "ma": 215.0
+  },
+  "res_dante": "3:2 Dante (3.9%)",
+  "res_pandora": "9:4 Pandora (1.0%)",
+  "hades_bound": true,
+  "hades_e_max": 0.07100907462905948
+ }
+]

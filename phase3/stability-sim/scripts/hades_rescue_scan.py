@@ -65,7 +65,9 @@ def nearest_resonance(a_km: float, a_other_km: float, inner: bool) -> str:
 
 # short aliases for the Hades fields a candidate may vary, and the directory tag
 FIELDS = {"a": "semi_major_axis_km", "e": "eccentricity",
-          "i": "inclination_deg", "ma": "mean_anomaly_deg"}
+          "i": "inclination_deg", "ma": "mean_anomaly_deg",
+          "m": "mass_kg", "r": "radius_km"}
+DROP: list[str] = []       # bodies removed from the config (set by --drop)
 
 
 DT_MINUTES = 10.0          # set by --dt-minutes; halving it is the resolution test
@@ -79,6 +81,8 @@ def run_candidate(spec: dict) -> dict:
            else "_".join(f"{k}{spec[k]:g}" for k in sorted(spec)))
     if DT_MINUTES != 10.0:                 # keep the finer-step twin in its own dir
         tag += f"_dt{DT_MINUTES:g}"
+    if DROP:
+        tag += "_no" + "".join(b.split()[-1][:3] for b in DROP)
     out_dir = OUT / tag
     summary = out_dir / "alpha_centauri_summary.json"
     if not summary.exists():
@@ -87,6 +91,8 @@ def run_candidate(spec: dict) -> dict:
             if m["name"] == "Hades":
                 for k, v in spec.items():
                     m[FIELDS[k]] = v
+        if DROP:
+            hyp["bodies"] = [m for m in hyp["bodies"] if m["name"] not in DROP]
         out_dir.mkdir(parents=True, exist_ok=True)
         tmp = out_dir / "hypotheticals.json"
         tmp.write_text(json.dumps(hyp, indent=1))
@@ -126,14 +132,19 @@ def main():
                          "stay at their shipped values)")
     ap.add_argument("--combo", action="append", metavar="f=v,f=v",
                     help="one candidate with several fields set at once (repeatable)")
+    ap.add_argument("--drop", action="append", metavar="BODY", default=[],
+                    help="remove a moon from the config (repeatable) — used to test a "
+                         "MERGER: drop one body and give Hades the combined mass/radius "
+                         "via --combo m=...,r=...")
     ap.add_argument("--dt-minutes", type=float, default=10.0,
                     help="timestep for this invocation (default 10 = the Principia "
                          "proxy). Halve it to test whether a survivor is real or a "
                          "fixed-step artifact; results land in a separate `_dt<N>` dir.")
     args = ap.parse_args()
 
-    global DT_MINUTES
+    global DT_MINUTES, DROP
     DT_MINUTES = args.dt_minutes
+    DROP = list(args.drop)
 
     specs = []
     if args.grid:

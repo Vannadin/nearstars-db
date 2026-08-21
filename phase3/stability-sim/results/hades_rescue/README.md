@@ -100,14 +100,6 @@ The commands behind the second pass below, for reference:
       --combo "e=0.01,i=5,ma=0" --combo "e=0.01,i=5,ma=75" --combo "e=0.01,i=5,ma=215"
     .venv/bin/python scripts/hades_rescue_scan.py --jobs 1 --dt-minutes 5 --combo "e=0.01,i=5"
 
-## What is stored here
-
-Per-candidate `alpha_centauri_summary.json`, its `hypotheticals.json`, and `run.log`.
-The 2,000-snapshot `alpha_centauri_timeseries.csv` files are **gitignored for this
-directory only** (1.3 MB x 40 = 52 MB of scan intermediate); every verdict in the tables
-above comes from the summaries, and a candidate worth plotting can be re-run from its
-stored `hypotheticals.json`.
-
 ## Second pass: the other orbital elements, and the verdict
 
 The semi-major-axis scan above says nothing survives its own robustness check, so the
@@ -185,3 +177,70 @@ the solar system are uniformly distant, eccentric, and often retrograde; inner r
 satellites form in situ. So the shipped configuration is an artifact of hand placement,
 not a physical state, and the honest options are to fix the orbit or to change the
 structure (Pandora's mass is the root cause: 860× Hades at a 2.22 period ratio).
+
+## Third pass: the merger, retrograde, and a binary — with survival rates
+
+The second pass ranked candidates on n=5, which cannot separate 3/5 from 4/5. This pass
+raised the prograde combo to **20 phase realizations** and gave the structural options
+their own batteries. Retrograde and the binary were also tested, at the owner's
+suggestion, and both are recorded here as documented negatives.
+
+| candidate | samples | no moon lost | notes |
+|---|---|---|---|
+| shipped (a 148,000 · e 0.05 · i 11°) | 20 fwd + 4 back | **0%** | dies in both time directions |
+| prograde combo (i 5° + e 0.01) | 20 | **85%** | all 3 failures lose Dante |
+| merged body @ 148,000 (Dante absorbed) | 5 | **100%** | ~277× Io, tidally safe |
+| merged body @ 110,000 (Dante's slot) | 5 | **100%** | ~2,570× Io, falls in 0.2–0.6 Myr |
+| retrograde (i 169°, 175°) | 5 | **100%** | rejected — see below |
+| binary pair @ 148,000 | analytic | impossible | see below |
+
+**The root cause is the inner PAIR, not Pandora alone.** The merged body at 148,000 km has
+the same packing separation from Pandora as the shipped Hades (mutual-Hill Δ = 4.15) and
+yet survives every realization, while Hades with Dante present survives none. Every combo
+failure also loses Dante. So it is the three-body Dante–Hades–Pandora coupling that is
+fatal, and removing one of the inner two removes it. For reference the pairwise Δ are
+Dante–Hades 16.2, Hades–Pandora 4.15, Pandora–Cassandra 6.09, Cassandra–Chaos 11.5,
+against 14–16 for every Galilean pair.
+
+**Position decides the merged body's fate, through tides.** Synchronous orbit sits at
+119,392 km (1.67 R_p), so a body inside it spirals in and a body outside it moves out.
+At Dante's 110,000 km the merged body reaches the Roche limit in 0.2–0.6 Myr (k₂/Q from
+0.5/3e4 to 0.5/1e5, a Jupiter analogy that would need grounding before adoption) — the
+same failure as Hades, four times slower. At Hades' 148,000 km it migrates outward and is
+tidally safe, and its heating is a moderate ~277× Io instead of ~2,570×. Note the
+by-product: the CURRENT Dante, at 110,000 km, is itself inside synchronous and reaches
+Roche in 0.3–0.9 Myr, so the "Roche-edge perpetual volcanism" placement was already
+transient independently of Hades.
+
+**Retrograde is rejected despite winning the N-body test.** i = 169° and 175° survive 5/5
+with low eccentricity (0.067–0.090), because a retrograde orbit detunes the resonances
+with Pandora that make the whole prograde corridor uninhabitable. It fails on two counts
+the N-body sim cannot see. Origin: inner regular satellites form in a prograde
+circumplanetary disk, and capture cannot deliver a body to an inner circular orbit —
+solar-system captures are uniformly distant, eccentric and often retrograde, which is
+where Cassandra (176°) and Chaos (179°) legitimately sit. Tides: a retrograde satellite
+migrates INWARD regardless of the synchronous radius, and at 2 R_p that is 2.4–8.1 m/yr,
+reaching the Roche limit in 3–11 Myr. The same formula reproduces Phobos' observed decay
+to within a factor of two.
+
+**A binary moon in Hades' slot is geometrically impossible.** Split the merged body in
+half and each component is 832 km in radius, so they cannot sit closer than 1,664 km
+without touching — but the pair's own Hill radius at 148,000 km is only 2,690 km (3.2
+component radii), and prograde binary stability needs a separation under 0.4–0.5 of that,
+i.e. 1,076–1,345 km. The stable zone is INSIDE the contact distance, so no configuration
+exists. A probe at 1,800 km (0.67 R_Hill) confirms it: the components collide within half
+a mutual orbit, about two hours. The mutual period (4.5 h) is only 0.32 of the orbital
+period about the planet (14.3 h), where survival needs it to be far shorter. This is the
+same reason no moon in the solar system has a moon of its own. A binary only becomes
+geometrically possible beyond 183,000–229,000 km, which is inside Pandora's resonance
+zone. Note that `load.add_hypotheticals` cannot express a moon of a moon (the Hill
+pre-flight looks the parent up among the planets), so this was probed with a standalone
+script rather than by extending the shared loader.
+
+## What is stored here
+
+Per-candidate `alpha_centauri_summary.json`, its `hypotheticals.json`, and `run.log`.
+The 2,000-snapshot `alpha_centauri_timeseries.csv` files are **gitignored for this
+directory only** (1.3 MB per run, tens of runs); every verdict in the tables above comes
+from the summaries, and a candidate worth plotting can be re-run from its stored
+`hypotheticals.json`.

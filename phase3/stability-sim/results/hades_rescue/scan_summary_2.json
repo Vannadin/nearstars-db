@@ -1,22 +1,26 @@
 [
  {
-  "tag": "e0.01_dt5",
+  "tag": "a110000_m1.3e+22_r1048_dt5_noDan",
   "spec": {
-   "e": 0.01
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 110000.0
+  },
+  "res_dante": "5:4 Dante (25.0%)",
+  "res_pandora": "3:1 Pandora (13.7%)",
+  "hades_bound": true,
+  "hades_e_max": 0.08010250290669337
+ },
+ {
+  "tag": "a148000_m1.3e+22_r1048_dt5_noDan",
+  "spec": {
+   "m": 1.3e+22,
+   "r": 1048.0,
+   "a": 148000.0
   },
   "res_dante": "3:2 Dante (3.9%)",
   "res_pandora": "9:4 Pandora (1.0%)",
   "hades_bound": true,
-  "hades_e_max": 0.10353143289088666
- },
- {
-  "tag": "i5_dt5",
-  "spec": {
-   "i": 5.0
-  },
-  "res_dante": "3:2 Dante (3.9%)",
-  "res_pandora": "9:4 Pandora (1.0%)",
-  "hades_bound": false,
-  "hades_e_max": 74663837.21187177
+  "hades_e_max": 0.07197524172466702
  }
 ]
