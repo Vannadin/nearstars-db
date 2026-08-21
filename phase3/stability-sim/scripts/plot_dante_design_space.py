@@ -81,12 +81,18 @@ def draw(theme: str):
     ax.clabel(cs, fmt=lambda v: f"{v:.0f} K", fontsize=8.5, inline_spacing=6)
     ax.contour(Rg, 100 * Fg, Tg, levels=[LAKE_HI], colors=["#e1566a"], linewidths=2.0)
     ax.contour(Rg, 100 * Fg, Tg, levels=[LAKE_LO], colors=["#4a90d9"], linewidths=2.0)
+    ax.contour(Rg, 100 * Fg, Tg, levels=[1350.0], colors=["#ff2d55"],
+               linewidths=2.0, linestyles="--")
+    ax.text(952, 3.0, "1350 K silicate melting point —\nnothing works below this line",
+            fontsize=8, color="#ff2d55", ha="right", va="center")
     # the shaded band IS the feasible one; name both of its edges on the plot
-    ax.text(268, 12.5, "crusted lava lakes can live here\n(300–900 K, as observed on Io)",
+    ax.text(268, 12.5, "crusted lava lakes can live here — dark plates with\n"
+            "glowing cracks (300–900 K, as observed on Io)",
             fontsize=9, color="#48c78e", va="center")
-    ax.text(690, 0.72, "too hot for a lake: the budget would demand\n"
-                       "crust-free molten rock over the whole area\n"
-                       "— the assumption that broke the 900 km design",
+    ax.text(690, 0.78, "too hot: the budget would demand that the LAKES' OWN area\n"
+                       "be crust-free exposed melt end to end (not the whole surface).\n"
+                       "Past ~1350 K even that fails — it exceeds the silicate melting\n"
+                       "point, which is where the shipped 900 km / 5 % design sat.",
             fontsize=8.5, color="#e1566a", va="center", ha="center")
     ax.text(905, 26, "900 K ceiling", fontsize=8.5, color="#e1566a",
             ha="right", va="center", rotation=-38)
