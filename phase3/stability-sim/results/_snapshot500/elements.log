@@ -1,30 +1,30 @@
-  ... 25 yr  elapsed 31s
-  ... 50 yr  elapsed 62s
-  ... 75 yr  elapsed 93s
-  ... 100 yr  elapsed 123s
-  ... 125 yr  elapsed 154s
-  ... 150 yr  elapsed 185s
-  ... 175 yr  elapsed 216s
-  ... 200 yr  elapsed 246s
-  ... 225 yr  elapsed 277s
-  ... 250 yr  elapsed 308s
-  ... 275 yr  elapsed 338s
-  ... 300 yr  elapsed 369s
-  ... 325 yr  elapsed 400s
-  ... 350 yr  elapsed 430s
-  ... 375 yr  elapsed 461s
-  ... 400 yr  elapsed 492s
-  ... 425 yr  elapsed 526s
-  ... 450 yr  elapsed 560s
-  ... 475 yr  elapsed 598s
-  ... 500 yr  elapsed 629s
+  ... 25 yr  elapsed 5s
+  ... 50 yr  elapsed 10s
+  ... 75 yr  elapsed 14s
+  ... 100 yr  elapsed 19s
+  ... 125 yr  elapsed 24s
+  ... 150 yr  elapsed 29s
+  ... 175 yr  elapsed 34s
+  ... 200 yr  elapsed 39s
+  ... 225 yr  elapsed 44s
+  ... 250 yr  elapsed 48s
+  ... 275 yr  elapsed 53s
+  ... 300 yr  elapsed 58s
+  ... 325 yr  elapsed 63s
+  ... 350 yr  elapsed 68s
+  ... 375 yr  elapsed 73s
+  ... 400 yr  elapsed 78s
+  ... 425 yr  elapsed 83s
+  ... 450 yr  elapsed 87s
+  ... 475 yr  elapsed 92s
+  ... 500 yr  elapsed 97s
 
-# t = 500.000 yr snapshot  (mutual inc Polyphemus vs AB plane: 16.127 deg)
+# t = 500.000 yr snapshot  (mutual inc Polyphemus vs AB plane: 16.088 deg)
 # Polyphemus (frame: AB plane, x = A->B direction at t=500)
-Polyphemus  a_au=1.593607 e=0.07561 inc=16.127 lan=149.71 argp=185.11 ma=101.65
+Polyphemus  a_au=1.595720 e=0.07347 inc=16.088 lan=126.44 argp=189.62 ma=116.44
 # Moons (frame: Polyphemus orbital plane, x = mutual node line on AB plane)
-Dante      a_km=109921.3 e=0.01397 inc=10.996 lan=157.34 argp=195.61 ma=34.93
-Hades      a_km=148805.1 e=0.05298 inc=17.863 lan=128.30 argp=14.17 ma=325.30
-Pandora    a_km=252433.4 e=0.00517 inc=18.041 lan=115.69 argp=116.07 ma=53.69
-Cassandra  a_km=600591.4 e=0.06624 inc=168.241 lan=264.65 argp=147.85 ma=3.63
-Chaos      a_km=1576906.3 e=0.01488 inc=176.475 lan=269.16 argp=187.00 ma=335.21
+Dante      a_km=109890.2 e=0.01334 inc=7.341 lan=41.07 argp=113.62 ma=45.38
+Hades      a_km=148268.7 e=0.02456 inc=16.245 lan=140.78 argp=296.60 ma=288.17
+Pandora    a_km=252424.1 e=0.00589 inc=18.212 lan=117.44 argp=109.20 ma=43.81
+Cassandra  a_km=599190.2 e=0.06385 inc=168.118 lan=264.32 argp=140.91 ma=357.91
+Chaos      a_km=1574350.1 e=0.01476 inc=176.540 lan=266.35 argp=196.56 ma=322.45
