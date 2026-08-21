@@ -32,6 +32,11 @@ locking treatment first.
 4. [The eccentricity-maintenance requirement](#4-the-eccentricity-maintenance-requirement)
 5. [Domain of validity: k₂/Q by body class, and the rheology problem](#5-domain-of-validity-kq-by-body-class-and-the-rheology-problem)
 6. [Deciding the outcome: volcanism / ocean / plumes](#6-deciding-the-outcome-volcanism-ocean-plumes)
+   - [6.1 The flux → regime table](#61-the-flux--regime-table)
+   - [6.2 How the heat actually leaves: the three-mode ladder](#62-how-the-heat-actually-leaves-the-three-mode-ladder)
+   - [6.3 The plains are not an exit](#63-the-plains-are-not-an-exit)
+   - [6.4 The lava-lake capacity test (and the two-denominator trap)](#64-the-lava-lake-capacity-test-and-the-two-denominator-trap)
+   - [6.5 The super-Io ceiling: what size a lava moon can be](#65-the-super-io-ceiling-what-size-a-lava-moon-can-be)
 7. [Worked examples](#7-worked-examples)
 8. [Honesty & uncertainty](#8-honesty--uncertainty)
 9. [Annotated Bibliography](#9-annotated-bibliography)
@@ -227,6 +232,14 @@ uncertainty rather than over-claim.
 
 ## 6. Deciding the outcome: volcanism / ocean / plumes
 
+§1–§5 answer *how much power is generated*. That is only half the problem: the power
+has to **leave through the surface**, and above a few W/m² the exit is the binding
+constraint, not the generation. §6.1 is the quick verdict table; §6.2–§6.5 are the
+transport side, which is what decides whether a designed high-flux body is physically
+possible at all.
+
+### 6.1 The flux → regime table
+
 Convert `Ė` to a **surface heat flux** `F = Ė / (4πR²)` and compare to thresholds
 (these are guides, not sharp lines):
 
@@ -245,13 +258,209 @@ map `F` to the table; if it lands near a threshold, escalate to a viscoelastic
 cross-check (§5 regime 3) before committing. **(5)** record the chosen `k₂/Q`, the
 maintaining resonance, and the resulting `F`-range on the Phase-4 board, and where
 art overrides a "dead" verdict, mark it a **documented divergence**, never a silent
-upgrade.
+upgrade. **(6)** if `F ≳ 1 W/m²`, the verdict "vigorous volcanism" is not the end of
+the check — run the transport test of §6.2–§6.4, which is what fails for oversized
+designs.
 
 Note that tidal heating is one heat source among several (radiogenic, accretional,
 primordial). For an Earth-mass body radiogenic heating alone is ~0.08 W/m²; tidal
 heating matters when it *exceeds* that. For small icy moons radiogenic heat is
 negligible and tides are essentially the only knob, which is why the distance gate
 is so decisive for them.
+
+### 6.2 How the heat actually leaves: the three-mode ladder
+
+A body's surface has exactly three ways to pass internal heat, and they differ by
+**four orders of magnitude in capacity**. Which one the body is in is set by the flux
+itself, so the mode is an output of §6.1, not a free choice.
+
+| Mode | Mechanism | Capacity | Anchor body |
+|---|---|---|---|
+| **Plate tectonics** | the lid itself is recycled | ~0.09 W/m² | Earth, **92.1 mW/m²** (47±2 TW from 38,347 measurements, [`2010SolE....1....5D`](https://ui.adsabs.harvard.edu/abs/2010SolE....1....5D)) |
+| **Stagnant lid** | conduction through an immobile lid | ceiling **10–30 mW/m²** | Venus 10–20, Mars 15–30 ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)) |
+| **Heat pipe** | melt migrates through the lid and erupts | ≥ ~2.5 W/m², no firm upper bound | Io; early Earth ([`2019JGRE..124..114K`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124..114K)) |
+
+The decisive fact for any tidally heated body above ~0.1 W/m²: **conduction is not an
+option.** Reese, Solomatov & Moresi 1998 ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)) put the
+stagnant-lid conductive ceiling at 10–30 mW/m² before widespread melting sets in —
+two orders of magnitude below Io. Moore 2003 ([`2003JGRE..108.5096M`](https://ui.adsabs.harvard.edu/abs/2003JGRE..108.5096M)) shows even
+solid-state convection *"falls an order of magnitude short"* of Io's flux. What is
+left is **advection**: melt segregates, rises, and carries its latent heat to the
+surface.
+
+The governing surface energy balance is Spencer, Katz & Hewitt 2020
+([arXiv:2003.08287](https://arxiv.org/abs/2003.08287)), whose eq. 33 converts a
+dissipation rate `Ψ` directly into a resurfacing rate,
+
+    q_s  =  Ψ / [ 4πR² ( ρL + ρ c (T_m − T_s) ) ]
+
+with `ρ` density, `L` latent heat of fusion, `c` specific heat, `T_m` melt
+temperature and `T_s` surface temperature. Conduction is **dropped from the balance**
+because it is negligible. Their Io reference solution (Table 1: ρ=3000 kg/m³,
+L=4×10⁵ J/kg, c=1200 J/kg/K, T_m=1500 K, T_s=150 K, Ψ=10¹⁴ W) returns **99.5 % of
+surface heat transport as volcanic**, a resurfacing rate of 1.25 cm/yr matching Io's
+observed rate, and an **80 km elastic thickness**. Their eqs. 34–35 further split
+erupted from intruded melt: **~80 % of Io's magma is emplaced within the crust rather
+than erupted**, which matters when converting a heat budget into visible lava. The
+paper explicitly offers eq. 10 for reuse — *"provides a means of estimating eruption
+rates for other tidally heated lava-worlds, utilising their tidal heating rate, size,
+and surface temperature"* — so this is the sanctioned formula for a synthetic body,
+not an analogy. For lid thickness, mantle temperature and the residual conductive
+flux, Kankanamge & Moore 2019 ([`2019JGRE..124..114K`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124..114K), doi
+10.1029/2018JE005800) give a heat-pipe parameterization validated to <15 % against
+numerical simulation.
+
+**The counter-intuitive consequence: high flux gives a THICK lid, not a thin one.**
+Heat piping *"produces a thick, cold, and strong lithosphere"* (Moore & Webb 2017,
+[`2017E&PSL.474...13M`](https://ui.adsabs.harvard.edu/abs/2017E%26PSL.474...13M)), and O'Reilly & Davies 1981
+([`1981GeoRL...8..313O`](https://ui.adsabs.harvard.edu/abs/1981GeoRL...8..313O)) titled the mechanism exactly that — *a mechanism
+allowing a **thick** lithosphere*. Conduction alone would force Io's lithosphere down
+to ~5 km; advection lets it be thick. Observations agree: ≥12 km from mountain volume
+([`2003JGRE..108.5093J`](https://ui.adsabs.harvard.edu/abs/2003JGRE..108.5093J)), ≥30 km from mountain distribution
+([`1998Icar..135..146C`](https://ui.adsabs.harvard.edu/abs/1998Icar..135..146C)), 35–80 km in models — a lid that by conduction
+passes only **3–7 % of Io's flux**.
+
+So the design rule is the inverse of the intuitive one: **you cannot buy a thicker
+crust by raising the heat, and a high-flux body does not have a centimetre-scale
+crust.** It has a thick cold lid pierced by discrete melt conduits, and *those* have
+to carry essentially all of the power.
+
+### 6.3 The plains are not an exit
+
+If the lid conducts ~0.1 W/m², the terrain between volcanic centres is thermally
+**inert**: it sits at radiative equilibrium with its external budget (starlight, plus
+the parent's contribution for a moon — see
+[`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md)) and carries
+none of the interior's heat.
+
+Io confirms this directly. Its background plains are **110–130 K, purely
+insolation-driven** — a frost model with Bond albedo 0.56 and thermal inertia 250 MKS
+fits 22 years of data ([arXiv:2405.19253](https://arxiv.org/abs/2405.19253);
+equatorial frost 106–116 K), and between hot spots the endogenic contribution is
+**<1 W/m²** ([`2004Icar..169..127R`](https://ui.adsabs.harvard.edu/abs/2004Icar..169..127R)). On a body radiating 2.5 W/m² on
+average, the plains are cold.
+
+The heat is therefore concentrated into a small fraction of the surface:
+
+- active volcanoes occupy **≈2 %** of Io's surface ([arXiv:2310.12382](https://arxiv.org/abs/2310.12382));
+- **50 % of the heat flow comes from 1.2 % of the surface** ([`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V));
+- patera floors are 2.5 % of the surface but host **64 % of detected hot spots**
+  ([`2011Icar..214...91W`](https://ui.adsabs.harvard.edu/abs/2011Icar..214...91W)).
+
+The literature predicts this shape for exo-bodies too, not just Io. Henning,
+O'Connell & Sasselov 2009 ([arXiv:0912.1907](https://arxiv.org/abs/0912.1907)) find
+tides alone unlikely to open a *surface* magma ocean (it would take *"half a million
+TW or more"*, ≈980 W/m² on an Earth-radius body), and that *"thin-layer global
+resurfacing as on Io is unlikely for viscous lavas. This supports the notion of
+searching for small radiantly cooled hotspots on supertidal exoplanets."*
+
+**Two consequences for Phase-4 work.** (a) A warm plains temperature is not an art
+choice — it is a claim that the lid is metres thick, which cannot support topography.
+Set the plains from the external budget and leave them there. (b) Conservation still
+binds: the area-weighted `σT⁴` mean must equal `F`, so concentrating the heat makes
+the hot spots *hotter*, and their temperature — not the plains' — is what the
+transport check has to survive.
+
+### 6.4 The lava-lake capacity test (and the two-denominator trap)
+
+Since the lakes carry all of it, the test for any high-flux design is arithmetic:
+
+    required areal flux  =  F / (lake area fraction)
+
+and that number has to fall inside the **measured** capacity of a real lava lake.
+
+**First, the trap.** Two different denominators are in use in the literature and they
+differ by two orders of magnitude. Dividing a patera's power by its *geologic floor
+area* gives a crust-dominated ~300 K number; dividing by the *fitted
+equivalent-blackbody area* gives a crust-corrected proxy at 600–940 K. **Never mix
+them, and always state which one a quoted flux uses.** Loki Patera makes the gap
+concrete: 9.6×10¹² W ([`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V)) over its 21,500 km² floor
+([`2017Natur.545..199D`](https://ui.adsabs.harvard.edu/abs/2017Natur.545..199D)) is **446–465 W/m², i.e. 298–301 K** — corroborated
+independently by JIRAM crust brightness temperatures of 270–355 K
+([arXiv:2410.10686](https://arxiv.org/abs/2410.10686)) — while Pele's *fitted* 6.5 km²
+gives **44.3 kW/m² at 940 K** ([`2016Icar..264..198D`](https://ui.adsabs.harvard.edu/abs/2016Icar..264..198D)).
+
+**The ceiling.** Bare, crust-free melt radiates `σ T_erupt⁴`. Io's eruption
+temperature was revised down from ~1600 °C to **~1340 °C = 1613 K**
+([`2007Icar..192..491K`](https://ui.adsabs.harvard.edu/abs/2007Icar..192..491K)), giving **384 kW/m²**. That is an absolute
+upper bound, and **no observed lake comes close** — the record is 59 % of it:
+
+| Object | Area | Areal flux | T_eff | Note |
+|---|---|---|---|---|
+| Nyamuragira 2014 | 900 m² | **111 kW/m²** | 1,199 K | observed MAXIMUM ([`2023FrEaS..1140199C`](https://ui.adsabs.harvard.edu/abs/2023FrEaS..1140199C) Table 1) |
+| Kilauea 2008 / Ambrym 2015 | 300 / 4,000 m² | 100 kW/m² | 1,167 K | same table |
+| Erta Ale (FLIR) | ~1,000 m² | 45–76 kW/m² | 944–1,076 K | [`2008GGG.....912008S`](https://ui.adsabs.harvard.edu/abs/2008GGG.....912008S) |
+| Nyiragongo 2017 | 50,000 m² | 24 kW/m² | 817 K | large ⇒ crusted |
+| Kilauea 2015 | 30,000 m² | 23.3 kW/m² | 811 K | large ⇒ crusted |
+| Erebus Ray Lake | ~1,400 m² | 21–25 kW/m² | 784–815 K | [`2008JVGR..177..695C`](https://ui.adsabs.harvard.edu/abs/2008JVGR..177..695C); lidar area 535–1,709 m² ([`2015JVGR..295...43J`](https://ui.adsabs.harvard.edu/abs/2015JVGR..295...43J)) |
+| Kupaianaha stages 1 / 3 | sub-m² | 22 / 4.9 kW/m² | 789 / 542 K | [`1993JGR....98.6461F`](https://ui.adsabs.harvard.edu/abs/1993JGR....98.6461F) |
+
+The reason nothing reaches 384 kW/m² is the **crust**. The crust-free fraction runs
+from 10⁻⁵ (quiescent, thick crust) to ~0.3 (vigorous): organized lakes are *">80 %
+covered by a cooling skin"* while chaotic ones are *"mostly crust-free and
+incandescent"* (Campion & Coppola 2023, citing [`2019JVGR..381...16L`](https://ui.adsabs.harvard.edu/abs/2019JVGR..381...16L)); Erta
+Ale often exceeds 90 % crust against Marum's ≤30 % ([`2016JVGR..322..105R`](https://ui.adsabs.harvard.edu/abs/2016JVGR..322..105R)).
+
+Note the trend in the table: **bigger lakes are more crusted, hence cooler per unit
+area.** That is supply-limited, not a capacity ceiling — surface speed correlates with
+gas flux and lake area ([`2019JVGR..381...16L`](https://ui.adsabs.harvard.edu/abs/2019JVGR..381...16L)) and crust lifetime falls with
+transit velocity ([`2005JVGR..142..207H`](https://ui.adsabs.harvard.edu/abs/2005JVGR..142..207H)) — so it does not forbid a
+high-flux large lake outright. But it does mean the honest test is the band, not the
+bound:
+
+> **Transport test.** `F / f_lake` must land inside the measured band, **≲111 kW/m²**,
+> and comfortably below the 384 kW/m² bare-melt ceiling. A design that needs more is
+> asking for crust-free exposed melt across the lakes' entire area — which nothing
+> observed does.
+
+Worked the other way, this fixes lake area from size, or size from lake area. Sanity
+check on Io itself: 2.5 W/m² through ~0.05 % of its area needs 5.0 kW/m², i.e. **545 K**
+— squarely inside the observed band, so the relation is not tuned to any NearStars body.
+
+### 6.5 The super-Io ceiling: what size a lava moon can be
+
+Published work bounds how far past Io a sustainable body can go: **1–3 orders of
+magnitude above Io = 25–2,500 W/m²**, with the sustainable branch being heat piping
+through a thick cold lid rather than a global melt ([`2021PSJ.....2..119R`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2..119R),
+adopted by [arXiv:2305.03410](https://arxiv.org/abs/2305.03410)). A magma ocean needs
+melt fraction above ~0.45 — itself disputed (0.30 / 0.45 / 0.50), and there is **no
+published W/m² boundary** between the modes, because the real criterion is melt
+fraction and any flux threshold is a conversion, not a citation.
+
+Because `Ė ∝ R⁵` while area ∝ `R²`, **surface flux scales as `R³` at fixed density**:
+doubling a moon's radius multiplies its flux eightfold and its required lake flux with
+it. Size is therefore the strongest transport knob, and the transport test above turns
+into a hard radius ceiling.
+
+**Worked example — Dante (Alpha Centauri A b I), 2026-08-21.** The body was drafted at
+900 km, and the transport test is what rejected that. Holding density at 2,620 kg/m³
+and scaling from the drafted 900 km / 1,200× Io / 11,500 W/m²:
+
+| R | mass (kg) | output | F | 5 %-lake required areal flux | verdict |
+|---|---|---|---|---|---|
+| 900 km (drafted) | 8.0×10²¹ | 1,200× Io | 11,500 W/m² | 230 kW/m² | **2.1× the observed max — impossible** |
+| 714 km | 3.99×10²¹ | 377× | 5,742 W/m² | 114.8 kW/m² | exactly at the record max |
+| **521 km (adopted)** | **1.552×10²¹** | **78×** | **2,231 W/m²** | **44.6 kW/m²** | **Erta Ale class — inside the band** |
+| 450 km | 1.0×10²¹ | 38× | 1,438 W/m² | 28.8 kW/m² | Erebus class |
+
+At 900 km the design was implicitly demanding a centimetre-scale crust and lakes hotter
+than molten rock; §6.2 says the crust cannot be thin and §6.4 says the lakes cannot be
+that hot. **521 km** satisfies both, sits inside the published super-Io envelope
+(2,231 < 2,500 W/m², which caps the radius at 541 km), gives an area-averaged 452 K, and
+leaves the plains at their external-budget 223 K — cold enough that elemental sulfur is
+stable while SO₂ frost is not (frost needs ≤120 K, [`1988Icar...75..450M`](https://ui.adsabs.harvard.edu/abs/1988Icar...75..450M);
+sulfur vacuum-boils by ~500 K), which is what makes the surface read as sulfur-toned
+rather than white.
+
+Two by-products worth recording, because they are what make the check cheap to redo:
+
+- **`J₂` and `C₂₂` are radius-independent at fixed density.** The tidal-figure
+  parameter is `q = M_p / ((4/3)πρa³)`, in which the heated body's own radius does not
+  appear. Resizing a moon changes its mass, gravity and flux; it does **not** change
+  its flattening, its triaxial *ratios*, or its rotation period.
+- The absolute relief does scale. Dante's `J₂ = 0.039` / `C₂₂ = 0.0118` give
+  `a = 549.6`, `b = 512.7`, `c = 500.7 km`, a sub-planet-to-pole relief of **48.9 km**
+  — the height budget available to a canyon wall once a spherical sea level is imposed.
 
 ---
 
@@ -320,6 +529,31 @@ In the spirit of the dynamo doc's caveats:
   the board as art overriding physics, never dressed up as a derivation. The method's
   value is precisely that it tells you honestly when a feature is *not* physically
   supported, so the override is an explicit, recorded choice.
+
+On the **transport** side (§6.2–§6.5) the uncertainties are different in kind — the
+mechanism is solid, the numbers are noisy:
+
+- **Emissivity is disputed and the flux scales with it.** 0.74 measured in the field at
+  Erta Ale ([`2002BVol...64..472B`](https://ui.adsabs.harvard.edu/abs/2002BVol...64..472B)) against 0.95 assumed by Campion &
+  Coppola: **±28 %** on every areal flux in §6.4.
+- **Radiant output spans 3× by method.** Erta Ale is quoted at 5–30, 45–76 and
+  100–400 MW depending on whether the number is radiative-only or total surface heat.
+  Always state which. The Campion & Coppola lake areas are photographic estimates, so
+  their fluxes are order-of-magnitude.
+- **Fitted single-blackbody temperatures are not physical temperatures**
+  ([arXiv:1906.05426](https://arxiv.org/abs/1906.05426)) — they are the proxy that goes
+  with the fitted-area denominator, and only that.
+- **41–46 % of Io's heat flow is from unidentified sources**
+  ([`2012Icar..219..701V`](https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V), [`2015Icar..245..379V`](https://ui.adsabs.harvard.edu/abs/2015Icar..245..379V)), so even the
+  anchor body's hot-spot census is incomplete.
+- **The mode boundaries are not citable in W/m².** §6.2's ladder is a capacity
+  comparison, not a published threshold set; the physical criterion is melt fraction
+  (critical value disputed: 0.30 / 0.45 / 0.50).
+- Several transport sources predate arXiv or are paywalled and are therefore verified
+  by ADS bibcode and abstract rather than full text: Kankanamge & Moore 2019,
+  Moore 2003, Moore & Webb 2017, Reese 1998, the Veeder series, Harris 1999/2005/2008,
+  Lev 2019. Harris 1999/2008 and Lev 2019 are the three whose full text would most
+  improve the crust-fraction scaling if this section ever needs it quantitatively.
 
 The method is grounded and calibrated (it reproduces Io and Enceladus across 4 dex
 in `Ė`); the *inputs* (`k₂/Q`, the rheology, the maintenance of `e`) carry the
@@ -392,10 +626,79 @@ ADS citation count, and one line on the contribution.
   Cites: 82. Increased tidal dissipation using advanced (Andrade) rheology: shows
   fixed-Q and Andrade can differ by large factors. §5, §8.
 
+**Surface heat transport (§6.2–§6.5).** Verified in the same ADS pass, 2026-08-21.
+
+- **O'Reilly, T. C. & Davies, G. F. (1981)**: *Geophys. Res. Lett.* 8, 313. **No arXiv**
+  ([`1981GeoRL...8..313O`](https://ui.adsabs.harvard.edu/abs/1981GeoRL...8..313O)). Magma transport of heat on Io as *a mechanism
+  allowing a **thick** lithosphere* — the founding statement that advection, not
+  conduction, carries the heat. §6.2.
+- **Reese, C. C., Solomatov, V. S. & Moresi, L.-N. (1998)**: *JGR* 103, 13643.
+  **No arXiv** ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)). Heat transport efficiency for
+  stagnant-lid convection: the 10–30 mW/m² conductive ceiling that rules the plains out
+  as an exit. §6.2.
+- **Moore, W. B. (2003)**: *JGR Planets* 108, 5096. **No arXiv**
+  ([`2003JGRE..108.5096M`](https://ui.adsabs.harvard.edu/abs/2003JGRE..108.5096M)). Tidal heating and convection in Io: solid-state
+  convection *"falls an order of magnitude short"*, so melt segregation must dominate.
+  §6.2.
+- **Moore, W. B. & Webb, A. A. G. (2017)**: *Earth Planet. Sci. Lett.* 474, 13.
+  **No arXiv** ([`2017E&PSL.474...13M`](https://ui.adsabs.harvard.edu/abs/2017E%26PSL.474...13M)). Heat piping *"produces a thick, cold,
+  and strong lithosphere"* — the high-flux/thick-lid result. §6.2.
+- **Kankanamge, D. G. J. & Moore, W. B. (2019)**: *JGR Planets* 124, 114. **No arXiv**
+  ([`2019JGRE..124..114K`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124..114K), doi 10.1029/2018JE005800). Quantitative heat-pipe
+  parameterization (melt flux, mantle and lid-base temperature, **lid thickness**,
+  residual conductive flux), validated to <15 % against numerical simulation. §6.2.
+- **Spencer, D. C., Katz, R. F. & Hewitt, I. J. (2020)**: *JGR Planets* 125, e06443.
+  **[arXiv:2003.08287](https://arxiv.org/abs/2003.08287).** The governing surface energy
+  balance (eq. 33) and the erupted/intruded split (eqs. 34–35); 99.5 % volcanic
+  transport, 80 km elastic thickness, and an explicit invitation to apply eq. 10 to other
+  lava worlds. **The load-bearing citation of §6.2.**
+- **Davies, J. H. & Davies, D. R. (2010)**: *Solid Earth* 1, 5. **No arXiv**
+  ([`2010SolE....1....5D`](https://ui.adsabs.harvard.edu/abs/2010SolE....1....5D)). Earth's surface heat flow, 47±2 TW = 92.1 mW/m²
+  from 38,347 measurements: the plate-tectonics rung of the ladder. §6.2.
+- **Rathbun, J. A. et al. (2004)**: *Icarus* 169, 127. **No arXiv**
+  ([`2004Icar..169..127R`](https://ui.adsabs.harvard.edu/abs/2004Icar..169..127R)). Io's background thermal emission: endogenic flux
+  between hot spots is <1 W/m². §6.3.
+- **Veeder, G. J. et al. (2015)**: *Icarus* 245, 379. **No arXiv**
+  ([`2015Icar..245..379V`](https://ui.adsabs.harvard.edu/abs/2015Icar..245..379V)). Io's heat-flow census update; with Veeder+ 2012,
+  the source of the "41–46 % unidentified" caveat. §8.
+- **Veeder, G. J. et al. (2012)** — see §2 above; also supplies the "50 % of the heat
+  from 1.2 % of the surface" concentration and Loki's 9.6×10¹² W. §6.3, §6.4.
+- **Williams, D. A. et al. (2011)**: *Icarus* 214, 91. **No arXiv**
+  ([`2011Icar..214...91W`](https://ui.adsabs.harvard.edu/abs/2011Icar..214...91W)). Io's global geologic map: patera floors are 2.5 %
+  of the surface but host 64 % of detected hot spots. §6.3.
+- **Davies, A. G. et al. (2024)**: *Nature Astronomy* 8, 94.
+  **[arXiv:2310.12382](https://arxiv.org/abs/2310.12382).** Io's total thermal emission
+  ≈106 TW with ≈56 TW from volcanic edifices; active volcanoes cover ≈2 % of the
+  surface. §6.2, §6.3.
+- **Giles, R. S. et al. (2024)**: *Icarus* 418, 116151.
+  **[arXiv:2405.19253](https://arxiv.org/abs/2405.19253).** Io's SO₂ atmosphere and the
+  frost-temperature model behind it: 22 years of data fit by insolation alone (Bond
+  albedo 0.56, thermal inertia 250 MKS), equatorial frost 106–116 K. The evidence that
+  the plains are radiative-equilibrium terrain. §6.3.
+- **Mura, A. et al. (2025)**: *Planet. Sci. J.* 6, 43.
+  **[arXiv:2410.10686](https://arxiv.org/abs/2410.10686).** Juno/JIRAM observations of
+  Loki Patera: crust brightness temperatures 270–355 K, the independent corroboration of
+  the geologic-area denominator. §6.4.
+- **Keszthelyi, L. et al. (2007)**: *Icarus* 192, 491. **No arXiv**
+  ([`2007Icar..192..491K`](https://ui.adsabs.harvard.edu/abs/2007Icar..192..491K)). Io's eruption temperature revised to ~1340 °C
+  (1613 K), which sets the 384 kW/m² bare-melt ceiling. §6.4.
+- **de Pater, I. et al. (2016)**: *Icarus* 264, 198. **No arXiv**
+  ([`2016Icar..264..198D`](https://ui.adsabs.harvard.edu/abs/2016Icar..264..198D)). Time evolution of Pele and Pillan; Pele's
+  fitted-area flux of 44.3 kW/m² at 940 K is the fitted-denominator anchor. §6.4.
+- **Campion, R. & Coppola, D. (2023)**: *Front. Earth Sci.* 11, 1140199. **No arXiv**
+  ([`2023FrEaS..1140199C`](https://ui.adsabs.harvard.edu/abs/2023FrEaS..1140199C)). The lava-lake compilation whose Table 1 supplies
+  the measured capacity band and its 111 kW/m² maximum. §6.4.
+- **Rovira-Navarro, M. et al. (2021)**: *Planet. Sci. J.* 2, 119. **No arXiv**
+  ([`2021PSJ.....2..119R`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2..119R)). "Tidally Heated Exomoons around Gas Giants":
+  the super-Io envelope, 1–3 dex above Io, with heat piping through a thick lid as the
+  sustainable branch. Adopted by Kleisioti+ 2023 ([arXiv:2305.03410](https://arxiv.org/abs/2305.03410)),
+  the ε Eridani b exomoon observability study. §6.5.
+
 **Topics with no single canonical paper:** the surface-flux → "ocean vs dead"
-*thresholds* in §6 are a synthesis of the Enceladus/Europa and Io literature above,
+*thresholds* in §6.1 are a synthesis of the Enceladus/Europa and Io literature above,
 not a single citable threshold paper, treated as order-of-magnitude guides, not a
-derived law.
+derived law. The same applies to the §6.2 mode boundaries, which compare published
+*capacities* rather than quoting a published threshold (§8).
 
 ---
 
