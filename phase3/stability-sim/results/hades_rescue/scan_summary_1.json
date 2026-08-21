@@ -1,13 +1,14 @@
 [
  {
-  "tag": "e0.01_i5_dt5",
+  "tag": "a148000_e0.01_i5_noDan",
   "spec": {
+   "a": 148000.0,
    "e": 0.01,
    "i": 5.0
   },
   "res_dante": "3:2 Dante (3.9%)",
   "res_pandora": "9:4 Pandora (1.0%)",
   "hades_bound": true,
-  "hades_e_max": 0.06397046246381317
+  "hades_e_max": 0.056670501935576656
  }
 ]
