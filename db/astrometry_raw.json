@@ -589,15 +589,16 @@
     "ra_error_mas": 0.50480086,
     "dec_deg": -56.79381206688221,
     "dec_error_mas": 0.4675873,
-    "parallax_mas": 270.6580324694526,
-    "parallax_error_mas": 0.6895573,
+    "parallax_mas": 274.8431415216296,
+    "parallax_error_mas": null,
     "pmra_mas_yr": 3981.97666296105,
     "pmra_error_mas_yr": 0.6016568,
     "pmdec_mas_yr": -2466.8318147663504,
     "pmdec_error_mas_yr": 0.6256827,
     "radial_velocity_km_s": -40.4,
     "rv_error_km_s": 0.9,
-    "radial_velocity_source": "King et al. 2010 system RV (2010A&A...510A..99K)"
+    "radial_velocity_source": "King et al. 2010 system RV (2010A&A...510A..99K)",
+    "parallax_source": "shared from eps Ind A (Gaia DR3); Ba's own DR3 parallax 270.66 is photocenter-perturbed (Ba-Bb 11 yr orbit)"
   },
   "GJ 3512": {
     "source": "gaia_dr3",
@@ -2547,14 +2548,15 @@
     "ra_error_mas": null,
     "dec_deg": -60.83399268831004,
     "dec_error_mas": null,
-    "parallax_mas": 742.12,
-    "parallax_error_mas": null,
+    "parallax_mas": 747.17,
+    "parallax_error_mas": 0.61,
     "pmra_mas_yr": -3679.25,
     "pmra_error_mas_yr": null,
     "pmdec_mas_yr": 473.67,
     "pmdec_error_mas_yr": null,
     "radial_velocity_km_s": -15.252,
-    "rv_error_km_s": null
+    "rv_error_km_s": null,
+    "parallax_source": "Kervella et al. 2016 orbital parallax (2016A&A...594A.107K)"
   },
   "Alpha Centauri B": {
     "source": "simbad",
@@ -2565,14 +2567,15 @@
     "ra_error_mas": null,
     "dec_deg": -60.83752756558407,
     "dec_error_mas": null,
-    "parallax_mas": 742.12,
-    "parallax_error_mas": null,
+    "parallax_mas": 747.17,
+    "parallax_error_mas": 0.61,
     "pmra_mas_yr": -3614.39,
     "pmra_error_mas_yr": null,
     "pmdec_mas_yr": 802.98,
     "pmdec_error_mas_yr": null,
     "radial_velocity_km_s": -22.586,
-    "rv_error_km_s": null
+    "rv_error_km_s": null,
+    "parallax_source": "Kervella et al. 2016 orbital parallax (2016A&A...594A.107K)"
   },
   "Sirius A": {
     "source": "simbad",
@@ -2839,7 +2842,7 @@
     "ra_error_mas": null,
     "dec_deg": -56.79381206688221,
     "dec_error_mas": null,
-    "parallax_mas": 270.6580324694526,
+    "parallax_mas": 274.8431415216296,
     "parallax_error_mas": null,
     "pmra_mas_yr": 3981.97666296105,
     "pmra_error_mas_yr": null,
@@ -2848,6 +2851,7 @@
     "radial_velocity_km_s": -40.4,
     "rv_error_km_s": 0.9,
     "manual_ref": "sibling of eps Ind Ba (Gaia DR3 6412596012146801152); relative position from binary_orbit",
-    "radial_velocity_source": "King et al. 2010 system RV (2010A&A...510A..99K)"
+    "radial_velocity_source": "King et al. 2010 system RV (2010A&A...510A..99K)",
+    "parallax_source": "shared from eps Ind A (Gaia DR3); see eps Ind Ba"
   }
 }

@@ -42,6 +42,30 @@ MANUAL_ASTROMETRY = {
 }
 
 
+# ── 수동 parallax override ──────────────────────────────────────────────────
+# position/PM/RV 는 카탈로그 그대로 두고 parallax 만 교체 (MANUAL_ASTROMETRY 와 달리
+# 전체 교체가 아님). 두 용도:
+#  1) 궤도해 기반 orbital parallax 가 카탈로그 시차보다 우월한 경우 (α Cen: HIP 742.12
+#     → Kervella et al. 2016 orbital parallax 747.17. binary_orbit 의 a_arcsec 환산이
+#     이 시차를 전제하므로, 다른 시차를 쓰면 제3법칙이 어긋난다 — validate.py 4c-2).
+#  2) 물리적으로 같은 거리인 광계층 동반성의 Gaia 해가 photocenter 오염 등으로 어긋나
+#     주계열 성분의 정밀 시차를 공유시키는 경우 (eps Ind Ba/Bb: Gaia 270.66 vs A 274.84,
+#     Δ4.19 mas ≫ 1,460 AU 분리가 허용하는 물리적 시선차 ≤0.5 mas — 이 오차가 시선방향
+#     11,500 AU 의 가짜 간격으로 증폭되어 A↔B 가 비속박이 됐었다. 2026-08-21).
+# {name: {"plx": mas, "err": mas|None, "source": "..."}}.
+MANUAL_PARALLAX = {
+    "Alpha Centauri A": {"plx": 747.17, "err": 0.61,
+                         "source": "Kervella et al. 2016 orbital parallax (2016A&A...594A.107K)"},
+    "Alpha Centauri B": {"plx": 747.17, "err": 0.61,
+                         "source": "Kervella et al. 2016 orbital parallax (2016A&A...594A.107K)"},
+    "eps Ind Ba":       {"plx": 274.8431415216296, "err": None,
+                         "source": "shared from eps Ind A (Gaia DR3); Ba's own DR3 parallax "
+                                   "270.66 is photocenter-perturbed (Ba-Bb 11 yr orbit)"},
+    "eps Ind Bb":       {"plx": 274.8431415216296, "err": None,
+                         "source": "shared from eps Ind A (Gaia DR3); see eps Ind Ba"},
+}
+
+
 # ── 수동 RV override ────────────────────────────────────────────────────────
 # Gaia DR3 가 RV 를 안 주는 (밝거나·흐리거나·변광·축퇴성) 별의 시선속도를 출처-기반으로
 # 보강. position/PM/parallax 는 Gaia 그대로 두고 RV 만 채운다 (MANUAL_ASTROMETRY 와 달리
@@ -276,6 +300,17 @@ def main():
             "manual_ref":            m["ref"],
         }
         print(f"  {name}: plx={m['parallax_mas']} mas ({m['ref']})")
+
+    # ── 수동 parallax override 적용 (parallax 만 교체, 나머지 필드 유지) ──────────
+    print("\n수동 parallax override:")
+    for name, m in MANUAL_PARALLAX.items():
+        r = results.get(name)
+        if not r:
+            continue
+        r["parallax_mas"] = m["plx"]
+        r["parallax_error_mas"] = m.get("err")
+        r["parallax_source"] = m["source"]
+        print(f"  {name}: plx={m['plx']} mas ({m['source']})")
 
     # ── 수동 RV override 적용 (Gaia/SIMBAD RV 가 없을 때만 보강) ──────────────────
     print("\n수동 RV override:")

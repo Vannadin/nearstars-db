@@ -7,14 +7,14 @@
       {
         "name": "Alpha Centauri A",
         "mass_msun": 1.1055,
-        "mass_source": "pourbaix_correia_2017",
+        "mass_source": "pourbaix_boffin_2016",
         "astrometry_source": "mass_weighted_average",
         "astrometry_quality": "barycentric"
       },
       {
         "name": "Alpha Centauri B",
-        "mass_msun": 0.9092,
-        "mass_source": "pourbaix_correia_2017",
+        "mass_msun": 0.9373,
+        "mass_source": "pourbaix_boffin_2016",
         "astrometry_source": "mass_weighted_average",
         "astrometry_quality": "barycentric"
       },
@@ -147,14 +147,14 @@
     "components": [
       {
         "name": "61 Cygni A",
-        "mass_msun": 0.708,
+        "mass_msun": 0.7,
         "mass_source": "kervella_2008",
         "astrometry_source": "mass_weighted_average",
         "astrometry_quality": "barycentric"
       },
       {
         "name": "61 Cygni B",
-        "mass_msun": 0.696,
+        "mass_msun": 0.63,
         "mass_source": "kervella_2008",
         "astrometry_source": "mass_weighted_average",
         "astrometry_quality": "barycentric"
