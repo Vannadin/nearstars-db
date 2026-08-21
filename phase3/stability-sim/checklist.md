@@ -119,3 +119,21 @@ Note: `STABILITY_REPORT.md` lives under `phase3/`, outside the `ko/` mirror scop
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
+
+## Dante size + Hades orbit (2026-08-21) — evidence gathered, authoring pending
+
+- [x] Hades orbit: combo i 5° + e 0.01 raised to 20 phase samples → 85 % clean
+- [x] Root cause is the inner PAIR: lightening Dante removes the residual failures
+- [x] Dante size grounded via four ADS research angles → `DANTE_HEAT_TRANSPORT_EVIDENCE.md`
+- [x] Dante 521 km chosen (78× Io, 2,231 W/m², 5 % lakes = 44.6 kW/m² = Erta Ale class)
+- [x] Dynamics at 521 km + combo: **4/4 no moon lost**
+- [ ] Author the `tidal-heating-methodology.md` §6 extension from the evidence file
+      (owner decision 2026-08-21: fold into the existing doc, do NOT create a new one —
+      heat generation and its exit are one package)
+- [ ] Index row + ko mirror wording update for the tidal-heating recipe; build_docs; check.sh
+- [ ] Phase 4 rows to re-run once the doc lands: Dante bulk (radius/mass/gravity —
+      J₂/C₂₂/flattening/rotation are radius-INDEPENDENT and do not change),
+      Dante bulk.tidal_heating, Dante identity string, Dante surface/appearance/gameplay,
+      Hades identity/bulk (i 5°, e 0.01), Polyphemus satellites + bulk.obliquity
+      (its evidence cites the inner moons' 9–11° shared node), radiation-belt rows
+      (Dante torus is the stated saturating source — needs review at 1/5 the mass)
