@@ -1884,8 +1884,9 @@
     "pmra_error_mas_yr": 0.031386077,
     "pmdec_mas_yr": 769.4650146478623,
     "pmdec_error_mas_yr": 0.050524533,
-    "radial_velocity_km_s": -21.942726,
-    "rv_error_km_s": 0.21612652
+    "radial_velocity_km_s": -22.204,
+    "rv_error_km_s": 0.032,
+    "radial_velocity_source": "Kervella et al. 2017 HARPS absolute RV, convective blueshift + gravitational redshift corrected (2017A&A...598L...7K). Gaia DR3 -21.943 carries an M-dwarf zero-point offset that breaks the bound-orbit geometry vs the alpha Cen AB barycenter."
   },
   "GJ 625": {
     "source": "gaia_dr3",

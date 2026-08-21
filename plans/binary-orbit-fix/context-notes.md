@@ -67,3 +67,35 @@ confirmed-set cfg gives Alpha Cen AB P=78.94 yr / e=0.515 (catalog 79.91 / 0.517
 Proxima remains on the linear fallback: Gaia relative velocity at ~12,700 AU is
 error-dominated (3.7 vs v_esc 0.55 km/s) → formally hyperbolic, but drift over
 centuries of gameplay is ≪ separation; the 547 kyr orbit is invisible either way.
+
+## 2026-08-21 (follow-up): Proxima must be BOUND — owner's Principia branch assumes it
+
+The custom Principia branch under development assumes Proxima is gravitationally
+bound to alpha Cen AB, so "formally hyperbolic but harmless" was not acceptable.
+
+Root cause of the spurious unbound state: the AB barycenter velocity from
+mass_weighted_average of per-component SIMBAD records was corrupted by
+alpha Cen A's catalog RV of -15.252 km/s (orbit-phase/legacy inconsistent;
+B = -22.586, systemic = -22.3). Weighted barycenter RV came out ~-18.6 km/s →
+~3.7 km/s line-of-sight ghost velocity vs Proxima.
+
+Fix (all paper-grounded, no fabricated phase):
+1. alpha Cen A/B astrometry_source → hipparcos_barycenter with a top-level
+   barycenter_astrometry block from Kervella, Thévenin & Lovis 2017
+   (2017A&A...598L...7K) Table 1: ICRS barycenter position at epoch 1991.25,
+   parallax/PM from Kervella et al. 2016, corrected absolute RV -22.332.
+2. Proxima RV: Gaia DR3 -21.943 → HARPS absolute -22.204±0.032 (same paper;
+   convective blueshift + gravitational redshift corrected). Gaia's M-dwarf
+   zero-point offset alone distorts the outer orbit to e~0.84. Implemented as
+   MANUAL_RV "force" flag (overrides existing catalog RV, reason documented).
+3. Proxima position/PM stay Gaia DR3; the AB-Proxima orbit row remains
+   phase_reliable=false (no periastron epoch exists) — boundness now emerges
+   from the measured state itself, which is exactly what an n-body integrator
+   needs.
+
+Method validation: Kervella barycenter + Kervella-adopted Proxima reproduces
+the paper (sep 12,948 AU vs published 12,947±260; relv 0.273; P 546 kyr;
+e 0.50; peri 4,339 AU vs 4.3+1.1-0.9 kau). Our shipped combination (Gaia DR3
+pos/PM + HARPS RV) gives P=539 kyr, e=0.51, peri=4,215 AU, apo=12,927 AU.
+
+Shipped cfg after re-emit: AB inner P=78.94 yr unchanged; Proxima BOUND.

@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.049872905,
         "pmra_mas_yr": -3781.741008265163,
         "pmdec_mas_yr": 769.4650146478623,
-        "radial_velocity_km_s": -21.942726,
-        "radial_velocity_source": "gaia_dr3",
+        "radial_velocity_km_s": -22.204,
+        "radial_velocity_source": "Kervella et al. 2017 HARPS absolute RV, convective blueshift + gravitational redshift corrected (2017A&A...598L...7K). Gaia DR3 -21.943 carries an M-dwarf zero-point offset that breaks the bound-orbit geometry vs the alpha Cen AB barycenter.",
         "vmag_v": 11.2931,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2904,
@@ -266,19 +266,19 @@
         "propagation_method": "linear",
         "distance_pc": 1.3019705311704333,
         "distance_km": 40174612797945.35,
-        "icrs_x_km": -14631443559462.676,
-        "icrs_y_km": -11244665164864.973,
-        "icrs_z_km": -35737299506977.39,
-        "icrs_vx_km_s": -9.523972115583097,
-        "icrs_vy_km_s": 22.098425147795368,
-        "icrs_vz_km_s": 21.674415764140438,
-        "position_ulp_km": 0.00793527455011431,
-        "icrs_x_j2000_km": -14646471244584.412,
-        "icrs_y_j2000_km": -11209796501792.77,
-        "icrs_z_j2000_km": -35703099879831.47,
-        "icrs_vx_j2000_km_s": -9.523972115583097,
-        "icrs_vy_j2000_km_s": 22.098425147795368,
-        "icrs_vz_j2000_km_s": 21.674415764140438,
+        "icrs_x_km": -14631642017169.316,
+        "icrs_y_km": -11244816855099.842,
+        "icrs_z_km": -35737782972133.64,
+        "icrs_vx_km_s": -9.428688096864635,
+        "icrs_vy_km_s": 22.171255049054178,
+        "icrs_vz_km_s": 21.906538284235953,
+        "position_ulp_km": 0.007935381900943925,
+        "icrs_x_j2000_km": -14646519355543.598,
+        "icrs_y_j2000_km": -11209833275183.041,
+        "icrs_z_j2000_km": -35703217083505.71,
+        "icrs_vx_j2000_km_s": -9.428688096864635,
+        "icrs_vy_j2000_km_s": 22.171255049054178,
+        "icrs_vz_j2000_km_s": 21.906538284235953,
         "luminosity_lsun": 0.00155,
         "age_gyr": 4.85,
         "metallicity_fe_h_dex": 0.05,
@@ -582,7 +582,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -591,7 +591,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -600,7 +600,7 @@
       "title": "Suárez Mascareño et al. 2025",
       "doi": "10.1051/0004-6361/202554723",
       "bibcode": "2025A&A...700A..11S",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "Proxima Cen mass (evolutionary_model)"
       ]
@@ -609,7 +609,7 @@
       "title": "Mann et al. 2019",
       "doi": "10.3847/1538-4357/aaf3bc",
       "bibcode": "2019ApJ...871...63M",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "Proxima Cen mass (spectroscopic_calibration)"
       ]
@@ -618,7 +618,7 @@
       "title": "Anglada-Escudé et al. 2016",
       "doi": "10.1038/nature19106",
       "bibcode": "2016Natur.536..437A",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "Proxima Cen mass (spectroscopic_calibration)"
       ]
@@ -627,7 +627,7 @@
       "title": "Demory et al. 2009",
       "doi": "10.1051/0004-6361/200911976",
       "bibcode": "2009A&A...505..205D",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "Proxima Cen radius (interferometry)"
       ]
@@ -636,7 +636,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "Proxima Cen radius (sed_fitting)"
       ]
@@ -645,7 +645,7 @@
       "title": "Faria et al. 2022",
       "doi": "10.1051/0004-6361/202142337",
       "bibcode": "2022A&A...658A.115F",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "planet Proxima Cen d orbital"
       ]
@@ -654,14 +654,14 @@
       "title": "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed (e_c fixed 0; eccentric model not favored). Gaia-Hipparcos proper-motion anomaly is compatible with a true mass ~10-20 M_earth (Kervella 2020, as cited by Damasso 2020). CANDIDATE — Damasso states follow-up is required to confirm its planetary origin; later analyses dispute the signal. Re-included as a documented candidate (never ingested into raw).",
       "doi": "10.1126/sciadv.aax7467",
       "bibcode": "2020SciA....6.7467D",
-      "accessed": "2026-07-31",
+      "accessed": "2026-08-21",
       "used_for": [
         "planet Proxima Cen c orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-07-31",
+    "retrieval_date": "2026-08-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

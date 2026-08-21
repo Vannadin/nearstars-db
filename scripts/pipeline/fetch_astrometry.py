@@ -71,7 +71,14 @@ MANUAL_PARALLAX = {
 # 보강. position/PM/parallax 는 Gaia 그대로 두고 RV 만 채운다 (MANUAL_ASTROMETRY 와 달리
 # 전체 교체가 아님). RV 누락이면 공간속도가 접선 성분만 되어 운동·heliosphere 방향이
 # 틀어지므로 보강. {name: {"rv": km/s, "err": km/s|None, "source": "..."}}.
+# "force": True 를 주면 카탈로그 RV 가 있어도 교체한다 — 카탈로그 값에 알려진
+# 계통 오차가 있고 논문의 절대 RV 가 우월한 경우만 (사유를 source 에 명시).
 MANUAL_RV = {
+    "Proxima Cen":       {"rv": -22.204, "err": 0.032, "force": True,
+                          "source": "Kervella et al. 2017 HARPS absolute RV, convective blueshift + "
+                                    "gravitational redshift corrected (2017A&A...598L...7K). Gaia DR3 "
+                                    "-21.943 carries an M-dwarf zero-point offset that breaks the "
+                                    "bound-orbit geometry vs the alpha Cen AB barycenter."},
     "eps Eri":           {"rv": 16.376,  "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
     "tau Cet":           {"rv": -16.597, "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
     "Delta Pavonis":     {"rv": -21.543, "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
@@ -318,7 +325,7 @@ def main():
         r = results.get(name)
         if not r:
             continue
-        if r.get("radial_velocity_km_s") is None:
+        if r.get("radial_velocity_km_s") is None or m.get("force"):
             r["radial_velocity_km_s"] = m["rv"]
             r["rv_error_km_s"] = m.get("err")
             r["radial_velocity_source"] = m["source"]

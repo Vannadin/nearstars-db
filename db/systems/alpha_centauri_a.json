@@ -253,23 +253,23 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 1.338383500408207,
         "distance_km": 41298199626470.55,
-        "icrs_x_km": -15422487103922.486,
-        "icrs_y_km": -12942053522168.092,
-        "icrs_z_km": -36091527376303.13,
-        "icrs_vx_km_s": -13.95709394245869,
-        "icrs_vy_km_s": 19.499389879568973,
-        "icrs_vz_km_s": 13.524196152688777,
-        "position_ulp_km": 0.008013928937412181,
-        "icrs_x_j2000_km": -15438880816499.621,
-        "icrs_y_j2000_km": -12909717079377.018,
-        "icrs_z_j2000_km": -36060374856724.664,
-        "icrs_vx_j2000_km_s": -9.383746469322183,
-        "icrs_vy_j2000_km_s": 23.352787698791825,
-        "icrs_vz_j2000_km_s": 17.88281496009097,
+        "icrs_x_km": -15422138190246.945,
+        "icrs_y_km": -12941447779107.969,
+        "icrs_z_km": -36091538630920.234,
+        "icrs_vx_km_s": -12.747948935081073,
+        "icrs_vy_km_s": 20.267048976470267,
+        "icrs_vz_km_s": 16.98166336091216,
+        "position_ulp_km": 0.008013931436439189,
+        "icrs_x_j2000_km": -15436624715091.629,
+        "icrs_y_j2000_km": -12907898440587.912,
+        "icrs_z_j2000_km": -36054930502028.71,
+        "icrs_vx_j2000_km_s": -8.175914597763391,
+        "icrs_vy_j2000_km_s": 24.12182572687095,
+        "icrs_vz_j2000_km_s": 21.340440482357355,
         "orbit_id": "AB",
         "orbit_role": "primary",
         "mass_ratio_q": 0.4588310162522029,
-        "barycenter_method": "mass_weighted_average(Alpha Centauri A,Alpha Centauri B)",
+        "barycenter_method": "hipparcos_barycenter",
         "phase_reliable": true,
         "luminosity_lsun": 1.521,
         "age_gyr": 5.3,
@@ -453,20 +453,37 @@
     "system_id": "alpha_centauri",
     "hierarchy": "triple",
     "wds_id": "14396-6050",
+    "barycenter_astrometry": {
+      "ra_deg": 219.91752833333334,
+      "dec_deg": -60.83713138888889,
+      "parallax_mas": 747.17,
+      "parallax_error_mas": 0.61,
+      "pmra_mas_yr": -3619.9,
+      "pmra_error_mas_yr": 3.9,
+      "pmdec_mas_yr": 693.8,
+      "pmdec_error_mas_yr": 3.9,
+      "radial_velocity_km_s": -22.332,
+      "rv_error_km_s": 0.005,
+      "epoch_jd": 2448349.0625,
+      "epoch_label": "J1991.25",
+      "ref": "Kervella, Thévenin & Lovis 2017 (2017A&A...598L...7K) Table 1 — ICRS barycenter position at Hipparcos epoch 1991.25; parallax/PM Kervella et al. 2016 (2016A&A...594A.107K); RV is the corrected absolute barycentric value."
+    },
     "components": [
       {
         "name": "Alpha Centauri A",
         "mass_msun": 1.1055,
         "mass_source": "pourbaix_boffin_2016",
-        "astrometry_source": "mass_weighted_average",
-        "astrometry_quality": "barycentric"
+        "astrometry_source": "hipparcos_barycenter",
+        "astrometry_quality": "barycentric",
+        "astrometry_note": "Barycenter kinematics from Kervella, Thévenin & Lovis 2017 (2017A&A...598L...7K, https://ui.adsabs.harvard.edu/abs/2017A%26A...598L...7K) Table 1. Previous mass_weighted_average of per-component SIMBAD records gave a barycenter RV of ~-18.6 km/s (A's catalog RV -15.252 is orbit-phase/legacy inconsistent), which made Proxima spuriously hyperbolic (relv 3.7 vs v_esc 0.55 km/s). 2026-08-21."
       },
       {
         "name": "Alpha Centauri B",
         "mass_msun": 0.9373,
         "mass_source": "pourbaix_boffin_2016",
-        "astrometry_source": "mass_weighted_average",
-        "astrometry_quality": "barycentric"
+        "astrometry_source": "hipparcos_barycenter",
+        "astrometry_quality": "barycentric",
+        "astrometry_note": "Barycenter kinematics from Kervella, Thévenin & Lovis 2017 (2017A&A...598L...7K, https://ui.adsabs.harvard.edu/abs/2017A%26A...598L...7K) Table 1. Previous mass_weighted_average of per-component SIMBAD records gave a barycenter RV of ~-18.6 km/s (A's catalog RV -15.252 is orbit-phase/legacy inconsistent), which made Proxima spuriously hyperbolic (relv 3.7 vs v_esc 0.55 km/s). 2026-08-21."
       },
       {
         "name": "Proxima Cen",
@@ -474,7 +491,7 @@
         "mass_source": "suarez_mascareno_2025",
         "astrometry_source": "gaia_dr3",
         "astrometry_quality": "single_component",
-        "astrometry_note": "Hierarchically bound to AB pair (Kervella et al. 2017). Outer orbit phase_reliable=false → numerical position falls back to direct Gaia DR3 astrometry (linear propagation). Schema-level grouping enables future Gaia DR4 NSS hierarchical solutions to slot in without restructuring."
+        "astrometry_note": "Hierarchically bound to AB pair (Kervella et al. 2017). Outer orbit phase_reliable=false → numerical position falls back to direct Gaia DR3 astrometry (linear propagation), with RV overridden to the HARPS absolute RV -22.204±0.032 km/s (Kervella et al. 2017; convective blueshift + gravitational redshift corrected — Gaia DR3 RV -21.943 has an M-dwarf zero-point offset that distorts the orbit to e~0.84). With the AB barycenter_astrometry block, the emitted relative state integrates as a BOUND orbit: P≈539 kyr, e≈0.51, periastron ≈4,200 AU — matching the published solution (P≈550 kyr, e=0.50, peri 4.3 kau). The owner's custom Principia branch assumes Proxima bound; this state guarantees it without fabricating a periastron epoch. Schema-level grouping still enables future Gaia DR4 NSS hierarchical solutions to slot in without restructuring."
       }
     ],
     "orbits": [
