@@ -1,0 +1,340 @@
+# 물리값 의존 그래프 — 노드(양)와 세 종류 엣지. 문서·코드에 근거 있는 것만 등재
+#
+# 이 파일이 정본이다. engine/DEPENDENCY-CHAIN.md 와 dependency-chain.html 은
+# 여기서 읽어 만든 뷰이지, 별도의 진실이 아니다.
+#
+# 엣지 종류
+#   requires    A 의 수치가 B 의 입력. 빌드 순서를 정한다.
+#   selects     A 가 B 의 *모델* 을 고른다. 숫자를 넘기지 않는다.
+#               빠뜨리면 틀린 레시피가 조용히 적용된다 — 가장 위험한 종류.
+#   influences  정식 입력은 아니나 A 가 바뀌면 B 를 다시 봐야 한다.
+#               cascade 재검토 질의가 이 엣지를 따라간다.
+#
+# 모든 엣지는 ref 를 단다. 근거 없는 엣지는 넣지 않는다 — 그림을 그리기 위해
+# 추측한 화살표가 바로 이 프로젝트가 반복해 온 실수다.
+
+version: 1
+updated: 2026-08-24
+
+kinds: [requires, selects, influences]
+node_kinds: [measured, owner, computed]
+grades: [measured, calibrated, analog, judgment]
+
+nodes:
+
+  # ── 0층. 아무것도 계산하지 않는다 ────────────────────────────────
+  star_physical:
+    kind: measured
+    outputs: [mass, radius, teff, luminosity, age]
+    note: Phase 2 큐레이션
+
+  star_metallicity:
+    kind: measured
+    outputs: [z]
+    status: gap
+    note: >
+      현재 "저임팩트"로 스킵 중이나, 암석체 방사성 발열의 실입력이다.
+      우리 레시피가 아직 이 항을 쓰지 않으므로 엣지도 gap 으로만 표시한다.
+
+  orbit_elements:
+    kind: measured
+    outputs: [a, e, i, lan, aop]
+
+  mass_or_radius:
+    kind: measured
+    outputs: [mass, radius]
+    note: 둘 중 측정된 쪽이 앵커. 나머지는 mass_radius_relation 이 채운다.
+
+  composition_intent:
+    kind: owner
+    outputs: [layer_fractions]
+    status: gap
+    note: >
+      암석/얼음/H-He 및 층 질량분율. 아무도 측정하지 않는 순수 오너 결정인데,
+      지금은 body_type 산문에만 암시돼 있다. 내부구조의 직접 입력.
+
+  initial_rotation:
+    kind: owner
+    outputs: [p_init]
+    status: gap
+    note: >
+      despin 타임스케일의 입력. tidal-locking-timescale 이 항을 쓰지만
+      어느 보드도 값을 기록하지 않는다 — 무기록 가정.
+
+  ocean_fraction:
+    kind: owner
+    outputs: [f_ocean]
+    status: gap
+    note: >
+      알베도·열수지·층별 Q 세 곳으로 간다. 액체 물의 Q 가 규산염보다 한 자릿수
+      작아 바다가 있으면 조석 소산을 지배한다. 현재 정성적 hydrosphere 축만 있음.
+
+  # ── 1층. 분기키 ────────────────────────────────────────────────
+  body_class:
+    kind: computed
+    status: missing
+    inputs_from: [mass_or_radius, composition_intent]
+    outputs: [class]
+    note: >
+      아래 전부가 여기서 갈린다. 없어서 각 레시피가 산문으로 제 입장 조건을
+      따로 쓰고 있고, 그래서 오적용을 기계적으로 막을 수 없다.
+
+  # ── 2층. 허브 ──────────────────────────────────────────────────
+  interior_structure:
+    kind: computed
+    status: missing
+    outputs: [nmoi, core_radius, conductor_phase, layer_q, p_central]
+    note: 네 레시피가 각자 자기 버전을 가정 중. 이음매 드리프트의 근원.
+
+  # ── 3층. 갈래 ──────────────────────────────────────────────────
+  mass_radius_relation:
+    kind: computed
+    recipe: mass-radius-relation-methodology
+    outputs: [radius, density]
+
+  tidal_locking:
+    kind: computed
+    recipe: tidal-locking-timescale-methodology
+    outputs: [locked, t_lock, rotation_period]
+
+  body_figure:
+    kind: computed
+    recipe: body-figure-methodology
+    outputs: [j2, c22, flattening, reference_radius]
+
+  cassini_state:
+    kind: computed
+    recipe: cassini-state-obliquity-methodology
+    outputs: [obliquity]
+
+  dynamo_giant:
+    kind: computed
+    recipe: planetary-dynamo-scaling
+    outputs: [b_pol, b_eq, dipole_moment]
+    note: 0층만으로 닿는다. 2층을 기다리지 않는 유일한 자기 갈래.
+
+  dynamo_rocky:
+    kind: computed
+    recipe: rocky-planet-dynamo-methodology
+    outputs: [dipole_moment, b_eq]
+
+  magnetosphere_geometry:
+    kind: computed
+    recipe: planetary-magnetosphere-geometry-methodology
+    outputs: [r_mp, belt_extent, belt_intensity]
+
+  stellar_wind:
+    kind: computed
+    outputs: [n_sw, v_sw, p_sw]
+
+  tidal_heating:
+    kind: computed
+    recipe: tidal-heating-methodology
+    outputs: [power, surface_flux]
+
+  heat_transport_mode:
+    kind: computed
+    recipe: tidal-heating-methodology
+    outputs: [mode, resurfacing_rate]
+    note: "§6.2 세 모드 사다리 — plate / stagnant lid / heat pipe"
+
+  global_fluid_layer:
+    kind: computed
+    outputs: [present]
+    note: 바다 또는 열을 지구 규모로 옮길 만큼 두꺼운 대기가 있는가.
+
+  # ── 4층. 열·대기 ───────────────────────────────────────────────
+  t_eq_stellar:
+    kind: computed
+    outputs: [t_eq]
+
+  moon_energy_budget:
+    kind: computed
+    recipe: moon-energy-budget-methodology
+    outputs: [t_eq_4term]
+
+  atmospheric_escape:
+    kind: computed
+    recipe: exoplanet-atmosphere-methodology
+    outputs: [retained, loss_rate]
+
+  atmosphere_choice:
+    kind: owner
+    outputs: [pressure, composition]
+
+  greenhouse:
+    kind: computed
+    recipe: greenhouse-warming-methodology
+    outputs: [delta_t_gh, t_surf]
+
+  # ── 5층. 표면 ──────────────────────────────────────────────────
+  ice_stability:
+    kind: computed
+    recipe: ice-stability-methodology
+    outputs: [ice_survives]
+
+  surface_albedo:
+    kind: computed
+    outputs: [albedo]
+
+  crater_state:
+    kind: computed
+    recipe: crater-degradation-methodology
+    outputs: [cratered]
+
+  surface_dose:
+    kind: computed
+    recipe: surface-radiation-dose-methodology
+    outputs: [dose]
+
+edges:
+
+  # ── requires ───────────────────────────────────────────────────
+  - {from: mass_or_radius, to: mass_radius_relation, kind: requires}
+  - {from: mass_or_radius, to: body_class, kind: requires}
+  - {from: composition_intent, to: body_class, kind: requires}
+  - {from: body_class, to: interior_structure, kind: requires}
+  - {from: composition_intent, to: interior_structure, kind: requires}
+
+  - {from: interior_structure, to: body_figure, kind: requires,
+     via: nmoi,
+     ref: "docs/reference/body-figure-methodology.md"}
+  - {from: interior_structure, to: dynamo_rocky, kind: requires,
+     via: [core_radius, conductor_phase],
+     ref: "docs/reference/rocky-planet-dynamo-methodology.md"}
+  - {from: interior_structure, to: tidal_locking, kind: requires, via: layer_q}
+  - {from: interior_structure, to: tidal_heating, kind: requires, via: layer_q}
+
+  - {from: tidal_locking, to: body_figure, kind: requires, via: rotation_period}
+  - {from: tidal_locking, to: cassini_state, kind: requires, via: locked}
+  - {from: star_physical, to: dynamo_giant, kind: requires, via: age}
+  - {from: mass_or_radius, to: dynamo_giant, kind: requires}
+  - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq}
+  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: requires, via: b_eq}
+  - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_sw}
+  - {from: star_physical, to: stellar_wind, kind: requires, via: age}
+
+  - {from: tidal_heating, to: heat_transport_mode, kind: requires, via: surface_flux}
+  - {from: star_physical, to: t_eq_stellar, kind: requires, via: luminosity}
+  - {from: orbit_elements, to: t_eq_stellar, kind: requires, via: a}
+  - {from: t_eq_stellar, to: moon_energy_budget, kind: requires}
+  - {from: atmosphere_choice, to: greenhouse, kind: requires}
+  - {from: greenhouse, to: ice_stability, kind: requires, via: t_surf}
+  - {from: heat_transport_mode, to: crater_state, kind: requires, via: resurfacing_rate}
+  - {from: magnetosphere_geometry, to: surface_dose, kind: requires, via: belt_intensity}
+  - {from: initial_rotation, to: tidal_locking, kind: requires, via: p_init,
+     status: gap,
+     note: 레시피는 이 항을 쓰는데 보드가 값을 기록하지 않는다.}
+  - {from: ocean_fraction, to: interior_structure, kind: requires, via: layer_q,
+     status: gap}
+
+  # ── selects — 숫자가 아니라 모델을 고른다 ────────────────────────
+  - from: global_fluid_layer
+    to: moon_energy_budget
+    kind: selects
+    note: >
+      유체층이 있으면 고체 조석 플럭스가 전 지구 T_eq 에 들어가고, 없으면
+      국소 수송으로 빠져 평원은 외부 예산에 머문다. 플럭스 크기의 문턱이 아니다.
+    ref:
+      - "docs/reference/tidal-heating-methodology.md#63-the-plains-are-not-an-exit"
+      - "docs/reference/moon-energy-budget-methodology.md#domain-of-validity"
+    cases: {lid: Dante, global: Alpha Centauri A b III}
+
+  - from: atmosphere_choice
+    to: magnetosphere_geometry
+    kind: selects
+    note: >
+      다이나모가 없을 때 전도성 전리층이 있으면 induced 경계가 서고, 없으면
+      아무것도 서지 않는다(달). 대기는 자기권에 숫자를 넘기지 않는다.
+    ref: "docs/reference/planetary-magnetosphere-geometry-methodology.md:30,45,203"
+    cases: {induced: [Venus, Mars, Proxima Cen b], none: Moon}
+
+  - from: tidal_locking
+    to: dynamo_rocky
+    kind: selects
+    via: rotation_period
+    note: >
+      자전은 regime 게이트로만 들어간다. 쌍극자 진폭에는 안 들어간다.
+      조석고정 느린 회전자가 Ro_l = 0.12 를 넘으면 multipolar.
+    ref: "docs/reference/rocky-planet-dynamo-methodology.md:43,73-76"
+
+  - from: body_class
+    to: dynamo_giant
+    kind: selects
+    note: >
+      H/He 거대행성 0.3-13 M_J 에만 적용. 서브넵튠 이하는 검증 영역 밖이라
+      태양계 아날로그로, 암석은 rocky 레시피로 간다. 오적용은 논문이 실재해도
+      인용 오류다.
+    ref: "docs/reference/planetary-dynamo-scaling.md:80-101"
+
+  # ── influences — 바뀌면 다시 봐야 한다 ──────────────────────────
+  - from: dynamo_giant
+    to: atmospheric_escape
+    kind: influences
+    sign: non-monotonic
+    note: >
+      약한 쌍극자는 없느니만 못하다. standoff 가 유도 경계를 넘어설 때까지
+      자기장이 오히려 이온 탈출을 늘린다. 단조 증가로 그리면 부호를 틀린다.
+    ref: "docs/reference/planetary-magnetosphere-geometry-methodology.md:38,200"
+
+  - {from: dynamo_rocky, to: atmospheric_escape, kind: influences,
+     sign: non-monotonic,
+     ref: "docs/reference/planetary-magnetosphere-geometry-methodology.md:38,200"}
+
+  - {from: surface_albedo, to: t_eq_stellar, kind: influences,
+     textbook: true,
+     note: "T_eq = [L(1-A)/16πσa²]^¼. 순환 2 의 되먹임 변."}
+
+  - from: ice_stability
+    to: surface_albedo
+    kind: influences
+    note: >
+      얼음 생존이 알베도 문턱으로 환산된다 — 주어진 궤도에서 T 가 문턱 아래로
+      떨어질 때까지 알베도를 올리는 형태라, 두 양이 서로를 정의한다.
+    ref: "docs/reference/ice-stability-methodology.md:74-75"
+
+  - from: heat_transport_mode
+    to: surface_albedo
+    kind: influences
+    status: gap
+    note: >
+      화산 재표면화가 표면 물질을 갈아치우므로 알베도가 따라 움직인다.
+      surface-color-albedo 는 조성 → 반사율만 다루고 재표면화 유입을
+      아직 서술하지 않는다 — 문서 쪽 공백.
+
+  - from: greenhouse
+    to: interior_structure
+    kind: influences
+    via: t_surf
+    status: gap
+    note: >
+      순환 1 — 내부 solver 의 표면 경계조건. 우리에게 내부 레시피 자체가
+      없으므로 이 결합을 서술한 문서도 없다.
+  - from: star_metallicity
+    to: interior_structure
+    kind: influences
+    status: gap
+    note: >
+      방사성 발열이 호스트 금속함량을 탄다. 우리 레시피가 아직 이 항을
+      쓰지 않아 gap. 현재 [Fe/H] 는 "저임팩트"로 스킵 중이나 암석체
+      내부열에는 저임팩트가 아니다.
+
+cycles:
+  - id: 1
+    name: 표면온도 ↔ 내부구조
+    members: [interior_structure, greenhouse]
+    resolution: T_eq 를 1차 경계값으로 두고 두 번 반복. 깊은 곳은 표면에 둔감하다.
+  - id: 2
+    name: 알베도 ↔ 평형온도
+    members: [surface_albedo, t_eq_stellar, ice_stability]
+    resolution: 클래스 기본 알베도로 시드 후 두 번 반복, 또는 알베도를 오너 결정으로 끊는다.
+  - id: 3
+    name: 조석가열 ↔ 내부구조
+    members: [interior_structure, tidal_heating, heat_transport_mode, greenhouse]
+    resolution: >
+      2층이 생겨야 닫힌다. 그전까지 k2/Q 는 도출값 옷을 입은 자유 파라미터이며
+      그렇게 표시해야 한다.
+
+ordering_rules:
+  - 부모가 완전히 풀리기 전에는 위성을 풀 수 없다. 위성 4항 예산이 부모의 온도·반지름·알베도를 먹는다.
+  - 별이 행성보다 먼저다.
