@@ -1,0 +1,445 @@
+# Phase 4 보드 필드 → engine/chain.yaml 노드 역류 매핑 (초안)
+# 158 fields. produced_by 는 chain.yaml 의 실재 노드 이름만 쓴다.
+# derived_from 은 같은 천체 안의 *다른 확정 필드* 를 가리킨다 (노드가 아니다).
+
+fields:
+
+  # ── identity / label ────────────────────────────────────────────
+  kopernicus_name: {produced_by: [], kind: label}
+  designation:     {produced_by: [], kind: label}
+  cultural_name:   {produced_by: [], kind: label}
+  orbit_ref:       {produced_by: [], kind: label, note: 다른 보드 행을 가리키는 포인터}
+  naked_eye:       {produced_by: [], kind: label, note: 겉보기 등급의 산문 요약, 값은 True/False}
+  radiation_model: {produced_by: [], kind: label, note: RadiationModel cfg 노드 이름(nearstars_*), 물리값 아님}
+  satellites:      {produced_by: [], kind: label, note: 이 천체가 거느리는 바디 목록 = 바디 정의}
+  epoch:           {produced_by: [], kind: label, note: emit 규약(0), 측정 에포크가 아님}
+
+  # ── gameplay ────────────────────────────────────────────────────
+  difficulty:                 {produced_by: [], kind: gameplay}
+  science_biomes:             {produced_by: [], kind: gameplay}
+  timewarp_limits:            {produced_by: [], kind: gameplay}
+  landing:                    {produced_by: [], kind: gameplay}
+  artificial:                 {produced_by: [], kind: gameplay}
+  sphere_of_influence_tuning: {produced_by: [], kind: gameplay, note: auto from mass / 수동 튜닝 — Kopernicus 편의값}
+  lagrange_placement:         {produced_by: [], kind: gameplay, note: 오너의 궤도 배치 선택}
+
+  # ── 궤도 ────────────────────────────────────────────────────────
+  semi_major_axis_au:       {produced_by: [orbit_elements], bundled: false}
+  eccentricity:             {produced_by: [orbit_elements], bundled: false}
+  inclination_deg:          {produced_by: [orbit_elements], bundled: false}
+  longitude_ascending_node: {produced_by: [orbit_elements], bundled: false}
+  argument_periapsis:       {produced_by: [orbit_elements], bundled: false}
+  mean_anomaly:             {produced_by: [orbit_elements], bundled: false}
+  orbital_period:
+    produced_by: [orbit_elements]
+    derived_from: [semi_major_axis_au]
+    note: 케플러 3법칙 — 모체 질량과 a 에서. a 를 고치면 반드시 같이 움직인다.
+  barycentric_split:
+    produced_by: [orbit_elements]
+    bundled: false
+    note: 상대궤도를 성분별 ICRS 상태로 쪼개는 절차. binary-epoch-pipeline 이 근거인데 chain 에는 노드가 없다.
+  hill_radius:
+    produced_by: [orbit_elements, mass_or_radius]
+    derived_from: [mass, semi_major_axis_au, eccentricity]
+  satellite_stability_limit:
+    produced_by: [orbit_elements, mass_or_radius]
+    derived_from: [hill_radius]
+    note: 힐 반경의 고정 분수(~0.4-0.5). hill_radius 가 바뀌면 자동으로 틀려진다.
+  co_orbitals:
+    produced_by: []
+    kind: unmapped
+    note: 공궤도 아키텍처는 오너 궤도 선택. resonance_architecture 노드는 forced_e 만 내보내므로 대응이 안 된다.
+  satellite_count:
+    produced_by: []
+    kind: unmapped
+    note: 위성 개수는 오너 결정. chain 에 body-set 노드가 없다.
+
+  # ── 벌크 · 형상 ─────────────────────────────────────────────────
+  mass:   {produced_by: [mass_or_radius, mass_radius_relation], bundled: false}
+  radius: {produced_by: [mass_or_radius, mass_radius_relation], bundled: false}
+  gravity:
+    produced_by: [mass_or_radius, mass_radius_relation]
+    derived_from: [mass, radius]
+    note: g = GM/R². 질량이나 반지름 어느 쪽이 움직여도 재계산 대상.
+  geopotential_j2:  {produced_by: [body_figure], bundled: false}
+  geopotential_c22: {produced_by: [body_figure], bundled: false}
+  j4:               {produced_by: [body_figure], bundled: false}
+  flattening:
+    produced_by: [body_figure]
+    derived_from: [geopotential_j2, rotation_period, radius, mass]
+    note: J2 와 자전에서 나온다 (f ≈ 3/2·J2 + q/2). J2 를 고치고 f 를 안 고치면 즉시 불일치.
+  reference_radius:
+    produced_by: [body_figure]
+    derived_from: [radius]
+    note: J2/C22 가 정의된 기준 반지름. radius 와 같은 수여야 한다.
+  cliff_height:
+    produced_by: [body_figure]
+    bundled: false
+    note: body_figure 의 relief 출력. 중력에 걸린 지형 기복 한계.
+  intrinsic_luminosity:
+    produced_by: [star_physical, internal_heat_nontidal]
+    note: 항성이면 star_physical 의 luminosity, 갈색왜성/거대행성이면 internal_heat_nontidal 의 l_int.
+  age:           {produced_by: [system_age, body_age], bundled: false}
+  cooling_age:   {produced_by: [body_age], note: 백색왜성 냉각연령 — 전구체 수명을 뺀 body_age}
+  internal_heat: {produced_by: [internal_heat_nontidal], bundled: false}
+
+  # ── 자전 · 축 ───────────────────────────────────────────────────
+  rotation_period:      {produced_by: [tidal_locking, spin_axis_inclination], bundled: false}
+  tidal_lock:           {produced_by: [tidal_locking], bundled: false}
+  spin_orbit_resonance: {produced_by: [tidal_locking], bundled: false}
+  obliquity:            {produced_by: [cassini_state], bundled: false}
+  spin_axis_orientation:
+    produced_by: [spin_axis_inclination, cassini_state]
+    bundled: true
+    note: 축 기울기(obliquity 와 동일 결정)와 절대 방위(i_star/Omega)가 한 문장에 같이 들어 있다.
+
+  # ── 조석 · 열수송 ───────────────────────────────────────────────
+  tidal_heating: {produced_by: [tidal_heating], bundled: false}
+  tidal_surface_flux:
+    produced_by: [tidal_heating]
+    derived_from: [tidal_heating, radius]
+    note: W/m² = 총 소산전력 / 4πR². 총량을 고치면 반드시 같이 움직인다.
+  tectonics: {produced_by: [heat_transport_mode], bundled: false}
+  emission_glow:
+    produced_by: [heat_transport_mode]
+    bundled: false
+    note: 용암 발광색은 heat_transport_mode 의 표면온도에서. 단 생물발광 사례(Pandora)는 오너 픽션이라 이 노드가 아니다.
+
+  # ── 자기장 · 다이나모 ───────────────────────────────────────────
+  magnetic_field:       {produced_by: [dynamo_giant, dynamo_rocky], bundled: false}
+  magnetic_field_polar: {produced_by: [dynamo_giant, dynamo_rocky], note: b_pol}
+  field_geometry:       {produced_by: [dynamo_giant, dynamo_rocky], note: 다극/쌍극 레짐 판정 (Ro_l 게이트)}
+  stellar_wind:         {produced_by: [stellar_wind], bundled: false}
+  heliosphere:
+    produced_by: [stellar_wind]
+    bundled: false
+    note: astrosphere standoff — 항성풍 압력과 성간풍 ram 의 균형. LISM 값이 두 번째 입력인데 chain 에 노드가 없다.
+
+  # ── 자기권 기하 (역류 사고가 난 곳) ─────────────────────────────
+  magnetosphere:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: R_mp(코) 그 자체. pause_nose 와 같은 양이 다른 이름으로 두 번 적힌다 — 사고의 1차 원인.
+  magnetopause_standoff_rp:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: 역시 R_mp. magnetosphere / pause_nose 와 3중 별칭이다.
+  pause_nose:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: >
+      이 무리의 뿌리. Part A 챕먼-페라로 코 거리(R_p 단위). 이 값이 움직이면
+      pause_radius / pause_tail / pause_extension / inner·outer_compression /
+      inner·outer_extension / pause_deform_scale 전부 재계산 대상이다.
+      23.5→35.33 사고가 바로 이 사슬이다.
+  pause_alpha:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: Shue alpha. pause_compression 의 상류다 (alpha = log2 compression).
+  pause_alpha_night:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: 문서는 야간측 별도 alpha 를 시험하고 롤백했다고 적는데("Every body keeps a single α") 보드에는 아직 값이 남아 있다. 확인 필요.
+  pause_compression:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_alpha]
+    note: = 2^pause_alpha. A b 는 2^0.42 = 1.3379 로 검산됨.
+  pause_radius:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_nose, pause_compression]
+    note: = pause_nose × pause_compression. A b 는 35.33 × 1.3379 = 47.273 로 검산됨.
+  pause_tail:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_nose]
+    note: L = 150^M_A × pause_nose (sub-Alfvénic 은 M_A 로 짧아진다). 코가 움직이면 꼬리도 움직인다.
+  pause_extension:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_radius, pause_tail]
+    note: = pause_radius / pause_tail. A b 는 47.273 / 5299.9 = 0.00892 로 검산됨.
+  pause_height_scale:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: 극/적도 standoff 비. 문서상 독립 — 코가 움직여도 따라가지 않는다.
+  pause_deform:
+    produced_by: [magnetosphere_geometry, dynamo_rocky]
+    note: 비쌍극 요철 진폭. ROKerbalism 앵커값에서.
+  pause_deform_scale:
+    produced_by: [magnetosphere_geometry, dynamo_rocky]
+    derived_from: [pause_nose]
+    note: deform_scale = (l / R_mp) / 5. R_mp 가 곧 pause_nose 이므로 코가 바뀌면 재계산 대상.
+  pause_offset:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: 실험적 필드. 문서상 pause_waist 로 대체됨(superseded). 남아 있는 값은 None.
+  pause_waist:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: 일반화 stock pause(유도 자기권 분기 — Venus/Mars 형)의 허리 위치. Shue 분기 바디에서는 0.
+  pause_smooth:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_radius_smoothed]
+    note: >
+      문서는 pause_smooth = 0.5 × pause_radius 를 고정점으로 푼다고 적는다.
+      다만 보드 실값(Pandora 144.012 vs radius_smoothed 3.4672)이 이 관계와 맞지 않아 확인이 필요하다.
+  pause_radius_smoothed:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_radius, pause_smooth, pause_waist]
+    note: 플러그인이 붙으면 pause_radius 를 대체하는 값. 네 값(smooth/waist/radius_smoothed/extension_smoothed)이 한 세트로 움직인다.
+  pause_compression_smoothed:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_compression, pause_smooth, pause_waist]
+  pause_extension_smoothed:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_extension, pause_smooth, pause_waist]
+  radiation_pause:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: GCR 차폐 존재 표시. 문서가 standoff 에 스케일되지 않는다고 못박음(~-0.01 stock 균일) — derived_from 없음이 정답.
+  geomagnetic_pole_lat:
+    produced_by: [magnetosphere_geometry, dynamo_giant, dynamo_rocky]
+    bundled: false
+    note: lat = 90° − 쌍극 기울기. 기울기 자체는 다이나모 쪽 산출.
+  geomagnetic_offset:
+    produced_by: [magnetosphere_geometry, dynamo_giant, dynamo_rocky]
+    bundled: false
+    note: 쌍극 중심 오프셋 / R_p. 축대칭이라 deform 과 이중계상 금지.
+  belt_architecture:
+    produced_by: [magnetosphere_geometry]
+    bundled: false
+    note: 어느 벨트 레짐인지 고르는 selects 성 결정 (CRAND 내대 + 항성풍 외대 등).
+
+  # ── 방사선 벨트 기하 ────────────────────────────────────────────
+  inner_dist:      {produced_by: [magnetosphere_geometry], note: 내벨트 코어 L-shell (fit_belts.py 합동 피팅)}
+  inner_radius:    {produced_by: [magnetosphere_geometry], note: 껍질 반두께, inner_dist 와 한 번에 피팅}
+  inner_deform_xy: {produced_by: [magnetosphere_geometry], note: 드리프트 셸의 위도 눌림 (cos²λ 닫힘)}
+  outer_dist:      {produced_by: [magnetosphere_geometry]}
+  outer_radius:    {produced_by: [magnetosphere_geometry]}
+  outer_deform_xy: {produced_by: [magnetosphere_geometry]}
+  inner_border_dist:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [inner_dist, inner_radius, inner_deform_xy]
+    note: 대기 손실원뿔로 깎아내는 뺄셈 토러스. 본체 셸이 움직이면 같이 움직인다.
+  inner_border_radius:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [inner_dist, inner_radius, inner_deform_xy]
+  inner_border_deform_xy:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [inner_dist, inner_radius, inner_deform_xy]
+  outer_border_dist:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [outer_dist, outer_radius, outer_deform_xy]
+  outer_border_radius:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [outer_dist, outer_radius, outer_deform_xy]
+  outer_border_deform_xy:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [outer_dist, outer_radius, outer_deform_xy]
+  inner_compression:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_compression, pause_nose, inner_dist, inner_deform_xy]
+    note: >
+      compression = 1 + eps·(pause_compression − 1), eps = (r_core/R_mp)³,
+      r_core = inner_dist/sqrt(inner_deform_xy). R_mp = pause_nose 이므로 코가 바뀌면 여기가 조용히 틀려진다.
+  inner_extension:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_extension, pause_nose, inner_dist, inner_deform_xy]
+    note: extension = 1 − eps·(1 − pause_extension), 같은 eps.
+  outer_compression:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_compression, pause_nose, outer_dist, outer_deform_xy]
+    note: 실제 사고 지점. pause_nose 23.5→35.33 에 이 값이 따라가지 않았다.
+  outer_extension:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [pause_extension, pause_nose, outer_dist, outer_deform_xy]
+    note: 위와 동일. 사고 지점.
+  inner_deform: {produced_by: [magnetosphere_geometry, dynamo_rocky], note: 비쌍극 요철 진폭}
+  outer_deform: {produced_by: [magnetosphere_geometry, dynamo_rocky]}
+  radiation_inner: {produced_by: [magnetosphere_geometry], note: Part B source − loss, K-P 상한. B 에서 스케일하지 않는다}
+  radiation_outer: {produced_by: [magnetosphere_geometry]}
+  radiation_inner_gradient:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [inner_radius, inner_dist]
+    note: gradient = inner_radius / d_inner (SDF 깊이). inner_radius 가 바뀌면 재계산.
+  radiation_outer_gradient:
+    produced_by: [magnetosphere_geometry]
+    derived_from: [outer_radius, outer_dist]
+
+  # ── 열 · 대기 ───────────────────────────────────────────────────
+  temperature:
+    produced_by: [t_eq_stellar, t_eff_body, moon_energy_budget, greenhouse]
+    bundled: false
+    note: 어느 노드가 주는지는 바디 종류가 고른다 (위성이면 moon_energy_budget, 대기 있으면 greenhouse).
+  surface_temperature:
+    produced_by: [greenhouse, t_eq_stellar, moon_energy_budget]
+    derived_from: [temperature, greenhouse]
+    note: T_surf = T_eq + dT_gh. 주야 대비는 heat_transport_mode 쪽.
+  greenhouse: {produced_by: [greenhouse], bundled: false}
+  pressure:   {produced_by: [atmosphere_choice], bundled: false}
+  composition:
+    produced_by: [atmosphere_choice, atmospheric_escape]
+    bundled: true
+    note: 조성 선택 + 왜 유지/소실되는지(escape 판정)가 한 칸에 같이 적힌다.
+  escape: {produced_by: [atmospheric_escape], bundled: false}
+  breathability:
+    produced_by: [atmosphere_choice]
+    derived_from: [composition, pressure]
+    note: 조성·압력에서 바로 나오는 판정. 값 자체는 True/False.
+  scale_height:
+    produced_by: [atmosphere_choice]
+    derived_from: [temperature, gravity, composition]
+    note: H = kT/(mu·g). 세 입력 중 하나만 움직여도 재계산.
+  haze:                {produced_by: [atmosphere_choice, atmosphere_reflected_color], bundled: false}
+  haze_aerosol_radius: {produced_by: [atmosphere_choice], bundled: false}
+  clouds:              {produced_by: [atmosphere_choice], bundled: false, note: 구름 덱의 존재/종류. 색은 atmosphere_reflected_color 쪽}
+  cloud_coverage:
+    produced_by: []
+    kind: unmapped
+    note: 구름 피복률(0.9). chain 에 구름 피복 노드가 없다.
+  uv_xray_flux: {produced_by: [xuv_history, surface_uv], note: surface_uv 노드는 status gap}
+
+  # ── 표면 ────────────────────────────────────────────────────────
+  albedo:      {produced_by: [surface_albedo], bundled: false}
+  albedo_mean: {produced_by: [surface_albedo, atmosphere_reflected_color], note: 대기 있는 바디면 반사색 노드가 실제 공급자}
+  base_color:  {produced_by: [surface_albedo, atmosphere_reflected_color], bundled: false}
+  base_colour:
+    produced_by: [surface_albedo, atmosphere_reflected_color]
+    bundled: false
+    note: base_color 의 철자 변종. 같은 축인데 이름이 둘이다 — 정규화 대상.
+  color:
+    produced_by: []
+    kind: unmapped
+    note: 항성 광구색. stellar-photospheric-color-methodology.md 는 있는데 chain.yaml 에 노드가 없다. 진짜 결손.
+  surface: {produced_by: [surface_albedo], bundled: false}
+  surface_type:
+    produced_by: [composition_intent, surface_albedo, heat_transport_mode]
+    bundled: true
+    note: 암석 종류 + 지질 활동 + 착륙 색이 한 문장에 뭉쳐 있다.
+  surface_detail:   {produced_by: [crater_state], bundled: false}
+  crater_state:     {produced_by: [crater_state], bundled: false}
+  ice_caps:         {produced_by: [ice_stability], bundled: false}
+  hydrosphere:      {produced_by: [ocean_fraction, ocean_depth], bundled: false, note: 두 노드 모두 status gap}
+  radiation:        {produced_by: [surface_dose], bundled: false}
+  hapke_terrain:    {produced_by: [hapke_shader_values], bundled: false}
+  hapke_scaled:     {produced_by: [hapke_shader_values], bundled: false}
+  hapke_porosity_k: {produced_by: [hapke_shader_values], bundled: false}
+  hapke_theta:      {produced_by: [hapke_shader_values], bundled: false}
+  terrain:
+    produced_by: []
+    kind: unmapped
+    note: 지형 형태(산맥·화산대). chain 에 지형/PQS 노드가 없다.
+  specular:
+    produced_by: []
+    kind: unmapped
+    note: 해면 반짝임(OceanFX). ocean_fraction 이 상류지만 셰이더 룩 자체를 내는 노드는 없다.
+
+  # ── 대기 색 · 띠 ────────────────────────────────────────────────
+  banding:             {produced_by: [atmosphere_reflected_color], bundled: false}
+  banding_base:        {produced_by: [atmosphere_reflected_color], bundled: false}
+  banding_belt:        {produced_by: [atmosphere_reflected_color], bundled: false}
+  banding_chromophore: {produced_by: [atmosphere_reflected_color], bundled: false}
+  banding_storm_eye:   {produced_by: [atmosphere_reflected_color], bundled: false}
+  banding_morphology:
+    produced_by: []
+    kind: unmapped
+    note: 띠 형태·와류 구조. 반사색 노드는 hex 만 낸다. 대기 역학 노드가 없다.
+
+  # ── 고리 ────────────────────────────────────────────────────────
+  rings:                 {produced_by: [ring_system], bundled: false}
+  ring_structure:        {produced_by: [ring_system], bundled: false}
+  ring_composition:      {produced_by: [ring_system], bundled: false}
+  ring_opacity:          {produced_by: [ring_system], note: optical_depth}
+  ring_plane:            {produced_by: [ring_system], bundled: false}
+  ring_inner_annulus_km: {produced_by: [ring_system], bundled: false}
+  ring_outer_annulus_km: {produced_by: [ring_system], bundled: false}
+  ring_gap_km:
+    produced_by: [ring_system]
+    derived_from: [ring_inner_annulus_km, ring_outer_annulus_km]
+    note: 두 고리대 사이 간격 — 양쪽 경계에서 바로 따라온다.
+  ring_brightness_R_jup:
+    produced_by: [ring_system]
+    derived_from: [ring_opacity]
+  ring_color:
+    produced_by: []
+    kind: unmapped
+    note: debris-disk-color-methodology.md(Mie 합성)가 근거인데 chain.yaml 에 노드가 없다.
+  dust_sources:
+    produced_by: [ring_system]
+    bundled: false
+    note: 고리 물질 공급원. optical_depth 를 유지하는 상류인데 노드 출력에는 없다.
+
+  # ── 항성 외관 · 활동 (그래프 결손 구역) ─────────────────────────
+  activity:
+    produced_by: []
+    kind: unmapped
+    note: P_rot·log R_HK·log Lx·주기. 측정 항성 활동인데 star_physical 출력에 없다.
+  flares:         {produced_by: [], kind: unmapped, note: 플레어 빈도 — 항성 활동 노드 부재}
+  flare_colour:   {produced_by: [], kind: unmapped, note: 플레어 H-alpha 색 — 플라스마 발광색 노드 부재}
+  spots_faculae:  {produced_by: [], kind: unmapped, note: 흑점/백반 — 항성 활동 노드 부재}
+  granulation:    {produced_by: [], kind: unmapped, note: 대류 입상반 — 항성 표면 외관 노드 부재}
+  limb_darkening: {produced_by: [], kind: unmapped, note: 주연감광 — 항성 외관 노드 부재}
+  corona:         {produced_by: [], kind: unmapped, note: 코로나 유무/세기 — 항성 활동 노드 부재}
+  habitable_zone:
+    produced_by: []
+    kind: unmapped
+    note: 광도·Teff 에서 나오는 계 수준 도출값인데 전용 노드가 없다.
+
+  # ── 기타 ────────────────────────────────────────────────────────
+  body_type:
+    produced_by: [body_class, mass_radius_relation, composition_intent]
+    bundled: true
+    note: 분광형/클래스 + 질량·반지름·밀도 + 조성 의도가 한 문자열에 뭉쳐 있다. body_class 는 status missing.
+  aurora:
+    produced_by: []
+    kind: unmapped
+    note: 오로라 발광색·오벌 형태. 상류는 magnetosphere_geometry + 대기 조성이지만 발광 노드가 없다.
+  biosphere:
+    produced_by: []
+    kind: unmapped
+    note: 생물권은 오너 픽션 축. chain 에 노드 없음.
+  neutral_torus_supply:
+    produced_by: []
+    kind: unmapped
+    note: 중성 토러스 공급률(kg/s). 벨트 소스 항의 실입력인데 노드가 없다.
+
+# 전부 실측 — 인자는 validation-manifest.yaml, 비용은 STABILITY_REPORT.md:81.
+consumers:
+  - id: stability-sim/alpha_centauri/moons
+    kind: simulation
+    cost: 21h
+    consumes: [geopotential_j2, obliquity]
+    args: ["--j2", "0.023", "--j2-obliquity-deg", "5"]
+    ref:
+      - "phase3/stability-sim/validation-manifest.yaml:58"
+      - "phase3/stability-sim/STABILITY_REPORT.md:81"
+    invalidates:
+      - "A b 위성 5개의 Hill-bound 판정 (MEGNO 3.65, 거의 정칙)"
+      - "위성 궤도 선택 자체 — 리포트 §284 가 편평도가 이 선택을 뒤집는다고 기록"
+    note: >
+      J₂ 는 방법론의 결론이 아니라 적분기의 입력이다. 내부구조가 NMoI 를 바꾸면
+      body_figure 가 J₂ 를 바꾸고, 이 21시간 런과 그 결과로 확정된 행들이 함께 열린다.
+
+  - id: stability-sim/alpha_centauri/planets
+    kind: simulation
+    cost: 7h
+    consumes: [semi_major_axis_au, eccentricity, inclination_deg]
+    args: ["--acen-a-au", "1.6", "--acen-e", "0.1", "--acen-incl-deg", "16"]
+    ref:
+      - "phase3/stability-sim/validation-manifest.yaml:55"
+      - "phase3/stability-sim/STABILITY_REPORT.md:81"
+    invalidates:
+      - "A b 궤도의 장기 카오스 판정 (a·e 봉투 유계, 1억 년)"
+    note: >
+      궤도 요소는 측정치라 방법론이 바꾸지 않는다. 합성 이심률을 넣거나 forced_e 를
+      건드릴 때만 열린다.
+
+# 확정값끼리의 순환 중 진짜 고정점인 것. 선언되지 않은 순환은 check 가 FAIL 시킨다.
+fixed_points:
+  - id: pause-smooth-radius
+    members: [pause_smooth, pause_radius_smoothed]
+    ref:
+      - "docs/reference/planetary-magnetosphere-geometry-methodology.md:874"
+    note: >
+      pause_smooth = 0.5 × pause_radius 를 고정점 반복으로 푼다 — 반지름 자체가
+      스무딩에 의존하기 때문이다. 문서가 명시한다. 다만 그 "radius" 가
+      pause_radius 인지 pause_radius_smoothed 인지는 문서가 두 이름을 섞어 쓴다.
+      여기서는 smoothed 로 배선했다. 레시피를 쓸 때 확정할 것.
