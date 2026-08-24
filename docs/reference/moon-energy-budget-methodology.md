@@ -129,6 +129,16 @@ telescope. Neither was tuned.
 5. **Ocean tidal dissipation is NOT in this budget.** See the second channel below. For a
    moon with a liquid ocean it is a separate term, set by the eccentricity tide and the
    ocean's depth rather than by `k₂/Q`.
+6. **The solid-body tidal term is global only when something makes it global.** Averaging
+   `F_tidal` over `4πR²` assumes a **global fluid layer** — an ocean, or an atmosphere
+   thick enough to move heat around the globe — actually redistributes it. A lid-bearing
+   body has no such layer: its interior heat leaves through discrete conduits and the
+   terrain between them stays at its external budget, so folding `F_tidal` into this
+   `T_eq` overheats it, by tens of kelvin at Io-class fluxes. For those bodies consume the
+   local-transport result from
+   [`tidal-heating-methodology.md`](tidal-heating-methodology.md) §6.2–6.4 instead. The
+   choice between the two is a *selector* set by the body's transport mode, not a
+   threshold on the flux — check it before adding the term.
 
 ## Worked example: the Alpha Centauri A b (Polyphemus) moons
 

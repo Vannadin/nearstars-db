@@ -327,6 +327,16 @@ to carry essentially all of the power.
 
 ### 6.3 The plains are not an exit
 
+> **Scope — lid-bearing bodies only.** This section describes a body whose heat must
+> cross a solid lid: no global ocean, no atmosphere thick enough to move heat around
+> the globe. Where a **global fluid layer** exists, it redistributes the interior flux
+> and the whole argument below is void — the tidal term then belongs in the body's
+> global energy balance instead, via
+> [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md). Which of the
+> two applies is a *selector*, not a number: decide it before reading further.
+> Dante (silicate, airless) takes this branch; Alpha Centauri A b III (Pandora), half
+> ocean under 1.1 bar, takes the other one.
+
 If the lid conducts ~0.1 W/m², the terrain between volcanic centres is thermally
 **inert**: it sits at radiative equilibrium with its external budget (starlight, plus
 the parent's contribution for a moon — see
