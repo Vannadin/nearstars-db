@@ -343,7 +343,19 @@ edges:
   - {from: ocean_fraction, to: surface_albedo, kind: requires, status: gap, ref: "tidally-locked-temperature-methodology.md:208"}
   - {from: t_eq_stellar, to: crater_state, kind: requires, via: homologous_temperature, ref: "crater-degradation-methodology.md:92"}
   - {from: composition_intent, to: crater_state, kind: selects, ref: "crater-degradation-methodology.md:96"}
-  - {from: atmosphere_choice, to: crater_state, kind: selects, ref: "crater-degradation-methodology.md:109"}
+  - from: atmosphere_choice
+    to: crater_state
+    kind: selects
+    via: fluvial_aeolian_channel
+    note: >
+      두꺼운 대기는 크레이터 열화의 채널 자체를 바꾼다. 작동하는 수문·풍성 순환이
+      있으면 비·강·바람이 바닥부터 채우고, 그 열화는 초반이 빠르고 스스로 멈춘다 —
+      낡은 것은 전부 깊이 메워지고 어린 것은 거의 안 건드려진 이중 분포가 남는다.
+      대기가 없으면 이 채널이 아예 없고 열화는 충돌·완화에만 의존한다.
+      D ≳ 10 km 소거 시간은 화성·타이탄 수준에서 수억 년.
+    ref:
+      - "crater-degradation-methodology.md:100-112"
+      - "2012P&SS...60...26N"
   - {from: body_age, to: crater_state, kind: requires, ref: "crater-degradation-methodology.md:143"}
   - {from: star_physical, to: atmosphere_reflected_color, kind: requires, via: sed, ref: "atmosphere-reflected-color-methodology.md:233"}
   - {from: atmosphere_choice, to: atmosphere_reflected_color, kind: requires, ref: "atmosphere-reflected-color-methodology.md:55"}
@@ -352,7 +364,18 @@ edges:
   - {from: atmosphere_reflected_color, to: greenhouse, kind: influences, ref: "atmosphere-reflected-color-methodology.md:439"}
   - {from: body_class, to: hapke_shader_values, kind: selects, ref: "hapke-shader-methodology.md:165"}
   - {from: surface_albedo, to: hapke_shader_values, kind: influences, sign: non-monotonic, ref: "hapke-shader-methodology.md:81"}
-  - {from: atmosphere_choice, to: hapke_shader_values, kind: selects, ref: "hapke-shader-methodology.md:88"}
+  - from: atmosphere_choice
+    to: hapke_shader_values
+    kind: selects
+    via: scaled_family
+    note: >
+      대기는 원반 위상곡선을 매끄러운 산란 쪽으로 씻어낸다. 무대기 레골리스·얼음이
+      scaled 2.2 계열인 데 반해, 얇고 먼지 있는 대기는 1.56/1.0(화성), 두꺼운 대기는
+      1.0~1.15 로 내려가고 지구는 아예 무대기 경로 밖(대양 셰이더)이다.
+      즉 대기 유무가 값을 조금 움직이는 게 아니라 어느 계열을 쓸지를 고른다.
+    ref:
+      - "hapke-shader-methodology.md:42-51"
+      - "hapke-shader-methodology.md:88-90"
   - {from: crater_state, to: hapke_shader_values, kind: requires, via: terrain, ref: "hapke-shader-methodology.md:158"}
 
   # ── excludes — 시험했고 아니었다 ───────────────────────────────

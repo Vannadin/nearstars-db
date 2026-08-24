@@ -263,6 +263,13 @@ h1{font-size:26px;font-weight:700;margin:0;letter-spacing:-.02em}
 .panel .tag.warn{color:var(--partial);border-color:var(--partial);background:var(--partial-bg)}
 .panel .grp.warn h3{color:var(--partial)}
 .panel .grp.warn li b{color:var(--partial);font-weight:500}
+.q{font-family:var(--font-sans);font-size:12.5px;border:1px solid var(--rule);
+   background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;
+   min-width:210px;outline:none}
+.q:focus{border-color:var(--ink-3)}
+.q::placeholder{color:var(--ink-3)}
+.node.found rect:first-child{stroke:var(--selects);stroke-width:2.2}
+
 .legend2{display:flex;gap:18px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--ink-3)}
 .legend2 span{display:flex;align-items:center;gap:6px}
 .legend2 .sw{width:10px;height:10px;border-radius:2px;flex:none}
@@ -323,6 +330,8 @@ svg{display:block}
     <span class="tg selects" data-k="selects" data-on="1"><span class="dot"></span>방식을 고른다 __CS__</span>
     <span class="tg influences" data-k="influences" data-on="1"><span class="dot"></span>영향을 준다 __CI__</span>
     <span class="tg excludes" data-k="excludes" data-on="0"><span class="dot"></span>아니라고 밝혀졌다 __CX__</span>
+    <input id="q" class="q" type="search" placeholder="찾기 — 크레이터, hapke, j2 …"
+           aria-label="노드 찾기">
     <span class="hint">왼쪽이 먼저 정해지는 값이다</span>
   </div>
   <div class="legend2">
@@ -404,6 +413,51 @@ if (D.orphans.length) {
     <p>이미 내보냈는데 어느 방법론도 이 값을 만들어내지 않는다. 그래프의 실제 구멍이다.<br>
     <code>${D.orphans.map(f => `${f.name}(${f.n})`).join('  ')}</code></p>`;
 }
+
+// 라벨이 한국어라 기술 이름(hapke, j2, crater_state)으로는 화면에서 찾을 수가 없다.
+// 검색은 라벨과 노드 id, 그리고 내놓는 값 이름까지 함께 본다.
+// 캔버스는 가로로 스크롤된다. 검색으로 찾은 노드가 화면 밖이면 찾아도 안 보인다.
+const canvas = document.querySelector('.canvas');
+function reveal(id) {
+  const n = D.nodes[id];
+  const scale = canvas.clientWidth / D.w;
+  const x = n.x * (scale < 1 ? 1 : scale);
+  const want = x + NW / 2 - canvas.clientWidth / 2;
+  canvas.scrollTo({ left: Math.max(0, want), behavior: 'smooth' });
+}
+
+const q = document.getElementById('q');
+q.addEventListener('input', () => {
+  const v = q.value.trim().toLowerCase();
+  const hits = [];
+  for (const id in D.nodes) {
+    const n = D.nodes[id];
+    const hay = (id + ' ' + n.label + ' ' + (n.outputs || []).join(' ') + ' ' +
+                 (n.bf.shipped || []).map(f => f.name).join(' ')).toLowerCase();
+    const hit = v && hay.includes(v);
+    nEls[id].classList.toggle('found', !!hit);
+    if (hit) hits.push(id);
+  }
+  if (!v) { pinned = null; clear(); return; }
+  for (const id in nEls) nEls[id].classList.toggle('dim', hits.length > 0 && !hits.includes(id));
+  if (hits.length === 1) { pinned = hits[0]; show(pinned); reveal(pinned); return; }
+  if (hits.length) return;
+  // 노드에 없다고 없는 값이 아니다. 이미 출하됐는데 낳는 노드가 없는 것일 수 있고,
+  // 그 경우 "못 찾음" 이 아니라 "그래프의 구멍" 이라고 말해야 한다.
+  const orp = D.orphans.filter(f => f.name.toLowerCase().includes(v));
+  pinned = null;
+  panel.innerHTML = orp.length
+    ? `<h2>${esc(orp.map(f => f.name).join(', '))}</h2>
+       <div class="tags"><span class="tag miss">낳는 노드 없음</span></div>
+       <p class="note">이미 ${orp.reduce((a, f) => a + f.n, 0)}행 출하됐는데 이 값을 만들어내는
+       방법론이 그래프에 없다. 값은 손으로 정해졌고 아무것도 그걸 재현하지 못한다.</p>`
+    : `<p class="ph">'${esc(v)}' 에 해당하는 값이 없다.</p>`;
+});
+q.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const first = Object.keys(D.nodes).find(id => nEls[id].classList.contains('found'));
+  if (first) { pinned = first; show(pinned); }
+});
 
 const off = new Set(['excludes']);
 let pinned = null;
