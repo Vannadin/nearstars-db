@@ -1,0 +1,85 @@
+<!-- NS의 논문-근거화 derived-value 방법론 문서 전체 인덱스 (Phase 3/4가 도출에 사용) -->
+# Methodology Index: Paper-Grounded Derived-Value Recipes
+
+NearStars assigns many physical values that are **derived, not measured**: a body's
+color, magnetic field, atmosphere, internal heat, and so on. Each such value has a
+dedicated **methodology reference**: an ADS-verified recipe (relation + regimes +
+worked examples + an annotated, citation-checked bibliography), modeled on the
+`planetary-dynamo-scaling.md` gold standard.
+
+This page is the single index of those recipes. Phase 3 derives cfg-ready values
+through them; Phase 4 validates owner art-direction against them. Every methodology
+doc has a Korean mirror under `ko/docs/reference/`.
+
+> Discipline: citations are resolved against NASA ADS (registered API token), not
+> ad-hoc web search; arXiv id where one exists, else the authoritative ADS bibcode.
+> Textbook relations (e.g. Darwin–Radau, the Planck function) are the allowed
+> exception to "derived values must be paper-grounded."
+
+## Magnetism, structure & dynamics
+
+| Methodology | Grounds | Key references |
+|---|---|---|
+| [planetary-dynamo-scaling](planetary-dynamo-scaling.md) | Giant/BD magnetic field strength (energy-flux) | Christensen 2009; Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)); Yadav & Thorngren 2017 |
+| [rocky-planet-dynamo-methodology](rocky-planet-dynamo-methodology.md) | Rocky (Earth/super-Earth) magnetic moment + surface field | Rodríguez-Mozos & Moya 2022 ([arXiv:2203.01065](https://arxiv.org/abs/2203.01065)); Olson & Christensen 2006; Gaidos 2010; Driscoll & Olson 2011 |
+| [planetary-magnetosphere-geometry-methodology](planetary-magnetosphere-geometry-methodology.md) | Magnetosphere standoff + belt extent/intensity from B (→ Kerbalism); exact K–P ceiling calculator `scripts/refs/kp_limit.py` | Chapman & Ferraro 1931; Shue 1997/98; Kennel & Petschek 1966; Summers 2009/2014; Mauk & Fox 2010 (+Zenodo port); Seltzer 1979/92; Schulz & Lanzerotti 1974; Thorne 2010 |
+| [mass-radius-relation-methodology](mass-radius-relation-methodology.md) | Mass ↔ radius ↔ density tie-break | Seager 2007; Zeng 2016; Fortney 2007; Chen & Kipping 2017 |
+| [tidal-locking-timescale-methodology](tidal-locking-timescale-methodology.md) | Spin state / synchronization timescale | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
+| [tidal-heating-methodology](tidal-heating-methodology.md) | Tidal heating flux (Io/Enceladus-calibrated) **+ surface heat transport**: which mode carries the heat out, and the lava-lake capacity that caps a body's size | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009; Spencer, Katz & Hewitt 2020; Reese 1998; Campion & Coppola 2023 |
+| [body-figure-methodology](body-figure-methodology.md) | Oblateness J₂ + tidal triaxiality C₂₂ (Principia gravity model) | Helled 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan anchors |
+| [cassini-state-obliquity-methodology](cassini-state-obliquity-methodology.md) | Equilibrium spin-axis tilt of a tidally-damped body (locked ≠ obliquity 0) | Peale 1969; Ward 1975; Ward & Hamilton 2004; Bills 2005; Baland 2011; Margot 2007 (Mercury anchor) |
+| [spin-axis-inclination-methodology](spin-axis-inclination-methodology.md) | Line-of-sight spin inclination i★ of free rotators (stars/BDs) from v sin i + period + radius | Vos, Allers & Biller 2017 ([arXiv:1705.06045](https://arxiv.org/abs/1705.06045)); Masuda & Winn 2020 ([arXiv:2001.04973](https://arxiv.org/abs/2001.04973)); Apai 2021; Burrows 2001 |
+
+## Orbits & epoch
+
+| Methodology | Grounds | Key references |
+|---|---|---|
+| [emit-orbit-phase-match-methodology](emit-orbit-phase-match-methodology.md) | Emit orbital phase (Ω/ω/M) of a directly-detected planet: sky-PA match + epoch rewind to 1950.0 | Beichman 2025 ([arXiv:2508.03814](https://arxiv.org/abs/2508.03814)); Pourbaix & Correia 2017; Murray & Dermott 1999 (textbook) |
+
+## Atmosphere & thermal
+
+| Methodology | Grounds | Key references |
+|---|---|---|
+| [exoplanet-atmosphere-methodology](exoplanet-atmosphere-methodology.md) | Atmosphere retention + pressure/composition | Zahnle & Catling 2017 (cosmic shoreline); Owen 2019; Dong 2017/2018 |
+| [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md) | Surface temperature / climate state | Joshi 1997; Wordsworth 2015; Koll & Abbot 2016; Koll 2022 |
+| [moon-energy-budget-methodology](moon-energy-budget-methodology.md) | Satellite T_eq: stellar − eclipses + parent thermal + parent reflected + tidal, vs the circumplanetary habitable edge; calculator `scripts/refs/moon_energy_budget.py` | Heller & Barnes 2013 ([arXiv:1209.5323](https://arxiv.org/abs/1209.5323)); Dobos 2017 ([arXiv:1703.02447](https://arxiv.org/abs/1703.02447)); Barnes 2013 ([arXiv:1203.5104](https://arxiv.org/abs/1203.5104)); Tyler 2008; Beuthe 2016; Hay & Matsuyama 2017 |
+| [greenhouse-warming-methodology](greenhouse-warming-methodology.md) | Greenhouse increment T_surf − T_eq for any gas mixture: 4 layers (analytic model / opacity data / iso-Ts contours / borrowed runs) + host-star correction; calculator `scripts/refs/greenhouse_dt.py` | Robinson & Catling 2012 ([arXiv:1209.1833](https://arxiv.org/abs/1209.1833)); Karman 2019 (HITRAN CIA); Byrne & Goldblatt 2014a/b; Feulner 2012 ([arXiv:1204.4449](https://arxiv.org/abs/1204.4449)); Kopparapu 2013 ([arXiv:1301.6674](https://arxiv.org/abs/1301.6674)); Charnay 2013 ([arXiv:1310.4286](https://arxiv.org/abs/1310.4286)); Ramirez 2014/2018; Goldblatt 2009; Arney 2016 |
+| [internal-heat-luminosity-methodology](internal-heat-luminosity-methodology.md) | Internal heat + self-luminosity (T_int) | Burrows 1997; Baraffe 2003; Fortney 2007; Marley 2007 |
+| [surface-radiation-dose-methodology](surface-radiation-dose-methodology.md) | Surface dose from stellar particle events through an atmospheric column (Kerbalism hazard layer), distinct from trapped-belt dose | Atri 2020 ([arXiv:1910.09871](https://arxiv.org/abs/1910.09871)); Atri 2017 ([arXiv:1606.07027](https://arxiv.org/abs/1606.07027)); Grießmeier 2016 ([arXiv:1603.06500](https://arxiv.org/abs/1603.06500)); MSL RAD calibration |
+| [ice-stability-methodology](ice-stability-methodology.md) | Whether exposed ice survives at an orbit: sublimation lifetime + the albedo survival threshold; calculator [`docs/ice-stability.html`](../ice-stability.html) | Fray & Schmitt 2009 ([`2009P&SS...57.2053F`](https://ui.adsabs.harvard.edu/abs/2009P%26SS...57.2053F)); Feistel & Wagner 2007; Schörghofer 2008/2016; Hayne & Aharonson 2015; Marti & Mauersberger 1993 |
+
+## Surface & geology
+
+| Methodology | Grounds | Key references |
+|---|---|---|
+| [crater-degradation-methodology](crater-degradation-methodology.md) | Cratered vs crater-free look: per-channel crater erasure timescales (diffusion / burial / viscous relaxation / fluvial / wholesale renewal) vs impact accumulation | Fassett & Thomson 2014; Hartmann 1984; Zahnle 2003; Passey & Shoemaker 1981; Bland 2012; McKinnon 2016; Forsberg-Taylor 2004; Neish & Lorenz 2012; Strom 1994 |
+
+## Color (shared CIE 1931 → sRGB engine)
+
+All four reflected/emitted color recipes share one colorimetry engine (CIE 1931 CMF →
+XYZ → IEC 61966-2-1 sRGB), owned by the reflected-color doc.
+
+| Methodology | Grounds | Key references |
+|---|---|---|
+| [stellar-photospheric-color-methodology](stellar-photospheric-color-methodology.md) | Star incandescent color (Teff → sRGB) | Husser 2013 (PHOENIX); Castelli & Kurucz 2003; Allard BT-Settl 2011; Mann 2015; Pickles 1998 |
+| [atmosphere-reflected-color-methodology](atmosphere-reflected-color-methodology.md) | Sky/cloud reflected color | Sneep & Ubachs 2005 (Rayleigh); Gao 2021; Irwin 2024; CIE 1931 / IEC sRGB |
+| [surface-color-albedo-methodology](surface-color-albedo-methodology.md) | Surface mineral color + Bond albedo | Burns 1993; Hapke 1981/2012; Kokaly (USGS) 2017; Grundy |
+| [debris-disk-color-methodology](debris-disk-color-methodology.md) | Debris-disk dust scattering color (Mie) | Draine 2003; Bohren & Huffman 1983; Khare 1984 |
+| [element-plasma-colors](element-plasma-colors.md) | Emission/plasma color (aurora, reentry, lines) | NIST ASD; Pearse & Gaydon; Park 1990 |
+| [hapke-shader-methodology](hapke-shader-methodology.md) | Sol `_Hapke` shader values (terrain + scaled) per body class | Sol-Configs @ f9e6fdf (anchors); Hapke 1981/1986/2002; Sato 2014; Warell 2004; Verbiscer 2005; Belskaya & Shevchenko 2000 |
+
+## Validation (not derivation, but Phase-4 gates)
+
+- **Orbital/stability simulation**: REBOUND N-body (WHFast / TRACE / IAS15) + MEGNO
+  chaos indicator + Hill-stability + resonance analysis, under `phase3/stability-sim/`.
+  Confirms a system architecture survives (bounded eccentricities, no ejections) before
+  a Phase-4 orbit is locked.
+- [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md): n-body gravity-model (J2/geopotential) cfg conventions.
+- [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md): literature grounding for the far-field gravity-truncation floor `a_floor` + switching-shell ratio (Principia fork). Folkner 2014 / Park 2021 (ephemeris perturber selection); Chesley 2014 (Yarkovsky detectability); Jiang & Tremaine 2010 (Jacobi radius); Rein & Spiegel 2015 (force-error budgets).
+- [binary-epoch-pipeline](binary-epoch-pipeline.md): multi-star Keplerian → ICRS epoch propagation.
+- [solar-system-radiation-belts](solar-system-radiation-belts.md): the evidence and derivation record behind the magnetosphere-geometry recipe. **Part 1** — stock Kerbalism cfg vs ADS-grounded physics for all 7 magnetized Solar-System bodies (Earth/Jupiter/Saturn/Uranus/Neptune/Mercury/Ganymede), with the in-game SDF cross-section renders inline. **Part 2** — the derivation record: why the magnetotail has no derivable length (eight attempts), the near-tail X-line grading, the induced-boundary shape families that were measured and rejected, and the two failed attempts at moving the widest cross-section. Split out of the methodology 2026-08-16 so the recipe carries conclusions only. Joy 2002; Cooper 1983; Ness 1986/1989; Winslow 2013; Kivelson 2002; +18 more.
+
+## Related
+
+- [methodology](methodology.md): the upstream DB-building workflow (Phase 1–3 data pipeline) these recipes feed.
+- [tools](tools.md): the tool/script index.

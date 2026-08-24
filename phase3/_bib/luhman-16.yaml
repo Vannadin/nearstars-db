@@ -1,0 +1,88 @@
+host: Luhman 16
+slug: luhman-16
+generated_at: '2026-06-09'
+note: 'Brown-dwarf binary (WISE J104915.57-531906.1 AB), nearest BD system. Anchor papers pinned by arxiv_id for the convergent
+  _papers cache (value-check for DB add-star, Phase 1). Bedin 2024 = primary (mass+orbit+parallax, self-consistent); L&S 2018
+  + Garcia 2017 = documented alternates.
+
+  '
+papers:
+- arxiv_id: null
+  ads_bibcode: 2020ApJ...894...42M
+  doi: 10.3847/1538-4357/ab6ef2
+  title: 'Millar-Blanchaer et al. 2020 — H-band VLT/NaCo polarimetry (p_A=0.031%); Luhman 16A requires constant longitudinal cloud bands (oblateness ruled out). No arXiv (IOP); manually fetched + integrated 2026-06-20 into luhman-16-a cloud_morphology'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2602.03409'
+  ads_bibcode: 2026arXiv260203409D
+  title: 'de Regt et al. 2026 (ESO SupJup IX) - CRIRES+ isotopes; 12C/13C=74 both comps + Oceanus moving group membership -> age ~500 Myr (supersedes Faherty field age); C/O ratios'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2505.00794'
+  ads_bibcode: 2025arXiv250500794B
+  title: 'Biller et al. 2025 (JWST Weather Report II) - MIRI+NIRSpec variability; patchy clouds + hot spots at distinct pressure levels in A and B, small-grain silicates in A (cloud-morphology basis)'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2407.09194'
+  ads_bibcode: 2024arXiv240709194B
+  title: 'Biller et al. 2024 (JWST Weather Report I) - first-epoch JWST NIRSpec+MIRI monitoring of WISE 1049AB (companion to Biller 2025; ar5iv body unrendered, cited by title)'
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '2403.08865'
+  ads_bibcode: 2024AN....34530158B
+  title: Bedin et al. 2024 - HST astrometry II; masses, relative orbit, parallax (PRIMARY)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1808.07835'
+  ads_bibcode: 2018A&A...618A.111L
+  title: Lazorenko & Sahlmann 2018 - astrometric orbit + masses (alternate, longer baseline)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1708.02714'
+  ads_bibcode: 2017ApJ...846...97G
+  title: Garcia et al. 2017 - model-independent individual masses (alternate)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1406.1518'
+  ads_bibcode: 2014ApJ...790...90F
+  title: Faherty et al. 2014 - Teff(A,B) from bolometric luminosity
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1303.2401'
+  ads_bibcode: 2013ApJ...767L...1L
+  title: Luhman 2013 - discovery, spectral types, first parallax
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1304.0481'
+  ads_bibcode: 2013A&A...555L...5G
+  title: Gillon et al. 2013 - first variability, P_rot(B)=4.87 hr (rotation primary)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2101.02253'
+  ads_bibcode: 2021ApJ...906...64A
+  title: Apai et al. 2021 - TESS rotation B=5.28 hr, A~6.94 hr tentative
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1401.8145'
+  ads_bibcode: 2014Natur.505..654C
+  title: Crossfield et al. 2014 - Doppler surface map, v sin i, adopts B=4.9 hr
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1510.08099'
+  ads_bibcode: 2015A&A...584A.104M
+  title: Mancini et al. 2015 - B=5.1 hr, A~8 hr tentative
+  status: fetched
+  category: deep_read
+  fetch_error: null

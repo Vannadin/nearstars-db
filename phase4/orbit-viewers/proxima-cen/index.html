@@ -1,0 +1,139 @@
+<!-- Proxima Centauri 궤도 안정성 검증 매트릭스 (자동 생성, scripts/validate_orbits.py) -->
+<!doctype html><html lang="en" class="ns-light-ok"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proxima Centauri — orbit stability validation</title>
+<style>
+/* 궤도 검증 세트 페이지 공용 스타일 (scripts/validate.py 가 인라인으로 삽입). */
+  body{margin:0;background:#06070a;color:rgba(255,255,255,.82);font:14px/1.65 system-ui,sans-serif}
+  header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.09)}
+  h1{margin:0;font-size:20px;font-weight:600;letter-spacing:-.01em} .lead{color:rgba(255,255,255,.52);font-size:13px;margin-top:6px;max-width:80ch}
+  main{padding:22px;max-width:1100px}
+  table.matrix{border-collapse:collapse;margin:6px 0 22px}
+  table.matrix th,table.matrix td{border:1px solid rgba(255,255,255,.09);padding:9px 13px;text-align:left;vertical-align:top}
+  table.matrix th{background:rgba(255,255,255,.03);font-size:12px;color:rgba(255,255,255,.52)}
+  .v-ok{color:#4ec9b0;font-weight:600} .v-warn{color:#e0b070;font-weight:600}
+  .v-bad{color:#e090d0;font-weight:600}
+  .mono{font-family:ui-monospace,monospace;font-size:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+  .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:10px;overflow:hidden}
+  .card img{width:100%;display:block;background:#06070a}
+  .card .m{padding:11px 13px} .card h3{margin:0 0 4px;font-size:14px}
+  .card .sub{color:rgba(255,255,255,.52);font-size:12px} .card a{color:#7aa8ff;text-decoration:none;font-size:12px}
+  .card a:hover{text-decoration:underline}
+  h2{font-size:15px;margin:26px 0 10px;border-top:1px solid rgba(255,255,255,.09);padding-top:18px}
+  .note{color:rgba(255,255,255,.52);font-size:12.5px;max-width:80ch}
+  header .seg{float:right}
+
+  @media (prefers-color-scheme: light) {
+    html.ns-light-ok body{background:#f5f6fa;color:rgba(9,12,22,.80)}
+    html.ns-light-ok header{border-bottom-color:rgba(12,17,34,.13)}
+    html.ns-light-ok h1{color:rgba(9,12,22,.95)}
+    html.ns-light-ok .lead,html.ns-light-ok .sub,html.ns-light-ok .note{color:rgba(9,12,22,.60)}
+    /* .card .sub 가 더 구체적이라 위 규칙에 안 걸린다 */
+    html.ns-light-ok .card .sub{color:rgba(9,12,22,.60)}
+    html.ns-light-ok .card{background:rgba(12,17,34,.030);border-color:rgba(12,17,34,.13)}
+    html.ns-light-ok .card img{background:#f5f6fa}
+    html.ns-light-ok .card a,html.ns-light-ok .crumb a,html.ns-light-ok .links a,
+    html.ns-light-ok header a{color:#114edd}
+    html.ns-light-ok .v-ok{color:#1e6657} html.ns-light-ok .v-warn{color:#765419}
+    html.ns-light-ok .v-bad{color:#992c83}
+    html.ns-light-ok .links a{border-color:rgba(12,17,34,.18)}
+    html.ns-light-ok h2{border-top-color:rgba(12,17,34,.13)}
+    html.ns-light-ok table.matrix td,html.ns-light-ok table.matrix th{border-color:rgba(12,17,34,.13)}
+    html.ns-light-ok table.matrix th{background:rgba(12,17,34,.045);color:rgba(9,12,22,.60)}
+    html.ns-light-ok code,html.ns-light-ok .k{color:rgba(9,12,22,.78)}
+  }
+@media (max-width:700px){
+  header a{min-height:38px;display:inline-flex;align-items:center}
+  .grid{grid-template-columns:1fr;gap:12px} main{padding:14px}
+  table.matrix{display:block;overflow-x:auto}
+}
+</style>
+<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .ns-bar a:hover { color:#114edd }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+/* 모바일: 두 줄로 접히고 링크가 13px 높이였다 → 한 줄 가로 스크롤 + 44px 터치 타깃.
+   구분점은 폭만 먹으므로 감추고, 브랜드는 왼쪽에 고정해 되돌아갈 곳을 남긴다. */
+@media (max-width:700px) {
+  .ns-bar { gap:0; padding:0 0 0 12px; flex-wrap:nowrap; overflow-x:auto;
+    overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; align-items:stretch }
+  .ns-bar::-webkit-scrollbar { display:none }
+  .ns-bar > * { flex-shrink:0 }
+  .ns-bar .ns-sep { display:none }
+  .ns-bar .ns-brand { position:sticky; left:0; z-index:1; display:flex; align-items:center;
+    padding-right:12px; background:linear-gradient(90deg,rgba(10,12,18,.92) 70%,transparent) }
+  .ns-bar a:not(.ns-brand), .ns-bar span.ns-here {
+    display:flex; align-items:center; min-height:44px; padding:0 11px }
+  .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #7aa8ff }
+}
+@media (max-width:700px) and (prefers-color-scheme:light) {
+  html.ns-light-ok .ns-bar .ns-brand {
+    background:linear-gradient(90deg,rgba(245,246,250,.94) 70%,transparent) }
+  html.ns-light-ok .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #114edd }
+}
+
+/* .seg.seg = 특이도 상향: 본문 내 <style> 를 가진 페이지에서도 정본이 이긴다 */
+.seg.seg { display:inline-flex; padding:2px; gap:2px; flex-shrink:0;
+  background:rgba(255,255,255,.022); border:1px solid rgba(255,255,255,.09);
+  border-radius:8px }
+.seg.seg button { background:transparent; border:none; cursor:pointer;
+  padding:5px 10px; border-radius:6px; white-space:nowrap;
+  color:rgba(255,255,255,.56);
+  font:500 12px/1 'Geist','Inter',system-ui,sans-serif }
+.seg.seg button:hover { color:rgba(255,255,255,.80) }
+.seg.seg button.on { background:rgba(255,255,255,.07); color:rgba(255,255,255,.94) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .seg.seg {
+  background:rgba(12,17,34,.03); border-color:rgba(12,17,34,.12) }
+  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
+  html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
+    color:rgba(9,12,22,.92) } }
+/* 모바일: 세그먼트 버튼이 24px 였다 → 44px 터치 타깃 */
+@media (max-width:700px) {
+  .seg.seg button { min-height:40px; min-width:44px; justify-content:center;
+    display:inline-flex; align-items:center; font-size:13px; padding:0 12px }
+}
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#114edd } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
+</style><div class="ns-bar"><a class="ns-brand" href="../../../index.html">NearStars</a><a href="../../../index.html">DB</a><span class="ns-sep">·</span><a href="../../../starmap.html">3D Map</a><span class="ns-sep">·</span><a href="../../../reports.html">Reports</a><span class="ns-sep">·</span><span class="ns-here">Phase 4</span><span class="ns-sep">·</span><a href="../../../tools.html">Tools</a><span class="ns-sep">·</span><a href="../../../wiki/index.html">Wiki</a></div>
+<header>
+  <div class="seg"><button id="ko">한</button><button id="en" class="on">EN</button></div>
+  <nav style="font-size:12px;margin-bottom:8px"><a href="../index.html" style="color:#7aa8ff;text-decoration:none">← <span data-i18n>궤도 뷰어</span><span data-en hidden>Orbit viewers</span></a></nav>
+  <h1>Proxima Centauri — <span data-i18n>궤도 안정성 검증</span><span data-en hidden>orbit stability validation</span></h1>
+  <div class="lead"><span data-i18n>위성계와 행성계를 각각 두 방식으로 교차 검증했습니다. leapfrog(고정 10분 스텝)는 Principia 인게임 적분기와 정합하고, IAS15+MEGNO는 결정론적 카오스를 판정합니다(MEGNO≈2 정칙, &gt;5 카오스).</span><span data-en hidden>Both the moon system and the planet orbit are cross-checked two ways. Leapfrog (fixed 10-min step) matches Principia's in-game integrator; IAS15+MEGNO diagnoses deterministic chaos (MEGNO≈2 regular, &gt;5 chaotic).</span></div>
+</header>
+<main>
+  <table class="matrix"><tr><th></th><th>leapfrog · <span data-i18n>인게임 정합</span><span data-en hidden>in-game fidelity</span></th><th>IAS15/TRACE + MEGNO · <span data-i18n>카오스 판정</span><span data-en hidden>chaos diagnosis</span></th></tr><tr><th><span data-i18n>행성계</span><span data-en hidden>Planet orbit</span><br><span class="mono">3 bodies</span></th><td><span class="v-ok">STABLE</span><br><span class="mono">10⁵ yr · |ΔE/E|=2.4e-10</span></td><td><span class="v-ok">STABLE</span><br><span class="mono">1.4×10⁶ yr · MEGNO 4.04</span></td></tr></table>
+  
+  <h2><span data-i18n>행성계</span><span data-en hidden>Planet orbit</span></h2><div class="grid"><div class="card"><a href="planets_leapfrog.html"><picture><source media="(prefers-color-scheme: light)" srcset="planets_leapfrog_light.png"><img src="planets_leapfrog.png" alt="Planet orbit orbital elements, leapfrog integrator" loading="lazy"></picture></a><div class="m"><h3>leapfrog · 10⁵ yr</h3><div class="sub">10⁵ yr · |ΔE/E|=2.4e-10 · <a href="planets_leapfrog.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a> · <a href="planets_leapfrog_orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div></div><div class="card"><a href="planets_accurate.html"><picture><source media="(prefers-color-scheme: light)" srcset="planets_accurate_light.png"><img src="planets_accurate.png" alt="Planet orbit orbital elements, ias15 integrator" loading="lazy"></picture></a><div class="m"><h3>IAS15+MEGNO · 1.4×10⁶ yr</h3><div class="sub">1.4×10⁶ yr · MEGNO 4.04 · <a href="planets_accurate.html"><span data-i18n>인터랙티브</span><span data-en hidden>interactive</span></a></div></div></div></div>
+  
+</main>
+<script>
+const ko=document.getElementById('ko'),en=document.getElementById('en');
+function set(e){document.querySelectorAll('[data-i18n]').forEach(x=>x.hidden=e);document.querySelectorAll('[data-en]').forEach(x=>x.hidden=!e);ko.classList.toggle('on',!e);en.classList.toggle('on',e);}
+ko.onclick=()=>{set(false);localStorage.setItem('nearstars-lang','ko');};
+en.onclick=()=>{set(true);localStorage.setItem('nearstars-lang','en');};
+set(localStorage.getItem('nearstars-lang')!=='ko');
+</script>

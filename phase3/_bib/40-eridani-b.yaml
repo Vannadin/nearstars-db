@@ -1,0 +1,32 @@
+host: 40 Eridani B
+slug: 40-eridani-b
+generated_at: '2026-05-29'
+note: 'A-lite retrofit bibliography (see 40-eridani-a.yaml). 40 Eri B (DA white dwarf) cited + anchor papers pinned by arxiv_id
+  for the convergent _papers cache.
+
+  '
+papers:
+- arxiv_id: '1709.00478'
+  ads_bibcode: 2017ApJ...848...16B
+  title: Bond et al. 2017 — dynamical mass, Teff, radius, luminosity, age anchor
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1707.03635'
+  ads_bibcode: 2017AJ....154..200M
+  title: Mason, Hartkopf & Miles 2017 — B-C astrometric orbit
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1109.3171'
+  ads_bibcode: 2011ApJ...743..138G
+  title: Giammichele et al. 2012 — DA white dwarf atmosphere parameters
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: astro-ph/0006050
+  ads_bibcode: null
+  title: earlier kilogauss magnetic-field upper limit (context)
+  status: fetched
+  category: skim
+  fetch_error: null

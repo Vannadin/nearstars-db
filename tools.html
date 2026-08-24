@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!-- 단독 시각화 도구·계산기들을 한곳에 모은 Tools 허브 페이지 (수동 관리 정적 페이지) -->
+<html lang="en" class="ns-light-ok">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title"></title>
+<link rel="stylesheet" href="style.css">
+<style>
+main { max-width: 980px }
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 6px }
+.tool { display: block; padding: 14px 16px; border: 1px solid var(--bd-strong); border-radius: 8px;
+        background: var(--bg-card); text-decoration: none; transition: border-color .15s }
+.tool:hover { border-color: var(--accent) }
+.tool .tname { color: var(--fg-emph); font-weight: 700; font-size: 14px; margin-bottom: 4px }
+.tool .tdesc { color: var(--fg-dim); font-size: 12.5px; line-height: 1.5 }
+.tool .tsub { margin-top: 8px; font-family: var(--mono); font-size: 11px }
+.tool .tsub a { color: var(--accent) }
+.lang-toggle { margin-left: auto }
+</style>
+</head>
+<body>
+<style>
+.ns-bar { display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:9px 22px; font:12px/1 'Geist Mono','SF Mono',Menlo,monospace;
+  background:rgba(10,12,18,.62); border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(10px) }
+.ns-bar .ns-brand { color:rgba(255,255,255,.94); font-weight:700;
+  font-family:'Geist','Inter',system-ui,sans-serif; font-size:13px;
+  text-decoration:none; letter-spacing:.2px }
+.ns-bar a { color:rgba(255,255,255,.52); text-decoration:none }
+.ns-bar a:hover { color:#aac8ff; text-decoration:none }
+.ns-bar span.ns-here { color:rgba(255,255,255,.90) }
+.ns-bar .ns-sep { color:rgba(255,255,255,.22) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .ns-bar {
+  background:rgba(245,246,250,.72); border-bottom:1px solid rgba(12,17,34,.12) }
+  html.ns-light-ok .ns-bar .ns-brand { color:rgba(9,12,22,.92) }
+  html.ns-light-ok .ns-bar a { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .ns-bar a:hover { color:#114edd }
+  html.ns-light-ok .ns-bar span.ns-here { color:rgba(9,12,22,.90) }
+  html.ns-light-ok .ns-bar .ns-sep { color:rgba(9,12,22,.25) } }
+/* 모바일: 두 줄로 접히고 링크가 13px 높이였다 → 한 줄 가로 스크롤 + 44px 터치 타깃.
+   구분점은 폭만 먹으므로 감추고, 브랜드는 왼쪽에 고정해 되돌아갈 곳을 남긴다. */
+@media (max-width:700px) {
+  .ns-bar { gap:0; padding:0 0 0 12px; flex-wrap:nowrap; overflow-x:auto;
+    overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; align-items:stretch }
+  .ns-bar::-webkit-scrollbar { display:none }
+  .ns-bar > * { flex-shrink:0 }
+  .ns-bar .ns-sep { display:none }
+  .ns-bar .ns-brand { position:sticky; left:0; z-index:1; display:flex; align-items:center;
+    padding-right:12px; background:linear-gradient(90deg,rgba(10,12,18,.92) 70%,transparent) }
+  .ns-bar a:not(.ns-brand), .ns-bar span.ns-here {
+    display:flex; align-items:center; min-height:44px; padding:0 11px }
+  .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #7aa8ff }
+}
+@media (max-width:700px) and (prefers-color-scheme:light) {
+  html.ns-light-ok .ns-bar .ns-brand {
+    background:linear-gradient(90deg,rgba(245,246,250,.94) 70%,transparent) }
+  html.ns-light-ok .ns-bar span.ns-here { box-shadow:inset 0 -2px 0 #114edd }
+}
+
+/* .seg.seg = 특이도 상향: 본문 내 <style> 를 가진 페이지에서도 정본이 이긴다 */
+.seg.seg { display:inline-flex; padding:2px; gap:2px; flex-shrink:0;
+  background:rgba(255,255,255,.022); border:1px solid rgba(255,255,255,.09);
+  border-radius:8px }
+.seg.seg button { background:transparent; border:none; cursor:pointer;
+  padding:5px 10px; border-radius:6px; white-space:nowrap;
+  color:rgba(255,255,255,.56);
+  font:500 12px/1 'Geist','Inter',system-ui,sans-serif }
+.seg.seg button:hover { color:rgba(255,255,255,.80) }
+.seg.seg button.on { background:rgba(255,255,255,.07); color:rgba(255,255,255,.94) }
+@media (prefers-color-scheme:light) { html.ns-light-ok .seg.seg {
+  background:rgba(12,17,34,.03); border-color:rgba(12,17,34,.12) }
+  html.ns-light-ok .seg.seg button { color:rgba(9,12,22,.62) }
+  html.ns-light-ok .seg.seg button:hover { color:rgba(9,12,22,.80) }
+  html.ns-light-ok .seg.seg button.on { background:rgba(12,17,34,.08);
+    color:rgba(9,12,22,.92) } }/* 모바일: 세그먼트 버튼이 24px 였다 → 44px 터치 타깃 */
+@media (max-width:700px) {
+  .seg.seg button { min-height:40px; min-width:44px; justify-content:center;
+    display:inline-flex; align-items:center; font-size:13px; padding:0 12px }
+}
+:focus-visible { outline:2px solid #7aa8ff; outline-offset:2px; border-radius:4px }
+@media (prefers-color-scheme:light) {
+  html.ns-light-ok :focus-visible { outline-color:#114edd } }
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+    scroll-behavior:auto !important } }
+</style><div class="ns-bar"><a class="ns-brand" href="index.html">NearStars</a><a href="index.html">DB</a><span class="ns-sep">·</span><a href="starmap.html">3D Map</a><span class="ns-sep">·</span><a href="reports.html">Reports</a><span class="ns-sep">·</span><a href="phase4/index.html">Phase 4</a><span class="ns-sep">·</span><span class="ns-here">Tools</span><span class="ns-sep">·</span><a href="wiki/index.html">Wiki</a></div>
+<header>
+  <h1 data-i18n="title"></h1>
+  <div class="seg lang-toggle" id="lang-seg">
+    <button data-lang="ko">한</button>
+    <button class="on" data-lang="en">EN</button>
+  </div>
+</header>
+
+<main>
+<section>
+  <h2 data-i18n="section_title"></h2>
+  <div class="card">
+    <p class="intro" data-i18n="intro"></p>
+  </div>
+  <div class="tool-grid">
+    <a class="tool" href="starmap.html">
+      <div class="tname" data-i18n="t_starmap"></div>
+      <div class="tdesc" data-i18n="d_starmap"></div>
+    </a>
+    <a class="tool" href="firefly-colors.html">
+      <div class="tname" data-i18n="t_colors"></div>
+      <div class="tdesc" data-i18n="d_colors"></div>
+    </a>
+    <a class="tool" href="belt-viewer.html">
+      <div class="tname" data-i18n="t_belts"></div>
+      <div class="tdesc" data-i18n="d_belts"></div>
+    </a>
+    <a class="tool" href="ice-stability.html">
+      <div class="tname" data-i18n="t_ice"></div>
+      <div class="tdesc" data-i18n="d_ice"></div>
+    </a>
+    <a class="tool" href="phase4/orbit-viewers/index.html">
+      <div class="tname" data-i18n="t_valid"></div>
+      <div class="tdesc" data-i18n="d_valid"></div>
+    </a>
+  </div>
+</section>
+
+<section>
+  <h2 data-i18n="oneoff_title"></h2>
+  <div class="card">
+    <p class="intro" data-i18n="oneoff_intro"></p>
+  </div>
+  <div class="tool-grid">
+    <a class="tool" href="uranus-geometry.html">
+      <div class="tname" data-i18n="t_uranus"></div>
+      <div class="tdesc" data-i18n="d_uranus"></div>
+    </a>
+    <a class="tool" href="img/field-geometry.png">
+      <div class="tname" data-i18n="t_fieldgeo"></div>
+      <div class="tdesc" data-i18n="d_fieldgeo"></div>
+    </a>
+    <a class="tool" href="img/proxima-d-alfven-wing.png">
+      <div class="tname" data-i18n="t_alfven"></div>
+      <div class="tdesc" data-i18n="d_alfven"></div>
+    </a>
+    <a class="tool" href="img/moon-atmosphere-feasibility.png">
+      <div class="tname" data-i18n="t_moonatm"></div>
+      <div class="tdesc" data-i18n="d_moonatm"></div>
+    </a>
+    <a class="tool" href="img/proxima-c-system-to-scale.png">
+      <div class="tname" data-i18n="t_pcscale"></div>
+      <div class="tdesc" data-i18n="d_pcscale"></div>
+    </a>
+    <a class="tool" href="img/proxima-c-i-orbit-edge-compare.png">
+      <div class="tname" data-i18n="t_pcedge"></div>
+      <div class="tdesc" data-i18n="d_pcedge"></div>
+    </a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <span data-i18n="footer_note"></span>
+</footer>
+
+<script>
+const T = {
+  en: {
+    title: "NearStars · Tools",
+    section_title: "Standalone tools",
+    intro: "Interactive visualizations and calculators that stand apart from the per-body report chain. Each opens in place; use the nav above to get back.",
+    oneoff_title: "One-off explainers",
+    oneoff_intro: "Figures and pages built to settle a single question during curation. They are not regenerated when data changes \u2014 each is a snapshot of the argument it was made for, kept because the reasoning behind a derived value is worth being able to look at.",
+    t_fieldgeo: "Field shape \u2014 dipole vs multipole",
+    d_fieldgeo: "Meridional field lines, surface B_r map and auroral footprints, showing the *shape* of a planetary field rather than its strength.",
+    t_alfven: "Proxima d Alfv\u00e9n wing",
+    d_alfven: "Sub-Alfv\u00e9nic star-planet interaction geometry (Neubauer 1980; Saur 2013) \u2014 orbital-plane and meridional close-up.",
+    t_moonatm: "Moon atmosphere feasibility",
+    d_moonatm: "Whether a large moon can hold an atmosphere: Jeans retention limit, synchronous-orbit constraint, and measured precedents to scale.",
+    t_pcscale: "Proxima c system to scale",
+    d_pcscale: "The Proxima c system drawn at true relative scale.",
+    t_pcedge: "Proxima c I orbit \u2014 edge-on comparison",
+    d_pcedge: "Edge-on orbit geometry compared against alternatives considered during curation.",
+    t_starmap: "3D star map",
+    d_starmap: "Every curated system within 50 light-years, with spin axes, astrospheres, interstellar wind, and the 1314-star field layer.",
+    t_colors: "Element & plasma colors",
+    d_colors: "LTE emission colors per element and reentry-plasma palettes, computed from Saha-Boltzmann level populations.",
+    t_uranus: "Uranus pole-on geometry",
+    d_uranus: "Why Voyager 2 sampled an extreme magnetotail configuration: Earth vs Uranus in 3D, rotation axis, dipole tilt and the sweeping current sheet.",
+    t_belts: "Radiation belt viewer",
+    d_belts: "Kerbalism belt geometry (SDF torus + pause) for Solar System anchors and NearStars bodies, stock vs physical presets.",
+    t_ice: "Surface ice stability",
+    d_ice: "Given an ice species, orbit, size, and albedo: does an exposed ice surface survive the body's age, and what does the dust-lag branch leave behind?",
+    t_orbits: "Orbit viewers",
+    d_orbits: "Interactive 3D orbit and n-body views per system, rendered from the stability-sim runs.",
+    t_valid: "Orbit dynamics viewers",
+    d_valid: "Per system and hierarchy: leapfrog vs IAS15/MEGNO, with the 3D animation on the leapfrog run.",
+    footer_note: "NearStars · Tools index · hand-maintained (docs/tools.html)"
+  },
+  ko: {
+    title: "NearStars · 도구",
+    section_title: "단독 도구",
+    intro: "천체별 보고서 사슬과 별개로 도는 인터랙티브 시각화·계산기 모음입니다. 각 도구에서 위 내비게이션으로 돌아올 수 있습니다.",
+    oneoff_title: "일회성 설명물",
+    oneoff_intro: "큐레이션 중 한 가지 논점을 매듭짓기 위해 만든 그림과 페이지입니다. 데이터가 바뀌어도 다시 생성하지 않습니다. 각각은 그때 그 논증의 스냅숏이고, 도출값 뒤의 근거를 눈으로 확인할 수 있도록 남겨 둡니다.",
+    t_fieldgeo: "자기장 형상 \u2014 쌍극 vs 다중극",
+    d_fieldgeo: "자오면 자기력선, 표면 B_r 지도, 오로라 발자국. 자기장의 세기가 아니라 *모양*을 보여줍니다.",
+    t_alfven: "프록시마 d 알펜 윙",
+    d_alfven: "sub-Alfv\u00e9nic 항성-행성 상호작용 기하(Neubauer 1980, Saur 2013). 궤도면 뷰와 자오면 근접 뷰입니다.",
+    t_moonatm: "위성 대기 보유 가능성",
+    d_moonatm: "대형 위성이 대기를 붙잡을 수 있는지. Jeans 보유 한계, 동기궤도 제약, 실측 선례를 같은 축척으로 놓았습니다.",
+    t_pcscale: "프록시마 c 계 실척",
+    d_pcscale: "프록시마 c 계를 실제 상대 크기로 그린 그림입니다.",
+    t_pcedge: "프록시마 c I 궤도 \u2014 edge-on 비교",
+    d_pcedge: "큐레이션 중 검토한 대안들과 edge-on 궤도 기하를 비교합니다.",
+    t_starmap: "3D 성도",
+    d_starmap: "50광년 이내 큐레이션 항성계 전부. 자전축, 항성권, 성간풍, 1314개 별 필드 레이어 포함.",
+    t_colors: "원소·플라스마 발광색",
+    d_colors: "Saha-Boltzmann 준위 분포로 계산한 원소별 LTE 발광색과 재진입 플라스마 팔레트.",
+    t_uranus: "천왕성 pole-on 기하",
+    d_uranus: "Voyager 2가 왜 극단적인 자기꼬리 배치를 샘플링했는지. 지구와 천왕성을 3D로 비교하고 자전축·쌍극자 기울기·쓸려 도는 전류시트를 보여줍니다.",
+    t_belts: "방사선대 뷰어",
+    d_belts: "태양계 앵커와 NearStars 천체의 Kerbalism 벨트 기하(SDF 토러스 + 자기권계면). 스톡/물리 프리셋 비교.",
+    t_ice: "표면 얼음 안정성",
+    d_ice: "얼음 종류·궤도·크기·알베도를 넣으면, 노출된 얼음 표면이 천체 나이만큼 버티는지와 먼지 잔류층 갈래의 결과를 보여줍니다.",
+    t_orbits: "궤도 뷰어",
+    d_orbits: "안정성 시뮬레이션 결과로 렌더한 시스템별 인터랙티브 3D 궤도·n-body 뷰.",
+    t_valid: "궤도 동역학 뷰어",
+    d_valid: "시스템별·계층별 leapfrog 대 IAS15/MEGNO 교차 검증. 3D 애니메이션은 leapfrog 런에 붙어 있습니다.",
+    footer_note: "NearStars · 도구 인덱스 · 수동 관리 (docs/tools.html)"
+  }
+};
+
+let lang = localStorage.getItem('nearstars-lang') || 'en';
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = T[lang][el.dataset.i18n];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('#lang-seg button').forEach(b => {
+    b.classList.toggle('on', b.dataset.lang === lang);
+  });
+}
+
+document.getElementById('lang-seg').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-lang]');
+  if (!btn) return;
+  lang = btn.dataset.lang;
+  localStorage.setItem('nearstars-lang', lang);
+  applyLang();
+});
+
+applyLang();
+</script>
+
+</body>
+</html>

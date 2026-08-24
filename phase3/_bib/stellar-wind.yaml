@@ -1,0 +1,104 @@
+host: _stellar-wind-magnetic-field
+slug: stellar-wind
+generated_at: '2026-06-10'
+note: 'Cross-star anchor bibliography for the mass_loss + magnetic_field categories (Kerbalism stellar-wind layer). Pinned
+  by arxiv_id for cache-grep value-check before committing recommended values. See [[project-nearstars-stellar-wind-kerbalism]].
+
+  '
+papers:
+- arxiv_id: '2009.01259'
+  ads_bibcode: 2020AJ....160..237F
+  title: France et al. 2020 - Barnard high-energy environment (Chandra L_X + FUV flare rate; xray axis anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1612.06570'
+  ads_bibcode: 2016arXiv161206570R
+  title: Robrade & Schmitt 2016 - alpha Cen AB XMM long-term X-ray (L_X cycles; xray axis anchor; already cached)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2105.00019'
+  ads_bibcode: 2021ApJ...915...37W
+  title: Wood et al. 2021 - M dwarf wind mass-loss (Proxima/Barnard upper limits, astrospheric Lya)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0011153
+  ads_bibcode: 2001ApJ...547L..49W
+  title: Wood et al. 2001 - alpha Cen + Proxima mass-loss (HST Lya astrosphere)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0808.2986'
+  ads_bibcode: 2008ApJ...684.1390R
+  title: Reiners & Basri 2008 - Proxima surface magnetic field <B> (Zeeman)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2010.14311'
+  ads_bibcode: 2021MNRAS.500.1844K
+  title: Klein et al. 2021 - Proxima large-scale field (ZDI)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2204.00342'
+  ads_bibcode: 2022A&A...662A..41R
+  title: Reiners et al. 2022 - M dwarf <B> vs rotation calibration (CARMENES)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1706.04617'
+  ads_bibcode: 2017ApJ...843L..33G
+  title: Garraffo et al. 2017 - TRAPPIST-1 wind/magnetic environment (model B)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '2509.12310'
+  ads_bibcode: 2025ApJ...tau.Cet.ZDI
+  title: Chiti et al. 2025 - tau Cet large-scale field (ZDI, weakest in a Sun-like star)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1310.6507'
+  ads_bibcode: 2013arXiv1310.6507M
+  title: Marsden et al. 2013 - BCool survey (PRELIMINARY proceedings, no per-star table)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1311.3374'
+  ads_bibcode: 2014MNRAS.444.3517M
+  title: Marsden et al. 2014 - BCool magnetic snapshot survey (MNRAS 444, 3517; full per-star B_l table)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0506401
+  ads_bibcode: 2005ApJ...628L.143W
+  title: Wood et al. 2005 - New astrospheric Lya mass-loss measurements (eps Ind / 40 Eri check)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1401.0847'
+  ads_bibcode: 2014AJ....147...59A
+  title: Ayres 2014 - The Ups and Downs of alpha Cen (X-ray cycles A 19.2 yr tentative, B 8.1 yr)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1009.1652'
+  ads_bibcode: 2010ApJ...722..343D
+  title: DeWarf Datin Guinan 2010 - alpha Cen B multi-band activity cycle 8.84 yr
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1610.03447'
+  ads_bibcode: 2017MNRAS.464.3281W
+  title: Wargelin et al. 2017 - Proxima Cen 7-yr stellar cycle (ASAS V-band + X-ray/UV)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2302.10310'
+  ads_bibcode: 2023AJ....165..176L
+  title: Laliotis et al. 2023 - HK/S-index cycle compilation (40 Eri A 8.70 yr, eps Ind A 5.65 yr)
+  status: fetched
+  category: deep_read
+  fetch_error: null

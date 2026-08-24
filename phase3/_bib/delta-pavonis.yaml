@@ -1,0 +1,54 @@
+host: Delta Pavonis
+slug: delta-pavonis
+generated_at: '2026-05-29'
+note: 'Phase 2 anchor bibliography for δ Pav (Tier 1 host #1). The ADS/arXiv keyword auto-gen missed every anchor (arXiv 429
+  + object-query noise), so sources were resolved via the ADS API and verified (bibcode + arxiv_id). Recommended radius/teff/luminosity
+  anchor = Rains 2020 VLTI/PIONIER (the postmortem fix).
+
+  '
+papers:
+- arxiv_id: '2004.02343'
+  ads_bibcode: 2020MNRAS.493.2377R
+  title: Rains et al. 2020 — VLTI/PIONIER theta_LD -> R/Teff/L (ANCHOR radius+teff+lum)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1309.2631'
+  ads_bibcode: 2014A&A...562A..71B
+  title: Bensby et al. 2014 — FEROS high-res [Fe/H], mass, vsini
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1002.4268'
+  ads_bibcode: 2010MNRAS.405.1907B
+  title: Bruntt et al. 2010 — asteroseismic radius (radius alternative)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0811.3982'
+  ads_bibcode: 2009A&A...501..941H
+  title: Holmberg et al. 2009 — Geneva-Copenhagen survey III, isochrone age
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1105.3125'
+  ads_bibcode: 2011MNRAS.416..447S
+  title: Spada et al. 2011 — evolutionary models, subgiant mass/age
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 1996AJ....111..439H
+  title: Henry et al. 1996 — chromospheric activity log R'HK (no arXiv; VizieR/ADS value-check)
+  status: skipped
+  category: manual_followup
+- arxiv_id: null
+  ads_bibcode: 1998A&AS..132..155H
+  title: Hunsch et al. 1998 — ROSAT nearby-stars X-ray catalog (no arXiv; VizieR)
+  status: skipped
+  category: manual_followup
+- arxiv_id: null
+  ads_bibcode: 2013A&A...555A..11E
+  title: Eiroa et al. 2013 — DUNES debris disk (disks_curated; arXiv resolve when needed)
+  status: skipped
+  category: manual_followup

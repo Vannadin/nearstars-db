@@ -1,0 +1,49 @@
+host: 55 Cnc
+slug: 55-cnc
+generated_at: '2026-05-31'
+note: Phase 2 anchor bibliography for 55 Cnc A (rho1 Cnc, HD 75732, HIP 43587, Gaia DR3 704967037090946688, K0IV-V, d=12.59
+  pc / 41 ly). Stellar fundamentals (R, Teff, L) anchored on von Braun et al. 2011 CHARA interferometry (theta_LD -> R 0.943
+  +/- 0.010 Rsun, direct Teff 5196 +/- 24 K, L 0.582 +/- 0.014 Lsun); this RE-ANCHORS the DB radius 0.943 currently mis-attributed
+  to Bourrier 2018 method=unverified. Mass + rotation + magnetic-activity cycle from Bourrier et al. 2018 homogeneous system
+  refit. Latest planet masses (b/c/f/d + companion B planets) from Moutou et al. 2025/2026 (arXiv 2510.11523) which POSTDATES
+  the model knowledge cutoff -> all Moutou values VALUE-CHECKED against the cached text before promotion. Planet e (USP transiting
+  super-Earth) orbit+mass+radius from Bourrier 2018; e atmosphere papers (Demory 2016 phase curve, Hu 2024 secondary atmosphere)
+  pinned as deep_read for later Phase 3. A-B has NO published Keplerian orbit (only ~1065 AU projected separation) -> left
+  UNMODELED, note only. Companion B already in DB (55_cnc_b) with 2 planets; NOT re-curated here, but its mass/radius method=unverified
+  is flagged. [Fe/H] skipped per project policy.
+papers:
+- arxiv_id: '1107.1936'
+  ads_bibcode: 2011ApJ...740...49V
+  title: von Braun et al. 2011 — CHARA interferometric radius (R 0.943 Rsun), direct Teff 5196 K, bolometric luminosity (RECOMMENDED
+    radius/Teff/luminosity anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1807.04301'
+  ads_bibcode: 2018A&A...619A...1B
+  title: Bourrier et al. 2018 — homogeneous 55 Cnc system refit; stellar mass, rotation period + magnetic activity cycle;
+    planet e orbit/mass/radius anchor (RECOMMENDED mass + rotation + activity)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2510.11523'
+  ads_bibcode: 2026A&A...705A.190M
+  title: Moutou et al. 2025/2026 — latest 55 Cnc RV refit; planet b/c/f/d masses + periods, companion 55 Cnc B 2 planets (planet
+    mass VALUE-CHECK; postdates cutoff)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1505.00269'
+  ads_bibcode: 2016Natur.532..207D
+  title: Demory et al. 2016 — Spitzer 4.5 um thermal phase curve of 55 Cnc e, dayside brightness-temperature variability (e
+    atmosphere; Phase 3 deep_read)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2024Natur.630..609H
+  title: Hu et al. 2024 — JWST MIRI/NIRCam secondary-eclipse evidence for a volatile (CO/CO2) secondary atmosphere on 55 Cnc
+    e (Nature; ar5iv likely empty -> manual_followup)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
