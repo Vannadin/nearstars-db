@@ -1,0 +1,7 @@
+# gh-pages 는 빌드 산출물 전용 고아 브랜치다. 아래는 절대 올라가면 안 되는 것들 —
+# publish_site.sh 의 rsync 제외가 실패했을 때의 두 번째 그물.
+
+# ADS/arXiv 논문 전문 캐시. 저작권물이며 공개 사이트에 게시하지 않는다.
+_papers/
+
+.DS_Store
