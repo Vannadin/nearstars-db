@@ -91,9 +91,57 @@ def levels(nodes: dict, edges: list) -> dict[str, int]:
     return lv
 
 
+def backflow() -> dict:
+    """bindings.yaml + 보드에서 노드별 "이미 출하한 값" 을 모은다.
+
+    탐색기는 방법론끼리의 의존만 그렸다. 그런데 실제 사고는 값이 출하된 뒤에
+    났다 — 출하값이 다른 출하값의 부모가 되고, 시뮬의 입력이 되는 층이다.
+    그 층이 그림에 없으면 이 페이지는 기준이 될 수 없다.
+    """
+    binds = yaml.safe_load((HERE / "bindings.yaml").read_text(encoding="utf-8"))
+    fields = binds["fields"]
+
+    rows: dict[str, int] = {}
+    for board in sorted((HERE.parent / "phase4").glob("*.yaml")):
+        doc = yaml.safe_load(board.read_text(encoding="utf-8")) or {}
+        for row in doc.get("decisions") or []:
+            for f in row.get("fields") or []:
+                name = f.get("name")
+                if name:
+                    rows[name] = rows.get(name, 0) + 1
+
+    per: dict[str, dict] = {}
+    for name, b in fields.items():
+        for node in b.get("produced_by") or []:
+            d = per.setdefault(node, {"shipped": [], "rows": 0, "bundled": [], "consumers": []})
+            d["shipped"].append({"name": name, "n": rows.get(name, 0),
+                                 "from": b.get("derived_from") or []})
+            d["rows"] += rows.get(name, 0)
+            if b.get("bundled"):
+                d["bundled"].append({"name": name, "note": (b.get("note") or "").strip()})
+
+    for c in binds.get("consumers") or []:
+        owners = {node for n in (c.get("consumes") or [])
+                  for node in (fields.get(n, {}).get("produced_by") or [])}
+        for node in owners:
+            per.setdefault(node, {"shipped": [], "rows": 0, "bundled": [], "consumers": []})
+            per[node]["consumers"].append({
+                "id": c.get("id"), "cost": c.get("cost", ""),
+                "invalidates": c.get("invalidates") or []})
+
+    for d in per.values():
+        d["shipped"].sort(key=lambda x: -x["n"])
+
+    orphans = sorted(n for n, b in fields.items()
+                     if not (b.get("produced_by") or [])
+                     and b.get("kind") not in ("label", "gameplay", "art"))
+    return {"per": per, "orphans": [{"name": n, "n": rows.get(n, 0)} for n in orphans]}
+
+
 def build() -> None:
     g = yaml.safe_load(CHAIN.read_text(encoding="utf-8"))
     nodes, edges = g["nodes"], g["edges"]
+    bf = backflow()
     lv = levels(nodes, edges)
 
     cols: dict[int, list[str]] = {}
@@ -124,6 +172,8 @@ def build() -> None:
                 "note": (nd.get("note") or "").strip(),
                 "recipe": nd.get("recipe", ""),
                 "outputs": nd.get("outputs", []),
+                "bf": bf["per"].get(n, {"shipped": [], "rows": 0,
+                                        "bundled": [], "consumers": []}),
                 "x": pos[n][0], "y": pos[n][1],
             } for n, nd in nodes.items()
         },
@@ -140,6 +190,7 @@ def build() -> None:
         ],
         "kindKo": KIND_KO,
         "layers": [{"x": PAD_X + l * GX, "name": LAYER_KO[l]} for l in sorted(LAYER)],
+        "orphans": bf["orphans"],
         "w": width, "h": height,
     }
 
@@ -167,6 +218,7 @@ TEMPLATE = r"""<title>의존 사슬 탐색기</title>
   --ink:#16202B; --ink-2:#48586A; --ink-3:#7B8B9B; --rule:#C7D0D9;
   --requires:#5A6B7D; --selects:#6A3FA0; --influences:#1F6E7C; --excludes:#A81F48;
   --missing:#A81F48; --missing-bg:#F7DFE6; --partial:#9A6605; --partial-bg:#F6ECD8;
+  --ship:#4A6B2F; --ship-bg:#E4EEDA;
   --font-sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
   --font-mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,monospace;
 }
@@ -175,12 +227,14 @@ TEMPLATE = r"""<title>의존 사슬 탐색기</title>
   --ink:#DCE4EC; --ink-2:#A3B2C0; --ink-3:#6F7F8F; --rule:#2C3946;
   --requires:#93A3B4; --selects:#C4A0F0; --influences:#5FC0CF; --excludes:#FF7A9C;
   --missing:#FF7A9C; --missing-bg:#37202A; --partial:#E3AE4A; --partial-bg:#31281A;
+  --ship:#9FC96B; --ship-bg:#232C1C;
 }}
 :root[data-theme="dark"]{
   --paper:#10161D; --surface:#19212B; --surface-2:#1F2833;
   --ink:#DCE4EC; --ink-2:#A3B2C0; --ink-3:#6F7F8F; --rule:#2C3946;
   --requires:#93A3B4; --selects:#C4A0F0; --influences:#5FC0CF; --excludes:#FF7A9C;
   --missing:#FF7A9C; --missing-bg:#37202A; --partial:#E3AE4A; --partial-bg:#31281A;
+  --ship:#9FC96B; --ship-bg:#232C1C;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans);line-height:1.7}
@@ -201,6 +255,28 @@ h1{font-size:26px;font-weight:700;margin:0;letter-spacing:-.02em}
 .stage{max-width:1700px;margin:0 auto;padding:0 24px 60px;display:grid;
        grid-template-columns:minmax(0,1fr) 310px;gap:20px;align-items:start}
 @media(max-width:1080px){.stage{grid-template-columns:1fr}}
+/* 역류 표시 — 이미 출하한 값이 걸린 노드는 손대면 실제로 되열린다 */
+.node .ship{fill:var(--ship)}
+.node .rerun{fill:var(--partial)}
+.node .bundle{fill:none;stroke:var(--missing);stroke-width:1.4}
+.panel .tag.ship{color:var(--ship);border-color:var(--ship);background:var(--ship-bg)}
+.panel .tag.warn{color:var(--partial);border-color:var(--partial);background:var(--partial-bg)}
+.panel .grp.warn h3{color:var(--partial)}
+.panel .grp.warn li b{color:var(--partial);font-weight:500}
+.legend2{display:flex;gap:18px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--ink-3)}
+.legend2 span{display:flex;align-items:center;gap:6px}
+.legend2 .sw{width:10px;height:10px;border-radius:2px;flex:none}
+.legend2 .sw.ship{background:var(--ship);width:3px;height:12px;border-radius:1.5px}
+.legend2 .sw.rerun{background:var(--partial);border-radius:50%;width:7px;height:7px}
+.legend2 .sw.bundle{background:none;border:1.4px solid var(--missing);width:7px;height:7px}
+
+.orph{margin-top:14px;border-top:1px solid var(--rule);padding-top:12px}
+.orph h3{margin:0 0 7px;font-size:11.5px;font-family:var(--font-mono);letter-spacing:.04em;
+  color:var(--missing);font-weight:500}
+.orph p{margin:0;font-size:12.5px;color:var(--ink-2);font-weight:300;line-height:1.55}
+.orph code{font-family:var(--font-mono);font-size:11px;color:var(--ink-3);
+  display:block;margin-top:5px;line-height:1.9;overflow-wrap:anywhere;word-break:break-word}
+
 .canvas{background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow-x:auto}
 svg{display:block}
 .panel{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:20px;
@@ -241,7 +317,7 @@ svg{display:block}
 
 <div class="top">
   <h1>의존 사슬 탐색기</h1>
-  <p class="sub">노드 __NN__개, 연결 __NE__개 전부. 값 하나에 올려두면 그 값이 무엇에 기대고 무엇을 흔드는지 보인다. 눌러서 고정.</p>
+  <p class="sub">노드 __NN__개, 연결 __NE__개 전부. 값 하나에 올려두면 그 값이 무엇에 기대고 무엇을 흔드는지, 그리고 <b>이미 내보낸 값 중 무엇이 다시 열리는지</b> 보인다. 눌러서 고정.</p>
   <div class="bar">
     <span class="tg requires" data-k="requires" data-on="1"><span class="dot"></span>값을 넘긴다 __CR__</span>
     <span class="tg selects" data-k="selects" data-on="1"><span class="dot"></span>방식을 고른다 __CS__</span>
@@ -249,12 +325,19 @@ svg{display:block}
     <span class="tg excludes" data-k="excludes" data-on="0"><span class="dot"></span>아니라고 밝혀졌다 __CX__</span>
     <span class="hint">왼쪽이 먼저 정해지는 값이다</span>
   </div>
+  <div class="legend2">
+    <span><i class="sw ship"></i>이미 출하함 — 손대면 되열린다</span>
+    <span><i class="sw rerun"></i>시뮬 재실행 필요</span>
+    <span><i class="sw bundle"></i>벌크라 재도출 불가</span>
+  </div>
 </div>
 
 <div class="stage">
   <div class="canvas"><svg id="g" role="img" aria-label="의존 그래프 전체. 노드에 올리면 연결이 강조된다."></svg></div>
   <aside class="panel" id="p"><p class="ph">노드에 마우스를 올리면 여기에 설명과 연결이 표시된다.</p></aside>
 </div>
+
+<div class="orph" id="orph"></div>
 
 <script>
 const D = __DATA__;
@@ -293,12 +376,33 @@ for (const id in D.nodes) {
             : n.kind === 'class_table' ? 'tbl' : '';
   const g = mk('g', { class: `node ${cls}`, tabindex: '0', role: 'button' });
   g.appendChild(mk('rect', { x: n.x, y: n.y, width: NW, height: NH, rx: 6 }));
+  // 이미 출하한 값이 있으면 왼쪽에 두께로 표시한다 — 건드리면 실제로 되열리는 노드.
+  if (n.bf.rows) {
+    g.appendChild(mk('rect', { x: n.x, y: n.y, width: 3, height: NH,
+      rx: 1.5, class: 'ship' }));
+  }
+  // 시뮬을 다시 돌려야 하는 노드는 따로 찍는다. 값 되계산과 비용이 다르다.
+  if (n.bf.consumers.length) {
+    g.appendChild(mk('circle', { cx: n.x + NW - 8, cy: n.y + 8, r: 3.2, class: 'rerun' }));
+  }
+  if (n.bf.bundled.length) {
+    g.appendChild(mk('rect', { x: n.x + NW - 13, y: n.y + NH - 11, width: 6, height: 6,
+      rx: 1, class: 'bundle' }));
+  }
   const t = mk('text', { x: n.x + NW / 2, y: n.y + NH / 2 + 4.5, 'text-anchor': 'middle' });
   t.textContent = n.label; g.appendChild(t);
   g.addEventListener('mouseenter', () => show(id));
   g.addEventListener('focus', () => show(id));
   g.addEventListener('click', () => { pinned = pinned === id ? null : id; show(id); });
   gN.appendChild(g); nEls[id] = g;
+}
+
+const orph = document.getElementById('orph');
+if (D.orphans.length) {
+  const total = D.orphans.reduce((a, f) => a + f.n, 0);
+  orph.innerHTML = `<h3>낳는 노드가 없는 출하값 ${D.orphans.length}종 / ${total}행</h3>
+    <p>이미 내보냈는데 어느 방법론도 이 값을 만들어내지 않는다. 그래프의 실제 구멍이다.<br>
+    <code>${D.orphans.map(f => `${f.name}(${f.n})`).join('  ')}</code></p>`;
 }
 
 const off = new Set(['excludes']);
@@ -321,6 +425,33 @@ function list(items, dir) {
   return `<div class="grp"><h3>${dir === 'in' ? '이것이 기대는 값' : '이 값이 흔드는 것'} ${items.length}</h3><ul>${li}</ul></div>`;
 }
 
+function backflowBlocks(n) {
+  const b = n.bf; let out = '';
+  if (b.rows) {
+    const li = b.shipped.map(f => {
+      const from = f.from.length ? ` · ${f.from.join(', ')} 에서 계산` : '';
+      return `<li><span>${esc(f.name)}<br><em>${f.n}행${esc(from)}</em></span></li>`;
+    }).join('');
+    out += `<div class="grp"><h3>이미 출하한 값 ${b.rows}행 / ${b.shipped.length}종</h3>
+      <ul>${li}</ul></div>`;
+  }
+  if (b.bundled.length) {
+    const li = b.bundled.map(f =>
+      `<li><span>${esc(f.name)}${f.note ? `<br><em>${esc(f.note)}</em>` : ''}</span></li>`).join('');
+    out += `<div class="grp warn"><h3>벌크라 재도출 불가 ${b.bundled.length}</h3>
+      <ul>${li}</ul></div>`;
+  }
+  if (b.consumers.length) {
+    const li = b.consumers.map(c => {
+      const inv = c.invalidates.map(t => `<br><em>무효: ${esc(t)}</em>`).join('');
+      return `<li><span>${esc(c.id)} <b>${esc(c.cost)}</b>${inv}</span></li>`;
+    }).join('');
+    out += `<div class="grp warn"><h3>다시 돌려야 할 것 ${b.consumers.length}</h3>
+      <ul>${li}</ul></div>`;
+  }
+  return out;
+}
+
 function show(id) {
   const n = D.nodes[id];
   const inc = D.edges.filter(e => e.t === id && !off.has(e.k));
@@ -337,11 +468,14 @@ function show(id) {
   if (n.status) tags.push(`<span class="tag miss">${n.status === 'missing' ? '없음' : '공백'}</span>`);
   if (n.kind === 'class_table') tags.push('<span class="tag tbl">계산값 아님</span>');
   if (n.recipe) tags.push(`<span class="tag">${esc(n.recipe)}</span>`);
+  if (n.bf.rows) tags.push(`<span class="tag ship">출하 ${n.bf.rows}행</span>`);
+  if (n.bf.consumers.length) tags.push('<span class="tag warn">재실행 필요</span>');
 
   panel.innerHTML = `<h2>${esc(n.label)}</h2><div class="id">${esc(id)}</div>
     <div class="tags">${tags.join('')}</div>
     ${n.note ? `<p class="note">${esc(n.note)}</p>` : ''}
     ${n.outputs.length ? `<div class="grp"><h3>내놓는 값</h3><ul><li><span><em>${esc(n.outputs.join(' · '))}</em></span></li></ul></div>` : ''}
+    ${backflowBlocks(n)}
     ${list(inc, 'in')}${list(out, 'out')}`;
 
   panel.querySelectorAll('[data-go]').forEach(li =>
