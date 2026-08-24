@@ -2399,7 +2399,7 @@ decisions:
         cfg 필드로 구조화.
 
   - body: Pandora
-    axis: appearance               # base_colour/clouds/biolum/aurora/specular (group 6, facet-walk 2026-06-22)
+    axis: appearance               # base_color/clouds/biolum/aurora/specular (group 6, facet-walk 2026-06-22)
     provenance: >
       2026-08-07: Hapke shader scalars + mean visual albedo added (hapke_terrain / hapke_scaled / hapke_porosity_k / hapke_theta / albedo_mean) per docs/reference/hapke-shader-methodology.md; K computed from the packing formula, theta anchored by analog. No prior value changed.
       2026-08-18: ⚗ 대기 세트 다섯 값을 수기 적합에서 닫힌 해로 교체했다(waist 0.2528→0, smooth 13.5428→144.012,
@@ -2419,7 +2419,7 @@ decisions:
       번지며, 대기 상층부에서는 격렬한 오로라가 타오른다. 특히 강한 국소 자기장을 띠고 있는 지역의 하늘에 독특한
       형태의 오로라가 더해진다.
     fields:
-      - { name: base_colour, value: "Earth-like green vegetation with blue oceans and white cloud marbling", value_ko: "지구식 초록 식생 + 파란 대양 + 흰 구름 마블", op: set }
+      - { name: base_color, value: "Earth-like green vegetation with blue oceans and white cloud marbling", value_ko: "지구식 초록 식생 + 파란 대양 + 흰 구름 마블", op: set }
       - { name: clouds, value: "White water clouds, active weather", value_ko: "흰 물구름, 활발한 기상", op: set }
       - { name: emission_glow, value: "Soft cyan bioluminescence at night (plants and coastlines)", value_ko: "은은한 청록 야간 생물발광 (식물+해안)", op: set }
       - { name: aurora, value: "Violent and multicolored (O₂ green 557.7/630 nm, N₂⁺ blue-violet 391 nm, plus red) with local flux-vortex ovals", value_ko: "격렬·다색 (O₂ 초록 557.7/630nm + N₂⁺ 청보라 391nm + 적색) + 국소 플럭스-볼텍스 오벌", op: set }
@@ -2710,7 +2710,7 @@ decisions:
       약한 자기장 탓에 오로라는 희미하다.
     refs: ["docs/reference/atmosphere-reflected-color-methodology.md", "docs/reference/hapke-shader-methodology.md"]
     fields:
-      - { name: base_colour, value: "Pale blue-white marbling with a faint amber (grey-blue seas, white ice caps, dark continents)", value_ko: "엷은 청백 마블 + 약한 amber (청회색 바다 + 흰 빙관 + 어두운 대륙)", op: set }
+      - { name: base_color, value: "Pale blue-white marbling with a faint amber (grey-blue seas, white ice caps, dark continents)", value_ko: "엷은 청백 마블 + 약한 amber (청회색 바다 + 흰 빙관 + 어두운 대륙)", op: set }
       - { name: haze, value: "A thin high organic tholin haze (the surface shows through; the amber is a transmitted tint, not a scattering color)", value_ko: "얇은 고층 유기 톨린 haze (표면 비침; amber는 산란색이 아니라 투과 색조)", op: set }
       - { name: haze_aerosol_radius, value: "≳0.2", unit: µm, op: set, note: "A lower bound. Below this, Rayleigh-regime scattering overwhelms absorption and the haze turns blue (#c7e6ff)", note_ko: "하한. 이보다 작으면 레일리 영역 산란이 흡수를 압도해 haze가 청색(#c7e6ff)이 됨" }
       - { name: clouds, value: "White water clouds (active weather)", value_ko: "흰 물구름 (활발한 기상)", op: set }

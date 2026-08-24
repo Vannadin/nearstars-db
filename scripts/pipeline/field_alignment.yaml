@@ -270,12 +270,6 @@ alignment:
     unit: hex
     cfg: {kopernicus: "PQS color map base"}
     applies: planet
-  - phase4: base_colour
-    phase3: [surface_tint_rgb_hex_primary, surface_tint_rgb_hex]
-    unit: hex
-    cfg: {kopernicus: "PQS color map base"}
-    applies: planet
-    note: British-spelling duplicate of base_color — normalize on next board touch
   - phase4: surface
     phase3: [surface_tint_rgb_hex_primary, surface_tint_rgb_hex_accent]
     unit: hex / prose

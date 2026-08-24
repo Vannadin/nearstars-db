@@ -58,14 +58,14 @@ AXIS_NAMES = {
                    "breathability", "oxygen", "greenhouse", "escape", "loss"},
     "surface": {"surface_type", "hydrosphere", "ocean", "ice_caps", "glaciation",
                 "tectonics", "volcanism", "terrain", "surface_temperature", "albedo", "biosphere"},
-    "appearance": {"banding", "base_colour", "base_color", "clouds", "haze", "aurora",
+    "appearance": {"banding", "base_color", "clouds", "haze", "aurora",
                    "rings", "surface", "emission_glow", "specular", "artificial",
                    "city_lights", "granulation", "limb_darkening", "spots_faculae",
-                   "corona", "flares", "beam", "color", "colour"},
+                   "corona", "flares", "beam", "color"},
     "magnetism": {"magnetic_field", "magnetosphere", "radiation_belts"},
     "environment": {"radiation", "stellar_wind", "activity", "heliosphere", "flares",
                     "space_weather", "uv_xray_flux", "habitable_zone"},
-    "rings": {"ring_structure", "ring_composition", "ring_color", "ring_colour",
+    "rings": {"ring_structure", "ring_composition", "ring_color",
               "ring_opacity", "ring_plane", "circumstellar_disk", "debris_belt", "asteroid_belt"},
     "satellites": {"co_orbitals", "trojans", "dust_sources"},
     "gameplay": {"sphere_of_influence_tuning", "science_biomes", "timewarp_limits", "difficulty"},
@@ -154,6 +154,57 @@ def is_v2(doc):
     return str(doc.get("schema_version", "")).strip() in {"2", "2.0"}
 
 
+# `fields[].name` 어휘. 명부는 engine/bindings.yaml 하나뿐이다 — 두 벌을 두면
+# 그게 또 갈린다(base_colour 가 그렇게 살아남았다). 그 파일은 158개 이름 각각을
+# 어느 도출 노드가 낳는지까지 들고 있으므로, 여기서는 키 집합만 빌려 쓴다.
+def field_vocabulary():
+    path = REPO / "engine" / "bindings.yaml"
+    if not path.exists():
+        return None
+    doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return set((doc.get("fields") or {}).keys())
+
+
+def check_field_names(loc, fields, vocab, fails):
+    """출하되는 이름을 명부에 대조한다.
+
+    2026-08-24 까지 이 검사가 없었다. AXIS_NAMES 는 `axis:` 접미사만 봤고
+    `fields[].name` 은 무엇이든 통과했다 — 없는 이름을 넣어도 PASS 였다.
+    그래서 158개 이름 중 36개가 한 번만 등장하고, base_color/base_colour 가
+    나란히 출하됐다.
+    """
+    if vocab is None:
+        return
+    for f in fields:
+        if not isinstance(f, dict):
+            continue
+        name = f.get("name")
+        if name and name not in vocab:
+            fails.append(f"{loc}: field name '{name}' 이 명부(engine/bindings.yaml)에 없다 "
+                         f"— 새 이름이면 명부에 먼저 등재할 것")
+
+
+def check_menu_variants(fails):
+    """§0 메뉴 자체에 철자 변종이 들어 있는지 본다.
+
+    이름 검사는 메뉴에 있으면 통과시킨다. 그래서 드리프트가 생겼을 때 고치는
+    대신 메뉴를 넓히면 조용히 합법이 된다. base_colour/base_color 가 그렇게
+    살아남았고, 감사가 세 번 적었는데도 아무 게이트도 울리지 않았다.
+    """
+    def norm(n):
+        return (n.replace("colour", "color").replace("grey", "gray")
+                 .replace("_metre", "_meter").replace("ise", "ize"))
+
+    seen = {}
+    for group, names in AXIS_NAMES.items():
+        for n in names:
+            key = (group, norm(n))
+            if key in seen and seen[key] != n:
+                fails.append(f"§0 메뉴 '{group}': '{seen[key]}' 와 '{n}' 는 같은 이름의 "
+                             f"철자 변종이다 — 메뉴를 넓히지 말고 보드를 정규화할 것")
+            seen[key] = n
+
+
 def check_fields(loc, fields, fails):
     """SPEC §3.1 typed-field shape: every entry is a mapping with a name and a value
     (an emit number living only in prose is exactly what the gate exists to prevent)."""
@@ -183,6 +234,7 @@ def check_fields(loc, fields, fails):
 
 def check_v2(path, doc):
     fails, warns = [], []
+    vocab = field_vocabulary()
     if not isinstance(doc.get("decisions"), list):
         fails.append(f"{path.name}: no 'decisions:' list at top level "
                      "(missing or misspelled key would silently skip every row)")
@@ -217,7 +269,7 @@ def check_v2(path, doc):
         if group not in AXIS_GROUPS:
             fails.append(f"{loc}: axis group '{group}' not in the §0 menu")
         if name and name not in AXIS_NAMES.get(group, set()):
-            warns.append(f"{loc}: axis name '{name}' not in the §0 menu for '{group}'")
+            fails.append(f"{loc}: axis name '{name}' not in the §0 menu for '{group}'")
 
         if status not in STATUS:
             fails.append(f"{loc}: status '{status}' not in {sorted(STATUS)}")
@@ -251,6 +303,7 @@ def check_v2(path, doc):
             fails.append(f"{loc}: fields is not a list")
             fields = []
         check_fields(loc, fields, fails)
+        check_field_names(loc, fields, vocab, fails)
 
         refs = row.get("refs")
         if refs is not None and (not isinstance(refs, list)
@@ -442,6 +495,16 @@ def summarize_legacy(path, doc):
 def main():
     any_fail = False
     print("── Phase 4 emit-gate (schema v2 strict / legacy soft) ──")
+
+    # 보드보다 먼저 메뉴 자체를 검사한다. 메뉴가 오염돼 있으면 보드 검사는
+    # 오염을 합법으로 읽는다.
+    menu_fails = []
+    check_menu_variants(menu_fails)
+    if menu_fails:
+        any_fail = True
+        print(f"  [FAIL] §0 메뉴: {len(menu_fails)} error(s)")
+        for m in menu_fails:
+            print(f"      ✗ {m}")
     for path in BOARDS:
         try:
             doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
