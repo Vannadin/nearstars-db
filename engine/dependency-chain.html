@@ -6,8 +6,8 @@
 <style>
 :root{
   --paper:#E7EBEF; --surface:#FBFCFD; --surface-2:#F1F4F7;
-  --ink:#16202B; --ink-2:#4A5A6B; --ink-3:#7B8B9B; --rule:#C7D0D9;
-  --req:#4A5A6B; --select:#6A3FA0; --infl:#1F6E7C; --excl:#A81F48;
+  --ink:#16202B; --ink-2:#48586A; --ink-3:#7B8B9B; --rule:#C7D0D9;
+  --req:#48586A; --select:#6A3FA0; --infl:#1F6E7C; --excl:#A81F48;
   --missing:#A81F48; --missing-bg:#F7DFE6;
   --partial:#9A6605; --partial-bg:#F6ECD8; --ok:#2C6E49;
   --shadow:rgba(22,32,43,.08);
@@ -16,16 +16,16 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --paper:#10161D; --surface:#19212B; --surface-2:#1F2833;
-  --ink:#DCE4EC; --ink-2:#9DACBB; --ink-3:#6F7F8F; --rule:#2C3946;
-  --req:#9DACBB; --select:#C4A0F0; --infl:#5FC0CF; --excl:#FF7A9C;
+  --ink:#DCE4EC; --ink-2:#A3B2C0; --ink-3:#6F7F8F; --rule:#2C3946;
+  --req:#A3B2C0; --select:#C4A0F0; --infl:#5FC0CF; --excl:#FF7A9C;
   --missing:#FF7A9C; --missing-bg:#37202A;
   --partial:#E3AE4A; --partial-bg:#31281A; --ok:#6FD09A;
   --shadow:rgba(0,0,0,.35);
 }}
 :root[data-theme="dark"]{
   --paper:#10161D; --surface:#19212B; --surface-2:#1F2833;
-  --ink:#DCE4EC; --ink-2:#9DACBB; --ink-3:#6F7F8F; --rule:#2C3946;
-  --req:#9DACBB; --select:#C4A0F0; --infl:#5FC0CF; --excl:#FF7A9C;
+  --ink:#DCE4EC; --ink-2:#A3B2C0; --ink-3:#6F7F8F; --rule:#2C3946;
+  --req:#A3B2C0; --select:#C4A0F0; --infl:#5FC0CF; --excl:#FF7A9C;
   --missing:#FF7A9C; --missing-bg:#37202A;
   --partial:#E3AE4A; --partial-bg:#31281A; --ok:#6FD09A;
   --shadow:rgba(0,0,0,.35);
@@ -33,87 +33,86 @@
 
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans);
-     font-weight:400;line-height:1.72;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1160px;margin:0 auto;padding:56px 26px 96px;display:flex;flex-direction:column;gap:54px}
+     line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:60px 26px 100px;display:flex;flex-direction:column;gap:56px}
+.wide{max-width:1080px;width:100%;margin-left:calc((760px - 1080px)/2)}
+@media(max-width:1140px){.wide{max-width:100%;margin-left:0}}
 
 .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
          color:var(--ink-3);margin:0 0 14px}
-h1{font-size:clamp(30px,4.6vw,46px);line-height:1.16;font-weight:700;margin:0;letter-spacing:-.02em;text-wrap:balance}
-.thesis{font-size:clamp(16px,1.7vw,19px);color:var(--ink-2);margin:18px 0 0;max-width:60ch;font-weight:300}
-.meta{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-3);margin-top:22px;
-      display:flex;flex-wrap:wrap;gap:18px}
+h1{font-size:clamp(30px,4.6vw,44px);line-height:1.18;font-weight:700;margin:0;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:24px;font-weight:600;margin:0 0 10px;letter-spacing:-.015em;text-wrap:balance}
+.lede{font-size:19px;color:var(--ink-2);margin:20px 0 0;font-weight:300}
+p{margin:0 0 15px;font-size:16px}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+.meta{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-3);margin-top:24px;
+      display:flex;flex-wrap:wrap;gap:16px}
 
-h2{font-size:22px;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
-h3{font-size:15px;font-weight:600;margin:0 0 4px}
-.sub{color:var(--ink-2);margin:0 0 22px;max-width:64ch;font-weight:300;font-size:15.5px}
-p{margin:0 0 12px}
-section>p:last-child{margin-bottom:0}
+.bad{background:var(--missing-bg);border-left:3px solid var(--missing);
+     padding:20px 24px;border-radius:0 8px 8px 0;font-size:15.5px}
+.bad code{font-family:var(--font-mono);font-size:13px}
 
-.statrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-.statrow div{background:var(--surface);border:1px solid var(--rule);border-radius:8px;
-             padding:12px 18px;display:flex;flex-direction:column;gap:2px;min-width:84px}
-.statrow b{font-family:var(--font-mono);font-size:22px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
-.statrow span{font-size:11.5px;color:var(--ink-3)}
-.statrow .warn{border-color:var(--missing)} .statrow .warn b{color:var(--missing)}
-.statrow .was{opacity:.55}
-
-.kinds{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.kind{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;
-      border-top:3px solid var(--k)}
+.kinds{display:flex;flex-direction:column;gap:12px}
+.kind{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--k);
+      border-radius:0 10px 10px 0;padding:18px 22px}
 .kind.r{--k:var(--req)} .kind.s{--k:var(--select)} .kind.i{--k:var(--infl)} .kind.x{--k:var(--excl)}
-.kind code{font-family:var(--font-mono);font-size:12px;color:var(--k);font-weight:500;letter-spacing:.04em}
-.kind .n{font-family:var(--font-mono);font-size:20px;font-weight:500;float:right;color:var(--k);
-         font-variant-numeric:tabular-nums}
-.kind p{margin:6px 0 0;font-size:13.5px;color:var(--ink-2);font-weight:300;line-height:1.62}
-.kind em{font-style:normal;color:var(--ink);font-weight:500}
+.kind h3{margin:0;font-size:17px;font-weight:600;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.kind h3 em{font-family:var(--font-mono);font-size:11.5px;font-style:normal;color:var(--k);letter-spacing:.05em}
+.kind h3 b{margin-left:auto;font-family:var(--font-mono);font-size:19px;font-weight:500;color:var(--k);
+           font-variant-numeric:tabular-nums}
+.kind p{margin:8px 0 0;font-size:15px;color:var(--ink-2)}
+.kind .ex{margin-top:10px;font-size:14px;color:var(--ink);background:var(--surface-2);
+          border-radius:7px;padding:11px 14px;line-height:1.7}
+.kind .ex span{color:var(--ink-3);font-family:var(--font-mono);font-size:11px;display:block;margin-top:3px}
 
-figure{margin:0;display:flex;flex-direction:column;gap:14px}
+figure{margin:0;display:flex;flex-direction:column;gap:16px}
 .scroll{overflow-x:auto}
 svg{display:block;max-width:100%;height:auto;color:var(--ink)}
-svg.spine{min-width:880px} svg.cyc{min-width:820px}
-figcaption{font-size:13.5px;color:var(--ink-2);max-width:70ch;font-weight:300}
+svg.spine{min-width:860px} svg.cyc{min-width:700px}
+figcaption{font-size:14px;color:var(--ink-2);font-weight:300}
 .nd{fill:var(--surface-2);stroke:var(--ink-3);stroke-width:1.3}
 .nd.miss{fill:var(--missing-bg);stroke:var(--missing);stroke-width:2.2}
 .nd.tbl{fill:var(--partial-bg);stroke:var(--partial);stroke-width:2}
-.lb{font-size:12.5px;font-weight:600;fill:var(--ink)}
-.lb.sm{font-size:11px;font-weight:400;fill:var(--ink-2)}
-.ax{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.09em;fill:var(--ink-3)}
-.e{stroke:var(--req);stroke-width:1.4;fill:none;opacity:.75}
+.lb{font-size:13px;font-weight:600;fill:var(--ink)}
+.lb.sm{font-size:11.5px;font-weight:500;fill:var(--ink-2)}
+.ax{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;fill:var(--ink-3)}
+.e{stroke:var(--req);stroke-width:1.4;fill:none;opacity:.7}
 .e.sel{stroke:var(--select);stroke-width:1.8;stroke-dasharray:6 4;opacity:1}
 .e.back{stroke:var(--excl);stroke-width:1.5;stroke-dasharray:4 4;fill:none}
-.el{font-family:var(--font-mono);font-size:10px;fill:var(--ink-3)}
+.el{font-family:var(--font-mono);font-size:10.5px;fill:var(--ink-3)}
 .el.s{fill:var(--select)}
 
-.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:24px;
-      box-shadow:0 1px 2px var(--shadow)}
-.quote{border-left:3px solid var(--rule);padding-left:16px;margin:12px 0;font-size:14px;
-       color:var(--ink-2);font-weight:300}
-.quote cite{display:block;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);
-            font-style:normal;margin-top:6px}
-
-table{border-collapse:collapse;width:100%;font-size:13.5px}
-th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
-th{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
-   color:var(--ink-3);font-weight:500;border-bottom:1.5px solid var(--rule)}
-td.m{font-family:var(--font-mono);font-size:11.5px;white-space:nowrap}
-td.x{font-family:var(--font-mono);font-size:11.5px;color:var(--excl);white-space:nowrap}
+.story{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:24px 26px;
+       box-shadow:0 1px 2px var(--shadow)}
+.story h3{margin:0 0 8px;font-size:17px;font-weight:600}
+.story p{font-size:15.5px}
+.q{border-left:2px solid var(--rule);padding-left:15px;margin:14px 0;font-size:14.5px;
+   color:var(--ink-2);font-weight:300}
+.q cite{display:block;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);
+        font-style:normal;margin-top:5px}
 
 .term{background:var(--surface-2);border:1px solid var(--rule);border-radius:8px;padding:18px 20px;
-      font-family:var(--font-mono);font-size:12px;line-height:1.7;overflow-x:auto;white-space:pre;color:var(--ink-2)}
+      font-family:var(--font-mono);font-size:12.5px;line-height:1.75;overflow-x:auto;white-space:pre;
+      color:var(--ink-2)}
 .term b{color:var(--ink);font-weight:500}
 .term .g{color:var(--ok)} .term .r{color:var(--excl)}
 
-.note{border-left:3px solid var(--missing);background:var(--missing-bg);padding:18px 22px;
-      border-radius:0 8px 8px 0;font-size:14.5px}
-.note b{font-weight:600}
+.growth{display:flex;flex-wrap:wrap;gap:10px}
+.growth div{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:13px 18px;
+            min-width:112px}
+.growth b{font-family:var(--font-mono);font-size:21px;font-weight:500;display:block;line-height:1.2;
+          font-variant-numeric:tabular-nums}
+.growth s{font-family:var(--font-mono);font-size:12px;color:var(--ink-3);text-decoration:none;opacity:.7}
+.growth span{font-size:12px;color:var(--ink-3);display:block;margin-top:2px}
 
-ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:18px}
-ol.steps li{counter-increment:s;display:grid;grid-template-columns:32px 1fr;gap:15px;align-items:start}
-ol.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--font-mono);font-size:12px;
-                    color:var(--ink-3);padding-top:3px}
-ol.steps p{margin:3px 0 0;color:var(--ink-2);font-weight:300;font-size:14.5px}
+ol.next{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:20px}
+ol.next li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:16px;align-items:start}
+ol.next li::before{content:counter(s);font-family:var(--font-mono);font-size:15px;color:var(--ink-3);padding-top:2px}
+ol.next h3{margin:0 0 4px;font-size:16.5px}
+ol.next p{margin:0;font-size:15px;color:var(--ink-2)}
 
-footer{border-top:1px solid var(--rule);padding-top:22px;font-size:13px;color:var(--ink-3);font-weight:300}
+footer{border-top:1px solid var(--rule);padding-top:24px;font-size:13.5px;color:var(--ink-3);font-weight:300}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--select);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -123,244 +122,194 @@ a{color:inherit}
 
 <header>
   <p class="eyebrow">NearStars · engine/prototype</p>
-  <h1>천체 물리값 의존 사슬</h1>
-  <p class="thesis">무엇을 결정해야 무엇을 계산할 수 있는가. 그림이 아니라 <b>검증되는 파일</b>이다 — 근거를 인용하지 못하는 엣지는 등재되지 않고, 검증기가 거절한다.</p>
-  <div class="meta">
-    <span>engine/chain.yaml v2</span><span>engine/chain.py</span><span>2026-08-24</span>
-  </div>
-  <div class="statrow">
-    <div><b>44</b><span>노드 <s class="was">29</s></span></div>
-    <div><b>161</b><span>엣지 <s class="was">37</s></span></div>
-    <div><b>6</b><span>순환 <s class="was">3</s></span></div>
-    <div><b>4</b><span>부모 참조</span></div>
-    <div class="warn"><b>9</b><span>빠진 것</span></div>
-  </div>
+  <h1>어떤 값이 어떤 값에 기대는가</h1>
+  <p class="lede">천체 하나에 값이 수십 개 붙는다. 그중 상당수는 다른 값에서 나온다. 지금까지 그 관계를 머리로 기억해 왔고, 그래서 반복해서 틀렸다.</p>
+  <div class="meta"><span>engine/chain.yaml</span><span>2026-08-24</span></div>
 </header>
 
 <section>
-  <h2>엣지가 한 종류가 아니었다</h2>
-  <p class="sub">첫 판본은 “A의 숫자가 B로 간다” 하나만 그렸다. 방법론 21개를 전수로 훑으니 네 종류가 나왔고, 빠져 있던 종류가 가장 위험한 것이었다.</p>
+  <h2>왜 만들었나</h2>
+  <p>Polyphemus의 자기권 크기를 23.5에서 35.33으로 바꾼 적이 있다. 그런데 <strong>그 값으로 계산되는 다른 필드 두 개를 같이 안 고쳤다.</strong> 지금도 옛날 값으로 계산된 숫자가 보드에 앉아 있다.</p>
+  <div class="bad">
+    바꾼 값 → <code>pause_nose 23.5 → 35.33</code><br>
+    안 바뀐 값 → <code>outer_compression</code>, <code>outer_extension</code> — 둘 다 nose의 함수인데 그대로다.
+  </div>
+  <p style="margin-top:15px">이런 일이 왜 생기냐면, <strong>같은 숫자가 여러 군데에 손으로 적혀 있기 때문</strong>이다. 요리책에 소금 양이 열세 개 요리에 각각 적혀 있는 것과 같다. 소금을 바꾸면 열세 군데를 찾아야 하는데, 어디에 적혀 있는지는 머릿속에만 있다.</p>
+  <p>그래서 <strong>“소금은 이 열세 요리에 들어간다”를 파일로 적었다.</strong> 이제 물어보면 답한다.</p>
+</section>
+
+<section>
+  <h2>화살표가 네 종류였다</h2>
+  <p>처음엔 한 종류만 그렸다. “A의 숫자가 B로 간다.” 방법론 문서 21개를 전부 훑고 나니 네 종류가 나왔고, <strong>빠져 있던 종류가 제일 위험한 것</strong>이었다.</p>
   <div class="kinds">
-    <div class="kind r"><span class="n">94</span><code>requires</code>
-      <p>A의 수치가 B의 입력이 된다. 빌드 순서를 정하는 유일한 종류다.</p></div>
-    <div class="kind s"><span class="n">35</span><code>selects</code>
-      <p>A가 B의 <em>모델을 고른다.</em> 숫자를 넘기지 않는다. 빠뜨리면 <em>틀린 레시피가 조용히 적용된다</em> — 오적용이 가장 큰 위험인데 v1에 4개뿐이었다.</p></div>
-    <div class="kind i"><span class="n">24</span><code>influences</code>
-      <p>정식 입력은 아니지만 A가 바뀌면 B를 다시 봐야 한다. 5건은 <em>비단조</em>라 단순 화살표로는 부호를 틀린다.</p></div>
-    <div class="kind x"><span class="n">8</span><code>excludes</code>
-      <p><em>시험했고 아니었다.</em> 그럴듯해서 다시 긋는 것을 막는 기록. 없으면 같은 오류가 재발한다.</p></div>
+    <div class="kind r"><h3>값을 넘긴다 <em>requires</em><b>94</b></h3>
+      <p>A에서 나온 숫자가 그대로 B의 입력이 된다. 계산 순서를 정하는 건 이 종류뿐이다.</p>
+      <div class="ex">관성모멘트가 정해져야 편평도 J₂를 계산할 수 있다.</div>
+    </div>
+    <div class="kind s"><h3>방식을 고른다 <em>selects</em><b>35</b></h3>
+      <p>숫자를 넘기는 게 아니라 <strong>어느 계산법을 쓸지</strong>를 정한다. 이걸 빠뜨리면 틀린 공식이 조용히 적용된다. 처음엔 4개인 줄 알았다.</p>
+      <div class="ex">대기가 있으면 자기권이 “유도형”으로 생기고, 없으면 아무것도 안 생긴다(달). 대기가 자기권에 숫자를 주는 게 아니라 <strong>어느 모형을 쓸지를 고른다</strong>.
+        <span>planetary-magnetosphere-geometry-methodology.md:30</span></div>
+    </div>
+    <div class="kind i"><h3>영향을 준다 <em>influences</em><b>24</b></h3>
+      <p>정식 입력은 아닌데, A가 바뀌면 B를 다시 봐야 한다. 이 중 다섯은 <strong>단조롭지 않아서</strong> 화살표 하나로는 방향을 틀리게 그린다.</p>
+      <div class="ex">자기장이 세지면 대기를 지켜줄 것 같지만, 어느 지점까지는 <strong>오히려 대기를 더 빼앗긴다</strong>. 자기권이 전리층 경계를 넘어선 뒤에야 지키기 시작한다.
+        <span>Egan 2019 · magnetosphere:198–203</span></div>
+    </div>
+    <div class="kind x"><h3>아니라고 밝혀졌다 <em>excludes</em><b>8</b></h3>
+      <p>“그럴듯해서 확인해 봤는데 아니었다”는 기록. 이걸 안 남기면 나중에 또 그어진다.</p>
+      <div class="ex">표면중력이 표면 다공도를 정할 것 같지만, 태양계 16개 천체로 확인했더니 상관계수가 0.58이고 그마저 이상치가 끌고 있었다.
+        <span>hapke-shader-methodology.md:148</span></div>
+    </div>
   </div>
 </section>
 
-<figure>
+<figure class="wide">
   <div class="scroll">
-    <svg class="spine" viewBox="0 0 1080 470" role="img"
-         aria-label="0층 입력에서 표면까지의 척추. 클래스 키와 내부구조가 없음으로 표시되고, 클래스 표 상수 네 개가 그 자리를 대신하고 있다.">
+    <svg class="spine" viewBox="0 0 1060 460" role="img"
+         aria-label="위에서 아래로 흐르는 계산 순서. 클래스 키와 내부구조가 빨강으로 비어 있고, 그 자리를 주황색 클래스 표 넷이 대신하고 있다.">
       <defs>
         <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0 0 L10 5 L0 10z" fill="currentColor" opacity=".6"/></marker>
+          <path d="M0 0 L10 5 L0 10z" fill="currentColor" opacity=".55"/></marker>
         <marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0 0 L10 5 L0 10z" fill="#6A3FA0"/></marker>
       </defs>
 
-      <text class="ax" x="86" y="44" text-anchor="end">0 · 바닥</text>
-      <text class="ax" x="86" y="130" text-anchor="end">1 · 분기키</text>
-      <text class="ax" x="86" y="216" text-anchor="end">2 · 허브</text>
-      <text class="ax" x="86" y="316" text-anchor="end">3 · 갈래</text>
-      <text class="ax" x="86" y="420" text-anchor="end">4·5 · 표면</text>
+      <text class="ax" x="128" y="42" text-anchor="end">측정한 것</text>
+      <text class="ax" x="128" y="128" text-anchor="end">어떤 천체인가</text>
+      <text class="ax" x="128" y="214" text-anchor="end">속은 어떤가</text>
+      <text class="ax" x="128" y="312" text-anchor="end">거기서 나오는 것</text>
+      <text class="ax" x="128" y="416" text-anchor="end">겉모습</text>
 
-      <rect class="nd" x="110" y="22" width="150" height="40" rx="6"/><text class="lb" x="185" y="47" text-anchor="middle">질량 · 반지름</text>
-      <rect class="nd" x="285" y="22" width="150" height="40" rx="6"/><text class="lb" x="360" y="47" text-anchor="middle">궤도 · 나이</text>
-      <rect class="nd miss" x="460" y="22" width="160" height="40" rx="6"/><text class="lb" x="540" y="47" text-anchor="middle">조성 의도</text>
-      <rect class="nd" x="645" y="22" width="150" height="40" rx="6"/><text class="lb" x="720" y="47" text-anchor="middle">항성 물리량</text>
+      <rect class="nd" x="150" y="20" width="152" height="40" rx="6"/><text class="lb" x="226" y="45" text-anchor="middle">질량 · 반지름</text>
+      <rect class="nd" x="322" y="20" width="152" height="40" rx="6"/><text class="lb" x="398" y="45" text-anchor="middle">궤도 · 나이</text>
+      <rect class="nd miss" x="494" y="20" width="152" height="40" rx="6"/><text class="lb" x="570" y="45" text-anchor="middle">조성 의도</text>
+      <rect class="nd" x="666" y="20" width="152" height="40" rx="6"/><text class="lb" x="742" y="45" text-anchor="middle">별의 성질</text>
 
-      <rect class="nd miss" x="285" y="108" width="180" height="44" rx="6"/><text class="lb" x="375" y="135" text-anchor="middle">클래스 키</text>
-      <rect class="nd" x="510" y="108" width="180" height="44" rx="6"/><text class="lb" x="600" y="135" text-anchor="middle">질량–반경 관계</text>
+      <rect class="nd miss" x="322" y="106" width="176" height="44" rx="6"/><text class="lb" x="410" y="133" text-anchor="middle">천체 분류</text>
+      <rect class="nd" x="540" y="106" width="176" height="44" rx="6"/><text class="lb" x="628" y="133" text-anchor="middle">질량–반지름 관계</text>
 
-      <rect class="nd miss" x="130" y="194" width="180" height="44" rx="6"/><text class="lb" x="220" y="221" text-anchor="middle">내부구조</text>
-      <rect class="nd tbl" x="360" y="196" width="128" height="40" rx="6"/><text class="lb sm" x="424" y="221" text-anchor="middle">NMoI 표</text>
-      <rect class="nd tbl" x="502" y="196" width="128" height="40" rx="6"/><text class="lb sm" x="566" y="221" text-anchor="middle">k₂/Q 표</text>
-      <rect class="nd tbl" x="644" y="196" width="128" height="40" rx="6"/><text class="lb sm" x="708" y="221" text-anchor="middle">ω₀ 표</text>
-      <rect class="nd tbl" x="786" y="196" width="128" height="40" rx="6"/><text class="lb sm" x="850" y="221" text-anchor="middle">T_exo 구간</text>
+      <rect class="nd miss" x="150" y="192" width="176" height="44" rx="6"/><text class="lb" x="238" y="219" text-anchor="middle">내부 구조</text>
+      <rect class="nd tbl" x="372" y="194" width="150" height="40" rx="6"/><text class="lb sm" x="447" y="219" text-anchor="middle">관성모멘트 표</text>
+      <rect class="nd tbl" x="540" y="194" width="150" height="40" rx="6"/><text class="lb sm" x="615" y="219" text-anchor="middle">조석 소산 표</text>
+      <rect class="nd tbl" x="708" y="194" width="150" height="40" rx="6"/><text class="lb sm" x="783" y="219" text-anchor="middle">초기 자전 표</text>
 
-      <rect class="nd" x="110" y="292" width="148" height="42" rx="6"/><text class="lb" x="184" y="318" text-anchor="middle">조석 고정</text>
-      <rect class="nd" x="278" y="292" width="148" height="42" rx="6"/><text class="lb" x="352" y="318" text-anchor="middle">figure J₂·C₂₂</text>
-      <rect class="nd" x="446" y="292" width="148" height="42" rx="6"/><text class="lb" x="520" y="318" text-anchor="middle">조석 가열</text>
-      <rect class="nd" x="614" y="292" width="148" height="42" rx="6"/><text class="lb" x="688" y="318" text-anchor="middle">자기장 · 자기권</text>
-      <rect class="nd" x="782" y="292" width="148" height="42" rx="6"/><text class="lb" x="856" y="318" text-anchor="middle">내부열</text>
+      <rect class="nd" x="150" y="288" width="150" height="42" rx="6"/><text class="lb" x="225" y="314" text-anchor="middle">조석 고정</text>
+      <rect class="nd" x="320" y="288" width="150" height="42" rx="6"/><text class="lb" x="395" y="314" text-anchor="middle">편평도 J₂</text>
+      <rect class="nd" x="490" y="288" width="150" height="42" rx="6"/><text class="lb" x="565" y="314" text-anchor="middle">조석 가열</text>
+      <rect class="nd" x="660" y="288" width="150" height="42" rx="6"/><text class="lb" x="735" y="314" text-anchor="middle">자기장 · 자기권</text>
+      <rect class="nd" x="830" y="288" width="150" height="42" rx="6"/><text class="lb" x="905" y="314" text-anchor="middle">내부 열</text>
 
-      <rect class="nd" x="190" y="396" width="160" height="42" rx="6"/><text class="lb" x="270" y="422" text-anchor="middle">열 · 대기</text>
-      <rect class="nd" x="380" y="396" width="160" height="42" rx="6"/><text class="lb" x="460" y="422" text-anchor="middle">표면 · 얼음</text>
-      <rect class="nd" x="570" y="396" width="160" height="42" rx="6"/><text class="lb" x="650" y="422" text-anchor="middle">색 · 방사선량</text>
+      <rect class="nd" x="240" y="392" width="160" height="42" rx="6"/><text class="lb" x="320" y="418" text-anchor="middle">온도 · 대기</text>
+      <rect class="nd" x="430" y="392" width="160" height="42" rx="6"/><text class="lb" x="510" y="418" text-anchor="middle">표면 · 얼음</text>
+      <rect class="nd" x="620" y="392" width="160" height="42" rx="6"/><text class="lb" x="700" y="418" text-anchor="middle">색 · 방사선량</text>
 
       <g marker-end="url(#a)">
-        <path class="e" d="M235 62 L340 108"/>
-        <path class="e" d="M540 62 L430 108"/>
-        <path class="e" d="M240 62 L560 108"/>
-        <path class="e" d="M600 152 L250 194"/>
-        <path class="e" d="M240 238 L200 292"/>
-        <path class="e" d="M424 236 L370 292"/>
-        <path class="e" d="M560 236 L525 292"/>
-        <path class="e" d="M700 236 L205 288"/>
-        <path class="e" d="M256 334 L262 396"/>
-        <path class="e" d="M520 334 L450 396"/>
-        <path class="e" d="M700 334 L640 396"/>
-        <path class="e" d="M856 334 L700 396"/>
+        <path class="e" d="M270 60 L372 106"/>
+        <path class="e" d="M570 60 L466 106"/>
+        <path class="e" d="M280 60 L590 106"/>
+        <path class="e" d="M600 150 L280 192"/>
+        <path class="e" d="M240 236 L228 288"/>
+        <path class="e" d="M447 234 L410 288"/>
+        <path class="e" d="M600 234 L570 288"/>
+        <path class="e" d="M770 234 L250 284"/>
+        <path class="e" d="M280 330 L305 392"/>
+        <path class="e" d="M565 330 L500 392"/>
+        <path class="e" d="M720 330 L690 392"/>
+        <path class="e" d="M890 330 L740 392"/>
       </g>
       <g marker-end="url(#as)">
-        <path class="e sel" d="M375 152 L400 196"/>
-        <path class="e sel" d="M400 152 L540 196"/>
-        <path class="e sel" d="M420 152 L690 196"/>
-        <path class="e sel" d="M465 130 L640 292"/>
+        <path class="e sel" d="M410 150 L430 194"/>
+        <path class="e sel" d="M430 150 L580 194"/>
+        <path class="e sel" d="M450 150 L750 194"/>
+        <path class="e sel" d="M498 128 L680 288"/>
       </g>
-      <text class="el s" x="470" y="176">클래스가 표를 고른다</text>
-      <path class="e back" marker-end="url(#a)" d="M520 292 L980 280 L980 150 L690 130"/>
-      <text class="el" x="990" y="215" text-anchor="end">반지름 상한 (순환 6)</text>
+      <text class="el s" x="500" y="176">분류가 표를 고른다</text>
+      <path class="e back" marker-end="url(#a)" d="M565 288 L1000 275 L1000 148 L716 128"/>
+      <text class="el" x="994" y="212" text-anchor="end">크기 상한을 되돌려준다</text>
     </svg>
   </div>
-  <figcaption><b>척추만.</b> 161개 엣지를 한 그림에 그리면 읽을 수 없다. 여기 있는 건 주 경로뿐이고, 나머지는 <code>chain.py</code>가 답한다. 빨강은 없는 노드, 주황은 <b>클래스 표 상수</b> — 도출값처럼 보이지만 실은 조회값이다. 오른쪽 점선은 조석 수송 테스트가 반지름 상한을 되돌려주는 역방향 엣지다.</figcaption>
+  <figcaption><strong>읽는 법.</strong> 위가 시작이고 아래로 갈수록 앞의 것이 정해져야 계산된다. <span style="color:var(--missing);font-weight:600">빨강</span>은 아직 없는 것, <span style="color:var(--partial);font-weight:600">주황</span>은 “계산한 값”이 아니라 <strong>분류별 표에서 꺼낸 값</strong>이다. 보라색 점선이 “방식을 고른다”이고, 오른쪽 점선은 조석 가열이 천체 크기 상한을 거꾸로 되돌려주는 경로다. 화살표 161개를 다 그리면 못 읽으니 주요 경로만 그렸다.</figcaption>
 </figure>
 
 <section>
-  <h2>가장 깊은 발견 — 도출값인 줄 알았던 것</h2>
-  <p class="sub">세 문서가 각각 인정한다. NMoI · k₂/Q · ω₀ · T_exo 는 per-body 기록값이 아니라 클래스별 표에서 꺼내는 상수다. 그런데 J₂ · 조석고정 · 조석가열 · 대기탈출이 전부 이 넷 위에 서 있다.</p>
-  <div class="card">
-    <div class="quote">바디 클래스에서 NMoI를 고르고, 가정과 범위를 명시하라.<cite>body-figure-methodology.md:256</cite></div>
-    <div class="quote">k₂/Q는 외계 천체에서 사실상 측정된 적이 없다.<cite>tidal-heating-methodology.md:527</cite></div>
-    <div class="quote">초기 자전은 원시 미지값이다. 인용이 아니라 논증으로 경계지어진다.<cite>tidal-locking-timescale-methodology.md:431</cite></div>
-    <div class="quote">T_exo는 약한 입력이고 표면온도가 아니다.<cite>exoplanet-atmosphere-methodology.md:284</cite></div>
+  <h2>훑고 나서 알게 된 것 셋</h2>
+
+  <div class="story" style="margin-bottom:16px">
+    <h3>1. 계산한 값인 줄 알았는데, 표에서 꺼낸 값이었다</h3>
+    <p>편평도·조석 고정·조석 가열이 전부 관성모멘트와 조석 소산율 위에 서 있다. 그런데 그 두 값은 우리가 계산한 게 아니라 <strong>“이런 종류 천체는 대개 이 정도”라는 표에서 꺼낸 것</strong>이다. 문서들이 스스로 그렇게 적어놨다.</p>
+    <div class="q">천체 분류에서 관성모멘트를 고르고, 가정과 범위를 명시하라.<cite>body-figure-methodology.md:256</cite></div>
+    <div class="q">조석 소산율은 외계 천체에서 사실상 측정된 적이 없다.<cite>tidal-heating-methodology.md:527</cite></div>
+    <p>문제는 겉보기다. 표에서 꺼낸 값과 계산한 값이 보드에서 똑같이 생겼다. 그러면 <strong>그 위에 쌓은 숫자들의 신뢰도를 실제보다 높게 읽게 된다.</strong> 그래서 그래프에서 따로 표시했다.</p>
   </div>
-  <p style="margin-top:16px">그래프에 <code>kind: class_table</code>로 따로 표시했다. 자유 파라미터가 도출값 옷을 입고 있으면, 그 위에 쌓은 값들의 신뢰도를 우리가 실제보다 높게 읽는다.</p>
-</section>
 
-<section>
-  <h2>천체를 건너는 엣지</h2>
-  <p class="sub">노드는 천체 하나에 붙어 있는데, 어떤 의존은 부모를 참조한다. 넷이 확인됐고, 이건 누락이 아니라 구조였다.</p>
-  <div class="scroll"><table>
-    <thead><tr><th>소비</th><th>공급</th><th>넘어가는 것</th><th>근거</th></tr></thead>
-    <tbody>
-      <tr><td>위성 Cassini 상태</td><td class="m">부모의 J₂ · 반지름</td><td>교점 이동률</td><td class="m">cassini:124</td></tr>
-      <tr><td>위성 표면 방사선량</td><td class="m">부모의 자기권</td><td>포획 플럭스</td><td class="m">magnetosphere:1049</td></tr>
-      <tr><td>위성 4항 에너지수지</td><td class="m">부모의 T_eff</td><td>열복사 · 반사광</td><td class="m">moon-energy:50,120</td></tr>
-      <tr><td><b>부모의</b> 자기권 벨트</td><td class="m">위성의 조석 가열</td><td>플라스마 공급</td><td class="m">magnetosphere:330,1182</td></tr>
-    </tbody>
-  </table></div>
-  <p style="margin-top:14px">마지막 행은 방향이 반대다. 화산 위성이 <b>부모의</b> 벨트를 먹인다 — Io가 목성에 초당 1톤을 넣듯, 우리 A b I도 같은 일을 한다. 이 스코프를 넣자 검증기가 신고하던 거짓 순환 하나가 사라졌다. 위성이 부모의 값을 먹는 건 자기 자신과의 고리가 아니다.</p>
-</section>
+  <div class="story" style="margin-bottom:16px">
+    <h3>2. 위성의 값이 부모 행성의 값에 기대고 있었다</h3>
+    <p>값은 천체마다 붙어 있는데, 어떤 의존은 <strong>다른 천체를 건너간다.</strong> 넷 찾았다.</p>
+    <div class="term">위성이 받는 방사선량   ←  <b>부모의</b> 자기권
+위성의 자전축 기울기   ←  <b>부모의</b> 편평도
+위성의 온도           ←  <b>부모의</b> 열복사·반사광
+<b>부모의</b> 방사선 벨트    ←  위성의 화산 활동</div>
+    <p style="margin-top:15px">마지막 줄은 방향이 반대다. 화산 위성이 부모의 벨트를 <strong>먹인다.</strong> Io가 목성에 초당 1톤을 넣듯, 우리 A b I도 같은 일을 한다. 그래서 <strong>부모를 먼저 다 풀어야 위성을 풀 수 있다.</strong></p>
+  </div>
 
-<section>
-  <h2>긋지 말아야 할 엣지</h2>
-  <p class="sub">문서가 “시험했고 아니었다”라고 적어둔 것들. 기록해두지 않으면 그럴듯해서 다시 그어진다.</p>
-  <div class="scroll"><table>
-    <thead><tr><th>후보</th><th>판정</th><th>근거</th></tr></thead>
-    <tbody>
-      <tr><td class="x">표면중력 → Hapke 다공도</td><td>Sol 16개에서 corr +0.58뿐이고 이상치가 끌고 있다</td><td class="m">hapke:148</td></tr>
-      <tr><td class="x">조성 → 표면 방사선량</td><td>조성은 거의 상관없다. 기둥밀도가 정한다</td><td class="m">dose:89</td></tr>
-      <tr><td class="x">궤도 → 낮밤 대비</td><td>대비는 대기가 정하지 궤도가 정하지 않는다</td><td class="m">tidally-locked:47</td></tr>
-      <tr><td class="x">화산 재표면화 → 알베도</td><td>어느 문서도 서술하지 않는다. 가까운 건 충돌·풍화 노출연령이고 다른 것이다</td><td class="m">surface-color:191</td></tr>
-      <tr><td class="x">항성 → 거대행성 내부열</td><td>나이와 질량이 정하지 호스트가 정하지 않는다</td><td class="m">internal-heat:118</td></tr>
-      <tr><td class="x">Cassini ↔ 자전축 경사</td><td>조석 감쇠된 것과 아닌 것. 교차적용 금지</td><td class="m">cassini:203</td></tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section>
-  <h2>독립된 두 독자가 아니었으면 놓쳤을 것</h2>
-  <div class="card">
-    <p>자기 담당은 <code>자기권 → 대기탈출</code>을 <b>확정 엣지</b>로, 열·대기 담당은 같은 결합을 <b>부정 엣지</b>로 보고했다. 원문을 보면 모순이 아니었다.</p>
-    <div class="quote">자기장을 키우면 standoff가 유도 경계를 넘기 전까지 이온 탈출이 오히려 늘고, 넘어선 뒤에야 차폐가 시작된다. 판정식은 R_mp(B_eq) &gt; r_ionopause이지 B_eq &gt; 0이 아니다.<cite>magnetosphere:198-203 · Egan 2019</cite></div>
-    <div class="quote">“자기권이 있다”를 보드 행의 대기 유지 논거로 쓰지 말 것.<cite>exoplanet-atmosphere:238-244</cite></div>
-    <p style="margin-bottom:0">같은 물리를 반대편에서 말한 것이다. 결합은 실재하고, 순진한 방향으로 쓰면 틀린다. 한쪽만 읽었으면 <code>sign: non-monotonic</code>이 왜 필요한지 몰랐을 것이다.</p>
+  <div class="story">
+    <h3>3. 두 명이 읽었더니 놓칠 뻔한 게 잡혔다</h3>
+    <p>문서 묶음을 넷으로 나눠서 각각 읽혔다. 자기 담당은 “자기권 → 대기 유지”를 <strong>있는 연결</strong>로, 대기 담당은 같은 걸 <strong>없는 연결</strong>로 보고했다. 원문을 보니 모순이 아니었다.</p>
+    <div class="q">자기장을 키우면 어느 지점까지는 대기가 오히려 더 빠져나가고, 그 지점을 넘어선 뒤에야 지키기 시작한다.<cite>magnetosphere:198–203</cite></div>
+    <div class="q">“자기권이 있다”를 대기가 남아 있는 근거로 쓰지 말 것.<cite>exoplanet-atmosphere:238–244</cite></div>
+    <p>같은 사실을 반대편에서 말한 것이다. 연결은 있고, <strong>순진하게 “자기장=보호”로 쓰면 틀린다.</strong> 한쪽만 읽었으면 둘 중 하나만 기록했을 것이다.</p>
   </div>
 </section>
 
-<figure>
-  <div class="scroll">
-    <svg class="cyc" viewBox="0 0 1080 200" role="img"
-         aria-label="순환 여섯 개 중 검증기가 크기를 바로잡은 둘. 알베도 고리는 3노드가 아니라 5노드, 반지름 고리는 2노드가 아니라 4노드였다.">
-      <defs><marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M0 0 L10 5 L0 10z" fill="currentColor" opacity=".6"/></marker></defs>
+<section>
+  <h2>이제 물어보면 답한다</h2>
+  <p>머리로 하던 추적이 명령 한 줄이 됐다.</p>
+  <div class="term"><b>$ 내부 구조가 바뀌면 뭘 다시 봐야 해?</b>
+  <b>29개</b> — 자전, 편평도, 조석 가열, 자기장, 자기권,
+         방사선량, 크레이터, 알베도, 위성 온도 …
 
-      <text class="ax" x="20" y="24">순환 2 — 3노드로 봤는데 실제 5노드</text>
-      <g>
-        <rect class="nd" x="20" y="48" width="112" height="36" rx="6"/><text class="lb sm" x="76" y="71" text-anchor="middle">알베도</text>
-        <rect class="nd" x="152" y="48" width="112" height="36" rx="6"/><text class="lb sm" x="208" y="71" text-anchor="middle">얼음 생존</text>
-        <rect class="nd" x="284" y="48" width="112" height="36" rx="6"/><text class="lb sm" x="340" y="71" text-anchor="middle">온실 ΔT</text>
-        <rect class="nd" x="284" y="126" width="112" height="36" rx="6"/><text class="lb sm" x="340" y="149" text-anchor="middle">대기 P</text>
-        <rect class="nd" x="20" y="126" width="112" height="36" rx="6"/><text class="lb sm" x="76" y="149" text-anchor="middle">T_eq</text>
-        <g marker-end="url(#ac)">
-          <path class="e" d="M132 66 L152 66"/><path class="e" d="M264 66 L284 66"/>
-          <path class="e" d="M340 84 L340 126"/><path class="e" d="M284 144 L132 144"/>
-          <path class="e" d="M76 126 L76 84"/>
-        </g>
-        <text class="el" x="150" y="118">척도높이</text>
-      </g>
+<b>$ 거대행성 자기장을 계산하려면 뭐가 먼저 있어야 해?</b>
+  별의 성질 · 질량 · 반지름 · 나이
+  천체 분류  <span class="r">← 아직 없음</span>
+    조성 의도  <span class="r">← 아직 없음</span></div>
+  <p style="margin-top:15px">두 번째가 이 그래프의 쓸모다. 계산을 시작하기 전에 <strong>무엇이 없어서 못 하는지</strong>를 먼저 알려준다.</p>
+</section>
 
-      <text class="ax" x="600" y="24">순환 6 — 2노드로 봤는데 실제 4노드</text>
-      <g>
-        <rect class="nd" x="600" y="48" width="128" height="36" rx="6"/><text class="lb sm" x="664" y="71" text-anchor="middle">배정 반지름</text>
-        <rect class="nd" x="748" y="48" width="128" height="36" rx="6"/><text class="lb sm" x="812" y="71" text-anchor="middle">figure J₂·C₂₂</text>
-        <rect class="nd" x="896" y="48" width="128" height="36" rx="6"/><text class="lb sm" x="960" y="71" text-anchor="middle">Cassini 경사</text>
-        <rect class="nd" x="748" y="126" width="128" height="36" rx="6"/><text class="lb sm" x="812" y="149" text-anchor="middle">조석 가열</text>
-        <g marker-end="url(#ac)">
-          <path class="e" d="M728 66 L748 66"/><path class="e" d="M876 66 L896 66"/>
-          <path class="e" d="M960 84 L960 144 L876 144"/>
-          <path class="e" d="M748 144 L664 144 L664 84"/>
-        </g>
-        <text class="el" x="672" y="118">반지름 상한</text>
-      </g>
-    </svg>
+<section>
+  <h2>덤으로 잡힌 오류</h2>
+  <p>연습 삼아 거대행성 자기장 계산을 <strong>문서에 적힌 표가 아니라 실제로 도는 함수</strong>로 만들어 봤다. 그 함수로 문서의 표를 다시 만들었더니 이렇게 나왔다.</p>
+  <div class="term">ε Ind A b  자기 모멘트   함수: <b>201,307</b>      문서: <span class="r">~3700 / 2600 → med</span></div>
+  <p style="margin-top:15px">옆 칸 숫자가 새어 들어와 <strong>54배 낮게</strong> 적혀 있었다. 손으로 고친 게 아니라 함수가 표를 다시 만들면서 없어졌고, 이제 그 표는 매번 다시 검사된다.</p>
+</section>
+
+<section>
+  <h2>얼마나 늘었나</h2>
+  <p>처음 판은 대화하다 읽은 문서 대여섯 개에서만 뽑은 것이었다. 21개를 전부 훑으니 이렇게 됐다.</p>
+  <div class="growth">
+    <div><b>44</b><s>← 29</s><span>값</span></div>
+    <div><b>161</b><s>← 37</s><span>연결</span></div>
+    <div><b>35</b><s>← 4</s><span>방식 선택</span></div>
+    <div><b>6</b><s>← 3</s><span>순환</span></div>
   </div>
-  <figcaption><b>검증기가 크기를 바로잡았다.</b> 순환 여섯 개 중 둘은 내가 손으로 잡은 것보다 컸다. 알베도 고리는 온실과 대기를 거쳐 척도높이로 돌아오고, 반지름 고리는 figure와 Cassini 경사각을 거쳐 수송 테스트로 돌아온다. 둘 다 읽어서는 못 찾았을 고리다.</figcaption>
-</figure>
-
-<section>
-  <h2>도구가 답한다</h2>
-  <p class="sub">지금까지 기억으로 하던 cascade 추적이 질의가 됐다.</p>
-  <div class="term"><b>$ python3 engine/chain.py affects interior_structure</b>
-interior_structure 가 바뀌면 다시 봐야 할 것 <b>29개</b>
-
-<b>$ python3 engine/chain.py needs dynamo_giant</b>
-  └ star_physical · mass_or_radius · body_age
-  └ body_class  (selects)  <span class="r">⚠ missing</span>
-    └ composition_intent  (requires)  <span class="r">⚠ gap</span>
-
-<b>$ python3 engine/chain.py check</b>
-  <span class="g">[PASS]</span> 노드 44 · 엣지 161 (selects 35, influences 24) · 순환 6 선언됨</div>
+  <p style="margin-top:16px">순환은 “A가 B를 정하는데 B도 A를 정하는” 고리다. 없앨 수 없고 두 번 돌려서 맞춰야 한다. 여섯 개 중 둘은 <strong>검증 도구가 내가 그린 것보다 크다고 알려줬다</strong> — 알베도 고리는 3개인 줄 알았는데 5개였고, 크기 고리는 2개인 줄 알았는데 4개였다.</p>
 </section>
 
 <section>
-  <h2>파일럿 — 레시피 하나를 함수로</h2>
-  <p class="sub">거대행성 다이나모를 골랐다. 0층만으로 닿는 유일한 갈래라, 내부구조를 기다리지 않고 계약을 시험할 수 있다.</p>
-  <div class="term">앵커 — 논문이 공표한 천체를 재현하는가
-  <span class="g">[PASS]</span> Jupiter                    B_pol   9.00 G  기대   9.0 G  ( 0.0%)
-  <span class="g">[PASS]</span> eps Eri b (paper M sin i)  B_pol  18.65 G  기대  19.0 G  ( 1.8%)
-  <span class="g">[PASS]</span> 1 M_J 젊은 끝               B_pol  25.15 G  기대  25.6 G  ( 1.8%)
-  <span class="g">[PASS]</span> 1 M_J 늙은 끝               B_pol   6.92 G  기대   6.9 G  ( 0.2%)
-
-거절 — 도메인 밖은 값이 아니라 이유를 돌려주는가
-  <span class="g">[PASS]</span> rocky · brown dwarf · sub-Neptune · stellar · pre-calibration age
-
-표 재생성
-  eps Ind A b   모멘트 <b>201,307</b> ×Earth      문서: <span class="r">~3700 / 2600 → med</span></div>
-  <p style="margin-top:14px">마지막 줄이 파일럿의 값이다. µT 범위가 모멘트 칸으로 새어 <b>54배</b> 낮게 적혀 있던 셀을, 손으로 고친 게 아니라 함수가 표를 다시 만들면서 죽였다. 이제 재생성기가 그 표를 지킨다.</p>
-</section>
-
-<section class="note">
-  <b>지금 빠진 것.</b> 없는 노드 둘(<code>body_class</code>, <code>interior_structure</code>)과 공백 일곱(조성 의도 · 해양 비율 · 해양 깊이 · 공명 구조 · 고리 · 항성 금속함량 · 지표 UV). 그리고 이 목록이 랜덤이 아니다 — <b>대부분이 내부구조 계산기의 입력면</b>이다. 2층을 만들지 않았으니 그 입력들이 요구된 적이 없었고, 그래서 기록하는 자리도 생기지 않았다.
-</section>
-
-<section>
-  <h2>여기서 나오는 순서</h2>
-  <ol class="steps">
-    <li><div><b>클래스 키</b><p>가장 싸고 가장 많이 푼다. <code>selects</code> 35개 중 상당수가 여기서 출발하고, 없으면 어떤 레시피도 제 유효범위를 검사받을 수 없다.</p></div></li>
-    <li><div><b>내부구조</b><p>생기는 순간 클래스 표 상수 넷이 도출값으로 바뀐다. 다만 순수한 추가 작업이 아니라 <b>기존 게이트 일부를 다시 연다</b>.</p></div></li>
-    <li><div><b>다음 레시피 하나</b><p>다이나모는 상류가 없는 가장 쉬운 경우였다. 상류가 있는 것을 하나 더 해봐야 계약이 이음매에서도 버티는지 안다.</p></div></li>
+  <h2>다음</h2>
+  <ol class="next">
+    <li><div><h3>천체 분류부터</h3>
+      <p>가장 싸고 가장 많이 푼다. “방식을 고른다” 35개 중 상당수가 여기서 출발하고, 이게 없으면 어떤 계산도 자기가 쓸 수 있는 천체인지 검사받을 수 없다.</p></div></li>
+    <li><div><h3>그다음이 내부 구조</h3>
+      <p>생기는 순간 표에서 꺼내 쓰던 값 셋이 계산한 값으로 바뀐다. 다만 순수한 추가가 아니다 — <strong>이미 확정한 값 일부가 다시 열린다.</strong></p></div></li>
+    <li><div><h3>레시피 하나 더</h3>
+      <p>자기장은 앞에 아무것도 필요 없는 가장 쉬운 경우였다. 앞이 있는 걸 하나 더 해봐야 이 방식이 이음매에서도 버티는지 안다.</p></div></li>
   </ol>
 </section>
 
 <footer>
-  NearStars · <code>engine/chain.yaml</code>이 정본이고 이 페이지는 그 뷰다. 방법론 21개를 네 묶음으로 나눠 전수 채굴했고, 근거를 인용하지 못한 엣지는 등재하지 않았다.
+  NearStars · 정본은 <code>engine/chain.yaml</code>이고 이 페이지는 그걸 읽어 만든 설명이다.
+  근거를 인용하지 못한 연결은 넣지 않았고, 검증 도구가 그걸 거절한다.
 </footer>
 
 </div>
