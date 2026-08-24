@@ -1,0 +1,221 @@
+<title>의존 사슬 탐색기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#E7EBEF; --surface:#FBFCFD; --surface-2:#F1F4F7;
+  --ink:#16202B; --ink-2:#48586A; --ink-3:#7B8B9B; --rule:#C7D0D9;
+  --requires:#5A6B7D; --selects:#6A3FA0; --influences:#1F6E7C; --excludes:#A81F48;
+  --missing:#A81F48; --missing-bg:#F7DFE6; --partial:#9A6605; --partial-bg:#F6ECD8;
+  --font-sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#10161D; --surface:#19212B; --surface-2:#1F2833;
+  --ink:#DCE4EC; --ink-2:#A3B2C0; --ink-3:#6F7F8F; --rule:#2C3946;
+  --requires:#93A3B4; --selects:#C4A0F0; --influences:#5FC0CF; --excludes:#FF7A9C;
+  --missing:#FF7A9C; --missing-bg:#37202A; --partial:#E3AE4A; --partial-bg:#31281A;
+}}
+:root[data-theme="dark"]{
+  --paper:#10161D; --surface:#19212B; --surface-2:#1F2833;
+  --ink:#DCE4EC; --ink-2:#A3B2C0; --ink-3:#6F7F8F; --rule:#2C3946;
+  --requires:#93A3B4; --selects:#C4A0F0; --influences:#5FC0CF; --excludes:#FF7A9C;
+  --missing:#FF7A9C; --missing-bg:#37202A; --partial:#E3AE4A; --partial-bg:#31281A;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans);line-height:1.7}
+.top{max-width:1700px;margin:0 auto;padding:34px 24px 0}
+h1{font-size:26px;font-weight:700;margin:0;letter-spacing:-.02em}
+.sub{color:var(--ink-2);font-weight:300;margin:8px 0 0;font-size:15px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 14px;align-items:center}
+.tg{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.03em;border:1px solid var(--rule);
+    background:var(--surface);color:var(--ink-2);border-radius:999px;padding:6px 14px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;user-select:none}
+.tg:hover{border-color:var(--ink-3)}
+.tg .dot{width:16px;height:0;border-top:2px solid var(--c)}
+.tg[data-on="0"]{opacity:.36}
+.tg.requires{--c:var(--requires)} .tg.selects{--c:var(--selects)}
+.tg.influences{--c:var(--influences)} .tg.excludes{--c:var(--excludes)}
+.tg.selects .dot,.tg.excludes .dot{border-top-style:dashed}
+.hint{font-size:12.5px;color:var(--ink-3);margin-left:auto}
+.stage{max-width:1700px;margin:0 auto;padding:0 24px 60px;display:grid;
+       grid-template-columns:minmax(0,1fr) 310px;gap:20px;align-items:start}
+@media(max-width:1080px){.stage{grid-template-columns:1fr}}
+.canvas{background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow-x:auto}
+svg{display:block}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:20px;
+       position:sticky;top:20px;min-height:340px;font-size:14px}
+.panel .ph{color:var(--ink-3);font-weight:300;font-size:14px}
+.panel h2{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+.panel .id{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);margin-top:3px;word-break:break-all}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.tag{font-family:var(--font-mono);font-size:10.5px;border:1px solid var(--rule);border-radius:5px;
+     padding:3px 8px;color:var(--ink-2)}
+.tag.miss{border-color:var(--missing);color:var(--missing);background:var(--missing-bg)}
+.tag.tbl{border-color:var(--partial);color:var(--partial);background:var(--partial-bg)}
+.panel .note{font-size:13.5px;color:var(--ink-2);font-weight:300;margin:10px 0 0;
+             border-left:2px solid var(--rule);padding-left:12px}
+.grp{margin-top:18px}
+.grp h3{margin:0 0 7px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;
+        text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.grp ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.grp li{font-size:13px;display:flex;gap:8px;align-items:baseline;cursor:pointer;line-height:1.5}
+.grp li:hover{color:var(--selects)}
+.grp li i{width:9px;height:9px;border-radius:2px;background:var(--c);flex:0 0 auto;
+          position:relative;top:1px}
+.grp li em{font-style:normal;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3)}
+.node{cursor:pointer}
+.node rect{fill:var(--surface-2);stroke:var(--ink-3);stroke-width:1.2}
+.node.miss rect{fill:var(--missing-bg);stroke:var(--missing);stroke-width:2}
+.node.tbl rect{fill:var(--partial-bg);stroke:var(--partial);stroke-width:1.8}
+.node text{font-size:11.5px;font-weight:500;fill:var(--ink);pointer-events:none}
+.node.dim{opacity:.16}
+.node.hot rect{stroke-width:2.6;stroke:var(--selects)}
+.ed{fill:none;stroke-width:1.1;opacity:.13}
+.ed.requires{stroke:var(--requires)} .ed.selects{stroke:var(--selects);stroke-dasharray:5 3}
+.ed.influences{stroke:var(--influences)} .ed.excludes{stroke:var(--excludes);stroke-dasharray:3 3}
+.ed.hot{opacity:1;stroke-width:2}
+.ed.off{display:none}
+.lvl{font-family:var(--font-mono);font-size:10px;fill:var(--ink-3);letter-spacing:.08em}
+</style>
+
+<div class="top">
+  <h1>의존 사슬 탐색기</h1>
+  <p class="sub">노드 44개, 연결 161개 전부. 값 하나에 올려두면 그 값이 무엇에 기대고 무엇을 흔드는지 보인다. 눌러서 고정.</p>
+  <div class="bar">
+    <span class="tg requires" data-k="requires" data-on="1"><span class="dot"></span>값을 넘긴다 94</span>
+    <span class="tg selects" data-k="selects" data-on="1"><span class="dot"></span>방식을 고른다 35</span>
+    <span class="tg influences" data-k="influences" data-on="1"><span class="dot"></span>영향을 준다 24</span>
+    <span class="tg excludes" data-k="excludes" data-on="0"><span class="dot"></span>아니라고 밝혀졌다 8</span>
+    <span class="hint">왼쪽이 먼저 정해지는 값이다</span>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="canvas"><svg id="g" role="img" aria-label="의존 그래프 전체. 노드에 올리면 연결이 강조된다."></svg></div>
+  <aside class="panel" id="p"><p class="ph">노드에 마우스를 올리면 여기에 설명과 연결이 표시된다.</p></aside>
+</div>
+
+<script>
+const D = {"nodes": {"star_physical": {"label": "별의 성질", "kind": "measured", "kindKo": "측정", "status": "", "note": "", "recipe": "", "outputs": ["mass", "radius", "teff", "luminosity", "sed", "v_sin_i"], "x": 26, "y": 362.0}, "star_metallicity": {"label": "별 금속함량", "kind": "measured", "kindKo": "측정", "status": "gap", "note": "", "recipe": "", "outputs": ["z"], "x": 26, "y": 316.0}, "system_age": {"label": "계 나이", "kind": "measured", "kindKo": "측정", "status": "", "note": "", "recipe": "", "outputs": ["t_sys"], "x": 26, "y": 40.0}, "body_age": {"label": "천체 나이", "kind": "measured", "kindKo": "측정", "status": "", "note": "천체 자신의 나이. 항성 나이와 다르고, 거대행성 냉각광도의 실입력이다.", "recipe": "", "outputs": ["t_body"], "x": 26, "y": 500.0}, "orbit_elements": {"label": "궤도 요소", "kind": "measured", "kindKo": "측정", "status": "", "note": "", "recipe": "", "outputs": ["a", "e", "i", "lan", "aop", "n"], "x": 26, "y": 178.0}, "mass_or_radius": {"label": "질량 또는 반지름", "kind": "measured", "kindKo": "측정", "status": "", "note": "", "recipe": "", "outputs": ["mass", "radius"], "x": 26, "y": 454.0}, "composition_intent": {"label": "조성 의도", "kind": "owner", "kindKo": "결정", "status": "gap", "note": "층 질량분율·맨틀 산화도·표면 종. 측정되지 않는 오너 결정인데 지금은 body_type 산문에만 있다.", "recipe": "", "outputs": ["layer_fractions", "mantle_redox", "surface_species"], "x": 26, "y": 408.0}, "ocean_fraction": {"label": "바다 비율", "kind": "owner", "kindKo": "결정", "status": "gap", "note": "", "recipe": "", "outputs": ["f_ocean"], "x": 26, "y": 270.0}, "ocean_depth": {"label": "바다 깊이", "kind": "owner", "kindKo": "결정", "status": "gap", "note": "f_ocean 과 다른 양이다. 공명 두께에 걸리면 소산이 자릿수로 움직인다.", "recipe": "", "outputs": ["d_ocean"], "x": 26, "y": 224.0}, "resonance_architecture": {"label": "공명 구조", "kind": "owner", "kindKo": "결정", "status": "gap", "note": "지속 조석가열을 주장하려면 e 를 유지하는 공명을 이름 대야 한다.", "recipe": "", "outputs": ["forced_e"], "x": 26, "y": 132.0}, "ring_system": {"label": "고리", "kind": "owner", "kindKo": "결정", "status": "gap", "note": "", "recipe": "", "outputs": ["present", "optical_depth"], "x": 26, "y": 86.0}, "body_class": {"label": "천체 분류", "kind": "computed", "kindKo": "계산", "status": "missing", "note": "아래 전부가 여기서 갈린다. 없어서 오적용을 기계적으로 막을 수 없다.", "recipe": "", "outputs": ["class"], "x": 236, "y": 293.0}, "mass_radius_relation": {"label": "질량–반지름 관계", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "mass-radius-relation-methodology", "outputs": ["radius", "density"], "x": 236, "y": 247.0}, "interior_structure": {"label": "내부 구조", "kind": "computed", "kindKo": "계산", "status": "missing", "note": "네 레시피가 각자 가정 중. 이음매 드리프트의 근원.", "recipe": "", "outputs": ["nmoi", "core_radius", "conductor_phase", "layer_q", "k2_over_q"], "x": 446, "y": 201.0}, "xuv_history": {"label": "XUV 이력", "kind": "computed", "kindKo": "계산", "status": "", "note": "순간 플럭스가 아니라 생애 적분 선량. 모든 stripping 추정의 입력.", "recipe": "", "outputs": ["xuv_cumulative"], "x": 446, "y": 109.0}, "internal_heat_nontidal": {"label": "내부 열", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "internal-heat-luminosity-methodology", "outputs": ["l_int", "t_int", "geotherm"], "x": 446, "y": 247.0}, "nmoi_class_table": {"label": "관성모멘트 표", "kind": "class_table", "kindKo": "분류표 조회", "status": "", "note": "\"바디 클래스에서 NMoI 를 고르고 가정과 범위를 명시하라\" — body-figure:256", "recipe": "", "outputs": ["nmoi"], "x": 446, "y": 155.0}, "k2q_class_table": {"label": "조석 소산 표", "kind": "class_table", "kindKo": "분류표 조회", "status": "", "note": "\"외계 천체에서는 사실상 측정된 적이 없다\" — tidal-heating:527", "recipe": "", "outputs": ["k2_over_q"], "x": 446, "y": 339.0}, "omega0_class_table": {"label": "초기 자전 표", "kind": "class_table", "kindKo": "분류표 조회", "status": "", "note": "\"원시 미지값. 인용이 아니라 논증으로 경계지어진다\" — tidal-locking:431", "recipe": "", "outputs": ["p_init"], "x": 446, "y": 385.0}, "t_exo_bracket": {"label": "외기권 온도 구간", "kind": "class_table", "kindKo": "분류표 조회", "status": "", "note": "\"T_exo 는 약한 입력이고 표면온도가 아니다\" — exoplanet-atmosphere:284. 손으로 구간을 잡는다.", "recipe": "", "outputs": ["t_exo"], "x": 446, "y": 293.0}, "tidal_locking": {"label": "조석 고정", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "tidal-locking-timescale-methodology", "outputs": ["locked", "t_lock", "rotation_period"], "x": 656, "y": 431.0}, "body_figure": {"label": "편평도 J₂·C₂₂", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "body-figure-methodology", "outputs": ["j2", "c22", "flattening", "reference_radius", "relief"], "x": 656, "y": 477.0}, "cassini_state": {"label": "자전축 기울기", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "cassini-state-obliquity-methodology", "outputs": ["obliquity"], "x": 656, "y": 247.0}, "spin_axis_inclination": {"label": "자전축 방향", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "spin-axis-inclination-methodology", "outputs": ["i_star", "p_rot"], "x": 656, "y": 293.0}, "dynamo_giant": {"label": "자기장 (거대행성)", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "planetary-dynamo-scaling", "outputs": ["b_pol", "b_eq", "dipole_moment"], "x": 656, "y": 155.0}, "dynamo_rocky": {"label": "자기장 (암석)", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "rocky-planet-dynamo-methodology", "outputs": ["dipole_moment", "b_eq"], "x": 656, "y": 201.0}, "stellar_wind": {"label": "항성풍", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "", "outputs": ["n_sw", "v_sw", "p_ram"], "x": 446, "y": 431.0}, "magnetosphere_geometry": {"label": "자기권 · 방사선대", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "planetary-magnetosphere-geometry-methodology", "outputs": ["r_mp", "belt_extent", "belt_intensity"], "x": 656, "y": 109.0}, "tidal_heating": {"label": "조석 가열", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "tidal-heating-methodology", "outputs": ["power", "surface_flux"], "x": 656, "y": 385.0}, "heat_transport_mode": {"label": "열 수송 방식", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "tidal-heating-methodology", "outputs": ["mode", "resurfacing_rate", "day_night_contrast"], "x": 656, "y": 63.0}, "global_fluid_layer": {"label": "전 지구 유체층", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "", "outputs": ["present"], "x": 656, "y": 339.0}, "t_eq_stellar": {"label": "평형 온도", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "", "outputs": ["t_eq"], "x": 866, "y": 385.0}, "moon_energy_budget": {"label": "위성 에너지수지", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "moon-energy-budget-methodology", "outputs": ["t_eq_4term", "f_abs"], "x": 866, "y": 293.0}, "t_eff_body": {"label": "유효 온도", "kind": "computed", "kindKo": "계산", "status": "", "note": "T_eff⁴ = T_eq⁴ + T_int⁴", "recipe": "", "outputs": ["t_eff"], "x": 866, "y": 339.0}, "atmospheric_escape": {"label": "대기 탈출", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "exoplanet-atmosphere-methodology", "outputs": ["retained", "loss_rate"], "x": 866, "y": 201.0}, "atmosphere_choice": {"label": "대기 조성·기압", "kind": "owner", "kindKo": "결정", "status": "", "note": "", "recipe": "", "outputs": ["pressure", "composition", "haze"], "x": 866, "y": 155.0}, "greenhouse": {"label": "온실 효과", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "greenhouse-warming-methodology", "outputs": ["delta_t_gh", "t_surf"], "x": 866, "y": 247.0}, "ice_stability": {"label": "얼음 안정성", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "ice-stability-methodology", "outputs": ["ice_survives", "min_albedo"], "x": 1076, "y": 178.0}, "surface_albedo": {"label": "표면색 · 알베도", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "surface-color-albedo-methodology", "outputs": ["albedo", "hue"], "x": 1076, "y": 408.0}, "crater_state": {"label": "크레이터", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "crater-degradation-methodology", "outputs": ["cratered"], "x": 1076, "y": 270.0}, "surface_dose": {"label": "표면 방사선량", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "surface-radiation-dose-methodology", "outputs": ["dose"], "x": 1076, "y": 362.0}, "surface_uv": {"label": "지표 UV", "kind": "computed", "kindKo": "계산", "status": "gap", "note": "", "recipe": "", "outputs": ["uv_flux"], "x": 1076, "y": 224.0}, "atmosphere_reflected_color": {"label": "대기 반사색", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "atmosphere-reflected-color-methodology", "outputs": ["hex"], "x": 1076, "y": 132.0}, "hapke_shader_values": {"label": "표면 광학값", "kind": "computed", "kindKo": "계산", "status": "", "note": "", "recipe": "hapke-shader-methodology", "outputs": ["terrain", "scaled", "porosity_k", "theta"], "x": 1076, "y": 316.0}}, "edges": [{"f": "mass_or_radius", "t": "mass_radius_relation", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "composition_intent", "t": "mass_radius_relation", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "mass_radius_relation", "k": "influences", "via": "insolation", "scope": "self", "sign": "positive", "status": "", "note": ""}, {"f": "mass_radius_relation", "t": "body_class", "k": "requires", "via": "radius_valley", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_or_radius", "t": "body_class", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "composition_intent", "t": "body_class", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_radius_relation", "t": "interior_structure", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "interior_structure", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "composition_intent", "t": "interior_structure", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_radius_relation", "t": "atmosphere_choice", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_radius_relation", "t": "surface_albedo", "k": "influences", "via": "", "scope": "self", "sign": "non-monotonic", "status": "", "note": ""}, {"f": "body_class", "t": "nmoi_class_table", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "k2q_class_table", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "omega0_class_table", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "nmoi_class_table", "t": "body_figure", "k": "requires", "via": "nmoi", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "nmoi_class_table", "t": "cassini_state", "k": "requires", "via": "nmoi", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "k2q_class_table", "t": "tidal_heating", "k": "requires", "via": "k2_over_q", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "k2q_class_table", "t": "tidal_locking", "k": "requires", "via": "k2_over_q", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "omega0_class_table", "t": "tidal_locking", "k": "requires", "via": "p_init", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "t_exo_bracket", "t": "atmospheric_escape", "k": "requires", "via": "t_exo", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "interior_structure", "t": "nmoi_class_table", "k": "influences", "via": "", "scope": "self", "sign": "", "status": "gap", "note": "내부구조가 생기면 클래스 조회를 도출값이 대체한다."}, {"f": "tidal_locking", "t": "body_figure", "k": "requires", "via": "lock_state", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_figure", "t": "tidal_locking", "k": "selects", "via": "permanent_quadrupole", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_radius_relation", "t": "body_figure", "k": "requires", "via": "radius", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "body_figure", "k": "requires", "via": "n", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "body_figure", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "body_figure", "k": "requires", "via": "p_rot", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "spin_axis_inclination", "k": "requires", "via": "v_sin_i", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "spin_axis_inclination", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "spin_axis_inclination", "t": "body_figure", "k": "requires", "via": "p_rot", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_figure", "t": "cassini_state", "k": "requires", "via": "j2, c22", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_locking", "t": "cassini_state", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "cassini_state", "k": "requires", "via": "e, a, n", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "cassini_state", "k": "requires", "via": "mass", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "ocean_fraction", "t": "cassini_state", "k": "influences", "via": "", "scope": "self", "sign": "positive", "status": "gap", "note": ""}, {"f": "body_figure", "t": "cassini_state", "k": "requires", "via": "j2, radius", "scope": "parent", "sign": "", "status": "", "note": "위성의 Cassini 상태는 *부모 행성의* J2 와 반지름이 정하는 교점 이동률에 걸린다."}, {"f": "body_figure", "t": "cassini_state", "k": "selects", "via": "fossil_bulge", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_figure", "t": "crater_state", "k": "requires", "via": "relief", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "tidal_locking", "k": "requires", "via": "a, e", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_radius_relation", "t": "tidal_locking", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "system_age", "t": "tidal_locking", "k": "requires", "via": "t_sys", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "tidal_locking", "k": "selects", "via": "thermal_tide", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_locking", "t": "tidal_heating", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "tidal_heating", "k": "requires", "via": "a, e, n", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_radius_relation", "t": "tidal_heating", "k": "requires", "via": "radius", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "resonance_architecture", "t": "tidal_heating", "k": "requires", "via": "forced_e", "scope": "self", "sign": "", "status": "gap", "note": ""}, {"f": "cassini_state", "t": "tidal_heating", "k": "requires", "via": "obliquity", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "ocean_depth", "t": "tidal_heating", "k": "requires", "via": "d_ocean", "scope": "self", "sign": "", "status": "gap", "note": ""}, {"f": "tidal_heating", "t": "interior_structure", "k": "influences", "via": "", "scope": "self", "sign": "non-monotonic", "status": "", "note": ""}, {"f": "tidal_heating", "t": "mass_radius_relation", "k": "requires", "via": "radius_ceiling", "scope": "self", "sign": "", "status": "", "note": "수송 테스트가 하드 반지름 상한을 돌려준다. 제한받는 것은 *측정된* 반지름이 아니라 우리가 배정하는 반지름이다 — Dante 521 km 가 그 상한의 산물이다."}, {"f": "tidal_heating", "t": "heat_transport_mode", "k": "requires", "via": "surface_flux", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "internal_heat_nontidal", "t": "heat_transport_mode", "k": "requires", "via": "geotherm", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "global_fluid_layer", "t": "heat_transport_mode", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "t_eq_stellar", "t": "heat_transport_mode", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "heat_transport_mode", "k": "requires", "via": "pressure", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "omega0_class_table", "t": "heat_transport_mode", "k": "selects", "via": "circulation_regime", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_heating", "t": "ice_stability", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_heating", "t": "crater_state", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_heating", "t": "surface_albedo", "k": "requires", "via": "plains_temperature", "scope": "self", "sign": "", "status": "", "note": "평원 온도가 어느 휘발성 물질이 안정한지를 정한다 — 황이냐 SO2 서리냐가 표면 색조를 가른다."}, {"f": "tidal_heating", "t": "internal_heat_nontidal", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_or_radius", "t": "dynamo_giant", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_age", "t": "dynamo_giant", "k": "requires", "via": "cooling_luminosity", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "internal_heat_nontidal", "t": "dynamo_giant", "k": "requires", "via": "l_int", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "dynamo_giant", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_locking", "t": "dynamo_giant", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "dynamo_rocky", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_or_radius", "t": "dynamo_rocky", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "dynamo_rocky", "k": "requires", "via": "period", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "interior_structure", "t": "dynamo_rocky", "k": "requires", "via": "core_radius, conductor_phase", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_locking", "t": "dynamo_rocky", "k": "selects", "via": "rossby", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "ocean_fraction", "t": "dynamo_rocky", "k": "influences", "via": "", "scope": "self", "sign": "negative", "status": "gap", "note": ""}, {"f": "body_age", "t": "dynamo_rocky", "k": "influences", "via": "", "scope": "self", "sign": "negative", "status": "", "note": ""}, {"f": "heat_transport_mode", "t": "dynamo_rocky", "k": "selects", "via": "cmb_heat_flux", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "internal_heat_nontidal", "t": "dynamo_rocky", "k": "requires", "via": "geotherm", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "stellar_wind", "k": "requires", "via": "age", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "stellar_wind", "t": "magnetosphere_geometry", "k": "requires", "via": "p_ram", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "dynamo_giant", "t": "magnetosphere_geometry", "k": "requires", "via": "b_eq", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "dynamo_rocky", "t": "magnetosphere_geometry", "k": "requires", "via": "b_eq", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "dynamo_rocky", "t": "magnetosphere_geometry", "k": "selects", "via": "multipolar", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "magnetosphere_geometry", "k": "selects", "via": "ionosphere", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "magnetosphere_geometry", "k": "selects", "via": "plasmasphere_slot", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "magnetosphere_geometry", "k": "influences", "via": "", "scope": "self", "sign": "negative", "status": "", "note": ""}, {"f": "tidal_heating", "t": "magnetosphere_geometry", "k": "requires", "via": "plasma_source", "scope": "parent", "sign": "", "status": "", "note": "화산 위성이 부모의 벨트를 먹인다. Io 는 목성에 ~1 ton/s 를 공급하고, 우리 A b I 도 같은 역할을 한다."}, {"f": "ring_system", "t": "magnetosphere_geometry", "k": "influences", "via": "", "scope": "self", "sign": "negative", "status": "gap", "note": ""}, {"f": "magnetosphere_geometry", "t": "atmospheric_escape", "k": "influences", "via": "r_mp", "scope": "self", "sign": "non-monotonic", "status": "", "note": "약한 쌍극자는 없느니만 못하다. standoff 가 유도 경계를 넘기 전까지 이온 탈출이 오히려 늘고, 넘어선 뒤에야 차폐가 시작된다. 판정식은 R_mp(B_eq) > r_ionopause 이지 B_eq > 0 이 아니다. 대기 문서는 같은 사실을 반대편에서 말한다 — \"자기권이 있다\"를 대기 유지 논거로 쓰지 말 것."}, {"f": "dynamo_rocky", "t": "surface_dose", "k": "requires", "via": "b_eq", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "surface_dose", "k": "requires", "via": "column", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_or_radius", "t": "surface_dose", "k": "requires", "via": "gravity", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "surface_dose", "k": "requires", "via": "spe_fluence", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "magnetosphere_geometry", "t": "surface_dose", "k": "requires", "via": "", "scope": "parent", "sign": "", "status": "", "note": "위성 표면이 보는 방사선은 압도적으로 *부모의* 포획 플럭스다. 벨트 간극에 앉으면 면한다."}, {"f": "surface_dose", "t": "surface_uv", "k": "influences", "via": "", "scope": "self", "sign": "", "status": "gap", "note": ""}, {"f": "star_physical", "t": "xuv_history", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_age", "t": "xuv_history", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "xuv_history", "t": "atmospheric_escape", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_or_radius", "t": "atmospheric_escape", "k": "requires", "via": "v_esc", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "stellar_wind", "t": "atmospheric_escape", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_locking", "t": "atmospheric_escape", "k": "influences", "via": "", "scope": "self", "sign": "negative", "status": "", "note": ""}, {"f": "tidal_heating", "t": "atmospheric_escape", "k": "influences", "via": "", "scope": "self", "sign": "positive", "status": "", "note": ""}, {"f": "atmospheric_escape", "t": "atmosphere_choice", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmospheric_escape", "t": "composition_intent", "k": "influences", "via": "selective_loss", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "composition_intent", "t": "atmosphere_choice", "k": "requires", "via": "mantle_redox", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "internal_heat_nontidal", "t": "atmosphere_choice", "k": "requires", "via": "outgassing", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "t_eq_stellar", "t": "atmosphere_choice", "k": "requires", "via": "scale_height", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "surface_albedo", "t": "t_eq_stellar", "k": "requires", "via": "albedo", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "t_eq_stellar", "k": "requires", "via": "luminosity", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "t_eq_stellar", "k": "requires", "via": "a", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_locking", "t": "t_eq_stellar", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "orbit_elements", "t": "moon_energy_budget", "k": "requires", "via": "a, i, e", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "t_eff_body", "t": "moon_energy_budget", "k": "requires", "via": "", "scope": "parent", "sign": "", "status": "", "note": "부모의 온도·반지름·알베도가 위성 4항 예산의 두 항을 만든다. 젊은 거대행성은 그것만으로 위성에 폭주온실을 일으킬 수 있다."}, {"f": "tidal_heating", "t": "moon_energy_budget", "k": "requires", "via": "f_tidal", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "global_fluid_layer", "t": "moon_energy_budget", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "heat_transport_mode", "t": "moon_energy_budget", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "greenhouse", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "greenhouse", "k": "influences", "via": "haze", "scope": "self", "sign": "non-monotonic", "status": "", "note": ""}, {"f": "t_eq_stellar", "t": "greenhouse", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "moon_energy_budget", "t": "greenhouse", "k": "requires", "via": "t_eq_4term", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "greenhouse", "k": "requires", "via": "teff", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "greenhouse", "k": "selects", "via": "spectrum", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "tidal_heating", "t": "greenhouse", "k": "influences", "via": "", "scope": "self", "sign": "", "status": "gap", "note": ""}, {"f": "mass_or_radius", "t": "internal_heat_nontidal", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_age", "t": "internal_heat_nontidal", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "internal_heat_nontidal", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_metallicity", "t": "internal_heat_nontidal", "k": "influences", "via": "", "scope": "self", "sign": "", "status": "gap", "note": ""}, {"f": "internal_heat_nontidal", "t": "mass_radius_relation", "k": "influences", "via": "", "scope": "self", "sign": "positive", "status": "", "note": ""}, {"f": "internal_heat_nontidal", "t": "t_eff_body", "k": "requires", "via": "t_int", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "t_eq_stellar", "t": "t_eff_body", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "greenhouse", "t": "ice_stability", "k": "requires", "via": "t_surf", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "moon_energy_budget", "t": "ice_stability", "k": "requires", "via": "f_abs", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "surface_albedo", "t": "ice_stability", "k": "requires", "via": "albedo", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "ice_stability", "t": "surface_albedo", "k": "requires", "via": "min_albedo", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "composition_intent", "t": "ice_stability", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_age", "t": "ice_stability", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_or_radius", "t": "ice_stability", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "composition_intent", "t": "surface_albedo", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "surface_albedo", "k": "requires", "via": "sed", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "stellar_wind", "t": "surface_albedo", "k": "influences", "via": "", "scope": "self", "sign": "negative", "status": "", "note": ""}, {"f": "magnetosphere_geometry", "t": "surface_albedo", "k": "influences", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "surface_albedo", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_age", "t": "surface_albedo", "k": "influences", "via": "", "scope": "self", "sign": "negative", "status": "", "note": ""}, {"f": "ocean_fraction", "t": "surface_albedo", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "gap", "note": ""}, {"f": "t_eq_stellar", "t": "crater_state", "k": "requires", "via": "homologous_temperature", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "composition_intent", "t": "crater_state", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "crater_state", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_age", "t": "crater_state", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "star_physical", "t": "atmosphere_reflected_color", "k": "requires", "via": "sed", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "atmosphere_reflected_color", "k": "requires", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "t_eq_stellar", "t": "atmosphere_reflected_color", "k": "selects", "via": "cloud_class", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_reflected_color", "t": "surface_albedo", "k": "influences", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "atmosphere_reflected_color", "t": "greenhouse", "k": "influences", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "body_class", "t": "hapke_shader_values", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "surface_albedo", "t": "hapke_shader_values", "k": "influences", "via": "", "scope": "self", "sign": "non-monotonic", "status": "", "note": ""}, {"f": "atmosphere_choice", "t": "hapke_shader_values", "k": "selects", "via": "", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "crater_state", "t": "hapke_shader_values", "k": "requires", "via": "terrain", "scope": "self", "sign": "", "status": "", "note": ""}, {"f": "mass_or_radius", "t": "hapke_shader_values", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "corr(K, log g) = +0.58 뿐이고 이상치가 끌고 있다. K 는 표면중력을 따라가지 않는다."}, {"f": "interior_structure", "t": "hapke_shader_values", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "phi 는 근표면 광학 packing 이지 벌크 다공도가 아니다."}, {"f": "composition_intent", "t": "surface_dose", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "조성은 거의 상관없다. 기둥밀도가 정한다."}, {"f": "internal_heat_nontidal", "t": "t_eff_body", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "암석체에서는 0.001 K 보정이라 표면온도에 무의미하다. 거대행성 엣지와 구분할 것."}, {"f": "star_physical", "t": "internal_heat_nontidal", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "나이와 질량이 정하지 호스트가 정하지 않는다."}, {"f": "orbit_elements", "t": "heat_transport_mode", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "낮밤 대비는 대기가 정하지 궤도가 정하지 않는다."}, {"f": "heat_transport_mode", "t": "surface_albedo", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "화산 재표면화 → 알베도는 어느 문서도 서술하지 않는다. 가장 가까운 건 충돌·풍화 노출연령이고 그건 다른 것이다."}, {"f": "cassini_state", "t": "spin_axis_inclination", "k": "excludes", "via": "", "scope": "self", "sign": "", "status": "", "note": "조석 감쇠된 것과 아닌 것. 교차적용 금지."}], "kindKo": {"requires": "값을 넘긴다", "selects": "방식을 고른다", "influences": "영향을 준다", "excludes": "아니라고 밝혀졌다"}, "layers": [{"x": 26, "name": "먼저 정해지는 것"}, {"x": 236, "name": "어떤 천체인가"}, {"x": 446, "name": "속은 어떤가"}, {"x": 656, "name": "거기서 나오는 것"}, {"x": 866, "name": "온도 · 대기"}, {"x": 1076, "name": "겉모습"}], "w": 1312, "h": 586};
+const NW = 154, NH = 34;
+const svg = document.getElementById('g'), panel = document.getElementById('p');
+svg.setAttribute('viewBox', `0 0 ${D.w} ${D.h}`);
+svg.setAttribute('width', D.w); svg.setAttribute('height', D.h);
+
+const ns = 'http://www.w3.org/2000/svg';
+const mk = (t, a) => { const e = document.createElementNS(ns, t);
+  for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+const gE = mk('g', {}), gN = mk('g', {});
+svg.appendChild(gE); svg.appendChild(gN);
+
+const path = (a, b) => {
+  const x1 = a.x + NW, y1 = a.y + NH / 2, x2 = b.x, y2 = b.y + NH / 2;
+  if (x2 >= x1) { const m = (x1 + x2) / 2;
+    return `M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}`; }
+  const lift = Math.max(46, Math.abs(y2 - y1) * .6 + 30);
+  return `M${x1} ${y1} C${x1 + lift} ${y1 - lift} ${x2 - lift} ${y2 - lift} ${x2} ${y2}`;
+};
+
+const eEls = [];
+D.edges.forEach((e, i) => {
+  const a = D.nodes[e.f], b = D.nodes[e.t];
+  const p = mk('path', { d: path(a, b), class: `ed ${e.k}` });
+  p.dataset.f = e.f; p.dataset.t = e.t; p.dataset.k = e.k; p.dataset.i = i;
+  gE.appendChild(p); eEls.push(p);
+});
+
+const nEls = {};
+for (const id in D.nodes) {
+  const n = D.nodes[id];
+  const cls = n.status === 'missing' || n.status === 'gap' ? 'miss'
+            : n.kind === 'class_table' ? 'tbl' : '';
+  const g = mk('g', { class: `node ${cls}`, tabindex: '0', role: 'button' });
+  g.appendChild(mk('rect', { x: n.x, y: n.y, width: NW, height: NH, rx: 6 }));
+  const t = mk('text', { x: n.x + NW / 2, y: n.y + NH / 2 + 4.5, 'text-anchor': 'middle' });
+  t.textContent = n.label; g.appendChild(t);
+  g.addEventListener('mouseenter', () => show(id));
+  g.addEventListener('focus', () => show(id));
+  g.addEventListener('click', () => { pinned = pinned === id ? null : id; show(id); });
+  gN.appendChild(g); nEls[id] = g;
+}
+
+const off = new Set(['excludes']);
+let pinned = null;
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function list(items, dir) {
+  if (!items.length) return '';
+  const li = items.map(e => {
+    const other = dir === 'in' ? e.f : e.t;
+    const bits = [D.kindKo[e.k]];
+    if (e.via) bits.push(e.via);
+    if (e.scope !== 'self') bits.push('부모');
+    if (e.sign === 'non-monotonic') bits.push('비단조');
+    if (e.status) bits.push('공백');
+    return `<li data-go="${esc(other)}"><i style="--c:var(--${e.k})"></i>
+      <span>${esc(D.nodes[other].label)}<br><em>${esc(bits.join(' · '))}</em></span></li>`;
+  }).join('');
+  return `<div class="grp"><h3>${dir === 'in' ? '이것이 기대는 값' : '이 값이 흔드는 것'} ${items.length}</h3><ul>${li}</ul></div>`;
+}
+
+function show(id) {
+  const n = D.nodes[id];
+  const inc = D.edges.filter(e => e.t === id && !off.has(e.k));
+  const out = D.edges.filter(e => e.f === id && !off.has(e.k));
+  const near = new Set([id, ...inc.map(e => e.f), ...out.map(e => e.t)]);
+
+  for (const k in nEls) nEls[k].classList.toggle('dim', !near.has(k));
+  nEls[id].classList.add('hot');
+  for (const k in nEls) if (k !== id) nEls[k].classList.remove('hot');
+  eEls.forEach(p => p.classList.toggle('hot',
+    !off.has(p.dataset.k) && (p.dataset.f === id || p.dataset.t === id)));
+
+  const tags = [`<span class="tag">${esc(n.kindKo)}</span>`];
+  if (n.status) tags.push(`<span class="tag miss">${n.status === 'missing' ? '없음' : '공백'}</span>`);
+  if (n.kind === 'class_table') tags.push('<span class="tag tbl">계산값 아님</span>');
+  if (n.recipe) tags.push(`<span class="tag">${esc(n.recipe)}</span>`);
+
+  panel.innerHTML = `<h2>${esc(n.label)}</h2><div class="id">${esc(id)}</div>
+    <div class="tags">${tags.join('')}</div>
+    ${n.note ? `<p class="note">${esc(n.note)}</p>` : ''}
+    ${n.outputs.length ? `<div class="grp"><h3>내놓는 값</h3><ul><li><span><em>${esc(n.outputs.join(' · '))}</em></span></li></ul></div>` : ''}
+    ${list(inc, 'in')}${list(out, 'out')}`;
+
+  panel.querySelectorAll('[data-go]').forEach(li =>
+    li.addEventListener('click', ev => { ev.stopPropagation(); pinned = li.dataset.go; show(pinned); }));
+}
+
+function clear() {
+  if (pinned) return;
+  for (const k in nEls) { nEls[k].classList.remove('dim'); nEls[k].classList.remove('hot'); }
+  eEls.forEach(p => p.classList.remove('hot'));
+  panel.innerHTML = '<p class="ph">노드에 마우스를 올리면 여기에 설명과 연결이 표시된다.</p>';
+}
+svg.addEventListener('mouseleave', clear);
+
+function apply() {
+  eEls.forEach(p => p.classList.toggle('off', off.has(p.dataset.k)));
+  if (pinned) show(pinned);
+}
+document.querySelectorAll('.tg').forEach(t => {
+  if (t.dataset.on === '0') off.add(t.dataset.k);
+  t.addEventListener('click', () => {
+    const k = t.dataset.k, on = t.dataset.on === '1';
+    t.dataset.on = on ? '0' : '1';
+    if (on) off.add(k); else off.delete(k);
+    apply();
+  });
+});
+apply();
+
+// 단 라벨
+D.layers.forEach(l => {
+  const t = mk('text', { x: l.x, y: 18, class: 'lvl' });
+  t.textContent = l.name;
+  svg.appendChild(t);
+});
+</script>
