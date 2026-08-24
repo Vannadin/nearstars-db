@@ -22,7 +22,15 @@ python3 scripts/check_dead_links.py || fail=1
 
 echo ""
 echo "── 3b. 사이트 내부 링크 (docs/ 404) ──"
-python3 scripts/check_site_links.py || fail=1
+# 생성 HTML 은 gh-pages 가 정본이라 main 에서 추적하지 않는다(.gitignore 참고).
+# 갓 클론했거나 새 워크트리라면 docs/ 에 사이트가 없고, 그때 이 게이트는
+# 존재하지 않는 파일을 향한 링크를 전부 404 로 신고한다 — 빌드하라는 뜻이지
+# 링크가 깨졌다는 뜻이 아니므로, 빌드 여부를 먼저 확인하고 건너뛴다.
+if [ -f docs/index.html ]; then
+  python3 scripts/check_site_links.py || fail=1
+else
+  echo "  [SKIP] 사이트가 빌드되지 않은 트리 — run_pipeline.sh 후 다시 확인"
+fi
 
 echo ""
 echo "── 3c. 인용 링크 (docs/reference bibcode/arXiv) ──"
@@ -72,7 +80,11 @@ python3 scripts/check_language.py || fail=1
 
 echo ""
 echo "── 7. 빌드 산출물 신선도 + 매니페스트 커버리지 ──"
-python3 scripts/check_build_freshness.py || fail=1
+if [ -f docs/index.html ]; then
+  python3 scripts/check_build_freshness.py || fail=1
+else
+  echo "  [SKIP] 사이트가 빌드되지 않은 트리"
+fi
 
 echo ""
 echo "── 8. Phase 4 emit-게이트 (v2 strict / legacy soft) ──"
@@ -120,7 +132,11 @@ python3 scripts/check_pipeline_flow.py || fail=1
 
 echo ""
 echo "── 11. 사이트맵 연결성 게이트 (신규 고아 페이지 감지) ──"
-python3 scripts/build_sitemap.py --audit-only || fail=1
+if [ -f docs/index.html ]; then
+  python3 scripts/build_sitemap.py --audit-only || fail=1
+else
+  echo "  [SKIP] 사이트가 빌드되지 않은 트리"
+fi
 
 echo ""
 echo "── 12. 방법론 등재 게이트 (EN 인덱스 / KO 미러 / 위키 포털) ──"

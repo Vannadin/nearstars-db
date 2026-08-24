@@ -88,19 +88,47 @@ def resolve(source: Path, target: str, repo_root: Path) -> Path:
     return (source.parent / bare).resolve()
 
 
+def _is_build_artifact(resolved: Path, repo_root: Path) -> bool:
+    """True when `resolved` is a path git deliberately ignores (a build output).
+
+    Uses git's own ignore rules rather than a hand-kept list, so a new
+    .gitignore entry never silently turns into a false "broken link".
+    """
+    try:
+        rel = resolved.resolve().relative_to(repo_root.resolve())
+    except ValueError:
+        return False
+    return subprocess.run(
+        ['git', 'check-ignore', '-q', str(rel)],
+        cwd=repo_root, capture_output=True,
+    ).returncode == 0
+
+
 def main() -> int:
     quiet = '--quiet' in sys.argv
     repo_root = Path(
         subprocess.check_output(['git', 'rev-parse', '--show-toplevel'], text=True).strip()
     )
     broken: list[str] = []
+    unbuilt = 0
     files = tracked_md_files(repo_root)
     for path in files:
         for lineno, target in extract_links(path):
             resolved = resolve(path, target, repo_root)
-            if not resolved.exists():
-                rel = path.relative_to(repo_root)
-                broken.append(f"{rel}:{lineno}: broken link → {target}")
+            if resolved.exists():
+                continue
+            # 생성 사이트 HTML 은 gh-pages 가 정본이라 main 에서 추적하지 않는다.
+            # 갓 클론했거나 새 워크트리라면 파일이 없는 게 정상이고, 링크는
+            # 발행된 사이트에서 멀쩡히 살아 있다. git 이 무시하는 경로면
+            # "빌드 안 됨"이지 "링크 깨짐"이 아니다.
+            if _is_build_artifact(resolved, repo_root):
+                unbuilt += 1
+                continue
+            rel = path.relative_to(repo_root)
+            broken.append(f"{rel}:{lineno}: broken link → {target}")
+
+    if unbuilt and not quiet:
+        print(f"  [note] 빌드되지 않은 사이트 산출물로의 링크 {unbuilt}건은 건너뜀")
 
     if broken:
         print(f"[FAIL] {len(broken)} broken link(s) across {len(files)} file(s):")
