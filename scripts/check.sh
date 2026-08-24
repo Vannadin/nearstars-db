@@ -143,6 +143,17 @@ echo "── 12. 방법론 등재 게이트 (EN 인덱스 / KO 미러 / 위키 �
 python3 scripts/check_methodology_coverage.py || fail=1
 
 echo ""
+echo "── 13. 엔진 그래프 + 역류 층 ──"
+# chain.yaml 은 방법론끼리의 의존, bindings.yaml 은 이미 출하된 확정값이 어느
+# 노드에서 나왔고 무엇이 그걸 먹는지. 후자가 없어서 Proxima pause_nose 사고가 났다.
+python3 engine/chain.py check || fail=1
+python3 engine/backflow.py check 2>&1 | grep -v "^  \[WARN\]" || true
+python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
+(cd engine && python3 test_backflow.py) || fail=1
+(cd engine && python3 test_dynamo.py) || fail=1
+python3 engine/dynamo_table.py --check || fail=1
+
+echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else
