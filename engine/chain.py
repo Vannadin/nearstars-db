@@ -49,9 +49,15 @@ def check(g: dict) -> int:
                 errors.append(f"cycle {c['id']}: '{m}' 는 nodes 에 없다")
 
     # requires 만으로 이루어진 순환은 선언돼 있어야 한다.
+    #
+    # scope != self 인 엣지는 제외한다. 부모의 값을 소비하는 엣지는 *다른 천체*
+    # 를 거쳐가므로 한 천체 안의 순환이 아니다. 이걸 빼지 않으면 위성이 부모의
+    # T_eff 를 먹는 것이 자기 자신과의 고리로 잘못 잡힌다.
     req: dict[str, set[str]] = {n: set() for n in nodes}
     for e in edges:
-        if e.get("kind") == "requires" and e["from"] in nodes and e["to"] in nodes:
+        if e.get("kind") != "requires" or e.get("scope", "self") != "self":
+            continue
+        if e["from"] in nodes and e["to"] in nodes:
             req[e["to"]].add(e["from"])
 
     seen: set[str] = set()
@@ -146,7 +152,8 @@ def gaps(g: dict) -> int:
     es = [e for e in g["edges"] if e.get("status")]
     print(f"빠진 노드 {len(ns)}개")
     for n, d in ns:
-        print(f"  [{d['status']}] {n} — {(d.get('note') or '').strip().splitlines()[0]}")
+        first = ((d.get("note") or "").strip().splitlines() or [""])[0]
+        print(f"  [{d['status']}] {n}{' — ' + first if first else ''}")
     print(f"\n빠진 엣지 {len(es)}개")
     for e in es:
         print(f"  [{e['status']}] {e['from']} -> {e['to']} ({e['kind']})")

@@ -1,340 +1,405 @@
-# 물리값 의존 그래프 — 노드(양)와 세 종류 엣지. 문서·코드에 근거 있는 것만 등재
+# 물리값 의존 그래프 — 노드(양)와 네 종류 엣지. 문서에 근거 있는 것만 등재
 #
 # 이 파일이 정본이다. engine/DEPENDENCY-CHAIN.md 와 dependency-chain.html 은
-# 여기서 읽어 만든 뷰이지, 별도의 진실이 아니다.
+# 여기서 읽어 만든 뷰이지 별도의 진실이 아니다.
+#
+# v2 (2026-08-24): 방법론 21개를 네 묶음으로 나눠 전수 채굴한 결과를 반영.
+# v1 은 대화 중 우연히 읽은 5-6개 문서에서만 캐낸 편향 표본이었고, 전수
+# 채굴에서 엣지가 두 배 넘게 나왔다.
 #
 # 엣지 종류
 #   requires    A 의 수치가 B 의 입력. 빌드 순서를 정한다.
 #   selects     A 가 B 의 *모델* 을 고른다. 숫자를 넘기지 않는다.
-#               빠뜨리면 틀린 레시피가 조용히 적용된다 — 가장 위험한 종류.
+#               빠뜨리면 틀린 레시피가 조용히 적용된다.
 #   influences  정식 입력은 아니나 A 가 바뀌면 B 를 다시 봐야 한다.
-#               cascade 재검토 질의가 이 엣지를 따라간다.
+#   excludes    시험했고 아니었다. "그럴듯해서 다시 긋는 것"을 막는 기록.
 #
-# 모든 엣지는 ref 를 단다. 근거 없는 엣지는 넣지 않는다 — 그림을 그리기 위해
-# 추측한 화살표가 바로 이 프로젝트가 반복해 온 실수다.
+# 필드
+#   via       넘어가는 양. 없으면 selects 이거나 스칼라가 아니다.
+#   scope     self(기본) | parent | system. 부모의 값을 소비하는 엣지가 실재한다.
+#   sign      influences 의 부호. non-monotonic 은 반드시 명시한다.
+#   spatial   true 면 스칼라가 아니라 분포가 바뀐다.
+#   status    gap = 결합은 실재하나 우리 문서가 아직 서술하지 않음.
+#   textbook  교과서 관계식이라 논문 인용이 면제되는 경우.
+#
+# 근거 없는 엣지는 넣지 않는다. 그림을 위해 추측한 화살표가 이 프로젝트가
+# 반복해 온 실수다.
 
-version: 1
+version: 2
 updated: 2026-08-24
 
-kinds: [requires, selects, influences]
-node_kinds: [measured, owner, computed]
+kinds: [requires, selects, influences, excludes]
+node_kinds: [measured, owner, computed, class_table]
 grades: [measured, calibrated, analog, judgment]
+scopes: [self, parent, system]
 
 nodes:
 
-  # ── 0층. 아무것도 계산하지 않는다 ────────────────────────────────
-  star_physical:
+  # ── 0층. 계산되지 않는 것 ──────────────────────────────────────
+  star_physical:      {kind: measured, outputs: [mass, radius, teff, luminosity, sed, v_sin_i]}
+  star_metallicity:   {kind: measured, outputs: [z], status: gap}
+  system_age:         {kind: measured, outputs: [t_sys]}
+  body_age:
     kind: measured
-    outputs: [mass, radius, teff, luminosity, age]
-    note: Phase 2 큐레이션
-
-  star_metallicity:
-    kind: measured
-    outputs: [z]
-    status: gap
-    note: >
-      현재 "저임팩트"로 스킵 중이나, 암석체 방사성 발열의 실입력이다.
-      우리 레시피가 아직 이 항을 쓰지 않으므로 엣지도 gap 으로만 표시한다.
-
-  orbit_elements:
-    kind: measured
-    outputs: [a, e, i, lan, aop]
-
-  mass_or_radius:
-    kind: measured
-    outputs: [mass, radius]
-    note: 둘 중 측정된 쪽이 앵커. 나머지는 mass_radius_relation 이 채운다.
+    outputs: [t_body]
+    note: 천체 자신의 나이. 항성 나이와 다르고, 거대행성 냉각광도의 실입력이다.
+  orbit_elements:     {kind: measured, outputs: [a, e, i, lan, aop, n]}
+  mass_or_radius:     {kind: measured, outputs: [mass, radius]}
 
   composition_intent:
     kind: owner
-    outputs: [layer_fractions]
+    outputs: [layer_fractions, mantle_redox, surface_species]
     status: gap
-    note: >
-      암석/얼음/H-He 및 층 질량분율. 아무도 측정하지 않는 순수 오너 결정인데,
-      지금은 body_type 산문에만 암시돼 있다. 내부구조의 직접 입력.
-
-  initial_rotation:
+    note: 층 질량분율·맨틀 산화도·표면 종. 측정되지 않는 오너 결정인데 지금은 body_type 산문에만 있다.
+  ocean_fraction:     {kind: owner, outputs: [f_ocean], status: gap}
+  ocean_depth:
     kind: owner
-    outputs: [p_init]
+    outputs: [d_ocean]
     status: gap
-    note: >
-      despin 타임스케일의 입력. tidal-locking-timescale 이 항을 쓰지만
-      어느 보드도 값을 기록하지 않는다 — 무기록 가정.
-
-  ocean_fraction:
+    note: f_ocean 과 다른 양이다. 공명 두께에 걸리면 소산이 자릿수로 움직인다.
+  resonance_architecture:
     kind: owner
-    outputs: [f_ocean]
+    outputs: [forced_e]
     status: gap
-    note: >
-      알베도·열수지·층별 Q 세 곳으로 간다. 액체 물의 Q 가 규산염보다 한 자릿수
-      작아 바다가 있으면 조석 소산을 지배한다. 현재 정성적 hydrosphere 축만 있음.
+    note: 지속 조석가열을 주장하려면 e 를 유지하는 공명을 이름 대야 한다.
+  ring_system:        {kind: owner, outputs: [present, optical_depth], status: gap}
 
   # ── 1층. 분기키 ────────────────────────────────────────────────
   body_class:
     kind: computed
     status: missing
-    inputs_from: [mass_or_radius, composition_intent]
     outputs: [class]
-    note: >
-      아래 전부가 여기서 갈린다. 없어서 각 레시피가 산문으로 제 입장 조건을
-      따로 쓰고 있고, 그래서 오적용을 기계적으로 막을 수 없다.
+    note: 아래 전부가 여기서 갈린다. 없어서 오적용을 기계적으로 막을 수 없다.
+  mass_radius_relation: {kind: computed, recipe: mass-radius-relation-methodology, outputs: [radius, density]}
 
   # ── 2층. 허브 ──────────────────────────────────────────────────
   interior_structure:
     kind: computed
     status: missing
-    outputs: [nmoi, core_radius, conductor_phase, layer_q, p_central]
-    note: 네 레시피가 각자 자기 버전을 가정 중. 이음매 드리프트의 근원.
+    outputs: [nmoi, core_radius, conductor_phase, layer_q, k2_over_q]
+    note: 네 레시피가 각자 가정 중. 이음매 드리프트의 근원.
+  xuv_history:
+    kind: computed
+    outputs: [xuv_cumulative]
+    note: 순간 플럭스가 아니라 생애 적분 선량. 모든 stripping 추정의 입력.
+  internal_heat_nontidal:
+    kind: computed
+    recipe: internal-heat-luminosity-methodology
+    outputs: [l_int, t_int, geotherm]
+
+  # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
+  # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
+  # 꺼내는 상수이고, 그런데도 J2·조석고정·조석가열 전부의 뿌리다.
+  nmoi_class_table:
+    kind: class_table
+    outputs: [nmoi]
+    note: "\"바디 클래스에서 NMoI 를 고르고 가정과 범위를 명시하라\" — body-figure:256"
+  k2q_class_table:
+    kind: class_table
+    outputs: [k2_over_q]
+    note: "\"외계 천체에서는 사실상 측정된 적이 없다\" — tidal-heating:527"
+  omega0_class_table:
+    kind: class_table
+    outputs: [p_init]
+    note: "\"원시 미지값. 인용이 아니라 논증으로 경계지어진다\" — tidal-locking:431"
+  t_exo_bracket:
+    kind: class_table
+    outputs: [t_exo]
+    note: "\"T_exo 는 약한 입력이고 표면온도가 아니다\" — exoplanet-atmosphere:284. 손으로 구간을 잡는다."
 
   # ── 3층. 갈래 ──────────────────────────────────────────────────
-  mass_radius_relation:
-    kind: computed
-    recipe: mass-radius-relation-methodology
-    outputs: [radius, density]
-
-  tidal_locking:
-    kind: computed
-    recipe: tidal-locking-timescale-methodology
-    outputs: [locked, t_lock, rotation_period]
-
-  body_figure:
-    kind: computed
-    recipe: body-figure-methodology
-    outputs: [j2, c22, flattening, reference_radius]
-
-  cassini_state:
-    kind: computed
-    recipe: cassini-state-obliquity-methodology
-    outputs: [obliquity]
-
-  dynamo_giant:
-    kind: computed
-    recipe: planetary-dynamo-scaling
-    outputs: [b_pol, b_eq, dipole_moment]
-    note: 0층만으로 닿는다. 2층을 기다리지 않는 유일한 자기 갈래.
-
-  dynamo_rocky:
-    kind: computed
-    recipe: rocky-planet-dynamo-methodology
-    outputs: [dipole_moment, b_eq]
-
-  magnetosphere_geometry:
-    kind: computed
-    recipe: planetary-magnetosphere-geometry-methodology
-    outputs: [r_mp, belt_extent, belt_intensity]
-
-  stellar_wind:
-    kind: computed
-    outputs: [n_sw, v_sw, p_sw]
-
-  tidal_heating:
-    kind: computed
-    recipe: tidal-heating-methodology
-    outputs: [power, surface_flux]
-
-  heat_transport_mode:
-    kind: computed
-    recipe: tidal-heating-methodology
-    outputs: [mode, resurfacing_rate]
-    note: "§6.2 세 모드 사다리 — plate / stagnant lid / heat pipe"
-
-  global_fluid_layer:
-    kind: computed
-    outputs: [present]
-    note: 바다 또는 열을 지구 규모로 옮길 만큼 두꺼운 대기가 있는가.
+  tidal_locking:      {kind: computed, recipe: tidal-locking-timescale-methodology, outputs: [locked, t_lock, rotation_period]}
+  body_figure:        {kind: computed, recipe: body-figure-methodology, outputs: [j2, c22, flattening, reference_radius, relief]}
+  cassini_state:      {kind: computed, recipe: cassini-state-obliquity-methodology, outputs: [obliquity]}
+  spin_axis_inclination: {kind: computed, recipe: spin-axis-inclination-methodology, outputs: [i_star, p_rot]}
+  dynamo_giant:       {kind: computed, recipe: planetary-dynamo-scaling, outputs: [b_pol, b_eq, dipole_moment]}
+  dynamo_rocky:       {kind: computed, recipe: rocky-planet-dynamo-methodology, outputs: [dipole_moment, b_eq]}
+  stellar_wind:       {kind: computed, outputs: [n_sw, v_sw, p_ram]}
+  magnetosphere_geometry: {kind: computed, recipe: planetary-magnetosphere-geometry-methodology, outputs: [r_mp, belt_extent, belt_intensity]}
+  tidal_heating:      {kind: computed, recipe: tidal-heating-methodology, outputs: [power, surface_flux]}
+  heat_transport_mode: {kind: computed, recipe: tidal-heating-methodology, outputs: [mode, resurfacing_rate, day_night_contrast]}
+  global_fluid_layer: {kind: computed, outputs: [present]}
 
   # ── 4층. 열·대기 ───────────────────────────────────────────────
-  t_eq_stellar:
-    kind: computed
-    outputs: [t_eq]
-
-  moon_energy_budget:
-    kind: computed
-    recipe: moon-energy-budget-methodology
-    outputs: [t_eq_4term]
-
-  atmospheric_escape:
-    kind: computed
-    recipe: exoplanet-atmosphere-methodology
-    outputs: [retained, loss_rate]
-
-  atmosphere_choice:
-    kind: owner
-    outputs: [pressure, composition]
-
-  greenhouse:
-    kind: computed
-    recipe: greenhouse-warming-methodology
-    outputs: [delta_t_gh, t_surf]
+  t_eq_stellar:       {kind: computed, outputs: [t_eq]}
+  moon_energy_budget: {kind: computed, recipe: moon-energy-budget-methodology, outputs: [t_eq_4term, f_abs]}
+  t_eff_body:         {kind: computed, outputs: [t_eff], note: "T_eff⁴ = T_eq⁴ + T_int⁴"}
+  atmospheric_escape: {kind: computed, recipe: exoplanet-atmosphere-methodology, outputs: [retained, loss_rate]}
+  atmosphere_choice:  {kind: owner, outputs: [pressure, composition, haze]}
+  greenhouse:         {kind: computed, recipe: greenhouse-warming-methodology, outputs: [delta_t_gh, t_surf]}
 
   # ── 5층. 표면 ──────────────────────────────────────────────────
-  ice_stability:
-    kind: computed
-    recipe: ice-stability-methodology
-    outputs: [ice_survives]
-
-  surface_albedo:
-    kind: computed
-    outputs: [albedo]
-
-  crater_state:
-    kind: computed
-    recipe: crater-degradation-methodology
-    outputs: [cratered]
-
-  surface_dose:
-    kind: computed
-    recipe: surface-radiation-dose-methodology
-    outputs: [dose]
+  ice_stability:      {kind: computed, recipe: ice-stability-methodology, outputs: [ice_survives, min_albedo]}
+  surface_albedo:     {kind: computed, recipe: surface-color-albedo-methodology, outputs: [albedo, hue]}
+  crater_state:       {kind: computed, recipe: crater-degradation-methodology, outputs: [cratered]}
+  surface_dose:       {kind: computed, recipe: surface-radiation-dose-methodology, outputs: [dose]}
+  surface_uv:         {kind: computed, outputs: [uv_flux], status: gap}
+  atmosphere_reflected_color: {kind: computed, recipe: atmosphere-reflected-color-methodology, outputs: [hex]}
+  hapke_shader_values: {kind: computed, recipe: hapke-shader-methodology, outputs: [terrain, scaled, porosity_k, theta]}
 
 edges:
 
-  # ── requires ───────────────────────────────────────────────────
-  - {from: mass_or_radius, to: mass_radius_relation, kind: requires}
+  # ── 질량·반지름이 뿌리에 가깝다 ────────────────────────────────
+  - {from: mass_or_radius, to: mass_radius_relation, kind: requires, ref: "mass-radius-relation-methodology.md:62"}
+  - {from: composition_intent, to: mass_radius_relation, kind: selects, ref: "mass-radius-relation-methodology.md:191"}
+  - {from: star_physical, to: mass_radius_relation, kind: influences, sign: positive, via: insolation, ref: "mass-radius-relation-methodology.md:107"}
+  - {from: mass_radius_relation, to: body_class, kind: requires, via: radius_valley, ref: "mass-radius-relation-methodology.md:220"}
   - {from: mass_or_radius, to: body_class, kind: requires}
   - {from: composition_intent, to: body_class, kind: requires}
+  - {from: mass_radius_relation, to: interior_structure, kind: requires, ref: "rocky-planet-dynamo-methodology.md:187"}
   - {from: body_class, to: interior_structure, kind: requires}
   - {from: composition_intent, to: interior_structure, kind: requires}
+  - {from: mass_radius_relation, to: atmosphere_choice, kind: selects, ref: "mass-radius-relation-methodology.md:221"}
+  - {from: mass_radius_relation, to: surface_albedo, kind: influences, sign: non-monotonic, ref: "mass-radius-relation-methodology.md:368"}
 
-  - {from: interior_structure, to: body_figure, kind: requires,
-     via: nmoi,
-     ref: "docs/reference/body-figure-methodology.md"}
-  - {from: interior_structure, to: dynamo_rocky, kind: requires,
-     via: [core_radius, conductor_phase],
-     ref: "docs/reference/rocky-planet-dynamo-methodology.md"}
-  - {from: interior_structure, to: tidal_locking, kind: requires, via: layer_q}
-  - {from: interior_structure, to: tidal_heating, kind: requires, via: layer_q}
+  # ── 클래스 표 상수가 실제 공급자다 ─────────────────────────────
+  - {from: body_class, to: nmoi_class_table, kind: selects, ref: "body-figure-methodology.md:256"}
+  - {from: body_class, to: k2q_class_table, kind: selects, ref: "tidal-heating-methodology.md:194"}
+  - {from: body_class, to: omega0_class_table, kind: selects, ref: "tidal-locking-timescale-methodology.md:431"}
+  - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, ref: "body-figure-methodology.md:256"}
+  - {from: nmoi_class_table, to: cassini_state, kind: requires, via: nmoi, ref: "cassini-state-obliquity-methodology.md:166"}
+  - {from: k2q_class_table, to: tidal_heating, kind: requires, via: k2_over_q, ref: "tidal-heating-methodology.md:194"}
+  - {from: k2q_class_table, to: tidal_locking, kind: requires, via: k2_over_q, ref: "tidal-locking-timescale-methodology.md:266"}
+  - {from: omega0_class_table, to: tidal_locking, kind: requires, via: p_init, ref: "tidal-locking-timescale-methodology.md:270"}
+  - {from: t_exo_bracket, to: atmospheric_escape, kind: requires, via: t_exo, ref: "exoplanet-atmosphere-methodology.md:284"}
+  - {from: interior_structure, to: nmoi_class_table, kind: influences, status: gap, note: 내부구조가 생기면 클래스 조회를 도출값이 대체한다.}
 
-  - {from: tidal_locking, to: body_figure, kind: requires, via: rotation_period}
-  - {from: tidal_locking, to: cassini_state, kind: requires, via: locked}
-  - {from: star_physical, to: dynamo_giant, kind: requires, via: age}
-  - {from: mass_or_radius, to: dynamo_giant, kind: requires}
-  - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq}
-  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: requires, via: b_eq}
-  - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_sw}
+  # ── figure · 자전 ──────────────────────────────────────────────
+  - {from: tidal_locking, to: body_figure, kind: requires, via: lock_state, ref: "body-figure-methodology.md:252"}
+  - {from: body_figure, to: tidal_locking, kind: selects, via: permanent_quadrupole, ref: "tidal-locking-timescale-methodology.md:204"}
+  - {from: mass_radius_relation, to: body_figure, kind: requires, via: radius, ref: "body-figure-methodology.md:353"}
+  - {from: orbit_elements, to: body_figure, kind: requires, via: n, ref: "body-figure-methodology.md:37"}
+  - {from: body_class, to: body_figure, kind: selects, ref: "body-figure-methodology.md:79"}
+  - {from: star_physical, to: body_figure, kind: requires, via: p_rot, ref: "body-figure-methodology.md:238"}
+  - {from: star_physical, to: spin_axis_inclination, kind: requires, via: v_sin_i, ref: "spin-axis-inclination-methodology.md:21"}
+  - {from: body_class, to: spin_axis_inclination, kind: selects, ref: "spin-axis-inclination-methodology.md:75"}
+  - {from: spin_axis_inclination, to: body_figure, kind: requires, via: p_rot, ref: "body-figure-methodology.md:244"}
+  - {from: body_figure, to: cassini_state, kind: requires, via: [j2, c22], ref: "cassini-state-obliquity-methodology.md:92"}
+  - {from: tidal_locking, to: cassini_state, kind: selects, ref: "cassini-state-obliquity-methodology.md:175"}
+  - {from: orbit_elements, to: cassini_state, kind: requires, via: [e, a, n], ref: "cassini-state-obliquity-methodology.md:167"}
+  - {from: star_physical, to: cassini_state, kind: requires, via: mass, ref: "cassini-state-obliquity-methodology.md:79"}
+  - {from: ocean_fraction, to: cassini_state, kind: influences, sign: positive, status: gap, ref: "cassini-state-obliquity-methodology.md:187"}
+  - from: body_figure
+    to: cassini_state
+    kind: requires
+    via: [j2, radius]
+    scope: parent
+    note: 위성의 Cassini 상태는 *부모 행성의* J2 와 반지름이 정하는 교점 이동률에 걸린다.
+    ref: "cassini-state-obliquity-methodology.md:124"
+  - {from: body_figure, to: cassini_state, kind: selects, via: fossil_bulge, ref: "cassini-state-obliquity-methodology.md:185"}
+  - {from: body_figure, to: crater_state, kind: requires, via: relief, ref: "tidal-heating-methodology.md:471"}
+
+  # ── 조석 ───────────────────────────────────────────────────────
+  - {from: orbit_elements, to: tidal_locking, kind: requires, via: [a, e], ref: "tidal-locking-timescale-methodology.md:141"}
+  - {from: mass_radius_relation, to: tidal_locking, kind: requires, ref: "tidal-locking-timescale-methodology.md:450"}
+  - {from: system_age, to: tidal_locking, kind: requires, via: t_sys, ref: "tidal-locking-timescale-methodology.md:89"}
+  - {from: atmosphere_choice, to: tidal_locking, kind: selects, via: thermal_tide, ref: "tidal-locking-timescale-methodology.md:247"}
+  - {from: tidal_locking, to: tidal_heating, kind: selects, ref: "tidal-locking-timescale-methodology.md:438"}
+  - {from: orbit_elements, to: tidal_heating, kind: requires, via: [a, e, n], ref: "tidal-heating-methodology.md:61"}
+  - {from: mass_radius_relation, to: tidal_heating, kind: requires, via: radius, ref: "mass-radius-relation-methodology.md:371"}
+  - {from: resonance_architecture, to: tidal_heating, kind: requires, via: forced_e, status: gap, ref: "tidal-heating-methodology.md:182"}
+  - {from: cassini_state, to: tidal_heating, kind: requires, via: obliquity, ref: "moon-energy-budget-methodology.md:318"}
+  - {from: ocean_depth, to: tidal_heating, kind: requires, via: d_ocean, status: gap, ref: "moon-energy-budget-methodology.md:237"}
+  - {from: tidal_heating, to: interior_structure, kind: influences, sign: non-monotonic, ref: "tidal-heating-methodology.md:199"}
+  - from: tidal_heating
+    to: mass_radius_relation
+    kind: requires
+    via: radius_ceiling
+    note: >
+      수송 테스트가 하드 반지름 상한을 돌려준다. 제한받는 것은 *측정된* 반지름이
+      아니라 우리가 배정하는 반지름이다 — Dante 521 km 가 그 상한의 산물이다.
+    ref: "tidal-heating-methodology.md:442"
+  - {from: tidal_heating, to: heat_transport_mode, kind: requires, via: surface_flux, ref: "tidal-heating-methodology.md:273"}
+  - {from: internal_heat_nontidal, to: heat_transport_mode, kind: requires, via: geotherm, ref: "tidal-heating-methodology.md:266"}
+  - {from: global_fluid_layer, to: heat_transport_mode, kind: selects, ref: "tidal-heating-methodology.md:332"}
+  - {from: t_eq_stellar, to: heat_transport_mode, kind: requires, ref: "tidal-heating-methodology.md:341"}
+  - {from: atmosphere_choice, to: heat_transport_mode, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md:144"}
+  - {from: omega0_class_table, to: heat_transport_mode, kind: selects, via: circulation_regime, ref: "tidally-locked-temperature-methodology.md:150"}
+  - {from: tidal_heating, to: ice_stability, kind: requires, ref: "tidal-heating-methodology.md:717"}
+  - {from: tidal_heating, to: crater_state, kind: requires, ref: "tidal-heating-methodology.md:720"}
+  - from: tidal_heating
+    to: surface_albedo
+    kind: requires
+    via: plains_temperature
+    note: 평원 온도가 어느 휘발성 물질이 안정한지를 정한다 — 황이냐 SO2 서리냐가 표면 색조를 가른다.
+    ref: "tidal-heating-methodology.md:460"
+  - {from: tidal_heating, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:34"}
+
+  # ── 자기 ───────────────────────────────────────────────────────
+  - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md:29"}
+  - {from: body_age, to: dynamo_giant, kind: requires, via: cooling_luminosity, ref: "planetary-dynamo-scaling.md:34"}
+  - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md:472"}
+  - {from: body_class, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:82"}
+  - {from: tidal_locking, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:33"}
+  - {from: body_class, to: dynamo_rocky, kind: selects, ref: "planetary-dynamo-scaling.md:97"}
+  - {from: mass_or_radius, to: dynamo_rocky, kind: requires, ref: "rocky-planet-dynamo-methodology.md:22"}
+  - {from: orbit_elements, to: dynamo_rocky, kind: requires, via: period, ref: "rocky-planet-dynamo-methodology.md:22"}
+  - {from: interior_structure, to: dynamo_rocky, kind: requires, via: [core_radius, conductor_phase], ref: "rocky-planet-dynamo-methodology.md:23"}
+  - {from: tidal_locking, to: dynamo_rocky, kind: selects, via: rossby, ref: "rocky-planet-dynamo-methodology.md:76"}
+  - {from: ocean_fraction, to: dynamo_rocky, kind: influences, sign: negative, status: gap, ref: "rocky-planet-dynamo-methodology.md:109"}
+  - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:70"}
+  - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, ref: "rocky-planet-dynamo-methodology.md:70"}
+  - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, ref: "internal-heat-luminosity-methodology.md:202"}
   - {from: star_physical, to: stellar_wind, kind: requires, via: age}
-
-  - {from: tidal_heating, to: heat_transport_mode, kind: requires, via: surface_flux}
-  - {from: star_physical, to: t_eq_stellar, kind: requires, via: luminosity}
-  - {from: orbit_elements, to: t_eq_stellar, kind: requires, via: a}
-  - {from: t_eq_stellar, to: moon_energy_budget, kind: requires}
-  - {from: atmosphere_choice, to: greenhouse, kind: requires}
-  - {from: greenhouse, to: ice_stability, kind: requires, via: t_surf}
-  - {from: heat_transport_mode, to: crater_state, kind: requires, via: resurfacing_rate}
-  - {from: magnetosphere_geometry, to: surface_dose, kind: requires, via: belt_intensity}
-  - {from: initial_rotation, to: tidal_locking, kind: requires, via: p_init,
-     status: gap,
-     note: 레시피는 이 항을 쓰는데 보드가 값을 기록하지 않는다.}
-  - {from: ocean_fraction, to: interior_structure, kind: requires, via: layer_q,
-     status: gap}
-
-  # ── selects — 숫자가 아니라 모델을 고른다 ────────────────────────
-  - from: global_fluid_layer
-    to: moon_energy_budget
-    kind: selects
-    note: >
-      유체층이 있으면 고체 조석 플럭스가 전 지구 T_eq 에 들어가고, 없으면
-      국소 수송으로 빠져 평원은 외부 예산에 머문다. 플럭스 크기의 문턱이 아니다.
-    ref:
-      - "docs/reference/tidal-heating-methodology.md#63-the-plains-are-not-an-exit"
-      - "docs/reference/moon-energy-budget-methodology.md#domain-of-validity"
-    cases: {lid: Dante, global: Alpha Centauri A b III}
-
-  - from: atmosphere_choice
+  - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_ram, ref: "planetary-magnetosphere-geometry-methodology.md:83"}
+  - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
+  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
+  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: selects, via: multipolar, ref: "planetary-magnetosphere-geometry-methodology.md:1154"}
+  - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, via: ionosphere, ref: "planetary-magnetosphere-geometry-methodology.md:30"}
+  - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, via: plasmasphere_slot, ref: "planetary-magnetosphere-geometry-methodology.md:133"}
+  - {from: orbit_elements, to: magnetosphere_geometry, kind: influences, sign: negative, ref: "planetary-magnetosphere-geometry-methodology.md:205"}
+  - from: tidal_heating
     to: magnetosphere_geometry
-    kind: selects
-    note: >
-      다이나모가 없을 때 전도성 전리층이 있으면 induced 경계가 서고, 없으면
-      아무것도 서지 않는다(달). 대기는 자기권에 숫자를 넘기지 않는다.
-    ref: "docs/reference/planetary-magnetosphere-geometry-methodology.md:30,45,203"
-    cases: {induced: [Venus, Mars, Proxima Cen b], none: Moon}
-
-  - from: tidal_locking
-    to: dynamo_rocky
-    kind: selects
-    via: rotation_period
-    note: >
-      자전은 regime 게이트로만 들어간다. 쌍극자 진폭에는 안 들어간다.
-      조석고정 느린 회전자가 Ro_l = 0.12 를 넘으면 multipolar.
-    ref: "docs/reference/rocky-planet-dynamo-methodology.md:43,73-76"
-
-  - from: body_class
-    to: dynamo_giant
-    kind: selects
-    note: >
-      H/He 거대행성 0.3-13 M_J 에만 적용. 서브넵튠 이하는 검증 영역 밖이라
-      태양계 아날로그로, 암석은 rocky 레시피로 간다. 오적용은 논문이 실재해도
-      인용 오류다.
-    ref: "docs/reference/planetary-dynamo-scaling.md:80-101"
-
-  # ── influences — 바뀌면 다시 봐야 한다 ──────────────────────────
-  - from: dynamo_giant
+    kind: requires
+    via: plasma_source
+    scope: parent
+    note: 화산 위성이 부모의 벨트를 먹인다. Io 는 목성에 ~1 ton/s 를 공급하고, 우리 A b I 도 같은 역할을 한다.
+    ref: "planetary-magnetosphere-geometry-methodology.md:330,1182"
+  - {from: ring_system, to: magnetosphere_geometry, kind: influences, sign: negative, status: gap, ref: "planetary-magnetosphere-geometry-methodology.md:569"}
+  - from: magnetosphere_geometry
     to: atmospheric_escape
     kind: influences
     sign: non-monotonic
+    via: r_mp
     note: >
-      약한 쌍극자는 없느니만 못하다. standoff 가 유도 경계를 넘어설 때까지
-      자기장이 오히려 이온 탈출을 늘린다. 단조 증가로 그리면 부호를 틀린다.
-    ref: "docs/reference/planetary-magnetosphere-geometry-methodology.md:38,200"
+      약한 쌍극자는 없느니만 못하다. standoff 가 유도 경계를 넘기 전까지 이온
+      탈출이 오히려 늘고, 넘어선 뒤에야 차폐가 시작된다. 판정식은
+      R_mp(B_eq) > r_ionopause 이지 B_eq > 0 이 아니다. 대기 문서는 같은 사실을
+      반대편에서 말한다 — "자기권이 있다"를 대기 유지 논거로 쓰지 말 것.
+    ref:
+      - "planetary-magnetosphere-geometry-methodology.md:198-203"
+      - "exoplanet-atmosphere-methodology.md:238-244"
+      - "2019MNRAS.488.2108E"
 
-  - {from: dynamo_rocky, to: atmospheric_escape, kind: influences,
-     sign: non-monotonic,
-     ref: "docs/reference/planetary-magnetosphere-geometry-methodology.md:38,200"}
+  # ── 방사선 ─────────────────────────────────────────────────────
+  - {from: dynamo_rocky, to: surface_dose, kind: requires, via: b_eq, ref: "surface-radiation-dose-methodology.md:36"}
+  - {from: atmosphere_choice, to: surface_dose, kind: requires, via: column, ref: "surface-radiation-dose-methodology.md:45"}
+  - {from: mass_or_radius, to: surface_dose, kind: requires, via: gravity, ref: "surface-radiation-dose-methodology.md:45"}
+  - {from: star_physical, to: surface_dose, kind: requires, via: spe_fluence, ref: "surface-radiation-dose-methodology.md:49"}
+  - from: magnetosphere_geometry
+    to: surface_dose
+    kind: requires
+    scope: parent
+    note: 위성 표면이 보는 방사선은 압도적으로 *부모의* 포획 플럭스다. 벨트 간극에 앉으면 면한다.
+    ref: "planetary-magnetosphere-geometry-methodology.md:1049-1053"
+  - {from: surface_dose, to: surface_uv, kind: influences, status: gap, ref: "surface-radiation-dose-methodology.md:99"}
 
-  - {from: surface_albedo, to: t_eq_stellar, kind: influences,
-     textbook: true,
-     note: "T_eq = [L(1-A)/16πσa²]^¼. 순환 2 의 되먹임 변."}
+  # ── 열 · 대기 ──────────────────────────────────────────────────
+  - {from: star_physical, to: xuv_history, kind: requires, ref: "exoplanet-atmosphere-methodology.md:111"}
+  - {from: body_age, to: xuv_history, kind: requires}
+  - {from: xuv_history, to: atmospheric_escape, kind: requires, ref: "exoplanet-atmosphere-methodology.md:66"}
+  - {from: mass_or_radius, to: atmospheric_escape, kind: requires, via: v_esc, ref: "exoplanet-atmosphere-methodology.md:66"}
+  - {from: stellar_wind, to: atmospheric_escape, kind: requires, ref: "exoplanet-atmosphere-methodology.md:115"}
+  - {from: tidal_locking, to: atmospheric_escape, kind: influences, sign: negative, ref: "exoplanet-atmosphere-methodology.md:102"}
+  - {from: tidal_heating, to: atmospheric_escape, kind: influences, sign: positive, ref: "moon-energy-budget-methodology.md:80"}
+  - {from: atmospheric_escape, to: atmosphere_choice, kind: selects, ref: "exoplanet-atmosphere-methodology.md:76"}
+  - {from: atmospheric_escape, to: composition_intent, kind: influences, via: selective_loss, ref: "exoplanet-atmosphere-methodology.md:224"}
+  - {from: composition_intent, to: atmosphere_choice, kind: requires, via: mantle_redox, ref: "exoplanet-atmosphere-methodology.md:152"}
+  - {from: internal_heat_nontidal, to: atmosphere_choice, kind: requires, via: outgassing, ref: "internal-heat-luminosity-methodology.md:208"}
+  - {from: t_eq_stellar, to: atmosphere_choice, kind: requires, via: scale_height, ref: "exoplanet-atmosphere-methodology.md:522"}
+  - {from: surface_albedo, to: t_eq_stellar, kind: requires, via: albedo, textbook: true, ref: "greenhouse-warming-methodology.md:197"}
+  - {from: star_physical, to: t_eq_stellar, kind: requires, via: luminosity, textbook: true}
+  - {from: orbit_elements, to: t_eq_stellar, kind: requires, via: a, textbook: true}
+  - {from: tidal_locking, to: t_eq_stellar, kind: selects, ref: "tidally-locked-temperature-methodology.md:41"}
+  - {from: orbit_elements, to: moon_energy_budget, kind: requires, via: [a, i, e], ref: "moon-energy-budget-methodology.md:42"}
+  - from: t_eff_body
+    to: moon_energy_budget
+    kind: requires
+    scope: parent
+    note: 부모의 온도·반지름·알베도가 위성 4항 예산의 두 항을 만든다. 젊은 거대행성은 그것만으로 위성에 폭주온실을 일으킬 수 있다.
+    ref: "moon-energy-budget-methodology.md:50,120"
+  - {from: tidal_heating, to: moon_energy_budget, kind: requires, via: f_tidal, ref: "moon-energy-budget-methodology.md:68"}
+  - {from: global_fluid_layer, to: moon_energy_budget, kind: selects, ref: "moon-energy-budget-methodology.md:132"}
+  - {from: heat_transport_mode, to: moon_energy_budget, kind: selects, ref: "moon-energy-budget-methodology.md:132"}
+  - {from: atmosphere_choice, to: greenhouse, kind: requires, ref: "greenhouse-warming-methodology.md:17"}
+  - {from: atmosphere_choice, to: greenhouse, kind: influences, sign: non-monotonic, via: haze, ref: "greenhouse-warming-methodology.md:213"}
+  - {from: t_eq_stellar, to: greenhouse, kind: requires, ref: "greenhouse-warming-methodology.md:439"}
+  - {from: moon_energy_budget, to: greenhouse, kind: requires, via: t_eq_4term, ref: "greenhouse-warming-methodology.md:441"}
+  - {from: star_physical, to: greenhouse, kind: requires, via: teff, ref: "greenhouse-warming-methodology.md:162"}
+  - {from: star_physical, to: greenhouse, kind: selects, via: spectrum, ref: "greenhouse-warming-methodology.md:283"}
+  - {from: tidal_heating, to: greenhouse, kind: influences, status: gap, ref: "moon-energy-budget-methodology.md:124"}
+  - {from: mass_or_radius, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
+  - {from: body_age, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
+  - {from: body_class, to: internal_heat_nontidal, kind: selects, ref: "internal-heat-luminosity-methodology.md:187"}
+  - {from: star_metallicity, to: internal_heat_nontidal, kind: influences, status: gap, ref: "internal-heat-luminosity-methodology.md:254"}
+  - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md:477"}
+  - {from: internal_heat_nontidal, to: t_eff_body, kind: requires, via: t_int, ref: "internal-heat-luminosity-methodology.md:60"}
+  - {from: t_eq_stellar, to: t_eff_body, kind: requires, textbook: true, ref: "internal-heat-luminosity-methodology.md:60"}
 
-  - from: ice_stability
-    to: surface_albedo
-    kind: influences
-    note: >
-      얼음 생존이 알베도 문턱으로 환산된다 — 주어진 궤도에서 T 가 문턱 아래로
-      떨어질 때까지 알베도를 올리는 형태라, 두 양이 서로를 정의한다.
-    ref: "docs/reference/ice-stability-methodology.md:74-75"
+  # ── 표면 ───────────────────────────────────────────────────────
+  - {from: greenhouse, to: ice_stability, kind: requires, via: t_surf}
+  - {from: moon_energy_budget, to: ice_stability, kind: requires, via: f_abs, ref: "ice-stability-methodology.md:53"}
+  - {from: surface_albedo, to: ice_stability, kind: requires, via: albedo, ref: "ice-stability-methodology.md:73"}
+  - {from: ice_stability, to: surface_albedo, kind: requires, via: min_albedo, ref: "ice-stability-methodology.md:159"}
+  - {from: composition_intent, to: ice_stability, kind: selects, ref: "ice-stability-methodology.md:137"}
+  - {from: body_age, to: ice_stability, kind: requires, ref: "ice-stability-methodology.md:71"}
+  - {from: mass_or_radius, to: ice_stability, kind: requires, ref: "ice-stability-methodology.md:72"}
+  - {from: composition_intent, to: surface_albedo, kind: requires, ref: "surface-color-albedo-methodology.md:64"}
+  - {from: star_physical, to: surface_albedo, kind: requires, via: sed, ref: "surface-color-albedo-methodology.md:268"}
+  - {from: stellar_wind, to: surface_albedo, kind: influences, sign: negative, ref: "surface-color-albedo-methodology.md:184"}
+  - {from: magnetosphere_geometry, to: surface_albedo, kind: influences, spatial: true, ref: "surface-color-albedo-methodology.md:231"}
+  - {from: atmosphere_choice, to: surface_albedo, kind: selects, ref: "surface-color-albedo-methodology.md:26"}
+  - {from: body_age, to: surface_albedo, kind: influences, sign: negative, ref: "surface-color-albedo-methodology.md:68"}
+  - {from: ocean_fraction, to: surface_albedo, kind: requires, status: gap, ref: "tidally-locked-temperature-methodology.md:208"}
+  - {from: t_eq_stellar, to: crater_state, kind: requires, via: homologous_temperature, ref: "crater-degradation-methodology.md:92"}
+  - {from: composition_intent, to: crater_state, kind: selects, ref: "crater-degradation-methodology.md:96"}
+  - {from: atmosphere_choice, to: crater_state, kind: selects, ref: "crater-degradation-methodology.md:109"}
+  - {from: body_age, to: crater_state, kind: requires, ref: "crater-degradation-methodology.md:143"}
+  - {from: star_physical, to: atmosphere_reflected_color, kind: requires, via: sed, ref: "atmosphere-reflected-color-methodology.md:233"}
+  - {from: atmosphere_choice, to: atmosphere_reflected_color, kind: requires, ref: "atmosphere-reflected-color-methodology.md:55"}
+  - {from: t_eq_stellar, to: atmosphere_reflected_color, kind: selects, via: cloud_class, ref: "atmosphere-reflected-color-methodology.md:58"}
+  - {from: atmosphere_reflected_color, to: surface_albedo, kind: influences, ref: "surface-color-albedo-methodology.md:277"}
+  - {from: atmosphere_reflected_color, to: greenhouse, kind: influences, ref: "atmosphere-reflected-color-methodology.md:439"}
+  - {from: body_class, to: hapke_shader_values, kind: selects, ref: "hapke-shader-methodology.md:165"}
+  - {from: surface_albedo, to: hapke_shader_values, kind: influences, sign: non-monotonic, ref: "hapke-shader-methodology.md:81"}
+  - {from: atmosphere_choice, to: hapke_shader_values, kind: selects, ref: "hapke-shader-methodology.md:88"}
+  - {from: crater_state, to: hapke_shader_values, kind: requires, via: terrain, ref: "hapke-shader-methodology.md:158"}
 
-  - from: heat_transport_mode
-    to: surface_albedo
-    kind: influences
-    status: gap
-    note: >
-      화산 재표면화가 표면 물질을 갈아치우므로 알베도가 따라 움직인다.
-      surface-color-albedo 는 조성 → 반사율만 다루고 재표면화 유입을
-      아직 서술하지 않는다 — 문서 쪽 공백.
-
-  - from: greenhouse
-    to: interior_structure
-    kind: influences
-    via: t_surf
-    status: gap
-    note: >
-      순환 1 — 내부 solver 의 표면 경계조건. 우리에게 내부 레시피 자체가
-      없으므로 이 결합을 서술한 문서도 없다.
-  - from: star_metallicity
-    to: interior_structure
-    kind: influences
-    status: gap
-    note: >
-      방사성 발열이 호스트 금속함량을 탄다. 우리 레시피가 아직 이 항을
-      쓰지 않아 gap. 현재 [Fe/H] 는 "저임팩트"로 스킵 중이나 암석체
-      내부열에는 저임팩트가 아니다.
+  # ── excludes — 시험했고 아니었다 ───────────────────────────────
+  - {from: mass_or_radius, to: hapke_shader_values, kind: excludes, ref: "hapke-shader-methodology.md:148", note: "corr(K, log g) = +0.58 뿐이고 이상치가 끌고 있다. K 는 표면중력을 따라가지 않는다."}
+  - {from: interior_structure, to: hapke_shader_values, kind: excludes, ref: "hapke-shader-methodology.md:144", note: "phi 는 근표면 광학 packing 이지 벌크 다공도가 아니다."}
+  - {from: composition_intent, to: surface_dose, kind: excludes, ref: "surface-radiation-dose-methodology.md:89", note: 조성은 거의 상관없다. 기둥밀도가 정한다.}
+  - {from: internal_heat_nontidal, to: t_eff_body, kind: excludes, scope: self, ref: "internal-heat-luminosity-methodology.md:308", note: 암석체에서는 0.001 K 보정이라 표면온도에 무의미하다. 거대행성 엣지와 구분할 것.}
+  - {from: star_physical, to: internal_heat_nontidal, kind: excludes, ref: "internal-heat-luminosity-methodology.md:118", note: 나이와 질량이 정하지 호스트가 정하지 않는다.}
+  - {from: orbit_elements, to: heat_transport_mode, kind: excludes, ref: "tidally-locked-temperature-methodology.md:47", note: 낮밤 대비는 대기가 정하지 궤도가 정하지 않는다.}
+  - {from: heat_transport_mode, to: surface_albedo, kind: excludes, ref: "surface-color-albedo-methodology.md:191", note: "화산 재표면화 → 알베도는 어느 문서도 서술하지 않는다. 가장 가까운 건 충돌·풍화 노출연령이고 그건 다른 것이다."}
+  - {from: cassini_state, to: spin_axis_inclination, kind: excludes, ref: "cassini-state-obliquity-methodology.md:203", note: 조석 감쇠된 것과 아닌 것. 교차적용 금지.}
 
 cycles:
   - id: 1
     name: 표면온도 ↔ 내부구조
-    members: [interior_structure, greenhouse]
-    resolution: T_eq 를 1차 경계값으로 두고 두 번 반복. 깊은 곳은 표면에 둔감하다.
+    members: [interior_structure, greenhouse, tidal_heating]
+    resolution: T_eq 를 1차 경계값으로 두고 두 번 반복.
   - id: 2
-    name: 알베도 ↔ 평형온도
-    members: [surface_albedo, t_eq_stellar, ice_stability]
-    resolution: 클래스 기본 알베도로 시드 후 두 번 반복, 또는 알베도를 오너 결정으로 끊는다.
+    name: 알베도 ↔ 평형온도 ↔ 얼음 ↔ 온실 ↔ 대기
+    members: [surface_albedo, t_eq_stellar, ice_stability, greenhouse, atmosphere_choice]
+    resolution: >
+      클래스 기본 알베도로 시드 후 두 번 반복. 처음엔 3노드로 봤는데 검증기가
+      실제 고리를 짚어줬다 — T_eq 가 알베도를 먹고, 알베도를 얼음 생존이
+      되돌려주고, 얼음은 온실이 준 T_surf 를 먹고, 온실은 대기를 먹고, 대기는
+      척도높이 때문에 다시 T_eq 를 먹는다. 다섯 노드다.
   - id: 3
     name: 조석가열 ↔ 내부구조
-    members: [interior_structure, tidal_heating, heat_transport_mode, greenhouse]
+    members: [interior_structure, tidal_heating, heat_transport_mode]
+    resolution: 2층이 생겨야 닫힌다. 그전까지 k2/Q 는 클래스 표 상수다.
+  - id: 4
+    name: figure ↔ 조석고정
+    members: [body_figure, tidal_locking]
+    resolution: 1:1 잠금을 가정해 figure 를 풀고, 영구 사중극이 p:q 포획을 허용하는지 되짚는다.
+  - id: 5
+    name: 내부열 ↔ 반지름
+    members: [internal_heat_nontidal, mass_radius_relation]
+    resolution: 내부열이 반지름을 부풀리고 그 반지름이 T_int 를 정한다. 나이에 맞춰 반복.
+  - id: 6
+    name: 조석가열 ↔ 배정 반지름 ↔ figure ↔ Cassini
+    members: [tidal_heating, mass_radius_relation, body_figure, cassini_state]
     resolution: >
-      2층이 생겨야 닫힌다. 그전까지 k2/Q 는 도출값 옷을 입은 자유 파라미터이며
-      그렇게 표시해야 한다.
+      반지름이 figure 를 정하고, figure 가 Cassini 세차상수를 정하고, 경사각이
+      조석 소산에 들어가고, 그 열유속의 수송 테스트가 반지름 상한을 돌려준다.
+      검증기가 짚어준 고리다 — 처음엔 조석↔반지름 2노드로 봤는데 실제로는 넷을
+      돈다. 반지름을 잡고 한 바퀴 돌린 뒤 상한을 위반하지 않는지 확인한다.
 
 ordering_rules:
-  - 부모가 완전히 풀리기 전에는 위성을 풀 수 없다. 위성 4항 예산이 부모의 온도·반지름·알베도를 먹는다.
+  - 부모가 완전히 풀리기 전에는 위성을 풀 수 없다. scope=parent 엣지가 네 건 확인됐다.
   - 별이 행성보다 먼저다.
+  - 클래스 표 상수(NMoI · k2/Q · omega0 · T_exo)는 도출값이 아니다. 그렇게 표시해야 한다.
