@@ -49,17 +49,32 @@ to ice VII. Chaos (Alpha Centauri A b V) was the body the hole was blocking and 
 Ganymede, whose water column bottoms out inside ice VI, is what shows the phases carrying a
 measured body rather than merely unblocking a search.
 
+**2026-08-26 added compaction.** The solver had treated every layer as solid throughout, so
+a small body whose self-gravity cannot crush what it accreted from came back as a body made
+of something lighter, or came back declined. Porosity is now a function of the local
+pressure, taken from a published relation rather than fitted to any of our bodies, and the
+two moons the previous revision refused on that mechanism return numbers. The section on
+[porosity](#porosity-what-the-pressure-has-not-crushed-yet) has the relation, and
+[what it says about Dante and Hades](#what-the-compaction-relation-says-about-dante-and-hades)
+has the part that matters: the relation accounts for their volume deficits arithmetically
+and rules itself out physically, which is a finding about two invented radii rather than a
+solved interior.
+
 ## Contract — `interior_layers`
 
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
 `radius` [R_earth] · `core_pressure` [GPa]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
-`composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth]
+`composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
+`initial_porosity` [—] · `porosity_cap` [Pa]
 **Discriminating keys** — the material stack chosen by `composition`, and the pressure
 reached at each layer boundary, which decides whether a grounded phase exists there.
 Regimes and their numeric conditions are in [Domain of validity](#domain-of-validity).
-**Grade** — calibrated. The equations of state are published fits, and the recipe
-reproduces four measured moments of inertia without being handed layer densities.
+**Grade** — calibrated, dropping to **analog** whenever `initial_porosity` is greater than
+zero. The equations of state are published fits and the recipe reproduces four measured
+moments of inertia without being handed layer densities; the compaction relation is a
+laboratory curve extrapolated past the pressures it was measured at, and the initial
+porosity it needs is a declaration this recipe cannot derive.
 
 `radius_earth` is **not used to compute anything**: radius is an output. When supplied it
 is compared against the derived radius, so a composition declaration that fails to
@@ -78,7 +93,12 @@ against self-gravity, closed by an equation of state. These are Seager+ 2007's e
 
     dm/dr = 4π r² ρ(r)
     dP/dr = −G m(r) ρ(r) / r²
-    ρ     = ρ(P)                        ← the equation of state, per material
+    ρ     = ρ_solid(P) · (1 − φ(P))     ← the equation of state, per material,
+                                          times the solid fraction left at that pressure
+
+The porosity term φ(P) is zero unless the body is declared porous, and the section on
+[compaction](#porosity-what-the-pressure-has-not-crushed-yet) below says where it comes
+from. Everything in this document up to that section is the φ = 0 case.
 
 The moment of inertia integrates alongside them,
 
@@ -220,6 +240,84 @@ baked constant has drifted from the representation, which is the protection a ha
 table needs (this repository has been 54× wrong in a hand-keyed table before). The
 development environment that reproduces it is pinned in `engine/requirements.txt`.
 
+## Porosity: what the pressure has not crushed yet
+
+Everything above treats a layer as solid all the way through. Small bodies are not. Their
+self-gravity is too weak to crush the material they accreted from, so void space survives,
+and the mean density comes out below what the composition alone would give. Ignoring that
+is how a rubble pile gets mistaken for a body made of something lighter.
+
+There is a threshold, and it is a pressure rather than a size. **Silicate grains begin to
+fracture at about 10⁷ Pa**, which Britt+ 2002 established and Carry 2012 §5.2 restates as
+"silicate grains start to fracture when the pressure reaches ∼10⁷ Pa". Below it an
+aggregate keeps its voids; above it they collapse. The observational record agrees with the
+threshold read as a pressure: Carry 2012 §5.2 notes that "the pressure inside an object
+with a mass lower than ≈10²⁰ kg never reaches 10⁷ Pa", and reports that bodies above
+10²⁰ kg all sit at macroporosity ≈ 0 while everything below is scattered from 0 to 70 %.
+
+### The relation
+
+The recipe uses Bierson, Nimmo & McKinnon 2019's equations (1) and (2)
+([`2019Icar..326...10B`](https://ui.adsabs.harvard.edu/abs/2019Icar..326...10B)), which is
+the formulation that has been checked against real bodies: they used it to explain the
+observed density-versus-size trend of the Kuiper Belt.
+
+    ice     φ(P) = max( φ₀ · exp(b_ice · P),  φ_floor )
+    rock    φ(P) = min( φ₀ · P^(b_rock),      φ₀      )
+
+P is the local lithostatic pressure in **MPa**. The two functional forms differ because
+Yasui & Arakawa 2009 fitted the two materials that way, not because we chose it: in their
+compaction experiments an exponential fitted ice in the low-porosity regime and a power law
+fitted silica across the whole pressure range (their §3.3).
+
+| constant | value | what it is | source |
+|---|---|---|---|
+| `b_ice` | −0.1 MPa⁻¹ | exponential rate for water ice | Bierson+ 2019 Table 1, from Yasui & Arakawa 2009 |
+| `b_rock` | −0.11 | power-law exponent for silicate | Bierson+ 2019 Table 1, from Yasui & Arakawa 2009 |
+| `φ_floor` | 0.20 | porosity the ice matrix supports on strength alone | Bierson+ 2019 Table 1, from Durham+ 2005 |
+| `φ₀` | 0.60 (nominal) | initial porosity, a **declared input** | Bierson+ 2019 Table 1 |
+| grain-fracture threshold | 10⁷ Pa | where silicate grains start to break | Britt+ 2002, via Carry 2012 §5.2 |
+| experimental ceiling | 150 MPa | highest pressure the compaction experiments reached | Durham+ 2005 |
+
+`b_rock` can be checked against its own source rather than taken on trust. Yasui & Arakawa
+2009's Table 1, last row (run 090210-5, pure silica at −10 °C) reports a power-law fit with
+a₃ = 0.53 and b₃ = 0.11, an initial porosity of 0.64 falling to 0.38 at 30 MPa. The
+exponent is the same number Bierson+ 2019 carry, read from two papers independently.
+
+**Iron gets no porosity law.** Not because the literature is silent but because the question
+does not arise: a core forms by metal melting and sinking, so applying an unsintered-granular
+curve to it contradicts how it got there. `porosity.py` records that reasoning next to the
+material map rather than leaving the omission to be guessed at.
+
+### Four limits, and the last one is the load-bearing one
+
+**Pressure.** Yasui & Arakawa 2009 pressed to 30 MPa at −10 °C and 80 MPa at −55 to −67 °C;
+Durham+ 2005 reached 150 MPa. Above that the curve is extrapolated, and the power-law tail
+decays so slowly that the extrapolation is visibly wrong at planetary pressures: pushed to
+Earth's central 358 GPa it still returns 15 % porosity. So the recipe carries a
+`porosity_cap`, which claims nothing above a stated pressure, and the verdict below is taken
+under the cap so that no conclusion rests on unmeasured extrapolation. Each result also
+reports the fraction of the body's mass that sits above the ceiling.
+
+**Cold and unsintered.** Bierson+ 2019 §2.2 lists what their model leaves out: "melt
+production, differentiation, convection, impacts, and tidal heating". All five remove
+porosity, which is why they describe their runs as "a lower bound on the bulk density (the
+most porosity that can be retained)". The same holds here, one stage earlier: this recipe
+implements only their brittle stage, so what it returns is the **most** porosity a body
+could keep, not an estimate of what it kept.
+
+**The ice branch is the cold branch.** With `b_ice` = −0.1 MPa⁻¹ and a floor of 0.20, the
+relation describes ice at Durham's 77 to 120 K. Yasui & Arakawa's pure ice at −10 °C
+compacted to 0.02 at 30 MPa, where this relation still returns 0.20. Warm ice is not
+described here, and the test prints both numbers side by side rather than letting the gap
+pass unnoticed.
+
+**φ₀ is not derived.** Accretion sets it and heating erases it, and this recipe carries
+neither, so it arrives as a declaration and defaults to **zero**. Zero is not a claim that
+a body has no voids: it is the statement that this recipe cannot decide. That default is
+also what keeps the anchors still, and the test measures the alternative rather than
+asserting it, by reporting what declaring φ₀ = 0.60 would do to the Moon.
+
 ## Practical recipe
 
 1. **Choose the material stack** from `composition`. Four are defined: `earth_like`
@@ -243,7 +341,10 @@ development environment that reproduces it is pinned in `engine/requirements.txt
 Most moons arrive with a mass and a radius and no composition declaration, which
 over-determines the problem: the two observations fix one free fraction. Pure silicate is
 the baseline. A body denser than that baseline needs metal, so the recipe solves for the
-core mass fraction; a body less dense needs ice, so it solves for the ice mass fraction.
+core mass fraction. A body less dense needs either ice or void space, and which of the two
+is a declaration rather than a deduction: where the board allows ice the recipe solves for
+the ice mass fraction, and where the board excludes it the recipe solves for the initial
+porosity against the published compaction relation instead.
 
 The axis is **scanned before it is bisected**. Bisecting straight away will eventually
 probe a value inside the phase gap and stop there, and nothing then distinguishes "the
@@ -254,9 +355,19 @@ the exercise for the low-density moons below.
 **The inversion is not unique, and the result says so.** At the pressures small bodies
 reach, void space survives, and porosity and ice lower the mean density in the same
 direction. An icy body at 30 % ice and a less icy body at 15 % ice with 15 % porosity are
-not distinguished by mass and radius alone. Separating them needs a compaction model, which
-is out of scope here, so every inverted result carries the degeneracy in its notes and is
-graded **analog** rather than calibrated.
+not distinguished by mass and radius alone. Having a compaction model does not fix that: it
+makes both branches computable rather than one of them computable and the other a gap. So
+every inverted result carries the degeneracy in its notes, names which axis it took and on
+whose declaration, and is graded **analog** rather than calibrated.
+
+The porosity inversion has one extra honesty requirement, because its free variable is the
+initial porosity and that is exactly the quantity the relation cannot derive. So the
+recipe brackets before it inverts: it reports the radius at zero porosity, the radius at the
+published nominal φ₀ = 0.60 read to the letter, and the radius at that nominal under the
+conservative cap. Only if the declared radius falls inside that envelope does it read back a
+φ₀, and it reads it back under the cap so the answer never depends on extrapolation. Outside
+the envelope it declines and says the declared mass-radius pair is what wants revisiting.
+The number that comes back is a **read-back, not a fitted constant**, and the notes say so.
 
 ## Validation
 
@@ -362,6 +473,83 @@ test of the ice ladder, and it passes.
 The icy-moon table is regenerated by `python3 engine/test_interior.py --icy`; the Ganymede
 row alone is asserted in the default test run, because the other four take minutes.
 
+### Compaction, checked on published measurements and published bodies
+
+The compaction relation needs its own anchors, and none of them is our own output.
+
+**Against the laboratory.** Yasui & Arakawa 2009's pure-silica run compacted from 0.64 to
+0.38 at 30 MPa, and their own power-law fit through it gives 0.365. Our implementation
+returns 0.440 for the same starting porosity, 16 % high, because Bierson+ 2019 normalise the
+prefactor to φ₀ rather than to Yasui's fitted a₃. That bias gives **more** porosity, which is
+the direction their "lower bound on the bulk density" is meant to err in, so it is
+conservative rather than wrong. On the ice side Durham+ 2005 measured about 0.10 residual
+porosity at 150 MPa; the floor Bierson adopted, and this recipe uses, is 0.20, twice the
+measurement and again conservative.
+
+**Against the published model.** Bierson+ 2019 §2.1 justifies their nominal initial porosity
+by stating that "a nominal value of 60% is used as this gives an object with f_m = 70% a
+density of ~750 kg/m³". Running our integration at φ₀ = 0.60 and a 70 % rock mass fraction
+over the seven smallest bodies below returns **749 kg/m³**, 0.1 % from the published figure.
+That is the transcription check: the relation as implemented reproduces the number its source
+paper quotes for it.
+
+**The transition mass falls out, and it is not an input.** Nothing in the integration is told
+about 10²⁰ kg. Given only the compaction relation and the 10 MPa grain-fracture threshold,
+the mass at which a porous silicate body's central pressure first crosses that threshold
+comes out at **3.0 × 10¹⁹ kg** (a 168 km radius), inside the 10¹⁹ to 10²⁰ kg transition Carry
+2012 §5.2 reports from observed asteroid macroporosities. A curve fitted in mass would have
+no reason to land there.
+
+**Against measured bodies.** The fifteen Kuiper Belt objects Bierson+ 2019 list in their
+Table A.2, each run at their nominal 70 % rock mass fraction, under the conservative cap:
+
+| body | D (km) | ρ observed | ρ brittle-only | ρ zero-porosity | source |
+|---|---|---|---|---|---|
+| Altjira | 123 | 300 | 736 | 1837 | Vilenius+ 2014 |
+| Typhon | 157 | 600 | 738 | 1837 | Stansberry+ 2012 |
+| Ceto | 174 | 1370 | 747 | 1837 | Grundy+ 2007 |
+| Teharonhiawako | 178 | 600 | 739 | 1837 | Vilenius+ 2014 |
+| 2001 QC298 | 235 | 1140 | 765 | 1837 | Vilenius+ 2014 |
+| Sila | 249 | 730 | 756 | 1837 | Vilenius+ 2014 |
+| Lempo | 304 | 500 | 762 | 1837 | Stansberry+ 2006 |
+| 2002 UX25 | 652 | 820 | 920 | 1837 | Brown 2013 |
+| Varda | 705 | 1270 | 989 | 1841 | Vilenius+ 2014 |
+| Salacia | 866 | 1260 | 1069 | 1841 | Brown & Butler 2017 |
+| Orcus | 958 | 1520 | 1136 | 1841 | Fornasier+ 2013 |
+| Quaoar | 1070 | 2180 | 1243 | 1842 | Vilenius+ 2014 |
+| Charon | 1212 | 1700 | 1276 | 1842 | Nimmo+ 2016 |
+| Haumea | 1595 | 1885 | 1466 | 1843 | Ortiz+ 2017 |
+| Eris | 2326 | 2520 | 1638 | 1871 | Brown+ 2011 |
+
+Three things in that table are the point, and a fourth is a limit worth naming.
+
+The brittle-only density **rises monotonically with mass**, from 736 to 1638 kg/m³ across
+five orders of magnitude in mass, while the zero-porosity column barely moves (1837 to
+1871). The size-density trend is the thing Bierson+ 2019 set out to explain, and it comes
+out of the pressure dependence rather than out of any compositional change: the rock mass
+fraction is held fixed at 0.70 for every row.
+
+**Six bodies sit below the curve** (Altjira, Typhon, Teharonhiawako, Sila, Lempo,
+2002 UX25). Five of them are the small, low-density objects whose rock mass fraction the
+paper solves for individually (their Fig. 1b treats f_m as free per object); holding it
+fixed at the nominal 0.70, as we do, must scatter rows both ways. The sixth is the one
+Bierson+ 2019 §3 flag themselves: "2002 UX25 is below our expected density. We are not
+aware of any processes that might significantly lower the bulk density without lowering
+f_m." Our implementation puts it below the curve too, which is the agreement worth having.
+
+**Eight bodies sit more than 20 % above the curve**, and that gap is the missing stage
+rather than a failure. Bierson+ 2019 run a brittle pass and then a thermal-ductile pass that
+closes pores by viscous creep; this recipe carries only the first, because the second needs a
+thermal history and this solver is isothermal. Denser-than-predicted large bodies are exactly
+the signature that would leave. It is a stated limit, not a decline.
+
+The last check is that none of this leaks upward. With porosity undeclared the integration is
+byte-identical to before: Earth 0.3297 and the Moon 0.3945, unchanged. Declaring φ₀ = 0.60
+on the Moon would grow its radius from 1745 to 1764 km, which is why the default is zero and
+why the test prints that number rather than claiming the effect is negligible.
+
+The KBO table is regenerated by `python3 engine/test_porosity.py --kbo`.
+
 Both tables, and the roster table below, are regenerated by
 `python3 engine/test_interior.py --table` and `--roster`. None of them is hand-keyed.
 
@@ -374,10 +562,13 @@ Both tables, and the roster table below, are regenerated by
 | rock + ice VII | ice column base above 2.216 GPa and below 37.4 GPa | integrates, ice VII | calibrated |
 | rock + ice III / V / VI | ice column base in 209.5 MPa – 2.216 GPa | integrates, switching phase at each triple point | calibrated |
 | **warm ice window** | ice column base in 209.5 MPa – 2.216 GPa on a body warm enough to melt | **not decided here**: the same pressures hold liquid water, and choosing needs a thermal profile this recipe does not carry | — |
+| porous rock or ice | `initial_porosity` > 0, central pressure inside the 150 MPa experimental ceiling | integrates with φ(P) from the published relation | analog |
+| **porosity above the experimental ceiling** | `initial_porosity` > 0, pressure above 150 MPa | the relation is **extrapolated**: results report the mass fraction affected, and `porosity_cap` gives the reading that claims nothing there | analog |
+| **porosity on a heated body** | `initial_porosity` > 0 and the body has melt, differentiation, convection, impacts or tidal heating | **not decided here**: all five remove porosity (Bierson+ 2019 §2.2), so what this recipe returns is an upper bound on the voids, never an estimate | — |
 | ice X / superionic | ice column base above 37.4 GPa | declines, naming the phase (Goncharov+ 2005; French+ 2009) | — |
 | electron degeneracy | central pressure above the core material's ceiling | declines, naming Thomas–Fermi–Dirac | — |
 | **undifferentiated** | `differentiated: false` | **declines**, naming the mixed-phase equation of state it would need | — |
-| **too light for any rock/ice mix** | mean density below pure ice | **declines**, naming porosity or an H/He envelope | — |
+| **too light for any rock/ice mix** | mean density below the porous envelope | **declines**, saying the declared mass-radius pair is outside what the published relation allows | — |
 | gas / ice giant | `body_class` names a fluid body | declines: every equation of state here is condensed matter, and an H/He envelope is a polytrope. See [mass–radius relation](mass-radius-relation-methodology.md) §2 for that literature | — |
 
 Out of domain is a **returned value**, not an error: each row comes back with its reason
@@ -392,13 +583,14 @@ the silicate. This solver stacks pure materials layer by layer and has no way to
 mixed phase; what it would need is a mixture equation of state (volume-additive, or a
 Voigt–Reuss–Hill average). That is the named starting point, and with it the body solves.
 
-**Porosity is not ice.** Both lower the mean density, and at the central pressures of a
-few-hundred-kilometre body both are live. The recipe separates two different failures. If
-the observed radius can be reached by some rock-and-ice mixture, the recipe returns that
-mixture and warns that a lower-ice, higher-porosity solution fits equally well. If the
-observed radius cannot be reached even by pure water ice, the recipe declines and says so:
-that is the case where **a porosity model is the missing piece**, and a compaction curve is
-what unlocks it.
+**Porosity is not ice, and now both are modelled.** Both lower the mean density, and at the
+central pressures of a few-hundred-kilometre body both are live, so mass and radius alone
+cannot separate them. What changed on 2026-08-26 is that the porosity side is no longer a
+gap: a body whose board excludes ice is now solved on the porosity axis instead of being
+turned away, and a body whose board allows ice is still solved on the ice axis. The
+degeneracy is real and every result says so in its notes. What the recipe will not do is
+pick between them from density, because density does not contain that information; the
+board's composition declaration does, and it is an input for exactly that reason.
 
 **A missing phase was not a missing layer, and closing it was a citation rather than a
 model.** Until 2026-08-25 an ice column reaching into the 209.5 MPa to 2.216 GPa window
@@ -411,69 +603,87 @@ is ice X and the superionic phase, and that decline is unchanged.
 ## What the roster asks for
 
 Six moons in the Alpha Centauri and Proxima systems have both a mass and a radius on the
-board, and four of them sit below 3000 kg/m³, which the revision before last refused
-outright. Running the inversion on all six:
+board, and four of them sit below 3000 kg/m³, which two revisions ago was refused outright.
+Running the inversion on all six:
 
 | body | ρ̄ (kg/m³) | ice declared | outcome | what it took, or what is missing |
 |---|---|---|---|---|
 | Pandora (A b III) | 4901 | allowed | solved | solved — core_mass_fraction 0.255, C/MR² 0.3384, P_c 220903 MPa |
 | Cassandra (A b IV) | 5467 | allowed | solved | solved — core_mass_fraction 0.654, C/MR² 0.3311, P_c 81809 MPa |
-| Hades (A b II) | 2829 | **excluded** | declined | porosity: ice is excluded by declaration, so void space is what is left. Needs a compaction curve |
-| Dante (A b I) | 2620 | **excluded** | declined | porosity: ice is excluded by declaration, so void space is what is left. Needs a compaction curve |
+| Hades (A b II) | 2829 | **excluded** | solved | solved — initial_porosity 0.478, C/MR² 0.3742, P_c 738 MPa |
+| Dante (A b I) | 2620 | **excluded** | solved | solved — initial_porosity 0.389, C/MR² 0.3771, P_c 317 MPa |
 | Chaos (A b V) | 2014 | allowed | solved | solved — ice_mass_fraction 0.240, C/MR² 0.3150, P_c 162 MPa |
 | Proxima Cen c I | 1599 | allowed | solved | solved — ice_mass_fraction 0.406, C/MR² 0.3052, P_c 85 MPa |
 
-Four of the six solve. The two that do not decline for a stated reason rather than being
-turned away at a mean-density gate, and the reason is the same for both.
+All six solve, and the table is now less interesting than what sits behind two of its rows.
 
-**The `ice declared` column is a declaration, not a measurement, and it decides the
+**The `ice declared` column is a declaration, not a measurement, and it still decides the
 answer.** The board states what each body is made of, and for two of them it excludes water
 ice outright: Dante is a silicate volcanic moon of the Io type with an SO₂ outgassing
 atmosphere, and Hades is recorded as "silicate and ice-free". Handing the inversion only a
-mass and a radius lets it pick the ice axis on density alone, and it then reports an ice
-result for two bodies the board says have no ice at all. That is a wrong statement about a
-real question, so the declaration is an input.
+mass and a radius lets it pick the ice axis on density alone. Now that the porosity axis
+exists, that would be worse rather than better, because both axes return a number: the
+recipe would silently choose the wrong mechanism instead of declining. The declaration is
+what makes the choice, and it is an input for that reason.
 
-**With ice excluded, Dante and Hades still decline on porosity, and the new ice phases do
-not change that.** A zero-porosity silicate body of Dante's mass comes out at 486 km against
-a declared 521 km, and Hades at 718 km against 750; the volume shortfall is 18.7 % and
-12.3 % respectively. With ice ruled out by declaration, the mechanism left is **void
-space**, and their central pressures (344 and 752 MPa) are low enough for it to survive. The
-recipe has no compaction curve, so it declines and says so. A second reading is recorded
-alongside: if the rock is genuinely lighter than the silicate this recipe carries, no
-porosity is needed and the question becomes *which* rock, and if neither holds then the
-declared mass-radius pair is what wants revisiting. Naming a porosity model is the
-actionable half.
+**Chaos and Proxima Centauri c I are untouched by any of this.** Their boards allow ice, so
+they take the ice axis exactly as before: 24 % ice at C/MR² 0.3150 and 41 % ice at 0.3052,
+the same numbers to four figures. Porosity would fit them too, and that is the degeneracy
+the notes carry; what stops the recipe drifting onto the new axis is the declaration, not a
+tolerance.
 
-**Chaos solves, and reading why it used to decline is worth the paragraph.** The board calls
-it a small icy moon of water ice with rock, so the ice axis is legitimate there. The
-converged answer is 24 % ice over a silicate interior, C/MR² 0.3150, with the base of the
-water column at only 20 MPa: the body is small, and every part of its ice is ice Ih.
+### What the compaction relation says about Dante and Hades
 
-So the ice phases are not in the answer at all. What they changed is the **path**. The
-inversion scans the ice-fraction axis before bisecting, and the shooting method inside each
-scan point starts from an overestimate of the central pressure. Those first trial
-integrations put the base of the ice column at 0.368, 0.278 and 0.217 GPa for the three grid
-points nearest the answer, all three inside the old gap. Every one of them raised the gap
-and took its grid point out of the scan, and with those three gone no surviving pair of
-neighbours bracketed the target radius, so the inversion declined and reported the missing
-phases. The previous revision of this document read the 0.217 GPa off one of those blocked
-trial points and described it as the converged mixture sitting a hair above the ice Ih
-boundary. That was wrong: the converged mixture is nowhere near the boundary, and the
-sentence has been removed rather than adjusted.
+This is the question the porosity work was for, and the answer has three parts. It is worth
+being careful here, because **the mass and radius of both bodies are invented.** The board
+marks them `INVENTED`, and Dante's radius was set by the surface heat-transport gate rather
+than by any observation. So the relation was built and validated first, on Solar System
+bodies and laboratory compaction curves, and only then pointed at these two.
 
-The mechanism it named was still the right one, and the lesson is sharper than the original
-claim. **A hole in an equation of state does not only block the bodies whose answer lies
-inside it; it blocks every body whose solver has to pass through it.** A shooting method
-that clamped its trial pressures might have reached Chaos without ices III, V and VI. That
-is a real observation about the inversion and it is recorded here rather than acted on,
-because redesigning the shooter is separate work. The phases are needed regardless, and
-Ganymede in the validation section is the proof: its water column bottoms out inside ice VI
-in the **converged** solution, not in a trial one.
+**First: the numbers fit inside the envelope.** Both declared radii lie between the
+zero-porosity radius and the radius the published relation allows, and they lie inside it
+under the conservative cap as well, so this conclusion does not rest on extrapolating the
+compaction curve past the pressures it was measured at.
 
-If Chaos is warm rather than cold, the pressures its ice column reaches are low enough that
-part of it would be liquid instead. That needs a thermal profile, which is a different
-recipe, and the domain table above records it as undecided rather than as solved.
+| body | R at φ = 0 | R at published φ₀ = 0.60 | same, capped at 150 MPa | R declared | φ₀ read back | bulk porosity |
+|---|---|---|---|---|---|---|
+| Dante (A b I) | 486 km | 575 km | 558 km | 521 km | 0.389 | 0.186 |
+| Hades (A b II) | 718 km | 834 km | 765 km | 750 km | 0.478 | 0.124 |
+
+Both read-back values sit below the published nominal of 0.60, and the bulk porosities they
+imply, 18.6 % and 12.4 %, are the volume deficits the previous revision could only name.
+Taken on its own that is the first of the three legitimate outcomes: the model explains the
+voids.
+
+**Second: the regime is wrong, and the observations say so.** Dante is 1.6 × 10²¹ kg and
+Hades 5.0 × 10²¹ kg, which is 16 and 50 times the mass above which Carry 2012 §5.2 reports
+that bodies are observed to have **no macroporosity at all**. Their central pressures, 317
+and 738 MPa, are 32 and 74 times the grain-fracture threshold. And 34 % of Dante's mass and
+69 % of Hades's sits above the pressures the compaction experiments ever reached. Every one
+of those is a statement that these bodies are outside the population the relation was
+calibrated on, in the direction of less porosity rather than more.
+
+**Third: their own board rows close it.** Bierson+ 2019 §2.2 lists the processes their model
+excludes, and tidal heating is on that list. Dante's board carries about 1200 times Io's
+tidal heat flux, and Hades's about 15 times Io's, with surface temperatures of 278 to 444 K.
+Cold unsintered granular rock is the one thing the relation requires, and the board declares
+the opposite for both bodies. The relation therefore returns an **upper bound on the voids
+they could hold**, and the physical expectation for a body heated like that is that the
+voids are gone.
+
+So the honest verdict is the third of the three outcomes rather than the first: **the
+relation accounts for the deficit arithmetically and rules itself out physically, and what
+is left over is the thermal history.** Two readings survive that, and both are for the owner
+rather than for this recipe. Either the declared radii are too large for the declared masses,
+which is a finding about art-direction values that were invented rather than observed, or the
+rock is genuinely lighter than the enstatite-plus-PREM silicate this recipe carries, in which
+case the question becomes which rock and the answer is a composition rather than a void
+fraction. Nothing here changes the board: it reports.
+
+What did change is that the recipe now says all of that with numbers instead of declining
+with a mechanism name. The previous revision could only report "porosity, and a compaction
+curve is what unlocks it". The curve arrived, and the answer it gives is that these two
+bodies are the wrong size to use it on.
 
 ## Worked example: Pandora (Alpha Centauri A b III)
 
@@ -566,6 +776,49 @@ instead of as a class constant.
   ([`2014Sci...344...78I`](https://ui.adsabs.harvard.edu/abs/2014Sci...344...78I)). None of
   the five has an arXiv preprint; each value was verified against ADS-indexed full text or
   the paper's own abstract rather than taken from memory.
+- **Bierson, C. J., Nimmo, F. & McKinnon, W. B. 2019**, Icarus 326, 10
+  ([`2019Icar..326...10B`](https://ui.adsabs.harvard.edu/abs/2019Icar..326...10B), DOI
+  [10.1016/j.icarus.2019.01.027](https://doi.org/10.1016/j.icarus.2019.01.027)). **Cached** in
+  `docs/phase3/_papers/2019Icar..326...10B.txt`. The pressure-dependent porosity relation
+  this recipe implements (their eqs. 1 and 2), its constants (their Table 1), the nominal
+  initial porosity and the ~750 kg/m³ figure the validation reproduces, the fifteen Kuiper
+  Belt densities of their Table A.2, and the §2.2 list of processes their model excludes,
+  which is where this recipe's "cold and unsintered" limit comes from. *No arXiv preprint*:
+  read from the author-accepted manuscript in PubMed Central
+  ([PMC7058130](https://pmc.ncbi.nlm.nih.gov/articles/PMC7058130/)), a **non-ADS-fulltext
+  exception** noted here so a later audit knows the route.
+- **Yasui, M. & Arakawa, M. 2009**, JGR Planets 114, E09004
+  ([`2009JGRE..114.9004Y`](https://ui.adsabs.harvard.edu/abs/2009JGRE..114.9004Y), DOI
+  [10.1029/2009JE003374](https://doi.org/10.1029/2009JE003374)). **Cached** in
+  `docs/phase3/_papers/2009JGRE..114.9004Y.pdf`. The compaction experiments the two
+  exponents come from: their §3.3 chooses the exponential and power-law forms per material,
+  and their Table 1 last row gives the pure-silica fit (a₃ = 0.53, b₃ = 0.11, porosity 0.64
+  falling to 0.38 at 30 MPa) against which `b_rock` is independently checked. *No arXiv
+  preprint*; open access, read from the Kobe University repository copy.
+- **Durham, W. B., McKinnon, W. B. & Stern, L. A. 2005**, GRL 32, L18202
+  ([`2005GeoRL..3218202D`](https://ui.adsabs.harvard.edu/abs/2005GeoRL..3218202D)). The cold
+  hydrostatic compaction of granulated water ice at 77 to 120 K up to 150 MPa, which sets
+  both the experimental ceiling this recipe reports against and the strength-supported
+  porosity floor. *No arXiv preprint and not reachable in full text from here*: the residual
+  porosity of about 0.10 at maximum pressure and the 10 to 20 % retained beyond 100 MPa are
+  quoted from the ADS abstract, and the floor value actually used (0.20) is taken from
+  Bierson+ 2019's Table 1 rather than from this paper. Marked as **abstract-only** so the
+  distinction is not lost.
+- **Carry, B. 2012**, P&SS 73, 98
+  ([`2012P&SS...73...98C`](https://ui.adsabs.harvard.edu/abs/2012P%26SS...73...98C), arXiv
+  **[1203.4336](https://arxiv.org/abs/1203.4336)**). **Cached** in
+  `docs/phase3/_papers/1203.4336.md`. Densities and macroporosities for 287 small bodies.
+  §5.2 supplies the 10⁷ Pa silicate grain-fracture threshold (attributing it to Britt+ 2002),
+  the statement that pressure inside a body below ≈10²⁰ kg never reaches it, and the observed
+  transition from scattered macroporosity below that mass to macroporosity ≈ 0 above it.
+  This is the number the derived transition mass is checked against.
+- **Britt, D. T., Yeomans, D., Housen, K. & Consolmagno, G. 2002**, in *Asteroids III*, 485
+  ([`2002aste.book..485B`](https://ui.adsabs.harvard.edu/abs/2002aste.book..485B)). The
+  original source of the grain-fracture threshold and of the three-way split of asteroids
+  into essentially solid bodies, heavily fractured bodies at ~20 % macroporosity, and rubble
+  piles above 30 %. A book chapter with no preprint and no online full text here: it is cited
+  through Carry 2012, which quotes the threshold explicitly, and no number is taken from it
+  directly.
 - **Still not obtained, and still not used.** Choukroun & Grasset 2007
   ([`2007JChPh.127l4506C`](https://ui.adsabs.harvard.edu/abs/2007JChPh.127l4506C)) and 2010
   ([`2010JChPh.133n4502C`](https://ui.adsabs.harvard.edu/abs/2010JChPh.133n4502C)), and
