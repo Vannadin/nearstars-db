@@ -112,6 +112,8 @@ def check(chain, binds) -> int:
     for name in fields:
         walk(name)
 
+    n_dec = check_decisions(binds, errors)
+
     for w in warnings:
         print(f"  [WARN] {w}")
     for e in errors:
@@ -121,8 +123,56 @@ def check(chain, binds) -> int:
         der = sum(1 for b in fields.values() if b.get("derived_from"))
         bun = sum(1 for b in fields.values() if b.get("bundled"))
         print(f"  [PASS] 필드 {len(fields)} (물리 {phys}) · 확정값끼리 의존 {der} "
-              f"· 벌크 {bun} · 소비처 {len(binds.get('consumers') or [])}")
+              f"· 벌크 {bun} · 소비처 {len(binds.get('consumers') or [])} "
+              f"· 근거-보드 대조 {n_dec}")
     return 1 if errors else 0
+
+
+def board_values() -> dict[tuple[str, str], dict]:
+    """보드에서 (천체, 필드) -> 필드 블록. decisions 대조에 쓴다."""
+    out: dict[tuple[str, str], dict] = {}
+    for path in BOARDS:
+        board = yaml.safe_load(path.read_text(encoding="utf-8"))
+        for row in board.get("decisions") or []:
+            if row.get("status") == "superseded":
+                continue
+            for f in row.get("fields") or []:
+                if f.get("name"):
+                    out.setdefault((str(row.get("body")), f["name"]), f)
+    return out
+
+
+def check_decisions(binds: dict, errors: list[str]) -> int:
+    """근거 문서가 고른 값을 보드가 실제로 들고 있는지 대조한다.
+
+    consumers 와 방향이 반대다. 값이 어디로 흘러가는지가 아니라 **어디서
+    정해졌는지** 를 보고, 보드가 그 답을 받았는지 확인한다. 결정이 나고도
+    보드가 안 따라가는 것은 조용히 지나가던 실패였다.
+    """
+    board = board_values()
+    checked = 0
+    for d in binds.get("decisions") or []:
+        key = (d["body"], d["field"])
+        got = board.get(key)
+        if got is None:
+            errors.append(f"결정 {d['body']}.{d['field']}: 보드에 그 행이 없다")
+            continue
+        checked += 1
+        try:
+            a, b = float(got.get("value")), float(d["value"])
+        except (TypeError, ValueError):
+            if str(got.get("value")) != str(d["value"]):
+                errors.append(f"결정 {d['body']}.{d['field']}: 보드 '{got.get('value')}' "
+                              f"!= 근거 '{d['value']}' ({d['source']})")
+            continue
+        if b and abs(a - b) / abs(b) > 1e-6:
+            errors.append(
+                f"결정 {d['body']}.{d['field']}: 보드 {a:g} {got.get('unit','')} 인데 "
+                f"근거 문서는 {b:g} {d.get('unit','')} 를 골랐다 — {d['source']}")
+        elif got.get("unit") and d.get("unit") and got["unit"] != d["unit"]:
+            errors.append(f"결정 {d['body']}.{d['field']}: 단위가 다르다 "
+                          f"(보드 {got['unit']} vs 근거 {d['unit']})")
+    return checked
 
 
 def _downstream_nodes(chain, start: str) -> dict[str, int]:

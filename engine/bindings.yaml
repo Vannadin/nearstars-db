@@ -443,3 +443,33 @@ fixed_points:
       스무딩에 의존하기 때문이다. 문서가 명시한다. 다만 그 "radius" 가
       pause_radius 인지 pause_radius_smoothed 인지는 문서가 두 이름을 섞어 쓴다.
       여기서는 smoothed 로 배선했다. 레시피를 쓸 때 확정할 것.
+
+# 근거 문서가 고른 값. 보드가 이걸 따라가야 한다.
+#
+# **여기 들어오는 것은 레시피가 낳지 않는 값뿐이다.** 오너 결정과 아트 디렉션처럼
+# 도출 경로가 영영 없는 값이면 근거 문서가 영구 권위이므로 대조할 대상이 된다.
+# 반대로 노드가 낳는 값은 여기 적지 않는다 — 레시피가 생기면 그게 권위이고,
+# 사슬이 돌면서 스스로 다시 계산되기 때문이다. 그런 값을 여기 적으면 검사가
+# 영구히 빨간 채로 남고, 그건 테스트 옷을 입은 TODO 다. 사람을 검사 무시하게
+# 훈련시키는 것이 이 층을 만든 이유와 정반대다.
+#
+# consumers 와 방향이 반대다. consumers 는 출하값이 어디로 흘러가는지를 적고,
+# 여기는 **출하값이 어디서 정해졌는지** 를 적는다. 2026-08-25 에 필요해진 이유:
+# 열수송 증거가 Dante 를 521 km 로 골라 커밋됐는데(8b9f0408) 보드는 900 km 를
+# 들고 있었고, 아무것도 둘을 대조하지 않았다. 그 문서는 900 km 를 "impossible"
+# 로, 그 배치의 동역학을 0/5 실패로 적고 있다.
+decisions:
+  - body: Dante
+    field: radius
+    value: 521
+    unit: km
+    source: "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:143"
+    note: >
+      표면 열수송 게이트가 고른 값. 900 km 는 5 % 용융호에 관측 최대의 2.1 배
+      면적유속을 요구해서 기각됐다. 521 km 는 super-Io 봉투 안(2231 < 2500 W/m²).
+  - body: Dante
+    field: mass
+    value: 1.552e21
+    unit: kg
+    source: "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:143"
+    note: 밀도 2620 kg/m³ 를 고정한 채 반지름에서 따라온 값.

@@ -1466,11 +1466,15 @@ decisions:
       궤도는 로슈 한계 바깥에 넉넉히 자리하고, 내부는 조석으로 뜨겁게 유지된다.
     fields:
       - { name: kopernicus_name, value: "Alpha Centauri A b I", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
-      - { name: mass, value: 8.0e21, unit: kg, op: set, note: "INVENTED" }
-      - { name: radius, value: 900, unit: km, op: set, note: "INVENTED" }
-      - { name: gravity, value: 0.659, unit: m/s2, op: set, note: "derived echo of GM/R^2", note_ko: "GM/R² 파생 에코" }
+      - { name: mass, value: 1.552e21, unit: kg, op: set,
+          note: "INVENTED; sized by the surface heat transport gate, DANTE_HEAT_TRANSPORT_EVIDENCE.md",
+          note_ko: "INVENTED; 크기는 표면 열수송 게이트, DANTE_HEAT_TRANSPORT_EVIDENCE.md 가 정함" }
+      - { name: radius, value: 521, unit: km, op: set,
+          note: "INVENTED; the surface heat transport gate, DANTE_HEAT_TRANSPORT_EVIDENCE.md rejected 900 km — a 5 % melt lake would need 2.1x the observed maximum areal flux",
+          note_ko: "INVENTED; 표면 열수송 게이트, DANTE_HEAT_TRANSPORT_EVIDENCE.md 가 900 km 를 기각 — 5 % 용융호가 관측 최대의 2.1 배 면적유속을 요구" }
+      - { name: gravity, value: 0.382, unit: m/s2, op: set, note: "derived echo of GM/R^2", note_ko: "GM/R² 파생 에코" }
       - { name: flattening, value: 0.098, op: set, note: "= (5/2)·J₂ mean-equatorial spheroid; the visual slot. The egg's long axis, a-c ~16%, is in the C₂₂ row's note", note_ko: "= (5/2)·J₂ 평균적도 spheroid; 시각 슬롯; 계란 장축 a−c~16%는 C22 행 note" }
-      - { name: reference_radius, value: 900, unit: km, op: set, note: "J₂/C₂₂ reference radius = radius", note_ko: "J2/C22 기준 반경 = radius" }
+      - { name: reference_radius, value: 521, unit: km, op: set, note: "J₂/C₂₂ reference radius = radius", note_ko: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 9.2, unit: h, op: set, note: "tidally locked (rotation = orbit)", note_ko: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.039, reference_radius_km: 900, op: set, note: "= 10/3·C̄₂₂, φ0.80" }
