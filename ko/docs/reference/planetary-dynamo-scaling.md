@@ -13,6 +13,29 @@
 [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) 에
 자체 canonical 거처를 둔다.
 
+## 계약 — `dynamo_giant`
+
+**Returns** — `b_pol` [µT] · `b_eq` [µT] · `dipole_moment` [×Earth]
+**Needs** — `mass_mj` [M_J] · `radius_rj` [R_jup] · `age_gyr` [Gyr] · `body_class` [—]
+**갈리는 축** — 질량(0.3 M_J 미만 서브새턴 / 0.3~13 거대행성 / 13~70 갈색왜성 /
+70 초과 항성), 나이(0.2 Gyr 이상), 그리고 암석 분기에서만 `body_class`.
+**등급** — calibrated.
+
+| 레짐 | 조건 | 이 레시피가 하는 일 | 등급 |
+|---|---|---|---|
+| 거대행성 | 0.3 ≤ M ≤ 13 M_J, 나이 ≥ 0.2 Gyr | 냉각 트랙에서 B를 도출 | calibrated |
+| 서브새턴 | M < 0.3 M_J | 거절 — 헬륨 강우가 전도영역을 성층화하고, RC10이 명시적으로 제외 | — |
+| 갈색왜성 | 13 < M ≤ 70 M_J | 거절 — L(M, 나이) 트랙이 필요한데 이 문서가 주지 않는다 | — |
+| 암석체 | `body_class = rocky` | 거절 — [rocky-planet-dynamo-methodology.md](rocky-planet-dynamo-methodology.md) 참조 | — |
+| 항성 | M > 70 M_J | 거절 — 이런 종류의 다이나모가 아니다 | — |
+| 보정 이전 | 나이 < 0.2 Gyr | 거절 — 보정된 트랙 아래다 | — |
+
+**범위 밖은 오류가 아니라 반환값입니다.** 위 각 행이 이유를 달고 돌아오므로, 도출할 수
+없는 천체는 외삽되는 대신 왜 안 되는지를 말합니다.
+
+이 블록은 코드와 대조됩니다. `engine/check_contracts.py` 가 여기 선언한 것과
+`dynamo_giant` 가 실행 시점에 실제로 먹고 내는 것을 맞춰보므로, 둘이 어긋날 수 없습니다.
+
 ## 법칙
 
 Christensen, Holzwarth & Reiners 2009 (Nature 457, 167, [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C))

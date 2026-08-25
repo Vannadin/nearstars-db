@@ -12,6 +12,30 @@ This is the canonical home for the giant/substellar dynamo method; the rocky-pla
 field method (RM22 = Rodríguez-Mozos & Moya 2022, `2203.01065`) has its own canonical
 home in [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md).
 
+## Contract — `dynamo_giant`
+
+**Returns** — `b_pol` [µT] · `b_eq` [µT] · `dipole_moment` [×Earth]
+**Needs** — `mass_mj` [M_J] · `radius_rj` [R_jup] · `age_gyr` [Gyr] · `body_class` [—]
+**Discriminating keys** — mass (< 0.3 M_J sub-Saturn / 0.3–13 M_J giant / 13–70 M_J brown
+dwarf / > 70 M_J stellar), age (≥ 0.2 Gyr), `body_class` for the rocky case only.
+**Grade** — calibrated.
+
+| regime | condition | what this recipe does | grade |
+|---|---|---|---|
+| giant | 0.3 ≤ M ≤ 13 M_J, age ≥ 0.2 Gyr | derives B from the cooling track | calibrated |
+| sub-Saturn | M < 0.3 M_J | declines — helium rain stratifies the conducting region, and RC10 excludes it | — |
+| brown dwarf | 13 < M ≤ 70 M_J | declines — needs an L(M, age) track this document does not supply | — |
+| rocky | `body_class = rocky` | declines — see [rocky-planet-dynamo-methodology.md](rocky-planet-dynamo-methodology.md) | — |
+| stellar | M > 70 M_J | declines — not a dynamo of this kind | — |
+| pre-calibration | age < 0.2 Gyr | declines — below the calibrated track | — |
+
+**Out of domain is a returned value, not an error.** Each row above comes back with its
+reason attached, so a body that cannot be derived says why rather than being extrapolated.
+
+This block is checked against the code: `engine/check_contracts.py` compares what is
+declared here with what `dynamo_giant` actually consumes and produces at run time, so the
+two cannot drift.
+
 ## The law
 
 Christensen, Holzwarth & Reiners 2009 (Nature 457, 167, [`2009Natur.457..167C`](https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C))
