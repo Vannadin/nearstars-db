@@ -11,13 +11,14 @@
 
 그래서 넷 중 셋은 값을 내지 않고 **거절한다**.
 
-* 암석  — Zeng 격자를 거듭제곱으로 근사해 값을 낸다. 여기만 확정값이다.
+* 암석  — interior_layers 가 층을 적분해서 낸다. 여기만 확정값이다.
 * 밸리  — 애매하다고 밝히고 양쪽을 함께 돌려준다. 하나로 고르지 않는다.
 * 서브넵튠 — 반지름이 질량의 나쁜 대리라 확률 관계를 써야 한다. 여기서 안 낸다.
 * 거대행성 — 전자축퇴라 R 이 질량에 거의 무관하다. 범위를 주되 거듭제곱은 금지.
 """
 from __future__ import annotations
 
+from interior import COMPOSITIONS, solve
 from payload import Result, out_of_domain
 
 RECIPE = "mass-radius-relation-methodology"
@@ -31,24 +32,20 @@ REFS = (
     "2007ApJ...659.1661F",      # Fortney+ 2007 — 휘발성·거대행성 격자
 )
 
-# 암석 거듭제곱. 문서 §3 — Zeng 격자를 M ≲ 8 M⊕ 에서 몇 % 안으로 근사한다.
-ROCKY_EXPONENT = 0.27
-
-# 조성별 반지름 정규화.
+# 조성 이름은 이제 **재료 배정** 이지 반지름 배율이 아니다. 어떤 질량분율이 어떤
+# 재료로 가는지는 interior.COMPOSITIONS 한 곳에만 있고, 반지름은 그 층을 적분해서
+# 나온다.
 #
-# ⚠ 이 표는 내부 구조를 대신하고 있다. 클래스 표(NMoI·k2/Q 등)와 같은 물건이 새
-# 자리에 생긴 것이고, 같은 이유로 임시다. earth_like 만 지구 정규화라 정의상 1.0 이고,
-# 나머지 셋은 문서 §2 의 *산문 순서* ("밀한 재료일수록 작다", "순철 ≳ 1.5 ρ⊕") 를
-# 숫자로 옮긴 것이다 — 층을 풀어서 나온 값이 아니다.
-#
-# 그래서 earth_like 밖의 배정과 density_gate 는 grade 를 analog 로 내린다. 제대로
-# 하려면 발표된 곡선(Zeng/Seager)을 데이터로 들여오거나 interior_structure 가
-# 층을 풀어야 한다. chain.yaml 에 그 엣지를 gap 으로 적어뒀다.
-COMPOSITION = {
-    "iron":       (0.874, "순철 (초수성급)"),   # 문서 §2 표의 "≳ 1.5 ρ⊕" 에서: (1/1.5)^(1/3)
-    "earth_like": (1.00, "지구식 암석 (철 약 1/3)"),
-    "silicate":   (1.12, "순규산염 (철 결핍, 달·화성식)"),
-    "water":      (1.28, "물·얼음 세계 (H₂O 50 %)"),
+# 2026-08-25 까지 여기에는 조성별 반지름 배율표가 있었다. earth_like 만 정의상 1.0
+# 이었고 나머지 셋은 방법론 문서 §2 의 *산문 순서* ("밀한 재료일수록 작다", "순철
+# ≳ 1.5 ρ⊕") 를 숫자로 옮긴 것이었다 — 층을 풀어서 나온 값이 아니었다. 그래서
+# density_gate 의 순철 문턱이 문서 §7 의 기각 사례를 재현하지 못했다. 표가 사라지고
+# 순철 곡선이 실제 Fe(ε) 상태방정식의 적분이 되면서 그 문제도 같이 사라진다.
+COMPOSITION_KO = {
+    "iron":       "순철 (초수성급)",
+    "earth_like": "지구식 암석 (철 약 1/3)",
+    "silicate":   "순규산염 (철 결핍, 달·화성식)",
+    "water":      "물·얼음 세계 (H₂O 50 %)",
 }
 
 # 반지름 밸리. 문서 §5 — Fulton 갭은 ~1.5-2.0 R⊕, 중심은 ~1.8 R⊕ 부근.
@@ -71,11 +68,11 @@ def assign(mass_earth: float, composition: str = "earth_like") -> Result:
     """Assign a radius from a mass. 레짐 밖은 거절한다."""
     inputs = {"mass_earth": mass_earth, "composition": composition}
 
-    if composition not in COMPOSITION:
+    if composition not in COMPOSITIONS:
         return out_of_domain(
             RECIPE, VERSION,
             f"'{composition}' 는 이 문서가 다루는 조성이 아니다. "
-            f"쓸 수 있는 것: {', '.join(COMPOSITION)}",
+            f"쓸 수 있는 것: {', '.join(COMPOSITIONS)}",
             inputs=inputs, refs=REFS)
 
     if mass_earth <= 0:
@@ -92,10 +89,17 @@ def assign(mass_earth: float, composition: str = "earth_like") -> Result:
             "젊거나 강한 복사를 받으면 위로 올린다.",
             inputs=inputs, refs=REFS)
 
-    # 암석 격자를 먼저 읽어야 밸리 판정을 할 수 있다. 문서 §5 는 이 게이트가
-    # §3 의 레짐 선택보다 *먼저* 돈다고 못박는다.
-    scale, comp_ko = COMPOSITION[composition]
-    rocky_radius = scale * mass_earth ** ROCKY_EXPONENT
+    # 암석 반지름을 먼저 읽어야 밸리 판정을 할 수 있다. 문서 §5 는 이 게이트가
+    # §3 의 레짐 선택보다 *먼저* 돈다고 못박는다. 이제 그 반지름은 거듭제곱 근사가
+    # 아니라 층 적분의 결과다.
+    comp_ko = COMPOSITION_KO[composition]
+    structure = solve(mass_earth, composition=composition)
+    if not structure.applicable:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"층 적분이 이 천체를 거절했다 — {structure.reason}",
+            inputs=inputs, refs=REFS)
+    rocky_radius = structure.values["radius"]
 
     if mass_earth > ROCKY_MASS_MAX:
         return out_of_domain(
@@ -136,16 +140,14 @@ def assign(mass_earth: float, composition: str = "earth_like") -> Result:
         recipe=RECIPE, version=VERSION, regime="rocky",
         reason=(f"{mass_earth:.2f} M⊕ 는 암석 영역(≲ {ROCKY_MASS_MAX} M⊕)이고 "
                 f"반지름 {rocky_radius:.2f} R⊕ 가 밸리({VALLEY_LO} R⊕) 아래다. "
-                f"{comp_ko} 곡선을 R ∝ M^{ROCKY_EXPONENT} 로 읽었다 — "
-                "작은 지수는 자기압축의 흔적이다."),
-        grade="calibrated" if composition == "earth_like" else "analog",
+                f"{comp_ko} 의 층을 정수압 평형으로 적분해서 나온 반지름이다 — "
+                "자기압축이 그 안에 들어 있다."),
+        grade="calibrated",
         inputs=inputs,
         values={"radius": rocky_radius, "density": density},
         units={"radius": "R_earth", "density": "g/cm3"},
         refs=REFS,
-        notes=() if composition == "earth_like" else (
-            f"'{composition}' 배율은 문서의 산문 순서에서 유도한 근사다. "
-            "층을 푼 값이 아니므로 interior_structure 가 생기면 교체 대상이다.",),
+        notes=(structure.notes[0],),
     )
 
 
@@ -155,15 +157,17 @@ def density_gate(mass_earth: float, radius_earth: float) -> Result:
     질량·반지름·중력이 다 지정되면 셋 중 둘만 자유롭다. 순철 곡선보다 밀하면
     수성보다 철이 많다는 뜻이고, 충돌로 벗겨진 파편이 아닌 한 물리적이지 않다.
 
-    ⚠ 문턱이 근사다. 순철 곡선의 *절대 위치* 를 알아야 하는데 지금은 COMPOSITION
-    표의 유도된 배율에 서 있다. 그래서 grade 는 analog 이고, 문서 §7 의 A b III
-    기각(1.2 ρ⊕ 가 순철보다 밀하다)이 이 게이트에서 재현되지 않는다 — 같은
-    반지름에서 이 곡선은 1.53 ρ⊕ 를 준다. 결론이 옳을 수는 있어도 적힌 이유는
-    확인이 필요하다.
+    순철 곡선의 절대 위치는 이제 Fe(ε) 상태방정식을 적분해서 나온다 (Seager+ 2007
+    Table 1 의 Vinet 적합). 문턱이 유도된 배율 위에 서 있던 동안에는 문서 §7 의
+    기각 사례가 재현되지 않았는데, 곡선이 실물이 되면서 그 자리가 정리됐다.
     """
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth}
-    iron_scale = COMPOSITION["iron"][0]
-    iron_radius = iron_scale * mass_earth ** ROCKY_EXPONENT
+    iron = solve(mass_earth, composition="iron")
+    if not iron.applicable:
+        return out_of_domain(RECIPE, VERSION,
+                             f"순철 곡선을 못 그렸다 — {iron.reason}",
+                             inputs=inputs, refs=REFS)
+    iron_radius = iron.values["radius"]
     density = _density(mass_earth, radius_earth)
     rho_rel = density / EARTH_DENSITY_GCC
 
@@ -180,7 +184,7 @@ def density_gate(mass_earth: float, radius_earth: float) -> Result:
         recipe=RECIPE, version=VERSION, regime="density_gate",
         reason=(f"밀도 {rho_rel:.2f} ρ⊕ 는 조성 그물 안이다 "
                 f"(순철 한계 {iron_radius:.3f} R⊕ 보다 크다)."),
-        grade="analog",
+        grade="calibrated",
         inputs=inputs,
         values={"density": density},
         units={"density": "g/cm3"},

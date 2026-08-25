@@ -154,11 +154,16 @@ ambition. Neither bound pushes on the other.
 These rules make errors *detectable*. They do not make the derivations right, and they add
 real cost: every new value needs a binding, a citation, and usually a test.
 
-Two structural gaps are open and known. Interior structure is not yet derived — four
-recipes each assume one privately, and class lookup tables stand in for it. And nineteen
-shipped fields have no node that produces them at all, mostly stellar appearance and
-activity, plus two (`color`, `ring_color`) that have methodology documents but no entry in
-the graph.
+One of the two structural gaps closed on 2026-08-25: interior structure is now derived
+rather than assumed. The layer densities that four recipes each used to assume privately
+are outputs of an integration, and the two lookup tables that stood in for them are gone.
+What the solver cannot do it now **declines by naming the mechanism**, which is the part
+that makes the remaining gaps actionable: three of the Alpha Centauri moons come back
+"needs the equation of state for ices III, V and VI", not "too low density".
+
+The other gap is still open. Nineteen shipped fields have no node that produces them at
+all, mostly stellar appearance and activity, plus two (`color`, `ring_color`) that have
+methodology documents but no entry in the graph.
 
 ## Related
 

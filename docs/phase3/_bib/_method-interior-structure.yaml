@@ -1,0 +1,30 @@
+planet: (methodology) interior structure
+slug: _method-interior-structure
+sources:
+  ads: queried by hand (citation_count desc, 2026-08-25)
+papers:
+- arxiv_id: '0707.2895'
+  ads_bibcode: 2007ApJ...669.1279S
+  title: Mass-Radius Relationships for Solid Exoplanets
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1512.08827'
+  ads_bibcode: 2016ApJ...819..127Z
+  title: Mass-Radius Relation for Rocky Planets Based on PREM
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1301.0818'
+  ads_bibcode: 2013PASP..125..227Z
+  title: A Detailed Model Grid for Solid Planets from 0.1 through 100 Earth Masses
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1805.10530'
+  ads_bibcode: 2018Icar..313...61H
+  title: A new ab initio equation of state of hcp-Fe
+  status: fetched
+  fetch_error: null
+- arxiv_id: '2307.06508'
+  ads_bibcode: 2023ApJ...953...57K
+  title: Where are the Water Worlds
+  status: fetched
+  fetch_error: null

@@ -24,7 +24,10 @@ declared inputs  ──▶  recipes  ──▶  physical state  ──▶  (adap
 | `registry.py` | binds a node name to the function that computes it. |
 | `state.py` | one body's `BodyState`: declared inputs plus recorded `Result`s. |
 | `run.py` | executes the graph over a body, then compares against already-shipped values. |
-| `dynamo.py` | the one implemented recipe (of 28). |
+| `dynamo.py` | the giant-dynamo recipe. |
+| `eos.py` | equations of state, one per material, every constant carrying its source. |
+| `interior.py` | the interior solver: shoots on central pressure, integrates the layers. |
+| `mass_radius.py` | mass to radius and density, reading its radius from `interior.py`. |
 | `bodies/*.yaml` | declared inputs per body, plus `expected` — the shipped values the engine must reproduce. |
 | `build_graph_page.py` | generates `chain-explorer.html` from the two declarations. |
 
@@ -53,9 +56,10 @@ declaration at all. The six names are still worth keeping — each names a physi
 — but the runner iterates the core as one block, because sub-loops trade values with each
 other and iterating them separately does not converge.
 
-`interior_structure` is declared in two of those cycles but is not yet in the core: its
-edges are still `status: gap`. It joins when they land, which is one more reason that node
-is the destination.
+`interior_structure` was declared in two of those cycles but sat outside the core, because
+its edges were still `status: gap`. On 2026-08-25 the layer integration landed and started
+producing the radius, which turned the edge into `requires`, and the node joined exactly as
+predicted. The core is sixteen nodes now.
 
 **Class tables are not ordering constraints.** A lookup needs its key, not a turn in the
 sequence. Counting them as computation steps invents loops that are not there — with them
@@ -78,6 +82,17 @@ consulted whenever asked.
 
 ## Where it stands
 
-One recipe of 28. `dynamo_giant` reproduces the shipped Alpha Centauri A b field to 0.1 %
-on the polar component and 1.4 % on the equatorial — the first time a board value has been
-regenerated rather than trusted.
+Three recipes of 28.
+
+`dynamo_giant` reproduces the shipped Alpha Centauri A b field to 0.1 % on the polar
+component and 1.4 % on the equatorial, the first time a board value had been regenerated
+rather than trusted.
+
+`interior_layers` integrates hydrostatic equilibrium with published equations of state and
+reproduces Earth's C/MR² to 0.3 % and its radius to 0.3 % from mass and core mass fraction
+alone. The uniform-layer model it replaced was 4.8 % out on Earth, and it needed layer
+densities handed to it for every body except Earth. Two lookup tables went away with it:
+`LAYER_DENSITY` here and `COMPOSITION` in `mass_radius.py`.
+
+`mass_radius_relation` now reads its rocky radius, and its pure-iron density gate, off that
+integration instead of off a scaling table derived from prose.

@@ -55,23 +55,35 @@ classification, each with a stated composition assumption.
 **Needs** — `mass_earth` [M_earth] · `composition` [—]
 **Discriminating keys** — mass (≲ 8 M⊕ rocky / > 8 M⊕ volatile / ≥ 0.1 M_J degenerate),
 the rocky radius against the valley (1.5–1.8 R⊕), and composition.
-**Grade** — calibrated for `earth_like`; analog otherwise, and for the density gate.
+**Grade** — calibrated, for every composition and for the density gate. The radius comes
+from an integrated interior rather than from a scaling table.
 
 | regime | condition | what this recipe does | grade |
 |---|---|---|---|
-| rocky | R < 1.5 R⊕ from R ∝ M^0.27 | assigns radius and density off the Earth-normalised grid | calibrated |
+| rocky | R < 1.5 R⊕ from the integrated interior | assigns radius and density from the solved layer structure | calibrated |
 | radius valley | 1.5 ≤ R < 1.8 R⊕ | returns the reading **and says it is ambiguous** — both rocky and volatile are live | judgment |
 | above the valley | R ≥ 1.8 R⊕ | declines — statistically not rocky since Rogers 2015; radius is a poor proxy for mass, so the probabilistic relation applies | — |
 | beyond the fit | M > 8 M⊕ | declines — the Zeng approximation ends | — |
 | giant | M ≥ 0.1 M_J | declines — electron degeneracy makes R flat then decreasing; assign the 1.0–1.2 R_J range, never a power law | — |
 
-**Known limitation.** The per-composition scale factors are derived from the prose
-ordering in §2, not from solving layers, so everything except `earth_like` — and the
-density gate's threshold — is an approximation standing in for interior structure. The
-gate therefore does **not** reproduce §7's rejection of the A b III canon: at that radius
-this curve puts the pure-iron limit at 1.53 ρ⊕, so the 1.2 ρ⊕ the canon implied sits inside
-the composition family. The rejection may still be right; the reason recorded for it needs
-checking. Tracked as a `gap` edge from `interior_structure` in `chain.yaml`.
+**Where the radius comes from (changed 2026-08-25).** Until this revision the recipe held
+its own table of per-composition radius scale factors, derived from the prose ordering in
+§2 rather than from solving layers. Everything except `earth_like`, and the density gate's
+threshold with it, was therefore an approximation standing in for interior structure. The
+table is gone. `mass_radius_relation` now calls
+[`interior_layers`](interior-structure-methodology.md), which integrates hydrostatic
+equilibrium with published equations of state, and reads the radius off the solved
+structure. The pure-iron curve the density gate needs is likewise an integration of
+Seager+ 2007's Fe(ε) fit.
+
+**What that corrected, and what it did not.** The gate still does **not** reproduce §7's
+rejection of the A b III canon, and now the reason is grounded rather than suspected. With
+a real Fe(ε) curve, the pure-iron limit at that mass is about **2.1 ρ⊕**, not the 1.53 ρ⊕
+the scaling table implied and not the ~1.5 ρ⊕ §2 quotes from zero-pressure densities. The
+canon's ~1.2 ρ⊕ sits well inside the composition family, so **"rejected as a super-Mercury"
+was the wrong reason**. The rejection itself may still stand on the surface-gravity target
+that Option B was solving for; what fails is the density argument recorded for it. See
+§6 and §7.
 
 ## 1. Why One of M, R Is Almost Always Missing
 
@@ -120,11 +132,18 @@ straight (denser material → smaller radius):
 
 | Composition | Relative radius at fixed M | Bulk density vs Earth |
 |---|---|---|
-| Pure iron (super-Mercury) | smallest | highest (≳ 1.5 ρ⊕) |
+| Pure iron (super-Mercury) | smallest | highest (≈ 2.0–2.6 ρ⊕ over 0.6–2.5 M⊕) |
 | Earth-like rock (≈ 1/3 Fe) | reference | ≈ 1 ρ⊕ (5.5 g/cm³) |
 | Pure silicate (Moon/Mars-like, Fe-poor) | larger | lower (~0.7 ρ⊕) |
 | Water/ice world (50 % H₂O) | larger still | ~0.5 ρ⊕ |
 | H/He envelope (sub-Neptune → giant) | much larger | ≪ Earth |
+
+The iron row is worth stating carefully, because it used to be quoted as "≳ 1.5 ρ⊕" and
+that number is the ratio of the **zero-pressure** densities of iron and Earth
+(7870 / 5513 = 1.43). A pure-iron *planet* is compressed, so its bulk density runs far
+higher and grows with mass: integrating Seager+ 2007's Fe(ε) fit gives 2.04 ρ⊕ at
+0.65 M⊕, 2.17 ρ⊕ at 1 M⊕ and 2.56 ρ⊕ at 2.5 M⊕. The density gate in §6 uses the
+integrated curve, not the zero-pressure ratio.
 
 For the volatile-rich and giant regimes the canonical grid is **Fortney+ 2007**,
 which spans **five orders of magnitude in mass** with rock/ice cores plus H/He
@@ -145,6 +164,10 @@ Across the **rocky** regime the Zeng/Seager grids are well approximated by a pow
 law:
 
     R ∝ M^β,   β ≈ 0.27   (Earth-like composition, M ≲ 8 M⊕)
+
+This power law is a **description of the grid's shape**, useful for reasoning about it.
+The recipe no longer evaluates it: since 2026-08-25 the radius is integrated body by body,
+which is what lets the same code serve compositions the power law was never fitted for.
 
 The small exponent is the signature of self-compression: doubling the mass adds
 less than 21 % to the radius because the deep interior is squeezed to higher
@@ -276,7 +299,9 @@ gate that rejects the unphysical combination:
 The canonical NearStars case is the moon **"A b III"** (consistency-gate worked
 example, §7): a canon that implied a bulk density of **~1.2 ρ⊕** at its size was
 **rejected as a super-Mercury**: too iron-rich to be a physical body at that
-radius. Option B (fix surface gravity at 0.8 g and the radius, solve for mass)
+radius. **That reason does not survive the integrated curve.** Pure iron at 0.65 M⊕ is
+about 2.1 ρ⊕, so 1.2 ρ⊕ is an ordinary rocky density, not an impossible one, and the
+gate passes it. Option B (fix surface gravity at 0.8 g and the radius, solve for mass)
 gave **0.645 M⊕** and **~0.89 ρ⊕** (~4900 kg/m³), a realistic Mars-to-Earth rocky
 density. The density gate is what turned an arbitrary art number into a defensible
 rocky body.
@@ -300,12 +325,14 @@ radius valley, so **no H/He envelope** and a secondary atmosphere at most (feeds
 the atmosphere doc's Proxima b lake-world: g ≈ 10.5 m/s², H ≈ 7–8 km).
 
 **A b III: the density consistency gate (frame qualitatively).** A moon whose
-canon implied ρ ≈ 1.2 ρ⊕ at its radius. That density at that size lands **denser
-than the pure-iron curve** (a "super-Mercury," not a physical rocky moon), so it
-was **rejected**. Option B fixes g = 0.8 g and the radius, solving for mass
-M = 0.645 M⊕, which gives ρ ≈ 0.89 ρ⊕ (~4900 kg/m³), a realistic Mars↔Earth rocky
-body. (Decision lives on the Phase 4 board; the gate reasoning is what matters
-here.)
+canon implied ρ ≈ 1.2 ρ⊕ at its radius. The rejection was recorded as
+"**denser than the pure-iron curve**", a super-Mercury rather than a physical rocky
+moon. **The integrated curve does not support that reading** (2026-08-25): pure iron
+at 0.65 M⊕ is about 2.1 ρ⊕, so 1.2 ρ⊕ is an ordinary rocky density and the gate
+passes it. What still stands is Option B on its own terms, fixing g = 0.8 g and the
+radius and solving for mass M = 0.645 M⊕, which gives ρ ≈ 0.89 ρ⊕ (~4900 kg/m³), a
+realistic Mars↔Earth rocky body. (Decision lives on the Phase 4 board; the gate
+reasoning is what matters here, and one half of it turned out to be wrong.)
 
 **A sub-Neptune: the relation flattens into a band.** For a transiting ~2.5 R⊕
 body the classification gate says **not rocky** (above the valley). Reading a mass
@@ -381,7 +408,7 @@ exists), citation count (ADS, at survey time), and one line on what it contribut
 
 ## Related
 
-- [`interior-structure-methodology.md`](interior-structure-methodology.md): solves the layer geometry a radius implies, and is what should eventually replace the composition lookup here.
+- [`interior-structure-methodology.md`](interior-structure-methodology.md): integrates the layers this recipe reads its radius and its pure-iron gate off. It replaced the composition lookup that used to live here on 2026-08-25.
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the temperature
   `T` that, with the surface gravity `g` this doc assigns, sets the scale height in
   the atmosphere doc; rocky-vs-volatile classification (§5) decides which
