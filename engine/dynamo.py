@@ -138,3 +138,20 @@ def dipole_field(mass_mj: float, radius_rj: float, age_gyr: float,
         units={"b_pol": "µT", "b_eq": "µT", "dipole_moment": "×Earth"},
         refs=REFS,
     )
+
+
+# ── 그래프에 붙이기 ─────────────────────────────────────────────────────
+# dipole_field 는 순수 함수로 남긴다 — 테스트와 표 생성기가 그 형태로 부른다.
+# 러너가 부르는 얇은 껍질만 여기서 등록한다. 상태에서 무엇을 꺼내는지가
+# 이 한 곳에만 적히므로, 입력 이름이 바뀌어도 고칠 자리가 하나다.
+from registry import recipe  # noqa: E402
+
+
+@recipe("dynamo_giant")
+def _from_state(state):
+    return dipole_field(
+        mass_mj=state["mass_mj"],
+        radius_rj=state["radius_rj"],
+        age_gyr=state["age_gyr"],
+        body_class=state.get("body_class", "giant"),
+    )

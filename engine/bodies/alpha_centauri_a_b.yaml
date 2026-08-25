@@ -1,0 +1,30 @@
+# Alpha Centauri A b (Polyphemus) — 엔진 입력. 선언된 것만 적고 도출값은 안 적는다.
+name: Alpha Centauri A b
+kind: planet
+parent: Alpha Centauri A
+
+# 측정치와 오너 결정. 여기 있는 것은 도출되지 않는다.
+inputs:
+  mass_mj: 0.3776          # 120 M⊕ / 317.8
+  radius_rj: 1.0
+  age_gyr: 5.3
+  body_class: giant
+  rotation_period_h: 10.35
+
+units:
+  mass_mj: M_J
+  radius_rj: R_jup
+  age_gyr: Gyr
+  rotation_period_h: h
+
+# 이미 출하된 값. 엔진은 이걸 읽지 않는다 — 재현해야 할 제약이다.
+# 어긋나면 엔진이 틀렸거나 보드가 틀렸다는 뜻이고, 둘 다 찾을 가치가 있다.
+expected:
+  b_eq:
+    value: 170
+    unit: uT
+    source: "phase4/alpha_centauri.yaml · magnetism.magnetic_field"
+  b_pol:
+    value: 345
+    unit: uT
+    source: "phase4/alpha_centauri.yaml · magnetism.magnetic_field"

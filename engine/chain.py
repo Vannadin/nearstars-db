@@ -16,6 +16,8 @@ from pathlib import Path
 
 import yaml
 
+import graph
+
 CHAIN = Path(__file__).resolve().parent / "chain.yaml"
 
 
@@ -48,37 +50,20 @@ def check(g: dict) -> int:
             if m not in nodes:
                 errors.append(f"cycle {c['id']}: '{m}' 는 nodes 에 없다")
 
-    # requires 만으로 이루어진 순환은 선언돼 있어야 한다.
-    #
-    # scope != self 인 엣지는 제외한다. 부모의 값을 소비하는 엣지는 *다른 천체*
-    # 를 거쳐가므로 한 천체 안의 순환이 아니다. 이걸 빼지 않으면 위성이 부모의
-    # T_eff 를 먹는 것이 자기 자신과의 고리로 잘못 잡힌다.
-    req: dict[str, set[str]] = {n: set() for n in nodes}
-    for e in edges:
-        if e.get("kind") != "requires" or e.get("scope", "self") != "self":
-            continue
-        if e["from"] in nodes and e["to"] in nodes:
-            req[e["to"]].add(e["from"])
+    # 순환은 requires 와 selects 를 함께 따라가야 보인다. 예전에는 requires 만
+    # 봤고, 그래서 selects 를 지나는 고리를 하나도 못 잡았다 — 러너를 만들자
+    # 위상정렬이 막히면서 드러났다. 실제 모양은 선언된 여섯 개가 아니라
+    # 15노드짜리 덩어리 하나였다. 규칙은 graph.py 에만 둔다.
+    for comp in graph.undeclared(g):
+        errors.append("선언되지 않은 순환군: " + ", ".join(comp))
 
-    seen: set[str] = set()
-    stack: list[str] = []
-
-    def walk(n: str) -> None:
-        if n in stack:
-            loop = stack[stack.index(n):] + [n]
-            if not set(loop) <= declared:
-                errors.append("선언되지 않은 requires 순환: " + " -> ".join(loop))
-            return
-        if n in seen:
-            return
-        seen.add(n)
-        stack.append(n)
-        for p in req[n]:
-            walk(p)
-        stack.pop()
-
-    for n in nodes:
-        walk(n)
+    core = graph.declared_core(g)
+    real = {n for c in graph.components(g) for n in c}
+    antic = (g.get("coupled_core") or {}).get("anticipated") or []
+    for n in sorted(core - real):
+        if n not in antic:
+            warnings.append(f"coupled_core '{n}' 는 실제 순환 안에 없다 "
+                            "(엣지가 아직 gap 이면 anticipated 로 옮길 것)")
 
     for name, nd in nodes.items():
         if nd.get("kind") == "computed" and not nd.get("recipe"):
@@ -93,7 +78,8 @@ def check(g: dict) -> int:
         n_sel = sum(1 for e in edges if e["kind"] == "selects")
         n_inf = sum(1 for e in edges if e["kind"] == "influences")
         print(f"  [PASS] 노드 {len(nodes)} · 엣지 {len(edges)} "
-              f"(selects {n_sel}, influences {n_inf}) · 순환 {len(g.get('cycles', []))} 선언됨")
+              f"(selects {n_sel}, influences {n_inf}) · 순환군 {len(graph.components(g))} "
+              f"(코어 {len(graph.declared_core(g))}노드, 이름 붙인 부분 고리 {len(g.get('cycles', []))})")
     return 1 if errors else 0
 
 

@@ -426,3 +426,26 @@ ordering_rules:
   - 부모가 완전히 풀리기 전에는 위성을 풀 수 없다. scope=parent 엣지가 네 건 확인됐다.
   - 별이 행성보다 먼저다.
   - 클래스 표 상수(NMoI · k2/Q · omega0 · T_exo)는 도출값이 아니다. 그렇게 표시해야 한다.
+
+# 위 여섯은 물리적으로 왜 얽히는지를 이름 붙인 것이고, 실제로는 **하나의 덩어리**다.
+# requires 와 selects 를 함께 따라가면 강결합 성분이 하나 나오고 여섯이 전부 그
+# 부분 고리다. 여섯으로 쪼개 적은 것이 결합의 크기를 가리고 있었다 — 검증기가
+# requires 만 보느라 못 잡았고, 러너를 만들자 위상정렬이 막히면서 드러났다.
+#
+# body_class·moon_energy_budget·spin_axis_inclination 은 어느 선언에도 없었다.
+# interior_structure 는 반대로 선언돼 있지만 아직 덩어리 안에 없다 — 그쪽 엣지가
+# status: gap 이라 아직 안 이어져 있다. 생기는 순간 합류한다.
+coupled_core:
+  members: [atmosphere_choice, body_class, body_figure, cassini_state, greenhouse,
+            heat_transport_mode, ice_stability, internal_heat_nontidal,
+            mass_radius_relation, moon_energy_budget, spin_axis_inclination,
+            surface_albedo, t_eq_stellar, tidal_heating, tidal_locking]
+  anticipated: [interior_structure]
+  resolution: >
+    클래스 기본값으로 시드하고 덩어리 전체를 함께 반복한다. 부분 고리마다 따로
+    두 번 도는 것이 아니라 한 덩어리로 돈다 — 부분 고리끼리 값을 주고받으므로
+    따로 돌리면 수렴을 보장할 수 없다. 값이 안 움직이면 멈춘다.
+  note: >
+    클래스 표(NMoI·k2/Q·omega0·T_exo)는 이 계산에서 제외한다. 조회는 순서를
+    요구하지 않는다 — 키만 있으면 즉시 나온다. 표를 계산 단계로 세면 없는 고리가
+    생긴다(그렇게 세면 선언 안 된 순환이 12개로 늘어난다).
