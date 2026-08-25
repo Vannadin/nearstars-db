@@ -117,7 +117,19 @@ nodes:
   stellar_wind:       {kind: computed, outputs: [n_sw, v_sw, p_ram]}
   magnetosphere_geometry: {kind: computed, recipe: planetary-magnetosphere-geometry-methodology, outputs: [r_mp, belt_extent, belt_intensity]}
   tidal_heating:      {kind: computed, recipe: tidal-heating-methodology, outputs: [power, surface_flux]}
-  heat_transport_mode: {kind: computed, recipe: tidal-heating-methodology, outputs: [mode, resurfacing_rate, day_night_contrast]}
+  heat_transport_mode:
+    kind: computed
+    recipe: tidal-heating-methodology
+    outputs: [mode, resurfacing_rate]
+    note: 내부 열이 표면까지 어떻게 나오는가. 별빛 열의 재분배는 day_night_contrast 다.
+  day_night_contrast:
+    kind: computed
+    recipe: tidally-locked-temperature-methodology
+    outputs: [contrast, substellar_ceiling]
+    note: >
+      별빛 열을 대기가 낮밤으로 얼마나 재분배하는가. 2026-08-25 까지
+      heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고
+      이건 밖에서 들어온 열이다. "수송" 이라는 말을 공유해 합쳐져 있었다.
   global_fluid_layer: {kind: computed, outputs: [present]}
 
   # ── 4층. 열·대기 ───────────────────────────────────────────────
@@ -213,8 +225,16 @@ edges:
   - {from: internal_heat_nontidal, to: heat_transport_mode, kind: requires, via: geotherm, ref: "tidal-heating-methodology.md:266"}
   - {from: global_fluid_layer, to: heat_transport_mode, kind: selects, ref: "tidal-heating-methodology.md:332"}
   - {from: t_eq_stellar, to: heat_transport_mode, kind: requires, ref: "tidal-heating-methodology.md:341"}
-  - {from: atmosphere_choice, to: heat_transport_mode, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md:144"}
-  - {from: omega0_class_table, to: heat_transport_mode, kind: selects, via: circulation_regime, ref: "tidally-locked-temperature-methodology.md:150"}
+  - {from: atmosphere_choice, to: day_night_contrast, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md:117"}
+  - {from: omega0_class_table, to: day_night_contrast, kind: selects, via: circulation_regime, ref: "tidally-locked-temperature-methodology.md:117"}
+  - {from: t_eq_stellar, to: day_night_contrast, kind: requires, ref: "tidally-locked-temperature-methodology.md:61"}
+  - from: tidal_locking
+    to: day_night_contrast
+    kind: selects
+    note: >
+      이 문서는 동기자전 암석행성만 다룬다. 비동기 자전체에서는 대비를 묻지 않고
+      T_eq 로 끝난다 — 그래서 값을 바꾸는 게 아니라 레시피를 쓸지 말지를 고른다.
+    ref: "tidally-locked-temperature-methodology.md:29"
   - {from: tidal_heating, to: ice_stability, kind: requires, ref: "tidal-heating-methodology.md:717"}
   - {from: tidal_heating, to: crater_state, kind: requires, ref: "tidal-heating-methodology.md:720"}
   - from: tidal_heating
@@ -384,7 +404,7 @@ edges:
   - {from: composition_intent, to: surface_dose, kind: excludes, ref: "surface-radiation-dose-methodology.md:89", note: 조성은 거의 상관없다. 기둥밀도가 정한다.}
   - {from: internal_heat_nontidal, to: t_eff_body, kind: excludes, scope: self, ref: "internal-heat-luminosity-methodology.md:308", note: 암석체에서는 0.001 K 보정이라 표면온도에 무의미하다. 거대행성 엣지와 구분할 것.}
   - {from: star_physical, to: internal_heat_nontidal, kind: excludes, ref: "internal-heat-luminosity-methodology.md:118", note: 나이와 질량이 정하지 호스트가 정하지 않는다.}
-  - {from: orbit_elements, to: heat_transport_mode, kind: excludes, ref: "tidally-locked-temperature-methodology.md:47", note: 낮밤 대비는 대기가 정하지 궤도가 정하지 않는다.}
+  - {from: orbit_elements, to: day_night_contrast, kind: excludes, ref: "tidally-locked-temperature-methodology.md:47", note: 낮밤 대비는 대기가 정하지 궤도가 정하지 않는다.}
   - {from: heat_transport_mode, to: surface_albedo, kind: excludes, ref: "surface-color-albedo-methodology.md:191", note: "화산 재표면화 → 알베도는 어느 문서도 서술하지 않는다. 가장 가까운 건 충돌·풍화 노출연령이고 그건 다른 것이다."}
   - {from: cassini_state, to: spin_axis_inclination, kind: excludes, ref: "cassini-state-obliquity-methodology.md:203", note: 조석 감쇠된 것과 아닌 것. 교차적용 금지.}
 

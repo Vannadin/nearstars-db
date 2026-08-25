@@ -272,7 +272,7 @@ fields:
   surface_temperature:
     produced_by: [greenhouse, t_eq_stellar, moon_energy_budget]
     derived_from: [temperature, greenhouse]
-    note: T_surf = T_eq + dT_gh. 주야 대비는 heat_transport_mode 쪽.
+    note: T_surf = T_eq + dT_gh. 주야 대비는 day_night_contrast 쪽(2026-08-25 분리).
   greenhouse: {produced_by: [greenhouse], bundled: false}
   pressure:   {produced_by: [atmosphere_choice], bundled: false}
   composition:

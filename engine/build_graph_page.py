@@ -40,7 +40,7 @@ LABELS = {
     "cassini_state": "자전축 기울기", "spin_axis_inclination": "자전축 방향",
     "dynamo_giant": "자기장 (거대행성)", "dynamo_rocky": "자기장 (암석)",
     "stellar_wind": "항성풍", "magnetosphere_geometry": "자기권 · 방사선대",
-    "tidal_heating": "조석 가열", "heat_transport_mode": "열 수송 방식",
+    "tidal_heating": "조석 가열", "heat_transport_mode": "열 수송 방식", "day_night_contrast": "낮밤 대비",
     "global_fluid_layer": "전 지구 유체층",
     "t_eq_stellar": "평형 온도", "moon_energy_budget": "위성 에너지수지",
     "t_eff_body": "유효 온도", "atmospheric_escape": "대기 탈출",
@@ -75,6 +75,7 @@ LAYER = {
     4: ["t_eq_stellar", "moon_energy_budget", "t_eff_body",
         "atmospheric_escape", "atmosphere_choice", "greenhouse"],
     5: ["ice_stability", "surface_albedo", "crater_state", "surface_dose",
+        "day_night_contrast",
         "surface_uv", "atmosphere_reflected_color", "hapke_shader_values"],
 }
 LAYER_KO = {0: "먼저 정해지는 것", 1: "어떤 천체인가", 2: "속은 어떤가",
