@@ -73,6 +73,24 @@ ROSTER = [
      "포획 KBO 위성 — 보드가 얼음을 배제하지 않는다"),
 ]
 
+# 태양계 얼음 위성. **발표된** C/MR² 를 재현하는지 보는 자리이고, 새로 들어온
+# III·V·VI 이 수렴한 해 안에서 실제로 쓰이는지 확인하는 자리다 — Ganymede 의 얼음 기둥
+# 바닥은 1.5 GPa 로 얼음 VI 구간 한가운데다.
+#
+# 다섯 중 **Ganymede 만 판정선** 이다. 나머지 넷은 이 레시피가 자유 분율 하나만 푸는
+# 2층 구조라서 못 맞히는 천체들이고, 그 사실 자체가 이 표의 내용이다. C/MR² 값은 전부
+# ADS 전문에서 확인했다.
+#
+# (이름, 질량 kg, 반지름 km, 발표 C/MR², 출처, 판정선인가)
+ICY_ANCHORS = [
+    ("Ganymede",  1.4819e23, 2634.1, 0.3115,
+     "Schubert+ 2004 (Anderson+ 1996)", True),
+    ("Callisto",  1.0759e23, 2410.3, 0.3549, "Anderson+ 2001", False),
+    ("Titan",     1.3452728e23, 2575.5, 0.3414, "Iess+ 2010 (Cassini)", False),
+    ("Europa",    4.7998e22, 1560.8, 0.346,  "Anderson+ 1998", False),
+    ("Enceladus", 1.0802e20,  252.1, 0.335,  "Iess+ 2014 (Cassini)", False),
+]
+
 TOL = 0.03          # 3 %. 균질 2층 시절의 허용치가 5 % 였고 지구가 그 4.8 % 였다.
 EARTH_TOL = 0.01    # 지구는 1 % 안. 자기압축이 실제로 들어갔는지의 판정선이다.
 RADIUS_TOL = 0.01   # 반지름 1 %
@@ -103,8 +121,6 @@ def _mechanism(res) -> str:
     if "빈 공간" in res.reason:
         return ("porosity: ice is excluded by declaration, so void space is what is "
                 "left. Needs a compaction curve")
-    if "III·V·VI" in res.reason:
-        return "high-pressure ice phases III/V/VI (or a liquid ocean if warm)"
     if "얼음 X" in res.reason:
         return "ice X / superionic phase"
     if "다공도" in res.reason:
@@ -131,12 +147,120 @@ def roster_table() -> None:
             print(f"| {name} | {rho:.0f} | {ice_col} | declined | {_mechanism(res)} |")
 
 
+# 각 상의 기준 등온. eos.py 가 이 온도에서 P = 0 의 ρ·K_T·K′ 를 읽어 BME3 상수로 쓴다.
+SEAFREEZE_REF = (("ice_iii", "III", 251.15, 209.5, 355.0),
+                 ("ice_v", "V", 256.43, 355.0, 618.4),
+                 ("ice_vi", "VI", 272.73, 618.4, 2216.0))
+
+# SeaFreeze README 가 검증용으로 싣는 단일점 출력. 얼음 VI, 900 MPa / 255 K.
+# 이건 **발표된 값** 이라 우리 출력으로 우리를 시험하는 게 아니다.
+SEAFREEZE_PUBLISHED_ICE_VI = (900.0, 255.0, 1356.1)
+
+
+def _seafreeze_crosscheck() -> list[str]:
+    """박아둔 III·V·VI 상수를 원 Gibbs 표현과 대조한다. 없으면 건너뛴다."""
+    try:
+        import numpy as np
+        from seafreeze.seafreeze import defpath, getProp
+    except ImportError:
+        print("  [SKIP] SeaFreeze 가 없다. engine/.venv 로 돌리면 이 절이 뛴다 "
+              "(engine/requirements.txt)")
+        return []
+
+    def sf(p_mpa, t_k, phase, *props):
+        arr = np.array([np.atleast_1d(np.asarray(p_mpa, float)),
+                        np.atleast_1d(np.asarray(t_k, float))], dtype=object)
+        out = getProp(arr, phase, defpath, *props)
+        return [np.asarray(getattr(out, k), float).ravel() for k in props]
+
+    from eos import MATERIALS
+    bad: list[str] = []
+    phases = {ph.name: ph for ph in MATERIALS["h2o"].phases}
+
+    # 1) 얼음 Ih 이 두 출처에서 같은가. 이 일치가 III·V·VI 을 같은 표현에서 읽어올 근거다.
+    rho_ih = sf(0.101325, 273.152519, "Ih", "rho")[0][0]
+    d = abs(rho_ih - 916.721463419) / 916.721463419
+    ok = d < 1e-9
+    if not ok:
+        bad.append(f"SeaFreeze 의 얼음 Ih 이 IAPWS-06 검증값과 {d:.1e} 어긋난다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 얼음 Ih  SeaFreeze {rho_ih:.9f} · "
+          f"IAPWS-06 916.721463419 kg/m³ (상대차 {d:.1e})")
+
+    # 2) 세 상의 상수가 그 자리에서 다시 나오는가, 그리고 그 상수로 세운 BME3 가
+    #    구간 전체에서 원 표현의 ρ(P) 를 재현하는가.
+    for name, code, t_ref, p_lo, p_hi in SEAFREEZE_REF:
+        ph = phases[name]
+        rho0, k0, k0p = (v[0] for v in sf(0.0, t_ref, code, "rho", "Kt", "Kp"))
+        drifts = [abs(ph.rho0 - rho0) / rho0,
+                  abs(ph.k0 - k0 * 1e6) / (k0 * 1e6),
+                  abs(ph.k0p - k0p) / k0p]
+        ps = [p_lo + (p_hi - p_lo) * i / 24 for i in range(25)]
+        got = sf(ps, t_ref, code, "rho")[0]
+        worst = max(abs(ph.density(p * 1e6) - g) / g for p, g in zip(ps, got))
+        ok = max(drifts) < 1e-6 and worst < 0.002
+        if not ok:
+            bad.append(f"{name}: 상수 표류 {max(drifts):.1e}, 구간 재현 오차 {worst * 100:.3f} %")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {name:8} T_ref {t_ref:6.2f} K  "
+              f"ρ₀ {ph.rho0:9.4f} · K₀ {ph.k0 / 1e9:7.4f} GPa · K₀′ {ph.k0p:.4f}  "
+              f"(상수 표류 {max(drifts):.0e}, {p_lo:.0f}-{p_hi:.0f} MPa 재현 "
+              f"{worst * 100:.3f} %)")
+
+    # 3) 발표된 단일점. 우리 얼음 VI 는 272.73 K 등온이고 그 점은 255 K 라, 차이는
+    #    온도 그 자체다 — 그래서 이 줄은 사다리가 아니라 **온도폭** 을 재는 자리다.
+    p_mpa, t_k, rho_pub = SEAFREEZE_PUBLISHED_ICE_VI
+    rho_sf = sf(p_mpa, t_k, "VI", "rho")[0][0]
+    rho_ours = phases["ice_vi"].density(p_mpa * 1e6)
+    d_pub = abs(rho_sf - rho_pub) / rho_pub
+    d_ours = (rho_ours - rho_pub) / rho_pub
+    ok = d_pub < 1e-4 and abs(d_ours) < 0.02
+    if not ok:
+        bad.append(f"발표 체크값: SeaFreeze {d_pub:.1e}, 우리 등온 {d_ours * 100:+.2f} %")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 발표 체크값 얼음 VI {p_mpa:.0f} MPa / {t_k:.0f} K "
+          f"= {rho_pub} kg/m³ · SeaFreeze {rho_sf:.2f} (상대차 {d_pub:.0e}) · "
+          f"우리 272.73 K 등온 {rho_ours:.2f} ({d_ours * 100:+.2f} %, 이게 온도폭이다)")
+    return bad
+
+
+def icy_table() -> None:
+    """문서 §Validation 의 얼음 위성 표를 다시 낸다."""
+    print("| moon | ρ̄ (kg/m³) | ice fraction | ice-column base | C/MR² derived | published | error | source |")
+    print("|---|---|---|---|---|---|---|---|")
+    for name, mkg, r_km, nmoi_pub, src, _gate in ICY_ANCHORS:
+        rho = mkg / (4.0 / 3.0 * 3.141592653589793 * (r_km * 1e3) ** 3)
+        res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M,
+                                ice_allowed=True)
+        if not res.applicable:
+            print(f"| {name} | {rho:.0f} | – | – | declined | {nmoi_pub:.4f} | – | {src} |")
+            continue
+        imf = res.inputs["ice_mass_fraction"]
+        base = _ice_base_gpa(res)
+        print(f"| {name} | {rho:.0f} | {imf:.3f} | {base} | "
+              f"{res.values['nmoi']:.4f} | {nmoi_pub:.4f} | "
+              f"{abs(res.values['nmoi'] - nmoi_pub) / nmoi_pub * 100:.1f} % | {src} |")
+
+
+def _ice_base_gpa(res) -> str:
+    """note 에 기록된 얼음 기둥 바닥 압력을 상 이름과 함께 뽑는다."""
+    for note in res.notes:
+        if "얼음 기둥 바닥" in note:
+            frag = note.split("얼음 기둥 바닥")[1].split(",")[0].strip()
+            gpa = float(frag.split()[0])
+            phase = ("ice Ih" if gpa < 0.2095 else "ice III" if gpa < 0.355
+                     else "ice V" if gpa < 0.6184 else "ice VI" if gpa < 2.216
+                     else "ice VII")
+            return f"{frag} ({phase})"
+    return "–"
+
+
 def main() -> int:
     if "--table" in sys.argv:
         table()
         return 0
     if "--roster" in sys.argv:
         roster_table()
+        return 0
+    if "--icy" in sys.argv:
+        icy_table()
         return 0
 
     fails: list[str] = []
@@ -233,6 +357,49 @@ def main() -> int:
           f"밀도 차 {d * 100:.2f} % — 압축 자체가 "
           f"{(ref.density(ICE_IH_TO_III) / ICE_IH_RHO0 - 1) * 100:.1f} % 뿐이다")
 
+    print("\n발표된 얼음 위성 — 새 상들이 수렴한 해 안에서 실제로 쓰이는가")
+    # Ganymede 만 판정선이다. 얼음 기둥 바닥이 1.5 GPa 로 얼음 VI 구간 한가운데라,
+    # 이 한 줄이 III·V·VI 이 사격 경로가 아니라 **답** 안에서 쓰인다는 증거다.
+    # 나머지 넷은 `--icy` 가 표로 낸다 — 2층 구조로는 못 맞히는 천체들이고, 넣으면
+    # 기본 실행이 1분을 넘긴다.
+    gan = [a for a in ICY_ANCHORS if a[5]][0]
+    res = infer_composition(gan[1] / EARTH_MASS_KG, gan[2] * 1e3 / EARTH_RADIUS_M,
+                            ice_allowed=True)
+    if not res.applicable:
+        fails.append(f"{gan[0]}: 풀려야 하는데 거절했다 — {res.reason[:70]}")
+        print(f"  [FAIL] {gan[0]} 거절됨")
+    else:
+        base = _ice_base_gpa(res)
+        off = abs(res.values["nmoi"] - gan[3]) / gan[3]
+        ok = off <= TOL and "ice VI" in base
+        if not ok:
+            fails.append(f"{gan[0]}: C/MR² {res.values['nmoi']:.4f} vs {gan[3]} "
+                         f"({off * 100:.1f}%), 얼음 기둥 바닥 {base}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {gan[0]} C/MR² {res.values['nmoi']:.4f} vs "
+              f"{gan[3]:.4f} ({off * 100:.1f} %) · 얼음질량분율 "
+              f"{res.inputs['ice_mass_fraction']:.3f} · 얼음 기둥 바닥 {base} · {gan[4]}")
+
+    print("\n물얼음 상 사다리 — 209.5 MPa 부터 37.4 GPa 까지 끊긴 데가 없는가")
+    # 2026-08-25 에 III·V·VI 이 들어와 사다리가 이어졌다. 이어져 있다는 것은 주장이
+    # 아니라 검사 대상이다 — 전이압 상수 하나를 이웃과 어긋나게 고치면 조용히 구멍이
+    # 다시 열리고, 그러면 솔버가 답이 있는 자리에서 거절한다.
+    from eos import H2O
+    for prev, nxt in zip(H2O.phases, H2O.phases[1:]):
+        cond = abs(nxt.p_min - prev.p_max) <= 1e-6 * max(prev.p_max, 1.0)
+        if not cond:
+            fails.append(f"얼음 사다리가 {prev.name} 상한 {prev.p_max / 1e6:.1f} MPa 와 "
+                         f"{nxt.name} 하한 {nxt.p_min / 1e6:.1f} MPa 사이에서 끊겼다")
+        print(f"  [{'PASS' if cond else 'FAIL'}] {prev.name:8} → {nxt.name:8} "
+              f"{prev.p_max / 1e6:8.1f} MPa 에서 이어진다")
+
+    print("\nIII·V·VI 의 세 상수 — 박아둔 값이 원 표현과 같은가 (SeaFreeze 있을 때만)")
+    # 계수를 손으로 옮겨 적은 것이므로 대조가 필요하다. 이 리포지토리는 손으로 친 표에서
+    # 54배가 어긋난 전례가 있다. SeaFreeze 는 **런타임 의존성이 아니다** — check.sh 는
+    # 시스템 파이썬으로 돌고 이 절만 건너뛴다. 대조는 engine/.venv 로 돌릴 때 실제로 뛴다.
+    #
+    #   engine/.venv/bin/python engine/test_interior.py
+    fails += _seafreeze_crosscheck()
+
     print("\n로스터 — 저밀도 위성 넷 중 몇을 푸는가")
     solved = declined = 0
     for name, mkg, r_km, ice_ok, _why in ROSTER:
@@ -246,7 +413,7 @@ def main() -> int:
                   f"P_c {res.values['core_pressure'] * 1e3:.0f} MPa")
         else:
             declined += 1
-            named = any(k in res.reason for k in ("III·V·VI", "다공도", "얼음 X"))
+            named = any(k in res.reason for k in ("다공도", "얼음 X"))
             if not named:
                 fails.append(f"{name}: 거절 이유가 기작 이름이 아니다 — {res.reason[:60]}")
             print(f"  [거절] {name:20} {res.reason[:96]}")

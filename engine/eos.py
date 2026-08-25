@@ -174,31 +174,72 @@ SILICATE = Material(
 
 # ── 물 ──────────────────────────────────────────────────────────────────
 #
-# 얼음은 상이 갈린다. 저압에서는 육방정 얼음 Ih 이고, 209.5 MPa 에서 얼음 III 으로
-# 넘어간다 (Choukroun & Grasset 2007 의 삼중점 209.5 MPa / 251.15 K; Zeng &
-# Sasselov 2013 §III.3.1, arXiv:1301.0818 이 행성 모형에 그대로 채택). 이어서 III →
-# V (355.0 MPa) → VI (618.4 MPa) → VII (2.216 GPa) 로 간다.
+# 얼음은 상이 갈린다. 녹는곡선을 따라가면 Ih → III → V → VI → VII 이고, 전이압은
+# 네 삼중점이 정한다. 넷 다 Choukroun & Grasset 2007 (VI→VII 만 Daucik & Dooley
+# 2011) 의 값이고, Zeng & Sasselov 2013 §III.3.1 (arXiv:1301.0818) 이 행성 모형에
+# 채택한 것을 그대로 읽었다.
 #
-# **III · V · VI 은 여기 없다.** 그 세 상의 상태방정식 계수는 Choukroun & Grasset
-# 2007/2010 과 Bezacier+ 2014 에 있는데 전문을 못 구했다. 없는 것을 있는 척하지
-# 않는다 — 209.5 MPa 와 2.216 GPa 사이는 틈으로 남겨두고, 솔버가 거기에 닿으면
-# 그 사실을 이름과 함께 돌려준다.
+#     Ih  → III    209.5 MPa / 251.15 K
+#     III → V      355.0 MPa / 256.43 K
+#     V   → VI     618.4 MPa / 272.73 K
+#     VI  → VII    2.216 GPa / 355 K
 #
-# Ih 의 두 상수는 IAPWS-06 (Feistel & Wagner 2006) 의 검증표에서 직접 읽었다.
+# **III·V·VI 의 세 상수는 적합한 게 아니라 읽은 것이다.** SeaFreeze v1.1.0 이 얼음
+# III·V·VI 의 Gibbs 표현을 들고 있고 (Journaux+ 2020, JGR Planets 125, e2019JE006176),
+# 각 상의 기준 등온에서 P = 0 의 ρ · K_T · K′ 를 그 자리에서 평가해 BME3 의 ρ₀ · K₀ ·
+# K₀′ 로 쓴다. 얼음 Ih 이 IAPWS-06 검증표에서 ρ 와 κ_T 를 읽어 BM2 로 들어온 것과
+# **같은 구성** 이다 — 곡선을 맞춘 상수가 아니라 기준 상태의 상태량이다.
+#
+# 기준 등온은 그 상이 시작하는 삼중점의 온도로 잡았다. 세 상에 규칙 하나이고, 얼음 Ih 이
+# 녹는점에서 읽힌 것과 결이 같다. 그렇게 세운 BME3 가 각 상의 유효 구간 전체에서
+# SeaFreeze 의 ρ(P) 와 0.006 % · 0.014 % · 0.118 % 안에서 같아서, 적합할 이유가 없었다.
+#
+# **온도는 값이다.** 녹는곡선이 구간 안에서 올라가므로 구간 상단에서 기준 등온과의 밀도
+# 차가 III 0.11 % · V 0.27 % · VI 1.3 % 다. 얼음 VI 의 구간이 82 K 에 걸쳐 넓어서 그쪽이
+# 크고, 그 1.3 % 가 이 재료의 정직한 오차폭이다.
+#
+# **SeaFreeze 는 런타임 의존성이 아니다.** 이 파일의 다른 재료가 전부 발표된 상수를 박아둔
+# 형태이고 scripts/check.sh 가 무거운 의존성 없이 돌아야 한다. 대신 test_interior.py 가
+# SeaFreeze 가 있을 때만 도는 대조 절을 들고 있어서, 박아둔 상수가 원 표현과 어긋나면 그
+# 자리에서 잡히고, 없으면 그 절만 건너뛴다.
+#
+# 얼음 Ih 의 두 상수는 IAPWS-06 (Feistel & Wagner 2006) 의 검증표에서 직접 읽었다.
 # T = 273.152519 K, p = 101 325 Pa 에서 ρ = 916.721463419 kg/m³ 이고
 # κ_T = 1.17785291765e-10 Pa⁻¹ 이므로 K_T = 1/κ_T = 8.490 GPa 다.
 # K₀′ 는 그 표에 없어서 BM2 (K₀′ = 4 고정) 를 쓴다. Ih 이 존재하는 구간 전체에서
 # 압축이 2.4 % 뿐이라 K₀′ 를 4 로 두든 6 으로 두든 밀도가 0.2 % 안에서 같다 —
-# test_interior.py 가 그 감도를 실제로 재서 보여준다.
+# test_interior.py 가 그 감도를 실제로 재서 보여준다. SeaFreeze 의 얼음 Ih 도 같은
+# IAPWS-06 이라, 그 표현을 같은 상태에서 평가하면 ρ 가 아홉 자리까지 겹친다. 그 일치가
+# III·V·VI 을 같은 표현에서 읽어올 근거다.
 ICE_IH_RHO0 = 916.721463419        # IAPWS-06 Table 6, T=273.152519 K, p=101325 Pa
 ICE_IH_KT = 1.0 / 1.17785291765e-10  # 같은 표의 κ_T 를 뒤집은 것. 8.490 GPa
 ICE_IH_TO_III = 209.5 * MPA        # Choukroun & Grasset 2007 삼중점
+ICE_III_TO_V = 355.0 * MPA         # Choukroun & Grasset 2007 삼중점 (256.43 K)
+ICE_V_TO_VI = 618.4 * MPA          # Choukroun & Grasset 2007 삼중점 (272.73 K)
 ICE_VI_TO_VII = 2.216 * GPA        # Daucik & Dooley 2011 (Zeng & Sasselov 2013 §III.3.1 경유)
+
+# 기준 등온에서 P = 0 의 (ρ₀, K₀, K₀′). SeaFreeze v1.1.0 을 그 자리에서 평가한 값이고,
+# 세 상 모두 상이 시작하는 삼중점의 온도를 기준으로 삼았다.
+ICE_III_REF_T = 251.15             # K. Ih→III 삼중점
+ICE_V_REF_T = 256.43               # K. III→V 삼중점
+ICE_VI_REF_T = 272.73              # K. V→VI 삼중점
 
 H2O = Material(
     "h2o", "물얼음",
     (Phase("ice_ih", "bm2", ICE_IH_RHO0, ICE_IH_KT, 4.0, ICE_IH_TO_III,
            "IAPWS-06 / Feistel & Wagner 2006 Table 6 검증값"),
+     Phase("ice_iii", "bme3", 1126.384048, 7.834907 * GPA, 6.709734, ICE_III_TO_V,
+           "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
+           "얼음 III 을 P=0, T=251.15 K 에서 평가한 ρ·K_T·K′",
+           p_min=ICE_IH_TO_III),
+     Phase("ice_v", "bme3", 1207.841865, 10.636814 * GPA, 6.745951, ICE_V_TO_VI,
+           "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
+           "얼음 V 를 P=0, T=256.43 K 에서 평가한 ρ·K_T·K′",
+           p_min=ICE_III_TO_V),
+     Phase("ice_vi", "bme3", 1263.385752, 10.368592 * GPA, 7.821860, ICE_VI_TO_VII,
+           "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
+           "얼음 VI 를 P=0, T=272.73 K 에서 평가한 ρ·K_T·K′",
+           p_min=ICE_V_TO_VI),
      Phase("ice_vii", "bme3", 1460.0, 23.7 * GPA, 4.15, 37.4 * GPA,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — H₂O ice VII BME, Hemley+ 1987",
            p_min=ICE_VI_TO_VII)),
@@ -206,11 +247,14 @@ H2O = Material(
                  "({max_gpa:.1f} GPa) 위다. 그 위는 얼음 X 와 초이온상이고 "
                  "(Goncharov+ 2005 의 47 GPa 전이, French+ 2009), 이 레시피에는 그 "
                  "상태방정식이 없다. 물이 많은 큰 천체는 여기서 멈춘다."),
-    gap_reason=("얼음 기둥 바닥이 {p_gpa:.3f} GPa 다. 209.5 MPa 에서 얼음 Ih 이 "
-                "얼음 III 으로 넘어가고 2.216 GPa 까지 III·V·VI 이 이어지는데, 이 셋의 "
-                "상태방정식 계수는 이 리포지토리에 근거된 게 없다 (Choukroun & Grasset "
-                "2007/2010, Bezacier+ 2014 의 전문을 못 구했다). 없는 계수를 지어내는 "
-                "대신 여기서 멈춘다 — 그 세 상이 들어오면 이 천체는 풀린다."),
+    # 2026-08-25 에 III·V·VI 이 들어와 Ih 부터 VII 까지 사다리가 이어졌다. 그래서 이
+    # 설명은 더 이상 도달하지 않는다 — 도달하면 전이압 상수 하나가 이웃과 어긋나게
+    # 편집된 것이다. 침묵하는 대신 그렇게 말한다. test_interior.py 가 사다리의 연속성을
+    # 따로 확인한다.
+    gap_reason=("{p_gpa:.4f} GPa 가 물얼음 상 사다리의 두 상 **사이** 에 떨어졌다. "
+                "Ih(~209.5 MPa) · III(~355.0) · V(~618.4) · VI(~2.216 GPa) · VII 은 "
+                "이어져 있어야 하므로, 이건 물리가 아니라 전이압 상수가 이웃과 어긋나게 "
+                "편집됐다는 뜻이다."),
 )
 MATERIALS: dict[str, Material] = {
     m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O)

@@ -41,6 +41,7 @@ REFS = (
     "2016ApJ...819..127Z",      # Zeng+ 2016 — PREM 을 BM2 로 적합한 핵·하부맨틀 EOS
     "2007ApJ...669.1279S",      # Seager+ 2007 — 구조 방정식과 enstatite·얼음VII EOS
     "2006JPCRD..35.1021F",      # Feistel & Wagner 2006 (IAPWS-06) — 얼음 Ih
+    "2020JGRE..12506176J",      # Journaux+ 2020 (SeaFreeze) — 얼음 III·V·VI
     "1981PEPI...25..297D",      # PREM — 앵커로 쓰는 지구 C/MR²
 )
 
@@ -497,8 +498,9 @@ def infer_composition(mass_earth: float, radius_earth: float,
             notes=(f"풀린 눈금의 반지름 범위 "
                    f"{min(r.values['radius'] for _, r in solved) * EARTH_RADIUS_M / 1e3:.0f}"
                    f"-{max(r.values['radius'] for _, r in solved) * EARTH_RADIUS_M / 1e3:.0f} km",
-                   "**얼음층이 없어서** 가 아니라 **그 얼음이 어느 상인지 몰라서** 막혔다. "
-                   "둘은 다음 작업이 다르다.",))
+                   "**얼음층이 없어서** 가 아니라 그 압력의 얼음 상태방정식이 없어서 "
+                   "막혔다. 물얼음 사다리는 Ih 부터 VII 까지 이어져 있으므로, 남은 상한은 "
+                   "37.4 GPa 위의 얼음 X·초이온상 하나다.",))
 
     # 3) 이분법. 감싼 구간 안이라 반드시 값이 나온다. 얼음은 넣을수록 반지름이
     #    커지고 금속은 넣을수록 작아지므로, 어느 쪽으로 좁힐지는 축이 정한다.

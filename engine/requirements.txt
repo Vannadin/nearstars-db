@@ -1,0 +1,19 @@
+# 개발용 대조 환경 — 런타임 의존성이 아니다.
+#
+# eos.py 의 얼음 III·V·VI 계수는 SeaFreeze (Journaux+ 2020) 의 Gibbs 표현을 기준
+# 상태에서 평가해 얻은 값이고, 그 값은 상수로 박아 두었다. scripts/check.sh 는 이
+# 목록 없이 시스템 파이썬으로 돌아야 하므로 SeaFreeze 를 임포트할 수 없을 때
+# test_interior.py 의 대조 절은 SKIP 한다.
+#
+# 대조를 실제로 돌리려면 이 목록으로 engine/.venv 를 만들고 그쪽 파이썬을 쓴다.
+#
+#     python3 -m venv engine/.venv
+#     engine/.venv/bin/pip install -r engine/requirements.txt
+#     engine/.venv/bin/python engine/test_interior.py
+h5py==3.14.0
+hdf5storage==0.1.19
+numpy==1.26.4
+psutil==7.2.2
+PyYAML==6.0.3
+scipy==1.13.1
+SeaFreeze==1.1.0
