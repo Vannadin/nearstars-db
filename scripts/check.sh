@@ -155,6 +155,7 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 run.py bodies/pandora.yaml) || fail=1
 (cd engine && python3 test_mass_radius.py) || fail=1
 (cd engine && python3 test_interior.py) || fail=1
+(cd engine && python3 test_porosity.py) || fail=1
 (cd engine && python3 check_contracts.py) || fail=1
 python3 engine/dynamo_table.py --check || fail=1
 

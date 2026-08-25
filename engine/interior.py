@@ -33,6 +33,8 @@ import math
 
 from eos import MATERIALS, PhaseGap
 from payload import Result, out_of_domain
+from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
+                      bulk_factor, porosity)
 
 RECIPE = "interior-structure-methodology"
 VERSION = "2"
@@ -42,6 +44,8 @@ REFS = (
     "2007ApJ...669.1279S",      # Seager+ 2007 — 구조 방정식과 enstatite·얼음VII EOS
     "2006JPCRD..35.1021F",      # Feistel & Wagner 2006 (IAPWS-06) — 얼음 Ih
     "2020JGRE..12506176J",      # Journaux+ 2020 (SeaFreeze) — 얼음 III·V·VI
+    "2019Icar..326...10B",      # Bierson+ 2019 — 압력이 공극을 닫는 관계와 그 계수
+    "2012P&SS...73...98C",      # Carry 2012 — 10 MPa 파쇄 문턱, 관측된 전이질량
     "1981PEPI...25..297D",      # PREM — 앵커로 쓰는 지구 C/MR²
 )
 
@@ -73,10 +77,10 @@ class Structure:
     """적분 한 번의 결과. Result 로 포장하기 전의 알맹이."""
 
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
-                 "p_cmb", "p_ice_base", "phases")
+                 "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
-                 p_cmb, p_ice_base, phases):
+                 p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -85,10 +89,21 @@ class Structure:
         self.p_cmb = p_cmb
         self.p_ice_base = p_ice_base
         self.phases = phases
+        self.v_pore = v_pore              # 빈 공간의 부피 [m³]
+        self.m_above_lab = m_above_lab    # 실험압 위에서 법칙을 외삽한 질량 [kg]
 
     @property
     def nmoi(self) -> float:
         return self.moi / (self.mass_kg * self.radius_m ** 2)
+
+    @property
+    def volume(self) -> float:
+        return 4.0 / 3.0 * math.pi * self.radius_m ** 3
+
+    @property
+    def phi_bulk(self) -> float:
+        """벌크 공극률. 빈 공간의 부피를 천체 부피로 나눈 것."""
+        return self.v_pore / self.volume
 
 
 def _stack(cmf: float, imf: float, core_material: str):
@@ -104,16 +119,21 @@ def _stack(cmf: float, imf: float, core_material: str):
 
 
 def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
-              core_material: str) -> Structure:
+              core_material: str, phi0: float = 0.0,
+              p_cap: float | None = None) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
     같으므로 이 선택은 수렴점에서 정확하고, 반복마다 경계가 흔들리지 않아 이분법이
-    단조를 유지한다."""
+    단조를 유지한다.
+
+    `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
+    압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
+    강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
     stack = _stack(cmf, imf, core_material)
     mat = stack[0][1]
 
-    rho_c = mat.density(p_center)
+    rho_c = mat.density(p_center) * bulk_factor(mat.name, p_center, phi0, p_cap)
     r_scale = (3.0 * mass_kg / (4.0 * math.pi * rho_c)) ** (1.0 / 3.0)
     dr = r_scale / STEPS
 
@@ -126,6 +146,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     p_ice_base = None
     phases: list[str] = []
     layer = 0
+    v_pore = 4.0 / 3.0 * math.pi * r ** 3 * porosity_at(mat, p, phi0, p_cap)
+    m_above_lab = m if p > P_LAB_MAX else 0.0
 
     def material_for(m_now: float):
         nonlocal layer
@@ -151,11 +173,14 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         # 어긋나는 오차는 dr/R ~ 3e-4 이라 C/MR² 의 유효숫자 밖이다.
         def deriv(rr, mm, pp):
             if rr <= 0.0:
-                return 0.0, 0.0, 0.0
+                return 0.0, 0.0, 0.0, 0.0
             rr_rho = mat.density(pp) if pp > 0.0 else mat.rho0
+            phi = porosity_at(mat, pp, phi0, p_cap)
+            rr_rho *= 1.0 - phi
             return (4.0 * math.pi * rr * rr * rr_rho,
                     -G * mm * rr_rho / (rr * rr),
-                    8.0 / 3.0 * math.pi * rr ** 4 * rr_rho)
+                    8.0 / 3.0 * math.pi * rr ** 4 * rr_rho,
+                    4.0 * math.pi * rr * rr * phi)
 
         k1 = deriv(r, m, p)
         k2 = deriv(r + dr / 2, m + dr / 2 * k1[0], p + dr / 2 * k1[1])
@@ -164,6 +189,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         dm = dr / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
         dp = dr / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
         di = dr / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
+        dv = dr / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
 
         if p + dp <= 0.0:
             # 표면을 넘어섰다. P=0 자리로 선형 보간해서 멈춘다.
@@ -171,13 +197,17 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             r += dr * frac
             m += dm * frac
             moi += di * frac
+            v_pore += dv * frac
             p = 0.0
             break
 
+        if p > P_LAB_MAX:
+            m_above_lab += dm
         r += dr
         m += dm
         p += dp
         moi += di
+        v_pore += dv
 
     if steps >= MAX_STEPS:
         raise ValueError(f"{MAX_STEPS} 단계 안에 표면에 닿지 못했다 "
@@ -186,11 +216,21 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     if core_radius is None:
         core_radius = r      # 핵만 있는 천체
         p_cmb = p
-    return Structure(r, m, moi, core_radius, p_center, p_cmb, p_ice_base, phases)
+    return Structure(r, m, moi, core_radius, p_center, p_cmb, p_ice_base, phases,
+                     v_pore=v_pore, m_above_lab=m_above_lab)
+
+
+def porosity_at(mat, p_pa: float, phi0: float,
+                p_cap: float | None = None) -> float:
+    """이 재료가 이 압력에서 들고 있는 공극률. 법칙이 없는 재료는 0."""
+    if phi0 <= 0.0:
+        return 0.0
+    return 1.0 - bulk_factor(mat.name, max(p_pa, 0.0), phi0, p_cap)
 
 
 def shoot(mass_kg: float, cmf: float, imf: float,
-          core_material: str) -> tuple[Structure, bool]:
+          core_material: str, phi0: float = 0.0,
+          p_cap: float | None = None) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -199,7 +239,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
     stack = _stack(cmf, imf, core_material)
     rho0_bar = 1.0 / sum(
-        (hi_f - (stack[i - 1][0] if i else 0.0)) / mat.rho0
+        (hi_f - (stack[i - 1][0] if i else 0.0))
+        / (mat.rho0 * bulk_factor(mat.name, 0.0, phi0, p_cap))
         for i, (hi_f, mat) in enumerate(stack))
     r0 = (3.0 * mass_kg / (4.0 * math.pi * rho0_bar)) ** (1.0 / 3.0)
     # 중심압은 가장 안쪽 재료가 받는다. 바깥 층의 상한은 적분 중에 PhaseGap 이
@@ -207,7 +248,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     p_ceiling = stack[0][1].p_max
     lo = 1.0e2
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
-    while integrate(hi, mass_kg, cmf, imf, core_material).mass_kg < mass_kg:
+    while integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap).mass_kg < mass_kg:
         if hi >= p_ceiling:
             raise ValueError(
                 f"이 질량을 담으려면 중심압이 {stack[0][1].name} 의 근거 구간 상한"
@@ -217,12 +258,12 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         hi = min(hi * 4.0, p_ceiling)
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
-    st = integrate(hi, mass_kg, cmf, imf, core_material)
+    st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
     x1 = math.log(max(lo, hi * 1e-3))
-    st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material)
+    st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap)
     y1 = math.log(st.mass_kg / mass_kg)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
@@ -239,7 +280,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             x2 = 0.5 * (math.log(lo) + math.log(hi))
         x0, y0 = x1, y1
         x1 = x2
-        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material)
+        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -255,7 +296,9 @@ def solve(mass_earth: float,
           composition: str = "earth_like",
           radius_earth: float | None = None,
           differentiated: bool = True,
-          body_class: str | None = None) -> Result:
+          body_class: str | None = None,
+          initial_porosity: float = 0.0,
+          porosity_cap: float | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -269,7 +312,8 @@ def solve(mass_earth: float,
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
               "core_mass_fraction": cmf, "ice_mass_fraction": imf,
               "composition": composition, "differentiated": differentiated,
-              "body_class": body_class}
+              "body_class": body_class, "initial_porosity": initial_porosity,
+              "porosity_cap": porosity_cap}
 
     if body_class in FLUID_CLASSES:
         return out_of_domain(
@@ -302,6 +346,14 @@ def solve(mass_earth: float,
             "아예 없다는 뜻이지 섞여 있다는 뜻이 아니다.",
             inputs=inputs, refs=REFS)
 
+    if not 0.0 <= initial_porosity < 1.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"초기 공극률 {initial_porosity} 가 [0, 1) 밖이다. 0 은 '공극이 없다' 는 "
+            "주장이 아니라 '이 레시피가 판정하지 않는다' 는 뜻이다 — φ₀ 는 강착이 "
+            "정하고 가열이 지우며, 이 레시피에는 그 둘이 없다.",
+            inputs=inputs, refs=REFS)
+
     if not 0.0 <= cmf <= 1.0 or not 0.0 <= imf <= 1.0 or cmf + imf > 1.0:
         return out_of_domain(
             RECIPE, VERSION,
@@ -310,7 +362,8 @@ def solve(mass_earth: float,
             inputs=inputs, refs=REFS)
 
     try:
-        st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material)
+        st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
+                              initial_porosity, porosity_cap)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -327,7 +380,10 @@ def solve(mass_earth: float,
     if st.p_ice_base is not None:
         bounds.append(f"얼음 기둥 바닥 {st.p_ice_base / 1e9:.3g} GPa")
     notes = [f"층별 상: {' → '.join(st.phases)}. {' · '.join(bounds)}, "
-             f"평균밀도 {rho_bar:.0f} kg/m³.",
+             f"평균밀도 {rho_bar:.0f} kg/m³.",]
+    if initial_porosity > 0:
+        notes.append(_porosity_note(st, initial_porosity, mass_earth))
+    notes += [
              "이 노드는 결합 코어 안에 있다 (chain.yaml 순환 1·3). converged 는 "
              "**이 적분의 사격이 붙었는가** 를 말하지, 조석가열이 조성을 되바꾸는 "
              "그래프 고리가 닫혔는가를 말하지 않는다 — 그 고리는 러너가 코어를 "
@@ -337,6 +393,7 @@ def solve(mass_earth: float,
 
     reason = (f"{mass_earth:.4g} M⊕ 를 핵질량분율 {cmf:.3f}"
               + (f" · 얼음질량분율 {imf:.3f}" if imf > 0 else "")
+              + (f" · 초기공극 {initial_porosity:.2f}" if initial_porosity > 0 else "")
               + f" 로 적분했다. 정수압 평형이 반지름 {radius:.4f} R⊕ 와 "
               f"중심압 {st.p_center / 1e9:.1f} GPa 를 주고, 그 압력 분포에서 층 밀도가 "
               f"결정되므로 자기압축이 C/MR² 에 들어간다.")
@@ -355,7 +412,9 @@ def solve(mass_earth: float,
         recipe=RECIPE, version=VERSION,
         regime="integrated_" + ("_".join(st.phases) if len(st.phases) > 1 else st.phases[0]),
         reason=reason,
-        grade="calibrated",
+        # 공극이 켜지면 등급이 내려간다. 압밀 곡선의 실험 상한 위로 외삽하게 되고,
+        # φ₀ 자체가 이 레시피가 도출하지 못하는 선언값이다.
+        grade="analog" if initial_porosity > 0 else "calibrated",
         inputs=inputs,
         cycles=(1, 3),
         converged=converged,
@@ -374,6 +433,26 @@ def solve(mass_earth: float,
     )
 
 
+def _porosity_note(st, phi0: float, mass_earth: float) -> str:
+    """공극이 켜졌을 때 무엇을 했고 어디가 외삽인지 한 줄로 적는다."""
+    mass_kg = st.mass_kg
+    frac = st.m_above_lab / mass_kg if mass_kg else 0.0
+    line = (f"공극이 켜져 있다 — 초기공극 {phi0:.2f}, 벌크 공극률 {st.phi_bulk:.3f}. "
+            f"φ 는 국소 압력의 함수이고(Bierson+ 2019 식 1·2) 자유 매개변수가 아니다. "
+            f"중심압 {st.p_center / 1e6:.0f} MPa 가 규산염 입자 파쇄 문턱"
+            f"({P_GRAIN_FRACTURE / 1e6:.0f} MPa) 의 "
+            f"{st.p_center / P_GRAIN_FRACTURE:.0f} 배다.")
+    if frac > 0:
+        line += (f" 압밀 곡선을 실험 상한({P_LAB_MAX / 1e6:.0f} MPa) 위로 외삽한 질량 "
+                 f"몫이 {frac * 100:.1f} % 다 — 그 구간은 측정된 적이 없다.")
+    if mass_kg > MASS_COMPACT_KG:
+        line += (f" 그리고 이 천체는 {mass_kg / MASS_COMPACT_KG:.0f} × 10²⁰ kg 이다. "
+                 "Carry 2012 §5.2 는 10²⁰ kg 위의 천체가 관측상 전부 macroporosity ≈ 0 "
+                 "이라고 보고한다 — 이 법칙의 검증 범위 밖이라는 뜻이고, 여기서 나온 "
+                 "공극은 예측이 아니라 **상한** 으로 읽어야 한다.")
+    return line
+
+
 # ── 역산: 질량과 반지름에서 조성을 되찾는다 ──────────────────────────────
 #
 # 위성 대부분은 조성이 선언돼 있지 않고 질량과 반지름만 있다. 순방향 솔버를 한 번
@@ -387,6 +466,121 @@ def solve(mass_earth: float,
 
 INFER_TOL = 5e-4        # 반지름 상대오차
 SCAN_POINTS = 13        # 자유 분율 축을 훑는 눈금 수
+
+
+def _porous_rock_verdict(mass_earth: float, radius_earth: float,
+                         rock: Result, inputs: dict) -> Result:
+    """얼음이 선언으로 배제된 저밀도 천체를 공극으로 설명할 수 있는지 판정한다.
+
+    **맞추지 않는다.** 발표된 법칙을 발표된 초기공극 φ₀ = 0.60 (Bierson+ 2019
+    Table 1 의 nominal) 으로 돌려 이 질량이 가질 수 있는 **최대 반지름** 을 낸다.
+    Bierson 자신이 자기 모형을 "a lower bound on the bulk density (the most
+    porosity that can be retained)" 라고 적으므로, 그 반지름은 상한이다.
+
+    봉투를 **두 개** 낸다. 발표된 대로 전 구간에 법칙을 적용한 것과, 실험 상한
+    150 MPa 위에서는 아무것도 주장하지 않는 것. 판정은 **보수적인 쪽** 으로 한다 —
+    결론이 측정된 적 없는 외삽에 기대면 안 되기 때문이다. 둘이 갈리면 그 사실이
+    결론이 된다.
+
+    그러면 선언된 반지름이 셋 중 하나에 떨어진다.
+
+    * 공극 0 반지름보다 작다 → 공극이 아니라 금속이 필요하다. 호출자가 핵 축으로.
+    * 공극 0 과 최대 사이 → 봉투 안이다. 그 반지름을 재현하는 φ₀ 를 되읽어 준다.
+      **되읽은 값이지 적합한 상수가 아니다** — 등급이 analog 로 내려가고, φ₀ 를
+      도출하는 것은 강착·열이력의 일이라고 note 가 말한다.
+    * 최대보다 크다 → 발표된 최대 공극으로도 못 미친다. 선언된 질량-반지름 쌍이
+      물리와 안 맞는다는 뜻이고, 그게 답이다.
+    """
+    km = EARTH_RADIUS_M / 1e3
+    r_solid = rock.values["radius"]
+    mass_kg = mass_earth * EARTH_MASS_KG
+
+    def at(phi, cap):
+        return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
+                     initial_porosity=phi, porosity_cap=cap)
+
+    top_pub = at(PHI0_NOMINAL, None)
+    top_cap = at(PHI0_NOMINAL, P_LAB_MAX)
+    if not (top_pub.applicable and top_cap.applicable):
+        blocked = top_pub if not top_pub.applicable else top_cap
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"공극을 켠 규산염 적분이 풀리지 않는다 — {blocked.reason}",
+            inputs=inputs, refs=REFS)
+    r_pub = top_pub.values["radius"]
+    r_cap = top_cap.values["radius"]
+
+    envelope = (f"공극 0 이면 {r_solid * km:.0f} km, 발표된 초기공극 "
+                f"{PHI0_NOMINAL:.2f} 로는 {r_pub * km:.0f} km, 실험 상한"
+                f"({P_LAB_MAX / 1e6:.0f} MPa) 위를 안 믿으면 {r_cap * km:.0f} km 다. "
+                f"선언된 값은 {radius_earth * km:.0f} km.")
+    heavy = (f"이 천체는 {mass_kg / MASS_COMPACT_KG:.0f} × 10²⁰ kg 이다. Carry 2012 "
+             "§5.2 는 10²⁰ kg 위의 천체가 관측상 전부 macroporosity ≈ 0 이라고 보고하고"
+             "('The pressure inside an object with a mass lower than ≈10²⁰ kg never "
+             "reaches 10⁷ Pa'), 이 법칙이 검증된 곳은 그 아래다. 여기서 나온 공극은 "
+             "예측이 아니라 **봉투** 로 읽어야 한다."
+             ) if mass_kg > MASS_COMPACT_KG else ""
+
+    if radius_earth > r_cap:
+        over = "발표된 대로 외삽해도" if radius_earth > r_pub else "보수적으로 읽으면"
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"{over} 이 반지름에 못 미친다. {envelope} Bierson+ 2019 의 모형은 자기 "
+            "자신을 밀도의 하한, 즉 남을 수 있는 **최대** 공극이라고 적으므로 이 봉투는 "
+            "상한이다. 그래서 답은 다공도가 아니다 — **선언된 질량-반지름 쌍이 물리와 "
+            "맞지 않는다**, 또는 암석이 이 레시피가 든 규산염보다 가볍다. " + heavy,
+            inputs=inputs, refs=REFS,
+            notes=(envelope, "선언값이 봉투 위에 있다.") +
+                  ((heavy,) if heavy else ()))
+
+    # 봉투 안이다. 반지름을 재현하는 φ₀ 를 보수적 읽기로 되읽는다.
+    lo, hi = 0.0, PHI0_NOMINAL
+    best, phi = top_cap, PHI0_NOMINAL
+    for _ in range(40):
+        mid = 0.5 * (lo + hi)
+        res = at(mid, P_LAB_MAX)
+        if not res.applicable:
+            break
+        best, phi = res, mid
+        got = res.values["radius"]
+        if abs(got - radius_earth) / radius_earth < INFER_TOL:
+            break
+        if got < radius_earth:
+            lo = mid
+        else:
+            hi = mid
+
+    inputs["initial_porosity"] = phi
+    inputs["porosity_cap"] = P_LAB_MAX
+    notes = [f"역산이다 — 초기공극 φ₀ = {phi:.3f} 가 선언된 반지름을 재현한다. "
+             f"실험 상한 위를 믿지 않는 보수적 읽기로 풀었으므로, 이 결론은 측정된 "
+             f"구간에만 기댄다. {envelope}"]
+    notes += list(best.notes)
+    notes.append("φ₀ 는 **되읽은 값이지 적합한 상수가 아니다.** 그 값을 도출하는 것은 "
+                 "강착이 남긴 초기 공극과 그 뒤의 가열 이력의 일이고, 이 레시피에는 "
+                 "둘 다 없다. Bierson+ 2019 §2.2 가 자기 모형이 다루지 않는 것을 "
+                 "나열한다 — melt production, differentiation, convection, impacts, "
+                 "tidal heating. 다섯 다 공극을 **더** 없애는 방향이므로, 여기 나온 "
+                 "φ₀ 는 그 반지름을 내는 데 필요한 값이고 그 다섯 중 하나가 이 천체에 "
+                 "걸려 있으면 실제로 남았을 공극은 이보다 적다.")
+    notes.append("얼음과 공극은 평균밀도를 같은 방향으로 낮춘다. 이 천체는 보드가 "
+                 "얼음을 배제해서 공극 축으로 풀렸지만, 그 선언이 바뀌면 얼음 축의 해도 "
+                 "똑같이 잘 맞는다 — 질량과 반지름만으로는 둘을 가를 수 없다.")
+    if heavy:
+        notes.append(heavy)
+
+    return Result(
+        recipe=RECIPE, version=VERSION, regime="inferred_initial_porosity",
+        reason=(f"질량 {mass_earth:.3g} M⊕ 와 반지름 {radius_earth:.4f} R⊕ 가 둘 다 "
+                "주어졌고 얼음이 선언으로 배제됐다. 남는 기작은 빈 공간이므로, 압력이 "
+                f"공극을 닫는 발표된 관계식을 두고 초기공극 하나를 풀면 {phi:.3f} 에서 "
+                "반지름이 맞는다."),
+        grade="analog",
+        inputs=inputs,
+        cycles=(1, 3),
+        converged=best.converged,
+        values=dict(best.values), units=best.units, refs=REFS, notes=tuple(notes),
+    )
 
 
 def infer_composition(mass_earth: float, radius_earth: float,
@@ -427,25 +621,9 @@ def infer_composition(mass_earth: float, radius_earth: float,
         def at(x):
             return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0)
     elif not ice_allowed:
-        # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 축이 남지 않는다.
-        short = (radius_earth - rock.values["radius"]) / radius_earth
-        return out_of_domain(
-            RECIPE, VERSION,
-            f"얼음 없는 천체로 선언됐는데, 공극 0 인 규산염으로 이 질량을 풀면 "
-            f"{rock.values['radius'] * EARTH_RADIUS_M / 1e3:.0f} km 가 나온다. 선언된 "
-            f"{radius_earth * EARTH_RADIUS_M / 1e3:.0f} km 에 {short * 100:.1f} % 모자라고, "
-            "그만큼의 부피를 채울 것이 필요하다. 얼음은 선언이 배제했으므로 남는 기작은 "
-            "**빈 공간** 뿐이다 — 중심압 "
-            f"{rock.values['core_pressure'] * 1e3:.0f} MPa 는 공극이 살아남을 수 있는 "
-            "크기다. **다공도 모형이 없어서** 못 푸는 경우가 이것이고, 압밀 곡선이 "
-            "들어오면 풀린다. 다른 읽기도 하나 있다 — 암석이 이 레시피가 든 것보다 "
-            "가벼우면 다공도 없이도 맞는데, 그러면 어느 암석인지가 답이 되고, "
-            "그것도 아니면 선언된 질량·반지름 쌍 자체를 다시 봐야 한다.",
-            inputs=inputs, refs=REFS,
-            notes=("얼음 축은 물리가 아니라 **선언** 으로 닫혔다 (ice_allowed=False). "
-                   "선언이 바뀌면 이 천체는 얼음 축에서 풀린다.",
-                   f"공극 0 규산염 기준선 대비 부피 부족분 "
-                   f"{(1 - (rock.values['radius'] / radius_earth) ** 3) * 100:.1f} %.",))
+        # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 남는 기작은 빈 공간이고,
+        # 이제 그 빈 공간에 근거된 관계식이 있다 — 그래서 여기서 끝나지 않는다.
+        return _porous_rock_verdict(mass_earth, radius_earth, rock, inputs)
     else:
         axis, span = "ice_mass_fraction", (0.0, 0.98)
 
@@ -557,4 +735,8 @@ def _from_state(state):
         radius_earth=state.get("radius_earth"),
         differentiated=state.get("differentiated", True),
         body_class=state.get("body_class"),
+        # 공극은 **선언** 으로 들어온다. 기본값 0 은 "공극이 없다" 가 아니라
+        # "이 레시피가 판정하지 않는다" 는 뜻이다 — φ₀ 는 강착이 정하고 가열이 지운다.
+        initial_porosity=state.get("initial_porosity", 0.0),
+        porosity_cap=state.get("porosity_cap"),
     )

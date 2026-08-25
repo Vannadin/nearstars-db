@@ -28,3 +28,8 @@ papers:
   title: Where are the Water Worlds
   status: fetched
   fetch_error: null
+- arxiv_id: '1203.4336'
+  ads_bibcode: 2012P&SS...73...98C
+  title: Density of asteroids
+  status: fetched
+  fetch_error: null
