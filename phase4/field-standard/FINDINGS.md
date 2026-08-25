@@ -192,3 +192,71 @@ tokens outside the SPEC §1 vocabulary, 6 rows with `**` markup, 6 with em-dash.
 rule in the standard and a check that enforces it, so applying it to the remaining six
 boards is running the check and clearing what it reports — not repeating this analysis.
 C4, D5 and F are the items α Cen cannot exercise; they wait for their own board.
+
+---
+
+## G. Parameter-surface review (2026-08-25)
+
+A pass over what a complete body-parameter set has to contain, checked against what this
+repository actually asks for. Every conclusion below is argued from material already here;
+the review only decided which questions to ask.
+
+### G1. Four declared gaps are real, not placeholders for tidiness
+
+`star_metallicity`, `ocean_fraction`, `ring_system` and `composition_intent` are all marked
+`status: gap` in `chain.yaml`, each on the grounds that something downstream needs them.
+They are the kind of quantity a body definition cannot do without — the metallicity that
+scales radiogenic heating, the ocean fraction that moves albedo and tidal dissipation, the
+ring optical depth, the layer mass fractions. Closing them is not optional polish.
+
+### G2. Two of the four class tables are probably owner inputs, not future derivations
+
+`chain.yaml` records both tables' own documents saying they cannot be measured:
+
+- `omega0_class_table` — *"원시 미지값. 인용이 아니라 논증으로 경계지어진다"*
+  (`tidal-locking:431`)
+- `k2q_class_table` — *"외계 천체에서는 사실상 측정된 적이 없다"* (`tidal-heating:527`)
+
+Both are currently annotated as things `interior_structure` will replace once it exists.
+That claim does not survive its own sources. An initial rotation period is a primordial
+unknown; no interior model recovers it. A tidal Q is a dissipation parameter, not a
+structural one.
+
+The likely correct resolution is that these are **owner decisions with a declared
+rationale**, not derivations waiting on a solver — which also means the `constrained` kind
+from §0's engine/adapter split applies to them: physics narrows the admissible range, the
+owner picks inside it.
+
+`k₂` is different and should be separated from `Q`. It follows from layer structure and
+belongs to `tidal_response`. Pairing a derivable quantity with an undeliverable one inside
+a single table is what made the whole table look derivable.
+
+### G3. The orphan list groups into fewer nodes than it has members
+
+§E already argued that the 19 unproduced fields collapse to three new documents. Two of
+those groupings hold up on a second look:
+
+- stellar activity — `activity`, `flares`, `spots_faculae`, `corona` share rotation period,
+  log R'HK and log Lx as inputs, so they are one node, not four
+- `aurora` is a genuine derivation, not decoration: the shipped values already cite
+  emission lines (O₂ 557.7/630 nm, N₂⁺ 391 nm, H Balmer-α, H₂ Fulcher)
+
+### G4. Four input axes this repository does not have at all
+
+| axis | why it matters | status |
+|---|---|---|
+| **porosity** | small bodies are not fully compacted, and porosity moves bulk density directly. The roster has several sub-0.05 g bodies where this is not a correction but a first-order term. | absent |
+| **partial differentiation** | `interior_layers` declines CMF = 0 outright. Callisto is the canonical partially-differentiated body and cannot be expressed at all. | declined, not modelled |
+| **vertical atmospheric structure** | atmosphere is a scalar pressure plus a composition here, but Kopernicus consumes temperature and pressure *curves*, so the adapter will need structure the engine does not produce. | absent |
+| **owner override with a reason** | `payload.Result` carries `grade` and `reason` for what the engine derived. There is no path for the owner to pin a value *and* record why, which is what art direction and canon anchors actually need. | absent |
+
+### G5. Species properties exist for one axis only
+
+`exoplanet-atmosphere-methodology.md` §7 carries a mean-molecular-weight table for 13
+species, hand-typed. Nothing else does: there is no shared table of Planck-mean absorption
+coefficients, triple points, critical temperatures, condensation curves or cloud albedos,
+and `greenhouse-warming-methodology` reaches for absorption coefficients that live nowhere
+canonical.
+
+A single generated species table is the fix, and it is the same argument as every other
+generated table here — a hand-typed constant in one document is a copy, and copies drift.
