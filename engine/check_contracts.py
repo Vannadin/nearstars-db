@@ -34,7 +34,10 @@ DOCS = HERE.parent / "docs" / "reference"
 BODIES = HERE / "bodies"
 
 FIELD = re.compile(r"`([a-z0-9_]+)`")
-LINE = re.compile(r"^\*\*(Returns|Needs)\*\*\s*[—-]\s*(.+)$", re.M)
+# 항목이 많으면 줄이 넘어간다. 다음 **항목** 이나 빈 줄까지 이어 읽는다 —
+# 문서를 한 줄에 욱여넣게 만들면 읽기 나빠지고, 그건 이 작업의 목적에 반한다.
+LINE = re.compile(r"^\*\*(Returns|Needs)\*\*\s*[—-]\s*(.+?)(?=\n\s*\n|\n\*\*|\Z)",
+                  re.M | re.S)
 
 
 def parse_contract(doc: Path, node: str) -> dict[str, set[str]] | None:

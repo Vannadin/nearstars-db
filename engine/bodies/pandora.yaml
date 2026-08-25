@@ -8,10 +8,13 @@ inputs:
   age_gyr: 5.3
   body_class: rocky
   composition_intent: earth_like
+  radius_earth: 0.8984     # 보드 5724 km / 6371
+  core_mass_fraction: 0.325   # 지구식. composition_intent 가 정할 자리다.
 
 units:
   mass_earth: M_earth
   age_gyr: Gyr
+  radius_earth: R_earth
 
 # 이미 출하된 값. 엔진은 읽지 않고 대조만 한다.
 expected:

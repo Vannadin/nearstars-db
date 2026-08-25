@@ -61,3 +61,4 @@ def load_all() -> None:
     """
     import dynamo        # noqa: F401
     import mass_radius   # noqa: F401
+    import interior      # noqa: F401
