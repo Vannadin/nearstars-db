@@ -11,6 +11,60 @@ fields, and all 4 bundled kinds — which is why fixing it here covers most of t
 
 ---
 
+## 0. The decision this standard is actually serving (2026-08-25)
+
+NearStars is being taken from a curation repository to a computation tool, and the
+computed thing is **physical state, not KSP config**. The engine derives a body's physics;
+an adapter turns that into cfg for whatever renders it.
+
+```
+engine  →  physical state (game-agnostic)  →  adapter  →  KSP cfg
+```
+
+This settles a question that kept reopening: what stops the vocabulary growing without
+bound? Each layer is bounded, and for different reasons, so neither pushes growth onto the
+other.
+
+- **Engine** — bounded by physics. A body has a finite state: bulk, interior layers,
+  rotation, orbit, thermal, atmosphere, surface optics, magnetic, environment. The test
+  for admission is **"is this a quantity with a unit, or a declared dimensionless or
+  categorical state?"** A description is not a quantity. `hapke_terrain` is admissible;
+  "geometric natural rock formations" is narrative.
+- **Adapter** — bounded by an external schema we do not control. Kopernicus, Principia,
+  Firefly, EVE, Scatterer, Kerbalism field lists do not grow with our ambition.
+  `field_alignment.yaml` measures it today: of 91 entries, **82 reach a cfg target**, 9 do
+  not (`age`, `cooling_age`, `internal_heat`, `tidal_heating`, `tidal_surface_flux`,
+  `greenhouse`, `escape`, `habitable_zone`, `artificial` — these are inputs to other
+  values, not prose).
+
+The boards currently mix both layers. First-pass split of the 158 field names:
+
+| | kinds | rows |
+|---|---|---|
+| physical state | 90 | 672 |
+| KSP encoding / gameplay | 68 | 297 |
+
+**43 % of what the boards carry is game encoding, and that is where every accident
+happened.** The largest clusters are all derived encodings of a single physical quantity:
+
+```
+pause_       16 kinds / 67 rows     encodes one number: R_mp
+inner_        9 kinds / 25 rows     radiation-belt shell geometry
+outer_        9 kinds / 25 rows     "
+radiation_    6 kinds / 31 rows     "
+hapke_        4 kinds / 40 rows     shader convention over surface optics
+```
+
+This is why `pause_nose` moving from 23.5 to 35.33 left `outer_compression` and
+`outer_extension` behind: sixteen hand-maintained parameters of a shape function stood in
+for one physical value. Under the split the engine records R_mp and the adapter
+regenerates all sixteen every build, so they cannot disagree.
+
+The split also explains why unbundling is mandatory rather than tidy: `body_type` packs
+four quantities into one string, and a bundled string cannot be assigned to a layer at all.
+
+---
+
 ## A. The enforcement hole (fixed 2026-08-25, `92041e6e`)
 
 **A1. `fields[].name` was never validated.** `AXIS_NAMES` only checked the suffix of the
@@ -81,19 +135,45 @@ stars and hours for planets is the declared contract.
 
 ---
 
-## E. Fields no node produces (α Cen: 16 of 19)
+## E. Fields no node produces — 19, but not 19 documents (α Cen: 16 of 19)
 
-Stellar appearance and activity, because `star_physical` stops at
-[mass, radius, teff, luminosity, sed, v_sin_i] and nothing emits rotation or activity
-indices: `activity`, `flares`, `flare_colour`, `spots_faculae`, `granulation`,
-`limb_darkening`, `corona`.
+Reading the shipped values changes the count. These are not blank: the values are already
+out, so what a recipe must produce can be read off them, and the document formalises what
+is already being done by hand rather than inventing anything. **19 orphans collapse to
+three new documents.**
 
-Have a methodology doc but no chain node — the cheapest two to close:
-`color` (`stellar-photospheric-color-methodology.md`), `ring_color`
-(`debris-disk-color-methodology.md`).
+**Doc exists, only the node is missing — wiring, not writing (4).**
 
-No node at all: `aurora`, `banding_morphology`, `cloud_coverage`, `terrain`, `specular`,
-`habitable_zone`, `neutral_torus_supply`, `co_orbitals`, `satellite_count`, `biosphere`.
+| field | shipped value | doc |
+|---|---|---|
+| `color` | `#ffe9d5` | `stellar-photospheric-color-methodology.md` |
+| `ring_color` | `#cdd9e4` | `debris-disk-color-methodology.md` |
+| `flare_colour` | `#ff5e2a` (H-α cited) | `element-plasma-colors.md` |
+| `aurora` | O₂ 557.7/630 nm, N₂⁺ 391 nm, H Balmer-α, H₂ Fulcher | `element-plasma-colors.md`, `color-materials.md` |
+
+`aurora` already cites real emission lines — it is a grounded value with no node, not a
+guess.
+
+**Four fields, one node (1 new doc).** `activity`, `flares`, `spots_faculae`, `corona` all
+come from the same inputs — rotation period, log R'HK, log Lx — as the shipped values
+show (`P_rot 22d, log R'HK −4.95, X-ray log Lx ~26.78, cycle ~19.1yr`). One
+`stellar_activity` node covers all four.
+
+**`star_physical` outputs extended, no new doc (2).** `granulation` and `limb_darkening`
+are functions of Teff and log g, not of activity.
+
+**Owner decisions — a Phase 4 axis, and writing a methodology would be wrong (5).**
+`biosphere` ("Lush rainforest with high paleo-diversity and cyan bioluminescence"),
+`terrain`, `specular`, `co_orbitals`, `banding_morphology`. Note `terrain` ships **once**,
+on Pandora only; the systematic field is `hapke_terrain` (10 rows), which already has a
+producer. Its physical content is already elsewhere: relief in `body_figure.relief`,
+optics in `hapke_shader_values`, material in `composition`.
+
+**Textbook (2).** `habitable_zone` is a function of luminosity and Teff;
+`satellite_count` is effectively a label.
+
+**Genuinely new derivations (2 new docs).** `neutral_torus_supply` (Chaos: 134) and
+`cloud_coverage` (A b: 0.9).
 
 ---
 

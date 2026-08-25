@@ -124,6 +124,29 @@ quantity each with its unit. Narrative stays as the settings-book text that expl
 
 Existing approved narrative is not rewritten. The work is to lift the values out of it.
 
+### 9. Derive physical state; let an adapter encode it
+
+What the recipes produce is a body's physics, not a config file for whatever renders it.
+An adapter turns the physical state into the target's fields.
+
+```
+recipes  →  physical state (target-agnostic)  →  adapter  →  KSP cfg
+```
+
+This is not tidiness. Sixteen `pause_*` parameters were being maintained by hand on the
+boards, and they are not physics — they parametrise a shape function in the game engine.
+The physics is one number, the magnetopause standoff. Sixteen hand-kept encodings of one
+value is what produced the Proxima failure; the same shape repeats in the radiation-belt
+shell fields. Recorded as physical state, the encodings are regenerated on every build and
+cannot disagree with their source.
+
+It also answers a question that otherwise has no floor: what stops the vocabulary growing
+forever? Each layer is bounded for its own reason. The engine is bounded by physics — a
+body's state is a finite list of quantities, and the admission test is *"is this a quantity
+with a unit, or a declared dimensionless or categorical state?"* A description is not a
+quantity. The adapter is bounded by a schema we do not own and that does not grow with our
+ambition. Neither bound pushes on the other.
+
 ---
 
 ## What this does not fix

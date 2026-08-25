@@ -6,9 +6,25 @@ applying it elsewhere is running the check, not repeating the analysis.
 
 ## The shape we are moving to
 
-A methodology becomes a **deterministic function**. Its output is the board's typed
-`fields[]` — one field, one quantity, one unit, one producing node. Same inputs, same
-values, and a machine can compare them.
+NearStars becomes a **computation tool**, and what it computes is **physical state, not
+KSP config**. The engine derives the physics; an adapter turns it into cfg.
+
+```
+engine  →  physical state (game-agnostic)  →  adapter  →  KSP cfg
+```
+
+A methodology becomes a **deterministic function**. Its output is a physical quantity —
+one quantity, one unit, one producing node. Same inputs, same values, and a machine can
+compare them.
+
+Admission to the engine layer is decided by **"is this a quantity with a unit, or a
+declared dimensionless or categorical state?"** — not by whether it reaches a cfg field.
+The two layers are bounded separately (physics on one side, an external schema on the
+other), so neither grows the other. See [FINDINGS §0](FINDINGS.md).
+
+The boards mix the layers today: 90 field kinds are physical state, 68 are game encoding,
+and the encoding clusters are where every accident happened — sixteen `pause_*`
+parameters standing in for one number, R_mp.
 
 **Prose is demoted to a settings book.** Today `narrative` carries decisions, which is
 exactly why four field kinds bundle several nodes' outputs into one string
@@ -26,11 +42,23 @@ already approved gets reworded to fit the machine.
 
 ## Tasks
 
+### 0. Layer
+- [ ] Mark every field in `bindings.yaml` as `layer: physical` or `layer: encoding`.
+      → verify: every field has a layer; `backflow.py` can report the two separately.
+- [ ] **Take the `pause_*` / `inner_*` / `outer_*` / `radiation_*` families off the board.**
+      52 hand-maintained kinds over 148 rows encode belt and magnetopause geometry that
+      follows from R_mp, belt extent and belt intensity. The engine should record those
+      three; the adapter should regenerate the rest each build.
+      → verify: changing R_mp regenerates every dependant with no hand edit, and
+      `backflow.py after pause_nose` has nothing left to warn about.
+
 ### 1. Names
 - [x] `base_colour` → `base_color`; menu variants removed; `fields[].name` validated
       against `engine/bindings.yaml`; menu-widening blocked. (`92041e6e`)
 - [ ] **Resolve the R_mp triple alias** — `magnetosphere`, `magnetopause_standoff_rp`,
       `pause_nose` are three names for one quantity (A b: 35.33 in all three).
+      Under the layer split this is nearly settled: R_mp is the physical value, the other
+      two are its encodings.
       → verify: one name survives in α Cen; `backflow.py field <name>` shows a single
       node and the full dependant list; a check rejects the retired names.
 
