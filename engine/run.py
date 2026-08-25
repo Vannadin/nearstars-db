@@ -63,6 +63,7 @@ def solve(body: BodyState, g: dict, verbose: bool = False) -> dict[str, int]:
         passes = MAX_PASSES if len(unit) > 1 else 1
         for p in range(passes):
             before = dict(body.resolved)
+            stalled: dict[str, str] = {}
             for node in computable:
                 fn = registry.get(node)
                 if fn is None:
@@ -72,14 +73,19 @@ def solve(body: BodyState, g: dict, verbose: bool = False) -> dict[str, int]:
                 try:
                     res: Result = fn(body)
                 except Missing as exc:
-                    if p == passes - 1:
-                        stats["not_ready"] += 1
-                        if verbose:
-                            print(f"    [대기] {node}: {exc}")
+                    # 입력이 아직 없다. 반복하면 생길 수도 있으므로 이번 회차만
+                    # 기록하고, 마지막 회차의 것만 최종 집계한다. 예전에는
+                    # `p == passes - 1` 로 셌는데 일찍 수렴하면 거기 도달하지 않아
+                    # 영영 세지 않았다.
+                    stalled[node] = str(exc)
                     continue
                 body.record(node, res)
             if body.resolved == before:
                 break                      # 값이 안 움직인다. 수렴했다.
+        stats["not_ready"] += len(stalled)
+        if verbose:
+            for node, why in stalled.items():
+                print(f"    [대기] {node}: {why}")
         if len(unit) > 1 and verbose:
             print(f"    [순환] {', '.join(unit)} — {p + 1}회")
 
@@ -98,11 +104,16 @@ def load_body(path: Path) -> tuple[BodyState, dict]:
     return body, doc.get("expected") or {}
 
 
-def compare(body: BodyState, expected: dict, tol: float = 0.02) -> int:
+def compare(body: BodyState, expected: dict, default_tol: float = 0.02) -> int:
     """엔진이 낸 값과 이미 출하된 값을 대조한다.
 
     출하값은 엔진의 입력이 아니라 **재현해야 할 제약**이다. 어긋나면 엔진이
     틀렸거나 보드가 틀렸다는 뜻이고, 어느 쪽이든 찾을 가치가 있다.
+
+    허용오차를 항목마다 둘 수 있다. 어떤 기대값은 *다른 기대값의 함수*라서
+    전파 오차를 그대로 안기 때문이다 — 밀도는 반지름의 세제곱에 반비례하므로
+    반지름이 1 % 어긋나면 밀도는 3 % 어긋난다. 그건 불일치가 아니라 산술이다.
+    그런 항목은 `tol:` 과 함께 *왜* 느슨한지를 적는다.
     """
     if not expected:
         return 0
@@ -114,12 +125,15 @@ def compare(body: BodyState, expected: dict, tol: float = 0.02) -> int:
         if got is None:
             print(f"    [건너뜀] {key:14} 엔진이 아직 이 값을 안 낸다")
             continue
+        tol = spec.get("tol", default_tol)
         off = abs(got - want) / abs(want) if want else abs(got)
         ok = off <= tol
         bad += 0 if ok else 1
         mark = "일치" if ok else "어긋남"
         print(f"    [{mark}] {key:14} 엔진 {got:>9.4g} · 보드 {want:>8} "
-              f"{spec.get('unit','')}  ({off * 100:.1f}%)")
+              f"{spec.get('unit','')}  ({off * 100:.1f}% / 허용 {tol * 100:.0f}%)")
+        if ok and spec.get("tol_reason"):
+            print(f"             허용 사유: {spec['tol_reason']}")
         if not ok:
             print(f"             출처: {spec.get('source','?')}")
     return bad

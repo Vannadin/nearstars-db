@@ -27,7 +27,7 @@ import yaml
 
 import graph
 import registry
-from state import BodyState
+from state import BodyState, Missing
 
 HERE = Path(__file__).resolve().parent
 DOCS = HERE.parent / "docs" / "reference"
@@ -52,17 +52,25 @@ def parse_contract(doc: Path, node: str) -> dict[str, set[str]] | None:
     return out
 
 
-def sample_body() -> BodyState:
-    """계약을 확인할 표본. 도메인 안에 있는 천체 하나면 된다."""
-    doc = yaml.safe_load((BODIES / "alpha_centauri_a_b.yaml").read_text(encoding="utf-8"))
-    return BodyState(name=doc["name"], kind=doc["kind"], parent=doc.get("parent"),
-                     inputs=doc.get("inputs") or {}, units=doc.get("units") or {})
+def sample_bodies() -> list[BodyState]:
+    """계약을 확인할 표본들.
+
+    하나로는 부족하다. 레시피는 도메인 밖에서 값을 내지 않으므로, 거절하는
+    천체만 보면 Returns 를 확인할 수 없다 — 거대행성 하나만 두었더니 암석
+    레시피의 출력을 못 봤다. 천체를 훑어 그 레시피가 실제로 값을 내는 것을 쓴다.
+    """
+    out = []
+    for path in sorted(BODIES.glob("*.yaml")):
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        out.append(BodyState(name=doc["name"], kind=doc["kind"], parent=doc.get("parent"),
+                             inputs=doc.get("inputs") or {}, units=doc.get("units") or {}))
+    return out
 
 
 def main() -> int:
     registry.load_all()
     g = graph.load()
-    body = sample_body()
+    bodies = sample_bodies()
     fails: list[str] = []
     checked = 0
 
@@ -81,7 +89,24 @@ def main() -> int:
             fails.append(f"{node}: {doc.name} 에 '## Contract — `{node}`' 블록이 없다")
             continue
 
-        res = registry.get(node)(body)
+        fn = registry.get(node)
+        res = None
+        for body in bodies:
+            try:
+                candidate = fn(body)
+            except Missing:
+                continue
+            res = res or candidate
+            if candidate.applicable:
+                res = candidate
+                break
+        if res is None:
+            print(f"  [건너뜀] {node}: 어느 표본 천체도 입력을 갖추지 못했다")
+            continue
+        if not res.applicable:
+            print(f"  [건너뜀] {node}: 표본 천체가 전부 도메인 밖이다 "
+                  f"— Returns 를 확인할 수 없다")
+            continue
         actual_in = set(res.inputs)
         actual_out = set(res.values)
         checked += 1

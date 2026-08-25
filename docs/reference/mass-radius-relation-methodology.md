@@ -49,6 +49,30 @@ classification, each with a stated composition assumption.
 
 ---
 
+## Contract — `mass_radius_relation`
+
+**Returns** — `radius` [R_earth] · `density` [g/cm3]
+**Needs** — `mass_earth` [M_earth] · `composition` [—]
+**Discriminating keys** — mass (≲ 8 M⊕ rocky / > 8 M⊕ volatile / ≥ 0.1 M_J degenerate),
+the rocky radius against the valley (1.5–1.8 R⊕), and composition.
+**Grade** — calibrated for `earth_like`; analog otherwise, and for the density gate.
+
+| regime | condition | what this recipe does | grade |
+|---|---|---|---|
+| rocky | R < 1.5 R⊕ from R ∝ M^0.27 | assigns radius and density off the Earth-normalised grid | calibrated |
+| radius valley | 1.5 ≤ R < 1.8 R⊕ | returns the reading **and says it is ambiguous** — both rocky and volatile are live | judgment |
+| above the valley | R ≥ 1.8 R⊕ | declines — statistically not rocky since Rogers 2015; radius is a poor proxy for mass, so the probabilistic relation applies | — |
+| beyond the fit | M > 8 M⊕ | declines — the Zeng approximation ends | — |
+| giant | M ≥ 0.1 M_J | declines — electron degeneracy makes R flat then decreasing; assign the 1.0–1.2 R_J range, never a power law | — |
+
+**Known limitation.** The per-composition scale factors are derived from the prose
+ordering in §2, not from solving layers, so everything except `earth_like` — and the
+density gate's threshold — is an approximation standing in for interior structure. The
+gate therefore does **not** reproduce §7's rejection of the A b III canon: at that radius
+this curve puts the pure-iron limit at 1.53 ρ⊕, so the 1.2 ρ⊕ the canon implied sits inside
+the composition family. The rejection may still be right; the reason recorded for it needs
+checking. Tracked as a `gap` edge from `interior_structure` in `chain.yaml`.
+
 ## 1. Why One of M, R Is Almost Always Missing
 
 The two ways we discover a NearStars planet measure **different** quantities:

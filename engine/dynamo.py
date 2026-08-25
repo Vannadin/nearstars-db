@@ -147,10 +147,13 @@ def dipole_field(mass_mj: float, radius_rj: float, age_gyr: float,
 from registry import recipe  # noqa: E402
 
 
+M_EARTH_PER_MJ = 317.8      # 엔진은 질량을 M⊕ 로만 들고 있다. 별칭을 만들지 않는다.
+
+
 @recipe("dynamo_giant")
 def _from_state(state):
     return dipole_field(
-        mass_mj=state["mass_mj"],
+        mass_mj=state["mass_earth"] / M_EARTH_PER_MJ,
         radius_rj=state["radius_rj"],
         age_gyr=state["age_gyr"],
         body_class=state.get("body_class", "giant"),

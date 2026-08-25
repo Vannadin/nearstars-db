@@ -59,4 +59,5 @@ def load_all() -> None:
     지금은 하나뿐이라 명시 목록이 제일 정직하다. 늘어나면 여기만 늘린다 —
     디렉터리를 자동 스캔하면 등록 실패가 조용히 지나간다.
     """
-    import dynamo  # noqa: F401
+    import dynamo        # noqa: F401
+    import mass_radius   # noqa: F401

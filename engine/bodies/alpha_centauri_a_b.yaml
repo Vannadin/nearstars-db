@@ -5,14 +5,14 @@ parent: Alpha Centauri A
 
 # 측정치와 오너 결정. 여기 있는 것은 도출되지 않는다.
 inputs:
-  mass_mj: 0.3776          # 120 M⊕ / 317.8
+  mass_earth: 120.0        # 한 양에 한 이름. M_J 가 필요한 레시피가 변환한다.
   radius_rj: 1.0
   age_gyr: 5.3
   body_class: giant
   rotation_period_h: 10.35
 
 units:
-  mass_mj: M_J
+  mass_earth: M_earth
   radius_rj: R_jup
   age_gyr: Gyr
   rotation_period_h: h

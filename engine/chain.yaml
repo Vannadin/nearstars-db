@@ -342,6 +342,18 @@ edges:
   - {from: body_age, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
   - {from: body_class, to: internal_heat_nontidal, kind: selects, ref: "internal-heat-luminosity-methodology.md:187"}
   - {from: star_metallicity, to: internal_heat_nontidal, kind: influences, status: gap, ref: "internal-heat-luminosity-methodology.md:254"}
+  - from: interior_structure
+    to: mass_radius_relation
+    kind: influences
+    status: gap
+    note: >
+      조성별 M-R 곡선의 절대 위치는 층을 풀어야 나온다. 지금 레시피는 문서 §2 의
+      산문 순서에서 유도한 배율표를 쓰고 있고, 그건 클래스 표와 같은 임시물이다.
+      밀도 게이트의 문턱이 여기 걸려 있어서 문서 §7 의 기각 사례가 재현되지 않는다.
+      대안은 둘 — 발표된 곡선(Zeng/Seager)을 데이터로 들여오거나, interior_structure
+      가 풀어서 이 표를 대체하거나.
+    ref:
+      - "mass-radius-relation-methodology.md:76-118"
   - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md:477"}
   - {from: internal_heat_nontidal, to: t_eff_body, kind: requires, via: t_int, ref: "internal-heat-luminosity-methodology.md:60"}
   - {from: t_eq_stellar, to: t_eff_body, kind: requires, textbook: true, ref: "internal-heat-luminosity-methodology.md:60"}
