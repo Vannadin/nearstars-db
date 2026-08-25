@@ -284,35 +284,46 @@ Six moons in the Alpha Centauri and Proxima systems have both a mass and a radiu
 board, and four of them sit below 3000 kg/m³, which the previous revision refused outright.
 Running the inversion on all six:
 
-| body | ρ̄ (kg/m³) | outcome | what it took, or what is missing |
-|---|---|---|---|
-| Pandora (A b III) | 4901 | solved | core_mass_fraction 0.255, C/MR² 0.3384, P_c 220903 MPa |
-| Cassandra (A b IV) | 5467 | solved | core_mass_fraction 0.654, C/MR² 0.3311, P_c 81809 MPa |
-| Hades (A b II) | 2829 | declined | ice column base in the III/V/VI window |
-| Dante (A b I) | 2620 | declined | ice column base in the III/V/VI window |
-| Chaos (A b V) | 2014 | declined | ice column base in the III/V/VI window |
-| Proxima Cen c I | 1599 | solved | ice_mass_fraction 0.406, C/MR² 0.3052, P_c 85 MPa |
+| body | ρ̄ (kg/m³) | ice declared | outcome | what it took, or what is missing |
+|---|---|---|---|---|
+| Pandora (A b III) | 4901 | allowed | solved | solved — core_mass_fraction 0.255, C/MR² 0.3384, P_c 220903 MPa |
+| Cassandra (A b IV) | 5467 | allowed | solved | solved — core_mass_fraction 0.654, C/MR² 0.3311, P_c 81809 MPa |
+| Hades (A b II) | 2829 | **excluded** | declined | porosity: ice is excluded by declaration, so void space is what is left. Needs a compaction curve |
+| Dante (A b I) | 2620 | **excluded** | declined | porosity: ice is excluded by declaration, so void space is what is left. Needs a compaction curve |
+| Chaos (A b V) | 2014 | allowed | declined | high-pressure ice phases III/V/VI (or a liquid ocean if warm) |
+| Proxima Cen c I | 1599 | allowed | solved | solved — ice_mass_fraction 0.406, C/MR² 0.3052, P_c 85 MPa |
 
-Three of the four low-density moons now solve or fail for a stated reason rather than
-being turned away at a mean-density gate. **Proxima Centauri c I is solved outright**: at
-326 km its entire water column stays under 85 MPa, comfortably inside ice Ih, and 41 % ice
-over a silicate interior reproduces the board radius.
+Four of the six solve or decline for a stated reason, rather than being turned away at a
+mean-density gate as the previous revision did. **Proxima Centauri c I is solved outright**:
+at 326 km its entire water column stays under 85 MPa, comfortably inside ice Ih, and 41 %
+ice over a silicate interior reproduces the board radius.
 
-**The other three fail on one thing, and it is not the ice shell.** Hades, Dante and Chaos
-all need an ice mantle, and all three put the base of that mantle between 0.2 and 0.8 GPa,
-which is ice III, V or VI territory. Chaos misses by the smallest margin: the mixture that
-would reproduce its 400 km radius puts the ice base at roughly 0.21 GPa against a boundary
-at 0.2095 GPa. The blocking mechanism is named and narrow: **the equation of state for ices
-III, V and VI**, which is a literature-acquisition problem rather than a modelling one.
+**The `ice declared` column is a declaration, not a measurement, and it decides the
+answer.** The board states what each body is made of, and for two of them it excludes water
+ice outright: Dante is a silicate volcanic moon of the Io type with an SO₂ outgassing
+atmosphere, and Hades is recorded as "silicate and ice-free". Handing the inversion only a
+mass and a radius lets it pick the ice axis on density alone, and it then reports "needs
+high-pressure ice phases" for two bodies the board says have no ice at all. That is a wrong
+statement about a real question, so the declaration is an input.
 
-There is a second reading of the same three bodies, and it is worth recording because it
-changes what the next piece of work should be. Dante is the system's tidally heated moon,
-running at roughly 1200 × Io, and Hades is heated too. In a warm body the H₂O at those
-pressures is not high-pressure ice at all: it is **liquid, an internal ocean**. Resolving
-Dante properly therefore needs a liquid-water equation of state and a thermal profile that
-says which of the two states applies, and that is a different, larger job than acquiring
-three sets of ice coefficients. Both branches are out of this revision; the recipe declines
-and names them rather than choosing one silently.
+**With ice excluded, Dante and Hades decline on porosity.** A zero-porosity silicate body of
+Dante's mass comes out at 486 km against a declared 521 km, and Hades at 718 km against 750;
+the volume shortfall is 18.7 % and 12.3 % respectively. With ice ruled out by declaration,
+the mechanism left is **void space**, and their central pressures (344 and 752 MPa) are low
+enough for it to survive. The recipe has no compaction curve, so it declines and says so.
+A second reading is recorded alongside: if the rock is genuinely lighter than the silicate
+this recipe carries, no porosity is needed and the question becomes *which* rock, and if
+neither holds then the declared mass-radius pair is what wants revisiting. Naming a porosity
+model is the actionable half.
+
+**Chaos declines on the ice phases, and it is the only one that does.** The board calls it a
+small icy moon of water ice with rock, so the ice axis is legitimate there. The mixture that
+would reproduce its 400 km radius puts the base of the ice column at roughly 0.21 GPa
+against the ice Ih boundary at 0.2095 GPa, a miss by less than one percent. The blocking
+mechanism is narrow and named: **the equation of state for ices III, V and VI**, which is a
+literature-acquisition problem rather than a modelling one. If the body is warm rather than
+cold, the same pressures hold liquid water instead, which needs a thermal profile to decide;
+both branches are out of this revision.
 
 ## Worked example: Pandora (Alpha Centauri A b III)
 

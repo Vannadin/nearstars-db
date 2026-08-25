@@ -51,13 +51,26 @@ DECLINES = [
 ]
 
 # 로스터. 판정이 아니라 **무엇이 풀리고 무엇이 왜 안 풀리는가** 를 보여주는 표다.
+#
+# 네 번째 칸은 **보드가 얼음을 허용하는가** 다. 이건 물리가 아니라 선언이고, 넘기지
+# 않으면 역산이 밀도만 보고 축을 고른다 — 그러면 보드가 규산염 화산체로 정해둔
+# 천체에 얼음을 붙이고 "얼음 상이 필요하다" 는 틀린 진술이 나온다. 저밀도의 원인을
+# 가려내는 게 이 레시피의 일이므로, 그 선언은 입력이어야 한다.
+#
+# (이름, 질량 kg, 반지름 km, 얼음 허용, 보드 근거)
 ROSTER = [
-    ("Pandora (A b III)",     3.85e24, 5724),
-    ("Cassandra (A b IV)",    9.00e23, 3400),
-    ("Hades (A b II)",        5.00e21,  750),
-    ("Dante (A b I)",         8.00e21,  900),
-    ("Chaos (A b V)",         5.40e20,  400),
-    ("Proxima Cen c I",       2.32e20,  326),
+    ("Pandora (A b III)",     3.85e24, 5724, True,
+     "surface: 대륙과 바다, 극관"),
+    ("Cassandra (A b IV)",    9.00e23, 3400, True,
+     "surface: 물바다 + 극관"),
+    ("Hades (A b II)",        5.00e21,  750, False,
+     "identity: rocky moon, 'silicate and ice-free'"),
+    ("Dante (A b I)",         1.552e21, 521, False,
+     "identity/surface: silicate volcanic (Io-type), SO2 탈가스 대기"),
+    ("Chaos (A b V)",         5.40e20,  400, True,
+     "identity: Small icy moon, 'water ice with rock'"),
+    ("Proxima Cen c I",       2.32e20,  326, True,
+     "포획 KBO 위성 — 보드가 얼음을 배제하지 않는다"),
 ]
 
 TOL = 0.03          # 3 %. 균질 2층 시절의 허용치가 5 % 였고 지구가 그 4.8 % 였다.
@@ -85,23 +98,37 @@ def table() -> None:
               f"{v['core_pressure']:.1f} |")
 
 
+def _mechanism(res) -> str:
+    """거절 결과에서 **기작 이름** 한 줄을 뽑는다. 증상이 아니라 기작이어야 한다."""
+    if "빈 공간" in res.reason:
+        return ("porosity: ice is excluded by declaration, so void space is what is "
+                "left. Needs a compaction curve")
+    if "III·V·VI" in res.reason:
+        return "high-pressure ice phases III/V/VI (or a liquid ocean if warm)"
+    if "얼음 X" in res.reason:
+        return "ice X / superionic phase"
+    if "다공도" in res.reason:
+        return "porosity or an H/He envelope"
+    return "see reason"
+
+
 def roster_table() -> None:
     """로스터 표. 푼 것은 조성을, 못 푼 것은 기작을 적는다."""
-    print("| body | ρ̄ (kg/m³) | outcome | what it took, or what is missing |")
-    print("|---|---|---|---|")
-    for name, mkg, r_km in ROSTER:
+    print("| body | ρ̄ (kg/m³) | ice declared | outcome | what it took, or what is missing |")
+    print("|---|---|---|---|---|")
+    for name, mkg, r_km, ice_ok, _why in ROSTER:
         rho = mkg / (4.0 / 3.0 * 3.141592653589793 * (r_km * 1e3) ** 3)
-        res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M)
+        res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M,
+                                ice_allowed=ice_ok)
+        ice_col = "allowed" if ice_ok else "**excluded**"
         if res.applicable:
             axis = res.regime.replace("inferred_", "")
             val = res.inputs[axis]
             what = (f"solved — {axis} {val:.3f}, C/MR² {res.values['nmoi']:.4f}, "
                     f"P_c {res.values['core_pressure'] * 1e3:.0f} MPa")
-            print(f"| {name} | {rho:.0f} | solved | {what} |")
+            print(f"| {name} | {rho:.0f} | {ice_col} | solved | {what} |")
         else:
-            miss = ("high-pressure ice phases III/V/VI (or a liquid ocean if warm)"
-                    if "III·V·VI" in res.reason else "see reason")
-            print(f"| {name} | {rho:.0f} | declined | {miss} |")
+            print(f"| {name} | {rho:.0f} | {ice_col} | declined | {_mechanism(res)} |")
 
 
 def main() -> int:
@@ -208,8 +235,9 @@ def main() -> int:
 
     print("\n로스터 — 저밀도 위성 넷 중 몇을 푸는가")
     solved = declined = 0
-    for name, mkg, r_km in ROSTER:
-        res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M)
+    for name, mkg, r_km, ice_ok, _why in ROSTER:
+        res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M,
+                                ice_allowed=ice_ok)
         if res.applicable:
             solved += 1
             axis = res.regime.replace("inferred_", "")

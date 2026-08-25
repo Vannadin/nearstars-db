@@ -388,7 +388,8 @@ INFER_TOL = 5e-4        # 반지름 상대오차
 SCAN_POINTS = 13        # 자유 분율 축을 훑는 눈금 수
 
 
-def infer_composition(mass_earth: float, radius_earth: float) -> Result:
+def infer_composition(mass_earth: float, radius_earth: float,
+                      ice_allowed: bool = True) -> Result:
     """질량과 반지름을 재현하는 자유 분율 하나를 푼다.
 
     금속도 얼음도 없는 순수 규산염을 기준선으로 잡는다. 관측 반지름이 그보다
@@ -397,11 +398,19 @@ def infer_composition(mass_earth: float, radius_earth: float) -> Result:
 
     축을 **먼저 훑고** 이분법으로 좁힌다. 곧장 이분법을 돌리면 상 구간의 틈에
     떨어진 시험값 하나 때문에 멈추는데, 그 값이 답인지 지나가던 자리인지 구분이
-    안 된다. 훑어두면 답이 틈 안에 있는지 밖에 있는지 말할 수 있다."""
+    안 된다. 훑어두면 답이 틈 안에 있는지 밖에 있는지 말할 수 있다.
+
+    `ice_allowed=False` 는 **선언이지 물리가 아니다.** 호출자가 그 천체를 얼음 없는
+    것으로 이미 정해두었다는 뜻이고, 그러면 얼음 축은 후보에서 빠진다. 기준선보다
+    가벼운데 얼음을 못 쓰면 남는 기작은 빈 공간뿐이므로 거기서 거절한다.
+
+    이 인자가 없던 동안 이 함수는 밀도만 보고 축을 골랐고, 보드가 규산염 화산체로
+    선언한 천체에 얼음을 붙여 "얼음 상이 필요하다" 는 틀린 진술을 냈다. 저밀도의
+    원인을 가려내는 것이 이 레시피의 일인데, 바로 그 자리에서 새고 있었다."""
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
               "core_mass_fraction": None, "ice_mass_fraction": None,
               "composition": "inferred", "differentiated": True,
-              "body_class": None}
+              "ice_allowed": ice_allowed, "body_class": None}
 
     if mass_earth <= 0 or radius_earth <= 0:
         return out_of_domain(RECIPE, VERSION, "질량 또는 반지름이 양수가 아니다",
@@ -416,6 +425,26 @@ def infer_composition(mass_earth: float, radius_earth: float) -> Result:
 
         def at(x):
             return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0)
+    elif not ice_allowed:
+        # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 축이 남지 않는다.
+        short = (radius_earth - rock.values["radius"]) / radius_earth
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"얼음 없는 천체로 선언됐는데, 공극 0 인 규산염으로 이 질량을 풀면 "
+            f"{rock.values['radius'] * EARTH_RADIUS_M / 1e3:.0f} km 가 나온다. 선언된 "
+            f"{radius_earth * EARTH_RADIUS_M / 1e3:.0f} km 에 {short * 100:.1f} % 모자라고, "
+            "그만큼의 부피를 채울 것이 필요하다. 얼음은 선언이 배제했으므로 남는 기작은 "
+            "**빈 공간** 뿐이다 — 중심압 "
+            f"{rock.values['core_pressure'] * 1e3:.0f} MPa 는 공극이 살아남을 수 있는 "
+            "크기다. **다공도 모형이 없어서** 못 푸는 경우가 이것이고, 압밀 곡선이 "
+            "들어오면 풀린다. 다른 읽기도 하나 있다 — 암석이 이 레시피가 든 것보다 "
+            "가벼우면 다공도 없이도 맞는데, 그러면 어느 암석인지가 답이 되고, "
+            "그것도 아니면 선언된 질량·반지름 쌍 자체를 다시 봐야 한다.",
+            inputs=inputs, refs=REFS,
+            notes=("얼음 축은 물리가 아니라 **선언** 으로 닫혔다 (ice_allowed=False). "
+                   "선언이 바뀌면 이 천체는 얼음 축에서 풀린다.",
+                   f"공극 0 규산염 기준선 대비 부피 부족분 "
+                   f"{(1 - (rock.values['radius'] / radius_earth) ** 3) * 100:.1f} %.",))
     else:
         axis, span = "ice_mass_fraction", (0.0, 0.98)
 
