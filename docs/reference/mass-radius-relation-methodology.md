@@ -381,6 +381,7 @@ exists), citation count (ADS, at survey time), and one line on what it contribut
 
 ## Related
 
+- [`interior-structure-methodology.md`](interior-structure-methodology.md): solves the layer geometry a radius implies, and is what should eventually replace the composition lookup here.
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the temperature
   `T` that, with the surface gravity `g` this doc assigns, sets the scale height in
   the atmosphere doc; rocky-vs-volatile classification (§5) decides which

@@ -348,6 +348,7 @@ R_J**(젊음/복사로 올려서)를 채택한다. 이것이 거대 행성 다�
 
 ## 관련 문서
 
+- [`interior-structure-methodology.md`](interior-structure-methodology.md): 반지름이 함의하는 층 기하를 푼다. 여기 조성 조회표를 언젠가 대체해야 할 쪽이다.
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): 이 문서가 배정하는
   표면중력 `g`와 함께 대기 문서의 스케일높이를 정하는 온도 `T`. 암석형-대-휘발성
   분류(§5)가 어느 온도/대기 분기를 쓸지 결정한다.

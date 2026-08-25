@@ -178,6 +178,7 @@ regime gate, so a locked planet with an active core can still hold a modest fiel
 
 ## Related
 
+- [`interior-structure-methodology.md`](interior-structure-methodology.md): supplies the core radius this recipe consumes.
 - [`surface-radiation-dose-methodology.md`](surface-radiation-dose-methodology.md) —
   consumes this doc's field strength as the weaker of its two shielding terms
   (dose ∝ B^−1.48, against the atmospheric column's ∝ C^−2…−3).

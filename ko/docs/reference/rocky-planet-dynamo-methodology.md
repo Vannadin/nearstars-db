@@ -159,6 +159,7 @@ RM22의 격자는 0.1–48 M⊕이지만 물리는 급격히 분기합니다.
 
 ## Related
 
+- [`interior-structure-methodology.md`](interior-structure-methodology.md): 이 레시피가 쓰는 핵 반경을 공급한다.
 - [`planetary-dynamo-scaling.md`](planetary-dynamo-scaling.md) — 거대행성/아성단
   에너지플럭스 방법. 두 방법은 암석형 ↔ sub-Neptune 경계에서 갈립니다.
 - [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md) —

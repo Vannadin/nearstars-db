@@ -300,6 +300,7 @@ Earth/Moon/Mars/Venus만이 진정으로 *풍부한* 고차 장을 가집니다(
 
 ## Related
 
+- [`interior-structure-methodology.md`](interior-structure-methodology.md): C/MR²를 공급한다. Radau–Darwin 단계가 J₂를 내려면 먼저 필요한 입력이다.
 - [`principia-geopotential-data.md`](principia-geopotential-data.md): verbatim
   태양계 계수, 정규화, cfg 형식, A b 자이언트 워크드 예시.
 - [`principia-cfg-reference.md`](principia-cfg-reference.md): cfg 스키마(노드 문법, 단위).

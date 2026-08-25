@@ -345,6 +345,7 @@ field (everything else is degree-2 to low-degree, recovered from flybys).
 
 ## Related
 
+- [`interior-structure-methodology.md`](interior-structure-methodology.md): supplies C/MR², the input the Radau–Darwin step needs before it can give J₂.
 - [`principia-geopotential-data.md`](principia-geopotential-data.md): verbatim
   Solar-System coefficients, normalization, cfg forms, the A b giant worked example.
 - [`principia-cfg-reference.md`](principia-cfg-reference.md): the cfg schema (node syntax, units).
