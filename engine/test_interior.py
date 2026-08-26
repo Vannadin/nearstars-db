@@ -20,6 +20,7 @@ import sys
 
 import interior
 from interior import EARTH_MASS_KG, EARTH_RADIUS_M, infer_composition, solve
+from porosity import MASS_COMPACT_KG, P_GRAIN_FRACTURE, voids_expected
 
 # (이름, 질량 M⊕, 발표 반지름 R⊕, CMF, 발표 C/MR², 발표 f, 출처)
 #
@@ -57,19 +58,28 @@ DECLINES = [
 # 천체에 얼음을 붙이고 "얼음 상이 필요하다" 는 틀린 진술이 나온다. 저밀도의 원인을
 # 가려내는 게 이 레시피의 일이므로, 그 선언은 입력이어야 한다.
 #
-# (이름, 질량 kg, 반지름 km, 얼음 허용, 보드 근거)
+# 다섯 번째 칸은 **보드가 조석가열을 선언하는가** 다. 이것도 물리가 아니라 선언이다 —
+# 조석가열은 다른 노드의 출력이고, 여기서 질량이나 궤도로 추정하면 그 노드의 두 번째
+# 사본이 생긴다. 공극이 남을 레짐인가를 판정하는 세 지표 중 하나로만 쓰인다
+# (Bierson+ 2019 §2.2 의 제외 목록).
+#
+# 지금 True 인 둘은 보드에 `tidal_heating` 행을 실제로 가진 둘이다
+# (phase4/alpha_centauri.yaml:1553 Dante ~1200× Io · :1888 Hades ~15× Io). 나머지
+# 넷에는 그 행이 없다.
+#
+# (이름, 질량 kg, 반지름 km, 얼음 허용, 조석가열 선언, 보드 근거)
 ROSTER = [
-    ("Pandora (A b III)",     3.85e24, 5724, True,
+    ("Pandora (A b III)",     3.85e24, 5724, True,  False,
      "surface: 대륙과 바다, 극관"),
-    ("Cassandra (A b IV)",    9.00e23, 3400, True,
+    ("Cassandra (A b IV)",    9.00e23, 3400, True,  False,
      "surface: 물바다 + 극관"),
-    ("Hades (A b II)",        5.00e21,  750, False,
+    ("Hades (A b II)",        5.00e21,  750, False, True,
      "identity: rocky moon, 'silicate and ice-free'"),
-    ("Dante (A b I)",         1.552e21, 521, False,
+    ("Dante (A b I)",         1.552e21, 521, False, True,
      "identity/surface: silicate volcanic (Io-type), SO2 탈가스 대기"),
-    ("Chaos (A b V)",         5.40e20,  400, True,
+    ("Chaos (A b V)",         5.40e20,  400, True,  False,
      "identity: Small icy moon, 'water ice with rock'"),
-    ("Proxima Cen c I",       2.32e20,  326, True,
+    ("Proxima Cen c I",       2.32e20,  326, True,  False,
      "포획 KBO 위성 — 보드가 얼음을 배제하지 않는다"),
 ]
 
@@ -129,22 +139,39 @@ def _mechanism(res) -> str:
 
 
 def roster_table() -> None:
-    """로스터 표. 푼 것은 조성을, 못 푼 것은 기작을 적는다."""
-    print("| body | ρ̄ (kg/m³) | ice declared | outcome | what it took, or what is missing |")
-    print("|---|---|---|---|---|")
-    for name, mkg, r_km, ice_ok, _why in ROSTER:
+    """로스터 표. 푼 것은 조성을, 못 푼 것은 기작을 적는다.
+
+    `voids?` 칸이 있는 이유. 공극 축으로 풀린 천체는 `solved` 로 나오지만, 그 해가
+    **믿을 만한 레짐에서 나왔는가** 는 별개의 질문이고 답이 다를 수 있다. 그 판정이
+    출력에 없던 동안에는 방법론 문서의 산문만이 그 사실을 들고 있었다 — 표가 스스로
+    말하지 못하면 산문이 대신 말하게 되고, 산문은 어긋난다."""
+    print("| body | ρ̄ (kg/m³) | ice declared | tidal | outcome | voids? "
+          "| what it took, or what is missing |")
+    print("|---|---|---|---|---|---|---|")
+    for name, mkg, r_km, ice_ok, tidal, _why in ROSTER:
         rho = mkg / (4.0 / 3.0 * 3.141592653589793 * (r_km * 1e3) ** 3)
         res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M,
-                                ice_allowed=ice_ok)
+                                ice_allowed=ice_ok, tidal_heating=tidal)
         ice_col = "allowed" if ice_ok else "**excluded**"
+        tidal_col = "declared" if tidal else "—"
         if res.applicable:
             axis = res.regime.replace("inferred_", "")
             val = res.inputs[axis]
+            # 공극 축으로 풀린 것만 판정이 결론을 바꾼다. 다른 축은 빈 공간을
+            # 주장하지 않으므로 판정이 걸려도 그 해에 대한 진술이 아니다.
+            porous = axis == "initial_porosity"
+            ok = res.values["voids_expected"]
+            verdict = ("**no**" if porous and not ok else
+                       "yes" if porous else "n/a")
             what = (f"solved — {axis} {val:.3f}, C/MR² {res.values['nmoi']:.4f}, "
                     f"P_c {res.values['core_pressure'] * 1e3:.0f} MPa")
-            print(f"| {name} | {rho:.0f} | {ice_col} | solved | {what} |")
+            if porous and not ok:
+                what += " — **공극 해이나 공극이 남을 레짐이 아니다**"
+            print(f"| {name} | {rho:.0f} | {ice_col} | {tidal_col} | solved "
+                  f"| {verdict} | {what} |")
         else:
-            print(f"| {name} | {rho:.0f} | {ice_col} | declined | {_mechanism(res)} |")
+            print(f"| {name} | {rho:.0f} | {ice_col} | {tidal_col} | declined "
+                  f"| — | {_mechanism(res)} |")
 
 
 # 각 상의 기준 등온. eos.py 가 이 온도에서 P = 0 의 ρ·K_T·K′ 를 읽어 BME3 상수로 쓴다.
@@ -402,15 +429,17 @@ def main() -> int:
 
     print("\n로스터 — 저밀도 위성 넷 중 몇을 푸는가")
     solved = declined = 0
-    for name, mkg, r_km, ice_ok, _why in ROSTER:
+    for name, mkg, r_km, ice_ok, tidal, _why in ROSTER:
         res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M,
-                                ice_allowed=ice_ok)
+                                ice_allowed=ice_ok, tidal_heating=tidal)
         if res.applicable:
             solved += 1
             axis = res.regime.replace("inferred_", "")
+            voids = "" if axis != "initial_porosity" else (
+                " · 공극 레짐 " + ("O" if res.values["voids_expected"] else "X"))
             print(f"  [풀림] {name:20} {axis} {res.inputs[axis]:.3f} · "
                   f"C/MR² {res.values['nmoi']:.4f} · "
-                  f"P_c {res.values['core_pressure'] * 1e3:.0f} MPa")
+                  f"P_c {res.values['core_pressure'] * 1e3:.0f} MPa{voids}")
         else:
             declined += 1
             named = any(k in res.reason for k in ("다공도", "얼음 X"))
@@ -418,6 +447,45 @@ def main() -> int:
                 fails.append(f"{name}: 거절 이유가 기작 이름이 아니다 — {res.reason[:60]}")
             print(f"  [거절] {name:20} {res.reason[:96]}")
     print(f"         풀림 {solved} · 거절 {declined}")
+
+    # ── 공극 레짐 판정 ──────────────────────────────────────────────────
+    #
+    # 지표 셋을 하나씩 켜고 끈다. 판정이 산문이 아니라 값이 된 뒤로 이렇게 시험할 수
+    # 있고, 그게 승격의 이유다. 각 지표마다 **양쪽** 을 본다 — 문턱 위에서 발화하고
+    # 아래에서 침묵해야 지표이지, 늘 발화하면 상수다.
+    print("\n공극 레짐 판정 — 지표 셋이 각자 문턱의 양쪽에서 다르게 답하는가")
+    below = MASS_COMPACT_KG * 0.5      # 관측된 전이질량 아래
+    above = MASS_COMPACT_KG * 5.0      # 위
+    p_lo = P_GRAIN_FRACTURE * 0.5      # 파쇄 문턱 아래
+    p_hi = P_GRAIN_FRACTURE * 5.0      # 위
+    for label, args, want in (
+            ("셋 다 안 걸리면 공극이 기대된다", (below, p_lo, False), True),
+            ("질량이 전이질량을 넘으면 아니다", (above, p_lo, False), False),
+            ("중심압이 파쇄 문턱을 넘으면 아니다", (below, p_hi, False), False),
+            ("조석가열이 선언되면 아니다", (below, p_lo, True), False)):
+        got, why = voids_expected(*args)
+        ok = got is want
+        if not ok:
+            fails.append(f"공극 레짐 판정: {label} — {got}, {why[:60]}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {label}")
+
+    # 판정은 **이유를 이름 대야** 한다. 불리언만 돌려주면 표가 다시 산문을 부른다.
+    _, why_off = voids_expected(above, p_hi, True)
+    named = all(k in why_off for k in ("전이질량", "파쇄 문턱", "조석가열"))
+    if not named:
+        fails.append(f"공극 레짐 판정: 걸린 지표를 전부 이름 대지 않는다 — {why_off}")
+    print(f"  [{'PASS' if named else 'FAIL'}] 걸린 지표를 이름 댄다")
+
+    # 그리고 솔버를 통해서도 나와야 한다. 판정 함수만 맞고 배선이 끊기면 표는 여전히
+    # 아무 말도 못 한다.
+    r_dante = infer_composition(1.552e21 / EARTH_MASS_KG, 521e3 / EARTH_RADIUS_M,
+                                ice_allowed=False, tidal_heating=True)
+    wired = (r_dante.applicable
+             and r_dante.regime == "inferred_initial_porosity"
+             and r_dante.values.get("voids_expected") is False)
+    if not wired:
+        fails.append("공극 레짐 판정: 역산 결과에 판정이 실려 오지 않는다")
+    print(f"  [{'PASS' if wired else 'FAIL'}] 공극 축으로 풀린 결과가 판정을 싣고 온다")
 
     print("\n계약 — 페이로드가 제 몫을 하는가")
     r = solve(1.0, core_mass_fraction=0.325)

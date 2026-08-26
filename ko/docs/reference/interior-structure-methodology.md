@@ -57,10 +57,10 @@ Gibbs 표현에서 읽어 온 것이고, 사다리는 얼음 Ih 부터 얼음 VI
 ## 계약 — `interior_layers`
 
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
-`radius` [R_earth] · `core_pressure` [GPa]
+`radius` [R_earth] · `core_pressure` [GPa] · `bulk_porosity` [—] · `voids_expected` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
-`initial_porosity` [—] · `porosity_cap` [Pa]
+`initial_porosity` [—] · `porosity_cap` [Pa] · `tidal_heating` [—]
 **갈리는 축** — `composition` 이 고르는 물질 스택, 그리고 각 층 경계에서 도달하는 압력.
 거기 근거 있는 상(phase)이 존재하는지를 그 압력이 정합니다. 레짐과 수치 조건은
 [유효 영역](#유효-영역)에 있습니다.
@@ -72,6 +72,15 @@ Gibbs 표현에서 읽어 온 것이고, 사다리는 얼음 Ih 부터 얼음 VI
 `radius_earth` 는 **아무것도 계산하는 데 쓰이지 않습니다.** 반지름은 출력입니다. 넘겨주면
 도출된 반지름과 대조만 하므로, 알려진 천체를 재현하지 못하는 조성 선언은 조용히 통과하는
 대신 그렇다고 말합니다. 이 값을 실제로 소비하는 것은 아래의 역산입니다.
+
+`tidal_heating` 도 계산에는 쓰이지 않습니다. `voids_expected` 를 떠받치는 세 지표 중
+하나이고, 추정이 아니라 선언으로 받습니다 — 조석가열은 다른 노드의 출력이라서, 여기서
+질량이나 궤도로 어림하면 그 노드의 두 번째 사본이 이 레시피 안에 생깁니다.
+
+`voids_expected` 는 압밀 관계식이 답하지 않는 질문에 답합니다. 이 천체가 애초에 빈 공간을
+간직할 수 있는 레짐인가입니다. 세 지표 중 하나라도 걸리면 거짓이 됩니다 — 관측된
+전이질량을 넘는 질량, 입자 파쇄 문턱을 넘는 중심압, 선언된 조석가열. `voids_expected` 가
+거짓인데 공극 해가 함께 나왔다면, 그 해는 예측이 아니라 봉투입니다.
 
 이 블록은 코드와 대조됩니다. `engine/check_contracts.py` 가 여기 선언된 내용과
 `interior_layers` 가 실행 시점에 실제로 받고 내놓는 것을 비교하므로, 둘이 어긋날 수

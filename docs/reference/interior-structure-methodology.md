@@ -63,10 +63,10 @@ solved interior.
 ## Contract — `interior_layers`
 
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
-`radius` [R_earth] · `core_pressure` [GPa]
+`radius` [R_earth] · `core_pressure` [GPa] · `bulk_porosity` [—] · `voids_expected` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
-`initial_porosity` [—] · `porosity_cap` [Pa]
+`initial_porosity` [—] · `porosity_cap` [Pa] · `tidal_heating` [—]
 **Discriminating keys** — the material stack chosen by `composition`, and the pressure
 reached at each layer boundary, which decides whether a grounded phase exists there.
 Regimes and their numeric conditions are in [Domain of validity](#domain-of-validity).
@@ -80,6 +80,17 @@ porosity it needs is a declaration this recipe cannot derive.
 is compared against the derived radius, so a composition declaration that fails to
 reproduce a known body says so instead of passing quietly. The inversion below is what
 consumes it for real.
+
+`tidal_heating` is not used to compute anything either. It is one of the three indicators
+behind `voids_expected`, and it is a declaration rather than an inference because tidal
+heating is another node's output; estimating it here from mass or orbit would put a second
+copy of that node inside this recipe.
+
+`voids_expected` answers a question the compaction relation does not: whether this body is
+in a regime where pore space survives at all. It is false when any of three indicators
+fires — mass above the observed transition, central pressure above the grain-fracture
+threshold, or declared tidal heating — and a porous solution returned alongside
+`voids_expected: false` is an envelope, not a prediction.
 
 This block is checked against the code: `engine/check_contracts.py` compares what is
 declared here with what `interior_layers` actually consumes and produces at run time, so

@@ -139,6 +139,46 @@ def bulk_factor(material_name: str, p_pa: float, phi0: float,
     return 1.0 - porosity(kind, p_pa, phi0, p_cap)
 
 
+def voids_expected(mass_kg: float, p_center_pa: float,
+                   tidal_heating: bool = False) -> tuple[bool, str]:
+    """이 레짐에서 공극이 남아 있으리라 기대할 수 있는가, 그리고 왜.
+
+    압밀 곡선은 "이 압력에서 φ 가 얼마인가" 를 답하지 "이 천체가 애초에 공극을
+    가질 수 있는가" 를 답하지 않는다. 후자는 세 지표가 말하고, 셋 다 이 파일의
+    상수에서 나온다 — 그래서 판정도 여기 있다.
+
+    지표 셋은 전부 **공극이 없는 쪽** 으로만 발화한다. 하나라도 걸리면 이 천체의
+    공극 해는 예측이 아니라 봉투 상한으로 읽어야 한다.
+
+    1. 관측된 전이질량 (Carry 2012 §5.2). 10²⁰ kg 위의 천체는 관측상 전부
+       macroporosity ≈ 0 이다. 압밀 곡선이 검증된 곳은 그 아래다.
+    2. 입자 파쇄 문턱 (Britt+ 2002 → Carry 2012). 중심압이 10 MPa 를 넘으면
+       규산염 알갱이가 깨지기 시작한다. 1 번의 기작 쪽 진술이지만, 질량이 아니라
+       적분이 실제로 낸 압력을 보므로 독립적으로 발화할 수 있다.
+    3. 조석가열. Bierson+ 2019 §2.2 가 자기 모형의 제외 목록에 넣은 다섯 중
+       하나이고, 다섯 다 공극을 **더** 없애는 방향이다.
+
+    조석가열은 계산하지 않고 **선언으로 받는다.** 그건 다른 노드의 일이고, 여기서
+    질량이나 궤도로 추정하면 `tidal_heating` 의 두 번째 사본이 이 레시피 안에
+    생긴다.
+    """
+    hits = []
+    if mass_kg > MASS_COMPACT_KG:
+        hits.append(f"질량이 관측된 전이질량의 {mass_kg / MASS_COMPACT_KG:.0f} 배"
+                    f" (Carry 2012 §5.2)")
+    if p_center_pa > P_GRAIN_FRACTURE:
+        hits.append(f"중심압이 입자 파쇄 문턱의 "
+                    f"{p_center_pa / P_GRAIN_FRACTURE:.0f} 배")
+    if tidal_heating:
+        hits.append("조석가열이 선언돼 있다 (Bierson+ 2019 §2.2 의 제외 목록)")
+    if not hits:
+        return True, (f"세 지표 어느 것도 걸리지 않는다 — 질량 "
+                      f"{mass_kg / MASS_COMPACT_KG:.2f} × 10²⁰ kg, 중심압 "
+                      f"{p_center_pa / 1e6:.1f} MPa, 조석가열 선언 없음. "
+                      "압밀 곡선이 검증된 레짐 안이다.")
+    return False, "공극이 남을 레짐이 아니다 — " + "; ".join(hits) + "."
+
+
 REFS = (
     "2019Icar..326...10B",      # Bierson+ 2019 — 식 (1)(2) 와 계수 표, KBO 검증
     "2009JGRE..114.9004Y",      # Yasui & Arakawa 2009 — 압밀 실험, 순수 실리카 지수

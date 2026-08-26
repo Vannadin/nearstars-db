@@ -34,7 +34,7 @@ import math
 from eos import MATERIALS, PhaseGap
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
-                      bulk_factor, porosity)
+                      bulk_factor, porosity, voids_expected)
 
 RECIPE = "interior-structure-methodology"
 VERSION = "2"
@@ -298,12 +298,17 @@ def solve(mass_earth: float,
           differentiated: bool = True,
           body_class: str | None = None,
           initial_porosity: float = 0.0,
-          porosity_cap: float | None = None) -> Result:
+          porosity_cap: float | None = None,
+          tidal_heating: bool = False) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
     대조해서, 선언한 조성이 그 천체를 재현하는지 판정하고 어긋나면 무엇이 빠졌는지
-    이름을 댄다."""
+    이름을 댄다.
+
+    `tidal_heating` 도 계산에 쓰이지 않는다. 공극이 남을 레짐인가를 판정하는 세
+    지표 중 하나이고 (`porosity.voids_expected`), 다른 노드의 출력이므로 여기서는
+    선언으로만 받는다."""
     preset_cmf, preset_imf, core_material = COMPOSITIONS.get(
         composition, (None, None, "fe_prem"))
     cmf = preset_cmf if core_mass_fraction is None else core_mass_fraction
@@ -313,7 +318,7 @@ def solve(mass_earth: float,
               "core_mass_fraction": cmf, "ice_mass_fraction": imf,
               "composition": composition, "differentiated": differentiated,
               "body_class": body_class, "initial_porosity": initial_porosity,
-              "porosity_cap": porosity_cap}
+              "porosity_cap": porosity_cap, "tidal_heating": tidal_heating}
 
     if body_class in FLUID_CLASSES:
         return out_of_domain(
@@ -391,6 +396,10 @@ def solve(mass_earth: float,
              "등온이다. 핵과 하부맨틀 EOS 가 PREM 적합이라 지구의 열구조와 가벼운 "
              "원소가 그 유효 ρ₀ 안에 흡수돼 있다."]
 
+    # 공극이 남을 레짐인가. 적분이 낸 중심압을 쓰므로 적분 뒤에만 물을 수 있다.
+    voids_ok, voids_why = voids_expected(st.mass_kg, st.p_center, tidal_heating)
+    notes.append(("공극 레짐 판정 — " if voids_ok else "공극 레짐 판정 ⚠ — ") + voids_why)
+
     reason = (f"{mass_earth:.4g} M⊕ 를 핵질량분율 {cmf:.3f}"
               + (f" · 얼음질량분율 {imf:.3f}" if imf > 0 else "")
               + (f" · 초기공극 {initial_porosity:.2f}" if initial_porosity > 0 else "")
@@ -422,12 +431,16 @@ def solve(mass_earth: float,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
                 "core_radius": st.core_radius_m / EARTH_RADIUS_M,
                 "radius": radius,
-                "core_pressure": st.p_center / 1e9},
+                "core_pressure": st.p_center / 1e9,
+                "bulk_porosity": st.phi_bulk,
+                "voids_expected": voids_ok},
         units={"nmoi": "dimensionless",
                "core_radius_fraction": "dimensionless",
                "core_radius": "R_earth",
                "radius": "R_earth",
-               "core_pressure": "GPa"},
+               "core_pressure": "GPa",
+               "bulk_porosity": "dimensionless",
+               "voids_expected": ""},
         refs=REFS,
         notes=tuple(notes),
     )
@@ -469,7 +482,8 @@ SCAN_POINTS = 13        # 자유 분율 축을 훑는 눈금 수
 
 
 def _porous_rock_verdict(mass_earth: float, radius_earth: float,
-                         rock: Result, inputs: dict) -> Result:
+                         rock: Result, inputs: dict,
+                         tidal_heating: bool = False) -> Result:
     """얼음이 선언으로 배제된 저밀도 천체를 공극으로 설명할 수 있는지 판정한다.
 
     **맞추지 않는다.** 발표된 법칙을 발표된 초기공극 φ₀ = 0.60 (Bierson+ 2019
@@ -497,7 +511,8 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
 
     def at(phi, cap):
         return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
-                     initial_porosity=phi, porosity_cap=cap)
+                     initial_porosity=phi, porosity_cap=cap,
+                     tidal_heating=tidal_heating)
 
     top_pub = at(PHI0_NOMINAL, None)
     top_cap = at(PHI0_NOMINAL, P_LAB_MAX)
@@ -584,7 +599,8 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
 
 
 def infer_composition(mass_earth: float, radius_earth: float,
-                      ice_allowed: bool = True) -> Result:
+                      ice_allowed: bool = True,
+                      tidal_heating: bool = False) -> Result:
     """질량과 반지름을 재현하는 자유 분율 하나를 푼다.
 
     금속도 얼음도 없는 순수 규산염을 기준선으로 잡는다. 관측 반지름이 그보다
@@ -605,13 +621,15 @@ def infer_composition(mass_earth: float, radius_earth: float,
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
               "core_mass_fraction": None, "ice_mass_fraction": None,
               "composition": "inferred", "differentiated": True,
-              "ice_allowed": ice_allowed, "body_class": None}
+              "ice_allowed": ice_allowed, "body_class": None,
+              "tidal_heating": tidal_heating}
 
     if mass_earth <= 0 or radius_earth <= 0:
         return out_of_domain(RECIPE, VERSION, "질량 또는 반지름이 양수가 아니다",
                              inputs=inputs, refs=REFS)
 
-    rock = solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0)
+    rock = solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
+                 tidal_heating=tidal_heating)
     if not rock.applicable:
         return rock
 
@@ -619,16 +637,19 @@ def infer_composition(mass_earth: float, radius_earth: float,
         axis, span = "core_mass_fraction", (0.0, 1.0)
 
         def at(x):
-            return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0)
+            return solve(mass_earth, core_mass_fraction=x, ice_mass_fraction=0.0,
+                         tidal_heating=tidal_heating)
     elif not ice_allowed:
         # 기준선보다 가벼운데 얼음이 선언으로 배제돼 있다. 남는 기작은 빈 공간이고,
         # 이제 그 빈 공간에 근거된 관계식이 있다 — 그래서 여기서 끝나지 않는다.
-        return _porous_rock_verdict(mass_earth, radius_earth, rock, inputs)
+        return _porous_rock_verdict(mass_earth, radius_earth, rock, inputs,
+                                    tidal_heating)
     else:
         axis, span = "ice_mass_fraction", (0.0, 0.98)
 
         def at(x):
-            return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=x)
+            return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=x,
+                         tidal_heating=tidal_heating)
 
     # 1) 축을 훑는다. 값이 나오는 눈금과 막힌 눈금을 모두 들고 간다.
     grid = [span[0] + (span[1] - span[0]) * i / (SCAN_POINTS - 1)
