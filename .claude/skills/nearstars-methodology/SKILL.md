@@ -64,10 +64,16 @@ ambiguous, one clarifying line beats a wrong mode.
 
 ## Before writing anything — read the exemplars (mandatory)
 
-The sections below describe *structure*; the exemplars carry the density,
-tone, and citation craft that make the output consumable. A session that
-authors from the descriptions alone produces structurally-correct but
-shallow output (observed in the first cross-repo run, 2026-07-11).
+The sections below describe *structure*; the exemplars carry the tone and
+citation craft. A session that authors from the descriptions alone produces
+structurally-correct but shallow output (observed in the first cross-repo run,
+2026-07-11).
+
+**Read them for citation craft and register, not for length.** "Density" here
+means every line earning its place, and it has repeatedly been read as "write
+more", which is how one doc reached 4.5x the reference. The Mode A section
+below lists what not to write; that list wins over anything an exemplar
+happens to contain.
 Read the chosen mode's exemplars once, in full, in the authoring thread —
 fan-out research agents do not need them (they receive the authored prompt
 itself). Absolute paths so they resolve from any repo:
@@ -168,20 +174,49 @@ Two execution rules:
 
 ## Mode A — writing the methodology doc
 
-Structure, modeled on `planetary-dynamo-scaling.md` (first line: one-line
-Korean HTML comment stating the doc's role):
+A methodology doc is a **manual for a recipe**, not an account of how the
+recipe came to be. It is read by someone who wants to call the thing, and by
+the machine that checks the contract against the code. Neither needs the story.
 
-1. **Title** — "<quantity> grounding — <method name>".
-2. **The law / relation** — the governing equation(s), with the source paper.
-3. **Practical formula** — the calibrated, directly-computable form actually
-   used by the pipeline.
-4. **Validation** — reproduce the source paper's own published values with
-   the practical formula. This is the step that catches transcription errors.
-5. **Domain of validity / regimes** — where the relation holds, with regime
-   branches per body class (giant / sub-Neptune / rocky…), each grounded.
-6. **Worked examples** — real NearStars bodies, numbers shown end-to-end.
-7. **Citations** — annotated: full reference, bibcode, arXiv id, whether it
-   is in the `_papers/` cache, and one sentence on what role it plays.
+Structure (first line: one-line Korean HTML comment stating the doc's role;
+then a title, `<quantity> grounding — <method name>`):
+
+1. **Contract** — `## Contract — <node>` with `Returns`, `Needs`,
+   `Discriminating keys`, `Grade`. `engine/check_contracts.py` parses this
+   block and diffs it against what the recipe actually consumes and produces,
+   so it is machine-checked, not decorative.
+2. **The relation** — the governing equations with their source. State them;
+   do not narrate deriving them.
+3. **Constants / equations of state** — one table. Every row carries its
+   source, table number, and validity limit. Values only; a constant that
+   needs a paragraph belongs in Sources as one annotated line.
+4. **The mechanisms this recipe models** — one short section each, only where
+   the physics genuinely branches (e.g. porosity, compaction, phase ladders).
+   Skip entirely if the relation in §2 is the whole method.
+5. **Domain of validity** — the regime table with numeric conditions, and what
+   the recipe returns in each. **Anchor results live here as a table**, because
+   "how well does it work and where" is one question, not two. The table only —
+   the surrounding prose is what made the last doc 4.5x the reference one.
+6. **Sources** — annotated: full reference, bibcode, arXiv id, whether it is
+   in the `_papers/` cache, and one sentence on the role it plays. **A choice
+   between sources is one line here**, not a section elsewhere.
+
+**Do not write these.** Every one of them has appeared, been asked to go, and
+come back:
+
+- a revision history, or a "what changed on <date> and why" section — that is
+  what git log is
+- worked examples walked through by hand — the tests generate them and
+  `check.sh` runs them; a doc table that is not generated will drift
+- the reasoning behind a choice, retold — the one-line annotation in Sources is
+  the whole budget for it
+- "what the roster asks for", or any section framed around our bodies rather
+  than the method — a manual describes the tool, not today's inputs
+- restating in prose what the tables above already say
+
+The reference for length is `planetary-dynamo-scaling.md` at ~190 lines. A doc
+past ~300 has almost certainly grown one of the sections above; check before
+adding another.
 
 Registration checklist (a Mode A doc is not done until all five):
 - [ ] Row added to the right section of `docs/reference/methodology-index.md`.
