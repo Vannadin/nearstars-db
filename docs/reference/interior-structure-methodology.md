@@ -191,9 +191,9 @@ at 209.5 MPa is load-bearing for the roster below, and mixing sources would move
 gain.
 
 What was missing was never the boundaries. It was the three equations of state, whose
-coefficients sit in Choukroun & Grasset 2007/2010 and Bezacier+ 2014, none of which we
-could obtain in full text (they still cannot be, and the request stands). The coefficients
-in the table above come from somewhere else, and they are not a fit to anybody's data.
+coefficients sit in Choukroun & Grasset 2007/2010, neither of which we could obtain in full
+text (the request stands). The coefficients in the table above come from somewhere else,
+and they are not a fit to anybody's data.
 
 ### Reading the three ice phases instead of fitting them
 
@@ -819,12 +819,18 @@ instead of as a class constant.
   piles above 30 %. A book chapter with no preprint and no online full text here: it is cited
   through Carry 2012, which quotes the threshold explicitly, and no number is taken from it
   directly.
+- **Bezacier+ 2014 was obtained** ([`2014JChPh.141j4505B`](https://ui.adsabs.harvard.edu/abs/2014JChPh.141j4505B),
+  no arXiv; full text in hand 2026-08-26). It measures the equations of state of ices VI and
+  VII by synchrotron X-ray diffraction, and checking our two phases against its Table II puts
+  the density curves within **0.37 %** and **1.95 %** across their windows. Nothing was
+  changed: ice VII stays on the Hemley+ 1987 line (via Seager+ 2007), whose K₀ the authors'
+  own measurement undercuts by 12 %. Both agreements sit inside the anchor tolerance, and
+  moving would break the shared-source consistency the silicate and iron phases rely on.
 - **Still not obtained, and still not used.** Choukroun & Grasset 2007
   ([`2007JChPh.127l4506C`](https://ui.adsabs.harvard.edu/abs/2007JChPh.127l4506C)) and 2010
-  ([`2010JChPh.133n4502C`](https://ui.adsabs.harvard.edu/abs/2010JChPh.133n4502C)), and
-  Bezacier+ 2014 ([`2014JChPh.141j4505B`](https://ui.adsabs.harvard.edu/abs/2014JChPh.141j4505B)),
-  carry their own equation-of-state coefficients for ices III, V, VI and VII. None has an
-  arXiv preprint and none is reachable in full text from here. The **transition pressures**
+  ([`2010JChPh.133n4502C`](https://ui.adsabs.harvard.edu/abs/2010JChPh.133n4502C))
+  carry their own equation-of-state coefficients for ices III, V and VI. Neither has an
+  arXiv preprint and neither is reachable in full text from here. The **transition pressures**
   attributed to Choukroun & Grasset 2007 in this document are read from Zeng & Sasselov
   2013 §III.3.1, which states them explicitly; their coefficients are not used and are not
   cited for any number here. Two further sources that would give an independent set were
