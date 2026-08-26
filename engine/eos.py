@@ -11,19 +11,22 @@
 **여기 있는 숫자는 전부 발표된 적합값이고, 상수마다 출처를 옆에 적었다.** 손으로
 친 표에서 54배가 어긋났던 전례가 있어서, 출처 없는 상수는 이 파일에 못 들어온다.
 
-세 가지 함수형을 쓴다. 어느 것을 쓸지는 그 재료를 적합한 논문이 정한 것이지 우리가
+다섯 가지 함수형을 쓴다. 어느 것을 쓸지는 그 재료를 적합한 논문이 정한 것이지 우리가
 고른 게 아니다.
 
 * **BM2** — 2차 Birch-Murnaghan. K₀′ 를 4 로 고정한 형태다.
   P = (3/2) K₀ [(ρ/ρ₀)^(7/3) − (ρ/ρ₀)^(5/3)]
   Zeng+ 2016 이 PREM 을 이 형태로 적합했다 (arXiv:1512.08827 eq. 1).
 * **BME3** — 3차 Birch-Murnaghan. K₀′ 가 자유롭다. Seager+ 2007 Table 1 의 기본형.
+* **BME4** — 4차 Birch-Murnaghan. K₀″ 가 하나 더 붙는다. Seager+ 2007 이 규산염
+  **하나에만** 쓴 형태이고, 고른 이유가 "TFD 와 매끄럽게 이어지는 유일한 적합" 이다.
+  그 한 자리가 3.5 TPa 위의 규산염이라 이 형태가 필요했다 — 자세한 사정은 SILICATE 주석에.
 * **Vinet** — 고압 외삽에 BME 보다 낫다고 Seager+ 2007 §III.1 이 적는다. Fe(ε) 에 쓴다.
 * **Polytrope** — P = K ρ^(1+1/n). 응축상이 아니라 수소-헬륨 외피에 쓰는 형태다.
   폴리트로프는 **별도의 가지가 아니라 상태방정식의 한 형태** 이고, 그래서 같은 적분기가
   거대행성을 그대로 푼다. n = 1 의 계수는 H_HE 주석에 있다.
 
-네 형태가 전부 **순수한 물질 하나** 를 서술한다. 한 층 안에 두 물질이 섞여 있는 상태는
+다섯 형태가 전부 **순수한 물질 하나** 를 서술한다. 한 층 안에 두 물질이 섞여 있는 상태는
 형태가 아니라 **재료를 합성하는 규칙** 이 필요하고, 그것이 `Mixture` 다. 부피 가법
 혼합이며 상수와 유효 한계는 그 클래스 위 주석에 있다.
 
@@ -51,13 +54,14 @@ class PhaseGap(Exception):
 class Phase:
     """한 상의 냉각 등온 상태방정식."""
     name: str
-    form: str                 # bm2 | bme3 | vinet | polytrope
+    form: str                 # bm2 | bme3 | bme4 | vinet | polytrope
     rho0: float               # kg/m³. polytrope 는 0 이다 — 영압에서 밀도가 0 이다
     k0: float                 # Pa. polytrope 는 K [m⁵ kg⁻¹ s⁻²] 를 여기 넣는다
     k0p: float                # K₀′ (bm2 는 4 로 고정이므로 무시된다). polytrope 는 지수 n
     p_max: float              # Pa. 이 상이 유효한 상한
     ref: str                  # 어느 논문 어느 표에서 왔는가
     p_min: float = 0.0        # Pa. 앞 상에서 넘어오는 전이압
+    k0pp: float = 0.0         # Pa⁻¹. K₀″. bme4 만 쓴다 — 다른 형태는 무시한다
 
     def pressure(self, rho: float) -> float:
         """ρ 에서 P. 정방향은 닫힌 형태라 이쪽이 값싸다."""
@@ -70,6 +74,17 @@ class Phase:
         if self.form == "bme3":
             return (1.5 * self.k0 * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0))
                     * (1.0 + 0.75 * (self.k0p - 4.0) * (x ** (2.0 / 3.0) - 1.0)))
+        if self.form == "bme4":
+            # 오일러 유한변형 f = ½[(ρ/ρ₀)^(2/3) − 1] 로 쓴 4차 BME.
+            #   P = 3K₀ f (1+2f)^(5/2) [1 + (3/2)(K₀′−4) f
+            #                             + (3/2)(K₀K₀″ + (K₀′−4)(K₀′−3) + 35/9) f²]
+            # f² 항을 떼면 3차와 같은 식이 된다 — 위의 bme3 가지가 같은 관계를 x 로
+            # 쓴 것이고, test_interior.py 가 두 형태의 항등성을 실제로 재서 확인한다.
+            f = 0.5 * (x ** (2.0 / 3.0) - 1.0)
+            a = 1.5 * (self.k0p - 4.0)
+            b = 1.5 * (self.k0 * self.k0pp
+                       + (self.k0p - 4.0) * (self.k0p - 3.0) + 35.0 / 9.0)
+            return 3.0 * self.k0 * f * (1.0 + 2.0 * f) ** 2.5 * (1.0 + a * f + b * f * f)
         if self.form == "vinet":
             e = x ** (-1.0 / 3.0)
             return (3.0 * self.k0 * x ** (2.0 / 3.0) * (1.0 - e)
@@ -299,13 +314,95 @@ FE_EPS = Material(
 #   1 % 미만 움직인다고 적는다.
 # * 23.83 GPa 위 — PREM 하부맨틀 BM2 적합 (Zeng+ 2016 §II: "Lower Mantle:
 #   ρ₀ = 3.98 g/cc, K₀ = 206 GPa").
+# * 3.5 TPa 위 — Seager+ 2007 의 MgSiO₃ 페로브스카이트 BME4. 아래에 사정을 적는다.
+#
+# ── 3.5 TPa 위: 왜 상이 하나 더 필요했고, 왜 **하나** 면 됐나 ──────────────
+#
+# PREM 하부맨틀 적합의 3.5 TPa 는 우리가 고른 수가 아니라 Zeng+ 2016 §II 가 자기 적합의
+# 상한으로 적은 수다 — "mantle (good up to 3.5 TPa where it asymptotically approaches
+# TFD)". 같은 절이 그 위에 무엇을 쓰라고까지 적는다: "> 3.5 TPa: TFD EOS of MgSiO₃
+# calculated using method in (Salpeter & Zapolsky 1967)".
+#
+# **그 처방을 따르지 않았다.** TFD 는 재료의 적합이 아니라 전자축퇴의 점근이고, 이
+# 레시피는 그 영역을 이름 대며 거절하는 쪽을 택했다. 대신 그 사이를 메우는 적합이
+# 문헌에 있는지를 물었고, 있었다 — **이 파일이 이미 쓰고 있는 논문 안에** 있었다.
+#
+# Seager+ 2007 §III.3 (arXiv:0707.2895) 이 규산염을 이렇게 만든다. "For a silicate EOS
+# we use the perovskite phase of MgSiO₃. We use a fourth order BME fit up to
+# P = 1.35×10⁴ GPa. At this pressure we switch to the TFD EOS. The fourth order BME fit
+# is from a density functional calculation up to P = 150 GPa by Karki et al. 2000. …
+# the fourth order BME is the only fit we found that smoothly matches the TFD EOS at
+# high pressures." 상수는 그 논문 Table 1 의 MgSiO₃(pv) 행이다.
+#
+#     ρ₀ = 4.10 Mg/m³ · K₀ = 247 ± 4 GPa · K₀′ = 3.97 · 적합 BME4 · K₀″ = −0.016 /GPa
+#     log₁₀ P_V/T = 13.13  (= 1.35×10⁴ GPa. Vinet/BME 가 TFD 로 넘어가는 압력)
+#
+# **이 구성은 이 파일에 이미 선례가 있다.** fe_eps 의 상한 2.09×10⁴ GPa 가 정확히 같은
+# 절의 같은 문장에서 왔다 ("a Vinet fit up to P = 2.09×10⁴ GPa … we switch to the TFD
+# EOS"). 철은 Seager 에서, 규산염은 Zeng 에서 가져왔기 때문에 상한이 20.9 TPa 대 3.5 TPa
+# 로 갈렸던 것이고, 빠져 있던 것은 새 물리가 아니라 **Seager 의 규산염 행** 이었다.
+#
+# **왜 하나면 되나 — 상전이는 실재하지만 전부 3.5 TPa 아래다.** Umemoto+ 2017 §3.1
+# (arXiv:1708.04767) 이 MgSiO₃ 의 사다리를 제일원리로 준다. PPv → Mg₂SiO₄ + MgSi₂O₅ 가
+# 0.75 TPa, → Mg₂SiO₄ + Fe₂P-형 SiO₂ 가 1.31 TPa, → CsCl-형 MgO + Fe₂P-형 SiO₂ 가
+# 3.10 TPa 다. 그리고 같은 논문의 결론이 그 위를 닫는다 — "The last solid-solid
+# transition identified so far remains the dissociation of Mg₂SiO₄ into the pure oxides
+# Fe₂P-type SiO₂ and CsCl-type MgO at 3 TPa at low temperatures." 즉 3.5 TPa 위에서는
+# **알려진 상전이가 없다.** 이어 붙일 상이 하나인 것은 그래서다. 셋은 이미 PREM 적합이
+# 덮는 구간 안에 있고, 그 구간을 건드리면 앵커가 움직인다.
+#
+# **그러면 이 상은 무엇의 적합인가 — 이름과 실물이 다르다는 것을 적어둔다.** 3.5 TPa
+# 위의 실물은 페로브스카이트가 아니라 MgO + SiO₂ 다. Seager 의 적합에 붙은 이름은
+# 'perovskite' 이고, 그 이름을 믿는 근거가 아니라 **조성이 그 압력에서 밀도를 거의
+# 정하지 않는다** 는 것이 근거다. Zeng+ 2016 §II 가 그것을 수로 적는다 — "the TFD beyond
+# 1 TPa for MgO, SiO₂, MgSiO₃, and Mg₂SiO₄ are almost identical as they all have average
+# atomic weight A=20 and average atomic charge Z=10 … it indicates that Mg/Si ratio does
+# not matter towards the high-pressure end." Seager 자신도 §IV.2.1 에서 고압 상전이의
+# EOS 효과를 "small" 이라고 적는다. 이 근거는 조성 무관성이지 결정구조의 동일성이
+# 아니고, 그래서 이 구간은 등급이 내려간다 (interior.py 의 SILICATE_EXTRAPOLATED_MIN).
+#
+# **이음매는 지어낸 것이 아니라 재본 것이다.** 3.5 TPa 에서 PREM BM2 가 14293 kg/m³,
+# 이 BME4 가 14263 kg/m³ 로 **0.21 % 차이** 다. 지진학 적합과 DFT 적합이 서로를 모른 채
+# 그 압력에서 겹친 것이고, 그래서 이 자리에 밀도 도약을 넣지 않았다. test_interior.py 가
+# 그 0.21 % 를 다시 잰다.
+#
+# **K₀″ 를 3차로 반올림하면 안 된다.** BME3 의 암묵적 K₀″ 는
+# −(1/K₀)[(3−K₀′)(4−K₀′) + 35/9] = −0.01563 /GPa 로, Seager 가 적은 −0.016 /GPa 와
+# 0.24 % 차이다. 그런데 그 차이가 f² 항을 타고 커져서 13.5 TPa 에서 밀도가 9.1 % 벌어진다.
+# 즉 이 재료는 BME3 으로 근사할 수 없고, 그래서 BME4 형태가 필요했다. 그 감도를
+# test_interior.py 가 실제로 재서 보여준다.
+#
+# **상한 위는 여전히 전자축퇴다.** 1.35×10⁴ GPa 는 Seager 가 TFD 로 갈아타는 압력이므로,
+# 이 재료의 상한은 "적합이 떨어졌다" 가 아니라 "여기부터는 축퇴가 지배한다" 는 뜻이다.
+# 물얼음의 37.4 GPa 와 같은 종류의 울타리이고, 아래 over_reason 이 그렇게 말한다.
+SILICATE_EN_TO_PREM = 23.83 * GPA    # Zeng+ 2016 §II.1 상부→하부 맨틀 전이
+SILICATE_PREM_TO_PV = 3.5e3 * GPA    # Zeng+ 2016 §II — PREM 하부맨틀 적합의 상한
+SILICATE_PV_TO_TFD = 1.35e4 * GPA    # Seager+ 2007 §III.3 — BME4 가 TFD 로 넘어가는 압력
+
 SILICATE = Material(
     "silicate", "규산염 맨틀",
-    (Phase("mgsio3_en", "bme3", 3220.0, 125.0 * GPA, 5.0, 23.83 * GPA,
+    (Phase("mgsio3_en", "bme3", 3220.0, 125.0 * GPA, 5.0, SILICATE_EN_TO_PREM,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — MgSiO₃ enstatite BME"),
-     Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, 3.5e3 * GPA,
+     Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, SILICATE_PREM_TO_PV,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 하부맨틀 BM2 적합",
-           p_min=23.83 * GPA)),
+           p_min=SILICATE_EN_TO_PREM),
+     Phase("mgsio3_pv", "bme4", 4100.0, 247.0 * GPA, 3.97, SILICATE_PV_TO_TFD,
+           "Seager+ 2007 Table 1 · §III.3 (arXiv:0707.2895) — MgSiO₃ perovskite BME4, "
+           "Karki+ 2000 의 DFT 계산. 실물은 MgO + SiO₂ 다 (Umemoto+ 2017, "
+           "arXiv:1708.04767) — 조성이 이 압력대에서 밀도를 거의 안 정한다는 것이 근거",
+           p_min=SILICATE_PREM_TO_PV, k0pp=-0.016 / GPA)),
+    over_reason=("규산염 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
+                 "({max_gpa:.0f} GPa) 위다. 그 상한은 Seager+ 2007 §III.3 이 규산염의 "
+                 "BME4 를 놓고 TFD 로 갈아타는 압력이므로, 그 위는 전자축퇴가 지배하는 "
+                 "영역이고 (Salpeter & Zapolsky 1967), 이 레시피에는 그 상태방정식이 "
+                 "없다. 암석이 많은 아주 큰 천체는 여기서 멈춘다."),
+    # 2026-08-27 에 mgsio3_pv 가 들어와 enstatite 부터 13.5 TPa 까지 사다리가 이어졌다.
+    # 그래서 이 설명은 도달하지 않는다 — 도달하면 전이압 상수 하나가 이웃과 어긋나게
+    # 편집된 것이다. test_interior.py 가 사다리의 연속성을 따로 확인한다.
+    gap_reason=("{p_gpa:.4f} GPa 가 규산염 상 사다리의 두 상 **사이** 에 떨어졌다. "
+                "enstatite(~23.83 GPa) · PREM 하부맨틀(~3.5 TPa) · MgSiO₃(pv) 는 "
+                "이어져 있어야 하므로, 이건 물리가 아니라 전이압 상수가 이웃과 어긋나게 "
+                "편집됐다는 뜻이다."),
 )
 
 # ── 물 ──────────────────────────────────────────────────────────────────

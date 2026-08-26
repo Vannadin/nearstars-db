@@ -21,8 +21,12 @@ from __future__ import annotations
 import math
 import sys
 
-from eos import AVL_VOLUME_DEVIATION, MATERIALS, Mixture, mix
+from eos import (AVL_VOLUME_DEVIATION, MATERIALS, SILICATE_PREM_TO_PV, Mixture,
+                 mix)
 from interior import EARTH_RADIUS_M, ENVELOPE_Z_MATERIAL, solve
+
+# 목성 C/MR² 앵커. 출처와 기각한 값들은 test_giant.py 머리 주석에 있다.
+JUPITER_NMOI_BAND = (0.2634, 0.2644)   # Neuenschwander+ 2021 ∪ Wahl+ 2017
 
 # ── 발표값 ──────────────────────────────────────────────────────────────
 #
@@ -160,26 +164,69 @@ def main() -> int:
           f"맞춰서 찾은 값이 아니다. 남는 잔차는 중원소가 외피에 균질하게 녹아 있다고 둔 "
           f"몫이고, 실제 분포(희석 핵)는 이 레시피에 없다.")
 
-    print("\n목성 — Z 를 넣으면 상한에 걸린다. 그 사실이 이름을 대는가")
-    hit = [(z, r) for z, r in _z_rows(JUPITER) if not r.applicable]
-    ok = len(hit) == 3 and all(ENVELOPE_Z_MATERIAL in r.reason for _z, r in hit)
+    print("\n목성 — Z 를 넣으면 어떻게 되나. 2026-08-27 에 답이 바뀌었다")
+    # 직전 판까지 이 절은 **거절** 을 검사했다. 목성 중심이 Z 를 넣으면 4 TPa 를 넘고
+    # 규산염 적합이 3.5 TPa 에서 끝났기 때문이다. 규산염이 13.5 TPa 까지 이어지면서
+    # 세 눈금이 전부 돌게 됐고, 이 절은 이제 그 결과를 재서 기록한다.
+    rows = list(_z_rows(JUPITER))
+    ok = all(r.applicable for _z, r in rows)
     if not ok:
-        fails.append("목성 Z 거절이 상한 소유자를 이름 대지 않는다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] Guillot 구간 세 눈금 전부 거절하고, 이유가 "
+        stuck = [(z, r.reason[:80]) for z, r in rows if not r.applicable]
+        fails.append(f"목성 Z 가 아직 막힌다: {stuck}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] Guillot 구간 세 눈금이 전부 적분된다")
+    for z, res in rows:
+        if not res.applicable:
+            print(f"         Z {z:.4f} 거절 — {res.reason[:80]}")
+            continue
+        print(f"         Z {z:.4f} ({z * JUPITER[1]:.0f} M⊕) → {_km(res):.0f} km "
+              f"({(_km(res) / JUPITER[2] - 1) * 100:+.1f} %) · C/MR² "
+              f"{res.values['nmoi']:.4f} · P_c {res.values['core_pressure'] / 1e3:.2f} TPa")
+    # 중심압이 옛 천장 위, 새 천장 아래여야 한다. 그게 이 절이 무엇 때문에 열렸는지다.
+    pcs = [r.values["core_pressure"] * 1e9 for _z, r in rows if r.applicable]
+    ok = bool(pcs) and all(SILICATE_PREM_TO_PV < pc < MATERIALS["silicate"].p_max
+                           for pc in pcs)
+    if not ok:
+        fails.append("목성 Z 의 중심압이 옛 천장과 새 천장 사이에 있지 않다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 중심압 {min(pcs) / 1e12:.2f}~{max(pcs) / 1e12:.2f} TPa "
+          f"— 옛 상한 {SILICATE_PREM_TO_PV / 1e12:.1f} TPa 위, 새 상한 "
+          f"{MATERIALS['silicate'].p_max / 1e12:.1f} TPa 아래다")
+    # **반지름은 나빠진다. 그것도 결과다.** K 는 목성에 맞춰진 상수이고 실제 목성에는
+    # Z 가 이미 들어 있으므로, Z 를 또 얹으면 이중계산이 된다.
+    off0 = _km(_giant(JUPITER[1], 0.0)) / JUPITER[2] - 1.0
+    offs = [_km(r) / JUPITER[2] - 1.0 for _z, r in rows if r.applicable]
+    worse = all(abs(o) > abs(off0) for o in offs)
+    if not worse:
+        fails.append("목성에 Z 를 넣었는데 반지름이 나빠지지 않는다 — 이중계산 진단이 깨졌다")
+    print(f"  [{'PASS' if worse else 'FAIL'}] 반지름은 Z = 0 의 {off0 * 100:+.1f} % 에서 "
+          f"{min(offs) * 100:+.1f} % 까지 **나빠진다**")
+    print(f"         이중계산이라서다. n = 1 의 K 는 Helled+ 2022 가 **실제 목성** 에 맞춘 "
+          f"상수이고 실제 목성은 이미 Guillot 의 Z 를 들고 있다. 그 위에 Z 를 또 얹으면 "
+          f"중원소가 두 번 들어간다 — 토성에서 Z 가 −0.1 % 로 내려오는 것과 방향이 반대인 "
+          f"이유가 그것이다. 토성은 K 가 맞춰진 천체가 아니다.")
+    # C/MR² 쪽은 반대로 앵커 밴드 안으로 들어온다. 반지름과 갈리는 것이 요점이라 재둔다.
+    ns = [r.values["nmoi"] for _z, r in rows if r.applicable]
+    inband = [n for n in ns if JUPITER_NMOI_BAND[0] <= n <= JUPITER_NMOI_BAND[1]]
+    print(f"  [보고] C/MR² 는 반대로 움직인다 — Z = 0 의 "
+          f"{_giant(JUPITER[1], 0.0).values['nmoi']:.4f} 에서 {min(ns):.4f}~{max(ns):.4f} 로 "
+          f"올라가고, {len(inband)}/{len(ns)} 눈금이 앵커 밴드 "
+          f"{JUPITER_NMOI_BAND[0]}–{JUPITER_NMOI_BAND[1]} 안에 든다 "
+          f"(Neuenschwander+ 2021 ∪ Wahl+ 2017). 반지름과 C/MR² 가 서로 다른 Z 를 "
+          f"가리키는 것이고, 그걸 화해시키는 것은 희석 핵이지 이 레시피가 아니다.")
+
+    print("\n규산염 천장 — 이제 어디서 걸리나. 거절 문장이 여전히 정직한가")
+    # 천장이 사라진 게 아니라 올라갔다. 올라간 자리에서도 혼합 거절이 순수 재료용
+    # 전자축퇴 문장을 쓰면 안 된다 — 섞인 층에서는 성분 하나의 적합이 끝난 것뿐이다.
+    huge = _giant(JUPITER[1], 0.75)
+    ok = not huge.applicable and ENVELOPE_Z_MATERIAL in huge.reason
+    if not ok:
+        fails.append("천장 위 혼합 거절이 상한 소유자를 이름 대지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] Z = 0.75 는 여전히 거절하고 "
           f"'{ENVELOPE_Z_MATERIAL}' 의 상한을 이름 댄다")
-    # 순수 재료가 상한에 닿으면 그 위는 전자축퇴다. 혼합은 그렇지 않고, 거절 이유가
-    # 그 둘을 갈라야 한다. ("전자축퇴" 라는 낱말은 혼합 쪽 문장에도 "…이야기가 아니다"
-    # 로 들어 있으므로, 낱말이 아니라 **어느 문장인지** 를 본다.)
-    ok = all("성분 하나" in r.reason and "축퇴가 지배" not in r.reason
-             for _z, r in hit)
+    ok = "성분 하나" in huge.reason and "축퇴가 지배" not in huge.reason
     if not ok:
         fails.append("혼합 상한 거절이 순수 재료용 전자축퇴 문장을 쓴다 — 거짓이다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 그 이유가 전자축퇴가 **아니다** — 섞인 층에서는 "
           f"성분 하나의 적합이 끝난 것이지 축퇴 영역이 아니다")
-    print(f"         목성 중심은 Z 를 넣으면 4 TPa 를 넘고 규산염 적합은 "
-          f"{MATERIALS[ENVELOPE_Z_MATERIAL].p_max / 1e9:.0f} GPa 에서 끝난다. 같은 천장이 "
-          f"직전 세션에서 중원소를 **압축된 핵** 으로 넣었을 때도 걸렸다 — 기작이 둘인데 "
-          f"천장이 하나다.")
 
     print("\n미분화 — 앵커가 없다. 대신 측정값을 가려내는가")
     und = solve(MERCURY_MASS_ME, core_mass_fraction=MERCURY_CMF, differentiated=False)

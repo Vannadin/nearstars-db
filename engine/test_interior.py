@@ -108,6 +108,33 @@ ICY_ANCHORS = [
     ("Enceladus", 1.0802e20,  252.1, 0.335,  "Iess+ 2014 (Cassini)", False),
 ]
 
+# ── 3.5 TPa 위의 규산염 ──────────────────────────────────────────────────
+#
+# 앵커는 **발표된** 수여야 한다는 규율이 이 절에도 걸린다. 이 압력대에는 측정이 없으므로
+# 대조 상대는 실험이 아니라 **같은 논문이 따로 발표한 두 번째 표현** 이다.
+#
+# Seager+ 2007 Table 3 이 Vinet/BME 와 TFD 를 이어 붙인 곡선을 ρ = ρ₀ + cP^n 로 다시
+# 적합해 싣는다. MgSiO₃(pv) 행이 아래 셋이고, "valid for the pressure range P < 10¹⁶ Pa"
+# 라고 적혀 있다. 우리가 박아둔 BME4 상수는 같은 논문 Table 1 에서 왔으므로, 둘이 서로를
+# 재현하면 옮겨 적기가 맞은 것이다 — 54배 오류를 낸 전례가 이 대조를 요구한다.
+SEAGER_T3_RHO0 = 4100.0        # kg/m³. Seager+ 2007 Table 3, MgSiO₃ (perovskite)
+SEAGER_T3_C = 0.00161          # kg m⁻³ Pa⁻ⁿ. 같은 행
+SEAGER_T3_N = 0.541            # 같은 행
+SEAGER_T3_TOL = 0.03           # 3 %. 두 표현은 같은 곡선의 두 적합이지 같은 식이 아니다
+
+
+def seager_table3(p_pa: float) -> float:
+    """Seager+ 2007 Table 3 의 병합 EOS 적합. ρ = ρ₀ + c P^n."""
+    return SEAGER_T3_RHO0 + SEAGER_T3_C * p_pa ** SEAGER_T3_N
+
+
+# 조성별 암석 질량 상한을 재는 축. 값이 아니라 **누가 상한을 정하는가** 가 내용이다.
+CEILING_CASES = (
+    ("earth_like (CMF 0.325)", dict(core_mass_fraction=0.325)),
+    ("pure silicate (CMF 0)", dict(core_mass_fraction=0.0)),
+    ("pure iron (fe_eps)", dict(composition="iron")),
+)
+
 TOL = 0.03          # 3 %. 균질 2층 시절의 허용치가 5 % 였고 지구가 그 4.8 % 였다.
 EARTH_TOL = 0.01    # 지구는 1 % 안. 자기압축이 실제로 들어갔는지의 판정선이다.
 RADIUS_TOL = 0.01   # 반지름 1 %
@@ -286,7 +313,53 @@ def _ice_base_gpa(res) -> str:
     return "–"
 
 
+_CEILING_CACHE: dict[str, tuple[float, str]] = {}
+
+
+def mass_ceiling(**kwargs) -> tuple[float, str]:
+    """이 조성이 풀리는 가장 큰 질량을 이분법으로 잰다. (M⊕, 상한을 정한 재료).
+
+    **재는 것이지 적는 것이 아니다.** 상한은 재료의 성질이므로 재료가 바뀌면 움직이고,
+    손으로 적어두면 그 순간 두 번째 사본이 된다."""
+    key = repr(sorted(kwargs.items()))
+    if key in _CEILING_CACHE:
+        return _CEILING_CACHE[key]
+    lo, hi = 0.5, 400.0
+    for _ in range(28):
+        mid = 0.5 * (lo + hi)
+        if solve(mid, **kwargs).applicable:
+            lo = mid
+        else:
+            hi = mid
+    over = solve(hi, **kwargs)
+    owner = "?"
+    for name in ("fe_eps", "fe_prem", "silicate", "h2o"):
+        if name in over.reason:
+            owner = name
+            break
+    _CEILING_CACHE[key] = (lo, owner)
+    return lo, owner
+
+
+def ceiling_table() -> None:
+    """문서 §Domain 의 암석 질량 상한 표를 다시 낸다. 손으로 친 표는 어긋난다."""
+    print("| composition | mass ceiling | what stops it | its stated ceiling | "
+          "R at the ceiling | C/MR² |")
+    print("|---|---|---|---|---|---|")
+    from eos import MATERIALS
+    for label, kwargs in CEILING_CASES:
+        m, owner = mass_ceiling(**kwargs)
+        res = solve(m, **kwargs)
+        cap = MATERIALS[owner].p_max / 1e12 if owner in MATERIALS else float("nan")
+        print(f"| {label} | {m:.2f} M⊕ | `{owner}` | {cap:.1f} TPa | "
+              f"{res.values['radius']:.3f} R⊕ | {res.values['nmoi']:.4f} |")
+
+
+
 def main() -> int:
+    if "--ceiling" in sys.argv:
+        ceiling_table()
+        return 0
     if "--table" in sys.argv:
         table()
         return 0
@@ -493,6 +566,120 @@ def main() -> int:
     if not wired:
         fails.append("공극 레짐 판정: 역산 결과에 판정이 실려 오지 않는다")
     print(f"  [{'PASS' if wired else 'FAIL'}] 공극 축으로 풀린 결과가 판정을 싣고 온다")
+
+    print("\n규산염 상 사다리 — 23.83 GPa 부터 13.5 TPa 까지 끊긴 데가 없는가")
+    # 2026-08-27 에 mgsio3_pv 가 들어와 사다리가 이어졌다. 얼음과 같은 규율이다 —
+    # 전이압 상수 하나를 이웃과 어긋나게 고치면 조용히 구멍이 열리고, 그러면 솔버가
+    # 답이 있는 자리에서 거절한다.
+    from eos import (SILICATE, SILICATE_PREM_TO_PV, SILICATE_PV_TO_TFD,
+                     MATERIALS, Phase)
+    for prev, nxt in zip(SILICATE.phases, SILICATE.phases[1:]):
+        cond = abs(nxt.p_min - prev.p_max) <= 1e-6 * max(prev.p_max, 1.0)
+        if not cond:
+            fails.append(f"규산염 사다리가 {prev.name} 상한 {prev.p_max / 1e9:.2f} GPa 와 "
+                         f"{nxt.name} 하한 {nxt.p_min / 1e9:.2f} GPa 사이에서 끊겼다")
+        print(f"  [{'PASS' if cond else 'FAIL'}] {prev.name:12} → {nxt.name:12} "
+              f"{prev.p_max / 1e9:9.2f} GPa 에서 이어진다")
+
+    print("\n이음매 — 지진학 적합과 DFT 적합이 3.5 TPa 에서 겹치는가")
+    # 두 적합은 서로를 모른다. PREM 은 지구의 지진파에서, Seager 의 BME4 는 Karki+ 2000
+    # 의 DFT 에서 왔다. 그 둘이 이 압력에서 몇 % 안에서 같다는 것이 이 자리에 상을
+    # 갈아 끼우면서 밀도 도약을 지어내지 않아도 되는 근거다.
+    prem, pv = SILICATE.phases[1], SILICATE.phases[2]
+    d_prem, d_pv = prem.density(SILICATE_PREM_TO_PV), pv.density(SILICATE_PREM_TO_PV)
+    seam = abs(d_pv - d_prem) / d_prem
+    ok = seam < 0.01
+    if not ok:
+        fails.append(f"3.5 TPa 이음매가 {seam * 100:.2f} % 어긋난다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] PREM BM2 {d_prem:.0f} · Seager BME4 "
+          f"{d_pv:.0f} kg/m³ — 차이 {seam * 100:.2f} %")
+
+    print("\n박아둔 BME4 상수 — 같은 논문의 두 번째 표현을 재현하는가")
+    # Seager+ 2007 Table 1 (BME4) 과 Table 3 (병합 곡선의 ρ₀+cPⁿ 적합) 은 같은 논문의
+    # 다른 표다. 우리는 Table 1 을 옮겨 적었으므로, Table 3 을 재현하면 옮겨 적기가 맞다.
+    worst_t3 = 0.0
+    for p_tpa in (0.5, 1.0, 2.0, 3.5, 6.0, 10.0, 13.5):
+        got, want = pv.density(p_tpa * 1e12), seager_table3(p_tpa * 1e12)
+        worst_t3 = max(worst_t3, abs(got - want) / want)
+    ok = worst_t3 <= SEAGER_T3_TOL
+    if not ok:
+        fails.append(f"BME4 가 Seager Table 3 과 {worst_t3 * 100:.1f} % 어긋난다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 0.5~13.5 TPa 에서 최악 "
+          f"{worst_t3 * 100:.2f} % (허용 {SEAGER_T3_TOL * 100:.0f} %) — Table 3 "
+          f"ρ = {SEAGER_T3_RHO0:.0f} + {SEAGER_T3_C} P^{SEAGER_T3_N}")
+
+    print("\n왜 3차가 아니라 4차인가 — K₀″ 를 떼면 얼마나 달라지는가")
+    # 반올림 하나가 답을 9 % 움직이는 자리라서, 이 감도는 주장이 아니라 검사 대상이다.
+    implied = -(1.0 / pv.k0) * ((3.0 - pv.k0p) * (4.0 - pv.k0p) + 35.0 / 9.0)
+    three = Phase("pv3", "bme3", pv.rho0, pv.k0, pv.k0p, pv.p_max, "")
+    d3, d4 = three.density(SILICATE_PV_TO_TFD), pv.density(SILICATE_PV_TO_TFD)
+    swing = abs(d4 - d3) / d3
+    ok = swing > 0.02
+    if not ok:
+        fails.append(f"BME3 과 BME4 가 {swing * 100:.2f} % 밖에 안 갈린다 — "
+                     f"그러면 형태를 늘릴 이유가 없었다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 상한에서 BME3 {d3:.0f} · BME4 {d4:.0f} kg/m³ "
+          f"({swing * 100:.1f} %)")
+    print(f"         논문이 적은 K₀″ = {pv.k0pp * 1e9:.3f} /GPa 와 3차의 암묵값 "
+          f"{implied * 1e9:.5f} /GPa 는 {abs(pv.k0pp / implied - 1) * 100:.2f} % 차이다. "
+          f"그 차이가 f² 항을 타고 {swing * 100:.1f} % 로 커진다 — 두 자리 유효숫자로 "
+          f"적힌 상수가 하중을 받는 자리이므로, 3차로 근사하지 않는다.")
+    # 그리고 적분기가 밟는 구간 전체에서 단조여야 한다. P(ρ) 가 뒤집히면 Newton 이
+    # 엉뚱한 뿌리로 간다.
+    rho = pv.rho0
+    prev_p, mono = -1.0, True
+    while rho < pv.density(SILICATE_PV_TO_TFD):
+        pr = pv.pressure(rho)
+        if pr < prev_p:
+            mono = False
+            break
+        prev_p, rho = pr, rho * 1.002
+    if not mono:
+        fails.append("BME4 가 유효 구간 안에서 단조가 아니다")
+    print(f"  [{'PASS' if mono else 'FAIL'}] 유효 구간 전체에서 P(ρ) 가 단조다")
+
+    print("\n암석 질량 상한 — 조성마다 누가 상한을 정하는가")
+    from eos import MATERIALS as _MATS
+    for label, kwargs in CEILING_CASES:
+        m, owner = mass_ceiling(**kwargs)
+        cond = owner in _MATS
+        if not cond:
+            fails.append(f"질량 상한: {label} 의 거절이 재료를 이름 대지 않는다")
+        print(f"  [{'PASS' if cond else 'FAIL'}] {label:24} {m:7.2f} M⊕ 까지 — "
+              f"`{owner}` 의 {_MATS[owner].p_max / 1e12:.1f} TPa 가 정한다")
+
+    print("\n외삽 구간 — 밟으면 등급이 내려가고 note 가 이유를 대는가")
+    # 3.5 TPa 아래는 측정된 행성의 적합(PREM)이고 위는 제일원리 계산이다. 답이 그 위를
+    # 밟았다는 사실이 값을 받는 쪽에 보여야 한다.
+    m_top, _ = mass_ceiling(core_mass_fraction=0.325)
+    top = solve(m_top, core_mass_fraction=0.325)
+    said = any("외삽 구간" in n for n in top.notes)
+    ok = top.grade == "analog" and said
+    if not ok:
+        fails.append(f"외삽 구간: 등급 {top.grade}, note 가 이유를 {'댄다' if said else '안 댄다'}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] {m_top:.2f} M⊕ 지구조성 → grade {top.grade}, "
+          f"note 가 이유를 이름 댄다")
+    # 그리고 아래를 밟은 천체는 움직이면 안 된다.
+    low = solve(1.0, core_mass_fraction=0.325)
+    ok = low.grade == "calibrated" and not any("외삽 구간" in n for n in low.notes)
+    if not ok:
+        fails.append("외삽 구간 판정이 3.5 TPa 아래 천체까지 물들였다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 지구는 grade {low.grade} 그대로다")
+
+    print("\n새 상한 위 — 여전히 이름을 대며 거절하는가")
+    m_si, _ = mass_ceiling(core_mass_fraction=0.0)
+    over = solve(m_si * 1.2, core_mass_fraction=0.0)
+    named = (not over.applicable
+             and "silicate" in over.reason
+             and "13500" in over.reason)
+    if not named:
+        fails.append("새 상한 위 거절이 재료와 상한을 이름 대지 않는다")
+    print(f"  [{'PASS' if named else 'FAIL'}] {m_si * 1.2:.1f} M⊕ 순규산염 — 거절이 "
+          f"`silicate` 와 13500 GPa 를 이름 댄다")
+    deg = "Thomas-Fermi" in over.reason or "축퇴" in over.reason
+    if not deg:
+        fails.append("새 상한 위 거절이 무엇이 그 위인지 말하지 않는다")
+    print(f"  [{'PASS' if deg else 'FAIL'}] 그 위가 전자축퇴임을 말한다")
 
     print("\n계약 — 페이로드가 제 몫을 하는가")
     r = solve(1.0, core_mass_fraction=0.325)

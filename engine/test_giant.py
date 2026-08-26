@@ -247,6 +247,49 @@ def main() -> int:
         if abs(drift) < 0.05:
             fails.append("클래스 상수와의 차이가 5 % 안이다 — 보고할 발견이 아니게 됐다")
 
+    print("\n거대행성 안의 압축된 암석 핵 — 2026-08-27 에 어디까지 열렸나")
+    # 직전 판까지 이 자리는 통째로 막혀 있었다. 19 M⊕ 규산염 핵이 **혼자서** 3.4 TPa 까지
+    # 자기압축하고 PREM 적합이 3.5 TPa 에서 끝나서다. 규산염이 13.5 TPa 까지 이어지면서
+    # 이 갈래가 열렸는데, **끝까지 열리지는 않았다** — 그 경계가 어디인지가 이 절의 내용이다.
+    #
+    # 그리고 막는 것이 바뀌었다. 이제는 핵의 자기압축이 아니라 **외피의 하중** 이다.
+    # 같은 19 M⊕ 를 알몸으로 두면 3.43 TPa 로 새 천장 한참 아래인데, 목성 안에 넣으면
+    # 그 위로 밀린다. 그래서 상한은 핵 질량 하나로 정해지지 않고 외피 질량에 달렸다.
+    # 이분법 눈금은 24회면 60 M⊕ 폭에서 4e-6 M⊕ 다. 한 번이 사격 한 벌이라 비싸다.
+    lo, hi = 0.0, 60.0
+    for _ in range(24):
+        mid = 0.5 * (lo + hi)
+        if _giant(JUPITER_MASS_EARTH, mid).applicable:
+            lo = mid
+        else:
+            hi = mid
+    core_cap = lo
+    bare, _ = shoot(19.0 * EARTH_MASS_KG, 0.0, 0.0, "fe_prem")
+    ok = 0.0 < core_cap < 42.0
+    if not ok:
+        fails.append(f"목성 안 규산염 핵 상한이 {core_cap:.1f} M⊕ 로 뜻이 안 통한다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 317.8 M⊕ 거대행성이 담을 수 있는 규산염 핵은 "
+          f"{core_cap:.2f} M⊕ 까지다")
+    for core in (11.0, core_cap * 0.99, 19.0, 42.0):
+        res = _giant(JUPITER_MASS_EARTH, core)
+        if res.applicable:
+            print(f"         핵 {core:5.2f} M⊕ → R {_km(res):.0f} km · C/MR² "
+                  f"{res.values['nmoi']:.4f} · P_c "
+                  f"{res.values['core_pressure'] / 1e3:.2f} TPa · {res.grade}")
+        else:
+            print(f"         핵 {core:5.2f} M⊕ → 거절 ({res.reason[:60]}…)")
+    over = _giant(JUPITER_MASS_EARTH, 19.0)
+    named = not over.applicable and "silicate" in over.reason and "13500" in over.reason
+    if not named:
+        fails.append("19 M⊕ 핵 거절이 규산염의 새 상한을 이름 대지 않는다")
+    print(f"  [{'PASS' if named else 'FAIL'}] Guillot 의 19 M⊕ 는 **여전히 거절** 하고, "
+          f"이제 3.5 가 아니라 13.5 TPa 를 이름 댄다")
+    print(f"         막는 것이 바뀌었다는 것이 요점이다. 19 M⊕ 규산염을 알몸으로 두면 "
+          f"중심압이 {bare.p_center / 1e12:.2f} TPa 로 새 천장 한참 아래다 — 목성 안에서 "
+          f"넘기는 것은 자기압축이 아니라 외피의 하중이고, 그래서 이 상한은 핵 질량이 "
+          f"아니라 **핵과 외피의 짝** 이 정한다. Guillot 의 목성 중원소 11–42 M⊕ 중 "
+          f"아래쪽만 압축된 핵으로 들어간다.")
+
     print("\n거절 — 아직 밖인 것은 이름을 대며 거절하는가")
     for label, kwargs, keyword in (
             ("갈색왜성", dict(mass_earth=5000.0, body_class="brown_dwarf"), "중수소"),

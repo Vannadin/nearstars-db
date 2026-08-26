@@ -31,7 +31,7 @@ from __future__ import annotations
 
 import math
 
-from eos import MATERIALS, PhaseGap, mix
+from eos import MATERIALS, SILICATE_PREM_TO_PV, PhaseGap, mix
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       bulk_factor, porosity, voids_expected)
@@ -90,10 +90,12 @@ class Structure:
     """적분 한 번의 결과. Result 로 포장하기 전의 알맹이."""
 
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
-                 "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab")
+                 "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
+                 "p_silicate_max")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
-                 p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0):
+                 p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
+                 p_silicate_max=0.0):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -104,6 +106,10 @@ class Structure:
         self.phases = phases
         self.v_pore = v_pore              # 빈 공간의 부피 [m³]
         self.m_above_lab = m_above_lab    # 실험압 위에서 법칙을 외삽한 질량 [kg]
+        # 규산염을 들고 있는 층이 받는 가장 높은 압력 [Pa]. 압력은 바깥으로 갈수록
+        # 낮아지므로, 규산염이 처음 나타나는 자리의 압력이 곧 최대다. 이 값 하나로
+        # "3.5 TPa 위의 외삽 구간을 실제로 밟았는가" 를 판정한다.
+        self.p_silicate_max = p_silicate_max
 
     @property
     def nmoi(self) -> float:
@@ -151,6 +157,13 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     return out
 
 
+def _carries_silicate(mat) -> bool:
+    """이 층 재료가 규산염을 들고 있는가. 혼합이면 성분 중에 있는지를 본다."""
+    if mat.name == "silicate":
+        return True
+    return any(m.name == "silicate" for m, w in getattr(mat, "parts", ()) if w > 0.0)
+
+
 def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
@@ -182,6 +195,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     layer = 0
     v_pore = 4.0 / 3.0 * math.pi * r ** 3 * porosity_at(mat, p, phi0, p_cap)
     m_above_lab = m if p > P_LAB_MAX else 0.0
+    p_si_max = p if _carries_silicate(mat) else 0.0
 
     def material_for(m_now: float):
         nonlocal layer
@@ -202,6 +216,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 p_ice_base = p
         if mat.name not in phases:
             phases.append(mat.name)
+        if p_si_max == 0.0 and _carries_silicate(mat):
+            p_si_max = p
 
         # 4차 Runge-Kutta. 한 단계 안에서는 재료를 고정한다 — 경계에서 한 단계
         # 어긋나는 오차는 dr/R ~ 3e-4 이라 C/MR² 의 유효숫자 밖이다.
@@ -251,7 +267,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         core_radius = r      # 핵만 있는 천체
         p_cmb = p
     return Structure(r, m, moi, core_radius, p_center, p_cmb, p_ice_base, phases,
-                     v_pore=v_pore, m_above_lab=m_above_lab)
+                     v_pore=v_pore, m_above_lab=m_above_lab,
+                     p_silicate_max=p_si_max)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -388,6 +405,21 @@ ENVELOPE_Z_MATERIAL = "silicate"
 
 GIANT_ANCHOR_PASS_ME = 317.8    # Jupiter. 평균반지름 대비 +0.6 % — 이 갈래가 맞은 유일한 곳
 GIANT_ANCHOR_FAIL_ME = 95.2     # Saturn. +20.7 % — 이 갈래가 틀린 유일한 곳
+
+# ── 규산염의 외삽 구간 ───────────────────────────────────────────────────
+#
+# 3.5 TPa 아래의 규산염은 **측정된 행성의 적합** 이다 — PREM 은 지진파에서 나온 지구의
+# 밀도 분포다. 그 위는 다르다. Seager+ 2007 의 BME4 는 150 GPa 까지의 DFT 계산
+# (Karki+ 2000) 을 90배 위로 끌고 간 것이고, 그 사이에서 MgSiO₃ 는 실제로 세 번
+# 해리해 MgO + SiO₂ 가 된다 (Umemoto+ 2017: 0.75 · 1.31 · 3.10 TPa). 그 해리를
+# 무시해도 되는 근거는 결정구조가 같다는 것이 아니라 **그 압력대에서 조성이 밀도를
+# 거의 정하지 않는다** 는 것이다 (Zeng+ 2016 §II: MgO·SiO₂·MgSiO₃·Mg₂SiO₄ 의 TFD 가
+# A=20, Z=10 로 거의 같다).
+#
+# 그건 근거이긴 하지만 측정이 아니다. 그래서 해가 이 구간을 실제로 밟으면 등급이
+# 내려가고, note 가 왜인지를 적는다. 얼마나 맞는가가 아니라 **무엇에 기대는가** 를
+# 등급이 말한다는 이 파일의 규율 그대로다.
+SILICATE_EXTRAPOLATED_MIN = SILICATE_PREM_TO_PV
 
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
 FLUID_CLASSES = ("ice_giant", "sub_neptune", "brown_dwarf", "star")
@@ -547,6 +579,19 @@ def solve(mass_earth: float,
     # 토성이 맞은 것은 이 레시피가 토성을 예측해서가 아니라 논문이 준 조성을 받아썼기
     # 때문이고, 등급은 적합의 좋음이 아니라 **레시피가 검증할 수 없는 선언에 답이 기대는가**
     # 를 말해야 한다. initial_porosity 와 같은 규율이다.
+    silicate_extrapolated = st.p_silicate_max > SILICATE_EXTRAPOLATED_MIN
+    if silicate_extrapolated:
+        notes.append(
+            f"**규산염이 외삽 구간에 들어갔다** — 규산염 층 바닥이 "
+            f"{st.p_silicate_max / 1e12:.2f} TPa 로 PREM 적합의 상한 "
+            f"{SILICATE_EXTRAPOLATED_MIN / 1e12:.1f} TPa 위다. 그 위는 측정된 행성의 "
+            "적합이 아니라 제일원리 계산이다 — Seager+ 2007 §III.3 이 Karki+ 2000 의 "
+            "150 GPa 까지의 DFT 계산을 BME4 로 13.5 TPa 까지 끌고 간 것이고, 그 사이에서 "
+            "MgSiO₃ 는 실제로 MgO + SiO₂ 로 해리한다 (Umemoto+ 2017: 0.75 · 1.31 · "
+            "3.10 TPa). 그 해리를 무시하는 근거는 그 압력대에서 조성이 밀도를 거의 정하지 "
+            "않는다는 것이고 (Zeng+ 2016 §II, A=20·Z=10), 실험도 관측도 아니다. "
+            "이음매 자체는 재봤다 — 3.5 TPa 에서 두 적합이 0.21 % 안에서 겹친다. "
+            "등급을 analog 로 내린다.")
     giant_unvalidated = (gmf > 0 and envelope_z == 0.0
                          and mass_earth < GIANT_ANCHOR_PASS_ME)
     if envelope_z > 0:
@@ -618,7 +663,8 @@ def solve(mass_earth: float,
         # 를 말한다. φ₀ 도 Z 도 강착과 진화가 정하는 값이라 여기서 도출되지 않고,
         # 미분화는 측정 앵커가 없다.
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
-                            or not differentiated or giant_unvalidated)
+                            or not differentiated or giant_unvalidated
+                            or silicate_extrapolated)
                else "calibrated"),
         inputs=inputs,
         cycles=(1, 3),
