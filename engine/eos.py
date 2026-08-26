@@ -19,6 +19,9 @@
   Zeng+ 2016 이 PREM 을 이 형태로 적합했다 (arXiv:1512.08827 eq. 1).
 * **BME3** — 3차 Birch-Murnaghan. K₀′ 가 자유롭다. Seager+ 2007 Table 1 의 기본형.
 * **Vinet** — 고압 외삽에 BME 보다 낫다고 Seager+ 2007 §III.1 이 적는다. Fe(ε) 에 쓴다.
+* **Polytrope** — P = K ρ^(1+1/n). 응축상이 아니라 수소-헬륨 외피에 쓰는 형태다.
+  폴리트로프는 **별도의 가지가 아니라 상태방정식의 한 형태** 이고, 그래서 같은 적분기가
+  거대행성을 그대로 푼다. n = 1 의 계수는 H_HE 주석에 있다.
 
 각 재료는 **상(phase) 의 열** 이다. 상마다 유효 압력 구간이 있고, 구간 사이에 근거가
 없는 틈이 있으면 그 틈을 이름 붙여 들고 있는다 — 얼음의 209.5 MPa ~ 2.216 GPa 가
@@ -44,16 +47,19 @@ class PhaseGap(Exception):
 class Phase:
     """한 상의 냉각 등온 상태방정식."""
     name: str
-    form: str                 # bm2 | bme3 | vinet
-    rho0: float               # kg/m³
-    k0: float                 # Pa
-    k0p: float                # K₀′ (bm2 는 4 로 고정이므로 무시된다)
+    form: str                 # bm2 | bme3 | vinet | polytrope
+    rho0: float               # kg/m³. polytrope 는 0 이다 — 영압에서 밀도가 0 이다
+    k0: float                 # Pa. polytrope 는 K [m⁵ kg⁻¹ s⁻²] 를 여기 넣는다
+    k0p: float                # K₀′ (bm2 는 4 로 고정이므로 무시된다). polytrope 는 지수 n
     p_max: float              # Pa. 이 상이 유효한 상한
     ref: str                  # 어느 논문 어느 표에서 왔는가
     p_min: float = 0.0        # Pa. 앞 상에서 넘어오는 전이압
 
     def pressure(self, rho: float) -> float:
         """ρ 에서 P. 정방향은 닫힌 형태라 이쪽이 값싸다."""
+        if self.form == "polytrope":
+            # P = K ρ^(1+1/n). ρ₀ 로 나누지 않으므로 rho0 = 0 이어도 된다.
+            return self.k0 * rho ** (1.0 + 1.0 / self.k0p)
         x = rho / self.rho0
         if self.form == "bm2":
             return 1.5 * self.k0 * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0))
@@ -71,7 +77,13 @@ class Phase:
 
         P(ρ) 는 단조증가라 뿌리가 하나뿐이다. 첫 추측은 선형 압축
         ρ ≈ ρ₀(1 + P/K₀) 이고, 이 자리가 적분 안쪽 고리라 반복 횟수가 그대로
-        실행시간이다 — 이분법 200회로는 쓸 수 없이 느렸다."""
+        실행시간이다 — 이분법 200회로는 쓸 수 없이 느렸다.
+
+        폴리트로프는 뒤집기가 닫힌 형태라 반복이 아예 없다."""
+        if self.form == "polytrope":
+            if p <= 0.0:
+                return 0.0
+            return (p / self.k0) ** (self.k0p / (self.k0p + 1.0))
         if p <= 0.0:
             return self.rho0
         rho = self.rho0 * (1.0 + p / self.k0) ** 0.4
@@ -110,6 +122,21 @@ class Material:
     @property
     def p_max(self) -> float:
         return self.phases[-1].p_max
+
+    def rho_seed(self, mass_kg: float) -> float:
+        """사격의 괄호를 잡을 때만 쓰는 밀도 척도. 계산 결과에는 들어가지 않는다.
+
+        응축상은 영압 밀도가 그 척도다. 폴리트로프는 영압에서 밀도가 0 이라 그걸 쓸 수
+        없고, 대신 **n = 1 해의 평균밀도** 를 쓴다. n = 1 은 반지름이 질량과 무관하게
+        R = √(πK/2G) 로 고정되므로 (Helled+ 2022 §2), 그 반지름에서의 평균밀도
+        3M/(4πR³) 이 K 와 질량만으로 정해진다 — 새로 가정한 상수가 아니다."""
+        ph = self.phases[0]
+        if ph.rho0 > 0.0:
+            return ph.rho0
+        if ph.form == "polytrope" and abs(ph.k0p - 1.0) < 1e-9:
+            r = polytrope_radius_n1(ph.k0)
+            return 3.0 * mass_kg / (4.0 * math.pi * r ** 3)
+        raise ValueError(f"{self.name}: 괄호잡기용 밀도 척도를 정할 수 없다")
 
     def phase_at(self, p: float) -> Phase:
         """이 압력에서 유효한 상. 없으면 왜 없는지를 들고 던진다."""
@@ -256,6 +283,67 @@ H2O = Material(
                 "이어져 있어야 하므로, 이건 물리가 아니라 전이압 상수가 이웃과 어긋나게 "
                 "편집됐다는 뜻이다."),
 )
+# ── 수소-헬륨 ───────────────────────────────────────────────────────────
+#
+# 거대행성 외피는 응축상이 아니다. 그래서 여기 있는 다른 재료의 Birch-Murnaghan 이나
+# Vinet 은 쓸 수 없고, 대신 **폴리트로프** 를 쓴다. P = K ρ^(1+1/n) 이고 n = 1 이다.
+#
+# n = 1 이 "인위적이지만 놀랄 만큼 쓸 만한" 근사라는 것과 그 계수를 Helled, Movshovitz &
+# Nettelmann 2022 §2 (arXiv:2202.10046) 가 적는다 — "a surprisingly reasonable
+# approximation of the compressibility of a hydrogen-helium mixture at conditions typical
+# of giant planet envelopes". 같은 절이 비회전 구형 해를 닫힌 형태로 준다.
+#
+#     ρ(r) = ρ_c · sin(kr)/(kr),   k = √(2πG/K),   R = √(πK/2G)
+#
+# **K 를 옮겨 적을 때 함정이 하나 있었고, 논문 자신의 숫자로 걸러냈다.** 그 논문은
+# K = 2.1×10¹² 라고 쓰면서 단위를 m⁵ kg⁻¹ s⁻² 로 달아 놓았다. 그런데 같은 문단이 그
+# K 에서 R = 70,300 km 가 나온다고 적는다. SI 로 2.1e12 를 넣으면 R 이 1.5 AU 가 되고,
+# 2.1e5 를 넣으면 70,302 km 가 된다. 즉 적힌 수는 cgs (cm⁵ g⁻¹ s⁻²) 이고 SI 로는
+# 2.1×10⁵ 다. 손으로 친 표에서 54배가 어긋났던 전례가 있는 리포지토리라, 이 검산을
+# test_giant.py 가 다시 돌린다.
+POLYTROPE_K_HHE = 2.1e5      # m⁵ kg⁻¹ s⁻². Helled+ 2022 §2 의 2.1×10¹² cgs
+POLYTROPE_N_HHE = 1.0        # 지수. 같은 절
+#
+# **압력 상한은 문헌이 말해 주지 않는다.** 그 논문은 압력 한계를 적지 않고, 근사가
+# 깨지는 방식이 압력 절단이 아니라 조성과 열이기 때문이다 (같은 절이 그 근사가 목성보다
+# 토성에 덜 맞는 이유로 P∝ρ² 가 토성 외피에 덜 맞는 것과 토성이 중원소가 더 많은 것
+# 둘을 든다). 그래서 여기 두는 상한은 **선언된 범위의 두 번째 울타리** 다 — 이 관계식이
+# 13 M_J 에서 도달하는 중심압으로 잡았고, 13 M_J 는 중수소 연소로 갈리는 관례적
+# 행성/갈색왜성 경계다 (Spiegel, Burrows & Milsom 2011, arXiv:1008.5150 이 "13 M_J is
+# generally a reasonable rule of thumb" 라고 적으면서 그 값이 헬륨량·중수소량·금속량에
+# 달렸다고 덧붙인다). 그 위는 body_class 가 이미 이름 대며 거절하므로, 이 상한이
+# 하중을 받는 자리는 아니다.
+JUPITER_MASS_EARTH = 317.828     # M⊕. 목성 질량, IAU/IAG 보고 (Archinal+ 2011)
+DEUTERIUM_LIMIT_MJ = 13.0        # M_J. Spiegel+ 2011 의 rule of thumb
+G_NEWTON = 6.67430e-11           # m³ kg⁻¹ s⁻². interior.py 의 G 와 같은 값
+EARTH_MASS_KG_EOS = 5.972e24     # kg. 위 상한을 계산하는 데만 쓴다
+
+
+def polytrope_radius_n1(k: float) -> float:
+    """n = 1 폴리트로프의 반지름 R = √(πK/2G). 질량과 무관하다 (Helled+ 2022 §2)."""
+    return math.sqrt(math.pi * k / (2.0 * G_NEWTON))
+
+
+def polytrope_central_pressure_n1(k: float, mass_kg: float) -> float:
+    """n = 1 해의 중심압. ρ_c = πM/(4R³) 이고 P_c = K ρ_c² 다."""
+    r = polytrope_radius_n1(k)
+    rho_c = math.pi * mass_kg / (4.0 * r ** 3)
+    return k * rho_c ** 2
+
+
+H_HE = Material(
+    "h_he", "수소-헬륨 외피",
+    (Phase("hhe_n1", "polytrope", 0.0, POLYTROPE_K_HHE, POLYTROPE_N_HHE,
+           polytrope_central_pressure_n1(
+               POLYTROPE_K_HHE,
+               DEUTERIUM_LIMIT_MJ * JUPITER_MASS_EARTH * EARTH_MASS_KG_EOS),
+           "Helled+ 2022 §2 (arXiv:2202.10046) — n=1 폴리트로프, K=2.1e5 SI"),),
+    over_reason=("수소-헬륨 외피가 {p_gpa:.0f} GPa 까지 내려간다. n=1 폴리트로프를 "
+                 "이 리포지토리가 선언한 범위의 상한({max_gpa:.0f} GPa, 13 M_J 의 "
+                 "중심압) 위로 끌고 가는 것이고, 그 위는 갈색왜성이다 — 중수소가 타고 "
+                 "(Spiegel+ 2011), 이 레시피에는 그 광도 이력이 없다."),
+)
+
 MATERIALS: dict[str, Material] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O)
+    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O, H_HE)
 }

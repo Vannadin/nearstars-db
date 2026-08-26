@@ -33,3 +33,43 @@ papers:
   title: Density of asteroids
   status: fetched
   fetch_error: null
+- arxiv_id: '1109.1627'
+  ads_bibcode: 2011Icar..216..440H
+  title: 'Jupiter''s moment of inertia: A possible determination by Juno'
+  status: fetched
+  fetch_error: null
+- arxiv_id: '2101.12508'
+  ads_bibcode: 2021ApJ...910...38N
+  title: Connecting the Gravity Field, Moment of Inertia, and Core Properties in Jupiter
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1409.5525'
+  ads_bibcode: 2015MNRAS.452.1375W
+  title: A variable polytrope index applied to planet and material models
+  status: fetched
+  fetch_error: null
+- arxiv_id: astro-ph/9907402
+  ads_bibcode: 1999P&SS...47.1183G
+  title: A comparison of the interiors of Jupiter and Saturn
+  status: fetched
+  fetch_error: null
+- arxiv_id: '0912.0533'
+  ads_bibcode: 2010SSRv..152..423F
+  title: The Interior Structure, Composition, and Evolution of Giant Planets
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1902.01852'
+  ads_bibcode: 2019ApJ...872...51C
+  title: A New Equation of State for Dense Hydrogen-Helium Mixtures
+  status: fetched
+  fetch_error: null
+- arxiv_id: '2202.10046'
+  ads_bibcode: 2022arXiv220210046H
+  title: The nature of gas giant planets
+  status: fetched
+  fetch_error: null
+- arxiv_id: '2110.15452'
+  ads_bibcode: 2021PSJ.....2..241N
+  title: Theory of Figures to the Seventh Order and the Interiors of Jupiter and Saturn
+  status: fetched
+  fetch_error: null

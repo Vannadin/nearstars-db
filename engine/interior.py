@@ -46,6 +46,9 @@ REFS = (
     "2020JGRE..12506176J",      # Journaux+ 2020 (SeaFreeze) — 얼음 III·V·VI
     "2019Icar..326...10B",      # Bierson+ 2019 — 압력이 공극을 닫는 관계와 그 계수
     "2012P&SS...73...98C",      # Carry 2012 — 10 MPa 파쇄 문턱, 관측된 전이질량
+    "2022arXiv220210046H",      # Helled+ 2022 — n=1 폴리트로프와 그 계수
+    "1999P&SS...47.1183G",      # Guillot 1999 — 목성·토성의 중원소 질량
+    "2021ApJ...910...38N",      # Neuenschwander+ 2021 — 목성 NMoI 앵커
     "1981PEPI...25..297D",      # PREM — 앵커로 쓰는 지구 C/MR²
 )
 
@@ -53,15 +56,23 @@ G = 6.67430e-11
 EARTH_MASS_KG = 5.972e24
 EARTH_RADIUS_M = 6.371e6
 
-# 조성 이름 → (핵질량분율, 얼음질량분율, 핵 재료). 숫자를 직접 주면 이건 기본값일 뿐이다.
+# 조성 이름 → (핵질량분율, 얼음질량분율, 가스질량분율, 핵 재료).
+# 숫자를 직접 주면 이건 기본값일 뿐이다.
 #
 # `iron` 만 순철(fe_eps)을 쓴다. 그 곡선의 용도가 "이보다 밀할 수 없다" 는 한계선을
 # 긋는 것이라서, 가벼운 원소가 섞인 PREM 핵이 아니라 실험실 순철이어야 한다.
-COMPOSITIONS: dict[str, tuple[float, float, str]] = {
-    "iron":       (1.000, 0.00, "fe_eps"),
-    "earth_like": (0.325, 0.00, "fe_prem"),
-    "silicate":   (0.000, 0.00, "fe_prem"),
-    "water":      (0.163, 0.50, "fe_prem"),
+#
+# `gas_giant` 의 가스질량분율 0.90 은 목성의 값이다. Guillot 1999 (arXiv:astro-ph/9907402)
+# 이 목성의 중원소 총량(핵 포함)을 11–42 M⊕ 로, 토성을 19–31 M⊕ 로 제약한다. 목성
+# 317.83 M⊕ 의 중간값 26.5 M⊕ 는 8.3 % 이므로 가스 91.7 % 인데, 프리셋은 그 구간의
+# 중앙 근처인 0.90 으로 둔다. **프리셋은 기본값일 뿐이고 천체마다 넘겨주는 것이 정상이다** —
+# 토성은 같은 논문의 25 M⊕ / 95.16 M⊕ = 26 % 가 되어 가스 0.74 다.
+COMPOSITIONS: dict[str, tuple[float, float, float, str]] = {
+    "iron":       (1.000, 0.00, 0.00, "fe_eps"),
+    "earth_like": (0.325, 0.00, 0.00, "fe_prem"),
+    "silicate":   (0.000, 0.00, 0.00, "fe_prem"),
+    "water":      (0.163, 0.50, 0.00, "fe_prem"),
+    "gas_giant":  (0.000, 0.00, 0.90, "fe_prem"),
 }
 
 # 적분 격자. 1500 단계에서 C/MR² 가 격자를 네 배 촘촘히 해도 1.2e-4 (상대) 안에서
@@ -106,21 +117,26 @@ class Structure:
         return self.v_pore / self.volume
 
 
-def _stack(cmf: float, imf: float, core_material: str):
-    """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다."""
+def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0):
+    """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
+
+    가스 외피가 있으면 그것이 가장 바깥 층이다. 폴리트로프는 **별도의 가지가 아니라
+    상태방정식의 한 형태** 이므로, 층 하나가 늘 뿐 적분기는 그대로다."""
     out = []
     if cmf > 0:
         out.append((cmf, MATERIALS[core_material]))
-    if 1.0 - cmf - imf > 0:
-        out.append((1.0 - imf, MATERIALS["silicate"]))
+    if 1.0 - cmf - imf - gmf > 0:
+        out.append((1.0 - imf - gmf, MATERIALS["silicate"]))
     if imf > 0:
-        out.append((1.0, MATERIALS["h2o"]))
+        out.append((1.0 - gmf, MATERIALS["h2o"]))
+    if gmf > 0:
+        out.append((1.0, MATERIALS["h_he"]))
     return out
 
 
 def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
-              p_cap: float | None = None) -> Structure:
+              p_cap: float | None = None, gmf: float = 0.0) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -130,7 +146,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
-    stack = _stack(cmf, imf, core_material)
+    stack = _stack(cmf, imf, core_material, gmf)
     mat = stack[0][1]
 
     rho_c = mat.density(p_center) * bulk_factor(mat.name, p_center, phi0, p_cap)
@@ -230,17 +246,19 @@ def porosity_at(mat, p_pa: float, phi0: float,
 
 def shoot(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
-          p_cap: float | None = None) -> tuple[Structure, bool]:
+          p_cap: float | None = None, gmf: float = 0.0) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
-    stack = _stack(cmf, imf, core_material)
+    stack = _stack(cmf, imf, core_material, gmf)
+    # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
+    # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
     rho0_bar = 1.0 / sum(
         (hi_f - (stack[i - 1][0] if i else 0.0))
-        / (mat.rho0 * bulk_factor(mat.name, 0.0, phi0, p_cap))
+        / (mat.rho_seed(mass_kg) * bulk_factor(mat.name, 0.0, phi0, p_cap))
         for i, (hi_f, mat) in enumerate(stack))
     r0 = (3.0 * mass_kg / (4.0 * math.pi * rho0_bar)) ** (1.0 / 3.0)
     # 중심압은 가장 안쪽 재료가 받는다. 바깥 층의 상한은 적분 중에 PhaseGap 이
@@ -248,7 +266,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     p_ceiling = stack[0][1].p_max
     lo = 1.0e2
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
-    while integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap).mass_kg < mass_kg:
+    while integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf).mass_kg < mass_kg:
         if hi >= p_ceiling:
             raise ValueError(
                 f"이 질량을 담으려면 중심압이 {stack[0][1].name} 의 근거 구간 상한"
@@ -258,12 +276,12 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         hi = min(hi * 4.0, p_ceiling)
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
-    st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap)
+    st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
     x1 = math.log(max(lo, hi * 1e-3))
-    st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap)
+    st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap, gmf)
     y1 = math.log(st.mass_kg / mass_kg)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
@@ -280,19 +298,25 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             x2 = 0.5 * (math.log(lo) + math.log(hi))
         x0, y0 = x1, y1
         x1 = x2
-        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap)
+        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap, gmf)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
 
 # 고체 표면이 없는 천체. 여기 있는 상태방정식은 전부 응축상이라 H/He 외피에는
 # 쓸 수 없다 — 그쪽은 폴리트로프이고 다른 문헌이다.
-FLUID_CLASSES = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf", "star")
+# 수소-헬륨 외피가 있는 천체. 폴리트로프가 들어온 뒤로 이 둘은 **거절하지 않는다** —
+# 가스질량분율을 주면 같은 적분기가 푼다.
+GAS_GIANT_CLASSES = ("giant", "gas_giant")
+
+# 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
+FLUID_CLASSES = ("ice_giant", "sub_neptune", "brown_dwarf", "star")
 
 
 def solve(mass_earth: float,
           core_mass_fraction: float | None = None,
           ice_mass_fraction: float | None = None,
+          gas_mass_fraction: float | None = None,
           composition: str = "earth_like",
           radius_earth: float | None = None,
           differentiated: bool = True,
@@ -309,24 +333,38 @@ def solve(mass_earth: float,
     `tidal_heating` 도 계산에 쓰이지 않는다. 공극이 남을 레짐인가를 판정하는 세
     지표 중 하나이고 (`porosity.voids_expected`), 다른 노드의 출력이므로 여기서는
     선언으로만 받는다."""
-    preset_cmf, preset_imf, core_material = COMPOSITIONS.get(
-        composition, (None, None, "fe_prem"))
+    preset_cmf, preset_imf, preset_gmf, core_material = COMPOSITIONS.get(
+        composition, (None, None, None, "fe_prem"))
     cmf = preset_cmf if core_mass_fraction is None else core_mass_fraction
     imf = preset_imf if ice_mass_fraction is None else ice_mass_fraction
+    gmf = preset_gmf if gas_mass_fraction is None else gas_mass_fraction
 
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
               "core_mass_fraction": cmf, "ice_mass_fraction": imf,
+              "gas_mass_fraction": gmf,
               "composition": composition, "differentiated": differentiated,
               "body_class": body_class, "initial_porosity": initial_porosity,
               "porosity_cap": porosity_cap, "tidal_heating": tidal_heating}
 
     if body_class in FLUID_CLASSES:
+        why = {
+            "brown_dwarf": ("중수소가 탄다. 13 M_J 위는 광도가 시간에 따라 변하고 "
+                            "(Spiegel+ 2011), 이 레시피에는 그 열이력이 없다 — 등온 "
+                            "폴리트로프로 갈색왜성을 푸는 것은 나이를 무시하는 것이다."),
+            "star": ("수소가 탄다. 별의 NMoI 는 이 레시피가 아니라 n = 3/2 폴리트로프의 "
+                     "발표값 0.205 에서 오고 (Chandrasekhar 1939), 그 가지는 "
+                     "body_figure 에 따로 있다."),
+            "ice_giant": ("외피가 수소-헬륨이 아니라 물·암모니아·메탄이 섞인 '얼음' 이고, "
+                          "그 혼합물의 상태방정식이 이 파일에 없다. n = 1 폴리트로프는 "
+                          "H/He 압축성에 맞춰진 것이라 여기 쓸 수 없다 — 필요한 것은 "
+                          "Redmer+ 2011 계열의 물-암모니아 EOS 다."),
+            "sub_neptune": ("H/He 외피가 총질량의 몇 %뿐이라 두께가 조성이 아니라 "
+                            "**나이와 항성 조사량** 이 정한다 (광증발). 이 레시피는 "
+                            "등온이고 진화가 없으므로, 가스질량분율을 스스로 정할 수 "
+                            "없다. 그 값을 넘겨주면 적분 자체는 돈다."),
+        }.get(body_class, "이 클래스의 외피 상태방정식이 이 파일에 없다.")
         return out_of_domain(
-            RECIPE, VERSION,
-            f"'{body_class}' 는 고체 표면이 없다. 이 레시피의 상태방정식은 철·규산염·"
-            "얼음, 전부 응축상이라 수소-헬륨 외피에 쓸 수 없다 — 그쪽은 폴리트로프 "
-            "영역이고 다른 문헌이다 (Fortney+ 2007, Baraffe+ 2008). 무거운 원소 핵만 "
-            "따로 풀고 싶다면 그 핵의 질량을 이 레시피에 주면 된다.",
+            RECIPE, VERSION, f"'{body_class}' 는 아직 이 레시피 밖이다. {why}",
             inputs=inputs, refs=REFS)
 
     if composition not in COMPOSITIONS:
@@ -359,16 +397,25 @@ def solve(mass_earth: float,
             "정하고 가열이 지우며, 이 레시피에는 그 둘이 없다.",
             inputs=inputs, refs=REFS)
 
-    if not 0.0 <= cmf <= 1.0 or not 0.0 <= imf <= 1.0 or cmf + imf > 1.0:
+    if (not 0.0 <= cmf <= 1.0 or not 0.0 <= imf <= 1.0
+            or not 0.0 <= gmf <= 1.0 or cmf + imf + gmf > 1.0):
         return out_of_domain(
             RECIPE, VERSION,
-            f"질량분율이 맞지 않는다 — 핵 {cmf}, 얼음 {imf}. "
-            "둘 다 [0, 1] 안이고 합이 1 이하여야 한다.",
+            f"질량분율이 맞지 않는다 — 핵 {cmf}, 얼음 {imf}, 가스 {gmf}. "
+            "셋 다 [0, 1] 안이고 합이 1 이하여야 한다.",
+            inputs=inputs, refs=REFS)
+
+    if gmf > 0 and body_class is not None and body_class not in GAS_GIANT_CLASSES:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"가스질량분율 {gmf} 를 받았는데 body_class 가 '{body_class}' 다. "
+            f"수소-헬륨 외피를 붙이는 것은 {' 또는 '.join(GAS_GIANT_CLASSES)} 로 "
+            "선언된 천체에만 한다 — 선언과 조성이 어긋나면 조용히 엉뚱한 천체를 푼다.",
             inputs=inputs, refs=REFS)
 
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
-                              initial_porosity, porosity_cap)
+                              initial_porosity, porosity_cap, gmf)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -402,6 +449,7 @@ def solve(mass_earth: float,
 
     reason = (f"{mass_earth:.4g} M⊕ 를 핵질량분율 {cmf:.3f}"
               + (f" · 얼음질량분율 {imf:.3f}" if imf > 0 else "")
+              + (f" · 가스질량분율 {gmf:.3f}" if gmf > 0 else "")
               + (f" · 초기공극 {initial_porosity:.2f}" if initial_porosity > 0 else "")
               + f" 로 적분했다. 정수압 평형이 반지름 {radius:.4f} R⊕ 와 "
               f"중심압 {st.p_center / 1e9:.1f} GPa 를 주고, 그 압력 분포에서 층 밀도가 "
@@ -752,6 +800,7 @@ def _from_state(state):
         mass_earth=state["mass_earth"],
         core_mass_fraction=state.get("core_mass_fraction"),
         ice_mass_fraction=state.get("ice_mass_fraction"),
+        gas_mass_fraction=state.get("gas_mass_fraction"),
         composition=state.get("composition_intent", "earth_like"),
         radius_earth=state.get("radius_earth"),
         differentiated=state.get("differentiated", True),
