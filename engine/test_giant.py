@@ -28,7 +28,7 @@ import sys
 
 from eos import (DEUTERIUM_LIMIT_MJ, JUPITER_MASS_EARTH, POLYTROPE_K_HHE,
                  POLYTROPE_N_HHE, polytrope_radius_n1)
-from interior import EARTH_RADIUS_M, solve
+from interior import EARTH_MASS_KG, EARTH_RADIUS_M, shoot, solve
 
 # ── 발표값 ──────────────────────────────────────────────────────────────
 #
@@ -97,6 +97,16 @@ def _km(res) -> float:
     return res.values["radius"] * EARTH_RADIUS_M / 1e3
 
 
+def _integrator_km(mass_earth: float) -> float:
+    """적분기를 **레시피의 영역 정책을 거치지 않고** 직접 돌려 반지름[km]을 낸다.
+
+    해석해 대조는 "이 천체를 믿는가" 가 아니라 "적분기가 Lane-Emden 을 재현하는가"
+    를 묻는다. 두 질문에 같은 문을 쓰면, 검증 범위를 좁히는 순간 적분기 검사가 같이
+    막힌다 — 실제로 그렇게 됐다. 정책은 solve() 에 두고, 이 검사만 아래를 본다."""
+    st, _ = shoot(mass_earth * EARTH_MASS_KG, 0.0, 0.0, "fe_prem", gmf=1.0)
+    return st.radius_m / 1e3
+
+
 def table() -> None:
     """문서 §Validation 의 거대행성 표를 다시 낸다. 손으로 친 표는 어긋난다."""
     print("| body | M (M⊕) | R derived | R mean (IAU) | ΔR vs mean | R eq 1 bar | "
@@ -130,7 +140,8 @@ def main() -> int:
     nmoi_analytic = analytic_nmoi_n1()
     # n = 1 은 반지름이 질량과 무관하다. 그게 이 형태의 서명이므로 질량을 흩어 확인한다.
     got = [(m, _giant(m)) for m in (95.0, 317.8, 636.0, 1200.0)]
-    spread = max(_km(r) for _m, r in got) / min(_km(r) for _m, r in got) - 1.0
+    swept = [_integrator_km(m) for m, _r in got]
+    spread = max(swept) / min(swept) - 1.0
     ok = spread < 1e-4
     if not ok:
         fails.append(f"n=1 인데 반지름이 질량에 따라 {spread * 100:.3f} % 움직인다")
@@ -265,6 +276,29 @@ def main() -> int:
             fails.append(f"{label} 가 움직였다")
         print(f"  [{'PASS' if ok else 'FAIL'}] {label} C/MR² "
               f"{res.values['nmoi']:.4f}" + (f" (기준 {want})" if want else ""))
+
+    # ── 검증 범위가 등급에 나타나는가 ──────────────────────────────────
+    #
+    # 이 갈래는 어느 거대행성에도 같은 반지름과 같은 C/MR² 를 돌려준다. 그러니
+    # "얼마나 맞는가" 는 계산이 아니라 **어디서 시험됐는가** 가 정하고, 그 사실이
+    # 값을 받는 쪽에 보여야 한다. 등급이 그 자리다.
+    print("\n검증 범위 — 시험된 곳과 아닌 곳이 등급으로 갈리는가")
+    for label, m, want in (
+            ("목성은 calibrated — 이 갈래가 맞은 유일한 곳", JUPITER_MASS_EARTH, "calibrated"),
+            ("토성은 analog — +20.7 % 로 측정된 곳", PLANETS[1][1], "analog"),
+            ("두 앵커 사이는 analog — 시험된 적이 없다", AB_MASS_EARTH, "analog")):
+        got = _giant(m).grade
+        ok = got == want
+        if not ok:
+            fails.append(f"검증 범위: {label} — grade {got}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {label}")
+
+    # 등급만 내리고 이유를 안 적으면 받는 쪽이 왜인지 모른다.
+    ab = _giant(AB_MASS_EARTH)
+    said = any("검증되지 않은 질량" in n for n in ab.notes)
+    if not said:
+        fails.append("검증 범위: 등급은 내렸는데 note 가 이유를 안 적는다")
+    print(f"  [{'PASS' if said else 'FAIL'}] 강등 이유를 note 가 이름 댄다")
 
     print("\n계약 — 페이로드가 거대행성에서도 제 몫을 하는가")
     res = _giant(AB_MASS_EARTH)

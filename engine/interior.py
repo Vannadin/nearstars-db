@@ -309,6 +309,23 @@ def shoot(mass_kg: float, cmf: float, imf: float,
 # 가스질량분율을 주면 같은 적분기가 푼다.
 GAS_GIANT_CLASSES = ("giant", "gas_giant")
 
+# ── 거대행성 갈래의 검증 범위 ────────────────────────────────────────────
+#
+# n = 1 폴리트로프에는 **천체가 돌릴 손잡이가 없다.** K 가 상수 하나이고 R = √(πK/2G)
+# 라서 질량도 조성도 반지름에 안 들어간다 — 어떤 거대행성에도 같은 반지름과 같은
+# C/MR² 를 돌려준다. 그래서 "Jupiter 0.6 %, Saturn 20.7 %" 는 오차 두 개가 아니라
+# **출력 하나를 두 행성에 대본 것** 이다.
+#
+# 그러면 이 갈래의 신뢰도는 계산이 아니라 **어디서 시험됐는가** 가 정한다. 시험된 곳은
+# 딱 둘이고, 사이는 한 번도 확인된 적이 없다. 둘 사이에 문턱을 지어내지 않는 이유가
+# 그것이다 — 지어낸 수는 근거가 아니라 장식이다.
+#
+# Saturn 이 왜 틀리는지는 Helled+ 2022 §2 가 적는다. P ∝ ρ² 가 토성 외피에 덜 맞고,
+# 토성이 중원소가 더 많다 (Guillot 1999: 목성 총중원소 3–13 %, 토성 20–33 %). 둘 다
+# 질량 자체의 이야기가 아니므로, 아래 두 상수는 **기작의 문턱이 아니라 시험의 좌표** 다.
+GIANT_ANCHOR_PASS_ME = 317.8    # Jupiter. 평균반지름 대비 +0.6 % — 이 갈래가 맞은 유일한 곳
+GIANT_ANCHOR_FAIL_ME = 95.2     # Saturn. +20.7 % — 이 갈래가 틀린 유일한 곳
+
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
 FLUID_CLASSES = ("ice_giant", "sub_neptune", "brown_dwarf", "star")
 
@@ -435,6 +452,23 @@ def solve(mass_earth: float,
              f"평균밀도 {rho_bar:.0f} kg/m³.",]
     if initial_porosity > 0:
         notes.append(_porosity_note(st, initial_porosity, mass_earth))
+
+    # 목성 아래는 시험된 적이 없다. **거절하지 않는다** — 이 레시피는 이런 천체를
+    # 못 푸는 게 아니라 측정된 만큼 틀리게 푼다. 거절은 "다루지 않는다" 는 말이라
+    # 거짓이 되고, 토성 잔차를 재는 검사도 같이 죽는다. 대신 등급으로 말한다.
+    giant_unvalidated = gmf > 0 and mass_earth < GIANT_ANCHOR_PASS_ME
+    if giant_unvalidated:
+        toward = ("토성 쪽에" if abs(mass_earth - GIANT_ANCHOR_FAIL_ME)
+                  < abs(mass_earth - GIANT_ANCHOR_PASS_ME) else "목성 쪽에")
+        notes.append(
+            "**검증되지 않은 질량이다.** 이 갈래의 앵커는 둘뿐이다 — 목성"
+            f"({GIANT_ANCHOR_PASS_ME:.4g} M⊕) 에서 평균반지름 대비 +0.6 %, 토성"
+            f"({GIANT_ANCHOR_FAIL_ME:.4g} M⊕) 에서 +20.7 %. {mass_earth:.4g} M⊕ 는 "
+            f"그 사이이고 {toward} 가깝다. n = 1 은 질량에도 조성에도 반응하지 않으므로"
+            "(R = √(πK/2G)) 여기 나온 반지름과 C/MR² 는 목성에 맞춰진 상수 하나가 어느 "
+            "거대행성에나 돌려주는 같은 값이다. 그래서 잔차가 0.6 % 쪽인지 20.7 % 쪽인지 "
+            "말할 근거가 없고, 등급을 analog 로 내린다. 이 축을 여는 것은 봉투 중원소가 "
+            "들어간 혼합 상태방정식이다 (Helled+ 2022 §2; Guillot 1999 의 Z 예산).")
     notes += [
              "이 노드는 결합 코어 안에 있다 (chain.yaml 순환 1·3). converged 는 "
              "**이 적분의 사격이 붙었는가** 를 말하지, 조석가열이 조성을 되바꾸는 "
@@ -471,7 +505,7 @@ def solve(mass_earth: float,
         reason=reason,
         # 공극이 켜지면 등급이 내려간다. 압밀 곡선의 실험 상한 위로 외삽하게 되고,
         # φ₀ 자체가 이 레시피가 도출하지 못하는 선언값이다.
-        grade="analog" if initial_porosity > 0 else "calibrated",
+        grade="analog" if (initial_porosity > 0 or giant_unvalidated) else "calibrated",
         inputs=inputs,
         cycles=(1, 3),
         converged=converged,
