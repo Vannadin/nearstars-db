@@ -21,56 +21,24 @@ from it. Whether the core is a conducting liquid is a thermal question (`core_st
 what k₂ and Q are is a viscoelastic one (`tidal_response`). Different inputs, different
 literature, separate recipes.
 
-## What changed on 2026-08-25, and why it had to
+## What changed, and why each change had to
 
-Until this revision the recipe assumed **uniform layers** and evaluated two closed-form
-expressions. Layer densities came from a composition lookup table, and that table only held
-near Earth's mass. The cost was not subtle:
+Each row is a summary; the section it names carries the work.
 
-- Earth's C/MR² came out 4.8 % high, and the error only ever pointed one way, because
-  uniform layers ignore self-compression and a real interior concentrates mass inward.
-- Mercury came back 8.6 % out, and the cause was the table rather than the algebra:
-  Mercury's core sits near 7800 kg/m³ where Earth's runs near 10900, the same iron
-  differently squeezed. Fitting a power law in mass gave an exponent scattering from 0.10
-  to 0.23 across bodies, so there was no single scaling to hide behind.
-- The mass–radius recipe carried a second table of composition radius scalings, derived
-  from *prose ordering* in its own document rather than from a solved interior, and its
-  pure-iron threshold was therefore not a real curve.
+| date | what changed | what it cost before, or what it opened |
+|---|---|---|
+| 2026-08-25 | uniform layers replaced by an integration | layer densities came from a composition table that only held near Earth's mass: Earth's C/MR² was 4.8 % high and always in the same direction, Mercury 8.6 % out because its core sits near 7800 kg/m³ where Earth's runs near 10900. The table is gone, layer density is an output, Earth's error is 0.3 % |
+| 2026-08-25 | the water ice column completed | the named hole between 209.5 MPa and 2.216 GPa filled by ices III, V and VI, read from a published Gibbs representation rather than fitted |
+| 2026-08-26 | compaction added | a small body whose self-gravity cannot crush what it accreted is solved rather than declined or mistaken for lighter rock. [What it says about Dante and Hades](#what-the-compaction-relation-says-about-dante-and-hades) is the part that matters |
+| 2026-08-26 | giants added | what they needed was not another recipe but another equation of state, so a polytrope joined the functional forms. [What that opens](#what-the-giant-branch-opens-alpha-centauri-a-b-and-the-class-table) is a derived C/MR² of 0.2614 for Alpha Centauri A b against the 0.23 the class table carries |
 
-Both tables are now gone. Layer density is an output of the integration, not an input to
-it, and the pure-iron curve is an integration of a published iron equation of state. Earth's
-C/MR² error dropped from 4.8 % to 0.3 %.
-
-Later the same day the water ice column was completed. The revision above left a named hole
-between 209.5 MPa and 2.216 GPa, where ices III, V and VI belong, and returned it as a
-result whenever an ice column reached into it. Three phases now fill it, read from a
-published Gibbs representation rather than fitted, so the ladder runs unbroken from ice Ih
-to ice VII. Chaos (Alpha Centauri A b V) was the body the hole was blocking and it solves;
-Ganymede, whose water column bottoms out inside ice VI, is what shows the phases carrying a
-measured body rather than merely unblocking a search.
-
-**2026-08-26 added compaction.** The solver had treated every layer as solid throughout, so
-a small body whose self-gravity cannot crush what it accreted from came back as a body made
-of something lighter, or came back declined. Porosity is now a function of the local
-pressure, taken from a published relation rather than fitted to any of our bodies, and the
-two moons the previous revision refused on that mechanism return numbers. The section on
-[porosity](#porosity-what-the-pressure-has-not-crushed-yet) has the relation, and
-[what it says about Dante and Hades](#what-the-compaction-relation-says-about-dante-and-hades)
-has the part that matters: the relation accounts for their volume deficits arithmetically
-and rules itself out physically, which is a finding about two invented radii rather than a
-solved interior.
-
-**2026-08-26, later, added giants.** The recipe had refused every hydrogen-helium body, and
-the refusal was right about the cause and wrong about the remedy: what giants needed was not
-another recipe but another equation of state. A polytrope joined `bm2`, `bme3` and `vinet` as
-a fourth functional form, an H/He material joined the four condensed ones, and the same
-integrator now solves a giant as a body with one more layer on the outside. No new node, no
-new methodology document. Jupiter comes out within 0.6 % of its mean radius from its mass
-alone; Saturn comes out 20.7 % too large, which the source paper predicts and explains. The
-consequence worth reading is
-[what it opens](#what-the-giant-branch-opens-alpha-centauri-a-b-and-the-class-table): Alpha
-Centauri A b now has a derived C/MR² of 0.2614 against the 0.23 the class table carries, and
-that difference propagates into J₂ and from there into a 21-hour moon integration.
+**2026-08-27 carried the silicate above 3.5 TPa.** One phase, spliced where the PREM fit's
+author stops it and running to where Seager+ 2007 hands silicate over to Thomas–Fermi–Dirac.
+Three separate refusals shared that one ceiling and all three moved: the rocky mass limit
+rose from 6.84 to 22.78 M⊕ at Earth composition and from 19.32 to 53.38 M⊕ for pure silicate,
+Jupiter's whole heavy-element budget now integrates, and a compact rock core inside a
+Jupiter-mass giant is possible up to 17.66 M⊕ where before it was not possible at all. The
+third is the one that only half opened, and its row says so.
 
 ## Contract — `interior_layers`
 
@@ -159,7 +127,11 @@ fit PREM with ([arXiv:1512.08827](https://arxiv.org/abs/1512.08827), their eq. 1
 
 **Third-order Birch–Murnaghan (BME3)**, which frees K₀′, and **Vinet**, which Seager+ 2007
 §III.1 prefers for extrapolation above the experimental range because BME is a truncated
-expansion of the elastic potential energy. Both are in Seager's Table 1.
+expansion of the elastic potential energy. Both are in Seager's Table 1. **Fourth-order
+Birch–Murnaghan (BME4)** adds K₀″, and Seager uses it for one material only, the deep silicate,
+because it "is the only fit we found that smoothly matches the TFD EOS at high pressures".
+Third order will not approximate it: the published K₀″ sits 0.24 % from the third-order
+implied value, and that gap reaches 9.1 % in density at the ceiling.
 
 **Polytrope**, P = K ρ^(1+1/n), which is not a condensed-matter fit at all. It is the form a
 hydrogen-helium envelope takes, and it is worth being precise about what adding it did: a
@@ -178,6 +150,7 @@ The materials, with the source of every constant:
 | `fe_eps` (pure iron limit) | Vinet | 8300 | 156.2 | 6.08 | 0 to 20.9 TPa | Seager+ 2007 Table 1, Fe(ε), Anderson+ 2001 data |
 | `mgsio3_en` (upper mantle) | BME3 | 3220 | 125 | 5 | 0 to 23.83 GPa | Seager+ 2007 Table 1, MgSiO₃ enstatite |
 | `mgsio3_prem` (lower mantle) | BM2 | 3980 | 206 | 4 | 23.83 GPa to 3.5 TPa | Zeng+ 2016 §II, PREM lower-mantle fit |
+| `mgsio3_pv` (deep mantle) | BME4, K₀″ = −0.016 GPa⁻¹ | 4100 | 247 | 3.97 | 3.5 to 13.5 TPa | Seager+ 2007 Table 1 + §III.3, Karki+ 2000 DFT |
 | `ice_ih` | BM2 | 916.72 | 8.490 | 4 | 0 to 209.5 MPa | IAPWS-06 (Feistel & Wagner 2006) Table 6 |
 | `ice_iii` | BME3 | 1126.384 | 7.8349 | 6.7097 | 209.5 to 355.0 MPa | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 251.15 K |
 | `ice_v` | BME3 | 1207.842 | 10.6368 | 6.7460 | 355.0 to 618.4 MPa | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 256.43 K |
@@ -200,12 +173,25 @@ temperature: it is using an equation of state calibrated on a real, hot planet. 
 the opposite object, a cold laboratory iron with no light elements, and it exists only to
 draw the "nothing can be denser than this" limit that the density gate needs.
 
-**The mantle is two materials, not one.** Earth's upper-to-lower mantle transition sits at
+**The mantle is three materials, not one.** Earth's upper-to-lower mantle transition sits at
 23.83 GPa with a 10 % density jump from 4.0 to 4.4 g/cc (Zeng+ 2016 §II.1). Below it the
 recipe uses Seager's enstatite fit, above it the PREM lower-mantle fit. Evaluated at the
 transition the two give 3688 and 4379 kg/m³, so the jump the code produces is the jump the
 paper describes. Bodies smaller than Mars never reach the transition and are enstatite all
 the way down.
+
+**Above 3.5 TPa it is a calculation, not a measured planet.** 3.5 TPa is where Zeng+ 2016 §II
+stop their PREM fit, prescribing Thomas–Fermi–Dirac above it; this recipe declines degeneracy
+by name instead, so the third phase comes from the paper it already uses for iron. Seager+
+2007 §III.3 carries MgSiO₃ on a fourth-order BME to 1.35 × 10⁴ GPa and switches to TFD there,
+exactly as its Fe(ε) row does at 2.09 × 10⁴ GPa. The seam is measured rather than invented:
+at 3.5 TPa the seismic fit and the DFT fit give 14292 and 14263 kg/m³, **0.21 %** apart, so
+no density jump is placed there. Name and substance differ, since post-perovskite has
+dissociated to MgO + SiO₂ by 3.10 TPa (Umemoto+ 2017, whose conclusion also settles how many
+phases to splice), and what licenses ignoring that is composition rather than structure:
+above ~1 TPa Mg/Si stops setting the density. The `SILICATE` comment in `engine/eos.py`
+carries the argument in full; being an argument and not a measurement, it costs a result that
+steps into this segment its grade, which drops to **analog** with a note naming why.
 
 **Ice Ih's two constants come from IAPWS-06's own check table.** At T = 273.152519 K and
 p = 101 325 Pa the release tabulates ρ = 916.721463419 kg/m³ and κ_T = 1.17785291765 ×
@@ -233,7 +219,7 @@ and they are not a fit to anybody's data.
 
 ### Mixing two materials in one layer
 
-The four forms above each describe **one pure substance**. A layer holding two at once needs
+The five forms above each describe **one pure substance**. A layer holding two at once needs
 no new form, only a rule for combining the ones already here, and the rule is the
 **additive volume law**: at a given pressure each component occupies its own volume, and
 the volumes add by mass fraction.
@@ -269,9 +255,9 @@ for a rock–metal mixture, and none is quoted here: the H–He number is not ca
 **No material in this file is the right carrier for a giant envelope's heavy elements**, and
 each fails differently. `h2o` matches the composition best, since Z in giants is
 ice-dominated, and is unusable because it stops at 37.4 GPa. `fe_prem` reaches 12 TPa but
-iron is the dense end of Z rather than its middle. `silicate` is the plausible middle and
-stops at 3.5 TPa, which covers Saturn's centre and not Jupiter's; it is the one used, and
-the ceiling it imposes is reported rather than avoided.
+iron is the dense end of Z rather than its middle. `silicate` is the plausible middle; it is
+the one used, and since 2026-08-27 it reaches 13.5 TPa, which covers both planets' centres
+across the whole published Z budget. The ceiling it still imposes is reported, not avoided.
 
 ### Reading the three ice phases instead of fitting them
 
@@ -745,15 +731,16 @@ already declines to invent for undifferentiated rocky bodies. The test pins the 
 into a band rather than tolerating it, so the limit cannot be quietly fixed or quietly made
 worse.
 
-**A heavy-element core does not rescue it, and running into that found a second limit.**
+**A heavy-element core does not rescue it, and the ceiling it ran into moved on 2026-08-27.**
 Putting Guillot's heavy elements into a compact central core makes the planet smaller, which
-is the wrong direction for Jupiter and not nearly enough for Saturn. It also runs out of
-material: a 19 M⊕ rock core self-compresses to about 3.4 TPa on its own, which is at the
-stated ceiling of the PREM lower-mantle fit (3.5 TPa, Zeng+ 2016), and Jupiter's centre at
-3.9 TPa is past it. So this recipe cannot put a large rock core inside a giant, and it
-declines by naming that ceiling. Real giant models do not use a compact core for all of Z
-either: Guillot's own core limits are below the total heavy-element mass precisely because
-much of it is dissolved in the envelope.
+is the wrong direction for Jupiter and not nearly enough for Saturn. It also used to run out
+of material immediately: a 19 M⊕ rock core self-compresses to 3.43 TPa on its own, at the
+stated ceiling of the PREM lower-mantle fit (3.5 TPa, Zeng+ 2016). With the silicate carried
+to 13.5 TPa the branch opens partway: a Jupiter-mass giant now integrates a silicate core up
+to **17.66 M⊕**, and Guillot's 19 M⊕ still declines. What stops it is no longer the core's
+own weight but the envelope's overburden, so the limit belongs to the pair. Real giant
+models do not use a compact core for all of Z either: Guillot's own core limits are below the
+total heavy-element mass precisely because much of it is dissolved in the envelope.
 
 **Jupiter's moment of inertia, and why this document names one value out of three.** Three
 numbers circulate and they are not equally grounded.
@@ -780,9 +767,9 @@ edge** of the published Saturn budget, taken as a boundary. Regenerated by
 | body | Z (M⊕) | Z fraction | R derived | R mean (IAU) | ΔR | C/MR² | grade |
 |---|---|---|---|---|---|---|---|
 | Jupiter | 0 | 0.000 | 70302 km | 69911 km | +0.6 % | 0.2614 | calibrated |
-| Jupiter | 11 | 0.035 | declined | 69911 km | – | – | – |
-| Jupiter | 26 | 0.083 | declined | 69911 km | – | – | – |
-| Jupiter | 42 | 0.132 | declined | 69911 km | – | – | – |
+| Jupiter | 11 | 0.035 | 68374 km | 69911 km | -2.2 % | 0.2620 | analog |
+| Jupiter | 26 | 0.083 | 65696 km | 69911 km | -6.0 % | 0.2630 | analog |
+| Jupiter | 42 | 0.132 | 63056 km | 69911 km | -9.8 % | 0.2641 | analog |
 | Saturn | 0 | 0.000 | 70302 km | 58232 km | +20.7 % | 0.2614 | analog |
 | Saturn | 19 | 0.200 | 58198 km | 58232 km | -0.1 % | 0.2650 | analog |
 | Saturn | 25 | 0.263 | 54544 km | 58232 km | -6.3 % | 0.2667 | analog |
@@ -794,11 +781,14 @@ this rule does, and their real distribution: post-Juno models favour a **diluted
 heavy elements graded inward rather than uniform. That distribution is not modelled here,
 and the residual belongs to it.
 
-**Jupiter declines at every Z in its budget.** With heavy elements mixed in, its centre
-passes 4 TPa while the silicate fit stops at 3.5 TPa, and the decline names that component
-rather than reporting electron degeneracy, which is what a pure material at its ceiling
-would mean. The same ceiling stopped the previous revision's attempt to place Guillot's Z
-as a compact core, so two different mechanisms meet one limit.
+**Jupiter used to decline at every Z in its budget, and since 2026-08-27 it does not.** With
+heavy elements mixed in its centre reaches 4.3 to 5.8 TPa, which the silicate fit now covers.
+What the three rows show is that opening the branch did not make it right: the radius gets
+**worse**, +0.6 % at Z = 0 to −9.8 % at 42 M⊕, because K was fitted by Helled+ 2022 to the
+real Jupiter, which already carries its heavy elements, so adding Z counts them twice. That
+is exactly why the same move helps Saturn, a planet K was not fitted to. C/MR² moves the
+other way, into the 0.2634 to 0.2644 anchor band. Radius and moment of inertia pointing at
+different Z is the signature of a diluted core, which is not modelled here.
 
 **Adding Z does not restore a mass axis.** R = √(πK/2G) has no M in it whether or not the
 envelope carries metals, so two giants of the same Z still receive the same radius. That
@@ -829,6 +819,7 @@ Both tables, and the roster table below, are regenerated by
 | **porosity above the experimental ceiling** | `initial_porosity` > 0, pressure above 150 MPa | the relation is **extrapolated**: results report the mass fraction affected, and `porosity_cap` gives the reading that claims nothing there | analog |
 | **porosity on a heated body** | `initial_porosity` > 0 and the body has melt, differentiation, convection, impacts or tidal heating | **not decided here**: all five remove porosity (Bierson+ 2019 §2.2), so what this recipe returns is an upper bound on the voids, never an estimate | — |
 | ice X / superionic | ice column base above 37.4 GPa | declines, naming the phase (Goncharov+ 2005; French+ 2009) | — |
+| **deep silicate (3.5 to 13.5 TPa)** | the silicate layer's base passes 3.5 TPa | integrates on `mgsio3_pv`, at grade **analog** with a note: below 3.5 TPa the silicate is a fit to a measured planet (PREM), above it a DFT calculation extrapolated through a dissociation | analog |
 | electron degeneracy | central pressure above the core material's ceiling | declines, naming Thomas–Fermi–Dirac | — |
 | undifferentiated rock + metal | `differentiated: false` with no ice or gas | integrates one mixed layer by the same rule. No measured C/MR² anchor exists for such a body, so the check is a discrimination: undifferentiated Mercury does not reproduce the measured value | analog |
 | **undifferentiated with ice or gas** | `differentiated: false` and `ice_mass_fraction` or `gas_mass_fraction` > 0 | **declines**: this rule mixes rock and metal only, and ice mixed through rock is partial differentiation, which is neither fully mixed nor fully layered | — |
@@ -836,13 +827,27 @@ Both tables, and the roster table below, are regenerated by
 | gas giant | `body_class` is `giant` or `gas_giant` and a `gas_mass_fraction` is given | integrates, H/He envelope on the n = 1 polytrope | calibrated |
 | **unvalidated giant mass** | `gas_mass_fraction` > 0 and mass below Jupiter's 317.8 M⊕ | **integrates at grade analog**: the two anchors are Jupiter at +0.6 % and Saturn at +20.7 %, and nothing between them has been checked. Since n = 1 returns the same radius and C/MR² for every giant, there is no basis for saying which end the residual resembles | analog |
 | metal-rich giant | as above with `envelope_z` > 0, central pressure under the Z carrier's ceiling | integrates, H/He and heavy elements mixed by the additive volume law. Saturn lands at −0.1 % at the bottom of its published Z budget | analog |
-| **giant whose centre passes the Z carrier's ceiling** | `envelope_z` > 0 and central pressure above 3.5 TPa (Jupiter) | **declines**, naming the component whose fit ended rather than reporting degeneracy. Needs a rock equation of state fitted further up | — |
+| **giant whose centre passes the Z carrier's ceiling** | `envelope_z` > 0 and central pressure above 13.5 TPa | **declines**, naming the component whose fit ended rather than reporting degeneracy. Jupiter's whole Guillot range now integrates (centres of 4.3 to 5.8 TPa); the branch runs out at Z = 0.383, or 122 M⊕ of heavy elements | — |
 | **diluted core** | heavy elements graded inward rather than uniform through the envelope | **not decided here**: this rule mixes one homogeneous Z, and the residual after it belongs to the distribution | — |
-| **large rock core in a giant** | heavy elements placed as a compact core massive enough to self-compress past 3.5 TPa | **declines**, naming the PREM lower-mantle fit's stated ceiling | — |
+| **large rock core in a giant** | heavy elements placed as a compact core whose base passes 13.5 TPa. In a Jupiter-mass giant that is a core above **17.7 M⊕** | **partly open**: cores below that integrate at grade analog; above it the recipe declines, naming the silicate ceiling. The limit is now the envelope's overburden, not the core's own weight, so it depends on the pair rather than on the core mass | analog |
 | ice giant | `body_class` is `ice_giant` | declines: the envelope is a water-ammonia-methane mixture, and n = 1 is tuned to H/He compressibility | — |
 | sub-Neptune | `body_class` is `sub_neptune` | declines: envelope thickness is set by age and irradiation, and this recipe is isothermal with no evolution. Given a gas fraction the integration runs | — |
 | brown dwarf | `body_class` is `brown_dwarf` | declines, naming deuterium burning above ~13 M_J (Spiegel+ 2011) and the age-dependent luminosity this recipe has no track for | — |
 | star | `body_class` is `star` | declines: the stellar C/MR² is the n = 3/2 polytrope value 0.205 (Chandrasekhar 1939) on a separate `body_figure` branch, untouched here | — |
+
+Two of those rows are a mass limit. The limit is a property of the material rather than of
+any body, so it is measured rather than asserted (`test_interior.py --ceiling`):
+
+| composition | mass ceiling | what stops it | its stated ceiling | R at the ceiling | C/MR² |
+|---|---|---|---|---|---|
+| earth_like (CMF 0.325) | 22.78 M⊕ | `fe_prem` | 12.0 TPa | 2.207 R⊕ | 0.2958 |
+| pure silicate (CMF 0) | 53.38 M⊕ | `silicate` | 13.5 TPa | 2.856 R⊕ | 0.3291 |
+| pure iron (fe_eps) | 24.92 M⊕ | `fe_eps` | 20.9 TPa | 1.717 R⊕ | 0.3364 |
+
+Before the deep silicate phase those were 6.84 and 19.32 M⊕, iron unchanged. **The
+Earth-composition row changed hands as well as value**: the limit is the iron core's ceiling
+now, not the mantle's. And 6.84 M⊕ was never the mass at which Earth-like rock reaches
+3.5 TPa, which is nearer 20.7 M⊕; the gap was headroom the shooting bracket needed.
 
 Out of domain is a **returned value**, not an error: each row comes back with its reason
 attached, so a body that cannot be derived says why instead of being extrapolated.
@@ -989,13 +994,12 @@ body sits between the two anchors and roughly eight times nearer the one that fa
 gap that has never been checked. The recipe therefore returns the value at grade **analog**
 with a note naming both anchors, rather than at calibrated.
 
-What survives is a narrower claim, and it is still worth having: 0.23 has no source and
-0.2614 has one. The 0.2614 is the value the physics predicts for a body with no substantial
-core, and 0.23 is what a body with a large concentrated core would give. Which one is right for a
-fictional planet is not a question this recipe can settle. What it can say is that 0.23 has
-no source and 0.2614 has one, plus the caveat attached to it: the coreless polytrope is
-0.77 % *below* Jupiter's measured band, so for a real giant the integrated value is a mild
-over-estimate of C/MR² rather than an under-estimate.
+What survives is a narrower claim, and it is still worth having: **0.23 has no source and
+0.2614 has one.** The 0.2614 is what the physics predicts for a body with no substantial
+core, and 0.23 is what a large concentrated core would give; which is right for a fictional
+planet this recipe cannot settle. The caveat travels with it: the coreless polytrope sits
+0.77 % *below* Jupiter's measured band, so for a real giant the integrated value
+over-estimates C/MR² mildly rather than under-estimating it.
 
 **This is reported, not applied.** The board is untouched, and the reason to be careful is
 in `engine/backflow.py impact body_figure`: changing `body_figure` obliges 87 rows across
@@ -1045,14 +1049,18 @@ instead of as a class constant.
   **[0707.2895](https://arxiv.org/abs/0707.2895)**). **Cached** in
   `docs/phase3/_papers/0707.2895.md`. The structure equations this recipe integrates
   (their eqs. 1–3), and Table 1's Vinet/BME fits, from which the recipe takes Fe(ε),
-  MgSiO₃ enstatite and H₂O ice VII. Also the source of the Thomas–Fermi–Dirac boundary that
-  the high-pressure decline names.
+  MgSiO₃ enstatite, H₂O ice VII and the deep-mantle MgSiO₃ BME4. §III.3 supplies both
+  materials' ceilings, the pressures at which that paper hands over to Thomas–Fermi–Dirac
+  (2.09 × 10⁴ GPa for iron, 1.35 × 10⁴ GPa for silicate), and Table 3's merged-EOS refit
+  ρ = ρ₀ + cPⁿ, which the test uses as an independent check on the transcription.
 - **Zeng, L., Sasselov, D. D. & Jacobsen, S. B. 2016**, ApJ 819, 127
   ([`2016ApJ...819..127Z`](https://ui.adsabs.harvard.edu/abs/2016ApJ...819..127Z), arXiv
   **[1512.08827](https://arxiv.org/abs/1512.08827)**). **Cached** in
   `docs/phase3/_papers/1512.08827.md`. The BM2 fits to PREM's outer core and lower mantle
-  that carry the rocky part of this recipe, the 23.83 GPa mantle transition, and the
-  semi-empirical M–R relation used as an independent validation curve.
+  that carry the rocky part of this recipe, the 23.83 GPa mantle transition, the stated
+  3.5 TPa ceiling of the lower-mantle fit and the argument that above ~1 TPa Mg/Si stops
+  setting the density, and the semi-empirical M–R relation used as an independent validation
+  curve.
 - **Zeng, L. & Sasselov, D. 2013**, PASP 125, 227
   ([`2013PASP..125..227Z`](https://ui.adsabs.harvard.edu/abs/2013PASP..125..227Z), arXiv
   **[1301.0818](https://arxiv.org/abs/1301.0818)**). **Cached** in
@@ -1083,6 +1091,19 @@ instead of as a class constant.
   ice Ih check state to nine significant figures, and it reproduces the ice VI single-point
   output published in the package's own documentation (900 MPa, 255 K, ρ = 1356.1 kg/m³) to
   2 × 10⁻⁵.
+- **Umemoto, K., Wentzcovitch, R. M., Wu, S., Ji, M., Wang, C.-Z. & Ho, K.-M. 2017**,
+  E&PSL 478, 40
+  ([`2017E&PSL.478...40U`](https://ui.adsabs.harvard.edu/abs/2017E%26PSL.478...40U), arXiv
+  **[1708.04767](https://arxiv.org/abs/1708.04767)**). **Cached** in
+  `docs/phase3/_papers/1708.04767.md`. The first-principles dissociation sequence of MgSiO₃
+  post-perovskite (0.75, 1.31 and 3.10 TPa), and the conclusion that the break-up into
+  MgO + SiO₂ is "the last solid-solid transition identified so far", which is why one phase
+  covers 3.5 to 13.5 TPa rather than several.
+- **Salpeter, E. E. & Zapolsky, H. S. 1967**, Phys. Rev. 158, 876
+  ([`1967PhRv..158..876S`](https://ui.adsabs.harvard.edu/abs/1967PhRv..158..876S)). The
+  Thomas–Fermi–Dirac equation of state with a correlation-energy correction. *No arXiv
+  preprint; pinned by bibcode.* **Not implemented here**: it is what both source papers switch
+  to at the pressures this recipe stops at, and what every ceiling's refusal names.
 - **Dziewonski, A. M. & Anderson, D. L. 1981**, PEPI 25, 297
   ([`1981PEPI...25..297D`](https://ui.adsabs.harvard.edu/abs/1981PEPI...25..297D)).
   The Preliminary Reference Earth Model: the profile Zeng+ 2016's fits are extrapolations
