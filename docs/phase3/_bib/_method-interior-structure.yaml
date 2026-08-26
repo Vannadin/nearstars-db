@@ -73,3 +73,13 @@ papers:
   title: Theory of Figures to the Seventh Order and the Interiors of Jupiter and Saturn
   status: fetched
   fetch_error: null
+- arxiv_id: cond-mat/0609476
+  ads_bibcode: 2007PhRvB..75b4206V
+  title: Hydrogen-helium mixtures in the interiors of giant planets
+  status: fetched
+  fetch_error: null
+- arxiv_id: '0802.1810'
+  ads_bibcode: 2008A&A...482..315B
+  title: Structure and evolution of super-Earth to super-Jupiter exoplanets. I.
+  status: fetched
+  fetch_error: null

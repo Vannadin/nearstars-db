@@ -23,6 +23,10 @@
   폴리트로프는 **별도의 가지가 아니라 상태방정식의 한 형태** 이고, 그래서 같은 적분기가
   거대행성을 그대로 푼다. n = 1 의 계수는 H_HE 주석에 있다.
 
+네 형태가 전부 **순수한 물질 하나** 를 서술한다. 한 층 안에 두 물질이 섞여 있는 상태는
+형태가 아니라 **재료를 합성하는 규칙** 이 필요하고, 그것이 `Mixture` 다. 부피 가법
+혼합이며 상수와 유효 한계는 그 클래스 위 주석에 있다.
+
 각 재료는 **상(phase) 의 열** 이다. 상마다 유효 압력 구간이 있고, 구간 사이에 근거가
 없는 틈이 있으면 그 틈을 이름 붙여 들고 있는다 — 얼음의 209.5 MPa ~ 2.216 GPa 가
 그렇다. 솔버가 거기에 발을 디디면 조용히 외삽하는 게 아니라 그 사실을 돌려준다.
@@ -150,6 +154,111 @@ class Material:
 
     def density(self, p: float) -> float:
         return self.phase_at(p).density(p)
+
+
+# ── 섞인 층 ─────────────────────────────────────────────────────────────
+#
+# 위의 재료는 전부 순수하다. 금속이 가라앉지 않아 규산염에 섞여 있는 천체나, 중원소가
+# 수소-헬륨 외피에 녹아 있는 거대행성은 **한 층 안에 두 물질** 이고, 그걸 표현하려면
+# 새 상태방정식이 아니라 있는 것 둘을 합치는 규칙이 필요하다.
+#
+# 쓰는 규칙은 **부피 가법 혼합(additive volume law, AVL)** 이다. 같은 압력에서 각
+# 성분이 자기 부피를 차지하고, 그 부피를 질량분율로 더한다.
+#
+#     1/ρ_mix(P) = Σ_i  w_i / ρ_i(P)          w_i 는 질량분율, Σw_i = 1
+#
+# Baraffe+ 2008 §3.3 (arXiv:0802.1810) 이 이 형태를 그대로 적는다 — "the EOS of the
+# mixture is simply the mass-weighted interpolation of each species contribution at
+# constant intensive variables, P and T". 같은 문단이 이 규칙을 "exact in the ideal gas
+# limit, without restriction on the species mass fractions and densities" 라고 부르고,
+# 대신 "the interactions between the three different fluids ... are not taken into
+# account" 라고 못박는다. 그 두 문장이 이 규칙의 내용과 값이다.
+#
+# 이 규칙은 거대행성 상태방정식의 표준이고 새로 고른 것이 아니다. Saumon+ 1995
+# (1995ApJS...99..713S) 가 H/He 표를 "the additive volume rule and an additional ideal
+# entropy-of-mixing term" 으로 만들었고, Chabrier+ 2019 (arXiv:1902.01852) 가 24년 뒤에
+# 같은 말을 다시 한다 — "based on the so-called additive volume law and thus does not
+# take into account the interactions between the two species".
+#
+# **유효 한계는 그 셋이 말해 주지 않는다. 규칙을 쓰는 논문이지 시험하는 논문이 아니라서다.**
+# 시험한 것은 Vorberger+ 2007 (arXiv:cond-mat/0609476) 이고, 거대행성 내부 조건의 H-He
+# 혼합을 제일원리 DFT-MD 로 돌려 "investigate the validity of the widely used linear
+# mixing approximation" 했다. 결과가 이렇다.
+#
+#   * 정압에서 **부피 편차가 최대 8 %** ("deviations of up to 8% in energy and volume
+#     from linear mixing at constant pressure in the region of molecular dissociation").
+#   * 가장 나쁜 자리가 **분자 해리 구간** 이다. 순수 분자상에서는 "LM is a good
+#     approximation" 이라고 같은 논문이 적고, 목성형 혼합비 x≈0.14 에서 압력 편차가
+#     500 K 의 ~0 에서 5000 K 의 10 % 까지 간다. 부피 편차는 "slightly smaller than the
+#     one in the pressure" 다.
+#
+# 그래서 이 규칙이 이 파일에 들고 오는 오차는 **8 % 수준으로 유계** 이고, 그 크기가
+# 어디서 나는지도 이름이 있다. 그게 유효 한계다.
+#
+# **암석-금속 혼합에는 그런 수가 없다.** 같은 규칙을 쓰는 것이 관행이지만, ADS 로 찾은
+# 범위에서 철-규산염 혼합의 AVL 편차를 정량한 논문은 없었다. 문헌이 침묵하므로 여기서도
+# 침묵한다 — H-He 의 8 % 를 암석에 옮겨 적지 않는다. 그쪽 유효성의 근거는 두 성분이
+# 화학적으로 섞이지 않고 각자 자기 상으로 남는다는 것뿐이고, 그 이상은 주장하지 않는다.
+AVL_VOLUME_DEVIATION = 0.08   # Vorberger+ 2007 초록. 정압 부피, H-He, 분자 해리 구간
+AVL_DEVIATION_REGIME = "분자 해리 구간 (순수 분자상에서는 ~0)"
+
+
+@dataclass(frozen=True)
+class Mixture:
+    """한 층 안에 섞인 두 재료 이상. 부피 가법으로 합친다.
+
+    `Material` 과 같은 자리에 꽂히도록 같은 이름의 것들을 낸다 — `density(p)`,
+    `rho0`, `p_max`, `rho_seed(mass)`. 적분기는 층에 들어온 것이 순수 재료인지
+    혼합인지 묻지 않는다."""
+    name: str
+    label_ko: str
+    parts: tuple[tuple[Material, float], ...]   # (재료, 질량분율)
+
+    def __post_init__(self) -> None:
+        if not self.parts:
+            raise ValueError(f"{self.name}: 성분이 없다")
+        total = sum(w for _m, w in self.parts)
+        if abs(total - 1.0) > 1e-9:
+            raise ValueError(f"{self.name}: 질량분율 합이 {total} 다, 1 이어야 한다")
+        if any(w < 0.0 for _m, w in self.parts):
+            raise ValueError(f"{self.name}: 음수 질량분율")
+
+    @property
+    def rho0(self) -> float:
+        """영압 밀도. 성분 중 하나라도 영압에서 0 이면(폴리트로프) 혼합도 0 이다."""
+        if any(m.rho0 <= 0.0 for m, w in self.parts if w > 0.0):
+            return 0.0
+        return 1.0 / sum(w / m.rho0 for m, w in self.parts if w > 0.0)
+
+    @property
+    def p_max(self) -> float:
+        """**가장 낮은 성분 상한** 이 혼합의 상한이다.
+
+        하나가 근거 구간을 벗어나면 그 압력의 혼합 밀도는 근거가 없다. 가장 높은
+        상한을 쓰면 근거 없는 외삽을 근거 있는 성분 뒤에 숨기게 된다."""
+        return min(m.p_max for m, w in self.parts if w > 0.0)
+
+    def rho_seed(self, mass_kg: float) -> float:
+        """사격 괄호잡기용 밀도 척도. 성분들의 척도를 같은 규칙으로 합친다."""
+        return 1.0 / sum(w / m.rho_seed(mass_kg)
+                         for m, w in self.parts if w > 0.0)
+
+    def density(self, p: float) -> float:
+        """압력 p 에서 혼합 밀도. 성분마다 **같은 압력** 에서 평가한다.
+
+        성분이 자기 근거 구간 밖이면 그 성분이 PhaseGap 을 던지고, 그게 그대로
+        올라간다 — 혼합이 그 사실을 삼키지 않는다."""
+        return 1.0 / sum(w / m.density(p) for m, w in self.parts if w > 0.0)
+
+
+def mix(name: str, label_ko: str, *parts: tuple[Material, float]) -> Material | Mixture:
+    """혼합을 만든다. 성분이 실질적으로 하나면 그 재료를 그대로 돌려준다.
+
+    분율 0 인 성분을 남겨두면 `p_max` 가 쓰지도 않는 재료의 상한에 묶인다."""
+    live = [(m, w) for m, w in parts if w > 0.0]
+    if len(live) == 1:
+        return live[0][0]
+    return Mixture(name, label_ko, tuple(live))
 
 
 GPA = 1e9

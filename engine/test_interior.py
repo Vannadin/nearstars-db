@@ -39,8 +39,11 @@ ANCHORS = [
 
 # 거절해야 하는 것들. 거절이 답이고, **어느 기작 때문인지 이름을 대야** 답이다.
 DECLINES = [
-    ("미분화", dict(mass_earth=1.0, core_mass_fraction=0.3, differentiated=False),
-     "혼합상", "금속이 맨틀에 섞여 있다 — 혼합물 상태방정식이 필요하다"),
+    # 미분화는 2026-08-26 에 풀리게 됐다 (test_mixture.py). 얼음·가스와 함께 선언하는
+    # 것은 부분 분화의 영역이라 여전히 거절하고, 그 경계를 여기서 지킨다.
+    ("미분화 + 얼음", dict(mass_earth=1.0, core_mass_fraction=0.3,
+                       ice_mass_fraction=0.3, differentiated=False),
+     "부분 분화", "암석+금속만 섞는다 — 얼음이 섞인 것은 다른 문제다"),
     ("분율 합 초과", dict(mass_earth=1.0, core_mass_fraction=0.7, ice_mass_fraction=0.5),
      "질량분율", "핵과 얼음의 합이 1 을 넘는다"),
     ("모르는 조성", dict(mass_earth=1.0, composition="cheese"),

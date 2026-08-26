@@ -31,7 +31,7 @@ from __future__ import annotations
 
 import math
 
-from eos import MATERIALS, PhaseGap
+from eos import MATERIALS, PhaseGap, mix
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       bulk_factor, porosity, voids_expected)
@@ -49,6 +49,8 @@ REFS = (
     "2022arXiv220210046H",      # Helled+ 2022 — n=1 폴리트로프와 그 계수
     "1999P&SS...47.1183G",      # Guillot 1999 — 목성·토성의 중원소 질량
     "2021ApJ...910...38N",      # Neuenschwander+ 2021 — 목성 NMoI 앵커
+    "2008A&A...482..315B",      # Baraffe+ 2008 §3.3 — 부피 가법 혼합의 형태
+    "2007PhRvB..75b4206V",      # Vorberger+ 2007 — 그 혼합의 정량적 유효 한계
     "1981PEPI...25..297D",      # PREM — 앵커로 쓰는 지구 C/MR²
 )
 
@@ -117,12 +119,23 @@ class Structure:
         return self.v_pore / self.volume
 
 
-def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0):
+def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
+           envelope_z: float = 0.0, differentiated: bool = True):
     """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
 
     가스 외피가 있으면 그것이 가장 바깥 층이다. 폴리트로프는 **별도의 가지가 아니라
-    상태방정식의 한 형태** 이므로, 층 하나가 늘 뿐 적분기는 그대로다."""
+    상태방정식의 한 형태** 이므로, 층 하나가 늘 뿐 적분기는 그대로다.
+
+    층에 들어가는 것이 순수 재료인지 혼합인지는 적분기가 묻지 않는다. 여기서 두 자리가
+    혼합을 쓴다 — 미분화 천체의 암석+금속 한 층, 그리고 중원소가 녹은 가스 외피."""
     out = []
+    if not differentiated:
+        # 금속이 가라앉지 않았다. 핵과 맨틀이 아니라 **섞인 한 층** 이다.
+        rock_metal = mix("rock_metal", "미분화 암석+금속",
+                         (MATERIALS[core_material], cmf),
+                         (MATERIALS["silicate"], 1.0 - cmf))
+        out.append((1.0, rock_metal))
+        return out
     if cmf > 0:
         out.append((cmf, MATERIALS[core_material]))
     if 1.0 - cmf - imf - gmf > 0:
@@ -130,13 +143,18 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0):
     if imf > 0:
         out.append((1.0 - gmf, MATERIALS["h2o"]))
     if gmf > 0:
-        out.append((1.0, MATERIALS["h_he"]))
+        # 외피에 중원소가 녹아 있으면 그 층이 혼합이다. envelope_z 는 **행성 전체가
+        # 아니라 이 외피 안에서의** 질량분율이다.
+        out.append((1.0, mix("h_he_z", "중원소 섞인 수소-헬륨 외피",
+                             (MATERIALS["h_he"], 1.0 - envelope_z),
+                             (MATERIALS[ENVELOPE_Z_MATERIAL], envelope_z))))
     return out
 
 
 def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
-              p_cap: float | None = None, gmf: float = 0.0) -> Structure:
+              p_cap: float | None = None, gmf: float = 0.0,
+              envelope_z: float = 0.0, differentiated: bool = True) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -146,7 +164,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
-    stack = _stack(cmf, imf, core_material, gmf)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
     mat = stack[0][1]
 
     rho_c = mat.density(p_center) * bulk_factor(mat.name, p_center, phi0, p_cap)
@@ -246,14 +264,16 @@ def porosity_at(mat, p_pa: float, phi0: float,
 
 def shoot(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
-          p_cap: float | None = None, gmf: float = 0.0) -> tuple[Structure, bool]:
+          p_cap: float | None = None, gmf: float = 0.0,
+          envelope_z: float = 0.0,
+          differentiated: bool = True) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
-    stack = _stack(cmf, imf, core_material, gmf)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
     # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
     # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
     rho0_bar = 1.0 / sum(
@@ -266,22 +286,24 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     p_ceiling = stack[0][1].p_max
     lo = 1.0e2
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
-    while integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf).mass_kg < mass_kg:
+    while integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
+                        envelope_z, differentiated).mass_kg < mass_kg:
         if hi >= p_ceiling:
             raise ValueError(
-                f"이 질량을 담으려면 중심압이 {stack[0][1].name} 의 근거 구간 상한"
-                f"({p_ceiling / 1e9:.0f} GPa) 을 넘어야 한다. 그 위는 전자축퇴가 "
-                "지배하는 영역이고 (Thomas-Fermi-Dirac), 이 레시피에는 그 상태방정식이 "
-                "없다 — Seager+ 2007 §III.2 가 그 자리를 채우는 방법을 적어두었다.")
+                f"이 질량을 담으려면 중심압이 {_ceiling_owner(stack[0][1])} 의 근거 "
+                f"구간 상한({p_ceiling / 1e9:.0f} GPa) 을 넘어야 한다. "
+                + _ceiling_why(stack[0][1]))
         hi = min(hi * 4.0, p_ceiling)
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
-    st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf)
+    st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
+                        envelope_z, differentiated)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
     x1 = math.log(max(lo, hi * 1e-3))
-    st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap, gmf)
+    st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
+                    gmf, envelope_z, differentiated)
     y1 = math.log(st.mass_kg / mass_kg)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
@@ -298,9 +320,37 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             x2 = 0.5 * (math.log(lo) + math.log(hi))
         x0, y0 = x1, y1
         x1 = x2
-        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap, gmf)
+        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
+                    gmf, envelope_z, differentiated)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
+
+
+def _ceiling_owner(mat) -> str:
+    """상한을 정한 것이 누구인가. 혼합이면 **가장 낮은 성분** 이 정한다."""
+    parts = getattr(mat, "parts", None)
+    if not parts:
+        return mat.name
+    limiting = min(parts, key=lambda pw: pw[0].p_max)[0]
+    return f"{mat.name} 안의 {limiting.name}"
+
+
+def _ceiling_why(mat) -> str:
+    """그 상한 위가 무엇인지. 순수 재료와 혼합이 다른 답을 준다.
+
+    순수 재료가 상한에 닿는 것은 전자축퇴 영역에 들어간다는 뜻이었다. 혼합에서는
+    그렇지 않다 — 무거운 성분 하나의 적합이 끝났을 뿐이고, 나머지 성분은 멀쩡하다.
+    두 경우에 같은 문장을 돌려주면 거절 이유가 거짓이 된다."""
+    parts = getattr(mat, "parts", None)
+    if not parts:
+        return ("그 위는 전자축퇴가 지배하는 영역이고 (Thomas-Fermi-Dirac), 이 "
+                "레시피에는 그 상태방정식이 없다 — Seager+ 2007 §III.2 가 그 자리를 "
+                "채우는 방법을 적어두었다.")
+    limiting = min(parts, key=lambda pw: pw[0].p_max)[0]
+    return (f"섞인 층이라 전자축퇴 이야기가 아니다 — 성분 하나('{limiting.name}')의 "
+            "적합이 거기서 끝날 뿐이고 나머지 성분은 멀쩡하다. 이 압력의 혼합 밀도에 "
+            "근거가 없어서 멈추는 것이고, 그 성분을 더 높은 압력까지 적합한 상태방정식이 "
+            "들어오면 이 천체는 풀린다.")
 
 
 # 고체 표면이 없는 천체. 여기 있는 상태방정식은 전부 응축상이라 H/He 외피에는
@@ -323,6 +373,19 @@ GAS_GIANT_CLASSES = ("giant", "gas_giant")
 # Saturn 이 왜 틀리는지는 Helled+ 2022 §2 가 적는다. P ∝ ρ² 가 토성 외피에 덜 맞고,
 # 토성이 중원소가 더 많다 (Guillot 1999: 목성 총중원소 3–13 %, 토성 20–33 %). 둘 다
 # 질량 자체의 이야기가 아니므로, 아래 두 상수는 **기작의 문턱이 아니라 시험의 좌표** 다.
+# 거대행성 외피의 중원소를 어느 재료가 나르는가. **이 파일의 셋 중 옳은 것이 없고,
+# 각자 다르게 틀린다** — 고른 이유가 아니라 고를 수 있는 것이 없다는 사실이 내용이다.
+#
+#   h2o       조성은 제일 맞다 (Guillot 의 Z 는 얼음이 주다). 상한 37.4 GPa 이라
+#             거대행성 외피가 첫 몇 % 에서 지나쳐 버린다. 못 쓴다.
+#   silicate  그럴듯한 중간. 상한 3.5 TPa 이라 토성 중심(709 GPa)은 덮고 목성 중심
+#             (~4.4 TPa)은 못 덮는다. **이걸 쓴다.**
+#   fe_prem   상한 12 TPa 로 둘 다 덮지만 철은 Z 의 무거운 끝이지 중간이 아니다.
+#             이걸 골랐으면 목성이 돌았을 것이고, 그래서 안 골랐다 — 상한은 실재하는
+#             한계이고 그것을 가리려고 재료를 고르는 것은 답을 고르는 것이다.
+#             그쪽 수치는 test_giant.py 가 재서 기록에 남긴다.
+ENVELOPE_Z_MATERIAL = "silicate"
+
 GIANT_ANCHOR_PASS_ME = 317.8    # Jupiter. 평균반지름 대비 +0.6 % — 이 갈래가 맞은 유일한 곳
 GIANT_ANCHOR_FAIL_ME = 95.2     # Saturn. +20.7 % — 이 갈래가 틀린 유일한 곳
 
@@ -340,7 +403,8 @@ def solve(mass_earth: float,
           body_class: str | None = None,
           initial_porosity: float = 0.0,
           porosity_cap: float | None = None,
-          tidal_heating: bool = False) -> Result:
+          tidal_heating: bool = False,
+          envelope_z: float = 0.0) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -361,7 +425,8 @@ def solve(mass_earth: float,
               "gas_mass_fraction": gmf,
               "composition": composition, "differentiated": differentiated,
               "body_class": body_class, "initial_porosity": initial_porosity,
-              "porosity_cap": porosity_cap, "tidal_heating": tidal_heating}
+              "porosity_cap": porosity_cap, "tidal_heating": tidal_heating,
+              "envelope_z": envelope_z}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -395,15 +460,30 @@ def solve(mass_earth: float,
         return out_of_domain(RECIPE, VERSION, "질량이 양수가 아니다",
                              inputs=inputs, refs=REFS)
 
-    if not differentiated:
+    if not differentiated and (imf > 0 or gmf > 0):
         return out_of_domain(
             RECIPE, VERSION,
-            "미분화 천체다 — 금속이 있는데 가라앉지 않아 맨틀에 섞여 있는 상태다. "
-            "이 솔버는 층마다 순수한 재료의 상태방정식을 쌓는 구조라, 금속과 규산염이 "
-            "한 층 안에 섞인 혼합상을 표현할 방법이 없다. 필요한 것은 혼합물 "
-            "상태방정식(부피 가법 혼합 또는 Voigt-Reuss-Hill 평균)이고, 그게 들어오면 "
-            "이 천체는 풀린다. 핵질량분율을 0 으로 두는 것은 다른 상태다 — 그건 금속이 "
-            "아예 없다는 뜻이지 섞여 있다는 뜻이 아니다.",
+            "미분화가 얼음이나 가스와 함께 선언됐다. 이 레시피가 섞는 것은 **암석과 "
+            "금속** 한 쌍뿐이다 — 얼음이 암석에 섞인 천체(Callisto 형)는 부분 분화의 "
+            "영역이고, 그건 완전히 섞였거나 완전히 갈렸거나가 아니라 그 사이라서 다른 "
+            "문제다. 얼음질량분율과 가스질량분율을 0 으로 두면 이 천체는 풀린다.",
+            inputs=inputs, refs=REFS)
+
+    if not 0.0 <= envelope_z < 1.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"외피 중원소분율 {envelope_z} 가 [0, 1) 밖이다. 0 은 '중원소가 없다' 는 "
+            "주장이 아니라 '이 레시피가 판정하지 않는다' 는 뜻이다 — Z 는 강착과 "
+            "진화가 정하고, 이 레시피에는 그 둘이 없다.",
+            inputs=inputs, refs=REFS)
+
+    if envelope_z > 0 and gmf <= 0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"외피 중원소분율 {envelope_z} 를 받았는데 가스 외피가 없다"
+            f"(가스질량분율 {gmf}). envelope_z 는 **외피 안에서의** 질량분율이므로 "
+            "외피가 있어야 뜻이 있다. 고체 천체에 무거운 성분을 섞으려면 "
+            "differentiated=False 쪽이다.",
             inputs=inputs, refs=REFS)
 
     if not 0.0 <= initial_porosity < 1.0:
@@ -432,7 +512,8 @@ def solve(mass_earth: float,
 
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
-                              initial_porosity, porosity_cap, gmf)
+                              initial_porosity, porosity_cap, gmf,
+                              envelope_z, differentiated)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -453,22 +534,50 @@ def solve(mass_earth: float,
     if initial_porosity > 0:
         notes.append(_porosity_note(st, initial_porosity, mass_earth))
 
-    # 목성 아래는 시험된 적이 없다. **거절하지 않는다** — 이 레시피는 이런 천체를
-    # 못 푸는 게 아니라 측정된 만큼 틀리게 푼다. 거절은 "다루지 않는다" 는 말이라
-    # 거짓이 되고, 토성 잔차를 재는 검사도 같이 죽는다. 대신 등급으로 말한다.
-    giant_unvalidated = gmf > 0 and mass_earth < GIANT_ANCHOR_PASS_ME
+    # 2026-08-26: 혼합 규칙이 들어오면서 **앵커 수가 하나에서 둘로 늘었다.** 목성이
+    # Z = 0 에서 +0.6 %, 토성이 Z = 0.200 에서 −0.1 % 다. 그래서 이 강등 규칙을 다시
+    # 판정했고, 판정은 이렇다.
+    #
+    # 지우지 않았다. n = 1 은 이제 조성에 반응하지만 **질량에는 여전히 반응하지 않는다** —
+    # R = √(πK/2G) 에 M 이 없는 것은 그대로다. 그래서 두 앵커가 묶는 것은 질량 구간이
+    # 아니라 조성이고, 두 앵커 사이의 200 M⊕ 천체는 두 검사점 사이를 보간하는 게 아니라
+    # Z 가 시키는 값을 받을 뿐이다. 앵커 사이를 calibrated 로 올리는 안은 그래서 기각했다.
+    #
+    # 대신 강등 조건이 하나 늘었다 — **Z 가 선언되면 질량과 무관하게 analog** 다.
+    # 토성이 맞은 것은 이 레시피가 토성을 예측해서가 아니라 논문이 준 조성을 받아썼기
+    # 때문이고, 등급은 적합의 좋음이 아니라 **레시피가 검증할 수 없는 선언에 답이 기대는가**
+    # 를 말해야 한다. initial_porosity 와 같은 규율이다.
+    giant_unvalidated = (gmf > 0 and envelope_z == 0.0
+                         and mass_earth < GIANT_ANCHOR_PASS_ME)
+    if envelope_z > 0:
+        notes.append(
+            f"**외피 중원소 {envelope_z:.3f} 는 선언이다.** 강착과 진화가 정하는 값이고 "
+            "이 레시피에는 그 둘이 없으므로, 관측 반지름에서 되읽어 맞춘 것이 아니라 "
+            "받아쓴 것이다. 이 갈래가 토성을 Z = 0.200 (Guillot 1999 예산의 아래 끝) 에서 "
+            "평균반지름 대비 −0.1 % 로 재현하는데, 그것이 보이는 것은 혼합 규칙이 맞다는 "
+            "것이지 이 레시피가 토성을 예측한다는 것이 아니다. 그래서 등급을 analog 로 "
+            "내린다.")
+    if not differentiated:
+        notes.append(
+            "**미분화 천체에는 측정 앵커가 없다.** 완전히 섞인 암석-금속 천체의 C/MR² 를 "
+            "잰 사례를 찾지 못했다 — Ceres 와 Callisto 는 부분 분화이고 그건 다른 문제다. "
+            "대신 판별 검사가 있다: 수성 질량·금속분율을 미분화로 풀면 C/MR² 가 0.393 이고 "
+            "측정값 0.346 보다 13.7 % 높다. 수성이 분화했다는 것을 이 레시피가 맞게 "
+            "말한다는 뜻이지, 미분화 값 자체가 검증됐다는 뜻은 아니다. 등급을 analog 로 "
+            "내린다.")
     if giant_unvalidated:
         toward = ("토성 쪽에" if abs(mass_earth - GIANT_ANCHOR_FAIL_ME)
                   < abs(mass_earth - GIANT_ANCHOR_PASS_ME) else "목성 쪽에")
         notes.append(
             "**검증되지 않은 질량이다.** 이 갈래의 앵커는 둘뿐이다 — 목성"
             f"({GIANT_ANCHOR_PASS_ME:.4g} M⊕) 에서 평균반지름 대비 +0.6 %, 토성"
-            f"({GIANT_ANCHOR_FAIL_ME:.4g} M⊕) 에서 +20.7 %. {mass_earth:.4g} M⊕ 는 "
-            f"그 사이이고 {toward} 가깝다. n = 1 은 질량에도 조성에도 반응하지 않으므로"
-            "(R = √(πK/2G)) 여기 나온 반지름과 C/MR² 는 목성에 맞춰진 상수 하나가 어느 "
-            "거대행성에나 돌려주는 같은 값이다. 그래서 잔차가 0.6 % 쪽인지 20.7 % 쪽인지 "
-            "말할 근거가 없고, 등급을 analog 로 내린다. 이 축을 여는 것은 봉투 중원소가 "
-            "들어간 혼합 상태방정식이다 (Helled+ 2022 §2; Guillot 1999 의 Z 예산).")
+            f"({GIANT_ANCHOR_FAIL_ME:.4g} M⊕) 에서 Z = 0 이면 +20.7 %. {mass_earth:.4g} M⊕ "
+            f"는 그 사이이고 {toward} 가깝다. **Z 를 선언하지 않았으므로** 여기 나온 "
+            "반지름과 C/MR² 는 목성에 맞춰진 상수 하나가 어느 거대행성에나 돌려주는 같은 "
+            "값이고 (R = √(πK/2G) 에 M 도 조성도 없다), 잔차가 0.6 % 쪽인지 20.7 % 쪽인지 "
+            "말할 근거가 없다. 등급을 analog 로 내린다. 토성의 20.7 % 는 이제 이 갈래가 "
+            "그 질량에서 틀렸다는 뜻이 아니라 **거기서는 조성이 필요하다** 는 뜻이다 — "
+            "envelope_z 를 주면 −0.1 % 로 내려온다.")
     notes += [
              "이 노드는 결합 코어 안에 있다 (chain.yaml 순환 1·3). converged 는 "
              "**이 적분의 사격이 붙었는가** 를 말하지, 조석가열이 조성을 되바꾸는 "
@@ -484,6 +593,8 @@ def solve(mass_earth: float,
     reason = (f"{mass_earth:.4g} M⊕ 를 핵질량분율 {cmf:.3f}"
               + (f" · 얼음질량분율 {imf:.3f}" if imf > 0 else "")
               + (f" · 가스질량분율 {gmf:.3f}" if gmf > 0 else "")
+              + (f" · 외피중원소 {envelope_z:.3f}" if envelope_z > 0 else "")
+              + ("" if differentiated else " · 미분화(암석+금속 한 층)")
               + (f" · 초기공극 {initial_porosity:.2f}" if initial_porosity > 0 else "")
               + f" 로 적분했다. 정수압 평형이 반지름 {radius:.4f} R⊕ 와 "
               f"중심압 {st.p_center / 1e9:.1f} GPa 를 주고, 그 압력 분포에서 층 밀도가 "
@@ -503,9 +614,12 @@ def solve(mass_earth: float,
         recipe=RECIPE, version=VERSION,
         regime="integrated_" + ("_".join(st.phases) if len(st.phases) > 1 else st.phases[0]),
         reason=reason,
-        # 공극이 켜지면 등급이 내려간다. 압밀 곡선의 실험 상한 위로 외삽하게 되고,
-        # φ₀ 자체가 이 레시피가 도출하지 못하는 선언값이다.
-        grade="analog" if (initial_porosity > 0 or giant_unvalidated) else "calibrated",
+        # 등급은 적합의 좋음이 아니라 **답이 이 레시피가 검증할 수 없는 선언에 기대는가**
+        # 를 말한다. φ₀ 도 Z 도 강착과 진화가 정하는 값이라 여기서 도출되지 않고,
+        # 미분화는 측정 앵커가 없다.
+        grade=("analog" if (initial_porosity > 0 or envelope_z > 0
+                            or not differentiated or giant_unvalidated)
+               else "calibrated"),
         inputs=inputs,
         cycles=(1, 3),
         converged=converged,
@@ -835,6 +949,8 @@ def _from_state(state):
         core_mass_fraction=state.get("core_mass_fraction"),
         ice_mass_fraction=state.get("ice_mass_fraction"),
         gas_mass_fraction=state.get("gas_mass_fraction"),
+        # Z 는 **선언** 이다. 강착과 진화가 정하는 값이고 이 레시피에 그 둘이 없다.
+        envelope_z=state.get("envelope_z", 0.0),
         composition=state.get("composition_intent", "earth_like"),
         radius_earth=state.get("radius_earth"),
         differentiated=state.get("differentiated", True),
