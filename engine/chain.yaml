@@ -187,13 +187,36 @@ edges:
   - {from: body_class, to: nmoi_class_table, kind: selects, ref: "body-figure-methodology.md:256"}
   - {from: body_class, to: k2q_class_table, kind: selects, ref: "tidal-heating-methodology.md:194"}
   - {from: body_class, to: omega0_class_table, kind: selects, ref: "tidal-locking-timescale-methodology.md:431"}
-  - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, ref: "body-figure-methodology.md:256"}
-  - {from: nmoi_class_table, to: cassini_state, kind: requires, via: nmoi, ref: "cassini-state-obliquity-methodology.md:166"}
+  # 클래스 조회는 이제 **적분이 못 미치는 클래스에서만** 공급자다. 응축상 천체는
+  # interior_layers 가 per-body 로 낸다(아래). 남은 자리는 H/He 봉투를 가진
+  # 거대행성이고, eos.py 에 폴리트로프가 들어오면 이 두 엣지가 죽는다.
+  - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, note: 적분이 거절하는 클래스에 한한다 — 지금은 거대행성., ref: "body-figure-methodology.md:256"}
+  - {from: nmoi_class_table, to: cassini_state, kind: requires, via: nmoi, note: 적분이 거절하는 클래스에 한한다 — 지금은 거대행성., ref: "cassini-state-obliquity-methodology.md:166"}
   - {from: k2q_class_table, to: tidal_heating, kind: requires, via: k2_over_q, ref: "tidal-heating-methodology.md:194"}
   - {from: k2q_class_table, to: tidal_locking, kind: requires, via: k2_over_q, ref: "tidal-locking-timescale-methodology.md:266"}
   - {from: omega0_class_table, to: tidal_locking, kind: requires, via: p_init, ref: "tidal-locking-timescale-methodology.md:270"}
   - {from: t_exo_bracket, to: atmospheric_escape, kind: requires, via: t_exo, ref: "exoplanet-atmosphere-methodology.md:284"}
-  - {from: interior_layers, to: nmoi_class_table, kind: influences, ref: "interior-structure-methodology.md:Contract", note: 층 적분이 클래스 조회를 대체한다 (2026-08-25).}
+  - from: interior_layers
+    to: body_figure
+    kind: requires
+    via: nmoi
+    note: >
+      C/MR² 의 공급자. 2026-08-25 까지 클래스 조회 하나가 이 자리에 있었고, 적분이
+      per-body 값을 내기 시작한 뒤에도 소비처가 표를 계속 봤다 — 더 나은 수가 옆에서
+      안 쓰인 채로 있었다는 뜻이다. 클래스 표는 적분이 거절하는 클래스에만 남는다.
+    ref:
+      - "interior-structure-methodology.md:Contract"
+      - "body-figure-methodology.md:256"
+  - from: interior_layers
+    to: cassini_state
+    kind: requires
+    via: nmoi
+    note: >
+      body_figure 와 같은 양을 같은 곳에서 받는다. 한쪽만 적분으로 옮기면 하나의
+      C/MR² 에 공급자가 둘이 되고, 그게 이미 한 번 사고를 낸 모양이다.
+    ref:
+      - "interior-structure-methodology.md:Contract"
+      - "cassini-state-obliquity-methodology.md:166"
 
   # ── figure · 자전 ──────────────────────────────────────────────
   - {from: tidal_locking, to: body_figure, kind: requires, via: lock_state, ref: "body-figure-methodology.md:252"}
