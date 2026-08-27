@@ -157,6 +157,7 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_mass_radius.py) || fail=1
 (cd engine && python3 test_interior.py) || fail=1
 (cd engine && python3 test_core_state.py) || fail=1
+(cd engine && python3 test_body_class.py) || fail=1
 (cd engine && python3 test_porosity.py) || fail=1
 (cd engine && python3 test_giant.py) || fail=1
 (cd engine && python3 test_mixture.py) || fail=1

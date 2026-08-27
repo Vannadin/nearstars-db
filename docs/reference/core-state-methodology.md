@@ -180,6 +180,7 @@ disagree by 13 %.
 
 ## Related
 
+- [Body class](body-class-methodology.md) — derives the `body_class` key this recipe declines the six coreless classes on, and contrasts it against the declared one
 - [Interior structure](interior-structure-methodology.md) — supplies the core pressures and
   the geotherm this recipe reads as a bound, and documents the water melting curve
 - [Rocky-planet dynamo](rocky-planet-dynamo-methodology.md) — the consumer: it needs a

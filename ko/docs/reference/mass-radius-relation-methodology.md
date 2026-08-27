@@ -373,6 +373,10 @@ R_J**(젊음/복사로 올려서)를 채택한다. 이것이 거대 행성 다�
 
 ## 관련 문서
 
+- [`body-class-methodology.md`](body-class-methodology.md): §5 의 밸리 띠를 가져다 다른
+  질문에 씁니다. 이 문서는 그 반지름에서 암석 격자를 믿을 수 있는지를 묻고, 저쪽은 이
+  천체가 무엇인지를 묻습니다. 이 레시피가 거절하는 거대행성에 대해서도 저쪽은 답해야 합니다.
+
 - [`interior-structure-methodology.md`](interior-structure-methodology.md): 이 레시피가 반지름과 순철 게이트를 읽어 가는 층을 적분한다. 여기 있던 조성 조회표를 2026-08-25 에 대체한 쪽이다.
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): 이 문서가 배정하는
   표면중력 `g`와 함께 대기 문서의 스케일높이를 정하는 온도 `T`. 암석형-대-휘발성

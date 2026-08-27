@@ -1,0 +1,60 @@
+planet: (methodology) body class
+slug: _method-body-class
+sources:
+  ads: queried by hand (citation_count desc, 2026-08-27)
+papers:
+- arxiv_id: '1603.08614'
+  ads_bibcode: 2017ApJ...834...17C
+  title: Probabilistic Forecasting of the Masses and Radii of Other Worlds
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1407.4457'
+  ads_bibcode: 2015ApJ...801...41R
+  title: Most 1.6 Earth-radius Planets are Not Rocky
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1703.10375'
+  ads_bibcode: 2017AJ....154..109F
+  title: The California-Kepler Survey III. A Gap in the Radius Distribution of Small Planets
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1710.05398'
+  ads_bibcode: 2018MNRAS.479.4786V
+  title: An asteroseismic view of the radius valley - stripped cores, not born rocky
+  status: fetched
+  fetch_error: null
+- arxiv_id: '2301.04062'
+  ads_bibcode: 2023MNRAS.519.4056H
+  title: A deep radius valley revealed by Kepler short cadence observations
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1911.04745'
+  ads_bibcode: 2020A&A...634A..43O
+  title: Revisited mass-radius relations for exoplanets below 120 M_earth
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1408.6087'
+  ads_bibcode: 2014A&A...572A..35L
+  title: Separating gas-giant and ice-giant planets by halting pebble accretion
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1008.5150'
+  ads_bibcode: 2011ApJ...727...57S
+  title: The Deuterium-burning Mass Limit for Brown Dwarfs and Giant Planets
+  status: fetched
+  fetch_error: null
+- arxiv_id: astro-ph/0006383
+  ads_bibcode: 2000ARA&A..38..337C
+  title: Theory of Low-Mass Stars and Substellar Objects
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1004.1091'
+  ads_bibcode: 2010arXiv1004.1091L
+  title: 'The Potato Radius: a Lower Minimum Size for Dwarf Planets'
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1802.09602'
+  ads_bibcode: 2018ApJ...856..122K
+  title: Exoplanet Classification and Yield Estimates for Direct Imaging Missions
+  status: fetched
+  fetch_error: null

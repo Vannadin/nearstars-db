@@ -171,6 +171,9 @@ González-Cataldo 조각입니다. 그 폭은 같은 압력의 두 정적압축 
 
 ## 관련
 
+- [천체 클래스](body-class-methodology.md) — 이 레시피가 핵 없는 여섯 클래스를 거절할 때
+  쓰는 `body_class` 키를 도출하고, 선언된 값과 대조합니다
+
 - [내부 구조](interior-structure-methodology.md) — 이 레시피가 하한으로 읽는 핵 압력과
   지오섬을 공급하고, 물의 융해곡선을 문서화합니다
 - [암석행성 다이나모](rocky-planet-dynamo-methodology.md) — 소비처입니다. 전도성 액체 핵이

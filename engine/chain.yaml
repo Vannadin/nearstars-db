@@ -67,9 +67,18 @@ nodes:
   # ── 1층. 분기키 ────────────────────────────────────────────────
   body_class:
     kind: computed
-    status: missing
-    outputs: [class]
-    note: 아래 전부가 여기서 갈린다. 없어서 오적용을 기계적으로 막을 수 없다.
+    recipe: body-class-methodology
+    outputs: [class, classes, decided_by, agrees_with_declared]
+    note: >
+      아래 전부가 여기서 갈린다 — selects 엣지 여덟이 이 노드에서 나간다. 2026-08-27
+      까지 값이 계산되지 않고 bodies/*.yaml 에 손으로 적혀 있었고, 모든 레시피가 그것을
+      액면 그대로 받았다. 해왕성을 giant 로 적어 넣으면 H/He 폴리트로프가 돌아 자신 있게
+      틀린 답이 나왔다는 뜻이다.
+      이제 질량과 반지름에서 좁힌다. **고르지 않고 좁힌다** — 경계마다 발표된 띠가 있고
+      띠 안이면 양쪽이 다 살아남는다. 선언은 지우지 않는다: 지어낸 천체는 관측이 없어
+      도출할 수 없으므로, 이 노드가 하는 일은 선언을 **대조** 하는 것이고 어긋나면
+      agrees_with_declared 가 거짓이 된다. 어느 쪽이 맞는지는 오너가 정한다.
+      소비처 여덟은 아직 선언을 읽는다. 그 배선은 interior.py 를 만져야 해서 별건이다.
   mass_radius_relation: {kind: computed, recipe: mass-radius-relation-methodology, outputs: [radius, density]}
 
   # ── 2층. 허브 ──────────────────────────────────────────────────
@@ -187,9 +196,30 @@ edges:
   - {from: mass_or_radius, to: mass_radius_relation, kind: requires, ref: "mass-radius-relation-methodology.md:62"}
   - {from: composition_intent, to: mass_radius_relation, kind: selects, ref: "mass-radius-relation-methodology.md:191"}
   - {from: star_physical, to: mass_radius_relation, kind: influences, sign: positive, via: insolation, ref: "mass-radius-relation-methodology.md:107"}
-  - {from: mass_radius_relation, to: body_class, kind: requires, via: radius_valley, ref: "mass-radius-relation-methodology.md:220"}
+  - from: mass_radius_relation
+    to: body_class
+    kind: requires
+    via: radius_valley
+    note: >
+      밸리 게이트는 저쪽에 남는다. 저쪽이 묻는 것은 "이 반지름에서 암석 격자를 믿을 수
+      있나" 이고 이쪽이 묻는 것은 "이 천체가 무엇인가" 다 — 저쪽의 거절("통계적으로
+      암석이 아니다")은 분류가 아니라서, 서브넵튠인지 얼음거대행성인지 가스거대행성인지를
+      말하지 않는다. body_class 는 같은 띠를 **가져다 쓴다** (mass_radius.VALLEY_LO/HI):
+      사본을 두 벌 두면 그중 하나가 표류한다.
+      다만 이 엣지가 늘 값을 나르지는 않는다. 저쪽은 거대행성을 거절하므로 Alpha
+      Centauri A b 에서는 아무 값도 안 낸다 — 그래서 사다리의 위쪽 절반은 질량으로 읽는다.
+    ref: "mass-radius-relation-methodology.md:220"
   - {from: mass_or_radius, to: body_class, kind: requires}
-  - {from: composition_intent, to: body_class, kind: requires}
+  - from: composition_intent
+    to: body_class
+    kind: requires
+    status: gap
+    note: >
+      경계 여섯 중 **하나** 에서만 짐을 진다. 가스거대행성과 얼음거대행성을 가르는 것은
+      크기가 아니라 질량의 대부분이 수소-헬륨인가 무거운 원소인가이고 (Lambrechts &
+      Johansen 2014), 그것을 말하는 것이 이 노드다. 선언되면 그 경계가 조성으로 갈리고,
+      없으면 발표된 질량 띠 둘 사이가 모호한 채로 남는다. 나머지 다섯 경계는 질량이나
+      반지름으로 그어지므로 이것이 없어도 갈린다.
   - {from: mass_radius_relation, to: interior_layers, kind: requires, ref: "rocky-planet-dynamo-methodology.md:187"}
   - {from: body_class, to: interior_layers, kind: requires}
   - {from: composition_intent, to: interior_layers, kind: requires}

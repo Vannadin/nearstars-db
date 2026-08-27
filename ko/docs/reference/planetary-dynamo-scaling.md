@@ -176,6 +176,9 @@ Notes:
 
 ## Related
 
+- [`body-class-methodology.md`](body-class-methodology.md) — 이 방법이 액면 그대로 받는
+  분기키를 도출하고, 갈색왜성 경계를 중수소 한계에서 같은 자리에 긋습니다.
+
 - [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — 암석형
   (지구/슈퍼지구) 상대편 방법. 두 방법은 암석형 ↔ sub-Neptune 경계에서 갈리며 교차
   적용해서는 안 된다.

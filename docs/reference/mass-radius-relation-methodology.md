@@ -408,6 +408,7 @@ exists), citation count (ADS, at survey time), and one line on what it contribut
 
 ## Related
 
+- [`body-class-methodology.md`](body-class-methodology.md): imports the §5 valley band and reads it for the other question. This doc asks whether the rocky grid can be trusted at a radius; that one asks what the body is, and has to answer for the giants this recipe declines.
 - [`interior-structure-methodology.md`](interior-structure-methodology.md): integrates the layers this recipe reads its radius and its pure-iron gate off. It replaced the composition lookup that used to live here on 2026-08-25.
 - [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the temperature
   `T` that, with the surface gravity `g` this doc assigns, sets the scale height in

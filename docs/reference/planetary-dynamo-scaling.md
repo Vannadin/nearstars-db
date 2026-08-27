@@ -180,6 +180,8 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
 
 ## Related
 
+- [`body-class-methodology.md`](body-class-methodology.md) — derives the dispatch key this
+  method takes at face value, and draws the same brown-dwarf boundary from the deuterium limit.
 - [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.md) — the
   rocky (Earth/super-Earth) counterpart; the two methods split at the rocky ↔
   sub-Neptune boundary and must not be cross-applied.
