@@ -130,7 +130,7 @@ fit PREM with ([arXiv:1512.08827](https://arxiv.org/abs/1512.08827), their eq. 1
 expansion of the elastic potential energy. Both are in Seager's Table 1. **Fourth-order
 Birch–Murnaghan (BME4)** adds K₀″, and Seager uses it for one material only, the deep silicate,
 because it "is the only fit we found that smoothly matches the TFD EOS at high pressures".
-Third order will not approximate it: the published K₀″ sits 0.24 % from the third-order
+Third order will not approximate it: the published K₀″ sits 2.3 % from the third-order
 implied value, and that gap reaches 9.1 % in density at the ceiling.
 
 **Polytrope**, P = K ρ^(1+1/n), which is not a condensed-matter fit at all. It is the form a

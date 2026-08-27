@@ -88,7 +88,7 @@ into a third-order one is
 
     K₀″ = −(1/K₀)[(3 − K₀′)(4 − K₀′) + 35/9] = −0.015627 /GPa
 
-which is 0.24 % away. It would be easy to call that rounding and use `bme3`.
+which is 2.3 % away. It would be easy to call that rounding and use `bme3`.
 
 It is not rounding. That term enters multiplied by f², and f reaches 1.17 at the fit's
 ceiling, so the two curves separate by **9.1 % in density at 13.5 TPa**. A constant printed

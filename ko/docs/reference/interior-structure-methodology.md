@@ -123,7 +123,7 @@ log–log 상의 시컨트 스텝에 이분법을 예비로 두는데, 적분 �
 둘 다 Seager 의 Table 1 에 있습니다. **4차 Birch–Murnaghan(BME4)** 은 K₀″ 를 하나 더
 붙이는데, Seager 가 이 형태를 쓴 재료는 심부 규산염 하나뿐이고 이유도 적어 두었습니다.
 "is the only fit we found that smoothly matches the TFD EOS at high pressures" 라고요.
-3차로는 근사가 안 됩니다. 발표된 K₀″ 가 3차의 암묵값에서 0.24 % 떨어져 있는데, 그 틈이
+3차로는 근사가 안 됩니다. 발표된 K₀″ 가 3차의 암묵값에서 2.3 % 떨어져 있는데, 그 틈이
 상한에서 밀도 9.1 % 로 벌어집니다.
 
 **폴리트로프** P = K ρ^(1+1/n) 은 응축상 적합이 아예 아닙니다. 수소-헬륨 외피가 취하는
