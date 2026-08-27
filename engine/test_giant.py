@@ -294,7 +294,12 @@ def main() -> int:
     for label, kwargs, keyword in (
             ("갈색왜성", dict(mass_earth=5000.0, body_class="brown_dwarf"), "중수소"),
             ("별", dict(mass_earth=3e5, body_class="star"), "n = 3/2"),
-            ("얼음 자이언트", dict(mass_earth=17.0, body_class="ice_giant"), "암모니아"),
+            # 얼음거대행성은 2026-08-27 에 열렸다. 남은 거절은 얼음층을 안 준 경우이고,
+            # 그건 클래스가 아니라 선언의 문제다.
+            ("얼음 없는 얼음 자이언트",
+             dict(mass_earth=17.0, body_class="ice_giant", core_mass_fraction=0.0,
+                  ice_mass_fraction=0.0, gas_mass_fraction=0.13,
+                  potential_temperature=2500.0), "얼음거대행성이 아니다"),
             ("서브넵튠", dict(mass_earth=8.0, body_class="sub_neptune"), "광증발"),
             ("가스인데 암석 클래스",
              dict(mass_earth=120.0, core_mass_fraction=0.0, ice_mass_fraction=0.0,

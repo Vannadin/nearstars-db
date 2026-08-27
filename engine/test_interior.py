@@ -60,12 +60,16 @@ DECLINES = [
     # 이름을 대며 거절하는지는 여기서 계속 지킨다.
     ("갈색왜성", dict(mass_earth=5000.0, body_class="brown_dwarf"),
      "중수소", "13 M_J 위는 광도 이력이 필요하다"),
-    # 2026-08-27 에 이 거절이 "Redmer+ 2011 계열의 물-암모니아 EOS 가 필요하다" 였다.
-    # 조사해 보니 필요한 것은 고압 **고체** 얼음이 아니라 유체·초이온 갈래였다 — 얼음
-    # 맨틀이 5000 K 위라 이 파일의 사다리(20~1800 K) 위에 통째로 있다. 거절 문구가 이제
-    # 그 거리를 수로 말하므로, 검사도 그 수를 짚는다.
-    ("얼음 자이언트", dict(mass_earth=17.0, body_class="ice_giant"),
-     "5700", "얼음 맨틀이 사다리의 온도 구간 위에 통째로 있다"),
+    # 얼음거대행성은 2026-08-27 에 열렸다. 남은 거절은 **온도를 선언하지 않은 경우** 이고,
+    # 그건 이 갈래의 성질이다 — 유체 물의 적합은 P(ρ,T) 가 통째로 하나라 온도가 인자다.
+    ("온도 없는 얼음 자이언트", dict(mass_earth=17.0, body_class="ice_giant",
+                            core_mass_fraction=0.0, ice_mass_fraction=0.8,
+                            gas_mass_fraction=0.13),
+     "등온으로 풀 수 없다", "유체 물은 온도가 인자라 등온 경로가 없다"),
+    ("얼음 없는 얼음 자이언트", dict(mass_earth=17.0, body_class="ice_giant",
+                            core_mass_fraction=0.0, ice_mass_fraction=0.0,
+                            gas_mass_fraction=0.13, potential_temperature=2500.0),
+     "얼음거대행성이 아니다", "이 클래스를 이름 그대로 만드는 층이 없다"),
 ]
 
 # 로스터. 판정이 아니라 **무엇이 풀리고 무엇이 왜 안 풀리는가** 를 보여주는 표다.
@@ -529,6 +533,45 @@ def mass_ceiling(**kwargs) -> tuple[float, str]:
     return lo, owner
 
 
+# 얼음거대행성의 앵커. Scheibe+ 2019 Table 1 의 **Mazevet 물 EOS 행** 에서 왔다 —
+# 우리가 쓰는 것과 같은 상태방정식으로 지은 모형이라야 조성을 빌려올 수 있다.
+# (M⊕, 발표 평균반지름 R⊕, 암석 핵 M⊕, H/He 총량 M⊕)
+ICE_GIANTS = (
+    ("Uranus", 14.536, 3.9808, 0.79, 2.0),
+    ("Neptune", 17.147, 3.8646, 1.04, 2.2),
+)
+ICE_GIANT_T_POT = 2500.0     # K. 얼음 맨틀 꼭대기의 온도로 읽는다 (아래 주석)
+
+
+def ice_giant_table() -> None:
+    """문서의 얼음거대행성 표를 다시 낸다. **느려서 기본 실행에는 없다.**
+
+    한 천체가 24 ~ 500 초다. 뜨거운 물의 P(ρ,T) 가 페르미 적분을 먹고, 그게 적분의
+    안쪽 고리에 있어서다. check.sh 의 예산에 안 들어가므로 이 표는 플래그로만 낸다."""
+    print("| planet | R derived | R published | Δ | C/MR² | T_c | P_c | grade |")
+    print("|---|---|---|---|---|---|---|---|")
+    for name, m, r_pub, m_core, m_hhe in ICE_GIANTS:
+        gmf = m_hhe / m
+        imf = 1.0 - gmf - m_core / m
+        res = solve(m, body_class="ice_giant", core_mass_fraction=0.0,
+                    ice_mass_fraction=imf, gas_mass_fraction=gmf,
+                    potential_temperature=ICE_GIANT_T_POT)
+        v = res.values
+        print(f"| {name} | {v['radius']:.3f} R⊕ | {r_pub:.3f} R⊕ | "
+              f"{(v['radius'] / r_pub - 1) * 100:+.1f} % | {v['nmoi']:.4f} | "
+              f"{v['core_temperature']:.0f} K | {v['core_pressure']:.0f} GPa | "
+              f"{res.grade} |")
+    # 초과분이 어느 층의 몫인지. 같은 천왕성에서 외피만 빼 본다.
+    m, r_pub, m_core = ICE_GIANTS[0][1], ICE_GIANTS[0][2], ICE_GIANTS[0][3]
+    bare = solve(m, body_class="ice_giant", core_mass_fraction=0.0,
+                 ice_mass_fraction=1.0 - m_core / m, gas_mass_fraction=0.0,
+                 potential_temperature=ICE_GIANT_T_POT)
+    print(f"| Uranus, no H/He | {bare.values['radius']:.3f} R⊕ | {r_pub:.3f} R⊕ | "
+          f"{(bare.values['radius'] / r_pub - 1) * 100:+.1f} % | "
+          f"{bare.values['nmoi']:.4f} | {bare.values['core_temperature']:.0f} K | "
+          f"{bare.values['core_pressure']:.0f} GPa | {bare.grade} |")
+
+
 def thermal_table() -> None:
     """문서 §Validation 의 온도 표를 다시 낸다. 손으로 친 표는 어긋난다."""
     print("| body | T_Pot (K) | T_CMB derived | Unterborn+ 2019 eq. 7–8 | Δ | "
@@ -568,6 +611,9 @@ def main() -> int:
         return 0
     if "--ceiling" in sys.argv:
         ceiling_table()
+        return 0
+    if "--icegiant" in sys.argv:
+        ice_giant_table()
         return 0
     if "--table" in sys.argv:
         table()
@@ -1286,20 +1332,41 @@ def main() -> int:
     print(f"  [{'PASS' if ok else 'FAIL'}] water 프리셋이 {m_water:.3f} M⊕ 까지 풀린다 "
           f"(2026-08-27 에는 0.0398 M⊕ 로 달의 3.2 배였다)")
 
+    print("\n얼음거대행성 — 열렸는가, 그리고 뜨거운 물이 자기 구간을 지키는가")
+    # **적분은 여기서 안 돌린다.** 얼음거대행성 하나가 24 ~ 500 초라 check.sh 의 예산에
+    # 안 들어간다. 천왕성·해왕성 표는 `--icegiant` 가 낸다. 여기서는 적분하지 않고 되는
+    # 것만 짚는다 — 배선과 재료의 울타리다.
+    from interior import FLUID_CLASSES, ICE_GIANT_CLASSES
+    from eos import H2O_HOT, PhaseGap as _PG
+    import water_hot as _wh
+    ok = "ice_giant" not in FLUID_CLASSES and "ice_giant" in ICE_GIANT_CLASSES
+    if not ok:
+        fails.append("ice_giant 가 아직 FLUID_CLASSES 에 있다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] ice_giant 가 거절 목록에서 나왔다 — "
+          f"남은 유체 거절은 {FLUID_CLASSES}")
+    for t, needle, label in ((0.0, "등온 경로로 풀 수 없다", "온도 미선언"),
+                             (1200.0, "하한", "1800 K 아래 (응축상 사다리의 몫)"),
+                             (60000.0, "상한", "50000 K 위 (적합의 상한)")):
+        got = None
+        try:
+            H2O_HOT.density(100e9, t)
+        except _PG as gap:
+            got = gap
+        ok = got is not None and needle in got.reason
+        if not ok:
+            fails.append(f"뜨거운 물이 {label} 에서 이름 대며 거절하지 않는다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {label:28} → 이름 대며 거절한다")
+    ok = _wh.T_MIN == ICE_VII_X_T_MAX
+    if not ok:
+        fails.append(f"뜨거운 물의 하한 {_wh.T_MIN} 이 얼음 사다리의 천장 "
+                     f"{ICE_VII_X_T_MAX} 와 다르다 — 사이에 틈이 생긴다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 뜨거운 물의 하한 {_wh.T_MIN:.0f} K 이 얼음 "
+          f"사다리의 천장과 같은 자리다 — 온도 축에 틈이 없다")
+
     print("\n얼음거대행성 — 거절이 거리를 수로 말하는가")
     from eos import (AVL_ICES_DEVIATION, AVL_ICES_TERNARY_DEVIATION,
                      AVL_VOLUME_DEVIATION, ICE_VII_X_T_MAX,
                      SOLAR_ICE_MASS_FRACTIONS)
-    ig = solve(14.5, body_class="ice_giant")
-    checks = (("온도 천장을 인용한다", f"{ICE_VII_X_T_MAX:.0f} K" in ig.reason),
-              ("중심 온도를 인용한다", "5700" in ig.reason and "5500" in ig.reason),
-              ("유체·초이온 갈래라고 말한다", "초이온" in ig.reason),
-              ("옮겨 적을 수 있는 것이 물뿐임을 말한다", "Mazevet" in ig.reason),
-              ("EOS 만으로 부족함을 말한다", "adiabatic" in ig.reason))
-    for label, cond in checks:
-        if not cond:
-            fails.append(f"ice_giant 거절: {label}")
-        print(f"  [{'PASS' if cond else 'FAIL'}] {label}")
     ok = abs(sum(SOLAR_ICE_MASS_FRACTIONS.values()) - 1.0) < 1e-12
     if not ok:
         fails.append("태양 조성 얼음 질량분율의 합이 1 이 아니다")

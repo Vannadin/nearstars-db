@@ -42,6 +42,8 @@
 from __future__ import annotations
 
 import math
+
+import water_hot
 from dataclasses import dataclass
 
 R_GAS = 8.314462618          # J mol⁻¹ K⁻¹. CODATA 2018 기체상수
@@ -483,6 +485,103 @@ class Mixture:
         """혼합의 γ. 성분의 γ 를 질량분율로 더한다 — 부피 가법과 같은 결이다."""
         return sum(w * m.gruneisen(p, m.density(p, t, t_pot), t, t_pot)
                    for m, w in self.parts if w > 0.0)
+
+
+# ── 뜨거운 물 — 사다리가 아니라 이웃 ────────────────────────────────────
+#
+# 위의 물 사다리는 20 ~ 1800 K 의 응축상이다. 얼음거대행성의 '얼음' 맨틀은 그 위에서
+# 시작해 위로 가므로 (100 GPa 에서 5000~7000 K, 중심 5500~5700 K — Scheibe+ 2019),
+# 사다리를 늘리는 것이 아니라 **다른 상** 을 나란히 세운다.
+#
+# 상태방정식은 water_hot.py 에 있다. 여기 있는 것은 그것을 적분기가 먹을 수 있는 모양으로
+# 감싸는 껍질이다 — Material 과 같은 것들을 내지만 상(Phase) 의 열이 아니다. 냉각 곡선과
+# 열압력으로 갈리지 않고 P(ρ,T) 가 통째로 하나이기 때문이고, 그래서 Phase 를 억지로
+# 씌우는 대신 같은 자리에 꽂히는 별개의 것으로 둔다.
+@dataclass(frozen=True)
+class HotWater:
+    """유체·초이온 물. `Material` 과 같은 자리에 꽂히지만 상의 열이 아니다."""
+    name: str = "h2o_hot"
+    label_ko: str = "뜨거운 물 (유체·초이온)"
+
+    @property
+    def rho0(self) -> float:
+        """괄호잡기용 영압 밀도. 이 적합은 영압에서 뜻이 없으므로 유효 하한을 쓴다."""
+        return water_hot.RHO_MIN
+
+    @property
+    def p_max(self) -> float:
+        """압력 상한. 이 적합은 밀도로 잘리므로, 상한 밀도의 압력을 상한으로 쓴다.
+
+        온도에 따라 움직이지만, 괄호잡기와 거절 판정에만 쓰이므로 이 갈래에서 실제로
+        도달하는 가장 낮은 온도(T_MIN)에서 잡는다 — 가장 보수적인 자리다."""
+        return water_hot.pressure(water_hot.RHO_MAX, water_hot.T_MIN)
+
+    def rho_seed(self, mass_kg: float) -> float:
+        return water_hot.RHO_MIN
+
+    @property
+    def has_thermal(self) -> bool:
+        return True
+
+    def cold_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def melt_free_phases(self) -> tuple[str, ...]:
+        """녹는곡선이 없다 — **있을 자리가 아니다.** 이 재료는 이미 유체다."""
+        return (self.name,)
+
+    def t_melt(self, p: float) -> float | None:
+        return None
+
+    def check_temperature(self, p: float, t: float) -> None:
+        """이 적합이 유효한 온도 구간 밖인가. 양쪽 다 이름을 대며 거절한다."""
+        if t <= 0.0:
+            raise PhaseGap(
+                self.name, p,
+                "뜨거운 물은 등온 경로로 풀 수 없다. 이 적합은 P(ρ,T) 가 통째로 하나라 "
+                "온도가 인자이고, 얼음 사다리처럼 냉각 곡선을 따로 갖고 있지 않다. "
+                "포텐셜 온도를 선언하면 이 층이 풀린다.")
+        if t < water_hot.T_MIN:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 이 적합을 쓰는 하한({water_hot.T_MIN:.0f} K) 아래다. "
+                "그 아래는 응축상 얼음이고 이 파일의 사다리(ice_ih … ice_x)가 받는다. "
+                "Mazevet+ 2019 §3.1 자신이 그 구간을 'limited applicability for the ice VII "
+                "and ice X phases' 로 적고 불일치를 'tens percent' 로 부른다.", t)
+        if t > water_hot.T_MAX:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 이 적합의 상한({water_hot.T_MAX:.0f} K) 위다. "
+                "Mazevet+ 2019 초록이 'for temperatures below 50,000K' 로 적는다.", t)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        self.check_temperature(p, t)
+        return water_hot.density(p, t)
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        if t <= 0.0:
+            return 0.0
+        return water_hot.gruneisen(rho, t)
+
+    def phase_at(self, p: float):
+        """단열 기울기가 (∂P/∂T)_V 를 묻는다. 상이 아니라 닫힘 하나로 답한다."""
+        return _HotWaterSlope(p)
+
+
+@dataclass(frozen=True)
+class _HotWaterSlope:
+    """`_adiabatic_dtdp` 가 K_S 를 만들 때 쓰는 (∂P/∂T)_V. 유한차분이다."""
+    p: float
+
+    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+        if t <= 0.0:
+            return 0.0
+        rho = water_hot.density(self.p, t)
+        h = 0.01 * t
+        return (water_hot.pressure(rho, t + h) - water_hot.pressure(rho, t - h)) / (2.0 * h)
+
+
+H2O_HOT = HotWater()
 
 
 def mix(name: str, label_ko: str, *parts: tuple[Material, float]) -> Material | Mixture:
@@ -1165,6 +1264,6 @@ H_HE = Material(
                  "(Spiegel+ 2011), 이 레시피에는 그 광도 이력이 없다."),
 )
 
-MATERIALS: dict[str, Material] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O, H_HE)
+MATERIALS: dict[str, Material | HotWater] = {
+    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O, H_HE, H2O_HOT)
 }

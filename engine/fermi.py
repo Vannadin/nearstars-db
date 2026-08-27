@@ -213,6 +213,9 @@ def f_three_half(eta: float) -> float:
     return _hermite(_LN_P32, lambda i: _D_P32[i], eta)
 
 
+_LAST_INVERSE = (0.0, 0.0)     # 직전 (값, 해). 출발점일 뿐이다
+
+
 def inverse_f_half(value: float) -> float:
     """F_{1/2}(η) = value 를 푸는 η. 단조증가라 뿌리가 하나다.
 
@@ -220,8 +223,14 @@ def inverse_f_half(value: float) -> float:
     이분법으로 되돌린다 — 적분 안쪽 고리라 반복 횟수가 곧 실행시간이다."""
     if value <= 0.0:
         raise ValueError(f"F_1/2 의 역함수에 양수가 아닌 값 {value}")
-    # 첫 추측: 양 끝의 해석적 극한을 이어 붙인다.
-    if value < 0.5:
+    # 첫 추측. 적분기가 매끄럽게 행진하므로 **직전 해** 가 대개 제일 가깝다 — 그게
+    # 빗나가도 아래 괄호가 잡아 주고, 맞으면 Newton 이 두 번에 붙는다. 캐시가 아니라
+    # 출발점이므로 답에는 들어가지 않는다.
+    global _LAST_INVERSE
+    prev_v, prev_eta = _LAST_INVERSE
+    if prev_v > 0.0 and 0.2 < value / prev_v < 5.0:
+        eta = prev_eta
+    elif value < 0.5:
         eta = math.log(value / math.gamma(1.5))
     else:
         eta = (1.5 * value) ** (2.0 / 3.0)
@@ -233,12 +242,15 @@ def inverse_f_half(value: float) -> float:
         else:
             lo = max(lo, eta)
         if abs(f) <= 1e-13 * value:
+            _LAST_INVERSE = (value, eta)
             return eta
         step = f / (0.5 * f_minus_half(eta))
         nxt = eta - step
         if not (lo < nxt < hi):
             nxt = 0.5 * (lo + hi)
         if abs(nxt - eta) <= 1e-14 * max(abs(eta), 1.0):
+            _LAST_INVERSE = (value, nxt)
             return nxt
         eta = nxt
+    _LAST_INVERSE = (value, eta)
     return eta

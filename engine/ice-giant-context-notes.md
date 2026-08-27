@@ -252,3 +252,67 @@ state, its energy and its Grüneisen parameter. What is left is wiring — a mat
 and Uranus and Neptune as anchors. That is mechanical work against a tested foundation rather
 than a research question, and it is deliberately a separate commit so that a wiring mistake
 cannot be confused with a transcription mistake.
+
+---
+
+## The wiring: the node is open, and the error moved to the layer above
+
+`ice_giant` is out of `FLUID_CLASSES`. A body declared with an ice fraction and a potential
+temperature now integrates: rock, then an ice mantle on `h2o_hot`, then the H/He envelope.
+
+### The result, and what it names
+
+| planet | R derived | R published | Δ |
+|---|---|---|---|
+| Uranus | 4.930 R⊕ | 3.981 R⊕ | **+23.8 %** |
+| Neptune | 4.992 R⊕ | 3.865 R⊕ | **+29.2 %** |
+| Uranus, H/He removed | 3.092 R⊕ | 3.981 R⊕ | **−22.3 %** |
+
+Compositions come from Scheibe+ 2019's Table 1 rows built on this same water EOS, so the
+structure is borrowed rather than fitted.
+
+The third row is the finding. Both planets come out too large; removing the envelope
+overshoots the other way; the measured radius sits between them. So the error is **the H/He
+envelope, not the ices**: 13.8 % of Uranus's mass adds 1.84 R⊕ on the n = 1 polytrope where
+the real envelope adds about 0.9. Running the same body with only 5 % H/He gives 4.01 R⊕,
+essentially Uranus — the polytrope needs 2.8× less gas than the planet has.
+
+That is the objection the old refusal already carried: "n = 1 폴리트로프는 H/He 압축성에
+맞춰진 것이라 여기 쓸 수 없다". Bringing in the ices did not remove it, it **relocated** it.
+Fixing it needs an H/He equation of state, which is a different literature and a separate
+piece of work. The domain row says so, and the grade is analog.
+
+Central temperatures land unevenly — Uranus 5978 K against a published 5700, Neptune 10017
+against 5500. Uranus is close; Neptune is not, and the reason is not diagnosed. Recorded as
+an open number rather than explained away.
+
+### What the declaration means on this branch, and why
+
+`potential_temperature` is defined as the surface value, but the H/He polytrope carries no
+thermal constants, so temperature does not flow through the envelope: T is constant across it
+and the declaration lands at the **top of the ice mantle**. That is a real semantic shift for
+this branch and it is stated in the refusal and the domain rows. The alternative is an H/He
+thermal treatment, which is the same missing piece as above.
+
+### Two mistakes the tests caught
+
+**A speed optimisation broke an identity.** Passing the previous temperature pass's central
+pressure as the next pass's bracket is worth 27 %, and it changes the secant's path, so the
+converged value moves in its last bits. That breaks "at the reference potential temperature
+the answer does not move, bit for bit" — an identity this file treats as load-bearing rather
+than as a tolerance. Reverted, with the reason in the code so it is not re-attempted.
+
+**The density inversion was 200-step bisection.** The first ice giant ran past ten minutes.
+`P(ρ)` is nearly a straight line in log-log, so a secant with the bracket kept as a fallback
+does the same job in about eight evaluations; warm-starting both that and the Fermi inverse
+from the previous call cut a single integration from 1.31 s to 0.58 s, and the two tests
+confirmed the answers did not move.
+
+### The cost that remains
+
+One ice giant is 24 to 500 seconds. The density inversion sits in the integrator's inner loop
+and each call evaluates Fermi integrals, so this branch is two orders slower than the rocky
+one. It is therefore **not in `check.sh`**: the anchors are behind
+`test_interior.py --icegiant`, and what `check.sh` runs is the wiring and the material's
+temperature fences, which need no integration. That is a real gap — the anchors are not
+routinely checked — and it is named here rather than hidden by a smaller test case.

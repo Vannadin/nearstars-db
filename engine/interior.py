@@ -137,7 +137,8 @@ class Structure:
 
 
 def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
-           envelope_z: float = 0.0, differentiated: bool = True):
+           envelope_z: float = 0.0, differentiated: bool = True,
+           ice_material: str = "h2o"):
     """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
 
     가스 외피가 있으면 그것이 가장 바깥 층이다. 폴리트로프는 **별도의 가지가 아니라
@@ -158,7 +159,9 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     if 1.0 - cmf - imf - gmf > 0:
         out.append((1.0 - imf - gmf, MATERIALS["silicate"]))
     if imf > 0:
-        out.append((1.0 - gmf, MATERIALS["h2o"]))
+        # 얼음층의 재료가 갈린다. 응축상 사다리(h2o)와 유체·초이온(h2o_hot)은 온도
+        # 구간이 겹치지 않으므로, 어느 쪽인지는 천체 종류가 정하고 solve 가 넘겨준다.
+        out.append((1.0 - gmf, MATERIALS[ice_material]))
     if gmf > 0:
         # 외피에 중원소가 녹아 있으면 그 층이 혼합이다. envelope_z 는 **행성 전체가
         # 아니라 이 외피 안에서의** 질량분율이다.
@@ -171,10 +174,12 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
 # 단열 기울기를 한 단계에 한 번만 다시 잰다. 적분기가 이미 한 단계 안에서 재료를
 # 고정하고 있고(경계에서 dr/R ~ 3e-4 의 오차), 온도 기울기는 그보다 매끄럽다.
 # 단계마다 RK 네 자리에서 다시 재면 밀도 뒤집기가 여덟 번 더 돌아 비싸다.
-def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated):
+def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated,
+                 ice_material="h2o"):
     """이 천체의 층들 중 발표된 열 상수가 없어 등온으로 남는 상들의 이름."""
     out: list[str] = []
-    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated):
+    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
+                           ice_material):
         out.extend(mat.cold_phases())
     return out
 
@@ -212,7 +217,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
               envelope_z: float = 0.0, differentiated: bool = True,
-              t_center: float = 0.0, t_pot: float = 0.0) -> Structure:
+              t_center: float = 0.0, t_pot: float = 0.0,
+              ice_material: str = "h2o") -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -222,7 +228,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
+                   ice_material)
     mat = stack[0][1]
 
     # 온도가 선언되지 않으면 t_center 가 0 이고, 아래 모든 density 호출이 예전과
@@ -390,15 +397,16 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     core_material: str, phi0: float = 0.0,
                     p_cap: float | None = None, gmf: float = 0.0,
                     envelope_z: float = 0.0, differentiated: bool = True,
-                    t_center: float = 0.0,
-                    t_pot: float = 0.0) -> tuple[Structure, bool]:
+                    t_center: float = 0.0, t_pot: float = 0.0,
+                    ice_material: str = "h2o") -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
+                   ice_material)
     # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
     # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
     rho0_bar = 1.0 / sum(
@@ -414,7 +422,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
 
     def at(p: float):
         return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                         envelope_z, differentiated, t_center, t_pot)
+                         envelope_z, differentiated, t_center, t_pot,
+                         ice_material)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -433,6 +442,11 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         try:
             st = at(hi)
         except PhaseGap as gap:
+            if gap.temperature_k:
+                # **온도가 막은 것은 압력 괄호로 못 고친다.** 중심압을 낮춰도 그 층의
+                # 온도는 중심 온도가 정하므로, 좁히는 대신 위로 올려 보낸다 — 바깥의
+                # 온도 고리가 중심 온도를 올려 다시 잡는다.
+                raise
             if good is None:
                 raise            # 첫 시험부터 깨진다. 좁힐 바닥이 없다
             broke = gap
@@ -459,13 +473,13 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, differentiated, t_center, t_pot)
+                        envelope_z, differentiated, t_center, t_pot, ice_material)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
     x1 = math.log(max(lo, hi * 1e-3))
     st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated, t_center, t_pot)
+                    gmf, envelope_z, differentiated, t_center, t_pot, ice_material)
     y1 = math.log(st.mass_kg / mass_kg)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
@@ -483,7 +497,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         x0, y0 = x1, y1
         x1 = x2
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated, t_center, t_pot)
+                    gmf, envelope_z, differentiated, t_center, t_pot, ice_material)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -492,13 +506,16 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
 # 두세 번이면 붙는다 — 밀도가 온도에 몇 % 만 반응하기 때문이다.
 T_PASSES = 6
 T_TOL = 1e-6
+# 온도 괄호잡기의 시도 횟수. 한 번에 1.6배씩 올린다.
+T_BRACKET_TRIES = 12
 
 
 def shoot(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
           p_cap: float | None = None, gmf: float = 0.0,
           envelope_z: float = 0.0, differentiated: bool = True,
-          potential_temperature: float | None = None) -> tuple[Structure, bool]:
+          potential_temperature: float | None = None,
+          ice_material: str = "h2o") -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -511,18 +528,41 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     밀도가 온도에 되먹임하는 몫만 반복이 흡수한다."""
     args = (mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z,
             differentiated)
+    kw = {"ice_material": ice_material}
     if not potential_temperature:
-        return _shoot_pressure(*args)
+        return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
     t_c = t_pot * 2.0        # 첫 추측. 비율로 다시 재므로 값 자체는 중요하지 않다
-    st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot)
+
+    # 직전 통과의 중심압을 괄호의 출발점으로 물려주는 것을 재봤고, 되돌렸다. 27 % 를
+    # 벌지만 할선의 경로가 바뀌어 수렴점이 마지막 비트에서 달라지고, 그러면 "기준
+    # 포텐셜 온도에서는 답이 비트까지 안 움직인다" 는 항등식이 깨진다. 그 항등식이
+    # 속도보다 무겁다.
+    def attempt(t_try: float) -> tuple[Structure, bool]:
+        """중심 온도 하나로 사격한다. 온도 바닥에 걸리면 올려서 다시 잡는다.
+
+        **온도에도 괄호잡기가 필요하다.** 압력 쪽에서 배운 것과 같은 자리다 — 중심
+        온도를 낮게 잡으면 바깥으로 갈수록 단열선이 내려가 어떤 층의 온도 하한을
+        뚫는데, 그건 이 천체가 안 풀린다는 뜻이 아니라 **시험값이 낮았다** 는 뜻이다.
+        중심 온도를 올리면 프로파일 전체가 올라가므로 답이 그 위에 있다."""
+        t_now = t_try
+        for _ in range(T_BRACKET_TRIES):
+            try:
+                return _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+            except PhaseGap as gap:
+                if not gap.temperature_k:
+                    raise        # 온도가 아니라 압력이 막았다. 그건 진짜다
+                t_now *= 1.6
+        return _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+
+    st, converged = attempt(t_c)
     for _ in range(T_PASSES):
         if st.t_surface <= 0.0:
             break            # 열 상수가 없는 재료뿐이다. 온도가 흐르지 않는다
         nxt = t_c * t_pot / st.t_surface
         done = abs(nxt / t_c - 1.0) < T_TOL
         t_c = nxt
-        st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot)
+        st, converged = attempt(t_c)
         if done:
             break
     return st, converged
@@ -689,7 +729,12 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
 
 
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
-FLUID_CLASSES = ("ice_giant", "sub_neptune", "brown_dwarf", "star")
+FLUID_CLASSES = ("sub_neptune", "brown_dwarf", "star")
+
+# 얼음거대행성. 2026-08-27 까지 위 목록에 있었고, 뜨거운 물 상태방정식이 들어오면서
+# 나왔다. 얼음층이 응축상 사다리가 아니라 h2o_hot 을 쓴다 — 그 둘은 온도 구간이 겹치지
+# 않으므로 어느 쪽인지는 천체 종류가 정한다.
+ICE_GIANT_CLASSES = ("ice_giant",)
 
 
 def solve(mass_earth: float,
@@ -743,36 +788,6 @@ def solve(mass_earth: float,
             "star": ("수소가 탄다. 별의 NMoI 는 이 레시피가 아니라 n = 3/2 폴리트로프의 "
                      "발표값 0.205 에서 오고 (Chandrasekhar 1939), 그 가지는 "
                      "body_figure 에 따로 있다."),
-            "ice_giant": ("외피가 수소-헬륨이 아니라 물·암모니아·메탄이 섞인 '얼음' 이고, "
-                          "그 혼합물의 상태방정식이 이 파일에 없다. n = 1 폴리트로프는 "
-                          "H/He 압축성에 맞춰진 것이라 여기 쓸 수 없다.\n"
-                          "**얼음 사다리로도 못 간다 — 온도가 안 맞는다.** 이 파일의 물은 "
-                          f"20~{ICE_VII_X_T_MAX:.0f} K 의 응축상이고, 얼음거대행성의 얼음 "
-                          "맨틀은 그 위에서 시작해 위로 간다: 깊은 내부가 100 GPa 에서 "
-                          "5000~7000 K, 중심이 천왕성 5700 K · 해왕성 5500 K 다 "
-                          "(Scheibe+ 2019, arXiv:1911.00447). 그래서 필요한 것은 고압 "
-                          "고체 얼음이 아니라 **유체·초이온 갈래** 이고, 그건 이 레시피가 "
-                          "2026-08-27 에 이름 대며 거절한 바로 그 상이다.\n"
-                          "세 성분 중 옮겨 적을 형태가 있는 것은 물 하나뿐이다 — Mazevet+ "
-                          "2019 (arXiv:1810.05658) 의 해석적 자유에너지 적합이고, "
-                          "Scheibe+ 2019 가 천왕성·해왕성 모형을 그 위에 세운다. 암모니아"
-                          "(Bethkenhagen+ 2013)와 메탄(Bethkenhagen+ 2017)은 표로만 있다. "
-                          "물 하나로 얼음 전체를 대신하는 것은 이 분야의 관행이지만"
-                          "(Redmer+ 2011 · Helled+ 2011 · Nettelmann+ 2013), **그 대가는 "
-                          "정량돼 있지 않다.** Bethkenhagen+ 2017 의 4 % / 2.1 % 는 세 "
-                          "성분의 순수 EOS 를 다 갖춘 뒤 부피 가법으로 섞는 단계의 한계이고, "
-                          "물 하나로 가는 길은 그 단계를 아예 밟지 않는다. 물 EOS 와 혼합물 "
-                          "EOS 의 차이는 다른 수이고 인용된 문헌 범위에서 측정되지 않았다 — "
-                          "그 논문의 결론부가 세 순수 성분의 퍼텐셜 구축을 후속 과제로 꼽는 "
-                          "것 자체가 물 하나로는 안 된다는 전제다. H-He 의 8 % 를 암석에 "
-                          "옮겨 적지 않았던 것과 같은 규율로, 여기서도 옮겨 적지 않는다.\n"
-                          "**그리고 그 상태방정식이 있어도 충분하지 않다.** Scheibe+ 2019 "
-                          "가 바로 그 EOS 로 두 행성을 단열 모형으로 풀어 냉각시간을 "
-                          "천왕성 5.1 Gyr · 해왕성 3.7 Gyr 로 얻었고 (실제 나이 4.56 Gyr), "
-                          "결론이 \"neither planet is fully adiabatic in the deeper "
-                          "interior\" 다. 둘을 가르는 것은 열경계층이고 그 크기는 열류가 "
-                          "정한다 — core_state 가 핵 쪽 경계 온도를 선언으로 받는 것과 "
-                          "같은 자리이고, 이 레시피에는 그 열류가 없다."),
             "sub_neptune": ("H/He 외피가 총질량의 몇 %뿐이라 두께가 조성이 아니라 "
                             "**나이와 항성 조사량** 이 정한다 (광증발). 이 레시피는 "
                             "등온이고 진화가 없으므로, 가스질량분율을 스스로 정할 수 "
@@ -844,18 +859,38 @@ def solve(mass_earth: float,
             "셋 다 [0, 1] 안이고 합이 1 이하여야 한다.",
             inputs=inputs, refs=REFS)
 
-    if gmf > 0 and body_class is not None and body_class not in GAS_GIANT_CLASSES:
+    if (gmf > 0 and body_class is not None
+            and body_class not in GAS_GIANT_CLASSES + ICE_GIANT_CLASSES):
         return out_of_domain(
             RECIPE, VERSION,
             f"가스질량분율 {gmf} 를 받았는데 body_class 가 '{body_class}' 다. "
-            f"수소-헬륨 외피를 붙이는 것은 {' 또는 '.join(GAS_GIANT_CLASSES)} 로 "
+            f"수소-헬륨 외피를 붙이는 것은 "
+            f"{' 또는 '.join(GAS_GIANT_CLASSES + ICE_GIANT_CLASSES)} 로 "
             "선언된 천체에만 한다 — 선언과 조성이 어긋나면 조용히 엉뚱한 천체를 푼다.",
+            inputs=inputs, refs=REFS)
+
+    ice_material = "h2o_hot" if body_class in ICE_GIANT_CLASSES else "h2o"
+    if ice_material == "h2o_hot" and not potential_temperature:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "얼음거대행성은 등온으로 풀 수 없다. 이 갈래의 얼음층은 응축상 사다리가 "
+            "아니라 유체·초이온 물이고 (Mazevet+ 2019), 그 적합은 P(ρ,T) 가 통째로 "
+            "하나라 온도가 인자다. 게다가 그 자리에서 온도가 밀도를 크게 움직인다 — "
+            "같은 압력에서 2000 K 와 5700 K 사이에 30 GPa 에서 14 %, 800 GPa 에서 5 % "
+            "다. 포텐셜 온도를 선언하면 풀린다.",
+            inputs=inputs, refs=REFS)
+    if ice_material == "h2o_hot" and imf <= 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"'{body_class}' 인데 얼음질량분율이 {imf} 다. 이 클래스를 이름 그대로 "
+            "만드는 것이 그 층이므로, 얼음이 없으면 얼음거대행성이 아니다.",
             inputs=inputs, refs=REFS)
 
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
-                              envelope_z, differentiated, potential_temperature)
+                              envelope_z, differentiated, potential_temperature,
+                              ice_material)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -904,7 +939,7 @@ def solve(mass_earth: float,
                      and abs(potential_temperature - EARTH_POTENTIAL_T) > 1e-9)
     if thermal_declared:
         cold = sorted(set(_cold_phases(cmf, imf, core_material, gmf, envelope_z,
-                                       differentiated)))
+                                       differentiated, ice_material)))
         notes.append(
             f"**포텐셜 온도 {potential_temperature:.0f} K 는 선언이다.** 대류하는 내부를 "
             "표면까지 단열 감압했을 때의 온도이고 표면 온도가 아니다 — 그 사이의 전도하는 "

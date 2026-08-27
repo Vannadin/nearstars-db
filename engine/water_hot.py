@@ -202,17 +202,54 @@ def gruneisen(rho: float, t: float) -> float:
     return dpdt / (rho * c_v)
 
 
+_LAST_DENSITY = (0.0, 0.0, 0.0)   # 직전 (P, T, ρ). 출발점일 뿐이다
+
+
 def density(p: float, t: float) -> float:
-    """압력에서 밀도 [kg/m³]. P(ρ) 가 단조증가라 뿌리가 하나다."""
+    """압력에서 밀도 [kg/m³]. P(ρ) 가 단조증가라 뿌리가 하나다.
+
+    **이 자리가 적분의 안쪽 고리다.** 적분 한 번에 이 함수가 수천 번 불리고, 한 번마다
+    pressure 가 페르미 적분을 네 번쯤 먹는다. 그래서 이분법 200회로는 못 쓴다 — 처음에
+    그렇게 짰다가 천왕성 하나가 10분을 넘겼다. log-log 할선법이 같은 답을 여덟 번쯤에
+    내고, 괄호를 들고 다니므로 벗어나면 이분법으로 되돌린다."""
     lo, hi = RHO_MIN, RHO_MAX
-    if pressure(lo, t) > p:
+    p_lo = pressure(lo, t)
+    if p_lo >= p:
         return lo
-    for _ in range(200):
-        mid = math.sqrt(lo * hi)
-        if pressure(mid, t) < p:
-            lo = mid
+    p_hi = pressure(hi, t)
+    if p_hi <= p:
+        return hi
+    # log-log 는 거의 직선이다 (P ~ ρ^n, n ≈ 1~3). 두 끝점이 괄호이고, 출발점은
+    # **직전 호출의 해** 를 쓴다 — 적분기가 매끄럽게 행진하므로 대개 한두 번이면 붙는다.
+    x0, y0 = math.log(lo), math.log(p_lo / p)
+    x1, y1 = math.log(hi), math.log(p_hi / p)
+    global _LAST_DENSITY
+    prev_p, prev_t, prev_rho = _LAST_DENSITY
+    if prev_t == t and prev_p > 0.0 and 0.1 < p / prev_p < 10.0:
+        x = math.log(prev_rho)
+        if not (x0 < x < x1):
+            x = x0 + (x1 - x0) * (-y0) / (y1 - y0)
+    else:
+        x = x0 + (x1 - x0) * (-y0) / (y1 - y0)
+    for _ in range(60):
+        rho = math.exp(x)
+        y = math.log(pressure(rho, t) / p)
+        if abs(y) < 1e-12:
+            _LAST_DENSITY = (p, t, rho)
+            return rho
+        if y < 0.0:
+            x0, y0 = x, y
         else:
-            hi = mid
-        if hi - lo <= 1e-10 * hi:
+            x1, y1 = x, y
+        if y1 == y0:
             break
-    return 0.5 * (lo + hi)
+        nxt = x0 + (x1 - x0) * (-y0) / (y1 - y0)
+        if not (x0 < nxt < x1):
+            nxt = 0.5 * (x0 + x1)
+        if abs(nxt - x) <= 1e-14 * abs(x):
+            _LAST_DENSITY = (p, t, math.exp(nxt))
+            return math.exp(nxt)
+        x = nxt
+    out = math.exp(0.5 * (x0 + x1))
+    _LAST_DENSITY = (p, t, out)
+    return out
