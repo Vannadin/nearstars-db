@@ -1004,10 +1004,18 @@ any body, so it is measured rather than asserted (`test_interior.py --ceiling`):
 | earth_like (CMF 0.325) | 22.78 M⊕ | `fe_prem` | 12.0 TPa | 2.207 R⊕ | 0.2958 |
 | pure silicate (CMF 0) | 53.38 M⊕ | `silicate` | 13.5 TPa | 2.856 R⊕ | 0.3291 |
 | pure iron (fe_eps) | 24.92 M⊕ | `fe_eps` | 20.9 TPa | 1.717 R⊕ | 0.3364 |
+| water (ice 0.50, ice is the outer layer) | 21.49 M⊕ | `h2o` | 1.0 TPa | 2.706 R⊕ | 0.2770 |
 
 Before the deep silicate phase those were 6.84 and 19.32 M⊕, iron unchanged. **The
 Earth-composition row changed hands as well as value**: the limit is the iron core's ceiling
-now, not the mantle's. And 6.84 M⊕ was never the mass at which Earth-like rock reaches
+now, not the mantle's.
+
+The water row is the one whose limit is set by a material that is **not at the centre**, and
+that is why it alone was reported wrongly. Until 2026-08-27 the preset was said to stop at
+5.884 M⊕; the bracketing search reached the answer and then took one more step, and the
+outer ice broke at that discarded trial pressure rather than at the converged one. Its real
+limit is 21.49 M⊕. The first three rows never moved, because the pressure the bracket checks
+is the innermost material's and the centre genuinely sits in it. And 6.84 M⊕ was never the mass at which Earth-like rock reaches
 3.5 TPa, which is nearer 20.7 M⊕; the gap was headroom the shooting bracket needed.
 
 Out of domain is a **returned value**, not an error: each row comes back with its reason

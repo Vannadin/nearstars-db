@@ -350,6 +350,41 @@ def porosity_at(mat, p_pa: float, phi0: float,
     return 1.0 - bulk_factor(mat.name, max(p_pa, 0.0), phi0, p_cap)
 
 
+# 좁히기의 상한과 멈춤 조건. 적분 한 번이 비싸므로 둘 다 필요하다.
+#
+# 답을 담은 시험압을 만나면 즉시 멈추므로 **풀리는 천체는 서너 번** 이면 끝난다.
+# 비싼 것은 거절하는 쪽이다 — 담는 압력이 아예 없으므로 그 조건이 안 걸린다. 그래서
+# 깨지기 시작하는 압력을 얼마나 정밀하게 찾을지를 따로 정해야 하고, 그 정밀도는
+# 거절 메시지가 인용할 압력의 자릿수만 있으면 된다. 1 % 면 충분하다.
+NARROW_ITERS = 24            # 안전 상한. 보통 그 전에 아래 조건이 먼저 걸린다
+NARROW_RATIO = 1.01          # bad/good 가 이보다 가까우면 멈춘다
+
+
+def _narrow_bracket(good: float, bad: float, at, mass_kg: float):
+    """적분이 되는 `good` 과 바깥 층이 깨지는 `bad` 사이에서 괄호의 위쪽을 찾는다.
+
+    바깥 층의 바닥은 중심압에 단조증가하므로 이 구간에 "깨지기 시작하는 압력" 이
+    하나 있고, 답이 있다면 그 아래다. 목표 질량을 담는 시험압을 만나는 즉시 멈춘다 —
+    그 아래를 더 재는 것은 이 함수의 일이 아니라 뒤따르는 할선법의 일이다.
+
+    돌려주는 것은 (압력, 그 압력의 구조) 이고, 구조의 겉질량이 목표에 못 미치면
+    호출자가 그것을 진짜 거절의 근거로 쓴다."""
+    best_p, best_st = good, at(good)
+    for _ in range(NARROW_ITERS):
+        if bad / good < NARROW_RATIO:
+            break                        # 깨지는 자리를 충분히 좁혔다
+        mid = math.sqrt(good * bad)      # 로그 중점. 압력이 자릿수로 움직인다
+        try:
+            st = at(mid)
+        except PhaseGap:
+            bad = mid
+            continue
+        good, best_p, best_st = mid, mid, st
+        if st.mass_kg >= mass_kg:
+            break                        # 괄호가 잡혔다. 정밀도는 할선법의 일이다
+    return best_p, best_st
+
+
 def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     core_material: str, phi0: float = 0.0,
                     p_cap: float | None = None, gmf: float = 0.0,
@@ -375,14 +410,51 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     p_ceiling = stack[0][1].p_max
     lo = 1.0e2
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
-    while integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, differentiated, t_center, t_pot).mass_kg < mass_kg:
+
+    def at(p: float):
+        return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
+                         envelope_z, differentiated, t_center, t_pot)
+
+    # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
+    #
+    # **바깥 층이 시험압에서 깨지는 것은 거절이 아니다.** 중심압을 올리면 프로파일
+    # 전체가 올라가므로 바깥 층의 바닥도 같이 오른다. 그러니 어떤 시험압에서 그 층이
+    # 근거 구간을 벗어났다는 것은 **답이 그 아래에 있다** 는 뜻이지, 이 천체가 안
+    # 풀린다는 뜻이 아니다. 그런데도 PhaseGap 을 그대로 올려 보내면 버려질 시험값이
+    # 물리인 척하고 나간다 — 6.84 M⊕ (2026-08-26, 규산염) 와 5.884 M⊕ (2026-08-27,
+    # 물) 가 그렇게 나온 수였고 둘 다 물리로 읽혔다. 그래서 여기서는 좁힌다.
+    #
+    # 좁혀도 목표 질량에 못 닿으면 **그때가 진짜 거절** 이고, 그 거절은 좁혀서 얻은
+    # 상태를 근거로 말한다. 버린 시험값을 인용하지 않는다.
+    good = None                  # 마지막으로 적분이 끝난 시험압
+    broke: PhaseGap | None = None
+    while True:
+        try:
+            st = at(hi)
+        except PhaseGap as gap:
+            if good is None:
+                raise            # 첫 시험부터 깨진다. 좁힐 바닥이 없다
+            broke = gap
+            hi, st = _narrow_bracket(good, hi, at, mass_kg)
+            break
+        good = hi
+        if st.mass_kg >= mass_kg:
+            break
         if hi >= p_ceiling:
             raise ValueError(
                 f"이 질량을 담으려면 중심압이 {_ceiling_owner(stack[0][1])} 의 근거 "
                 f"구간 상한({p_ceiling / 1e9:.0f} GPa) 을 넘어야 한다. "
                 + _ceiling_why(stack[0][1]))
         hi = min(hi * 4.0, p_ceiling)
+
+    if st.mass_kg < mass_kg:
+        # 좁힌 위쪽 끝에서도 질량이 모자란다. 중심압을 더 올려야 하는데 그러면 바깥
+        # 층이 깨지므로, 이건 실재하는 거절이다. 이유는 **바깥 층** 이지 안쪽 재료의
+        # 상한이 아니다.
+        raise ValueError(
+            f"이 질량을 담으려면 중심압을 {hi / 1e9:.0f} GPa 위로 올려야 하는데, "
+            f"그러면 바깥의 {broke.material} 층이 근거 구간을 벗어난다 "
+            f"(그 층 바닥이 {broke.pressure_pa / 1e9:.0f} GPa). {broke.reason}")
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,

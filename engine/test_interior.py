@@ -50,8 +50,12 @@ DECLINES = [
      "조성", "재료가 배정되지 않았다"),
     # 2026-08-27 까지 이 자리는 1 M⊕ 였다. 얼음 X 가 들어와 그 천체가 풀리므로,
     # 같은 거절을 **새 울타리** 에서 다시 건다 — 천장을 없앤 게 아니라 옮긴 것이다.
-    ("물이 아주 많은 큰 천체", dict(mass_earth=8.0, composition="water"),
-     "매듭 구간", "얼음 기둥이 French & Redmer 표현의 1 TPa 상한 아래로 내려간다"),
+    # 30 M⊕ 다. 8.0 이었는데 그 천체는 **풀린다** — 8.0 의 거절은 물리가 아니라
+    # 괄호잡기가 버릴 시험압에서 얼음을 깬 것이었고, 그 결함을 이 검사가 못 박고
+    # 있었다 (2026-08-27 에 고침). 지금 값은 수렴해의 얼음 기둥이 실제로 1 TPa 를
+    # 넘는 자리이고, 프리셋의 실제 상한은 21.68 M⊕ 다.
+    ("물이 아주 많은 큰 천체", dict(mass_earth=30.0, composition="water"),
+     "근거 구간을 벗어난다", "얼음 기둥이 French & Redmer 표현의 1 TPa 상한을 넘는다"),
     # 거대행성은 2026-08-26 에 풀리게 됐다 (test_giant.py). 아직 밖인 유체 천체가
     # 이름을 대며 거절하는지는 여기서 계속 지킨다.
     ("갈색왜성", dict(mass_earth=5000.0, body_class="brown_dwarf"),
@@ -219,6 +223,11 @@ CEILING_CASES = (
     ("earth_like (CMF 0.325)", dict(core_mass_fraction=0.325)),
     ("pure silicate (CMF 0)", dict(core_mass_fraction=0.0)),
     ("pure iron (fe_eps)", dict(composition="iron")),
+    # 앞의 셋은 **안쪽** 재료가 상한을 정한다 — 중심이 그 재료 안에 있으므로 그
+    # 검사는 맞고, 괄호잡기 수정에도 한 자리도 안 움직였다. water 만 다르다: 얼음이
+    # 바깥층이라 상한을 정하는 것이 중심에 있지 않은 재료이고, 그래서 이 프리셋만
+    # 시험압이 버려질 자리에서 깨지는 결함에 걸렸다. 그 대비가 이 행의 내용이다.
+    ("water (ice 0.50, 얼음이 바깥층)", dict(composition="water")),
 )
 
 TOL = 0.03          # 3 %. 균질 2층 시절의 허용치가 5 % 였고 지구가 그 4.8 % 였다.
@@ -631,6 +640,41 @@ def main() -> int:
         if not ok:
             fails.append(f"{label}: 거절하거나 '{keyword}' 를 이름 대야 한다")
         print(f"  [{'PASS' if ok else 'FAIL'}] {label:14} {why}")
+
+    # ── 괄호잡기가 버릴 시험압을 물리로 착각하지 않는가 ──────────────────
+    #
+    # 이 결함은 **두 번** 나왔고 두 번 다 물리로 읽혔다. 2026-08-26 에 지구식 암석이
+    # 6.84 M⊕ 에서 막힌다고 보고됐는데 그 수렴해의 중심압은 2741 GPa 로 규산염 천장
+    # 3500 근처도 아니었다. 2026-08-27 에 water 프리셋이 5.884 M⊕ 에서 막힌다고
+    # 보고됐는데 8.0 M⊕ 가 멀쩡히 수렴한다.
+    #
+    # 그래서 증상이 아니라 **기작** 을 지킨다. 아래 두 천체는 답에 이르는 길에서
+    # 시험압이 바깥 층의 천장을 넘고, 수렴해는 그 천장 한참 아래에 있다. 하나라도
+    # 거절로 돌아오면 괄호잡기가 다시 시험값을 내보내고 있는 것이다.
+    print("\n괄호잡기 — 버릴 시험압에서 바깥 층이 깨져도 거절하지 않는가")
+    # 15 M⊕ 는 예전 상한의 2.5 배이고 실제 상한(21.5)에서는 떨어져 있다. 상한 바로
+    # 아래를 고르면 좁히기가 많이 돌아 이 검사 하나가 10 초를 먹는데, 여기서 지키는
+    # 것은 상한의 위치가 아니라 **버릴 시험압이 새어 나오지 않는다** 는 것이다.
+    for label, m in (("water 8 M⊕ (예전 5.884 상한 위)", 8.0),
+                     ("water 15 M⊕", 15.0)):
+        res = solve(m, composition="water")
+        ok = res.applicable
+        if not ok:
+            fails.append(f"괄호잡기: {label} 가 거절했다 — {res.reason[:70]}")
+        else:
+            base = res.values["core_pressure"]
+            print(f"  [PASS] {label} — 중심압 {base:.0f} GPa · "
+                  f"C/MR² {res.values['nmoi']:.4f}")
+            continue
+        print(f"  [FAIL] {label}")
+
+    # 그리고 진짜 거절은 여전히 살아 있어야 한다. 없애는 게 아니라 옮기는 것이었다.
+    over = solve(30.0, composition="water")
+    real = (not over.applicable) and "h2o" in over.reason
+    if not real:
+        fails.append("괄호잡기: 얼음 천장을 진짜로 넘는 천체가 거절하지 않는다")
+    print(f"  [{'PASS' if real else 'FAIL'}] water 30 M⊕ 는 여전히 거절하고 "
+          "바깥 층을 이름 댄다")
 
     print("\n격자 수렴 — 적분 격자가 오차원이 아님을 보인다")
     base = interior.STEPS
