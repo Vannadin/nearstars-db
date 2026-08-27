@@ -30,6 +30,11 @@
 형태가 아니라 **재료를 합성하는 규칙** 이 필요하고, 그것이 `Mixture` 다. 부피 가법
 혼합이며 상수와 유효 한계는 그 클래스 위 주석에 있다.
 
+**등온이 아니다 — 온도를 주면 열압력이 붙는다.** `density(p)` 는 예전 그대로이고,
+`density(p, t, t_pot)` 가 냉각 곡선에서 열압력을 뺀 자리를 뒤집는다. 상수와 기준, 그리고
+기준을 틀리면 왜 지구를 두 번 데우는지는 아래 "열 항" 절에 있다. 열 상수가 없는 상
+(얼음 VII, 수소-헬륨)은 등온으로 남고, `cold_phases()` 가 그 이름을 들고 있다.
+
 각 재료는 **상(phase) 의 열** 이다. 상마다 유효 압력 구간이 있고, 구간 사이에 근거가
 없는 틈이 있으면 그 틈을 이름 붙여 들고 있는다 — 얼음의 209.5 MPa ~ 2.216 GPa 가
 그렇다. 솔버가 거기에 발을 디디면 조용히 외삽하는 게 아니라 그 사실을 돌려준다.
@@ -38,6 +43,8 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+
+R_GAS = 8.314462618          # J mol⁻¹ K⁻¹. CODATA 2018 기체상수
 
 
 class PhaseGap(Exception):
@@ -62,6 +69,63 @@ class Phase:
     ref: str                  # 어느 논문 어느 표에서 왔는가
     p_min: float = 0.0        # Pa. 앞 상에서 넘어오는 전이압
     k0pp: float = 0.0         # Pa⁻¹. K₀″. bme4 만 쓴다 — 다른 형태는 무시한다
+    # ── 열 항 ──────────────────────────────────────────────────────────
+    # alpha_k 가 0 이면 **이 상에는 발표된 열 상수가 없다** 는 뜻이고, 그러면 이 상은
+    # 등온으로 남는다. 0 을 "열팽창이 없다" 로 읽으면 안 된다 — 있는 척하지 않는 것이다.
+    alpha_k: float = 0.0      # Pa/K. αK_T. 부피에 무관하다고 두는 Anderson & Goto 근사
+    alpha_k_dt: float = 0.0   # Pa/K². (∂αK/∂T)_V. 전자 여기 때문에 금속에만 붙는다
+    t_ref: float = 0.0        # K. 이 적합이 놓인 기준의 온도
+    t_ref_kind: str = "isotherm"   # "isotherm" | "adiabat" — 아래 delta_t 를 보라
+    c_v_ref: float = 0.0      # J kg⁻¹ K⁻¹. 정적비열. 아래 상수 절에 출처가 있다
+
+    @property
+    def has_thermal(self) -> bool:
+        """이 상에 발표된 열 상수가 있는가. 없으면 등온으로 남는다."""
+        return self.alpha_k > 0.0 and self.c_v_ref > 0.0
+
+    def delta_t(self, t: float, t_pot: float = 0.0) -> float:
+        """이 상의 **기준** 에서 얼마나 뜨거운가. 열압력이 먹는 것이 이 차분이다.
+
+        기준이 두 종류다. 실험실 등온에 맞춘 상(`isotherm`)은 기준이 상수 한 개다.
+        PREM 에 맞춘 상(`adiabat`)은 다르다 — PREM 은 **뜨거운 실제 지구** 를 관측한
+        것이라 그 적합의 기준이 지구의 지오섬이고, 상수가 아니라 곡선이다. 거기에
+        열팽창을 통째로 얹으면 지구를 두 번 데운다.
+
+        단열선은 앵커에 선형이므로(dT/dP = γT/K_S 가 T 에 1차) 그 곡선을 따로 적분할
+        필요가 없다. T_ref(P) = T(P)·(T_ref_pot / T_pot) 이고, 차분이 닫힌 형태로 나온다.
+        T_pot 이 기준값과 같으면 차분이 **정확히 0** 이다 — 그것이 지구가 안 움직이는
+        이유이고, 허용오차가 아니라 항등식이다."""
+        if not self.has_thermal or t is None or t <= 0.0:
+            return 0.0
+        if self.t_ref_kind == "adiabat":
+            if t_pot <= 0.0:
+                return 0.0
+            return t * (1.0 - self.t_ref / t_pot)
+        return t - self.t_ref
+
+    def thermal_pressure(self, t: float, t_pot: float = 0.0) -> float:
+        """열압력 P_th. 기준 대비 ΔT 의 함수다.
+
+        Anderson & Goto 1989 의 근사를 Seager+ 2007 §IV.2.2 가 쓰는 형태 그대로다 —
+        Debye 온도 위에서 αK_T 가 부피에 무관하므로 P_th 가 T 에 선형이다. 금속에는
+        전자 여기 때문에 2차 항이 하나 더 붙는다 (Isaak & Anderson 2003)."""
+        dt = self.delta_t(t, t_pot)
+        return self.alpha_k * dt + 0.5 * self.alpha_k_dt * dt * dt
+
+    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+        """(∂P/∂T)_V. 열압력의 기울기이고, 그뤼나이젠 계수가 이걸 먹는다."""
+        return self.alpha_k + self.alpha_k_dt * self.delta_t(t, t_pot)
+
+    def gruneisen(self, rho: float, t: float, t_pot: float = 0.0) -> float:
+        """그뤼나이젠 계수 γ = (∂P/∂T)_V / (ρ c_V). 단열 기울기가 이걸 먹는다.
+
+        **새 상수가 아니라 항등식이다.** 열압력에 이미 있는 (∂P/∂T)_V 와 Dulong-Petit
+        c_V 로 닫힌다. 이 항등식이 맞는지는 얼음 III·V·VI 에서 확인된다 — SeaFreeze 가
+        자기 γ 를 따로 들고 있고, 여기 식으로 계산한 값과 소수 넷째 자리까지 같다.
+        test_interior.py 가 그 대조를 돌린다."""
+        if not self.has_thermal or rho <= 0.0:
+            return 0.0
+        return self.dpdt_v(t, t_pot) / (rho * self.c_v_ref)
 
     def pressure(self, rho: float) -> float:
         """ρ 에서 P. 정방향은 닫힌 형태라 이쪽이 값싸다."""
@@ -91,14 +155,25 @@ class Phase:
                     * math.exp(1.5 * (self.k0p - 1.0) * (1.0 - e)))
         raise ValueError(f"모르는 EOS 형태 '{self.form}'")
 
-    def density(self, p: float) -> float:
-        """P 에서 ρ. 정방향은 닫힌 형태이므로 Newton 으로 뒤집는다.
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """P 에서 ρ. 온도를 주면 열압력을 뺀 **냉각 곡선의** 압력에서 뒤집는다.
+
+        전체 압력이 냉각 압력과 열압력의 합이므로(P = P_cold + P_th), 같은 P 를
+        지탱하는 밀도는 뜨거울수록 낮다. 열 상수가 없는 상은 P_th 가 0 이라 예전과
+        같은 경로를 탄다 — 비트까지 같다.
+
+        정방향은 닫힌 형태이므로 Newton 으로 뒤집는다.
 
         P(ρ) 는 단조증가라 뿌리가 하나뿐이다. 첫 추측은 선형 압축
         ρ ≈ ρ₀(1 + P/K₀) 이고, 이 자리가 적분 안쪽 고리라 반복 횟수가 그대로
         실행시간이다 — 이분법 200회로는 쓸 수 없이 느렸다.
 
         폴리트로프는 뒤집기가 닫힌 형태라 반복이 아예 없다."""
+        p_th = self.thermal_pressure(t, t_pot)
+        if p_th:
+            # 열압력이 전체 압력을 넘으면 그 온도에서 이 상은 존재할 수 없다. 냉각
+            # 압력을 음수로 넘기면 Newton 이 발산하므로, 영압 밀도로 바닥을 친다.
+            p = p - p_th
         if self.form == "polytrope":
             if p <= 0.0:
                 return 0.0
@@ -167,8 +242,20 @@ class Material:
         raise PhaseGap(self.name, p, self.over_reason.format(
             p_gpa=p / 1e9, max_gpa=self.p_max / 1e9))
 
-    def density(self, p: float) -> float:
-        return self.phase_at(p).density(p)
+    @property
+    def has_thermal(self) -> bool:
+        """모든 상에 열 상수가 있는가. 하나라도 없으면 이 재료는 부분적으로 등온이다."""
+        return all(ph.has_thermal for ph in self.phases)
+
+    def cold_phases(self) -> tuple[str, ...]:
+        """열 상수가 없어 등온으로 남는 상들. 없는 척하지 않고 이름을 들고 있는다."""
+        return tuple(ph.name for ph in self.phases if not ph.has_thermal)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return self.phase_at(p).density(p, t, t_pot)
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        return self.phase_at(p).gruneisen(rho, t, t_pot)
 
 
 # ── 섞인 층 ─────────────────────────────────────────────────────────────
@@ -258,12 +345,28 @@ class Mixture:
         return 1.0 / sum(w / m.rho_seed(mass_kg)
                          for m, w in self.parts if w > 0.0)
 
-    def density(self, p: float) -> float:
-        """압력 p 에서 혼합 밀도. 성분마다 **같은 압력** 에서 평가한다.
+    @property
+    def has_thermal(self) -> bool:
+        return all(m.has_thermal for m, w in self.parts if w > 0.0)
+
+    def cold_phases(self) -> tuple[str, ...]:
+        out: list[str] = []
+        for m, w in self.parts:
+            if w > 0.0:
+                out.extend(m.cold_phases())
+        return tuple(out)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """압력 p 에서 혼합 밀도. 성분마다 **같은 압력과 같은 온도** 에서 평가한다.
 
         성분이 자기 근거 구간 밖이면 그 성분이 PhaseGap 을 던지고, 그게 그대로
         올라간다 — 혼합이 그 사실을 삼키지 않는다."""
-        return 1.0 / sum(w / m.density(p) for m, w in self.parts if w > 0.0)
+        return 1.0 / sum(w / m.density(p, t, t_pot) for m, w in self.parts if w > 0.0)
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        """혼합의 γ. 성분의 γ 를 질량분율로 더한다 — 부피 가법과 같은 결이다."""
+        return sum(w * m.gruneisen(p, m.density(p, t, t_pot), t, t_pot)
+                   for m, w in self.parts if w > 0.0)
 
 
 def mix(name: str, label_ko: str, *parts: tuple[Material, float]) -> Material | Mixture:
@@ -278,6 +381,72 @@ def mix(name: str, label_ko: str, *parts: tuple[Material, float]) -> Material | 
 
 GPA = 1e9
 MPA = 1e6
+
+# ── 열 항 ───────────────────────────────────────────────────────────────
+#
+# 여기까지의 상태방정식은 전부 **등온** 이다. 온도를 넣는 표준 처리는 냉각 곡선에
+# 열압력을 더하는 것이고, 형태는 Seager+ 2007 §IV.2.2 (arXiv:0707.2895) 가 쓰는
+# Anderson & Goto 1989 근사 그대로다.
+#
+#     P(ρ, T) = P_cold(ρ) + P_th(T),      P_th = αK_T · ΔT
+#
+# **왜 선형인가.** Debye 온도 위에서 αK_T 가 부피에 거의 무관하다는 것이 Anderson &
+# Goto 1989 의 결과이고, Seager 가 그것을 근거로 이 형태를 쓴다. θ_D 는 규산염과
+# 철 함유 광물에서 ~700 K, 물얼음에서 ~300 K, 탄소에서 ~2000 K 라고 같은 절이 적는다.
+# 금속은 전자 여기 때문에 2차 항이 하나 더 붙는다 (Isaak & Anderson 2003).
+#
+#     P_th(금속) = αK₀ · ΔT + ½ (∂αK₀/∂T)_V · ΔT²
+#
+# **유효 한계도 같은 절이 준다.** 그 논문이 이 처리로 재보고 적은 밀도 변화폭이다.
+#   * MgSiO₃ — 10 GPa 위에서 300 K ~ 6000 K 구간에 걸쳐 4 % 미만
+#   * Fe — 100 GPa 위에서 4 % 미만
+#   * H₂O 얼음 VII — Frank+ 2004 의 자료가 있는 50 GPa · 800 K 까지 "a few percent"
+#
+# **기준이 재료마다 다르다. 이게 이 절에서 제일 조심할 자리다.**
+#
+# `fe_prem` 과 `mgsio3_prem` 은 PREM 적합이고 PREM 은 **뜨거운 실제 지구를 관측한
+# 결과** 다. 지구의 지오섬이 그 유효 ρ₀ 안에 이미 들어 있다. 거기에 300 K 기준의
+# 열팽창을 얹으면 지구를 두 번 데운다 — 직전 세션이 목성에 중원소를 두 번 넣어
+# 반지름을 +0.6 % 에서 −9.8 % 로 만든 것과 똑같은 함정이다.
+#
+# 그래서 암석-금속 기둥의 기준은 **등온이 아니라 지구의 단열선** 이다. 앵커는
+# Unterborn+ 2019 §2 (arXiv:1905.06530) 의 지구형 맨틀 포텐셜 온도 1600 K 이고,
+# 그 논문이 T(R) = T_Pot 을 경계조건으로 쓰면서 같은 값을 기준으로 삼는다.
+# 포텐셜 온도를 1600 K 로 선언하면 ΔT 가 **정확히 0** 이라 지구가 비트까지 그대로다.
+# 허용오차가 아니라 항등식이고, 그 사정은 Phase.delta_t 주석에 있다.
+#
+# 얼음은 다르다. 상마다 기준이 실제 등온이고 그 온도가 이미 이 파일에 있다.
+#
+# **규산염 세 상이 전부 같은 기준을 쓴다.** mgsio3_en 은 실험실 상온 적합이고 mgsio3_pv 는
+# 3.5 TPa 위라 지구가 닿지도 않는데, 셋 다 지구 단열선을 기준으로 둔다. 이유는 이 스택에서
+# 그 셋이 하나의 암석 기둥이고, 지구를 0.3 % 로 재현한 것이 그 기둥 전체이기 때문이다 —
+# 상마다 기준을 갈라 두면 그 0.3 % 안에 이미 흡수돼 있는 몫을 다시 꺼내게 되고, 이음매마다
+# 열압력이 튄다. 대가는 차가운 천체의 규산염이 지구 맨틀 기준으로 계산된다는 것이고,
+# 그 방향은 맞다 (차가우면 밀하다). 균일한 규칙 하나를 쓰고 그렇다고 적는다.
+SILICATE_ALPHA_K = 0.00692 * GPA     # Pa/K. Anderson & Masuda 1994, Seager+ 2007 §IV.2.2
+IRON_ALPHA_K = 0.00121 * GPA         # Pa/K. Isaak & Anderson 2003, 같은 절
+IRON_ALPHA_K_DT = 7.8e-7 * GPA       # Pa/K². 전자 여기 항, 같은 절
+EARTH_POTENTIAL_T = 1600.0           # K. Unterborn+ 2019 §2 의 지구형 맨틀 포텐셜 온도
+LAB_ISOTHERM_T = 300.0               # K. 실험실 압축 자료의 관례적 기준 온도
+
+# 정적비열. **두 가지 다른 출처에서 왔고 섞으면 안 된다.**
+#
+# 규산염과 철은 Debye 온도(~700 K) 위에서 쓰이므로 **Dulong-Petit 극한** 3R/M_atom
+# 이다. 적합한 상수가 아니라 교과서 결과이고, M_atom 은 조성에서 나오는 몰질량이다.
+#   MgSiO₃ : M = 100.3875 g/mol, 원자 5개 → M_atom = 20.0775 g/mol
+#   Fe     : M = 55.845 g/mol,  원자 1개 → M_atom = 55.845 g/mol
+#
+# **얼음에는 그 극한을 쓰면 안 된다.** θ_D 가 ~300 K 인데 얼음이 존재하는 온도가
+# 그 아래라, Dulong-Petit 이 c_V 를 두 배 넘게 과대평가한다 (물 3원자 기준 4154
+# 대 실제 ~1700~2050). 그래서 얼음의 c_V 는 ρ₀·K₀·K₀′ 와 **같은 자리에서 같은
+# 방식으로** 읽었다 — SeaFreeze v1.1.0 을 각 상의 기준 상태에서 평가한 값이다.
+def dulong_petit(m_atom_kg_per_mol: float) -> float:
+    """3R/M_atom. Debye 온도 위의 격자 비열 극한 [J kg⁻¹ K⁻¹]."""
+    return 3.0 * R_GAS / m_atom_kg_per_mol
+
+
+CV_SILICATE = dulong_petit(0.0200775)   # 1242.4 J/kg/K
+CV_IRON = dulong_petit(0.0558450)       # 446.6 J/kg/K
 
 # ── 철 ──────────────────────────────────────────────────────────────────
 #
@@ -295,12 +464,16 @@ MPA = 1e6
 FE_PREM = Material(
     "fe_prem", "철 핵 (PREM 외핵 외삽)",
     (Phase("fe_prem", "bm2", 7050.0, 201.0 * GPA, 4.0, 12e3 * GPA,
-           "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 외핵 BM2 적합"),),
+           "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 외핵 BM2 적합",
+           alpha_k=IRON_ALPHA_K, alpha_k_dt=IRON_ALPHA_K_DT, c_v_ref=CV_IRON,
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat"),),
 )
 FE_EPS = Material(
     "fe_eps", "순수 ε-철",
     (Phase("fe_eps", "vinet", 8300.0, 156.2 * GPA, 6.08, 2.09e4 * GPA,
-           "Seager+ 2007 Table 1 (arXiv:0707.2895) — Fe(ε) Vinet, Anderson+ 2001"),),
+           "Seager+ 2007 Table 1 (arXiv:0707.2895) — Fe(ε) Vinet, Anderson+ 2001",
+           alpha_k=IRON_ALPHA_K, alpha_k_dt=IRON_ALPHA_K_DT, c_v_ref=CV_IRON,
+           t_ref=LAB_ISOTHERM_T),),
 )
 
 # ── 규산염 ──────────────────────────────────────────────────────────────
@@ -382,15 +555,20 @@ SILICATE_PV_TO_TFD = 1.35e4 * GPA    # Seager+ 2007 §III.3 — BME4 가 TFD 로
 SILICATE = Material(
     "silicate", "규산염 맨틀",
     (Phase("mgsio3_en", "bme3", 3220.0, 125.0 * GPA, 5.0, SILICATE_EN_TO_PREM,
-           "Seager+ 2007 Table 1 (arXiv:0707.2895) — MgSiO₃ enstatite BME"),
+           "Seager+ 2007 Table 1 (arXiv:0707.2895) — MgSiO₃ enstatite BME",
+           alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat"),
      Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, SILICATE_PREM_TO_PV,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 하부맨틀 BM2 적합",
-           p_min=SILICATE_EN_TO_PREM),
+           p_min=SILICATE_EN_TO_PREM, alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat"),
      Phase("mgsio3_pv", "bme4", 4100.0, 247.0 * GPA, 3.97, SILICATE_PV_TO_TFD,
            "Seager+ 2007 Table 1 · §III.3 (arXiv:0707.2895) — MgSiO₃ perovskite BME4, "
            "Karki+ 2000 의 DFT 계산. 실물은 MgO + SiO₂ 다 (Umemoto+ 2017, "
            "arXiv:1708.04767) — 조성이 이 압력대에서 밀도를 거의 안 정한다는 것이 근거",
-           p_min=SILICATE_PREM_TO_PV, k0pp=-0.016 / GPA)),
+           p_min=SILICATE_PREM_TO_PV, k0pp=-0.016 / GPA,
+           alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat")),
     over_reason=("규산염 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.0f} GPa) 위다. 그 상한은 Seager+ 2007 §III.3 이 규산염의 "
                  "BME4 를 놓고 TFD 로 갈아타는 압력이므로, 그 위는 전자축퇴가 지배하는 "
@@ -453,6 +631,30 @@ ICE_VI_TO_VII = 2.216 * GPA        # Daucik & Dooley 2011 (Zeng & Sasselov 2013 
 
 # 기준 등온에서 P = 0 의 (ρ₀, K₀, K₀′). SeaFreeze v1.1.0 을 그 자리에서 평가한 값이고,
 # 세 상 모두 상이 시작하는 삼중점의 온도를 기준으로 삼았다.
+# 열 상수도 **같은 자리에서 같은 방식으로** 읽었다 — SeaFreeze v1.1.0 을 각 상의 기준
+# 상태에서 평가한 αK_T 와 c_V 다. 얼음의 Debye 온도가 ~300 K 이고 이 상들이 존재하는
+# 온도가 그 아래라, Dulong-Petit 극한을 쓰면 c_V 가 두 배 넘게 틀린다. 그래서 규산염·철과
+# 달리 읽어 왔다.
+#
+# **그리고 그 대가로 얻는 것이 이 파일이 이미 적어둔 수의 검증이다.** 아래 주석은 기준
+# 등온과 구간 상단의 밀도 차를 III 0.11 % · V 0.27 % · VI 1.3 % 로 적어두고 그것을 "이
+# 재료의 정직한 오차폭" 이라고 불렀다. 그 수는 SeaFreeze 와 대조해서 **잰** 것이다. 이제
+# 열 항이 들어왔으므로 같은 수가 **계산돼서** 나와야 하고, test_interior.py 가 그 둘을
+# 맞춰 본다. 맞으면 열 항의 크기가 독립적으로 확인된 것이다.
+#
+# **얼음 VII 에는 열 상수가 없다.** SeaFreeze 의 얼음 VII 는 별개 표현(VII_X_French)이라
+# 이 파일의 VII (Seager+ 2007 / Hemley+ 1987) 와 기준이 다르고, Seager 자신은 얼음 VII 의
+# 열압력을 Fei+ 1993 의 관계식에 Frank+ 2004 의 매개변수를 넣어 만들었을 뿐 옮겨 적을
+# 상수를 싣지 않았다. 그래서 얼음 VII 은 **등온으로 남는다.** 있는 척하지 않는다.
+ICE_IH_ALPHA_K = 1.357059e6        # Pa/K. SeaFreeze Ih 를 273.152519 K, 101325 Pa 에서
+ICE_IH_CV = 2032.079310            # J/kg/K. 같은 상태
+ICE_III_ALPHA_K = 2.048279e6       # Pa/K. SeaFreeze III 를 P=0, T=251.15 K 에서
+ICE_III_CV = 1769.447868           # J/kg/K. 같은 상태
+ICE_V_ALPHA_K = 2.369011e6         # Pa/K. SeaFreeze V 를 P=0, T=256.43 K 에서
+ICE_V_CV = 1742.729067             # J/kg/K. 같은 상태
+ICE_VI_ALPHA_K = 3.739766e6        # Pa/K. SeaFreeze VI 를 P=0, T=272.73 K 에서
+ICE_VI_CV = 2053.963382            # J/kg/K. 같은 상태
+
 ICE_III_REF_T = 251.15             # K. Ih→III 삼중점
 ICE_V_REF_T = 256.43               # K. III→V 삼중점
 ICE_VI_REF_T = 272.73              # K. V→VI 삼중점
@@ -460,19 +662,23 @@ ICE_VI_REF_T = 272.73              # K. V→VI 삼중점
 H2O = Material(
     "h2o", "물얼음",
     (Phase("ice_ih", "bm2", ICE_IH_RHO0, ICE_IH_KT, 4.0, ICE_IH_TO_III,
-           "IAPWS-06 / Feistel & Wagner 2006 Table 6 검증값"),
+           "IAPWS-06 / Feistel & Wagner 2006 Table 6 검증값",
+           alpha_k=ICE_IH_ALPHA_K, c_v_ref=ICE_IH_CV, t_ref=273.152519),
      Phase("ice_iii", "bme3", 1126.384048, 7.834907 * GPA, 6.709734, ICE_III_TO_V,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 III 을 P=0, T=251.15 K 에서 평가한 ρ·K_T·K′",
-           p_min=ICE_IH_TO_III),
+           p_min=ICE_IH_TO_III,
+           alpha_k=ICE_III_ALPHA_K, c_v_ref=ICE_III_CV, t_ref=ICE_III_REF_T),
      Phase("ice_v", "bme3", 1207.841865, 10.636814 * GPA, 6.745951, ICE_V_TO_VI,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 V 를 P=0, T=256.43 K 에서 평가한 ρ·K_T·K′",
-           p_min=ICE_III_TO_V),
+           p_min=ICE_III_TO_V,
+           alpha_k=ICE_V_ALPHA_K, c_v_ref=ICE_V_CV, t_ref=ICE_V_REF_T),
      Phase("ice_vi", "bme3", 1263.385752, 10.368592 * GPA, 7.821860, ICE_VI_TO_VII,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 VI 를 P=0, T=272.73 K 에서 평가한 ρ·K_T·K′",
-           p_min=ICE_V_TO_VI),
+           p_min=ICE_V_TO_VI,
+           alpha_k=ICE_VI_ALPHA_K, c_v_ref=ICE_VI_CV, t_ref=ICE_VI_REF_T),
      Phase("ice_vii", "bme3", 1460.0, 23.7 * GPA, 4.15, 37.4 * GPA,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — H₂O ice VII BME, Hemley+ 1987",
            p_min=ICE_VI_TO_VII)),

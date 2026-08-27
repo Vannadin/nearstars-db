@@ -31,7 +31,8 @@ from __future__ import annotations
 
 import math
 
-from eos import MATERIALS, SILICATE_PREM_TO_PV, PhaseGap, mix
+from eos import (EARTH_POTENTIAL_T, MATERIALS, SILICATE_PREM_TO_PV, PhaseGap,
+                 mix)
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       bulk_factor, porosity, voids_expected)
@@ -91,11 +92,11 @@ class Structure:
 
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
-                 "p_silicate_max")
+                 "p_silicate_max", "t_center", "t_cmb", "t_surface")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
-                 p_silicate_max=0.0):
+                 p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -110,6 +111,10 @@ class Structure:
         # 낮아지므로, 규산염이 처음 나타나는 자리의 압력이 곧 최대다. 이 값 하나로
         # "3.5 TPa 위의 외삽 구간을 실제로 밟았는가" 를 판정한다.
         self.p_silicate_max = p_silicate_max
+        # 온도 [K]. 0 은 "선언되지 않았다" 는 뜻이지 0 K 가 아니다.
+        self.t_center = t_center
+        self.t_cmb = t_cmb
+        self.t_surface = t_surface
 
     @property
     def nmoi(self) -> float:
@@ -157,6 +162,39 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     return out
 
 
+# 단열 기울기를 한 단계에 한 번만 다시 잰다. 적분기가 이미 한 단계 안에서 재료를
+# 고정하고 있고(경계에서 dr/R ~ 3e-4 의 오차), 온도 기울기는 그보다 매끄럽다.
+# 단계마다 RK 네 자리에서 다시 재면 밀도 뒤집기가 여덟 번 더 돌아 비싸다.
+def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated):
+    """이 천체의 층들 중 발표된 열 상수가 없어 등온으로 남는 상들의 이름."""
+    out: list[str] = []
+    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated):
+        out.extend(mat.cold_phases())
+    return out
+
+
+def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
+    """단열 기울기 dT/dP = γ T / K_S [K/Pa].
+
+    **열 상수가 없는 층에서는 0 이다.** 그러면 그 층을 지나는 동안 온도가 변하지
+    않고, 그 사실이 결과의 note 에 이름과 함께 적힌다 — 기울기를 지어내지 않는다.
+
+    K_S = K_T (1 + αγT) 이고 αK_T 는 이미 재료가 들고 있으므로 새 상수가 없다.
+    K_T 는 냉각 곡선의 수치 미분으로 잰다."""
+    gamma = mat.gruneisen(p, rho, t, t_pot)
+    if gamma <= 0.0 or t <= 0.0:
+        return 0.0
+    h = p * 1e-4
+    d_hi, d_lo = mat.density(p + h, t, t_pot), mat.density(p - h, t, t_pot)
+    if d_hi <= d_lo:
+        return 0.0
+    k_t = rho * 2.0 * h / (d_hi - d_lo)
+    # αK_T·γ·T = K_T·αγT 이므로 K_S 가 새 상수 없이 닫힌다.
+    ph = mat.phase_at(p) if hasattr(mat, "phase_at") else None
+    k_s = k_t + (ph.dpdt_v(t, t_pot) * gamma * t if ph is not None else 0.0)
+    return gamma * t / max(k_s, 1.0)
+
+
 def _carries_silicate(mat) -> bool:
     """이 층 재료가 규산염을 들고 있는가. 혼합이면 성분 중에 있는지를 본다."""
     if mat.name == "silicate":
@@ -167,7 +205,8 @@ def _carries_silicate(mat) -> bool:
 def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
-              envelope_z: float = 0.0, differentiated: bool = True) -> Structure:
+              envelope_z: float = 0.0, differentiated: bool = True,
+              t_center: float = 0.0, t_pot: float = 0.0) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -180,7 +219,10 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
     mat = stack[0][1]
 
-    rho_c = mat.density(p_center) * bulk_factor(mat.name, p_center, phi0, p_cap)
+    # 온도가 선언되지 않으면 t_center 가 0 이고, 아래 모든 density 호출이 예전과
+    # 같은 인자로 떨어진다 — 비트까지 같은 경로다.
+    t = t_center
+    rho_c = mat.density(p_center, t, t_pot) * bulk_factor(mat.name, p_center, phi0, p_cap)
     r_scale = (3.0 * mass_kg / (4.0 * math.pi * rho_c)) ** (1.0 / 3.0)
     dr = r_scale / STEPS
 
@@ -196,6 +238,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     v_pore = 4.0 / 3.0 * math.pi * r ** 3 * porosity_at(mat, p, phi0, p_cap)
     m_above_lab = m if p > P_LAB_MAX else 0.0
     p_si_max = p if _carries_silicate(mat) else 0.0
+    t_cmb = None
+    t_surface = t
 
     def material_for(m_now: float):
         nonlocal layer
@@ -211,7 +255,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         if layer != prev_layer:
             # 층이 바뀐 자리의 압력을 기록해둔다. core_state 와 얼음 상 판정이 쓴다.
             if prev_layer == 0 and cmf > 0:
-                core_radius, p_cmb = r, p
+                core_radius, p_cmb, t_cmb = r, p, t
             if stack[layer][1].name == "h2o":
                 p_ice_base = p
         if mat.name not in phases:
@@ -221,10 +265,13 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
 
         # 4차 Runge-Kutta. 한 단계 안에서는 재료를 고정한다 — 경계에서 한 단계
         # 어긋나는 오차는 dr/R ~ 3e-4 이라 C/MR² 의 유효숫자 밖이다.
+        # 이 단계의 단열 기울기. 한 단계에 한 번만 잰다 (위 _adiabatic_dtdp 주석).
+        dtdp = _adiabatic_dtdp(mat, p, mat.density(p, t, t_pot), t, t_pot) if t > 0.0 else 0.0
+
         def deriv(rr, mm, pp):
             if rr <= 0.0:
                 return 0.0, 0.0, 0.0, 0.0
-            rr_rho = mat.density(pp) if pp > 0.0 else mat.rho0
+            rr_rho = mat.density(pp, t, t_pot) if pp > 0.0 else mat.rho0
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
             return (4.0 * math.pi * rr * rr * rr_rho,
@@ -248,7 +295,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             m += dm * frac
             moi += di * frac
             v_pore += dv * frac
+            t += dtdp * dp * frac
             p = 0.0
+            t_surface = t
             break
 
         if p > P_LAB_MAX:
@@ -258,6 +307,10 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         p += dp
         moi += di
         v_pore += dv
+        # 온도는 압력을 따라간다 — dT = (dT/dP) dP. 열 상수가 없는 층에서는
+        # dtdp 가 0 이라 온도가 그 층을 그대로 통과한다.
+        t += dtdp * dp
+        t_surface = t
 
     if steps >= MAX_STEPS:
         raise ValueError(f"{MAX_STEPS} 단계 안에 표면에 닿지 못했다 "
@@ -266,9 +319,12 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     if core_radius is None:
         core_radius = r      # 핵만 있는 천체
         p_cmb = p
+        t_cmb = t
     return Structure(r, m, moi, core_radius, p_center, p_cmb, p_ice_base, phases,
                      v_pore=v_pore, m_above_lab=m_above_lab,
-                     p_silicate_max=p_si_max)
+                     p_silicate_max=p_si_max, t_center=t_center,
+                     t_cmb=t_cmb if t_cmb is not None else 0.0,
+                     t_surface=t_surface)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -279,11 +335,12 @@ def porosity_at(mat, p_pa: float, phi0: float,
     return 1.0 - bulk_factor(mat.name, max(p_pa, 0.0), phi0, p_cap)
 
 
-def shoot(mass_kg: float, cmf: float, imf: float,
-          core_material: str, phi0: float = 0.0,
-          p_cap: float | None = None, gmf: float = 0.0,
-          envelope_z: float = 0.0,
-          differentiated: bool = True) -> tuple[Structure, bool]:
+def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
+                    core_material: str, phi0: float = 0.0,
+                    p_cap: float | None = None, gmf: float = 0.0,
+                    envelope_z: float = 0.0, differentiated: bool = True,
+                    t_center: float = 0.0,
+                    t_pot: float = 0.0) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -304,7 +361,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     lo = 1.0e2
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
     while integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, differentiated).mass_kg < mass_kg:
+                        envelope_z, differentiated, t_center, t_pot).mass_kg < mass_kg:
         if hi >= p_ceiling:
             raise ValueError(
                 f"이 질량을 담으려면 중심압이 {_ceiling_owner(stack[0][1])} 의 근거 "
@@ -314,13 +371,13 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, differentiated)
+                        envelope_z, differentiated, t_center, t_pot)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
     x1 = math.log(max(lo, hi * 1e-3))
     st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated)
+                    gmf, envelope_z, differentiated, t_center, t_pot)
     y1 = math.log(st.mass_kg / mass_kg)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
@@ -338,9 +395,49 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         x0, y0 = x1, y1
         x1 = x2
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated)
+                    gmf, envelope_z, differentiated, t_center, t_pot)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
+
+
+# 온도를 맞추는 바깥 고리의 횟수와 허용오차. 단열선이 앵커에 거의 선형이라
+# 두세 번이면 붙는다 — 밀도가 온도에 몇 % 만 반응하기 때문이다.
+T_PASSES = 6
+T_TOL = 1e-6
+
+
+def shoot(mass_kg: float, cmf: float, imf: float,
+          core_material: str, phi0: float = 0.0,
+          p_cap: float | None = None, gmf: float = 0.0,
+          envelope_z: float = 0.0, differentiated: bool = True,
+          potential_temperature: float | None = None) -> tuple[Structure, bool]:
+    """겉질량과 **표면 온도** 를 동시에 맞춘다.
+
+    온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
+    않고 예전 경로 그대로다 — 비트까지 같다.
+
+    선언되면 경계조건이 하나 더 붙는다. 적분은 중심에서 바깥으로 가는데 온도의
+    경계조건은 **표면** 에 있으므로(Unterborn+ 2019 §2 의 T(R) = T_Pot), 중심 온도를
+    미지수로 두고 표면 온도가 맞을 때까지 좁힌다. 사격을 두 개 겹치는 대신 단열선이
+    앵커에 거의 선형이라는 것을 쓴다 — 중심 온도를 비율로 다시 재면 몇 번 만에 붙고,
+    밀도가 온도에 되먹임하는 몫만 반복이 흡수한다."""
+    args = (mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z,
+            differentiated)
+    if not potential_temperature:
+        return _shoot_pressure(*args)
+    t_pot = float(potential_temperature)
+    t_c = t_pot * 2.0        # 첫 추측. 비율로 다시 재므로 값 자체는 중요하지 않다
+    st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot)
+    for _ in range(T_PASSES):
+        if st.t_surface <= 0.0:
+            break            # 열 상수가 없는 재료뿐이다. 온도가 흐르지 않는다
+        nxt = t_c * t_pot / st.t_surface
+        done = abs(nxt / t_c - 1.0) < T_TOL
+        t_c = nxt
+        st, converged = _shoot_pressure(*args, t_center=t_c, t_pot=t_pot)
+        if done:
+            break
+    return st, converged
 
 
 def _ceiling_owner(mat) -> str:
@@ -421,6 +518,11 @@ GIANT_ANCHOR_FAIL_ME = 95.2     # Saturn. +20.7 % — 이 갈래가 틀린 유�
 # 등급이 말한다는 이 파일의 규율 그대로다.
 SILICATE_EXTRAPOLATED_MIN = SILICATE_PREM_TO_PV
 
+# 온도 갈래가 발표된 값과 대조된 반지름 상한. Unterborn+ 2019 eq. 7 의 적합이
+# 0.75 ~ 1.5 R⊕ 이고, 그 안에서도 위쪽 절반은 우리 단열선이 낮게 흐른다 (1.0 에서
+# 4.4 %, 1.46 에서 17 %). 그래서 "대조됐다" 고 말할 수 있는 자리를 좁게 잡는다.
+UNTERBORN_TCMB_MAX_R = 1.05
+
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
 FLUID_CLASSES = ("ice_giant", "sub_neptune", "brown_dwarf", "star")
 
@@ -436,7 +538,8 @@ def solve(mass_earth: float,
           initial_porosity: float = 0.0,
           porosity_cap: float | None = None,
           tidal_heating: bool = False,
-          envelope_z: float = 0.0) -> Result:
+          envelope_z: float = 0.0,
+          potential_temperature: float | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -445,7 +548,13 @@ def solve(mass_earth: float,
 
     `tidal_heating` 도 계산에 쓰이지 않는다. 공극이 남을 레짐인가를 판정하는 세
     지표 중 하나이고 (`porosity.voids_expected`), 다른 노드의 출력이므로 여기서는
-    선언으로만 받는다."""
+    선언으로만 받는다.
+
+    `potential_temperature` 는 **세 번째 선언** 이다. 대류하는 내부를 표면까지
+    단열적으로 감압했을 때의 온도이고, 표면 온도가 아니다 — 그 둘 사이에는 전도하는
+    뚜껑이 있고 지구에서 그 차이가 1300 K 쯤 된다. 뚜껑의 두께를 정하는 것은 열류이고,
+    열류는 `internal_heat_nontidal` 의 출력이라 여기서 도출하지 않는다. 주지 않으면
+    (`None`) 온도가 아예 흐르지 않고 예전 등온 경로 그대로다."""
     preset_cmf, preset_imf, preset_gmf, core_material = COMPOSITIONS.get(
         composition, (None, None, None, "fe_prem"))
     cmf = preset_cmf if core_mass_fraction is None else core_mass_fraction
@@ -458,7 +567,8 @@ def solve(mass_earth: float,
               "composition": composition, "differentiated": differentiated,
               "body_class": body_class, "initial_porosity": initial_porosity,
               "porosity_cap": porosity_cap, "tidal_heating": tidal_heating,
-              "envelope_z": envelope_z}
+              "envelope_z": envelope_z,
+              "potential_temperature": potential_temperature}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -518,6 +628,15 @@ def solve(mass_earth: float,
             "differentiated=False 쪽이다.",
             inputs=inputs, refs=REFS)
 
+    if potential_temperature is not None and potential_temperature < 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"포텐셜 온도 {potential_temperature} K 가 음수다. 0 과 None 은 "
+            "'0 K 다' 가 아니라 '이 레시피가 판정하지 않는다' 는 뜻이고 "
+            "(`initial_porosity` · `envelope_z` 와 같은 규율), 그 경우 온도가 "
+            "아예 흐르지 않는다. 음수는 그 어느 쪽도 아니다.",
+            inputs=inputs, refs=REFS)
+
     if not 0.0 <= initial_porosity < 1.0:
         return out_of_domain(
             RECIPE, VERSION,
@@ -545,7 +664,7 @@ def solve(mass_earth: float,
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
-                              envelope_z, differentiated)
+                              envelope_z, differentiated, potential_temperature)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -561,6 +680,8 @@ def solve(mass_earth: float,
         bounds.append(f"핵-맨틀 경계 {st.p_cmb / 1e9:.3g} GPa")
     if st.p_ice_base is not None:
         bounds.append(f"얼음 기둥 바닥 {st.p_ice_base / 1e9:.3g} GPa")
+    if st.t_center > 0.0:
+        bounds.append(f"중심 온도 {st.t_center:.0f} K")
     notes = [f"층별 상: {' → '.join(st.phases)}. {' · '.join(bounds)}, "
              f"평균밀도 {rho_bar:.0f} kg/m³.",]
     if initial_porosity > 0:
@@ -579,6 +700,41 @@ def solve(mass_earth: float,
     # 토성이 맞은 것은 이 레시피가 토성을 예측해서가 아니라 논문이 준 조성을 받아썼기
     # 때문이고, 등급은 적합의 좋음이 아니라 **레시피가 검증할 수 없는 선언에 답이 기대는가**
     # 를 말해야 한다. initial_porosity 와 같은 규율이다.
+    # 온도가 답에 실제로 들어갔는가. 기준 포텐셜 온도를 선언한 것은 "지구와 같은
+    # 열구조" 라고 말한 것이고, 그러면 열압력이 항등적으로 0 이라 답이 안 움직인다.
+    # 그 경우까지 등급을 내리면 등급이 뜻을 잃는다.
+    thermal_declared = bool(potential_temperature)
+    thermal_moves = (thermal_declared
+                     and abs(potential_temperature - EARTH_POTENTIAL_T) > 1e-9)
+    if thermal_declared:
+        cold = sorted(set(_cold_phases(cmf, imf, core_material, gmf, envelope_z,
+                                       differentiated)))
+        notes.append(
+            f"**포텐셜 온도 {potential_temperature:.0f} K 는 선언이다.** 대류하는 내부를 "
+            "표면까지 단열 감압했을 때의 온도이고 표면 온도가 아니다 — 그 사이의 전도하는 "
+            "뚜껑이 지구에서 1300 K 쯤 되고, 그 두께를 정하는 것은 열류다. 열류는 "
+            "`internal_heat_nontidal` 의 출력이라 이 레시피가 도출하지 않는다. "
+            f"기준은 {EARTH_POTENTIAL_T:.0f} K 이고 (Unterborn+ 2019 §2 의 지구형 맨틀 "
+            "포텐셜 온도), 암석-금속 상들의 적합 기준이 그 단열선이라 거기서는 열압력이 "
+            "정확히 0 이다. 지구가 안 움직이는 이유가 그것이고, 허용오차가 아니라 항등식이다."
+            + (f" 열 상수가 없어 등온으로 남는 상: {', '.join(cold)}." if cold else ""))
+    thermal_unchecked = thermal_declared and radius > UNTERBORN_TCMB_MAX_R
+    if thermal_unchecked:
+        notes.append(
+            f"**반지름 {radius:.2f} R⊕ 는 온도 갈래가 대조된 구간 밖이다.** 단열선의 "
+            f"판정선은 Unterborn+ 2019 eq. 7 이고 그 적합이 "
+            f"{UNTERBORN_TCMB_MAX_R:.2f} R⊕ 까지다. 그 위에서 여기 단열선이 그들 값보다 "
+            "낮게 흐르고, 1.46 R⊕ 에서 17 % 다 — αK_T 를 부피에 무관하다고 둔 Anderson & "
+            "Goto 근사가 압축이 커지면 γ 를 1/ρ 로 떨어뜨리는데, Debye 모형으로 α(P,T) 와 "
+            "C_P(P,T) 를 푸는 쪽은 그렇게 빨리 떨어지지 않는다. 밀도가 안 움직였더라도 "
+            "**핵 온도가 대조 밖** 이므로 등급을 analog 로 내린다 — 그 값을 받는 쪽이 "
+            "core_state 다.")
+    if thermal_moves:
+        notes.append(
+            f"답이 그 선언에 기댄다 — 기준 {EARTH_POTENTIAL_T:.0f} K 에서 "
+            f"{potential_temperature - EARTH_POTENTIAL_T:+.0f} K 떨어져 있고, 그만큼 열압력이 "
+            "밀도를 움직인다. 단열선은 대류하는 층에만 맞고, 조석가열과 맨틀 안의 열경계층은 "
+            "프로파일을 초단열로 만든다 (Unterborn+ 2019 §3.2). 등급을 analog 로 내린다.")
     silicate_extrapolated = st.p_silicate_max > SILICATE_EXTRAPOLATED_MIN
     if silicate_extrapolated:
         notes.append(
@@ -664,12 +820,15 @@ def solve(mass_earth: float,
         # 미분화는 측정 앵커가 없다.
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
                             or not differentiated or giant_unvalidated
-                            or silicate_extrapolated)
+                            or silicate_extrapolated or thermal_moves
+                            or thermal_unchecked)
                else "calibrated"),
         inputs=inputs,
         cycles=(1, 3),
         converged=converged,
         values={"nmoi": st.nmoi,
+                "core_temperature": st.t_center,
+                "cmb_temperature": st.t_cmb,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
                 "core_radius": st.core_radius_m / EARTH_RADIUS_M,
                 "radius": radius,
@@ -677,6 +836,8 @@ def solve(mass_earth: float,
                 "bulk_porosity": st.phi_bulk,
                 "voids_expected": voids_ok},
         units={"nmoi": "dimensionless",
+               "core_temperature": "K",
+               "cmb_temperature": "K",
                "core_radius_fraction": "dimensionless",
                "core_radius": "R_earth",
                "radius": "R_earth",

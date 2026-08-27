@@ -128,6 +128,54 @@ def seager_table3(p_pa: float) -> float:
     return SEAGER_T3_RHO0 + SEAGER_T3_C * p_pa ** SEAGER_T3_N
 
 
+# ── 온도 ────────────────────────────────────────────────────────────────
+#
+# 앵커는 발표된 값이어야 한다. 온도 프로파일의 앵커는 둘이고, 둘 다 우리 출력이 아니다.
+#
+# Unterborn+ 2019 (arXiv:1905.06530) 이 자기 모형의 핵-맨틀 경계 온도를 반지름의 닫힌
+# 형태로 적합해 실었다 (그들의 eq. 7, 포텐셜 온도 1600 K, 0.75 ≤ R ≤ 1.5 R⊕).
+#
+#     T_CMB(R) = 4180 R − 2764 R² + 1219 R³
+#
+# 그리고 그 식이 1 R⊕ 에서 내는 2635 K 를 Lay+ 2008 의 지구 값 2500–2800 K 와 대조하며
+# "in good agreement" 라고 적는다. 그 구간이 이 절의 판정선이다 — 우리 계산이 아니라
+# 지구에서 측정·추정된 범위다.
+#
+# eq. 8 은 포텐셜 온도를 옮겼을 때 CMB 온도가 얼마나 따라가는지를 준다.
+#
+#     ΔT_CMB(R, T_Pot) ≈ (T_Pot − 1600 K) · (0.82 + R^1.81)
+UNTERBORN_TCMB = (4180.0, -2764.0, 1219.0)   # eq. 7 계수 (R 의 1·2·3차)
+UNTERBORN_TCMB_RANGE = (0.75, 1.5)           # 그 적합이 유효한 반지름 구간 [R⊕]
+LAY_2008_EARTH_TCMB = (2500.0, 2800.0)       # K. Unterborn+ 2019 이 인용한 지구 값
+UNTERBORN_SENSITIVITY = (0.82, 1.81)         # eq. 8 의 상수와 지수
+# 우리 단열선은 지구 근처에서 그 적합과 맞고 위로 갈수록 낮게 흐른다. 그 사실을
+# 허용오차로 덮지 않고 **두 개의 검사** 로 나눈다 — 맞는 구간은 좁게 단정하고, 벗어나는
+# 몫은 구간에 묶어서 조용히 고쳐지거나 조용히 나빠지는 것을 둘 다 잡는다. 토성의
+# +20.7 % 를 test_giant.py 가 다루는 방식과 같다.
+TCMB_TOL = 0.05                              # 5 %. R ≤ 1.05 R⊕ 에서
+TCMB_DRIFT_BAND = (-0.22, -0.10)             # 4 M⊕ (R 1.46) 에서 기록된 초과분
+
+# eos.py 가 얼음 절 주석에 적어둔 "이 재료의 정직한 오차폭". 기준 등온과 각 상의 구간
+# 상단 사이의 밀도 차이고, SeaFreeze 와 대조해서 **잰** 값이다. 열 항이 들어왔으니
+# 이제 같은 수가 **계산돼서** 나와야 한다 — 그 일치가 열 항 크기의 독립 검증이다.
+ICE_THERMAL_SPREAD = (("ice_iii", 355.0e6, 256.43, 0.0011),
+                      ("ice_v", 618.4e6, 272.73, 0.0027),
+                      ("ice_vi", 2.216e9, 355.0, 0.013))
+ICE_SPREAD_TOL = 0.15    # 상대. 0.11 % 대 0.107 % 같은 자리라 절대가 아니라 상대다
+
+
+def unterborn_tcmb(radius_earth: float, t_pot: float = 1600.0) -> float:
+    """Unterborn+ 2019 eq. 7 과 eq. 8. 포텐셜 온도 t_pot 에서의 CMB 온도 [K].
+
+    eq. 7 은 1600 K 에서의 값이고, eq. 8 이 포텐셜 온도를 옮겼을 때의 이동을 준다.
+    둘을 합쳐야 1600 K 아닌 천체와 대볼 수 있다."""
+    a, b, c = UNTERBORN_TCMB
+    r = radius_earth
+    base = a * r + b * r ** 2 + c * r ** 3
+    s_a, s_b = UNTERBORN_SENSITIVITY
+    return base + (t_pot - 1600.0) * (s_a + r ** s_b)
+
+
 # 조성별 암석 질량 상한을 재는 축. 값이 아니라 **누가 상한을 정하는가** 가 내용이다.
 CEILING_CASES = (
     ("earth_like (CMF 0.325)", dict(core_mass_fraction=0.325)),
@@ -216,6 +264,38 @@ SEAFREEZE_REF = (("ice_iii", "III", 251.15, 209.5, 355.0),
 # SeaFreeze README 가 검증용으로 싣는 단일점 출력. 얼음 VI, 900 MPa / 255 K.
 # 이건 **발표된 값** 이라 우리 출력으로 우리를 시험하는 게 아니다.
 SEAFREEZE_PUBLISHED_ICE_VI = (900.0, 255.0, 1356.1)
+
+
+def _seafreeze_gamma() -> list[str]:
+    """γ = (∂P/∂T)_V / (ρ c_V) 가 **항등식** 인지 원 표현과 대조한다.
+
+    이 파일은 그뤼나이젠 계수를 새 상수로 들여오지 않고 열압력의 기울기와 비열에서
+    닫는다. 그게 맞다는 것은 주장이 아니라 검사 대상이다 — SeaFreeze 가 자기 γ 를
+    따로 들고 있으므로, 같은 상태에서 두 값을 대면 된다."""
+    out: list[str] = []
+    try:
+        import numpy as np
+        from seafreeze.seafreeze import getProp
+    except ImportError:
+        print("  [SKIP] SeaFreeze 가 없다 — γ 항등식 대조는 engine/.venv 에서만 돈다")
+        return out
+    from eos import H2O
+    for name, sf_name, t_ref, p_mpa in (("ice_ih", "Ih", 273.152519, 0.101325),
+                                        ("ice_iii", "III", 251.15, 1e-3),
+                                        ("ice_v", "V", 256.43, 1e-3),
+                                        ("ice_vi", "VI", 272.73, 1e-3)):
+        ph = [x for x in H2O.phases if x.name == name][0]
+        pt = np.empty((1,), dtype="object")
+        pt[0] = (p_mpa, t_ref)
+        want = float(getProp(pt, sf_name).gamma_Gruneisen[0])
+        got = ph.gruneisen(ph.rho0, t_ref + 1.0)   # ΔT 가 0 이면 금속 2차항만 죽는다
+        d = abs(got - want) / want
+        ok = d < 1e-3
+        if not ok:
+            out.append(f"{name}: γ 항등식이 {got:.6f}, SeaFreeze 는 {want:.6f}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {name:8} γ {got:.6f} · SeaFreeze "
+              f"{want:.6f} ({d * 100:.4f} %)")
+    return out
 
 
 def _seafreeze_crosscheck() -> list[str]:
@@ -341,6 +421,24 @@ def mass_ceiling(**kwargs) -> tuple[float, str]:
     return lo, owner
 
 
+def thermal_table() -> None:
+    """문서 §Validation 의 온도 표를 다시 낸다. 손으로 친 표는 어긋난다."""
+    print("| body | T_Pot (K) | T_CMB derived | Unterborn+ 2019 eq. 7–8 | Δ | "
+          "R | C/MR² | grade |")
+    print("|---|---|---|---|---|---|---|---|")
+    for label, m, cmf, t_pot in (("Earth (reference)", 1.0, 0.325, 1600.0),
+                                 ("Earth, cool mantle", 1.0, 0.325, 1400.0),
+                                 ("Earth, hot mantle", 1.0, 0.325, 1900.0),
+                                 ("2 M⊕ super-Earth", 2.0, 0.325, 1600.0),
+                                 ("4 M⊕ super-Earth", 4.0, 0.325, 1600.0)):
+        res = solve(m, core_mass_fraction=cmf, potential_temperature=t_pot)
+        v = res.values
+        want = unterborn_tcmb(v["radius"], t_pot)
+        print(f"| {label} | {t_pot:.0f} | {v['cmb_temperature']:.0f} K | {want:.0f} K | "
+              f"{(v['cmb_temperature'] / want - 1) * 100:+.1f} % | {v['radius']:.3f} R⊕ | "
+              f"{v['nmoi']:.4f} | {res.grade} |")
+
+
 def ceiling_table() -> None:
     """문서 §Domain 의 암석 질량 상한 표를 다시 낸다. 손으로 친 표는 어긋난다."""
     print("| composition | mass ceiling | what stops it | its stated ceiling | "
@@ -357,6 +455,9 @@ def ceiling_table() -> None:
 
 
 def main() -> int:
+    if "--thermal" in sys.argv:
+        thermal_table()
+        return 0
     if "--ceiling" in sys.argv:
         ceiling_table()
         return 0
@@ -498,6 +599,9 @@ def main() -> int:
                          f"{nxt.name} 하한 {nxt.p_min / 1e6:.1f} MPa 사이에서 끊겼다")
         print(f"  [{'PASS' if cond else 'FAIL'}] {prev.name:8} → {nxt.name:8} "
               f"{prev.p_max / 1e6:8.1f} MPa 에서 이어진다")
+
+    print("\n그뤼나이젠 — 새 상수가 아니라 항등식인가 (SeaFreeze 있을 때만)")
+    fails += _seafreeze_gamma()
 
     print("\nIII·V·VI 의 세 상수 — 박아둔 값이 원 표현과 같은가 (SeaFreeze 있을 때만)")
     # 계수를 손으로 옮겨 적은 것이므로 대조가 필요하다. 이 리포지토리는 손으로 친 표에서
@@ -680,6 +784,157 @@ def main() -> int:
     if not deg:
         fails.append("새 상한 위 거절이 무엇이 그 위인지 말하지 않는다")
     print(f"  [{'PASS' if deg else 'FAIL'}] 그 위가 전자축퇴임을 말한다")
+
+    print("\n온도 — 기준 포텐셜 온도에서 지구가 **비트까지** 안 움직이는가")
+    # 이 작업 전체의 판정선이다. PREM 적합은 뜨거운 실제 지구를 관측한 것이라 지구의
+    # 지오섬이 그 유효 ρ₀ 안에 이미 있고, 거기에 300 K 기준의 열팽창을 얹으면 지구를
+    # 두 번 데운다 — 직전 세션이 목성에 중원소를 두 번 넣어 반지름을 +0.6 % 에서
+    # −9.8 % 로 만든 것과 같은 함정이다. 암석-금속 상들의 기준을 1600 K 단열선으로
+    # 잡았으므로 그 온도에서는 ΔT 가 항등적으로 0 이고, 그래서 허용오차가 아니라
+    # **같음** 을 검사한다.
+    from eos import EARTH_POTENTIAL_T
+    for name, m, r_pub, cmf, nmoi_pub, f_pub, _src in ANCHORS:
+        off = solve(m, core_mass_fraction=cmf)
+        on = solve(m, core_mass_fraction=cmf,
+                   potential_temperature=EARTH_POTENTIAL_T)
+        same = (off.values["nmoi"] == on.values["nmoi"]
+                and off.values["radius"] == on.values["radius"])
+        if not same:
+            fails.append(f"{name}: 기준 온도에서 답이 움직였다 — 이중계상이다 "
+                         f"({off.values['nmoi']:.10f} → {on.values['nmoi']:.10f})")
+        print(f"  [{'PASS' if same else 'FAIL'}] {name:8} C/MR² {on.values['nmoi']:.6f} · "
+              f"R {on.values['radius']:.6f} — 온도를 끈 답과 비트까지 같다")
+    ok = solve(1.0, core_mass_fraction=0.325,
+               potential_temperature=EARTH_POTENTIAL_T).grade == "calibrated"
+    if not ok:
+        fails.append("기준 온도를 선언했다고 등급이 내려간다 — 답이 안 움직였는데 내려간다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 기준 온도 선언만으로는 등급이 안 내려간다")
+
+    print("\n온도 — 옮기면 밀도가 움직이고, 방향이 맞는가")
+    cool = solve(1.0, core_mass_fraction=0.325, potential_temperature=1400.0)
+    hot = solve(1.0, core_mass_fraction=0.325, potential_temperature=1900.0)
+    base = solve(1.0, core_mass_fraction=0.325)
+    ok = (cool.values["radius"] < base.values["radius"] < hot.values["radius"])
+    if not ok:
+        fails.append("포텐셜 온도를 올렸는데 반지름이 커지지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 1400 K {cool.values['radius']:.5f} < "
+          f"1600 K {base.values['radius']:.5f} < 1900 K {hot.values['radius']:.5f} R⊕ — "
+          f"뜨거우면 부풀고 차가우면 줄어든다")
+    swing = (hot.values["radius"] - cool.values["radius"]) / base.values["radius"]
+    ok = 0.0005 < swing < 0.05
+    if not ok:
+        fails.append(f"1400~1900 K 에서 반지름이 {swing * 100:.2f} % 움직인다 — "
+                     f"배선이 끊겼거나 과하다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 1400~1900 K 폭에서 반지름이 {swing * 100:.2f} % "
+          f"움직인다. Seager+ 2007 §IV.2.2 가 평균밀도 3.5 % 오차를 반지름 1.2 % 로 "
+          f"환산해 두었고, 같은 자릿수다")
+    for label, res in (("1400 K", cool), ("1900 K", hot)):
+        ok = res.grade == "analog" and any("선언에 기댄다" in n for n in res.notes)
+        if not ok:
+            fails.append(f"온도 {label}: 등급이 {res.grade} 이고 이유를 note 가 안 적는다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {label} → grade {res.grade}, note 가 이유를 댄다")
+
+    print("\n핵 온도 — 발표된 지구 값 안에 떨어지는가 (core_state 가 이걸 먹는다)")
+    # 우리 출력으로 우리를 시험하지 않는다. 대는 상대는 Unterborn+ 2019 eq. 7 과
+    # 그들이 인용한 Lay+ 2008 의 지구 값이다.
+    e = solve(1.0, core_mass_fraction=0.325, potential_temperature=EARTH_POTENTIAL_T)
+    t_cmb = e.values["cmb_temperature"]
+    lo, hi = LAY_2008_EARTH_TCMB
+    ok = lo <= t_cmb <= hi
+    if not ok:
+        fails.append(f"지구 CMB 온도 {t_cmb:.0f} K 가 Lay+ 2008 의 {lo:.0f}–{hi:.0f} K 밖")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 지구 CMB {t_cmb:.0f} K · Lay+ 2008 "
+          f"{lo:.0f}–{hi:.0f} K · Unterborn+ 2019 eq. 7 {unterborn_tcmb(e.values['radius']):.0f} K")
+    from interior import UNTERBORN_TCMB_MAX_R
+    near, far = 0.0, None
+    for m in (0.5, 1.0, 2.0, 4.0):
+        res = solve(m, core_mass_fraction=0.325, potential_temperature=EARTH_POTENTIAL_T)
+        r = res.values["radius"]
+        if not UNTERBORN_TCMB_RANGE[0] <= r <= UNTERBORN_TCMB_RANGE[1]:
+            continue        # 그 적합이 유효한 반지름 구간 밖은 대지 않는다
+        d = res.values["cmb_temperature"] / unterborn_tcmb(r) - 1.0
+        if r <= UNTERBORN_TCMB_MAX_R:
+            near = max(near, abs(d))
+        else:
+            far = d if far is None else min(far, d)
+        print(f"         {m:4.1f} M⊕ (R {r:.3f}) → {res.values['cmb_temperature']:.0f} K · "
+              f"eq. 7 {unterborn_tcmb(r):.0f} K ({d * 100:+.1f} %)")
+    ok = near <= TCMB_TOL
+    if not ok:
+        fails.append(f"R ≤ {UNTERBORN_TCMB_MAX_R} R⊕ 에서 CMB 온도가 eq. 7 과 "
+                     f"{near * 100:.1f} % 어긋난다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] R ≤ {UNTERBORN_TCMB_MAX_R:.2f} R⊕ 에서 최악 "
+          f"{near * 100:.1f} % (허용 {TCMB_TOL * 100:.0f} %)")
+    # 위쪽은 **맞지 않는 것이 답** 이다. 초과분을 구간에 묶어 둔다.
+    ok = far is not None and TCMB_DRIFT_BAND[0] <= far <= TCMB_DRIFT_BAND[1]
+    if not ok:
+        fails.append(f"큰 천체의 CMB 온도 초과분 {far} 가 기록된 구간 "
+                     f"{TCMB_DRIFT_BAND} 밖")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 그 위에서는 낮게 흐른다 — 최악 "
+          f"{far * 100:+.1f} % (기록된 구간 {TCMB_DRIFT_BAND[0] * 100:.0f}~"
+          f"{TCMB_DRIFT_BAND[1] * 100:.0f} %)")
+    print(f"         αK_T 를 부피에 무관하다고 둔 Anderson & Goto 근사가 γ 를 1/ρ 로 "
+          f"떨어뜨리는데, Debye 모형으로 α(P,T)·C_P(P,T) 를 푸는 Unterborn 쪽은 그렇게 "
+          f"빨리 떨어지지 않는다. 그래서 이 갈래가 '대조됐다' 고 말할 수 있는 자리를 "
+          f"{UNTERBORN_TCMB_MAX_R:.2f} R⊕ 로 좁게 잡고, 그 위는 note 가 편향을 이름 댄다.")
+    # eq. 8 — 포텐셜 온도를 옮겼을 때의 민감도. 같은 논문의 두 번째 표현이다.
+    a, b = UNTERBORN_SENSITIVITY
+    want = a + e.values["radius"] ** b
+    got = (hot.values["cmb_temperature"] - cool.values["cmb_temperature"]) / 500.0
+    ok = abs(got / want - 1.0) <= 0.25
+    if not ok:
+        fails.append(f"CMB 온도 민감도 {got:.2f} 가 eq. 8 의 {want:.2f} 와 25 % 넘게 다르다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] dT_CMB/dT_Pot {got:.2f} · eq. 8 이 주는 "
+          f"{want:.2f} ({(got / want - 1) * 100:+.0f} %)")
+
+    print("\n얼음 — 열 항이 이 파일이 이미 적어둔 오차폭을 재현하는가")
+    # eos.py 의 얼음 절이 기준 등온 대비 구간 상단의 밀도 차를 III 0.11 % · V 0.27 % ·
+    # VI 1.3 % 로 적어 두었다. 그 수는 SeaFreeze 와 대조해 **잰** 것이고, 열 항은
+    # 전혀 다른 상수(αK_T)에서 온다. 둘이 맞으면 열 항의 크기가 독립 검증된 것이다.
+    from eos import H2O
+    for name, p_top, t_top, want_frac in ICE_THERMAL_SPREAD:
+        ph = [x for x in H2O.phases if x.name == name][0]
+        got = ph.density(p_top) / ph.density(p_top, t=t_top) - 1.0
+        d = abs(got / want_frac - 1.0)
+        ok = d <= ICE_SPREAD_TOL
+        if not ok:
+            fails.append(f"{name}: 열 항이 {got * 100:.3f} %, 파일이 적어둔 값은 "
+                         f"{want_frac * 100:.2f} %")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {name:8} 구간 상단 {t_top:.2f} K 에서 "
+              f"{got * 100:.3f} % · 주석에 적힌 {want_frac * 100:.2f} % "
+              f"({d * 100:.0f} % 차)")
+
+    print("\n열 상수가 없는 상 — 있는 척하지 않고 이름을 대는가")
+    from eos import H_HE, MATERIALS as _M
+    for mat, want in ((_M["h2o"], "ice_vii"), (H_HE, "hhe_n1")):
+        cold = mat.cold_phases()
+        ok = want in cold
+        if not ok:
+            fails.append(f"{mat.name}: 등온으로 남는 상을 {want} 로 이름 대지 않는다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {mat.name:9} 등온으로 남는 상 {cold}")
+    for mat in (_M["silicate"], _M["fe_prem"], _M["fe_eps"]):
+        ok = mat.has_thermal
+        if not ok:
+            fails.append(f"{mat.name}: 열 상수가 있어야 한다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {mat.name:9} 전 상에 열 상수가 있다")
+    icy = solve(0.0248, core_mass_fraction=0.0, ice_mass_fraction=0.407,
+                potential_temperature=250.0)
+    said = icy.applicable and any("ice_vii" in n for n in icy.notes)
+    if not said:
+        fails.append("얼음 천체의 결과가 등온으로 남는 상을 note 에 이름 대지 않는다")
+    print(f"  [{'PASS' if said else 'FAIL'}] 얼음 천체 결과의 note 가 그 사실을 싣고 온다")
+
+    print("\n거절 — 온도가 뜻을 잃으면 이름을 대는가")
+    zero = solve(1.0, core_mass_fraction=0.325, potential_temperature=0.0)
+    base_off = solve(1.0, core_mass_fraction=0.325)
+    # 0 은 None 과 같은 '선언 안 함' 이다 — φ₀ · envelope_z 와 같은 규율이다.
+    ok = zero.applicable and zero.values["nmoi"] == base_off.values["nmoi"]
+    neg = solve(1.0, core_mass_fraction=0.325, potential_temperature=-5.0)
+    ok = ok and not neg.applicable and "음수다" in neg.reason
+    if not ok:
+        fails.append("음수 포텐셜 온도를 이름 대며 거절하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 음수 포텐셜 온도는 거절하고, 0/None 은 "
+          f"'판정하지 않는다' 로 읽는다")
 
     print("\n계약 — 페이로드가 제 몫을 하는가")
     r = solve(1.0, core_mass_fraction=0.325)

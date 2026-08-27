@@ -76,13 +76,19 @@ nodes:
   interior_layers:
     kind: computed
     recipe: interior-structure-methodology
-    outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure]
+    outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
+              core_temperature, cmb_temperature]
     note: >
       질량과 조성에서 층 구조를 푼다. 정수압 평형·질량보존·상태방정식을 함께
       적분하므로 층 밀도가 입력이 아니라 결과다 — 그래서 반지름과 중심압도 같이
       나온다. 2026-08-25 까지 interior_structure 한 덩어리였는데, 거기에는 열
       문제(핵이 전도성 액체인가)와 점탄성 문제(k2/Q)가 같이 들어 있었다. 입력도
       논문도 등급도 다르므로 나눴다.
+      2026-08-27 에 온도가 들어왔다. core_temperature 와 cmb_temperature 는
+      **internal_heat_nontidal 의 geotherm 과 다른 양이다** — 저쪽은 방사성 붕괴와
+      잔열이 정하는 열 예산(l_int, 암석체에서 t_int ≈ 35 K)이고, 이쪽은 그 예산이
+      수준을 정해 주는 정수압 프로파일 위의 T(P) 다. 한 낱말이 두 양을 덮고 있으니
+      geotherm 쪽 이름을 갈라 주는 것이 좋다. 여기서는 손대지 않았다.
   core_state:
     kind: computed
     status: missing
@@ -307,6 +313,17 @@ edges:
   - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:70"}
   - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, ref: "rocky-planet-dynamo-methodology.md:70"}
   - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, ref: "internal-heat-luminosity-methodology.md:202"}
+  # 내부 온도 프로파일의 앵커(맨틀 포텐셜 온도)는 열 예산이 정한다. 그 예산이
+  # internal_heat_nontidal 의 것이고, 표면 온도와 포텐셜 온도 사이의 전도하는
+  # 뚜껑 두께가 열류의 함수다 (Unterborn+ 2019 §2). 그러나 저 레시피는 프로파일을
+  # 내지 않으므로 requires 로 걸면 아무도 못 지키는 약속이 된다. 실재하는 결합을
+  # gap 으로 기록한다 — interior_layers 는 포텐셜 온도를 선언으로 받는다.
+  - {from: internal_heat_nontidal, to: interior_layers, kind: influences, status: gap, ref: "interior-structure-methodology.md:1", note: 열 예산이 내부 단열선의 앵커(포텐셜 온도)를 정한다. 저쪽이 프로파일을 내지 않아 지금은 선언으로 받는다.}
+  # core_state 는 핵의 압력과 온도를 융해곡선에 대야 한다. 압력은 2026-08-25 부터
+  # 있었고 온도가 2026-08-27 에 생겼다. 그래서 이 두 엣지가 이제 선언될 수 있다 —
+  # 노드 자체는 아직 미구현이고(status: missing) 융해곡선은 별도 논문이 필요하다.
+  - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md:1"}
+  - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md:1"}
   - {from: star_physical, to: stellar_wind, kind: requires, via: age}
   - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_ram, ref: "planetary-magnetosphere-geometry-methodology.md:83"}
   - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
