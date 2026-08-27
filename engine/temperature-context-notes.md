@@ -131,3 +131,50 @@ The ice ladder cross-check turned into the nicest result of the session and dese
 treating those phases isothermally — numbers measured against SeaFreeze. The thermal term
 comes from a completely different constant (αK_T rather than a ρ(P,T) comparison) and
 returns 0.107 %, 0.267 % and 1.283 %. Nothing was fitted to make that happen.
+
+## Wiring `core_state`'s output, found while verifying this work
+
+Declaring `core_state`'s two `requires` edges took `chain.py needs core_state` from zero to
+34, but `affects core_state` stayed at zero: nothing consumed the node. The reason was one
+edge away.
+
+`core_state`'s only declared output is `conductor_phase`, and the edge carrying that
+quantity to `dynamo_rocky` named `interior_layers` as its source — bundled together with
+`core_radius` in a single `via` list. `interior_layers` does not produce `conductor_phase`
+and never did. So the node that exists to answer "can this core drive a dynamo" was written
+out of the one place that asks.
+
+The source settles the split. RM22 solves the internal structure for the core radius and
+density, then feeds that core into a dynamo scaling driven by "the convective buoyancy flux
+through a **conducting liquid-iron core**". Geometry and phase are two questions with two
+answers: the geometry edge keeps `interior_layers`, and the phase edge now comes from
+`core_state`. `affects core_state` is 31.
+
+This is the same defect the temperature work refused to create when it rejected option (B)
+— a `requires` edge promising a number nothing produces — except it was already in the file
+rather than about to be added. It is also the same shape as the `nmoi` supplier fixed on
+2026-08-26: one quantity, two suppliers, and the wrong one wins because nobody re-reads the
+edge.
+
+### Three more like it, not touched
+
+Sweeping every `via` against its source's declared `outputs` gives 35 mismatches, but most
+are noise — `outputs` lists are sparse, so the named quantity usually has no declared owner
+at all. Only where another node **is** the declared owner is there a real conflict, and
+after the fix above three remain:
+
+| edge | `via` | declared owner |
+|---|---|---|
+| `star_physical → body_figure` | `p_rot` | `spin_axis_inclination` |
+| `body_figure → cassini_state` | `radius` | four nodes; `body_figure` emits `reference_radius` |
+| `crater_state → hapke_shader_values` | `terrain` | `hapke_shader_values` itself |
+
+None is obviously wrong and each needs a decision rather than an edit. The first two bodies
+in one name: a star's own rotation feeding its own figure is legitimate, and so is a
+planet's — the collision is that one field name serves both. The third looks like a slip,
+`reference_radius` written as `radius`. The fourth is a word doing two jobs, terrain as
+input information versus terrain as a shader output.
+
+The general lesson is that `via` is unchecked. Nothing compares it against the source's
+`outputs`, which is why this survived. Whether it should be checked is a question about how
+complete `outputs` lists are meant to be, and that is a larger call than this fix.

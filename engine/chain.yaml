@@ -307,7 +307,15 @@ edges:
   - {from: body_class, to: dynamo_rocky, kind: selects, ref: "planetary-dynamo-scaling.md:97"}
   - {from: mass_or_radius, to: dynamo_rocky, kind: requires, ref: "rocky-planet-dynamo-methodology.md:22"}
   - {from: orbit_elements, to: dynamo_rocky, kind: requires, via: period, ref: "rocky-planet-dynamo-methodology.md:22"}
-  - {from: interior_layers, to: dynamo_rocky, kind: requires, via: [core_radius, conductor_phase], ref: "rocky-planet-dynamo-methodology.md:23"}
+  # RM22 는 둘을 다른 데서 받는다. 핵 **기하** 는 내부 구조가 풀고, 그 핵이 다이나모를
+  # 돌릴 수 있는 **상태** 인가는 별개의 판정이다 — 문서가 "convective buoyancy flux
+  # through a conducting liquid-iron core" 라고 적는다. conductor_phase 는 core_state
+  # 의 선언된 출력이므로 그쪽에서 와야 한다. 2026-08-27 까지 두 양이 한 엣지에 묶여
+  # interior_layers 에서 오는 것으로 적혀 있었고, interior_layers 는 conductor_phase 를
+  # 내지 않으므로 그 엣지는 아무도 못 지키는 약속이었다. core_state 가 출력 쪽으로
+  # 배선되지 못한 이유이기도 하다.
+  - {from: interior_layers, to: dynamo_rocky, kind: requires, via: core_radius, ref: "rocky-planet-dynamo-methodology.md:23"}
+  - {from: core_state, to: dynamo_rocky, kind: requires, via: conductor_phase, ref: "rocky-planet-dynamo-methodology.md:25"}
   - {from: tidal_locking, to: dynamo_rocky, kind: selects, via: rossby, ref: "rocky-planet-dynamo-methodology.md:76"}
   - {from: ocean_fraction, to: dynamo_rocky, kind: influences, sign: negative, status: gap, ref: "rocky-planet-dynamo-methodology.md:109"}
   - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:70"}
