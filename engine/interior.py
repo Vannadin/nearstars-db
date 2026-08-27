@@ -1353,19 +1353,65 @@ def infer_composition(mass_earth: float, radius_earth: float,
                 "남아 있는 것(다공도)이거나 H/He 외피다. **다공도 모형이 없어서** 못 "
                 "푸는 경우가 이것이고, 압밀 곡선이 들어오면 풀린다.",
                 inputs=inputs, refs=REFS)
-        why = blocked[0][1].reason if blocked else "이유 미상"
+        km = EARTH_RADIUS_M / 1e3
+        r_lo = min(r.values["radius"] for _, r in solved) * km
+        r_hi = max(r.values["radius"] for _, r in solved) * km
+        span_note = f"풀린 눈금의 반지름 범위 {r_lo:.0f}-{r_hi:.0f} km"
+
+        if not blocked:
+            # **막힌 눈금이 하나도 없다.** 축은 끝까지 풀렸고 목표가 그 밖이다 — 이건
+            # "막힌 구간" 이 아니라 사정거리 문제이고, 둘을 같은 문구로 내보내면 거절이
+            # 기작을 이름 대지 않는다. 어느 쪽 끝인지, 그리고 무엇이 있어야 닿는지를 말한다.
+            if radius_earth * km > r_hi:
+                # 목표가 제일 큰 눈금보다 크다 = 축이 낼 수 있는 것보다 가볍다.
+                # 얼음 축에서는 위쪽 분기가 이미 이 경우를 잡으므로 여기 오는 것은
+                # 핵 축이고, 핵을 **빼는** 방향으로는 순규산염이 끝이다.
+                return out_of_domain(
+                    RECIPE, VERSION,
+                    f"{radius_earth * km:.0f} km 는 이 축이 닿는 것보다 가볍다 — 핵을 "
+                    f"{solved[0][0]:.2f} 까지 빼도 {r_hi:.0f} km 다. 금속을 더 빼는 "
+                    "것으로는 못 가므로 남는 기작은 더 가벼운 물질이다: 얼음이거나 "
+                    "빈 공간이거나 H/He 외피다. 얼음이 선언으로 배제돼 있지 않다면 "
+                    "얼음 축으로 풀렸을 것이므로, 이 거절은 그 선언이 있다는 뜻이다.",
+                    inputs=inputs, refs=REFS, notes=(span_note,))
+            # 목표가 제일 작은 눈금보다 작다 = 축이 낼 수 있는 것보다 밀하다.
+            # 이 축의 끝은 fe_prem 이고 그건 가벼운 원소가 섞인 **지구** 핵이다. 순철
+            # 곡선(fe_eps)이 "이보다 밀할 수 없다" 는 한계선으로 이 파일에 이미 있으므로,
+            # 목표를 거기에 대면 조성 문제와 물리적 불가능이 갈린다.
+            iron = solve(mass_earth, composition="iron", ice_mass_fraction=0.0)
+            r_iron = iron.values["radius"] * km if iron.applicable else None
+            if r_iron is not None and radius_earth * km < r_iron:
+                return out_of_domain(
+                    RECIPE, VERSION,
+                    f"{radius_earth * km:.0f} km 는 이 질량을 **순철로 채워도** 못 "
+                    f"미치는 크기다 (순철 {r_iron:.0f} km). 행성 물질 중 그보다 밀한 "
+                    "것이 없으므로 남는 설명은 조성이 아니다 — 선언된 질량-반지름 쌍이 "
+                    "서로 안 맞거나, 질량이 Msini 라 참값이 더 크거나다.",
+                    inputs=inputs, refs=REFS,
+                    notes=(span_note,
+                           "순철 곡선은 이 레시피가 한계선으로 들고 있는 fe_eps 다 "
+                           "(Seager+ 2007 Table 1). 밀도의 상한이지 조성 후보가 아니다.",))
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"{radius_earth * km:.0f} km 는 이 축이 닿는 것보다 밀하다 — 핵을 "
+                f"{solved[-1][0]:.0f} 까지 채워도 {r_lo:.0f} km 다. 그런데 순철 곡선"
+                + (f"({r_iron:.0f} km) 안쪽이므로" if r_iron is not None else " 안쪽이므로")
+                + " 물리적으로 불가능한 것은 아니다. 이 축의 끝은 fe_prem, 곧 가벼운 "
+                "원소가 섞인 **지구** 핵이고, 이 천체는 그보다 순수한 철을 요구한다. "
+                "필요한 것은 핵 재료를 자유롭게 두는 것이지 새 상태방정식이 아니다.",
+                inputs=inputs, refs=REFS,
+                notes=(span_note,
+                       "fe_prem 은 PREM 외핵 적합이라 지구의 가벼운 원소가 그 유효 ρ₀ "
+                       "안에 흡수돼 있다. fe_eps 는 실험실 순철이다. 둘 사이가 이 "
+                       "레시피가 지금 훑지 않는 축이다.",))
+
         return out_of_domain(
             RECIPE, VERSION,
             f"목표 반지름을 감싸는 배합이 {axis} 축의 **막힌 구간 안** 에 있다. "
             f"풀리는 눈금은 {len(solved)}/{len(scan)} 개뿐이고, 그 어느 쌍도 "
-            f"{radius_earth * EARTH_RADIUS_M / 1e3:.0f} km 를 감싸지 못한다. {why}",
+            f"{radius_earth * km:.0f} km 를 감싸지 못한다. {blocked[0][1].reason}",
             inputs=inputs, refs=REFS,
-            notes=(f"풀린 눈금의 반지름 범위 "
-                   f"{min(r.values['radius'] for _, r in solved) * EARTH_RADIUS_M / 1e3:.0f}"
-                   f"-{max(r.values['radius'] for _, r in solved) * EARTH_RADIUS_M / 1e3:.0f} km",
-                   "**얼음층이 없어서** 가 아니라 그 압력의 얼음 상태방정식이 없어서 "
-                   "막혔다. 물얼음 사다리는 Ih 부터 VII 까지 이어져 있으므로, 남은 상한은 "
-                   "37.4 GPa 위의 얼음 X·초이온상 하나다.",))
+            notes=(span_note,))
 
     # 3) 이분법. 감싼 구간 안이라 반드시 값이 나온다. 얼음은 넣을수록 반지름이
     #    커지고 금속은 넣을수록 작아지므로, 어느 쪽으로 좁힐지는 축이 정한다.
