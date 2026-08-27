@@ -77,6 +77,29 @@ class Phase:
     t_ref: float = 0.0        # K. 이 적합이 놓인 기준의 온도
     t_ref_kind: str = "isotherm"   # "isotherm" | "adiabat" — 아래 delta_t 를 보라
     c_v_ref: float = 0.0      # J kg⁻¹ K⁻¹. 정적비열. 아래 상수 절에 출처가 있다
+    # ── 녹는곡선 ───────────────────────────────────────────────────────
+    # melt 가 빈 문자열이면 **이 상에는 발표된 녹는곡선이 없다** 는 뜻이고, 그러면
+    # 이 상에서는 고체·액체를 판정하지 않는다. alpha_k = 0 과 같은 규율이다.
+    melt: str = ""            # "" | "water" | "iron". 어느 곡선을 쓰는가
+    melt_scale: float = 1.0   # 녹는점에 곱하는 인자. 합금 핵의 내림폭이 여기 들어온다
+    melt_ref: str = ""        # 그 곡선이 어느 논문·표준 어느 절에서 왔는가
+
+    @property
+    def has_melt(self) -> bool:
+        """이 상에 발표된 녹는곡선이 있는가."""
+        return bool(self.melt)
+
+    def t_melt(self, p: float) -> float | None:
+        """압력 p 에서 이 상이 녹는 온도 [K]. 곡선이 없거나 곡선 밖이면 None.
+
+        **곡선이 자기 분기점을 들고 다닌다.** 물얼음의 녹는곡선 분기점(IAPWS 삼중점)은
+        이 파일의 상 전이압(Choukroun & Grasset 2007)과 최대 2.3 % 어긋나고, 어느 쪽도
+        상대에 맞춰 옮기지 않는다 — 옮기면 그 값이 속한 적합이 깨진다. 그래서 이 함수는
+        상 이름이 아니라 **압력** 으로 분기를 고른다."""
+        if not self.melt:
+            return None
+        base = water_t_melt(p) if self.melt == "water" else iron_t_melt(p)
+        return None if base is None else base * self.melt_scale
 
     @property
     def has_thermal(self) -> bool:
@@ -251,6 +274,14 @@ class Material:
         """열 상수가 없어 등온으로 남는 상들. 없는 척하지 않고 이름을 들고 있는다."""
         return tuple(ph.name for ph in self.phases if not ph.has_thermal)
 
+    def melt_free_phases(self) -> tuple[str, ...]:
+        """발표된 녹는곡선이 없는 상들. cold_phases() 와 같은 규율이다."""
+        return tuple(ph.name for ph in self.phases if not ph.has_melt)
+
+    def t_melt(self, p: float) -> float | None:
+        """압력 p 에서 이 재료가 녹는 온도 [K]. 곡선이 없으면 None."""
+        return self.phase_at(p).t_melt(p)
+
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         return self.phase_at(p).density(p, t, t_pot)
 
@@ -356,6 +387,21 @@ class Mixture:
                 out.extend(m.cold_phases())
         return tuple(out)
 
+    def melt_free_phases(self) -> tuple[str, ...]:
+        out: list[str] = []
+        for m, w in self.parts:
+            if w > 0.0:
+                out.extend(m.melt_free_phases())
+        return tuple(out)
+
+    def t_melt(self, p: float) -> float | None:
+        """섞인 층에는 녹는점이 하나가 아니다. **판정하지 않는다.**
+
+        두 성분이 각자의 녹는점을 가지고, 그 사이는 부분용융이라 고상선과 액상선 두
+        곡선이 필요하다 — 순물질의 녹는점 하나가 아니다. 이 파일에 그 두 곡선이 없으므로
+        여기서는 답하지 않는다. 미분화 천체와 중원소 섞인 외피가 이 자리에 온다."""
+        return None
+
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """압력 p 에서 혼합 밀도. 성분마다 **같은 압력과 같은 온도** 에서 평가한다.
 
@@ -448,6 +494,170 @@ def dulong_petit(m_atom_kg_per_mol: float) -> float:
 CV_SILICATE = dulong_petit(0.0200775)   # 1242.4 J/kg/K
 CV_IRON = dulong_petit(0.0558450)       # 446.6 J/kg/K
 
+# ── 녹는곡선 ─────────────────────────────────────────────────────────────
+#
+# 여기까지가 "이 압력에서 이 상이 유효한가" 였다. 녹는곡선은 그 **옆에 서는 같은 종류**
+# 다 — 압력의 함수인 온도 문턱이고, 적분이 지나가는 자리마다 물으면 "지금 여기가 고체인가
+# 액체인가" 가 답해진다. 상태방정식의 새 층이 아니라 이웃이다.
+#
+# 상마다 `melt` 이름이 붙는다. 빈 문자열은 **이 상에는 발표된 녹는곡선이 없다** 는 뜻이고,
+# `alpha_k = 0` 이 열 상수가 없다는 뜻인 것과 같은 규율이다. 없는 척하지 않는다.
+#
+# ── 물 ──
+#
+# IAPWS R14-08(2011), *Revised Release on the Pressure along the Melting and Sublimation
+# Curves of Ordinary Water Substance* 가 얼음 Ih·III·V·VI·VII 의 p_melt(T) 를 닫힌 형태로
+# 준다. 이 파일이 얼음 Ih 의 ρ₀·K_T 를 읽어온 IAPWS-06 과 같은 기관의 같은 종류의 문서이고,
+# 릴리스 번호로 핀한다 (ADS 밖의 표준 문서라 그렇게 인용한다).
+#
+#   Ih   π = 1 + Σ aᵢ(1 − θ^bᵢ)              T* = 273.16 K,   p* = 611.657 Pa,  273.16→251.165 K
+#   III  π = 1 − 0.299948(1 − θ⁶⁰)           T* = 251.165 K,  p* = 208.566 MPa, 251.165→256.164 K
+#   V    π = 1 − 1.18721(1 − θ⁸)             T* = 256.164 K,  p* = 350.1 MPa,   256.164→273.31 K
+#   VI   π = 1 − 1.07476(1 − θ⁴·⁶)           T* = 273.31 K,   p* = 632.4 MPa,   273.31→355 K
+#   VII  ln π = 1.73683(1 − θ⁻¹) − 0.0544606(1 − θ⁵) + 8.06106e−8(1 − θ²²)
+#                                             T* = 355 K,      p* = 2216 MPa,   355→715 K
+#
+# **불확도도 그 문서가 준다** — 2 % (Ih) · 3 % (III·V·VI) · 7 % (VII). 그리고 §7 이
+# 프로그램 검증용 계산값을 하나씩 싣는다. test_interior.py 가 그 다섯 점을 다시 낸다.
+#
+# **삼중점이 이 파일의 전이압과 비트까지 같지 않다. 그 사실이 내용이다.** 상 사다리의
+# 전이압은 Choukroun & Grasset 2007 (Zeng & Sasselov 2013 경유) 에서 왔고, IAPWS 는 자기
+# 녹는곡선을 자기 삼중점 표에 맞춰 구속했다. 압력으로 0.45 % (Ih–III) · 1.4 % (III–V) ·
+# 2.3 % (V–VI) 차이다. 어느 쪽도 상대에 맞춰 옮기지 않는다 — 옮기면 그 값이 속한 적합이
+# 깨진다. 대신 **녹는곡선은 자기 분기점을 들고 다닌다** (아래 WATER_MELT_BREAKS). 그래서
+# 삼중점 근처 2 % 폭에서 두 표가 "어느 상이 녹는가" 를 다르게 말할 수 있고, 그 폭은 IAPWS
+# 자신의 3 % 불확도보다 좁다.
+#
+# ── 철 ──
+#
+# 두 조각이 이 엔진이 닿는 압력대를 덮는다. 둘 다 논문이 초록에 적합식을 그대로 실었다.
+#
+#   Zhang+ 2015 (2015PEPI..244...69Z) — 2상 분자동역학 자료에 Simon 식을 적합.
+#       T_m = 1825 K (1 + P/57.723 GPa)^0.654           365 GPa 까지 적합
+#     영압에서 1825 K 로 실측 1811 K 와 0.8 % 차이이고, 330 GPa 에서 6345 K 를 준다.
+#
+#   González-Cataldo & Militzer 2023 (2023PhRvR...5c3194G) — 고체·액체 Gibbs 자유에너지를
+#   같게 두어 녹는선을 얻고, 역시 Simon 형태로 적었다.
+#       T_m = 6469 K (1 + (P − 300 GPa)/434.82 GPa)^0.54369      300 – 5000 GPa
+#     같은 논문이 이 곡선을 Kraus+ 2022 (2022Sci...375..202K) 의 1 TPa 실측과 대조해
+#     "in very good agreement" 라고 적는다.
+#
+# **겹치는 구간에서 둘이 6.8 ~ 7.5 % 어긋난다.** 그 폭은 같은 압력의 두 정적압축 실험이
+# 어긋나는 폭보다 좁다 — Anzellini+ 2013 이 내핵 경계에서 6230 ± 500 K, Sinmyo+ 2019 가
+# 5500 ± 220 K 로 13 % 차이다. 그래서 평균내지 않고 Zhang 의 적합 상한(365 GPa)에서
+# 갈아탄다. 이음매의 6.8 % 는 지어낸 것이 아니라 **잰** 것이고 test_interior.py 가 다시 잰다.
+#
+# 5 TPa 위는 두 적합 다 밖이다. IRON_MELT_MAX 가 그 자리를 들고 있고, 그 위를 물으면
+# 값이 아니라 None 이 온다.
+#
+# **가벼운 원소가 섞인 핵은 녹는점이 내려간다.** 그 몫은 재료마다 다르고, 이 파일은 이미
+# 그 구분을 들고 있다 — `fe_eps` 는 실험실 순철이고 `fe_prem` 은 PREM 외핵 적합이라
+# 가벼운 원소가 유효 ρ₀ 안에 이미 있다. 그래서 녹는곡선도 같은 자리에서 갈린다.
+# 내림폭 20 % 는 발표된 열진화 모형들의 관례다 (Stevenson+ 1983 → Tachinami+ 2011,
+# Stixrude 2014, Zhang & Rogers 2022 arXiv:2208.06523 이 "the melting temperature of iron
+# is reduced by 20 % to account for the influence of light elements in the iron core" 라고
+# 적는다). 독립 검산이 같은 자리에 떨어진다 — Sinmyo+ 2019 의 지구 내핵 경계 온도
+# 5120 ± 390 K 를 위 순철 곡선의 329 GPa 값 6331 K 에 대면 19.1 % 다. 두 수는 같은 주장이
+# 아니라서(Sinmyo 는 자기 5500 K 곡선에 380 K 를 뺀 것이다) 이 일치는 도출이 아니라 검산이고,
+# 그렇게 적는다. **이 값은 선언이다** — 이 레시피는 핵의 조성을 도출하지 않는다.
+
+# IAPWS R14-08(2011) §3. (계수, 지수) 와 (T*, p*), 그리고 그 식이 유효한 온도 구간.
+IAPWS_IH_A = (0.119539337e7, 0.808183159e5, 0.333826860e4)
+IAPWS_IH_B = (3.0, 25.75, 103.75)
+IAPWS_MELT: dict[str, tuple[float, float, float, float, float, float]] = {
+    # name: (T*, p* [Pa], 계수, 지수, T_lo, T_hi)
+    "ice_iii": (251.165, 208.566e6, 0.299948, 60.0, 251.165, 256.164),
+    "ice_v":   (256.164, 350.1e6, 1.18721, 8.0, 256.164, 273.31),
+    "ice_vi":  (273.31, 632.4e6, 1.07476, 4.6, 273.31, 355.0),
+}
+IAPWS_IH_RANGE = (251.165, 273.16)     # K. 식 (1) 의 유효 구간
+IAPWS_VII_RANGE = (355.0, 715.0)       # K. 식 (5) — 상한은 측정이 끝나는 온도다
+IAPWS_VII_TP = (355.0, 2216.0e6)       # T*, p*
+IAPWS_VII_C = (1.73683, -0.0544606, 8.06106e-8)
+IAPWS_VII_E = (-1.0, 5.0, 22.0)
+# 녹는곡선 자신의 분기점 [Pa]. 위 삼중점 표에서 오고, 상 사다리의 전이압과 다르다.
+WATER_MELT_BREAKS = (208.566e6, 350.1e6, 632.4e6, 2216.0e6)
+IAPWS_MELT_UNCERTAINTY = {"ice_ih": 0.02, "ice_iii": 0.03, "ice_v": 0.03,
+                          "ice_vi": 0.03, "ice_vii": 0.07}
+IAPWS_MELT_REF = ("IAPWS R14-08(2011) §3 — Revised Release on the Pressure along the "
+                  "Melting and Sublimation Curves of Ordinary Water Substance")
+
+# Simon 적합 두 조각. (T₀ [K], P₀ [Pa], a [Pa], c) 로 T = T₀(1 + (P−P₀)/a)^c 다.
+IRON_MELT_LOW = (1825.0, 0.0, 57.723 * GPA, 0.654)        # Zhang+ 2015 초록
+IRON_MELT_HIGH = (6469.0, 300.0 * GPA, 434.82 * GPA, 0.54369)   # González-Cataldo+ 2023 초록
+IRON_MELT_SPLICE = 365.0 * GPA     # Zhang+ 2015 가 자기 적합의 상한으로 적은 압력
+IRON_MELT_MAX = 5000.0 * GPA       # González-Cataldo+ 2023 의 계산 상한
+IRON_LIGHT_ELEMENT_FACTOR = 0.80   # 관례적 20 % 내림 (Stevenson+ 1983 → Zhang & Rogers 2022)
+IRON_MELT_REF_LOW = ("Zhang+ 2015 (2015PEPI..244...69Z) — 2상 MD 자료의 Simon 적합, "
+                     "365 GPa 까지")
+IRON_MELT_REF_HIGH = ("González-Cataldo & Militzer 2023 (2023PhRvR...5c3194G) — ab initio "
+                      "Gibbs 자유에너지, 300–5000 GPa, Kraus+ 2022 의 1 TPa 실측과 일치")
+
+
+def iapws_p_melt(name: str, t: float) -> float:
+    """IAPWS R14-08(2011) 의 p_melt(T) [Pa]. 상 이름이 어느 식인지를 고른다."""
+    if name == "ice_ih":
+        th = t / 273.16
+        return 611.657 * (1.0 + sum(a * (1.0 - th ** b)
+                                    for a, b in zip(IAPWS_IH_A, IAPWS_IH_B)))
+    if name == "ice_vii":
+        t_star, p_star = IAPWS_VII_TP
+        th = t / t_star
+        ln_pi = sum(c * (1.0 - th ** e)
+                    for c, e in zip(IAPWS_VII_C, IAPWS_VII_E))
+        return p_star * math.exp(ln_pi)
+    t_star, p_star, c, e, _lo, _hi = IAPWS_MELT[name]
+    return p_star * (1.0 - c * (1.0 - (t / t_star) ** e))
+
+
+def _water_branch(p: float) -> str | None:
+    """이 압력에서 녹는 것이 어느 얼음인가. **녹는곡선 자신의 분기점** 으로 고른다."""
+    b3, b5, b6, b7 = WATER_MELT_BREAKS
+    if p <= 0.0:
+        return None
+    if p < b3:
+        return "ice_ih"
+    if p < b5:
+        return "ice_iii"
+    if p < b6:
+        return "ice_v"
+    if p < b7:
+        return "ice_vi"
+    if p <= iapws_p_melt("ice_vii", IAPWS_VII_RANGE[1]):
+        return "ice_vii"
+    return None
+
+
+def water_t_melt(p: float) -> float | None:
+    """압력 p 에서 물얼음이 녹는 온도 [K]. 곡선 밖이면 None.
+
+    IAPWS 는 p(T) 를 준다. 각 분기 안에서 단조라 이분법으로 뒤집는다 — 층 경계에서만
+    묻는 질문이라 적분 안쪽 고리가 아니고, 그래서 값싼 형태보다 확실한 형태를 쓴다."""
+    name = _water_branch(p)
+    if name is None:
+        return None
+    lo, hi = (IAPWS_IH_RANGE if name == "ice_ih" else
+              IAPWS_VII_RANGE if name == "ice_vii" else
+              IAPWS_MELT[name][4:6])
+    # Ih 은 압력이 오르면 녹는점이 **내려간다**. 두 방향을 한 코드로 다루려고 부호를 뽑는다.
+    rising = iapws_p_melt(name, hi) > iapws_p_melt(name, lo)
+    for _ in range(80):
+        mid = 0.5 * (lo + hi)
+        if (iapws_p_melt(name, mid) < p) == rising:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def iron_t_melt(p: float) -> float | None:
+    """압력 p 에서 **순철** 이 녹는 온도 [K]. 5 TPa 위는 None (두 적합 다 밖이다)."""
+    if p < 0.0 or p > IRON_MELT_MAX:
+        return None
+    t0, p0, a, c = IRON_MELT_LOW if p <= IRON_MELT_SPLICE else IRON_MELT_HIGH
+    return t0 * (1.0 + (p - p0) / a) ** c
+
+
 # ── 철 ──────────────────────────────────────────────────────────────────
 #
 # 두 갈래가 있고 둘 다 필요하다.
@@ -466,14 +676,21 @@ FE_PREM = Material(
     (Phase("fe_prem", "bm2", 7050.0, 201.0 * GPA, 4.0, 12e3 * GPA,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 외핵 BM2 적합",
            alpha_k=IRON_ALPHA_K, alpha_k_dt=IRON_ALPHA_K_DT, c_v_ref=CV_IRON,
-           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat"),),
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
+           # PREM 외핵 적합이라 가벼운 원소가 이미 들어 있는 재료다. 녹는점도 같은
+           # 자리에서 갈린다 — 순철 곡선에 관례적 20 % 내림을 곱한다.
+           melt="iron", melt_scale=IRON_LIGHT_ELEMENT_FACTOR,
+           melt_ref=IRON_MELT_REF_LOW + " · 합금 내림 "
+                    f"{(1 - IRON_LIGHT_ELEMENT_FACTOR) * 100:.0f} % (Stevenson+ 1983 관례)"),),
 )
 FE_EPS = Material(
     "fe_eps", "순수 ε-철",
     (Phase("fe_eps", "vinet", 8300.0, 156.2 * GPA, 6.08, 2.09e4 * GPA,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — Fe(ε) Vinet, Anderson+ 2001",
            alpha_k=IRON_ALPHA_K, alpha_k_dt=IRON_ALPHA_K_DT, c_v_ref=CV_IRON,
-           t_ref=LAB_ISOTHERM_T),),
+           t_ref=LAB_ISOTHERM_T,
+           # 실험실 순철이므로 내림이 없다. 순철 곡선 그대로다.
+           melt="iron", melt_ref=IRON_MELT_REF_LOW),),
 )
 
 # ── 규산염 ──────────────────────────────────────────────────────────────
@@ -663,25 +880,32 @@ H2O = Material(
     "h2o", "물얼음",
     (Phase("ice_ih", "bm2", ICE_IH_RHO0, ICE_IH_KT, 4.0, ICE_IH_TO_III,
            "IAPWS-06 / Feistel & Wagner 2006 Table 6 검증값",
-           alpha_k=ICE_IH_ALPHA_K, c_v_ref=ICE_IH_CV, t_ref=273.152519),
+           alpha_k=ICE_IH_ALPHA_K, c_v_ref=ICE_IH_CV, t_ref=273.152519,
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (1)"),
      Phase("ice_iii", "bme3", 1126.384048, 7.834907 * GPA, 6.709734, ICE_III_TO_V,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 III 을 P=0, T=251.15 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_IH_TO_III,
-           alpha_k=ICE_III_ALPHA_K, c_v_ref=ICE_III_CV, t_ref=ICE_III_REF_T),
+           alpha_k=ICE_III_ALPHA_K, c_v_ref=ICE_III_CV, t_ref=ICE_III_REF_T,
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (2)"),
      Phase("ice_v", "bme3", 1207.841865, 10.636814 * GPA, 6.745951, ICE_V_TO_VI,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 V 를 P=0, T=256.43 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_III_TO_V,
-           alpha_k=ICE_V_ALPHA_K, c_v_ref=ICE_V_CV, t_ref=ICE_V_REF_T),
+           alpha_k=ICE_V_ALPHA_K, c_v_ref=ICE_V_CV, t_ref=ICE_V_REF_T,
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (3)"),
      Phase("ice_vi", "bme3", 1263.385752, 10.368592 * GPA, 7.821860, ICE_VI_TO_VII,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 VI 를 P=0, T=272.73 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_V_TO_VI,
-           alpha_k=ICE_VI_ALPHA_K, c_v_ref=ICE_VI_CV, t_ref=ICE_VI_REF_T),
+           alpha_k=ICE_VI_ALPHA_K, c_v_ref=ICE_VI_CV, t_ref=ICE_VI_REF_T,
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (4)"),
      Phase("ice_vii", "bme3", 1460.0, 23.7 * GPA, 4.15, 37.4 * GPA,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — H₂O ice VII BME, Hemley+ 1987",
-           p_min=ICE_VI_TO_VII)),
+           # 곡선은 있는데 **열 상수가 없다.** 온도가 이 층을 흐르지 않으므로 여기서
+           # 나온 T 를 곡선에 대는 것은 가짜 온도를 재는 것이다. 소비처가 거절한다.
+           p_min=ICE_VI_TO_VII, melt="water",
+           melt_ref=IAPWS_MELT_REF + " 식 (5) — 355–715 K")),
     over_reason=("얼음 기둥 바닥이 {p_gpa:.1f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.1f} GPa) 위다. 그 위는 얼음 X 와 초이온상이고 "
                  "(Goncharov+ 2005 의 47 GPa 전이, French+ 2009), 이 레시피에는 그 "

@@ -164,6 +164,27 @@ ICE_THERMAL_SPREAD = (("ice_iii", 355.0e6, 256.43, 0.0011),
 ICE_SPREAD_TOL = 0.15    # 상대. 0.11 % 대 0.107 % 같은 자리라 절대가 아니라 상대다
 
 
+# ── 녹는곡선 ────────────────────────────────────────────────────────────
+#
+# 앵커는 발표된 값이어야 한다. 녹는곡선의 앵커는 셋이고 셋 다 우리 출력이 아니다.
+#
+# IAPWS R14-08(2011) §7 은 "프로그램 검증용" 이라고 이름 붙여 각 식마다 계산값을 하나씩
+# 싣는다. 그 표를 그대로 다시 낸다 — 이 파일이 그 식을 옮겨 적었는지를 재는 자리다.
+IAPWS_TABLE3 = (("ice_ih", 260.0, 138.268),
+                ("ice_iii", 254.0, 268.685),
+                ("ice_v", 265.0, 479.640),
+                ("ice_vi", 320.0, 1356.76),
+                ("ice_vii", 550.0, 6308.71))     # (상, T [K], p [MPa])
+IAPWS_TABLE3_TOL = 5e-6      # 표가 실은 자릿수만큼
+
+# 철의 융해온도. 발표된 두 실험과 두 계산이 내핵 경계(330 GPa)에서 무엇을 말하는가.
+FE_ICB_GPA = 330.0
+FE_ICB_ANCHORS = (("Anzellini+ 2013 (2013Sci...340..464A)", 6230.0, 500.0),
+                  ("Sinmyo+ 2019 (2019E&PSL.510...45S)", 5500.0, 220.0))
+FE_ZERO_P_MELT = 1811.0      # K. 상압 철의 녹는점. 곡선의 T₀ 가 이 근처여야 한다
+FE_ZERO_P_TOL = 0.02
+
+
 def unterborn_tcmb(radius_earth: float, t_pot: float = 1600.0) -> float:
     """Unterborn+ 2019 eq. 7 과 eq. 8. 포텐셜 온도 t_pot 에서의 CMB 온도 [K].
 
@@ -935,6 +956,142 @@ def main() -> int:
         fails.append("음수 포텐셜 온도를 이름 대며 거절하지 않는다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 음수 포텐셜 온도는 거절하고, 0/None 은 "
           f"'판정하지 않는다' 로 읽는다")
+
+    print("\n녹는곡선 — IAPWS 가 검증용으로 실은 다섯 점을 다시 내는가")
+    # 손으로 옮겨 적은 식이 맞는지를 그 표준 자신의 검증표로 잰다.
+    from eos import iapws_p_melt, iron_t_melt, water_t_melt
+    from eos import (IRON_LIGHT_ELEMENT_FACTOR, IRON_MELT_SPLICE, IRON_MELT_LOW,
+                     IRON_MELT_HIGH, IRON_MELT_MAX)
+    for name, t_k, want_mpa in IAPWS_TABLE3:
+        got = iapws_p_melt(name, t_k) / 1e6
+        d = abs(got - want_mpa) / want_mpa
+        ok = d <= IAPWS_TABLE3_TOL
+        if not ok:
+            fails.append(f"IAPWS {name}: {t_k} K 에서 {got:.5f} MPa, 표는 {want_mpa}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {name:8} {t_k:6.1f} K → {got:10.4f} MPa "
+              f"· 표 {want_mpa:10.4f} (상대차 {d:.1e})")
+
+    print("\n녹는곡선 — 뒤집기가 제자리로 돌아오는가, 그리고 창을 끊김 없이 덮는가")
+    worst_inv = 0.0
+    for name, t_k, _p in IAPWS_TABLE3:
+        p_pa = iapws_p_melt(name, t_k)
+        back = water_t_melt(p_pa)
+        if back is None:
+            fails.append(f"물 녹는곡선이 {p_pa / 1e6:.1f} MPa 에서 None 을 돌려준다")
+            continue
+        worst_inv = max(worst_inv, abs(back - t_k))
+    ok = worst_inv < 1e-6
+    if not ok:
+        fails.append(f"p_melt(T) 를 뒤집은 T 가 {worst_inv:.3g} K 어긋난다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] p→T 뒤집기 최악 {worst_inv:.2e} K")
+    # 따뜻한 얼음 창 전체. 209.5 MPa ~ 2.216 GPa 안에서 곡선이 끊기지 않고 단조증가한다.
+    from eos import ICE_IH_TO_III, ICE_VI_TO_VII
+    prev = None
+    gap = None
+    for i in range(101):
+        p_pa = ICE_IH_TO_III + (ICE_VI_TO_VII - ICE_IH_TO_III) * i / 100.0
+        t_m = water_t_melt(p_pa)
+        if t_m is None:
+            gap = p_pa
+            break
+        if prev is not None and t_m < prev - 1e-9:
+            gap = p_pa
+            break
+        prev = t_m
+    ok = gap is None
+    if not ok:
+        fails.append(f"따뜻한 얼음 창의 녹는곡선이 {gap / 1e6:.1f} MPa 에서 끊긴다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 209.5 MPa–2.216 GPa 에서 끊긴 데 없이 "
+          f"{water_t_melt(ICE_IH_TO_III):.2f} K → {prev:.2f} K 로 오른다")
+
+    print("\n녹는곡선 — 철이 발표된 앵커 안에 떨어지는가")
+    t0 = iron_t_melt(0.0)
+    d = abs(t0 - FE_ZERO_P_MELT) / FE_ZERO_P_MELT
+    ok = d <= FE_ZERO_P_TOL
+    if not ok:
+        fails.append(f"상압 철 녹는점이 {t0:.0f} K, 실측 {FE_ZERO_P_MELT:.0f} K")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 상압 {t0:.0f} K · 실측 {FE_ZERO_P_MELT:.0f} K "
+          f"({d * 100:.1f} %)")
+    t_icb = iron_t_melt(FE_ICB_GPA * 1e9)
+    hit = [n for n, v, u in FE_ICB_ANCHORS if abs(t_icb - v) <= u]
+    ok = bool(hit)
+    if not ok:
+        fails.append(f"내핵 경계 순철 녹는점 {t_icb:.0f} K 가 두 실험 어느 오차범위에도 "
+                     f"안 들어간다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] {FE_ICB_GPA:.0f} GPa 에서 순철 {t_icb:.0f} K")
+    for n, v, u in FE_ICB_ANCHORS:
+        inside = "안" if abs(t_icb - v) <= u else "밖"
+        print(f"         {n}: {v:.0f} ± {u:.0f} K — {inside}")
+    print(f"         두 실험이 서로 "
+          f"{abs(FE_ICB_ANCHORS[0][1] - FE_ICB_ANCHORS[1][1]) / FE_ICB_ANCHORS[1][1] * 100:.0f} % "
+          f"어긋난다. 이 곡선의 정직한 오차폭이 그 폭이다.")
+
+    print("\n녹는곡선 — 두 적합의 이음매를 재본다 (지어낸 수가 아니라)")
+    lo_t0, lo_p0, lo_a, lo_c = IRON_MELT_LOW
+    hi_t0, hi_p0, hi_a, hi_c = IRON_MELT_HIGH
+    worst_splice = 0.0
+    for p_gpa in (300.0, 330.0, 365.0):
+        a = lo_t0 * (1.0 + (p_gpa * 1e9 - lo_p0) / lo_a) ** lo_c
+        b = hi_t0 * (1.0 + (p_gpa * 1e9 - hi_p0) / hi_a) ** hi_c
+        worst_splice = max(worst_splice, abs(b - a) / a)
+        print(f"         {p_gpa:.0f} GPa — Zhang+ 2015 {a:.0f} K · "
+              f"González-Cataldo+ 2023 {b:.0f} K ({(b / a - 1) * 100:+.1f} %)")
+    ok = 0.05 < worst_splice < 0.10
+    if not ok:
+        fails.append(f"두 융해 적합의 겹치는 구간 차이가 {worst_splice * 100:.1f} % 로 "
+                     f"기록된 6.8~7.5 % 밖")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 겹치는 구간 최악 {worst_splice * 100:.1f} % — "
+          f"두 실험이 어긋나는 13 % 보다 좁다")
+    ok = iron_t_melt(IRON_MELT_MAX * 1.01) is None
+    if not ok:
+        fails.append("5 TPa 위에서도 융해온도를 돌려준다 — 두 적합 다 밖인 자리다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] {IRON_MELT_MAX / 1e12:.0f} TPa 위는 값이 아니라 "
+          f"None 이다")
+
+    print("\n녹는곡선 — 없는 재료는 없다고 말하는가")
+    from eos import MATERIALS as _MM, H_HE
+    for mat, want_free in ((_MM["silicate"], True), (_MM["h2o"], False),
+                           (_MM["fe_prem"], False), (_MM["fe_eps"], False),
+                           (H_HE, True)):
+        free = mat.melt_free_phases()
+        ok = bool(free) == want_free
+        if not ok:
+            fails.append(f"{mat.name}: 녹는곡선 유무를 잘못 말한다 — {free}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {mat.name:9} 곡선 없는 상 {free or '()'}")
+    ok = (_MM["fe_eps"].t_melt(FE_ICB_GPA * 1e9)
+          > _MM["fe_prem"].t_melt(FE_ICB_GPA * 1e9))
+    if not ok:
+        fails.append("합금 핵(fe_prem)의 녹는점이 순철(fe_eps)보다 낮지 않다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 합금 핵이 순철보다 "
+          f"{(1 - IRON_LIGHT_ELEMENT_FACTOR) * 100:.0f} % 낮게 녹는다 — "
+          f"{_MM['fe_prem'].t_melt(FE_ICB_GPA * 1e9):.0f} K 대 "
+          f"{_MM['fe_eps'].t_melt(FE_ICB_GPA * 1e9):.0f} K")
+
+    print("\n따뜻한 얼음 창 — 판정이 나오고, 온도를 옮기면 뒤집히는가")
+    icy = dict(core_mass_fraction=0.0, ice_mass_fraction=0.407)
+    cold = solve(0.0248, potential_temperature=120.0, **icy)
+    warm = solve(0.0248, potential_temperature=250.0, **icy)
+    none_t = solve(0.0248, **icy)
+    got = (cold.values["ice_column_state"], warm.values["ice_column_state"],
+           none_t.values["ice_column_state"])
+    ok = got == ("solid", "molten", "undecided")
+    if not ok:
+        fails.append(f"얼음 창 판정이 {got} 다 — (solid, molten, undecided) 여야 한다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 120 K → {got[0]} · 250 K → {got[1]} · "
+          f"온도 미선언 → {got[2]}")
+    ok = solve(1.0, core_mass_fraction=0.325).values["ice_column_state"] == "none"
+    if not ok:
+        fails.append("얼음이 없는 천체가 'none' 이라고 말하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 얼음 기둥이 없으면 'none' 이다")
+    said = any("밀도는 손대지 않았다" in n for n in warm.notes)
+    if not said:
+        fails.append("녹았다고 판정하면서 밀도를 안 건드렸다는 사실을 note 가 안 적는다")
+    print(f"  [{'PASS' if said else 'FAIL'}] 녹은 해의 note 가 밀도를 손대지 않았다고 적는다")
+    # 판정이 밀도에 영향을 주지 않는다는 것을 값으로 확인한다.
+    ok = (warm.values["radius"] == solve(0.0248, potential_temperature=250.0,
+                                         **icy).values["radius"])
+    print(f"  [{'PASS' if ok else 'FAIL'}] 같은 입력이 같은 반지름을 낸다 (판정은 "
+          f"밀도 경로에 들어가지 않는다)")
 
     print("\n계약 — 페이로드가 제 몫을 하는가")
     r = solve(1.0, core_mass_fraction=0.325)

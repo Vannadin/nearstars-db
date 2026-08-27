@@ -44,8 +44,9 @@ that the reference is Earth's own adiabat, not an isotherm.
 ## Contract — `interior_layers`
 
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
-`radius` [R_earth] · `core_pressure` [GPa] · `core_temperature` [K] ·
-`cmb_temperature` [K] · `bulk_porosity` [—] · `voids_expected` [—]
+`radius` [R_earth] · `core_pressure` [GPa] · `cmb_pressure` [GPa] ·
+`core_temperature` [K] · `cmb_temperature` [K] · `ice_column_state` [—] ·
+`bulk_porosity` [—] · `voids_expected` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
@@ -76,6 +77,14 @@ the surface, which is Unterborn+ 2019's boundary condition `T(R) = T_Pot`. Betwe
 sits a conductive lid worth roughly 1300 K on Earth, and its thickness is a function of the
 heat flux, which is `internal_heat_nontidal`'s output rather than this recipe's. Left unset
 the recipe carries no temperature at all and reproduces the isothermal result bit for bit.
+
+`core_temperature` and `cmb_temperature` are a **lower bound on the core**, not the core's
+temperature. One adiabat is drawn from the surface to the centre, so the core sits on the
+mantle's: the D″ thermal boundary layer is missing (over 1200 K on Earth), and the iron
+Grüneisen the γ identity produces from Seager+ 2007's thermal-pressure αK₀ is 0.22 at core
+pressures against the ab-initio 1.5. Both biases point down, which is what makes the number
+a bound rather than noise, and [`core_state`](core-state-methodology.md) is built on that
+property.
 
 `voids_expected` answers a question the compaction relation does not: whether this body is
 in a regime where pore space survives at all. It is false when any of three indicators
@@ -358,6 +367,50 @@ its text containing no adiabat, Grüneisen parameter or potential temperature. A
 state needs T at each pressure along the profile, which only the integration can produce.
 Two quantities, one word; the outputs added here are named `core_temperature` and
 `cmb_temperature`, and renaming `geotherm` belongs to the recipe that owns it.
+
+### The melting curve: whether the layer is solid at all
+
+With P and T at every depth, the phase question can finally be asked. The curve is a
+property of the material and lives beside `phase_at(P)` in `engine/eos.py`, because it needs
+the same branch selection: `T_melt(P)` is not single-valued for water, ice Ih's curve running
+backwards while ices III, V and VI run forwards.
+
+Water takes the melting-pressure equations of **IAPWS R14-08(2011)**, the same body and the
+same kind of document as the IAPWS-06 release ice Ih's ρ₀ and K_T are read from. Each branch
+is `p_melt(T)`, inverted numerically at the few pressures the recipe asks about.
+
+| branch | equation | reduced at | valid | uncertainty |
+|---|---|---|---|---|
+| ice Ih | π = 1 + Σ aᵢ(1 − θ^bᵢ) | 273.16 K, 611.657 Pa | 273.16 → 251.165 K | 2 % |
+| ice III | π = 1 − 0.299948(1 − θ⁶⁰) | 251.165 K, 208.566 MPa | 251.165 → 256.164 K | 3 % |
+| ice V | π = 1 − 1.18721(1 − θ⁸) | 256.164 K, 350.1 MPa | 256.164 → 273.31 K | 3 % |
+| ice VI | π = 1 − 1.07476(1 − θ⁴·⁶) | 273.31 K, 632.4 MPa | 273.31 → 355 K | 3 % |
+| ice VII | ln π = 1.73683(1 − θ⁻¹) − 0.0544606(1 − θ⁵) + 8.06106×10⁻⁸(1 − θ²²) | 355 K, 2216 MPa | 355 → 715 K | 7 % |
+
+Ices III, V and VI cover the warm ice window end to end, so the row that used to refuse it is
+now a verdict. The release's §7 lists one calculated pressure per equation for program
+verification; `test_interior.py` reproduces all five.
+
+**The curve keeps its own triple points.** IAPWS constrains its equations to its own
+triple-point table, which differs from the transition pressures this recipe takes from
+Choukroun & Grasset 2007 by 0.45 %, 1.4 % and 2.3 %. Neither is moved to match the other,
+because moving either breaks the fit it belongs to; the melting curve branches on its own
+break pressures instead. Within about 2 % of a triple point the two disagree about which ice
+melts, which is inside IAPWS's own 3 %.
+
+**The verdict is returned; the density is not changed.** Liquid water is not the same density
+as ice, and modelling that needs a second equation of state per material and a phase fraction
+inside the integrator. So a body reported `molten` still has the solid-phase radius and
+C/MR², every note carrying a molten verdict says so, and every anchor is bit-identical to the
+revision before this one. Ice VII has a published melting curve and no published thermal
+constants, so temperature does not flow through it and the verdict declines there by name
+rather than compare a real curve against a frozen temperature.
+
+Iron's melting curve is documented with its consumer, in
+[core-state](core-state-methodology.md). Silicate has none here: a mantle solidus is a
+different literature (a solidus and a liquidus for a mixture, not one melting point for a
+pure compound), and `melt_free_phases()` names the silicate phases the way `cold_phases()`
+names the phases without thermal constants.
 
 ## Porosity: what the pressure has not crushed yet
 
@@ -897,7 +950,9 @@ Both tables, and the roster table below, are regenerated by
 | rock + ice Ih | ice column base below 209.5 MPa | integrates, ice Ih throughout | calibrated |
 | rock + ice VII | ice column base above 2.216 GPa and below 37.4 GPa | integrates, ice VII | calibrated |
 | rock + ice III / V / VI | ice column base in 209.5 MPa – 2.216 GPa | integrates, switching phase at each triple point | calibrated |
-| **warm ice window** | ice column base in 209.5 MPa – 2.216 GPa on a body warm enough to melt | **not decided here**: the same pressures hold liquid water, and choosing needs a thermal profile this recipe does not carry | — |
+| **warm ice window** | ice column in 209.5 MPa – 2.216 GPa with a `potential_temperature` declared | **decides**: the integrated T(P) is compared against the IAPWS melting curve at the base, the top and each phase change, and `ice_column_state` comes back `solid` or `molten`. The verdict is returned and **the density is not changed** (no liquid equation of state here), so a `molten` result carries the solid-phase radius and C/MR² and says so | analog |
+| **ice with no temperature declared** | any ice column, `potential_temperature` unset | `ice_column_state: undecided`. The curve and the pressures are both there; nothing flows without the declaration | — |
+| **ice VII** | ice column base above 2.216 GPa | that part of the column drops out of the verdict, named: IAPWS gives ice VII a melting curve (355–715 K) and `eos.py` has no thermal constants for the phase, so the temperature carried through it is not a temperature | — |
 | porous rock or ice | `initial_porosity` > 0, central pressure inside the 150 MPa experimental ceiling | integrates with φ(P) from the published relation | analog |
 | **porosity above the experimental ceiling** | `initial_porosity` > 0, pressure above 150 MPa | the relation is **extrapolated**: results report the mass fraction affected, and `porosity_cap` gives the reading that claims nothing there | analog |
 | **porosity on a heated body** | `initial_porosity` > 0 and the body has melt, differentiation, convection, impacts or tidal heating | **not decided here**: all five remove porosity (Bierson+ 2019 §2.2), so what this recipe returns is an upper bound on the voids, never an estimate | — |
@@ -1153,6 +1208,16 @@ instead of as a class constant.
   `docs/phase3/_papers/1301.0818.md`. The H₂O phase sequence along the melting curve and
   its transition pressures (Ih → III at 209.5 MPa, VI → VII at 2.216 GPa, VII → X at
   47 GPa), which is where this recipe's ice-phase gates come from.
+- **IAPWS R14-08(2011)**, *Revised Release on the Pressure along the Melting and
+  Sublimation Curves of Ordinary Water Substance*
+  ([iapws.org/relguide/MeltSub.html](http://www.iapws.org/relguide/MeltSub.html)). The
+  melting-pressure equations for ices Ih, III, V, VI and VII with their reducing constants,
+  validity ranges, uncertainties and the §7 verification values the test reproduces. *A
+  standards release rather than an ADS record*, pinned by release number, the same route by
+  which IAPWS-06 supplies ice Ih's equation of state below. The companion article
+  ([Wagner, W., Riegert, T. & Pruß, A. 2011](https://ui.adsabs.harvard.edu/abs/2011JPCRD..40d3103W),
+  [`2011JPCRD..40d3103W`](https://ui.adsabs.harvard.edu/abs/2011JPCRD..40d3103W)) derives the
+  new ice Ih equation and reprints the ice III–VII ones unchanged.
 - **Feistel, R. & Wagner, W. 2006**, J. Phys. Chem. Ref. Data 35, 1021
   ([`2006JPCRD..35.1021F`](https://ui.adsabs.harvard.edu/abs/2006JPCRD..35.1021F)).
   The IAPWS-06 Gibbs-potential equation of state for ice Ih. *No arXiv preprint*: verified
@@ -1376,6 +1441,8 @@ instead of as a class constant.
   its pure-iron density gate from this recipe, replacing the composition scaling table
 - [Body figure](body-figure-methodology.md) — turns C/MR² into J₂ via Radau–Darwin
 - [Principia geopotential data](principia-geopotential-data.md) — the J₂ worked example
+- [Core state](core-state-methodology.md) — takes the core pressures and the geotherm bound
+  from here and decides whether the metal is liquid
 - [Rocky-planet dynamo](rocky-planet-dynamo-methodology.md) — consumes the core radius
 - [Derivation discipline](derivation-discipline.md) — why the contract block is checked
   against the code, and why tables are generated rather than typed

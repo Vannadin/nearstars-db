@@ -31,8 +31,8 @@ from __future__ import annotations
 
 import math
 
-from eos import (EARTH_POTENTIAL_T, MATERIALS, SILICATE_PREM_TO_PV, PhaseGap,
-                 mix)
+from eos import (EARTH_POTENTIAL_T, ICE_VI_TO_VII, MATERIALS,
+                 SILICATE_PREM_TO_PV, PhaseGap, mix)
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       bulk_factor, porosity, voids_expected)
@@ -45,6 +45,7 @@ REFS = (
     "2007ApJ...669.1279S",      # Seager+ 2007 — 구조 방정식과 enstatite·얼음VII EOS
     "2006JPCRD..35.1021F",      # Feistel & Wagner 2006 (IAPWS-06) — 얼음 Ih
     "2020JGRE..12506176J",      # Journaux+ 2020 (SeaFreeze) — 얼음 III·V·VI
+    "2011JPCRD..40d3103W",      # Wagner+ 2011 / IAPWS R14-08(2011) — 물의 융해곡선
     "2019Icar..326...10B",      # Bierson+ 2019 — 압력이 공극을 닫는 관계와 그 계수
     "2012P&SS...73...98C",      # Carry 2012 — 10 MPa 파쇄 문턱, 관측된 전이질량
     "2022arXiv220210046H",      # Helled+ 2022 — n=1 폴리트로프와 그 계수
@@ -92,11 +93,12 @@ class Structure:
 
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
-                 "p_silicate_max", "t_center", "t_cmb", "t_surface")
+                 "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
-                 p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0):
+                 p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
+                 ice_samples=()):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -115,6 +117,9 @@ class Structure:
         self.t_center = t_center
         self.t_cmb = t_cmb
         self.t_surface = t_surface
+        # 얼음 기둥을 지나며 찍은 (압력, 온도) 표본. 녹는곡선에 대는 것은 적분이 끝난
+        # 뒤이고, 사격이 반복될 때마다 뒤집기를 돌리지 않으려고 그렇게 나눴다.
+        self.ice_samples = tuple(ice_samples)
 
     @property
     def nmoi(self) -> float:
@@ -240,6 +245,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     p_si_max = p if _carries_silicate(mat) else 0.0
     t_cmb = None
     t_surface = t
+    ice_samples: list[tuple[float, float]] = []
+    ICE_SAMPLE_EVERY = 20
 
     def material_for(m_now: float):
         nonlocal layer
@@ -260,6 +267,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 p_ice_base = p
         if mat.name not in phases:
             phases.append(mat.name)
+        if mat.name == "h2o" and (not ice_samples
+                                  or steps % ICE_SAMPLE_EVERY == 0):
+            ice_samples.append((p, t))
         if p_si_max == 0.0 and _carries_silicate(mat):
             p_si_max = p
 
@@ -320,11 +330,16 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         core_radius = r      # 핵만 있는 천체
         p_cmb = p
         t_cmb = t
+    if ice_samples and mat.name == "h2o":
+        # 기둥 꼭대기. 얼음 III·V·VI 구간에서는 녹는곡선이 단열선보다 가파르므로
+        # T − T_melt 가 제일 큰 자리가 여기다. 가스 외피가 있으면 마지막 층이 얼음이
+        # 아니라서 이 표본을 넣지 않는다 — 다른 층의 점을 얼음이라고 부르지 않는다.
+        ice_samples.append((p, t))
     return Structure(r, m, moi, core_radius, p_center, p_cmb, p_ice_base, phases,
                      v_pore=v_pore, m_above_lab=m_above_lab,
                      p_silicate_max=p_si_max, t_center=t_center,
                      t_cmb=t_cmb if t_cmb is not None else 0.0,
-                     t_surface=t_surface)
+                     t_surface=t_surface, ice_samples=ice_samples)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -523,6 +538,73 @@ SILICATE_EXTRAPOLATED_MIN = SILICATE_PREM_TO_PV
 # 4.4 %, 1.46 에서 17 %). 그래서 "대조됐다" 고 말할 수 있는 자리를 좁게 잡는다.
 UNTERBORN_TCMB_MAX_R = 1.05
 
+# ── 따뜻한 얼음 창 ───────────────────────────────────────────────────────
+#
+# 2026-08-27 까지 이 자리에 거절이 하나 있었다 — 얼음 기둥 바닥이 209.5 MPa 과 2.216 GPa
+# 사이이고 천체가 녹을 만큼 따뜻하면 "여기서 판정하지 않는다. 같은 압력이 액체 물도 담고,
+# 고르려면 이 레시피가 들고 있지 않은 열 프로파일이 필요하다" 였다. 프로파일이 생겼고
+# (2026-08-27 의 온도) 녹는곡선이 생겼으므로(IAPWS R14-08) 그 사유가 만료됐다.
+#
+# **판정만 하고 밀도는 손대지 않는다.** 액체 물은 얼음보다 밀도가 다르고, 그것까지 모형에
+# 넣으려면 재료마다 액체 상태방정식이 하나씩 더 있어야 하고 적분기 안에 상분율이 들어와야
+# 한다 — 이번 범위보다 크다. 그래서 녹았다고 판정된 해의 반지름과 C/MR² 는 **고체상의 답**
+# 이고, 그렇게 적는다. 명시하지 않는 것이 결함이지 판정만 내는 것이 결함은 아니다.
+#
+# 표본은 기둥 바닥·중간·꼭대기다. 얼음 III·V·VI 구간에서 녹는곡선(약 52 K/GPa)이
+# 단열선(약 21 K/GPa)보다 가파르므로 T − T_melt 의 최대는 기둥 **꼭대기** 에 있고,
+# 얼음 Ih 은 녹는곡선이 내려가므로 반대로 바닥에 있다. 양쪽을 다 찍는다.
+ICE_STATE_NONE = "none"
+ICE_STATE_SOLID = "solid"
+ICE_STATE_MOLTEN = "molten"
+ICE_STATE_UNDECIDED = "undecided"
+
+
+def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
+    """얼음 기둥이 녹았는가. (상태, 한 줄 설명) 을 돌려준다."""
+    if not st.ice_samples:
+        return ICE_STATE_NONE, ""
+    if not potential_temperature:
+        return (ICE_STATE_UNDECIDED,
+                "**얼음 기둥의 고체·액체를 판정하지 않았다** — 포텐셜 온도가 선언되지 "
+                "않아 이 해에는 온도가 흐르지 않는다. 녹는곡선은 있고(IAPWS R14-08(2011)) "
+                "압력도 있으니, 온도를 선언하면 이 행은 판정으로 바뀐다.")
+    ice = MATERIALS["h2o"]
+    best_margin = None
+    best = None
+    above_vii = False
+    for p_pa, t_k in st.ice_samples:
+        if p_pa <= 0.0 or t_k <= 0.0:
+            continue
+        if p_pa > ICE_VI_TO_VII:
+            above_vii = True
+            continue     # 얼음 VII 에는 열 상수가 없다 — 아래에서 이름 대고 거절한다
+        t_m = ice.t_melt(p_pa)
+        if t_m is None:
+            continue
+        margin = t_k - t_m
+        if best_margin is None or margin > best_margin:
+            best_margin, best = margin, (p_pa, t_k, t_m)
+    if best_margin is None:
+        return (ICE_STATE_UNDECIDED,
+                "**얼음 기둥의 고체·액체를 판정하지 않았다** — 기둥 전체가 얼음 VII "
+                f"({ICE_VI_TO_VII / 1e9:.3f} GPa 위)이고 그 상에는 발표된 열 상수가 없어 "
+                "온도가 그 층을 그대로 통과한다. 녹는곡선은 IAPWS 가 355–715 K 로 주지만, "
+                "가짜 온도를 진짜 곡선에 대는 것은 판정이 아니다.")
+    p_pa, t_k, t_m = best
+    tail = (f" 기둥의 일부가 얼음 VII({ICE_VI_TO_VII / 1e9:.3f} GPa 위)이라 그 구간은 "
+            "판정에서 빠졌다 — 그 상에 열 상수가 없다." if above_vii else "")
+    where = f"{p_pa / 1e6:.1f} MPa 에서 T {t_k:.1f} K · 녹는점 {t_m:.1f} K"
+    if best_margin > 0.0:
+        return (ICE_STATE_MOLTEN,
+                f"**얼음 기둥이 녹는다** — {where} 로 {best_margin:+.1f} K 다 "
+                f"(IAPWS R14-08(2011), 이 구간 불확도 3 %). **밀도는 손대지 않았다**: "
+                "이 레시피에 액체 물의 상태방정식이 없어서, 여기 나온 반지름과 C/MR² 는 "
+                "고체상의 답이다. 판정만 읽고 밀도는 읽지 말 것." + tail)
+    return (ICE_STATE_SOLID,
+            f"얼음 기둥이 고체다 — 제일 녹기 쉬운 자리가 {where} 로 {best_margin:+.1f} K "
+            f"다 (IAPWS R14-08(2011), 불확도 3 %)." + tail)
+
+
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
 FLUID_CLASSES = ("ice_giant", "sub_neptune", "brown_dwarf", "star")
 
@@ -686,6 +768,9 @@ def solve(mass_earth: float,
              f"평균밀도 {rho_bar:.0f} kg/m³.",]
     if initial_porosity > 0:
         notes.append(_porosity_note(st, initial_porosity, mass_earth))
+    ice_state, ice_note = _ice_verdict(st, potential_temperature)
+    if ice_note:
+        notes.append(ice_note)
 
     # 2026-08-26: 혼합 규칙이 들어오면서 **앵커 수가 하나에서 둘로 늘었다.** 목성이
     # Z = 0 에서 +0.6 %, 토성이 Z = 0.200 에서 −0.1 % 다. 그래서 이 강등 규칙을 다시
@@ -786,6 +871,18 @@ def solve(mass_earth: float,
              "돌릴 때 닫힌다.",
              "등온이다. 핵과 하부맨틀 EOS 가 PREM 적합이라 지구의 열구조와 가벼운 "
              "원소가 그 유효 ρ₀ 안에 흡수돼 있다."]
+    if st.t_center > 0.0:
+        notes.append(
+            "**core_temperature 와 cmb_temperature 는 하한이지 핵의 온도가 아니다.** 이 "
+            "적분은 표면에서 중심까지 단열선 하나를 이어서 그리므로, 핵이 맨틀의 단열선 "
+            "위에 앉는다. 판정선이었던 Unterborn+ 2019 eq. 7 도 **맨틀** 단열선이고 그들의 "
+            "2635 K 는 핵-맨틀 경계의 맨틀 쪽 값이다 (그 논문이 Lay+ 2008 의 2500–2800 K 와 "
+            "대조하며 그렇게 적는다). 그 사이에 D″ 열경계층이 있고 그 ΔT 는 핵-맨틀 경계의 "
+            "열류가 정한다 — 지구에서 1200 K 를 넘고 (Sinmyo+ 2019 의 핵 쪽 3760 ± 290 K), "
+            "이 레시피에는 그 열류가 없다. 더해서 철의 단열 기울기가 낮다: γ 항등식이 "
+            "Seager+ 2007 의 αK₀(열압력용 상수)를 받아 핵 압력대에서 γ_Fe ≈ 0.22 를 내는데, "
+            "ab initio 값은 1.5 다 (Alfè+ 2002, arXiv:cond-mat/0107307). 두 편향이 같은 "
+            "방향(아래)이라 이 값은 **하한** 이고, core_state 가 그 성질을 쓴다.")
 
     # 공극이 남을 레짐인가. 적분이 낸 중심압을 쓰므로 적분 뒤에만 물을 수 있다.
     voids_ok, voids_why = voids_expected(st.mass_kg, st.p_center, tidal_heating)
@@ -829,6 +926,8 @@ def solve(mass_earth: float,
         values={"nmoi": st.nmoi,
                 "core_temperature": st.t_center,
                 "cmb_temperature": st.t_cmb,
+                "cmb_pressure": (st.p_cmb or 0.0) / 1e9,
+                "ice_column_state": ice_state,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
                 "core_radius": st.core_radius_m / EARTH_RADIUS_M,
                 "radius": radius,
@@ -838,6 +937,8 @@ def solve(mass_earth: float,
         units={"nmoi": "dimensionless",
                "core_temperature": "K",
                "cmb_temperature": "K",
+               "cmb_pressure": "GPa",
+               "ice_column_state": "",
                "core_radius_fraction": "dimensionless",
                "core_radius": "R_earth",
                "radius": "R_earth",
@@ -1166,4 +1267,7 @@ def _from_state(state):
         # "이 레시피가 판정하지 않는다" 는 뜻이다 — φ₀ 는 강착이 정하고 가열이 지운다.
         initial_porosity=state.get("initial_porosity", 0.0),
         porosity_cap=state.get("porosity_cap"),
+        # 포텐셜 온도도 **선언** 이다. 없으면 온도가 아예 흐르지 않고 예전 등온 경로다.
+        potential_temperature=state.get("potential_temperature"),
+        tidal_heating=bool(state.get("tidal_heating", False)),
     )

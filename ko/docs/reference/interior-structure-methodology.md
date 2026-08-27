@@ -42,8 +42,9 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 ## 계약 — `interior_layers`
 
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
-`radius` [R_earth] · `core_pressure` [GPa] · `core_temperature` [K] ·
-`cmb_temperature` [K] · `bulk_porosity` [—] · `voids_expected` [—]
+`radius` [R_earth] · `core_pressure` [GPa] · `cmb_pressure` [GPa] ·
+`core_temperature` [K] · `cmb_temperature` [K] · `ice_column_state` [—] ·
+`bulk_porosity` [—] · `voids_expected` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
@@ -329,6 +330,47 @@ Unterborn+ 2019 §2 의 맨틀 포텐셜 온도 1600 K 입니다. 1600 K 를 선
 것은 프로파일 위 각 압력에서의 T 이고, 그건 적분만이 낼 수 있습니다. 양이 둘인데 낱말이
 하나입니다. 그래서 여기 더한 출력은 `core_temperature` 와 `cmb_temperature` 로 이름 짓고,
 `geotherm` 의 개명은 그 낱말을 가진 레시피의 몫으로 둡니다.
+
+### 융해곡선. 그 층이 애초에 고체인가
+
+깊이마다 P 와 T 가 다 있으니 이제 상을 물을 수 있습니다. 곡선은 재료의 성질이라
+`engine/eos.py` 의 `phase_at(P)` 옆에 둡니다. 같은 분기 선택이 필요하기 때문입니다.
+물에서 `T_melt(P)` 는 값이 하나가 아닙니다 — 얼음 Ih 의 곡선은 거꾸로 내려가고 III·V·VI
+은 올라갑니다.
+
+물은 **IAPWS R14-08(2011)** 의 융해압 식을 씁니다. 이 파일이 얼음 Ih 의 ρ₀ 와 K_T 를
+읽어 온 IAPWS-06 과 같은 기관의 같은 종류 문서입니다. 각 분기가 `p_melt(T)` 라서, 레시피가
+묻는 몇 안 되는 압력에서만 수치로 뒤집습니다.
+
+| 분기 | 식 | 기준 | 유효 구간 | 불확도 |
+|---|---|---|---|---|
+| 얼음 Ih | π = 1 + Σ aᵢ(1 − θ^bᵢ) | 273.16 K, 611.657 Pa | 273.16 → 251.165 K | 2 % |
+| 얼음 III | π = 1 − 0.299948(1 − θ⁶⁰) | 251.165 K, 208.566 MPa | 251.165 → 256.164 K | 3 % |
+| 얼음 V | π = 1 − 1.18721(1 − θ⁸) | 256.164 K, 350.1 MPa | 256.164 → 273.31 K | 3 % |
+| 얼음 VI | π = 1 − 1.07476(1 − θ⁴·⁶) | 273.31 K, 632.4 MPa | 273.31 → 355 K | 3 % |
+| 얼음 VII | ln π = 1.73683(1 − θ⁻¹) − 0.0544606(1 − θ⁵) + 8.06106×10⁻⁸(1 − θ²²) | 355 K, 2216 MPa | 355 → 715 K | 7 % |
+
+얼음 III·V·VI 이 따뜻한 얼음 창을 끝에서 끝까지 덮습니다. 그래서 그 창을 거절하던 행이
+이제 판정이 됐습니다. 그 릴리스의 §7 이 식마다 "프로그램 검증용" 계산값을 하나씩 싣고,
+`test_interior.py` 가 그 다섯 점을 다시 냅니다.
+
+**곡선은 자기 삼중점을 들고 다닙니다.** IAPWS 는 자기 식을 자기 삼중점 표에 맞춰
+구속했고, 그 표는 이 레시피가 Choukroun & Grasset 2007 에서 받은 전이압과 0.45 % · 1.4 % ·
+2.3 % 다릅니다. 어느 쪽도 상대에 맞춰 옮기지 않습니다. 옮기면 그 값이 속한 적합이 깨지기
+때문이고, 대신 융해곡선이 자기 분기점으로 갈립니다. 삼중점 근처 2 % 폭에서 둘이 어느
+얼음이 녹는지를 다르게 말할 수 있는데, 그 폭은 IAPWS 자신의 3 % 안입니다.
+
+**판정만 내고 밀도는 바꾸지 않습니다.** 액체 물은 얼음과 밀도가 다르고, 그것까지 모형에
+넣으려면 재료마다 상태방정식이 하나 더 있어야 하고 적분기 안에 상분율이 들어와야 합니다.
+그래서 `molten` 으로 나온 천체도 반지름과 C/MR² 는 고체상의 답이고, 그 판정을 실은 note 가
+전부 그렇게 적으며, 앵커는 직전 리비전과 비트까지 같습니다. 얼음 VII 은 발표된 융해곡선은
+있고 발표된 열 상수는 없어서 온도가 그 층을 흐르지 않습니다. 진짜 곡선에 얼어붙은 온도를
+대는 대신, 그 구간은 이름을 대며 판정에서 빠집니다.
+
+철의 융해곡선은 그 소비처와 함께 [핵 상태](core-state-methodology.md) 에 적었습니다.
+규산염은 여기에 곡선이 없습니다. 맨틀 고상선은 다른 문헌이고(순물질의 녹는점 하나가 아니라
+혼합물의 고상선과 액상선입니다), `melt_free_phases()` 가 규산염 상들의 이름을 들고 있습니다
+— `cold_phases()` 가 열 상수 없는 상을 그렇게 들고 있는 것과 같습니다.
 
 ## 공극. 압력이 아직 으깨지 못한 것
 
@@ -1067,6 +1109,15 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   **[1301.0818](https://arxiv.org/abs/1301.0818)**). `docs/phase3/_papers/1301.0818.md` 에
   **캐시**돼 있음. 융해 곡선을 따라가는 H₂O 상 순서와 그 전이 압력(Ih → III 209.5 MPa,
   VI → VII 2.216 GPa, VII → X 47 GPa). 이 레시피의 얼음 상 게이트가 여기서 왔음.
+- **IAPWS R14-08(2011)**, *Revised Release on the Pressure along the Melting and
+  Sublimation Curves of Ordinary Water Substance*
+  ([iapws.org/relguide/MeltSub.html](http://www.iapws.org/relguide/MeltSub.html)). 얼음
+  Ih·III·V·VI·VII 의 융해압 식과 그 기준 상수·유효 구간·불확도, 그리고 시험이 다시 내는
+  §7 의 검증값. *ADS 레코드가 아니라 표준 릴리스* 이고 릴리스 번호로 핀합니다. 아래
+  IAPWS-06 이 얼음 Ih 의 상태방정식을 주는 것과 같은 경로입니다. 동반 논문
+  ([Wagner, W., Riegert, T. & Pruß, A. 2011](https://ui.adsabs.harvard.edu/abs/2011JPCRD..40d3103W),
+  [`2011JPCRD..40d3103W`](https://ui.adsabs.harvard.edu/abs/2011JPCRD..40d3103W)) 이 새
+  얼음 Ih 식을 유도하고 III–VII 식을 그대로 다시 싣습니다.
 - **Feistel, R. & Wagner, W. 2006**, J. Phys. Chem. Ref. Data 35, 1021
   ([`2006JPCRD..35.1021F`](https://ui.adsabs.harvard.edu/abs/2006JPCRD..35.1021F)).
   얼음 Ih 의 IAPWS-06 Gibbs 퍼텐셜 상태방정식. *arXiv 프리프린트 없음.* bibcode 로
@@ -1269,6 +1320,8 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   게이트를 이 레시피에서 가져가며, 조성 배율표를 대체했다
 - [천체 figure](body-figure-methodology.md) — Radau–Darwin으로 C/MR²를 J₂로 바꾼다
 - [Principia 지오퍼텐셜 데이터](principia-geopotential-data.md) — J₂ worked example
+- [핵 상태](core-state-methodology.md) — 여기서 핵의 압력과 지오섬 하한을 받아 금속이
+  액체인지 판정한다
 - [암석행성 다이나모](rocky-planet-dynamo-methodology.md) — 핵 반경을 쓴다
 - [도출 규율](derivation-discipline.md) — 계약 블록을 왜 코드와 대조하고, 표를 왜 손으로
   치지 않고 생성하는가
