@@ -48,8 +48,10 @@ DECLINES = [
      "질량분율", "핵과 얼음의 합이 1 을 넘는다"),
     ("모르는 조성", dict(mass_earth=1.0, composition="cheese"),
      "조성", "재료가 배정되지 않았다"),
-    ("얼음 많은 큰 천체", dict(mass_earth=1.0, composition="water"),
-     "얼음 X", "물 기둥이 얼음 X·초이온상까지 내려간다"),
+    # 2026-08-27 까지 이 자리는 1 M⊕ 였다. 얼음 X 가 들어와 그 천체가 풀리므로,
+    # 같은 거절을 **새 울타리** 에서 다시 건다 — 천장을 없앤 게 아니라 옮긴 것이다.
+    ("물이 아주 많은 큰 천체", dict(mass_earth=8.0, composition="water"),
+     "매듭 구간", "얼음 기둥이 French & Redmer 표현의 1 TPa 상한 아래로 내려간다"),
     # 거대행성은 2026-08-26 에 풀리게 됐다 (test_giant.py). 아직 밖인 유체 천체가
     # 이름을 대며 거절하는지는 여기서 계속 지킨다.
     ("갈색왜성", dict(mass_earth=5000.0, body_class="brown_dwarf"),
@@ -185,6 +187,21 @@ FE_ZERO_P_MELT = 1811.0      # K. 상압 철의 녹는점. 곡선의 T₀ 가 �
 FE_ZERO_P_TOL = 0.02
 
 
+# ── 얼음 X ──────────────────────────────────────────────────────────────
+#
+# 이 상은 이 사다리에서 **읽은 게 아니라 적합한** 유일한 얼음이다. 그래서 재는 것이
+# 두 가지다 — 적합이 자기 출처를 얼마나 재현하는가, 그리고 이음매가 얼마나 벌어지는가.
+# 둘 다 eos.py 주석에 수로 적혀 있으므로, 여기서 다시 재서 그 수가 맞는지를 본다.
+ICE_X_FIT_WORST = 0.01475      # 상대. 37.4 GPa–1 TPa 의 300 K 등온선에서
+ICE_X_FIT_TOL = 0.10           # 그 수 자체의 허용 표류 (상대)
+ICE_X_SEAM = -0.0226           # 37.4 GPa 에서 ice_vii BME 대비 ice_x Vinet
+ICE_X_SEAM_TOL = 0.10
+# 초이온상. Millot+ 2019 (2019Natur.569..251M) 초록이 적는 하한이고, 우리 온도 천장이
+# 그 **아래** 에 서 있다는 것이 검사 대상이다 — 위에 서 있으면 초이온상을 얼음 X 라고
+# 부르게 된다.
+MILLOT_SUPERIONIC = (100.0e9, 2000.0)
+
+
 def unterborn_tcmb(radius_earth: float, t_pot: float = 1600.0) -> float:
     """Unterborn+ 2019 eq. 7 과 eq. 8. 포텐셜 온도 t_pot 에서의 CMB 온도 [K].
 
@@ -317,6 +334,63 @@ def _seafreeze_gamma() -> list[str]:
         print(f"  [{'PASS' if ok else 'FAIL'}] {name:8} γ {got:.6f} · SeaFreeze "
               f"{want:.6f} ({d * 100:.4f} %)")
     return out
+
+
+ICE_CEILING_CASES = (
+    ("water 프리셋 (얼음 0.50 · 핵 0.163)", dict(composition="water")),
+    ("얼음질량분율 0.25", dict(core_mass_fraction=0.163, ice_mass_fraction=0.25)),
+    ("얼음질량분율 0.75", dict(core_mass_fraction=0.0, ice_mass_fraction=0.75)),
+    ("순수 얼음", dict(core_mass_fraction=0.0, ice_mass_fraction=1.0)),
+)
+
+
+def ice_mass_ceiling(**kwargs) -> float:
+    """얼음이 있는 조성이 풀리는 가장 큰 질량 [M⊕].
+
+    `mass_ceiling` 과 달리 아래로 0.5 M⊕ 밑까지 내려간다. 2026-08-27 의 water 프리셋
+    상한이 0.0398 M⊕ 였고, 그 자리를 못 재면 이 작업이 무엇을 열었는지도 못 잰다."""
+    lo, hi = 1e-4, 400.0
+    if solve(hi, **kwargs).applicable:
+        return hi
+    for _ in range(45):
+        mid = (lo * hi) ** 0.5
+        if solve(mid, **kwargs).applicable:
+            lo = mid
+        else:
+            hi = mid
+    return lo
+
+
+def _ice_x_crosscheck() -> list[str]:
+    """얼음 X 의 Vinet 이 자기 출처(French & Redmer 2015) 를 재현하는가.
+
+    **이 상은 읽은 게 아니라 적합한 것이다.** 그래서 III·V·VI 처럼 '상수가 표류했는가'
+    를 묻는 것으로는 부족하고, 곡선 전체가 원 표현에서 얼마나 벗어나는지를 재야 한다.
+    그 수(1.475 %)가 eos.py 주석에 적혀 있으므로 여기서 다시 잰다. SeaFreeze 가 없으면
+    건너뛴다 — check.sh 는 무거운 의존성 없이 돌아야 한다."""
+    try:
+        import numpy as np
+        from seafreeze.seafreeze import defpath, getProp
+    except ImportError:
+        print("  [SKIP] SeaFreeze 가 없다 — 얼음 X 적합 대조는 engine/.venv 에서만 돈다")
+        return []
+    from eos import H2O, ICE_VII_TO_X, ICE_VII_X_REF_T, ICE_X_P_MAX
+    icex = [x for x in H2O.phases if x.name == "ice_x"][0]
+    ps = [ICE_VII_TO_X * (ICE_X_P_MAX / ICE_VII_TO_X) ** (i / 40.0)
+          for i in range(41)]
+    arr = np.array([np.array([q / 1e6 for q in ps]),
+                    np.array([ICE_VII_X_REF_T])], dtype=object)
+    want = np.asarray(getProp(arr, "VII_X_French", defpath, "rho").rho, float).ravel()
+    worst = max(abs(icex.density(q) - w) / w for q, w in zip(ps, want))
+    bad: list[str] = []
+    ok = abs(worst / ICE_X_FIT_WORST - 1.0) <= ICE_X_FIT_TOL
+    if not ok:
+        bad.append(f"ice_x 적합이 원 표현에서 {worst * 100:.3f} % 벗어난다, "
+                   f"기록된 값은 {ICE_X_FIT_WORST * 100:.3f} %")
+    print(f"  [{'PASS' if ok else 'FAIL'}] ice_x  {ICE_VII_TO_X / 1e9:.1f}–"
+          f"{ICE_X_P_MAX / 1e9:.0f} GPa 에서 최악 {worst * 100:.3f} % "
+          f"(주석에 적힌 {ICE_X_FIT_WORST * 100:.3f} %)")
+    return bad
 
 
 def _seafreeze_crosscheck() -> list[str]:
@@ -608,7 +682,7 @@ def main() -> int:
               f"{gan[3]:.4f} ({off * 100:.1f} %) · 얼음질량분율 "
               f"{res.inputs['ice_mass_fraction']:.3f} · 얼음 기둥 바닥 {base} · {gan[4]}")
 
-    print("\n물얼음 상 사다리 — 209.5 MPa 부터 37.4 GPa 까지 끊긴 데가 없는가")
+    print("\n물얼음 상 사다리 — 209.5 MPa 부터 1 TPa 까지 끊긴 데가 없는가")
     # 2026-08-25 에 III·V·VI 이 들어와 사다리가 이어졌다. 이어져 있다는 것은 주장이
     # 아니라 검사 대상이다 — 전이압 상수 하나를 이웃과 어긋나게 고치면 조용히 구멍이
     # 다시 열리고, 그러면 솔버가 답이 있는 자리에서 거절한다.
@@ -927,23 +1001,17 @@ def main() -> int:
 
     print("\n열 상수가 없는 상 — 있는 척하지 않고 이름을 대는가")
     from eos import H_HE, MATERIALS as _M
-    for mat, want in ((_M["h2o"], "ice_vii"), (H_HE, "hhe_n1")):
-        cold = mat.cold_phases()
-        ok = want in cold
-        if not ok:
-            fails.append(f"{mat.name}: 등온으로 남는 상을 {want} 로 이름 대지 않는다")
-        print(f"  [{'PASS' if ok else 'FAIL'}] {mat.name:9} 등온으로 남는 상 {cold}")
-    for mat in (_M["silicate"], _M["fe_prem"], _M["fe_eps"]):
+    ok = _M["h2o"].cold_phases() == () and "hhe_n1" in H_HE.cold_phases()
+    if not ok:
+        fails.append(f"등온으로 남는 상 목록이 틀렸다 — h2o {_M['h2o'].cold_phases()}, "
+                     f"h_he {H_HE.cold_phases()}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] h2o 는 이제 전 상에 열 상수가 있다 "
+          f"(2026-08-27 에는 ice_vii 이 등온이었다) · h_he 는 {H_HE.cold_phases()}")
+    for mat in (_M["silicate"], _M["fe_prem"], _M["fe_eps"], _M["h2o"]):
         ok = mat.has_thermal
         if not ok:
             fails.append(f"{mat.name}: 열 상수가 있어야 한다")
         print(f"  [{'PASS' if ok else 'FAIL'}] {mat.name:9} 전 상에 열 상수가 있다")
-    icy = solve(0.0248, core_mass_fraction=0.0, ice_mass_fraction=0.407,
-                potential_temperature=250.0)
-    said = icy.applicable and any("ice_vii" in n for n in icy.notes)
-    if not said:
-        fails.append("얼음 천체의 결과가 등온으로 남는 상을 note 에 이름 대지 않는다")
-    print(f"  [{'PASS' if said else 'FAIL'}] 얼음 천체 결과의 note 가 그 사실을 싣고 온다")
 
     print("\n거절 — 온도가 뜻을 잃으면 이름을 대는가")
     zero = solve(1.0, core_mass_fraction=0.325, potential_temperature=0.0)
@@ -1050,7 +1118,10 @@ def main() -> int:
 
     print("\n녹는곡선 — 없는 재료는 없다고 말하는가")
     from eos import MATERIALS as _MM, H_HE
-    for mat, want_free in ((_MM["silicate"], True), (_MM["h2o"], False),
+    # h2o 는 2026-08-27 에 전 상이 곡선을 들고 있었다. 얼음 X 가 들어오면서 곡선이
+    # **없는 상이 하나 생겼다** — IAPWS 식 (5) 가 715 K(20.6 GPa) 에서 끝나기 때문이고,
+    # 그 사실을 지우지 않고 이름으로 들고 있는 것이 여기서 검사하는 것이다.
+    for mat, want_free in ((_MM["silicate"], True), (_MM["h2o"], True),
                            (_MM["fe_prem"], False), (_MM["fe_eps"], False),
                            (H_HE, True)):
         free = mat.melt_free_phases()
@@ -1058,6 +1129,12 @@ def main() -> int:
         if not ok:
             fails.append(f"{mat.name}: 녹는곡선 유무를 잘못 말한다 — {free}")
         print(f"  [{'PASS' if ok else 'FAIL'}] {mat.name:9} 곡선 없는 상 {free or '()'}")
+    ok = _MM["h2o"].melt_free_phases() == ("ice_x",)
+    if not ok:
+        fails.append(f"곡선 없는 물얼음 상이 ice_x 하나여야 한다 — "
+                     f"{_MM['h2o'].melt_free_phases()}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 물얼음에서 곡선이 없는 것은 ice_x 뿐이다 — "
+          f"IAPWS 식 (5) 가 715 K 에서 끝나고 그게 20.6 GPa 다")
     ok = (_MM["fe_eps"].t_melt(FE_ICB_GPA * 1e9)
           > _MM["fe_prem"].t_melt(FE_ICB_GPA * 1e9))
     if not ok:
@@ -1092,6 +1169,74 @@ def main() -> int:
                                          **icy).values["radius"])
     print(f"  [{'PASS' if ok else 'FAIL'}] 같은 입력이 같은 반지름을 낸다 (판정은 "
           f"밀도 경로에 들어가지 않는다)")
+
+    print("\n얼음 X — 적합이 자기 출처를 재현하는가 (SeaFreeze 있을 때만)")
+    fails += _ice_x_crosscheck()
+
+    print("\n얼음 X — 이음매와 온도 천장")
+    from eos import (H2O as _H2O, ICE_VII_TO_X, ICE_VII_X_T_MAX, ICE_X_P_MAX,
+                     PhaseGap)
+    vii = [x for x in _H2O.phases if x.name == "ice_vii"][0]
+    icex = [x for x in _H2O.phases if x.name == "ice_x"][0]
+    seam = vii.density(ICE_VII_TO_X) / icex.density(ICE_VII_TO_X) - 1.0
+    ok = abs(seam / ICE_X_SEAM - 1.0) <= ICE_X_SEAM_TOL
+    if not ok:
+        fails.append(f"37.4 GPa 이음매가 {seam * 100:+.2f} %, 기록된 값은 "
+                     f"{ICE_X_SEAM * 100:+.2f} %")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 37.4 GPa 이음매 {seam * 100:+.2f} % "
+          f"(기록 {ICE_X_SEAM * 100:+.2f} %) — ice_vii {vii.density(ICE_VII_TO_X):.1f} 대 "
+          f"ice_x {icex.density(ICE_VII_TO_X):.1f} kg/m³")
+    print(f"         규산염 이음매의 0.21 % 보다 열 배 넓다. 1987년 실험 적합을 37.4 GPa "
+          f"까지 끌고 간 값과 2015년 퍼텐셜의 차이이고, 어느 쪽도 상대에 맞춰 당기지 "
+          f"않았다 — 당기면 우리 출력에 적합하는 것이다.")
+    p_sup, t_sup = MILLOT_SUPERIONIC
+    ok = ICE_VII_X_T_MAX < t_sup
+    if not ok:
+        fails.append(f"온도 천장 {ICE_VII_X_T_MAX:.0f} K 가 초이온상 하한 {t_sup:.0f} K "
+                     f"위다 — 초이온상을 얼음 X 라고 부르게 된다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 온도 천장 {ICE_VII_X_T_MAX:.0f} K 가 "
+          f"초이온상 하한 {t_sup:.0f} K (Millot+ 2019, {p_sup / 1e9:.0f} GPa 위) 아래다")
+    got = None
+    try:
+        _H2O.density(200e9, ICE_VII_X_T_MAX + 100.0)
+    except PhaseGap as gap:
+        got = gap
+    ok = got is not None and "초이온상" in got.reason and got.temperature_k > 0
+    if not ok:
+        fails.append("온도 천장 위에서 초이온상을 이름 대며 거절하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 천장 위는 값이 아니라 거절이고, 그 위가 "
+          f"무엇인지를 말한다")
+    got = None
+    try:
+        _H2O.density(ICE_X_P_MAX * 1.01)
+    except PhaseGap as gap:
+        got = gap
+    ok = got is not None and "매듭 구간" in got.reason
+    if not ok:
+        fails.append("1 TPa 위에서 이름을 대며 거절하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] {ICE_X_P_MAX / 1e9:.0f} GPa 위도 이름을 대며 "
+          f"거절한다 — 물리가 없는 게 아니라 읽을 형태가 없다고 말한다")
+
+    shallow = solve(0.5, composition="water")
+    deep = solve(1.0, composition="water")
+    ok = (shallow.grade == "calibrated" and deep.grade == "analog"
+          and any("얼음 X 까지 내려갔다" in n for n in deep.notes))
+    if not ok:
+        fails.append(f"얼음 X 를 밟아도 등급이 안 내려간다 — 0.5 M⊕ {shallow.grade}, "
+                     f"1.0 M⊕ {deep.grade}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 얼음 X 를 밟으면 등급이 내려간다 — "
+          f"0.5 M⊕ {shallow.grade} → 1.0 M⊕ {deep.grade}, note 가 이유를 댄다")
+
+    print("\n얼음 조성의 질량 상한 — 닫혀 있던 조성이 열렸는가")
+    for label, kw in ICE_CEILING_CASES:
+        m = ice_mass_ceiling(**kw)
+        print(f"         {label:34} {m:9.4f} M⊕")
+    m_water = ice_mass_ceiling(composition="water")
+    ok = m_water > 1.0
+    if not ok:
+        fails.append(f"water 프리셋 상한이 {m_water:.4f} M⊕ 로 아직 지구 아래다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] water 프리셋이 {m_water:.3f} M⊕ 까지 풀린다 "
+          f"(2026-08-27 에는 0.0398 M⊕ 로 달의 3.2 배였다)")
 
     print("\n계약 — 페이로드가 제 몫을 하는가")
     r = solve(1.0, core_mass_fraction=0.325)

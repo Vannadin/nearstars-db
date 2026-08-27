@@ -48,11 +48,16 @@ R_GAS = 8.314462618          # J mol⁻¹ K⁻¹. CODATA 2018 기체상수
 
 
 class PhaseGap(Exception):
-    """근거 있는 상 사이의 빈 구간에 압력이 떨어졌다. 외삽 대신 이걸 던진다."""
+    """근거 있는 상 사이의 빈 구간에 압력이 떨어졌다. 외삽 대신 이걸 던진다.
 
-    def __init__(self, material: str, pressure_pa: float, reason: str):
+    온도 천장을 넘어도 같은 것을 던진다. 막힌 것이 압력인지 온도인지는 `temperature_k`
+    가 채워져 있는지로 갈리고, 두 경우에 다른 예외를 만들면 잡는 쪽이 둘로 갈린다."""
+
+    def __init__(self, material: str, pressure_pa: float, reason: str,
+                 temperature_k: float = 0.0):
         self.material = material
         self.pressure_pa = pressure_pa
+        self.temperature_k = temperature_k
         self.reason = reason
         super().__init__(reason)
 
@@ -83,6 +88,17 @@ class Phase:
     melt: str = ""            # "" | "water" | "iron". 어느 곡선을 쓰는가
     melt_scale: float = 1.0   # 녹는점에 곱하는 인자. 합금 핵의 내림폭이 여기 들어온다
     melt_ref: str = ""        # 그 곡선이 어느 논문·표준 어느 절에서 왔는가
+    # ── 온도 천장 ──────────────────────────────────────────────────────
+    # p_max 와 **같은 종류** 다. 적합이 어디까지 유효한가를 말하지, 물질이 어디서
+    # 상을 바꾸는가를 말하지 않는다. 0 이면 선언된 천장이 없다는 뜻이다.
+    #
+    # melt 와 헷갈리기 쉬워서 적어둔다. melt 는 이 레시피가 **위치를 아는 물리적
+    # 전이** 이고 압력에 따라 움직이는 곡선이며, 소비처가 밀도를 안 건드린 채 상태를
+    # 이름 붙이는 데 쓴다. t_max 는 곡선이 아니라 적합의 울타리이고, 넘으면 판정이
+    # 아니라 거절이 나온다. 초이온상 경계는 melt 와 같은 종류인데 이 레시피에 그
+    # 곡선이 없어서, 대신 그 아래에 울타리를 세운 것이다 — 아래 t_over_reason 이
+    # 무엇이 그 위에 있는지를 이름 댄다.
+    t_max: float = 0.0        # K. 이 상의 적합이 유효한 상한 온도
 
     @property
     def has_melt(self) -> bool:
@@ -230,6 +246,7 @@ class Material:
     phases: tuple[Phase, ...]
     gap_reason: str = ""      # 상 사이 빈 구간에 붙일 설명
     over_reason: str = ("{p_gpa:.1f} GPa 는 근거 있는 상의 상한({max_gpa:.1f} GPa) 위다")
+    t_over_reason: str = ("{t_k:.0f} K 는 '{phase}' 적합의 상한({t_max:.0f} K) 위다")
 
     @property
     def rho0(self) -> float:
@@ -282,7 +299,17 @@ class Material:
         """압력 p 에서 이 재료가 녹는 온도 [K]. 곡선이 없으면 None."""
         return self.phase_at(p).t_melt(p)
 
+    def check_temperature(self, p: float, t: float) -> None:
+        """이 압력의 상이 이 온도에서도 유효한가. 아니면 이름 대며 던진다."""
+        if t <= 0.0:
+            return              # 온도가 선언되지 않았다. 등온 경로다
+        ph = self.phase_at(p)
+        if ph.t_max and t > ph.t_max:
+            raise PhaseGap(self.name, p, self.t_over_reason.format(
+                t_k=t, t_max=ph.t_max, phase=ph.name, p_gpa=p / 1e9), t)
+
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        self.check_temperature(p, t)
         return self.phase_at(p).density(p, t, t_pot)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
@@ -401,6 +428,11 @@ class Mixture:
         곡선이 필요하다 — 순물질의 녹는점 하나가 아니다. 이 파일에 그 두 곡선이 없으므로
         여기서는 답하지 않는다. 미분화 천체와 중원소 섞인 외피가 이 자리에 온다."""
         return None
+
+    def check_temperature(self, p: float, t: float) -> None:
+        for m, w in self.parts:
+            if w > 0.0:
+                m.check_temperature(p, t)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """압력 p 에서 혼합 밀도. 성분마다 **같은 압력과 같은 온도** 에서 평가한다.
@@ -876,6 +908,97 @@ ICE_III_REF_T = 251.15             # K. Ih→III 삼중점
 ICE_V_REF_T = 256.43               # K. III→V 삼중점
 ICE_VI_REF_T = 272.73              # K. V→VI 삼중점
 
+# ── 얼음 VII 과 얼음 X — 하나의 퍼텐셜, 두 칸 ────────────────────────────
+#
+# 2026-08-27 에 "얼음 VII 에는 열 상수가 없다" 고 적었고, 그건 **논문** 을 찾은
+# 결과였다. 그때 놓친 것은 이 파일이 이미 기대고 있는 SeaFreeze 가 여섯 번째 표현을
+# 싣고 있다는 사실이다 — `VII_X_French` 이고, 패키지 README 가 출처를 French & Redmer
+# 2015 (2015PhRvB..91a4308F, "Construction of a thermodynamic potential for the water ices
+# VII and X") 로 적는다. 셔플된 스플라인에서 매듭 구간을 직접 읽으면
+#
+#     P 1.7 GPa ~ 1000 GPa · T 20 K ~ 1800 K        (SeaFreeze v1.1.0)
+#
+# 이다. 얼음 III·V·VI 이 들어온 것과 **같은 출처의 같은 구성** 이라, 같은 방식으로
+# 읽는다. (README 머리말은 "up to 100 GPa and 10,000 K" 라고 적는데 실제 매듭 구간은
+# 위쪽이다. 우리가 쓰는 것은 스플라인이므로 매듭 구간을 따른다.)
+#
+# **VII 과 X 를 가르지 않는다.** French & Redmer 는 둘을 하나의 자유에너지로 다룬다 —
+# VII→X 는 수소결합이 연속적으로 대칭화되는 것이라 밀도 도약이 없고, 옛 거절 문구가
+# 이름 대던 Goncharov+ 2005 의 47 GPa 는 그 대칭화가 끝나는 자리이지 새 상태방정식이
+# 시작하는 자리가 아니다. 그래서 사다리에 붙는 칸은 **하나** 다.
+#
+# ── 왜 읽지 않고 적합했나 ────────────────────────────────────────────────
+#
+# 얼음 III·V·VI 은 P = 0 의 (ρ, K_T, K′) 를 읽어서 BME3 에 그대로 꽂았고, 그 셋이 BME3
+# 이 받는 전부라 적합할 이유가 없었다. 여기서는 그 길이 막힌다. 매듭 구간이 1.7 GPa 에서
+# 시작해 P = 0 을 평가할 수 없고, 37.4 GPa 에서 (ρ, K_T, K′) 를 읽어 BME3 을 거꾸로 풀면
+# 1 TPa 에서 **15.5 %** 어긋난다 — 국소적으로 읽은 세 값은 27배의 압력 구간을 못 건넌다.
+#
+# 그래서 이 상은 **적합** 이다. 쓰는 구간(37.4 GPa ~ 1 TPa)의 300 K 등온선에 최소제곱으로
+# 맞췄고, 형태 셋을 같은 자료에 대봤다.
+#
+#     Vinet  ρ₀ 1644.29 · K₀ 22.29 GPa · K₀′ 6.75   최악 1.475 %   ← 이걸 쓴다
+#     BME3   ρ₀ 1855.97 · K₀ 58.37 GPa · K₀′ 4.67   최악 1.621 %
+#     BME4                                          발산
+#
+# Vinet 이 이긴 것이 우연이 아니고 이 파일 자신의 규칙이 가리키던 쪽이다 — Seager+ 2007
+# §III.1 이 고압 외삽에서 Vinet 이 BME 보다 낫다고 적고, Fe(ε) 가 그래서 Vinet 이다.
+# 잔차는 양 끝이 제일 크고(37.4 GPa 에서 +1.48 %, 1 TPa 에서 −1.02 %) 가운데가 0.5 % 쯤이다.
+# 두 조각으로 쪼개면 0.26 % 까지 내려가지만 아래 조각의 상수가 ρ₀ = 382 kg/m³ · K₀ =
+# 0.4 MPa 로 나온다 — 무엇의 상수도 아닌 적합 부산물이고, 이 파일은 뜻 없는 상수를 안 싣는다.
+#
+# **1.475 % 가 이 상의 정직한 오차폭이고, 사다리에서 제일 넓다.** 등급이 내려가는 이유다.
+#
+# ── 이음매 ──────────────────────────────────────────────────────────────
+#
+# 37.4 GPa 에서 기존 얼음 VII (Hemley+ 1987 자료의 BME3) 이 2467.7 kg/m³, 이 Vinet 이
+# 2524.0 kg/m³ 로 **−2.26 %** 다. 3분의 2는 이 적합이 자기 구간 아래 끝에서 +1.48 % 넘치는
+# 몫이고, 나머지는 1987년 실험 적합을 37.4 GPa 까지 끌고 간 값이 2015년 퍼텐셜보다 0.82 %
+# 낮은 몫이다. 어느 쪽도 상대에 맞춰 당기지 않았다 — 당기면 우리 출력에 적합하는 것이고
+# 규율 3 이 금지한다. 규산염 이음매의 0.21 % 보다 열 배 넓으므로, 지어낸 수가 아니라 **잰**
+# 수로 두고 test_interior.py 가 다시 잰다. 37.4 GPa 자체도 우리 수가 아니다 — Zeng &
+# Sasselov 2013 §III.3.2 가 "the intersection between FFH2004's EOS and FMNR2009's EOS" 로
+# 정한 값이고, 같은 두 출처의 앞 세대에 같은 구성을 쓴 것이다.
+#
+# ── 열 항, 그리고 그 한계 ────────────────────────────────────────────────
+#
+# 두 상의 αK_T 와 c_V 를 같은 표현에서, 각 상의 기준 상태에서 읽었다. 기준 등온은 둘 다
+# 300 K 다 — 얼음 VII 의 BME 가 Hemley+ 1987 의 상온 자료이고 이 Vinet 도 300 K 등온선에
+# 맞췄으므로, 두 칸에 규칙 하나다.
+#
+# **이 재료에서 Anderson-Goto 근사가 다른 재료보다 거칠다. 재서 적어둔다.** 이 파일의 열
+# 항 전체가 αK_T 가 부피에 무관하다는 것에 기대는데, 이 표현을 훑으면 αK_T 가 300 K 에서
+# 1800 K 사이에 어느 압력에서든 **두 배쯤 오른다** (37.4 GPa 에서 4.34 → 9.39 MPa/K).
+# 그래서 열 항을 표현과 대보면 100 GPa 위에서는 300~1800 K 전 구간에 0.7 % 안이고,
+# 37.4 GPa 에서 600 K 에 2.0 %, 1800 K 에 7.7 % 까지 벌어진다. 그 모서리는 애초에 얼음이
+# 아니지만(37.4 GPa 에서 얼음 VII 은 870 K 근처에서 녹는다) 이 레시피가 그걸 스스로
+# 증명하지 못하므로 수를 지우지 않고 적는다.
+#
+# **그리고 매듭 구간이 사각형인데 상 영역은 사각형이 아니다.** 2.216 GPa · 1500 K 에서
+# 이 표현은 c_V = 1.5×10⁸ J/kg/K 를, 10 GPa · 1800 K 에서 −7.3×10⁵ 를 돌려준다. 둘 다
+# 녹는곡선 한참 위라 얼음 VII 이 존재하지 않는 자리이고, 스플라인이 외삽해서 헛것을 내는
+# 것이다. 아래 온도 천장은 그걸 막아주지 않는다 — 낮은 압력에서 실제로 막는 것은
+# ice_column_state 가 그 구간에서 이미 undecided 를 내는 것이다.
+ICE_VII_X_REF_T = 300.0            # K. 두 칸이 공유하는 기준 등온
+ICE_VII_ALPHA_K = 5.921738e6       # Pa/K. SeaFreeze VII_X_French 를 2.216 GPa, 300 K 에서
+ICE_VII_CV = 2476.728978           # J/kg/K. 같은 상태
+ICE_X_ALPHA_K = 4.337479e6         # Pa/K. 같은 표현을 37.4 GPa, 300 K 에서
+ICE_X_CV = 1226.296689             # J/kg/K. 같은 상태
+# Vinet 적합 상수. 37.4 GPa ~ 1 TPa 의 300 K 등온선에 상대압력 잔차 최소제곱.
+ICE_X_RHO0 = 1644.294888           # kg/m³
+ICE_X_K0 = 22.286772 * GPA         # Pa
+ICE_X_K0P = 6.750653
+ICE_VII_TO_X = 37.4 * GPA          # Zeng & Sasselov 2013 §III.3.2 — 두 EOS 의 교점
+ICE_X_P_MAX = 1000.0 * GPA         # SeaFreeze v1.1.0 의 VII_X_French 매듭 상한
+# 온도 천장. **매듭 구간의 상한이지 상 경계가 아니다.** 그런데 그 아래에 놓이는 것이
+# 초이온상이라 쓸모가 있다 — Millot+ 2019 (2019Natur.569..251M) 초록이 초이온상을
+# "pressures exceeding 100 gigapascals and high temperatures above 2,000 kelvin" 로 적으므로,
+# 1800 K 천장은 이 레시피가 못 다루는 상 **아래** 에서 멈춘다. 초이온상을 얼음 X 라고
+# 조용히 부르는 일이 생기지 않는다.
+ICE_VII_X_T_MAX = 1800.0           # K
+SUPERIONIC_MIN_T = 2000.0          # K. Millot+ 2019 초록
+SUPERIONIC_MIN_P = 100.0 * GPA     # Pa. 같은 초록
+
 H2O = Material(
     "h2o", "물얼음",
     (Phase("ice_ih", "bm2", ICE_IH_RHO0, ICE_IH_KT, 4.0, ICE_IH_TO_III,
@@ -900,16 +1023,40 @@ H2O = Material(
            p_min=ICE_V_TO_VI,
            alpha_k=ICE_VI_ALPHA_K, c_v_ref=ICE_VI_CV, t_ref=ICE_VI_REF_T,
            melt="water", melt_ref=IAPWS_MELT_REF + " 식 (4)"),
-     Phase("ice_vii", "bme3", 1460.0, 23.7 * GPA, 4.15, 37.4 * GPA,
-           "Seager+ 2007 Table 1 (arXiv:0707.2895) — H₂O ice VII BME, Hemley+ 1987",
-           # 곡선은 있는데 **열 상수가 없다.** 온도가 이 층을 흐르지 않으므로 여기서
-           # 나온 T 를 곡선에 대는 것은 가짜 온도를 재는 것이다. 소비처가 거절한다.
+     Phase("ice_vii", "bme3", 1460.0, 23.7 * GPA, 4.15, ICE_VII_TO_X,
+           "Seager+ 2007 Table 1 (arXiv:0707.2895) — H₂O ice VII BME, Hemley+ 1987. "
+           "열 상수는 SeaFreeze v1.1.0 의 VII_X_French (French & Redmer 2015, "
+           "2015PhRvB..91a4308F) 를 2.216 GPa · 300 K 에서 평가한 값이다",
            p_min=ICE_VI_TO_VII, melt="water",
-           melt_ref=IAPWS_MELT_REF + " 식 (5) — 355–715 K")),
-    over_reason=("얼음 기둥 바닥이 {p_gpa:.1f} GPa 로 근거 구간의 상한"
-                 "({max_gpa:.1f} GPa) 위다. 그 위는 얼음 X 와 초이온상이고 "
-                 "(Goncharov+ 2005 의 47 GPa 전이, French+ 2009), 이 레시피에는 그 "
-                 "상태방정식이 없다. 물이 많은 큰 천체는 여기서 멈춘다."),
+           melt_ref=IAPWS_MELT_REF + " 식 (5) — 355–715 K",
+           alpha_k=ICE_VII_ALPHA_K, c_v_ref=ICE_VII_CV, t_ref=ICE_VII_X_REF_T,
+           t_max=ICE_VII_X_T_MAX),
+     Phase("ice_x", "vinet", ICE_X_RHO0, ICE_X_K0, ICE_X_K0P, ICE_X_P_MAX,
+           "SeaFreeze v1.1.0 의 VII_X_French (French & Redmer 2015, "
+           "2015PhRvB..91a4308F) 300 K 등온선에 맞춘 Vinet 적합. 37.4 GPa–1 TPa 에서 "
+           "최악 1.475 % — 이 사다리에서 제일 넓은 오차폭이고, 읽은 게 아니라 적합한 "
+           "유일한 얼음 상이다",
+           p_min=ICE_VII_TO_X,
+           alpha_k=ICE_X_ALPHA_K, c_v_ref=ICE_X_CV, t_ref=ICE_VII_X_REF_T,
+           t_max=ICE_VII_X_T_MAX,
+           # 녹는곡선은 여기까지 못 온다. IAPWS 식 (5) 가 715 K 에서 끝나고 그건
+           # 20.6 GPa 라 얼음 VII 구간 안이다. 곡선을 안 붙이는 것이 정직하다 —
+           # 소비처가 undecided 를 돌려주고, 그건 이미 있는 답이다.
+           melt=""),),
+    over_reason=("얼음 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
+                 "({max_gpa:.0f} GPa) 위다. 그 상한은 SeaFreeze v1.1.0 이 싣는 "
+                 "French & Redmer 2015 표현의 매듭 구간이 끝나는 자리다. 그 위에 "
+                 "물리가 없는 것이 아니라 **읽을 형태가 없다** — Zeng & Sasselov 2013 이 "
+                 "French+ 2009 의 표를 8.893 TPa 까지 끌고 간 뒤에야 전자축퇴로 넘어가므로 "
+                 "(Salpeter & Zapolsky 1967), 여기와 축퇴 사이에 아홉 배쯤의 여백이 "
+                 "발표돼 있다. 물이 아주 많은 큰 천체는 여기서 멈춘다."),
+    t_over_reason=("얼음 기둥의 온도 {t_k:.0f} K 가 '{phase}' 적합의 상한"
+                   "({t_max:.0f} K) 위다. 그 위는 초이온상이다 — 산소는 격자에 남고 "
+                   "수소만 액체처럼 돌아다니는 상태이고, Millot+ 2019 "
+                   "(2019Natur.569..251M) 이 100 GPa 위 · 2000 K 위로 적는다. 이 천장은 "
+                   "그 아래에 서 있어서 초이온상을 얼음 X 라고 부르지 않는다. "
+                   "그 상의 상태방정식은 French & Redmer 2016 (2016PhRvE..93b2140F) 이 "
+                   "두 초이온상의 열역학 퍼텐셜로 구성해 두었고, 이 레시피에 그것이 없다."),
     # 2026-08-25 에 III·V·VI 이 들어와 Ih 부터 VII 까지 사다리가 이어졌다. 그래서 이
     # 설명은 더 이상 도달하지 않는다 — 도달하면 전이압 상수 하나가 이웃과 어긋나게
     # 편집된 것이다. 침묵하는 대신 그렇게 말한다. test_interior.py 가 사다리의 연속성을

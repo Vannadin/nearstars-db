@@ -31,7 +31,7 @@ from __future__ import annotations
 
 import math
 
-from eos import (EARTH_POTENTIAL_T, ICE_VI_TO_VII, MATERIALS,
+from eos import (EARTH_POTENTIAL_T, ICE_VII_TO_X, MATERIALS,
                  SILICATE_PREM_TO_PV, PhaseGap, mix)
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
@@ -571,38 +571,48 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
     ice = MATERIALS["h2o"]
     best_margin = None
     best = None
-    above_vii = False
+    unseen = 0.0        # 녹는곡선 밖으로 나간 표본의 가장 낮은 압력
     for p_pa, t_k in st.ice_samples:
         if p_pa <= 0.0 or t_k <= 0.0:
             continue
-        if p_pa > ICE_VI_TO_VII:
-            above_vii = True
-            continue     # 얼음 VII 에는 열 상수가 없다 — 아래에서 이름 대고 거절한다
         t_m = ice.t_melt(p_pa)
         if t_m is None:
+            # 녹는곡선이 여기까지 안 온다. IAPWS 식 (5) 가 715 K 에서 끝나고 그건
+            # 20.6 GPa 라 얼음 VII 구간 안이다. **못 본 것을 안 본 척하지 않는다.**
+            unseen = p_pa if unseen == 0.0 else min(unseen, p_pa)
             continue
         margin = t_k - t_m
         if best_margin is None or margin > best_margin:
             best_margin, best = margin, (p_pa, t_k, t_m)
+    blind = ("" if unseen == 0.0 else
+             f" 기둥의 {unseen / 1e9:.1f} GPa 아래쪽만 판정했다 — 그 위는 녹는곡선이 "
+             "닿지 않는다. IAPWS 식 (5) 가 715 K 에서 끝나고 그게 20.6 GPa 다.")
     if best_margin is None:
         return (ICE_STATE_UNDECIDED,
-                "**얼음 기둥의 고체·액체를 판정하지 않았다** — 기둥 전체가 얼음 VII "
-                f"({ICE_VI_TO_VII / 1e9:.3f} GPa 위)이고 그 상에는 발표된 열 상수가 없어 "
-                "온도가 그 층을 그대로 통과한다. 녹는곡선은 IAPWS 가 355–715 K 로 주지만, "
-                "가짜 온도를 진짜 곡선에 대는 것은 판정이 아니다.")
+                "**얼음 기둥의 고체·액체를 판정하지 않았다** — 기둥 전체가 이 레시피가 "
+                "들고 있는 녹는곡선(IAPWS R14-08(2011)) 의 압력 구간 위다. 그 위의 곡선을 "
+                "고르는 것은 별건이고, 후보와 기각 이유는 engine/ice-x-context-notes.md 에 "
+                "적어 두었다.")
     p_pa, t_k, t_m = best
-    tail = (f" 기둥의 일부가 얼음 VII({ICE_VI_TO_VII / 1e9:.3f} GPa 위)이라 그 구간은 "
-            "판정에서 빠졌다 — 그 상에 열 상수가 없다." if above_vii else "")
     where = f"{p_pa / 1e6:.1f} MPa 에서 T {t_k:.1f} K · 녹는점 {t_m:.1f} K"
     if best_margin > 0.0:
         return (ICE_STATE_MOLTEN,
                 f"**얼음 기둥이 녹는다** — {where} 로 {best_margin:+.1f} K 다 "
                 f"(IAPWS R14-08(2011), 이 구간 불확도 3 %). **밀도는 손대지 않았다**: "
                 "이 레시피에 액체 물의 상태방정식이 없어서, 여기 나온 반지름과 C/MR² 는 "
-                "고체상의 답이다. 판정만 읽고 밀도는 읽지 말 것." + tail)
+                "고체상의 답이다. 판정만 읽고 밀도는 읽지 말 것." + blind)
+    if unseen != 0.0:
+        # 본 자리는 전부 고체인데 못 본 자리가 있다. **'고체' 라고 말하면 안 된다** —
+        # 하한이 한쪽만 묶는 것과 같은 규율이고, core_state 가 같은 규칙을 쓴다.
+        return (ICE_STATE_UNDECIDED,
+                f"**얼음 기둥의 고체·액체를 판정하지 않았다.** 본 자리는 전부 고체다 — "
+                f"제일 녹기 쉬운 자리가 {where} 로 {best_margin:+.1f} K 다. 그런데 기둥의 "
+                f"{unseen / 1e9:.1f} GPa 위쪽은 녹는곡선이 닿지 않아 보지 못했고, 못 본 "
+                "구간이 있으면 '고체' 는 말할 수 없다. 'molten' 은 한 자리만 넘어도 참이지만 "
+                "'solid' 는 전부를 봐야 참이다.")
     return (ICE_STATE_SOLID,
             f"얼음 기둥이 고체다 — 제일 녹기 쉬운 자리가 {where} 로 {best_margin:+.1f} K "
-            f"다 (IAPWS R14-08(2011), 불확도 3 %)." + tail)
+            f"다 (IAPWS R14-08(2011), 불확도 3 %).")
 
 
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
@@ -750,7 +760,9 @@ def solve(mass_earth: float,
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
-                                    f"압력 {gap.pressure_pa / 1e9:.4f} GPa",))
+                                    f"압력 {gap.pressure_pa / 1e9:.4f} GPa"
+                                    + (f", 온도 {gap.temperature_k:.0f} K"
+                                       if gap.temperature_k else ""),))
     except ValueError as err:
         return out_of_domain(RECIPE, VERSION, f"적분이 실패했다 — {err}",
                              inputs=inputs, refs=REFS)
@@ -820,6 +832,22 @@ def solve(mass_earth: float,
             f"{potential_temperature - EARTH_POTENTIAL_T:+.0f} K 떨어져 있고, 그만큼 열압력이 "
             "밀도를 움직인다. 단열선은 대류하는 층에만 맞고, 조석가열과 맨틀 안의 열경계층은 "
             "프로파일을 초단열로 만든다 (Unterborn+ 2019 §3.2). 등급을 analog 로 내린다.")
+    # 얼음 기둥이 얼음 X 까지 내려갔는가. 그 상은 이 사다리에서 **읽은 게 아니라 적합한**
+    # 유일한 얼음이고, 원 표현을 1.475 % 안에서만 재현한다 — 다른 얼음 상들의 0.006~
+    # 0.118 % 와 자릿수가 다르다. 게다가 그 표현 자체가 제일원리 계산이지 측정이 아니다.
+    # mgsio3_pv 가 3.5 TPa 위에서 등급을 내리는 것과 같은 종류의 자리다.
+    ice_x_reached = (st.p_ice_base is not None
+                     and st.p_ice_base > ICE_VII_TO_X)
+    if ice_x_reached:
+        notes.append(
+            f"**얼음 기둥이 얼음 X 까지 내려갔다** — 기둥 바닥이 "
+            f"{st.p_ice_base / 1e9:.0f} GPa 로 얼음 VII→X 전이({ICE_VII_TO_X / 1e9:.1f} GPa) "
+            "아래다. 그 상은 측정된 압축 자료의 적합이 아니라 제일원리 자유에너지 "
+            "퍼텐셜(French & Redmer 2015)이고, 이 파일의 다른 얼음 상들과 달리 읽은 값이 "
+            "아니라 **적합** 이다 — 매듭 구간이 1.7 GPa 에서 시작해 P = 0 을 평가할 수 "
+            "없어서 그 길이 막혔다. 그 적합이 원 표현을 재현하는 폭이 1.475 % 이고, "
+            "얼음 III·V·VI 의 0.006~0.118 % 와 자릿수가 다르다. 37.4 GPa 이음매도 "
+            "−2.26 % 로 규산염 이음매(0.21 %)의 열 배다. 등급을 analog 로 내린다.")
     silicate_extrapolated = st.p_silicate_max > SILICATE_EXTRAPOLATED_MIN
     if silicate_extrapolated:
         notes.append(
@@ -918,7 +946,7 @@ def solve(mass_earth: float,
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
                             or not differentiated or giant_unvalidated
                             or silicate_extrapolated or thermal_moves
-                            or thermal_unchecked)
+                            or thermal_unchecked or ice_x_reached)
                else "calibrated"),
         inputs=inputs,
         cycles=(1, 3),
