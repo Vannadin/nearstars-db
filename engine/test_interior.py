@@ -60,8 +60,12 @@ DECLINES = [
     # 이름을 대며 거절하는지는 여기서 계속 지킨다.
     ("갈색왜성", dict(mass_earth=5000.0, body_class="brown_dwarf"),
      "중수소", "13 M_J 위는 광도 이력이 필요하다"),
+    # 2026-08-27 에 이 거절이 "Redmer+ 2011 계열의 물-암모니아 EOS 가 필요하다" 였다.
+    # 조사해 보니 필요한 것은 고압 **고체** 얼음이 아니라 유체·초이온 갈래였다 — 얼음
+    # 맨틀이 5000 K 위라 이 파일의 사다리(20~1800 K) 위에 통째로 있다. 거절 문구가 이제
+    # 그 거리를 수로 말하므로, 검사도 그 수를 짚는다.
     ("얼음 자이언트", dict(mass_earth=17.0, body_class="ice_giant"),
-     "암모니아", "외피가 H/He 가 아니라 물·암모니아·메탄 혼합물이다"),
+     "5700", "얼음 맨틀이 사다리의 온도 구간 위에 통째로 있다"),
 ]
 
 # 로스터. 판정이 아니라 **무엇이 풀리고 무엇이 왜 안 풀리는가** 를 보여주는 표다.
@@ -1281,6 +1285,33 @@ def main() -> int:
         fails.append(f"water 프리셋 상한이 {m_water:.4f} M⊕ 로 아직 지구 아래다")
     print(f"  [{'PASS' if ok else 'FAIL'}] water 프리셋이 {m_water:.3f} M⊕ 까지 풀린다 "
           f"(2026-08-27 에는 0.0398 M⊕ 로 달의 3.2 배였다)")
+
+    print("\n얼음거대행성 — 거절이 거리를 수로 말하는가")
+    from eos import (AVL_ICES_DEVIATION, AVL_ICES_TERNARY_DEVIATION,
+                     AVL_VOLUME_DEVIATION, ICE_VII_X_T_MAX,
+                     SOLAR_ICE_MASS_FRACTIONS)
+    ig = solve(14.5, body_class="ice_giant")
+    checks = (("온도 천장을 인용한다", f"{ICE_VII_X_T_MAX:.0f} K" in ig.reason),
+              ("중심 온도를 인용한다", "5700" in ig.reason and "5500" in ig.reason),
+              ("유체·초이온 갈래라고 말한다", "초이온" in ig.reason),
+              ("옮겨 적을 수 있는 것이 물뿐임을 말한다", "Mazevet" in ig.reason),
+              ("EOS 만으로 부족함을 말한다", "adiabatic" in ig.reason))
+    for label, cond in checks:
+        if not cond:
+            fails.append(f"ice_giant 거절: {label}")
+        print(f"  [{'PASS' if cond else 'FAIL'}] {label}")
+    ok = abs(sum(SOLAR_ICE_MASS_FRACTIONS.values()) - 1.0) < 1e-12
+    if not ok:
+        fails.append("태양 조성 얼음 질량분율의 합이 1 이 아니다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 태양 조성 얼음 분율 "
+          f"{SOLAR_ICE_MASS_FRACTIONS} 의 합이 1 이다")
+    ok = AVL_ICES_TERNARY_DEVIATION < AVL_ICES_DEVIATION < AVL_VOLUME_DEVIATION
+    if not ok:
+        fails.append("부피 가법 혼합의 유효 한계 셋이 순서대로가 아니다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 부피 가법 혼합의 한계: 얼음 삼성분 "
+          f"{AVL_ICES_TERNARY_DEVIATION * 100:.1f} % < 얼음 이성분 "
+          f"{AVL_ICES_DEVIATION * 100:.0f} % < H-He {AVL_VOLUME_DEVIATION * 100:.0f} % — "
+          f"행성 얼음이 H-He 보다 얌전하다")
 
     print("\n계약 — 페이로드가 제 몫을 하는가")
     r = solve(1.0, core_mass_fraction=0.325)

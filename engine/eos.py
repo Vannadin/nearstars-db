@@ -359,8 +359,38 @@ class Material:
 # 범위에서 철-규산염 혼합의 AVL 편차를 정량한 논문은 없었다. 문헌이 침묵하므로 여기서도
 # 침묵한다 — H-He 의 8 % 를 암석에 옮겨 적지 않는다. 그쪽 유효성의 근거는 두 성분이
 # 화학적으로 섞이지 않고 각자 자기 상으로 남는다는 것뿐이고, 그 이상은 주장하지 않는다.
+#
+# **행성 얼음(물·암모니아·메탄)에는 있다.** 2026-08-27 에는 이 자리도 침묵이었는데,
+# 얼음거대행성 외피를 조사하면서 나왔다. Bethkenhagen+ 2017 (arXiv:1709.04133) 이
+# 1000 GPa · 20 000 K 까지의 DFT-MD 자료로 세 1:1 이성분 혼합과 2:1:4 삼성분 혼합을
+# 실제 혼합과 대조했다.
+#
+#   * 이성분 — "deviations of the linear mixing approximation from the results of the real
+#     mixture are generally small; for the thermal EOS they amount to 4% or less". 같은
+#     논문이 그 4 % 를 전형값이 아니라 **상한** 이라고 부른다.
+#   * 삼성분(천왕성 프로파일 셋) — "maximum deviations in density amount to up to 2.1%"
+#     이고 10 000 K 위에서는 0.5 % 아래로 떨어진다.
+#   * **부호가 있다** — "the LMA overestimates the density, while the internal energy is
+#     underestimated". 편차가 큰 자리도 이름이 있다: 성분 하나만 초이온이 되거나 탄소가
+#     화학반응을 시작하는 구간이다.
+#
+# 즉 행성 얼음은 부피 가법 아래에서 H-He 보다 **얌전하다** (4 % 대 8 %). 이 상수는 아직
+# 소비처가 없다 — 그 외피의 상태방정식이 이 파일에 없어서다(interior.py 의 ice_giant
+# 거절이 사정을 적는다). 그래도 여기 둔다. 침묵이 아니게 된 자리를 침묵으로 남겨두면
+# 다음 조사가 같은 길을 다시 걷는다.
 AVL_VOLUME_DEVIATION = 0.08   # Vorberger+ 2007 초록. 정압 부피, H-He, 분자 해리 구간
 AVL_DEVIATION_REGIME = "분자 해리 구간 (순수 분자상에서는 ~0)"
+AVL_ICES_DEVIATION = 0.04     # Bethkenhagen+ 2017 초록. 1:1 이성분, 밀도, **상한**
+AVL_ICES_TERNARY_DEVIATION = 0.021   # 같은 논문. 2:1:4 삼성분, 천왕성 프로파일 위
+AVL_ICES_SIGN = "밀도는 과대평가, 내부에너지는 과소평가"
+
+# 얼음거대행성 외피의 조성비. **관측이 묶지 않는다** — 항성 조성과 형성 이력이 정하고
+# 이 레시피에 그 둘이 없으므로, 들어온다면 envelope_z 와 같은 **선언** 이 된다.
+# 기본값으로 쓸 만한 발표값은 태양 H:C:N:O 조성에서 나온다 (Bethkenhagen+ 2017 §V):
+# Z_CH4 : Z_NH3 : Z_H2O = 0.31 : 0.08 : 0.61 (질량분율). 같은 절이 자기들이 시뮬레이션한
+# 2:1:4 분자비를 고른 이유를 "resemblance to the solar abundances of about 4:1:7 of
+# C:N:O (Asplund+ 2009)" 로 적는다.
+SOLAR_ICE_MASS_FRACTIONS = {"ch4": 0.31, "nh3": 0.08, "h2o": 0.61}
 
 
 @dataclass(frozen=True)

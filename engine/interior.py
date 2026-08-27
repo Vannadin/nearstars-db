@@ -31,8 +31,9 @@ from __future__ import annotations
 
 import math
 
-from eos import (EARTH_POTENTIAL_T, ICE_VII_TO_X, MATERIALS,
-                 SILICATE_PREM_TO_PV, PhaseGap, mix)
+from eos import (AVL_ICES_DEVIATION, EARTH_POTENTIAL_T, ICE_VII_TO_X,
+                 ICE_VII_X_T_MAX, MATERIALS, SILICATE_PREM_TO_PV,
+                 PhaseGap, mix)
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       bulk_factor, porosity, voids_expected)
@@ -744,8 +745,29 @@ def solve(mass_earth: float,
                      "body_figure 에 따로 있다."),
             "ice_giant": ("외피가 수소-헬륨이 아니라 물·암모니아·메탄이 섞인 '얼음' 이고, "
                           "그 혼합물의 상태방정식이 이 파일에 없다. n = 1 폴리트로프는 "
-                          "H/He 압축성에 맞춰진 것이라 여기 쓸 수 없다 — 필요한 것은 "
-                          "Redmer+ 2011 계열의 물-암모니아 EOS 다."),
+                          "H/He 압축성에 맞춰진 것이라 여기 쓸 수 없다.\n"
+                          "**얼음 사다리로도 못 간다 — 온도가 안 맞는다.** 이 파일의 물은 "
+                          f"20~{ICE_VII_X_T_MAX:.0f} K 의 응축상이고, 얼음거대행성의 얼음 "
+                          "맨틀은 그 위에서 시작해 위로 간다: 깊은 내부가 100 GPa 에서 "
+                          "5000~7000 K, 중심이 천왕성 5700 K · 해왕성 5500 K 다 "
+                          "(Scheibe+ 2019, arXiv:1911.00447). 그래서 필요한 것은 고압 "
+                          "고체 얼음이 아니라 **유체·초이온 갈래** 이고, 그건 이 레시피가 "
+                          "2026-08-27 에 이름 대며 거절한 바로 그 상이다.\n"
+                          "세 성분 중 옮겨 적을 형태가 있는 것은 물 하나뿐이다 — Mazevet+ "
+                          "2019 (arXiv:1810.05658) 의 해석적 자유에너지 적합이고, "
+                          "Scheibe+ 2019 가 천왕성·해왕성 모형을 그 위에 세운다. 암모니아"
+                          "(Bethkenhagen+ 2013)와 메탄(Bethkenhagen+ 2017)은 표로만 있다. "
+                          "물 하나로 얼음 전체를 대신하는 것은 이 분야의 관행이고"
+                          "(Redmer+ 2011 · Helled+ 2011 · Nettelmann+ 2013), 그 대가는 "
+                          f"부피 가법 혼합의 {AVL_ICES_DEVIATION * 100:.0f} % 상한으로 "
+                          "묶여 있다 (Bethkenhagen+ 2017).\n"
+                          "**그리고 그 상태방정식이 있어도 충분하지 않다.** Scheibe+ 2019 "
+                          "가 바로 그 EOS 로 두 행성을 단열 모형으로 풀어 냉각시간을 "
+                          "천왕성 5.1 Gyr · 해왕성 3.7 Gyr 로 얻었고 (실제 나이 4.56 Gyr), "
+                          "결론이 \"neither planet is fully adiabatic in the deeper "
+                          "interior\" 다. 둘을 가르는 것은 열경계층이고 그 크기는 열류가 "
+                          "정한다 — core_state 가 핵 쪽 경계 온도를 선언으로 받는 것과 "
+                          "같은 자리이고, 이 레시피에는 그 열류가 없다."),
             "sub_neptune": ("H/He 외피가 총질량의 몇 %뿐이라 두께가 조성이 아니라 "
                             "**나이와 항성 조사량** 이 정한다 (광증발). 이 레시피는 "
                             "등온이고 진화가 없으므로, 가스질량분율을 스스로 정할 수 "
