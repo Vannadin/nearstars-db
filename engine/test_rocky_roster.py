@@ -19,37 +19,50 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import rocky_roster as rr  # noqa: E402
 
-# 로스터에 반드시 있어야 하는 천체와 그 등급. DB 가 바뀌어 조용히 빠지면 잡는다.
-EXPECTED = {
-    "TRAPPIST-1 b": rr.MEASURED, "TRAPPIST-1 c": rr.MEASURED,
-    "TRAPPIST-1 d": rr.MEASURED, "TRAPPIST-1 e": rr.MEASURED,
-    "TRAPPIST-1 f": rr.MEASURED, "TRAPPIST-1 g": rr.MEASURED,
-    "TRAPPIST-1 h": rr.MEASURED,
-    "Barnard b": rr.ESTIMATED, "Barnard c": rr.ESTIMATED,
-    "Barnard d": rr.ESTIMATED, "Barnard e": rr.ESTIMATED,
-    "Proxima Cen b": rr.ESTIMATED, "Proxima Cen d": rr.ESTIMATED,
-    "40 Eridani A c": rr.ESTIMATED, "40 Eridani A d": rr.ESTIMATED,
-    "40 Eridani A b": rr.MASS_ONLY, "Proxima Cen c": rr.MASS_ONLY,
+# **이름 목록을 두지 않는다.** 예전에는 17개를 등급과 함께 박아 두었는데, 그것이
+# 모집단을 다시 프로젝트 로스터로 묶는 자리였다 — 파일에서 하드코딩을 뺐는데 검사가
+# 도로 넣는 꼴이다. DB 가 자라면 그 목록은 매번 손봐야 하고, 손보지 않으면 새로 들어온
+# 천체는 검사받지 않는다.
+#
+# 대신 **규칙** 과 **세 파수꾼** 을 지킨다. 파수꾼은 등급마다 하나씩이고, DB 의 실제
+# 행이 여전히 제 칸에 떨어지는지만 본다. 규칙이 본체다.
+SENTINELS = {
+    "TRAPPIST-1 b": rr.MEASURED,     # 통과 + 실질량
+    "Barnard b": rr.ESTIMATED,       # RV, 반지름이 추정
 }
+
+MIN_POOL = 50        # DB 전체를 훑으면 이보다는 많아야 한다. 넷으로 되돌아가면 잡힌다
 
 
 def main() -> int:
     fails: list[str] = []
     data = {r["name"]: r for r in rr.rows()}
 
-    print("증거 등급 — 오차의 유무가 판정하는가")
-    for name, want in EXPECTED.items():
+    print("모집단 — DB 전체에서 오는가, 로스터 넷으로 되돌아가지 않았는가")
+    fn = rr.funnel()
+    wide = len(data) >= MIN_POOL and fn.get("scanned", 0) > len(data)
+    if not wide:
+        fails.append(f"모집단이 {len(data)}개다 — DB {fn.get('scanned', 0)} 중")
+    print(f"  [{'PASS' if wide else 'FAIL'}] DB 행성 {fn.get('scanned', 0)} 중 "
+          f"rocky 후보 {len(data)}개 (하한 {MIN_POOL})")
+    # 걸러낸 것을 말없이 두지 않는다. 표가 좁아진 자리는 표가 말해야 한다.
+    told = all(k in fn for k in ("scanned",)) and len(fn) > 1
+    if not told:
+        fails.append("깔때기가 걸러낸 이유를 세지 않는다")
+    print(f"  [{'PASS' if told else 'FAIL'}] 걸러진 이유가 세어져 있다 — "
+          + " · ".join(f"{k} {v}" for k, v in fn.items() if k != "scanned"))
+
+    print("\n파수꾼 — DB 의 실제 행이 제 등급에 떨어지는가")
+    for name, want in SENTINELS.items():
         row = data.get(name)
         if row is None:
             fails.append(f"{name}: 로스터에서 사라졌다")
+            print(f"  [FAIL] {name} 이 없다")
             continue
-        if row["grade"] != want:
+        good = row["grade"] == want
+        if not good:
             fails.append(f"{name}: 등급 {row['grade']}, 기대 {want}")
-    ok = not fails
-    print(f"  [{'PASS' if ok else 'FAIL'}] {len(EXPECTED)}개가 기대한 등급에 있다 "
-          f"(측정 7 · 추정 8 · 질량만 2)")
-    for f in fails:
-        print(f"         {f}")
+        print(f"  [{'PASS' if good else 'FAIL'}] {name:16} → {row['grade']}")
 
     # 검출 방식 문자열은 DB 안에서 표기가 갈린다. 판정은 오차 쪽에 걸려 있어야 한다.
     print("\n판정 근거 — 검출 방식 문자열이 아니라 오차 필드인가")
@@ -75,7 +88,8 @@ def main() -> int:
               if r["grade"] == rr.ESTIMATED and rr.evaluate(r)[0] is not None]
     if leaked:
         fails.append(f"순환: 추정 반지름에 역산이 걸렸다 — {', '.join(leaked)}")
-    print(f"  [{'PASS' if not leaked else 'FAIL'}] 추정 등급 8개 전부 보류로 나온다")
+    n_est = sum(1 for r in rr.rows() if r["grade"] == rr.ESTIMATED)
+    print(f"  [{'PASS' if not leaked else 'FAIL'}] 추정 등급 {n_est}개 전부 보류로 나온다")
 
     # 그리고 측정 등급은 실제로 역산돼야 한다. 위 검사만 있으면 전부 보류시켜도 통과한다.
     #
@@ -96,12 +110,20 @@ def main() -> int:
     scope = f"{len(targets)}개" + ("" if full else " (대표 1개 — 전수는 --full)")
     print(f"  [{'PASS' if good else 'FAIL'}] 측정 등급이 실제로 역산된다 — {scope}")
 
-    print("\nMsini — 하한이라는 사실이 출력에 남는가")
-    pc = next((r for r in rr.rows() if r["name"] == "Proxima Cen c"), None)
-    said = pc is not None and "Msini" in rr._outcome(pc)[1]
+    # 질량만 등급은 지금 **비어 있다.** DB 를 전부 훑어도 반지름 없이 rocky 라 부를 수
+    # 있는 천체가 없기 때문이다 — 질량만으로는 2.04 M⊕(Chen & Kipping T(1)) 위를 암석이라
+    # 못 하고, 그 아래에 반지름 없는 행성이 DB 에 없다. 그러니 DB 행 하나를 골라 시험할
+    # 수가 없고, 그렇다고 규칙을 놓으면 그 등급이 다시 채워질 때 조용히 새어 나간다.
+    # 규칙을 직접 시험한다.
+    print("\nMsini — 하한이라는 사실이 출력에 남는가 (등급이 비어 있어 규칙으로)")
+    synthetic = {"name": "(가상)", "mass_earth": 1.0, "radius_earth": None,
+                 "grade": rr.MASS_ONLY, "msini": True, "classes": rr.ROCKY}
+    said = "Msini" in rr._outcome(synthetic)[1]
     if not said:
         fails.append("Msini: 순방향 결과가 하한이라는 것을 말하지 않는다")
-    print(f"  [{'PASS' if said else 'FAIL'}] Proxima Cen c 가 Msini 임을 적는다")
+    print(f"  [{'PASS' if said else 'FAIL'}] 질량만 + Msini 인 행이 하한임을 적는다")
+    n_mo = sum(1 for r in rr.rows() if r["grade"] == rr.MASS_ONLY)
+    print(f"         DB 의 질량만 등급 {n_mo}개 — 비어 있는 것이 결과다")
 
     # 거절 훑기도 역산을 깨우면 안 된다. 위에서 이미 계산된 것(캐시)과 순방향으로
     # 끝나는 것만 본다 — 측정 등급의 전수 거절 확인은 --full 이 켜졌을 때 딸려 온다.

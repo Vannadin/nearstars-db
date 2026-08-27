@@ -9,6 +9,11 @@
 `db/systems/*.json` 에 이미 있으므로, 손으로 옮겨 적으면 그 순간 두 번째 사본이 된다.
 그래서 읽는다.
 
+**모집단도 읽는다.** 2026-08-27 까지 계 이름 넷이 박혀 있었고, 그게 이 솔버의
+일반성을 프로젝트 로스터로 시험하는 꼴이었다 — 솔버는 범용인데 표본이 "우리가
+구현하려는 천체" 였다는 뜻이다. 이제 DB 전체 229개를 훑고 `body_class` 가 rocky
+후보로 고른 것을 넣는다. 걸러진 수는 표가 스스로 말한다.
+
 왜 등급을 가르나
 ----------------
 역산은 질량과 반지름 **둘 다 측정됐을 때만** 조성을 말한다. 그런데 DB 의 암석 행성
@@ -38,17 +43,21 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import body_class  # noqa: E402
 from interior import (EARTH_MASS_KG, EARTH_RADIUS_M,  # noqa: E402
                       infer_composition, solve)
 
 DB = Path(__file__).resolve().parent.parent / "db" / "systems"
 
-# 훑을 계. 인계문의 "암석 로스터" 넷이고, 구현 후보 로스터에서 암석 행성을 가진 것들이다.
-SYSTEMS = ("40_eridani", "barnards_star", "proxima_cen", "trappist_1")
-
-# 이 위는 암석 행성이 아니다. 넘기면 솔버가 규산염으로 풀려다 상한에 걸리고, 그 거절이
-# "고압 규산염이 없다" 로 읽히는데 실제로는 "이건 암석이 아니다" 다.
-ROCKY_MAX_ME = 20.0
+# 무엇이 암석 행성인가는 **body_class 가 답한다.** 2026-08-27 까지 이 자리에 계 이름
+# 넷과 손으로 정한 20 M⊕ 컷이 있었다. 둘 다 이 파일이 스스로 정한 경계였고, 그래서
+# 이 조사의 모집단이 "우리가 구현하려는 천체" 로 좁아져 있었다 — 솔버는 범용인데
+# 그 일반성을 시험할 표본이 프로젝트 로스터였다는 뜻이다.
+#
+# 이제 DB 전체를 훑고 클래스로 고른다. 경계는 발표된 것이고(body-class-methodology),
+# 모호하면 후보가 여럿으로 나오므로 **rocky 가 후보에 들어 있으면** 넣는다 — 이
+# 조사가 답하려는 것이 바로 그 모호한 천체들이라서, 미리 잘라내면 질문이 사라진다.
+ROCKY = "rocky"
 
 # 증거 등급. 순서가 곧 신뢰 순서다.
 MEASURED = "measured"        # 통과로 반지름, 실질량
@@ -80,16 +89,19 @@ def is_msini(raw: dict, derived: dict) -> bool:
 
 _ROWS: list[dict] | None = None
 
+# 훑은 것과 걸러진 것. **말없이 자르지 않는다** — 모집단이 좁아진 자리를 표가
+# 스스로 말해야 하고, 특히 "반지름이 없어서 rocky 라 부를 수 없었다" 는 결과이지
+# 누락이 아니다.
+_FUNNEL: dict[str, int] = {}
+
 
 def rows() -> list[dict]:
-    """DB 에서 암석 행성을 읽는다. 등급이 붙어 나온다."""
+    """DB 전체에서 암석 행성을 읽는다. 클래스와 증거 등급이 붙어 나온다."""
     global _ROWS
     if _ROWS is not None:
         return _ROWS
     out = []
     for path in sorted(glob.glob(str(DB / "*.json"))):
-        if not any(s in Path(path).name for s in SYSTEMS):
-            continue
         doc = json.loads(Path(path).read_text(encoding="utf-8"))
         for p in doc.get("planets") or []:
             dv, raw = p.get("derived") or {}, p.get("raw") or {}
@@ -97,7 +109,15 @@ def rows() -> list[dict]:
             if not m_kg:
                 continue
             m_e = m_kg / EARTH_MASS_KG
-            if m_e > ROCKY_MAX_ME:
+            r_e = r_m / EARTH_RADIUS_M if r_m else None
+            _FUNNEL["scanned"] = _FUNNEL.get("scanned", 0) + 1
+            cls = body_class.solve(mass_earth=m_e, radius_earth=r_e)
+            if not cls.applicable:
+                _FUNNEL["classifier declined"] = _FUNNEL.get("classifier declined", 0) + 1
+                continue
+            if ROCKY not in str(cls.values.get("classes", "")):
+                key = ("not rocky, no radius" if r_e is None else "not rocky")
+                _FUNNEL[key] = _FUNNEL.get(key, 0) + 1
                 continue
             out.append({
                 "name": p["name"],
@@ -105,11 +125,18 @@ def rows() -> list[dict]:
                 "radius_earth": r_m / EARTH_RADIUS_M if r_m else None,
                 "grade": grade(raw),
                 "msini": is_msini(raw, dv),
+                "classes": cls.values.get("classes", ROCKY),
             })
     order = {MEASURED: 0, ESTIMATED: 1, MASS_ONLY: 2}
     out.sort(key=lambda r: (order[r["grade"]], r["name"]))
     _ROWS = out
     return out
+
+
+def funnel() -> dict[str, int]:
+    """DB 전체에서 이 표까지 무엇이 몇 개 걸러졌나. rows() 를 먼저 부른다."""
+    rows()
+    return dict(_FUNNEL)
 
 
 _CACHE: dict[str, tuple] = {}
@@ -161,6 +188,8 @@ LABEL = {MEASURED: "측정 (통과 + 실질량)",
 def table(markdown: bool = False) -> None:
     data = rows()
     if markdown:
+        f = funnel()
+        print(f"<!-- DB 행성 {f.get('scanned', 0)} 중 rocky 후보 {len(data)} -->")
         print("| planet | evidence | M (M⊕) | R (R⊕) | outcome | what it says |")
         print("|---|---|---|---|---|---|")
         for row in data:
@@ -169,6 +198,11 @@ def table(markdown: bool = False) -> None:
             print(f"| {row['name']} | {row['grade']} | {row['mass_earth']:.3f} | "
                   f"{r} | {verdict} | {why} |")
         return
+    f = funnel()
+    print(f"  DB 행성 {f.get('scanned', 0)} 중 rocky 후보 {len(data)} — "
+          f"클래스로 걸러진 {f.get('not rocky', 0)}"
+          + (f" · 반지름이 없어 rocky 라 부를 수 없는 {f['not rocky, no radius']}"
+             if f.get("not rocky, no radius") else ""))
     last = None
     for row in data:
         if row["grade"] != last:

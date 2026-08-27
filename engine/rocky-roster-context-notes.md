@@ -91,3 +91,57 @@ times over by the moon roster in the same run.
 So the default checks the wiring with one representative body and `--full` sweeps all
 seven; the table regenerates all seven every time it is printed. The decline scan had to be
 taught the same discipline — it originally evaluated every row and undid the saving.
+
+## The pool was the project's roster, which is not a generality test
+
+`SYSTEMS` held four system names and `ROCKY_MAX_ME` a hand-picked 20 M⊕ cut. Both were
+boundaries this file invented for itself, and together they meant the survey's population
+was "the bodies we intend to implement". The solver is general; its sample was not.
+
+The pool now comes from the whole database — 229 planets across 157 files — and
+`body_class` decides what counts as rocky. That replaces both hardcoded boundaries with one
+published, cited recipe, and it makes the roster the first consumer of a node that eight
+`selects` edges are waiting on.
+
+`rocky` is taken as a **candidate**, not a verdict: a body inside a boundary band comes back
+with both neighbours alive, and those ambiguous bodies are precisely what this survey exists
+to look at. Filtering to the unambiguous ones would delete the question.
+
+## Widening it found what the narrow pool was hiding
+
+17 planets became 88, and two declines appeared that four systems never produced.
+
+- **GJ 341 b** — 4.0 M⊕ at 0.88 R⊕ is 32 g/cm³, denser than pure iron. Refusing is right;
+  the declared pair is not a planet.
+- **GJ 367 b** — 0.633 M⊕ at 0.699 R⊕. The target sits *between* an all-`fe_prem` body
+  (0.7236 R⊕) and pure `fe_eps` iron (0.6774), so the inversion's axis genuinely cannot
+  reach it: it needs a core with fewer light elements than Earth's.
+
+Both refusals are correct and **neither message says so** — they report "reason unknown"
+from a generic fallback, which fails the engine's own rule that a refusal names a mechanism.
+The information to write both messages already exists, since `fe_eps` is carried precisely
+as the "cannot be denser than this" limit. Not fixed here: the message lives in
+`interior.py`, which another session holds.
+
+## The mass-only tier is empty, and that is a result
+
+No body in the database can be called rocky from mass alone: `body_class` will not put
+anything above Chen & Kipping's 2.04 M⊕ break in the rocky class without a radius, and the
+database has no radius-less planet below it. Two former members left the pool for that
+reason — `Proxima Cen c` and `40 Eridani A b`, both mass-only.
+
+So the survey prints its funnel: 229 scanned, 88 rocky candidates, and the counts for what
+each filter removed. A population that narrows silently reads as "we covered everything".
+
+## The test asserts rules, not a name list
+
+The old test held 17 planet names with their expected grades. That was the hardcoding put
+back one file over: the pool would be data-driven and the check would re-pin it to the same
+seventeen, and any planet the database gained afterwards would go unchecked.
+
+What it holds now is the rules — the pool is wide and comes from the database, the funnel
+counts what it dropped, estimated radii never reach the inverter, measured ones do — plus
+two sentinels, one per populated tier, that confirm real database rows still land where they
+should. The `Msini` caveat is asserted against a constructed row rather than a database one,
+because the tier it applies to is currently empty and a rule that stops being checked when
+its tier empties is a rule that leaks the moment the tier refills.
