@@ -77,7 +77,8 @@ nodes:
     kind: computed
     recipe: interior-structure-methodology
     outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
-              core_temperature, cmb_temperature]
+              core_temperature, cmb_temperature, cmb_pressure, ice_column_state,
+              bulk_porosity, voids_expected]
     note: >
       질량과 조성에서 층 구조를 푼다. 정수압 평형·질량보존·상태방정식을 함께
       적분하므로 층 밀도가 입력이 아니라 결과다 — 그래서 반지름과 중심압도 같이
@@ -91,11 +92,17 @@ nodes:
       geotherm 쪽 이름을 갈라 주는 것이 좋다. 여기서는 손대지 않았다.
   core_state:
     kind: computed
-    status: missing
-    outputs: [conductor_phase]
+    recipe: core-state-methodology
+    outputs: [conductor_phase, cmb_melt_temperature, center_melt_temperature,
+              core_cmb_temperature_used, core_center_temperature_used, icb_pressure]
     note: >
       핵이 다이나모를 돌릴 수 있는 상태인가. 핵 압력·온도를 융해곡선과 비교해야
       하므로 지오섬이 먼저 필요하다. interior_layers 와 별개의 계산이다.
+      2026-08-27 에 융해곡선이 들어와 구현됐고, 그때 **융해곡선만으로는 열리지
+      않는다는 것** 이 같이 나왔다. interior_layers 의 지오섬은 맨틀 단열선을 핵까지
+      이어 그린 것이라 D″ 열경계층과 철의 진짜 단열 기울기가 빠져 있고, 두 편향이 같은
+      방향이라 그 값은 **하한** 이다. 하한만으로는 '액체' 만 말할 수 있고 '고체' 는
+      말할 수 없다. 핵 쪽 경계 온도를 선언하면 둘 다 말한다.
   tidal_response:
     kind: computed
     status: missing
@@ -332,6 +339,14 @@ edges:
   # 노드 자체는 아직 미구현이고(status: missing) 융해곡선은 별도 논문이 필요하다.
   - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md:1"}
+  - {from: interior_layers, to: core_state, kind: requires, via: cmb_pressure, ref: "core-state-methodology.md:1"}
+  - {from: interior_layers, to: core_state, kind: requires, via: cmb_temperature, ref: "core-state-methodology.md:1"}
+  # 핵 쪽 경계 온도는 D″ 열경계층을 가로지르는 열류가 정한다. 그 열류가
+  # internal_heat_nontidal 의 몫인데 저쪽은 프로파일도 열류도 내지 않으므로, 실재하는
+  # 결합을 gap 으로 기록한다 — core_state 는 지금 그 값을 선언으로 받는다.
+  # interior_layers 가 같은 이유로 포텐셜 온도를 선언으로 받는 것과 같은 자리다.
+  - {from: internal_heat_nontidal, to: core_state, kind: influences, status: gap, ref: "core-state-methodology.md:1", note: 핵-맨틀 경계의 열류가 핵 쪽 경계 온도를 정한다. 저쪽이 그 열류를 내지 않아 지금은 선언으로 받는다.}
+  - {from: body_class, to: core_state, kind: selects, ref: "core-state-methodology.md:1"}
   - {from: star_physical, to: stellar_wind, kind: requires, via: age}
   - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_ram, ref: "planetary-magnetosphere-geometry-methodology.md:83"}
   - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}

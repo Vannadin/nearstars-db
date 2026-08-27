@@ -27,7 +27,7 @@ import yaml
 
 import graph
 import registry
-from state import BodyState, Missing
+from state import BodyState
 
 HERE = Path(__file__).resolve().parent
 DOCS = HERE.parent / "docs" / "reference"
@@ -74,6 +74,9 @@ def main() -> int:
     registry.load_all()
     g = graph.load()
     bodies = sample_bodies()
+    import run
+    for body in bodies:
+        run.solve(body, g)
     fails: list[str] = []
     checked = 0
 
@@ -92,12 +95,12 @@ def main() -> int:
             fails.append(f"{node}: {doc.name} 에 '## Contract — `{node}`' 블록이 없다")
             continue
 
-        fn = registry.get(node)
         res = None
         for body in bodies:
-            try:
-                candidate = fn(body)
-            except Missing:
+            # 그래프를 통째로 돌린 뒤에 읽는다. 레시피를 하나만 불러서는 **다른 노드의
+            # 출력을 먹는 노드** 의 계약을 확인할 수 없다 — core_state 가 그렇다.
+            candidate = body.results.get(node)
+            if candidate is None:
                 continue
             res = res or candidate
             if candidate.applicable:

@@ -1,0 +1,55 @@
+# Earth — 이 엔진의 앵커. 보드 천체가 아니라 **발표된 값으로 엔진을 대보는** 표본이다.
+# core_state 가 값을 내려면 핵 쪽 경계 온도가 선언돼 있어야 하고, 지구는 그 값이
+# 발표돼 있는 유일한 천체다. 그래서 계약 대조도 여기서 돈다.
+name: Earth
+kind: planet
+parent: Sun
+
+inputs:
+  mass_earth: 1.0
+  radius_earth: 1.0
+  age_gyr: 4.54
+  body_class: rocky
+  composition_intent: earth_like
+  core_mass_fraction: 0.325     # PREM 핵 질량 / 지구 질량
+  # 맨틀 포텐셜 온도. **선언** 이다 — Unterborn+ 2019 §2 의 지구형 값이고,
+  # 암석-금속 상들의 적합 기준이 이 단열선이라 여기서 열압력이 정확히 0 이다.
+  potential_temperature: 1600.0
+  # 핵 **쪽** 핵-맨틀 경계 온도. 이것도 선언이고, D″ 열경계층을 가로지르는 열류가
+  # 정하는 값이라 이 엔진이 도출하지 않는다. Sinmyo+ 2019 (2019E&PSL.510...45S) 의
+  # 3760 ± 290 K 다. 맨틀 쪽 값(이 적분이 내는 ~2530 K)보다 1200 K 넘게 높다.
+  core_cmb_temperature: 3760.0
+
+units:
+  mass_earth: M_earth
+  radius_earth: R_earth
+  age_gyr: Gyr
+  potential_temperature: K
+  core_cmb_temperature: K
+
+# 발표된 값. 엔진은 읽지 않고 대조만 한다.
+expected:
+  radius:
+    value: 1.0
+    unit: R_earth
+    tol: 0.01
+    source: "IAU/IAG (Archinal+ 2011) — 평균반지름 6371 km"
+  nmoi:
+    value: 0.3307
+    unit: dimensionless
+    tol: 0.01
+    source: "PREM (Dziewonski & Anderson 1981, 1981PEPI...25..297D)"
+  cmb_pressure:
+    value: 135.75
+    unit: GPa
+    tol: 0.02
+    source: "PREM — 핵-맨틀 경계 압력"
+  icb_pressure:
+    value: 328.85
+    unit: GPa
+    tol: 0.10
+    tol_reason: >
+      중심 근처에서 핵의 단열선과 철의 융해곡선이 거의 나란하다. 융해온도 1 % 가
+      경계를 수십 GPa 옮기므로, 이 값의 잔차는 두 곡선의 벌어짐이 아니라 그
+      나란함이 증폭한 것이다. 같은 압력에서 두 융해 실험이 13 % 어긋난다.
+    source: "PREM — 내핵 경계 압력"
