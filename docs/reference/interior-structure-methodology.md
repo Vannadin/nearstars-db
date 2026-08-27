@@ -31,28 +31,31 @@ Each row is a summary; the section it names carries the work.
 | 2026-08-25 | the water ice column completed | the named hole between 209.5 MPa and 2.216 GPa filled by ices III, V and VI, read from a published Gibbs representation rather than fitted |
 | 2026-08-26 | compaction added | a small body whose self-gravity cannot crush what it accreted is solved rather than declined or mistaken for lighter rock. [What it says about Dante and Hades](#what-the-compaction-relation-says-about-dante-and-hades) is the part that matters |
 | 2026-08-26 | giants added | what they needed was not another recipe but another equation of state, so a polytrope joined the functional forms. [What that opens](#what-the-giant-branch-opens-alpha-centauri-a-b-and-the-class-table) is a derived C/MR² of 0.2614 for Alpha Centauri A b against the 0.23 the class table carries |
+| 2026-08-27 | the silicate carried above 3.5 TPa | one phase, spliced where the PREM fit's author stops it and running to where Seager+ 2007 hands silicate to Thomas–Fermi–Dirac. Three separate refusals shared that ceiling: the rocky mass limit rose from 6.84 to 22.78 M⊕ at Earth composition and 19.32 to 53.38 M⊕ for pure silicate, Jupiter's whole heavy-element budget integrates, and a compact rock core inside a Jupiter-mass giant is possible up to 17.66 M⊕. The third only half opened, and its row says so |
 
-**2026-08-27 carried the silicate above 3.5 TPa.** One phase, spliced where the PREM fit's
-author stops it and running to where Seager+ 2007 hands silicate over to Thomas–Fermi–Dirac.
-Three separate refusals shared that one ceiling and all three moved: the rocky mass limit
-rose from 6.84 to 22.78 M⊕ at Earth composition and from 19.32 to 53.38 M⊕ for pure silicate,
-Jupiter's whole heavy-element budget now integrates, and a compact rock core inside a
-Jupiter-mass giant is possible up to 17.66 M⊕ where before it was not possible at all. The
-third is the one that only half opened, and its row says so.
+**2026-08-27, later, gave the solver a temperature.** `ρ(P)` became `ρ(P, T)` and an
+adiabat now integrates alongside the pressure, so `core_temperature` and `cmb_temperature`
+come out and `core_state` can finally be wired: that node had zero edges because it needed a
+core temperature to compare against a melting curve. The hard part was not adding the term
+but avoiding adding it twice, since the PREM fits already contain Earth's geotherm; the
+[temperature](#temperature-what-the-fits-already-contain) section has how, and the answer is
+that the reference is Earth's own adiabat, not an isotherm.
 
 ## Contract — `interior_layers`
 
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
-`radius` [R_earth] · `core_pressure` [GPa] · `bulk_porosity` [—] · `voids_expected` [—]
+`radius` [R_earth] · `core_pressure` [GPa] · `core_temperature` [K] ·
+`cmb_temperature` [K] · `bulk_porosity` [—] · `voids_expected` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
-`tidal_heating` [—] · `envelope_z` [—]
+`tidal_heating` [—] · `envelope_z` [—] · `potential_temperature` [K]
 **Discriminating keys** — the material stack chosen by `composition`, and the pressure
 reached at each layer boundary, which decides whether a grounded phase exists there.
 Regimes and their numeric conditions are in [Domain of validity](#domain-of-validity).
 **Grade** — calibrated, dropping to **analog** whenever `initial_porosity` is greater than
-zero, and for any giant below Jupiter's mass, where the branch has never been checked. The equations of state are published fits and the recipe reproduces four measured
+zero, whenever `potential_temperature` departs from the 1600 K reference, and for any giant
+below Jupiter's mass, where the branch has never been checked. The equations of state are published fits and the recipe reproduces four measured
 moments of inertia without being handed layer densities; the compaction relation is a
 laboratory curve extrapolated past the pressures it was measured at, and the initial
 porosity it needs is a declaration this recipe cannot derive.
@@ -66,6 +69,13 @@ consumes it for real.
 behind `voids_expected`, and it is a declaration rather than an inference because tidal
 heating is another node's output; estimating it here from mass or orbit would put a second
 copy of that node inside this recipe.
+
+`potential_temperature` is the third declaration, and it is **not the surface
+temperature**: it is the temperature the convecting interior would have if decompressed to
+the surface, which is Unterborn+ 2019's boundary condition `T(R) = T_Pot`. Between the two
+sits a conductive lid worth roughly 1300 K on Earth, and its thickness is a function of the
+heat flux, which is `internal_heat_nontidal`'s output rather than this recipe's. Left unset
+the recipe carries no temperature at all and reproduces the isothermal result bit for bit.
 
 `voids_expected` answers a question the compaction relation does not: whether this body is
 in a regime where pore space survives at all. It is false when any of three indicators
@@ -85,12 +95,17 @@ against self-gravity, closed by an equation of state. These are Seager+ 2007's e
 
     dm/dr = 4π r² ρ(r)
     dP/dr = −G m(r) ρ(r) / r²
-    ρ     = ρ_solid(P) · (1 − φ(P))     ← the equation of state, per material,
+    dT/dP = γ T / K_S                   ← the adiabat, carried only when a potential
+                                          temperature is declared
+    ρ     = ρ_solid(P, T) · (1 − φ(P))  ← the equation of state, per material,
                                           times the solid fraction left at that pressure
 
 The porosity term φ(P) is zero unless the body is declared porous, and the section on
 [compaction](#porosity-what-the-pressure-has-not-crushed-yet) below says where it comes
-from. Everything in this document up to that section is the φ = 0 case.
+from. Everything in this document up to that section is the φ = 0 case. The temperature
+term is likewise off unless declared, and the same section pattern applies:
+[temperature](#temperature-what-the-fits-already-contain) has the relation and, more
+importantly, what it must not be applied to twice.
 
 The moment of inertia integrates alongside them,
 
@@ -144,19 +159,25 @@ section has the constants and the limits.
 
 The materials, with the source of every constant:
 
-| material | form | ρ₀ (kg/m³) | K₀ (GPa) | K₀′ | valid range | source |
-|---|---|---|---|---|---|---|
-| `fe_prem` (planet core) | BM2 | 7050 | 201 | 4 | 0 to 12 TPa | Zeng+ 2016 §II, PREM outer-core fit |
-| `fe_eps` (pure iron limit) | Vinet | 8300 | 156.2 | 6.08 | 0 to 20.9 TPa | Seager+ 2007 Table 1, Fe(ε), Anderson+ 2001 data |
-| `mgsio3_en` (upper mantle) | BME3 | 3220 | 125 | 5 | 0 to 23.83 GPa | Seager+ 2007 Table 1, MgSiO₃ enstatite |
-| `mgsio3_prem` (lower mantle) | BM2 | 3980 | 206 | 4 | 23.83 GPa to 3.5 TPa | Zeng+ 2016 §II, PREM lower-mantle fit |
-| `mgsio3_pv` (deep mantle) | BME4, K₀″ = −0.016 GPa⁻¹ | 4100 | 247 | 3.97 | 3.5 to 13.5 TPa | Seager+ 2007 Table 1 + §III.3, Karki+ 2000 DFT |
-| `ice_ih` | BM2 | 916.72 | 8.490 | 4 | 0 to 209.5 MPa | IAPWS-06 (Feistel & Wagner 2006) Table 6 |
-| `ice_iii` | BME3 | 1126.384 | 7.8349 | 6.7097 | 209.5 to 355.0 MPa | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 251.15 K |
-| `ice_v` | BME3 | 1207.842 | 10.6368 | 6.7460 | 355.0 to 618.4 MPa | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 256.43 K |
-| `ice_vi` | BME3 | 1263.386 | 10.3686 | 7.8219 | 618.4 MPa to 2.216 GPa | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 272.73 K |
-| `ice_vii` | BME3 | 1460 | 23.7 | 4.15 | 2.216 to 37.4 GPa | Seager+ 2007 Table 1, Hemley+ 1987 data |
-| `h_he` (giant envelope) | polytrope, n = 1 | 0 (see note) | K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻² | n = 1 | 0 to 653 TPa | Helled+ 2022 §2, unit-checked against their own R = 70,300 km |
+| material | form | ρ₀ (kg/m³) | K₀ (GPa) | K₀′ | valid range | αK_T (GPa/K) | T_ref | source |
+|---|---|---|---|---|---|---|---|---|
+| `fe_prem` (planet core) | BM2 | 7050 | 201 | 4 | 0 to 12 TPa | 0.00121 + 7.8e-7·ΔT | Earth adiabat, 1600 K | Zeng+ 2016 §II, PREM outer-core fit  |
+| `fe_eps` (pure iron limit) | Vinet | 8300 | 156.2 | 6.08 | 0 to 20.9 TPa | 0.00121 + 7.8e-7·ΔT | 300 K | Seager+ 2007 Table 1, Fe(ε), Anderson+ 2001 data  |
+| `mgsio3_en` (upper mantle) | BME3 | 3220 | 125 | 5 | 0 to 23.83 GPa | 0.00692 | Earth adiabat, 1600 K | Seager+ 2007 Table 1, MgSiO₃ enstatite  |
+| `mgsio3_prem` (lower mantle) | BM2 | 3980 | 206 | 4 | 23.83 GPa to 3.5 TPa | 0.00692 | Earth adiabat, 1600 K | Zeng+ 2016 §II, PREM lower-mantle fit  |
+| `mgsio3_pv` (deep mantle) | BME4, K₀″ = −0.016 GPa⁻¹ | 4100 | 247 | 3.97 | 3.5 to 13.5 TPa | 0.00692 | Earth adiabat, 1600 K | Seager+ 2007 Table 1 + §III.3, Karki+ 2000 DFT  |
+| `ice_ih` | BM2 | 916.72 | 8.490 | 4 | 0 to 209.5 MPa | 0.001357 | 273.15 K | IAPWS-06 (Feistel & Wagner 2006) Table 6  |
+| `ice_iii` | BME3 | 1126.384 | 7.8349 | 6.7097 | 209.5 to 355.0 MPa | 0.002048 | 251.15 K | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 251.15 K  |
+| `ice_v` | BME3 | 1207.842 | 10.6368 | 6.7460 | 355.0 to 618.4 MPa | 0.002369 | 256.43 K | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 256.43 K  |
+| `ice_vi` | BME3 | 1263.386 | 10.3686 | 7.8219 | 618.4 MPa to 2.216 GPa | 0.003740 | 272.73 K | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 272.73 K  |
+| `ice_vii` | BME3 | 1460 | 23.7 | 4.15 | 2.216 to 37.4 GPa | **none published** | – | Seager+ 2007 Table 1, Hemley+ 1987 data  |
+| `h_he` (giant envelope) | polytrope, n = 1 | 0 (see note) | K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻² | n = 1 | 0 to 653 TPa | **not applicable** | – | Helled+ 2022 §2, unit-checked against their own R = 70,300 km  |
+
+The two thermal columns have two sources and must not be mixed: rock and metal take αK_T
+from Seager+ 2007 §IV.2.2 (Anderson & Masuda 1994 for the silicate, Isaak & Anderson 2003
+for the metal and its electron term), the ices from SeaFreeze at the same reference state
+their ρ₀, K₀ and K₀′ were read at. Ice VII has **no** transcribable constant in either and
+stays isothermal, which the result says out loud rather than assuming zero expansion.
 
 Six things about that table are worth stating out loud, because each of them is a
 decision rather than a transcription. `h_he` has ρ₀ = 0 because a polytrope really does go
@@ -303,6 +324,40 @@ otherwise. That check re-reads all three phases at their reference states and fa
 baked constant has drifted from the representation, which is the protection a hand-copied
 table needs (this repository has been 54× wrong in a hand-keyed table before). The
 development environment that reproduces it is pinned in `engine/requirements.txt`.
+
+### Temperature: what the fits already contain
+
+Thermal pressure adds to the cold curve in the form Seager+ 2007 §IV.2.2 uses, which is
+Anderson & Goto 1989's: above the Debye temperature αK_T is nearly volume-independent, so
+`P(ρ,T) = P_cold(ρ) + αK_T·ΔT`, with a second-order term for metals whose electrons are
+thermally excited. The adiabat supplying T is `dT/dP = γT/K_S`, and γ is not a new constant:
+`γ = (∂P/∂T)_V / (ρ c_V)` closes on the thermal-pressure slope already present. That
+identity is checked rather than asserted, against SeaFreeze's own Grüneisen parameter for
+four ice phases, where it agrees to every digit printed.
+
+**ΔT is measured from each fit's own reference, and getting that wrong would heat Earth
+twice.** `fe_prem` and `mgsio3_prem` are fits to PREM, a measurement of the real, hot Earth,
+so its geotherm is already inside their effective ρ₀; a 300 K-referenced expansion on top
+would double-count it, exactly as the giant branch double-counted heavy elements by adding Z
+to a polytrope constant fitted to a Jupiter that already has them. The rock-and-metal column
+is therefore referenced to **Earth's adiabat**, anchored at the 1600 K mantle potential
+temperature of Unterborn+ 2019 §2. Declaring 1600 K makes ΔT identically zero and the answer
+bit-for-bit the isothermal one, which the test asserts as equality rather than closeness.
+Ice phases are referenced to the real isotherms already recorded above.
+
+**The anchor is a declaration, and it is not the surface temperature.** In a convecting
+interior the adiabat's intercept is the potential temperature; the surface sits below it
+across a conductive lid worth roughly 1300 K on Earth, whose thickness is a function of the
+heat flux. That flux is `internal_heat_nontidal`'s output, so `potential_temperature` enters
+as a declaration beside `ice_allowed` and `tidal_heating`, with the coupling recorded in the
+chain as an `influences` edge carrying `status: gap`.
+
+**That edge settles a naming question.** `internal_heat_nontidal`'s `geotherm` is a heat
+budget: it produces `l_int` and `t_int` (≈ 35 K for a rocky body) and never writes a T(P),
+its text containing no adiabat, Grüneisen parameter or potential temperature. An equation of
+state needs T at each pressure along the profile, which only the integration can produce.
+Two quantities, one word; the outputs added here are named `core_temperature` and
+`cmb_temperature`, and renaming `geotherm` belongs to the recipe that owns it.
 
 ## Porosity: what the pressure has not crushed yet
 
@@ -566,9 +621,9 @@ density curve is compared against the representation across its window:
 
 | phase | reference state | ρ₀ (kg/m³) | K₀ (GPa) | K₀′ | window | curve reproduced to |
 |---|---|---|---|---|---|---|
-| `ice_iii` | P = 0, T = 251.15 K | 1126.3840 | 7.8349 | 6.7097 | 209.5 to 355.0 MPa | 0.006 % |
-| `ice_v` | P = 0, T = 256.43 K | 1207.8419 | 10.6368 | 6.7460 | 355.0 to 618.4 MPa | 0.014 % |
-| `ice_vi` | P = 0, T = 272.73 K | 1263.3858 | 10.3686 | 7.8219 | 618.4 MPa to 2.216 GPa | 0.118 % |
+| `ice_iii` | P = 0, T = 251.15 K | 1126.3840 | 7.8349 | 6.7097 | 209.5 to 355.0 MPa | 0.002048 | 251.15 K | 0.006 %  |
+| `ice_v` | P = 0, T = 256.43 K | 1207.8419 | 10.6368 | 6.7460 | 355.0 to 618.4 MPa | 0.002369 | 256.43 K | 0.014 %  |
+| `ice_vi` | P = 0, T = 272.73 K | 1263.3858 | 10.3686 | 7.8219 | 618.4 MPa to 2.216 GPa | 0.003740 | 272.73 K | 0.118 %  |
 
 One published number anchors the representation itself rather than our use of it. SeaFreeze
 publishes a single-point output for ice VI at 900 MPa and 255 K, ρ = 1356.1 kg/m³, and the
@@ -757,6 +812,34 @@ that concentrates mass pushes C/MR² **down** from the polytrope value, not up. 
 residual is under one percent while the two rejected values are off by 3.8 % and 4.4 % is
 the argument for the anchor as much as the provenance is.
 
+### Temperature, checked against a published core-mantle boundary
+
+The adiabat has no anchor of its own, so it is checked against someone else's. Unterborn+
+2019 ([arXiv:1905.06530](https://arxiv.org/abs/1905.06530)) fit their models' CMB temperature
+to a cubic in radius at 1600 K potential temperature (eq. 7, valid 0.75 to 1.5 R⊕) with a
+shift for other anchors (eq. 8); at 1 R⊕ it returns 2635 K, which they call "in good
+agreement" with Lay+ 2008's 2500 to 2800 K for Earth. Regenerated by
+`test_interior.py --thermal`:
+
+| body | T_Pot (K) | T_CMB derived | Unterborn+ 2019 eq. 7–8 | Δ | R | C/MR² | grade |
+|---|---|---|---|---|---|---|---|
+| Earth (reference) | 1600 | 2526 K | 2642 K | -4.4 % | 1.003 R⊕ | 0.3297 | calibrated |
+| Earth, cool mantle | 1400 | 2191 K | 2273 K | -3.6 % | 1.001 R⊕ | 0.3301 | analog |
+| Earth, hot mantle | 1900 | 2967 K | 3198 K | -7.2 % | 1.006 R⊕ | 0.3290 | analog |
+| 2 M⊕ super-Earth | 1600 | 2883 K | 3186 K | -9.5 % | 1.215 R⊕ | 0.3247 | analog |
+| 4 M⊕ super-Earth | 1600 | 3331 K | 4009 K | -16.9 % | 1.461 R⊕ | 0.3177 | analog |
+
+**Earth's 2526 K lands inside the measured band, and the drift above it is a limit rather
+than a tolerance.** The residual grows with radius because holding αK_T volume-independent
+makes γ fall as 1/ρ, while a Debye treatment of α(P,T) and C_P(P,T) lets it fall more
+slowly. The test pins the near field at 5 % and the far field into a recorded band, and the
+domain row declares 1.05 R⊕ as where this branch stops being checked.
+
+**A second check needs no planet.** The thermal term reproduces, from an independent
+constant, the ice-ladder numbers recorded above: 0.107 %, 0.267 % and 1.283 % for ices III,
+V and VI against the 0.11 %, 0.27 % and 1.3 % measured earlier against SeaFreeze. Those were
+the honest error width of an isothermal treatment; they are now a computed consequence.
+
 ### Mixtures, checked on Saturn and on a discrimination
 
 Heavy-element masses are Guillot 1999's constraints, 11 to 42 M⊕ for Jupiter and 19 to
@@ -819,6 +902,9 @@ Both tables, and the roster table below, are regenerated by
 | **porosity above the experimental ceiling** | `initial_porosity` > 0, pressure above 150 MPa | the relation is **extrapolated**: results report the mass fraction affected, and `porosity_cap` gives the reading that claims nothing there | analog |
 | **porosity on a heated body** | `initial_porosity` > 0 and the body has melt, differentiation, convection, impacts or tidal heating | **not decided here**: all five remove porosity (Bierson+ 2019 §2.2), so what this recipe returns is an upper bound on the voids, never an estimate | — |
 | ice X / superionic | ice column base above 37.4 GPa | declines, naming the phase (Goncharov+ 2005; French+ 2009) | — |
+| temperature at or below the reference declaration | `potential_temperature` unset, or set to 1600 K | unset carries no temperature and returns the isothermal answer bit for bit; 1600 K integrates the adiabat and returns `core_temperature` / `cmb_temperature` with ΔT identically zero, so density does not move either way | unchanged |
+| **temperature declared away from the reference** | `potential_temperature` ≠ 1600 K | integrates with thermal pressure. The answer now leans on a declaration this recipe cannot derive, and the adiabat holds only where the layer convects: tidal heating and internal thermal boundary layers make the real profile super-adiabatic (Unterborn+ 2019 §3.2) | analog |
+| **temperature on a body above 1.05 R⊕** | `potential_temperature` declared at any value | integrates, but the only published check on the adiabat (Unterborn+ 2019 eq. 7) is matched to 4.4 % at 1 R⊕ and drifts to −17 % at 1.46 R⊕. The note names the bias and the grade drops even where density did not move, because `core_state` is the consumer of that number | analog |
 | **deep silicate (3.5 to 13.5 TPa)** | the silicate layer's base passes 3.5 TPa | integrates on `mgsio3_pv`, at grade **analog** with a note: below 3.5 TPa the silicate is a fit to a measured planet (PREM), above it a DFT calculation extrapolated through a dissociation | analog |
 | electron degeneracy | central pressure above the core material's ceiling | declines, naming Thomas–Fermi–Dirac | — |
 | undifferentiated rock + metal | `differentiated: false` with no ice or gas | integrates one mixed layer by the same rule. No measured C/MR² anchor exists for such a body, so the check is a discrimination: undifferentiated Mercury does not reproduce the measured value | analog |
@@ -1099,6 +1185,25 @@ instead of as a class constant.
   post-perovskite (0.75, 1.31 and 3.10 TPa), and the conclusion that the break-up into
   MgO + SiO₂ is "the last solid-solid transition identified so far", which is why one phase
   covers 3.5 to 13.5 TPa rather than several.
+- **Unterborn, C. T., Dismukes, E. E. & Panero, W. R. 2019**, JGR Planets 124, 1704
+  ([`2019JGRE..124.1704U`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124.1704U), arXiv
+  **[1905.06530](https://arxiv.org/abs/1905.06530)**). **Cached** in
+  `docs/phase3/_papers/1905.06530.md`. The adiabatic boundary condition `T(R) = T_Pot` and
+  the statement that a conductive lid sits between it and the surface; the Earth-like 1600 K
+  potential temperature this recipe references rock and metal to; eq. 7 and eq. 8, the
+  published CMB-temperature fits the adiabat is checked against (valid 0.75 to 1.5 R⊕),
+  including the 2500 to 2800 K Earth value they quote from **Lay, Hernlund & Buffett 2008**
+  ([`2008NatGe...1...25L`](https://ui.adsabs.harvard.edu/abs/2008NatGe...1...25L)); and the
+  caveat that tidal heating and mantle boundary layers make real profiles super-adiabatic.
+- **Anderson, O. L. & Goto, T. 1989**, PEPI 55, 241
+  ([`1989PEPI...55..241A`](https://ui.adsabs.harvard.edu/abs/1989PEPI...55..241A)); with
+  **Anderson & Masuda 1994** and **Isaak & Anderson 2003**. The thermal-pressure
+  approximation `P_th = αK_T·ΔT` and its basis, that αK_T is nearly volume-independent above
+  the Debye temperature, plus the silicate and metal coefficients (0.00692 GPa/K, and
+  0.00121 GPa/K with a 7.8 × 10⁻⁷ GPa/K² electron term). *No arXiv preprints.* All three are
+  used **through Seager+ 2007 §IV.2.2**, the cached full text that quotes the coefficients,
+  the Debye temperatures bounding them and the resulting density changes — named here so a
+  later audit knows the route.
 - **Salpeter, E. E. & Zapolsky, H. S. 1967**, Phys. Rev. 158, 876
   ([`1967PhRv..158..876S`](https://ui.adsabs.harvard.edu/abs/1967PhRv..158..876S)). The
   Thomas–Fermi–Dirac equation of state with a correlation-energy correction. *No arXiv
