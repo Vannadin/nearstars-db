@@ -153,3 +153,102 @@ belongs to the owner because it is a choice about how much numerical-methods wor
 
 Whichever is chosen, the envelope would be water-only at first, with ammonia and methane
 recorded as absent and their cost bounded by §1.
+
+---
+
+## 2026-08-27, later: the two blockers are gone
+
+The owner chose the quadrature route and corrected one thing I had wrong. Both are recorded
+here because they change what the earlier sections said.
+
+### The Padé problem dissolved rather than being solved
+
+I had framed 270 hand-typed coefficients as the blocker. The owner's correction: **Antia's
+Padé is not the canonical object.** It is a 1993 approximation to a function whose definition
+is a closed definite integral, written for Fortran. The definition is the canonical form, and
+evaluating it needs no table.
+
+`fermi.py` does that. Three branches, and two of them are not tables at all:
+
+| branch | how | measured error |
+|---|---|---|
+| η ≤ −1 | the polylog series, converged | ~1e-16 |
+| −1 < η < 20 | baked table, Hermite in ln F with exact slopes | **4.5e-7** |
+| η ≥ 20 | Sommerfeld degenerate expansion | 1.1e-8 |
+
+The middle is 85 grid points evaluated with `scipy.integrate.quad` in the dev venv and baked,
+exactly as ices III, V and VI were. Two things had to be measured rather than assumed:
+
+**The interpolation error is a new error dimension, and it took two tries.** The owner flagged
+this: the ice III/V/VI precedent baked three constants, so "is the constant right" was the
+whole question. Here the baked object is a function's table, so the gaps between grid points
+are a separate error. Measuring it caught a real mistake — interpolating F directly gives
+3.9e-6, and the worst point sat in the first cell. Interpolating **ln F** with the exact slope
+identity d(ln F_j)/dη = j·F_{j−1}/F_j gives 4.5e-7, an eightfold improvement for free, since
+the slopes come from the table itself rather than from a new constant.
+
+**The seam had to move.** With the Sommerfeld branch starting at η = 15 its own error is
+1.3e-7, and that jump dominated the inverse's round-trip: 8.6e-8, worst exactly at η = 15.
+Moving the seam to η = 20 drops the branch error to 1.1e-8 and the round-trip to 4.2e-14.
+Twenty extra grid points bought four orders of magnitude.
+
+**Two oracles, not one**, as instructed: `quad` on the definition, and mpmath at 40 digits on
+the polylog identity F_j(η) = −Γ(j+1)·Li_{j+1}(−e^η). They agree to 8.5e-16 over the sweep
+the test runs. Different methods do not make the same mistake in the same direction.
+
+**No inverse table.** F_{1/2} is monotone and its derivative is closed (½F_{−1/2}), so Newton
+on the forward interpolant converges in two or three steps.
+
+### The water EOS is ported, and the transcription is checked three ways
+
+`water_hot.py` carries Mazevet+ 2019's pressure and internal energy, transcribed from the
+authors' `eoswater21.f` rather than from the paper, because the paper omits the explicit form
+of the moderate-density term and the reference carries a 2021 correction that postdates it.
+About twenty constants.
+
+No Fortran compiler, so no oracle by execution. Three independent checks instead, and the
+first is the one that matters:
+
+1. **The paper prints a check value of its own fit**: it puts the liquid-vapour critical point
+   at 683 K and 0.331 g/cc (against measured 647 K and 0.322). This port gives **683.1 K and
+   0.3305 g/cc**. That single number exercises the van der Waals term, the blending function
+   and the ideal term together, and it compares against *their fit* rather than against
+   physics, which is the right target when what is being tested is a transcription.
+2. **The low-density limit** goes to the molecular ideal gas, approaching 1.000 as density
+   drops. Physics fixes that, so a wrong constant would show.
+3. **Two sources for the same constants.** The effective charge Z\* is printed in the paper as
+   eq. (9) and implemented in the reference; coding both paths independently and comparing
+   gives 0.0 difference on its six constants. The blending function is the same story: the
+   paper's printed "3509 K" and the reference's 90·T_au agree to the printed rounding
+   (3508.6 K), and the paper's 2.5 g/cc is exactly the reference's Q1 = 0.4 inverted.
+
+Internal energy came along because the alternative was an isothermal envelope, and that is not
+available: at fixed pressure, moving from 2000 K to 5700 K changes water's density by 14 % at
+30 GPa and 5 % at 800 GPa. The Grüneisen parameter falls out by finite differences rather than
+by transcribing the reference's analytic derivative chains, which would have been long code
+with nothing to check it against; the truncation error is ~1e-4 against an equation of state
+good to percents.
+
+### The correction: water-only's cost is not Bethkenhagen's 4 %
+
+I wrote in the previous commit that standing water in for all three ices costs the 4 % /
+2.1 % from Bethkenhagen+ 2017. **That is wrong and it is now fixed in the code, both docs and
+both mirrors.**
+
+Those numbers bound a different step: mixing three *complete* pure equations of state by
+additive volume. The water-only shortcut never takes that step. Its cost is the difference
+between a water EOS and a mixture EOS, which the cited literature does not measure — and the
+same paper's conclusion proposing that all three pure potentials be built is itself the
+statement that water alone is not sufficient. So it is recorded the way the rock–metal case
+already was: field practice, unquantified. When methane and ammonia arrive, comparing an
+additive-volume mixture against water-only is the work that produces the number.
+
+### Where this leaves the node
+
+Still refused, but for one remaining reason rather than three. What is built and tested is the
+whole physics stack an ice-giant envelope needs: Fermi integrals, the hot-water equation of
+state, its energy and its Grüneisen parameter. What is left is wiring — a material in
+`eos.py`, `ice_giant` out of `FLUID_CLASSES`, the layer stack picking hot water above 1800 K,
+and Uranus and Neptune as anchors. That is mechanical work against a tested foundation rather
+than a research question, and it is deliberately a separate commit so that a wiring mistake
+cannot be confused with a transcription mistake.

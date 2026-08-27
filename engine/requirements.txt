@@ -17,3 +17,4 @@ psutil==7.2.2
 PyYAML==6.0.3
 scipy==1.13.1
 SeaFreeze==1.1.0
+mpmath==1.4.1        # 페르미 적분의 두 번째 오라클 (폴리로그 항등식)

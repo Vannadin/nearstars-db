@@ -31,7 +31,7 @@ from __future__ import annotations
 
 import math
 
-from eos import (AVL_ICES_DEVIATION, EARTH_POTENTIAL_T, ICE_VII_TO_X,
+from eos import (EARTH_POTENTIAL_T, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, SILICATE_PREM_TO_PV,
                  PhaseGap, mix)
 from payload import Result, out_of_domain
@@ -757,10 +757,15 @@ def solve(mass_earth: float,
                           "2019 (arXiv:1810.05658) 의 해석적 자유에너지 적합이고, "
                           "Scheibe+ 2019 가 천왕성·해왕성 모형을 그 위에 세운다. 암모니아"
                           "(Bethkenhagen+ 2013)와 메탄(Bethkenhagen+ 2017)은 표로만 있다. "
-                          "물 하나로 얼음 전체를 대신하는 것은 이 분야의 관행이고"
-                          "(Redmer+ 2011 · Helled+ 2011 · Nettelmann+ 2013), 그 대가는 "
-                          f"부피 가법 혼합의 {AVL_ICES_DEVIATION * 100:.0f} % 상한으로 "
-                          "묶여 있다 (Bethkenhagen+ 2017).\n"
+                          "물 하나로 얼음 전체를 대신하는 것은 이 분야의 관행이지만"
+                          "(Redmer+ 2011 · Helled+ 2011 · Nettelmann+ 2013), **그 대가는 "
+                          "정량돼 있지 않다.** Bethkenhagen+ 2017 의 4 % / 2.1 % 는 세 "
+                          "성분의 순수 EOS 를 다 갖춘 뒤 부피 가법으로 섞는 단계의 한계이고, "
+                          "물 하나로 가는 길은 그 단계를 아예 밟지 않는다. 물 EOS 와 혼합물 "
+                          "EOS 의 차이는 다른 수이고 인용된 문헌 범위에서 측정되지 않았다 — "
+                          "그 논문의 결론부가 세 순수 성분의 퍼텐셜 구축을 후속 과제로 꼽는 "
+                          "것 자체가 물 하나로는 안 된다는 전제다. H-He 의 8 % 를 암석에 "
+                          "옮겨 적지 않았던 것과 같은 규율로, 여기서도 옮겨 적지 않는다.\n"
                           "**그리고 그 상태방정식이 있어도 충분하지 않다.** Scheibe+ 2019 "
                           "가 바로 그 EOS 로 두 행성을 단열 모형으로 풀어 냉각시간을 "
                           "천왕성 5.1 Gyr · 해왕성 3.7 Gyr 로 얻었고 (실제 나이 4.56 Gyr), "
