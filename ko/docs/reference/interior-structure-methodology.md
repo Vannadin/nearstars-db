@@ -407,9 +407,12 @@ Unterborn+ 2019 §2 의 맨틀 포텐셜 온도 1600 K 입니다. 1600 K 를 선
 먹는 페르미 적분은 참조의 Padé 표가 아니라 **정의** 로 계산합니다(`fermi.py`) — 정의가
 정본이고, 그 구성 자체의 오차를 4.5 × 10⁻⁷ 로 재서 적었습니다.
 
-`python3 engine/test_interior.py --icegiant` 이 다시 냅니다. `scripts/check.sh` 에는
-**없습니다** — 얼음거대행성 하나가 24 ~ 500 초입니다. 밀도 뒤집기가 적분의 안쪽 고리에
-있고 호출마다 페르미 적분을 먹기 때문입니다.
+`python3 engine/test_ice_giant.py --refresh` 가 다시 계산하고(2026-08-28 기준 천왕성
+약 13 분), 굳힌 결과에서 `--table` 이 표를 냅니다. 전체 풀이는 `scripts/check.sh` 에
+**없습니다**. 게이트가 도는 것은 굳힌 수렴점에서의 적분 한 번과 사격 경로의 지문이라,
+답을 움직일 변화가 오면 게이트가 실패하고 다시 굳히라고 요구합니다. 그 13 분이 어디로
+가는지는 `engine/speed-context-notes.md` 에 재어 두었습니다 — 페르미 적분이 아니라,
+질량 계단 위에서 수렴하지 못하는 압력 사격입니다.
 
 | 행성 | 도출 R | 발표 R | Δ | C/MR² | T_c | P_c | 등급 |
 |---|---|---|---|---|---|---|---|
@@ -808,7 +811,8 @@ KBO 표는 `python3 engine/test_porosity.py --kbo` 가 다시 만듭니다.
 그대로 둡니다. 이 상수가 밀도를 내지는 않지만 함정은 남아 있으니까요.
 
 **행성 넷을 상대로.** `python3 engine/test_giant.py --table` 가 다시 만들고,
-얼음거대행성은 `python3 engine/test_interior.py --icegiant` 가 냅니다.
+얼음거대행성은 `python3 engine/test_ice_giant.py --table` 이 굳힌 앵커에서 냅니다
+(`--refresh` 가 다시 계산합니다).
 
 | 천체 | M (M⊕) | 1-bar 온도 | R 도출 | R 평균 (IAU) | ΔR | C/MR² | P_c (GPa) | 이전 |
 |---|---|---|---|---|---|---|---|---|

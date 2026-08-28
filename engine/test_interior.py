@@ -533,43 +533,14 @@ def mass_ceiling(**kwargs) -> tuple[float, str]:
     return lo, owner
 
 
-# 얼음거대행성의 앵커. Scheibe+ 2019 Table 1 의 **Mazevet 물 EOS 행** 에서 왔다 —
-# 우리가 쓰는 것과 같은 상태방정식으로 지은 모형이라야 조성을 빌려올 수 있다.
-# (M⊕, 발표 평균반지름 R⊕, 암석 핵 M⊕, H/He 총량 M⊕)
-ICE_GIANTS = (
-    ("Uranus", 14.536, 3.9808, 0.79, 2.0),
-    ("Neptune", 17.147, 3.8646, 1.04, 2.2),
-)
-ICE_GIANT_T_POT = 2500.0     # K. 얼음 맨틀 꼭대기의 온도로 읽는다 (아래 주석)
-
-
+# 얼음거대행성의 앵커는 test_ice_giant.py 로 옮겨갔다 (2026-08-28). 여기 있던
+# ICE_GIANT_T_POT = 2500 K 는 폴리트로프 시절의 선언(얼음 맨틀 꼭대기 온도)이었고, 수소-헬륨
+# 표가 들어와 선언이 1 bar 온도가 된 뒤로는 두 행성 다 거절을 찍고 있었다 — 앵커가 아니라
+# 낡은 표였다. 전체 풀이는 그 파일의 --refresh 가, 표는 --table 이 낸다.
 def ice_giant_table() -> None:
-    """문서의 얼음거대행성 표를 다시 낸다. **느려서 기본 실행에는 없다.**
-
-    한 천체가 24 ~ 500 초다. 뜨거운 물의 P(ρ,T) 가 페르미 적분을 먹고, 그게 적분의
-    안쪽 고리에 있어서다. check.sh 의 예산에 안 들어가므로 이 표는 플래그로만 낸다."""
-    print("| planet | R derived | R published | Δ | C/MR² | T_c | P_c | grade |")
-    print("|---|---|---|---|---|---|---|---|")
-    for name, m, r_pub, m_core, m_hhe in ICE_GIANTS:
-        gmf = m_hhe / m
-        imf = 1.0 - gmf - m_core / m
-        res = solve(m, body_class="ice_giant", core_mass_fraction=0.0,
-                    ice_mass_fraction=imf, gas_mass_fraction=gmf,
-                    potential_temperature=ICE_GIANT_T_POT)
-        v = res.values
-        print(f"| {name} | {v['radius']:.3f} R⊕ | {r_pub:.3f} R⊕ | "
-              f"{(v['radius'] / r_pub - 1) * 100:+.1f} % | {v['nmoi']:.4f} | "
-              f"{v['core_temperature']:.0f} K | {v['core_pressure']:.0f} GPa | "
-              f"{res.grade} |")
-    # 초과분이 어느 층의 몫인지. 같은 천왕성에서 외피만 빼 본다.
-    m, r_pub, m_core = ICE_GIANTS[0][1], ICE_GIANTS[0][2], ICE_GIANTS[0][3]
-    bare = solve(m, body_class="ice_giant", core_mass_fraction=0.0,
-                 ice_mass_fraction=1.0 - m_core / m, gas_mass_fraction=0.0,
-                 potential_temperature=ICE_GIANT_T_POT)
-    print(f"| Uranus, no H/He | {bare.values['radius']:.3f} R⊕ | {r_pub:.3f} R⊕ | "
-          f"{(bare.values['radius'] / r_pub - 1) * 100:+.1f} % | "
-          f"{bare.values['nmoi']:.4f} | {bare.values['core_temperature']:.0f} K | "
-          f"{bare.values['core_pressure']:.0f} GPa | {bare.grade} |")
+    """문서의 얼음거대행성 표. test_ice_giant.py 의 굳힌 앵커에서 낸다."""
+    from test_ice_giant import table
+    table()
 
 
 def thermal_table() -> None:

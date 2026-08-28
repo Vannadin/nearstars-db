@@ -158,6 +158,9 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_fermi.py) || fail=1
 (cd engine && python3 test_water_hot.py) || fail=1
 (cd engine && python3 test_interior.py) || fail=1
+# 얼음거대행성 앵커. 전체 풀이는 ~13 분이라 굳혀 두고, 게이트는 굳힌 수렴점에서 적분 한 번
+# + 사격 경로 지문만 대조한다. 건너뛰는 것(전체 풀이)은 그 테스트가 [SKIP] 으로 말한다.
+(cd engine && python3 test_ice_giant.py) || fail=1
 (cd engine && python3 test_core_state.py) || fail=1
 (cd engine && python3 test_body_class.py) || fail=1
 (cd engine && python3 test_porosity.py) || fail=1
