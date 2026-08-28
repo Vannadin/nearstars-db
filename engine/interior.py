@@ -84,6 +84,10 @@ COMPOSITIONS: dict[str, tuple[float, float, float, str]] = {
 # 같다 — 앵커가 발표값과 어긋나는 폭(0.3 %)의 30분의 1이라 격자는 오차원이 아니다.
 # test_interior.py 의 격자 수렴 검사가 그 숫자를 실제로 낸다.
 STEPS = 1500
+# 걸음 안의 경계 둘 — 층 전환과 표 바닥 — 을 걸음 안에서 보간한다. False 는 2026-08-28
+# 이전의 경로(둘 다 걸음 단위 양자화)이고, 격자 대조 검사만 그것을 켠다 — 답이 어느 쪽으로
+# 가는지를 재는 대조 상대로.
+INTERPOLATE_LAYERS = True
 MAX_STEPS = 40000
 SHOOT_ITERS = 200
 SHOOT_TOL = 1e-8            # 겉질량의 상대오차
@@ -298,17 +302,21 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             layer += 1
         return stack[layer][1]
 
+    def note_switch(prev_layer: int) -> None:
+        """층이 바뀐 자리의 압력을 기록해둔다. core_state 와 얼음 상 판정이 쓴다."""
+        nonlocal core_radius, p_cmb, t_cmb, p_ice_base
+        if prev_layer == 0 and cmf > 0:
+            core_radius, p_cmb, t_cmb = r, p, t
+        if stack[layer][1].name == "h2o":
+            p_ice_base = p
+
     steps = 0
     while p > p_stop and steps < MAX_STEPS:
         steps += 1
         prev_layer = layer
         mat = material_for(m)
         if layer != prev_layer:
-            # 층이 바뀐 자리의 압력을 기록해둔다. core_state 와 얼음 상 판정이 쓴다.
-            if prev_layer == 0 and cmf > 0:
-                core_radius, p_cmb, t_cmb = r, p, t
-            if stack[layer][1].name == "h2o":
-                p_ice_base = p
+            note_switch(prev_layer)
         if mat.name not in phases:
             phases.append(mat.name)
 
@@ -375,6 +383,40 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         di = dr / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
         dv = dr / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
 
+        # **표 바닥도 걸음 안에서 찾는다.** 위의 in_domain 검사는 걸음의 출발점에서만 보므로
+        # 온도 바닥에 닿는 자리가 걸음 단위로 양자화되고, 그러면 층 경계를 보간해도 반지름이
+        # 격자 위상에 따라 dr/R 만큼 뛴다 (천왕성 1499·1500·1501 걸음에서 겉질량은 1e-6 안에
+        # 고정인데 반지름이 2.5e-4 흔들렸다 — speed-context-notes §11). 걸음 안의 상태를 선형
+        # 보간으로 두고 (표면 넘김과 같은 규칙) 바닥을 넘는 분율을 이분법으로 찾는다.
+        # in_domain 은 표 조회 없이 부등식 둘이라 싸다.
+        if (INTERPOLATE_LAYERS and getattr(mat, "p_floor", 0.0) and t > 0.0
+                and p + dp > p_stop):
+            t_end = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
+            if not mat.in_domain(p + dp, t_end):
+                lo_f, hi_f = 0.0, 1.0
+                for _ in range(50):
+                    mid = 0.5 * (lo_f + hi_f)
+                    p_mid = p + dp * mid
+                    t_mid = t * (p_mid / p) ** grad if grad else t + dtdp * dp * mid
+                    if mat.in_domain(p_mid, t_mid):
+                        lo_f = mid
+                    else:
+                        hi_f = mid
+                frac = lo_f
+                r += dr * frac
+                m += dm * frac
+                moi += di * frac
+                v_pore += dv * frac
+                p_new = p + dp * frac
+                t = t * (p_new / p) ** grad if grad else t + dtdp * dp * frac
+                p = p_new
+                p_surface = p
+                t_surface = t
+                floor = mat.p_floor
+                if p > floor * 1.001 and last_grad > 0.0:
+                    t_surface = t * (floor / p) ** last_grad
+                break
+
         if p + dp <= p_stop:
             # 표면을 넘어섰다. 멈출 압력 자리로 선형 보간한다.
             frac = (p - p_stop) / (-dp) if dp != 0 else 0.0
@@ -389,9 +431,37 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             t_surface = t
             break
 
+        # **층 경계가 이 걸음 안에 있으면 걸음을 경계까지 자른다.** 2026-08-28 까지는
+        # 경계를 걸음 단위로만 넘겼다 — 걸음이 시작할 때의 누적질량이 경계를 넘어야 재료가
+        # 바뀌었으므로, 경계 반지름이 dr = R/1500 로 양자화됐다. 그러면 겉질량이 중심압에
+        # 대해 **계단** 이 된다. 경계가 한 걸음 옮겨갈 때마다 얼음 한 껍질이 기체로 바뀌므로
+        # 단의 높이가 3·(dr/R)·(Δρ/ρ̄)·M ≈ 9×10⁻⁴ M 이고 (얼음→H/He 경계), SHOOT_TOL 10⁻⁸ 은 그
+        # 10 만분의 1 이라 목표가 단의 수직면에 앉으면 할선법이 원리적으로 못 붙어 200 회를
+        # 같은 중심압에 다시 적분했다 — 천왕성 1038 초의 정체 (speed-context-notes §6).
+        # 걸음 안에서 경계 질량에 닿는 분율 f 를 이 걸음의 첫 기울기로 어림하고, f·dr 만큼을
+        # 같은 RK4 로 다시 걷는다. 경계 위치의 오차가 O(dr) 에서 O(dr²) 로 내려가고 겉질량이
+        # 중심압에 연속이 된다. 격자 대조가 이것이 고해상도 답 쪽으로 가는 것임을 보인다
+        # (test_interior.py 의 격자 수렴 검사, 얼음거대행성 포함).
+        h = dr
+        crossed = False
+        if INTERPOLATE_LAYERS and layer < len(stack) - 1:
+            m_b = stack[layer][0] * mass_kg
+            if dm > 0.0 and m + dm >= m_b:
+                f = (m_b - m) / dm
+                if 0.0 < f < 1.0:
+                    h = f * dr
+                    k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
+                    k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
+                    k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
+                    dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
+                    dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
+                    di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
+                    dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+                    crossed = True
+
         if p > P_LAB_MAX:
             m_above_lab += dm
-        r += dr
+        r += h
         m += dm
         moi += di
         v_pore += dv
@@ -400,6 +470,12 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
         p += dp
         t_surface = t
+        if crossed:
+            # 경계에 섰다. 다음 걸음은 새 재료로 시작한다 — material_for 의 문턱에 맡기지
+            # 않는다. RK4 의 겉질량은 첫 기울기로 잰 m_b 와 O(dr²) 만큼 다를 수 있어서,
+            # 문턱에 맡기면 같은 계단이 한 걸음 뒤로 옮겨갈 뿐이다.
+            layer += 1
+            note_switch(layer - 1)
 
     if steps >= MAX_STEPS:
         raise ValueError(f"{MAX_STEPS} 단계 안에 표면에 닿지 못했다 "

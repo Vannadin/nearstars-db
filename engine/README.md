@@ -99,11 +99,12 @@ integration instead of off a scaling table derived from prose.
 
 ## What it costs, and what the gate protects
 
-The rocky and icy anchors solve in under a second each; the gas giants in 5–20 s. An ice
-giant is the exception: one Uranus solve is about 13 minutes (2026-08-28), not because the
-hot-water equation of state is slow but because the pressure shoot cannot converge on a
-mass staircase and runs to its iteration cap — measured in `speed-context-notes.md`. So the
-Uranus anchor is **frozen** in `ice_giant_anchor.json` and `scripts/check.sh` runs
-`test_ice_giant.py`, which re-integrates the frozen converged point once and fingerprints
-the shooting path; either drifting fails the gate and asks for `--refresh`. The gate says
-what it skips.
+The rocky and icy anchors solve in under a second each; the gas giants in 5–20 s; an ice
+giant in about 50 s. On the morning of 2026-08-28 one Uranus solve was 1038 s, not because
+the hot-water equation of state was slow but because layer boundaries were quantised to the
+integration step, the surface mass was a staircase in central pressure, and the pressure
+shoot spun to its iteration cap on a riser — measured in `speed-context-notes.md`. Boundaries
+(and the table-floor stop) are now interpolated inside the step; the grid comparison in the
+same notes shows the interpolated answer is the high-resolution one. `scripts/check.sh` runs
+`test_ice_giant.py`, which solves Uranus and Neptune live and compares them bit for bit with
+`ice_giant_anchor.json`; a change that moves the answer must `--refresh` and leave the diff.

@@ -253,3 +253,164 @@ That is the same shape as the ice-giant debt one size smaller: anchors that are 
 declare and expensive to run, protected by the gate only as long as nobody minds waiting.
 Whether they should be frozen the same way, or the sweeps thinned, is a separate decision;
 it is written here so the "two minutes" the brief remembered is replaced by a number.
+
+
+---
+
+# Second pass — the owner chose route 1, and the grid was the judge
+
+The owner's reading: interpolating the layer switch is not an accuracy-for-speed trade, it
+**buys** accuracy, because the step-quantised boundary is an error sitting on the boundary
+radius. The judgement line therefore moved from "does the answer change" to "does it move
+toward the high-resolution answer", and the tool for that is the grid-convergence check,
+extended to the body where the staircase is visible.
+
+## 11. What was built, and the second staircase the grid test found
+
+**The layer switch.** `integrate()` now cuts the step at the boundary: the fraction f of the
+step at which the enclosed mass reaches the layer's cumulative target is estimated from the
+step's own increment, the RK4 step is re-taken with h = f·dr, the material switches
+explicitly at that point (not through `material_for`'s threshold, which would move the
+staircase one step outward instead of removing it), and the next step starts from the
+boundary. Boundary position error goes from O(dr) to O(dr²); the surface mass becomes a
+continuous function of central pressure. Measured across the old riser at fixed T_c
+(P_c = 1.218723e12 × (1 ± 8e-6)):
+
+    without: 0.9994290 0.9994327 0.9994360 0.9994393 | 1.0003204 1.0003241 ...   (riser 8.8e-4)
+    with:    1.0008455 1.0008503 1.0008552 1.0008601 1.0008650 1.0008699 ...      (smooth)
+
+Every pressure shoot then converges in ten or eleven integrations instead of spinning to
+205: the full Uranus solve went from 1927 integrations to 167 and from 729 s to 49 s.
+
+**The floor stop was a second staircase, and the grid-phase test exposed it.** Running the
+same converged point on 1499, 1500 and 1501 steps, the surface mass was fixed to 1e-6 but
+the radius moved by 2.5e-4 — the temperature-floor stop of the H/He table was still taken at
+a step start. That is the same defect at the other end of the body: the radius is quantised
+to dr/R. Fixed the same way — the crossing of the reachable region is located inside the
+step by bisection on the linearly interpolated state (cheap: `in_domain` is two
+inequalities), and the step is committed to that fraction, exactly as the P = 0 crossing
+already was. Radius then holds to 2e-6 across the three grids. Both crossings sit under one
+switch, `INTERPOLATE_LAYERS`, which only the comparison below turns off. This is a scope
+extension over "interpolate the layer switch" and is recorded as one: the owner asked for the
+grid to judge, and the grid found it.
+
+## 12. The grid comparison at the converged point (Uranus, P_c = 1220.25 GPa, T_c = 6157.5 K)
+
+One `integrate()` per row, no shooting, so the only thing varying is the grid:
+
+| steps | scheme | m/M | R (R⊕) | note |
+|---|---|---|---|---|
+| 1499 · 1500 · 1501 | old (no interpolation) | 0.99885 · 1.00000 · 0.99821 | 4.19225 · 4.19826 · 4.18917 | grid phase alone moves R by 2e-3 |
+| 1499 · 1500 · 1501 | interpolated (layers + floor) | 1.0003953 · 1.0003944 · 1.0003949 | 4.200722 · 4.200713 · 4.200703 | phase-stable to 2e-6 |
+| 6000 | old | 0.9999195 | 4.196056 | still inside its staircase |
+| 6000 | interpolated | 1.0003197 | 4.198764 | |
+| 24000 | old | 1.0001943 | 4.197629 | |
+| 24000 | interpolated | 1.0003014 | 4.198280 | |
+| 96000 | old | 1.0002492 | 4.197865 | |
+| 96000 | interpolated | 1.0002969 | 4.198159 | |
+| 384000 | old | 1.0002929 | 4.198106 | 107 s |
+| 384000 | interpolated | 1.0002958 | 4.198132 | 110 s |
+
+The interpolated sequence converges at second order (R differences 1.95e-3, 4.8e-4, 1.2e-4,
+2.7e-5 — ratio 4 each time) to about 4.19812; the old scheme, once its staircase is ground
+fine enough, arrives at the same place — at 384000 steps the two agree to 6e-6 in radius and
+3e-6 in mass. So **the interpolation computes the same limit as the old scheme and reaches
+it from 1500 steps with the error a 1500-step grid honestly carries** (6e-4 in radius for an
+ice giant — the gas envelope's grid error, not the boundary's), where the old scheme at 1500
+steps sat anywhere within ±2e-3 depending on grid phase. The 1500 old-scheme value in the
+methodology table (4.198258) was 3e-5 from the limit by luck of phase: its neighbours at
+1499 and 1501 steps were 1.4e-3 and 2.1e-3 off.
+
+Full solves confirm it: Uranus 1500 + interp **4.198693** (+5.47 %), 6000 + interp 4.198082,
+6000 old (897 s of spinning) 4.197956; Neptune 1500 + interp 4.211250 (+8.97 %), 6000 +
+interp 4.210152.
+
+## 13. Every anchor, five ways (full solves; radius in R⊕, C/MR² dimensionless)
+
+| anchor | quantity | now (1500, no interp) | 1500 + interp | 6000 + interp | 6000, no interp | 24000, no interp | residual vs published, now → interp |
+|---|---|---|---|---|---|---|---|
+| condensed:Earth | radius | 1.0028798 | 1.0029682 | 1.0029786 | 1.0029588 | 1.0029735 | +0.29 % → +0.30 % |
+| condensed:Earth | nmoi | 0.3296591 | 0.3297123 | 0.3297084 | 0.3296988 | 0.3297021 | -0.31 % → -0.30 % |
+| condensed:Mars | radius | 0.5317339 | 0.5317847 | 0.5317847 | 0.5317766 | 0.5317820 | -0.05 % → -0.04 % |
+| condensed:Mars | nmoi | 0.3544827 | 0.3545381 | 0.3545379 | 0.3545291 | 0.3545349 | -2.72 % → -2.71 % |
+| condensed:Mercury | radius | 0.3821418 | 0.3821465 | 0.3821465 | 0.3821418 | 0.3821418 | -0.20 % → -0.20 % |
+| condensed:Mercury | nmoi | 0.3387702 | 0.3387675 | 0.3387674 | 0.3387701 | 0.3387701 | -2.09 % → -2.09 % |
+| condensed:Moon | radius | 0.2739055 | 0.2739084 | 0.2739084 | 0.2739074 | 0.2739083 | +0.44 % → +0.44 % |
+| condensed:Moon | nmoi | 0.3944693 | 0.3944808 | 0.3944807 | 0.3944764 | 0.3944799 | +0.35 % → +0.35 % |
+| condensed:Earth@1600K | radius | 1.0028798 | 1.0029682 | 1.0029786 | 1.0029588 | 1.0029735 | +0.29 % → +0.30 % |
+| condensed:Earth@1600K | nmoi | 0.3296591 | 0.3297123 | 0.3297084 | 0.3296988 | 0.3297021 | -0.31 % → -0.30 % |
+| roster:Pandora (A b III) | radius | 0.8982303 | 0.8982948 | 0.8982862 | 0.8982799 | – |  |
+| roster:Pandora (A b III) | nmoi | 0.3383720 | 0.3384129 | 0.3384152 | 0.3384136 | – |  |
+| roster:Cassandra (A b IV) | radius | 0.5336503 | 0.5336712 | 0.5336712 | 0.5336503 | – |  |
+| roster:Cassandra (A b IV) | nmoi | 0.3311485 | 0.3311439 | 0.3311437 | 0.3311484 | – |  |
+| roster:Hades (A b II) | radius | 0.1177635 | 0.1177635 | 0.1177609 | 0.1177609 | – |  |
+| roster:Hades (A b II) | nmoi | 0.3741727 | 0.3741727 | 0.3741799 | 0.3741799 | – |  |
+| roster:Dante (A b I) | radius | 0.0817533 | 0.0817533 | 0.0817530 | 0.0817530 | – |  |
+| roster:Dante (A b I) | nmoi | 0.3770574 | 0.3770574 | 0.3770566 | 0.3770566 | – |  |
+| roster:Chaos (A b V) | radius | 0.0627802 | 0.0627797 | 0.0627797 | 0.0627665 | – |  |
+| roster:Chaos (A b V) | nmoi | 0.3149569 | 0.3149588 | 0.3149587 | 0.3150167 | – |  |
+| roster:Proxima Cen c I | radius | 0.0511793 | 0.0511488 | 0.0511488 | 0.0511718 | – |  |
+| roster:Proxima Cen c I | nmoi | 0.3051833 | 0.3051668 | 0.3051668 | 0.3051790 | – |  |
+| icy:Ganymede | radius | 0.4134163 | 0.4133780 | 0.4133792 | 0.4133717 | – |  |
+| icy:Ganymede | nmoi | 0.3178928 | 0.3179019 | 0.3179010 | 0.3178975 | – | +2.05 % → +2.06 % |
+| icy:Callisto | radius | 0.3783744 | 0.3784567 | 0.3784566 | 0.3784452 | – |  |
+| icy:Callisto | nmoi | 0.3158159 | 0.3158257 | 0.3158265 | 0.3158252 | – | -11.01 % → -11.01 % |
+| icy:Titan | radius | 0.4043476 | 0.4041765 | 0.4041778 | 0.4041745 | – |  |
+| icy:Titan | nmoi | 0.3171579 | 0.3171709 | 0.3171693 | 0.3171709 | – | -7.10 % → -7.10 % |
+| icy:Europa | radius | 0.2451613 | 0.2450409 | 0.2450408 | 0.2449760 | – |  |
+| icy:Europa | nmoi | 0.3789191 | 0.3792679 | 0.3792680 | 0.3794571 | – | +9.51 % → +9.62 % |
+| icy:Enceladus | radius | 0.0395522 | 0.0395628 | 0.0395628 | 0.0395581 | – |  |
+| icy:Enceladus | nmoi | 0.3051151 | 0.3051196 | 0.3051195 | 0.3051174 | – | -8.92 % → -8.92 % |
+| giant:Jupiter | radius | 10.8825433 | 10.8825435 | 10.8899871 | 10.8899871 | – |  |
+| giant:Jupiter | nmoi | 0.2773648 | 0.2773648 | 0.2774682 | 0.2774682 | – |  |
+| giant:Saturn_Z0 | radius | 9.7856519 | 9.7856519 | 9.7868156 | 9.7868156 | – |  |
+| giant:Saturn_Z0 | nmoi | 0.2710235 | 0.2710235 | 0.2711562 | 0.2711562 | – |  |
+| giant:Saturn_Z0.0825 | radius | 9.1397975 | 9.1397975 | 9.1433966 | 9.1433966 | – |  |
+| giant:Saturn_Z0.0825 | nmoi | 0.2749367 | 0.2749367 | 0.2750005 | 0.2750005 | – |  |
+
+How to read it. The reference is not one number: the old scheme at any resolution is a
+staircase, so "6000, no interp" carries ±one riser of its own (2e-4 in mass at 6000, smaller
+in radius and for rock/iron contrasts), and the cleanest reference is **6000 + interp**, which
+the grid ladder above showed converging at second order.
+
+* **Rocky anchors (Earth, Mars, Mercury, Moon, Pandora, Cassandra):** 1500 + interp agrees with
+  6000 + interp to 1e-5 or better (Mars, Mercury, Moon, Cassandra: 1e-7), while the old
+  1500 value is 1e-4 to 2e-4 away. Mercury looked like the exception — its old value equals
+  the old 6000 and 24000 values to seven digits — but that is grid phase repeating: 6000 and
+  24000 are multiples of 1500 and the 70 % boundary lands at the same fraction of a step;
+  at 1499 and 1501 steps the old Mercury radius is 0.38199 and 0.38213, and the interpolated
+  one is 0.3821465 on all four grids.
+* **Icy moons (Ganymede, Callisto, Titan, Europa, Enceladus, Chaos, Proxima c I):**
+  1500 + interp agrees with 6000 + interp to ~1e-6; the old 1500 values are 1e-4 to 6e-4
+  away. These are `infer_composition` solves, so the inferred ice fraction moved with the
+  radius (Titan 0.434 → 0.431, Europa 0.033 → 0.032, Proxima c I 0.406 → 0.403).
+* **No boundary, no change:** Jupiter, Saturn (Z = 0 and 0.0825) are single-layer and are
+  bit-identical (Jupiter's radius moved 2e-8 from the floor interpolation); Hades and Dante
+  solve on the porosity axis with no layer switch inside the step and are bit-identical.
+  Their 1500 → 6000 moves (7e-4 for Jupiter) are the gas envelope's own grid error and are
+  not touched by this work.
+* **Published residuals:** Earth +0.29 → +0.30 %, Mars −0.05 → −0.04 %, Moon C/MR² error
+  0.3 → 0.4 %, Europa C/MR² +9.51 → +9.62 %; the rest move in the third decimal or not at
+  all. Nothing improved or worsened beyond the grid error the old numbers were carrying;
+  the residuals are the physics (the two-layer model, the ices, the envelope), and they were
+  never the grid. Recorded as the owner asked: where a residual got slightly worse, that is
+  an accidental cancellation with grid error coming off, not a regression.
+
+## 14. The gate, re-decided: live, with the frozen file as the bit line
+
+With Uranus at 51 s and Neptune at 43 s the two ice giants fit the three minutes from §1,
+so `test_ice_giant.py` now **solves both live on every gate run** and compares radius,
+C/MR², central temperature and central pressure against `ice_giant_anchor.json` bit for bit
+— the same discipline as the ices' constants: a change that moves the answer must
+`--refresh` and leave the diff. On top of the bit line it runs the two grid checks that
+would have caught the staircase (1499 ↔ 1501 phase < 1e-5; 1500 → 6000 < 1e-3). The
+`--fast` path (one integration + fingerprint) stays for people iterating on the equation of
+state. The gate's own cost, measured: 14 min 39 s → **14 min 22 s** with the two live
+solves inside it — the interpolation sped up every other multi-layer solve in `test_interior`
+and `test_mixture` by more than the 90 s the ice giants add, as the owner expected. The
+§10 debt is smaller but still there.
+
+Order of operations, as asked: the old frozen file was run against the interpolating code
+first and failed on all three counts (fingerprint changed — `integrate` is now part of it —
+and both standalone integrations moved), then `--refresh` re-froze, then the live gate
+passed. Freezing was the bit line's detour; it is now the regression record.

@@ -35,3 +35,14 @@ gate say what it skips.
 - [x] whatever the gate skips, the gate's output says so
 - [x] `engine/README.md` cost line, if it changes
 - [x] `bash scripts/check.sh` green
+
+## Second pass (owner's choice: route 1, interpolate the layer switch) — 2026-08-28
+- [x] layer boundary interpolated inside the step (`integrate()`, `INTERPOLATE_LAYERS`)
+- [x] the table-floor stop interpolated too — found by the grid-phase test, same defect at the surface (notes §11)
+- [x] continuity: the mass staircase is gone (P_c sweep across the old riser)
+- [x] grid comparison at the converged point: 1499/1500/1501 phase and the 1500→384000 ladder, interp on/off (notes §12)
+- [x] full-solve three-way table for every anchor (now · 1500+interp · high-res no-interp) with published residuals (notes §13)
+- [x] `ice_giant_anchor.json` re-frozen — old file failed first (fingerprint + integrate), then `--refresh`
+- [x] cost re-measured: Uranus 51 s, Neptune 43 s → the anchors run **live** in the gate; the frozen file is the bit line
+- [x] methodology tables regenerated (EN + KO), prose on Neptune updated
+- [x] `bash scripts/check.sh` green
