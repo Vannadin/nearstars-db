@@ -163,15 +163,20 @@ exactly as the brief suspected.
 
 ## Cost
 
-| body | before | after |
-|---|---|---|
-| Jupiter | ~0.2 s | 2.3 s |
-| Saturn | ~0.2 s | 2.9 s |
-| Uranus | 24–500 s | 148 s |
+| body | before | table only | final (c_P-weighted mixture, converged badge) |
+|---|---|---|---|
+| Jupiter | ~0.2 s | 2.3 s | **5.4 s** |
+| Saturn | ~0.2 s | 2.9 s | – |
+| Uranus | 24–500 s | 148 s | **1038 s** |
+
+The middle column is what this section first reported; the last column is what the
+checklist measured at the end, after the mixture's adiabatic gradient became c_P-weighted
+and `converged` started covering the temperature boundary condition — so solutions that
+used to leave unconverged now iterate until they converge. The final numbers are the ones
+to plan against (`speed-context-notes.md` takes them up).
 
 One table lookup is 2.2 µs (bicubic, 16 nodes, pure Python), against roughly 0.5 µs for the
-polytrope's closed form. The giants are ten times slower and the ice giants are inside their
-old range, because there the hot-water EOS still dominates.
+polytrope's closed form. That alone does not explain the ice giant; the iteration count does.
 
 ---
 
