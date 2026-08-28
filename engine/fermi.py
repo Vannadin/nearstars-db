@@ -131,23 +131,45 @@ FD_P32 = (
 )
 
 
-def _hermite(logs: list[float], deriv, eta: float) -> float:
-    """굳혀 둔 격자 위의 3차 Hermite 보간. **ln F 를 보간한다.**
+# 격자 칸 수. 세 표가 같은 격자를 쓰므로 하나다 (import 때 아래에서 확인한다).
+_N_CELLS = int(round((ETA_HI - ETA_LO) / ETA_STEP)) + 1
 
-    기울기는 d(ln F_j)/dη = j·F_{j−1}/F_j 라는 항등식에서 오므로 정확하고, 그래서 격자가
-    성기어도 4차로 수렴한다. 값을 그대로 보간하면 같은 격자에서 오차가 여덟 배 커진다."""
+
+def _hermite_cell(eta: float):
+    """η 가 든 칸과 그 칸의 Hermite 기저값 넷. 표 하나에 묶이지 않는다.
+
+    2026-08-28 속도 작업에서 `_hermite` 를 둘로 갈랐다 — Newton 한 걸음이 F_{1/2} 와
+    F_{−1/2} 를 **같은 η** 에서 부르는데, 칸 찾기와 기저 다항식이 표와 무관하게 같으므로
+    한 번만 계산하고 두 표에 얹는다. 부동소수점 연산은 예전 `_hermite` 와 **같은 식을
+    같은 순서로** 계산하므로 값이 비트까지 같다. 빨라지는 것은 파이썬 호출 수뿐이다."""
     i = int((eta - ETA_LO) / ETA_STEP)
     if i < 0:
         i = 0
-    elif i > len(logs) - 2:
-        i = len(logs) - 2
+    elif i > _N_CELLS - 2:
+        i = _N_CELLS - 2
     x0 = ETA_LO + i * ETA_STEP
     t = (eta - x0) / ETA_STEP
-    y0, y1 = logs[i], logs[i + 1]
-    d0, d1 = deriv(i), deriv(i + 1)
     t2, t3 = t * t, t * t * t
-    return math.exp((2 * t3 - 3 * t2 + 1) * y0 + (t3 - 2 * t2 + t) * ETA_STEP * d0
-                    + (-2 * t3 + 3 * t2) * y1 + (t3 - t2) * ETA_STEP * d1)
+    return (i, 2 * t3 - 3 * t2 + 1, (t3 - 2 * t2 + t) * ETA_STEP,
+            -2 * t3 + 3 * t2, (t3 - t2) * ETA_STEP)
+
+
+def _hermite_on(logs, derivs, cell) -> float:
+    """한 표를 `_hermite_cell` 의 칸 위에서 평가한다. exp(보간된 ln F)."""
+    i, h00, h10, h01, h11 = cell
+    return math.exp(h00 * logs[i] + h10 * derivs[i]
+                    + h01 * logs[i + 1] + h11 * derivs[i + 1])
+
+
+def _hermite(logs: list[float], derivs, eta: float) -> float:
+    """굳혀 둔 격자 위의 3차 Hermite 보간. **ln F 를 보간한다.**
+
+    기울기는 d(ln F_j)/dη = j·F_{j−1}/F_j 라는 항등식에서 오므로 정확하고, 그래서 격자가
+    성기어도 4차로 수렴한다. 값을 그대로 보간하면 같은 격자에서 오차가 여덟 배 커진다.
+
+    `derivs` 는 기울기 표다 (예전에는 인덱스를 받는 람다였다 — 호출 하나가 줄었을 뿐
+    값은 같다)."""
+    return _hermite_on(logs, derivs, _hermite_cell(eta))
 
 
 def _series(j: float, eta: float) -> float:
@@ -161,17 +183,32 @@ def _series(j: float, eta: float) -> float:
     return math.gamma(j + 1.0) * total
 
 
-def _sommerfeld(j: float, eta: float) -> float:
-    """η ≥ 15 의 축퇴 전개. η=15 에서 1.3e-7 이고 위로 갈수록 좋아진다."""
+def _sommerfeld_coefficients(j: float):
+    """축퇴 전개의 계수 셋과 j+1. j 에만 달린 상수라 부를 때마다 다시 만들 것이 없다 —
+    아래 `_SOMMERFELD` 가 세 j 에 대해 import 때 한 번 계산한다. 식은 예전 `_sommerfeld`
+    본문 그대로이므로 같은 double 이 나온다."""
     a = (j + 1) * j * math.pi ** 2 / 6.0
     b = (j + 1) * j * (j - 1) * (j - 2) * 7.0 * math.pi ** 4 / 360.0
     c = ((j + 1) * j * (j - 1) * (j - 2) * (j - 3) * (j - 4)
          * 31.0 * math.pi ** 6 / 15120.0)
+    return a, b, c, j + 1
+
+
+_SOMMERFELD = {j: _sommerfeld_coefficients(j) for j in (-0.5, 0.5, 1.5)}
+# 역함수의 Newton 이 펼쳐 쓰는 j = 1/2 와 −1/2 의 계수. 같은 dict 의 같은 값이다.
+_S12_A, _S12_B, _S12_C, _S12_JP1 = _SOMMERFELD[0.5]
+_SM12_A, _SM12_B, _SM12_C, _SM12_JP1 = _SOMMERFELD[-0.5]
+
+
+def _sommerfeld(j: float, eta: float) -> float:
+    """η ≥ 20 의 축퇴 전개. η=20 에서 1.1e-8 이고 위로 갈수록 좋아진다."""
+    a, b, c, jp1 = _SOMMERFELD[j] if j in _SOMMERFELD else _sommerfeld_coefficients(j)
     e2 = eta * eta
-    return eta ** (j + 1) / (j + 1) * (1.0 + a / e2 + b / e2 ** 2 + c / e2 ** 3)
+    return eta ** jp1 / jp1 * (1.0 + a / e2 + b / e2 ** 2 + c / e2 ** 3)
 
 
 # ln F 와 그 정확한 기울기. 굳혀 둔 값에서 나오므로 새 상수가 아니다.
+assert len(FD_M12) == len(FD_P12) == len(FD_P32) == _N_CELLS, "세 표의 격자가 다르다"
 _LN_M12 = [math.log(v) for v in FD_M12]
 _LN_P12 = [math.log(v) for v in FD_P12]
 _LN_P32 = [math.log(v) for v in FD_P32]
@@ -192,7 +229,7 @@ def f_minus_half(eta: float) -> float:
         return _series(-0.5, eta)
     if eta >= ETA_HI:
         return _sommerfeld(-0.5, eta)
-    return _hermite(_LN_M12, lambda i: _D_M12[i], eta)
+    return _hermite(_LN_M12, _D_M12, eta)
 
 
 def f_half(eta: float) -> float:
@@ -201,7 +238,7 @@ def f_half(eta: float) -> float:
         return _series(0.5, eta)
     if eta >= ETA_HI:
         return _sommerfeld(0.5, eta)
-    return _hermite(_LN_P12, lambda i: _D_P12[i], eta)
+    return _hermite(_LN_P12, _D_P12, eta)
 
 
 def f_three_half(eta: float) -> float:
@@ -210,7 +247,7 @@ def f_three_half(eta: float) -> float:
         return _series(1.5, eta)
     if eta >= ETA_HI:
         return _sommerfeld(1.5, eta)
-    return _hermite(_LN_P32, lambda i: _D_P32[i], eta)
+    return _hermite(_LN_P32, _D_P32, eta)
 
 
 _LAST_INVERSE = (0.0, 0.0)     # 직전 (값, 해). 출발점일 뿐이다
@@ -235,17 +272,39 @@ def inverse_f_half(value: float) -> float:
     else:
         eta = (1.5 * value) ** (2.0 / 3.0)
     lo, hi = -800.0, 1.0e4
+    tol = 1e-13 * value
     for _ in range(60):
-        f = f_half(eta) - value
-        if f > 0.0:
-            hi = min(hi, eta)
+        # F_{1/2} 와 그 도함수 (1/2)F_{−1/2} 를 같은 η 에서 쓴다. 표 구간이면 칸과 기저를
+        # 한 번만 만들어 두 표에 얹고, 축퇴 구간이면 η² 을 한 번만 만든다 — 값은
+        # f_half·f_minus_half 를 따로 부른 것과 비트까지 같다 (_hermite_cell 주석, 그리고
+        # _sommerfeld 의 식을 그대로 펼친 것). 급수 구간만 그대로 따로 부른다.
+        if ETA_LO < eta < ETA_HI:
+            cell = _hermite_cell(eta)
+            f = _hermite_on(_LN_P12, _D_P12, cell) - value
+        elif eta >= ETA_HI:
+            cell = None
+            e2 = eta * eta
+            f = (eta ** _S12_JP1 / _S12_JP1
+                 * (1.0 + _S12_A / e2 + _S12_B / e2 ** 2 + _S12_C / e2 ** 3)) - value
         else:
-            lo = max(lo, eta)
-        if abs(f) <= 1e-13 * value:
+            cell = None
+            f = _series(0.5, eta) - value
+        if f > 0.0:
+            if eta < hi:
+                hi = eta
+        elif eta > lo:
+            lo = eta
+        if abs(f) <= tol:
             _LAST_INVERSE = (value, eta)
             return eta
-        step = f / (0.5 * f_minus_half(eta))
-        nxt = eta - step
+        if cell is not None:
+            slope = _hermite_on(_LN_M12, _D_M12, cell)
+        elif eta >= ETA_HI:
+            slope = (eta ** _SM12_JP1 / _SM12_JP1
+                     * (1.0 + _SM12_A / e2 + _SM12_B / e2 ** 2 + _SM12_C / e2 ** 3))
+        else:
+            slope = _series(-0.5, eta)
+        nxt = eta - f / (0.5 * slope)
         if not (lo < nxt < hi):
             nxt = 0.5 * (lo + hi)
         if abs(nxt - eta) <= 1e-14 * max(abs(eta), 1.0):
