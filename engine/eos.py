@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import math
 
+import hhe_table
 import water_hot
 from dataclasses import dataclass
 
@@ -53,13 +54,20 @@ class PhaseGap(Exception):
     """근거 있는 상 사이의 빈 구간에 압력이 떨어졌다. 외삽 대신 이걸 던진다.
 
     온도 천장을 넘어도 같은 것을 던진다. 막힌 것이 압력인지 온도인지는 `temperature_k`
-    가 채워져 있는지로 갈리고, 두 경우에 다른 예외를 만들면 잡는 쪽이 둘로 갈린다."""
+    가 채워져 있는지로 갈리고, 두 경우에 다른 예외를 만들면 잡는 쪽이 둘로 갈린다.
+
+    **온도가 막았다면 어느 쪽으로 막았는지까지 말한다.** 시험 온도를 올려야 풀리는
+    경우(`too_cold=True`) 와 내려야 풀리는 경우가 있고, 사격의 괄호는 그것으로 방향을
+    정한다. 이 구분이 없던 동안 괄호는 늘 올리기만 했고, 수소-헬륨 표가 위아래로 다 벽을
+    갖게 되면서 실제로 걸렸다 — 목성의 첫 시험값이 아래 벽에 막혀 열두 번 올라가다
+    92,887 K 로 위 벽을 뚫었다."""
 
     def __init__(self, material: str, pressure_pa: float, reason: str,
-                 temperature_k: float = 0.0):
+                 temperature_k: float = 0.0, too_cold: bool = False):
         self.material = material
         self.pressure_pa = pressure_pa
         self.temperature_k = temperature_k
+        self.too_cold = too_cold
         self.reason = reason
         super().__init__(reason)
 
@@ -317,6 +325,42 @@ class Material:
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
         return self.phase_at(p).gruneisen(rho, t, t_pot)
 
+    def k_t(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """등온 체적탄성률 K_T [Pa]. 냉각 곡선의 수치 미분이다."""
+        h = p * 1e-4
+        rho = self.density(p, t, t_pot)
+        d_hi = self.density(p + h, t, t_pot)
+        d_lo = self.density(max(p - h, 1.0), t, t_pot)
+        return 0.0 if d_hi <= d_lo else rho * 2.0 * h / (d_hi - d_lo)
+
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """정압비열 c_P = c_V (1 + αγT) [J/kg/K]. 새 상수가 아니라 항등식이다.
+
+        α = (∂P/∂T)_V / K_T 이고 γ = (∂P/∂T)_V / (ρ c_V) 이므로, 이 파일이 이미 들고
+        있는 것들로 닫힌다. 열 상수가 없는 상은 0 을 낸다 — 없는 척하지 않는다."""
+        ph = self.phase_at(p)
+        if not ph.has_thermal or t <= 0.0:
+            return 0.0
+        rho = self.density(p, t, t_pot)
+        k_t = self.k_t(p, t, t_pot)
+        if k_t <= 0.0 or rho <= 0.0:
+            return ph.c_v_ref
+        dpdt = ph.dpdt_v(t, t_pot)
+        gamma = dpdt / (rho * ph.c_v_ref)
+        alpha = dpdt / k_t
+        return ph.c_v_ref * (1.0 + alpha * gamma * t)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """(∂lnT/∂lnP)_S = γ P / K_S. 혼합이 이걸 c_P 로 가중해 합친다."""
+        if t <= 0.0 or p <= 0.0:
+            return 0.0
+        rho = self.density(p, t, t_pot)
+        gamma = self.gruneisen(p, rho, t, t_pot)
+        if gamma <= 0.0:
+            return 0.0
+        k_s = self.k_t(p, t, t_pot) + self.phase_at(p).dpdt_v(t, t_pot) * gamma * t
+        return 0.0 if k_s <= 0.0 else gamma * p / k_s
+
 
 # ── 섞인 층 ─────────────────────────────────────────────────────────────
 #
@@ -474,6 +518,67 @@ class Mixture:
             if w > 0.0:
                 m.check_temperature(p, t)
 
+    @property
+    def p_floor(self) -> float:
+        """성분 중 하나라도 압력 바닥을 말하면 혼합도 거기서 멈춘다. 중원소가 녹아
+        있어도 외피는 여전히 기체이고, P = 0 인 표면이 없는 것은 그대로다."""
+        return max((getattr(m, "p_floor", 0.0)
+                    for m, w in self.parts if w > 0.0), default=0.0)
+
+    def in_domain(self, p: float, t: float) -> bool:
+        return all(m.in_domain(p, t) for m, w in self.parts
+                   if w > 0.0 and hasattr(m, "in_domain"))
+
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """정압비열도 질량분율로 더한다. 엔트로피가 가법이면 그 온도 도함수도 가법이다."""
+        return sum(w * m.c_p(p, t, t_pot) for m, w in self.parts if w > 0.0)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """혼합의 단열 기울기. **c_P 로 가중한 평균이지 부피 가법이 아니다.**
+
+            ∇_ad,mix = Σ wᵢ c_P,ᵢ ∇_ad,ᵢ / Σ wᵢ c_P,ᵢ
+
+        밀도는 부피가 가법이라 조화평균으로 합쳐지지만 ∇_ad 는 엔트로피의 도함수이고,
+        엔트로피는 **가법 그 자체** 다. Chabrier+ 2019 §V 가 자기 혼합 규칙을 그렇게
+        적는다 — "the so-called 'additive volume law' ... is based on the additivity of
+        the extensive variables (volume, energy, **entropy**, ...) at constant intensive
+        variables (P,T)", 결론부에서 다시 "simply taking into account the ideal mixing
+        entropy contribution between the two species". 같은 문장이 이 파일이 밀도 규칙에
+        이미 인용해 둔 그 문장이다.
+
+        그 전제에서 닫힌 형태가 나온다. (∂S/∂P)_T 와 (∂S/∂T)_P 가 각각 가법이고
+        (∂S/∂P)_T,ᵢ = −c_P,ᵢ ∇_ad,ᵢ / P, (∂S/∂T)_P,ᵢ = c_P,ᵢ / T 이므로,
+        ∇_ad = −(P/T)(∂S/∂P)_T/(∂S/∂T)_P 에 넣으면 위 식이 된다. 이상 혼합
+        엔트로피 항은 조성만의 함수라 두 도함수에서 사라진다.
+
+        **2026-08-28 까지 이 자리가 비어 있었고, 그게 조용한 결함이었다.** 혼합에
+        ∇_ad 가 없으면 적분기가 γ 와 K_S 로 **재조립한** 기울기로 되돌아갔고, 표를
+        들여온 이유가 바로 그 조립을 그만두는 것이었다. 중원소를 한 톨(Z = 0.02) 넣는
+        순간 토성의 표면 온도가 135 K 대신 19 K 로 나왔고, 온도 고리가 매 통과 7배씩
+        중심 온도를 올리다 가짜 가지로 걸어갔다."""
+        num = den = 0.0
+        for m, w in self.parts:
+            if w <= 0.0:
+                continue
+            c = m.c_p(p, t, t_pot)
+            if c <= 0.0:
+                # 발표된 열용량이 없는 성분이 있으면 가중치를 지어낼 수 없다.
+                raise PhaseGap(
+                    self.name, p,
+                    f"'{m.name}' 의 정압비열이 없어 혼합의 단열 기울기를 c_P 로 가중할 "
+                    "수 없다. 엔트로피 가법에서 나오는 가중치가 c_P 인데 그 값이 이 "
+                    "재료에 없으므로, 지어내는 대신 여기서 멈춘다.", t)
+            g = m.grad_ad(p, t, t_pot)
+            num += w * c * g
+            den += w * c
+        return 0.0 if den <= 0.0 else num / den
+
+    def dtdp_adiabat(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """dT/dP = ∇_ad · T / P. 적분기가 이걸 우선해서 조립 경로를 안 탄다."""
+        if t <= 0.0 or p <= 0.0:
+            return 0.0
+        return self.grad_ad(p, t, t_pot) * t / p
+
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """압력 p 에서 혼합 밀도. 성분마다 **같은 압력과 같은 온도** 에서 평가한다.
 
@@ -547,7 +652,8 @@ class HotWater:
                 f"{t:.0f} K 는 이 적합을 쓰는 하한({water_hot.T_MIN:.0f} K) 아래다. "
                 "그 아래는 응축상 얼음이고 이 파일의 사다리(ice_ih … ice_x)가 받는다. "
                 "Mazevet+ 2019 §3.1 자신이 그 구간을 'limited applicability for the ice VII "
-                "and ice X phases' 로 적고 불일치를 'tens percent' 로 부른다.", t)
+                "and ice X phases' 로 적고 불일치를 'tens percent' 로 부른다.",
+                t, too_cold=True)
         if t > water_hot.T_MAX:
             raise PhaseGap(
                 self.name, p,
@@ -1251,19 +1357,144 @@ def polytrope_central_pressure_n1(k: float, mass_kg: float) -> float:
     return k * rho_c ** 2
 
 
-H_HE = Material(
-    "h_he", "수소-헬륨 외피",
-    (Phase("hhe_n1", "polytrope", 0.0, POLYTROPE_K_HHE, POLYTROPE_N_HHE,
-           polytrope_central_pressure_n1(
-               POLYTROPE_K_HHE,
-               DEUTERIUM_LIMIT_MJ * JUPITER_MASS_EARTH * EARTH_MASS_KG_EOS),
-           "Helled+ 2022 §2 (arXiv:2202.10046) — n=1 폴리트로프, K=2.1e5 SI"),),
-    over_reason=("수소-헬륨 외피가 {p_gpa:.0f} GPa 까지 내려간다. n=1 폴리트로프를 "
-                 "이 리포지토리가 선언한 범위의 상한({max_gpa:.0f} GPa, 13 M_J 의 "
-                 "중심압) 위로 끌고 가는 것이고, 그 위는 갈색왜성이다 — 중수소가 타고 "
-                 "(Spiegel+ 2011), 이 레시피에는 그 광도 이력이 없다."),
-)
+# 폴리트로프는 2026-08-28 에 **밀도를 내는 자리에서 물러났다.** 상수 하나가 목성에
+# 맞춰져 있어서 목성에서만 맞고(+0.6 %) 외피가 일부뿐인 천체에서 세 배 부풀었다 —
+# 토성 +20.7 %, 천왕성 +23.8 %, 해왕성 +29.2 %. 남은 쓰임은 하나다: 사격의 괄호를
+# 잡을 때 쓰는 **밀도 척도**. 질량과 무관한 닫힌 해가 있어서 그 자리에 값싸고, 계산
+# 결과에는 들어가지 않는다 (Material.rho_seed 의 주석과 같은 규율).
 
-MATERIALS: dict[str, Material | HotWater] = {
+
+class HydrogenHelium:
+    """수소-헬륨 외피. `Material` 과 같은 자리에 꽂히지만 상의 열이 아니다.
+
+    상태방정식은 hhe_table.py 에 있다 — Chabrier, Mazevet & Soubiran 2019 (ApJ 872, 51,
+    arXiv:1902.01852) 가 배포한 표를 행성 창에서 굳힌 것이고, 출처·유효 영역·보간 오차가
+    그 파일 머리에 있다. 여기 있는 것은 그것을 적분기가 먹을 수 있는 모양으로 감싸는
+    껍질이다. water_hot.py 를 감싼 HotWater 와 같은 이유·같은 모양이다.
+
+    **이 재료에는 P = 0 인 표면이 없다.** 기체라서 밀도가 압력과 함께 0 으로 가고,
+    발표된 거대행성 반지름은 전부 특정 압력 준위(1 bar)의 값이다. 그래서 `p_floor` 를
+    들고 있고, 적분기가 거기서 멈춘다."""
+    name: str = "h_he"
+    label_ko: str = "수소-헬륨 외피"
+
+    @property
+    def rho0(self) -> float:
+        """영압 밀도. 기체이므로 0 이다 — 폴리트로프도 같은 값을 냈다."""
+        return 0.0
+
+    @property
+    def p_max(self) -> float:
+        """굳힌 창의 위쪽 끝. 표 자체는 10¹³ GPa 까지 가지만 행성 창만 굳혔다."""
+        return 10.0 ** (hhe_table.LOGP_LO + (hhe_table.NP - 1) * hhe_table.STEP) * 1e9
+
+    @property
+    def p_floor(self) -> float:
+        """굳힌 창의 아래쪽 끝 = 1 bar. 기체 외피의 적분이 여기서 멈춘다."""
+        return hhe_table.P_FLOOR_PA
+
+    def rho_seed(self, mass_kg: float) -> float:
+        """괄호잡기용 밀도 척도. **n = 1 폴리트로프가 남아서 하는 일이 이것뿐이다.**
+        질량과 무관한 닫힌 해라 값싸고, 계산 결과에는 들어가지 않는다."""
+        r = polytrope_radius_n1(POLYTROPE_K_HHE)
+        return 3.0 * mass_kg / (4.0 * math.pi * r ** 3)
+
+    @property
+    def has_thermal(self) -> bool:
+        return True
+
+    def cold_phases(self) -> tuple[str, ...]:
+        """**비었다.** 2026-08-28 까지 여기에 hhe_n1 이 있었고, 그 한 줄 때문에 온도가
+        외피를 안 흘러 포텐셜 온도가 표면이 아니라 얼음 맨틀 꼭대기에 떨어졌다."""
+        return ()
+
+    def melt_free_phases(self) -> tuple[str, ...]:
+        """녹는곡선이 없다 — 있을 자리가 아니다. 이 재료는 유체다."""
+        return (self.name,)
+
+    def t_melt(self, p: float) -> float | None:
+        return None
+
+    def in_domain(self, p: float, t: float) -> bool:
+        return hhe_table.in_domain(p, t)
+
+    def check_temperature(self, p: float, t: float) -> None:
+        if t <= 0.0:
+            raise PhaseGap(
+                self.name, p,
+                "수소-헬륨 외피는 등온 경로로 풀 수 없다. 이 상태방정식은 표가 통째로 "
+                "(P, T) 의 함수라 온도가 인자이고, 폴리트로프처럼 압력 하나로 닫히지 "
+                "않는다. 포텐셜 온도를 선언하면 이 층이 풀린다.")
+        # **압력으로 막힌 것을 온도로 막혔다고 말하면 안 된다.** 사격의 괄호는 둘을
+        # 다르게 다룬다 — 압력이면 시험압을 좁히고, 온도면 시험 온도를 옮긴다. 굳힌 창의
+        # 압력 밖은 온도와 무관하므로 temperature_k 를 채우지 않는다.
+        if p < self.p_floor or p > self.p_max:
+            raise PhaseGap(
+                self.name, p,
+                f"{p / 1e9:.4g} GPa 는 굳힌 창의 압력 구간"
+                f"({self.p_floor / 1e9:.4g}–{self.p_max / 1e9:.4g} GPa) 밖이다. "
+                "아래쪽 끝은 1 bar 이고 발표된 거대행성 반지름이 재어진 준위다 — "
+                "기체에는 P = 0 인 표면이 없다.")
+        if hhe_table.in_domain(p, t):
+            return
+        lt_max = 10.0 ** (hhe_table.LOGT_LO + (hhe_table.NT - 1) * hhe_table.STEP)
+        if t > lt_max:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 굳힌 창의 상한({lt_max:.0f} K) 위다. Chabrier+ 2019 의 "
+                "표는 10⁸ K 까지 가지만 이 리포지토리는 행성 구간만 굳혔다 — 그 위는 "
+                "갈색왜성과 별이고, body_class 가 이미 이름 대며 거절한다.", t)
+        raise PhaseGap(
+            self.name, p,
+            f"{p / 1e9:.4g} GPa 에서 {t:.0f} K 는 대류하는 외피가 닿는 것보다 차다. "
+            "이 창의 아래 경계는 1 bar · 50 K 에서 출발한 단열선 아래에 그은 선이고 "
+            "(천왕성의 1 bar 온도가 76 K 다), 그 아래에는 배포 표 자신이 예고한 결함이 "
+            "몰려 있다 — 밀도 자리의 sentinel 과 0.1/0.5 로 눌린 grad_ad. 발표된 수를 "
+            "손보는 대신 영역을 말한다.", t, too_cold=True)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        self.check_temperature(p, t)
+        return hhe_table.density(p, t)
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        if t <= 0.0:
+            return 0.0
+        return hhe_table.gruneisen(p, t)
+
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """정압비열 [J/kg/K]. 표의 엔트로피 열에서 온다 — 조립한 값이 아니다."""
+        return 0.0 if t <= 0.0 else hhe_table.heat_capacity_p(p, t)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return 0.0 if t <= 0.0 else hhe_table.grad_ad(p, t)
+
+    def dtdp_adiabat(self, p: float, t: float, t_pot: float = 0.0) -> float:
+        """단열 기울기 dT/dP = ∇_ad · T / P [K/Pa].
+
+        **표가 ∇_ad 를 들고 있으므로 다시 만들지 않는다.** 다른 재료에서는 이 기울기를
+        γ 와 K_S 로 조립하는데, 그건 Birch-Murnaghan 상이 내줄 수 있는 것이 그것뿐이라
+        그렇다. 여기서는 저자들이 자기 엔트로피에서 계산한 값이 그대로 있다."""
+        if t <= 0.0 or p <= 0.0:
+            return 0.0
+        return hhe_table.grad_ad(p, t) * t / p
+
+    def phase_at(self, p: float, t: float = 0.0):
+        return _HydrogenHeliumSlope(p)
+
+
+@dataclass(frozen=True)
+class _HydrogenHeliumSlope:
+    """혼합 안에 들어갔을 때 `_adiabatic_dtdp` 가 묻는 (∂P/∂T)_V."""
+    p: float
+    name: str = "h_he"
+    t_max: float = 0.0
+
+    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+        return 0.0 if t <= 0.0 else hhe_table.dpdt_v(self.p, t)
+
+
+H_HE = HydrogenHelium()
+
+MATERIALS: dict[str, Material | HotWater | HydrogenHelium] = {
     m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O, H_HE, H2O_HOT)
 }

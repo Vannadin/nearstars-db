@@ -94,12 +94,13 @@ class Structure:
 
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
-                 "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples")
+                 "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
+                 "p_surface")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
-                 ice_samples=()):
+                 ice_samples=(), p_surface=0.0):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -121,6 +122,9 @@ class Structure:
         # 얼음 기둥을 지나며 찍은 (압력, 온도) 표본. 녹는곡선에 대는 것은 적분이 끝난
         # 뒤이고, 사격이 반복될 때마다 뒤집기를 돌리지 않으려고 그렇게 나눴다.
         self.ice_samples = tuple(ice_samples)
+        # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
+        # 있으면 그 재료의 압력 바닥(1 bar)이고, 발표된 거대행성 반지름이 그 준위의 값이다.
+        self.p_surface = p_surface
 
     @property
     def nmoi(self) -> float:
@@ -191,19 +195,46 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     않고, 그 사실이 결과의 note 에 이름과 함께 적힌다 — 기울기를 지어내지 않는다.
 
     K_S = K_T (1 + αγT) 이고 αK_T 는 이미 재료가 들고 있으므로 새 상수가 없다.
-    K_T 는 냉각 곡선의 수치 미분으로 잰다."""
+    K_T 는 냉각 곡선의 수치 미분으로 잰다.
+
+    **재료가 자기 ∇_ad 를 들고 있으면 그것을 쓴다.** 조립하는 것은 Birch-Murnaghan 상이
+    내줄 수 있는 것이 γ 와 K_T 뿐이라서이지, 그 경로가 더 옳아서가 아니다. 수소-헬륨
+    표는 저자들이 자기 엔트로피에서 계산한 (∂lnT/∂lnP)_S 를 그대로 싣고 있고, 그걸 두고
+    다시 만드는 것은 발표된 수를 우리 조립으로 바꿔 적는 것이다. 이 갈래가 없는 재료는
+    한 줄도 지나지 않으므로 비트까지 같다."""
+    own = getattr(mat, "dtdp_adiabat", None)
+    if own is not None:
+        return own(p, t, t_pot)
     gamma = mat.gruneisen(p, rho, t, t_pot)
     if gamma <= 0.0 or t <= 0.0:
         return 0.0
     h = p * 1e-4
-    d_hi, d_lo = mat.density(p + h, t, t_pot), mat.density(p - h, t, t_pot)
+    # 재료가 압력 바닥을 말하면 그 아래로 차분을 내밀지 않는다. 기체 외피의 표면(1 bar)
+    # 에서 실제로 걸린다 — 반 칸 아래가 굳힌 창 밖이라 거절이 나고, 그건 물리가 아니라
+    # 차분의 발이다. 그 자리에서는 한쪽 차분으로 바꾼다.
+    p_lo, p_hi = p - h, p + h
+    floor = getattr(mat, "p_floor", 0.0)
+    if floor and p_lo < floor:
+        p_lo, p_hi = p, p + 2.0 * h
+    d_hi, d_lo = mat.density(p_hi, t, t_pot), mat.density(p_lo, t, t_pot)
     if d_hi <= d_lo:
         return 0.0
-    k_t = rho * 2.0 * h / (d_hi - d_lo)
+    k_t = rho * (p_hi - p_lo) / (d_hi - d_lo)
     # αK_T·γ·T = K_T·αγT 이므로 K_S 가 새 상수 없이 닫힌다.
     ph = mat.phase_at(p) if hasattr(mat, "phase_at") else None
     k_s = k_t + (ph.dpdt_v(t, t_pot) * gamma * t if ph is not None else 0.0)
     return gamma * t / max(k_s, 1.0)
+
+
+def _grad_ad_at(mat, p: float, t: float, t_pot: float = 0.0) -> float:
+    """이 재료가 이 자리에서 들고 있는 (∂lnT/∂lnP)_S = (dT/dP)·P/T.
+
+    수소-헬륨은 발표된 ∇_ad 를 그대로 내고, 중원소가 녹은 혼합은 γ 와 K_S 로 조립한
+    기울기를 같은 형태로 환산한다 — 어느 쪽이든 **적분기가 온도를 멱법칙으로 나르는
+    데 쓰는 지수** 다."""
+    if t <= 0.0 or p <= 0.0:
+        return 0.0
+    return _adiabatic_dtdp(mat, p, mat.density(p, t, t_pot), t, t_pot) * p / t
 
 
 def _carries_silicate(mat) -> bool:
@@ -231,6 +262,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
                    ice_material)
     mat = stack[0][1]
+    # 적분이 멈추는 압력. 응축상 천체는 0 — 표면이 P = 0 이다. 기체 외피가 바깥에 있으면
+    # 그 재료가 자기 바닥을 말한다 (1 bar). 바깥 층 하나가 정하므로 여기서 한 번 본다.
+    p_stop = getattr(stack[-1][1], "p_floor", 0.0)
 
     # 온도가 선언되지 않으면 t_center 가 0 이고, 아래 모든 density 호출이 예전과
     # 같은 인자로 떨어진다 — 비트까지 같은 경로다.
@@ -253,6 +287,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     p_si_max = p if _carries_silicate(mat) else 0.0
     t_cmb = None
     t_surface = t
+    p_surface = 0.0
+    last_grad = 0.0        # 마지막으로 잰 ∇_ad. 표면 밖에서는 다시 잴 수 없다
     ice_samples: list[tuple[float, float]] = []
     ICE_SAMPLE_EVERY = 20
 
@@ -263,7 +299,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         return stack[layer][1]
 
     steps = 0
-    while p > 0.0 and steps < MAX_STEPS:
+    while p > p_stop and steps < MAX_STEPS:
         steps += 1
         prev_layer = layer
         mat = material_for(m)
@@ -275,6 +311,23 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 p_ice_base = p
         if mat.name not in phases:
             phases.append(mat.name)
+
+        # **기체에는 P = 0 인 표면이 없다.** 밀도가 압력과 함께 0 으로 가므로 적분이
+        # 어디서 끝나는지를 재료가 말해야 하고, 그 자리가 발표된 반지름이 재어진
+        # 준위(1 bar)다. 표의 온도 바닥 아래로 내려가는 것도 같은 뜻이다 — 그건 거절이
+        # 아니라 **표면에 닿았다** 는 뜻이므로, 여기서 멈추고 그 사실을 들고 나간다.
+        floor = getattr(mat, "p_floor", 0.0)
+        if floor and (t > 0.0 and not mat.in_domain(p, t)):
+            p_surface = p
+            t_surface = t
+            if p > floor * 1.001 and last_grad > 0.0:
+                # 압력 바닥이 아니라 **온도 바닥** 에 먼저 닿았다. 표가 100 K 에서
+                # 끝나고 천왕성의 1 bar 온도는 76 K 라 실제로 걸린다. 경계조건은
+                # 1 bar 준위에 걸려 있으므로, 그 준위의 온도를 단열선의 국소 멱법칙
+                # T ∝ P^∇_ad 으로 닫아 준다 — 압력 비가 서너 배라 한 줄이면 된다.
+                # 반지름은 그렇게 늘리지 않는다. 그 결손은 note 가 수로 말한다.
+                t_surface = t * (floor / p) ** last_grad
+            break
         if mat.name == "h2o" and (not ice_samples
                                   or steps % ICE_SAMPLE_EVERY == 0):
             ice_samples.append((p, t))
@@ -285,11 +338,27 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         # 어긋나는 오차는 dr/R ~ 3e-4 이라 C/MR² 의 유효숫자 밖이다.
         # 이 단계의 단열 기울기. 한 단계에 한 번만 잰다 (위 _adiabatic_dtdp 주석).
         dtdp = _adiabatic_dtdp(mat, p, mat.density(p, t, t_pot), t, t_pot) if t > 0.0 else 0.0
+        # **기체 층에서는 온도를 선형이 아니라 멱법칙으로 나른다.** 반지름 격자가 균일한데
+        # 기체 외피는 바깥 몇 걸음에서 압력이 자릿수로 떨어진다 — 한 걸음이 척도높이 두세
+        # 개를 건너뛴다. dT = (dT/dP)dP 는 그 걸음에서 뜻을 잃고(목성 중심온도가 15,000 K
+        # 대신 5,000 K 로 나왔다), 단열선은 그 구간에서 T ∝ P^∇_ad 이므로 같은 ∇_ad 로
+        # 곱셈으로 나르면 걸음 크기에 둔감해진다. ∇_ad 를 들고 있는 재료만 이 갈래를
+        # 타므로 나머지는 한 줄도 지나지 않는다.
+        grad = (dtdp * p / t
+                if (t > 0.0 and dtdp > 0.0 and getattr(mat, "p_floor", 0.0))
+                else None)
+        if grad:
+            last_grad = grad
 
         def deriv(rr, mm, pp):
             if rr <= 0.0:
                 return 0.0, 0.0, 0.0, 0.0
-            rr_rho = mat.density(pp, t, t_pot) if pp > 0.0 else mat.rho0
+            # 마지막 반 걸음이 바닥 아래로 내려갈 수 있다. 그 자리의 밀도는 바닥의
+            # 값으로 둔다 — 1 bar 의 수소-헬륨은 평균밀도의 10⁻⁴ 이라 질량에도
+            # 반지름에도 유효숫자로 안 들어오고, 굳히지 않은 구간을 외삽하는 것보다
+            # 이쪽이 정직하다.
+            rr_rho = (mat.density(max(pp, p_stop), t, t_pot) if pp > 0.0
+                      else mat.rho0)
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
             return (4.0 * math.pi * rr * rr * rr_rho,
@@ -306,15 +375,17 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         di = dr / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
         dv = dr / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
 
-        if p + dp <= 0.0:
-            # 표면을 넘어섰다. P=0 자리로 선형 보간해서 멈춘다.
-            frac = p / (-dp) if dp != 0 else 0.0
+        if p + dp <= p_stop:
+            # 표면을 넘어섰다. 멈출 압력 자리로 선형 보간한다.
+            frac = (p - p_stop) / (-dp) if dp != 0 else 0.0
             r += dr * frac
             m += dm * frac
             moi += di * frac
             v_pore += dv * frac
-            t += dtdp * dp * frac
-            p = 0.0
+            p_new = p_stop
+            t = t * (p_new / p) ** grad if grad else t + dtdp * dp * frac
+            p = p_new
+            p_surface = p_stop
             t_surface = t
             break
 
@@ -322,12 +393,12 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             m_above_lab += dm
         r += dr
         m += dm
-        p += dp
         moi += di
         v_pore += dv
         # 온도는 압력을 따라간다 — dT = (dT/dP) dP. 열 상수가 없는 층에서는
         # dtdp 가 0 이라 온도가 그 층을 그대로 통과한다.
-        t += dtdp * dp
+        t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
+        p += dp
         t_surface = t
 
     if steps >= MAX_STEPS:
@@ -347,7 +418,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                      v_pore=v_pore, m_above_lab=m_above_lab,
                      p_silicate_max=p_si_max, t_center=t_center,
                      t_cmb=t_cmb if t_cmb is not None else 0.0,
-                     t_surface=t_surface, ice_samples=ice_samples)
+                     t_surface=t_surface, ice_samples=ice_samples,
+                     p_surface=p_surface)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -417,7 +489,11 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # 중심압은 가장 안쪽 재료가 받는다. 바깥 층의 상한은 적분 중에 PhaseGap 이
     # 스스로 잡으므로 여기서 겹쳐 걸면 엉뚱한 층 때문에 거절하게 된다.
     p_ceiling = stack[0][1].p_max
-    lo = 1.0e2
+    p_stop = getattr(stack[-1][1], "p_floor", 0.0)
+    # 중심압의 아래 끝. 바깥 재료가 압력 바닥을 말하면 중심압이 그보다 낮을 수 없다 —
+    # 기체 외피에서 실제로 걸린다. 할선의 두 번째 시험점이 그 아래로 내려가면 표 밖이라
+    # 거절이 나고, 그건 물리가 아니라 시험값이다.
+    lo = max(1.0e2, p_stop)
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
 
     def at(p: float):
@@ -436,7 +512,22 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     #
     # 좁혀도 목표 질량에 못 닿으면 **그때가 진짜 거절** 이고, 그 거절은 좁혀서 얻은
     # 상태를 근거로 말한다. 버린 시험값을 인용하지 않는다.
+    # **사다리가 밟은 눈금이 그대로 괄호의 아래끝이 된다.**
+    #
+    # 표면이 P = 0 이면 겉질량이 중심압에 단조라 아래끝을 아무 데나 둬도 뿌리가 하나다.
+    # 기체 외피는 다르다 — 표면이 1 bar 로 고정돼 있으면 중심압이 낮을수록 천체가 부풀어
+    # 저밀도 가스가 먼 곳까지 1 bar 를 유지하며 질량을 담으므로, 겉질량이 중심압에 대해
+    # **U 자** 를 그린다. 그건 경계조건의 성질이지 결함이 아니고, 1 bar 를 고른 것도 맞다
+    # (가스에는 P = 0 인 표면이 없고 발표된 반지름도 그 준위다). 고칠 것은 뿌리 찾기다.
+    #
+    # 아래끝을 바닥에 두면 괄호가 **최소를 통째로 품고**, 그 안에 뿌리가 둘이라 두 번째
+    # 시험점이 답을 정한다. 토성에서 hi × 10⁻³ 은 왼쪽 가지에 떨어져 반지름 650만 km 를
+    # 냈다. 그래서 아래끝을 사다리가 이미 밟은 눈금 중 **질량이 목표에 못 미친 마지막
+    # 자리** 로 둔다. 사다리는 위로 올라가며 그 눈금들의 질량을 이미 계산했으므로 적분이
+    # 더 들지 않고, ×4 라는 눈금 간격이 답을 정하지도 않는다 — 정하는 것은 "최소를
+    # 넘긴 뒤" 라는 조건이다.
     good = None                  # 마지막으로 적분이 끝난 시험압
+    rung = None                  # 질량이 목표에 못 미친 마지막 눈금 (압력, 질량)
     broke: PhaseGap | None = None
     while True:
         try:
@@ -455,6 +546,11 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         good = hi
         if st.mass_kg >= mass_kg:
             break
+        # 목표에 못 미치는 **마지막** 눈금을 들고 간다. 질량이 U 자를 그려도 마지막인
+        # 것이 중요하다 — 내려가는 가지에서 목표 아래로 떨어진 눈금이 있었다면 그 뒤의
+        # 눈금들도 최소까지 계속 목표 아래이므로, 마지막은 언제나 최소의 오른쪽,
+        # 곧 질량이 중심압에 단조증가하는 구간에 있다.
+        rung = (hi, st.mass_kg)
         if hi >= p_ceiling:
             raise ValueError(
                 f"이 질량을 담으려면 중심압이 {_ceiling_owner(stack[0][1])} 의 근거 "
@@ -476,11 +572,21 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         envelope_z, differentiated, t_center, t_pot, ice_material)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
-    x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
-    x1 = math.log(max(lo, hi * 1e-3))
-    st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated, t_center, t_pot, ice_material)
-    y1 = math.log(st.mass_kg / mass_kg)
+    if p_stop and rung is not None:
+        # 기체가 바깥에 있다. 사다리가 밟은 눈금을 아래끝으로 쓴다. 그 눈금의 질량이
+        # 이미 있으므로 할선의 두 점이 **공짜** 이고, 이 구간 안에서는 질량이 중심압에
+        # 단조증가하므로 뿌리가 하나다. st 는 위쪽 점(hi)의 것이라 x1 과 짝이 맞는다.
+        lo = rung[0]
+        x0, y0 = math.log(rung[0]), math.log(rung[1] / mass_kg)
+        x1, y1 = math.log(hi), math.log(st.mass_kg / mass_kg)
+    else:
+        x0, y0 = math.log(hi), math.log(st.mass_kg / mass_kg)
+        # 응축상. 표면이 P = 0 이라 질량이 중심압에 단조이고, 아래끝이 어디든 뿌리가
+        # 하나다. 예전 경로를 그대로 둬서 앵커가 비트까지 같게 유지한다.
+        x1 = math.log(max(lo, hi * 1e-3))
+        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
+                        gmf, envelope_z, differentiated, t_center, t_pot, ice_material)
+        y1 = math.log(st.mass_kg / mass_kg)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
             return st, True
@@ -504,8 +610,17 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
 
 # 온도를 맞추는 바깥 고리의 횟수와 허용오차. 단열선이 앵커에 거의 선형이라
 # 두세 번이면 붙는다 — 밀도가 온도에 몇 % 만 반응하기 때문이다.
-T_PASSES = 6
+# 온도 고리의 통과 횟수. 응축상은 두세 번이면 붙어서 6 으로 충분했다. 기체 외피는
+# 다르다 — 표면이 1 bar 에 있고 단열선이 그 자리에서 가파르므로 비례 갱신의 수렴 인자가
+# 0.3 쯤이고, 목성이 6 회에서 1.5 % 를 남긴 채 끝났다. 붙는 천체는 T_TOL 에서 먼저
+# 빠져나가므로 이 상한을 올려도 답이 안 바뀐다.
+T_PASSES = 14
 T_TOL = 1e-6
+# 표면 온도가 선언값에 이만큼 안에 들어와야 **온도 경계조건이 수렴한 것** 이다.
+# 2026-08-28 까지 shoot() 이 돌려주는 converged 는 압력 사격의 것뿐이었고, 온도 고리가
+# T_PASSES 를 다 쓰고도 못 맞추면 아무 표시 없이 나갔다. 도달 불가능한 표면 온도를 쫓다가
+# 가짜 가지로 걸어간 해가 converged=True 배지를 달고 나온 일반 원인이 그 구멍이다.
+T_SURFACE_TOL = 1e-3
 # 온도 괄호잡기의 시도 횟수. 한 번에 1.6배씩 올린다.
 T_BRACKET_TRIES = 12
 
@@ -538,34 +653,56 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 벌지만 할선의 경로가 바뀌어 수렴점이 마지막 비트에서 달라지고, 그러면 "기준
     # 포텐셜 온도에서는 답이 비트까지 안 움직인다" 는 항등식이 깨진다. 그 항등식이
     # 속도보다 무겁다.
-    def attempt(t_try: float) -> tuple[Structure, bool]:
+    def attempt(t_try: float) -> tuple[Structure, bool, float]:
         """중심 온도 하나로 사격한다. 온도 바닥에 걸리면 올려서 다시 잡는다.
 
         **온도에도 괄호잡기가 필요하다.** 압력 쪽에서 배운 것과 같은 자리다 — 중심
         온도를 낮게 잡으면 바깥으로 갈수록 단열선이 내려가 어떤 층의 온도 하한을
         뚫는데, 그건 이 천체가 안 풀린다는 뜻이 아니라 **시험값이 낮았다** 는 뜻이다.
-        중심 온도를 올리면 프로파일 전체가 올라가므로 답이 그 위에 있다."""
+        중심 온도를 올리면 프로파일 전체가 올라가므로 답이 그 위에 있다.
+        **양쪽으로 넓힌다.** 수소-헬륨 표가 들어오면서 아래 벽만이 아니라 위 벽도
+        생겼다. 거절이 어느 쪽 벽인지는 PhaseGap 이 말하고, 방향이 뒤집히면 두 벽 사이에
+        답이 없다는 뜻이므로 거기서 멈춘다 — 계속 넓히면 두 벽 사이를 오간다."""
         t_now = t_try
+        last = None
         for _ in range(T_BRACKET_TRIES):
             try:
-                return _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+                got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+                return got, ok, t_now
             except PhaseGap as gap:
                 if not gap.temperature_k:
                     raise        # 온도가 아니라 압력이 막았다. 그건 진짜다
-                t_now *= 1.6
-        return _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+                if last is not None and last != gap.too_cold:
+                    raise        # 양쪽 벽에 다 부딪혔다. 넓혀서 될 일이 아니다
+                last = gap.too_cold
+                t_now = t_now * 1.6 if gap.too_cold else t_now / 1.6
+        got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+        return got, ok, t_now
 
-    st, converged = attempt(t_c)
+    # **괄호가 옮긴 온도를 그대로 받아 온다.** 받지 않으면 바깥 고리가 자기가 요청한
+    # 온도로 비율을 다시 재는데, 실제로 적분된 것은 괄호가 옮긴 온도라 매 통과가 같은
+    # 배수만큼 틀리고 고리가 수렴하지 않는다. 통과 횟수를 6 에서 14 로 올렸더니 목성은
+    # 붙고 토성은 +2.09 % 에서 +7.06 % 로 흔들린 것이 이 자리였다.
+    st, converged, t_c = attempt(t_c)
     for _ in range(T_PASSES):
         if st.t_surface <= 0.0:
             break            # 열 상수가 없는 재료뿐이다. 온도가 흐르지 않는다
         nxt = t_c * t_pot / st.t_surface
         done = abs(nxt / t_c - 1.0) < T_TOL
-        t_c = nxt
-        st, converged = attempt(t_c)
+        st, converged, t_c = attempt(nxt)
         if done:
             break
-    return st, converged
+    return st, converged and _surface_temperature_met(st, t_pot)
+
+
+def _surface_temperature_met(st, t_pot: float) -> bool:
+    """표면 온도가 선언값에 닿았는가. 못 닿았으면 그 해는 수렴한 것이 아니다.
+
+    압력 사격이 붙었다는 것과 경계조건이 다 맞았다는 것은 다른 말이고, 둘을 한 배지로
+    내보내면 후자가 안 맞은 해가 전자의 배지를 달고 나간다."""
+    if st.t_surface <= 0.0:
+        return True          # 열 상수가 없는 재료뿐이다. 맞출 경계조건이 없다
+    return abs(st.t_surface / t_pot - 1.0) < T_SURFACE_TOL
 
 
 def _ceiling_owner(mat) -> str:
@@ -628,8 +765,19 @@ GAS_GIANT_CLASSES = ("giant", "gas_giant")
 #             그쪽 수치는 test_giant.py 가 재서 기록에 남긴다.
 ENVELOPE_Z_MATERIAL = "silicate"
 
-GIANT_ANCHOR_PASS_ME = 317.8    # Jupiter. 평균반지름 대비 +0.6 % — 이 갈래가 맞은 유일한 곳
-GIANT_ANCHOR_FAIL_ME = 95.2     # Saturn. +20.7 % — 이 갈래가 틀린 유일한 곳
+# **2026-08-28 에 이 갈래의 앵커가 둘에서 셋으로 늘었다.** 폴리트로프였을 때는 앵커가
+# 목성(맞음)과 토성(틀림) 둘뿐이었고, 그 사이를 강등 구간으로 둔 이유는 잔차가 어느 쪽인지
+# 말할 근거가 없어서가 아니라 **n = 1 이 어떤 거대행성에나 같은 답을 냈기 때문** 이다
+# (R = √(πK/2G) 에 질량도 조성도 안 들어간다). 그 전제가 사라졌다 — 표는 (P, T) 의
+# 함수이고 질량·조성·온도에 전부 반응한다.
+#
+# 그래서 "목성보다 가벼우면 analog" 라는 규칙을 **지운다.** 대신 강등의 근거를 실제로
+# 남아 있는 것에 건다: 이 갈래가 기대는 선언(포텐셜 온도)과, 굳힌 창의 가장자리다.
+GIANT_ANCHORS = (
+    ("목성", 317.828, -0.83),
+    ("토성 (Z = 0)", 95.159, +7.06),
+    ("천왕성", 14.536, +5.49),
+)
 
 # ── 규산염의 외삽 구간 ───────────────────────────────────────────────────
 #
@@ -995,8 +1143,10 @@ def solve(mass_earth: float,
             "않는다는 것이고 (Zeng+ 2016 §II, A=20·Z=10), 실험도 관측도 아니다. "
             "이음매 자체는 재봤다 — 3.5 TPa 에서 두 적합이 0.21 % 안에서 겹친다. "
             "등급을 analog 로 내린다.")
-    giant_unvalidated = (gmf > 0 and envelope_z == 0.0
-                         and mass_earth < GIANT_ANCHOR_PASS_ME)
+    # 앵커가 셋이고 셋이 두 자릿수 질량 범위(14.5 ~ 318 M⊕)를 덮는다. 사이를 통째로
+    # 강등하던 규칙은 근거를 잃었으므로 남기지 않는다. 남는 강등 사유는 **선언** 이다 —
+    # 이 갈래는 포텐셜 온도 없이 못 풀고, 그 값은 이 레시피가 도출하지 않는다.
+    giant_declared = gmf > 0
     if envelope_z > 0:
         notes.append(
             f"**외피 중원소 {envelope_z:.3f} 는 선언이다.** 강착과 진화가 정하는 값이고 "
@@ -1013,19 +1163,16 @@ def solve(mass_earth: float,
             "측정값 0.346 보다 13.7 % 높다. 수성이 분화했다는 것을 이 레시피가 맞게 "
             "말한다는 뜻이지, 미분화 값 자체가 검증됐다는 뜻은 아니다. 등급을 analog 로 "
             "내린다.")
-    if giant_unvalidated:
-        toward = ("토성 쪽에" if abs(mass_earth - GIANT_ANCHOR_FAIL_ME)
-                  < abs(mass_earth - GIANT_ANCHOR_PASS_ME) else "목성 쪽에")
+    if giant_declared:
+        band = " · ".join(f"{n} {m:.4g} M⊕ {d:+.2f} %" for n, m, d in GIANT_ANCHORS)
         notes.append(
-            "**검증되지 않은 질량이다.** 이 갈래의 앵커는 둘뿐이다 — 목성"
-            f"({GIANT_ANCHOR_PASS_ME:.4g} M⊕) 에서 평균반지름 대비 +0.6 %, 토성"
-            f"({GIANT_ANCHOR_FAIL_ME:.4g} M⊕) 에서 Z = 0 이면 +20.7 %. {mass_earth:.4g} M⊕ "
-            f"는 그 사이이고 {toward} 가깝다. **Z 를 선언하지 않았으므로** 여기 나온 "
-            "반지름과 C/MR² 는 목성에 맞춰진 상수 하나가 어느 거대행성에나 돌려주는 같은 "
-            "값이고 (R = √(πK/2G) 에 M 도 조성도 없다), 잔차가 0.6 % 쪽인지 20.7 % 쪽인지 "
-            "말할 근거가 없다. 등급을 analog 로 내린다. 토성의 20.7 % 는 이제 이 갈래가 "
-            "그 질량에서 틀렸다는 뜻이 아니라 **거기서는 조성이 필요하다** 는 뜻이다 — "
-            "envelope_z 를 주면 −0.1 % 로 내려온다.")
+            "**이 갈래는 선언에 기댄다 — 포텐셜 온도다.** 수소-헬륨 외피는 등온으로 "
+            "풀 수 없고 (표가 (P, T) 의 함수다), 1 bar 준위의 온도는 이 레시피가 "
+            "도출하지 않는 값이다. 그래서 등급을 analog 로 내린다. **질량 때문이 "
+            "아니다** — 2026-08-28 까지 여기 있던 '목성보다 가벼우면 강등' 규칙은 "
+            "n = 1 폴리트로프가 어느 거대행성에나 같은 반지름을 돌려주던 데서 나온 "
+            "것이고, 그 전제가 표로 바뀌면서 사라졌다. 지금 앵커는 셋이고 14.5 M⊕ "
+            f"에서 318 M⊕ 까지를 덮는다: {band}.")
     notes += [
              "이 노드는 결합 코어 안에 있다 (chain.yaml 순환 1·3). converged 는 "
              "**이 적분의 사격이 붙었는가** 를 말하지, 조석가열이 조성을 되바꾸는 "
@@ -1078,7 +1225,7 @@ def solve(mass_earth: float,
         # 를 말한다. φ₀ 도 Z 도 강착과 진화가 정하는 값이라 여기서 도출되지 않고,
         # 미분화는 측정 앵커가 없다.
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
-                            or not differentiated or giant_unvalidated
+                            or not differentiated or giant_declared
                             or silicate_extrapolated or thermal_moves
                             or thermal_unchecked or ice_x_reached)
                else "calibrated"),

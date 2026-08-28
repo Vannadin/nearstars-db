@@ -30,7 +30,8 @@ Each row is a summary; the section it names carries the work.
 | 2026-08-25 | uniform layers replaced by an integration | layer densities came from a composition table that only held near Earth's mass: Earth's C/MR² was 4.8 % high and always in the same direction, Mercury 8.6 % out because its core sits near 7800 kg/m³ where Earth's runs near 10900. The table is gone, layer density is an output, Earth's error is 0.3 % |
 | 2026-08-25 | the water ice column completed | the named hole between 209.5 MPa and 2.216 GPa filled by ices III, V and VI, read from a published Gibbs representation rather than fitted |
 | 2026-08-26 | compaction added | a small body whose self-gravity cannot crush what it accreted is solved rather than declined or mistaken for lighter rock. [What it says about Dante and Hades](#what-the-compaction-relation-says-about-dante-and-hades) is the part that matters |
-| 2026-08-26 | giants added | what they needed was not another recipe but another equation of state, so a polytrope joined the functional forms. [What that opens](#what-the-giant-branch-opens-alpha-centauri-a-b-and-the-class-table) is a derived C/MR² of 0.2614 for Alpha Centauri A b against the 0.23 the class table carries |
+| 2026-08-26 | giants added | what they needed was not another recipe but another equation of state, so a polytrope joined the functional forms. [What that opens](#what-the-giant-branch-opens-alpha-centauri-a-b-and-the-class-table) was a derived C/MR² for Alpha Centauri A b against the 0.23 the class table carries — the polytrope's 0.2614, superseded on 2026-08-28 |
+| 2026-08-28 | the H/He envelope stopped being a polytrope | one constant fitted to Jupiter was carrying every giant, and it inflated any envelope that was only part of a planet: Saturn +20.7 %, Uranus +23.8 %, Neptune +29.2 %. The published Chabrier+ 2019 mixture table replaced it — Jupiter −0.83 %, Saturn at Z = 0 +7.06 %, Uranus +5.46 %. The same table carries ∇_ad, which is what finally gave the envelope a temperature; and its entropy columns gave the c_P weights that a metal-loaded envelope needs, closing a silent fallback to an assembled gradient |
 | 2026-08-27 | the silicate carried above 3.5 TPa | one phase, spliced where the PREM fit's author stops it and running to where Seager+ 2007 hands silicate to Thomas–Fermi–Dirac. Three separate refusals shared that ceiling: the rocky mass limit rose from 6.84 to 22.78 M⊕ at Earth composition and 19.32 to 53.38 M⊕ for pure silicate, Jupiter's whole heavy-element budget integrates, and a compact rock core inside a Jupiter-mass giant is possible up to 17.66 M⊕. The third only half opened, and its row says so |
 
 **2026-08-27, later, gave the solver a temperature.** `ρ(P)` became `ρ(P, T)` and an
@@ -561,80 +562,88 @@ a body has no voids: it is the statement that this recipe cannot decide. That de
 also what keeps the anchors still, and the test measures the alternative rather than
 asserting it, by reporting what declaring φ₀ = 0.60 would do to the Moon.
 
-## Giants: the polytrope is a fourth EOS form, not a fifth recipe
+## Giants: a published mixture table, and what the polytrope is still for
 
 Until 2026-08-26 this recipe refused every giant planet, and the refusal named the reason
 correctly: iron, silicate and the water ices are all condensed matter, and a
-hydrogen-helium envelope is not. What it got wrong was the implied conclusion, that giants
-therefore needed somewhere else to live. They needed one more equation of state.
+hydrogen-helium envelope is not. The answer was one more equation of state — first a
+polytrope, and since 2026-08-28 the published mixture itself.
 
 ### The relation
 
-For a hydrogen-helium mixture at giant-planet envelope conditions, Helled, Movshovitz &
-Nettelmann 2022 §2 ([arXiv:2202.10046](https://arxiv.org/abs/2202.10046)) call P ∝ ρ² "a
-simple and artificial assumption" that is "nevertheless a surprisingly reasonable
-approximation of the compressibility of a hydrogen-helium mixture at conditions typical of
-giant planet envelopes", and give the constant. Combined with hydrostatic equilibrium it
-has a closed-form non-rotating solution, which is the polytrope of index one:
+The envelope reads two quantities out of a table: the density and the adiabatic gradient.
 
-    P = K ρ²,   K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻²
-    ρ(r) = ρ_c · sin(kr)/(kr),   k = √(2πG/K)
-    R = √(πK/2G)                     ← independent of mass
+| | source | domain | representation | measured width |
+|---|---|---|---|---|
+| H/He mixture, Y = 0.275, Z = 0 | **Chabrier, Mazevet & Soubiran 2019**, ApJ 872, 51 | 1 bar – 10⁴ GPa, 100 – 25 119 K, above the reachable-envelope line | log ρ and ∇_ad on the distributed 0.05-dex grid, bicubic | ρ 2.0×10⁻³, ∇_ad 9.1×10⁻³ |
 
-The mass-independent radius is the signature of n = 1, and it is why Jupiter-mass planets
-all come out about the same size. Two more numbers fall out of the same solution and both
-are used below as checks: the central density is ρ_c = πM/(4R³), and the normalised moment
-of inertia is a pure number,
+**Y = 0.275, not the Y_eff = 0.292 the same archive offers.** The second is that mixture
+with Z = 0.017 folded into the helium so two components can stand in for three. This recipe
+already carries `envelope_z` and mixes metals itself, so taking Y_eff would count them
+twice — the trap this repository walked into with Jupiter's Z and with Earth's geotherm.
 
-    C/MR² = (2/3)(1 − 6/π²) = 0.261380
+**∇_ad is read, not rebuilt.** Every other material here assembles its adiabatic gradient
+from γ and K_S, because a Birch–Murnaghan phase has nothing else to offer. The table
+carries (∂lnT/∂lnP)_S computed by the authors from their own entropy, so the recipe uses
+it. That is also what gave the envelope a temperature at all: the polytrope had no thermal
+constants, `cold_phases()` named it, and the declared potential temperature landed on the
+top of the ice mantle instead of on the surface.
 
-which is a textbook integral of the Lane–Emden solution rather than anything this
-repository decided.
+**A gas has no P = 0 surface.** Density goes to zero with pressure, and every published
+giant radius is quoted at a pressure level. So the integration stops at the table's floor,
+1 bar, and the declared `potential_temperature` is the temperature there — 165 K for
+Jupiter, 135 K for Saturn, 76 K for Uranus (Voyager radio occultation). Below 100 K the
+table stops; where a body's adiabat crosses that floor before reaching 1 bar, the surface
+temperature is closed to the 1-bar level by the adiabat's own power law T ∝ P^∇_ad.
 
-**The constant carried a unit trap, and the paper's own arithmetic caught it.** That paper
-prints K = 2.1 × 10¹² and labels it m⁵ kg⁻¹ s⁻², which is SI. Read in SI it puts the radius
-at 1.49 AU. Read as cgs, which is what the number actually is, it converts to
-2.1 × 10⁵ SI and gives R = 70,302 km against the 70,300 km the same paragraph states. So
-the value in the code is 2.1 × 10⁵, chosen by checking it against the source's own
-downstream number rather than by transcribing the digits. `engine/test_giant.py` re-runs
-both readings, so the trap cannot be walked into again. This repository has been 54× wrong
-in a hand-keyed table before, and that is the discipline that catches it.
+**Mixtures weight by heat capacity, not by volume.** Density mixes by additive volume, but
+∇_ad is a derivative of the entropy and entropy is additive itself. Chabrier+ 2019 states
+the rule as "the additivity of the extensive variables (volume, energy, **entropy**, …) at
+constant intensive variables (P,T)", the same sentence this file already cites for density.
+From that,
 
-### Three limits, and one of them is a planet
+    ∇_ad,mix = Σ wᵢ c_P,ᵢ ∇_ad,ᵢ / Σ wᵢ c_P,ᵢ
 
-**Mass, by declaration.** `body_class` decides. `giant` and `gas_giant` integrate;
-`ice_giant`, `sub_neptune`, `brown_dwarf` and `star` still decline, and each decline names
-what it would need rather than saying "out of scope". An ice giant's envelope is a
-water-ammonia-methane mixture whose equation of state is not in this file, and n = 1 is
-tuned to H/He compressibility, so it cannot stand in. A sub-Neptune's envelope thickness is
-set by age and irradiation rather than by composition, and this recipe is isothermal with no
-evolution, so it cannot choose the gas fraction (given one, the integration runs). A brown
-dwarf burns deuterium above about 13 M_J, which makes its luminosity a function of age;
-Spiegel, Burrows & Milsom 2011 ([arXiv:1008.5150](https://arxiv.org/abs/1008.5150)) call
-13 M_J "generally a reasonable rule of thumb" while noting it depends on helium, deuterium
-and metal abundance. A star's C/MR² comes from the n = 3/2 polytrope value 0.205
-(Chandrasekhar 1939) on a separate branch in `body_figure`, and that branch is not touched
-here.
+with c_P for H/He read off the table's entropy columns and c_P for the metals closed from
+constants already here as c_V(1 + αγT). Leaving this out was a silent defect rather than a
+missing feature: without it a mixture fell back to the assembled γ/K_S gradient, which is
+the thing the table was brought in to stop doing, and one part in fifty of metal put
+Saturn's surface at 19 K instead of 135 K.
 
-**Pressure, and the literature is silent on it.** The source paper states no pressure
-ceiling for the approximation, because the way it fails is not a pressure cutoff: the same
-paragraph attributes the poorer fit for Saturn to composition and to the shape of Saturn's
-envelope, not to reaching some pressure. So the ceiling in the code is a **second fence
-rather than the load-bearing one**: it is the central pressure this relation reaches at
-13 M_J, above which `body_class` declines anyway.
+**The polytrope is still in the file, and it now does one job.** P = Kρ² with
+K = 2.1 × 10⁵ SI (Helled, Movshovitz & Nettelmann 2022 §2,
+[arXiv:2202.10046](https://arxiv.org/abs/2202.10046)) has a closed-form n = 1 solution
+whose radius R = √(πK/2G) is independent of mass, which makes it a cheap density scale for
+bracketing the shooting. It no longer supplies a density. **The constant carried a unit
+trap and the paper's own arithmetic caught it**: the paper prints 2.1 × 10¹² labelled
+m⁵ kg⁻¹ s⁻², which read as SI puts the radius at 1.49 AU, while read as cgs it converts to
+2.1 × 10⁵ and gives 70,302 km against the 70,300 km the same paragraph states.
+`engine/test_giant.py` re-runs both readings.
 
-**Saturn, which is the interesting limit.** The relation reproduces Jupiter and does not
-reproduce Saturn, and the source predicts exactly that. See the
+### Three limits, and one of them is composition
+
+**Mass, by declaration and now also by the table.** `body_class` decides which branch
+applies — `giant` and `gas_giant` integrate; `sub_neptune`, `brown_dwarf` and `star` still
+decline, each naming what it would need. On top of that the baked window has a pressure
+ceiling of 10⁴ GPa, which caps a pure H/He body at **519 M⊕ (1.63 M_J)**. That is lower
+than the polytrope's declared 13 M_J fence and it is *our* window rather than the EOS's:
+the distributed table runs to 10¹³ GPa, so baking more columns raises it.
+
+**Temperature, on both sides.** The window is 100 – 25 119 K. Below it lies the region no
+convective envelope reaches, where the distributed table also carries its own flaws — seven
+cells with a sentinel where a density belongs, and grad_ad pinned at the ends of a clamp —
+so the recipe declines there rather than repairing published numbers.
+
+**Composition, which is the interesting limit.** With Z = 0 the model has no metals at all,
+and Saturn comes out 7.1 % large. Guillot 1999 gives Saturn 19–31 M⊕ of heavy elements; the
+envelope metallicity that reproduces the measured radius is now 0.0825, or 7.85 M⊕ — see the
 [validation](#giants-checked-against-the-analytic-solution-and-against-two-planets) below.
 
-### Which radius, and why it matters by 2 %
-
-A non-rotating spherical model must be compared against a **volumetric mean radius**, not
-against an equatorial one. Rotation inflates Jupiter's equator by 2.3 % over its mean, and
-this recipe does not compute that. So the anchors are the IAU/IAG Working Group values
-(Archinal+ 2011): Jupiter mean 69,911 km against equatorial 1 bar 71,492 km, Saturn mean
-58,232 km against equatorial 1 bar 60,268 km. Both are stated in the validation table so
-that no comparison silently changes convention.
+**Which radius.** A non-rotating spherical model is compared against the **volumetric mean**
+radius, not the equatorial one — rotation inflates Jupiter's equator by 2.3 % over its mean
+and this recipe does not compute that. The anchors are the IAU/IAG values (Archinal+ 2011):
+Jupiter mean 69,911 km against equatorial 1-bar 71,492 km, Saturn 58,232 against 60,268. The
+validation table states both so no comparison silently changes convention.
 
 ## Practical recipe
 
@@ -870,56 +879,55 @@ The KBO table is regenerated by `python3 engine/test_porosity.py --kbo`.
 
 ### Giants, checked against the analytic solution and against two planets
 
-The polytrope needs a different kind of check from the condensed materials, because for
-n = 1 the answer is known in closed form. That makes the first check exact rather than
-tolerant.
+**Against the analytic solution — and the sign of this check flipped on 2026-08-28.** While
+the envelope was a polytrope the test asserted that the radius does *not* move with mass,
+because that is the signature of n = 1. With the table in, that insensitivity would be a
+defect, so the test asserts the opposite: the radius moves 22 % across 95 to 500 M⊕ where
+the polytrope moved 0.00004 %. The same inversion applies to C/MR², which now sits 6.5 %
+away from the Lane–Emden value that used to be the answer.
 
-**Against the analytic solution.** Integrating the H/He envelope numerically must reproduce
-the Lane–Emden solution it is a discretisation of. The radius comes out mass-independent to
-4 × 10⁻⁵ across 95 to 1200 M⊕, matches √(πK/2G) to 8 × 10⁻⁶, and the moment of inertia
-comes out 0.26138 against the textbook (2/3)(1 − 6/π²) = 0.261380. Nothing about that
-agreement is tuned: it is the integrator being shown to integrate.
-
-**Against the published number, which is also the unit check.** The same K gives 70,302 km
+**Against the published number, which is also the unit check.** K still gives 70,302 km
 against the 70,300 km Helled+ 2022 §2 states, and the same digits read as SI give 1.49 AU.
-The test asserts both, so the reading that was chosen stays chosen for a reason on the
-record rather than by habit.
+The test asserts both. The constant no longer supplies a density — it is the bracketing
+scale — but the trap is still worth a standing check.
 
-**Against two planets.** Regenerated by `python3 engine/test_giant.py --table`:
+**Against four planets.** Regenerated by `python3 engine/test_giant.py --table`; the ice
+giants by `python3 engine/test_interior.py --icegiant`.
 
-| body | M (M⊕) | R derived | R mean (IAU) | ΔR vs mean | R eq 1 bar | C/MR² derived | P_c (GPa) |
-|---|---|---|---|---|---|---|---|
-| Jupiter | 317.8 | 70302 km | 69911 km | +0.6 % | 71492 km | 0.2614 | 3866 |
-| Saturn | 95.2 | 70302 km | 58232 km | +20.7 % | 60268 km | 0.2614 | 347 |
-| Alpha Centauri A b | 120.0 | 70302 km | – | – | 71492 km (declared) | 0.2614 | 551 |
+| body | M (M⊕) | T at 1 bar | R derived | R mean (IAU) | ΔR | C/MR² | P_c (GPa) | before |
+|---|---|---|---|---|---|---|---|---|
+| Jupiter | 317.8 | 165 K | 69333 km | 69911 km | **−0.83 %** | 0.2774 | 3453 | +0.6 % |
+| Saturn, Z = 0 | 95.2 | 135 K | 62344 km | 58232 km | **+7.06 %** | 0.2710 | 481 | +20.7 % |
+| Uranus | 14.5 | 76 K | 4.198 R⊕ | 3.981 R⊕ | **+5.46 %** | – | – | +23.8 % |
+| Neptune | 17.1 | 72 K | declined | 3.865 R⊕ | – | – | – | +29.2 % |
+| Alpha Centauri A b | 120.0 | 165 K (declared) | 59969 km | – | – | 0.2874 | 790 | – |
 
-**Jupiter is reproduced to 0.6 % from its mass alone**, and the central pressure of
-3866 GPa (38.7 Mbar) lands where Jupiter's is independently believed to be. That is the
-result which says the polytrope actually went in.
+**Jupiter got slightly worse, and that is the evidence rather than a regression.** The old
++0.6 % came from a constant fitted to Jupiter; −0.83 % is what a published mixture says
+about the same planet with nothing left to tune. The sign flipped and the magnitude did
+not, which is what a fit looks like when it is replaced by a prediction. Its central
+temperature comes out 14 300 K.
 
-**Saturn is 20.7 % too large, and that is the honest answer rather than a bug.** The source
-paper predicts it in the same paragraph it gives the constant in: the index-1 approximation
-"is more appropriate for Jupiter than it is for Saturn", both because P ∝ ρ² does not fit
-Saturn's present-day envelope as well and because Saturn's interior is more enriched in
-heavy elements. Guillot 1999 ([arXiv:astro-ph/9907402](https://arxiv.org/abs/astro-ph/9907402))
-puts the total heavy-element mass at 11 to 42 M⊕ for Jupiter and 19 to 31 M⊕ for Saturn,
-which is 3 to 13 % of Jupiter against 20 to 33 % of Saturn. Saturn is the metal-rich one and
-a pure-H/He relation cannot know that. Closing it would need an envelope equation of state
-with metals dissolved in it, which is the same **mixture** equation of state this document
-already declines to invent for undifferentiated rocky bodies. The test pins the residual
-into a band rather than tolerating it, so the limit cannot be quietly fixed or quietly made
-worse.
+**Saturn's fitting metallicity moved, and that was the question worth asking.** Under the
+polytrope the envelope needed Z = 0.200 — 19.0 M⊕, sitting exactly at the bottom edge of
+Guillot 1999's 19–31 M⊕ budget — to reach the measured radius. With the table it needs
+**Z = 0.0825, or 7.85 M⊕**, which is *below* that budget. The old value was doing two jobs
+at once: supplying Saturn's metals and compensating an envelope the polytrope drew three
+times too fluffy. The comparison is not like for like, because this model has no core and
+so must put every metal in the envelope while Guillot's budget is a total; what is
+unambiguous is that the requirement fell by a factor of 2.4.
 
-**A heavy-element core does not rescue it, and the ceiling it ran into moved on 2026-08-27.**
-Putting Guillot's heavy elements into a compact central core makes the planet smaller, which
-is the wrong direction for Jupiter and not nearly enough for Saturn. It also used to run out
-of material immediately: a 19 M⊕ rock core self-compresses to 3.43 TPa on its own, at the
-stated ceiling of the PREM lower-mantle fit (3.5 TPa, Zeng+ 2016). With the silicate carried
-to 13.5 TPa the branch opens partway: a Jupiter-mass giant now integrates a silicate core up
-to **17.66 M⊕**, and Guillot's 19 M⊕ still declines. What stops it is no longer the core's
-own weight but the envelope's overburden, so the limit belongs to the pair. Real giant
-models do not use a compact core for all of Z either: Guillot's own core limits are below the
-total heavy-element mass precisely because much of it is dissolved in the envelope.
+**Uranus is the gate this work was measured against**, and it moved from +23.8 % to +5.46 %
+with a central temperature of 6 158 K against the 5 700 K of Scheibe+ 2019 — an 8 %
+overshoot in the same direction as the radius. Neptune still declines, one layer deeper than
+before: see the ice-material row in the [domain table](#domain-of-validity).
+
+**A heavy-element core no longer fits inside Jupiter at all, and that is the envelope
+getting heavier.** With the polytrope a Jupiter-mass giant integrated a silicate core up to
+17.66 M⊕ before the envelope's overburden pushed the silicate past its 13.5 TPa ceiling.
+The table makes the envelope denser at depth — Jupiter's own central pressure is 3.45 TPa —
+and the ceiling is now reached with no core at all. What blocks it is unchanged (the
+silicate fit's ceiling, loaded by the envelope); the load is larger.
 
 **Jupiter's moment of inertia, and why this document names one value out of three.** Three
 numbers circulate and they are not equally grounded.
@@ -930,11 +938,12 @@ numbers circulate and they are not equally grounded.
 | 0.2756 | Ni 2018 ([`2018A&A...613A..32N`](https://ui.adsabs.harvard.edu/abs/2018A%26A...613A..32N)), re-quoted by later papers as "a Jupiter-like value determined from the Juno probe" | its full text was not reachable from here, so whether that paper *infers* it or *scans* it as an input could not be confirmed. What could be confirmed is that no interior-model study read in full produces it, and that it sits 4.5 % above the ones that do |
 | **0.2634 to 0.2644** | Neuenschwander+ 2021 ([arXiv:2101.12508](https://arxiv.org/abs/2101.12508)) get 0.2634 < MoI < 0.2639 from piecewise-polytropic profiles fitted to the Juno gravity field, and quote Wahl+ 2017 at 0.2640 to 0.2644 | **this is the anchor.** Post-Juno, fitted to the measured field, two independent studies, and the union sits inside the 0.2629 to 0.2645 that Helled+ 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)) obtained separately |
 
-The coreless polytrope gives 0.2614, which is 0.77 % below the anchor band's lower edge. The
-sign is expected: real Jupiter has heavy elements concentrated inward, and every mechanism
-that concentrates mass pushes C/MR² **down** from the polytrope value, not up. That the
-residual is under one percent while the two rejected values are off by 3.8 % and 4.4 % is
-the argument for the anchor as much as the provenance is.
+The coreless table model gives **0.2774, 4.9 % above** the anchor band, and above is the
+right side to be on: this is a non-rotating homogeneous H/He sphere with no core and no
+metals, so its mass is less concentrated inward than real Jupiter's and C/MR² must come out
+high. The polytrope's 0.2614 looked closer, but that number was a property of n = 1 rather
+than a statement about Jupiter — it is the same 0.2614 for every giant. The test asserts the
+sign and the size, not membership of the band.
 
 ### Temperature, checked against a published core-mantle boundary
 
@@ -973,33 +982,34 @@ edge** of the published Saturn budget, taken as a boundary. Regenerated by
 
 | body | Z (M⊕) | Z fraction | R derived | R mean (IAU) | ΔR | C/MR² | grade |
 |---|---|---|---|---|---|---|---|
-| Jupiter | 0 | 0.000 | 70302 km | 69911 km | +0.6 % | 0.2614 | calibrated |
-| Jupiter | 11 | 0.035 | 68374 km | 69911 km | -2.2 % | 0.2620 | analog |
-| Jupiter | 26 | 0.083 | 65696 km | 69911 km | -6.0 % | 0.2630 | analog |
-| Jupiter | 42 | 0.132 | 63056 km | 69911 km | -9.8 % | 0.2641 | analog |
-| Saturn | 0 | 0.000 | 70302 km | 58232 km | +20.7 % | 0.2614 | analog |
-| Saturn | 19 | 0.200 | 58198 km | 58232 km | -0.1 % | 0.2650 | analog |
-| Saturn | 25 | 0.263 | 54544 km | 58232 km | -6.3 % | 0.2667 | analog |
-| Saturn | 31 | 0.326 | 50988 km | 58232 km | -12.4 % | 0.2687 | analog |
+| Jupiter | 0 | 0.000 | 69333 km | 69911 km | -0.8 % | 0.2774 | analog |
+| Jupiter | 11 | 0.035 | 67504 km | 69911 km | -3.4 % | 0.2780 | analog |
+| Jupiter | 26 | 0.083 | 64936 km | 69911 km | -7.1 % | 0.2790 | analog |
+| Jupiter | 42 | 0.132 | 62407 km | 69911 km | -10.7 % | 0.2798 | analog |
+| Saturn | 0 | 0.000 | 62344 km | 58232 km | +7.1 % | 0.2710 | analog |
+| Saturn | 19 | 0.200 | 52541 km | 58232 km | -9.8 % | 0.2805 | analog |
+| Saturn | 25 | 0.263 | 49551 km | 58232 km | -14.9 % | 0.2836 | analog |
+| Saturn | 31 | 0.326 | 46610 km | 58232 km | -20.0 % | 0.2867 | analog |
 
-**Saturn goes from +20.7 % to −0.1 %** at the bottom of its published Z budget. What remains
-is the difference between heavy elements spread evenly through the envelope, which is what
-this rule does, and their real distribution: post-Juno models favour a **diluted core**,
-heavy elements graded inward rather than uniform. That distribution is not modelled here,
-and the residual belongs to it.
+**Saturn's fitting metallicity left the published budget, and that is the interesting
+result.** Under the polytrope Z = 0.200 — the bottom edge of Guillot's 19–31 M⊕ — put Saturn
+at −0.1 %. With a real envelope the same Z overshoots to −9.8 %, and the radius is matched at
+**Z = 0.0825, or 7.85 M⊕**, below the budget. The old agreement was a coincidence of two
+errors: a polytrope that inflated the envelope and a metal fraction large enough to squash
+it back. Two caveats keep this from being a contradiction of Guillot. This model has no core,
+so every heavy element must sit in the envelope while Guillot's number is a total; and heavy
+elements spread evenly are not their real distribution, since post-Juno models favour a
+**diluted core** graded inward. Both push the same way.
 
-**Jupiter used to decline at every Z in its budget, and since 2026-08-27 it does not.** With
-heavy elements mixed in its centre reaches 4.3 to 5.8 TPa, which the silicate fit now covers.
-What the three rows show is that opening the branch did not make it right: the radius gets
-**worse**, +0.6 % at Z = 0 to −9.8 % at 42 M⊕, because K was fitted by Helled+ 2022 to the
-real Jupiter, which already carries its heavy elements, so adding Z counts them twice. That
-is exactly why the same move helps Saturn, a planet K was not fitted to. C/MR² moves the
-other way, into the 0.2634 to 0.2644 anchor band. Radius and moment of inertia pointing at
-different Z is the signature of a diluted core, which is not modelled here.
+**Jupiter now gets monotonically worse with Z**, from −0.8 % at Z = 0 to −10.7 % at 42 M⊕,
+and unlike before that is no longer a double-count of a Jupiter-fitted constant — the table
+is not fitted to Jupiter. It is the same missing distribution: uniform metals over-compress a
+planet whose metals are concentrated. C/MR² moves the same way for the same reason, away from
+the 0.2634–0.2644 anchor band rather than into it.
 
-**Adding Z does not restore a mass axis.** R = √(πK/2G) has no M in it whether or not the
-envelope carries metals, so two giants of the same Z still receive the same radius. That
-axis is piecewise polytropes (Neuenschwander+ 2021) and is not opened here.
+**Adding Z now moves the mass axis too.** With the polytrope R = √(πK/2G) had no M in it, so
+two giants of the same Z received the same radius; the table responds to mass, composition
+and temperature separately, and the sweep above shows the composition axis alone.
 
 **Undifferentiated bodies have no measured anchor**, so what is tested is the discrimination
 a real anchor would perform. Mercury at its measured mass and metal fraction returns C/MR²
@@ -1038,13 +1048,16 @@ Both tables, and the roster table below, are regenerated by
 | undifferentiated rock + metal | `differentiated: false` with no ice or gas | integrates one mixed layer by the same rule. No measured C/MR² anchor exists for such a body, so the check is a discrimination: undifferentiated Mercury does not reproduce the measured value | analog |
 | **undifferentiated with ice or gas** | `differentiated: false` and `ice_mass_fraction` or `gas_mass_fraction` > 0 | **declines**: this rule mixes rock and metal only, and ice mixed through rock is partial differentiation, which is neither fully mixed nor fully layered | — |
 | **too light for any rock/ice mix** | mean density below the porous envelope | **declines**, saying the declared mass-radius pair is outside what the published relation allows | — |
-| gas giant | `body_class` is `giant` or `gas_giant` and a `gas_mass_fraction` is given | integrates, H/He envelope on the n = 1 polytrope | calibrated |
-| **unvalidated giant mass** | `gas_mass_fraction` > 0 and mass below Jupiter's 317.8 M⊕ | **integrates at grade analog**: the two anchors are Jupiter at +0.6 % and Saturn at +20.7 %, and nothing between them has been checked. Since n = 1 returns the same radius and C/MR² for every giant, there is no basis for saying which end the residual resembles | analog |
-| metal-rich giant | as above with `envelope_z` > 0, central pressure under the Z carrier's ceiling | integrates, H/He and heavy elements mixed by the additive volume law. Saturn lands at −0.1 % at the bottom of its published Z budget | analog |
+| gas giant | `body_class` is `giant` or `gas_giant`, a `gas_mass_fraction`, and a declared `potential_temperature` (the 1-bar level) | integrates, H/He envelope on the Chabrier+ 2019 table, stopping at 1 bar because a gas has no P = 0 surface. Jupiter −0.83 %, Saturn at Z = 0 +7.06 % | analog |
+| **gas giant with no temperature declared** | as above, `potential_temperature` unset | declines: the table is a function of (P, T), so there is no isothermal path the way there was for a polytrope | — |
+| **gas envelope past 10⁴ GPa** | pure H/He above about 519 M⊕ (1.63 M_J) | declines at the baked window's pressure ceiling. The distributed table runs to 10¹³ GPa, so this is our window and not the EOS's | — |
+| **envelope colder than convection reaches** | below log T = 2.72 + 0.257 log P, or below 100 K | declines. That region is where the distributed table carries its own flaws — seven sentinel densities and grad_ad pinned at the ends of a clamp — and no convective envelope reaches it; the published numbers are left alone rather than repaired | — |
+| metal-rich giant | as above with `envelope_z` > 0, central pressure under the Z carrier's ceiling | integrates. Density mixes by additive volume; **∇_ad mixes by heat capacity**, which is what entropy additivity gives. Saturn reaches its measured radius at Z = 0.0825 (7.85 M⊕), below Guillot's 19–31 M⊕ total — and this model has no core to put them in | analog |
 | **giant whose centre passes the Z carrier's ceiling** | `envelope_z` > 0 and central pressure above 13.5 TPa | **declines**, naming the component whose fit ended rather than reporting degeneracy. Jupiter's whole Guillot range now integrates (centres of 4.3 to 5.8 TPa); the branch runs out at Z = 0.383, or 122 M⊕ of heavy elements | — |
 | **diluted core** | heavy elements graded inward rather than uniform through the envelope | **not decided here**: this rule mixes one homogeneous Z, and the residual after it belongs to the distribution | — |
 | **large rock core in a giant** | heavy elements placed as a compact core whose base passes 13.5 TPa. In a Jupiter-mass giant that is a core above **17.7 M⊕** | **partly open**: cores below that integrate at grade analog; above it the recipe declines, naming the silicate ceiling. The limit is now the envelope's overburden, not the core's own weight, so it depends on the pair rather than on the core mass | analog |
-| ice giant | `body_class` is `ice_giant`, with an ice fraction and a declared temperature | **integrates**, ice mantle on `h2o_hot` (Mazevet+ 2019) between the rock and the H/He envelope. Uranus and Neptune both come out **+24 % and +29 % in radius**, and the excess is measured to be the envelope rather than the ices: taking the H/He away drops Uranus from 4.93 to 3.09 R⊕ against a measured 3.98, so the n = 1 polytrope adds about twice the radius the real envelope does. That polytrope is calibrated to Jupiter, which is what the old refusal already said about it | analog |
+| ice giant | `body_class` is `ice_giant`, with an ice fraction and a declared 1-bar temperature | **integrates**, ice mantle on `h2o_hot` (Mazevet+ 2019) between the rock and the H/He envelope. Uranus comes out **+5.46 %** with a central temperature of 6 158 K against Scheibe+ 2019's 5 700 K; before the envelope table it was +24 % | analog |
+| **ice material chosen by class, not by (P, T)** | any ice giant | the ice layer is `h2o_hot` because the body class says so, never because the local state does. Neptune's envelope base lands at 1797 K, three kelvin under that fit's floor, and declines. Falling through to the condensed ladder would be worse: 1800 K is the knot ceiling of a fit, not a phase boundary, and at those pressures water is fluid. **What is missing is a melting curve between 20.6 GPa and the superionic field** — the same gap `melt_free_phases()` has named since ice X went in | — |
 | **ice giant with no declared temperature** | `body_class` is `ice_giant`, `potential_temperature` unset | **declines**: the hot-water fit is P(ρ, T) as one object, so temperature is an argument rather than a correction, and at fixed pressure 2000 K against 5700 K is 14 % in density at 30 GPa | — |
 | **hot water outside its fit** | ice mantle below 1800 K or above 50 000 K | **declines** by name at both ends. The lower bound is where the condensed ladder takes over, and the paper puts its own fit's applicability there as "limited ... tens percent"; the upper is its stated 50 000 K | — |
 | sub-Neptune | `body_class` is `sub_neptune` | declines: envelope thickness is set by age and irradiation, and this recipe is isothermal with no evolution. Given a gas fraction the integration runs | — |
@@ -1199,7 +1212,7 @@ value for the same body:
 
 | quantity | class table | integrated | difference |
 |---|---|---|---|
-| C/MR² | 0.23 | 0.2614 | **+13.6 %** |
+| C/MR² | 0.23 | 0.2874 | **+24.9 %** |
 | radius | not produced | 70,302 km = 0.983 R_J | −1.7 % against the declared 1.0 R_J |
 | central pressure | not produced | 551 GPa | – |
 
@@ -1219,7 +1232,7 @@ gap that has never been checked. The recipe therefore returns the value at grade
 with a note naming both anchors, rather than at calibrated.
 
 What survives is a narrower claim, and it is still worth having: **0.23 has no source and
-0.2614 has one.** The 0.2614 is what the physics predicts for a body with no substantial
+0.2874 has one.** The 0.2874 is what the physics predicts for a body with no substantial
 core, and 0.23 is what a large concentrated core would give; which is right for a fictional
 planet this recipe cannot settle. The caveat travels with it: the coreless polytrope sits
 0.77 % *below* Jupiter's measured band, so for a real giant the integrated value
@@ -1338,6 +1351,16 @@ instead of as a class constant.
   ice Ih check state to nine significant figures, and it reproduces the ice VI single-point
   output published in the package's own documentation (900 MPa, 255 K, ρ = 1356.1 kg/m³) to
   2 × 10⁻⁵.
+- **Chabrier, G., Mazevet, S. & Soubiran, F. 2019**, ApJ 872, 51
+  ([`2019ApJ...872...51C`](https://ui.adsabs.harvard.edu/abs/2019ApJ...872...51C), arXiv
+  **[1902.01852](https://arxiv.org/abs/1902.01852)**). **Cached** in
+  `docs/phase3/_papers/1902.01852.md`. The hydrogen-helium equation of state this recipe's
+  envelope reads, taken as the distributed tables rather than transcribed: the archive at
+  `perso.ens-lyon.fr/gilles.chabrier/DirEOS` carries the Y = 0.275 mixture on a
+  (log T, log P) grid with log ρ and ∇_ad, and its README attributes them to this paper.
+  The same paper supplies the mixing rule used for a metal-loaded envelope — "the
+  additivity of the extensive variables (volume, energy, entropy, …) at constant intensive
+  variables (P,T)" — from which the heat-capacity-weighted ∇_ad follows.
 - **Umemoto, K., Wentzcovitch, R. M., Wu, S., Ji, M., Wang, C.-Z. & Ho, K.-M. 2017**,
   E&PSL 478, 40
   ([`2017E&PSL.478...40U`](https://ui.adsabs.harvard.edu/abs/2017E%26PSL.478...40U), arXiv

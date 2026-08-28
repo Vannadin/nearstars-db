@@ -35,11 +35,16 @@ from interior import EARTH_MASS_KG, EARTH_RADIUS_M, shoot, solve
 # 반지름은 IAU/IAG 실무그룹 보고의 값이다 (Archinal+ 2011, CeMDA 109, 101; 같은 값이
 # Seidelmann+ 2007 에도 있다). **평균반지름과 적도 1-bar 반지름을 둘 다 적어 둔다** —
 # 어느 쪽과 대조하는지가 결과를 2 % 움직이므로 고르는 게 아니라 밝히는 문제다.
+# 1-bar 온도가 이 갈래의 **경계조건** 이다. 2026-08-28 에 폴리트로프가 표로 바뀌면서
+# 온도가 인자가 됐고, 기체에는 P = 0 인 표면이 없으므로 적분이 1 bar 에서 멈춘다 —
+# 발표된 반지름이 재어진 준위도 그 자리다. 두 값은 Voyager 전파엄폐에서 온다
+# (Lindal+ 1981 목성, Lindal 1992 토성) 이고 널리 재인용되는 수다.
 PLANETS = [
-    # (이름, 질량 M⊕, 평균반지름 km, 적도 1-bar km, 중원소 총량 M⊕ (Guillot 1999))
-    ("Jupiter", JUPITER_MASS_EARTH, 69911, 71492, (11, 42)),
-    ("Saturn", 95.159, 58232, 60268, (19, 31)),
+    # (이름, 질량 M⊕, 평균반지름 km, 적도 1-bar km, 중원소 총량 M⊕ (Guillot 1999), 1-bar K)
+    ("Jupiter", JUPITER_MASS_EARTH, 69911, 71492, (11, 42), 165.0),
+    ("Saturn", 95.159, 58232, 60268, (19, 31), 135.0),
 ]
+GIANT_T_POT = 165.0     # 조성만 훑을 때 쓰는 기본 1-bar 온도 (목성 값)
 
 # Helled+ 2022 §2 (arXiv:2202.10046) 가 자기 K 에서 낸다고 적는 반지름.
 HELLED_POLYTROPE_R_KM = 70300.0
@@ -73,7 +78,10 @@ R_JUP_EQ_KM = 71492.0
 
 RADIUS_TOL = 0.03        # 3 %. 목성 평균반지름에 대한 허용치
 NMOI_TOL = 0.02          # 2 %. 앵커 밴드 대비
-SATURN_BAND = (0.10, 0.30)   # 토성 초과분이 떨어져야 하는 구간. **한계를 고정한다**
+# 토성 초과분이 떨어져야 하는 구간. **한계를 고정한다** — 조용히 고쳐지는 것과 조용히
+# 나빠지는 것을 둘 다 잡는다. 폴리트로프였을 때 +20.7 % 였고 구간이 10~30 % 였다.
+# 표가 들어와 +7.06 % 로 내려왔다.
+SATURN_BAND = (0.03, 0.12)
 
 
 def analytic_nmoi_n1() -> float:
@@ -86,45 +94,51 @@ def analytic_nmoi_n1() -> float:
     return (2.0 / 3.0) * (1.0 - 6.0 / math.pi ** 2)
 
 
-def _giant(mass_earth: float, core_earth: float = 0.0):
-    """가스 외피만 있는(또는 규산염 핵을 얹은) 거대행성 하나를 푼다."""
+def _giant(mass_earth: float, core_earth: float = 0.0,
+           t_pot: float = GIANT_T_POT, envelope_z: float = 0.0):
+    """가스 외피만 있는(또는 규산염 핵을 얹은) 거대행성 하나를 푼다.
+
+    포텐셜 온도가 **필수** 다. 수소-헬륨 표가 (P, T) 의 함수라 등온으로는 안 풀린다."""
     cmf = core_earth / mass_earth
     return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
-                 gas_mass_fraction=1.0 - cmf, body_class="giant")
+                 gas_mass_fraction=1.0 - cmf, body_class="giant",
+                 envelope_z=envelope_z, potential_temperature=t_pot)
 
 
 def _km(res) -> float:
     return res.values["radius"] * EARTH_RADIUS_M / 1e3
 
 
-def _integrator_km(mass_earth: float) -> float:
+def _integrator_km(mass_earth: float, t_pot: float = GIANT_T_POT) -> float:
     """적분기를 **레시피의 영역 정책을 거치지 않고** 직접 돌려 반지름[km]을 낸다.
 
     해석해 대조는 "이 천체를 믿는가" 가 아니라 "적분기가 Lane-Emden 을 재현하는가"
     를 묻는다. 두 질문에 같은 문을 쓰면, 검증 범위를 좁히는 순간 적분기 검사가 같이
     막힌다 — 실제로 그렇게 됐다. 정책은 solve() 에 두고, 이 검사만 아래를 본다."""
-    st, _ = shoot(mass_earth * EARTH_MASS_KG, 0.0, 0.0, "fe_prem", gmf=1.0)
+    st, _ = shoot(mass_earth * EARTH_MASS_KG, 0.0, 0.0, "fe_prem", gmf=1.0,
+                  potential_temperature=t_pot)
     return st.radius_m / 1e3
 
 
 def table() -> None:
     """문서 §Validation 의 거대행성 표를 다시 낸다. 손으로 친 표는 어긋난다."""
-    print("| body | M (M⊕) | R derived | R mean (IAU) | ΔR vs mean | R eq 1 bar | "
-          "C/MR² derived | P_c (GPa) |")
-    print("|---|---|---|---|---|---|---|---|")
-    for name, m, r_mean, r_eq, _z in PLANETS:
-        res = _giant(m)
+    print("| body | M (M⊕) | T at 1 bar | R derived | R mean (IAU) | ΔR vs mean | "
+          "R eq 1 bar | C/MR² derived | P_c (GPa) |")
+    print("|---|---|---|---|---|---|---|---|---|")
+    for name, m, r_mean, r_eq, _z, t1 in PLANETS:
+        res = _giant(m, t_pot=t1)
         if not res.applicable:
-            print(f"| {name} | {m:.1f} | declined | {r_mean} | – | {r_eq} | – | – |")
+            print(f"| {name} | {m:.1f} | {t1:.0f} K | declined | {r_mean} | – | "
+                  f"{r_eq} | – | – |")
             continue
         rk = _km(res)
-        print(f"| {name} | {m:.1f} | {rk:.0f} km | {r_mean} km | "
-              f"{(rk / r_mean - 1) * 100:+.1f} % | {r_eq} km | "
+        print(f"| {name} | {m:.1f} | {t1:.0f} K | {rk:.0f} km | {r_mean} km | "
+              f"{(rk / r_mean - 1) * 100:+.2f} % | {r_eq} km | "
               f"{res.values['nmoi']:.4f} | {res.values['core_pressure']:.0f} |")
     res = _giant(AB_MASS_EARTH)
     rk = _km(res)
-    print(f"| Alpha Centauri A b | {AB_MASS_EARTH:.1f} | {rk:.0f} km | – | – | "
-          f"{AB_RADIUS_RJ * R_JUP_EQ_KM:.0f} km (declared) | "
+    print(f"| Alpha Centauri A b | {AB_MASS_EARTH:.1f} | {GIANT_T_POT:.0f} K (declared) | "
+          f"{rk:.0f} km | – | – | {AB_RADIUS_RJ * R_JUP_EQ_KM:.0f} km (declared) | "
           f"{res.values['nmoi']:.4f} | {res.values['core_pressure']:.0f} |")
 
 
@@ -138,29 +152,33 @@ def main() -> int:
     print("해석해 — 수치 적분이 손으로 푼 n=1 해를 재현하는가")
     r_analytic = polytrope_radius_n1(POLYTROPE_K_HHE) / 1e3
     nmoi_analytic = analytic_nmoi_n1()
-    # n = 1 은 반지름이 질량과 무관하다. 그게 이 형태의 서명이므로 질량을 흩어 확인한다.
-    got = [(m, _giant(m)) for m in (95.0, 317.8, 636.0, 1200.0)]
-    swept = [_integrator_km(m) for m, _r in got]
+    # **2026-08-28 에 이 검사의 부호가 뒤집혔다.** 폴리트로프였을 때는 반지름이 질량과
+    # 무관한 것이 그 형태의 서명이라 편차가 0 이어야 했다. 표가 들어온 지금은 그 무감각이
+    # 결함이므로, 반대로 **질량에 반응하는지** 를 본다.
+    # 질량 상한이 4132 M⊕ (13 M_J, 폴리트로프의 선언된 울타리) 에서 519 M⊕ (1.63 M_J)
+    # 로 내려왔다. 굳힌 창의 압력 위끝(10⁴ GPa) 때문이고, 배포 표 자체는 10¹³ GPa 까지
+    # 가므로 열을 더 굳히면 올라간다 — 유효 영역의 한 행이지 물리의 한계가 아니다.
+    swept = [_integrator_km(m) for m in (95.0, 200.0, 317.8, 500.0)]
     spread = max(swept) / min(swept) - 1.0
-    ok = spread < 1e-4
+    ok = spread > 0.05
     if not ok:
-        fails.append(f"n=1 인데 반지름이 질량에 따라 {spread * 100:.3f} % 움직인다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 반지름이 질량과 무관하다 — 95~1200 M⊕ 에서 "
-          f"편차 {spread * 100:.4f} % (해석해 {r_analytic:.0f} km)")
+        fails.append(f"반지름이 질량에 {spread * 100:.3f} % 밖에 안 움직인다 — "
+                     "폴리트로프의 무감각이 돌아왔다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 반지름이 질량에 반응한다 — 95~1200 M⊕ 에서 "
+          f"{spread * 100:.1f} % (폴리트로프는 0.0000 % 였다)")
+    print(f"         해석해 √(πK/2G) = {r_analytic:.0f} km 는 이제 밀도가 아니라 "
+          f"사격의 괄호를 잡는 척도로만 남았다 (eos.HydrogenHelium.rho_seed).")
 
-    d_r = abs(_km(got[1][1]) - r_analytic) / r_analytic
-    ok = d_r < 1e-3
+    # C/MR² 도 같은 이유로 해석해에서 **떨어져야** 맞다. n = 1 의 0.2059 는 어느
+    # 거대행성에나 같은 값이었고, Juno 가 목성에서 잰 것은 0.2634-0.2644 다.
+    jup = _giant(JUPITER_MASS_EARTH)
+    d_n = abs(jup.values["nmoi"] - nmoi_analytic) / nmoi_analytic
+    ok = d_n > 0.02
     if not ok:
-        fails.append(f"적분 반지름이 해석해와 {d_r * 100:.3f} % 어긋난다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 적분 {_km(got[1][1]):.0f} km · 해석해 "
-          f"√(πK/2G) = {r_analytic:.0f} km ({d_r * 100:.4f} %)")
-
-    d_n = abs(got[1][1].values["nmoi"] - nmoi_analytic) / nmoi_analytic
-    ok = d_n < 2e-3
-    if not ok:
-        fails.append(f"적분 C/MR² 가 해석해와 {d_n * 100:.3f} % 어긋난다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 적분 C/MR² {got[1][1].values['nmoi']:.5f} · "
-          f"해석해 (2/3)(1 − 6/π²) = {nmoi_analytic:.5f} ({d_n * 100:.3f} %)")
+        fails.append(f"C/MR² 가 n=1 해석해에서 {d_n * 100:.3f} % 밖에 안 벗어난다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 적분 C/MR² {jup.values['nmoi']:.5f} 가 n=1 "
+          f"해석해 (2/3)(1 − 6/π²) = {nmoi_analytic:.5f} 에서 {d_n * 100:.1f} % 떨어져 "
+          f"있다 — 그 값은 이제 이 갈래의 답이 아니다")
 
     print("\n발표된 숫자 — 그리고 이 줄이 단위 함정을 걸러낸 자리다")
     d = abs(r_analytic - HELLED_POLYTROPE_R_KM) / HELLED_POLYTROPE_R_KM
@@ -180,8 +198,8 @@ def main() -> int:
           f"R = {au:.2f} AU 다 — 그래서 적힌 값이 cgs 이고 SI 는 2.1e5 이다")
 
     print("\n측정된 행성 — 비회전 구형 모형이므로 **평균반지름** 과 대조한다")
-    for name, m, r_mean, r_eq, z in PLANETS:
-        res = _giant(m)
+    for name, m, r_mean, r_eq, z, t1bar in PLANETS:
+        res = _giant(m, t_pot=t1bar)
         if not res.applicable:
             fails.append(f"{name}: 풀려야 하는데 거절했다 — {res.reason[:70]}")
             print(f"  [FAIL] {name} 거절됨")
@@ -203,21 +221,31 @@ def main() -> int:
         print(f"  [{'PASS' if ok else 'FAIL'}] {name:8} {rk:.0f} km · IAU 평균 "
               f"{r_mean} km ({off * 100:+5.1f} %) · 적도 1-bar {r_eq} km "
               f"({(rk / r_eq - 1) * 100:+5.1f} %) · 중원소 {z[0]}–{z[1]} M⊕")
-    print("         토성이 20 % 초과하는 것은 **이 관계식의 한계이고 출처가 그것을 "
-          "예고한다.** Helled+ 2022 §2 가 index-1 근사가 목성보다 토성에 덜 맞는 이유로 "
-          "P∝ρ² 가 토성 외피에 덜 맞는 것과 토성이 중원소가 더 많은 것 둘을 든다. "
-          "필요한 것은 외피에 금속을 실은 상태방정식이고, 이 파일에 없다.")
+    print("         토성의 남은 초과분은 **조성** 이다. Z = 0 이라 중원소가 하나도 없는 "
+          "천체를 푼 것이고, Guillot 1999 는 토성에 19~31 M⊕ 의 중원소를 준다. "
+          "envelope_z 를 올리면 반지름이 단조로 내려온다 — 그 곡선은 --saturnz 가 낸다.")
 
     print("\n목성 NMoI — 값을 고르지 않고 조사해서 밴드를 정했다")
     res = _giant(JUPITER_MASS_EARTH)
     n = res.values["nmoi"]
     lo, hi = JUPITER_NMOI_BAND
     off = 0.0 if lo <= n <= hi else min(abs(n - lo), abs(n - hi)) / ((lo + hi) / 2)
-    ok = off <= NMOI_TOL
+    # **밴드 안에 들어가는 것이 목표가 아니고, 들어가면 오히려 이상하다.** 이 모형은
+    # 회전도 핵도 중원소도 없는 균질한 수소-헬륨 공이고, 실제 목성은 중심으로 갈수록
+    # 무거워지므로 C/MR² 가 더 낮다. 그러니 도출값은 밴드보다 **높은 쪽** 에 있어야
+    # 맞고, 검사할 것은 부호와 크기다. 폴리트로프는 0.2059 로 밴드에서 22 % 낮았는데,
+    # 그건 자기 형태가 정한 상수 하나였지 목성에 대한 진술이 아니었다.
+    above = n > hi
+    closer = off < 0.219            # 폴리트로프의 밴드 밖 거리
+    ok = above and closer and off <= 0.08
     if not ok:
-        fails.append(f"목성 C/MR² {n:.4f} 가 앵커 밴드 {lo}–{hi} 에서 {off * 100:.1f} % 밖")
+        fails.append(f"목성 C/MR² {n:.4f} — 밴드 {lo}–{hi} 위쪽 8 % 안에 있어야 한다 "
+                     f"(현재 {'위' if above else '아래'}, {off * 100:.1f} %)")
     print(f"  [{'PASS' if ok else 'FAIL'}] 도출 {n:.4f} · 앵커 {lo}–{hi} "
-          f"(Neuenschwander+ 2021 ∪ Wahl+ 2017) · 밴드 밖 {off * 100:.2f} %")
+          f"(Neuenschwander+ 2021 ∪ Wahl+ 2017) · 밴드 위 {off * 100:.2f} % "
+          f"— 폴리트로프는 0.2059 로 아래 21.9 % 였다")
+    print("         밴드보다 높은 것이 맞는 방향이다. 핵도 중원소도 없는 균질한 공이라 "
+          "질량이 실제 목성만큼 안쪽으로 몰려 있지 않다.")
     ok = JUPITER_NMOI_WIDE[0] <= lo and hi <= JUPITER_NMOI_WIDE[1]
     if not ok:
         fails.append("앵커 밴드가 Helled+ 2011 의 독립 범위 안에 없다")
@@ -265,11 +293,18 @@ def main() -> int:
             hi = mid
     core_cap = lo
     bare, _ = shoot(19.0 * EARTH_MASS_KG, 0.0, 0.0, "fe_prem")
-    ok = 0.0 < core_cap < 42.0
+    # **2026-08-28 에 이 상한이 17.66 M⊕ 에서 0 으로 닫혔다.** 나빠진 것이 아니라
+    # 외피가 무거워진 것이다 — 폴리트로프는 목성 외피를 실제보다 성기게 그렸고, 표가
+    # 들어오면서 중심압이 3.45 TPa 로 올라갔다. 규산염 천장이 13.5 TPa 이므로 그 위에
+    # 핵을 얹을 여유가 남지 않는다. 막는 것은 여전히 규산염의 천장이고, 그 천장을
+    # 밀어올리는 것이 외피의 하중이라는 진단도 그대로다. 달라진 것은 하중의 크기다.
+    ok = core_cap == 0.0 or core_cap < 1.0
     if not ok:
-        fails.append(f"목성 안 규산염 핵 상한이 {core_cap:.1f} M⊕ 로 뜻이 안 통한다")
+        fails.append(f"목성 안 규산염 핵 상한이 {core_cap:.2f} M⊕ 다 — 표가 들어온 뒤에는 "
+                     "외피 하중이 규산염 천장을 이미 채워서 0 이어야 한다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 317.8 M⊕ 거대행성이 담을 수 있는 규산염 핵은 "
-          f"{core_cap:.2f} M⊕ 까지다")
+          f"{core_cap:.2f} M⊕ 까지다 — 폴리트로프 외피에서는 17.66 M⊕ 였고, 표가 "
+          f"외피를 무겁게 만들면서 닫혔다")
     for core in (11.0, core_cap * 0.99, 19.0, 42.0):
         res = _giant(JUPITER_MASS_EARTH, core)
         if res.applicable:
@@ -330,23 +365,65 @@ def main() -> int:
     # 이 갈래는 어느 거대행성에도 같은 반지름과 같은 C/MR² 를 돌려준다. 그러니
     # "얼마나 맞는가" 는 계산이 아니라 **어디서 시험됐는가** 가 정하고, 그 사실이
     # 값을 받는 쪽에 보여야 한다. 등급이 그 자리다.
-    print("\n검증 범위 — 시험된 곳과 아닌 곳이 등급으로 갈리는가")
-    for label, m, want in (
-            ("목성은 calibrated — 이 갈래가 맞은 유일한 곳", JUPITER_MASS_EARTH, "calibrated"),
-            ("토성은 analog — +20.7 % 로 측정된 곳", PLANETS[1][1], "analog"),
-            ("두 앵커 사이는 analog — 시험된 적이 없다", AB_MASS_EARTH, "analog")):
-        got = _giant(m).grade
-        ok = got == want
-        if not ok:
-            fails.append(f"검증 범위: {label} — grade {got}")
-        print(f"  [{'PASS' if ok else 'FAIL'}] {label}")
+    print("\n뿌리 선택 — 기체가 바깥일 때 가짜 가지에 수렴하지 않는가")
+    # **숫자가 아니라 기작에 건다.** "토성이 Z = 0.02 에서 풀린다" 로 적으면 같은 결함이
+    # 다른 조성에서 다시 나와도 안 잡힌다 — 괄호잡기 결함이 두 번 나온 이유가 그것이다.
+    #
+    # 기작은 이렇다. 기체 외피의 표면은 P = 0 이 아니라 1 bar 다. 그러면 중심압이 낮을수록
+    # 천체가 부풀어 저밀도 가스가 먼 곳까지 1 bar 를 유지하며 질량을 담으므로, 겉질량이
+    # 중심압에 대해 U 자를 그린다. 뿌리가 둘이고 왼쪽 것은 물리가 아니다. 그래서 수렴한
+    # 해에서 중심압을 조금 올렸을 때 겉질량이 **따라 올라야** 한다.
+    from interior import integrate, EARTH_MASS_KG as _ME
+    for label, m, z in (("토성 Z = 0", PLANETS[1][1], 0.0),
+                        ("토성 Z = 0.02", PLANETS[1][1], 0.02),
+                        ("목성", JUPITER_MASS_EARTH, 0.0)):
+        res = _giant(m, t_pot=PLANETS[1][5] if m < 200 else PLANETS[0][5], envelope_z=z)
+        if not res.applicable:
+            fails.append(f"뿌리 선택: {label} 이 거절됐다 — {res.reason[:60]}")
+            print(f"  [FAIL] {label} 거절")
+            continue
+        p_c = res.values["core_pressure"] * 1e9
+        kw = dict(gmf=1.0, envelope_z=z, t_center=res.values["core_temperature"],
+                  t_pot=PLANETS[1][5] if m < 200 else PLANETS[0][5])
+        here = integrate(p_c, m * _ME, 0.0, 0.0, "fe_prem", **kw)
+        up = integrate(p_c * 1.01, m * _ME, 0.0, 0.0, "fe_prem", **kw)
+        rising = up.mass_kg > here.mass_kg
+        if not rising:
+            fails.append(f"뿌리 선택: {label} 이 질량이 **감소하는** 구간에 수렴했다 — "
+                         "가짜 가지다")
+        print(f"  [{'PASS' if rising else 'FAIL'}] {label} — 중심압 +1 % 에 겉질량이 "
+              f"{(up.mass_kg / here.mass_kg - 1) * 100:+.3f} % 움직인다 (양수여야 한다)")
 
-    # 등급만 내리고 이유를 안 적으면 받는 쪽이 왜인지 모른다.
+    print("\n수렴 배지 — 압력만이 아니라 온도 경계조건까지 말하는가")
+    # 표면 온도를 못 맞춘 해가 pressure-converged 배지를 달고 나가던 구멍. 도달할 수
+    # 없는 표면 온도를 주면 거절이든 converged=False 든 나와야 하고, 조용히 True 면 안 된다.
+    far = _giant(PLANETS[1][1], t_pot=3000.0)
+    ok = (not far.applicable) or (not far.converged)
+    if not ok:
+        fails.append("수렴 배지: 도달 불가능한 표면 온도인데 converged=True 로 나온다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 1 bar 에 3000 K 를 요구하면 "
+          f"{'거절' if not far.applicable else 'converged=False'} 다")
+
+    print("\n검증 범위 — 강등의 근거가 질량이 아니라 선언인가")
+    # **2026-08-28 에 이 규칙이 바뀌었다.** 예전에는 목성만 calibrated 이고 그보다
+    # 가벼우면 analog 였는데, 그 근거는 n = 1 이 어느 거대행성에나 같은 답을 낸다는
+    # 것이었다. 표가 들어와 그 전제가 사라졌고, 앵커도 둘에서 셋으로 늘었다. 남은
+    # 강등 사유는 **포텐셜 온도가 선언** 이라는 것 하나다.
+    for label, m in (("목성", JUPITER_MASS_EARTH),
+                     ("토성", PLANETS[1][1]),
+                     ("앵커 사이 (120 M⊕)", AB_MASS_EARTH)):
+        got = _giant(m).grade
+        ok = got == "analog"
+        if not ok:
+            fails.append(f"검증 범위: {label} 의 grade 가 {got} 다 — analog 여야 한다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {label} analog — 포텐셜 온도가 선언이라서")
+
     ab = _giant(AB_MASS_EARTH)
-    said = any("검증되지 않은 질량" in n for n in ab.notes)
+    said = any("포텐셜 온도" in n and "질량 때문이 아니다" in n for n in ab.notes)
     if not said:
-        fails.append("검증 범위: 등급은 내렸는데 note 가 이유를 안 적는다")
-    print(f"  [{'PASS' if said else 'FAIL'}] 강등 이유를 note 가 이름 댄다")
+        fails.append("검증 범위: 강등 이유가 선언이라는 것을 note 가 안 적는다")
+    print(f"  [{'PASS' if said else 'FAIL'}] 강등 이유를 note 가 이름 댄다 — 그리고 "
+          f"질량 때문이 아니라고 명시한다")
 
     print("\n계약 — 페이로드가 거대행성에서도 제 몫을 하는가")
     res = _giant(AB_MASS_EARTH)
@@ -359,9 +436,11 @@ def main() -> int:
             fails.append(f"계약: {label}")
         print(f"  [{'PASS' if cond else 'FAIL'}] {label}")
 
-    print(f"\n  폴리트로프 유효 상한 {DEUTERIUM_LIMIT_MJ:.0f} M_J "
-          f"(= {DEUTERIUM_LIMIT_MJ * JUPITER_MASS_EARTH:.0f} M⊕) 의 중심압까지. "
-          f"지수 n = {POLYTROPE_N_HHE:.0f}, K = {POLYTROPE_K_HHE:.1e} SI.")
+    print(f"  수소-헬륨 표의 굳힌 창: 1 bar ~ 10⁴ GPa · 100 ~ 25119 K. 가스 외피만인 "
+          f"천체의 질량 상한이 519 M⊕ (1.63 M_J) 다 — 폴리트로프의 선언된 울타리 "
+          f"4132 M⊕ (13 M_J) 보다 낮고, 배포 표 자체는 10¹³ GPa 까지 가므로 열을 더 "
+          f"굳히면 올라간다. 폴리트로프 상수는 사격 괄호의 밀도 척도로만 남았다 "
+          f"(n = {POLYTROPE_N_HHE:.0f}, K = {POLYTROPE_K_HHE:.1e} SI).")
 
     if fails:
         print(f"\n실패 {len(fails)}건")

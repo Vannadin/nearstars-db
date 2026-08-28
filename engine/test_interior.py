@@ -1118,13 +1118,20 @@ def main() -> int:
 
     print("\n열 상수가 없는 상 — 있는 척하지 않고 이름을 대는가")
     from eos import H_HE, MATERIALS as _M
-    ok = _M["h2o"].cold_phases() == () and "hhe_n1" in H_HE.cold_phases()
+    # **2026-08-28 에 이 목록이 비었다.** 마지막으로 남아 있던 것이 폴리트로프
+    # `hhe_n1` 이었고, 그 한 줄 때문에 온도가 외피를 흐르지 않아 선언된 포텐셜 온도가
+    # 표면이 아니라 얼음 맨틀 꼭대기에 떨어졌다. Chabrier+ 2019 표가 ∇_ad 를 들고
+    # 오면서 사라졌다. 그러니 검사는 "이름을 대는가" 에서 **"비었는가"** 로 바뀐다 —
+    # 다시 채워지면 온도 경계조건의 뜻이 조용히 옮겨간다는 뜻이므로.
+    cold = {m: _M[m].cold_phases() for m in ("h2o", "h_he", "silicate", "fe_prem")}
+    ok = all(v == () for v in cold.values())
     if not ok:
-        fails.append(f"등온으로 남는 상 목록이 틀렸다 — h2o {_M['h2o'].cold_phases()}, "
-                     f"h_he {H_HE.cold_phases()}")
-    print(f"  [{'PASS' if ok else 'FAIL'}] h2o 는 이제 전 상에 열 상수가 있다 "
-          f"(2026-08-27 에는 ice_vii 이 등온이었다) · h_he 는 {H_HE.cold_phases()}")
-    for mat in (_M["silicate"], _M["fe_prem"], _M["fe_eps"], _M["h2o"]):
+        fails.append(f"등온으로 남는 상이 남아 있다 — {cold}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 등온으로 남는 상이 하나도 없다 — h2o 는 "
+          f"2026-08-27 에 ice_vii 이, h_he 는 2026-08-28 에 hhe_n1 이 마지막이었다")
+    print(f"         h_he 가 비었다는 것이 곧 **포텐셜 온도가 이 갈래에서도 표면의 "
+          f"온도** 라는 뜻이다 (1 bar 준위).")
+    for mat in (_M["silicate"], _M["fe_prem"], _M["fe_eps"], _M["h2o"], H_HE):
         ok = mat.has_thermal
         if not ok:
             fails.append(f"{mat.name}: 열 상수가 있어야 한다")

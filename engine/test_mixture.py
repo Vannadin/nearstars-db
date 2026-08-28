@@ -45,7 +45,14 @@ MERCURY_MASS_ME = 0.0553
 MERCURY_CMF = 0.70
 MERCURY_NMOI = 0.3460
 
-SATURN_TOL = 0.03        # 3 %. 토성이 Z 예산 안에서 이 안에 들어와야 한다
+# **2026-08-28 에 이 검사의 내용이 바뀌었다.** 폴리트로프였을 때 토성은 Guillot 예산의
+# 아래 끝(Z = 0.200)에서 −0.1 % 로 맞았고, 그 일치가 두 오차의 상쇄였다 — 외피를 세 배
+# 부풀리는 관계식과, 그것을 도로 눌러 주는 큰 중원소 분율. 표가 들어오면서 같은 Z 가
+# −9.8 % 로 지나쳐 버린다. 그래서 검사할 것은 "예산 안에서 맞는가" 가 아니라
+# **예산 밖으로 나갔는가, 그리고 어느 쪽으로** 다. 맞는 Z 는 0.0825 (7.85 M⊕) 이고
+# 예산 19–31 M⊕ 아래다. 방향에는 이유가 둘 있고 둘 다 같은 쪽을 민다 — 이 모형에는 핵이
+# 없어서 중원소를 전부 외피에 넣어야 하고, 균질 분포는 실제(희석 핵)보다 더 누른다.
+SATURN_BUDGET_OVERSHOOT = -0.05   # Z 예산 아래 끝에서 이보다 더 작아야 한다
 EXACT = 1e-12            # Z = 0 은 "거의" 가 아니라 정확히 같아야 한다
 
 
@@ -53,17 +60,22 @@ def _km(res) -> float:
     return res.values["radius"] * EARTH_RADIUS_M / 1e3
 
 
-def _giant(mass_earth: float, z: float = 0.0):
+# 1-bar 온도. 2026-08-28 부터 이 갈래의 경계조건이다 (Voyager 전파엄폐).
+T_1BAR = {"Jupiter": 165.0, "Saturn": 135.0}
+
+
+def _giant(mass_earth: float, z: float = 0.0, t_pot: float = 165.0):
     return solve(mass_earth, core_mass_fraction=0.0, ice_mass_fraction=0.0,
-                 gas_mass_fraction=1.0, body_class="giant", envelope_z=z)
+                 gas_mass_fraction=1.0, body_class="giant", envelope_z=z,
+                 potential_temperature=t_pot)
 
 
 def _z_rows(planet):
     """한 행성을 Z 예산의 양 끝과 몇 눈금에서 푼다."""
-    _name, m, _r, z_lo, z_hi = planet
+    name, m, _r, z_lo, z_hi = planet
     fracs = [z_lo / m, (z_lo + z_hi) / 2 / m, z_hi / m]
     for z in fracs:
-        yield z, _giant(m, z)
+        yield z, _giant(m, z, T_1BAR.get(name, 165.0))
 
 
 def table() -> None:
@@ -72,7 +84,7 @@ def table() -> None:
     print("|---|---|---|---|---|---|---|---|")
     for planet in (JUPITER, SATURN):
         name, m, r_mean, z_lo, z_hi = planet
-        base = _giant(m, 0.0)
+        base = _giant(m, 0.0, T_1BAR.get(name, 165.0))
         print(f"| {name} | 0 | 0.000 | {_km(base):.0f} km | {r_mean} km | "
               f"{(_km(base) / r_mean - 1) * 100:+.1f} % | {base.values['nmoi']:.4f} | "
               f"{base.grade} |")
@@ -117,8 +129,11 @@ def main() -> int:
           f"({m2.density(p):.1f} kg/m³, 상대차 {d:.0e})")
 
     # 상한은 **가장 낮은** 성분이 정한다. 높은 쪽을 쓰면 근거 없는 외삽을 숨기게 된다.
+    # 2026-08-28 에 그 성분이 바뀌었다 — 폴리트로프의 울타리(13 M_J 의 중심압)가 규산염의
+    # 13.5 TPa 위에 있어서 규산염이 정하고 있었는데, 표의 굳힌 창이 10⁴ GPa 이라 이제
+    # 수소-헬륨이 정한다. 검사는 소유자 이름이 아니라 **규칙** 을 본다.
     env = mix("t", "t", (h, 0.8), (si, 0.2))
-    ok = env.p_max == si.p_max and si.p_max < h.p_max
+    ok = env.p_max == min(si.p_max, h.p_max)
     if not ok:
         fails.append("혼합 상한이 가장 낮은 성분을 따르지 않는다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 혼합 상한 {env.p_max / 1e9:.0f} GPa = "
@@ -154,15 +169,16 @@ def main() -> int:
             best = (z, off)
         print(f"         Z {z:.3f} ({z * m:.0f} M⊕) → {_km(res):.0f} km "
               f"({off * 100:+.1f} %)")
-    ok = best is not None and abs(best[1]) <= SATURN_TOL
+    ok = best is not None and best[1] < SATURN_BUDGET_OVERSHOOT
     if not ok:
-        fails.append(f"토성이 Z 예산 안에서 {SATURN_TOL * 100:.0f} % 안에 안 들어온다")
+        fails.append("토성이 Guillot 예산의 아래 끝에서 이미 지나쳐야 하는데 그러지 않는다 "
+                     "— 폴리트로프의 상쇄가 돌아온 것일 수 있다")
     print(f"  [{'PASS' if ok else 'FAIL'}] Z = 0 에서 {base_off * 100:+.1f} % 였던 것이 "
-          f"Z = {best[0]:.3f} 에서 {best[1] * 100:+.1f} % 다 "
-          f"(허용 {SATURN_TOL * 100:.0f} %)")
-    print(f"         그 Z 는 Guillot 의 {z_lo:.0f}–{z_hi:.0f} M⊕ 구간의 **아래 끝** 이지 "
-          f"맞춰서 찾은 값이 아니다. 남는 잔차는 중원소가 외피에 균질하게 녹아 있다고 둔 "
-          f"몫이고, 실제 분포(희석 핵)는 이 레시피에 없다.")
+          f"Guillot 예산 아래 끝 Z = {best[0]:.3f} 에서 {best[1] * 100:+.1f} % 로 "
+          f"**지나친다** — 맞는 Z 는 예산 아래에 있다")
+    print(f"         폴리트로프였을 때는 같은 Z = {best[0]:.3f} 가 −0.1 % 로 맞았다. 그 "
+          f"일치가 두 오차의 상쇄였다는 것이 이 줄의 내용이다. 이 모형에 핵이 없어서 "
+          f"중원소를 전부 외피에 넣어야 하고, 균질 분포는 실제(희석 핵)보다 더 누른다.")
 
     print("\n목성 — Z 를 넣으면 어떻게 되나. 2026-08-27 에 답이 바뀌었다")
     # 직전 판까지 이 절은 **거절** 을 검사했다. 목성 중심이 Z 를 넣으면 4 TPa 를 넘고
@@ -217,9 +233,12 @@ def main() -> int:
     # 천장이 사라진 게 아니라 올라갔다. 올라간 자리에서도 혼합 거절이 순수 재료용
     # 전자축퇴 문장을 쓰면 안 된다 — 섞인 층에서는 성분 하나의 적합이 끝난 것뿐이다.
     huge = _giant(JUPITER[1], 0.75)
-    ok = not huge.applicable and ENVELOPE_Z_MATERIAL in huge.reason
+    # 이름 대야 하는 것은 **실제로 상한을 정한 성분** 이다. 표가 들어오면서 그게
+    # 규산염에서 수소-헬륨으로 옮겨갔고, 거절 문장이 그 이름을 따라가야 한다.
+    owner = ENVELOPE_Z_MATERIAL if si.p_max < h.p_max else h.name
+    ok = not huge.applicable and owner in huge.reason
     if not ok:
-        fails.append("천장 위 혼합 거절이 상한 소유자를 이름 대지 않는다")
+        fails.append(f"천장 위 혼합 거절이 상한 소유자('{owner}')를 이름 대지 않는다")
     print(f"  [{'PASS' if ok else 'FAIL'}] Z = 0.75 는 여전히 거절하고 "
           f"'{ENVELOPE_Z_MATERIAL}' 의 상한을 이름 댄다")
     ok = "성분 하나" in huge.reason and "축퇴가 지배" not in huge.reason
@@ -282,7 +301,9 @@ def main() -> int:
 
     print("\n등급 — 답이 검증할 수 없는 선언에 기대면 내려가는가")
     for label, res, want in (
-            ("목성 Z=0 (앵커 위)", _giant(JUPITER[1], 0.0), "calibrated"),
+            # 2026-08-28 부터 거대행성은 전부 analog 다. 포텐셜 온도가 선언이라서이고,
+            # 질량이나 앵커 위치 때문이 아니다 (interior.GIANT_ANCHORS 옆 주석).
+            ("목성 Z=0", _giant(JUPITER[1], 0.0), "analog"),
             ("토성 Z=0.200", _giant(SATURN[1], 19.0 / SATURN[1]), "analog"),
             ("미분화 지구", solve(1.0, core_mass_fraction=0.325,
                               differentiated=False), "analog")):
