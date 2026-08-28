@@ -231,23 +231,32 @@ is nevertheless under the gate, by the third route.
 
 ## 10. Where the gate's fourteen minutes go — a debt this work names and does not pay
 
-Each engine test timed alone on the final tree, quiet machine:
+Each engine test timed alone, quiet machine. The first column is the frozen-anchor tree
+(before §11); the second is the final tree with the boundary interpolation and the live
+ice-giant solves, re-measured 2026-08-28 after review:
 
-| test | seconds |
-|---|---|
-| `test_mixture.py` | 262 |
-| `test_giant.py` | 226 |
-| `test_interior.py` | 223 |
-| `test_porosity.py` | 40 |
-| `test_mass_radius.py` | 16 |
-| `test_core_state.py` | 15 |
-| `test_fermi.py` | 11 |
-| `run.py earth` · `check_contracts.py` · `test_rocky_roster.py` | 7 · 7 · 5 |
-| `test_ice_giant.py` (this work) | **1** |
-| everything else (nine files) | ≤ 1 each |
+| test | before interpolation (s) | final tree (s) |
+|---|---|---|
+| `test_mixture.py` | 262 | 261 |
+| `test_giant.py` | 226 | 218 |
+| `test_interior.py` | 223 | 184 |
+| `test_ice_giant.py` | 1 (frozen) | **93** (live Uranus + Neptune) |
+| `test_porosity.py` | 40 | 27 |
+| `test_mass_radius.py` | 16 | 4 |
+| `test_core_state.py` | 15 | 15 |
+| `test_fermi.py` | 11 | 10 |
+| `run.py earth` · `check_contracts.py` · `test_rocky_roster.py` | 7 · 7 · 5 | 5 · 6 · 4 |
+| everything else (nine files) | ≤ 1 each | ≤ 1 each |
+| engine total | ≈ 815 | ≈ 827 |
 
-Three files are twelve of the fourteen minutes, and all three grew when the H/He table
-replaced the polytrope — every giant solve went from 0.2 s to 5–20 s and those tests
+The interpolation took 39 s out of `test_interior` (its multilayer solves stopped spinning
+on risers), 13 s out of `test_porosity`, 12 s out of `test_mass_radius` and 8 s out of
+`test_giant` — 73 s in all — and the live ice-giant solves put 92 s back, which is why the
+whole gate moved only 14 min 39 s → 14 min 22 s. `test_mixture` did not move: its
+solves are single-layer H/He mixtures with no boundary to interpolate.
+
+Three files are still eleven of the fourteen minutes, and all three grew when the H/He
+table replaced the polytrope — every giant solve went from 0.2 s to 5–20 s and those tests
 sweep compositions (Saturn's Z ladder, Jupiter's core ladder, the mixture sanity grid).
 That is the same shape as the ice-giant debt one size smaller: anchors that are cheap to
 declare and expensive to run, protected by the gate only as long as nobody minds waiting.
@@ -311,8 +320,9 @@ One `integrate()` per row, no shooting, so the only thing varying is the grid:
 | 384000 | old | 1.0002929 | 4.198106 | 107 s |
 | 384000 | interpolated | 1.0002958 | 4.198132 | 110 s |
 
-The interpolated sequence converges at second order (R differences 1.95e-3, 4.8e-4, 1.2e-4,
-2.7e-5 — ratio 4 each time) to about 4.19812; the old scheme, once its staircase is ground
+The interpolated sequence converges at **first order** (R differences 1.95e-3, 4.8e-4, 1.2e-4,
+2.7e-5 — ratio 4 each time under a 4× refinement, so p = log 4 / log 4 = 1; second order
+would need ratio 16) to about 4.19812; the old scheme, once its staircase is ground
 fine enough, arrives at the same place — at 384000 steps the two agree to 6e-6 in radius and
 3e-6 in mass. So **the interpolation computes the same limit as the old scheme and reaches
 it from 1500 steps with the error a 1500-step grid honestly carries** (6e-4 in radius for an
@@ -320,6 +330,13 @@ ice giant — the gas envelope's grid error, not the boundary's), where the old 
 steps sat anywhere within ±2e-3 depending on grid phase. The 1500 old-scheme value in the
 methodology table (4.198258) was 3e-5 from the limit by luck of phase: its neighbours at
 1499 and 1501 steps were 1.4e-3 and 2.1e-3 off.
+
+First order, not second — the earlier draft of this section and the message of commit
+5a168696 said "second order", which the ratios above contradict; corrected 2026-08-28 after
+review. It matters twice: halving the grid error costs 2× the steps, not 1.4×, and RK4 is
+fourth order inside a layer, so a first-order whole says the boundary handling (the
+interpolated switch and the floor stop are both linear in the step) is what bounds the
+accuracy — that is the address if more is ever wanted.
 
 Full solves confirm it: Uranus 1500 + interp **4.198693** (+5.47 %), 6000 + interp 4.198082,
 6000 old (897 s of spinning) 4.197956; Neptune 1500 + interp 4.211250 (+8.97 %), 6000 +
@@ -371,15 +388,31 @@ interp 4.210152.
 How to read it. The reference is not one number: the old scheme at any resolution is a
 staircase, so "6000, no interp" carries ±one riser of its own (2e-4 in mass at 6000, smaller
 in radius and for rock/iron contrasts), and the cleanest reference is **6000 + interp**, which
-the grid ladder above showed converging at second order.
+the grid ladder above showed converging at first order.
 
 * **Rocky anchors (Earth, Mars, Mercury, Moon, Pandora, Cassandra):** 1500 + interp agrees with
   6000 + interp to 1e-5 or better (Mars, Mercury, Moon, Cassandra: 1e-7), while the old
-  1500 value is 1e-4 to 2e-4 away. Mercury looked like the exception — its old value equals
-  the old 6000 and 24000 values to seven digits — but that is grid phase repeating: 6000 and
-  24000 are multiples of 1500 and the 70 % boundary lands at the same fraction of a step;
-  at 1499 and 1501 steps the old Mercury radius is 0.38199 and 0.38213, and the interpolated
-  one is 0.3821465 on all four grids.
+  1500 value is 1e-4 to 2e-4 away. **Mercury is the one anchor that moves the other way in
+  the table** — the old value sits at 0.0 from "24000, no interp" and the interpolated one
+  4.7e-6 from it — and the table cannot settle which of two stable schemes holds the limit,
+  because its high-resolution column is old-scheme. Re-measured 2026-08-28 after review
+  (full solves, radius in R⊕ · C/MR²):
+
+  | steps | scheme | radius | C/MR² |
+  |---|---|---|---|
+  | 1500 · 6000 · 24000 · 96000 | interpolated | 0.38214647 · 0.38214649 · 0.38214649 · 0.38214649 | 0.33876754 · 0.33876742 · 0.33876741 · 0.33876741 |
+  | 1500 · 6000 · 24000 (multiples of 1500) | old | 0.38214179 (all three) | 0.33877025 |
+  | 25000 · 100000 (not multiples) | old | 0.38214522 (both) | 0.33876814 |
+
+  Case one of the three: the interpolated high-resolution value (96000) is on the
+  interpolated 1500 side to 2e-8, so the interpolation is right and the old scheme was
+  grid-insensitive *and wrong*. Its "stability" is grid phase repeating: 6000 and 24000 are
+  multiples of 1500, the 70 % boundary lands at the same fraction of a step, and the value
+  repeats to seven digits; on grids that are not multiples of 1500 (25000, 100000 — again a
+  multiple pair, again repeating) the old scheme gives a different constant, 1.3e-6 from
+  the interpolated limit instead of 4.7e-6. At 1499 and 1501 steps the old radius is
+  0.38199 and 0.38213. The old scheme does not converge on Mercury; it lands wherever the
+  phase family puts it, and the family of 1500 happened to be 4.7e-6 short.
 * **Icy moons (Ganymede, Callisto, Titan, Europa, Enceladus, Chaos, Proxima c I):**
   1500 + interp agrees with 6000 + interp to ~1e-6; the old 1500 values are 1e-4 to 6e-4
   away. These are `infer_composition` solves, so the inferred ice fraction moved with the
