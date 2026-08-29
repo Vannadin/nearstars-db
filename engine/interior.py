@@ -185,7 +185,8 @@ class Structure:
 
 
 def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
-           envelope_z: float = 0.0, differentiated: bool = True):
+           envelope_z: float = 0.0, differentiated: bool = True,
+           serpentinisation: float = 0.0):
     """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
 
     가스 외피가 있으면 그것이 가장 바깥 층이다. 폴리트로프는 **별도의 가지가 아니라
@@ -204,7 +205,7 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     if cmf > 0:
         out.append((cmf, MATERIALS[core_material]))
     if 1.0 - cmf - imf - gmf > 0:
-        out.append((1.0 - imf - gmf, MATERIALS["silicate"]))
+        out.append((1.0 - imf - gmf, _rock(serpentinisation)))
     if imf > 0:
         # 얼음층의 이름은 사다리(h2o)다. 그 자리의 물이 액체인지 고체인지는 적분기가 걸음마다
         # 국소 (P, T) 를 녹는곡선에 대서 정하고, 액체면 h2o_liquid(2.3 GPa 까지) 또는
@@ -219,13 +220,26 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     return out
 
 
+def _rock(serpentinisation: float):
+    """암석층의 재료. 사문석화 분율이 0 이면 규산염, 아니면 규산염과 antigorite 를 부피 가법으로 섞은
+    것 — 두 고체가 알갱이로 공존하는 부분 사문석화 암석 (C10). C7 이 막은 '물을 규산염에 섞기'
+    가 아니다."""
+    if serpentinisation <= 0.0:
+        return MATERIALS["silicate"]
+    return mix("rock_serpentinised", "부분 사문석화 암석",
+               (MATERIALS["silicate"], 1.0 - serpentinisation),
+               (MATERIALS["antigorite"], serpentinisation))
+
+
 # 단열 기울기를 한 단계에 한 번만 다시 잰다. 적분기가 이미 한 단계 안에서 재료를
 # 고정하고 있고(경계에서 dr/R ~ 3e-4 의 오차), 온도 기울기는 그보다 매끄럽다.
 # 단계마다 RK 네 자리에서 다시 재면 밀도 뒤집기가 여덟 번 더 돌아 비싸다.
-def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated):
+def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated,
+                 serpentinisation=0.0):
     """이 천체의 층들 중 발표된 열 상수가 없어 등온으로 남는 상들의 이름."""
     out: list[str] = []
-    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated):
+    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
+                           serpentinisation):
         out.extend(mat.cold_phases())
     return out
 
@@ -292,7 +306,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               envelope_z: float = 0.0, differentiated: bool = True,
               t_center: float = 0.0, t_pot: float = 0.0,
               boundary_temperature_jump: float = 0.0,
-              mantle_rock_fraction: float = 0.0) -> Structure:
+              mantle_rock_fraction: float = 0.0,
+              serpentinisation: float = 0.0) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -302,7 +317,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation)
     mat = stack[0][1]
     # 적분이 멈추는 압력. 응축상 천체는 0 — 표면이 P = 0 이다. 기체 외피가 바깥에 있으면
     # 그 재료가 자기 바닥을 말한다 (1 bar). 바깥 층 하나가 정하므로 여기서 한 번 본다.
@@ -820,14 +835,15 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     envelope_z: float = 0.0, differentiated: bool = True,
                     t_center: float = 0.0, t_pot: float = 0.0,
                     boundary_temperature_jump: float = 0.0,
-                    mantle_rock_fraction: float = 0.0) -> tuple[Structure, bool]:
+                    mantle_rock_fraction: float = 0.0,
+                    serpentinisation: float = 0.0) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation)
     # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
     # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
     rho0_bar = 1.0 / sum(
@@ -848,7 +864,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     def at(p: float):
         return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
                          envelope_z, differentiated, t_center, t_pot,
-                         boundary_temperature_jump, mantle_rock_fraction)
+                         boundary_temperature_jump, mantle_rock_fraction,
+                         serpentinisation)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -969,7 +986,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
                         envelope_z, differentiated, t_center, t_pot,
-                        boundary_temperature_jump, mantle_rock_fraction)
+                        boundary_temperature_jump, mantle_rock_fraction,
+                        serpentinisation)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -986,7 +1004,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         x1 = math.log(max(lo, hi * 1e-3))
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
                         gmf, envelope_z, differentiated, t_center, t_pot,
-                        boundary_temperature_jump, mantle_rock_fraction)
+                        boundary_temperature_jump, mantle_rock_fraction,
+                        serpentinisation)
         y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
@@ -1013,7 +1032,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         x1 = x2
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
                     gmf, envelope_z, differentiated, t_center, t_pot,
-                    boundary_temperature_jump, mantle_rock_fraction)
+                    boundary_temperature_jump, mantle_rock_fraction,
+                    serpentinisation)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -1048,7 +1068,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           envelope_z: float = 0.0, differentiated: bool = True,
           potential_temperature: float | None = None,
           boundary_temperature_jump: float = 0.0,
-          mantle_rock_fraction: float = 0.0) -> tuple[Structure, bool]:
+          mantle_rock_fraction: float = 0.0,
+          serpentinisation: float = 0.0) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1062,7 +1083,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     args = (mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z,
             differentiated)
     kw = {"boundary_temperature_jump": boundary_temperature_jump,
-          "mantle_rock_fraction": mantle_rock_fraction}
+          "mantle_rock_fraction": mantle_rock_fraction,
+          "serpentinisation": serpentinisation}
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -1461,7 +1483,8 @@ def solve(mass_earth: float,
           envelope_z: float = 0.0,
           potential_temperature: float | None = None,
           boundary_temperature_jump: float = 0.0,
-          mantle_rock_fraction: float = 0.0) -> Result:
+          mantle_rock_fraction: float = 0.0,
+          serpentinisation: float = 0.0) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -1492,7 +1515,8 @@ def solve(mass_earth: float,
               "envelope_z": envelope_z,
               "potential_temperature": potential_temperature,
               "boundary_temperature_jump": boundary_temperature_jump,
-              "mantle_rock_fraction": mantle_rock_fraction}
+              "mantle_rock_fraction": mantle_rock_fraction,
+              "serpentinisation": serpentinisation}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -1588,6 +1612,17 @@ def solve(mass_earth: float,
             "선언하면 풀린다. 0 이면 암석 행성이고 body_class 를 rocky 로 두는 쪽이다.",
             inputs=inputs, refs=REFS)
 
+    # ── 선언 (C10): 암석의 사문석화 분율 — enstatite/PREM 과 antigorite 를 부피 가법으로 섞는 축 ──
+    if not 0.0 <= serpentinisation <= 1.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"사문석화 분율 {serpentinisation} 이 [0, 1] 밖이다.", inputs=inputs, refs=REFS)
+    if serpentinisation > 0.0 and not differentiated:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "사문석화 분율은 분화된 천체의 암석층 선언이다 — 미분화 층은 암석+금속 혼합이고 거기에 "
+            "세 번째 성분을 더 섞는 것은 이 파일이 재지 않았다.", inputs=inputs, refs=REFS)
+
     # ── 두 선언 (C5): 얼음 맨틀 위 열경계층의 온도 점프, 얼음 맨틀의 암석 분율 ──
     # 둘 다 형성과 열 이력이 정하고 이 레시피가 도출하지 않는다 — gas_mass_fraction 과 같은 종류.
     if boundary_temperature_jump < 0.0 or not 0.0 <= mantle_rock_fraction < 1.0:
@@ -1637,7 +1672,8 @@ def solve(mass_earth: float,
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
                               envelope_z, differentiated, potential_temperature,
-                              boundary_temperature_jump, mantle_rock_fraction)
+                              boundary_temperature_jump, mantle_rock_fraction,
+                         serpentinisation)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -1689,7 +1725,7 @@ def solve(mass_earth: float,
                      and abs(potential_temperature - EARTH_POTENTIAL_T) > 1e-9)
     if thermal_declared:
         cold = sorted(set(_cold_phases(cmf, imf, core_material, gmf, envelope_z,
-                                       differentiated)))
+                                       differentiated, serpentinisation)))
         notes.append(
             f"**포텐셜 온도 {potential_temperature:.0f} K 는 선언이다.** 대류하는 내부를 "
             "표면까지 단열 감압했을 때의 온도이고 표면 온도가 아니다 — 그 사이의 전도하는 "
@@ -1715,6 +1751,15 @@ def solve(mass_earth: float,
             f"{potential_temperature - EARTH_POTENTIAL_T:+.0f} K 떨어져 있고, 그만큼 열압력이 "
             "밀도를 움직인다. 단열선은 대류하는 층에만 맞고, 조석가열과 맨틀 안의 열경계층은 "
             "프로파일을 초단열로 만든다 (Unterborn+ 2019 §3.2). 등급을 analog 로 내린다.")
+    if serpentinisation > 0.0:
+        notes.append(
+            f"**사문석화 분율 {serpentinisation:.2f} 은 선언이다.** 암석층이 규산염(enstatite/PREM)과 "
+            "antigorite (Hilairet+ 2006 BM2, ρ₀ 2640.5 kg/m³ 도출)를 그 분율로 부피 가법 혼합한 것이다 — "
+            "두 고체가 알갱이로 공존하는 부분 사문석화 암석이지, C7 이 막은 '물을 규산염에 섞기' 가 "
+            "아니다. 얼마나 사문석화됐는가는 물이 어디까지 갔는가의 이력이라 이 레시피가 도출하지 않는다. "
+            "antigorite 는 상온 적합뿐이라 **열항이 없고** 온도가 그 성분을 그대로 통과한다 (Holland & "
+            "Powell 1998 이 요청 목록에 있다); 10 GPa 위에서는 탈수라 같은 상이 아니다. 등급을 analog 로 "
+            "내린다.")
     if boundary_temperature_jump > 0.0:
         notes.append(
             f"**열경계층 {boundary_temperature_jump:.0f} K 는 선언이다.** 얼음 맨틀 꼭대기와 기체 외피 "
@@ -1853,6 +1898,7 @@ def solve(mass_earth: float,
         # 미분화는 측정 앵커가 없다.
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
                             or boundary_temperature_jump > 0 or mantle_rock_fraction > 0
+                            or serpentinisation > 0
                             or not differentiated or giant_declared
                             or silicate_extrapolated or thermal_moves
                             or thermal_unchecked or ice_x_reached)
@@ -2251,7 +2297,8 @@ _INFER_ITERS = 12                                  # 얼음질량분율의 regul
 
 
 def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
-                          potential_temperature: float, tidal_heating: bool):
+                          potential_temperature: float, tidal_heating: bool,
+                          serpentinisation: float = 0.0):
     """핵질량분율을 고정하고 반지름을 재현하는 얼음질량분율을 푼다. (분율, Result) 또는 None.
 
     반지름은 얼음에 단조증가이므로 양 끝을 재고 그 사이를 Illinois 형 regula falsi 로 좁힌다 —
@@ -2260,7 +2307,7 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
     def at(imf):
         return solve(mass_earth, core_mass_fraction=cmf, ice_mass_fraction=imf,
                      potential_temperature=potential_temperature,
-                     tidal_heating=tidal_heating)
+                     tidal_heating=tidal_heating, serpentinisation=serpentinisation)
     lo, hi = 0.0, max(0.0, 0.98 - cmf)
     r_lo = at(lo)
     if not r_lo.applicable:
@@ -2299,7 +2346,8 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
 def infer_three_layer(mass_earth: float, radius_earth: float,
                       potential_temperature: float, nmoi: float | None = None,
                       tidal_heating: bool = False,
-                      core_grid: tuple[float, ...] = THREE_LAYER_CORE_GRID) -> Result:
+                      core_grid: tuple[float, ...] = THREE_LAYER_CORE_GRID,
+                      serpentinisation: float = 0.0) -> Result:
     """질량과 반지름을 재현하는 (핵질량분율, 얼음질량분율) 의 띠를 돌려준다. C/MR² 를 주면 좁힌다.
 
     `potential_temperature` 는 필수다 — 온도가 흐르지 않으면 바다가 없고, 바다가 없으면 이
@@ -2309,7 +2357,8 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
               "potential_temperature": potential_temperature, "nmoi_observed": nmoi,
               "composition": "inferred_three_layer", "differentiated": True,
               "body_class": None, "tidal_heating": tidal_heating,
-              "core_mass_fraction": None, "ice_mass_fraction": None}
+              "core_mass_fraction": None, "ice_mass_fraction": None,
+              "serpentinisation": serpentinisation}
     if mass_earth <= 0 or radius_earth <= 0:
         return out_of_domain(RECIPE, VERSION, "질량 또는 반지름이 양수가 아니다",
                              inputs=inputs, refs=REFS)
@@ -2323,7 +2372,7 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
     members = []
     for cmf in core_grid:
         got = _solve_ice_for_radius(mass_earth, radius_earth, cmf,
-                                    potential_temperature, tidal_heating)
+                                    potential_temperature, tidal_heating, serpentinisation)
         if got is None:
             continue
         imf, res = got

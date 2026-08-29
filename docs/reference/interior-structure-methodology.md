@@ -42,7 +42,7 @@ literature, separate recipes.
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
 `tidal_heating` [—] · `envelope_z` [—] · `potential_temperature` [K] ·
-`boundary_temperature_jump` [K] · `mantle_rock_fraction` [—]
+`boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `serpentinisation` [—]
 **Discriminating keys** — the material stack chosen by `composition`, and the pressure
 reached at each layer boundary, which decides whether a grounded phase exists there.
 Regimes and their numeric conditions are in [Domain of validity](#domain-of-validity).
@@ -167,6 +167,7 @@ The materials, with the source of every constant:
 | `mgsio3_en` (upper mantle) | BME3 | 3220 | 125 | 5 | 0 to 23.83 GPa | 0.00692 | Earth adiabat, 1600 K | Seager+ 2007 Table 1, MgSiO₃ enstatite  |
 | `mgsio3_prem` (lower mantle) | BM2 | 3980 | 206 | 4 | 23.83 GPa to 3.5 TPa | 0.00692 | Earth adiabat, 1600 K | Zeng+ 2016 §II, PREM lower-mantle fit  |
 | `mgsio3_pv` (deep mantle) | BME4, K₀″ = −0.016 GPa⁻¹ | 4100 | 247 | 3.97 | 3.5 to 13.5 TPa | 0.00692 | Earth adiabat, 1600 K | Seager+ 2007 Table 1 + §III.3, Karki+ 2000 DFT  |
+| `antigorite` (serpentinised rock, the light end of one declared axis) | BM2 | 2640.5 (**derived**: 273.50 u per m = 1 unit / 172 Å³) | 67.27 | 4 (fixed) | 0 to 10 GPa | **none published** — room temperature only; T passes through | – | Hilairet+ 2006 §3 [13] BM2 (V₀ 2926.23 Å³), ρ₀ from the structural formula §2 [6] and the m = 1 volume §4 [15]; Holland & Powell 1998 requested for the thermal term  |
 | `ice_ih` | BM2 | 916.72 | 8.490 | 4 | 0 to 209.5 MPa | 0.001357 | 273.15 K | IAPWS-06 (Feistel & Wagner 2006) Table 6  |
 | `ice_iii` | BME3 | 1126.384 | 7.8349 | 6.7097 | 209.5 to 355.0 MPa | 0.002048 | 251.15 K | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 251.15 K  |
 | `ice_v` | BME3 | 1207.842 | 10.6368 | 6.7460 | 355.0 to 618.4 MPa | 0.002369 | 256.43 K | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 256.43 K  |
@@ -835,10 +836,10 @@ inside that band:
 | moon | ρ̄ (kg/m³) | two-layer C/MR² | three-layer band (core 0 → 0.45) | published | inside? | narrowed by C/MR² | source |
 |---|---|---|---|---|---|---|---|
 | Ganymede | 1936 | 0.3179 | 0.2836 – 0.3128 | 0.3115 | yes | core 0.008 · ice 0.421 · ocean 500 km / shell 24 km | Schubert+ 2004 (Anderson+ 1996) |
-| Callisto | 1834 | 0.3158 | 0.2856 – 0.3119 | 0.3549 | no | outside the band: rock lighter than this silicate | Anderson+ 2001 |
-| Titan | 1880 | 0.3172 | 0.2853 – 0.3126 | 0.3414 | no | outside the band: rock lighter than this silicate | Iess+ 2010 (Cassini) |
+| Callisto | 1834 | 0.3158 | 0.2856 – 0.3119 | 0.3549 | no | outside the band: rock lighter than this silicate — and than antigorite (C10) | Anderson+ 2001 |
+| Titan | 1880 | 0.3172 | 0.2853 – 0.3126 | 0.3414 | no | outside the band: rock lighter than this silicate — and than antigorite (C10) | Iess+ 2010 (Cassini) |
 | Europa | 3014 | 0.3793 | 0.2774 – 0.3655 | 0.3460 | yes | core 0.070 · ice 0.078 · ocean 104 km / shell 26 km | Anderson+ 1998 |
-| Enceladus | 1610 | 0.3051 | 0.2682 – 0.3008 | 0.3350 | no | outside the band: rock lighter than this silicate | Iess+ 2014 (Cassini) |
+| Enceladus | 1610 | 0.3051 | 0.2682 – 0.3008 | 0.3350 | no | outside the band: rock lighter than this silicate — and than antigorite (C10) | Iess+ 2014 (Cassini) |
 
 **Two of the five are now inside, and the ocean is what moved them.** Ganymede's band starts at
 0.3128 with no core, 0.4 % from the measurement where the two-layer column was 2.1 % high:
@@ -855,6 +856,27 @@ lighter than the silicate this recipe carries (hydrated or porous, the published
 three) or is partially differentiated. The reason is a **material**, not a missing layer. At
 Enceladus the 270 K declaration puts no ocean in a 10 MPa column at all (ice Ih melts above
 272 K there), so that row is the two-layer answer with a core axis, and porosity is live too.
+
+**Measured on 2026-08-30 (C10): hydrated rock alone does not reach them.** The rock now has a
+declared serpentinisation axis — antigorite (Hilairet+ 2006, ρ₀ 2640.5 kg/m³ derived) mixed
+by additive volume into the enstatite/PREM silicate, two solids as grains — and the
+three-layer band was re-run on the three moons at fractions 0, 0.25, 0.5, 0.75 and 1
+(`test_interior.py --serpentine`). The band's top (the zero-core end) rises with the fraction
+and **stays under the published value at every fraction, including fully serpentinised rock**:
+
+| moon | published | band top at f = 0 | 0.25 | 0.5 | 0.75 | f = 1 | fraction in [0, 1] that closes it |
+|---|---|---|---|---|---|---|---|
+| Callisto | 0.3549 | 0.3119 | 0.3165 | 0.3213 | 0.3265 | 0.3321 | none — 0.023 short at f = 1 |
+| Titan | 0.3414 | 0.3126 | 0.3172 | 0.3222 | 0.3276 | 0.3334 | none — 0.008 short at f = 1 |
+| Enceladus | 0.3350 | 0.3008 | 0.3058 | 0.3109 | 0.3162 | 0.3216 | none — 0.013 short at f = 1 |
+
+So "rock lighter than this silicate" is now a measured sentence with a limit: lightening the
+rock all the way to pure antigorite closes 40–75 % of each gap and no more. What remains is
+not a composition on this axis; it is **void space** — C9's branch, porosity retained on a
+heated body — or a partial differentiation that C7 declined to model. Two items answer one
+question from two sides. No fraction was chosen to close anything; the grid is the report.
+(At f > 0 the band collapses to its zero-core member on Callisto and Titan: with a lighter rock
+no core fraction on the grid reproduces the radius, which is the same statement.)
 
 The table is regenerated by `python3 engine/test_interior.py --icy` (about twenty minutes);
 the default run asserts Ganymede's two-layer row and Europa's three-layer narrowing.
@@ -1168,6 +1190,7 @@ Both tables, and the roster table below, are regenerated by
 | **ice giant with no declared temperature** | `body_class` is `ice_giant`, `potential_temperature` unset | **declines**: the hot-water fit is P(ρ, T) as one object, so temperature is an argument rather than a correction, and at fixed pressure 2000 K against 5700 K is 14 % in density at 30 GPa | — |
 | **thermal boundary layer** | `boundary_temperature_jump` > 0 on a body with an ice mantle, a gas envelope and a declared 1-bar temperature | **integrates**, the interior warmer by the declared step across the mantle/envelope boundary (Nettelmann+ 2016's stably stratified TBL; their U15-II 2500 K, U15-III 4700 K, near 0.1 Mbar — this recipe's boundary sits where the composition puts it, 30–40 GPa for the anchors). A declaration: the layer's stability and width are thermal history. A warmer interior is less dense, so the step **enlarges** a planet the adiabatic model already makes too large; it closes nothing by itself | analog |
 | **rock in the ice mantle** | `mantle_rock_fraction` > 0 with a declared temperature | **integrates**, silicate mixed by additive volume into every water phase above the ocean table's 2.3 GPa, ∇_ad weighted by c_P (the hot-water fit gained c_P and ∇_ad from its own P and U for this). A declaration: the ice:rock ratio is formation, and Nettelmann+ 2016 write that the mixing behaviour of rocks with ices "is not well-understood". Denser, so it **shrinks** the planet | analog |
+| **serpentinised rock** | `serpentinisation` in (0, 1] on a differentiated body | **integrates**, the rock layer a volume-additive mixture of the enstatite/PREM silicate and antigorite (Hilairet+ 2006 BM2 to 10 GPa; ρ₀ derived, not printed) — two solids as grains, the rock–metal rule's own shape and not the reaction C7 declined. A declaration: how far the water got is history. antigorite carries **no thermal term** (room temperature only; Holland & Powell 1998 requested), so temperature passes through that component and the grade is set by that deficiency, not by the fit. Above 10 GPa the antigorite end declines by name (dehydration). On Callisto, Titan and Enceladus no fraction in [0, 1] reaches the published C/MR² | analog |
 | **hot water outside its fit** | a liquid below 1000 K above 2.3 GPa (or above 500 K below it), or any water above 50 000 K | **declines** by name at both ends. The floor is Mazevet+ 2019 §3.1's own for ρ ≳ 1 g/cc ("10³ K ≲ T"), and a liquid under it has no equation of state here — the shelf is SeaFreeze `water2` (Brown 2018); the refusal is thrown as too cold, since the fluid opens above. The ceiling is the paper's 50 000 K | — |
 | sub-Neptune | `body_class` is `sub_neptune`, a declared `gas_mass_fraction` and a declared 1-bar temperature | **integrates**: iron core, rock, H/He envelope on the same integrator as the giants. The gas fraction is the seventh declaration (age and irradiation set it; no evolution here) and drops the grade. GJ 1214 b at 2 % H/He reaches its radius with 300 K at 1 bar, inside Valencia+ 2013's < 7 % | analog |
 | **envelope hotter than the mass binds** | any H/He envelope whose 1-bar adiabat is too hot for the body | **declines**, citing the hottest bound solution and the temperature above which the 1-bar level is never reached: the declared adiabat from 1 bar puts the envelope base above what the core can hold. A radiative zone would lower the deep adiabat, and this recipe has none | — |
@@ -1285,7 +1308,9 @@ rather than for this recipe. Either the declared radii are too large for the dec
 which is a finding about art-direction values that were invented rather than observed, or the
 rock is genuinely lighter than the enstatite-plus-PREM silicate this recipe carries, in which
 case the question becomes which rock and the answer is a composition rather than a void
-fraction. Nothing here changes the board: it reports.
+fraction. Nothing here changes the board: it reports. (Since 2026-08-30 the second reading has
+a tool — the `serpentinisation` axis, C10 — and the question is the owner's; it is not run
+here.)
 
 What did change is that the recipe now says all of that with numbers instead of declining
 with a mechanism name. The previous revision could only report "porosity, and a compaction
@@ -1559,6 +1584,26 @@ instead of as a class constant.
   ([`2012E&PSL.345..142A`](https://ui.adsabs.harvard.edu/abs/2012E%26PSL.345..142A)). *Creep
   of phyllosilicates at the onset of plate tectonics* — the antigorite creep law (Peierls
   stress, grain-size independent). Same standing. Verified by bibcode and title.
+- **Hilairet, N., Daniel, I. & Reynard, B. 2006**, GRL 33, L02302
+  ([`2006GeoRL..33.2302H`](https://ui.adsabs.harvard.edu/abs/2006GeoRL..33.2302H),
+  doi [10.1029/2005GL024728](https://doi.org/10.1029/2005GL024728)). *Equation of state of
+  antigorite, stability field of serpentines, and seismicity in subduction zones.* **Cached** as
+  `docs/phase3/_papers/2006GeoRL..33.2302H.pdf` (open access; fetched by the owner). The BM2 the
+  paper adopts (V₀ 2926.23(50) Å³, K₀ 67.27(123) GPa, K₀′ = 4, reversible to 10 GPa), the
+  structural formula and the m = 1 volume from which ρ₀ is derived here, and the one printed
+  density (2765 kg/m³ at 5.7 GPa and 470 °C) it is checked against. Room temperature only.
+  Verified by bibcode and title.
+- **Capitani, G. & Mellini, M. 2004**, Am. Mineral. 89, 147
+  ([`2004AmMin..89..147C`](https://ui.adsabs.harvard.edu/abs/2004AmMin..89..147C)). *The
+  modulated crystal structure of antigorite: The m = 17 polysome* — the structure Hilairet+ index
+  with, which is why 2926.23 / 172 = 17.01. Cited for that check only. Verified by title.
+- **Vance, S. D. et al. 2018**, JGR Planets 123, 180
+  ([`2018JGRE..123..180V`](https://ui.adsabs.harvard.edu/abs/2018JGRE..123..180V),
+  [1705.03999](https://arxiv.org/abs/1705.03999)). *Geophysical Investigations of Habitability
+  in Ice-Covered Ocean Worlds* — the published rock-density targets the icy moons are read
+  against, and the two routes to Enceladus's ~2700 kg/m³ (hydrous rock, or anhydrous rock plus
+  pores) that C9's rheology discriminator tells apart. *Open access*; not yet in the cache, cited
+  from ADS for the targets only. Verified by bibcode and title.
 - **Bierson, C. J., Nimmo, F. & McKinnon, W. B. 2019**, Icarus 326, 10
   ([`2019Icar..326...10B`](https://ui.adsabs.harvard.edu/abs/2019Icar..326...10B), DOI
   [10.1016/j.icarus.2019.01.027](https://doi.org/10.1016/j.icarus.2019.01.027)). **Cached** in

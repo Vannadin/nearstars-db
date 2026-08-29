@@ -575,6 +575,12 @@ class Mixture:
         for m, w in self.parts:
             if w <= 0.0:
                 continue
+            if not m.has_thermal:
+                # **열 상수가 없는 성분은 온도를 그대로 통과시킨다** — 순수 재료에서 cold_phases 가
+                # 받는 것과 같은 규칙(그 상에서 dT/dP = 0). 열 상수가 있는 성분들만 c_P 로 가중한다.
+                # 2026-08-30 에 antigorite 가 들어오며 생긴 자리다: Hilairet+ 2006 은 상온뿐이라
+                # 열항이 없고, 그 결핍은 지어내지 않고 등급과 note 가 말한다.
+                continue
             c = m.c_p(p, t, t_pot)
             if c <= 0.0:
                 # 발표된 열용량이 없는 성분이 있으면 가중치를 지어낼 수 없다.
@@ -1548,6 +1554,48 @@ ICE_VII_X_T_MAX = 1800.0           # K
 SUPERIONIC_MIN_T = 2000.0          # K. Millot+ 2019 초록
 SUPERIONIC_MIN_P = 100.0 * GPA     # Pa. 같은 초록
 
+# ── antigorite — 사문석화된 암석의 가벼운 끝 ───────────────────────────────
+#
+# Hilairet, Daniel & Reynard 2006 (2006GeoRL..33.2302H, 오픈 액세스, PDF 가 캐시에 있다) 가 천연
+# antigorite (Cu12, 쿠바 Escambray) 를 다이아몬드 앤빌 셀에서 10 GPa 까지 방사광 XRD 로 압축했다 —
+# "No amorphization, phase transition or hysteresis were detected during compression or
+# decompression". 그들이 채택한 적합은 **2차 Birch-Murnaghan** 이고 F–f 도표로 확인했다 (§3 [13]):
+#
+#     V₀ = 2926.23(50) Å³,  K₀ = 67.27(123) GPa,  K₀′ = 4 (고정)
+#
+# 3차 적합(V₀ 2926.65, K₀ 62.03, K₀′ 6.39)은 비교용으로만 싣는다. **논문은 ρ₀ 를 인쇄하지 않는다.**
+# 대신 그것을 내는 둘을 인쇄한다 — 구조식 (Mg₂.₆₂Fe₀.₁₆Al₀.₁₅)(Si₁.₉₆Al₀.₀₄)O₅(OH)₃.₅₇ (§2 [6]) 과
+# "The V₀ value corresponding to m = 1 for antigorite is 172 Å³" (§4 [15]). 구조식 한 단위의 질량은
+# 273.50 u (Mg 63.68 + Fe 8.93 + Al 5.13 + Si 55.05 + O 80.00 + OH 60.71), 그것을 172 Å³ 에 놓으면
+#
+#     ρ₀ = 273.50 u / 172 Å³ = 2640.5 kg/m³            (도출값 — 아래 test_interior 가 다시 낸다)
+#
+# 검산 둘. 2926.23 / 172 = 17.013 로 정수이고, 논문이 회절선 지수화에 쓴 구조가 Capitani & Mellini
+# 2004 의 **m = 17 폴리솜** 이다 (2004AmMin..89..147C). 그리고 논문의 유일한 인쇄 밀도 — "at 5.7 GPa
+# and 470°C, antigorite density calculated with our new bulk modulus is 2765 kg·m⁻³" — 를 이 곡선은
+# 상온에서 2839 로 낸다: 2.7 % 차이는 450 K 열팽창의 크기와 부호다.
+#
+# **열항이 없다.** 논문은 상온만 재고 필요한 자리에서 Holland & Powell 1998 의 열팽창을 빌린다. 그
+# 논문은 오너 요청 목록에 있다. 그래서 이 상은 alpha_k = 0 — 등온으로 남고 cold_phases 가 이름을
+# 댄다 — 이고, 상온이 아닌 암석에 쓰이면 등급은 적합의 품질이 아니라 **이 결핍** 이 정한다.
+#
+# **C7 이 막은 혼합이 아니다.** C7 은 물을 규산염에 섞는 것(반응)을 막았다. 이것은 antigorite 와
+# enstatite/PREM 이라는 **두 고체가 알갱이로 공존** 하는 것 — 부분 사문석화된 암석의 실제 모습 — 이고,
+# 그 사이의 부피 가법은 이 파일의 암석–금속 규칙과 같은 모양이다. 축은 하나, "얼마나 사문석화됐는가".
+ANTIGORITE_RHO0 = 2640.5           # kg/m³. 위 도출
+ANTIGORITE_K0 = 67.27 * GPA        # Pa. Hilairet+ 2006 BM2
+ANTIGORITE_P_MAX = 10.0 * GPA      # Pa. 실험 상한 — 가역, 무이력, 같은 공간군
+ANTIGORITE_REF = ("Hilairet, Daniel & Reynard 2006 (2006GeoRL..33.2302H) §3 [13] — 2차 BM 적합, "
+                  "V₀ 2926.23 Å³ · K₀ 67.27 GPa · K₀′ 4; ρ₀ 는 §2 [6] 구조식과 §4 [15] 의 m = 1 부피 "
+                  "172 Å³ 에서 도출")
+ANTIGORITE = Material(
+    "antigorite", "antigorite (사문석)",
+    (Phase("antigorite", "bm2", ANTIGORITE_RHO0, ANTIGORITE_K0, 4.0, ANTIGORITE_P_MAX,
+           ANTIGORITE_REF),),
+    over_reason=("사문석화된 암석층의 바닥이 {p_gpa:.1f} GPa 로 antigorite 실험 상한({max_gpa:.0f} GPa) "
+                 "위다. Hilairet+ 2006 이 압축한 것이 거기까지이고, 그 위의 사문석은 탈수 반응의 "
+                 "영역이라 같은 상이 아니다."))
+
 H2O = Material(
     "h2o", "물얼음",
     (Phase("ice_ih", "bm2", ICE_IH_RHO0, ICE_IH_KT, 4.0, ICE_IH_TO_III,
@@ -1802,5 +1850,5 @@ class _HydrogenHeliumSlope:
 H_HE = HydrogenHelium()
 
 MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O, H_HE, H2O_HOT, H2O_LIQUID)
+    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID)
 }

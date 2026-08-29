@@ -366,6 +366,39 @@ def print_adiabat_window() -> None:
               f"{r['rise_engine']:.3f} | {r['rise_nl']:.3f} | {(r['rise_engine'] / r['rise_nl'] - 1) * 100:+.1f} % |")
 
 
+# ── antigorite (C10) — 옮겨 적기 검산 ────────────────────────────────────
+#
+# Hilairet+ 2006 (2006GeoRL..33.2302H) 는 ρ₀ 를 인쇄하지 않는다. eos.py 가 구조식과 m = 1 부피에서
+# 도출했으므로 여기서 **다시** 도출해 같은 수가 나오는지, 그리고 논문의 인쇄값 셋에 대는지를 본다.
+HILAIRET_FORMULA = (("Mg", 2.62), ("Fe", 0.16), ("Al", 0.15 + 0.04), ("Si", 1.96), ("O", 5.0),
+                    ("OH", 3.57))                 # §2 [6] (Mg₂.₆₂Fe₀.₁₆Al₀.₁₅)(Si₁.₉₆Al₀.₀₄)O₅(OH)₃.₅₇
+HILAIRET_V_M1_A3 = 172.0                          # Å³, §4 [15] "V₀ corresponding to m = 1 … 172 Å³"
+HILAIRET_V0_A3 = 2926.23                          # Å³, §3 [13] BM2 cell volume
+HILAIRET_POLYSOME_M = 17                          # Capitani & Mellini 2004, the structure used to index
+HILAIRET_PRINTED_DENSITY = (5.7e9, 470.0 + 273.15, 2765.0)   # §4: "at 5.7 GPa and 470°C … 2765 kg·m⁻³"
+ATOMIC_MASS_U = {"Mg": 24.305, "Fe": 55.845, "Al": 26.982, "Si": 28.086, "O": 15.999, "OH": 17.007}
+AMU_KG = 1.66053907e-27
+
+
+SERPENTINE_GRID = (0.0, 0.25, 0.5, 0.75, 1.0)
+
+
+def print_serpentine_bands() -> None:
+    """C10 — 세 위성의 3층 띠를 사문석화 분율마다 다시 돌린다 (한 위성에 몇 분). 문서 §Validation 의
+    표가 이것으로 만들어졌고, 게이트에는 넣지 않는다."""
+    print("| moon | published | " + " | ".join(f"band top f = {f}" for f in SERPENTINE_GRID) + " |")
+    print("|---|---|" + "---|" * len(SERPENTINE_GRID))
+    for name, mkg, r_km, nmoi_pub, _src, _gate in ICY_ANCHORS:
+        if name not in ("Callisto", "Titan", "Enceladus"):
+            continue
+        tops = []
+        for f in SERPENTINE_GRID:
+            res = infer_three_layer(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M, ICY_T_POT,
+                                    nmoi=nmoi_pub, serpentinisation=f)
+            tops.append(f"{res.values['nmoi_high']:.4f}" if res.applicable else "declined")
+        print(f"| {name} | {nmoi_pub:.4f} | " + " | ".join(tops) + " |")
+
+
 # 조성별 암석 질량 상한을 재는 축. 값이 아니라 **누가 상한을 정하는가** 가 내용이다.
 CEILING_CASES = (
     ("earth_like (CMF 0.325)", dict(core_mass_fraction=0.325)),
@@ -663,7 +696,7 @@ def icy_table() -> None:
                         f"{res.values['ocean_thickness']:.0f} km / shell "
                         f"{res.values['ice_shell_thickness']:.0f} km")
         else:
-            narrowed = "outside the band: " + ("rock lighter than this silicate" if nmoi_pub > hi
+            narrowed = "outside the band: " + ("rock lighter than this silicate — and than antigorite (C10)" if nmoi_pub > hi
                                                else "core grid too small")
         print(f"| {name} | {rho:.0f} | {two_s} | {lo:.4f} – {hi:.4f} | {nmoi_pub:.4f} | "
               f"{'yes' if inside else 'no'} | {narrowed} | {src} |")
@@ -762,6 +795,9 @@ def main() -> int:
         return 0
     if "--icegiant" in sys.argv:
         ice_giant_table()
+        return 0
+    if "--serpentine" in sys.argv:
+        print_serpentine_bands()
         return 0
     if "--adiabat" in sys.argv:
         print_adiabat_window()
@@ -1252,6 +1288,39 @@ def main() -> int:
         fails.append(f"CMB 온도 민감도 {got:.2f} 가 eq. 8 의 {want:.2f} 와 25 % 넘게 다르다")
     print(f"  [{'PASS' if ok else 'FAIL'}] dT_CMB/dT_Pot {got:.2f} · eq. 8 이 주는 "
           f"{want:.2f} ({(got / want - 1) * 100:+.0f} %)")
+
+    # ── antigorite (C10) — 옮겨 적기 검산 ──
+    print("\nantigorite — Hilairet+ 2006 의 BM2 와, 인쇄되지 않은 ρ₀ 의 재도출")
+    from eos import ANTIGORITE, ANTIGORITE_RHO0, ANTIGORITE_K0, ANTIGORITE_P_MAX
+    mass_u = sum(ATOMIC_MASS_U[el] * n for el, n in HILAIRET_FORMULA)
+    rho0_again = mass_u * AMU_KG / (HILAIRET_V_M1_A3 * 1e-30)
+    ok = abs(rho0_again - ANTIGORITE_RHO0) < 0.5
+    if not ok:
+        fails.append(f"antigorite ρ₀ 재도출 {rho0_again:.1f} 이 eos.py 의 {ANTIGORITE_RHO0} 와 다르다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 구조식 {mass_u:.2f} u / 172 Å³ → ρ₀ {rho0_again:.1f} kg/m³ "
+          f"(eos.py {ANTIGORITE_RHO0})")
+    m_units = HILAIRET_V0_A3 / HILAIRET_V_M1_A3
+    ok = abs(m_units - HILAIRET_POLYSOME_M) < 0.05
+    if not ok:
+        fails.append(f"V₀ / V(m=1) = {m_units:.3f} 이 m = 17 폴리솜과 안 맞는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] V₀ 2926.23 / 172 = {m_units:.3f} — Capitani & Mellini 2004 의 "
+          f"m = {HILAIRET_POLYSOME_M} 폴리솜")
+    p_pr, t_pr, rho_pr = HILAIRET_PRINTED_DENSITY
+    rho_rt = ANTIGORITE.density(p_pr)
+    d = rho_rt / rho_pr - 1.0
+    ok = 0.02 < d < 0.035
+    if not ok:
+        fails.append(f"5.7 GPa 상온 밀도 {rho_rt:.0f} 가 논문의 470 °C 값 2765 보다 {d * 100:+.1f} % — "
+                     "450 K 열팽창의 크기(2–3.5 %)가 아니다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 5.7 GPa: 상온 곡선 {rho_rt:.0f} kg/m³ 대 논문의 470 °C 인쇄값 "
+          f"{rho_pr:.0f} → {d * 100:+.1f} %, 450 K 열팽창의 크기와 부호")
+    ok = ANTIGORITE.cold_phases() == ("antigorite",) and ANTIGORITE_P_MAX == 10e9
+    if not ok:
+        fails.append("antigorite 가 등온 상으로, 10 GPa 상한으로 서 있지 않다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 열항 없음(등온으로 남는 상: {ANTIGORITE.cold_phases()}) · "
+          f"상한 {ANTIGORITE_P_MAX / 1e9:.0f} GPa — 등급을 정하는 것은 적합이 아니라 이 결핍이다")
+    for p_gpa in (0.023, 2.73, 3.28):
+        print(f"         {p_gpa:5.3f} GPa → {ANTIGORITE.density(p_gpa * 1e9):.0f} kg/m³")
 
     # ── 두 번째 앵커 (C8) ──
     # 등급을 올리는 근거는 "앵커가 하나 더 있다" 가 아니라 **"그 앵커와 이만큼 어긋난다"** 다.

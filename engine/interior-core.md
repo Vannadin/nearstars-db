@@ -346,6 +346,11 @@ shell ≈30–40 km. Convection and impacts: ✗ — still carried by nobody, an
   wired: the icy anchors that are heated and differentiating — Enceladus first (the paper's
   own body; on the icy roster, solved today with no porosity declared), Europa, and the roster's
   tidally heated moons that declare `tidal_heating`.
+- **The path on the day it is wired:** parse Table 3 from the cached publisher HTML
+  (`docs/phase3/_papers/2019ApJ...882...47N.html`, whose `<table>` keeps the columns the text
+  extraction flattened) or from the publisher PDF (`PUB_PDF` on ADS), bake the creep
+  coefficients the way the other tables are baked, and integrate the creep law over a declared
+  thermal history — the history being the thing the recipe does not yet have.
 - Malamud & Prialnik 2015 (2015Icar..246...21M, on the request list from C7) serves this item
   too: its abstract carries compaction's gravitational potential energy and serpentinisation
   heat as heat sources — two more of the five.
@@ -359,28 +364,57 @@ statement**: Hilairet's antigorite ρ₀ still stands and still lands on Vance's
 Neumann adds is that a body *made* of it would not keep its pores. The two live on different
 layers; a later session must not read this as a density refutation.
 
-### C10 — Lighter rock
+### C10 — Lighter rock — **closed 2026-08-30: the axis exists, and it does not reach**
 
-Callisto, Titan and Enceladus sit **above** every three-layer band. Every member of a band
-lowers C/MR² as the core grows, so a published value above the zero-core end cannot be
-reached by any layering at all: the mass is less centrally concentrated than rock over water
-allows. The reason is the material, not the structure — the rock must be lighter than the
-enstatite-plus-PREM silicate this recipe carries. Hydrated or porous is the published reading
-for all three.
+Callisto, Titan and Enceladus sit **above** every three-layer band: every member of a band
+lowers C/MR² as the core grows, so a published value above the zero-core end cannot be reached
+by any layering, and the reason was read as the material — rock lighter than the
+enstatite-plus-PREM silicate, hydrated or porous. Set aside on 2026-08-26 for want of a
+grounded lighter rock; the evidence arrived and was used.
 
-**This was investigated and set aside on 2026-08-26 for want of evidence, and the evidence
-now exists.** The rocky-planet roster produced no body needing lighter rock — every measured
-planet solved on the core axis — so the conclusion then was that a search had no direction.
-That survey was of rocky planets; the icy moons say the opposite, three of five, in the same
-direction, agreeing with their published readings.
+**The material.** Hilairet, Daniel & Reynard 2006 (2006GeoRL..33.2302H, open access, PDF in
+the cache): antigorite compressed to 10 GPa with no amorphisation, transition or hysteresis;
+their adopted second-order Birch–Murnaghan **V₀ = 2926.23(50) Å³, K₀ = 67.27(123) GPa,
+K₀′ = 4**, confirmed by an F–f plot (§3 [13]). The paper prints no ρ₀; it prints the structural
+formula (Mg₂.₆₂Fe₀.₁₆Al₀.₁₅)(Si₁.₉₆Al₀.₀₄)O₅(OH)₃.₅₇ (§2 [6]) and "the V₀ value corresponding to
+m = 1 … is 172 Å³" (§4 [15]), and from those **ρ₀ = 273.50 u / 172 Å³ = 2640.5 kg/m³** — derived
+here from the PDF, matching two earlier independent readings (2638–2640), and checked twice:
+2926.23 / 172 = 17.01 is the m = 17 polysome the paper indexes with (Capitani & Mellini 2004),
+and the paper's one printed density, 2765 kg/m³ at 5.7 GPa and 470 °C, comes back as 2841 at
+room temperature on this curve — +2.7 %, the size and sign of 450 K of expansion.
+**Room temperature only**: the paper measures no thermal term and borrows Holland & Powell
+1998 where it needs one; that paper is on the request list, and the grade is set by this
+deficiency, not by the fit. `test_interior.py` re-derives ρ₀ and re-runs both checks.
 
-It is also the axis the open Dante / Hades question turns on: one of the two readings there
-is that the rock is lighter than this silicate.
+**The axis.** `serpentinisation`, a declared fraction of antigorite in the rock layer, mixed
+by additive volume with the silicate — **two solids coexisting as grains**, the rock–metal
+rule's own shape and not the reaction C7 declined (water *into* silicate). Where the water
+went is history, so it is a declaration and drops the grade. Temperature passes through the
+antigorite component the way it passes through any phase without thermal constants.
 
-Needs: a lighter silicate, grounded — which rock, over which pressure and temperature range,
-against what. The direction the 2026-08-26 note said was missing.
+**Bracketing, and the result.** Antigorite sits under the Vance+ 2018 targets (2641 kg/m³ at
+Enceladus's 0.023 GPa, 2742 at Callisto's 2.73, 2761 at Titan's 3.28, against ~2700 and
+~3100) and the existing silicate sits over them, so the three-layer band was re-run at
+fractions 0, 0.25, 0.5, 0.75, 1 — declared, not fitted:
 
-Depends on: nothing.
+| moon | published | band top f = 0 → 1 | fraction in [0, 1] that closes it |
+|---|---|---|---|
+| Callisto | 0.3549 | 0.3119 → 0.3321 | **none** — 0.023 short at pure antigorite |
+| Titan | 0.3414 | 0.3126 → 0.3334 | **none** — 0.008 short |
+| Enceladus | 0.3350 | 0.3008 → 0.3216 | **none** — 0.013 short |
+
+Lightening the rock to pure antigorite closes 40–75 % of each gap and no more. That is the
+strong result the brief allowed for: **the answer on these three is not serpentinisation but
+void space** — C9's branch, porosity retained on a heated body — or the partial
+differentiation C7 declined to model. Two items now answer one question from two sides, and
+C9's discriminator keeps its own layer: a body whose core is antigorite-dominated would not
+keep its pores (rheology), while Hilairet's density stands (density) — on Enceladus the two
+statements together say the pores are in rock that is *not* mostly antigorite, which is
+consistent with this table.
+
+**Dante / Hades.** One of the two readings of that open radius question is that the rock is
+lighter than this silicate; C10 gives it a tool and does not run it. The judgment is the
+owner's.
 
 ## What closing all of these does not do
 

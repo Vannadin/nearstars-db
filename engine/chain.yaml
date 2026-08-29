@@ -112,6 +112,10 @@ nodes:
       mantle_rock_fraction (얼음 맨틀에 섞인 암석의 질량분율). 둘 다 형성과 열 이력이
       정하고 이 레시피가 도출하지 않으며, 쓰이면 등급이 analog 로 내려간다. 앵커는 둘 다
       0 으로 두어 움직이지 않는다.
+      같은 날 serpentinisation 이 들어왔다 (C10) — 암석층에서 antigorite 가 차지하는
+      질량분율, 규산염과 부피 가법으로 섞는 선언 축 하나. 물이 어디까지 갔는가의 이력이라
+      도출하지 않는다. Hilairet+ 2006 의 antigorite 는 상온 적합뿐이라 등급은 그 결핍이
+      정한다. 앵커는 0.
   core_state:
     kind: computed
     recipe: core-state-methodology
