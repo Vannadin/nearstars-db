@@ -87,7 +87,7 @@ nodes:
     recipe: interior-structure-methodology
     outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
               core_temperature, cmb_temperature, cmb_pressure, ice_column_state,
-              bulk_porosity, voids_expected]
+              ocean_thickness, ice_shell_thickness, bulk_porosity, voids_expected]
     note: >
       질량과 조성에서 층 구조를 푼다. 정수압 평형·질량보존·상태방정식을 함께
       적분하므로 층 밀도가 입력이 아니라 결과다 — 그래서 반지름과 중심압도 같이
@@ -99,6 +99,10 @@ nodes:
       잔열이 정하는 열 예산(l_int, 암석체에서 t_int ≈ 35 K)이고, 이쪽은 그 예산이
       수준을 정해 주는 정수압 프로파일 위의 T(P) 다. 한 낱말이 두 양을 덮고 있으니
       geotherm 쪽 이름을 갈라 주는 것이 좋다. 여기서는 손대지 않았다.
+      2026-08-29 에 바다가 들어왔다. ice_column_state 의 판정이 밀도에 들어가고
+      (액체 물 EOS, SeaFreeze water1), 그래서 이 노드 **안에** 고리가 생겼다 —
+      순환 7. ocean_thickness · ice_shell_thickness 는 그 결과이고, 둘 다
+      포텐셜 온도 선언이 정하는 값이라 등급이 analog 다.
   core_state:
     kind: computed
     recipe: core-state-methodology
@@ -572,6 +576,16 @@ cycles:
       검증기가 짚어준 고리다 — 처음엔 조석↔반지름 2노드로 봤는데 실제로는 넷을
       돈다. 반지름을 잡고 한 바퀴 돌린 뒤 상한을 위반하지 않는지 확인한다.
 
+  - id: 7
+    name: 상 ↔ 밀도 ↔ 온도 (interior_layers 안)
+    members: [interior_layers]
+    resolution: >
+      노드 하나 안의 고리다. 얼음 기둥의 상(고체/액체)이 밀도를 정하고, 밀도가
+      정수압·단열선을 정하고, 그 온도가 다시 상을 정한다. 적분이 중심에서 바깥으로
+      가며 걸음마다 그 자리의 (P, T) 로 상을 정하므로 한 번의 적분 안에서는 인과가
+      한 방향이고(안쪽이 바깥쪽을 정한다), 되먹임은 표면 온도를 선언값에 맞추는
+      바깥 고리(shoot 의 온도 반복)가 닫는다. 수렴은 겉질량 1e-8 과 표면 온도 1e-3
+      이 함께 들어야 converged 다. 2026-08-29.
 ordering_rules:
   - 부모가 완전히 풀리기 전에는 위성을 풀 수 없다. scope=parent 엣지가 네 건 확인됐다.
   - 별이 행성보다 먼저다.

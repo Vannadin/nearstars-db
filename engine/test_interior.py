@@ -19,7 +19,8 @@ from __future__ import annotations
 import sys
 
 import interior
-from interior import EARTH_MASS_KG, EARTH_RADIUS_M, infer_composition, solve
+from interior import (EARTH_MASS_KG, EARTH_RADIUS_M, infer_composition,
+                      infer_three_layer, solve)
 from porosity import MASS_COMPACT_KG, P_GRAIN_FRACTURE, voids_expected
 
 # (이름, 질량 M⊕, 발표 반지름 R⊕, CMF, 발표 C/MR², 발표 f, 출처)
@@ -108,9 +109,12 @@ ROSTER = [
 # III·V·VI 이 수렴한 해 안에서 실제로 쓰이는지 확인하는 자리다 — Ganymede 의 얼음 기둥
 # 바닥은 1.5 GPa 로 얼음 VI 구간 한가운데다.
 #
-# 다섯 중 **Ganymede 만 판정선** 이다. 나머지 넷은 이 레시피가 자유 분율 하나만 푸는
-# 2층 구조라서 못 맞히는 천체들이고, 그 사실 자체가 이 표의 내용이다. C/MR² 값은 전부
-# ADS 전문에서 확인했다.
+# 2026-08-29 까지 다섯 중 Ganymede 만 판정선이었고, 나머지 넷은 "자유 분율 하나만 푸는 2층
+# 구조라서 못 맞히는 천체" 라고 적혀 있었다. 바다와 3층 역산이 들어온 뒤 그 문장은 시험됐다 —
+# `--icy` 가 다섯 천체의 (핵, 얼음) 띠를 내고 발표 C/MR² 가 그 띠 안인지 말한다. 안이면
+# 층이 모자랐던 것이고, 밖이면 이유가 다른 이름을 얻는다 (암석의 밀도, 부분 분화). 기본
+# 실행은 Ganymede(2층, 예전 그대로)와 Europa(3층, 좁히기까지)를 판정선으로 든다. C/MR² 값은
+# 전부 ADS 전문에서 확인했다.
 #
 # (이름, 질량 kg, 반지름 km, 발표 C/MR², 출처, 판정선인가)
 ICY_ANCHORS = [
@@ -474,22 +478,59 @@ def _seafreeze_crosscheck() -> list[str]:
     return bad
 
 
+# 얼음 위성의 포텐셜 온도 선언. 껍질 아래 바다 꼭대기는 그 압력의 얼음 Ih 녹는점에 있고
+# (273.16 K 에서 251.2 K 까지), 그것을 표면까지 감압한 단열선의 온도가 선언값이다. 270 K 는
+# 20–30 km 껍질에 해당하고, 값은 열 이력이 정하므로 이 표의 모든 행이 그 선언에 기댄다.
+ICY_T_POT = 270.0
+
+
+def _water_table_crosscheck() -> list[str]:
+    """water_table.py 의 밀도가 SeaFreeze water1 을 재현하는가. 생성기가 적은 보간 오차 안이어야 한다."""
+    try:
+        from seafreeze.seafreeze import getProp
+    except ImportError:
+        print("  [SKIP] SeaFreeze 가 없다 — 액체 물 표 대조는 engine/.venv 에서만 돈다")
+        return []
+    import numpy as np
+    import water_table
+    worst = 0.0
+    for p_mpa, t_k in ((5.0, 273.15), (150.0, 265.0), (600.0, 290.0), (1200.0, 310.0),
+                       (2100.0, 350.0)):
+        pt = np.empty((1,), dtype=object)
+        pt[0] = (p_mpa, t_k)
+        rho_sf = float(getProp(pt, "water1").rho[0])
+        worst = max(worst, abs(water_table.density(p_mpa * 1e6, t_k) / rho_sf - 1.0))
+    ok = worst < 5e-4
+    print(f"  [{'PASS' if ok else 'FAIL'}] 다섯 점에서 최악 {worst:.1e} (생성기가 적은 보간 오차 "
+          f"2e-4 · 허용 5e-4)")
+    return [] if ok else [f"액체 물 표가 SeaFreeze water1 과 {worst:.1e} 어긋난다"]
+
+
 def icy_table() -> None:
-    """문서 §Validation 의 얼음 위성 표를 다시 낸다."""
-    print("| moon | ρ̄ (kg/m³) | ice fraction | ice-column base | C/MR² derived | published | error | source |")
+    """문서 §Validation 의 얼음 위성 표를 다시 낸다 — 2층 한 점과 3층 띠를 나란히."""
+    print("| moon | ρ̄ (kg/m³) | two-layer C/MR² | three-layer band (core 0 → 0.45) | published | inside? | narrowed by C/MR² | source |")
     print("|---|---|---|---|---|---|---|---|")
     for name, mkg, r_km, nmoi_pub, src, _gate in ICY_ANCHORS:
         rho = mkg / (4.0 / 3.0 * 3.141592653589793 * (r_km * 1e3) ** 3)
-        res = infer_composition(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M,
-                                ice_allowed=True)
+        m_e, r_e = mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M
+        two = infer_composition(m_e, r_e, ice_allowed=True)
+        two_s = f"{two.values['nmoi']:.4f}" if two.applicable else "declined"
+        res = infer_three_layer(m_e, r_e, ICY_T_POT, nmoi=nmoi_pub)
         if not res.applicable:
-            print(f"| {name} | {rho:.0f} | – | – | declined | {nmoi_pub:.4f} | – | {src} |")
+            print(f"| {name} | {rho:.0f} | {two_s} | declined | {nmoi_pub:.4f} | – | – | {src} |")
             continue
-        imf = res.inputs["ice_mass_fraction"]
-        base = _ice_base_gpa(res)
-        print(f"| {name} | {rho:.0f} | {imf:.3f} | {base} | "
-              f"{res.values['nmoi']:.4f} | {nmoi_pub:.4f} | "
-              f"{abs(res.values['nmoi'] - nmoi_pub) / nmoi_pub * 100:.1f} % | {src} |")
+        lo, hi = res.values["nmoi_low"], res.values["nmoi_high"]
+        inside = lo <= nmoi_pub <= hi
+        if res.regime == "inferred_three_layer_by_nmoi":
+            narrowed = (f"core {res.inputs['core_mass_fraction']:.3f} · ice "
+                        f"{res.inputs['ice_mass_fraction']:.3f} · ocean "
+                        f"{res.values['ocean_thickness']:.0f} km / shell "
+                        f"{res.values['ice_shell_thickness']:.0f} km")
+        else:
+            narrowed = "outside the band: " + ("rock lighter than this silicate" if nmoi_pub > hi
+                                               else "core grid too small")
+        print(f"| {name} | {rho:.0f} | {two_s} | {lo:.4f} – {hi:.4f} | {nmoi_pub:.4f} | "
+              f"{'yes' if inside else 'no'} | {narrowed} | {src} |")
 
 
 def _ice_base_gpa(res) -> str:
@@ -1258,15 +1299,80 @@ def main() -> int:
     if not ok:
         fails.append("얼음이 없는 천체가 'none' 이라고 말하지 않는다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 얼음 기둥이 없으면 'none' 이다")
-    said = any("밀도는 손대지 않았다" in n for n in warm.notes)
+    said = any("바다를 담은 값" in n for n in warm.notes)
     if not said:
-        fails.append("녹았다고 판정하면서 밀도를 안 건드렸다는 사실을 note 가 안 적는다")
-    print(f"  [{'PASS' if said else 'FAIL'}] 녹은 해의 note 가 밀도를 손대지 않았다고 적는다")
-    # 판정이 밀도에 영향을 주지 않는다는 것을 값으로 확인한다.
-    ok = (warm.values["radius"] == solve(0.0248, potential_temperature=250.0,
-                                         **icy).values["radius"])
-    print(f"  [{'PASS' if ok else 'FAIL'}] 같은 입력이 같은 반지름을 낸다 (판정은 "
-          f"밀도 경로에 들어가지 않는다)")
+        fails.append("녹았다고 판정하면서 밀도가 바다를 담았다는 사실을 note 가 안 적는다")
+    print(f"  [{'PASS' if said else 'FAIL'}] 녹은 해의 note 가 바다를 담은 값이라고 적는다")
+    ok = warm.values["ocean_thickness"] > 0.0 and cold.values["ocean_thickness"] == 0.0
+    if not ok:
+        fails.append("바다 두께가 판정과 어긋난다 — molten 인데 0 이거나 solid 인데 양수다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 250 K 바다 {warm.values['ocean_thickness']:.0f} km "
+          f"· 껍질 {warm.values['ice_shell_thickness']:.0f} km · 120 K 바다 0 km")
+
+    print("\n바다 — 밀도를 실제로 움직이는가, 경계가 격자에 매이지 않는가, 3층을 역산하는가")
+    # 유로파형 천체: 금속 핵 + 암석 + 물 기둥. 2026-08-29 전에는 표현할 수 없던 구조다.
+    eur = dict(core_mass_fraction=0.12, ice_mass_fraction=0.10, potential_temperature=ICY_T_POT)
+    m_eur = 4.7998e22 / EARTH_MASS_KG
+    with_ocean = solve(m_eur, **eur)
+    try:
+        interior.OCEAN_LAYER = False
+        solid = solve(m_eur, **eur)
+    finally:
+        interior.OCEAN_LAYER = True
+    moved = abs(with_ocean.values["radius"] / solid.values["radius"] - 1.0)
+    ok = with_ocean.values["ocean_thickness"] > 0.0 and moved > 1e-3
+    if not ok:
+        fails.append(f"바다가 밀도를 안 움직인다 — 반지름 변화 {moved:.1e}, "
+                     f"바다 {with_ocean.values['ocean_thickness']:.0f} km. 배선이 끊겼다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 유로파형 (핵 0.12 · 얼음 0.10 · {ICY_T_POT:.0f} K): "
+          f"바다 {with_ocean.values['ocean_thickness']:.0f} km · 껍질 "
+          f"{with_ocean.values['ice_shell_thickness']:.0f} km · 반지름이 고체상 대비 "
+          f"{(with_ocean.values['radius'] / solid.values['radius'] - 1) * 100:+.2f} % · "
+          f"C/MR² {solid.values['nmoi']:.4f} → {with_ocean.values['nmoi']:.4f}")
+    # 격자 위상. 상 경계를 걸음 안에서 보간하지 않으면 여기서 2e-3 이 나온다 (2026-08-29 측정).
+    st, _ = interior.shoot(4.7998e22, 0.12, 0.10, "fe_prem", potential_temperature=ICY_T_POT)
+    base = interior.STEPS
+    got = []
+    try:
+        for n in (base - 1, base, base + 1):
+            interior.STEPS = n
+            g = interior.integrate(st.p_center, 4.7998e22, 0.12, 0.10, "fe_prem",
+                                   t_center=st.t_center, t_pot=ICY_T_POT)
+            got.append((g.mass_kg / 4.7998e22, g.radius_m / EARTH_RADIUS_M))
+    finally:
+        interior.STEPS = base
+    span_m = max(x[0] for x in got) - min(x[0] for x in got)
+    span_r = (max(x[1] for x in got) - min(x[1] for x in got)) / got[1][1]
+    ok = span_m < 1e-5 and span_r < 1e-5
+    if not ok:
+        fails.append(f"바다 경계의 격자 위상: {base - 1}↔{base + 1} 걸음에서 겉질량 {span_m:.1e}, "
+                     f"반지름 {span_r:.1e} — 상 경계가 걸음에 양자화됐다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 격자 위상 {base - 1} · {base} · {base + 1}: 겉질량 "
+          f"{span_m:.1e} · 반지름 {span_r:.1e} (허용 1e-5)")
+    # 3층 역산. 유로파의 발표 C/MR² 가 (핵, 얼음) 띠 안에 있고, 그것으로 좁히면 한 점이 나온다.
+    # 기본 실행은 격자 두 점만 훑는다 — 넉 점은 `--icy` 가 낸다.
+    eu = [a for a in ICY_ANCHORS if a[0] == "Europa"][0]
+    band = infer_three_layer(eu[1] / EARTH_MASS_KG, eu[2] * 1e3 / EARTH_RADIUS_M, ICY_T_POT,
+                             nmoi=eu[3], core_grid=(0.0, 0.30))
+    if not band.applicable:
+        fails.append(f"Europa 3층 역산이 거절했다 — {band.reason[:80]}")
+        print(f"  [FAIL] Europa 3층 역산 거절: {band.reason[:80]}")
+    else:
+        inside = band.values["nmoi_low"] <= eu[3] <= band.values["nmoi_high"]
+        narrowed = band.regime == "inferred_three_layer_by_nmoi"
+        off = abs(band.values["nmoi"] - eu[3]) / eu[3] if narrowed else 1.0
+        ok = inside and narrowed and off < 2e-3 and band.converged
+        if not ok:
+            fails.append(f"Europa 3층: 띠 {band.values['nmoi_low']:.4f}–{band.values['nmoi_high']:.4f}, "
+                         f"발표 {eu[3]}, 좁힘 {narrowed}, 오차 {off:.1e}, converged {band.converged}")
+        print(f"  [{'PASS' if ok else 'FAIL'}] Europa: 띠 C/MR² {band.values['nmoi_low']:.4f}–"
+              f"{band.values['nmoi_high']:.4f} 가 발표값 {eu[3]} 을 담고, 그것으로 좁히면 핵 "
+              f"{band.inputs.get('core_mass_fraction', float('nan')):.3f} · 얼음 "
+              f"{band.inputs.get('ice_mass_fraction', float('nan')):.3f} · 바다 "
+              f"{band.values.get('ocean_thickness', 0):.0f} km / 껍질 "
+              f"{band.values.get('ice_shell_thickness', 0):.0f} km · converged {band.converged}")
+    print("\n액체 물 표 — 굳힌 표가 원 표현과 같은가 (SeaFreeze 있을 때만)")
+    fails += _water_table_crosscheck()
 
     print("\n얼음 X — 적합이 자기 출처를 재현하는가 (SeaFreeze 있을 때만)")
     fails += _ice_x_crosscheck()

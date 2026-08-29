@@ -47,6 +47,7 @@ REFS = (
     "2006JPCRD..35.1021F",      # Feistel & Wagner 2006 (IAPWS-06) — 얼음 Ih
     "2020JGRE..12506176J",      # Journaux+ 2020 (SeaFreeze) — 얼음 III·V·VI
     "2011JPCRD..40d3103W",      # Wagner+ 2011 / IAPWS R14-08(2011) — 물의 융해곡선
+    "2019JChPh.151e4501B",      # Bollengier+ 2019 (SeaFreeze water1) — 액체 물, 0–2.3 GPa
     "2019Icar..326...10B",      # Bierson+ 2019 — 압력이 공극을 닫는 관계와 그 계수
     "2012P&SS...73...98C",      # Carry 2012 — 10 MPa 파쇄 문턱, 관측된 전이질량
     "2022arXiv220210046H",      # Helled+ 2022 — n=1 폴리트로프와 그 계수
@@ -88,6 +89,10 @@ STEPS = 1500
 # 이전의 경로(둘 다 걸음 단위 양자화)이고, 격자 대조 검사만 그것을 켠다 — 답이 어느 쪽으로
 # 가는지를 재는 대조 상대로.
 INTERPOLATE_LAYERS = True
+# 얼음 기둥 안에서 국소 (P, T) 가 녹는곡선 위이면 액체 물로 적분한다 (2026-08-29). False 는
+# 판정만 내고 밀도는 고체상으로 두던 2026-08-27 의 경로이고, 바다가 밀도를 실제로 움직이는지를
+# 재는 대조 검사만 그것을 켠다.
+OCEAN_LAYER = True
 MAX_STEPS = 40000
 SHOOT_ITERS = 200
 SHOOT_TOL = 1e-8            # 겉질량의 상대오차
@@ -99,12 +104,12 @@ class Structure:
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
-                 "p_surface")
+                 "p_surface", "r_ocean_base", "r_ocean_top")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
-                 ice_samples=(), p_surface=0.0):
+                 ice_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -129,6 +134,23 @@ class Structure:
         # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
         # 있으면 그 재료의 압력 바닥(1 bar)이고, 발표된 거대행성 반지름이 그 준위의 값이다.
         self.p_surface = p_surface
+        # 바다의 바닥과 꼭대기 반지름 [m]. 얼음 기둥 안에서 국소 (P, T) 가 녹는곡선 위에 있던
+        # 구간이다. None 은 "액체인 자리가 없었다" 는 뜻이고, 온도가 흐르지 않은 해는 늘 None 이다.
+        self.r_ocean_base = r_ocean_base
+        self.r_ocean_top = r_ocean_top
+
+    @property
+    def ocean_thickness_m(self) -> float:
+        if self.r_ocean_base is None or self.r_ocean_top is None:
+            return 0.0
+        return self.r_ocean_top - self.r_ocean_base
+
+    @property
+    def ice_shell_thickness_m(self) -> float:
+        """바다 위에 남은 고체 얼음의 두께. 바다가 없으면 0 — 기둥 전체를 껍질이라 부르지 않는다."""
+        if self.r_ocean_top is None:
+            return 0.0
+        return self.radius_m - self.r_ocean_top
 
     @property
     def nmoi(self) -> float:
@@ -295,6 +317,21 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     last_grad = 0.0        # 마지막으로 잰 ∇_ad. 표면 밖에서는 다시 잴 수 없다
     ice_samples: list[tuple[float, float]] = []
     ICE_SAMPLE_EVERY = 20
+    # ── 바다 ──
+    # 얼음 기둥(h2o)의 한 자리가 액체인가는 그 자리의 (P, T) 를 녹는곡선에 댄 것으로 정한다.
+    # 그 판정을 **걸음의 출발점에서 한 번만** 내리고 걸음 전체의 재료를 그것으로 고정한다 —
+    # RK4 의 네 자리에서 각자 판정하게 두면 상이 걸음 안에서 뒤집혀 2026-08-28 에 걷어낸
+    # 그 계단이 돌아온다. 걸음 안에서 상이 바뀌는 자리는 층 경계와 같은 방법으로 찾는다
+    # (아래). 온도가 흐르지 않으면(t = 0) 이 판정은 아예 없고 예전 경로 그대로다.
+    liquid_mat = MATERIALS["h2o_liquid"]
+    forced_liquid = None   # 방금 상 경계를 넘었다. 다음 걸음은 판정 없이 이 상으로 시작한다
+    r_ocean_base = None
+    r_ocean_top = None
+
+    def liquid_at(pp: float, tt: float) -> bool:
+        """이 (P, T) 의 얼음 기둥이 액체인가. 녹는곡선이 닿지 않는 자리는 고체로 둔다 —
+        그 자리는 판정이 undecided 이고, 밀도는 예전처럼 사다리의 것이다."""
+        return bool(MATERIALS["h2o"].liquid_at(pp, tt))
 
     def material_for(m_now: float):
         nonlocal layer
@@ -317,6 +354,16 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         mat = material_for(m)
         if layer != prev_layer:
             note_switch(prev_layer)
+            forced_liquid = None
+        in_column = OCEAN_LAYER and t > 0.0 and mat.name == "h2o"
+        liquid = False
+        if in_column:
+            liquid = forced_liquid if forced_liquid is not None else liquid_at(p, t)
+            forced_liquid = None
+            if liquid:
+                mat = liquid_mat
+                if r_ocean_base is None:
+                    r_ocean_base = r
         if mat.name not in phases:
             phases.append(mat.name)
 
@@ -336,8 +383,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 # 반지름은 그렇게 늘리지 않는다. 그 결손은 note 가 수로 말한다.
                 t_surface = t * (floor / p) ** last_grad
             break
-        if mat.name == "h2o" and (not ice_samples
-                                  or steps % ICE_SAMPLE_EVERY == 0):
+        if mat.name in ("h2o", "h2o_liquid") and (not ice_samples
+                                                  or steps % ICE_SAMPLE_EVERY == 0):
             ice_samples.append((p, t))
         if p_si_max == 0.0 and _carries_silicate(mat):
             p_si_max = p
@@ -459,6 +506,36 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                     dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
                     crossed = True
 
+        # **상 경계도 걸음 안에서 찾는다.** 층 경계(질량)와 표 바닥(온도)을 걸음 안에서 보간하는
+        # 것과 같은 자리다. 걸음 끝의 (P, T) 를 선형으로 내다보고 상이 뒤집히면, 뒤집히는 분율을
+        # 이분법으로 찾아 그만큼만 걷는다. 층 경계가 이 걸음 안에 먼저 있었으면 이미 h 가 거기까지로
+        # 잘려 있고, 그 안에서 상이 또 바뀌면 상 경계가 더 안쪽이므로 그쪽이 이긴다 — 층 경계는
+        # 다음 걸음이 다시 찾는다. 판정은 walk 의 출발점 상과 같은 함수(liquid_at)라, 여기서 찾은
+        # 자리와 다음 걸음의 판정이 어긋나지 않는다.
+        phase_crossed = False
+        if INTERPOLATE_LAYERS and in_column and p + dp > p_stop:
+            t_end = t + dtdp * dp
+            if liquid_at(p + dp, t_end) != liquid:
+                lo_f, hi_f = 0.0, 1.0
+                for _ in range(50):
+                    mid = 0.5 * (lo_f + hi_f)
+                    if liquid_at(p + dp * mid, t + dtdp * dp * mid) == liquid:
+                        lo_f = mid
+                    else:
+                        hi_f = mid
+                f = lo_f
+                if 0.0 < f < 1.0:
+                    h = f * h
+                    k2 = deriv(r + h / 2, m + h / 2 * k1[0], p + h / 2 * k1[1])
+                    k3 = deriv(r + h / 2, m + h / 2 * k2[0], p + h / 2 * k2[1])
+                    k4 = deriv(r + h, m + h * k3[0], p + h * k3[1])
+                    dm = h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0])
+                    dp = h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])
+                    di = h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
+                    dv = h / 6 * (k1[3] + 2 * k2[3] + 2 * k3[3] + k4[3])
+                    crossed = False
+                phase_crossed = True
+
         if p > P_LAB_MAX:
             m_above_lab += dm
         r += h
@@ -470,6 +547,13 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
         p += dp
         t_surface = t
+        if liquid:
+            r_ocean_top = r
+        if phase_crossed:
+            # 상 경계에 섰다. 다음 걸음은 판정 없이 **반대 상** 으로 시작한다 — 이분법이 경계의
+            # 이쪽에 멈추므로 다시 판정하면 같은 상이 나와 폭 0 의 걸음을 되풀이한다. 층 경계에서
+            # material_for 의 문턱에 맡기지 않는 것과 같은 이유다.
+            forced_liquid = not liquid
         if crossed:
             # 경계에 섰다. 다음 걸음은 새 재료로 시작한다 — material_for 의 문턱에 맡기지
             # 않는다. RK4 의 겉질량은 첫 기울기로 잰 m_b 와 O(dr²) 만큼 다를 수 있어서,
@@ -485,7 +569,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         core_radius = r      # 핵만 있는 천체
         p_cmb = p
         t_cmb = t
-    if ice_samples and mat.name == "h2o":
+    if ice_samples and mat.name in ("h2o", "h2o_liquid"):
         # 기둥 꼭대기. 얼음 III·V·VI 구간에서는 녹는곡선이 단열선보다 가파르므로
         # T − T_melt 가 제일 큰 자리가 여기다. 가스 외피가 있으면 마지막 층이 얼음이
         # 아니라서 이 표본을 넣지 않는다 — 다른 층의 점을 얼음이라고 부르지 않는다.
@@ -495,7 +579,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                      p_silicate_max=p_si_max, t_center=t_center,
                      t_cmb=t_cmb if t_cmb is not None else 0.0,
                      t_surface=t_surface, ice_samples=ice_samples,
-                     p_surface=p_surface)
+                     p_surface=p_surface, r_ocean_base=r_ocean_base,
+                     r_ocean_top=r_ocean_top)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -882,10 +967,13 @@ UNTERBORN_TCMB_MAX_R = 1.05
 # 고르려면 이 레시피가 들고 있지 않은 열 프로파일이 필요하다" 였다. 프로파일이 생겼고
 # (2026-08-27 의 온도) 녹는곡선이 생겼으므로(IAPWS R14-08) 그 사유가 만료됐다.
 #
-# **판정만 하고 밀도는 손대지 않는다.** 액체 물은 얼음보다 밀도가 다르고, 그것까지 모형에
-# 넣으려면 재료마다 액체 상태방정식이 하나씩 더 있어야 하고 적분기 안에 상분율이 들어와야
-# 한다 — 이번 범위보다 크다. 그래서 녹았다고 판정된 해의 반지름과 C/MR² 는 **고체상의 답**
-# 이고, 그렇게 적는다. 명시하지 않는 것이 결함이지 판정만 내는 것이 결함은 아니다.
+# **2026-08-29 부터 판정이 밀도에 들어간다.** 2026-08-27 에는 판정만 내고 밀도는 고체상의
+# 것으로 뒀다 — 액체 상태방정식과 적분기 안의 상분율이 이 범위 밖이었다. 둘 다 들어왔다:
+# 액체 물은 eos.py 의 h2o_liquid (SeaFreeze water1, Bollengier+ 2019) 이고, integrate() 가
+# 걸음마다 얼음 기둥의 국소 (P, T) 를 녹는곡선에 대서 사다리와 액체를 갈아 끼운다. 그래서
+# 아래 판정은 적분이 실제로 밟은 상을 다시 읽는 것이고, molten 인 해의 반지름과 C/MR² 는
+# 바다를 **담은** 답이다. 바다의 두께는 포텐셜 온도 선언이 정하므로 (열 이력이 이 레시피에
+# 없다) 그 해는 선언에 기댄다 — core_state 가 핵 쪽 경계 온도를 받는 것과 같은 자리다.
 #
 # 표본은 기둥 바닥·중간·꼭대기다. 얼음 III·V·VI 구간에서 녹는곡선(약 52 K/GPa)이
 # 단열선(약 21 K/GPa)보다 가파르므로 T − T_melt 의 최대는 기둥 **꼭대기** 에 있고,
@@ -897,9 +985,28 @@ ICE_STATE_UNDECIDED = "undecided"
 
 
 def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
-    """얼음 기둥이 녹았는가. (상태, 한 줄 설명) 을 돌려준다."""
+    """얼음 기둥이 녹았는가. (상태, 한 줄 설명) 을 돌려준다.
+
+    액체인 자리가 있었으면 적분이 그것을 밟았으므로 그 사실이 판정이다. 표본은 못 본 구간
+    (녹는곡선이 닿지 않는 압력)을 이름 대고, 고체 판정의 여유를 적는 데 쓴다."""
     if not st.ice_samples:
         return ICE_STATE_NONE, ""
+    if st.ocean_thickness_m > 0.0:
+        shell = st.ice_shell_thickness_m / 1e3
+        unseen = min((p_pa for p_pa, t_k in st.ice_samples
+                      if p_pa > 0.0 and MATERIALS["h2o"].t_melt(p_pa) is None),
+                     default=0.0)
+        blind = ("" if unseen == 0.0 else
+                 f" 기둥의 {unseen / 1e9:.1f} GPa 위쪽은 녹는곡선이 닿지 않아 사다리의 고체로 "
+                 "적분했다 — IAPWS 식 (5) 가 715 K 에서 끝나고 그게 20.6 GPa 다.")
+        return (ICE_STATE_MOLTEN,
+                f"**얼음 기둥에 바다가 있다** — 두께 {st.ocean_thickness_m / 1e3:.0f} km, "
+                + (f"그 위의 얼음 껍질 {shell:.0f} km" if shell > 0.0 else "표면까지 액체")
+                + ". 국소 (P, T) 가 IAPWS R14-08(2011) 의 녹는곡선 위인 자리마다 적분기가 "
+                "액체 물의 상태방정식(SeaFreeze water1, Bollengier+ 2019)을 썼으므로 반지름과 "
+                "C/MR² 는 바다를 담은 값이다. **두께는 포텐셜 온도 선언이 정한다** — 껍질의 "
+                "두께를 정하는 열 이력이 이 레시피에 없어서, 그 선언이 바뀌면 바다도 바뀐다."
+                + blind)
     if not potential_temperature:
         return (ICE_STATE_UNDECIDED,
                 "**얼음 기둥의 고체·액체를 판정하지 않았다** — 포텐셜 온도가 선언되지 "
@@ -933,11 +1040,12 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
     p_pa, t_k, t_m = best
     where = f"{p_pa / 1e6:.1f} MPa 에서 T {t_k:.1f} K · 녹는점 {t_m:.1f} K"
     if best_margin > 0.0:
+        # 표본은 걸음 출발점의 (P, T) 이고 적분기가 같은 판정으로 상을 골랐으므로, 여기 오면
+        # 적분이 액체를 밟았어야 한다. 오면 배선이 끊긴 것이다 — 조용히 넘기지 않는다.
         return (ICE_STATE_MOLTEN,
-                f"**얼음 기둥이 녹는다** — {where} 로 {best_margin:+.1f} K 다 "
-                f"(IAPWS R14-08(2011), 이 구간 불확도 3 %). **밀도는 손대지 않았다**: "
-                "이 레시피에 액체 물의 상태방정식이 없어서, 여기 나온 반지름과 C/MR² 는 "
-                "고체상의 답이다. 판정만 읽고 밀도는 읽지 말 것." + blind)
+                f"**얼음 기둥이 녹는데 적분은 바다를 밟지 않았다** — {where} 로 "
+                f"{best_margin:+.1f} K 다. 판정과 적분이 같은 함수를 써야 하는데 어긋났다. "
+                "결함이다." + blind)
     if unseen != 0.0:
         # 본 자리는 전부 고체인데 못 본 자리가 있다. **'고체' 라고 말하면 안 된다** —
         # 하한이 한쪽만 묶는 것과 같은 규율이고, core_state 가 같은 규칙을 쓴다.
@@ -1134,6 +1242,9 @@ def solve(mass_earth: float,
         bounds.append(f"얼음 기둥 바닥 {st.p_ice_base / 1e9:.3g} GPa")
     if st.t_center > 0.0:
         bounds.append(f"중심 온도 {st.t_center:.0f} K")
+    if st.ocean_thickness_m > 0.0:
+        bounds.append(f"바다 {st.ocean_thickness_m / 1e3:.0f} km · 얼음 껍질 "
+                      f"{st.ice_shell_thickness_m / 1e3:.0f} km")
     notes = [f"층별 상: {' → '.join(st.phases)}. {' · '.join(bounds)}, "
              f"평균밀도 {rho_bar:.0f} kg/m³.",]
     if initial_porosity > 0:
@@ -1253,7 +1364,11 @@ def solve(mass_earth: float,
              "이 노드는 결합 코어 안에 있다 (chain.yaml 순환 1·3). converged 는 "
              "**이 적분의 사격이 붙었는가** 를 말하지, 조석가열이 조성을 되바꾸는 "
              "그래프 고리가 닫혔는가를 말하지 않는다 — 그 고리는 러너가 코어를 "
-             "돌릴 때 닫힌다.",
+             "돌릴 때 닫힌다. 노드 안에도 고리가 하나 있다 (순환 7): 상이 밀도를 정하고 "
+             "밀도가 온도 프로파일을 정하고 온도가 상을 정한다. 적분은 중심에서 바깥으로 "
+             "가며 걸음마다 상을 그 자리의 (P, T) 로 정하므로 한 번의 적분 안에서는 인과가 "
+             "한 방향이고, 되먹임은 표면 온도를 맞추는 바깥 고리가 닫는다 — converged 가 "
+             "그 고리의 수렴(표면 온도 1e-3 안)까지 포함한다.",
              "등온이다. 핵과 하부맨틀 EOS 가 PREM 적합이라 지구의 열구조와 가벼운 "
              "원소가 그 유효 ρ₀ 안에 흡수돼 있다."]
     if st.t_center > 0.0:
@@ -1306,13 +1421,15 @@ def solve(mass_earth: float,
                             or thermal_unchecked or ice_x_reached)
                else "calibrated"),
         inputs=inputs,
-        cycles=(1, 3),
+        cycles=(1, 3, 7),
         converged=converged,
         values={"nmoi": st.nmoi,
                 "core_temperature": st.t_center,
                 "cmb_temperature": st.t_cmb,
                 "cmb_pressure": (st.p_cmb or 0.0) / 1e9,
                 "ice_column_state": ice_state,
+                "ocean_thickness": st.ocean_thickness_m / 1e3,
+                "ice_shell_thickness": st.ice_shell_thickness_m / 1e3,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
                 "core_radius": st.core_radius_m / EARTH_RADIUS_M,
                 "radius": radius,
@@ -1324,6 +1441,8 @@ def solve(mass_earth: float,
                "cmb_temperature": "K",
                "cmb_pressure": "GPa",
                "ice_column_state": "",
+               "ocean_thickness": "km",
+               "ice_shell_thickness": "km",
                "core_radius_fraction": "dimensionless",
                "core_radius": "R_earth",
                "radius": "R_earth",
@@ -1481,7 +1600,7 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
                 "반지름이 맞는다."),
         grade="analog",
         inputs=inputs,
-        cycles=(1, 3),
+        cycles=(1, 3, 7),
         converged=best.converged,
         values=dict(best.values), units=best.units, refs=REFS, notes=tuple(notes),
     )
@@ -1671,10 +1790,198 @@ def infer_composition(mass_earth: float, radius_earth: float,
                 f"{x:.3f} 에서 반지름이 맞는다."),
         grade="analog",
         inputs=inputs,
-        cycles=(1, 3),
+        cycles=(1, 3, 7),
         converged=best.converged,
         values=v, units=best.units, refs=REFS, notes=tuple(notes),
     )
+
+
+# ── 3층 역산: 금속 핵 + 암석 + 물 기둥(그 안의 바다) ─────────────────────
+#
+# 위의 역산은 자유 분율 **하나** 를 푼다 — 질량과 반지름 둘로 미지수 하나. 유로파·가니메데·
+# 엔셀라두스 같은 천체는 금속 핵과 물 기둥을 같이 갖고, 그러면 미지수가 둘이다(핵질량분율·
+# 얼음질량분율, 암석은 나머지). 바다의 두께는 **미지수가 아니다** — 포텐셜 온도 선언과
+# 녹는곡선이 정하고, 이 함수는 그 선언을 받아 넘길 뿐이다.
+#
+# 미지수 둘에 관측 둘이면 해는 점이 아니라 **띠** 다. 그래서 고르지 않는다: 핵질량분율 축을
+# 훑으며 자리마다 반지름을 재현하는 얼음질량분율을 풀고, 그 (핵, 얼음, C/MR²) 의 열을 그대로
+# 돌려준다. 발표된 C/MR² 가 있으면(태양계 위성) 그것을 **세 번째 관측** 으로 받아 띠 위의 한
+# 점으로 좁힌다 — 좁힌 것이지 고른 것이 아니고, 결과가 그렇게 적는다. 엔진이 스스로 핵질량분율을
+# 정하는 일은 없다.
+THREE_LAYER_CORE_GRID = (0.0, 0.15, 0.30, 0.45)   # 훑는 핵질량분율. 넷이면 띠의 모양이 보인다
+THREE_LAYER_NMOI_TOL = 1e-3                        # C/MR² 로 좁힐 때의 상대 허용오차
+_INFER_ITERS = 12                                  # 얼음질량분율의 regula falsi 상한
+
+
+def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
+                          potential_temperature: float, tidal_heating: bool):
+    """핵질량분율을 고정하고 반지름을 재현하는 얼음질량분율을 푼다. (분율, Result) 또는 None.
+
+    반지름은 얼음에 단조증가이므로 양 끝을 재고 그 사이를 Illinois 형 regula falsi 로 좁힌다 —
+    온도를 선언한 풀이가 한 번에 몇 초라 이분법 40 회는 못 쓴다. 양 끝 밖이면 None: 얼음을
+    다 빼도 크거나(이 핵으로는 너무 가볍다), 거의 다 얼음이어도 작다(빈 공간이 필요하다)."""
+    def at(imf):
+        return solve(mass_earth, core_mass_fraction=cmf, ice_mass_fraction=imf,
+                     potential_temperature=potential_temperature,
+                     tidal_heating=tidal_heating)
+    lo, hi = 0.0, max(0.0, 0.98 - cmf)
+    r_lo = at(lo)
+    if not r_lo.applicable:
+        return None
+    if r_lo.values["radius"] >= radius_earth:
+        return (lo, r_lo) if abs(r_lo.values["radius"] - radius_earth) / radius_earth < INFER_TOL else None
+    r_hi = at(hi)
+    if not r_hi.applicable or r_hi.values["radius"] < radius_earth:
+        return None
+    f_lo = r_lo.values["radius"] - radius_earth
+    f_hi = r_hi.values["radius"] - radius_earth
+    best = None
+    side = 0
+    for _ in range(_INFER_ITERS):
+        x = hi - f_hi * (hi - lo) / (f_hi - f_lo)
+        res = at(x)
+        if not res.applicable:
+            return None
+        f = res.values["radius"] - radius_earth
+        best = (x, res)
+        if abs(f) / radius_earth < INFER_TOL:
+            break
+        if f < 0.0:
+            lo, f_lo = x, f
+            if side == -1:
+                f_hi *= 0.5
+            side = -1
+        else:
+            hi, f_hi = x, f
+            if side == 1:
+                f_lo *= 0.5
+            side = 1
+    return best
+
+
+def infer_three_layer(mass_earth: float, radius_earth: float,
+                      potential_temperature: float, nmoi: float | None = None,
+                      tidal_heating: bool = False,
+                      core_grid: tuple[float, ...] = THREE_LAYER_CORE_GRID) -> Result:
+    """질량과 반지름을 재현하는 (핵질량분율, 얼음질량분율) 의 띠를 돌려준다. C/MR² 를 주면 좁힌다.
+
+    `potential_temperature` 는 필수다 — 온도가 흐르지 않으면 바다가 없고, 바다가 없으면 이
+    함수가 위의 단일 축 역산과 다를 것이 없다. 그 선언이 바다의 두께를 정하므로 결과는 늘
+    analog 다."""
+    inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
+              "potential_temperature": potential_temperature, "nmoi_observed": nmoi,
+              "composition": "inferred_three_layer", "differentiated": True,
+              "body_class": None, "tidal_heating": tidal_heating,
+              "core_mass_fraction": None, "ice_mass_fraction": None}
+    if mass_earth <= 0 or radius_earth <= 0:
+        return out_of_domain(RECIPE, VERSION, "질량 또는 반지름이 양수가 아니다",
+                             inputs=inputs, refs=REFS)
+    if not potential_temperature or potential_temperature <= 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "3층 역산에는 포텐셜 온도 선언이 있어야 한다. 바다의 자리를 정하는 것이 녹는곡선에 "
+            "댄 온도이고, 온도가 흐르지 않으면 기둥은 전부 고체라 단일 축 역산(infer_composition)"
+            "과 같은 문제가 된다.", inputs=inputs, refs=REFS)
+
+    members = []
+    for cmf in core_grid:
+        got = _solve_ice_for_radius(mass_earth, radius_earth, cmf,
+                                    potential_temperature, tidal_heating)
+        if got is None:
+            continue
+        imf, res = got
+        members.append({"core_mass_fraction": cmf, "ice_mass_fraction": imf,
+                        "nmoi": res.values["nmoi"], "radius": res.values["radius"],
+                        "ocean_thickness": res.values["ocean_thickness"],
+                        "ice_shell_thickness": res.values["ice_shell_thickness"],
+                        "converged": bool(res.converged)})
+    if not members:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"핵질량분율 {', '.join(f'{c:.2f}' for c in core_grid)} 어느 자리에서도 얼음질량분율로 "
+            f"반지름 {radius_earth * EARTH_RADIUS_M / 1e3:.0f} km 를 재현하지 못한다. 암석·금속·"
+            "물의 어떤 배합으로도 이 밀도가 안 나온다는 뜻이고, 남는 기작은 빈 공간(다공도)이거나 "
+            "이 레시피의 규산염보다 가벼운 암석(함수 규산염)이다.",
+            inputs=inputs, refs=REFS)
+
+    n_lo, n_hi = (min(m["nmoi"] for m in members), max(m["nmoi"] for m in members))
+    band_note = ("띠 — " + " · ".join(
+        f"핵 {m['core_mass_fraction']:.2f} → 얼음 {m['ice_mass_fraction']:.3f}, "
+        f"C/MR² {m['nmoi']:.4f}, 바다 {m['ocean_thickness']:.0f} km / 껍질 "
+        f"{m['ice_shell_thickness']:.0f} km" for m in members)
+        + ". 질량과 반지름 둘로는 이 열의 어느 점도 고를 수 없다.")
+    lean = ("**바다의 두께는 포텐셜 온도 선언이 정한다.** 껍질 아래 바다 꼭대기는 그 압력의 "
+            "녹는점에 있고, 표면까지 감압한 단열선의 온도가 곧 선언값이다 — 얼음 Ih 의 녹는점 "
+            "251–273 K 사이 어디에 두느냐가 껍질 두께이고, 그것을 정하는 열 이력이 이 레시피에 "
+            "없다. 그래서 analog 다.")
+    converged = all(m["converged"] for m in members)
+
+    if nmoi is None or not (n_lo <= nmoi <= n_hi):
+        notes = [band_note, lean]
+        if nmoi is not None:
+            notes.insert(0, (
+                f"**관측 C/MR² {nmoi:.4f} 는 띠 밖이다** — 띠는 {n_lo:.4f} 에서 {n_hi:.4f} 까지다. "
+                + ("관측값이 띠보다 높다: 질량이 이 모형보다 **덜** 중심에 몰려 있어야 하고, "
+                   "핵을 빼는 것으로는 이 띠의 위 끝(핵 0)이 한계다. 남는 기작은 암석 자체가 "
+                   "이 레시피의 규산염보다 가벼운 것(함수 규산염 · 다공질 핵)이거나 부분 분화 — "
+                   "층 수의 문제가 아니라 **재료** 의 문제다."
+                   if nmoi > n_hi else
+                   "관측값이 띠보다 낮다: 이 격자의 가장 큰 핵으로도 질량이 충분히 중심에 안 "
+                   "몰린다. 핵 격자를 위로 넓히면 닿을 수 있다.")))
+        return Result(
+            recipe=RECIPE, version=VERSION, regime="inferred_three_layer_band",
+            reason=(f"질량 {mass_earth:.3g} M⊕ 와 반지름 {radius_earth:.4f} R⊕ 를 재현하는 "
+                    f"(핵, 얼음) 배합이 {len(members)} 점의 띠로 나온다 — C/MR² {n_lo:.4f}–"
+                    f"{n_hi:.4f}. 미지수 둘에 관측 둘이라 좁히지 않는다."),
+            grade="analog", inputs=inputs, cycles=(1, 3, 7), converged=converged,
+            values={"nmoi_low": n_lo, "nmoi_high": n_hi, "members": members},
+            units={"nmoi_low": "dimensionless", "nmoi_high": "dimensionless",
+                   "members": ""},
+            refs=REFS, notes=tuple(notes))
+
+    # C/MR² 가 띠 안이다. 이웃한 두 점 사이를 보간해 출발하고, 핵질량분율에 대해 할선으로 좁힌다.
+    members.sort(key=lambda m: m["core_mass_fraction"])
+    pairs = [(a, b) for a, b in zip(members, members[1:])
+             if min(a["nmoi"], b["nmoi"]) <= nmoi <= max(a["nmoi"], b["nmoi"])]
+    a, b = pairs[0]
+    x0, y0 = a["core_mass_fraction"], a["nmoi"] - nmoi
+    x1, y1 = b["core_mass_fraction"], b["nmoi"] - nmoi
+    best = None
+    for _ in range(6):
+        x = x1 - y1 * (x1 - x0) / (y1 - y0) if y1 != y0 else 0.5 * (x0 + x1)
+        got = _solve_ice_for_radius(mass_earth, radius_earth, x,
+                                    potential_temperature, tidal_heating)
+        if got is None:
+            break
+        imf, res = got
+        y = res.values["nmoi"] - nmoi
+        best = (x, imf, res)
+        if abs(y) / nmoi < THREE_LAYER_NMOI_TOL:
+            break
+        x0, y0, x1, y1 = x1, y1, x, y
+    if best is None:
+        return out_of_domain(
+            RECIPE, VERSION, "띠 안인데 C/MR² 로 좁히는 할선이 풀리는 점을 못 찾았다",
+            inputs=inputs, refs=REFS, notes=(band_note,))
+    cmf, imf, res = best
+    inputs["core_mass_fraction"] = cmf
+    inputs["ice_mass_fraction"] = imf
+    v = dict(res.values)
+    v.update({"nmoi_low": n_lo, "nmoi_high": n_hi, "members": members})
+    u = dict(res.units)
+    u.update({"nmoi_low": "dimensionless", "nmoi_high": "dimensionless", "members": ""})
+    notes = [f"역산이다 — 핵질량분율 {cmf:.3f} · 얼음질량분율 {imf:.3f} 가 질량·반지름과 "
+             f"관측 C/MR² {nmoi:.4f} 를 재현한다. C/MR² 는 **세 번째 관측** 으로 받아 띠를 "
+             "좁히는 데만 썼고, 이 값은 예측이 아니라 되읽은 값이다.",
+             band_note, lean]
+    notes += list(res.notes)
+    return Result(
+        recipe=RECIPE, version=VERSION, regime="inferred_three_layer_by_nmoi",
+        reason=(f"질량 {mass_earth:.3g} M⊕ 와 반지름 {radius_earth:.4f} R⊕ 가 (핵, 얼음) 의 "
+                f"띠를 남기고, 관측 C/MR² {nmoi:.4f} 가 그 띠 위의 한 점 — 핵 {cmf:.3f} · "
+                f"얼음 {imf:.3f} — 을 고른다."),
+        grade="analog", inputs=inputs, cycles=(1, 3, 7), converged=res.converged,
+        values=v, units=u, refs=REFS, notes=tuple(notes))
 
 
 # ── 그래프에 붙이기 ─────────────────────────────────────────────────────
