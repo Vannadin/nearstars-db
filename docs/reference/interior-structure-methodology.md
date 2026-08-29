@@ -23,8 +23,6 @@ literature, separate recipes.
 
 ## What changed, and why each change had to
 
-Each row is a summary; the section it names carries the work.
-
 | date | what changed | what it cost before, or what it opened |
 |---|---|---|
 | 2026-08-25 | uniform layers replaced by an integration | layer densities came from a composition table that only held near Earth's mass: Earth's C/MR² was 4.8 % high and always in the same direction, Mercury 8.6 % out because its core sits near 7800 kg/m³ where Earth's runs near 10900. The table is gone, layer density is an output, Earth's error is 0.3 % |
@@ -34,20 +32,12 @@ Each row is a summary; the section it names carries the work.
 | 2026-08-28 | the H/He envelope stopped being a polytrope | one constant fitted to Jupiter was carrying every giant, and it inflated any envelope that was only part of a planet: Saturn +20.7 %, Uranus +23.8 %, Neptune +29.2 %. The published Chabrier+ 2019 mixture table replaced it — Jupiter −0.83 %, Saturn at Z = 0 +7.06 %, Uranus +5.46 %. The same table carries ∇_ad, which is what finally gave the envelope a temperature; and its entropy columns gave the c_P weights that a metal-loaded envelope needs, closing a silent fallback to an assembled gradient |
 | 2026-08-27 | the silicate carried above 3.5 TPa | one phase, spliced where the PREM fit's author stops it and running to where Seager+ 2007 hands silicate to Thomas–Fermi–Dirac. Three separate refusals shared that ceiling: the rocky mass limit rose from 6.84 to 22.78 M⊕ at Earth composition and 19.32 to 53.38 M⊕ for pure silicate, Jupiter's whole heavy-element budget integrates, and a compact rock core inside a Jupiter-mass giant is possible up to 17.66 M⊕. The third only half opened, and its row says so |
 
-**2026-08-27, later, gave the solver a temperature.** `ρ(P)` became `ρ(P, T)` and an
-adiabat now integrates alongside the pressure, so `core_temperature` and `cmb_temperature`
-come out and `core_state` can finally be wired: that node had zero edges because it needed a
-core temperature to compare against a melting curve. The hard part was not adding the term
-but avoiding adding it twice, since the PREM fits already contain Earth's geotherm; the
-[temperature](#temperature-what-the-fits-already-contain) section has how, and the answer is
-that the reference is Earth's own adiabat, not an isotherm.
-
 ## Contract — `interior_layers`
 
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
 `radius` [R_earth] · `core_pressure` [GPa] · `cmb_pressure` [GPa] ·
 `core_temperature` [K] · `cmb_temperature` [K] · `ice_column_state` [—] ·
-`bulk_porosity` [—] · `voids_expected` [—]
+`ocean_thickness` [km] · `ice_shell_thickness` [km] · `bulk_porosity` [—] · `voids_expected` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
@@ -182,6 +172,7 @@ The materials, with the source of every constant:
 | `ice_vi` | BME3 | 1263.386 | 10.3686 | 7.8219 | 618.4 MPa to 2.216 GPa | 0.003740 | 272.73 K | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 272.73 K  |
 | `ice_vii` | BME3 | 1460 | 23.7 | 4.15 | 2.216 to 37.4 GPa | 0.005922 | 300 K | Seager+ 2007 Table 1, Hemley+ 1987 data; thermal constants from SeaFreeze v1.1.0 `VII_X_French` (French & Redmer 2015) at 2.216 GPa, 300 K  |
 | `ice_x` | Vinet | 1644.295 | 22.2868 | 6.7507 | 37.4 GPa to 1 TPa, T ≤ 1800 K | 0.004337 | 300 K | **Fitted**, not read: SeaFreeze v1.1.0 `VII_X_French` (French & Redmer 2015) 300 K isotherm over the range used  |
+| `h2o_liquid` (ocean) | baked table, bilinear in (P, T) | – | – | – | 0 to 2.3 GPa, 240 to 500 K | published slope dT/dP\|_S read, not assembled | – | SeaFreeze v1.1.0 `water1` (Bollengier+ 2019), baked by `tools/make_water_table.py`; 2×10⁻⁴ against the source where an ocean sits (252 to 360 K)  |
 | `h_he` (giant envelope) | polytrope, n = 1 | 0 (see note) | K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻² | n = 1 | 0 to 653 TPa | **not applicable** | – | Helled+ 2022 §2, unit-checked against their own R = 70,300 km  |
 
 The two thermal columns have two sources and must not be mixed: rock and metal take αK_T
@@ -431,18 +422,26 @@ because moving either breaks the fit it belongs to; the melting curve branches o
 break pressures instead. Within about 2 % of a triple point the two disagree about which ice
 melts, which is inside IAPWS's own 3 %.
 
-**The verdict is returned; the density is not changed.** Liquid water is not the same density
-as ice, and modelling that needs a second equation of state per material and a phase fraction
-inside the integrator. So a body reported `molten` still has the solid-phase radius and
-C/MR², every note carrying a molten verdict says so, and every anchor is bit-identical to the
-revision before this one.
+**The verdict moves the density.** Wherever the local (P, T) in the water column sits above
+the melting curve the integrator uses liquid water, `h2o_liquid` in the table above, so a
+body reported `molten` carries an ocean in its radius and C/MR², and reports its thickness
+and the ice shell above it. The ocean is not a layer of the stack: it is the same substance
+as the shell and the high-pressure ice, so the phase is decided **inside the `h2o` material**,
+once per integration step from the state at the step's start, and pinned for the step. The
+step is cut where the interpolated (P, T) crosses the curve, exactly as at a layer boundary,
+because letting the four Runge–Kutta stages each decide would quantise the ocean's edges to
+the grid (measured: 2 × 10⁻³ in radius between 1499 and 1501 steps without the cut, 10⁻⁷ with
+it). A liquid demanded above 2.3 GPa (ice VII warm enough to melt) declines by name; the shelf
+is SeaFreeze's `water2` (Brown 2018, to 100 GPa).
 
-**The curve runs out before the ladder does, and that stays a verdict rather than a density.**
-IAPWS equation (5) ends at 715 K, which is 20.6 GPa, inside ice VII: `ice_x` therefore carries
-no melting curve at all and `melt_free_phases()` names it. Above 20.6 GPa the state comes back
-`undecided`, and a column with any sample past the curve can only be `molten` or `undecided`,
-never `solid` — one sample above the curve proves melting, but `solid` needs the whole column
-seen. The density is unaffected either way, as above.
+**The ocean's thickness follows the declaration.** The top of an ocean under a shell sits at
+the ice Ih melting point of that depth, 273.16 to 251.2 K, and the adiabat decompressed to the
+surface is what `potential_temperature` declares: 270 K is a 20 to 30 km shell. The thermal
+history that fixes it is not in this recipe, so every result with an ocean is graded analog on
+that declaration, the same standing as `core_cmb_temperature` in [core-state](core-state-methodology.md).
+Above 20.6 GPa, where IAPWS equation (5) ends, `ice_x` carries no curve, the column stays on
+the solid ladder and the state is `undecided`; a column with any sample past the curve is
+`molten` or `undecided`, never `solid`.
 
 Iron's melting curve is documented with its consumer, in
 [core-state](core-state-methodology.md). Silicate has none here: a mantle solidus is a
@@ -654,8 +653,7 @@ validation table states both so no comparison silently changes convention.
 1. **Choose the material stack** from `composition`. Four are defined: `earth_like`
    (CMF 0.325), `iron` (pure Fe(ε)), `silicate` (no metal), and `water` (50 % H₂O over an
    Earth-like rock). Numeric fractions passed explicitly override the preset.
-2. **Refuse the undifferentiated case.** `differentiated: false` is declined by name, and
-   it is not the same statement as CMF = 0. See [Domain of validity](#domain-of-validity).
+2. **Mix the undifferentiated case.** `differentiated: false` is one rock-metal layer, not CMF = 0.
 3. **Bracket the central pressure** from the uncompressed radius, capped at the innermost
    material's validity ceiling. Above that ceiling the physics is electron degeneracy
    (Thomas–Fermi–Dirac, Seager+ 2007 §III.2), which this recipe does not carry.
@@ -690,6 +688,15 @@ not distinguished by mass and radius alone. Having a compaction model does not f
 makes both branches computable rather than one of them computable and the other a gap. So
 every inverted result carries the degeneracy in its notes, names which axis it took and on
 whose declaration, and is graded **analog** rather than calibrated.
+
+**Three layers make it a band, and the band is the answer.** A body with a metal core, rock
+and a water column has two free fractions, and mass and radius fix only one. `infer_three_layer`
+scans the core mass fraction (0, 0.15, 0.30, 0.45), solves at each the ice fraction that
+reproduces the radius (with the ocean the declaration puts in it), and returns that family with
+its C/MR² range: the engine narrows and does not pick. Given a measured C/MR² it narrows the
+band to the one member that reproduces it, on the secant in core fraction, and says it did so on
+a third observation; a value outside the band names the mechanism the band cannot reach
+(above it, rock lighter than this silicate; below it, a larger core than the grid).
 
 The porosity inversion has one extra honesty requirement, because its free variable is the
 initial porosity and that is exactly the quantity the relation cannot derive. So the
@@ -775,34 +782,37 @@ locates the melting-curve triple points from its own Gibbs energies, at 207.59, 
 consistency check between two literatures rather than within one.
 
 **Against measured moons.** The construction is only worth anything if the phases carry a
-real body. Inverting five Solar System icy satellites from mass and radius alone:
+real body. Five Solar System icy satellites, inverted from mass and radius: the two-layer
+column (one free fraction, no temperature) beside the three-layer band (core, rock, water
+column with the ocean the 270 K declaration puts in it), and whether the published C/MR² lies
+inside that band:
 
-| moon | ρ̄ (kg/m³) | ice fraction | ice-column base | C/MR² derived | published | error | source |
+| moon | ρ̄ (kg/m³) | two-layer C/MR² | three-layer band (core 0 → 0.45) | published | inside? | narrowed by C/MR² | source |
 |---|---|---|---|---|---|---|---|
-| Ganymede | 1936 | 0.406 | 1.51 GPa (ice VI) | 0.3179 | 0.3115 | 2.1 % | Schubert+ 2004 (Anderson+ 1996) |
-| Callisto | 1834 | 0.444 | 1.28 GPa (ice VI) | 0.3158 | 0.3549 | 11.0 % | Anderson+ 2001 |
-| Titan | 1880 | 0.431 | 1.47 GPa (ice VI) | 0.3172 | 0.3414 | 7.1 % | Iess+ 2010 (Cassini) |
-| Europa | 3014 | 0.032 | 0.0695 GPa (ice Ih) | 0.3793 | 0.3460 | 9.6 % | Anderson+ 1998 |
-| Enceladus | 1610 | 0.398 | 0.00968 GPa (ice Ih) | 0.3051 | 0.3350 | 8.9 % | Iess+ 2014 (Cassini) |
+| Ganymede | 1936 | 0.3179 | 0.2836 – 0.3128 | 0.3115 | yes | core 0.008 · ice 0.421 · ocean 500 km / shell 24 km | Schubert+ 2004 (Anderson+ 1996) |
+| Callisto | 1834 | 0.3158 | 0.2856 – 0.3119 | 0.3549 | no | outside the band: rock lighter than this silicate | Anderson+ 2001 |
+| Titan | 1880 | 0.3172 | 0.2853 – 0.3126 | 0.3414 | no | outside the band: rock lighter than this silicate | Iess+ 2010 (Cassini) |
+| Europa | 3014 | 0.3793 | 0.2774 – 0.3655 | 0.3460 | yes | core 0.070 · ice 0.078 · ocean 104 km / shell 26 km | Anderson+ 1998 |
+| Enceladus | 1610 | 0.3051 | 0.2682 – 0.3008 | 0.3350 | no | outside the band: rock lighter than this silicate | Iess+ 2014 (Cassini) |
 
-**Ganymede is the row that matters, and it is the gate in the test.** Its water column
-bottoms at 1.51 GPa, in the middle of ice VI, so this is the new phases doing load-bearing
-work inside a converged solution rather than merely unblocking a search. C/MR² comes out
-2.1 % from the measured value, the same tolerance Mars and Mercury sit at.
+**Two of the five are now inside, and the ocean is what moved them.** Ganymede's band starts at
+0.3128 with no core, 0.4 % from the measurement where the two-layer column was 2.1 % high:
+500 km of liquid replaced ices III, V and VI, which are denser, so the column lightened and
+the moment of inertia came down. Europa's column is ice Ih and liquid only (there the liquid
+is the denser), and what brought it inside was the iron core the two-layer inversion could
+not express; C/MR² narrows it to a 7 % core under a 104 km ocean and a 26 km shell.
 
-**The other four rows are a limit of the recipe, not of the ice.** This inversion solves
-**one** free fraction over a silicate interior, and all four are three-layer bodies. Callisto
-at 0.3549 is the classic partially-undifferentiated case, which a fully layered model cannot
-produce at all and which the recipe already declines to model by name. Titan's high moment
-of inertia is read as hydrated silicate in the core, again a mixture. Europa has an iron
-core, and inverting it on the ice axis puts almost no ice on it and lands 9.5 % high.
-Enceladus is small enough that porosity is live, which is the degeneracy every inverted
-result already carries in its notes. None of the four is evidence against the ice phases:
-each names a mechanism this document already lists as out of scope. Only Ganymede is a fair
-test of the ice ladder, and it passes.
+**The other three are outside the band, above it, and that is a different sentence from the one
+this table used to carry.** Every member of every band lowers C/MR² as the core grows, so a
+published value above the zero-core end cannot be reached by any layering: the mass must be
+*less* centrally concentrated than rock over water allows, which means the rock itself is
+lighter than the silicate this recipe carries (hydrated or porous, the published reading for all
+three) or is partially differentiated. The reason is a **material**, not a missing layer. At
+Enceladus the 270 K declaration puts no ocean in a 10 MPa column at all (ice Ih melts above
+272 K there), so that row is the two-layer answer with a core axis, and porosity is live too.
 
-The icy-moon table is regenerated by `python3 engine/test_interior.py --icy`; the Ganymede
-row alone is asserted in the default test run, because the other four take minutes.
+The table is regenerated by `python3 engine/test_interior.py --icy` (about twenty minutes);
+the default run asserts Ganymede's two-layer row and Europa's three-layer narrowing.
 
 ### Compaction, checked on published measurements and published bodies
 
@@ -1039,9 +1049,9 @@ Both tables, and the roster table below, are regenerated by
 | rock + ice Ih | ice column base below 209.5 MPa | integrates, ice Ih throughout | calibrated |
 | rock + ice VII | ice column base above 2.216 GPa and below 37.4 GPa | integrates, ice VII. Since 2026-08-27 it carries thermal pressure as well: with a temperature declared the density there moves, and with none it is unchanged bit for bit | calibrated |
 | rock + ice III / V / VI | ice column base in 209.5 MPa – 2.216 GPa | integrates, switching phase at each triple point | calibrated |
-| **warm ice window** | ice column in 209.5 MPa – 2.216 GPa with a `potential_temperature` declared | **decides**: the integrated T(P) is compared against the IAPWS melting curve at the base, the top and each phase change, and `ice_column_state` comes back `solid` or `molten`. The verdict is returned and **the density is not changed** (no liquid equation of state here), so a `molten` result carries the solid-phase radius and C/MR² and says so | analog |
+| **ocean** | ice column below 2.3 GPa with a `potential_temperature` declared | **integrates the liquid** wherever the local (P, T) is above the IAPWS melting curve, on SeaFreeze `water1`; returns `ocean_thickness` and `ice_shell_thickness`, and `ice_column_state` is `solid` or `molten`. The thickness is set by the declaration | analog |
+| **liquid above 2.3 GPa** | a column warm enough to melt ice VII | **declines**, naming the shelf: `water1` ends at 2.3 GPa and `water2` (Brown 2018) is not baked | — |
 | **ice with no temperature declared** | any ice column, `potential_temperature` unset | `ice_column_state: undecided`. The curve and the pressures are both there; nothing flows without the declaration | — |
-| **ice VII** | ice column base above 2.216 GPa | that part of the column drops out of the verdict, named: IAPWS gives ice VII a melting curve (355–715 K) and `eos.py` has no thermal constants for the phase, so the temperature carried through it is not a temperature | — |
 | porous rock or ice | `initial_porosity` > 0, central pressure inside the 150 MPa experimental ceiling | integrates with φ(P) from the published relation | analog |
 | **porosity above the experimental ceiling** | `initial_porosity` > 0, pressure above 150 MPa | the relation is **extrapolated**: results report the mass fraction affected, and `porosity_cap` gives the reading that claims nothing there | analog |
 | **porosity on a heated body** | `initial_porosity` > 0 and the body has melt, differentiation, convection, impacts or tidal heating | **not decided here**: all five remove porosity (Bierson+ 2019 §2.2), so what this recipe returns is an upper bound on the voids, never an estimate | — |
@@ -1082,18 +1092,6 @@ any body, so it is measured rather than asserted (`test_interior.py --ceiling`):
 | pure iron (fe_eps) | 24.92 M⊕ | `fe_eps` | 20.9 TPa | 1.717 R⊕ | 0.3364 |
 | water (ice 0.50, ice is the outer layer) | 21.29 M⊕ | `h2o` | 1.0 TPa | 2.700 R⊕ | 0.2771 |
 
-Before the deep silicate phase those were 6.84 and 19.32 M⊕, iron unchanged. **The
-Earth-composition row changed hands as well as value**: the limit is the iron core's ceiling
-now, not the mantle's.
-
-The water row is the one whose limit is set by a material that is **not at the centre**, and
-that is why it alone was reported wrongly. Until 2026-08-27 the preset was said to stop at
-5.884 M⊕; the bracketing search reached the answer and then took one more step, and the
-outer ice broke at that discarded trial pressure rather than at the converged one. Its real
-limit is 21.29 M⊕. The first three rows never moved, because the pressure the bracket checks
-is the innermost material's and the centre genuinely sits in it. And 6.84 M⊕ was never the mass at which Earth-like rock reaches
-3.5 TPa, which is nearer 20.7 M⊕; the gap was headroom the shooting bracket needed.
-
 Out of domain is a **returned value**, not an error: each row comes back with its reason
 attached, so a body that cannot be derived says why instead of being extrapolated.
 
@@ -1106,22 +1104,16 @@ the silicate. This solver stacks pure materials layer by layer and has no way to
 mixed phase; what it would need is a mixture equation of state (volume-additive, or a
 Voigt–Reuss–Hill average). That is the named starting point, and with it the body solves.
 
-**Porosity is not ice, and now both are modelled.** Both lower the mean density, and at the
+**Porosity is not ice, and both are modelled.** Both lower the mean density, and at the
 central pressures of a few-hundred-kilometre body both are live, so mass and radius alone
-cannot separate them. What changed on 2026-08-26 is that the porosity side is no longer a
-gap: a body whose board excludes ice is now solved on the porosity axis instead of being
-turned away, and a body whose board allows ice is still solved on the ice axis. The
-degeneracy is real and every result says so in its notes. What the recipe will not do is
-pick between them from density, because density does not contain that information; the
-board's composition declaration does, and it is an input for exactly that reason.
+cannot separate them: a body whose board excludes ice is solved on the porosity axis, one
+whose board allows it on the ice axis, and every result names the degeneracy. The recipe
+will not pick between them from density, because density does not contain that information.
 
-**A missing phase was not a missing layer, and closing it was a citation rather than a
-model.** Until 2026-08-25 an ice column reaching into the 209.5 MPa to 2.216 GPa window
-came back declined, because the recipe did not know what ices III, V and VI weigh. That row
-is gone from the table above: the ladder now runs unbroken from ice Ih to ice X, and the
-test asserts the contiguity rather than trusting it, since editing one transition pressure
-out of step with its neighbour would silently reopen a hole. What remains above the ladder
-is the superionic phase, declined by temperature rather than by pressure.
+**A missing phase was not a missing layer.** The ladder runs unbroken from ice Ih to
+ice X and the test asserts the contiguity; the ocean is likewise not a layer but a phase of
+the same column. What remains above the ladder is the superionic phase, declined by
+temperature rather than by pressure.
 
 ## What the roster asks for
 
@@ -1343,6 +1335,14 @@ instead of as a class constant.
   [R10-06(2009)](http://www.iapws.org/relguide/Ice-2009.pdf), which is the authoritative
   publication of the same equation. Marked as a **non-ADS-fulltext exception**: the release
   document was read directly, not summarised.
+- **Bollengier, O., Brown, J. M. & Shaw, G. H. 2019**, J. Chem. Phys. 151, 054501
+  ([`2019JChPh.151e4501B`](https://ui.adsabs.harvard.edu/abs/2019JChPh.151e4501B), DOI
+  [10.1063/1.5097179](https://doi.org/10.1063/1.5097179)). Sound speeds in liquid water to
+  700 MPa down to the freezing point and the Gibbs-energy equation of state to 2300 MPa over
+  240–500 K, distributed as SeaFreeze's `water1`; baked into `water_table.py` for the ocean.
+  The shelf above it, **Brown, J. M. 2018**, Fluid Phase Equilibria 463, 18
+  ([`2018FlPEq.463...18B`](https://ui.adsabs.harvard.edu/abs/2018FlPEq.463...18B)), `water2`
+  to 100 GPa, is named in the refusal and not baked. *No arXiv preprints.*
 - **Journaux, B., Brown, J. M., Pakhomova, A., Collings, I. E., Petitgirard, S., Espinoza,
   P., Boffa Ballaran, T., Vance, S. D., Ott, J., Cova, F., Garbarino, G. & Hanfland, M.
   2020**, JGR Planets 125, e2019JE006176
