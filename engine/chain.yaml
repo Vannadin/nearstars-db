@@ -350,6 +350,11 @@ edges:
   - {from: body_class, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:82"}
   - {from: tidal_locking, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:33"}
   - {from: body_class, to: dynamo_rocky, kind: selects, ref: "planetary-dynamo-scaling.md:97"}
+  # 2026-08-30 C1 이 서브넵튠을 적분으로 넘겼지만 다이나모 갈래는 아직 없다 —
+  # core_state 는 클래스로 거절하고(철핵 유무가 기준이 아니다), dynamo_giant 는
+  # 질량(< 0.3 M_J)으로 배제하고, dynamo_rocky 는 이 클래스를 받지 않는다. 이름 없이
+  # 두면 사라지므로 gap 으로 적는다. 닫으려면 외피 아래 철핵의 다이나모 레시피가 필요하다.
+  - {from: body_class, to: dynamo_rocky, kind: selects, via: sub_neptune, status: gap, ref: "planetary-dynamo-scaling.md:97", note: "sub_neptune 에는 다이나모 경로가 없다. core_state · dynamo_giant · dynamo_rocky 셋 다 거절한다 — 외피 아래 철핵의 다이나모 레시피가 없는 소비처 공백."}
   - {from: mass_or_radius, to: dynamo_rocky, kind: requires, ref: "rocky-planet-dynamo-methodology.md:22"}
   - {from: orbit_elements, to: dynamo_rocky, kind: requires, via: period, ref: "rocky-planet-dynamo-methodology.md:22"}
   # RM22 는 둘을 다른 데서 받는다. 핵 **기하** 는 내부 구조가 풀고, 그 핵이 다이나모를

@@ -62,6 +62,11 @@ ladder seed already over the target fell onto the inflated branch of the U-shape
 curve. Each fix is gated so that no anchor path enters it, and the bit lines say so.
 `engine/sub-neptune-context-notes.md` has the measurements.
 
+Left open, named: a sub-Neptune now integrates but has **no dynamo path** — `core_state`
+declines by class, `dynamo_giant` excludes it by mass, `dynamo_rocky` does not take the class.
+Recorded as a gap edge in `chain.yaml` (`body_class → dynamo_rocky, via: sub_neptune`); not a
+solver item, so it is not on this list.
+
 ### C2 — The ocean layer, and multi-axis inversion — **closed 2026-08-29**
 
 Liquid water came from SeaFreeze's `water1`, the phase switch is pinned inside the

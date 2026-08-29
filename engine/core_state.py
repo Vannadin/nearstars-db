@@ -85,6 +85,23 @@ CONDUCTOR_UNDECIDED = "undecided"
 CORELESS_CLASSES = ("giant", "gas_giant", "ice_giant", "sub_neptune",
                     "brown_dwarf", "star")
 
+# 거절문은 클래스마다 다르다 — 무엇이 다이나모를 돌리는지가 다르고, 서브넵튠은
+# 돌릴 갈래가 아직 없기 때문이다. 한 문장으로 덮으면 서브넵튠에 금속수소를 말하게 된다.
+_METALLIC_H = ("다이나모는 금속수소가 돌린다 — 그쪽은 dynamo_giant 의 갈래이고 "
+               "철의 융해곡선과 무관하다.")
+_CORELESS_WHY = {
+    "giant": "거대행성의 " + _METALLIC_H,
+    "gas_giant": "거대행성의 " + _METALLIC_H,
+    "brown_dwarf": "갈색왜성의 " + _METALLIC_H,
+    "ice_giant": "얼음거대행성의 다이나모는 이온성·초이온성 물이 돌린다 — 그쪽은 "
+                 "dynamo_giant 의 아날로그 갈래이고 철의 융해곡선과 무관하다.",
+    "sub_neptune": "서브넵튠의 철핵은 가스 외피 아래 앉아 있지만 그 핵을 받는 다이나모 "
+                   "갈래가 아직 없다 — dynamo_giant 는 질량으로 배제하고 dynamo_rocky 는 "
+                   "이 클래스를 받지 않는다. chain.yaml 의 gap 이다. 여기서 철의 "
+                   "융해곡선을 대도 그 답을 읽을 소비처가 없다.",
+    "star": "항성에는 금속 핵이 없다. 자기장은 대류층의 다이나모이고 이 엔진의 몫이 아니다.",
+}
+
 
 def _adiabat(material, p_pa: float, p_cmb: float, t_cmb: float,
              rho_cmb: float) -> float:
@@ -132,8 +149,7 @@ def solve(core_pressure: float,
         return out_of_domain(
             RECIPE, VERSION,
             f"'{body_class}' 에는 이 판정이 뜻이 없다. 이 노드가 묻는 것은 **금속 핵이 "
-            "액체인가** 이고, 거대행성과 갈색왜성의 다이나모는 금속수소가 돌린다 — "
-            "그쪽은 dynamo_giant 의 갈래이고 철의 융해곡선과 무관하다.",
+            f"액체인가** 이고, {_CORELESS_WHY[body_class]}",
             inputs=inputs, refs=REFS)
 
     if cmb_pressure <= 0.0 or core_pressure <= cmb_pressure:
