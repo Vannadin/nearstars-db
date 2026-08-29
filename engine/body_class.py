@@ -57,8 +57,9 @@ REFS = (
 #
 # 여섯이다. 여기 들어오려면 **소비처를 이름 댈 수 있어야** 한다 — 새 이름을 만들면 그
 # 여덟 selects 엣지가 전부 그것을 어떻게 다룰지 답해야 하기 때문이다. 여섯 전부
-# 이름이 있다: interior.py 의 FLUID_CLASSES 가 위의 넷을 각각 다른 이유로 거절하고,
-# GAS_GIANT_CLASSES 가 거대행성을 받고, 나머지 하나가 암석 경로다.
+# 이름이 있다: interior.py 의 FLUID_CLASSES 가 갈색왜성과 별을 각각 다른 이유로 거절하고,
+# GAS_GIANT_CLASSES · ICE_GIANT_CLASSES · SUB_NEPTUNE_CLASSES 가 외피 있는 셋을 받고
+# (셋 다 가스질량분율과 포텐셜 온도를 선언으로 받는다), 나머지 하나가 암석 경로다.
 #
 # 질량 오름차순이다. 사다리의 순서가 곧 경계의 순서다.
 LADDER = ("rocky", "sub_neptune", "ice_giant", "gas_giant", "brown_dwarf", "star")

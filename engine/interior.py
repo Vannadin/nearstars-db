@@ -93,6 +93,14 @@ INTERPOLATE_LAYERS = True
 # 판정만 내고 밀도는 고체상으로 두던 2026-08-27 의 경로이고, 바다가 밀도를 실제로 움직이는지를
 # 재는 대조 검사만 그것을 켠다.
 OCEAN_LAYER = True
+# 기체 외피가 표의 영역을 벗어난 자리가 **표면인가, 시험 온도의 잘못인가.** 1 bar 의 몇 배 안에서
+# 벗어나면 표면이다 — 천왕성의 1 bar 온도(76 K)가 표 바닥(100 K) 아래라 실제로 그 몇 bar 위에서
+# 걸리고, 1 bar 온도는 T ∝ P^∇ 로 닫힌다. 그 배수 밖에서 벗어나는 것은 표면이 아니라 외피 바닥이
+# 대류가 닿는 온도 아래라는 뜻이고, 시험 중심 온도를 올려야 풀린다. 2026-08-29 까지 둘을 가르지
+# 않아 5 M⊕ 서브넵튠의 외피가 244 GPa 에서 '표면' 으로 잘려 질량 0 이 됐고, 사다리가 철 천장까지
+# 올라가 거짓 거절을 냈다 (sub-neptune-context-notes.md). 100 은 앵커의 시험 경로가 실제로 닿는
+# 최대 9 bar (해왕성) 의 열 배 위라, 앵커는 이 갈래를 한 번도 타지 않는다.
+FLOOR_EXTRAPOLATION_MAX = 100.0
 MAX_STEPS = 40000
 SHOOT_ITERS = 200
 SHOOT_TOL = 1e-8            # 겉질량의 상대오차
@@ -104,12 +112,13 @@ class Structure:
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
-                 "p_surface", "r_ocean_base", "r_ocean_top")
+                 "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
-                 ice_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None):
+                 ice_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
+                 surface_reached=True):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -138,6 +147,9 @@ class Structure:
         # 구간이다. None 은 "액체인 자리가 없었다" 는 뜻이고, 온도가 흐르지 않은 해는 늘 None 이다.
         self.r_ocean_base = r_ocean_base
         self.r_ocean_top = r_ocean_top
+        # False 면 표면(P = p_stop)에 닿기 전에 걸음 상한에서 잘린 부분 적분이다. 겉질량이 이미
+        # 목표를 넘겼을 때만 그렇게 돌아오고, 사격의 괄호에만 쓰인다 — 수렴해가 될 수 없다.
+        self.surface_reached = surface_reached
 
     @property
     def ocean_thickness_m(self) -> float:
@@ -373,6 +385,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         # 아니라 **표면에 닿았다** 는 뜻이므로, 여기서 멈추고 그 사실을 들고 나간다.
         floor = getattr(mat, "p_floor", 0.0)
         if floor and (t > 0.0 and not mat.in_domain(p, t)):
+            if p > floor * FLOOR_EXTRAPOLATION_MAX:
+                # 표면이 아니다. 재료가 어느 벽인지 이름 대며 던지고, 온도 괄호가 받는다.
+                mat.check_temperature(p, t)
             p_surface = p
             t_surface = t
             if p > floor * 1.001 and last_grad > 0.0:
@@ -440,6 +455,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 and p + dp > p_stop):
             t_end = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
             if not mat.in_domain(p + dp, t_end):
+                if p + dp > floor * FLOOR_EXTRAPOLATION_MAX:
+                    mat.check_temperature(p + dp, t_end)     # 위와 같다. 걸음 안의 자리
                 lo_f, hi_f = 0.0, 1.0
                 for _ in range(50):
                     mid = 0.5 * (lo_f + hi_f)
@@ -561,9 +578,26 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             layer += 1
             note_switch(layer - 1)
 
-    if steps >= MAX_STEPS:
-        raise ValueError(f"{MAX_STEPS} 단계 안에 표면에 닿지 못했다 "
-                         f"(중심압 {p_center / 1e9:.3g} GPa)")
+    if steps >= MAX_STEPS and p > p_stop:
+        if m > mass_kg * (1.0 + SHOOT_TOL):
+            # 표면에 닿기 전에 목표 질량을 이미 넘겼다. 사격이 이 시험값에서 알아야 하는 것은
+            # "질량이 넘친다" 뿐이므로 여기서 멈춰 그 사실을 들고 나간다 — 예전에는 예외를
+            # 던졌고, 그 예외가 solve() 에서 물리인 척하는 거절로 나갔다 (5 M⊕ 서브넵튠의
+            # 뜨거운 시험 온도에서 외피가 격자 밖까지 부풀었다, sub-neptune-context-notes.md).
+            # 수렴해로 받아들여질 수는 없다: 겉질량이 목표와 SHOOT_TOL 안이 아니다.
+            return Structure(r, m, moi, core_radius if core_radius is not None else r,
+                             p_center, p_cmb if p_cmb is not None else p,
+                             p_ice_base, phases, v_pore=v_pore, m_above_lab=m_above_lab,
+                             p_silicate_max=p_si_max, t_center=t_center,
+                             t_cmb=t_cmb if t_cmb is not None else 0.0,
+                             t_surface=t, ice_samples=ice_samples, p_surface=p,
+                             surface_reached=False)
+        raise GridExceeded(
+            f"{MAX_STEPS} 걸음(중심 격자 dr 의 {MAX_STEPS / STEPS:.0f} 배 반지름, 여기서는 "
+            f"{r / EARTH_RADIUS_M:.1f} R⊕) 안에 표면에 닿지 못했다 — 중심압 "
+            f"{p_center / 1e9:.3g} GPa · 중심 온도 {t_center:.0f} K 에서 그 반지름까지 담은 질량이 "
+            f"목표의 {m / mass_kg:.3f} 배이고 그 자리의 압력이 {p / 1e5:.3g} bar 다. 외피가 격자가 "
+            "닿는 것보다 멀리 부풀어 있다는 뜻이고, 격자의 한계이지 재료의 한계가 아니다.")
 
     if core_radius is None:
         core_radius = r      # 핵만 있는 천체
@@ -599,6 +633,40 @@ def porosity_at(mat, p_pa: float, phi0: float,
 # 거절 메시지가 인용할 압력의 자릿수만 있으면 된다. 1 % 면 충분하다.
 NARROW_ITERS = 24            # 안전 상한. 보통 그 전에 아래 조건이 먼저 걸린다
 NARROW_RATIO = 1.01          # bad/good 가 이보다 가까우면 멈춘다
+
+
+class Unbound(ValueError):
+    """이 중심 온도에서는 외피가 정수압 1 bar 준위를 갖지 못한다.
+
+    괄호가 부동소수점 해상도까지 닫혔는데 한쪽은 외피 없는 암석뿐(질량 부족), 다른 쪽은 격자
+    끝까지 가도 표면에 못 닿는 외피(질량 초과)다. 외피 바닥의 온도가 이 질량이 묶을 수 있는
+    것보다 높아서 — 등온 대기라면 P(∞)/P_b = exp(−r_b/H) 가 p_stop/P_b 보다 커서 1 bar 가
+    무한대에 놓인다 — 사이에 뿌리가 없다. 시험값이 아니라 그 온도의 성질이고, 온도 고리가 받아
+    선언된 1 bar 온도가 닿을 수 없음을 말한다."""
+
+    def __init__(self, t_center, mass_kg, rock_only, unbound):
+        self.t_center = t_center
+        self.rock_only = rock_only
+        self.unbound = unbound
+        super().__init__(
+            f"중심 온도 {t_center:.0f} K 에서 외피가 묶이지 않는다 — 중심압 "
+            f"{rock_only.p_center / 1e9:.4g} GPa 에서는 응축상만으로 목표의 "
+            f"{rock_only.mass_kg / mass_kg:.4g} 배를 1 bar 에서 담고 외피가 없고, 그 바로 위 "
+            f"{unbound.p_center / 1e9:.4g} GPa 에서는 외피가 격자 끝 "
+            f"{unbound.radius_m / EARTH_RADIUS_M:.0f} R⊕ 까지 가도 1 bar 에 닿지 못한 채 이미 "
+            f"목표의 {unbound.mass_kg / mass_kg:.3g} 배를 담는다 (그 자리 압력 "
+            f"{unbound.p_surface / 1e5:.3g} bar).")
+
+
+class GridExceeded(ValueError):
+    """표면에 닿기 전에 걸음 상한이 왔고 질량은 아직 모자란다 — 외피가 격자가 닿는 것보다 멀리
+    부풀어 있다. 격자의 한계이지 재료의 한계가 아니고, 온도 고리는 이것을 벽으로 받는다:
+    더 뜨거운 시험은 더 부풀 뿐이다."""
+
+
+class NoCompactRoot(ValueError):
+    """이 중심 온도에서 겉질량의 U 자 최소가 목표 위다 — 오른쪽(치밀한) 가지에 뿌리가 없다.
+    Unbound 와 같은 종류의 사실이고, 온도 고리가 같은 벽으로 받는다."""
 
 
 def _narrow_bracket(good: float, bad: float, at, mass_kg: float):
@@ -690,6 +758,56 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     good = None                  # 마지막으로 적분이 끝난 시험압
     rung = None                  # 질량이 목표에 못 미친 마지막 눈금 (압력, 질량)
     broke: PhaseGap | None = None
+    # **씨앗이 이미 목표를 넘긴 기체 천체.** U 자의 왼쪽 가지(부푼 쪽)에서 출발한 것일 수 있다.
+    # 예전에는 사다리가 즉시 멈추고 할선의 둘째 점을 hi × 10⁻³ 에 두어 부푼 뿌리로 갔다 — 5 M⊕
+    # 순수 가스 천체가 같은 중심 온도에서 11 R⊕ 와 131 R⊕ 두 답을 번갈아 냈다. 물리적인 쪽은
+    # 오른쪽 가지(치밀한 쪽)다: 중심압을 올리면 질량이 늘어나는 구간이고, 발표된 거대행성 반지름은
+    # 전부 그쪽이다. 그래서 질량이 줄어드는 동안 위로 오른다 — 목표 아래로 내려가면 그 눈금이
+    # rung 이고 기존 사다리가 이어받는다. 최소를 지나서도 목표 아래로 못 내려가면 치밀한 뿌리가
+    # 없다는 뜻이고, 그것은 묶이지 않는 외피와 같은 종류의 사실이다.
+    if p_stop:
+        try:
+            st0 = at(hi)
+        except PhaseGap:
+            st0 = None
+        if st0 is not None and st0.mass_kg >= mass_kg:
+            # 먼저 내려가 본다. 오른쪽 가지의 뿌리 위에 앉은 씨앗이면(목성·토성 질량의 순수 가스
+            # 천체가 그렇다) 내려갈수록 질량이 줄어 목표 아래로 떨어지고, 그 눈금이 rung 이다.
+            # 내려갈수록 질량이 **늘면** 왼쪽(부푼) 가지이고, 그때는 위로 올라 최소를 넘긴다.
+            prev, p_prev = st0, hi
+            rung_found = False
+            while p_prev / 4.0 > lo:
+                p_dn = p_prev / 4.0
+                try:
+                    st_dn = at(p_dn)
+                except PhaseGap:
+                    break
+                if st_dn.mass_kg < mass_kg:
+                    rung = (p_dn, st_dn.mass_kg)
+                    rung_found = True
+                    break
+                if st_dn.mass_kg > prev.mass_kg:
+                    break                    # 내려가는데 질량이 는다. 부푼 가지다
+                prev, p_prev = st_dn, p_dn
+            if not rung_found:
+                prev, p_prev = st0, hi
+                while True:
+                    nxt_p = min(p_prev * 4.0, p_ceiling)
+                    try:
+                        st1 = at(nxt_p)
+                    except PhaseGap:
+                        break                # 위가 막혔다. 기존 사다리가 좁힌다
+                    if st1.mass_kg < mass_kg:
+                        hi = nxt_p           # 최소를 지나 목표 아래로 내려왔다. 여기가 rung 이 된다
+                        break
+                    if st1.mass_kg >= prev.mass_kg or nxt_p >= p_ceiling:
+                        raise NoCompactRoot(
+                            f"중심 온도 {t_center:.0f} K 에서 치밀한 뿌리가 없다 — 중심압 {p_prev / 1e9:.4g} 에서 "
+                            f"{nxt_p / 1e9:.4g} GPa 로 올려도 겉질량이 목표의 {prev.mass_kg / mass_kg:.3g} 배에서 "
+                            f"{st1.mass_kg / mass_kg:.3g} 배로 줄지 않는다. 1 bar 에 묶인 외피의 겉질량이 중심압에 "
+                            "U 자를 그리는데 그 최소가 목표 위에 있어서, 남는 해는 부푼 왼쪽 가지뿐이고 그것은 "
+                            "발표된 어떤 거대행성도 앉아 있지 않은 가지다.")
+                    prev, p_prev = st1, nxt_p
     while True:
         try:
             st = at(hi)
@@ -748,13 +866,21 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
                         gmf, envelope_z, differentiated, t_center, t_pot, ice_material)
         y1 = math.log(st.mass_kg / mass_kg)
+    last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
         if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
             return st, True
         if st.mass_kg < mass_kg:
             lo = math.exp(x1)
+            last_short = st
         else:
             hi = math.exp(x1)
+            # **괄호가 닫혔는데 뿌리가 없다.** 아래쪽은 표면에 닿은 채 질량이 모자라고 위쪽은
+            # 표면에 못 닿은 채 질량이 넘친다면, 그 사이의 어떤 중심압도 겉질량을 목표에 맞추지
+            # 못한다 — 외피가 이 온도에서 묶이지 않는 것이고, 시험값의 문제가 아니다.
+            if (not st.surface_reached and last_short is not None
+                    and hi / lo - 1.0 < 1e-9):
+                raise Unbound(t_center, mass_kg, last_short, st)
         if y1 != y0:
             x2 = x1 - y1 * (x1 - x0) / (y1 - y0)
         else:
@@ -782,6 +908,13 @@ T_TOL = 1e-6
 # T_PASSES 를 다 쓰고도 못 맞추면 아무 표시 없이 나갔다. 도달 불가능한 표면 온도를 쫓다가
 # 가짜 가지로 걸어간 해가 converged=True 배지를 달고 나온 일반 원인이 그 구멍이다.
 T_SURFACE_TOL = 1e-3
+# 온도 고리를 비례 갱신에서 좁히기로 바꾸는 문턱. 어긋남이 이보다 크면서 한 진동 전보다 줄지
+# 않았을 때만 바꾼다 — 수렴 근처의 작은 흔들림으로 갈래를 바꾸면 앵커가 움직인다.
+T_DIVERGENCE_MIN = 0.05
+# 한 진동(두 걸음) 동안 어긋남이 이 배수 아래로 줄지 않으면 비례 갱신이 너무 느리다 — 지수 n 이
+# 2 에 가까우면 (1 − n)² ≈ 0.8–1 로 줄어 열네 걸음으로 못 붙는다 (GJ 1214 b 가스 5 %). 앵커는
+# 한 진동에 0.01–0.1 배로 준다 (목성 0.70 → 0.37 → 0.08 → 0.022, 천왕성 0.067 → 0.006 → 0.0004).
+T_CONTRACTION_MIN = 0.5
 # 온도 괄호잡기의 시도 횟수. 한 번에 1.6배씩 올린다.
 T_BRACKET_TRIES = 12
 
@@ -845,14 +978,90 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     # 배수만큼 틀리고 고리가 수렴하지 않는다. 통과 횟수를 6 에서 14 로 올렸더니 목성은
     # 붙고 토성은 +2.09 % 에서 +7.06 % 로 흔들린 것이 이 자리였다.
     st, converged, t_c = attempt(t_c)
-    for _ in range(T_PASSES):
+    # **비례 갱신이 발산하는 천체가 있다.** T_c·T_pot/T_surf 는 T_surf ∝ T_c 를 놓는데, 얇은 외피가
+    # 무거운 핵 위에 있으면 지수가 2 를 넘는다 — 외피 바닥이 핵 단열선을 그대로 타고 1 bar 온도는
+    # 그 위에서 외피 두께까지 같이 바뀐다 (GJ 1214 b 가스 2 % 에서 2.3). 지수 n 의 비례 갱신은
+    # 오차를 (1 − n) 배 하므로 n > 2 면 진동이 커지고, 거대행성(n ≈ 0.7, 오차가 0.3 배씩 준다)에서는
+    # 그냥 붙는다. 그래서 **진동이 줄지 않을 때만** 갈래를 바꾼다: 두 걸음 전보다 어긋남이 줄지 않았거나
+    # 묶이지 않는 벽에 닿았으면, 그때부터 양쪽 점 사이를 로그-로그 regula falsi 로 좁힌다. 앵커
+    # 넷(목성·토성 둘·천왕성·해왕성)은 매 걸음 줄어들므로 이 갈래를 한 번도 타지 않는다 — 비트까지
+    # 같다는 것을 그 경로로 보장한다.
+    wall = None                  # 외피가 묶이지 않은 가장 낮은 중심 온도
+    wall_why = ""                # 그 온도에서 왜 묶이지 않았는가 (사다리의 문장)
+    lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
+    devs: list[float] = []
+    bracketed = False
+    passes = T_PASSES
+
+    def note(t_now, got):
+        nonlocal lo, hi
+        if got.t_surface <= 0.0:
+            return
+        pt = (math.log(t_now), math.log(got.t_surface / t_pot))
+        if pt[1] < 0.0:
+            if lo is None or pt[0] > lo[0]:
+                lo = pt
+        elif hi is None or pt[0] < hi[0]:
+            hi = pt
+
+    note(t_c, st)
+    while passes > 0:
+        passes -= 1
         if st.t_surface <= 0.0:
             break            # 열 상수가 없는 재료뿐이다. 온도가 흐르지 않는다
-        nxt = t_c * t_pot / st.t_surface
+        devs.append(abs(st.t_surface / t_pot - 1.0))
+        # 어긋남이 **크면서** 한 진동 전보다 줄지 않았을 때만이다. 수렴 근처의 1e-4 급 흔들림은
+        # 발산이 아니라 반올림이고, 거기서 갈래를 바꾸면 앵커의 마지막 비트가 움직인다 (2026-08-29
+        # 에 천왕성·해왕성이 그렇게 움직였다).
+        if (len(devs) >= 3 and devs[-1] >= T_CONTRACTION_MIN * devs[-3]
+                and devs[-1] > T_DIVERGENCE_MIN):
+            bracketed = True
+        if bracketed and lo is not None and (hi is not None or wall is not None):
+            if hi is not None:
+                x_lo, y_lo = lo
+                x_hi, y_hi = hi
+                x = x_lo - y_lo * (x_hi - x_lo) / (y_hi - y_lo)
+                if wall is not None:
+                    x = min(x, 0.5 * (x_lo + math.log(wall)))
+            else:
+                x = 0.5 * (lo[0] + math.log(wall))
+            nxt = math.exp(x)
+            if wall is not None and wall / math.exp(lo[0]) - 1.0 < 1e-3:
+                break        # 벽에 붙었다. 더 올릴 온도가 없다
+        else:
+            nxt = t_c * t_pot / st.t_surface
+            if wall is not None and nxt >= wall:
+                nxt = math.sqrt(t_c * wall)
         done = abs(nxt / t_c - 1.0) < T_TOL
-        st, converged, t_c = attempt(nxt)
+        try:
+            got, ok, t_now = attempt(nxt)
+        except (Unbound, NoCompactRoot, GridExceeded) as why:
+            wall, wall_why = nxt, str(why)
+            bracketed = True
+            passes += 1      # 벽을 찾은 걸음은 통과 횟수에서 빼 준다
+            if passes > 3 * T_PASSES:
+                break
+            continue
+        stuck = abs(t_now / t_c - 1.0) < 1e-9 if t_c else False
+        st, converged, t_c = got, ok, t_now
+        note(t_c, st)
+        if stuck:
+            break            # 괄호가 표의 온도 벽에서 같은 온도로 되돌렸다. 더 갈 데가 없다
+        if bracketed is True and passes == 0 and not _surface_temperature_met(st, t_pot):
+            passes = T_PASSES    # 좁히는 갈래에는 한 벌 더, **한 번만** 준다
+            bracketed = "extended"
         if done:
             break
+    if wall is not None and not _surface_temperature_met(st, t_pot):
+        # **선언된 1 bar 온도에 닿는 중심 온도가 없다.** 벽 아래의 가장 뜨거운 묶인 해와 벽을 둘 다
+        # 들고 나간다 — 버린 시험값이 아니라 실제로 도달한 두 상태다.
+        raise ValueError(
+            f"선언된 포텐셜 온도 {t_pot:.0f} K 에 닿는 해가 없다. 외피가 묶이는 가장 뜨거운 중심 온도 "
+            f"{t_c:.0f} K 에서 반지름 {st.radius_m / EARTH_RADIUS_M:.2f} R⊕ · 1 bar 온도 "
+            f"{st.t_surface:.0f} K 이고, 그 위 {wall:.0f} K 에서는 외피가 묶이지 않는다: {wall_why} "
+            "1 bar 에서 출발한 단열선이 이 질량이 묶을 수 있는 것보다 뜨겁다는 뜻이다 — 실제 "
+            "서브넵튠은 복사층이 깊은 단열선을 더 차게 두는데 이 레시피에는 복사층이 없으므로, "
+            "선언을 낮추거나(복사-대류 경계의 온도) 그 층이 들어와야 한다.")
     return st, converged and _surface_temperature_met(st, t_pot)
 
 
@@ -1061,7 +1270,15 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
 
 
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
-FLUID_CLASSES = ("sub_neptune", "brown_dwarf", "star")
+FLUID_CLASSES = ("brown_dwarf", "star")
+
+# 서브넵튠. 2026-08-29 까지 위 목록에 있었고 "가스질량분율을 주면 적분 자체는 돈다" 고 적혀
+# 있었는데, 재보니 돌지 않았다 — 외피 바닥의 표 영역 이탈을 표면으로 오인하는 결함이 철 천장
+# 거절로 나왔다 (sub-neptune-context-notes.md). 결함을 고치고 나서 목록에서 뺐다. 가스질량분율은
+# **선언** 이다: 나이와 항성 조사량(광증발)이 정하고 이 레시피에 그 둘이 없다 — ice_allowed ·
+# tidal_heating · initial_porosity · envelope_z · potential_temperature · core_cmb_temperature
+# 와 같은 일곱 번째 선언이고, 등급을 같은 이유로 내린다.
+SUB_NEPTUNE_CLASSES = ("sub_neptune",)
 
 # 얼음거대행성. 2026-08-27 까지 위 목록에 있었고, 뜨거운 물 상태방정식이 들어오면서
 # 나왔다. 얼음층이 응축상 사다리가 아니라 h2o_hot 을 쓴다 — 그 둘은 온도 구간이 겹치지
@@ -1120,10 +1337,6 @@ def solve(mass_earth: float,
             "star": ("수소가 탄다. 별의 NMoI 는 이 레시피가 아니라 n = 3/2 폴리트로프의 "
                      "발표값 0.205 에서 오고 (Chandrasekhar 1939), 그 가지는 "
                      "body_figure 에 따로 있다."),
-            "sub_neptune": ("H/He 외피가 총질량의 몇 %뿐이라 두께가 조성이 아니라 "
-                            "**나이와 항성 조사량** 이 정한다 (광증발). 이 레시피는 "
-                            "등온이고 진화가 없으므로, 가스질량분율을 스스로 정할 수 "
-                            "없다. 그 값을 넘겨주면 적분 자체는 돈다."),
         }.get(body_class, "이 클래스의 외피 상태방정식이 이 파일에 없다.")
         return out_of_domain(
             RECIPE, VERSION, f"'{body_class}' 는 아직 이 레시피 밖이다. {why}",
@@ -1191,14 +1404,20 @@ def solve(mass_earth: float,
             "셋 다 [0, 1] 안이고 합이 1 이하여야 한다.",
             inputs=inputs, refs=REFS)
 
-    if (gmf > 0 and body_class is not None
-            and body_class not in GAS_GIANT_CLASSES + ICE_GIANT_CLASSES):
+    envelope_classes = GAS_GIANT_CLASSES + ICE_GIANT_CLASSES + SUB_NEPTUNE_CLASSES
+    if gmf > 0 and body_class is not None and body_class not in envelope_classes:
         return out_of_domain(
             RECIPE, VERSION,
             f"가스질량분율 {gmf} 를 받았는데 body_class 가 '{body_class}' 다. "
-            f"수소-헬륨 외피를 붙이는 것은 "
-            f"{' 또는 '.join(GAS_GIANT_CLASSES + ICE_GIANT_CLASSES)} 로 "
+            f"수소-헬륨 외피를 붙이는 것은 {' 또는 '.join(envelope_classes)} 로 "
             "선언된 천체에만 한다 — 선언과 조성이 어긋나면 조용히 엉뚱한 천체를 푼다.",
+            inputs=inputs, refs=REFS)
+    if body_class in SUB_NEPTUNE_CLASSES and gmf <= 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"'{body_class}' 인데 가스질량분율이 {gmf} 다. 이 클래스를 만드는 것이 그 외피이고, "
+            "그 분율은 나이와 항성 조사량(광증발)이 정하므로 이 레시피가 도출하지 않는다 — "
+            "선언하면 풀린다. 0 이면 암석 행성이고 body_class 를 rocky 로 두는 쪽이다.",
             inputs=inputs, refs=REFS)
 
     ice_material = "h2o_hot" if body_class in ICE_GIANT_CLASSES else "h2o"
@@ -1350,6 +1569,13 @@ def solve(mass_earth: float,
             "측정값 0.346 보다 13.7 % 높다. 수성이 분화했다는 것을 이 레시피가 맞게 "
             "말한다는 뜻이지, 미분화 값 자체가 검증됐다는 뜻은 아니다. 등급을 analog 로 "
             "내린다.")
+    if body_class in SUB_NEPTUNE_CLASSES:
+        notes.append(
+            f"**가스질량분율 {gmf:.3f} 는 선언이다.** 서브넵튠의 외피 두께는 조성이 아니라 나이와 "
+            "항성 조사량이 정하고(광증발), 이 레시피에는 진화가 없어서 그 값을 도출하지 않는다 — "
+            "ice_allowed · initial_porosity · envelope_z · potential_temperature 와 같은 종류의 "
+            "선언이고, 답이 그 값에 기대므로 등급을 analog 로 내린다. 이 갈래의 앵커는 아직 "
+            "없다: 거대행성 셋은 질량이 두 자릿수 위다.")
     if giant_declared:
         band = " · ".join(f"{n} {m:.4g} M⊕ {d:+.2f} %" for n, m, d in GIANT_ANCHORS)
         notes.append(
