@@ -45,6 +45,7 @@ import math
 
 import hhe_table
 import water_hot
+import water_table
 from dataclasses import dataclass
 
 R_GAS = 8.314462618          # J mol⁻¹ K⁻¹. CODATA 2018 기체상수
@@ -308,6 +309,19 @@ class Material:
     def t_melt(self, p: float) -> float | None:
         """압력 p 에서 이 재료가 녹는 온도 [K]. 곡선이 없으면 None."""
         return self.phase_at(p).t_melt(p)
+
+    def liquid_at(self, p: float, t: float) -> bool | None:
+        """이 (P, T) 에서 이 재료가 액체인가. 곡선이 없거나 닿지 않으면 None.
+
+        `t > t_melt(p)` 와 같은 답을 뒤집기 없이 낸다. 물만 이 길을 갖는다 — 철의 곡선은
+        core_state 가 층 경계에서 몇 번 묻는 것이라 t_melt 로 충분하다."""
+        ph = self.phase_at(p)
+        if ph.melt != "water":
+            return None
+        if ph.melt_scale != 1.0:
+            t_m = ph.t_melt(p)
+            return None if t_m is None else t > t_m
+        return water_liquid_at(p, t)
 
     def check_temperature(self, p: float, t: float) -> None:
         """이 압력의 상이 이 온도에서도 유효한가. 아니면 이름 대며 던진다."""
@@ -690,6 +704,135 @@ class _HotWaterSlope:
 H2O_HOT = HotWater()
 
 
+# ── 액체 물 ─────────────────────────────────────────────────────────────
+#
+# 2026-08-27 의 녹는곡선은 얼음 기둥의 어느 자리가 녹았는지를 **판정** 만 했고, 밀도는 고체상의
+# 것이었다. 그때 "액체 상태방정식이 하나 더 있어야 한다" 고 적었는데, 그 상태방정식은 이 파일이
+# 얼음 III·V·VI 을 읽어 온 같은 라이브러리 안에 이미 있었다 — SeaFreeze v1.1.0 의 `water1`,
+# Bollengier, Brown & Shaw 2019 (2019JChPh.151e4501B). 700 MPa 까지 어는점까지 잰 음속에
+# 앵커한 Gibbs 표현이고, 2300 MPa · 240–500 K 까지 적합했다. 그 창이 얼음 껍질 아래의 바다다:
+# 위쪽 끝 2.3 GPa 는 얼음 VI→VII 전이(2.216 GPa) 바로 위이고, IAPWS 녹는곡선의 저압 갈래
+# 넷(식 1–4)이 끝나는 자리다.
+#
+# **세 상수로는 안 된다. 재봤다.** 얼음 III·V·VI 처럼 기준 상태의 (ρ₀, K₀, K₀′, αK_T, c_V) 를
+# 읽어 BME3 + Anderson–Goto 로 두면 273 K 등온선의 2.2 GPa 에서 5.3 %, 400 K 에서 10.6 % 어긋난다.
+# 액체 물의 αK_T 가 밀도 최대(277 K)에서 부호를 바꾸고 창 안에서 40 배 커지기 때문이고, 이 파일의
+# 열 항 전체가 기대는 "αK_T 는 부피에 무관" 이 액체에서는 성립하지 않는다. 그래서 수소-헬륨
+# 외피와 같은 길을 간다 — 표를 굳혀 온다 (water_table.py, tools/make_water_table.py). 격자 사이
+# 보간 오차는 생성기가 재서 적는다: 얼음 껍질 아래 바다가 놓이는 252–360 K 에서 밀도 2e-4 안.
+#
+# **어디서 액체가 되는가는 이 재료가 정하지 않는다.** 얼음 사다리(H2O)의 녹는곡선이 정하고,
+# 적분기가 걸음마다 그 판정으로 사다리와 이 재료 사이를 갈아 끼운다 — interior.py 를 보라.
+# 이 재료는 액체라고 결정된 자리의 밀도와 단열 기울기만 낸다. 2.3 GPa 위의 액체는 거절하고
+# 선반을 이름 댄다: 같은 라이브러리의 `water2` (Brown 2018, 2018FlPEq.463...18B) 가 100 GPa ·
+# 10 000 K 까지 가지만, 이번 범위는 액체와 고체가 갈리는 저압 쪽이다.
+LIQUID_WATER_REF = ("SeaFreeze v1.1.0 water1 / Bollengier, Brown & Shaw 2019 "
+                    "(2019JChPh.151e4501B) — 액체 물 Gibbs 표현, 0–2300 MPa · 240–500 K")
+LIQUID_WATER_SHELF = ("SeaFreeze v1.1.0 water2 / Brown 2018 (2018FlPEq.463...18B) — "
+                      "0–100 GPa · 240–10 000 K. 굳히지 않았다")
+
+
+class LiquidWater:
+    """액체 물. `Material` 과 같은 자리에 꽂히지만 상의 열이 아니라 표 하나다.
+
+    HotWater · HydrogenHelium 과 같은 모양이다. 응축상 사다리처럼 P = 0 인 표면이 있으므로
+    `p_floor` 는 없다 — 바다가 표면까지 올라오면 적분은 P = 0 에서 멈춘다."""
+    name: str = "h2o_liquid"
+    label_ko: str = "액체 물 (바다)"
+
+    @property
+    def rho0(self) -> float:
+        """영압 밀도. 어는점의 물이다. 괄호잡기와 표면 바깥 반 걸음에만 쓰인다."""
+        return water_table.density(0.0, 273.15)
+
+    @property
+    def p_max(self) -> float:
+        return water_table.P_MAX_PA
+
+    def rho_seed(self, mass_kg: float) -> float:
+        return self.rho0
+
+    @property
+    def has_thermal(self) -> bool:
+        return True
+
+    def cold_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def melt_free_phases(self) -> tuple[str, ...]:
+        """녹는곡선이 없다 — 이 재료는 이미 액체다. 어디서 어는지는 얼음 사다리가 말한다."""
+        return (self.name,)
+
+    def t_melt(self, p: float) -> float | None:
+        return None
+
+    def in_domain(self, p: float, t: float) -> bool:
+        return water_table.in_domain(p, t)
+
+    def check_temperature(self, p: float, t: float) -> None:
+        """이 표가 유효한 (P, T) 밖인가. 세 방향을 각각 이름 대며 거절한다."""
+        if t <= 0.0:
+            raise PhaseGap(
+                self.name, p,
+                "액체 물은 등온 경로로 풀 수 없다. 이 표는 (P, T) 의 함수이고, 애초에 온도가 "
+                "선언되지 않으면 녹는곡선이 어느 자리를 액체라고 말할 일도 없다.")
+        if p > water_table.P_MAX_PA:
+            # **온도가 막은 것으로 던진다.** 여기 오는 것은 압력이 아니라 그 압력에서 얼음 VII 을
+            # 녹일 만큼 뜨거운 온도이고, 사격의 온도 괄호가 중심 온도를 내리면 풀린다 — 첫 시험
+            # 온도(포텐셜 온도의 두 배)가 실제로 여기 걸린다. 수렴점에서도 걸리는 천체(따뜻한
+            # 물 세계)는 온도 고리가 표면 온도를 못 맞춰 converged=False 로 나간다.
+            raise PhaseGap(
+                self.name, p,
+                f"{p / 1e9:.3f} GPa 의 액체 물은 굳힌 표의 상한({water_table.P_MAX_PA / 1e9:.1f} "
+                "GPa) 위다. 얼음 VII 이 녹을 만큼 따뜻한 기둥인데, 그 압력의 액체는 "
+                f"{LIQUID_WATER_REF} 의 창 밖이다. 선반은 있다 — {LIQUID_WATER_SHELF}.",
+                t)
+        if t > water_table.T_MAX_K:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 액체 물 표의 상한({water_table.T_MAX_K:.0f} K) 위다. "
+                f"{LIQUID_WATER_REF}. 그 위는 뜨거운 물(h2o_hot)의 영역이고 별건이다.", t)
+        if t < water_table.T_LO_K:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 액체 물 표의 하한({water_table.T_LO_K:.0f} K) 아래다 — 녹는곡선의 "
+                "최저점(251 K)보다 낮으므로 여기 오는 것은 판정이 아니라 편집 오류다.",
+                t, too_cold=True)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        self.check_temperature(p, t)
+        return water_table.density(max(p, 0.0), t)
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        """쓰이지 않는다 — 단열 기울기는 표가 직접 든다 (dtdp_adiabat). 0 은 '없다' 가 아니라
+        이 길이 아니라는 뜻이다."""
+        return 0.0
+
+    def dtdp_adiabat(self, p: float, t: float, t_pot: float = 0.0) -> float:
+        """단열 기울기 dT/dP|_S = α T / (ρ c_P) [K/Pa]. 표에서 읽는다, 조립하지 않는다."""
+        if t <= 0.0:
+            return 0.0
+        return water_table.dtdp_adiabat(max(p, 0.0), t)
+
+    def phase_at(self, p: float, t: float = 0.0):
+        return _LiquidWaterSlope(p)
+
+
+@dataclass(frozen=True)
+class _LiquidWaterSlope:
+    """`_adiabatic_dtdp` 가 own 기울기를 쓰므로 여기까지 오지 않지만, 상 자리를 묻는 호출자에게
+    이름을 돌려준다."""
+    p: float
+    name: str = "h2o_liquid"
+    t_max: float = 0.0
+
+    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+        return 0.0
+
+
+H2O_LIQUID = LiquidWater()
+
+
 def mix(name: str, label_ko: str, *parts: tuple[Material, float]) -> Material | Mixture:
     """혼합을 만든다. 성분이 실질적으로 하나면 그 재료를 그대로 돌려준다.
 
@@ -923,6 +1066,29 @@ def water_t_melt(p: float) -> float | None:
         else:
             hi = mid
     return 0.5 * (lo + hi)
+
+
+def water_liquid_at(p: float, t: float) -> bool | None:
+    """이 (P, T) 의 물이 액체인가. 곡선이 닿지 않는 압력이면 None.
+
+    `water_t_melt` 를 뒤집지 않고 답한다 — 적분기가 **걸음마다** 묻는 질문이라 80 회 이분법이
+    한 걸음마다 붙으면 바다 있는 천체의 풀이에서 3 분의 1 이 그 자리에 갔다 (2026-08-29 프로파일).
+    분기 안에서 p_melt(T) 가 단조이므로 압력을 곡선의 압력과 대면 같은 답이다: 올라가는
+    분기(III·V·VI·VII)는 P < p_melt(T) 면 액체, 거꾸로 가는 얼음 Ih 은 P > p_melt(T) 면 액체.
+    분기의 온도 구간 밖은 곡선을 부를 것도 없이 정해진다 — 구간 위면 액체, 아래면 고체."""
+    name = _water_branch(p)
+    if name is None:
+        return None
+    lo, hi = (IAPWS_IH_RANGE if name == "ice_ih" else
+              IAPWS_VII_RANGE if name == "ice_vii" else
+              IAPWS_MELT[name][4:6])
+    if t >= hi:
+        return True
+    if t <= lo:
+        return False
+    if name == "ice_ih":
+        return p > iapws_p_melt(name, t)
+    return p < iapws_p_melt(name, t)
 
 
 def iron_t_melt(p: float) -> float | None:
@@ -1495,6 +1661,6 @@ class _HydrogenHeliumSlope:
 
 H_HE = HydrogenHelium()
 
-MATERIALS: dict[str, Material | HotWater | HydrogenHelium] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O, H_HE, H2O_HOT)
+MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater] = {
+    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, H2O, H_HE, H2O_HOT, H2O_LIQUID)
 }
