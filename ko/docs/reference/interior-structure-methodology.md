@@ -1019,7 +1019,7 @@ Z 가 같은 두 거대행성이 같은 반지름을 받았습니다. 표는 질
 | **심부 규산염 (3.5 ~ 13.5 TPa)** | 규산염 층 바닥이 3.5 TPa 를 넘음 | `mgsio3_pv` 로 적분하되 **analog** 등급에 note 를 단다. 3.5 TPa 아래의 규산염은 측정된 행성(PREM)의 적합이고 그 위는 해리를 관통해 외삽한 DFT 계산이다 | analog |
 | 전자축퇴 | 중심압이 핵 물질의 상한 위 | 거절한다. Thomas–Fermi–Dirac 을 이름으로 대면서 | — |
 | 미분화 암석 + 금속 | 얼음도 가스도 없는 `differentiated: false` | 같은 규칙으로 섞인 한 층을 적분한다. 그런 천체의 측정 C/MR² 앵커가 없으므로 검사는 판별이다. 미분화 수성은 측정값을 재현하지 못한다 | analog |
-| **얼음이나 가스가 있는 미분화** | `differentiated: false` 이고 `ice_mass_fraction` 또는 `gas_mass_fraction` > 0 | **거절한다.** 이 규칙이 섞는 것은 암석과 금속뿐이고, 얼음이 암석에 섞인 것은 부분 분화라 완전히 섞인 것도 완전히 갈린 것도 아니다 | — |
+| **얼음이나 가스가 있는 미분화** | `differentiated: false` 이고 `ice_mass_fraction` 또는 `gas_mass_fraction` > 0 | **거절한다.** 이유는 빠진 규칙이 아니라 구조다 (C7, 2026-08-30 닫음). 물이 규산염에 섞이는 것은 **반응** 이다 — 수화 광물은 제 밀도·제 부피 변화·제 열을 갖는다 — 그리고 완전히 섞이지도 갈리지도 않은 상태를 만드는 것은 **수송 이력**, 곧 물이 어디까지 갔는가다. 문헌은 그것을 정수압 풀이가 받는 조성이 아니라 열진화로 다룬다 (Malamud & Prialnik 2015, 2013; Prialnik & Merk 2008 — 초록만, 본문은 유료). 얼음 든 층의 혼합 규칙은 찾지 못했고 그런 규칙의 오차 상한도 발표된 것이 없다. 이것은 C10 을 덮지 **않는다**. antigorite 와 enstatite 는 알갱이로 공존하는 두 고체이고, 그 사이의 부피 가법은 암석–금속 규칙과 같은 모양이다 | — |
 | **어떤 암석/얼음 조합에도 너무 가벼움** | 평균밀도가 다공성 봉투 아래 | **거절한다.** 선언된 질량-반지름 쌍이 발표된 관계식이 허용하는 범위 밖이라고 말하면서 | — |
 | 가스 자이언트 | `body_class` 가 `giant` 또는 `gas_giant`, `gas_mass_fraction`, 그리고 선언된 `potential_temperature`(1-bar 준위) | 적분한다. Chabrier+ 2019 표의 H/He 외피이고, 기체에는 P = 0 인 표면이 없으므로 1 bar 에서 멈춘다. 목성 −0.83 %, 토성 Z = 0 에서 +7.06 % | analog |
 | **온도를 선언하지 않은 가스 자이언트** | 위와 같고 `potential_temperature` 없음 | 거절한다. 표가 (P, T) 의 함수라 폴리트로프 때처럼 등온으로 갈 길이 없다 | — |
@@ -1454,6 +1454,23 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   `docs/phase3/_papers/0802.1810.md`. 이 레시피가 쓰는 형태 그대로의 부피 가법 혼합(그들의
   §3.3), 이상기체 극한에서 엄밀하다는 진술과 성분 간 상호작용을 빼놓는다는 진술, 그리고
   H/He 에 중원소를 Z = 50 % 까지 섞은 적용.
+- **Malamud, U. & Prialnik, D. 2015**, Icarus 246, 21
+  ([`2015Icar..246...21M`](https://ui.adsabs.harvard.edu/abs/2015Icar..246...21M),
+  doi [10.1016/j.icarus.2014.02.027](https://doi.org/10.1016/j.icarus.2014.02.027)). *Modeling
+  Kuiper belt objects Charon, Orcus and Salacia by means of a new equation of state for porous
+  icy bodies*. 처음에 균질한 얼음–암석 천체에서 다공질 암석을 지나는 물의 다상 흐름, 그 결과의
+  분화, 수성 변질을 따라가고 사문석화와 압밀의 중력 에너지를 열원으로 듭니다 — 부분 분화가
+  실제로 받는 취급(C7)이고, C9 의 제외 항목 둘이기도 합니다. *유료, 초록만*. 오너 요청 목록에
+  C7·C9 겸용으로. bibcode 와 제목으로 확인.
+- **Malamud, U. & Prialnik, D. 2013**, Icarus 225, 763
+  ([`2013Icar..225..763M`](https://ui.adsabs.harvard.edu/abs/2013Icar..225..763M),
+  doi [10.1016/j.icarus.2013.04.024](https://doi.org/10.1016/j.icarus.2013.04.024)). Enceladus
+  와 Mimas 의 진화에서 발열 반응으로서의 사문석화 — 암석 속의 물이 혼합이 아니라 반응인 이유.
+  *유료, 초록만*.
+- **Prialnik, D. & Merk, R. 2008**, Icarus 197, 211
+  ([`2008Icar..197..211P`](https://ui.adsabs.harvard.edu/abs/2008Icar..197..211P),
+  doi [10.1016/j.icarus.2008.03.024](https://doi.org/10.1016/j.icarus.2008.03.024)). 위 둘이
+  딛고 선 다공질 얼음 천체 열진화 코드. *유료, 초록만*.
 - **Bethkenhagen, M., French, M. & Redmer, R. 2013**, J. Chem. Phys. 138, 234504
   ([`2013JChPh.138w4504B`](https://ui.adsabs.harvard.edu/abs/2013JChPh.138w4504B),
   doi [10.1063/1.4810883](https://doi.org/10.1063/1.4810883)). Bethkenhagen+ 2017 이 확장한

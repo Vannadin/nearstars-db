@@ -18,6 +18,13 @@ depends on another, so the numbers are a queue rather than a chain; an entry tha
 Landing section carries one checkbox — *update the matching row in `interior-core.md`* — and
 a row is not closed by the work being done but by that line being written here.
 
+**Prose that carries a number carries the duty to update it.** Notes, domain rows, tables —
+wherever a number sits, when the code moves that number the same commit either fixes it or
+dates it *interim, superseded <date>*. Three times a note fell behind the code (C2 within a
+day; the domain row that stated Neptune's "1797 K, three kelvin under the floor" as fact; the
+H/He note's Saturn +2.09 % after the gas-layer temperature carry moved it to +7.06 %), and
+the rule above only covered core rows.
+
 ## Where the line is
 
 Not by body class — by **what is missing**.
@@ -227,16 +234,42 @@ them. Listed so that a future refusal can be traced to its row rather than re-di
 
 Depends on: a body that actually hits one.
 
-### C7 — Partial differentiation
+### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
-`differentiated: false` integrates for rock and metal mixed in one layer, and declines when
-ice or gas is present. Ice mixed through rock is neither fully mixed nor fully layered, and
-the mixture rule this file carries handles rock and metal only.
+`differentiated: false` integrates rock and metal mixed in one layer and declines when ice
+or gas is present. The refusal stays; its reason is raised. It used to say the mixture rule
+handles rock and metal only — true of the code, and an invitation to go looking for the
+missing rule. Searched 2026-08-30 (additive-volume / ideal / linear mixing for rock + ice,
+interior models of undifferentiated icy bodies): **no mixing rule for an ice-bearing layer
+exists, and no published bound on the error of using one.** Two reasons, and they are the
+content of this closure.
 
-Needs: a mixing rule for the ice-bearing case, or a recorded finding that the intermediate
-state needs a different treatment than a mixture.
+**It is a reaction, not a mixture.** Water and silicate combine into hydrated minerals with
+their own density, volume change and heat; that is why hydrated-rock density in the
+literature comes from Gibbs-energy minimisation over a mineral database rather than from
+mixing two end-member densities. C10 hit the same wall from the other side — no closed-form
+hydrated-rock EOS and no ice–rock mixing rule are two faces of one fact.
 
-Depends on: nothing.
+**It is a process, not a state.** What makes a body neither fully mixed nor fully layered is
+how far the water got. Malamud & Prialnik 2015 (2015Icar..246...21M) start from a
+homogeneous ice–rock body and follow the multiphase flow of water through porous rock, the
+differentiation that results and the aqueous alteration of the rock, with the density profile
+from hydrostatic equilibrium maintained through changing composition, pressure and
+temperature; Malamud & Prialnik 2013 (2013Icar..225..763M) treat serpentinisation
+explicitly, exothermy included; Prialnik & Merk 2008 (2008Icar..197..211P) is the porous
+icy-body evolution code both stand on. **Provenance, plainly: all three are Elsevier, no
+preprint, and only the abstracts were read.** This closure can say a treatment exists and
+what kind it is; it cannot say whether it is transcribable. Malamud & Prialnik 2015 goes on
+the owner's paper-request list serving **C7 and C9 at once** — its heat sources include
+compaction's gravitational potential energy and serpentinisation, two of the five
+exclusions C9 is about.
+
+**This does not touch C10.** C7 forbids mixing water *into* silicate — a reaction. C10 mixes
+antigorite with enstatite/PREM: two solids coexisting as grains, each with its own measured
+equation of state, which is what a partially serpentinised rock physically is. Volume
+additivity between them is standard and is the same shape as the rock–metal rule this
+recipe already carries, so C10's interpolation is one declared axis — how serpentinised —
+and not the forbidden mixture.
 
 ### C8 — The temperature branch's validated window
 

@@ -108,7 +108,7 @@ the table's pressure floor (1 bar) and that is the level the published radii are
 | body | before | after | T_c derived | T_c published |
 |---|---|---|---|---|
 | Jupiter (T = 165 K at 1 bar) | +0.6 % | **−0.69 %** | 14 490 K | ~20 000 K |
-| Saturn, Z = 0 (135 K) | +20.7 % | **+2.09 %** | 4 800 K | — |
+| Saturn, Z = 0 (135 K) | +20.7 % | **+2.09 %** (interim, superseded 2026-08-30: +7.06 % / 62 344 km / 6 930 K on the current code — the gas-layer temperature carry moved it after this note; the anchor at Z = 0.0825 and the direction "far below 0.200" stand) | 4 800 K | — |
 | Uranus (76 K) | +23.8 % | **+5.4 %** | 6 150 K | 5 700 K (Scheibe+ 2019) |
 | Neptune (72 K) | +29.2 % | **declines** | — | 5 500 K |
 
@@ -157,7 +157,7 @@ one extra integration, paid only when a gas is outermost. That is the next thing
 
 Until it exists, **Saturn's fitting Z has not been measured** and the question the brief
 asked — where inside the Guillot budget it moves — is open. What is known is the direction:
-Z = 0 now gives +2.09 % instead of +20.7 %, so whatever the fitting Z turns out to be, it is
+Z = 0 now gives +2.09 % instead of +20.7 % (interim number; +7.06 % on the current code, superseded 2026-08-30), so whatever the fitting Z turns out to be, it is
 far below the 0.200 the polytrope needed. The old value was compensating for the envelope,
 exactly as the brief suspected.
 
@@ -239,7 +239,7 @@ points for free and no integration is added.
 
 | Saturn, envelope Z | 0.00 | 0.02 | 0.05 | 0.10 | 0.20 |
 |---|---|---|---|---|---|
-| radius vs IAU mean | **+2.09 %** | +11066 % | −5.03 % | −5.73 % | −13.60 % |
+| radius vs IAU mean | **+2.09 %** (interim, superseded 2026-08-30: +7.06 %) | +11066 % | −5.03 % | −5.73 % | −13.60 % |
 
 Monotone except Z = 0.02, and that one exposes the remaining case: when the ladder's **first**
 rung already exceeds the target, no rung is recorded and the bracket falls back to the old
@@ -255,7 +255,7 @@ This was the owner's most important request, and it holds.
 | body | before the selector | after |
 |---|---|---|
 | Jupiter | −0.69 % | **−0.69 %** |
-| Saturn, Z = 0 | +2.09 % | **+2.09 %** |
+| Saturn, Z = 0 | +2.09 % | **+2.09 %** (interim; +7.06 % on the current code, superseded 2026-08-30) |
 | Uranus | +5.4 %, T_c 6153 K | **+5.49 %, T_c 6159 K** |
 
 So the improvement reported earlier is not an artefact of landing on a lucky root.
