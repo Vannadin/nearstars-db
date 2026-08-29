@@ -580,6 +580,12 @@ class Mixture:
                 # 받는 것과 같은 규칙(그 상에서 dT/dP = 0). 열 상수가 있는 성분들만 c_P 로 가중한다.
                 # 2026-08-30 에 antigorite 가 들어오며 생긴 자리다: Hilairet+ 2006 은 상온뿐이라
                 # 열항이 없고, 그 결핍은 지어내지 않고 등급과 note 가 말한다.
+                #
+                # **중첩 모서리.** 성분이 자기도 Mixture 면(예: 사문석화 암석을 얼음 맨틀에 섞는 날)
+                # Mixture.has_thermal 이 all() 이라 cold 성분 하나 때문에 그 안의 **열 성분(규산염 몫)까지
+                # 통째로** 통과된다. 지금은 도달 불가다 — with_rock 은 MATERIALS["silicate"] 를 직접 쓰고
+                # _rock 의 혼합은 층 재료로만 쓰인다. 도달하게 만들면 성분을 flatten 해서 열 부분과 cold
+                # 부분을 따로 이 고리에 넣을 것.
                 continue
             c = m.c_p(p, t, t_pot)
             if c <= 0.0:
