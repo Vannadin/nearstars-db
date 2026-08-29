@@ -19,6 +19,8 @@ from __future__ import annotations
 import sys
 
 import interior
+import math
+from eos import EARTH_POTENTIAL_T as _NL_EARTH_T
 from interior import (EARTH_MASS_KG, EARTH_RADIUS_M, infer_composition,
                       infer_three_layer, solve)
 from porosity import MASS_COMPACT_KG, P_GRAIN_FRACTURE, voids_expected
@@ -228,6 +230,140 @@ def unterborn_tcmb(radius_earth: float, t_pot: float = 1600.0) -> float:
     base = a * r + b * r ** 2 + c * r ** 3
     s_a, s_b = UNTERBORN_SENSITIVITY
     return base + (t_pot - 1600.0) * (s_a + r ** s_b)
+
+
+# ── 두 번째 앵커: Noack & Lasbleis 2020 ─────────────────────────────────
+#
+# Noack & Lasbleis 2020, A&A 638, A129 (2020A&A...638A.129N, 오픈 액세스, PDF 가 캐시에 있다) 가
+# 자기 내부구조 모형의 맨틀 단열선을 핵-맨틀 경계까지 끌고 간 매개변수화를 싣는다. 0.8 ~ 2 M⊕,
+# 지구형 조성(Fe·Mg·Si·O), 그들의 §7 이 "We limited our mass range to two Earth masses" 라고
+# 적는다. 상수는 전부 PDF 에서 직접 읽었다 (2026-08-30).
+#
+#   (8)  R_p [km]     = (7030 − 1840 X_Fe) (M/M⊕)^0.282          X_Fe = 행성 전체의 철 질량분율
+#   (9)  R_c,hot [km] = 4850 X_CMF^0.328 (M/M⊕)^0.266
+#   (13) g_0 = G M / (R_p·1000)²        (14) g_CMB = G X_CMF M / (R_c·1000)²
+#   (15) g_m,av = (g_0 + g_CMB) / 2
+#   (18) α_m,av [1/K] = (13 + 0.738 X_CMF − 11 (M/M⊕)^0.04) × 10⁻⁵
+#   (19) C_p,m,av [J/kg/K] = 1275 − 585 #FeM^1.06
+#   (22) T_CMB,cold = T_um · exp( dT · g_m,av α_m,av / C_p,m,av · (R_p − R_c,hot − D_l)·1000 )
+#        T_um = 2000 K ("for simplicity") at the bottom of the lithosphere, D_l = 250 km, dT ≈ 0.5
+#
+# **식 (20)(21) 은 쓰지 않는다.** T_CMB,hot · T_CMB,warm 은 마그마 오션 직후의 **초기** 온도이고
+# (Stixrude 2014 융해곡선 위, 지구에서 4800 / 4300 K 쯤), 논문이 일부러 "문헌값을 수천 K 초과한다"
+# 고 주장하는 값이다. 현재 단열선과 댈 수 있는 것은 (22) 하나다.
+#
+# **앵커가 다르다는 것을 적어 둔다.** (22) 는 250 km 깊이에서 2000 K 를 출발점으로 쓰고, 이 레시피는
+# 표면 포텐셜 온도 1600 K 에서 출발한다 (Unterborn 의 eq. 7 도 그렇다). 그래서 두 가지를 잰다 —
+# (A) 식 (22) 를 인쇄된 그대로(T_um = 2000 K) 와 엔진의 CMB 온도, (B) 식의 지수 인자
+# exp(…) 와 엔진의 T_CMB / T(250 km) 비. (B) 가 단열선 **기울기** 의 비교이고 (A) 는 출발점 선택까지
+# 섞인 비교다.
+NL2020_RP = (7030.0, 1840.0, 0.282)          # eq. 8
+NL2020_RC_HOT = (4850.0, 0.328, 0.266)       # eq. 9
+NL2020_ALPHA = (13.0, 0.738, 11.0, 0.04)     # eq. 18, × 1e-5
+NL2020_CP = (1275.0, 585.0, 1.06)            # eq. 19
+NL2020_T_UM = 2000.0                         # K, eq. 22
+NL2020_D_L_KM = 250.0                        # km, eq. 22
+NL2020_DT = 0.5                              # eq. 22 의 경험 인자
+NL2020_FE_M = 0.1                            # 지구형 맨틀 철 수 (§2.2, "best resembles Earth")
+NL2020_MASS_RANGE = (0.8, 2.0)               # M⊕
+NL2020_G = 6.67384e-11                       # 논문이 적은 G
+NL2020_M_EARTH = 5.972e24                    # 논문이 적은 M⊕ [kg]
+# 재는 값. 엔진 기하(R_p · R_c 는 엔진 출력)에서 식 (22) 가 내는 T_CMB 와 엔진 T_CMB 의 비 − 1 의
+# 구간, 0.8 ~ 2 M⊕. 2026-08-30 에 잰 구간이고, 여기서 나가면 무엇이 움직였는지 봐야 한다.
+NL2020_BAND = (-0.03, 0.0)                   # (A), 엔진 / 식 (22) − 1: 잰 값 −2.2 % (0.8 M⊕) → −0.8 % (2 M⊕)
+NL2020_SLOPE_BAND = (0.10, 0.16)             # (B), 엔진 상승비 / 식의 지수 인자 − 1: 잰 값 +11.6 ~ +13.5 %
+NL2020_EARTH_TCMB = 2563.0                   # K. 식 (22) 를 엔진의 지구 기하에 넣은 값 — 조사가 보고한 2562 K 의 독립 재현
+ANCHOR_SPREAD_BAND = (0.04, 0.10)            # 두 앵커가 서로 어긋나는 폭 (Unterborn / N&L − 1), 1 → 2 M⊕
+
+
+def nl2020_exponent(mass_earth: float, radius_km: float, core_radius_km: float,
+                    x_cmf: float, fe_m: float = NL2020_FE_M) -> float:
+    """식 (22) 의 지수 인자 exp(dT · g α / C_p · (R_p − R_c − D_l)·1000)."""
+    m_kg = mass_earth * NL2020_M_EARTH
+    g0 = NL2020_G * m_kg / (radius_km * 1000.0) ** 2
+    g_cmb = NL2020_G * x_cmf * m_kg / (core_radius_km * 1000.0) ** 2
+    g_av = 0.5 * (g0 + g_cmb)
+    a0, a1, a2, a3 = NL2020_ALPHA
+    alpha = (a0 + a1 * x_cmf - a2 * mass_earth ** a3) * 1e-5
+    c0, c1, c2 = NL2020_CP
+    c_p = c0 - c1 * fe_m ** c2
+    depth_m = (radius_km - core_radius_km - NL2020_D_L_KM) * 1000.0
+    return math.exp(NL2020_DT * g_av * alpha / c_p * depth_m)
+
+
+def nl2020_tcmb(mass_earth: float, radius_km: float, core_radius_km: float,
+                x_cmf: float, fe_m: float = NL2020_FE_M) -> float:
+    """식 (22) 그대로 — T_um = 2000 K 에서 출발한 CMB 온도 [K]."""
+    return NL2020_T_UM * nl2020_exponent(mass_earth, radius_km, core_radius_km, x_cmf, fe_m)
+
+
+def nl2020_geometry(mass_earth: float, x_cmf: float, x_fe: float) -> tuple[float, float]:
+    """논문 자신의 기하 — 식 (8) 의 R_p 와 식 (9) 의 R_c,hot [km]."""
+    r0, r1, re = NL2020_RP
+    c0, ce1, ce2 = NL2020_RC_HOT
+    return ((r0 - r1 * x_fe) * mass_earth ** re, c0 * x_cmf ** ce1 * mass_earth ** ce2)
+
+
+def _mantle_t_at_depth(res, depth_km: float = NL2020_D_L_KM) -> float:
+    """엔진의 맨틀 온도를 깊이 depth_km 에서 읽는다 — 풀린 중심에서 한 번 더 적분하며
+    규산염 밀도 호출의 (P, T) 를 모아, 그 깊이의 정수압(ρ g h, 표면 g 와 상부 맨틀 밀도)에서 보간."""
+    import eos as _eos
+    v = res.values
+    m_kg = v["mass_earth"] * EARTH_MASS_KG if "mass_earth" in v else res.inputs["mass_earth"] * EARTH_MASS_KG
+    samples: list[tuple[float, float]] = []
+    orig = _eos.Material.density
+
+    def rec(self, p, t=0.0, t_pot=0.0, _o=orig):
+        if self.name == "silicate" and t > 0.0:
+            samples.append((p, t))
+        return _o(self, p, t, t_pot)
+    _eos.Material.density = rec
+    try:
+        st = interior.integrate(v["core_pressure"] * 1e9, m_kg, res.inputs["core_mass_fraction"], 0.0,
+                                "fe_prem", t_center=v["core_temperature"], t_pot=_NL_EARTH_T)
+    finally:
+        _eos.Material.density = orig
+    g = interior.G * m_kg / st.radius_m ** 2
+    rho_um = _eos.MATERIALS["silicate"].density(1e9, _NL_EARTH_T, _NL_EARTH_T)
+    p_depth = rho_um * g * depth_km * 1000.0
+    samples.sort()
+    for (p0, t0), (p1, t1) in zip(samples, samples[1:]):
+        if p0 <= p_depth <= p1:
+            return t0 + (t1 - t0) * (p_depth - p0) / (p1 - p0)
+    return samples[0][1] if samples else 0.0
+
+
+def adiabat_window_table() -> list[dict]:
+    """0.8 ~ 2 M⊕ 지구형에서 엔진 · Unterborn eq. 7 · Noack & Lasbleis eq. (22) 를 나란히."""
+    out = []
+    for m in (0.8, 1.0, 1.2, 1.5, 2.0):
+        res = solve(m, core_mass_fraction=0.325, potential_temperature=_NL_EARTH_T)
+        v = res.values
+        r_km = v["radius"] * EARTH_RADIUS_M / 1e3
+        rc_km = v["core_radius"] * EARTH_RADIUS_M / 1e3
+        t_engine = v["cmb_temperature"]
+        t_nl = nl2020_tcmb(m, r_km, rc_km, 0.325)
+        rp_paper, rc_paper = nl2020_geometry(m, 0.325, 0.35)
+        t_nl_paper = nl2020_tcmb(m, rp_paper, rc_paper, 0.325)
+        t_unt = unterborn_tcmb(v["radius"]) if UNTERBORN_TCMB_RANGE[0] <= v["radius"] <= UNTERBORN_TCMB_RANGE[1] else None
+        t_depth = _mantle_t_at_depth(res)
+        out.append(dict(mass=m, radius=v["radius"], r_km=r_km, rc_km=rc_km, t_engine=t_engine,
+                        t_nl=t_nl, t_nl_paper=t_nl_paper, rp_paper=rp_paper, rc_paper=rc_paper,
+                        t_unt=t_unt, t_depth=t_depth,
+                        rise_engine=t_engine / t_depth if t_depth else float("nan"),
+                        rise_nl=nl2020_exponent(m, r_km, rc_km, 0.325), grade=res.grade))
+    return out
+
+
+def print_adiabat_window() -> None:
+    print("| M (M⊕) | R (R⊕) | engine T_CMB | N&L eq. 22 (engine R_p, R_c) | Δ | N&L eq. 22 (paper R_p, R_c) | Δ | Unterborn eq. 7 | Δ | engine T(250 km) | rise engine | rise eq. 22 | Δ |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+    for r in adiabat_window_table():
+        du = "–" if r["t_unt"] is None else f"{r['t_unt']:.0f} K | {(r['t_engine'] / r['t_unt'] - 1) * 100:+.1f} %"
+        print(f"| {r['mass']:.1f} | {r['radius']:.3f} | {r['t_engine']:.0f} K | {r['t_nl']:.0f} K | "
+              f"{(r['t_engine'] / r['t_nl'] - 1) * 100:+.1f} % | {r['t_nl_paper']:.0f} K | "
+              f"{(r['t_engine'] / r['t_nl_paper'] - 1) * 100:+.1f} % | {du} | {r['t_depth']:.0f} K | "
+              f"{r['rise_engine']:.3f} | {r['rise_nl']:.3f} | {(r['rise_engine'] / r['rise_nl'] - 1) * 100:+.1f} % |")
 
 
 # 조성별 암석 질량 상한을 재는 축. 값이 아니라 **누가 상한을 정하는가** 가 내용이다.
@@ -626,6 +762,9 @@ def main() -> int:
         return 0
     if "--icegiant" in sys.argv:
         ice_giant_table()
+        return 0
+    if "--adiabat" in sys.argv:
+        print_adiabat_window()
         return 0
     if "--table" in sys.argv:
         table()
@@ -1113,6 +1252,42 @@ def main() -> int:
         fails.append(f"CMB 온도 민감도 {got:.2f} 가 eq. 8 의 {want:.2f} 와 25 % 넘게 다르다")
     print(f"  [{'PASS' if ok else 'FAIL'}] dT_CMB/dT_Pot {got:.2f} · eq. 8 이 주는 "
           f"{want:.2f} ({(got / want - 1) * 100:+.0f} %)")
+
+    # ── 두 번째 앵커 (C8) ──
+    # 등급을 올리는 근거는 "앵커가 하나 더 있다" 가 아니라 **"그 앵커와 이만큼 어긋난다"** 다.
+    # 그래서 표 전체를 재고 구간에 묶는다. 표는 `--adiabat` 가 낸다.
+    print("\n두 번째 앵커 — Noack & Lasbleis 2020 eq. (22), 0.8 ~ 2 M⊕")
+    nl_rows = adiabat_window_table()
+    earth = [r for r in nl_rows if r["mass"] == 1.0][0]
+    ok = abs(earth["t_nl"] - NL2020_EARTH_TCMB) < 1.0
+    if not ok:
+        fails.append(f"식 (22) 의 지구 값 {earth['t_nl']:.1f} K 가 옮겨 적은 기록 {NL2020_EARTH_TCMB:.0f} K 와 다르다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 식 (22) · 지구 기하 → {earth['t_nl']:.0f} K (기록 {NL2020_EARTH_TCMB:.0f} K, "
+          f"조사 보고 2562 K 의 독립 재현) · 엔진 {earth['t_engine']:.0f} K · eq. 7 {earth['t_unt']:.0f} K")
+    worst_lo = min(r["t_engine"] / r["t_nl"] - 1.0 for r in nl_rows)
+    worst_hi = max(r["t_engine"] / r["t_nl"] - 1.0 for r in nl_rows)
+    ok = NL2020_BAND[0] <= worst_lo and worst_hi <= NL2020_BAND[1]
+    if not ok:
+        fails.append(f"엔진 / 식 (22) 의 폭 {worst_lo * 100:+.1f} ~ {worst_hi * 100:+.1f} % 가 기록 구간 {NL2020_BAND} 밖")
+    for r in nl_rows:
+        print(f"         {r['mass']:.1f} M⊕ (R {r['radius']:.3f}) → 엔진 {r['t_engine']:.0f} K · eq. (22) {r['t_nl']:.0f} K "
+              f"({(r['t_engine'] / r['t_nl'] - 1) * 100:+.1f} %) · eq. 7 "
+              + ("–" if r["t_unt"] is None else f"{r['t_unt']:.0f} K ({(r['t_engine'] / r['t_unt'] - 1) * 100:+.1f} %)"))
+    print(f"  [{'PASS' if ok else 'FAIL'}] 엔진은 식 (22) 에 {worst_lo * 100:+.1f} ~ {worst_hi * 100:+.1f} % — "
+          f"기록 구간 {NL2020_BAND[0] * 100:+.0f} ~ {NL2020_BAND[1] * 100:+.0f} %")
+    slopes = [r["rise_engine"] / r["rise_nl"] - 1.0 for r in nl_rows]
+    ok = NL2020_SLOPE_BAND[0] <= min(slopes) and max(slopes) <= NL2020_SLOPE_BAND[1]
+    if not ok:
+        fails.append(f"상승비의 폭 {min(slopes) * 100:+.1f} ~ {max(slopes) * 100:+.1f} % 가 기록 구간 밖")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 250 km 에서 CMB 까지의 상승비: 엔진이 식의 지수 인자보다 "
+          f"{min(slopes) * 100:+.1f} ~ {max(slopes) * 100:+.1f} % 가파르다 — 절대 온도가 맞는 것은 출발점이 "
+          f"다른 것(식 2000 K, 엔진 {earth['t_depth']:.0f} K)과 상쇄된 결과이고, 그 사실을 적는다")
+    spreads = [(r["t_unt"] / r["t_nl"] - 1.0) for r in nl_rows if r["t_unt"] is not None and r["mass"] >= 1.0]
+    ok = ANCHOR_SPREAD_BAND[0] <= max(spreads) <= ANCHOR_SPREAD_BAND[1]
+    if not ok:
+        fails.append(f"두 앵커의 상호 폭 {max(spreads) * 100:.1f} % 가 기록 구간 밖")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 두 앵커끼리는 1 → 2 M⊕ 에서 {min(spreads) * 100:+.1f} ~ {max(spreads) * 100:+.1f} % "
+          f"어긋난다 — 엔진은 그 사이에 앉는다")
 
     print("\n얼음 — 열 항이 이 파일이 이미 적어둔 오차폭을 재현하는가")
     # eos.py 의 얼음 절이 기준 등온 대비 구간 상단의 밀도 차를 III 0.11 % · V 0.27 % ·

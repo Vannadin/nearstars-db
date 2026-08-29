@@ -1702,14 +1702,13 @@ def solve(mass_earth: float,
     thermal_unchecked = thermal_declared and radius > UNTERBORN_TCMB_MAX_R
     if thermal_unchecked:
         notes.append(
-            f"**반지름 {radius:.2f} R⊕ 는 온도 갈래가 대조된 구간 밖이다.** 단열선의 "
-            f"판정선은 Unterborn+ 2019 eq. 7 이고 그 적합이 "
-            f"{UNTERBORN_TCMB_MAX_R:.2f} R⊕ 까지다. 그 위에서 여기 단열선이 그들 값보다 "
-            "낮게 흐르고, 1.46 R⊕ 에서 17 % 다 — αK_T 를 부피에 무관하다고 둔 Anderson & "
-            "Goto 근사가 압축이 커지면 γ 를 1/ρ 로 떨어뜨리는데, Debye 모형으로 α(P,T) 와 "
-            "C_P(P,T) 를 푸는 쪽은 그렇게 빨리 떨어지지 않는다. 밀도가 안 움직였더라도 "
-            "**핵 온도가 대조 밖** 이므로 등급을 analog 로 내린다 — 그 값을 받는 쪽이 "
-            "core_state 다.")
+            f"**반지름 {radius:.2f} R⊕ 는 온도 갈래가 5 % 안에서 맞는 구간({UNTERBORN_TCMB_MAX_R:.2f} R⊕) "
+            "밖이다.** 앵커는 둘이고 서로 어긋난다 — Unterborn+ 2019 eq. 7 에는 여기 단열선이 낮게 흐르고 "
+            "(1.06 R⊕ 에서 −5.6 %, 1.22 R⊕ 에서 −9.5 %, 1.46 R⊕ 에서 −17 %), Noack & Lasbleis 2020 "
+            "eq. (22) 에는 0.8 ~ 2 M⊕ 전 구간에서 −2.2 ~ −0.8 % 로 붙는다. 두 발표 추정치끼리 1 → 2 M⊕ 에서 "
+            "4.4 ~ 9.7 % 어긋나고 엔진은 그 사이에 앉는다 (2026-08-30 측정, test_interior --adiabat). "
+            "2 M⊕ (1.22 R⊕) 위는 그 논문의 천장이라 다시 앵커가 하나다. 핵 온도가 그 폭만큼 불확실하므로 "
+            "등급을 analog 로 내린다 — 그 값을 받는 쪽이 core_state 다.")
     if thermal_moves:
         notes.append(
             f"답이 그 선언에 기댄다 — 기준 {EARTH_POTENTIAL_T:.0f} K 에서 "

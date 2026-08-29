@@ -271,15 +271,34 @@ additivity between them is standard and is the same shape as the rock–metal ru
 recipe already carries, so C10's interpolation is one declared axis — how serpentinised —
 and not the forbidden mixture.
 
-### C8 — The temperature branch's validated window
+### C8 — The temperature branch's validated window — **closed 2026-08-30**
 
-The only published check on the adiabat (Unterborn+ 2019 eq. 7) is matched to 4.4 % at
-1 R⊕ and drifts to −17 % at 1.46 R⊕, so the grade drops above 1.05 R⊕ even where density
-did not move. `core_state` consumes that number, so the drift propagates into a verdict.
+The adiabat had one published check, Unterborn+ 2019 eq. 7 — 4.4 % at 1 R⊕, −17 % at
+1.46 R⊕ — and one anchor is a coincidence with an error bar. The second is Noack & Lasbleis
+2020 (2020A&A...638A.129N, PDF in the cache): their eq. (22) carries the mantle adiabat to the
+CMB with every term printed, valid 0.8–2 M⊕ for Earth-like composition, and all constants
+were re-read from the PDF. Their eqs. (20)–(21) are initial post-magma-ocean temperatures and
+were not used. Engine against both, Earth-like CMF 0.325 at 1600 K
+(`test_interior.py --adiabat`, and the section *Temperature, checked against a published
+core-mantle boundary* carries the full table):
 
-Needs: a second published anchor above 1.05 R⊕, or a recorded finding that none exists.
+| M (M⊕) | R (R⊕) | engine | vs eq. (22) | vs eq. 7 | anchors vs each other |
+|---|---|---|---|---|---|
+| 0.8 | 0.942 | 2430 K | −2.2 % | −2.9 % | +0.7 % |
+| 1.0 | 1.003 | 2526 K | −1.4 % | −4.4 % | +3.1 % |
+| 1.5 | 1.123 | 2724 K | −0.7 % | −7.2 % | +7.1 % |
+| 2.0 | 1.216 | 2884 K | −0.8 % | −9.5 % | +9.6 % |
 
-Depends on: nothing.
+The Earth point reproduces the 2562 K an independent reading reported (2563 K) — the
+transcription check. So the grade above 1.05 R⊕ rests on a measured spread: the engine is
+within 2.2 % of one published estimate and within 9.5 % of the other, and **the two published
+estimates disagree with each other by up to 9.7 %**, with the engine between them. The
+agreement in absolute temperature is partly two differences cancelling (the paper's 2000 K at
+250 km against the engine's 1736 K there; the engine's rise to the CMB 12–14 % steeper than
+the paper's damped exponent), and the test pins both. **2 M⊕ (1.22 R⊕) is the paper's own
+ceiling**; above it the recipe is back to one anchor, to Unterborn's 1.5 R⊕. Anchors
+bit-identical: this added a comparison, not a change to the adiabat.
+`engine/adiabat-window-context-notes.md` has the transcription and the runs.
 
 ### C9 — Porosity on a heated body
 
