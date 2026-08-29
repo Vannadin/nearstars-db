@@ -81,22 +81,27 @@ which is C10.**
 
 Reasoning: `engine/ocean-layer-context-notes.md`.
 
-### C3 — The melting-curve gap, and dispatch by class
+### C3 — The melting-curve gap, and dispatch by class — **closed 2026-08-30**
 
-The ice material is chosen by `body_class`, never by the local (P, T) —
-`interior.py:960`. Neptune's envelope base landed 3 K under the hot-water fit's floor and
-declined until the boundary interpolation moved it above; the dispatch itself is unchanged
-and the next body at that boundary will hit it again.
+The ice material is now chosen by the local (P, T) against two published lines, never by
+`body_class`: IAPWS's melting curve to 20.6 GPa, then Reinhardt+ 2022's liquid–solid line
+(to 52.4 GPa) and its ice VII′–VII″ line (to 70 GPa), baked from the paper's public data by
+`tools/make_ice_melt_table.py`. Below the VII′–VII″ line the column is the condensed ladder;
+above it, VII″ and the liquid alike go to Mazevet's fit, whose floor is now the paper's own
+1000 K rather than the ladder's 1800 K ceiling. Every result names the phase at both ends of
+the column and the line it was measured against. Neptune's envelope base at convergence is
+39 GPa · 2 555 K, 999 K above the liquid line — fluid for a stated reason. The seam at
+20.6 GPa is +26 % in melting temperature, measured and stated; the grade is analog because
+the lines are simulation.
 
-Dispatching by state is right in principle but **1800 K cannot be the switch**: it is the
-knot ceiling of a fit, not a phase boundary, and water at those pressures is fluid. IAPWS
-equation (5) ends at 715 K (20.6 GPa) and `melt_free_phases()` already names `ice_x` as
-carrying no curve at all.
-
-Needs: a melting curve between 20.6 GPa and the superionic field. Then the dispatch can read
-the state.
-
-Depends on: nothing. Closing it also settles two domain rows that currently defer to it.
+Two things came out from under it. The "1797 K, three kelvin under the floor" was a trial
+path, not the converged point; and Neptune's old convergence was luck — the 1-bar
+temperature was jagged in the central temperature by ±0.4 K because the closing
+extrapolation read its adiabatic gradient at a grid-bound step start. The gradient is now read
+at the exit point and the temperature loop keeps its best pass; Uranus moved +3.8 × 10⁻⁵ in
+radius, Neptune −2.8 × 10⁻⁴ (6 308 → 6 296 K at the centre), both reported in
+`engine/melting-curve-context-notes.md`. Above 70 GPa no line reaches and none is invented:
+the verdict says "fluid or superionic" with Millot+ 2018's one point.
 
 ### C4 — Ammonia and methane
 

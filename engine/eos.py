@@ -44,6 +44,7 @@ from __future__ import annotations
 import math
 
 import hhe_table
+import ice_melt_table
 import water_hot
 import water_table
 from dataclasses import dataclass
@@ -663,10 +664,10 @@ class HotWater:
         if t < water_hot.T_MIN:
             raise PhaseGap(
                 self.name, p,
-                f"{t:.0f} K 는 이 적합을 쓰는 하한({water_hot.T_MIN:.0f} K) 아래다. "
-                "그 아래는 응축상 얼음이고 이 파일의 사다리(ice_ih … ice_x)가 받는다. "
-                "Mazevet+ 2019 §3.1 자신이 그 구간을 'limited applicability for the ice VII "
-                "and ice X phases' 로 적고 불일치를 'tens percent' 로 부른다.",
+                f"{t:.0f} K 는 이 적합이 유체에 대해 적은 하한({water_hot.T_MIN:.0f} K) 아래다 — "
+                "Mazevet+ 2019 §3.1 이 ρ ≳ 1 g/cc 의 적합 구간을 '10³ K ≲ T' 로 적는다. 녹는곡선은 "
+                "여기를 액체라 하는데 이 저장소에 그 온도의 조밀한 액체 상태방정식이 없다. 선반은 있다 — "
+                "SeaFreeze water2 (Brown 2018, 0–100 GPa · 240–10 000 K). 고체는 얼음 사다리가 받는다.",
                 t, too_cold=True)
         if t > water_hot.T_MAX:
             raise PhaseGap(
@@ -1000,6 +1001,29 @@ IAPWS_MELT_UNCERTAINTY = {"ice_ih": 0.02, "ice_iii": 0.03, "ice_v": 0.03,
 IAPWS_MELT_REF = ("IAPWS R14-08(2011) §3 — Revised Release on the Pressure along the "
                   "Melting and Sublimation Curves of Ordinary Water Substance")
 
+# **20.6 GPa 위의 녹는곡선.** IAPWS 식 (5) 가 715 K 에서 끝나는 자리부터 Reinhardt+ 2022
+# (2022NatCo..13.4707R) 의 액체–고체 공존선을 쓴다 — 열역학 적분으로 계산한 11 점, 10–52.4 GPa,
+# 공개 데이터에서 생성한 표(ice_melt_table.py)를 점 사이 선형 보간한다. **실험이 아니라
+# 기계학습 퍼텐셜(PBE) 시뮬레이션** 이라 이 곡선으로 낸 판정은 analog 다. 같은 논문의
+# 얼음 VII′–VII″ 공존선(20–70 GPa, 1차 전이)도 같이 든다 — 밀도에는 안 쓰고 상의 이름에만 쓴다.
+#
+# **이음매는 20.6 GPa 이고 그 폭은 잰 것이다.** IAPWS 가 거기서 715 K, Reinhardt 보간이 902 K —
+# 녹는점으로 +26 % 다. 두 곡선이 15–16 GPa 에서 교차하므로 교차점에서 갈아탈 수도 있었지만,
+# 그러면 측정 곡선의 마지막 5 GPa 를 시뮬레이션으로 바꾸고 이음매 압력이 우리 것이 된다.
+# 규산염 이음매(3.5 TPa, 0.21 %)와 같은 규칙 — 출처가 끝나는 자리에서 갈아타고 폭을 적는다.
+# test_interior.py 가 이 폭을 다시 잰다. 이 폭 안의 띠(20.6 GPa 근처 715–902 K)에 앉은 자리는
+# 판정문이 "두 출처가 다투는 띠" 라고 이름 댄다.
+REINHARDT_LIQUID = tuple((p_gpa * GPA, t_k) for p_gpa, t_k, _s in ice_melt_table.LIQUID_LINE)
+REINHARDT_VII1_VII2 = tuple((p_gpa * GPA, t_k) for p_gpa, t_k in ice_melt_table.VII1_VII2_LINE)
+REINHARDT_P_MAX = REINHARDT_LIQUID[-1][0]        # 52.4 GPa. 이 위의 액체선은 이 레시피에 없다
+REINHARDT_VII1_VII2_P_MAX = REINHARDT_VII1_VII2[-1][0]   # 70 GPa. VII′–VII″ 선이 끝나는 자리
+REINHARDT_MELT_REF = ("Reinhardt+ 2022 (2022NatCo..13.4707R) Fig. 1a — 열역학 적분 액체–고체 "
+                      "공존선 10–52.4 GPa, 공개 데이터(BingqingCheng/highP-ice)에서 생성. "
+                      "기계학습 퍼텐셜 시뮬레이션, 등급 analog")
+# 52.4 GPa 위에서 이 레시피가 드는 유일한 융해 측정. **점이지 곡선이 아니다** — Millot+ 2018
+# (2018NatPh..14..297M) 초록의 "ice melts near 5,000 K at 190 GPa". 판정문이 거리를 재는 데만 쓴다.
+MILLOT_2018_MELT = (190.0 * GPA, 5000.0)
+
 # Simon 적합 두 조각. (T₀ [K], P₀ [Pa], a [Pa], c) 로 T = T₀(1 + (P−P₀)/a)^c 다.
 IRON_MELT_LOW = (1825.0, 0.0, 57.723 * GPA, 0.654)        # Zhang+ 2015 초록
 IRON_MELT_HIGH = (6469.0, 300.0 * GPA, 434.82 * GPA, 0.54369)   # González-Cataldo+ 2023 초록
@@ -1028,6 +1052,9 @@ def iapws_p_melt(name: str, t: float) -> float:
     return p_star * (1.0 - c * (1.0 - (t / t_star) ** e))
 
 
+IAPWS_VII_END = iapws_p_melt("ice_vii", IAPWS_VII_RANGE[1])   # Pa. 식 (5) 가 끝나는 압력, 715 K 에서 20.6 GPa
+
+
 def _water_branch(p: float) -> str | None:
     """이 압력에서 녹는 것이 어느 얼음인가. **녹는곡선 자신의 분기점** 으로 고른다."""
     b3, b5, b6, b7 = WATER_MELT_BREAKS
@@ -1041,9 +1068,26 @@ def _water_branch(p: float) -> str | None:
         return "ice_v"
     if p < b7:
         return "ice_vi"
-    if p <= iapws_p_melt("ice_vii", IAPWS_VII_RANGE[1]):
+    if p <= IAPWS_VII_END:
         return "ice_vii"
+    if p <= REINHARDT_P_MAX:
+        return "ice_vii_reinhardt"
     return None
+
+
+def _interp_line(line: tuple[tuple[float, float], ...], p: float) -> float | None:
+    """(P, T) 점 사이를 선형 보간한 T [K]. 표 밖이면 None. 점이 열한 개라 선형 탐색이 싸다."""
+    if p < line[0][0] or p > line[-1][0]:
+        return None
+    for (p0, t0), (p1, t1) in zip(line, line[1:]):
+        if p <= p1:
+            return t0 + (t1 - t0) * (p - p0) / (p1 - p0)
+    return line[-1][1]
+
+
+def water_vii1_vii2_boundary(p: float) -> float | None:
+    """압력 p 에서 얼음 VII′ 이 VII″ 로 넘어가는 온도 [K] (Reinhardt+ 2022). 20–70 GPa 밖은 None."""
+    return _interp_line(REINHARDT_VII1_VII2, p)
 
 
 def water_t_melt(p: float) -> float | None:
@@ -1054,6 +1098,8 @@ def water_t_melt(p: float) -> float | None:
     name = _water_branch(p)
     if name is None:
         return None
+    if name == "ice_vii_reinhardt":
+        return _interp_line(REINHARDT_LIQUID, p)
     lo, hi = (IAPWS_IH_RANGE if name == "ice_ih" else
               IAPWS_VII_RANGE if name == "ice_vii" else
               IAPWS_MELT[name][4:6])
@@ -1079,6 +1125,9 @@ def water_liquid_at(p: float, t: float) -> bool | None:
     name = _water_branch(p)
     if name is None:
         return None
+    if name == "ice_vii_reinhardt":
+        t_m = _interp_line(REINHARDT_LIQUID, p)
+        return None if t_m is None else t > t_m
     lo, hi = (IAPWS_IH_RANGE if name == "ice_ih" else
               IAPWS_VII_RANGE if name == "ice_vii" else
               IAPWS_MELT[name][4:6])
@@ -1089,6 +1138,57 @@ def water_liquid_at(p: float, t: float) -> bool | None:
     if name == "ice_ih":
         return p > iapws_p_melt(name, t)
     return p < iapws_p_melt(name, t)
+
+
+WATER_PHASE_LABELS = {"ice_ih": "얼음 Ih", "ice_iii": "얼음 III", "ice_v": "얼음 V",
+                      "ice_vi": "얼음 VI", "ice_vii": "얼음 VII"}
+
+
+def water_phase_name(p: float, t: float) -> tuple[str, str, str]:
+    """이 (P, T) 의 물이 어느 상인가 — (판정, 상 이름, 왜) 를 돌려준다.
+
+    판정은 "liquid" · "solid" · "undecided" 셋이다. 밀도에는 안 쓰인다: 적분기는 `water_liquid_at`
+    로 재료를 고르고, 이 함수는 그 선택을 **말로 옮기는** 자리다 — 어느 곡선에 댔고 얼마나 떨어져
+    있는지를 수로 적어서, 상이 조용히 갈리는 일이 없게 한다. 곡선이 닿지 않는 자리는 이름을
+    지어내지 않고 undecided 로 두며 무엇이 닿지 않는지를 적는다."""
+    if t <= 0.0:
+        return "undecided", "", "온도가 없다"
+    name = _water_branch(p)
+    t_m = water_t_melt(p)
+    if name is not None and t_m is not None:
+        margin = t - t_m
+        if name == "ice_vii_reinhardt":
+            src = f"Reinhardt+ 2022 의 액체선 (analog), 녹는점 {t_m:.0f} K"
+            if margin > 0.0:
+                return "liquid", "액체", f"{src} 보다 {margin:+.0f} K 위"
+            t_b = water_vii1_vii2_boundary(p)
+            if t_b is not None and t > t_b:
+                band = (" — IAPWS 식 (5) 의 끝(715 K)은 여기를 액체라 하고 Reinhardt 는 고체라 "
+                        "한다, 두 출처가 다투는 띠" if t > IAPWS_VII_RANGE[1] and p < 26.0 * GPA
+                        else "")
+                return ("solid", "얼음 VII″",
+                        f"{src} 보다 {margin:+.0f} K 아래, VII′–VII″ 선({t_b:.0f} K) 위 — "
+                        f"초이온 bcc 얼음, VII′ 과 1차 전이로 갈리며 밀도는 초이온을 덮는 Mazevet+ 2019 "
+                        f"의 적합이 받는다{band}")
+            return ("solid", "얼음 VII′/X",
+                    f"{src} 보다 {margin:+.0f} K 아래" + (f", VII′–VII″ 선({t_b:.0f} K) 아래 — "
+                    "VII·VII′·X 는 한 열역학 상이다" if t_b is not None else ""))
+        src = f"{IAPWS_MELT_REF.split(' — ')[0]}, 녹는점 {t_m:.0f} K"
+        if margin > 0.0:
+            return "liquid", "액체", f"{src} 보다 {margin:+.0f} K 위"
+        return "solid", WATER_PHASE_LABELS[name], f"{src} 보다 {margin:+.0f} K 아래"
+    if p > REINHARDT_P_MAX:
+        t_b = water_vii1_vii2_boundary(p)
+        if t_b is not None and t < t_b:
+            return ("solid", "얼음 VII′/X",
+                    f"액체선은 {REINHARDT_P_MAX / GPA:.1f} GPa 에서 끝나지만 VII′–VII″ 선({t_b:.0f} K) "
+                    f"아래라 고체다")
+        p_m, t_mm = MILLOT_2018_MELT
+        return ("undecided", "유체 또는 초이온",
+                f"이 레시피의 액체선이 {REINHARDT_P_MAX / GPA:.1f} GPa 에서 끝나 여기({p / GPA:.0f} GPa "
+                f"· {t:.0f} K)에는 닿지 않는다. 드는 측정은 Millot+ 2018 의 점 하나 — {p_m / GPA:.0f} GPa "
+                f"에서 {t_mm:.0f} K 근처에서 녹는다 — 뿐이라 어느 쪽인지 말하지 않는다")
+    return "undecided", "", "녹는곡선이 닿지 않는 압력이다"
 
 
 def iron_t_melt(p: float) -> float | None:
@@ -1437,7 +1537,8 @@ H2O = Material(
            "열 상수는 SeaFreeze v1.1.0 의 VII_X_French (French & Redmer 2015, "
            "2015PhRvB..91a4308F) 를 2.216 GPa · 300 K 에서 평가한 값이다",
            p_min=ICE_VI_TO_VII, melt="water",
-           melt_ref=IAPWS_MELT_REF + " 식 (5) — 355–715 K",
+           melt_ref=IAPWS_MELT_REF + " 식 (5) — 355–715 K (2.216–20.6 GPa); 그 위는 "
+                    + REINHARDT_MELT_REF,
            alpha_k=ICE_VII_ALPHA_K, c_v_ref=ICE_VII_CV, t_ref=ICE_VII_X_REF_T,
            t_max=ICE_VII_X_T_MAX),
      Phase("ice_x", "vinet", ICE_X_RHO0, ICE_X_K0, ICE_X_K0P, ICE_X_P_MAX,
@@ -1448,10 +1549,9 @@ H2O = Material(
            p_min=ICE_VII_TO_X,
            alpha_k=ICE_X_ALPHA_K, c_v_ref=ICE_X_CV, t_ref=ICE_VII_X_REF_T,
            t_max=ICE_VII_X_T_MAX,
-           # 녹는곡선은 여기까지 못 온다. IAPWS 식 (5) 가 715 K 에서 끝나고 그건
-           # 20.6 GPa 라 얼음 VII 구간 안이다. 곡선을 안 붙이는 것이 정직하다 —
-           # 소비처가 undecided 를 돌려주고, 그건 이미 있는 답이다.
-           melt=""),),
+           # 녹는곡선이 52.4 GPa 까지 온다 (Reinhardt+ 2022). 그 위는 water_t_melt 가 None 을
+           # 돌려주고 소비처가 undecided 로 적는다 — 곡선이 어디서 끝나는지를 판정문이 수로 말한다.
+           melt="water", melt_ref=REINHARDT_MELT_REF),),
     over_reason=("얼음 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.0f} GPa) 위다. 그 상한은 SeaFreeze v1.1.0 이 싣는 "
                  "French & Redmer 2015 표현의 매듭 구간이 끝나는 자리다. 그 위에 "

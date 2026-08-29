@@ -1260,7 +1260,7 @@ def main() -> int:
     # h2o 는 2026-08-27 에 전 상이 곡선을 들고 있었다. 얼음 X 가 들어오면서 곡선이
     # **없는 상이 하나 생겼다** — IAPWS 식 (5) 가 715 K(20.6 GPa) 에서 끝나기 때문이고,
     # 그 사실을 지우지 않고 이름으로 들고 있는 것이 여기서 검사하는 것이다.
-    for mat, want_free in ((_MM["silicate"], True), (_MM["h2o"], True),
+    for mat, want_free in ((_MM["silicate"], True), (_MM["h2o"], False),
                            (_MM["fe_prem"], False), (_MM["fe_eps"], False),
                            (H_HE, True)):
         free = mat.melt_free_phases()
@@ -1268,12 +1268,52 @@ def main() -> int:
         if not ok:
             fails.append(f"{mat.name}: 녹는곡선 유무를 잘못 말한다 — {free}")
         print(f"  [{'PASS' if ok else 'FAIL'}] {mat.name:9} 곡선 없는 상 {free or '()'}")
-    ok = _MM["h2o"].melt_free_phases() == ("ice_x",)
+    # 2026-08-30 까지 ice_x 가 곡선 없는 상이었다. Reinhardt+ 2022 의 액체선이 52.4 GPa 까지 오므로
+    # 이제 곡선은 있고, **어디서 끝나는지** 가 검사 대상이다 — 그 위는 None 이고 판정문이 그 압력을 말한다.
+    from eos import REINHARDT_P_MAX as _RPM, IAPWS_VII_END as _IVE, water_t_melt as _wtm
+    ok = (_wtm(_RPM) is not None and _wtm(_RPM * 1.0001) is None
+          and abs(_wtm(_RPM) - 1953.0) < 1e-9)
     if not ok:
-        fails.append(f"곡선 없는 물얼음 상이 ice_x 하나여야 한다 — "
-                     f"{_MM['h2o'].melt_free_phases()}")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 물얼음에서 곡선이 없는 것은 ice_x 뿐이다 — "
-          f"IAPWS 식 (5) 가 715 K 에서 끝나고 그게 20.6 GPa 다")
+        fails.append(f"물의 녹는곡선이 {_RPM / 1e9:.1f} GPa 에서 1953 K 로 끝나지 않는다 — "
+                     f"{_wtm(_RPM)}, {_wtm(_RPM * 1.0001)}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 물의 녹는곡선은 {_RPM / 1e9:.1f} GPa · 1953 K 에서 끝난다 "
+          "(Reinhardt+ 2022 의 마지막 점) — 그 위는 None")
+    # (a) 이음매. IAPWS 식 (5) 가 끝나는 20.6 GPa 에서 두 곡선의 폭을 **잰다**. 규산염 이음매(0.21 %)와
+    # 같은 규칙이고, 이 폭이 크다는 것이 이 곡선을 analog 로 두는 이유 중 하나다.
+    from eos import _interp_line as _il, REINHARDT_LIQUID as _RL
+    t_iapws = _wtm(_IVE * (1.0 - 1e-12))
+    t_rein = _il(_RL, _IVE)
+    seam = (t_rein - t_iapws) / t_iapws
+    ok = abs(t_iapws - 715.0) < 0.5 and abs(seam - 0.2634) < 0.002
+    if not ok:
+        fails.append(f"20.6 GPa 이음매가 기록과 다르다 — IAPWS {t_iapws:.1f} K, Reinhardt {t_rein:.1f} K, "
+                     f"{seam * 100:+.2f} %")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 이음매 {_IVE / 1e9:.2f} GPa: IAPWS {t_iapws:.0f} K → Reinhardt "
+          f"{t_rein:.0f} K, 녹는점 {seam * 100:+.1f} % — 잰 값이고 문서가 같은 수를 적는다")
+    # (c) 표는 생성된 것이다: 논문이 본문에 적는 삼중점(20 GPa · 875 K)과 직접 공존 점들을 지나는가.
+    import ice_melt_table as _imt
+    tp_p, tp_t = _imt.TRIPLE_POINT_GPA_K
+    worst = max(abs(_il(_RL, p_gpa * 1e9) - t_k) for p_gpa, t_k in _imt.DIRECT_COEXISTENCE)
+    # 삼중점 20 GPa 는 IAPWS 의 구간(20.6 GPa 까지) 안이라 water_t_melt 는 거기서 IAPWS 를 답한다
+    # (705 K — 이음매의 다툼이 바로 이것이다). 검사하는 것은 **굳힌 선 자체** 가 논문의 점을 지나는가다.
+    ok = abs(_il(_RL, tp_p * 1e9) - tp_t) < 1e-9 and worst < 30.0
+    if not ok:
+        fails.append(f"굳힌 액체선이 논문의 삼중점·직접 공존 점을 지나지 않는다 — "
+                     f"삼중점 {_il(_RL, tp_p * 1e9)}, 직접 공존 최악 {worst:.1f} K")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 굳힌 액체선이 논문의 삼중점 {tp_p:.0f} GPa · {tp_t:.0f} K 를 지나고 "
+          f"직접 공존 {len(_imt.DIRECT_COEXISTENCE)} 점과 최악 {worst:.0f} K 안이다 (데이터 "
+          f"{_imt.DATA_COMMIT[:10]})")
+    # (d) 적합의 천장과 상 경계는 다른 객체다.
+    from eos import water_vii1_vii2_boundary as _wvb, ICE_VII_X_T_MAX as _IXT
+    # 47 GPa 에서는 Reinhardt 의 액체선이 정확히 1800.0 K 를 지난다 — 사다리 천장과 같은 **수** 이지만
+    # 다른 **객체** 다 (하나는 상 경계, 하나는 매듭의 끝). 그래서 수가 다른 45 GPa 에서 셋을 대본다.
+    ok = (_wvb(45e9) is not None and _wvb(45e9) != _IXT and _wtm(45e9) != _IXT
+          and abs(_wtm(47e9) - _IXT) < 1e-9)
+    if not ok:
+        fails.append("적합 천장(1800 K)과 상 경계가 갈라져 있지 않다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 45 GPa 에서 VII′–VII″ 선 {_wvb(45e9):.0f} K · 녹는점 {_wtm(45e9):.0f} K "
+          f"· 사다리 천장 {_IXT:.0f} K — 셋이 다른 수이고 다른 종류다 (47 GPa 에서 액체선이 "
+          "1800 K 를 지나는 것은 우연이고, 같은 수라도 같은 객체가 아니다)")
     ok = (_MM["fe_eps"].t_melt(FE_ICB_GPA * 1e9)
           > _MM["fe_prem"].t_melt(FE_ICB_GPA * 1e9))
     if not ok:
@@ -1487,7 +1527,7 @@ def main() -> int:
     print(f"  [{'PASS' if ok else 'FAIL'}] ice_giant 가 거절 목록에서 나왔다 — "
           f"남은 유체 거절은 {FLUID_CLASSES}")
     for t, needle, label in ((0.0, "등온 경로로 풀 수 없다", "온도 미선언"),
-                             (1200.0, "하한", "1800 K 아래 (응축상 사다리의 몫)"),
+                             (800.0, "하한", "1000 K 아래 (Mazevet 이 적은 유체의 바닥)"),
                              (60000.0, "상한", "50000 K 위 (적합의 상한)")):
         got = None
         try:
@@ -1498,12 +1538,15 @@ def main() -> int:
         if not ok:
             fails.append(f"뜨거운 물이 {label} 에서 이름 대며 거절하지 않는다")
         print(f"  [{'PASS' if ok else 'FAIL'}] {label:28} → 이름 대며 거절한다")
-    ok = _wh.T_MIN == ICE_VII_X_T_MAX
+    # 2026-08-30 까지는 두 수가 같아야 했다 ("온도 축에 틈이 없다"). 그 항등식이 바로 적합의 천장을
+    # 상 경계로 쓰는 혼동이었다. 지금은 녹는곡선이 어느 쪽인지를 정하고, 두 수는 출처가 다르다 —
+    # 1000 K 는 Mazevet+ 2019 §3.1 이 유체에 대해 적은 바닥, 1800 K 는 French & Redmer 2015 매듭의 끝.
+    ok = _wh.T_MIN == 1000.0 and ICE_VII_X_T_MAX == 1800.0 and _wh.T_MIN != ICE_VII_X_T_MAX
     if not ok:
-        fails.append(f"뜨거운 물의 하한 {_wh.T_MIN} 이 얼음 사다리의 천장 "
-                     f"{ICE_VII_X_T_MAX} 와 다르다 — 사이에 틈이 생긴다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 뜨거운 물의 하한 {_wh.T_MIN:.0f} K 이 얼음 "
-          f"사다리의 천장과 같은 자리다 — 온도 축에 틈이 없다")
+        fails.append(f"뜨거운 물의 하한 {_wh.T_MIN} 과 사다리 천장 {ICE_VII_X_T_MAX} 가 "
+                     "기록(1000 · 1800)과 다르다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 뜨거운 물의 하한 {_wh.T_MIN:.0f} K (Mazevet §3.1) 과 사다리 "
+          f"천장 {ICE_VII_X_T_MAX:.0f} K (French & Redmer 매듭) 는 다른 수다 — 사이는 녹는곡선이 가른다")
 
     print("\n얼음거대행성 — 거절이 거리를 수로 말하는가")
     from eos import (AVL_ICES_DEVIATION, AVL_ICES_TERNARY_DEVIATION,

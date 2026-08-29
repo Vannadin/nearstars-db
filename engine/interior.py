@@ -31,9 +31,11 @@ from __future__ import annotations
 
 import math
 
-from eos import (EARTH_POTENTIAL_T, ICE_VII_TO_X,
-                 ICE_VII_X_T_MAX, MATERIALS, SILICATE_PREM_TO_PV,
-                 PhaseGap, mix)
+import water_hot
+import water_table
+from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
+                 ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
+                 PhaseGap, mix, water_phase_name, water_vii1_vii2_boundary)
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       bulk_factor, porosity, voids_expected)
@@ -112,13 +114,14 @@ class Structure:
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
-                 "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached")
+                 "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
+                 "ice_x_reached")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
                  ice_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
-                 surface_reached=True):
+                 surface_reached=True, ice_x_reached=False):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -143,6 +146,9 @@ class Structure:
         # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
         # 있으면 그 재료의 압력 바닥(1 bar)이고, 발표된 거대행성 반지름이 그 준위의 값이다.
         self.p_surface = p_surface
+        # 사다리의 얼음 X 를 실제로 밟았는가. 기둥 바닥의 압력이 37.4 GPa 위여도 그 자리가
+        # 유체(h2o_hot)면 얼음 X 가 아니다 — 압력이 아니라 밟은 재료로 판정한다.
+        self.ice_x_reached = ice_x_reached
         # 바다의 바닥과 꼭대기 반지름 [m]. 얼음 기둥 안에서 국소 (P, T) 가 녹는곡선 위에 있던
         # 구간이다. None 은 "액체인 자리가 없었다" 는 뜻이고, 온도가 흐르지 않은 해는 늘 None 이다.
         self.r_ocean_base = r_ocean_base
@@ -179,8 +185,7 @@ class Structure:
 
 
 def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
-           envelope_z: float = 0.0, differentiated: bool = True,
-           ice_material: str = "h2o"):
+           envelope_z: float = 0.0, differentiated: bool = True):
     """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
 
     가스 외피가 있으면 그것이 가장 바깥 층이다. 폴리트로프는 **별도의 가지가 아니라
@@ -201,9 +206,10 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     if 1.0 - cmf - imf - gmf > 0:
         out.append((1.0 - imf - gmf, MATERIALS["silicate"]))
     if imf > 0:
-        # 얼음층의 재료가 갈린다. 응축상 사다리(h2o)와 유체·초이온(h2o_hot)은 온도
-        # 구간이 겹치지 않으므로, 어느 쪽인지는 천체 종류가 정하고 solve 가 넘겨준다.
-        out.append((1.0 - gmf, MATERIALS[ice_material]))
+        # 얼음층의 이름은 사다리(h2o)다. 그 자리의 물이 액체인지 고체인지는 적분기가 걸음마다
+        # 국소 (P, T) 를 녹는곡선에 대서 정하고, 액체면 h2o_liquid(2.3 GPa 까지) 또는
+        # h2o_hot 으로 갈아탄다 — 2026-08-30 까지는 천체 종류가 h2o_hot 을 통째로 골랐다.
+        out.append((1.0 - gmf, MATERIALS["h2o"]))
     if gmf > 0:
         # 외피에 중원소가 녹아 있으면 그 층이 혼합이다. envelope_z 는 **행성 전체가
         # 아니라 이 외피 안에서의** 질량분율이다.
@@ -216,12 +222,10 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
 # 단열 기울기를 한 단계에 한 번만 다시 잰다. 적분기가 이미 한 단계 안에서 재료를
 # 고정하고 있고(경계에서 dr/R ~ 3e-4 의 오차), 온도 기울기는 그보다 매끄럽다.
 # 단계마다 RK 네 자리에서 다시 재면 밀도 뒤집기가 여덟 번 더 돌아 비싸다.
-def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated,
-                 ice_material="h2o"):
+def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated):
     """이 천체의 층들 중 발표된 열 상수가 없어 등온으로 남는 상들의 이름."""
     out: list[str] = []
-    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
-                           ice_material):
+    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated):
         out.extend(mat.cold_phases())
     return out
 
@@ -286,8 +290,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
               envelope_z: float = 0.0, differentiated: bool = True,
-              t_center: float = 0.0, t_pot: float = 0.0,
-              ice_material: str = "h2o") -> Structure:
+              t_center: float = 0.0, t_pot: float = 0.0) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -297,8 +300,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
-                   ice_material)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
     mat = stack[0][1]
     # 적분이 멈추는 압력. 응축상 천체는 0 — 표면이 P = 0 이다. 기체 외피가 바깥에 있으면
     # 그 재료가 자기 바닥을 말한다 (1 bar). 바깥 층 하나가 정하므로 여기서 한 번 본다.
@@ -336,14 +338,81 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     # 그 계단이 돌아온다. 걸음 안에서 상이 바뀌는 자리는 층 경계와 같은 방법으로 찾는다
     # (아래). 온도가 흐르지 않으면(t = 0) 이 판정은 아예 없고 예전 경로 그대로다.
     liquid_mat = MATERIALS["h2o_liquid"]
+    hot_mat = MATERIALS["h2o_hot"]
     forced_liquid = None   # 방금 상 경계를 넘었다. 다음 걸음은 판정 없이 이 상으로 시작한다
     r_ocean_base = None
     r_ocean_top = None
+    ice_x_stepped = False  # 사다리의 얼음 X 를 실제로 밟았는가. 압력만으로는 모른다 — 그 자리가 유체일 수 있다
+
+    def liquid_material(pp: float, tt: float):
+        """액체인 자리의 재료. 2.3 GPa 까지는 바다(SeaFreeze water1), 그 위는 뜨거운 물(Mazevet+ 2019)
+        — 단 그 적합이 유체에 대해 적은 하한(1000 K) 위에서만. 그 아래는 이 저장소에 조밀한
+        액체의 상태방정식이 없고, 바다 재료가 압력 상한을 이름 대며 거절한다 (2026-08-30 전과 같은
+        거절이라 그 경로를 밟는 천체는 비트까지 같다)."""
+        if pp > water_table.P_MAX_PA:
+            if tt >= water_hot.T_MIN:
+                return hot_mat
+            # 조밀한 액체인데 그 온도의 상태방정식이 없다. **온도가 막은 것으로, 위로 던진다** —
+            # 액체는 더 뜨거워져도 액체이고 이 저장소에서 그 위에 있는 유일한 적합이 Mazevet 이라,
+            # 온도 괄호가 중심 온도를 올리면 풀린다. 2026-08-30 전에는 이 자리를 h2o_hot 의
+            # 1800 K 하한이 같은 방향으로 던졌다.
+            raise PhaseGap(
+                hot_mat.name, pp,
+                f"{pp / 1e9:.2f} GPa · {tt:.0f} K 의 물은 녹는곡선 위(액체)인데, 이 온도의 조밀한 액체 "
+                f"상태방정식이 없다 — 바다 표(SeaFreeze water1)는 {water_table.P_MAX_PA / 1e9:.1f} GPa "
+                f"에서 끝나고 뜨거운 물(Mazevet+ 2019)은 ρ ≳ 1 g/cc 에서 {water_hot.T_MIN:.0f} K 위를 "
+                "적는다. 선반은 있다 — SeaFreeze water2 (Brown 2018, 0–100 GPa · 240–10 000 K).",
+                tt, too_cold=True)
+        if tt > water_table.T_MAX_K:
+            # 낮은 압력의 뜨거운 액체. Mazevet+ 2019 §3.1 이 ρ ≲ 1 g/cc · T ≲ 2000 K 의 액체와
+            # 10³ K 위의 플라스마를 적합 구간으로 적으므로 바다 표의 500 K 위는 그쪽이 받는다 —
+            # 단 1000 K 부터다. 500–1000 K 의 액체는 두 적합 사이의 틈이고, 위와 같은 이유로 온도가
+            # 막은 것으로 던진다 (얼음거대행성의 시험 경로가 외피 바닥 2 GPa · 986 K 로 실제로 지난다).
+            if tt >= water_hot.T_MIN:
+                return hot_mat
+            raise PhaseGap(
+                hot_mat.name, pp,
+                f"{pp / 1e9:.2f} GPa · {tt:.0f} K 의 물은 녹는곡선 위(액체)인데 이 온도의 액체 상태방정식이 "
+                f"없다 — 바다 표(SeaFreeze water1)는 {water_table.T_MAX_K:.0f} K 에서 끝나고 뜨거운 물"
+                f"(Mazevet+ 2019)은 {water_hot.T_MIN:.0f} K 위를 적는다. 선반은 있다 — SeaFreeze water2 "
+                "(Brown 2018, 0–100 GPa · 240–10 000 K).",
+                tt, too_cold=True)
+        return liquid_mat
 
     def liquid_at(pp: float, tt: float) -> bool:
-        """이 (P, T) 의 얼음 기둥이 액체인가. 녹는곡선이 닿지 않는 자리는 고체로 둔다 —
-        그 자리는 판정이 undecided 이고, 밀도는 예전처럼 사다리의 것이다."""
-        return bool(MATERIALS["h2o"].liquid_at(pp, tt))
+        """이 (P, T) 의 얼음 기둥에 **유체의 상태방정식** 을 쓰는가.
+
+        곡선이 닿는 자리는 곡선이 답한다. 20.6 GPa 까지는 IAPWS 의 녹는곡선(액체 ↔ 얼음). 그 위
+        70 GPa 까지는 Reinhardt+ 2022 의 **VII′–VII″ 선** 이 경계다 — 그 아래의 VII·VII′·X 는 절연
+        얼음이고 사다리(French & Redmer 2015)의 몫, 그 위의 VII″ 는 초이온 bcc 얼음이라 액체와 함께
+        Mazevet+ 2019 의 한 적합(액체·플라스마·초이온을 한 형태로)이 받는다. 액체선(52.4 GPa 까지)은
+        그 안에서 액체와 VII″ 를 **이름** 으로 가르는 데 쓰이고 밀도는 안 가른다.
+
+        70 GPa 위는 어느 선도 닿지 않아 판정이 undecided 이고, 재료는 **가용성** 으로 고른다 —
+        사다리의 적합이 서 있는 곳(1 TPa · 1800 K 아래, 둘 다 매듭의 끝이지 상 경계가 아니다)은
+        사다리, 그 밖은 Mazevet(1000 K 위), 둘 다 없으면 온도가 막은 것으로 던진다. 그 선택이 상의
+        판정이 아니라는 것을 _ice_verdict 가 적는다."""
+        if pp <= IAPWS_VII_END:
+            return bool(MATERIALS["h2o"].liquid_at(pp, tt))
+        t_b = water_vii1_vii2_boundary(pp)
+        if t_b is not None and tt >= t_b:
+            return True
+        # 선이 닿으면 VII′/X 고체, 안 닿으면 undecided. 어느 쪽이든 사다리의 적합이 서 있는 동안은
+        # 사다리다. 그 밖(1800 K 위 또는 1 TPa 위)은 상이 무엇이든 읽을 수 있는 것이 Mazevet 뿐이다 —
+        # 65–70 GPa 의 VII′/X 가 1800 K 위에 앉는 좁은 띠가 실제로 여기를 지난다(해왕성의 시험 경로).
+        if tt < ICE_VII_X_T_MAX and pp <= MATERIALS["h2o"].p_max:
+            return False
+        if tt >= water_hot.T_MIN:
+            return True
+        # 사다리는 압력으로 끝났고(1 TPa) 유체 적합은 온도로 아직 안 열렸다(1000 K). 남은 표현이
+        # 없다 — 그리고 이 자리는 더 뜨거우면 Mazevet 이 받으므로 **온도가 막은 것으로** 던진다.
+        raise PhaseGap(
+            "h2o", pp,
+            f"{pp / 1e9:.0f} GPa · {tt:.0f} K 의 물에는 읽을 표현이 없다 — 얼음 사다리는 "
+            f"{MATERIALS['h2o'].p_max / 1e9:.0f} GPa 에서 끝나고(French & Redmer 2015 의 매듭 구간), "
+            f"뜨거운 물(Mazevet+ 2019)은 {water_hot.T_MIN:.0f} K 위를 적는다. 녹는곡선도 "
+            f"{REINHARDT_P_MAX / 1e9:.1f} GPa 위에는 없어서 어느 상인지도 말하지 못한다.",
+            tt, too_cold=True)
 
     def material_for(m_now: float):
         nonlocal layer
@@ -373,9 +442,11 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             liquid = forced_liquid if forced_liquid is not None else liquid_at(p, t)
             forced_liquid = None
             if liquid:
-                mat = liquid_mat
-                if r_ocean_base is None:
+                mat = liquid_material(p, t)
+                if mat is liquid_mat and r_ocean_base is None:
                     r_ocean_base = r
+        if mat.name == "h2o" and p > ICE_VII_TO_X:
+            ice_x_stepped = True       # 등온 경로도 포함한다 — 사다리를 그 압력에서 실제로 밟았다
         if mat.name not in phases:
             phases.append(mat.name)
 
@@ -398,8 +469,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 # 반지름은 그렇게 늘리지 않는다. 그 결손은 note 가 수로 말한다.
                 t_surface = t * (floor / p) ** last_grad
             break
-        if mat.name in ("h2o", "h2o_liquid") and (not ice_samples
-                                                  or steps % ICE_SAMPLE_EVERY == 0):
+        if mat.name in ("h2o", "h2o_liquid", "h2o_hot") and (not ice_samples
+                                                             or steps % ICE_SAMPLE_EVERY == 0):
             ice_samples.append((p, t))
         if p_si_max == 0.0 and _carries_silicate(mat):
             p_si_max = p
@@ -477,8 +548,16 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 p_surface = p
                 t_surface = t
                 floor = mat.p_floor
-                if p > floor * 1.001 and last_grad > 0.0:
-                    t_surface = t * (floor / p) ** last_grad
+                if p > floor * 1.001:
+                    # 1 bar 준위까지의 외삽은 **탈출점 자신의** ∇_ad 로 닫는다. 2026-08-30 까지는 이
+                    # 걸음 출발점의 값(last_grad)이었는데, 출발점은 반지름 격자 위에 있어서 어느 걸음이
+                    # 바닥을 건너는지가 중심 온도에 따라 계단으로 바뀌고, 그러면 1 bar 온도가 중심
+                    # 온도에 대해 ±0.4 K 로 들쭉날쭉해진다 (해왕성 72 K 에서 6300–6340 K 를 훑으면
+                    # 71.46 ↔ 72.42 K). 온도 고리의 허용오차가 1e-3 이라 그 요철이 수렴을 운에
+                    # 맡겼다 — 2026-08-30 전의 해왕성 converged=True 는 시험 경로가 우연히 요철의
+                    # 골에 앉은 것이다. 탈출점의 (P, T) 는 이분법으로 찾은 자리라 격자에 안 묶인다.
+                    g_exit = _grad_ad_at(mat, p, t, t_pot)
+                    t_surface = t * (floor / p) ** (g_exit if g_exit > 0.0 else last_grad)
                 break
 
         if p + dp <= p_stop:
@@ -564,7 +643,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
         p += dp
         t_surface = t
-        if liquid:
+        if liquid and mat is liquid_mat:
             r_ocean_top = r
         if phase_crossed:
             # 상 경계에 섰다. 다음 걸음은 판정 없이 **반대 상** 으로 시작한다 — 이분법이 경계의
@@ -603,7 +682,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         core_radius = r      # 핵만 있는 천체
         p_cmb = p
         t_cmb = t
-    if ice_samples and mat.name in ("h2o", "h2o_liquid"):
+    if ice_samples and mat.name in ("h2o", "h2o_liquid", "h2o_hot"):
         # 기둥 꼭대기. 얼음 III·V·VI 구간에서는 녹는곡선이 단열선보다 가파르므로
         # T − T_melt 가 제일 큰 자리가 여기다. 가스 외피가 있으면 마지막 층이 얼음이
         # 아니라서 이 표본을 넣지 않는다 — 다른 층의 점을 얼음이라고 부르지 않는다.
@@ -614,7 +693,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                      t_cmb=t_cmb if t_cmb is not None else 0.0,
                      t_surface=t_surface, ice_samples=ice_samples,
                      p_surface=p_surface, r_ocean_base=r_ocean_base,
-                     r_ocean_top=r_ocean_top)
+                     r_ocean_top=r_ocean_top, ice_x_reached=ice_x_stepped)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -698,16 +777,14 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     core_material: str, phi0: float = 0.0,
                     p_cap: float | None = None, gmf: float = 0.0,
                     envelope_z: float = 0.0, differentiated: bool = True,
-                    t_center: float = 0.0, t_pot: float = 0.0,
-                    ice_material: str = "h2o") -> tuple[Structure, bool]:
+                    t_center: float = 0.0, t_pot: float = 0.0) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
-                   ice_material)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated)
     # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
     # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
     rho0_bar = 1.0 / sum(
@@ -727,8 +804,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
 
     def at(p: float):
         return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                         envelope_z, differentiated, t_center, t_pot,
-                         ice_material)
+                         envelope_z, differentiated, t_center, t_pot)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -848,7 +924,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, differentiated, t_center, t_pot, ice_material)
+                        envelope_z, differentiated, t_center, t_pot)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -864,7 +940,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         # 하나다. 예전 경로를 그대로 둬서 앵커가 비트까지 같게 유지한다.
         x1 = math.log(max(lo, hi * 1e-3))
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                        gmf, envelope_z, differentiated, t_center, t_pot, ice_material)
+                        gmf, envelope_z, differentiated, t_center, t_pot)
         y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
@@ -890,7 +966,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         x0, y0 = x1, y1
         x1 = x2
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated, t_center, t_pot, ice_material)
+                    gmf, envelope_z, differentiated, t_center, t_pot)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -923,8 +999,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
           p_cap: float | None = None, gmf: float = 0.0,
           envelope_z: float = 0.0, differentiated: bool = True,
-          potential_temperature: float | None = None,
-          ice_material: str = "h2o") -> tuple[Structure, bool]:
+          potential_temperature: float | None = None) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -937,7 +1012,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     밀도가 온도에 되먹임하는 몫만 반복이 흡수한다."""
     args = (mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z,
             differentiated)
-    kw = {"ice_material": ice_material}
+    kw = {}
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -992,6 +1067,21 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     devs: list[float] = []
     bracketed = False
     passes = T_PASSES
+    # 가장 잘 붙은 시험값. 1 bar 온도는 중심 온도에 대해 격자 위상의 잔여 요철(해왕성에서 ±0.02 K,
+    # 온도를 걸음마다 한 번의 ∇_ad 로 나르는 1차 오차)을 갖고 있어서, 어긋남이 허용오차 안으로
+    # 들어온 뒤에도 비례 갱신이 요철의 국소 기울기(n ≈ 2.5)를 타고 다시 벌어질 수 있다. 그때 마지막
+    # 시험값을 들고 나가면 붙었던 해가 converged=False 로 나간다 — 2026-08-30 에 해왕성이 3.5e-5 까지
+    # 붙고 나서 열두 걸음 동안 1.5 배씩 벌어져 1.25e-3 으로 나갔다. 매 걸음 줄어드는 앵커는 마지막이
+    # 곧 최선이라 이 갈래를 타지 않는다.
+    best = None                  # (어긋남, Structure, 사격 수렴, 중심 온도)
+
+    def remember(got, ok, t_now):
+        nonlocal best
+        if got.t_surface <= 0.0:
+            return
+        d = abs(got.t_surface / t_pot - 1.0)
+        if best is None or d < best[0]:
+            best = (d, got, ok, t_now)
 
     def note(t_now, got):
         nonlocal lo, hi
@@ -1005,6 +1095,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             hi = pt
 
     note(t_c, st)
+    remember(st, converged, t_c)
     while passes > 0:
         passes -= 1
         if st.t_surface <= 0.0:
@@ -1045,6 +1136,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         stuck = abs(t_now / t_c - 1.0) < 1e-9 if t_c else False
         st, converged, t_c = got, ok, t_now
         note(t_c, st)
+        remember(st, converged, t_c)
         if stuck:
             break            # 괄호가 표의 온도 벽에서 같은 온도로 되돌렸다. 더 갈 데가 없다
         if bracketed is True and passes == 0 and not _surface_temperature_met(st, t_pot):
@@ -1052,6 +1144,10 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             bracketed = "extended"
         if done:
             break
+    if (best is not None and not _surface_temperature_met(st, t_pot)
+            and best[0] < T_SURFACE_TOL):
+        # 마지막 시험값은 벌어졌지만 그 전에 붙은 시험값이 있다. 그것이 답이다 (위 best 주석).
+        _d, st, converged, t_c = best
     if wall is not None and not _surface_temperature_met(st, t_pot):
         # **선언된 1 bar 온도에 닿는 중심 온도가 없다.** 벽 아래의 가장 뜨거운 묶인 해와 벽을 둘 다
         # 들고 나간다 — 버린 시험값이 아니라 실제로 도달한 두 상태다.
@@ -1197,17 +1293,37 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
     """얼음 기둥이 녹았는가. (상태, 한 줄 설명) 을 돌려준다.
 
     액체인 자리가 있었으면 적분이 그것을 밟았으므로 그 사실이 판정이다. 표본은 못 본 구간
-    (녹는곡선이 닿지 않는 압력)을 이름 대고, 고체 판정의 여유를 적는 데 쓴다."""
+    (녹는곡선이 닿지 않는 압력)을 이름 대고, 고체 판정의 여유를 적는 데 쓴다. 기둥의
+    꼭대기와 바닥은 **어느 상을 왜 골랐는지** 를 곡선 이름과 거리로 말한다 (water_phase_name)
+    — 상이 조용히 갈리는 일이 이 항목이 지운 결함이다."""
     if not st.ice_samples:
         return ICE_STATE_NONE, ""
+    if not potential_temperature:
+        return (ICE_STATE_UNDECIDED,
+                "**얼음 기둥의 고체·액체를 판정하지 않았다** — 포텐셜 온도가 선언되지 "
+                "않아 이 해에는 온도가 흐르지 않는다. 녹는곡선은 있고(IAPWS R14-08(2011), "
+                "Reinhardt+ 2022) 압력도 있으니, 온도를 선언하면 이 행은 판정으로 바뀐다.")
+    samples = sorted((p_pa, t_k) for p_pa, t_k in st.ice_samples if p_pa > 0.0 and t_k > 0.0)
+    if not samples:
+        return ICE_STATE_NONE, ""
+
+    def describe(p_pa: float, t_k: float) -> str:
+        verdict, label, why = water_phase_name(p_pa, t_k)
+        off_ladder = ("" if verdict == "liquid" or (t_k < ICE_VII_X_T_MAX
+                                                     and p_pa <= MATERIALS["h2o"].p_max)
+                      else "; 사다리의 적합 밖이라 밀도는 Mazevet+ 2019 가 냈다")
+        return f"{p_pa / 1e9:.1f} GPa · {t_k:.0f} K → **{label or '판정 없음'}** ({why}{off_ladder})"
+
+    (p_top, t_top), (p_base, t_base) = samples[0], samples[-1]
+    ends = f" 기둥 꼭대기 {describe(p_top, t_top)}; 바닥 {describe(p_base, t_base)}."
+    unseen = min((p_pa for p_pa, t_k in samples if water_phase_name(p_pa, t_k)[0] == "undecided"),
+                 default=0.0)
+    blind = ("" if unseen == 0.0 else
+             f" 기둥의 {unseen / 1e9:.1f} GPa 위쪽은 녹는곡선이 닿지 않는다 — Reinhardt+ 2022 의 "
+             f"액체선이 {REINHARDT_P_MAX / 1e9:.1f} GPa 에서 끝나고, 그 위의 유체·초이온은 가르지 "
+             "않았다.")
     if st.ocean_thickness_m > 0.0:
         shell = st.ice_shell_thickness_m / 1e3
-        unseen = min((p_pa for p_pa, t_k in st.ice_samples
-                      if p_pa > 0.0 and MATERIALS["h2o"].t_melt(p_pa) is None),
-                     default=0.0)
-        blind = ("" if unseen == 0.0 else
-                 f" 기둥의 {unseen / 1e9:.1f} GPa 위쪽은 녹는곡선이 닿지 않아 사다리의 고체로 "
-                 "적분했다 — IAPWS 식 (5) 가 715 K 에서 끝나고 그게 20.6 GPa 다.")
         return (ICE_STATE_MOLTEN,
                 f"**얼음 기둥에 바다가 있다** — 두께 {st.ocean_thickness_m / 1e3:.0f} km, "
                 + (f"그 위의 얼음 껍질 {shell:.0f} km" if shell > 0.0 else "표면까지 액체")
@@ -1215,46 +1331,38 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
                 "액체 물의 상태방정식(SeaFreeze water1, Bollengier+ 2019)을 썼으므로 반지름과 "
                 "C/MR² 는 바다를 담은 값이다. **두께는 포텐셜 온도 선언이 정한다** — 껍질의 "
                 "두께를 정하는 열 이력이 이 레시피에 없어서, 그 선언이 바뀌면 바다도 바뀐다."
-                + blind)
-    if not potential_temperature:
-        return (ICE_STATE_UNDECIDED,
-                "**얼음 기둥의 고체·액체를 판정하지 않았다** — 포텐셜 온도가 선언되지 "
-                "않아 이 해에는 온도가 흐르지 않는다. 녹는곡선은 있고(IAPWS R14-08(2011)) "
-                "압력도 있으니, 온도를 선언하면 이 행은 판정으로 바뀐다.")
+                + ends + blind)
+    if "h2o_hot" in st.phases:
+        return (ICE_STATE_MOLTEN,
+                "**얼음층이 유체다** — 국소 (P, T) 가 녹는곡선 위인 자리마다 적분기가 뜨거운 물의 "
+                "적합(Mazevet+ 2019)을 썼다. 바다가 아니라 유체 맨틀이고, 반지름은 그 밀도의 값이다. "
+                "곡선은 실험이 아니라 시뮬레이션(Reinhardt+ 2022)이라 등급은 analog 다."
+                + ends + blind)
     ice = MATERIALS["h2o"]
     best_margin = None
     best = None
-    unseen = 0.0        # 녹는곡선 밖으로 나간 표본의 가장 낮은 압력
-    for p_pa, t_k in st.ice_samples:
-        if p_pa <= 0.0 or t_k <= 0.0:
-            continue
-        t_m = ice.t_melt(p_pa)
+    for p_pa, t_k in samples:
+        t_m = ice.t_melt(p_pa) if p_pa <= REINHARDT_P_MAX else None
         if t_m is None:
-            # 녹는곡선이 여기까지 안 온다. IAPWS 식 (5) 가 715 K 에서 끝나고 그건
-            # 20.6 GPa 라 얼음 VII 구간 안이다. **못 본 것을 안 본 척하지 않는다.**
-            unseen = p_pa if unseen == 0.0 else min(unseen, p_pa)
             continue
         margin = t_k - t_m
         if best_margin is None or margin > best_margin:
             best_margin, best = margin, (p_pa, t_k, t_m)
-    blind = ("" if unseen == 0.0 else
-             f" 기둥의 {unseen / 1e9:.1f} GPa 아래쪽만 판정했다 — 그 위는 녹는곡선이 "
-             "닿지 않는다. IAPWS 식 (5) 가 715 K 에서 끝나고 그게 20.6 GPa 다.")
     if best_margin is None:
         return (ICE_STATE_UNDECIDED,
                 "**얼음 기둥의 고체·액체를 판정하지 않았다** — 기둥 전체가 이 레시피가 "
-                "들고 있는 녹는곡선(IAPWS R14-08(2011)) 의 압력 구간 위다. 그 위의 곡선을 "
-                "고르는 것은 별건이고, 후보와 기각 이유는 engine/ice-x-context-notes.md 에 "
-                "적어 두었다.")
+                f"들고 있는 녹는곡선의 압력 구간({REINHARDT_P_MAX / 1e9:.1f} GPa) 위다. 드는 측정은 "
+                "Millot+ 2018 의 점 하나(190 GPa · ~5000 K)뿐이고, 재료는 가용성으로 골랐다 — "
+                "사다리의 적합 천장(1800 K) 아래면 사다리, 위면 Mazevet+ 2019." + ends)
     p_pa, t_k, t_m = best
     where = f"{p_pa / 1e6:.1f} MPa 에서 T {t_k:.1f} K · 녹는점 {t_m:.1f} K"
     if best_margin > 0.0:
         # 표본은 걸음 출발점의 (P, T) 이고 적분기가 같은 판정으로 상을 골랐으므로, 여기 오면
         # 적분이 액체를 밟았어야 한다. 오면 배선이 끊긴 것이다 — 조용히 넘기지 않는다.
         return (ICE_STATE_MOLTEN,
-                f"**얼음 기둥이 녹는데 적분은 바다를 밟지 않았다** — {where} 로 "
+                f"**얼음 기둥이 녹는데 적분은 액체를 밟지 않았다** — {where} 로 "
                 f"{best_margin:+.1f} K 다. 판정과 적분이 같은 함수를 써야 하는데 어긋났다. "
-                "결함이다." + blind)
+                "결함이다." + ends + blind)
     if unseen != 0.0:
         # 본 자리는 전부 고체인데 못 본 자리가 있다. **'고체' 라고 말하면 안 된다** —
         # 하한이 한쪽만 묶는 것과 같은 규율이고, core_state 가 같은 규칙을 쓴다.
@@ -1263,10 +1371,12 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
                 f"제일 녹기 쉬운 자리가 {where} 로 {best_margin:+.1f} K 다. 그런데 기둥의 "
                 f"{unseen / 1e9:.1f} GPa 위쪽은 녹는곡선이 닿지 않아 보지 못했고, 못 본 "
                 "구간이 있으면 '고체' 는 말할 수 없다. 'molten' 은 한 자리만 넘어도 참이지만 "
-                "'solid' 는 전부를 봐야 참이다.")
+                "'solid' 는 전부를 봐야 참이다." + ends)
+    src = ("IAPWS R14-08(2011), 불확도 3 %" if p_pa <= 20.6e9
+           else "IAPWS R14-08(2011) 아래 · Reinhardt+ 2022 (analog) 위")
     return (ICE_STATE_SOLID,
             f"얼음 기둥이 고체다 — 제일 녹기 쉬운 자리가 {where} 로 {best_margin:+.1f} K "
-            f"다 (IAPWS R14-08(2011), 불확도 3 %).")
+            f"다 ({src})." + ends)
 
 
 # 아직 거절하는 유체 천체. 각각 무엇이 있어야 답이 바뀌는지를 거절 이유가 말한다.
@@ -1281,8 +1391,9 @@ FLUID_CLASSES = ("brown_dwarf", "star")
 SUB_NEPTUNE_CLASSES = ("sub_neptune",)
 
 # 얼음거대행성. 2026-08-27 까지 위 목록에 있었고, 뜨거운 물 상태방정식이 들어오면서
-# 나왔다. 얼음층이 응축상 사다리가 아니라 h2o_hot 을 쓴다 — 그 둘은 온도 구간이 겹치지
-# 않으므로 어느 쪽인지는 천체 종류가 정한다.
+# 나왔다. 2026-08-30 까지는 이 목록이 얼음층의 재료(h2o_hot)를 통째로 골랐다 — 지금은
+# 국소 (P, T) 가 녹는곡선(Reinhardt+ 2022, 52.4 GPa 까지)에 대서 고르고, 이 목록은 온도
+# 선언과 얼음 존재를 요구하는 데만 쓰인다.
 ICE_GIANT_CLASSES = ("ice_giant",)
 
 
@@ -1420,17 +1531,19 @@ def solve(mass_earth: float,
             "선언하면 풀린다. 0 이면 암석 행성이고 body_class 를 rocky 로 두는 쪽이다.",
             inputs=inputs, refs=REFS)
 
-    ice_material = "h2o_hot" if body_class in ICE_GIANT_CLASSES else "h2o"
-    if ice_material == "h2o_hot" and not potential_temperature:
+    # 얼음층의 재료는 여기서 고르지 않는다 — 적분기가 걸음마다 국소 (P, T) 를 녹는곡선에 댄다.
+    # 얼음거대행성에 남은 클래스 조건은 둘뿐이다: 온도가 선언돼야 하고, 얼음이 있어야 한다.
+    ice_giant = body_class in ICE_GIANT_CLASSES
+    if ice_giant and not potential_temperature:
         return out_of_domain(
             RECIPE, VERSION,
-            "얼음거대행성은 등온으로 풀 수 없다. 이 갈래의 얼음층은 응축상 사다리가 "
-            "아니라 유체·초이온 물이고 (Mazevet+ 2019), 그 적합은 P(ρ,T) 가 통째로 "
+            "얼음거대행성은 등온으로 풀 수 없다. 이 클래스의 얼음층은 녹는곡선 위의 "
+            "유체·초이온 물이고 (Mazevet+ 2019), 그 적합은 P(ρ,T) 가 통째로 "
             "하나라 온도가 인자다. 게다가 그 자리에서 온도가 밀도를 크게 움직인다 — "
             "같은 압력에서 2000 K 와 5700 K 사이에 30 GPa 에서 14 %, 800 GPa 에서 5 % "
             "다. 포텐셜 온도를 선언하면 풀린다.",
             inputs=inputs, refs=REFS)
-    if ice_material == "h2o_hot" and imf <= 0.0:
+    if ice_giant and imf <= 0.0:
         return out_of_domain(
             RECIPE, VERSION,
             f"'{body_class}' 인데 얼음질량분율이 {imf} 다. 이 클래스를 이름 그대로 "
@@ -1440,8 +1553,7 @@ def solve(mass_earth: float,
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
-                              envelope_z, differentiated, potential_temperature,
-                              ice_material)
+                              envelope_z, differentiated, potential_temperature)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -1493,7 +1605,7 @@ def solve(mass_earth: float,
                      and abs(potential_temperature - EARTH_POTENTIAL_T) > 1e-9)
     if thermal_declared:
         cold = sorted(set(_cold_phases(cmf, imf, core_material, gmf, envelope_z,
-                                       differentiated, ice_material)))
+                                       differentiated)))
         notes.append(
             f"**포텐셜 온도 {potential_temperature:.0f} K 는 선언이다.** 대류하는 내부를 "
             "표면까지 단열 감압했을 때의 온도이고 표면 온도가 아니다 — 그 사이의 전도하는 "
@@ -1524,12 +1636,13 @@ def solve(mass_earth: float,
     # 유일한 얼음이고, 원 표현을 1.475 % 안에서만 재현한다 — 다른 얼음 상들의 0.006~
     # 0.118 % 와 자릿수가 다르다. 게다가 그 표현 자체가 제일원리 계산이지 측정이 아니다.
     # mgsio3_pv 가 3.5 TPa 위에서 등급을 내리는 것과 같은 종류의 자리다.
-    ice_x_reached = (st.p_ice_base is not None
-                     and st.p_ice_base > ICE_VII_TO_X)
+    ice_x_reached = st.ice_x_reached
     if ice_x_reached:
+        # 순수 얼음 천체는 층 경계가 없어 p_ice_base 가 비어 있다. 그 기둥의 바닥은 중심이다.
+        p_ice_base = st.p_ice_base if st.p_ice_base is not None else st.p_center
         notes.append(
             f"**얼음 기둥이 얼음 X 까지 내려갔다** — 기둥 바닥이 "
-            f"{st.p_ice_base / 1e9:.0f} GPa 로 얼음 VII→X 전이({ICE_VII_TO_X / 1e9:.1f} GPa) "
+            f"{p_ice_base / 1e9:.0f} GPa 로 얼음 VII→X 전이({ICE_VII_TO_X / 1e9:.1f} GPa) "
             "아래다. 그 상은 측정된 압축 자료의 적합이 아니라 제일원리 자유에너지 "
             "퍼텐셜(French & Redmer 2015)이고, 이 파일의 다른 얼음 상들과 달리 읽은 값이 "
             "아니라 **적합** 이다 — 매듭 구간이 1.7 GPa 에서 시작해 P = 0 을 평가할 수 "

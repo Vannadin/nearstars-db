@@ -68,11 +68,16 @@ RHO_MIN = 0.5e3            # kg/m³. 이 아래는 기체·이상해리 영역�
                            # "less reliable in the domain of thermal ionization and
                            #  dissociation" 이라고 적는다
 RHO_MAX = 100.0e3          # kg/m³. TFMD 와 맞춰 본 상한 (100 g/cc)
-# **얼음 사다리와 겹치는 구간에서는 이 적합을 쓰지 않는다.** 같은 절이 스스로
-# "limited applicability for the ice VII and ice X phases that occurs at T ≲ 2000 K in the
-# range (0.02-0.5) Mbar ≲ P ≲ 3 Mbar" 라고 적고, 그 구간의 불일치를 "tens percent" 로
-# 부른다. 그래서 이 재료는 1800 K 위에서만 쓰이고, 아래는 얼음 사다리가 받는다.
-T_MIN = 1800.0             # K. eos.py 의 ICE_VII_X_T_MAX 와 같은 자리
+# **유체의 바닥은 이 논문이 적은 것이다.** §3.1: "The present analytical fit describes the EOS
+# of liquid water at ρ ≲ 1 g/cc and T ≲ 2000 K, as well as plasma at 1 g/cc ≲ ρ ≲ 10² g/cc and
+# 10³ K ≲ T ≲ 10⁵ K" — 행성 밀도(ρ ≳ 1 g/cc)에서 적합이 스스로 말하는 하한이 1000 K 다. 같은 절이
+# "limited applicability for the ice VII and ice X phases that occurs at T ≲ 2000 K in the range
+# (0.02-0.5) Mbar ≲ P ≲ 3 Mbar" 라고 적고 그 불일치를 "tens percent" 로 부르지만, 그건 **고체**
+# 이야기다 — §4 가 이 적합을 "extending the liquid throughout the solid phases" 로 설명한다.
+# 어느 쪽인지는 녹는곡선이 정한다(eos.py 의 water_liquid_at): 액체면 이 적합, 고체면 얼음 사다리.
+# 2026-08-30 까지 이 값은 1800 K 로 eos.py 의 ICE_VII_X_T_MAX 와 같은 자리에 있었다 — 그건
+# 적합 매듭의 천장이지 상 경계가 아니라서 갈랐다. 둘은 **다른 종류의 수** 이고 같이 움직이지 않는다.
+T_MIN = 1000.0             # K. Mazevet+ 2019 §3.1, ρ ≳ 1 g/cc 에서 적합이 적은 하한
 
 
 def _electron_free_energy(dens_e: float, temp: float) -> tuple[float, float]:

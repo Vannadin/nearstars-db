@@ -82,7 +82,7 @@ def _standalone(name: str, p_center_pa: float, t_center: float):
     _n, m, _r, m_core, m_hhe, t1bar = _body(name)
     imf, gmf = _fractions(m, m_core, m_hhe)
     return integrate(p_center_pa, m * EARTH_MASS_KG, 0.0, imf, "fe_prem", gmf=gmf,
-                     t_center=t_center, t_pot=t1bar, ice_material="h2o_hot")
+                     t_center=t_center, t_pot=t1bar)
 
 
 def _radius_at_steps(name: str, p_center_pa: float, t_center: float, steps: int) -> float:

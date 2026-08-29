@@ -431,17 +431,50 @@ once per integration step from the state at the step's start, and pinned for the
 step is cut where the interpolated (P, T) crosses the curve, exactly as at a layer boundary,
 because letting the four Runge–Kutta stages each decide would quantise the ocean's edges to
 the grid (measured: 2 × 10⁻³ in radius between 1499 and 1501 steps without the cut, 10⁻⁷ with
-it). A liquid demanded above 2.3 GPa (ice VII warm enough to melt) declines by name; the shelf
-is SeaFreeze's `water2` (Brown 2018, to 100 GPa).
+it). A liquid above the ocean table's 2.3 GPa goes to the hot-water fit (`h2o_hot`, below) from
+1000 K up, the floor Mazevet+ 2019 §3.1 states for ρ ≳ 1 g/cc; a liquid between 500 K and
+1000 K has no equation of state here and declines by name, the shelf being SeaFreeze's `water2`
+(Brown 2018, to 100 GPa and 10 000 K).
 
 **The ocean's thickness follows the declaration.** The top of an ocean under a shell sits at
 the ice Ih melting point of that depth, 273.16 to 251.2 K, and the adiabat decompressed to the
 surface is what `potential_temperature` declares: 270 K is a 20 to 30 km shell. The thermal
 history that fixes it is not in this recipe, so every result with an ocean is graded analog on
 that declaration, the same standing as `core_cmb_temperature` in [core-state](core-state-methodology.md).
-Above 20.6 GPa, where IAPWS equation (5) ends, `ice_x` carries no curve, the column stays on
-the solid ladder and the state is `undecided`; a column with any sample past the curve is
-`molten` or `undecided`, never `solid`.
+**Above 20.6 GPa the curve is a simulation, and it says so.** Where IAPWS equation (5) ends
+(715 K), the recipe continues on **Reinhardt+ 2022**'s liquid–solid coexistence line — eleven
+thermodynamic-integration points over 10–52.4 GPa, generated into `engine/ice_melt_table.py`
+from the paper's published data by `tools/make_ice_melt_table.py` (never transcribed by hand)
+and interpolated linearly between points. It is a machine-learned potential fitted to PBE
+DFT, not a measurement; the one experimental check available is the triple point (Queyroux+
+2020: 14.6 GPa · 850 K against the simulation's ~20 GPa · 875 K), and every experiment that
+would check the line itself is paywalled. Any verdict that leans on it is graded **analog**.
+
+**The seam at 20.6 GPa is measured: +26 %.** IAPWS gives 715 K there and Reinhardt's line
+interpolates to 903 K; in pressure, Reinhardt reaches 715 K at 16.5 GPa, 20 % below. The two
+curves cross near 15–16 GPa, and splicing at the crossing was rejected: it would trade the
+last five gigapascals of a measured curve for a simulation where both exist, and the splice
+pressure would be ours rather than either source's. The splice is at the source's end, the
+width is stated, and `test_interior.py` re-measures it. A column sitting in the disputed band
+(715–903 K near 20.6 GPa) is named as such by the verdict.
+
+**The same paper gives the boundary the dispatch needs.** Its ice VII′–VII″ coexistence line
+(20–70 GPa, first order by the chemical-potential slope) separates the insulating bcc ices —
+VII, VII′ and X, which the paper shows to be one thermodynamic phase — from ice VII″, the
+superionic bcc solid that coexists with the liquid above ~1000 K. Below that line the column
+is integrated on the condensed ladder (French & Redmer 2015); above it, VII″ and the liquid
+alike go to Mazevet+ 2019's single-phase fit, which the paper says covers the superionic
+regime, and the liquid line only decides the *name* (liquid or VII″) inside that. So the
+material is chosen by the local (P, T) against two published lines, not by `body_class`, and
+the verdict says which phase each end of the column got and how far from which line.
+
+**Above 52.4 GPa no liquid line is carried and none is invented.** The VII′–VII″ line reaches
+70 GPa; past it the state is `undecided`, the representation is chosen by availability — the
+ladder while its fit stands (to 1 TPa and 1800 K, both knot limits rather than phase
+boundaries), Mazevet's fit beyond — and the verdict says "fluid or superionic" with the one
+measurement that would place it: Millot+ 2018's "ice melts near 5,000 K at 190 GPa". Neptune's
+adiabat is at 3 440 K there. A column with any sample past the curve is `molten` or
+`undecided`, never `solid`.
 
 Iron's melting curve is documented with its consumer, in
 [core-state](core-state-methodology.md). Silicate has none here: a mantle solidus is a
@@ -451,11 +484,15 @@ names the phases without thermal constants.
 
 ### Hot water: the branch the ice giants needed
 
-The ladder above is condensed solids and stops at 1800 K. An ice giant's ice mantle starts
-above that and climbs to 5500–5700 K at the centre, so it needs a different phase rather than
-another rung. `water_hot.py` carries Mazevet+ 2019's analytic free-energy fit, which covers
-liquid, plasma and superionic water in one object; Scheibe+ 2019 build their Uranus and
-Neptune models on it. Its constants come from the authors' reference implementation rather
+The ladder above is condensed insulating ice, and its fit stops at 1 TPa and 1800 K. An ice
+giant's ice mantle is fluid from the base of its envelope down (Neptune: 39 GPa · 2 555 K, a
+kilokelvin above Reinhardt's line) and climbs to 5500–6100 K at the centre, so it needs a
+different phase rather than another rung. `water_hot.py` carries Mazevet+ 2019's analytic
+free-energy fit, which covers liquid, plasma and superionic water in one object; Scheibe+ 2019
+build their Uranus and Neptune models on it. Its floor is the paper's own, 1000 K at ρ ≳ 1 g/cc
+(§3.1), and it is a different number from the ladder's 1800 K ceiling: which of the two
+representations a given (P, T) gets is decided by the melting curve above, not by a hand-off
+temperature. Until 2026-08-30 the two numbers were the same, 1800 K, and the class chose. Its constants come from the authors' reference implementation rather
 than the paper, because the paper omits the explicit moderate-density term.
 
 Two consequences follow from the fit being P(ρ, T) rather than a cold curve plus a thermal
@@ -913,8 +950,8 @@ recomputes it).
 |---|---|---|---|---|---|---|---|---|
 | Jupiter | 317.8 | 165 K | 69333 km | 69911 km | **−0.83 %** | 0.2774 | 3453 | +0.6 % |
 | Saturn, Z = 0 | 95.2 | 135 K | 62344 km | 58232 km | **+7.06 %** | 0.2710 | 481 | +20.7 % |
-| Uranus | 14.5 | 76 K | 4.199 R⊕ | 3.981 R⊕ | **+5.47 %** | 0.1741 | 1220 | +23.8 % |
-| Neptune | 17.1 | 72 K | 4.211 R⊕ | 3.865 R⊕ | **+8.97 %** | 0.1799 | 1533 | +29.2 % |
+| Uranus | 14.5 | 76 K | 4.199 R⊕ | 3.981 R⊕ | **+5.48 %** | 0.1741 | 1220 | +23.8 % |
+| Neptune | 17.1 | 72 K | 4.210 R⊕ | 3.865 R⊕ | **+8.94 %** | 0.1799 | 1533 | +29.2 % |
 | Alpha Centauri A b | 120.0 | 165 K (declared) | 59962 km | – | – | 0.2875 | 790 | – |
 
 **Jupiter got slightly worse, and that is the evidence rather than a regression.** The old
@@ -932,13 +969,19 @@ times too fluffy. The comparison is not like for like, because this model has no
 so must put every metal in the envelope while Guillot's budget is a total; what is
 unambiguous is that the requirement fell by a factor of 2.4.
 
-**Uranus is the gate this work was measured against**, and it moved from +23.8 % to +5.47 %
-with a central temperature of 6 159 K against the 5 700 K of Scheibe+ 2019 — an 8 %
+**Uranus is the gate this work was measured against**, and it moved from +23.8 % to +5.48 %
+with a central temperature of 6 160 K against the 5 700 K of Scheibe+ 2019 — an 8 %
 overshoot in the same direction as the radius. Neptune declined on the morning this table was
 first made (its envelope base landed 3 K under the hot-water floor); once the layer boundary
 was interpolated inside the integration step (2026-08-28, `engine/speed-context-notes.md`
-§11) it lands above the floor and integrates at +8.97 %. Whether that excess belongs to the
-ices or to the envelope is not analysed here; the number is now anchored and measurable.
+§11) it landed above the floor and integrated at +8.97 % — by luck, it turned out: the 1-bar
+temperature was a jagged function of the central temperature (±0.4 K, the adiabatic gradient
+used to close the last extrapolation being read at a grid-bound step start), and that trial
+path happened to sit in a trough. Since 2026-08-30 the gradient is read at the exit point
+itself and the temperature loop keeps its best pass, and Neptune converges at +8.94 % with a
+central temperature of 6 296 K, its envelope base fluid for a stated reason
+(`engine/melting-curve-context-notes.md`). Whether the excess belongs to the ices or to the
+envelope is not analysed here; the number is anchored and measurable.
 
 **A heavy-element core no longer fits inside Jupiter at all, and that is the envelope
 getting heavier.** With the polytrope a Jupiter-mass giant integrated a silicate core up to
@@ -1057,7 +1100,7 @@ Both tables, and the roster table below, are regenerated by
 | **porosity on a heated body** | `initial_porosity` > 0 and the body has melt, differentiation, convection, impacts or tidal heating | **not decided here**: all five remove porosity (Bierson+ 2019 §2.2), so what this recipe returns is an upper bound on the voids, never an estimate | — |
 | **rock + ice X** | ice column base in 37.4 GPa – 1 TPa | integrates on `ice_x`, at grade **analog** with a note: this is the one ice rung fitted rather than read, holding its source to 1.475 % against the others' 0.006–0.118 %, and its source is a first-principles potential rather than measured compression | analog |
 | **ice above 1 TPa** | ice column base above 1 TPa | **declines**, naming what ended: the representation's knot domain, not the physics. Zeng & Sasselov 2013 carry the same family of data to 8.893 TPa before handing over to Thomas–Fermi–Dirac, so roughly a factor of nine of published headroom sits above this fence | — |
-| **superionic** | ice column above 1800 K | **declines**, naming the phase: oxygen stays on a lattice while hydrogen diffuses, above 100 GPa and 2000 K (Millot+ 2019). The ceiling is the representation's, and it sits below the transition, so ice X is never returned where the material is superionic. French & Redmer 2016 built the potentials that would open it | — |
+| **superionic** | ice column above the VII′–VII″ line (20–70 GPa), or above 52.4 GPa and 1800 K | **integrates on the hot-water fit**, which Mazevet+ 2019 state covers the superionic regime as one phase with the liquid, and the verdict names it: ice VII″ where Reinhardt's lines place it, "fluid or superionic" where no line reaches (above 52.4 GPa the liquid line ends; Millot+ 2019 put superionic water above 100 GPa and 2000 K, Millot+ 2018 melt it near 5000 K at 190 GPa). The ladder never returns ice X where the material is superionic; French & Redmer 2016's potentials would make the superionic solid a phase of its own | analog |
 | temperature at or below the reference declaration | `potential_temperature` unset, or set to 1600 K | unset carries no temperature and returns the isothermal answer bit for bit; 1600 K integrates the adiabat and returns `core_temperature` / `cmb_temperature` with ΔT identically zero, so density does not move either way | unchanged |
 | **temperature declared away from the reference** | `potential_temperature` ≠ 1600 K | integrates with thermal pressure. The answer now leans on a declaration this recipe cannot derive, and the adiabat holds only where the layer convects: tidal heating and internal thermal boundary layers make the real profile super-adiabatic (Unterborn+ 2019 §3.2) | analog |
 | **temperature on a body above 1.05 R⊕** | `potential_temperature` declared at any value | integrates, but the only published check on the adiabat (Unterborn+ 2019 eq. 7) is matched to 4.4 % at 1 R⊕ and drifts to −17 % at 1.46 R⊕. The note names the bias and the grade drops even where density did not move, because `core_state` is the consumer of that number | analog |
@@ -1074,10 +1117,10 @@ Both tables, and the roster table below, are regenerated by
 | **giant whose centre passes the Z carrier's ceiling** | `envelope_z` > 0 and central pressure above 13.5 TPa | **declines**, naming the component whose fit ended rather than reporting degeneracy. Jupiter's whole Guillot range now integrates (centres of 4.3 to 5.8 TPa); the branch runs out at Z = 0.383, or 122 M⊕ of heavy elements | — |
 | **diluted core** | heavy elements graded inward rather than uniform through the envelope | **not decided here**: this rule mixes one homogeneous Z, and the residual after it belongs to the distribution | — |
 | **large rock core in a giant** | heavy elements placed as a compact core whose base passes 13.5 TPa. In a Jupiter-mass giant that is a core above **11.5 M⊕** (measured 2026-08-29; the polytrope envelope allowed 17.7, and the "0 M⊕ since the table" of 2026-08-28 was the envelope-base defect fixed with the sub-Neptunes, not physics) | **partly open**: cores below that integrate at grade analog; above it the recipe declines, naming the silicate ceiling. The limit is the envelope's overburden, not the core's own weight, so it depends on the pair rather than on the core mass | analog |
-| ice giant | `body_class` is `ice_giant`, with an ice fraction and a declared 1-bar temperature | **integrates**, ice mantle on `h2o_hot` (Mazevet+ 2019) between the rock and the H/He envelope. Uranus comes out **+5.47 %** with a central temperature of 6 159 K against Scheibe+ 2019's 5 700 K, Neptune **+8.97 %**; before the envelope table they were +24 % and +29 % | analog |
-| **ice material chosen by class, not by (P, T)** | any ice giant | the ice layer is `h2o_hot` because the body class says so, never because the local state does. Neptune's envelope base landed at 1797 K, three kelvin under that fit's floor, and declined until the layer boundary was interpolated inside the step; it now lands above the floor and integrates, but the dispatch is still by class. Falling through to the condensed ladder would be worse: 1800 K is the knot ceiling of a fit, not a phase boundary, and at those pressures water is fluid. **What is missing is a melting curve between 20.6 GPa and the superionic field** — the same gap `melt_free_phases()` has named since ice X went in | — |
+| ice giant | `body_class` is `ice_giant`, with an ice fraction and a declared 1-bar temperature | **integrates**, ice mantle on `h2o_hot` (Mazevet+ 2019) between the rock and the H/He envelope. Uranus comes out **+5.48 %** with a central temperature of 6 160 K against Scheibe+ 2019's 5 700 K, Neptune **+8.94 %** (6 296 K); before the envelope table they were +24 % and +29 % | analog |
+| **ice material chosen by (P, T), not by class** | any body with water above 2.3 GPa and a declared temperature | the ice layer's material is decided per step by the local state against two published lines: IAPWS's melting curve to 20.6 GPa, then Reinhardt+ 2022's liquid line (to 52.4 GPa) and VII′–VII″ line (to 70 GPa). Neptune's envelope base at convergence is 39 GPa · 2 555 K, **999 K above the liquid line**, so it is fluid for a stated reason; its "1797 K, three kelvin under the floor" was a trial path, and the converged point never sat there. `body_class` no longer picks the material; it only requires a temperature and an ice fraction of an ice giant. The lines are simulation (grade analog), and above 70 GPa no line reaches | analog |
 | **ice giant with no declared temperature** | `body_class` is `ice_giant`, `potential_temperature` unset | **declines**: the hot-water fit is P(ρ, T) as one object, so temperature is an argument rather than a correction, and at fixed pressure 2000 K against 5700 K is 14 % in density at 30 GPa | — |
-| **hot water outside its fit** | ice mantle below 1800 K or above 50 000 K | **declines** by name at both ends. The lower bound is where the condensed ladder takes over, and the paper puts its own fit's applicability there as "limited ... tens percent"; the upper is its stated 50 000 K | — |
+| **hot water outside its fit** | a liquid below 1000 K above 2.3 GPa (or above 500 K below it), or any water above 50 000 K | **declines** by name at both ends. The floor is Mazevet+ 2019 §3.1's own for ρ ≳ 1 g/cc ("10³ K ≲ T"), and a liquid under it has no equation of state here — the shelf is SeaFreeze `water2` (Brown 2018); the refusal is thrown as too cold, since the fluid opens above. The ceiling is the paper's 50 000 K | — |
 | sub-Neptune | `body_class` is `sub_neptune`, a declared `gas_mass_fraction` and a declared 1-bar temperature | **integrates**: iron core, rock, H/He envelope on the same integrator as the giants. The gas fraction is the seventh declaration (age and irradiation set it; no evolution here) and drops the grade. GJ 1214 b at 2 % H/He reaches its radius with 300 K at 1 bar, inside Valencia+ 2013's < 7 % | analog |
 | **envelope hotter than the mass binds** | any H/He envelope whose 1-bar adiabat is too hot for the body | **declines**, citing the hottest bound solution and the temperature above which the 1-bar level is never reached: the declared adiabat from 1 bar puts the envelope base above what the core can hold. A radiative zone would lower the deep adiabat, and this recipe has none | — |
 | brown dwarf | `body_class` is `brown_dwarf` | declines, naming deuterium burning above ~13 M_J (Spiegel+ 2011) and the age-dependent luminosity this recipe has no track for | — |
@@ -1318,6 +1361,25 @@ instead of as a class constant.
   ([`2019Natur.569..251M`](https://ui.adsabs.harvard.edu/abs/2019Natur.569..251M)).
   Superionic water above "100 gigapascals and ... 2,000 kelvin", which the ceiling is checked
   against. *No preprint*: verified by bibcode.
+- **Millot, M. et al. 2018**, Nature Physics 14, 297
+  ([`2018NatPh..14..297M`](https://ui.adsabs.harvard.edu/abs/2018NatPh..14..297M)). "Ice
+  melts near 5,000 K at 190 GPa" — the one melting measurement above 52.4 GPa this recipe
+  quotes, as a point the verdict measures a deep mantle against, not as a curve. *No preprint*:
+  verified by bibcode; abstract only.
+- **Reinhardt, A., Bethkenhagen, M., Coppari, F., Millot, M., Hamel, S. & Cheng, B. 2022**,
+  Nat. Commun. 13, 4707
+  ([`2022NatCo..13.4707R`](https://ui.adsabs.harvard.edu/abs/2022NatCo..13.4707R),
+  [2203.12897](https://arxiv.org/abs/2203.12897)). The liquid–solid coexistence line
+  (10–52.4 GPa) and the ice VII′–VII″ coexistence line (20–70 GPa) from thermodynamic
+  integration with a machine-learned potential fitted to PBE DFT, and the finding that ices
+  VII, VII′ and X are one thermodynamic phase while VII″ is first-order distinct. Baked from
+  the paper's published data repository (`BingqingCheng/highP-ice`), never from the figure.
+  *Open access*; the text is in the cache.
+- **Queyroux, J.-A. et al. 2020**, Phys. Rev. Lett. 125, 195501
+  ([`2020PhRvL.125s5501Q`](https://ui.adsabs.harvard.edu/abs/2020PhRvL.125s5501Q)). The
+  measured triple point at 14.6 GPa · 850 K and the identification of the high-temperature
+  bcc phase with superionic ice VII″ — the one experimental check on Reinhardt's lines this
+  recipe can quote. *No preprint*: abstract only, verified by bibcode.
 - **IAPWS R14-08(2011)**, *Revised Release on the Pressure along the Melting and
   Sublimation Curves of Ordinary Water Substance*
   ([iapws.org/relguide/MeltSub.html](http://www.iapws.org/relguide/MeltSub.html)). The
