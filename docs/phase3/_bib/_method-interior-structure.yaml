@@ -83,3 +83,18 @@ papers:
   title: Structure and evolution of super-Earth to super-Jupiter exoplanets. I.
   status: fetched
   fetch_error: null
+- arxiv_id: '1010.0277'
+  ads_bibcode: 2011ApJ...733....2N
+  title: Thermal Evolution and Structure Models of the Transiting Super-Earth GJ 1214b
+  status: fetched
+  fetch_error: null
+- arxiv_id: '1305.2629'
+  ads_bibcode: 2013ApJ...775...10V
+  title: Bulk Composition of GJ 1214b and Other Sub-Neptune Exoplanets
+  status: fetched
+  fetch_error: null
+- arxiv_id: '2402.05991'
+  ads_bibcode: 2024ApJ...963L..37M
+  title: Using JWST Transits and Occultations to Determine ~1% Stellar Radii and Temperatures (GJ 1214 b mass and radius)
+  status: fetched
+  fetch_error: null

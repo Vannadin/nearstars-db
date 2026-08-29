@@ -103,6 +103,10 @@ nodes:
       (액체 물 EOS, SeaFreeze water1), 그래서 이 노드 **안에** 고리가 생겼다 —
       순환 7. ocean_thickness · ice_shell_thickness 는 그 결과이고, 둘 다
       포텐셜 온도 선언이 정하는 값이라 등급이 analog 다.
+      2026-08-29 에 sub_neptune 이 거절 목록에서 나왔다. gas_mass_fraction 은
+      일곱 번째 **선언** 이다 (ice_allowed · tidal_heating · initial_porosity ·
+      envelope_z · potential_temperature · core_cmb_temperature 와 같은 종류):
+      나이와 항성 조사량이 정하고 이 레시피에 진화가 없어서 도출하지 않는다.
   core_state:
     kind: computed
     recipe: core-state-methodology
@@ -242,8 +246,8 @@ edges:
   # 레시피에 진화 트랙이 없고, 갈색왜성은 중수소 연소가 있고, 항성은 n = 3/2 의
   # 0.205 로 body_figure 의 별도 갈래에 있다.
   # (interior-structure-methodology.md §Domain of validity)
-  - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — ice_giant · sub_neptune · brown_dwarf · star.", ref: "body-figure-methodology.md:256"}
-  - {from: nmoi_class_table, to: cassini_state, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — ice_giant · sub_neptune · brown_dwarf · star.", ref: "cassini-state-obliquity-methodology.md:166"}
+  - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — brown_dwarf · star. ice_giant 는 2026-08-27, sub_neptune 은 2026-08-29 에 적분으로 넘어갔다.", ref: "body-figure-methodology.md:256"}
+  - {from: nmoi_class_table, to: cassini_state, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — brown_dwarf · star. ice_giant 는 2026-08-27, sub_neptune 은 2026-08-29 에 적분으로 넘어갔다.", ref: "cassini-state-obliquity-methodology.md:166"}
   - {from: k2q_class_table, to: tidal_heating, kind: requires, via: k2_over_q, ref: "tidal-heating-methodology.md:194"}
   - {from: k2q_class_table, to: tidal_locking, kind: requires, via: k2_over_q, ref: "tidal-locking-timescale-methodology.md:266"}
   - {from: omega0_class_table, to: tidal_locking, kind: requires, via: p_init, ref: "tidal-locking-timescale-methodology.md:270"}

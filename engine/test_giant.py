@@ -293,18 +293,20 @@ def main() -> int:
             hi = mid
     core_cap = lo
     bare, _ = shoot(19.0 * EARTH_MASS_KG, 0.0, 0.0, "fe_prem")
-    # **2026-08-28 에 이 상한이 17.66 M⊕ 에서 0 으로 닫혔다.** 나빠진 것이 아니라
-    # 외피가 무거워진 것이다 — 폴리트로프는 목성 외피를 실제보다 성기게 그렸고, 표가
-    # 들어오면서 중심압이 3.45 TPa 로 올라갔다. 규산염 천장이 13.5 TPa 이므로 그 위에
-    # 핵을 얹을 여유가 남지 않는다. 막는 것은 여전히 규산염의 천장이고, 그 천장을
-    # 밀어올리는 것이 외피의 하중이라는 진단도 그대로다. 달라진 것은 하중의 크기다.
-    ok = core_cap == 0.0 or core_cap < 1.0
+    # **이 상한은 두 번 잘못 재어졌다.** 폴리트로프 외피에서 17.66 M⊕ 였고, 2026-08-28 에
+    # 표가 들어오자 0 으로 닫혔다고 적었다 — 그런데 그 0 은 물리가 아니라 결함이었다. 외피
+    # 바닥이 표의 도달 영역 아래로 떨어지면 적분기가 그 자리를 1 bar 표면으로 오인해 외피
+    # 질량이 0 이 됐고, 사다리가 규산염 천장까지 올라가 거절을 냈다 (sub-neptune-context-notes.md).
+    # 그 결함을 고친 2026-08-29 의 측정은 **11.46 M⊕** 다. 막는 것은 여전히 규산염 천장이고
+    # 그것을 밀어올리는 것이 외피 하중이라는 진단은 그대로다 — 크기가 다를 뿐이다.
+    JUPITER_CORE_CAP = 11.46
+    ok = abs(core_cap - JUPITER_CORE_CAP) < 0.1
     if not ok:
-        fails.append(f"목성 안 규산염 핵 상한이 {core_cap:.2f} M⊕ 다 — 표가 들어온 뒤에는 "
-                     "외피 하중이 규산염 천장을 이미 채워서 0 이어야 한다")
+        fails.append(f"목성 안 규산염 핵 상한이 {core_cap:.2f} M⊕ 다 — 2026-08-29 측정 "
+                     f"{JUPITER_CORE_CAP} M⊕ 에서 움직였다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 317.8 M⊕ 거대행성이 담을 수 있는 규산염 핵은 "
-          f"{core_cap:.2f} M⊕ 까지다 — 폴리트로프 외피에서는 17.66 M⊕ 였고, 표가 "
-          f"외피를 무겁게 만들면서 닫혔다")
+          f"{core_cap:.2f} M⊕ 까지다 — 폴리트로프 외피에서 17.66, 표 도입 직후의 0 은 외피 "
+          f"바닥을 표면으로 오인한 결함이었고, 결함을 고친 뒤 {JUPITER_CORE_CAP} 이다")
     for core in (11.0, core_cap * 0.99, 19.0, 42.0):
         res = _giant(JUPITER_MASS_EARTH, core)
         if res.applicable:
@@ -335,7 +337,10 @@ def main() -> int:
              dict(mass_earth=17.0, body_class="ice_giant", core_mass_fraction=0.0,
                   ice_mass_fraction=0.0, gas_mass_fraction=0.13,
                   potential_temperature=2500.0), "얼음거대행성이 아니다"),
-            ("서브넵튠", dict(mass_earth=8.0, body_class="sub_neptune"), "광증발"),
+            # 서브넵튠은 2026-08-29 에 열렸다. 남은 거절은 가스질량분율을 안 준 경우다 — 선언의 문제다.
+            ("가스 없는 서브넵튠", dict(mass_earth=8.0, body_class="sub_neptune",
+                                core_mass_fraction=0.3, potential_temperature=300.0),
+             "선언하면 풀린다"),
             ("가스인데 암석 클래스",
              dict(mass_earth=120.0, core_mass_fraction=0.0, ice_mass_fraction=0.0,
                   gas_mass_fraction=0.9, body_class="rocky"), "어긋나면")):

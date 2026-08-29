@@ -1442,6 +1442,38 @@ def main() -> int:
     print(f"  [{'PASS' if ok else 'FAIL'}] water 프리셋이 {m_water:.3f} M⊕ 까지 풀린다 "
           f"(2026-08-27 에는 0.0398 M⊕ 로 달의 3.2 배였다)")
 
+    print("\n서브넵튠 — 가스 외피 아래 철 핵이 풀리고, 사다리가 천장 거절을 지어내지 않는가")
+    # 2026-08-29 까지 이 둘은 fe_prem 의 12 TPa 천장 거절을 냈다 — 5 M⊕ 가 닿을 수 없는 압력이다.
+    # 원인은 외피 바닥의 표 영역 이탈을 표면으로 오인한 것이었다 (sub-neptune-context-notes.md).
+    # 여기서 지키는 것은 수치가 아니라 **기작** 이다: 풀리거나, 이름을 대며 거절하거나.
+    gj = solve(8.41, core_mass_fraction=0.325 * 0.98, ice_mass_fraction=0.0,
+               gas_mass_fraction=0.02, body_class="sub_neptune", potential_temperature=300.0)
+    ok = gj.applicable and gj.converged and gj.grade == "analog"
+    if not ok:
+        fails.append(f"서브넵튠: 가스 외피 아래 철 핵이 안 풀린다 — "
+                     f"{gj.reason[:80] if not gj.applicable else gj.converged}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] GJ 1214 b (8.41 M⊕ · H/He 2 % · 1 bar 300 K): "
+          + (f"R {gj.values['radius']:.3f} R⊕ (발표 2.733) · converged {gj.converged} · analog"
+             if gj.applicable else "거절"))
+    # 20 % 는 이제 풀린다 (12.7 R⊕ — 그 선언에 충실한 답이다). 순수 가스 5 M⊕ 가 거절이다: 1 bar
+    # 500 K 단열선이 묶이는 가장 뜨거운 치밀한 해가 1 bar 에서 145 K 뿐이라, 그 위는 부푼 가지다.
+    hot = solve(5.0, core_mass_fraction=0.0, ice_mass_fraction=0.0, gas_mass_fraction=1.0,
+                body_class="giant", potential_temperature=500.0)
+    ok = (not hot.applicable and "묶이지 않는다" in hot.reason and "천장" not in hot.reason
+          and "12000" not in hot.reason)
+    if not ok:
+        fails.append("서브넵튠: 5 M⊕ · 순수 가스 · 500 K 가 '묶이지 않는 외피' 로 거절해야 하는데 "
+                     f"{'풀렸다' if hot.applicable else hot.reason[:80]}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 5 M⊕ · 순수 가스 · 1 bar 500 K: "
+          + ("풀렸다 (거절해야 한다)" if hot.applicable else
+             "거절하며 묶이는 가장 뜨거운 해와 벽을 인용한다 — 천장이 아니다"))
+    gasless = solve(8.0, core_mass_fraction=0.3, body_class="sub_neptune",
+                    potential_temperature=300.0)
+    ok = not gasless.applicable and "선언하면 풀린다" in gasless.reason
+    if not ok:
+        fails.append("서브넵튠: 가스질량분율 없이 선언하면 그것이 선언임을 말하며 거절해야 한다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 가스질량분율 없는 서브넵튠은 선언을 요구하며 거절한다")
+
     print("\n얼음거대행성 — 열렸는가, 그리고 뜨거운 물이 자기 구간을 지키는가")
     # **적분은 여기서 안 돌린다.** 얼음거대행성 하나가 24 ~ 500 초라 check.sh 의 예산에
     # 안 들어간다. 천왕성·해왕성 표는 `--icegiant` 가 낸다. 여기서는 적분하지 않고 되는
