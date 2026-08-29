@@ -43,39 +43,24 @@ standard.
 
 ## The list
 
-### C1 — Sub-Neptunes, and the defect hiding behind them
+### C1 — Sub-Neptunes, and the defect hiding behind them — **closed 2026-08-30**
 
-`sub_neptune` is in `FLUID_CLASSES` and the domain row says *"given a gas fraction the
-integration runs"*. **Measured 2026-08-28, it does not.** Same body, class renamed to
-`giant`, gas fraction swept:
+The sweep (5 M⊕ · CMF 0.20 · 500 K at 1 bar) now solves at 2, 5, 10, 20 and 30 % gas and
+declines at 50, 80 and 100 % citing the hottest bound solution and the wall above it —
+neither sentence mentions a ceiling. `sub_neptune` is off `FLUID_CLASSES`; `gas_mass_fraction`
+is the seventh declaration. GJ 1214 b (8.41 M⊕, 2.733 R⊕) is reproduced by 1.5–2.4 % H/He for
+1-bar temperatures of 350–250 K, inside Valencia+ 2013's < 7 % and beside their ~3 % for a
+solar-metallicity envelope.
 
-| gas mass fraction | result |
-|---|---|
-| 100 % | solves, R 6.282 R⊕ |
-| 80 %, 50 %, 30 %, 20 %, 10 %, 5 %, 2 % | all decline: *"central pressure must exceed fe_prem's ceiling (12000 GPa)"* |
-
-A 5 M⊕ body cannot reach 12 TPa — the Earth-like composition runs to 22.78 M⊕ without
-touching that ceiling. **Any iron core under a gas envelope breaks it**, which is the
-sub-Neptune regime by definition.
-
-This also contradicts a row two lines above: *large rock core in a giant* claims cores up
-to 17.7 M⊕ integrate. One of the two measurements is wrong and the difference must be found
-before either is trusted.
-
-**One place to look first — unverified, and to be tested rather than assumed.** The refusal
-is spoken by the bracketing ladder, which only ever climbs (`hi = min(hi * 4, p_ceiling)`)
-and whose ceiling is the *innermost* material's `p_max`. With a gas envelope the surface is
-pinned at 1 bar, so surface mass is not monotonic in central pressure — the U-shape the
-ladder's own comment already describes for Saturn. If a physical solution sits on the falling
-branch, below the seed, the ladder walks past it to the ceiling and reports *"must exceed the
-ceiling"*, which would be a false sentence rather than a physical one. It would also explain
-why 100 % gas solves (a different seed path) and why a 17.7 M⊕ core in a Jupiter-mass
-envelope integrates (reachable on the rising branch).
-
-Needs: the defect diagnosed and fixed; then `sub_neptune` off `FLUID_CLASSES` with
-`gas_mass_fraction` as a declared input, graded and noted like the other six.
-
-Depends on: nothing.
+Both measurements were wrong: the 17.7 M⊕ row was the polytrope era's, the "0 M⊕ since the
+table" of 2026-08-28 was the same defect as the sweep's refusal (the envelope base cut off as a
+surface), and the cap re-measured with the defect fixed is 11.46 M⊕. Under it were three defects, none a ceiling: the
+integrator took the envelope base leaving the H/He table's reach line for the 1-bar surface,
+so the envelope had no mass; the temperature loop's proportional update diverges when the
+1-bar temperature scales faster than the central one (thin envelopes on heavy cores); and a
+ladder seed already over the target fell onto the inflated branch of the U-shaped surface-mass
+curve. Each fix is gated so that no anchor path enters it, and the bit lines say so.
+`engine/sub-neptune-context-notes.md` has the measurements.
 
 ### C2 — The ocean layer, and multi-axis inversion — **closed 2026-08-29**
 
