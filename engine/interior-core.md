@@ -31,7 +31,12 @@ where the text puts it. Constants that are right hide a wrong label, and the nex
 follows the label opens the wrong equation — the same failure as a fabricated DOI that
 resolves to a real, unrelated paper: the form is plausible, so it passes. (C8 wrote Noack &
 Lasbleis's R_p scaling as their eq. (8); it is their eq. (5), and (8) is X_CMF. The constants
-were right, three labels were not.)
+were right, eight labels were not.) **And when one file carries two papers, the same number
+can exist twice, so a label is written with the paper's name** — `Noack & Lasbleis eq. 5`,
+never a bare `eq. 8` — which is how `test_interior.py` came to hold Unterborn's real eq. 8
+beside a mislabelled Noack & Lasbleis eq. 8 without either looking wrong. That is the fourth
+kind of plausible-because-well-formed failure this list has met, after the fabricated
+identifier, the stale number and the label slip: the same number from a different paper.
 
 ## Where the line is
 

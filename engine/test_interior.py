@@ -257,13 +257,13 @@ def unterborn_tcmb(radius_earth: float, t_pot: float = 1600.0) -> float:
 # (A) 식 (22) 를 인쇄된 그대로(T_um = 2000 K) 와 엔진의 CMB 온도, (B) 식의 지수 인자
 # exp(…) 와 엔진의 T_CMB / T(250 km) 비. (B) 가 단열선 **기울기** 의 비교이고 (A) 는 출발점 선택까지
 # 섞인 비교다.
-NL2020_RP = (7030.0, 1840.0, 0.282)          # eq. 8
-NL2020_RC_HOT = (4850.0, 0.328, 0.266)       # eq. 9
-NL2020_ALPHA = (13.0, 0.738, 11.0, 0.04)     # eq. 18, × 1e-5
-NL2020_CP = (1275.0, 585.0, 1.06)            # eq. 19
-NL2020_T_UM = 2000.0                         # K, eq. 22
-NL2020_D_L_KM = 250.0                        # km, eq. 22
-NL2020_DT = 0.5                              # eq. 22 의 경험 인자
+NL2020_RP = (7030.0, 1840.0, 0.282)          # Noack & Lasbleis eq. 5 (not Unterborn's eq. 8 above)
+NL2020_RC_HOT = (4850.0, 0.328, 0.266)       # Noack & Lasbleis eq. 9
+NL2020_ALPHA = (13.0, 0.738, 11.0, 0.04)     # Noack & Lasbleis eq. 18, × 1e-5
+NL2020_CP = (1275.0, 585.0, 1.06)            # Noack & Lasbleis eq. 19
+NL2020_T_UM = 2000.0                         # K, Noack & Lasbleis eq. 22
+NL2020_D_L_KM = 250.0                        # km, Noack & Lasbleis eq. 22
+NL2020_DT = 0.5                              # Noack & Lasbleis eq. 22 의 경험 인자
 NL2020_FE_M = 0.1                            # 지구형 맨틀 철 수 (§2.2, "best resembles Earth")
 NL2020_MASS_RANGE = (0.8, 2.0)               # M⊕
 NL2020_G = 6.67384e-11                       # 논문이 적은 G
