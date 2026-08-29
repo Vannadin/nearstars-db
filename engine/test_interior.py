@@ -239,7 +239,7 @@ def unterborn_tcmb(radius_earth: float, t_pot: float = 1600.0) -> float:
 # 지구형 조성(Fe·Mg·Si·O), 그들의 §7 이 "We limited our mass range to two Earth masses" 라고
 # 적는다. 상수는 전부 PDF 에서 직접 읽었다 (2026-08-30).
 #
-#   (8)  R_p [km]     = (7030 − 1840 X_Fe) (M/M⊕)^0.282          X_Fe = 행성 전체의 철 질량분율
+#   (5)  R_p [km]     = (7030 − 1840 X_Fe) (M/M⊕)^0.282          X_Fe = 행성 전체의 철 질량분율
 #   (9)  R_c,hot [km] = 4850 X_CMF^0.328 (M/M⊕)^0.266
 #   (13) g_0 = G M / (R_p·1000)²        (14) g_CMB = G X_CMF M / (R_c·1000)²
 #   (15) g_m,av = (g_0 + g_CMB) / 2
@@ -298,7 +298,7 @@ def nl2020_tcmb(mass_earth: float, radius_km: float, core_radius_km: float,
 
 
 def nl2020_geometry(mass_earth: float, x_cmf: float, x_fe: float) -> tuple[float, float]:
-    """논문 자신의 기하 — 식 (8) 의 R_p 와 식 (9) 의 R_c,hot [km]."""
+    """논문 자신의 기하 — 식 (5) 의 R_p 와 식 (9) 의 R_c,hot [km]."""
     r0, r1, re = NL2020_RP
     c0, ce1, ce2 = NL2020_RC_HOT
     return ((r0 - r1 * x_fe) * mass_earth ** re, c0 * x_cmf ** ce1 * mass_earth ** ce2)

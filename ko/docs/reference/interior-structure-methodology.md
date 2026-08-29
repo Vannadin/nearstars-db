@@ -953,7 +953,7 @@ Debye 모형으로 푸는 쪽은 그렇게 빨리 떨어지지 않아서 잔차�
 `T_um = 2000 K`, 경험 인자 `dT ≈ 0.5`, 맨틀 평균값은 그들의 식 (15)·(18)·(19). 상수는 전부 PDF
 에서 읽었습니다. 식 (20)·(21) 은 **쓰지 않습니다** — 마그마 오션 직후의 초기 온도이고 논문이
 일부러 문헌값을 수천 K 넘긴 값이라, 초기 행성 이야기이지 현재 단열선이 아닙니다. 엔진 자신의
-기하(그 R_p·R_c)와 논문의 기하(식 8·9) 양쪽에서 평가했고 `test_interior.py --adiabat` 이 다시
+기하(그 R_p·R_c)와 논문의 기하(식 5·9) 양쪽에서 평가했고 `test_interior.py --adiabat` 이 다시
 냅니다.
 
 | M (M⊕) | R (R⊕) | 엔진 T_CMB | 식 (22), 엔진 R_p·R_c | Δ | 식 (22), 논문 R_p·R_c | Δ | Unterborn eq. 7 | Δ |
@@ -1038,7 +1038,7 @@ Z 가 같은 두 거대행성이 같은 반지름을 받았습니다. 표는 질
 | **2.3 GPa 위의 액체** | 얼음 VII 이 녹을 만큼 따뜻한 기둥 | **거절한다.** 선반을 이름 댄다. `water1` 은 2.3 GPa 에서 끝나고 `water2` (Brown 2018) 는 굳히지 않았다 | — |
 | 다공성 암석·얼음 | `initial_porosity` > 0, 중심압이 150 MPa 실험 상한 안 | 발표된 관계식의 φ(P) 로 적분한다 | analog |
 | **실험 상한 위의 공극** | `initial_porosity` > 0, 압력이 150 MPa 위 | 관계식이 **외삽** 이다. 결과가 해당 질량 몫을 보고하고, `porosity_cap` 이 그 구간에서 아무것도 주장하지 않는 읽기를 준다 | analog |
-| **데워진 천체의 공극** | `initial_porosity` > 0 이고 용융·분화·대류·충돌·조석가열이 있는 천체 | **여기서 정하지 않는다.** 다섯 다 공극을 없애므로(Bierson+ 2019 §2.2), 이 레시피가 돌려주는 것은 빈틈의 상한이고 추정이 아니다 | — |
+| **데워진 천체의 공극** | `initial_porosity` > 0 이고 용융·분화·대류·충돌·조석가열이 있는 천체 | **여기서 정하지 않는다.** 다섯 다 공극을 없애므로(Bierson+ 2019 §2.2), 이 레시피가 돌려주는 것은 빈틈의 상한이고 추정이 아니다. **다섯 중 셋에 대해서는 관계가 존재하고, 그것은 유변학에 의존한다** (C9, 2026-08-30 닫음): Neumann & Kruse 2019 (오픈 액세스, 본문이 캐시에) 가 엔셀라두스에 조석가열·분화·용융을 들고 핵을 크리프로 압밀한다(그들의 §2.5, 감람석은 Mei & Kohlstedt 2000, antigorite 는 Amiguet+ 2012 의 크리프 법칙, 계수는 Table 3). 감람석이면 4 ~ 70 km 의 다공질 핵층이 남고 **antigorite 면 남지 않는다.** 한 천체 한 크기이고 이 레시피가 적분하지 않는 열 이력이 필요하므로 갈래로만 기록한다 — 닿았고 명세됐고 소비처는 아직 없다. Bierson 의 상한이 일반 경우로 남는다(지름 123 ~ 2326 km 에서 검증). 대류와 충돌은 여전히 아무도 안 든다 | — |
 | **암석 + 얼음 X** | 얼음 기둥 바닥이 37.4 GPa ~ 1 TPa | `ice_x` 로 적분하고 등급은 **analog**, 노트가 이유를 적는다: 이 사다리에서 읽지 않고 적합한 유일한 얼음 칸이고 출처를 1.475 % 안에서만 재현한다 (다른 칸은 0.006 ~ 0.118 %) | analog |
 | **1 TPa 위의 얼음** | 얼음 기둥 바닥이 1 TPa 위 | **거절한다.** 끝난 것이 무엇인지 이름 댄다 — 물리가 아니라 표현의 매듭 구간이다. Zeng & Sasselov 2013 은 같은 계열의 자료를 8.893 TPa 까지 끌고 간 뒤에야 전자축퇴로 넘긴다 | — |
 | **초이온** | 얼음 기둥이 VII′–VII″ 선(20 ~ 70 GPa) 위이거나, 52.4 GPa 와 1800 K 위 | **뜨거운 물 적합으로 적분한다.** Mazevet+ 2019 가 초이온 영역을 액체와 한 상으로 덮는다고 적었고, 판정문이 이름을 댄다 — Reinhardt 의 선이 놓는 자리는 얼음 VII″, 어느 선도 안 닿는 자리는 "유체 또는 초이온" (52.4 GPa 위에서 액체선이 끝난다. Millot+ 2019 는 초이온 물을 100 GPa · 2000 K 위에 두고, Millot+ 2018 은 190 GPa 에서 5000 K 근처에서 녹인다). 사다리는 물질이 초이온인 자리에 얼음 X 를 돌려주지 않는다. French & Redmer 2016 의 퍼텐셜이면 초이온 고체가 제 상이 된다 | analog |
@@ -1351,7 +1351,7 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   *Parameterisations of interior properties of rocky planets. An investigation of planets with
   Earth-like compositions but variable iron content.* `docs/phase3/_papers/2020A&A...638A.129N.pdf`
   로 **캐시**돼 있음(오픈 액세스, 오너가 받아옴). 단열선의 두 번째 앵커 — 식 (22) 와 그것을 받치는
-  (8)·(9)·(13)~(15)·(18)·(19), 0.8 ~ 2 M⊕ 유효, 상수는 전부 PDF 에서 읽음. 식 (20)·(21) 은 초기
+  (5)·(9)·(13)~(15)·(18)·(19), 0.8 ~ 2 M⊕ 유효, 상수는 전부 PDF 에서 읽음. 식 (20)·(21) 은 초기
   온도라 일부러 쓰지 않았습니다. bibcode 와 제목으로 확인.
 - **Unterborn, C. T., Dismukes, E. E. & Panero, W. R. 2019**, JGR Planets 124, 1704
   ([`2019JGRE..124.1704U`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124.1704U), arXiv
@@ -1395,6 +1395,23 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   ([`2014Sci...344...78I`](https://ui.adsabs.harvard.edu/abs/2014Sci...344...78I)).
   다섯 다 arXiv 프리프린트가 없고, 각 값은 기억이 아니라 ADS 색인 전문이나 논문 초록에서
   확인했습니다.
+- **Neumann, W. & Kruse, A. 2019**, ApJ 882, 47
+  ([`2019ApJ...882...47N`](https://ui.adsabs.harvard.edu/abs/2019ApJ...882...47N),
+  doi [10.3847/1538-4357/ab2fcf](https://doi.org/10.3847/1538-4357/ab2fcf)). *Differentiation
+  of Enceladus and Retention of a Porous Core.* `docs/phase3/_papers/2019ApJ...882...47N.html`
+  로 **캐시**(오픈 액세스, ADS 게이트웨이로 2026-08-30 받음), 텍스트 추출본이 옆에. 데워진 천체의
+  공극 갈래 — 조석가열·분화·용융, 크리프에 의한 핵 압밀(§2.5), 세 유변학의 크리프 계수(Table 3),
+  감람석이면 4 ~ 70 km 의 다공질 핵층, antigorite 면 없음. 닿았고 명세됐고 배선하지 않음(C9).
+  bibcode 와 제목으로 확인.
+- **Mei, S. & Kohlstedt, D. L. 2000**, JGR 105, 21457 및 21471
+  ([`2000JGR...10521457M`](https://ui.adsabs.harvard.edu/abs/2000JGR...10521457M),
+  [`2000JGR...10521471M`](https://ui.adsabs.harvard.edu/abs/2000JGR...10521471M)). Neumann &
+  Kruse 가 압밀에 쓰는 감람석 확산·전위 크리프 법칙. 갈래의 명세로만 인용, 옮겨 적지 않음.
+  bibcode 와 제목으로 확인.
+- **Amiguet, E. et al. 2012**, EPSL 345, 142
+  ([`2012E&PSL.345..142A`](https://ui.adsabs.harvard.edu/abs/2012E%26PSL.345..142A)). *Creep of
+  phyllosilicates at the onset of plate tectonics* — antigorite 크리프 법칙(Peierls 응력, 입도
+  무관). 같은 지위. bibcode 와 제목으로 확인.
 - **Bierson, C. J., Nimmo, F. & McKinnon, W. B. 2019**, Icarus 326, 10
   ([`2019Icar..326...10B`](https://ui.adsabs.harvard.edu/abs/2019Icar..326...10B), DOI
   [10.1016/j.icarus.2019.01.027](https://doi.org/10.1016/j.icarus.2019.01.027)). **캐시**

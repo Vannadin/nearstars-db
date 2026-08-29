@@ -9,7 +9,7 @@ number in the layout. What was transcribed (their numbering):
 
 | eq. | statement | constants |
 |---|---|---|
-| (8) | R_p [km] = (7030 − 1840 X_Fe)(M/M⊕)^0.282 | exponent "within the literature range (0.26−0.3)" |
+| (5) | R_p [km] = (7030 − 1840 X_Fe)(M/M⊕)^0.282 | exponent "within the literature range (0.26−0.3)" |
 | (9) | R_c,hot [km] = 4850 X_CMF^0.328 (M/M⊕)^0.266 | |
 | (13), (14) | g_0 = G M/(R_p·1000)², g_CMB = G X_CMF M/(R_c·1000)² | G = 6.67384e−11, M⊕ = 5.972e24 as printed |
 | (15) | g_m,av = (g_0 + g_CMB)/2 | |
@@ -36,7 +36,7 @@ Eq. (22) starts from 2000 K at 250 km depth; this recipe and Unterborn's eq. 7 s
 
 - **(A)** eq. (22) as printed against the engine's CMB temperature — in the engine's own
   geometry (its R_p and R_c, so only the adiabat is being compared) and in the paper's
-  (eqs. 8 and 9 with X_Fe = 0.35, X_CMF = 0.325);
+  (eqs. 5 and 9 with X_Fe = 0.35, X_CMF = 0.325);
 - **(B)** the exponential factor of eq. (22) against the engine's own rise T_CMB / T(250 km),
   the engine's mantle temperature at that depth read off the silicate density calls of one
   re-integration at the solved centre, at the hydrostatic pressure ρ_um g h.

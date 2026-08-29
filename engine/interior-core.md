@@ -25,6 +25,14 @@ day; the domain row that stated Neptune's "1797 K, three kelvin under the floor"
 H/He note's Saturn +2.09 % after the gas-layer temperature carry moved it to +7.06 %), and
 the rule above only covered core rows.
 
+**Labels are re-checked at their place in the text, not only the constants.** When a
+transcription is verified against a source, the equation number itself is confirmed to sit
+where the text puts it. Constants that are right hide a wrong label, and the next reader who
+follows the label opens the wrong equation — the same failure as a fabricated DOI that
+resolves to a real, unrelated paper: the form is plausible, so it passes. (C8 wrote Noack &
+Lasbleis's R_p scaling as their eq. (8); it is their eq. (5), and (8) is X_CMF. The constants
+were right, three labels were not.)
+
 ## Where the line is
 
 Not by body class — by **what is missing**.
@@ -300,17 +308,51 @@ ceiling**; above it the recipe is back to one anchor, to Unterborn's 1.5 R⊕. A
 bit-identical: this added a comparison, not a change to the adiabat.
 `engine/adiabat-window-context-notes.md` has the transcription and the runs.
 
-### C9 — Porosity on a heated body
+### C9 — Porosity on a heated body — **closed 2026-08-30: a relation exists, and it depends on rheology**
 
-The compaction relation returns an upper bound on void space, never an estimate, because
-melt, differentiation, convection, impacts and tidal heating all remove porosity and
-Bierson+ 2019 §2.2 excludes all five. The recipe says so and declines to decide.
+**This row's own prediction was wrong, and is corrected here rather than quietly.** It said
+*"this one may close as 'the bound is the answer', which is a legitimate ending."* The
+2026-08-30 survey found otherwise, and a row that carries a guess carries the duty to correct
+it — left standing, it tells the next reader to skip the search.
 
-Needs: a relation that carries at least one of the five, or a recorded finding that the
-bound is the best available answer.
+The compaction relation (Bierson+ 2019) returns an upper bound on void space, never an
+estimate, because melt, differentiation, convection, impacts and tidal heating all remove
+porosity and its §2.2 excludes all five. **Three of the five are carried, with
+coefficients, by Neumann & Kruse 2019** (2019ApJ...882...47N, open access, full text fetched
+through the ADS gateway into the cache and read): Enceladus heated by radionuclides and tidal
+dissipation, differentiating through a melting front, its core compacted by creep — their
+§2.5, "compaction is a change of the density and volume of a porous material that is being
+heated and applied pressure to … facilitated by creep processes on a geologic timescale" —
+with the olivine creep laws of Mei & Kohlstedt 2000 and the antigorite law of Amiguet+ 2012,
+coefficients for dry olivine (A1–A4), wet olivine (B1–B4) and antigorite (C1–C2) in their
+Table 3. Results: core radius 185–205 km, **porous core layer 4–70 km**, ocean ≈10–27 km, ice
+shell ≈30–40 km. Convection and impacts: ✗ — still carried by nobody, and said so.
 
-Depends on: nothing. **This one may close as "the bound is the answer"**, which is a
-legitimate ending.
+**How it closes.** Not "the bound is the answer" and not "the bound is replaced":
+
+- Bierson's bound stays the **general case**, validated over 123–2326 km diameter; Neumann is
+  one body at one size (252 km) and cannot replace a general bound.
+- Neumann & Kruse enter as the **branch** for a tidally heated, differentiating body, grade
+  analog — **reached and specified, not wired.** The relation is a creep law integrated over
+  a thermal history (porosity as a function of time, stress, grain size, water and
+  temperature), and this recipe integrates hydrostatics, not time. Wiring it means a thermal
+  evolution the recipe does not have; the specification (which creep laws, which table) is
+  written so that whoever brings the history finds the branch ready. Consumers, when it is
+  wired: the icy anchors that are heated and differentiating — Enceladus first (the paper's
+  own body; on the icy roster, solved today with no porosity declared), Europa, and the roster's
+  tidally heated moons that declare `tidal_heating`.
+- Malamud & Prialnik 2015 (2015Icar..246...21M, on the request list from C7) serves this item
+  too: its abstract carries compaction's gravitational potential energy and serpentinisation
+  heat as heat sources — two more of the five.
+
+**The discriminator it hands C10, kept on its own layer.** "No porosity is retained for an
+antigorite rheology, implying that the core of Enceladus is not dominated by this mineral."
+Vance+ 2018 gave two routes to Enceladus's ~2700 kg/m³ — hydrous rock, or anhydrous rock plus
+pores — and density alone cannot tell them apart; retained porosity can, because antigorite
+is weak and creep closes its pores. **That is a rheology statement, not a density
+statement**: Hilairet's antigorite ρ₀ still stands and still lands on Vance's target. What
+Neumann adds is that a body *made* of it would not keep its pores. The two live on different
+layers; a later session must not read this as a density refutation.
 
 ### C10 — Lighter rock
 
