@@ -46,7 +46,8 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
-`tidal_heating` [—] · `envelope_z` [—] · `potential_temperature` [K]
+`tidal_heating` [—] · `envelope_z` [—] · `potential_temperature` [K] ·
+`boundary_temperature_jump` [K] · `mantle_rock_fraction` [—]
 **갈리는 축** — `composition` 이 고르는 물질 스택, 그리고 각 층 경계에서 도달하는 압력.
 거기 근거 있는 상(phase)이 존재하는지를 그 압력이 정합니다. 레짐과 수치 조건은
 [유효 영역](#유효-영역)에 있습니다.
@@ -863,13 +864,18 @@ KBO 표는 `python3 engine/test_porosity.py --kbo` 가 다시 만듭니다.
 얼음거대행성은 `python3 engine/test_ice_giant.py --table` 이 굳힌 앵커에서 냅니다
 (`--refresh` 가 다시 계산합니다).
 
-| 천체 | M (M⊕) | 1-bar 온도 | R 도출 | R 평균 (IAU) | ΔR | C/MR² | P_c (GPa) | 이전 |
-|---|---|---|---|---|---|---|---|---|
-| Jupiter | 317.8 | 165 K | 69333 km | 69911 km | **−0.83 %** | 0.2774 | 3453 | +0.6 % |
-| Saturn, Z = 0 | 95.2 | 135 K | 62344 km | 58232 km | **+7.06 %** | 0.2710 | 481 | +20.7 % |
-| Uranus | 14.5 | 76 K | 4.199 R⊕ | 3.981 R⊕ | **+5.48 %** | 0.1741 | 1220 | +23.8 % |
-| Neptune | 17.1 | 72 K | 4.210 R⊕ | 3.865 R⊕ | **+8.94 %** | 0.1799 | 1533 | +29.2 % |
-| Alpha Centauri A b | 120.0 | 165 K (선언) | 59962 km | – | – | 0.2875 | 790 | – |
+| 천체 | M (M⊕) | 1-bar 온도 | R 도출 | R 평균 (IAU) | ΔR | C/MR² | T_c (K) | P_c (GPa) | 이전 |
+|---|---|---|---|---|---|---|---|---|---|
+| Jupiter | 317.8 | 165 K | 69333 km | 69911 km | **−0.83 %** | 0.2774 | 14314 | 3453 | +0.6 % |
+| Saturn, Z = 0 | 95.2 | 135 K | 62344 km | 58232 km | **+7.06 %** | 0.2710 | 6930 | 481 | +20.7 % |
+| Uranus | 14.5 | 76 K | 4.199 R⊕ | 3.981 R⊕ | **+5.48 %** | 0.1741 | 6160 | 1220 | +23.8 % |
+| Neptune | 17.1 | 72 K | 4.210 R⊕ | 3.865 R⊕ | **+8.94 %** | 0.1799 | 6296 | 1533 | +29.2 % |
+| Alpha Centauri A b | 120.0 | 165 K (선언) | 64934 km | – | – | 0.2697 | 8930 | 659 | – |
+
+T_c 열은 2026-08-30 에 들어왔습니다(C5). 해왕성의 중심온도가 `engine/ice_giant_anchor.json`
+에만 살아 있어서 코어 리스트를 처음 쓸 때 사라졌던 수입니다. 거대행성 행은
+`python3 engine/test_giant.py --table` 이, 얼음거대행성 행은 `test_ice_giant.py --table` 이
+다시 냅니다.
 
 **목성이 조금 나빠졌고, 그게 후퇴가 아니라 증거입니다.** 예전 +0.6 % 는 목성에 맞춘 상수가
 낸 값이고, −0.83 % 는 발표된 혼합이 같은 행성에 대해 조정할 것 없이 내놓은 값입니다.
@@ -1026,6 +1032,8 @@ Z 가 같은 두 거대행성이 같은 반지름을 받았습니다. 표는 질
 | 얼음 자이언트 | `body_class` 가 `ice_giant`, 얼음분율과 선언된 1-bar 온도가 있음 | **적분한다.** 암석과 H/He 외피 사이의 얼음 맨틀이 `h2o_hot` (Mazevet+ 2019) 를 쓴다. 천왕성이 **+5.48 %**, 중심온도 6,160 K 로 Scheibe+ 2019 의 5,700 K 대비, 해왕성이 **+8.94 %** (6,296 K). 외피 표가 들어오기 전에는 +24 % 와 +29 % 였다 | analog |
 | **얼음 재료를 클래스가 아니라 (P, T) 가 고른다** | 2.3 GPa 위의 물과 선언된 온도가 있는 모든 천체 | 얼음층의 재료는 걸음마다 국소 상태를 발표된 두 선에 대서 정한다 — 20.6 GPa 까지는 IAPWS 의 녹는곡선, 그 위는 Reinhardt+ 2022 의 액체선(52.4 GPa 까지)과 VII′–VII″ 선(70 GPa 까지). 해왕성의 외피 바닥은 수렴점에서 39 GPa · 2,555 K 로 **액체선보다 999 K 위** 라 이유가 있는 유체다. "하한보다 3 K 아래인 1797 K" 는 시험 경로였고 수렴점은 거기 앉은 적이 없다. `body_class` 는 이제 재료를 안 고르고, 얼음거대행성에 온도 선언과 얼음분율을 요구할 뿐이다. 선은 시뮬레이션이라 등급은 analog 이고, 70 GPa 위에는 어느 선도 안 닿는다 | analog |
 | **온도를 선언하지 않은 얼음 자이언트** | `body_class` 가 `ice_giant`, `potential_temperature` 미선언 | **거절한다.** 뜨거운 물 적합은 P(ρ, T) 가 통째로 하나라 온도가 보정이 아니라 인자다. 같은 압력에서 2000 K 와 5700 K 가 30 GPa 에서 밀도로 14 % 차이다 | — |
+| **열경계층** | 얼음 맨틀·기체 외피·선언된 1-bar 온도가 있는 천체에 `boundary_temperature_jump` > 0 | **적분한다.** 맨틀/외피 경계에서 선언된 만큼 안쪽이 더 뜨겁다 (Nettelmann+ 2016 의 안정 성층 TBL — 그들의 U15-II 가 2500 K, U15-III 가 4700 K, 0.1 Mbar 근처. 이 레시피의 경계는 조성이 놓는 자리, 앵커에서는 30 ~ 40 GPa). 선언이다 — 층의 안정성과 폭은 열 이력이다. 더 뜨거운 내부는 덜 조밀하므로 이 점프는 단열 모형이 이미 크게 내는 행성을 **더 키운다**. 혼자서는 아무것도 닫지 않는다 | analog |
+| **얼음 맨틀의 암석** | 선언된 온도와 함께 `mantle_rock_fraction` > 0 | **적분한다.** 바다 표의 2.3 GPa 위 모든 물 상에 규산염을 부피 가법으로 섞고 ∇_ad 는 c_P 가중이다 (이를 위해 뜨거운 물 적합이 자기 P·U 에서 c_P 와 ∇_ad 를 갖게 됐다). 선언이다 — 얼음:암석 비는 형성이고, Nettelmann+ 2016 은 암석과 얼음의 혼합 거동이 "not well-understood" 라고 적는다. 더 조밀하므로 행성을 **줄인다** | analog |
 | **적합 밖의 뜨거운 물** | 2.3 GPa 위에서 1000 K 아래의 액체(그 아래 압력에서는 500 K 위), 또는 50 000 K 위의 물 | 양쪽 다 **이름을 대며 거절한다.** 바닥은 Mazevet+ 2019 §3.1 이 ρ ≳ 1 g/cc 에 대해 적은 "10³ K ≲ T" 이고, 그 아래의 액체는 이 저장소에 상태방정식이 없다 — 선반은 SeaFreeze `water2` (Brown 2018). 유체가 그 위에서 열리므로 온도가 막은 것으로 던진다. 위는 논문의 50 000 K 다 | — |
 | 서브넵튠 | `body_class` 가 `sub_neptune`, 가스질량분율과 1 bar 온도가 선언됨 | **적분한다.** 철 핵·암석·H/He 외피를 거대행성과 같은 적분기로 푼다. 가스질량분율은 일곱 번째 선언이고(나이와 조사량이 정하며 여기에 진화가 없다) 등급을 내린다. GJ 1214 b 는 H/He 2 % 에 1 bar 300 K 로 반지름에 닿고, Valencia+ 2013 의 < 7 % 안이다 | analog |
 | **질량이 묶을 수 있는 것보다 뜨거운 외피** | 1 bar 단열선이 천체에 비해 너무 뜨거운 H/He 외피 | **거절한다.** 묶이는 가장 뜨거운 해와, 그 위로는 1 bar 준위에 닿지 못하는 온도를 함께 든다. 1 bar 에서 출발한 단열선이 외피 바닥을 핵이 붙들 수 있는 것보다 뜨겁게 두는 것이고, 복사층이 깊은 단열선을 식히는데 이 레시피에 그 층이 없다 | — |
@@ -1465,8 +1473,31 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   그 귀속에만 인용합니다.
 - **Helled, R., Nettelmann, N. & Guillot, T. 2020**, Space Sci. Rev. 216, 38
   ([`2020SSRv..216...38H`](https://ui.adsabs.harvard.edu/abs/2020SSRv..216...38H),
-  [1909.04891](https://arxiv.org/abs/1909.04891)). 천왕성·해왕성 리뷰. 잔차 뒤의 열린 질문으로
-  비단열·비균질 내부를 꼽습니다. *오픈 액세스*.
+  [1909.04891](https://arxiv.org/abs/1909.04891)). 천왕성·해왕성 리뷰. "even a very small (in
+  mass) H-He atmosphere can imply high interior temperatures, if an adiabatic temperature
+  profile is assumed" — 중심온도 초과를 단열 외피의 서명으로 이름 댄 문장 — 과, 층 전이가
+  날카로운지 완만한지는 열린 질문(그들의 Fig. 4). *오픈 액세스*, 본문이 캐시에 있습니다(그
+  문장은 HTML 에 있고 마크다운 추출이 빠뜨렸습니다).
+- **Helled, R. & Stevenson, D. 2017**, ApJ 840, L4
+  ([`2017ApJ...840L...4H`](https://ui.adsabs.harvard.edu/abs/2017ApJ...840L...4H),
+  [1704.01299](https://arxiv.org/abs/1704.01299)). 희석된 핵의 닫힌 형태
+  Z(m) = (2a/√π)(1 − Z_e) exp(−a²m²/m_c²) + Z_e — 목성 중원소 분포의 옮겨 적을 수 있는 모양.
+  닿았고 구현하지 않았습니다(소비처 없음). *오픈 액세스*.
+- **Howard, S., Guillot, T. & Bazot, M. 2023**, A&A 672, A33
+  ([`2023A&A...672A..33H`](https://ui.adsabs.harvard.edu/abs/2023A&A...672A..33H),
+  [2302.09082](https://arxiv.org/abs/2302.09082)). Juno 로 묶은 희석 핵 목성 모형, 두 번째
+  경로. 닿았고 구현하지 않았습니다. *오픈 액세스*.
+- **Debras, F. & Chabrier, G. 2019**, ApJ 872, 100
+  ([`2019ApJ...872..100D`](https://ui.adsabs.harvard.edu/abs/2019ApJ...872..100D),
+  [1901.05697](https://arxiv.org/abs/1901.05697)). §4.1 "Inward decreasing abundance of heavy
+  elements in some part of the outer envelope" — 중원소 프로파일은 단조가 아니고 구조는 네
+  구역이 필요하다는 것. *오픈 액세스*, 본문이 캐시에 있습니다.
+- **Kimura, T. 2023**, J. Chem. Phys. 158, 134504
+  ([`2023JChPh.158m4504K`](https://ui.adsabs.harvard.edu/abs/2023JChPh.158m4504K),
+  doi [10.1063/5.0137943](https://doi.org/10.1063/5.0137943)). *Revisiting the melting curve of
+  H₂O by Brillouin spectroscopy to 54 GPa* — Reinhardt 구간 전체를 덮는 측정이고, 도착하면
+  20.6 GPa 이음매의 심판입니다. *유료*, 오너 요청 목록에. bibcode 는 제목까지 대조했습니다(이
+  세션과 감사 세션, 2026-08-30).
 - **Bethkenhagen, M. et al. 2017**, ApJ 848, 67
   ([`2017ApJ...848...67B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...67B), arXiv
   **[1709.04133](https://arxiv.org/abs/1709.04133)**). **캐시**

@@ -290,7 +290,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
               envelope_z: float = 0.0, differentiated: bool = True,
-              t_center: float = 0.0, t_pot: float = 0.0) -> Structure:
+              t_center: float = 0.0, t_pot: float = 0.0,
+              boundary_temperature_jump: float = 0.0,
+              mantle_rock_fraction: float = 0.0) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -343,6 +345,38 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     r_ocean_base = None
     r_ocean_top = None
     ice_x_stepped = False  # 사다리의 얼음 X 를 실제로 밟았는가. 압력만으로는 모른다 — 그 자리가 유체일 수 있다
+    # ── 두 선언 (C5) ──
+    # 얼음 맨틀에 섞인 암석. 물의 어느 상이든(사다리·바다·뜨거운 물) 같은 분율의 규산염과 부피
+    # 가법으로 섞고, ∇_ad 는 c_P 가중이다 (Mixture). 상마다 혼합 객체를 하나씩 만들어 둔다.
+    rock_mix: dict[str, object] = {}
+
+    def with_rock(water_mat):
+        if mantle_rock_fraction <= 0.0:
+            return water_mat
+        m = rock_mix.get(water_mat.name)
+        if m is None:
+            m = mix(f"{water_mat.name}_rock", "얼음 맨틀 + 암석",
+                    (water_mat, 1.0 - mantle_rock_fraction),
+                    (MATERIALS["silicate"], mantle_rock_fraction))
+            rock_mix[water_mat.name] = m
+        return m
+
+    def apply_jump(prev_layer: int) -> None:
+        """얼음 맨틀에서 기체 외피로 넘어가는 자리의 열경계층. 안쪽이 선언한 만큼 더 뜨겁다 —
+        바깥으로 적분하므로 여기서 온도가 그만큼 **떨어진다** (Nettelmann+ 2016 의 TBL). 떨어진
+        온도가 0 아래면 이 시험 중심 온도로는 경계층 위가 존재하지 않으므로 온도가 막은 것으로 던진다."""
+        nonlocal t
+        if boundary_temperature_jump <= 0.0 or t <= 0.0:
+            return
+        if (stack[prev_layer][1].name == "h2o"
+                and getattr(stack[layer][1], "p_floor", 0.0)):
+            if t - boundary_temperature_jump <= 0.0:
+                raise PhaseGap(
+                    "h_he", p,
+                    f"얼음 맨틀 꼭대기 {t:.0f} K 에서 선언된 열경계층 {boundary_temperature_jump:.0f} K 를 "
+                    "빼면 외피가 0 K 아래다 — 이 중심 온도로는 경계층 위의 외피가 없다.",
+                    t, too_cold=True)
+            t -= boundary_temperature_jump
 
     def liquid_material(pp: float, tt: float):
         """액체인 자리의 재료. 2.3 GPa 까지는 바다(SeaFreeze water1), 그 위는 뜨거운 물(Mazevet+ 2019)
@@ -435,6 +469,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         mat = material_for(m)
         if layer != prev_layer:
             note_switch(prev_layer)
+            apply_jump(prev_layer)
             forced_liquid = None
         in_column = OCEAN_LAYER and t > 0.0 and mat.name == "h2o"
         liquid = False
@@ -449,6 +484,11 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             ice_x_stepped = True       # 등온 경로도 포함한다 — 사다리를 그 압력에서 실제로 밟았다
         if mat.name not in phases:
             phases.append(mat.name)
+        if in_column and p > water_table.P_MAX_PA:
+            # 물의 상은 위에서 정해졌다. 암석은 그 위에 섞인다 — 단 **깊은 맨틀** 에만 (Nettelmann 의
+            # inner envelope). 바다 표의 2.3 GPa 아래는 바다·얕은 얼음이고, 거기 암석을 섞는 것은 물리도
+            # 아니거니와 바다 표가 c_P 를 안 들고 있어 혼합의 ∇_ad 를 가중할 수도 없다.
+            mat = with_rock(mat)
 
         # **기체에는 P = 0 인 표면이 없다.** 밀도가 압력과 함께 0 으로 가므로 적분이
         # 어디서 끝나는지를 재료가 말해야 하고, 그 자리가 발표된 반지름이 재어진
@@ -656,6 +696,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             # 문턱에 맡기면 같은 계단이 한 걸음 뒤로 옮겨갈 뿐이다.
             layer += 1
             note_switch(layer - 1)
+            apply_jump(layer - 1)
 
     if steps >= MAX_STEPS and p > p_stop:
         if m > mass_kg * (1.0 + SHOOT_TOL):
@@ -777,7 +818,9 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     core_material: str, phi0: float = 0.0,
                     p_cap: float | None = None, gmf: float = 0.0,
                     envelope_z: float = 0.0, differentiated: bool = True,
-                    t_center: float = 0.0, t_pot: float = 0.0) -> tuple[Structure, bool]:
+                    t_center: float = 0.0, t_pot: float = 0.0,
+                    boundary_temperature_jump: float = 0.0,
+                    mantle_rock_fraction: float = 0.0) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -804,7 +847,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
 
     def at(p: float):
         return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                         envelope_z, differentiated, t_center, t_pot)
+                         envelope_z, differentiated, t_center, t_pot,
+                         boundary_temperature_jump, mantle_rock_fraction)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -924,7 +968,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, differentiated, t_center, t_pot)
+                        envelope_z, differentiated, t_center, t_pot,
+                        boundary_temperature_jump, mantle_rock_fraction)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -940,7 +985,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         # 하나다. 예전 경로를 그대로 둬서 앵커가 비트까지 같게 유지한다.
         x1 = math.log(max(lo, hi * 1e-3))
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                        gmf, envelope_z, differentiated, t_center, t_pot)
+                        gmf, envelope_z, differentiated, t_center, t_pot,
+                        boundary_temperature_jump, mantle_rock_fraction)
         y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
@@ -966,7 +1012,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         x0, y0 = x1, y1
         x1 = x2
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated, t_center, t_pot)
+                    gmf, envelope_z, differentiated, t_center, t_pot,
+                    boundary_temperature_jump, mantle_rock_fraction)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -999,7 +1046,9 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
           p_cap: float | None = None, gmf: float = 0.0,
           envelope_z: float = 0.0, differentiated: bool = True,
-          potential_temperature: float | None = None) -> tuple[Structure, bool]:
+          potential_temperature: float | None = None,
+          boundary_temperature_jump: float = 0.0,
+          mantle_rock_fraction: float = 0.0) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1012,7 +1061,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     밀도가 온도에 되먹임하는 몫만 반복이 흡수한다."""
     args = (mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z,
             differentiated)
-    kw = {}
+    kw = {"boundary_temperature_jump": boundary_temperature_jump,
+          "mantle_rock_fraction": mantle_rock_fraction}
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -1409,7 +1459,9 @@ def solve(mass_earth: float,
           porosity_cap: float | None = None,
           tidal_heating: bool = False,
           envelope_z: float = 0.0,
-          potential_temperature: float | None = None) -> Result:
+          potential_temperature: float | None = None,
+          boundary_temperature_jump: float = 0.0,
+          mantle_rock_fraction: float = 0.0) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -1438,7 +1490,9 @@ def solve(mass_earth: float,
               "body_class": body_class, "initial_porosity": initial_porosity,
               "porosity_cap": porosity_cap, "tidal_heating": tidal_heating,
               "envelope_z": envelope_z,
-              "potential_temperature": potential_temperature}
+              "potential_temperature": potential_temperature,
+              "boundary_temperature_jump": boundary_temperature_jump,
+              "mantle_rock_fraction": mantle_rock_fraction}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -1531,6 +1585,32 @@ def solve(mass_earth: float,
             "선언하면 풀린다. 0 이면 암석 행성이고 body_class 를 rocky 로 두는 쪽이다.",
             inputs=inputs, refs=REFS)
 
+    # ── 두 선언 (C5): 얼음 맨틀 위 열경계층의 온도 점프, 얼음 맨틀의 암석 분율 ──
+    # 둘 다 형성과 열 이력이 정하고 이 레시피가 도출하지 않는다 — gas_mass_fraction 과 같은 종류.
+    if boundary_temperature_jump < 0.0 or not 0.0 <= mantle_rock_fraction < 1.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"선언이 범위 밖이다 — 열경계층 점프 {boundary_temperature_jump} K (0 이상), 맨틀 암석 "
+            f"분율 {mantle_rock_fraction} ([0, 1)).",
+            inputs=inputs, refs=REFS)
+    if (boundary_temperature_jump > 0.0 or mantle_rock_fraction > 0.0) and imf <= 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "열경계층 점프와 맨틀 암석 분율은 얼음 맨틀의 선언인데 얼음질량분율이 0 이다.",
+            inputs=inputs, refs=REFS)
+    if boundary_temperature_jump > 0.0 and (gmf <= 0.0 or not potential_temperature):
+        return out_of_domain(
+            RECIPE, VERSION,
+            "열경계층 점프는 얼음 맨틀과 기체 외피 사이의 온도 차다 — 외피(gas_mass_fraction)와 "
+            "선언된 온도가 있어야 그 자리가 있다.",
+            inputs=inputs, refs=REFS)
+    if mantle_rock_fraction > 0.0 and not potential_temperature:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "맨틀 암석 분율은 온도가 흐르는 얼음 맨틀의 선언이다 — 혼합의 단열 기울기가 c_P 가중이라 "
+            "등온 경로에는 정의되지 않는다. 포텐셜 온도를 선언하면 풀린다.",
+            inputs=inputs, refs=REFS)
+
     # 얼음층의 재료는 여기서 고르지 않는다 — 적분기가 걸음마다 국소 (P, T) 를 녹는곡선에 댄다.
     # 얼음거대행성에 남은 클래스 조건은 둘뿐이다: 온도가 선언돼야 하고, 얼음이 있어야 한다.
     ice_giant = body_class in ICE_GIANT_CLASSES
@@ -1553,7 +1633,8 @@ def solve(mass_earth: float,
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
-                              envelope_z, differentiated, potential_temperature)
+                              envelope_z, differentiated, potential_temperature,
+                              boundary_temperature_jump, mantle_rock_fraction)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -1632,6 +1713,20 @@ def solve(mass_earth: float,
             f"{potential_temperature - EARTH_POTENTIAL_T:+.0f} K 떨어져 있고, 그만큼 열압력이 "
             "밀도를 움직인다. 단열선은 대류하는 층에만 맞고, 조석가열과 맨틀 안의 열경계층은 "
             "프로파일을 초단열로 만든다 (Unterborn+ 2019 §3.2). 등급을 analog 로 내린다.")
+    if boundary_temperature_jump > 0.0:
+        notes.append(
+            f"**열경계층 {boundary_temperature_jump:.0f} K 는 선언이다.** 얼음 맨틀 꼭대기와 기체 외피 "
+            "바닥 사이의 온도 차이고, 그 층이 성층으로 안정한가와 그 폭은 열 이력이 정하므로 이 "
+            "레시피가 도출하지 않는다 (Nettelmann+ 2016 의 TBL — 그들의 U15-II 가 2500 K, U15-III 가 "
+            "4700 K, 경계는 0.1 Mbar 근처). 안쪽 전체가 그만큼 더 뜨겁고 같은 압력에서 덜 조밀하다. "
+            "등급을 analog 로 내린다.")
+    if mantle_rock_fraction > 0.0:
+        notes.append(
+            f"**얼음 맨틀의 암석 분율 {mantle_rock_fraction:.2f} 은 선언이다.** 얼음:암석 비는 형성이 정하고 "
+            "관측이 묶지 않으므로 이 레시피가 도출하지 않는다 (Nettelmann+ 2016 §6 — 따뜻한 내부 맨틀은 "
+            "중력장을 맞추려면 암석이 필요하다; 물·암석 혼합의 거동은 그들도 '잘 이해되지 않았다' 고 적는다). "
+            "규산염을 부피 가법으로 섞고 ∇_ad 는 c_P 가중이다 (AVL 의 폭은 얼음 혼합에서 4 % 상한, "
+            "물–암석에 대한 발표값은 없다). 등급을 analog 로 내린다.")
     # 얼음 기둥이 얼음 X 까지 내려갔는가. 그 상은 이 사다리에서 **읽은 게 아니라 적합한**
     # 유일한 얼음이고, 원 표현을 1.475 % 안에서만 재현한다 — 다른 얼음 상들의 0.006~
     # 0.118 % 와 자릿수가 다르다. 게다가 그 표현 자체가 제일원리 계산이지 측정이 아니다.
@@ -1755,6 +1850,7 @@ def solve(mass_earth: float,
         # 를 말한다. φ₀ 도 Z 도 강착과 진화가 정하는 값이라 여기서 도출되지 않고,
         # 미분화는 측정 앵커가 없다.
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
+                            or boundary_temperature_jump > 0 or mantle_rock_fraction > 0
                             or not differentiated or giant_declared
                             or silicate_extrapolated or thermal_moves
                             or thermal_unchecked or ice_x_reached)

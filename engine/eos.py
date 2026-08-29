@@ -684,6 +684,46 @@ class HotWater:
             return 0.0
         return water_hot.gruneisen(rho, t)
 
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """정압비열 c_P = c_V (1 + αγT) [J/kg/K]. Material 과 같은 항등식이고, c_V 와 (∂P/∂T)_ρ 는
+        water_hot 의 P(ρ,T)·U(ρ,T) 유한차분이다. **혼합(Mixture)이 ∇_ad 를 c_P 로 가중할 때만 쓴다**
+        — 적분기의 단열 기울기는 예전 그대로 gruneisen 과 수치 K_S 로 조립하므로(dtdp_adiabat 을
+        일부러 두지 않는다), 이 함수가 생겨도 순수 물 경로는 비트까지 같다."""
+        c_v, dpdt, k_t = self._thermal(p, t)
+        if c_v <= 0.0:
+            return 0.0
+        if k_t <= 0.0:
+            return c_v
+        rho = water_hot.density(p, t)
+        gamma = dpdt / (rho * c_v)
+        alpha = dpdt / k_t
+        return c_v * (1.0 + alpha * gamma * t)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """(∂lnT/∂lnP)_S = γ P / K_S, K_S = K_T (1 + αγT). c_p 와 같은 유한차분에서 닫힌다."""
+        if t <= 0.0 or p <= 0.0:
+            return 0.0
+        c_v, dpdt, k_t = self._thermal(p, t)
+        if c_v <= 0.0 or k_t <= 0.0:
+            return 0.0
+        rho = water_hot.density(p, t)
+        gamma = dpdt / (rho * c_v)
+        k_s = k_t + dpdt * gamma * t
+        return 0.0 if k_s <= 0.0 else gamma * p / k_s
+
+    def _thermal(self, p: float, t: float) -> tuple[float, float, float]:
+        """(c_V, (∂P/∂T)_ρ, K_T) 를 water_hot 의 P·U 중앙차분으로. h = 1 % (gruneisen 과 같은 걸음)."""
+        if t <= 0.0:
+            return 0.0, 0.0, 0.0
+        rho = water_hot.density(p, t)
+        h = 0.01 * t
+        dpdt = (water_hot.pressure(rho, t + h) - water_hot.pressure(rho, t - h)) / (2.0 * h)
+        c_v = (water_hot.internal_energy(rho, t + h)
+               - water_hot.internal_energy(rho, t - h)) / (2.0 * h)
+        dr = 0.01 * rho
+        k_t = rho * (water_hot.pressure(rho + dr, t) - water_hot.pressure(rho - dr, t)) / (2.0 * dr)
+        return c_v, dpdt, k_t
+
     def phase_at(self, p: float):
         """단열 기울기가 (∂P/∂T)_V 를 묻는다. 상이 아니라 닫힘 하나로 답한다."""
         return _HotWaterSlope(p)

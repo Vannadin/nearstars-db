@@ -103,10 +103,13 @@ radius, Neptune −2.8 × 10⁻⁴ (6 308 → 6 296 K at the centre), both repor
 `engine/melting-curve-context-notes.md`. Above 70 GPa no line reaches and none is invented:
 the verdict says "fluid or superionic" with Millot+ 2018's one point.
 
-**The seam is itself under review.** Kimura+ 2023 (Brillouin — a measurement, on the
-owner's paper-request list) becomes the arbiter of the disputed band when it arrives: its
-product is not only a possible grade upgrade but a **re-verdict of the band
-(16.5–20.6 GPa / 715–902 K) and a possible narrowing of the seam's width.**
+**The seam is itself under review.** Kimura 2023
+([`2023JChPh.158m4504K`](https://ui.adsabs.harvard.edu/abs/2023JChPh.158m4504K), *Revisiting
+the melting curve of H₂O by Brillouin spectroscopy to 54 GPa* — a measurement across the whole
+Reinhardt range, on the owner's paper-request list; bibcode checked by title, this session and
+the audit session) becomes the arbiter of the disputed band when it arrives: its product is
+not only a possible grade upgrade but a **re-verdict of the band (16.5–20.6 GPa / 715–902 K)
+and a possible narrowing of the seam's width.**
 
 ### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt**
 
@@ -151,30 +154,60 @@ own open question (Helled+ 2020). **C4 is not a candidate for that residual in e
 direction**, so closing it unbuilt costs the recipe nothing it was counting on.
 `engine/ammonia-methane-context-notes.md` has the search.
 
-### C5 — Where the giants' leftovers belong
+### C5 — Where the giants' leftovers belong — **closed 2026-08-30**
 
-Two residuals, one question: after the model is run, some radius and some heat are left
-over, and **nothing in this recipe owns them.**
+Two residuals; both now have an owner, and one has two declarations it can be read against.
 
-**Jupiter, and the diluted core.** The mixture rule carries one homogeneous Z through the
-envelope. Post-Juno models favour heavy elements graded inward instead, and the residual
-after the homogeneous rule is what that grading would explain. An earlier attempt to place Z
-as a compact core failed in the wrong direction and ran into the silicate ceiling; the domain
-row records it.
+**Jupiter, and the diluted core — reached, no consumer.** The mixture rule carries one
+homogeneous Z through the envelope. Post-Juno structure is not "graded inward": Debras &
+Chabrier 2019 §4.1 (2019ApJ...872..100D, text in the cache) is titled *Inward decreasing
+abundance of heavy elements in some part of the outer envelope* — locally ∇Z > 0 — and the
+structure needs four regions: an outer convective envelope, a composition-and-entropy
+gradient, an inner convective envelope and an extended dilute core. Two transcribable forms
+exist: Helled & Stevenson 2017's closed Z(m) (2017ApJ...840L...4H) and Howard, Guillot &
+Bazot 2023's Juno-constrained models (2023A&A...672A..33H). Not implemented: Alpha Centauri
+A b's radius is a declaration, so nothing in the roster would read a graded-Z envelope
+today. The earlier compact-core attempt and its silicate ceiling stay in the domain row.
 
-**The ice giants, and a residual that has been ownerless three times.** Uranus comes out
-**+5.47 %** with a central temperature of 6 159 K against Scheibe+ 2019's 5 700 K — an 8 %
-overshoot in the same direction — and Neptune **+8.97 %**. The ice-giant notes opened the
-question *"ice or envelope?"* and left it open; the review of that work marked it ownerless;
-this list omitted it. It is written here so that stops. C4 cannot absorb it — an ammonia and
-methane mixture is a percent-scale correction and this is nine — and the diluted core above
-is a Jupiter frame.
+**The ice giants — the residual has an owner, and the question was wrong.** Helled,
+Nettelmann & Guillot 2020 (2020SSRv..216...38H, text in the cache): "even a very small (in
+mass) H-He atmosphere can imply high interior temperatures, if an adiabatic temperature
+profile is assumed" — the +8 % / +14.7 % central-temperature excess is the signature of an
+adiabatic H/He envelope, not a missing material, and whether layer transitions are sharp or
+gradual is open (their Fig. 4). Nettelmann, Wang & Fortney 2016 (2016Icar..275..107N, text
+in the cache) put the mechanism at the **boundary**: a stably stratified thermal boundary
+layer at the H/He–ice/rock transition near 0.1 Mbar (their Table 1), whose class II and III
+models "yield by a factor of up to about 2 to 3 warmer core temperatures than the class I
+models. As a result, the presence of rocks is required in the inner mantle in order to
+match the gravity data" (§7); their U15-II has ΔT = 2500 K and U15-III 4700 K (Fig. 9),
+≈ 5000 K (≈ 9000 K) higher central temperatures (§6), and their favoured models carry 1× solar
+I:R with "the mixing behavior of rocks with … ices … not well-understood". Their negative
+result is narrower than it was quoted: the I:R ratio "does not provide a solution to the
+**low luminosity**" (§3) — a cooling-time statement, not a gravity-fit one. C4 is not a
+candidate for this residual either way.
 
-Needs: the residual attributed — a graded-Z envelope for the one, ice-versus-envelope
-resolved for the other — or a recorded finding that neither can be attributed with what this
-recipe carries.
+**Two declarations, integrated without tuning.** `boundary_temperature_jump` (the TBL step at
+this recipe's mantle/envelope boundary, 30–40 GPa for the anchors) and
+`mantle_rock_fraction` (silicate mixed into the water phases above 2.3 GPa). Published values
+for the first (2500 K, 4700 K); no published mass fraction for the second, so a declared grid:
 
-Depends on: nothing, but only worth reading against C6.
+| declaration | Uranus ΔR (T_c) | Neptune ΔR (T_c) |
+|---|---|---|
+| none (anchor) | +5.48 % (6 160 K) | +8.94 % (6 296 K) |
+| ΔT 2500 K | +7.99 % (11 493 K) | +11.50 % (11 886 K) |
+| ΔT 4700 K | +10.04 % (15 661 K) | +13.58 % (16 241 K) |
+| rock 0.10 | +3.64 % (6 275 K) | +7.02 % (6 401 K) |
+| rock 0.20 | +1.83 % (6 369 K) | +5.13 % (6 486 K) |
+| ΔT 2500 K + rock 0.10 | +5.61 % (11 630 K) | +9.00 % (11 994 K) |
+| ΔT 2500 K + rock 0.20 | +3.26 % (11 718 K) | +6.56 % (12 053 K) |
+
+Read, not fitted: the boundary layer **widens** the radius residual (+2.5 %p per 2500 K) and
+raises the centre by ≈ 5 300 K per 2500 K — the same ≈ 5 000 K Nettelmann report for class II;
+rock **narrows** it by ≈ 1.8 %p per 0.10. Neither published value closes either planet on its
+own; the two together are the chain the paper describes (warmer → less dense → rock), and the
+rock fraction that would close it is not a number this recipe has a source for, so it is not
+declared. Anchors keep both at 0 and are bit-identical. `engine/giant-residual-context-notes.md`
+has the runs and the provenance of every number.
 
 ### C6 — Material ceilings
 

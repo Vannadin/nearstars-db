@@ -107,6 +107,11 @@ nodes:
       일곱 번째 **선언** 이다 (ice_allowed · tidal_heating · initial_porosity ·
       envelope_z · potential_temperature · core_cmb_temperature 와 같은 종류):
       나이와 항성 조사량이 정하고 이 레시피에 진화가 없어서 도출하지 않는다.
+      2026-08-30 에 두 선언이 더 들어왔다 (C5) — boundary_temperature_jump (얼음 맨틀
+      꼭대기와 기체 외피 바닥 사이의 열경계층 온도 차, Nettelmann+ 2016) 와
+      mantle_rock_fraction (얼음 맨틀에 섞인 암석의 질량분율). 둘 다 형성과 열 이력이
+      정하고 이 레시피가 도출하지 않으며, 쓰이면 등급이 analog 로 내려간다. 앵커는 둘 다
+      0 으로 두어 움직이지 않는다.
   core_state:
     kind: computed
     recipe: core-state-methodology

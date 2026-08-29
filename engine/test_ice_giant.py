@@ -38,6 +38,7 @@ import time
 from pathlib import Path
 
 import interior
+from eos import PhaseGap
 from interior import EARTH_MASS_KG, EARTH_RADIUS_M, integrate, solve
 
 ANCHOR_FILE = Path(__file__).with_name("ice_giant_anchor.json")
@@ -224,6 +225,43 @@ def _fast(frozen: dict, fails: list[str]) -> None:
         print(f"  [{'FAIL' if moved else 'PASS'}] {name} — 수렴점에서 적분 한 번 {dt:.1f} s: "
               f"{'움직였다: ' + ', '.join(moved) if moved else '반지름·질량·관성모멘트·표면온도 비트까지 같다'}")
     print("  [SKIP] --fast 는 전체 풀이를 돌리지 않는다. 게이트(기본 실행)가 돌린다")
+    _declarations(frozen, fails)
+
+
+def _declarations(frozen: dict, fails: list[str]) -> None:
+    """C5 의 두 선언이 수렴점 적분을 예상한 방향으로 움직이는가 — 그리고 0 이면 안 움직이는가.
+
+    열경계층 점프는 외피 바닥을 그만큼 식히므로 이 시험 중심 온도로는 표의 온도 바닥 아래로
+    떨어져 **온도가 막은 것으로** 던져야 하고(사격이 중심 온도를 올린다), 맨틀 암석은 맨틀을
+    조밀하게 해 같은 중심압에서 겉질량이 모자라야 한다. 풀이는 여기서 안 돌린다 — 그 표는
+    interior-core.md C5 행에 있다."""
+    print("\n선언 둘 (C5) — 수렴점 적분이 예상한 방향으로 움직이는가")
+    rec = frozen["bodies"]["Neptune"]
+    if not rec["applicable"]:
+        return
+    sa = rec["standalone"]
+    _n, m, _r, m_core, m_hhe, t1bar = _body("Neptune")
+    imf, gmf = _fractions(m, m_core, m_hhe)
+    base = _standalone("Neptune", float(sa["p_center_pa"]), float(sa["t_center"]))
+    got = None
+    try:
+        integrate(float(sa["p_center_pa"]), m * EARTH_MASS_KG, 0.0, imf, "fe_prem", gmf=gmf,
+                  t_center=float(sa["t_center"]), t_pot=t1bar, boundary_temperature_jump=2500.0)
+    except PhaseGap as gap:
+        got = gap
+    ok = got is not None and got.too_cold
+    if not ok:
+        fails.append("열경계층 2500 K 가 수렴점에서 온도가 막은 것으로 던지지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 열경계층 2500 K → 외피가 표 바닥 아래로 떨어져 too_cold 로 던진다"
+          + (f" ({got.temperature_k:.0f} K)" if got is not None and got.temperature_k else ""))
+    st = integrate(float(sa["p_center_pa"]), m * EARTH_MASS_KG, 0.0, imf, "fe_prem", gmf=gmf,
+                   t_center=float(sa["t_center"]), t_pot=t1bar, mantle_rock_fraction=0.2)
+    ok = st.mass_kg < base.mass_kg and st.radius_m < base.radius_m
+    if not ok:
+        fails.append(f"맨틀 암석 0.2 가 같은 중심압에서 맨틀을 조밀하게 하지 않는다 — "
+                     f"질량 {st.mass_kg / base.mass_kg:.4f}, 반지름 {st.radius_m / base.radius_m:.4f}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 맨틀 암석 0.2 → 같은 중심압에서 겉질량 "
+          f"{st.mass_kg / base.mass_kg:.3f} 배, 반지름 {st.radius_m / base.radius_m:.3f} 배")
 
 
 def _live(frozen: dict, fails: list[str]) -> None:

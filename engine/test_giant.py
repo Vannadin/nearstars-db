@@ -122,24 +122,28 @@ def _integrator_km(mass_earth: float, t_pot: float = GIANT_T_POT) -> float:
 
 def table() -> None:
     """문서 §Validation 의 거대행성 표를 다시 낸다. 손으로 친 표는 어긋난다."""
+    # T_c 열은 2026-08-30 에 들어왔다 (C5). 해왕성의 중심온도가 동결 파일에만 살아서 코어 리스트를 쓸 때
+    # 사라졌던 일이 있다 — 산문이 드는 표에 그 수가 있어야 그 질문이 되풀이되지 않는다.
     print("| body | M (M⊕) | T at 1 bar | R derived | R mean (IAU) | ΔR vs mean | "
-          "R eq 1 bar | C/MR² derived | P_c (GPa) |")
-    print("|---|---|---|---|---|---|---|---|---|")
+          "R eq 1 bar | C/MR² derived | T_c (K) | P_c (GPa) |")
+    print("|---|---|---|---|---|---|---|---|---|---|")
     for name, m, r_mean, r_eq, _z, t1 in PLANETS:
         res = _giant(m, t_pot=t1)
         if not res.applicable:
             print(f"| {name} | {m:.1f} | {t1:.0f} K | declined | {r_mean} | – | "
-                  f"{r_eq} | – | – |")
+                  f"{r_eq} | – | – | – |")
             continue
         rk = _km(res)
         print(f"| {name} | {m:.1f} | {t1:.0f} K | {rk:.0f} km | {r_mean} km | "
               f"{(rk / r_mean - 1) * 100:+.2f} % | {r_eq} km | "
-              f"{res.values['nmoi']:.4f} | {res.values['core_pressure']:.0f} |")
+              f"{res.values['nmoi']:.4f} | {res.values['core_temperature']:.0f} | "
+              f"{res.values['core_pressure']:.0f} |")
     res = _giant(AB_MASS_EARTH)
     rk = _km(res)
     print(f"| Alpha Centauri A b | {AB_MASS_EARTH:.1f} | {GIANT_T_POT:.0f} K (declared) | "
           f"{rk:.0f} km | – | – | {AB_RADIUS_RJ * R_JUP_EQ_KM:.0f} km (declared) | "
-          f"{res.values['nmoi']:.4f} | {res.values['core_pressure']:.0f} |")
+          f"{res.values['nmoi']:.4f} | {res.values['core_temperature']:.0f} | "
+          f"{res.values['core_pressure']:.0f} |")
 
 
 def main() -> int:
