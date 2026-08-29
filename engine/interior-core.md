@@ -103,22 +103,53 @@ radius, Neptune −2.8 × 10⁻⁴ (6 308 → 6 296 K at the centre), both repor
 `engine/melting-curve-context-notes.md`. Above 70 GPa no line reaches and none is invented:
 the verdict says "fluid or superionic" with Millot+ 2018's one point.
 
-### C4 — Ammonia and methane
+**The seam is itself under review.** Kimura+ 2023 (Brillouin — a measurement, on the
+owner's paper-request list) becomes the arbiter of the disputed band when it arrives: its
+product is not only a possible grade upgrade but a **re-verdict of the band
+(16.5–20.6 GPa / 715–902 K) and a possible narrowing of the seam's width.**
+
+### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt**
 
 The ice-giant envelope is water alone, standing in for a water–ammonia–methane mixture. That
 is the field's own convention, but it is a stated substitution and **its price is not
-quantified**. Bethkenhagen+ 2017's 2.1 % is the deviation from *mixing three components that
-you already have*, not the cost of replacing two of them with the third; the distinction was
-corrected once already, in the H/He work, and `eos.py` states it correctly. The number only
-comes into existence when C4's tables do.
+quantified** — not bounded, not estimated. Bethkenhagen+ 2017's 2.1 % is the deviation from
+*mixing three components you already have*, not the cost of replacing two of them with the
+third; `eos.py` states the distinction correctly. The number only comes into existence when
+the tables do, and the tables cannot be reached from here. Three routes, checked on
+2026-08-27 and again on 2026-08-30:
 
-The 2026-08-27 survey found the blocker: of the three, only water has a form that can be
-transcribed; ammonia and methane exist as tables.
+| route | why it fails |
+|---|---|
+| Bethkenhagen+ 2017 (2017ApJ...848...67B, full text in the cache) | describes the grid exactly — 1000 GPa · 20 000 K, thirteen isotherms — and publishes no data-availability statement and no URL |
+| Bethkenhagen+ 2013 (2013JChPh.138w4504B, doi 10.1063/1.4810883), the ammonia source | AIP paywall; 330 GPa · 500–10 000 K, the set 2017 extended |
+| FPEOS, Militzer+ 2021 (2021PhRvE.103a3203M) | distributes tables and code, and carries CH₄ — but **no NH₃**, and its range 10⁴–10⁹ K begins above the ice-giant adiabat (5500–6300 K) |
 
-Needs: their tables located and baked, the way Chabrier's H/He table was in C6's sibling
-work. Or a recorded finding that they are not reachable.
+**An author request is the only remaining route.** Bethkenhagen+ 2013 goes on the owner's
+paper-request list; the 2017 tables would come from the same authors.
 
-Depends on: nothing.
+What can be said about the sign, in three tiers, only the first carrying a number:
+
+- **composition** — direction **+**, it *widens* the residual. The solar-ratio mixture
+  (0.31 : 0.08 : 0.61 CH₄ : NH₃ : H₂O by mass, Bethkenhagen+ 2017 §V) has a mean molecular
+  weight of 17.28 against water's 18.02, so water overestimates the ice density by 4.27 % at
+  equal number density (*derived*); electrons per unit mass agree in direction (H₂O 0.555,
+  NH₃ 0.587, CH₄ 0.623 e/amu, *derived*). Correcting it lowers the density and enlarges a
+  planet the model already makes too large, on a ~1.5 % radius scale (*derived*).
+- **thermal** — mechanism named, **sign ungrounded**. Atoms per unit mass run H₂O 3/18 <
+  NH₃ 4/17 < CH₄ 5/16, so the ideal-gas intuition is a higher heat capacity, a shallower
+  adiabat, a colder and denser interior (Bethkenhagen+ 2017's icy Uranus is cold, T_core ~
+  4000 K), pulling the radius back. Dissociation at high pressure shrinks that difference
+  and with it the sign; no direction is defended.
+- **net** — needs the tables.
+
+Writing "1.5 % worse" would quote the first tier as the third.
+
+C5 was attributed on 2026-08-30: the ice giants' residual belongs to a thermal boundary
+layer at the transition between the ice/rock interior and the H/He envelope and to the
+inner mantle's ice:rock ratio (Nettelmann+ 2016), with non-adiabatic interiors the review's
+own open question (Helled+ 2020). **C4 is not a candidate for that residual in either
+direction**, so closing it unbuilt costs the recipe nothing it was counting on.
+`engine/ammonia-methane-context-notes.md` has the search.
 
 ### C5 — Where the giants' leftovers belong
 

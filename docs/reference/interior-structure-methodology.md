@@ -522,7 +522,14 @@ other way, which brackets the measured radius and puts the error in the envelope
 Uranus's mass in H/He adds 1.84 R⊕ on the n = 1 polytrope where the real envelope adds about
 0.9. That polytrope is calibrated to Jupiter, and this is the same objection the ice-giant
 refusal used to raise before the ices were in. Water alone standing in for all three ices is
-field practice, and its cost is not quantified anywhere cited.
+field practice, and its cost is not quantified anywhere cited; the tables that would quantify
+it are not reachable except by author request (C4, closed unbuilt 2026-08-30 — three routes
+and why each fails are in `engine/interior-core.md`). What can be said is in three tiers:
+the composition term widens the residual (the solar-ratio mixture's mean molecular weight is
+17.28 against water's 18.02, a 4.27 % density overestimate at equal number density,
+*derived*); the thermal term has a mechanism (more atoms per unit mass, a higher heat
+capacity, a colder interior) but no defended sign once dissociation is in; the net needs the
+tables.
 
 ## Porosity: what the pressure has not crushed yet
 
@@ -1594,6 +1601,27 @@ instead of as a class constant.
   `docs/phase3/_papers/0802.1810.md`. The additive volume law in the form this recipe uses
   (their §3.3), its stated exactness in the ideal gas limit and its stated omission of
   interspecies interactions, applied to H/He plus heavy elements up to Z = 50 %.
+- **Bethkenhagen, M., French, M. & Redmer, R. 2013**, J. Chem. Phys. 138, 234504
+  ([`2013JChPh.138w4504B`](https://ui.adsabs.harvard.edu/abs/2013JChPh.138w4504B),
+  doi [10.1063/1.4810883](https://doi.org/10.1063/1.4810883)). The ammonia equation of state
+  Bethkenhagen+ 2017 extend — 330 GPa, 500–10 000 K. *Paywalled*, the route back to C4's tables;
+  on the owner's paper-request list. Verified by bibcode and title.
+- **Militzer, B., González-Cataldo, F., Zhang, S., Driver, K. P. & Soubiran, F. 2021**,
+  Phys. Rev. E 103, 013203
+  ([`2021PhRvE.103a3203M`](https://ui.adsabs.harvard.edu/abs/2021PhRvE.103a3203M),
+  [2012.07093](https://arxiv.org/abs/2012.07093)). The FPEOS database: CH₄ but no NH₃, and
+  10⁴–10⁹ K, above the ice-giant adiabat — checked as a route to C4 and declined for those two
+  reasons. *Open access*.
+- **Nettelmann, N., Wang, K., Fortney, J. J., Hamel, S., Yellamilli, S., Bethkenhagen, M. &
+  Redmer, R. 2016**, Icarus 275, 107
+  ([`2016Icar..275..107N`](https://ui.adsabs.harvard.edu/abs/2016Icar..275..107N),
+  [1605.00171](https://arxiv.org/abs/1605.00171)). Uranus models with a thermal boundary at the
+  ice/rock–H/He transition and an ice:rock ratio, which is where the ice giants' residual is
+  attributed (C5). *Open access*; cited here only for that attribution.
+- **Helled, R., Nettelmann, N. & Guillot, T. 2020**, Space Sci. Rev. 216, 38
+  ([`2020SSRv..216...38H`](https://ui.adsabs.harvard.edu/abs/2020SSRv..216...38H),
+  [1909.04891](https://arxiv.org/abs/1909.04891)). The Uranus/Neptune review: non-adiabatic and
+  inhomogeneous interiors as the open question behind the residual. *Open access*.
 - **Bethkenhagen, M. et al. 2017**, ApJ 848, 67
   ([`2017ApJ...848...67B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...67B), arXiv
   **[1709.04133](https://arxiv.org/abs/1709.04133)**). **Cached** in
