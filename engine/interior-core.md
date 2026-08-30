@@ -84,6 +84,16 @@ is rewritten from "which one" to "how wrong are both", and the grade keeps its w
 reason changes. Two unregistered results in a row meant the list was young; every retrial
 brief now carries all five.
 
+**A discriminating test states, beside each prediction, the assumption that prediction
+stands on, and its register includes the default ending "every prediction misses = the test
+itself failed; the product is the name of the wrong assumption."** Born in C12 (2026-08-31):
+the test's (나) prediction — "our water lands on the printed density" — carried the unspoken
+assumption that the water-only profile's material is pure water, forgetting the H/He of a
+three-layer model's inner envelope; when every prediction missed by 18–32 %, the result was
+not a reading chosen but an assumption exposed. This is a rule about the tool, not about the
+evidence: the outcome register classifies what the evidence did; this classifies what the
+test could not do.
+
 **A table is regenerated on the code that ships, in the commit that ships it — and when the
 regeneration differs, which side is right is settled by a separate trace.** The sub-kind's
 name ("the table ran ahead of the code inside one commit") invites doubting the table first;
@@ -768,7 +778,14 @@ inner envelope under (나); a mixture 15–25 % lighter than water under (가), 
 ammonia result makes plausible). **Closed on the conservative branch**: no ternary anchor can
 be read from the column with the evidence held; C4's composition tier keeps its water +
 ammonia number. What would settle it: Redmer+ 2011's own ρ(R) for the water-only model, or the
-authors. No code, no anchor, no gate change. `engine/ternary-anchor-context-notes.md`.
+authors. **The failed test was the audit session's proposal, fixed into the brief by the
+directing session — the responsibility is joint**, recorded the way this project keeps every
+error named. *Observation, derived, not a verdict*: the residual shrinks with depth
+(+29 % → +16–19 %), which is qualitatively what reading (나) with a small H/He admixture in
+the inner envelope would do; Redmer+ 2011's ρ(R) would most likely settle it that way.
+**Redmer+ 2011** (Icarus 211, 798, the water-only Uranus model) goes on the owner's
+paper-request list; if it prints 1.00 g cm⁻³ at 0.839 R_U, (나) is settled and C12 reopens as
+*revisited*. No code, no anchor, no gate change. `engine/ternary-anchor-context-notes.md`.
 
 ## What closing all of these does not do
 

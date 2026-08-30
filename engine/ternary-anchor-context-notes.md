@@ -108,6 +108,22 @@ deviation from the LMA, which would let the mixture density be reconstructed fro
 EOSs — but the pure methane EOS is the thing C4 lacks, so (ii) does not close; (iii) the
 authors.
 
+## Responsibility, and one observation
+
+The discriminating test was the **audit session's proposal**, fixed into Brief 20 by the
+**directing session**; its (나) prediction carried the unspoken assumption that the
+water-only profile's material is pure water — the H/He of a three-layer model's inner
+envelope forgotten. The responsibility is joint, and the rule it produced (a test names the
+assumption under each prediction, and "all predictions miss" is a registered ending) is in
+the core list.
+
+*Observation, derived from the table above, not a verdict*: the residual falls monotonically
+with depth on all three profiles (+29–32 % near 4–7 GPa → +16–19 % near 510–559 GPa), which
+is qualitatively what reading (나) with a small H/He admixture in the inner envelope predicts
+(H/He is far more compressible than the ices, so its lightening effect shrinks with
+pressure). Redmer+ 2011 (Icarus 211, 798) would most likely settle it that way; it is on the
+owner's request list for exactly that.
+
 ## What did not move
 
 No code, no anchor, no test (a check whose meaning is unsettled does not enter the gate).
