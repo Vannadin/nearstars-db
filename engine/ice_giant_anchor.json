@@ -1,11 +1,11 @@
 {
  "python": "3.9.6",
- "path_fingerprint": "3352fdd89b6905a1",
+ "path_fingerprint": "80f51b8cf9f89239",
  "frozen_at": "2026-08-30",
  "steps": 1500,
  "bodies": {
   "Uranus": {
-   "seconds": 23.0,
+   "seconds": 27.3,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -22,6 +22,7 @@
     "ice_shell_thickness": "0.0",
     "core_radius_fraction": "0.0",
     "core_radius": "0.0",
+    "crust_thickness": "0.0",
     "radius": "4.198853465500676",
     "core_pressure": "1220.0435043191865",
     "bulk_porosity": "0.0",
@@ -40,7 +41,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 55.0,
+   "seconds": 60.6,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -57,6 +58,7 @@
     "ice_shell_thickness": "0.0",
     "core_radius_fraction": "0.0",
     "core_radius": "0.0",
+    "crust_thickness": "0.0",
     "radius": "4.210086210275766",
     "core_pressure": "1533.207948855248",
     "bulk_porosity": "0.0",

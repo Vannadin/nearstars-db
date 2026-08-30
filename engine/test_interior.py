@@ -415,6 +415,34 @@ def print_serpentine_bands() -> None:
         print(f"| {name} | {nmoi_pub:.4f} | " + " | ".join(tops) + " |")
 
 
+MIDDLE_RUNG_T_POT = 200.0                      # 지각이 녹는곡선 아래에 서는 선언 온도 (270 K 는 거절된다)
+MIDDLE_RUNG_FRONTS = (1.0, 0.9, 0.8, 0.7, 0.6)
+MIDDLE_RUNG_ROCK = (0.3, 0.6)
+
+
+def print_middle_rung_bands() -> None:
+    """C11 — Callisto·Titan 의 3층 띠를 분화 전선 × 지각 암석분율 격자로 다시 돌린다 (한 점에 1–6 분).
+    선언 격자는 위 상수이고 맞추지 않는다. 문서 §Validation 의 표가 이것으로 만들어졌고 게이트에는 안 넣는다.
+    270 K 에서는 지각이 녹는곡선 위라 거절되므로 200 K 에서 돌리고, 지각 없는 기준(전선 1.0)도 같은 온도로 낸다."""
+    print(f"T_pot = {MIDDLE_RUNG_T_POT:.0f} K · 전선 {MIDDLE_RUNG_FRONTS} · 지각 암석 {MIDDLE_RUNG_ROCK}")
+    print("| moon | published | front | X_d | band (low–high) | members |")
+    print("|---|---|---|---|---|---|")
+    for name, mkg, r_km, nmoi_pub, _src, _gate in ICY_ANCHORS:
+        if name not in ("Callisto", "Titan"):
+            continue
+        for f in MIDDLE_RUNG_FRONTS:
+            for xd in (MIDDLE_RUNG_ROCK if f < 1.0 else (0.0,)):
+                res = infer_three_layer(mkg / EARTH_MASS_KG, r_km * 1e3 / EARTH_RADIUS_M, MIDDLE_RUNG_T_POT,
+                                        nmoi=nmoi_pub, differentiation_front=f, crust_rock_fraction=xd)
+                if res.applicable:
+                    band = f"{res.values['nmoi_low']:.4f}–{res.values['nmoi_high']:.4f}"
+                    mem = " · ".join(f"핵 {m['core_mass_fraction']:.2f}/얼음 {m['ice_mass_fraction']:.3f}/{m['nmoi']:.4f}"
+                                     for m in res.values["members"])
+                else:
+                    band, mem = "declined", (res.reason or "")[:80]
+                print(f"| {name} | {nmoi_pub:.4f} | {f} | {xd} | {band} | {mem} |")
+
+
 # 조성별 암석 질량 상한을 재는 축. 값이 아니라 **누가 상한을 정하는가** 가 내용이다.
 CEILING_CASES = (
     ("earth_like (CMF 0.325)", dict(core_mass_fraction=0.325)),
@@ -814,6 +842,9 @@ def main() -> int:
         return 0
     if "--serpentine" in sys.argv:
         print_serpentine_bands()
+        return 0
+    if "--middle-rung" in sys.argv:
+        print_middle_rung_bands()
         return 0
     if "--adiabat" in sys.argv:
         print_adiabat_window()
@@ -1711,6 +1742,51 @@ def main() -> int:
               f"{band.values.get('ice_shell_thickness', 0):.0f} km · converged {band.converged}")
     print("\n액체 물 표 — 굳힌 표가 원 표현과 같은가 (SeaFreeze 있을 때만)")
     fails += _water_table_crosscheck()
+
+    print("\n중간 단 (C11) — 선언된 분화 전선 위의 원시 지각")
+    # 전선 1.0 은 예전 열 그대로다: 같은 천체를 명시적으로 1.0 으로 풀면 비트까지 같아야 한다.
+    same = solve(m_eur, differentiation_front=1.0, **eur)
+    ok = (same.values["radius"] == with_ocean.values["radius"]
+          and same.values["nmoi"] == with_ocean.values["nmoi"])
+    if not ok:
+        fails.append("differentiation_front=1.0 이 기본 경로와 비트까지 같지 않다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 전선 1.0 = 지각 없음: 기본 풀이와 비트까지 같다")
+    # 270 K 의 지각은 자기모순이다 — 0.02–0.6 GPa 의 얼음 Ih·III·V 녹는점(251–273 K)이 그 아래에 있다.
+    warm_crust = solve(m_eur, differentiation_front=0.8, crust_rock_fraction=0.6, **eur)
+    ok = (not warm_crust.applicable) and "녹는곡선 위" in (warm_crust.reason or "")
+    if not ok:
+        fails.append("270 K 의 지각이 거절되지 않았다 — 녹은 적 없는 지각이 녹는곡선 위에 앉았다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] {ICY_T_POT:.0f} K 의 지각(전선 0.8 · 암석 0.6)은 자기모순이라 거절: "
+          f"'{(warm_crust.reason or '')[:60]}…'")
+    # 200 K 에서는 지각이 선다. 방향은 사전 등록대로: 지각 암석은 C/MR² 를 올리고 공극은 내린다.
+    cold = dict(eur, potential_temperature=200.0)
+    ref = solve(m_eur, **cold)
+    crust = solve(m_eur, differentiation_front=0.8, crust_rock_fraction=0.6, **cold)
+    porous = solve(m_eur, differentiation_front=0.8, crust_rock_fraction=0.6, crust_porosity=True, **cold)
+    ok = (ref.applicable and crust.applicable and porous.applicable)
+    if not ok:
+        fails.append("200 K 유로파형의 지각 풀이가 거절됐다: " + " / ".join((r.reason or "")[:80] for r in (ref, crust, porous) if not r.applicable))
+        print("  [FAIL] 200 K 유로파형 지각 풀이 거절")
+    if ok:
+        ok = (crust.values["nmoi"] > ref.values["nmoi"] > 0.0
+              and porous.values["nmoi"] < crust.values["nmoi"]
+              and crust.values["crust_thickness"] > 0.0 and crust.grade == "analog"
+              and "crust_primordial" in crust.regime)
+        if not ok:
+            fails.append("지각의 방향이 사전 등록과 어긋난다 — 암석은 올리고 공극은 내려야 한다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] 200 K 유로파형: 지각 없음 C/MR² {ref.values['nmoi']:.4f} → 전선 0.8 · 암석 0.6 "
+              f"{crust.values['nmoi']:.4f} (두께 {crust.values['crust_thickness']:.0f} km) → 공극 얹으면 "
+              f"{porous.values['nmoi']:.4f}; analog, 층 이름에 crust_primordial")
+    # 거절 셋: 얼음 없는 전선, 암석 0 의 지각, 조성보다 많이 요구하는 지각, 두 공극 법칙.
+    bad = [solve(0.5, core_mass_fraction=0.3, differentiation_front=0.8, crust_rock_fraction=0.5, potential_temperature=1600.0),
+           solve(m_eur, differentiation_front=0.8, **cold),
+           solve(m_eur, differentiation_front=0.5, crust_rock_fraction=0.2, **cold),
+           solve(m_eur, differentiation_front=0.8, crust_rock_fraction=0.4, crust_porosity=True, initial_porosity=0.3, **cold)]
+    ok = all(not r.applicable for r in bad)
+    if not ok:
+        fails.append("지각 선언의 자기모순을 거절하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 거절 넷: 얼음 없는 전선 · 암석 0 의 지각 · 조성을 넘는 지각 · 두 공극 법칙")
+
 
     print("\n얼음 X — 적합이 자기 출처를 재현하는가 (SeaFreeze 있을 때만)")
     fails += _ice_x_crosscheck()

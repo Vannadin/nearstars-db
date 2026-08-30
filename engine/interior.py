@@ -217,8 +217,8 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     # 그 위, 기체 외피 아래는 **한 번도 녹지 않은** 얼음+암석 알갱이의 지각이다. 1.0 이면 지각이
     # 없고 예전 열 그대로다. 지각의 암석은 그 자체가 두 번째 선언(crust_rock_fraction)이다 —
     # Malamud & Prialnik 2015 의 바깥 맨틀은 핵에서 올라온 물이 재동결해 원시 조성이 아니다.
-    crust = (1.0 - gmf) - differentiation_front
-    rock_crust = crust * crust_rock_fraction if crust > 0.0 else 0.0
+    crust = max((1.0 - gmf) - differentiation_front, 0.0)
+    rock_crust = crust * crust_rock_fraction
     ice_crust = crust - rock_crust
     rock_deep = (1.0 - cmf - imf - gmf) - rock_crust
     ice_deep = imf - ice_crust
@@ -552,7 +552,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
 
     def note_switch(prev_layer: int) -> None:
         """층이 바뀐 자리의 압력을 기록해둔다. core_state 와 얼음 상 판정이 쓴다."""
-        nonlocal core_radius, p_cmb, t_cmb, p_ice_base
+        nonlocal core_radius, p_cmb, t_cmb, p_ice_base, r_crust_base, p_crust_base
         if prev_layer == 0 and cmf > 0:
             core_radius, p_cmb, t_cmb = r, p, t
         if stack[layer][1].name == "h2o":
@@ -1865,6 +1865,20 @@ def solve(mass_earth: float,
     except ValueError as err:
         return out_of_domain(RECIPE, VERSION, f"적분이 실패했다 — {err}",
                              inputs=inputs, refs=REFS)
+    if (crust_mass > 0.0 and potential_temperature and not converged
+            and st.t_surface < potential_temperature * (1.0 - T_SURFACE_TOL)):
+        # 지각이 녹는곡선 위에 앉아 던진 PhaseGap 을 온도 괄호가 '내려야 한다' 로 받아 중심 온도를
+        # 낮췄고, 지각이 고체가 되는 온도에서야 멈췄다 — 그 해의 표면 온도는 선언값에 못 닿는다.
+        # 그것은 수렴 실패가 아니라 **선언의 자기모순** 이므로, converged=False 를 조용히 내지 않고
+        # 이름 대며 거절한다 (C11).
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"선언된 원시 지각(전선 {differentiation_front:.2f}, 암석 {crust_rock_fraction:.2f})이 포텐셜 온도 "
+            f"{potential_temperature:.0f} K 에서 물의 녹는곡선 위(액체)에 앉는다. 한 번도 녹지 않은 지각은 그 "
+            f"온도에 있을 수 없다 — 온도 괄호는 지각이 고체가 되는 표면 온도 {st.t_surface:.0f} K 까지 내려가서야 "
+            "멈췄고, 선언된 표면 온도에 닿는 해가 없다. 포텐셜 온도를 낮추거나 분화 전선을 올려 지각을 얇게 "
+            "하는 것이 선언을 고치는 길이고, 이 레시피는 그 사이를 지어내지 않는다 (C11).",
+            inputs=inputs, refs=REFS)
 
     radius = st.radius_m / EARTH_RADIUS_M
     rho_bar = st.mass_kg / (4.0 / 3.0 * math.pi * st.radius_m ** 3)
@@ -2518,7 +2532,10 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
     # (1 − 암석분율))보다 적으면 solve 가 거절한다. 그 아래끝에서 출발한다.
     crust = (1.0 - differentiation_front)
     ice_floor = crust * (1.0 - crust_rock_fraction) if crust > 0.0 else 0.0
-    lo, hi = ice_floor, max(ice_floor, 0.98 - cmf)
+    # 위끝도 지각이 정한다: 전체 암석(1 − 핵 − 얼음)이 지각의 암석보다 적으면 solve 가 거절한다.
+    rock_crust = crust * crust_rock_fraction if crust > 0.0 else 0.0
+    ice_ceiling = min(0.98 - cmf, 1.0 - cmf - rock_crust - 1e-6)
+    lo, hi = ice_floor, max(ice_floor, ice_ceiling)
     r_lo = at(lo)
     if not r_lo.applicable:
         return None

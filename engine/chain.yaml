@@ -116,6 +116,13 @@ nodes:
       질량분율, 규산염과 부피 가법으로 섞는 선언 축 하나. 물이 어디까지 갔는가의 이력이라
       도출하지 않는다. Hilairet+ 2006 의 antigorite 는 상온 적합뿐이라 등급은 그 결핍이
       정한다. 앵커는 0.
+      2026-08-30 에 세 선언이 더 들어왔다 (C11, 중간 단) — differentiation_front (중심에서
+      잰 누적 질량분율로 어디까지 녹아 분화했는가; 1 이면 지각 없음), crust_rock_fraction
+      (그 위 한 번도 녹지 않은 원시 지각의 암석 질량분율 — Malamud & Prialnik 2015 의 바깥
+      맨틀이 재동결로 원시 조성이 아니라 둘째 선언이 필요하다), crust_porosity (같은 논문 식
+      (4)–(6) 의 two-layer 공극을 지각에 얹는 상한, 선택). 지각은 얼음 사다리와 규산염을
+      알갱이로 부피 가법 혼합한 층이라 C7 이 막은 반응이 아니다. 어디까지 녹았는가는 열
+      이력이라 도출하지 않고, 쓰이면 analog. 앵커는 전선 1.0 (지각 없음).
   core_state:
     kind: computed
     recipe: core-state-methodology

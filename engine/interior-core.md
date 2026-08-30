@@ -38,6 +38,20 @@ beside a mislabelled Noack & Lasbleis eq. 8 without either looking wrong. That i
 kind of plausible-because-well-formed failure this list has met, after the fabricated
 identifier, the stale number and the label slip: the same number from a different paper.
 
+**When a source is baked, its claimed range is swept against physical criteria registered
+in advance, and the effective ceiling is measured and recorded with the table.** A label can
+be verified faithfully at its place in the source and the source's own claim can still
+break in execution — the fifth kind of plausible-because-well-formed failure. SeaFreeze's
+`water2` (water2 item, 2026-08-30) carries knots to 100 GPa and AQUA quotes that as its
+range, and the spline returns negative densities inside it; the effective ceiling (2.3 GPa
+at 360 K rising to 30 GPa at 1000 K) was found by a sweep whose criteria — ρ finite and
+rising with P, 1000 < c_P < 15 000 J/kg/K, dT/dP|_S > 0, no runaway in successive density
+increments, two cells of margin — were fixed *before* the sweep, so the ceiling could not
+drift to wherever the results looked odd. **Pre-registration is the point**: without it,
+"as far as it looks fine" is an impression, not a verdict. `fermi.py`, `hhe_table.py` and
+`ammonia_table.py` already meet this in their own ways; it is stated here so the next baked
+table does too.
+
 ## Where the line is
 
 Not by body class — by **what is missing**.
@@ -578,6 +592,78 @@ its reason is now the borrowing and flattening, not the term's absence — the s
 said otherwise is rewritten here and in the docs. Two ceiling-poking finite differences were
 fixed on the way (`eos.Material.k_t`, `interior._adiabatic_dtdp`); no anchor touched.
 `engine/antigorite-thermal-context-notes.md` has the transcription and the runs.
+
+### C11 — The middle rung: a declared differentiation front and a never-melted crust — **opened 2026-08-30 on F3's grounds; closed 2026-08-30**
+
+**What it is, and what it is not.** C7 refuses a body that is neither fully mixed nor fully
+layered, because ice mixed through rock *where liquid water reached it* is a reaction and a
+transport history. **C7 stays closed, and C11 is not its repair.** C11 is the other case F3
+found in Malamud & Prialnik 2015's full text: the depth the melting reached is taken as a
+**declaration**, and the body is static — metal core, rock, water/ice mantle, and above the
+front a crust that never melted, cold ice and rock grains never in contact with liquid water.
+Hydration is a story about places liquid water reached, so C7's argument does not apply
+there; and for that state a mixing rule exists — Yasui & Arakawa 2009's two-layer model,
+adopted as Malamud & Prialnik's eq. (1) and reported to do *"a very good job of reproducing
+the compaction curve of the mixture"* (§3.1.3) — the shape C10 already uses for antigorite
+plus enstatite. The first row added after the list closed.
+
+**Two declarations, not one.** `differentiation_front` (cumulative mass fraction from the
+centre that melted; 1.0 is today's body) and `crust_rock_fraction` — the second because the
+source's outer mantle is *not* primordial: it is ice-enriched by water that rose and refroze
+(§5.1), so the front alone does not fix the crust's composition; the primordial fraction is
+an upper bound. Optional `crust_porosity`: the same paper's eqs. (4)–(6) with Γ = 1 (never
+melted), laboratory compaction curves, an **upper bound** on void. Directions registered
+before the sweep: crust rock **raises** C/MR², porosity **lowers** it. `_stack` gains the
+crust as a fourth layer (ice ladder + silicate as grains, additive volume, no
+serpentinisation — water never reached it); a crust step above the melting curve is refused
+as a self-contradictory declaration. Grade analog whenever a crust is declared; the
+Malamud porosity functions landed first (8786d857) so no intermediate commit is broken.
+
+**The sweep, on a declared grid, not tuned.** Potential temperature 200 K — at the roster's
+270 K the crust is refused, because ice Ih/III/V melt at 251–273 K between 0.02 and 0.6 GPa
+and a never-melted crust cannot sit there; the reference (front 1.0) is re-run at the same
+200 K. `infer_three_layer` over core fractions 0/0.15/0.30/0.45; `test_interior.py
+--middle-rung` regenerates it. Band = C/MR² over the core-fraction members that reproduce
+the radius:
+
+| moon (published) | front | X_d 0.3 | X_d 0.6 |
+|---|---|---|---|
+| Callisto (0.3549) | 1.0 | 0.2881–0.3127 (no crust) | — |
+| | 0.9 | 0.3010–0.3077 | 0.3155–0.3203 |
+| | 0.8 | 0.3107–0.3158 | 0.3393 |
+| | 0.7 | 0.3220–0.3348 | **0.3561–0.3643** |
+| | 0.6 | 0.3275–0.3390 | 0.3714–0.3768 |
+| Titan (0.3414) | 1.0 | 0.2883–0.3138 (no crust) | — |
+| | 0.9 | 0.3011–0.3081 | 0.3158–0.3207 |
+| | 0.8 | 0.3103–0.3300 | **0.3384–0.3498** |
+| | 0.7 | 0.3218–0.3350 | 0.3547–0.3633 |
+| | 0.6 | 0.3270–0.3390 | 0.3695–0.3757 |
+
+**Where they land.** C10's grid lay entirely below both published values; C11's grid
+**brackets them**. Titan's 0.3414 falls **inside** the band of one declared pair — front
+0.8, X_d 0.6 (0.3384 at core 0.15 to 0.3498 at core 0) — closed along the core axis the way
+Europa's is, with the declarations untouched. Callisto's 0.3549 falls **between** two
+declared pairs: above the front 0.8 · X_d 0.6 band (0.3393) and just below the front 0.7 ·
+X_d 0.6 band (0.3561–0.3643), 0.0012 under its low end; no grid point's band contains it,
+and the grid is not refined to make one — that would be the fitting C5 and C10 declined.
+Porosity on the front 0.7 · X_d 0.6 pair moves the band down as registered: Callisto
+0.3561–0.3643 → 0.3390–0.3494, Titan 0.3547–0.3633 → 0.3386–0.3496 (about −0.015, the
+laboratory upper bound on crust void). One member did not converge (Callisto, front 0.9 ·
+X_d 0.3, core 0.30). Run times 2–7 min per point on a loaded machine (Titan's first three
+took 31 min each while five other processes ran); the 270 K refusal through the inversion
+route did not finish in 17–24 CPU-minutes and was stopped — the temperature bracket is
+exhausted on every solve of the regula falsi — where the direct `solve` refuses in about 12 s.
+Recorded as a cost, not fixed here.
+
+**What moves and what does not.** Anchors bit-identical: Uranus and Neptune (the stack's
+bounds for a body with a gas envelope reproduce the old expressions to the bit — checked
+after a negative-crust bug in the first pass had frozen both as refusals, which is exactly
+the failure the anchor exists to catch), Europa's inversion, the rock and giant anchors;
+`--refresh` for the fingerprint (`_stack`, `integrate`, `shoot` changed). The Callisto and
+Titan question C10 left — *void space or partial differentiation* — now has its second half
+measured: a declared front with a rock-bearing crust reaches the published values, a
+serpentinisation fraction does not. Which pair, if any, a body should declare is the owner's
+call; this row supplies the grid. `engine/middle-rung-context-notes.md`.
 
 ## What closing all of these does not do
 
