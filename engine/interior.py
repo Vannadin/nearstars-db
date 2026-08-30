@@ -33,6 +33,7 @@ import math
 
 import water_hot
 import water_table
+import water2_table
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
                  PhaseGap, mix, water_phase_name, water_vii1_vii2_boundary)
@@ -361,6 +362,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     # 그 계단이 돌아온다. 걸음 안에서 상이 바뀌는 자리는 층 경계와 같은 방법으로 찾는다
     # (아래). 온도가 흐르지 않으면(t = 0) 이 판정은 아예 없고 예전 경로 그대로다.
     liquid_mat = MATERIALS["h2o_liquid"]
+    dense_mat = MATERIALS["h2o_liquid_dense"]
     hot_mat = MATERIALS["h2o_hot"]
     forced_liquid = None   # 방금 상 경계를 넘었다. 다음 걸음은 판정 없이 이 상으로 시작한다
     r_ocean_base = None
@@ -400,37 +402,28 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             t -= boundary_temperature_jump
 
     def liquid_material(pp: float, tt: float):
-        """액체인 자리의 재료. 2.3 GPa 까지는 바다(SeaFreeze water1), 그 위는 뜨거운 물(Mazevet+ 2019)
-        — 단 그 적합이 유체에 대해 적은 하한(1000 K) 위에서만. 그 아래는 이 저장소에 조밀한
-        액체의 상태방정식이 없고, 바다 재료가 압력 상한을 이름 대며 거절한다 (2026-08-30 전과 같은
-        거절이라 그 경로를 밟는 천체는 비트까지 같다)."""
-        if pp > water_table.P_MAX_PA:
+        """액체인 자리의 재료. 2.3 GPa · 500 K 까지는 바다(SeaFreeze water1); 그 위는 1000 K 부터
+        뜨거운 물(Mazevet+ 2019, 그 적합이 유체에 대해 적은 하한), 그 아래는 조밀한 액체 물
+        (SeaFreeze water2 / Brown 2018, 2026-08-30 에 굳힘 — 그 전에는 이 띠가 too_cold 로 던져져
+        온도 괄호가 중심 온도를 밀어 올렸다). water1 의 창과 1000 K 위의 경로는 한 줄도 안 바뀌었다.
+        water2 의 등온선별 천장과 1000 K 사이(12–20.6 GPa 에서 녹는점 위 ~100 K 의 좁은 띠), 그리고
+        0.1 GPa 아래의 뜨거운 저압 물은 여전히 표현이 없고 이름 대며 거절한다."""
+        if pp > water_table.P_MAX_PA or tt > water_table.T_MAX_K:
             if tt >= water_hot.T_MIN:
                 return hot_mat
-            # 조밀한 액체인데 그 온도의 상태방정식이 없다. **온도가 막은 것으로, 위로 던진다** —
-            # 액체는 더 뜨거워져도 액체이고 이 저장소에서 그 위에 있는 유일한 적합이 Mazevet 이라,
-            # 온도 괄호가 중심 온도를 올리면 풀린다. 2026-08-30 전에는 이 자리를 h2o_hot 의
-            # 1800 K 하한이 같은 방향으로 던졌다.
+            if water2_table.in_domain(pp, tt):
+                return dense_mat
+            # 조밀한 액체인데 water2 의 유효 천장 위(또는 압력 바닥 아래)이고 Mazevet 의 바닥 아래다.
+            # **온도가 막은 것으로, 위로 던진다** — 더 뜨거우면 water2 의 천장이 오르고 1000 K 부터는
+            # Mazevet 이 받는다.
             raise PhaseGap(
-                hot_mat.name, pp,
-                f"{pp / 1e9:.2f} GPa · {tt:.0f} K 의 물은 녹는곡선 위(액체)인데, 이 온도의 조밀한 액체 "
-                f"상태방정식이 없다 — 바다 표(SeaFreeze water1)는 {water_table.P_MAX_PA / 1e9:.1f} GPa "
-                f"에서 끝나고 뜨거운 물(Mazevet+ 2019)은 ρ ≳ 1 g/cc 에서 {water_hot.T_MIN:.0f} K 위를 "
-                "적는다. 선반은 있다 — SeaFreeze water2 (Brown 2018, 0–100 GPa · 240–10 000 K).",
-                tt, too_cold=True)
-        if tt > water_table.T_MAX_K:
-            # 낮은 압력의 뜨거운 액체. Mazevet+ 2019 §3.1 이 ρ ≲ 1 g/cc · T ≲ 2000 K 의 액체와
-            # 10³ K 위의 플라스마를 적합 구간으로 적으므로 바다 표의 500 K 위는 그쪽이 받는다 —
-            # 단 1000 K 부터다. 500–1000 K 의 액체는 두 적합 사이의 틈이고, 위와 같은 이유로 온도가
-            # 막은 것으로 던진다 (얼음거대행성의 시험 경로가 외피 바닥 2 GPa · 986 K 로 실제로 지난다).
-            if tt >= water_hot.T_MIN:
-                return hot_mat
-            raise PhaseGap(
-                hot_mat.name, pp,
-                f"{pp / 1e9:.2f} GPa · {tt:.0f} K 의 물은 녹는곡선 위(액체)인데 이 온도의 액체 상태방정식이 "
-                f"없다 — 바다 표(SeaFreeze water1)는 {water_table.T_MAX_K:.0f} K 에서 끝나고 뜨거운 물"
-                f"(Mazevet+ 2019)은 {water_hot.T_MIN:.0f} K 위를 적는다. 선반은 있다 — SeaFreeze water2 "
-                "(Brown 2018, 0–100 GPa · 240–10 000 K).",
+                dense_mat.name, pp,
+                f"{pp / 1e9:.2f} GPa · {tt:.0f} K 의 물은 녹는곡선 위(액체)인데 어느 표현도 없다 — 바다 표"
+                f"(SeaFreeze water1)는 {water_table.P_MAX_PA / 1e9:.1f} GPa · {water_table.T_MAX_K:.0f} K 에서 "
+                f"끝나고, 조밀한 액체 물 표(SeaFreeze water2 / Brown 2018)는 이 온도에서 "
+                f"{water2_table.P_MIN_PA / 1e9:.1f}–{water2_table.p_ceiling(tt) / 1e9:.1f} GPa 만 유효하며"
+                f"(스플라인이 그 위에서 비물리적), 뜨거운 물(Mazevet+ 2019)은 ρ ≳ 1 g/cc 에서 "
+                f"{water_hot.T_MIN:.0f} K 위를 적는다.",
                 tt, too_cold=True)
         return liquid_mat
 
@@ -530,7 +523,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 # 반지름은 그렇게 늘리지 않는다. 그 결손은 note 가 수로 말한다.
                 t_surface = t * (floor / p) ** last_grad
             break
-        if mat.name in ("h2o", "h2o_liquid", "h2o_hot") and (not ice_samples
+        if mat.name in ("h2o", "h2o_liquid", "h2o_liquid_dense", "h2o_hot") and (not ice_samples
                                                              or steps % ICE_SAMPLE_EVERY == 0):
             ice_samples.append((p, t))
         if p_si_max == 0.0 and _carries_silicate(mat):
@@ -744,7 +737,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         core_radius = r      # 핵만 있는 천체
         p_cmb = p
         t_cmb = t
-    if ice_samples and mat.name in ("h2o", "h2o_liquid", "h2o_hot"):
+    if ice_samples and mat.name in ("h2o", "h2o_liquid", "h2o_liquid_dense", "h2o_hot"):
         # 기둥 꼭대기. 얼음 III·V·VI 구간에서는 녹는곡선이 단열선보다 가파르므로
         # T − T_melt 가 제일 큰 자리가 여기다. 가스 외피가 있으면 마지막 층이 얼음이
         # 아니라서 이 표본을 넣지 않는다 — 다른 층의 점을 얼음이라고 부르지 않는다.
@@ -1419,10 +1412,14 @@ def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
                 "C/MR² 는 바다를 담은 값이다. **두께는 포텐셜 온도 선언이 정한다** — 껍질의 "
                 "두께를 정하는 열 이력이 이 레시피에 없어서, 그 선언이 바뀌면 바다도 바뀐다."
                 + ends + blind)
-    if "h2o_hot" in st.phases:
+    if "h2o_hot" in st.phases or "h2o_liquid_dense" in st.phases:
+        used = " · ".join(n for n, on in (("조밀한 액체 물 표 (SeaFreeze water2 / Brown 2018, 1000 K 아래)",
+                                          "h2o_liquid_dense" in st.phases),
+                                         ("뜨거운 물의 적합 (Mazevet+ 2019, 1000 K 위)",
+                                          "h2o_hot" in st.phases)) if on)
         return (ICE_STATE_MOLTEN,
-                "**얼음층이 유체다** — 국소 (P, T) 가 녹는곡선 위인 자리마다 적분기가 뜨거운 물의 "
-                "적합(Mazevet+ 2019)을 썼다. 바다가 아니라 유체 맨틀이고, 반지름은 그 밀도의 값이다. "
+                "**얼음층이 유체다** — 국소 (P, T) 가 녹는곡선 위인 자리마다 적분기가 유체의 표현을 썼다: "
+                f"{used}. 바다가 아니라 유체 맨틀이고, 반지름은 그 밀도의 값이다. "
                 "곡선은 실험이 아니라 시뮬레이션(Reinhardt+ 2022)이라 등급은 analog 다."
                 + ends + blind)
     ice = MATERIALS["h2o"]

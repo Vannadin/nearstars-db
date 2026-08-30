@@ -147,6 +147,20 @@ narrowed: the measurement gives no support to IAPWS's end. Table I enters the ga
 table. What would still move this is a measured point between 15 and 26 GPa — Queyroux+ 2020,
 now in the cache. `engine/seam-retrial-context-notes.md` has the tables.
 
+**Revisited 2026-08-30 (water2): the open defect this row named is filled, not overturned.**
+The band with no equation of state — liquid water above the ocean table's 2.3 GPa (or above
+its 500 K) and below the hot-water fit's 1000 K floor, the one F2's Callisto and Titan at
+f = 0.75 walked into — is now carried by SeaFreeze `water2` (Brown 2018,
+2018FlPEq.463...18B; range as AQUA §2.3.5 states it, *"liquid and supercritical H₂O from
+1 GPa to 100 GPa and up to 10⁴ K"*), baked ragged to the spline's **real** ceiling, which is
+not its knot box: SeaFreeze's `water2` returns negative densities inside 100 GPa — valid to
+2.3 GPa at 360 K, 10 GPa at 600 K, 13 GPa at 700 K, 30 GPa at 1000 K, hugging the liquid
+side of this row's melting curve. Two seams measured: water1 ↔ water2 in their overlap ρ
+0.13 % / dT/dP|_S 9 %; water2 ↔ Mazevet at 1000 K, Mazevet 2.5–3.3 % less dense over
+2.3–26 GPa. Still uncovered by name: 12–20.6 GPa between the melting curve and the ceiling
+(≲ 170 K wide), and hot water below 0.1 GPa. `engine/water2-context-notes.md`. C3 stays
+closed; the dispatch by (P, T) is unchanged, one more material answers it.
+
 ### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt; reopened 2026-08-30 for ammonia and closed again for that half, built**
 
 The ice-giant envelope is water alone, standing in for a water–ammonia–methane mixture. That

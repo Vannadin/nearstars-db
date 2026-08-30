@@ -47,6 +47,7 @@ import hhe_table
 import ice_melt_table
 import water_hot
 import water_table
+import water2_table
 import ammonia_table
 from dataclasses import dataclass
 
@@ -689,8 +690,9 @@ class HotWater:
                 self.name, p,
                 f"{t:.0f} K 는 이 적합이 유체에 대해 적은 하한({water_hot.T_MIN:.0f} K) 아래다 — "
                 "Mazevet+ 2019 §3.1 이 ρ ≳ 1 g/cc 의 적합 구간을 '10³ K ≲ T' 로 적는다. 녹는곡선은 "
-                "여기를 액체라 하는데 이 저장소에 그 온도의 조밀한 액체 상태방정식이 없다. 선반은 있다 — "
-                "SeaFreeze water2 (Brown 2018, 0–100 GPa · 240–10 000 K). 고체는 얼음 사다리가 받는다.",
+                "여기를 액체라 한다. 그 온도의 조밀한 액체는 h2o_liquid_dense (SeaFreeze water2 / Brown 2018, "
+                "굳힌 창 360–1100 K · 등온선별 천장 2.3–36 GPa)가 받고, 그 천장 위·1000 K 아래는 어느 표현도 "
+                "없다. 고체는 얼음 사다리가 받는다.",
                 t, too_cold=True)
         if t > water_hot.T_MAX:
             raise PhaseGap(
@@ -942,13 +944,17 @@ NH3 = Ammonia()
 #
 # **어디서 액체가 되는가는 이 재료가 정하지 않는다.** 얼음 사다리(H2O)의 녹는곡선이 정하고,
 # 적분기가 걸음마다 그 판정으로 사다리와 이 재료 사이를 갈아 끼운다 — interior.py 를 보라.
-# 이 재료는 액체라고 결정된 자리의 밀도와 단열 기울기만 낸다. 2.3 GPa 위의 액체는 거절하고
-# 선반을 이름 댄다: 같은 라이브러리의 `water2` (Brown 2018, 2018FlPEq.463...18B) 가 100 GPa ·
-# 10 000 K 까지 가지만, 이번 범위는 액체와 고체가 갈리는 저압 쪽이다.
+# 이 재료는 액체라고 결정된 자리의 밀도와 단열 기울기만 낸다. 2.3 GPa 위(또는 500 K 위)의 액체는
+# 같은 라이브러리의 `water2` (Brown 2018, 2018FlPEq.463...18B) 를 굳힌 h2o_liquid_dense 가 받는다 —
+# 2026-08-30 까지 "굳히지 않았다" 로 선반에만 있었고, 그 사이 500–1000 K 의 조밀한 액체가 거절돼
+# 온도 괄호가 중심 온도를 밀어 올렸다 (F2 의 칼리스토·타이탄 f = 0.75, 70 CPU-분). 아래 클래스.
 LIQUID_WATER_REF = ("SeaFreeze v1.1.0 water1 / Bollengier, Brown & Shaw 2019 "
                     "(2019JChPh.151e4501B) — 액체 물 Gibbs 표현, 0–2300 MPa · 240–500 K")
-LIQUID_WATER_SHELF = ("SeaFreeze v1.1.0 water2 / Brown 2018 (2018FlPEq.463...18B) — "
-                      "0–100 GPa · 240–10 000 K. 굳히지 않았다")
+LIQUID_WATER_DENSE_REF = (
+    "SeaFreeze v1.1.0 water2 / Brown 2018 (2018FlPEq.463...18B) — 조밀한 액체·초임계 물의 Gibbs "
+    "표현. AQUA(Haldemann+ 2020) §2.3.5 가 '1–100 GPa, 10⁴ K 까지' 로 적는 그 표현이고, 굳힌 창은 "
+    "스플라인이 실제로 유효한 부분 — 0.1 GPa 부터 등온선별 천장(360 K 2.3 GPa · 600 K 10 GPa · "
+    "1000 K 30 GPa)까지, 360–1100 K")
 
 
 class LiquidWater:
@@ -1002,9 +1008,10 @@ class LiquidWater:
             # 물 세계)는 온도 고리가 표면 온도를 못 맞춰 converged=False 로 나간다.
             raise PhaseGap(
                 self.name, p,
-                f"{p / 1e9:.3f} GPa 의 액체 물은 굳힌 표의 상한({water_table.P_MAX_PA / 1e9:.1f} "
+                f"{p / 1e9:.3f} GPa 의 액체 물은 바다 표의 상한({water_table.P_MAX_PA / 1e9:.1f} "
                 "GPa) 위다. 얼음 VII 이 녹을 만큼 따뜻한 기둥인데, 그 압력의 액체는 "
-                f"{LIQUID_WATER_REF} 의 창 밖이다. 선반은 있다 — {LIQUID_WATER_SHELF}.",
+                f"{LIQUID_WATER_REF} 의 창 밖이다 — 적분기는 그 자리를 h2o_liquid_dense (water2) 로 "
+                "보내므로 여기 온 것은 편집 오류다.",
                 t)
         if t > water_table.T_MAX_K:
             raise PhaseGap(
@@ -1050,6 +1057,114 @@ class _LiquidWaterSlope:
 
 
 H2O_LIQUID = LiquidWater()
+
+
+# ── 조밀한 액체 물 — 바다 표 위, 뜨거운 물 아래 ────────────────────────────
+#
+# 2026-08-30 까지 이 자리는 빈 띠였다: 2.3 GPa 위(또는 500 K 위)의 액체를 녹는곡선이 인정해도 이
+# 저장소에 그 상태방정식이 없어 too_cold 로 던졌고, 온도 괄호가 중심 온도를 1000 K 위로 밀어
+# Mazevet 의 적합으로 넘겼다. C3 가 그 띠를 "열린 결함" 으로 적었고 F2 가 값을 치렀다.
+# 표는 water_table.py 와 같은 길로 굳혔다 (water2_table.py, tools/make_water2_table.py).
+#
+# **천장은 매듭이 아니라 스플라인의 것이다.** SeaFreeze 의 water2 는 매듭 상자가 0–100 GPa 인데
+# 그 안쪽에서 밀도가 음수로 가고 c_P 가 10⁶ 이 된다 — 700 K 에서 ~13 GPa 위, 1000 K 에서
+# ~30 GPa 위 (2026-08-30 측정, water2-context-notes.md). 유효 천장은 녹는곡선을 바짝 따라간다:
+# 10 GPa 까지는 녹는점 바로 위부터 유효하고, 12–20.6 GPa 에서는 녹는점(663–705 K)과 천장이 서는
+# 온도(~780–870 K) 사이에 좁은 띠가 남는다. 그 띠는 이름 대며 거절한다 — 더 뜨거우면 이 표나
+# Mazevet 이 받으므로 too_cold 다. 1000 K 위는 예전 그대로 Mazevet 이 받는다 (h2o_hot 경로는
+# 한 줄도 안 바뀌었다 — 얼음거대행성 앵커가 그 위에 서 있다).
+class DenseLiquidWater:
+    """조밀한 액체·초임계 물, SeaFreeze water2 (Brown 2018) 의 굳힌 표. LiquidWater 와 같은 모양에
+    c_P 를 더 들고 있어 암석 혼합(Mixture.grad_ad 의 c_P 가중)이 이 띠에서도 닫힌다."""
+    name: str = "h2o_liquid_dense"
+    label_ko: str = "조밀한 액체 물 (water2)"
+
+    @property
+    def rho0(self) -> float:
+        return water2_table.density(water2_table.P_MIN_PA, water2_table.T_LO_K)
+
+    @property
+    def p_max(self) -> float:
+        """가장 뜨거운 등온선의 천장. 온도마다의 실제 천장은 density 가 이름 대며 거절한다."""
+        return water2_table.P_MAX_PA
+
+    def rho_seed(self, mass_kg: float) -> float:
+        return self.rho0
+
+    @property
+    def has_thermal(self) -> bool:
+        return True
+
+    def cold_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def melt_free_phases(self) -> tuple[str, ...]:
+        return (self.name,)
+
+    def t_melt(self, p: float) -> float | None:
+        return None
+
+    def in_domain(self, p: float, t: float) -> bool:
+        return water2_table.in_domain(p, t)
+
+    def check_temperature(self, p: float, t: float) -> None:
+        if t <= 0.0:
+            raise PhaseGap(self.name, p,
+                           "조밀한 액체 물은 등온 경로로 풀 수 없다. 이 표는 (P, T) 의 함수다.")
+        if t < water2_table.T_LO_K:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 조밀한 액체 물 표의 하한({water2_table.T_LO_K:.0f} K) 아래다 — 2.3 GPa 의 "
+                "녹는점(362 K)보다 낮으므로 여기 오는 것은 판정이 아니라 편집 오류다.", t, too_cold=True)
+        if t > water2_table.T_MAX_K:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 조밀한 액체 물 표의 상한({water2_table.T_MAX_K:.0f} K) 위다 — 1000 K 위는 "
+                "뜨거운 물(Mazevet+ 2019)의 자리라 적분기가 여기로 보내지 않는다.", t)
+        if p < water2_table.P_MIN_PA:
+            # **온도가 막은 것으로 던진다** — 2026-08-30 전에 이 자리(500–1000 K 의 저압 액체)가 던지던 방향
+            # 그대로. 더 뜨거우면 1000 K 부터 Mazevet 이 받고, 시험 경로가 실제로 여기를 지난다(해왕성의
+            # 온도 괄호가 0.098 GPa · 817 K 를 밟았다). 압력 벽으로 던지면 괄호가 이것을 진짜 거절로 읽는다.
+            raise PhaseGap(
+                self.name, p,
+                f"{p / 1e9:.3f} GPa · {t:.0f} K 의 물은 조밀한 액체 물 표(SeaFreeze water2 / Brown 2018)의 굳힌 "
+                f"창의 압력 바닥({water2_table.P_MIN_PA / 1e9:.1f} GPa) 아래다 — 500 K 위의 저압 물은 증기에 가깝고 "
+                f"쌍선형 격자가 정직하지 않아 굳히지 않았다. 더 뜨거우면 {water_hot.T_MIN:.0f} K 부터 Mazevet+ 2019 가 받는다.",
+                t, too_cold=True)
+        ceiling = water2_table.p_ceiling(t)
+        if p > ceiling * (1.0 + 1e-12):
+            raise PhaseGap(
+                self.name, p,
+                f"{p / 1e9:.2f} GPa · {t:.0f} K 의 액체 물은 {LIQUID_WATER_DENSE_REF} 의 이 온도 천장"
+                f"({ceiling / 1e9:.1f} GPa) 위다 — 스플라인이 그 위에서 비물리적이라 굳히지 않았다. "
+                f"더 뜨거우면 천장이 오르고 {water_hot.T_MIN:.0f} K 부터는 Mazevet+ 2019 가 받는다.",
+                t, too_cold=True)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        self.check_temperature(p, t)
+        return water2_table.density(p, t)
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        return 0.0
+
+    def dtdp_adiabat(self, p: float, t: float, t_pot: float = 0.0) -> float:
+        if t <= 0.0:
+            return 0.0
+        return water2_table.dtdp_adiabat(p, t)
+
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return water2_table.c_p(p, t)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        if t <= 0.0 or p <= 0.0:
+            return 0.0
+        return water2_table.dtdp_adiabat(p, t) * p / t
+
+    def phase_at(self, p: float, t: float = 0.0):
+        return _LiquidWaterSlope(p, name=self.name)
+
+
+H2O_LIQUID_DENSE = DenseLiquidWater()
 
 
 def mix(name: str, label_ko: str, *parts: tuple[Material, float]) -> Material | Mixture:
@@ -2041,6 +2156,7 @@ class _HydrogenHeliumSlope:
 
 H_HE = HydrogenHelium()
 
-MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | Ammonia] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID, NH3)
+MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseLiquidWater | Ammonia] = {
+    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,
+                        H2O_LIQUID_DENSE, NH3)
 }

@@ -84,7 +84,7 @@ fit (an expensive integration), and every downward step re-enters the band and i
 again — thirty pressure shoots in 45 s, each on hot-water integrations, until the passes are
 exhausted and the member returns `converged=False`. It is the C3 band-direction trade-off
 (recorded there as a trade-off) biting a warm water world, **an open defect that F2 exposed
-and did not fix**: the fix belongs to the band (an equation of state for dense liquid water
+and did not fix** *(closed 2026-08-30 by the water2 item — `engine/water2-context-notes.md`)*: the fix belongs to the band (an equation of state for dense liquid water
 between 500 and 1000 K — SeaFreeze `water2`, the shelf named in C3), not to this item. A
 bracket-collapse guard was added to the pressure shoot during the investigation; it is
 separate and, on this case, not the cause. The reason is arithmetic, not a surprise: the moons' rock sits at 250–400 K,

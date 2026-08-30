@@ -163,6 +163,7 @@ log–log 상의 시컨트 스텝에 이분법을 예비로 두는데, 적분 �
 | `ice_vii` | BME3 | 1460 | 23.7 | 4.15 | 2.216 ~ 37.4 GPa | **발표된 값 없음** | – | Seager+ 2007 Table 1, Hemley+ 1987 자료  |
 | `h2o_liquid` (바다) | 굳힌 표, (P, T) 쌍선형 보간 | – | – | – | 0 ~ 2.3 GPa, 240 ~ 500 K | 발표된 기울기 dT/dP\|_S 를 읽음, 조립 안 함 | – | SeaFreeze v1.1.0 `water1` (Bollengier+ 2019), `tools/make_water_table.py` 로 굳힘. 바다가 놓이는 252 ~ 360 K 에서 원 표현과 2×10⁻⁴ 안  |
 | `nh3` (암모니아 — 아직 소비처 없는 표) | 굳힌 표, 등온선 위에서 log p 는 log ρ 에 선형, 등온선 사이는 T 에 선형. 밀도는 이분법 | – | – | – | 들쭉날쭉한 (ρ, T) 격자 위 0.309 ~ 333.2 GPa, 500 ~ 10 000 K. 빠진 차갑고 조밀한 칸 여섯은 표 밖 | c_P 와 ∇_ad 는 표의 p·u 유한차분 — u 에 진동 보정이 **들어 있다** (Bethkenhagen 2013 Appendix B) | – | Bethkenhagen, French & Redmer 2013 Appendix B Table I, `tools/make_ammonia_table.py` 로 굳힘. p 는 2 % 안, 표시된 다섯 점은 5 % 이고 플래그로 들고 감. leave-one-out 은 얼음거대행성 맨틀 영역에서 8.7 % (격자 간격 두 배 기준)  |
+| `h2o_liquid_dense` (조밀한 액체, 바다 표와 뜨거운 물 적합 사이) | 굳힌 표, (log P, T) 쌍선형, 들쭉날쭉한 천장 | – | – | – | 0.1 GPa 부터 온도에 따라 오르는 천장까지 (360 K 2.3 GPa, 500 K 5.5, 600 K 10, 700 K 13, 1000 K 30 GPa), 360 ~ 1100 K | 발표된 기울기 dT/dP\|_S 와 c_P 를 읽음, 조립 안 함 | – | SeaFreeze v1.1.0 `water2` (Brown 2018), `tools/make_water2_table.py` 로 굳힘. 2.3 ~ 10 GPa × 500 ~ 1000 K 에서 보간 오차 ρ 1.8×10⁻⁵. 천장은 100 GPa 매듭 상자가 아니라 스플라인이 비물리적으로 가는 자리. 이음매: 겹침에서 water1 과 ρ 0.13 % / dT/dP 9 %, 1000 K 에서 Mazevet 이 −2.5 ~ −3.3 %  |
 | `h_he` (거대행성 외피) | polytrope, n = 1 | 0 (주 참고) | K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻² | n = 1 | 0 ~ 653 TPa | **해당 없음** | – | Helled+ 2022 §2, 그 논문 자신의 R = 70,300 km 로 단위 검산  |
 
 열 항 두 칸은 출처가 둘이고 섞으면 안 됩니다. 암석과 금속의 αK_T 는 Seager+ 2007
@@ -393,16 +394,18 @@ Unterborn+ 2019 §2 의 맨틀 포텐셜 온도 1600 K 입니다. 1600 K 를 선
 번만 정하고 그 걸음 동안 고정합니다. 보간한 (P, T) 가 곡선을 넘는 자리에서 걸음을 자르는 것은
 층 경계와 같습니다. Runge–Kutta 네 자리가 각자 판정하면 바다의 가장자리가 격자에 양자화됩니다
 (재봤습니다. 자르지 않으면 1499 ↔ 1501 걸음에서 반지름이 2 × 10⁻³, 자르면 10⁻⁷). 2.3 GPa 위의
-액체(얼음 VII 이 녹을 만큼 따뜻한 기둥)는 이름을 대며 거절하고, 선반은 SeaFreeze 의 `water2`
-(Brown 2018, 100 GPa 까지)입니다.
+액체(얼음 VI·VII 이 녹을 만큼 따뜻한 기둥)는 1000 K 아래면 SeaFreeze 의 `water2` (Brown 2018)
+를 굳힌 조밀한 액체 물 표가, 그 위면 뜨거운 물 적합이 받습니다.
 
 **바다의 두께는 선언을 따릅니다.** 껍질 아래 바다의 꼭대기는 그 깊이의 얼음 Ih 녹는점
 (273.16 ~ 251.2 K)에 놓이고, 그것을 표면까지 감압한 단열선의 온도가 `potential_temperature`
 입니다. 270 K 면 껍질 20 ~ 30 km 입니다. 그 값을 정하는 열 이력이 이 레시피에 없으므로 바다가
 있는 결과는 그 선언 위에서 analog 이고, [핵 상태](core-state-methodology.md)의 `core_cmb_temperature` 와 같은 자리입니다. 바다 표의 2.3 GPa 위의 액체는 1000 K 부터 뜨거운 물
 적합(`h2o_hot`, 아래 절)이 받습니다 — Mazevet+ 2019 §3.1 이 ρ ≳ 1 g/cc 에서 적은 자기 적합의
-바닥입니다. 500 ~ 1000 K 의 액체는 이 저장소에 상태방정식이 없어 이름을 대며 거절하고, 선반은
-SeaFreeze `water2` (Brown 2018, 100 GPa · 10 000 K 까지) 입니다.
+바닥입니다. 바다 표와 그 바닥 사이의 액체는 조밀한 액체 물 표(`h2o_liquid_dense`, SeaFreeze
+`water2`, Brown 2018 — 2026-08-30 에 스플라인의 실제 천장까지 굳힘, 360 K 에서 2.3 GPa 부터
+1000 K 에서 30 GPa 까지)가 받습니다. 여전히 이름을 대며 거절하는 자리는 12 ~ 20.6 GPa 에서
+녹는곡선과 그 천장 사이, 그리고 0.1 GPa 아래의 뜨거운 물입니다.
 
 **20.6 GPa 위의 곡선은 시뮬레이션이고, 스스로 그렇게 말합니다.** IAPWS 식 (5) 가 끝나는
 자리(715 K)부터는 **Reinhardt+ 2022** 의 액체–고체 공존선을 씁니다 — 열역학 적분으로 구한
@@ -1079,7 +1082,7 @@ Z 가 같은 두 거대행성이 같은 반지름을 받았습니다. 표는 질
 | 암석 + 얼음 VII | 얼음 기둥 바닥이 2.216 GPa 위 37.4 GPa 아래 | 적분한다. 얼음 VII. 2026-08-27 부터 열압력도 나른다 — 온도를 선언하면 이 구간의 밀도가 움직이고, 선언하지 않으면 예전과 비트까지 같다 | calibrated |
 | 암석 + 얼음 III / V / VI | 얼음 기둥 바닥이 209.5 MPa – 2.216 GPa | 적분한다. 삼중점마다 상을 갈아 끼우면서 | calibrated |
 | **바다** | 얼음 기둥이 2.3 GPa 아래이고 `potential_temperature` 가 선언됨 | 국소 (P, T) 가 IAPWS 융해곡선 위인 자리마다 **액체를 적분한다** (SeaFreeze `water1`). `ocean_thickness` 와 `ice_shell_thickness` 를 돌려주고 `ice_column_state` 는 `solid` 또는 `molten` 이다. 두께는 선언이 정한다 | analog |
-| **2.3 GPa 위의 액체** | 얼음 VII 이 녹을 만큼 따뜻한 기둥 | **거절한다.** 선반을 이름 댄다. `water1` 은 2.3 GPa 에서 끝나고 `water2` (Brown 2018) 는 굳히지 않았다 | — |
+| **2.3 GPa 위, 1000 K 아래의 액체** | 얼음 VI·VII 이 녹을 만큼 따뜻하되 뜨거운 물 적합의 바닥 아래인 기둥 | **적분한다.** `h2o_liquid_dense` (SeaFreeze `water2`, Brown 2018) 위에서, 그 온도의 스플라인 천장까지 — 400 K 3.0 GPa, 600 K 10 GPa, 700 K 13 GPa, 1000 K 30 GPa — 제 dT/dP\|_S 와 c_P 로. 천장 위·1000 K 아래(12 ~ 20.6 GPa, 녹는곡선 위 ≲ 170 K 의 띠)는 이름을 대며 **거절한다**. 더 뜨거우면 풀리므로 온도가 막은 것으로 던진다 | analog |
 | 다공성 암석·얼음 | `initial_porosity` > 0, 중심압이 150 MPa 실험 상한 안 | 발표된 관계식의 φ(P) 로 적분한다 | analog |
 | **실험 상한 위의 공극** | `initial_porosity` > 0, 압력이 150 MPa 위 | 관계식이 **외삽** 이다. 결과가 해당 질량 몫을 보고하고, `porosity_cap` 이 그 구간에서 아무것도 주장하지 않는 읽기를 준다 | analog |
 | **데워진 천체의 공극** | `initial_porosity` > 0 이고 용융·분화·대류·충돌·조석가열이 있는 천체 | **여기서 정하지 않는다.** 다섯 다 공극을 없애므로(Bierson+ 2019 §2.2), 이 레시피가 돌려주는 것은 빈틈의 상한이고 추정이 아니다. **다섯 중 셋에 대해서는 관계가 존재하고, 그것은 유변학에 의존한다** (C9, 2026-08-30 닫음): Neumann & Kruse 2019 (오픈 액세스, 본문이 캐시에) 가 엔셀라두스에 조석가열·분화·용융을 들고 핵을 크리프로 압밀한다(그들의 §2.5, 감람석은 Mei & Kohlstedt 2000, antigorite 는 Amiguet+ 2012 의 크리프 법칙, 계수는 Table 3). 감람석이면 4 ~ 70 km 의 다공질 핵층이 남고 **antigorite 면 남지 않는다.** 한 천체 한 크기이고 이 레시피가 적분하지 않는 열 이력이 필요하므로 갈래로만 기록한다 — 닿았고 명세됐고 소비처는 아직 없다. Bierson 의 상한이 일반 경우로 남는다(지름 123 ~ 2326 km 에서 검증). 대류와 충돌은 여전히 아무도 안 든다 | — |
@@ -1108,7 +1111,7 @@ Z 가 같은 두 거대행성이 같은 반지름을 받았습니다. 표는 질
 | **열경계층** | 얼음 맨틀·기체 외피·선언된 1-bar 온도가 있는 천체에 `boundary_temperature_jump` > 0 | **적분한다.** 맨틀/외피 경계에서 선언된 만큼 안쪽이 더 뜨겁다 (Nettelmann+ 2016 의 안정 성층 TBL — 그들의 U15-II 가 2500 K, U15-III 가 4700 K, 0.1 Mbar 근처. 이 레시피의 경계는 조성이 놓는 자리, 앵커에서는 30 ~ 40 GPa). 선언이다 — 층의 안정성과 폭은 열 이력이다. 더 뜨거운 내부는 덜 조밀하므로 이 점프는 단열 모형이 이미 크게 내는 행성을 **더 키운다**. 혼자서는 아무것도 닫지 않는다 | analog |
 | **얼음 맨틀의 암석** | 선언된 온도와 함께 `mantle_rock_fraction` > 0 | **적분한다.** 바다 표의 2.3 GPa 위 모든 물 상에 규산염을 부피 가법으로 섞고 ∇_ad 는 c_P 가중이다 (이를 위해 뜨거운 물 적합이 자기 P·U 에서 c_P 와 ∇_ad 를 갖게 됐다). 선언이다 — 얼음:암석 비는 형성이고, Nettelmann+ 2016 은 암석과 얼음의 혼합 거동이 "not well-understood" 라고 적는다. 더 조밀하므로 행성을 **줄인다** | analog |
 | **사문석화 암석** | 분화된 천체에 `serpentinisation` ∈ (0, 1] | **적분한다.** 암석층이 enstatite/PREM 규산염과 antigorite (Hilairet+ 2006 BM2, 10 GPa 까지; ρ₀ 는 인쇄값이 아니라 도출)의 부피 가법 혼합 — 알갱이로 공존하는 두 고체, 암석–금속 규칙과 같은 모양이고 C7 이 물린 반응이 아니다. 선언이다 — 물이 어디까지 갔는가는 이력이다. antigorite 의 열항은 Holland & Powell 1998 (Hilairet 자신의 본문이 빌리는 출처)에서 **빌린 것** — 순수 Mg 단성분의 열팽창을 출처의 온도 의존형에서 298 K 로 평탄화(600 K 에서 40 % 과소) — 이라 등급은 적합이 아니라 그 빌림과 평탄화가 정한다 (F2, 2026-08-30; 전에는 열항의 부재가 정했다). 10 GPa 위는 antigorite 끝이 이름 대며 거절한다(탈수). Callisto·Titan·Enceladus 에서는 [0, 1] 의 어느 분율도 발표 C/MR² 에 닿지 않는다 | analog |
-| **적합 밖의 뜨거운 물** | 2.3 GPa 위에서 1000 K 아래의 액체(그 아래 압력에서는 500 K 위), 또는 50 000 K 위의 물 | 양쪽 다 **이름을 대며 거절한다.** 바닥은 Mazevet+ 2019 §3.1 이 ρ ≳ 1 g/cc 에 대해 적은 "10³ K ≲ T" 이고, 그 아래의 액체는 이 저장소에 상태방정식이 없다 — 선반은 SeaFreeze `water2` (Brown 2018). 유체가 그 위에서 열리므로 온도가 막은 것으로 던진다. 위는 논문의 50 000 K 다 | — |
+| **적합 밖의 뜨거운 물** | 50 000 K 위의 액체, 또는 1000 K 아래에서 `water2` 의 천장까지 넘은 액체 | 양쪽 다 **이름을 대며 거절한다.** 바닥은 Mazevet+ 2019 §3.1 이 ρ ≳ 1 g/cc 에 대해 적은 "10³ K ≲ T" 이고, 그 아래는 조밀한 액체 물 표(`water2`)가 제 천장까지 받으며 그 천장을 넘어야 거절이 나온다 — 유체가 그 위에서 열리므로 온도가 막은 것으로. 기둥이 액체인 채 1000 K 를 지나면 그 자리의 갈아타기는 잰 −2.5 ~ −3.3 % 의 밀도 계단이다(water2 대비 Mazevet, 2.3 ~ 26 GPa). 위는 논문의 50 000 K 다 | — |
 | 서브넵튠 | `body_class` 가 `sub_neptune`, 가스질량분율과 1 bar 온도가 선언됨 | **적분한다.** 철 핵·암석·H/He 외피를 거대행성과 같은 적분기로 푼다. 가스질량분율은 일곱 번째 선언이고(나이와 조사량이 정하며 여기에 진화가 없다) 등급을 내린다. GJ 1214 b 는 H/He 2 % 에 1 bar 300 K 로 반지름에 닿고, Valencia+ 2013 의 < 7 % 안이다 | analog |
 | **질량이 묶을 수 있는 것보다 뜨거운 외피** | 1 bar 단열선이 천체에 비해 너무 뜨거운 H/He 외피 | **거절한다.** 묶이는 가장 뜨거운 해와, 그 위로는 1 bar 준위에 닿지 못하는 온도를 함께 든다. 1 bar 에서 출발한 단열선이 외피 바닥을 핵이 붙들 수 있는 것보다 뜨겁게 두는 것이고, 복사층이 깊은 단열선을 식히는데 이 레시피에 그 층이 없다 | — |
 | 갈색왜성 | `body_class` 가 `brown_dwarf` | 거절한다. ~13 M_J 위의 중수소 연소(Spiegel+ 2011)와 이 레시피에 없는 나이 의존 광도를 이름 대면서 | — |
@@ -1364,10 +1367,23 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   ([`2019JChPh.151e4501B`](https://ui.adsabs.harvard.edu/abs/2019JChPh.151e4501B), DOI
   [10.1063/1.5097179](https://doi.org/10.1063/1.5097179)). 어는점까지 700 MPa 로 잰 액체
   물의 음속과, 240 ~ 500 K 에서 2300 MPa 까지의 Gibbs 에너지 상태방정식. SeaFreeze 의
-  `water1` 로 배포되며 바다용으로 `water_table.py` 에 굳혔습니다. 그 위의 선반인 **Brown, J. M.
-  2018**, Fluid Phase Equilibria 463, 18
-  ([`2018FlPEq.463...18B`](https://ui.adsabs.harvard.edu/abs/2018FlPEq.463...18B)), 곧
-  100 GPa 까지의 `water2` 는 거절문이 이름만 대고 굳히지 않았습니다. *arXiv 프리프린트 없음.*
+  `water1` 로 배포되며 바다용으로 `water_table.py` 에 굳혔습니다. 그 위의 **Brown, J. M. 2018**,
+  Fluid Phase Equilibria 463, 18
+  ([`2018FlPEq.463...18B`](https://ui.adsabs.harvard.edu/abs/2018FlPEq.463...18B), doi
+  [10.1016/j.fluid.2018.02.001](https://doi.org/10.1016/j.fluid.2018.02.001)), *Local basis
+  function representations of thermodynamic surfaces: H₂O at high pressure and temperature as
+  an example* 는 SeaFreeze 의 `water2` 로 배포되고, **2026-08-30 에** 바다 표와 뜨거운 물 적합
+  사이의 조밀한 액체용으로 `water2_table.py` 에 굳혔습니다 — 100 GPa 매듭 상자가 아니라 스플라인의
+  실제 천장까지. 범위는 제3자의 진술로: AQUA §2.3.5, "liquid and supercritical H₂O from 1 GPa to
+  100 GPa and up to 10⁴ K". Brown 의 적합·잔차 논의는 읽지 못했습니다(유료). *arXiv 프리프린트 없음.*
+- **Haldemann, J., Alibert, Y., Mordasini, C. & Benz, W. 2020**, A&A 643, A105
+  ([`2020A&A...643A.105H`](https://ui.adsabs.harvard.edu/abs/2020A&A...643A.105H),
+  [2009.10098](https://arxiv.org/abs/2009.10098)). *AQUA: A Collection of H₂O Equations of
+  State for Planetary Models* — 0.1 Pa 에서 400 TPa 까지 일곱 구역을 잇고 이음매 방법을 적어
+  둡니다(Method 1 은 Gibbs 교차점에서 갈아타기, Method 2 는 도함수 보간 — "thermodynamic
+  consistency will not be guaranteed"). 이 레시피의 띠를 Brown 2018 에 맡기는 §2.3.5 를 위해
+  읽었습니다. **선반에 두고 엔진에는 넣지 않습니다** — 사다리가 범위를 다 쓰는 날의 후보입니다.
+  *오픈 액세스.*
 - **Journaux, B., Brown, J. M., Pakhomova, A., Collings, I. E., Petitgirard, S., Espinoza,
   P., Boffa Ballaran, T., Vance, S. D., Ott, J., Cova, F., Garbarino, G. & Hanfland, M.
   2020**, JGR Planets 125, e2019JE006176

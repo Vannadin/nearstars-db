@@ -205,6 +205,6 @@ trial path. About +13 s on a 22-minute gate.
 - The liquid line above 52.4 GPa and the superionic melting line (Millot+ 2018/2019) are
   not carried; the verdict says "fluid or superionic" there. What would carry them is the
   paywalled Millot+ 2019 Fig. 3, or French & Redmer 2016's superionic potentials.
-- The 500–1000 K dense-liquid band has no equation of state; the shelf is SeaFreeze `water2`.
+- The 500–1000 K dense-liquid band has no equation of state; the shelf is SeaFreeze `water2`. *(Filled 2026-08-30: `water2` baked to its real ceiling, `engine/water2-context-notes.md`.)*
 - The residual 0.02 K ripple in the 1-bar temperature is the first-order temperature carry,
   not this item's.
