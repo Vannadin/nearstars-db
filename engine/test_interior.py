@@ -366,6 +366,22 @@ def print_adiabat_window() -> None:
               f"{r['rise_engine']:.3f} | {r['rise_nl']:.3f} | {(r['rise_engine'] / r['rise_nl'] - 1) * 100:+.1f} % |")
 
 
+# ── Kimura & Murakami 2023 — Reinhardt 액체선의 측정 검사 (F1) ─────────────────
+#
+# 2023JChPh.158m4504K, PDF 가 캐시에 있다. Table I 에서 옮겼다 (열: P + P_th [GPa], T [K], 괄호 불확도).
+# 같은 압력 묶음에서 **가장 낮은** 액체 관측 온도가 융해온도다 — 융해는 "appearance of the Brillouin
+# peaks derived from the liquid phase" 로 판정하고, 더 뜨거운 행은 융해점 위의 액체다 (그들의 eq. (2)
+# 가 31 GPa 에서 1316 K 를 내어 1300 K 행 옆에 선다). 별표 행(7.8 ~ 21.3 GPa)은 Queyroux 곡선에서
+# **추정한** 온도라 측정이 아니고, 여기 넣지 않는다. 기준: |Reinhardt − Kimura| ≤ Kimura 의 불확도.
+KIMURA_TABLE_I = ((25.9, 1300.0, 140.0), (30.7, 1300.0, 140.0), (37.2, 1530.0, 140.0),
+                  (41.1, 1570.0, 140.0), (47.3, 1730.0, 140.0), (49.6, 1770.0, 140.0),
+                  (51.5, 1860.0, 140.0), (53.5, 1910.0, 140.0))
+KIMURA_INSIDE_MIN = 6            # 2026-08-30 에 잰 값: Reinhardt 구간 안 7 점 중 6 점이 불확도 안
+# Kimura & Murakami eq. (2): Simon–Glatzel, Queyroux+ 2020 의 삼중점(14.6 GPa · 850 K)에 앵커
+KIMURA_SIMON = (14.6, 850.0, 21.0, 1.32)     # P_ref [GPa], T_ref [K], A, C
+KIMURA_SEAM_BAND = (0.10, 0.20)              # eq. (2) / Reinhardt − 1 at 20.6 GPa, 잰 값 +13.9 %
+
+
 # ── antigorite (C10) — 옮겨 적기 검산 ────────────────────────────────────
 #
 # Hilairet+ 2006 (2006GeoRL..33.2302H) 는 ρ₀ 를 인쇄하지 않는다. eos.py 가 구조식과 m = 1 부피에서
@@ -1288,6 +1304,34 @@ def main() -> int:
         fails.append(f"CMB 온도 민감도 {got:.2f} 가 eq. 8 의 {want:.2f} 와 25 % 넘게 다르다")
     print(f"  [{'PASS' if ok else 'FAIL'}] dT_CMB/dT_Pot {got:.2f} · eq. 8 이 주는 "
           f"{want:.2f} ({(got / want - 1) * 100:+.0f} %)")
+
+    # ── Kimura & Murakami 2023 — Reinhardt 액체선의 측정 검사 (F1) ──
+    print("\n융해곡선 재심 (F1) — Kimura & Murakami 2023 Table I 대 Reinhardt+ 2022 액체선")
+    from eos import _interp_line as _il2, REINHARDT_LIQUID as _RL2, IAPWS_VII_END as _IVE2
+    inside = n_cmp = 0
+    for p_gpa, t_k, sig in KIMURA_TABLE_I:
+        t_r = _il2(_RL2, p_gpa * 1e9)
+        if t_r is None:
+            print(f"         {p_gpa:5.1f} GPa · {t_k:.0f} ± {sig:.0f} K — Reinhardt 의 52.4 GPa 밖")
+            continue
+        n_cmp += 1
+        ok_pt = abs(t_r - t_k) <= sig
+        inside += ok_pt
+        print(f"         {p_gpa:5.1f} GPa · Kimura {t_k:.0f} ± {sig:.0f} K · Reinhardt {t_r:.0f} K "
+              f"({t_r - t_k:+.0f} K, {(t_r - t_k) / sig:+.2f} σ) {'안' if ok_pt else '**밖**'}")
+    ok = inside >= KIMURA_INSIDE_MIN
+    if not ok:
+        fails.append(f"Reinhardt 액체선이 Kimura 의 불확도 안에 드는 점이 {inside}/{n_cmp} — 기록 {KIMURA_INSIDE_MIN} 미만")
+    print(f"  [{'PASS' if ok else 'FAIL'}] {n_cmp} 점 중 {inside} 점이 측정 불확도 안 (기록 ≥ {KIMURA_INSIDE_MIN}); "
+          "밖의 한 점(25.9 GPa)은 측정이 시뮬레이션보다 뜨겁다 — IAPWS 쪽이 아니다")
+    p_ref, t_ref, a_s, c_s = KIMURA_SIMON
+    t_simon = t_ref * ((_IVE2 / 1e9 - p_ref) / a_s + 1.0) ** (1.0 / c_s)
+    d = t_simon / _il2(_RL2, _IVE2) - 1.0
+    ok = KIMURA_SEAM_BAND[0] <= d <= KIMURA_SEAM_BAND[1]
+    if not ok:
+        fails.append(f"이음매에서 Kimura & Murakami eq. (2) / Reinhardt − 1 = {d * 100:+.1f} % 가 기록 구간 밖")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 이음매 {_IVE2 / 1e9:.1f} GPa: Kimura & Murakami eq. (2) {t_simon:.0f} K — Reinhardt 보다 "
+          f"{d * 100:+.1f} %, IAPWS 식 (5) 715 K 보다 {(t_simon / 715.0 - 1) * 100:+.0f} % — 측정이 시뮬레이션 쪽에 선다")
 
     # ── antigorite (C10) — 옮겨 적기 검산 ──
     print("\nantigorite — Hilairet+ 2006 의 BM2 와, 인쇄되지 않은 ρ₀ 의 재도출")

@@ -470,6 +470,17 @@ regime, and the liquid line only decides the *name* (liquid or VII″) inside th
 material is chosen by the local (P, T) against two published lines, not by `body_class`, and
 the verdict says which phase each end of the column got and how far from which line.
 
+**Revisited against a measurement (F1, 2026-08-30).** Kimura & Murakami 2023
+([`2023JChPh.158m4504K`](https://ui.adsabs.harvard.edu/abs/2023JChPh.158m4504K), PDF in
+the cache) measure melting by Brillouin spectroscopy from 25.9 to 53.6 GPa, ±130–150 K per
+point. With the criterion fixed beforehand (inside the measurement's own error), Reinhardt's
+line sits inside it at six of seven melting points, and the one outside (25.9 GPa) has the
+measurement 171 K *hotter* than the simulation — away from IAPWS. Their Simon–Glatzel fit
+(their eq. (2), anchored on Queyroux+ 2020's triple point) puts 1028 K at 20.6 GPa, +14 % over
+Reinhardt and +44 % over IAPWS's 715 K. The step is not an artefact of the simulation; the
+splice, the seam number and the grade (analog — the check's own error is 8–11 % and does not
+reach the seam) all stand, and `test_interior.py` re-runs the six-of-seven count.
+
 **Above 52.4 GPa no liquid line is carried and none is invented.** The VII′–VII″ line reaches
 70 GPa; past it the state is `undecided`, the representation is chosen by availability — the
 ladder while its fit stands (to 1 TPa and 1800 K, both knot limits rather than phase
@@ -1774,9 +1785,12 @@ instead of as a class constant.
 - **Kimura, T. 2023**, J. Chem. Phys. 158, 134504
   ([`2023JChPh.158m4504K`](https://ui.adsabs.harvard.edu/abs/2023JChPh.158m4504K),
   doi [10.1063/5.0137943](https://doi.org/10.1063/5.0137943)). *Revisiting the melting curve of
-  H₂O by Brillouin spectroscopy to 54 GPa* — a measurement across the whole Reinhardt range, the
-  arbiter of the 20.6 GPa seam when it arrives. *Paywalled*; on the owner's request list.
-  Bibcode verified by title (this session and the audit session, 2026-08-30).
+  H₂O by Brillouin spectroscopy to 54 GPa*. **Cached** as
+  `docs/phase3/_papers/2023JChPh.158m4504K.pdf` (fetched by the owner, 2026-08-30). Table I
+  (melting points 25.9–53.6 GPa, ±130–150 K; the rows below 26 GPa are liquid runs at a
+  temperature estimated from Queyroux's curve) and eq. (2), the Simon–Glatzel fit anchored on
+  Queyroux+ 2020's triple point. The arbiter of the 20.6 GPa seam: it sits with Reinhardt (F1).
+  Bibcode verified by title.
 - **Bethkenhagen, M. et al. 2017**, ApJ 848, 67
   ([`2017ApJ...848...67B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...67B), arXiv
   **[1709.04133](https://arxiv.org/abs/1709.04133)**). **Cached** in

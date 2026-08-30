@@ -131,6 +131,20 @@ the audit session) becomes the arbiter of the disputed band when it arrives: its
 not only a possible grade upgrade but a **re-verdict of the band (16.5–20.6 GPa / 715–902 K)
 and a possible narrowing of the seam's width.**
 
+**Revisited 2026-08-30 (F1), with the criterion fixed before the comparison.** Kimura &
+Murakami measure melting only from 25.9 to 53.6 GPa (their lower rows are liquid runs at a
+temperature *estimated from Queyroux's curve*). Against Reinhardt's line, six of their seven
+melting points sit inside their own stated ±130–150 K, and the one outside (25.9 GPa) is the
+measurement *hotter* than the simulation by 171 K — away from IAPWS, not toward it. At the
+seam their Simon–Glatzel fit (eq. (2), anchored on Queyroux's 14.6 GPa · 850 K triple point)
+gives 1028 K (968–1155 at 1σ): +14 % above Reinhardt and +44 % above IAPWS's 715 K.
+**Kimura sits with Reinhardt; the step is not an artefact of the simulation.** C3 stays
+closed, the seam number stands, the dispatch is unchanged, and the grade stays analog
+because the check's own error is 8–11 % and it does not reach the seam. The band is not
+narrowed: the measurement gives no support to IAPWS's end. Table I enters the gate as a check
+table. What would still move this is a measured point between 15 and 26 GPa — Queyroux+ 2020,
+now in the cache. `engine/seam-retrial-context-notes.md` has the tables.
+
 ### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt**
 
 The ice-giant envelope is water alone, standing in for a water–ammonia–methane mixture. That

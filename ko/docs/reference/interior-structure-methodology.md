@@ -418,6 +418,16 @@ PBE DFT 에 맞춘 기계학습 퍼텐셜이지 측정이 아닙니다. 실험�
 VII″ 냐)만 정합니다. 그러니 재료는 `body_class` 가 아니라 국소 (P, T) 를 발표된 두 선에 댄
 것이 고르고, 판정문은 기둥 양 끝이 어느 상을 어느 선에서 얼마나 떨어져 받았는지를 말합니다.
 
+**측정에 대어 재심했습니다 (F1, 2026-08-30).** Kimura & Murakami 2023
+([`2023JChPh.158m4504K`](https://ui.adsabs.harvard.edu/abs/2023JChPh.158m4504K), PDF 가
+캐시에) 이 브릴루앙 분광으로 25.9 ~ 53.6 GPa 의 융해를 점당 ±130 ~ 150 K 로 쟀습니다. 판정
+기준(측정 자신의 불확도 안)을 먼저 못 박고 대본 결과, Reinhardt 의 선은 융해점 일곱 중 여섯에서
+그 안에 앉고, 밖의 한 점(25.9 GPa)은 측정이 시뮬레이션보다 171 K *뜨겁습니다* — IAPWS 에서 먼
+쪽입니다. 그들의 Simon–Glatzel 적합(그들의 식 (2), Queyroux+ 2020 의 삼중점에 앵커)은 20.6 GPa
+에서 1028 K 로 Reinhardt 보다 +14 %, IAPWS 의 715 K 보다 +44 % 입니다. 단차는 시뮬레이션의
+산물이 아닙니다. 접합·이음매 수·등급(analog — 검사 자신의 오차가 8 ~ 11 % 이고 이음매에 닿지
+않습니다)은 그대로이고, `test_interior.py` 가 일곱-중-여섯을 다시 셉니다.
+
 **52.4 GPa 위에는 액체선을 들지 않고, 지어내지도 않습니다.** VII′–VII″ 선은 70 GPa 까지
 닿고, 그 위는 상태가 `undecided` 이며 표현은 가용성으로 고릅니다 — 사다리의 적합이 서 있는
 동안(1 TPa · 1800 K 까지, 둘 다 상 경계가 아니라 매듭의 끝)은 사다리, 그 밖은 Mazevet 의 적합.
@@ -1605,9 +1615,11 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
 - **Kimura, T. 2023**, J. Chem. Phys. 158, 134504
   ([`2023JChPh.158m4504K`](https://ui.adsabs.harvard.edu/abs/2023JChPh.158m4504K),
   doi [10.1063/5.0137943](https://doi.org/10.1063/5.0137943)). *Revisiting the melting curve of
-  H₂O by Brillouin spectroscopy to 54 GPa* — Reinhardt 구간 전체를 덮는 측정이고, 도착하면
-  20.6 GPa 이음매의 심판입니다. *유료*, 오너 요청 목록에. bibcode 는 제목까지 대조했습니다(이
-  세션과 감사 세션, 2026-08-30).
+  H₂O by Brillouin spectroscopy to 54 GPa*. `docs/phase3/_papers/2023JChPh.158m4504K.pdf` 로
+  **캐시**(오너가 받아옴, 2026-08-30). Table I (융해점 25.9 ~ 53.6 GPa, ±130 ~ 150 K; 26 GPa
+  아래 행은 Queyroux 곡선에서 추정한 온도의 액체 실험)과 식 (2), Queyroux+ 2020 삼중점에 앵커한
+  Simon–Glatzel 적합. 20.6 GPa 이음매의 심판 — Reinhardt 쪽에 섭니다 (F1). bibcode 는 제목으로
+  확인.
 - **Bethkenhagen, M. et al. 2017**, ApJ 848, 67
   ([`2017ApJ...848...67B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...67B), arXiv
   **[1709.04133](https://arxiv.org/abs/1709.04133)**). **캐시**
