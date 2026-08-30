@@ -65,6 +65,17 @@ numbers travelling down into briefs, and one headline (C11's "Titan is inside a 
 band", 2026-08-30) travelling up without reproduction; the rule above stops the first and
 this one the second.
 
+**The disease is independent of role.** On 2026-08-30 it fired once in each of the three
+sessions: the directing session put unlabelled numbers into briefs (four times); the working
+session wrote a gate time it had not measured; the audit session joined the triple point's
+pressure (14.6 GPa) to an isotherm's temperature (905 K) into one pair and took it for a
+melting point (Queyroux+ 2020 — the pressure belongs to 14.6(5) GPa · 850(20) K, the
+temperature to an isotherm whose melting pressure the Letter does not print). What stops it
+is not the role but the label and the prior reading — and the procedure held: the audit had
+fenced its own suggestion with "read first · do not quote · direction only", so the mistaken
+pair was read before it was used and never reached a verdict. An error occurred and the
+procedure caught it; "it passed the audit" is not a reason to skip the reading.
+
 **A table is regenerated on the code that ships, in the commit that ships it — and when the
 regeneration differs, which side is right is settled by a separate trace.** The sub-kind's
 name ("the table ran ahead of the code inside one commit") invites doubting the table first;
