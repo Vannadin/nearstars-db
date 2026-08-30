@@ -186,3 +186,43 @@ REFS = (
     "2012P&SS...73...98C",      # Carry 2012 — 10 MPa 문턱과 관측된 전이질량
     "2002aste.book..485B",      # Britt+ 2002 — 입자 파쇄 문턱의 원 출처
 )
+
+
+# ── 원시 지각의 two-layer 공극 (Malamud & Prialnik 2015, C11) ──────────────
+#
+# Malamud & Prialnik 2015 (2015Icar..246...21M) §3.3 식 (4)–(6), 전문에서 읽음 (F3,
+# malamud-readthrough-context-notes.md). 얼음과 암석이 각자의 압밀 곡선을 따르고 부피를 더하는
+# two-layer 모형(Yasui & Arakawa 2009)이고, 위 Bierson 법칙과 **같은 실험**(Durham+ 2005,
+# Yasui & Arakawa 2009, Leliwa-Kopystyński+ 1994)의 다른 매개화다 — 차이는 얼음의 상동온도
+# T/T_m 의존(식 (6))과 암석의 지수 형이다. 지각(C11)에만 쓴다. 논문 단위 cgs: P 는 dyn/cm².
+#   ψ_w(T, P) = ψ_w0 exp(−β_w(T/T_m) √P),  β_w = β_w1 + β_w2 / (1 + exp(β_w3 (1 − T/T_m)))
+#   ψ_d(P)    = ψ_d0 exp(−β_d P) Γ,        Γ = 1 (지각은 녹은 적이 없다: T_max < T_m)
+# 식 (7) 의 Γ 는 인쇄본 지수가 15(T_max/675) − 1 로 본문 서술("675 K 중심")과 어긋나고
+# 15(T_max/675 − 1) 이 본문과 맞는다 — 여기서는 Γ = 1 이라 그 형이 값에 안 들어오지만, 옮겨 적는
+# 다음 사람을 위해 적어 둔다. 적합 범위: 얼음 150 MPa(Durham)·암석 764 MPa(Leliwa-Kopystyński),
+# 얼음 I. 그 위는 외삽이고 공극이 이미 몇 % 라 그 몫이 상한이다.
+MALAMUD_PSI_W0 = 0.45
+MALAMUD_PSI_D0 = 0.4
+MALAMUD_BETA_W1 = 4.7434e-5     # cm dyn^-1/2
+MALAMUD_BETA_W2 = 31.7434e-5    # cm dyn^-1/2
+MALAMUD_BETA_W3 = 11.0
+MALAMUD_BETA_D = 1.28e-10       # cm² dyn⁻¹
+MALAMUD_P_FIT_MAX = 764.0e6     # Pa. 암석 압밀 데이터의 끝 (Leliwa-Kopystyński+ 1994)
+
+
+def malamud_ice_porosity(p_pa: float, t_k: float, t_melt_k: float | None) -> float:
+    """얼음 알갱이의 공극 ψ_w(T, P), 식 (4)·(6). 온도가 흐르지 않으면(t ≤ 0) 또는 녹는점을 모르면
+    가장 차가운 끝(β_w1) 으로 잰다 — 공극이 가장 많이 남는 쪽, 곧 상한이다."""
+    p_cgs = max(p_pa, 0.0) * 10.0
+    if t_k > 0.0 and t_melt_k:
+        h = min(t_k / t_melt_k, 1.0)
+        beta = MALAMUD_BETA_W1 + MALAMUD_BETA_W2 / (1.0 + math.exp(MALAMUD_BETA_W3 * (1.0 - h)))
+    else:
+        beta = MALAMUD_BETA_W1
+    return MALAMUD_PSI_W0 * math.exp(-beta * math.sqrt(p_cgs))
+
+
+def malamud_rock_porosity(p_pa: float) -> float:
+    """암석 알갱이의 공극 ψ_d(P), 식 (5) 에 Γ = 1."""
+    return MALAMUD_PSI_D0 * math.exp(-MALAMUD_BETA_D * max(p_pa, 0.0) * 10.0)
+

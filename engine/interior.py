@@ -36,9 +36,10 @@ import water_table
 import water2_table
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
-                 PhaseGap, mix, water_phase_name, water_vii1_vii2_boundary)
+                 Mixture, PhaseGap, mix, water_phase_name, water_vii1_vii2_boundary)
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
+                      malamud_ice_porosity, malamud_rock_porosity,
                       bulk_factor, porosity, voids_expected)
 
 RECIPE = "interior-structure-methodology"
@@ -116,13 +117,14 @@ class Structure:
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
-                 "ice_x_reached")
+                 "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
                  ice_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
-                 surface_reached=True, ice_x_reached=False):
+                 surface_reached=True, ice_x_reached=False, r_crust_base=None,
+                 p_crust_base=None, crust_void=0.0):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -144,6 +146,10 @@ class Structure:
         # 얼음 기둥을 지나며 찍은 (압력, 온도) 표본. 녹는곡선에 대는 것은 적분이 끝난
         # 뒤이고, 사격이 반복될 때마다 뒤집기를 돌리지 않으려고 그렇게 나눴다.
         self.ice_samples = tuple(ice_samples)
+        # 원시 지각 (C11). 지각 바닥의 반지름과 압력, 그리고 지각 안 빈 공간의 부피 [m³].
+        self.r_crust_base = r_crust_base
+        self.p_crust_base = p_crust_base
+        self.crust_void = crust_void
         # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
         # 있으면 그 재료의 압력 바닥(1 bar)이고, 발표된 거대행성 반지름이 그 준위의 값이다.
         self.p_surface = p_surface
@@ -187,7 +193,8 @@ class Structure:
 
 def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
            envelope_z: float = 0.0, differentiated: bool = True,
-           serpentinisation: float = 0.0):
+           serpentinisation: float = 0.0, differentiation_front: float = 1.0,
+           crust_rock_fraction: float = 0.0, crust_porosity: bool = False):
     """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
 
     가스 외피가 있으면 그것이 가장 바깥 층이다. 폴리트로프는 **별도의 가지가 아니라
@@ -205,13 +212,25 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
         return out
     if cmf > 0:
         out.append((cmf, MATERIALS[core_material]))
-    if 1.0 - cmf - imf - gmf > 0:
-        out.append((1.0 - imf - gmf, _rock(serpentinisation)))
-    if imf > 0:
+    # ── 중간 단 (C11): 선언된 분화 전선 위의 원시 지각 ──
+    # differentiation_front 는 중심에서 잰 누적 질량분율이고 그 아래가 녹아서 분화한 부분이다.
+    # 그 위, 기체 외피 아래는 **한 번도 녹지 않은** 얼음+암석 알갱이의 지각이다. 1.0 이면 지각이
+    # 없고 예전 열 그대로다. 지각의 암석은 그 자체가 두 번째 선언(crust_rock_fraction)이다 —
+    # Malamud & Prialnik 2015 의 바깥 맨틀은 핵에서 올라온 물이 재동결해 원시 조성이 아니다.
+    crust = (1.0 - gmf) - differentiation_front
+    rock_crust = crust * crust_rock_fraction if crust > 0.0 else 0.0
+    ice_crust = crust - rock_crust
+    rock_deep = (1.0 - cmf - imf - gmf) - rock_crust
+    ice_deep = imf - ice_crust
+    if rock_deep > 0:
+        out.append((cmf + rock_deep, _rock(serpentinisation)))
+    if ice_deep > 0:
         # 얼음층의 이름은 사다리(h2o)다. 그 자리의 물이 액체인지 고체인지는 적분기가 걸음마다
         # 국소 (P, T) 를 녹는곡선에 대서 정하고, 액체면 h2o_liquid(2.3 GPa 까지) 또는
         # h2o_hot 으로 갈아탄다 — 2026-08-30 까지는 천체 종류가 h2o_hot 을 통째로 골랐다.
-        out.append((1.0 - gmf, MATERIALS["h2o"]))
+        out.append((cmf + rock_deep + ice_deep, MATERIALS["h2o"]))
+    if crust > 0.0:
+        out.append((1.0 - gmf, _crust(crust_rock_fraction, crust_porosity)))
     if gmf > 0:
         # 외피에 중원소가 녹아 있으면 그 층이 혼합이다. envelope_z 는 **행성 전체가
         # 아니라 이 외피 안에서의** 질량분율이다.
@@ -232,15 +251,73 @@ def _rock(serpentinisation: float):
                (MATERIALS["antigorite"], serpentinisation))
 
 
+CRUST_NAME = "crust_primordial"
+
+
+def _crust(crust_rock_fraction: float, crust_porosity: bool = False):
+    """원시 지각의 재료 (C11). 얼음 사다리(h2o)와 규산염을 부피 가법으로 섞은 것 — 액체 물이
+    닿은 적 없는 두 고체가 알갱이로 공존하는 층이라, C7 이 막은 '물을 규산염에 섞기'(반응)가
+    아니라 C10 의 antigorite+enstatite 와 같은 모양이다. Malamud & Prialnik 2015 §3.1.3 이 Yasui &
+    Arakawa 2009 의 two-layer 모형을 그 근거로 든다: "ice and silica are independently compressed
+    with pressure, following the compaction curve of each pure material … it does a very good job
+    of reproducing the compaction curve of the mixture". 암석은 규산염뿐이다 — 물이 안 닿았으니
+    사문석화가 없고, 그 논문의 바깥 맨틀 암석도 "mostly unprocessed" 다.
+
+    `crust_porosity` 가 켜지면 같은 논문의 식 (4)–(6) 을 Γ = 1 로 얹는다 (아래 클래스)."""
+    parts = ((MATERIALS["h2o"], 1.0 - crust_rock_fraction),
+             (MATERIALS["silicate"], crust_rock_fraction))
+    if crust_porosity:
+        return PorousCrust(CRUST_NAME, "미분화 원시 지각 (얼음+암석 알갱이, 공극)", parts)
+    return mix(CRUST_NAME, "미분화 원시 지각 (얼음+암석 알갱이)", *parts)
+
+
+class PorousCrust(Mixture):
+    """지각의 two-layer 공극 (Malamud & Prialnik 2015 §3.3 식 (1)·(4)–(6), Γ = 1).
+
+        1/ρ = Σ wᵢ / (ρᵢ (1 − ψᵢ)),   ψ_w = ψ_w0 exp(−β_w(T/T_m)√P),   ψ_d = ψ_d0 exp(−β_d P)
+
+    각 고체가 제 압밀 곡선을 따르고 부피를 더한다 — 밀도 규칙과 같은 모형이라 새 가정이 없다.
+    Γ(T_max) 는 1 이다: 지각은 정의상 녹은 적이 없어 T_max < T_m 이고, 본문과 맞는 형
+    15(T_max/675 − 1) 로 Γ(273 K) = 0.9999 다 (인쇄된 식 (7)의 지수는 본문 서술과 어긋난다 —
+    porosity.py 에 기록). 얼음의 상동온도 T/T_m 은 사다리의 녹는곡선(IAPWS) 이 그 압력에서
+    주는 T_m 으로 잰다 — 논문은 얼음 I 만 다루므로 P ≲ 0.2 GPa 위는 그 적합의 바깥이고, 공극이
+    거기서 이미 몇 % 라 외삽의 몫은 그 크기다. 온도가 흐르지 않으면(t = 0) 얼음 공극은 가장
+    차가운 끝(β_w1) 으로 잰다. **상한이다**: 실험실 압밀 곡선이라 지질학적 시간의 크리프(C9)
+    가 더 닫을 수 있고, 방향은 C/MR² 를 **낮추는** 쪽이라 지각 암석이 올리는 것과 반대다.
+
+    이 클래스는 밀도만 바꾼다. c_P·∇_ad·γ 는 알갱이의 것(Mixture)을 그대로 쓴다 — 빈 공간에는
+    열용량이 없다."""
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        inv = 0.0
+        for m, w in self.parts:
+            if w <= 0.0:
+                continue
+            rho = m.density(p, t, t_pot)
+            if m.name == "h2o":
+                t_m = m.t_melt(p)
+                psi = malamud_ice_porosity(p, t, t_m)
+            else:
+                psi = malamud_rock_porosity(p)
+            inv += w / (rho * (1.0 - psi))
+        return 1.0 / inv
+
+    def void_fraction(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """이 자리의 빈 공간 부피분율 = 1 − ρ_bulk/ρ_grain."""
+        return 1.0 - self.density(p, t, t_pot) / Mixture.density(self, p, t, t_pot)
+
+
 # 단열 기울기를 한 단계에 한 번만 다시 잰다. 적분기가 이미 한 단계 안에서 재료를
 # 고정하고 있고(경계에서 dr/R ~ 3e-4 의 오차), 온도 기울기는 그보다 매끄럽다.
 # 단계마다 RK 네 자리에서 다시 재면 밀도 뒤집기가 여덟 번 더 돌아 비싸다.
 def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated,
-                 serpentinisation=0.0):
+                 serpentinisation=0.0, differentiation_front=1.0, crust_rock_fraction=0.0,
+                 crust_porosity=False):
     """이 천체의 층들 중 발표된 열 상수가 없어 등온으로 남는 상들의 이름."""
     out: list[str] = []
     for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
-                           serpentinisation):
+                           serpentinisation, differentiation_front, crust_rock_fraction,
+                           crust_porosity):
         out.extend(mat.cold_phases())
     return out
 
@@ -314,7 +391,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               t_center: float = 0.0, t_pot: float = 0.0,
               boundary_temperature_jump: float = 0.0,
               mantle_rock_fraction: float = 0.0,
-              serpentinisation: float = 0.0) -> Structure:
+              serpentinisation: float = 0.0, differentiation_front: float = 1.0,
+              crust_rock_fraction: float = 0.0, crust_porosity: bool = False) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -324,7 +402,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation,
+                   differentiation_front, crust_rock_fraction, crust_porosity)
     mat = stack[0][1]
     # 적분이 멈추는 압력. 응축상 천체는 0 — 표면이 P = 0 이다. 기체 외피가 바깥에 있으면
     # 그 재료가 자기 바닥을 말한다 (1 bar). 바깥 층 하나가 정하므로 여기서 한 번 본다.
@@ -368,6 +447,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     r_ocean_base = None
     r_ocean_top = None
     ice_x_stepped = False  # 사다리의 얼음 X 를 실제로 밟았는가. 압력만으로는 모른다 — 그 자리가 유체일 수 있다
+    r_crust_base = None    # 원시 지각 (C11)
+    p_crust_base = None
+    crust_void = 0.0
     # ── 두 선언 (C5) ──
     # 얼음 맨틀에 섞인 암석. 물의 어느 상이든(사다리·바다·뜨거운 물) 같은 분율의 규산염과 부피
     # 가법으로 섞고, ∇_ad 는 c_P 가중이다 (Mixture). 상마다 혼합 객체를 하나씩 만들어 둔다.
@@ -475,6 +557,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             core_radius, p_cmb, t_cmb = r, p, t
         if stack[layer][1].name == "h2o":
             p_ice_base = p
+        if stack[layer][1].name == CRUST_NAME:
+            r_crust_base, p_crust_base = r, p
 
     steps = 0
     while p > p_stop and steps < MAX_STEPS:
@@ -496,6 +580,18 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                     r_ocean_base = r
         if mat.name == "h2o" and p > ICE_VII_TO_X:
             ice_x_stepped = True       # 등온 경로도 포함한다 — 사다리를 그 압력에서 실제로 밟았다
+        if mat.name == CRUST_NAME and t > 0.0 and liquid_at(p, t):
+            # **선언이 자기모순이다.** 지각은 녹은 적이 없다고 선언됐는데 이 자리의 (P, T) 가 녹는곡선
+            # 위다. 온도 괄호로 고칠 일이 아니라(표면 온도가 경계조건이다) 선언을 고칠 일이므로, 온도가
+            # 막은 것으로 던지되 방향을 '내려야 한다' 로 둔다 — 두 벽에 다 닿으면 shoot 이 그대로 거절한다.
+            raise PhaseGap(
+                CRUST_NAME, p,
+                f"선언된 원시 지각의 {p / 1e9:.3f} GPa · {t:.0f} K 가 물의 녹는곡선 위(액체)다. 한 번도 "
+                "녹지 않은 지각은 이 온도에 있을 수 없다 — 포텐셜 온도를 낮추거나 분화 전선을 올려 "
+                "지각을 얇게 하는 것이 선언을 고치는 길이고, 이 레시피는 그 사이를 지어내지 않는다 (C11).",
+                t, too_cold=False)
+        if mat.name == CRUST_NAME and crust_porosity:
+            crust_void += 4.0 * math.pi * r * r * dr * mat.void_fraction(p, t, t_pot)
         if mat.name not in phases:
             phases.append(mat.name)
         if in_column and p > water_table.P_MAX_PA:
@@ -725,7 +821,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                              p_silicate_max=p_si_max, t_center=t_center,
                              t_cmb=t_cmb if t_cmb is not None else 0.0,
                              t_surface=t, ice_samples=ice_samples, p_surface=p,
-                             surface_reached=False)
+                             surface_reached=False, r_crust_base=r_crust_base,
+                             p_crust_base=p_crust_base, crust_void=crust_void)
         raise GridExceeded(
             f"{MAX_STEPS} 걸음(중심 격자 dr 의 {MAX_STEPS / STEPS:.0f} 배 반지름, 여기서는 "
             f"{r / EARTH_RADIUS_M:.1f} R⊕) 안에 표면에 닿지 못했다 — 중심압 "
@@ -748,7 +845,9 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                      t_cmb=t_cmb if t_cmb is not None else 0.0,
                      t_surface=t_surface, ice_samples=ice_samples,
                      p_surface=p_surface, r_ocean_base=r_ocean_base,
-                     r_ocean_top=r_ocean_top, ice_x_reached=ice_x_stepped)
+                     r_ocean_top=r_ocean_top, ice_x_reached=ice_x_stepped,
+                     r_crust_base=r_crust_base, p_crust_base=p_crust_base,
+                     crust_void=crust_void)
 
 
 def porosity_at(mat, p_pa: float, phi0: float,
@@ -835,14 +934,17 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     t_center: float = 0.0, t_pot: float = 0.0,
                     boundary_temperature_jump: float = 0.0,
                     mantle_rock_fraction: float = 0.0,
-                    serpentinisation: float = 0.0) -> tuple[Structure, bool]:
+                    serpentinisation: float = 0.0, differentiation_front: float = 1.0,
+                    crust_rock_fraction: float = 0.0,
+                    crust_porosity: bool = False) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation)
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation,
+                   differentiation_front, crust_rock_fraction, crust_porosity)
     # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
     # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
     rho0_bar = 1.0 / sum(
@@ -864,7 +966,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
                          envelope_z, differentiated, t_center, t_pot,
                          boundary_temperature_jump, mantle_rock_fraction,
-                         serpentinisation)
+                         serpentinisation, differentiation_front, crust_rock_fraction,
+                         crust_porosity)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -986,7 +1089,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
                         envelope_z, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
-                        serpentinisation)
+                        serpentinisation, differentiation_front, crust_rock_fraction,
+                        crust_porosity)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -1004,7 +1108,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
                         gmf, envelope_z, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
-                        serpentinisation)
+                        serpentinisation, differentiation_front, crust_rock_fraction,
+                        crust_porosity)
         y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
@@ -1041,7 +1146,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
                     gmf, envelope_z, differentiated, t_center, t_pot,
                     boundary_temperature_jump, mantle_rock_fraction,
-                    serpentinisation)
+                    serpentinisation, differentiation_front, crust_rock_fraction,
+                    crust_porosity)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -1077,7 +1183,9 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           potential_temperature: float | None = None,
           boundary_temperature_jump: float = 0.0,
           mantle_rock_fraction: float = 0.0,
-          serpentinisation: float = 0.0) -> tuple[Structure, bool]:
+          serpentinisation: float = 0.0, differentiation_front: float = 1.0,
+          crust_rock_fraction: float = 0.0,
+          crust_porosity: bool = False) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1092,7 +1200,10 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             differentiated)
     kw = {"boundary_temperature_jump": boundary_temperature_jump,
           "mantle_rock_fraction": mantle_rock_fraction,
-          "serpentinisation": serpentinisation}
+          "serpentinisation": serpentinisation,
+          "differentiation_front": differentiation_front,
+          "crust_rock_fraction": crust_rock_fraction,
+          "crust_porosity": crust_porosity}
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -1496,7 +1607,10 @@ def solve(mass_earth: float,
           potential_temperature: float | None = None,
           boundary_temperature_jump: float = 0.0,
           mantle_rock_fraction: float = 0.0,
-          serpentinisation: float = 0.0) -> Result:
+          serpentinisation: float = 0.0,
+          differentiation_front: float = 1.0,
+          crust_rock_fraction: float = 0.0,
+          crust_porosity: bool = False) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -1528,7 +1642,10 @@ def solve(mass_earth: float,
               "potential_temperature": potential_temperature,
               "boundary_temperature_jump": boundary_temperature_jump,
               "mantle_rock_fraction": mantle_rock_fraction,
-              "serpentinisation": serpentinisation}
+              "serpentinisation": serpentinisation,
+              "differentiation_front": differentiation_front,
+              "crust_rock_fraction": crust_rock_fraction,
+              "crust_porosity": crust_porosity}
 
     if body_class in FLUID_CLASSES:
         why = {
@@ -1661,6 +1778,58 @@ def solve(mass_earth: float,
             "등온 경로에는 정의되지 않는다. 포텐셜 온도를 선언하면 풀린다.",
             inputs=inputs, refs=REFS)
 
+    # ── 세 선언 (C11): 분화 전선, 지각의 암석 분율, 지각 공극 — 중간 단 ──
+    # 전선 아래는 녹아서 분화했고 그 위는 한 번도 녹지 않은 얼음+암석 알갱이의 원시 지각이다.
+    # 어디까지 녹았는가는 열 이력이라 이 레시피가 도출하지 않는다 (Malamud & Prialnik 2015 에서는
+    # 4.6 Gyr 다상 흐름 계산의 출력이지 입력이 아니다). C7 을 다시 여는 것이 아니다 — C7 은 물이
+    # 닿은 곳(반응)을 막고, 지각은 물이 닿지 않은 곳이다.
+    if not 0.0 <= differentiation_front <= 1.0 or not 0.0 <= crust_rock_fraction <= 1.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"선언이 범위 밖이다 — 분화 전선 {differentiation_front} ([0, 1]), 지각 암석 분율 "
+            f"{crust_rock_fraction} ([0, 1]).", inputs=inputs, refs=REFS)
+    crust_mass = (1.0 - gmf) - differentiation_front
+    if crust_mass > 0.0:
+        if not differentiated:
+            return out_of_domain(
+                RECIPE, VERSION,
+                "분화 전선은 분화된 천체의 선언이다 — 미분화 천체에는 전선이 없다.",
+                inputs=inputs, refs=REFS)
+        if imf <= 0.0:
+            return out_of_domain(
+                RECIPE, VERSION,
+                "분화 전선은 얼음이 있는 천체의 선언이다 — 얼음 없이는 '녹지 않은 지각' 이 그냥 "
+                "암석층이고, 그 천체는 전선 없이 풀린다.", inputs=inputs, refs=REFS)
+        if crust_rock_fraction <= 0.0:
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"분화 전선 {differentiation_front:.2f} 위의 지각에 암석이 0 이다 — 그것은 지각이 아니라 "
+                "얼음층이고, 전선을 1 로 두면 같은 천체다. 지각의 암석 분율은 두 번째 선언이다: "
+                "Malamud & Prialnik 2015 의 바깥 맨틀은 핵에서 올라온 물이 재동결해 원시 조성이 아니므로, "
+                "전선만으로 지각 조성이 정해지지 않는다.", inputs=inputs, refs=REFS)
+        rock_crust = crust_mass * crust_rock_fraction
+        ice_crust = crust_mass - rock_crust
+        rock_total = 1.0 - cmf - imf - gmf
+        if rock_crust > rock_total + 1e-12 or ice_crust > imf + 1e-12:
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"지각(질량분율 {crust_mass:.3f}, 암석 {crust_rock_fraction:.2f})이 천체가 가진 것보다 많이 "
+                f"요구한다 — 지각의 암석 {rock_crust:.3f} 대 전체 암석 {rock_total:.3f}, 지각의 얼음 "
+                f"{ice_crust:.3f} 대 얼음질량분율 {imf:.3f}. 전선을 올리거나 지각 암석 분율을 조성 "
+                "쪽으로 옮겨야 한다.", inputs=inputs, refs=REFS)
+    elif crust_porosity or crust_rock_fraction > 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "지각 암석 분율과 지각 공극은 분화 전선이 1 아래일 때의 선언이다 — 지각이 없는데 "
+            "선언됐다.", inputs=inputs, refs=REFS)
+    if crust_porosity and initial_porosity > 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "지각 공극(Malamud & Prialnik 2015 식 (4)–(6))과 initial_porosity(Bierson+ 2019)는 같은 빈 "
+            "공간을 두 법칙으로 세는 것이다 — 하나만 선언하라. 지각은 Bierson 의 법칙 목록에 없어 "
+            "initial_porosity 가 지각에는 닿지 않고, 그 사실을 조용히 넘기지 않는다.",
+            inputs=inputs, refs=REFS)
+
     # 얼음층의 재료는 여기서 고르지 않는다 — 적분기가 걸음마다 국소 (P, T) 를 녹는곡선에 댄다.
     # 얼음거대행성에 남은 클래스 조건은 둘뿐이다: 온도가 선언돼야 하고, 얼음이 있어야 한다.
     ice_giant = body_class in ICE_GIANT_CLASSES
@@ -1685,7 +1854,8 @@ def solve(mass_earth: float,
                               initial_porosity, porosity_cap, gmf,
                               envelope_z, differentiated, potential_temperature,
                               boundary_temperature_jump, mantle_rock_fraction,
-                         serpentinisation)
+                              serpentinisation, differentiation_front, crust_rock_fraction,
+                              crust_porosity)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -1772,6 +1942,24 @@ def solve(mass_earth: float,
             "antigorite 의 열항은 Hilairet 이 빌린 그 출처, Holland & Powell 1998 의 순수 Mg 단성분에서 "
             "빌려 298 K 에서 평탄화한 것이다 (α 가 600 K 에서 40 % 더 크다); 10 GPa 위에서는 탈수라 같은 상이 "
             "아니다. 등급은 그 빌림과 평탄화가 정한다 — analog.")
+    if crust_mass > 0.0:
+        notes.append(
+            f"**분화 전선 {differentiation_front:.2f} 과 지각 암석 분율 {crust_rock_fraction:.2f} 은 선언이다** "
+            f"(C11). 전선 위의 질량 {crust_mass:.3f} 은 한 번도 녹지 않은 원시 지각 — 얼음 사다리와 규산염을 "
+            "알갱이로 부피 가법 혼합한 층이다 (Malamud & Prialnik 2015 §3.1.3 이 Yasui & Arakawa 2009 의 "
+            "two-layer 모형으로 근거를 든다; C10 의 antigorite+enstatite 와 같은 모양이고, C7 이 막은 "
+            "'물이 닿은 곳의 반응' 이 아니다). 어디까지 녹았는가와 지각의 암석 분율은 열 이력이라 "
+            "이 레시피가 도출하지 않는다 — 그 논문에서 둘 다 4.6 Gyr 계산의 출력이다. 지각은 그 아래의 "
+            "얼음 맨틀·암석층에서 그만큼을 뺀 것이고, 등급은 analog 다."
+            + (f" 지각 바닥은 {(st.p_crust_base or 0.0) / 1e9:.3f} GPa, 두께 "
+               f"{(st.radius_m - st.r_crust_base) / 1e3:.0f} km." if st.r_crust_base else ""))
+    if crust_porosity:
+        notes.append(
+            "**지각 공극은 선언된 상한이다.** Malamud & Prialnik 2015 §3.3 식 (1)·(4)–(6) 의 two-layer "
+            "공극(얼음 ψ_w0 = 0.45, 암석 ψ_d0 = 0.4, 실험실 압밀 곡선, Γ = 1 — 지각은 녹은 적이 없다)을 "
+            "지각 밀도에 얹었다. 764 MPa 까지의 적합이고 얼음 I 데이터라 그 위는 외삽이며, 지질학적 시간의 "
+            "크리프(C9)가 더 닫을 수 있으므로 상한이다. 방향은 C/MR² 를 낮추는 쪽 — 지각 암석이 올리는 "
+            f"것과 반대다. 지각의 빈 공간 {st.crust_void / st.volume * 100:.2f} % (천체 부피 대비).")
     if boundary_temperature_jump > 0.0:
         notes.append(
             f"**열경계층 {boundary_temperature_jump:.0f} K 는 선언이다.** 얼음 맨틀 꼭대기와 기체 외피 "
@@ -1910,7 +2098,7 @@ def solve(mass_earth: float,
         # 미분화는 측정 앵커가 없다.
         grade=("analog" if (initial_porosity > 0 or envelope_z > 0
                             or boundary_temperature_jump > 0 or mantle_rock_fraction > 0
-                            or serpentinisation > 0
+                            or serpentinisation > 0 or crust_mass > 0.0
                             or not differentiated or giant_declared
                             or silicate_extrapolated or thermal_moves
                             or thermal_unchecked or ice_x_reached)
@@ -1927,6 +2115,8 @@ def solve(mass_earth: float,
                 "ice_shell_thickness": st.ice_shell_thickness_m / 1e3,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
                 "core_radius": st.core_radius_m / EARTH_RADIUS_M,
+                "crust_thickness": ((st.radius_m - st.r_crust_base) / 1e3
+                                    if st.r_crust_base else 0.0),
                 "radius": radius,
                 "core_pressure": st.p_center / 1e9,
                 "bulk_porosity": st.phi_bulk,
@@ -1938,6 +2128,7 @@ def solve(mass_earth: float,
                "ice_column_state": "",
                "ocean_thickness": "km",
                "ice_shell_thickness": "km",
+               "crust_thickness": "km",
                "core_radius_fraction": "dimensionless",
                "core_radius": "R_earth",
                "radius": "R_earth",
@@ -2310,7 +2501,8 @@ _INFER_ITERS = 12                                  # 얼음질량분율의 regul
 
 def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
                           potential_temperature: float, tidal_heating: bool,
-                          serpentinisation: float = 0.0):
+                          serpentinisation: float = 0.0, differentiation_front: float = 1.0,
+                          crust_rock_fraction: float = 0.0, crust_porosity: bool = False):
     """핵질량분율을 고정하고 반지름을 재현하는 얼음질량분율을 푼다. (분율, Result) 또는 None.
 
     반지름은 얼음에 단조증가이므로 양 끝을 재고 그 사이를 Illinois 형 regula falsi 로 좁힌다 —
@@ -2319,8 +2511,14 @@ def _solve_ice_for_radius(mass_earth: float, radius_earth: float, cmf: float,
     def at(imf):
         return solve(mass_earth, core_mass_fraction=cmf, ice_mass_fraction=imf,
                      potential_temperature=potential_temperature,
-                     tidal_heating=tidal_heating, serpentinisation=serpentinisation)
-    lo, hi = 0.0, max(0.0, 0.98 - cmf)
+                     tidal_heating=tidal_heating, serpentinisation=serpentinisation,
+                     differentiation_front=differentiation_front,
+                     crust_rock_fraction=crust_rock_fraction, crust_porosity=crust_porosity)
+    # 지각이 선언되면 얼음의 아래끝은 0 이 아니다 — 지각이 요구하는 얼음(전선 위 질량의
+    # (1 − 암석분율))보다 적으면 solve 가 거절한다. 그 아래끝에서 출발한다.
+    crust = (1.0 - differentiation_front)
+    ice_floor = crust * (1.0 - crust_rock_fraction) if crust > 0.0 else 0.0
+    lo, hi = ice_floor, max(ice_floor, 0.98 - cmf)
     r_lo = at(lo)
     if not r_lo.applicable:
         return None
@@ -2359,7 +2557,8 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
                       potential_temperature: float, nmoi: float | None = None,
                       tidal_heating: bool = False,
                       core_grid: tuple[float, ...] = THREE_LAYER_CORE_GRID,
-                      serpentinisation: float = 0.0) -> Result:
+                      serpentinisation: float = 0.0, differentiation_front: float = 1.0,
+                      crust_rock_fraction: float = 0.0, crust_porosity: bool = False) -> Result:
     """질량과 반지름을 재현하는 (핵질량분율, 얼음질량분율) 의 띠를 돌려준다. C/MR² 를 주면 좁힌다.
 
     `potential_temperature` 는 필수다 — 온도가 흐르지 않으면 바다가 없고, 바다가 없으면 이
@@ -2370,7 +2569,9 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
               "composition": "inferred_three_layer", "differentiated": True,
               "body_class": None, "tidal_heating": tidal_heating,
               "core_mass_fraction": None, "ice_mass_fraction": None,
-              "serpentinisation": serpentinisation}
+              "serpentinisation": serpentinisation,
+              "differentiation_front": differentiation_front,
+              "crust_rock_fraction": crust_rock_fraction, "crust_porosity": crust_porosity}
     if mass_earth <= 0 or radius_earth <= 0:
         return out_of_domain(RECIPE, VERSION, "질량 또는 반지름이 양수가 아니다",
                              inputs=inputs, refs=REFS)
@@ -2384,7 +2585,8 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
     members = []
     for cmf in core_grid:
         got = _solve_ice_for_radius(mass_earth, radius_earth, cmf,
-                                    potential_temperature, tidal_heating, serpentinisation)
+                                    potential_temperature, tidal_heating, serpentinisation,
+                                    differentiation_front, crust_rock_fraction, crust_porosity)
         if got is None:
             continue
         imf, res = got
