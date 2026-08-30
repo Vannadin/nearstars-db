@@ -52,6 +52,19 @@ drift to wherever the results looked odd. **Pre-registration is the point**: wit
 `ammonia_table.py` already meet this in their own ways; it is stated here so the next baked
 table does too.
 
+**Relays without verification, in both directions.** *Downward*: a number without its label
+does not enter a brief. *Upward*: **a number that changes a verdict is reproduced by the
+directing session before it goes to the audit.** Verdict-changing, specified in advance so
+it is not judged by impression: (a) a number that opens, closes or reopens a row; (b) **a
+first claim that a published value is contained or reproduced**; (c) a number that moves an
+anchor; (d) a number that changes a grade. The directing session's reproduction does **not**
+replace the audit's: a verdict-changing number is computed by the working session,
+reproduced by the directing session, and reproduced again by the audit. The five failures
+that produced these two sentences are one disease in two directions — four unlabelled
+numbers travelling down into briefs, and one headline (C11's "Titan is inside a declared
+band", 2026-08-30) travelling up without reproduction; the rule above stops the first and
+this one the second.
+
 ## Where the line is
 
 Not by body class — by **what is missing**.
@@ -649,9 +662,10 @@ and the grid is not refined to make one — that would be the fitting C5 and C10
 Porosity on the front 0.7 · X_d 0.6 pair moves the band down as registered: Callisto
 0.3561–0.3643 → 0.3390–0.3494, Titan 0.3547–0.3633 → 0.3386–0.3496 (about −0.015, the
 laboratory upper bound on crust void). One member did not converge (Callisto, front 0.9 ·
-X_d 0.3, core 0.30). Run times 2–7 min per point on a loaded machine (Titan's first three
-took 31 min each while five other processes ran); the 270 K refusal through the inversion
-route did not finish in 17–24 CPU-minutes and was stopped — the temperature bracket is
+X_d 0.3, core 0.30). The table is the regeneration on the code that
+ships (2026-08-30, after the crust-refusal fix was narrowed — see the notes' post-mortem),
+identical at all twenty points to the first pass; run times 2–7 min per point; the 270 K
+refusal through the inversion route did not finish in 17–24 CPU-minutes and was stopped — the temperature bracket is
 exhausted on every solve of the regula falsi — where the direct `solve` refuses in about 12 s.
 Recorded as a cost, not fixed here.
 

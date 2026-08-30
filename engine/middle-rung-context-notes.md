@@ -118,6 +118,65 @@ does (ice 0.08, rock 0.12). The same check bit `_solve_ice_for_radius`, whose ic
 start at the crust's ice demand and stop below the point where the crust's rock demand
 exceeds the rock left — without the upper bound every sweep point declined.
 
+## Post-mortem: the table ran ahead of its own commit's code
+
+The landing commit 1e3e443b carried a sweep table and a code change made *after* the table
+was generated, and the change removed a member the table showed. Three independent
+reproductions (the audit twice, the directing session once) on the landing code returned
+Titan's front 0.8 · X_d 0.6 band as the single point 0.3498 — no core-0.15 member — where the
+table said 0.3384–0.3498 and "contains 0.3414". Order of events inside the one commit:
+
+1. The sweep ran (six processes, `c11_run.py`) on code state S1: crust, partition checks,
+   ice-search bounds — but the 270 K self-contradiction came back as `converged=False` with
+   a note rather than a refusal.
+2. `test_interior.py` then caught that: a self-contradictory crust must not pass as a merely
+   unconverged solve. Fix 3 was written into `solve`: *declared crust + not converged +
+   surface colder than the declaration → refuse by name.*
+3. The table from step 1 went into the row and the notes; the gate passed; the commit was
+   made. The table was never regenerated on the code that shipped.
+
+Fix 3 was **over-broad**, and that — not a non-converged member counted as converged — is
+what removed the member. Traced with `_solve_ice_for_radius` on Titan, core 0.15: the
+regula falsi's intermediate trial at ice 0.6029 is a solve that does not converge for
+reasons unrelated to the crust (the temperature loop's usual failure to meet the surface on
+an ice-rich trial); fix 3 read "not converged, surface cold, crust declared" and refused it,
+`_solve_ice_for_radius` treats a refused trial as "no member", and the member vanished. The
+converged endpoint of that search (ice 0.5798, C/MR² 0.3384, `converged=True`) is a real
+solution — the same value the first table showed.
+
+The repair narrows fix 3 to its actual evidence: `shoot`'s temperature bracket now records
+whether the attempt that produced the returned structure was pushed down by the crust's
+`PhaseGap` (`Structure.crust_blocked`), and `solve` refuses only when that flag is set. The
+270 K case still refuses (every attempt hits the crust wall); an unrelated unconverged trial
+passes through as before, and Titan's core-0.15 member returns (traced: ice 0.7300 → 0.6029
+→ 0.5837 → 0.5770 → 0.5798, converged). The whole grid was regenerated on this code (twenty
+points, five in parallel, 2–7 min each) — **identical at every point to the first pass**, which
+is what the trace predicted: the first table's numbers were right. The table in the row is
+that regeneration.
+
+**The responsibility runs the other way from the hypothesis.** "The table ran ahead of the
+code" is true in time, but the *table's numbers were right and the code that shipped had
+regressed*. Naming the sub-kind "table ahead of code" would send the next reader to doubt
+the table; here the code was the thing to doubt. Both readings exist in the same sub-kind —
+a commit whose table and code come from different states — and which half is wrong has to
+be established by tracing, as it was here.
+
+**The repair's two guards, checked.** (i) The 270 K refusal goes through the narrowed
+condition and not some other path: `shoot` on the Europa-type body at 270 K returns
+`converged=False`, surface 169 K, `crust_blocked=True`, and `solve`'s reason carries the C11
+text. (ii) The test that produced fix 3 still guards: with the refusal disabled in a
+subprocess, the same call comes back `applicable=True, converged=False` — the 270 K check in
+`test_interior.py` fails. The regeneration below was started only after the code was in
+its final state (an earlier launch overlapped a brief disable-and-restore of that line
+during this check and was discarded).
+
+**What the audit's hypothesis got right and wrong.** Right: the table pre-dated a
+member-eligibility change in the same commit, a new sub-kind of the stale-number failure —
+one commit, two states. Wrong in mechanism: the vanished member was converged; what changed
+was an intermediate trial's fate. The lesson is the same either way — **a table is
+regenerated on the code that ships, in the commit that ships it** — and it now stands in the
+core list as the upward half of the relay rule.
+
 ## Parking (superseded the same day — kept as history)
 
 **Parked 2026-08-30, before the first commit, by the owner's decision: the liquid-water gap

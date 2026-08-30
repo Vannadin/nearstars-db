@@ -12,3 +12,4 @@
 - [x] `test_ice_giant.py --refresh` (integrate/_stack/shoot changed) — values identical (after the negative-crust bug was fixed)
 - [x] domain rows EN/KO, contract block, chain.yaml
 - [x] C11 row opened and closed in the landing commit; gate FAIL 0; report to nearstars-cb
+- [x] reproduction failure (Titan core-0.15 member) traced to an over-broad refusal written after the table; refusal narrowed to `crust_blocked`, both guards checked, grid regenerated on the shipping code — identical; post-mortem and the relay rule recorded

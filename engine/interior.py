@@ -117,7 +117,7 @@ class Structure:
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
-                 "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void")
+                 "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
@@ -150,6 +150,9 @@ class Structure:
         self.r_crust_base = r_crust_base
         self.p_crust_base = p_crust_base
         self.crust_void = crust_void
+        # 이 구조를 낸 마지막 온도 시도에서 지각이 녹는곡선 위라 던져 괄호가 중심 온도를 내렸는가 (C11).
+        # shoot 이 채운다. 표면 온도가 선언에 못 닿은 해에서 이것이 참이면 선언의 자기모순이다.
+        self.crust_blocked = False
         # 적분이 멈춘 압력 [Pa]. 응축상 천체는 0 이다 — 표면이 P = 0 이니까. 기체 외피가
         # 있으면 그 재료의 압력 바닥(1 bar)이고, 발표된 거대행성 반지름이 그 준위의 값이다.
         self.p_surface = p_surface
@@ -1225,9 +1228,11 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         답이 없다는 뜻이므로 거기서 멈춘다 — 계속 넓히면 두 벽 사이를 오간다."""
         t_now = t_try
         last = None
+        crust_hit = False        # 이 시도 안에서 지각(C11)의 벽에 닿아 내려왔는가
         for _ in range(T_BRACKET_TRIES):
             try:
                 got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+                got.crust_blocked = crust_hit
                 return got, ok, t_now
             except PhaseGap as gap:
                 if not gap.temperature_k:
@@ -1235,8 +1240,11 @@ def shoot(mass_kg: float, cmf: float, imf: float,
                 if last is not None and last != gap.too_cold:
                     raise        # 양쪽 벽에 다 부딪혔다. 넓혀서 될 일이 아니다
                 last = gap.too_cold
+                if gap.material == CRUST_NAME and not gap.too_cold:
+                    crust_hit = True
                 t_now = t_now * 1.6 if gap.too_cold else t_now / 1.6
         got, ok = _shoot_pressure(*args, t_center=t_now, t_pot=t_pot, **kw)
+        got.crust_blocked = crust_hit
         return got, ok, t_now
 
     # **괄호가 옮긴 온도를 그대로 받아 온다.** 받지 않으면 바깥 고리가 자기가 요청한
@@ -1865,12 +1873,15 @@ def solve(mass_earth: float,
     except ValueError as err:
         return out_of_domain(RECIPE, VERSION, f"적분이 실패했다 — {err}",
                              inputs=inputs, refs=REFS)
-    if (crust_mass > 0.0 and potential_temperature and not converged
+    if (crust_mass > 0.0 and potential_temperature and not converged and st.crust_blocked
             and st.t_surface < potential_temperature * (1.0 - T_SURFACE_TOL)):
         # 지각이 녹는곡선 위에 앉아 던진 PhaseGap 을 온도 괄호가 '내려야 한다' 로 받아 중심 온도를
         # 낮췄고, 지각이 고체가 되는 온도에서야 멈췄다 — 그 해의 표면 온도는 선언값에 못 닿는다.
         # 그것은 수렴 실패가 아니라 **선언의 자기모순** 이므로, converged=False 를 조용히 내지 않고
-        # 이름 대며 거절한다 (C11).
+        # 이름 대며 거절한다 (C11). **지각의 벽을 마지막 시도에서 실제로 맞았을 때만** 이다
+        # (st.crust_blocked): 다른 이유로 미수렴한 해까지 이 이름으로 거절하면 역산의 중간 시험값이
+        # 떨어져 멤버가 통째로 사라진다 — 2026-08-30 에 타이탄의 핵 0.15 멤버가 그렇게 사라져
+        # 착지 보고의 띠가 재현되지 않았다.
         return out_of_domain(
             RECIPE, VERSION,
             f"선언된 원시 지각(전선 {differentiation_front:.2f}, 암석 {crust_rock_fraction:.2f})이 포텐셜 온도 "
