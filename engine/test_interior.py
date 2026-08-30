@@ -1743,6 +1743,49 @@ def main() -> int:
     print("\n액체 물 표 — 굳힌 표가 원 표현과 같은가 (SeaFreeze 있을 때만)")
     fails += _water_table_crosscheck()
 
+    print("\n녹는곡선 — Queyroux+ 2020 Table S1 (F4): 대역 안의 측정이 두 곡선 어느 쪽에 앉는가")
+    # Queyroux+ 2020 Supplemental Material Table S1, PDF 4쪽에서 읽음: (Tm K, σT K, Pm GPa, σP GPa).
+    # 판정 척도는 F1 의 것 — 잔차가 인쇄된 σT 안이면 "앉는다". 삼중점 850(20) K 는 적합의 교점이라 쓰지 않는다.
+    QUEYROUX_S1 = ((660, 5, 8.4, 0.2), (677, 5, 8.8, 0.2), (757, 10, 11.3, 0.2), (790, 10, 12.5, 0.65),
+                   (853, 10, 14.6, 0.2), (905, 10, 15.1, 0.2), (930, 10, 16.6, 0.5), (944, 10, 16.6, 0.2),
+                   (978, 10, 17.3, 1.1), (1172, 100, 27.0, 1.5), (1310, 100, 36.7, 2.0), (1492, 100, 44.7, 1.5))
+    _line = sorted((pp, tk) for pp, tk, _f in _imt.LIQUID_LINE)
+
+    def _reinhardt(p_gpa):
+        for (p0, t0), (p1, t1) in zip(_line, _line[1:]):
+            if p0 <= p_gpa <= p1:
+                return t0 + (t1 - t0) * (p_gpa - p0) / (p1 - p0)
+        return None
+    cold_both = 0
+    band = []
+    high = []
+    for tm, st_, pm, _sp in QUEYROUX_S1:
+        ia = water_t_melt(pm * 1e9) if pm <= 20.6 else None
+        rh = _reinhardt(pm)
+        if pm <= 20.6:
+            if ia < tm - st_ and (rh is None or rh < tm - st_):
+                cold_both += 1
+            if 16.5 <= pm <= 20.6:
+                band.append((pm, tm, st_, ia - tm, rh - tm))
+        else:
+            high.append((pm, tm, st_, rh - tm, abs(rh - tm) <= st_))
+    ok = cold_both == 9 and all(d_i < -20 * st_ and d_r < -20 * st_ for _p, _t, st_, d_i, d_r in band)
+    if not ok:
+        fails.append("Queyroux Table S1: 대역 안 측정이 두 곡선보다 뜨겁다는 기록이 더는 성립하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 20.6 GPa 아래 9 점 전부에서 IAPWS 와 Reinhardt 가 측정보다 차갑다; 대역 안 3 점: "
+          + " · ".join(f"{p:.1f} GPa {t}±{s_} K → IAPWS {di:+.0f} / Reinhardt {dr:+.0f} K" for p, t, s_, di, dr in band))
+    inside = [x for x in high if x[4]]
+    ok = len(inside) == 1 and inside[0][0] == 27.0 and all(x[3] > 0 for x in high if not x[4])
+    if not ok:
+        fails.append("Queyroux Table S1: 27 GPa 위의 기록(27 에서 안, 36.7·44.7 에서 Reinhardt 가 더 뜨거움)이 성립하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 27 GPa 위(σT 100 K): "
+          + " · ".join(f"{p:.1f} GPa Reinhardt {d:+.0f} K ({'안' if i else '밖'})" for p, _t, _s, d, i in high)
+          + " — Queyroux 가족이 레이저가열 가족보다 100–150 K 낮다는 그들의 진술과 같은 방향")
+    ok = all(s_ / t < 0.05 for t, s_, p, _ in QUEYROUX_S1 if p <= 17.3) and all(s_ / t > 0.05 for t, s_, p, _ in QUEYROUX_S1 if p >= 27.0)
+    if not ok:
+        fails.append("Queyroux Table S1 의 σT/Tm 이 기록(17.3 GPa 까지 5 % 아래, 27 GPa 위 5 % 위)과 다르다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] σT/Tm: 17.3 GPa 까지 0.7–1.3 % (5 % 문턱 아래) · 27 GPa 위 6.7–8.5 % (위) — 등급은 측정이 아니라 곡선이 막는다")
+
     print("\n중간 단 (C11) — 선언된 분화 전선 위의 원시 지각")
     # 전선 1.0 은 예전 열 그대로다: 같은 천체를 명시적으로 1.0 으로 풀면 비트까지 같아야 한다.
     same = solve(m_eur, differentiation_front=1.0, **eur)

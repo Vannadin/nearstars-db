@@ -221,6 +221,26 @@ Letter does give is a **bound**: liquid at 15.4 GPa · 944 K (Fig. 2a) and solid
 verdict. Table S1 (free from APS, requested from the owner) is what would run the item.
 `engine/queyroux-seam-context-notes.md`.
 
+**Revisited 2026-08-31 (F4 resumed): Table S1 arrived, and the measurement sits with
+neither curve — it is hotter than both.** Twelve measured melting points (Queyroux+ 2020
+Supplemental Material Table S1, read from the PDF), three inside the band: 16.6 ± 0.5 GPa ·
+930 ± 10 K, 16.6 ± 0.2 · 944 ± 10, 17.3 ± 1.1 · 978 ± 10. Against them IAPWS eq. (5) is
+255–297 K cold (25–30 σ) and Reinhardt's line 213–228 K cold (21–23 σ); at every point from
+8.4 to 17.3 GPa both curves are on the cold side, IAPWS already 69–79 K (14–16 σ) cold at
+8.4–8.8 GPa. So of the three registered outcomes none fires as written: not "with Reinhardt",
+not "with IAPWS" — **C3 does not reopen** — and not "between" but *above both*. The band is
+redrawn to what the data support: **both curves too cold by 210–300 K at 16.6–17.3 GPa**,
+Reinhardt the less wrong by 40–70 K; the +26 % step is in the measured direction and not
+large enough; the dispatch is unchanged because the recipe has no third curve, and adopting
+Queyroux's points as a melting-curve source is an owner decision with this table as its
+grounds. Above 27 GPa (σ_T = 100 K) Reinhardt is inside at 27 GPa and hotter than Queyroux by
+160 and 239 K at 36.7 and 44.7 GPa — while F1 found it inside Kimura & Murakami's ±130–150 K
+at six of seven points; the two experiments differ by the 100–150 K Queyroux themselves
+report against the laser-heated family, and this recipe does not adjudicate between them.
+Grade: the measurement clears the 5 % bar (σ_T/T_m 0.7–1.3 % to 17.3 GPa) and the curves do
+not clear the measurement, so analog stands with a new reason — the one measurement in the
+band sits 210–300 K above both lines. Table S1 is a check table in `test_interior.py`.
+
 ### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt; reopened 2026-08-30 for ammonia and closed again for that half, built**
 
 The ice-giant envelope is water alone, standing in for a water–ammonia–methane mixture. That

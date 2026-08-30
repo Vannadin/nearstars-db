@@ -463,9 +463,14 @@ that declaration, the same standing as `core_cmb_temperature` in [core-state](co
 thermodynamic-integration points over 10–52.4 GPa, generated into `engine/ice_melt_table.py`
 from the paper's published data by `tools/make_ice_melt_table.py` (never transcribed by hand)
 and interpolated linearly between points. It is a machine-learned potential fitted to PBE
-DFT, not a measurement; the one experimental check available is the triple point (Queyroux+
-2020: 14.6 GPa · 850 K against the simulation's ~20 GPa · 875 K), and every experiment that
-would check the line itself is paywalled. Any verdict that leans on it is graded **analog**.
+DFT, not a measurement. Checked against Queyroux+ 2020's twelve measured melting points
+(Supplemental Material Table S1, F4, 2026-08-31): inside the disputed band the measurement is
+**hotter than both curves** — IAPWS eq. (5) by 255–297 K, Reinhardt by 213–228 K, at 16.6–17.3
+GPa with σ_T = 10 K — and both are on the cold side at every point from 8.4 GPa up; above
+27 GPa (σ_T = 100 K) Reinhardt is inside at 27 GPa and 160–239 K hotter than Queyroux at
+36.7–44.7 GPa, where it sat inside Kimura & Murakami's errors (F1) — the 100–150 K offset
+between the two experimental families, not adjudicated here. Any verdict that leans on the
+line is graded **analog**, and the band's reason is now that measurement.
 
 **The seam at 20.6 GPa is measured: +26 %.** IAPWS gives 715 K there and Reinhardt's line
 interpolates to 903 K; in pressure, Reinhardt reaches 715 K at 16.5 GPa, 20 % below. The two
