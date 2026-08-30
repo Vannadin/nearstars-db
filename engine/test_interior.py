@@ -1358,11 +1358,21 @@ def main() -> int:
                      "450 K 열팽창의 크기(2–3.5 %)가 아니다")
     print(f"  [{'PASS' if ok else 'FAIL'}] 5.7 GPa: 상온 곡선 {rho_rt:.0f} kg/m³ 대 논문의 470 °C 인쇄값 "
           f"{rho_pr:.0f} → {d * 100:+.1f} %, 450 K 열팽창의 크기와 부호")
-    ok = ANTIGORITE.cold_phases() == ("antigorite",) and ANTIGORITE_P_MAX == 10e9
+    from eos import ANTIGORITE_ALPHA_K, HP98_ATG_A0, HP98_ATG_CP_298
+    # F2 (2026-08-30): 열항은 Holland & Powell 1998 Table 5 atg 행에서 — a° 4.70e-5 (forsterite 의 6.13 이 같은 열
+    # 규약을 확인), α(298) = a°(1 − 10/√298.15), Hilairet 의 K₀ 를 곱함. C_p(298) 은 다항식에서 다시 낸다.
+    a0 = HP98_ATG_A0
+    alpha_298 = a0 * (1.0 - 10.0 / 298.15 ** 0.5)
+    cp_298 = (9.6210e3 - 9.1183e-2 * 298.15 - 35941.6e3 / 298.15 ** 2 - 83.0342e3 / 298.15 ** 0.5) / 4.5359
+    ok = (ANTIGORITE.cold_phases() == () and ANTIGORITE_P_MAX == 10e9
+          and abs(ANTIGORITE_ALPHA_K / (alpha_298 * ANTIGORITE_K0) - 1.0) < 1e-9
+          and abs(HP98_ATG_CP_298 / cp_298 - 1.0) < 1e-3)
     if not ok:
-        fails.append("antigorite 가 등온 상으로, 10 GPa 상한으로 서 있지 않다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 열항 없음(등온으로 남는 상: {ANTIGORITE.cold_phases()}) · "
-          f"상한 {ANTIGORITE_P_MAX / 1e9:.0f} GPa — 등급을 정하는 것은 적합이 아니라 이 결핍이다")
+        fails.append(f"antigorite 열항이 Holland & Powell 1998 에서 다시 낸 값과 다르다 — αK {ANTIGORITE_ALPHA_K:.4e} "
+                     f"대 {alpha_298 * ANTIGORITE_K0:.4e}, c_p {HP98_ATG_CP_298:.1f} 대 {cp_298:.1f}, cold {ANTIGORITE.cold_phases()}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 열항 (Holland & Powell 1998 Table 5 atg): α(298) {alpha_298:.3e} K⁻¹ × K₀ → "
+          f"αK_T {ANTIGORITE_ALPHA_K / 1e6:.3f} MPa/K · c_P(298) {cp_298:.0f} J/kg/K · 상한 {ANTIGORITE_P_MAX / 1e9:.0f} GPa — "
+          "빌린 항을 298 K 에서 평탄화, 등급은 그 빌림이 정한다")
     for p_gpa in (0.023, 2.73, 3.28):
         print(f"         {p_gpa:5.3f} GPa → {ANTIGORITE.density(p_gpa * 1e9):.0f} kg/m³")
 

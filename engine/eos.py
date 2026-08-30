@@ -341,12 +341,20 @@ class Material:
         return self.phase_at(p).gruneisen(rho, t, t_pot)
 
     def k_t(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
-        """등온 체적탄성률 K_T [Pa]. 냉각 곡선의 수치 미분이다."""
+        """등온 체적탄성률 K_T [Pa]. 냉각 곡선의 수치 미분이다.
+
+        위쪽 반 걸음이 이 재료의 상한을 넘으면 그 걸음을 상한에서 자른다 — 사격의 괄호가 상한 바로
+        위에 시험점을 놓을 때(antigorite 10 GPa 에서 실제로 걸렸다, 2026-08-30 F2) 미분이 상한 밖을
+        찔러 거절을 만들면 안 된다. 상한에 닿지 않는 자리에서는 예전과 같은 중앙차분이다."""
         h = p * 1e-4
         rho = self.density(p, t, t_pot)
-        d_hi = self.density(p + h, t, t_pot)
-        d_lo = self.density(max(p - h, 1.0), t, t_pot)
-        return 0.0 if d_hi <= d_lo else rho * 2.0 * h / (d_hi - d_lo)
+        p_hi = min(p + h, self.p_max)
+        p_lo = max(p - h, 1.0)
+        if p_hi <= p_lo:
+            return 0.0
+        d_hi = self.density(p_hi, t, t_pot)
+        d_lo = self.density(p_lo, t, t_pot)
+        return 0.0 if d_hi <= d_lo else rho * (p_hi - p_lo) / (d_hi - d_lo)
 
     def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """정압비열 c_P = c_V (1 + αγT) [J/kg/K]. 새 상수가 아니라 항등식이다.
@@ -581,11 +589,12 @@ class Mixture:
                 # 2026-08-30 에 antigorite 가 들어오며 생긴 자리다: Hilairet+ 2006 은 상온뿐이라
                 # 열항이 없고, 그 결핍은 지어내지 않고 등급과 note 가 말한다.
                 #
-                # **중첩 모서리.** 성분이 자기도 Mixture 면(예: 사문석화 암석을 얼음 맨틀에 섞는 날)
-                # Mixture.has_thermal 이 all() 이라 cold 성분 하나 때문에 그 안의 **열 성분(규산염 몫)까지
-                # 통째로** 통과된다. 지금은 도달 불가다 — with_rock 은 MATERIALS["silicate"] 를 직접 쓰고
-                # _rock 의 혼합은 층 재료로만 쓰인다. 도달하게 만들면 성분을 flatten 해서 열 부분과 cold
-                # 부분을 따로 이 고리에 넣을 것.
+                # **중첩 모서리.** 성분이 자기도 Mixture 면 Mixture.has_thermal 이 all() 이라 cold 성분
+                # 하나 때문에 그 안의 **열 성분까지 통째로** 통과된다. 2026-08-30 F2 에서 antigorite 가
+                # 열항(Holland & Powell 1998)을 얻어 이 저장소의 어느 재료도 더는 cold 가 아니므로, 이 분기
+                # 자체가 지금은 **어느 혼합에서도 안 걸린다** — 사문석화 암석도 전 성분이 열 성분이다. 분기는
+                # 열 상수 없는 재료가 다시 들어올 때를 위해 남겨 두고, 그때 성분이 Mixture 면 flatten 해서
+                # 열 부분과 cold 부분을 따로 이 고리에 넣을 것.
                 continue
             c = m.c_p(p, t, t_pot)
             if c <= 0.0:
@@ -1581,9 +1590,23 @@ SUPERIONIC_MIN_P = 100.0 * GPA     # Pa. 같은 초록
 # and 470°C, antigorite density calculated with our new bulk modulus is 2765 kg·m⁻³" — 를 이 곡선은
 # 상온에서 2839 로 낸다: 2.7 % 차이는 450 K 열팽창의 크기와 부호다.
 #
-# **열항이 없다.** 논문은 상온만 재고 필요한 자리에서 Holland & Powell 1998 의 열팽창을 빌린다. 그
-# 논문은 오너 요청 목록에 있다. 그래서 이 상은 alpha_k = 0 — 등온으로 남고 cold_phases 가 이름을
-# 댄다 — 이고, 상온이 아닌 암석에 쓰이면 등급은 적합의 품질이 아니라 **이 결핍** 이 정한다.
+# **열항은 빌린 것이다 — Hilairet 이 빌린 그 출처에서.** Hilairet+ 2006 은 상온만 재고, 필요한 자리에서
+# "thermal expansivity of Holland and Powell [1998]" 을 쓴다고 §4 에 적는다. Holland & Powell 1998
+# (1998JMetG..16..309H, PDF 가 캐시에 있다) Table 5 의 antigorite (atg, Mg₄₈Si₃₄O₈₅(OH)₆₂) 행:
+#
+#     a° = 4.70 × 10⁻⁵ K⁻¹ (열팽창 인자),  κ₂₉₈ = 525 kbar,  C_p = a + bT + cT⁻² + dT⁻½ 에
+#     a 9.6210 kJ/K · b −9.1183×10⁻⁵ kJ/K² · c −35941.6 kJ·K · d −83.0342 kJ·K^½,  V 175.480 J/bar
+#
+# 그들의 열팽창은 온도에 의존한다 — V(1,T) = V°[1 + a°(T−298) − 20a°(√T − √298)], 곧
+# α(T) = a°(1 − 10/√T): 298 K 에서 1.98×10⁻⁵, 600 K 에서 2.78×10⁻⁵, 1000 K 에서 3.21×10⁻⁵ K⁻¹.
+# 이 파일의 열항은 αK_T 상수(Anderson & Goto)라 **298 K 에서 평탄화** 한다 — α(298) 에 Hilairet 의
+# K₀ 를 곱해 αK_T = 1.33 MPa/K. 600 K 에서는 그 40 % 를 놓치는 평탄화이고, 그것이 이 열항의 폭이다
+# (그들의 κ(T) = κ₂₉₈(1 − 1.5×10⁻⁴(T−298)) 도 이 형태에는 자리가 없어 들지 않는다).
+# c_V 는 Table 5 의 C_p 를 298 K 에서 평가해(4381 J/K/mol) 몰질량 4535.9 g/mol 로 나눈 966 J/kg/K
+# 이고, 고체라 c_P ≈ c_V 로 둔다. **조성이 다르다** — Holland & Powell 은 순수 Mg 단성분(ρ 2585),
+# Hilairet 의 시료는 Fe·Al 을 든 천연 antigorite(ρ₀ 2640). 열항을 순수 단성분에서 빌려 천연 시료의
+# 압축 곡선에 얹은 것이고, 그래서 등급은 여전히 analog 다: 결핍이 아니라 **빌린 항의 평탄화와 조성
+# 차이** 가 정한다 (2026-08-30, F2).
 #
 # **C7 이 막은 혼합이 아니다.** C7 은 물을 규산염에 섞는 것(반응)을 막았다. 이것은 antigorite 와
 # enstatite/PREM 이라는 **두 고체가 알갱이로 공존** 하는 것 — 부분 사문석화된 암석의 실제 모습 — 이고,
@@ -1593,11 +1616,17 @@ ANTIGORITE_K0 = 67.27 * GPA        # Pa. Hilairet+ 2006 BM2
 ANTIGORITE_P_MAX = 10.0 * GPA      # Pa. 실험 상한 — 가역, 무이력, 같은 공간군
 ANTIGORITE_REF = ("Hilairet, Daniel & Reynard 2006 (2006GeoRL..33.2302H) §3 [13] — 2차 BM 적합, "
                   "V₀ 2926.23 Å³ · K₀ 67.27 GPa · K₀′ 4; ρ₀ 는 §2 [6] 구조식과 §4 [15] 의 m = 1 부피 "
-                  "172 Å³ 에서 도출")
+                  "172 Å³ 에서 도출. 열항은 Holland & Powell 1998 (1998JMetG..16..309H) Table 5 의 "
+                  "atg 행에서 — a° 4.70×10⁻⁵ K⁻¹ 을 298 K 에서 평탄화, C_p(298)")
+HP98_ATG_A0 = 4.70e-5              # K⁻¹. Holland & Powell 1998 Table 5, atg, a° (열 ×10⁻⁵ 이 표의 규약)
+HP98_ATG_ALPHA_298 = HP98_ATG_A0 * (1.0 - 10.0 / 298.15 ** 0.5)   # 1.978e-5 K⁻¹, α(T) = a°(1 − 10/√T)
+HP98_ATG_CP_298 = 4380.7 / 4.5359  # J/kg/K. Table 5 C_p 다항식을 298.15 K 에서, Mg₄₈Si₃₄O₈₅(OH)₆₂ 4535.9 g/mol
+ANTIGORITE_ALPHA_K = HP98_ATG_ALPHA_298 * ANTIGORITE_K0   # 1.331 MPa/K
 ANTIGORITE = Material(
     "antigorite", "antigorite (사문석)",
     (Phase("antigorite", "bm2", ANTIGORITE_RHO0, ANTIGORITE_K0, 4.0, ANTIGORITE_P_MAX,
-           ANTIGORITE_REF),),
+           ANTIGORITE_REF,
+           alpha_k=ANTIGORITE_ALPHA_K, c_v_ref=HP98_ATG_CP_298, t_ref=298.15),),
     over_reason=("사문석화된 암석층의 바닥이 {p_gpa:.1f} GPa 로 antigorite 실험 상한({max_gpa:.0f} GPa) "
                  "위다. Hilairet+ 2006 이 압축한 것이 거기까지이고, 그 위의 사문석은 탈수 반응의 "
                  "영역이라 같은 상이 아니다."))

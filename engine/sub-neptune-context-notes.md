@@ -189,7 +189,9 @@ silicate ceiling; 11.5 declines at it). The 0 was the envelope base leaving the 
 reach line at the trial temperature and being taken for the surface — exactly the sweep's
 defect, seen from the other side of the mass range. So "one of the two measurements is
 wrong" resolved as *both*: 17.7 was the polytrope's, 0 was the bug's, 11.46 is the answer
-with the envelope integrated. The assertion, the domain row and C1's closing text now carry
+with the envelope integrated *(interim, superseded 2026-08-30 F2: 16.69 M⊕ — the 11.46 was
+itself half a defect, the K_T finite difference poking past the 13.5 TPa ceiling on the
+shooting's ceiling trial; see antigorite-thermal-context-notes.md)*. The assertion, the domain row and C1's closing text now carry
 11.46, and this is reported here as a physically justified change rather than absorbed: the
 giant anchors themselves (Jupiter Z = 0, Saturn Z = 0 and 0.0825) are unchanged.
 

@@ -74,7 +74,9 @@ solar-metallicity envelope.
 
 Both measurements were wrong: the 17.7 M⊕ row was the polytrope era's, the "0 M⊕ since the
 table" of 2026-08-28 was the same defect as the sweep's refusal (the envelope base cut off as a
-surface), and the cap re-measured with the defect fixed is 11.46 M⊕. Under it were three defects, none a ceiling: the
+surface), and the cap re-measured with the defect fixed was 11.46 M⊕ (interim, superseded
+2026-08-30 F2: 16.69 M⊕ once the bulk-modulus finite difference stopped poking past the
+silicate ceiling on the shooting's ceiling trial). Under it were three defects, none a ceiling: the
 integrator took the envelope base leaving the H/He table's reach line for the 1-bar surface,
 so the envelope had no mass; the temperature loop's proportional update diverges when the
 1-bar temperature scales faster than the central one (thin envelopes on heavy cores); and a
@@ -429,6 +431,22 @@ consistent with this table.
 **Dante / Hades.** One of the two readings of that open radius question is that the rock is
 lighter than this silicate; C10 gives it a tool and does not run it. The judgment is the
 owner's.
+
+**Revisited 2026-08-30 (F2), with the overturn condition registered first.** Holland & Powell
+1998 is in the cache and antigorite **is** in its Table 5 (atg, a° = 4.70×10⁻⁵ K⁻¹ in
+α(T) = a°(1 − 10/√T), κ₂₉₈ = 525 kbar, the C_p polynomial), and Hilairet's §4 borrows from
+exactly that paper — the chain holds. The term is carried flattened at 298 K
+(αK_T = 1.33 MPa/K with Hilairet's K₀; c_V 966 J/kg/K), from a pure-Mg end-member onto a
+natural Fe/Al sample. Re-run on the same grid, the bands are unchanged to four decimals at
+every finished point (Enceladus −0.0001 at f ≥ 0.75; Callisto and Titan at f = 0.75 ran past
+the sweep's budget, a C3 band defect traced in the notes, not a change in the answer): the
+moons' rock sits within ~100 K of the reference and the thermal pressure is ≲ 0.1 GPa
+against 2–3 GPa. **No moon reaches its
+published C/MR² at any fraction in [0, 1]; C10 stays closed.** The grade stays analog, and
+its reason is now the borrowing and flattening, not the term's absence — the sentence that
+said otherwise is rewritten here and in the docs. Two ceiling-poking finite differences were
+fixed on the way (`eos.Material.k_t`, `interior._adiabatic_dtdp`); no anchor touched.
+`engine/antigorite-thermal-context-notes.md` has the transcription and the runs.
 
 ## What closing all of these does not do
 

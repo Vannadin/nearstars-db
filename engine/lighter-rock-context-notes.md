@@ -30,13 +30,14 @@ the seismic velocities.
 
 ## What the material is allowed to do
 
-BM2 to 10 GPa, no thermal term. `alpha_k = 0` means the phase is isothermal in this recipe's
-sense — temperature passes through it unchanged — and `cold_phases()` names it, as it names
-every phase without published thermal constants. Above 10 GPa the material declines by name:
-the paper's range ends there and serpentine above it is a dehydration problem, not the same
-phase. Holland & Powell 1998 (thermal expansivity) is on the owner's request list; **the grade
-follows from this deficiency**, not from the quality of the fit, because Titan's and
-Callisto's rock is not at room temperature.
+BM2 to 10 GPa. *(Interim, superseded 2026-08-30 by F2: the paragraph below described the
+state at C10's landing.)* At landing the phase had no thermal term — `alpha_k = 0`, isothermal,
+named by `cold_phases()` — and the grade followed from that deficiency. Since F2 the term is
+borrowed from Holland & Powell 1998 (the source Hilairet's §4 borrows from), flattened at
+298 K, and the grade follows from the borrowing and flattening instead; see
+`engine/antigorite-thermal-context-notes.md`. Above 10 GPa the material still declines by
+name: the paper's range ends there and serpentine above it is a dehydration problem, not the
+same phase.
 
 ## The mixture, and the one rule extended
 

@@ -272,6 +272,12 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     floor = getattr(mat, "p_floor", 0.0)
     if floor and p_lo < floor:
         p_lo, p_hi = p, p + 2.0 * h
+    # 위쪽 반 걸음이 재료의 상한을 넘으면 상한에서 자른다 — 사격의 괄호가 상한에 시험점을 놓을 때
+    # 미분이 상한 밖을 찔러 거절을 만들면 안 된다 (antigorite 10 GPa, 2026-08-30 F2). eos.Material.k_t 와 같다.
+    ceiling = getattr(mat, "p_max", 0.0)
+    if ceiling and p_hi > ceiling:
+        p_hi = ceiling
+        p_lo = min(p_lo, p_hi - 2.0 * h)
     d_hi, d_lo = mat.density(p_hi, t, t_pot), mat.density(p_lo, t, t_pot)
     if d_hi <= d_lo:
         return 0.0
@@ -1028,6 +1034,15 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             x2 = 0.5 * (math.log(lo) + math.log(hi))
         if not (math.log(lo) <= x2 <= math.log(hi)):
             x2 = 0.5 * (math.log(lo) + math.log(hi))
+        if hi / lo - 1.0 < 1e-12:
+            # **괄호가 한 점으로 닫혔는데 질량이 허용오차 밖이다.** 같은 중심압을 다시 적분해도 같은
+            # 답이 나오므로 여기서 멈춘다 — converged=False 를 달고 온도 고리에 돌려준다. 2026-08-30 F2
+            # 에서 넣었고, 그날 관찰된 느린 풀이(칼리스토형, 사문석화 0.75 · 얼음 0.5, 40 분 넘김)의
+            # 원인은 **이 자리가 아니었다** — 온도 괄호가 2.3 ~ 5 GPa · 500 ~ 1000 K 의 액체 띠(상태방정식
+            # 없음, 위로 던짐)에 밀려 2000 K 대의 시험을 돌고 그 적분이 하나하나 비쌌던 것이다
+            # (antigorite-thermal-context-notes.md). 이 보호는 그 조사 중 발견한 별개의 빈틈이고, 수렴하는
+            # 앵커는 여기 오지 않는다.
+            return st, False
         x0, y0 = x1, y1
         x1 = x2
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
@@ -1757,9 +1772,9 @@ def solve(mass_earth: float,
             "antigorite (Hilairet+ 2006 BM2, ρ₀ 2640.5 kg/m³ 도출)를 그 분율로 부피 가법 혼합한 것이다 — "
             "두 고체가 알갱이로 공존하는 부분 사문석화 암석이지, C7 이 막은 '물을 규산염에 섞기' 가 "
             "아니다. 얼마나 사문석화됐는가는 물이 어디까지 갔는가의 이력이라 이 레시피가 도출하지 않는다. "
-            "antigorite 는 상온 적합뿐이라 **열항이 없고** 온도가 그 성분을 그대로 통과한다 (Holland & "
-            "Powell 1998 이 요청 목록에 있다); 10 GPa 위에서는 탈수라 같은 상이 아니다. 등급을 analog 로 "
-            "내린다.")
+            "antigorite 의 열항은 Hilairet 이 빌린 그 출처, Holland & Powell 1998 의 순수 Mg 단성분에서 "
+            "빌려 298 K 에서 평탄화한 것이다 (α 가 600 K 에서 40 % 더 크다); 10 GPa 위에서는 탈수라 같은 상이 "
+            "아니다. 등급은 그 빌림과 평탄화가 정한다 — analog.")
     if boundary_temperature_jump > 0.0:
         notes.append(
             f"**열경계층 {boundary_temperature_jump:.0f} K 는 선언이다.** 얼음 맨틀 꼭대기와 기체 외피 "
