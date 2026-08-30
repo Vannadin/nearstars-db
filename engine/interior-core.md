@@ -65,6 +65,13 @@ numbers travelling down into briefs, and one headline (C11's "Titan is inside a 
 band", 2026-08-30) travelling up without reproduction; the rule above stops the first and
 this one the second.
 
+**A table is regenerated on the code that ships, in the commit that ships it — and when the
+regeneration differs, which side is right is settled by a separate trace.** The sub-kind's
+name ("the table ran ahead of the code inside one commit") invites doubting the table first;
+in the case that named it (C11, 2026-08-30) the table was right and the code had regressed —
+an over-broad refusal written after the table removed a converged member. Regenerate, diff,
+then trace; do not correct the table to the code, or the code to the table, on the name alone.
+
 ## Where the line is
 
 Not by body class — by **what is missing**.
