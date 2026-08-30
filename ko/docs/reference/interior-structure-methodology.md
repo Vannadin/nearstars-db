@@ -1686,9 +1686,13 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   확인.
 - **Bethkenhagen, M. et al. 2017**, ApJ 848, 67
   ([`2017ApJ...848...67B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...67B), arXiv
-  **[1709.04133](https://arxiv.org/abs/1709.04133)**). **캐시**
-  `docs/phase3/_papers/1709.04133.md`. 행성 얼음에 대한 부피 가법 혼합의 정량된 한계, 그리고
+  **[1709.04133](https://arxiv.org/abs/1709.04133)**). **캐시** 는 조판된 ApJ PDF
+  `docs/phase3/_papers/2017ApJ...848...67B.pdf`(2026-08-31 부터 인용 기반; ar5iv 텍스트
+  `1709.04133.md` 도 옆에 둠). 행성 얼음에 대한 부피 가법 혼합의 정량된 한계, 그리고
   얼음거대행성 외피를 선언할 때 쓸 태양 조성 얼음비 Z(CH₄):Z(NH₃):Z(H₂O) = 0.31:0.08:0.61.
+  Table 1 은 세 천왕성 프로파일을 따른 상태점을 삼원 혼합의 확산계수 옆에 인쇄합니다 — C12 가
+  읽었고, 본문은 그 밀도 열을 혼합이 아니라 프로파일의 것으로 둡니다. EOS 격자는 어느 판에도
+  없습니다.
 - **Scheibe, L., Nettelmann, N. & Redmer, R. 2019**, A&A 632, A70
   ([`2019A&A...632A..70S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...632A..70S), arXiv
   **[1911.00447](https://arxiv.org/abs/1911.00447)**). **캐시**

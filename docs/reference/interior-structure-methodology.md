@@ -1863,10 +1863,14 @@ instead of as a class constant.
   Bibcode verified by title.
 - **Bethkenhagen, M. et al. 2017**, ApJ 848, 67
   ([`2017ApJ...848...67B`](https://ui.adsabs.harvard.edu/abs/2017ApJ...848...67B), arXiv
-  **[1709.04133](https://arxiv.org/abs/1709.04133)**). **Cached** in
-  `docs/phase3/_papers/1709.04133.md`. The additive volume law's quantified bound for
+  **[1709.04133](https://arxiv.org/abs/1709.04133)**). **Cached** as the typeset ApJ PDF
+  `docs/phase3/_papers/2017ApJ...848...67B.pdf` (the citation base since 2026-08-31; the ar5iv
+  text `1709.04133.md` remains beside it). The additive volume law's quantified bound for
   planetary ices, and the solar-abundance ice ratio Z(CH₄):Z(NH₃):Z(H₂O) = 0.31:0.08:0.61
-  that an ice-giant envelope would be declared with.
+  that an ice-giant envelope would be declared with. Its Table 1 prints state points along
+  three Uranus profiles beside the ternary's diffusion coefficients — read for C12, whose
+  density column the text assigns to the profiles, not the mixture; no EOS grid is printed in
+  either version.
 - **Scheibe, L., Nettelmann, N. & Redmer, R. 2019**, A&A 632, A70
   ([`2019A&A...632A..70S`](https://ui.adsabs.harvard.edu/abs/2019A%26A...632A..70S), arXiv
   **[1911.00447](https://arxiv.org/abs/1911.00447)**). **Cached** in

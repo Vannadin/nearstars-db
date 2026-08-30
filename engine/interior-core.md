@@ -76,6 +76,14 @@ fenced its own suggestion with "read first · do not quote · direction only", s
 pair was read before it was used and never reached a verdict. An error occurred and the
 procedure caught it; "it passed the audit" is not a reason to skip the reading.
 
+**A retrial's outcomes are registered before it runs, and the register now has five kinds:**
+sits with A · sits with B · between · the source does not reach the deciding region (added
+after F1) · **the source disagrees with both candidates** (added after F4, where Queyroux sat
+above IAPWS and Reinhardt alike) — in which no reopening condition fires, the band's question
+is rewritten from "which one" to "how wrong are both", and the grade keeps its word while its
+reason changes. Two unregistered results in a row meant the list was young; every retrial
+brief now carries all five.
+
 **A table is regenerated on the code that ships, in the commit that ships it — and when the
 regeneration differs, which side is right is settled by a separate trace.** The sub-kind's
 name ("the table ran ahead of the code inside one commit") invites doubting the table first;
@@ -240,6 +248,10 @@ report against the laser-heated family, and this recipe does not adjudicate betw
 Grade: the measurement clears the 5 % bar (σ_T/T_m 0.7–1.3 % to 17.3 GPa) and the curves do
 not clear the measurement, so analog stands with a new reason — the one measurement in the
 band sits 210–300 K above both lines. Table S1 is a check table in `test_interior.py`.
+Two ways a check can fail to raise a grade, now both on record: F1's — the check's own error
+(8–11 %) is larger than the scale, so it cannot see; F4's — the check is precise enough
+(0.7–1.3 %) and **the thing checked is wrong**. The grade word is the same; the reasons are
+opposites, and the second is the one that names what would have to change.
 
 ### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt; reopened 2026-08-30 for ammonia and closed again for that half, built**
 
@@ -731,6 +743,32 @@ Titan question C10 left — *void space or partial differentiation* — now has 
 measured: a declared front with a rock-bearing crust reaches the published values, a
 serpentinisation fraction does not. Which pair, if any, a body should declare is the owner's
 call; this row supplies the grid. `engine/middle-rung-context-notes.md`.
+
+### C12 — A ternary anchor from a diffusion table? — **opened 2026-08-31 on the owner's grounds; closed 2026-08-31, recorded**
+
+**A check, not a material — and not a reopening of C4.** Opened when the owner doubted the
+report that Bethkenhagen+ 2017's typeset version (`2017ApJ...848...67B.pdf`, in the cache)
+carried no usable data — a report made from the text layer twice — and read it as images:
+the EOS grid is indeed absent (Figures 1–3 only, no table, no supplement; **C4's methane half
+stays on its author-request route**), but **Table 1** prints R · ρ · T · p at thirty state
+points along three Uranus profiles beside the real 2:1:4 mixture's self-diffusion
+coefficients. If ρ were the mixture's, water-alone could be measured against the real ternary
+— the number C4 said needed the tables.
+
+**Settled from the text first**: §4 introduces the table as *"the diffusion coefficients of
+each species in the real ternary mixture, as well as radius, density, temperature, and
+pressure along the three profiles"* — profile quantities; §2.7 matches the profile's
+*pressure* within 2 % and says nothing of tabulating the box's density; the mixture's own
+density appears as Figure 4. The text's reading is (나), the profile's density. **The
+registered discriminating check then failed on its own premise**: this recipe's water
+(Mazevet+ 2019 at all thirty rows) is 18–32 % denser than *every* printed ρ, including the
+water-only profile's (29 % at 6.9 GPa · 1775 K → 18 % at 510 GPa · 5750 K), so the column is
+not pure water's density anywhere — and both readings can explain that size (an H/He-bearing
+inner envelope under (나); a mixture 15–25 % lighter than water under (가), which C4's own
+ammonia result makes plausible). **Closed on the conservative branch**: no ternary anchor can
+be read from the column with the evidence held; C4's composition tier keeps its water +
+ammonia number. What would settle it: Redmer+ 2011's own ρ(R) for the water-only model, or the
+authors. No code, no anchor, no gate change. `engine/ternary-anchor-context-notes.md`.
 
 ## What closing all of these does not do
 
