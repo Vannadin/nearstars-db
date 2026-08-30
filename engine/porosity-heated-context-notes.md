@@ -43,6 +43,11 @@ differentiation, and the same shelf: Malamud & Prialnik's evolution code). So th
 specified — which laws, which table, which body it was built on — and left for whoever brings
 the history.
 
+*(Added 2026-08-30 by F3: Malamud & Prialnik 2015, read in full, carries a third relation —
+rock porosity as a closed form in (P, T_max), one declared number per shell rather than a
+thermal history. It is a bound with its own shelf (≤ 0.8 GPa, ice I, no rock melt); it does
+not replace the two above. `engine/malamud-readthrough-context-notes.md`.)*
+
 Consumers when it is wired: Enceladus (the paper's own body, on the icy roster, solved today with no
 porosity declared), Europa, and the roster's tidally heated moons that declare
 `tidal_heating`. Not the condensed anchors, whose `initial_porosity` is zero.

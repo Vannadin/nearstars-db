@@ -300,6 +300,28 @@ additivity between them is standard and is the same shape as the rock–metal ru
 recipe already carries, so C10's interpolation is one declared axis — how serpentinised —
 and not the forbidden mixture.
 
+**Revisited 2026-08-30 (F3), from the full text now in the cache.** The stated limit is
+removed in the transcribable direction: the paper's EOS (§3.3, eqs. (1)–(7)) is an
+**equilibrium closed form in (P, T, X_d) with every coefficient printed** — porosity of ice
+ψ_w = 0.45 exp(−β_w(T/T_m)√P) and of rock ψ_d = 0.4 exp(−β_d P) Γ(T_max), volumes added by
+the two-layer model — and its only history variable is T_max, one number per shell. It fits
+laboratory compaction to 764 MPa, ice I only, no rock melt; at Callisto's and Titan's core
+pressures it is out of range and gives ~1 % void, so **it does not reach the deciding region
+of C10's three moons; it reaches their crusts.** Both reasons above are confirmed from the
+text: serpentinisation is a reaction *"only so long as there is available liquid water"*, and
+the front is an output of a 4.6 Gyr multiphase-flow run with no input parameter for how far
+melting reached. **One sentence above was too broad and is corrected here in words:** a
+mixing rule for an ice-bearing layer *does* exist for the never-wet state — cold ice and rock
+grains, each compacted on its own curve, volumes additive (Yasui & Arakawa 2009's two-layer
+model, adopted as eq. (1) and reported to reproduce the mixture's compaction curve) — which is
+C10's shape; what still has no rule is the reacted, partially differentiated body, and the
+refusal stays on that. "No consumer" is therefore a **choice** about the missing front, not an
+absence of a treatment. The full text names the declared-front shortcut (*"assuming that
+differentiation somehow occurred, without actually computing how"*) and does not take it;
+grounds for a middle rung — a declared front plus a cold mixed crust, Callisto and Titan as
+consumers — are written as a proposal, not an item, in
+`engine/malamud-readthrough-context-notes.md`. C7 stays closed.
+
 ### C8 — The temperature branch's validated window — **closed 2026-08-30**
 
 The adiabat had one published check, Unterborn+ 2019 eq. 7 — 4.4 % at 1 R⊕, −17 % at
@@ -379,6 +401,21 @@ is weak and creep closes its pores. **That is a rheology statement, not a densit
 statement**: Hilairet's antigorite ρ₀ still stands and still lands on Vance's target. What
 Neumann adds is that a body *made* of it would not keep its pores. The two live on different
 layers; a later session must not read this as a density refutation.
+
+**Revisited 2026-08-30 (F3), from the full text.** The abstract-derived sentence holds and
+gets its weights: serpentinisation heat is the second source after radioactivity (an order of
+magnitude below it over the run, twice it in the first 200–235 Myr); compaction's
+gravitational energy is *"marginal"*, two orders below serpentinisation. Tidal heating,
+impacts and convection are still carried by nobody — satellites are excluded from the
+paper's sample for the first two. What the text adds is a **third relation of its own kind**:
+rock porosity as a closed form in (P, T_max), eq. (5) with a step Γ centred at 675 K that the
+authors call *"hypothetical"*, valid to ~0.8 GPa, ice I, no rock melt. It does not replace
+Bierson (general) or Neumann (rheology over a history); but its history is one declared
+number per shell, T_max ≥ T, and the present T gives the maximum porosity — a bound. For
+this relation "reached, no consumer" is a choice about a declaration, not about a thermal
+evolution. Transcription note when it is ever wired: the printed eq. (7) exponent
+15(T_max/675) − 1 contradicts the text's stated behaviour; 15(T_max/675 − 1) is the form the
+text describes. `engine/malamud-readthrough-context-notes.md`. C9 stays closed.
 
 ### C10 — Lighter rock — **closed 2026-08-30: the axis exists, and it does not reach**
 

@@ -23,6 +23,13 @@ So the closure can say *a treatment exists and it is thermal evolution with reac
 transport*; it cannot say whether anything in it is transcribable into a hydrostatic
 solver. That limit is written into the row, not softened.
 
+*(Superseded 2026-08-30 by F3: the full text of Malamud & Prialnik 2015 is now in the cache
+and was read. The EOS is transcribable — an equilibrium closed form with printed
+coefficients — and the "no mixing rule for an ice-bearing layer" sentence above was too
+broad: one exists for cold, never-wet grains (the two-layer model), and none for the reacted
+partially differentiated body. The refusal stands on the latter. See
+`engine/malamud-readthrough-context-notes.md` and the C7 *revisited* line.)*
+
 ## Why the reason had to be raised
 
 "The mixture rule handles rock and metal only" describes the code and sends the next reader
