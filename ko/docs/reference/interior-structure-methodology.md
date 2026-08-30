@@ -1346,8 +1346,12 @@ Helled+ 2022 가 목성에 맞춘 상수입니다. 목성 모양의 숫자 둘�
   본문이 캐시에 있습니다.
 - **Queyroux, J.-A. et al. 2020**, Phys. Rev. Lett. 125, 195501
   ([`2020PhRvL.125s5501Q`](https://ui.adsabs.harvard.edu/abs/2020PhRvL.125s5501Q)). 측정된
-  삼중점 14.6 GPa · 850 K 와 고온 bcc 상을 초이온 얼음 VII″ 로 동정한 것 — Reinhardt 의 선을
-  실험에 대볼 수 있는 유일한 자리입니다. *프리프린트 없음*: 초록만, bibcode 로 확인.
+  삼중점 14.6(5) GPa · 850(20) K 와 고온 bcc 상을 초이온 얼음 VII″ 로 동정한 것 — Reinhardt 의
+  선을 실험에 대볼 수 있는 유일한 자리입니다. **Letter 전문을 읽음**(캐시의 PDF, 2026-08-30,
+  F4). 개별 융해점은 보충자료 Table S1 에 있고 그것은 없습니다 — Letter 가 16.5 ~ 20.6 GPa 안에
+  인쇄한 값(905 K 에서 15.6(2) GPa, 944 K 에서 18.4(9) GPa)은 융해가 아니라 얼음 VII″ → VII′
+  등구조 전이라, 이음매 재검은 Table S1 이 올 때까지 세워 둡니다. *프리프린트 없음*, bibcode 로
+  확인.
 - **IAPWS R14-08(2011)**, *Revised Release on the Pressure along the Melting and
   Sublimation Curves of Ordinary Water Substance*
   ([iapws.org/relguide/MeltSub.html](http://www.iapws.org/relguide/MeltSub.html)). 얼음

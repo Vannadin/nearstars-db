@@ -1481,9 +1481,13 @@ instead of as a class constant.
   *Open access*; the text is in the cache.
 - **Queyroux, J.-A. et al. 2020**, Phys. Rev. Lett. 125, 195501
   ([`2020PhRvL.125s5501Q`](https://ui.adsabs.harvard.edu/abs/2020PhRvL.125s5501Q)). The
-  measured triple point at 14.6 GPa · 850 K and the identification of the high-temperature
-  bcc phase with superionic ice VII″ — the one experimental check on Reinhardt's lines this
-  recipe can quote. *No preprint*: abstract only, verified by bibcode.
+  measured triple point at 14.6(5) GPa · 850(20) K and the identification of the
+  high-temperature bcc phase with superionic ice VII″ — the one experimental check on
+  Reinhardt's lines this recipe can quote. **Letter read in full** (PDF in the cache,
+  2026-08-30, F4); the individual melting points are in its Supplemental Material Table S1,
+  which is not held — the values the Letter prints inside 16.5–20.6 GPa (15.6(2) GPa at
+  905 K, 18.4(9) GPa at 944 K) are the ice VII″ → VII′ isostructural transition, not melting,
+  so the seam retrial is parked until Table S1 arrives. *No preprint*; verified by bibcode.
 - **IAPWS R14-08(2011)**, *Revised Release on the Pressure along the Melting and
   Sublimation Curves of Ordinary Water Substance*
   ([iapws.org/relguide/MeltSub.html](http://www.iapws.org/relguide/MeltSub.html)). The

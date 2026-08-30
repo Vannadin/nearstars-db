@@ -195,6 +195,21 @@ side of this row's melting curve. Two seams measured: water1 ↔ water2 in their
 (≲ 170 K wide), and hot water below 0.1 GPa. `engine/water2-context-notes.md`. C3 stays
 closed; the dispatch by (P, T) is unchanged, one more material answers it.
 
+**Parked at the gate 2026-08-30 (F4, Queyroux at the seam).** The band 16.5–20.6 GPa has
+one measurement, Queyroux+ 2020 (2020PhRvL.125s5501Q, the arbiter's seat, independent of
+Kimura 2023), and this repository holds its six-page Letter but not the Supplemental Material
+that carries the individual melting points (Table S1). The values printed in the band —
+15.6(2) GPa at 905 K and **18.4(9) GPa at 944 K** — are the ice VII″ → VII′ **isostructural
+solid transition** on two isotherms (§*Isostructural transition*; Fig. 1 keeps "melting line"
+and "isostructural solid transition" as separate symbols), not melting points; the triple
+point is 14.6(5) GPa · 850(20) K. F1's criterion, reused, has nothing to put a residual inside
+of, and a fit cannot reopen a row, so the fourth branch fires and nothing moves. What the
+Letter does give is a **bound**: liquid at 15.4 GPa · 944 K (Fig. 2a) and solid at 18.4(9) GPa
+· 944 K put T_m(18.4 GPa) above 944 K — above IAPWS's 690 K by 254 K and Reinhardt's 801 K by
+143 K, the direction and size of Kimura's out-of-band point. Recorded as orientation, not a
+verdict. Table S1 (free from APS, requested from the owner) is what would run the item.
+`engine/queyroux-seam-context-notes.md`.
+
 ### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt; reopened 2026-08-30 for ammonia and closed again for that half, built**
 
 The ice-giant envelope is water alone, standing in for a water–ammonia–methane mixture. That
