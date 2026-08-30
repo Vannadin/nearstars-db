@@ -147,7 +147,7 @@ narrowed: the measurement gives no support to IAPWS's end. Table I enters the ga
 table. What would still move this is a measured point between 15 and 26 GPa — Queyroux+ 2020,
 now in the cache. `engine/seam-retrial-context-notes.md` has the tables.
 
-### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt**
+### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt; reopened 2026-08-30 for ammonia and closed again for that half, built**
 
 The ice-giant envelope is water alone, standing in for a water–ammonia–methane mixture. That
 is the field's own convention, but it is a stated substitution and **its price is not
@@ -189,6 +189,86 @@ inner mantle's ice:rock ratio (Nettelmann+ 2016), with non-adiabatic interiors t
 own open question (Helled+ 2020). **C4 is not a candidate for that residual in either
 direction**, so closing it unbuilt costs the recipe nothing it was counting on.
 `engine/ammonia-methane-context-notes.md` has the search.
+
+**Reopened 2026-08-30 for the ammonia half** — the registered overturn condition fired: the
+owner obtained Bethkenhagen, French & Redmer 2013 and **the table is printed inside it**
+(Appendix B, Table I; no repository, no fit — the printed table is the distribution). The
+closure above assumed it was out of reach; it was not. The methane half stays closed as
+written — nothing new bears on it.
+
+**Closed again for ammonia, built.** `engine/ammonia_table.py`, baked by
+`tools/make_ammonia_table.py` from the cached PDF's text layer and checked against the
+printed page: 93 points on a **ragged** grid (500 K to 1.5 g/cm³, 700 K to 2.0, 1000 K and
+above to 3.0; 0.309–333.2 GPa), the five asterisked points carried as a 5 % flag against the
+paper's 2 %, nothing interpolated across the six absent cells. The material `nh3`
+(`eos.Ammonia`) refuses outside the table by name. **The convention is stated and tested**:
+the caloric column includes the vibrational correction (2013 Appendix B) — the correction
+Bethkenhagen+ 2017 §II.4 removed from this set — and the exposure is c_P / ∇_ad only, never
+the density mixing. The ice-giant adiabat (5500–6300 K) lies between the 5000 and 7000 K
+isotherms: **interpolation, not extrapolation.** Interpolation error, leave-one-out at
+doubled spacing: 8.7 % in the mantle region (ρ ≥ 1 g/cm³, T ≥ 2000 K), 17.3 % in the low-density dissociation corner.
+
+**What the table settles, and only that.** Water (Mazevet+ 2019) and ammonia (this table)
+read at the same (P, T) at eight points — four on the engine's own solved Uranus profile
+(50–250 GPa, 2830–3950 K) and four bracketing the central temperatures — mixed by additive
+volume at the solar-ratio pair fraction w_NH₃ = 0.1159: ammonia is 21–24 % less dense than water at
+equal (P, T) — the equal-number-density μ argument (5.5 %) was a floor — and **water
+standing in for the water–ammonia pair overestimates its density by 2.9–3.5 %**, direction
++, above the propagated noise (0.6 %). That is the composition tier's number for the
+**ammonia share**; the tier's direction stands. The thermal tier gets a first table-derived
+indication that is **not uniform**: ammonia's ∇_ad is 19–45 % below water's at seven points
+(the pair's adiabat 3–10 % shallower) and above it at the mantle top (50 GPa, 2830 K: 2.6 %
+steeper), under the convention caveat — so it **keeps "sign ungrounded"**. The net tier still needs the tables,
+**because methane — the largest share, 0.31 — is still missing.** Ammonia is not wired
+into any body; whether it enters the mantle as a declared fraction is the owner's decision,
+with the grounds (for, against, and the ceiling below the ice giants' centres) in
+`engine/ammonia-table-context-notes.md`. Anchors bit-identical — no path function moved.
+
+**The methane half, re-stated from the full text (2026-08-30, not built).** Sherman, Wilson,
+Weeraratne & Militzer 2012, *Ab initio simulations of hot, dense methane during shock
+experiments*, Phys. Rev. B 86, 224113 (2012PhRvB..86v4113S, arXiv 1207.2948) is in the
+cache as the published PDF and the arXiv LaTeX source. **A table exists and is distributed**:
+the source's appendix carries 79 DFT-MD (T, P, E) points with 1σ error bars, marked *"to be
+published as online supplementary information"* — the published PDF refers to the
+supplement and does not print it. The row's old reason, *not obtained because paywalled*, is
+replaced by two that hold with the table in hand:
+
+- **Methane does not persist as a species in the region.** Sherman: *"At a temperature of
+  approximately 4000–5000 K, a plateau is reached … the system entering into a polymeric
+  regime where the methane molecules spontaneously dissociate to form long hydrocarbon
+  chains"*, a regime they show to be metallic; at 6000 K a plasma. Bethkenhagen+ 2017 §III on
+  their own runs: *"Pure methane does not become superionic but instead decomposes into
+  long-chained molecules in our simulations."* Additive volume assumes each component keeps
+  its identity at (P, T); **no mixing error for a dissociating component has been measured
+  or published**, so a methane table would not make a linear-mixing mantle grounded.
+- **The grid does not cover the region.** Counted from the source (13 densities × 13
+  temperatures, 79 cells filled): the low densities stop at 4000 K, only two density lines
+  (1.201 and 1.498 g/cm³) run the full 300–75 000 K, and single points sit at 0.600, 1.353,
+  2.129 and 2.376 g/cm³. Bethkenhagen+ 2017 §II.3, naming Sherman: *"none of them covers the
+  entire pressure-temperature region required for Uranus and Neptune interior models."*
+
+| ρ (g/cm³) | 0.600 | 0.800 | 1.000 | 1.201 | 1.353 | 1.498 | 1.600 | 1.775 | 2.010 | 2.129 | 2.257 | 2.376 | 2.502 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| points | 1 | 5 | 5 | 13 | 1 | 13 | 9 | 9 | 9 | 1 | 6 | 1 | 6 |
+| T (K) | 300 | 300–4000 | 300–4000 | 300–75 000 | 2000 | 300–75 000 | 2000–75 000 | 2000–75 000 | 2000–75 000 | 10 000 | 5000–75 000 | 10 000 | 5000–75 000 |
+
+**Measured: the solved mantles do pass the published dissociation thresholds.**
+`tools/methane_thresholds.py` reads the frozen convergence point and samples the ice layer:
+
+| | Uranus | Neptune |
+|---|---|---|
+| ice mantle span | 34.5–820 GPa, 2663–5948 K | 39.2–1016 GPa, 2553–6066 K |
+| C–C bonds (> 1100 K and > 10 GPa, Hirai+ via Sherman) | the whole mantle, from its top | the whole mantle, from its top |
+| diamond (> 3000 K) | from 80 GPa (3037 K) to the base — 71 of 78 samples | from 114 GPa (3049 K) — 67 of 76 |
+| polymeric 4000 K / 5000 K | 262 GPa / 525 GPa | 334 GPa / 626 GPa |
+
+So in this recipe's own profiles the entire ice mantle sits above the carbon–carbon bond
+threshold, nine tenths of its pressure span above the diamond threshold, and its deeper
+half inside or beyond the polymeric regime. That is a measurement, recorded here as grounds
+either way; whether carbon separation becomes an item (carbon as its own phase rather than
+methane in a mixture) is the owner's decision. **The three-tier sign statement does not
+move**: methane's absence is now more precisely stated, and the net still needs tables that
+would have to carry a dissociating component — which none published does.
 
 ### C5 — Where the giants' leftovers belong — **closed 2026-08-30**
 

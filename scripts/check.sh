@@ -157,6 +157,7 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_mass_radius.py) || fail=1
 (cd engine && python3 test_fermi.py) || fail=1
 (cd engine && python3 test_water_hot.py) || fail=1
+(cd engine && python3 test_ammonia.py) || fail=1
 (cd engine && python3 test_interior.py) || fail=1
 # 얼음거대행성 앵커. 천왕성·해왕성을 실제로 풀어(각 ~50 초) 굳힌 값과 비트까지 대조하고,
 # 격자 위상·격자 수렴도 본다. 답을 바꾸는 작업은 --refresh 로 다시 굳혀 diff 에 남긴다.

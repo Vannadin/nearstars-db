@@ -47,6 +47,7 @@ import hhe_table
 import ice_melt_table
 import water_hot
 import water_table
+import ammonia_table
 from dataclasses import dataclass
 
 R_GAS = 8.314462618          # J mol⁻¹ K⁻¹. CODATA 2018 기체상수
@@ -453,8 +454,9 @@ class Material:
 # 안 된다는 전제이고, 그 §V 가 water-only 모형과 icy 모형을 대조하는 절이다. H-He 의
 # 8 % 를 암석에 옮겨 적지 않았던 규율 그대로, 이 수도 그쪽으로 옮겨 적지 않는다.
 #
-# 소비처는 아직 없다 — 암모니아와 메탄의 상태방정식이 이 파일에 없어서다. 그래도 여기
-# 둔다. 침묵이 아니게 된 자리를 침묵으로 남겨두면 다음 조사가 같은 길을 다시 걷는다.
+# 소비처는 아직 없다 — 메탄의 상태방정식이 이 파일에 없어서다(암모니아는 2026-08-30 C4 재개로
+# 들어왔다: 아래 Ammonia). 그래도 여기 둔다. 침묵이 아니게 된 자리를 침묵으로 남겨두면 다음
+# 조사가 같은 길을 다시 걷는다.
 AVL_VOLUME_DEVIATION = 0.08   # Vorberger+ 2007 초록. 정압 부피, H-He, 분자 해리 구간
 AVL_DEVIATION_REGIME = "분자 해리 구간 (순수 분자상에서는 ~0)"
 AVL_ICES_DEVIATION = 0.04     # Bethkenhagen+ 2017 초록. 1:1 이성분, 밀도, **상한**
@@ -764,6 +766,161 @@ class _HotWaterSlope:
 
 
 H2O_HOT = HotWater()
+
+
+# ── 암모니아 — 표 하나, 아직 소비처 없음 ──────────────────────────────────
+#
+# 2026-08-30 C4 가 "표에 닿을 수 없다" 로 닫혔고, 오너가 논문을 받아오면서 그 조건이 뒤집혔다:
+# Bethkenhagen, French & Redmer 2013 (2013JChPh.138w4504B) 의 Appendix B Table I 이 암모니아의
+# p(ρ,T)·u(ρ,T) 를 93 점 인쇄한다 — 저장소도 적합식도 없고 인쇄가 배포다. ammonia_table.py 가
+# 그 표를 굳힌 것이고(tools/make_ammonia_table.py, PDF 텍스트층 파싱 + 인쇄본 대조), 여기는
+# 적분기가 먹을 수 있는 껍질이다 — HotWater 와 같은 모양, P(ρ,T) 가 통째로 하나라 Phase 가 아니다.
+#
+# **어느 천체에도 아직 배선되지 않았다.** 암모니아 혼자는 얼음거대행성 맨틀이 아니고, 메탄 표는
+# 여전히 없다. 이것이 당장 여는 것은 **검사** 다 — 물(Mazevet+ 2019)과 암모니아(이 표)를 같은
+# (P, T) 에서 읽어 부피 가법으로 섞으면 물 하나로 두 성분을 대신할 때의 값이 처음으로 표에서
+# 나온다. test_ammonia.py 가 그것을 재고 interior-core.md C4 가 결과를 든다.
+#
+# **규약 — 내부에너지에 진동(핵 양자) 보정이 들어 있다.** 이 표의 u 는 u = u* + u_vc (2013 식 (1),
+# Appendix B, Fig. 7 캡션). Bethkenhagen+ 2017 §II.4 는 같은 데이터에서 그 보정을 **뺐다**. 이
+# 저장소는 인쇄된(보정된) 값을 굳힌다 — 인쇄된 것이 그것뿐이고, 물리적으로 맞는 쪽이다. 노출은
+# c_P 와 ∇_ad 뿐이다(u 의 온도 도함수). 밀도 혼합은 p 만 읽으므로 규약과 무관하고, 논문이 p_vc 를
+# 이 데이터에서 무시할 만하다고 적되 "this should not be understood as a general result" 라 한다.
+# ammonia_table.U_INCLUDES_VIBRATIONAL_CORRECTION 이 그 사실을 들고, test_ammonia.py 가 확인한다.
+NH3_REF = ("Bethkenhagen, French & Redmer 2013 (2013JChPh.138w4504B) Appendix B Table I — "
+           "FT-DFT-MD 암모니아 p(ρ,T)·u(ρ,T), 0.5–3.0 g/cm³ · 500–10 000 K · 0.309–333.2 GPa, "
+           "압력 2 % (표시점 5 %)")
+
+
+@dataclass(frozen=True)
+class Ammonia:
+    """암모니아 유체·초이온·해리상, 굳힌 표 위에서. `Material` 과 같은 자리에 꽂힌다."""
+    name: str = "nh3"
+    label_ko: str = "암모니아 (표, Bethkenhagen+ 2013)"
+
+    @property
+    def rho0(self) -> float:
+        """괄호잡기용. 표의 최저 밀도 — 영압은 표 밖이다."""
+        return 0.5e3
+
+    @property
+    def p_max(self) -> float:
+        """표의 가장 큰 압력(3.0 g/cm³ · 10 000 K). 온도마다의 실제 천장은 density 가 표 이름을
+        대며 거절한다 — 격자가 들쭉날쭉해서 하나의 수로 말할 수 없다."""
+        return ammonia_table.P_MAX_PA
+
+    def rho_seed(self, mass_kg: float) -> float:
+        return 1.5e3
+
+    @property
+    def has_thermal(self) -> bool:
+        return True
+
+    def cold_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def melt_free_phases(self) -> tuple[str, ...]:
+        """녹는곡선이 없다 — 표는 유체·초이온·해리상을 한 격자로 잇고, 1차 전이(Fig. 6·7 의
+        점선)를 가로질러 보간한다. 어디가 전이인지는 이 재료가 판정하지 않는다."""
+        return (self.name,)
+
+    def t_melt(self, p: float) -> float | None:
+        return None
+
+    def in_domain(self, p: float, t: float) -> bool:
+        return ammonia_table.in_domain(p, t)
+
+    def check_temperature(self, p: float, t: float) -> None:
+        if t <= 0.0:
+            raise PhaseGap(
+                self.name, p,
+                "암모니아는 등온 경로로 풀 수 없다. 표가 (ρ, T) 격자라 온도가 인자다. "
+                "포텐셜 온도를 선언하면 이 층이 풀린다.")
+        if t < ammonia_table.T_MIN_K or t > ammonia_table.T_MAX_K:
+            raise PhaseGap(
+                self.name, p,
+                f"{t:.0f} K 는 {ammonia_table.SOURCE} 의 등온선 범위"
+                f"({ammonia_table.T_MIN_K:.0f}–{ammonia_table.T_MAX_K:.0f} K) 밖이다. "
+                "표 밖은 외삽하지 않는다.", t, too_cold=t < ammonia_table.T_MIN_K)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        self.check_temperature(p, t)
+        try:
+            return ammonia_table.density(p, t)
+        except ValueError as e:
+            # 표의 들쭉날쭉한 가장자리. 500 K 는 1.5 g/cm³, 700 K 는 2.0 까지만 있고, 압력 천장은
+            # 등온선마다 다르다(1000 K 237 GPa … 10 000 K 333.2 GPa). 여섯 칸은 계산되지 않은 것이지
+            # 떨어진 것이 아니라, 그 사이를 채우지 않고 표 이름을 대며 거절한다.
+            raise PhaseGap(self.name, p, f"{e} — 표 밖은 외삽하지 않는다.", t) from None
+
+    def uncertainty(self, p: float, t: float) -> float:
+        """논문이 적은 압력 불확도: 보간이 밟는 격자점에 별표가 있으면 5 %, 아니면 2 %."""
+        return ammonia_table.uncertainty(self.density(p, t), t)
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        if t <= 0.0:
+            return 0.0
+        c_v, dpdt, _k_t = self._thermal(p, t)
+        return 0.0 if c_v <= 0.0 else dpdt / (rho * c_v)
+
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """c_P = c_V (1 + αγT). HotWater 와 같은 항등식, 표의 p·u 유한차분에서."""
+        c_v, dpdt, k_t = self._thermal(p, t)
+        if c_v <= 0.0:
+            return 0.0
+        if k_t <= 0.0:
+            return c_v
+        rho = ammonia_table.density(p, t)
+        gamma = dpdt / (rho * c_v)
+        alpha = dpdt / k_t
+        return c_v * (1.0 + alpha * gamma * t)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """(∂lnT/∂lnP)_S = γ P / K_S, K_S = K_T (1 + αγT)."""
+        if t <= 0.0 or p <= 0.0:
+            return 0.0
+        c_v, dpdt, k_t = self._thermal(p, t)
+        if c_v <= 0.0 or k_t <= 0.0:
+            return 0.0
+        rho = ammonia_table.density(p, t)
+        gamma = dpdt / (rho * c_v)
+        k_s = k_t + dpdt * gamma * t
+        return 0.0 if k_s <= 0.0 else gamma * p / k_s
+
+    def _thermal(self, p: float, t: float) -> tuple[float, float, float]:
+        """(c_V, (∂P/∂T)_ρ, K_T) 를 표의 p·u 중앙차분으로. h = 1 % (HotWater 와 같은 걸음).
+        온도 걸음이 표의 끝을 넘으면 안쪽으로 한쪽 차분을 쓴다."""
+        if t <= 0.0:
+            return 0.0, 0.0, 0.0
+        rho = ammonia_table.density(p, t)
+        h = 0.01 * t
+        t_lo = max(t - h, ammonia_table.T_MIN_K)
+        t_hi = min(t + h, ammonia_table.T_MAX_K)
+        dpdt = (ammonia_table.pressure(rho, t_hi) - ammonia_table.pressure(rho, t_lo)) / (t_hi - t_lo)
+        c_v = (ammonia_table.internal_energy(rho, t_hi)
+               - ammonia_table.internal_energy(rho, t_lo)) / (t_hi - t_lo)
+        dr = 0.01 * rho
+        lo, hi = ammonia_table.rho_bounds(t)
+        r_lo, r_hi = max(rho - dr, lo), min(rho + dr, hi)
+        k_t = rho * (ammonia_table.pressure(r_hi, t) - ammonia_table.pressure(r_lo, t)) / (r_hi - r_lo)
+        return c_v, dpdt, k_t
+
+    def phase_at(self, p: float):
+        return _AmmoniaSlope(p)
+
+
+@dataclass(frozen=True)
+class _AmmoniaSlope:
+    """`_adiabatic_dtdp` 가 K_S 를 만들 때 쓰는 (∂P/∂T)_V. 표의 유한차분이다."""
+    p: float
+
+    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+        if t <= 0.0:
+            return 0.0
+        return NH3._thermal(self.p, t)[1]
+
+
+NH3 = Ammonia()
 
 
 # ── 액체 물 ─────────────────────────────────────────────────────────────
@@ -1884,6 +2041,6 @@ class _HydrogenHeliumSlope:
 
 H_HE = HydrogenHelium()
 
-MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID)
+MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | Ammonia] = {
+    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID, NH3)
 }

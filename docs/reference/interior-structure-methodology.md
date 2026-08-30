@@ -175,6 +175,7 @@ The materials, with the source of every constant:
 | `ice_vii` | BME3 | 1460 | 23.7 | 4.15 | 2.216 to 37.4 GPa | 0.005922 | 300 K | Seager+ 2007 Table 1, Hemley+ 1987 data; thermal constants from SeaFreeze v1.1.0 `VII_X_French` (French & Redmer 2015) at 2.216 GPa, 300 K  |
 | `ice_x` | Vinet | 1644.295 | 22.2868 | 6.7507 | 37.4 GPa to 1 TPa, T ≤ 1800 K | 0.004337 | 300 K | **Fitted**, not read: SeaFreeze v1.1.0 `VII_X_French` (French & Redmer 2015) 300 K isotherm over the range used  |
 | `h2o_liquid` (ocean) | baked table, bilinear in (P, T) | – | – | – | 0 to 2.3 GPa, 240 to 500 K | published slope dT/dP\|_S read, not assembled | – | SeaFreeze v1.1.0 `water1` (Bollengier+ 2019), baked by `tools/make_water_table.py`; 2×10⁻⁴ against the source where an ocean sits (252 to 360 K)  |
+| `nh3` (ammonia — a table with no consumer yet) | baked table, log p linear in log ρ along an isotherm, linear in T between; density by bisection | – | – | – | 0.309 to 333.2 GPa on a ragged (ρ, T) grid, 500 to 10 000 K; the six absent cold-dense cells are outside it | c_P and ∇_ad from finite differences of the table's p and u — u **includes** the vibrational correction (Bethkenhagen 2013 Appendix B) | – | Bethkenhagen, French & Redmer 2013 Appendix B Table I, baked by `tools/make_ammonia_table.py`; p within 2 %, 5 % at five flagged points, carried as a flag; leave-one-out 8.7 % in the ice-giant mantle region at doubled spacing  |
 | `h_he` (giant envelope) | polytrope, n = 1 | 0 (see note) | K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻² | n = 1 | 0 to 653 TPa | **not applicable** | – | Helled+ 2022 §2, unit-checked against their own R = 70,300 km  |
 
 The two thermal columns have two sources and must not be mixed: rock and metal take αK_T
@@ -298,6 +299,16 @@ the 2:1:4 ternary along three Uranus profiles by at most 2.1 %, falling under 0.
 where one component becomes superionic and another does not. That constant has no consumer
 yet, because the envelope it belongs to is still declined; it is recorded so the next
 survey does not re-walk the search.
+
+**One pair of the three is now measured from tables (C4, reopened for ammonia 2026-08-30).**
+With Bethkenhagen, French & Redmer 2013's ammonia table baked (`nh3`), water (Mazevet+ 2019)
+and ammonia can be read at the same (P, T) and mixed by the rule above. At eight points
+along and above the solved Uranus mantle (50–250 GPa, 2830–6300 K), ammonia is 21–24 % less dense
+than water at equal (P, T), and water standing in for the water–ammonia pair at the
+solar-ratio pair fraction (w_NH₃ = 0.1159) overestimates its density by 2.9–3.5 % — the
+composition tier's number for the ammonia share, direction +, above the propagated noise.
+`engine/test_ammonia.py` prints the table; `engine/ammonia-table-context-notes.md` carries
+the convention caveat that keeps the thermal columns from asserting a sign.
 
 **What that number does not cover.** It bounds the step of mixing three *complete* pure
 equations of state by additive volume. It is not the cost of the common shortcut of letting
@@ -535,14 +546,18 @@ other way, which brackets the measured radius and puts the error in the envelope
 Uranus's mass in H/He adds 1.84 R⊕ on the n = 1 polytrope where the real envelope adds about
 0.9. That polytrope is calibrated to Jupiter, and this is the same objection the ice-giant
 refusal used to raise before the ices were in. Water alone standing in for all three ices is
-field practice, and its cost is not quantified anywhere cited; the tables that would quantify
-it are not reachable except by author request (C4, closed unbuilt 2026-08-30 — three routes
-and why each fails are in `engine/interior-core.md`). What can be said is in three tiers:
-the composition term widens the residual (the solar-ratio mixture's mean molecular weight is
-17.28 against water's 18.02, a 4.27 % density overestimate at equal number density,
-*derived*); the thermal term has a mechanism (more atoms per unit mass, a higher heat
-capacity, a colder interior) but no defended sign once dissociation is in; the net needs the
-tables.
+field practice, and its cost is not quantified anywhere cited; of the tables that would
+quantify it, ammonia's is now baked (C4, reopened for ammonia 2026-08-30 — the printed table
+was in the paper the closure assumed was out of reach) and methane's is still not reachable
+(`engine/interior-core.md`). What can be said is in three tiers: the composition term widens
+the residual — for the ammonia share now *measured*, water overestimating the water–ammonia
+pair's density by 2.9–3.5 % along the adiabat, against the 4.27 % the mean-molecular-weight
+argument gave for all three ices at equal number density (*derived*, and shown by the
+ammonia table to be a floor: ammonia is 21–24 % less dense than water at equal P and T); the
+thermal term has a mechanism (more atoms per unit mass, a higher heat capacity, a colder
+interior) and a first table-derived indication for the ammonia share that is not uniform (its
+adiabat 19–45 % shallower than water's over most of the mantle, steeper at the mantle top),
+but no defended sign once dissociation and the caloric convention are in; the net needs the tables, and methane is the largest share — and its own published table (Sherman+ 2012) does not license the mixing rule, because methane polymerises and then ionises across the very region the mantle occupies; the solved mantles cross all three published dissociation thresholds (`engine/interior-core.md`, C4).
 
 ## Porosity: what the pressure has not crushed yet
 
@@ -1759,8 +1774,22 @@ instead of as a class constant.
 - **Bethkenhagen, M., French, M. & Redmer, R. 2013**, J. Chem. Phys. 138, 234504
   ([`2013JChPh.138w4504B`](https://ui.adsabs.harvard.edu/abs/2013JChPh.138w4504B),
   doi [10.1063/1.4810883](https://doi.org/10.1063/1.4810883)). The ammonia equation of state
-  Bethkenhagen+ 2017 extend — 330 GPa, 500–10 000 K. *Paywalled*, the route back to C4's tables;
-  on the owner's paper-request list. Verified by bibcode and title.
+  Bethkenhagen+ 2017 extend — 0.309–333.2 GPa, 500–10 000 K, 93 FT-DFT-MD points printed as
+  Appendix B Table I, which is the only form the data exist in. **Read in full** (PDF in the
+  cache, 2026-08-30) and baked as `engine/ammonia_table.py`; its caloric column includes the
+  vibrational correction that the 2017 paper removed. Verified by bibcode and title.
+- **Sherman, B. L., Wilson, H. F., Weeraratne, D. & Militzer, B. 2012**, Phys. Rev. B 86,
+  224113 ([`2012PhRvB..86v4113S`](https://ui.adsabs.harvard.edu/abs/2012PhRvB..86v4113S),
+  doi [10.1103/PhysRevB.86.224113](https://doi.org/10.1103/PhysRevB.86.224113),
+  [1207.2948](https://arxiv.org/abs/1207.2948)). *Ab initio simulations of hot, dense methane
+  during shock experiments*: DFT-MD methane to 75 000 K, a 79-point (T, P, E) table in the
+  arXiv source's supplement, and the finding that methane polymerises into metallic
+  hydrocarbon chains at 4000–5000 K and a plasma at 6000 K. Read in full (PDF and LaTeX
+  source in the cache, 2026-08-30) for C4's methane half — **not baked**: a dissociating
+  component has no published linear-mixing error, and the grid does not cover the ice-giant
+  region (Bethkenhagen+ 2017 §II.3). Its introduction's thresholds (C–C bonds above 1100 K
+  and 10 GPa, diamond above 3000 K) are what `engine/tools/methane_thresholds.py` measures
+  the solved mantles against.
 - **Militzer, B., González-Cataldo, F., Zhang, S., Driver, K. P. & Soubiran, F. 2021**,
   Phys. Rev. E 103, 013203
   ([`2021PhRvE.103a3203M`](https://ui.adsabs.harvard.edu/abs/2021PhRvE.103a3203M),
