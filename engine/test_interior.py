@@ -1938,6 +1938,24 @@ def main() -> int:
         print(f"  [{'PASS' if ok else 'FAIL'}] 온도 없는 1.2 TPa 물 중심은 여전히 이름 대며 거절 "
               f"(too_cold={g_.too_cold}): '{g_.reason[:50]}…'")
 
+    print("\n스팀 (IAPWS-IF97 r1·2, 브리프 25) — 전사가 표준의 인쇄 검증값을 재현하는가")
+    import steam_if97
+    worst_if97 = steam_if97.verify()
+    ok = worst_if97 < 1e-8
+    if not ok:
+        fails.append(f"IF97 전사가 표준 검증값과 {worst_if97:.1e} 어긋난다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] Tables 5·15·35 + B23 점, 최악 상대오차 {worst_if97:.1e} "
+          "(표준이 9유효숫자로 인쇄)")
+    # region 3 삼각형(623.15–863.15 K × p_B23–100 MPa)도 같은 날 전사됐다(벽의 잔여가
+    # 정확히 거기였다). 벽의 실측 표본 두 점이 열려 있고, region 5(1073 K 위)는 이름으로 밖.
+    ok = (steam_if97.region(50e6, 700.0) == 3 and steam_if97.in_domain(50e6, 700.0)
+          and steam_if97.in_domain(22.1e6, 661.0) and steam_if97.in_domain(97e6, 645.0)
+          and steam_if97.in_domain(2e6, 1000.0) and not steam_if97.in_domain(2e6, 1100.0))
+    if not ok:
+        fails.append("IF97 영역 판정이 어긋난다 — region 1·2·3 창 또는 region 5 경계가 뒤바뀌었다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] region 3(50 MPa·700 K)과 벽 표본(22.1 MPa·661 K, "
+          "97 MPa·645 K) 열림 · region 5(1100 K)는 밖")
+
     print("\n서브넵튠 — 가스 외피 아래 철 핵이 풀리고, 사다리가 천장 거절을 지어내지 않는가")
     # 2026-08-29 까지 이 둘은 fe_prem 의 12 TPa 천장 거절을 냈다 — 5 M⊕ 가 닿을 수 없는 압력이다.
     # 원인은 외피 바닥의 표 영역 이탈을 표면으로 오인한 것이었다 (sub-neptune-context-notes.md).

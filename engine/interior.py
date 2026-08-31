@@ -34,6 +34,7 @@ import math
 import water_hot
 import water_table
 import water2_table
+import steam_if97
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
                  Mixture, PhaseGap, mix, water_phase_name, water_vii1_vii2_boundary)
@@ -1477,6 +1478,48 @@ GAS_GIANT_CLASSES = ("giant", "gas_giant")
 ENVELOPE_Z_MATERIAL = "silicate"
 
 
+class _Steam:
+    """IAPWS-IF97 region 1·2 의 물 (브리프 25) — `steam_if97` 전사를 재료 모양으로 감싼다.
+
+    _EnvelopeWater 의 위임 대상으로만 쓰인다. p_max 를 말하지 않는 것은 혼합의 상한을
+    이 성분이 정하지 않게 하려는 것이고(_EnvelopeWater 와 같은 이유), 자기 영역 밖은
+    in_domain 이 거른다. 검증은 표준 자신이 인쇄한 컴퓨터-프로그램 검증값으로
+    (steam_if97.verify, 최악 2.9e-9), 게이트가 매번 돌린다."""
+    name = "h2o_if97"
+    label_ko = "물 (IAPWS-IF97 r1·2·3)"
+    rho0 = 999.8
+    p_max = float("inf")
+    p_floor = 0.0
+    has_thermal = True
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return steam_if97.density(p, t)
+
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return steam_if97.c_p(p, t)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return steam_if97.grad_ad(p, t)
+
+    def check_temperature(self, p: float, t: float) -> None:
+        return None
+
+    def rho_seed(self, mass_kg: float) -> float:
+        return self.rho0
+
+    def cold_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def melt_free_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def in_domain(self, p: float, t: float) -> bool:
+        return steam_if97.in_domain(p, t)
+
+
+STEAM = _Steam()
+
+
 class _EnvelopeWater:
     """외피에 녹은 물 (얼음 축, 브리프 23) — (P, T) 마다 유효한 물 표현으로 위임한다.
 
@@ -1521,6 +1564,12 @@ class _EnvelopeWater:
                     t, too_cold=True)
         if not liquid:
             return MATERIALS["h2o"]
+        if steam_if97.in_domain(p, t):
+            # IAPWS-IF97 r1·2 (브리프 25) — 100 MPa 아래의 증기·액체. 브리프 23 의 벽
+            # (p≲0.1 GPa × 500–1000 K)이 이 줄로 메워졌다. Mazevet 은 여기서 못 쓴다 —
+            # 자기 유효조건(ρ≳1 g/cc)이 저압 증기 밖이고, 1000 K 저압에서 IF97 대비
+            # +88 %(100 MPa)…+994 %(20 MPa) 로 실측됐다 (steam-context-notes §3).
+            return STEAM
         if water_table.in_domain(p, t):
             return MATERIALS["h2o_liquid"]   # 바다 표 — c_P 는 2026-08-31 에 구웠다 (얼음 축)
         if t >= water_hot.T_MIN:
@@ -1530,9 +1579,10 @@ class _EnvelopeWater:
         raise PhaseGap(
             self.name, p,
             f"{p / 1e9:.3f} GPa · {t:.0f} K 의 외피에 녹은 물은 액체인데 어느 표현도 "
-            "없다 — 바다 표(SeaFreeze water1, 2.3 GPa · 240–500 K)와 조밀한 액체 물 표"
-            "(water2)는 이 (P, T) 밖이고, 뜨거운 물(Mazevet+ 2019)은 1000 K 위를 적는다. "
-            "더 뜨거우면 표현이 생기므로 온도가 막은 것으로 던진다 (얼음 축, 브리프 23).",
+            "없다 — IF97 r1·2·3(≤100 MPa · ≤1073.15 K)과 바다 표(water1)·조밀한 액체 물 "
+            "표(water2)가 이 (P, T) 밖이고, 뜨거운 물(Mazevet+ 2019)은 1000 K 위·"
+            "ρ≳1 g/cc 를 적는다. 더 뜨거우면 표현이 생기므로 온도가 막은 것으로 던진다 "
+            "(브리프 23·25; region 5, 1073 K 위·≤50 MPa 는 전사 밖).",
             t, too_cold=True)
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
@@ -2204,7 +2254,7 @@ def solve(mass_earth: float,
             "\"ideal mixing … 잘 재현, 편차 수 % (국소 최대 10 %)\" — 그리고 대조 표적인 "
             "N13 의 외피 자신이 물의 선형혼합(LM-REOS, Nettelmann+ 2008)이다. 그 대역 "
             "밖(얕은 외피의 저압·저온부)에서는 가법이 근거가 아니라 연장이고, 물 성분은 "
-            "(P, T) 마다 유효한 표현(사다리·water2·Mazevet)으로 위임되며 어느 것도 없는 "
+            "(P, T) 마다 유효한 표현(사다리·IF97 r1·2·water1·water2·Mazevet)으로 위임되며 어느 것도 없는 "
             "자리는 이름을 대고 거절된다.")
     if not differentiated:
         notes.append(
