@@ -12,9 +12,14 @@ owner's decision, and this note is the input to it.
 Queyroux+ 2020 Table S1's twelve measured points), a linear interpolation through those
 points; the two points at 16.6 GPa (930 and 944 K) are averaged to 937 K. Outside the
 window the dispatch is untouched (IAPWS branches below, Reinhardt's liquid line above).
-The window edges therefore carry steps — +70 K at 8.4 GPa (590 → 660 K) and −242 K at
-44.7 GPa (1492 → 1734 K); an adopted curve would need a joining rule, but for a flip test
-the steps only matter if a body's column sits inside a step's span, and none does (§3).
+The window edges therefore carry steps — **+69 K** at 8.4 GPa (ours 591.4 → 660 K) and
+**−239 K** at 44.7 GPa (ours 1731.0 → 1492 K; an earlier draft wrote 1734, which was a
+44.8 GPa evaluation transcribed as the boundary value — corrected after audit). An adopted
+curve would need a joining rule, but for a flip test the steps only matter if a body's
+column sits inside a step's span, and none does (§3). Units, for whoever reconstructs the
+patch from this section: `water_t_melt` and `water_liquid_at` take pressure in **Pa** —
+the window guard is `8.4e9 <= p <= 44.7e9` — and a GPa-valued argument lands every call on
+the ice Ih branch (~273 K).
 
 Curve fingerprint (from the runner, both runs):
 
@@ -73,14 +78,16 @@ The diff of the two sweeps, in full:
 The geometry that decides the physics side, from the baseline's own numbers:
 
 - **The five moons never ask the question.** The deepest pressure any moon solve reaches is
-  Ganymede's **central** 8.27 GPa — 0.13 GPa below the window's floor, and that is rock/iron,
+  Ganymede's **central** 8.27 GPa (the three-layer inversion narrowed by the published
+  C/MR², `core_pressure` 8.269; the two-layer inversion's centre is 6.83 GPa — either
+  variant sits below 8.4) — 0.13 GPa below the window's floor, and that is rock/iron,
   not water; Ganymede's ice-column base is 1.62 GPa (ice VI, 308 K), Callisto's and Titan's
   centers are ≈5.5 GPa, Europa's ice base is 0.18 GPa, Enceladus is 0.03 GPa-scale. Every
   phase call the moon solves make lands below 8.4 GPa, where the patch changes nothing by
   construction.
 - **The ice giants cross the window, but a kilokelvin above either curve.** Uranus's ice
-  column tops out at 34.5 GPa · 2663 K — +1268 K above our curve (1395 K), +1384 K above
-  the Queyroux line (1279 K). Neptune: 39.2 GPa · 2553 K — +999 K above ours (1554 K),
+  column tops out at 34.5 GPa · 2663 K — +1268 K above our curve (1395 K), +1385 K above
+  the Queyroux line (1278 K; the engine-printed strings, same as §3's diff bullet). Neptune: 39.2 GPa · 2553 K — +999 K above ours (1554 K),
   +1186 K above Queyroux (1367 K). Both stay `molten` under either curve; below ~52 GPa the
   column leaves every curve's reach and the verdict ("fluid or superionic", undecided by
   name) never depended on the disputed band.
@@ -100,7 +107,7 @@ the shoot's trial routing would need to survive a solid classification inside th
 e.g. the solid-ladder over-depth refusal thrown as a too-cold PhaseGap so the temperature
 loop raises the trial instead of the solve dying. That is solver work, measured here at one
 body's cost; whether it is worth doing is part of the adoption decision. Two more items an
-adoption would owe: a joining rule at the window edges (+70 K step at 8.4 GPa, −242 K at
+adoption would owe: a joining rule at the window edges (+69 K step at 8.4 GPa, −239 K at
 44.7 GPa against Reinhardt), and F4's grade reasoning moving from "the check cannot see"
 to a curve the measurements support. None of this is done here; nothing is committed from
 the experiment worktree, which is deleted.
