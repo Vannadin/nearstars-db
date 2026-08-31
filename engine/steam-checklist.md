@@ -80,8 +80,10 @@ generator is needed); English commits, one logical unit each.
 ## Region-3 inversion speedup (owner-directed, 2026-09-01 pre-dawn) — REGISTERED BEFORE EDIT
 
 The acceptance chain ran hours without printing solve 1 of 4: the "~15 min" estimate was
-measured on runs that DIED at the region-3 wall in 1 s; with the wall filled, trials now
-complete full integrations, and each region-3 density call costs a measured **1.15 ms**
+measured (by the directing seat: 195/246/213/212 s, all conv=False) on runs whose walks
+STOPPED EARLY at the then-unfilled region-3 wall — not, as this register first said, on
+1-s deaths; correction from the directing seat, 2026-09-01. With the wall filled, trials
+integrate to full depth, and each region-3 density call costs a measured **1.15 ms**
 (80 fixed bisection iterations) = 82× region 1, ~400× the water1 table. Owner directive:
 kill, speed up the inversion (Newton), rerun the four solves **in parallel**.
 
