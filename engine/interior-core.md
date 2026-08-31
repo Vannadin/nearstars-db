@@ -92,6 +92,27 @@ sampled**: in the case that named this, the same message's Uranus J₂ (3510.7) 
 be right, so a spot-check would have passed both. Scope, stated precisely: the error lived
 only in the relay message; the notes' printed values (3510.68 / 3535.94) were correct.
 
+**A sentinel carried in a variable something else re-arms is not a contract.** Registered
+2026-09-01 from the temperature loop's non-termination. The loop meant to extend its pass
+budget **once**: on running out it set `bracketed = "extended"` and checked for that sentinel
+before extending again. But the deviation test re-armed `bracketed = True` on every pass that
+failed to contract, overwriting the sentinel, so *"one more set, only once"* re-fired every
+time the budget hit zero. A converged attempt was measured at **51 attempts against an
+intended ceiling of 29** (1 + 14 + 14). The repair is five lines: a dedicated `extended` flag
+that nothing else writes. **State that encodes a promise gets its own variable** — a value
+doing double duty is a promise anyone downstream can silently revoke.
+
+**And it is the cold flank again, in a new form: the climb hid the wall from the controller.**
+The four members registered on 2026-08-31 were trial refusals *killing* a solve. This one is
+the opposite failure with the same cause — the temperature loop lowers by ratio, meets a
+too-cold refusal at 130–152 GPa (the H/He envelope's base), and the attempt's internal climb
+(×1.6) carries it back up to the same ~360 K surface, so **the controller never learns that
+its target is unreachable from below** and cycles forever instead of refusing by name. A wall
+that a trial path climbs away from is a wall the answer never gets told about. Brief 22 taught
+trial refusals to steer the bracket; this says the steering must also be able to **conclude**.
+It was invisible before region 3 was baked, because every trial died in the steam wedge first —
+which is why the earlier four-end measurement finished in 195–246 s.
+
 **A process listing is an instant, not a state — and a serial chain is invisible between its
 steps.** Registered 2026-08-31 by the directing seat, against itself. After the work session
 was compacted, this seat ran `ps` for `python|check.sh`, saw nothing, and reported *"the run
