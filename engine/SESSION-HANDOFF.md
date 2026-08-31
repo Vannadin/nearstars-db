@@ -24,6 +24,15 @@ opened** — that is the owner's call, deliberately not taken.
 use. The git stash stack is shared across all three worktrees, so **never use bare
 `git stash`** — a temporary WIP commit is the safe way to set work aside.
 
+**And when you do write there, stage what you wrote, not what the file holds.** A
+path-scoped `git add <file>` is not scoped enough in a shared worktree: on 2026-08-31 the
+directing seat's C6 commit (`66fffaa7`) swept in the work session's uncommitted rule
+paragraph for Brief 22, because both seats had edited `interior-core.md` at once. The
+content was sound and landed in the right place, so nothing was rewritten — but the commit
+message described one change and the commit contained two, which is a false label on a
+commit. **Run `git diff --stat <file>` before staging it**, and if the diff contains someone
+else's lines, either wait or name them in the message.
+
 ## The four seats
 
 | seat | what it does |
