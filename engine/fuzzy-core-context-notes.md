@@ -55,6 +55,15 @@ member of one family in two days: C11's over-broad refusal, the Queyroux–Neptu
 death (`queyroux-flip-context-notes.md` §3), and now this — **the trial corridor's cold
 flank keeps demanding evidence the answer never uses.**
 
+Three occurrences in two days is not coincidence, and the directing session's reading is
+recorded as the diagnosis: **this is structure, not individual bugs.** The recipe's
+refusal machinery was built to keep the *answer* honest (every material stops where its
+evidence stops — C6), but the shoot and temperature loop route their *trials* through the
+same refusals, so a solve can die on a state no converged answer would ever occupy. Each
+instance so far was patched locally (C11's guard narrowed) or recorded (Queyroux, this);
+the general fix — letting trial-path refusals steer the bracket instead of killing the
+solve — is the named prerequisite both pending owner decisions share.
+
 ## §3 The ceiling, computed outside the engine (assumptions labeled)
 
 Since the engine cannot measure end B, the span's ceiling was computed analytically:
