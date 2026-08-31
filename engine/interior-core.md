@@ -604,7 +604,7 @@ a different one**. The Neumann & Kruse relation does not take an age in Gyr. Wha
 **t₀ — the accretion time after CAI formation, in Ma** (their §2.3), and the outcome turns
 on that value at the megayear level: for the wet olivine rheology successful models live in
 t₀ ≈ 1.3–1.9 Ma (§3.3), and for the antigorite rheology **no differentiation occurs at all
-for t₀ ≥ 5.5 Ma** (§3.4) — because the short-lived isotopes (²⁶Al, ⁵³Mn, ⁶⁰Fe) release their
+for t₀ ≥ 5.5 Ma (at ϕ₀ = 0.6)** (§3.4) — because the short-lived isotopes (²⁶Al, ⁵³Mn, ⁶⁰Fe) release their
 heat "within the first few millions of years after CAIs" (§2.3; all read from the cached
 text this session). The structure is decided within ~5 Ma; the remaining 4.5 Gyr is
 bookkeeping. **Feeding `body_age` (Gyr) into this node would give it the number it is least
