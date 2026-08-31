@@ -561,11 +561,39 @@ homogeneous Z through the envelope. Post-Juno structure is not "graded inward": 
 Chabrier 2019 §4.1 (2019ApJ...872..100D, text in the cache) is titled *Inward decreasing
 abundance of heavy elements in some part of the outer envelope* — locally ∇Z > 0 — and the
 structure needs four regions: an outer convective envelope, a composition-and-entropy
-gradient, an inner convective envelope and an extended dilute core. Two transcribable forms
-exist: Helled & Stevenson 2017's closed Z(m) (2017ApJ...840L...4H) and Howard, Guillot &
-Bazot 2023's Juno-constrained models (2023A&A...672A..33H). Not implemented: Alpha Centauri
-A b's radius is a declaration, so nothing in the roster would read a graded-Z envelope
-today. The earlier compact-core attempt and its silicate ceiling stay in the domain row.
+gradient, an inner convective envelope and an extended dilute core. Not implemented: Alpha
+Centauri A b's radius is a declaration, so nothing in the roster would read a graded-Z
+envelope today. The earlier compact-core attempt and its silicate ceiling stay in the domain
+row.
+
+**Corrected 2026-08-31 (survey ⑥) — this row claimed "two transcribable forms exist" and one
+of them is not one.** *Helled & Stevenson 2017's* Z(m) is a Gaussian the paper prints and
+then disowns twice: the sentence introducing it says *"In such a case (**which is merely
+chosen to aid the explanation**)"*, and §I says the validity of their suggestion
+*"**doesn't automatically lead to a prediction for the final Z-profile** which depends on the
+specific conditions under which the giant planet has formed."* What the paper gives is a
+**formation-history relation** plus an illustrative profile computed from a specific Jupiter
+formation model — not a form to transcribe. The accurate label is *"a formation-history
+relation, and an example Gaussian chosen to aid an argument."* **`Howard, Guillot & Bazot
+2023` is a real closed form** and stands: an erf profile whose width parameter δm_dil the
+paper *"set[s] to 0.075"*, with no derivation or sensitivity test in the text.
+
+*The consequence for C13*: its registered fourth branch — Helled & Stevenson's ice-envelope
+applicability — **closes here, and not for the registered reason.** Not "Jupiter-only, cannot
+be transferred" but **there is no function to transfer**; the mechanism's own conditions are
+composition-independent, and the profile only ever arrives through a formation model our
+bodies do not have.
+
+*And the row was missing the paper that matters most for the ice giants.* **Vazan & Helled
+2020** ([`2020A&A...633A..50V`](https://ui.adsabs.harvard.edu/abs/2020A%26A...633A..50V),
+arXiv 1908.10682, cached) is about **Uranus**, fits **the moment of inertia directly**
+(*"we fit MoI instead of the gravitational moments"*, target **0.222–0.230 MR²**), tests
+whether a gradient survives on Gyr timescales with the Ledoux criterion, and tabulates four
+adopted models. Its conclusion lands on this list's own open question: *"an interior with a
+**mixture of ice and rock, rather than separated ice and rock shells**, is consistent with
+measurements, suggesting that **Uranus might not be 'differentiated'**."* It has no closed
+Z(r) either — it sweeps *"composition gradients of various slopes"* and selects on R, L and
+MoI.
 
 **The ice giants — the residual has an owner, and the question was wrong.** Helled,
 Nettelmann & Guillot 2020 (2020SSRv..216...38H, text in the cache): "even a very small (in
@@ -1074,8 +1102,10 @@ excluded**, and is not confirmed: the solvable span was never measured.
 over-depth ladder refusal so the temperature loop stays on the fluid side, or teach the
 pre-check that a column can be fluid-only where the answer is), after which end B is two
 solves. It is the same prerequisite the Queyroux adoption would need — the two owner
-decisions share it. Helled & Stevenson 2017's closed form was never reached; its
-ice-envelope applicability check stays the registered fourth branch for whoever builds.
+decisions share it. **The registered fourth branch — Helled & Stevenson 2017's
+ice-envelope applicability — is closed as of survey ⑥ (see C5's correction): there is no
+closed form to apply, because that paper disowns its own Gaussian as illustrative and
+delivers a formation-history relation instead.**
 Both refusals reproduce in ≤ 1 s. No code, no anchor, no gate change.
 `engine/fuzzy-core-context-notes.md`.
 
