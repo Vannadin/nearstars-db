@@ -101,7 +101,10 @@ start to matter, measured from the margins: a body whose water column crosses
 ~8.4–20.6 GPa within ≈300 K of our curve, or 30–45 GPa within ≈240 K — neither exists in
 the roster today.
 
-**But adopting the line as-is would break Neptune's solve.** The refusal above is a
+**But adopting the line as-is would break Neptune's solve.** *(Discharged 2026-08-31,
+Brief 22: the cold-flank repair landed, and Neptune under the window patch + fix converges
+to the anchor's own solution in 79 s — `cold-flank-context-notes.md` §3. The two remaining
+costs below stand.)* The refusal above is a
 prerequisite, not a verdict: before Queyroux (or any hotter in-band line) could be adopted,
 the shoot's trial routing would need to survive a solid classification inside the window —
 e.g. the solid-ladder over-depth refusal thrown as a too-cold PhaseGap so the temperature

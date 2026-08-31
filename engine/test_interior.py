@@ -1899,6 +1899,42 @@ def main() -> int:
     print(f"  [{'PASS' if ok else 'FAIL'}] water 프리셋이 {m_water:.3f} M⊕ 까지 풀린다 "
           f"(2026-08-27 에는 0.0398 M⊕ 로 달의 3.2 배였다)")
 
+    print("\n냉측 일반 수정 (브리프 22) — 물 기둥이 가장 안쪽인 천체가 스텁 없이 적분되는가")
+    # 2026-08-31 까지 이 구성(C13 끝 B: 규산염층 없음, 암석은 외피 Z)은 **1 ULP 의 유령
+    # 규산염 스텁이 있어야만** 풀렸다 — 중심 씨앗이 디스패치 없이 정적 사다리를 불러
+    # 매듭 상한(1 TPa; 데이터 천장 ~355 GPa — C6)이나 초이온 온도 상한에서 죽었고, 사격의 괄호도 사다리 상한에
+    # 잘렸다. 지금은 씨앗이 걸음과 같은 디스패치를 받는다. 수렴점은 스텁 실험(ε=1e-9,
+    # 2026-08-31)의 값이고, 여기서는 그 자리의 적분 한 번이 서고 질량이 닫히는지만 본다.
+    for name_, m_, pc_gpa, tc_k in (("Uranus", 14.536, 784.0, 4953.0),
+                                    ("Neptune", 17.147, 984.0, 4901.0)):
+        gmf_ = (2.0 if name_ == "Uranus" else 2.2) / m_
+        rockf_ = (0.79 if name_ == "Uranus" else 1.04) / m_
+        try:
+            stb = interior.integrate(pc_gpa * 1e9, m_ * EARTH_MASS_KG, 0.0, 1.0 - gmf_ - rockf_,
+                            "fe_prem", gmf=gmf_ + rockf_, envelope_z=rockf_ / (gmf_ + rockf_),
+                            t_center=tc_k, t_pot=76.0 if name_ == "Uranus" else 72.0)
+            ratio = stb.mass_kg / (m_ * EARTH_MASS_KG)
+            ok = abs(ratio - 1.0) < 0.05
+            if not ok:
+                fails.append(f"냉측: {name_} 끝 B 적분의 질량이 목표의 {ratio:.3f} 배다")
+            print(f"  [{'PASS' if ok else 'FAIL'}] {name_} 끝 B (암석을 외피 Z 로, 규산염층 0) — "
+                  f"수렴점 적분이 서고 질량/목표 {ratio:.4f}")
+        except PhaseGap as g_:
+            fails.append(f"냉측: {name_} 끝 B 가 다시 죽는다 — {g_.reason[:80]}")
+            print(f"  [FAIL] {name_} 끝 B 거절: {g_.reason[:80]}")
+    # 근거 천장 자체는 남아 있어야 한다 — 온도가 흐르지 않는 차가운 물 천체는 여전히
+    # 이름을 대며 거절한다 (사다리의 1 TPa 는 표현이 끝나는 실재하는 자리다 — 매듭 상자; C6).
+    try:
+        interior.integrate(1.2e12, 10.0 * EARTH_MASS_KG, 0.0, 1.0, "fe_prem")
+        fails.append("냉측: 온도 없는 물 천체가 1.2 TPa 중심을 거절하지 않는다")
+        print("  [FAIL] 차가운 근거 천장이 사라졌다")
+    except PhaseGap as g_:
+        ok = "근거 구간의 상한" in g_.reason and not g_.too_cold
+        if not ok:
+            fails.append("냉측: 차가운 물 천체의 천장 거절이 이름·방향을 잃었다")
+        print(f"  [{'PASS' if ok else 'FAIL'}] 온도 없는 1.2 TPa 물 중심은 여전히 이름 대며 거절 "
+              f"(too_cold={g_.too_cold}): '{g_.reason[:50]}…'")
+
     print("\n서브넵튠 — 가스 외피 아래 철 핵이 풀리고, 사다리가 천장 거절을 지어내지 않는가")
     # 2026-08-29 까지 이 둘은 fe_prem 의 12 TPa 천장 거절을 냈다 — 5 M⊕ 가 닿을 수 없는 압력이다.
     # 원인은 외피 바닥의 표 영역 이탈을 표면으로 오인한 것이었다 (sub-neptune-context-notes.md).

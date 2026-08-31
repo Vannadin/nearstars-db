@@ -415,21 +415,18 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     # 온도가 선언되지 않으면 t_center 가 0 이고, 아래 모든 density 호출이 예전과
     # 같은 인자로 떨어진다 — 비트까지 같은 경로다.
     t = t_center
-    rho_c = mat.density(p_center, t, t_pot) * bulk_factor(mat.name, p_center, phi0, p_cap)
-    r_scale = (3.0 * mass_kg / (4.0 * math.pi * rho_c)) ** (1.0 / 3.0)
-    dr = r_scale / STEPS
-
-    r = dr
-    m = 4.0 / 3.0 * math.pi * r ** 3 * rho_c
-    moi = 8.0 / 15.0 * math.pi * r ** 5 * rho_c
+    # **중심 씨앗도 걸음과 같은 디스패치를 받아야 한다** (냉측 일반 수정, 2026-08-31).
+    # 얼음 기둥이 가장 안쪽인 천체(C13 끝 B)에서 정적 사다리로 씨앗을 재면 사다리의 매듭
+    # 상한(1 TPa) 위에서 온도와 무관하게 죽는다 — 뜨거운 중심은 유체(Mazevet)가 받는 자리다.
+    # 디스패치(liquid_at·liquid_material)가 아래에서 정의되므로 씨앗과 그에 딸린 초기값
+    # 계산을 그 뒤로 미룬다. 디스패치가 닿지 않는 천체(t = 0, 또는 h2o 가 안쪽이 아님)는
+    # 예전과 같은 인자·순서로 떨어진다.
     p = p_center
     core_radius = 0.0 if cmf <= 0 else None
     p_cmb = None
     p_ice_base = None
     phases: list[str] = []
     layer = 0
-    v_pore = 4.0 / 3.0 * math.pi * r ** 3 * porosity_at(mat, p, phi0, p_cap)
-    m_above_lab = m if p > P_LAB_MAX else 0.0
     p_si_max = p if _carries_silicate(mat) else 0.0
     t_cmb = None
     t_surface = t
@@ -563,6 +560,19 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         if stack[layer][1].name == CRUST_NAME:
             r_crust_base, p_crust_base = r, p
 
+    # ── 중심 씨앗 (위에서 미룬 것) ──
+    mat_c = mat
+    if OCEAN_LAYER and t > 0.0 and mat.name == "h2o" and liquid_at(p_center, t):
+        mat_c = liquid_material(p_center, t)
+    rho_c = mat_c.density(p_center, t, t_pot) * bulk_factor(mat_c.name, p_center, phi0, p_cap)
+    r_scale = (3.0 * mass_kg / (4.0 * math.pi * rho_c)) ** (1.0 / 3.0)
+    dr = r_scale / STEPS
+    r = dr
+    m = 4.0 / 3.0 * math.pi * r ** 3 * rho_c
+    moi = 8.0 / 15.0 * math.pi * r ** 5 * rho_c
+    v_pore = 4.0 / 3.0 * math.pi * r ** 3 * porosity_at(mat_c, p, phi0, p_cap)
+    m_above_lab = m if p > P_LAB_MAX else 0.0
+
     steps = 0
     while p > p_stop and steps < MAX_STEPS:
         steps += 1
@@ -581,6 +591,21 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 mat = liquid_material(p, t)
                 if mat is liquid_mat and r_ocean_base is None:
                     r_ocean_base = r
+            elif p > MATERIALS["h2o"].p_max:
+                # **가용성 이음매는 물리가 아니다** (냉측 일반 수정, 2026-08-31). 사다리의
+                # 매듭 상한(1 TPa — 데이터 천장은 ~355 GPa, C6) 바로 위는 1000 K 위에서 유체(Mazevet)가 받는 자리라,
+                # 유체↔고체의 이음매가 정확히 그 상한에 선다. 걸음 안 상경계 탐색이 그
+                # 이음매를 상 경계로 읽고 다음 걸음을 상한 위에 고체로 앉히면, 사다리가
+                # 온도 없는 거절을 던지고 사격이 그걸 기하(압력)로 좁혀 죽었다 —
+                # Queyroux 실험의 해왕성 경로사가 그것이다. 여기는 더 뜨거우면 유체가
+                # 받으므로 **온도가 막은 것으로** 던져 온도 괄호가 조종하게 한다.
+                raise PhaseGap(
+                    "h2o", p,
+                    f"{p / 1e9:.0f} GPa · {t:.0f} K 가 고체로 판정됐는데 얼음 사다리 표현의 매듭 "
+                    f"상한({MATERIALS['h2o'].p_max / 1e9:.0f} GPa) 위다 — 유체·고체 표현의 "
+                    "이음매(가용성 경계)에 시험 경로가 앉은 것이지 물리 거절이 아니다. 더 "
+                    "뜨거우면 같은 자리를 뜨거운 물(Mazevet+ 2019)이 받는다.",
+                    t, too_cold=True)
         if mat.name == "h2o" and p > ICE_VII_TO_X:
             ice_x_stepped = True       # 등온 경로도 포함한다 — 사다리를 그 압력에서 실제로 밟았다
         if mat.name == CRUST_NAME and t > 0.0 and liquid_at(p, t):
@@ -958,6 +983,15 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # 중심압은 가장 안쪽 재료가 받는다. 바깥 층의 상한은 적분 중에 PhaseGap 이
     # 스스로 잡으므로 여기서 겹쳐 걸면 엉뚱한 층 때문에 거절하게 된다.
     p_ceiling = stack[0][1].p_max
+    if stack[0][1].name == "h2o" and t_center >= water_hot.T_MIN:
+        # **유체로 디스패치되는 중심에 고체 사다리의 상한을 걸지 않는다** (냉측 일반 수정,
+        # 2026-08-31 — C13 끝 B 가 여기서 죽었다). 사다리의 1 TPa 는 French & Redmer 2015
+        # 표현의 매듭 상자가 끝나는 자리이고 (데이터 천장은 ~355 GPa — C6, 2026-08-31), 1000 K 위의 중심은 뜨거운 물
+        # (Mazevet+ 2019)이 받는다 — 그 적합은 자기 압력 상한을 적지 않는다("valid for the
+        # entire density range relevant to planetary modeling"). 괄호는 여기서 자르지 않고,
+        # 실제 거절은 적분이 자리마다 이름을 대며 던진다. 차가운 중심(1000 K 아래)은 예전
+        # 그대로 사다리의 상한에서 멈춘다 — 물이 아주 많은 차가운 큰 천체의 거절은 실재다.
+        p_ceiling = float("inf")
     p_stop = getattr(stack[-1][1], "p_floor", 0.0)
     # 중심압의 아래 끝. 바깥 재료가 압력 바닥을 말하면 중심압이 그보다 낮을 수 없다 —
     # 기체 외피에서 실제로 걸린다. 할선의 두 번째 시험점이 그 아래로 내려가면 표 밖이라
