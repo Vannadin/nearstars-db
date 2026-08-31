@@ -120,6 +120,18 @@ The number was honest when taken and false when quoted, because the thing it mea
 replaced in between — so a timing carried into a brief carries the commit it was taken on, or
 it is not carried.
 
+**A number whose source was not stated is quoted without one — you do not supply the
+provenance.** The receiving half of the rule above, registered 2026-08-31 by the work session
+against itself. The brief said only *"about 15 minutes"*; the checklist and the commit message
+that quoted it wrote *"measured on the runs that died in 1 s at the wall"* — a provenance
+inferred from the diagnostic story around it and then written as fact. The figure was in fact
+measured on the directing seat's four full integrations (195 / 246 / 213 / 212 s, all
+`conv=False`, on paths that stopped early at the wall). Nothing downstream moved, and the
+sub-kind is still worth its line, because **an invented source is harder to catch than a
+missing one**: a reader who sees a provenance stops looking for it — the same mechanism as
+sub-kind 7, arriving from the other direction. The correction was made in place with a
+correction commit rather than by rewriting an already-quoted hash.
+
 **A new number is carried back to the old ones before it is used to clear them.** Registered
 2026-08-31 by the parallel session, against itself, and it is its own kind because nothing was
 misread: having established that the ice ladder's data ceiling is ~355 GPa, it wrote that
