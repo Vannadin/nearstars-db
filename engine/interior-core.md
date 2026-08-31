@@ -92,6 +92,34 @@ sampled**: in the case that named this, the same message's Uranus J₂ (3510.7) 
 be right, so a spot-check would have passed both. Scope, stated precisely: the error lived
 only in the relay message; the notes' printed values (3510.68 / 3535.94) were correct.
 
+**A process listing is an instant, not a state — and a serial chain is invisible between its
+steps.** Registered 2026-08-31 by the directing seat, against itself. After the work session
+was compacted, this seat ran `ps` for `python|check.sh`, saw nothing, and reported *"the run
+never started"* as measured fact. The chain was alive — started 22:27 — and the work session,
+trusting that report, launched an identical chain at 22:53; **two copies of the same solve ran
+at once on a machine whose owner had spent the day fighting thermal throttling.** The `ps` was
+not wrong about its instant: a chain that runs its steps sequentially shows **no matching
+process in the gap between two steps**, and a single sample lands in that gap often enough to
+be useless. The same seat had, an hour earlier, used `ps` correctly to find two 31-hour ghost
+processes — which is exactly why the second reading felt authoritative.
+
+The prescription is a pair, and it mirrors sub-kind 7's. *Reporting*: process state is
+reported with its sampling — "no match in one `ps` at 22:5x", never "it never started" — and
+liveness is established from something durable (the task's own output file growing, a
+timestamped log, the launching session's own record), not from absence in one listing.
+*Receiving*: **a session about to re-launch work checks for itself before starting**, however
+the report reads; the cost of a duplicate heavy run is paid in someone's battery and fan, and
+the check costs a second. The work session drew that conclusion unprompted and it is the right
+one.
+
+**A runtime estimate belongs to the code state it was measured on.** Same event, second
+lesson. The "~15 minutes" this seat put in a brief was measured on the four ice-axis ends
+before region 3 existed, when every path stopped early at the wall. With the wall filled the
+paths integrate all the way, and the first solve passed **two hours of CPU** without printing.
+The number was honest when taken and false when quoted, because the thing it measured had been
+replaced in between — so a timing carried into a brief carries the commit it was taken on, or
+it is not carried.
+
 **A new number is carried back to the old ones before it is used to clear them.** Registered
 2026-08-31 by the parallel session, against itself, and it is its own kind because nothing was
 misread: having established that the ice ladder's data ceiling is ~355 GPa, it wrote that
