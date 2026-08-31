@@ -71,8 +71,12 @@ fit convention its footnote states. Segment used: Ice VII melt at 8.2/15.4, bcc-
 than both our curves in the disputed band" — still true, now with a third voice sitting
 between (15.4–17.3 GPa) or alongside (8.4, 20 GPa). F4's grade reasoning and C3's
 dispatch are untouched — nothing here changes a verdict; the 700 K literature spread the
-paper quotes at ~50 GPa now brackets our own table's four-way spread (1506–2739 K at
-52 GPa, a 1233 K spread — consistent with their sentence, recorded not judged.)
+paper quotes at ~50 GPa sits beside our own table's spreads at 52 GPa — **the four-way
+spread is 1405.2 K** (highest Prakapenka 2738.8, lowest AQUA 1333.6), and the
+Prakapenka−Queyroux gap alone is 1233.7 K. (An earlier draft printed 1233 K *as* the
+four-way spread — a mislabel the directing session's reproduction caught; both numbers
+are true, the name was wrong.) Consistent in direction with their sentence; recorded,
+not judged.
 
 ## §4 What did not move
 
