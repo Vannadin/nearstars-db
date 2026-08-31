@@ -92,6 +92,19 @@ sampled**: in the case that named this, the same message's Uranus J₂ (3510.7) 
 be right, so a spot-check would have passed both. Scope, stated precisely: the error lived
 only in the relay message; the notes' printed values (3510.68 / 3535.94) were correct.
 
+**A new number is carried back to the old ones before it is used to clear them.** Registered
+2026-08-31 by the parallel session, against itself, and it is its own kind because nothing was
+misread: having established that the ice ladder's data ceiling is ~355 GPa, it wrote that
+"every anchor sits far below 355 GPa" — while the ice giants' mantles reach 820 and 1016 GPa,
+a table it had read that same morning. The anchors *are* safe, for a different reason
+(`ICE_VII_X_T_MAX` = 1800 K, above which Mazevet carries the column), so the conclusion held
+and **the condition was inverted**: not "safe below 355 GPa" but "safe above 1800 K", which
+sends the next reader looking for danger in exactly the wrong place. The others in this list
+are failures of reading; this one is a failure of *re-reading* — a new measurement obsoletes
+the safety statements standing around it, and clearing them requires opening them again, not
+recalling them. The check is cheap and its absence is invisible, which is why it is written
+down.
+
 **A correction request is itself a labelled claim, and it is opened before it is sent.**
 Registered 2026-08-31 by the audit, against itself. Reviewing the directing seat's handoff,
 it asked that C13's 26 % / 41 % be marked as standing on two of three legs, with the work
