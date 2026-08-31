@@ -1029,6 +1029,20 @@ class LiquidWater:
         self.check_temperature(p, t)
         return water_table.density(max(p, 0.0), t)
 
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """c_P [J/kg/K] — 원본(Bollengier+ 2019 깁스 표현)이 처음부터 싣던 양을 2026-08-31
+        (얼음 축, 브리프 23) 에 표로 구웠다. 혼합(Mixture)의 ∇_ad 가중이 소비처다 — 그 전까지
+        이 표는 dT/dP|_S 만 실어서 물 섞인 혼합이 바다 창에서 c_P 없음으로 거절됐다."""
+        self.check_temperature(p, t)
+        return water_table.c_p(max(p, 0.0), t)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        """(∂lnT/∂lnP)_S = (dT/dP|_S)·P/T — 표의 기울기에서 그대로."""
+        self.check_temperature(p, t)
+        if t <= 0.0:
+            return 0.0
+        return water_table.dtdp_adiabat(max(p, 0.0), t) * max(p, 0.0) / t
+
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
         """쓰이지 않는다 — 단열 기울기는 표가 직접 든다 (dtdp_adiabat). 0 은 '없다' 가 아니라
         이 길이 아니라는 뜻이다."""

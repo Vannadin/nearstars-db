@@ -46,8 +46,10 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
-`tidal_heating` [—] · `envelope_z` [—] · `potential_temperature` [K] ·
-`boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `serpentinisation` [—]
+`tidal_heating` [—] · `envelope_z` [—] · `envelope_z_rock_fraction` [—] ·
+`potential_temperature` [K] ·
+`boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `serpentinisation` [—] ·
+`differentiation_front` [—] · `crust_rock_fraction` [—] · `crust_porosity` [—]
 **갈리는 축** — `composition` 이 고르는 물질 스택, 그리고 각 층 경계에서 도달하는 압력.
 거기 근거 있는 상(phase)이 존재하는지를 그 압력이 정합니다. 레짐과 수치 조건은
 [유효 영역](#유효-영역)에 있습니다.
@@ -161,7 +163,7 @@ log–log 상의 시컨트 스텝에 이분법을 예비로 두는데, 적분 �
 | `ice_v` | BME3 | 1207.842 | 10.6368 | 6.7460 | 355.0 ~ 618.4 MPa | 0.002369 | 256.43 K | SeaFreeze v1.1.0 (Journaux+ 2020) 을 P = 0, T = 256.43 K 에서 평가  |
 | `ice_vi` | BME3 | 1263.386 | 10.3686 | 7.8219 | 618.4 MPa ~ 2.216 GPa | 0.003740 | 272.73 K | SeaFreeze v1.1.0 (Journaux+ 2020) 을 P = 0, T = 272.73 K 에서 평가  |
 | `ice_vii` | BME3 | 1460 | 23.7 | 4.15 | 2.216 ~ 37.4 GPa | **발표된 값 없음** | – | Seager+ 2007 Table 1, Hemley+ 1987 자료  |
-| `h2o_liquid` (바다) | 굳힌 표, (P, T) 쌍선형 보간 | – | – | – | 0 ~ 2.3 GPa, 240 ~ 500 K | 발표된 기울기 dT/dP\|_S 를 읽음, 조립 안 함 | – | SeaFreeze v1.1.0 `water1` (Bollengier+ 2019), `tools/make_water_table.py` 로 굳힘. 바다가 놓이는 252 ~ 360 K 에서 원 표현과 2×10⁻⁴ 안  |
+| `h2o_liquid` (바다) | 굳힌 표, (P, T) 쌍선형 보간 | – | – | – | 0 ~ 2.3 GPa, 240 ~ 500 K | 발표된 기울기 dT/dP\|_S 와 (2026-08-31 얼음 축부터) c_P 를 읽음, 조립 안 함 | – | SeaFreeze v1.1.0 `water1` (Bollengier+ 2019), `tools/make_water_table.py` 로 굳힘. 바다가 놓이는 252 ~ 360 K 에서 원 표현과 2×10⁻⁴ 안  |
 | `nh3` (암모니아 — 아직 소비처 없는 표) | 굳힌 표, 등온선 위에서 log p 는 log ρ 에 선형, 등온선 사이는 T 에 선형. 밀도는 이분법 | – | – | – | 들쭉날쭉한 (ρ, T) 격자 위 0.309 ~ 333.2 GPa, 500 ~ 10 000 K. 빠진 차갑고 조밀한 칸 여섯은 표 밖 | c_P 와 ∇_ad 는 표의 p·u 유한차분 — u 에 진동 보정이 **들어 있다** (Bethkenhagen 2013 Appendix B) | – | Bethkenhagen, French & Redmer 2013 Appendix B Table I, `tools/make_ammonia_table.py` 로 굳힘. p 는 2 % 안, 표시된 다섯 점은 5 % 이고 플래그로 들고 감. leave-one-out 은 얼음거대행성 맨틀 영역에서 8.7 % (격자 간격 두 배 기준)  |
 | `h2o_liquid_dense` (조밀한 액체, 바다 표와 뜨거운 물 적합 사이) | 굳힌 표, (log P, T) 쌍선형, 들쭉날쭉한 천장 | – | – | – | 0.1 GPa 부터 온도에 따라 오르는 천장까지 (360 K 2.3 GPa, 500 K 5.5, 600 K 10, 700 K 13, 1000 K 30 GPa), 360 ~ 1100 K | 발표된 기울기 dT/dP\|_S 와 c_P 를 읽음, 조립 안 함 | – | SeaFreeze v1.1.0 `water2` (Brown 2018), `tools/make_water2_table.py` 로 굳힘. 2.3 ~ 10 GPa × 500 ~ 1000 K 에서 보간 오차 ρ 1.8×10⁻⁵. 천장은 100 GPa 매듭 상자가 아니라 스플라인이 비물리적으로 가는 자리. 이음매: 겹침에서 water1 과 ρ 0.13 % / dT/dP 9 %, 1000 K 에서 Mazevet 이 −2.5 ~ −3.3 %  |
 | `h_he` (거대행성 외피) | polytrope, n = 1 | 0 (주 참고) | K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻² | n = 1 | 0 ~ 653 TPa | **해당 없음** | – | Helled+ 2022 §2, 그 논문 자신의 R = 70,300 km 로 단위 검산  |

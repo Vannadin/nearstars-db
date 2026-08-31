@@ -706,17 +706,20 @@ def _water_table_crosscheck() -> list[str]:
         return []
     import numpy as np
     import water_table
-    worst = 0.0
+    worst = worst_c = 0.0
     for p_mpa, t_k in ((5.0, 273.15), (150.0, 265.0), (600.0, 290.0), (1200.0, 310.0),
                        (2100.0, 350.0)):
         pt = np.empty((1,), dtype=object)
         pt[0] = (p_mpa, t_k)
-        rho_sf = float(getProp(pt, "water1").rho[0])
+        o = getProp(pt, "water1")
+        rho_sf = float(o.rho[0])
         worst = max(worst, abs(water_table.density(p_mpa * 1e6, t_k) / rho_sf - 1.0))
-    ok = worst < 5e-4
-    print(f"  [{'PASS' if ok else 'FAIL'}] 다섯 점에서 최악 {worst:.1e} (생성기가 적은 보간 오차 "
-          f"2e-4 · 허용 5e-4)")
-    return [] if ok else [f"액체 물 표가 SeaFreeze water1 과 {worst:.1e} 어긋난다"]
+        # c_P 는 2026-08-31 (얼음 축) 에 구웠다 — 같은 다섯 점에서 원 표현과 대조한다.
+        worst_c = max(worst_c, abs(water_table.c_p(p_mpa * 1e6, t_k) / float(o.Cp[0]) - 1.0))
+    ok = worst < 5e-4 and worst_c < 1e-2
+    print(f"  [{'PASS' if ok else 'FAIL'}] 다섯 점에서 최악 ρ {worst:.1e} (생성기 2e-4 · 허용 5e-4) "
+          f"· c_P {worst_c:.1e} (생성기 4.5e-3 바다 창 · 허용 1e-2)")
+    return [] if ok else [f"액체 물 표가 SeaFreeze water1 과 ρ {worst:.1e} · c_P {worst_c:.1e} 어긋난다"]
 
 
 def icy_table() -> None:

@@ -41,7 +41,8 @@ literature, separate recipes.
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
-`tidal_heating` [—] · `envelope_z` [—] · `potential_temperature` [K] ·
+`tidal_heating` [—] · `envelope_z` [—] · `envelope_z_rock_fraction` [—] ·
+`potential_temperature` [K] ·
 `boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `serpentinisation` [—] ·
 `differentiation_front` [—] · `crust_rock_fraction` [—] · `crust_porosity` [—]
 **Discriminating keys** — the material stack chosen by `composition`, and the pressure
@@ -175,7 +176,7 @@ The materials, with the source of every constant:
 | `ice_vi` | BME3 | 1263.386 | 10.3686 | 7.8219 | 618.4 MPa to 2.216 GPa | 0.003740 | 272.73 K | SeaFreeze v1.1.0 (Journaux+ 2020), evaluated at P = 0, T = 272.73 K  |
 | `ice_vii` | BME3 | 1460 | 23.7 | 4.15 | 2.216 to 37.4 GPa | 0.005922 | 300 K | Seager+ 2007 Table 1, Hemley+ 1987 data; thermal constants from SeaFreeze v1.1.0 `VII_X_French` (French & Redmer 2015) at 2.216 GPa, 300 K  |
 | `ice_x` | Vinet | 1644.295 | 22.2868 | 6.7507 | 37.4 GPa to 1 TPa, T ≤ 1800 K | 0.004337 | 300 K | **Fitted**, not read: SeaFreeze v1.1.0 `VII_X_French` (French & Redmer 2015) 300 K isotherm over the range used  |
-| `h2o_liquid` (ocean) | baked table, bilinear in (P, T) | – | – | – | 0 to 2.3 GPa, 240 to 500 K | published slope dT/dP\|_S read, not assembled | – | SeaFreeze v1.1.0 `water1` (Bollengier+ 2019), baked by `tools/make_water_table.py`; 2×10⁻⁴ against the source where an ocean sits (252 to 360 K)  |
+| `h2o_liquid` (ocean) | baked table, bilinear in (P, T) | – | – | – | 0 to 2.3 GPa, 240 to 500 K | published slope dT/dP\|_S and (since 2026-08-31, the ice axis) c_P read, not assembled | – | SeaFreeze v1.1.0 `water1` (Bollengier+ 2019), baked by `tools/make_water_table.py`; ρ 2×10⁻⁴ · c_P 4.5×10⁻³ against the source where an ocean sits (252 to 360 K)  |
 | `nh3` (ammonia — a table with no consumer yet) | baked table, log p linear in log ρ along an isotherm, linear in T between; density by bisection | – | – | – | 0.309 to 333.2 GPa on a ragged (ρ, T) grid, 500 to 10 000 K; the six absent cold-dense cells are outside it | c_P and ∇_ad from finite differences of the table's p and u — u **includes** the vibrational correction (Bethkenhagen 2013 Appendix B) | – | Bethkenhagen, French & Redmer 2013 Appendix B Table I, baked by `tools/make_ammonia_table.py`; p within 2 %, 5 % at five flagged points, carried as a flag; leave-one-out 8.7 % in the ice-giant mantle region at doubled spacing  |
 | `h2o_liquid_dense` (dense liquid, between the ocean table and the hot-water fit) | baked table, bilinear in (log P, T), ragged ceiling | – | – | – | 0.1 GPa to a ceiling that rises with temperature (2.3 GPa at 360 K, 5.5 at 500 K, 10 at 600 K, 13 at 700 K, 30 at 1000 K), 360 to 1100 K | published slope dT/dP\|_S and c_P read, not assembled | – | SeaFreeze v1.1.0 `water2` (Brown 2018), baked by `tools/make_water2_table.py`; interpolation 1.8×10⁻⁵ in ρ over 2.3–10 GPa × 500–1000 K; the ceiling is where the spline turns unphysical, not its 100 GPa knot box; seams: water1 ρ 0.13 % / dT/dP 9 % in the overlap, Mazevet −2.5 … −3.3 % at 1000 K  |
 | `h_he` (giant envelope) | polytrope, n = 1 | 0 (see note) | K = 2.1 × 10⁵ m⁵ kg⁻¹ s⁻² | n = 1 | 0 to 653 TPa | **not applicable** | – | Helled+ 2022 §2, unit-checked against their own R = 70,300 km  |

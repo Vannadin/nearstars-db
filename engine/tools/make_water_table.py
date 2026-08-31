@@ -61,7 +61,7 @@ def evaluate(ps_mpa, ts_k):
     cp = np.asarray(out.Cp, dtype=float).reshape(len(ts_k), len(ps_mpa))
     tt = np.asarray(ts_k, dtype=float)[:, None]
     dtdp = alpha * tt / (rho * cp)          # K/Pa
-    return rho, dtdp
+    return rho, dtdp, cp
 
 
 def fmt_row(vals, digits):
@@ -70,7 +70,13 @@ def fmt_row(vals, digits):
 
 def main():
     ps, ts = grid()
-    rho, dtdp = evaluate(ps, ts)
+    rho, dtdp, cp = evaluate(ps, ts)
+    # c_P 물리성 스윕 — 기준은 스윕 전에 등록 (2026-08-31, 얼음 축): 유한하고
+    # 0 < c_P < 15,000 J/kg/K, 창 전체. water2 가 쓴 것과 같은 창이다. 어긋나면 굽지
+    # 않고 여기서 죽는다 — 유효 천장을 재는 대신 죽는 이유는 water1 의 창(2.3 GPa ·
+    # 240-500 K)이 저자들이 음속으로 앵커한 그 창이라, 어긋남은 전사 오류라서다.
+    assert np.all(np.isfinite(cp)) and np.all(cp > 0.0) and np.all(cp < 15000.0), \
+        (float(np.nanmin(cp)), float(np.nanmax(cp)))
     here = os.path.dirname(os.path.abspath(__file__))
     target = os.path.join(here, "..", "water_table.py")
     lines = [
@@ -108,6 +114,15 @@ def main():
         lines.append("    " + fmt_row(dtdp[i], 6))
     lines.append(")")
     lines.append("")
+    lines.append("# c_P [J/kg/K]. 같은 격자. 2026-08-31 (얼음 축, 브리프 23) 에 추가 —")
+    lines.append("# 혼합(Mixture)의 나눗_ad 가중에 필요하고, 원본(Bollengier+ 2019 깁스 표현)이")
+    lines.append("# 처음부터 싣고 있던 양이다. 물리성 기준(유한, 0 < c_P < 15,000)은 생성기가")
+    lines.append("# 스윕 전에 등록하고 어긋나면 굽지 않는다.")
+    lines.append("C_P = (")
+    for i in range(len(ts)):
+        lines.append("    " + fmt_row(cp[i], 6))
+    lines.append(")")
+    lines.append("")
     lines.append(TAIL)
     open(target, "w").write("\n".join(lines) + "\n")
 
@@ -122,7 +137,7 @@ def main():
     print(f"wrote {target}: {len(ts)} x {len(ps)} grid")
     for label, t_lo, t_hi in (("252-360 K (under an ice shell)", 252.0, 360.0),
                               ("whole window", 242.0, 499.0)):
-        worst_r, worst_s = 0.0, 0.0
+        worst_r, worst_s, worst_c = 0.0, 0.0, 0.0
         for p in np.arange(12.5, 2290.0, 62.5):
             for t in np.arange(t_lo, t_hi, 6.0):
                 pt = np.empty((1,), dtype=object)
@@ -132,7 +147,8 @@ def main():
                 s_sf = float(o.alpha[0]) * t / (r_sf * float(o.Cp[0]))
                 worst_r = max(worst_r, abs(wt.density(p * 1e6, t) / r_sf - 1.0))
                 worst_s = max(worst_s, abs(wt.dtdp_adiabat(p * 1e6, t) - s_sf))
-        print(f"  {label}: rho {worst_r:.2e} (relative), dT/dP {worst_s * 1e9:.2e} K/GPa (absolute)")
+                worst_c = max(worst_c, abs(wt.c_p(p * 1e6, t) / float(o.Cp[0]) - 1.0))
+        print(f"  {label}: rho {worst_r:.2e} (relative), dT/dP {worst_s * 1e9:.2e} K/GPa (absolute), c_P {worst_c:.2e} (relative)")
 
 TAIL = '''
 # 굳힌 창의 경계. 표는 양 끝을 포함한다.
@@ -167,6 +183,11 @@ def density(p_pa, t_k):
 def dtdp_adiabat(p_pa, t_k):
     """dT/dP|_S [K/Pa] — the published alpha T / (rho c_P), interpolated."""
     return _bilinear(DTDP_S, p_pa, t_k)
+
+
+def c_p(p_pa, t_k):
+    """c_P [J/kg/K] — the source's own specific heat, interpolated (added 2026-08-31)."""
+    return _bilinear(C_P, p_pa, t_k)
 '''
 
 

@@ -195,7 +195,8 @@ class Structure:
 
 
 def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
-           envelope_z: float = 0.0, differentiated: bool = True,
+           envelope_z: float = 0.0, envelope_z_rock_fraction: float = 1.0,
+           differentiated: bool = True,
            serpentinisation: float = 0.0, differentiation_front: float = 1.0,
            crust_rock_fraction: float = 0.0, crust_porosity: bool = False):
     """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
@@ -236,10 +237,18 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
         out.append((1.0 - gmf, _crust(crust_rock_fraction, crust_porosity)))
     if gmf > 0:
         # 외피에 중원소가 녹아 있으면 그 층이 혼합이다. envelope_z 는 **행성 전체가
-        # 아니라 이 외피 안에서의** 질량분율이다.
-        out.append((1.0, mix("h_he_z", "중원소 섞인 수소-헬륨 외피",
-                             (MATERIALS["h_he"], 1.0 - envelope_z),
-                             (MATERIALS[ENVELOPE_Z_MATERIAL], envelope_z))))
+        # 아니라 이 외피 안에서의** 질량분율이다. Z 의 조성은 envelope_z_rock_fraction 이
+        # 가른다 — 1.0(기본)이면 예전 그대로 규산염뿐, 그 아래면 나머지가 **녹은 물**
+        # (ENVELOPE_WATER — (P, T) 마다 유효한 물 표현으로 위임; 근거는 그 클래스 주석,
+        # Soubiran & Militzer 2015 + N13 의 LM-REOS. 얼음 축, 브리프 23).
+        z_rock = envelope_z * envelope_z_rock_fraction
+        z_ice = envelope_z - z_rock
+        parts = [(MATERIALS["h_he"], 1.0 - envelope_z)]
+        if z_rock > 0.0 or z_ice <= 0.0:
+            parts.append((MATERIALS[ENVELOPE_Z_MATERIAL], z_rock))
+        if z_ice > 0.0:
+            parts.append((ENVELOPE_WATER, z_ice))
+        out.append((1.0, mix("h_he_z", "중원소 섞인 수소-헬륨 외피", *parts)))
     return out
 
 
@@ -313,12 +322,12 @@ class PorousCrust(Mixture):
 # 단열 기울기를 한 단계에 한 번만 다시 잰다. 적분기가 이미 한 단계 안에서 재료를
 # 고정하고 있고(경계에서 dr/R ~ 3e-4 의 오차), 온도 기울기는 그보다 매끄럽다.
 # 단계마다 RK 네 자리에서 다시 재면 밀도 뒤집기가 여덟 번 더 돌아 비싸다.
-def _cold_phases(cmf, imf, core_material, gmf, envelope_z, differentiated,
+def _cold_phases(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated,
                  serpentinisation=0.0, differentiation_front=1.0, crust_rock_fraction=0.0,
                  crust_porosity=False):
     """이 천체의 층들 중 발표된 열 상수가 없어 등온으로 남는 상들의 이름."""
     out: list[str] = []
-    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, differentiated,
+    for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated,
                            serpentinisation, differentiation_front, crust_rock_fraction,
                            crust_porosity):
         out.extend(mat.cold_phases())
@@ -390,7 +399,8 @@ def _carries_silicate(mat) -> bool:
 def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               core_material: str, phi0: float = 0.0,
               p_cap: float | None = None, gmf: float = 0.0,
-              envelope_z: float = 0.0, differentiated: bool = True,
+              envelope_z: float = 0.0, envelope_z_rock_fraction: float = 1.0,
+           differentiated: bool = True,
               t_center: float = 0.0, t_pot: float = 0.0,
               boundary_temperature_jump: float = 0.0,
               mantle_rock_fraction: float = 0.0,
@@ -405,7 +415,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     `phi0` 가 0 보다 크면 각 자리의 고체 밀도에 (1 − φ(P)) 를 곱한다. φ 는 **국소
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation,
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated, serpentinisation,
                    differentiation_front, crust_rock_fraction, crust_porosity)
     mat = stack[0][1]
     # 적분이 멈추는 압력. 응축상 천체는 0 — 표면이 P = 0 이다. 기체 외피가 바깥에 있으면
@@ -958,7 +968,8 @@ def _narrow_bracket(good: float, bad: float, at, mass_kg: float):
 def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     core_material: str, phi0: float = 0.0,
                     p_cap: float | None = None, gmf: float = 0.0,
-                    envelope_z: float = 0.0, differentiated: bool = True,
+                    envelope_z: float = 0.0, envelope_z_rock_fraction: float = 1.0,
+           differentiated: bool = True,
                     t_center: float = 0.0, t_pot: float = 0.0,
                     boundary_temperature_jump: float = 0.0,
                     mantle_rock_fraction: float = 0.0,
@@ -971,7 +982,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     를 단 결과다. 예외로 던지면 호출자가 그 사실을 조용히 삼킬 수 있다."""
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
-    stack = _stack(cmf, imf, core_material, gmf, envelope_z, differentiated, serpentinisation,
+    stack = _stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated, serpentinisation,
                    differentiation_front, crust_rock_fraction, crust_porosity)
     # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
     # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
@@ -1001,7 +1012,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
 
     def at(p: float):
         return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                         envelope_z, differentiated, t_center, t_pot,
+                         envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                          boundary_temperature_jump, mantle_rock_fraction,
                          serpentinisation, differentiation_front, crust_rock_fraction,
                          crust_porosity)
@@ -1124,7 +1135,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # log M 은 log P_c 에 거의 선형이라 할선법이 몇 번 만에 붙는다. 벗어나면
     # 괄호 안의 로그 이분법으로 되돌린다 — 적분 한 번이 비싸서 반복 횟수가 곧 비용이다.
     st = integrate(hi, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
-                        envelope_z, differentiated, t_center, t_pot,
+                        envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
                         serpentinisation, differentiation_front, crust_rock_fraction,
                         crust_porosity)
@@ -1143,7 +1154,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         # 하나다. 예전 경로를 그대로 둬서 앵커가 비트까지 같게 유지한다.
         x1 = math.log(max(lo, hi * 1e-3))
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                        gmf, envelope_z, differentiated, t_center, t_pot,
+                        gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
                         serpentinisation, differentiation_front, crust_rock_fraction,
                         crust_porosity)
@@ -1181,7 +1192,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         x0, y0 = x1, y1
         x1 = x2
         st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                    gmf, envelope_z, differentiated, t_center, t_pot,
+                    gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                     boundary_temperature_jump, mantle_rock_fraction,
                     serpentinisation, differentiation_front, crust_rock_fraction,
                     crust_porosity)
@@ -1216,7 +1227,8 @@ T_BRACKET_TRIES = 12
 def shoot(mass_kg: float, cmf: float, imf: float,
           core_material: str, phi0: float = 0.0,
           p_cap: float | None = None, gmf: float = 0.0,
-          envelope_z: float = 0.0, differentiated: bool = True,
+          envelope_z: float = 0.0, envelope_z_rock_fraction: float = 1.0,
+           differentiated: bool = True,
           potential_temperature: float | None = None,
           boundary_temperature_jump: float = 0.0,
           mantle_rock_fraction: float = 0.0,
@@ -1234,7 +1246,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     앵커에 거의 선형이라는 것을 쓴다 — 중심 온도를 비율로 다시 재면 몇 번 만에 붙고,
     밀도가 온도에 되먹임하는 몫만 반복이 흡수한다."""
     args = (mass_kg, cmf, imf, core_material, phi0, p_cap, gmf, envelope_z,
-            differentiated)
+            envelope_z_rock_fraction, differentiated)
     kw = {"boundary_temperature_jump": boundary_temperature_jump,
           "mantle_rock_fraction": mantle_rock_fraction,
           "serpentinisation": serpentinisation,
@@ -1464,6 +1476,96 @@ GAS_GIANT_CLASSES = ("giant", "gas_giant")
 #             그쪽 수치는 test_giant.py 가 재서 기록에 남긴다.
 ENVELOPE_Z_MATERIAL = "silicate"
 
+
+class _EnvelopeWater:
+    """외피에 녹은 물 (얼음 축, 브리프 23) — (P, T) 마다 유효한 물 표현으로 위임한다.
+
+    부피 가법(Mixture)의 성분으로 꽂힌다. 규칙은 걸음의 유체·고체 디스패치와 같은 순서다:
+    녹는곡선이 닿으면 곡선이 답하고, 액체면 바다 표(water1, 2.3 GPa · 240–500 K — c_P 는
+    2026-08-31 에 구웠다: 원본 깁스 표현이 처음부터 싣던 양이고, 그 전까지는 dT/dP|_S 만
+    구워져 있어 이 자리가 c_P 없음으로 막혔었다) 또는 뜨거운 물(Mazevet+ 2019, 1000 K 위)
+    또는 조밀한 액체 물 표(water2), 고체·미판정이면 사다리(전 상이 열 상수를 실음). 어느
+    표현도 없는 자리는 이름을 대고 거절한다 — 지어내지 않는다.
+
+    물–수소 부피 가법의 근거: Soubiran & Militzer 2015 (2015ApJ...806..228S, 캐시
+    1505.07885) 가 2–70 GPa × 1000–6000 K 의 DFT-MD 로 "ideal mixing(등압·등온 부피
+    가법)이 혼합 시뮬레이션을 잘 재현, 편차 수 % (국소 최대 10 %)" 를 인쇄한다. 표적
+    자신도 같은 규칙이다 — N13 의 외피는 수소·헬륨·물의 선형혼합(LM-REOS,
+    Nettelmann+ 2008, 캐시 0712.1019)이다. 그 대역 밖(얕은 외피)의 가법은 근거가
+    아니라 연장이고, 그 사실은 노트가 말한다."""
+    name = "h2o_env"
+    label_ko = "외피에 녹은 물"
+    rho0 = MATERIALS["h2o"].rho0
+    p_max = float("inf")          # 자기 상한을 말하지 않는다 — 위임받은 표현이 자리에서 거절한다
+    p_floor = 0.0
+    has_thermal = True
+
+    def _rep(self, p: float, t: float):
+        if t <= 0.0:
+            return MATERIALS["h2o"]           # 온도가 흐르지 않으면 사다리 — 예전 규칙 그대로
+        if p <= IAPWS_VII_END:
+            liquid = bool(MATERIALS["h2o"].liquid_at(p, t))
+        else:
+            t_b = water_vii1_vii2_boundary(p)
+            if t_b is not None and t >= t_b:
+                liquid = True
+            elif t < ICE_VII_X_T_MAX and p <= MATERIALS["h2o"].p_max:
+                liquid = False
+            elif t >= water_hot.T_MIN:
+                liquid = True
+            else:
+                raise PhaseGap(
+                    self.name, p,
+                    f"{p / 1e9:.0f} GPa · {t:.0f} K 의 외피 물에는 읽을 표현이 없다 — "
+                    "사다리는 매듭 상자 밖이고 뜨거운 물(Mazevet+ 2019)은 1000 K 위를 적는다.",
+                    t, too_cold=True)
+        if not liquid:
+            return MATERIALS["h2o"]
+        if water_table.in_domain(p, t):
+            return MATERIALS["h2o_liquid"]   # 바다 표 — c_P 는 2026-08-31 에 구웠다 (얼음 축)
+        if t >= water_hot.T_MIN:
+            return MATERIALS["h2o_hot"]
+        if water2_table.in_domain(p, t):
+            return MATERIALS["h2o_liquid_dense"]
+        raise PhaseGap(
+            self.name, p,
+            f"{p / 1e9:.3f} GPa · {t:.0f} K 의 외피에 녹은 물은 액체인데 어느 표현도 "
+            "없다 — 바다 표(SeaFreeze water1, 2.3 GPa · 240–500 K)와 조밀한 액체 물 표"
+            "(water2)는 이 (P, T) 밖이고, 뜨거운 물(Mazevet+ 2019)은 1000 K 위를 적는다. "
+            "더 뜨거우면 표현이 생기므로 온도가 막은 것으로 던진다 (얼음 축, 브리프 23).",
+            t, too_cold=True)
+
+    def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return self._rep(p, t).density(p, t, t_pot)
+
+    def c_p(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return self._rep(p, t).c_p(p, t, t_pot)
+
+    def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
+        return self._rep(p, t).grad_ad(p, t, t_pot)
+
+    def check_temperature(self, p: float, t: float) -> None:
+        self._rep(p, t).check_temperature(p, t)
+
+    def rho_seed(self, mass_kg: float) -> float:
+        return MATERIALS["h2o"].rho_seed(mass_kg)
+
+    def cold_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def melt_free_phases(self) -> tuple[str, ...]:
+        return ()
+
+    def in_domain(self, p: float, t: float) -> bool:
+        try:
+            self._rep(p, t)
+        except PhaseGap:
+            return False
+        return True
+
+
+ENVELOPE_WATER = _EnvelopeWater()
+
 # **2026-08-28 에 이 갈래의 앵커가 둘에서 셋으로 늘었다.** 폴리트로프였을 때는 앵커가
 # 목성(맞음)과 토성(틀림) 둘뿐이었고, 그 사이를 강등 구간으로 둔 이유는 잔차가 어느 쪽인지
 # 말할 근거가 없어서가 아니라 **n = 1 이 어떤 거대행성에나 같은 답을 냈기 때문** 이다
@@ -1646,6 +1748,7 @@ def solve(mass_earth: float,
           porosity_cap: float | None = None,
           tidal_heating: bool = False,
           envelope_z: float = 0.0,
+          envelope_z_rock_fraction: float = 1.0,
           potential_temperature: float | None = None,
           boundary_temperature_jump: float = 0.0,
           mantle_rock_fraction: float = 0.0,
@@ -1681,6 +1784,7 @@ def solve(mass_earth: float,
               "body_class": body_class, "initial_porosity": initial_porosity,
               "porosity_cap": porosity_cap, "tidal_heating": tidal_heating,
               "envelope_z": envelope_z,
+              "envelope_z_rock_fraction": envelope_z_rock_fraction,
               "potential_temperature": potential_temperature,
               "boundary_temperature_jump": boundary_temperature_jump,
               "mantle_rock_fraction": mantle_rock_fraction,
@@ -1740,6 +1844,19 @@ def solve(mass_earth: float,
             f"(가스질량분율 {gmf}). envelope_z 는 **외피 안에서의** 질량분율이므로 "
             "외피가 있어야 뜻이 있다. 고체 천체에 무거운 성분을 섞으려면 "
             "differentiated=False 쪽이다.",
+            inputs=inputs, refs=REFS)
+    if not 0.0 <= envelope_z_rock_fraction <= 1.0:
+        return out_of_domain(
+            "invalid_declaration",
+            f"외피 Z 의 암석 몫 {envelope_z_rock_fraction} 이 [0, 1] 밖이다. 1(기본)은 "
+            "Z 전부가 규산염, 0 은 전부가 녹은 물, 그 사이는 부피 가법의 세 성분이다 "
+            "(얼음 축, 브리프 23).",
+            inputs=inputs, refs=REFS)
+    if envelope_z > 0 and envelope_z_rock_fraction < 1.0 and (potential_temperature or 0.0) <= 0.0:
+        return out_of_domain(
+            "invalid_declaration",
+            "외피에 물을 녹이려면(envelope_z_rock_fraction < 1) 온도가 흘러야 한다 — "
+            "녹은 물의 표현이 (P, T) 로 갈리는데 포텐셜 온도 선언이 없다.",
             inputs=inputs, refs=REFS)
 
     if potential_temperature is not None and potential_temperature < 0.0:
@@ -1884,17 +2001,20 @@ def solve(mass_earth: float,
             "같은 압력에서 2000 K 와 5700 K 사이에 30 GPa 에서 14 %, 800 GPa 에서 5 % "
             "다. 포텐셜 온도를 선언하면 풀린다.",
             inputs=inputs, refs=REFS)
-    if ice_giant and imf <= 0.0:
+    if ice_giant and imf <= 0.0 and not (envelope_z > 0.0 and envelope_z_rock_fraction < 1.0):
+        # 얼음이 외피에 **녹은** 선언(얼음 축, 브리프 23)이면 층이 없어도 얼음거대행성이다 —
+        # 이 검증은 층만 읽던 시절의 것이고, 클래스의 뜻은 얼음이 지배하는 천체다.
         return out_of_domain(
             RECIPE, VERSION,
             f"'{body_class}' 인데 얼음질량분율이 {imf} 다. 이 클래스를 이름 그대로 "
-            "만드는 것이 그 층이므로, 얼음이 없으면 얼음거대행성이 아니다.",
+            "만드는 것이 그 층이므로, 얼음이 없으면 얼음거대행성이 아니다 (외피에 녹은 "
+            "물 선언이 있으면 예외다 — envelope_z_rock_fraction < 1).",
             inputs=inputs, refs=REFS)
 
     try:
         st, converged = shoot(mass_earth * EARTH_MASS_KG, cmf, imf, core_material,
                               initial_porosity, porosity_cap, gmf,
-                              envelope_z, differentiated, potential_temperature,
+                              envelope_z, envelope_z_rock_fraction, differentiated, potential_temperature,
                               boundary_temperature_jump, mantle_rock_fraction,
                               serpentinisation, differentiation_front, crust_rock_fraction,
                               crust_porosity)
@@ -1966,7 +2086,8 @@ def solve(mass_earth: float,
                      and abs(potential_temperature - EARTH_POTENTIAL_T) > 1e-9)
     if thermal_declared:
         cold = sorted(set(_cold_phases(cmf, imf, core_material, gmf, envelope_z,
-                                       differentiated, serpentinisation)))
+                                       envelope_z_rock_fraction, differentiated,
+                                       serpentinisation)))
         notes.append(
             f"**포텐셜 온도 {potential_temperature:.0f} K 는 선언이다.** 대류하는 내부를 "
             "표면까지 단열 감압했을 때의 온도이고 표면 온도가 아니다 — 그 사이의 전도하는 "
@@ -2075,6 +2196,16 @@ def solve(mass_earth: float,
             "평균반지름 대비 −0.1 % 로 재현하는데, 그것이 보이는 것은 혼합 규칙이 맞다는 "
             "것이지 이 레시피가 토성을 예측한다는 것이 아니다. 그래서 등급을 analog 로 "
             "내린다.")
+    if envelope_z > 0 and envelope_z_rock_fraction < 1.0:
+        notes.append(
+            f"**외피 Z 의 {1.0 - envelope_z_rock_fraction:.3f} 은 녹은 물이다** (얼음 축, "
+            "브리프 23). 물–수소의 등압·등온 부피 가법은 Soubiran & Militzer 2015 "
+            "(2015ApJ...806..228S) 가 2–70 GPa × 1000–6000 K 의 DFT-MD 로 잰 근거가 있다 — "
+            "\"ideal mixing … 잘 재현, 편차 수 % (국소 최대 10 %)\" — 그리고 대조 표적인 "
+            "N13 의 외피 자신이 물의 선형혼합(LM-REOS, Nettelmann+ 2008)이다. 그 대역 "
+            "밖(얕은 외피의 저압·저온부)에서는 가법이 근거가 아니라 연장이고, 물 성분은 "
+            "(P, T) 마다 유효한 표현(사다리·water2·Mazevet)으로 위임되며 어느 것도 없는 "
+            "자리는 이름을 대고 거절된다.")
     if not differentiated:
         notes.append(
             "**미분화 천체에는 측정 앵커가 없다.** 완전히 섞인 암석-금속 천체의 C/MR² 를 "

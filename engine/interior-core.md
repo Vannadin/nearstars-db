@@ -1020,6 +1020,26 @@ measured bracket stands stub-free: 26 % / 41 % were not stub-dependent** (branch
 not fire). The ice axis (③) is now measurable without any phantom device — which was the
 reason ① was ordered before it.
 
+*Revisited 2026-08-31, Brief 23 — **the ice axis, attempted: representable except one
+named wall, and no bracket end converges through it.*** The mixing question was answered
+from sources first (Soubiran & Militzer 2015: additive volume for H₂O–H₂ measured good to
+a few %, ≤10 % locally, over 2–70 GPa × 1000–6000 K; and N13's own envelopes are LM-REOS
+*linear-mixed* water — matching like with like), so branch 4 did not fire. The
+representation was built (`envelope_z_rock_fraction`, a dispatching `_EnvelopeWater`
+part, and **water1's c_P baked** — the source's own Gibbs quantity, closing the hole that
+confined C5(b)'s rock mixing to ≥ 2.3 GPa). All four end-B states (ice / ice+rock × two
+planets) close mass exactly and **none converges**: a refusal spy shows 1102 of 1202
+trial deaths on one wall — **liquid envelope water at p ≲ 0.1 GPa × 500–1000 K**, the
+tri-corner of water1's 500 K top, water2's 0.1 GPa floor and Mazevet's 1000 K floor,
+which every path cold enough to reach the 76 / 72 K boundary must cross carrying 85 %
+dissolved water. Branch 3, refined: blocker named, with a published filler (IAPWS-95 /
+IF97 steam covers it) whose baking is an owner decision. **No gap-covered percentage is
+reported** — a bracket end that misses the boundary condition by ~1200 K is not a
+measured end. Recorded, not judged: all four states sit *above* the targets (renorm
+0.2531–0.3061 vs 0.2300 / 0.2410), and the wedge-crossing is partly the uniform-Z
+bracket's own artifact — a graded profile tapers the water toward 1 bar and is not
+blocked to the same degree. `engine/ice-axis-context-notes.md`.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
