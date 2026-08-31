@@ -98,36 +98,46 @@ be measured through the phantom-stub device again rather than properly.
 sub-Neptunes, which the recipe barely answers today), and a third melting-curve candidate.
 Reports will arrive addressed to the directing seat.
 
-## In flight when the work session stalled — 2026-08-31, ~20:00 KST
+## Where Brief 25 stands — 2026-08-31, ~20:00 KST
 
-The work session stopped mid-item (cause unknown, the owner's read is throttling) and will be
-restarted later. **Its work is on disk, uncommitted, and nothing is lost.** Do not commit it
-for it — only that session can say the gate passed. State, measured rather than assumed:
+*This section replaces one written minutes earlier that said the work was uncommitted on
+disk. It was already landing as `544d8730` while that was being written — a stale number
+committed by the directing seat, in the same hour as the rule about stale numbers. Left
+visible rather than quietly overwritten.*
 
-```
- M engine/ice_giant_anchor.json   fingerprint 425c011016a248cf -> be375eaec98efb01, seconds only
- M engine/interior.py             +58 lines
- M engine/test_interior.py        +18 lines
- ?? engine/steam_if97.py          new
- ?? engine/steam-checklist.md     new
- ?? engine/steam-context-notes.md new
-```
+**Brief 25 (bake IAPWS-95/IF97 steam) is landed but its acceptance is not run.** The owner
+paused compute (fan/throttle; one run was externally killed), so the four ice-axis ends and
+the full `check.sh` are deferred. `544d8730` carries the code:
 
-**The anchor diff is fingerprint and seconds and nothing else — every solved value is
-bit-identical** (checked by the directing seat, not relayed). So the refresh is the expected
-consequence of adding a branch, not a moved answer. But it is a **refreshed anchor whose
-cause is not committed**: a gate run right now compares against it, so the next session
-either lands Brief 25 or reverts the anchor before trusting a green gate.
+- **IF97 regions 1, 2 and 3** transcribed into `engine/steam_if97.py` — pure Python closed
+  form, **no new runtime dependency**. Verified against the standard's own printed check
+  values (Tables 5, 15, 33, 35, the B23 point, a density round trip): **worst 3.2e-9**, and
+  the gate re-runs it.
+- **The coefficient tables were read from the typeset images, not the text layer** — the
+  archived PDF's text layer drops every power of ten, so transcribing it would have been
+  silent fabrication. That is the right call and it is why this took as long as it did.
+- **Region 3 was needed too**: with regions 1 and 2 alone the ends still refused, and the
+  refusal spy (1202 → 138) put every remaining water-side death on the **B23 edge of the
+  region 3 triangle** (18–97 MPa × 635–661 K, measured).
+- **A finding about our own table**: at 1000 K and low pressure, Mazevet is off by
+  **+88 … +994 %** — its ρ ≳ 1 g/cc validity condition confirmed numerically — so the
+  envelope dispatch now puts IF97 **in front of** Mazevet. Physicality sweep: zero
+  violations. Seams: water1 0.005 %, water2 ≤ 0.02 %.
+- Anchor bit-identical; `--refresh` in the same commit (fingerprint 425c011016a248cf →
+  **be375eaec98efb01**, diff is fingerprint and seconds only, a solve-note string moved it).
 
-**Brief 25 = bake IAPWS-95/IF97 steam**, the precondition for ③: every ice-axis bracket end
-dies at one wall (p ≲ 0.1 GPa × 500–1000 K, 1102 of 1202 refusals) and the published filler
-covers exactly that window. Its acceptance is to re-run the four ice-axis ends and see
-whether `conv=True` appears; if not, **the next wall's coordinates are the product**. Carry
-the label that steam does not buy the mixture — that window is outside Soubiran & Militzer's
-validated band on both axes.
+**Resume point, from that session's own checklist**: ① run the four ice-axis ends
+(`scratchpad/ice_axis_runs.py`) through the full r1·2·3 dispatch — convergence unknown, and
+**gap-covered % only becomes quotable if `conv=True` appears**; ② the full `check.sh`. If no
+end converges, **the next wall's coordinates are the product**, not a failure.
 
-**Whoever picks this up: read `engine/steam-checklist.md` first** — it is that session's own
-pre-registration, written before the code.
+**Carry the label steam does not buy**: that window sits outside Soubiran & Militzer's
+validated mixing band on both axes, so passing the wall happens over an unverified mixture
+(`7769be6e`).
+
+**Its landing chain, if a session's context has holes** (the owner reports some sessions lost
+records to a re-login): `84b93530` Brief 24 → `ac8146c5` label correction → `544d8730` this.
+Each checklist and note carries the prior state, so re-anchor from those files.
 
 ## Standing rules — each exists because something got through
 
