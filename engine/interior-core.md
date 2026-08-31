@@ -92,6 +92,22 @@ sampled**: in the case that named this, the same message's Uranus J₂ (3510.7) 
 be right, so a spot-check would have passed both. Scope, stated precisely: the error lived
 only in the relay message; the notes' printed values (3510.68 / 3535.94) were correct.
 
+**A correction request is itself a labelled claim, and it is opened before it is sent.**
+Registered 2026-08-31 by the audit, against itself. Reviewing the directing seat's handoff,
+it asked that C13's 26 % / 41 % be marked as standing on two of three legs, with the work
+session's reproduction and two caveats outstanding — and wrote *"`19360f72` already records
+the row as revisited"* while never opening `19360f72`, whose checklist closes all three and
+whose §6 table reproduces the audit's own float-residual point to the digit. The correction
+was withdrawn the same hour. Two known sub-kinds combined: a number left stale (2), resting
+on an identifier cited but not read (the shadow of 1). What makes it worth its own line is
+the direction — **the list was ahead of the ledger, not behind it**, so "the row closed
+before verification did" was the exact inverse of what happened, and a correction accepted
+on its face would have re-opened a settled row. Hence the pair: *sender* — the moment you
+write "X already says so", X is a document you have opened, exhaustively, not by title;
+*receiver* — **a correction is reproduced before it is applied**, the same duty as a number
+attributed to you. The incoming seat reproduced it and it did not survive, which is the
+only reason this is a recorded lesson rather than a re-opened row.
+
 **A retrial's outcomes are registered before it runs, and the register now has five kinds:**
 sits with A · sits with B · between · the source does not reach the deciding region (added
 after F1) · **the source disagrees with both candidates** (added after F4, where Queyroux sat
