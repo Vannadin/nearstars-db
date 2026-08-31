@@ -162,8 +162,33 @@ Reports will arrive addressed to the directing seat.
 - **Open the rendered document** when the owner asks to see one: `./scripts/preview-md.sh <file>`
   then `open`. Do it unasked for anything newly written.
 
-## Owner decisions still parked, unrelated to the four above
+## Owner decisions still parked
 
+The four approved items are worked through: **① the cold-flank general fix landed**
+(2026-08-31, Brief 22, three legs), **③ the ice axis was attempted and could not be
+measured** (Brief 23 — the axis is expressible, no bracket end converges, and the reason is
+named below), and **④ all three surveys landed**
+(`engine/surveys-2026-08-31-context-notes.md`). **② is the one still open of the four**, and
+it now has the paper it was waiting for.
+
+- **② Adopt Queyroux's melting curve, or not — reframed, and unblocked.** Survey ③ found
+  the 100–150 K disagreement already settled by Queyroux themselves; what is live is the
+  curve's *shape* (continuous vs discontinuous melting, still argued in 2025), so adopting
+  them is **choosing a side**, not repairing an error. Brief 22 removed one of the three
+  cost items. **Prakapenka+ 2021 is now cached and has not been read against our curve or
+  Queyroux's** — that comparison is the work this decision waits on, and it needs to be
+  dispatched before the decision is taken.
+- **⑥ Bake IAPWS-95/IF97 steam?** New, 2026-08-31, and it is **③'s precondition**: every
+  ice-axis bracket end dies at one wall (p ≲ 0.1 GPa × 500–1000 K, the junction of water1's
+  500 K ceiling, water2's 0.1 GPa floor and Mazevet's 1000 K floor — 1102 of 1202 refusals),
+  and the published filler covers exactly that window. Bringing in a new source is the
+  owner's call. **Its cost includes one thing steam does not buy**: the wall sits outside
+  Soubiran & Militzer's validated mixing band (2–70 GPa × 1000–6000 K) on both axes, so
+  filling it gives a water equation of state there and leaves the *mixture* ungrounded —
+  the same shape as C6's ladder, a table standing where the data is not.
+- **Adopt AQUA?** Not urgent, and the gain is now named twice over: the high-pressure
+  300–1000 K corner is not merely untabulated, it is where our own ladder stops being data
+  (C6). Cost is a 13.6 MB dependency and an interpolation seam inside our range.
 - **Merging `engine/prototype` into `main`**, and whether to open a PR.
 - **Which declared pair C11 should actually use** — the row gives the grid and does not choose.
 - **Carbon as a separate phase.** Uranus's and Neptune's mantles cross every published
