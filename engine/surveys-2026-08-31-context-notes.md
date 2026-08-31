@@ -180,7 +180,15 @@ the 14.6 GPa kink — its range starts far above.
   but two or three declarations, one of which has no literature.
 - **Paper request, first priority: Prakapenka+ 2021** (Nat. Phys. 17, 1233) — the only
   post-Queyroux measurement in the band, and the only way to know whether that curve was
-  confirmed, revised or superseded. ② should not be decided without it.
+  confirmed, revised or superseded. ② should not be decided without it. **Obtained the same
+  day** (`docs/phase3/_papers/2021NatPh..17.1233P.pdf`): the publisher paywall held against
+  the owner's institutional access, and an Unpaywall lookup found the author's final version
+  in the GFZ Potsdam institutional repository, deposited there by a co-author. A first pass
+  reports that published melting lines diverge by up to **700 K near 50 GPa**, that this
+  measurement finds a **slope increase above 29 GPa**, and that its own line sits at higher
+  temperatures than the previous ones. **Not yet read against our curve or Queyroux's** —
+  that comparison is the next piece of work on ②, and nothing above should be treated as
+  its result.
 
 ## What no leg has checked
 

@@ -168,5 +168,11 @@ Reports will arrive addressed to the directing seat.
 - **Which declared pair C11 should actually use** — the row gives the grid and does not choose.
 - **Carbon as a separate phase.** Uranus's and Neptune's mantles cross every published
   dissociation threshold; that was measured and not judged. Opening it is a scope decision.
-- **Paper requests still open**: the ternary EOS grid (author request only — Bethkenhagen's
-  group at Rostock), Millot 2019 Fig. 3 (would check the superionic end).
+- **Paper requests**: only one is still open — the ternary EOS grid (author request only,
+  Bethkenhagen's group at Rostock). The other two arrived 2026-08-31. **Millot+ 2019** is
+  cached (`2019Natur.569..251M.pdf`) and the figure the notes named was the wrong one — the
+  phase diagram is **Fig. 4**, not Fig. 3 — so the superionic constants are still
+  abstract-sourced until someone reads Fig. 4 against them. **Prakapenka+ 2021** is cached
+  (`2021NatPh..17.1233P.pdf`, the GFZ Potsdam repository's open-access author copy, found
+  through Unpaywall after the publisher paywall held) and it is the paper decision ②
+  should not be taken without.
