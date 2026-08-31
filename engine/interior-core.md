@@ -490,8 +490,23 @@ thermal term is not ours: they carry a volume-dependent Debye θ(V) with a Grün
 parameter varying with volume plus an anharmonic term, and **our Anderson–Goto form is the
 special case where γ₀/V is constant**. So this is an implementation extension with a
 measurable error, of the kind the ladder has taken before — not a missing table. The
-authors also flag their own bias: V₀ is *"3% larger than that of experiment … it may be
-necessary to shift V₀"*.
+authors also flag their own bias: V₀ is *"3% larger than that of experiment **once
+zero-point motion and thermal expansion have been accounted for** … it may be necessary to
+shift V₀ 'by hand'"*, a *"well-known error resulting from the use of GGA-DFT"*. **Only that
+3 % is theirs**: dividing their V₀ by a 298 K measurement gives −2.00 % in density and is
+not like-for-like — their V₀ is a static-lattice cold-curve parameter with neither
+zero-point motion nor thermal expansion in it, and both corrections shrink the experimental
+static volume, which is why their number is the larger one.
+
+*And the experimental branch is a table too, not just a range check.* Dewaele+ 2008's
+Table III prints a complete Mie–Grüneisen–Debye equation of state for diamond —
+V₀ = 5.6693 Å³/atom, K₀ = 444.5 GPa (fixed), K₀′ = 4.18(15), θ₀ = 1860 K fixed *"based on
+heat capacity measurements"*, γ₀ = 0.85 fixed *"based on ambient pressure thermal expansion
+data"*, with q = 3.6(1.5) the single adjusted parameter; Occelli's 298 K V₀ = 5.6724(19)
+sits beside it. It reaches only 80 GPa · 900 K, so it cannot carry our mantle — **but it is
+the same function family as Correa's**, which is what makes either of them consumable: one
+`Phase` extension takes both, and **the experimental set becomes a low-pressure check on
+the first-principles one**. That is a better position than either paper alone.
 
 *What now blocks it is the other two questions.* **How much** carbon separates has no
 published rule that includes water (Cheng+ 2023 give coexisting compositions for C/H, with
