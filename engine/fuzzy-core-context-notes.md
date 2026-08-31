@@ -104,3 +104,52 @@ No code, no anchor, no gate change — this item is measurement and documentatio
 Both refusals reproduce in ≤ 1 s (the full solve and the convergence-point integration in
 §2; runner preserved at the session scratchpad's `c13_bracket.py`, and the diagnostic is
 three lines against the frozen anchor).
+
+## §6 Revisited, same day — end B was 1 ULP away, and the bracket is measured
+
+§2's "the recipe cannot hold end B" is **superseded**: the audit's independent
+construction, `imf = 1 − (rock+hhe)/m`, differs from §2's `imf = 1 − gmf − rockf` by one
+ULP of `ice_mass_fraction`, and that ULP is a **ghost silicate stub** (mass fraction
+~1e-16) that occupies the centre, keeps the water column's base off the ladder's 1000 GPa
+cap, and lets the cold flank survive — 1 s refusal vs 112 s convergence. The stub is an
+**apparatus, not a repair**; that the corridor's boundary sits one floating-point digit
+from the answer's path is the cold-flank family's strongest exhibit, and the structural
+diagnosis (§2, `f3f3a3fd`) stands stronger, not weaker.
+
+**Triple reproduction.** The directing session pre-registered the reading
+(`PREREG-c13-stub.md`: λ stable across ε = the ε→0 limit; λ moving with ε = artifact) and
+ran ε = 1e-7 / 1e-9; the audit's point was the float residual itself (~5.6e-17). This
+runner (`c13_stub_repro.py`, one changed line) reproduced every digit:
+
+| run | λ | R (vs pub) | I/(M·R_pub²) | P_c | T_c | conv | grid 1500→6000 |
+|---|---|---|---|---|---|---|---|
+| Uranus ε=1e-9 | 0.209756 | 3.9183 (−1.57 %) | 0.2032 | 784 GPa | 4953 K | yes | 3.9e-4 |
+| Neptune ε=1e-9 | 0.219683 | 3.9090 (+1.15 %) | 0.2248 | 984 GPa | 4901 K | yes | 3.9e-4 |
+| Neptune ε=float(5.6e-17) | 0.219617 | 3.9101 (+1.18 %) | 0.2248 | 984 GPa | 4916 K | yes | 3.7e-4 |
+| Uranus ε=float | — residual is exactly 0.0 → the §2 refusal, 1 s | | | | | | |
+
+λ is stable across **nine orders of ε** (Neptune's two ends differ 3e-4 relative), so the
+pre-registered first branch fires: the numbers are the ε→0 limit, not an artifact. The
+Uranus float row is its own exhibit: the same expression that revives Neptune leaves
+Uranus dead, because its residual happens to round to exactly zero — one planet's
+solvability decided by the last bit of an input subtraction. Caveats retired: the ladder
+wall does **not** press Neptune's P_c (984 GPa converged; a probe at 1010 GPa integrates
+cleanly, so the cap is outside the search space once the stub holds the centre; mass
+closure 1.000000), and grid convergence is the anchors' own order.
+
+**The measured bracket, against the deficit** (targets N13 P_Voy, mean-radius):
+
+| | end A | end B | target | gap covered |
+|---|---|---|---|---|
+| Uranus | 0.1937 | 0.2032 | 0.2300 | 0.0095 / 0.0363 = **26 %** |
+| Neptune | 0.2135 | 0.2248 | 0.2410 | 0.0113 / 0.0275 = **41 %** |
+
+**This axis cannot close the deficit**: any grading between the compact core and the
+uniform-envelope-Z extreme is an interpolation inside this span. Precisely what it is not:
+end B moves only the **declared rock**; the literature's fuzzy core spreads ice as well,
+so this is the recipe's rock-axis ceiling, not the fuzzy core's — the remaining candidate
+owners are graded ice and the ice mantle's own density profile, unmeasured. The §3
+analytic ceiling (+31/+34 %) was an upper bound on λ-gain and did not lie; the solved end
+B lands well under it (+20.5 % / +22.1 % in λ) because the envelope sits at r/R < 1 and
+the structure rearranges. Bonus, recorded not attributed: end B shrinks the radius
+residual (+5.48 → −1.57 %, +8.94 → +1.15 %) and cools the centres to ~4900–4950 K.

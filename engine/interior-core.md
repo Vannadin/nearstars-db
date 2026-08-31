@@ -76,6 +76,22 @@ fenced its own suggestion with "read first · do not quote · direction only", s
 pair was read before it was used and never reached a verdict. An error occurred and the
 procedure caught it; "it passed the audit" is not a reason to skip the reading.
 
+**False provenance — the label is present and false.** Registered as sub-kind 7 by the
+audit, and worse than a missing label, because **a label stops verification**: a reader who sees "the
+value you gave me" checks nothing. (2026-08-31: a relay message attributed Neptune's J₂ as
+3538.0×10⁻⁶ "from your message" — the message had carried only (2/3)J₂ and the source name;
+the digits were filled from memory and labeled as received. NH22 Table 1 prints 3535.94.)
+This is **the only sub-kind whose check lives in someone else's hands**: a fabricated
+identifier is caught by holding the title against the original, but a false attribution is
+caught only when **the attributed party compares it with what they actually sent**. The
+prescription is therefore a pair — *sender*: quote only what sits inside quotation marks;
+never fill in a number the other party did not say and label it "yours"; a filled value is
+marked "filled by me". *Receiver*: a number someone attributes to you is compared against
+what you actually sent before it is accepted. And the verification is **exhaustive, not
+sampled**: in the case that named this, the same message's Uranus J₂ (3510.7) happened to
+be right, so a spot-check would have passed both. Scope, stated precisely: the error lived
+only in the relay message; the notes' printed values (3510.68 / 3535.94) were correct.
+
 **A retrial's outcomes are registered before it runs, and the register now has five kinds:**
 sits with A · sits with B · between · the source does not reach the deciding region (added
 after F1) · **the source disagrees with both candidates** (added after F4, where Queyroux sat
@@ -840,7 +856,7 @@ not the body's. Redmer+ 2011 comes **off the request list**: not because it yiel
 number, but because the shell-boundary sentence replaced the need for it. All three quotes
 verified against the cached PDFs in this session.
 
-### C13 — Does the fuzzy core account for the moment-of-inertia deficit? — **opened 2026-08-31; open — the bracket could not be held**
+### C13 — Does the fuzzy core account for the moment-of-inertia deficit? — **opened 2026-08-31; the rock axis measured same day — it cannot close the deficit; the ice axis stays open**
 
 **Not C5's repair.** C5(a) recorded a graded-Z envelope as *reached, no consumer* — true
 when written. What opened this row is a **measurement**: the ice giants' C/MR² sits
@@ -887,6 +903,39 @@ decisions share it. Helled & Stevenson 2017's closed form was never reached; its
 ice-envelope applicability check stays the registered fourth branch for whoever builds.
 Both refusals reproduce in ≤ 1 s. No code, no anchor, no gate change.
 `engine/fuzzy-core-context-notes.md`.
+
+*Revisited 2026-08-31, same day — the audit overturned "could not be held": end B was
+**1 ULP away**, and the bracket is now measured.* The audit's independent construction
+(`imf = 1 − (rock+hhe)/m`) leaves a floating-point residual of +5.6e-17 for Neptune — a
+ghost silicate stub that occupies the centre, keeps the water column off the 1000 GPa
+ladder cap, and lets the cold flank survive: **1 s refusal vs 112 s convergence on one
+ULP.** The directing session pre-registered the reading (λ stable across ε → the ε→0
+limit; λ moving with ε → artifact) and ran ε = 1e-7 / 1e-9; this session's runner
+reproduced every digit (triple complete), added the float-residual point, and retired the
+caveats: **λ is stable across nine orders of ε** (Neptune 0.219683 at 1e-9 vs 0.219617 at
+5.6e-17, a 3e-4 relative move; Uranus 0.209756 / 0.209749 at 1e-9 / 1e-7 — its
+float-residual point does not exist, because 1 − (0.79+2.0)/14.536 leaves a residual of
+exactly 0.0 and dies: **the same expression revives Neptune and leaves Uranus dead**,
+which is the cold-flank family's strongest exhibit); the ladder wall does **not** press
+Neptune's P_c 984 GPa (a probe at 1010 GPa integrates; mass closure 1.000000); grid
+1500 → 6000 moves the radius 3.7–3.9e-4, the anchors' own order. **The measured bracket:**
+
+| | I/(M·R_pub²), end A | end B | target (N13, P_Voy) | gap covered |
+|---|---|---|---|---|
+| Uranus | 0.1937 | 0.2032 (λ 0.2098, R −1.57 %) | 0.2300 | **26 %** |
+| Neptune | 0.2135 | 0.2248 (λ 0.2197, R +1.15 %) | 0.2410 | **41 %** |
+
+**The answer this axis gives: rearranging the declared rock mass — any grading between
+compact core and uniform envelope Z — buys at most 26 % / 41 % of the gap. This axis
+cannot close the deficit.** What this is *not*: a ceiling on the fuzzy core as the
+literature means it, which spreads **ice** as well as rock; the recipe's end B moves only
+the declared rock. The remaining owners on the table are that difference (graded ice) and
+the ice mantle's own density profile — the ice axis stays open, unmeasured. The stub is an
+apparatus, not a repair: that the corridor's boundary sits one floating-point digit from
+the answer's path strengthens the structural diagnosis (`f3f3a3fd`), and the general fix
+remains the shared prerequisite of both pending owner decisions. Bonus, measured on the
+way: end B also **shrinks the radius residual** (Uranus +5.48 % → −1.57 %, Neptune
++8.94 % → +1.15 %) and cools the centre (T_c 4953 / 4901 K) — recorded, not attributed.
 
 ## What closing all of these does not do
 

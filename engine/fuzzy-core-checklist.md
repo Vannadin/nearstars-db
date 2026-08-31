@@ -36,3 +36,18 @@ build (if the bracket reaches).
       stands)
 - [x] Report to nearstars-cb; judgment-changing numbers flagged for directing-session
       reproduction (both refusals reproduce in ≤ 1 s)
+
+Revisited same day — the audit found end B 1 ULP away (ghost silicate stub):
+
+- [x] Triple completed: this runner reproduces the directing session's ε=1e-9 digits and
+      the audit's float-residual point exactly (notes §6 table)
+- [x] Caveat ②: ladder wall does not press Neptune's P_c 984 (probe at 1010 GPa
+      integrates; mass closure 1.000000)
+- [x] Caveat ③: grid 1500→6000 drift 3.7–3.9e-4 (anchors' own order); ε ladder spans
+      nine orders, λ stable (first pre-registered branch)
+- [x] Row updated: the rock axis cannot close the deficit (26 % / 41 % of the gap); what
+      it is not (the fuzzy core's ice half stays open); Uranus's float row recorded (its
+      residual is exactly 0.0 — the same expression revives Neptune and leaves Uranus dead)
+- [x] Sub-kind 7 (false provenance) registered in the rules with the paired prescription,
+      the exhaustive-not-sampled ground (Uranus's J₂ was luck-correct), and the precise
+      scope (relay message only; the notes' printed values were right)
