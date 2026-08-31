@@ -441,6 +441,13 @@ rock fraction that would close it is not a number this recipe has a source for, 
 declared. Anchors keep both at 0 and are bit-identical. `engine/giant-residual-context-notes.md`
 has the runs and the provenance of every number.
 
+*Revisited 2026-08-31 (C13)* — (a)'s *"reached, no consumer"* was true when written and is
+**superseded on the consumer half**: the ice giants' measured C/MR² deficit (−15.8 % /
+−11.4 % after the radius is stripped, the gate's 2026-08-31 comparison) is a consumer. The
+blocker moved, it did not vanish — not "nothing would read a graded-Z envelope" but "the
+recipe cannot yet hold the arrangement it would grade toward": see C13, where the rock-free
+extreme refuses at stack build. (b) is untouched.
+
 ### C6 — Material ceilings
 
 Each material stops where its evidence stops, and each ceiling is a row that declines by
@@ -832,6 +839,54 @@ misreading of the profile's name** — "water-only" states the ice component's c
 not the body's. Redmer+ 2011 comes **off the request list**: not because it yielded the
 number, but because the shell-boundary sentence replaced the need for it. All three quotes
 verified against the cached PDFs in this session.
+
+### C13 — Does the fuzzy core account for the moment-of-inertia deficit? — **opened 2026-08-31; open — the bracket could not be held**
+
+**Not C5's repair.** C5(a) recorded a graded-Z envelope as *reached, no consumer* — true
+when written. What opened this row is a **measurement**: the ice giants' C/MR² sits
+−24.3 % / −25.3 % under Nettelmann+ 2013 (P_Voy, R_mean), and **−15.8 % / −11.4 % remains
+after the radius is stripped**. A fuzzy core is the candidate whose sign matches — and sign
+is not size (C5(b) taught that: the boundary layer had the plausible direction and widened
+the residual).
+
+**The target is a derived value, said plainly**: λ is J₂, J₄ and an assumed rotation period
+passed through an interior model — matching 0.230 is agreeing with what the gravity field
+permits, not matching nature. And N13's own models are three-layer with **rocks confined to
+the core**, so the number this row would chase was produced by a model that does not contain
+the thing this row would add; λ being gravity-constrained softens that, but any future
+"matched by adding what they did not have" needs its own justification, written here in
+advance.
+
+**The non-core terms, bounded first** (each ruled out as the owner of the remainder): the
+rotation term — our λ is a non-rotating sphere's — is order 1 % by the axial-vs-mean
+identity (2/3)J₂ = 0.00234 / 0.00236, with m_rot = ω²R_eq³/GM = 2.95 % / 2.61 % as the
+restructuring scale; the rotation-period spread is a **target-side** spread of −3.3 % /
++6.0 % (attribution measured against P_Voy: IAU baseline, normalization-matched, both
+papers' default). Together ≲ 7 % against 11.4–15.8 %: a remainder survives.
+
+**The bracket, and why it could not be held.** As briefed: end A = the anchor's compact
+central silicate; end B = the same rock mass (5.43 % / 6.07 % of the planet) spread
+uniformly through the envelope (`envelope_z` = 0.283 / 0.321, no silicate layer). **End B
+refuses at stack build, at any temperature**: with no silicate at the centre the water
+column reaches P_c (1220 / 1533 GPa) and the cold-phase pre-check demands the solid
+ladder's coverage, whose French & Redmer 2015 evidence span ends at **1000 GPa** — even
+though the answer's deep column is fluid (Mazevet) and never touches the ladder there.
+Branch 2's registered assumption ("nothing in the recipe caps the outer extreme") is
+**false, with the cap named**. Third member of one family in two days (C11's over-broad
+refusal, the Queyroux–Neptune route death): **the trial corridor's cold flank demands
+evidence the answer never uses.** The analytic ceiling, computed since the engine could not
+(all rock at the surface, structure held fixed — assumptions written): Δλ/λ ≤ f_rock/λ =
++31.2 % / +33.7 %, above the required +18.7 % / +12.9 % — so the fuzzy core **cannot be
+excluded**, and is not confirmed: the solvable span was never measured.
+
+**Open, with the settling path named**: the cold-flank representability work (route the
+over-depth ladder refusal so the temperature loop stays on the fluid side, or teach the
+pre-check that a column can be fluid-only where the answer is), after which end B is two
+solves. It is the same prerequisite the Queyroux adoption would need — the two owner
+decisions share it. Helled & Stevenson 2017's closed form was never reached; its
+ice-envelope applicability check stays the registered fourth branch for whoever builds.
+Both refusals reproduce in ≤ 1 s. No code, no anchor, no gate change.
+`engine/fuzzy-core-context-notes.md`.
 
 ## What closing all of these does not do
 
