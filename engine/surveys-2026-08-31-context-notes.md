@@ -126,8 +126,13 @@ in this band is Prakapenka+ 2021, paywalled.
 | 40.0 | 1581.3 | 1109.3 | 1388.9 | **−192** |
 | 52.0 | 1941.7 | 1333.6 | 1505.1 | **−437** |
 
-Below the seam our IAPWS piece is the coldest of the four; above it our Reinhardt piece is the
-**hottest**. The two errors point opposite ways, so "our curve is cold" was never one statement.
+Below the seam our IAPWS piece is the coldest of the four. Above it our Reinhardt piece was the
+hottest **of those four** — and that half of the sentence did not survive the day: with
+Prakapenka+ 2021 measured onto the same grid (Brief 24, 2026-08-31), **we are nowhere the
+hottest above 30 GPa** (ours 1262 / 1581 / 1942 K against Prakapenka's 1605 / 2210 / 2739 K at
+30.7 / 40 / 52 GPa). What stands is the shape of the claim, not its superlative: **the ordering
+is band-dependent, so "our curve is cold" was never one statement.** The sentence is corrected
+here rather than rewritten silently, because a fifth voice would move it again.
 (The 7 K meeting at 30.7 GPa is a coincidence of two unrelated curves, labelled as such by the
 surveyor before anyone asked — and by the fit's own convention: interpolating Queyroux's
 Table S1 points there gives 38 K instead.)
