@@ -113,7 +113,10 @@ authors.
 The discriminating test was the **audit session's proposal**, fixed into Brief 20 by the
 **directing session**; its (나) prediction carried the unspoken assumption that the
 water-only profile's material is pure water — the H/He of a three-layer model's inner
-envelope forgotten. The responsibility is joint, and the rule it produced (a test names the
+envelope forgotten. (*Final name, fixed 2026-08-31 after Redmer+ 2011 was read: **a
+misreading of the profile's name** — "water-only" states how the ice component is
+represented, not what the body is made of. See the Revisited section below.*) The
+responsibility is joint, and the rule it produced (a test names the
 assumption under each prediction, and "all predictions miss" is a registered ending) is in
 the core list.
 
@@ -128,3 +131,33 @@ owner's request list for exactly that.
 
 No code, no anchor, no test (a check whose meaning is unsettled does not enter the gate).
 C4 untouched; the 2017 citation's base moved from the ar5iv text to the typeset PDF.
+
+## Revisited 2026-08-31 — Redmer+ 2011 arrived, and one sentence replaced the number
+
+The owner obtained the paper (cached as `docs/phase3/_papers/2011Icar..211..798R.pdf`;
+title checked: *The phase diagram of water and the magnetic fields of Uranus and Neptune*,
+Redmer, Mattsson, Nettelmann & French, Icarus 211, 798). Settle path (i) above **does not
+exist in it**: there is no ρ(R) table — Figures 1–3 only, no supplement; the structure
+models are imported (Fortney & Nettelmann 2010). (나) settled anyway, from three sentences,
+each verified against the cached PDFs this session:
+
+1. Bethkenhagen+ 2017 Figure 3 caption names the model: *"the temperature profiles of the
+   TBL (Nettelmann et al. 2016), **water-only (Redmer et al. 2011)**, and icy (see
+   Section 5) Uranus models"* — the attribution is explicit.
+2. Bethkenhagen+ 2017 §2(i) states what the name means: the *"adiabatic Uranus model of
+   Redmer et al. (2011), where **ices are represented solely by a water EOS**"* —
+   "water-only" is the ice component's representation, not the planet's composition. The
+   model is three-layer with an H/He-rich outer envelope.
+3. Redmer+ 2011 prints the shell boundaries: a fluid shell from about 0.42–0.56 to 0.7–0.8
+   of the planet radius, *"(here: **the ionic water shell extending from 0.6 to 0.8 R_p**)"*.
+
+Table 1's shallowest row, 0.839 R_U, sits **above the water shell — in the H/He-bearing
+outer envelope**. Its ρ = 1.00 g cm⁻³ is the profile's density there and could not be pure
+water's; our Mazevet water running +29 % against it is thereby explained, and the monotonic
+fall of the residual with depth (the *Observation* above) matches the envelope's H/He share
+compressing away. The verdict does not move: no ternary anchor, C4's composition tier keeps
+water + ammonia 2.9–3.5 % — that Table 1 gives no mixture density is now **confirmed**
+rather than assumed. What moves is the closure's quality ("could not confirm" → "confirmed —
+reading (나)") and the failed test's wrong assumption, which gets its final name above.
+Redmer+ 2011 comes off the request list: not because it yielded a number, but because the
+shell-boundary sentence made the number unnecessary.

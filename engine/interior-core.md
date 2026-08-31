@@ -598,6 +598,30 @@ statement**: Hilairet's antigorite ρ₀ still stands and still lands on Vance's
 Neumann adds is that a body *made* of it would not keep its pores. The two live on different
 layers; a later session must not read this as a density refutation.
 
+*Revisited 2026-08-31* — **a time axis was considered and rejected** (owner's decision; the
+planned C13 was not opened). Not because the recipe lacks an axis, but because **the axis is
+a different one**. The Neumann & Kruse relation does not take an age in Gyr. What it takes is
+**t₀ — the accretion time after CAI formation, in Ma** (their §2.3), and the outcome turns
+on that value at the megayear level: for the wet olivine rheology successful models live in
+t₀ ≈ 1.3–1.9 Ma (§3.3), and for the antigorite rheology **no differentiation occurs at all
+for t₀ ≥ 5.5 Ma** (§3.4) — because the short-lived isotopes (²⁶Al, ⁵³Mn, ⁶⁰Fe) release their
+heat "within the first few millions of years after CAIs" (§2.3; all read from the cached
+text this session). The structure is decided within ~5 Ma; the remaining 4.5 Gyr is
+bookkeeping. **Feeding `body_age` (Gyr) into this node would give it the number it is least
+sensitive to while the number it is most sensitive to stays undefined.** The six consumers
+in sight (Uranus, Neptune, Callisto, Titan, Europa, Enceladus) are all solar-system anchors
+whose ages are CAI-anchored directly, so inheriting an age from a star does not even arise
+for them. For invented bodies neither t₀ nor the initial ²⁶Al abundance derives from the
+star's age (Lichtenberg+ 2019 — reported by the directing session as 0–10× solar ²⁶Al₀
+across systems, not re-read here): both are **declarations**, not derived values, and
+whether to introduce them is a Phase 4 owner decision. Since ²⁶Al matters only for bodies
+small enough to be shaped by it, the node never applies to the ice giants. **Do not draw a
+`body_age → porosity` edge in the chain**: the edge is real but the payload would be wrong —
+it must carry `t_form` (Ma after CAI), not `t_body` (Gyr); a Gyr endpoint is at most an
+`influences`. Two papers considered for the request list are dropped with the time axis —
+**Kruijer+ 2017** (Jupiter's Hf-W age) and **Castillo-Rogez+ 2009** (Iapetus): both served
+only the Gyr-age inheritance question, which no longer exists.
+
 **Revisited 2026-08-30 (F3), from the full text.** The abstract-derived sentence holds and
 gets its weights: serpentinisation heat is the second source after radioactivity (an order of
 magnitude below it over the run, twice it in the first 200–235 Myr); compaction's
@@ -786,6 +810,28 @@ the inner envelope would do; Redmer+ 2011's ρ(R) would most likely settle it th
 **Redmer+ 2011** (Icarus 211, 798, the water-only Uranus model) goes on the owner's
 paper-request list; if it prints 1.00 g cm⁻³ at 0.839 R_U, (나) is settled and C12 reopens as
 *revisited*. No code, no anchor, no gate change. `engine/ternary-anchor-context-notes.md`.
+
+*Revisited 2026-08-31* — the owner obtained **Redmer+ 2011**
+([2011Icar..211..798R](https://ui.adsabs.harvard.edu/abs/2011Icar..211..798R), cached as
+`docs/phase3/_papers/2011Icar..211..798R.pdf`), and the expected settle path does not exist
+in it: **no ρ(R) table** (Figures 1–3 only, no supplement; the structure models are taken
+from Fortney & Nettelmann 2010). **(나) is settled anyway, by a shorter path** — one
+sentence of shell geometry instead of a number. Bethkenhagen+ 2017's Figure 3 caption names
+the model (*"water-only (Redmer et al. 2011)"*), their §2(i) states what the name means
+(*"ices are represented solely by a water EOS"* — the ice component's representation, not
+the planet's composition; the model is three-layer with an H/He-rich outer envelope), and
+Redmer+ 2011 prints the shell boundaries: *"the ionic water shell extending from 0.6 to
+0.8 R_p"*. Table 1's shallowest row sits at **0.839 R_U — above the water shell, inside the
+H/He-bearing outer envelope**, where ρ = 1.00 g cm⁻³ is the profile's density and could not
+be pure water's; our water being +29 % against it is thereby explained. The verdict does not
+move (closed, conservative branch; no ternary anchor; C4's tier keeps water + ammonia — that
+Table 1 gives no mixture density is now confirmed, not assumed). What moves is the closure's
+quality, from *"could not confirm — the anchor cannot be read under either reading"* to
+*"confirmed — reading (나)"*, and the failed test's wrong assumption gets its final name: **a
+misreading of the profile's name** — "water-only" states the ice component's composition,
+not the body's. Redmer+ 2011 comes **off the request list**: not because it yielded the
+number, but because the shell-boundary sentence replaced the need for it. All three quotes
+verified against the cached PDFs in this session.
 
 ## What closing all of these does not do
 
