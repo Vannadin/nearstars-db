@@ -463,6 +463,52 @@ methane in a mixture) is the owner's decision. **The three-tier sign statement d
 move**: methane's absence is now more precisely stated, and the net still needs tables that
 would have to carry a dissociating component — which none published does.
 
+**Opened by the owner 2026-08-31, and surveyed (④).** Four questions were put to the
+literature; the answers move the blocker rather than removing it.
+
+*Separation happens, and it has a destination.* Kadobayashi+ 2021 on the C–O–H system:
+diamond formation *"can occur throughout the icy mantles of Uranus and Neptune (even in
+their upper regions)"*, and the diamond *"settles deep into the icy mantle and accumulates
+at the boundary between the icy mantle and rocky core."* The overlap is one-sided, and this
+must be carried with the claim: **in temperature our whole mantle is above threshold, but
+the experiments reach 45 GPa (C–O–H) and 80 GPa (C–H) against our 34.5–1016 GPa** — they
+cover the mantle's top few per cent, and below that the authors are extrapolating.
+
+*An equation of state exists and it reaches us — the survey's first answer was wrong and
+was retracted.* Correa+ 2008's multiphase carbon EOS is neither a static-DAC table (≤900 K)
+nor a warm-dense-matter one (≥10⁴ K), the two categories the survey had generalised into a
+gap. §III: the solid-phase treatment holds *"in the range of our interest (below a pressure
+of ~2500 GPa)"*, against our mantle base of 1016 GPa; BC8 becomes *"stable above a pressure
+of roughly 1100"* GPa with the cold curves crossing at **1075 GPa**, so Neptune's base sits
+inside the diamond field by ~60 GPa; and Correa+ 2006 puts the diamond–BC8–liquid triple
+point at **7445 K · 850 GPa**, above our hottest 6066 K, so separated carbon is solid here.
+Table I prints the coefficients.
+
+*The cost is a form mismatch, not an absence.* The cold curve is a Vinet fit, which
+`eos.Phase` already takes (V₀ = 5.785 Å³/atom → **ρ₀ = 3.4477 g/cc**, recomputed). The
+thermal term is not ours: they carry a volume-dependent Debye θ(V) with a Grüneisen
+parameter varying with volume plus an anharmonic term, and **our Anderson–Goto form is the
+special case where γ₀/V is constant**. So this is an implementation extension with a
+measurable error, of the kind the ladder has taken before — not a missing table. The
+authors also flag their own bias: V₀ is *"3% larger than that of experiment … it may be
+necessary to shift V₀"*.
+
+*What now blocks it is the other two questions.* **How much** carbon separates has no
+published rule that includes water (Cheng+ 2023 give coexisting compositions for C/H, with
+no water, and the quantity still needs a declared bulk carbon fraction — `composition_intent`,
+currently a gap). And **the target does not have this component**: the three-layer practice,
+Nettelmann+ 2013 included, represents HCNO molecules by a water equation of state. That is
+C13's registered trap — adding what the target lacks and then matching its number means no
+longer computing the same thing. Both are owner questions, not literature ones.
+
+*A timescale, not an uncertainty.* Frost+ 2024 measure diamond forming at 2500 K over
+19–27 GPa and find it *"took at least 30 µs to form"*, and name why the field splits:
+*"the disagreement between static and shock compression studies is the timescale of the
+physical processes, which can differ by more than 10 orders of magnitude."* The static and
+shock thresholds are one process seen at timescales ten orders apart — so the spread
+between them is **a rate, and must not be carried as an error bar**. On planetary
+timescales the static side is the relevant one.
+
 ### C5 — Where the giants' leftovers belong — **closed 2026-08-30**
 
 Two residuals; both now have an owner, and one has two declarations it can be read against.
