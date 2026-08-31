@@ -98,6 +98,37 @@ be measured through the phantom-stub device again rather than properly.
 sub-Neptunes, which the recipe barely answers today), and a third melting-curve candidate.
 Reports will arrive addressed to the directing seat.
 
+## In flight when the work session stalled — 2026-08-31, ~20:00 KST
+
+The work session stopped mid-item (cause unknown, the owner's read is throttling) and will be
+restarted later. **Its work is on disk, uncommitted, and nothing is lost.** Do not commit it
+for it — only that session can say the gate passed. State, measured rather than assumed:
+
+```
+ M engine/ice_giant_anchor.json   fingerprint 425c011016a248cf -> be375eaec98efb01, seconds only
+ M engine/interior.py             +58 lines
+ M engine/test_interior.py        +18 lines
+ ?? engine/steam_if97.py          new
+ ?? engine/steam-checklist.md     new
+ ?? engine/steam-context-notes.md new
+```
+
+**The anchor diff is fingerprint and seconds and nothing else — every solved value is
+bit-identical** (checked by the directing seat, not relayed). So the refresh is the expected
+consequence of adding a branch, not a moved answer. But it is a **refreshed anchor whose
+cause is not committed**: a gate run right now compares against it, so the next session
+either lands Brief 25 or reverts the anchor before trusting a green gate.
+
+**Brief 25 = bake IAPWS-95/IF97 steam**, the precondition for ③: every ice-axis bracket end
+dies at one wall (p ≲ 0.1 GPa × 500–1000 K, 1102 of 1202 refusals) and the published filler
+covers exactly that window. Its acceptance is to re-run the four ice-axis ends and see
+whether `conv=True` appears; if not, **the next wall's coordinates are the product**. Carry
+the label that steam does not buy the mixture — that window is outside Soubiran & Militzer's
+validated band on both axes.
+
+**Whoever picks this up: read `engine/steam-checklist.md` first** — it is that session's own
+pre-registration, written before the code.
+
 ## Standing rules — each exists because something got through
 
 - **Anchors bit-identical.** If a solved number moves, it is reported with its cause, never
