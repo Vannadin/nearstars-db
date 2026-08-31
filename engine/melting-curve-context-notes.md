@@ -124,6 +124,17 @@ paper's Fig. 3 phase diagram (the measured melting line of superionic ice XVIII 
 unverified; the constants `SUPERIONIC_MIN_T`/`SUPERIONIC_MIN_P` that already sit in
 `eos.py` remain abstract-sourced and say so.
 
+*2026-08-31 — the paper arrived (owner fetched it; cached as
+`docs/phase3/_papers/2019Natur.569..251M.pdf`), and **the figure named above is the wrong
+one**. Millot+ 2019's **Fig. 3** is "X-ray diffraction data and results"; the phase diagram
+is **Fig. 4**, captioned "Phase diagram of H2O" — the b.c.c. and ice XVIII measurement
+points, the conductivity constraints between 100 and 190 GPa along the ice VII Hugoniot,
+and the predicted solid / f.c.c.-superionic boundary as a dashed line. The label above was
+written from the abstract-era description and never checked at its place in the paper; it
+is left in the sentence above with this correction beneath it rather than silently
+rewritten. **The constants are still abstract-sourced** — nobody has yet read Fig. 4
+against them; that reading is the work, and it is now unblocked.*
+
 ## What the first implementation hit, in order
 
 **The ladder above 1 TPa on a cold trial.** With the ladder as the stack material, an ice
