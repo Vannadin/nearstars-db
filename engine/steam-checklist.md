@@ -98,3 +98,31 @@ kill, speed up the inversion (Newton), rerun the four solves **in parallel**.
 safeguarded fallback bisects that step (correctness unaffected); if equivalence still
 fails → revert, back to bisection, record. ③ speedup insufficient (<4×) → keep whichever
 is correct, parallelism alone carries the chain.
+
+## Temperature-loop extension leak (found by the acceptance chain) — REGISTERED BEFORE EDIT
+
+The four parallel end-B solves ran 6.6+ h wall each without printing; a `_shoot_pressure`
+trace on U-ice measured the loop: every converged attempt lands at t_surface ≈ 355–363 K
+regardless of t_center (target t_pot = 76 K — unreachable from below; too-cold refusals
+at 130–152 GPa pin the reachable t_center ≥ ~3500 K), and the loop cycles down-ratio /
+climb-×1.6 forever. Bound check: 51 converged attempts observed > the intended cap of
+1 + T_PASSES + one extension = 29, with zero wall exceptions.
+
+**Cause (code vs its own comment):** `bracketed = True` is re-armed every non-contracting
+iteration by the devs check, so the "한 벌 더, **한 번만**" extension
+(`passes = T_PASSES`) re-fires every time passes reaches 0 — the `bracketed = "extended"`
+sentinel is overwritten. Termination then requires secant/stuck/done, none reachable when
+every attempt lands hot-side (lo stays None). Pre-region-3 this was masked: trials died at
+the steam wedge before the cycle could establish itself.
+
+**Fix registered:** enforce the stated once-only contract with a dedicated flag
+(`extended`), nothing else — no tuning, no new branches.
+
+**Invariants:** anchors bit-identical in values (fingerprint moves — shoot is a
+PATH_FUNCTION — so --refresh in the same commit, diff must be fingerprint/date/seconds
+only); the four end-B solves must terminate; gate FAIL 0.
+
+**Branches:** ① anchors identical + solves terminate → adopt; the solves' own verdict
+(conv / wall coordinates) is then Brief 25's registered acceptance answer. ② anchors move
+→ revert, escalate to cb (the fix touched answers it must not). ③ solves still don't
+terminate → second cause exists; trace again, register separately.

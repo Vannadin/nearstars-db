@@ -1312,6 +1312,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
     devs: list[float] = []
     bracketed = False
+    extended = False             # 연장은 한 번만 — devs 검사가 bracketed 를 매 통과 재무장하므로
+                                 # bracketed 값으로는 못 지킨다 (2026-09-01, 무한 사이클의 원인)
     passes = T_PASSES
     # 가장 잘 붙은 시험값. 1 bar 온도는 중심 온도에 대해 격자 위상의 잔여 요철(해왕성에서 ±0.02 K,
     # 온도를 걸음마다 한 번의 ∇_ad 로 나르는 1차 오차)을 갖고 있어서, 어긋남이 허용오차 안으로
@@ -1385,9 +1387,10 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         remember(st, converged, t_c)
         if stuck:
             break            # 괄호가 표의 온도 벽에서 같은 온도로 되돌렸다. 더 갈 데가 없다
-        if bracketed is True and passes == 0 and not _surface_temperature_met(st, t_pot):
+        if (not extended and bracketed and passes == 0
+                and not _surface_temperature_met(st, t_pot)):
             passes = T_PASSES    # 좁히는 갈래에는 한 벌 더, **한 번만** 준다
-            bracketed = "extended"
+            extended = True
         if done:
             break
     if (best is not None and not _surface_temperature_met(st, t_pot)
