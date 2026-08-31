@@ -438,12 +438,26 @@ replaced by two that hold with the table in hand:
 |---|---|---|
 | ice mantle span | 34.5–820 GPa, 2663–5948 K | 39.2–1016 GPa, 2553–6066 K |
 | C–C bonds (> 1100 K and > 10 GPa, Hirai+ via Sherman) | the whole mantle, from its top | the whole mantle, from its top |
-| diamond (> 3000 K) | from 80 GPa (3037 K) to the base — 71 of 78 samples | from 114 GPa (3049 K) — 67 of 76 |
+| diamond, **C–H system** (> 3000 K) | from 80 GPa (3037 K) to the base — 71 of 78 samples | from 114 GPa (3049 K) — 67 of 76 |
+| diamond, **C–O–H system** (> 1600 K) — *the mantle's own chemistry* | **the whole mantle, from its top** (34.5 GPa, 2663 K) — 78 of 78 | **the whole mantle, from its top** (39.2 GPa, 2553 K) — 76 of 76 |
 | polymeric 4000 K / 5000 K | 262 GPa / 525 GPa | 334 GPa / 626 GPa |
 
+**The threshold this row first used was the wrong chemical system, and it understated the
+crossing** (survey ④, 2026-08-31). 3000 K is C–H, from Hirai+ via Sherman; our mantles are
+C–O–H — methane *and water* — and Kadobayashi+ 2021 measure that system directly:
+*"…to ultimately form diamond proceeds at **milder temperatures (~1600 K) and pressures
+(13–45 GPa) in the C–O–H system than in the C–H system due to the influence of water**"*,
+with *"below ~1600 K, diamond formation did not occur, even under prolonged [heating]"*.
+Re-run at 1600 K (`tools/methane_thresholds.py`, one constant changed, reproduced by the
+directing seat), the count is **78/78 and 76/76 — crossed at the mantle's top**, the
+coldest point of either mantle (Neptune's 2553 K) sitting 953 K above the threshold. The
+C–H row is kept above it rather than deleted, because it is what the earlier text was
+measured against.
+
 So in this recipe's own profiles the entire ice mantle sits above the carbon–carbon bond
-threshold, nine tenths of its pressure span above the diamond threshold, and its deeper
-half inside or beyond the polymeric regime. That is a measurement, recorded here as grounds
+threshold, **all of it above the diamond threshold of its own chemistry** (nine tenths, by
+the C–H threshold this row first used), and its deeper half inside or beyond the polymeric
+regime. That is a measurement, recorded here as grounds
 either way; whether carbon separation becomes an item (carbon as its own phase rather than
 methane in a mixture) is the owner's decision. **The three-tier sign statement does not
 move**: methane's absence is now more precisely stated, and the net still needs tables that
