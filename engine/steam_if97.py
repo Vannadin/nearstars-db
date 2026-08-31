@@ -208,24 +208,34 @@ def _r3_pressure(rho: float, t_k: float) -> float:
 
 
 def _r3_density(p_pa: float, t_k: float) -> float:
-    """ρ(p, T) 역산 — 이분법. T < T_c 는 포화선(식 30)으로 액체·증기 가지를 가른다.
+    """ρ(p, T) 역산 — 괄호 안전장치를 단 뉴턴법. T < T_c 는 포화선(식 30)으로 가지를 가른다.
 
-    region 3 안의 안정 단상에서는 (∂p/∂ρ)_T > 0 이라 가지 안에서 근이 하나다. 브리프 25 의
-    삼각형(623.15–863.15 K × B23–100 MPa)이 소비처이고, 임계 근방(650 K 에서 Δρ 300 에
-    Δp 3.3 MPa — Table 33 의 두 점)이 제일 평평해 이분법을 80 회 돌린다."""
+    region 3 안의 안정 단상에서는 (∂p/∂ρ)_T > 0 이라 가지 안에서 근이 하나다. p 와
+    ∂p/∂ρ = R T (2δφ_δ + δ²φ_δδ) 가 같은 Helmholtz 도함수 한 평가에서 닫히므로 뉴턴
+    걸음을 만들고, 걸음이 괄호를 벗어나거나 기울기가 비물리(≤ 0)면 그 걸음만 이분한다.
+    80 회 고정 이분법(호출당 1.15 ms 실측 — region 1 의 82배, 온도 루프 전체를 시간
+    벽으로 만든 원인)을 대체. 근은 동일하고 판정은 verify() 와 A/B 격자 대조."""
     if t_k < T_CRIT_K and p_pa < p_sat_pa(t_k):
         lo, hi = 0.1, _RHO_CRIT          # 증기 가지
     elif t_k < T_CRIT_K:
         lo, hi = _RHO_CRIT, 900.0        # 액체 가지
     else:
         lo, hi = 0.1, 900.0
+    rho = 0.5 * (lo + hi)
     for _ in range(80):
-        mid = 0.5 * (lo + hi)
-        if _r3_pressure(mid, t_k) < p_pa:
-            lo = mid
+        d, _tau, fd, fdd, *_ = _r3_phi_derivs(rho, t_k)
+        f = rho * R * t_k * d * fd - p_pa
+        if f < 0.0:
+            lo = rho
         else:
-            hi = mid
-    return 0.5 * (lo + hi)
+            hi = rho
+        dp_drho = R * t_k * (2.0 * d * fd + d * d * fdd)
+        step = rho - f / dp_drho if dp_drho > 0.0 else 0.5 * (lo + hi)
+        rho_new = step if lo < step < hi else 0.5 * (lo + hi)
+        if abs(rho_new - rho) < 1e-12 * rho:
+            return rho_new
+        rho = rho_new
+    return rho
 
 
 def _r3_cp(rho: float, t_k: float) -> float:

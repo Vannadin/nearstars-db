@@ -76,3 +76,23 @@ generator is needed); English commits, one logical unit each.
       anchor diff is fingerprint/date/seconds only. Full live gate deferred with the hold
 - [ ] Full gate — DEFERRED (compute hold), to run with the acceptance solves; the cheap
       checks (syntax, steam verify 3.2e-9, --fast) ran and pass
+
+## Region-3 inversion speedup (owner-directed, 2026-09-01 pre-dawn) — REGISTERED BEFORE EDIT
+
+The acceptance chain ran hours without printing solve 1 of 4: the "~15 min" estimate was
+measured on runs that DIED at the region-3 wall in 1 s; with the wall filled, trials now
+complete full integrations, and each region-3 density call costs a measured **1.15 ms**
+(80 fixed bisection iterations) = 82× region 1, ~400× the water1 table. Owner directive:
+kill, speed up the inversion (Newton), rerun the four solves **in parallel**.
+
+**Registered invariants (all must hold, else revert):**
+- root equivalence: new `_r3_density` vs the old 80-iteration bisection on a grid across
+  the region-3 triangle (and both T<T_c branches) — worst relative diff ≤ 1e-9;
+- `verify()` worst ≤ 1e-8 (same standard tables; the transcription gate re-passes);
+- anchors `--fast` bit-identical (change is outside the fingerprinted corridor);
+- speedup and new per-call cost measured and recorded.
+
+**Branches:** ① all pass → adopt, relaunch chain. ② Newton unstable anywhere → bracket-
+safeguarded fallback bisects that step (correctness unaffected); if equivalence still
+fails → revert, back to bisection, record. ③ speedup insufficient (<4×) → keep whichever
+is correct, parallelism alone carries the chain.
