@@ -126,6 +126,24 @@ not a reading chosen but an assumption exposed. This is a rule about the tool, n
 evidence: the outcome register classifies what the evidence did; this classifies what the
 test could not do.
 
+**A trial-path refusal steers the bracket; it does not kill the solve.** The refusal
+machinery exists to keep the **answer** honest — every material stops where its evidence
+stops (C6) — but the shoot and temperature loops route their *trials* through the same
+refusals, so a solve could die in a state no converged answer would occupy. Repeated
+sightings in two days (C11's over-broad refusal · the Queyroux–Neptune route death ·
+C13 end B's stack-build death, sharpened by the 1 ULP that separated a 1 s refusal from a
+112 s convergence) made it structure, and Brief 22 (2026-08-31) repaired the corridor's
+three static spots: the centre seed dispatches fluid/solid like a step; the pressure
+bracket's ceiling respects the dispatch (a hot centre is the fluid's, whose fit states no
+pressure cap — a **cold** watery centre still stops at the ladder's 1 TPa by name); and
+the fluid↔solid **availability seam** at exactly that cap — which the in-step boundary
+finder can land a trial on — throws too_cold with the local temperature instead of a
+temperatureless cap refusal the shoot would mis-read as geometry. Acceptance was
+pre-registered and measured: end B solves with no stub under either `imf` expression, and
+the Queyroux-window Neptune converges to the anchor's own solution. The distinction to
+keep: **evidence caps are real for answers** (the cold refusal survives, tested), **and
+representational for trials**. `engine/cold-flank-context-notes.md`.
+
 **A table is regenerated on the code that ships, in the commit that ships it — and when the
 regeneration differs, which side is right is settled by a separate trace.** The sub-kind's
 name ("the table ran ahead of the code inside one commit") invites doubting the table first;
@@ -487,7 +505,7 @@ name. They are listed together because they are one kind of work.
 
 | material | ceiling | what is above it |
 |---|---|---|
-| `h2o` | 1 TPa · 1800 K | ice X above the knot domain; superionic above the temperature |
+| `h2o` | 1 TPa · 1800 K **(printed; the data ceiling is ~355 GPa — see below)** | ice X above the knot domain; superionic above the temperature |
 | `silicate` | 13.5 TPa | Thomas–Fermi–Dirac (electron degeneracy) |
 | `fe_prem` · `fe_eps` | 12 · 20.9 TPa | the same |
 | `h_he` | 10⁴ GPa in the giant branch | the table's own edge |
@@ -495,6 +513,31 @@ name. They are listed together because they are one kind of work.
 Needs: nothing, unless a body the roster wants is refused by one of them. **Each is a
 correctly stated limit, not a defect** — the work here is to keep them honest, not to remove
 them. Listed so that a future refusal can be traced to its row rather than re-diagnosed.
+
+**Except one, found 2026-08-31 — `h2o`'s 1 TPa is the spline's knot box, not the source's
+data ceiling.** French & Redmer 2015 §III, read in the cached PDF: *"A total number of 92 MD
+simulations of these ices were [performed] … The densities were varied between 1.6 and
+4.25 g/cm³, and the temperatures were chosen from 295 up to 2000 K… Densities of 4.5 g/cm³
+and higher lead to a distortion of the bcc oxygen lattice."* On our own 300 K isotherm
+(point evaluations, not a sweep) ρ = 4.201 g/cc at 340 GPa and 4.267 at 360 GPa, so their
+highest simulated density sits at **≈355 GPa**; at the printed 1 TPa ceiling our ladder
+returns **5.755 g/cc** — 1.35× their highest simulation and well past the 4.5 g/cc where
+they say the lattice distorts. **The ladder's upper two thirds in pressure is extrapolation**,
+resting on the paper's own §I assurance that the potential "is well behaved in
+extrapolation" — a statement about the function's smoothness, not about those values being
+verified. This is the fifth failure kind (printed validity range ≠ executed range, the rule
+`water2` produced) landing on **our** side rather than a third party's, and the rule's
+prescription — record the effective ceiling with the table — is what this paragraph is.
+
+**Where it bites, stated precisely, because the obvious reading is wrong.** It is *not* true
+that the anchors stay under 355 GPa: the ice giants' mantles span 34.5–820 GPa (Uranus) and
+39.2–1016 GPa (Neptune). They are unaffected for a different reason — their mantles run
+2553–6066 K, above `ICE_VII_X_T_MAX` = 1800 K (`eos.py:1840`), so the ladder branch never
+fires there and Mazevet carries the column. **The extrapolation therefore bites only on a
+cold, dense water column: T < 1800 K above ~355 GPa** — the same cold flank this list has
+been tracking all day, and a second reason (beyond "no table at all") that AQUA's high-
+pressure 300–1000 K corner is the gain worth having. No answer moves today; what moves is
+what this row is allowed to claim.
 
 Depends on: a body that actually hits one.
 
@@ -952,6 +995,17 @@ the answer's path strengthens the structural diagnosis (`f3f3a3fd`), and the gen
 remains the shared prerequisite of both pending owner decisions. Bonus, measured on the
 way: end B also **shrinks the radius residual** (Uranus +5.48 % → −1.57 %, Neptune
 +8.94 % → +1.15 %) and cools the centre (T_c 4953 / 4901 K) — recorded, not attributed.
+
+*Revisited 2026-08-31, later the same day (Brief 22)* — **the stub is retired: end B
+solves with no stub at all.** The cold-flank corridor repair (the rules paragraph;
+`engine/cold-flank-context-notes.md`) removed the three static spots, and the
+pre-registered acceptance passed: both planets solve under **both** `imf` expressions —
+Uranus (residual exactly 0.0, the configuration that died) λ 0.209729 · renorm 0.2032;
+Neptune (±5.6e-17) λ 0.219577 / 0.219617 · renorm 0.2248 both ways. 1 ULP no longer gates
+solvability, only nudging λ by 1.8e-4 relative, inside the ε-ladder envelope. **The
+measured bracket stands stub-free: 26 % / 41 % were not stub-dependent** (branch 4 did
+not fire). The ice axis (③) is now measurable without any phantom device — which was the
+reason ① was ordered before it.
 
 ## What closing all of these does not do
 
