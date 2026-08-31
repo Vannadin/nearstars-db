@@ -16,7 +16,7 @@
 회귀선이다 — 얼음 III·V·VI 상수와 같은 규율로, 값이 마지막 비트까지 같아야 통과하고,
 물리를 바꾸는 작업은 `--refresh` 로 다시 굳혀 그 사실을 diff 에 남긴다.
 
-**게이트가 보는 것 셋.**
+**게이트가 보는 것 넷.**
 
 1. **전체 풀이가 굳힌 값과 비트까지 같다** — 반지름·C/MR²·중심온도·중심압. 상태방정식,
    페르미 적분, 적분기, 층 쌓기, 사격, 온도 고리 어느 것이 바뀌어도 여기서 걸린다.
@@ -24,6 +24,10 @@
    계단 결함은 바로 이 검사에 걸린다 (보간 전에는 2e-3 이 흔들렸다). `test_interior.py`
    의 격자 수렴 검사가 지구에서 묻는 것을, 밀도 대비가 큰 얼음/가스 경계에서 묻는다.
 3. **격자 수렴** — 1500 → 6000 걸음에서 반지름이 1e-3 안에서 움직인다 (측정: 4.6e-4, 1차 수렴).
+4. **발표 C/MR² 과의 거리** (2026-08-31) — 반지름만 `R published` 열이 있었고 C/MR² 은
+   자기 자신과만 대조되고 있었다. 발표값(도출값이다 — `PUBLISHED_NMOI` 의 주석이 출처와
+   가정을 적는다) 대비 Δ 를 재서 적는다. Δ 에 허용치는 없다; FAIL 을 걸 수 있는 것은
+   두 출처가 정규화 환산 뒤 서로 만나는가 하는 전사 검사뿐이다.
 
 `--fast` 는 굳힌 수렴점에서 적분 한 번과 사격 경로의 바이트코드 지문만 본다. 1 초.
 전체 풀이 없이 적분기·상태방정식의 변화를 잡는 용도이고, 게이트는 이것을 쓰지 않는다.
@@ -56,6 +60,46 @@ ICE_GIANTS = (
 PHASE_TOL = 1e-5        # 1499 ↔ 1501 걸음의 반지름 상대차. 계단이면 2e-3 이 나온다
 GRID_TOL = 1e-3         # 1500 → 6000 걸음의 반지름 상대차. 측정 4.6e-4
 BIT_KEYS = ("radius", "nmoi", "core_temperature", "core_pressure")
+
+# ── 발표 C/MR² — 목성과 같은 규율로 **고르지 않고 조사했다** (2026-08-31) ──────────
+#
+# 얼음거대행성의 관성모멘트는 측정이 아니다. 발표되는 모든 C/MR² 는 중력장(J₂·J₄,
+# Voyager 2 + 위성·고리 천체측량, Jacobson 2007/2009)에 **가정된 자전주기** 아래 맞춘
+# 내부구조 모형의 도출값이라, 무엇을 발표값으로 삼느냐가 그 자체로 판단이다. 좌우하는
+# 가정은 자전주기다.
+#   P_Voy  Voyager 2 전파 주기 — 천왕성 17.24 h (Desch+ 1986), 해왕성 16.11 h
+#          (Warwick+ 1989). IAU 자전상수의 기준선.
+#   P_HAS  Helled+ 2010 이 동역학 높이·바람을 최소화해 제안한 수정 주기 (16.57 h/17.46 h).
+# 이 하나가 발표값을 천왕성 −3.3 %, 해왕성 +6.0 % 움직인다 — 그 폭도 답의 일부다.
+#
+# 출처 둘, 그리고 정규화 함정 하나.
+#   Nettelmann+ 2013 (2013P&SS...77..143N, https://ui.adsabs.harvard.edu/abs/2013P%26SS...77..143N
+#     · arXiv:1207.2309) — LM-R EOS 3층 물리 모형. **각주 2 가 λ = I/(M_p R_mean²) 를
+#     직접 적는다 — 평균반지름 정규화, 이 파일의 nmoi 와 같은 규약.**
+#     P_Voy: 천왕성 0.230(1) · 해왕성 0.2410(8). P_HAS: 0.2224(1) · 0.2555(2).
+#   Neuenschwander & Helled 2022 (2022MNRAS.512.3124N,
+#     https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.3124N · arXiv:2203.02233) Table 2 —
+#     경험적 조각별-폴리트로프(ToF 4차) 해 공간. **§3.6: MoI = I/(M a²), 적도반지름 정규화.**
+# 두 정규화는 (a/R_mean)² ≈ 1.6 %(천왕성)/1.2 %(해왕성) 차이 — 두 논문의 자체 밴드보다
+# 크므로, 환산 없이 나란히 적으면 가짜 불일치를 만든다 (목성 팩트시트 0.254 와 같은 함정).
+# 환산 뒤 두 출처는 0.15 % 안에서 만나고 (최악: 해왕성 P_HAS), 게이트가 그 환산을 매번
+# 다시 계산해 전사 오류를 잡는다.
+#
+# **대조 열은 Nettelmann+ 2013 의 P_Voy 값이다** — 정규화가 우리 구와 같고(비회전 구에는
+# 적도반지름이 없다), 불확도가 인쇄된 값이며, IAU 와 같은 자전 가정이다. Δ 자체에는
+# 허용치가 없다 — 크면 큰 대로 적는 것이 이 대조의 산출물이다.
+PUBLISHED_NMOI = {
+    # n13_*: (값, 마지막 자리 불확도) — λ = I/(M R_mean²). nh22_*: Table 2 밴드 — I/(M a²).
+    # r_eq_km: NH22 Table 1 의 적도반지름 (P_Voy 행, P_HAS 행 — 해왕성+ 는 24 787 km).
+    "Uranus": {"n13_voy": (0.230, 0.001), "n13_has": (0.2224, 0.0001),
+               "nh22_voy": (0.22594, 0.22670), "nh22_has": (0.21919, 0.21964),
+               "r_eq_km": (25559.0, 25559.0)},
+    "Neptune": {"n13_voy": (0.2410, 0.0008), "n13_has": (0.2555, 0.0002),
+                "nh22_voy": (0.23727, 0.23900), "nh22_has": (0.25248, 0.25431),
+                "r_eq_km": (24766.0, 24787.0)},
+}
+NMOI_SOURCE_TOL = 5e-3   # 환산 뒤 두 출처가 만나야 하는 거리. 측정 최악 1.5e-3 (해왕성 P_HAS)
+R_EARTH_KM = EARTH_RADIUS_M / 1e3
 
 
 def _fractions(m: float, m_core: float, m_hhe: float) -> tuple[float, float]:
@@ -181,23 +225,66 @@ def refresh() -> int:
 def table() -> None:
     """문서의 얼음거대행성 표. 굳힌 파일에서 낸다 — 전체 풀이를 다시 돌리지 않는다."""
     frozen = json.loads(ANCHOR_FILE.read_text(encoding="utf-8"))
-    print("| planet | T at 1 bar | R derived | R published | Δ | C/MR² | T_c | P_c | "
-          "converged | grade |")
-    print("|---|---|---|---|---|---|---|---|---|---|")
+    print("| planet | T at 1 bar | R derived | R published | Δ | C/MR² | C/MR² published | Δ | "
+          "T_c | P_c | converged | grade |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|---|")
     for name, rec in frozen["bodies"].items():
         r_pub = rec["r_published_earth"]
         if not rec["applicable"]:
             print(f"| {name} | {rec['t_1bar_k']:.0f} K | declined | {r_pub:.3f} R⊕ | – | – | – | – "
-                  f"| – | – |")
+                  f"| – | – | – | – |")
             continue
         v = {k: float(rec["values"][k]) for k in BIT_KEYS}
+        n_pub, n_unc = PUBLISHED_NMOI[name]["n13_voy"]
         print(f"| {name} | {rec['t_1bar_k']:.0f} K | {v['radius']:.3f} R⊕ | {r_pub:.3f} R⊕ | "
               f"{(v['radius'] / r_pub - 1) * 100:+.2f} % | {v['nmoi']:.4f} | "
+              f"{n_pub:.4f}±{n_unc:g} | {(v['nmoi'] / n_pub - 1) * 100:+.1f} % | "
               f"{v['core_temperature']:.0f} K | {v['core_pressure']:.0f} GPa | "
               f"{rec['converged']} | {rec['grade']} |")
+    print("\nC/MR² published: Nettelmann+ 2013 (2013P&SS...77..143N), Voyager 자전주기, "
+          "λ = I/(M R_mean²) — 상수 블록 PUBLISHED_NMOI 의 주석이 근거다.")
 
 
 # ── 게이트 ──────────────────────────────────────────────────────────────
+
+def _published_nmoi(frozen: dict, fails: list[str]) -> None:
+    """발표 C/MR² 대조 — 굳힌 값에서 Δ 를 재고, 두 출처의 정합을 환산으로 다시 계산한다.
+
+    FAIL 을 걸 수 있는 것은 출처 정합(두 논문이 적도→평균 환산 뒤 서로 만나는가 — 전사
+    검사)뿐이다. Δ 자체에는 허용치가 없다: 재고 적는 것까지가 이 대조다."""
+    print("\n발표 C/MR² — J₂+자전주기에 맞춘 모형의 도출값 vs 우리 구 (비회전, R_mean 정규화)")
+    for name, rec in frozen["bodies"].items():
+        if not rec["applicable"]:
+            continue
+        pub = PUBLISHED_NMOI[name]
+        nmoi, r_der = float(rec["values"]["nmoi"]), float(rec["values"]["radius"])
+        r_pub = rec["r_published_earth"]
+        voy, has = pub["n13_voy"][0], pub["n13_has"][0]
+        renorm = nmoi * (r_der / r_pub) ** 2      # I/(M·R_발표²) — 반지름 몫을 걷어낸 값
+        print(f"  {name}: 도출 {nmoi:.4f} vs 발표 {voy:.4f}±{pub['n13_voy'][1]:g} "
+              f"(Nettelmann+ 2013, P_Voy, R_mean) → **{(nmoi / voy - 1) * 100:+.1f} %** "
+              f"· P_HAS {has:.4f} 대비 {(nmoi / has - 1) * 100:+.1f} %")
+        print(f"         반지름 몫(도출 R {(r_der / r_pub - 1) * 100:+.2f} %)을 걷어내면 "
+              f"I/(M·R_발표²) = {renorm:.4f} → {(renorm / voy - 1) * 100:+.1f} % — "
+              f"반지름이 설명 못 하는 나머지다. 기록, 판정 없음")
+        # 출처 정합 — NH22 의 적도 정규화 밴드를 (a/R_mean)² 로 평균 정규화로 환산하면
+        # N13 의 값과 만나야 한다. 전사(자릿수·반지름) 오류는 여기서 0.5 % 를 훌쩍 넘긴다.
+        r_mean_km = r_pub * R_EARTH_KM
+        worst = 0.0
+        for (lam, _unc), band, a_km in ((pub["n13_voy"], pub["nh22_voy"], pub["r_eq_km"][0]),
+                                        (pub["n13_has"], pub["nh22_has"], pub["r_eq_km"][1])):
+            f_conv = (a_km / r_mean_km) ** 2
+            lo, hi = band[0] * f_conv, band[1] * f_conv
+            dist = 0.0 if lo <= lam <= hi else min(abs(lam - lo), abs(lam - hi)) / lam
+            worst = max(worst, dist)
+        ok = worst < NMOI_SOURCE_TOL
+        if not ok:
+            fails.append(f"{name}: 발표 C/MR² 의 두 출처가 정규화 환산 뒤에도 {worst * 100:.2f} % "
+                         "떨어져 있다 — 전사나 환산 반지름을 의심하라")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {name} — Neuenschwander & Helled 2022 밴드를 "
+              f"(a/R_mean)² 환산하면 Nettelmann+ 2013 과 {worst * 100:.2f} % 거리 "
+              f"(< {NMOI_SOURCE_TOL * 100:.1f} %; 두 자전 가정 모두)")
+
 
 def _fast(frozen: dict, fails: list[str]) -> None:
     """적분 한 번 + 경로 지문. 전체 풀이 없이 적분기·상태방정식의 변화를 잡는다."""
@@ -338,6 +425,7 @@ def main() -> int:
         _fast(frozen, fails)
     else:
         _live(frozen, fails)
+    _published_nmoi(frozen, fails)
 
     if fails:
         print(f"\n실패 {len(fails)}건")
