@@ -151,5 +151,11 @@ so this is the recipe's rock-axis ceiling, not the fuzzy core's — the remainin
 owners are graded ice and the ice mantle's own density profile, unmeasured. The §3
 analytic ceiling (+31/+34 %) was an upper bound on λ-gain and did not lie; the solved end
 B lands well under it (+20.5 % / +22.1 % in λ) because the envelope sits at r/R < 1 and
-the structure rearranges. Bonus, recorded not attributed: end B shrinks the radius
+the structure rearranges.
+
+*2026-08-31, later — insensitivity check after the steam dispatch (Brief 25) went in:*
+the four end-B values rerun **digit-for-digit identical** (λ 0.209729/0.209729 ·
+0.219577/0.219617; renorm 0.2032 / 0.2248), so the rock axis's walk never enters the
+IF97 window and **26 % / 41 % are insensitive to the steam introduction** — the printed
+bracket needs no update. Bonus, recorded not attributed: end B shrinks the radius
 residual (+5.48 → −1.57 %, +8.94 → +1.15 %) and cools the centres to ~4900–4950 K.

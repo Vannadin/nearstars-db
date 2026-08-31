@@ -11,6 +11,16 @@ Archive's capture of the same path — title checked). The text layer drops ever
 ten in the coefficient tables, so **all tables were transcribed from the typeset page
 images**, the exact failure mode that would otherwise fabricate magnitudes silently.
 
+**The trap, named for the register** (directing-session request): the text layer's loss is
+*silent and self-consistent* — it drops the powers of ten from the coefficient tables AND
+from the printed verification tables alike, so a transcription scraped wholly from the
+text layer could have passed a verification scraped from the same layer while being wrong
+by orders of magnitude. Same family as the fabricated-identifier and false-provenance
+sub-kinds: plausible because well-formed, and the check that would catch it must come from
+**outside the corrupted channel** (here: the typeset page images). Rule shape: *a machine
+extraction of a numeric table is verified against a different rendering of the source, not
+against numbers that rode the same extraction.*
+
 Transcribed into `engine/steam_if97.py` (plain Python, closed-form Gibbs — no fitting, no
 baked table, no runtime dependency): region 1 (eq. 7, Table 2's 34 coefficients), region 2
 (eqs. 15–17, Tables 10–11: 9 + 43 coefficients), the B23 boundary (eq. 5, Table 1), the
@@ -42,7 +52,10 @@ and region 5 (above 1073.15 K). Both refuse by name through the dispatch.
 - steam ↔ **Mazevet at 1000 K, low P: +88 % (100 MPa) → +994 % (20 MPa)** — not a defect
   of either source but the measurement of Mazevet's own validity statement (ρ ≳ 1 g/cc):
   the hot-water fit must never serve low-density steam. The envelope dispatch therefore
-  asks IF97 **before** the T ≥ 1000 K Mazevet branch.
+  asks IF97 **before** the T ≥ 1000 K Mazevet branch. *(A judgment-changing number —
+  reproduction: `water_hot.density(p, 1000.0) / steam_if97.density(p, 1000.0) − 1` at
+  p = 20/50/100 MPa, three lines, sub-second; the directing seat reproduces before it
+  goes to the audit.)*
 
 ## §3 Wiring, and the acceptance
 

@@ -59,8 +59,12 @@ generator is needed); English commits, one logical unit each.
       measurement of Mazevet's own ρ≳1 g/cc validity claim; steam must precede it
 - [x] Wired (`_Steam` adapter, dispatch ahead of water1/Mazevet); in-column
       `liquid_material` wedge out of scope, recorded
-- [ ] **PENDING — owner's compute hold (2026-08-31 evening, fan/throttle; a run was
-      externally killed).** RESUME POINT: `python3 -u scratchpad/ice_axis_runs.py`
+- [ ] **PENDING — battery stop (2026-08-31 evening, second interrupt).** The resumed
+      chain got ② done (rock axis: all four digits identical to baseline — 26 %/41 %
+      insensitive to steam, recorded in fuzzy-core notes §6), but ① was killed silently
+      before its first solve printed and the gate died at exit 143 (SIGTERM) — that gate
+      run is INVALID, not a pass. RESUME (owner's signal only, on mains):
+      `python3 -u scratchpad/ice_axis_runs.py`
       (4 solves, ~15 min unthrottled / 20+ throttled). First rerun after steam r1·2 only:
       still conv=False, deaths moved to the region-3 corner (spy: 22.1 MPa·661 K etc.),
       three of four states bit-identical to pre-steam. Region 3 has SINCE been transcribed;
