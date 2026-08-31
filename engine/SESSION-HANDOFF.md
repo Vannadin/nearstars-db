@@ -50,7 +50,11 @@ is not thereby verified.
   roster wants is refused by one.
 - **C13 open.** The ice-giant moment of inertia sits 11–16 % below publication after radius is
   removed. The rock-redistribution axis was measured and **covers only 26 % (Uranus) / 41 %
-  (Neptune)** of that gap, so it cannot close it. The ice axis is untested.
+  (Neptune)** of that gap, so it cannot close it. The ice axis is untested. *Three legs, all
+  landed (`19360f72`)*: the audit found the float residual, the previous directing seat
+  pre-registered and ran the ε ladder, and the work session reproduced every digit and
+  retired both caveats — Neptune's P_c 984 GPa is not wall-adjacent (a probe at 1010 GPa
+  integrates, mass closure 1.000000) and the grid 1500 → 6000 drift is 3.7–3.9e-4.
 - **Follow-ups F1–F5, water2, the C/MR² check and the Queyroux flip experiment are all closed**
   and all audited.
 
@@ -58,11 +62,15 @@ is not thereby verified.
 
 **① The cold-flank general fix.** The refusal machinery exists to make answers honest, but the
 shooting and temperature loops put *trial* solutions through the same refusals — so a solve can
-die in a state no converged answer would ever occupy. It has appeared four times: C1's false
-ceiling, C11's over-broad refusal, the Queyroux experiment's Neptune path death, and — the
-sharpest — a **1 ULP** difference in `ice_mass_fraction` deciding between a 1-second refusal
-and a 112-second convergence. The diagnosis is committed at `f3f3a3fd`; the proposed shape is
-to route trial-path refusals into steering the bracket rather than killing the solve.
+die in a state no converged answer would ever occupy. **Three occurrences in two days** is how
+the committed diagnosis counts it (`f3f3a3fd`): C11's over-broad refusal, the Queyroux
+experiment's Neptune path death, and C13's end B — whose sharpest form is a **1 ULP**
+difference in `ice_mass_fraction` deciding between a 1-second refusal and a 112-second
+convergence (the same event, not a fourth). Counting C1's false ceiling — its ladder seed and
+F2's bulk-modulus finite difference are literally trial paths hitting evidence the answer does
+not use — makes it four; say which basis you are using, because the two documents differ.
+The proposed shape is to route trial-path refusals into steering the bracket rather than
+killing the solve.
 
 **This unblocks ② and ③.** C13 cannot close properly without it, and the Queyroux adoption
 needs it too.
@@ -135,8 +143,9 @@ Reports will arrive addressed to the directing seat.
 - **Do not fix the band at 2.3–5 GPa / 500–1000 K by special-casing.** It is closed now
   (`water2`), but the pattern recurs: when a path dies in a gap, the fix belongs in the gap's
   equation of state, not in a detour.
-- **`~/Downloads` may be unreadable** by directory listing (a macOS privacy grant that reset).
-  Named paths still read. Ask the owner for the exact filename, or have them move the file into
+- **`~/Downloads` may be unreadable** by directory listing (a macOS privacy grant that reset)
+  — **the directing seat's grant only**; the work session read and copied named paths there
+  without trouble. Named paths still read. Ask the owner for the exact filename, or have them move the file into
   the paper cache.
 - **The owner's doubt has twice been right** where a session's report was wrong — once about a
   paper's tables, once about a plan's shape. Take it seriously rather than defending the
