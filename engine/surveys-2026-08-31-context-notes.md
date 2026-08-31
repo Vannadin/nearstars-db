@@ -70,7 +70,7 @@ quotes — and the deep isothermal layer emerges rather than being imposed.
   could change significantly."*
 - **∇_ad** — 2/7 for H₂ with rotational modes live, retreating toward 4/3 for a metal-rich
   envelope. Composition enters twice, through κ and again here; the choice moves the boundary
-  ~24 %.
+  by ~16–24 % depending on the driver.
 
 **So the purpose and the available inputs do not meet.** Opening hot sub-Neptunes by this route
 means carrying two or three new declarations, at least one of which has no literature to
@@ -86,9 +86,23 @@ in the rules and both re-earned: *numbers agreeing is not causes agreeing*, and 
 imports the other leg's code is not a leg*. Verification of a transcription is comparison
 against the source, which is what the audit did.
 
-**Two labels the table still owes**: its gravity came from Nettelmann's abstract (6.55 M⊕ ·
-2.678 R⊕) rather than the curated 8.41 M⊕ · 2.733 R⊕, and its T_irr = 778 K was constructed,
-not read. Regeneration is queued.
+**Both labels the table owed are paid** (regenerated 2026-08-31, same day). Its gravity now
+comes from the curated geometry — 8.41(0.36) M⊕ · 2.733(0.033) R⊕ from
+`db/planets_curated.json`, sourced to Mahajan+ 2024 (`2024ApJ...963L..37M`) — giving
+g = 11.056 m/s² **± 4.9 %** propagated from the printed errors, and the driver prints that
+provenance in its own header rather than leaving it to prose. T_irr stays **unchosen**: the
+header carries it as `**UNSOURCED DECLARATION**` and prints what 600 / 700 / 778 K do to
+every row, so the gap warns the reader from inside the output. **No verdict moved** — T_int's
+dominance is still ~120× (3,156 → 27 bar at 50× solar), the 30–60 K bracket still ~6×, the
+four deep rows still extrapolation past Valencia's printed 300 bar; the geometry change made
+the absolute values ~14 % deeper, and against Nettelmann's own two T_int values the shallow
+end now sits 9× rather than 8× below their 80–800 bar.
+
+*A closure worth keeping*: `2024ApJ...963L..37M` **is** arXiv:2402.05991 — the same Mahajan+
+2024 the surveyor had discounted as "a stellar-radius paper, nothing for the
+radiative–convective question". It was nothing for that question and it is the source of the
+planet's mass and radius, which is what the notes' grouping had said all along. Discounting
+it half-closed the loop; opening the DB entry closed it the other way.
 
 ## ③ The melting curve — there is a third candidate, and the debate is not the one we asked about
 
