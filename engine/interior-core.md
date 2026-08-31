@@ -508,7 +508,35 @@ the same function family as Correa's**, which is what makes either of them consu
 `Phase` extension takes both, and **the experimental set becomes a low-pressure check on
 the first-principles one**. That is a better position than either paper alone.
 
-*What now blocks it is the other two questions.* **How much** carbon separates has no
+**And there are two carbon stories, not one** (survey ⑤, 2026-08-31 — the owner asked
+whether theory exists where measurement does not). Everything above is **diamond**: a solid
+that nucleates, sinks and piles up. The other is **fluid**: Militzer 2024
+([`2024PNAS..12103981M`](https://ui.adsabs.harvard.edu/abs/2024PNAS..12103981M), single
+author, CC BY; Europe PMC full text cached as `.xml`/`.txt` — the PDF is script-blocked,
+not paywalled, and the figures and SI are not in the cache) finds a solar-type
+7 H₂O : 4 CH₄ : 1 NH₃ mixture at **343 GPa · 4750 K** — inside our solved mantles, not an
+extrapolation — where *"the homogeneous fluid **spontaneously phase separates** into a
+water-rich fluid and a C-N-H fluid"*, self-checked as *"not sensitive to the hydrogen
+concentration"*, with compositions printed (C₈N₂H₁₁…H₃₄ / C₈N₂H₁₃…H₃₈). **No solid**: the
+word `precipitat` appears **0 times** in the distributed full text (counted twice, by the
+surveyor and by the directing seat), and `diamond` 5 times — all in the literature review,
+where *"the formation of diamond from CH₄ in ice giant interiors has been explored with
+theoretical and experimental techniques (17–19)"*. **It cites the diamond work and models
+something else.**
+
+That splits both blockers by axis:
+
+| | a theory for *how much* | a target model that has it |
+|---|---|---|
+| **fluid C-N-H separation** | **yes** — Militzer 2024, first-principles | **yes** — Militzer 2024 builds Concentric MacLaurin Spheroid ensembles that *"match the observed gravity field"*, printing J₂ = 3510.99 and J₄ = −33.61 / −35.8 (×10⁻⁶) as the fit targets |
+| **diamond precipitation** | partial — Cheng+ 2023, still C/H with no water | **none found** (three ADS sweeps; Ross 1981 is the idea's origin, Bailey & Stevenson 2021 separates H₂–H₂O, not carbon) |
+
+**So C13's trap is lifted on the fluid axis and stands on the diamond axis** — and choosing
+between them is a physics choice, not a gap: Militzer knew the diamond literature and
+modelled the other thing. One cost rides along with the fluid axis: their mixture
+**contains ammonia** and our column does not, so adopting the theory adopts a composition.
+
+*What blocks the diamond axis is the other two questions.* **How much** carbon separates has no
 published rule that includes water (Cheng+ 2023 give coexisting compositions for C/H, with
 no water, and the quantity still needs a declared bulk carbon fraction — `composition_intent`,
 currently a gap). And **the target does not have this component**: the three-layer practice,
