@@ -69,4 +69,27 @@ validate the additive-volume mixing there — the band is outside Soubiran & Mil
 2–70 GPa × 1000–6000 K; any crossing rides on unvalidated extrapolation, and the solve's
 envelope-water note says so (grade stays analog with that named reason).
 
-*(acceptance — the four end-B solves — recorded below when they land)*
+**Acceptance (2026-09-01).** Reaching it cost two more findings, both registered in the
+checklist: the "~15 min" estimate belonged to pre-region-3 code (runs that stopped early
+at the wall), and once the wall was filled the solves ran 6.6+ h without printing — not
+steam cost (Newton made region 3 a measured 0.080 ms/call) but the temperature loop's
+one-shot extension re-firing forever when the target surface is unreachable from below
+(51 converged attempts observed vs the intended cap of 29; fixed with a dedicated flag,
+`6d59730d`, anchors bit-identical under --refresh).
+
+The verdict, per the pre-registered acceptance: the four end-B solves now **terminate**
+(165–263 s each) and the steam wall is **retired** — the refusal spy over a full Uranus
+B_ice solve collects 100 PhaseGaps, **all h_he too_cold, zero water** (was 1102-of-1202
+on the water wedge). conv stays **False on all four**: every converged attempt lands at
+t_surface ≈ 355–363 K against t_pot = 76 K regardless of t_center, because trial
+adiabats cold enough to head for 76 K die at the **H/He window's cold floor** (the
+adiabat-from-1 bar·50 K boundary) at 130–164 GPa (samples 131–1121 K; a second band near
+1046–1062 GPa · 1929–3096 K). So **no gap-covered percentages exist** — the product is
+the next wall's coordinates, and it is not a water wall any more. Four-state table and
+the axis judgment: `ice-axis-context-notes.md` §5.
+
+Gate: FAIL 0, **1205 s measured**. Not directly comparable to the last valid full gate
+(~17 min, Brief 24 landing) — test content changed in between. The controlled pair
+inside it: anchor `seconds` 23.4→21.9 / 55.7→52.4 (−6 %), attributed to the
+ghost-process absence; the Newton share there is zero (anchor paths never enter
+region 3).

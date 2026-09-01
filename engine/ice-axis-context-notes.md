@@ -136,3 +136,33 @@ is for whoever builds, not for this measurement.
 
 The sum question (B_both vs B_ice) is deferred with the axis — comparing two
 non-converged states would be comparing artifacts.
+
+## §5 Revisited — the wedge is filled and the wall moved (Brief 25 acceptance, 2026-09-01)
+
+IF97 regions 1·2·3 now stand where §3's wedge was, and that wall is **retired**: the
+refusal spy went 1102-of-1202 on the water wedge → **0 water of 100** — every remaining
+refusal is h_he too_cold. The four ends rerun (165–263 s each, in parallel, after the
+temperature loop's re-firing extension was fixed — `6d59730d`; the loop previously
+cycled 6.6+ h on these exact solves):
+
+| run | z | z_rock | λ | R (vs pub) | I/(M·R_pub²) | P_c | T_c | conv |
+|---|---|---|---|---|---|---|---|---|
+| Uranus B_ice | 0.8545 | 0 | 0.294150 | 3.5623 (−10.51 %) | 0.2356 | 867 GPa | 5439 K | **no** |
+| Uranus B_both | 0.8624 | 0.0630 | 0.313228 | 3.4711 (−12.81 %) | 0.2381 | 493 GPa | 3985 K | **no** |
+| Neptune B_ice | 0.8634 | 0 | 0.299345 | 3.5626 (−7.81 %) | 0.2544 | 1117 GPa | 4998 K | **no** |
+| Neptune B_both | 0.8717 | 0.0696 | 0.305116 | 3.6596 (−5.30 %) | 0.2736 | 586 GPa | 6654 K | **no** |
+
+Still no converged end, for a new and named reason: the surface now pins at
+**355–363 K** (was ~1275 K) against the 76 K boundary condition. Trial adiabats cold
+enough to head for 76 K die at the **H/He window's cold floor** — the
+adiabat-from-1 bar·50 K lower boundary — at 130–164 GPa (samples 131–1121 K; a second
+band near 1046–1062 GPa · 1929–3096 K), and the attempt-level climb carries every trial
+back to the hottest surviving surface, so the ice axis is no longer blocked by water at
+all: it is blocked by **how cold the H/He table lets a dense envelope be at
+130–164 GPa**. §4's judgment stands unchanged — branch 3, walls named, **no gap-covered
+percentage** (a bracket end that does not meet the boundary condition is not a measured
+end) — with the wall's owner updated from water to h_he. The §3 observation also stands
+in the new numbers, recorded not judged: all four non-converged states sit above the
+targets (renorm 0.2356–0.2736 vs 0.2300/0.2410). The mixing-gap label rides along
+unchanged: the trials now *cross* the old wedge on IF97, and that crossing is additive
+mixing outside Soubiran & Militzer's band (`7769be6e`).

@@ -59,23 +59,26 @@ generator is needed); English commits, one logical unit each.
       measurement of Mazevet's own ρ≳1 g/cc validity claim; steam must precede it
 - [x] Wired (`_Steam` adapter, dispatch ahead of water1/Mazevet); in-column
       `liquid_material` wedge out of scope, recorded
-- [ ] **PENDING — battery stop (2026-08-31 evening, second interrupt).** The resumed
-      chain got ② done (rock axis: all four digits identical to baseline — 26 %/41 %
-      insensitive to steam, recorded in fuzzy-core notes §6), but ① was killed silently
-      before its first solve printed and the gate died at exit 143 (SIGTERM) — that gate
-      run is INVALID, not a pass. RESUME (owner's signal only, on mains):
-      `python3 -u scratchpad/ice_axis_runs.py`
-      (4 solves, ~15 min unthrottled / 20+ throttled). First rerun after steam r1·2 only:
-      still conv=False, deaths moved to the region-3 corner (spy: 22.1 MPa·661 K etc.),
-      three of four states bit-identical to pre-steam. Region 3 has SINCE been transcribed;
-      the four solves have NOT run on it yet — conv is unknown, gap-covered % must wait
+- [x] **Acceptance ran (2026-09-01)** — after two more walls of its own: a duplicate
+      chain (both killed) and the temperature loop's re-firing one-shot extension
+      (found by tracing, fixed in 6d59730d — see the register below). Four solves in
+      parallel, 165–263 s each: **conv=False on all four**, but the steam wall is
+      retired — spy 100 PhaseGaps, **all h_he too_cold, zero water** (was 1102-of-1202
+      on the water wedge). The next wall: the H/He window's cold floor (the
+      adiabat-from-1 bar·50 K boundary) at 130–164 GPa; every converged attempt pins
+      t_surface ≈ 355–363 K against t_pot = 76 K. Per the pre-registered acceptance,
+      conv=False → **no gap-covered percentages**; the product is these coordinates
 - [x] Mixing-gap label + grade note carried (envelope-water note names IF97 and the
       Soubiran band; `7769be6e`'s label stands)
 - [x] Anchors --fast bit-identical. The fingerprint DID move late (the solve-note string
       naming IF97 sits inside a fingerprinted function) → --refresh ran in this landing;
       anchor diff is fingerprint/date/seconds only. Full live gate deferred with the hold
-- [ ] Full gate — DEFERRED (compute hold), to run with the acceptance solves; the cheap
-      checks (syntax, steam verify 3.2e-9, --fast) ran and pass
+- [x] Full gate — FAIL 0, exit 0, **1205 s measured** (2026-09-01, fresh run replacing
+      the INVALID exit-143 one). Not directly comparable to the last valid full gate
+      (~17 min, Brief 24 landing) — test content changed in between (steam verify +
+      cold-flank sections). The controlled pair inside it: anchor `seconds` 23.4→21.9 /
+      55.7→52.4 (−6 %) — ghost-process absence; the Newton inversion's share there is
+      zero (anchor paths never enter region 3)
 
 ## Region-3 inversion speedup (owner-directed, 2026-09-01 pre-dawn) — REGISTERED BEFORE EDIT
 
