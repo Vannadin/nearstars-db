@@ -215,9 +215,9 @@ ICE_X_FIT_TOL = 0.10           # 그 수 자체의 허용 표류 (상대)
 ICE_X_SEAM = -0.0226           # 37.4 GPa 에서 ice_vii BME 대비 ice_x Vinet
 ICE_X_SEAM_TOL = 0.10
 # 초이온상. Millot+ 2019 (2019Natur.569..251M) 초록이 적는 하한이고, 우리 온도 천장이
-# 그 **아래** 에 서 있다는 것이 검사 대상이다 — 위에 서 있으면 초이온상을 얼음 X 라고
-# 부르게 된다.
-MILLOT_SUPERIONIC = (100.0e9, 2000.0)
+# (브리프 34) 예전의 MILLOT_SUPERIONIC = (100 GPa, 2000 K) 은 제거됐다 — Millot+ 2019 초록이
+# 자기 refs 6–12 의 예측을 소개한 수였고(귀속 오류), 발표 경계는 평평하지 않아 그 검사는
+# 거짓을 주장했다. 대체 검사 = test_ice_giant 의 교란-불변 회귀 (eos.py ICE_VII_X_T_MAX 주석).
 
 
 def unterborn_tcmb(radius_earth: float, t_pot: float = 1600.0) -> float:
@@ -1902,13 +1902,8 @@ def main() -> int:
     print(f"         규산염 이음매의 0.21 % 보다 열 배 넓다. 1987년 실험 적합을 37.4 GPa "
           f"까지 끌고 간 값과 2015년 퍼텐셜의 차이이고, 어느 쪽도 상대에 맞춰 당기지 "
           f"않았다 — 당기면 우리 출력에 적합하는 것이다.")
-    p_sup, t_sup = MILLOT_SUPERIONIC
-    ok = ICE_VII_X_T_MAX < t_sup
-    if not ok:
-        fails.append(f"온도 천장 {ICE_VII_X_T_MAX:.0f} K 가 초이온상 하한 {t_sup:.0f} K "
-                     f"위다 — 초이온상을 얼음 X 라고 부르게 된다")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 온도 천장 {ICE_VII_X_T_MAX:.0f} K 가 "
-          f"초이온상 하한 {t_sup:.0f} K (Millot+ 2019, {p_sup / 1e9:.0f} GPa 위) 아래다")
+    print("  (브리프 34) 평평한 초이온 하한 검사는 제거됐다 — 발표 경계는 305–375 GPa 에서 "
+          "1800 K 아래를 지나므로 그 검사는 거짓을 주장했다. 대체 = test_ice_giant 의 교란-불변 회귀")
     got = None
     try:
         _H2O.density(200e9, ICE_VII_X_T_MAX + 100.0)

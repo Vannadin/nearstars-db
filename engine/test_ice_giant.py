@@ -407,6 +407,48 @@ def _live(frozen: dict, fails: list[str]) -> None:
               f"{abs(v['radius'] / r_pub - 1):.1e} 의 {abs(v['radius'] / r_pub - 1) / max(drift, 1e-12):.0f} 분의 1)")
 
 
+def _clamp_invariance(frozen: dict, fails: list[str]) -> None:
+    """교란-불변 회귀 (브리프 34 항목 B, A2 의 V1+ 를 게이트로 승격 — 게이트 +22 s, 1205 s 의
+    2 % 라 승격이 쌈). 주장은 세상이 아니라 우리 코드에 대한 것이다: **천왕성의 수렴한 해는
+    초이온 예측 구역(P > 355 GPa · 0 < T < 1800 K — French+ 2016 Fig. 4 의 경계가 우리 1800 K
+    천장 아래로 지나간 곳)의 ice_x 값에 무관하다.** 구역 밀도를 +5 % 밀고 전체를 다시 풀어
+    굳힌 앵커와 비트 대조한다 — A2(2026-09-01)에서 ±5 %(발화 1,754회)와 첫-접촉 거절이 전부
+    비트 동일이었다. 이 검사가 깨지는 날은 솔버 변경이 그 무관함을 깨뜨린 날이고, 그때 C6 의
+    상시 감시가 다시 열린다. 범위 제한: 현 로스터의 천왕성에 대한 실측이지 일반 보증이 아니다."""
+    import eos as _eos
+    h2o = _eos.MATERIALS["h2o"]
+    cls = type(h2o)
+    orig = cls.density
+
+    def bumped(self, p, t=0.0, t_pot=0.0):
+        if (self is h2o and p > 355e9 and 0.0 < t < 1800.0
+                and getattr(self.phase_at(p), "name", "") == "ice_x"):
+            return orig(self, p, t, t_pot) * 1.05
+        return orig(self, p, t, t_pot)
+
+    name = "Uranus"
+    rec = frozen["bodies"][name]
+    cls.density = bumped
+    try:
+        t0 = time.perf_counter()
+        res = _solve(name)
+        dt = time.perf_counter() - t0
+    finally:
+        cls.density = orig
+    if not res.applicable:
+        fails.append(f"교란-불변: {name} 이 구역 교란에서 거절됐다 — {res.reason[:80]}")
+        print(f"  [FAIL] 교란-불변 — 거절 ({dt:.0f} s)")
+        return
+    moved = [k for k in BIT_KEYS if repr(res.values[k]) != rec["values"][k]]
+    ok = not moved and res.converged
+    if not ok:
+        fails.append("교란-불변이 깨졌다 — 수렴한 해가 초이온 예측 구역의 ice_x 값에 의존하기 "
+                     "시작했다: " + (", ".join(moved) if moved else "converged=False")
+                     + ". 무엇이 시험 회랑의 결과를 답에 연결했는지 추적하라 (브리프 34 A2)")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 교란-불변 ({dt:.0f} s): 구역(>355 GPa · <1800 K) 밀도 +5 % "
+          f"에서도 천왕성 해가 앵커와 비트 동일 — 수렴한 해는 그 구역에 무관 (A2, 브리프 34)")
+
+
 def main() -> int:
     if "--refresh" in sys.argv:
         return refresh()
@@ -425,6 +467,7 @@ def main() -> int:
         _fast(frozen, fails)
     else:
         _live(frozen, fails)
+        _clamp_invariance(frozen, fails)
     _published_nmoi(frozen, fails)
 
     if fails:
