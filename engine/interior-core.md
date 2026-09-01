@@ -805,8 +805,16 @@ limitation belongs with it.
 the *search trajectory* (Brief 27's `conv=False` is exactly that, and a point measurement
 cannot call it negligible), the other weight-blind gates (`cold_phases`, `in_domain`), and
 the `_EnvelopeWater` dispatch interaction. The slopes are also location-dependent, so any
-policy would need a conservative envelope or a per-site check. **Owner's call; nothing was
-changed in the gate.**
+policy would need a conservative envelope or a per-site check.
+
+**Owner's decision, 2026-09-01: leave the gate as it is, and keep the measurement.** The
+reason is that **the case which raised the question dissolved** — the state where the trace
+component vetoed turned out to be forbidden anyway, with helium solid there and the source
+saying its equation of state must not be used at those conditions. **So there is not yet a
+single instance of a trace component blocking an otherwise legitimate answer**, and this list
+does not build machinery without a consumer (the rule C5 followed when it declined to
+implement a graded envelope). Nothing was changed. When a body is refused by a trace component
+at a state that is otherwise sound, the item opens with the method already in hand.
 
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
