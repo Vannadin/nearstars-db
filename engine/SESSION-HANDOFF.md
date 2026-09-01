@@ -82,33 +82,52 @@ anchors were never refreshed. **Verify that before trusting a comparison.**
 
 ## What is running, and what the owner has decided
 
-**Briefs 22–32 landed today, every one gate-clean.** The work session is on **Brief 32
-(adopt AQUA)**; the parallel session is on **survey ⑧b (does the tidal-heat fixed point
-reproduce Io?)**.
+**Rewritten 2026-09-01 evening, end of day. Briefs 22–33 landed, every one gate-clean.**
+All three seats are idle with nothing computing; the working tree is clean and no stash was
+used. **Sample the process table yourself rather than trusting this sentence** — a listing is
+an instant, not a state, and this seat has already caused one duplicate heavy run by
+reporting from a single `ps`.
 
-**Adopted, in this order** — AQUA → Queyroux's melting curve → carbon's **fluid** axis. Only
-AQUA is briefed; the other two need briefs written.
+**The adopted set as it actually resolved** — the order in the last handoff (AQUA → Queyroux →
+carbon) survived, but **two of the three did not end as adoptions**:
 
-- **AQUA**: the survey found it does **not** raise a ceiling — do not brief it that way. The
-  gain is the high-pressure 300–1000 K corner, doubled by C6's finding that our own ladder is
-  extrapolation above ~355 GPa. **Brief 32 recommends filling only the hole**, because
-  replacing the ladder would move the anchors and force every number from these two days to be
-  reinterpreted.
-- **Queyroux**: adopting it is **choosing a side in a live debate** (the curve's *shape*), not
-  repairing an error — survey ③ found the 100–150 K question already settled by Queyroux
-  themselves. It must be recorded as a named choice.
-- **Carbon, fluid axis**: Militzer 2024's fluid C-N-H separation has both a quantity theory and
-  a target model that fits the gravity field. The diamond axis has neither. **Ammonia rides
-  along** with the fluid family — our column does not have it today.
+- **AQUA — not built.** Zero reachable cells. See the parked-decisions section.
+- **Queyroux — landed, but not as the briefed election.** The owner rejected both "choose a
+  side" and a three-way mean, and took the **mean of two measurements below the kink**. The
+  brief's own framing ("choosing a side in a live debate") turned out to apply only *above*
+  14.6 GPa. Full terms and the three label conditions are in the parked-decisions section.
+- **Carbon's fluid axis — half its rationale was retracted by the surveyor who wrote it.**
+  Do **not** brief it from the last handoff's sentence, which said Militzer 2024 has "a
+  quantity theory". It does not; those numbers are fitted model parameters. And the same
+  sentence's claim that **"our column does not have ammonia" is wrong** — `engine/ammonia_table.py`
+  carries it from C4. What we lack is methane (C4 closed that half as unbuilt because methane
+  dissociates) and the hydrogen-poor C–N–H polymer species the separation produces. It now
+  needs an owner scope decision before a brief.
 
-**Also decided today**: the weight-blind mixture gate stays (the case that raised it dissolved);
-the ternary EOS grid closes as *recorded, not found*; branch merge is deferred.
+**Two findings arrived after the core list closed, both about `ice_x`, and neither is briefed:**
 
-**Open and unbriefed**: tidal heating → interior structure. The relation exists but is a
-**fixed-point problem** (Ė rises with temperature, peaks, then falls), the equilibrium may be
-**multi-valued** — a body can sit hot or cold depending on thermal history — so any wiring must
-return a labelled set, not one temperature. Both papers are now cached. **Survey ⑧b decides
-whether it is adoptable**: if the fixed point does not reproduce Io, it is not.
+- **The superionic gate asserts something false and passes.** `test_interior.py:220`'s
+  `MILLOT_SUPERIONIC = (100.0e9, 2000.0)` treats the superionic floor as **flat**, and the
+  gate checks `ICE_VII_X_T_MAX (1800 K) < 2000 K`. The real boundary rises to a maximum near
+  200 GPa and then **descends through 1800 K somewhere in 305–375 GPa** (two independent
+  figure renderings; the maximum agrees to 0.7 % in T and 5 % in P, the crossing disagrees by
+  29 GPa and **was not adjudicated**). So the promise in `eos.py:1929-1934` — that superionic
+  ice will not be quietly called ice X — is reachable. **No current answer is wrong**: both
+  ice giants' mantles bottom out at 2553 K. **Whether a cold *trial* path enters is unmeasured,
+  and that is what separates a labelling defect from a convergence defect.**
+- **And the attribution on those constants is false.** Millot+ 2019's "exceeding 100 GPa …
+  above 2,000 kelvin" is that paper restating **refs 6–12's prediction** — verified verbatim
+  in the cached PDF by this seat — not its own result. The constants carry a Millot label on
+  someone else's number. Separately, `eos.py`'s `SUPERIONIC_MIN_T`/`_P` are **defined and never
+  read**; the live copy is the test's, unlinked to them.
+- **`ice_x` now has three different ceilings**, and the code uses the largest: **data ≈355 GPa**
+  (above it, extrapolation — C6), **stability ≈520 GPa** (where the ice region closes in the
+  very potential `ice_x` is fitted to), **printed 1000 GPa** (the knot box, and what
+  `ICE_X_P_MAX` says). This is C6's subject and belongs in its row.
+
+**Brief 34 is the repair** and is designed but unwritten: measure whether trials enter the
+false region · replace the flat inequality with a (P, T)-dependent check · fix the attribution
+and remove the unlinked duplicate · record the three ceilings as one notation.
 
 ## Standing rules — each exists because something got through
 
@@ -209,40 +228,79 @@ Every one is in `interior-core.md`'s rules section with its case. The short form
 
 ## Owner decisions still parked
 
-The four approved items are worked through: **① the cold-flank general fix landed**
-(2026-08-31, Brief 22, three legs), **③ the ice axis was attempted and could not be
-measured** (Brief 23 — the axis is expressible, no bracket end converges, and the reason is
-named below), and **④ all three surveys landed**
-(`engine/surveys-2026-08-31-context-notes.md`). **② is the one still open of the four**, and
-it now has the paper it was waiting for.
+**Rewritten 2026-09-01 evening. Four rows that stood here were already resolved and were
+sitting stale** — ⑥ was listed as awaiting a decision after it had been transcribed and
+landed, and a session reading this list would have re-asked a closed question. That is the
+list's own rule (*prose that carries a number carries the duty to update it*) applied to
+prose that carries an open/closed state. **Check a parked row against `git log` before
+acting on it.**
 
-- **② Adopt Queyroux's melting curve, or not — reframed, and unblocked.** Survey ③ found
-  the 100–150 K disagreement already settled by Queyroux themselves; what is live is the
-  curve's *shape* (continuous vs discontinuous melting, still argued in 2025), so adopting
-  them is **choosing a side**, not repairing an error. Brief 22 removed one of the three
-  cost items. **Prakapenka+ 2021 is now cached and has not been read against our curve or
-  Queyroux's** — that comparison is the work this decision waits on, and it needs to be
-  dispatched before the decision is taken.
-- **⑥ Bake IAPWS-95/IF97 steam?** New, 2026-08-31, and it is **③'s precondition**: every
-  ice-axis bracket end dies at one wall (p ≲ 0.1 GPa × 500–1000 K, the junction of water1's
-  500 K ceiling, water2's 0.1 GPa floor and Mazevet's 1000 K floor — 1102 of 1202 refusals),
-  and the published filler covers exactly that window. Bringing in a new source is the
-  owner's call. **Its cost includes one thing steam does not buy**: the wall sits outside
-  Soubiran & Militzer's validated mixing band (2–70 GPa × 1000–6000 K) on both axes, so
-  filling it gives a water equation of state there and leaves the *mixture* ungrounded —
-  the same shape as C6's ladder, a table standing where the data is not.
-- **Adopt AQUA?** Not urgent, and the gain is now named twice over: the high-pressure
-  300–1000 K corner is not merely untabulated, it is where our own ladder stops being data
-  (C6). Cost is a 13.6 MB dependency and an interpolation seam inside our range.
-- **Merging `engine/prototype` into `main`**, and whether to open a PR.
-- **Which declared pair C11 should actually use** — the row gives the grid and does not choose.
-- **Carbon as a separate phase.** Uranus's and Neptune's mantles cross every published
-  dissociation threshold; that was measured and not judged. Opening it is a scope decision.
-- **Paper requests**: only one is still open — the ternary EOS grid (author request only,
-  Bethkenhagen's group at Rostock). The other two arrived 2026-08-31. **Millot+ 2019** is
-  cached (`2019Natur.569..251M.pdf`) and the figure the notes named was the wrong one — the
-  phase diagram is **Fig. 4**, not Fig. 3 — so the superionic constants are still
-  abstract-sourced until someone reads Fig. 4 against them. **Prakapenka+ 2021** is cached
-  (`2021NatPh..17.1233P.pdf`, the GFZ Potsdam repository's open-access author copy, found
-  through Unpaywall after the publisher paywall held) and it is the paper decision ②
-  should not be taken without.
+**Resolved since the last rewrite — do not re-open these:**
+
+- **② Queyroux's melting curve — landed, and not as either election.** The owner rejected
+  both the lineage choice and a three-way mean, and chose the **unweighted mean of Queyroux+
+  2020 and Prakapenka+ 2021 over 2.17–14.6 GPa** (Brief 33, `0e8dcc02`). Below the kink both
+  lineages agree, so there is no side to take; above 14.6 GPa the dispatch is unchanged and
+  the stretch where candidates disagree refuses by name. Our own curve was **excluded from
+  the mean** because a three-way mean let the curve under review vote on its own trial — it
+  landed 111–120 K *below* both real measurements at 20 GPa. Anchors bit-identical, gate
+  FAIL 0. Label conditions live beside the constants: the two papers **share Datchi's
+  triple-point anchor** (2.17 GPa · 354.8 K, identical to three figures in both), so the
+  1.0 K agreement at 8.2 GPa is **not** independent confirmation — the independent number is
+  8.7 K at 20.0 GPa; averaging does **not** shrink the uncertainty (carry the ≤54 K
+  separation, never σ/√2); below 8.4 GPa is anchored interpolation, not measurement support.
+- **⑥ IF97 steam — transcribed and landed** (Brief 25, `544d8730`, `bb1d3779`). It retired
+  the water wall, and **the wall moved rather than cleared**: the ice axis now stops at
+  h_he's low-temperature floor (`01271699`). So **③ is stopped again, by a different wall**,
+  and is not an adoption candidate today.
+- **AQUA — closed as *not built*** (Brief 32, `b5c9cb97`). The full pipeline ran and the
+  exhaustive question came back zero: **no baked fluid cell below 1000 K that steam/water1/
+  water2 do not already own.** The target corner was already-served territory plus AQUA's own
+  region-5/6/7 seam, which is where our named refusal lives and where AQUA's numbers are the
+  unphysical ones. A fallback with no reachable state is a machine without a consumer (C5).
+  Generator, cached grid and PROVENANCE kept; the baked module was not committed.
+- **C11's declared pair — closed by declining to elect one** (`8bd564fe`). The grid is the
+  answer; anything downstream needing one number declares its own and carries the label.
+- **Ternary EOS grid — closed as *recorded, not found*** (`d8907784`).
+- **Millot+ 2019's Fig. 4 — read** (surveys ⑩/⑩b, 2026-09-01), and it did not say what the
+  constants claimed. See the next section; the repair is Brief 34, not a decision.
+
+**Still open:**
+
+- **Where the tidal-heating → interior axis goes in the queue.** It is now adoptable and
+  **cheaper than the first reading**: Ė(T) is needed to *predict* an equilibrium, not to
+  evaluate the conversion at a given heating rate, which is what Kankanamge §6 does for Io
+  (1471 K internal, 12.6 km lithosphere, consistent with Galileo eruptive temperatures) —
+  and our Ė is likewise a computed input. Multiplicity is one stable point, with an unstable
+  one only in the Maxwell-plus-convection pairing. **This is the one decision that unblocks
+  the queue.** The directing seat recommends it next.
+- **Carbon's fluid axis — a scope decision, and half its rationale was retracted.** Survey ⑨
+  found that the composition numbers this axis was adopted for are **fitted interior-model
+  parameters, not chemistry outputs** — the first-principles part establishes that separation
+  happens and that hydrogen depletion grows with pressure, and leaves the quantity free. So
+  the fluid/diamond contrast narrows: **both need declared quantities.** For Uranus and
+  Neptune it is buildable (their values are printed); as a *general* axis it needs **four
+  declarations per body** (two layer compositions, two boundary radii) with **two** published
+  examples. That is the shape that closed hot sub-Neptunes — **but not the same case**: what
+  closed those was a parameter with *no* published value at all. Here there are two worked
+  examples, a printed stability inequality (H₃ < H₂), an exact endpoint (undepleted CH₄–NH₃
+  gives H = 1 by the printed definition), and a printed interpolation form. The recipe
+  declares things routinely; the rule is *say that you declared*. **The genuine limit is that
+  this axis has no independent validation anywhere** — J₂/J₄ were the fit targets, not a
+  prediction test, which is exactly the threshold the tidal axis cleared via Io. So its
+  output is *structure consistent with the physics*, not *structure constrained by data*, and
+  must say so. Directing seat recommends adopting it as a **declared family with a grid**,
+  never one elected quadruple.
+- **Zenodo download permission.** Carbon's layer equations of state are **distributed as
+  deposited data, not printed** (records named in survey ⑨; nothing was downloaded — the
+  record IDs are the product). This is the AQUA/CDS shape, which we accept, but fetching from
+  a new host is the owner's call.
+- **Merging `engine/prototype` into `main`**, and whether to open a PR. Still deferred, and
+  the cost of deferring is now visible: a session in the main checkout sees the last work as
+  tidal heating and the stability simulation and is not wrong.
+- **Dante · Hades radii** — board work, so it sits behind the engine by the standing
+  tool-before-boards rule.
+- **Paper requests**: the ternary grid closed as not found. **French, Desjarlais & Redmer
+  2016** (PRE 93, 022140, `2016PhRvE..93b2140F`) was **obtained by the owner 2026-09-01** and
+  is cached with PROVENANCE; it prints **no** boundary equation or table, which is recorded as
+  a legitimate *not found*. Nothing is outstanding.
