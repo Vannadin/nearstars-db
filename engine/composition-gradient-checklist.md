@@ -164,3 +164,54 @@ Wide half done (32 shells, conv=True all):
 (Not judged, recorded: N w=0.30's renorm 0.2300 sits at Uranus's target by coincidence
 of digits; N's own target is 0.2410. U's radius residual nearly vanishes at wide
 widths — +0.12 % at w=0.30 — while renorm covers 0.0144/0.0363 ≈ 40 % of U's deficit.)
+
+# Brief 27 — widen the family to z_shallow > 0 (owner chose (b)) — REGISTERED BEFORE RUNS
+
+Basis: `728f6f5d` — route A's cap is a **family resemblance** (the shape of Vazan &
+Helled 2020's successful models), not a stability calculation. This brief puts that
+shape into the declared family and measures again.
+
+**Design — no engine edit needed, and that is the identity argument**: Brief 26's erf
+already produces the three-part shape when z_shallow > 0 (deep Z → gradient → a
+homogeneous outer plateau at Z = z_shallow), the validations already admit
+0 ≤ shallow ≤ deep ≤ 1, and the dispatch already mixes the outer shells. z_shallow = 0
+declarations are therefore **the same calls byte-for-byte** — identity by
+call-equality, plus one measured rerun (U w=0.20, must be bit-identical to the grid
+log) so the claim is measured, not argued.
+
+**z_shallow is a declaration with a citable bracket**: Vazan & Helled 2020 §3.3, the
+metal-rich convective outer layer of all successful models except two-layer U-1 carries
+**Z = 0.6–0.7** (the T_int pattern: declare inside a published bracket, never invent).
+Source cited beside every value.
+
+**Mass conservation, forced by the declaration mapping**: total heavy mass is fixed
+(rock layer + envelope Z-mass = the end-B budget), so raising z_shallow pushes the
+transition deeper: m_mid = (imf0 + base − s·1)/(1 − s) from
+(m_mid − base) + s·(1 − m_mid) = imf0 (symmetric erf). Shells conserve the integral
+exactly (mass-averaged erf), but the erf tail clipped at the envelope base is NOT
+negligible at wide widths — the runner prints the actual integrated Z mass next to the
+declared imf0 and the difference is reported per point.
+
+**Conformity criterion, redefined for this family** (registered here): the *gradient*
+(heterogeneous) region m_mid ± 2δm must sit below 0.8 R (r_grad_top ≤ 0.8 R); above it
+the profile is homogeneous at z_shallow by construction and convective by the recipe's
+adiabatic assumption — i.e. Vazan's actual description (outer ~20 % homogeneous
+convective, stratified below), not just "gradient below 0.8 R with a clean top".
+
+**Probes before any grid** (2-D grid would be 42 solves): Uranus, three points —
+(z_shallow 0.6, w 0.20) · (0.7, 0.20) · (0.65, 0.30), serial. Two questions each:
+① conforms (r_grad_top ≤ 0.8 R)? ② renorm moves off the layered end A (0.1937)?
+
+**Branches, five**: ① conforms AND moves → grid; reachable coverage exists for the
+first time. ② conforms, doesn't move → the homogeneous top kills the moment gain;
+trace why; that is the result. ③ moves, doesn't conform → the family widening lands in
+the same place; the cap itself becomes the question → (a). ④ neither → the gradient
+axis closes in this recipe; C13's next item changes. ⑤ outside the register → name it.
+
+**Hard constraints**: z_shallow=0 reproduces Brief 26 bit-for-bit (call-equality + one
+measured rerun; stop before any grid if it fails); anchors bit-identical (no fingerprint
+move expected — no code edit); gate in background/detached ONLY (the 600 s foreground
+harness limit killed two runs yesterday); **no value adopted — neither width nor
+z_shallow**; observations beside.
+
+**Out of scope**: (a) re-grounding the cap; Howard+ 2025; the silicate melting curve.
