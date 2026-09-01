@@ -10,7 +10,8 @@ The original brief left open "if the ice axis covers much of the deficit, the gr
 relaxes". The measured result is the opposite: **the ice axis cannot be measured with
 uniform Z at all** (all four end-B solves conv=False; the surface pins at 355–363 K vs
 t_pot = 76 K because trial adiabats die at the h_he table's cold floor — 1830 K at
-130 GPa, 1945 K at 164 GPa, 3130 K at 1050 GPa, directing-seat measurement). So the
+130 GPa, 1945 K at 164 GPa, 3130 K at 1050 GPa, directing-seat measurement; reproduction = probe the h_he window floor at fixed
+pressure by bisecting temperature against the too_cold refusal, milliseconds). So the
 gradient is **the only remaining path**, and whether it clears that wall is the first
 question, not the last.
 
@@ -64,9 +65,16 @@ silicate melting curve.
 
 ## Work items
 
-- [ ] (blocked on owner) wall probe: steepest + shallowest width, conv or the wall
+- [ ] wall probe: steepest + shallowest width, conv or the wall (owner reported 09-01
+      morning; directing seat cleared start — minimal Z(x) first, probe before grid)
 - [ ] width-0 anchor identity (bit-identical to layered)
-- [ ] fetch-and-pin Gupta+ 2025 (2407.04685), transcribability verdict
+- [x] fetch-and-pin Gupta+ 2025 (2407.04685 · 2025ApJ...982L..35G) — **transcribable,
+      closed form**: critical curve Eqs. 5–10 with Table 1's six printed parameters
+      (validity 750–6000 K × 0.25–2000 GPa). Table verified against the typeset page
+      images (the IF97 corrupted-channel rule) — all six match the text layer; spot
+      check P_c(3000 K) = 27.0 GPa vs the paper's own "near 30 GPa at 3000 K".
+      Caveats pinned in the PROVENANCE: binary-system curve (x=0.6 shifts +~10 GPa at
+      3000 K); location only, never width
 - [ ] Ledoux cap route A transcription (knobs stated), route B check where computable
 - [ ] grid + per-point report (renorm, radius residual; observations beside, not fitted)
 - [ ] landing: notes, C13 row hand-off to directing seat
