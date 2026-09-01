@@ -57,3 +57,10 @@ the corner → legitimate ending, water2's shape. ⑤ outside → name it.
 
 **Hard constraints**: no new runtime dependency (baked module); gate background +
 log-tail watch; the raw 51 MB/13.6 MB grid never enters git.
+
+**Verdict (2026-09-01)**: branches ③+④ — the baked AQUA subset has **zero cells that
+the existing tables do not already own**: the target corner = (already-served
+territory) ∪ (AQUA's own region-5/6/7 inconsistency seam, 52 cells excluded by the
+registered sweep at 15.9–26.9 GPa × 759–933 K, the paper's own §2.5 sentence). No
+consumer → no landing: dispatch insertions reverted, baked module not committed;
+generator + cached grid + PROVENANCE kept. Details: aqua-context-notes.md.
