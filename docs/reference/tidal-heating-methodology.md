@@ -561,6 +561,16 @@ mechanism is solid, the numbers are noisy:
   (critical value disputed: 0.30 / 0.45 / 0.50).
 - Several transport sources predate arXiv or are paywalled and are therefore verified
   by ADS bibcode and abstract rather than full text: Kankanamge & Moore 2019,
+
+  > **Kankanamge & Moore 2019 was obtained 2026-09-01** (owner fetched it; cached as
+  > `docs/phase3/_papers/2019JGRE..124..114K.pdf`). The admission above is kept rather than
+  > edited away, because survey ⑧ found this row *by reading it* — the doc had named the
+  > paper that answers "what sets the mantle temperature" and had recorded, 254 lines later,
+  > that it had not been read. **The gap was between our own reference and the literature,
+  > not in either.** Also cached the same day: **Rovira-Navarro+ 2021**
+  > ([`2021PSJ.....2..119R`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2..119R)),
+  > *Tidally Heated Exomoons around Gas Giants* — gas-giant moons, so our own case rather
+  > than an analogy, and the source of the fixed-point framing below.
   Moore 2003, Moore & Webb 2017, Reese 1998, the Veeder series, Harris 1999/2005/2008,
   Lev 2019. Harris 1999/2008 and Lev 2019 are the three whose full text would most
   improve the crust-fraction scaling if this section ever needs it quantitatively.
