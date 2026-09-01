@@ -104,26 +104,36 @@ carbon) survived, but **two of the three did not end as adoptions**:
   dissociates) and the hydrogen-poor C–N–H polymer species the separation produces. It now
   needs an owner scope decision before a brief.
 
-**Two findings arrived after the core list closed, both about `ice_x`, and neither is briefed:**
+**Two findings arrived after the core list closed, both about `ice_x`. Brief 34 closed them the
+same evening** (`438efd70`, `6ae41eb4`, `21f37436`; notes `engine/superionic-gate-context-notes.md`,
+full record in C6's row). Summary, because the shape of the answer is the part worth carrying:
 
-- **The superionic gate asserts something false and passes.** `test_interior.py:220`'s
-  `MILLOT_SUPERIONIC = (100.0e9, 2000.0)` treats the superionic floor as **flat**, and the
-  gate checks `ICE_VII_X_T_MAX (1800 K) < 2000 K`. The real boundary rises to a maximum near
-  200 GPa and then **descends through 1800 K somewhere in 305–375 GPa** (two independent
-  figure renderings; the maximum agrees to 0.7 % in T and 5 % in P, the crossing disagrees by
-  29 GPa and **was not adjudicated**). So the promise in `eos.py:1929-1934` — that superionic
-  ice will not be quietly called ice X — is reachable. **No current answer is wrong**: both
-  ice giants' mantles bottom out at 2553 K. **Whether a cold *trial* path enters is unmeasured,
-  and that is what separates a labelling defect from a convergence defect.**
-- **And the attribution on those constants is false.** Millot+ 2019's "exceeding 100 GPa …
-  above 2,000 kelvin" is that paper restating **refs 6–12's prediction** — verified verbatim
-  in the cached PDF by this seat — not its own result. The constants carry a Millot label on
-  someone else's number. Separately, `eos.py`'s `SUPERIONIC_MIN_T`/`_P` are **defined and never
-  read**; the live copy is the test's, unlinked to them.
-- **`ice_x` now has three different ceilings**, and the code uses the largest: **data ≈355 GPa**
-  (above it, extrapolation — C6), **stability ≈520 GPa** (where the ice region closes in the
-  very potential `ice_x` is fitted to), **printed 1000 GPa** (the knot box, and what
-  `ICE_X_P_MAX` says). This is C6's subject and belongs in its row.
+- **The gate was asserting something false and passing.** It compared `ICE_VII_X_T_MAX` (1800 K)
+  against a **flat** 2 000 K superionic floor; the real boundary peaks near 200 GPa and
+  **descends through 1800 K somewhere in 305–375 GPa** (two figure renderings; the maximum agrees
+  to 0.7 % in T, the crossing disagrees by 29 GPa and **was not adjudicated** — a figure reading
+  does not settle a figure disagreement). The floor's provenance was also false: that sentence in
+  Millot+ 2019 restates **its own refs 6–12's prediction**, verified verbatim in the cached PDF.
+- **Both ceilings do have a consumer — and it does not reach the answer.** Uranus's *trial*
+  corridor makes **1,854** `ice_x` evaluations inside the region, traversing 355→535 GPa along an
+  adiabat; the moons make zero and Neptune's corridor stops at 235 GPa. Then a ±5 % perturbation
+  confined to the region **fired 1,754 times and moved nothing**, and refusal at first contact
+  **fired once and left the trajectory identical** — five runs bit-identical, Δ exactly 0. So the
+  answer is insensitive to the region's values *and* the trials that walk it are discardable.
+- **Both candidate repairs were discarded by measurement, not preference.** "Assert it is never
+  evaluated there" lost its **premise**; "refuse by name at the boundary" lost its **necessity**
+  (refusing changes nothing → machinery without a consumer, C5). What landed is **tolerance plus
+  labels**, with the gate now asserting the **measured invariance** (`_clamp_invariance`, +22 s):
+  a claim about our code, which **fails loudly the day a solver change connects the corridor to
+  the answer.**
+- **Three transferable lessons.** A null result is believable only once the instrument is shown to
+  have fired — hook-fire counts are what make Δ = 0 evidence rather than absence. A distribution
+  refutes a story: the directing seat read "the temperature loop is riding the ceiling" and the
+  T-histogram killed it (≥1799 K is 0.8 % of hits). And **`ICE_X_P_MAX` stays at 1 000 GPa** —
+  A2 *weakened* the case for narrowing, because the only consumer is a corridor that does not
+  reach the answer. The invariance is **measured for the current roster's Uranus and is not a
+  general guarantee**; a body whose *converged* column enters the region reopens it, which is why
+  C6 stays a standing watch.
 
 **Brief 34 is the repair** and is designed but unwritten: measure whether trials enter the
 false region · replace the flat inequality with a (P, T)-dependent check · fix the attribution

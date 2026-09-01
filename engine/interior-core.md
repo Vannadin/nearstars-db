@@ -887,9 +887,47 @@ and high temperatures above 2,000 kelvin"* is that paper restating **the predict
 refs 6–12** (*"Particularly intriguing is **the prediction** that H₂O becomes superionic⁶⁻¹²…"*,
 verified verbatim in the cached PDF by the directing seat), not its result — and the paper's own
 measurement window, 100–400 GPa × 2 000–3 000 K, is an experimental range, not a boundary.
-`eos.py`'s `SUPERIONIC_MIN_T`/`_P` are meanwhile **defined and never read**; the live copy is the
-test's, unlinked to them. **Both the ceiling notation and the label repair are Brief 34**; C6
-stays a standing watch and records that it fired.
+`eos.py`'s `SUPERIONIC_MIN_T`/`_P` were meanwhile **defined and never read**; the live copy was
+the test's, unlinked to them.
+
+**Closed 2026-09-01 by Brief 34 — and the answer was cheaper than either candidate fix**
+(`438efd70`, `6ae41eb4`, `21f37436`; `engine/superionic-gate-context-notes.md`). **The two
+paragraphs above are the state before that brief and are kept as the finding's record; what
+follows is the state now.**
+
+**Both ceilings do have a consumer, and it is a trial corridor that does not reach the answer.**
+Item A instrumented every `ice_x` evaluation across all seven anchors: the five moons make
+**zero** (their deepest phase call is 8 GPa-scale), Neptune's corridor stops at 235 GPa, and
+**Uranus makes 1,854 evaluations inside the region** — 355→535 GPa traversed continuously along
+an adiabat, T rising 1643→1800 K with pressure (0.87 K/GPa; not pinned at the ceiling — ≥1799 K
+is 0.8 % of them, median 1728). **A directing-seat reading that the temperature loop was riding
+the ceiling was refuted by that distribution**, which is what the distribution was asked for.
+
+**Then item A2 measured whether the answer depends on that region, and it does not — on both
+axes.** Criterion fixed before running (same solution within the anchors' recorded
+reproducibility, not bit-identity, since a perturbation moves the shoot's iterates). Five runs
+came back **bit-identical, Δ exactly 0**: a ±5 % density perturbation confined to the region
+**fired 1,754 times** and moved nothing, so the answer is insensitive to the *values*; and
+refusal at first contact **fired once** and left the trajectory identical to base, so the trials
+that walk the region are **discardable** — first-contact death and full-walk death are the same
+signal to the controller. The null result was validated by hook-fire counts before being
+believed, which is the reason it is trustworthy rather than an instrument that never fired.
+
+**So both candidate repairs were discarded, each by measurement rather than by preference.** B2
+("assert `ice_x` is never evaluated there") had its **premise** disproved — it is evaluated 1,854
+times. B1 ("refuse by name at the boundary") had its **necessity** disproved — refusing changes
+nothing, so it is machinery without a consumer, which is C5's rule. What landed instead is
+**tolerance plus labels**: the flat-floor check and the falsely-attributed constants are removed,
+and the gate now asserts **the measured invariance** — a +5 % perturbation in the region must
+reproduce Uranus's anchor to the bit (`test_ice_giant._clamp_invariance`, +22 s, ≈2 % of the
+gate). That is a claim about our code rather than about the world, and it **fails loudly on the
+day a solver change connects the trial corridor to the answer.**
+
+**The scope limit is part of the result, not a caveat on it**: this invariance is *measured for
+the current roster's Uranus, and is not a general guarantee.* A body whose **converged** column
+enters the region reopens it — which is why C6 remains a standing watch. `ICE_X_P_MAX` stays at
+1 000 GPa, and A2 **weakened** the case for narrowing it: the only consumer is a corridor that
+does not reach the answer.
 
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
