@@ -92,6 +92,31 @@ sampled**: in the case that named this, the same message's Uranus J₂ (3510.7) 
 be right, so a spot-check would have passed both. Scope, stated precisely: the error lived
 only in the relay message; the notes' printed values (3510.68 / 3535.94) were correct.
 
+**A third party checks a solver by closure, not by A/B against a harness whose brackets it
+does not own.** Registered 2026-09-01 by the audit, against its own instrument. Verifying the
+region-3 Newton inversion, its first two bisection harnesses reported a worst disagreement of
+**0.4** — and both were the harness's fault: the first bisected globally across a
+non-monotonic stretch below T_c, the second used a lower bracket of 50 kg/m³ while the hot
+low-pressure root sat at 34.3. At the worst point the audit evaluated **p(ρ_Newton) = 17.0 MPa
+against p(ρ_bisection) = 24.3** and judged, on the spot, that **Newton was right and the
+instrument was wrong**. It then changed the final check from A/B to **root reproduction** —
+does the returned density close the equation it was inverting — and got worst **8.6e-13**.
+The general form: an A/B against the previous implementation is the *implementer's* check,
+because they know the old brackets; **an outside leg's check should be one that cannot inherit
+the old method's assumptions**, and a closure test is that. A verification harness is code, and
+code that disagrees with the thing it verifies is a suspect, not a verdict.
+
+**An unreachable boundary condition should close as a named refusal, not as a failure to
+converge.** Proposed by the audit 2026-09-01 and recorded here as the ice axis's settling path.
+The four ends of Brief 23/25 are currently `conv=False`, which reads as *"the solver could not
+do it"* — but the measurement says something stronger and more specific: **no central
+temperature reaches a 76 K surface, because the `h_he` table has no state below ~1830 K at
+130 GPa.** That is the same kind of statement every material ceiling in C6 makes, and this
+list's standard is that a refusal names its mechanism and its citation. Once the controller can
+*conclude* rather than cycle (the second defect above), these ends stop being an unfinished
+measurement and become a **recorded refusal with coordinates** — which is a closeable state,
+where "did not converge" is not.
+
 **A sentinel carried in a variable something else re-arms is not a contract.** Registered
 2026-09-01 from the temperature loop's non-termination. The loop meant to extend its pass
 budget **once**: on running out it set `bracketed = "extended"` and checked for that sentinel
