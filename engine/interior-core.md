@@ -1284,8 +1284,19 @@ rather than inferred from the refusals:
 The refusal samples sit at 131–1121 K in the first band (130–164 GPa) and 1929–3096 K in the
 second (~1046–1062 GPa) — **below the floor in both.** So a cold envelope at those depths has
 no representation at all, and the 76 K surface is not reachable from below by any central
-temperature. This is a **material ceiling of the kind C6 lists**, met from underneath rather
-than above.
+temperature.
+
+*Corrected 2026-09-01 (survey ⑦) — this was first written as "a material ceiling of the kind
+C6 lists". It is not one.* The floor is **our own declared line**, not the source's evidence
+limit: `hhe_table.py` carries `REACH_A = 2.7198`, `REACH_B = 0.2567` and the rule
+`log T ≥ REACH_A + REACH_B · log P`, whose comment says *"below that a **convecting** envelope
+does not reach, and the distributed table's defects (7 sentinel cells in the density slot,
+grad_ad clamped to 0.1/0.5) are all down there. We refuse rather than repair — stating the
+domain beats touching published numbers."* Evaluated at the five pressures probed above, the
+line gives 1830.0 / 1898.5 / 1942.5 / 3128.5 / 3132.3 K — **reproducing every measured floor
+point**, residuals 0 to +2.7 K in the direction a 5 K probe step would give. The underlying
+table (Chabrier, Mazevet & Soubiran 2019, cached) advertises **10² to 10⁸ K** and our own
+baked subset starts at 100 K. **Nothing is missing. We declined to enter.**
 
 *The four ends, recorded and not judged* (λ, then the radius residual, then
 `I/(M·R_pub²)`): Uranus B_ice 0.294150 / −10.51 % / 0.2356; Uranus B_both 0.313228 /
@@ -1358,6 +1369,44 @@ monotonic. Neptune **+8.90 % → 3.98 % at w = 0.20, then back to 4.14 %** — *
 with its optimum inside the grid**, while renorm rises monotonically for both. So the radius
 axis behaves differently from the moment-of-inertia axis, and the two planets behave
 differently from each other. Recorded, not judged.
+
+**And the wall the two gradient families died on is one assumption answering two questions
+(survey ⑦, 2026-09-01).** The reach line's justification is *"below that a **convecting**
+envelope does not reach"*, and it was derived by integrating **adiabats**. Both halves are
+statements about a convective, adiabatic envelope.
+
+**A composition gradient is, by definition, stably stratified** — that is what makes it a
+gradient rather than a mixed layer — and Vazan & Helled say what follows: *"The heat in a
+stable (steep) composition gradient region is transported by **conduction**"*, the layer
+*"acts as a thermal boundary to suppress convection and slow down the internal cooling."* A
+sub-adiabatic profile is **colder than an adiabat at the same pressure**, so a gradient model
+descends below the reach line **on purpose**. That both families died on the same line is not
+coincidence: **we asked a question outside the premise of a domain we had drawn from that
+premise.**
+
+*This does not make the refusal wrong.* The distributed values below the line really are
+damaged — 7 sentinel cells, 887 clamped — and the source calls part of that region
+*"unphysical"*, naming solid hydrogen and helium and the breakdown of the Wigner–Kirkwood
+expansion, *"identified in Fig. 1 and 16"*. **What changes is the reason attached to the
+refusal**: "a convecting envelope does not reach here" stops applying the moment the layer
+being carried is stratified. One line is answering two questions, and only one of them is
+still its own.
+
+*What would settle it, named and not guessed*: **Chabrier's Fig. 1 and Fig. 16**, read as
+(log T, log P) coordinates. If the cells we hit lie inside the solid-H/He region, the wall is
+physics and the gradient path is wrong there; if they lie merely below our adiabatic cut, the
+numbers exist and the question becomes whether the sentinel and clamped cells actually touch
+them. The surveyor **did not guess** — the figures are not in the cached text, and the
+hydrogen melting curve was not recalled from memory to decide it. Second candidate, unmeasured
+because this survey was scoped to literature: whether the damaged cells overlap the two bands
+at all (the notes put sentinels at 500–710 K · 8–225 GPa and the clamp at T ≤ 3550 K — the
+latter covers both bands).
+
+*And the target passes by a different trade, not a wider table.* Vazan & Helled use **SCvH
+(Saumon+ 1995)** — a semi-analytic free-energy model that returns a number everywhere by
+construction — while ours is a simulation-assembled table with declared holes. Chabrier 2019
+contains SCvH as its own low-temperature component and then spends several sections on where
+SCvH disagrees with QMD. **Not a better table: a different bargain.**
 
 **What this leaves the owner.** A gradient that reaches the numbers exists; a gradient that
 reaches them *and* resembles the profiles Vazan found workable does not. Two ways forward,
