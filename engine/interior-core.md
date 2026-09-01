@@ -1465,6 +1465,41 @@ together and we had been citing the one that does not apply.
 melting and validity curves are printed as **eqs. (1), (2), (3), (7)**. Evaluating them turns
 every ± 4 % above into an exact number. Not yet done.
 
+**Tightened by the printed equations, and one of them has a wrong unit note.** The melting
+and validity curves are printed, so the figure reads could be replaced by arithmetic —
+reproduced independently by the directing seat.
+
+**Helium, eq. (7): `T_m = 61.0 P^0.639`, followed by *"where the pressure P is in kbar
+(= 0.1 GPa)"*. Read that way it gives 5959 K at 130 GPa against a figure read of ≈1180 K —
+5× off.** The upstream source settles it, and it was already in our cache from the water
+survey: Chabrier cites **Datchi+ 2000**, whose Simon law is `P = 1.6067 × 10⁻³ T^1.565`.
+Inverting: **1/1.6067e-3 = 622.394, and 622.394^0.639 = 61.011**, while **1/1.565 = 0.6390** —
+the printed coefficient *and* exponent are that inversion to the decimal. Round trip, checked
+here: 300 K → 12.096 GPa → 300.01 K; 1000 K → 79.604 GPa → 1000.06 K. And 12.1 GPa at 300 K
+is helium's known room-temperature solidification pressure, so it holds physically as well as
+algebraically. **The coefficient is right and the unit note is wrong — P is in GPa.** A kbar
+reading would require the printed coefficient to be 14.0. The paper is quoted as printed, the
+discrepancy is named, and anyone transcribing eq. (7) uses GPa and cites Datchi alongside.
+(Second odd printed unit in this paper; no common cause claimed.)
+
+**Hydrogen, eq. (1)** confirms the figure reads to better than 1 % (988.4 K at the 76.3 GPa
+maximum; **869.8 K at 130 GPa, 741.6 K at 164** against ≈870 and ≈740 read). **Helium's
+equation replaces them**: 1368.2 K at 130 GPa and 1587.1 K at 164, where the figure had been
+read as 1180 and 1400 — **12–14 % low against a stated ± 5–7 %.** The surveyor named their own
+error bar as optimistic and identified the cause they had already flagged: Fig. 16's axis
+labels had to be read from a different crop than the region of interest.
+
+**Effect on the verdict — it strengthens.** Band 1's top corner, previously "5 % below the
+line, inside the error", is **18 % below at 130 GPa and 29 % below at 164**. The whole band,
+corner included, is solid with room. Band 2's helium margin goes from 1.85× to **2.25×**.
+
+**One limit cannot be closed, and the reason is worth more than the answer.** Eqs. (2) and (3)
+— the OCP melting line and the f_WK = 0.7 validity limit — are functions of **density**, not
+pressure. Our bands are given in (P, T). Converting needs ρ(P, T), **which is the very table
+whose usability at those cells is the open question.** The check requires the object it is
+checking. That is the cleanest statement of why this question and the baked-cell count are
+two different questions, and it is left undecided rather than forced.
+
 **And counting the baked table turned the second reason false as stated (Brief 29,
 2026-09-01).** The reach line's comment gives two grounds; the first was shown not to apply
 to a stratified layer, and the second — *"the distributed table's defects are **all** down
