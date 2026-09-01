@@ -56,3 +56,29 @@ uniform envelope already uses. No new EOS, no new material — only the stack's 
 - The wall probe (steepest = δm_dil → small, shallowest = Vazan-cap geometry) runs
   before any grid; both conv=False on the h_he floor → branch ⑥, grid not run.
 
+
+## §4 Measurements so far (probe + the grid's narrow half; compute stopped mid-grid)
+
+**Width-0 identity, both bit-identical** (2026-09-01): the Uranus anchor with a Z≡0
+profile equals the anchor in every digit (λ, R, P_c, T_c; 44 s), and a rock-free
+ice+H/He body declared as layers vs as a zero-width step profile equals itself the same
+way (98 s). The corridor's boundary is the answer's own path (the c13 1-ULP lesson,
+honored by construction this time).
+
+**Wall probe — the gradient clears the h_he floor** (registered verdict rule: either
+end conv=True → grid proceeds): U w=0.01 → λ 0.174208, renorm 0.1937 (the layered end A
+exactly — continuity), conv=True; U w=0.30 → λ 0.207637, renorm 0.2081, radius residual
++0.12 %, T_c 4294 K, conv=True. Why: uniform Z carried heavy material to the surface
+and dragged the adiabat under the h_he window's floor; the gradient's shallow envelope
+tapers to clean H/He, whose adiabat stays inside — the anchor's own surviving shape.
+Brief 23's §4 observation ("a graded profile crosses the wedge with far less water")
+was a testable prediction and it held.
+
+**Grid, narrow half done before the compute stop** (6 of 14; values in the checklist):
+U/N × {0.01, 0.025, 0.05} all sit at the layered end A's renorm (0.1937/0.2135 to the
+fourth digit) — narrow gradients are the layered structure, as continuity demands. The
+movement lives in the wide half {0.075, 0.125, 0.20, 0.30}, unmeasured except the
+probe's U 0.30. No adoption; observations (N13 P_Voy 0.2300/0.2410) sit beside.
+
+*(landing: the wide half, the shell-sensitivity point, Vazan-geometry conformity per
+point, and the gate — resume on the owner's signal only)*
