@@ -1392,7 +1392,43 @@ refusal**: "a convecting envelope does not reach here" stops applying the moment
 being carried is stratified. One line is answering two questions, and only one of them is
 still its own.
 
-*What would settle it, named and not guessed*: **Chabrier's Fig. 1 and Fig. 16**, read as
+**Settled 2026-09-01 (survey ⑦ addendum): both bands are inside the forbidden region, and
+what puts them there is helium, not hydrogen.** The figures arrived (the owner fetched the
+paper; the earlier cached copy was an ar5iv conversion whose only two `<img>` tags were the
+converter's own logo, which is why the text was readable and the figures were not).
+
+**Fig. 1 and Fig. 16 are not two cuts of one diagram — they are the two pure components.**
+Caption 1: *"Temperature-density domain of the present EOS for **hydrogen**."* Caption 16:
+*"…for **helium**."* Both end with the same sentence, verified twice in the cached text:
+**"The EOS must not be used beyond these limits."** Our table is the Y = 0.275 additive
+mixture of those two.
+
+| band | hydrogen's melting line | helium's | verdict |
+|---|---|---|---|
+| 130–164 GPa · 131–1121 K | ≈870 K at 130, ≈740 K at 164 — the band **straddles**, 81–88 % of its log-T width solid | ≈1180 K at 130, ≈1400 K at 164 — **the whole band sits below** | **solid** |
+| ~1055 GPa · 2309–2340 K | Γ_m = 175 line ≈1520 K — band is 1.5× hotter, so **fluid by hydrogen** | ≈4100 K — band is **1.85× colder**, 0.27 dex, several times the error | **solid** |
+
+**Read Fig. 1 alone and the second band answers "fluid".** It is helium that binds it, and
+helium is 27.5 % of the mixture. Method, because the numbers are figure reads: vector PDF
+rendered at 2400 dpi, measured against tick marks inside the same crop, **± 1 % in pressure
+and ± 3.5–5 % in temperature**, with the calibration checked against a printed number — the
+surveyor's H₂ melting maximum at ≈80 GPa · ≈1000 K against the text's *"determined
+experimentally up to T ≃ 1000 K, P ≃ 100 GPa"*. One corner is left undecided rather than
+claimed: band 1's top at 130 GPa (1121 vs 1180 K, inside the error), and band 2's crossing of
+the f_WK = 0.7 validity limit (5 % ± 4 %).
+
+**So §5's finding stands and does not open the region.** The reach line's stated reason —
+*"a convecting envelope does not reach"* — genuinely stops applying to a stratified layer.
+**But a second limit sits in the same place and does not care whether the layer convects:**
+the source forbids its own EOS there. **The gradient path is wrong at those cells, and that
+reason survives dropping the convective assumption.** Two limits happened to lie close
+together and we had been citing the one that does not apply.
+
+*What would settle the remaining corners, and it is arithmetic rather than a search*: the
+melting and validity curves are printed as **eqs. (1), (2), (3), (7)**. Evaluating them turns
+every ± 4 % above into an exact number. Not yet done.
+
+*What was named and not guessed*: **Chabrier's Fig. 1 and Fig. 16**, read as
 (log T, log P) coordinates. If the cells we hit lie inside the solid-H/He region, the wall is
 physics and the gradient path is wrong there; if they lie merely below our adiabatic cut, the
 numbers exist and the question becomes whether the sentinel and clamped cells actually touch
