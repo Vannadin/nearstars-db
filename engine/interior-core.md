@@ -1465,6 +1465,34 @@ together and we had been citing the one that does not apply.
 melting and validity curves are printed as **eqs. (1), (2), (3), (7)**. Evaluating them turns
 every ± 4 % above into an exact number. Not yet done.
 
+**And counting the baked table turned the second reason false as stated (Brief 29,
+2026-09-01).** The reach line's comment gives two grounds; the first was shown not to apply
+to a stratified layer, and the second — *"the distributed table's defects are **all** down
+there"* — was checked against **our own baked product** rather than the distributed original.
+
+*The two bands were never baked at all.* `KEEP` trims columns per isotherm, and for band A the
+kept range stops far short of it; for band B the four isotherms of the fatal point's bicubic
+stencil end at 224–794 GPa while evaluation needs 1259 GPa. **The fatal cell is neither
+damaged nor sound — it is unbaked**, so the refusal there is the reach line itself, not data.
+Sentinels in the baked table: **zero** — all seven sit in trimmed columns. That is registered
+branch ④, and it makes *"the table is damaged there"* the wrong sentence: **we did not bake
+those cells.**
+
+*But 72 clamped cells survive the bake, and 70 of them sit **above** the line* — inside the
+region we use. Reproduced by the directing seat over the baked arrays: 5495 cells kept, 72
+with `grad_ad` pinned, **70 above the reach line, 2 below**, every one of them at the **0.1**
+clamp end and none at 0.5. The block runs **≈18–112 GPa × 1585–3981 K** — the molecular-to-
+atomic transition band, near where Gupta+ 2025 place the fluid structural transition. So the
+second reason holds for the sentinels and for the cold pinned mass, and **fails for one block
+that lives in the used domain**.
+
+*The open, testable follow-up*: the notes' own table has a 60 K-start adiabat passing 100 GPa
+at ≈2371 K, which puts a cold-start ice-giant profile **inside the stencil reach of those
+pinned rows**. **Whether our anchor integrations read stencils containing a clamped node is
+not known and is checkable.** If they do, the adiabatic gradient at those steps is a clamp end
+rather than a published value. Verdict-changing if true; opened as its own item rather than
+folded in here.
+
 *What was named and not guessed*: **Chabrier's Fig. 1 and Fig. 16**, read as
 (log T, log P) coordinates. If the cells we hit lie inside the solid-H/He region, the wall is
 physics and the gradient path is wrong there; if they lie merely below our adiabatic cut, the
