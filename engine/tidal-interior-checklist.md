@@ -67,4 +67,7 @@ recovery shows (1471, 12.6) requires α=8.71e-7·ΔT_rh=354 K (unphysical); the 
 own Tables 2–4 fail deterministic inversion (per-row L drifts 0.3→10.8). Axis shipped
 wired + labelled + `validation: failed-io-reproduction`; Io = gate check table
 (test_tidal_transport.py); Dante = no root at 11,500 W/m², Hades = (1844 K, 224 km)
-measured-not-adopted. Declaration untouched. Details: tidal-interior-context-notes.md §4–5.
+measured-not-adopted. *Corrected same day (notes §6): the Dante input was a mismatched
+pair (11,500 is the rejected 900-km draft's flux); at the canonical §6.5 pair
+(2,231 W/m²) Dante has a unique root (2122 K, 147 km). Roster inputs are now read
+from canonical files with a pairing gate (roster_inputs), hand-typing removed.* Declaration untouched. Details: tidal-interior-context-notes.md §4–5.

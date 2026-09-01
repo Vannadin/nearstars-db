@@ -151,10 +151,9 @@ exact-root recovery, and the label discipline.
 
 Io-class material fill-ins (Table 5), per-body g and T_s, D/R = 0.549 declared:
 
-- **Dante (A b I)** — R 521 km, board flux 11,500 W/m², T_s 360 K, g 0.437 (ρ=3000
-  fill-in): **the printed system has no root** at this input. At ~3,800× the Io flux
-  the melt-zone geometry cannot balance (36)+(38). Measured as an absence; the board's
-  own §6.4-based lava-lake treatment remains the operative story. Nothing touched.
+- **Dante (A b I)** — *interim, superseded 2026-09-01 (see §6): the inputs below were
+  a mismatched pair.* R 521 km was fed the **rejected 900-km draft's flux** 11,500 W/m²
+  (and a ρ=3000 g), so the measured "no root" was an input artifact, not physics.
 - **Hades (A b II)** — R 750 km, M 5.0e21, board flux 207 W/m² (band bottom), T_s
   278 K: unique root **T_i = 1844 K, lithosphere = 224 km** (on D = 412 km — more than
   half the declared mantle depth, where the 1-D slab is least trustworthy; §6 of the
@@ -163,3 +162,46 @@ Io-class material fill-ins (Table 5), per-body g and T_s, D/R = 0.549 declared:
 
 Anchors: no engine module imports `tidal_transport`; anchors expected bit-identical
 (gate run confirms).
+
+
+## 6. Corrections after the owner's question (2026-09-01, same day)
+
+**① The Dante measurement used a mismatched pair, and the verdict flips.** §5's input
+(R 521 km + F 11,500 W/m²) paired the adopted radius with the rejected 900-km draft's
+flux — methodology §6.5 is the canonical table (directing seat confirmed
+(900/521)³ = 5.15 and 2,231 × 5.15 = 11,500 exactly; F ∝ R³ at fixed density). Re-run
+with the matched pair (521 km · 1.552×10²¹ kg · ρ 2,620 · 2,231 W/m² · plains 223 K ·
+g 0.3816): **the printed system has a unique root — T_i = 2122 K, lithosphere 147 km**
+(F_m = 2231, F_c = 29 mW/m²). So Dante is *not* an absence; the "no root at Dante"
+line in §5 is superseded. Still measured-not-adopted, still unvalidated-labelled.
+(T_s sensitivity: the board-era 360 K moves it to 2125 K / 136 km — small.)
+
+**② Hades inputs cross-checked and kept.** Canonical = phase4/alpha_centauri.yaml,
+which is self-consistent for Hades (no radius redesign): moons block M 5.0×10²¹ kg ·
+R 750 km (density M/V = 2,830 kg/m³, inside the rocky band, matching the board's
+"Moon-sized rocky body"); bulk.tidal_heating 207 W/m² whose "~15× Io" multiple implies
+an Io output of 9.76×10¹³ W (inside the ~10¹⁴ W Veeder order) — flux and radius are a
+pair. surface_temperature 278 K. §5's Hades numbers stand: (1844 K, 224 km).
+
+**③ Hand-typed inputs removed.** The same defect fired twice in one day (this
+session's Dante pair; the audit's g·T_s omission), so `roster_inputs()` now reads the
+values from the canonical files with their sources attached and refuses mismatched
+pairs by name before running: Dante's F∝R³ check against the drafted row and
+M = ρ(4/3)πR³; Hades's rocky-band density and the ×Io-multiple ↔ flux·area
+consistency. Canonical choices recorded in the module: **Dante = methodology §6.5
+table** (the phase4 board is internally split while the radius question is parked:
+decisions row says 521 km, moons block still carries the 900 km draft, and
+bulk.tidal_heating still carries 11,500 W/m²); **Hades = the phase4 board**. The board
+stays read-only. The gate now pins the corrected measurements as invariants
+(test_tidal_transport.py §5–6).
+
+**④ Both roster roots sit where the model is least trustworthy.** Hades:
+lithosphere/mantle-depth = 224/412 = **54 %**; Dante: 147/286 = **51 %**. The
+parameterization's convection scalings (eq. 5's Ra with (D−δ)³, eq. 13's velocity) are
+stagnant-lid laws for a thin lid over a deep convecting layer; at δ/D > ½ the "layer"
+is thinner than its lid, the melt zone occupies most of what remains, and the paper's
+own §5 validation never went there — their nondimensional lid thickness tops out at
+δ/D = 0.26 (Tables 2–4), and §6 says even Io's spherical correction (ignored in the
+1-D slab) would lower both outputs. The unvalidated label already applies; this notes
+*which regime* the numbers sit in, so a reader does not mistake them for interpolation
+inside the validated range.
