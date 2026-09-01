@@ -138,3 +138,35 @@ span.
 
 (The cap's exclusion statement stands at the top of this section — the spans in the
 table are read under it.)
+
+## §6 Brief 27 — the family widened to z_shallow > 0, and the probes name a new wall
+
+Registered in the checklist (47e34c7e): owner chose (b) after `728f6f5d` showed the cap
+is a family resemblance. No engine edit was needed — Brief 26's erf already makes the
+three-part shape — so identity is call-equality, confirmed by a measured rerun of
+U w=0.20 (every printed digit equal to the grid log). Mass conservation held by the
+declaration mapping (integrated Z mass within 0.0008 of the declared imf0, tail
+clipping reported).
+
+**Probe verdict — branch ⑤, named.** All three probes (z_shallow 0.6/0.7 × w 0.20,
+0.65 × 0.30; Vazan bracket cited) end **conv=False**: the surface pins at
+**120.6–123.2 K against the 76 K boundary condition**. The spy (35 refusals) puts the
+wall almost entirely in the **deep h_he band, ~1055 GPa · 2309–2340 K** — the window
+floor cb measured at 3130 K (1050 GPa) — with a single low-band sample (163.7 GPa ·
+131 K). Reading, recorded with its mechanism: the metal-rich homogeneous top flattens
+the upper envelope's mixture adiabat (heavier mean molecular weight), so the same
+t_center yields a hotter 1-bar level; reaching 76 K then needs a t_center whose deep
+adiabat falls below the h_he window's floor, and the trials die there. **The family
+widening moved the failure from "shape outside the cap" (Brief 26) to "boundary
+condition unreachable inside the recipe" — Vazan's successful shape, declared here,
+cannot land on the declared 1-bar temperature.** Their models do reach it with the
+same geometry, but with their own H/He EOS and a thermal-evolution model; ours refuses
+at the table's printed floor. The unconverged renorms (0.2023–0.2095) are NOT
+measurements (the ice-axis rule: an end that misses the boundary condition is not a
+measured end). **No z_shallow adopted, no width adopted; the grid was not run.**
+
+*Evidence-gate observation, recorded for whoever owns it next (C6 family)*: the fatal
+refusals fire on the h_he **component of the deepest shells, whose mixture weight
+there is ~10⁻⁵** — the mixture's evidence gate asks every part regardless of weight,
+so a one-part-in-10⁵ component can veto the state. Whether a weight-thresholded gate
+is honest is a materials-policy question, not this brief's.

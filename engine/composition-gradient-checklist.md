@@ -215,3 +215,9 @@ harness limit killed two runs yesterday); **no value adopted — neither width n
 z_shallow**; observations beside.
 
 **Out of scope**: (a) re-grounding the cap; Howard+ 2025; the silicate melting curve.
+
+**Brief 27 probe verdict (2026-09-01)**: branch ⑤ — all three probes conv=False,
+surface pinned 120.6–123.2 K vs 76 K; wall = deep h_he window floor (~1055 GPa ·
+2309–2340 K, spy 35 refusals; mechanism and the 10⁻⁵-weight evidence-gate observation
+in context notes §6). Identity rerun matched the Brief 26 grid in every printed digit;
+mass conservation within 0.0008. Grid NOT run; nothing adopted.
