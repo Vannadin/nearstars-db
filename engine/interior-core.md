@@ -429,7 +429,10 @@ the tables do, and the tables cannot be reached from here. Three routes, checked
 | FPEOS, Militzer+ 2021 (2021PhRvE.103a3203M) | distributes tables and code, and carries CH₄ — but **no NH₃**, and its range 10⁴–10⁹ K begins above the ice-giant adiabat (5500–6300 K) |
 
 **An author request is the only remaining route.** Bethkenhagen+ 2013 goes on the owner's
-paper-request list; the 2017 tables would come from the same authors.
+paper-request list; the 2017 tables would come from the same authors. **Closed 2026-09-01 by
+the owner: the paper was not obtained, and the item ends as *recorded, not found*.** What was
+searched and by what route is above; the grid stays unreachable without the authors.
+
 
 What can be said about the sign, in three tiers, only the first carrying a number:
 
@@ -1190,7 +1193,7 @@ not the body's. Redmer+ 2011 comes **off the request list**: not because it yiel
 number, but because the shell-boundary sentence replaced the need for it. All three quotes
 verified against the cached PDFs in this session.
 
-### C13 — Does the fuzzy core account for the moment-of-inertia deficit? — **opened 2026-08-31; the rock axis measured same day — it cannot close the deficit; the ice axis stays open**
+### C13 — Does the fuzzy core account for the moment-of-inertia deficit? — **opened 2026-08-31; closed 2026-09-01 as a named refusal: the deficit is real, three axes were measured, and each stops at a boundary this recipe can name**
 
 **Not C5's repair.** C5(a) recorded a graded-Z envelope as *reached, no consumer* — true
 when written. What opened this row is a **measurement**: the ice giants' C/MR² sits
@@ -1618,6 +1621,41 @@ shape**, and measure again. (b) is the cheaper honesty: it tests our recipe agai
 literature's geometry instead of re-drawing a line around our own answer. Fitting the width
 to the observables would have produced 39.7 % / 60.0 % and no way to know this — which is
 what the method was chosen to prevent.
+
+**Closed 2026-09-01 as a named refusal — the ending the audit proposed and the owner chose.**
+`conv=False` reads as *"the solver could not"*; the measurements say something stronger and
+addressable, so this row ends the way C6's ceilings do: **with a mechanism and a citation, not
+a shrug.**
+
+*The deficit is real and stands*: −15.8 % / −11.4 % after the radius is stripped, against
+N13's gravity-constrained λ.
+
+*Three axes were measured, and each stops somewhere this recipe can point at.*
+
+| axis | where it stops |
+|---|---|
+| **declared rock, redistributed** | Reaches 26 % / 41 % of the gap on the published table — **and that bracket does not exist on the repaired one** (Brief 31). The axis's own ceiling is real; its size is a table choice. |
+| **declared ice, uniform envelope Z** | Not measurable. Every bracket end refuses — first at the water wedge (1102 of 1202), then, once IF97 filled it, at `h_he`'s declared reach line. |
+| **composition gradient Z(x)** | Built, general, continuous with the layer stack to the bit. Clears the wall the uniform end died on. **The widths that move λ lie outside the geometry Vazan's successful models share**, and the family that does share it (`z_shallow > 0`) cannot reach a 76 K surface at all. |
+
+*And the wall the last two share is now identified to the cell.* It is **our own declared
+reach line**, not a source limit — `log T ≥ 2.7198 + 0.2567 log P`, reproducing every measured
+floor point. Its stated reason (*"a convecting envelope does not reach"*) **stops applying to
+a stratified gradient**, which transports by conduction and is sub-adiabatic by construction.
+**But a second limit sits in the same place and does not care whether the layer convects**:
+Chabrier's Fig. 1 and Fig. 16 put both bands inside the forbidden region, **helium binding
+where hydrogen would have allowed it**, under captions that read *"The EOS must not be used
+beyond these limits."* Confirmed by arithmetic on the printed equations, once eq. (7)'s unit
+note was shown wrong against Datchi+ 2000.
+
+**So the refusal is chosen, named and cited** — which is this list's definition of finished.
+What is *not* claimed: that a fuzzy core cannot account for the deficit. What is claimed is
+that **this recipe cannot decide it**, and exactly why.
+
+*Left on the table for whoever reopens it*: the ice mantle's own density profile — the one
+named candidate never measured; the unpublished `grad_ad` behind the 66 repairable clamps,
+which only the original authors hold; and whether the clamp is conservative or violent in the
+molecular-to-atomic band.
 
 ## What closing all of these does not do
 
