@@ -46,7 +46,7 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
 `initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] ·
-`tidal_heating` [—] · `envelope_z` [—] · `envelope_z_rock_fraction` [—] ·
+`tidal_heating` [—] · `envelope_z` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·
 `potential_temperature` [K] ·
 `boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `serpentinisation` [—] ·
 `differentiation_front` [—] · `crust_rock_fraction` [—] · `crust_porosity` [—]

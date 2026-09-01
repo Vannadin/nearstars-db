@@ -82,3 +82,59 @@ probe's U 0.30. No adoption; observations (N13 P_Voy 0.2300/0.2410) sit beside.
 
 *(landing: the wide half, the shell-sensitivity point, Vazan-geometry conformity per
 point, and the gate — resume on the owner's signal only)*
+
+## §5 The grid, complete — the cap's exclusion first, then the table
+
+**The headline, before any number is read as coverage: the widths that move the moment
+of inertia are all outside the transcribed stable geometry.** Vazan-geometry conformity
+(gradient region m_mid ± 2δm below 0.8 R; measured per point by standalone integration
+at the printed convergence point, closure ±1e-3) holds **only at w = 0.01 and 0.025 —
+which sit at the layered end A**. Every wider width runs past 0.8 R (w ≥ 0.075 reaches
+the surface). If Vazan & Helled's printed geometry is taken as the Ledoux cap (route A),
+**the reachable coverage is ~0 % and the 39.7 %/60.0 % spans below are the values of
+unreachable points.** Scope of that exclusion, named with it: it is a statement about
+THIS declared family — a two-end erf with z_shallow = 0 — while their stable models pair
+a wide gradient with a metal-rich homogeneous convective shell (Z ≈ 0.6–0.7) above
+0.8 R, a shape this family cannot express. Route B (own Ledoux) stays refused by name
+(§2, no ∇R).
+
+All 14 points conv=True (widths registered in the checklist; 32 shells; the second
+interrupt's kill was the directing seat's own, mis-aimed at reducing parallelism — their
+register). **No width is adopted.** Observations sit beside; nothing was fitted.
+Directing-seat integrity sweep over the interrupt-scarred logs: no .py change across the
+grid, no duplicates from the kill, renorm recomputed from λ·R at all 14 points with zero
+mismatch.
+
+| δm_dil | U renorm | U R resid | N renorm | N R resid |
+|---|---|---|---|---|
+| 0.01  | 0.1937 | +5.44 % | 0.2135 | +8.90 % |
+| 0.025 | 0.1937 | +5.32 % | 0.2136 | +8.78 % |
+| 0.05  | 0.1938 | +4.97 % | 0.2137 | +8.37 % |
+| 0.075 (Howard) | 0.1941 | +4.27 % | 0.2140 | +7.58 % |
+| 0.125 | 0.1951 | +2.19 % | 0.2153 | +5.50 % |
+| 0.20  | 0.1991 | +0.33 % | 0.2200 | +3.98 % |
+| 0.30  | 0.2081 | +0.12 % | 0.2300 | +4.14 % |
+| target (N13 P_Voy) | 0.2300 | — | 0.2410 | — |
+
+**Span, from grid values**: U 0.1937 → 0.2081 = 0.0144 of the 0.0363 deficit = **39.7 %**;
+N 0.2135 → 0.2300 = 0.0165 of 0.0275 = **60.0 %**. Monotone in width, no plateau reached
+inside the registered grid. (N's 0.2300 at w=0.30 equals U's *target* by digit
+coincidence only.)
+
+**The second product — the radius residual collapses on the same axis**: Uranus
++5.44 % → **+0.12 %** (w=0.30), Neptune +8.90 % → +3.98 % (minimum at w=0.20). The
+layered anchors carried +5.48/+8.94 % as a known systematic; a wide gradient removes
+most of it *without being asked to* — the radius was never a fit target.
+
+*Recorded, not judged (directing-seat observation)*: **Neptune's radius residual is
+non-monotone** — it falls to 3.98 % at w=0.20 and rises back to 4.14 % at w=0.30, so its
+minimum lies inside the grid, while Uranus falls monotonically to the grid's edge. The
+renormalized moment is monotone for both, so the non-monotonicity lives on the radius
+axis alone; the two planets behave differently there.
+
+**Shell sensitivity** (U w=0.075, 32 → 64 shells): renorm 0.1941 → 0.1941 (stable at
+the printed digit); λ 0.178521 → 0.178240 (−0.16 %). The staircase is not driving the
+span.
+
+(The cap's exclusion statement stands at the top of this section — the spans in the
+table are read under it.)

@@ -118,14 +118,15 @@ class Structure:
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
                  "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
-                 "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked")
+                 "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked",
+                 "r_grad_base", "r_grad_top")
 
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
                  ice_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
                  surface_reached=True, ice_x_reached=False, r_crust_base=None,
-                 p_crust_base=None, crust_void=0.0):
+                 p_crust_base=None, crust_void=0.0, r_grad_base=None, r_grad_top=None):
         self.radius_m = radius_m
         self.mass_kg = mass_kg
         self.moi = moi
@@ -164,6 +165,8 @@ class Structure:
         # 구간이다. None 은 "액체인 자리가 없었다" 는 뜻이고, 온도가 흐르지 않은 해는 늘 None 이다.
         self.r_ocean_base = r_ocean_base
         self.r_ocean_top = r_ocean_top
+        self.r_grad_base = r_grad_base    # 구배 영역(m_mid ± 2δm)의 반지름 마크 (브리프 26)
+        self.r_grad_top = r_grad_top
         # False 면 표면(P = p_stop)에 닿기 전에 걸음 상한에서 잘린 부분 적분이다. 겉질량이 이미
         # 목표를 넘겼을 때만 그렇게 돌아오고, 사격의 괄호에만 쓰인다 — 수렴해가 될 수 없다.
         self.surface_reached = surface_reached
@@ -511,6 +514,12 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     r_ocean_top = None
     ice_x_stepped = False  # 사다리의 얼음 X 를 실제로 밟았는가. 압력만으로는 모른다 — 그 자리가 유체일 수 있다
     r_crust_base = None    # 원시 지각 (C11)
+    r_grad_base = None     # 구배 영역 반지름 마크 (브리프 26): m 이 m_mid ∓ 2δm 을 넘는 자리
+    r_grad_top = None
+    if envelope_z_profile is not None:
+        _zp_mid, _zp_dm = envelope_z_profile[2], envelope_z_profile[3]
+        grad_lo_kg = max(_zp_mid - 2.0 * _zp_dm, 0.0) * mass_kg
+        grad_hi_kg = min(_zp_mid + 2.0 * _zp_dm, 1.0) * mass_kg
     p_crust_base = None
     crust_void = 0.0
     # ── 두 선언 (C5) ──
@@ -879,6 +888,11 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         m += dm
         moi += di
         v_pore += dv
+        if envelope_z_profile is not None:
+            if r_grad_base is None and m >= grad_lo_kg:
+                r_grad_base = r
+            if r_grad_top is None and m >= grad_hi_kg:
+                r_grad_top = r
         # 온도는 압력을 따라간다 — dT = (dT/dP) dP. 열 상수가 없는 층에서는
         # dtdp 가 0 이라 온도가 그 층을 그대로 통과한다.
         t = t * ((p + dp) / p) ** grad if grad else t + dtdp * dp
@@ -938,6 +952,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                      p_surface=p_surface, r_ocean_base=r_ocean_base,
                      r_ocean_top=r_ocean_top, ice_x_reached=ice_x_stepped,
                      r_crust_base=r_crust_base, p_crust_base=p_crust_base,
+                     r_grad_base=r_grad_base, r_grad_top=r_grad_top,
                      crust_void=crust_void)
 
 

@@ -65,7 +65,7 @@ silicate melting curve.
 
 ## Work items
 
-- [ ] wall probe: steepest + shallowest width, conv or the wall (owner reported 09-01
+- [x] wall probe: steepest + shallowest width, conv or the wall (owner reported 09-01
       morning; directing seat cleared start — minimal Z(x) first, probe before grid).
       **Probe declarations, registered before the runs**: Uranus end-B-ice geometry
       (cmf 0, silicate layer 0.79 M⊕ intact, envelope = H/He + ice = gmf+imf0), profile
@@ -77,7 +77,8 @@ silicate melting curve.
       smeared over most of the envelope; Vazan-geometry conformity reported post-hoc,
       not enforced). Verdict rule (directing seat): either conv=True → grid proceeds;
       both conv=False on the h_he floor → branch ⑥, grid NOT run.
-- [ ] width-0 anchor identity (bit-identical to layered)
+- [x] width-0 anchor identity — BIT-IDENTICAL twice (anchor ± Z≡0 profile; rock-free
+      toy layers vs zero-width step), 872c44ae
 - [x] fetch-and-pin Gupta+ 2025 (2407.04685 · 2025ApJ...982L..35G) — **transcribable,
       closed form**: critical curve Eqs. 5–10 with Table 1's six printed parameters
       (validity 750–6000 K × 0.25–2000 GPa). Table verified against the typeset page
@@ -85,9 +86,23 @@ silicate melting curve.
       check P_c(3000 K) = 27.0 GPa vs the paper's own "near 30 GPa at 3000 K".
       Caveats pinned in the PROVENANCE: binary-system curve (x=0.6 shifts +~10 GPa at
       3000 K); location only, never width
-- [ ] Ledoux cap route A transcription (knobs stated), route B check where computable
-- [ ] grid + per-point report (renorm, radius residual; observations beside, not fitted)
-- [ ] landing: notes, C13 row hand-off to directing seat
+- [x] Ledoux cap route A: Vazan §3.3's printed geometry (stratified below ~0.8 R)
+      transcribed and measured per point — conformal only at w ≤ 0.025; every moving
+      width excluded (context notes §5, with the z_shallow=0 family limitation named).
+      Route B refused by name (no ∇R in the recipe)
+- [x] grid complete 14/14 conv=True + shell sensitivity (renorm digit-stable at 64
+      shells) + extent pass — full table in context notes §5; span U 39.7 % / N 60.0 %
+      of the deficit, radius residual U +5.44→+0.12 %; **no width adopted**
+- [x] landing gate: **FAIL 0, exit 0, 1205 s measured** (detached run). The first full
+      gate FAILED 1: code uses `envelope_z_profile` but the methodology doc's Needs
+      lacked it — the prose-lags-code class this list keeps meeting (Brief 23 hit the
+      same check); fixed in en + ko docs, rerun clean. Two rerun attempts in between
+      died at ~600 s on the tool harness's own timeout (SIGTERM — neither the owner nor
+      the directing seat; the attribution sub-kind gains the branch "the sender
+      candidates include the execution harness itself"); the completing run was
+      detached from the harness. Anchor `seconds` unchanged class (21.9→22.2→21.9-grade
+      jitter), values bit-identical throughout
+- [ ] C13 row hand-off to directing seat (report sent)
 
 ## Grid registration (after the probe passed — both widths conv=True)
 
