@@ -195,11 +195,28 @@ class Structure:
         return self.v_pore / self.volume
 
 
+def _erf_mean_z(a: float, b: float, z_deep: float, z_shallow: float,
+                m_mid: float, dm: float) -> float:
+    """Howard+ 2023 식 (2) 의 Z(m) 을 질량 구간 [a, b] 에서 질량평균한 값.
+
+    Z(m) = z_shallow + (z_deep − z_shallow)/2 · [1 − erf((m − m_mid)/δm)] 이고, erf 의
+    부정적분 F(u) = u·erf(u) + e^(−u²)/√π 로 닫힌다. 표본이 아니라 평균이라 셸이 성겨도
+    구간의 Z 질량이 보존된다. δm = 0 은 계단 — m_mid 가 셸 모서리에 앉아 있으므로
+    구간은 한쪽에만 있다."""
+    if dm <= 0.0:
+        return z_deep if b <= m_mid else z_shallow
+    ua, ub = (a - m_mid) / dm, (b - m_mid) / dm
+    F = lambda u: u * math.erf(u) + math.exp(-u * u) / math.sqrt(math.pi)
+    mean_erf = dm * (F(ub) - F(ua)) / (b - a)
+    return z_shallow + (z_deep - z_shallow) * 0.5 * (1.0 - mean_erf)
+
+
 def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
            envelope_z: float = 0.0, envelope_z_rock_fraction: float = 1.0,
            differentiated: bool = True,
            serpentinisation: float = 0.0, differentiation_front: float = 1.0,
-           crust_rock_fraction: float = 0.0, crust_porosity: bool = False):
+           crust_rock_fraction: float = 0.0, crust_porosity: bool = False,
+           envelope_z_profile: tuple | None = None):
     """바깥으로 가는 층의 열. (누적질량분율 상한, 재료) 로 준다.
 
     가스 외피가 있으면 그것이 가장 바깥 층이다. 폴리트로프는 **별도의 가지가 아니라
@@ -242,6 +259,40 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
         # 가른다 — 1.0(기본)이면 예전 그대로 규산염뿐, 그 아래면 나머지가 **녹은 물**
         # (ENVELOPE_WATER — (P, T) 마다 유효한 물 표현으로 위임; 근거는 그 클래스 주석,
         # Soubiran & Militzer 2015 + N13 의 LM-REOS. 얼음 축, 브리프 23).
+        if envelope_z_profile is not None:
+            # 선언된 Z(m) 프로파일 (Howard+ 2023 식 (2), 브리프 26). 외피를 질량 셸로
+            # 나눠 셸마다 그 구간의 질량평균 Z 를 오늘의 혼합과 같은 부품으로 얹는다.
+            # 새 재료·새 EOS 없음 — 스택의 모양만 바뀐다. 퇴화 셸(Z=1·zr=0 → 순수 얼음
+            # 사다리, Z=0 → 순수 h_he)은 맨 재료를 내보내고, 같은 재료의 이웃 셸은
+            # 병합한다 — 폭 0 계단이 층 스택과 층 대 층으로 같아지는 자리다(항등 검사).
+            z_deep, z_shallow, m_mid, dm, shells = envelope_z_profile
+            base = 1.0 - gmf
+            edges = [base + gmf * i / shells for i in range(shells + 1)]
+            edges[-1] = 1.0          # (1−gmf)+gmf 의 마지막 비트 오차가 꼭대기를 못 벗어나게
+            if base < m_mid < 1.0:
+                edges = sorted(set(edges + [m_mid]))
+            prev_z = None
+            for a, b in zip(edges, edges[1:]):
+                z_i = _erf_mean_z(a, b, z_deep, z_shallow, m_mid, dm)
+                if prev_z is not None and z_i == prev_z:
+                    out[-1] = (b, out[-1][1])    # 같은 조성 — 경계만 밀어 병합 (여분 경계는
+                    continue                     # 적분기의 경계 보간을 흔들어 항등을 깬다)
+                prev_z = z_i
+                zr_i = z_i * envelope_z_rock_fraction
+                zi_i = z_i - zr_i
+                if z_i >= 1.0 and zr_i <= 0.0:
+                    mat_i = MATERIALS["h2o"]     # 순수 얼음 셸 = 층 방식의 얼음 사다리 그대로
+                else:
+                    # 균일 가지와 **같은 표현** 을 쓴다 — z = 0 도 (silicate, 0.0) 을 낀
+                    # 레거시 형태 그대로여야 폭 0 이 층 방식과 비트까지 같다.
+                    parts_i = [(MATERIALS["h_he"], 1.0 - z_i)]
+                    if zr_i > 0.0 or zi_i <= 0.0:
+                        parts_i.append((MATERIALS[ENVELOPE_Z_MATERIAL], zr_i))
+                    if zi_i > 0.0:
+                        parts_i.append((ENVELOPE_WATER, zi_i))
+                    mat_i = mix("h_he_z", "중원소 섞인 수소-헬륨 외피", *parts_i)
+                out.append((b, mat_i))
+            return out
         z_rock = envelope_z * envelope_z_rock_fraction
         z_ice = envelope_z - z_rock
         parts = [(MATERIALS["h_he"], 1.0 - envelope_z)]
@@ -325,12 +376,12 @@ class PorousCrust(Mixture):
 # 단계마다 RK 네 자리에서 다시 재면 밀도 뒤집기가 여덟 번 더 돌아 비싸다.
 def _cold_phases(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated,
                  serpentinisation=0.0, differentiation_front=1.0, crust_rock_fraction=0.0,
-                 crust_porosity=False):
+                 crust_porosity=False, envelope_z_profile=None):
     """이 천체의 층들 중 발표된 열 상수가 없어 등온으로 남는 상들의 이름."""
     out: list[str] = []
     for _hi, mat in _stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated,
                            serpentinisation, differentiation_front, crust_rock_fraction,
-                           crust_porosity):
+                           crust_porosity, envelope_z_profile):
         out.extend(mat.cold_phases())
     return out
 
@@ -406,7 +457,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               boundary_temperature_jump: float = 0.0,
               mantle_rock_fraction: float = 0.0,
               serpentinisation: float = 0.0, differentiation_front: float = 1.0,
-              crust_rock_fraction: float = 0.0, crust_porosity: bool = False) -> Structure:
+              crust_rock_fraction: float = 0.0, crust_porosity: bool = False,
+              envelope_z_profile: tuple | None = None) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -417,7 +469,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     압력의 함수** 이므로 자유 매개변수가 아니다 — porosity.py 를 보라. φ₀ 자체는
     강착과 가열이 정하고 이 레시피에 그 둘이 없어서 선언으로 들어온다."""
     stack = _stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated, serpentinisation,
-                   differentiation_front, crust_rock_fraction, crust_porosity)
+                   differentiation_front, crust_rock_fraction, crust_porosity, envelope_z_profile)
     mat = stack[0][1]
     # 적분이 멈추는 압력. 응축상 천체는 0 — 표면이 P = 0 이다. 기체 외피가 바깥에 있으면
     # 그 재료가 자기 바닥을 말한다 (1 bar). 바깥 층 하나가 정하므로 여기서 한 번 본다.
@@ -976,7 +1028,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     mantle_rock_fraction: float = 0.0,
                     serpentinisation: float = 0.0, differentiation_front: float = 1.0,
                     crust_rock_fraction: float = 0.0,
-                    crust_porosity: bool = False) -> tuple[Structure, bool]:
+                    crust_porosity: bool = False,
+                    envelope_z_profile: tuple | None = None) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -984,7 +1037,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # 비압축 반지름에서 중심압을 어림해 괄호를 잡는다. 재료의 유효 상한을 넘겨서
     # 잡으면 상 구간 밖이라 PhaseGap 이 나므로, 위쪽은 그 상한에서 멈춘다.
     stack = _stack(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fraction, differentiated, serpentinisation,
-                   differentiation_front, crust_rock_fraction, crust_porosity)
+                   differentiation_front, crust_rock_fraction, crust_porosity, envelope_z_profile)
     # 괄호잡기용 평균밀도. 폴리트로프는 영압 밀도가 0 이라 `rho_seed` 가 n=1 해의
     # 평균밀도로 갈아 준다 — 계산 결과에는 들어가지 않고 첫 추측에만 쓰인다.
     rho0_bar = 1.0 / sum(
@@ -1016,7 +1069,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                          envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                          boundary_temperature_jump, mantle_rock_fraction,
                          serpentinisation, differentiation_front, crust_rock_fraction,
-                         crust_porosity)
+                         crust_porosity, envelope_z_profile)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -1139,7 +1192,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
                         serpentinisation, differentiation_front, crust_rock_fraction,
-                        crust_porosity)
+                        crust_porosity, envelope_z_profile)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -1158,7 +1211,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
                         serpentinisation, differentiation_front, crust_rock_fraction,
-                        crust_porosity)
+                        crust_porosity, envelope_z_profile)
         y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
@@ -1196,7 +1249,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                     boundary_temperature_jump, mantle_rock_fraction,
                     serpentinisation, differentiation_front, crust_rock_fraction,
-                    crust_porosity)
+                    crust_porosity, envelope_z_profile)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -1235,7 +1288,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           mantle_rock_fraction: float = 0.0,
           serpentinisation: float = 0.0, differentiation_front: float = 1.0,
           crust_rock_fraction: float = 0.0,
-          crust_porosity: bool = False) -> tuple[Structure, bool]:
+          crust_porosity: bool = False,
+          envelope_z_profile: tuple | None = None) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1253,7 +1307,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           "serpentinisation": serpentinisation,
           "differentiation_front": differentiation_front,
           "crust_rock_fraction": crust_rock_fraction,
-          "crust_porosity": crust_porosity}
+          "crust_porosity": crust_porosity,
+          "envelope_z_profile": envelope_z_profile}
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -1808,7 +1863,8 @@ def solve(mass_earth: float,
           serpentinisation: float = 0.0,
           differentiation_front: float = 1.0,
           crust_rock_fraction: float = 0.0,
-          crust_porosity: bool = False) -> Result:
+          crust_porosity: bool = False,
+          envelope_z_profile: tuple | None = None) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -1838,6 +1894,7 @@ def solve(mass_earth: float,
               "porosity_cap": porosity_cap, "tidal_heating": tidal_heating,
               "envelope_z": envelope_z,
               "envelope_z_rock_fraction": envelope_z_rock_fraction,
+              "envelope_z_profile": envelope_z_profile,
               "potential_temperature": potential_temperature,
               "boundary_temperature_jump": boundary_temperature_jump,
               "mantle_rock_fraction": mantle_rock_fraction,
@@ -1911,6 +1968,38 @@ def solve(mass_earth: float,
             "외피에 물을 녹이려면(envelope_z_rock_fraction < 1) 온도가 흘러야 한다 — "
             "녹은 물의 표현이 (P, T) 로 갈리는데 포텐셜 온도 선언이 없다.",
             inputs=inputs, refs=REFS)
+
+    if envelope_z_profile is not None:
+        # 선언된 Z(m) 프로파일 (브리프 26). 형태는 Howard+ 2023 식 (2) — 선언이지 도출이 아니다.
+        if envelope_z > 0.0:
+            return out_of_domain(
+                RECIPE, VERSION,
+                "envelope_z 와 envelope_z_profile 이 둘 다 선언됐다. 균일 Z 는 프로파일의 "
+                "폭 0 극한이 아니라 별개 선언이므로 하나만 받는다.",
+                inputs=inputs, refs=REFS)
+        zp_deep, zp_shallow, zp_mid, zp_dm, zp_shells = envelope_z_profile
+        if gmf <= 0.0:
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"외피 Z 프로파일을 받았는데 가스 외피가 없다(가스질량분율 {gmf}).",
+                inputs=inputs, refs=REFS)
+        if not (0.0 <= zp_shallow <= zp_deep <= 1.0):
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"프로파일의 Z 끝값 (deep {zp_deep}, shallow {zp_shallow}) 이 "
+                "0 ≤ shallow ≤ deep ≤ 1 을 벗어난다.",
+                inputs=inputs, refs=REFS)
+        if zp_dm < 0.0 or int(zp_shells) < 1 or zp_shells != int(zp_shells):
+            return out_of_domain(
+                RECIPE, VERSION,
+                f"프로파일 폭 {zp_dm} 은 0 이상, 셸 수 {zp_shells} 는 1 이상의 정수여야 한다.",
+                inputs=inputs, refs=REFS)
+        if envelope_z_rock_fraction < 1.0 and zp_deep > 0.0 and (potential_temperature or 0.0) <= 0.0:
+            return out_of_domain(
+                RECIPE, VERSION,
+                "프로파일이 외피에 물을 녹인다(envelope_z_rock_fraction < 1) — 온도가 흘러야 "
+                "한다. potential_temperature 를 선언하라 (균일 Z 와 같은 규율).",
+                inputs=inputs, refs=REFS)
 
     if potential_temperature is not None and potential_temperature < 0.0:
         return out_of_domain(
@@ -2054,7 +2143,9 @@ def solve(mass_earth: float,
             "같은 압력에서 2000 K 와 5700 K 사이에 30 GPa 에서 14 %, 800 GPa 에서 5 % "
             "다. 포텐셜 온도를 선언하면 풀린다.",
             inputs=inputs, refs=REFS)
-    if ice_giant and imf <= 0.0 and not (envelope_z > 0.0 and envelope_z_rock_fraction < 1.0):
+    if ice_giant and imf <= 0.0 and not (envelope_z > 0.0 and envelope_z_rock_fraction < 1.0) \
+            and not (envelope_z_profile is not None and envelope_z_profile[0] > 0.0
+                     and envelope_z_rock_fraction < 1.0):
         # 얼음이 외피에 **녹은** 선언(얼음 축, 브리프 23)이면 층이 없어도 얼음거대행성이다 —
         # 이 검증은 층만 읽던 시절의 것이고, 클래스의 뜻은 얼음이 지배하는 천체다.
         return out_of_domain(
@@ -2070,7 +2161,7 @@ def solve(mass_earth: float,
                               envelope_z, envelope_z_rock_fraction, differentiated, potential_temperature,
                               boundary_temperature_jump, mantle_rock_fraction,
                               serpentinisation, differentiation_front, crust_rock_fraction,
-                              crust_porosity)
+                              crust_porosity, envelope_z_profile)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -2140,7 +2231,8 @@ def solve(mass_earth: float,
     if thermal_declared:
         cold = sorted(set(_cold_phases(cmf, imf, core_material, gmf, envelope_z,
                                        envelope_z_rock_fraction, differentiated,
-                                       serpentinisation)))
+                                       serpentinisation,
+                                       envelope_z_profile=envelope_z_profile)))
         notes.append(
             f"**포텐셜 온도 {potential_temperature:.0f} K 는 선언이다.** 대류하는 내부를 "
             "표면까지 단열 감압했을 때의 온도이고 표면 온도가 아니다 — 그 사이의 전도하는 "
@@ -2241,6 +2333,17 @@ def solve(mass_earth: float,
     # 강등하던 규칙은 근거를 잃었으므로 남기지 않는다. 남는 강등 사유는 **선언** 이다 —
     # 이 갈래는 포텐셜 온도 없이 못 풀고, 그 값은 이 레시피가 도출하지 않는다.
     giant_declared = gmf > 0
+    if envelope_z_profile is not None:
+        zp_deep, zp_shallow, zp_mid, zp_dm, zp_shells = envelope_z_profile
+        notes.append(
+            f"**외피 Z(m) 프로파일은 선언이다** — 형태는 Howard+ 2023 식 (2) 의 erf "
+            f"(2302.09082, 그들의 δm_dil = 0.075 는 목성/Juno 적합), 여기 폭 {zp_dm:g}, "
+            f"전이 위치 m = {zp_mid:g}, 끝값 {zp_deep:g}→{zp_shallow:g}, 셸 {zp_shells:g}개 "
+            "(셸마다 구간 질량평균 Z, 부품은 균일 Z 외피와 동일). 폭과 위치는 도출이 "
+            "아니라 받아쓴 값이고, 형태의 출처가 목성이므로 등급은 analog 아래로 "
+            "내려간다. H₂–H₂O 혼화 임계곡선(Gupta+ 2025, 2025ApJ...982L..35G)은 전이의 "
+            "**위치** 근거이지 폭의 근거가 아니다 — 폭을 주는 발표는 없다 "
+            "(engine/miscibility-pairs.md).")
     if envelope_z > 0:
         notes.append(
             f"**외피 중원소 {envelope_z:.3f} 는 선언이다.** 강착과 진화가 정하는 값이고 "
