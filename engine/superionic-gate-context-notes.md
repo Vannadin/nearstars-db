@@ -31,14 +31,15 @@ within the anchor reproducibility 3.9e-4 — the result beat the criterion:
 |---|---|---|
 | base control | — | exactly 0 |
 | V1 ±5 % density in region | **1,754** | exactly 0 (bit-identical) |
-| V2 refuse at >355 GPa | **1** (first touch kills the trial) | exactly 0 |
+| V2 refuse at >355 GPa | **1–2** (instrument-dependent; all touches bracket-steered — 2026-09-01 amendment below) | exactly 0 |
 | V3 refuse at >520 GPa | **1** | exactly 0 |
 
 The zero was validated by the fire counters (a null result must prove the instrument
 fired). Mechanism read off the counters: the region-walking trials are value-insensitive
-(1,754 perturbed evaluations change nothing) and dispensable (killing them at first
-touch changes nothing — first-touch death and full-walk death are the same signal to
-the controller). **The converged solution is independent of the region in both the
+(1,754 perturbed evaluations change nothing) and dispensable (refusing them changes
+nothing — the refusal is caught and steered by the temperature bracket, and the steered
+solve converges to the same bits as the full walk; 1–2 region touches depending on the
+instrument, amendment below). **The converged solution is independent of the region in both the
 value axis and the traversal axis.**
 
 ## §3 What the gate asserts now, and the two discarded approaches
@@ -74,3 +75,27 @@ Millot's abstract; the paper's 100–400 GPa × 2000–3000 K is its experimenta
 The three ceilings (data ≈355 / stability ≈520 / printed 1000 GPa) stand as one
 notation at `ICE_X_P_MAX`, pointing at C6 and the survey notes, with the closure that
 the stability boundary's ice-side potential IS what `ice_x` is fitted to.
+
+## §5 Amendment (2026-09-01, Brief 35 follow-up ⑥) — V2's count and its flavor, measured
+
+The audit's own instrumentation counted V2's region touches as **2** against this
+file's original **1** ("first touch kills the trial"), and validated its instrument by
+throwing region points at the hook post-solve. Replicated here to find the flavor:
+
+- **The `too_cold` flavor is load-bearing.** Re-running V2 (PhaseGap raised from the
+  h2o cold-curve density hook in the region) with `too_cold=True`: the temperature
+  bracket catches it, raises the trial center temperature ×1.6, and Uranus converges
+  **bit-identical to the anchor** — 1 fire at (535.1 GPa, T → 1800⁻ K). With
+  `too_cold=False` the same touch escalates to a **whole-body refusal** (Uranus
+  inapplicable). A2's V2 completed bit-identical, so its refusal was too_cold-steered;
+  the flavor is confirmed, not assumed.
+- **The count is a property of the hook point, not the physics.** Under this session's
+  hook (cold-curve `density` of h2o) the count is 1 with either region predicate
+  (with or without the T < 1800 K bound): the ×1.6-hotter retry re-enters the corridor
+  through the **hot-water dispatch**, which the cold-curve hook cannot see. The audit's
+  instrument sits where it counts a second, also-steered touch. Both instruments agree
+  on Δ = 0.
+
+So the sentence to carry: **1–2 touches, all steered by the too_cold-flavored bracket,
+answer unchanged to the bit.** "First-touch death" was one instrument's view of a
+steered retry, not a property of the solve.

@@ -49,7 +49,7 @@ region to 535 GPa: 1,854 evaluations in >355 GPa·<1800 K, 153 above 520; moons 
 Neptune caps 235 GPa; distribution = adiabat-shaped continuous walk, not a ceiling
 pin). Item A2 (directing-seat addendum, throwaway worktree) → branch ①, strongest
 form: base/V1±/V2/V3 all BIT-identical, fire counters validating the null (V1 1,754,
-V2/V3 first-touch 1). Resolution: tolerance + labels — B1 and B2 both discarded with
+V2/V3 touches 1–2, instrument-dependent, all bracket-steered — amended 2026-09-01, notes §5). Resolution: tolerance + labels — B1 and B2 both discarded with
 reasons (notes §3); old flat check removed; A2's V1+ promoted to the gate as
 _clamp_invariance (+22 s); constants consolidated to prose (all copies removed);
 three ceilings as one notation; ICE_X_P_MAX untouched. Anchors bit-identical
