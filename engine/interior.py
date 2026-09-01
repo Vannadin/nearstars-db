@@ -1900,14 +1900,14 @@ def solve(mass_earth: float,
             inputs=inputs, refs=REFS)
     if not 0.0 <= envelope_z_rock_fraction <= 1.0:
         return out_of_domain(
-            "invalid_declaration",
+            RECIPE, VERSION,
             f"외피 Z 의 암석 몫 {envelope_z_rock_fraction} 이 [0, 1] 밖이다. 1(기본)은 "
             "Z 전부가 규산염, 0 은 전부가 녹은 물, 그 사이는 부피 가법의 세 성분이다 "
             "(얼음 축, 브리프 23).",
             inputs=inputs, refs=REFS)
     if envelope_z > 0 and envelope_z_rock_fraction < 1.0 and (potential_temperature or 0.0) <= 0.0:
         return out_of_domain(
-            "invalid_declaration",
+            RECIPE, VERSION,
             "외피에 물을 녹이려면(envelope_z_rock_fraction < 1) 온도가 흘러야 한다 — "
             "녹은 물의 표현이 (P, T) 로 갈리는데 포텐셜 온도 선언이 없다.",
             inputs=inputs, refs=REFS)
