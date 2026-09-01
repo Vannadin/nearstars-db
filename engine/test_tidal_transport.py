@@ -90,12 +90,59 @@ def main() -> int:
     ok(dpt['validation']['status'] == "failed-io-reproduction",
        "4: 도출 potential_temperature에 검증-실패 라벨이 안 실렸다")
 
+
+    # ── 5. 로스터 입력은 출처에서 읽히고, 어긋난 짝은 이름을 대고 거절된다 ────
+    # (브리프 35 후속 ③ — 손입력이 단테에 900 km 초안의 플럭스를 물렸던 결함의 수리)
+    try:
+        inputs = tt.roster_inputs()
+    except Exception as e:
+        fails.append(f"5: roster_inputs 가 정본을 못 읽는다 — {e}")
+        inputs = {}
+    if inputs:
+        d = inputs.get("Dante (A b I)") or {}
+        ok(abs(d.get("radius_m", 0) - 521e3) < 1 and abs(d.get("flux_wm2", 0) - 2231.0) < 0.5,
+           f"5: Dante 정본 짝이 (521 km, 2231 W/m²) 가 아니다 — {d.get('radius_m')}, {d.get('flux_wm2')}")
+        ok(abs(d.get("mass_kg", 0) - 1.552e21) < 0.005e21 and abs(d.get("T_s", 0) - 223.0) < 0.5,
+           "5: Dante 질량/표면온도가 §6.5 와 다르다")
+        h = inputs.get("Hades (A b II)") or {}
+        ok(abs(h.get("radius_m", 0) - 750e3) < 1 and abs(h.get("flux_wm2", 0) - 207.0) < 0.5
+           and abs(h.get("T_s", 0) - 278.0) < 0.5,
+           "5: Hades 보드 짝 (750 km, 207 W/m², 278 K) 이 아니다")
+    try:
+        tt._pairing_check_dante(521e3, 1.552e21, 11500.0, 2620.0, 11500.0, 900e3)
+        fails.append("5: 어긋난 짝(521 km + 11,500 W/m² — 실제로 났던 실수)이 조용히 통과했다")
+    except ValueError:
+        pass
+
+    # ── 6. 로스터 측정 불변량 (측정이지 채택이 아니다; 움직이면 추적) ─────────
+    # 2026-09-01 정정 측정: 올바른 짝에서 Dante 는 근이 있다 (구 "근 없음" 은 입력 아티팩트).
+    meas = tt.roster_measurement()
+    dm = meas.get("Dante (A b I)", {})
+    ok(dm.get("internal_temperature") is not None,
+       "6: Dante 가 올바른 짝(2231 W/m²)에서 근이 없다 — 정정 측정과 다르다")
+    if dm.get("internal_temperature"):
+        ok(abs(dm["internal_temperature"]["value_K"] - 2122.2) < 0.5
+           and abs(dm["lithosphere_thickness"]["value_m"] - 146.80e3) < 0.5e3,
+           f"6: Dante 측정값 이동 — ({dm['internal_temperature']['value_K']:.1f} K, "
+           f"{dm['lithosphere_thickness']['value_m']/1e3:.2f} km), 기록 (2122.2, 146.80)")
+    hm = meas.get("Hades (A b II)", {})
+    if hm.get("internal_temperature"):
+        ok(abs(hm["internal_temperature"]["value_K"] - 1843.9) < 0.5
+           and abs(hm["lithosphere_thickness"]["value_m"] - 224.08e3) < 0.5e3,
+           f"6: Hades 측정값 이동 — ({hm['internal_temperature']['value_K']:.1f} K, "
+           f"{hm['lithosphere_thickness']['value_m']/1e3:.2f} km), 기록 (1843.9, 224.08)")
+        ratio = hm["lithosphere_thickness"]["value_m"] / hm["mantle_depth"]["value_m"]
+        ok(ratio > 0.5, "6: Hades lith/D 가 0.5 아래로 내려왔다 — §5 의 모델-밖 주의가 갱신 대상")
+    for m in meas.values():
+        ok(m["validation"]["status"] == "failed-io-reproduction",
+           "6: 로스터 측정에 검증-실패 라벨이 빠졌다")
+
     if fails:
         print(f"test_tidal_transport: FAIL {len(fails)}")
         for f in fails:
             print("  -", f)
         return 1
-    print("test_tidal_transport: OK (전사 폐합·재현 실패 불변량·역산 폐합·라벨 규율)")
+    print("test_tidal_transport: OK (전사 폐합·재현 실패 불변량·역산 폐합·라벨 규율·로스터 출처읽기)")
     return 0
 
 

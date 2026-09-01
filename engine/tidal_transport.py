@@ -289,6 +289,140 @@ def derive_potential_temperature(surface_flux_wm2: float, radius_m: float, **kw)
                 stability=r['stability'])
 
 
+
+# ── 로스터 측정 입력 — 손 타이핑 금지, 출처에서 읽는다 (브리프 35 후속 ③) ──────────
+# 같은 실수가 두 번 났다: 작업 세션이 단테에 기각된 900 km 초안의 플럭스(11,500)를
+# 채택 반지름(521 km)과 짝지었고, 감사 세션은 하데스에서 천체별 g·T_s를 빼먹었다.
+# 손으로 값을 타이핑하는 자리가 결함원이므로, 값은 정본 파일에서 읽고 짝의
+# 자기일관성을 실행 전에 검사한다 — 안 맞으면 이름을 대고 거절한다.
+#
+# 정본 선택 (기록 의무):
+#   Dante — docs/reference/tidal-heating-methodology.md §6.5 표 (지휘석 확인, 2026-09-01).
+#     phase4 보드는 내부 분열 상태다: decisions의 radius 행은 521 km(채택)인데 moons
+#     블록은 900 km 초안(mass 8.0e21)을 그대로 들고 있고, bulk.tidal_heating 행도
+#     11,500 W/m²(900 km의 값)를 든다 — 단테 반지름 건이 오너 결정 대기라 보드가 아직
+#     안 고쳐진 것. §6.5 표가 짝이 맞는 유일한 출처다 (521 → 78× → 2,231 W/m²).
+#   Hades — phase4/alpha_centauri.yaml: bulk.tidal_heating 행(207 W/m²) +
+#     surface_temperature 행(278 K) + moons 블록(M 5.0e21 kg, R 750 km).
+#     하데스는 반지름 재설계가 없었어서 보드가 자기일관이다.
+# 보드는 읽기 전용 — 반지름 건은 오너 결정 대기.
+
+import re
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parent.parent
+_METHODOLOGY = _ROOT / "docs" / "reference" / "tidal-heating-methodology.md"
+_BOARD = _ROOT / "phase4" / "alpha_centauri.yaml"
+_G_NEWTON = 6.674e-11
+_SUP = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+
+
+def _sci(mant: str, sup: str) -> float:
+    return float(mant) * 10.0 ** int(sup.translate(_SUP))
+
+
+def _pairing_check_dante(R_m, M_kg, F_wm2, rho, F_draft, R_draft_m) -> None:
+    """짝 자기일관성 — 실패는 이름을 대고 거절한다."""
+    scaled = F_wm2 * (R_draft_m / R_m) ** 3
+    if abs(scaled - F_draft) > 0.01 * F_draft:
+        raise ValueError(
+            f"짝 자기일관성 실패 (Dante): F ∝ R³ 검산이 어긋난다 — "
+            f"{F_wm2:.0f} W/m² × ({R_draft_m/1e3:.0f}/{R_m/1e3:.0f})³ = {scaled:.0f}, "
+            f"초안 행은 {F_draft:.0f}. 반지름과 플럭스가 다른 설계의 것이다")
+    m_rho = rho * (4.0 / 3.0) * math.pi * R_m ** 3
+    if abs(m_rho - M_kg) > 0.01 * M_kg:
+        raise ValueError(
+            f"짝 자기일관성 실패 (Dante): 질량 {M_kg:.3e} ≠ ρ·(4/3)πR³ = {m_rho:.3e} "
+            f"(ρ = {rho:.0f}) — 질량·밀도·반지름이 같은 행의 것이 아니다")
+
+
+def _pairing_check_hades(R_m, M_kg, F_wm2, x_io) -> None:
+    rho = M_kg / ((4.0 / 3.0) * math.pi * R_m ** 3)
+    if not 2000.0 <= rho <= 4000.0:
+        raise ValueError(
+            f"짝 자기일관성 실패 (Hades): M/R³ 밀도 {rho:.0f} kg/m³ 가 암석 대역(2000–4000) "
+            f"밖 — 보드의 'Moon-sized rocky body' 와 모순")
+    io_power = F_wm2 * 4.0 * math.pi * R_m ** 2 / x_io
+    if not 0.9e14 <= io_power <= 1.1e14:
+        raise ValueError(
+            f"짝 자기일관성 실패 (Hades): {F_wm2:.0f} W/m² × 4πR²/{x_io:.0f} = 이오 출력 "
+            f"{io_power:.2e} W — 이오 전지구 열류 ~1e14 W (Veeder 2012 차수) 밖. "
+            f"플럭스와 반지름이 짝이 아니다")
+
+
+def roster_inputs() -> dict:
+    """정본 파일에서 (값, 출처)를 함께 읽고 짝 검사를 통과시킨 로스터 측정 입력."""
+    text = _METHODOLOGY.read_text(encoding="utf-8")
+    ad = re.search(r"\| \*\*521 km \(adopted\)\*\* \| \*\*([\d.]+)×10([⁰¹²³⁴⁵⁶⁷⁸⁹]+)\*\* "
+                   r"\| \*\*(\d+)×\*\* \| \*\*([\d,]+) W/m²\*\*", text)
+    dr = re.search(r"\| 900 km \(drafted\) \| ([\d.]+)×10([⁰¹²³⁴⁵⁶⁷⁸⁹]+) \| ([\d,]+)× Io "
+                   r"\| ([\d,]+) W/m²", text)
+    rho = re.search(r"density at ([\d,]+) kg/m³", text)
+    ts = re.search(r"plains at their external-budget (\d+) K", text)
+    if not (ad and dr and rho and ts):
+        raise ValueError("§6.5 표를 못 읽었다 — tidal-heating-methodology.md 의 워크드 예제가 "
+                         "옮겨졌거나 형식이 바뀌었다. 정본 위치부터 확인할 것")
+    R_d, M_d = 521e3, _sci(ad.group(1), ad.group(2))
+    F_d = float(ad.group(4).replace(",", ""))
+    rho_d = float(rho.group(1).replace(",", ""))
+    _pairing_check_dante(R_d, M_d, F_d, rho_d, float(dr.group(4).replace(",", "")), 900e3)
+
+    import yaml
+    board = yaml.safe_load(_BOARD.read_text(encoding="utf-8"))
+    F_h = Ts_h = x_io = None
+    for row in board.get("decisions") or []:
+        if row.get("body") != "Hades":
+            continue
+        for f in row.get("fields") or []:
+            if f.get("name") == "tidal_heating" and row.get("axis") == "bulk.tidal_heating":
+                m = re.search(r"~(\d+)× Io \((\d+) W/m²", str(f.get("value")))
+                if m:
+                    x_io, F_h = float(m.group(1)), float(m.group(2))
+            if f.get("name") == "surface_temperature" and isinstance(f.get("value"), (int, float)):
+                Ts_h = float(f["value"])
+    M_h = R_h = None
+
+    def _walk(node):
+        nonlocal M_h, R_h
+        if isinstance(node, dict):
+            if node.get("name") == "Hades" and "mass_kg" in node:
+                M_h, R_h = float(node["mass_kg"]), float(node["radius_km"]) * 1e3
+            for v in node.values():
+                _walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                _walk(v)
+    _walk(board)
+    if None in (F_h, Ts_h, M_h, R_h):
+        raise ValueError(f"보드에서 Hades 입력을 못 읽었다 (F={F_h}, T_s={Ts_h}, M={M_h}, R={R_h})")
+    _pairing_check_hades(R_h, M_h, F_h, x_io)
+
+    return {
+        "Dante (A b I)": dict(
+            radius_m=R_d, mass_kg=M_d, flux_wm2=F_d, T_s=float(ts.group(1)),
+            g=_G_NEWTON * M_d / R_d ** 2,
+            source="docs/reference/tidal-heating-methodology.md §6.5 표 (정본; 채택 행 "
+                   "521 km · 1.552e21 kg · 2,231 W/m², ρ 2,620, 평원 223 K)"),
+        "Hades (A b II)": dict(
+            radius_m=R_h, mass_kg=M_h, flux_wm2=F_h, T_s=Ts_h,
+            g=_G_NEWTON * M_h / R_h ** 2,
+            source="phase4/alpha_centauri.yaml (정본; bulk.tidal_heating 207 W/m² + "
+                   "surface_temperature 278 K + moons 블록 M 5.0e21 · R 750 km)"),
+    }
+
+
+def roster_measurement() -> dict:
+    """로스터 천체를 축에 통과시킨 측정 — 채택 아님, unvalidated 라벨 그대로."""
+    out = {}
+    for name, inp in roster_inputs().items():
+        p = dict(IO_TABLE5)
+        p["g"] = inp["g"]
+        p["T_s"] = inp["T_s"]
+        r = transport_result(inp["flux_wm2"], inp["radius_m"], params=p)
+        r["inputs"] = inp
+        out[name] = r
+    return out
+
 if __name__ == '__main__':
     p = dict(IO_TABLE5)
     print("이오, Table 5 축자 + α=3e-5 (Schubert 채움), 자연 독법 A 두 개:")
