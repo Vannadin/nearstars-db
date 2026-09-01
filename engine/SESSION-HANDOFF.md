@@ -6,7 +6,7 @@ Read this, then `engine/interior-core.md`, then take the seat.
 
 ## Where the work lives
 
-**All of it is on `engine/prototype`, in a worktree.** As of this writing that is ~105 commits
+**All of it is on `engine/prototype`, in a worktree.** As of this writing that is ~140 commits
 ahead of `main`, and `main` is not ahead at all. A session sitting in the main checkout sees
 the last work as tidal heating and the stability simulation, and is **not wrong** — that is
 what `main` contains.
@@ -158,6 +158,39 @@ whether it is adoptable**: if the fixed point does not reproduce Io, it is not.
 - **Clear the work session's context at item boundaries** (`/clear`, which the owner types —
   a session cannot clear itself), after confirming the notes carry what the next session needs,
   especially the approaches that were tried and rejected.
+
+## What 2026-09-01 added to the rules — read these, they are new
+
+Every one is in `interior-core.md`'s rules section with its case. The short forms:
+
+- **A process listing is an instant, not a state**, and a serial chain shows nothing between
+  its steps. This seat reported "the run never started" from one `ps` and caused a duplicate
+  heavy run. Report process state with its sampling; **a session about to relaunch checks for
+  itself**, whatever the report says.
+- **A runtime estimate belongs to the commit it was measured on.** "~15 minutes" was honest
+  when taken and false when quoted, because the code had changed between.
+- **A number whose source was not stated is quoted without one** — do not supply the
+  provenance. An invented source is harder to catch than a missing one, because a reader who
+  sees one stops looking.
+- **A sentinel carried in a variable something else re-arms is not a contract.** State that
+  encodes a promise gets its own variable.
+- **The cold flank has a second form: the climb hid the wall from the controller.** Brief 22
+  taught trial refusals to steer the bracket; this says the steering must also be able to
+  **conclude**, or the loop cycles instead of refusing by name.
+- **A third party checks a solver by closure, not by A/B against a harness whose brackets it
+  does not own.** The audit's own instrument was wrong twice and it judged the instrument, not
+  the solver.
+- **An unreachable boundary condition closes as a named refusal**, not as a failure to
+  converge. That is what let C13 close.
+- **A new number is carried back to the old ones before it is used to clear them.**
+- **Stage what you wrote, not what the file holds** — `git diff --stat` before `git add`, in a
+  worktree two seats are editing.
+- **When machine-extracting a numeric table, check against a different rendering**, not
+  against check values that rode the same extraction — they can be self-consistently wrong.
+  The IF97 PDF's text layer dropped every power of ten.
+- **`check.sh` is ~20 minutes and the foreground tool limit is 10.** Run it backgrounded and
+  watch the log tail; twice it was killed and read as an owner signal. **An external signal's
+  sender candidates include the harness itself.**
 
 ## Traps worth knowing before you step on them
 
