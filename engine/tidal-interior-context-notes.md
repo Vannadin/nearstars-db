@@ -82,3 +82,84 @@ From the paper's own stated precision, two tiers, both registered now:
   verified in the test).
 
 Outcome branches are the brief's five, unchanged.
+
+## 4. Verdict (2026-09-01, after the runs) — branches ③+④ fired
+
+**Io does not reproduce under any natural reading of the unprinted constants; the
+product is the name of the wrong assumption, and it is not on our side of the wiring.**
+
+What was established, in order:
+
+1. **Transcription verified verbatim.** Every equation (1)–(38) was checked against the
+   PDF text layer (FlateDecode extraction), not only the rendered pages. The solver
+   drives the printed system's residuals to ~1e-14 and preserves the built-in closure
+   F_m + F_c = H·D to machine precision.
+2. **A numerically necessary reformulation, algebraically identical.** The printed
+   eq. (36)/(38) contain c₁·exp(+ρC_p v δ/k); away from the root this is a huge
+   exponential times a near-cancelling bracket, and sign-scanning it produces hundreds
+   of spurious "roots" with astronomical residuals. Eliminating c₁ analytically leaves
+   only exp(−Pe) terms; at the root the two forms agree to the bit.
+3. **Natural readings miss, decisively.** With Table 5 verbatim, α = 3×10⁻⁵ (Schubert
+   fill-in, the paper's own pointer) and A over the full physical range (ΔT_rh 10–500 K,
+   including the Karato & Wu wet/dry readings 0.0147/0.0184 K⁻¹), and H at both the
+   printed 3×10⁻⁶ and the flux-implied 2.509×10⁻⁶ W/m³: the unique root sits at
+   **T_i ≈ 1447–1594 K, δ ≈ 97–534 km** — the lithosphere misses the printed 12.6 km by
+   **8–42×** at every candidate; T_i misses the ±21 K acceptance at the natural A's.
+   (Robust half worth recording: F_c = 7.4–8.0 mW/m² across the entire grid, matching
+   the printed "9 mW/m²" in kind — the burial-limited conduction physics is stable;
+   the (T_i, δ) placement is what fails.)
+4. **Exact-root recovery pins the diagnosis.** Solving (A, α) so that the printed
+   (1471 K, 12.6 km) is an exact root of the printed system (H = 2.509×10⁻⁶ from the
+   printed fluxes' own closure) converges to **α = 8.71×10⁻⁷ K⁻¹ (≈ 1/34 of mantle
+   rock) and ΔT_rh = 354 K (rock rheological scales are ~40–100 K)** — residuals 1e-14,
+   and the all-roots solver lands on (1471.00 K, 12.599 km) at exactly those constants.
+   No physically admissible fill-in exists: the printed §6 result is not a root of the
+   printed §4 system under the paper's own cited material values.
+5. **Independent of Io, the paper's own nondim Tables 2–4 fail deterministic
+   inversion.** Using only printed Model columns and printed equations: the latent heat
+   L recovered per row (one constant in the model) drifts 0.3 → 10.8 across rows, and
+   the v recovered from the flux equation (36) disagrees with the v recovered from the
+   temperature equation (37) by up to 4×, systematically in dT_sol/dz. Neither
+   exponent-sign convention fixes it. So the non-reproducibility is a property of the
+   paper's printed system, not of our Io setup.
+
+**Branch ③ product — the wrong assumption, named**: that Kankanamge & Moore 2019's
+printed §4 equations + Table 5 constitute the closed system that produced their §6 Io
+numbers. They do not: α is absent, A's unit is unprinted, H is printed at one
+significant figure against its own flux printout, and the actual solved system appears
+to differ from print in some undocumented way (their §7 notes "we did refit a_u" —
+the class of quiet refits that would explain the table inversion failure).
+**Branch ④ unblock**: the paper's stated data link (http://cas.hamptonu.edu/data-products,
+"Simulation results and data extraction scripts are available at") or the authors —
+per standing rule, ask the owner before any fetch outside the ADS/_papers channel.
+Not tuned: the transport-mode declaration was never touched (branch-③ discipline).
+
+**What shipped anyway (wired, labelled, unvalidated)**: `engine/tidal_transport.py` —
+Ė/(4πR²) → labelled (internal temperature, lithosphere thickness) under a **declared**
+transport mode, with the derived-vs-declared provenance on every number, the
+Rovira-Navarro+ 2021 stability label (stable under Andrade; conditionally-stable with
+the runaway-cooling caveat under Maxwell+convection), and a permanent
+`validation: failed-io-reproduction` tag so a reader cannot mistake these numbers for
+validated ones. `derive_potential_temperature()` exists but its output carries the same
+tag — the declaration-to-derivation upgrade is wired and **blocked from adoption by its
+own label**. Io enters the gate as a check table (`test_tidal_transport.py`, registered
+in check.sh): it pins the transcription closure, the measured miss (as invariants — if
+Io ever lands inside tolerance the test fires loudly, because the story changed), the
+exact-root recovery, and the label discipline.
+
+## 5. Roster measurement (measured, NOT adopted — hard line kept)
+
+Io-class material fill-ins (Table 5), per-body g and T_s, D/R = 0.549 declared:
+
+- **Dante (A b I)** — R 521 km, board flux 11,500 W/m², T_s 360 K, g 0.437 (ρ=3000
+  fill-in): **the printed system has no root** at this input. At ~3,800× the Io flux
+  the melt-zone geometry cannot balance (36)+(38). Measured as an absence; the board's
+  own §6.4-based lava-lake treatment remains the operative story. Nothing touched.
+- **Hades (A b II)** — R 750 km, M 5.0e21, board flux 207 W/m² (band bottom), T_s
+  278 K: unique root **T_i = 1844 K, lithosphere = 224 km** (on D = 412 km — more than
+  half the declared mantle depth, where the 1-D slab is least trustworthy; §6 of the
+  paper itself says spherical correction would reduce both). Unvalidated, unadopted;
+  the Dante/Hades radius question stays parked with the owner.
+
+Anchors: no engine module imports `tidal_transport`; anchors expected bit-identical
+(gate run confirms).

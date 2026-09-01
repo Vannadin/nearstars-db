@@ -9,7 +9,7 @@ line: no roster body's answer changes in this brief — Hades/Dante are NOT re-s
 (parked owner decision; measure only, adopt nothing).
 
 **Order and items**
-- [ ] **A (extract the relation)**: read Kankanamge & Moore 2019
+- [x] **A (extract the relation)**: read Kankanamge & Moore 2019
   (`docs/phase3/_papers/2019JGRE..124..114K.pdf`) and transcribe the heat-pipe
   parameterization: surface heat flux → internal (mantle) temperature + lithosphere
   thickness, every equation labelled `Kankanamge & Moore eq. N` checked at its place
@@ -18,10 +18,10 @@ line: no roster body's answer changes in this brief — Hades/Dante are NOT re-s
   104 TW, two orders off; the flux itself is sound); "<15 %" is parameterization vs
   their own simulation (§5), not accuracy vs Io; Rovira-Navarro Fig. 2 is a topology
   diagram (no numeric x labels at 1200 dpi) — no digitizing, recorded as an absence.
-- [ ] **B (pre-register the Io tolerance)**: from the paper's own printed precision,
+- [x] **B (pre-register the Io tolerance)**: from the paper's own printed precision,
   BEFORE the first run — never back-derived from what the run produces. Written in
   the context notes with its derivation.
-- [ ] **C (wire the axis)**: Ė → (internal temperature, lithosphere thickness) under a
+- [x] **C (wire the axis)**: Ė → (internal temperature, lithosphere thickness) under a
   declared transport mode (§6.2 three-mode ladder is the menu; declaration carries
   its label). Output is a **labelled result**: each number says whether it is derived
   from Ė or declared, plus a **stability label** (Rovira-Navarro+ 2021: one stable
@@ -29,11 +29,11 @@ line: no roster body's answer changes in this brief — Hades/Dante are NOT re-s
   there *"enters a runaway cooling phase"* — labelled result, not a bare temperature).
   Where this axis can derive `potential_temperature`, the output states derived-vs-
   declared explicitly. No new runtime dependency.
-- [ ] **D (Io validation)**: feed Io's observed heat flux (2.5 W/m², Kankanamge §6)
+- [x] **D (Io validation)**: feed Io's observed heat flux (2.5 W/m², Kankanamge §6)
   through our wiring; accept iff it lands on **1471 K and 12.6 km** within the item-B
   tolerance. Io is not in the anchor set — record the choice: gate check-table vs
   one-off reproduction.
-- [ ] **E (measure, don't adopt)**: what the axis *would* do to affected roster bodies
+- [x] **E (measure, don't adopt)**: what the axis *would* do to affected roster bodies
   (Hades, Dante, any tidally heated roster body) — measured and reported, zero
   adoption, anchors bit-identical.
 - [ ] **F (landing)**: context notes closed; report SHAs, Io reproduction + which
@@ -59,3 +59,12 @@ with label (quantity, source location, condition, paper name where a file carrie
 papers); filled-in numbers say so; no WebSearch (ADS token + `_papers/` cache,
 identifiers read not made, checked by title); commits English, one logical change,
 `VaNnadin <vannadin00@gmail.com>`; `git diff --stat <file>` before `git add <file>`.
+
+**Verdict (2026-09-01, landed)**: Branches ③+④. Transcription verbatim-verified (PDF
+text layer); solver exact to 1e-14 with F_m+F_c=HD closure; natural readings put Io at
+T_i 1447–1594 K, δ 97–534 km (δ misses 12.6 km by 8–42× everywhere); exact-root
+recovery shows (1471, 12.6) requires α=8.71e-7·ΔT_rh=354 K (unphysical); the paper's
+own Tables 2–4 fail deterministic inversion (per-row L drifts 0.3→10.8). Axis shipped
+wired + labelled + `validation: failed-io-reproduction`; Io = gate check table
+(test_tidal_transport.py); Dante = no root at 11,500 W/m², Hades = (1844 K, 224 km)
+measured-not-adopted. Declaration untouched. Details: tidal-interior-context-notes.md §4–5.
