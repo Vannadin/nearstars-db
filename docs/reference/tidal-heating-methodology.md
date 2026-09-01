@@ -571,6 +571,39 @@ mechanism is solid, the numbers are noisy:
   > ([`2021PSJ.....2..119R`](https://ui.adsabs.harvard.edu/abs/2021PSJ.....2..119R)),
   > *Tidally Heated Exomoons around Gas Giants* — gas-giant moons, so our own case rather
   > than an analogy, and the source of the fixed-point framing below.
+  >
+  > **Both were then read (survey ⑧b, 2026-09-01), and the cost of wiring this axis came down.**
+  > *The validation our standard asks for — relation plus a known body — is met for the
+  > transport half*: **Kankanamge §6 solves Io to an internal temperature of 1471 K** and a
+  > 12.6 km lithosphere, *"consistent with the range of eruptive temperatures from Galileo
+  > observations"*. The *"<15 %"* this doc quoted from the abstract is now quoted from §5 and
+  > its subject named: *"below 10 % except few data points, which approach 15 % at low melt
+  > flux"* — **parameterization against their own numerical simulation, not against Io.**
+  >
+  > **And the expensive part turns out not to be required.** The first reading was that this
+  > axis needs Ė(T) — a temperature-dependent dissipation curve under our tidal recipe, which
+  > we do not have. **It does not, for what we want.** Ė(T) is needed to *predict* an
+  > equilibrium; **evaluating the conversion at a given heating rate does not need it**, and
+  > that is exactly what §6 does for Io — *"the internal heating rate is chosen to satisfy the
+  > observed thermal emission"*. **Our own Ė is likewise a computed input, not a prediction**,
+  > so declaring the transport mode and taking Ė as given closes the system.
+  >
+  > **Multiplicity, corrected downward from the first reading**: Rovira-Navarro's text says
+  > *"In both cases, there is **a stable** equilibrium point"*, with an additional **unstable**
+  > one only in the Maxwell-plus-convection combination; they adopt Andrade. So the branching
+  > is real but is a property of one rheology pairing, not of the method. An implementation
+  > should still return a stability label — a body landing on the unstable point *"enters a
+  > runaway cooling phase"*.
+  >
+  > **Their Fig. 2 cannot answer "what temperature", and that is a property of the figure, not
+  > of the reading**: rendered at 1200 dpi its x-axis carries **no numeric labels at all**, only
+  > the symbolic gridlines T_melt and T_res, and y is normalised to Io's own flux. It is a
+  > topology diagram. Recorded as an absence rather than a failed read.
+  >
+  > ⚠ **Do not transcribe Kankanamge §6's "totaling ∼1 TW".** At the 2.5 W/m² printed beside
+  > it, Io's actual surface area gives **104 TW** — reproduced here — and 1 TW would need a
+  > 178 km body. Two orders low, unresolved (a slip, or a 1-D slab's reference area). It does
+  > not touch the temperature result, and 2.5 W/m² itself agrees with Io's measured output.
   Moore 2003, Moore & Webb 2017, Reese 1998, the Veeder series, Harris 1999/2005/2008,
   Lev 2019. Harris 1999/2008 and Lev 2019 are the three whose full text would most
   improve the crust-fraction scaling if this section ever needs it quantitatively.
