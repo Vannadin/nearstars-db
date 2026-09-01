@@ -771,6 +771,43 @@ what this row is allowed to claim.
 
 Depends on: a body that actually hits one.
 
+**A trace component can veto a state, and what that costs was measured, not declared
+(Brief 28, 2026-09-01).** The mixture's evidence gate is weight-blind by design —
+`eos.py:509`, `min(m.p_max for m, w in self.parts if w > 0.0)` — and its comment gives the
+reason: *"if one component is outside its evidence range the mixture density there has no
+grounding; using the highest ceiling would hide ungrounded extrapolation behind a grounded
+component."* **The general statement stands.** What Brief 27 exposed is the edge: the fatal
+refusal fired on an `h_he` component whose weight in that shell is **6.87 × 10⁻⁶**.
+
+Rather than declare a cutoff — this list has refused arbitrary thresholds twice — the
+contribution was **measured**, at the same pressure but above the floor so both mixtures can
+be evaluated:
+
+| w | Δρ/ρ | Δc_p/c_p | Δ∇_ad/∇_ad |
+|---|---|---|---|
+| **6.87e-6** (the actual weight) | −1.18e-5 | +1.46e-5 | −8.9e-6 |
+| 1e-4 | −1.72e-4 | +2.12e-4 | −1.30e-4 |
+| 1e-3 | −1.71e-3 | +2.12e-3 | −1.30e-3 |
+
+**Linear to three or four digits** (slopes −1.716 / +2.118 / −1.299), so branch ③ did not
+fire and **the crossing point is computed rather than chosen**: at this location the
+contribution reaches the anchor's own reproducibility (3.7–3.9e-4) near **w ≈ 1.7 × 10⁻⁴**.
+At the weight that actually vetoed, all three quantities sit **25–30× below** that jitter.
+
+**The comparison's own weakness, stated by the measuring session and not by its proposer.**
+A point-wise EOS error and an end-to-end radius jitter are **different quantities**; putting
+them side by side is a **scale reference, not a propagation**. So "smaller than the anchor's
+jitter" is not yet a bound on the answer — turning it into one means perturbing the density
+by that amount and re-solving. **Not done.** The directing seat proposed this criterion; the
+limitation belongs with it.
+
+**And what the measurement does not cover, registered in advance**: the refusal's effect on
+the *search trajectory* (Brief 27's `conv=False` is exactly that, and a point measurement
+cannot call it negligible), the other weight-blind gates (`cold_phases`, `in_domain`), and
+the `_EnvelopeWater` dispatch interaction. The slopes are also location-dependent, so any
+policy would need a conservative envelope or a per-site check. **Owner's call; nothing was
+changed in the gate.**
+
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
 `differentiated: false` integrates rock and metal mixed in one layer and declines when ice
