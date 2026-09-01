@@ -844,6 +844,53 @@ does not build machinery without a consumer (the rule C5 followed when it declin
 implement a graded envelope). Nothing was changed. When a body is refused by a trace component
 at a state that is otherwise sound, the item opens with the method already in hand.
 
+**Fired again 2026-09-01, and this time the ceiling is a third one: `ice_x` has three, and the
+code uses the largest** (surveys ⑩/⑩b; `engine/superionic-ceiling-context-notes.md`).
+
+| ceiling | value | what it is |
+|---|---|---|
+| **data** | **≈355 GPa** | above it the ladder is extrapolation — the row above, unchanged |
+| **stability** | **≈520 GPa** | where the ice region *closes* in the potential `ice_x` is fitted to — new |
+| printed | 1 000 GPa | SeaFreeze's `VII_X_French` knot box, and what `ICE_X_P_MAX` says |
+
+The stability ceiling is the new one and it is **not a competing source**: the ice side of the
+boundary is French, Desjarlais & Redmer 2016's Fig. 4, whose ices potential is *"taken from
+Ref. [30]"* = French & Redmer 2015 ([`2015PhRvB..91a4308F`](https://ui.adsabs.harvard.edu/abs/2015PhRvB..91a4308F)),
+**the same potential SeaFreeze's `VII_X_French` carries and `eos.py`'s `ice_x` is fitted to**
+(`eos.py:1852-1853`, `2027-2036`). So this is *the authors of our own ice potential computing
+where their ice stops being the stable phase* — the bcc–ices boundary turns back down and
+leaves the plotted temperature range near 520 GPa, above which their calculation shows no ice
+region at any plotted temperature. They say it closes and do not say what replaces it: *"There
+have been several predictions of crystalline structures of water ice at zero Kelvin **beyond
+the stability region of ice X** [69–75] … most of them are of noncubic structure and the
+derivation of accurate thermodynamic potentials for them is not an easy task."*
+
+**This is the same disease C6 was opened for, one layer deeper.** The row above already found
+that our ladder's printed ceiling is not its data ceiling. The third ceiling says the printed
+ceiling is not its *stability* ceiling either, and the smallest of the three is the data one
+while the code carries the largest. **No published number moves**: the anchors' mantles bottom
+out at 2553 K, far above `ICE_VII_X_T_MAX` = 1800 K, so the ladder branch does not fire on a
+converged column — which is exactly the condition the row above already registered. **What is
+unmeasured is the trial path**, and that is what separates a labelling defect from a
+convergence defect.
+
+**And a second finding rides with it, which is a label rather than a ceiling.** The gate's
+superionic floor (`test_interior.py:220`, `MILLOT_SUPERIONIC = (100.0e9, 2000.0)`) is **flat**,
+and the boundary is not: it rises to a maximum near 200 GPa and descends through 1800 K
+somewhere in **305–375 GPa** (two independent figure renderings; the maximum agrees to 0.7 % in
+T and 5 % in P, the crossing disagrees by 29 GPa with error bars barely touching, and **was not
+adjudicated** — a figure reading does not settle a figure disagreement). So `ICE_VII_X_T_MAX <
+t_sup` **passes while asserting something false**, and the promise in `eos.py:1929-1934` — that
+superionic ice will not quietly be called ice X — is reachable. Worse, the constants'
+provenance is false in the way subspecies 7 describes: Millot+ 2019's *"exceeding 100 gigapascals
+and high temperatures above 2,000 kelvin"* is that paper restating **the prediction of its own
+refs 6–12** (*"Particularly intriguing is **the prediction** that H₂O becomes superionic⁶⁻¹²…"*,
+verified verbatim in the cached PDF by the directing seat), not its result — and the paper's own
+measurement window, 100–400 GPa × 2 000–3 000 K, is an experimental range, not a boundary.
+`eos.py`'s `SUPERIONIC_MIN_T`/`_P` are meanwhile **defined and never read**; the live copy is the
+test's, unlinked to them. **Both the ceiling notation and the label repair are Brief 34**; C6
+stays a standing watch and records that it fired.
+
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
 `differentiated: false` integrates rock and metal mixed in one layer and declines when ice
