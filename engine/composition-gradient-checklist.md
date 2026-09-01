@@ -88,3 +88,19 @@ silicate melting curve.
 - [ ] Ledoux cap route A transcription (knobs stated), route B check where computable
 - [ ] grid + per-point report (renorm, radius residual; observations beside, not fitted)
 - [ ] landing: notes, C13 row hand-off to directing seat
+
+## Grid registration (after the probe passed — both widths conv=True)
+
+Probe verdict (2026-09-01): w=0.01 → λ 0.174208, renorm 0.1937 (= the layered end A,
+continuity confirmed), conv=True; w=0.30 → λ 0.207637, renorm 0.2081, radius residual
++0.12 %, conv=True. The gradient clears the h_he floor that killed uniform Z — the
+shallow envelope tapers to clean H/He, whose adiabat stays inside the window (the
+anchor's own surviving configuration). Grid proceeds.
+
+**Width grid, registered before the runs**: δm_dil ∈ {0.01, 0.025, 0.05, **0.075
+(Howard+ 2023, the one sourced point)**, 0.125, 0.20, 0.30}, both planets (Uranus and
+Neptune end-B-ice geometry, z 1→0, m_dilute = envelope base + ice mass, 32 shells,
+zr = 0, t_pot 76/72 K). Per point: λ, radius residual, renorm I/(M·R_pub²), P_c, T_c,
+conv, and the gradient region's radial extent (Vazan-geometry conformity reported, not
+enforced). Observations (N13 P_Voy 0.2300/0.2410) reported beside; **no point adopted**.
+Shell-count sensitivity: rerun one mid point at 64 shells, report the digit drift.
