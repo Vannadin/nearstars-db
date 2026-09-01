@@ -1276,7 +1276,13 @@ cannot close the deficit.**
 > the original authors' unpublished calculation. Default path unchanged: the repair is an
 > opt-in instrument (`engine/hhe_repair.py`), nothing imports it, the baked table still carries
 > its 72 clamped cells, the anchors were not refreshed, and both readings are kept side by
-> side wherever the numbers appear. What this is *not*: a ceiling on the fuzzy core as the
+> side wherever the numbers appear. **Owner's decision 2026-09-01: the default stays the
+> published table** — not because that route is judged nearer the truth, but because there is
+> no ground to elect either as truth, and this list's practice when it cannot choose is to
+> record the divergence rather than pick (the move C11 made when it published a grid of
+> declared pairs and declined to select one).
+
+What this is *not*: a ceiling on the fuzzy core as the
 literature means it, which spreads **ice** as well as rock; the recipe's end B moves only
 the declared rock. The remaining owners on the table are that difference (graded ice) and
 the ice mantle's own density profile — the ice axis stays open, unmeasured. The stub is an
