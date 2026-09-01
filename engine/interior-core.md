@@ -1521,7 +1521,45 @@ atomic transition band, near where Gupta+ 2025 place the fluid structural transi
 second reason holds for the sentinels and for the cold pinned mass, and **fails for one block
 that lives in the used domain**.
 
-*The open, testable follow-up*: the notes' own table has a 60 K-start adiabat passing 100 GPa
+**Tested, and the answer is the uncomfortable middle (Brief 30, 2026-09-01).**
+
+**Contact is universal.** A stencil hook reproducing the baked bicubic's clamped 4×4 was run
+over 22 converged points: **every published number in this row reads clamped stencils.**
+Anchors **12.1 % (Uranus) / 18.5 % (Neptune)** of envelope `grad_ad` lookups, contact zone
+22–37 GPa · 2359–2624 K — the middle of the block. **The rock-axis end B behind C13's
+26 % / 41 % : 20.7 % / 26.2 %.** Ice ends 13.2–20.2 %, the whole gradient grid 13.6–20.1 % — **the grid figures reproduced by
+the directing seat on the preserved runner, all fourteen points, range identical**.
+Branch ① is out. (The first attempt returned zero lookups from a declaration slip in the
+runner's own setup; it was discarded and re-run rather than reported.)
+
+**Propagation says the answers hold — with one quantity at the edge.** All 72 cells were
+replaced by in-isotherm linear interpolation behind a non-committed hook and **both anchors
+were re-solved** — the propagation test that Brief 28's point measurement could not stand in
+for.
+
+| | Δλ | ΔR | ΔT_c |
+|---|---|---|---|
+| Uranus | +9.3e-6 | +9.0e-6 | **+3.41e-4** |
+| Neptune | −4.3e-5 | +2.9e-5 | +1.43e-4 |
+
+Against the anchors' own reproducibility (3.7–3.9e-4): λ and R sit 10–40× below it, and
+**T_c sits at 0.87–0.92× — inside, but against the wall.** Branch ③ did not fire and
+**`--refresh` was not run anywhere**, which is the right instinct: re-freezing on a
+substituted table would make the substitution the reference.
+
+**What this does and does not establish, kept together.** It establishes that our published
+numbers do not move under *this* substitution. It does **not** establish distance from the
+unpublished true values — **the replacement is our own interpolation, not truth**, so this is
+a sensitivity to one substitution and not an error bar. And **we are reading clamped values**,
+which the answers surviving does not undo: a colder-starting or higher-Z body sits deeper in
+the block, and the same test could come out differently. The two runners
+(`clamp_contact`, `clamp_propagate`, ~3 min together) are preserved for exactly that re-check.
+
+**Still open, and it belongs to the figures rather than the code**: whether the original clamp
+is conservative or violent at those conditions — the block sits in the molecular-to-atomic
+transition band, near where Gupta+ 2025 place the fluid structural transition.
+
+*The follow-up as first opened*: the notes' own table has a 60 K-start adiabat passing 100 GPa
 at ≈2371 K, which puts a cold-start ice-giant profile **inside the stencil reach of those
 pinned rows**. **Whether our anchor integrations read stencils containing a clamped node is
 not known and is checkable.** If they do, the adiabatic gradient at those steps is a clamp end
