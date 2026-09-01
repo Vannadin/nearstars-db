@@ -1263,7 +1263,20 @@ Neptune's P_c 984 GPa (a probe at 1010 GPa integrates; mass closure 1.000000); g
 
 **The answer this axis gives: rearranging the declared rock mass — any grading between
 compact core and uniform envelope Z — buys at most 26 % / 41 % of the gap. This axis
-cannot close the deficit.** What this is *not*: a ceiling on the fuzzy core as the
+cannot close the deficit.**
+
+> ⚠ **Condition attached 2026-09-01 (Brief 31): these two percentages were measured on the
+> clamped table, and they do not survive its repair.** With the 66 repairable clamped nodes
+> assembled instead of read, **both ends of this bracket stop converging** (λ −6.9 % / −5.5 %,
+> boundary condition missed) — so the bracket **is not measurable at all** on that path. The
+> same holds for Brief 26's gradient span: 39.7 % / 60.0 % collapses to ≈3.6 % / ≈1.5 %, the
+> wide half refusing. **These are measurements of a table choice, not of the planet.** A number
+> that exists on one grounded route and will not converge on the other was never robust to
+> that choice. Which route is nearer the truth this experiment does not say — the truth is in
+> the original authors' unpublished calculation. Default path unchanged: the repair is an
+> opt-in instrument (`engine/hhe_repair.py`), nothing imports it, the baked table still carries
+> its 72 clamped cells, the anchors were not refreshed, and both readings are kept side by
+> side wherever the numbers appear. What this is *not*: a ceiling on the fuzzy core as the
 literature means it, which spreads **ice** as well as rock; the recipe's end B moves only
 the declared rock. The remaining owners on the table are that difference (graded ice) and
 the ice mantle's own density profile — the ice axis stays open, unmeasured. The stub is an
