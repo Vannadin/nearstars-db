@@ -1234,6 +1234,51 @@ measured end. Recorded, not judged: all four states sit *above* the targets (ren
 bracket's own artifact — a graded profile tapers the water toward 1 bar and is not
 blocked to the same degree. `engine/ice-axis-context-notes.md`.
 
+**The ice axis, attempted twice and measured as a wall both times — 2026-09-01 (Briefs 23, 25).**
+Brief 23 put the declared ice into the envelope as a uniform Z; every bracket end refused, and
+**1102 of 1202 refusals sat at one water wall** (p ≲ 0.1 GPa × 500–1000 K — the junction of
+water1's 500 K ceiling, water2's 0.1 GPa floor and Mazevet's 1000 K floor). Brief 25 baked
+IAPWS-IF97 regions 1–3 to fill exactly that window.
+
+**The steam bake did what it was for: the water wall is retired.** In the same solve the spy
+now counts **100 refusals, 100 % of them `h_he`, water 0.** But no end converges, so **no
+gap-covered percentage exists** and the registered product is the next wall's coordinates.
+
+**Where it moved, and why the target is unreachable.** The surface pins at **355–363 K
+regardless of central temperature, against a declared 76 K.** Every trial adiabat cold enough
+to head for 76 K dies on the **H/He table's low-temperature floor**, measured here directly
+rather than inferred from the refusals:
+
+| pressure | lowest temperature the `h_he` table will evaluate |
+|---|---|
+| 130 GPa | **1830 K** |
+| 150 GPa | 1900 K |
+| 164 GPa | 1945 K |
+| 1050 GPa | 3130 K |
+
+The refusal samples sit at 131–1121 K in the first band (130–164 GPa) and 1929–3096 K in the
+second (~1046–1062 GPa) — **below the floor in both.** So a cold envelope at those depths has
+no representation at all, and the 76 K surface is not reachable from below by any central
+temperature. This is a **material ceiling of the kind C6 lists**, met from underneath rather
+than above.
+
+*The four ends, recorded and not judged* (λ, then the radius residual, then
+`I/(M·R_pub²)`): Uranus B_ice 0.294150 / −10.51 % / 0.2356; Uranus B_both 0.313228 /
+−12.81 % / 0.2381; Neptune B_ice 0.299345 / −7.81 % / 0.2544; Neptune B_both 0.305116 /
+−5.30 % / 0.2736. All four sit **above** the targets (0.2300 / 0.2410), the same direction as
+the earlier attempt with values moved by the surface coming down from ~1275 K to ~360 K.
+**None of this is a measurement** — an end that misses its boundary condition is not an end,
+and these numbers must not be quoted as the ice axis's coverage.
+
+**The label steam does not buy still rides**: trial paths now *cross* the old wedge on IF97,
+and that crossing happens over an unverified additive mixture, outside Soubiran & Militzer's
+validated band on both axes (`7769be6e`).
+
+Two defects were found on the way and are registered in the rules above — the re-armed
+sentinel that let the temperature loop run 51 attempts against a ceiling of 29, and the
+climb that hid the wall from the controller. Both were invisible while every trial died in
+the steam wedge first.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
