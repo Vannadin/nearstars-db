@@ -275,15 +275,72 @@ acting on it.**
 - **Millot+ 2019's Fig. 4 — read** (surveys ⑩/⑩b, 2026-09-01), and it did not say what the
   constants claimed. See the next section; the repair is Brief 34, not a decision.
 
-**Still open:**
+**Resolved after that section was written — the tidal axis is wired, and its validation failed:**
 
-- **Where the tidal-heating → interior axis goes in the queue.** It is now adoptable and
-  **cheaper than the first reading**: Ė(T) is needed to *predict* an equilibrium, not to
-  evaluate the conversion at a given heating rate, which is what Kankanamge §6 does for Io
-  (1471 K internal, 12.6 km lithosphere, consistent with Galileo eruptive temperatures) —
-  and our Ė is likewise a computed input. Multiplicity is one stable point, with an unstable
-  one only in the Maxwell-plus-convection pairing. **This is the one decision that unblocks
-  the queue.** The directing seat recommends it next.
+- **Tidal heating → interior structure: built, and the validation it was adopted for does not
+  reproduce** (Brief 35: `051a8a4c` registration, `e719b5d7` pre-registration committed *before
+  the first run*, `e0628e59` the wiring, `bd32daae` the verdict; notes
+  `engine/tidal-interior-context-notes.md` §4, code `engine/tidal_transport.py`).
+
+  The cheapness finding stands and is why it was briefed: **Ė(T) is needed to *predict* an
+  equilibrium, not to evaluate the conversion at a given heating rate**, which is what
+  Kankanamge & Moore 2019 §6 does for Io, and our Ė is likewise a computed input. So declaring
+  the transport mode closes the system, and the mode was never touched.
+
+  **What failed is the acceptance test, and the failure is the paper's, not ours.** The printed
+  system (36)+(38) was transcribed verbatim and solved to a machine residual of 1e-14; across
+  the whole natural-reading constant grid Io comes out at **T_i 1447–1594 K** (which spans the
+  target 1471 K) but **δ 97–534 km against the paper's 12.6 km — out by 8–42× everywhere.**
+  Registered branches ③+④ fired, and the product is the **name of the wrong assumption**: *that
+  the printed §4 system plus Table 5 is the closed system that produced §6's Io result.* Three
+  legs, two of them reproduced independently by the directing seat:
+  - **Table 5 has no thermal expansivity α at all** — read directly: g, D, Ts, Tsol0, dTsol/dz,
+    ρ, cP, L, H, k, η₀, A, T0, and α appears zero times (§6 defers to Schubert 2001). `A = 15`
+    carries **no printed units**; `H = 3×10⁻⁶ W/m³` is **one significant figure**; D = 1000 km.
+  - **The paper violates its own closure by 16.4 %** — computed from Table 5's own values:
+    H·D = 3.000 W/m² against §6's printed F_m + F_c = 2.509 W/m². Closure would need
+    H = 2.509×10⁻⁶.
+  - **The decisive leg, and the one the directing seat did NOT reproduce**: inverse-solving for
+    the constants that make (1471 K, 12.6 km) a root of the printed system gives
+    **α = 8.71×10⁻⁷ (1/34 of rock) and ΔT_rh = 354 K** — i.e. *no physically admissible filling
+    exists.* If that leg falls, the verdict reverts to "we picked the wrong constants". It is
+    with the audit.
+  - **Independently of Io**, the paper's own dimensionless Tables 2–4 do not close against its
+    printed equations: the latent heat L — **a single constant in the model** — drifts 0.3 → 10.8
+    row by row, and eq. (36)'s v disagrees with eq. (37)'s by up to 4×. §7's *"we did refit a_u"*
+    names undocumented refitting as the candidate cause. Also with the audit.
+
+  **Two of the authors' own sentences matter here**: *"a correction for the spherical geometry of
+  Io should be applied, but that is not included at this time"*, and *"The lid thickness is lower
+  than expected, given the presence of ∼18-km-high mountains on Io"* — **the target we were
+  matching is one the authors themselves call surprising.**
+
+  ⚠ **Banned number, and it is easy to re-import**: §6's *"totaling ∼1 TW"*. At the 2.5 W/m²
+  printed beside it, Io's area gives **104 TW** (reproduced); 1 TW would need a 178 km body. The
+  **flux itself is sound**. And *"<15 %"* is §5's parameterization error **against their own
+  simulation**, not accuracy against Io.
+
+  **What landed is honest rather than adopted**: `transport_result()` separates declared
+  (transport mode) from derived (T_i, δ, F_m, F_c), returns the **stability label** (Andrade →
+  one stable point; Maxwell-plus-convection → conditionally stable with a runaway-cooling
+  warning, per Rovira-Navarro — multiplicity was **corrected downward**, not multi-valued), and
+  carries **`validation:"failed-io-reproduction"` permanently**, so the label itself blocks
+  adoption. Io entered the gate as a check table (recorded choice, not a one-off) so that **if Io
+  ever comes inside tolerance the test rings loudly — because the story would have changed.**
+  Roster measurement with **zero adoption**: Dante has **no root** in the printed system; Hades
+  has a unique root at T_i 1844 K, lithosphere 224 km. Boards untouched, and the Dante/Hades
+  radius question — a parked owner decision — untouched by design.
+
+  **The unblock route is closed.** The paper's printed data address,
+  `http://cas.hamptonu.edu/data-products`, was opened by the directing seat: DNS resolves, it
+  redirects to https and returns **HTTP 404** ("Page not found – Center for Atmospheric
+  Sciences"). The host is alive; **the path is gone**, and the site now has no data section at
+  all. Archives, mirrors and alternate hosts were **deliberately not tried** — circumventing a
+  dead link is what the discipline forbids, and **the failure mode is itself the result.**
+  W. B. Moore is still listed as faculty there, so **author contact is viable and is the owner's
+  call; it is parked, not declined.**
+
+**Still open:**
 - **Carbon's fluid axis — a scope decision, and half its rationale was retracted.** Survey ⑨
   found that the composition numbers this axis was adopted for are **fitted interior-model
   parameters, not chemistry outputs** — the first-principles part establishes that separation
