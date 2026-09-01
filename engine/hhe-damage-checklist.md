@@ -29,3 +29,11 @@ mean it is fluid. The parallel session reads the figures; divergence between the
 readings is itself information.
 
 **Hard constraints**: no code change; counting only; gate in background at landing.
+
+**Verdict (2026-09-01)**: branch ④ for BOTH bands — zero baked cells in either (the
+fatal cell was never baked; refusal there is the reach line, not data). Sentinels in
+the baked table: 0. Item-④ finding: **70 pressed (0.1-clamped) cells sit above the
+reach line** in the baked usable region, a coherent molecular-to-atomic block at
+~18–112 GPa × 1585–3981 K — the line's second rationale is false as stated; whether
+anchor adiabats read stencils containing them is flagged to the directing seat.
+Details: hhe-damage-context-notes.md.
