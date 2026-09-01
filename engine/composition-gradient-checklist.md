@@ -104,3 +104,25 @@ zr = 0, t_pot 76/72 K). Per point: λ, radius residual, renorm I/(M·R_pub²), P
 conv, and the gradient region's radial extent (Vazan-geometry conformity reported, not
 enforced). Observations (N13 P_Voy 0.2300/0.2410) reported beside; **no point adopted**.
 Shell-count sensitivity: rerun one mid point at 64 shells, report the digit drift.
+
+## COMPUTE STOP (2026-09-01, owner going out — directing-seat relay)
+
+Grid interrupted cleanly, remaining python 0 verified. **6 of 14 points done** (values
+kept below — deterministic, resume continues from the rest). **Resume on the owner's
+signal ONLY**: run `scratchpad/zprofile_grid.py <U|N> <w>` for the 8 missing points
+{U,N} × {0.075, 0.125, 0.20, 0.30} (4-way parallel), then the shell-sensitivity point
+`U 0.075 64`, then the landing gate.
+
+Done (32 shells, conv=True all):
+| pt | λ | R resid | renorm | P_c | T_c |
+|---|---|---|---|---|---|
+| U w=0.01 | 0.174208 | +5.44 % | 0.1937 | 1220 | 6149 |
+| U w=0.025 | 0.174607 | +5.32 % | 0.1937 | 1219 | 6120 |
+| U w=0.05 | 0.175925 | +4.97 % | 0.1938 | 1217 | 6044 |
+| N w=0.01 | 0.180034 | +8.90 % | 0.2135 | 1533 | 6285 |
+| N w=0.025 | 0.180482 | +8.78 % | 0.2136 | 1532 | 6255 |
+| N w=0.05 | 0.181987 | +8.37 % | 0.2137 | 1529 | 6168 |
+
+(Probe values already registered above: U w=0.30 → renorm 0.2081, R +0.12 %; the narrow
+widths sit at the layered end A as continuity predicts — renorm starts moving in the
+wide half of the grid.)
