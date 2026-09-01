@@ -29,3 +29,11 @@ moves → **anchors are contaminated: report the shift and STOP — no quiet fix
 **Hard constraints**: no committed code change (hooks only, in scratch runners);
 anchors bit-identical (instrumentation must not perturb); gate in background at
 landing; branch ③ freezes all anchor operations pending the owner.
+
+**Verdict (2026-09-01)**: branch ② — contact is real everywhere (anchors 12.1/18.5 %,
+rock end B 20.7/26.2 %, ice end B and all 14 grid points 13–20 % of grad_ad reads),
+but replacing all 72 clamped nodes with neighbour interpolation moves the re-solved
+anchors by Δλ ≤ 4.3e-5 · ΔR ≤ 2.9e-5 (10–40× below the 3.7–3.9e-4 jitter) and
+ΔT_c ≤ 3.41e-4 (0.87–0.92× of it — within, flush against the boundary). Answers
+stand; the fact that clamped values are read is recorded; no --refresh ran.
+Details: hhe-clamp-contact-context-notes.md.
