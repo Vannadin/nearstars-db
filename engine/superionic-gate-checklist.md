@@ -43,3 +43,14 @@ traced); --refresh only if a fingerprinted function/constant moves, same commit,
 stated; gate FAIL 0 backgrounded, log-tail watch, **in-log timestamps this run**,
 measured delta reported; no new runtime dependency; stage by filename (two seats in
 the worktree); commits English, one logical change.
+
+**Verdict (2026-09-01, landed)**: Item A → branch ③ (Uranus's trial corridor walks the
+region to 535 GPa: 1,854 evaluations in >355 GPa·<1800 K, 153 above 520; moons 0,
+Neptune caps 235 GPa; distribution = adiabat-shaped continuous walk, not a ceiling
+pin). Item A2 (directing-seat addendum, throwaway worktree) → branch ①, strongest
+form: base/V1±/V2/V3 all BIT-identical, fire counters validating the null (V1 1,754,
+V2/V3 first-touch 1). Resolution: tolerance + labels — B1 and B2 both discarded with
+reasons (notes §3); old flat check removed; A2's V1+ promoted to the gate as
+_clamp_invariance (+22 s); constants consolidated to prose (all copies removed);
+three ceilings as one notation; ICE_X_P_MAX untouched. Anchors bit-identical
+throughout. Details: superionic-gate-context-notes.md.
