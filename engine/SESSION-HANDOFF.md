@@ -245,6 +245,17 @@ list's own rule (*prose that carries a number carries the duty to update it*) ap
 prose that carries an open/closed state. **Check a parked row against `git log` before
 acting on it.**
 
+> **Standing obligation, added 2026-09-01 on the audit session's finding.** The rule above
+> only fires when someone happens to notice — five stale rows were found here because one
+> seat cross-checked out of curiosity, not because anything required it. So: **whoever takes
+> or hands over this seat cross-checks every row in this section against the commit log
+> before writing anything else, and says in their first report that they did.** One pass, and
+> it is cheap: each row names its subject, and `git log --oneline -40` shows whether that
+> subject closed. A row that survives the pass is dated; a row that does not is moved to the
+> resolved list with its SHA. The reason this is an obligation rather than advice is that a
+> stale *open* row does not look wrong — it reads as work waiting, which is exactly what a new
+> seat is looking for.
+
 **Resolved since the last rewrite — do not re-open these:**
 
 - **② Queyroux's melting curve — landed, and not as either election.** The owner rejected
