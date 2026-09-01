@@ -1313,9 +1313,19 @@ stopped the ice axis** — the uniform-Z end carried heavy material to the surfa
 the adiabat under `h_he`'s floor, while a gradient's upper envelope converges to clean H/He
 and stays inside the window. That was predicted in Brief 23's landing note and tested here.
 
-**Then the cap excluded the result.** Vazan & Helled 2020's stable geometry, transcribed
-(route A: the gradient's span must sit below 0.8 R), is met **only at δm_dil = 0.01 and
-0.025 — the two widths that sit on the layer limit and move nothing.** w ≥ 0.05 crosses
+**Then the cap excluded the result — and the cap is weaker than "stability".** What route A
+actually transcribes is **a description of Vazan & Helled 2020's successful models, not a
+stability calculation.** Their sentence, read at its place in the cached text: models matching
+radius, luminosity and moment of inertia *"have some **common properties**: in these models the
+outer 20% of the planetary radius develop a large-scale convection on top of a stratified inner
+region. This convective layer is metal rich for all models except for the two-layer model
+(U-1) … heavy-element enrichment of 0.6-0.7."* So the criterion is **"does this look like the
+profiles that worked for them"**, not **"is this convectively stable"** — Ledoux is what
+*they* used to test survival; the 0.8 R figure is an outcome they observed. The row says so
+because the two readings license very different next moves.
+
+Under that criterion, the gradient's span sits below 0.8 R **only at δm_dil = 0.01 and 0.025 —
+the two widths that sit on the layer limit and move nothing.** w ≥ 0.05 crosses
 0.8 R and w ≥ 0.075 reaches the surface. **Taking route A as transcribed, the reachable
 coverage is ~0 %, and the span below is a set of unreachable points.** Route B (deriving our
 own ∇X) refuses by name: no radiative gradient exists in this recipe, and the check does not
@@ -1350,9 +1360,12 @@ axis behaves differently from the moment-of-inertia axis, and the two planets be
 differently from each other. Recorded, not judged.
 
 **What this leaves the owner.** A gradient that reaches the numbers exists; a gradient that
-reaches them *and* satisfies the transcribed stability geometry does not. Two ways forward,
-both declarations of their own: **(a)** draw the cap on other grounds than Vazan's geometry,
-or **(b)** widen the declared family to `z_shallow > 0` and measure again. Fitting the width
+reaches them *and* resembles the profiles Vazan found workable does not. Two ways forward,
+both declarations of their own: **(a)** find or derive an actual stability cap — this recipe
+has never had one, and route A turned out to be a family resemblance rather than a criterion —
+or **(b)** widen the declared family to `z_shallow > 0`, which **is Vazan's own successful
+shape**, and measure again. (b) is the cheaper honesty: it tests our recipe against the
+literature's geometry instead of re-drawing a line around our own answer. Fitting the width
 to the observables would have produced 39.7 % / 60.0 % and no way to know this — which is
 what the method was chosen to prevent.
 
