@@ -126,3 +126,26 @@ Done (32 shells, conv=True all):
 (Probe values already registered above: U w=0.30 → renorm 0.2081, R +0.12 %; the narrow
 widths sit at the layered end A as continuity predicts — renorm starts moving in the
 wide half of the grid.)
+
+## SECOND INTERRUPT (2026-09-01 ~11:11, SIGTERM from outside this session)
+
+The wide-half workers died on signal 15 mid-chain — not sent by this seat; same shape
+as the battery-stop kill wave. Remaining python verified 0. **13 of 14 grid points are
+now done** (values below); missing: **N w=0.20** (~100 s) and the shell-sensitivity
+point **U w=0.075 @64 shells** (~60 s), then anchors --refresh (the gradient-radius
+marks moved the fingerprint) and the landing gate. RESUME ON THE OWNER'S SIGNAL ONLY.
+
+Wide half done (32 shells, conv=True all):
+| pt | λ | R resid | renorm | P_c | T_c |
+|---|---|---|---|---|---|
+| U w=0.075 | 0.178521 | +4.27 % | 0.1941 | 1213 | 5909 |
+| U w=0.125 | 0.186833 | +2.19 % | 0.1951 | 1202 | 5445 |
+| U w=0.20 | 0.197789 | +0.33 % | 0.1991 | 1178 | 4816 |
+| U w=0.30 | 0.207637 | +0.12 % | 0.2081 | 1131 | 4294 |
+| N w=0.075 | 0.184934 | +7.58 % | 0.2140 | 1524 | 6014 |
+| N w=0.125 | 0.193415 | +5.50 % | 0.2153 | 1510 | 5509 |
+| N w=0.30 | 0.212117 | +4.14 % | 0.2300 | 1421 | 4395 |
+
+(Not judged, recorded: N w=0.30's renorm 0.2300 sits at Uranus's target by coincidence
+of digits; N's own target is 0.2410. U's radius residual nearly vanishes at wide
+widths — +0.12 % at w=0.30 — while renorm covers 0.0144/0.0363 ≈ 40 % of U's deficit.)
