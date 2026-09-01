@@ -1511,10 +1511,24 @@ def main() -> int:
               f"· 표 {want_mpa:10.4f} (상대차 {d:.1e})")
 
     print("\n녹는곡선 — 뒤집기가 제자리로 돌아오는가, 그리고 창을 끊김 없이 덮는가")
+    # 얼음 VII 분기는 브리프 33 에서 water_t_melt 가 IAPWS 가 아니라 두 측정의 평균을 답하므로,
+    # **식 (5) 전사 검증** 은 식 (5) 자신을 지역 이분법으로 뒤집어서 잰다 — 표준 검증표는 표준의 것.
+    from eos import IAPWS_VII_RANGE as _IVR
+
+    def _invert_vii(p_pa):
+        lo, hi = _IVR
+        for _ in range(80):
+            mid = 0.5 * (lo + hi)
+            if iapws_p_melt("ice_vii", mid) < p_pa:
+                lo = mid
+            else:
+                hi = mid
+        return 0.5 * (lo + hi)
+
     worst_inv = 0.0
     for name, t_k, _p in IAPWS_TABLE3:
         p_pa = iapws_p_melt(name, t_k)
-        back = water_t_melt(p_pa)
+        back = _invert_vii(p_pa) if name == "ice_vii" else water_t_melt(p_pa)
         if back is None:
             fails.append(f"물 녹는곡선이 {p_pa / 1e6:.1f} MPa 에서 None 을 돌려준다")
             continue
@@ -1610,24 +1624,30 @@ def main() -> int:
                      f"{_wtm(_RPM)}, {_wtm(_RPM * 1.0001)}")
     print(f"  [{'PASS' if ok else 'FAIL'}] 물의 녹는곡선은 {_RPM / 1e9:.1f} GPa · 1953 K 에서 끝난다 "
           "(Reinhardt+ 2022 의 마지막 점) — 그 위는 None")
-    # (a) 이음매. IAPWS 식 (5) 가 끝나는 20.6 GPa 에서 두 곡선의 폭을 **잰다**. 규산염 이음매(0.21 %)와
-    # 같은 규칙이고, 이 폭이 크다는 것이 이 곡선을 analog 로 두는 이유 중 하나다.
-    from eos import _interp_line as _il, REINHARDT_LIQUID as _RL
-    t_iapws = _wtm(_IVE * (1.0 - 1e-12))
+    # (a) 채택 기하 (브리프 33): 킨크(14.6 GPa) 아래는 두 측정의 평균, 14.6–20.6 은 이름 있는
+    # 분쟁 거절, 20.6 위는 Reinhardt 그대로. 걸음과 봉투를 **잰다** — 문서가 같은 수를 적는다.
+    from eos import _interp_line as _il, REINHARDT_LIQUID as _RL, water_vii_melt_mean as _wvm
+    from eos import PhaseGap as _PG, water_liquid_at as _wla
+    t_kink = _wvm(14.6e9)
     t_rein = _il(_RL, _IVE)
-    seam = (t_rein - t_iapws) / t_iapws
-    ok = abs(t_iapws - 715.0) < 0.5 and abs(seam - 0.2634) < 0.002
+    ok = abs(t_kink - 829.6) < 0.5 and abs(t_rein - 903.3) < 0.5 and _wtm(17e9) is None
+    try:
+        _wla(17e9, 800.0)
+        ok = False
+        why = "분쟁 대역이 거절하지 않는다"
+    except _PG:
+        why = ""
+    ok = ok and _wla(17e9, 1200.0) is True and _wla(17e9, 600.0) is False
     if not ok:
-        fails.append(f"20.6 GPa 이음매가 기록과 다르다 — IAPWS {t_iapws:.1f} K, Reinhardt {t_rein:.1f} K, "
-                     f"{seam * 100:+.2f} %")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 이음매 {_IVE / 1e9:.2f} GPa: IAPWS {t_iapws:.0f} K → Reinhardt "
-          f"{t_rein:.0f} K, 녹는점 {seam * 100:+.1f} % — 잰 값이고 문서가 같은 수를 적는다")
+        fails.append(f"채택 기하가 기록과 다르다 — 평균(14.6)={t_kink:.1f}, Reinhardt(20.6)={t_rein:.1f}{', ' + why if why else ''}")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 채택 기하: 평균(14.6 GPa)={t_kink:.0f} K · 분쟁 대역 14.6–20.6 은 "
+          f"봉투 밖 판정+안 거절 · Reinhardt(20.6)={t_rein:.0f} K — 걸음은 기록이고 보정하지 않았다")
     # (c) 표는 생성된 것이다: 논문이 본문에 적는 삼중점(20 GPa · 875 K)과 직접 공존 점들을 지나는가.
     import ice_melt_table as _imt
     tp_p, tp_t = _imt.TRIPLE_POINT_GPA_K
     worst = max(abs(_il(_RL, p_gpa * 1e9) - t_k) for p_gpa, t_k in _imt.DIRECT_COEXISTENCE)
-    # 삼중점 20 GPa 는 IAPWS 의 구간(20.6 GPa 까지) 안이라 water_t_melt 는 거기서 IAPWS 를 답한다
-    # (705 K — 이음매의 다툼이 바로 이것이다). 검사하는 것은 **굳힌 선 자체** 가 논문의 점을 지나는가다.
+    # 삼중점 20 GPa 는 이제 분쟁 대역(14.6–20.6) 안이라 water_t_melt 는 거기서 None 이다 (브리프 33).
+    # 검사하는 것은 **굳힌 선 자체** 가 논문의 점을 지나는가다.
     ok = abs(_il(_RL, tp_p * 1e9) - tp_t) < 1e-9 and worst < 30.0
     if not ok:
         fails.append(f"굳힌 액체선이 논문의 삼중점·직접 공존 점을 지나지 않는다 — "
@@ -1762,8 +1782,22 @@ def main() -> int:
     cold_both = 0
     band = []
     high = []
+    from eos import IAPWS_VII_RANGE as _IVR2, iapws_p_melt as _ipm, water_vii_melt_mean as _wvm2
+
+    def _iapws_vii_t(p_pa):
+        lo, hi = _IVR2
+        for _ in range(80):
+            mid = 0.5 * (lo + hi)
+            if _ipm("ice_vii", mid) < p_pa:
+                lo = mid
+            else:
+                hi = mid
+        return 0.5 * (lo + hi)
+
     for tm, st_, pm, _sp in QUEYROUX_S1:
-        ia = water_t_melt(pm * 1e9) if pm <= 20.6 else None
+        # 기록되는 사실은 IAPWS 식 (5) 곡선의 것 — 디스패치가 아니라 출처를 직접 뒤집는다 (브리프 33
+        # 이후 water_t_melt 는 킨크 아래 평균·대역 None 이라 이 기록의 재현에 못 쓴다).
+        ia = _iapws_vii_t(pm * 1e9) if pm <= 20.6 else None
         rh = _reinhardt(pm)
         if pm <= 20.6:
             if ia < tm - st_ and (rh is None or rh < tm - st_):
@@ -1788,6 +1822,21 @@ def main() -> int:
     if not ok:
         fails.append("Queyroux Table S1 의 σT/Tm 이 기록(17.3 GPa 까지 5 % 아래, 27 GPa 위 5 % 위)과 다르다")
     print(f"  [{'PASS' if ok else 'FAIL'}] σT/Tm: 17.3 GPa 까지 0.7–1.3 % (5 % 문턱 아래) · 27 GPa 위 6.7–8.5 % (위) — 등급은 측정이 아니라 곡선이 막는다")
+    # 채택 평균(브리프 33)이 킨크 아래 다섯 점 곁에 어떻게 앉는가 — 적합이 아니라 기록이고,
+    # 라벨 ②의 불확도(두 곡선의 간격을 σ 와 나란히)가 잔차를 덮는지를 잰다.
+    worst_off = 0.0
+    for tm, st_, pm, _sp in QUEYROUX_S1:
+        if pm > 14.6:
+            continue
+        d = _wvm2(pm * 1e9) - tm
+        from eos import QUEYROUX_LOWER as _QL, PRAKAPENKA_VII as _PV, _melt_sg as _msg
+        sep = abs(_msg(pm * 1e9, _QL) - _msg(pm * 1e9, _PV))
+        cover = abs(d) <= sep + 2 * st_
+        worst_off = max(worst_off, abs(d) - (sep + 2 * st_))
+        if not cover:
+            fails.append(f"채택 평균이 {pm} GPa 에서 S1 점을 라벨 불확도(간격+2σ) 밖으로 벗어난다 — Δ {d:+.1f} K")
+    print(f"  [{'PASS' if worst_off <= 0 else 'FAIL'}] 채택 평균 vs 킨크 아래 S1 다섯 점: 전부 (두 곡선 간격 + 2σ_T) 안 — "
+          "평균은 적합이 아니고, 불확도는 σ/√2 가 아니라 간격을 진다")
 
     print("\n중간 단 (C11) — 선언된 분화 전선 위의 원시 지각")
     # 전선 1.0 은 예전 열 그대로다: 같은 천체를 명시적으로 1.0 으로 풀면 비트까지 같아야 한다.

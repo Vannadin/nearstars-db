@@ -412,6 +412,31 @@ Two ways a check can fail to raise a grade, now both on record: F1's — the che
 (0.7–1.3 %) and **the thing checked is wrong**. The grade word is the same; the reasons are
 opposites, and the second is the one that names what would have to change.
 
+**Revisited 2026-09-01 (Brief 33) — the owner adopted, and the adopted thing is not
+"Queyroux".** F4's park closed the way it registered: the reopening condition (a
+melting-curve source decision by the owner, with the S1 table as grounds) fired. Below the
+kink (14.6 GPa) the dispatch now carries **the unweighted mean of the two post-2020
+measurements** — Queyroux+ 2020's lower Simon–Glatzel and Prakapenka+ 2021's ice-VII
+segment — a stretch where the continuous-vs-discontinuous lineage debate (Rescigno+ 2025
+defends continuous; Datchi stands on both sides) does not exist and the two agree
+(|Q−P| ≤ 54 K vs 71–348 K to the old curve). Our own IAPWS piece is excluded from the mean
+(a three-way mean let our curve vote on its own trial, 111–120 K below both measurements).
+Label conditions carried in `eos.py` at the constants: the two papers share Datchi's anchor
+(2.17 GPa · 354.8 K printed in both), so the 1.0 K agreement at 8.2 GPa is never independent
+confirmation — the independent number is 8.7 K at 20.0 GPa; the mean's uncertainty is the
+curves' separation alongside each σ, never σ/√2; below 8.4 GPa the span is anchored
+interpolation, not measurement support. **14.6–20.6 GPa is now a named disputed refusal**
+(the sources agree numerically but assign different phases — VII′ vs VII — and the dispatch
+consumes the phase; verdicts are still given outside the candidates' envelope, and no roster
+body reaches the band: ice-giant column tops 34.5/39.2 GPa, moon calls all below 8.4 GPa).
+Above 20.6 GPa nothing changed. **The grade's reason moves accordingly**: below the kink the
+curve is no longer simulation but the mean of two mutually consistent measurements (grade
+question now hangs on the mean's declared uncertainty, not on "the lines are simulation");
+in the band the honest state is refusal, not a graded curve. Handover step at our VI–VII
+triple point: +4.1 K, recorded not smoothed. Anchors bit-identical (measured); the old seam
+sentence ("+26 % at 20.6 GPa, both curves cold against S1") stays above as the record of
+what the dispatch was when C3 closed.
+
 ### C4 — Ammonia and methane — **closed 2026-08-30, unbuilt; reopened 2026-08-30 for ammonia and closed again for that half, built**
 
 The ice-giant envelope is water alone, standing in for a water–ammonia–methane mixture. That

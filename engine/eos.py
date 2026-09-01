@@ -1399,7 +1399,56 @@ def iapws_p_melt(name: str, t: float) -> float:
     return p_star * (1.0 - c * (1.0 - (t / t_star) ** e))
 
 
-IAPWS_VII_END = iapws_p_melt("ice_vii", IAPWS_VII_RANGE[1])   # Pa. 식 (5) 가 끝나는 압력, 715 K 에서 20.6 GPa
+IAPWS_VII_END = iapws_p_melt("ice_vii", IAPWS_VII_RANGE[1])   # Pa. 식 (5) 의 옛 끝, 20.6 GPa —
+# 이제 분쟁 대역의 위 모서리이자 Reinhardt 이음매의 자리로 남는다 (브리프 33).
+
+# ── 얼음 VII 녹는곡선, 킨크 아래 (브리프 33 해결) ──────────────────────────────
+# **킨크(14.6 GPa) 아래는 2020 년 이후 두 측정의 비가중 평균이다** — Queyroux+ 2020 (PRL 125,
+# 195501; 2020PhRvL.125s5501Q, Table I 하부) 와 Prakapenka+ 2021 (Nat. Phys. 17, 1233;
+# 2021NatPh..17.1233P, Supp. Table 3 "Ice VII melt"). 연속-대-불연속 계보 논쟁(Rescigno+ 2025,
+# Nature 640, 662 가 연속 쪽을 옹호)은 킨크와 그 위의 일이고, 킨크 아래는 두 계보가 일치한다 —
+# 논쟁이 없는 구간의 채택이다. 우리 곡선(IAPWS 식 (5))은 평균에서 제외한다: 자기 시험에 자기가
+# 투표하는 3자 평균은 실측 둘보다 111–120 K 아래로 끌려갔다.
+# **라벨 조건 셋 (전부 의무)**: ① 두 논문은 앵커를 공유한다 (둘 다 Datchi 의 VI–VII–유체 삼중점
+# 2.17 GPa · 354.8 K 를 인쇄) — 8.2 GPa 의 1.0 K 일치는 같은 못에 가까운 두 선이지 독립 확인이
+# 아니며, 독립 일치는 앵커에서 먼 20.0 GPa 의 8.7 K 다. ② 평균의 불확도는 σ/√2 가 아니라 **두
+# 곡선의 간격(최대 54 K)** 을 각자의 σ 와 나란히 진다. ③ 8.4 GPa 아래는 측정 지지가 아니라
+# 앵커드 보간이다 (두 논문의 측정 최저점이 8.2–8.4 GPa).
+QUEYROUX_LOWER = (1.555, 2.557, 2.17e9, 354.8)     # T = T_t·[(P−P_t)/a+1]^(1/b), P ≤ 14.6 GPa
+PRAKAPENKA_VII = (1.25, 2.85, 2.17e9, 354.8)       # P = P₀+a[(T/T₀)ⁿ−1] 의 역산, 같은 형
+MELT_KINK_PA = 14.6e9                              # Queyroux 삼중점 압력 — 채택 상한
+# 분쟁 대역 14.6–20.6 GPa: 두 출처가 수치로는 일치하나 **상 배정이 다르다** (Queyroux 는 14.6 부터
+# VII′ 상부 가지, Prakapenka 는 자기 17.5 GPa 분절까지 VII) — 디스패치는 온도만이 아니라 상을
+# 소비하므로 평균하지 않고 이름을 대고 거절한다. 로스터 천체는 이 대역에 닿지 않는다 (실측:
+# 두 얼음거대행성 기둥 꼭대기 34.5/39.2 GPa, 위성 전 호출 8.4 GPa 아래). 대역의 위·아래 봉투
+# 밖은 후보 전원이 일치하므로 판정한다. 금지 수 유지: 782/2188 K 는 Queyroux 불확도가 아니다.
+
+
+def _melt_sg(p: float, coef) -> float:
+    a, b, p_t, t_t = coef
+    return t_t * ((p - p_t) / (a * 1e9) + 1.0) ** (1.0 / b)
+
+
+def water_vii_melt_mean(p: float) -> float:
+    """킨크 아래 채택 곡선: Queyroux+ 2020 하부와 Prakapenka+ 2021 VII 분절의 비가중 평균 [K].
+    이름은 "Queyroux 채택" 이 아니라 **킨크 아래 두 post-2020 측정의 평균, 둘 다 Datchi 앵커** 다."""
+    return 0.5 * (_melt_sg(p, QUEYROUX_LOWER) + _melt_sg(p, PRAKAPENKA_VII))
+
+
+def _vii_disputed_bounds(p: float) -> tuple[float, float]:
+    """분쟁 대역의 온도 봉투: 아래 = IAPWS 식 (5) (후보 중 최저), 위 = Queyroux 상부 적합 (최고).
+    봉투 밖은 후보 전원이 같은 답을 내므로 판정하고, 안은 거절한다."""
+    lo_t, hi_t = IAPWS_VII_RANGE
+    lo, hi = lo_t, hi_t
+    for _ in range(60):
+        mid = 0.5 * (lo + hi)
+        if iapws_p_melt("ice_vii", mid) < p:
+            lo = mid
+        else:
+            hi = mid
+    t_lo = 0.5 * (lo + hi)
+    t_hi = _melt_sg(p, (3.44, 4.33, 14.6e9, 850.0))   # Queyroux Table I 상부 (채택 아님 — 봉투 전용)
+    return t_lo, t_hi
 
 
 def _water_branch(p: float) -> str | None:
@@ -1415,8 +1464,10 @@ def _water_branch(p: float) -> str | None:
         return "ice_v"
     if p < b7:
         return "ice_vi"
-    if p <= IAPWS_VII_END:
+    if p <= MELT_KINK_PA:
         return "ice_vii"
+    if p <= IAPWS_VII_END:
+        return "ice_vii_disputed"   # 브리프 33: 두 출처의 상 배정이 갈리는 대역 — 곡선이 답을 거절
     if p <= REINHARDT_P_MAX:
         return "ice_vii_reinhardt"
     return None
@@ -1447,6 +1498,10 @@ def water_t_melt(p: float) -> float | None:
         return None
     if name == "ice_vii_reinhardt":
         return _interp_line(REINHARDT_LIQUID, p)
+    if name == "ice_vii":
+        return water_vii_melt_mean(p)   # 브리프 33 — 킨크 아래 두 측정의 평균 (위 라벨 조건 셋)
+    if name == "ice_vii_disputed":
+        return None                     # 대역의 녹는점은 출처들이 상 배정으로 갈린다 — 지어내지 않는다
     lo, hi = (IAPWS_IH_RANGE if name == "ice_ih" else
               IAPWS_VII_RANGE if name == "ice_vii" else
               IAPWS_MELT[name][4:6])
@@ -1475,8 +1530,23 @@ def water_liquid_at(p: float, t: float) -> bool | None:
     if name == "ice_vii_reinhardt":
         t_m = _interp_line(REINHARDT_LIQUID, p)
         return None if t_m is None else t > t_m
+    if name == "ice_vii":
+        return t > water_vii_melt_mean(p)     # 브리프 33 — 직접 비교라 역산보다 싸다
+    if name == "ice_vii_disputed":
+        t_lo, t_hi = _vii_disputed_bounds(p)
+        if t >= t_hi:
+            return True                        # 후보 전원이 액체라는 온도
+        if t <= t_lo:
+            return False                       # 후보 전원이 고체라는 온도
+        raise PhaseGap(
+            "h2o", p,
+            f"{p / 1e9:.1f} GPa · {t:.0f} K 는 녹는곡선의 분쟁 대역(14.6–20.6 GPa) 안이다 — "
+            f"Queyroux+ 2020 과 Prakapenka+ 2021 은 이 대역에서 수치로는 겹치지만 상 배정이 "
+            f"다르고(VII′ 대 VII), IAPWS 식 (5) 는 두 측정보다 210–300 K 차다. 후보 봉투 "
+            f"{t_lo:.0f}–{t_hi:.0f} K 밖이면 판정하고 안은 고르지 않는다 (브리프 33). 더 "
+            "뜨거우면 전원이 액체로 일치한다.",
+            t, too_cold=True)
     lo, hi = (IAPWS_IH_RANGE if name == "ice_ih" else
-              IAPWS_VII_RANGE if name == "ice_vii" else
               IAPWS_MELT[name][4:6])
     if t >= hi:
         return True
@@ -1502,6 +1572,14 @@ def water_phase_name(p: float, t: float) -> tuple[str, str, str]:
         return "undecided", "", "온도가 없다"
     name = _water_branch(p)
     t_m = water_t_melt(p)
+    if name == "ice_vii_disputed":
+        t_lo, t_hi = _vii_disputed_bounds(p)
+        if t >= t_hi:
+            return "liquid", "액체", f"분쟁 대역(14.6–20.6 GPa)이지만 후보 봉투 위({t_hi:.0f} K)라 전원이 액체"
+        if t <= t_lo:
+            return "solid", "얼음 VII/VII′ (출처 분쟁)", f"후보 봉투 아래({t_lo:.0f} K)라 전원이 고체 — 상 이름은 출처가 갈린다"
+        return "undecided", "", (f"녹는곡선의 분쟁 대역(14.6–20.6 GPa) — Queyroux 와 Prakapenka 가 상 배정으로 "
+                                 f"갈리고 봉투({t_lo:.0f}–{t_hi:.0f} K) 안이라 고르지 않는다 (브리프 33)")
     if name is not None and t_m is not None:
         margin = t - t_m
         if name == "ice_vii_reinhardt":
@@ -1520,7 +1598,10 @@ def water_phase_name(p: float, t: float) -> tuple[str, str, str]:
             return ("solid", "얼음 VII′/X",
                     f"{src} 보다 {margin:+.0f} K 아래" + (f", VII′–VII″ 선({t_b:.0f} K) 아래 — "
                     "VII·VII′·X 는 한 열역학 상이다" if t_b is not None else ""))
-        src = f"{IAPWS_MELT_REF.split(' — ')[0]}, 녹는점 {t_m:.0f} K"
+        if name == "ice_vii":
+            src = f"Queyroux+ 2020·Prakapenka+ 2021 평균(킨크 아래, 브리프 33), 녹는점 {t_m:.0f} K"
+        else:
+            src = f"{IAPWS_MELT_REF.split(' — ')[0]}, 녹는점 {t_m:.0f} K"
         if margin > 0.0:
             return "liquid", "액체", f"{src} 보다 {margin:+.0f} K 위"
         return "solid", WATER_PHASE_LABELS[name], f"{src} 보다 {margin:+.0f} K 아래"

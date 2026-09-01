@@ -438,6 +438,23 @@ because moving either breaks the fit it belongs to; the melting curve branches o
 break pressures instead. Within about 2 % of a triple point the two disagree about which ice
 melts, which is inside IAPWS's own 3 %.
 
+**Above the VI–VII triple point the VII equation no longer supplies the dispatch's melting
+values (2026-09-01, Brief 33).** From the VI–VII boundary to the 14.6 GPa kink the melting
+temperature is the **unweighted mean of the two post-2020 measurements** — Queyroux+ 2020
+(PRL 125, 195501, Table I's lower Simon–Glatzel) and Prakapenka+ 2021 (Nat. Phys. 17, 1233,
+Supp. Table 3's ice-VII segment). Three conditions ride on every use: the two papers share
+Datchi's VI–VII–fluid anchor (2.17 GPa · 354.8 K printed in both), so their 1.0 K agreement
+at 8.2 GPa is never quoted as independent confirmation — the independent number is 8.7 K at
+20.0 GPa; the mean's uncertainty carries the curves' separation (up to 54 K) alongside each
+σ, never σ/√2; and below 8.4 GPa the span is anchored interpolation, not measurement
+support. **In 14.6–20.6 GPa the dispatch refuses by name** — the two sources agree
+numerically there but assign different phases (VII′ vs VII), and the dispatch consumes the
+phase; verdicts are still given outside the candidates' temperature envelope. The VII
+equation above stays transcribed and verified: it is the envelope's lower edge and the
+record of the prior dispatch. Above 20.6 GPa Reinhardt+ 2022 stands unchanged. The choice
+of lineage this sidesteps is real — Rescigno+ 2025 defends the continuous melting curve
+against the kinked one — and the adopted stretch is precisely where the two lineages agree.
+
 **The verdict moves the density.** Wherever the local (P, T) in the water column sits above
 the melting curve the integrator uses liquid water, `h2o_liquid` in the table above, so a
 body reported `molten` carries an ocean in its radius and C/MR², and reports its thickness
