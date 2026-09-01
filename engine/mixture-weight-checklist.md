@@ -47,3 +47,8 @@ interaction with dispatch switching inside `_EnvelopeWater`.
 
 **Hard constraints**: NO code change (measurement only); anchors bit-identical
 (trivially — nothing runs but EOS calls); gate in background/detached at landing.
+
+**Verdict (2026-09-01)**: branch ① — at the actual fatal weight 6.87e-6, contributions
+(ρ −1.18e-5 · c_p +1.46e-5 · ∇_ad −8.9e-6) sit 25–30× below the anchor jitter; linear
+in w (slopes −1.716/+2.118/−1.299), crossover at w ≈ 1.7e-4 at this locus. Policy
+grounds measured; adoption owner's. Details: mixture-weight-context-notes.md.
