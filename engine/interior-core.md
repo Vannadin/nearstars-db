@@ -1304,6 +1304,58 @@ sentinel that let the temperature loop run 51 attempts against a ceiling of 29, 
 climb that hid the wall from the controller. Both were invisible while every trial died in
 the steam wedge first.
 
+**The composition gradient, measured — and the widths that work are the ones that are not
+allowed (2026-09-01, Brief 26).** Z(x) as Howard+ 2023's erf, discretised by shell mass. The
+implementation's own check came first and passed twice: **width → 0 reproduces the layer stack
+bit-identically**, both against the anchor and against a rock-free toy, so the gradient is
+continuous with what it replaces rather than a second recipe. It also **clears the wall that
+stopped the ice axis** — the uniform-Z end carried heavy material to the surface and dragged
+the adiabat under `h_he`'s floor, while a gradient's upper envelope converges to clean H/He
+and stays inside the window. That was predicted in Brief 23's landing note and tested here.
+
+**Then the cap excluded the result.** Vazan & Helled 2020's stable geometry, transcribed
+(route A: the gradient's span must sit below 0.8 R), is met **only at δm_dil = 0.01 and
+0.025 — the two widths that sit on the layer limit and move nothing.** w ≥ 0.05 crosses
+0.8 R and w ≥ 0.075 reaches the surface. **Taking route A as transcribed, the reachable
+coverage is ~0 %, and the span below is a set of unreachable points.** Route B (deriving our
+own ∇X) refuses by name: no radiative gradient exists in this recipe, and the check does not
+invent one.
+
+| δm_dil | Uranus renorm | ΔR | Neptune renorm | ΔR |
+|---|---|---|---|---|
+| 0.01 · 0.025 *(within the cap)* | 0.1937 · 0.1937 | +5.44 % · +5.32 % | 0.2135 · 0.2136 | +8.90 % · +8.78 % |
+| 0.05 | 0.1938 | +4.97 % | 0.2137 | +8.37 % |
+| 0.075 *(Howard's value)* | 0.1941 | +4.27 % | 0.2140 | +7.58 % |
+| 0.125 | 0.1951 | +2.19 % | 0.2153 | +5.50 % |
+| 0.20 | 0.1991 | +0.33 % | 0.2200 | **+3.98 %** |
+| 0.30 | 0.2081 | **+0.12 %** | 0.2300 | +4.14 % |
+| target (N13, P_Voy) | 0.2300 | | 0.2410 | |
+
+All fourteen converged; **no width was adopted** and the observables are reported beside the
+grid, never fitted to. The span, if the cap were not there: **39.7 % (Uranus) / 60.0 %
+(Neptune)** of the deficit, monotonic in width with no plateau inside the registered grid.
+(Neptune's 0.2300 at w = 0.30 equals *Uranus's* target — a coincidence of digits, not a
+result.) Shell count is not a knob: 32 → 64 leaves renorm at 0.1941.
+
+**The exclusion's own scope, stated because it bounds the verdict.** The declared family here
+is a two-end erf with `z_shallow = 0`; Vazan's stable models put a **metal-rich homogeneous
+convective top (Z ≈ 0.6–0.7) above the gradient** — a shape this family cannot express. So the
+finding is *"widths that move the answer are outside the cap **for this family**"*, not
+*"gradients are unstable."*
+
+**A second product, unasked for: the radius residual collapses.** Uranus **+5.44 % → +0.12 %**,
+monotonic. Neptune **+8.90 % → 3.98 % at w = 0.20, then back to 4.14 %** — **non-monotonic,
+with its optimum inside the grid**, while renorm rises monotonically for both. So the radius
+axis behaves differently from the moment-of-inertia axis, and the two planets behave
+differently from each other. Recorded, not judged.
+
+**What this leaves the owner.** A gradient that reaches the numbers exists; a gradient that
+reaches them *and* satisfies the transcribed stability geometry does not. Two ways forward,
+both declarations of their own: **(a)** draw the cap on other grounds than Vazan's geometry,
+or **(b)** widen the declared family to `z_shallow > 0` and measure again. Fitting the width
+to the observables would have produced 39.7 % / 60.0 % and no way to know this — which is
+what the method was chosen to prevent.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
