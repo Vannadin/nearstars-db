@@ -166,3 +166,7 @@ in the new numbers, recorded not judged: all four non-converged states sit above
 targets (renorm 0.2356–0.2736 vs 0.2300/0.2410). The mixing-gap label rides along
 unchanged: the trials now *cross* the old wedge on IF97, and that crossing is additive
 mixing outside Soubiran & Militzer's band (`7769be6e`).
+
+*2026-09-01, Brief 31 condition attached*: §5's four diagnostic states were computed
+on the clamped H/He table; on the opt-in repaired table they remain conv=False with
+renorms moved percent-level (0.2437–0.2830). `clamp-fallback-context-notes.md` §2.

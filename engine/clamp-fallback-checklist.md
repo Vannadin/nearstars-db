@@ -50,3 +50,11 @@ refuses (measured: 6 such). ④ split by coordinates → written per cell (it is
 **What this cannot say** (Brief 30's sentence, same kind): the assembled value is not
 truth either — this measures how far two grounded routes diverge, not which is closer
 to the authors' unpublished calculation.
+
+**Verdict (2026-09-01, landed per directing-seat terms)**: anchors branch ① (within
+jitter); the published derived numbers are NOT robust to the table choice — C13's rock
+end B flips conv=False (λ −6.9/−5.5 %) and Brief 26's wide half flips too, so
+26 %/41 % and 39.7/60.0 % carry the condition "measured on the clamped table".
+Controls: repair-off reruns reproduce both bases exactly. Landed as OPT-IN
+(`hhe_repair.py`, default path bit-identical, no --refresh); default-table choice is
+the owner's, pending. Details: clamp-fallback-context-notes.md.

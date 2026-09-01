@@ -170,3 +170,9 @@ refusals fire on the h_he **component of the deepest shells, whose mixture weigh
 there is ~10⁻⁵** — the mixture's evidence gate asks every part regardless of weight,
 so a one-part-in-10⁵ component can veto the state. Whether a weight-thresholded gate
 is honest is a materials-policy question, not this brief's.
+
+*2026-09-01, Brief 31 condition attached*: §5's spans (U 39.7 % / N 60.0 %) were
+**measured on the clamped H/He table**. On the opt-in repaired table the wide half of
+the grid (U w ≥ 0.2, N w ≥ 0.125) flips conv=False and the measurable span collapses
+to the narrow half (≈3.6 % / ≈1.5 % of the deficit) — the spans were a measurement of
+the table choice, not of the planets. `clamp-fallback-context-notes.md` §2.

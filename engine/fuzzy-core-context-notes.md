@@ -159,3 +159,10 @@ the four end-B values rerun **digit-for-digit identical** (λ 0.209729/0.209729 
 IF97 window and **26 % / 41 % are insensitive to the steam introduction** — the printed
 bracket needs no update. Bonus, recorded not attributed: end B shrinks the radius
 residual (+5.48 → −1.57 %, +8.94 → +1.15 %) and cools the centres to ~4900–4950 K.
+
+*2026-09-01, Brief 31 condition attached*: §6's 26 % / 41 % were **measured on the
+clamped H/He table**. On the opt-in repaired table (`hhe_repair.py` — the 0.1-clamped
+grad_ad nodes replaced by the table's own assembled values) both end-B solves flip
+conv=False (λ −6.9 % / −5.5 %), so the bracket is unmeasured there: the coverage
+numbers were a measurement of the table choice, not of the planets. Which table is
+default is the owner's pending decision; `clamp-fallback-context-notes.md` §2.
