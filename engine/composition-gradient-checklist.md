@@ -66,7 +66,17 @@ silicate melting curve.
 ## Work items
 
 - [ ] wall probe: steepest + shallowest width, conv or the wall (owner reported 09-01
-      morning; directing seat cleared start — minimal Z(x) first, probe before grid)
+      morning; directing seat cleared start — minimal Z(x) first, probe before grid).
+      **Probe declarations, registered before the runs**: Uranus end-B-ice geometry
+      (cmf 0, silicate layer 0.79 M⊕ intact, envelope = H/He + ice = gmf+imf0), profile
+      z 1.0→0.0, m_dilute = envelope base + imf0 (so the integrated Z mass equals the
+      declared ice mass automatically — the erf is symmetric about m_dilute; tail
+      clipping at the edges is exponentially small at the steep width and reported at
+      the shallow one), 32 shells, zr = 0, t_pot 76 K. Widths: **0.01** (steepest —
+      near-step, the layered limit's neighbour) and **0.30** (shallowest — transition
+      smeared over most of the envelope; Vazan-geometry conformity reported post-hoc,
+      not enforced). Verdict rule (directing seat): either conv=True → grid proceeds;
+      both conv=False on the h_he floor → branch ⑥, grid NOT run.
 - [ ] width-0 anchor identity (bit-identical to layered)
 - [x] fetch-and-pin Gupta+ 2025 (2407.04685 · 2025ApJ...982L..35G) — **transcribable,
       closed form**: critical curve Eqs. 5–10 with Table 1's six printed parameters
