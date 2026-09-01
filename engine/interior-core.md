@@ -1065,7 +1065,7 @@ said otherwise is rewritten here and in the docs. Two ceiling-poking finite diff
 fixed on the way (`eos.Material.k_t`, `interior._adiabatic_dtdp`); no anchor touched.
 `engine/antigorite-thermal-context-notes.md` has the transcription and the runs.
 
-### C11 — The middle rung: a declared differentiation front and a never-melted crust — **opened 2026-08-30 on F3's grounds; closed 2026-08-30**
+### C11 — The middle rung: a declared differentiation front and a never-melted crust — **opened 2026-08-30 on F3's grounds; closed 2026-08-30; the declared pair settled 2026-09-01 — the grid is the answer, and no pair is elected**
 
 **What it is, and what it is not.** C7 refuses a body that is neither fully mixed nor fully
 layered, because ice mixed through rock *where liquid water reached it* is a reaction and a
@@ -1121,7 +1121,17 @@ and the grid is not refined to make one — that would be the fitting C5 and C10
 Porosity on the front 0.7 · X_d 0.6 pair moves the band down as registered: Callisto
 0.3561–0.3643 → 0.3390–0.3494, Titan 0.3547–0.3633 → 0.3386–0.3496 (about −0.015, the
 laboratory upper bound on crust void). One member did not converge (Callisto, front 0.9 ·
-X_d 0.3, core 0.30). The table is the regeneration on the code that
+X_d 0.3, core 0.30).
+
+**Owner's decision 2026-09-01: the grid stands as the answer and no pair is elected.** The
+question this row left open — *which declared pair should Callisto and Titan actually use* —
+is resolved by declining it. **Titan's published value falls inside one pair's band and
+Callisto's falls between two**, and refining the grid to capture Callisto's remaining 0.0012
+is the fitting C5 and C10 refused and Brief 26 refused again. So the published statement is
+the band, not a point: **the recipe says what each declaration implies, and does not claim to
+know which one these moons are.** Anything downstream that needs a single number — a cfg
+value, a board row — declares its own choice and carries that label, rather than borrowing
+authority from a measurement that was never made. The table is the regeneration on the code that
 ships (2026-08-30, after the crust-refusal fix was narrowed — see the notes' post-mortem),
 identical at all twenty points to the first pass; run times 2–7 min per point; the 270 K
 refusal through the inversion route did not finish in 17–24 CPU-minutes and was stopped — the temperature bracket is
