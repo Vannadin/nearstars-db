@@ -83,8 +83,10 @@ lines close to a shared nail and is NEVER quoted as independent confirmation; th
 independent agreement is the 8.7 K at 20.0 GPa. ② the mean's uncertainty carries the
 curve separation (up to 54 K) alongside each σ — never σ/√2; the corner-run ban
 (782/2188 K) stands. ③ below 8.4 GPa the span is anchored interpolation, not
-measurement support. Handover at the VI–VII boundary with the measured step recorded
-(+3.9 K at our 2.216 GPa), not smoothed. The upper fit's 15.1 GPa −2.8σ failure is out
+measurement support. Handover at the VI–VII boundary with the measured step recorded,
+not smoothed — **+3.9 K was the Queyroux-only candidate's step at our 2.216 GPa
+(the pre-resolution measurement); the adopted MEAN's step is +4.1 K** (Q 358.9,
+Prakapenka 359.3, mean 359.1 vs IAPWS VI-side 355.0; both values verified 2026-09-01). The upper fit's 15.1 GPa −2.8σ failure is out
 of adopted scope but recorded as one reason 14.6 is the boundary. Identity expectation
 STRONGER than briefed (zero calls in 8.4–20.6 for the ice giants; moons below 8.4;
 water column tops U 34.5 / N 39.2 GPa) — any movement stops and is traced.
