@@ -51,93 +51,64 @@ directing session's briefs five times, the directing session caught the audit's 
 misread pair of numbers, and the audit caught everyone. A number handed down, up or sideways
 is not thereby verified.
 
-## Where things stand
+## Where things stand — rewritten 2026-09-01, the core list is closed
 
-**`engine/interior-core.md` is the one place that says what remains.** Read it before acting.
+**`engine/interior-core.md` is still the one place that says what remains.** Read it before
+acting. What changed since the last handoff is that **it no longer has an open row.**
 
-- **C1–C12 closed.** C6 is a standing watch — material ceilings need nothing unless a body the
-  roster wants is refused by one.
-- **C13 open.** The ice-giant moment of inertia sits 11–16 % below publication after radius is
-  removed. The rock-redistribution axis was measured and **covers only 26 % (Uranus) / 41 %
-  (Neptune)** of that gap, so it cannot close it. The ice axis is untested. *Three legs, all
-  landed (`19360f72`)*: the audit found the float residual, the previous directing seat
-  pre-registered and ran the ε ladder, and the work session reproduced every digit and
-  retired both caveats — Neptune's P_c 984 GPa is not wall-adjacent (a probe at 1010 GPa
-  integrates, mass closure 1.000000) and the grid 1500 → 6000 drift is 3.7–3.9e-4.
-- **Follow-ups F1–F5, water2, the C/MR² check and the Queyroux flip experiment are all closed**
-  and all audited.
+- **C1–C13 all closed.** C6 stays a standing watch — material ceilings need nothing unless a
+  body the roster wants is refused by one. It fired twice today and both are recorded.
+- **C13 closed 2026-09-01 as a *named refusal*, which is the ending the audit proposed and the
+  owner chose.** The deficit is real (−15.8 % / −11.4 % after radius is stripped) and three
+  axes were measured, each stopping somewhere this recipe can point at. **Not claimed**: that a
+  fuzzy core cannot account for it. **Claimed**: that this recipe cannot decide it, and why.
+- **C11's open question was settled by declining it** — the grid is the answer and no declared
+  pair is elected. Anything downstream needing one number declares its own and carries the
+  label.
 
-## What the owner approved, in this order
+**The single most important thing a new seat should know about today's numbers:**
 
-**① The cold-flank general fix.** The refusal machinery exists to make answers honest, but the
-shooting and temperature loops put *trial* solutions through the same refusals — so a solve can
-die in a state no converged answer would ever occupy. **Three occurrences in two days** is how
-the committed diagnosis counts it (`f3f3a3fd`): C11's over-broad refusal, the Queyroux
-experiment's Neptune path death, and C13's end B — whose sharpest form is a **1 ULP**
-difference in `ice_mass_fraction` deciding between a 1-second refusal and a 112-second
-convergence (the same event, not a fourth). Counting C1's false ceiling — its ladder seed and
-F2's bulk-modulus finite difference are literally trial paths hitting evidence the answer does
-not use — makes it four; say which basis you are using, because the two documents differ.
-The proposed shape is to route trial-path refusals into steering the bracket rather than
-killing the solve.
+> **26 % / 41 % (C13's rock axis) and 39.7 % / 60.0 % (Brief 26's gradient span) were
+> measurements of a table choice, not of the planet.** With the 66 repairable clamped `grad_ad`
+> nodes assembled instead of read, both stop converging entirely. A number that exists on one
+> grounded route and will not converge on the other was never robust to that choice. **Which
+> route is nearer the truth is unknown** — the truth is in the original authors' unpublished
+> calculation. Every affected number now carries that condition beside it.
 
-**This unblocks ② and ③.** C13 cannot close properly without it, and the Queyroux adoption
-needs it too.
+**The default path is the published table** (owner, 2026-09-01) — not because it is judged
+truer, but because there is no ground to elect either. `engine/hhe_repair.py` is an **opt-in
+instrument**: nothing imports it, the baked table still carries its 72 clamped cells, and the
+anchors were never refreshed. **Verify that before trusting a comparison.**
 
-**② Adopt Queyroux's melting curve, or not.** The cost table is complete: **no physics verdict
-flips in the current roster**, and the cost is three pieces of work — trial-path hardening
-(that is ①), a window-edge splice rule (+69 K at 8.4 GPa, −239 K at 44.7 GPa against
-Reinhardt), and F4's grade wording. Our curve is 210–300 K colder than the only measurement in
-16–20 GPa.
+## What is running, and what the owner has decided
 
-**③ Measure the ice axis.** Same method as the rock axis. Do it **after ①**, otherwise it will
-be measured through the phantom-stub device again rather than properly.
+**Briefs 22–32 landed today, every one gate-clean.** The work session is on **Brief 32
+(adopt AQUA)**; the parallel session is on **survey ⑧b (does the tidal-heat fixed point
+reproduce Io?)**.
 
-**④ Three surveys, dispatched to the parallel session on 2026-08-31**, in this order: AQUA
-(water's ceiling — most likely to pay), the radiative–convective boundary (opens hot
-sub-Neptunes, which the recipe barely answers today), and a third melting-curve candidate.
-Reports will arrive addressed to the directing seat.
+**Adopted, in this order** — AQUA → Queyroux's melting curve → carbon's **fluid** axis. Only
+AQUA is briefed; the other two need briefs written.
 
-## Where Brief 25 stands — 2026-08-31, ~20:00 KST
+- **AQUA**: the survey found it does **not** raise a ceiling — do not brief it that way. The
+  gain is the high-pressure 300–1000 K corner, doubled by C6's finding that our own ladder is
+  extrapolation above ~355 GPa. **Brief 32 recommends filling only the hole**, because
+  replacing the ladder would move the anchors and force every number from these two days to be
+  reinterpreted.
+- **Queyroux**: adopting it is **choosing a side in a live debate** (the curve's *shape*), not
+  repairing an error — survey ③ found the 100–150 K question already settled by Queyroux
+  themselves. It must be recorded as a named choice.
+- **Carbon, fluid axis**: Militzer 2024's fluid C-N-H separation has both a quantity theory and
+  a target model that fits the gravity field. The diamond axis has neither. **Ammonia rides
+  along** with the fluid family — our column does not have it today.
 
-*This section replaces one written minutes earlier that said the work was uncommitted on
-disk. It was already landing as `544d8730` while that was being written — a stale number
-committed by the directing seat, in the same hour as the rule about stale numbers. Left
-visible rather than quietly overwritten.*
+**Also decided today**: the weight-blind mixture gate stays (the case that raised it dissolved);
+the ternary EOS grid closes as *recorded, not found*; branch merge is deferred.
 
-**Brief 25 (bake IAPWS-95/IF97 steam) is landed but its acceptance is not run.** The owner
-paused compute (fan/throttle; one run was externally killed), so the four ice-axis ends and
-the full `check.sh` are deferred. `544d8730` carries the code:
-
-- **IF97 regions 1, 2 and 3** transcribed into `engine/steam_if97.py` — pure Python closed
-  form, **no new runtime dependency**. Verified against the standard's own printed check
-  values (Tables 5, 15, 33, 35, the B23 point, a density round trip): **worst 3.2e-9**, and
-  the gate re-runs it.
-- **The coefficient tables were read from the typeset images, not the text layer** — the
-  archived PDF's text layer drops every power of ten, so transcribing it would have been
-  silent fabrication. That is the right call and it is why this took as long as it did.
-- **Region 3 was needed too**: with regions 1 and 2 alone the ends still refused, and the
-  refusal spy (1202 → 138) put every remaining water-side death on the **B23 edge of the
-  region 3 triangle** (18–97 MPa × 635–661 K, measured).
-- **A finding about our own table**: at 1000 K and low pressure, Mazevet is off by
-  **+88 … +994 %** — its ρ ≳ 1 g/cc validity condition confirmed numerically — so the
-  envelope dispatch now puts IF97 **in front of** Mazevet. Physicality sweep: zero
-  violations. Seams: water1 0.005 %, water2 ≤ 0.02 %.
-- Anchor bit-identical; `--refresh` in the same commit (fingerprint 425c011016a248cf →
-  **be375eaec98efb01**, diff is fingerprint and seconds only, a solve-note string moved it).
-
-**Resume point, from that session's own checklist**: ① run the four ice-axis ends
-(`scratchpad/ice_axis_runs.py`) through the full r1·2·3 dispatch — convergence unknown, and
-**gap-covered % only becomes quotable if `conv=True` appears**; ② the full `check.sh`. If no
-end converges, **the next wall's coordinates are the product**, not a failure.
-
-**Carry the label steam does not buy**: that window sits outside Soubiran & Militzer's
-validated mixing band on both axes, so passing the wall happens over an unverified mixture
-(`7769be6e`).
-
-**Its landing chain, if a session's context has holes** (the owner reports some sessions lost
-records to a re-login): `84b93530` Brief 24 → `ac8146c5` label correction → `544d8730` this.
-Each checklist and note carries the prior state, so re-anchor from those files.
+**Open and unbriefed**: tidal heating → interior structure. The relation exists but is a
+**fixed-point problem** (Ė rises with temperature, peaks, then falls), the equilibrium may be
+**multi-valued** — a body can sit hot or cold depending on thermal history — so any wiring must
+return a labelled set, not one temperature. Both papers are now cached. **Survey ⑧b decides
+whether it is adoptable**: if the fixed point does not reproduce Io, it is not.
 
 ## Standing rules — each exists because something got through
 
