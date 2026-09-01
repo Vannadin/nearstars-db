@@ -60,3 +60,31 @@ extend the register, record the kind.
 **Hard constraints**: gate FAIL 0 backgrounded; no new runtime dependency; commits
 English, one logical change; `git diff --stat` before `git add`; --refresh only if a
 fingerprinted function/constant changes, same commit, cause stated.
+
+## RESOLUTION (owner, 2026-09-01) — the registered elections are SUPERSEDED
+
+The pre-registration above stands as the record of what was expected before measuring.
+The owner resolved differently after the measurement report (band reached by no roster
+body; shared anchor; printed-fit residuals):
+
+**Adopted: the unweighted mean of Queyroux+ 2020 and Prakapenka+ 2021 over
+[VI–VII boundary, 14.6 GPa]** — the stretch where no lineage debate exists and the two
+post-2020 measurements are mutually consistent (|Q−P| = 1.0/54.1/8.7 K at
+8.2/15.4/20.0 GPa vs 71–348 K to ours). Our own curve is excluded from the mean (a
+3-way mean would let our curve vote on its own trial, landing 111–120 K below both
+real measurements). **14.6–20.6 GPa: disputed, refused by name** — the two sources
+agree numerically but assign different phases there (Queyroux on VII′ from 14.6,
+Prakapenka on its VII segment to 17.5), and the dispatch consumes the phase; zero
+roster reach makes this free. **Above 20.6 GPa: unchanged.**
+
+Label conditions, all mandatory: ① the two papers share Datchi's anchor (Q Table I:
+2.17/354.8; P Supp. Table 3: 2.17(5)/354.8(5)) — the 1.0 K agreement at 8.2 GPa is two
+lines close to a shared nail and is NEVER quoted as independent confirmation; the
+independent agreement is the 8.7 K at 20.0 GPa. ② the mean's uncertainty carries the
+curve separation (up to 54 K) alongside each σ — never σ/√2; the corner-run ban
+(782/2188 K) stands. ③ below 8.4 GPa the span is anchored interpolation, not
+measurement support. Handover at the VI–VII boundary with the measured step recorded
+(+3.9 K at our 2.216 GPa), not smoothed. The upper fit's 15.1 GPa −2.8σ failure is out
+of adopted scope but recorded as one reason 14.6 is the boundary. Identity expectation
+STRONGER than briefed (zero calls in 8.4–20.6 for the ice giants; moons below 8.4;
+water column tops U 34.5 / N 39.2 GPa) — any movement stops and is traced.
