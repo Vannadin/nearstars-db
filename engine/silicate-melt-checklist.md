@@ -88,7 +88,9 @@ reproduction agrees).
 **Verdict (2026-09-02, landed)**: chain built and gated (test_silicate_melt.py):
 transcription checks all pass (Deng Table I ≤ ±50 K, printed 500 GPa point 9376.6,
 Monteux 20 GPa joins 0.040/1.002 K with the 1336e9 trap pinned at 745.6 K); seams
-measured +1200.7 (A) / +321.7 (F) / +17.98 / +296.7 / closure +47.6; refusals named
+measured on the implemented-curve basis (audit correction 2026-09-02, notes §3):
+liquidus +1275.7 (A) / +396.7 (F), solidus +1732.1, then +17.98 / +296.7 / closure
++47.6; refusals named
 (500 GPa ceiling, bdg 11.89 GPa arithmetic floor, unknown variant); φ (eq 6) single
 source; C′_p (eq 17) + ∇_ad damping in-window (eq 16 printed-but-unadopted, reason in
 eos.py); seeding differentiated→peridotitic / undifferentiated & primitive crust→

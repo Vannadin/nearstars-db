@@ -68,7 +68,14 @@ C_p/C′_p in-window. `interior.solve` returns `silicate_melt_state` /
 Transcription: Deng Table I residuals ≤ ±50 K (the paper's own class), printed
 500 GPa extrapolation 9376.6 vs 9376; Fei anchor exact at 140 GPa; Monteux joins
 0.040 K / 1.002 K, and the 1336×10⁹ trap scale pinned at 745.6 K. Seams: 140 GPa
-rock→bdg **+1200.7 K (A) / +321.7 K (F)** (a material-kind declaration, not smoothed);
+rock→implemented curves **+1275.7 K (A) / +396.7 K (F)** on the liquidus and
+**+1732.1 K** on the solidus — one basis for both lines: the step between the curves
+this code actually returns (rock branch → tm ± 75). *Corrected 2026-09-02 (audit): the
+first record quoted the liquidus steps against Deng's bare tm (+1200.7/+321.7), a
+different basis than the solidus line beside it. The three candidate bases sit exactly
+75 K apart because the nominal width is a declaration — the step numbers depend on
+that declaration, which is why the basis must be named.* (A material-kind declaration,
+not smoothed);
 180 GPa bdg→ppv **+17.98 K** (printed triple point; the fits' own crossing at
 173.6 GPa carried as the paper's internal inconsistency); 200 GPa ppv→Fei
 **+296.7 K**; 500 GPa closure comparison +47.6 K.
