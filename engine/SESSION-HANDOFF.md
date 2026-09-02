@@ -396,7 +396,10 @@ acting on it.**
 >   work, and Militzer's layer is both. **Do not re-derive this**; it is in
 >   `engine/carbon-deposit-context-notes.md`, and the five files to request are named there.
 >   **What remains is author contact, which is the owner's call and was not initiated.**
-> - **Core melting depression is ready to brief and needs no further survey.** The measured
+> - **Core melting depression — BRIEF 38 LANDED 2026-09-02** (`543a88ff` → `311c03ee` →
+>   `303f1d2e` → `958dab40`; gate FAIL 0, 1220 s, anchors bit-identical). **Nothing here is
+>   waiting work** — read this bullet only for how it resolved, and see the resolved row below.
+>   The bullet as first written said the measured
 >   factor is **0.61–0.70 across five decades of pressure, essentially flat**; our
 >   `IRON_LIGHT_ELEMENT_FACTOR = 0.80` is high everywhere, and its pedigree turns out to be a
 >   **1981 estimate its own source calls a crude assumption**. Mori+ 2017 prints a Simon equation
@@ -441,6 +444,19 @@ acting on it.**
    *"the alloy core's depression goes here"* and no alloy material fills it, so the **melting
    depression** is a declared convention rather than a material property. And the **C–N–H
    polymer** the carbon axis needs, which is the same thing as item 3's scope decision.
+
+   ✅ **The melting half of this row closed with Brief 38 (2026-09-02), and not as expected.**
+   The depression is *still* a declared convention and that is now the grounded answer, not a
+   gap: 0.80 rides `fe_prem`, Earth's actual core, where Sinmyo+ 2019's ICB check puts it at
+   **−0.12 σ**; the Fe–Fe₃S eutectic (0.61–0.70) is the *floor* at a composition no roster body
+   runs, and it is stored as a labelled bound — `iron_fes_eutectic_t_melt`, `None` outside
+   21–350 GPa, `IRON_FES_GAP_REASON` for the 10–21 GPa hole neither source covers. **The bound
+   was measured and deliberately not wired**: the smallest margin between our declaration and
+   the eutectic floor is **+407.5 K at ~48 GPa**, so no roster body can violate it — C5, no
+   machinery without a consumer. It gains one the day a body declares an S-rich core. The
+   **C–N–H polymer half is closed by carbon not building** (banner above). What is left on this
+   row is only the two unobtained papers: **Fei+ 2000** (the eutectic curve's single anchor) and
+   **Sata+ 2010** (load-bearing under Hakim's density table).
 
    ⚠ **Two corrections to how this row was first written** (2026-09-02, survey ⑮ + the owner).
    **The density half of it was wrong**: `earth_like` resolves to `fe_prem`, not pure iron
