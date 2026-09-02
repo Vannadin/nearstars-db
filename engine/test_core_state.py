@@ -197,6 +197,48 @@ def main() -> int:
         print(f"  [{'PASS' if cond else 'FAIL'}] {label}")
     print(f"  {r.evidence()[:150]}")
 
+
+    print("\n공정 바운드 — Mori+ 2017 전사와 괄호 측정 (브리프 38)")
+    from eos import iron_fes_eutectic_t_melt, iron_t_melt, IRON_LIGHT_ELEMENT_FACTOR
+    # 전사 검산 넷 — 논문 자신이 인쇄한 값. 네 번째의 "~4100 at the ICB" 는 자기 곡선 위
+    # ~350 GPa 의 값(라벨 세부, 결함 아님 — 판정 완료, paper-defects 에 넣지 말 것).
+    for g, printed, tol, what in ((60.0, 1910.0, 6.0, "run #6"),
+                                  (254.0, 3550.0, 10.0, "run #11"),
+                                  (136.0, 2700.0, 20.0, "'~2700 K at the CMB'"),
+                                  (350.0, 4100.0, 5.0, "'~4100 K at the ICB' (~350 GPa)")):
+        got = iron_fes_eutectic_t_melt(g * 1e9)
+        ok = got is not None and abs(got - printed) <= tol
+        if not ok:
+            fails.append(f"Mori 전사: {g} GPa 에서 {got} vs 인쇄 {printed} ({what}) — "
+                         "인쇄점이 자기 식에서 안 나온다. 계수를 만지지 말고 멈춰라")
+        print(f"  [{'PASS' if ok else 'FAIL'}] {g:5.0f} GPa → {got:6.1f} K (인쇄 ~{printed:.0f}, {what})")
+    ok = (iron_fes_eutectic_t_melt(20e9) is None
+          and iron_fes_eutectic_t_melt(351e9) is None)
+    if not ok:
+        fails.append("공정 곡선이 21–350 GPa 밖에서 값을 낸다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 21 GPa 아래·350 GPa 위는 None — "
+          "10–21 GPa 공백은 IRON_FES_GAP_REASON 이 이름 댄다")
+    # Sinmyo 검산의 재계산 (브리프 38 E) — 리터럴이던 19.1 이 계산값이 됐고, PREM ICB
+    # 압력에서 ~19 % 로 돌아와야 한다. 갈래 ③ 감시.
+    pct = (1.0 - SINMYO_EARTH_ICB_K[0] / iron_t_melt(PREM_ICB_GPA * 1e9)) * 100.0
+    ok = 18.5 <= pct <= 19.5
+    if not ok:
+        fails.append(f"Sinmyo 내림 재계산이 {pct:.2f} % — ~19 에서 이탈 (갈래 ③): "
+                     "iron_t_melt 나 앵커가 움직였다. 바꾸기 전에 델타와 압력을 보고하라")
+    print(f"  [{'PASS' if ok else 'FAIL'}] Sinmyo 5120 K vs 순철 @ {PREM_ICB_GPA:.2f} GPa → "
+          f"{pct:.2f} % (리터럴이 아니라 계산)")
+    # 괄호 측정 (브리프 38 F, 갈래 ④): 로스터 전원이 0.80 상수이므로 선언 융해곡선이
+    # 공정 바닥을 위반할 수 없다 — 21–350 GPa 최소 여유가 양수임을 재서 C5 로 닫는다.
+    # 이 최소 여유(+407.5 K @ 48 GPa, 2026-09-02 측정)가 움직이면 곡선 중 하나가 움직인 것.
+    margin = min(IRON_LIGHT_ELEMENT_FACTOR * iron_t_melt(p * 1e9)
+                 - iron_fes_eutectic_t_melt(p * 1e9) for p in range(21, 351))
+    ok = 400.0 < margin < 415.0
+    if not ok:
+        fails.append(f"괄호 최소 여유 {margin:.1f} K — 기록 +407.5 에서 이탈. "
+                     "공정이나 순철 곡선이 움직였다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 선언(×0.80) − 공정 바닥의 21–350 GPa 최소 여유 "
+          f"{margin:+.1f} K — 위반 가능 천체 0, 런타임 배선은 C5 로 안 지었다")
+
     if fails:
         print(f"\n실패 {len(fails)}건")
         for f in fails:

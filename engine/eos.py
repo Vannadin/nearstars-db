@@ -1424,11 +1424,64 @@ IRON_MELT_LOW = (1825.0, 0.0, 57.723 * GPA, 0.654)        # Zhang+ 2015 초록
 IRON_MELT_HIGH = (6469.0, 300.0 * GPA, 434.82 * GPA, 0.54369)   # González-Cataldo+ 2023 초록
 IRON_MELT_SPLICE = 365.0 * GPA     # Zhang+ 2015 가 자기 적합의 상한으로 적은 압력
 IRON_MELT_MAX = 5000.0 * GPA       # González-Cataldo+ 2023 의 계산 상한
-IRON_LIGHT_ELEMENT_FACTOR = 0.80   # 관례적 20 % 내림 (Stevenson+ 1983 → Zhang & Rogers 2022)
+# 가벼운 원소의 융해 내림 20 %. **혈통 수리(브리프 38 D) — 값은 안 움직였다**: 기원은
+# Stevenson 1981 의 이상혼합 추정이고, Boehler 1996 p. 29 가 그 방법을 "making crude
+# assumptions on the entropy of melting and assuming ideal mixing" 이라 적으며, 우리에게는
+# Zhang & Rogers 2022 를 거쳐 오는데 그 논문 스스로 "artificial" · "fine tune[d] … to
+# match Tachinami et al. (2011)" 이라 부른다. **지금 이 값 밑에 서 있는 것은 그 관례가
+# 아니라 독립 검산이다** — Sinmyo+ 2019 의 지구 ICB 5120 ± 390 K 에 순철 곡선 ×0.80 을
+# 대면 −0.12 σ (core_state.py 가 계산해서 낸다). 1981 년 추정치에 2019 년 측정이 독립적으로
+# 착지한 모양이고, 아래 공정(eutectic) 바운드가 그 반대편 울타리다. Boehler 의 "고압 수렴"
+# 기대는 지지되지 않는다(두 번 헤지된 자기 인용 외삽이고, 같은 문단의 Anderson & Ahrens
+# 1995 FeS ICB 4310 ± 750 K 가 Mori 공정 3993 K 를 품는다) — 절대 내림은 자라고(1 bar
+# 546 K → 254 GPa 1958 K) 분율은 평평하므로, **상수 인자는 형태로서 정당하다**.
+IRON_LIGHT_ELEMENT_FACTOR = 0.80
 IRON_MELT_REF_LOW = ("Zhang+ 2015 (2015PEPI..244...69Z) — 2상 MD 자료의 Simon 적합, "
                      "365 GPa 까지")
 IRON_MELT_REF_HIGH = ("González-Cataldo & Militzer 2023 (2023PhRvR...5c3194G) — ab initio "
                       "Gibbs 자유에너지, 300–5000 GPa, Kraus+ 2022 의 1 TPa 실측과 일치")
+
+# ── Fe–Fe₃S 공정(eutectic) 융해곡선 — **바운드이지 우리 melt 곡선이 아니다** (브리프 38) ──
+#
+# Mori+ 2017 (2017E&PSL.464..135M) §3.3 식 (1), 캐시 1차에서 전사. 융해면의 **바닥** —
+# S-부화 공정 조성에서의 최저 융해온도라, 어떤 철 합금 핵의 선언 융해곡선도 이 아래로
+# 내려갈 수 없다. **0.63(공정) < 0.81(우리 0.80 = 지구 실제 조성, Sinmyo 검산 −0.12 σ)
+# < 1.0(순철) 은 물리적으로 맞는 순서다** — 이 곡선으로 0.80 을 "정정" 하는 것은 브리프
+# 38 §0 이 잡은 짝-오류다(맞는 수, 틀린 짝). 조건 셋, 상수 옆이 제자리다:
+#   ① **황이 최대 내림** — Fig. 6 캡션이 순서를 인쇄한다(Fe–Fe₃S 가 Fe·Fe–FeSi·Fe–FeO·
+#     Fe–Fe₃C 보다 낮고 FeH 만 비슷). Si/O/C 핵은 0.65 와 1.0 사이다.
+#   ② **니켈 미포함** — Mori 조성은 Fe–S 뿐(Table 2).
+#   ③ **곡선 전체가 미확보 앵커 한 점에 걸린다** — 기준점 1348 K @ 21 GPa 는 Fei+ 2000
+#     이고 우리에게 없다. 네 검산은 적합을 확인하지 앵커를 확인하지 않는다.
+# 전사 검산 넷(test_core_state.py 가 게이트에 든다): 60 GPa → 1915.0 (인쇄 1910, run #6) ·
+# 254 GPa → 3541.1 (3550, run #11) · 136 GPa → 2681.0 ("~2700 K at the CMB") · ~350 GPa →
+# 4102.7 ("~4100 K at the ICB"). ⚠ 넷째는 **라벨 세부이지 결함이 아니다** — 교과서 ICB
+# 330 GPa 에서 식 (1)은 3993 K 이고, 논문의 "~4100 ICB" 는 자기 곡선 위 ~350 GPa 에 있다.
+# 판정 완료(브리프 35 후속), paper-defects 에 넣지 말 것.
+# 범위: 측정 21→254 GPa, 논문 자신의 외삽 사용처가 ~350 GPa. **10–21 GPa 는 Mori 도
+# Buono & Walker 2011 도 못 덮는다**(Buono 는 1 bar–10 GPa 를 조성 다항식으로만) — 그
+# 구간이 필요하면 값을 맞추지 말고 IRON_FES_GAP_REASON 으로 이름 대고 거절하라. Buono
+# 식 (5) 를 쓸 일이 있으면 **+2140.2 로 교정해 읽되 결함 인용 필수** (paper-defects #10).
+# 소비처 현황(브리프 38 F, 갈래 ④): 로스터 전원이 0.80 상수라 공정/순철 괄호를 위반할
+# 수 있는 천체가 없고(21–350 GPa 최소 여유 +407.5 K @ 48 GPa — test_core_state 가 잰다),
+# C5 에 따라 런타임 배선은 짓지 않았다. S-부화 핵을 선언하는 날 이 상수가 기다린다.
+MORI_FES_EUTECTIC = (1348.0, 21.0 * GPA, 36.5 * GPA, 1.0 / 2.07)  # (T_ref, P_ref, a, 1/c)
+MORI_FES_P_MEASURED_MAX = 254.0 * GPA   # 측정 상한 (run #11)
+MORI_FES_P_MAX = 350.0 * GPA            # 논문 자신의 외삽 사용처 ("~4100 at the ICB")
+IRON_FES_GAP_REASON = ("10–21 GPa 의 Fe–S 융해는 Mori+ 2017(21 GPa 아래는 기준점 밖)도 "
+                       "Buono & Walker 2011(1 bar–10 GPa, 조성 다항식)도 덮지 않는다 — "
+                       "이 구간의 공정 온도는 적합이 아니라 부재다.")
+
+
+def iron_fes_eutectic_t_melt(p: float) -> float | None:
+    """Fe–Fe₃S 공정 융해온도 [K] — 융해 바운드(바닥). 21–350 GPa 밖은 None.
+
+    Mori+ 2017 식 (1). 우리 iron_t_melt 와 같은 Simon 형이고 지수가 그들의 1/c 다.
+    바운드로만 쓴다 — 위 블록 주석의 조건 셋과 짝-오류 경고를 보라."""
+    t_ref, p_ref, a, cinv = MORI_FES_EUTECTIC
+    if p < p_ref or p > MORI_FES_P_MAX:
+        return None
+    return t_ref * ((p - p_ref) / a + 1.0) ** cinv
 
 
 def iapws_p_melt(name: str, t: float) -> float:

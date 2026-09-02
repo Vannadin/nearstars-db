@@ -208,7 +208,12 @@ def solve(core_pressure: float,
             "열진화 모형들의 관례이고 (Stevenson+ 1983 → Zhang & Rogers 2022), 독립 "
             "검산이 같은 자리에 떨어진다 — Sinmyo+ 2019 의 지구 내핵 경계 온도 "
             f"{SINMYO_EARTH_ICB_K[0]:.0f} ± {SINMYO_EARTH_ICB_K[1]:.0f} K 를 순철 곡선의 "
-            "같은 압력 값에 대면 19.1 % 다. 두 수는 같은 주장이 아니라서 이 일치는 "
+            # 브리프 38 E: 이 백분율은 리터럴이었고(19.1), iron_t_melt 가 움직이면 조용히
+            # 낡을 수였다. 이제 PREM ICB 압력(328.85 GPa)에서 계산한다 — 검산의 압력이
+            # 어디였는지도 이 한 줄이 말한다. test_core_state 가 ~19 % 를 고정한다.
+            f"같은 압력(PREM ICB {PREM_ICB_GPA:.2f} GPa) 값에 대면 "
+            f"{(1.0 - SINMYO_EARTH_ICB_K[0] / iron_t_melt(PREM_ICB_GPA * 1e9)) * 100:.1f} % 다. "
+            "두 수는 같은 주장이 아니라서 이 일치는 "
             "도출이 아니라 검산이고, 핵의 조성은 이 레시피가 도출하지 않는다.")
     if p_c > IRON_MELT_SPLICE:
         notes.append(
