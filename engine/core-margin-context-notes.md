@@ -108,3 +108,38 @@ section "판정의 여유".
 
 **Gate**: `check_contracts` 5/5 with the six new outputs, `chain.py check` pass, path fingerprint
 unchanged (`708ff4627f24c448`); full `check.sh` result recorded in the report.
+
+## 4. Follow-up after audit — 2026-09-03, code `ce87de81`
+
+**③ fired, and §3 read it as ①.** Branch ③ said *"some body's verdict flips inside the declared
+γ range"* and was read as the **pressure** window `GAMMA_RANGE_PA`; the range that matters is
+the **value** range, and the flip is inside it. `core_state.py`'s own comment quotes Alfè+ 2002
+twice: h.c.p. **solid** *"ca. 1.5"* (what `GAMMA_CORE` is) and **liquid** Hugoniot *"1.51 to
+1.52 as p goes from 280 to 340 GPa"*. `fe_prem` is the liquid fit (Brief 41 `fit_state`), so the
+adiabat puts the solid's exponent on a liquid density — the same disease Brief 41 catches on
+density, one level up. Measured (감, 직, 여기 on my column): centre margin **−17.6 K at γ 1.50,
+−5.5 K at 1.51, +6.7 K at 1.52** — the paper's own liquid range straddles the crossing
+(γ_flip 1.5145). And Earth's centre (358.5 GPa) is outside **both** verified bands (340 GPa).
+
+**What changed**: `GAMMA_LIQUID_RANGE = (1.51, 1.52)` with `GAMMA_LIQUID_RANGE_PA = (280e9, 340e9)`
+beside the solid constants (no new source); output `gamma_flip_in_alfe_range`; **thin now means
+γ_flip ∈ [1.50, 1.52]**, Alfè's own span — the margin is an adiabat-side quantity and its
+uncertainty is measured on the adiabat side. The label says the solid's γ sits on a liquid fit
+and that the liquid value would make the verdict ambiguous. **`GAMMA_CORE` and K₀ untouched.**
+
+**② The borrowed threshold was wrong as printed, and the pre-registration's framing was too
+kind to itself.** The melting splice disagreement over the two iron fits' overlap (300–365 GPa,
+high/low − 1) runs **7.52 % → 3.98 %**, monotone; the prose said "6.8–7.5 %", and 0.068 was one
+pressure's value (≈312 GPa), not Earth's centre (4.30 %). It is now `melt_splice_disagreement(p)`,
+local, basis stated, **information only**. And §2 said the threshold was pre-registered before
+the numbers; the commit timestamps (감) show `230deeee` 03:21:51 already carried 0.33 % / 1.514 /
+194 — **the threshold was written after the margin was known.** No tuning risk (any threshold above
+0.4 % labels Earth thin), but it is said this way, not the other.
+
+**③ `k0_flip` null semantics** are in the contract (EN/ko): not computable — multi-phase material
+or no sign change in 0.5–2× K₀ — never "no flip exists"; the multi-phase refusal is pinned on the
+silicate material in `test_core_state.py`.
+
+Earth's outputs after the follow-up: `margin_condition` thin, `gamma_flip_in_alfe_range` True,
+`melt_splice_disagreement` 0.0430, `gamma_flip` 1.5145, `k0_flip` 194.0 GPa, `center_margin`
+−17.6 K — unchanged numbers, corrected meaning.
