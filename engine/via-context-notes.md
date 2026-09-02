@@ -68,6 +68,20 @@ computes nothing yet).
 after every edit; `graph.undeclared()` empty throughout; `chain.py check` passes. **Branch ①**:
 the misroutes fixed cleanly and the cycles did not move — `coupled_core` was never touched.
 
+**How to read 35 → 15 → 0 open.** Not "twenty problems fixed". Only **6–7 were ever real**
+(the six gaps plus the one already marked); the other ~20 were **a field doing four jobs** — a
+passed number, a rename, a contribution assembled across edges, and a `selects` discriminant. What
+was fixed is that `via` now means one thing, and the seven real breaks are named as breaks on the
+edge. That distinction is the finding; a later reader who sees "35 mismatches, now 0" without it
+will count wrong.
+
+**Pre-registration ③ was under-specified, not unmet** (직, on reading the deviation). It said a
+class-3 discriminant its supplier does not compute *"is a class-4 break in disguise"* — a binary
+that treats a `selects` edge naming a discriminant as making the same claim a `requires` edge
+makes. It does not: the header already says `selects` carries no via, so the third ending (drop the
+via, keep the word in the note) was in the file's own rules and the branch list did not have it.
+Registered as the pre-registration's gap, not as an unregistered outcome.
+
 Result: **83 via-edges, 15 mismatches = 8 allowlisted + 7 `status: gap` + 0 open.** The gate
 (`check_via.py --gate` in `check.sh`) fails on any via outside those two lists. pyyaml is not a
 new dependency (`chain.py`, `check_pipeline_flow.py`, `check_phase4_gate.py` already import it on
