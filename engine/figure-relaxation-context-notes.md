@@ -129,13 +129,23 @@ the threshold family **700–1009 K** (engine 0 GPa solidus 1661.2 K; τ_M(Rovir
 — refused by name, not defaulted. Alpha Centauri A b is out of domain upstream (interior refuses
 the giant), so no verdict is composed. **So the hydrostatic declaration is supported for the
 convecting mantle of every body that has a temperature, and the consumer never branches on
-today's roster** — said plainly, as ① requires. **But the reason it never branches is ⑥**: the
-solver's coldest temperature is the adiabat top, ≥ 1300 K for any declared value, while the
-threshold sits at 700–1009 K; a conductive lid hundreds of K colder would land inside or below
-the family, and the solver has no lid. **The product is therefore the condition on the label,
-not a hydrostatic verdict** — the wire is kept because it carries that condition to the figure
-solver, and because the `cannot-say` and `cannot-relax` branches are reachable and pinned
-(`test_rheology.py` §4: 850 K → inside spread, 600 K → cannot relax).
+today's roster** — said plainly, as ① requires. **But the reason it never branches is ⑥ — restated, because the first version of this
+sentence was wrong.** *Correction (audit of Brief 39, fix ②; the directing seat repeated the
+error upward as "a statement about our code, not about planets"):* the run record said the
+solver's coldest temperature is "≥ 1300 K for any declared value". **False.**
+`potential_temperature` has no floor (`interior.py` refuses only negatives) and the ice-giant
+anchors declare **76 K and 72 K** through that very field; `relaxation_verdict` at 270 K and
+200 K returns cannot-relax (감). What is true is narrower: **the consumer never branches because
+the bodies that reach the wrapper *today* declare hot mantle-top temperatures (Earth 1600 K)
+while the threshold sits at 700–1009 K.** That is a statement about **today's roster
+declarations** — not about our code, and not about planets — and it can change without a line of
+code moving. The solver still has no conductive lid, so a real lid hundreds of K colder is not
+represented; that condition rides on the emitted label. **The product is therefore the condition
+on the label, not a hydrostatic verdict** — the wire is kept because it carries that condition to
+the figure solver, and because the `cannot-say` and `cannot-relax` branches are reachable and
+pinned (`test_rheology.py` §4: 850 K → inside spread, 600 K → cannot relax). Fix ① (same audit)
+adds the refusal for a temperature that belongs to a non-silicate outer layer, which is exactly
+the 76 K / 72 K case.
 
 **Branches not fired**: ② (no body refuses), ③ (laws agree wherever a verdict exists), ④ (Earth
 is 590 K above the family's top; ④ is an *output* for any body inside it), ⑤ (age 0.1 → 10 Gyr
