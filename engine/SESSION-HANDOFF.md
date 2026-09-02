@@ -588,8 +588,15 @@ acting on it.**
   once the chain is tooled and re-run. Dante was **a temporary test**, and the owner's words on
   what that test is for are worth carrying verbatim: finding errors through it is good, *"그걸
   천체의 값을 지금 확정적으로 바꿀 이유가 되진 않잖아"* — it is not a reason to change a body's
-  value now. So `f5db1989`'s measurement (the family wants ~486 km, not the invented 521, and the
-  constant is the culprit) stands as **a measurement of the tool**, not a proposal for the board.
+  value now. So `f5db1989`'s measurement stands as **a measurement of the tool**, not a proposal
+  for the board — and state it with the right subject, because the row said it backwards until
+  2026-09-03: **the solver wants ~486 km at the adopted mass; the *family* on its own terms wants
+  521, because its constant-density scaling law is supported and only its 2,620 constant is not**
+  (the engine's dry-silicate floor is enstatite 3,220). ⚠ And the pair is **not unreachable**: the
+  commit's own measurement has `serpentinisation = 1.0` reproducing **519.4 km, −0.3 %, inside the
+  ±2 % tolerance** — it is rejected because antigorite contradicts a volcanic moon's identity, not
+  because the tool cannot get there. A reader of this row alone would otherwise take 521 as
+  unsupported by any route. *(Both corrections found by the audit seat.)*
   **Do not put this to the owner again as a three-way choice** — it is sequenced, not undecided.
 - **Paper requests**: the ternary grid closed as not found. **French, Desjarlais & Redmer
   2016** (PRE 93, 022140, `2016PhRvE..93b2140F`) was **obtained by the owner 2026-09-01** and
