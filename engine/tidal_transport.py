@@ -230,6 +230,8 @@ def transport_result(surface_flux_wm2: float, radius_m: float, *,
         status="failed-io-reproduction",
         note="Kankanamge & Moore 2019 인쇄 계는 자연 독법 상수로 자신의 이오 결과"
              "(1471 K, 12.6 km)를 재현하지 못한다 — tidal-interior-context-notes.md §4. "
+             "기제(브리프 37, §7): 모형이 애초에 무차원이고 Table 5는 집필 시점의 "
+             "재차원화라 폐합이 차원 표현에 없다 (§2 'T₀ (= 1)' 대 Table 5 '1400 K'). "
              "아래 수는 측정 전용, 채택 금지.")
     if mode != "heat-pipe":
         return dict(mode=dict(value=mode, provenance="declared"),

@@ -8,7 +8,7 @@ methodology citation block.
 The notes record a symptom (the printed system cannot reproduce its own Io result);
 this brief writes the **mechanism**, so no later seat re-digs the same paper.
 
-- [ ] **A (notes §7 — the three causes, quotes at their place, verifier named)**:
+- [x] **A (notes §7 — the three causes, quotes at their place, verifier named)**:
   ① the model is dimensionless by construction (thesis Table 2.1, §5.5, H "dimensionless
   value of 10") and Table 5 is a write-up-time re-dimensionalisation — predicting the
   audit's "no admissible constants"; ② the 2019 paper contradicts itself on T₀
@@ -22,13 +22,13 @@ this brief writes the **mechanism**, so no later seat re-digs the same paper.
   and Khurana+ 2011's induction (≥50 km, ≥20 % melt global layer) + Spencer+ 2020
   (80 % intrusion) say **the model resolves a different structure than the
   observations indicate**.
-- [ ] **B (methodology doc correction, EN + KO both)**: the citation block's "the
+- [x] **B (methodology doc correction, EN + KO both)**: the citation block's "the
   transport half meets the validation standard" claim is now known unsupported by the
   printed system — corrected in place, old sentence kept and dated (prose carrying a
   number carries the duty).
-- [ ] **C (label mechanism line)**: tidal_transport.py's failed-io-reproduction label
+- [x] **C (label mechanism line)**: tidal_transport.py's failed-io-reproduction label
   comment gains one line naming the cause — comment-only, zero behaviour.
-- [ ] **D (traps + reopeners + prerequisites)**: Spencer 2021 Table 1's diffusivity
+- [x] **D (traps + reopeners + prerequisites)**: Spencer 2021 Table 1's diffusivity
   printed 10⁶ m²/s (dropped minus, same family as the 1336e9 scale); K&M "~1 TW"
   carried; what reopens the axis (a model built for Khurana's structure, or a paper
   that predicts rather than calibrates Io's lid); author-contact question recorded,
@@ -39,3 +39,13 @@ this brief writes the **mechanism**, so no later seat re-digs the same paper.
 Constraints: labels with location+condition, identifiers read not made, no WebSearch,
 commits English, one logical change, `git diff --stat` before add (directing seat
 edits interior-core.md / SESSION-HANDOFF.md).
+
+**Verdict (2026-09-02, landed)**: notes §7 carries the three causes with quotes at
+their place and verifiers named; the methodology citation block corrected in place
+(EN + KO, old reading kept and dated — the KO mirror had never received the ⑧b block,
+so it gained a dated summary + the correction together); the runtime label now names
+the mechanism in one line; traps (Spencer 10⁶ m²/s, K&M ~1 TW), reopeners, the single
+author-contact question (recorded, not initiated), and the conductivity prerequisite
+all in §7. Anchors untouched by construction (prose + one label string; the only code
+file touched is a note string whose test pins status, not text — test_tidal_transport
+re-run green). Gate delta 0: nothing new executes.

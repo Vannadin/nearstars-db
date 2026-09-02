@@ -205,3 +205,95 @@ own §5 validation never went there — their nondimensional lid thickness tops 
 1-D slab) would lower both outputs. The unvalidated label already applies; this notes
 *which regime* the numbers sit in, so a reader does not mistake them for interpolation
 inside the validated range.
+
+## 7. The mechanism (Brief 37, 2026-09-02) — why the printed system cannot reproduce itself
+
+§4 recorded the symptom and named the wrong assumption; survey ⑭ and the directing
+seat found the mechanism, threefold. Everything below is quoted at its place in the
+cached documents, with the verifier named. §§4–6 stand as the record of what was
+established before the cause was known.
+
+**Cause 1 — the model is dimensionless by construction, and Table 5 is a
+re-dimensionalisation performed at write-up.** Kankanamge's 2016 thesis
+(`2016PhDT.......206K.pdf`, cached) Table 2.1 gives the model parameters
+non-dimensionally (η₀ 1.0, T₀ 1.0, T_s 0.2, L 1.0, D 1.0, **α 1.0, k 1.0**, κ 1.0,
+C_p 1.0, g 1.0, Ra 10⁶); §5.5: *"These **dimensionless** models…"*; the validation
+tables are dimensionless (lid thickness as a fraction of mantle depth); §4: H *"kept
+at dimensionless value of 10"*. So the constants were never omitted — **they were
+scaled out**, and this *predicts* the audit's independent finding: closure lives in
+the scaled form, so no physically admissible constant set need exist in the
+dimensional presentation. (Verifier: survey ⑭, thesis read at its lines; the directing
+seat counted `expansiv` = 0 occurrences in the 2019 PDF.)
+
+**Cause 2 — the 2019 paper contradicts itself on one symbol, and its own eq. (2)
+breaks on its own Table 5.** §2 under eq. (1): *"the reference temperature
+**T₀ (= 1)**"* (line 141); Table 5: **T₀ = 1400 K** (line 1913). Same paper, same
+symbol. And eq. (2), `ln(Δη) = A/ΔT = HD²A/k`, with the paper's own criterion of ~8
+for the stagnant lid: with Table 5's values the printed orientation gives **1.13×10⁷**
+(ΔT = k/HD² carrying units of *inverse temperature*), the flipped one **2.0×10⁻⁵** —
+six orders off in both directions. The only reading inside the paper's own regime is
+**A and T both dimensionless** — §2's `T₀ (= 1)`, not Table 5's 1400 K. (Verifier:
+directing seat, both quotes and both evaluations reproduced from the cached PDF.)
+
+**Cause 3 — the "missing" constants are resolved, and the recoverable one contradicts
+the printed result.** `A = 15` is **dimensionless** (thesis: Frank-Kamenetskii,
+*"reference viscosity is evaluated at T = 1. By using A = 15…"*; independently
+ΔT_rh = A⁻¹) — Table 5's blank unit cell was right, the defect is the dimensional
+1400 K beside it. **α is recoverable: 3×10⁻⁵ K⁻¹** — read NOT from the 2019 paper
+(0 occurrences) but from the thesis quoting the very source K&M §6 names (Schubert et
+al. 2001) and independently from Spencer+ 2021 Table 1. **That is the value the
+audit's inversion excluded** (sixteen starting points, one root, uniqueness confirmed:
+≈9×10⁻⁷, ~1/34 of rock). §4's *"no physically admissible fill-in exists"* is thereby
+promoted **from inference to a sourced statement**: the constant is known, and the
+known value contradicts the printed §6 result. `H`'s precision is unrecoverable (the
+model only ever had the dimensionless 10, entering through Ra_H); `a_u` is
+unrecoverable without digitising (thesis: *"see Figure 5.5"* — the value lives only in
+a figure; both documents say "we did refit a_u" without printing it).
+
+**Cause 3b — the acceptance target itself is unsettled, and the observations point at
+a different structure.** §4 leaned on the paper's own "18-km mountains vs 12.6 km lid"
+admission as a third leg; that leg is weaker than it looked: Carr+ 1998
+([`1998Icar..135..146C`](https://ui.adsabs.harvard.edu/abs/1998Icar..135..146C)) measures
+*"up to at least 7.6 km"* by shadow/stereo, White+ 2014
+([`2014JGRE..119.1276W`](https://ui.adsabs.harvard.edu/abs/2014JGRE..119.1276W)) says Io
+stereo topography is hard *"due to its anomalous surface albedo properties"*, and the
+mountains may not be a lid thermometer at all (Carr: no volcanic characteristics, no
+hot-spot correlation; Turtle+ 2001
+([`2001JGR...10633175T`](https://ui.adsabs.harvard.edu/abs/2001JGR...10633175T)): many
+collapsing outward, formation by global compression). What replaces it is stronger:
+**Khurana+ 2011** ([`2011Sci...332.1186K`](https://ui.adsabs.harvard.edu/abs/2011Sci...332.1186K))
+finds an induction signature requiring *"a global subsurface magma layer with a
+thickness of over 50 kilometers and a rock melt fraction of 20 % or more"* — a
+completely solid mantle is insufficient — and **Spencer+ 2020**
+(`2020JGRE..12506443S.pdf`, cached) is consistent (*"around 80 % of the magma… emplaced
+and frozen as plutons"*). **So the honest closing statement: a conductive lid over a
+solid convecting mantle — the structure this model resolves for — is not the structure
+the observations indicate.**
+
+**Why the second route does not rescue the axis.** Spencer, Katz & Hewitt 2021
+(`2021Icar..35914352S.pdf`) prints a transcribable lid relation (eqs. 16/17, checked by
+survey ⑭ as a truncated expansion), but its Table 1 footnotes say the parameters are
+*"Chosen to give an average lithospheric thickness of ~35 km"* and *"Chosen to give a
+total heating rate of 10¹⁴ W"* — it predicts the **variation** of the lid, not its
+value, so it cannot be the acceptance leg. And the two routes share an anchor without
+citing each other (checked: 0 citations either way): both tune to Io's observed output
+(K&M 2.5 W/m²; Spencer's 10¹⁴ W / Io's area = 2.402 W/m², 3.9 % apart — directing seat
+reproduced). Moore, Simon & Webb 2017 (`2017E_PSL.474...13M.pdf`) is not a third leg:
+shared author, defers detail to the thesis, prints no equations or parameters.
+
+**Transcription traps carried forward** (the 1336×10⁹ family): Spencer 2021 Table 1
+prints thermal diffusivity as **10⁶ m²/s** where rock is 10⁻⁶ — a dropped minus sign;
+and K&M §6's *"totaling ∼1 TW"* stays two orders low against its own sound 2.5 W/m²
+(104 TW over Io's area).
+
+**What would reopen this axis** — not the constants (resolved / unrecoverable /
+figure-only), but: a transport model built for the structure Khurana's induction
+signature implies (a ≥50 km, ≥20 %-melt global layer), or a paper that *predicts* Io's
+lithospheric thickness rather than calibrating to it. **Named prerequisite either
+way**: thermal conductivity from its own source — Brief 35 borrowed K&M's constant
+4 W/m/K (no T/P dependence); Spencer 2021 and Moore 2017 print none; the thesis is
+dimensionless. Our materials answer density, c_p and ∇_ad, not conductivity.
+
+**Author contact, recorded and NOT initiated (owner's call)**: the question is no
+longer "send the missing constants" but exactly one — **which T₀ entered the §6 Io
+calculation: §2's dimensionless 1, or Table 5's 1400 K?**
