@@ -10,11 +10,15 @@ Verifiers per item: (병) = parallel seat measured, (직) = directing seat repro
 work seat re-read from the cached PDF before landing.
 
 **Verification status, stated plainly.** The k(P, T) chain and its closure (§3) were computed
-by the parallel seat and reproduced independently by the directing seat from the SI equations
-(Table S1 self-recovery exact for γ, q, K_T, K′_T on both phases). **The audit seat's third leg
-is outstanding as of this commit.** The work seat re-read every *printed* number below at its
+by the parallel seat, reproduced independently by the directing seat from the SI equations
+(Table S1 self-recovery exact for γ, q, K_T, K′_T on both phases), and **reproduced a third
+time by the audit seat** (감) building the chain independently from Table S1 and eqs. S6–S12:
+ρ_ref 3.7082 / 4.4482 g/cm³, closure target-state g **18.92 / 14.67** against printed,
+reference-state 28.07 / 21.79. Its Pv g differs from the first two legs by ~2 % (5.97 → 4.66
+against 6.09 → 4.72), most likely the K′_T finite-difference treatment; it does not move the
+verdict. **Three legs, same answer.** The work seat re-read every *printed* number below at its
 place in the source but did **not** re-run the thermodynamic chain; where a number is a chain
-output it carries (병, 직) only.
+output it carries (병, 직, 감) as marked.
 
 Sources, all cached in `docs/phase3/_papers/` and title-checked:
 - `2011PNAS..10817901M.pdf` + `.SI.pdf` — Manthilake, de Koker, Frost & McCammon, *Lattice
@@ -72,16 +76,29 @@ aggregate, **18.9 ± 1.6 / 15.4 ± 1.4 W/(m·K)** at the top / base of the therm
 | reference-state g | 28.43 / 22.08 | 1.50× / 1.43× | misses |
 | integral ∫g d ln ρ | 22.57 / 17.71 | 1.19× / 1.15× | misses |
 
-(병, 직 independently.) **So: evaluate g at the target (P, T).** The reference-state reading is
-the natural one to write down and it is wrong by half — that is why this is a warning and not a
-footnote. **The one input not from the papers**: the pressures at the two depths (~127 GPa at
-2695 km, ~135.8 GPa at 2891 km) came from PREM, supplied by the parallel seat; the parent
-prints depth and temperature along a model geotherm (its ref. 29, line 372), not pressure.
+(병, 직, 감 independently.) **So: evaluate g at the target (P, T).** The reference-state reading
+is the natural one to write down and it is wrong by half — that is why this is a warning and
+not a footnote.
+
+**And the reading that closes is the least defensible one mathematically** (감). With
+g ≡ (∂ln k/∂ln ρ)_T, applying the *endpoint* slope over the whole compression is not what the
+definition says; the exact integral ∫g d ln ρ is the faithful reading — and it misses. So the
+recovered instruction is *"do what reproduces the authors' numbers"*, not *"do what the
+definition says"*, and any code that implements it must say so beside the exponent.
+
+**The one input not from the papers, and the softest joint in the chain**: the pressures at the
+two depths (~127 GPa at 2695 km, ~135.8 GPa at 2891 km) came from PREM, supplied by the
+parallel seat; the parent prints depth and temperature along a model geotherm (its ref. 29,
+line 372), not pressure. **One source, two seats declining to confirm it**: the work seat could
+not find the depths in the parent's text layer, and the audit seat confirmed 135.8 as PREM's
+CMB pressure (135.75) but said outright it could not reproduce the 127 without a PREM table.
 
 Beside the pure aggregate, the parent's own headline prediction for the **Fe/Al-bearing**
 aggregate is **9.1 ± 1.2 / 8.4 ± 1.2 W/(m·K)** (lines 506–508, 여기) — recorded here because it
 is the number the parent itself carries forward, and it happens to sit near Ohta's, which §4
-shows the *pure* chain does not. Not a closure; a context line.
+shows the *pure* chain does not. Not a closure; a context line — **the near-agreement is between
+different compositions (Fe/Al-bearing aggregate against Fe-free pure Pv) and is not evidence of
+consistency.** The audit seat made exactly that mispairing once and withdrew it.
 
 ## 4. The condition that must ride with every k this chain returns
 
@@ -145,9 +162,9 @@ against a pure phase; flagged as indicative at the time, now withdrawn.)*
   material answer, and its measured box (§5) covers the moons' pressures but not a hot
   silicate liquid — Soubiran's liquid k = 31 / 28 / 8 W/(m·K) at 240–500 GPa is the other end
   (`engine/electrical-conductivity-context-notes.md` §4).
-- **Implementation is deliberately not in this note.** The §3 closure is a verdict-changing
-  number standing on two legs; the audit's third is outstanding, and if it falls this note is
-  the record of why and no code has to be unwound.
+- **Implementation is deliberately not in this note.** The §3 closure now stands on three
+  legs, but neither thermal nor electrical conductivity has a consumer in the engine today, so
+  something has to be built for either to land — that shape is an owner decision, pending.
 
 ## Related
 
