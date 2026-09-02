@@ -511,11 +511,44 @@ first, new axes last:**
    cached source converts an abundance into watts; one partial abundance table and seven
    consumers. The short-lived (²⁶Al) half **closes as a named refusal** on our missing formation
    chronology. The `radiogenic_heat_w_m2` tooltip's 2× mislabel is fixed (Brief 40).
-2. **The rocky dynamo.** `dynamo_rocky` is declared at `chain.yaml:181` with **11 edges and no
-   module registering its recipe.** ⚠ **Check first whether the methodology's two recipes
-   conflict** — it specifies computing `Rm > 40` in one section and a table-anchored ladder that
-   never computes Rm in another. If the ladder is the real one, the iron-conductivity paper has
-   no consumer and that request is wrong.
+2. **The rocky dynamo — scoped 2026-09-03, and it is SMALL and needs NO paper.** `dynamo_rocky`
+   is declared at `chain.yaml:181` with 11 edges and no module registering its recipe. The
+   methodology's two sections do **not** conflict: the first *derives*, the second *executes*,
+   and the document says so — *"the whole recipe reduces to estimating the normalized moment
+   ℳ/ℳ⊕ from the regime ladder"*. **The ladder is the recipe.**
+
+   ⚠ **So `Rm > 40` is quoted and never evaluated. The file contains no formula for it** —
+   verified: zero hits for `μ₀`, `Rm =`, or a magnetic-Reynolds equation; `conductivity`,
+   `velocity` and `buoyancy flux` appear only in the derivation prose. It sits in the ladder as a
+   disqualifier beside two *class judgements*. **The iron-conductivity paper request
+   (`2012Natur.485..355P`) is therefore WITHDRAWN** — nothing in this recipe consumes σ, and
+   transcribing it would be machinery without a consumer. It becomes needed only if the owner
+   deliberately replaces the ladder with a computed gate, which is a different and much larger
+   brief — and two of that gate's four ingredients (**velocity, buoyancy flux**) are *absent*
+   rather than ungrounded, while a declared velocity would have to be anchored on Earth and then
+   compared against a threshold Earth validated. **A closed circle; do not walk into it by
+   having fetched the paper.**
+
+   ⚠ **Two edges are promises nobody can keep, and both feed a gate** — the same class the file
+   already records for `conductor_phase` as *"아무도 못 지키는 약속"*, which survived that
+   cleanup. `tidal_locking → via rossby`: the supplier emits `[locked, t_lock, rotation_period]`
+   and a Rossby number is not derivable from a rotation period — **it drives the ×0.06 multipolar
+   collapse, the recipe's largest lever.** `heat_transport_mode → via cmb_heat_flux`: the
+   supplier emits `[mode, resurfacing_rate]` and `mode` is a *label*, not a flux. **Re-mark both
+   `status: gap`; do not build them.** (`cmb_heat_flux` is wanted by two consumers and emitted by
+   none — one supplier, not two workarounds.)
+
+   ⚠ **And step 3 points at a table that exists and is the wrong one.** *"ℳ_base from the
+   mass/CMF class anchor (table below)"* — the table below is a per-**body** validation table
+   (Earth, Mercury, …), not a per-**class** anchor. A reader following the pointer lands on
+   something plausible. Two of the five prose regimes carry no value at all, so the ladder cannot
+   be executed for a 2–2.5 M⊕ body without a declaration.
+
+   **What the brief is**: five ladder steps over quantities already emitted (`mass`, `radius`,
+   `n`, class, `core_radius`, `conductor_phase`, `t_body`), four declarations as a **family with a
+   grid** (the regime multiplier's own spread — 0.06 OC06/RM22 vs 0.15 Grießmeier — is a factor
+   2.5 in the answer and rides on every emitted value), and the closing relation
+   `B_eq = 30·(ℳ/ℳ⊕)·(R/R⊕)⁻³`, already Solar-System-validated in the doc against five bodies.
 3. **Fe₃S core alloy — demoted, and the reason is measured.** ⚠ The melting curve is on the
    **Fe–Fe₃S** join (Mori+ 2017's title, read at source), not FeS; and its 21–350 GPa domain
    reaches **no roster body** — Dante 0.26 GPa central, Hades 0.63, against a 21 GPa floor, and
@@ -537,8 +570,8 @@ reported, so a −17 K verdict and a −500 K one read identically.
 
 **Papers wanted, in priority** (identifiers read from ADS by title, none constructed):
 `2020ApJ...903L..37N` Nimmo & Primack — the one to get, names both radiogenic consumers ·
-`2012Natur.485..355P` Pozzo+ iron conductivity, **open-access, but hold until item 2's recipe
-question is answered** · `2001E&PSL.185...49A` Allègre & Manhès · `2013GGG....14.4608D` Davies
+~~`2012Natur.485..355P` Pozzo+ iron conductivity~~ **— WITHDRAWN 2026-09-03, the recipe never
+computes σ (see item 2)** · `2001E&PSL.185...49A` Allègre & Manhès · `2013GGG....14.4608D` Davies
 and `1980RvGSP..18..269S` Sclater+, **both cited by our own methodology and not held** ·
 `2020E&PSL.53416080T` Thompson+ and `2006JGRB..111.6209S` Seagle+ for Fe₃S ·
 `1993Sci...260..771K` Karato & Wu · `2019CRGeo.351..154W` Wagle+ · Nettelmann+ 2011.
