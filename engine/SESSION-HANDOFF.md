@@ -153,6 +153,23 @@ and remove the unlinked duplicate · record the three ceilings as one notation.
   one carrying none, because the label stops the checking. Sender: quote only what is in
   quotation marks; if you filled a number in, say you filled it in. **Receiver: a number
   attributed to you is checked against what you actually sent before you accept it.**
+- **A number in a brief carries its condition AND a commit anchor** (added 2026-09-02, after
+  four directing-seat errors in one day, every one caught by someone else). *Condition* means
+  which pressure, which curve, which range, which basis — three of the four were **right numbers
+  wrongly paired**: a rejected draft's flux married to the adopted radius, a separation lifted
+  from a grid point *outside* the adopted range, a 500 GPa comparison quoted as a 200 GPa seam.
+  The fourth was an **inverted inequality** — an upper bound read as "certainly not molten" when
+  it means "certainly molten above" — so **push an inequality through to its conclusion before
+  writing it down**. *Anchor* means the commit or note the value came from (`11,500 W/m² @
+  eddd3a6b`), because a condition alone does not reveal that **the condition itself was
+  superseded** — that is the half the first error slips through, and the anchor makes staleness
+  mechanically checkable. This is the directing seat's version of the work seat's pair gate, and
+  the audit proposed it. **A brief arriving with an unanchored number is worth a question back.**
+- **When a value sits inside a declared window, say which edge the number is measured from.**
+  Brief 36's notes gave a seam step against the pure-mineral centre while the line above it gave
+  one against the implemented solidus — both true, exactly the declared half-width apart, and
+  **indistinguishable by eye because the three candidate bases are evenly spaced**. Prefer the
+  curve the code actually evaluates, so a reader can reproduce it.
 - **Verification without relay, both ways**: downward, no unlabelled numbers in briefs; upward,
   **judgment-changing numbers are reproduced by the directing seat before being reported on**.
   Triggers: (a) a number that changes a row's open/closed/reopened state, (b) a claim that a
