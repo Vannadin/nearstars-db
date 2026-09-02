@@ -285,8 +285,14 @@ acting on it.**
   FAIL 0. Label conditions live beside the constants: the two papers **share Datchi's
   triple-point anchor** (2.17 GPa · 354.8 K, identical to three figures in both), so the
   1.0 K agreement at 8.2 GPa is **not** independent confirmation — the independent number is
-  8.7 K at 20.0 GPa; averaging does **not** shrink the uncertainty (carry the ≤54 K
+  8.7 K at 20.0 GPa; averaging does **not** shrink the uncertainty (carry the two curves'
   separation, never σ/√2); below 8.4 GPa is anchored interpolation, not measurement support.
+  *Correction (`edf15772`, Brief 35 follow-up ⑤, directing seat's own misquote): the
+  separation to carry is **max 16.1 K within the adopted 2.17–14.6 GPa interval, at the
+  14.6 GPa kink** — as eos.py now writes it. The "≤54 K" that stood here came from the
+  survey grid's curve set at 15.4 GPa, outside the adopted interval; the two adopted
+  equations' own separation at 15.4 GPa is 18.0 K, so 54.1 is not re-derivable from these
+  equations and nobody should try. Conservative direction (54 > 16), no verdict moved.*
 - **⑥ IF97 steam — transcribed and landed** (Brief 25, `544d8730`, `bb1d3779`). It retired
   the water wall, and **the wall moved rather than cleared**: the ice axis now stops at
   h_he's low-temperature floor (`01271699`). So **③ is stopped again, by a different wall**,
@@ -355,9 +361,15 @@ acting on it.**
   carries **`validation:"failed-io-reproduction"` permanently**, so the label itself blocks
   adoption. Io entered the gate as a check table (recorded choice, not a one-off) so that **if Io
   ever comes inside tolerance the test rings loudly — because the story would have changed.**
-  Roster measurement with **zero adoption**: Dante has **no root** in the printed system; Hades
-  has a unique root at T_i 1844 K, lithosphere 224 km. Boards untouched, and the Dante/Hades
-  radius question — a parked owner decision — untouched by design.
+  Roster measurement with **zero adoption**: Dante and Hades both solve, and **both roots sit
+  past the model's validated lid fraction** — Dante T_i 2122 K, lithosphere 147 km (51 % of the
+  declared mantle depth); Hades T_i 1844 K, lithosphere 224 km (54 %) — against the paper's own
+  validated δ/D ceiling of 0.26, so neither is adoptable and the zero-adoption headline stands.
+  *Correction (`086bad3b`/`3b8a9739`): the "Dante has no root" that stood here was an input
+  artifact — the rejected 900 km draft's flux (11,500 W/m²) married to the adopted 521 km
+  radius; at the canonical §6.5 pair (2,231 W/m²) the root above exists. The reason nothing is
+  adopted changed from "no root" to "a root outside the model's validated range".* Boards
+  untouched, and the Dante/Hades radius question — a parked owner decision — untouched by design.
 
   **The unblock route is closed.** The paper's printed data address,
   `http://cas.hamptonu.edu/data-products`, was opened by the directing seat: DNS resolves, it
@@ -394,6 +406,13 @@ acting on it.**
 >   `engine/core-melt-depression-context-notes.md`, including the trap that cost the directing
 >   seat an error: **the denominator must be `FE_EPS`**, because `FE_PREM` already carries the
 >   0.80 and using it yields a plausible-looking 0.79–0.83.
+>   *Correction (Brief 38 §0, directing seat's own error — right numbers, wrong pairing): the
+>   0.61–0.70 is the **Fe–Fe₃S eutectic**, the floor of the melting surface at a composition no
+>   roster body runs; our 0.80 rides `fe_prem`, Earth's actual non-eutectic core, and
+>   `0.63 < 0.81 < 1.0` is a correct ordering. The Sinmyo+ 2019 ICB check decides it: ×0.80 →
+>   −0.12 σ, the eutectic → −2.56 σ (~950 K cold). **The scalar is NOT replaced** — Brief 38
+>   stores the eutectic as a labelled bound and repairs the 0.80's provenance, value unmoved
+>   (note §2's correction block carries the full case).*
 > - **A new index exists**: `docs/reference/paper-defects.md` (+ ko mirror) — **ten defects in the
 >   papers we cite**, each pointing at the note that carries its case. Read it before transcribing
 >   from any source listed there, and **add a row when you find the eleventh**.

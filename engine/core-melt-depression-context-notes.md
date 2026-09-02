@@ -32,6 +32,22 @@ unobtained — the entire eutectic curve hangs on that single point.
 
 ## 2. The measured factor — 0.61–0.70, flat over five decades of pressure
 
+> **Correction (Brief 38 §0, 2026-09-02 — the original text below stands as the record;
+> the directing seat wrote both the original headline and this correction).** What this
+> section measures is the **Fe–Fe₃S eutectic** — the *floor* of the melting surface, at
+> the S-rich eutectic composition, which no roster body runs. It is **not a correction
+> to `IRON_LIGHT_ELEMENT_FACTOR = 0.80`**: our 0.80 rides `fe_prem`, the PREM
+> outer-core fit — Earth's *actual*, non-eutectic composition, whose liquidus sits
+> above the eutectic and below pure Fe. `0.63 (eutectic) < 0.81 (ours) < 1.0 (pure
+> Fe)` is a physically correct ordering, not a discrepancy. The check that decides it
+> is already in the repo — `core_state.py`'s Sinmyo+ 2019 Earth ICB 5120 ± 390 K: at
+> 330 GPa ours ×0.80 gives 5073.7 K (**−0.12 σ**) while Mori's eutectic gives
+> 3992.7 K (**−2.56 σ, ~950 K cold**). Swapping 0.80 → 0.65 would break the one
+> independent check the recipe has. Same failure class as the day's others: **right
+> number, wrong pairing.** The eutectic is stored as a labelled *bound*, and the
+> 0.80's *provenance* — not its value — is what Brief 38 repairs.
+
+
 High pressure, Mori eq. (1) against our own pure-Fe curve (Zhang+ 2015 `IRON_MELT_LOW`;
 the pairing is ours, not Mori's) (병): 60 GPa **0.658** · 136 GPa **0.666** · 254 GPa
 **0.644** · 330 GPa **0.630**. Independently from Mori's own statement against *its*
@@ -63,8 +79,7 @@ hedged (*"are expected to converge"*), rests on Boehler's own 1993/1995, and the
 paragraph prints Anderson & Ahrens 1995's FeS ICB shock value **4310 ± 750 K** — which
 *brackets* Mori's eutectic 3993 K at the same pressure, 22 years and two methods
 apart. The depression does not vanish: absolute it grows (546 K @ 1 bar → 1958 K @
-254 GPa), fractional it is flat. **So a constant factor is a defensible shape — at
-~0.65, not 0.80.**
+254 GPa), fractional it is flat. **So a constant factor is a defensible shape.** *(The original clause here ended "at ~0.65, not 0.80" — superseded by the section-2 correction: 0.65 is the eutectic floor at a composition we do not run, and 0.80, Earth's actual, passes the Sinmyo check at −0.12 σ.)*
 
 ## 4. Conditions on the 0.65
 
