@@ -13,7 +13,7 @@ pressures and temperatures against the melting curve of iron.
 `center_melt_temperature` [K] · `core_cmb_temperature_used` [K] ·
 `core_center_temperature_used` [K] · `icb_pressure` [GPa] ·
 `center_margin` [K] · `cmb_margin` [K] · `center_margin_fraction` [—] · `gamma_flip` [—] ·
-`k0_flip` [GPa] · `margin_condition` [—]
+`gamma_flip_in_alfe_range` [—] · `k0_flip` [GPa] · `melt_splice_disagreement` [—] · `margin_condition` [—]
 **Needs** — `core_pressure` [GPa] · `cmb_pressure` [GPa] · `core_temperature` [K] ·
 `cmb_temperature` [K] · `core_material` [—] · `core_cmb_temperature` [K] ·
 `body_class` [—]
@@ -26,6 +26,7 @@ declaration it uses it directly, without it, it reads another recipe's geotherm 
 
 `conductor_phase` is one of `liquid`, `solid`, `liquid_outer_solid_inner` and `undecided`.
 `icb_pressure` is 0 when there is no inner-core boundary inside the core.
+`k0_flip` null means **not computable** — a multi-phase core material, or no sign change of the centre margin within 0.5–2× K₀. It does not mean "no flip exists". `gamma_flip`, `gamma_flip_in_alfe_range` and `k0_flip` are null on the lower-bound branch, where there is no core adiabat to flip; `melt_splice_disagreement` is null outside the two iron fits' overlap (300–365 GPa). `margin_condition` is `thin` when `gamma_flip` lies inside Alfè+ 2002's own γ span 1.50–1.52 (solid 1.5; liquid 1.51–1.52 at 280–340 GPa), `comfortable` otherwise, or the named not-computable label.
 
 `core_cmb_temperature` is the **core-side** temperature at the core-mantle boundary, and it
 is a declaration in the same sense as `potential_temperature`, `initial_porosity` and

@@ -13,7 +13,7 @@
 `center_melt_temperature` [K] · `core_cmb_temperature_used` [K] ·
 `core_center_temperature_used` [K] · `icb_pressure` [GPa] ·
 `center_margin` [K] · `cmb_margin` [K] · `center_margin_fraction` [—] · `gamma_flip` [—] ·
-`k0_flip` [GPa] · `margin_condition` [—]
+`gamma_flip_in_alfe_range` [—] · `k0_flip` [GPa] · `melt_splice_disagreement` [—] · `margin_condition` [—]
 **Needs** — `core_pressure` [GPa] · `cmb_pressure` [GPa] · `core_temperature` [K] ·
 `cmb_temperature` [K] · `core_material` [—] · `core_cmb_temperature` [K] ·
 `body_class` [—]
@@ -25,6 +25,7 @@
 
 `conductor_phase` 는 `liquid` · `solid` · `liquid_outer_solid_inner` · `undecided` 중
 하나입니다. `icb_pressure` 는 핵 안에 내핵 경계가 없으면 0 입니다.
+`k0_flip` 의 null 은 **계산 불가** 라는 뜻입니다 — 핵 재료가 다상이거나, K₀ 의 0.5–2배 안에서 중심 여유의 부호가 안 바뀌는 경우. "뒤집힘점이 없다" 는 뜻이 아닙니다. `gamma_flip` · `gamma_flip_in_alfe_range` · `k0_flip` 은 하한 갈래에서 null 입니다(뒤집을 단열선이 없음). `melt_splice_disagreement` 는 두 철 적합의 겹침(300–365 GPa) 밖에서 null 입니다. `margin_condition` 은 `gamma_flip` 이 Alfè+ 2002 자신의 γ 폭 1.50–1.52(고체 1.5, 액체 1.51–1.52 @ 280–340 GPa) 안이면 `thin`, 밖이면 `comfortable`, 아니면 계산 불가 라벨입니다.
 
 `core_cmb_temperature` 는 핵-맨틀 경계의 **핵 쪽** 온도이고, `potential_temperature` ·
 `initial_porosity` · `envelope_z` 와 같은 뜻의 선언입니다. 그 값을 정하는 것은 D″

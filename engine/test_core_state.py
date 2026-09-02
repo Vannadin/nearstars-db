@@ -150,10 +150,32 @@ def main() -> int:
     print(f"  [{'PASS' if ok else 'FAIL'}] ρ₀ ±10 % → 중심 온도 변화 {moved:.1e} K (비로만 들어와 상쇄)")
     mv = r.values
     ok = (mv["margin_condition"] == cs.MARGIN_THIN and -25.0 < mv["center_margin"] < -10.0
-          and abs(mv["center_margin_fraction"]) < cs.MARGIN_THIN_FRACTION)
+          and mv["gamma_flip_in_alfe_range"] is True
+          and cs.GAMMA_SPAN[0] <= mv["gamma_flip"] <= cs.GAMMA_SPAN[1])
     if not ok:
         fails.append(f"지구 중심 여유 {mv['center_margin']:+.1f} K / {mv['margin_condition']} — "
-                     f"−17.6 K, thin 이어야 한다 (사전등록 §2)")
+                     f"−17.6 K, thin (γ_flip 이 Alfè 폭 {cs.GAMMA_SPAN} 안) 이어야 한다")
+    # 액체 γ 의 양끝이 뒤집힘점을 끼고 있다 — 같은 논문의 액체 값이면 판정이 모호하다는 사실의 고정
+    p_cc = v["core_pressure"] * 1e9
+    rho_cmb_ = m.density(p_cmb, SINMYO_EARTH_CMB_K[0], 0.0); rho_c_ = m.density(p_cc, SINMYO_EARTH_CMB_K[0], 0.0)
+    tm_c = m.t_melt(p_cc)
+    mlo = SINMYO_EARTH_CMB_K[0] * (rho_c_ / rho_cmb_) ** cs.GAMMA_LIQUID_RANGE[0] - tm_c
+    mhi = SINMYO_EARTH_CMB_K[0] * (rho_c_ / rho_cmb_) ** cs.GAMMA_LIQUID_RANGE[1] - tm_c
+    ok2 = mlo < 0.0 < mhi
+    if not ok2:
+        fails.append(f"액체 γ 1.51/1.52 의 여유 {mlo:+.1f}/{mhi:+.1f} K 가 0 을 끼지 않는다 — 이야기가 바뀌었다")
+    print(f"  [{'PASS' if ok2 else 'FAIL'}] 액체 γ {cs.GAMMA_LIQUID_RANGE}: 중심 여유 {mlo:+.1f} → {mhi:+.1f} K (부호가 바뀐다)")
+    sd = mv["melt_splice_disagreement"]
+    ok3 = sd is not None and 0.040 < sd < 0.045
+    if not ok3:
+        fails.append(f"중심압에서의 이음매 국소 불일치 {sd} — 4.0–4.5 % 이어야 한다 (358.5 GPa)")
+    print(f"  [{'PASS' if ok3 else 'FAIL'}] 이음매 국소 불일치 @ 중심 {sd * 100 if sd else float('nan'):.2f} % "
+          f"(300 GPa {cs.melt_splice_disagreement(300e9) * 100:.2f} % → 365 GPa {cs.melt_splice_disagreement(365e9) * 100:.2f} %)")
+    kf = cs.k0_flip_gpa(MATERIALS["silicate"], p_cc, p_cmb, SINMYO_EARTH_CMB_K[0])
+    ok4 = kf is None
+    if not ok4:
+        fails.append(f"다상 재료(silicate)에 k0_flip 이 {kf} 를 낸다 — None 으로 거절해야 한다")
+    print(f"  [{'PASS' if ok4 else 'FAIL'}] 다상 재료 k0_flip → {kf} (이름 붙인 계산 불가)")
     print(f"  [{'PASS' if ok else 'FAIL'}] 지구 중심 여유 {mv['center_margin']:+.1f} K "
           f"({mv['center_margin_fraction'] * 100:+.2f} %) → {mv['margin_condition']}")
     ok = abs(mv["gamma_flip"] - 1.5145) < 0.002 and abs(mv["k0_flip"] - 194.0) < 1.0

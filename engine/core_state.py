@@ -34,6 +34,7 @@ from __future__ import annotations
 import math
 from dataclasses import replace as _dc_replace
 
+import eos
 from eos import (IRON_LIGHT_ELEMENT_FACTOR, IRON_MELT_MAX, IRON_MELT_SPLICE,
                  MATERIALS, PhaseGap, iron_t_melt)
 from payload import Result, out_of_domain
@@ -73,6 +74,16 @@ REFS = (
 # 쓰이는지를 여기와 eos.py 양쪽에 적어 둔다: 밀도는 αK₀, 핵의 단열선은 이 γ 다.
 GAMMA_CORE = 1.5
 GAMMA_RANGE_PA = (100e9, 340e9)     # 그 논문이 γ 를 확인한 압력 구간
+# 같은 논문의 **액체** 값 (위 주석의 두 번째 인용, 새 출처 없음): 액체 Hugoniot 에서
+# "1.51 to 1.52 as p goes from 280 to 340 GPa". GAMMA_CORE = 1.5 는 h.c.p. **고체** 의
+# 값이고, fe_prem 은 PREM 외핵의 **액체** 밀도 적합이다 (eos.Phase.fit_state, 브리프 41).
+# 그러므로 이 단열선은 액체 적합 위에 고체의 지수를 올린 것이다 — 브리프 41 이 밀도에서
+# 잡는 병을 지수에서 한 층 위로 앓는 셈이다. 지구 기둥에서 중심 판정은 γ = 1.5145 에서
+# 뒤집히는데, 그 값이 이 액체 범위 **안** 에 있다 (1.51 → −5.5 K 고체, 1.52 → +6.7 K 액체).
+# GAMMA_CORE 는 바꾸지 않는다 — 판정이 맞게 나오도록 상수를 옮기는 일은 하지 않는다.
+# 대신 뒤집힘점이 이 범위 안에 드는지를 내보내고, 그것이 "얇다" 의 기준이다 (아래).
+GAMMA_LIQUID_RANGE = (1.51, 1.52)
+GAMMA_LIQUID_RANGE_PA = (280e9, 340e9)
 
 # ── 판정의 여유 (브리프 42) ──────────────────────────────────────────────
 # 단열선에서 밀도는 비(ρ/ρ_cmb)로만 들어와 **정확히 상쇄** 된다 — ρ₀ 를 ±10 % 해도 중심
@@ -82,15 +93,30 @@ GAMMA_RANGE_PA = (100e9, 340e9)     # 그 논문이 γ 를 확인한 압력 구�
 # (지구는 외핵 액체·내핵 고체가 맞다) — 문제는 −17 K 판정과 −500 K 판정이 똑같이 보였다는
 # 것이다. 그래서 여유와 두 뒤집힘점을 판정 옆에 내보낸다. **γ 도 K₀ 도 움직이지 않는다.**
 #
-# "얇다" 의 기준은 사전등록이다 (core-margin-context-notes.md §2): |여유| / T_melt 가
-# 융해곡선 자신의 이음매 불일치(두 적합이 겹치는 구간에서 6.8~7.5 %) 아래면 얇다.
-# 곡선 자신의 오차 안에 있는 여유는 행성에 대한 판정으로 읽을 수 없다는 뜻이고,
-# 라벨이 그렇게 말한다. 거절이 아니다 — 답은 서 있고, 칼날 위라는 것을 독자가 안다.
-MARGIN_THIN_FRACTION = 0.068
+# "얇다" 의 기준 (브리프 42 후속, 감사 ①): 중심 판정이 뒤집히는 γ 가 Alfè+ 2002 가 인쇄한
+# γ 값들의 폭 — 고체 1.5 에서 액체 1.52 까지 — **안** 에 있으면 얇다. 여유는 단열선 쪽 양이므로
+# 그 불확도도 단열선 쪽에서 잰다. 첫 판(d133ad41)은 융해곡선의 이음매 불일치 6.8 % 를
+# 기준으로 썼는데, 그 수는 겹침 구간의 한 압력(≈312 GPa)에서 읽은 값이었고 실제 폭은
+# 4.0–7.5 % (300 → 365 GPa, high/low − 1) 라 어느 압력에서 읽었는지가 빠져 있었다 — 이제
+# 이음매 불일치는 **중심압에서의 국소값** 으로 정보로만 내보낸다 (melt_splice_disagreement).
+# 거절이 아니다 — 답은 서 있고, 칼날 위라는 것을 독자가 안다.
+GAMMA_SPAN = (min(GAMMA_CORE, GAMMA_LIQUID_RANGE[0]), GAMMA_LIQUID_RANGE[1])
 MARGIN_THIN = "thin"
 MARGIN_COMFORTABLE = "comfortable"
 MARGIN_NOT_COMPUTABLE = "not-computable (lower bound, no core adiabat)"
 K0_FLIP_SPAN = (0.5, 2.0)           # K₀ 뒤집힘점을 찾는 이분법의 배율 범위
+
+
+def melt_splice_disagreement(p_pa: float) -> float | None:
+    """철 융해곡선 두 조각의 국소 불일치 (high/low − 1), 겹침 구간 300 GPa–이음매(365 GPa)
+    안에서만. 밖이면 None. 7.51 % (300) → 3.98 % (365), 단조."""
+    lo_c, hi_c = eos.IRON_MELT_LOW, eos.IRON_MELT_HIGH
+    if p_pa < hi_c[1] or p_pa > IRON_MELT_SPLICE:
+        return None
+    def simon(c):
+        t0, p0, a, cc = c
+        return t0 * (1.0 + (p_pa - p0) / a) ** cc
+    return simon(hi_c) / simon(lo_c) - 1.0
 
 
 def _center_temperature(material, p_c: float, p_cmb: float, t_cmb: float) -> float:
@@ -269,8 +295,8 @@ def solve(core_pressure: float,
     if p_c > IRON_MELT_SPLICE:
         notes.append(
             f"중심압이 {IRON_MELT_SPLICE / 1e9:.0f} GPa 를 넘어 융해곡선이 두 번째 "
-            "조각으로 넘어간다 (González-Cataldo & Militzer 2023). 겹치는 구간에서 두 "
-            "적합이 6.8~7.5 % 어긋나고, 그 폭은 같은 압력의 두 실험이 어긋나는 폭"
+            "조각으로 넘어간다 (González-Cataldo & Militzer 2023). 겹치는 구간(300–365 GPa)에서 두 "
+            "적합이 7.5 % (300 GPa) → 4.0 % (365 GPa, high/low − 1) 어긋나고, 그 폭은 같은 압력의 두 실험이 어긋나는 폭"
             "(Anzellini+ 2013 의 6230 ± 500 K 대 Sinmyo+ 2019 의 5500 ± 220 K, 13 %)보다 "
             "좁다. 이음매 근처의 판정은 그 폭만큼 흔들린다.")
 
@@ -314,7 +340,9 @@ def solve(core_pressure: float,
                     "cmb_margin": cmb_temperature - t_melt_cmb,
                     "center_margin_fraction": (core_temperature - t_melt_c) / t_melt_c,
                     "gamma_flip": None,
+                    "gamma_flip_in_alfe_range": None,
                     "k0_flip": None,
+                    "melt_splice_disagreement": melt_splice_disagreement(p_c),
                     "margin_condition": MARGIN_NOT_COMPUTABLE},
             units={"conductor_phase": "", "cmb_melt_temperature": "K",
                    "center_melt_temperature": "K",
@@ -323,7 +351,8 @@ def solve(core_pressure: float,
                    "icb_pressure": "GPa",
                    "center_margin": "K", "cmb_margin": "K",
                    "center_margin_fraction": "dimensionless",
-                   "gamma_flip": "dimensionless", "k0_flip": "GPa",
+                   "gamma_flip": "dimensionless", "gamma_flip_in_alfe_range": "",
+                   "k0_flip": "GPa", "melt_splice_disagreement": "dimensionless",
                    "margin_condition": ""},
             notes=tuple(notes))
 
@@ -373,7 +402,10 @@ def solve(core_pressure: float,
     g_flip = gamma_flip(material, p_c, p_cmb, t_cmb_core)
     k_flip = k0_flip_gpa(material, p_c, p_cmb, t_cmb_core)
     k0_now = material.phases[0].k0 / 1e9
-    thin = abs(frac_c) < MARGIN_THIN_FRACTION
+    in_span = GAMMA_SPAN[0] <= g_flip <= GAMMA_SPAN[1]
+    splice = melt_splice_disagreement(p_c)
+    liquid_fit = material.phases[0].fit_state == "liquid"
+    thin = in_span
     condition = MARGIN_THIN if thin else MARGIN_COMFORTABLE
     notes.append(
         f"**판정의 여유 ({condition}).** 중심에서 단열선 − 융해온도 = {m_c:+.1f} K "
@@ -384,15 +416,22 @@ def solve(core_pressure: float,
            f"; K₀ 뒤집힘점은 계산하지 않았다 (상이 {len(material.phases)}개이거나 "
            f"배율 {K0_FLIP_SPAN} 안에 없다)")
         + ". 밀도 자체는 비로만 들어와 상쇄된다 — 갈리는 것은 압축률과 γ 다. "
-        + (f"**얇다**: 여유가 융해곡선 자신의 이음매 불일치({MARGIN_THIN_FRACTION * 100:.1f} %) "
-           "안이라 행성에 대한 판정으로 읽을 수 없다"
-           + (f"; 그리고 γ 는 이 천체의 중심압에서 검증 구간({hi / 1e9:.0f} GPa) 밖이라, "
-              f"이 판정은 검증 범위 밖의 선언된 지수가 {(g_flip / GAMMA_CORE - 1) * 100:.1f} % "
-              "움직이면 뒤집힌다" if gamma_out_of_range else "")
+        + (f"**얇다**: 뒤집히는 γ {g_flip:.4f} 가 Alfè+ 2002 가 인쇄한 γ 의 폭 "
+           f"{GAMMA_SPAN[0]}–{GAMMA_SPAN[1]} (고체 {GAMMA_CORE}, 액체 {GAMMA_LIQUID_RANGE[0]}–"
+           f"{GAMMA_LIQUID_RANGE[1]} @ {GAMMA_LIQUID_RANGE_PA[0] / 1e9:.0f}–{GAMMA_LIQUID_RANGE_PA[1] / 1e9:.0f} GPa) "
+           "안에 있다 — 같은 논문의 액체 값을 쓰면 판정이 모호해진다"
+           + (f"; 그리고 이 천체의 중심압은 고체 검증 구간({hi / 1e9:.0f} GPa)과 액체 구간"
+              f"({GAMMA_LIQUID_RANGE_PA[1] / 1e9:.0f} GPa) 둘 다 밖이라 두 γ 모두 외삽이다"
+              if gamma_out_of_range else "")
            + ". 답은 서 있다 — 칼날 위라는 것을 라벨이 말한다."
            if thin else
-           f"여유가 융해곡선의 이음매 불일치({MARGIN_THIN_FRACTION * 100:.1f} %) 밖이다.")
-        + " γ 와 K₀ 는 움직이지 않았다 (사전등록, core-margin-context-notes.md).")
+           f"뒤집히는 γ {g_flip:.4f} 가 Alfè+ 2002 의 γ 폭 {GAMMA_SPAN[0]}–{GAMMA_SPAN[1]} 밖이다.")
+        + (f" **고체의 γ {GAMMA_CORE} 를 액체 밀도 적합({core_material}, fit_state liquid) 위에 "
+           "올렸다** — 브리프 41 이 밀도에서 잡는 병을 지수에서 앓는 자리다; 상수는 옮기지 않았다."
+           if liquid_fit else "")
+        + (f" 철 융해곡선 이음매의 국소 불일치는 중심압에서 {splice * 100:.2f} % (high/low − 1, 정보)."
+           if splice is not None else "")
+        + " γ 와 K₀ 는 움직이지 않았다 (core-margin-context-notes.md).")
 
     reason = (f"핵-맨틀 경계 {cmb_pressure:.1f} GPa / {t_cmb_core:.0f} K 에서 γ = "
               f"{GAMMA_CORE} 의 단열선을 올리면 중심 {core_pressure:.1f} GPa 에서 "
@@ -417,7 +456,9 @@ def solve(core_pressure: float,
                 "cmb_margin": m_cmb,
                 "center_margin_fraction": frac_c,
                 "gamma_flip": g_flip,
+                "gamma_flip_in_alfe_range": in_span,
                 "k0_flip": k_flip,
+                "melt_splice_disagreement": splice,
                 "margin_condition": condition},
         units={"conductor_phase": "", "cmb_melt_temperature": "K",
                "center_melt_temperature": "K",
@@ -426,7 +467,8 @@ def solve(core_pressure: float,
                "icb_pressure": "GPa",
                "center_margin": "K", "cmb_margin": "K",
                "center_margin_fraction": "dimensionless",
-               "gamma_flip": "dimensionless", "k0_flip": "GPa",
+               "gamma_flip": "dimensionless", "gamma_flip_in_alfe_range": "",
+               "k0_flip": "GPa", "melt_splice_disagreement": "dimensionless",
                "margin_condition": ""},
         notes=tuple(notes))
 

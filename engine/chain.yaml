@@ -129,8 +129,8 @@ nodes:
     recipe: core-state-methodology
     outputs: [conductor_phase, cmb_melt_temperature, center_melt_temperature,
               core_cmb_temperature_used, core_center_temperature_used, icb_pressure,
-              center_margin, cmb_margin, center_margin_fraction, gamma_flip, k0_flip,
-              margin_condition]
+              center_margin, cmb_margin, center_margin_fraction, gamma_flip,
+              gamma_flip_in_alfe_range, k0_flip, melt_splice_disagreement, margin_condition]
     note: >
       핵이 다이나모를 돌릴 수 있는 상태인가. 핵 압력·온도를 융해곡선과 비교해야
       하므로 지오섬이 먼저 필요하다. interior_layers 와 별개의 계산이다.
