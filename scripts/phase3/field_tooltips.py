@@ -171,8 +171,11 @@ FIELD_TOOLTIPS: dict[str, dict[str, str]] = {
         'en': 'Stellar-field induction heating (W/m²).',
     },
     'radiogenic_heat_w_m2': {
-        'ko': '방사성 동위원소 붕괴 열 (W/m²). 지구 ≈ 0.087.',
-        'en': 'Radiogenic heat from isotope decay (W/m²). Earth ≈ 0.087.',
+        # 0.087 은 지구 표면 총 열류다 (internal-heat-luminosity-methodology.md:306). 방사성
+        # 몫은 그 대략 절반이고 비율은 U/Th 벌크 예산에 걸려 아직 논쟁 중 — 총량을 이 필드
+        # 이름에 붙였던 것을 2026-09-03 에 고쳤다 (engine/radiogenic-context-notes.md).
+        'ko': '방사성 동위원소 붕괴 열 (W/m²). 지구 표면 총 열류 ≈ 0.087 중 대략 절반(~0.04–0.05)이고, 그 비율은 아직 논쟁 중.',
+        'en': 'Radiogenic heat from isotope decay (W/m²). Roughly half of Earth\'s total surface heat flux of ≈ 0.087 (~0.04–0.05); the split is still contested.',
     },
 
     # ── Stellar / sky ──────────────────────────────────────────────────────
