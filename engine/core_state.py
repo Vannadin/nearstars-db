@@ -100,6 +100,8 @@ GAMMA_LIQUID_RANGE_PA = (280e9, 340e9)
 # 4.0–7.5 % (300 → 365 GPa, high/low − 1) 라 어느 압력에서 읽었는지가 빠져 있었다 — 이제
 # 이음매 불일치는 **중심압에서의 국소값** 으로 정보로만 내보낸다 (melt_splice_disagreement).
 # 거절이 아니다 — 답은 서 있고, 칼날 위라는 것을 독자가 안다.
+# Alfè 의 고체·액체 두 인쇄값을 감싸는 **포락선** 이지 측정된 범위가 아니다. 액체 범위만 쓰면 thin 이
+# 물리 진술로 읽히는데 GAMMA_CORE 는 여전히 고체값이라, 같은 혼합을 반대 방향으로 저지르는 셈이다.
 GAMMA_SPAN = (min(GAMMA_CORE, GAMMA_LIQUID_RANGE[0]), GAMMA_LIQUID_RANGE[1])
 MARGIN_THIN = "thin"
 MARGIN_COMFORTABLE = "comfortable"
@@ -396,6 +398,16 @@ def solve(core_pressure: float,
             f"핵 단열선의 γ = {GAMMA_CORE} 는 Alfè+ 2002 가 {lo / 1e9:.0f}–{hi / 1e9:.0f} GPa "
             f"에서 확인한 값이고, 이 천체의 중심압 {core_pressure:.0f} GPa 는 그 위다. "
             "그 위에서 γ 가 어떻게 흐르는지를 이 레시피는 모른다 — 상수로 끌고 간다.")
+    # 액체 범위는 자기 구간(280–340 GPa)으로 따로 판정한다 (감사, 브리프 42 후속). 두 상한이
+    # 340 으로 같은 것은 우연이고, 100–280 GPa 의 중심은 고체 구간 안·액체 구간 밖이다.
+    liq_lo, liq_hi = GAMMA_LIQUID_RANGE_PA
+    liquid_gamma_out_of_range = not (liq_lo <= p_c <= liq_hi)
+    if liquid_gamma_out_of_range:
+        notes.append(
+            f"같은 논문의 액체 γ {GAMMA_LIQUID_RANGE[0]}–{GAMMA_LIQUID_RANGE[1]} 은 "
+            f"{liq_lo / 1e9:.0f}–{liq_hi / 1e9:.0f} GPa 에서 확인된 값이고, 이 천체의 중심압 "
+            f"{core_pressure:.0f} GPa 는 그 {'위' if p_c > liq_hi else '아래'}다 — 아래의 뒤집힘 "
+            "비교는 그 값도 외삽해서 쓴다.")
 
     # ── 브리프 42: 판정의 여유와 두 뒤집힘점 ─────────────────────────────
     frac_c = m_c / t_melt_c
@@ -420,9 +432,16 @@ def solve(core_pressure: float,
            f"{GAMMA_SPAN[0]}–{GAMMA_SPAN[1]} (고체 {GAMMA_CORE}, 액체 {GAMMA_LIQUID_RANGE[0]}–"
            f"{GAMMA_LIQUID_RANGE[1]} @ {GAMMA_LIQUID_RANGE_PA[0] / 1e9:.0f}–{GAMMA_LIQUID_RANGE_PA[1] / 1e9:.0f} GPa) "
            "안에 있다 — 같은 논문의 액체 값을 쓰면 판정이 모호해진다"
-           + (f"; 그리고 이 천체의 중심압은 고체 검증 구간({hi / 1e9:.0f} GPa)과 액체 구간"
-              f"({GAMMA_LIQUID_RANGE_PA[1] / 1e9:.0f} GPa) 둘 다 밖이라 두 γ 모두 외삽이다"
-              if gamma_out_of_range else "")
+           + ("; 그리고 이 천체의 중심압은 "
+              + " · ".join(s for s, on in (
+                    (f"고체 검증 구간({lo / 1e9:.0f}–{hi / 1e9:.0f} GPa)", gamma_out_of_range),
+                    (f"액체 구간({liq_lo / 1e9:.0f}–{liq_hi / 1e9:.0f} GPa)", liquid_gamma_out_of_range)) if on)
+              + " 밖이라 그 γ 는 외삽이다"
+              if (gamma_out_of_range or liquid_gamma_out_of_range) else "")
+           + (f". 액체 γ 의 위끝({GAMMA_LIQUID_RANGE[1]})에서는 중심 판정이 액체로 넘어간다 — "
+              f"**선언된 {GAMMA_CORE} 가 이 레시피에서 내핵의 존재 자체를 떠받치고 있다.** 상수는 "
+              "옮기지 않는다(답이 맞게 나오도록 상수를 옮기는 일은 금지다); 그 금지의 비용이 이것이다"
+              if liquid_fit and (m_c < 0.0) else "")
            + ". 답은 서 있다 — 칼날 위라는 것을 라벨이 말한다."
            if thin else
            f"뒤집히는 γ {g_flip:.4f} 가 Alfè+ 2002 의 γ 폭 {GAMMA_SPAN[0]}–{GAMMA_SPAN[1]} 밖이다.")

@@ -190,6 +190,19 @@ def main() -> int:
         fails.append("하한 갈래가 뒤집힘점을 낸다 — 단열선이 없으니 못 한다고 말해야 한다 (④)")
     print(f"  [{'PASS' if ok else 'FAIL'}] 하한 갈래 → {b.values['margin_condition']}")
 
+    # 감사(42 후속) ①: 100–280 GPa 의 중심은 고체 γ 구간 안, 액체 γ 구간 밖 — 액체 외삽 문장만 나와야 한다
+    mid = solve(core_pressure=200.0, cmb_pressure=80.0, core_temperature=2000.0,
+                cmb_temperature=1900.0, core_cmb_temperature=3000.0)
+    txt = " ".join(mid.notes)
+    ok5 = mid.applicable and ("액체 γ" in txt and "아래다" in txt) and ("그 위다. 그 위에서 γ" not in txt)
+    if not ok5:
+        fails.append("중심 200 GPa 기둥에서 액체 γ 외삽 문장이 없거나 고체 외삽 문장이 잘못 붙는다 (감사 ①)")
+    print(f"  [{'PASS' if ok5 else 'FAIL'}] 중심 200 GPa: 고체 구간 안·액체 구간 밖 → 액체 γ 외삽만 말한다")
+    ok6 = "내핵의 존재 자체를 떠받치고" in " ".join(r.notes)
+    if not ok6:
+        fails.append("지구 라벨이 선언된 γ 가 내핵을 떠받친다는 비용을 말하지 않는다 (감사 ②)")
+    print(f"  [{'PASS' if ok6 else 'FAIL'}] 지구 라벨: 선언된 γ 1.5 가 내핵 존재를 떠받친다고 말한다")
+
     print("\n온도를 바꾸면 판정이 뒤집히는가 (배선이 살아 있는가)")
     seq = []
     for t_cmb in (2500.0, 3760.0, 12000.0):
