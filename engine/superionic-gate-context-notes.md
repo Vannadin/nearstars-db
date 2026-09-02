@@ -34,6 +34,9 @@ within the anchor reproducibility 3.9e-4 — the result beat the criterion:
 | V2 refuse at >355 GPa | **1–2** (instrument-dependent; all touches bracket-steered — 2026-09-01 amendment below) | exactly 0 |
 | V3 refuse at >520 GPa | **1** | exactly 0 |
 
+> *Audit seat's line, landed verbatim (2026-09-02; audit-measured,
+> directing-seat-unreproduced):* The V2 fire count is sensitive to the refusal's flavour — an audit replication using too_cold=True counted 2 fires (the steered bracket grazes the region once more), not 1; either way Δ = 0, and the discriminator between "first-contact kill" and a dead instrument is to call the hooked density on a region point **after** the solve and confirm it still raises (audit, 2026-09-02).
+
 The zero was validated by the fire counters (a null result must prove the instrument
 fired). Mechanism read off the counters: the region-walking trials are value-insensitive
 (1,754 perturbed evaluations change nothing) and dispensable (refusing them changes

@@ -235,6 +235,13 @@ six orders off in both directions. The only reading inside the paper's own regim
 **A and T both dimensionless** — §2's `T₀ (= 1)`, not Table 5's 1400 K. (Verifier:
 directing seat, both quotes and both evaluations reproduced from the cached PDF.)
 
+> *The block below is the audit seat's own wording, landed verbatim after that seat
+> was cleared (2026-09-02). Audit-measured, directing-seat-unreproduced — the
+> directing seat verified only that the audit's two messages agree with each other on
+> every number (a transcription check, not a physics check).*
+
+**Audit's second leg on pillar ② — a reduced inversion that needs no η/Ra conventions** (2026-09-02, audit seat; closure-check route, not a rerun of the L-recovery). Using only Table 2's printed Model columns (T_i, δ, F_m, T_l at T_sol0 = 0.8) and only conventions the paper prints in §5 (nondimensional k = ρC_p = D = 1, H = 10, T_s = 0, A = 15 so ΔT_rh = 1/15, a_rh = 2.4): invert eq. 17 for the sublayer, δ_rh = (T_l + a_rh·ΔT_rh − T_sol0)/(dT_sol/dz) − δ; then solve for v **twice, independently** — from eq. 36 with F_conv = a_rh·ΔT_rh/δ_rh, and from eq. 38, which on substituting eq. 17 reduces to Hδ/v + (1/v)(HD − F_m − H/v)(e^{vδ} − 1) − T_l = 0; recover L̂ = F_m/v − (T_mid − T_s) with T_mid = (T_i + T_l + a_rh·ΔT_rh)/2 (eq. 19). Across rows dT_sol/dz = 1.1, 2.0, 3.2, 4.0: δ_rh = 0.0328, 0.0320, 0.0236, 0.0200; **v(36)/v(38) = 0.96, 0.57, 0.33, 0.19** — the two printed equations disagree on v systematically in dT_sol/dz, reaching 5×; and **L̂ is not a constant on either route** (from 36: 0.36 → 0.77 → 0.96 → 0.71; from 38: 0.29 → −0.10 → −0.57 → **−0.97**, negative latent heat being unphysical). Same defect as the main-thread L-recovery (drift, systematic in dT_sol/dz), reached by a route that shares none of its viscosity/Rayleigh assumptions — a closure check in the registered sense, so pillar ② stands on two independent legs.
+
 **Cause 3 — the "missing" constants are resolved, and the recoverable one contradicts
 the printed result.** `A = 15` is **dimensionless** (thesis: Frank-Kamenetskii,
 *"reference viscosity is evaluated at T = 1. By using A = 15…"*; independently
