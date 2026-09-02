@@ -87,7 +87,8 @@ nodes:
     recipe: interior-structure-methodology
     outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
               core_temperature, cmb_temperature, cmb_pressure, ice_column_state,
-              ocean_thickness, ice_shell_thickness, bulk_porosity, voids_expected]
+              ocean_thickness, ice_shell_thickness, bulk_porosity, voids_expected,
+              figure_relaxation]
     note: >
       질량과 조성에서 층 구조를 푼다. 정수압 평형·질량보존·상태방정식을 함께
       적분하므로 층 밀도가 입력이 아니라 결과다 — 그래서 반지름과 중심압도 같이
@@ -313,6 +314,11 @@ edges:
     note: 위성의 Cassini 상태는 *부모 행성의* J2 와 반지름이 정하는 교점 이동률에 걸린다.
     ref: "cassini-state-obliquity-methodology.md:124"
   - {from: body_figure, to: cassini_state, kind: selects, via: fossil_bulge, ref: "cassini-state-obliquity-methodology.md:185"}
+  # 2026-09-03 Brief 39. body_figure 의 정유체 가정(J2 = 10/3·C22)은 완화시간 문제인데
+  # 아무도 그 시간을 재지 않았다. interior_layers 가 자기 온도와 나이로 맥스웰 완화 판정을
+  # 내서 fossil_bulge 의 상류 값으로 준다 — 도형 솔버는 손대지 않았고(오너 결정), 판정은
+  # 라벨 문자열이지 화석 비율이 아니다. engine/figure-relaxation-context-notes.md.
+  - {from: interior_layers, to: body_figure, kind: selects, via: figure_relaxation, ref: "body-figure-methodology.md:131", note: "정유체 가정이 이 천체에서 방어 가능한가 — 맥스웰 완화시간 대 나이. 선언된 가족(E_a × η_s)의 문턱 전체와 비교하고 안쪽이면 cannot-say. 화석 도형을 예측하지 않는다."}
   - {from: body_figure, to: crater_state, kind: requires, via: relief, ref: "tidal-heating-methodology.md:471"}
 
   # ── 조석 ───────────────────────────────────────────────────────

@@ -174,6 +174,8 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_tidal_transport.py) || fail=1
 # 규산염 녹는곡선 사슬 (Brief 36). 전사 검산과 이음매 계단이 측정 불변량이다.
 (cd engine && python3 test_silicate_melt.py) || fail=1
+# 도형 완화 판정 (Brief 39). 전사 검산·문턱 가족의 불감성·라벨·지구 판정이 앵커다.
+(cd engine && python3 test_rheology.py) || fail=1
 (cd engine && python3 check_contracts.py) || fail=1
 python3 engine/dynamo_table.py --check || fail=1
 

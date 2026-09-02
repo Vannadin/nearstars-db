@@ -3140,10 +3140,39 @@ def infer_three_layer(mass_earth: float, radius_earth: float,
 
 # ── 그래프에 붙이기 ─────────────────────────────────────────────────────
 from registry import recipe  # noqa: E402
+from dataclasses import replace as _dc_replace  # noqa: E402
+import rheology  # noqa: E402
 
 
 @recipe("interior_layers")
 def _from_state(state):
+    res = _solve_from_state(state)
+    # Brief 39 — 도형 완화 판정. solve() 가 아니라 여기서 합성한다: solve 는 앵커 지문
+    # 함수라 손대면 풀린 수 하나 안 움직여도 지문이 움직인다. 판정은 솔버가 이미 낸
+    # 온도(맨틀 상단 = 선언된 포텐셜 온도에 맞춘 경계, 핵-맨틀 경계 = 도출값)와 나이를
+    # 읽어 붙이는 후처리이고, 라벨·조건은 rheology.relaxation_verdict 가 싣는다.
+    if not res.applicable:
+        return res
+    v = rheology.relaxation_verdict(
+        t_top_k=state.get("potential_temperature"),
+        t_cmb_k=res.values.get("cmb_temperature") or None,
+        p_top_pa=0.0,
+        p_cmb_pa=(res.values.get("cmb_pressure") or 0.0) * 1e9 or None,
+        age_gyr=state.get("age_gyr"),
+        silicate_state=res.values.get("silicate_melt_state"),
+        variant="peridotitic" if state.get("differentiated", True) else "chondritic")
+    return _dc_replace(
+        res,
+        inputs={**res.inputs, "age_gyr": state.get("age_gyr")},
+        values={**res.values, "figure_relaxation": v["figure_relaxation"],
+                "maxwell_time_mantle_top": v["maxwell_time_mantle_top"],
+                "relaxation_threshold_max": v["relaxation_threshold_max"]},
+        units={**res.units, "figure_relaxation": "", "maxwell_time_mantle_top": "yr",
+               "relaxation_threshold_max": "K"},
+        notes=res.notes + tuple(v["notes"]))
+
+
+def _solve_from_state(state):
     return solve(
         mass_earth=state["mass_earth"],
         core_mass_fraction=state.get("core_mass_fraction"),
