@@ -351,7 +351,32 @@ acting on it.**
   W. B. Moore is still listed as faculty there, so **author contact is viable and is the owner's
   call; it is parked, not declined.**
 
-**Still open:**
+**The work order, set by the owner 2026-09-02 — follow it rather than re-deriving one:**
+
+1. **The tidal axis, revived.** It closed in Brief 35 as *wired, validation failed* — and the
+   failure is the paper's, not ours. What reopens it is **Spencer, Katz & Hewitt 2021**
+   ([`2021Icar..35914352S`](https://ui.adsabs.harvard.edu/abs/2021Icar..35914352S), cached, open
+   access): the same relation — tidal heating → lithospheric thickness on Io — from **a
+   different group by a different method** (3-D tidal heating coupled to magmatic segregation).
+   That is a genuinely independent second route to the acceptance test the first paper failed,
+   and it means **author contact is no longer the only way forward.** Moore, Simon & Webb 2017
+   (the parent paper of the first approach) and Kankanamge's 2016 thesis are also cached; the
+   thesis is a long shot for the missing constants — its parameter table is **non-dimensional,
+   all 1.0**. Survey ⑭ is dispatched and decides the shape of Brief 37.
+2. **The two missing materials.** **Core alloys** (Fe–S / Fe–Si) — `melt_scale` already sits in
+   `eos.py` with the comment *"the alloy core's depression goes here"* and there is no alloy
+   material, so a real core is modelled as pure iron and comes out **too dense**; this is what
+   made Dante's iron-core sensitivity read −12.5 %. And the **C–N–H polymer** the carbon axis
+   needs, which is the same thing as item 3's scope decision.
+3. **The three missing properties.** Materials currently answer density, specific heat and
+   adiabatic gradient, and nothing else. **Thermal conductivity** — Brief 35 needed it and
+   borrowed it from a paper's table. **Viscosity / rheology** — tidal response and convection
+   both hang on it, and both are declarations today. **Electrical conductivity** — the dynamo
+   needs it and it is nowhere in `eos.py` or `dynamo.py`. Thermal conductivity belongs with
+   item 1 rather than on its own; survey ⑭ carries a rider asking whether those three papers
+   print it.
+
+**Still open (owner decisions, unordered):**
 - **Carbon's fluid axis — a scope decision, and half its rationale was retracted.** Survey ⑨
   found that the composition numbers this axis was adopted for are **fitted interior-model
   parameters, not chemistry outputs** — the first-principles part establishes that separation
