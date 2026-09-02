@@ -37,10 +37,12 @@ the spin-polarized branch. Inadmissible because it is 100 GPa and 1 000 K outsid
 box *and* iron-bearing against iron-free, two errors pushing opposite ways; the 1.52 is not a
 measurement of anything.
 
-**Lead, not obtained**: `2017PNAS..114.9009S` (Scipioni, Stixrude & Desjarlais, *Electrical
-conductivity of SiO₂ at extreme conditions and planetary dynamos*) is the only known place
-the two lineages meet at a shared composition — Soubiran cites it as ref. 43 (line 429),
-Scipioni co-authors Stixrude 2020. **Not in the cache; it is with the owner as a request.**
+**Lead, now in the cache and not yet read**: `2017PNAS..114.9009S` (Scipioni, Stixrude &
+Desjarlais, *Electrical conductivity of SiO₂ at extreme conditions and planetary dynamos*) is
+the only known place the two lineages meet at a shared composition — Soubiran cites it as
+ref. 43 (line 429). Its three authors are **exactly the Stixrude 2020 author list** (ADS, both
+bibcodes, 여기), so it is a shared-composition bridge to Soubiran, **not an independent check on
+Stixrude**. Obtained by the owner 2026-09-03 with `.PROVENANCE.txt`; with the parallel seat.
 
 ## 2. Soubiran & Militzer 2018 — three DC points, no deposit
 
@@ -85,12 +87,21 @@ box: 100–140 GPa × 4 000–6 000 K** (line 19). The main figure's continuatio
 ≈ 50 GPa / ≈ 2 500 K is the fit read along an isentrope, not simulated points.
 
 ⚠ **`pdftotext` drops both minus signs from that exponent.** Extraction line 178 reads
-`exp½ðE þ PV Þ=RT` — the leading minus and the sign structure are gone. With the sign wrong the
-electronic term at 100 GPa / 4 000 K comes out **1.57×10⁷ S/m** (여기; 병 reports 2.35×10⁷ at a
-condition not stated), and either is excluded by the paper's own sentence *"although less than
-typical metallic conductivity (10⁶ S/m for the Earth's outer core)"* (line 90). Same family as
-the IF97 extraction failure (`engine/steam-context-notes.md`): **read the caption as a page
-image, never from the text layer.**
+`exp½ðE þ PV Þ=RT` — the leading minus and the sign structure are gone. With the sign wrong
+(직, 여기, each recomputed):
+
+| condition | terms | wrong-sign σ (S/m) |
+|---|---|---|
+| 100 GPa / 4 000 K | electronic, non-spin-polarized, alone | 1.57×10⁷ |
+| 120 GPa / 5 000 K | electronic spin-polarized + ionic | 2.35×10⁷ |
+| 140 GPa / 4 000 K | electronic spin-polarized + ionic | 1.02×10⁸ |
+
+Every one is one to two orders above the **10⁶ S/m** the paper's own sentence names for the
+metallic outer core — *"although less than typical metallic conductivity (10⁶ S/m for the
+Earth's outer core)"* (line 90) — so **the sign is settled by the paper at every condition and
+branch combination tried; the refutation does not hang on one number.** Same family as the
+IF97 extraction failure (`engine/steam-context-notes.md`): **read the caption as a page image,
+never from the text layer.**
 
 **Units, not an index row**: the caption gives σ₀ in **S/m** while the printed form requires
 **S·K/m**. Units-only; following the equation gives the right magnitude, so it cannot silently
