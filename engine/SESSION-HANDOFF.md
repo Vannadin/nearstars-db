@@ -576,6 +576,44 @@ and `1980RvGSP..18..269S` Sclater+, **both cited by our own methodology and not 
 `2020E&PSL.53416080T` Thompson+ and `2006JGRB..111.6209S` Seagle+ for Fe₃S ·
 `1993Sci...260..771K` Karato & Wu · `2019CRGeo.351..154W` Wagle+ · Nettelmann+ 2011.
 
+### Where the night stopped, and what unblocks it
+
+**45 commits landed 2026-09-03**, through Briefs 39–43 and their follow-ups. All three seats are
+idle and **nothing further can start without a paper.** That is the block, and it is a single one:
+**`2020ApJ...903L..37N` (Nimmo & Primack) opens the radiogenic axis**, which is item 1.
+
+**What the night established that a later seat should not re-derive:**
+
+- **The three properties are resolved** — see the section above. Thermal conductivity's exponent
+  convention had to be **recovered by closure, not read**; electrical conductivity has **no
+  cross-check available**; viscosity's constants are **all declarations**, and its consumer turned
+  out to be `body_figure`, not the tidal axis.
+- **Two checks were added that fired on day one, against this seat's prediction both times.**
+  The join/phase assertion found **7 of 14 melt-bearing phases** bridging a density fit to a
+  melting curve on a different composition — six of them Brief 36's silicate proxy, never
+  declared. The `via` check found **four wrong arrows in the canonical graph**, one of them
+  `stellar_wind`'s only incoming edge.
+- ⚠ **The most consequential single finding: `GAMMA_CORE = 1.5` is load-bearing for Earth having
+  an inner core at all in this recipe.** The code quotes Alfè twice — solid ≈1.5, liquid
+  1.51–1.52 — we use the **solid's** value on a **liquid** density fit (`fe_prem`, pinned by
+  Brief 41), and at the liquid value the centre verdict turns liquid, which is wrong for Earth.
+  The constant stays because moving it to make an answer come out is prohibited. **That
+  prohibition has a cost and this is it.** Both γ bands are extrapolated at Earth's centre.
+- **A stronger invariant than it reads**: removing all 19 `status: gap` edges leaves the strongly
+  connected component at **exactly 16 = `coupled_core`.** The cycle is real coupling, not an
+  artefact of unsatisfiable edges — and `chain.py check` cannot tell you that, because it includes
+  gap edges in the ordering.
+
+**Rules added 2026-09-03, all three the same shape — something that reads complete and is not:**
+the **± and the composition are part of the number**; **a narrow instrument's output is not a
+general fact**; and **a locator or a count without its rule is neither** (a line number without
+its extraction mode, a threshold without the pressure it was read at, an SCC count without the
+edge-kind rule). Each has three or more instances from this seat and others.
+
+**And a standing caution for whoever sits here next**: this seat's prior that *"a check added now
+will catch nothing today"* was **wrong twice in one night, in the same direction**. The quiet
+places were quiet because nothing was checking them.
+
 **The work order, set by the owner 2026-09-02 — follow it rather than re-deriving one:**
 
 1. **The tidal axis, revived.** It closed in Brief 35 as *wired, validation failed* — and the
