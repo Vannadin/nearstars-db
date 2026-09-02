@@ -37,6 +37,7 @@ literature, separate recipes.
 **Returns** — `nmoi` [—] · `core_radius_fraction` [—] · `core_radius` [R_earth] ·
 `radius` [R_earth] · `core_pressure` [GPa] · `cmb_pressure` [GPa] ·
 `core_temperature` [K] · `cmb_temperature` [K] · `ice_column_state` [—] ·
+`silicate_melt_state` [—] · `silicate_melt_fraction_max` [—] ·
 `ocean_thickness` [km] · `ice_shell_thickness` [km] · `crust_thickness` [km] · `bulk_porosity` [—] · `voids_expected` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
