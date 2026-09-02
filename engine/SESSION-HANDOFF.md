@@ -6,8 +6,10 @@ Read this, then `engine/interior-core.md`, then take the seat.
 
 ## Where the work lives
 
-**All of it is on `engine/prototype`, in a worktree.** As of this writing that is ~140 commits
-ahead of `main`, and `main` is not ahead at all. A session sitting in the main checkout sees
+**All of it is on `engine/prototype`, in a worktree.** Measured 2026-09-03 it is **230 commits
+ahead of `main`, and `main` is not ahead at all** (`git rev-list --left-right --count
+engine/prototype...main` → `230 0`). The "~140" that stood here was written on 2026-08-31 and
+was never updated — **remeasure this line rather than quoting it.** A session sitting in the main checkout sees
 the last work as tidal heating and the stability simulation, and is **not wrong** — that is
 what `main` contains.
 
@@ -17,8 +19,12 @@ what `main` contains.
 /Users/vana/Desktop/NearStars-wt/site              gh-pages
 ```
 
-The branch is pushed to `origin/engine/prototype`. **`main` has not been merged and no PR was
-opened** — that is the owner's call, deliberately not taken.
+The branch **is** pushed to `origin/engine/prototype`, as of 2026-09-03. **That sentence was
+false when it was first written and stayed false for four days**: 124 commits existed only in
+this worktree, with no backup anywhere, until the owner authorised a push on 2026-09-03
+(fast-forward `7c84f2d4..f7271b1f`, verified against origin by two seats). **`main` has not been
+merged and no PR was opened** — that is the owner's call, still deliberately not taken.
+**Check the push state, do not read it here** — this line has been wrong once already.
 
 **Do not write in the work worktree** unless you are the work session; it is in active serial
 use. The git stash stack is shared across all three worktrees, so **never use bare
@@ -43,8 +49,11 @@ else's lines, either wait or name them in the message.
 | **audit** | evaluates each completed item independently. Never implements, so it never audits its own work. |
 
 Session names change on restart. Use `ListAgents` and confirm each one's cwd, branch and
-current task rather than assuming. As of the handoff: `nearstars-db` works, `nearstars-74`
-surveys, `nearstars-1e` audits.
+current task rather than assuming. **And ask the owner, not only the sessions** — the owner
+assigns the seats, and a seat that assigns them itself will get it wrong (this happened twice on
+2026-09-03, in the same hour, because this seat read `ListAgents` and never asked). As of
+2026-09-03: `nearstars-93` works, `nearstars-c4` surveys, `nearstars-f4` audits, `nearstars-39`
+directs.
 
 **Verification runs in every direction.** During the last two days the work session caught the
 directing session's briefs five times, the directing session caught the audit's ledger and a
@@ -135,9 +144,13 @@ full record in C6's row). Summary, because the shape of the answer is the part w
   general guarantee**; a body whose *converged* column enters the region reopens it, which is why
   C6 stays a standing watch.
 
-**Brief 34 is the repair** and is designed but unwritten: measure whether trials enter the
-false region · replace the flat inequality with a (P, T)-dependent check · fix the attribution
-and remove the unlinked duplicate · record the three ceilings as one notation.
+**Brief 34 was the repair and it LANDED the same evening** (`438efd70`, `6ae41eb4`,
+`21f37436`) — measure whether trials enter the false region · replace the flat inequality with a
+(P, T)-dependent check · fix the attribution and remove the unlinked duplicate · record the three
+ceilings as one notation. *(Corrected 2026-09-03, found by the audit seat: this sentence said
+"designed but unwritten" while the paragraph ~30 lines above already said it closed that
+evening. It mattered because the parked list's Millot ⑩/⑩b row points forward at exactly this
+sentence, so the stale claim was reachable from inside the parked section.)*
 
 ## Standing rules — each exists because something got through
 
@@ -384,8 +397,11 @@ acting on it.**
 >
 > **The owner cleared every session at this point (2026-09-02, late).** The four seats you are
 > joining have no memory of the day; this document and the notes it points at are the whole
-> handover. **The single most useful thing to know: two of the three work-order items below have
-> already been surveyed to their conclusion, and both conclusions are in the repository.**
+> handover. **The single most useful thing to know: work-order items 1 and 2 below have already
+> been surveyed to their conclusion, and both conclusions are in the repository.**
+> *(Corrected 2026-09-03, audit seat: this said "two of the three" and then named carbon and
+> core-melt, which are **both item 2**. Item 1 — the tidal axis — is also closed, by Brief 37.
+> So the banner undercounted what was done.)*
 >
 > - **Carbon is finished as an investigation and it does not build.** Militzer 2024's deposited
 >   data covers **2 of the 7 simulated compositions** — one point on each axis, and the carbon
