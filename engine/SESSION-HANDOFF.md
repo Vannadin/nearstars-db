@@ -368,6 +368,36 @@ acting on it.**
   W. B. Moore is still listed as faculty there, so **author contact is viable and is the owner's
   call; it is parked, not declined.**
 
+> ## ⚠ Read this first — the work order below has moved on
+>
+> **The owner cleared every session at this point (2026-09-02, late).** The four seats you are
+> joining have no memory of the day; this document and the notes it points at are the whole
+> handover. **The single most useful thing to know: two of the three work-order items below have
+> already been surveyed to their conclusion, and both conclusions are in the repository.**
+>
+> - **Carbon is finished as an investigation and it does not build.** Militzer 2024's deposited
+>   data covers **2 of the 7 simulated compositions** — one point on each axis, and the carbon
+>   one is the hydrogen-free end — so there is **nothing to interpolate along**. The obvious
+>   rescue was tried and refused: Bethkenhagen+ 2017's linear-mixing approximation is the right
+>   *operation* but the wrong *domain*, and the paper says so itself — it names **"chemical
+>   reactions involving carbon"** as its own error source and pushes **demixing** into future
+>   work, and Militzer's layer is both. **Do not re-derive this**; it is in
+>   `engine/carbon-deposit-context-notes.md`, and the five files to request are named there.
+>   **What remains is author contact, which is the owner's call and was not initiated.**
+> - **Core melting depression is ready to brief and needs no further survey.** The measured
+>   factor is **0.61–0.70 across five decades of pressure, essentially flat**; our
+>   `IRON_LIGHT_ELEMENT_FACTOR = 0.80` is high everywhere, and its pedigree turns out to be a
+>   **1981 estimate its own source calls a crude assumption**. Mori+ 2017 prints a Simon equation
+>   in **the same algebraic form as our `iron_t_melt`**, transcription-checked against four of the
+>   paper's own printed values — so this is **a second `melt` curve, not a scalar**, and the
+>   interface does not change. Everything needed is in
+>   `engine/core-melt-depression-context-notes.md`, including the trap that cost the directing
+>   seat an error: **the denominator must be `FE_EPS`**, because `FE_PREM` already carries the
+>   0.80 and using it yields a plausible-looking 0.79–0.83.
+> - **A new index exists**: `docs/reference/paper-defects.md` (+ ko mirror) — **ten defects in the
+>   papers we cite**, each pointing at the note that carries its case. Read it before transcribing
+>   from any source listed there, and **add a row when you find the eleventh**.
+
 **The work order, set by the owner 2026-09-02 — follow it rather than re-deriving one:**
 
 1. **The tidal axis, revived.** It closed in Brief 35 as *wired, validation failed* — and the
@@ -375,11 +405,19 @@ acting on it.**
    ([`2021Icar..35914352S`](https://ui.adsabs.harvard.edu/abs/2021Icar..35914352S), cached, open
    access): the same relation — tidal heating → lithospheric thickness on Io — from **a
    different group by a different method** (3-D tidal heating coupled to magmatic segregation).
-   That is a genuinely independent second route to the acceptance test the first paper failed,
-   and it means **author contact is no longer the only way forward.** Moore, Simon & Webb 2017
-   (the parent paper of the first approach) and Kankanamge's 2016 thesis are also cached; the
-   thesis is a long shot for the missing constants — its parameter table is **non-dimensional,
-   all 1.0**. Survey ⑭ is dispatched and decides the shape of Brief 37.
+   That looked like a genuinely independent second route to the acceptance test the first paper
+   failed. **Survey ⑭ closed it: it is not one.** Spencer's Table 1 says *"**Chosen** to give an
+   average lithospheric thickness of ~35 km"* and *"**Chosen** to give a total heating rate of
+   10¹⁴ W"* — **both are calibration targets, not predictions**, so the paper cannot supply the
+   leg. Worse, the two share an anchor: both take Io's observed heat output as an *input*, from
+   different citations, landing 3.9 % apart. **Independent in method, not independent as a test.**
+   Moore, Simon & Webb 2017 is not a third leg either (Moore is a 2019 co-author, and the letter
+   defers its model to the thesis), and the thesis was the long shot it looked like — its
+   parameter table is **non-dimensional, all 1.0**, which turned out to be the *explanation*
+   rather than a dead end. **Brief 37 landed and this row is now closed** (`d86a33d4`,
+   `994ac3ab`); the mechanism, the three causes, and the conditions that would reopen it are in
+   `engine/tidal-interior-context-notes.md` §7. **Reopening needs a model built for the structure
+   Khurana's induction signature implies — not more digging in that paper.**
 2. **The two missing materials.** **Core alloys** — `melt_scale` sits in `eos.py` with the comment
    *"the alloy core's depression goes here"* and no alloy material fills it, so the **melting
    depression** is a declared convention rather than a material property. And the **C–N–H
