@@ -135,6 +135,39 @@ def main() -> int:
     print(f"  [{'PASS' if ok else 'FAIL'}] 하한이 융해온도를 넘으면 선언 없이도 "
           f"'{hot.values['conductor_phase']}' 다")
 
+    print("\n판정의 여유 — 브리프 42: 얼마나 얇은가를 판정과 함께 내는가")
+    # 밀도는 비로만 들어와 상쇄된다: ρ₀ 를 ±10 % 해도 중심 온도가 그대로다.
+    from dataclasses import replace as _r
+    ph = m.phases[0]
+    p_c = v["core_pressure"] * 1e9
+    t_base = cs._center_temperature(m, p_c, p_cmb, SINMYO_EARTH_CMB_K[0])
+    moved = max(abs(cs._center_temperature(_r(m, phases=(_r(ph, rho0=ph.rho0 * s),)),
+                                           p_c, p_cmb, SINMYO_EARTH_CMB_K[0]) - t_base)
+                for s in (0.9, 1.1))
+    ok = moved < 1e-6
+    if not ok:
+        fails.append(f"ρ₀ ±10 % 가 중심 온도를 {moved:.2e} K 움직인다 — 밀도가 상쇄되지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] ρ₀ ±10 % → 중심 온도 변화 {moved:.1e} K (비로만 들어와 상쇄)")
+    mv = r.values
+    ok = (mv["margin_condition"] == cs.MARGIN_THIN and -25.0 < mv["center_margin"] < -10.0
+          and abs(mv["center_margin_fraction"]) < cs.MARGIN_THIN_FRACTION)
+    if not ok:
+        fails.append(f"지구 중심 여유 {mv['center_margin']:+.1f} K / {mv['margin_condition']} — "
+                     f"−17.6 K, thin 이어야 한다 (사전등록 §2)")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 지구 중심 여유 {mv['center_margin']:+.1f} K "
+          f"({mv['center_margin_fraction'] * 100:+.2f} %) → {mv['margin_condition']}")
+    ok = abs(mv["gamma_flip"] - 1.5145) < 0.002 and abs(mv["k0_flip"] - 194.0) < 1.0
+    if not ok:
+        fails.append(f"뒤집힘점이 움직였다 — γ {mv['gamma_flip']:.4f} (1.5145), "
+                     f"K₀ {mv['k0_flip']:.1f} GPa (194.0)")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 중심 판정 뒤집힘: γ {mv['gamma_flip']:.4f} "
+          f"(선언 {GAMMA_CORE}) · K₀ {mv['k0_flip']:.1f} GPa (fe_prem {ph.k0 / 1e9:.0f})")
+    ok = (b.values["margin_condition"] == cs.MARGIN_NOT_COMPUTABLE
+          and b.values["gamma_flip"] is None and b.values["k0_flip"] is None)
+    if not ok:
+        fails.append("하한 갈래가 뒤집힘점을 낸다 — 단열선이 없으니 못 한다고 말해야 한다 (④)")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 하한 갈래 → {b.values['margin_condition']}")
+
     print("\n온도를 바꾸면 판정이 뒤집히는가 (배선이 살아 있는가)")
     seq = []
     for t_cmb in (2500.0, 3760.0, 12000.0):

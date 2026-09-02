@@ -31,6 +31,9 @@ conducting liquid-iron core" 라고 적는 그 '액체' 가 이 노드의 출력
 """
 from __future__ import annotations
 
+import math
+from dataclasses import replace as _dc_replace
+
 from eos import (IRON_LIGHT_ELEMENT_FACTOR, IRON_MELT_MAX, IRON_MELT_SPLICE,
                  MATERIALS, PhaseGap, iron_t_melt)
 from payload import Result, out_of_domain
@@ -70,6 +73,54 @@ REFS = (
 # 쓰이는지를 여기와 eos.py 양쪽에 적어 둔다: 밀도는 αK₀, 핵의 단열선은 이 γ 다.
 GAMMA_CORE = 1.5
 GAMMA_RANGE_PA = (100e9, 340e9)     # 그 논문이 γ 를 확인한 압력 구간
+
+# ── 판정의 여유 (브리프 42) ──────────────────────────────────────────────
+# 단열선에서 밀도는 비(ρ/ρ_cmb)로만 들어와 **정확히 상쇄** 된다 — ρ₀ 를 ±10 % 해도 중심
+# 온도가 소수 열째 자리까지 안 움직인다. 상쇄되지 않는 것은 압축률(K₀)과 γ 이고, 지구
+# 기둥에서 중심 판정은 K₀ = 194 GPa 에서 갈리는데 fe_prem 은 201 GPa 라 17.6 K (0.33 %)
+# 지나 앉아 있으며, γ 는 1.5145 에서 뒤집히는데 선언이 1.5 다 (0.97 %). 답은 틀리지 않았다
+# (지구는 외핵 액체·내핵 고체가 맞다) — 문제는 −17 K 판정과 −500 K 판정이 똑같이 보였다는
+# 것이다. 그래서 여유와 두 뒤집힘점을 판정 옆에 내보낸다. **γ 도 K₀ 도 움직이지 않는다.**
+#
+# "얇다" 의 기준은 사전등록이다 (core-margin-context-notes.md §2): |여유| / T_melt 가
+# 융해곡선 자신의 이음매 불일치(두 적합이 겹치는 구간에서 6.8~7.5 %) 아래면 얇다.
+# 곡선 자신의 오차 안에 있는 여유는 행성에 대한 판정으로 읽을 수 없다는 뜻이고,
+# 라벨이 그렇게 말한다. 거절이 아니다 — 답은 서 있고, 칼날 위라는 것을 독자가 안다.
+MARGIN_THIN_FRACTION = 0.068
+MARGIN_THIN = "thin"
+MARGIN_COMFORTABLE = "comfortable"
+MARGIN_NOT_COMPUTABLE = "not-computable (lower bound, no core adiabat)"
+K0_FLIP_SPAN = (0.5, 2.0)           # K₀ 뒤집힘점을 찾는 이분법의 배율 범위
+
+
+def _center_temperature(material, p_c: float, p_cmb: float, t_cmb: float) -> float:
+    rho_cmb = material.density(p_cmb, t_cmb, 0.0)
+    return _adiabat(material, p_c, p_cmb, t_cmb, rho_cmb)
+
+
+def gamma_flip(material, p_c: float, p_cmb: float, t_cmb: float) -> float:
+    """중심 판정이 뒤집히는 γ. 닫힌 꼴: T_cmb·(ρ_c/ρ_cmb)^γ = T_melt,c."""
+    rho_cmb = material.density(p_cmb, t_cmb, 0.0)
+    rho_c = material.density(p_c, t_cmb, 0.0)
+    return math.log(material.t_melt(p_c) / t_cmb) / math.log(rho_c / rho_cmb)
+
+
+def k0_flip_gpa(material, p_c: float, p_cmb: float, t_cmb: float) -> float | None:
+    """중심 판정이 뒤집히는 K₀ [GPa] — 첫 상의 K₀ 만 바꾼 사본으로 이분법. 상이 둘
+    이상이거나 배율 범위 안에서 부호가 안 바뀌면 None (계산 못 한다고 말한다)."""
+    if len(material.phases) != 1:
+        return None
+    ph = material.phases[0]
+    t_melt_c = material.t_melt(p_c)
+
+    def margin_at(k0: float) -> float:
+        mat = _dc_replace(material, phases=(_dc_replace(ph, k0=k0),))
+        return _center_temperature(mat, p_c, p_cmb, t_cmb) - t_melt_c
+
+    lo, hi = ph.k0 * K0_FLIP_SPAN[0], ph.k0 * K0_FLIP_SPAN[1]
+    if (margin_at(lo) > 0.0) == (margin_at(hi) > 0.0):
+        return None
+    return _cross(margin_at, lo, hi) / 1e9
 
 # 발표된 지구 앵커. **우리 출력이 아니다** — 검증이 여기 기대고, 이 레시피는 읽지 않는다.
 SINMYO_EARTH_CMB_K = (3760.0, 290.0)    # Sinmyo+ 2019 초록, 핵 쪽 핵-맨틀 경계 온도
@@ -256,12 +307,24 @@ def solve(core_pressure: float,
                     "center_melt_temperature": t_melt_c,
                     "core_cmb_temperature_used": cmb_temperature,
                     "core_center_temperature_used": core_temperature,
-                    "icb_pressure": 0.0},
+                    "icb_pressure": 0.0,
+                    # 브리프 42 ④: 하한 갈래에는 단열선이 없어 뒤집힘점을 계산할 수 없다.
+                    # 여유는 **하한 대비** 로만 적고, 조건은 못 한다고 이름 붙인다.
+                    "center_margin": core_temperature - t_melt_c,
+                    "cmb_margin": cmb_temperature - t_melt_cmb,
+                    "center_margin_fraction": (core_temperature - t_melt_c) / t_melt_c,
+                    "gamma_flip": None,
+                    "k0_flip": None,
+                    "margin_condition": MARGIN_NOT_COMPUTABLE},
             units={"conductor_phase": "", "cmb_melt_temperature": "K",
                    "center_melt_temperature": "K",
                    "core_cmb_temperature_used": "K",
                    "core_center_temperature_used": "K",
-                   "icb_pressure": "GPa"},
+                   "icb_pressure": "GPa",
+                   "center_margin": "K", "cmb_margin": "K",
+                   "center_margin_fraction": "dimensionless",
+                   "gamma_flip": "dimensionless", "k0_flip": "GPa",
+                   "margin_condition": ""},
             notes=tuple(notes))
 
     # ── 갈래 2: 핵 자신의 단열선 ──────────────────────────────────────────
@@ -298,11 +361,38 @@ def solve(core_pressure: float,
         "그 차이를 1 M⊕ 에서 ~240 K, 3 M⊕ 에서 ~1880 K 로 내는데, 그 폭 자체가 이 값이 "
         "모형에 달렸다는 뜻이다. 등급을 analog 로 내린다.")
     lo, hi = GAMMA_RANGE_PA
-    if p_c > hi:
+    gamma_out_of_range = p_c > hi
+    if gamma_out_of_range:
         notes.append(
             f"핵 단열선의 γ = {GAMMA_CORE} 는 Alfè+ 2002 가 {lo / 1e9:.0f}–{hi / 1e9:.0f} GPa "
             f"에서 확인한 값이고, 이 천체의 중심압 {core_pressure:.0f} GPa 는 그 위다. "
             "그 위에서 γ 가 어떻게 흐르는지를 이 레시피는 모른다 — 상수로 끌고 간다.")
+
+    # ── 브리프 42: 판정의 여유와 두 뒤집힘점 ─────────────────────────────
+    frac_c = m_c / t_melt_c
+    g_flip = gamma_flip(material, p_c, p_cmb, t_cmb_core)
+    k_flip = k0_flip_gpa(material, p_c, p_cmb, t_cmb_core)
+    k0_now = material.phases[0].k0 / 1e9
+    thin = abs(frac_c) < MARGIN_THIN_FRACTION
+    condition = MARGIN_THIN if thin else MARGIN_COMFORTABLE
+    notes.append(
+        f"**판정의 여유 ({condition}).** 중심에서 단열선 − 융해온도 = {m_c:+.1f} K "
+        f"({frac_c * 100:+.2f} % of T_melt), 경계에서 {m_cmb:+.1f} K. 중심 판정은 γ = "
+        f"{g_flip:.4f} 에서 뒤집힌다 (선언 {GAMMA_CORE}, {(g_flip / GAMMA_CORE - 1) * 100:+.2f} %)"
+        + (f", K₀ = {k_flip:.1f} GPa 에서 뒤집힌다 (이 재료 {k0_now:.1f} GPa)"
+           if k_flip is not None else
+           f"; K₀ 뒤집힘점은 계산하지 않았다 (상이 {len(material.phases)}개이거나 "
+           f"배율 {K0_FLIP_SPAN} 안에 없다)")
+        + ". 밀도 자체는 비로만 들어와 상쇄된다 — 갈리는 것은 압축률과 γ 다. "
+        + (f"**얇다**: 여유가 융해곡선 자신의 이음매 불일치({MARGIN_THIN_FRACTION * 100:.1f} %) "
+           "안이라 행성에 대한 판정으로 읽을 수 없다"
+           + (f"; 그리고 γ 는 이 천체의 중심압에서 검증 구간({hi / 1e9:.0f} GPa) 밖이라, "
+              f"이 판정은 검증 범위 밖의 선언된 지수가 {(g_flip / GAMMA_CORE - 1) * 100:.1f} % "
+              "움직이면 뒤집힌다" if gamma_out_of_range else "")
+           + ". 답은 서 있다 — 칼날 위라는 것을 라벨이 말한다."
+           if thin else
+           f"여유가 융해곡선의 이음매 불일치({MARGIN_THIN_FRACTION * 100:.1f} %) 밖이다.")
+        + " γ 와 K₀ 는 움직이지 않았다 (사전등록, core-margin-context-notes.md).")
 
     reason = (f"핵-맨틀 경계 {cmb_pressure:.1f} GPa / {t_cmb_core:.0f} K 에서 γ = "
               f"{GAMMA_CORE} 의 단열선을 올리면 중심 {core_pressure:.1f} GPa 에서 "
@@ -322,12 +412,22 @@ def solve(core_pressure: float,
                 "center_melt_temperature": t_melt_c,
                 "core_cmb_temperature_used": t_cmb_core,
                 "core_center_temperature_used": t_center,
-                "icb_pressure": icb},
+                "icb_pressure": icb,
+                "center_margin": m_c,
+                "cmb_margin": m_cmb,
+                "center_margin_fraction": frac_c,
+                "gamma_flip": g_flip,
+                "k0_flip": k_flip,
+                "margin_condition": condition},
         units={"conductor_phase": "", "cmb_melt_temperature": "K",
                "center_melt_temperature": "K",
                "core_cmb_temperature_used": "K",
                "core_center_temperature_used": "K",
-               "icb_pressure": "GPa"},
+               "icb_pressure": "GPa",
+               "center_margin": "K", "cmb_margin": "K",
+               "center_margin_fraction": "dimensionless",
+               "gamma_flip": "dimensionless", "k0_flip": "GPa",
+               "margin_condition": ""},
         notes=tuple(notes))
 
 
