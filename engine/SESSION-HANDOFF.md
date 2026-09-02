@@ -494,7 +494,15 @@ acting on it.**
    print it.
 
 **Still open (owner decisions, unordered):**
-- **~~Carbon's fluid axis — a scope decision~~ — DECIDED 2026-09-02: build it general.** The
+- **~~Carbon's fluid axis~~ — CLOSED 2026-09-03. The owner's word: "사실상 닫힘" (effectively
+  closed).** The scope decision below was taken on 09-02 and then overtaken the same day by the
+  banner above: the deposit is 2 of 7 compositions, so there is nothing to interpolate along and
+  the axis does not build. The only re-opening route was author contact, and **the owner declined
+  it on 09-03** (see the author-contact row). So this row is closed, not parked. The scope
+  reasoning is kept below because it is the right answer *if* the data ever arrive — do not
+  re-derive it, and do not re-open the row without new data.
+
+  *(Original 09-02 decision, preserved:)* The
   owner's words were *"as always, general"*, which is the standing goal for this solver rather
   than a fresh judgement: filling the coverage map **is** the plan, not drift from it.
 
@@ -516,7 +524,15 @@ acting on it.**
   targets, not a prediction test, which is precisely the threshold the tidal axis cleared through
   Io and this one does not. **So the output is *structure consistent with the physics*, not
   *structure constrained by data*, and it must say so on every value it emits.**
-- **~~Zenodo download permission~~ — GRANTED 2026-09-02, and then blocked at the host.** Carbon's
+- **~~Zenodo download permission~~ — RESOLVED. The record IS in the cache; this row was false-open
+  for a day.** `docs/phase3/_papers/militzer2024_zenodo/13937364.zip`, 131,906 bytes, **7 files /
+  130,650 bytes unpacked** — matching `carbon-deposit-context-notes.md`'s own count exactly. File
+  timestamp 2026-09-02 22:34, *after* the commit (`af5e59c8`) that wrote the "nothing was
+  downloaded" text below, and survey ⑯ then parsed every row of every file. The host block is
+  moot. **This is the exact disease the section's own standing obligation exists to catch, and it
+  survived one cross-check pass** — found 2026-09-03 only because a new seat checked the cache
+  rather than reading the row. *(Original text, preserved for its reasoning about not
+  circumventing a network block:)* Carbon's
   layer equations of state are **distributed as deposited data, not printed** — the AQUA/CDS
   shape we already accept. Record IDs, read from the cached paper's own text rather than relayed:
   **13937364** (data files, the one we need — the paper says the Fig. 1 equations of state are
@@ -527,12 +543,43 @@ acting on it.**
   refused us today (Wiley, A&A, ScienceDirect, Zenodo), so **our own request rate is a live
   suspect** — the right move is to stop knocking, not to change headers. **A browser will very
   likely fetch it in one click; ask the owner rather than re-running the API.**
-- **Merging `engine/prototype` into `main`**, and whether to open a PR. Still deferred, and
-  the cost of deferring is now visible: a session in the main checkout sees the last work as
+- **Merging `engine/prototype` into `main`**, and whether to open a PR. **Still deferred — and
+  the owner's 2026-09-03 decision was "push only", which is now done.** The branch is on origin;
+  the merge and the PR are untouched and remain the owner's call. The cost of deferring: a session in the main checkout sees the last work as
   tidal heating and the stability simulation and is not wrong.
-- **Dante · Hades radii** — board work, so it sits behind the engine by the standing
-  tool-before-boards rule.
+- **Dante · Hades radii — the owner restated the condition 2026-09-03, and it is more general
+  than this row was.** Not "decide later" but: **when the tool and the node are finished.** And
+  it is not about Dante — *"모든 천체가 다 마찬가지"*, every body is the same; boards get redone
+  once the chain is tooled and re-run. Dante was **a temporary test**, and the owner's words on
+  what that test is for are worth carrying verbatim: finding errors through it is good, *"그걸
+  천체의 값을 지금 확정적으로 바꿀 이유가 되진 않잖아"* — it is not a reason to change a body's
+  value now. So `f5db1989`'s measurement (the family wants ~486 km, not the invented 521, and the
+  constant is the culprit) stands as **a measurement of the tool**, not a proposal for the board.
+  **Do not put this to the owner again as a three-way choice** — it is sequenced, not undecided.
 - **Paper requests**: the ternary grid closed as not found. **French, Desjarlais & Redmer
   2016** (PRE 93, 022140, `2016PhRvE..93b2140F`) was **obtained by the owner 2026-09-01** and
   is cached with PROVENANCE; it prints **no** boundary equation or table, which is recorded as
-  a legitimate *not found*. Nothing is outstanding.
+  a legitimate *not found*.
+
+  **Corrected 2026-09-03 — "Nothing is outstanding" was false, and false in the dangerous
+  direction.** A row that reads *closed* when it is open stops a seat from looking at all, which
+  is worse than the stale-*open* case the section's preamble warns about. Both the audit and the
+  parallel seat found it independently. Actual state:
+
+  - **Obtained 2026-09-03, all three by the owner, all three cached with PROVENANCE**:
+    `2017PNAS..114.9009S` (Scipioni, Stixrude & Desjarlais — ⚠ **the same three authors as
+    Stixrude 2020**, so not an independent check on it), `2011PNAS..10817901M.SI` (the Manthilake
+    SI Appendix, 32 pp — this is what unblocks the thermal-conductivity axis), and
+    `2012E&PSL.349..109O` (Ohta — the only measured MgSiO₃ post-perovskite conductivity we hold).
+  - **Still unobtained, both from Brief 38's row**: **Fei+ 2000** (the Fe–FeS eutectic curve's
+    single anchor) and **Sata+ 2010** (load-bearing under Hakim's density table).
+    `core-melt-depression-context-notes.md:126-127` lists four more as blocked: Fischer+ 2014,
+    Komabayashi 2014, Noack+ 2020, Chen+ 2008.
+
+- **Author contact — a row this section never had, and the owner has now closed it.** Two asks
+  were recorded and never initiated, each in its own note rather than here: **carbon's five
+  missing compositions** (`carbon-deposit-context-notes.md` §5, named there, priority
+  `C₄₈N₁₂H₅₈`) and **the single tidal question** (`tidal-interior-context-notes.md` §7 — which T₀
+  entered Kankanamge & Moore's §6 Io calculation, the dimensionless 1 or Table 5's 1400 K).
+  **Owner, 2026-09-03: "둘 다 지금은 안 한다" — neither, for now.** Nothing was drafted and
+  nothing was sent. Carbon's closure above follows from this half.
