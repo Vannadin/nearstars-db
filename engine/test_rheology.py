@@ -86,8 +86,9 @@ def main() -> int:
     ok(cases[4]["figure_relaxation"] == rh.NO_SOLIDUS, "3: solidus undefined at 600 GPa must refuse by name")
     ok(cases[5]["figure_relaxation"] == rh.OTHER_LAYER,
        "3: a 1-bar temperature over a non-silicate outer layer must refuse by name (audit ①)")
-    ok("relayed" in cases[0]["notes"][0] and "Maxwell floor" in cases[0]["notes"][0],
-       "3: the headline note must carry the relayed-constant and Maxwell-floor conditions")
+    ok("relayed" in cases[0]["notes"][0] and "Maxwell floor" in cases[0]["notes"][0]
+       and "no conductive lid" in cases[0]["notes"][0],
+       "3: the headline note must carry the relayed-constant, Maxwell-floor and no-lid conditions")
 
     # ── 4. roster measurement and reachable branches ────────────────────────
     earth = cases[0]

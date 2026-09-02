@@ -81,9 +81,10 @@ NO_SOLIDUS = "cannot-say (solidus undefined at this pressure)"
 OTHER_LAYER = "cannot-say (temperature belongs to another layer)"
 
 CONDITION = ("Maxwell floor, order-of-magnitude gate; all viscosity constants relayed through "
-             "unobtained Karato & Wu 1993; solver has no conductive lid, so 'relaxes' means the "
-             "convecting mantle relaxes; age is the most permissive window, so 'relaxes' is "
-             "necessary not sufficient and 'cannot' is a hard refusal")
+             "unobtained Karato & Wu 1993; the temperature is the top of the convecting adiabat "
+             "and the solver represents no conductive lid, so 'relaxes' means the convecting "
+             "mantle relaxes and says nothing about a cold lid; age is the most permissive "
+             "window, so 'relaxes' is necessary not sufficient and 'cannot' is a hard refusal")
 
 
 def viscosity_rovira(t_k: float, t_s_k: float,
@@ -193,7 +194,8 @@ def relaxation_verdict(t_top_k: float | None, t_cmb_k: float | None,
     out["relaxation_threshold_max"] = hi
     out["second_law"] = second
     notes.append(
-        f"figure relaxation ({verdict}): top-of-mantle {t_top_k:.0f} K against the "
+        f"figure relaxation ({verdict}): top of the convecting adiabat {t_top_k:.0f} K (the "
+        f"declared potential temperature; no conductive lid is represented) against the "
         f"τ_M = age threshold family {lo:.0f}–{hi:.0f} K (E_a 300–540 kJ/mol × η_s 1e15–1e17 Pa·s, "
         f"μ 65 GPa, age {age_gyr:.2f} Gyr, T_sol {t_s:.0f} K at {p_top_pa / 1e9:.0f} GPa); "
         f"τ_M(Rovira-Navarro) = {tau_top:.2e} s = {tau_top / (365.25 * 86400.0):.2e} yr. "
