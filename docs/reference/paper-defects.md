@@ -31,6 +31,7 @@ would silently produce a wrong answer, say whether a gate catches it.**
 | 9 | **Militzer 2024** (PNAS 121, e2403981121) | Three simulation labels are **exactly 2× the paper's own eq. [3]** (`H₁ = N_H/2N_O`): O₈₄H₂₂₆ is **1.345**, printed as 2.69 (same for H₂₈₂, H₃₉₆). The control passes — eq. [2] and Table 1 reproduce exactly, so the defect is confined to those three | The method interpolates *as a function of hydrogen fraction*, so placing the deposited file on that axis needs the right scale and the paper prints both | `engine/carbon-*-context-notes.md` (survey ⑯) |
 | 10 | **Buono & Walker 2011** (GCoA 75, 2072) | Eq. (5), the 14 GPa liquidus polynomial, prints its constant as **−2140.2** — so T(x=0) = −2140.2 K, a negative melting point. Read +2140.2 it continues the monotone pure-Fe intercept rise (1808.9 → 2093.0 → 2140.2 K), and the 6 GPa intercept matches the paper's own prose to 6 K, so the family is sound and one sign is not | The x = 0 intercepts are the transcription check for the whole polynomial set; the paper itself says eqs. (2)/(5) were not used to calibrate its model | `engine/core-melt-depression-context-notes.md` (survey ⑰) |
 | 11 | **Soubiran & Militzer 2018** (Nat. Commun. 9, 3883) | Reference 11 prints *Geochem. Geophys. Geosyst.* **17**, 1935–1956 **(2006)**. Volume and pages are right; the year is **2016** — [`2016GGG....17.1935O`](https://ui.adsabs.harvard.edu/abs/2016GGG....17.1935O), Olson, P., *Mantle control of the geodynamo: Consequences of top-down regulation*, confirmed through ADS by title (pdftotext extraction line 875) | Load-bearing: that one citation carries **both** the `Rm > 40` onset **and** the `Ro_ℓ ≤ 0.1` dipolar cutoff, so a session chasing "Olson 2006" lands in the wrong decade of a prolific author's output. **No gate catches a citation year** | `engine/electrical-conductivity-context-notes.md` (survey ⑱) |
+| 12 | **Manthilake+ 2011** (PNAS 108, 17901) | Table 1 heads its reference-density row **`ρ_ref (cm³/mol)`**; the values (3.71–4.49) are **densities in g/cm³** at T_ref = 700 K, P_ref = 8 GPa (periclase) / 26 GPa (perovskite). Four independent confirmations: (1) magnitude — MgO's molar volume is ~11.2 cm³/mol and MgSiO₃ perovskite's ~24.5, so 3.71 / 4.45 are off by 3× / 5.5×; (2) the authors' own thermodynamic model (SI eqs. S6–S12) at their own reference states gives **MgO 3.708, MgSiO₃ 4.448 g/cm³** against printed 3.71 / 4.45 (0.05 %), while molar volume there is 10.87 / 22.57; (3) **a header transplant** — SI Table S1 heads a genuine molar-volume column `V₀ (cm³/mol)` (MgO 11.24, MgSiO₃ 24.45, from Xu+ 2008) and the parent's Table 1 carried that header onto a density row; (4) Ohta+ 2012, adopting the same eq. 1, prints Pv `ρ_ref = 4.89 g/cm³` at 62 GPa / 300 K, and our chain gives 4.882 there (0.17 %) | ρ_ref sits inside `(ρ/ρ_ref)^g` with g of order 4–7, so reading it as a molar volume **inverts the ratio and amplifies it**: k wrong by orders of magnitude and *decreasing* with depth. Nothing in the table contradicts the wrong reading — the numbers look dimensionless. **No gate catches it**; the transcription check is the SI model closure in (2) | `engine/thermal-conductivity-context-notes.md` (surveys ⑲/⑳) |
 
 ---
 
@@ -49,10 +50,11 @@ would silently produce a wrong answer, say whether a gate catches it.**
 
 ## What the pattern says
 
-**Eleven defects across the sources we have actually transcribed from.** Five are magnitude or
+**Twelve defects across the sources we have actually transcribed from.** Five are magnitude or
 sign slips in a single printed value (#1, #6, #8, #9, #10), three are a paper disagreeing with
 itself (#4, #5, #7), one is a claim range wider than the data behind it (#8), one is an
-attribution that points at the wrong owner (#2), and one is a citation with the wrong year (#11).
+attribution that points at the wrong owner (#2), one is a citation with the wrong year (#11),
+and one is a correct unit transplanted onto the wrong quantity (#12).
 
 Three consequences we now work from:
 
