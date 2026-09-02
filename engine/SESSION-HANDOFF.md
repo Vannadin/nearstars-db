@@ -380,11 +380,22 @@ acting on it.**
    (the parent paper of the first approach) and Kankanamge's 2016 thesis are also cached; the
    thesis is a long shot for the missing constants — its parameter table is **non-dimensional,
    all 1.0**. Survey ⑭ is dispatched and decides the shape of Brief 37.
-2. **The two missing materials.** **Core alloys** (Fe–S / Fe–Si) — `melt_scale` already sits in
-   `eos.py` with the comment *"the alloy core's depression goes here"* and there is no alloy
-   material, so a real core is modelled as pure iron and comes out **too dense**; this is what
-   made Dante's iron-core sensitivity read −12.5 %. And the **C–N–H polymer** the carbon axis
-   needs, which is the same thing as item 3's scope decision.
+2. **The two missing materials.** **Core alloys** — `melt_scale` sits in `eos.py` with the comment
+   *"the alloy core's depression goes here"* and no alloy material fills it, so the **melting
+   depression** is a declared convention rather than a material property. And the **C–N–H
+   polymer** the carbon axis needs, which is the same thing as item 3's scope decision.
+
+   ⚠ **Two corrections to how this row was first written** (2026-09-02, survey ⑮ + the owner).
+   **The density half of it was wrong**: `earth_like` resolves to `fe_prem`, not pure iron
+   (`interior.py:82`; `fe_eps` is reached only by `composition="iron"`), and `fe_prem` is already
+   alloy-grade — **7 050 kg/m³ at ambient against pure iron's 8 300, i.e. 0.849**, which is *below*
+   Wicks+ 2018's measured Fe-15Si (7 168). So there is little density headroom on this axis, and
+   the earlier claim that a pure-iron assumption drove a roster body's radius sensitivity is
+   **withdrawn**. **And the reasoning was pointed the wrong way**: that sensitivity was measured on
+   **Dante, whose mass and radius are both labelled `INVENTED`** — an art-directed body cannot
+   motivate engine work, because when the tool and an invented pair disagree **the tool is what has
+   grounding**. The standing goal for this solver is generality (*any* planet), and that is the
+   only justification this row needs. **Do not fit the engine to the roster.**
 3. **The three missing properties.** Materials currently answer density, specific heat and
    adiabatic gradient, and nothing else. **Thermal conductivity** — Brief 35 needed it and
    borrowed it from a paper's table. **Viscosity / rheology** — tidal response and convection
