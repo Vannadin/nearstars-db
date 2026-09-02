@@ -1,0 +1,77 @@
+<!-- Brief 43 — chain.yaml 의 via 91개 중 35개가 공급자가 내지 않는 양을 가리켰다: 분류, 수리, 게이트 -->
+# `via` versus `outputs` — what Brief 43 found and fixed (context notes)
+
+2026-09-03. Five commits, one per step, as the brief asked: `12eb701f` report only · `4654393a`
+classes 1 + 5 · `257721a5` class 3 · `886ff1b5` class 4 · `5c1df658` the gate. Verifiers: (병)
+parallel seat (parser and triage, `via_triage.py`), (직) directing seat (the four sharpest
+misroutes verified), (여기) work seat.
+
+## 1. The finding
+
+`chain.yaml`'s header defines `via` as *"넘어가는 양"*, and the file is the canonical graph. Yet
+nothing read the field except `build_graph_page.py`, for a tooltip. The parallel seat parsed all
+**91** via-edges against their suppliers' `outputs`: **35 (38 %)** named a quantity the supplier
+does not emit. Triage (병), reproduced mechanically (여기, `check_via.py`):
+
+| class | n | what it was | fix |
+|---|---|---|---|
+| 0 already gap | 1 | `body_class → dynamo_rocky via sub_neptune` | none |
+| 1 rename | 5 | the quantity exists under another name | via renamed |
+| 2 derivable | 8 | computable from emitted quantities, four of them *assembled across edges* | allowlisted, each row naming **which inputs combine** |
+| 3 selects-discriminant | 10 | a label the consumer forms, carried on a `selects` edge that the header says needs no via | see §2 |
+| 4 real break | 8 → **6** | no node emits it | `status: gap` with the reason on the edge |
+| 5 misrouted | 3 → **2** | the quantity is emitted — by another node, or by the destination | re-pointed / renamed; one reclassified (§2) |
+
+The header's own warning: *"근거 없는 엣지는 넣지 않는다. 그림을 위해 추측한 화살표가 이 프로젝트가
+반복해 온 실수다."* Two arrows were pointing at nodes that do not emit what they promise
+(`stellar_wind`'s **only** input was `star_physical via age`, and no node emits `age`;
+`crater_state → hapke_shader_values via terrain` named the destination's own output), and one
+promise was the supplier's list being short (below).
+
+## 2. Three places the triage moved, said rather than absorbed
+
+- **`star_physical → body_figure via p_rot` is not misrouted (class 5 → 2 rows).** It refs
+  `body-figure-methodology.md:238`, the **α Cen A** row (P_rot 22 d, *measured*); the
+  `spin_axis_inclination` edge refs `:244`, the **Fomalhaut A** row (P_rot *derived* from v sin i and
+  i★). Two routes, both real, separated by their refs on purpose. The defect was `star_physical`'s
+  output list lacking a measured stellar rotation period — and the DB does carry one
+  (`rotation_measurements` ×212, `rotation_period_days` ×157 in `db/stellar_props_curated.json` and
+  `db/systems/`), so adding `p_rot` is a kept promise, not a new unkeepable one (직, 여기).
+- **Class 3 was handled two ways, not one (pre-registered ③'s shape).** Where the supplier
+  *computes* the label it is declared as an output: `dynamo_rocky` gains `regime` (the RM22
+  ladder's Ro_ℓ gate, computed and discarded); `tidal_heating` gains `radius_ceiling` and
+  `plains_temperature` (the transport test's hard ceiling → Dante 521 km; the external-budget
+  plains → 223 K, §6.3/6.5) — those two had been in class 4 and left it. For the other eight the
+  supplier does **not** compute the label: five sit on `atmosphere_choice`, an *owner* node that
+  declares numbers, and the rest are formed by the consumer from `t_eq`, `power`, or
+  `retained`/`loss_rate`. Adding them to `outputs` would have declared a promise nobody keeps. The
+  header says `selects` carries no via, so the via is dropped and the discriminant word moves into
+  the edge note; the one `requires` edge (`plasma_source`, scope parent) now passes `power`.
+  Deviation from the brief's step 3, argued here; the brief's own ③ registered it.
+- **`circulation_regime`** was called the class table's own verdict; `omega0_class_table` outputs
+  `p_init` (initial spin), and the advection-versus-radiation regime is `day_night_contrast`'s
+  judgement (`tidally-locked-temperature-methodology.md:117`). Treated as consumer-formed.
+
+## 3. The six gaps, and what closes each
+
+`fossil_bulge` (body_figure does not emit it; the upstream verdict exists as
+`interior_layers.figure_relaxation` since Brief 39 — the gap closes when the figure solver reads
+it) · `cooling_luminosity` (**the graph was more optimistic than the module**: `dynamo.py` already
+refuses to supply L(M, age); the file now agrees with code that was right) · `rossby` (needs a
+convective velocity and length scale) · `cmb_heat_flux` (wanted by two consumers, emitted by
+none; one supplier, not two workarounds) · `spe_fluence` · `outgassing` (survey ㉓: the supplier
+computes nothing yet).
+
+## 4. Invariants checked at every step (여기)
+
+`graph.components()`: one coupled core of **16** nodes, identical to `coupled_core`, before and
+after every edit; `graph.undeclared()` empty throughout; `chain.py check` passes. **Branch ①**:
+the misroutes fixed cleanly and the cycles did not move — `coupled_core` was never touched.
+
+Result: **83 via-edges, 15 mismatches = 8 allowlisted + 7 `status: gap` + 0 open.** The gate
+(`check_via.py --gate` in `check.sh`) fails on any via outside those two lists. pyyaml is not a
+new dependency (`chain.py`, `check_pipeline_flow.py`, `check_phase4_gate.py` already import it on
+unconditional `check.sh` paths — verified, not relayed).
+
+**Free fix recorded for the `dynamo_rocky` build**: `regime` is now a declared output, so the
+node's recipe must emit it when built.
