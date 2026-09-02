@@ -1,11 +1,11 @@
 {
  "python": "3.9.6",
- "path_fingerprint": "67690e8df3a65544",
- "frozen_at": "2026-09-01",
+ "path_fingerprint": "708ff4627f24c448",
+ "frozen_at": "2026-09-03",
  "steps": 1500,
  "bodies": {
   "Uranus": {
-   "seconds": 22.8,
+   "seconds": 22.2,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -18,6 +18,8 @@
     "cmb_temperature": "0.0",
     "cmb_pressure": "0.0",
     "ice_column_state": "molten",
+    "silicate_melt_state": "undecided",
+    "silicate_melt_fraction_max": "0.0",
     "ocean_thickness": "0.0",
     "ice_shell_thickness": "0.0",
     "core_radius_fraction": "0.0",
@@ -41,7 +43,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 53.4,
+   "seconds": 52.8,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -54,6 +56,8 @@
     "cmb_temperature": "0.0",
     "cmb_pressure": "0.0",
     "ice_column_state": "molten",
+    "silicate_melt_state": "undecided",
+    "silicate_melt_fraction_max": "0.0",
     "ocean_thickness": "0.0",
     "ice_shell_thickness": "0.0",
     "core_radius_fraction": "0.0",
