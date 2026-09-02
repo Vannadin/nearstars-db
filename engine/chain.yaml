@@ -188,10 +188,10 @@ nodes:
   cassini_state:      {kind: computed, recipe: cassini-state-obliquity-methodology, outputs: [obliquity]}
   spin_axis_inclination: {kind: computed, recipe: spin-axis-inclination-methodology, outputs: [i_star, p_rot]}
   dynamo_giant:       {kind: computed, recipe: planetary-dynamo-scaling, outputs: [b_pol, b_eq, dipole_moment]}
-  dynamo_rocky:       {kind: computed, recipe: rocky-planet-dynamo-methodology, outputs: [dipole_moment, b_eq]}
+  dynamo_rocky:       {kind: computed, recipe: rocky-planet-dynamo-methodology, outputs: [dipole_moment, b_eq, regime], note: "regime = dipolar | multipolar, RM22 사다리 2단 (Ro_ℓ 0.12 게이트)의 판정. 2026-09-03 브리프 43 — 계산되고 버려지던 중간값을 출력으로 선언"}
   stellar_wind:       {kind: computed, outputs: [n_sw, v_sw, p_ram]}
   magnetosphere_geometry: {kind: computed, recipe: planetary-magnetosphere-geometry-methodology, outputs: [r_mp, belt_extent, belt_intensity]}
-  tidal_heating:      {kind: computed, recipe: tidal-heating-methodology, outputs: [power, surface_flux]}
+  tidal_heating:      {kind: computed, recipe: tidal-heating-methodology, outputs: [power, surface_flux, radius_ceiling, plains_temperature], note: "radius_ceiling 은 수송 테스트가 돌려주는 하드 반지름 상한 (§6, Dante 521 km 가 그 산물), plains_temperature 는 외부 예산의 평원 온도 (§6.3·6.5, Dante 223 K) — 둘 다 방법론이 실제로 계산하는 값이라 2026-09-03 에 gap 이 아니라 출력으로 선언했다."}
   heat_transport_mode:
     kind: computed
     recipe: tidal-heating-methodology
@@ -334,7 +334,7 @@ edges:
   - {from: orbit_elements, to: tidal_locking, kind: requires, via: [a, e], ref: "tidal-locking-timescale-methodology.md:141"}
   - {from: mass_radius_relation, to: tidal_locking, kind: requires, ref: "tidal-locking-timescale-methodology.md:450"}
   - {from: system_age, to: tidal_locking, kind: requires, via: t_sys, ref: "tidal-locking-timescale-methodology.md:89"}
-  - {from: atmosphere_choice, to: tidal_locking, kind: selects, via: thermal_tide, ref: "tidal-locking-timescale-methodology.md:247"}
+  - {from: atmosphere_choice, to: tidal_locking, kind: selects, note: "판별자 thermal_tide — 소비처가 pressure·composition 에서 형성한다 (2026-09-03, via 에서 내림)", ref: "tidal-locking-timescale-methodology.md:247"}
   - {from: tidal_locking, to: tidal_heating, kind: selects, ref: "tidal-locking-timescale-methodology.md:438"}
   - {from: orbit_elements, to: tidal_heating, kind: requires, via: [a, e, n], ref: "tidal-heating-methodology.md:61"}
   - {from: mass_radius_relation, to: tidal_heating, kind: requires, via: radius, ref: "mass-radius-relation-methodology.md:371"}
@@ -355,7 +355,7 @@ edges:
   - {from: global_fluid_layer, to: heat_transport_mode, kind: selects, ref: "tidal-heating-methodology.md:332"}
   - {from: t_eq_stellar, to: heat_transport_mode, kind: requires, ref: "tidal-heating-methodology.md:341"}
   - {from: atmosphere_choice, to: day_night_contrast, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md:117"}
-  - {from: omega0_class_table, to: day_night_contrast, kind: selects, via: circulation_regime, ref: "tidally-locked-temperature-methodology.md:117"}
+  - {from: omega0_class_table, to: day_night_contrast, kind: selects, note: "판별자 circulation_regime(이류 대 복사) — 표는 p_init 만 내고 순환 영역은 소비처의 판정이다 (2026-09-03, via 에서 내림)", ref: "tidally-locked-temperature-methodology.md:117"}
   - {from: t_eq_stellar, to: day_night_contrast, kind: requires, ref: "tidally-locked-temperature-methodology.md:61"}
   - from: tidal_locking
     to: day_night_contrast
@@ -427,16 +427,16 @@ edges:
   - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_ram, ref: "planetary-magnetosphere-geometry-methodology.md:83"}
   - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
   - {from: dynamo_rocky, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
-  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: selects, via: multipolar, ref: "planetary-magnetosphere-geometry-methodology.md:1154"}
-  - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, via: ionosphere, ref: "planetary-magnetosphere-geometry-methodology.md:30"}
-  - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, via: plasmasphere_slot, ref: "planetary-magnetosphere-geometry-methodology.md:133"}
+  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: selects, via: regime, ref: "planetary-magnetosphere-geometry-methodology.md:1154"}
+  - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, note: "판별자 ionosphere — 소비처가 pressure·composition 에서 형성 (2026-09-03, via 에서 내림)", ref: "planetary-magnetosphere-geometry-methodology.md:30"}
+  - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, note: "판별자 plasmasphere_slot — 소비처가 pressure·composition 에서 형성 (2026-09-03, via 에서 내림)", ref: "planetary-magnetosphere-geometry-methodology.md:133"}
   - {from: orbit_elements, to: magnetosphere_geometry, kind: influences, sign: negative, ref: "planetary-magnetosphere-geometry-methodology.md:205"}
   - from: tidal_heating
     to: magnetosphere_geometry
     kind: requires
-    via: plasma_source
+    via: power
     scope: parent
-    note: 화산 위성이 부모의 벨트를 먹인다. Io 는 목성에 ~1 ton/s 를 공급하고, 우리 A b I 도 같은 역할을 한다.
+    note: 화산 위성이 부모의 벨트를 먹인다. 넘어가는 수는 power 이고, plasma_source 라는 범주는 소비처가 그 수에서 형성한다 (2026-09-03). Io 는 목성에 ~1 ton/s 를 공급하고, 우리 A b I 도 같은 역할을 한다.
     ref: "planetary-magnetosphere-geometry-methodology.md:330,1182"
   - {from: ring_system, to: magnetosphere_geometry, kind: influences, sign: negative, status: gap, ref: "planetary-magnetosphere-geometry-methodology.md:569"}
   - from: magnetosphere_geometry
@@ -476,7 +476,7 @@ edges:
   - {from: tidal_locking, to: atmospheric_escape, kind: influences, sign: negative, ref: "exoplanet-atmosphere-methodology.md:102"}
   - {from: tidal_heating, to: atmospheric_escape, kind: influences, sign: positive, ref: "moon-energy-budget-methodology.md:80"}
   - {from: atmospheric_escape, to: atmosphere_choice, kind: selects, ref: "exoplanet-atmosphere-methodology.md:76"}
-  - {from: atmospheric_escape, to: composition_intent, kind: influences, via: selective_loss, ref: "exoplanet-atmosphere-methodology.md:224"}
+  - {from: atmospheric_escape, to: composition_intent, kind: influences, note: "선택적 손실(selective_loss) — retained·loss_rate 에서 소비처가 읽는 라벨, 수치 계약 없음 (2026-09-03, via 에서 내림)", ref: "exoplanet-atmosphere-methodology.md:224"}
   - {from: composition_intent, to: atmosphere_choice, kind: requires, via: mantle_redox, ref: "exoplanet-atmosphere-methodology.md:152"}
   - {from: internal_heat_nontidal, to: atmosphere_choice, kind: requires, via: outgassing, ref: "internal-heat-luminosity-methodology.md:208"}
   - {from: t_eq_stellar, to: atmosphere_choice, kind: requires, via: scale_height, ref: "exoplanet-atmosphere-methodology.md:522"}
@@ -540,8 +540,8 @@ edges:
   - from: atmosphere_choice
     to: crater_state
     kind: selects
-    via: fluvial_aeolian_channel
     note: >
+      판별자 fluvial_aeolian_channel — 소비처가 pressure·composition 에서 형성 (2026-09-03, via 에서 내림).
       두꺼운 대기는 크레이터 열화의 채널 자체를 바꾼다. 작동하는 수문·풍성 순환이
       있으면 비·강·바람이 바닥부터 채우고, 그 열화는 초반이 빠르고 스스로 멈춘다 —
       낡은 것은 전부 깊이 메워지고 어린 것은 거의 안 건드려진 이중 분포가 남는다.
@@ -553,7 +553,7 @@ edges:
   - {from: body_age, to: crater_state, kind: requires, ref: "crater-degradation-methodology.md:143"}
   - {from: star_physical, to: atmosphere_reflected_color, kind: requires, via: sed, ref: "atmosphere-reflected-color-methodology.md:233"}
   - {from: atmosphere_choice, to: atmosphere_reflected_color, kind: requires, ref: "atmosphere-reflected-color-methodology.md:55"}
-  - {from: t_eq_stellar, to: atmosphere_reflected_color, kind: selects, via: cloud_class, ref: "atmosphere-reflected-color-methodology.md:58"}
+  - {from: t_eq_stellar, to: atmosphere_reflected_color, kind: selects, note: "판별자 cloud_class — t_eq 에서 소비처가 형성하는 등급 라벨 (2026-09-03, via 에서 내림)", ref: "atmosphere-reflected-color-methodology.md:58"}
   - {from: atmosphere_reflected_color, to: surface_albedo, kind: influences, ref: "surface-color-albedo-methodology.md:277"}
   - {from: atmosphere_reflected_color, to: greenhouse, kind: influences, ref: "atmosphere-reflected-color-methodology.md:439"}
   - {from: body_class, to: hapke_shader_values, kind: selects, ref: "hapke-shader-methodology.md:165"}
@@ -561,8 +561,8 @@ edges:
   - from: atmosphere_choice
     to: hapke_shader_values
     kind: selects
-    via: scaled_family
     note: >
+      판별자 scaled_family — 소비처가 pressure·composition·haze 에서 형성 (2026-09-03, via 에서 내림).
       대기는 원반 위상곡선을 매끄러운 산란 쪽으로 씻어낸다. 무대기 레골리스·얼음이
       scaled 2.2 계열인 데 반해, 얇고 먼지 있는 대기는 1.56/1.0(화성), 두꺼운 대기는
       1.0~1.15 로 내려가고 지구는 아예 무대기 경로 밖(대양 셰이더)이다.
