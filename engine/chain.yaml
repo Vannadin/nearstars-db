@@ -36,7 +36,14 @@ scopes: [self, parent, system]
 nodes:
 
   # ── 0층. 계산되지 않는 것 ──────────────────────────────────────
-  star_physical:      {kind: measured, outputs: [mass, radius, teff, luminosity, sed, v_sin_i]}
+  star_physical:
+    kind: measured
+    # p_rot: 측정된 항성 자전주기. 2026-09-03 브리프 43 — star_physical → body_figure via p_rot
+    # (:body-figure-methodology.md:238, α Cen A P_rot 22 d 측정 경로)이 "오배선" 으로 분류됐다가
+    # 정정됐다: 화살표는 맞고 이 목록이 짧았다. spin_axis_inclination 의 p_rot 은 v sin i + i★ 의
+    # **도출** 경로(:244, Fomalhaut A)이고 둘은 다른 길이다. DB 는 rotation_measurements 로
+    # 측정 자전주기를 실제로 담고 있다 (db/stellar_props_curated.json · db/systems).
+    outputs: [mass, radius, teff, luminosity, sed, v_sin_i, p_rot]
   star_metallicity:   {kind: measured, outputs: [z], status: gap}
   system_age:         {kind: measured, outputs: [t_sys]}
   body_age:
@@ -294,8 +301,8 @@ edges:
       - "cassini-state-obliquity-methodology.md:166"
 
   # ── figure · 자전 ──────────────────────────────────────────────
-  - {from: tidal_locking, to: body_figure, kind: requires, via: lock_state, ref: "body-figure-methodology.md:252"}
-  - {from: body_figure, to: tidal_locking, kind: selects, via: permanent_quadrupole, ref: "tidal-locking-timescale-methodology.md:204"}
+  - {from: tidal_locking, to: body_figure, kind: requires, via: locked, ref: "body-figure-methodology.md:252"}
+  - {from: body_figure, to: tidal_locking, kind: selects, via: [j2, c22], ref: "tidal-locking-timescale-methodology.md:204"}
   - {from: mass_radius_relation, to: body_figure, kind: requires, via: radius, ref: "body-figure-methodology.md:353"}
   - {from: orbit_elements, to: body_figure, kind: requires, via: n, ref: "body-figure-methodology.md:37"}
   - {from: body_class, to: body_figure, kind: selects, ref: "body-figure-methodology.md:79"}
@@ -311,7 +318,7 @@ edges:
   - from: body_figure
     to: cassini_state
     kind: requires
-    via: [j2, radius]
+    via: [j2, reference_radius]
     scope: parent
     note: 위성의 Cassini 상태는 *부모 행성의* J2 와 반지름이 정하는 교점 이동률에 걸린다.
     ref: "cassini-state-obliquity-methodology.md:124"
@@ -414,7 +421,9 @@ edges:
   # interior_layers 가 같은 이유로 포텐셜 온도를 선언으로 받는 것과 같은 자리다.
   - {from: internal_heat_nontidal, to: core_state, kind: influences, status: gap, ref: "core-state-methodology.md:1", note: 핵-맨틀 경계의 열류가 핵 쪽 경계 온도를 정한다. 저쪽이 그 열류를 내지 않아 지금은 선언으로 받는다.}
   - {from: body_class, to: core_state, kind: selects, ref: "core-state-methodology.md:1"}
-  - {from: star_physical, to: stellar_wind, kind: requires, via: age}
+  # 2026-09-03: 이 노드의 유일한 입력 엣지가 star_physical via age 였는데, age 를 내는 노드는
+  # 없다 (system_age 가 t_sys, body_age 가 t_body). 항성풍의 나이는 항성의 나이 = 계의 나이.
+  - {from: system_age, to: stellar_wind, kind: requires, via: t_sys}
   - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_ram, ref: "planetary-magnetosphere-geometry-methodology.md:83"}
   - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
   - {from: dynamo_rocky, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
@@ -482,7 +491,7 @@ edges:
     scope: parent
     note: 부모의 온도·반지름·알베도가 위성 4항 예산의 두 항을 만든다. 젊은 거대행성은 그것만으로 위성에 폭주온실을 일으킬 수 있다.
     ref: "moon-energy-budget-methodology.md:50,120"
-  - {from: tidal_heating, to: moon_energy_budget, kind: requires, via: f_tidal, ref: "moon-energy-budget-methodology.md:68"}
+  - {from: tidal_heating, to: moon_energy_budget, kind: requires, via: surface_flux, ref: "moon-energy-budget-methodology.md:68"}
   - {from: global_fluid_layer, to: moon_energy_budget, kind: selects, ref: "moon-energy-budget-methodology.md:132"}
   - {from: heat_transport_mode, to: moon_energy_budget, kind: selects, ref: "moon-energy-budget-methodology.md:132"}
   - {from: atmosphere_choice, to: greenhouse, kind: requires, ref: "greenhouse-warming-methodology.md:17"}
@@ -490,7 +499,7 @@ edges:
   - {from: t_eq_stellar, to: greenhouse, kind: requires, ref: "greenhouse-warming-methodology.md:439"}
   - {from: moon_energy_budget, to: greenhouse, kind: requires, via: t_eq_4term, ref: "greenhouse-warming-methodology.md:441"}
   - {from: star_physical, to: greenhouse, kind: requires, via: teff, ref: "greenhouse-warming-methodology.md:162"}
-  - {from: star_physical, to: greenhouse, kind: selects, via: spectrum, ref: "greenhouse-warming-methodology.md:283"}
+  - {from: star_physical, to: greenhouse, kind: selects, via: sed, ref: "greenhouse-warming-methodology.md:283"}
   - {from: tidal_heating, to: greenhouse, kind: influences, status: gap, ref: "moon-energy-budget-methodology.md:124"}
   - {from: mass_or_radius, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
   - {from: body_age, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
@@ -561,7 +570,7 @@ edges:
     ref:
       - "hapke-shader-methodology.md:42-51"
       - "hapke-shader-methodology.md:88-90"
-  - {from: crater_state, to: hapke_shader_values, kind: requires, via: terrain, ref: "hapke-shader-methodology.md:158"}
+  - {from: crater_state, to: hapke_shader_values, kind: requires, via: cratered, ref: "hapke-shader-methodology.md:158"}
 
   # ── excludes — 시험했고 아니었다 ───────────────────────────────
   - {from: mass_or_radius, to: hapke_shader_values, kind: excludes, ref: "hapke-shader-methodology.md:148", note: "corr(K, log g) = +0.58 뿐이고 이상치가 끌고 있다. K 는 표면중력을 따라가지 않는다."}
