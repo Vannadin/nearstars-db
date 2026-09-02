@@ -116,7 +116,7 @@ class Structure:
 
     __slots__ = ("radius_m", "mass_kg", "moi", "core_radius_m", "p_center",
                  "p_cmb", "p_ice_base", "phases", "v_pore", "m_above_lab",
-                 "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples",
+                 "p_silicate_max", "t_center", "t_cmb", "t_surface", "ice_samples", "rock_samples",
                  "p_surface", "r_ocean_base", "r_ocean_top", "surface_reached",
                  "ice_x_reached", "r_crust_base", "p_crust_base", "crust_void", "crust_blocked",
                  "r_grad_base", "r_grad_top")
@@ -124,7 +124,7 @@ class Structure:
     def __init__(self, radius_m, mass_kg, moi, core_radius_m, p_center,
                  p_cmb, p_ice_base, phases, v_pore=0.0, m_above_lab=0.0,
                  p_silicate_max=0.0, t_center=0.0, t_cmb=0.0, t_surface=0.0,
-                 ice_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
+                 ice_samples=(), rock_samples=(), p_surface=0.0, r_ocean_base=None, r_ocean_top=None,
                  surface_reached=True, ice_x_reached=False, r_crust_base=None,
                  p_crust_base=None, crust_void=0.0, r_grad_base=None, r_grad_top=None):
         self.radius_m = radius_m
@@ -148,6 +148,9 @@ class Structure:
         # 얼음 기둥을 지나며 찍은 (압력, 온도) 표본. 녹는곡선에 대는 것은 적분이 끝난
         # 뒤이고, 사격이 반복될 때마다 뒤집기를 돌리지 않으려고 그렇게 나눴다.
         self.ice_samples = tuple(ice_samples)
+        # 규산염 층을 지나며 찍은 (압력, 온도) 표본. 얼음과 같은 규율 — 녹는곡선에
+        # 대는 것은 적분이 끝난 뒤다 (브리프 36, _silicate_melt_verdict 가 소비).
+        self.rock_samples = tuple(rock_samples)
         # 원시 지각 (C11). 지각 바닥의 반지름과 압력, 그리고 지각 안 빈 공간의 부피 [m³].
         self.r_crust_base = r_crust_base
         self.p_crust_base = p_crust_base
@@ -230,9 +233,11 @@ def _stack(cmf: float, imf: float, core_material: str, gmf: float = 0.0,
     out = []
     if not differentiated:
         # 금속이 가라앉지 않았다. 핵과 맨틀이 아니라 **섞인 한 층** 이다.
+        # 녹는곡선 조성은 A-콘드라이트 가지 — 한 번도 녹지 않은 원시 암석이다
+        # (분화-시딩, 브리프 36. eos.SILICATE_CHONDRITIC 의 블록 주석).
         rock_metal = mix("rock_metal", "미분화 암석+금속",
                          (MATERIALS[core_material], cmf),
-                         (MATERIALS["silicate"], 1.0 - cmf))
+                         (MATERIALS["silicate_chondritic"], 1.0 - cmf))
         out.append((1.0, rock_metal))
         return out
     if cmf > 0:
@@ -332,7 +337,8 @@ def _crust(crust_rock_fraction: float, crust_porosity: bool = False):
 
     `crust_porosity` 가 켜지면 같은 논문의 식 (4)–(6) 을 Γ = 1 로 얹는다 (아래 클래스)."""
     parts = ((MATERIALS["h2o"], 1.0 - crust_rock_fraction),
-             (MATERIALS["silicate"], crust_rock_fraction))
+             # 지각 암석은 "한 번도 녹지 않은" 층이므로 녹는곡선 조성도 A-콘드라이트다
+             (MATERIALS["silicate_chondritic"], crust_rock_fraction))
     if crust_porosity:
         return PorousCrust(CRUST_NAME, "미분화 원시 지각 (얼음+암석 알갱이, 공극)", parts)
     return mix(CRUST_NAME, "미분화 원시 지각 (얼음+암석 알갱이)", *parts)
@@ -446,9 +452,9 @@ def _grad_ad_at(mat, p: float, t: float, t_pot: float = 0.0) -> float:
 
 def _carries_silicate(mat) -> bool:
     """이 층 재료가 규산염을 들고 있는가. 혼합이면 성분 중에 있는지를 본다."""
-    if mat.name == "silicate":
+    if mat.name.startswith("silicate"):
         return True
-    return any(m.name == "silicate" for m, w in getattr(mat, "parts", ()) if w > 0.0)
+    return any(m.name.startswith("silicate") for m, w in getattr(mat, "parts", ()) if w > 0.0)
 
 
 def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
@@ -499,6 +505,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     p_surface = 0.0
     last_grad = 0.0        # 마지막으로 잰 ∇_ad. 표면 밖에서는 다시 잴 수 없다
     ice_samples: list[tuple[float, float]] = []
+    rock_samples: list[tuple[float, float]] = []
     ICE_SAMPLE_EVERY = 20
     # ── 바다 ──
     # 얼음 기둥(h2o)의 한 자리가 액체인가는 그 자리의 (P, T) 를 녹는곡선에 댄 것으로 정한다.
@@ -722,6 +729,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         if mat.name in ("h2o", "h2o_liquid", "h2o_liquid_dense", "h2o_hot") and (not ice_samples
                                                              or steps % ICE_SAMPLE_EVERY == 0):
             ice_samples.append((p, t))
+        if _carries_silicate(mat) and (not rock_samples or steps % ICE_SAMPLE_EVERY == 0):
+            rock_samples.append((p, t))
         if p_si_max == 0.0 and _carries_silicate(mat):
             p_si_max = p
 
@@ -925,7 +934,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                              p_ice_base, phases, v_pore=v_pore, m_above_lab=m_above_lab,
                              p_silicate_max=p_si_max, t_center=t_center,
                              t_cmb=t_cmb if t_cmb is not None else 0.0,
-                             t_surface=t, ice_samples=ice_samples, p_surface=p,
+                             t_surface=t, ice_samples=ice_samples, rock_samples=rock_samples,
+                             p_surface=p,
                              surface_reached=False, r_crust_base=r_crust_base,
                              p_crust_base=p_crust_base, crust_void=crust_void)
         raise GridExceeded(
@@ -949,6 +959,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                      p_silicate_max=p_si_max, t_center=t_center,
                      t_cmb=t_cmb if t_cmb is not None else 0.0,
                      t_surface=t_surface, ice_samples=ice_samples,
+                     rock_samples=rock_samples,
                      p_surface=p_surface, r_ocean_base=r_ocean_base,
                      r_ocean_top=r_ocean_top, ice_x_reached=ice_x_stepped,
                      r_crust_base=r_crust_base, p_crust_base=p_crust_base,
@@ -1747,6 +1758,75 @@ ICE_STATE_MOLTEN = "molten"
 ICE_STATE_UNDECIDED = "undecided"
 
 
+SILICATE_STATE_NONE = "none"
+SILICATE_STATE_SOLID = "solid"
+SILICATE_STATE_PARTIAL = "partial-melt"
+SILICATE_STATE_MOLTEN = "molten"
+SILICATE_STATE_UNDECIDED = "undecided"
+
+
+def _silicate_melt_verdict(st, potential_temperature, variant: str) -> tuple[str, float, str]:
+    """암석 기둥이 녹았는가 (브리프 36). (상태, 최대 용융분율, 한 줄 설명).
+
+    _ice_verdict 와 같은 규율 — 적분이 찍은 (P, T) 표본을 적분이 끝난 뒤 곡선에
+    댄다. 용융분율은 eos.silicate_melt_fraction 하나가 낸다(단일 진리원). 한계를
+    같이 말한다: **밀도는 어디서나 고체 EOS 다** — 용융 밀도(Monteux 식 (15),
+    Δρ/ρ 1.5 %)는 채택하지 않았으므로, molten 판정은 상태의 이름이지 반지름을
+    바꾼 것이 아니다. 140 GPa 위 곡선은 암석 솔리더스의 **상계**라 그 구간의
+    φ = 0 은 "확실히 고체" 가 아니라 "상계 아래(미정)" 다."""
+    if not st.rock_samples:
+        return SILICATE_STATE_NONE, 0.0, ""
+    if not potential_temperature:
+        return (SILICATE_STATE_UNDECIDED, 0.0,
+                "**암석 기둥의 고체·액체를 판정하지 않았다** — 포텐셜 온도가 선언되지 "
+                "않아 온도가 흐르지 않는다. 녹는곡선은 이제 있으므로(Monteux+ 2016 · "
+                "Deng+ 2023 · Fei+ 2021, 압력대별 사슬) 온도를 선언하면 이 행은 "
+                "판정으로 바뀐다.")
+    samples = sorted((p_pa, t_k) for p_pa, t_k in st.rock_samples
+                     if p_pa >= 0.0 and t_k > 0.0)
+    if not samples:
+        return SILICATE_STATE_NONE, 0.0, ""
+    from eos import (silicate_melt_fraction, silicate_solidus, SILICATE_MELT_MAX_PA,
+                     SILICATE_ROCK_MAX_PA, silicate_melt_refusal)
+    phis = [(p, t, silicate_melt_fraction(p, t, variant)) for p, t in samples]
+    seen = [(p, t, f) for p, t, f in phis if f is not None]
+    blind_p = min((p for p, t, f in phis if f is None), default=0.0)
+    blind = ("" if blind_p == 0.0 else
+             f" 기둥의 {blind_p / 1e9:.0f} GPa 위쪽은 곡선이 닿지 않는다 — "
+             + silicate_melt_refusal(blind_p))
+    variant_note = (f"조성 가지 {variant} (differentiated 선언에서 시딩 — 우리 연결; "
+                    "20 GPa 아래는 인쇄된 조성이 하나라 선택이 곡선을 못 바꾼다)")
+    if not seen:
+        return (SILICATE_STATE_UNDECIDED, 0.0,
+                "**암석 기둥 전체가 녹는곡선 상한(500 GPa) 위다** — 판정하지 않는다."
+                + blind)
+    max_phi = max(f for _, _, f in seen)
+    solid_kind = ""
+    if max_phi <= 0.0:
+        # 전부 φ = 0. 140 GPa 위 표본은 상계 아래라 "미정" 딱지가 붙는다.
+        margin = min(silicate_solidus(p, variant) - t for p, t, _ in seen)
+        above_rock = any(p >= SILICATE_ROCK_MAX_PA for p, _, _ in seen)
+        solid_kind = (" 140 GPa 위 구간의 곡선은 순수 MgSiO₃(암석 솔리더스의 상계)라 "
+                      "거기의 '안 녹음' 은 미정이다 — 암석은 더 낮게 녹을 수 있다."
+                      if above_rock else "")
+        return (SILICATE_STATE_SOLID, 0.0,
+                f"**암석 기둥은 전 표본에서 솔리더스 아래다** (최소 여유 {margin:.0f} K). "
+                + variant_note + "." + solid_kind + blind)
+    hot = max(seen, key=lambda x: x[2])
+    frac_molten = sum(1 for _, _, f in seen if f >= 1.0) / len(seen)
+    state = SILICATE_STATE_MOLTEN if max_phi >= 1.0 else SILICATE_STATE_PARTIAL
+    head = ("**암석 기둥에 리퀴더스 위 구간이 있다 — 마그마 오션이다**"
+            if state == SILICATE_STATE_MOLTEN else
+            "**암석 기둥이 부분용융 창 안에 있다**")
+    return (state, max_phi,
+            f"{head} — 최대 용융분율 φ = {max_phi:.2f} "
+            f"({hot[0] / 1e9:.2f} GPa · {hot[1]:.0f} K; Monteux+ 2016 식 (6)), 표본의 "
+            f"{frac_molten * 100:.0f} % 가 완전 용융. {variant_note}. "
+            "**밀도는 고체 EOS 그대로다** — 용융 밀도(식 (15), Δρ/ρ 1.5 %)는 "
+            "비채택이라 반지름·C/MR² 는 이 상태를 아직 모른다. 잠열은 겉보기 비열로 "
+            "들어갔다 (식 (17))." + blind)
+
+
 def _ice_verdict(st, potential_temperature) -> tuple[str, str]:
     """얼음 기둥이 녹았는가. (상태, 한 줄 설명) 을 돌려준다.
 
@@ -2223,6 +2303,12 @@ def solve(mass_earth: float,
     ice_state, ice_note = _ice_verdict(st, potential_temperature)
     if ice_note:
         notes.append(ice_note)
+    # 조성 가지는 differentiated 선언이 시딩한다 (분화 잔류물 = 페리도타이트).
+    silicate_variant = "peridotitic" if differentiated else "chondritic"
+    rock_state, rock_phi, rock_note = _silicate_melt_verdict(
+        st, potential_temperature, silicate_variant)
+    if rock_note:
+        notes.append(rock_note)
 
     # 2026-08-26: 혼합 규칙이 들어오면서 **앵커 수가 하나에서 둘로 늘었다.** 목성이
     # Z = 0 에서 +0.6 %, 토성이 Z = 0.200 에서 −0.1 % 다. 그래서 이 강등 규칙을 다시
@@ -2472,6 +2558,8 @@ def solve(mass_earth: float,
                 "cmb_temperature": st.t_cmb,
                 "cmb_pressure": (st.p_cmb or 0.0) / 1e9,
                 "ice_column_state": ice_state,
+                "silicate_melt_state": rock_state,
+                "silicate_melt_fraction_max": rock_phi,
                 "ocean_thickness": st.ocean_thickness_m / 1e3,
                 "ice_shell_thickness": st.ice_shell_thickness_m / 1e3,
                 "core_radius_fraction": st.core_radius_m / st.radius_m,
@@ -2487,6 +2575,8 @@ def solve(mass_earth: float,
                "cmb_temperature": "K",
                "cmb_pressure": "GPa",
                "ice_column_state": "",
+               "silicate_melt_state": "",
+               "silicate_melt_fraction_max": "",
                "ocean_thickness": "km",
                "ice_shell_thickness": "km",
                "crust_thickness": "km",

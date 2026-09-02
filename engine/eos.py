@@ -99,9 +99,15 @@ class Phase:
     # ── 녹는곡선 ───────────────────────────────────────────────────────
     # melt 가 빈 문자열이면 **이 상에는 발표된 녹는곡선이 없다** 는 뜻이고, 그러면
     # 이 상에서는 고체·액체를 판정하지 않는다. alpha_k = 0 과 같은 규율이다.
-    melt: str = ""            # "" | "water" | "iron". 어느 곡선을 쓰는가
+    melt: str = ""            # "" | "water" | "iron" | "silicate". 어느 곡선을 쓰는가
     melt_scale: float = 1.0   # 녹는점에 곱하는 인자. 합금 핵의 내림폭이 여기 들어온다
     melt_ref: str = ""        # 그 곡선이 어느 논문·표준 어느 절에서 왔는가
+    # 규산염 곡선의 조성 가지 (peridotitic | chondritic). **우리 선언이다** — 논문은
+    # 두 조성을 나란히 인쇄할 뿐 고르는 법을 말하지 않고, 분화 이력이 고른다는 연결은
+    # interior.solve 가 differentiated 에서 시딩한다 (분화 잔류물 = 페리도타이트).
+    # 20 GPa 아래는 Monteux 가 조성 하나만 인쇄하므로 이 선택은 **20 GPa 위에서만**
+    # 곡선을 바꾼다. melt != "silicate" 인 상은 이 필드를 안 읽는다.
+    melt_variant: str = "peridotitic"
     # ── 온도 천장 ──────────────────────────────────────────────────────
     # p_max 와 **같은 종류** 다. 적합이 어디까지 유효한가를 말하지, 물질이 어디서
     # 상을 바꾸는가를 말하지 않는다. 0 이면 선언된 천장이 없다는 뜻이다.
@@ -128,7 +134,14 @@ class Phase:
         상 이름이 아니라 **압력** 으로 분기를 고른다."""
         if not self.melt:
             return None
-        base = water_t_melt(p) if self.melt == "water" else iron_t_melt(p)
+        if self.melt == "silicate":
+            # 규산염은 다성분이라 융해가 점이 아니라 창이다 — 이 함수의 한 값은
+            # **솔리더스**(첫 용융이 나타나는 온도)이고, 전체 상태(용융분율)는
+            # silicate_melt_fraction 이 단일 진리원으로 낸다. 500 GPa 위는 None
+            # (silicate_melt_refusal 이 이유를 말한다).
+            base = silicate_solidus(p, self.melt_variant)
+        else:
+            base = water_t_melt(p) if self.melt == "water" else iron_t_melt(p)
         return None if base is None else base * self.melt_scale
 
     @property
@@ -369,14 +382,40 @@ class Material:
         rho = self.density(p, t, t_pot)
         k_t = self.k_t(p, t, t_pot)
         if k_t <= 0.0 or rho <= 0.0:
-            return ph.c_v_ref
+            return ph.c_v_ref + self._latent_cp(ph, p, t)
         dpdt = ph.dpdt_v(t, t_pot)
         gamma = dpdt / (rho * ph.c_v_ref)
         alpha = dpdt / k_t
-        return ph.c_v_ref * (1.0 + alpha * gamma * t)
+        return ph.c_v_ref * (1.0 + alpha * gamma * t) + self._latent_cp(ph, p, t)
+
+    @staticmethod
+    def _latent_cp(ph, p: float, t: float) -> float:
+        """부분용융 창 안의 잠열을 겉보기 비열로 — Monteux+ 2016 식 (17), Solomatov 2007.
+
+            C′_p = C_p + ΔH / (T_liq − T_sol)
+
+        창 밖(완전 고체·완전 액체·곡선 밖·온도 미선언)은 0 을 더한다. 상 경계에서
+        온도를 계단으로 밟는 대신 창에서 단열선을 평평하게 만드는 적분기-안정
+        패턴이고, 폭(T_liq − T_sol)은 솔리더스·리퀴더스가 따로 인쇄된 측정에서 온다
+        (140 GPa 위 단일점 구간만 선언된 명목 폭 — SILICATE_MELT_POINT_WIDTH)."""
+        if ph.melt != "silicate" or t <= 0.0:
+            return 0.0
+        sol = silicate_solidus(p, ph.melt_variant)
+        if sol is None or not sol < t:
+            return 0.0
+        liq = silicate_liquidus(p, ph.melt_variant)
+        if t >= liq:
+            return 0.0
+        return SILICATE_MELT_DH / (liq - sol)
 
     def grad_ad(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
-        """(∂lnT/∂lnP)_S = γ P / K_S. 혼합이 이걸 c_P 로 가중해 합친다."""
+        """(∂lnT/∂lnP)_S = γ P / K_S. 혼합이 이걸 c_P 로 가중해 합친다.
+
+        부분용융 창 안에서는 기울기에 C_p/C′_p 를 곱한다 — ∇_ad ∝ 1/c_p 이고 잠열이
+        겉보기 비열을 키우므로(식 (17), _latent_cp) 단열선이 창에서 평평해진다.
+        인쇄된 식 (16)의 α′ 은 비채택이다: 식 (15)의 용융 밀도를 채택하지 않는 채로
+        α′ 만 넣으면 고체 밀도 기둥에 용융 팽창 기울기를 섞는 비일관이 된다
+        (SILICATE_MELT_DH 블록 주석)."""
         if t <= 0.0 or p <= 0.0:
             return 0.0
         rho = self.density(p, t, t_pot)
@@ -384,7 +423,16 @@ class Material:
         if gamma <= 0.0:
             return 0.0
         k_s = self.k_t(p, t, t_pot) + self.phase_at(p).dpdt_v(t, t_pot) * gamma * t
-        return 0.0 if k_s <= 0.0 else gamma * p / k_s
+        if k_s <= 0.0:
+            return 0.0
+        grad = gamma * p / k_s
+        ph = self.phase_at(p)
+        lat = self._latent_cp(ph, p, t)
+        if lat > 0.0:
+            base = self.c_p(p, t, t_pot) - lat
+            if base > 0.0:
+                grad *= base / (base + lat)
+        return grad
 
 
 # ── 섞인 층 ─────────────────────────────────────────────────────────────
@@ -1743,23 +1791,212 @@ SILICATE_EN_TO_PREM = 23.83 * GPA    # Zeng+ 2016 §II.1 상부→하부 맨틀 
 SILICATE_PREM_TO_PV = 3.5e3 * GPA    # Zeng+ 2016 §II — PREM 하부맨틀 적합의 상한
 SILICATE_PV_TO_TFD = 1.35e4 * GPA    # Seager+ 2007 §III.3 — BME4 가 TFD 로 넘어가는 압력
 
+
+# ── 규산염 녹는곡선 — 압력대별 갈아타기, 분화-시딩 (브리프 36) ──────────────────
+#
+# 철(Zhang & Rogers 2022)과 물(IAPWS·Reinhardt)에는 녹는곡선이 있는데 규산염에는
+# 없었다 — 그래서 솔버가 "암석 맨틀이 녹았는가" 를 말하지 못했다. 여기의 사슬이
+# 그 구멍을 닫는다. **형태는 오너 결정(2026-09-02, 브리프 36 + 정정)**: 암석 자료가
+# 있는 데까지 암석을 쓰고(0–140 GPa, Monteux), 그 위는 순수 MgSiO₃(Deng·Fei)로
+# 갈아타되 이음매의 계단을 **물질 종류 차이의 선언**으로 라벨하고 절대 뭉개지 않는다.
+#
+#   0 – 20 GPa      Monteux+ 2016 식 (10)/(11) — Herzberg & Zhang 1996 의 실험 적합.
+#                   조성 하나만 인쇄되어 있어(본문 "chondritic mantle", 그 논문 제목은
+#                   "anhydrous peridotite KLB-1" — Monteux 내부 긴장, 우리가 안 푼다)
+#                   **조성 선택은 이 구간에서 곡선을 못 바꾼다.**
+#   20 – 140 GPa    솔리더스 = 식 (12) (A-콘드라이트, Andrault+ 2011 — Monteux 자신이
+#                   "F 와 A 의 솔리더스 차이가 크지 않다" 며 양쪽에 이걸 쓴다).
+#                   리퀴더스 = 식 (13), **조성이 여기서 갈린다**: F-페리도타이트
+#                   (Fiquet+ 2010) 대 A-콘드라이트 (Andrault+ 2011). 20 GPa 에서 0 K,
+#                   140 GPa 에서 +879 K (F 가 더 내화성 — 잔류물이라 그래야 한다).
+#   ~140 GPa 이음매  암석 → 순수 MgSiO₃. **조성 차이가 아니라 물질 종류 차이**이고
+#                   계단은 선언 그 자체다. 140 GPa 채택 근거: Andrault+ 2011 의 적합
+#                   범위는 논문 미확보로 **범위 미확인**이며, Monteux 는 "지구 최하부
+#                   맨틀 조건까지" 라고만 적는다 — 다만 Monteux 자신의 모델이 곡선을
+#                   140 GPa 에서 구사하므로("melt fraction ≈ 40% at P = 140 GPa")
+#                   인쇄 출처가 스스로 밟은 압력을 경계로 택했다. 대안은 지구 CMB
+#                   136 GPa 였다.
+#   140 – 180 GPa   Deng+ 2023 bridgmanite (Table I 자료 20–160 GPa; 160–180 은
+#                   그 위 20 GPa 외삽 — 라벨). 180 GPa = 논문이 인쇄한 bdg/ppv/액체
+#                   삼중점. 논문 내부 불일치 병기: 두 적합의 교차는 173.6 GPa/6413 K,
+#                   인쇄된 삼중점은 180 GPa/6420 K — 삼중점은 원자료에서 왔다.
+#   180 – 200 GPa   Deng+ 2023 post-perovskite. 200 GPa = 논문 자신의 경고 경계
+#                   ("extrapolating beyond ~200 GPa is subject to uncertainty").
+#   200 – 500 GPa   Fei+ 2021 상계 (Z-머신 충격압축; 멜팅 구속은 ~500 GPa 까지).
+#   500 GPa 위      **이름 대고 거절** — 여섯 논문 어디에도 자료가 있는 전사 가능한
+#                   MgSiO₃ 곡선이 없다 (규산염 사다리는 13.5 TPa 까지 가는데도).
+#
+# **140 GPa 위의 순수 광물 곡선은 암석 솔리더스의 상계로 읽는다**: 순수 내화 광물은
+# 저융점 성분이 있는 암석보다 높은 온도에서 녹으므로, T 가 곡선 위면 암석은 확실히
+# (적어도 부분) 용융이고, 곡선 아래면 **미정**이다 — "안 녹았다" 는 말은 못 한다.
+# 단일점 융해에는 명목 폭(아래 SILICATE_MELT_POINT_WIDTH)을 선언해 적분기가 칼날
+# 계단을 밟지 않게 한다.
+#
+# 라벨 규율: Monteux 는 **인쇄 출처이지 적합자가 아니다** — "연속성 재적합" 이라는
+# 말은 1차 본문에 없다(서베이 ⑬이 자기 앞선 보고를 철회). 실험 출처는 Herzberg &
+# Zhang 1996 / Andrault+ 2011 / Fiquet+ 2010. 그리고 기록해 둘 조건 하나: Monteux 의
+# 리퀴더스 세 가지가 20 GPa 에서 0.040 K 안에서 만난다 — 따로 인용된 실험 적합
+# 셋이 다섯 자리로 우연히 만나지 않으므로 누군가 그 일치를 만들었고 논문은 말하지
+# 않는다(당사자 미지목; Andrault+ 2011 확보가 이 열린 질문을 닫는다).
+SILICATE_MELT_REF = "Monteux+ 2016 (2016E&PSL.448..140M) §2.2.1 식 (10)–(13)"
+# 식 (10)/(11): P < 20 GPa, Herzberg & Zhang 1996 의 콘드라이트질 맨틀 (T [K], P [Pa]).
+# ⚠ 솔리더스 스케일은 **1.336×10⁹ Pa** — 1차 275행에서 확정. 널리 인용되는 2차 표기
+# (Walterová & Behounková 2020)의 1336×10⁹ 은 오식이고, 그대로 쓰면 위성·소형행성
+# 전 범위에서 750 K 차갑다. test_silicate_melt.py 가 이 함정을 조인 잔차로 고정한다.
+MONTEUX_SOL_LOW = (1661.2, 1.336e9, 7.437)    # 식 (10)
+MONTEUX_LIQ_LOW = (1982.1, 6.594e9, 5.374)    # 식 (11)
+MONTEUX_SOL_HIGH = (2081.8, 101.69e9, 1.226)  # 식 (12), A-콘드라이트 (Andrault+ 2011)
+# 식 (13): T_liq = c₁(P/c₂ + 1)^(1/c₃). 두 조성이 여기서 갈린다.
+MONTEUX_LIQ_F = (78.74, 4.054e6, 2.44)        # F-페리도타이트 (Fiquet+ 2010)
+MONTEUX_LIQ_A = (2006.8, 34.65e9, 1.844)      # A-콘드라이트 (Andrault+ 2011)
+MONTEUX_JOIN_PA = 20e9                        # 논문 자신의 저압/고압 가지 전환
+SILICATE_ROCK_MAX_PA = 140e9                  # 암석→순수 MgSiO₃ 이음매 (위 주석의 근거)
+# Deng+ 2023 (2023PhRvB.107f4103D) 본문의 두 Simon 적합 (T [K], P [GPa]).
+# 전사 확정: 인쇄된 외삽점 "9376 ± 656 K at 500 GPa" 를 전사식이 9376.6 K 로 낸다.
+DENG_BDG = (2875.0, 20.0, 8.11, 3.73)         # Tm = 2875·((P−20)/8.11 + 1)^(1/3.73)
+DENG_PPV = (5600.0, 120.0, 113.60, 2.85)      # Tm = 5600·((P−120)/113.60 + 1)^(1/2.85)
+# bdg 적합은 (P−20)/8.11+1 = 0 이 되는 **11.89 GPa 아래에서 산술적으로 정의되지
+# 않는다** — 산문이 아니라 계수 안에 사는 범위 한계(서베이 ⑬ 신규 종류 (f)). 체제상
+# 140 GPa 아래로는 안 내려가지만, 잘못 호출되면 조용한 복소수 대신 이름을 대게 한다.
+DENG_BDG_FLOOR_GPA = 20.0 - 8.11              # = 11.89, 계수의 성질이지 논문의 진술이 아니다
+DENG_TRIPLE_PA = 180e9                        # 인쇄된 bdg/ppv/액체 삼중점 (교차는 173.6)
+DENG_CEILING_PA = 200e9                       # 논문 자신의 외삽 경고 경계
+FEI_UPPER = (6295.0, 140.0, 0.317)            # Fei+ 2021: Tm = 6295·(P/140)^0.317 [K, GPa]
+SILICATE_MELT_MAX_PA = 500e9                  # 이 위는 자료 있는 전사 가능 곡선이 없다
+# 잠열과 부분용융 열역학 — Monteux+ 2016 §2.2.2, Solomatov 2007 을 따른 인쇄식.
+#   식 (6):  φ = (T − T_sol)/(T_liq − T_sol)            ← 용융분율, 인쇄된 정의
+#   식 (17): C′_p = C_p + ΔH/(T_liq − T_sol)            ← 겉보기 비열 (채택)
+#   식 (16): α′ = α + Δρ/(ρ(T_liq−T_sol)) 는 **인쇄돼 있으나 비채택** — 식 (15)의
+#   용융 밀도를 채택하지 않으므로(밀도는 고체 EOS 그대로), 16만 넣으면 고체 밀도
+#   기둥에 용융 팽창 기울기를 섞는 비일관이 된다. 기록만 남긴다: Δρ/ρ = 1.5 %
+#   (Monteux Table 1, Tosi et al.).
+SILICATE_MELT_DH = 4.0e5      # J/kg. Monteux+ 2016 Table 1, ΔH (Ghosh & McSween 1998)
+# 단일점 융해(140 GPa 위 순수 MgSiO₃)의 명목 부분용융 폭. **선언이고 채워 넣은
+# 값이다** — 실제 다성분 암석은 솔리더스와 리퀴더스가 따로 인쇄되어 폭이 측정에서
+# 오지만(20 GPa 에서 158 K, 140 GPa 에서 606 K), 순수 광물 단일점에는 인쇄된 폭이
+# 없어 적분기 안정용 명목값을 선언한다. 브리프 36 의 100–200 K 대의 중앙.
+SILICATE_MELT_POINT_WIDTH = 150.0   # K. 선언 (명목), 논문값 아님
+
+
+def _simon_pa(p: float, t0: float, p_scale: float, c: float) -> float:
+    """Simon–Glatzel 형 T = t0·(P/p_scale + 1)^(1/c). P [Pa]."""
+    return t0 * (p / p_scale + 1.0) ** (1.0 / c)
+
+
+def _silicate_melt_point(p: float) -> float | None:
+    """140–500 GPa 순수 MgSiO₃ 단일 녹는점 [K]. 사슬: Deng bdg → ppv → Fei 상계."""
+    if p > SILICATE_MELT_MAX_PA:
+        return None
+    gpa = p / GPA
+    if p >= DENG_CEILING_PA:                       # 200–500 GPa: Fei+ 2021 상계
+        t0, p_ref, ex = FEI_UPPER
+        return t0 * (gpa / p_ref) ** ex
+    if p >= DENG_TRIPLE_PA:                        # 180–200 GPa: Deng ppv
+        t0, p0, a, c = DENG_PPV
+        return t0 * ((gpa - p0) / a + 1.0) ** (1.0 / c)
+    if gpa < DENG_BDG_FLOOR_GPA:
+        raise ValueError(
+            f"Deng+ 2023 bridgmanite 적합은 {DENG_BDG_FLOOR_GPA:.2f} GPa 아래에서 "
+            f"산술적으로 정의되지 않는다 ((P−20)/8.11+1 ≤ 0, {gpa:.2f} GPa 요청) — "
+            "계수 안에 사는 범위 한계다. 이 압력의 곡선은 Monteux 암석 가지가 맡는다.")
+    t0, p0, a, c = DENG_BDG                        # 140–180 GPa: Deng bdg
+    return t0 * ((gpa - p0) / a + 1.0) ** (1.0 / c)
+
+
+def _silicate_variant_check(variant: str) -> None:
+    if variant not in ("peridotitic", "chondritic"):
+        raise ValueError(
+            f"미등록 규산염 조성: {variant!r} — peridotitic | chondritic. "
+            "조성은 differentiated 선언에서 온다 (interior.solve).")
+
+
+def silicate_solidus(p: float, variant: str = "peridotitic") -> float | None:
+    """압력 p [Pa] 에서 규산염 솔리더스 [K]. 500 GPa 위는 None (곡선 없음).
+
+    조성(variant)은 리퀴더스에서만 곡선을 바꾼다 — 솔리더스는 20 GPa 아래 HZ96,
+    20–140 GPa 는 Monteux 가 양쪽 조성에 같이 쓰는 A-콘드라이트 식 (12)다.
+    140 GPa 위는 순수 MgSiO₃ 단일점 − 명목 폭/2 이고 **암석 솔리더스의 상계**로
+    읽는다 (위 블록 주석)."""
+    _silicate_variant_check(variant)
+    if p < 0.0 or p > SILICATE_MELT_MAX_PA:
+        return None
+    if p < MONTEUX_JOIN_PA:
+        return _simon_pa(p, *MONTEUX_SOL_LOW)
+    if p < SILICATE_ROCK_MAX_PA:
+        return _simon_pa(p, *MONTEUX_SOL_HIGH)
+    tm = _silicate_melt_point(p)
+    return None if tm is None else tm - 0.5 * SILICATE_MELT_POINT_WIDTH
+
+
+def silicate_liquidus(p: float, variant: str = "peridotitic") -> float | None:
+    """압력 p [Pa] 에서 규산염 리퀴더스 [K]. 조성이 20–140 GPa 에서 곡선을 바꾼다."""
+    _silicate_variant_check(variant)
+    if p < 0.0 or p > SILICATE_MELT_MAX_PA:
+        return None
+    if p < MONTEUX_JOIN_PA:
+        return _simon_pa(p, *MONTEUX_LIQ_LOW)
+    if p < SILICATE_ROCK_MAX_PA:
+        coef = MONTEUX_LIQ_F if variant == "peridotitic" else MONTEUX_LIQ_A
+        return _simon_pa(p, *coef)
+    tm = _silicate_melt_point(p)
+    return None if tm is None else tm + 0.5 * SILICATE_MELT_POINT_WIDTH
+
+
+def silicate_melt_fraction(p: float, t: float, variant: str = "peridotitic") -> float | None:
+    """용융분율 φ = (T − T_sol)/(T_liq − T_sol), 0..1 로 잘라서 (Monteux+ 2016 식 (6)).
+
+    **단일 진리원이다** — 상 이름·겉보기 비열·하류 가중치가 전부 이 수 하나를 읽어야
+    한 천체가 묻는 사람에 따라 다른 결정:용융 비를 보이지 않는다 (C7·C11 이 분화
+    상태에 쓰는 원리와 같다). 곡선 밖(500 GPa 위)이나 온도 미선언(t ≤ 0)은 None —
+    0 인 척하지 않는다. 140 GPa 위에서 0.0 은 "확실히 고체" 가 아니라 "상계 아래" 다."""
+    if t <= 0.0:
+        return None
+    sol = silicate_solidus(p, variant)
+    if sol is None:
+        return None
+    liq = silicate_liquidus(p, variant)
+    if t <= sol:
+        return 0.0
+    if t >= liq:
+        return 1.0
+    return (t - sol) / (liq - sol)
+
+
+def silicate_melt_refusal(p: float) -> str:
+    """500 GPa 위에서 곡선이 없는 이유 — 이름 대는 거절문."""
+    return (f"{p / GPA:.0f} GPa 는 규산염 녹는곡선의 상한(500 GPa) 위다. 자료가 있는 "
+            "전사 가능한 MgSiO₃ 곡선이 그 위에 없다 — Fei+ 2021 의 융해 구속이 "
+            "~500 GPa 에서 끝나고, 1400 GPa 를 표방하는 후보(Nguyen Quang Hoc+ 2024)는 "
+            "그 수가 그림에만 산다(인쇄 표는 100 GPa 까지). 규산염 EOS 사다리는 "
+            "13.5 TPa 까지 가므로 그 구간의 고체·액체는 판정하지 않는다. TPa 대의 "
+            "답이 곡선이 아니라 선언된 '고체' 일 가능성(González-Cataldo+ 2016 이 "
+            "실리카에 대해 그렇게 결론)은 기록만 하고 채택하지 않았다 — 유추이지 "
+            "결과가 아니다.")
+
+
 SILICATE = Material(
     "silicate", "규산염 맨틀",
     (Phase("mgsio3_en", "bme3", 3220.0, 125.0 * GPA, 5.0, SILICATE_EN_TO_PREM,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — MgSiO₃ enstatite BME",
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
-           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat"),
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
+           melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
+           "압력대별 사슬, 조성은 differentiated 시딩 (블록 주석)"),
      Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, SILICATE_PREM_TO_PV,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 하부맨틀 BM2 적합",
            p_min=SILICATE_EN_TO_PREM, alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
-           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat"),
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
+           melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
+           "500 GPa 위는 곡선 밖 (silicate_melt_refusal)"),
      Phase("mgsio3_pv", "bme4", 4100.0, 247.0 * GPA, 3.97, SILICATE_PV_TO_TFD,
            "Seager+ 2007 Table 1 · §III.3 (arXiv:0707.2895) — MgSiO₃ perovskite BME4, "
            "Karki+ 2000 의 DFT 계산. 실물은 MgO + SiO₂ 다 (Umemoto+ 2017, "
            "arXiv:1708.04767) — 조성이 이 압력대에서 밀도를 거의 안 정한다는 것이 근거",
            p_min=SILICATE_PREM_TO_PV, k0pp=-0.016 / GPA,
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
-           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat")),
+           t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
+           melt="silicate", melt_ref="이 상의 압력대(3.5–13.5 TPa)는 전부 곡선 상한 "
+           "(500 GPa) 위라 t_melt 가 항상 None 이다 — 판정하지 않는다는 사실의 기록")),
     over_reason=("규산염 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.0f} GPa) 위다. 그 상한은 Seager+ 2007 §III.3 이 규산염의 "
                  "BME4 를 놓고 TFD 로 갈아타는 압력이므로, 그 위는 전자축퇴가 지배하는 "
@@ -1772,6 +2009,20 @@ SILICATE = Material(
                 "enstatite(~23.83 GPa) · PREM 하부맨틀(~3.5 TPa) · MgSiO₃(pv) 는 "
                 "이어져 있어야 하므로, 이건 물리가 아니라 전이압 상수가 이웃과 어긋나게 "
                 "편집됐다는 뜻이다."),
+)
+
+# 미분화(한 번도 녹지 않은) 암석의 규산염 — 같은 상태방정식, 녹는곡선 조성만
+# A-콘드라이트 가지다. **조성은 differentiated 선언에서 온다** (분화 잔류물 =
+# 페리도타이트 = 위의 SILICATE 기본값; 원시 미분화 = 콘드라이트질 = 이 변형).
+# 이 연결은 논문이 시킨 게 아니라 우리 선언이다 — 물리 검산: 잔류물은 저융점 성분이
+# 빠져 더 내화성이어야 하고, 인쇄된 F 리퀴더스가 실제로 A 보다 뜨겁다(140 GPa 에서
+# +879 K). 20 GPa 아래는 인쇄된 조성이 하나라 두 변형이 같은 곡선을 쓴다.
+from dataclasses import replace as _dc_replace
+
+SILICATE_CHONDRITIC = Material(
+    "silicate_chondritic", "규산염 맨틀 (미분화, A-콘드라이트 녹는곡선)",
+    tuple(_dc_replace(ph, melt_variant="chondritic") for ph in SILICATE.phases),
+    over_reason=SILICATE.over_reason, gap_reason=SILICATE.gap_reason,
 )
 
 # ── 물 ──────────────────────────────────────────────────────────────────
@@ -2015,6 +2266,10 @@ ANTIGORITE = Material(
     "antigorite", "antigorite (사문석)",
     (Phase("antigorite", "bm2", ANTIGORITE_RHO0, ANTIGORITE_K0, 4.0, ANTIGORITE_P_MAX,
            ANTIGORITE_REF,
+           # melt 가 비어 있는 것은 **판정이지 미채움 구멍이 아니다** (브리프 36):
+           # 사문석의 고온 운명은 일치 융해가 아니라 탈수·분해라서, 규산염 녹는곡선
+           # 여섯 후보 어느 것도 이 상에 적용되지 않는다. 탈수 경계 곡선은 별도
+           # 근거가 필요한 다른 물건이고 여기서 찾지 않았다.
            alpha_k=ANTIGORITE_ALPHA_K, c_v_ref=HP98_ATG_CP_298, t_ref=298.15),),
     over_reason=("사문석화된 암석층의 바닥이 {p_gpa:.1f} GPa 로 antigorite 실험 상한({max_gpa:.0f} GPa) "
                  "위다. Hilairet+ 2006 이 압축한 것이 거기까지이고, 그 위의 사문석은 탈수 반응의 "
@@ -2274,6 +2529,6 @@ class _HydrogenHeliumSlope:
 H_HE = HydrogenHelium()
 
 MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseLiquidWater | Ammonia] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,
+    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, SILICATE_CHONDRITIC, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,
                         H2O_LIQUID_DENSE, NH3)
 }

@@ -172,6 +172,8 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 # 조석 수송 축 (Brief 35). 이오 재현 실패가 측정 불변량으로 고정되어 있다 —
 # 이 테스트가 울리면 실패 서사 자체가 바뀐 것이니 멈추고 추적한다.
 (cd engine && python3 test_tidal_transport.py) || fail=1
+# 규산염 녹는곡선 사슬 (Brief 36). 전사 검산과 이음매 계단이 측정 불변량이다.
+(cd engine && python3 test_silicate_melt.py) || fail=1
 (cd engine && python3 check_contracts.py) || fail=1
 python3 engine/dynamo_table.py --check || fail=1
 
