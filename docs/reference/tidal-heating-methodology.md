@@ -580,6 +580,23 @@ mechanism is solid, the numbers are noisy:
   > its subject named: *"below 10 % except few data points, which approach 15 % at low melt
   > flux"* — **parameterization against their own numerical simulation, not against Io.**
   >
+  > **Correction (2026-09-02, Briefs 35+37; the sentence above is kept as the record of what
+  > survey ⑧b believed).** The claim "met for the transport half" is now known to be one the
+  > printed system cannot support: wired verbatim and solved to machine residual, the paper's
+  > §4 equations with its Table 5 put Io's lithosphere **8–42× off the paper's own 12.6 km**
+  > under every natural reading of the constants, and the exact-root inversion (audited,
+  > uniqueness confirmed) requires α ≈ 9×10⁻⁷ K⁻¹ — 1/34 of the 3×10⁻⁵ that the paper's own
+  > named source (Schubert et al. 2001, via the parent thesis and Spencer+ 2021 Table 1)
+  > gives. The mechanism: **the model is dimensionless by construction** (thesis Table 2.1;
+  > lid validated as a fraction of mantle depth) and Table 5 is a write-up-time
+  > re-dimensionalisation that contradicts the paper's own §2 (`T₀ (= 1)` vs Table 5's
+  > 1400 K; eq. (2) misses the paper's own ~8 stagnant-lid criterion by six orders in both
+  > readings of ΔT). The axis is wired in `engine/tidal_transport.py` with a permanent
+  > `validation: failed-io-reproduction` label; the full mechanism and what would reopen it
+  > (a model for Khurana+ 2011's ≥50 km / ≥20 %-melt induction layer, or a paper that
+  > *predicts* Io's lid rather than calibrating to it) are in
+  > `engine/tidal-interior-context-notes.md` §7.
+  >
   > **And the expensive part turns out not to be required.** The first reading was that this
   > axis needs Ė(T) — a temperature-dependent dissipation curve under our tidal recipe, which
   > we do not have. **It does not, for what we want.** Ė(T) is needed to *predict* an
