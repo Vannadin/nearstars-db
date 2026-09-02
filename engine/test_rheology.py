@@ -68,13 +68,14 @@ def main() -> int:
 
     # ── 3. label discipline ─────────────────────────────────────────────────
     labels = {rh.RELAXES, rh.CANNOT_RELAX, rh.INSIDE_SPREAD, rh.NO_TEMPERATURE,
-              rh.NO_SILICATE, rh.NO_SOLIDUS}
+              rh.NO_SILICATE, rh.NO_SOLIDUS, rh.OTHER_LAYER}
     cases = [
         rh.relaxation_verdict(1600.0, 2526.0, 0.0, 135.3e9, 4.54),
         rh.relaxation_verdict(None, None, 0.0, None, 5.3, "undecided"),
         rh.relaxation_verdict(1600.0, None, 0.0, None, 5.3, "none"),
         rh.relaxation_verdict(1600.0, None, 0.0, None, None),
         rh.relaxation_verdict(1600.0, None, 600e9, None, 4.5),
+        rh.relaxation_verdict(76.0, None, 0.0, None, 4.5, "solid", silicate_is_outermost=False),
     ]
     for c in cases:
         ok(c["figure_relaxation"] in labels, f"3: unregistered label {c['figure_relaxation']!r}")
@@ -83,6 +84,8 @@ def main() -> int:
     ok(cases[2]["figure_relaxation"] == rh.NO_SILICATE, "3: no silicate must refuse by name")
     ok(cases[3]["figure_relaxation"] == rh.NO_TEMPERATURE, "3: no age must refuse by name")
     ok(cases[4]["figure_relaxation"] == rh.NO_SOLIDUS, "3: solidus undefined at 600 GPa must refuse by name")
+    ok(cases[5]["figure_relaxation"] == rh.OTHER_LAYER,
+       "3: a 1-bar temperature over a non-silicate outer layer must refuse by name (audit ①)")
     ok("relayed" in cases[0]["notes"][0] and "Maxwell floor" in cases[0]["notes"][0],
        "3: the headline note must carry the relayed-constant and Maxwell-floor conditions")
 

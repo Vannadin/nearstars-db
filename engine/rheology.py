@@ -74,6 +74,11 @@ INSIDE_SPREAD = "cannot-say (inside criterion spread)"
 NO_TEMPERATURE = "cannot-say (no temperature)"
 NO_SILICATE = "not-applicable (no silicate mantle)"
 NO_SOLIDUS = "cannot-say (solidus undefined at this pressure)"
+# The temperature handed in is the declared potential temperature = the top of the solved
+# adiabat. For a body whose outermost solved layer is not silicate (ice, ocean, H/He), that is
+# the 1-bar or ice-surface temperature — the ice-giant anchors declare 76 K and 72 K through
+# this very field — and reading olivine rheology at it would be a silent wrong answer.
+OTHER_LAYER = "cannot-say (temperature belongs to another layer)"
 
 CONDITION = ("Maxwell floor, order-of-magnitude gate; all viscosity constants relayed through "
              "unobtained Karato & Wu 1993; solver has no conductive lid, so 'relaxes' means the "
@@ -123,7 +128,8 @@ def _verdict_at(t_k: float, thresholds: dict) -> str:
 
 def relaxation_verdict(t_top_k: float | None, t_cmb_k: float | None,
                        p_top_pa: float, p_cmb_pa: float | None, age_gyr: float | None,
-                       silicate_state: str = "solid", variant: str = "peridotitic") -> dict:
+                       silicate_state: str = "solid", variant: str = "peridotitic",
+                       silicate_is_outermost: bool = True) -> dict:
     """Labelled verdict for one body. Returns a dict with `figure_relaxation` (label),
     `maxwell_time_mantle_top` [yr] (Rovira-Navarro at the top temperature, or None),
     `relaxation_threshold_max` [K] (worst-case threshold across the family), `second_law`
@@ -140,6 +146,20 @@ def relaxation_verdict(t_top_k: float | None, t_cmb_k: float | None,
         out["figure_relaxation"] = NO_SILICATE
         notes.append("figure relaxation: no silicate mantle in the solved column — the "
                      "viscosity laws here are olivine rheology and do not apply.")
+        out["notes"] = tuple(notes)
+        return out
+    if not silicate_is_outermost:
+        # Refuse by name (audit of Brief 39, fix ①). Route chosen: the wrapper knows the layer
+        # order from the Result and nothing else; taking the silicate-top (P, T) from the
+        # profile would need solve() to export two new values — a path-fingerprint function and
+        # an anchor change for a quantity no roster body reaches today (C5). If a body needs
+        # it, that is the upgrade: read (P, T) at the silicate top from the profile and drop
+        # this refusal.
+        out["figure_relaxation"] = OTHER_LAYER
+        notes.append("figure relaxation: cannot say — the solved column has a non-silicate "
+                     "layer outside the silicate, so the declared potential temperature is "
+                     "that layer's surface temperature, not the silicate mantle top; refusing "
+                     "rather than reading olivine rheology at an ice or 1-bar temperature.")
         out["notes"] = tuple(notes)
         return out
     if not t_top_k or t_top_k <= 0.0 or age_gyr is None or age_gyr <= 0.0:

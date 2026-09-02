@@ -3153,6 +3153,11 @@ def _from_state(state):
     # 읽어 붙이는 후처리이고, 라벨·조건은 rheology.relaxation_verdict 가 싣는다.
     if not res.applicable:
         return res
+    # 층 순서는 regime 문자열이 안다 (중심 → 바깥). 규산염이 가장 바깥이 아니면 선언된
+    # 포텐셜 온도는 그 바깥 층(얼음·바다·H/He)의 표면 온도라 규산염 판정에 못 쓴다 —
+    # 얼음거대행성 앵커가 이 필드로 76 K · 72 K 를 선언한다. 감사 지적 ①, 이름 붙여 거절.
+    phases = res.regime[len("integrated_"):] if res.regime.startswith("integrated_") else res.regime
+    silicate_on_top = phases.endswith("silicate") or phases.endswith("silicate_chondritic")
     v = rheology.relaxation_verdict(
         t_top_k=state.get("potential_temperature"),
         t_cmb_k=res.values.get("cmb_temperature") or None,
@@ -3160,7 +3165,8 @@ def _from_state(state):
         p_cmb_pa=(res.values.get("cmb_pressure") or 0.0) * 1e9 or None,
         age_gyr=state.get("age_gyr"),
         silicate_state=res.values.get("silicate_melt_state"),
-        variant="peridotitic" if state.get("differentiated", True) else "chondritic")
+        variant="peridotitic" if state.get("differentiated", True) else "chondritic",
+        silicate_is_outermost=silicate_on_top)
     return _dc_replace(
         res,
         inputs={**res.inputs, "age_gyr": state.get("age_gyr")},
