@@ -120,6 +120,47 @@ potential_temperature) — cannot-say (no temperature); Alpha Centauri A b (gian
 (no silicate mantle). Uranus/Neptune anchors — untouched by construction, and the verdict is
 not computed for them because they are solved through `solve()`, not the recipe wrapper.
 
-## 4. Run record — filled in after the run
+## 4. Run record — 2026-09-03, code `21665370`
 
-*(pending)*
+**Branch fired: ① — with ⑥ riding on it.** Earth (the only engine body with a declared
+potential temperature) relaxes on both laws with room to spare: top-of-mantle 1600 K against
+the threshold family **700–1009 K** (engine 0 GPa solidus 1661.2 K; τ_M(Rovira-Navarro) =
+3.53×10⁵ s = 0.011 yr; Monteux/Abe agrees). Pandora returns `cannot-say (no temperature)`
+— refused by name, not defaulted. Alpha Centauri A b is out of domain upstream (interior refuses
+the giant), so no verdict is composed. **So the hydrostatic declaration is supported for the
+convecting mantle of every body that has a temperature, and the consumer never branches on
+today's roster** — said plainly, as ① requires. **But the reason it never branches is ⑥**: the
+solver's coldest temperature is the adiabat top, ≥ 1300 K for any declared value, while the
+threshold sits at 700–1009 K; a conductive lid hundreds of K colder would land inside or below
+the family, and the solver has no lid. **The product is therefore the condition on the label,
+not a hydrostatic verdict** — the wire is kept because it carries that condition to the figure
+solver, and because the `cannot-say` and `cannot-relax` branches are reachable and pinned
+(`test_rheology.py` §4: 850 K → inside spread, 600 K → cannot relax).
+
+**Branches not fired**: ② (no body refuses), ③ (laws agree wherever a verdict exists), ④ (Earth
+is 590 K above the family's top; ④ is an *output* for any body inside it), ⑤ (age 0.1 → 10 Gyr
+moves the threshold 794 → 721 K, 73 K, below any margin measured).
+
+**Reproductions** (여기): directing seat's threshold table reproduces to < 1.5 K **at T_s = 1600 K**
+(689 / 720 / 755 / 922 / 953 / 986) — the seat's T_s was not stated; 1600 K is the value that
+reproduces all six, recovered by inversion, and the test pins it. On the engine's own solidus the
+family is 700–1009 K. Age sensitivity 73 K here against the seat's 70 K. Monteux self-check
+8.0×10²² Pa·s at (4500, 2400) and 1.7×10¹⁹ at (4000, 2600) — ~10²³ and four orders, as surveyed.
+
+**Anchors — bit-identical, verified not asserted.** `solve()` untouched; the verdict composes in
+the recipe wrapper. Full `test_ice_giant.py`: all pass, Uranus and Neptune values identical to the
+frozen file. ⚠ **Pre-existing drift found on the way, not mine**: `test_ice_giant.py --fast`
+reports the path fingerprint differs from the frozen one (`708ff4627f24c448` vs
+`67690e8df3a65544`). Measured at HEAD *before* my change with a copy of `interior.py` from
+`c4768b18`: same `708ff…`. The anchor JSON was last refreshed at `764da03e` (Brief 26); the one
+commit touching `interior.py` since is **`9ff07deb` (Brief 36, silicate melting curve)**, which
+edited `solve` and `integrate` without `--refresh`. Values still match, so the gate passes; the
+fingerprint alone is stale. Left for the directing seat to route — refreshing it in this commit
+would attach Brief 36's change to Brief 39's label.
+
+**Gate**: `check.sh` FAIL 0, all checks pass, **01:59:34 → 02:19:50 = 1216 s**; `test_rheology.py`
+adds **0.03 s**. No new runtime dependency. Contract check 5/5 with the three new outputs and
+`age_gyr`. `chain.py check` passes with the new edge.
+
+**Noticed, not touched**: the ko contract mirror was already missing `crust_thickness` before
+this brief (EN has it); I added only my three outputs and did not repair the pre-existing gap.
