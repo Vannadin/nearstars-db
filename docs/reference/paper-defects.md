@@ -30,6 +30,7 @@ would silently produce a wrong answer, say whether a gate catches it.**
 | 8 | **Nguyen Quang Hoc+ 2024** (JAP 136, 045103) | Abstract headline **"up to 1400 GPa"** exists only in a figure; the printed ε table stops at **100 GPa** | A 14× gap between claimed and data range — C6's disease | `engine/silicate-melt-context-notes.md` (recorded as not-adopted) |
 | 9 | **Militzer 2024** (PNAS 121, e2403981121) | Three simulation labels are **exactly 2× the paper's own eq. [3]** (`H₁ = N_H/2N_O`): O₈₄H₂₂₆ is **1.345**, printed as 2.69 (same for H₂₈₂, H₃₉₆). The control passes — eq. [2] and Table 1 reproduce exactly, so the defect is confined to those three | The method interpolates *as a function of hydrogen fraction*, so placing the deposited file on that axis needs the right scale and the paper prints both | `engine/carbon-*-context-notes.md` (survey ⑯) |
 | 10 | **Buono & Walker 2011** (GCoA 75, 2072) | Eq. (5), the 14 GPa liquidus polynomial, prints its constant as **−2140.2** — so T(x=0) = −2140.2 K, a negative melting point. Read +2140.2 it continues the monotone pure-Fe intercept rise (1808.9 → 2093.0 → 2140.2 K), and the 6 GPa intercept matches the paper's own prose to 6 K, so the family is sound and one sign is not | The x = 0 intercepts are the transcription check for the whole polynomial set; the paper itself says eqs. (2)/(5) were not used to calibrate its model | `engine/core-melt-depression-context-notes.md` (survey ⑰) |
+| 11 | **Soubiran & Militzer 2018** (Nat. Commun. 9, 3883) | Reference 11 prints *Geochem. Geophys. Geosyst.* **17**, 1935–1956 **(2006)**. Volume and pages are right; the year is **2016** — [`2016GGG....17.1935O`](https://ui.adsabs.harvard.edu/abs/2016GGG....17.1935O), Olson, P., *Mantle control of the geodynamo: Consequences of top-down regulation*, confirmed through ADS by title (pdftotext extraction line 875) | Load-bearing: that one citation carries **both** the `Rm > 40` onset **and** the `Ro_ℓ ≤ 0.1` dipolar cutoff, so a session chasing "Olson 2006" lands in the wrong decade of a prolific author's output. **No gate catches a citation year** | `engine/electrical-conductivity-context-notes.md` (survey ⑱) |
 
 ---
 
@@ -48,10 +49,10 @@ would silently produce a wrong answer, say whether a gate catches it.**
 
 ## What the pattern says
 
-**Ten defects across the sources we have actually transcribed from.** Five are magnitude or
+**Eleven defects across the sources we have actually transcribed from.** Five are magnitude or
 sign slips in a single printed value (#1, #6, #8, #9, #10), three are a paper disagreeing with
-itself (#4, #5, #7), one is a claim range wider than the data behind it (#8), and one is an
-attribution that points at the wrong owner (#2).
+itself (#4, #5, #7), one is a claim range wider than the data behind it (#8), one is an
+attribution that points at the wrong owner (#2), and one is a citation with the wrong year (#11).
 
 Three consequences we now work from:
 
