@@ -28,34 +28,34 @@ eutectic 3992.7 K → −2.56 σ. **The value stays; its provenance gets repaire
 ⑤ Outside the register → land it, record the kind.
 
 **Items**
-- [ ] **A (documentation repair, first)**: note §2 + the handoff banner's Brief-38
+- [x] **A (documentation repair, first)**: note §2 + the handoff banner's Brief-38
   line — correction beside the original, never instead of it; the FE_EPS denominator
   trap stays as written. (Plus the two stale handoff statements found by the
   cross-check, fixed with their SHAs.)
-- [ ] **B (transcribe from the cached primary)**: Mori eq. (1) (1348 K @ 21 GPa,
+- [x] **B (transcribe from the cached primary)**: Mori eq. (1) (1348 K @ 21 GPa,
   a 36.5(4), c 2.07(1); our exponent 1/c). Four printed checks in the gate test —
   the "~4100 at the ICB" row is a **label detail already adjudicated, not a defect**
   (it sits at ~350 GPa on the paper's own curve). A printed point that does not come
   back = stop; never adjust coefficients.
-- [ ] **C (labels + three conditions at the constants)**: S-rich bound (Mori Fig. 6
+- [x] **C (labels + three conditions at the constants)**: S-rich bound (Mori Fig. 6
   ordering; Si/O/C between 0.65 and 1.0) · no nickel · the whole curve hangs on the
   unobtained Fei+ 2000 anchor (the four checks confirm the fit, not the anchor).
   Coverage: measured 21→254 GPa, self-extrapolated ~350; **10–21 GPa covered by
   neither Mori nor Buono → named refusal, never a silent interpolation**.
-- [ ] **D (provenance repair, value unmoved)**: eos.py:1427's "Stevenson+ 1983 관례" →
+- [x] **D (provenance repair, value unmoved)**: eos.py:1427's "Stevenson+ 1983 관례" →
   the real pedigree (Stevenson 1981 ideal-mixing, Boehler 1996 p. 29's "crude
   assumptions" quote; Zhang & Rogers 2022's "artificial"/"fine tune") + what now
   stands under it (a 1981 estimate that a 2019 measurement independently lands on at
   Earth's ICB, −0.12 σ) + the negative finding (Boehler convergence unsupported;
   absolute depression grows, fractional flat — a constant factor is a defensible
   shape).
-- [ ] **E (Sinmyo check computed, not asserted)**: core_state.py:209's literal
+- [x] **E (Sinmyo check computed, not asserted)**: core_state.py:209's literal
   "19.1 %" recomputed (directing seat gets 19.3 % at 330 GPa) — computed value +
   a gate test so it cannot drift silently.
-- [ ] **F (the bound, only if it fires)**: measure whether any roster body can violate
+- [x] **F (the bound, only if it fires)**: measure whether any roster body can violate
   eutectic ≤ declared ≤ pure Fe; expected unfireable → branch ④ closes it; the curve
   stays a labelled constant with its conditions.
-- [ ] **G (identity + gate)**: full anchor re-solve (not --fast), check.sh backgrounded
+- [x] **G (identity + gate)**: full anchor re-solve (not --fast), check.sh backgrounded
   under caffeinate -i, FAIL 0, delta vs 1213 s reported.
 
 **Standing constraints**: do not fit the engine to the roster (Dante is invented; the
@@ -63,3 +63,17 @@ eutectic 3992.7 K → −2.56 σ. **The value stays; its provenance gets repaire
 denominator; Buono eq. (5) used only as the corrected reading with defect #10 cited;
 paper-defects read before transcribing; commits English, one logical change,
 `git diff --stat` first.
+
+**Verdict (2026-09-02, landed)**: Branch **①** fired for the transcription (four
+printed checks reproduce: 1915.0/3541.1/2681.0/4102.7 vs 1910/3550/~2700/~4100;
+`iron_t_melt` untouched), branch **④** fired for item F as expected (minimum margin of
+the declared ×0.80 curve above the eutectic floor is **+407.5 K at 48 GPa** over
+21–350 GPa — no roster body can fire the bound, C5, no runtime wiring built), and
+branch **③ did not fire**: the 19.1 % literal recomputes to **19.11 % at PREM's ICB
+pressure 328.85 GPa** — it was computed there, not drifted (the directing seat's
+19.3 % was the 330 GPa value); it is now computed in place and pinned ~19 % in the
+gate. Item A landed at 311c03ee (note §2 + banner corrections beside originals, plus
+the two stale handoff statements found by the parked-row cross-check, each with its
+SHA). The eutectic lives as labelled constants + `iron_fes_eutectic_t_melt` (None
+outside 21–350 GPa; 10–21 GPa gap named by IRON_FES_GAP_REASON); the 0.80's pedigree
+repaired at the constant, value unmoved. Gate: see landing report.
