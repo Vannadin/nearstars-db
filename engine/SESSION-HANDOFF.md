@@ -39,6 +39,14 @@ message described one change and the commit contained two, which is a false labe
 commit. **Run `git diff --stat <file>` before staging it**, and if the diff contains someone
 else's lines, either wait or name them in the message.
 
+**Do not commit into the shared worktree while another seat's gate is running.** The gate
+certifies a tree state; a commit landing mid-run rides the push without review and makes the
+FAIL count a statement about a tree that no longer exists. Docs-only is harmless and the habit is
+not. *(2026-09-03: the directing seat's handoff edit landed at 04:19 inside a 04:18–04:38 gate and
+was pushed unreviewed — and `git diff --stat` before staging was skipped on that same commit, the
+last of a long night. The work seat flagged the extra commit rather than folding it into its own
+count, which is how it was caught.)*
+
 ## The four seats
 
 | seat | what it does |
