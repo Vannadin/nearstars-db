@@ -29,6 +29,7 @@ would silently produce a wrong answer, say whether a gate catches it.**
 | 7 | **Deng+ 2023** (PRB 107, 064103) | Printed triple point **180 GPa / 6420 K**, but the two printed equations cross at **173.6 GPa / 6413 K** | 6.4 GPa; the triple point comes from the source data, not the fits | `engine/silicate-melt-context-notes.md` |
 | 8 | **Nguyen Quang Hoc+ 2024** (JAP 136, 045103) | Abstract headline **"up to 1400 GPa"** exists only in a figure; the printed ε table stops at **100 GPa** | A 14× gap between claimed and data range — C6's disease | `engine/silicate-melt-context-notes.md` (recorded as not-adopted) |
 | 9 | **Militzer 2024** (PNAS 121, e2403981121) | Three simulation labels are **exactly 2× the paper's own eq. [3]** (`H₁ = N_H/2N_O`): O₈₄H₂₂₆ is **1.345**, printed as 2.69 (same for H₂₈₂, H₃₉₆). The control passes — eq. [2] and Table 1 reproduce exactly, so the defect is confined to those three | The method interpolates *as a function of hydrogen fraction*, so placing the deposited file on that axis needs the right scale and the paper prints both | `engine/carbon-*-context-notes.md` (survey ⑯) |
+| 10 | **Buono & Walker 2011** (GCoA 75, 2072) | Eq. (5), the 14 GPa liquidus polynomial, prints its constant as **−2140.2** — so T(x=0) = −2140.2 K, a negative melting point. Read +2140.2 it continues the monotone pure-Fe intercept rise (1808.9 → 2093.0 → 2140.2 K), and the 6 GPa intercept matches the paper's own prose to 6 K, so the family is sound and one sign is not | The x = 0 intercepts are the transcription check for the whole polynomial set; the paper itself says eqs. (2)/(5) were not used to calibrate its model | `engine/core-melt-depression-context-notes.md` (survey ⑰) |
 
 ---
 
@@ -47,8 +48,8 @@ would silently produce a wrong answer, say whether a gate catches it.**
 
 ## What the pattern says
 
-**Nine defects across the sources we have actually transcribed from.** Four are magnitude or
-sign slips in a single printed value (#1, #6, #8, #9), three are a paper disagreeing with
+**Ten defects across the sources we have actually transcribed from.** Five are magnitude or
+sign slips in a single printed value (#1, #6, #8, #9, #10), three are a paper disagreeing with
 itself (#4, #5, #7), one is a claim range wider than the data behind it (#8), and one is an
 attribution that points at the wrong owner (#2).
 
