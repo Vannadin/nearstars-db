@@ -223,6 +223,16 @@ sentence, so the stale claim was reachable from inside the parked section.)*
 - Papers through `ADS_API_TOKEN` and the `docs/phase3/_papers/` cache (gitignored). **No
   WebSearch.** Identifiers read, not made, checked **by title**; where one file cites two
   papers, the label carries the paper's name.
+- **A file in the paper cache is held only once it is shown to be a PDF.** Found 2026-09-03: a
+  772-byte anti-bot HTML challenge (aanda.org DataDome, *"Please enable JS and disable any ad
+  blocker"*) sat in `docs/phase3/_papers/` under a bibcode filename with a `.pdf` extension for
+  eight days (Ni 2018, `2018A&A...613A..32N`). Nothing consumed it — the methodology doc already
+  recorded the paper as unreachable — but a bibcode sweep would have counted it as held. It is
+  now `*.FAILED-FETCH.html` with a `.NOT-OBTAINED.txt` beside it, kept as evidence. **Before
+  recording a paper as held, run `file` on it; before reading a cached paper, check that the
+  text layer opens.** A `.PROVENANCE.txt` beside the file is the record of *how* it was
+  obtained and should exist for every new fetch — but its absence is **not** the check: as of
+  this writing only 8 of the 58 cached PDFs carry one, and the other 50 are real papers.
 - No new runtime dependency in `engine/` — `check.sh` runs on system Python.
 - Commits in English, one logical change each, identity `VaNnadin <vannadin00@gmail.com>`.
 - **Clear the work session's context at item boundaries** (`/clear`, which the owner types —
