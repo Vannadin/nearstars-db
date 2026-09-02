@@ -405,27 +405,39 @@ acting on it.**
    print it.
 
 **Still open (owner decisions, unordered):**
-- **Carbon's fluid axis — a scope decision, and half its rationale was retracted.** Survey ⑨
-  found that the composition numbers this axis was adopted for are **fitted interior-model
-  parameters, not chemistry outputs** — the first-principles part establishes that separation
-  happens and that hydrogen depletion grows with pressure, and leaves the quantity free. So
-  the fluid/diamond contrast narrows: **both need declared quantities.** For Uranus and
-  Neptune it is buildable (their values are printed); as a *general* axis it needs **four
-  declarations per body** (two layer compositions, two boundary radii) with **two** published
-  examples. That is the shape that closed hot sub-Neptunes — **but not the same case**: what
-  closed those was a parameter with *no* published value at all. Here there are two worked
-  examples, a printed stability inequality (H₃ < H₂), an exact endpoint (undepleted CH₄–NH₃
-  gives H = 1 by the printed definition), and a printed interpolation form. The recipe
-  declares things routinely; the rule is *say that you declared*. **The genuine limit is that
-  this axis has no independent validation anywhere** — J₂/J₄ were the fit targets, not a
-  prediction test, which is exactly the threshold the tidal axis cleared via Io. So its
-  output is *structure consistent with the physics*, not *structure constrained by data*, and
-  must say so. Directing seat recommends adopting it as a **declared family with a grid**,
-  never one elected quadruple.
-- **Zenodo download permission.** Carbon's layer equations of state are **distributed as
-  deposited data, not printed** (records named in survey ⑨; nothing was downloaded — the
-  record IDs are the product). This is the AQUA/CDS shape, which we accept, but fetching from
-  a new host is the owner's call.
+- **~~Carbon's fluid axis — a scope decision~~ — DECIDED 2026-09-02: build it general.** The
+  owner's words were *"as always, general"*, which is the standing goal for this solver rather
+  than a fresh judgement: filling the coverage map **is** the plan, not drift from it.
+
+  What that settles, and what it does not. **Settled**: not a Uranus/Neptune special case. Half
+  the rationale had been retracted by the surveyor who wrote it — the composition numbers are
+  **fitted interior-model parameters, not chemistry outputs**, so the fluid and diamond axes
+  *both* need declared quantities and the contrast that motivated picking fluid is narrower than
+  it looked. General means it needs **four declarations per body** (two layer compositions, two
+  boundary radii) against **two** published examples. **That is the shape that closed hot
+  sub-Neptunes, and it is not the same case**: what closed those was a parameter with *no*
+  published value anywhere. Here there are two worked examples, a printed stability inequality
+  (H₃ < H₂), an exact endpoint (undepleted CH₄–NH₃ gives H = 1 by the printed definition), and a
+  printed interpolation form — a floor to declare from. The recipe declares routinely; the rule
+  is *say that you declared*.
+
+  **Still binding on the build**: adopt it as a **declared family with a grid, never one elected
+  quadruple** — C11's ending, where the grid is the answer and anything needing one number
+  declares its own. And **this axis has no independent validation anywhere**: J₂/J₄ were the fit
+  targets, not a prediction test, which is precisely the threshold the tidal axis cleared through
+  Io and this one does not. **So the output is *structure consistent with the physics*, not
+  *structure constrained by data*, and it must say so on every value it emits.**
+- **~~Zenodo download permission~~ — GRANTED 2026-09-02, and then blocked at the host.** Carbon's
+  layer equations of state are **distributed as deposited data, not printed** — the AQUA/CDS
+  shape we already accept. Record IDs, read from the cached paper's own text rather than relayed:
+  **13937364** (data files, the one we need — the paper says the Fig. 1 equations of state are
+  there), 13952386 (figure files), 13326881 (code). **Nothing was downloaded**: the Zenodo API
+  returns **403 — *"restricted due to unusual traffic from your network"*** with a reference ID.
+  **That was not circumvented, and should not be**: it is a network-level block that names itself,
+  and the same discipline that refused to route around a dead link applies here. Four hosts
+  refused us today (Wiley, A&A, ScienceDirect, Zenodo), so **our own request rate is a live
+  suspect** — the right move is to stop knocking, not to change headers. **A browser will very
+  likely fetch it in one click; ask the owner rather than re-running the API.**
 - **Merging `engine/prototype` into `main`**, and whether to open a PR. Still deferred, and
   the cost of deferring is now visible: a session in the main checkout sees the last work as
   tidal heating and the stability simulation and is not wrong.
