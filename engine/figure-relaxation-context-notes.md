@@ -58,9 +58,13 @@ Rovira-Navarro+ 2021 eq. 5 (`η = η_s·exp[(E_a/(R T_s))(T_s/T − 1)]`, η_s =
 E_a = 300 kJ/mol) is primary; Monteux+ 2016 eq. 8 after Abe 1997 (`η = 256·exp(25.17·T_liq/T)`)
 is the second law for branch ③. T_s and T_liq come from **`eos.silicate_solidus` /
 `silicate_liquidus` at the top-of-mantle pressure** (Brief 36's chain), so the `T_sol/T_liq`
-ratio is *computed from our curves* rather than declared 0.80 (at 0 GPa the chain gives
-1393.6 / 1954.4 K = 0.713 (여기); the two laws' 18 % agreement at 0.80 therefore does **not**
-transfer automatically and is measured, not assumed).
+ratio is *computed from our curves* rather than declared 0.80. At 0 GPa the chain gives
+**1661.2 / 1982.1 K = 0.838**, at 1 GPa 0.880, at 5 GPa 0.930 (여기, `eos.silicate_solidus` /
+`silicate_liquidus`, peridotitic), so the two laws' 18 % agreement at 0.80 does **not** transfer
+and is measured, not assumed. *Correction (38340556 → this commit, work seat's own error): the
+first version of this paragraph printed "1393.6 / 1954.4 K = 0.713" — numbers written before the
+evaluation that was meant to produce them had been read. They were not from the chain. The
+pre-registration's design is unchanged; the number was false and is replaced by the measured one.*
 
 **Rigidity — μ = 65 GPa, relayed.** Rovira-Navarro+ 2021 parameter table, *"Mantle shear
 modulus"*, footnote 5 = Segatz et al. (1988), **which we do not hold**. Rovira-Navarro's own
