@@ -64,6 +64,32 @@ accepted as "the mantle-rock proxy" without a field saying so. Clause 2 is expec
 everywhere once declared: every fit is solid except `fe_prem`, which is the liquid member
 `core_state` needs.
 
-## 3. Result — filled after the check ran
+## 3. Result — 2026-09-03, code `a1a3093a`
 
-*(pending)*
+**Branch fired: ② in its soft form, as expected — seven phases already carried a join that
+differs from their melting curve's, none of them declared.** Not errors: bridges that existed
+only in prose.
+
+| phase(s) | density fit describes | curve measured on | bridge now declared |
+|---|---|---|---|
+| `fe_prem` | Fe alloy, PREM outer core, ~10 wt % light elements (Zeng+ 2016 §II) | pure Fe (`iron_t_melt`) | `melt_scale = 0.80` (Brief 38, labelled convention) — was already there; the note names it |
+| `silicate` × 3, `silicate_chondritic` × 3 | MgSiO₃ enstatite (Seager+ 2007) / PREM lower-mantle aggregate (Zeng+ 2016) / DFT MgSiO₃ perovskite (Karki+ 2000; real assemblage MgO + SiO₂) | mantle rock — peridotitic / A-chondrite solidus (Brief 36) | *"this material is the mantle-rock proxy"* — **new**; Brief 36 accepted it without a field |
+
+The other seven melt-bearing phases (`fe_eps`, six H₂O ices) match their curve's composition;
+`antigorite` has no curve and declares anyway. **Clause 2 passes everywhere once declared**:
+every fit is solid except `fe_prem`, the liquid member `core_state` relies on — now pinned so
+the pair cannot swap silently.
+
+**Cost, measured**: two defaulted fields plus a note, fifteen declarations, one test
+(`test_eos_joins.py`, < 0.1 s). `test_ice_giant.py --fast`: **path fingerprint unchanged**,
+`708ff4627f24c448`; the anchors are untouched by construction (Phase is not a path function) and
+the full gate confirms. `test_silicate_melt.py` and `test_rheology.py` unchanged.
+
+**What the tripwire now catches**: an Fe₃S density fit added under `melt="iron"` (or under a
+future `melt="fe_fes_eutectic"` whose `MELT_CURVE_JOIN` entry says *Fe–Fe₃S eutectic*) without a
+`join_note` **fails the gate**, and a solid-compression K₀ used for a liquid verdict is visible in
+`fit_state` (the Thompson+ 2020 condition in §1).
+
+**Noticed, not done**: the eutectic curve `iron_fes_eutectic_t_melt` is not a `melt` dispatch
+value yet (unwired by Brief 38's decision), so it has no `MELT_CURVE_JOIN` row today; the row
+goes in the day the curve is wired, with the join written as Fe–Fe₃S, not "FeS".
