@@ -15,7 +15,13 @@ bdg to the printed 180 GPa triple point, ppv to Deng's own 200 GPa caveat line, 
 three mgsio3 phases; `Phase.melt_variant` carries the composition branch;
 `SILICATE_CHONDRITIC` is the never-melted variant and `interior._stack` seeds it from
 `differentiated` (undifferentiated rock+metal layer, and the C11 primitive crust —
-both "never melted"). φ = (T−T_sol)/(T_liq−T_sol) is Monteux eq. (6), printed — the
+both "never melted"). **What the composition actually changes**: not where melting
+*starts* (the solidus is shared — HZ96 below 20 GPa, and Monteux's own printed choice
+of the A-chondritic eq. (12) for both above), but **how fast the rock finishes
+melting** — the liquidus alone splits (+879 K at 140 GPa), so A and F differ in the
+window's width and φ's temperature gradient, never in the onset. `t_melt` (solidus)
+is therefore variant-blind at every pressure; call `silicate_liquidus` or
+`silicate_melt_fraction` to see the branch. φ = (T−T_sol)/(T_liq−T_sol) is Monteux eq. (6), printed — the
 single source of truth; C′_p = C_p + ΔH/(T_liq−T_sol) is eq. (17) (ΔH = 4×10⁵ J/kg,
 Table 1, Ghosh & McSween 1998), hooked into `Material.c_p` and damping `grad_ad` by
 C_p/C′_p in-window. `interior.solve` returns `silicate_melt_state` /

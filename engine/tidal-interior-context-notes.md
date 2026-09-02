@@ -264,7 +264,16 @@ collapsing outward, formation by global compression). What replaces it is strong
 **Khurana+ 2011** ([`2011Sci...332.1186K`](https://ui.adsabs.harvard.edu/abs/2011Sci...332.1186K))
 finds an induction signature requiring *"a global subsurface magma layer with a
 thickness of over 50 kilometers and a rock melt fraction of 20 % or more"* — a
-completely solid mantle is insufficient — and **Spencer+ 2020**
+completely solid mantle is insufficient. (**Disambiguation, because 50 appears twice
+in that paper as two different quantities**: the ≥50 km here is the *derived lower
+bound on the magma layer's thickness*; the same paper's line 93 uses "50 km" as the
+*assumed crust thickness* of its models — *"the cold crust had zero conductivity and
+a thickness of 50 km"*. We cite the former. Cached: `2011Sci...332.1186K.pdf` +
+`.author-corrected.pdf` (the correction restores a missing figure, no numbers) +
+`.SOM.pdf`; read by the directing seat 2026-09-02. And a marker beside the
+conductivity prerequisite below: Khurana's models set the crust's conductivity to
+**zero** — a reference point, not an adoption, for how a revived axis might treat
+thermal conductivity.) And **Spencer+ 2020**
 (`2020JGRE..12506443S.pdf`, cached) is consistent (*"around 80 % of the magma… emplaced
 and frozen as plutons"*). **So the honest closing statement: a conductive lid over a
 solid convecting mantle — the structure this model resolves for — is not the structure
