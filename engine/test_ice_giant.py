@@ -31,6 +31,8 @@
 
 `--fast` 는 굳힌 수렴점에서 적분 한 번과 사격 경로의 바이트코드 지문만 본다. 1 초.
 전체 풀이 없이 적분기·상태방정식의 변화를 잡는 용도이고, 게이트는 이것을 쓰지 않는다.
+**경로 지문은 전체 모드도 대조한다** (2026-09-03) — 값이 그대로여도 경로 함수가 바뀌면 FAIL 이고,
+그 커밋에서 `--refresh` 하라고 말한다.
 """
 from __future__ import annotations
 
@@ -286,16 +288,30 @@ def _published_nmoi(frozen: dict, fails: list[str]) -> None:
               f"(< {NMOI_SOURCE_TOL * 100:.1f} %; 두 자전 가정 모두)")
 
 
-def _fast(frozen: dict, fails: list[str]) -> None:
-    """적분 한 번 + 경로 지문. 전체 풀이 없이 적분기·상태방정식의 변화를 잡는다."""
+def _fingerprint(frozen: dict, fails: list[str], full: bool) -> None:
+    """경로 지문 대조. 두 모드 다 본다 (2026-09-03, Brief 39 감사 ⑤).
+
+    2026-09-02 까지 이 대조는 `--fast` 에만 있었고 게이트는 전체 모드를 돌린다 — 그래서
+    "경로 함수를 고치면 같은 커밋에서 --refresh" 라는 규칙은 아무도 돌리지 않는 모드가
+    지키고 있었다. Brief 36 (9ff07deb) 이 `_stack`·`integrate`·`solve` 를 고치고 값은 비트까지
+    확인했지만 지문은 갱신하지 않았고, 하루 동안 규칙과 게이트가 어긋난 채 아무도 못 봤다.
+    전체 모드에서는 값이 맞아도 지문이 다르면 FAIL 이고, 메시지가 할 일을 말한다: 이 커밋에서
+    `--refresh`. 값이 움직였다면 그것은 아래 전체 풀이 대조가 따로 잡는다."""
     fp_now, fp_then = path_fingerprint(), frozen["path_fingerprint"]
     ok = fp_now == fp_then
     if not ok:
-        fails.append("사격·온도 고리·적분기의 경로 지문이 굳힐 때와 다르다 — 수렴점이 옮겨갔을 "
-                     "수 있다. 전체 풀이(기본 실행)나 `--refresh` 로 확인하라")
+        fails.append("사격·온도 고리·적분기의 경로 지문이 굳힐 때와 다르다 — "
+                     + ("값이 그대로여도 경로 함수가 바뀐 것이니 **이 커밋에서 `--refresh`** 로 "
+                        "다시 굳혀 diff 에 남겨라" if full else
+                        "수렴점이 옮겨갔을 수 있다. 전체 풀이(기본 실행)나 `--refresh` 로 확인하라"))
     print(f"  [{'PASS' if ok else 'FAIL'}] 경로 지문 {fp_then} "
           f"{'그대로' if ok else '→ ' + fp_now + ' (바뀜)'} — "
           f"{', '.join(PATH_FUNCTIONS)} + 상수 {len(PATH_CONSTANTS)}개")
+
+
+def _fast(frozen: dict, fails: list[str]) -> None:
+    """적분 한 번 + 경로 지문. 전체 풀이 없이 적분기·상태방정식의 변화를 잡는다."""
+    _fingerprint(frozen, fails, full=False)
     for name, rec in frozen["bodies"].items():
         if not rec["applicable"]:
             print(f"  [FROZEN] {name} — 거절이 앵커다. 굳힌 이유: {rec['reason'][:70]}…")
@@ -466,6 +482,7 @@ def main() -> int:
     if "--fast" in sys.argv:
         _fast(frozen, fails)
     else:
+        _fingerprint(frozen, fails, full=True)
         _live(frozen, fails)
         _clamp_invariance(frozen, fails)
     _published_nmoi(frozen, fails)
