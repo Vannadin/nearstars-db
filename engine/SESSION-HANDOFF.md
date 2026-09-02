@@ -469,6 +469,80 @@ acting on it.**
 >   papers we cite**, each pointing at the note that carries its case. Read it before transcribing
 >   from any source listed there, and **add a row when you find the eleventh**.
 
+## 2026-09-03 — the properties axis, and the order after it
+
+**Landed and pushed through `cf6b07ae`.** Briefs 39 (+ five follow-ups) and 40; surveys ⑱–㉓;
+paper defects #11 and #12; the handoff's own stale rows.
+
+**Brief 39 — the figure's relaxation verdict.** Viscosity's consumer turned out to be
+`body_figure`, named by the owner: rotation and tides in, deformation out. The scope was cut to
+**wiring only** — `scripts/refs/body_figure.py` is pre-interior-solver code and stays untouched;
+the interior solver now *supplies* a verdict it can consume. Branch ① fired: hydrostatic is
+supported for every body that has a temperature. ⚠ **The reason is about the roster, not the
+code and not the planets** — `potential_temperature` has no floor (only a negative refusal at
+`interior.py:2099`) and the anchors declare 76 K and 72 K, so the cold branch is reachable; the
+bodies that currently reach the wrapper simply declare hot mantle tops. **The verdict is
+insensitive to every ungrounded constant**: η_s over two orders and E_a over 80 % move the
+4.5 Gyr threshold only 700→1009 K, because τ_M spans 20+ decades. That reason is written beside
+the constants — *not* that they are trusted.
+
+**Two debts paid that were not Brief 39's.** The anchor fingerprint had diverged at **Brief 36**
+(`9ff07deb` edited `_stack`, `integrate` and `solve` without `--refresh`); values still matched,
+so only `--fast` rang — and **`--fast` is the only mode that compared the fingerprint while the
+gate runs full.** The rule and the gate disagreed for a day. Refreshed as its own commit, and
+**the full run now compares too**, so a mismatch fails with "refresh in this commit".
+
+**The three properties, resolved.** Thermal conductivity is transcribable (Manthilake's chain
+closes against the paper's own 18.9/15.4 W/(m·K), verified on three independent implementations)
+but **the exponent convention had to be recovered by closure, not read** — evaluate `g` at the
+target state; the reference-state reading misses by 1.4–1.5× and is the natural one to write.
+⚠ At CMB conditions it returns **~1.6× Ohta+ 2012's measurement**, and the two are **not
+independent** (Ohta adopts Manthilake's equation, its temperature exponent and its periclase
+data). Electrical conductivity is transcribable from Stixrude+ 2020 alone; **there is no
+cross-check** — the two papers do not overlap in (P,T) *or* composition. Viscosity's forms are
+transcribable and **every constant in them is a declaration**; Karato & Wu 1993, which four
+cached papers cite for their constants and none reproduces, is **unobtained**.
+
+**The order after this, and the reasoning that sets it — polish that revives existing depth
+first, new axes last:**
+
+1. **Radiogenic heating → structure.** Two consumers already declare by hand and say so in
+   `chain.yaml` (`status: gap` on both). **Blocked on papers** — ㉓ established that not one
+   cached source converts an abundance into watts; one partial abundance table and seven
+   consumers. The short-lived (²⁶Al) half **closes as a named refusal** on our missing formation
+   chronology. The `radiogenic_heat_w_m2` tooltip's 2× mislabel is fixed (Brief 40).
+2. **The rocky dynamo.** `dynamo_rocky` is declared at `chain.yaml:181` with **11 edges and no
+   module registering its recipe.** ⚠ **Check first whether the methodology's two recipes
+   conflict** — it specifies computing `Rm > 40` in one section and a table-anchored ladder that
+   never computes Rm in another. If the ladder is the real one, the iron-conductivity paper has
+   no consumer and that request is wrong.
+3. **Fe₃S core alloy — demoted, and the reason is measured.** ⚠ The melting curve is on the
+   **Fe–Fe₃S** join (Mori+ 2017's title, read at source), not FeS; and its 21–350 GPa domain
+   reaches **no roster body** — Dante 0.26 GPa central, Hades 0.63, against a 21 GPa floor, and
+   Ganymede-class at best lands in the 10–21 GPa hole we already refuse by name. Mars-class and
+   up only. **Generality work, not roster work.** ⚠ **And the dependency this seat asserted —
+   "Fe₃S gates the dynamo" — is false**: `core_state` answers today from `iron_t_melt` × 0.80,
+   which Brief 38 verified at −0.12 σ. Fe₃S *refines*; it does not *enable*.
+4. **Tidal axis revival.** A melt-thermostat family is the candidate; **the papers have not been
+   read.** Register the reopening conditions before entering — this axis failed once.
+5. **Stellar abundances → composition.** The one new axis worth pulling forward, because it
+   **removes an input**: composition is a human declaration today.
+
+**⚠ A knife-edge found on the way, and it is not on the order above** (Brief 42). `core_state`'s
+Earth verdict flips at **γ = 1.5140 against the declared 1.500 — 0.94 %** — and `GAMMA_RANGE_PA`
+is 100–340 GPa while that column's centre is 358.6, so the exponent is already extrapolated.
+K₀ has 3.4 % of room; **density has none at all — it cancels exactly**, because the adiabat uses
+only a ratio on one curve (verified to ten decimals). The answer is right; the margin is not
+reported, so a −17 K verdict and a −500 K one read identically.
+
+**Papers wanted, in priority** (identifiers read from ADS by title, none constructed):
+`2020ApJ...903L..37N` Nimmo & Primack — the one to get, names both radiogenic consumers ·
+`2012Natur.485..355P` Pozzo+ iron conductivity, **open-access, but hold until item 2's recipe
+question is answered** · `2001E&PSL.185...49A` Allègre & Manhès · `2013GGG....14.4608D` Davies
+and `1980RvGSP..18..269S` Sclater+, **both cited by our own methodology and not held** ·
+`2020E&PSL.53416080T` Thompson+ and `2006JGRB..111.6209S` Seagle+ for Fe₃S ·
+`1993Sci...260..771K` Karato & Wu · `2019CRGeo.351..154W` Wagle+ · Nettelmann+ 2011.
+
 **The work order, set by the owner 2026-09-02 — follow it rather than re-deriving one:**
 
 1. **The tidal axis, revived.** It closed in Brief 35 as *wired, validation failed* — and the
