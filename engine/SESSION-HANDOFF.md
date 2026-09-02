@@ -493,6 +493,41 @@ acting on it.**
    item 1 rather than on its own; survey ⑭ carries a rider asking whether those three papers
    print it.
 
+   ⚠ **That last sentence is wrong and is withdrawn (2026-09-03).** The rider came back
+   **negative** — Spencer 2021 and Moore 2017 print no conductivity and the thesis is
+   dimensionless — and item 1 itself closed with Brief 37. **Binding thermal conductivity to item 1
+   therefore makes it unschedulable**: the row is closed, its re-opening needs a model built for
+   Khurana's structure which does not exist, and the literature that would have carried k prints
+   none. The owner confirmed the sentence was a session's judgement, not an owner decision, so it
+   is cut: **thermal conductivity belongs on this row, the materials axis, where the rider itself
+   says our materials are silent.**
+
+   **Status of the three, after surveys ⑱–⑳ (2026-09-03):**
+   - **Electrical conductivity** — buildable today. **Stixrude+ 2020 prints an evaluable
+     `σ = σ₀·T⁻¹·exp[−(E* + P·V*)/(R·T)]`** with all coefficients, validity = its simulated box
+     100–140 GPa × 4000–6000 K, bulk-silicate-Earth composition, and the fit itself carries no
+     calibration. **There is no cross-check**: Soubiran+ 2018 publishes regime values only, and the
+     two do not overlap — 240 GPa / 7000 K against 140 GPa / 6000 K, plus iron-free against
+     Fe/(Fe+Mg)=0.11, the one variable both papers name as dominant. ⚠ Do not rescue that by
+     extrapolation; it gives 328 vs 216 Ω⁻¹cm⁻¹ and is inadmissible on two counts at once.
+   - **Thermal conductivity** — the model is `k = k_ref·(T_ref/T)^a·(ρ/ρ_ref)^g` with Table 1's
+     fitted coefficients, but `g` and `ρ(P,T)` were in an uncached supplement. **The SI Appendix
+     arrived 2026-09-03** and survey ⑳ is testing whether the chain closes against the paper's own
+     printed 18.9 / 15.4 W/(m·K). ⚠ Two traps ride with it: the measured box is 8–26 GPa / ≤1273 K
+     against an application near 136 GPa / 4100 K, validated only by a *downward* step to 0 GPa
+     that its own caption says fails at low T; and Table 1 labels `ρ_ref` **cm³/mol** when the
+     values are **g/cm³**, which inside `(ρ/ρ_ref)^g` inverts and amplifies the error.
+   - **Viscosity** — **no source at all.** A first-page scan of every PDF in the cache returns zero
+     papers on viscosity, rheology or creep. The only η law we hold is one line inside Kankanamge &
+     Moore 2019, a paper already on the defect index. This is the thinnest of the three and it is
+     thin for lack of literature, not lack of work.
+
+   **A structural fact that decides where each one can land**, measured from `chain.yaml` on
+   2026-09-03: `dynamo_rocky` sits **outside** the declared 16-node coupled core and reads its
+   converged output, while `heat_transport_mode` is **inside** it. So electrical conductivity
+   attaches where it cannot disturb convergence; thermal conductivity attaches inside the loop
+   that has to converge.
+
 **Still open (owner decisions, unordered):**
 - **~~Carbon's fluid axis~~ — CLOSED 2026-09-03. The owner's word: "사실상 닫힘" (effectively
   closed).** The scope decision below was taken on 09-02 and then overtaken the same day by the
