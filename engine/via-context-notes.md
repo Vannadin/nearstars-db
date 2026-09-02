@@ -82,6 +82,19 @@ makes. It does not: the header already says `selects` carries no via, so the thi
 via, keep the word in the note) was in the file's own rules and the branch list did not have it.
 Registered as the pre-registration's gap, not as an unregistered outcome.
 
+**The invariant is stronger than "unchanged" (감, 여기 reproduced).** Removing **all 19
+`status: gap` edges** and recomputing the strongly-connected components still gives **exactly 16
+nodes, exactly `coupled_core`**. The declared coupled core does not lean on a single edge nobody
+can satisfy — the cycle is real physical coupling, not an artefact of gaps. `chain.py check` would
+not have said this, because it orders with gap edges included.
+
+**Instrument ledger — "a count without its rule is not a count."** The audit's first SCC pass gave
+**20**, then **17**, then **16**, depending on whether `scope: parent` edges were followed and class
+tables included, before it read `graph.py`'s rule (`t_eff_body` joins the cycle only through a
+`scope: parent` edge to `moon_energy_budget`). Third instance tonight of a locator or count that
+looks complete and is not — beside the pdftotext line numbers without their extraction mode and the
+directing seat's unstated `T_s = 1600` on Brief 39.
+
 Result: **83 via-edges, 15 mismatches = 8 allowlisted + 7 `status: gap` + 0 open.** The gate
 (`check_via.py --gate` in `check.sh`) fails on any via outside those two lists. pyyaml is not a
 new dependency (`chain.py`, `check_pipeline_flow.py`, `check_phase4_gate.py` already import it on

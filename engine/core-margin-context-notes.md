@@ -143,3 +143,24 @@ silicate material in `test_core_state.py`.
 Earth's outputs after the follow-up: `margin_condition` thin, `gamma_flip_in_alfe_range` True,
 `melt_splice_disagreement` 0.0430, `gamma_flip` 1.5145, `k0_flip` 194.0 GPa, `center_margin`
 −17.6 K — unchanged numbers, corrected meaning.
+
+## 5. Audit of the follow-up — 2026-09-03, code `e2a5428b`
+
+**① Real defect, fixed.** The extrapolation sentence was gated on `GAMMA_RANGE_PA[1]` alone.
+`GAMMA_RANGE_PA[1]` and `GAMMA_LIQUID_RANGE_PA[1]` are both 340 GPa **by coincidence** (solid band
+100–340, liquid band 280–340), so a body with 100 < p_c < 280 GPa — Mars to a small super-Earth —
+was inside the solid band, outside the liquid band, and got **no** extrapolation sentence while the
+liquid γ was extrapolated at it. Correct for Earth by accident. Now two conditions on two ranges;
+the thin label names whichever band(s) the centre lies outside; pinned on a 200 GPa column.
+
+**② Two sentences.** `GAMMA_SPAN` is an **envelope over the two numbers Alfè prints**, not a
+measured range — using the liquid range alone would make `thin` read as physics while `GAMMA_CORE`
+stays the solid value, the same mixed quantity the other way round. And the sentence that matters
+most on this axis, now on Earth's label: **at the liquid γ's upper end the centre verdict is
+liquid, so the declared 1.5 is load-bearing for Earth having an inner core at all in this recipe.**
+The constant stays, because moving a constant to make an answer come out right is prohibited.
+**That prohibition has a cost, and this is what it costs.** Invisible to anyone who reads only the
+margin; visible on the label.
+
+**Closed by the audit without change**: the solid-γ-on-liquid-fit sentence is derived from
+`fit_state`, not asserted; the splice range 4.0–7.5 % monotone reproduces.
