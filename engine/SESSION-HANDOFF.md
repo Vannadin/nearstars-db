@@ -178,6 +178,18 @@ sentence, so the stale claim was reachable from inside the parked section.)*
   superseded** — that is the half the first error slips through, and the anchor makes staleness
   mechanically checkable. This is the directing seat's version of the work seat's pair gate, and
   the audit proposed it. **A brief arriving with an unanchored number is worth a question back.**
+- **A narrow instrument's output is not a general fact, and this seat reported it as one twice in
+  one day.** Added 2026-09-03. (i) A **first-page title scan** of the paper cache returned zero
+  hits for viscosity, and that was reported as *"no source exists"*. Full-text extraction over the
+  same 58 files then found **five** papers carrying printed viscosity constants, two of them
+  transcribable dimensional laws — none is *about* viscosity, which is exactly why titles missed
+  them. (ii) **One** cache file was found without a PROVENANCE record and the rule proposed from it
+  was *"a cached paper without a PROVENANCE file is not a cached paper"* — measurement says only
+  **8 of 57** carry one, so that rule would have declared 49 real papers unheld, including the
+  three transcribed from that same day. **Both times the instrument was fit for what it measured
+  and unfit for what was concluded**, and both times the hedge was stated when the scan ran and
+  dropped from the conclusion written about it. **State the instrument beside the finding, and if
+  the finding is a negative, say what the instrument cannot see.**
 - **The ± is part of the number, and so is the composition.** Added 2026-09-03 after this seat
   stripped a different qualifier three times in one day, each caught by someone else: a σ value
   relayed with **no (P,T) condition** (the work seat refused to transcribe it and was right); a
