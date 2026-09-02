@@ -76,6 +76,15 @@ class PhaseGap(Exception):
         super().__init__(reason)
 
 
+# 녹는곡선이 측정된 조성. Phase.join 과 다르면 Phase.join_note 가 있어야 한다 (브리프 41).
+MELT_CURVE_JOIN = {
+    "water": "H2O",
+    "iron": "Fe (pure)",                       # iron_t_melt — 순철 두 적합의 이어붙임
+    "silicate": "mantle rock (peridotitic / A-chondrite solidus)",   # silicate_solidus
+}
+FIT_STATES = ("solid", "liquid")
+
+
 @dataclass(frozen=True)
 class Phase:
     """한 상의 냉각 등온 상태방정식."""
@@ -108,6 +117,20 @@ class Phase:
     # 20 GPa 아래는 Monteux 가 조성 하나만 인쇄하므로 이 선택은 **20 GPa 위에서만**
     # 곡선을 바꾼다. melt != "silicate" 인 상은 이 필드를 안 읽는다.
     melt_variant: str = "peridotitic"
+    # ── 밀도 적합의 조성과 물질상 (브리프 41) ─────────────────────────────
+    # 한 Phase 는 **밀도 적합** 과 **녹는곡선** 을 한 객체에 묶는데, 둘이 같은 것을
+    # 말하는지는 아무도 묻지 않았다. Fe–Fe₃S 공융곡선(브리프 38) 옆에 FeS(36.5 wt% S,
+    # 다른 조인) 밀도를 놓는 일이 코드상 아무 저항 없이 가능했다. 그래서 두 선언.
+    # `join` — 이 **밀도 적합** 이 기술하는 조성, 적합의 출처(ref)가 쓴 말 그대로.
+    # `fit_state` — 그 적합이 측정된 물질상, "solid" | "liquid". fe_prem 은 PREM 외핵의
+    #   **액체** 적합이고 fe_eps 는 순수 ε-철 **고체** 다 — core_state 가 액체 판정에
+    #   액체 멤버를 쓰는 것은 맞는데, 그 사실이 산문에만 있었다.
+    # `join_note` — join 이 녹는곡선의 조성(MELT_CURVE_JOIN[melt])과 다르면 **필수**.
+    #   "다르지만 이렇게 잇는다" 를 상 옆에 적는 것이고, melt_scale 이 fe_prem 에서
+    #   하던 일을 규칙으로 만든 것이다. test_eos_joins.py 가 게이트에서 묻는다.
+    join: str = ""
+    fit_state: str = ""
+    join_note: str = ""
     # ── 온도 천장 ──────────────────────────────────────────────────────
     # p_max 와 **같은 종류** 다. 적합이 어디까지 유효한가를 말하지, 물질이 어디서
     # 상을 바꾸는가를 말하지 않는다. 0 이면 선언된 천장이 없다는 뜻이다.
@@ -1756,7 +1779,11 @@ FE_PREM = Material(
            # 자리에서 갈린다 — 순철 곡선에 관례적 20 % 내림을 곱한다.
            melt="iron", melt_scale=IRON_LIGHT_ELEMENT_FACTOR,
            melt_ref=IRON_MELT_REF_LOW + " · 합금 내림 "
-                    f"{(1 - IRON_LIGHT_ELEMENT_FACTOR) * 100:.0f} % (Stevenson+ 1983 관례)"),),
+                    f"{(1 - IRON_LIGHT_ELEMENT_FACTOR) * 100:.0f} % (Stevenson+ 1983 관례)",
+           join="Fe alloy — PREM outer core, ~10 wt% light elements (Zeng+ 2016 §II)",
+           fit_state="liquid",
+           join_note="밀도는 합금(PREM 외핵 액체), 곡선은 순철 — 그 차이를 melt_scale = "
+                     f"{IRON_LIGHT_ELEMENT_FACTOR} 이 잇는다 (브리프 38, 라벨된 관례)"),),
 )
 FE_EPS = Material(
     "fe_eps", "순수 ε-철",
@@ -1765,7 +1792,8 @@ FE_EPS = Material(
            alpha_k=IRON_ALPHA_K, alpha_k_dt=IRON_ALPHA_K_DT, c_v_ref=CV_IRON,
            t_ref=LAB_ISOTHERM_T,
            # 실험실 순철이므로 내림이 없다. 순철 곡선 그대로다.
-           melt="iron", melt_ref=IRON_MELT_REF_LOW),),
+           melt="iron", melt_ref=IRON_MELT_REF_LOW,
+           join="Fe (pure)", fit_state="solid"),),
 )
 
 # ── 규산염 ──────────────────────────────────────────────────────────────
@@ -2034,13 +2062,17 @@ SILICATE = Material(
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
            melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
-           "압력대별 사슬, 조성은 differentiated 시딩 (블록 주석)"),
+           "압력대별 사슬, 조성은 differentiated 시딩 (블록 주석)",
+           join="MgSiO3 enstatite (Seager+ 2007 Table 1)", fit_state="solid",
+           join_note="밀도는 MgSiO₃ 단성분 / PREM 집합체 적합이고 곡선은 페리도타이트·A-콘드라이트 **맨틀 암석** 솔리더스다 (브리프 36) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다"),
      Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, SILICATE_PREM_TO_PV,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 하부맨틀 BM2 적합",
            p_min=SILICATE_EN_TO_PREM, alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
            melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
-           "500 GPa 위는 곡선 밖 (silicate_melt_refusal)"),
+           "500 GPa 위는 곡선 밖 (silicate_melt_refusal)",
+           join="PREM lower mantle aggregate (Zeng+ 2016 §II)", fit_state="solid",
+           join_note="밀도는 MgSiO₃ 단성분 / PREM 집합체 적합이고 곡선은 페리도타이트·A-콘드라이트 **맨틀 암석** 솔리더스다 (브리프 36) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다"),
      Phase("mgsio3_pv", "bme4", 4100.0, 247.0 * GPA, 3.97, SILICATE_PV_TO_TFD,
            "Seager+ 2007 Table 1 · §III.3 (arXiv:0707.2895) — MgSiO₃ perovskite BME4, "
            "Karki+ 2000 의 DFT 계산. 실물은 MgO + SiO₂ 다 (Umemoto+ 2017, "
@@ -2049,7 +2081,9 @@ SILICATE = Material(
            alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
            t_ref=EARTH_POTENTIAL_T, t_ref_kind="adiabat",
            melt="silicate", melt_ref="이 상의 압력대(3.5–13.5 TPa)는 전부 곡선 상한 "
-           "(500 GPa) 위라 t_melt 가 항상 None 이다 — 판정하지 않는다는 사실의 기록")),
+           "(500 GPa) 위라 t_melt 가 항상 None 이다 — 판정하지 않는다는 사실의 기록",
+           join="MgSiO3 perovskite, DFT (Karki+ 2000); real assemblage MgO + SiO2", fit_state="solid",
+           join_note="밀도는 MgSiO₃ 단성분 / PREM 집합체 적합이고 곡선은 페리도타이트·A-콘드라이트 **맨틀 암석** 솔리더스다 (브리프 36) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다")),
     over_reason=("규산염 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.0f} GPa) 위다. 그 상한은 Seager+ 2007 §III.3 이 규산염의 "
                  "BME4 를 놓고 TFD 로 갈아타는 압력이므로, 그 위는 전자축퇴가 지배하는 "
@@ -2323,7 +2357,8 @@ ANTIGORITE = Material(
            # 사문석의 고온 운명은 일치 융해가 아니라 탈수·분해라서, 규산염 녹는곡선
            # 여섯 후보 어느 것도 이 상에 적용되지 않는다. 탈수 경계 곡선은 별도
            # 근거가 필요한 다른 물건이고 여기서 찾지 않았다.
-           alpha_k=ANTIGORITE_ALPHA_K, c_v_ref=HP98_ATG_CP_298, t_ref=298.15),),
+           alpha_k=ANTIGORITE_ALPHA_K, c_v_ref=HP98_ATG_CP_298, t_ref=298.15,
+           join="Mg3Si2O5(OH)4 antigorite (Hilairet+ 2006)", fit_state="solid"),),
     over_reason=("사문석화된 암석층의 바닥이 {p_gpa:.1f} GPa 로 antigorite 실험 상한({max_gpa:.0f} GPa) "
                  "위다. Hilairet+ 2006 이 압축한 것이 거기까지이고, 그 위의 사문석은 탈수 반응의 "
                  "영역이라 같은 상이 아니다."))
@@ -2333,25 +2368,29 @@ H2O = Material(
     (Phase("ice_ih", "bm2", ICE_IH_RHO0, ICE_IH_KT, 4.0, ICE_IH_TO_III,
            "IAPWS-06 / Feistel & Wagner 2006 Table 6 검증값",
            alpha_k=ICE_IH_ALPHA_K, c_v_ref=ICE_IH_CV, t_ref=273.152519,
-           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (1)"),
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (1)",
+           join="H2O", fit_state="solid"),
      Phase("ice_iii", "bme3", 1126.384048, 7.834907 * GPA, 6.709734, ICE_III_TO_V,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 III 을 P=0, T=251.15 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_IH_TO_III,
            alpha_k=ICE_III_ALPHA_K, c_v_ref=ICE_III_CV, t_ref=ICE_III_REF_T,
-           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (2)"),
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (2)",
+           join="H2O", fit_state="solid"),
      Phase("ice_v", "bme3", 1207.841865, 10.636814 * GPA, 6.745951, ICE_V_TO_VI,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 V 를 P=0, T=256.43 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_III_TO_V,
            alpha_k=ICE_V_ALPHA_K, c_v_ref=ICE_V_CV, t_ref=ICE_V_REF_T,
-           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (3)"),
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (3)",
+           join="H2O", fit_state="solid"),
      Phase("ice_vi", "bme3", 1263.385752, 10.368592 * GPA, 7.821860, ICE_VI_TO_VII,
            "SeaFreeze v1.1.0 / Journaux+ 2020 (2020JGRE..12506176J) — "
            "얼음 VI 를 P=0, T=272.73 K 에서 평가한 ρ·K_T·K′",
            p_min=ICE_V_TO_VI,
            alpha_k=ICE_VI_ALPHA_K, c_v_ref=ICE_VI_CV, t_ref=ICE_VI_REF_T,
-           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (4)"),
+           melt="water", melt_ref=IAPWS_MELT_REF + " 식 (4)",
+           join="H2O", fit_state="solid"),
      Phase("ice_vii", "bme3", 1460.0, 23.7 * GPA, 4.15, ICE_VII_TO_X,
            "Seager+ 2007 Table 1 (arXiv:0707.2895) — H₂O ice VII BME, Hemley+ 1987. "
            "열 상수는 SeaFreeze v1.1.0 의 VII_X_French (French & Redmer 2015, "
@@ -2360,7 +2399,7 @@ H2O = Material(
            melt_ref=IAPWS_MELT_REF + " 식 (5) — 355–715 K (2.216–20.6 GPa); 그 위는 "
                     + REINHARDT_MELT_REF,
            alpha_k=ICE_VII_ALPHA_K, c_v_ref=ICE_VII_CV, t_ref=ICE_VII_X_REF_T,
-           t_max=ICE_VII_X_T_MAX),
+           t_max=ICE_VII_X_T_MAX, join="H2O", fit_state="solid"),
      Phase("ice_x", "vinet", ICE_X_RHO0, ICE_X_K0, ICE_X_K0P, ICE_X_P_MAX,
            "SeaFreeze v1.1.0 의 VII_X_French (French & Redmer 2015, "
            "2015PhRvB..91a4308F) 300 K 등온선에 맞춘 Vinet 적합. 37.4 GPa–1 TPa 에서 "
@@ -2371,7 +2410,8 @@ H2O = Material(
            t_max=ICE_VII_X_T_MAX,
            # 녹는곡선이 52.4 GPa 까지 온다 (Reinhardt+ 2022). 그 위는 water_t_melt 가 None 을
            # 돌려주고 소비처가 undecided 로 적는다 — 곡선이 어디서 끝나는지를 판정문이 수로 말한다.
-           melt="water", melt_ref=REINHARDT_MELT_REF),),
+           melt="water", melt_ref=REINHARDT_MELT_REF,
+           join="H2O", fit_state="solid"),),
     over_reason=("얼음 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.0f} GPa) 위다. 그 상한은 SeaFreeze v1.1.0 이 싣는 "
                  "French & Redmer 2015 표현의 매듭 구간이 끝나는 자리다. 그 위에 "

@@ -176,6 +176,8 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_silicate_melt.py) || fail=1
 # 도형 완화 판정 (Brief 39). 전사 검산·문턱 가족의 불감성·라벨·지구 판정이 앵커다.
 (cd engine && python3 test_rheology.py) || fail=1
+# 밀도 적합 ↔ 녹는곡선의 조성·물질상 선언 (Brief 41). 다른 조인을 말없이 잇는 상이 생기면 여기서 잡힌다.
+(cd engine && python3 test_eos_joins.py) || fail=1
 (cd engine && python3 check_contracts.py) || fail=1
 python3 engine/dynamo_table.py --check || fail=1
 
