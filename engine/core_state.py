@@ -173,8 +173,9 @@ def solve(core_pressure: float,
     if material is None or material.melt_free_phases():
         return out_of_domain(
             RECIPE, VERSION,
-            f"핵 재료 '{core_material}' 에 발표된 융해곡선이 없다. 있는 것은 철뿐이다 "
-            "(fe_prem · fe_eps).",
+            f"핵 재료 '{core_material}' 에 발표된 융해곡선이 없다. 곡선이 있는 것은 "
+            "철(fe_prem · fe_eps)과 규산염(브리프 36 사슬)이고, antigorite 는 고온 "
+            "운명이 융해가 아니라 탈수·분해라 비어 있는 것 자체가 판정이다.",
             inputs=inputs, refs=REFS)
 
     p_cmb, p_c = cmb_pressure * 1e9, core_pressure * 1e9

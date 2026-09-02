@@ -164,10 +164,23 @@ def main() -> int:
         if not ok:
             fails.append(f"거절 '{label}': 이유가 '{needle}' 를 말하지 않는다")
         print(f"  [{'PASS' if ok else 'FAIL'}] {label:10} → {res.reason[:66]}…")
-    res = solve(**{**base, "core_material": "silicate"})
+    # 2026-09-02(브리프 36)까지 이 검사의 재료는 silicate 였다 — 규산염이 녹는곡선을
+    # 얻으면서 그 재료로는 이 조건(곡선 없음)을 더는 시험할 수 없어 antigorite 로
+    # 바꿨다 (빈 melt 가 판정인 재료). 규산염 핵은 아래에서 새 경로를 따로 고정한다.
+    res = solve(**{**base, "core_material": "antigorite"})
     ok = (not res.applicable) and "융해곡선이 없다" in res.reason
     if not ok:
         fails.append("융해곡선 없는 재료를 이름 대며 거절하지 않는다")
+    print(f"  [{'PASS' if ok else 'FAIL'}] 사문석 핵 → {res.reason[:66]}…")
+    # 규산염 핵은 이제 곡선이 있어 하한 갈래까지 가고, 거기서 원칙 있는 미판정을
+    # 낸다 — 하한 지오섬이 융해온도 아래면 액체라 못 하고, 하한은 한쪽만 묶으므로
+    # 고체라고도 못 한다. 상계 독법과 같은 결의 거절이고, 이 경로가 브리프 36 의
+    # 의도된 변화다.
+    res = solve(**{**base, "core_material": "silicate"})
+    ok = (res.applicable and res.values.get("conductor_phase") == "undecided"
+          and "하한" in res.reason)
+    if not ok:
+        fails.append(f"규산염 핵이 하한 갈래의 미판정에 닿지 않는다 — {res.reason[:60]}")
     print(f"  [{'PASS' if ok else 'FAIL'}] 규산염 핵 → {res.reason[:66]}…")
 
     print("\n계약 — 페이로드가 제 몫을 하는가")
