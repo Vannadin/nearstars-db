@@ -1783,7 +1783,8 @@ FE_PREM = Material(
            join="Fe alloy — PREM outer core, ~10 wt% light elements (Zeng+ 2016 §II)",
            fit_state="liquid",
            join_note="밀도는 합금(PREM 외핵 액체), 곡선은 순철 — 그 차이를 melt_scale = "
-                     f"{IRON_LIGHT_ELEMENT_FACTOR} 이 잇는다 (브리프 38, 라벨된 관례)"),),
+                     f"{IRON_LIGHT_ELEMENT_FACTOR} 이 잇는다 (브리프 38, 라벨된 관례). 일곱 다리 중 "
+                     "측정이 뒤에 있는 유일한 다리: Sinmyo+ 2019 ICB 검산 −0.12 σ (브리프 38 §0)"),),
 )
 FE_EPS = Material(
     "fe_eps", "순수 ε-철",
@@ -2064,7 +2065,7 @@ SILICATE = Material(
            melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
            "압력대별 사슬, 조성은 differentiated 시딩 (블록 주석)",
            join="MgSiO3 enstatite (Seager+ 2007 Table 1)", fit_state="solid",
-           join_note="밀도는 MgSiO₃ 단성분 / PREM 집합체 적합이고 곡선은 페리도타이트·A-콘드라이트 **맨틀 암석** 솔리더스다 (브리프 36) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다"),
+           join_note="밀도는 MgSiO₃ enstatite 단성분 적합, 곡선은 맨틀 암석 솔리더스(20 GPa 아래는 Monteux 가 조성 하나만 인쇄해 변종이 갈리지 않는다; 이 재료의 변종은 peridotitic) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다 (브리프 36). 이 상은 23.83 GPa 아래라 140 GPa 이음매를 보지 않는다"),
      Phase("mgsio3_prem", "bm2", 3980.0, 206.0 * GPA, 4.0, SILICATE_PREM_TO_PV,
            "Zeng+ 2016 §II (arXiv:1512.08827) — PREM 하부맨틀 BM2 적합",
            p_min=SILICATE_EN_TO_PREM, alpha_k=SILICATE_ALPHA_K, c_v_ref=CV_SILICATE,
@@ -2072,7 +2073,7 @@ SILICATE = Material(
            melt="silicate", melt_ref=SILICATE_MELT_REF + " + Deng+ 2023 + Fei+ 2021 — "
            "500 GPa 위는 곡선 밖 (silicate_melt_refusal)",
            join="PREM lower mantle aggregate (Zeng+ 2016 §II)", fit_state="solid",
-           join_note="밀도는 MgSiO₃ 단성분 / PREM 집합체 적합이고 곡선은 페리도타이트·A-콘드라이트 **맨틀 암석** 솔리더스다 (브리프 36) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다"),
+           join_note="밀도는 PREM 하부맨틀 집합체 적합, 곡선은 맨틀 암석 솔리더스(변종 peridotitic; 20–140 GPa 는 Monteux 의 A-콘드라이트 식 (12)를 양쪽 조성이 같이 쓴다) — 맨틀 암석의 대리라는 선언 (브리프 36). **대리의 값**: 140 GPa 에서 암석 곡선 → 순수 광물 단일점 − 75 K 로 넘어가며 솔리더스가 **+1732.1 K** 뛴다 (코드가 실제로 돌려주는 두 곡선 사이의 계단, silicate-melt-context-notes.md §3, eddd3a6b/39420387) — 선언으로 실어 간다"),
      Phase("mgsio3_pv", "bme4", 4100.0, 247.0 * GPA, 3.97, SILICATE_PV_TO_TFD,
            "Seager+ 2007 Table 1 · §III.3 (arXiv:0707.2895) — MgSiO₃ perovskite BME4, "
            "Karki+ 2000 의 DFT 계산. 실물은 MgO + SiO₂ 다 (Umemoto+ 2017, "
@@ -2083,7 +2084,7 @@ SILICATE = Material(
            melt="silicate", melt_ref="이 상의 압력대(3.5–13.5 TPa)는 전부 곡선 상한 "
            "(500 GPa) 위라 t_melt 가 항상 None 이다 — 판정하지 않는다는 사실의 기록",
            join="MgSiO3 perovskite, DFT (Karki+ 2000); real assemblage MgO + SiO2", fit_state="solid",
-           join_note="밀도는 MgSiO₃ 단성분 / PREM 집합체 적합이고 곡선은 페리도타이트·A-콘드라이트 **맨틀 암석** 솔리더스다 (브리프 36) — 이 재료가 맨틀 암석의 대리라는 선언을 여기 적는다")),
+           join_note="밀도는 DFT MgSiO₃ 페로브스카이트 적합(실물은 MgO + SiO₂), melt 라벨은 맨틀 암석 솔리더스 — 그러나 **이 다리는 건너지 않는다**: 이 상은 3.5–13.5 TPa 에 살고 silicate_solidus 는 500 GPa 위에서 None 이라 (7배 간격) t_melt 가 늘 None 이다. join_note 는 곡선이 여기서 무언가 한다는 뜻이 아니라, 한다면 어느 조성이냐의 기록이다")),
     over_reason=("규산염 기둥 바닥이 {p_gpa:.0f} GPa 로 근거 구간의 상한"
                  "({max_gpa:.0f} GPa) 위다. 그 상한은 Seager+ 2007 §III.3 이 규산염의 "
                  "BME4 를 놓고 TFD 로 갈아타는 압력이므로, 그 위는 전자축퇴가 지배하는 "
@@ -2108,7 +2109,12 @@ from dataclasses import replace as _dc_replace
 
 SILICATE_CHONDRITIC = Material(
     "silicate_chondritic", "규산염 맨틀 (미분화, A-콘드라이트 녹는곡선)",
-    tuple(_dc_replace(ph, melt_variant="chondritic") for ph in SILICATE.phases),
+    # join_note 도 변종을 말해야 한다 (브리프 41 감사 ①): 조성은 20 GPa 위에서 융해가 **얼마나
+    # 빨리 끝나는가**(리퀴더스)를 바꾸고 시작(솔리더스)은 같다 — 한 문자열로 두 선언을 덮지 않는다.
+    tuple(_dc_replace(ph, melt_variant="chondritic",
+                      join_note=ph.join_note.replace("변종 peridotitic", "변종 chondritic")
+                                            .replace("이 재료의 변종은 peridotitic", "이 재료의 변종은 chondritic"))
+          for ph in SILICATE.phases),
     over_reason=SILICATE.over_reason, gap_reason=SILICATE.gap_reason,
 )
 

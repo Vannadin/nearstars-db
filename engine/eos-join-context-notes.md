@@ -90,6 +90,29 @@ future `melt="fe_fes_eutectic"` whose `MELT_CURVE_JOIN` entry says *Fe–Fe₃S 
 `join_note` **fails the gate**, and a solid-compression K₀ used for a liquid verdict is visible in
 `fit_state` (the Thompson+ 2020 condition in §1).
 
+**What the check is, and is not (audit of Brief 41, ②).** `join` is free text and clause 1
+compares **strings**, so this is a **declaration gate, not a physics gate**: it catches only
+*declared* disagreement. Two silent failure modes are known and accepted: a `join` copied to match
+the curve's wording while the fit is on something else **passes**; a wording difference on the
+same composition (`"Fe (pure)"` vs `"pure Fe"`) **demands a note that is not owed**. The free-text
+choice stands — a taxonomy would have been invented — but a check that reads complete and is
+not is the shape of `Rm > 40`, the `via` field and the radiogenic tooltip, so it is said here.
+
+**What the proxy costs, per bridge (audit ①, added after the first landing).** The six silicate
+notes first recorded the fact and stopped; they now say the cost and the variant:
+- `mgsio3_en` (< 23.83 GPa) never reaches the 140 GPa seam; below 20 GPa Monteux prints one
+  composition, so the variant does not split the solidus there.
+- `mgsio3_prem` crosses the seam: at 140 GPa the rock solidus steps **+1732.1 K** onto the
+  pure-mineral point − 75 K — *the step between the curves the code actually returns*
+  (`silicate-melt-context-notes.md` §3, `eddd3a6b`/`39420387`), carried as a declaration.
+- `mgsio3_pv` (3.5–13.5 TPa) **never crosses its bridge**: `silicate_solidus` is `None` above
+  500 GPa, a 7× gap, so `t_melt` is always `None` there and the note says the curve does nothing.
+- `silicate` and `silicate_chondritic` now carry **different** notes naming their variant, because
+  composition changes how fast melting finishes (liquidus), not when it starts (Brief 36) — one
+  string was covering two declared compositions.
+- `fe_prem` is the **only** bridge with a measurement behind it: Sinmyo+ 2019 ICB check at
+  −0.12 σ (Brief 38 §0). The asymmetry is now visible where the bridge is declared.
+
 **Noticed, not done**: the eutectic curve `iron_fes_eutectic_t_melt` is not a `melt` dispatch
 value yet (unwired by Brief 38's decision), so it has no `MELT_CURVE_JOIN` row today; the row
 goes in the day the curve is wired, with the join written as Fe–Fe₃S, not "FeS".
