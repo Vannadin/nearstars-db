@@ -178,6 +178,17 @@ sentence, so the stale claim was reachable from inside the parked section.)*
   superseded** — that is the half the first error slips through, and the anchor makes staleness
   mechanically checkable. This is the directing seat's version of the work seat's pair gate, and
   the audit proposed it. **A brief arriving with an unanchored number is worth a question back.**
+- **The ± is part of the number, and so is the composition.** Added 2026-09-03 after this seat
+  stripped a different qualifier three times in one day, each caught by someone else: a σ value
+  relayed with **no (P,T) condition** (the work seat refused to transcribe it and was right); a
+  conductivity relayed to the owner as "14.65 against 9.0 ± 1.6" with **no composition label**,
+  where the two are pure Pv and the same seat's own brief had labelled them correctly; and
+  `18.9 / 15.4` relayed **bare** when the source prints `18.9 ± 1.6 / 15.4 ± 1.4`. This is *not*
+  covered by "carry the condition" — that rule was in force all three times and the digits were
+  right all three times. **A relay that keeps the digits and drops the ±, the composition or the
+  condition has not relayed the number**, and the loss is invisible downstream because what
+  arrives looks complete. It leaks worst in *summaries*: twice the qualifier was present in the
+  brief and absent in the one-paragraph version.
 - **When a value sits inside a declared window, say which edge the number is measured from.**
   Brief 36's notes gave a seam step against the pure-mineral centre while the line above it gave
   one against the implemented solidus — both true, exactly the declared half-width apart, and
