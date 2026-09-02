@@ -1606,7 +1606,11 @@ def main() -> int:
     # h2o 는 2026-08-27 에 전 상이 곡선을 들고 있었다. 얼음 X 가 들어오면서 곡선이
     # **없는 상이 하나 생겼다** — IAPWS 식 (5) 가 715 K(20.6 GPa) 에서 끝나기 때문이고,
     # 그 사실을 지우지 않고 이름으로 들고 있는 것이 여기서 검사하는 것이다.
-    for mat, want_free in ((_MM["silicate"], True), (_MM["h2o"], False),
+    # 규산염은 2026-09-02(브리프 36)까지 전 상이 곡선 없음이었다 — Monteux·Deng·Fei
+    # 사슬이 들어오며 셋 다 곡선을 얻었으므로 기대가 True → False 로 바뀌었다.
+    # 500 GPa 위에서 None 을 내는 것은 상이 아니라 곡선의 상한이고, 그 검사는
+    # test_silicate_melt.py 가 든다.
+    for mat, want_free in ((_MM["silicate"], False), (_MM["h2o"], False),
                            (_MM["fe_prem"], False), (_MM["fe_eps"], False),
                            (H_HE, True)):
         free = mat.melt_free_phases()
