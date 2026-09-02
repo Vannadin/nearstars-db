@@ -322,7 +322,7 @@ edges:
     scope: parent
     note: 위성의 Cassini 상태는 *부모 행성의* J2 와 반지름이 정하는 교점 이동률에 걸린다.
     ref: "cassini-state-obliquity-methodology.md:124"
-  - {from: body_figure, to: cassini_state, kind: selects, via: fossil_bulge, ref: "cassini-state-obliquity-methodology.md:185"}
+  - {from: body_figure, to: cassini_state, kind: selects, via: fossil_bulge, status: gap, ref: "cassini-state-obliquity-methodology.md:185", note: "body_figure 는 fossil_bulge 를 내지 않는다 (도형 솔버는 손대지 않는다, 오너 2026-09-03). 상류 값은 있다 — interior_layers.figure_relaxation (브리프 39) — 도형 솔버가 그것을 읽어 fossil_bulge 를 내는 날 gap 이 닫힌다."}
   # 2026-09-03 Brief 39. body_figure 의 정유체 가정(J2 = 10/3·C22)은 완화시간 문제인데
   # 아무도 그 시간을 재지 않았다. interior_layers 가 자기 온도와 나이로 맥스웰 완화 판정을
   # 내서 fossil_bulge 의 상류 값으로 준다 — 도형 솔버는 손대지 않았고(오너 결정), 판정은
@@ -376,7 +376,7 @@ edges:
 
   # ── 자기 ───────────────────────────────────────────────────────
   - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md:29"}
-  - {from: body_age, to: dynamo_giant, kind: requires, via: cooling_luminosity, ref: "planetary-dynamo-scaling.md:34"}
+  - {from: body_age, to: dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref: "planetary-dynamo-scaling.md:34", note: "그래프가 모듈보다 낙관적이었다 — dynamo.py 는 검증 안 된 냉각 궤적으로 L(M, age) 를 대는 것을 거절한다고 적고 갈색왜성 갈래는 out_of_domain 을 낸다. 코드가 맞고 이 표시가 없었다 (2026-09-03)."}
   - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md:472"}
   - {from: body_class, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:82"}
   - {from: tidal_locking, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:33"}
@@ -397,10 +397,10 @@ edges:
   # 배선되지 못한 이유이기도 하다.
   - {from: interior_layers, to: dynamo_rocky, kind: requires, via: core_radius, ref: "rocky-planet-dynamo-methodology.md:23"}
   - {from: core_state, to: dynamo_rocky, kind: requires, via: conductor_phase, ref: "rocky-planet-dynamo-methodology.md:25"}
-  - {from: tidal_locking, to: dynamo_rocky, kind: selects, via: rossby, ref: "rocky-planet-dynamo-methodology.md:76"}
+  - {from: tidal_locking, to: dynamo_rocky, kind: selects, via: rossby, status: gap, ref: "rocky-planet-dynamo-methodology.md:76", note: "국소 로스비 수는 대류 속도와 길이 척도가 필요하고 rotation_period 만으로는 안 나온다. RM22 사다리의 영역 게이트(×0.06 다극 붕괴)를 먹이는 가장 큰 레버 (2026-09-03 gap)."}
   - {from: ocean_fraction, to: dynamo_rocky, kind: influences, sign: negative, status: gap, ref: "rocky-planet-dynamo-methodology.md:109"}
   - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:70"}
-  - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, ref: "rocky-planet-dynamo-methodology.md:70"}
+  - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, status: gap, ref: "rocky-planet-dynamo-methodology.md:70", note: "mode 는 라벨이고 열류는 수다. 소비처 둘(core_state · dynamo_rocky)이 원하는데 내는 노드가 없다 — internal_heat_nontidal → core_state 도 같은 양으로 gap. 공급자 하나로 닫아야 한다 (2026-09-03)."}
   - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, ref: "internal-heat-luminosity-methodology.md:202"}
   # 내부 온도 프로파일의 앵커(맨틀 포텐셜 온도)는 열 예산이 정한다. 그 예산이
   # internal_heat_nontidal 의 것이고, 표면 온도와 포텐셜 온도 사이의 전도하는
@@ -458,7 +458,7 @@ edges:
   - {from: dynamo_rocky, to: surface_dose, kind: requires, via: b_eq, ref: "surface-radiation-dose-methodology.md:36"}
   - {from: atmosphere_choice, to: surface_dose, kind: requires, via: column, ref: "surface-radiation-dose-methodology.md:45"}
   - {from: mass_or_radius, to: surface_dose, kind: requires, via: gravity, ref: "surface-radiation-dose-methodology.md:45"}
-  - {from: star_physical, to: surface_dose, kind: requires, via: spe_fluence, ref: "surface-radiation-dose-methodology.md:49"}
+  - {from: star_physical, to: surface_dose, kind: requires, via: spe_fluence, status: gap, ref: "surface-radiation-dose-methodology.md:49", note: "항성 양성자 사건 플루언스 — [mass, radius, teff, luminosity, sed, v_sin_i, p_rot] 에서 도출되지 않는다 (2026-09-03 gap)."}
   - from: magnetosphere_geometry
     to: surface_dose
     kind: requires
@@ -478,7 +478,7 @@ edges:
   - {from: atmospheric_escape, to: atmosphere_choice, kind: selects, ref: "exoplanet-atmosphere-methodology.md:76"}
   - {from: atmospheric_escape, to: composition_intent, kind: influences, note: "선택적 손실(selective_loss) — retained·loss_rate 에서 소비처가 읽는 라벨, 수치 계약 없음 (2026-09-03, via 에서 내림)", ref: "exoplanet-atmosphere-methodology.md:224"}
   - {from: composition_intent, to: atmosphere_choice, kind: requires, via: mantle_redox, ref: "exoplanet-atmosphere-methodology.md:152"}
-  - {from: internal_heat_nontidal, to: atmosphere_choice, kind: requires, via: outgassing, ref: "internal-heat-luminosity-methodology.md:208"}
+  - {from: internal_heat_nontidal, to: atmosphere_choice, kind: requires, via: outgassing, status: gap, ref: "internal-heat-luminosity-methodology.md:208", note: "탈가스율 — 그 노드는 [l_int, t_int, geotherm] 을 내고, 서베이 ㉓ 은 그 노드가 아직 아무것도 계산하지 않음을 확정했다 (캐시의 모든 출처가 열 예산을 소비만 한다). 2026-09-03 gap."}
   - {from: t_eq_stellar, to: atmosphere_choice, kind: requires, via: scale_height, ref: "exoplanet-atmosphere-methodology.md:522"}
   - {from: surface_albedo, to: t_eq_stellar, kind: requires, via: albedo, textbook: true, ref: "greenhouse-warming-methodology.md:197"}
   - {from: star_physical, to: t_eq_stellar, kind: requires, via: luminosity, textbook: true}
