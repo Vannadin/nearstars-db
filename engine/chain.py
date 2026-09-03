@@ -25,6 +25,30 @@ def load() -> dict:
     return yaml.safe_load(CHAIN.read_text(encoding="utf-8"))
 
 
+_BANNER_TO_LAYER = {"클래스 표 상수 — 도출값이 아니라 조회값": "클래스 표 상수"}
+
+
+def _banner_layers() -> dict[str, str]:
+    """노드 이름 → 그 노드 위의 배너(층). YAML 은 주석을 버리므로 파일을 줄 단위로 읽는다."""
+    import re
+    out: dict[str, str] = {}
+    banner = None
+    in_nodes = False
+    for line in CHAIN.read_text(encoding="utf-8").split("\n"):
+        if line.startswith("nodes:"):
+            in_nodes = True
+        elif line.startswith("edges:"):
+            break
+        m = re.match(r"  # ── (.+?) ─", line)
+        if in_nodes and m:
+            b = m.group(1).strip()
+            banner = _BANNER_TO_LAYER.get(b, b)
+        m = re.match(r"  ([a-z_0-9]+):", line)
+        if in_nodes and m and banner:
+            out[m.group(1)] = banner
+    return out
+
+
 def check(g: dict) -> int:
     nodes, edges = g["nodes"], g["edges"]
     kinds = set(g["kinds"])
@@ -43,6 +67,19 @@ def check(g: dict) -> int:
         if e.get("kind") in ("selects", "influences") and not e.get("ref"):
             if not e.get("textbook") and e.get("status") != "gap":
                 errors.append(f"{where}: {e['kind']} 엣지에 ref 가 없다")
+
+    # 브리프 61 — 노드 축 둘. 모든 노드가 layer 와 domain 을 선언하고, 값은 헤더 목록 안이며,
+    # layer 는 노드가 놓인 배너와 같아야 한다 (주석과 필드가 어긋나면 주석은 거짓이 된다).
+    layers, domains = set(g.get("layers", [])), set(g.get("domains", []))
+    for name, n in nodes.items():
+        for axis, allowed in (("layer", layers), ("domain", domains)):
+            if axis not in n:
+                errors.append(f"node {name}: {axis} 가 없다")
+            elif n[axis] not in allowed:
+                errors.append(f"node {name}: {axis} '{n[axis]}' 가 {sorted(allowed)} 밖")
+    for name, banner in _banner_layers().items():
+        if name in nodes and nodes[name].get("layer") != banner:
+            errors.append(f"node {name}: layer '{nodes[name].get('layer')}' 가 배너 '{banner}' 와 다르다")
 
     declared = {m for c in g.get("cycles", []) for m in c["members"]}
     for c in g.get("cycles", []):

@@ -33,10 +33,33 @@ node_kinds: [measured, owner, computed, class_table]
 grades: [measured, calibrated, analog, judgment]
 scopes: [self, parent, system]
 
+# 노드 축 둘 (2026-09-03 브리프 61, 오너 지시). 둘은 교차한다 — interior_layers 와 core_state 는
+# 2층이고 dynamo_rocky 는 3층인데 셋 다 domain 은 interior 다.
+#   layer   실행 순서. 아래 배너 주석이 이름 그대로 필드가 됐다(오너가 정한 이름, 바꾸지 않는다).
+#           배너와 필드는 chain.py check 가 대조하므로 서로 어긋날 수 없다. 필드는 **파일이 노드를
+#           둔 자리** 를 적는다 — t_exo_bracket 은 kind 가 computed 인데 클래스 표 배너 아래 있고,
+#           그 불일치는 나중에 살펴볼 파일의 사실이지 지금 매끈하게 고칠 것이 아니다.
+#   domain  주제. 의존 그래프의 주제 축이다. docs/reference/methodology-index.md 는 **문서의 정리
+#           순서** 라 서로 달라도 된다 — 인덱스는 내부·조석·자전/도형·자기를 한 절에 두고
+#           internal_heat_nontidal 과 surface_dose 를 "Atmosphere & thermal" 에, 색 레시피를
+#           공용 엔진 절에 두지만, 여기서는 오너가 더 잘게 나눴고 internal_heat_nontidal 은
+#           interior, atmosphere_reflected_color 는 atmosphere 다. 그 차이를 "고치지" 말 것.
+#           `given` 은 주제가 아니라 **입력 경계** 다 — 출처(measured/owner)는 node_kinds 가
+#           이미 싣는다. 축을 총체로 두어야 "모든 노드가 domain 을 선언한다" 가 검사 가능한
+#           게이트가 되므로 남긴다. 클래스 표 넷은 layer 로는 함께(조회값), domain 으로는 먹이는
+#           주제로 갈린다(nmoi → interior, k2q · omega0 → tidal).
+#   개수 (48 노드, 파일이 정본이고 어떤 메시지도 아니다):
+#     domain  interior 8 · tidal 7 · given 11 · thermal 5 · atmosphere 5 · surface 5 · space_env 4 · spin_figure 3
+#     layer   0층 11 · 1층 2 · 2층 6 · 클래스 표 상수 4 · 3층 12 · 4층 6 · 5층 7
+layers: ["0층. 계산되지 않는 것", "1층. 분기키", "2층. 허브", "클래스 표 상수", "3층. 갈래", "4층. 열·대기", "5층. 표면"]
+domains: [interior, tidal, spin_figure, space_env, thermal, atmosphere, surface, given]
+
 nodes:
 
   # ── 0층. 계산되지 않는 것 ──────────────────────────────────────
   star_physical:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
     kind: measured
     # p_rot: 측정된 항성 자전주기. 2026-09-03 브리프 43 — star_physical → body_figure via p_rot
     # (:body-figure-methodology.md:238, α Cen A P_rot 22 d 측정 경로)이 "오배선" 으로 분류됐다가
@@ -44,35 +67,72 @@ nodes:
     # **도출** 경로(:244, Fomalhaut A)이고 둘은 다른 길이다. DB 는 rotation_measurements 로
     # 측정 자전주기를 실제로 담고 있다 (db/stellar_props_curated.json · db/systems).
     outputs: [mass, radius, teff, luminosity, sed, v_sin_i, p_rot]
-  star_metallicity:   {kind: measured, outputs: [z], status: gap}
-  system_age:         {kind: measured, outputs: [t_sys]}
+  star_metallicity:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
+    kind: measured
+    outputs: [z]
+    status: gap
+  system_age:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
+    kind: measured
+    outputs: [t_sys]
   body_age:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
     kind: measured
     outputs: [t_body]
     note: 천체 자신의 나이. 항성 나이와 다르고, 거대행성 냉각광도의 실입력이다.
-  orbit_elements:     {kind: measured, outputs: [a, e, i, lan, aop, n]}
-  mass_or_radius:     {kind: measured, outputs: [mass, radius]}
+  orbit_elements:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
+    kind: measured
+    outputs: [a, e, i, lan, aop, n]
+  mass_or_radius:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
+    kind: measured
+    outputs: [mass, radius]
 
   composition_intent:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
     kind: owner
     outputs: [layer_fractions, mantle_redox, surface_species]
     status: gap
     note: 층 질량분율·맨틀 산화도·표면 종. 측정되지 않는 오너 결정인데 지금은 body_type 산문에만 있다.
-  ocean_fraction:     {kind: owner, outputs: [f_ocean], status: gap}
+  ocean_fraction:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
+    kind: owner
+    outputs: [f_ocean]
+    status: gap
   ocean_depth:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
     kind: owner
     outputs: [d_ocean]
     status: gap
     note: f_ocean 과 다른 양이다. 공명 두께에 걸리면 소산이 자릿수로 움직인다.
   resonance_architecture:
+    layer: "0층. 계산되지 않는 것"
+    domain: tidal
     kind: owner
     outputs: [forced_e]
     status: gap
     note: 지속 조석가열을 주장하려면 e 를 유지하는 공명을 이름 대야 한다.
-  ring_system:        {kind: owner, outputs: [present, optical_depth], status: gap}
+  ring_system:
+    layer: "0층. 계산되지 않는 것"
+    domain: given
+    kind: owner
+    outputs: [present, optical_depth]
+    status: gap
 
   # ── 1층. 분기키 ────────────────────────────────────────────────
   body_class:
+    layer: "1층. 분기키"
+    domain: given
     kind: computed
     recipe: body-class-methodology
     outputs: [class, classes, decided_by, agrees_with_declared]
@@ -86,10 +146,17 @@ nodes:
       도출할 수 없으므로, 이 노드가 하는 일은 선언을 **대조** 하는 것이고 어긋나면
       agrees_with_declared 가 거짓이 된다. 어느 쪽이 맞는지는 오너가 정한다.
       소비처 여덟은 아직 선언을 읽는다. 그 배선은 interior.py 를 만져야 해서 별건이다.
-  mass_radius_relation: {kind: computed, recipe: mass-radius-relation-methodology, outputs: [radius, density]}
+  mass_radius_relation:
+    layer: "1층. 분기키"
+    domain: interior
+    kind: computed
+    recipe: mass-radius-relation-methodology
+    outputs: [radius, density]
 
   # ── 2층. 허브 ──────────────────────────────────────────────────
   interior_layers:
+    layer: "2층. 허브"
+    domain: interior
     kind: computed
     recipe: interior-structure-methodology
     outputs: [nmoi, core_radius_fraction, core_radius, radius, core_pressure,
@@ -132,6 +199,8 @@ nodes:
       알갱이로 부피 가법 혼합한 층이라 C7 이 막은 반응이 아니다. 어디까지 녹았는가는 열
       이력이라 도출하지 않고, 쓰이면 analog. 앵커는 전선 1.0 (지각 없음).
   core_state:
+    layer: "2층. 허브"
+    domain: interior
     kind: computed
     recipe: core-state-methodology
     outputs: [conductor_phase, cmb_melt_temperature, center_melt_temperature,
@@ -147,6 +216,8 @@ nodes:
       방향이라 그 값은 **하한** 이다. 하한만으로는 '액체' 만 말할 수 있고 '고체' 는
       말할 수 없다. 핵 쪽 경계 온도를 선언하면 둘 다 말한다.
   tidal_response:
+    layer: "2층. 허브"
+    domain: tidal
     kind: computed
     status: missing
     outputs: [k2_over_q, layer_q]
@@ -154,10 +225,14 @@ nodes:
       층 유동학에서 조석 Love 수와 소산을 낸다. k2q_class_table 이 이 자리를
       대신하고 있다. 바다 유무와 두께가 자릿수로 움직인다.
   xuv_history:
+    layer: "2층. 허브"
+    domain: space_env
     kind: computed
     outputs: [xuv_cumulative]
     note: 순간 플럭스가 아니라 생애 적분 선량. 모든 stripping 추정의 입력.
   internal_heat_nontidal:
+    layer: "2층. 허브"
+    domain: interior
     kind: computed
     recipe: internal-heat-luminosity-methodology
     # 2026-09-03 브리프 44: geotherm 이라는 이름을 물린다 — 한 낱말이 열 예산과 T(P) 프로파일 둘을
@@ -173,6 +248,8 @@ nodes:
               mantle_temperature_width_denominator, mantle_temperature_width_surface]
 
   cmb_heat_flux:
+    layer: "2층. 허브"
+    domain: interior
     kind: computed
     recipe: internal-heat-luminosity-methodology
     # 2026-09-03 브리프 60 (오너 승인): 핵-맨틀 경계 열류. Nimmo+ 2004 식 37–39 (맨틀 하단 경계층) 를
@@ -187,29 +264,64 @@ nodes:
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
   # 꺼내는 상수이고, 그런데도 J2·조석고정·조석가열 전부의 뿌리다.
   nmoi_class_table:
+    layer: "클래스 표 상수"
+    domain: interior
     kind: class_table
     outputs: [nmoi]
     note: "\"바디 클래스에서 NMoI 를 고르고 가정과 범위를 명시하라\" — body-figure:256"
   k2q_class_table:
+    layer: "클래스 표 상수"
+    domain: tidal
     kind: class_table
     outputs: [k2_over_q]
     note: "\"외계 천체에서는 사실상 측정된 적이 없다\" — tidal-heating:527"
   omega0_class_table:
+    layer: "클래스 표 상수"
+    domain: tidal
     kind: class_table
     outputs: [p_init]
     note: "\"원시 미지값. 인용이 아니라 논증으로 경계지어진다\" — tidal-locking:431"
   t_exo_bracket:
+    layer: "클래스 표 상수"
+    domain: thermal
     kind: class_table
     outputs: [t_exo]
     note: "\"T_exo 는 약한 입력이고 표면온도가 아니다\" — exoplanet-atmosphere:284. 손으로 구간을 잡는다."
 
   # ── 3층. 갈래 ──────────────────────────────────────────────────
-  tidal_locking:      {kind: computed, recipe: tidal-locking-timescale-methodology, outputs: [locked, t_lock, rotation_period]}
-  body_figure:        {kind: computed, recipe: body-figure-methodology, outputs: [j2, c22, flattening, reference_radius, relief]}
-  cassini_state:      {kind: computed, recipe: cassini-state-obliquity-methodology, outputs: [obliquity]}
-  spin_axis_inclination: {kind: computed, recipe: spin-axis-inclination-methodology, outputs: [i_star, p_rot]}
-  dynamo_giant:       {kind: computed, recipe: planetary-dynamo-scaling, outputs: [b_pol, b_eq, dipole_moment]}
+  tidal_locking:
+    layer: "3층. 갈래"
+    domain: tidal
+    kind: computed
+    recipe: tidal-locking-timescale-methodology
+    outputs: [locked, t_lock, rotation_period]
+  body_figure:
+    layer: "3층. 갈래"
+    domain: spin_figure
+    kind: computed
+    recipe: body-figure-methodology
+    outputs: [j2, c22, flattening, reference_radius, relief]
+  cassini_state:
+    layer: "3층. 갈래"
+    domain: spin_figure
+    kind: computed
+    recipe: cassini-state-obliquity-methodology
+    outputs: [obliquity]
+  spin_axis_inclination:
+    layer: "3층. 갈래"
+    domain: spin_figure
+    kind: computed
+    recipe: spin-axis-inclination-methodology
+    outputs: [i_star, p_rot]
+  dynamo_giant:
+    layer: "3층. 갈래"
+    domain: interior
+    kind: computed
+    recipe: planetary-dynamo-scaling
+    outputs: [b_pol, b_eq, dipole_moment]
   dynamo_rocky:
+    layer: "3층. 갈래"
+    domain: interior
     kind: computed
     recipe: rocky-planet-dynamo-methodology
     # 2026-09-03 브리프 47: 레시피 등록. 두 게이트(생존·영역)는 라벨이고 ℳ_base·영역·다극자 계수는 선언
@@ -217,15 +329,34 @@ nodes:
     # "undeclared (both emitted)" — rossby 엣지가 gap 이라 그렇다.
     outputs: [dipole_moment, dipole_moment_min, dipole_moment_max, b_eq, b_pol,
               b_eq_multipolar_min, b_eq_multipolar_max, regime, ladder_regime, dynamo_alive]
-  stellar_wind:       {kind: computed, outputs: [n_sw, v_sw, p_ram]}
-  magnetosphere_geometry: {kind: computed, recipe: planetary-magnetosphere-geometry-methodology, outputs: [r_mp, belt_extent, belt_intensity]}
-  tidal_heating:      {kind: computed, recipe: tidal-heating-methodology, outputs: [power, surface_flux, radius_ceiling, plains_temperature], note: "radius_ceiling 은 수송 테스트가 돌려주는 하드 반지름 상한 (§6, Dante 521 km 가 그 산물), plains_temperature 는 외부 예산의 평원 온도 (§6.3·6.5, Dante 223 K) — 둘 다 방법론이 실제로 계산하는 값이라 2026-09-03 에 gap 이 아니라 출력으로 선언했다."}
+  stellar_wind:
+    layer: "3층. 갈래"
+    domain: space_env
+    kind: computed
+    outputs: [n_sw, v_sw, p_ram]
+  magnetosphere_geometry:
+    layer: "3층. 갈래"
+    domain: space_env
+    kind: computed
+    recipe: planetary-magnetosphere-geometry-methodology
+    outputs: [r_mp, belt_extent, belt_intensity]
+  tidal_heating:
+    layer: "3층. 갈래"
+    domain: tidal
+    kind: computed
+    recipe: tidal-heating-methodology
+    outputs: [power, surface_flux, radius_ceiling, plains_temperature]
+    note: "radius_ceiling 은 수송 테스트가 돌려주는 하드 반지름 상한 (§6, Dante 521 km 가 그 산물), plains_temperature 는 외부 예산의 평원 온도 (§6.3·6.5, Dante 223 K) — 둘 다 방법론이 실제로 계산하는 값이라 2026-09-03 에 gap 이 아니라 출력으로 선언했다."
   heat_transport_mode:
+    layer: "3층. 갈래"
+    domain: tidal
     kind: computed
     recipe: tidal-heating-methodology
     outputs: [mode, resurfacing_rate]
     note: 내부 열이 표면까지 어떻게 나오는가. 별빛 열의 재분배는 day_night_contrast 다.
   day_night_contrast:
+    layer: "3층. 갈래"
+    domain: thermal
     kind: computed
     recipe: tidally-locked-temperature-methodology
     outputs: [contrast, substellar_ceiling]
@@ -233,24 +364,91 @@ nodes:
       별빛 열을 대기가 낮밤으로 얼마나 재분배하는가. 2026-08-25 까지
       heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고
       이건 밖에서 들어온 열이다. "수송" 이라는 말을 공유해 합쳐져 있었다.
-  global_fluid_layer: {kind: computed, outputs: [present]}
+  global_fluid_layer:
+    layer: "3층. 갈래"
+    domain: atmosphere
+    kind: computed
+    outputs: [present]
 
   # ── 4층. 열·대기 ───────────────────────────────────────────────
-  t_eq_stellar:       {kind: computed, outputs: [t_eq]}
-  moon_energy_budget: {kind: computed, recipe: moon-energy-budget-methodology, outputs: [t_eq_4term, f_abs]}
-  t_eff_body:         {kind: computed, outputs: [t_eff], note: "T_eff⁴ = T_eq⁴ + T_int⁴"}
-  atmospheric_escape: {kind: computed, recipe: exoplanet-atmosphere-methodology, outputs: [retained, loss_rate]}
-  atmosphere_choice:  {kind: owner, outputs: [pressure, composition, haze]}
-  greenhouse:         {kind: computed, recipe: greenhouse-warming-methodology, outputs: [delta_t_gh, t_surf]}
+  t_eq_stellar:
+    layer: "4층. 열·대기"
+    domain: thermal
+    kind: computed
+    outputs: [t_eq]
+  moon_energy_budget:
+    layer: "4층. 열·대기"
+    domain: thermal
+    kind: computed
+    recipe: moon-energy-budget-methodology
+    outputs: [t_eq_4term, f_abs]
+  t_eff_body:
+    layer: "4층. 열·대기"
+    domain: thermal
+    kind: computed
+    outputs: [t_eff]
+    note: "T_eff⁴ = T_eq⁴ + T_int⁴"
+  atmospheric_escape:
+    layer: "4층. 열·대기"
+    domain: atmosphere
+    kind: computed
+    recipe: exoplanet-atmosphere-methodology
+    outputs: [retained, loss_rate]
+  atmosphere_choice:
+    layer: "4층. 열·대기"
+    domain: atmosphere
+    kind: owner
+    outputs: [pressure, composition, haze]
+  greenhouse:
+    layer: "4층. 열·대기"
+    domain: atmosphere
+    kind: computed
+    recipe: greenhouse-warming-methodology
+    outputs: [delta_t_gh, t_surf]
 
   # ── 5층. 표면 ──────────────────────────────────────────────────
-  ice_stability:      {kind: computed, recipe: ice-stability-methodology, outputs: [ice_survives, min_albedo]}
-  surface_albedo:     {kind: computed, recipe: surface-color-albedo-methodology, outputs: [albedo, hue]}
-  crater_state:       {kind: computed, recipe: crater-degradation-methodology, outputs: [cratered]}
-  surface_dose:       {kind: computed, recipe: surface-radiation-dose-methodology, outputs: [dose]}
-  surface_uv:         {kind: computed, outputs: [uv_flux], status: gap}
-  atmosphere_reflected_color: {kind: computed, recipe: atmosphere-reflected-color-methodology, outputs: [hex]}
-  hapke_shader_values: {kind: computed, recipe: hapke-shader-methodology, outputs: [terrain, scaled, porosity_k, theta]}
+  ice_stability:
+    layer: "5층. 표면"
+    domain: surface
+    kind: computed
+    recipe: ice-stability-methodology
+    outputs: [ice_survives, min_albedo]
+  surface_albedo:
+    layer: "5층. 표면"
+    domain: surface
+    kind: computed
+    recipe: surface-color-albedo-methodology
+    outputs: [albedo, hue]
+  crater_state:
+    layer: "5층. 표면"
+    domain: surface
+    kind: computed
+    recipe: crater-degradation-methodology
+    outputs: [cratered]
+  surface_dose:
+    layer: "5층. 표면"
+    domain: space_env
+    kind: computed
+    recipe: surface-radiation-dose-methodology
+    outputs: [dose]
+  surface_uv:
+    layer: "5층. 표면"
+    domain: surface
+    kind: computed
+    outputs: [uv_flux]
+    status: gap
+  atmosphere_reflected_color:
+    layer: "5층. 표면"
+    domain: atmosphere
+    kind: computed
+    recipe: atmosphere-reflected-color-methodology
+    outputs: [hex]
+  hapke_shader_values:
+    layer: "5층. 표면"
+    domain: surface
+    kind: computed
+    recipe: hapke-shader-methodology
+    outputs: [terrain, scaled, porosity_k, theta]
 
 edges:
 
