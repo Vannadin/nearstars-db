@@ -11,9 +11,10 @@
    undeclared lid → cannot-say; regime-5 body past the declared death age → dead. Every note carries
    "QUOTED, not evaluated" for Rm > 40.
 3. Declarations are families — regimes 2 and 3 emit endpoints and no elected moment; the undeclared
-   regime gate emits both branches with the 0.06/0.15 spread (factor 2.5).
+   regime gate emits both branches with the 0.05/0.06 spread (factor 1.2 — two printed values of the same
+   quantity, OC06 and RM22; the 0.15 that stood here until 2026-09-04 was Grießmeier's different quantity).
 4. Roster — Earth: regime 1, alive, dipolar 1.0 ℳ⊕ → 30 µT (the anchor reproduced), multipolar
-   1.8–4.5 µT; an undecided core → cannot-say.
+   1.5–1.8 µT; an undecided core → cannot-say.
 """
 from __future__ import annotations
 
@@ -62,17 +63,17 @@ def main() -> int:
        "3: regime 3 must emit no elected moment or field")
     both = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54)
     ok(both.values["regime"] == "undeclared (both emitted)"
-       and abs(both.values["b_eq_multipolar_max"] / both.values["b_eq_multipolar_min"] - 2.5) < 1e-9,
-       "3: undeclared regime emits both branches with the 0.15/0.06 = 2.5 spread")
+       and abs(both.values["b_eq_multipolar_max"] / both.values["b_eq_multipolar_min"] - 1.2) < 1e-9,
+       "3: undeclared regime emits both branches with the 0.06/0.05 = 1.2 spread (same-quantity grid; 0.15 was a different quantity)")
     dec = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, dynamo_regime="multipolar")
-    ok(dec.values["regime"] == "multipolar" and dec.values["dipole_moment_min"] == 0.06 and dec.values["dipole_moment_max"] == 0.15,
+    ok(dec.values["regime"] == "multipolar" and dec.values["dipole_moment_min"] == 0.05 and dec.values["dipole_moment_max"] == 0.06,
        "3: a declared multipolar regime must carry the factor grid")
     # ── 4. roster ────────────────────────────────────────────────────────────
     ok(both.values["ladder_regime"] == 1 and both.values["dynamo_alive"] == dr.ALIVE
        and abs(both.values["b_eq"] - 30.0) < 1e-9 and abs(both.values["b_pol"] - 60.0) < 1e-9,
        f"4: Earth → regime 1 alive, 30 / 60 µT; got {both.values}")
-    ok(abs(both.values["b_eq_multipolar_min"] - 1.8) < 1e-9 and abs(both.values["b_eq_multipolar_max"] - 4.5) < 1e-9,
-       "4: Earth's multipolar branch is 1.8–4.5 µT")
+    ok(abs(both.values["b_eq_multipolar_min"] - 1.5) < 1e-9 and abs(both.values["b_eq_multipolar_max"] - 1.8) < 1e-9,
+       "4: Earth's multipolar branch is 1.5–1.8 µT (0.05–0.06 × 30; was 1.8–4.5 with the 0.15 grid point until 2026-09-04)")
     ok(both.grade == "judgment", "4: the ladder never grades above judgment — its gates are labels")
     giant = dr.ladder(120.0, 11.2, "liquid", False, 5.3, body_class="giant")
     ok(not giant.applicable, "4: a giant is out of domain here (dynamo_giant's recipe)")
@@ -81,7 +82,7 @@ def main() -> int:
         print(f"  [FAIL] {f}")
     if not fails:
         print("  [PASS] 암석 다이나모 사다리 — 문서 표 재현(수성 0.22 · 가니메데 0.87 · 지구 30 µT) + RM22 Table 8 차이 고정 "
-              "(수성 0.16 · 금성 0.024 µT) · 게이트 라벨 5건 · 격자 미선출(regime 2·3) · 지구 30 µT / 다극자 1.8–4.5 µT · Rm 인용 표기")
+              "(수성 0.16 · 금성 0.024 µT) · 게이트 라벨 5건 · 격자 미선출(regime 2·3) · 지구 30 µT / 다극자 1.5–1.8 µT · Rm 인용 표기")
     return 1 if fails else 0
 
 

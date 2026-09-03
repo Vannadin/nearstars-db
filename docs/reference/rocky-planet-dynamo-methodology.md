@@ -71,7 +71,13 @@ sits in — this is why a rocky field is a *decision ladder*, not one closed for
    `≈ 0.06 ×` its dipolar value — **RM22's coefficient** (*"the reducing coefficient in the solar system
    is about 0.06"*), not OC06's: OC06 print *"across this transition the dipole moment falls by nearly a
    factor of 20"* (≈ 0.05×) and, separately, that the multipolar regime is *"reduced by a factor of 10 or
-   more"*; vs 0.15 in Grießmeier 2009. Attribution corrected 2026-09-03 against both cached papers).
+   more"*. Attribution corrected 2026-09-03 against both cached papers. ⚠ **Grießmeier 2009's 0.15 is not a
+   value of this quantity** and was removed from the grid on 2026-09-04: their §2.2 gives 0.02–0.15 *M_E* —
+   Earth's present moment as denominator — for one configuration (Earth-like, 0.2 AU, 0.5 M☉), adopting the
+   maximum *"to obtain a lower limit for the cosmic ray flux"*; Table 1 prints 0.37/0.65/0.96 for other
+   locked cases; the paper contains no Rossby number and no 0.12. The `Ro_ℓ = 0.12` boundary and the
+   multipolar collapse are OC06's, executed by RM22 (their eqs for F, Ra_Q, Ro, Ro_ℓ and Table 6 inputs).
+   The engine's grid is {0.05 OC06, 0.06 RM22}, a 1.2× spread of the same quantity).
 3. **Rotation** enters *only through the regime gate*, not the dipolar amplitude.
    In the dipolar linear zone the moment carries **no explicit angular-velocity
    dependence** (RM22 §5.1) — a crucial, counter-intuitive point: slow rotation

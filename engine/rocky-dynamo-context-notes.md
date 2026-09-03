@@ -75,8 +75,20 @@ cannot execute for a super-Earth without one. Declared as a **grid, never one el
 
 **Step 4 — regime gate, declared and gridded.** The `rossby` edge is a gap (`tidal_locking` cannot supply
 Ro_ℓ). A body may declare `dynamo_regime: dipolar|multipolar`; undeclared → **both branches emitted**:
-dipolar ℳ_base and multipolar ℳ_base × {0.06 (OC06/RM22 — RM22: *"about 0.06 … ratif[ies] OC06"*), 0.15
-(Grießmeier 2009)} — a **factor 2.5 in the answer** that rides on every emitted value. `regime` output =
+dipolar ℳ_base and multipolar ℳ_base × {0.05 (OC06, *"nearly a factor of 20"*), 0.06 (RM22, Solar-System
+*"about 0.06 … ratif[ies] OC06"*)} — a **factor 1.2** of the same quantity. **Corrected 2026-09-04 (parallel
+seat's C16 survey, reproduced by the work seat from the cached PDF)**: the second grid point was 0.15
+"(Grießmeier 2009)" and the spread read *"a factor 2.5 in the answer"* — **a different quantity**. Grießmeier
+§2.2, verbatim: *"For an Earth-like planet in an orbit of 0.2 AU around a star with 0.5 stellar masses, the
+magnetic moment is expected to lie in the range 0.02 M_E < ℳ < 0.15 M_E, where M_E is the value of Earth's
+current magnetic moment … the maximum value of 0.15 M_E will be adopted to obtain a lower limit for the cosmic
+ray flux"*; Table 1 prints 0.37 · 0.65 · 0.96 for other locked cases; *Rossby*, *0.12*, *convectiv* occur
+zero times in the paper. Denominator Earth's present moment, one configuration, a deliberate conservative
+maximum — not a multipolar/dipolar ratio. It came in through RM22's aside *"Some other authors work with a
+dipole moment reduction coefficient of 0.15 (Grießmeier et al., 2009)"* — a secondary citation that broke at
+the source, the fifth of the day. RM22 prints three numbers in one paragraph (OC06 *"of the order of 0.05"*,
+its own *"about 0.06"*, the 0.15) — recorded as printed. The 2.5× sentences below are superseded by 1.2×.
+`regime` output =
 the declared branch or `undeclared (both emitted)`; the edge to `magnetosphere_geometry via regime` gets
 this.
 
@@ -97,6 +109,8 @@ computed alternative not followed.
 do not tune the anchor; ③ a roster body falls in regime 2 or 3 and the declaration is load-bearing → name it
 and the spread across the grid; ④ `conductor_phase` undecided for a body → cannot-say, not a default; ⑤ the
 ×0.06-vs-×0.15 spread swamps the answer for some body → the recipe cannot grade there and refuses by name.
+*(2026-09-04: the grid is now ×0.05-vs-×0.06 — see step 4's correction; ⑤ was registered against the 2.5× that no
+longer exists and could only fire at 1.2× now.)*
 
 **Expectation (여기; the directing seat declined to register one)**: ① the table reproduces trivially —
 `B = 30 ℳ R⁻³` is the doc's own arithmetic on the doc's own observed column — so the check certifies the
@@ -104,10 +118,12 @@ transcription and nothing about RM22; the substantive finding is the Mars/Venus 
 doc-versus-paper difference rather than ②. Earth → regime 1, alive (`liquid_outer_solid_inner`, and
 `stagnant_lid: false` declared in `bodies/earth.yaml` as a fact — plate tectonics), regime gate undeclared
 → both branches emitted: dipolar 1.0 ℳ⊕ → **30 µT** (the anchor, reproduced not predicted), multipolar
-0.06–0.15 ℳ⊕ → **1.8–4.5 µT**. Pandora → **④ cannot-say** (`core_state` is undecided for it — no
+0.06–0.15 ℳ⊕ → **1.8–4.5 µT** *(as recorded on 09-03; since the 2026-09-04 correction the multipolar grid is
+0.05–0.06 ℳ⊕ → **1.5–1.8 µT**)*. Pandora → **④ cannot-say** (`core_state` is undecided for it — no
 temperature). The giant → out of domain. ③ does not fire (no roster body above 2 M⊕ reaches the recipe);
 ⑤ does not fire as a refusal because the regime is emitted as a family rather than graded — the spread is
-carried, not adjudicated. **Load-bearing declarations for Earth**: the regime branch (2.5× in the answer)
+carried, not adjudicated. **Load-bearing declarations for Earth**: the regime branch (the dipolar/multipolar
+choice, 17–20×; the multipolar grid itself 1.2× since 2026-09-04)
 and `stagnant_lid`; not ℳ_base (regime 1 has a value) and not the death age (regime 5 only).
 
 ## 4. Result — 2026-09-03, code `c7ab0a80`
@@ -119,11 +135,12 @@ every point.
 
 | body | regime | alive gate | ℳ_base | regime gate | B_eq | multipolar B_eq |
 |---|---|---|---|---|---|---|
-| Earth | 1 (dry, 1.0 M⊕) | alive — `liquid_outer_solid_inner`, `stagnant_lid: false` declared | 1.0 (doc) | undeclared → both | **30 µT** (anchor reproduced, not predicted), B_pol 60 | **1.8–4.5 µT** |
+| Earth | 1 (dry, 1.0 M⊕) | alive — `liquid_outer_solid_inner`, `stagnant_lid: false` declared | 1.0 (doc) | undeclared → both | **30 µT** (anchor reproduced, not predicted), B_pol 60 | **1.5–1.8 µT** *(was 1.8–4.5 with the 0.15 grid point until 2026-09-04)* |
 | Pandora | 1 | **cannot-say** — `core_state` is undecided (no temperature) | — | — | null | null |
 | α Cen A b | — | out of domain (giant) | | | | |
 
-**Load-bearing declarations for Earth**: the regime branch (2.5× in the answer, carried as both branches) and
+**Load-bearing declarations for Earth**: the regime branch (multipolar ≈ 0.05–0.06× the dipolar value — the
+regime *choice* is the 17–20× lever; the grid inside the multipolar branch is 1.2× since 2026-09-04) and
 `stagnant_lid` (declared false; undeclared would have been cannot-say). Not load-bearing today: ℳ_base
 (regime 1 has a printed value) and the death age (regime 5 only). No roster body reaches regimes 2–3, so
 their grids are declared and unexercised — the day a 2–10 M⊕ rocky body reaches the recipe it gets endpoints
@@ -132,7 +149,7 @@ and no number, and the consumer declares its own (C11).
 **Pinned in `test_dynamo_rocky.py`**: the doc's table through step 5 (Mercury 0.22, Ganymede 0.87, Earth 30);
 RM22's computed Mercury 0.0003 → 0.16 µT and Venus 0.0007 → 0.024 µT (not the doc's zeros); the five gate
 labels (undecided core, solid, declared lid, undeclared lid, regime-5 past 7 Gyr); regimes 2–3 emit
-endpoints and no elected moment; the undeclared regime emits both branches at exactly 2.5× spread; every
+endpoints and no elected moment; the undeclared regime emits both branches (multipolar grid 1.2× since 2026-09-04); every
 result says *Rm > 40 is QUOTED, not evaluated*; the ladder never grades above judgment.
 
 **Doc fixes landed (EN + ko)**: A176 → **A101** at both sites; Gaidos+ 2010 author row → Gaidos, Conrad, Manga

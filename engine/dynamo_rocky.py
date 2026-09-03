@@ -27,7 +27,15 @@ structure + thermal-evolution solver per body." Closing relation, anchored on Ea
   **regimes 2 and 3 have no value in the doc** and are carried as grids with **no elected number** (C11).
 * **The regime gate is declared or emitted both ways.** `rossby` is a gap (a rotation period cannot give
   Ro_ℓ). Undeclared → dipolar and multipolar branches both emitted, the multipolar factor itself a grid
-  {0.06 (OC06; RM22 "about 0.06"), 0.15 (Grießmeier 2009)} — a factor 2.5 that rides on every value.
+  {0.05 (OC06, "nearly a factor of 20"), 0.06 (RM22, Solar-System "about 0.06")} — two printed values of
+  the SAME quantity (multipolar moment / the same dynamo's maximum dipolar moment), a 1.2× spread.
+  ⚠ Until 2026-09-04 the second grid point was 0.15 "(Grießmeier 2009)" and the spread read 2.5× — that was a
+  different quantity: Grießmeier §2.2 gives 0.02–0.15 M_E for ONE configuration (Earth-like, 0.2 AU,
+  0.5 M☉), the denominator is Earth's present moment, and 0.15 is the range's maximum "adopted to obtain a
+  lower limit for the cosmic ray flux"; their Table 1 prints 0.37, 0.65, 0.96 for other locked cases. It
+  reached us through RM22's one-line aside ("Some other authors work with a dipole moment reduction
+  coefficient of 0.15") — a secondary citation that broke on reading the source. RM22 itself prints three
+  numbers in one paragraph (OC06 "of the order of 0.05", its own "about 0.06", and that 0.15) — kept as printed.
 * **RM22's own Solar-System numbers differ from the doc's zeros.** RM22 Table 8 computes Mercury 0.0003,
   Venus 0.0007, Mars 0.084 (marked extinct); the doc's validation table writes Venus and Mars as ℳ = 0.
   The zeros are this ladder's class judgements, not the model's output (rocky-dynamo-context-notes.md §1).
@@ -47,7 +55,9 @@ REFS = (
     "2010ApJ...718..596G",      # Gaidos, Conrad, Manga & Hernlund 2010 — cited for the Rm > 40 threshold that this
                                # recipe QUOTES AND DOES NOT EVALUATE; HELD (arXiv preprint, parallel seat,
                                # 2026-09-03 13:37, PROVENANCE). Both "NOT HELD" were true at 12:00 when written.
-    "2009Icar..199..526G",      # Grießmeier+ 2009 — the alternative 0.15 multipolar factor
+    "2009Icar..199..526G",      # Grießmeier+ 2009 — HELD (parallel seat, 2026-09-04). Cited for the tidal-locking
+                               # coupling only; its 0.15 M_E is NOT a multipolar factor (see the docstring) and is no
+                               # longer in MULTIPOLAR_FACTORS. Rossby / 0.12 appear nowhere in that paper.
     "2022ApJ...938..131Z",      # Zhang & Rogers 2022 — computed alternative (thermal evolution), flagged, not followed
 )
 
@@ -66,7 +76,8 @@ M_BASE = {                     # ℳ/ℳ⊕ — the declared family. None = the 
     5: (0.0, 0.0),             # low-density dry, Mars analog: dynamo-dead by a few Gyr
 }
 ELECTED = {1, 4, 5}            # regimes where the doc prints one value; 2 and 3 emit endpoints only
-MULTIPOLAR_FACTORS = (0.06, 0.15)   # OC06 / RM22 ("about 0.06") vs Grießmeier 2009 — factor 2.5 spread
+MULTIPOLAR_FACTORS = (0.05, 0.06)   # OC06 "nearly a factor of 20" (≈ 0.05) · RM22 Solar-System "about 0.06" — same
+                                    # quantity, 1.2× spread. (0.15 removed 2026-09-04: a different quantity — docstring.)
 DYNAMO_DEATH_AGE_GYR = {5: 7.0}     # the doc's one worked point ("Mars-mass by ~7 Gyr"); Zhang & Rogers 2022
                                     # §4.2.5 give 1 M⊕ shut-off at ~2.5–5 Gyr and 3 M⊕ at ~10–12 Gyr from a
                                     # different model — contested, carried, not adopted
@@ -185,8 +196,9 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
         f"단계 4 영역 게이트: rossby 엣지는 gap 이라 선언으로 받는다 → **{branch}**"
         + ("" if branch != "undeclared (both emitted)" else
            f"; 쌍극자 {dip_lo}–{dip_hi} ℳ⊕ 와 다극자 ×{MULTIPOLAR_FACTORS[0]}–{MULTIPOLAR_FACTORS[1]} "
-           f"({mp_lo:.3g}–{mp_hi:.3g} ℳ⊕) 를 둘 다 싣는다 — 다극자 계수 자체가 OC06/RM22 0.06 대 Grießmeier 0.15, "
-           "답에서 2.5배")
+           f"({mp_lo:.3g}–{mp_hi:.3g} ℳ⊕) 를 둘 다 싣는다 — 다극자 계수 자체가 OC06 '거의 20배'(≈0.05) 대 RM22 태양계 "
+           "'약 0.06', 같은 양의 두 인쇄값이라 1.2배 (Grießmeier 의 0.15 는 다른 양 — 지구 현재 모멘트 대비 한 궤도의 "
+           "보수적 최댓값 — 이라 2026-09-04 에 뺐다)")
         + f". 단계 5 B_eq = 30 µT · ℳ · (R/R⊕)⁻³ (R = {radius_earth:.4f} R⊕), B_pol = 2 B_eq. "
         "지구 30 µT 는 앵커의 재현이지 예측이 아니다. RM22 자신의 Table 8 은 수성 0.0003 · 금성 0.0007 · 화성 0.084 를 "
         "계산하고, 문서의 검증 표는 관측열을 쓰며 금성·화성을 0 으로 적는다 — 그 0 은 이 사다리의 클래스 판단이다.")
