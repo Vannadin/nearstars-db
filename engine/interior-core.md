@@ -943,10 +943,12 @@ logP 1.10–2.30, where 2021 has values. `make_hhe_table.py` already handles tha
 records that 2019's seven lie below the 50 K reach line. Pre-registered ① (filename-only) versus ② (reader
 change): the answer is **①** — same header, columns, grid and sentinel convention; the switch is the
 filename, the sentinel cells move from seven to three in the same cold-dense corner, and the whole question
-is physics. *Correction (audit of Brief 51): the first version of this entry said "ten points … carry −8.86
-in the 2021 table" and called the answer ③ with "a hole guard the current reader does not have" — the count
-mixed both tables' placeholders, and the guard exists.* Uranus/Neptune anchors would move; that is what
-"candidate" means here.
+is physics. **The 7 → 3 placeholder change is not an advantage for 2021**: both sets sit in the same
+cold-dense corner, both are handled by the existing guard, and 2019's seven are below the reach line — the
+decision rests on the grad_ad physics alone. *Correction (audit of Brief 51): the first version of this entry
+said "ten points … carry −8.86 in the 2021 table" and called the answer ③ with "a hole guard the current
+reader does not have" — the total of ten was right but mixed both tables' placeholders, and the guard exists.*
+Uranus/Neptune anchors would move; that is what "candidate" means here.
 
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
