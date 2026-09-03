@@ -11,7 +11,20 @@ RM22, Reiners & Christensen, Yadav & Thorngren, Garraffo and Zhang & Rogers as a
 when all five are held. Three separate sessions hit this on 2026-09-03/04.
 
 The arXiv id is READ from the ADS `identifier` field, never constructed.
-Needs ADS_API_TOKEN. Exit status 1 if any queried paper is absent.
+Needs ADS_API_TOKEN. Exit status 1 if any queried paper is absent or abstract-only.
+
+Two defects of its own, found 2026-09-04 within hours of installation (recorded, not hidden):
+- The first arXiv regex matched only new-style ids (2203.01065) and missed old-style ones
+  (astro-ph/0103383, cached as astro-ph_0103383 — 52 such names). The tool built to stop
+  false absences produced a false absence of its own, for the one paper needed that night
+  (Burrows+ 2001). It was caught in thirty seconds ONLY because the ABSENT line prints what
+  was checked ("checked 2001RvMP...73..719B" — one candidate, no arXiv id, was the clue).
+  DO NOT change that output format; it is what makes this tool self-checking.
+- "Held" meant "a file of that name exists". Three cached names (1004.1091, 1209.5323,
+  1401.8145) are arXiv abstract pages (50-byte .md, .html without ltx_document), and a
+  name whose only file is .PROVENANCE.txt would also have counted. A held paper must have a
+  body: a .pdf, an .html carrying ltx_document, or an .md above BODY_MIN_BYTES. Otherwise
+  the verdict is ABSTRACT-ONLY — a different state from ABSENT, calling for a different fix.
 """
 from __future__ import annotations
 
@@ -28,17 +41,42 @@ CACHE = os.environ.get("NEARSTARS_PAPERS") or os.path.join(
     "docs", "phase3", "_papers")
 BIBCODE = re.compile(r"\b\d{4}[A-Za-z&][A-Za-z&.]{1,6}[0-9A-Za-z.]{0,8}\.{1,4}[0-9]{1,4}[A-Z]\b")
 ARXIV = re.compile(r"\b\d{4}\.\d{4,5}\b")
+# 구형 arXiv id (astro-ph/0103383) — 캐시는 '/' 를 '_' 로 바꿔 저장한다.
+ARXIV_OLD = re.compile(r"\b([a-z-]+(?:\.[A-Z]{2})?)/(\d{7})\b")
+BODY_MIN_BYTES = 2000  # an arXiv abstract page saved as .md is ~50 bytes; a full text is tens of KB
 STRIP = re.compile(r"\.(pdf|txt|src|md|json|html|xml|ps|eps|zip)$")
 
 
-def cache_names(root: str = CACHE) -> set[str]:
-    """Every base name the cache holds — files and directories, all levels."""
+def _has_body(path: str) -> bool:
+    """A file counts as a body if it is a pdf, an html with LaTeXML's ltx_document, or an md above BODY_MIN_BYTES."""
+    if path.endswith(".pdf"):
+        return True
+    if path.endswith(".html"):
+        with open(path, "rb") as fh:
+            return b"ltx_document" in fh.read()
+    if path.endswith(".md"):
+        return os.path.getsize(path) > BODY_MIN_BYTES
+    return False
+
+
+def cache_names(root: str = CACHE) -> dict[str, bool]:
+    """Every base name the cache holds (files and directories, all levels) -> whether a body was found.
+
+    A directory counts as a body (the zenodo bundles). A name whose only file is .PROVENANCE.txt
+    is listed with False, never True."""
     if not os.path.isdir(root):
         sys.exit(f"paper cache not found at {root} — set NEARSTARS_PAPERS if it lives elsewhere.")
-    names = set()
+    names: dict[str, bool] = {}
     for dirpath, dirnames, filenames in os.walk(root):
-        for name in list(filenames) + list(dirnames):
-            names.add(STRIP.sub("", name).removesuffix(".PROVENANCE"))
+        for name in dirnames:
+            names[name] = True
+        for name in filenames:
+            if name.endswith(".PROVENANCE.txt"):
+                base = name.removesuffix(".PROVENANCE.txt")
+                names.setdefault(base, False)
+                continue
+            base = STRIP.sub("", name)
+            names[base] = names.get(base, False) or _has_body(os.path.join(dirpath, name))
     return names
 
 
@@ -54,8 +92,12 @@ def ads_identifiers(bibcodes: list[str]) -> dict[str, list[str]]:
             {"q": " OR ".join(f'bibcode:"{b}"' for b in chunk), "fl": "bibcode,identifier", "rows": len(chunk)})
         req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
         for doc in json.load(urllib.request.urlopen(req))["response"]["docs"]:
-            found = [m.group(0) for ident in doc.get("identifier", [])
-                     if (m := ARXIV.search(ident))]
+            found = []
+            for ident in doc.get("identifier", []):
+                if (m := ARXIV.search(ident)):
+                    found.append(m.group(0))
+                elif (m := ARXIV_OLD.search(ident)):
+                    found.append(f"{m.group(1)}_{m.group(2)}")
             out[doc["bibcode"]] = sorted(set(found))
     return out
 
@@ -76,14 +118,19 @@ def main(argv: list[str]) -> int:
     missing = 0
     for b in bibcodes:
         candidates = [b] + arxiv.get(b, [])
-        held = [c for c in candidates if c in names]
+        held = [c for c in candidates if names.get(c)]
+        shells = [c for c in candidates if c in names and not names[c]]
         if held:
             how = "bibcode" if held[0] == b else f"arXiv {held[0]}"
             print(f"HELD    {b}  (as {how})")
+        elif shells:
+            missing += 1
+            how = "bibcode" if shells[0] == b else f"arXiv {shells[0]}"
+            print(f"ABSTRACT-ONLY  {b}  (as {how}; no pdf, no ltx_document html, md ≤ {BODY_MIN_BYTES} B)")
         else:
             missing += 1
             print(f"ABSENT  {b}  (checked {', '.join(candidates)})")
-    print(f"\n{len(bibcodes) - missing}/{len(bibcodes)} held, {missing} absent — cache index {len(names)} names.")
+    print(f"\n{len(bibcodes) - missing}/{len(bibcodes)} held, {missing} absent or abstract-only — cache index {len(names)} names.")
     return 1 if missing else 0
 
 
