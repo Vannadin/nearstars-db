@@ -183,18 +183,28 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
   Q_s 1.96 (2.0, −2 %) · Q_L 2.40 (2.6, −8 %) · Q_g 1.47 (1.6, −8 %) · Q_R 2.89 (2.9) · Q_k 6.18 (6.2) TW;
   T_i 5 598 K (5 581); M_c 1.927e24 kg; sum 8.71 against the printed Q_C 9.0 / component sum 9.1. Every
   component inside the pre-registered 10 %; **Q_L and Q_g sit 8 % low and stay low** — the shortfall is
-  reported, not tuned. **Diagnosed after the gate (directing seat's hypothesis, tested here): the −8 % is one
-  common factor, C_r.** The two exact terms (Q_s, Q_R) do not contain C_r; the two low ones both do (eqs 17,
-  19–20). Scaling C_r by 1.083 lands **both** on the printed values at once — Q_L 2.60, Q_g 1.59 — and the C_r
+  reported, not tuned. **Diagnosed after the gate (directing seat's hypothesis, tested here; the name of the factor
+  retracted 2026-09-04, see below): the −8 % is one common factor, `4πR_i²ρ_i·dR_i/dt`.** The two exact terms
+  (Q_s, Q_R) do not contain it; the two low ones both do — Q_L as that factor × L_h (eq. 17), Q_g through
+  C_c ∝ R_i²ρ_i/M_oc (eqs 19–20). Scaling C_r by 1.083 lands **both** on the printed values at once — Q_L 2.60, Q_g 1.59 — and the C_r
   each term asks for on its own is −14.59 and −14.66 km/K, the same number to 0.5 %. **The paper does not
   print its nominal model's C_r**; the −13.45 is our division of two one-decimal printed values (444 km/Gyr,
-  −33 K/Gyr), whose rounding is ±1.5 %, not 8 %. So the honest sentence is: *the −8 % comes from C_r, the
-  paper does not print that value, and the C_r its own Q_L and Q_g imply is −14.6 km/K.* **Not adopted** —
+  −33 K/Gyr), whose rounding is ±1.5 %, not 8 %. **Retracted 2026-09-04 (directing seat's recomputation,
+  audit seat's catch)**: the sentence that stood here — *"the −8 % comes from C_r"* — contradicted the ±1.5 %
+  two lines above it. `C_r·dT_c/dt = dR_i/dt`, and **dR_i/dt = 444 km/Gyr is printed in Table 4**, so the
+  product that actually enters Q_L is a printed value and C_r's rounding band (−13.24 … −13.68 km/K, ±1.7 %)
+  cannot hold 8 %. With printed inputs alone, Q_L = 4π(1.22e6)²·12148·750e3·(444e3/3.156e16) = **2.397 TW**
+  against the printed 2.6: **2.6 is not a product of the printed inputs; the difference sits in the paper's
+  own ρ_i·R_i·L_h or its arithmetic. Unresolved.** The observation that scaling by 1.083 lands both Q_L and
+  Q_g at once stands as fact — its reading changes: not that C_r is the cause, but that **a factor the two
+  terms share is 8 % low**. Excluded as the cause: a common I_S·I_T integration error (E_L and E_g do not
+  carry those integrals; E_R and E_s, which do, are exact); and since E_g/Q_g = 1/T_c exactly (0.00024067 =
+  1/4155), the −8 % (Q side) versus −6 % (E side) gap is the Q column's two-digit rounding. **Not adopted** —
   moving C_r to land the printed numbers is the thing this project forbids; the test keeps −13.45 with its
   label and the 8 % stays visible. (β_c's printed 10 % disagreement between Alfè and Roberts would move Q_g
   alone, not Q_L, so it is not the common factor.) **Independently confirmed by C15 (2026-09-04)**: on the
-  entropy side the three C_r-bearing terms (E_L, E_g, E_H) come out 6 % low and the C_r-free ones (E_R, E_s,
-  E_k) exact — the same factor, the same direction, from a different budget (`core-entropy-context-notes.md`
+  entropy side the three terms carrying the shared factor `R_i²ρ_i·dR_i/dt` (E_L, E_g, E_H) come out 6 % low and the
+  ones free of it (E_R, E_s, E_k) exact — the same factor, the same direction, from a different budget (`core-entropy-context-notes.md`
   §4). ψ's zero point cancels in Q_g
   (both choices identical to 1e-6). Root-find on the paper's own mantle side (eq. 29 base 2 694 K):
   **T_c 4 152 K against the printed 4 155.** C_r's three values kept apart: Gubbins −9.56 (printed, other

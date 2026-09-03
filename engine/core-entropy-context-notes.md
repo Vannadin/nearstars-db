@@ -62,7 +62,7 @@ the 1/T_c prefactor is in) · E_L 148.8 (159, −6 %) · E_g 353 (375, −6 %) �
 [M_oc/T_i − ∫_oc ρ/T dV] gives −125. **Adopted with that label — "sign recovered by closure, not read"** — the
 same class as Brief 60's eq. 29 reading; the alternative (a sign convention on R_H between G2 and this paper)
 is not distinguishable from the text layer. **ΔE 328 vs printed 351 (−6.5 %)** on that reading. E_L · E_g · E_H
-all carry C_r, so **the C14 diagnosis (−8 % in Q_L/Q_g from C_r) reappears as −6 % here** and is not tuned.
+all carry C_r, so **the C14 diagnosis (−8 % in Q_L/Q_g from C_r) reappears as −6 % here** and is not tuned. **Correction 2026-09-04**: the factor's name is not C_r — C_r's rounding band is ±1.7 % and dR_i/dt is printed — but the shared `R_i²ρ_i·dR_i/dt` that E_L, E_g, E_H carry and E_R, E_s, E_k do not; the −8 % vs −6 % gap is the Q column's two-digit rounding (E_g/Q_g = 1/T_c exactly). Cause unresolved; see `core-energy-balance-context-notes.md` §retraction.
 Two more scratch numbers on the *paper's* inputs, recorded because they shape the engine-Earth expectation
 that is deliberately not written: with the inner-core terms removed (E_L = E_g = E_H = 0), present-day Earth
 values give **E_R + E_s − E_k = −49 MW/K**, and at H = 0 **−138 MW/K** — i.e. on this model a completely liquid
