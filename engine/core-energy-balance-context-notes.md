@@ -150,8 +150,16 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
   Q_s 1.96 (2.0, −2 %) · Q_L 2.40 (2.6, −8 %) · Q_g 1.47 (1.6, −8 %) · Q_R 2.89 (2.9) · Q_k 6.18 (6.2) TW;
   T_i 5 598 K (5 581); M_c 1.927e24 kg; sum 8.71 against the printed Q_C 9.0 / component sum 9.1. Every
   component inside the pre-registered 10 %; **Q_L and Q_g sit 8 % low and stay low** — the shortfall is
-  reported, not tuned (a candidate cause, not verified: the paper's ρ_i may carry the ICB density jump it
-  says it "incorporates" for compositional convection; eq. 1 alone does not). ψ's zero point cancels in Q_g
+  reported, not tuned. **Diagnosed after the gate (directing seat's hypothesis, tested here): the −8 % is one
+  common factor, C_r.** The two exact terms (Q_s, Q_R) do not contain C_r; the two low ones both do (eqs 17,
+  19–20). Scaling C_r by 1.083 lands **both** on the printed values at once — Q_L 2.60, Q_g 1.59 — and the C_r
+  each term asks for on its own is −14.59 and −14.66 km/K, the same number to 0.5 %. **The paper does not
+  print its nominal model's C_r**; the −13.45 is our division of two one-decimal printed values (444 km/Gyr,
+  −33 K/Gyr), whose rounding is ±1.5 %, not 8 %. So the honest sentence is: *the −8 % comes from C_r, the
+  paper does not print that value, and the C_r its own Q_L and Q_g imply is −14.6 km/K.* **Not adopted** —
+  moving C_r to land the printed numbers is the thing this project forbids; the test keeps −13.45 with its
+  label and the 8 % stays visible. (β_c's printed 10 % disagreement between Alfè and Roberts would move Q_g
+  alone, not Q_L, so it is not the common factor.) ψ's zero point cancels in Q_g
   (both choices identical to 1e-6). Root-find on the paper's own mantle side (eq. 29 base 2 694 K):
   **T_c 4 152 K against the printed 4 155.** C_r's three values kept apart: Gubbins −9.56 (printed, other
   model) · Table 4 ratio −13.45 (our division) · slope-derived **−26.5 km/K** (ours; melting curve −0.434 vs
@@ -193,4 +201,10 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
 - **Profile method, for the record**: inward from the CMB, m falling from M_core, the innermost 2 % of the
   radius (10⁻⁵ of the volume) not integrated because the 0.3 % mass residual diverges as G m/r² at r → 0; the
   residual is emitted as `core_profile_mass_residual`.
-- **⑦** Gate: below, with `pmset -g` beside the time.
+- **⑦ Gate on `3a304019`: FAIL 0, 471 PASS (+12 = `test_core_energy`'s rows), 21:45:52 → 22:22:51 =
+  2 219 s.** Power state **at start**: battery 24 %, discharging, `powermode 1`; **at end**: AC, 40 %,
+  charging, `powermode 2` — the owner connected power during the run (*"전원 연결함 이어서 해줘"*). The values
+  are observed, not interpreted (what `powermode` 1 vs 2 means was not checked). Because the run straddles
+  the two power states, its time belongs to **neither** trend branch (mains 1 224–1 293 s; low-power
+  1 585–2 381 s) and is not compared with anything; the new test's own cost is 2.3 s measured standalone. The
+  next gate, run wholly on AC, is the one that can confirm the low-power attribution.

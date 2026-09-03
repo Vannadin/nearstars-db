@@ -1008,7 +1008,12 @@ lean on and no source settles.** Each is a labelled condition, not an open item;
 a solver change makes it load-bearing in a new place.
 - **γ = 1.5** — `GAMMA_CORE`, a solid (h.c.p.) value on a liquid density fit; Earth's inner core exists in
   this recipe only at that value (Brief 42's knife-edge, 0.94 %), and now it rides upstream of `Q_adiabat`
-  (Brief 60). Not moved, because moving a constant to make an answer come out is prohibited.
+  (Brief 60). Not moved, because moving a constant to make an answer come out is prohibited. **The same
+  question has a second face (C14, 2026-09-03): *at which temperature the pressure profile is evaluated.*
+  `core_state` lays the hot adiabat on the pressure axis of the cold lower-bound column and finds Earth's
+  inner core (351.4 GPa, margin −17.6 K); the C14 profile integrated at the hot adiabat's own temperature
+  reaches 346 GPa and finds none at any T_c ≳ 3 600 K. Brief 42 flipped the verdict on γ; C14 flips it on
+  the pressure profile's temperature — two faces of one knife-edge, watched here together, neither moved.**
 - **`Rm > 40` quoted, never evaluated** — the rocky dynamo's alive-gate sits in the ladder as a class
   judgement; no magnetic-Reynolds expression exists in the recipe (Brief 43). Building one is the larger
   brief the owner has not opened (C15 is its φ half).
