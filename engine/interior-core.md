@@ -1943,6 +1943,54 @@ cannot do.
 
 **Start condition.** Not now. Order: P3 → C14 → then reconsider.
 
+### C21 — the short-lived radiogenic formation pulse (²⁶Al · ⁶⁰Fe) — **listed 2026-09-03, not started**
+
+Owner: *"단수명도 파긴 해야겠네."* (`4b8e06ba`, 09-03 18:10) and *"등재하고 측정은 그때 가서."* (18:17) — listed
+now, measured when it is started.
+
+**Why it opens.** `radiogenic-context-notes.md` §3 closed this term as a named refusal and **narrowed the
+ground of the refusal on purpose**: *"The refusal rests on our missing input, not on borrowing their
+conclusions"* and *"Neither says ²⁶Al is negligible for a small body that formed early — Monteux says the
+opposite for 10–100 km objects, a class the roster may want."* The owner's judgement is that sentence's.
+
+**Two design proposals from the owner, verbatim:**
+1. *"단수명 방사성 원소가 소멸할 때까지의 구간만 촘촘하게 적분하는 식으로 접근하면 안되려나?"* (18:10) →
+   **a variable step.** Half-lives ²⁶Al 0.73 My · ⁶⁰Fe 1.5 My (Monteux+ 2016 lines 187–191, held, quoted
+   verbatim in `radiogenic-context-notes.md` §3, citing Carlson & Lugmair 2000): integrate the first ~10 Ma
+   finely (0.1 Ma steps ≈ 100 steps), then C20's ~4 Myr steps. ≈100 steps on top of C20's ~1 100 — cost
+   effectively nil, and **there is no other way**: a uniform 4 Myr step cannot see the pulse at all. **C21 is
+   the first ~10 Ma of C20's time axis.**
+2. *"초기비의 경우에는 계 단위로 그냥 랜덤한 시드값을 넣는게 어떨까?"* (18:17) → **a system-level seeded value**,
+   with two conditions attached together: **the system is the right unit physically** — ²⁶Al enrichment is a
+   property of the star-forming environment, so the bodies of one system share it; drawing per body is wrong.
+   **And it lives in a different layer** — a draw is an art / gameplay decision, not grounding, so it belongs
+   in the **Phase 4 gate override**, not in the engine; the engine goes as far as *"accept a declared ²⁶Al₀
+   with its band"*. An engine that rolls its own dice blurs measurement and draw the day a measurement
+   arrives. The synthetic-eccentricity concept sits in that layer for the same reason, and its guardrails
+   move over unchanged: never overwrite a measured value · reproducible from the seed · labelled synthetic.
+
+**⚠ Two prerequisites before starting:**
+- **(a) There is no distribution to draw from yet.** The *"0–10× solar ²⁶Al₀"* in C9's paragraph above is
+  marked there as *"reported by the directing session … not re-read here"*, and **Lichtenberg+ 2019 is not in
+  the cache** (0 hits, 09-03). A distribution built on an unverified relay would plant the disease Brief 64
+  spent the day clearing. On the not-held list (`SESSION-HANDOFF.md`), identifier to be read from ADS by
+  title before it is requested.
+- **(b) Measure dominance first** (owner: *"측정은 그때 가서"* — not now; first thing when started). Monteux's
+  "major role" is for **10–100 km** bodies; the roster's smallest are Chaos ~400 km (relayed), Dante 521 km
+  and Hades 750 km (`phase4/alpha_centauri.yaml`). Whether the formation pulse is actually dominant for
+  *our* bodies is a measurement: the two held half-lives plus a solar initial ratio give each body's pulse
+  energy, compared against the long-lived budget — the `ice_x` / ammonia-ceiling template. If it does not
+  reach, the refusal stands; if it does, (a)'s paper request and a declaration grid become justified.
+
+**A width warning, left as a question for the owner.** Two declarations multiply here — `t₀` and ²⁶Al₀ —
+and C9's paragraph prints the shape of the answer: wet olivine succeeds only for t₀ ≈ 1.3–1.9 Ma (§3.3),
+antigorite does not differentiate at all for t₀ ≥ 5.5 Ma (§3.4). The output is **a threshold verdict, not a
+continuous spectrum**. Following C11 ("the grid is the answer, no pair is elected"), the honest product is
+*"this body may or may not have differentiated, depending on t₀"* — **whether that product is worth having
+is the owner's decision**, not settled here.
+
+**Start condition.** Not now. Order still P3 → C14.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,
