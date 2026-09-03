@@ -137,9 +137,14 @@ solver per body. We instead anchor on the **moments RM22 tabulate** (Solar Syste
 |---|---|---|---|---|---|
 | Earth | 1.0 | 1.00 | 30 µT | 30 µT | ✓ (anchor) |
 | Mercury | 4×10⁻⁴ | 0.38 | 0.22 µT | ~0.3 µT | ✓ |
-| Ganymede | 2×10⁻³ | 0.41 | 0.87 µT | ~0.72 µT | ✓ |
+| Ganymede | 2×10⁻³ ⚠ | 0.41 | 0.87 µT | ~0.72 µT | ✓ |
 | Mars | 0 (frozen) | 0.53 | 0 | 0 (no global field) | ✓ |
 | Venus | 0 (stagnant lid) | 0.95 | 0 | 0 (no dynamo) | ✓ |
+
+⚠ **Ganymede's `2×10⁻³` carries no citation of its own here.** RM22 Table 8 prints two numbers for Ganymede:
+**0.003 (their model)** and **0.002 (observed, their ref. 3)**. The value above is the *observed* one as relayed
+by RM22 — a secondary citation of an observation, not RM22's computation. Which of the two the ladder's
+regime-4 anchor should carry is an open choice (C17, 2026-09-04), recorded here, not decided.
 
 RM22 validate their internal-structure + moment model against exactly these five
 bodies and report "remarkably low or even negligible" errors; the closing
@@ -161,7 +166,11 @@ RM22's grid runs 0.1–48 M⊕ but the physics branches sharply:
    shorter-lived than a naive mass-scaling suggests. Flag confidence low.
 4. **Water-rich rocky (ocean worlds)**: for the same mass and core size, the CMB
    heat flux `Q_c` is *lower* (cooler, lower-pressure CMB) → weaker moment.
-   Ganymede analog (`ℳ ≈ 2×10⁻³`).
+   Ganymede analog (`ℳ ≈ 2×10⁻³`). ⚠ **No source is cited for this item** (item 3 cites Gaidos 2010; this one
+   cites nothing) — the mechanism sentence is a statement of this document, not of a paper. ⚠ **Our own
+   interior, measured 2026-09-04 (C17)**: at 0.1 / 0.3 water on an Earth-mass body the CMB *pressure* falls
+   as written (135 → 116 GPa) but the CMB *temperature rises* (2 526 → ~4 400 K), the opposite of "cooler" —
+   an **unconverged** trial (C24), so an observation, not a verdict. The edge stays a gap on both counts.
 5. **Low-density dry (ρ < 0.8 ρ⊕, Mars-analog)**: small core, cools fast, likely
    dynamo-dead by a few Gyr → `ℳ = 0` today.
 

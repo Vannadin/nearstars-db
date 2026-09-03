@@ -91,6 +91,11 @@ body today. Route (i) is confirmed to exist. Nothing wired.**
 on this class until a water-rich rocky body *converges* in `interior_layers` (C1 closed sub-Neptunes with a
 gas envelope; a 0.1–0.3 water mantle on an Earth-mass rocky body without one has not been made to converge —
 its own item, not C17's), and until such a body carries its own declared core-side temperature (Earth's
-3 760 K is not a water world's). What C17 *did* settle: the edge's supplier is mislabelled — its payload is
+3 760 K is not a water world's). **Second reason (directing seat, 2026-09-04)**: the methodology's item 4 — the mechanism sentence this edge
+rests on — carries **no citation**; item 3 beside it cites Gaidos 2010, item 4 nothing. And its temperature
+direction (*"cooler"*) is the opposite of what our unconverged column shows. So C17 is open on two counts:
+the mechanism is **untested** (C24 blocks) and **ungrounded** (no source). Both are now marked in the
+methodology (en + ko), beside the Ganymede row, which likewise carries no citation of its own.
+What C17 *did* settle: the edge's supplier is mislabelled — its payload is
 `ice_mass_fraction`, not `f_ocean` — and half of it (the class → regime 4) already arrives. **Nothing wired
 into `dynamo_rocky`; the moment step was not attempted** (it needs `locked`, C16).
