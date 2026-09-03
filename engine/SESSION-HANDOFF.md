@@ -269,6 +269,14 @@ Every one is in `interior-core.md`'s rules section with its case. The short form
   itself**, whatever the report says.
 - **A runtime estimate belongs to the commit it was measured on.** "~15 minutes" was honest
   when taken and false when quoted, because the code had changed between.
+- **A truncated view of a correct query is a wrong answer that looks right.** `head`, `tail`, `cut`
+  and column limits clip *silently* — nothing marks where the output stopped, so a negative reads as
+  absence and a partial list reads as complete. **Before reporting a negative or a count from a
+  filtered command, re-run it unfiltered, or make the truncation visible** (`wc -l`, a trailing
+  marker, `--color` on the match). Two instances 2026-09-03, two seats: the directing seat's
+  `grep … | head -30` stopped at line 385 and produced a five-edge count from an eleven-edge list;
+  the work seat's `grep … | cut -c1-220` clipped line 261 before the number and produced "38.2 is
+  not in the source" for a number on the matched line.
 - **A number whose source was not stated is quoted without one** — do not supply the
   provenance. An invented source is harder to catch than a missing one, because a reader who
   sees one stops looking.

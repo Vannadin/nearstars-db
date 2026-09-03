@@ -345,7 +345,7 @@ calibration** (measured budget).
 
 **A NearStars rocky body (Proxima b / Proxima d: radiogenic-dominated, the question is
 volcanism & dynamo).** For a temperate-to-warm rocky planet around an M dwarf, internal heat
-is radiogenic-dominated at the **Earth scale (~0.08 W/m², `T_int ~ 35 K`)** and therefore
+is radiogenic and secular in comparable measure at the **Earth scale (~0.08 W/m² total, `T_int ~ 35 K`)** and therefore
 **irrelevant to the surface temperature**: `T_eff ≈ T_eq` (these worlds live entirely in
 the irradiation-dominated regime of §1). What the internal heat *does* decide is whether the
 body is geologically alive: enough interior heat → mantle convection → **volcanic outgassing**
