@@ -111,6 +111,37 @@ concentration set is a second declaration beside the 70 % (§2), but the BSE mas
 scratch to 1.1–2.1 %. (The directing seat's expectation was ③ with both halves; it noted its prior
 has been wrong twice tonight in the same direction.)
 
-## 4. Result — filled after the run
+## 4. Result — 2026-09-03, code `c7ab5ed5`
 
-*(pending)*
+**Branches fired: ① for Earth and Pandora; ③ in part; ④ for the giant. ⑤ did not fire.**
+
+- **①** Both gap edges (`→ interior_layers`, `→ core_state`) now carry `via: mantle_radiogenic_power`
+  with no `status: gap`; the notes say the budget is supplied and the temperatures are still declared.
+  Earth: **21.32 TW** total from its own silicate mass (5.972×10²⁴ × 0.675 = 4.03×10²⁴ kg), mantle
+  14.92 TW, crust 6.40 TW, surface-equivalent flux 0.0416 W/m², `radiogenic_power_low` 10.71 TW,
+  history factor 3.67. Pandora: 13.74 TW, 27.9 K.
+- **③, in part, as expected**: two declarations (concentration set, 70 % share), not one; the
+  silicate mass is **derived** from `core_mass_fraction`, so the "per-body BSE mass" half of ③ did not
+  fire. The directing seat's prior (both halves) was wrong in the direction it had flagged.
+- **④** Alpha Centauri A b refuses by name: the giant's internal heat is the cooling luminosity this
+  recipe does not supply. A rocky body without `core_mass_fraction` also refuses (pinned).
+- **⑤ did not fire** — closure 21.15 / 10.63 / 21.55 TW against 21.4 / 10.8 / 22, all within 2.1 %;
+  the constants were read correctly and none was adjusted.
+
+**Two expectations of mine that were wrong, corrected in the test rather than the code:**
+- *t_int.* I expected ≈ 35 K. The recipe gives **29.3 K**, because it converts the **radiogenic**
+  flux alone (0.042 W/m²); the methodology's ≈ 35 K uses the **total** 0.087 W/m² (radiogenic +
+  secular). Not a defect — a semantic line the label now draws: this `t_int` is a floor.
+- *The wrong-direction factor.* The brief relayed "1.67" for the parallel seat's forward mistake; at
+  ±4 Gyr from now the forward reading is **1.74**. The relayed digit came without its condition (which
+  two times were compared), so the test pins the *shape* — forward ≈ 1.7 against past 3.67 — not the
+  digit. Reported to the directing seat as such.
+
+**Retired name.** `geotherm` is no longer an output of `internal_heat_nontidal`; `heat_transport_mode`
+takes `mantle_radiogenic_power`; `→ dynamo_rocky via geotherm` is `status: gap` (thermal evolution,
+Nimmo+ 2004 not held). `check_via --gate`: 85 via-edges, 16 mismatches = 8 allowlisted + 8 gap +
+0 open. Graph: coupled core 16 = `coupled_core`, `undeclared()` empty. `check_contracts` 6/6.
+Path fingerprint unchanged.
+
+**Tooltip** (`radiogenic_heat_w_m2`) now carries the 22 TW radiogenic / 42–47 TW total pair with the
+geoneutrino range as the contested side; Sclater 1980 and Davies 2010 leave the paper-request list.
