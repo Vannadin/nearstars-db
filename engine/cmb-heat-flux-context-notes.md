@@ -166,6 +166,20 @@ with the cost stated:**
   or declarable; the one that cannot be *grounded* per body (dT_c/dt) is declarable with a stated band.
 
 **Done regardless, as briefed — Q_CMB labelled a lower bound where it is emitted**: see the recipe note
-and contract (next commit): the core-side temperature is a declared lower bound whose two named biases
+and contract (same commit, `6fdfbaeb` — `cmb_flux.py` `SUB_ADIABATIC` and the emit note): the core-side temperature is a declared lower bound whose two named biases
 point down (`core-state-methodology.md:60`), so a lower-bound input yields a lower-bound flux; the true
 Q_CMB is higher, and 2.75 TW must not be read as "Earth has no dynamo".
+
+**Gate on `6fdfbaeb` (Brief 61 `aae65a59` + Brief 62 step 1, one run): FAIL 0, 456 PASS, 16:06:30 → 16:26:54 =
+1224 s** by the log's last write (the log carries a start stamp and no end stamp; the directing seat observed the
+process exit at 16:27:06 = 1236 s). Against Brief 60's 1265 s that is −29 to −41 s — run-to-run noise, not an
+improvement, and not a cost: Brief 61's `chain.py` axis check and this brief's documentation added nothing
+measurable to the gate.
+
+*Recorded because the next seat will meet the same shape*: the terminal session that launched this gate crashed
+mid-run. The gate survived as an orphan (`bash ./scripts/check.sh` PID 3490, re-parented to PPID 1, under
+`caffeinate`), ran to completion, and its output was intact because stdout had been redirected to a file
+(`gate61.log`, 106,770 bytes against gate60's 106,768 — same section count). The directing seat read one dead
+child (`test_interior.py`) as the whole gate finished and declared the worktree free while the CMB section was
+still running; the work seat's own `ps` caught it. **A gate that outlived its terminal is a finished gate, not
+one to re-run** — check `ps` for the parent PID and the log's tail before launching another.
