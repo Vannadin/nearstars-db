@@ -719,6 +719,9 @@ off the *request* list (paywall, withdrawn), which is consistent with their stay
 `2011ApJ...733....2N` Nettelmann+ 2011 · Solomatov 1995 (given up 15:18, paywall) · Fei+ 2000 · Sata+ 2010.
 *(Lichtenberg+ 2019 `2019NatAs...3..307L` stood here for twenty minutes on 09-03 and was **obtained by the
 owner the same evening** — arXiv v1 preprint with source, PROVENANCE written by the directing seat; see C21.)*
+Added 09-03 by C22 (0 cache hits each; **identifiers not yet read from ADS, so none written** — look up by
+title first): **Meyer+ 2015** (molecular aggregates in water–ammonia mixtures, cited by Bethkenhagen+ 2017) ·
+**Hirai+ 2009** (methane phase diagram, Bethkenhagen+ 2017 Fig. 6). Neither is needed for C22.
 A row here is a fact about the cache, not a request; requests go through the owner and are recorded near
 the top of this file.
 

@@ -2071,8 +2071,25 @@ wiring now could be wasted. Why each question bites:
 - ⚠ **Do not read "low density = low pressure = envelope."** 3000 K is not an envelope temperature; which
   layer, if any, the survey answers.
 
-**Start condition.** After the survey's result and the owner's reading of it. Pre-registration (branches named)
-is committed before code.
+**Unblocked the same evening — the survey came back and the precedent does not transfer.** Three sentences,
+each reproduced by the work seat from the cache (`ammonia-wiring-context-notes.md` §1 has them in full):
+Bethkenhagen+ 2017, the paragraph before the methane sentence — *"pure ammonia becomes superionic as well but
+only below 4000 K"* (⚠ the PDF text layer splits *"superi onic"*; grep the `.md`); decomposition is
+elementisation to **N₂ + H₂**, not methane's polymerisation. And in our bodies it is **fluid**: 2013 §III A,
+*"Neither of the isentropes crosses the superionic phase … ammonia is very likely to only occur as a fluid under
+conditions present in the interior of Uranus and Neptune"* — molecular or dissociated unsaid, with 2017's
+Fig. 6 marking *"partial dissociation of ammonia into N₂ and H₂"* in the figure only. **The low-pressure
+branch is closed**: the "dissociation corner" is 1.906 GPa at **3000 K** (a hot dilute fluid, not an envelope);
+the table's floor is 500 K; 2017 puts the ice-rich layer *below* P₁₋₂ = 10–15 GPa. **Target layer: the mantle;
+`ENVELOPE_WATER` untouched.** One constraint added to step 1: the interpolation crosses unmarked first-order
+transitions on three isotherms (2013 §IV A: 3000 K at 1.8–2.0 g/cm³, 1000/2000 K at 1.3–1.5, 500 K at 1.0–1.3);
+the pressures we attach (59.40 / 76.45 GPa at 3000 K, from Table I) are **ours** — the paper prints none.
+Not held, identifiers not yet read from ADS: **Meyer+ 2015** (chain-like aggregates in mixtures — 2017:
+*"Similar molecular aggregates can occur also in mixtures with water and ammonia"*) and **Hirai+ 2009** (methane
+phase diagram) — on the not-held list, not needed for C22, which uses the pure-ammonia material.
+
+**Start condition — met.** Step 1 pre-registered in `ammonia-wiring-context-notes.md` §1–§3 (committed before
+code), then wired.
 
 ### P1–P3 — parked, each marked with the C it came from
 

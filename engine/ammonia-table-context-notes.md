@@ -103,8 +103,10 @@ error is about a quarter of it):
 | whole grid | 17.3 % | ρ 0.5, 3000 K, along T | 2.45 kJ/g |
 | ice-giant mantle region (ρ ≥ 1.0 g/cm³, T ≥ 2000 K — the solved mantles run 2550–6070 K) | 8.7 % | ρ 1.0, 3000 K, along T | 2.45 kJ/g |
 
-The whole-grid worst sits in the low-density dissociation corner — the same corner the 5 %
-flags sit in — and 3000 K is where the paper reports its first-order transition (§IV A,
+The whole-grid worst sits in the low-density dissociation corner — *adjacent to* the 5 %
+flags, not in their corner (corrected 2026-09-03, C22: the five flags are at 4000 K (0.5 · 0.75 · 1.0 g/cm³)
+and 5000 K (0.5 · 0.75), none at 3000 K; and the asterisk marks a **convergence error** — Appendix,
+*"uncertainty of up to 5%"* — not dissociation) — and 3000 K is where the paper reports its first-order transition (§IV A,
 between 1.8 and 2.0 g/cm³ on the 3000 K isotherm; the table does not mark it and the
 interpolation crosses it). Log-log in T was tried (15.2 % whole-grid) and not adopted: the gain
 is marginal and one rule for p and u is simpler. The generator writes both numbers into the
