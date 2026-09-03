@@ -2112,7 +2112,24 @@ corridor meets the registered ceiling deep (1 035 GPa · 3 935 K, "hotter"); and
 mantle top at **4.10 GPa · 4 749 K, 0.023 GPa below the table's low-density floor** ("colder") — the loop
 concludes by name between two walls pulling opposite ways. **So the deep-mantle rule is not one rule**: step 2
 needs a rule above the ceiling *and* one below the floor at a hot mantle top (or an entry condition on the
-wrap), and neither is declared here. That is the shape of the owner's decision.
+wrap), and neither is declared here. That is the shape of the owner's decision — **two decisions**, numbered:
+① above the ceiling (deep mantle; fired at 1 035 GPa · 3 935 K) · ② below the floor (mantle top; fired at
+4.10 GPa · 4 749 K — **by 0.024 GPa, 0.6 %**, a hair, not a gross violation; the floor climbs 0.309 GPa at
+500 K → 4.45 GPa at 5 000 K). *"Far outside"* and *"0.6 % outside"* are different decisions.
+
+**The extrapolation axis above the table is closed on the literature (same evening; notes §7).** Searched
+and found wanting: no published ammonia fit joins a high-pressure asymptote (ADS: 3 hits, all unrelated — the
+silicate/iron TFD construction has no ammonia candidate); the one paper in range, Li+ 2013
+(`2013JChPh.139m4505L`, owner-obtained preprint + source), is a Hugoniot whose single table sits at
+19 000–113 000 K over 221–1 274 GPa against a mantle at 2 550–6 070 K — it does not pass near our region;
+and four reported transitions in 90–350 GPa (ionic crystal, ammonium amide, liquid → plasma; three papers not
+held) plus *"no experiment above 350 GPa"* (Ravasio+ 2021) mean an extension would assert physics the 2013
+table does not contain. The refusal above ≈ 333 GPa is therefore **"looked, and cannot be used — for these
+reasons"**, not merely "refused by name". The extended 2017 data set (to 1 000 GPa, four more isotherms)
+exists, is undistributed, and has the nuclear-quantum correction *removed* where our table *includes* it —
+not appendable; an author request is the only route and is **recorded as possible, not opened** (the owner
+closed that class on 09-03). **State tonight**: step 1 landed · step 2-② landed · step 2-① waits on the
+owner (two decisions) · default 0.
 
 ### P1–P3 — parked, each marked with the C it came from
 

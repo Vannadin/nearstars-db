@@ -112,10 +112,12 @@ here.
   1585 s is unexplained by this seat (no competing gate or solve was running; a single `ps` at 20:39 showed
   only this gate) and is recorded rather than attributed. *Trend, for the next time it jumps*: today's gates
   ran 1224 → 1268 → 1280 → 1293 → 1585 s; the first four carry a cause (one new 0.81 s row plus noise), only
-  the fifth jumps. **Hypothesis, not a diagnosis (the directing seat's, unverified by anyone)**: thermal
-  throttling after several 20-minute CPU-saturating gates in a row. The cheap check, for later and not run
-  now: re-run the same tree (`20776346`) after the machine has rested — near 1293 s says machine, still
-  ~1585 s says look elsewhere.
+  the fifth jumps. **Attributed the same evening by the owner, not by a session** (`4b8e06ba`): *"그거 아마
+  내가 절전모드 잠깐 켜서 그런걸거야."* — the owner reports switching low-power mode on briefly in that window.
+  Recorded as *reported cause, not verified as the cause* (the owner's own "아마"); the thermal-throttling
+  hypothesis that stood here is withdrawn, and the re-run check is not needed — the cause is not in the code.
+  This is the fourth time today that a fact living only outside the repository (owner / transcript) filled a
+  gap the code could not; gate times with no cause in the code will keep being that kind of number.
 
 **Labels landed in code**: at w > 0 the recipe's note carries the five (methane asymmetry · ceiling below the
 mantle base · convention caveat on ∇_ad · fluid but molecular-vs-dissociated unsaid · partial N₂+H₂
@@ -202,4 +204,69 @@ and it is the product); ③ did not fire; ④ answered.**
   outside the isotherm range, replacing the `PhaseGap` it was logging. Guarded in the kept script
   (`scratchpad/c22_trace.py`); the two guarded runs above agree to the digit. Reported so the false first
   reading is not quoted.
-- **⑥** Gate: see the line appended below after the run.
+  **How close the floor refusal is, in numbers** (directing seat's recomputation, reproduced here): at 4 749 K
+  the table spans 4.124–276.8 GPa; the mantle top sits at 4.101 GPa — **0.024 GPa, 0.6 % below the floor**.
+  Not a gross violation; a hair. The floor's climb with temperature, from the table:
+
+      500 K 0.309 GPa · 1000 K 0.749 · 2000 K 1.320 · 3000 K 1.906 · 4000 K 3.150 · 5000 K 4.450
+
+  So the owner's decision is **two decisions**, and *"far outside"* and *"0.6 % outside"* are different ones:
+  ① above the ceiling (deep mantle; fired at 1 035 GPa · 3 935 K) · ② below the floor (mantle top; fired at
+  4.10 GPa · 4 749 K, by 0.6 %). Neither is declared; refusing by name is the correct state until then.
+- **⑥ Gate on `7393528f`: FAIL 0, 459 PASS (+2, the two new `test_ammonia` rows), 20:44:47 → 21:24:28 =
+  2 381 s.** The two rows cost ≈ 0 s (a handful of table lookups). The wall time is again far above the
+  1 268–1 293 s of the earlier runs and is **unexplained by this seat** — one `ps` at 20:39 and 21:2x showed
+  only this gate; whether the owner's low-power mode was on again is not known here. Trend for the record:
+  1 224 → 1 268 → 1 280 → 1 293 → 1 585 (low-power mode, owner-reported) → 2 381 s.
+
+## 7. The extrapolation axis above the table — closed on the literature, 2026-09-03
+
+Owner-obtained: **Li, Wang, Chen & Song 2013** (`2013JChPh.139m4505L`, cached as the arXiv preprint PDF +
+LaTeX source, ISO-8859/CRLF — read via `iconv -f latin1`). Result, reproduced by the work seat from the source:
+**the deep-mantle refusal above ≈ 333 GPa has no published route around it, and does not need one.**
+
+1. **No published ammonia fit joins a high-pressure asymptote.** The parallel seat's ADS query
+   `abs:"ammonia" abs:("Thomas-Fermi" OR "degenerate electron")` → numFound 3, all unrelated. The construction
+   `eos.py` uses for silicate (Seager's BME4 → TFD) and iron (Vinet → TFD) has **no ammonia candidate** — zero.
+2. **The one paper whose range fits (Li+ 2013) is a Hugoniot, and cannot be used as numbers.** Its source has
+   **one table** (Table I, *"Points along the principal ammonia Hugoniot"*); the other eight captions are
+   figures; nothing after `\end{document}`. *"Wide-range equation of state"* appears in the abstract only —
+   no coefficients, no grid. Table I, transcribed:
+
+   | ρ (g/cm³) | P (GPa) | T (K) |
+   |---|---|---|
+   | 1.9 | 77.09 | 4 791 |
+   | 2.0 | 95.94 | 6 036 — our mantle's top temperature (6 070 K) is here |
+   | 2.2 | 221.44 | 19 180 |
+   | 2.4 | 567.67 | 54 229 |
+   | 2.6 | 1 273.65 | 112 663 |
+
+   Where we need it — 333 to 1 035 GPa — this path is at **19 000–113 000 K against a mantle at
+   2 550–6 070 K**. Not "a different path shape": at high pressure the Hugoniot **does not pass near our
+   region at all**; at 6 036 K it is at 95.9 GPa, already inside our table, and from where the table ends it
+   is an order of magnitude hotter. Its *"at about 4800 K, the system transforms into a metallic, complex
+   mixture state consisting of NH₃, N₂, H₂, N and H"* is **a transition along the Hugoniot, not along an
+   isentrope** — the distinction is kept.
+3. **Extending the 2013 table upward would assert two things.** Four transitions are already reported in
+   90–350 GPa that 2013's four-phase picture does not contain — ionic crystal (Pickard & Needs' prediction at
+   ~90 GPa; Ninet+ 2014 `2014PhRvB..89q4103N` experiment ~180 GPa), self-ionisation to ammonium amide
+   (Palasyuk+ 2014 `2014NatCo...5.3460P`, ~120 GPa), molecular liquid → plasma (Ravasio+ 2021
+   `2021PhRvL.126b5003R`, from ~90 GPa, reaching ~350 GPa) — identifiers from the parallel seat's ADS lookup,
+   **none of the three held** (0 cache hits). And Ravasio+ write *"the experimentally accessed region of the
+   ammonia phase diagram today is still very limited"*: **above 350 GPa there is no experiment.**
+
+**The data we want already exist and are not distributed.** Bethkenhagen+ 2017 §2.4 (reproduced from the
+cached `.md`): *"We extended the ammonia EOS data set from Bethkenhagen et al. (2013), which ranged up to
+10 000 K and 330 GPa, to higher pressures and temperatures … the density grid was extended by seven additional
+densities per isotherm in order to cover the pressure range up to 1000 GPa. Additionally, four more isotherms
+(12 000 K, 14 000 K, 16 000 K, and 20 000 K) were computed."* ⚠ **It cannot be appended to our table**: the same
+paragraph says *"the correction due to nuclear quantum effects was removed from the published data set"*,
+and our baked 2013 Table I **includes** that correction — a separate data set; joining them puts a
+discontinuity at the seam. The only route is an author request, which is the class the owner closed on
+09-03 (*"둘 다 지금은 안 한다"*): **recorded as a possible route, not opened.** Aside, worth carrying: 2017
+interpolates its own tables with Akima splines and warns of *"oscillatory behavior when calculating small
+differences, especially when the underlying data grid is coarse and/or the data possess residual statistical
+fluctuations"* — the authors describing, for their data, the problem our interpolation-error work measured.
+
+**C22 as of tonight**: step 1 landed (dial at 0, anchors unmoved); step 2-② landed (cold-flank label);
+**step 2-① waits on the owner — two decisions, ceiling and floor**; default stays 0.

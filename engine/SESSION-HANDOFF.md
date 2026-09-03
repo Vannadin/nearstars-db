@@ -722,6 +722,11 @@ owner the same evening** — arXiv v1 preprint with source, PROVENANCE written b
 Added 09-03 by C22 (0 cache hits each; **identifiers not yet read from ADS, so none written** — look up by
 title first): **Meyer+ 2015** (molecular aggregates in water–ammonia mixtures, cited by Bethkenhagen+ 2017) ·
 **Hirai+ 2009** (methane phase diagram, Bethkenhagen+ 2017 Fig. 6). Neither is needed for C22.
+Added 09-03 by C22's extrapolation-axis closure (identifiers from the parallel seat's ADS lookup, 0 cache hits
+each, not needed — they bound what an extension would have to assert): `2014PhRvB..89q4103N` Ninet+ 2014
+(ionic ammonia ~180 GPa) · `2014NatCo...5.3460P` Palasyuk+ 2014 (ammonium amide ~120 GPa) ·
+`2021PhRvL.126b5003R` Ravasio+ 2021 (liquid → plasma, to ~350 GPa). Obtained the same evening by the owner:
+**Li+ 2013** `2013JChPh.139m4505L` (ammonia Hugoniot; preprint + source, PROVENANCE by the directing seat).
 A row here is a fact about the cache, not a request; requests go through the owner and are recorded near
 the top of this file.
 
