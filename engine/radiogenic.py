@@ -153,6 +153,27 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     cons = (mantle_flux.consistency(potential_temperature, b["total_w"], g_body, r_m)
             if g_body else {"verdict": "cannot-say (no radius)", "delta_t_km": None, "f_t_w_m2": None,
                             "q_m_w": None, "ratio": None, "notes": ("heat-flow consistency: no radius, no flux.",)})
+    # Brief 57 — the same budget inverted: the mantle temperature at which the top boundary layer
+    # sheds exactly the radiogenic power. A floor, a family (four named widths), never a point.
+    band = (mantle_flux.radiogenic_temperature_band(
+                {DEFAULT_SET: {"mantle_w": b["mantle_w"], "total_w": b["total_w"]},
+                 LOW_SET: {"mantle_w": b_low["mantle_w"], "total_w": b_low["total_w"]}}, g_body, r_m)
+            if g_body else {"verdict": "cannot-say (no radius)", "t_min": None, "t_max": None, "widths": {}})
+    w = band["widths"]
+    band_note = (
+        f"맨틀 온도 하한 밴드 (브리프 57, {band['verdict']}): "
+        + ((f"{band['t_min']:.0f}" if band['t_min'] is not None else f"< {mantle_flux.BRACKET_K[0]:.0f}")
+           + f"–{band['t_max']:.0f} K — 상단 경계층이 방사성 출력만을 내보내는 포텐셜 온도. "
+           f"**하한이다**: 영년 냉각은 열류를 더하지 빼지 않는다. 네 폭, 어느 것도 접지 않았다 — "
+           f"ζ {mantle_flux.ZETA_RANGE[0]:.3f}–{mantle_flux.ZETA_RANGE[1]:.3f} (Table 2 의 ±0.5): {w['zeta']:.0f} K · "
+           f"농도 세트 Earth (1)/(2): {w['set']:.0f} K · 분모 맨틀 몫/총량: {w['denominator']:.0f} K · "
+           f"T_s 293→{mantle_flux.BAND_T_S_ALT:.0f} K: {w['surface']:.0f} K. 세 폭이 같은 자릿수라 하나가 지배하지 않는다 — "
+           "폭은 구조적이지 골라서 좁힐 것이 아니다. 분모는 맨틀 몫이 like-for-like (F_t 는 상단 경계층을 건너고 지각 "
+           "생산은 그 위다; Korenaga 2008 의 대류 Urey 비) 인데 순방향 판정은 총량을 쓴다 — 둘 다 싣고 어느 쪽도 뽑지 않는다."
+           if band["t_max"] is not None else
+           f"이름 대며 거절 — 이분법 괄호 {mantle_flux.BRACKET_K[0]:.0f}–{mantle_flux.BRACKET_K[1]:.0f} K 밖이라 값을 "
+           "내지 않는다 (예전에는 괄호 끝을 값처럼 돌려줬다).")
+        + " 조석 가열 천체에서는 이 하한이 맨틀 온도가 아니다. " + mantle_flux.CONDITION + ".")
     notes = (
         f"방사성 예산 (현재값): 규산염 질량 {silicate_kg:.3e} kg (= 질량 × (1 − 핵질량분율 {core_mass_fraction} "
         f"− 얼음질량분율 {imf}), 도출) × "
@@ -172,7 +193,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
          "선언된 radius_earth; 미선언이면 interior_layers 의 도출 반지름). 방법론 §1 의 '지구 ≈ 35 K' 는 "
          "총 표면 열류 0.087 W/m²(방사성 + 잔열)로 계산한 것이라, 잔열을 갖지 않은 이 값은 그 하한이다."
          if t_int else "반지름이 없어 표면 flux 와 t_int 를 내지 않는다."),
-    ) + tuple(cons["notes"])
+    ) + tuple(cons["notes"]) + (band_note,)
     values = {"l_int": b["total_w"], "t_int": t_int,
               "radiogenic_power": b["total_w"], "mantle_radiogenic_power": b["mantle_w"],
               "crust_radiogenic_power": b["crust_w"], "radiogenic_power_low": b_low["total_w"],
@@ -181,13 +202,22 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
               "implied_surface_heat_flux": cons["f_t_w_m2"],
               "implied_surface_heat_flow": cons["q_m_w"],
               "heat_flow_consistency": cons["verdict"],
-              "urey_ratio": cons.get("urey_ratio")}
+              "urey_ratio": cons.get("urey_ratio"),
+              "mantle_temperature_floor_min": band["t_min"], "mantle_temperature_floor_max": band["t_max"],
+              "mantle_temperature_floor_verdict": band["verdict"],
+              "mantle_temperature_width_zeta": w.get("zeta"), "mantle_temperature_width_set": w.get("set"),
+              "mantle_temperature_width_denominator": w.get("denominator"),
+              "mantle_temperature_width_surface": w.get("surface")}
     units = {"l_int": "W", "t_int": "K", "radiogenic_power": "W", "mantle_radiogenic_power": "W",
              "crust_radiogenic_power": "W", "radiogenic_power_low": "W",
              "radiogenic_heat_w_m2": "W/m2", "radiogenic_power_history_4gyr": "dimensionless",
              "mantle_top_boundary_layer": "km", "implied_surface_heat_flux": "W/m2",
              "implied_surface_heat_flow": "W", "heat_flow_consistency": "",
-             "urey_ratio": "dimensionless"}
+             "urey_ratio": "dimensionless",
+             "mantle_temperature_floor_min": "K", "mantle_temperature_floor_max": "K",
+             "mantle_temperature_floor_verdict": "", "mantle_temperature_width_zeta": "K",
+             "mantle_temperature_width_set": "K", "mantle_temperature_width_denominator": "K",
+             "mantle_temperature_width_surface": "K"}
     return Result(recipe=RECIPE, version=VERSION, regime="rocky_radiogenic_present_day",
                   reason=(f"규산염 {silicate_kg:.2e} kg 에 Earth (1) 농도(선언)를 걸어 총 "
                           f"{b['total_w'] / 1e12:.2f} TW, 맨틀 몫 70 %(선언) {b['mantle_w'] / 1e12:.2f} TW."),

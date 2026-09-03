@@ -71,6 +71,31 @@ def main() -> int:
     ok(pandora.applicable and pandora.values["heat_flow_consistency"] == mf.NO_T,
        "4: a body without a declared potential temperature must say cannot-say (⑤), not default")
 
+    # ── 5. Brief 57 — the band, its four widths, and the bracket refusal ───
+    band = earth.values
+    ok(band["mantle_temperature_floor_verdict"] == mf.BAND_OK
+       and 1050.0 < band["mantle_temperature_floor_min"] < 1070.0 and 1480.0 < band["mantle_temperature_floor_max"] < 1500.0,
+       f"5: Earth floor band expected ~1060–1490 K, got {band['mantle_temperature_floor_min']}–{band['mantle_temperature_floor_max']} ({band['mantle_temperature_floor_verdict']})")
+    wz, ws, wd, wt = (band["mantle_temperature_width_zeta"], band["mantle_temperature_width_set"],
+                      band["mantle_temperature_width_denominator"], band["mantle_temperature_width_surface"])
+    ok(all(x is not None for x in (wz, ws, wd, wt)) and 0.5 < max(wz, ws, wd) / min(wz, ws, wd) < 2.5,
+       f"5: ζ/set/denominator widths must be of one order (none dominates), got {wz:.0f}/{ws:.0f}/{wd:.0f} K")
+    ok(wt is not None and 0.0 < wt < wd, f"5: the T_s width must be present and the smallest, got {wt}")
+    ok(abs(mf.invert_for_flow(14.81e12, 9.8, 6.4e6) - 1379.3) < 1.0, "5: 14.81 TW → 1379 K (the brief's own number)")
+    ok(mf.invert_for_flow(0.10e12, 1.8, 1.82e6) is None, "5: an Io-mass budget below the bracket must return None, not 1000.0")
+    io = rg.solve(0.015, 0.20, 0.286, "moon", 4.5)
+    ok(io.applicable and io.values["mantle_temperature_floor_verdict"] == mf.BAND_OPEN_BELOW
+       and io.values["mantle_temperature_floor_min"] is None and io.values["mantle_temperature_floor_max"] is not None,
+       f"5: Io-mass body: part of the family under the floor → open below, got {io.values.get('mantle_temperature_floor_verdict')}")
+    # the whole family under the floor is not reached by any roster-shaped body (budget ∝ M, Q_M(1000 K) ∝ R²
+    # — a 0.001 M⊕ body still has a corner at 1235 K); the branch is pinned on the function directly.
+    whole = mf.radiogenic_temperature_band({"a": {"mantle_w": 1e9, "total_w": 2e9}}, 9.8, 6.4e6)
+    ok(whole["verdict"] == mf.BELOW_BRACKET and whole["t_max"] is None, f"5: whole family under the floor → refuse by name, got {whole['verdict']}")
+    above = mf.radiogenic_temperature_band({"a": {"mantle_w": 1e20, "total_w": 2e20}}, 9.8, 6.4e6)
+    ok(above["verdict"] == mf.ABOVE_BRACKET, f"5: whole family above the ceiling → refuse by name, got {above['verdict']}")
+    ok(mf.invert_for_flow(1e20, 9.8, 6.4e6) is None, "5: a budget above the ceiling must return None too")
+    ok(all(k in earth.units for k in band if k.startswith("mantle_temperature")), "5: every band value carries a unit")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if not fails:

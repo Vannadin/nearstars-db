@@ -39,7 +39,10 @@ non-negligible, see that doc).
 **Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
 `crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
 `radiogenic_power_history_4gyr` [—] · `mantle_top_boundary_layer` [km] · `implied_surface_heat_flux` [W/m2] ·
-`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—] · `urey_ratio` [—]
+`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—] · `urey_ratio` [—] ·
+`mantle_temperature_floor_min` [K] · `mantle_temperature_floor_max` [K] · `mantle_temperature_floor_verdict` [—] ·
+`mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
+`mantle_temperature_width_surface` [K]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K]
 **Discriminating keys** — `body_class`: rocky bodies get the present-day radiogenic budget; giant,
@@ -64,6 +67,14 @@ evaluated at the **declared** `potential_temperature` (top boundary layer only; 
 printed; calibrated at source on present-day Earth), and `heat_flow_consistency` compares that implied flow with
 `radiogenic_power` — a consistency check on the declaration with secular cooling as the expected difference, never
 the body's actual heat flux; `cannot-say` when no temperature is declared. `engine/mantle-flux-consistency-context-notes.md`.
+`mantle_temperature_floor_min/max` (Brief 57) is the same chain **inverted**: the potential temperature at which the
+top boundary layer sheds exactly the radiogenic power — a **floor** on T_m (secular cooling adds to the flow), emitted
+as a family, never a point: the union over ζ (Table 2's ± 0.5), the two concentration sets, and both denominators
+(`mantle_w`, like-for-like with the top boundary layer, against `total_w`, what `heat_flow_consistency` uses — carried
+both ways, the inconsistency named in `engine/property-consumer-audit-context-notes.md` §3), with each width emitted
+by name (`mantle_temperature_width_*`; `surface` re-evaluates at T_s = 200 K). Consumer: art direction's tectonic-regime
+likelihood, which is **not** classified here. Outside the 1000–2500 K bisection bracket the verdict refuses by name
+instead of returning the bracket end. For a tidally heated body the floor is not its mantle temperature.
 `radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) is decay physics only; thermal evolution
 (Nimmo+ 2004, not held) is not built, and the edge to `dynamo_rocky` stays a gap.
 

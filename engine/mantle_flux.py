@@ -88,25 +88,86 @@ def viscosity(t_m_k: float, zeta: float = ZETA) -> float:
     return ETA_0 * math.exp(-zeta * (t_m_k - T_0))
 
 
-def implied_flux(t_m_k: float, g: float, r_m: float, zeta: float = ZETA) -> dict:
-    """eqs 34–36 at a declared potential temperature. Returns δ_t [m], F_t [W/m²], Q_M [W]."""
-    if t_m_k <= T_S:
-        raise ValueError(f"T_m {t_m_k} K 가 표면온도 {T_S} K 아래 — 경계층이 정의되지 않는다")
-    d_t = (RA_C * KAPPA_T * viscosity(t_m_k, zeta) / (RHO_M * g * ALPHA_M * (t_m_k - T_S))) ** (1.0 / 3.0)
-    f_t = K_T * (t_m_k - T_S) / d_t
+def implied_flux(t_m_k: float, g: float, r_m: float, zeta: float = ZETA, t_s: float = T_S) -> dict:
+    """eqs 34–36 at a declared potential temperature. Returns δ_t [m], F_t [W/m²], Q_M [W].
+    `t_s` defaults to the declared Earth surface temperature; Brief 57 passes another only to
+    measure the width that declaration carries."""
+    if t_m_k <= t_s:
+        raise ValueError(f"T_m {t_m_k} K 가 표면온도 {t_s} K 아래 — 경계층이 정의되지 않는다")
+    d_t = (RA_C * KAPPA_T * viscosity(t_m_k, zeta) / (RHO_M * g * ALPHA_M * (t_m_k - t_s))) ** (1.0 / 3.0)
+    f_t = K_T * (t_m_k - t_s) / d_t
     return {"delta_t_m": d_t, "f_t_w_m2": f_t, "q_m_w": f_t * 4.0 * math.pi * r_m ** 2}
 
 
+BRACKET_K = (1000.0, 2500.0)     # the bisection bracket — declared, and refused by name outside it
+
+
 def invert_for_flow(q_w: float, g: float = EARTH_G, r_m: float = EARTH_R_P,
-                    zeta: float = ZETA, lo: float = 1000.0, hi: float = 2500.0) -> float:
-    """T_m [K] whose implied Q_M equals q_w — the transcription check (42 TW → 1614 K)."""
+                    zeta: float = ZETA, lo: float = BRACKET_K[0], hi: float = BRACKET_K[1],
+                    t_s: float = T_S) -> float | None:
+    """T_m [K] whose implied Q_M equals q_w — the transcription check (42 TW → 1614 K).
+    **None when the root is outside [lo, hi]** (Brief 57): the bisection used to return the bracket
+    end as a plain float — an Io-mass body's 0.10 TW came back as 1000.0 K while Q_M(1000 K) was
+    already 0.11 TW. Both ends are checked; the caller names the refusal."""
+    if implied_flux(lo, g, r_m, zeta, t_s)["q_m_w"] > q_w or implied_flux(hi, g, r_m, zeta, t_s)["q_m_w"] < q_w:
+        return None
     for _ in range(80):
         mid = 0.5 * (lo + hi)
-        if implied_flux(mid, g, r_m, zeta)["q_m_w"] < q_w:
+        if implied_flux(mid, g, r_m, zeta, t_s)["q_m_w"] < q_w:
             lo = mid
         else:
             hi = mid
     return 0.5 * (lo + hi)
+
+
+# ── Brief 57 — the radiogenic budget inverted to a mantle-temperature band ────────────────
+# A FLOOR on T_m: the temperature at which the top boundary layer sheds exactly the radiogenic
+# power. Secular cooling adds to the flow, never subtracts, so the body's mantle is at least this
+# warm if the parameterisation transports. Four named widths, none folded in; no elected point.
+BAND_T_S_ALT = 200.0          # K — the surface the module already documents as +10 % on the flow
+BELOW_BRACKET = f"cannot-say (radiogenic budget below what the mantle sheds at the {BRACKET_K[0]:.0f} K bracket floor)"
+ABOVE_BRACKET = f"cannot-say (radiogenic budget above what the mantle sheds at the {BRACKET_K[1]:.0f} K bracket ceiling)"
+BAND_OK = "band (radiogenic-only floor on the mantle potential temperature)"
+BAND_OPEN_BELOW = (f"band, open below (part of the family falls under the {BRACKET_K[0]:.0f} K bracket floor; "
+                   "the low end is not a number)")
+
+
+def radiogenic_temperature_band(budgets: dict[str, dict[str, float]], g: float, r_m: float) -> dict:
+    """`budgets` = {set_name: {"mantle_w": .., "total_w": ..}} for the declared concentration sets.
+    Returns the union's endpoints, each width's own extent, the grid, and a verdict label."""
+    zetas = (ZETA_RANGE[0], ZETA, ZETA_RANGE[1])
+    grid: dict[tuple[str, str, float, float], float | None] = {}
+    for set_name, b in budgets.items():
+        for denom in ("mantle_w", "total_w"):
+            for z in zetas:
+                for t_s in (T_S, BAND_T_S_ALT):
+                    grid[(set_name, denom, z, t_s)] = invert_for_flow(b[denom], g, r_m, z, t_s=t_s)
+    base_all = {k: v for k, v in grid.items() if k[3] == T_S}
+    if all(v is None for v in base_all.values()):
+        # which side: every None is on one side, because Q_M(T) is monotone in T
+        k0 = next(iter(base_all))
+        side = BELOW_BRACKET if implied_flux(BRACKET_K[0], g, r_m, k0[2])["q_m_w"] > budgets[k0[0]][k0[1]] else ABOVE_BRACKET
+        return {"verdict": side, "t_min": None, "t_max": None, "widths": {}, "grid": grid}
+    base = {k: v for k, v in base_all.items() if v is not None}
+    open_below = len(base) < len(base_all)     # a corner of the family is under the floor
+
+    def extent(keyfn) -> float:
+        # the width one declaration carries: max over the others of (max − min) along it
+        groups: dict[tuple, list[float]] = {}
+        for k, v in base.items():
+            groups.setdefault(keyfn(k), []).append(v)
+        return max(max(vs) - min(vs) for vs in groups.values())
+
+    widths = {
+        "zeta": extent(lambda k: (k[0], k[1])),
+        "set": extent(lambda k: (k[1], k[2])),
+        "denominator": extent(lambda k: (k[0], k[2])),
+    }
+    alt = {k: v for k, v in grid.items() if k[3] == BAND_T_S_ALT and v is not None}
+    widths["surface"] = max(abs(alt[k] - base[(k[0], k[1], k[2], T_S)]) for k in alt) if alt else None
+    return {"verdict": BAND_OPEN_BELOW if open_below else BAND_OK,
+            "t_min": None if open_below else min(base.values()), "t_max": max(base.values()),
+            "widths": widths, "grid": grid}
 
 
 def consistency(t_m_k: float | None, radiogenic_w: float | None, g: float, r_m: float) -> dict:

@@ -36,7 +36,10 @@
 **Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
 `crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
 `radiogenic_power_history_4gyr` [—] · `mantle_top_boundary_layer` [km] · `implied_surface_heat_flux` [W/m2] ·
-`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—] · `urey_ratio` [—]
+`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—] · `urey_ratio` [—] ·
+`mantle_temperature_floor_min` [K] · `mantle_temperature_floor_max` [K] · `mantle_temperature_floor_verdict` [—] ·
+`mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
+`mantle_temperature_width_surface` [K]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K]
 **분기키** — `body_class`. 암석체는 현재값 방사성 예산을 받고, 거대행성·서브넵튠·갈색왜성·항성은
@@ -56,6 +59,13 @@ Primack 2020 의 **미발표 초안 표**(LaTeX 소스 `\end{document}` 뒤, PDF
 **선언된** `potential_temperature` 에서 평가한 값(상단 경계층만; `k_t` 는 인쇄값이 없어 κ_t ρ_m C_pm 으로 도출; 현재 지구에
 보정된 출처)이고, `heat_flow_consistency` 는 그 함의 열류를 `radiogenic_power` 와 대조합니다 — 선언에 대한 일관성 검사이며
 잔열 냉각이 예상되는 차이이고, 천체의 실제 열류가 아닙니다. 온도 미선언이면 `cannot-say`. `engine/mantle-flux-consistency-context-notes.md`.
+`mantle_temperature_floor_min/max` (브리프 57) 는 같은 사슬을 **뒤집은** 것입니다. 상단 경계층이 방사성 출력만을
+내보내는 포텐셜 온도이며, T_m 의 **하한**입니다(영년 냉각은 열류를 더합니다). 점이 아니라 가족으로 냅니다 — ζ(Table 2 의
+±0.5), 농도 세트 둘, 분모 둘(`mantle_w` 는 상단 경계층과 like-for-like, `total_w` 는 `heat_flow_consistency` 가 쓰는 것 —
+둘 다 싣고 불일치는 `engine/property-consumer-audit-context-notes.md` §3 에 이름 댔습니다)의 합집합이고, 각 폭은
+`mantle_temperature_width_*` 로 따로 냅니다(`surface` 는 T_s = 200 K 재평가). 소비처는 아트 디렉션의 판구조 레짐 가능성이며,
+여기서 분류하지는 **않습니다**. 이분법 괄호 1000–2500 K 밖이면 괄호 끝을 돌려주는 대신 이름 대며 거절합니다. 조석 가열
+천체에서는 이 하한이 맨틀 온도가 아닙니다.
 `radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) 는 붕괴 물리만이며, 열진화(Nimmo+ 2004, 미보유)는
 만들지 않았고 `dynamo_rocky` 로의 엣지는 gap 으로 남습니다.
 

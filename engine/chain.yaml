@@ -167,7 +167,10 @@ nodes:
     outputs: [l_int, t_int, radiogenic_power, mantle_radiogenic_power, crust_radiogenic_power,
               radiogenic_power_low, radiogenic_heat_w_m2, radiogenic_power_history_4gyr,
               mantle_top_boundary_layer, implied_surface_heat_flux, implied_surface_heat_flow,
-              heat_flow_consistency, urey_ratio]
+              heat_flow_consistency, urey_ratio,
+              mantle_temperature_floor_min, mantle_temperature_floor_max, mantle_temperature_floor_verdict,
+              mantle_temperature_width_zeta, mantle_temperature_width_set,
+              mantle_temperature_width_denominator, mantle_temperature_width_surface]
 
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
