@@ -6,7 +6,7 @@ wrong (the price is not bounded; the sign is three-tiered), and close the row.
 
 ## Search
 - [x] Bethkenhagen+ 2017 full text (cache 1709.04133.md): grid described, no data-availability statement, no URL
-- [x] Bethkenhagen+ 2013 (2013JChPh.138w4504B): AIP paywall, 330 GPa · 500–10 000 K
+- [x] Bethkenhagen+ 2013 (2013JChPh.138w4504B): 330 GPa · 500–10 000 K — *held and baked as `ammonia_table.py` (`80fde5d7`); pure ammonia, not the 2017 mixture grid this search was for. "AIP paywall" stood here until Brief 64 / P3.*
 - [x] FPEOS / Militzer+ 2021 (2021PhRvE.103a3203M): CH₄ present, no NH₃, 10⁴–10⁹ K above the adiabat
 - [x] every bibcode/DOI checked by title against an ADS response (five queries, 2026-08-30)
 

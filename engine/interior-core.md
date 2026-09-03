@@ -458,13 +458,17 @@ the tables do, and the tables cannot be reached from here. Three routes, checked
 | route | why it fails |
 |---|---|
 | Bethkenhagen+ 2017 (2017ApJ...848...67B, full text in the cache) | describes the grid exactly — 1000 GPa · 20 000 K, thirteen isotherms — and publishes no data-availability statement and no URL |
-| Bethkenhagen+ 2013 (2013JChPh.138w4504B, doi 10.1063/1.4810883), the ammonia source | AIP paywall; 330 GPa · 500–10 000 K, the set 2017 extended |
+| Bethkenhagen+ 2013 (2013JChPh.138w4504B, doi 10.1063/1.4810883), the ammonia source | **held** (owner-obtained 08-30 11:29, PROVENANCE) and **already baked** as `ammonia_table.py` (`80fde5d7`, 08-30 17:13); 330 GPa · 500–10 000 K — **pure ammonia**, so not the mixture grid this table was looking for. *"AIP paywall" stood here until Brief 64 / P3.* |
 | FPEOS, Militzer+ 2021 (2021PhRvE.103a3203M) | distributes tables and code, and carries CH₄ — but **no NH₃**, and its range 10⁴–10⁹ K begins above the ice-giant adiabat (5500–6300 K) |
 
 **An author request is the only remaining route.** Bethkenhagen+ 2013 goes on the owner's
 paper-request list; the 2017 tables would come from the same authors. **Closed 2026-09-01 by
 the owner: the paper was not obtained, and the item ends as *recorded, not found*.** What was
 searched and by what route is above; the grid stays unreachable without the authors.
+**Why that closure still holds after Brief 64 / P3 (2026-09-03):** Bethkenhagen+ **2013** is held and
+transcribed (`ammonia_table.py`) and is **pure ammonia**; what this row needed is the **2017 mixture
+grid** (1000 GPa · 20 000 K, thirteen isotherms), and that is still not held. Holding 2013 does not
+reopen the row — its closure was never about 2013's absence.
 
 
 What can be said about the sign, in three tiers, only the first carrying a number:
@@ -1875,6 +1879,46 @@ Order among them is the owner's, brief by brief.
 | **C18** | `body_class → dynamo_rocky via sub_neptune` (`:623`) | a sub-Neptune integrates (C1) and has no dynamo path; **the kind that closes as a refusal by class** |
 | **C19** | `body_age → dynamo_giant via cooling_luminosity` (`:614`) | the giant dynamo wants a cooling luminosity L(M, age) that no node emits |
 
+### C20 — the thermal-history integrator (forward integration in time) — **listed 2026-09-03, not started**
+
+Owner's approval, verbatim (session `4b8e06ba`, 09-03 17:55): *"적분기 c20, ㅇㅇ 그게 좋겠다. 작은 의견 몇개.
+행성의 생성 시기는 모천체의 생성시기로, 그리고 방사성 동위원소 관련 열 생성도 같이 넝어야 할 것같아."* (quoted as
+typed; the last clause reads "넣어야" — radiogenic heat production is to be included).
+
+**Why it is open.** The entropy-production verdict is a statement *over time* — "enough to run a geodynamo
+for the last ~3 Gyr" — and no present-epoch value answers it. When the owner adopted the ladder (*"ㄱㄱ 하자."*,
+`1588ff47`, 09-03 11:19, as the directing seat relays it), the entropy route was not closed but *deferred until
+an integrator exists*, and that deferral had no address anywhere in the documents. This row is the address.
+
+**What it is.** The coupled mantle–core energy balance rolled forward over 4.5 Gyr in ~4 Myr steps (≈1 100
+steps). Brief 45 ended at its (c) stop for exactly this reason: `Q_C` depends on `T_c` at every step and the
+core's equation is driven by the same `Q_C`, so neither half can be integrated alone. A different kind from the
+spatial integration (shooting, already built) and from C14's root-find (no integration).
+
+**Two design conditions from the owner, in the same message:**
+1. *"행성의 생성 시기는 모천체의 생성시기로"* — the integration's t = 0 is pinned to the **star's / system's
+   age**, not a per-body declaration; one declaration fewer. ⚠ **This conflicts with the graph as it stands**:
+   `chain.yaml:90` `body_age` is `kind: measured`, `domain: given`, layer 0, with the note *"천체 자신의 나이.
+   항성 나이와 다르고, 거대행성 냉각광도의 실입력이다"*, and `system_age` (`t_sys`, `:85`) is a separate node
+   (`:666`: *"항성풍의 나이는 항성의 나이 = 계의 나이"*). **Resolving the `body_age` / `system_age` relation is a
+   prerequisite of starting C20** — recorded here as a fact, nothing in `chain.yaml` changed.
+2. *"방사성 동위원소 관련 열 생성도 같이 넝어야 할 것같아"* — **wiring, not building**: `radiogenic.history_factor`
+   is that input already, and the module says so (`radiogenic.py:22` *"H(t) is four exponentials and is
+   built"*; `radiogenic-budget-context-notes.md:86` *"H(t) is built and NOT wired to the third consumer"*).
+   Condition 2 names exactly that unwired consumer.
+
+**Cost.** A dozen-odd core constants (heat capacity, expansivity, latent heat, gravitational-energy
+coefficient, light-element content …), an initial-condition declaration, and **the condition that the model is
+calibrated on Earth** — its success criterion is "reproduce Earth's present state", so the output is
+"consistent with an Earth-calibrated model", not "this body's actual value".
+
+**Relation to C14.** C14 *declares* `dT_c/dt` and solves the present epoch only (honest band 33–126 K/Gyr,
+4× between two published Earth models). **When C20 stands, that declaration becomes a computation**, and a
+body kept warm by tides and one that cooled quietly finally get different answers — the thing the ladder
+cannot do.
+
+**Start condition.** Not now. Order: P3 → C14 → then reconsider.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,
@@ -1886,18 +1930,19 @@ Order among them is the owner's, brief by brief.
 - **P2 · Kimura as arbiter of the disputed band (from C3).** Whether Kimura 2023 gives a point inside
   14.6–20.6 GPa at all — if not, C3's "arbiter" expectation was wrong and P2 closes on that record. Runs
   with P1.
-- **P3 · Bethkenhagen ammonia grid (from C4).** **Measurement approved, queued after P1·P2** — owner,
-  2026-09-03 (session `4b8e06ba`, 17:2x KST), to the proposal *"충분한지 재보는 것 자체는 짧습니다. 다만 닫으신
-  행이라 재개 여부는 오너 몫"*: **"끝나고 그것도 재보자."** ⚠ Scope: a measurement, **not** a reopening of C4 —
-  the row stays `closed`, and whether it reopens is the owner's decision after the number exists. Fact: the
-  2013 paper has been held since 08-30 11:29 (owner-obtained, PROVENANCE written by Brief 64); C4 closed on
-  09-01 as *"recorded, not found"* because a session reported it unheld. What to measure: C4 wanted the
-  **2017 grid** (1000 GPa · 20 000 K, 13 isotherms); the held **2013 table is 330 GPa · 500–10 000 K** — it
-  covers the ice-giant adiabat in temperature (5 500–6 300 K) and **stops at 330 GPa in pressure** — so the
-  one question is *does the roster's ammonia-bearing layer actually exceed 330 GPa*. Method: the C6 `ice_x`
-  template — count the evaluations the layer makes above the ceiling on the converged corridor (Uranus's
-  `ice_x` corridor made 1 854 in 355→535 GPa, Neptune's stopped at 235, the moons made 0). Zero means the
-  2013 grid suffices; non-zero says by how much. Not measured yet.
+- **P3 · Bethkenhagen ammonia (from C4) — redefined the same evening, and the first definition was wrong.**
+  The owner approved a measurement (*"끝나고 그것도 재보자."*, `4b8e06ba`, 17:2x KST), and the directing seat
+  first framed it as *"is the 2013 table's 330 GPa enough for C4?"* — **a wrong question**: the 2013 paper was
+  never C4's missing piece. It has been held since 08-30 11:29 and **baked the same day** (`ammonia_table.py`,
+  `80fde5d7`, 08-30 17:13); it is pure ammonia, and C4's open half needs the **2017 mixture grid**, still not
+  held. So the 09-01 closure stands (see the C4 paragraph). What P3 actually is, three parts: ① the two
+  stale "AIP paywall" phrasings corrected (done, this brief); ② the one-line reason the closure holds written
+  into C4 (done); ③ **a C6-class measurement**: `ammonia_table.P_MAX_PA = 333.2 GPa` is the material's domain
+  ceiling (`eos.py:883`) and its isotherm range 500–10 000 K refuses outside (`eos.py:912-917`), and **no gate
+  row says whether any roster column ever reaches either** — `test_interior.py` has no ammonia row
+  (`test_ammonia.py` checks the transcription, not the reach). Measured by the `ice_x` template (a spy on the
+  material, evaluation counts, positive control first); result recorded below when it lands. Measurement,
+  not repair: a reach, if any, is reported and left.
 
 ## What closing all of these does not do
 
