@@ -20,8 +20,11 @@ gives 11.59 TW today, 1.9× short of the paper's own appendix; **the concentrati
 (the appendix settles it). engine/radiogenic-budget-context-notes.md §1.
 
 What this module does not do: thermal evolution. H(t) is four exponentials and is built; turning it
-into a core that is or is not still convecting is Nimmo+ 2004 (`2004GeoJI.156..363N`), not cached,
-and the chain.yaml edge to dynamo_rocky stays a gap for that reason. The giant branch (cooling
+into a core that is or is not still convecting is Nimmo+ 2004 (`2004GeoJI.156..363N`) — held (cached
+with PROVENANCE; Brief 60 transcribed its eqs 37–39 into `cmb_flux.py`). The supplier of the CMB flux now
+exists; the chain.yaml edge to dynamo_rocky stays a gap because its consumer wiring is the φ step
+(core entropy production), not because the paper is missing. ("not cached" stood here from 10:15 on 2026-09-03
+until Brief 64 corrected it.) The giant branch (cooling
 luminosity L(M, age)) is refused here exactly as `dynamo.py` refuses it.
 """
 from __future__ import annotations
@@ -189,8 +192,9 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
         "에서 읽었으며, 그 표 자신의 21.4 / 10.8 TW 와 부록의 22 TW 에 1–2 % 로 폐합하는 것이 읽기의 검산이다.",
         f"붕괴 이력: H(−4 Gyr)/H(now) = {hist:.2f} (논문 산문 3.5). ²³⁵U 가 그 배율을 끈다 — 지금 "
         f"{heat_per_kg(CONCENTRATION_SETS['appendix'], 0.0, ('U235',)) * BSE_MASS_STANDARD_KG / 1e12:.2f} TW 인 "
-        "종을 빼면 2.8 로 준다. **이력은 여기서 끝난다**: 핵이 지금도 대류하는가는 열진화 모형(Nimmo+ 2004, "
-        "미보유)의 몫이라 dynamo_rocky 로는 배선하지 않는다.",
+        "종을 빼면 2.8 로 준다. **이력은 여기서 끝난다**: 핵이 지금도 대류하는가는 열진화 모형(Nimmo+ 2004)의 몫이다 — "
+        "그 논문의 하단 경계층(식 37–39)은 cmb_flux 가 이미 전사했고, dynamo_rocky 로의 배선은 φ(핵 엔트로피 생성) "
+        "단계라 지금은 gap 으로 남는다.",
         "소비처 둘(interior_layers 의 포텐셜 온도, core_state 의 핵 쪽 경계 온도)은 이 예산을 받되 **여전히 "
         "선언한다** — 예산을 온도나 경계층 열류로 바꾸는 것은 이 레시피가 갖지 않은 열 모형이다.",
         (f"t_int {t_int:.1f} K 는 **방사성만** 의 값이다 (F = {flux:.4f} W/m², R = {radius_earth:.4f} R⊕ — "

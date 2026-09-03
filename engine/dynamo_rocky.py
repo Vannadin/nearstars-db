@@ -41,9 +41,12 @@ VERSION = "1"
 REFS = (
     "docs/reference/rocky-planet-dynamo-methodology.md",
     "2022A&A...661A.101R",      # RM22, Rodríguez-Mozos & Moya 2022, A&A 661, A101 (arXiv 2203.01065) — held
-    "2006E&PSL.250..561O",      # OC06, Olson & Christensen 2006 — the 0.12 boundary and the ~0.06 factor; NOT HELD
+    "2006E&PSL.250..561O",      # OC06, Olson & Christensen 2006 — the 0.12 boundary and the ~0.06 factor; HELD
+                               # (owner, 2026-09-03 13:40, PROVENANCE) — so the 0.06 in MULTIPOLAR_FACTORS is now
+                               # checkable at source instead of via RM22; not re-read in Brief 64, value unchanged
     "2010ApJ...718..596G",      # Gaidos, Conrad, Manga & Hernlund 2010 — cited for the Rm > 40 threshold that this
-                               # recipe QUOTES AND DOES NOT EVALUATE; NOT HELD
+                               # recipe QUOTES AND DOES NOT EVALUATE; HELD (arXiv preprint, parallel seat,
+                               # 2026-09-03 13:37, PROVENANCE). Both "NOT HELD" were true at 12:00 when written.
     "2009Icar..199..526G",      # Grießmeier+ 2009 — the alternative 0.15 multipolar factor
     "2022ApJ...938..131Z",      # Zhang & Rogers 2022 — computed alternative (thermal evolution), flagged, not followed
 )

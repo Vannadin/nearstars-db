@@ -189,7 +189,10 @@ changed here; named for the owner.**
   against** — a yield strength, which nothing in the corpus prints. That is a *different kind* of gap from
   the dynamo gate's: `Rm` was blocked on another computed quantity (φ, §2) that only Earth could anchor,
   so it closed on itself; this is blocked on a material property with a value, which a paper can simply
-  supply. **A citation can close this one and could not close that one.** Solomatov 1995 is with the owner.
+  supply. **A citation can close this one and could not close that one.** Solomatov 1995 is **not held** — and
+  not with the owner either: the owner gave up on it at 15:18 KST (*"논문에 돈내야한대...ㅠㅠ 방법이 없다."*,
+  1588ff47, 09-03 15:18; request cancelled 15:20). This line was committed in `ef6a40ca` at 15:37, nineteen
+  minutes after that; corrected by Brief 64.
 
 ## Related
 

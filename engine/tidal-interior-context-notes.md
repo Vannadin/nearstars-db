@@ -321,5 +321,7 @@ calculation: §2's dimensionless 1, or Table 5's 1400 K?**
 *"We use c1 = 0.5 and arh = 2.5"*, Table 1 row `arh 2.5`) prints **2.5**, same Solomatov lineage, arrived
 at independently. **Named width 2.4–2.5** — not a defect, not a correction: it sits inside a `Ra^(1/3)`
 scaling, so ~4 % on a_rh is small but real. The module stays quarantined (§7); nothing here changes it.
-Solomatov 1995 itself is with the owner, not on a session's request list.
+Solomatov 1995 itself is **not held, and no longer with the owner** — paywalled, given up at 15:18 KST
+(*"논문에 돈내야한대...ㅠㅠ 방법이 없다."*, 1588ff47, 09-03 15:18; request cancelled 15:20; this sentence was
+committed at 15:37 in `ef6a40ca` and corrected by Brief 64).
 

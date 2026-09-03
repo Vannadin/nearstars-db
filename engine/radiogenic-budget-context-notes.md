@@ -79,7 +79,8 @@ potential-temperature anchor, `chain.yaml:410`) and `→ core_state` (the CMB fl
 carried *"저쪽이 프로파일도 열류도 내지 않으므로 지금은 선언으로 받는다"*. The supplier now emits the
 budget; **the consumers keep declaring** `potential_temperature` and `core_cmb_temperature`, because
 turning a budget into a temperature or a boundary-layer flux is the thermal model this paper defers
-to Nimmo+ 2004 (`2004GeoJI.156..363N`, **not cached**). The edges lose `status: gap` and gain
+to Nimmo+ 2004 (`2004GeoJI.156..363N`; **held** — cached with PROVENANCE, and Brief 60 transcribed its
+eqs 37–39 into `cmb_flux.py`; "not cached" stood here until Brief 64). The edges lose `status: gap` and gain
 `via: mantle_radiogenic_power`; the notes say what is supplied and what is still declared.
 
 **H(t) is built and NOT wired to the third consumer.** `→ dynamo_rocky via geotherm` (`:404`)
@@ -142,8 +143,8 @@ has been wrong twice tonight in the same direction.)
   digit. Reported to the directing seat as such.
 
 **Retired name.** `geotherm` is no longer an output of `internal_heat_nontidal`; `heat_transport_mode`
-takes `mantle_radiogenic_power`; `→ dynamo_rocky via geotherm` is `status: gap` (thermal evolution,
-Nimmo+ 2004 not held). `check_via --gate`: 85 via-edges, 16 mismatches = 8 allowlisted + 8 gap +
+takes `mantle_radiogenic_power`; `→ dynamo_rocky via geotherm` is `status: gap` (thermal evolution;
+Nimmo+ 2004 *is* held — the gap is the φ-step consumer wiring, Brief 60 §4). `check_via --gate`: 85 via-edges, 16 mismatches = 8 allowlisted + 8 gap +
 0 open. Graph: coupled core 16 = `coupled_core`, `undeclared()` empty. `check_contracts` 6/6.
 Path fingerprint unchanged.
 

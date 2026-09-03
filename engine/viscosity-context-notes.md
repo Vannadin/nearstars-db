@@ -87,7 +87,12 @@ the parallel seat's; **the paper prints neither.**
   *"several orders of magnitude"* for diffusion creep (병).
 - **The liquid axis has no cached source.** Stixrude+ 2020's η = 0.1 Pa·s (line 274, 여기, used
   only to show the magnetic Prandtl number is small) traces to **Karki & Stixrude 2010**
-  (`2010Sci...328..740K`, ref. at line 707) — **not cached** (여기 checked), and that paper's own
+  (`2010Sci...328..740K`, ref. at line 707) — **cached** (331,950 B, PROVENANCE *"obtained by the owner
+  2026-09-03"*, handed over at 01:42 KST — *"science.1188327.pdf 이거밖에 못받음"* (1588ff47, 09-03 01:42);
+  this line's *"not cached (여기 checked)"* was written at 01:28, fourteen minutes before the file arrived,
+  and stood uncorrected until Brief 64 — ⚠ §7 below warns, with this very paper as its example, against
+  manufacturing a false "not found"; this note then carried one for the same paper one section up, which
+  is the best statement of why the Brief 64 re-sweep was needed), and that paper's own
   abstract says the quantity **varies by two orders over the mantle pressure regime** (병), so
   the 0.1 is a point quoted for a range. Safe inside Stixrude's Prandtl argument; **must not be
   lifted out of it.**

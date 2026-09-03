@@ -66,8 +66,9 @@ Primack 2020 의 **미발표 초안 표**(LaTeX 소스 `\end{document}` 뒤, PDF
 `mantle_temperature_width_*` 로 따로 냅니다(`surface` 는 T_s = 200 K 재평가). 소비처는 아트 디렉션의 판구조 레짐 가능성이며,
 여기서 분류하지는 **않습니다**. 이분법 괄호 1000–2500 K 밖이면 괄호 끝을 돌려주는 대신 이름 대며 거절합니다. 조석 가열
 천체에서는 이 하한이 맨틀 온도가 아닙니다.
-`radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) 는 붕괴 물리만이며, 열진화(Nimmo+ 2004, 미보유)는
-만들지 않았고 `dynamo_rocky` 로의 엣지는 gap 으로 남습니다.
+`radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) 는 붕괴 물리만이며, 열진화는
+만들지 않았고(Nimmo+ 2004 는 보유 중이며 그 하단 경계층이 아래의 `q_cmb` 입니다) `dynamo_rocky` 로의 엣지는 논문이
+없어서가 아니라 소비자 배선이 φ 단계라서 gap 으로 남습니다.
 
 ## 계약 — `cmb_heat_flux`
 

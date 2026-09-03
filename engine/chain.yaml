@@ -238,7 +238,7 @@ nodes:
     # 2026-09-03 브리프 44: geotherm 이라는 이름을 물린다 — 한 낱말이 열 예산과 T(P) 프로파일 둘을
     # 덮고 있었다 (interior_layers 노트, 브리프 40 §4). 암석체에서 이 노드는 방사성 예산이다:
     # l_int = 총 방사성 출력, mantle_radiogenic_power = 맨틀 몫 70 %(선언). 거대행성 갈래(냉각광도)는
-    # dynamo.py 와 같은 이유로 거절한다. 붕괴 이력은 계산하되 열진화(Nimmo+ 2004, 미보유)는 아니다.
+    # dynamo.py 와 같은 이유로 거절한다. 붕괴 이력은 계산하되 열진화는 아니다(Nimmo+ 2004 는 보유 — 하단 경계층은 cmb_heat_flux 가 전사했다).
     outputs: [l_int, t_int, radiogenic_power, mantle_radiogenic_power, crust_radiogenic_power,
               radiogenic_power_low, radiogenic_heat_w_m2, radiogenic_power_history_4gyr,
               mantle_top_boundary_layer, implied_surface_heat_flux, implied_surface_heat_flow,
@@ -627,7 +627,7 @@ edges:
   - {from: ocean_fraction, to: dynamo_rocky, kind: influences, sign: negative, status: gap, ref: "rocky-planet-dynamo-methodology.md:109"}
   - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:70"}
   - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, status: gap, ref: "rocky-planet-dynamo-methodology.md:70", note: "mode 는 라벨이고 열류는 수다. 소비처 둘(core_state · dynamo_rocky)이 원하는데 내는 노드가 없다 — internal_heat_nontidal → core_state 도 같은 양으로 gap. 공급자 하나로 닫아야 한다 (2026-09-03)."}
-  - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, status: gap, ref: "internal-heat-luminosity-methodology.md:202", note: "핵이 **지금도** 대류하는가(Rm > 40)는 붕괴 이력 H(t)만이 아니라 열진화 모형이 필요하다 — Nimmo & Primack 2020 이 Nimmo+ 2004 (2004GeoJI.156..363N, 미보유)에 맡기는 부분. 붕괴 물리는 우리 것(radiogenic_power_history_4gyr), 열진화는 아니다. 2026-09-03 브리프 44 gap."}
+  - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, status: gap, ref: "internal-heat-luminosity-methodology.md:202", note: "핵이 **지금도** 대류하는가(Rm > 40)는 붕괴 이력 H(t)만이 아니라 열진화 모형이 필요하다 — Nimmo & Primack 2020 이 Nimmo+ 2004 (2004GeoJI.156..363N, 보유)에 맡기는 부분. 붕괴 물리는 우리 것(radiogenic_power_history_4gyr), 열진화는 아니다. 공급자 cmb_heat_flux 는 브리프 60 에 생겼고 소비자 배선은 φ 단계다. 2026-09-03 브리프 44 gap, 브리프 64 라벨 정정."}
   # 내부 온도 프로파일의 앵커(맨틀 포텐셜 온도)는 열 예산이 정한다. 그 예산이
   # internal_heat_nontidal 의 것이고, 표면 온도와 포텐셜 온도 사이의 전도하는
   # 뚜껑 두께가 열류의 함수다 (Unterborn+ 2019 §2). 그러나 저 레시피는 프로파일을

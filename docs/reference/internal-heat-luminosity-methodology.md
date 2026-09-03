@@ -76,7 +76,8 @@ by name (`mantle_temperature_width_*`; `surface` re-evaluates at T_s = 200 K). C
 likelihood, which is **not** classified here. Outside the 1000–2500 K bisection bracket the verdict refuses by name
 instead of returning the bracket end. For a tidally heated body the floor is not its mantle temperature.
 `radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) is decay physics only; thermal evolution
-(Nimmo+ 2004, not held) is not built, and the edge to `dynamo_rocky` stays a gap.
+is not built (Nimmo+ 2004 is held — its bottom boundary layer is `q_cmb`, below), and the edge to `dynamo_rocky`
+stays a gap because its consumer wiring is the φ step, not for want of the paper.
 
 ## Contract — `cmb_heat_flux`
 

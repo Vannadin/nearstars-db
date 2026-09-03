@@ -15,9 +15,13 @@ is not foreclosed by this.
   of two caches; `SESSION-HANDOFF.md`). ⚠ The methodology doc cites it as **"A&A 661, A176"** at lines 21 and
   151 — **wrong article number**, ADS-verified; fixed in this brief, EN and ko.
 - **OC06** — Olson & Christensen 2006, *Dipole moment scaling for convection-driven planetary dynamos*,
-  E&PSL 250, 561 (`2006E&PSL.250..561O`). **Not held in either cache** (checked both). On the request list.
+  E&PSL 250, 561 (`2006E&PSL.250..561O`). **Held** since 2026-09-03 13:40 (published PDF obtained by the owner,
+  `PROVENANCE` beside it). *"Not held in either cache"* was true when this note was written (11:55) and false
+  two hours later; corrected by Brief 64. With the paper in hand, `MULTIPOLAR_FACTORS`' 0.06 can be confirmed
+  at source rather than through RM22's citation of it — **checkable now, not yet checked; the value is untouched.**
 - **Gaidos+ 2010** — *Thermodynamic Limits on Magnetodynamos in Rocky Exoplanets*, ApJ 718, 596
-  (`2010ApJ...718..596G`). **Not held in either cache.** ⚠ Authors are **Gaidos, Conrad, Manga & Hernlund**
+  (`2010ApJ...718..596G`). **Held** since 2026-09-03 13:37 (arXiv preprint fetched by the parallel seat,
+  `PROVENANCE`); *"not held"* was true at 11:55, corrected by Brief 64. ⚠ Authors are **Gaidos, Conrad, Manga & Hernlund**
   (ADS); the doc's bibliography row (line 160) prints *"Gaidos, Conrad, Manoj & Blake"* — wrong author list,
   fixed. The body's "Gaidos 2010" is ordinary et-al shorthand. **Cited for the `Rm > 40` threshold we never
   evaluate** (§2).
@@ -82,7 +86,8 @@ this.
 Ganymede 2×10⁻³, 0.41 → 0.87 µT; Earth 30; Mars, Venus 0), **and** the finding above pinned: RM22's
 computed Mercury 0.0003 → 0.16 µT and Venus 0.0007 → 0.024 µT are not the zeros the doc writes.
 
-**REFS**: the methodology; RM22 as **A101**; OC06 (not held); Gaidos, Conrad, Manga & Hernlund 2010 — *"cited
+**REFS**: the methodology; RM22 as **A101**; OC06 (held since 13:40; the REFS comment said "NOT HELD" until Brief 64);
+Gaidos, Conrad, Manga & Hernlund 2010 (held since 13:37, same correction) — *"cited
 for a threshold this recipe quotes and does not evaluate"* in the comment; Zhang & Rogers 2022 flagged as the
 computed alternative not followed.
 
