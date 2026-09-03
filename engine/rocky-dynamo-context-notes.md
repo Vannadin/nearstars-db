@@ -103,6 +103,38 @@ temperature). The giant → out of domain. ③ does not fire (no roster body abo
 carried, not adjudicated. **Load-bearing declarations for Earth**: the regime branch (2.5× in the answer)
 and `stagnant_lid`; not ℳ_base (regime 1 has a value) and not the death age (regime 5 only).
 
-## 4. Result — filled after the run
+## 4. Result — 2026-09-03, code `c7ab0a80`
 
-*(pending)*
+**Branches: ① fired (the table reproduces on the doc's observed column — trivially, as expected, since it
+is the doc's own arithmetic); ④ fired for Pandora; ③ and ⑤ did not fire; ② did not fire as a failure but
+the doc-versus-paper difference registered in §1 is pinned as a test.** The work seat's expectation held on
+every point.
+
+| body | regime | alive gate | ℳ_base | regime gate | B_eq | multipolar B_eq |
+|---|---|---|---|---|---|---|
+| Earth | 1 (dry, 1.0 M⊕) | alive — `liquid_outer_solid_inner`, `stagnant_lid: false` declared | 1.0 (doc) | undeclared → both | **30 µT** (anchor reproduced, not predicted), B_pol 60 | **1.8–4.5 µT** |
+| Pandora | 1 | **cannot-say** — `core_state` is undecided (no temperature) | — | — | null | null |
+| α Cen A b | — | out of domain (giant) | | | | |
+
+**Load-bearing declarations for Earth**: the regime branch (2.5× in the answer, carried as both branches) and
+`stagnant_lid` (declared false; undeclared would have been cannot-say). Not load-bearing today: ℳ_base
+(regime 1 has a printed value) and the death age (regime 5 only). No roster body reaches regimes 2–3, so
+their grids are declared and unexercised — the day a 2–10 M⊕ rocky body reaches the recipe it gets endpoints
+and no number, and the consumer declares its own (C11).
+
+**Pinned in `test_dynamo_rocky.py`**: the doc's table through step 5 (Mercury 0.22, Ganymede 0.87, Earth 30);
+RM22's computed Mercury 0.0003 → 0.16 µT and Venus 0.0007 → 0.024 µT (not the doc's zeros); the five gate
+labels (undecided core, solid, declared lid, undeclared lid, regime-5 past 7 Gyr); regimes 2–3 emit
+endpoints and no elected moment; the undeclared regime emits both branches at exactly 2.5× spread; every
+result says *Rm > 40 is QUOTED, not evaluated*; the ladder never grades above judgment.
+
+**Doc fixes landed (EN + ko)**: A176 → **A101** at both sites; Gaidos+ 2010 author row → Gaidos, Conrad, Manga
+& Hernlund; the "cached" claim names the main cache and the symlink; step 2 says Rm is quoted and that RM22
+computes Venus/Mars non-zero; step 3 says no per-class table exists and what the recipe declares.
+
+**Gate**: `check_contracts` 7/7 (a Contract block was added for this node), `chain.py check` pass,
+`check_via --gate` 0 open (the `via regime` edge to `magnetosphere_geometry` is now satisfied by an output
+that exists), coupled core 16 = `coupled_core`, path fingerprint unchanged. Full `check.sh` in the report.
+
+**Request list** (ADS-read identifiers): OC06 `2006E&PSL.250..561O`; Gaidos, Conrad, Manga & Hernlund 2010
+`2010ApJ...718..596G`. RM22 is held.

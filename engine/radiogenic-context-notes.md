@@ -105,8 +105,9 @@ the two half-lives above and initial ²⁶Al/²⁷Al, ⁶⁰Fe/⁵⁶Fe ratios f
   wanted them for — total surface heat flow **42–47 TW**, 35–40 TW with the crust's radiogenic
   share removed, and total radiogenic production about **22 TW**. The Earth anchor pair now lives in
   `engine/radiogenic-budget-context-notes.md` and the Phase-3 tooltip.
-- Candidate added by the reconciliation (§1): **Nettelmann+ 2011**, the giant-side prescription
-  Vazan+ 2019 defers to. Not yet requested.
+- ~~Candidate added by the reconciliation (§1): **Nettelmann+ 2011**~~ — **held**: `docs/phase3/_papers/1010.0277.md`
+  (main cache; Nettelmann+ 2011, *Thermal evolution and structure models of the transiting super-Earth GJ 1214b*).
+  Off the request list 2026-09-03.
 - **Added by Brief 46's audit — the Urey ratio**, so the consistency verdict's soft floor (Ur ≥ 1/3) can be
   grounded: Korenaga 2008 (`2008RvGeo..46.2007K`) and Jaupart, Labrosse & Mareschal 2007
   (`2007mady.book..253J`), both ADS title-checked, not read.
