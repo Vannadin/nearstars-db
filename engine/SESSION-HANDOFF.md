@@ -284,15 +284,25 @@ Every one is in `interior-core.md`'s rules section with its case. The short form
   itself**, whatever the report says.
 - **A runtime estimate belongs to the commit it was measured on.** "~15 minutes" was honest
   when taken and false when quoted, because the code had changed between.
-- **The `.md` render of a cached paper can drop a table's body while keeping its caption.** So the
-  presence of `Table N` in a `.md` is not evidence that its values are there. Measured 2026-09-03 on
-  `0707.2895` (Seager+ 2007), the source of `eos.py`'s `fe_eps` and `mgsio3_en` fits: both renders carry
-  the captions for Tables 1–4, and **eight of eleven values `eos.py` takes from Table 1 are absent from
-  the `.md`** and present in the `.html` (the transcription is correct — it was read from the html or the
-  PDF). RM22's `.md` has none of its ten tables; Zhang & Rogers' none of its five. **The `.md` is the format
-  the data contract names, so this sits on the canonical read path.** Read the `.html` for any tabulated
-  value and record which render it came from; `scripts/check_paper_tables.py` (report only, never a gate)
-  lists where to look — 46 rows over the 91 cited papers with both renders, a re-check list, not defects.
+- **The `.md` render is regenerated from the cached `.html`, and the extractor used to lose tables — fixed
+  2026-09-03 (Brief 49).** History, kept because it is the evidence: the section walker reached only direct
+  children of `ltx_section/subsection/subsubsection`, so **article-level floats** (Seager+ 2007, `0707.2895`,
+  the source of `eos.py`'s `fe_eps`/`mgsio3_en` fits — eight of eleven values absent from the `.md`, present
+  in the `.html`, transcription correct) and **appendix floats** (RM22 Tables 7–10, the ladder's Table 8)
+  never reached the `.md`; and **table captions were never emitted anywhere** (11 of 729 `.md` carried
+  "Table N:", all prose), which made a caption-based check see losses that were not there (Zhang & Rogers'
+  five tables were always present). The walker now walks appendices, sweeps unreached floats, and emits
+  captions; every ar5iv-rendered `.md` was regenerated (`fetch_arxiv_texts.py --regenerate-md`, idempotent).
+  **Fallback rule**: for a table the `.md` does not show, read the `.html` and record the render; three
+  residual shapes exist (a table not marked as a float, an empty float, a density-signal false positive —
+  `scripts/check_paper_tables.py`, 46 → 3 rows on the cited set).
+- **Regeneration overwrites hand-made `.md` files unless guarded.** 61 cached `.html` files are not ar5iv
+  renders (arxiv.org abstract pages, search pages, a bot-block page) and five of their `.md` files had been
+  made by hand from the PDF ("PDF-extracted text (ar5iv render failed …)"); the first regeneration pass
+  turned those five into a title line. Restored from the same-session backup; `--regenerate-md` now skips
+  non-ar5iv `.html` and any `.md` whose head carries a manual signature. **Back up before a bulk rewrite,
+  and check what a shrinking file was before accepting the shrink** — a file can be right and smaller
+  (bibliography dropped by design) or a person's work destroyed.
 - **Check ADS `esources` before asking the owner for a paper.** The field names the free routes —
   `EPRINT_PDF` is arXiv, `ADS_PDF`/`ADS_SCAN` is ADS's own copy. Measured 2026-09-03: of seven papers the
   directing seat asked the owner to fetch, **three had a free route visible in a field the seat had already

@@ -39,7 +39,7 @@ the script's own documented cheap path.
    on the parent's class.
 2. **Captions**: emit the float's `ltx_caption` as a `**Table N: …**` line before the body, so the `.md`
    carries what the html says the table is. One line per table — the ④ noise question is measured after.
-3. **Regenerate** every `.md` from its cached `.html` (all 1588 backed up to the scratchpad first), then
+3. **Regenerate** every `.md` from its cached `.html` (all 729 `.md` backed up to the scratchpad first), then
    re-run `scripts/check_paper_tables.py` and report before/after. **Because captions now exist, the
    caption-parity signal becomes what it was meant to be**; the density signal stays.
 4. **③ spot-check before declaring success**: the recovered Seager Table 1 against `eos.py`'s eleven values
@@ -58,6 +58,51 @@ fire: Seager's values were read from the html that the recovered table is genera
 bold line per table, and the tables themselves were already there for most papers. Residue (②) possible
 where a float sits under a class none of us has seen yet — reported if found.
 
-## 3. Result — filled after the run
+## 3. Result — 2026-09-03
 
-*(pending)*
+**Branch ① fired, with a residue (②) of three rows and one incident that the pre-registration did not
+foresee.** ③ did not fire. ④ did not fire.
+
+**Fix** (`scripts/phase3/fetch_arxiv_texts.py`): `ltx_appendix` joins the walked classes; table floats are
+emitted through `_format_table_float`, which puts the `ltx_caption` as a `**Table N: …**` line before the
+body; floats emitted in the section pass are recorded by `id()` and a final sweep emits every `ltx_table`
+float not in that set under a `## Tables not reached by the section walk` heading. Verified on the three
+diagnostics before regenerating: Seager 75,610 → 80,103 chars, 4 captions, `156.2` / `8300` / `6.08` /
+`3220` recovered; RM22 74,456 → 92,429, 10 captions, `0.0007` / `0.084` / Table 8 recovered; Zhang & Rogers
+128,064 → 137,137, 5 captions (bodies were already there).
+
+**③ spot-check — passed, so nothing stopped.** The recovered Seager Table 1 rows carry exactly what `eos.py`
+carries: `Fe (ε) | 156.2 ± 1.8 | 6.08 ± 0.12 | 8.30 | V` (fe_eps: 8300, 156.2 GPa, 6.08);
+`H₂O (ice VII) | 23.7 ± 0.9 | 4.15 ± 0.07 | 1.46 | BME`; `MgSiO₃ (en) | 125 | 5 | 3.22 | BME`;
+`MgSiO₃ (pv) | 247 ± 4 | 3.97 | 4.10 | BME4`. RM22's recovered Table 8 rows match Brief 47's note digit for
+digit (Mercury 0.0003 / 0.0004, Venus 0.0007 / 0, Mars 0.084 / 0.10, Ganymede 0.003 / 0.002).
+
+**Regeneration, and the incident.** The first pass rewrote 576 of 714 `.md` files (557 grew, 9 shrank).
+**Five of the nine shrank to 50 characters** — `1605.07211`, `1703.01424`, `1703.01430`, `2411.07922`,
+`2510.11940`: their `.html` is an arxiv.org **abstract page** (ar5iv had failed) and their `.md` had been
+**made by hand from the PDF** (header: *"PDF-extracted text (ar5iv render failed; extracted from
+arxiv.org/pdf/… via pdftotext, 2026-05-30)"*). **Regeneration overwrote a person's work with a title line.**
+Restored from the backup within the same session; then the whole cache was reconciled: **61 `.html` files
+are not ar5iv renders** (abstract pages, search pages, the aanda bot page) and their `.md` files are never
+regenerated; a first over-broad restore (matching the word "manual" anywhere) reverted 51 legitimate
+renders, which were re-regenerated. **Final state against the backup: 510 `.md` changed (506 grew, 4 shrank),
+53 manual/non-ar5iv files untouched.** The four that shrank (`2006.00500`, `2410.21856`, `2502.09186`,
+`physics0305021`) lost only bibliography and acknowledgement text — the old files were whole-page dumps
+from an earlier extractor, and the walker skips `ltx_bibliography` by design; their body prose and headers
+are present. Accepted as ④-negative: the `.md` is better structured, not worse.
+
+The two guards are now in the script as `--regenerate-md` (no network; skips non-ar5iv `.html`; skips a
+`.md` whose head carries a manual-extraction signature) and the mode is idempotent: a second run reports
+`rewritten 0, unchanged 653, skipped_non_ar5iv 61`.
+
+**The deliverable — `scripts/check_paper_tables.py` before/after on the cited set: 46 rows → 3 rows.**
+The three (② residue), read at source:
+- `1707.06701` Table 1 — **false positive** of the density signal: the body is in the `.md` (42 rows); the
+  html window counts math markup as numbers.
+- `1802.09602` Table 2 — the html has **no `ltx_table` float at all**; the table is not marked as one
+  (an image or an unclassed tabular), so no extractor can reach it. Residue shape: table not a float.
+- `2301.04062` Table 11 — the float exists (appendix) but its `<table>` has **0 rows**; nothing to emit, and
+  `_format_table_float` drops the caption when the body is empty. Residue shape: empty float.
+
+**Brief 48's rule is downgraded** to a fallback with the history (handoff); the Seager case stays as the
+evidence that made this worth fixing.
