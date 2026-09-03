@@ -63,11 +63,34 @@ one-off download (with `PROVENANCE.txt`), record a command for a package or repo
 version where it is named (SeaFreeze v1.1.0; venv rebuild `pip install SeaFreeze==1.1.0`), and treat an
 archive from a personal academic page as the fragile case that must be kept. **`DirEOS2019.tar.gz` and `DirEOS2021.tar.gz` were fetched by the
 owner on 2026-09-03 and are in the cache with provenance (Brief 51); the 2019 archive reproduces the
-committed `hhe_table.py` byte for byte.** Request list, all for the owner, none to be fetched from a
-session: OC06 `2006E&PSL.250..561O`;
-Gaidos, Conrad, Manga & Hernlund 2010 `2010ApJ...718..596G`; Korenaga 2008 `2008RvGeo..46.2007K` and
-Jaupart, Labrosse & Mareschal 2007 `2007mady.book..253J` (Urey ratio); the canonical tabulation of
-long-lived isotope heat production (candidate Ruedas 2017, unread); Karato & Wu 1993 `1993Sci...260..771K`.
+committed `hhe_table.py` byte for byte.** **Request list — closed 2026-09-03 (Brief 55), no open
+item. Rows are kept, not deleted, so a resolved request is distinguishable from one never made:**
+- OC06 `2006E&PSL.250..561O` — **obtained** by the owner 2026-09-03, cached with PROVENANCE.
+- Gaidos, Conrad, Manga & Hernlund 2010 `2010ApJ...718..596G` — **obtained** (arXiv preprint,
+  parallel seat, 2026-09-03), cached with PROVENANCE.
+- Korenaga 2008 `2008RvGeo..46.2007K` — **obtained** by the owner 2026-09-03, cached with PROVENANCE.
+- Jaupart, Labrosse & Mareschal 2007 `2007mady.book..253J` (Urey ratio) — **withdrawn**. The owner
+  hit a paywall (2026-09-03), no circumvention attempted; the measurement then showed we do not need
+  it: Korenaga 2008 quotes the whole of what our documents wanted (global heat flux 46 ± 3 TW,
+  oceanic 32 ± 2, continental 14 ± 1, the revision entirely in the continental term), and for heat
+  production Ruedas 2017 says the Jaupart & Mareschal 2014 / Jaupart+ 2015 tabulations "merely quote"
+  Rybach 1985, whose decay energy and power run 5.1 % / 3.3 % high — a relay to a source we already
+  supersede. ⚠ Lookalike: "Jaupart 2007" hits at least two works (Jaupart/Labrosse/Mareschal 2007
+  and Labrosse & Jaupart 2007).
+- The canonical tabulation of long-lived isotope heat production — **obtained**: Ruedas 2017
+  `2017GGG....18.3530R` (arXiv preprint, parallel seat, 2026-09-03), cached with PROVENANCE.
+- Karato & Wu 1993 `1993Sci...260..771K` — **withdrawn**. Paywall first (owner, 2026-09-03), no
+  circumvention; then c4's sweep of all 92 cached PDFs: eleven cite it, six attach a value, and every
+  fitted constant is cited *jointly* with a second source (Nimmo+ 2004's 250–350 kJ/mol with
+  Yamazaki+ 2000; Monteux+ 2016's η_s,0 = 256 Pa·s, B = 25.17 with Abe 1997). What it carries alone
+  is the functional form, reproduced identically by three papers. **One labelled exception**:
+  Rovira-Navarro+ 2021's E_a = 300 kJ/mol rests on Karato & Wu alone — an *unchecked secondary
+  citation*, corroborated at range level (inside Nimmo's independently quoted 250–350, which is
+  both derivable from those energies via ζ = E/(RT²) → 0.00481–0.01644 against the printed
+  0.005–0.016 *and* cited to Solomatov 1995) but not at point level. Labelled at `rheology.py:47`
+  and `viscosity-context-notes.md` §1. ⚠ Lookalike: Gaidos+ 2010's b ≈ 17 is cited to **Karato,
+  Riedel & Yuen 2001**, not Karato & Wu 1993 — grepping "Karato" for a viscosity constant grabs the
+  wrong paper.
 
 **Do not commit into the shared worktree while another seat's gate is running.** The gate
 certifies a tree state; a commit landing mid-run rides the push without review and makes the

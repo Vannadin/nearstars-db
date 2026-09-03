@@ -41,6 +41,12 @@ adiabat (lines 343–345).
 
 η_s and E_a are declared in the paper's parameter table (line 279 row: `… 300  1·10¹⁶ …`, 여기);
 line 412: *"where η_s is the viscosity at the solidus temperature, E_a is the activation energy"*.
+⚠ **E_a = 300 kJ/mol is an unchecked secondary citation** (Brief 55): its footnote is Karato & Wu
+1993 alone, and that paper is withdrawn from the request list (paywall, then judged unneeded —
+`SESSION-HANDOFF.md` request list). It is corroborated at *range* level — inside Nimmo+ 2004's
+independently quoted 250–350 kJ/mol (Karato & Wu; Yamazaki+ 2000), a band also cited to Solomatov
+1995 — but not at *point* level. Two lookalikes: Gaidos+ 2010's b ≈ 17 cites **Karato, Riedel &
+Yuen 2001**, a different paper; "Jaupart 2007" names at least two works.
 
 ## 2. The one agreement on this axis — and the ratio it rides on is ours
 

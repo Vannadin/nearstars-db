@@ -45,7 +45,10 @@ GYR_S = 1e9 * 365.25 * 86400.0     # seconds per Gyr
 # ── Rovira-Navarro+ 2021 (2021PSJ.....2..119R) eq. 5, parameter table ──────────────
 # η = η_s · exp[(E_a / (R T_s)) · (T_s/T − 1)], T_s = solidus temperature.
 # "Mantle solidus viscosity" 1·10¹⁶ Pa·s and "Activation energy" 300 kJ/mol, footnote 4 =
-# Karato & Wu (1993) — RELAYED, see module docstring. E_a's admissible range 300–540 kJ/mol is
+# Karato & Wu (1993) — RELAYED, see module docstring. E_a = 300 is an UNCHECKED SECONDARY CITATION
+# (Brief 55: Karato & Wu withdrawn from the request list; the 300 sits inside Nimmo+ 2004's
+# independently quoted 250–350 kJ/mol, so corroborated at range level, not at point level).
+# E_a's admissible range 300–540 kJ/mol is
 # the paper's own sentence (lines 413–421 of the extraction): "the activation pressure at
 # Mars' mantle varies between 300 KJ mol⁻¹ close to the surface to 540 KJ mol⁻¹ in the
 # mid-mantle (Nimmo & Stevenson 2000)" — Mars, second-hand, and the paper's own word is
