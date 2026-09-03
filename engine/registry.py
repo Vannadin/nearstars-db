@@ -65,3 +65,4 @@ def load_all() -> None:
     import core_state    # noqa: F401
     import body_class    # noqa: F401
     import radiogenic    # noqa: F401
+    import dynamo_rocky  # noqa: F401

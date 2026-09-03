@@ -19,6 +19,8 @@ inputs:
   # 정하는 값이라 이 엔진이 도출하지 않는다. Sinmyo+ 2019 (2019E&PSL.510...45S) 의
   # 3760 ± 290 K 다. 맨틀 쪽 값(이 적분이 내는 ~2530 K)보다 1200 K 넘게 높다.
   core_cmb_temperature: 3760.0
+  # 정체 암석권 판단 — **선언**(사실: 지구는 판구조). dynamo_rocky 의 생존 게이트가 읽는다 (브리프 47).
+  stagnant_lid: false
 
 units:
   mass_earth: M_earth

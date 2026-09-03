@@ -195,7 +195,14 @@ nodes:
   cassini_state:      {kind: computed, recipe: cassini-state-obliquity-methodology, outputs: [obliquity]}
   spin_axis_inclination: {kind: computed, recipe: spin-axis-inclination-methodology, outputs: [i_star, p_rot]}
   dynamo_giant:       {kind: computed, recipe: planetary-dynamo-scaling, outputs: [b_pol, b_eq, dipole_moment]}
-  dynamo_rocky:       {kind: computed, recipe: rocky-planet-dynamo-methodology, outputs: [dipole_moment, b_eq, regime], note: "regime = dipolar | multipolar, RM22 사다리 2단 (Ro_ℓ 0.12 게이트)의 판정. 2026-09-03 브리프 43 — 계산되고 버려지던 중간값을 출력으로 선언"}
+  dynamo_rocky:
+    kind: computed
+    recipe: rocky-planet-dynamo-methodology
+    # 2026-09-03 브리프 47: 레시피 등록. 두 게이트(생존·영역)는 라벨이고 ℳ_base·영역·다극자 계수는 선언
+    # 가족이다. Rm > 40 은 인용이지 평가가 아니다 (문서에 공식이 없다). regime 은 선언된 갈래 또는
+    # "undeclared (both emitted)" — rossby 엣지가 gap 이라 그렇다.
+    outputs: [dipole_moment, dipole_moment_min, dipole_moment_max, b_eq, b_pol,
+              b_eq_multipolar_min, b_eq_multipolar_max, regime, ladder_regime, dynamo_alive]
   stellar_wind:       {kind: computed, outputs: [n_sw, v_sw, p_ram]}
   magnetosphere_geometry: {kind: computed, recipe: planetary-magnetosphere-geometry-methodology, outputs: [r_mp, belt_extent, belt_intensity]}
   tidal_heating:      {kind: computed, recipe: tidal-heating-methodology, outputs: [power, surface_flux, radius_ceiling, plains_temperature], note: "radius_ceiling 은 수송 테스트가 돌려주는 하드 반지름 상한 (§6, Dante 521 km 가 그 산물), plains_temperature 는 외부 예산의 평원 온도 (§6.3·6.5, Dante 223 K) — 둘 다 방법론이 실제로 계산하는 값이라 2026-09-03 에 gap 이 아니라 출력으로 선언했다."}

@@ -16,9 +16,25 @@ This is the canonical home for the rocky-body method. It supersedes the scattere
 prose in the Phase 3 skill's `mod-grounded-fields.md` (which now points here) and
 the ad-hoc reasoning in the TRAPPIST-1 / AU Mic decisions.
 
+## Contract — `dynamo_rocky`
+
+**Returns** — `dipole_moment` [M_earth] · `dipole_moment_min` [M_earth] · `dipole_moment_max` [M_earth] ·
+`b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
+`ladder_regime` [—] · `dynamo_alive` [—]
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
+`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—]
+**Discriminating keys** — the ladder regime (1 dry < 2 M⊕ · 2 dry 2–2.5 · 3 dry > 2.5 · 4 water-rich · 5
+low-density dry), from mass, radius and the declared ice fraction; the alive gate, which is three labels
+(`conductor_phase` from `core_state`, the declared `stagnant_lid`, the declared per-class death age) and
+one quotation (`Rm > 40`, never evaluated); the regime gate, declared (`dynamo_regime`) or emitted both
+ways.
+**Grade** — **judgment**, always: both gates are labels and ℳ_base, the regime and the multipolar factor
+are declarations. `dipole_moment` and `b_eq` are `null` for regimes 2 and 3 (the document prints no anchor;
+the grid is emitted) and for cannot-say (undecided core, undeclared lid). `dynamo_alive` names why.
+
 ## The law
 
-Rodríguez-Mozos & Moya 2022 (RM22, A&A 661, A176, arXiv **[2203.01065](https://arxiv.org/abs/2203.01065)**, cached)
+Rodríguez-Mozos & Moya 2022 (RM22, A&A 661, **A101**, arXiv **[2203.01065](https://arxiv.org/abs/2203.01065)**, cached)
 estimate a rocky planet's magnetic moment from **mass + radius + orbital period
 alone**, by (1) solving the internal structure (core radius `r₀`, core density
 `ρ₀`) against a PREM-anchored equation of state, then (2) feeding that core into
@@ -68,8 +84,12 @@ solver per body. We instead anchor on the **moments RM22 tabulate** (Solar Syste
 
 1. **Classify the body** (mass, radius → density → dry / water-rich; see regimes).
 2. **Alive?** Old + small (Mars-mass by ~7 Gyr), stagnant-lid (Venus-analog, no
-   plate tectonics → low CMB heat flux), or `Rm < 40` → `ℳ = 0`, done.
-3. **Base moment** `ℳ_base` from the mass/CMF class anchor (table below).
+   plate tectonics → low CMB heat flux), or `Rm < 40` → `ℳ = 0`, done. ⚠ **`Rm > 40` is quoted here, never
+   evaluated** — this document carries no magnetic-Reynolds formula; the recipe uses `core_state`'s liquid-core
+   verdict and a declared stagnant-lid judgement as the gate and says so on every result (owner condition,
+   2026-09-03). Note also that RM22's own Table 8 *computes* Venus 0.0007 and Mars 0.084 ℳ⊕; the zeros in the
+   validation table below are this ladder's class judgements, not the model's output.
+3. **Base moment** `ℳ_base` from the mass/CMF class anchor — ⚠ **no per-class anchor table exists in this document**; the "table below" is the *per-body* validation table. The recipe (`engine/dynamo_rocky.py`) declares the anchors: regime 1 → 1.0, regime 4 → 2×10⁻³, regime 5 → 0, and **regimes 2 and 3 carry no printed value** and are emitted as grids without an elected number.
 4. **Regime** — estimate rotation from tidal state (Grießmeier 2009 coupling test
    [`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G); for eccentric orbits the spin-orbit resonance from
    Dobrovolskis 2007 [`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)). Fast/free rotator → dipolar, keep
@@ -148,16 +168,16 @@ regime gate, so a locked planet with an active core can still hold a modest fiel
 
 ## Citations
 
-- **Rodríguez-Mozos & Moya 2022** (RM22), A&A 661, A176 (arXiv
+- **Rodríguez-Mozos & Moya 2022** (RM22), A&A 661, A101 ([`2022A&A...661A.101R`](https://ui.adsabs.harvard.edu/abs/2022A%26A...661A.101R); the article number was printed here as A176 until 2026-09-03 — wrong) (arXiv
   **[2203.01065](https://arxiv.org/abs/2203.01065)**). The method: internal
   structure (PREM-anchored EOS) → OC06 dynamo scaling → magnetic moment from
   M, R, orbital period, validated on the Solar System and applied to 176 TESS
-  planets. **Cached** in `docs/phase3/_papers/2203.01065.md`.
+  planets. **Cached** in `docs/phase3/_papers/2203.01065.md` (the main checkout's cache; worktrees reach it through the symlink — see `engine/SESSION-HANDOFF.md`).
 - **Olson & Christensen 2006** (OC06), E&PSL 250, 561 ([`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O)).
   "Dipole moment scaling for convection-driven planetary dynamos" — the buoyancy-flux
   scaling laws, the `Ro_ℓ = 0.12` dipolar/multipolar boundary, and the ~0.06
   multipolar reduction that RM22 build on.
-- **Gaidos, Conrad, Manoj & Blake 2010**, ApJ 718, 596 ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)).
+- **Gaidos, Conrad, Manga & Hernlund 2010**, ApJ 718, 596 (author list corrected 2026-09-03 against ADS; the earlier row read "Manoj & Blake") ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)).
   "Thermodynamic Limits on Magnetodynamos in Rocky Exoplanets" — the `Rm > 40`
   dynamo-onset gate and the no-solid-inner-core above ~2.5 M⊕ result.
 - **Driscoll & Olson 2011**, Icarus 213, 12 ([`2011Icar..213...12D`](https://ui.adsabs.harvard.edu/abs/2011Icar..213...12D)). "Optimal

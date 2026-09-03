@@ -14,9 +14,22 @@
 흩어져 있던 서술(이제 이 문서를 가리킵니다)과 TRAPPIST-1 / AU Mic 결정의 즉석 논증을
 대체합니다.
 
+## 계약 — `dynamo_rocky`
+
+**Returns** — `dipole_moment` [M_earth] · `dipole_moment_min` [M_earth] · `dipole_moment_max` [M_earth] ·
+`b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
+`ladder_regime` [—] · `dynamo_alive` [—]
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
+`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—]
+**분기키** — 사다리 regime(1 건조 < 2 M⊕ · 2 건조 2–2.5 · 3 건조 > 2.5 · 4 물 풍부 · 5 저밀도 건조), 질량·반지름·
+선언된 얼음 분율로 정함. 생존 게이트는 라벨 셋(`core_state` 의 `conductor_phase`, 선언된 `stagnant_lid`, 클래스별
+선언 사멸 연령)과 인용 하나(`Rm > 40`, 평가하지 않음). 영역 게이트는 선언(`dynamo_regime`) 또는 두 갈래 모두 출력.
+**등급** — 항상 **judgment**. 두 게이트가 라벨이고 ℳ_base·영역·다극자 계수가 선언입니다. regime 2·3(문서에 앵커 없음,
+격자만 출력)과 판정 불가(핵 미판정, 암석권 미선언)에서 `dipole_moment`·`b_eq` 는 `null`이며 `dynamo_alive` 가 이유를 말합니다.
+
 ## 법칙
 
-Rodríguez-Mozos & Moya 2022 (RM22, A&A 661, A176, arXiv **[2203.01065](https://arxiv.org/abs/2203.01065)**, 캐시됨)는
+Rodríguez-Mozos & Moya 2022 (RM22, A&A 661, **A101**, arXiv **[2203.01065](https://arxiv.org/abs/2203.01065)**, 캐시됨)는
 암석형 행성의 자기모멘트를 **질량 + 반지름 + 공전주기만으로** 추정합니다. (1) PREM에 앵커된
 상태방정식으로 내부구조(코어 반지름 `r₀`, 코어 밀도 `ρ₀`)를 풀고, (2) 그 코어를 Olson &
 Christensen 2006 (OC06, [`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O))의 대류 구동 다이나모 스케일링 법칙에
@@ -133,14 +146,14 @@ RM22의 격자는 0.1–48 M⊕이지만 물리는 급격히 분기합니다.
 
 ## 인용
 
-- **Rodríguez-Mozos & Moya 2022** (RM22), A&A 661, A176 (arXiv
+- **Rodríguez-Mozos & Moya 2022** (RM22), A&A 661, A101 ([`2022A&A...661A.101R`](https://ui.adsabs.harvard.edu/abs/2022A%26A...661A.101R); 2026-09-03 까지 A176 으로 잘못 적혀 있었음) (arXiv
   **[2203.01065](https://arxiv.org/abs/2203.01065)**). 방법 본체. 내부구조(PREM 앵커
   EOS) → OC06 다이나모 스케일링 → M·R·공전주기에서 자기모멘트, 태양계 검증 + TESS 176개
-  행성 적용. `docs/phase3/_papers/2203.01065.md`에 **캐시됨**.
+  행성 적용. `docs/phase3/_papers/2203.01065.md`에 **캐시됨** (메인 체크아웃의 캐시; 워크트리는 심링크로 닿는다 — `engine/SESSION-HANDOFF.md`).
 - **Olson & Christensen 2006** (OC06), E&PSL 250, 561 ([`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O)).
   "Dipole moment scaling for convection-driven planetary dynamos" — 부력 플럭스
   스케일링 법칙, `Ro_ℓ = 0.12` 쌍극/다극 경계, RM22가 기반으로 삼는 ~0.06 다극 감소.
-- **Gaidos, Conrad, Manoj & Blake 2010**, ApJ 718, 596 ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)).
+- **Gaidos, Conrad, Manga & Hernlund 2010**(저자 목록 2026-09-03 ADS 대조로 정정; 이전 행은 "Manoj & Blake"), ApJ 718, 596 ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)).
   "Thermodynamic Limits on Magnetodynamos in Rocky Exoplanets" — `Rm > 40` 다이나모
   개시 게이트, ~2.5 M⊕ 이상에서 고체 내핵 미형성 결과.
 - **Driscoll & Olson 2011**, Icarus 213, 12 ([`2011Icar..213...12D`](https://ui.adsabs.harvard.edu/abs/2011Icar..213...12D)). "Optimal
