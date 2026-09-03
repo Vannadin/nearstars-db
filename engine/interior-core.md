@@ -14,6 +14,14 @@ place.
 depends on another, so the numbers are a queue rather than a chain; an entry that closes as
 *"recorded, not found"* still closes.
 
+**Notation, fixed by the owner 2026-09-03 (relayed by the directing seat in Brief 64) — applied from here on.**
+`C` = the open-question list of `domain: interior`, and this domain has exactly one list: C1–C13 are closed
+history and are not touched; a new hole continues the numbering from **C14**. `P` = a *parked* state, marked
+with the C it came from, never a new axis. Every brief title carries its C number; a side branch is announced
+as "a branch of C<n>" first and returns when done. The three standing watches (γ = 1.5, `Rm > 40` quoted and
+never evaluated, the 0.06 multipolar factor as a secondary citation) hang **under C6**, not in a new file —
+this file stays the one place. The C14–C19 and P1–P3 rows are at the end of the list.
+
 **Keeping this file alive.** C2 was stale within a day of being written. So each brief's
 Landing section carries one checkbox — *update the matching row in `interior-core.md`* — and
 a row is not closed by the work being done but by that line being written here.
@@ -991,6 +999,18 @@ figures above are *"for Jupiter interior conditions"* (c4 re-read the sentence) 
 future switch has to answer that first. Uranus/Neptune anchors would move; that is what "candidate" means
 here.
 
+**Standing watches attached here (owner's notation, Brief 64, 2026-09-03) — three constants the answers
+lean on and no source settles.** Each is a labelled condition, not an open item; it fires the day a body or
+a solver change makes it load-bearing in a new place.
+- **γ = 1.5** — `GAMMA_CORE`, a solid (h.c.p.) value on a liquid density fit; Earth's inner core exists in
+  this recipe only at that value (Brief 42's knife-edge, 0.94 %), and now it rides upstream of `Q_adiabat`
+  (Brief 60). Not moved, because moving a constant to make an answer come out is prohibited.
+- **`Rm > 40` quoted, never evaluated** — the rocky dynamo's alive-gate sits in the ladder as a class
+  judgement; no magnetic-Reynolds expression exists in the recipe (Brief 43). Building one is the larger
+  brief the owner has not opened (C15 is its φ half).
+- **0.06 as a secondary citation** — `MULTIPOLAR_FACTORS`' OC06 value was taken through RM22; OC06 has been
+  held since 09-03 13:40, so it is **checkable at source and not yet checked** (Brief 64 ②).
+
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
 `differentiated: false` integrates rock and metal mixed in one layer and declines when ice
@@ -1840,6 +1860,44 @@ that **this recipe cannot decide it**, and exactly why.
 named candidate never measured; the unpublished `grad_ad` behind the 66 repairable clamps,
 which only the original authors hold; and whether the clamp is conservative or violent in the
 molecular-to-atomic band.
+
+### C14–C19 — opened 2026-09-03 under the owner's notation (Brief 64); each is a `status: gap` edge in `chain.yaml`
+
+None of these is work in progress; they are the holes named so that the queue has a number to point at.
+Order among them is the owner's, brief by brief.
+
+| C | edge (`chain.yaml`) | what the hole is |
+|---|---|---|
+| **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` (`:639`) | whether the core is *still* convecting needs thermal evolution, not only decay history; Brief 62 step 1 measured that the present-epoch closure is a root-find in T_c with the cooling rate declared |
+| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` (`:638`) | the supplier `cmb_heat_flux` exists (Brief 60); the consumer wiring is φ, core entropy production, not built |
+| **C16** | `tidal_locking → dynamo_rocky via rossby` (`:635`) | a Rossby number is not derivable from a rotation period; **a candidate to close as a named refusal, not to build** |
+| **C17** | `ocean_fraction → dynamo_rocky` (`:636`), `→ cassini_state` (`:552`), `→ surface_albedo` (`:781`) | three consumers, no supplier of an ocean fraction |
+| **C18** | `body_class → dynamo_rocky via sub_neptune` (`:623`) | a sub-Neptune integrates (C1) and has no dynamo path; **the kind that closes as a refusal by class** |
+| **C19** | `body_age → dynamo_giant via cooling_luminosity` (`:614`) | the giant dynamo wants a cooling luminosity L(M, age) that no node emits |
+
+### P1–P3 — parked, each marked with the C it came from
+
+- **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,
+  Brief 33) and the disputed 14.6–20.6 GPa refusal were built on a *simulated* liquid line (Reinhardt+ 2022,
+  `ice_melt_table.py`, grade analog). The owner ordered *"점검부터 하자"* (relayed, Brief 64 follow-up): first
+  comparison of the adopted values against the two **measurements** — Queyroux SM Table S1 (12 points with
+  σ) and Kimura & Murakami 2023. Outcomes are pre-registered before the transcriptions arrive (the work seat's
+  next brief); `ice_melt_table.py` is generated and is never hand-edited.
+- **P2 · Kimura as arbiter of the disputed band (from C3).** Whether Kimura 2023 gives a point inside
+  14.6–20.6 GPa at all — if not, C3's "arbiter" expectation was wrong and P2 closes on that record. Runs
+  with P1.
+- **P3 · Bethkenhagen ammonia grid (from C4).** **Measurement approved, queued after P1·P2** — owner,
+  2026-09-03 (session `4b8e06ba`, 17:2x KST), to the proposal *"충분한지 재보는 것 자체는 짧습니다. 다만 닫으신
+  행이라 재개 여부는 오너 몫"*: **"끝나고 그것도 재보자."** ⚠ Scope: a measurement, **not** a reopening of C4 —
+  the row stays `closed`, and whether it reopens is the owner's decision after the number exists. Fact: the
+  2013 paper has been held since 08-30 11:29 (owner-obtained, PROVENANCE written by Brief 64); C4 closed on
+  09-01 as *"recorded, not found"* because a session reported it unheld. What to measure: C4 wanted the
+  **2017 grid** (1000 GPa · 20 000 K, 13 isotherms); the held **2013 table is 330 GPa · 500–10 000 K** — it
+  covers the ice-giant adiabat in temperature (5 500–6 300 K) and **stops at 330 GPa in pressure** — so the
+  one question is *does the roster's ammonia-bearing layer actually exceed 330 GPa*. Method: the C6 `ice_x`
+  template — count the evaluations the layer makes above the ceiling on the converged corridor (Uranus's
+  `ice_x` corridor made 1 854 in 355→535 GPa, Neptune's stopped at 235, the moons made 0). Zero means the
+  2013 grid suffices; non-zero says by how much. Not measured yet.
 
 ## What closing all of these does not do
 

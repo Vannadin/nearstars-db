@@ -248,7 +248,17 @@ body still has a corner at 1235 K, because the budget scales with M and Q_M(1000
 function directly). (b) T_s = 293 K, carried as width 4. Pandora's band is a radiogenic-only floor on a
 tidally heated body — not its mantle temperature; the label says so.
 
-**Not classified.** Regime boundaries get their own brief. What `consistency`'s vocabulary already
+**Not classified — and why it is parked, so the next seat does not pick the seven-way classifier back up
+(Brief 64, 2026-09-03).** Two reasons, one from the owner and one structural. (a) The owner looked into the
+seven-regime scheme (mobile / stagnant / sluggish / heat-pipe / squishy / eggshell / drip) the art side wanted
+— *"그냥 레아 기준으로 판구조 레짐 … 각 분류일 가능성을 %로만 주면 내가 그걸 참고해서 아트 결정을 내릴수만
+있으면 될거야"* (1588ff47, 09-03 14:26) — and found, as relayed by the directing seat in Brief 64, that the
+scheme is a blog-sourced classification whose numbers are a back-fit (tuned so that Venus comes out at
+15 km) and whose author states it is not a research simulation; it does not pass this project's grounding
+rule, so it is not transcribed. (b) Structurally, a regime classifier consumes q, η and Ra, and η and k are
+not yet grounded here (Brief 54: both refused a material method; the viscosity axis is all declarations) —
+so it cannot start before those do. Regime boundaries get their own brief when (b) clears; (a) means that
+brief starts from the literature, not from the seven names. What `consistency`'s vocabulary already
 carries for a classifier: a heat-budget judgement with named refusals (`cannot-say (no potential
 temperature)`, `cannot-say (no radiogenic budget)`) and two flags on a declaration — the *shape* a
 percentage output wants underneath it, but its inputs are a declared T_m, whereas the band needs none;

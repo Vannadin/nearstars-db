@@ -685,6 +685,11 @@ first, new axes last:**
    read.** Register the reopening conditions before entering — this axis failed once.
 5. **Stellar abundances → composition.** The one new axis worth pulling forward, because it
    **removes an input**: composition is a human declaration today.
+6. **Tectonic regime — parked, not queued (recorded by Brief 64).** The owner wants only a per-regime
+   likelihood for art direction (*"각 분류일 가능성을 %로만 주면"*, 1588ff47, 09-03 14:26), but the seven-regime
+   scheme is blog-sourced, back-fitted (Venus → 15 km) and self-described as not a research simulation —
+   it fails the grounding rule — and a classifier consumes q · η · Ra, so it cannot start before k and η are
+   grounded. Full statement in `mantle-flux-consistency-context-notes.md` §5.
 
 **⚠ A knife-edge found on the way, and it is not on the order above** (Brief 42). `core_state`'s
 Earth verdict flips at **γ = 1.5140 against the declared 1.500 — 0.94 %** — and `GAMMA_RANGE_PA`
