@@ -61,8 +61,10 @@ every generator's source on disk and found one gone: **`hhe_table.py`'s Chabrier
 is fetched again. The convention that was practised but unwritten is now in `engine/tools/README.md`: keep a
 one-off download (with `PROVENANCE.txt`), record a command for a package or repository, pin a package's
 version where it is named (SeaFreeze v1.1.0; venv rebuild `pip install SeaFreeze==1.1.0`), and treat an
-archive from a personal academic page as the fragile case that must be kept. **Request list, all for the
-owner, none to be fetched from a session**: `DirEOS2019.tar.gz` (above); OC06 `2006E&PSL.250..561O`;
+archive from a personal academic page as the fragile case that must be kept. **`DirEOS2019.tar.gz` and `DirEOS2021.tar.gz` were fetched by the
+owner on 2026-09-03 and are in the cache with provenance (Brief 51); the 2019 archive reproduces the
+committed `hhe_table.py` byte for byte.** Request list, all for the owner, none to be fetched from a
+session: OC06 `2006E&PSL.250..561O`;
 Gaidos, Conrad, Manga & Hernlund 2010 `2010ApJ...718..596G`; Korenaga 2008 `2008RvGeo..46.2007K` and
 Jaupart, Labrosse & Mareschal 2007 `2007mady.book..253J` (Urey ratio); the canonical tabulation of
 long-lived isotope heat production (candidate Ruedas 2017, unread); Karato & Wu 1993 `1993Sci...260..771K`.

@@ -3,7 +3,9 @@
 
 ## The (A)/(B)/(C) question, answered before any code: **(A)**
 
-**(A) is live. The tables are distributed, reachable, and in the form this solver wants.**
+**(A) is live. The tables are distributed, reachable, and in the form this solver wants.** *(2026-09-03,
+Brief 51: both archives are now in `docs/phase3/_papers/chabrier_direos2019/` and `…2021/` with
+`PROVENANCE.txt`; the 2019 one regenerates `hhe_table.py` byte for byte. 2021 is held, unused — see C6.)*
 
 The paper's stated address (`perso.ens-lyon.fr/gilles.chabrier/DirEOS`) is a directory
 listing carrying two archives, `DirEOS2019.tar.gz` (12.0 MB) and `DirEOS2021.tar.gz`

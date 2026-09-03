@@ -16,17 +16,19 @@ has, one layer up: the baked table is replaceable from the source; the source ma
 | `make_ammonia_table.py` | `ammonia_table.py` | Bethkenhagen+ 2013 Table I, parsed from the cached PDF | ✓ paper cache |
 | `make_aqua_table.py` | (generator + cached grid; module not committed, Brief 32) | `docs/phase3/_papers/aqua/eos_pt.dat` (CDS, 62 MB) + `PROVENANCE.txt` | ✓ paper cache |
 | `make_ice_melt_table.py` | ice melting constants | `git clone https://github.com/BingqingCheng/highP-ice` (command in header) | ✓ recorded command |
-| `make_hhe_table.py` | `hhe_table.py` (129 KB, the ice-giant envelope) | Chabrier DirEOS2019 archive | **✗ not on disk** — see below |
+| `make_hhe_table.py` | `hhe_table.py` (129 KB, the ice-giant envelope) | Chabrier DirEOS2019 archive → `docs/phase3/_papers/chabrier_direos2019/DirTABLES-EOS2019/` (the argument) | ✓ **landed 2026-09-03 (Brief 51)**, owner-fetched; regeneration reproduces the committed table **byte for byte** (5,495 cells) |
 
 `hhe_table_tail.py` is a template fragment `make_hhe_table.py` appends; `methane_thresholds.py` is a
 measurement tool, not a generator.
 
-**The gap.** `hhe_table.py`'s source, `DirEOS2019.tar.gz` (12.0 MB, eight tables plus a README), is nowhere
-in the home directory (searched for `DirEOS*`, `TABLEEOS*`). Nothing is broken today — the baked table is
-committed and the engine runs — but the table **cannot be re-baked** (grid widened, interpolation changed, a
-value re-checked at source). It is recoverable: `engine/hhe-eos-context-notes.md` records the address
-`perso.ens-lyon.fr/gilles.chabrier/DirEOS` and the archive's contents. **On the request list** (handoff);
-not fetched from here — a personal academic page, not an API, after a week of refused hosts.
+**The gap, closed.** `hhe_table.py`'s source, `DirEOS2019.tar.gz` (11,970,972 B, sha256 `736de2a0…149b`),
+was nowhere on disk on 2026-09-03 morning; the owner fetched it (and the 2021 archive) the same day and both
+are now in the cache with `PROVENANCE.txt`. `engine/.venv/bin/python engine/tools/make_hhe_table.py
+docs/phase3/_papers/chabrier_direos2019/DirTABLES-EOS2019` reproduces the committed table byte for byte.
+**This is the convention's first real instance on the "keep" side**: an archive from a personal academic
+page, kept rather than commanded, because the page has no index behind it and can vanish.
+`chabrier_direos2021/` (Chabrier & Debras 2021, Paper II) is **held, unused** — a physics candidate on the
+interior board (C6), not a source of anything.
 
 **The inconsistency the audit found.** `aqua/` and `militzer2024_zenodo/` are kept in the cache; the Chabrier
 archive was not. Same kind of thing, opposite treatment, and until now nothing said which is right.

@@ -929,6 +929,19 @@ enters the region reopens it — which is why C6 remains a standing watch. `ICE_
 1 000 GPa, and A2 **weakened** the case for narrowing it: the only consumer is a corridor that
 does not reach the answer.
 
+**Held, unused — a candidate, not a task (2026-09-03, Brief 51).** Chabrier & Debras 2021 (Paper II,
+H/He *interacting* mixture, dropping the 2019 Ideal Volume Law) is in the cache
+(`docs/phase3/_papers/chabrier_direos2021/`, owner-fetched, provenance written). Switching `hhe_table.py`
+to it is a **physics decision** — interacting versus additive-volume mixture, with grad_ad changing in the
+envelope — not housekeeping, so nothing was switched. Measured so the candidate carries its cost: the 2021
+`TABLEEOS_2021_TP_Y0275_v1` has the **same header, columns and grid** as the 2019 table (53,361 points), so
+the reader needs only the filename changed — **but** inside the baked window (logT 2.0–4.4, logP −4…+4 GPa)
+grad_ad differs by more than 0.01 at **40.5 %** of points (max 0.40, median 6×10⁻⁵), and **ten points at
+logT 2.45–2.85, logP 1.1–2.5 carry log ρ = −8.86 in the 2021 table** where 2019 has ~0.15 — a placeholder
+hole the reader would have to detect and refuse. Pre-registered as ① (filename-only) versus ② (reader
+change); the answer is **③: same format, different domain** — the switch is one filename plus a hole guard,
+and the whole question is physics. Uranus/Neptune anchors would move; that is what "candidate" means here.
+
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
 `differentiated: false` integrates rock and metal mixed in one layer and declines when ice
