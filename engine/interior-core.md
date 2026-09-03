@@ -1902,10 +1902,34 @@ spatial integration (shooting, already built) and from C14's root-find (no integ
    항성 나이와 다르고, 거대행성 냉각광도의 실입력이다"*, and `system_age` (`t_sys`, `:85`) is a separate node
    (`:666`: *"항성풍의 나이는 항성의 나이 = 계의 나이"*). **Resolving the `body_age` / `system_age` relation is a
    prerequisite of starting C20** — recorded here as a fact, nothing in `chain.yaml` changed.
+   *Correction, same evening: it is the note that is out of step with the roster, not the owner's condition
+   that makes a new rule.* The owner asked (`4b8e06ba`) *"천체 나이와 행성 나이가 얼마나 차이가 나지? 적분
+   스텝보다 작으면 구분하는 의미가 없을거같은데"*, and the answer was already in this file: C9's time-axis
+   paragraph (2026-08-31, above) puts the star–planet difference at the **Ma** scale — Neumann & Kruse's
+   t₀ ≈ 1.3–1.9 Ma (§3.3) and "no differentiation for t₀ ≥ 5.5 Ma" (§3.4), read there from the cached text
+   — which is the size of one ~4 Myr integration step, so a Gyr thermal history cannot resolve it. And the
+   roster already does this: `bodies/alpha_centauri_a_b.yaml` and `bodies/pandora.yaml` both carry
+   `age_gyr: 5.3` (the system's age), `earth.yaml` 4.54; only the `chain.yaml:94` note says otherwise.
+   ⚠ **The opposite trap, from the same C9 paragraph, rides with this**: *"Feeding `body_age` (Gyr) into
+   this node would give it the number it is least sensitive to while the number it is most sensitive to
+   stays undefined"* and *"Do not draw a `body_age → porosity` edge … it must carry `t_form` (Ma after CAI),
+   not `t_body` (Gyr); a Gyr endpoint is at most an `influences`"*. Unifying the age does **not** make age
+   the input for everything; the Ma-scale consumers keep needing `t_form`, which no body declares.
 2. *"방사성 동위원소 관련 열 생성도 같이 넝어야 할 것같아"* — **wiring, not building**: `radiogenic.history_factor`
    is that input already, and the module says so (`radiogenic.py:22` *"H(t) is four exponentials and is
    built"*; `radiogenic-budget-context-notes.md:86` *"H(t) is built and NOT wired to the third consumer"*).
-   Condition 2 names exactly that unwired consumer.
+   Condition 2 names exactly that unwired consumer. **But it is half of radiogenic heating, and the row must
+   say which half**, or the next seat reads "radiogenic heat included" as complete:
+
+       long-lived  (K · Th · U)          → `radiogenic.history_factor`, built; wireable into C20
+       short-lived (²⁶Al · ⁵³Mn · ⁶⁰Fe)  → the formation pulse; needs t_form (Ma after CAI), which we do not hold
+
+   The short-lived half is **closed as a named refusal, not open** (`radiogenic-context-notes.md` §3: *"the
+   term is real and can dominate for small early bodies; we decline it because the input does not exist
+   here"*; to reopen it needs a declared formation epoch on the body, the two half-lives, and initial
+   ²⁶Al/²⁷Al · ⁶⁰Fe/⁵⁶Fe ratios from a held source). For the 4.5 Gyr history C20 aims at, the formation
+   pulse is outside the window anyway — no loss for C20 — but "radiogenic heating is in" means the long-lived
+   half only.
 
 **Cost.** A dozen-odd core constants (heat capacity, expansivity, latent heat, gravitational-energy
 coefficient, light-element content …), an initial-condition declaration, and **the condition that the model is
