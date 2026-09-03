@@ -124,8 +124,10 @@ the core list.
 with depth on all three profiles (+29–32 % near 4–7 GPa → +16–19 % near 510–559 GPa), which
 is qualitatively what reading (나) with a small H/He admixture in the inner envelope predicts
 (H/He is far more compressible than the ices, so its lightening effect shrinks with
-pressure). Redmer+ 2011 (Icarus 211, 798) would most likely settle it that way; it is on the
-owner's request list for exactly that.
+pressure). Redmer+ 2011 (Icarus 211, 798) would most likely settle it that way; it was put on the
+owner's request list for exactly that. *(Superseded the same day — see the revisit section below: obtained,
+no ρ(R) printed, and off the list because a shell-boundary sentence made the number unnecessary. The later
+paragraph is current; this one is the record of the ask. Brief 64.)*
 
 ## What did not move
 

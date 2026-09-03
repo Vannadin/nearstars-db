@@ -126,15 +126,17 @@ count, which is how it was caught.)*
 |---|---|
 | **directing** (this one) | writes briefs, hands them to the work session, verifies what comes back, reports each completed item to the audit session, relays the audit's feedback. **Does not implement.** |
 | **main work** | implements one item at a time, serially. Owns the worktree while working. |
-| **parallel** | literature only — "does this paper carry a transcribable X?" Never writes to the repository, because it shares the worktree. |
+| **parallel** | literature ("does this paper carry a transcribable X?") **and parallel work** — the literature-only rule was retired by the owner: *"c4는 조사만 시키지 말고 병렬로도 써"* (1588ff47, 2026-09-03 02:34). Because it shares the worktree with the work seat, it takes a **file allocation** from the directing seat before writing, and never edits a file the work seat holds. |
 | **audit** | evaluates each completed item independently. Never implements, so it never audits its own work. |
 
 Session names change on restart. Use `ListAgents` and confirm each one's cwd, branch and
 current task rather than assuming. **And ask the owner, not only the sessions** — the owner
 assigns the seats, and a seat that assigns them itself will get it wrong (this happened twice on
 2026-09-03, in the same hour, because this seat read `ListAgents` and never asked). As of
-2026-09-03: `nearstars-93` works, `nearstars-c4` surveys, `nearstars-f4` audits, `nearstars-39`
-directs.
+2026-09-03 16:20 (after the terminal crash re-seated everyone; owner's assignment): `nearstars-b0`
+(Opus 5) directs, `nearstars-34` (Fable 5.1) works, `nearstars-cd` (Fable 5.1) audits, `nearstars-82`
+(Opus 5) is parallel. *(Earlier that day: `nearstars-93` worked, `nearstars-c4` surveyed, `nearstars-f4`
+audited, `nearstars-39` directed.)*
 
 **Verification runs in every direction.** During the last two days the work session caught the
 directing session's briefs five times, the directing session caught the audit's ledger and a
@@ -666,7 +668,13 @@ first, new axes last:**
    grid** (the regime multiplier's own spread — 0.06 OC06/RM22 vs 0.15 Grießmeier — is a factor
    2.5 in the answer and rides on every emitted value), and the closing relation
    `B_eq = 30·(ℳ/ℳ⊕)·(R/R⊕)⁻³`, already Solar-System-validated in the doc against five bodies.
-3. **Fe₃S core alloy — demoted, and the reason is measured.** ⚠ The melting curve is on the
+3. **Fe₃S core alloy — demotion lifted 2026-09-03 (Brief 64).** The owner kept branch A (iron-core σ +
+   FeS) in the queue — *"근데 설명을 들으니 A도 하기는 해야겠어"* (1588ff47, 09-03 14:26) — and the only
+   blocker, the two Pommier 2018 papers, arrived at 14:32 (`2018E&PSL.496...37P`, `2018Icar..306..150P`,
+   owner-pasted paths at 14:31, both with PROVENANCE). The order the directing seat then proposed was
+   approved with *"ㄱㄱ"* (1588ff47, 09-03 15:23), and this row is its item 2. **The measured reasons below
+   still hold and still bound the scope**; they no longer demote it. *(As first written:)* demoted, and
+   the reason is measured. ⚠ The melting curve is on the
    **Fe–Fe₃S** join (Mori+ 2017's title, read at source), not FeS; and its 21–350 GPa domain
    reaches **no roster body** — Dante 0.26 GPa central, Hades 0.63, against a 21 GPa floor, and
    Ganymede-class at best lands in the 10–21 GPa hole we already refuse by name. Mars-class and
@@ -685,13 +693,20 @@ K₀ has 3.4 % of room; **density has none at all — it cancels exactly**, beca
 only a ratio on one curve (verified to ten decimals). The answer is right; the margin is not
 reported, so a −17 K verdict and a −500 K one read identically.
 
-**Papers wanted, in priority** (identifiers read from ADS by title, none constructed):
-`2020ApJ...903L..37N` Nimmo & Primack — the one to get, names both radiogenic consumers ·
-~~`2012Natur.485..355P` Pozzo+ iron conductivity~~ **— WITHDRAWN 2026-09-03, the recipe never
-computes σ (see item 2)** · `2001E&PSL.185...49A` Allègre & Manhès · `2013GGG....14.4608D` Davies
-and `1980RvGSP..18..269S` Sclater+, **both cited by our own methodology and not held** ·
-`2020E&PSL.53416080T` Thompson+ and `2006JGRB..111.6209S` Seagle+ for Fe₃S ·
-`1993Sci...260..771K` Karato & Wu · `2019CRGeo.351..154W` Wagle+ · Nettelmann+ 2011.
+**Papers not held — rewritten 2026-09-03 by Brief 64, every identifier checked against the merged cache
+(0 hits each).** This list contradicted the *"Request list — closed, no open item"* sentence near the top
+of this file: that sentence is about the *request* list (what has been asked of the owner), this is the
+*not-held* list (what the notes cite and the cache lacks) — two different things, and the old version
+mixed them. Removed from here because held or withdrawn: `2020ApJ...903L..37N` Nimmo & Primack (held and
+consumed, Briefs 44/57); Karato & Wu, Sclater+ and Davies are *not* removed — other notes say they came
+off the *request* list (paywall, withdrawn), which is consistent with their staying unheld. Still not held:
+`2001E&PSL.185...49A` Allègre & Manhès · `2013GGG....14.4608D` Davies · `1980RvGSP..18..269S` Sclater+
+(both cited by our own methodology) · `2020E&PSL.53416080T` Thompson+ · `2006JGRB..111.6209S` Seagle+ (Fe₃S)
+· `1993Sci...260..771K` Karato & Wu (request withdrawn, paywall) · `2019CRGeo.351..154W` Wagle+ ·
+`2012Natur.485..355P` Pozzo+ (request withdrawn — the recipe never computes σ, item 2) ·
+`2011ApJ...733....2N` Nettelmann+ 2011 · Solomatov 1995 (given up 15:18, paywall) · Fei+ 2000 · Sata+ 2010.
+A row here is a fact about the cache, not a request; requests go through the owner and are recorded near
+the top of this file.
 
 ### Where the night stopped, and what unblocks it
 

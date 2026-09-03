@@ -627,7 +627,9 @@ whether theory exists where measurement does not). Everything above is **diamond
 that nucleates, sinks and piles up. The other is **fluid**: Militzer 2024
 ([`2024PNAS..12103981M`](https://ui.adsabs.harvard.edu/abs/2024PNAS..12103981M), single
 author, CC BY; Europe PMC full text cached as `.xml`/`.txt` — the PDF is script-blocked,
-not paywalled, and the figures and SI are not in the cache) finds a solar-type
+not paywalled; the figures record is not in the cache, but the **SI data deposit is** —
+Zenodo 13937364 unpacked in `_papers/militzer2024_zenodo/`, 7 files, since 09-02 22:34; only the figures
+record 13952386 is unheld — corrected by Brief 64, the earlier "figures and SI" was half false) finds a solar-type
 7 H₂O : 4 CH₄ : 1 NH₃ mixture at **343 GPa · 4750 K** — inside our solved mantles, not an
 extrapolation — where *"the homogeneous fluid **spontaneously phase separates** into a
 water-rich fluid and a C-N-H fluid"*, self-checked as *"not sensitive to the hydrogen
@@ -1349,7 +1351,9 @@ error named. *Observation, derived, not a verdict*: the residual shrinks with de
 the inner envelope would do; Redmer+ 2011's ρ(R) would most likely settle it that way.
 **Redmer+ 2011** (Icarus 211, 798, the water-only Uranus model) goes on the owner's
 paper-request list; if it prints 1.00 g cm⁻³ at 0.839 R_U, (나) is settled and C12 reopens as
-*revisited*. No code, no anchor, no gate change. `engine/ternary-anchor-context-notes.md`.
+*revisited*. *(Superseded by the revisit below, written later the same day: the paper was obtained,
+printed no ρ(R), and came **off** the list because a shell-boundary sentence replaced the need — the
+later paragraph is the current state, kept here as the record of what was asked; Brief 64 labelled it.)* No code, no anchor, no gate change. `engine/ternary-anchor-context-notes.md`.
 
 *Revisited 2026-08-31* — the owner obtained **Redmer+ 2011**
 ([2011Icar..211..798R](https://ui.adsabs.harvard.edu/abs/2011Icar..211..798R), cached as
