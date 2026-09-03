@@ -79,3 +79,35 @@ paper's own Q_k (eq. 25, its density model) is **6.2 TW** (line 1341) at k = 50.
 - ③ eq. 39 needs something we do not have → named, stop. *Not expected: every symbol is supplied (§1).*
 - ④ anchors bit-identical (`interior.py`, `core_state.py`, `solve()` untouched — a new module, a new
   node); gate FAIL 0.
+
+## 4. Run record — 2026-09-03, code `b73d7293`
+
+**Branch fired: ② on the engine's own Earth, ① on the paper's own inputs — both emitted, neither tuned.**
+
+| input set | T_c | T̃_m | jump | T_a | η_b | δ_b | Q_CMB | paper |
+|---|---|---|---|---|---|---|---|---|
+| Nimmo's (test §1) | 4161 K | 2694 K (eq. 29 on 1603 K) | 1467 K | 3428 K | 7.6×10²¹ Pa s | **144 km** | **8.92 TW** | 140 km / 9 TW — closes |
+| engine Earth (recipe) | 3760 K (declared) | 2526 K (`interior_layers`) | 1234 K | 3143 K | 1.3×10²³ Pa s | **394 km** | **2.75 TW** (band 1.54–4.77 over ζ ± 0.5 × κ_b ± 2) | outside 4.5–9 |
+
+**Cause of ②, visible without touching a constant**: the engine's jump is 233 K smaller and its T_a is
+285 K colder than the paper's, and η_b is exponential in T_a — a 17× viscosity, a 2.7× thicker layer, a
+3.2× smaller flux. Both differences trace to the declared core-side temperature 3760 K (`earth.yaml`)
+against the paper's nominal 4161 K CMB adiabat and to our mantle adiabat's 2526 K against eq. 29's
+2694 K. **That is a statement about the two declarations, not about Earth; k, γ, ζ, f, T₁ stay where
+Table 1/2 put them.**
+
+**Q_adiabat, engine Earth**: fe_prem at 135.3 GPa / 3760 K, ρ 9907 kg/m³, dρ/dP by finite difference,
+g_cmb 10.67 m/s² (M_core = 0.325 M⊕ — the pre-registration's 6.64 TW used a rough 1.9×10²⁴ kg core;
+the exact core mass gives **6.79 TW** at k = 50, band **4.07–9.50** over k 30–70; |dT/dr| 0.89 K/km).
+Paper: 6.2 TW on its own density model (line 1341). **Verdict on the engine's Earth: Q_CMB < Q_adiabat**
+(2.75 < 6.79) — at the declared T_c the top of the core would be thermally stratified. This is the number
+φ would consume; it is **not** a dynamo statement and none is made (Brief 60's boundary).
+
+**Refusals pinned**: undeclared core-side temperature → `cannot-say (no declared core-side CMB
+temperature …)` (Pandora, which declares none, refuses by name in the chain); T_c ≤ T̃_m → refuse; giant →
+out of domain. **Not touched**: `chain.yaml:417-418` (the `cmb_heat_flux` / `geotherm` gaps into
+`dynamo_rocky`) — the supplier now exists, the consumer wiring is the φ step and stays a gap until then.
+
+**Anchors** bit-identical by construction (`interior.py`, `core_state.py`, `solve()` untouched; new
+module, new node). `check_contracts` 8/8; `chain.py check` 48 nodes / 182 edges; `check_via --gate` pass;
+`test_cmb_flux` 0.1 s. Gate: appended after the run.
