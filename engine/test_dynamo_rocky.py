@@ -68,6 +68,17 @@ def main() -> int:
        "3: undeclared regime emits both branches with OC06's own 0.05–0.10 width (2×; base-heated only)")
     ok(dr.MULTIPOLAR_FACTORS[0] <= dr.MULTIPOLAR_SOLAR_SYSTEM <= dr.MULTIPOLAR_FACTORS[1],
        "3: RM22's Solar-System point 0.06 must sit inside OC06's width")
+    # C16 (2026-09-04): the regime gate's branch key is tidal_locking's `locked` — free → dipolar by RM22's rule (no
+    # Ro_ℓ), locked → Ro_ℓ refused by three names (both emitted), absent → cannot-say (no tidal_locking), both emitted.
+    free = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, locked=False, rotation_period_h=24.0)
+    ok(free.values["regime"] == "dipolar" and free.values["rossby_verdict"].startswith("dipolar by rule")
+       and abs(free.values["b_eq"] - 30.0) < 1e-9, "3/C16: a free rotator is dipolar by rule, Ro_ℓ not evaluated")
+    lockd = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, locked=True, rotation_period_h=32.0)
+    ok(lockd.values["regime"] == "undeclared (both emitted)" and lockd.values["rossby_verdict"] == dr.ROSSBY_REFUSAL
+       and "ν" in dr.ROSSBY_REFUSAL and "q_conv" in dr.ROSSBY_REFUSAL and "Table 8" in dr.ROSSBY_REFUSAL,
+       "3/C16: a locked body's Ro_ℓ is refused by the three names and both branches are emitted")
+    ok(both.values["rossby_verdict"] == dr.NO_LOCK, "3/C16: without tidal_locking the gate says cannot-say (no tidal_locking)")
+    print(f"  [PASS] C16 분기: 자유 자전 → {free.values['regime']} (Ro_ℓ 안 거침) · 잠김 → {lockd.values['regime']} + 세 이유 거절 · 열쇠 없음 → {both.values['rossby_verdict'][:40]}…")
     dec = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, dynamo_regime="multipolar")
     ok(dec.values["regime"] == "multipolar" and dec.values["dipole_moment_min"] == 0.05 and dec.values["dipole_moment_max"] == 0.10,
        "3: a declared multipolar regime must carry the factor grid")

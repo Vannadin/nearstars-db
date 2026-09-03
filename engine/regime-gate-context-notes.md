@@ -87,3 +87,41 @@ Pozzo's 100 W/m/K for k and fits 60.)
 - ⑤ Anchors byte-identical; `dynamo_rocky` is not a path-fingerprint function; no `--refresh`.
 - ⑥ Gate FAIL 0, time, `pmset` both ends. ⑧ Any new declaration/output → Needs line + doc row (en + ko) in the
   same commit.
+
+## 4. Run record — 2026-09-04
+
+**Branches: ① built · ② answered · ③ measured, instrument first · ④ corrected · ⑤ untouched · ⑧ same commit.**
+
+- **① The branch exists** (`dynamo_rocky.ladder`, step 4): `locked=False` → `regime = dipolar`,
+  `rossby_verdict` = *dipolar by rule* (RM22 §5.2 quoted; Ro_ℓ not evaluated), base moment and 30 µT for
+  Earth's inputs; `locked=True` → both branches emitted and `rossby_verdict = ROSSBY_REFUSAL` naming ν, q_conv
+  and the equation-vs-Table 8 miss; `locked=None` → both branches emitted and `rossby_verdict = NO_LOCK`,
+  *"cannot-say (no tidal_locking — the branch key `locked` is that node's output and it has no recipe yet)"*.
+  A declared Phase 4 `dynamo_regime` still wins, and says so. **`locked` is never declared by this node** —
+  tidal lock is a Phase 4 fact (Pandora's 32 h is on the board, not where the chain reads), the same reason
+  C22's dial stays at 0.
+- **② Roster**: every body that reaches the gate gets `NO_LOCK` today — Earth (in-chain: `regime =
+  undeclared (both emitted)`, `rossby_verdict = cannot-say (no tidal_locking …)`), Pandora stops earlier
+  (`conductor_phase` undecided), α Cen A b is out of the rocky ladder. **That is the correct state, not a
+  defect** — the shape `cmb_flux` had before `core_state`'s T_c was declared: the supplier exists, the upstream
+  does not, the name is given.
+- **③ `MULTIPOLAR_FACTORS` consumer count, instrument first** (scratch `c16_consumer_spy.py`, a spy on
+  `ladder` bound into the registry): positive control — one declared-multipolar call → `multipolar_primary`
+  1 (the instrument counts). Roster chain runs: **multipolar as the primary reading 0 of 3 bodies**; the
+  factor is *evaluated* for Earth's beside-pair (`b_eq_multipolar_min/max` = 1.5–3.0 µT emitted next to the
+  dipolar 30 µT) and **no recipe downstream reads `b_eq_multipolar_*`** (`chain.yaml`'s consumers of
+  `dynamo_rocky` take `b_eq` and `regime`; no `magnetosphere_geometry` recipe exists yet). So the grid that
+  was corrected three times tonight has, today, **no consumer that elects it** — a C5 question, **reported
+  to the owner, not judged here** (the branch that would elect it is the locked branch, which is refused).
+- **④** The edge note *"a Rossby number cannot be derived from a rotation period"* is replaced; the new
+  `via: locked` edge carries the branch and the old `via: rossby` edge stays `status: gap` with the three
+  names. `tidal_locking`'s node block records that it has no recipe.
+- **⑤** `--fast` passes; `dynamo_rocky` is not a path-fingerprint function; no `--refresh`. Anchors untouched.
+- **A number worth keeping, found by the directing seat while checking ②**: `chain.yaml` has **34 computed
+  nodes and 10 registered recipes** (C14 and C15 made it 10 tonight); the 24 unregistered are the map of what
+  remains, and `tidal_locking`, `heat_transport_mode` and `tidal_heating` are the ones the dynamo chain is
+  waiting on. (⚠ `registry.registered()` is the accessor; `registry.RECIPES` does not exist.)
+- **⑧** Contract Needs (`locked`, `rotation_period`) and Returns (`rossby_verdict`) en + ko, chain outputs and
+  edges, in this commit; `chain.py check` 50 / 195, `check_via --gate`, `check_contracts` 10/10,
+  `dynamo_table --check` pass.
+- **⑥** Gate: below.

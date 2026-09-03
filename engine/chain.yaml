@@ -330,6 +330,9 @@ nodes:
     domain: tidal
     kind: computed
     recipe: tidal-locking-timescale-methodology
+    # 2026-09-04 (C16): **레시피 미등록** — 계산 노드 34 중 등록 10. 이 노드의 `locked` 가 dynamo_rocky 영역 게이트의 분기
+    # 열쇠라, 이 노드가 없는 동안 그 게이트는 모든 천체에 cannot-say (no tidal_locking) 다. 잠김 여부는 Phase 4 성격이라
+    # 소비자가 스스로 선언하지 않는다(판도라의 32 h 잠김은 보드에 있고 엔진이 읽는 자리에는 없다).
     outputs: [locked, t_lock, rotation_period]
   body_figure:
     layer: "3층. 갈래"
@@ -364,7 +367,7 @@ nodes:
     # 가족이다. Rm > 40 은 인용이지 평가가 아니다 (문서에 공식이 없다). regime 은 선언된 갈래 또는
     # "undeclared (both emitted)" — rossby 엣지가 gap 이라 그렇다.
     outputs: [dipole_moment, dipole_moment_min, dipole_moment_max, b_eq, b_pol,
-              b_eq_multipolar_min, b_eq_multipolar_max, regime, ladder_regime, dynamo_alive]
+              b_eq_multipolar_min, b_eq_multipolar_max, regime, ladder_regime, dynamo_alive, rossby_verdict]
   stellar_wind:
     layer: "3층. 갈래"
     domain: space_env
@@ -659,7 +662,11 @@ edges:
   # 배선되지 못한 이유이기도 하다.
   - {from: interior_layers, to: dynamo_rocky, kind: requires, via: core_radius, ref: "rocky-planet-dynamo-methodology.md:23"}
   - {from: core_state, to: dynamo_rocky, kind: requires, via: conductor_phase, ref: "rocky-planet-dynamo-methodology.md:25"}
-  - {from: tidal_locking, to: dynamo_rocky, kind: selects, via: rossby, status: gap, ref: "rocky-planet-dynamo-methodology.md:76", note: "국소 로스비 수는 대류 속도와 길이 척도가 필요하고 rotation_period 만으로는 안 나온다. RM22 사다리의 영역 게이트(×0.06 다극 붕괴)를 먹이는 가장 큰 레버 (2026-09-03 gap)."}
+  # C16 (2026-09-04): 분기 열쇠는 tidal_locking 의 `locked` (그 노드는 아직 레시피가 없다 — 계산 노드 34 중 등록 10). 자유 자전이면
+  # RM22 규칙으로 쌍극자(Ro_ℓ 안 거침), 잠김이면 Ro_ℓ 경로인데 세 이유(ν 값 없음 · q_conv 정의 없음 · 인쇄 식이 Table 8 과 4–5배
+  # 불일치)로 거절. 예전 주석 "rotation_period 만으로는 안 나온다" 는 틀렸다 — Ω 는 rotation_period 가 주며, 막는 것은 그 셋이다.
+  - {from: tidal_locking, to: dynamo_rocky, kind: selects, via: locked, ref: "rocky-planet-dynamo-methodology.md:69", note: "C16. RM22 §5.2 의 분기 — 조석 결합이 아니면 자유 자전 → 쌍극자(식 20), 결합이면 Ro_ℓ 경로(거절, 이유 셋). 공급자에 레시피가 없어 오늘은 모든 천체가 cannot-say (no tidal_locking)."}
+  - {from: tidal_locking, to: dynamo_rocky, kind: selects, via: rossby, status: gap, ref: "rocky-planet-dynamo-methodology.md:69", note: "C16 거절 상태. Ro_ℓ 은 ν(RM22 어디에도 값 없음)·q_conv(정의 없음)·식-Table 8 불일치(4–5배) 셋이 막는다 — rotation_period 부족이 아니다. RM22 사다리의 영역 게이트(×0.06 다극 붕괴)를 먹이는 가장 큰 레버 (2026-09-03 gap)."}
   - {from: ocean_fraction, to: dynamo_rocky, kind: influences, sign: negative, status: gap, ref: "rocky-planet-dynamo-methodology.md:109"}
   - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:70"}
   - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, status: gap, ref: "rocky-planet-dynamo-methodology.md:70", note: "mode 는 라벨이고 열류는 수다. 소비처 둘(core_state · dynamo_rocky)이 원하는데 내는 노드가 없다 — internal_heat_nontidal → core_state 도 같은 양으로 gap. 공급자 하나로 닫아야 한다 (2026-09-03)."}

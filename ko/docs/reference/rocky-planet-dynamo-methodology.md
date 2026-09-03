@@ -18,9 +18,9 @@
 
 **Returns** — `dipole_moment` [M_earth] · `dipole_moment_min` [M_earth] · `dipole_moment_max` [M_earth] ·
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
-`ladder_regime` [—] · `dynamo_alive` [—]
+`ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
-`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—]
+`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period` [h]
 **분기키** — 사다리 regime(1 건조 < 2 M⊕ · 2 건조 2–2.5 · 3 건조 > 2.5 · 4 물 풍부 · 5 저밀도 건조), 질량·반지름·
 선언된 얼음 분율로 정함. 생존 게이트는 라벨 셋(`core_state` 의 `conductor_phase`, 선언된 `stagnant_lid`, 클래스별
 선언 사멸 연령)과 인용 하나(`Rm > 40`, 평가하지 않음). 영역 게이트는 선언(`dynamo_regime`) 또는 두 갈래 모두 출력.
@@ -96,7 +96,11 @@ RM22가 **표로 제시한 모멘트**(태양계 + TESS 표본)에 앵커하고 
 2. **살아있나?** 늙고 작음(지구 ~7 Gyr에 화성질량은 사멸), 정체뚜껑(금성형, 판구조 없음
    → 낮은 CMB 열류), `Rm < 40` → `ℳ = 0`, 종료.
 3. **기저 모멘트** `ℳ_base`를 질량/CMF 클래스 앵커에서(아래 표).
-4. **Regime** — 조석상태로 자전 추정(Grießmeier 2009 결합 판정 [`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G),
+4. **Regime** — *(2026-09-04 C16 이후의 실행: 분기 열쇠는 `tidal_locking` 의 `locked`. 잠김이 아니면 RM22 자신의 규칙으로
+   쌍극형 — §5.2 "조석 결합이 아니면 자유 자전을 가정해 쌍극 자기모멘트로 … 식 20 을 쓴다" — 이고 Ro_ℓ 은 평가하지 않음;
+   잠김이면 Ro_ℓ 경로를 **이름을 대며 거절**: ν 는 RM22 어디에도 값이 없고, q_conv 는 정의가 없으며, 인쇄된 Ro_ℓ 식이 RM22
+   자신의 Table 8 을 느린 자전체에서 4–5배 빗나감; 열쇠가 없으면 `cannot-say (no tidal_locking)` — `tidal_locking` 에 레시피가
+   없어 오늘은 모든 로스터 천체가 이것. `rossby_verdict` 가 셋 중 어느 것인지 싣는다.)* 조석상태로 자전 추정(Grießmeier 2009 결합 판정 [`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G),
    이심궤도는 Dobrovolskis 2007 [`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)의 자전–공전 공명). 빠른/자유
    자전 → 쌍극형, `ℳ_base` 유지. `Ro_ℓ = 0.12`를 넘는 조석고정 느린 자전 → 다극형,
    `ℳ ≈ 0.06 · ℳ_base`.

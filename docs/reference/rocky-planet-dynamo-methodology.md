@@ -20,9 +20,9 @@ the ad-hoc reasoning in the TRAPPIST-1 / AU Mic decisions.
 
 **Returns** — `dipole_moment` [M_earth] · `dipole_moment_min` [M_earth] · `dipole_moment_max` [M_earth] ·
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
-`ladder_regime` [—] · `dynamo_alive` [—]
+`ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
-`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—]
+`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period` [h]
 **Discriminating keys** — the ladder regime (1 dry < 2 M⊕ · 2 dry 2–2.5 · 3 dry > 2.5 · 4 water-rich · 5
 low-density dry), from mass, radius and the declared ice fraction; the alive gate, which is three labels
 (`conductor_phase` from `core_state`, the declared `stagnant_lid`, the declared per-class death age) and
@@ -117,7 +117,13 @@ solver per body. We instead anchor on the **moments RM22 tabulate** (Solar Syste
    2026-09-03). Note also that RM22's own Table 8 *computes* Venus 0.0007 and Mars 0.084 ℳ⊕; the zeros in the
    validation table below are this ladder's class judgements, not the model's output.
 3. **Base moment** `ℳ_base` from the mass/CMF class anchor — ⚠ **no per-class anchor table exists in this document**; the "table below" is the *per-body* validation table. The recipe (`engine/dynamo_rocky.py`) declares the anchors: regime 1 → 1.0, regime 4 → 2×10⁻³, regime 5 → 0, and **regimes 2 and 3 carry no printed value** and are emitted as grids without an elected number.
-4. **Regime** — estimate rotation from tidal state (Grießmeier 2009 coupling test
+4. **Regime** — *(as executed since 2026-09-04, C16: the branch key is `tidal_locking`'s `locked`. Not
+   locked → dipolar by RM22's own rule — §5.2, *"If the planet is not tidally coupled, we assume free rotation
+   leading to a dipolar magnetic moment … we use equation 20"* — and Ro_ℓ is not evaluated; locked → the Ro_ℓ
+   path is **refused by name**: ν has no value anywhere in RM22, q_conv has no definition, and the printed
+   Ro_ℓ equation misses RM22's own Table 8 by 4–5× on the slow rotators; key absent → `cannot-say (no
+   tidal_locking)`, which is every roster body today because `tidal_locking` has no recipe. `rossby_verdict`
+   carries which of the three it was.)* Estimate rotation from tidal state (Grießmeier 2009 coupling test
    [`2009Icar..199..526G`](https://ui.adsabs.harvard.edu/abs/2009Icar..199..526G); for eccentric orbits the spin-orbit resonance from
    Dobrovolskis 2007 [`2007Icar..192....1D`](https://ui.adsabs.harvard.edu/abs/2007Icar..192....1D)). Fast/free rotator → dipolar, keep
    `ℳ_base`. Tidally-locked slow rotator that crosses `Ro_ℓ = 0.12` → multipolar,

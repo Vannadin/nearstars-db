@@ -124,12 +124,24 @@ def b_eq_ut(moment_earth: float, radius_earth: float) -> float:
     return B_EQ_EARTH_UT * moment_earth * radius_earth ** -3
 
 
+ROSSBY_REFUSAL = ("cannot-say (Ro_ℓ: ν has no value in RM22 — Appendix A.2's η_c is a mineral's viscosity in a different "
+                  "equation; q_conv has one phrase and no definition — total vs super-adiabatic excess undecided; and the "
+                  "printed Ro_ℓ equation misses RM22's own Table 8 by 4–5× on the slow rotators, a table that is itself a "
+                  "fit of k = 60)")
+NO_LOCK = "cannot-say (no tidal_locking — the branch key `locked` is that node's output and it has no recipe yet)"
+FREE_ROTATION = ("dipolar by rule — RM22 §5.2: 'If the planet is not tidally coupled, we assume free rotation leading to a "
+                 "dipolar magnetic moment … we use equation 20'; the dipolar zone 'does not present an explicit dependence "
+                 "on the angular velocity'. Ro_ℓ is not evaluated on this path.")
+
+
 def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str | None,
            stagnant_lid: bool | None, age_gyr: float | None, ice_mass_fraction: float = 0.0,
-           body_class: str | None = "rocky", dynamo_regime: str | None = None) -> Result:
+           body_class: str | None = "rocky", dynamo_regime: str | None = None,
+           locked: bool | None = None, rotation_period_h: float | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth, "conductor_phase": conductor_phase,
               "stagnant_lid": stagnant_lid, "age_gyr": age_gyr, "ice_mass_fraction": ice_mass_fraction,
-              "body_class": body_class, "dynamo_regime": dynamo_regime}
+              "body_class": body_class, "dynamo_regime": dynamo_regime,
+              "locked": locked, "rotation_period": rotation_period_h}
     if body_class not in ROCKY_CLASSES or mass_earth > MAX_ROCKY_MASS:
         return out_of_domain(RECIPE, VERSION,
                              f"'{body_class}' {mass_earth} M⊕ 는 암석 사다리 밖이다 (암석 클래스, ≤ {MAX_ROCKY_MASS} M⊕) "
@@ -180,8 +192,21 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
                              "regime": "", "ladder_regime": "", "dynamo_alive": ""},
                       refs=REFS, notes=tuple(notes))
 
-    # step 3 — ℳ_base (declared family) · step 4 — regime gate (declared or both) · step 5 — field
-    branch = dynamo_regime if dynamo_regime in ("dipolar", "multipolar") else "undeclared (both emitted)"
+    # step 3 — ℳ_base (declared family) · step 4 — regime gate · step 5 — field
+    # Step 4 (C16, 2026-09-04): RM22's branch structure. A declared dynamo_regime (Phase 4) still wins. Otherwise
+    # the key is `locked` — tidal_locking's output, which the engine does not yet compute (no recipe) and which
+    # this node does NOT declare for itself (tidal lock is a Phase 4 fact, as C22 kept its dial at 0):
+    #   locked False → dipolar by the paper's rule (free rotation, eq. 20 = the ladder's base; no Ro_ℓ)
+    #   locked True  → the locked branch, whose Ro_ℓ is refused by three names → both branches emitted
+    #   locked None  → cannot-say (no tidal_locking) → both branches emitted, as before
+    if dynamo_regime in ("dipolar", "multipolar"):
+        branch, rossby = dynamo_regime, f"declared regime '{dynamo_regime}' (Phase 4) — Ro_ℓ not consulted"
+    elif locked is False:
+        branch, rossby = "dipolar", FREE_ROTATION
+    elif locked is True:
+        branch, rossby = "undeclared (both emitted)", ROSSBY_REFUSAL
+    else:
+        branch, rossby = "undeclared (both emitted)", NO_LOCK
     dip_lo, dip_hi = lo, hi
     mp_lo, mp_hi = lo * MULTIPOLAR_FACTORS[0], hi * MULTIPOLAR_FACTORS[1]
     if branch == "dipolar":
@@ -199,14 +224,16 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
         "b_eq": b_eq_ut(moment, radius_earth) if (elected and moment is not None) else None,
         "b_pol": 2.0 * b_eq_ut(moment, radius_earth) if (elected and moment is not None) else None,
         "b_eq_multipolar_min": b_eq_ut(mp_lo, radius_earth), "b_eq_multipolar_max": b_eq_ut(mp_hi, radius_earth),
-        "regime": branch, "ladder_regime": reg, "dynamo_alive": alive,
+        "regime": branch, "ladder_regime": reg, "dynamo_alive": alive, "rossby_verdict": rossby,
     }
     notes.append(
         f"단계 3 ℳ_base: regime {reg} → "
         + (f"{lo} ℳ⊕ (문서 인쇄값; 선언)" if elected else
            f"**문서에 값이 없다** — 격자 {lo}–{hi} ℳ⊕ 를 싣고 하나를 뽑지 않는다 (C11); 소비처가 자기 값을 선언하고 라벨을 단다")
         + ". 문서의 '(table below)' 는 클래스 앵커가 아니라 천체별 검증 표를 가리킨다 — 잘못된 표를 가리키는 포인터. "
-        f"단계 4 영역 게이트: rossby 엣지는 gap 이라 선언으로 받는다 → **{branch}**"
+        f"단계 4 영역 게이트 (C16): 열쇠는 tidal_locking 의 `locked` — 자유 자전이면 논문 규칙으로 쌍극자(식 20, Ro_ℓ 안 거침), "
+        f"잠김이면 Ro_ℓ 경로인데 세 이유로 거절(ν 값 없음 · q_conv 정의 없음 · 인쇄 식이 Table 8 과 4–5배 불일치), 열쇠가 없으면 "
+        f"cannot-say → **{branch}** [{rossby}]"
         + ("" if branch != "undeclared (both emitted)" else
            f"; 쌍극자 {dip_lo}–{dip_hi} ℳ⊕ 와 다극자 ×{MULTIPOLAR_FACTORS[0]}–{MULTIPOLAR_FACTORS[1]} "
            f"({mp_lo:.3g}–{mp_hi:.3g} ℳ⊕) 를 둘 다 싣는다 — 다극자 계수는 OC06 자신의 두 진술 '거의 20배'(≥0.05)와 "
@@ -225,7 +252,7 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
                   grade="judgment", inputs=inputs, values=values,
                   units={"dipole_moment": "M_earth", "dipole_moment_min": "M_earth", "dipole_moment_max": "M_earth",
                          "b_eq": "uT", "b_pol": "uT", "b_eq_multipolar_min": "uT", "b_eq_multipolar_max": "uT",
-                         "regime": "", "ladder_regime": "", "dynamo_alive": ""},
+                         "regime": "", "ladder_regime": "", "dynamo_alive": "", "rossby_verdict": ""},
                   refs=REFS, notes=tuple(notes))
 
 
@@ -241,4 +268,6 @@ def _from_state(state):
                   age_gyr=state.get("age_gyr"),
                   ice_mass_fraction=state.get("ice_mass_fraction", 0.0),
                   body_class=state.get("body_class"),
-                  dynamo_regime=state.get("dynamo_regime"))
+                  dynamo_regime=state.get("dynamo_regime"),
+                  locked=state.get("locked"),                      # tidal_locking's output — absent until that node has a recipe
+                  rotation_period_h=state.get("rotation_period"))
