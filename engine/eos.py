@@ -2573,7 +2573,9 @@ class HydrogenHelium:
         if t > lt_max:
             raise PhaseGap(
                 self.name, p,
-                f"{t:.0f} K 는 굳힌 창의 상한({lt_max:.0f} K) 위다. Chabrier+ 2019 의 "
+                # 상한은 10^(logT 격자 끝) = 25118.86 K, 정수가 아니다 — 소수 둘째 자리까지 찍어야
+                # 경계 바로 위(25119.0 K)에서 "25119 K 는 25119 K 위다" 가 되지 않는다 (브리프 56).
+                f"{t:.2f} K 는 굳힌 창의 상한({lt_max:.2f} K) 위다. Chabrier+ 2019 의 "
                 "표는 10⁸ K 까지 가지만 이 리포지토리는 행성 구간만 굳혔다 — 그 위는 "
                 "갈색왜성과 별이고, body_class 가 이미 이름 대며 거절한다.", t)
         raise PhaseGap(

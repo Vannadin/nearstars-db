@@ -448,6 +448,27 @@ def main() -> int:
             fails.append(f"계약: {label}")
         print(f"  [{'PASS' if cond else 'FAIL'}] {label}")
 
+    # 브리프 56 — 경계 메시지가 경계를 표현하는가. 상한 25118.86 K 는 정수가 아니라서 .0f 로 찍으면
+    # 25119.0 K 에서 "25119 K 는 25119 K 위다" 가 된다. 거동은 맞고(배타 비교) 메시지가 틀린 부류다.
+    from eos import MATERIALS, PhaseGap
+    import hhe_table
+    lt_max = 10.0 ** (hhe_table.LOGT_LO + (hhe_table.NT - 1) * hhe_table.STEP)
+    hhe = MATERIALS["h_he"]
+    at_edge = hhe.density(50e9, lt_max) > 0.0
+    msg = ""
+    try:
+        hhe.density(50e9, lt_max + 0.14)          # 25119.0 K — 지시 세션이 친 값
+    except PhaseGap as e:
+        msg = str(e)
+    nums = [w for w in msg.replace("(", " ").replace(")", " ").split() if w.replace(".", "").isdigit()]
+    distinct = len(nums) >= 2 and nums[0] != nums[1]
+    for label, cond in (("상한 그 자리에서는 값을 낸다", at_edge),
+                        ("상한 0.14 K 위는 PhaseGap", bool(msg)),
+                        ("메시지의 두 온도가 구별된다", distinct)):
+        if not cond:
+            fails.append(f"경계 메시지: {label} — {msg[:80]!r}")
+        print(f"  [{'PASS' if cond else 'FAIL'}] 경계 메시지: {label}")
+
     print(f"  수소-헬륨 표의 굳힌 창: 1 bar ~ 10⁴ GPa · 100 ~ 25119 K. 가스 외피만인 "
           f"천체의 질량 상한이 519 M⊕ (1.63 M_J) 다 — 폴리트로프의 선언된 울타리 "
           f"4132 M⊕ (13 M_J) 보다 낮고, 배포 표 자체는 10¹³ GPa 까지 가므로 열을 더 "

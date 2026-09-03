@@ -102,6 +102,25 @@ missing grain size, not in the forms.
   diffusion creep dominates (§4).
 - **Every value emitting from this axis says it was declared.**
 
+## 6b. The family's reference form — Nimmo+ 2004 eq. 39 (placed by Brief 56, c4's text)
+
+Nothing calls it; it is recorded as the form a fifth law would be measured against.
+Nimmo, Price, Brodholt & Gubbins 2004, GJI 156, 363 (`2004GeoJI.156..363N`,
+[ADS](https://ui.adsabs.harvard.edu/abs/2004GeoJI.156..363N)), eq. 39:
+
+    η_b(T) = f · η₀ · exp[−ζ (T − T₁)]      Table 2: ζ = 1.0 ± 0.5 ×10⁻² K⁻¹, η₀ = 1.0 ×10²¹ Pa s,
+                                              f = 10, T₁ = 3400 K, T₀ = 1573 K
+
+Recorded because it is the only cached law satisfying all three at once: dimensionally clean
+(unlike Kankanamge & Moore 2019's unitless A = 15), carrying a published uncertainty on ζ (which
+Rovira-Navarro's re-use drops), and with its ζ verified to reproduce from the paper's own quoted
+activation energies — ζ = E/(RT²) over E = 250–350 kJ/mol, T = 1600–2500 K gives 0.00481–0.01644
+against the printed 0.005–0.016, the range independently attributed to Solomatov 1995 (직, 여기).
+**Caveat that rides with it**: the adopted ζ = 0.01 back-converts to E ≈ 213 kJ/mol at 1600 K, below
+the quoted 250 floor, re-entering at T ≈ 1734 K — internally consistent, but near the low edge of the
+range that motivated it, not its midpoint. (The top-layer twin, eq. 35 with η₀ and T₀, is what
+`mantle_flux.py:86` carries.)
+
 ## 7. A search-method trap worth its own line
 
 The first ADS query for Karki & Stixrude 2010 returned **numFound 0**, because the citing

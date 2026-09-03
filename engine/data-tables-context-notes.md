@@ -16,3 +16,14 @@ symlink — one physical copy, which is the shared cache by design and also the 
 only in this worktree), and the keep-versus-command convention. Both in `engine/tools/README.md`; the hhe gap
 and the request list in `engine/SESSION-HANDOFF.md`. `DirEOS2019.tar.gz` was **not fetched** — it goes to the
 owner.
+
+## Instrumenting a solver's material calls records what was *asked*, not what was *accepted* (c4, placed by Brief 56)
+
+A hook placed *before* the material call logs every trial the shooting bracket proposes, including
+the ones the fence refuses on the spot. That is why an instrumented gas-giant run showed apparent
+T_max of 10⁵–2×10⁵ K while every converged column stayed inside the H/He window (14 314 / 19 423 /
+22 917 K at t_pot 165 / 1000 / 2000 K; radii monotone 10.88 → 11.36 → 11.73 R⊕). Two consequences:
+the gas-giant "in box" request counts include rejected trials, a **second** reason beyond sampling
+density to read them as "present, magnitude not established"; the ice-giant zero is unaffected —
+zero requests implies zero accepted. Instrument *after* acceptance, or count converged columns, when
+the question is what the solver used.
