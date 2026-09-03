@@ -467,7 +467,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
               mantle_rock_fraction: float = 0.0,
               serpentinisation: float = 0.0, differentiation_front: float = 1.0,
               crust_rock_fraction: float = 0.0, crust_porosity: bool = False,
-              envelope_z_profile: tuple | None = None) -> Structure:
+              envelope_z_profile: tuple | None = None,
+              ammonia_mass_fraction: float = 0.0) -> Structure:
     """중심압 하나에서 바깥으로 적분한다. 표면(P=0)에서 멈춘다.
 
     층 경계는 **목표 질량** 의 누적 분율로 잡는다. 사격이 수렴하면 겉질량이 목표와
@@ -533,6 +534,25 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     # 얼음 맨틀에 섞인 암석. 물의 어느 상이든(사다리·바다·뜨거운 물) 같은 분율의 규산염과 부피
     # 가법으로 섞고, ∇_ad 는 c_P 가중이다 (Mixture). 상마다 혼합 객체를 하나씩 만들어 둔다.
     rock_mix: dict[str, object] = {}
+
+    # C22 (2026-09-03, 오너 "1로 하되 조심히 접근하자"): 얼음 맨틀의 얼음 가운데 암모니아 분율. 물의
+    # 어느 상이든 그 자리의 물 표현과 nh3 표(Bethkenhagen+ 2013)를 부피 가법으로 섞고, 그 위에
+    # 암석을 섞는다 — 암석 분율은 맨틀의 것, 암모니아 분율은 그 얼음의 것. 0 이면 **같은 객체**
+    # 를 돌려줘 예전 경로와 비트까지 같다(step 1 의 합격 조건). 표 천장(등온선마다 237–333 GPa)
+    # 위에서는 nh3 가 이름을 대며 거절하고 혼합이 그것을 삼키지 않는다 — 맨틀 바닥 820–1016 GPa
+    # 는 표 밖이라 w > 0 의 전체 풀이는 거절이 예상이고, 깊은 맨틀 규칙은 오너 결정(step 2).
+    ice_mix: dict[str, object] = {}
+
+    def with_ices(water_mat):
+        if ammonia_mass_fraction <= 0.0:
+            return water_mat
+        m = ice_mix.get(water_mat.name)
+        if m is None:
+            m = mix(f"{water_mat.name}_nh3", "물 + 암모니아 얼음",
+                    (water_mat, 1.0 - ammonia_mass_fraction),
+                    (MATERIALS["nh3"], ammonia_mass_fraction))
+            ice_mix[water_mat.name] = m
+        return m
 
     def with_rock(water_mat):
         if mantle_rock_fraction <= 0.0:
@@ -705,7 +725,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             # 물의 상은 위에서 정해졌다. 암석은 그 위에 섞인다 — 단 **깊은 맨틀** 에만 (Nettelmann 의
             # inner envelope). 바다 표의 2.3 GPa 아래는 바다·얕은 얼음이고, 거기 암석을 섞는 것은 물리도
             # 아니거니와 바다 표가 c_P 를 안 들고 있어 혼합의 ∇_ad 를 가중할 수도 없다.
-            mat = with_rock(mat)
+            # 암모니아(C22)도 같은 자리, 같은 이유 — 표의 바닥이 500 K 라 얕은 얼음·바다에는 없다.
+            mat = with_rock(with_ices(mat))
 
         # **기체에는 P = 0 인 표면이 없다.** 밀도가 압력과 함께 0 으로 가므로 적분이
         # 어디서 끝나는지를 재료가 말해야 하고, 그 자리가 발표된 반지름이 재어진
@@ -1055,7 +1076,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     serpentinisation: float = 0.0, differentiation_front: float = 1.0,
                     crust_rock_fraction: float = 0.0,
                     crust_porosity: bool = False,
-                    envelope_z_profile: tuple | None = None) -> tuple[Structure, bool]:
+                    envelope_z_profile: tuple | None = None,
+                    ammonia_mass_fraction: float = 0.0) -> tuple[Structure, bool]:
     """겉질량이 목표와 맞는 중심압을 찾는다. 질량은 중심압에 단조증가한다.
 
     수렴 여부를 값과 함께 돌려준다 — 못 맞춘 것은 예외가 아니라 `converged=False`
@@ -1095,7 +1117,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                          envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                          boundary_temperature_jump, mantle_rock_fraction,
                          serpentinisation, differentiation_front, crust_rock_fraction,
-                         crust_porosity, envelope_z_profile)
+                         crust_porosity, envelope_z_profile,
+                         ammonia_mass_fraction=ammonia_mass_fraction)
 
     # 괄호잡기. 시험압을 네 배씩 올리며 겉질량이 목표에 닿는 자리를 찾는다.
     #
@@ -1218,7 +1241,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
                         serpentinisation, differentiation_front, crust_rock_fraction,
-                        crust_porosity, envelope_z_profile)
+                        crust_porosity, envelope_z_profile,
+                        ammonia_mass_fraction=ammonia_mass_fraction)
     if abs(st.mass_kg - mass_kg) / mass_kg < SHOOT_TOL:
         return st, True
     if p_stop and rung is not None:
@@ -1237,7 +1261,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                         gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                         boundary_temperature_jump, mantle_rock_fraction,
                         serpentinisation, differentiation_front, crust_rock_fraction,
-                        crust_porosity, envelope_z_profile)
+                        crust_porosity, envelope_z_profile,
+                        ammonia_mass_fraction=ammonia_mass_fraction)
         y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
@@ -1275,7 +1300,8 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
                     gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                     boundary_temperature_jump, mantle_rock_fraction,
                     serpentinisation, differentiation_front, crust_rock_fraction,
-                    crust_porosity, envelope_z_profile)
+                    crust_porosity, envelope_z_profile,
+                    ammonia_mass_fraction=ammonia_mass_fraction)
         y1 = math.log(st.mass_kg / mass_kg)
     return st, False
 
@@ -1315,7 +1341,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           serpentinisation: float = 0.0, differentiation_front: float = 1.0,
           crust_rock_fraction: float = 0.0,
           crust_porosity: bool = False,
-          envelope_z_profile: tuple | None = None) -> tuple[Structure, bool]:
+          envelope_z_profile: tuple | None = None,
+          ammonia_mass_fraction: float = 0.0) -> tuple[Structure, bool]:
     """겉질량과 **표면 온도** 를 동시에 맞춘다.
 
     온도가 선언되지 않으면(`potential_temperature is None`) 아래 고리가 아예 돌지
@@ -1334,7 +1361,8 @@ def shoot(mass_kg: float, cmf: float, imf: float,
           "differentiation_front": differentiation_front,
           "crust_rock_fraction": crust_rock_fraction,
           "crust_porosity": crust_porosity,
-          "envelope_z_profile": envelope_z_profile}
+          "envelope_z_profile": envelope_z_profile,
+          "ammonia_mass_fraction": ammonia_mass_fraction}
     if not potential_temperature:
         return _shoot_pressure(*args, **kw)
     t_pot = float(potential_temperature)
@@ -1959,7 +1987,8 @@ def solve(mass_earth: float,
           differentiation_front: float = 1.0,
           crust_rock_fraction: float = 0.0,
           crust_porosity: bool = False,
-          envelope_z_profile: tuple | None = None) -> Result:
+          envelope_z_profile: tuple | None = None,
+          ammonia_mass_fraction: float = 0.0) -> Result:
     """질량과 조성에서 층 구조를 적분한다.
 
     `radius_earth` 는 계산에 **쓰이지 않는다** — 반지름은 출력이다. 주면 도출값과
@@ -1993,6 +2022,7 @@ def solve(mass_earth: float,
               "potential_temperature": potential_temperature,
               "boundary_temperature_jump": boundary_temperature_jump,
               "mantle_rock_fraction": mantle_rock_fraction,
+              "ammonia_mass_fraction": ammonia_mass_fraction,
               "serpentinisation": serpentinisation,
               "differentiation_front": differentiation_front,
               "crust_rock_fraction": crust_rock_fraction,
@@ -2173,6 +2203,23 @@ def solve(mass_earth: float,
             "맨틀 암석 분율은 온도가 흐르는 얼음 맨틀의 선언이다 — 혼합의 단열 기울기가 c_P 가중이라 "
             "등온 경로에는 정의되지 않는다. 포텐셜 온도를 선언하면 풀린다.",
             inputs=inputs, refs=REFS)
+    # ── C22: 얼음 맨틀의 암모니아 분율 — 같은 종류의 선언, 같은 조건 ──
+    if not 0.0 <= ammonia_mass_fraction < 1.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"선언이 범위 밖이다 — 얼음 맨틀의 암모니아 분율 {ammonia_mass_fraction} ([0, 1)).",
+            inputs=inputs, refs=REFS)
+    if ammonia_mass_fraction > 0.0 and imf <= 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "암모니아 분율은 얼음 맨틀의 선언인데 얼음질량분율이 0 이다.",
+            inputs=inputs, refs=REFS)
+    if ammonia_mass_fraction > 0.0 and not potential_temperature:
+        return out_of_domain(
+            RECIPE, VERSION,
+            "암모니아 분율은 온도가 흐르는 얼음 맨틀의 선언이다 — 표(Bethkenhagen+ 2013)가 (ρ, T) 격자라 "
+            "등온 경로에는 정의되지 않는다. 포텐셜 온도를 선언하면 풀린다.",
+            inputs=inputs, refs=REFS)
 
     # ── 세 선언 (C11): 분화 전선, 지각의 암석 분율, 지각 공극 — 중간 단 ──
     # 전선 아래는 녹아서 분화했고 그 위는 한 번도 녹지 않은 얼음+암석 알갱이의 원시 지각이다.
@@ -2256,7 +2303,8 @@ def solve(mass_earth: float,
                               envelope_z, envelope_z_rock_fraction, differentiated, potential_temperature,
                               boundary_temperature_jump, mantle_rock_fraction,
                               serpentinisation, differentiation_front, crust_rock_fraction,
-                              crust_porosity, envelope_z_profile)
+                              crust_porosity, envelope_z_profile,
+                              ammonia_mass_fraction=ammonia_mass_fraction)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS,
                              notes=(f"막힌 재료: {gap.material}, "
@@ -2400,6 +2448,19 @@ def solve(mass_earth: float,
             "중력장을 맞추려면 암석이 필요하다; 물·암석 혼합의 거동은 그들도 '잘 이해되지 않았다' 고 적는다). "
             "규산염을 부피 가법으로 섞고 ∇_ad 는 c_P 가중이다 (AVL 의 폭은 얼음 혼합에서 4 % 상한, "
             "물–암석에 대한 발표값은 없다). 등급을 analog 로 내린다.")
+    if ammonia_mass_fraction > 0.0:
+        notes.append(
+            f"**얼음 맨틀의 얼음 가운데 암모니아 분율 {ammonia_mass_fraction:.4f} 은 선언이다** (C22; 태양 얼음비의 "
+            "두 성분 재정규화값 0.1159 = 0.08/(0.08+0.61), Bethkenhagen+ 2017 §V). 물 표현과 Bethkenhagen+ 2013 "
+            "표(순수 암모니아)를 부피 가법으로 섞고 ∇_ad 는 c_P 가중이다. 라벨 다섯이 이 값에 탄다. ① 메탄 비대칭 — "
+            "태양 얼음의 메탄 몫 0.31 이 암모니아 0.08 보다 크고 메탄은 지어지지 않았다(C4, 분해): 작은 항을 고치고 "
+            "큰 항은 물로 남긴 상태라 이 분야가 모형하는 삼원계가 아니다. ② 표 천장(등온선마다 237–333 GPa)이 맨틀 "
+            "바닥(820–1016 GPa) 아래라 맨틀 대부분이 표 밖이고, 표 밖에서는 nh3 가 이름을 대며 거절한다 — 깊은 맨틀 "
+            "규칙은 정해지지 않았다(step 2, 오너). ③ 관례 주의 — 이 판의 내부에너지는 진동(핵양자) 보정을 포함하고 "
+            "2017 판은 뺐다: 밀도(−2.9~−3.5 %)는 근거가 서고 ∇_ad 의 부호는 근거화되지 않았다. ④ 이 (P,T) 에서 "
+            "암모니아는 초이온이 아니라 유체다(2013 §III A, Redmer+ 2011 등엔트로피선) — 분자유체인지 해리유체인지는 "
+            "논문이 말하지 않는다. ⑤ N₂+H₂ 로의 부분 해리는 2017 Fig. 6 에 그림으로만 표시되고 좌표는 인쇄되지 않았다. "
+            "등급을 analog 로 내린다.")
     # 얼음 기둥이 얼음 X 까지 내려갔는가. 그 상은 이 사다리에서 **읽은 게 아니라 적합한**
     # 유일한 얼음이고, 원 표현을 1.475 % 안에서만 재현한다 — 다른 얼음 상들의 0.006~
     # 0.118 % 와 자릿수가 다르다. 게다가 그 표현 자체가 제일원리 계산이지 측정이 아니다.

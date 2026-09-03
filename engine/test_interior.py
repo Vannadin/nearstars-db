@@ -2088,17 +2088,23 @@ def main() -> int:
           f"행성 얼음이 H-He 보다 얌전하다")
 
     print("\n암모니아 표 — 천장(333.2 GPa)과 등온선 범위(500–10 000 K)가 로스터의 수렴 기둥에 닿는가 (P3 ③, C6 템플릿)")
-    # 측정이지 판정이 아니다 (브리프 64 / P3, 2026-09-03). nh3 는 MATERIALS 에 등록돼 있고 도메인
-    # 검사·온도 거절까지 붙어 있으나, interior.py 의 어떤 층 배치도 그것을 부르지 않는다 — 그래서
-    # 천장은 소비자에게 닿지 않는다. 그 사실을 두 겹으로 굳힌다: 정적(소스에 "nh3" 가 없다)과
-    # 동적(굳힌 두 얼음거대행성의 수렴점 적분에서 발화 0, 양성 대조 1). 전체 풀이·위성 다섯의
-    # 풀이에서도 0 이었다(P3 측정 기록, interior-core.md). 이 행이 깨지는 날은 누군가 암모니아를
-    # 어떤 층에 배선한 날이고, 그때 천장 도달은 C6 의 상시 감시로 다시 잰다. 배선/철거는 오너 몫(C5).
+    # 측정이지 판정이 아니다 (브리프 64 / P3, 2026-09-03; C22 step 1 로 갱신). P3 ③ 이 잰 것: 어떤 층
+    # 배치도 nh3 를 부르지 않아 천장이 소비자에게 닿지 않는다(전체 풀이 둘·위성 다섯 모두 발화 0). C22
+    # step 1 (오너 "1로 하되 조심히 접근하자") 이 그 소비자를 만들었다 — integrate 의 with_ices 래핑,
+    # 선언 ammonia_mass_fraction, **기본값 0**. 그래서 이 행의 정적 절반은 "소스에 nh3 가 없다" 에서
+    # "nh3 는 with_ices 를 통해서만 들어오고 기본값 0 에서는 불활성" 으로 바뀌고, 동적 절반(굳힌 두
+    # 얼음거대행성의 수렴점 적분에서 발화 0, 양성 대조 1)은 그대로다 — 기본 경로가 예전 경로와 같다는
+    # 것을 발화 수로 말한다. 이 행이 깨지는 날은 기본값이 0 을 떠났거나 다른 자리가 nh3 를 부른 날이고,
+    # 그때 천장 도달(등온선마다 237–333 GPa vs 맨틀 바닥 820–1016 GPa)은 C6 의 상시 감시로 다시 잰다.
     import eos as _eos_nh3
     import test_ice_giant as _tig
     import json as _json
-    src_interior = open(interior.__file__, encoding="utf-8").read()
-    static_ok = '"nh3"' not in src_interior and "'nh3'" not in src_interior
+    import inspect as _inspect
+    src_integrate = _inspect.getsource(interior.integrate)
+    static_ok = ("def with_ices" in src_integrate and "with_rock(with_ices(mat))" in src_integrate
+                 and 'MATERIALS["nh3"]' in src_integrate
+                 and _inspect.signature(interior.integrate).parameters["ammonia_mass_fraction"].default == 0.0
+                 and _inspect.signature(interior.solve).parameters["ammonia_mass_fraction"].default == 0.0)
     cls_nh3 = type(_eos_nh3.NH3)
     orig_nh3 = cls_nh3.density
     fired = {"n": 0, "p_max": 0.0}

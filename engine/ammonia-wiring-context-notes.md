@@ -74,6 +74,37 @@ here.
   instead of concluding → record with the cold-flank family (Brief 22's steering rule).
 - ⑤ Gate FAIL 0, and what the step adds to its time.
 
-## 4. Run record
+## 4. Run record — 2026-09-03, step 1 wired
 
-*(filled in after the run)*
+**Branch fired: ① exactly, ③ exactly, and ④ in a kind that was not registered — recorded as such.**
+
+- **①** `test_ice_giant.py --refresh` after the wiring: **only `path_fingerprint` changed**
+  (`708ff4627f24c448` → `8021c2c929cb7f0b`); every body field of both anchors (`radius`, `nmoi`,
+  `core_pressure`, `core_temperature`, the standalone record, `converged`) is **byte-identical** to the
+  pre-wiring file (diffed field by field against a copy taken before the refresh; `frozen_at` same date).
+  Uranus 25 s · Neptune 58 s. `--fast` passes. The default-0 path is the old path.
+- **③** The wrap's own mixture (`mix(h2o_hot 0.8841, nh3 0.1159)`) on §113's eight (P, T) points gives
+  ρ_mix/ρ_H₂O = **0.9654 · 0.9684 · 0.9685 · 0.9687 · 0.9674 · 0.9689 · 0.9700 · 0.9705** — the §113 table to
+  four decimals at all eight. The wiring produces the predicted −2.9 to −3.5 %.
+- **④ — unregistered kind: refused by name on the trial corridor's cold flank, before any ceiling.** The
+  opt-in Uranus solve at w = 0.1159 died in **0 s**: *"152.00 GPa at 545 K is outside Bethkenhagen, French &
+  Redmer 2013 … Table I (0.360–22.4 GPa at this temperature)"*. Spy: `NH3.density` fired **4** times,
+  **4** refusals, max pressure touched 164 GPa. The state is the temperature loop's first trial (centre
+  guess 2 × 76 K), a cold adiabat that puts 545 K at 152 GPa — **a state no converged column occupies** (the
+  converged mantle is ~3 500 K there). The registered prediction (refusal at the 333 GPa ceiling on the
+  converged column) never got a chance. **Mechanism, read from the code, not fixed**: `Ammonia.density`
+  re-raises the table's `ValueError` as `PhaseGap(name, p, msg, t)` **without `too_cold`**, so Brief 22's
+  steering (trial refusals steer the temperature bracket instead of killing the solve) does not engage — the
+  shoot reads a cold-flank refusal as geometry and dies. This is the cold-flank family's newest member
+  (`interior-core.md` rules: *"a trial-path refusal steers the bracket; it does not kill the solve"*), and it
+  means **step 2 has two prerequisites, not one**: the deep-mantle rule (registered) **and** a cold-flank
+  label on the ammonia table's refusals (new). Neither is done here — measurement, not repair, and both
+  touch what the owner has not decided.
+- **⑤** Gate: see below.
+
+**Labels landed in code**: at w > 0 the recipe's note carries the five (methane asymmetry · ceiling below the
+mantle base · convention caveat on ∇_ad · fluid but molecular-vs-dissociated unsaid · partial N₂+H₂
+dissociation figure-only) and drops the grade to analog; validation refuses w ∉ [0, 1), w > 0 without ice,
+w > 0 without a potential temperature. The P3 ③ gate row's static half now asserts the wrap exists with
+default 0 (instead of "no nh3 in the source"); its dynamic half (positive control 1, zero fires on the frozen
+standalone integrations) is unchanged and is what says the default path is inert.

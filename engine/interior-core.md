@@ -2091,6 +2091,18 @@ phase diagram) — on the not-held list, not needed for C22, which uses the pure
 **Start condition — met.** Step 1 pre-registered in `ammonia-wiring-context-notes.md` §1–§3 (committed before
 code), then wired.
 
+**Step 1 landed 2026-09-03** (`ammonia-wiring-context-notes.md` §4). `ammonia_mass_fraction` (default 0) is
+threaded `solve → shoot → _shoot_pressure → integrate`, mixed at the deep-mantle water wrap
+(`with_rock(with_ices(mat))`), `_stack` untouched. **① fired exactly**: `--refresh` changed only the path
+fingerprint; every frozen value of both anchors is byte-identical. **③ fired exactly**: the wrap's mixture
+reproduces §113's eight ratios to four decimals (0.9654–0.9705). **④ fired in an unregistered kind**: the
+opt-in Uranus solve at w = 0.1159 refused **not at the 333 GPa ceiling but on the trial corridor's cold flank**
+— 152 GPa · 545 K on the temperature loop's first cold guess, 0 s, four fires, four refusals — because
+`Ammonia.density`'s `PhaseGap` carries no `too_cold`, so Brief 22's bracket steering does not engage and the
+shoot reads the refusal as geometry. **Step 2 therefore has two prerequisites**: the deep-mantle rule (owner)
+**and** a cold-flank label on the ammonia refusals (the cold-flank family's newest member; not fixed here —
+measurement, not repair). The P3 gate row's static half now asserts the wrap exists with default 0.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,
