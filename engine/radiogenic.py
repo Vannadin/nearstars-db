@@ -169,7 +169,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
         "소비처 둘(interior_layers 의 포텐셜 온도, core_state 의 핵 쪽 경계 온도)은 이 예산을 받되 **여전히 "
         "선언한다** — 예산을 온도나 경계층 열류로 바꾸는 것은 이 레시피가 갖지 않은 열 모형이다.",
         (f"t_int {t_int:.1f} K 는 **방사성만** 의 값이다 (F = {flux:.4f} W/m², R = {radius_earth:.4f} R⊕ — "
-         "interior_layers 의 도출 반지름이 있으면 그것, 없으면 선언된 radius_earth). 방법론 §1 의 '지구 ≈ 35 K' 는 "
+         "선언된 radius_earth; 미선언이면 interior_layers 의 도출 반지름). 방법론 §1 의 '지구 ≈ 35 K' 는 "
          "총 표면 열류 0.087 W/m²(방사성 + 잔열)로 계산한 것이라, 잔열을 갖지 않은 이 값은 그 하한이다."
          if t_int else "반지름이 없어 표면 flux 와 t_int 를 내지 않는다."),
     ) + tuple(cons["notes"])
@@ -180,12 +180,14 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
               "mantle_top_boundary_layer": cons["delta_t_km"],
               "implied_surface_heat_flux": cons["f_t_w_m2"],
               "implied_surface_heat_flow": cons["q_m_w"],
-              "heat_flow_consistency": cons["verdict"]}
+              "heat_flow_consistency": cons["verdict"],
+              "urey_ratio": cons.get("urey_ratio")}
     units = {"l_int": "W", "t_int": "K", "radiogenic_power": "W", "mantle_radiogenic_power": "W",
              "crust_radiogenic_power": "W", "radiogenic_power_low": "W",
              "radiogenic_heat_w_m2": "W/m2", "radiogenic_power_history_4gyr": "dimensionless",
              "mantle_top_boundary_layer": "km", "implied_surface_heat_flux": "W/m2",
-             "implied_surface_heat_flow": "W", "heat_flow_consistency": ""}
+             "implied_surface_heat_flow": "W", "heat_flow_consistency": "",
+             "urey_ratio": "dimensionless"}
     return Result(recipe=RECIPE, version=VERSION, regime="rocky_radiogenic_present_day",
                   reason=(f"규산염 {silicate_kg:.2e} kg 에 Earth (1) 농도(선언)를 걸어 총 "
                           f"{b['total_w'] / 1e12:.2f} TW, 맨틀 몫 70 %(선언) {b['mantle_w'] / 1e12:.2f} TW."),
@@ -200,7 +202,9 @@ from registry import recipe  # noqa: E402
 def _from_state(state):
     return solve(mass_earth=state["mass_earth"],
                  core_mass_fraction=state.get("core_mass_fraction"),
-                 radius_earth=state.get("radius", state.get("radius_earth")),
+                 # 브리프 46 후속 ③: 반지름은 **선언된** radius_earth 가 먼저다 (mass_or_radius 엣지, via radius);
+                 # 미선언이면 interior_layers 의 도출 반지름으로 대체한다 — 그 엣지도 chain.yaml 에 선언돼 있다.
+                 radius_earth=state.get("radius_earth", state.get("radius")),
                  body_class=state.get("body_class"),
                  age_gyr=state.get("age_gyr"),
                  ice_mass_fraction=state.get("ice_mass_fraction", 0.0),

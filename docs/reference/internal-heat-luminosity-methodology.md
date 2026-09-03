@@ -39,7 +39,7 @@ non-negligible, see that doc).
 **Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
 `crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
 `radiogenic_power_history_4gyr` [—] · `mantle_top_boundary_layer` [km] · `implied_surface_heat_flux` [W/m2] ·
-`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—]
+`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—] · `urey_ratio` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K]
 **Discriminating keys** — `body_class`: rocky bodies get the present-day radiogenic budget; giant,

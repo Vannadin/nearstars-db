@@ -167,7 +167,7 @@ nodes:
     outputs: [l_int, t_int, radiogenic_power, mantle_radiogenic_power, crust_radiogenic_power,
               radiogenic_power_low, radiogenic_heat_w_m2, radiogenic_power_history_4gyr,
               mantle_top_boundary_layer, implied_surface_heat_flux, implied_surface_heat_flow,
-              heat_flow_consistency]
+              heat_flow_consistency, urey_ratio]
 
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
@@ -508,7 +508,10 @@ edges:
   - {from: star_physical, to: greenhouse, kind: requires, via: teff, ref: "greenhouse-warming-methodology.md:162"}
   - {from: star_physical, to: greenhouse, kind: selects, via: sed, ref: "greenhouse-warming-methodology.md:283"}
   - {from: tidal_heating, to: greenhouse, kind: influences, status: gap, ref: "moon-energy-budget-methodology.md:124"}
-  - {from: mass_or_radius, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
+  - {from: mass_or_radius, to: internal_heat_nontidal, kind: requires, via: [mass, radius], ref: "internal-heat-luminosity-methodology.md:118", note: "2026-09-03 브리프 46 후속 ③: 레시피가 읽는 것은 mass_earth 와 **선언된** radius_earth 다 — via 가 없던 엣지를 이름 붙였다."}
+  # 브리프 46 후속 ③: radius_earth 가 미선언이면 interior_layers 의 도출 반지름을 읽는다. 읽는 입력에 화살표가
+  # 없었다 — check_via 는 '있는 via 가 틀린 것' 만 보고 '읽는데 via 가 없는 것' 은 못 본다 (via-context-notes.md).
+  - {from: interior_layers, to: internal_heat_nontidal, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md:118", note: "radius_earth 미선언 시의 대체 경로. 둘 다 16노드 코어 안이라 반복이 순서를 처리한다."}
   - {from: body_age, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
   - {from: body_class, to: internal_heat_nontidal, kind: selects, ref: "internal-heat-luminosity-methodology.md:187"}
   - {from: star_metallicity, to: internal_heat_nontidal, kind: influences, status: gap, ref: "internal-heat-luminosity-methodology.md:254"}

@@ -36,6 +36,8 @@ def main() -> int:
     ok(abs(c["q_m_w"] / 1e12 - 39.5) < 0.2, f"1: Q_M {c['q_m_w'] / 1e12:.1f} TW, expected 39.5")
     t_inv = mf.invert_for_flow(mf.PAPER_PRESENT_DAY_Q_TW * 1e12)
     ok(abs(t_inv - 1614.0) < 1.5, f"1: T_m for 42 TW = {t_inv:.1f} K, expected 1614 (closure on the derived k_t)")
+    # the paper prints its own present-day potential temperature: 1330 °C (McKenzie & Bickle 1988) = 1603 K
+    ok(abs(t_inv - 1603.15) < 15.0, f"1: 42 TW ← {t_inv:.1f} K against the paper's printed 1603 K — must agree within ~15 K")
     # ── 2. sensitivity, both directions ─────────────────────────────────────
     fwd = [mf.implied_flux(1600.0, mf.EARTH_G, mf.EARTH_R_P, z)["q_m_w"] / 1e12 for z in (0.5e-2, 1.0e-2, 1.5e-2)]
     ok(all(abs(a - b) < 0.2 for a, b in zip(fwd, (37.8, 39.5, 41.4))), f"2: forward ζ band {fwd}, expected 37.8/39.5/41.4")
@@ -54,11 +56,14 @@ def main() -> int:
         ok("calibrated at source" in x["notes"][0] or x["verdict"] == mf.NO_T, "3: the note must carry calibrated-at-source")
     ok(cases[1]["verdict"] == mf.NO_T and cases[2]["verdict"] == mf.NO_BUDGET, "3: missing inputs must refuse by name")
     # ── 4. roster and the two flags ─────────────────────────────────────────
+    ok(abs(mf.SECULAR_RATIO_MAX - 3.0) < 1e-12 and abs(mf.UREY_FLOOR - 1 / 3) < 1e-12, "4: the ceiling is a Urey floor of 1/3 (ratio 3), soft")
     ok(cases[0]["verdict"] == mf.CONSISTENT and 1.7 < cases[0]["ratio"] < 2.0,
        f"4: Earth 1600 K vs 21.3 TW → {cases[0]['verdict']} ratio {cases[0]['ratio']}")
     ok(cases[3]["verdict"] == mf.TOO_COLD, f"4: 1400 K must flag less-than-radiogenic, got {cases[3]['verdict']}")
     ok(cases[4]["verdict"] == mf.TOO_HOT, f"4: 1800 K must flag more-than-secular, got {cases[4]['verdict']}")
     earth = rg.solve(1.0, 0.325, 1.0, "rocky", 4.54, potential_temperature=1600.0)
+    ok(earth.applicable and abs(earth.values["implied_surface_heat_flow"] / earth.values["radiogenic_power"] - 1.85) < 0.03,
+       f"4: Earth ratio on the declared R⊕ must be 1.85, got {earth.values['implied_surface_heat_flow'] / earth.values['radiogenic_power']:.3f}")
     ok(earth.applicable and earth.values["heat_flow_consistency"] == mf.CONSISTENT
        and 55.0 < earth.values["mantle_top_boundary_layer"] < 62.0,
        f"4: recipe Earth → {earth.values.get('heat_flow_consistency')}, δ_t {earth.values.get('mantle_top_boundary_layer')}")
