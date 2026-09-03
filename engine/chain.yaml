@@ -160,7 +160,12 @@ nodes:
   internal_heat_nontidal:
     kind: computed
     recipe: internal-heat-luminosity-methodology
-    outputs: [l_int, t_int, geotherm]
+    # 2026-09-03 브리프 44: geotherm 이라는 이름을 물린다 — 한 낱말이 열 예산과 T(P) 프로파일 둘을
+    # 덮고 있었다 (interior_layers 노트, 브리프 40 §4). 암석체에서 이 노드는 방사성 예산이다:
+    # l_int = 총 방사성 출력, mantle_radiogenic_power = 맨틀 몫 70 %(선언). 거대행성 갈래(냉각광도)는
+    # dynamo.py 와 같은 이유로 거절한다. 붕괴 이력은 계산하되 열진화(Nimmo+ 2004, 미보유)는 아니다.
+    outputs: [l_int, t_int, radiogenic_power, mantle_radiogenic_power, crust_radiogenic_power,
+              radiogenic_power_low, radiogenic_heat_w_m2, radiogenic_power_history_4gyr]
 
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
@@ -351,7 +356,7 @@ edges:
       아니라 우리가 배정하는 반지름이다 — Dante 521 km 가 그 상한의 산물이다.
     ref: "tidal-heating-methodology.md:442"
   - {from: tidal_heating, to: heat_transport_mode, kind: requires, via: surface_flux, ref: "tidal-heating-methodology.md:273"}
-  - {from: internal_heat_nontidal, to: heat_transport_mode, kind: requires, via: geotherm, ref: "tidal-heating-methodology.md:266"}
+  - {from: internal_heat_nontidal, to: heat_transport_mode, kind: requires, via: mantle_radiogenic_power, ref: "tidal-heating-methodology.md:266"}
   - {from: global_fluid_layer, to: heat_transport_mode, kind: selects, ref: "tidal-heating-methodology.md:332"}
   - {from: t_eq_stellar, to: heat_transport_mode, kind: requires, ref: "tidal-heating-methodology.md:341"}
   - {from: atmosphere_choice, to: day_night_contrast, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md:117"}
@@ -401,13 +406,13 @@ edges:
   - {from: ocean_fraction, to: dynamo_rocky, kind: influences, sign: negative, status: gap, ref: "rocky-planet-dynamo-methodology.md:109"}
   - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:70"}
   - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, status: gap, ref: "rocky-planet-dynamo-methodology.md:70", note: "mode 는 라벨이고 열류는 수다. 소비처 둘(core_state · dynamo_rocky)이 원하는데 내는 노드가 없다 — internal_heat_nontidal → core_state 도 같은 양으로 gap. 공급자 하나로 닫아야 한다 (2026-09-03)."}
-  - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, ref: "internal-heat-luminosity-methodology.md:202"}
+  - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, status: gap, ref: "internal-heat-luminosity-methodology.md:202", note: "핵이 **지금도** 대류하는가(Rm > 40)는 붕괴 이력 H(t)만이 아니라 열진화 모형이 필요하다 — Nimmo & Primack 2020 이 Nimmo+ 2004 (2004GeoJI.156..363N, 미보유)에 맡기는 부분. 붕괴 물리는 우리 것(radiogenic_power_history_4gyr), 열진화는 아니다. 2026-09-03 브리프 44 gap."}
   # 내부 온도 프로파일의 앵커(맨틀 포텐셜 온도)는 열 예산이 정한다. 그 예산이
   # internal_heat_nontidal 의 것이고, 표면 온도와 포텐셜 온도 사이의 전도하는
   # 뚜껑 두께가 열류의 함수다 (Unterborn+ 2019 §2). 그러나 저 레시피는 프로파일을
   # 내지 않으므로 requires 로 걸면 아무도 못 지키는 약속이 된다. 실재하는 결합을
   # gap 으로 기록한다 — interior_layers 는 포텐셜 온도를 선언으로 받는다.
-  - {from: internal_heat_nontidal, to: interior_layers, kind: influences, status: gap, ref: "interior-structure-methodology.md:1", note: 열 예산이 내부 단열선의 앵커(포텐셜 온도)를 정한다. 저쪽이 프로파일을 내지 않아 지금은 선언으로 받는다.}
+  - {from: internal_heat_nontidal, to: interior_layers, kind: influences, via: mantle_radiogenic_power, ref: "interior-structure-methodology.md:1", note: "열 예산이 내부 단열선의 앵커(포텐셜 온도)를 정한다. 2026-09-03 브리프 44 — 공급자가 맨틀 방사성 출력(70 % 선언)을 낸다; 그것을 포텐셜 온도로 바꾸는 열 모형은 없어 소비처는 여전히 potential_temperature 를 선언한다. gap 은 풀렸고 선언은 남았다."}
   # core_state 는 핵의 압력과 온도를 융해곡선에 대야 한다. 압력은 2026-08-25 부터
   # 있었고 온도가 2026-08-27 에 생겼다. 그래서 이 두 엣지가 이제 선언될 수 있다 —
   # 노드 자체는 아직 미구현이고(status: missing) 융해곡선은 별도 논문이 필요하다.
@@ -419,7 +424,7 @@ edges:
   # internal_heat_nontidal 의 몫인데 저쪽은 프로파일도 열류도 내지 않으므로, 실재하는
   # 결합을 gap 으로 기록한다 — core_state 는 지금 그 값을 선언으로 받는다.
   # interior_layers 가 같은 이유로 포텐셜 온도를 선언으로 받는 것과 같은 자리다.
-  - {from: internal_heat_nontidal, to: core_state, kind: influences, status: gap, ref: "core-state-methodology.md:1", note: 핵-맨틀 경계의 열류가 핵 쪽 경계 온도를 정한다. 저쪽이 그 열류를 내지 않아 지금은 선언으로 받는다.}
+  - {from: internal_heat_nontidal, to: core_state, kind: influences, via: mantle_radiogenic_power, ref: "core-state-methodology.md:1", note: "핵-맨틀 경계의 열류가 핵 쪽 경계 온도를 정한다. 2026-09-03 브리프 44 — 공급자가 맨틀 방사성 예산을 낸다; D″ 경계층을 가로지르는 열류로 바꾸는 모형은 없어 소비처는 여전히 core_cmb_temperature 를 선언한다. gap 은 풀렸고 선언은 남았다."}
   - {from: body_class, to: core_state, kind: selects, ref: "core-state-methodology.md:1"}
   # 2026-09-03: 이 노드의 유일한 입력 엣지가 star_physical via age 였는데, age 를 내는 노드는
   # 없다 (system_age 가 t_sys, body_age 가 t_body). 항성풍의 나이는 항성의 나이 = 계의 나이.

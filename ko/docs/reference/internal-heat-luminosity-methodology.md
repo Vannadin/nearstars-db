@@ -31,6 +31,29 @@
 관계식 `T_eff⁴ = T_eq⁴ + T_int⁴`로 **결합**되며, 여기서 `T_int`는 비-조석 열원만을 묶어 담는다
 (조석 플럭스가 무시할 수 없는 수준이면 그 값을 `T_int`에 더한다, 해당 문서 참고).
 
+## 계약 — `internal_heat_nontidal`
+
+**Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
+`crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
+`radiogenic_power_history_4gyr` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `radius_earth` [R_earth] ·
+`body_class` [—] · `age_gyr` [Gyr]
+**분기키** — `body_class`. 암석체는 현재값 방사성 예산을 받고, 거대행성·서브넵튠·갈색왜성·항성은
+거절합니다. 그쪽 내부열은 냉각광도 L(M, age) 이고 이 레시피는 검증 안 된 냉각 궤적을 대지 않습니다
+(`dynamo.py` 와 같은 거절). `core_mass_fraction` 미선언 → 거절(농도를 걸 규산염 질량이 없음).
+**등급** — **analog**. 농도 세트(Earth (1) 콘드라이트, Earth (2) 비콘드라이트는 `radiogenic_power_low`
+로 나란히)와 맨틀 몫 70 % 는 선언이고, 규산염 질량은 천체 자신의 `core_mass_fraction` 에서 도출합니다.
+지구 ~21 TW 재현은 상수의 폐합이지 예측이 아닙니다.
+
+암석체의 `l_int` 는 곧 방사성 출력이고 `t_int = (F/σ)^¼` 는 §1 의 관계식을 **방사성 flux 에만** 적용한
+값입니다(지구 ≈ 29 K; §1 의 ≈ 35 K 는 총 열류 0.087 W/m², 방사성 + 잔열 — 그러니 이 `t_int` 는 그 하한).
+`mantle_radiogenic_power` 가 예전 `geotherm` 출력을 대신합니다 — 한 낱말이 여기서는 열 예산을,
+`interior_layers` 에서는 T(P) 프로파일을 덮고 있었습니다. 네 핵종 상수는 표준 핵데이터이며 Nimmo &
+Primack 2020 의 **미발표 초안 표**(LaTeX 소스 `\end{document}` 뒤, PDF 에 없음)에서 읽고 그 초안의
+총합과 부록의 22 TW 에 폐합해 검산했습니다 — `engine/radiogenic-budget-context-notes.md`.
+`radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) 는 붕괴 물리만이며, 열진화(Nimmo+ 2004, 미보유)는
+만들지 않았고 `dynamo_rocky` 로의 엣지는 gap 으로 남습니다.
+
 ## 목차
 
 1. [관계식: T_eff⁴ = T_eq⁴ + T_int⁴](#1-관계식-t_eff--t_eq--t_int)

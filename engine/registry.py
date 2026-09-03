@@ -64,3 +64,4 @@ def load_all() -> None:
     import interior      # noqa: F401
     import core_state    # noqa: F401
     import body_class    # noqa: F401
+    import radiogenic    # noqa: F401

@@ -34,6 +34,33 @@ The **irradiation / equilibrium temperature** `T_eq` (what the star delivers) is
 here folds in only the non-tidal sources (add the tidal flux into `T_int` if it is
 non-negligible, see that doc).
 
+## Contract — `internal_heat_nontidal`
+
+**Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
+`crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
+`radiogenic_power_history_4gyr` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `radius_earth` [R_earth] ·
+`body_class` [—] · `age_gyr` [Gyr]
+**Discriminating keys** — `body_class`: rocky bodies get the present-day radiogenic budget; giant,
+sub-Neptune, brown-dwarf and stellar classes are refused, because their internal heat is the cooling
+luminosity L(M, age) and this recipe does not supply an unverified cooling track (the same refusal
+`dynamo.py` makes). `core_mass_fraction` undeclared → refused (no silicate mass to hang the
+concentrations on).
+**Grade** — **analog**: the concentration set (Earth (1) chondritic, with Earth (2) non-chondritic
+emitted beside it as `radiogenic_power_low`) and the 70 % mantle share are declarations; the
+silicate mass is derived from the body's own `core_mass_fraction`. Reproducing Earth's ~21 TW is
+a closure on the constants, not a prediction.
+
+`l_int` for a rocky body **is** the radiogenic power, and `t_int = (F/σ)^¼` is §1's relation applied to
+the **radiogenic flux alone** (Earth ≈ 29 K; §1's ≈ 35 K uses the total 0.087 W/m², radiogenic + secular,
+so this `t_int` is a floor on that). `mantle_radiogenic_power` replaces the former `geotherm` output, which was one
+word covering a heat budget here and a T(P) profile in `interior_layers`. The four isotope constants
+are standard nuclear data read from Nimmo & Primack 2020's **unpublished draft table** (LaTeX source
+after `\end{document}`; absent from the PDF) and checked by closure against that draft's own totals
+and the appendix's printed 22 TW — see `engine/radiogenic-budget-context-notes.md`.
+`radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) is decay physics only; thermal evolution
+(Nimmo+ 2004, not held) is not built, and the edge to `dynamo_rocky` stays a gap.
+
 ## Table of Contents
 
 1. [The relation: T_eff⁴ = T_eq⁴ + T_int⁴](#1-the-relation-t_eff--t_eq--t_int)
