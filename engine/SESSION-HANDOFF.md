@@ -774,6 +774,15 @@ places were quiet because nothing was checking them.
      Moore 2019, a paper already on the defect index. This is the thinnest of the three and it is
      thin for lack of literature, not lack of work.
 
+   **Consumer audit — Brief 54, 2026-09-03: this row is CLOSED without a new material method.**
+   Viscosity's consumer is live and was already served by Brief 39 (`rheology.py` carries exactly
+   survey ㉑'s two laws). Thermal conductivity refuses: its two holders are reproduction
+   constants (k = 3.456 → 4.0 moves Nimmo's 42 TW closure 1614 → 1580 K). Electrical
+   conductivity refuses: Gaidos's Rm route eliminates V and is blocked on φ, the core entropy
+   production = the CMB heat flux nobody emits (`chain.yaml:417-418`); σ moves Rm by its own
+   factor against a gate cleared by decades. The transcriptions stay in their survey notes.
+   Full measurement: `engine/property-consumer-audit-context-notes.md`.
+
    **A structural fact that decides where each one can land**, measured from `chain.yaml` on
    2026-09-03: `dynamo_rocky` sits **outside** the declared 16-node coupled core and reads its
    converged output, while `heat_transport_mode` is **inside** it. So electrical conductivity
