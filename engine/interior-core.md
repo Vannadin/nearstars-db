@@ -1169,7 +1169,9 @@ in sight (Uranus, Neptune, Callisto, Titan, Europa, Enceladus) are all solar-sys
 whose ages are CAI-anchored directly, so inheriting an age from a star does not even arise
 for them. For invented bodies neither t₀ nor the initial ²⁶Al abundance derives from the
 star's age (Lichtenberg+ 2019 — reported by the directing session as 0–10× solar ²⁶Al₀
-across systems, not re-read here): both are **declarations**, not derived values, and
+across systems, not re-read here — *corrected 2026-09-03 from the cached preprint, C21 (a): the paper's
+scanned range is **[0.1, 10] × ²⁶Al_⊙**, floor 0.1 not 0, and it is a model scan, not an observed
+distribution*): both are **declarations**, not derived values, and
 whether to introduce them is a Phase 4 owner decision. Since ²⁶Al matters only for bodies
 small enough to be shaped by it, the node never applies to the ice giants. **Do not draw a
 `body_age → porosity` edge in the chain**: the edge is real but the payload would be wrong —
@@ -1907,7 +1909,10 @@ spatial integration (shooting, already built) and from C14's root-find (no integ
    스텝보다 작으면 구분하는 의미가 없을거같은데"*, and the answer was already in this file: C9's time-axis
    paragraph (2026-08-31, above) puts the star–planet difference at the **Ma** scale — Neumann & Kruse's
    t₀ ≈ 1.3–1.9 Ma (§3.3) and "no differentiation for t₀ ≥ 5.5 Ma" (§3.4), read there from the cached text
-   — which is the size of one ~4 Myr integration step, so a Gyr thermal history cannot resolve it. And the
+   — which is the size of one ~4 Myr integration step, so a Gyr thermal history cannot resolve it. A printed
+   number now stands under that: Lichtenberg+ 2019 (`2019NatAs...3..307L`, preprint, cached), `.tex:216`:
+   *"Disk lifetimes are distributed around 5 Myr, which is controlled via the photoevaporation rate"* (their
+   ref. `2013A&A...549A..44F`) — planet formation ends within about one step of the star's birth. And the
    roster already does this: `bodies/alpha_centauri_a_b.yaml` and `bodies/pandora.yaml` both carry
    `age_gyr: 5.3` (the system's age), `earth.yaml` 4.54; only the `chain.yaml:94` note says otherwise.
    ⚠ **The opposite trap, from the same C9 paragraph, rides with this**: *"Feeding `body_age` (Gyr) into
@@ -1970,11 +1975,23 @@ opposite for 10–100 km objects, a class the roster may want."* The owner's jud
    move over unchanged: never overwrite a measured value · reproducible from the seed · labelled synthetic.
 
 **⚠ Two prerequisites before starting:**
-- **(a) There is no distribution to draw from yet.** The *"0–10× solar ²⁶Al₀"* in C9's paragraph above is
-  marked there as *"reported by the directing session … not re-read here"*, and **Lichtenberg+ 2019 is not in
-  the cache** (0 hits, 09-03). A distribution built on an unverified relay would plant the disease Brief 64
-  spent the day clearing. On the not-held list (`SESSION-HANDOFF.md`), identifier to be read from ADS by
-  title before it is requested.
+- **(a) There is no *measured* distribution to draw from — and the relayed range was wrong.** The *"0–10×
+  solar ²⁶Al₀"* that C9's paragraph carried as *"reported by the directing session … not re-read here"* was
+  re-read on 09-03 once the owner supplied the paper: **Lichtenberg+ 2019** (`2019NatAs...3..307L`, cached as
+  the **arXiv v1 preprint** — its own title block says *"preprint differing from journal version"* — with
+  LaTeX source; identifier read from ADS, matched to page 1). `Al26_desiccation.tex:216`: *"we consider
+  values in the range ²⁶Al₀ ∈ [0.1, 10] × ²⁶Al_⊙"*, with *"the solar system's 'canonical' ²⁶Al value … of
+  ²⁶Al_⊙ = (²⁶Al/²⁷Al)₀ = 5.25 × 10⁻⁵"* (their ref. `2013M&PS...48.1383K`). **The floor is 0.1, not 0** — and
+  for a threshold-type output that is material: a draw of 0 means no ²⁶Al and therefore never
+  differentiates, 0.1× does not. ⚠ **Label the range for what it is**: *"the range a published model
+  scanned"* ("we consider values in the range"), **not an observed distribution** — the order-of-magnitude
+  variation it motivates is cited to nine papers (`2014ApJ...789...86A` … `2018PrPNP.102....1L`) that are
+  **not held**. Also printed and usable by the dominance measurement: planetesimal radii scanned [1, 100] km
+  with *"r_plts ≳ 30–50 km"* expected (`:88`, `:112`); ²⁶Al half-life **≈ 0.72 Myr** (`:86`) against Monteux's
+  quoted **0.73 My** — two printed values, both carried with their source, the choice made in the measurement
+  brief; initial water-to-rock ratio `f_H2O,init = 0.3` (`:172` ff.). Data availability: *"available from the
+  corresponding author upon reasonable request"* (`:219`) — no deposit; not needed, the ranges and anchors are
+  printed; **not put on any request list**.
 - **(b) Measure dominance first** (owner: *"측정은 그때 가서"* — not now; first thing when started). Monteux's
   "major role" is for **10–100 km** bodies; the roster's smallest are Chaos ~400 km (relayed), Dante 521 km
   and Hades 750 km (`phase4/alpha_centauri.yaml`). Whether the formation pulse is actually dominant for

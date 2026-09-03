@@ -716,9 +716,9 @@ off the *request* list (paywall, withdrawn), which is consistent with their stay
 (both cited by our own methodology) · `2020E&PSL.53416080T` Thompson+ · `2006JGRB..111.6209S` Seagle+ (Fe₃S)
 · `1993Sci...260..771K` Karato & Wu (request withdrawn, paywall) · `2019CRGeo.351..154W` Wagle+ ·
 `2012Natur.485..355P` Pozzo+ (request withdrawn — the recipe never computes σ, item 2) ·
-`2011ApJ...733....2N` Nettelmann+ 2011 · Solomatov 1995 (given up 15:18, paywall) · Fei+ 2000 · Sata+ 2010 ·
-**Lichtenberg+ 2019** (the ²⁶Al₀ distribution C21 would draw from — identifier **not yet read from ADS**, so
-none is written here; look it up by title before requesting; added 09-03 by C21's listing).
+`2011ApJ...733....2N` Nettelmann+ 2011 · Solomatov 1995 (given up 15:18, paywall) · Fei+ 2000 · Sata+ 2010.
+*(Lichtenberg+ 2019 `2019NatAs...3..307L` stood here for twenty minutes on 09-03 and was **obtained by the
+owner the same evening** — arXiv v1 preprint with source, PROVENANCE written by the directing seat; see C21.)*
 A row here is a fact about the cache, not a request; requests go through the owner and are recorded near
 the top of this file.
 
