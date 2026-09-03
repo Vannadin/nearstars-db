@@ -105,6 +105,30 @@ domain upstream. ③ does not fire: the ζ band moves the forward flow ±4 %, fa
 "consistent" and either failure mode. ①: not expected on today's roster — it needs a body with a declared
 T_m and a budget, and Earth is the only one.
 
-## 3. Result — filled after the run
+## 3. Result — 2026-09-03, code `ff90ab6b`
 
-*(pending)*
+**Branch fired: ② for Earth, ⑤ for Pandora, out of domain for the giant — as the work seat registered.**
+① did not fire (only Earth has both a declared temperature and a budget); ③ did not fire (the ζ band
+moves the forward flow ±4 %, the verdict's bands are far wider); ④ fired once, on `k_t`, and was resolved
+by derivation with the inversion closure (§2), not by a second derivation.
+
+| body | declared T_m | δ_t | F_t | implied Q_M | budget | ratio | verdict |
+|---|---|---|---|---|---|---|---|
+| Earth | 1600 K | 58.9 km | 0.0771 W/m² | 39.37 TW | 21.32 TW | **1.84** | consistent-within-secular-gap |
+| Pandora | — | — | — | — | 13.74 TW | — | cannot-say (no potential temperature declared) |
+| α Cen A b | — | | | | (giant, refused upstream) | | |
+
+Earth's 1.84 sits against the paper's own *"roughly twice"* — the recipe reproduces the calibration it was
+built from, which is what ② means and no more. The two flag branches are reachable and pinned: 1400 K →
+less-than-radiogenic; 1800 K → more-than-secular-cooling-allows.
+
+**Transcription checks** (직, 여기 independently): 1600 K → 58.8 km / 0.0768 W/m² / 39.5 TW with the paper's
+R_p and g; 42 TW ← **1613.8 K**; ζ forward 37.8 / 39.5 / 41.4 TW; ζ inverted 1639 / 1614 / 1603 K.
+
+**Where it lives.** In `radiogenic.py`'s recipe rather than `interior_layers`' wrapper: both ends of the loop
+are already there (the budget is this recipe's; the temperature is the declaration it reads from the state),
+so no ordering inside the coupled core is assumed and `solve()`'s path fingerprint is untouched.
+
+**Gate**: `test_mantle_flux.py` (< 0.1 s) in `check.sh`; `check_contracts` 6/6; `chain.py check` and
+`check_via --gate` pass; anchors bit-identical (fingerprint `708ff4627f24c448`). Full `check.sh` result in the
+report.
