@@ -44,6 +44,12 @@ ref. 43 (line 429). Its three authors are **exactly the Stixrude 2020 author lis
 bibcodes, 여기), so it is a shared-composition bridge to Soubiran, **not an independent check on
 Stixrude**. Obtained by the owner 2026-09-03 with `.PROVENANCE.txt`; with the parallel seat.
 
+**Iron-side addendum (Brief 58, owner-fetched):** Pommier 2018 (`2018E&PSL.496...37P`) is the
+one cached *iron-alloy* conductivity paper, and it does not unblock either: point measurements
+without a law (*"It is presently unknown which scaling law applies to what terrestrial body"*),
+*"up to 8 GPa and 1850 °C"* — one order below Mars' centre, two below our bodies. Values with
+conditions in `core-melt-depression-context-notes.md` §8 ③.
+
 ## 2. Soubiran & Militzer 2018 — three DC points, no deposit
 
 Method: DFT-MD + Kubo–Greenwood, DC value by linear extrapolation of σ(ω) to zero frequency.

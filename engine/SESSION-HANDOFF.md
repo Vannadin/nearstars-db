@@ -746,7 +746,10 @@ places were quiet because nothing was checking them.
    the eutectic floor is **+407.5 K at ~48 GPa**, so no roster body can violate it — C5, no
    machinery without a consumer. It gains one the day a body declares an S-rich core. The
    **C–N–H polymer half is closed by carbon not building** (banner above). What is left on this
-   row is only the two unobtained papers: **Fei+ 2000** (the eutectic curve's single anchor) and
+   row is only the two unobtained papers: **Fei+ 2000** (the eutectic curve's single anchor —
+   **and contradicted at 20–21 GPa, where it is load-bearing, by Pommier+ 2018 which we hold: 1700 °C
+   (±50) measured against Fei's predicted 1900 °C, a liquidus-shape dispute; obtaining Fei gives two
+   disagreeing sources, not a settlement** — `core-melt-depression-context-notes.md` §8, Brief 58) and
    **Sata+ 2010** (load-bearing under Hakim's density table).
 
    ⚠ **Two corrections to how this row was first written** (2026-09-02, survey ⑮ + the owner).
@@ -898,7 +901,9 @@ places were quiet because nothing was checking them.
     SI Appendix, 32 pp — this is what unblocks the thermal-conductivity axis), and
     `2012E&PSL.349..109O` (Ohta — the only measured MgSiO₃ post-perovskite conductivity we hold).
   - **Still unobtained, both from Brief 38's row**: **Fei+ 2000** (the Fe–FeS eutectic curve's
-    single anchor) and **Sata+ 2010** (load-bearing under Hakim's density table).
+    single anchor — unobtained, load-bearing, **and contradicted at that pressure by the cached
+    Pommier+ 2018**, `core-melt-depression-context-notes.md` §8; not re-added to the closed request
+    list) and **Sata+ 2010** (load-bearing under Hakim's density table).
     `core-melt-depression-context-notes.md:126-127` lists four more as blocked: Fischer+ 2014,
     Komabayashi 2014, Noack+ 2020, Chen+ 2008.
 

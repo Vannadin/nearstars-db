@@ -124,8 +124,56 @@ were not used to calibrate its model.
 
 Mori+ 2017 · Buono & Walker 2011 (both since obtained and read — the two rows above);
 still blocked: **Sata+ 2010** (load-bearing under Hakim's table), Fischer+ 2014,
-Komabayashi 2014, Noack+ 2020, Chen+ 2008, **Fei+ 2000** (Mori's single anchor point).
+Komabayashi 2014, Noack+ 2020, Chen+ 2008, **Fei+ 2000** (Mori's single anchor point —
+**unobtained, load-bearing, and contradicted at the pressure where it is load-bearing by a paper we
+hold**; §8 below. Not on the request list: the list closed 2026-09-03 and stays the owner's).
 Three of these answer 403 to plain fetches while marked OA — bot checks, not paywalls;
 not worked around.
 
 Gate delta 0 (nothing new executes — prose only); anchors untouched by construction.
+
+## 8. Two Pommier papers, owner-fetched — what they change and what they do not (Brief 58)
+
+Quotes verbatim from the cached PDFs (c4 read, 직 re-read, 여기 re-grepped `pdftotext` before writing).
+
+**① `IRON_FES_GAP_REASON` (10–21 GPa) now has two measured points inside it — and does not
+close.** Pommier, Laurenz, Davies & Frost 2018 (`2018Icar..306..150P`,
+[ADS](https://ui.adsabs.harvard.edu/abs/2018Icar..306..150P)): *"Experiments were performed at high
+temperatures (1400–1850 °C) and high pressures (14 and 20 GPa) using a multi-anvil apparatus."* Both
+pressures are inside the refused interval. It does not close it: the eutectic values it prints
+(*"about 15 wt.% S at 20 GPa and 18 wt.% S at 14 GPa"*) are a **citation** to Fei+ 2000,
+Chudinovskikh & Boehler 2007, Chen+ 2008a and Buono & Walker 2015, not its measurement — its own
+samples are *"containing mostly 1 and 5 wt.% S (and a few on FeS)"*, deliberately below the eutectic
+(it studies the snow regime); and two pressures are points, the hole is an interval. The gap reason
+in `eos.py` now says so.
+
+**② Fei+ 2000 is contradicted where it is load-bearing.** Verbatim: *"The determination of the
+liquidus curve from our data at 20 GPa and about 5 wt.% S does not agree with the predicted liquidus
+curve from Fei et al. (2000) at 21 GPa: for this composition, Fei et al. predicted a liquidus
+temperature of 1900 °C, while an additional data point from our experiments suggests a temperature of
+1700 °C (±50) that would be consistent with a sigmoidal shape of the liquidus curve."* A shape
+dispute, not an offset — the field *"suggested either a parabolic (Fei et al., 2000) or a sigmoidal
+shape (Chen et al., 2008a)"* and this paper concludes *"our results show the liquidus curve is not
+parabolic"*, with a steep slope between 2000 and ~1600 °C. Mori's 1348 K @ 21 GPa anchor is Fei's;
+obtaining Fei would yield two disagreeing sources, not a settlement. Provenance fact, not
+corroboration: the paper cites **our** melting-curve source — *"The eutectic composition is expected
+to have more than ≈13 wt.% S over the entire depth of the Martian core (Mori et al., 2017)."*
+
+**③ Electrical conductivity stays refused, now with a measured reason.** Pommier 2018
+(`2018E&PSL.496...37P`, [ADS](https://ui.adsabs.harvard.edu/abs/2018E%26PSL.496...37P)) is point
+measurements, not a law — no Arrhenius form, no fitted σ(P,T); its own words: *"It is presently
+unknown which scaling law applies to what terrestrial body, and new parameterized modeling studies …
+are required."* Range *"up to 8 GPa and 1850 °C"* — an order of magnitude below Mars' centre
+(~40 GPa) and two below our bodies. Values with their conditions, not to be used without them: at
+**4.5 GPa**, Fe-5 wt.% S under equilibrium crystallisation *"from about 300 to 190 microhm-cm,
+depending on temperature"*; liquid FeS *">10 times more resistive than Fe-5 wt.% S"*; compositions
+Fe, Fe-5 wt.% S, Fe-20 wt.% S, FeS, FeSi₂. Same shape as the thermal refusal — points where a front
+was wanted, in a domain that does not reach the consumer.
+
+**④ Shared-author dependency.** The Icarus paper's third author is Christopher J. Davies, first
+author of the iron-snow paper `2018E&PSL.481..189D` (Davies & Pommier 2018, *Iron snow in the
+Martian core?*). Agreement between these melting relations and that snow model is **internal
+consistency, not corroboration**. ⚠ The snow branch has **no engine documentation** today — the
+paper is in the cache with provenance only; this paragraph is where the fact lives until a snow row
+exists, so nobody counts the pair as two sources.
+

@@ -74,7 +74,9 @@ from Gaidos+ 2010 and never evaluated. Brief 52 wrote the formula into the metho
 (`Rm = V L/λ`, `λ = 1/(μ₀σ)`) as quoted-not-evaluated. Survey ⑱'s transcription (Stixrude+ 2020)
 is **silicate liquid**, the input of a basal-magma-ocean dynamo that is not a node; the core
 dynamo needs **iron** σ, which neither ⑱ paper prints (the Pozzo 2012 request was withdrawn in
-Brief 47 for lack of a consumer, and that stands).
+Brief 47 for lack of a consumer, and that stands). The one iron-alloy σ paper we hold, Pommier 2018
+(`2018E&PSL.496...37P`, Brief 58), is points without a law at ≤ 8 GPa — two orders below our bodies
+— so "no cross-check" is now "no law, wrong domain" (`core-melt-depression-context-notes.md` §8 ③).
 
 **Cause correction, recorded so nobody inherits it (directing seat, on reading this): the brief
 said the block was V. It is φ.** The brief's expectation was made from the `Rem ~ 16(B_c/1 µT)`
