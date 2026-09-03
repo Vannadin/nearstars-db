@@ -32,8 +32,11 @@ The directing seat's leads reproduce, with one addition it did not have:
   No `sigma`, no `μ₀`, no velocity anywhere executable.
 - Viscosity: **two** consumers, not one — `rheology.py:90-101` (Rovira-Navarro eq. 5, Monteux
   eq. 8, Maxwell time) consumed at `interior.py:3161`, and `mantle_flux.py:86-88`
-  (Nimmo+ 2004 eq. 35, `η₀ exp[−ζ(T−T₀)]`) consumed by `implied_flux`. `fermi.py`'s `ETA_*` is
-  the degeneracy parameter, a grep false friend.
+  (Nimmo+ 2004 eq. 35, `η₀ exp[−ζ(T−T₀)]`) consumed by `implied_flux`.
+- **Named non-consumers — the words a grep for these properties will hit, and what they are:**
+  `tidal_transport.py:269` `conductive_flux` is `HD − F_m`, a residual from Ė, no k in it;
+  `fermi.py`'s `ETA_*` is the electron degeneracy parameter η, not a viscosity;
+  `mantle_flux.py:23-26` and `rheology.py:85,198` say "conductivity"/"conductive" in prose only.
 
 ## 1. Thermal conductivity — refuse: no consumer; both holders are reproduction constants
 
@@ -72,6 +75,10 @@ from Gaidos+ 2010 and never evaluated. Brief 52 wrote the formula into the metho
 is **silicate liquid**, the input of a basal-magma-ocean dynamo that is not a node; the core
 dynamo needs **iron** σ, which neither ⑱ paper prints (the Pozzo 2012 request was withdrawn in
 Brief 47 for lack of a consumer, and that stands).
+
+**Cause correction, recorded so nobody inherits it (directing seat, on reading this): the brief
+said the block was V. It is φ.** The brief's expectation was made from the `Rem ~ 16(B_c/1 µT)`
+shortcut; the cached paper's general form eliminates V. The refusal reads "blocked on φ".
 
 **Is V reachable from anything we solve? — checked against the cached paper, not the summary.**
 L is: `interior_layers` emits `core_radius` and `chain.yaml:412` already wires it. V is **not** —
@@ -121,7 +128,9 @@ in full, not the handoff's one line):
 what `rheology.py` is. The gaps survey ㉑ §4 names (activation volume, grain size for diffusion
 creep) have **no source in the cache** and end as not found, not as a build.
 
-**The second consumer is a reproduction constant, same verdict as §1.** `mantle_flux.py:86`
+**Two live consumers that both already have what they need is a stronger closed state than
+one** — the refusal to build a third viscosity law is safe on both sides, not just on the figure
+verdict's. **The second consumer is a reproduction constant, same verdict as §1.** `mantle_flux.py:86`
 is Nimmo's Frank-Kamenetskii form with ζ = 0.01 (declared, ±0.5×10⁻² kept). Substituting
 `rheology.py`'s Arrhenius law there would move the 1614 K closure for the reason §1 gives.
 Recorded here from Brief 55, reproduced (여기): ζ = E/(RT²) over E = 250–350 kJ/mol,
@@ -130,15 +139,32 @@ the *adopted* ζ = 0.01 back-converts to **E ≈ 212.8 kJ/mol at 1600 K**, below
 floor, re-entering it only at **T ≈ 1734 K**. Internally consistent, but ζ = 0.01 sits at the
 low edge of its band, not the midpoint. It matters only if ζ is ever varied; it needs no paper.
 
+**What "wired" in the handoff's row 3 turned out to mean — a missing call, not missing physics,
+and an unstated denominator.** `radiogenic.py:153` *does* pass its budget into
+`mantle_flux.consistency` (forward direction wired; `test_mantle_flux.py` §4 exercises it through
+`rg.solve`). What nobody calls in production is `invert_for_flow` — the inverse, budget → T_m —
+which is what Brief 57 composes. Found on the way: the forward direction compares Q_M against
+**`total_w`** (21.15 TW) and Brief 57's inverse uses **`mantle_w`** (14.81 TW), and neither
+`mantle_flux.py`'s header nor `consistency`'s notes nor the consistency context notes state the
+choice. Physics is one-sided — F_t crosses the mantle's *top* boundary layer and crustal production
+is generated above it, so `mantle_w` is like-for-like (Korenaga 2008's *convective* Urey ratio, the
+one the methodology names as the geotherm consumer's). Cost of aligning the forward, measured
+(여기): Earth at 1600 K, Q_M 39.22 TW → ratio 1.84 / Urey 0.54 against total, **2.63 / 0.38**
+against mantle — same label (floor 1/3), different number; a body at 2.2 flips to too-hot. **Not
+changed here; named for the owner.**
+
 ## 4. What closes, what stays open
 
 - **Closed**: the work-order item "three missing properties" — no new material methods. The
   transcriptions stay where they are (survey notes §1/§3 each) and are ready if a consumer
   appears.
-- **The one thing that would re-open two of the three at once**: a CMB heat flux node
-  (`chain.yaml:417-418`). It is the consumer for iron k (eq. 14), for φ (eq. 3–4) and hence for
-  σ; it is also the thermal-evolution model Nimmo & Primack 2020 delegate to Nimmo+ 2004. That is
-  an owner decision and a much larger item; it is not proposed here.
+- **The one thing that would re-open three rows at once** (directing seat drew the third): a CMB
+  heat flux node (`chain.yaml:417-418`). It is the consumer for iron k (eq. 14), for φ (eq. 3–4)
+  and hence for σ — **and φ ~ 100 MW/K is the same quantity as the parked owner decision on
+  replacing the dynamo ladder with Nimmo+ 2004's entropy-production criterion**, whose threshold is
+  uncertain over four orders (0.1–1000 MW/K). It is also the thermal-evolution model Nimmo & Primack
+  2020 delegate to Nimmo+ 2004. One owner question with three payoffs, not three asks; a much larger
+  item, not proposed here.
 - **Not a refusal cause anywhere**: Karato & Wu 1993 — Brief 55 withdrew it (every constant is
   cited jointly; only Rovira-Navarro's E_a = 300 rests on it alone, labelled as an unchecked
   secondary citation at `rheology.py:47` and `viscosity-context-notes.md` §1).
