@@ -141,6 +141,39 @@ commit as the code** (the gate66 checklist line); edges from `cmb_heat_flux`, `c
 - **⑦ Gate FAIL 0, cost stated, `pmset -g` state recorded beside the time.**
 - **⑧ New declarations/outputs → Needs line + domain row (en + ko) in the same commit.**
 
+## 3b. Repair pre-registration — the route-B profile was not converged (2026-09-04, before code)
+
+**The directing seat found a real bug in route B, and §4 ④'s recorded cause is wrong.** Reproduced by the
+work seat with `steps=` passed explicitly (⚠ `ce.STEPS = n` does *not* change the default argument — it is
+bound at definition time; the first convergence check that did that saw a false "step-independent"
+346 GPa):
+
+    steps    400: p_center 345.84 GPa  m residual −0.00328  all liquid          ← what shipped
+    steps   1600:          352.56             −0.00091  inner core, ICB 351.3 GPa
+    steps   6400:          355.36             −0.00031  inner core, ICB 351.3 GPa
+    steps  25600:          356.34             −0.00016  inner core, ICB 351.3 GPa
+
+Forward Euler at 400 steps under-accumulates the pressure by ~3 %, the centre falls below the ICB pressure,
+and the inner core "disappears". Converged, route B's ICB is **351.3 GPa — the same as `core_state`'s 351.4**.
+The two codes do not disagree. **`m_center_residual` −0.003 was the signature of non-convergence, not of
+closure** — the instrument was there and was read the wrong way. (The 2 % inner cutoff also leaves the
+centre pressure a little under the true value; the directing seat's RK4 reaches 358.47 with the same cutoff.)
+
+**Repair**: forward Euler → RK4 in `core_profile` (the ρ(P, T_ad) coupling evaluated at each stage); step
+count re-measured after. **Gate rows**: mass residual below 1e-3, and **the profile's centre pressure within
+0.5 % of `interior.solve()`'s own `core_pressure` for the same Earth (358.46 GPa)** — the real anchor: two
+codes integrating the same material on the same body must give the same pressure profile, and no check said
+so until now. Then the engine's Earth is re-solved and §4 ② rewritten; **the shipped 3 978 K / 4.91 TW are
+values on a wrong profile.**
+
+**Registered outcomes.** ① RK4 at 400 steps: centre pressure within 0.5 % of 358.46 GPa and |mass residual|
+< 1e-3 (expected — the directing seat measured 358.47). ② Anchors untouched, no `--refresh` (new node).
+③ Re-solved Earth T_c and Q_C: reported, **no expectation**. ④ Inner core at the *declared* 3 760 K: yes
+(both codes); at the *solved* T_c: measured — the directing seat's reading is that it vanishes, because
+`fe_prem` is temperature-independent so the pressure profile stays while the adiabat rises through the
+melting curve; if so, the finding is *"closing the loop removes Earth's inner core"*, one face, and the
+"two faces of the γ knife-edge" sentence is withdrawn. ⑤ Gate FAIL 0 with power state.
+
 ## 4. Run record — 2026-09-03
 
 **Branches fired: ① exactly · ② answered (no expectation was written) · ③ did not fire · ④ answered, and
