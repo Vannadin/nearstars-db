@@ -924,7 +924,19 @@ class Ammonia:
             # 표의 들쭉날쭉한 가장자리. 500 K 는 1.5 g/cm³, 700 K 는 2.0 까지만 있고, 압력 천장은
             # 등온선마다 다르다(1000 K 237 GPa … 10 000 K 333.2 GPa). 여섯 칸은 계산되지 않은 것이지
             # 떨어진 것이 아니라, 그 사이를 채우지 않고 표 이름을 대며 거절한다.
-            raise PhaseGap(self.name, p, f"{e} — 표 밖은 외삽하지 않는다.", t) from None
+            #
+            # 거절의 **방향** (C22 step 2-②, 2026-09-03, 오너 "일단 2부터 보자"). 표의 압력 바닥과 천장은
+            # 둘 다 온도에 대해 단조증가다 (11 등온선 실측: 바닥 0.309→7.70, 천장 22.1→333.2 GPa,
+            # 500→10 000 K; test_ammonia.py 가 그 단조성을 게이트로 잰다 — 이 표의 사실이지 일반 보장이
+            # 아니다). 그러니 천장 위(p > p_hi(T))는 더 뜨거워져야 표 안이라 too_cold=True, 바닥 아래
+            # (p < p_lo(T))는 더 차가워져야 안이라 too_cold=False. 라벨이 없던 동안 사격의 온도 괄호
+            # (interior.py, `t_now * 1.6 if too_cold else / 1.6`)가 천장 쪽 거절을 기하로 읽고 **더 차갑게**
+            # 밀어 w > 0 의 첫 시험 경로가 152 GPa · 545 K 에서 0 초 만에 죽었다. 방향은 여기 소비자에서
+            # 가린다 — ammonia_table.py 는 생성 파일이라 손대지 않는다. 무조건 True 로 달면 바닥 쪽이
+            # 반대로 밀린다.
+            p_lo, p_hi = ammonia_table.p_bounds(t)
+            raise PhaseGap(self.name, p, f"{e} — 표 밖은 외삽하지 않는다.", t,
+                           too_cold=p > p_hi) from None
 
     def uncertainty(self, p: float, t: float) -> float:
         """논문이 적은 압력 불확도: 보간이 밟는 격자점에 별표가 있으면 5 %, 아니면 2 %."""

@@ -112,6 +112,27 @@ def main() -> int:
         except PhaseGap as e:
             check("Bethkenhagen" in e.reason and "2013" in e.reason, f"{why}: '{e.reason[:60]}…'")
     check(not a.in_domain(30e9, 600.0) and a.in_domain(30e9, 4000.0), "in_domain 이 같은 가장자리를 안다")
+    # C22 step 2-② (2026-09-03): 거절의 방향. 표의 압력 바닥·천장이 둘 다 T 에 단조증가라는 것은 **이 표의
+    # 사실**이고 재생성되면 조용히 깨질 수 있으므로 여기서 잰다 — eos.Ammonia.density 의 too_cold 판정
+    # (천장 위 → True, 바닥 아래 → False)이 이 단조성에 기댄다.
+    bounds = [a.p_bounds(float(t)) for t in a.T_K]
+    mono_lo = all(b[0] > c[0] for b, c in zip(bounds[1:], bounds))
+    mono_hi = all(b[1] > c[1] for b, c in zip(bounds[1:], bounds))
+    check(mono_lo and mono_hi,
+          f"표의 압력 바닥·천장이 T 에 단조증가 (바닥 {bounds[0][0] / 1e9:.3f}→{bounds[-1][0] / 1e9:.2f}, "
+          f"천장 {bounds[0][1] / 1e9:.1f}→{bounds[-1][1] / 1e9:.1f} GPa) — 방향 판정의 전제")
+    from eos import PhaseGap as _PG
+    p_lo, p_hi = a.p_bounds(3000.0)
+    flags = {}
+    for side, p_try in (("above", p_hi * 2.0), ("below", p_lo * 0.5)):
+        try:
+            NH3.density(p_try, 3000.0)
+            flags[side] = None
+        except _PG as g:
+            flags[side] = g.too_cold
+    check(flags == {"above": True, "below": False},
+          f"거절 방향 — 3000 K 천장 위 too_cold={flags['above']} (더 뜨거워야 표 안), 바닥 아래 too_cold={flags['below']} "
+          "(더 차가워야 표 안); 두 방향 다 실재한다")
 
     print("\n규약과 열 — 내부에너지에 진동 보정이 들어 있다고 말하는가")
     check(a.U_INCLUDES_VIBRATIONAL_CORRECTION is True,

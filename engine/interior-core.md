@@ -2103,6 +2103,17 @@ shoot reads the refusal as geometry. **Step 2 therefore has two prerequisites**:
 **and** a cold-flank label on the ammonia refusals (the cold-flank family's newest member; not fixed here —
 measurement, not repair). The P3 gate row's static half now asserts the wrap exists with default 0.
 
+**Step 2-② landed 2026-09-03** (owner: *"일단 2부터 보자."*; `ammonia-wiring-context-notes.md` §5–§6).
+`Ammonia.density` decides `too_cold` from `p_bounds(T)` — above the ceiling → hotter, below the floor →
+colder — resting on the table's floor and ceiling both rising with T, which is now a gate row in
+`test_ammonia.py` (a fact of this table, not a guarantee). Anchors untouched (not a path function). **What ④
+then showed, reproduced twice**: the cold trials now steer up and pass the state that killed step 1; the
+corridor meets the registered ceiling deep (1 035 GPa · 3 935 K, "hotter"); and the hotter adiabat puts the
+mantle top at **4.10 GPa · 4 749 K, 0.023 GPa below the table's low-density floor** ("colder") — the loop
+concludes by name between two walls pulling opposite ways. **So the deep-mantle rule is not one rule**: step 2
+needs a rule above the ceiling *and* one below the floor at a hot mantle top (or an entry condition on the
+wrap), and neither is declared here. That is the shape of the owner's decision.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,

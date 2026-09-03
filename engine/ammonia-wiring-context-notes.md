@@ -110,7 +110,12 @@ here.
   1293 s **on the same code** (gate66 → gate67 differs by the two methodology docs only), so the extra is not
   the wiring; the step's own cost is gate66's +13 s over gate65's 1280 s, itself within run-to-run noise. The
   1585 s is unexplained by this seat (no competing gate or solve was running; a single `ps` at 20:39 showed
-  only this gate) and is recorded rather than attributed.
+  only this gate) and is recorded rather than attributed. *Trend, for the next time it jumps*: today's gates
+  ran 1224 → 1268 → 1280 → 1293 → 1585 s; the first four carry a cause (one new 0.81 s row plus noise), only
+  the fifth jumps. **Hypothesis, not a diagnosis (the directing seat's, unverified by anyone)**: thermal
+  throttling after several 20-minute CPU-saturating gates in a row. The cheap check, for later and not run
+  now: re-run the same tree (`20776346`) after the machine has rested — near 1293 s says machine, still
+  ~1585 s says look elsewhere.
 
 **Labels landed in code**: at w > 0 the recipe's note carries the five (methane asymmetry · ceiling below the
 mantle base · convention caveat on ∇_ad · fluid but molecular-vs-dissociated unsaid · partial N₂+H₂
@@ -157,3 +162,44 @@ break it silently). No other material's `too_cold` is touched; the default stays
 minutes after the commit):** a new declaration, output or node goes into the methodology doc's Needs line and
 domain table (en + ko) **in the same commit** as the code — a pre-registration item, not a follow-up. This
 step adds no declaration or output (a flag on an existing refusal), so the line is carried, not exercised.
+
+## 6. Run record — step 2-②, 2026-09-03
+
+**Branches fired: ① · ⑤ exactly; ② as registered ("unfired" is wrong — the floor side *did* fire, once,
+and it is the product); ③ did not fire; ④ answered.**
+
+- **①** `eos.Ammonia.density` now decides the flag from `ammonia_table.p_bounds(t)`: `too_cold = p > p_hi(T)`.
+  Unit row in `test_ammonia.py`: at 3000 K, 2 × ceiling → `too_cold=True`, ½ × floor → `False`. Both directions
+  exist and carry the right flag. **③ did not fire**: the monotonicity of both bounds over all 11 isotherms is
+  now a gate row (floor 0.309 → 7.70, ceiling 22.1 → 333.2 GPa).
+- **⑤** `--fast` passes untouched; `Ammonia.density` is not a path-fingerprint function and `interior.py` is
+  unchanged. No `--refresh`.
+- **④ — the next wall, and it is the *floor*, not the ceiling.** Opt-in Uranus solve at w = 0.1159, traced
+  twice with identical output (4.3 s / 4.4 s; `density` 9 959 calls, `c_p` 1 990, `grad_ad` 1 990; seven
+  refusals):
+
+  | # | P (GPa) | T (K) | table floor–ceiling at T (GPa) | side | `too_cold` → steer |
+  |---|---|---|---|---|---|
+  | 1–3 | 164 · 162 · 158 | 131 · 210 · 338 | below 500 K (isotherm range) | temperature | True → hotter |
+  | 4–5 | 152 · 143 | 545 · 883 | 0.36–22.4 · 0.67–65.6 | **ceiling** | True → hotter |
+  | 6 | **1 035** | 3 935 | 3.07–268.3 | **ceiling** (the registered deep-mantle wall) | True → hotter |
+  | 7 | **4.10** | **4 749** | **4.123**–276.8 | **floor**, by 0.023 GPa | False → colder — bracket flips, the loop concludes |
+
+  Reading, in order: the fixed flag now steers the cold trials **up** (refusals 1–5, the state that killed
+  step 1's run is passed in 0 s), the corridor reaches the deep mantle and meets the registered ceiling at
+  1 035 GPa (refusal 6, steer hotter again), and the hotter adiabat then puts the **mantle top** — the first
+  ice state above the ocean table's 2.3 GPa, where `with_ices` engages — at 4.10 GPa · 4 749 K, **below the
+  table's low-density floor** at that temperature (4.123 GPa; the floor rises with T, 0.309 GPa at 500 K to
+  4.45 GPa at 5 000 K). That refusal says "colder", the previous said "hotter": **the corridor is pinched
+  between two walls that pull opposite ways**, and the temperature loop concludes by name instead of cycling
+  (Brief 22's rule held). *"Refused by name at the ceiling"* was the expectation written for step 1; the
+  truth is **two walls**: the deep ceiling (a deep-mantle rule, owner) **and the shallow floor** (the
+  low-density edge of the table at a hot mantle top — a *shallow* rule, or a hotter-than-the-floor entry
+  condition on `with_ices`, neither declared here). **No single temperature satisfies both at w = 0.1159 on
+  Uranus's column.** That is the shape the owner's deep-mantle decision has to take: it is not one rule.
+- **Instrument error, caught by running twice** (the rule from Brief 34's null result): a first inline trace
+  reported *"131 K … ValueError, 1 fire"* — its own `except` block called `p_bounds(131 K)`, which raises
+  outside the isotherm range, replacing the `PhaseGap` it was logging. Guarded in the kept script
+  (`scratchpad/c22_trace.py`); the two guarded runs above agree to the digit. Reported so the false first
+  reading is not quoted.
+- **⑥** Gate: see the line appended below after the run.
