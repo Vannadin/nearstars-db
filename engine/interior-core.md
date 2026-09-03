@@ -1956,7 +1956,10 @@ calibrated on Earth** — its success criterion is "reproduce Earth's present st
 body kept warm by tides and one that cooled quietly finally get different answers — the thing the ladder
 cannot do.
 
-**Start condition.** Not now. Order: P3 → C14 → then reconsider.
+**Start condition.** Not now. Order: P3 → C14 → then reconsider. **First real consumer, 2026-09-04: C15** —
+`core_entropy_production` emits `entropy_history_verdict = "cannot-say (needs C20)"` on every result, because
+two of Nimmo's three dynamo criteria (mean and minimum ΔE over the last 3.1 Gyr) are history quantities and
+the discriminating one is ΔE_min; a present-day φ cannot answer them. C20 stops being a listed-only item.
 
 ### C21 — the short-lived radiogenic formation pulse (²⁶Al · ⁶⁰Fe) — **listed 2026-09-03, not started**
 

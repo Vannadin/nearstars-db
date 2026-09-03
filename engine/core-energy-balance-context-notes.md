@@ -192,7 +192,10 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
   paper does not print that value, and the C_r its own Q_L and Q_g imply is −14.6 km/K.* **Not adopted** —
   moving C_r to land the printed numbers is the thing this project forbids; the test keeps −13.45 with its
   label and the 8 % stays visible. (β_c's printed 10 % disagreement between Alfè and Roberts would move Q_g
-  alone, not Q_L, so it is not the common factor.) ψ's zero point cancels in Q_g
+  alone, not Q_L, so it is not the common factor.) **Independently confirmed by C15 (2026-09-04)**: on the
+  entropy side the three C_r-bearing terms (E_L, E_g, E_H) come out 6 % low and the C_r-free ones (E_R, E_s,
+  E_k) exact — the same factor, the same direction, from a different budget (`core-entropy-context-notes.md`
+  §4). ψ's zero point cancels in Q_g
   (both choices identical to 1e-6). Root-find on the paper's own mantle side (eq. 29 base 2 694 K):
   **T_c 4 152 K against the printed 4 155.** C_r's three values kept apart: Gubbins −9.56 (printed, other
   model) · Table 4 ratio −13.45 (our division) · slope-derived **−26.5 km/K** (ours; melting curve −0.434 vs

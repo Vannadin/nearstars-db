@@ -99,9 +99,23 @@ name · ⑥ untouched · ⑧ same commit.**
   = E_R 99 + E_s 74 + E_L 0 + E_H 0 + E_g 0 − E_k 242. **Band −264 … +238 MW/K** over the eight corners of
   k 30–70 × H 0–1.5 pW/kg × dT_c/dt 33–126 K/Gyr — **4 of 8 corners positive; the band straddles zero.**
   Scan of the single axes (scratch `c15_proto.py`): k 30 → +28, k 70 → −166; dT_c/dt −126 K/Gyr → +141;
-  **H = 0 → −167 (④)**. Note E_k here is eq. 25 integrated on our own adiabat, 242 MW/K, against the paper's
-  D-based 202 — a 20 % difference in the term that decides the sign; reported, not attributed (the paper's
-  E_k is on its Gaussian T(r) with D 5 969 km; ours is on the ρ^γ adiabat of `fe_prem`).
+  **H = 0 → −167 (④)** — **and that corner is the structure the paper names, not a coincidence**: what keeps
+  the paper's inner-core-free early Earth positive is core potassium (*"no potassium in the core results in …
+  a reduction in present-day core entropy production of 45 per cent"*, §5.3); our H band's floor is 0, so the
+  budget collapses there by construction. **Three labels ride on the −69, large, because without them it
+  reads as "Earth has no dynamo" — the same misreading Q_CMB 2.75 TW invited this morning**: the required
+  excess is 0.1–1 000 MW/K (no threshold decides); the band straddles zero (4 of 8 corners positive); **any one
+  of the three declarations alone flips the sign** (k 30 / dT_c/dt −126 / H nominal vs 0). That is the honest
+  summary of ②. **E_k 242 vs 202 is two models, not a disagreement**: 202 is eq. 26's closed form, derived
+  under the Gaussian core's ∇T/T = −2r/D², which does not hold on our ρ^γ adiabat; 242 is eq. 25 integrated
+  on our own profile. Route A (the test) uses the paper's model throughout and route B (the recipe) uses our
+  profile throughout — **checked: `entropy_terms` reads only the C14 profile, C14's terms and the declared
+  constants; no term of route B comes from the paper's model.** E_k is ~20 % sensitive to the core temperature
+  model, and **the sign does not turn on that choice**: with E_k set to 202, ΔE is −29 — still negative.
+  **Cross-check between the two budgets**: in C14 the two C_r-bearing energy terms (Q_L, Q_g) sit 8 % low; here
+  the three C_r-bearing entropy terms (E_L, E_g, E_H) sit 6 % low, same direction, and the C_r-free terms are
+  exact in both — the energy and entropy budgets independently point at the same unprinted C_r
+  (`core-energy-balance-context-notes.md` §4 ①).
 - **③** Same profile, two T_c: at the declared 3 760 K (inner core 566 km) ΔE = **+125** with E_L 69, E_g 170,
   E_H −56; at 4 000 K (all liquid) ΔE = −70 with E_L = E_g = E_H = 0 exactly.
 - **What ② means, said carefully.** On this model the engine's Earth *at the energy balance's own solution*
@@ -119,4 +133,5 @@ name · ⑥ untouched · ⑧ same commit.**
 - **⑧** Contract (en + ko), chain node + six edges (the `→ dynamo_rocky` one `status: gap` by design — not
   wired), registry import, `check.sh` row; `chain.py check` 50 nodes / 194 edges; `check_via --gate` and
   `check_contracts` 10/10 pass.
-- **⑦** Gate: below.
+- **⑦ Gate on `ffd9602c`: FAIL 0, 484 PASS (+12 = `test_core_entropy`'s rows), 02:11:52 → 02:32:36 = 1 244 s,
+  AC 100 % `powermode 2` at both ends** — mains branch (1 224–1 362); the new test's 6.6 s is inside the noise.
