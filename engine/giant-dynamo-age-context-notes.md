@@ -44,3 +44,35 @@ Positive control: changing `age_gyr` on the giant must move `b_pol`.
   grounded tonight** (a cooling-track paper is a request, not a read-in).
 - **④** Age < 0.2 Gyr returns out_of_domain → confirmed; recorded as the third named refusal.
 - **⑤** No numeric constant moves; anchors untouched; no `dynamo.py` change. Gate FAIL 0, time, `pmset`.
+
+## 3. Run record — 2026-09-04
+
+**Branch fired: ① for the roster giant; ③ and ④ confirmed as named refusals. Nothing in `dynamo.py` moved.**
+
+    body / trial                         M (M_J)   age (Gyr)   regime          grade        b_pol (µT)   reason (head)
+    Polyphemus, run.py from body_age     0.378     5.3         giant           calibrated   344.7        "inside the calibrated giant range; dipole set by internal cooling luminosity"
+    Polyphemus, age halved (control)     0.378     2.65        giant           calibrated   433.3        same
+    Luhman 16 A-class mass (board 76)    33.5      0.5         out-of-domain   judgment     —            "brown-dwarf band 13–70 M_J: needs L(M, age); the document chose not to supply an unverified track"
+    below the calibration                0.378     0.15        out-of-domain   judgment     —            "0.15 Gyr is below the 0.2 Gyr floor; cooling luminosity changes too fast to interpolate"
+
+- **Positive control held**: halving the age raises b_pol 344.7 → 433.3 µT (the −0.33 exponent, as written).
+- **① for the giant class**: `run.py` delivers `dynamo_giant` from `body_age` alone — `body_age.age_gyr` reaches
+  the recipe and it produces a calibrated value. **The edge's `via: cooling_luminosity` was the mechanism's
+  name, not the payload's** (C17's shape again); for giants the payload is `age_gyr` and it is already wired.
+  Relabelled in `chain.yaml`: `body_age → dynamo_giant via t_body` (the graph's name for the code's `age_gyr`), no longer a gap.
+- **③ confirmed, and it is not academic**: Luhman 16 A and B (33.5 and 28.5 M_J on the board, 0.5 Gyr) are on
+  the v1 roster, and both sit in the band that returns out-of-domain. **The brown-dwarf L(M, age) gap is a
+  roster gap, not a corner case.** It stays a gap, on its own line: `body_age → dynamo_giant via
+  cooling_luminosity, status: gap`, now scoped to the brown-dwarf branch, with the request named (a
+  Burrows / Baraffe-class cooling track, grounded before it is read in — a Tier request, not tonight's read).
+- **④ confirmed**: age < 0.2 Gyr refuses by name. No roster body is that young on its board (Luhman 16 is
+  0.5 Gyr), so it is recorded, not prioritised.
+- **Observed beside it, not judged**: the same `run.py` shows `internal_heat_nontidal` refusing the giant for
+  the *same* reason (*"a giant's internal heat is the cooling luminosity L(M, age), and this recipe does not
+  supply an unverified cooling track"*). So the cooling-luminosity gap has **two consumers** — the brown-dwarf
+  dynamo branch and the giant's internal heat — and one supplier missing. Whichever item grounds a cooling
+  track closes both; that is a note for the owner's C list, not a wiring done here.
+
+**Closure state**: C19 **closes for the giant class (already wired, mislabelled) and narrows to the
+brown-dwarf branch**, where it stays open with its supplier named and two consumers listed. No code path
+touched; anchors untouched.

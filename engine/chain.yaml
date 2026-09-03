@@ -641,7 +641,8 @@ edges:
 
   # ── 자기 ───────────────────────────────────────────────────────
   - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md:29"}
-  - {from: body_age, to: dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref: "planetary-dynamo-scaling.md:34", note: "그래프가 모듈보다 낙관적이었다 — dynamo.py 는 검증 안 된 냉각 궤적으로 L(M, age) 를 대는 것을 거절한다고 적고 갈색왜성 갈래는 out_of_domain 을 낸다. 코드가 맞고 이 표시가 없었다 (2026-09-03)."}
+  - {from: body_age, to: dynamo_giant, kind: requires, via: t_body, ref: "planetary-dynamo-scaling.md:83", note: "C19 (2026-09-04) 측정: 거대행성 가지(0.3–13 M_J, ≥ 0.2 Gyr)는 냉각광도가 아니라 나이(그래프 t_body, 코드 age_gyr)를 직접 소비한다 — −0.33 지수가 냉각 트랙 자체. run.py 가 body_age 만으로 Polyphemus 344.7 µT 를 낸다. 이미 배선, 오표기였다."}
+  - {from: body_age, to: dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref: "planetary-dynamo-scaling.md:34", note: "C19 (2026-09-04) 갈색왜성 가지(13–70 M_J)로 범위 좁힘 — 로스터의 Luhman 16 A/B(33.5·28.5 M_J) 가 여기서 out_of_domain. 같은 공급자를 internal_heat_nontidal 도 기다린다(소비자 둘, 공급자 없음). 이전 note: 그래프가 모듈보다 낙관적이었다 — dynamo.py 는 검증 안 된 냉각 궤적으로 L(M, age) 를 대는 것을 거절한다고 적고 갈색왜성 갈래는 out_of_domain 을 낸다. 코드가 맞고 이 표시가 없었다 (2026-09-03)."}
   - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md:472"}
   - {from: body_class, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:82"}
   - {from: tidal_locking, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:33"}
