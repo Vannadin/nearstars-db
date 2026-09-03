@@ -109,6 +109,35 @@ lower-bound flux — the true value is higher, and 2.75 TW must not be read as "
 solution is the core energy-balance closure (Brief 62 B, `engine/cmb-heat-flux-context-notes.md` §5).
 `engine/cmb-heat-flux-context-notes.md`.
 
+## Contract — `core_energy_balance`
+
+**Returns** — `core_cmb_temperature_solved` [K] · `core_cmb_temperature_solved_min` [K] · `core_cmb_temperature_solved_max` [K] ·
+`core_cmb_temperature_declared` [K] · `core_cmb_solved_minus_declared` [K] · `q_cmb_solved` [W] · `q_s` [W] · `q_l` [W] · `q_g` [W] ·
+`q_r` [W] · `icb_radius_solved` [km] · `icb_pressure_solved` [GPa] · `c_r_km_per_k` [km/K] · `has_inner_core_solved` [—] ·
+`core_profile_mass_residual` [—] · `core_center_pressure_solved` [GPa] · `balance_residual` [—] · `band_corners_with_root` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
+`cmb_temperature` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—] · `dtc_dt_k_per_gyr` [K/Gyr] · `core_h_w_per_kg` [W/kg]
+**Discriminating keys** — `body_class`: rocky bodies only. `core_cmb_temperature` undeclared, or no `cmb_temperature` →
+refused by name (the balance needs both sides — the declared value is only the number the solution is reported beside).
+No root in the physical bracket → refused by name; the bracket is not widened.
+**Grade** — **analog**: Nimmo+ 2004 eq. 30 closed at the present epoch on an Earth-calibrated model whose success
+criterion is "reproduce present-day Earth"; `dT_c/dt` (−33 K/Gyr) and core `H` (1.5 pW/kg) are **declarations** with
+bands (33–126 K/Gyr between two published Earth models; H from 0 to 1.5); γ = 1.5 is the solid value on a liquid core;
+Q_H omitted by name.
+
+`core_cmb_temperature_solved` turns the declared **lower bound** of `core_state` into a solution: the root of
+`bottom_layer(T_c) = Q_s + Q_L + Q_g + Q_R` (eqs 37–39 on the left; eqs 10, 17, 19–21, 16 on the right, every cooling term
+linear in the declared `dT_c/dt`, so no time integration — Brief 62 step 1's measurement). The core profile
+(ρ, g, T, ψ on r) is **built by the node** from the CMB inward with `material.density` and hydrostatics (the engine emits
+no radial profile); the inner core is where that adiabat meets the material's melting curve, `c_r_km_per_k` = dR_i/dT_c
+from the two slopes there (a ratio of two nearly parallel slopes — knife-edge, reported as such). `_min/_max` re-solve
+the four corners of the dT_c/dt × H bands. **The solved value is not fed back to `core_state`** (C14's scope; feeding it
+back moves anchors and is a separate decision). Transcription closure: on the paper's own inputs Nimmo's analytic core
+(test file only) reproduces Table 4 component by component within 10 % and the root lands at 4152 K against the printed
+4155. On the engine's own Earth the profile evaluated at the hot adiabat reaches a lower centre pressure than the
+lower-bound column `interior_layers` solved, and carries **no inner core** at any T_c above ≈ 3 600 K — the same
+knife-edge `core_state` already reports, one layer deeper; reported, not tuned. `engine/core-energy-balance-context-notes.md`.
+
 ## Table of Contents
 
 1. [The relation: T_eff⁴ = T_eq⁴ + T_int⁴](#1-the-relation-t_eff--t_eq--t_int)

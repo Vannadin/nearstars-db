@@ -97,6 +97,32 @@ T_a 는 핵 쪽 경계온도와 맨틀 밑 **실온**(식 29 — 포텐셜 온�
 열류를 냅니다. 참값은 더 높으며 2.75 TW 를 "다이나모 없음" 으로 읽어서는 안 됩니다. 하한을 해로 바꾸는 것은 핵 에너지
 수지의 폐합(브리프 62 B, `engine/cmb-heat-flux-context-notes.md` §5)입니다. `engine/cmb-heat-flux-context-notes.md`.
 
+## 계약 — `core_energy_balance`
+
+**Returns** — `core_cmb_temperature_solved` [K] · `core_cmb_temperature_solved_min` [K] · `core_cmb_temperature_solved_max` [K] ·
+`core_cmb_temperature_declared` [K] · `core_cmb_solved_minus_declared` [K] · `q_cmb_solved` [W] · `q_s` [W] · `q_l` [W] · `q_g` [W] ·
+`q_r` [W] · `icb_radius_solved` [km] · `icb_pressure_solved` [GPa] · `c_r_km_per_k` [km/K] · `has_inner_core_solved` [—] ·
+`core_profile_mass_residual` [—] · `core_center_pressure_solved` [GPa] · `balance_residual` [—] · `band_corners_with_root` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
+`cmb_temperature` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—] · `dtc_dt_k_per_gyr` [K/Gyr] · `core_h_w_per_kg` [W/kg]
+**갈리는 축** — `body_class`: 암석체만. `core_cmb_temperature` 미선언이거나 `cmb_temperature` 가 없으면 이름을 대며
+거절합니다(수지는 양변이 다 필요합니다 — 선언값은 해를 나란히 보고할 기준일 뿐입니다). 물리적 괄호 안에 근이 없으면 이름을
+대며 거절하고, 괄호를 넓히지 않습니다.
+**등급** — **analog**. Nimmo+ 2004 식 30 을 현재 시점에서 닫되 모형은 지구에 보정된 것(성공 기준 자체가 "현재 지구 재현")이고,
+`dT_c/dt`(−33 K/Gyr)와 핵 `H`(1.5 pW/kg)는 밴드를 지는 **선언**(발표된 두 지구 모형 사이 33–126 K/Gyr; H 는 0–1.5)이며,
+γ = 1.5 는 액체 핵에 고체값을 쓴 것이고, Q_H 는 이름을 대고 생략합니다.
+
+`core_cmb_temperature_solved` 는 `core_state` 의 선언 **하한** 을 해로 바꿉니다. `bottom_layer(T_c) = Q_s + Q_L + Q_g + Q_R`
+(좌변 식 37–39, 우변 식 10·17·19–21·16; 냉각 항 전부가 선언된 `dT_c/dt` 에 선형이라 시간 적분이 없습니다 — 브리프 62 step 1 의
+측정)의 근입니다. 핵 프로파일(r 위의 ρ·g·T·ψ)은 **노드가 직접** CMB 에서 안쪽으로 `material.density` 와 정수압으로 만들고(엔진은
+반경 프로파일을 내지 않습니다), 내핵은 그 단열선이 재료 융해곡선을 만나는 자리이며 `c_r_km_per_k` = dR_i/dT_c 는 거기의 두 기울기
+비(거의 나란한 두 기울기의 비라 칼날 위 — 그렇게 보고)입니다. `_min/_max` 는 dT_c/dt × H 밴드의 네 모서리를 다시 풉니다. **풀린
+값은 `core_state` 로 되먹이지 않습니다**(C14 의 범위 — 되먹이면 앵커가 움직이고 그건 별도 결정). 전사 폐합: 논문 자신의 입력에서
+Nimmo 해석 핵(시험 파일에만)이 Table 4 를 성분별로 10 % 안에서 재현하고 근은 인쇄값 4155 대비 4152 K 에 앉습니다. 엔진 자신의
+지구에서는 뜨거운 단열선으로 평가한 프로파일이 `interior_layers` 가 푼 하한 온도 기둥보다 낮은 중심압에 이르고 ≈ 3 600 K 위의
+어떤 T_c 에서도 **내핵이 없습니다** — `core_state` 가 이미 보고하는 칼날이 한 층 더 깊어진 것으로, 조정하지 않고 보고합니다.
+`engine/core-energy-balance-context-notes.md`.
+
 ## 목차
 
 1. [관계식: T_eff⁴ = T_eq⁴ + T_int⁴](#1-관계식-t_eff--t_eq--t_int)

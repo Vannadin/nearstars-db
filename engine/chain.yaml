@@ -48,9 +48,9 @@ scopes: [self, parent, system]
 #           이미 싣는다. 축을 총체로 두어야 "모든 노드가 domain 을 선언한다" 가 검사 가능한
 #           게이트가 되므로 남긴다. 클래스 표 넷은 layer 로는 함께(조회값), domain 으로는 먹이는
 #           주제로 갈린다(nmoi → interior, k2q · omega0 → tidal).
-#   개수 (48 노드, 파일이 정본이고 어떤 메시지도 아니다):
-#     domain  interior 8 · tidal 7 · given 11 · thermal 5 · atmosphere 5 · surface 5 · space_env 4 · spin_figure 3
-#     layer   0층 11 · 1층 2 · 2층 6 · 클래스 표 상수 4 · 3층 12 · 4층 6 · 5층 7
+#   개수 (49 노드 — C14 의 core_energy_balance 가 2026-09-03 에 더해짐; 파일이 정본이고 어떤 메시지도 아니다):
+#     domain  interior 9 · tidal 7 · given 11 · thermal 5 · atmosphere 5 · surface 5 · space_env 4 · spin_figure 3
+#     layer   0층 11 · 1층 2 · 2층 7 · 클래스 표 상수 4 · 3층 12 · 4층 6 · 5층 7
 #   노드 명칭 결론과 진척 (오너, 1588ff47, 09-03 15:28–15:40). 오너의 물음 — 15:28 "나는 내부구조를 하나의
 #   노드로 생각하고 있었거든? 내부구조 안의 노드를 말하는거야 아님 내부구조와 동격의 새 노드를 말하는거야?",
 #   15:36 "하나의 특성으로 묶이는 그룹이 있고 그 안에 노드들이 여러가지 있는걸로 하는게 나을까?" — 에 대한
@@ -268,6 +268,20 @@ nodes:
     outputs: [q_cmb, q_cmb_min, q_cmb_max, cmb_boundary_layer, cmb_heat_flux_density, eta_bottom,
               q_adiabat, q_adiabat_min, q_adiabat_max, adiabat_gradient_cmb, g_cmb, k_core, cmb_jump,
               cmb_flux_verdict, q_cmb_in_paper_range]
+
+  core_energy_balance:
+    layer: "2층. 허브"
+    domain: interior
+    kind: computed
+    recipe: internal-heat-luminosity-methodology
+    # 2026-09-03 C14 (오너 "c14 진행하자" / "B로 가야지"): Nimmo+ 2004 식 30 의 핵 에너지 수지를 현재 시점에서
+    # 닫아 핵 쪽 CMB 온도를 **근찾기로 푼다** — 선언 하한(지구 3760 K)을 해로. dT_c/dt(−33 K/Gyr, 밴드 33–126)와
+    # 핵 H(1.5 pW/kg, 바닥 0)는 선언. 핵 프로파일(ρ·g·T·ψ)은 이 노드가 CMB 에서 안쪽으로 정수압 적분해 만든다.
+    # **되먹이지 않는다** — 풀린 T_c 는 보고이지 core_state 의 입력이 아니다(앵커 이동은 별도 결정). φ·다이나모는 C15.
+    outputs: [core_cmb_temperature_solved, core_cmb_temperature_solved_min, core_cmb_temperature_solved_max,
+              core_cmb_temperature_declared, core_cmb_solved_minus_declared, q_cmb_solved, q_s, q_l, q_g, q_r,
+              icb_radius_solved, icb_pressure_solved, c_r_km_per_k, has_inner_core_solved,
+              core_profile_mass_residual, core_center_pressure_solved, balance_residual, band_corners_with_root]
 
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
@@ -652,6 +666,13 @@ edges:
   - {from: core_state, to: cmb_heat_flux, kind: requires, via: core_cmb_temperature_used, ref: "internal-heat-luminosity-methodology.md:118", note: "식 37 의 T_c. 선언되지 않으면 하한 갈래라 점프가 0 — 거절."}
   - {from: mass_or_radius, to: cmb_heat_flux, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언) → g_cmb."}
   - {from: body_class, to: cmb_heat_flux, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만. 거대행성은 규산염 하단 경계층이 없다."}
+  # C14 (2026-09-03): 핵 에너지 수지 — 좌변은 cmb_heat_flux 와 같은 하단 경계층(식 37–39), 우변은 핵 프로파일 위의 Q_s+Q_L+Q_g+Q_R.
+  - {from: interior_layers, to: core_energy_balance, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118", note: "C14. 식 31 의 R, 프로파일 적분의 바깥 끝."}
+  - {from: interior_layers, to: core_energy_balance, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118", note: "프로파일 적분의 시작 압력."}
+  - {from: interior_layers, to: core_energy_balance, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:118", note: "식 37 의 T̃_m — T_c 와 무관해 근찾기 밖에 서는 쪽."}
+  - {from: mass_or_radius, to: core_energy_balance, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언) → 프로파일의 m(r)."}
+  - {from: body_class, to: core_energy_balance, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
+  - {from: core_state, to: core_energy_balance, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md:118", note: "같은 단열선(γ = 1.5)과 같은 융해곡선으로 내핵을 찾는다 — 값을 받지는 않고 방법을 공유한다. 풀린 T_c 는 core_state 로 되돌아가지 않는다(C14 범위)."}
   - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: cmb_pressure, ref: "core-state-methodology.md:1"}

@@ -140,3 +140,57 @@ commit as the code** (the gate66 checklist line); edges from `cmb_heat_flux`, `c
   `solve()` untouched. If needed → stop and trace.
 - **⑦ Gate FAIL 0, cost stated, `pmset -g` state recorded beside the time.**
 - **⑧ New declarations/outputs → Needs line + domain row (en + ko) in the same commit.**
+
+## 4. Run record — 2026-09-03
+
+**Branches fired: ① exactly · ② answered (no expectation was written) · ③ did not fire · ④ answered, and
+the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouched · ⑧ done in the same commit.**
+
+- **① Route A reproduces Table 4 component by component** (`test_core_energy.py` §1, on Table 1/2/4 inputs):
+  Q_s 1.96 (2.0, −2 %) · Q_L 2.40 (2.6, −8 %) · Q_g 1.47 (1.6, −8 %) · Q_R 2.89 (2.9) · Q_k 6.18 (6.2) TW;
+  T_i 5 598 K (5 581); M_c 1.927e24 kg; sum 8.71 against the printed Q_C 9.0 / component sum 9.1. Every
+  component inside the pre-registered 10 %; **Q_L and Q_g sit 8 % low and stay low** — the shortfall is
+  reported, not tuned (a candidate cause, not verified: the paper's ρ_i may carry the ICB density jump it
+  says it "incorporates" for compositional convection; eq. 1 alone does not). ψ's zero point cancels in Q_g
+  (both choices identical to 1e-6). Root-find on the paper's own mantle side (eq. 29 base 2 694 K):
+  **T_c 4 152 K against the printed 4 155.** C_r's three values kept apart: Gubbins −9.56 (printed, other
+  model) · Table 4 ratio −13.45 (our division) · slope-derived **−26.5 km/K** (ours; melting curve −0.434 vs
+  adiabat −0.383 K/km at the ICB — nearly parallel, so the ratio is a knife-edge and the printed ratio is not
+  recoverable from the printed curves; the reproduction uses the Table 4 ratio, labelled).
+- **② The engine's own Earth, route B** (`core_energy.solve(1.0, 0.325, 0.547, 135.3, 2526, 3760)`):
+  **T_c solved 3 978 K, band 3 750–4 284 K** (the four corners of dT_c/dt 33–126 K/Gyr × H 0–1.5 pW/kg, all
+  four with a root), **+218 K above the declared 3 760 K**. There Q_C = **4.91 TW = Q_s 2.00 + Q_R 2.91**,
+  Q_L = Q_g = 0 (see ④). Balance residual 8e-16; profile mass residual −0.33 %; profile centre pressure
+  346 GPa. Solve 1.6 s. So the declared lower bound is a lower bound by 218 K on this model, and the flux it
+  implied (2.75 TW, Brief 60) rises to 4.91 TW — **now inside Nimmo's printed 4.5–9 TW range**, on this
+  model's terms (Earth-calibrated; dT_c/dt and H declared). Still below Q_adiabat 6.79 TW at k = 50 (Brief
+  60) — that comparison is C15's, not made here.
+- **④ — the finding.** On the route-B profile **Earth has no inner core at any T_c above ≈ 3 600 K**, the
+  declared 3 760 K included, while `core_state` at the same 3 760 K reports an inner core at 351.4 GPa with a
+  centre margin of −17.6 K (its own "thin"; the in-chain Earth run, `run.py bodies/earth.yaml`). The
+  mechanism, read from both codes and not tuned: `core_state` takes P(r) from `interior_layers`, which solved
+  the **lower-bound** temperature column (core 2 526–2 671 K, centre 358.5 GPa), and lays the **hot** adiabat
+  (from 3 760 K) on that cold pressure axis; route B integrates the pressure **at the hot adiabat's own
+  temperature**, reaches only 346 GPa at the centre (a hotter, less dense column), and its adiabat then stays
+  above the melting curve everywhere. **Both are self-consistent to their own assumption and they disagree on
+  whether Earth's inner core exists** — the γ = 1.5 knife-edge `core_state` already reports (Brief 42:
+  the verdict flips at γ 1.514), now shown to flip also on *which temperature the pressure profile is
+  evaluated at*. Nothing is moved: γ stays 1.5, `core_state` is untouched, `interior_layers` is untouched.
+  What this means for the emitted numbers: `has_inner_core_solved` is False for Earth here and True in
+  `core_state`; both are emitted with their assumption. Whether the interior solver should carry the hot
+  core (a declared core-side temperature entering the density integration) is an **owner decision** — it
+  moves anchors and is exactly the feed-back C14 was scoped not to do.
+- **③** did not fire: the physical bracket [max(T̃_m, T_melt(P_cmb)) + 1 K, 3 T̃_m] = [3 216, 7 578] K holds one
+  sign change. (Two bracket corrections were needed before code ran right, both narrowing, neither widening:
+  the low end must sit above the CMB melting temperature — below it the core is solid at the CMB and
+  eq. 30's outer-core terms do not apply; and an all-liquid core is **not** a bracket end but the Q_L = Q_g = 0
+  regime, which the first draft had wrongly used as the top.)
+- **⑤** Both branches on one profile: at 3 300 K an inner core of 3 254 km with Q_L 3.11, Q_g 0.25 TW; at
+  4 000 K all liquid, Q_L = Q_g = 0.
+- **⑥** `--fast` passes; `interior.py`, `core_state.py`, `solve()` untouched; no `--refresh`.
+- **⑧** Needs line and contract section written in the same commit (en + ko); `check_contracts` passes with the
+  new node; `chain.py check` 49 nodes / 188 edges; `check_via --gate` passes.
+- **Profile method, for the record**: inward from the CMB, m falling from M_core, the innermost 2 % of the
+  radius (10⁻⁵ of the volume) not integrated because the 0.3 % mass residual diverges as G m/r² at r → 0; the
+  residual is emitted as `core_profile_mass_residual`.
+- **⑦** Gate: below, with `pmset -g` beside the time.
