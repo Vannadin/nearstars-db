@@ -35,9 +35,10 @@
 
 **Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
 `crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
-`radiogenic_power_history_4gyr` [—]
+`radiogenic_power_history_4gyr` [—] · `mantle_top_boundary_layer` [km] · `implied_surface_heat_flux` [W/m2] ·
+`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
-`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr]
+`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K]
 **분기키** — `body_class`. 암석체는 현재값 방사성 예산을 받고, 거대행성·서브넵튠·갈색왜성·항성은
 거절합니다. 그쪽 내부열은 냉각광도 L(M, age) 이고 이 레시피는 검증 안 된 냉각 궤적을 대지 않습니다
 (`dynamo.py` 와 같은 거절). `core_mass_fraction` 미선언 → 거절(농도를 걸 규산염 질량이 없음).
@@ -51,6 +52,10 @@
 `interior_layers` 에서는 T(P) 프로파일을 덮고 있었습니다. 네 핵종 상수는 표준 핵데이터이며 Nimmo &
 Primack 2020 의 **미발표 초안 표**(LaTeX 소스 `\end{document}` 뒤, PDF 에 없음)에서 읽고 그 초안의
 총합과 부록의 22 TW 에 폐합해 검산했습니다 — `engine/radiogenic-budget-context-notes.md`.
+`mantle_top_boundary_layer` · `implied_surface_heat_flux` · `implied_surface_heat_flow` 는 Nimmo+ 2004 식 34–36 을
+**선언된** `potential_temperature` 에서 평가한 값(상단 경계층만; `k_t` 는 인쇄값이 없어 κ_t ρ_m C_pm 으로 도출; 현재 지구에
+보정된 출처)이고, `heat_flow_consistency` 는 그 함의 열류를 `radiogenic_power` 와 대조합니다 — 선언에 대한 일관성 검사이며
+잔열 냉각이 예상되는 차이이고, 천체의 실제 열류가 아닙니다. 온도 미선언이면 `cannot-say`. `engine/mantle-flux-consistency-context-notes.md`.
 `radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) 는 붕괴 물리만이며, 열진화(Nimmo+ 2004, 미보유)는
 만들지 않았고 `dynamo_rocky` 로의 엣지는 gap 으로 남습니다.
 

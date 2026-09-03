@@ -38,9 +38,10 @@ non-negligible, see that doc).
 
 **Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
 `crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
-`radiogenic_power_history_4gyr` [—]
+`radiogenic_power_history_4gyr` [—] · `mantle_top_boundary_layer` [km] · `implied_surface_heat_flux` [W/m2] ·
+`implied_surface_heat_flow` [W] · `heat_flow_consistency` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
-`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr]
+`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K]
 **Discriminating keys** — `body_class`: rocky bodies get the present-day radiogenic budget; giant,
 sub-Neptune, brown-dwarf and stellar classes are refused, because their internal heat is the cooling
 luminosity L(M, age) and this recipe does not supply an unverified cooling track (the same refusal
@@ -58,6 +59,11 @@ word covering a heat budget here and a T(P) profile in `interior_layers`. The fo
 are standard nuclear data read from Nimmo & Primack 2020's **unpublished draft table** (LaTeX source
 after `\end{document}`; absent from the PDF) and checked by closure against that draft's own totals
 and the appendix's printed 22 TW — see `engine/radiogenic-budget-context-notes.md`.
+`mantle_top_boundary_layer`, `implied_surface_heat_flux` and `implied_surface_heat_flow` are Nimmo+ 2004 eqs 34–36
+evaluated at the **declared** `potential_temperature` (top boundary layer only; `k_t` derived as κ_t ρ_m C_pm, not
+printed; calibrated at source on present-day Earth), and `heat_flow_consistency` compares that implied flow with
+`radiogenic_power` — a consistency check on the declaration with secular cooling as the expected difference, never
+the body's actual heat flux; `cannot-say` when no temperature is declared. `engine/mantle-flux-consistency-context-notes.md`.
 `radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) is decay physics only; thermal evolution
 (Nimmo+ 2004, not held) is not built, and the edge to `dynamo_rocky` stays a gap.
 

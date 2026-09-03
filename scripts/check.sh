@@ -180,6 +180,8 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_eos_joins.py) || fail=1
 # 방사성 예산 (Brief 44). 초안 표의 폐합 세 건·캡션 오독 11.59 TW·과거 방향 3.67 이 앵커다.
 (cd engine && python3 test_radiogenic.py) || fail=1
+# 함의 열류 일관성 (Brief 46). Table 2 전사 폐합(42 TW ← 1614 K)과 ζ 양방향 민감도, 판정 라벨이 앵커다.
+(cd engine && python3 test_mantle_flux.py) || fail=1
 # chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
 python3 engine/check_via.py --gate || fail=1
 (cd engine && python3 check_contracts.py) || fail=1

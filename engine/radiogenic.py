@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import math
 
+import mantle_flux
 from payload import Result, out_of_domain
 
 RECIPE = "internal-heat-luminosity-methodology"
@@ -112,10 +113,11 @@ GIANT_CLASSES = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf"
 
 def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: float | None,
           body_class: str | None, age_gyr: float | None,
-          ice_mass_fraction: float = 0.0) -> Result:
+          ice_mass_fraction: float = 0.0, potential_temperature: float | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction,
               "ice_mass_fraction": ice_mass_fraction,
-              "radius_earth": radius_earth, "body_class": body_class, "age_gyr": age_gyr}
+              "radius_earth": radius_earth, "body_class": body_class, "age_gyr": age_gyr,
+              "potential_temperature": potential_temperature}
     if body_class in GIANT_CLASSES:
         return out_of_domain(
             RECIPE, VERSION,
@@ -144,6 +146,13 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     flux = b["total_w"] / (4.0 * math.pi * r_m ** 2) if r_m > 0.0 else None
     t_int = (flux / SIGMA_SB) ** 0.25 if flux else None
     hist = history_factor(-4.0)
+    # Brief 46 — the declared potential temperature, checked against this budget (Nimmo+ 2004 eqs 34–36).
+    # Composed here because both ends live here: the budget is this recipe's, the temperature is the
+    # declaration interior_layers reads. Nothing in solve()'s physics changes.
+    g_body = 6.674e-11 * mass_earth * M_EARTH_KG / r_m ** 2 if r_m > 0.0 else None
+    cons = (mantle_flux.consistency(potential_temperature, b["total_w"], g_body, r_m)
+            if g_body else {"verdict": "cannot-say (no radius)", "delta_t_km": None, "f_t_w_m2": None,
+                            "q_m_w": None, "ratio": None, "notes": ("heat-flow consistency: no radius, no flux.",)})
     notes = (
         f"방사성 예산 (현재값): 규산염 질량 {silicate_kg:.3e} kg (= 질량 × (1 − 핵질량분율 {core_mass_fraction} "
         f"− 얼음질량분율 {imf}), 도출) × "
@@ -163,14 +172,20 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
          "interior_layers 의 도출 반지름이 있으면 그것, 없으면 선언된 radius_earth). 방법론 §1 의 '지구 ≈ 35 K' 는 "
          "총 표면 열류 0.087 W/m²(방사성 + 잔열)로 계산한 것이라, 잔열을 갖지 않은 이 값은 그 하한이다."
          if t_int else "반지름이 없어 표면 flux 와 t_int 를 내지 않는다."),
-    )
+    ) + tuple(cons["notes"])
     values = {"l_int": b["total_w"], "t_int": t_int,
               "radiogenic_power": b["total_w"], "mantle_radiogenic_power": b["mantle_w"],
               "crust_radiogenic_power": b["crust_w"], "radiogenic_power_low": b_low["total_w"],
-              "radiogenic_heat_w_m2": flux, "radiogenic_power_history_4gyr": hist}
+              "radiogenic_heat_w_m2": flux, "radiogenic_power_history_4gyr": hist,
+              "mantle_top_boundary_layer": cons["delta_t_km"],
+              "implied_surface_heat_flux": cons["f_t_w_m2"],
+              "implied_surface_heat_flow": cons["q_m_w"],
+              "heat_flow_consistency": cons["verdict"]}
     units = {"l_int": "W", "t_int": "K", "radiogenic_power": "W", "mantle_radiogenic_power": "W",
              "crust_radiogenic_power": "W", "radiogenic_power_low": "W",
-             "radiogenic_heat_w_m2": "W/m2", "radiogenic_power_history_4gyr": "dimensionless"}
+             "radiogenic_heat_w_m2": "W/m2", "radiogenic_power_history_4gyr": "dimensionless",
+             "mantle_top_boundary_layer": "km", "implied_surface_heat_flux": "W/m2",
+             "implied_surface_heat_flow": "W", "heat_flow_consistency": ""}
     return Result(recipe=RECIPE, version=VERSION, regime="rocky_radiogenic_present_day",
                   reason=(f"규산염 {silicate_kg:.2e} kg 에 Earth (1) 농도(선언)를 걸어 총 "
                           f"{b['total_w'] / 1e12:.2f} TW, 맨틀 몫 70 %(선언) {b['mantle_w'] / 1e12:.2f} TW."),
@@ -188,4 +203,5 @@ def _from_state(state):
                  radius_earth=state.get("radius", state.get("radius_earth")),
                  body_class=state.get("body_class"),
                  age_gyr=state.get("age_gyr"),
-                 ice_mass_fraction=state.get("ice_mass_fraction", 0.0))
+                 ice_mass_fraction=state.get("ice_mass_fraction", 0.0),
+                 potential_temperature=state.get("potential_temperature"))
