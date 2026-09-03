@@ -46,9 +46,14 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
 - **A one-off archive from a personal academic page is the fragile case and must be kept** — the page can
   change or vanish and there is no index behind it. `DirEOS2019.tar.gz` is the standing example of what
   happens when it is not.
-- **A grep is not a measurement of a table.** The Chabrier tables store their placeholder as `-0.886030E+01`,
-  so `grep -c '-8.86'` returns 0 while the parsed value is −8.8603 at ten cells across the two tables; and a
-  difference count taken in both directions at once ("ten points") conflated three 2021 placeholders with
-  seven 2019 ones. Parse, then count with the selection written out (2026-09-03, Brief 51 audit).
+- **A count is only as symmetric as its filter, and the filter belongs in the report.** Two instances from
+  one audit (2026-09-03, Brief 51): a grep for `-8.86` returned 0 because the Chabrier tables store the
+  placeholder as `-0.886030E+01`; and `b < −5 and a > −5` — a one-directional filter — was reported as
+  "three placeholders across the entire table" when the symmetric count is ten (three in 2021 where 2019 has
+  values, seven in 2019 where 2021 has values). The grep is one case of the general failure: parse, count with
+  the selection written out, and say which direction it looks in.
+- **Read the generator before measuring its source.** `make_hhe_table.py:32` had carried `SENTINEL =
+  -8.8603` with the comment *"우리 창 안에 7칸 있다"* — the value, the convention and the exact count — the
+  whole time; two seats re-derived it from the tables, one of them wrongly, before either looked there.
 - **Every kept source directory carries a `PROVENANCE.txt`** (who obtained it, when, from where, what is in
   it). `militzer2024_zenodo/` lacked one until 2026-09-03; added.
