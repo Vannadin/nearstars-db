@@ -157,3 +157,25 @@ secular"* — stated as total, correctly. **One ambiguous line**: `internal-heat
 reads *"radiogenic-dominated at the Earth scale (~0.08 W/m², T_int ~ 35 K)"* — 0.08 W/m² is the total,
 and "radiogenic-dominated" over a 50/50 split is the tooltip's disease in softer form. Flagged, not edited
 (it is a qualitative word in a doc with a ko mirror; the directing seat's call).
+
+## 5. Follow-up after audit — 2026-09-03
+
+**① Icy bodies were getting ~2× — fixed by subtraction, not refusal.** `solve()` counted
+mass × (1 − core_mass_fraction) as silicate; for an icy body that includes the ice mantle while the
+concentrations are per kilogram of **bulk silicate**. Nothing wrong was emitted (only Earth and
+Pandora reach the wrapper) but Callisto, Titan and Enceladus would have — Brief 39's wrong-layer
+shape. The quantity exists in the state (`ice_mass_fraction`), so the silicate mass is now
+mass × (1 − cmf − imf); cmf + imf ≥ 1 refuses by name instead of going negative. Pinned: a 40 % ice
+body carries (1 − 0.10 − 0.40)/(1 − 0.10) of the same-mass rocky budget; core 0.6 + ice 0.5 refuses.
+Earth and Pandora unchanged (imf 0).
+
+**② The citation.** The closure certifies **the transcription, not the constants** — the draft
+table's totals were computed by the authors from the same numbers, so agreeing with them says we read
+the table right and nothing about whether it is right. `REFS` now carries, beside the paper, a
+"standard-nuclear-data (not held)" entry; the canonical tabulation goes on the request list
+(`radiogenic-context-notes.md` §5, candidate named from memory and marked unread).
+
+**③** The methodology's bold lead (line 346 / ko 296) still said "radiogenic-dominated"; fixed both
+languages. The tooltip's "§261" is `main.tex:261`, a line not a section — fixed. The flux's radius is now
+stated on the label: `interior_layers`' derived radius when present (Earth 1.003 R⊕ → 0.0416 W/m²;
+with R⊕ exactly, 0.0418), else the declared `radius_earth`.
