@@ -1008,12 +1008,13 @@ lean on and no source settles.** Each is a labelled condition, not an open item;
 a solver change makes it load-bearing in a new place.
 - **γ = 1.5** — `GAMMA_CORE`, a solid (h.c.p.) value on a liquid density fit; Earth's inner core exists in
   this recipe only at that value (Brief 42's knife-edge, 0.94 %), and now it rides upstream of `Q_adiabat`
-  (Brief 60). Not moved, because moving a constant to make an answer come out is prohibited. **The same
-  question has a second face (C14, 2026-09-03): *at which temperature the pressure profile is evaluated.*
-  `core_state` lays the hot adiabat on the pressure axis of the cold lower-bound column and finds Earth's
-  inner core (351.4 GPa, margin −17.6 K); the C14 profile integrated at the hot adiabat's own temperature
-  reaches 346 GPa and finds none at any T_c ≳ 3 600 K. Brief 42 flipped the verdict on γ; C14 flips it on
-  the pressure profile's temperature — two faces of one knife-edge, watched here together, neither moved.**
+  (Brief 60). Not moved, because moving a constant to make an answer come out is prohibited. **C14
+  (2026-09-04) adds what this knife-edge does when the declared lower bound is replaced by a solution**: at
+  the declared 3 760 K Earth's inner core is 566 km (both `core_state` and the C14 profile, ICB 351.3–351.4
+  GPa, half of PREM's 1 220 km); at the balance's own T_c, 3 978 K, **it is gone** — the pressure profile
+  stays (`fe_prem` is temperature-independent) while the adiabat rises through the melting curve. *(A
+  "second face — the pressure profile's temperature" stood here for one evening and is withdrawn: it was a
+  numerical artefact of an unconverged Euler profile, `core-energy-balance-context-notes.md` §3b/§5.)*
 - **`Rm > 40` quoted, never evaluated** — the rocky dynamo's alive-gate sits in the ladder as a class
   judgement; no magnetic-Reynolds expression exists in the recipe (Brief 43). Building one is the larger
   brief the owner has not opened (C15 is its φ half).
@@ -1879,7 +1880,7 @@ Order among them is the owner's, brief by brief.
 
 | C | edge (`chain.yaml`) | what the hole is |
 |---|---|---|
-| **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` (`:639`) | whether the core is *still* convecting needs thermal evolution, not only decay history; Brief 62 step 1 measured that the present-epoch closure is a root-find in T_c with the cooling rate declared. **Built 2026-09-03** (owner *"c14 진행하자"*; `core_energy.py`, node `core_energy_balance`, `core-energy-balance-context-notes.md`): Nimmo's analytic core reproduces Table 4 component by component (all within 10 %, Q_L/Q_g 8 % low and left low) and the root lands at 4 152 K vs printed 4 155; on the engine's Earth the solved T_c is **3 978 K (band 3 750–4 284), +218 K over the declared lower bound**, Q_C 4.91 TW — inside Nimmo's 4.5–9 on this model's terms. **Finding**: the route-B profile, integrated at the hot adiabat's own temperature, reaches 346 GPa at the centre (not the cold column's 358.5) and carries **no inner core at any T_c above ≈ 3 600 K**, while `core_state` at the same 3 760 K finds one (ICB 351.4 GPa, centre margin −17.6 K, "thin") — the γ knife-edge one layer deeper: the verdict also flips on which temperature the pressure profile is evaluated at. Nothing moved; not fed back; whether the interior carries a hot core is an owner decision. The edge itself stays `gap` — the *consumer* (dynamo) is C15. |
+| **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` (`:639`) | whether the core is *still* convecting needs thermal evolution, not only decay history; Brief 62 step 1 measured that the present-epoch closure is a root-find in T_c with the cooling rate declared. **Built 2026-09-03** (owner *"c14 진행하자"*; `core_energy.py`, node `core_energy_balance`, `core-energy-balance-context-notes.md`): Nimmo's analytic core reproduces Table 4 component by component (all within 10 %, Q_L/Q_g 8 % low and left low) and the root lands at 4 152 K vs printed 4 155; on the engine's Earth the solved T_c is **3 978 K (band 3 750–4 284), +218 K over the declared lower bound**, Q_C 4.91 TW — inside Nimmo's 4.5–9 on this model's terms. **Finding (corrected 2026-09-04 after a convergence bug the directing seat caught — the first evening's "two codes disagree" was an Euler artefact)**: at the declared 3 760 K both codes find an inner core (566 km, ICB 351.3 GPa); **at the solved 3 978 K the core is all liquid** — closing the loop removes Earth's inner core, so Q_L = Q_g = 0 on the solved Earth and C15's entropy budget loses its two largest terms. Nothing moved; not fed back. The edge itself stays `gap` — the *consumer* (dynamo) is C15. |
 | **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` (`:638`) | the supplier `cmb_heat_flux` exists (Brief 60); the consumer wiring is φ, core entropy production, not built |
 | **C16** | `tidal_locking → dynamo_rocky via rossby` (`:635`) | a Rossby number is not derivable from a rotation period; **a candidate to close as a named refusal, not to build** |
 | **C17** | `ocean_fraction → dynamo_rocky` (`:636`), `→ cassini_state` (`:552`), `→ surface_albedo` (`:781`) | three consumers, no supplier of an ocean fraction |

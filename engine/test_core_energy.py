@@ -134,6 +134,24 @@ def main() -> int:
     ok(abs(root - T_C4) < 20.0, f"1: root T_c {root:.0f} K vs Table 4 {T_C4}")
     print(f"  [{'PASS' if abs(root - T_C4) < 20 else 'FAIL'}] 논문 자신의 맨틀 쪽(식 29 밑 {t_m_paper:.0f} K)에서 근 T_c {root:.0f} K (Table 4 {T_C4:.0f})")
 
+    # ── 1b. route B profile convergence — the real anchor ───────────────────
+    # 2026-09-04 repair: forward Euler at 400 steps left the centre 3.4 % low and Earth's inner core vanished.
+    # Two codes integrating the same material on the same body must give the same pressure profile:
+    # interior.solve()'s own Earth core_pressure is 358.46 GPa (interior_layers, run.py bodies/earth.yaml).
+    print("\n경로 B 프로파일 — 수렴: 중심압이 interior_layers 의 지구 핵 중심압과 같은가")
+    EARTH_CORE_PRESSURE_GPA = 358.46
+    r_cmb, m_core = 0.547 * cf.R_EARTH_M, 0.325 * cf.M_EARTH_KG
+    prof = ce.core_profile("fe_prem", 135.3e9, 3760.0, r_cmb, m_core)
+    p_c = prof["p_center"] / 1e9
+    ok(abs(p_c - EARTH_CORE_PRESSURE_GPA) / EARTH_CORE_PRESSURE_GPA < 0.005,
+       f"1b: profile centre pressure {p_c:.2f} GPa vs interior_layers {EARTH_CORE_PRESSURE_GPA} — not within 0.5 %")
+    ok(abs(prof["m_center_residual"]) < 1e-3, f"1b: mass residual {prof['m_center_residual']:+.5f} ≥ 1e-3 — the profile is not converged")
+    prof2 = ce.core_profile("fe_prem", 135.3e9, 3760.0, r_cmb, m_core, steps=4 * ce.STEPS)
+    ok(abs(prof2["p_center"] - prof["p_center"]) / prof["p_center"] < 0.002,
+       f"1b: 4× steps moves the centre pressure by {(prof2['p_center'] / prof['p_center'] - 1) * 100:+.2f} % (> 0.2 %)")
+    print(f"  [{'PASS' if not fails else 'FAIL'}] 중심압 {p_c:.2f} GPa (interior_layers 358.46) · 질량 잔차 {prof['m_center_residual']:+.5f} · "
+          f"걸음 4× 에서 {(prof2['p_center'] / prof['p_center'] - 1) * 100:+.3f} % — RK4, {ce.STEPS} 걸음, 안쪽 2 % 반경(부피 10⁻⁵) 제외")
+
     # ── 2. route B: the engine's Earth — printed, not asserted ──────────────
     print("\n경로 B — 엔진 자신의 지구 (선언 3760 K 옆에 보고; 예상 없음)")
     res = ce.solve(1.0, 0.325, 0.547, 135.3, 2526.0, 3760.0, core_material="fe_prem", body_class="rocky")

@@ -234,6 +234,10 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
 - **Profile method, for the record**: inward from the CMB, m falling from M_core, the innermost 2 % of the
   radius (10⁻⁵ of the volume) not integrated because the 0.3 % mass residual diverges as G m/r² at r → 0; the
   residual is emitted as `core_profile_mass_residual`.
+- **⚠ §4 ② and ④ above were measured on an unconverged profile (forward Euler, 400 steps — §3b) and are
+  superseded by §5 below. ②'s T_c 3 978 K and Q_C 4.91 TW happen to survive (the root sits in the all-liquid
+  regime, where the terms do not touch the centre); ④'s recorded cause — "two codes disagree on Earth's
+  inner core" — is wrong and withdrawn. Kept as the record of what was reported before the repair.**
 - **⑦ Gate on `3a304019`: FAIL 0, 471 PASS (+12 = `test_core_energy`'s rows), 21:45:52 → 22:22:51 =
   2 219 s.** Power state **at start**: battery 24 %, discharging, `powermode 1`; **at end**: AC, 40 %,
   charging, `powermode 2` — the owner connected power during the run (*"전원 연결함 이어서 해줘"*). The values
@@ -241,3 +245,38 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
   the two power states, its time belongs to **neither** trend branch (mains 1 224–1 293 s; low-power
   1 585–2 381 s) and is not compared with anything; the new test's own cost is 2.3 s measured standalone. The
   next gate, run wholly on AC, is the one that can confirm the low-power attribution.
+
+## 5. Repair run record — 2026-09-04
+
+**Branches: ① fired · ② untouched · ③ answered · ④ answered — one face · ⑤ below.**
+
+- **① RK4 converges where Euler did not.** Same Earth inputs, `steps` passed explicitly:
+
+      RK4  100 steps: p_center 356.74 GPa  m residual −1.15e-4  inner core R_i 566 km, ICB 351.3 GPa
+      RK4  400 steps:          356.74             −1.18e-4               566 km,     351.3 GPa   (0.01 s)
+      RK4 1600 steps:          356.74             −1.16e-4               566 km,     351.3 GPa
+
+  Step-independent to the last printed digit; ICB **351.3 GPa against `core_state`'s 351.4** — the two codes
+  agree. Centre pressure 356.74 vs `interior_layers`' 358.46 GPa = **−0.48 %**: inside the pre-registered
+  0.5 %, and the remainder is the inner 2 % cutoff (the untouched innermost ~70 km carries the last ~1.7 GPa);
+  the tolerance is met with little to spare and that is said here rather than widened. Mass residual now
+  1e-4 — the "closure" number reads as closure. Gate rows in `test_core_energy.py` §1b: centre pressure within
+  0.5 % of 358.46, |mass residual| < 1e-3, 4× steps moves the centre by < 0.2 %.
+- **③ Re-solved Earth**: **T_c 3 978 K** (unchanged — the root lies in the all-liquid regime, whose terms do
+  not depend on the centre), **band 3 770–4 284 K** (the low corner moved 3 750 → 3 770 because at cold T_c
+  the now-present inner core adds Q_L, Q_g), Q_C **4.91 TW** = Q_s 2.00 + Q_R 2.91. Solve 4.5 s (RK4 costs
+  4× Euler per step at the same 400 steps; the test's row cost is re-measured below).
+- **④ — one face, and it is the finding: closing the loop removes Earth's inner core.** At the *declared*
+  3 760 K both codes now find an inner core — route B: R_i 566 km, ICB 351.3 GPa, Q_L 0.93 + Q_g 0.65 TW
+  (PREM's inner core is 1 220 km; the engine's Earth already carries half of it, `core_state`'s "thin"
+  margin of −17.6 K). Between 3 760 and 3 850 K it vanishes — `fe_prem` is temperature-independent, so the
+  pressure profile stays put while the adiabat rises through the melting curve — and at the *solved*
+  **3 978 K the core is all liquid**: Q_L = Q_g = 0. **The "two faces of the γ knife-edge" reading is
+  withdrawn** (the C6 watch paragraph is corrected); there is one face, γ's, and this is what it does when
+  the declared lower bound is replaced by the balance's own solution. Consequence for C15: the two largest
+  entropy terms (latent heat, compositional) are absent on the solved Earth — the entropy budget C15 builds
+  will have to say so. Nothing moved: γ, `core_state`, `interior_layers` untouched; not fed back.
+- **Reading errors, named**: (i) the mass residual −0.003 was a non-convergence signature read as closure;
+  (ii) `ce.STEPS = n` does not change the default argument — pass `steps=`; (iii) the "lower-bound column vs
+  hot column" mechanism was a story fitted to a numerical artefact. All three are the directing seat's
+  catch, reproduced here before any line was changed.

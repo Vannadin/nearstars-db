@@ -78,16 +78,34 @@ def core_profile(material_name: str, p_cmb: float, t_c: float, r_cmb: float, m_c
     # closes M_core to a few 10⁻³ leaves a residual that G m / r² turns into a divergence at r → 0. The
     # residual is returned as the profile's own closure number (pre-registered check), not hidden.
     r_min = 0.02 * r_cmb
+
+    def state(p_, t_guess):
+        rho_ = mat.density(p_, t_guess, 0.0)
+        t_ = t_c * (rho_ / rho_cmb) ** GAMMA
+        return mat.density(p_, t_, 0.0), t_              # one re-evaluation at the adiabat's own T
+
+    def slope(r_, p_, m_, t_guess):
+        """d/dr of (p, m, ψ) going inward (dr < 0 handled by the caller): (ρg, 4πr²ρ, g)."""
+        rho_, t_ = state(p_, t_guess)
+        g_ = G * max(m_, 0.0) / (r_ * r_)
+        return rho_ * g_, 4.0 * math.pi * r_ * r_ * rho_, g_, rho_, t_
+
+    t_guess = t_c
     while r > r_min:
-        rho = mat.density(p, t_c, 0.0)
-        t = t_c * (rho / rho_cmb) ** GAMMA
-        rho = mat.density(p, t, 0.0)                     # one re-evaluation at the adiabat's own T
-        g = G * max(m, 0.0) / (r * r)
+        # RK4 inward (2026-09-04 repair — forward Euler at 400 steps under-accumulated the centre pressure by
+        # ~3 % and made Earth's inner core vanish; the mass residual was the unread signature).
+        k1 = slope(r, p, m, t_guess)
+        rho, t = k1[3], k1[4]
+        g = k1[2]
         rs.append(r); rhos.append(rho); gs.append(g); ts.append(t); psis.append(psi); ms.append(m); ps.append(p)
-        # step inward
-        p += rho * g * dr
-        m -= 4.0 * math.pi * r * r * rho * dr
-        psi -= g * dr                                     # ψ decreases inward (zero at the CMB)
+        h = dr
+        k2 = slope(r - 0.5 * h, p + 0.5 * h * k1[0], m - 0.5 * h * k1[1], t)
+        k3 = slope(r - 0.5 * h, p + 0.5 * h * k2[0], m - 0.5 * h * k2[1], k2[4])
+        k4 = slope(r - h, p + h * k3[0], m - h * k3[1], k3[4])
+        p += h * (k1[0] + 2.0 * k2[0] + 2.0 * k3[0] + k4[0]) / 6.0
+        m -= h * (k1[1] + 2.0 * k2[1] + 2.0 * k3[1] + k4[1]) / 6.0
+        psi -= h * (k1[2] + 2.0 * k2[2] + 2.0 * k3[2] + k4[2]) / 6.0   # ψ decreases inward (zero at the CMB)
+        t_guess = k4[4]
         r -= dr
     return {"r": rs, "rho": rhos, "g": gs, "t": ts, "psi": psis, "m": ms, "p": ps,
             "m_center_residual": m / m_core, "p_center": p, "rho_cmb": rho_cmb, "material": mat,
