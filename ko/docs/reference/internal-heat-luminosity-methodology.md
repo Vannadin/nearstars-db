@@ -125,6 +125,36 @@ GPa). 엔진 자신의 지구에서 풀린 T_c 는 3978 K 이고 거기서는 �
 (`fe_prem` 이 온도 무관이라 압력은 그대로인데 단열선이 융해곡선을 넘어 올라갑니다). 조정하지 않고 보고합니다.
 `engine/core-energy-balance-context-notes.md`.
 
+## 계약 — `core_entropy_production`
+
+**Returns** — `entropy_production` [W/K] · `entropy_production_min` [W/K] · `entropy_production_max` [W/K] ·
+`entropy_production_h0` [W/K] · `e_r` [W/K] · `e_s` [W/K] · `e_l` [W/K] · `e_g` [W/K] · `e_h` [W/K] · `e_k` [W/K] ·
+`entropy_positive_present` [—] · `entropy_band_straddles_zero` [—] · `entropy_corners_positive` [—] ·
+`has_inner_core_solved` [—] · `entropy_history_verdict` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
+`core_cmb_temperature_solved` [K] · `core_material` [—] · `body_class` [—] · `k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] ·
+`dtc_dt_k_per_gyr` [K/Gyr]
+**갈리는 축** — `body_class`: 암석체만. 풀린 핵 쪽 온도가 없으면(C14 거절) 이름을 대며 거절합니다. `entropy_history_verdict`
+는 **항상** `cannot-say (needs C20)` 입니다.
+**등급** — **analog**. C14 와 같은 지구 보정 모형, 같은 선언 밴드(k 50 ± 20, H 0–1.5 pW/kg, dT_c/dt 33–126 K/Gyr), 같은 γ.
+E_H 의 괄호 순서는 인쇄값 −134 MW/K 에 대한 폐합으로, E_s 의 1/T_c 인자는 인쇄값 64 에 대한 폐합으로 확정했습니다 — 둘 다
+*읽어서가 아니라 되짚어서* 알아낸 것입니다.
+
+`entropy_production` 은 Nimmo+ 2004 식 43 의 현재 시점 값 **ΔE = E_R + E_s + E_L + E_H + E_g − E_k** 이고, C14 가 푼 T_c 의
+경로 B 프로파일 위에서 냅니다. E_R(식 16)은 I_T = ∫ρ/T dV 수치적분; E_s = (C_p/T_c)(M_c − I_S/T_c) dT_c/dt(식 10 — I_S 를
+따로 들며 E_s 는 Q_s 의 비례가 아닙니다); E_L(17)과 E_g(= Q_g/T_c)는 C14 의 Q_L·Q_g 에서; E_H(24)는 폐합으로 회수한 괄호;
+E_k = k ∫(∇T/T)² dV(식 25 를 프로파일에서 직접; 식 26 의 닫힌 꼴은 해석 핵의 것이라 시험에만). `_min/_max` 는 k × H ×
+dT_c/dt 의 여덟 모서리, `_h0` 는 H = 0 모서리 — 우리 H 밴드의 바닥이 0 이라 정직한 모서리로 냅니다. **산출물은 판정이
+아니라 밴드입니다**: 논문 자신이 `ΔE > 0` 을 씁니다("양수면 충분하다고 가정") — 필요한 초과 엔트로피가 "아마 ∼100 MW K⁻¹
+이지만 0.1–1000 어디든 있을 수 있다"(§5.2)이고, 400(Roberts+ 2003 의 2 TW)과 100(§6.2)이 논문 자신의 지구(351)를 사이에
+두기 때문이며, `entropy_positive_present` 는 그 라벨을 답니다. **`dynamo_rocky` 에 배선하지 않습니다** — 판정을 못 내는
+문턱이 사다리를 덮어쓸 자격이 없고, 논문도 Q_C 대 Q_k 와 φ 를 나란히 둡니다. **3 Gyr 진술은 이름을 대며 거절합니다** —
+논문의 세 기준 중 둘(3.1 Gyr 평균·최소 ΔE)이 이력 양이고 판별자는 ΔE_min(Table 5)이라, 현재 φ > 0 이 지속 다이나모를
+함의하지 않습니다 — 그 소비자는 C20 입니다. 내핵이 없으면(풀린 지구, C14) E_L = E_g = E_H = 0, ΔE = E_R + E_s − E_k — 논문의
+"완전 액체 핵" 경우이고 거기서 그것을 양수로 지키는 것은 핵 칼륨입니다(§5.3: 무칼륨 → −45 %). 전사 폐합: 논문 입력에서
+해석 핵(시험 파일에만)이 Table 4 의 엔트로피 여섯 항을 10 % 안에서 재현하고(E_L·E_g·E_H ≈ −6 %, C14 의 C_r 인자) ΔE 328
+대 351. `engine/core-entropy-context-notes.md`.
+
 ## 목차
 
 1. [관계식: T_eff⁴ = T_eq⁴ + T_int⁴](#1-관계식-t_eff--t_eq--t_int)

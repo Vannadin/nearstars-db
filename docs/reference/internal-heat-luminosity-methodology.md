@@ -142,6 +142,40 @@ the solved T_c is 3978 K, and there the core is **all liquid** — closing the l
 (`fe_prem` is temperature-independent, so the pressure stays while the adiabat rises through the melting curve);
 reported, not tuned. `engine/core-energy-balance-context-notes.md`.
 
+## Contract — `core_entropy_production`
+
+**Returns** — `entropy_production` [W/K] · `entropy_production_min` [W/K] · `entropy_production_max` [W/K] ·
+`entropy_production_h0` [W/K] · `e_r` [W/K] · `e_s` [W/K] · `e_l` [W/K] · `e_g` [W/K] · `e_h` [W/K] · `e_k` [W/K] ·
+`entropy_positive_present` [—] · `entropy_band_straddles_zero` [—] · `entropy_corners_positive` [—] ·
+`has_inner_core_solved` [—] · `entropy_history_verdict` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
+`core_cmb_temperature_solved` [K] · `core_material` [—] · `body_class` [—] · `k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] ·
+`dtc_dt_k_per_gyr` [K/Gyr]
+**Discriminating keys** — `body_class`: rocky bodies only. No solved core-side temperature (C14 refused) → refused by
+name. `entropy_history_verdict` is **always** `cannot-say (needs C20)`.
+**Grade** — **analog**: the same Earth-calibrated model as C14, with the same declared bands (k 50 ± 20, H 0–1.5 pW/kg,
+dT_c/dt 33–126 K/Gyr) and the same γ; E_H's bracket order recovered by closure on the printed −134 MW/K (the text
+layer does not resolve it), E_s's 1/T_c prefactor confirmed by closure on the printed 64 — both *found by working
+back, not by reading*.
+
+`entropy_production` is Nimmo+ 2004 eq. 43 at the present epoch, **ΔE = E_R + E_s + E_L + E_H + E_g − E_k**, on the
+route-B core profile at C14's solved T_c: E_R (eq. 16) with I_T = ∫ρ/T dV numeric; E_s = (C_p/T_c)(M_c − I_S/T_c) dT_c/dt
+(eq. 10 — I_S kept separately, E_s is not a rescaling of Q_s); E_L (17) and E_g (= Q_g/T_c) from C14's Q_L, Q_g; E_H
+(24) with the closure-recovered bracket; E_k = k ∫(∇T/T)² dV (eq. 25 on the profile; eq. 26's closed form belongs to
+the analytic core and lives in the test). `_min/_max` are the eight corners of k × H × dT_c/dt; `_h0` is the H = 0
+corner, emitted as the honest corner because our H band's floor is 0. **The output is a band, not a verdict**: the
+paper itself uses `ΔE > 0` (*"any positive ΔE is assumed sufficient"*) because the required excess is *"probably
+∼100 MW K⁻¹, but could lie anywhere within the range 0.1–1000"* (§5.2) — 400 (Roberts+ 2003's 2 TW) and 100 (§6.2)
+straddle the paper's own Earth (351) — and `entropy_positive_present` carries that label. **Not wired into
+`dynamo_rocky`**: a threshold that cannot decide has no standing to overwrite the ladder; the paper keeps Q_C-vs-Q_k
+and φ side by side. **The 3-Gyr statement is refused by name**: two of the paper's three criteria (mean and minimum
+ΔE over 3.1 Gyr) are history quantities, ΔE_min is the discriminating one (Table 5), and a present-day φ > 0 does
+not imply a sustained dynamo — C20 is this node's consumer for that. Without an inner core (the solved Earth, C14)
+E_L = E_g = E_H = 0 and ΔE = E_R + E_s − E_k — the paper's *"completely liquid core"* case, kept positive there by
+core potassium (§5.3: no potassium → −45 %). Transcription closure: on the paper's inputs the analytic core (test
+file only) reproduces Table 4's six entropy components within 10 % (E_L, E_g, E_H ≈ −6 %, the C_r factor of C14)
+and ΔE 328 vs 351. `engine/core-entropy-context-notes.md`.
+
 ## Table of Contents
 
 1. [The relation: T_eff⁴ = T_eq⁴ + T_int⁴](#1-the-relation-t_eff--t_eq--t_int)

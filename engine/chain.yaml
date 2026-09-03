@@ -48,9 +48,9 @@ scopes: [self, parent, system]
 #           이미 싣는다. 축을 총체로 두어야 "모든 노드가 domain 을 선언한다" 가 검사 가능한
 #           게이트가 되므로 남긴다. 클래스 표 넷은 layer 로는 함께(조회값), domain 으로는 먹이는
 #           주제로 갈린다(nmoi → interior, k2q · omega0 → tidal).
-#   개수 (49 노드 — C14 의 core_energy_balance 가 2026-09-03 에 더해짐; 파일이 정본이고 어떤 메시지도 아니다):
-#     domain  interior 9 · tidal 7 · given 11 · thermal 5 · atmosphere 5 · surface 5 · space_env 4 · spin_figure 3
-#     layer   0층 11 · 1층 2 · 2층 7 · 클래스 표 상수 4 · 3층 12 · 4층 6 · 5층 7
+#   개수 (50 노드 — C14 의 core_energy_balance(09-03)와 C15 의 core_entropy_production(09-04); 파일이 정본이고 어떤 메시지도 아니다):
+#     domain  interior 10 · tidal 7 · given 11 · thermal 5 · atmosphere 5 · surface 5 · space_env 4 · spin_figure 3
+#     layer   0층 11 · 1층 2 · 2층 8 · 클래스 표 상수 4 · 3층 12 · 4층 6 · 5층 7
 #   노드 명칭 결론과 진척 (오너, 1588ff47, 09-03 15:28–15:40). 오너의 물음 — 15:28 "나는 내부구조를 하나의
 #   노드로 생각하고 있었거든? 내부구조 안의 노드를 말하는거야 아님 내부구조와 동격의 새 노드를 말하는거야?",
 #   15:36 "하나의 특성으로 묶이는 그룹이 있고 그 안에 노드들이 여러가지 있는걸로 하는게 나을까?" — 에 대한
@@ -282,6 +282,19 @@ nodes:
               core_cmb_temperature_declared, core_cmb_solved_minus_declared, q_cmb_solved, q_s, q_l, q_g, q_r,
               icb_radius_solved, icb_pressure_solved, c_r_km_per_k, has_inner_core_solved,
               core_profile_mass_residual, core_center_pressure_solved, balance_residual, band_corners_with_root]
+
+  core_entropy_production:
+    layer: "2층. 허브"
+    domain: interior
+    kind: computed
+    recipe: internal-heat-luminosity-methodology
+    # 2026-09-04 C15 (오너 "자기장쪽 배선 최대한"): Nimmo+ 2004 식 43 의 현재 시점 엔트로피 생성 φ = ΔE, 여섯 항
+    # (E_R·E_s·E_L·E_H·E_g·E_k), C14 가 푼 T_c 의 프로파일 위에서. **판정이 아니라 밴드** — 논문 자신이 문턱을 안 쓰고
+    # ΔE > 0 을 쓰며(필요 엔트로피는 0.1–1000 MW/K), 우리는 그 선택을 "문턱 회피" 라벨과 함께 채택한다. dynamo_rocky
+    # 판정에는 **배선하지 않는다**(사다리를 덮어쓸 자격 없음). 3 Gyr 진술(평균·최소 ΔE)은 이력 양이라 C20 없이는 거절.
+    outputs: [entropy_production, entropy_production_min, entropy_production_max, entropy_production_h0,
+              e_r, e_s, e_l, e_g, e_h, e_k, entropy_positive_present, entropy_band_straddles_zero,
+              entropy_corners_positive, has_inner_core_solved, entropy_history_verdict]
 
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
@@ -673,6 +686,13 @@ edges:
   - {from: mass_or_radius, to: core_energy_balance, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언) → 프로파일의 m(r)."}
   - {from: body_class, to: core_energy_balance, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
   - {from: core_state, to: core_energy_balance, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md:118", note: "같은 단열선(γ = 1.5)과 같은 융해곡선으로 내핵을 찾는다 — 값을 받지는 않고 방법을 공유한다. 풀린 T_c 는 core_state 로 되돌아가지 않는다(C14 범위)."}
+  # C15 (2026-09-04): 엔트로피 생성 φ — C14 의 풀린 T_c 위에서, 같은 프로파일과 같은 에너지 항(Q_L·Q_g)을 다시 짓는다.
+  - {from: core_energy_balance, to: core_entropy_production, kind: requires, via: core_cmb_temperature_solved, ref: "internal-heat-luminosity-methodology.md:118", note: "C15. φ 는 풀린 T_c 의 프로파일 위에서 낸다 — 선언 하한이 아니라."}
+  - {from: interior_layers, to: core_entropy_production, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118"}
+  - {from: interior_layers, to: core_entropy_production, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118"}
+  - {from: mass_or_radius, to: core_entropy_production, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언)."}
+  - {from: body_class, to: core_entropy_production, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
+  - {from: core_entropy_production, to: dynamo_rocky, kind: influences, sign: non-monotonic, status: gap, ref: "rocky-planet-dynamo-methodology.md:60", note: "C15 는 φ 를 내기까지. 문턱이 판정을 못 내므로(0.1–1000 MW/K) 사다리 교체는 별도 오너 결정 — 배선하지 않는다. 논문도 Q_C 대 Q_k 와 φ 를 나란히 둔다."}
   - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: cmb_pressure, ref: "core-state-methodology.md:1"}

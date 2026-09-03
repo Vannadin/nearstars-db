@@ -65,6 +65,7 @@ def load_all() -> None:
     import core_state    # noqa: F401
     import cmb_flux      # noqa: F401
     import core_energy   # noqa: F401  — C14, core energy balance (2026-09-03)
+    import core_entropy  # noqa: F401  — C15, core entropy production φ (2026-09-04)
     import body_class    # noqa: F401
     import radiogenic    # noqa: F401
     import dynamo_rocky  # noqa: F401

@@ -82,3 +82,41 @@ hotter, faster-cooling epoch (its minimum 134 is a history value). Whether the e
 - **⑥** Anchors byte-identical, no `--refresh` (new node).
 - **⑦** Gate FAIL 0, time, `pmset` at both ends.
 - **⑧** Needs/Returns and the domain row (en + ko) in the same commit as the code.
+
+## 4. Run record — 2026-09-04
+
+**Branches: ① fired · ② answered (no expectation was written) · ③ exercised both ways · ④ answered · ⑤ by
+name · ⑥ untouched · ⑧ same commit.**
+
+- **① Route A reproduces Table 4's six entropy components** (`test_core_entropy.py` §1, Table 1/2/4 inputs,
+  C_r = the Table 4 ratio): E_R 89.3 (89) · E_s 63.8 (64) · E_L 148.8 (159, −6 %) · E_H −125.3 (−134, −6 %) ·
+  E_g 353.3 (375, −6 %) · E_k 202.1 (202) MW/K; **ΔE 327.7 vs printed 351 (−7 %)** — every component inside
+  the pre-registered 10 %; the three C_r-bearing terms sit 6 % low and stay low (C14's diagnosis, not tuned).
+  E_k (eq. 26) 202.1 and Q_k 6.18 TW re-close the parallel seat's 202.0 / 6.17. The two closure-recovered
+  readings are pinned in the test: E_s without the 1/T_c prefactor is 2.6×10⁵ MW/K (the relayed formula);
+  E_H with the other bracket order is +125 against the printed −134. **Found by working back, not by reading.**
+- **② The engine's Earth at C14's solved T_c = 3 978 K** (inputs from `interior.solve()`): **ΔE = −69 MW/K**
+  = E_R 99 + E_s 74 + E_L 0 + E_H 0 + E_g 0 − E_k 242. **Band −264 … +238 MW/K** over the eight corners of
+  k 30–70 × H 0–1.5 pW/kg × dT_c/dt 33–126 K/Gyr — **4 of 8 corners positive; the band straddles zero.**
+  Scan of the single axes (scratch `c15_proto.py`): k 30 → +28, k 70 → −166; dT_c/dt −126 K/Gyr → +141;
+  **H = 0 → −167 (④)**. Note E_k here is eq. 25 integrated on our own adiabat, 242 MW/K, against the paper's
+  D-based 202 — a 20 % difference in the term that decides the sign; reported, not attributed (the paper's
+  E_k is on its Gaussian T(r) with D 5 969 km; ours is on the ρ^γ adiabat of `fe_prem`).
+- **③** Same profile, two T_c: at the declared 3 760 K (inner core 566 km) ΔE = **+125** with E_L 69, E_g 170,
+  E_H −56; at 4 000 K (all liquid) ΔE = −70 with E_L = E_g = E_H = 0 exactly.
+- **What ② means, said carefully.** On this model the engine's Earth *at the energy balance's own solution*
+  makes **no** present-day entropy at the nominal declarations — and it does at the declared lower-bound T_c,
+  where the inner core still exists. That is C14's finding (closing the loop removes the inner core, and with
+  it the two largest entropy terms) arriving at the entropy budget, exactly as C14 §5 ④ predicted it would.
+  The paper's own all-liquid case keeps ΔE positive only at an earlier, hotter, faster-cooling epoch (its
+  134 minimum is a history value) and with core potassium; at *today's* T_c and cooling rate even the paper's
+  numbers give E_R + E_s − E_k = −49 (§2). **This is not a verdict about Earth's dynamo** — the threshold cannot
+  decide (0.1–1 000), the band straddles zero, E_k is model-dependent by 20 %, and the whole thing sits on a
+  declared cooling rate and a declared H. It is the honest present-day number on an Earth-calibrated model,
+  with its bands, and the 3-Gyr question is refused by name (C20).
+- **⑤** `entropy_history_verdict = "cannot-say (needs C20)"` on every result; the gate row asserts it.
+- **⑥** `--fast` passes; no path function touched; no `--refresh`. Test cost 6.6 s.
+- **⑧** Contract (en + ko), chain node + six edges (the `→ dynamo_rocky` one `status: gap` by design — not
+  wired), registry import, `check.sh` row; `chain.py check` 50 nodes / 194 edges; `check_via --gate` and
+  `check_contracts` 10/10 pass.
+- **⑦** Gate: below.
