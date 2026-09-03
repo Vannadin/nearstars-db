@@ -91,7 +91,10 @@ T_a 는 핵 쪽 경계온도와 맨틀 밑 **실온**(식 29 — 포텐셜 온�
 `q_adiabat` = 4π r² k |dT/dr| 이고 dT/dr 은 핵 단열선 T ∝ ρ^γ 과 dP/dr = −ρ g_cmb 에서, `q_adiabat_min/max` 는 k 30–70.
 `cmb_flux_verdict` 는 둘 중 어느 쪽이 큰지만 말하며 다이나모 판정은 하지 않습니다(φ 는 다음 단계). `q_cmb_in_paper_range`
 는 Nimmo 의 인쇄 범위 4.5–9 TW 와 비교하며, 엔진 자신의 지구(선언 핵 쪽 3760 K, 단열선 밑 2526 K)는 **밖**(≈ 2.75 TW)에
-떨어지고 조정 없이 보고합니다. `engine/cmb-heat-flux-context-notes.md`.
+떨어지고 조정 없이 보고합니다. ⚠ **`q_cmb` 는 하한입니다**(브리프 62). 선언된 핵 쪽 경계온도 자체가 하한이고
+(`core-state-methodology.md:60`, 이름 붙은 편향 둘이 모두 아래를 가리킴) η_b 가 T_a 에 지수적이라, 하한 입력은 하한
+열류를 냅니다. 참값은 더 높으며 2.75 TW 를 "다이나모 없음" 으로 읽어서는 안 됩니다. 하한을 해로 바꾸는 것은 핵 에너지
+수지의 폐합(브리프 62 B, `engine/cmb-heat-flux-context-notes.md` §5)입니다. `engine/cmb-heat-flux-context-notes.md`.
 
 ## 목차
 

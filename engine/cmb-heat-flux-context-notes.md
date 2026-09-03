@@ -110,4 +110,62 @@ out of domain. **Not touched**: `chain.yaml:417-418` (the `cmb_heat_flux` / `geo
 
 **Anchors** bit-identical by construction (`interior.py`, `core_state.py`, `solve()` untouched; new
 module, new node). `check_contracts` 8/8; `chain.py check` 48 nodes / 182 edges; `check_via --gate` pass;
-`test_cmb_flux` 0.1 s. Gate: appended after the run.
+`test_cmb_flux` 0.1 s. **Gate on `413163cb`: FAIL 0, 15:42:30 → 16:03:35 = 1265 s.**
+
+**Reproduced by the directing seat with one different choice, worth a line**: with g = 10.68 m/s² (the
+CMB value) in eq. 37 instead of the paper's Table 2 surface g = 9.8, the paper case gives δ_b 140.2 km /
+Q_C 9.17 TW (against my 144.2 / 8.92, printed 140 / 9) and the engine's Earth 383 km / 2.82 TW (against
+394 / 2.75). The module keeps the paper's g as transcribed; the g choice is a ±3 % width on Q_CMB and is
+named here rather than folded in.
+
+## 5. Brief 62, step 1 — does the core-temperature loop close at the present epoch? (measurement, nothing built)
+
+**The owner chose to close the loop** (a solved T_c instead of the declared lower bound 3760 K). The
+directing seat established that `bottom_layer` alone is one equation in two unknowns and that steady
+state fails (Q_M − H_mantle at 1600 K = 24.7 TW against ~9 TW; the difference is secular cooling, the same
+fact as Korenaga's 0.23). The third relation is Nimmo's **core energy balance**, and the question was
+whether it needs an integrator. **Read from the cached paper (여기): it does not, at the present epoch.**
+
+**The balance** (eq. 30 in the paper's notation, terms §3.1.2–3.1.6, extraction lines 300–455):
+
+    Q_C = Q_s + Q_L + Q_g + Q_R (+ Q_H)                      Q_C = 4π R² F_b   (line 578)
+    Q_s = −(C_p / T_c) I_S · dT_c/dt          I_S = ∫ ρ T dV over the core  (eq. 9)
+    Q_L = 4π R_i² L_h ρ_i · dR_i/dt           dR_i/dt = C_r · dT_c/dt         (eqs 17, 20)
+    Q_g = [∫_oc ρ ψ dV − M_oc ψ(R_i)] β_c C_c C_r · dT_c/dt                    (eq. 19–21)
+    Q_R = M_c H                                                                 (eq. 16)
+
+Every term but Q_R is **linear in dT_c/dt**, so with dT_c/dt declared the balance is algebraic:
+`bottom_layer(T_c)` on the left, `Q̃(T_c) · (−dT_c/dt) + M_c H` on the right — **a root-find in T_c, no
+time-stepping**. The paper's own present-day Table 4 (layout line 1454 ff.) closes it: T_c 4155 K, Q_C 9.0 TW
+= Q_s 2.0 + Q_L 2.6 + Q_g 1.6 + Q_R 2.9 (sum 9.1), **dT_c/dt = −33 K/Gyr**, Q_k 6.2, η_b 6.7×10²¹.
+
+**Symbol audit — hold / can declare / lack:**
+
+| symbol | what | status |
+|---|---|---|
+| T_c, R, ρ(r), g(r), p(r) | core-side CMB temperature, core radius, core profiles | **hold** — `core_state` / `interior_layers` (paper uses the analytic Gaussian model eqs 1–7 with ρ_cen 12500, L 7272 km, D 5969 km, Table 1; we can use our own profiles or transcribe theirs for Earth) |
+| T(r) adiabat, T_cen | core adiabat | **hold** — `core_state`'s T ∝ ρ^γ (γ = 1.5 caveat rides) |
+| R_i, T_i, ρ_i | inner-core radius, ICB temperature and density | **hold** — `core_state` (`icb_pressure`, melting curve); paper's eq. 40 needs T_m0/T_m1/T_m2/θ (Table 2) which we replace by our own iron melting curve |
+| C_r = dR_i/dT_c | ICB migration per unit cooling (eq. 20: melting-curve slope vs adiabat slope at the ICB) | **derivable** from what we hold (both slopes exist in `core_state`); the paper prints −9.56 km/K for Gubbins' model (Table 3 note) |
+| C_p 840, α_c 1.35 ± 0.15, L_h 750 kJ/kg, β_c 1.1 ± 0.1, χ 4.2 wt%, R_H −27.7 MJ/kg | core thermodynamic constants | **can declare** — Table 1/2, all Earth's, each with the paper's own band where printed |
+| H (core radiogenic, 400 ppm K → 1.5 pW/kg, Table 4) | core heat production | **can declare, and it is the paper's contested conclusion** — the paper needs ≈ 400 ppm K to fit Earth; for another body it is a declaration with H = 0 as the honest floor (Q_R 2.9 of 9 TW) |
+| **dT_c/dt** | present-day core cooling rate | **can declare** — **−33 K/Gyr** (Table 4, nominal); ⚠ the only band the paper offers is model-to-model: Gubbins' comparison model uses 126 K/Gyr (Table 3 note, k = 60), and §5.3 varies it through the mantle reference viscosity — **a 4× spread between two published Earth models**, and for an exoplanet it is exactly the thermal history we do not have |
+| Q_H | heat of reaction term | **can declare** (R_H, Table 1); small and negative in entropy, omitted at first pass with the omission named |
+
+**Pre-registered outcome: ① by the letter — a present-epoch closure exists and dT_c/dt is declarable —
+with the cost stated:**
+- B is a root-find on `bottom_layer(T_c) = Q̃(T_c)·(−dT_c/dt) + M_c H` plus **two declarations with bands**
+  (dT_c/dt, core H) and Table 1's thermodynamic constants; no integrator, no architectural change.
+- **The declaration carries Earth's history.** −33 K/Gyr is Earth's nominal value in one model; a body's
+  own cooling rate is the thermal history the engine does not compute. The solved T_c is therefore
+  "T_c under an Earth-like present-day cooling rate", and the band on dT_c/dt (33–126 K/Gyr between two
+  published Earth models) is the width that has to ride on it — it is large, and it is the honest width.
+- **A body with no inner core** (all-liquid, `core_state` says so) drops Q_L and Q_g: Q_C = Q_s + Q_R —
+  one integral and two declarations. That is the small first build if B proceeds.
+- Not ②: no history integration is needed for the present epoch. Not ③: every symbol is held, derivable,
+  or declarable; the one that cannot be *grounded* per body (dT_c/dt) is declarable with a stated band.
+
+**Done regardless, as briefed — Q_CMB labelled a lower bound where it is emitted**: see the recipe note
+and contract (next commit): the core-side temperature is a declared lower bound whose two named biases
+point down (`core-state-methodology.md:60`), so a lower-bound input yields a lower-bound flux; the true
+Q_CMB is higher, and 2.75 TW must not be read as "Earth has no dynamo".

@@ -55,7 +55,12 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
   that tested {0.1, 0.5} against both Chabrier editions and never tested 0.4 — 2021's clamp — put every
   2021 cell clamped at 0.4 into "genuine" (288 / 442 instead of 497 / 233). The first two were about which
   direction a filter looks; this one is about which edition each side is. **A comparison's filter has to know
-  what each side means.**
+  what each side means.** Fourth instance (Brief 61): a node regex `^  ([a-z_]+):` — no digits in the
+  class — counted 46 nodes where the file has 48, silently dropping `k2q_class_table` and `omega0_class_table`.
+  **The general form, stated once so instances need not accrete: a pattern is a hypothesis about the data's
+  shape, and reporting its output as a count asserts that hypothesis silently.** Say the pattern beside the
+  count, and have a second reader re-measure with a different one — every one of these four was caught by a
+  re-measurement, none by the author noticing.
 - **Read the generator before measuring its source.** `make_hhe_table.py:32` had carried `SENTINEL =
   -8.8603` with the comment *"우리 창 안에 7칸 있다"* — the value, the convention and the exact count — the
   whole time; two seats re-derived it from the tables, one of them wrongly, before either looked there.

@@ -102,6 +102,10 @@ reading misses the paper's own 140 km by 5×; recovered by closure: 144 km / 8.9
 dP/dr = −ρ g_cmb; `q_adiabat_min/max` span k 30–70. `cmb_flux_verdict` says only which is larger — no dynamo statement
 is made here (φ is the next step). `q_cmb_in_paper_range` compares with Nimmo's printed 4.5–9 TW; on the engine's own
 Earth (declared core-side 3760 K, adiabat base 2526 K) it lands **outside** (≈ 2.75 TW) and is reported, not tuned.
+⚠ **`q_cmb` is a lower bound** (Brief 62): the declared core-side temperature is itself a lower bound whose two named
+biases point down (`core-state-methodology.md:60`), and η_b is exponential in T_a, so a lower-bound input yields a
+lower-bound flux — the true value is higher, and 2.75 TW must not be read as "no dynamo". Turning the bound into a
+solution is the core energy-balance closure (Brief 62 B, `engine/cmb-heat-flux-context-notes.md` §5).
 `engine/cmb-heat-flux-context-notes.md`.
 
 ## Table of Contents
