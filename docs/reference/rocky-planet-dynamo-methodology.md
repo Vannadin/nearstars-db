@@ -51,11 +51,19 @@ sits in — this is why a rocky field is a *decision ladder*, not one closed for
 
 1. **Dynamo-alive gate** — the magnetic Reynolds number must exceed the critical
    `Rm > 40` (Gaidos 2010, [`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)), else there is no self-sustained
-   dynamo and `ℳ = 0`. A frozen, non-convecting, or too-slow core fails here.
+   dynamo and `ℳ = 0`. A frozen, non-convecting, or too-slow core fails here. The formula: `Rm = V L / λ`,
+   `λ = 1/(μ₀σ)` (Gaidos+ 2010; OC06 write `Rm = u d/λ`, and 40 is OC06's own measured onset, printed
+   three times) — **quoted, not evaluated here**, because it needs V and σ that nothing we hold supplies.
+   OC06's caveat rides with it: *"beyond Rm_crit there is no simple relationship between Lo_dip and Rm"* —
+   an on/off gate, never a strength predictor. And Gaidos+ 2010 argue it is almost always satisfied
+   (*"convective motions as small as 10⁻⁴ m/s are sufficient for Rem > 40"*, *"only very weakly dependent
+   on planet mass"*), which is an argument **for** the class ladder below.
 2. **Regime gate (local Rossby number)** — `Ro_ℓ < 0.12` → **dipolar** (strong,
    organized field); `Ro_ℓ > 0.12` → **multipolar** (the moment collapses to
-   `≈ 0.06 ×` its dipolar value; OC06's coefficient, which RM22 re-confirm on the
-   Solar System, vs 0.15 in Grießmeier 2009).
+   `≈ 0.06 ×` its dipolar value — **RM22's coefficient** (*"the reducing coefficient in the solar system
+   is about 0.06"*), not OC06's: OC06 print *"across this transition the dipole moment falls by nearly a
+   factor of 20"* (≈ 0.05×) and, separately, that the multipolar regime is *"reduced by a factor of 10 or
+   more"*; vs 0.15 in Grießmeier 2009. Attribution corrected 2026-09-03 against both cached papers).
 3. **Rotation** enters *only through the regime gate*, not the dipolar amplitude.
    In the dipolar linear zone the moment carries **no explicit angular-velocity
    dependence** (RM22 §5.1) — a crucial, counter-intuitive point: slow rotation
@@ -175,8 +183,10 @@ regime gate, so a locked planet with an active core can still hold a modest fiel
   planets. **Cached** in `docs/phase3/_papers/2203.01065.md` (the main checkout's cache; worktrees reach it through the symlink — see `engine/SESSION-HANDOFF.md`).
 - **Olson & Christensen 2006** (OC06), E&PSL 250, 561 ([`2006E&PSL.250..561O`](https://ui.adsabs.harvard.edu/abs/2006E%26PSL.250..561O)).
   "Dipole moment scaling for convection-driven planetary dynamos" — the buoyancy-flux
-  scaling laws, the `Ro_ℓ = 0.12` dipolar/multipolar boundary, and the ~0.06
-  multipolar reduction that RM22 build on.
+  scaling laws, the `Ro_ℓ = 0.12` dipolar/multipolar boundary, and the multipolar collapse — printed as
+  *"nearly a factor of 20"* (≈ 0.05×); the ~0.06 the ladder uses is RM22's Solar-System value, not OC06's.
+  **Fit domain, p. 564**: *"3×10⁻⁶ ≤ E ≤ 10⁻², 10⁴ ≤ Ra ≤ 1.5×10¹⁰, 0.06 ≤ Pm ≤ 24, 0.1 ≤ Pr ≤ 20, r* = 2.85"*
+  — see the extrapolation note in §The law.
 - **Gaidos, Conrad, Manga & Hernlund 2010**, ApJ 718, 596 (author list corrected 2026-09-03 against ADS; the earlier row read "Manoj & Blake") ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)).
   "Thermodynamic Limits on Magnetodynamos in Rocky Exoplanets" — the `Rm > 40`
   dynamo-onset gate and the no-solid-inner-core above ~2.5 M⊕ result.
