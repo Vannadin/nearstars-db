@@ -3,6 +3,10 @@
 set -u
 cd "$(git rev-parse --show-toplevel)"
 fail=0
+# 게이트 자신만 찍는 시작/종료선. 테스트 파일들이 찍는 "모두 통과" 와 겹칠 수 없는 형식이고,
+# 종료선 없이는 "무엇이 언제 무슨 트리 위에서 끝났는지" 를 말할 수 없다 (2026-09-04, 두 좌석에서 같은 오독).
+gate_sha=$(git rev-parse --short HEAD)
+echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T)"
 
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 python3 scripts/pipeline/validate.py || fail=1
@@ -201,4 +205,5 @@ if [ $fail -eq 0 ]; then
 else
   echo "──────── 일부 점검 실패 ────────"
 fi
+echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) rc=$fail"
 exit $fail

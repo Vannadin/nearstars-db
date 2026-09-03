@@ -68,6 +68,16 @@ backgrounded tool call carries a 10-minute ceiling and the gate takes ~20; the p
 with no end stamp. **Launch the gate under `nohup … &` (detached from the tool), stamp start and end in the
 log, and read a run that died without an end stamp as *interrupted*, never as *failed*** — the same lesson
 as the earlier "killed and read as an owner signal", from the other direction.
+⚠ **The same misreading happened twice in three days, in two seats, with this warning already written
+(2026-09-04)**: the directing seat once read a dead PID plus a mid-log "모두 통과" as "the gate finished"; the
+main seat then read a test file's "모두 통과" (sixteen test files print exactly that line) as the gate's end,
+committed three times into the tree while the gate ran, and launched a second gate on top of it — that run
+(gate76) was killed and stamped *void*. Twice with the rule in place means a log-design fault, not a
+person: the body's pass phrase looked like the end line. **So the gate now prints its own `GATE START sha=
+pid= at=` and `GATE END sha= pid= at= rc=` lines** (`scripts/check.sh`), which no test file can imitate.
+**The verdict "the gate finished" rests on the `GATE END` line alone** — with its sha naming the tree it
+ran on — never on any "통과" text in the body, and never on a PID being gone. A gate whose `GATE END` sha
+differs from HEAD ran on an older tree.
 
 **Three owner-obtained PDFs had no PROVENANCE and now do (Brief 64; the files live in the gitignored
 cache, so this line is their record in the repository)**: `2020PhRvL.125s5501Q_SM` (Queyroux SM, 08-31
