@@ -134,7 +134,16 @@ BAND_OPEN_BELOW = (f"band, open below (part of the family falls under the {BRACK
 
 def radiogenic_temperature_band(budgets: dict[str, dict[str, float]], g: float, r_m: float) -> dict:
     """`budgets` = {set_name: {"mantle_w": .., "total_w": ..}} for the declared concentration sets.
-    Returns the union's endpoints, each width's own extent, the grid, and a verdict label."""
+    Returns the union's endpoints, each width's own extent, the grid, and a verdict label.
+
+    **Width definitions — recomputable from the returned `grid`** (keys (set, denominator, ζ, T_s)):
+    * `zeta`, `set`, `denominator`: **at T_s = 293 K** (the declared surface), hold the other two of
+      {set, denominator, ζ} fixed, take max − min along the named axis, and report the **largest** such
+      span over the fixed combinations. (Including the T_s = 200 K rows in the maximisation gives larger
+      spans — e.g. Earth ζ 265 → 294 K; that is a different, mixed definition and is not this one.)
+    * `surface`: the largest |T(T_s = 200 K) − T(T_s = 293 K)| over all (set, denominator, ζ).
+    The union's endpoints are over the T_s = 293 K grid only. All of it is evaluated on the body's own
+    g, r_m and budgets, so every width moves with the body."""
     zetas = (ZETA_RANGE[0], ZETA, ZETA_RANGE[1])
     grid: dict[tuple[str, str, float, float], float | None] = {}
     for set_name, b in budgets.items():

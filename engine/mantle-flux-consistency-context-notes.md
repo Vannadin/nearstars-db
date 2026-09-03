@@ -256,4 +256,16 @@ a classifier would sit on the band, and reuse the labels' discipline rather than
 
 **Anchors** bit-identical by construction (`interior.py` and `solve()` untouched; `test_ice_giant.py
 --fast` 모두 통과). `check_contracts` 7/7 with the seven new outputs; `chain.py check` 47 nodes / 176 edges.
-Gate: see the line appended after the run.
+**Width definition, stated after the directing seat reproduced different numbers from the same grid**
+(its "hold the other three fixed" maximised over the T_s = 200 K rows too: ζ 293.6 / set 239.1 /
+denominator 123.7 K on Earth-shaped inputs g 9.8, r_m 6.4e6, silicate 4.0e24 kg, against the function's
+265.3 / 233.7 / 121.1). The function's definition, now in its docstring and on the emitted note: for
+ζ / set / denominator, **at T_s = 293 K**, hold the other two fixed, take max − min along the axis, report
+the largest such span; for surface, the largest |T(200 K) − T(293 K)| over all (set, denominator, ζ).
+Both are legitimate; the phrase "across the others" had not said which others or at which T_s. Widths are
+the body's own (g, R, budget) — Pandora's row already differs from Earth's. ζ's upper end is the module's
+declared 0.015 (Table 2's ± 0.5); the paper's printed range tops at 0.016, where a reader recomputing from
+the paper lands.
+
+Gate on `eb863569`: **FAIL 0, 14:53:38 → 15:14:32 = 1254 s.** The definition commit that follows is
+re-gated before push.

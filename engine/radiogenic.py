@@ -167,7 +167,11 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
            f"**하한이다**: 영년 냉각은 열류를 더하지 빼지 않는다. 네 폭, 어느 것도 접지 않았다 — "
            f"ζ {mantle_flux.ZETA_RANGE[0]:.3f}–{mantle_flux.ZETA_RANGE[1]:.3f} (Table 2 의 ±0.5): {w['zeta']:.0f} K · "
            f"농도 세트 Earth (1)/(2): {w['set']:.0f} K · 분모 맨틀 몫/총량: {w['denominator']:.0f} K · "
-           f"T_s 293→{mantle_flux.BAND_T_S_ALT:.0f} K: {w['surface']:.0f} K. 세 폭이 같은 자릿수라 하나가 지배하지 않는다 — "
+           f"T_s 293→{mantle_flux.BAND_T_S_ALT:.0f} K: {w['surface']:.0f} K. **폭의 정의**: 앞의 셋은 T_s = 293 K 에서 나머지 "
+           "두 선언을 고정하고 그 축을 따라 max − min 을 잰 것의 최대(T_s = 200 K 행을 섞어 최대를 잡으면 더 커진다 — "
+           "다른 정의다); surface 는 (세트·분모·ζ) 전부에 대한 |T(200 K) − T(293 K)| 의 최대. 모두 이 천체의 g·R·예산으로 "
+           f"잰 값이라 천체마다 움직인다. ζ 상단은 모듈 선언 {mantle_flux.ZETA_RANGE[1]:.3f} (Table 2 의 ±0.5) 이고 논문이 "
+           "인쇄한 범위의 상단은 0.016 이다. 세 폭이 같은 자릿수라 하나가 지배하지 않는다 — "
            "폭은 구조적이지 골라서 좁힐 것이 아니다. 분모는 맨틀 몫이 like-for-like (F_t 는 상단 경계층을 건너고 지각 "
            "생산은 그 위다; Korenaga 2008 의 대류 Urey 비) 인데 순방향 판정은 총량을 쓴다 — 둘 다 싣고 어느 쪽도 뽑지 않는다."
            if band["t_max"] is not None else
