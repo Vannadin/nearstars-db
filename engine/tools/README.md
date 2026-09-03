@@ -46,5 +46,9 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
 - **A one-off archive from a personal academic page is the fragile case and must be kept** — the page can
   change or vanish and there is no index behind it. `DirEOS2019.tar.gz` is the standing example of what
   happens when it is not.
+- **A grep is not a measurement of a table.** The Chabrier tables store their placeholder as `-0.886030E+01`,
+  so `grep -c '-8.86'` returns 0 while the parsed value is −8.8603 at ten cells across the two tables; and a
+  difference count taken in both directions at once ("ten points") conflated three 2021 placeholders with
+  seven 2019 ones. Parse, then count with the selection written out (2026-09-03, Brief 51 audit).
 - **Every kept source directory carries a `PROVENANCE.txt`** (who obtained it, when, from where, what is in
   it). `militzer2024_zenodo/` lacked one until 2026-09-03; added.

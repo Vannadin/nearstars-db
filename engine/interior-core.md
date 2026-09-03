@@ -936,11 +936,17 @@ to it is a **physics decision** — interacting versus additive-volume mixture, 
 envelope — not housekeeping, so nothing was switched. Measured so the candidate carries its cost: the 2021
 `TABLEEOS_2021_TP_Y0275_v1` has the **same header, columns and grid** as the 2019 table (53,361 points), so
 the reader needs only the filename changed — **but** inside the baked window (logT 2.0–4.4, logP −4…+4 GPa)
-grad_ad differs by more than 0.01 at **40.5 %** of points (max 0.40, median 6×10⁻⁵), and **ten points at
-logT 2.45–2.85, logP 1.1–2.5 carry log ρ = −8.86 in the 2021 table** where 2019 has ~0.15 — a placeholder
-hole the reader would have to detect and refuse. Pre-registered as ① (filename-only) versus ② (reader
-change); the answer is **③: same format, different domain** — the switch is one filename plus a hole guard,
-and the whole question is physics. Uranus/Neptune anchors would move; that is what "candidate" means here.
+grad_ad differs by more than 0.01 at **40.5 %** of points (max 0.40, median 6×10⁻⁵). Placeholder cells
+(the −8.8603 both tables store where the solve did not converge): 2021 has **three, on the single line
+logP = 2.50 at logT 2.45 / 2.50 / 2.55**, where 2019 has values; 2019 has **seven** at logT 2.70–2.85,
+logP 1.10–2.30, where 2021 has values. `make_hhe_table.py` already handles that sentinel (→ `None`) and
+records that 2019's seven lie below the 50 K reach line. Pre-registered ① (filename-only) versus ② (reader
+change): the answer is **①** — same header, columns, grid and sentinel convention; the switch is the
+filename, the sentinel cells move from seven to three in the same cold-dense corner, and the whole question
+is physics. *Correction (audit of Brief 51): the first version of this entry said "ten points … carry −8.86
+in the 2021 table" and called the answer ③ with "a hole guard the current reader does not have" — the count
+mixed both tables' placeholders, and the guard exists.* Uranus/Neptune anchors would move; that is what
+"candidate" means here.
 
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
