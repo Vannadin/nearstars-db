@@ -39,6 +39,19 @@ message described one change and the commit contained two, which is a false labe
 commit. **Run `git diff --stat <file>` before staging it**, and if the diff contains someone
 else's lines, either wait or name them in the message.
 
+**The paper cache is one directory, reached from every worktree by symlink.** `docs/phase3/_papers`
+is gitignored, so each checkout used to grow its own copy: on 2026-09-03 the main checkout held
+1399 files and the engine worktree 193, **189 of them — every paper the owner obtained that week —
+existing nowhere else**, and a "cached" sweep run against the wrong copy reported 18 false claims
+that were true in the other. The 189 were copied into main (`cp -Rn`, 0 collisions), the four
+same-name files that differed were diffed on every value our files quote (all present in both; the
+renders differ only in formatting), and the worktree directory was replaced by a symlink to
+`/Users/vana/Desktop/NearStars/docs/phase3/_papers` (the ignore rule lost its trailing slash so the
+symlink is ignored too). Two consequences: **`git clean -xdf` in a worktree removes the symlink**
+(the target survives) and it must be re-created — `ln -s /Users/vana/Desktop/NearStars/docs/phase3/_papers
+docs/phase3/_papers`; and until every worktree carries the link, **a "cached" claim is resolved against
+the union of both directories**, never one.
+
 **Do not commit into the shared worktree while another seat's gate is running.** The gate
 certifies a tree state; a commit landing mid-run rides the push without review and makes the
 FAIL count a statement about a tree that no longer exists. Docs-only is harmless and the habit is
