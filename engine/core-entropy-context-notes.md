@@ -133,5 +133,25 @@ name · ⑥ untouched · ⑧ same commit.**
 - **⑧** Contract (en + ko), chain node + six edges (the `→ dynamo_rocky` one `status: gap` by design — not
   wired), registry import, `check.sh` row; `chain.py check` 50 nodes / 194 edges; `check_via --gate` and
   `check_contracts` 10/10 pass.
+- **Numerical condition of E_R and E_s (directing seat's question, measured 2026-09-04, values unchanged).**
+  Both are differences of nearly equal quantities. On the engine's Earth at 3 978 K:
+
+      steps   I_T         M_c/T_c     left (% of M_c/T_c)  E_R    | I_S/T_c     M_c        left   E_s    E_k     ΔE
+       100    4.271e20    4.879e20    12.5 %               91.2   | 2.297e24    1.941e24   18.4 % 78.7   249.5   −79.6
+       400    4.221e20    4.879e20    13.5 %               98.7   | 2.278e24    1.941e24   17.4 % 74.4   241.8   −68.8  ← shipped
+      1600    4.209e20    4.879e20    13.7 %              100.6   | 2.273e24    1.941e24   17.1 % 73.3   239.8   −66.0
+      6400    4.206e20    4.879e20    13.8 %              101.0   | 2.272e24    1.941e24   17.0 % 73.0   239.4   −65.3
+
+  **One digit cancels** (13–14 % of M_c/T_c survives in E_R, 17 % of M_c in E_s) — not a significant-figure
+  warning. **Step sensitivity ≈ 5 % on ΔE** (−68.8 → −65.3 from 400 to 6 400 steps; I_T itself moves 0.4 %,
+  amplified ~5× by the difference), **two orders below the declaration band (−264 … +238); the sign does not
+  turn on it.** Cause, in one sentence: *the profile is RK4 and converges to 0.003 %, but the integrals on its
+  samples are first-order midpoint sums, O(h) — two layers, two convergence orders*; it applies to every term
+  built on I_S, I_T, ∫ρψ, including C14's Q terms, where without cancellation it is 0.1–0.5 % (Q_s 2.0006 →
+  1.9951 TW, total 0.13 %, 400 → 6 400 steps). Route A's 10 % reproduction on the paper's model (4 000-point
+  analytic integrals) is the evidence that the conditioning is not destructive. **Frozen as gate rows** rather
+  than left as a label: `entropy_integration_width` = |ΔE(4× steps) − ΔE| is emitted live (≈ 2.7 MW/K) and
+  gated at < 10 MW/K; C14's test gates the energy total's 4× move at < 0.5 %. The shipped step count stays
+  400 — the width rides on every result, so nothing is quoted that the code does not re-measure.
 - **⑦ Gate on `ffd9602c`: FAIL 0, 484 PASS (+12 = `test_core_entropy`'s rows), 02:11:52 → 02:32:36 = 1 244 s,
   AC 100 % `powermode 2` at both ends** — mains branch (1 224–1 362); the new test's 6.6 s is inside the noise.

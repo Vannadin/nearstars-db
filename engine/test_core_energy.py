@@ -157,9 +157,14 @@ def main() -> int:
     prof2 = ce.core_profile("fe_prem", p_cmb_pa, 3760.0, r_cmb, m_core, steps=4 * ce.STEPS)
     ok(abs(prof2["p_center"] - prof["p_center"]) / prof["p_center"] < 0.002,
        f"1b: 4× steps moves the centre pressure by {(prof2['p_center'] / prof['p_center'] - 1) * 100:+.2f} % (> 0.2 %)")
+    # 2026-09-04: the integrals on the profile (I_S, ∫ρψ, M_oc) are first-order sums, O(h), a different order from
+    # the RK4 profile; measured 0.13 % on the energy total from 400 to 6400 steps (no cancellation in the Q terms).
+    q1, q4 = ce.core_terms(prof)["q_total"], ce.core_terms(prof2)["q_total"]
+    ok(abs(q4 - q1) / q1 < 0.005, f"1b: 4× steps moves the energy total by {(q4 / q1 - 1) * 100:+.2f} % (> 0.5 %)")
     print(f"  [{'PASS' if not fails else 'FAIL'}] 중심압 {p_c:.3f} GPa (interior.solve() {ev['core_pressure']:.3f}, "
           f"{(p_c / ev['core_pressure'] - 1) * 100:+.3f} %) · 질량 잔차 {prof['m_center_residual']:+.1e} · 걸음 4× 에서 "
-          f"{(prof2['p_center'] / prof['p_center'] - 1) * 100:+.3f} % — RK4, {ce.STEPS} 걸음, 안쪽 2 % 반경(부피 10⁻⁵, +0.03 %) 제외; 입력은 solve 출력 그대로")
+          f"{(prof2['p_center'] / prof['p_center'] - 1) * 100:+.3f} % · 에너지 총합 {(q4 / q1 - 1) * 100:+.2f} % (적분은 1차, 프로파일은 RK4 — 두 층의 차수) — "
+          f"RK4, {ce.STEPS} 걸음, 안쪽 2 % 반경(부피 10⁻⁵, +0.03 %) 제외; 입력은 solve 출력 그대로")
 
     # ── 2. route B: the engine's Earth — printed, not asserted ──────────────
     print("\n경로 B — 엔진 자신의 지구 (선언 3760 K 옆에 보고; 예상 없음; 입력은 interior.solve() 출력)")

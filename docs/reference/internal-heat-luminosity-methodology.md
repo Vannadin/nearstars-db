@@ -147,7 +147,7 @@ reported, not tuned. `engine/core-energy-balance-context-notes.md`.
 **Returns** — `entropy_production` [W/K] · `entropy_production_min` [W/K] · `entropy_production_max` [W/K] ·
 `entropy_production_h0` [W/K] · `e_r` [W/K] · `e_s` [W/K] · `e_l` [W/K] · `e_g` [W/K] · `e_h` [W/K] · `e_k` [W/K] ·
 `entropy_positive_present` [—] · `entropy_band_straddles_zero` [—] · `entropy_corners_positive` [—] ·
-`has_inner_core_solved` [—] · `entropy_history_verdict` [—]
+`has_inner_core_solved` [—] · `entropy_history_verdict` [—] · `entropy_integration_width` [W/K]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
 `core_cmb_temperature_solved` [K] · `core_material` [—] · `body_class` [—] · `k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] ·
 `dtc_dt_k_per_gyr` [K/Gyr]
@@ -174,7 +174,10 @@ not imply a sustained dynamo — C20 is this node's consumer for that. Without a
 E_L = E_g = E_H = 0 and ΔE = E_R + E_s − E_k — the paper's *"completely liquid core"* case, kept positive there by
 core potassium (§5.3: no potassium → −45 %). Transcription closure: on the paper's inputs the analytic core (test
 file only) reproduces Table 4's six entropy components within 10 % (E_L, E_g, E_H ≈ −6 %, the C_r factor of C14)
-and ΔE 328 vs 351. `engine/core-entropy-context-notes.md`.
+and ΔE 328 vs 351. `entropy_integration_width` = |ΔE at 4× the profile steps − ΔE|, emitted live: the profile is
+RK4 (0.003 % converged) but the integrals on its samples are first-order sums, O(h), and E_R, E_s are differences of
+nearly equal quantities (one digit cancels) — measured ≈ 2.7 MW/K on Earth at 400 steps, two orders below the
+declaration band, gated at < 10 MW/K. `engine/core-entropy-context-notes.md`.
 
 ## Table of Contents
 

@@ -299,6 +299,12 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
   inputs showed up as a 0.5 % error and was explained as the cutoff's doing — the mass residual growing by
   an order of magnitude was the fingerprint, and it was not read.** All four are the directing seat's and
   the audit's catches, reproduced here before any line was changed.
+- **Two layers, two convergence orders (2026-09-04, from C15's numerical check).** The profile is RK4 and
+  converges to 0.003 %; the integrals taken on its samples (I_S, M_oc, ∫ρψ) are first-order midpoint sums,
+  O(h). Measured on Earth: Q_s 2.0006 → 1.9951 TW, Q_L 0.914 → 0.912, Q_g 0.639 → 0.636, total **0.13 %** from
+  400 to 6 400 steps — small here because the Q terms do not cancel; in C15's E_R and E_s, which are
+  differences of nearly equal quantities, the same O(h) becomes ~5 %. Gated in `test_core_energy.py` §1b:
+  the energy total's 4× move < 0.5 %.
 - **⑤ Gate on `db402d92`: FAIL 0, 472 PASS, 01:15:24 → 01:38:06 = 1 362 s — AC, 100 %, `powermode 2` at
   both ends.** Wholly on mains, the time returns to the mains branch (1 224 → 1 268 → 1 280 → 1 293 →
   **1 362** s; the +69 s over the last mains run is `test_core_energy` at 4.8 s plus noise), **which confirms

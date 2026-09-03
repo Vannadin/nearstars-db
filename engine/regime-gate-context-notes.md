@@ -124,4 +124,5 @@ Pozzo's 100 W/m/K for k and fits 60.)
 - **⑧** Contract Needs (`locked`, `rotation_period`) and Returns (`rossby_verdict`) en + ko, chain outputs and
   edges, in this commit; `chain.py check` 50 / 195, `check_via --gate`, `check_contracts` 10/10,
   `dynamo_table --check` pass.
-- **⑥** Gate: below.
+- **⑥ Gate on `3c3652df`: FAIL 0, 485 PASS (+1, the C16 branch row), 02:38:57 → 02:59:29 = 1 232 s, AC 100 %
+  `powermode 2` at both ends** — mains branch.

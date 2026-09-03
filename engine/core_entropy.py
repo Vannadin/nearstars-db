@@ -110,6 +110,12 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                 for d in ce.DTC_DT_RANGE:
                     corners[(k, h, d)] = entropy_terms(prof, terms, d, h, k)["delta_e"]
         h0 = entropy_terms(prof, terms, h=0.0)["delta_e"]
+        # Integration width (2026-09-04): the profile is RK4 (0.003 % converged) but the integrals on its samples
+        # are first-order midpoint sums, O(h) — two layers, two convergence orders — and E_R, E_s are differences
+        # of nearly equal quantities (one digit cancels), so their error is amplified ~5× relative to I_T, I_S.
+        # Emitted live rather than quoted: |ΔE(4× steps) − ΔE|. Measured 2026-09-04 on Earth: ≈ 2.7 MW/K at 400 steps.
+        prof4 = ce.core_profile(core_material, p_cmb, t_c, r_cmb, m_core, steps=4 * ce.STEPS)
+        de4 = entropy_terms(prof4, ce.core_terms(prof4))["delta_e"]
     except PhaseGap as e:
         return out_of_domain(RECIPE, VERSION, f"핵 프로파일이 재료 도메인 밖으로 나갔다 — {e}", inputs=inputs, refs=REFS)
     de = base["delta_e"]
@@ -123,9 +129,11 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               "e_g": base["e_g"], "e_h": base["e_h"], "e_k": base["e_k"],
               "entropy_positive_present": positive, "entropy_band_straddles_zero": straddles,
               "entropy_corners_positive": sum(1 for v in corners.values() if v > 0.0),
-              "has_inner_core_solved": bool(ic), "entropy_history_verdict": "cannot-say (needs C20)"}
+              "has_inner_core_solved": bool(ic), "entropy_history_verdict": "cannot-say (needs C20)",
+              "entropy_integration_width": abs(de4 - de)}
     units = {k: "W/K" for k in ("entropy_production", "entropy_production_min", "entropy_production_max",
-                                "entropy_production_h0", "e_r", "e_s", "e_l", "e_g", "e_h", "e_k")}
+                                "entropy_production_h0", "e_r", "e_s", "e_l", "e_g", "e_h", "e_k",
+                                "entropy_integration_width")}
     units.update({"entropy_positive_present": "", "entropy_band_straddles_zero": "", "entropy_corners_positive": "",
                   "has_inner_core_solved": "", "entropy_history_verdict": ""})
     notes = (
@@ -138,6 +146,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
            f"내핵 {ic['r_i'] / 1e3:.0f} km. ")
         + f"판정 라벨: {'ΔE > 0' if positive else 'ΔE ≤ 0'} — " + THRESHOLD_LABEL + ". "
         + ("**밴드가 0 을 가로지른다** — 부호가 선언 셋 안에서 갈리므로 이 수는 판정이 아니라 폭이다. " if straddles else "")
+        + f"적분 폭(걸음 4× 대비) {abs(de4 - de) / mw:.1f} MW/K — 프로파일은 RK4 로 수렴하지만 그 표본 위의 적분은 1차라 "
+        "O(h) 로 붙고, E_R·E_s 는 큰 두 수의 차(한 자리 상쇄)라 그 오차가 증폭된다; 선언 밴드보다 두 자릿수 작다. "
         + "**φ 는 dynamo_rocky 의 판정에 배선되지 않는다** — 문턱이 판정을 못 내므로 사다리를 덮어쓸 자격이 없고, "
         "논문도 Q_C 대 Q_k 와 φ 를 나란히 둔다. " + HISTORY_REFUSAL + ". 라벨: 지구에 보정된 모형 · dT_c/dt 4배 · H 4배(바닥 0) "
         "· k 50 ± 20 · γ = 1.5 고체값 · E_H 의 괄호 순서는 인쇄값 −134 에 대한 폐합으로 회수(텍스트층 불명) · "

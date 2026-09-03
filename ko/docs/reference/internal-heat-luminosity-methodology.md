@@ -130,7 +130,7 @@ GPa). 엔진 자신의 지구에서 풀린 T_c 는 3978 K 이고 거기서는 �
 **Returns** — `entropy_production` [W/K] · `entropy_production_min` [W/K] · `entropy_production_max` [W/K] ·
 `entropy_production_h0` [W/K] · `e_r` [W/K] · `e_s` [W/K] · `e_l` [W/K] · `e_g` [W/K] · `e_h` [W/K] · `e_k` [W/K] ·
 `entropy_positive_present` [—] · `entropy_band_straddles_zero` [—] · `entropy_corners_positive` [—] ·
-`has_inner_core_solved` [—] · `entropy_history_verdict` [—]
+`has_inner_core_solved` [—] · `entropy_history_verdict` [—] · `entropy_integration_width` [W/K]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
 `core_cmb_temperature_solved` [K] · `core_material` [—] · `body_class` [—] · `k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] ·
 `dtc_dt_k_per_gyr` [K/Gyr]
@@ -153,7 +153,9 @@ dT_c/dt 의 여덟 모서리, `_h0` 는 H = 0 모서리 — 우리 H 밴드의 �
 함의하지 않습니다 — 그 소비자는 C20 입니다. 내핵이 없으면(풀린 지구, C14) E_L = E_g = E_H = 0, ΔE = E_R + E_s − E_k — 논문의
 "완전 액체 핵" 경우이고 거기서 그것을 양수로 지키는 것은 핵 칼륨입니다(§5.3: 무칼륨 → −45 %). 전사 폐합: 논문 입력에서
 해석 핵(시험 파일에만)이 Table 4 의 엔트로피 여섯 항을 10 % 안에서 재현하고(E_L·E_g·E_H ≈ −6 %, C14 의 C_r 인자) ΔE 328
-대 351. `engine/core-entropy-context-notes.md`.
+대 351. `entropy_integration_width` = |프로파일 걸음 4× 에서의 ΔE − ΔE| 를 실시간으로 냅니다. 프로파일은 RK4 로 0.003 %
+수렴하지만 그 표본 위의 적분은 1차 합이라 O(h) 이고, E_R·E_s 는 거의 같은 두 수의 차(한 자리 상쇄)입니다 — 지구 400 걸음에서
+≈ 2.7 MW/K, 선언 밴드보다 두 자릿수 작으며 게이트가 < 10 MW/K 를 검사합니다. `engine/core-entropy-context-notes.md`.
 
 ## 목차
 

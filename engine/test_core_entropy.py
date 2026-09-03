@@ -100,11 +100,16 @@ def main() -> int:
         ok(v["entropy_history_verdict"] == "cannot-say (needs C20)", "2: the history verdict must refuse by name")
         ok(abs(v["e_l"]) + abs(v["e_g"]) + abs(v["e_h"]) == 0.0 if not v["has_inner_core_solved"] else True,
            "2: without an inner core E_L, E_g, E_H must be exactly 0")
+        # 2026-09-04: two layers, two convergence orders — the profile is RK4, the integrals on it are O(h) and
+        # E_R, E_s cancel one digit. Measured: ΔE moves 2.7 MW/K from 400 to 1600 steps (5 % of |ΔE|, two orders
+        # below the declaration band). Frozen at 10 MW/K so a coarser sampling or a deeper cancellation rings.
+        ok(v["entropy_integration_width"] < 10.0e6,
+           f"2: entropy integration width {v['entropy_integration_width'] / mw:.1f} MW/K ≥ 10 — the integrals on the profile are not converged")
         print(f"  [{'PASS' if not fails else 'FAIL'}] T_c {t_solved:.0f} K · ΔE {v['entropy_production'] / mw:+.0f} MW/K "
               f"(밴드 {v['entropy_production_min'] / mw:+.0f} … {v['entropy_production_max'] / mw:+.0f}, 양수 모서리 {v['entropy_corners_positive']}/8, "
               f"H=0 {v['entropy_production_h0'] / mw:+.0f}) = E_R {v['e_r'] / mw:.0f} + E_s {v['e_s'] / mw:.0f} + E_L {v['e_l'] / mw:.0f} "
               f"+ E_H {v['e_h'] / mw:.0f} + E_g {v['e_g'] / mw:.0f} − E_k {v['e_k'] / mw:.0f} · 내핵 {'있음' if v['has_inner_core_solved'] else '없음'} · "
-              f"0 가로지름 {v['entropy_band_straddles_zero']} · 이력 {v['entropy_history_verdict']}")
+              f"0 가로지름 {v['entropy_band_straddles_zero']} · 적분 폭(4×) {v['entropy_integration_width'] / mw:.1f} MW/K · 이력 {v['entropy_history_verdict']}")
 
     # ── 3. both branches on one profile ──────────────────────────────────────
     print("\n분기 — 내핵 없음(E_L = E_g = E_H = 0) / 내핵 있음, 같은 프로파일의 두 T_c")
