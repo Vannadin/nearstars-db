@@ -223,3 +223,37 @@ on the low set and an Io-mass body on any set hit the 1000 K floor.
   clamp (fixed here, refusal by name) and T_s = 293 K (carried as width 4). Pandora, tidally heated,
   gets a radiogenic-only floor that is not its mantle temperature — that is what "floor" on the label means.
 - ④ anchors: bit-identical by construction (`solve()` untouched; `interior.py` untouched); gate FAIL 0.
+
+### 5.1 Run record — 2026-09-03, code `736c461d`
+
+**Branch fired: ② with ③ riding on it, as pre-measured.** Earth's floor band **1060–1492 K**; Pandora
+**1017–1468 K**. Widths as emitted — each is the *largest* spread that declaration carries across the
+others, which is wider than the nominal-row spread quoted in the pre-registration (ζ 165 K on the
+Earth (1)/mantle row; 263 K on the Earth (2)/mantle row — the low set is where ζ bites hardest):
+
+| body | ζ | set | denominator | T_s 293→200 K | union |
+|---|---|---|---|---|---|
+| Earth | 263 K | 228 K | 121 K | 47 K | 1060–1492 K |
+| Pandora | 283 K | 223 K | 118 K | 45 K | 1017–1468 K |
+| Mars-like (0.107 M⊕, cmf 0.24) | 286 K | 209 K | 111 K | 45 K | open below – 1406 K |
+
+**Three widths of one order, none dominating** — the honest statement for a percentage consumer is
+that the width is structural, not a gap in our work; T_s is the smallest and is carried by name anyway.
+
+**③, twice.** (a) The bracket clamp: `invert_for_flow` returned 1000.0 K for an Io-scale 0.10 TW
+budget where Q_M(1000 K) = 0.11 TW already exceeds it — now `None`, both ends checked, and the recipe
+says **"open below"** when only a corner of the family is under the floor (Mars-like on the low set;
+Io-like) and **"cannot-say"** when the whole family is (no roster-shaped body reaches it — a 0.001 M⊕
+body still has a corner at 1235 K, because the budget scales with M and Q_M(1000 K) with R²; pinned on the
+function directly). (b) T_s = 293 K, carried as width 4. Pandora's band is a radiogenic-only floor on a
+tidally heated body — not its mantle temperature; the label says so.
+
+**Not classified.** Regime boundaries get their own brief. What `consistency`'s vocabulary already
+carries for a classifier: a heat-budget judgement with named refusals (`cannot-say (no potential
+temperature)`, `cannot-say (no radiogenic budget)`) and two flags on a declaration — the *shape* a
+percentage output wants underneath it, but its inputs are a declared T_m, whereas the band needs none;
+a classifier would sit on the band, and reuse the labels' discipline rather than their values.
+
+**Anchors** bit-identical by construction (`interior.py` and `solve()` untouched; `test_ice_giant.py
+--fast` 모두 통과). `check_contracts` 7/7 with the seven new outputs; `chain.py check` 47 nodes / 176 edges.
+Gate: see the line appended after the run.
