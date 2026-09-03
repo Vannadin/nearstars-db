@@ -2013,8 +2013,28 @@ is the owner's decision**, not settled here.
   ceiling (`eos.py:883`) and its isotherm range 500–10 000 K refuses outside (`eos.py:912-917`), and **no gate
   row says whether any roster column ever reaches either** — `test_interior.py` has no ammonia row
   (`test_ammonia.py` checks the transcription, not the reach). Measured by the `ice_x` template (a spy on the
-  material, evaluation counts, positive control first); result recorded below when it lands. Measurement,
-  not repair: a reach, if any, is reported and left.
+  material, evaluation counts, positive control first). Measurement, not repair: a reach, if any, is reported
+  and left.
+
+  **③ measured 2026-09-03 17:59–18:18 (code `ee3a8308`), spy on `NH3.density` / `check_temperature` /
+  `in_domain` and on `ammonia_table.density` / `pressure`; positive control first — one direct call fired
+  `NH3.density` 1, `check_temperature` 1, `ammonia_table.density` 1 (62 table pressure lookups behind it), so
+  the instrument counts.** Then, with every counter reset:
+
+  | column | solve | nh3 evaluations | ceiling / isotherm refusals |
+  |---|---|---|---|
+  | Uranus | full `solve`, converged, 23 s | **0** | 0 / 0 |
+  | Neptune | full `solve`, converged, 65 s | **0** | 0 / 0 |
+  | Ganymede · Callisto · Titan · Europa · Enceladus | `infer_three_layer` band, 240 · 145 · 175 · 365 · 134 s | **0** each | 0 / 0 |
+
+  **The ceiling 333.2 GPa and the 500–10 000 K isotherm range reach no roster column, and the reason is not
+  the corridor — it is that nothing calls the material.** `interior.py` contains no `"nh3"` (static check), so
+  the material is registered in `MATERIALS`, carries its domain check and temperature refusal, and has no
+  consumer. That is a **C5 matter** (machinery without a consumer), and it sits beside C4's *"ammonia half —
+  built"*: built as a material, not wired into any layer. **Wire it or retire it is the owner's decision; this
+  row reports the measurement and does not judge.** Frozen as a gate row in `test_interior.py` (static check +
+  positive control + zero fires on the two frozen ice-giant standalone integrations, ≈1 s) so the day someone
+  wires ammonia into a layer, the row rings and the ceiling reach is re-measured under C6.
 
 ## What closing all of these does not do
 
