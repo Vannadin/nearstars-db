@@ -177,3 +177,49 @@ moves Q_M **±4.5 %** (Q ∝ α^{1/3}); T_s = 293 K is Earth's and declared for 
 (T_m − T_s)^{4/3}, so a **200 K surface is +10 %**. Both forward-direction, same size as ζ's.
 
 **⑥** Criterion numbering corrected in §1 (mantle temperature is criterion (1), not (3)).
+
+## 5. Brief 57 — the radiogenic budget inverted to a mantle-temperature *band* (pre-registration)
+
+2026-09-03. **Consumer**: art direction — the owner wants, per body, the likelihood of each tectonic
+regime as a percentage, to reference when choosing surface art; an honest wide band beats a confident
+point. **This brief stops at the band; no regime classification** (boundaries are ungrounded and get
+their own brief). **Nothing in `mantle_flux.py`'s constants moves and ζ is not tuned.**
+
+**What is built.** `invert_for_flow` is already the inverse of eqs 34–36 and is called by nothing in
+production (the forward `consistency` is wired at `radiogenic.py:153`). The composition: for the
+radiogenic budget alone, the mantle temperature at which the top boundary layer sheds exactly that
+power — a **floor** on T_m (secular cooling adds to the flow, never subtracts). Emitted from
+`internal_heat_nontidal` as a family, not a point (C11): the union's endpoints plus each named width.
+
+**Four named widths, none folded in** (all from declarations already in the path):
+1. **ζ** over the module's declared `ZETA_RANGE` 0.5–1.5 ×10⁻² (Table 2's ± 0.5; Brief 55's printed
+   0.005–0.016 differs at the top by 0.001 — the module's declaration is the one used, said on the note).
+2. **Concentration set** — Earth (1) chondritic vs Earth (2) non-chondritic, both already emitted.
+3. **Denominator** — `mantle_w` (like-for-like: F_t crosses the *top* boundary layer, crustal
+   production is above it; Korenaga's convective Urey ratio) against `total_w` (what the forward
+   verdict uses). Both carried on the face of the result; the inconsistency is named, not resolved
+   (`property-consumer-audit-context-notes.md` §3).
+4. **T_s** — 293 K is Earth's, declared for every body; the band is re-evaluated at 200 K to show the
+   width (the module documents +10 % on the forward flow).
+
+**Refusal by name below the bracket.** `invert_for_flow` bisects on [1000, 2500] K and returns the
+boundary when the root is outside it — a plain float that looks like an answer (directing seat's
+Io-scale case: 0.10 TW budget, returned 1000.0 K where Q_M(1000 K) = 0.11 TW already exceeds the
+budget). Fixed in this brief: the function returns `None` when Q_M at either bracket end already brackets
+the root out, and the recipe emits a named label instead of a temperature. Both ends are checked.
+
+**Pre-measured before this text was written** (여기, `python3` on the landed modules — recorded as
+measurement, not prediction): Earth, `mantle_w` × ζ 0.005/0.010/0.016 → 1276 / 1383 / 1441 K;
+`total_w` → 1397 / 1462 / 1496 K; Earth (2) at ζ 0.01 → 1235 K (mantle). Widths ζ ~165 K, set ~148 K,
+denominator ~80 K — **three of the same order, none dominating**. Union 1060–1496 K. A Mars-mass body
+on the low set and an Io-mass body on any set hit the 1000 K floor.
+
+**Pre-registered outcomes:**
+- ① the band is narrow enough that regime assignment is mostly determined → say so; percentages are
+  near-degenerate. *Not expected: the pre-measurement already shows ~440 K of union width.*
+- ② the band spans several plausible regimes → the percentage output is the right shape. *Expected —
+  but the statement that matters is "three comparable widths, structural, nothing to tighten by choosing".*
+- ③ an Earth-calibrated input does not transport → *already fired in pre-measurement*: the bracket floor
+  clamp (fixed here, refusal by name) and T_s = 293 K (carried as width 4). Pandora, tidally heated,
+  gets a radiogenic-only floor that is not its mantle temperature — that is what "floor" on the label means.
+- ④ anchors: bit-identical by construction (`solve()` untouched; `interior.py` untouched); gate FAIL 0.
