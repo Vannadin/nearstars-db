@@ -54,3 +54,43 @@ fraction changes, else the instrument is dead.
   not the interior water fraction; those edges keep their own gap.
 - **⑥** No code path changes; anchors untouched; docs-only closure or a one-line edge relabel in `chain.yaml`.
   Gate FAIL 0, time, `pmset`.
+
+## 3. Run record — 2026-09-04
+
+**Branch fired: ③ — the solve does not converge at the water-rich end, so the mechanism is untestable on this
+body today. Route (i) is confirmed to exist. Nothing wired.**
+
+    ice_mass_fraction  R (R⊕)   core_radius   P_cmb (GPa)   T_cmb (K)   P_c (GPa)   converged   cmb_flux at declared T_c 3760 K        ladder regime
+    0.0                1.0030   0.5470        135.28        2526        358.5       True        Q_CMB 2.750 TW (δ_b 394 km)             1 (dry)
+    0.1                1.1509   0.5478        131.78        4397        353.8       **False**   refused — T_c 3760 ≤ T̃_m 4397, no jump    4 (water-rich, ℳ_base 0.002)
+    0.3                1.2934   0.5515        116.20        4372        333.1       **False**   refused — T_c 3760 ≤ T̃_m 4372, no jump    4 (water-rich, ℳ_base 0.002)
+
+- **Positive control held**: the water fraction moves the solve (radius +15 % / +29 %, P_cmb −3 % / −14 %).
+- **③, precisely**: at 0.1 and 0.3 the interior's temperature loop **does not converge** (`converged=False` —
+  the surface temperature condition is missed; 48–52 s each), and *an end that misses its boundary condition
+  is not an end* (this list's rule from C13's ice axis). The numbers in those two rows are therefore
+  **unconverged trial states, not results**, and no direction is read from them as a finding.
+- **What the unconverged trials show anyway, labelled as such**: the pressure half of the doc's mechanism
+  (*"lower-pressure CMB"*) goes the stated way (135 → 132 → 116 GPa); the temperature half (*"cooler"*) goes
+  **the opposite way on our column** — T̃_m at the CMB rises from 2 526 to ~4 400 K, because a water/ice
+  layer above the rock lengthens the adiabatic column from the same 1 600 K potential temperature. With the
+  core-side T_c held at Earth's declared 3 760 K that leaves **no superadiabatic jump**, and `cmb_flux`
+  refuses by name — the instrument cannot even reach Q_CMB. Whether a water-rich body's CMB is cooler or
+  hotter is therefore **not something this measurement decided**; it is what a converged water-rich solve
+  with its *own* declared core-side temperature would have to say.
+- **Route (i) exists and fires**: `dynamo_rocky.ladder(…, ice_mass_fraction)` selects regime 4 at both
+  water fractions, ℳ_base 0.002 (the Ganymede analog) — the *class* half of the mechanism is already wired
+  through the ladder, independent of the interior.
+- **Ganymede anchor, observed not judged** (directing seat's rider): the methodology's validation table
+  gives Ganymede *ℳ/ℳ⊕ (RM22 / obs)* = 2×10⁻³; RM22 Table 8 prints **0.003 (model)** and **0.002 (observed,
+  its ref. (3))** for Ganymede — so the ladder's anchor is the *observed* value as relayed by RM22's
+  citation (3), a secondary citation of an observation, not RM22's own computed 0.003. Both numbers are
+  now written; which the ladder should carry is not decided here.
+
+**Closure state**: C17 **stays open, with its reason named** — the edge's stated mechanism cannot be tested
+on this class until a water-rich rocky body *converges* in `interior_layers` (C1 closed sub-Neptunes with a
+gas envelope; a 0.1–0.3 water mantle on an Earth-mass rocky body without one has not been made to converge —
+its own item, not C17's), and until such a body carries its own declared core-side temperature (Earth's
+3 760 K is not a water world's). What C17 *did* settle: the edge's supplier is mislabelled — its payload is
+`ice_mass_fraction`, not `f_ocean` — and half of it (the class → regime 4) already arrives. **Nothing wired
+into `dynamo_rocky`; the moment step was not attempted** (it needs `locked`, C16).
