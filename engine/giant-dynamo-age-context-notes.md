@@ -76,3 +76,49 @@ Positive control: changing `age_gyr` on the giant must move `b_pol`.
 **Closure state**: C19 **closes for the giant class (already wired, mislabelled) and narrows to the
 brown-dwarf branch**, where it stays open with its supplier named and two consumers listed. No code path
 touched; anchors untouched.
+
+## 4. After the measurement — what the cache already holds, and what the records disagree on (2026-09-04, directing seat's review)
+
+**② The brown-dwarf branch has nothing to request.** Burrows, Hubbard, Lunine & Liebert 2001
+(`2001RvMP...73..719B`, cached as `astro-ph_0103383` — the cache-lookup tool reported it ABSENT until its
+old-style-id regex was fixed the same night) prints L(M, t) as an analytic power law with its conditions:
+
+    L ≈ 4×10⁻⁵ L☉ (10⁹ yr/t)^1.3 (M/0.05 M☉)^2.64 (κ_R/10⁻²)^0.35       (their eq. 1)
+    M ≈ 35 M_J (g/10⁵)^0.64 (T_eff/1000 K)^0.23                           (3)
+    t ≈ 1.0 Gyr (g/10⁵)^1.7 (1000 K/T_eff)^2.8                             (4)
+    R ≈ 6.7×10⁴ km (10⁵/g)^0.18 (T_eff/1000 K)^0.11                        (5)
+
+Solar metallicity; zero-metallicity exponents printed beside (1.25, 2.4); stated range *"two orders of
+magnitude in mass, three in age, T_eff 80–3000 K"* — Luhman 16 is inside. **κ_R is a free parameter that
+absorbs the atmosphere model and the review gives it no value: reading eq. 1 in makes κ_R a declaration.**
+The alternative is Baraffe+ 2003's tabulated tracks. **Neither is read in tonight** — owner's choice.
+**④'s floor gains a printed basis, its value unmoved**: Burrows write that deuterium burning *"roughly
+stabilizes T_eff, L, and R … from a few ×10⁶ years to 10⁸ years"* — so the 0.2 Gyr refusal's reason can
+become *"the deuterium-burning plateau (≲10⁸ yr, mass-dependent) breaks the power law"* instead of
+*"interpolation does not hold"*. The floor stays 0.2 Gyr; only the reason sentence is grounded. Not applied
+to `dynamo.py` tonight (a reason-string change is a code change; it goes with the branch's next commit).
+
+**③ Two of our own records disagree on Luhman 16's age** (directing seat's check, verified here):
+
+    db/systems/luhman_16_{a,b}.json   stars[].derived.age_gyr = 1.5   ← age_measurements: 1.5 ± 1.5 Gyr, method "unverified", attributed Faherty+ 2014 (2014ApJ...790...90F)
+    phase4/luhman_16.yaml:80, :640    age = 0.5 Gyr, op: passthrough   ← "Oceanus moving group (Gagné 2023), 12C/13C corroboration (de Regt 2026)"
+
+The DB's 1.5 ± 1.5 reads as the midpoint of a 0.1–3 Gyr range, not a measurement. Three pieces of evidence
+point at 0.5: the board's Gagné 2023 membership; eq. 4 with g from the DB's own mass and radius gives
+0.54 / 0.44 Gyr (parallel seat); and at that age eq. 1 reproduces the DB luminosity within 20–30 %, while at
+1.5 Gyr it misses by 3–4×. **Not fixed tonight**: `db/systems/*.json` is build output (never edited
+directly), the fix belongs in the source layer, and that is the main repository, outside this worktree.
+**Owner decision.** Beside it: the DB gives A and B the **same radius 62 613 km**, in the `principia` block
+(not a measurement block) — a declared value whose source needs checking, and eqs 3–4 are sensitive to it
+through g.
+
+**④ The wiring may be shorter than a track.** The L(M, age) that `dynamo.py`'s refusal asks for already
+exists in the DB as `derived.luminosity_lsun` (A 2.14e-05, B 1.95e-05) — and it is a **measurement**
+(bolometric flux, Faherty+ 2014, `2014ApJ...790...90F`), not a model. Two routes, written side by side,
+**not judged**:
+- (a) ground a cooling track (Burrows eq. 1 with a declared κ_R, or Baraffe+ 2003 tables) and compute L;
+- (b) consume the DB's measured luminosity directly — shorter, but it hangs on ③: the same L at 0.5 vs
+  1.5 Gyr sits on different tracks, so the age must be settled before the value is trusted as an *input to
+  a dynamo scaling* (Reiners & Christensen's B_dyn wants the internal flux, which the measurement gives
+  only if nothing else contributes).
+Both go to the owner's list with ③.
