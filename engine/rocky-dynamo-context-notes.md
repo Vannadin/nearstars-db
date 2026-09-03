@@ -32,7 +32,9 @@ is not foreclosed by this.
   T_eq 2500 K — which make the ladder's death-age declaration ("Mars-mass by ~7 Gyr") **contested**, not
   settled.
 
-**What RM22 itself prints for the Solar System (Table 8, HTML render, 여기)** — calculated / observed
+**What RM22 itself prints for the Solar System (Table 8, HTML render, 여기 — read from the `.html` because
+the `.md` render carries none of RM22's ten tables; the `.md` is the contract's canonical read path and
+would have found nothing, silently — `SESSION-HANDOFF.md` standing rule, `scripts/check_paper_tables.py`)** — calculated / observed
 ℳ/ℳ⊕: Mercury **0.0003 / 0.0004**, Venus **0.0007 / 0**, Earth 1 / 1, Mars **0.084 / 0.10** (marked *"extinct
 dynamo"*), Ganymede **0.003 / 0.002**. ⚠ **The methodology's "validation table" uses the observed column and
 writes Mars and Venus as ℳ = 0 ("frozen", "stagnant lid").** RM22's model does **not** compute zero for either

@@ -50,7 +50,9 @@ renders differ only in formatting), and the worktree directory was replaced by a
 symlink is ignored too). Two consequences: **`git clean -xdf` in a worktree removes the symlink**
 (the target survives) and it must be re-created — `ln -s /Users/vana/Desktop/NearStars/docs/phase3/_papers
 docs/phase3/_papers`; and until every worktree carries the link, **a "cached" claim is resolved against
-the union of both directories**, never one.
+the union of both directories**, never one. The owner decided **option ① only** — the symlink, no move
+outside the repo — because the path is baked into five scripts, the SPEC and every methodology doc, and the
+link buys the same thing for nothing.
 
 **Do not commit into the shared worktree while another seat's gate is running.** The gate
 certifies a tree state; a commit landing mid-run rides the push without review and makes the
@@ -282,6 +284,20 @@ Every one is in `interior-core.md`'s rules section with its case. The short form
   itself**, whatever the report says.
 - **A runtime estimate belongs to the commit it was measured on.** "~15 minutes" was honest
   when taken and false when quoted, because the code had changed between.
+- **The `.md` render of a cached paper can drop a table's body while keeping its caption.** So the
+  presence of `Table N` in a `.md` is not evidence that its values are there. Measured 2026-09-03 on
+  `0707.2895` (Seager+ 2007), the source of `eos.py`'s `fe_eps` and `mgsio3_en` fits: both renders carry
+  the captions for Tables 1–4, and **eight of eleven values `eos.py` takes from Table 1 are absent from
+  the `.md`** and present in the `.html` (the transcription is correct — it was read from the html or the
+  PDF). RM22's `.md` has none of its ten tables; Zhang & Rogers' none of its five. **The `.md` is the format
+  the data contract names, so this sits on the canonical read path.** Read the `.html` for any tabulated
+  value and record which render it came from; `scripts/check_paper_tables.py` (report only, never a gate)
+  lists where to look — 46 rows over the 91 cited papers with both renders, a re-check list, not defects.
+- **Check ADS `esources` before asking the owner for a paper.** The field names the free routes —
+  `EPRINT_PDF` is arXiv, `ADS_PDF`/`ADS_SCAN` is ADS's own copy. Measured 2026-09-03: of seven papers the
+  directing seat asked the owner to fetch, **three had a free route visible in a field the seat had already
+  queried** (Pozzo 2012 and Nimmo & Primack 2020 on arXiv, Nimmo+ 2004 hosted by ADS). The habit, not the
+  access, was missing. Query it; escalate only what is genuinely publisher-only.
 - **A truncated view of a correct query is a wrong answer that looks right.** `head`, `tail`, `cut`
   and column limits clip *silently* — nothing marks where the output stopped, so a negative reads as
   absence and a partial list reads as complete. **Before reporting a negative or a count from a
