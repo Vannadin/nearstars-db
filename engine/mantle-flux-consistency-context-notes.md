@@ -29,9 +29,12 @@ frozen core is a different model sharing equations; (b) full coupling — the co
 brief's own line; (c) stop. **(c) chosen.**
 
 **Recorded beside it, because the two together are what stops a re-attempt**: present-day T_m is one of
-the model's **calibration targets** — *"(3) the present-day mantle temperature, viscosity and heat
-flux"* (success criteria, layout lines ~569–572), with densities adopted *"so that the outer core
-density profile agrees with PREM"*. Computing Earth's T_m(t) with this machinery, coupled or not,
+the model's **calibration targets** — the success criteria at extraction lines 43–53 are *"(1)
+successfully reproduce the inferred present-day core and mantle temperature and viscosity structure;
+(2) successfully reproduce the present-day heat flux; and (3) generate enough entropy within the core
+to allow a geodynamo to function over the last 3 billion years"*, with densities adopted *"so that the
+outer core density profile agrees with PREM"*. *(Correction: the first version of this paragraph numbered
+the mantle-temperature criterion "(3)"; it is (1), and the substance is unchanged — audit of Brief 46.)* Computing Earth's T_m(t) with this machinery, coupled or not,
 reproduces a number the model was tuned to produce; for any other body it is an Earth-tuned model
 extrapolated. "We now compute the geotherm instead of declaring it" would be an overstatement in any
 of (a)–(c).
@@ -132,3 +135,45 @@ so no ordering inside the coupled core is assumed and `solve()`'s path fingerpri
 **Gate**: `test_mantle_flux.py` (< 0.1 s) in `check.sh`; `check_contracts` 6/6; `chain.py check` and
 `check_via --gate` pass; anchors bit-identical (fingerprint `708ff4627f24c448`). Full `check.sh` result in the
 report.
+
+## 4. Follow-up after audit — 2026-09-03
+
+**① The `k_t` licence is stronger than first stated.** Line 944: *"The values of κ_t and κ_b are based on
+Hofmeister's (1999) calculations of the increase in conductivity with depth"* — the authors made κ_t from a
+conductivity, so κ_t·ρ_m·C_pm **undoes their step**. That sentence is the primary licence; the inversion is
+the check, and the check is now between **two numbers the paper prints**: 42 TW ← 1614 K against the paper's
+own *"1330 °C (McKenzie & Bickle 1988)"* = 1603 K (line 1294) — +11 K, 0.7 %. What it does not do: with
+d ln Q/dT ≈ 0.0043 K⁻¹ an 11 K agreement constrains k_t to ~5 %, realistically ±10 % given the °C-level
+quote — the width of the textbook band. **It confirms the transcription; it does not sharpen k_t.** (The
+earlier phrase "Earth's canonical potential temperature" was our declaration's word; the paper's own
+number replaces it.) Pinned: |1614 − 1603| < 15 K.
+
+**② The CONSISTENT prose read as a passed test.** It now says *"consistent with an Earth-calibrated
+parameterisation; for Earth itself this reproduces the calibration. … Not a passed test of the body."*
+The recipe's Earth (declared R⊕, g = GM/R²) gives ratio **1.84**; the paper-Earth chain (R_p 6400 km,
+g 9.8) gives 1.85 — two conditions, one number each.
+
+**③ An input was read with no declared arrow — and the via gate cannot see that.** The recipe read
+`radius` from `interior_layers` (derived, 1.003 R⊕ — hence 39.37 vs 39.55 TW) while `chain.yaml` declared
+no `interior_layers → internal_heat_nontidal` edge and every in-edge carried `via: None`. **Route taken**:
+read the **declared** `radius_earth` first (the `mass_or_radius` edge now says `via: [mass, radius]`), fall
+back to `interior_layers`' derived radius only when undeclared — and that fallback is now a declared edge
+(`interior_layers → internal_heat_nontidal via radius`, requires). Both nodes are inside the 16-node core, so
+iteration handles the order either way; `graph.components()` unchanged (16 = `coupled_core`). The larger
+finding is in `via-context-notes.md`: `check_via` catches wrong arrows, not missing ones.
+
+**④ The 2.5 ceiling was the wrong kind of declaration.** implied/radiogenic is **1/Urey ratio**; the bound
+is now a **Urey floor**, `UREY_FLOOR = 1/3` (ratio ≤ 3), the soft "roughly 2–3" that the paper's *"roughly
+twice"* licenses — nothing held grounds a sharper edge, and (audit, from memory, not transcribed) much of the
+literature puts Earth's mantle Urey ratio below 0.4, so 2.5 would have flagged a body sitting where a large
+part of the field puts Earth. `urey_ratio` is emitted (Earth 0.54). On the paper-Earth chain ratio 2.5 sits
+at T_m 1669 K and ratio 1 at 1460 K — a 210 K window whose upper edge is the contested part. **Request list**
+(ADS title-checked, not read): Korenaga 2008, *Urey ratio and the structure and evolution of Earth's mantle*
+(`2008RvGeo..46.2007K`); Jaupart, Labrosse & Mareschal 2007, *Temperatures, Heat and Energy in the Mantle
+of the Earth* (`2007mady.book..253J`).
+
+**⑤ Two sensitivities nobody had stated**, now in the module and on the emitted note: α_m's printed ± 0.3
+moves Q_M **±4.5 %** (Q ∝ α^{1/3}); T_s = 293 K is Earth's and declared for every body — it enters as
+(T_m − T_s)^{4/3}, so a **200 K surface is +10 %**. Both forward-direction, same size as ζ's.
+
+**⑥** Criterion numbering corrected in §1 (mantle temperature is criterion (1), not (3)).

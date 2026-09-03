@@ -100,5 +100,13 @@ Result: **83 via-edges, 15 mismatches = 8 allowlisted + 7 `status: gap` + 0 open
 new dependency (`chain.py`, `check_pipeline_flow.py`, `check_phase4_gate.py` already import it on
 unconditional `check.sh` paths — verified, not relayed).
 
+**What the gate cannot see — first instance (Brief 46 audit).** `check_via` asks *"does a `via` name
+something its supplier does not emit?"* It cannot ask *"is an input read that no `via` names?"* — an edge
+with `via: None` is invisible to it. Brief 46's recipe read `interior_layers`' derived radius with no
+`interior_layers → internal_heat_nontidal` edge declared at all, and every in-edge to that node carried
+`via: None`; the gate passed. So the gate catches **wrong arrows, not missing ones**. Extending it needs to
+know what a recipe reads (its `Result.inputs` against the declared in-edges' `via`s) — a separate, harder
+question; recorded, not built.
+
 **Free fix recorded for the `dynamo_rocky` build**: `regime` is now a declared output, so the
 node's recipe must emit it when built.

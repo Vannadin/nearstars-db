@@ -107,6 +107,9 @@ the two half-lives above and initial ²⁶Al/²⁷Al, ⁶⁰Fe/⁵⁶Fe ratios f
   `engine/radiogenic-budget-context-notes.md` and the Phase-3 tooltip.
 - Candidate added by the reconciliation (§1): **Nettelmann+ 2011**, the giant-side prescription
   Vazan+ 2019 defers to. Not yet requested.
+- **Added by Brief 46's audit — the Urey ratio**, so the consistency verdict's soft floor (Ur ≥ 1/3) can be
+  grounded: Korenaga 2008 (`2008RvGeo..46.2007K`) and Jaupart, Labrosse & Mareschal 2007
+  (`2007mady.book..253J`), both ADS title-checked, not read.
 - **Added by Brief 44's audit — the canonical tabulation of long-lived isotope heat production**, so
   that `radiogenic.py`'s constants stop resting on an unpublished draft table. Candidate named from
   memory, **not read**: Ruedas 2017, *Geochem. Geophys. Geosyst.* (radioactive heat production of the
