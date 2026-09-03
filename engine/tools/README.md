@@ -55,5 +55,9 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
 - **Read the generator before measuring its source.** `make_hhe_table.py:32` had carried `SENTINEL =
   -8.8603` with the comment *"우리 창 안에 7칸 있다"* — the value, the convention and the exact count — the
   whole time; two seats re-derived it from the tables, one of them wrongly, before either looked there.
+  Third instance the same day (Brief 53): line 113 of the same generator names the grad_ad clamps
+  (*"0.1/0.5 로 눌린 grad_ad"*), and the C6 entry's "max 0.40" between the two Chabrier editions was
+  exactly those clamps (0.5 vs 0.4 conventions) re-discovered as a physical change. The first two were
+  about log ρ; this one shows the same file also answered a grad_ad question.
 - **Every kept source directory carries a `PROVENANCE.txt`** (who obtained it, when, from where, what is in
   it). `militzer2024_zenodo/` lacked one until 2026-09-03; added.

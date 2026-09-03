@@ -929,25 +929,46 @@ enters the region reopens it — which is why C6 remains a standing watch. `ICE_
 1 000 GPa, and A2 **weakened** the case for narrowing it: the only consumer is a corridor that
 does not reach the answer.
 
-**Held, unused — a candidate, not a task (2026-09-03, Brief 51).** Chabrier & Debras 2021 (Paper II,
+**Held, unused — a candidate, not a task (2026-09-03, Briefs 51 and 53).** Chabrier & Debras 2021 (Paper II,
 H/He *interacting* mixture, dropping the 2019 Ideal Volume Law) is in the cache
 (`docs/phase3/_papers/chabrier_direos2021/`, owner-fetched, provenance written). Switching `hhe_table.py`
-to it is a **physics decision** — interacting versus additive-volume mixture, with grad_ad changing in the
-envelope — not housekeeping, so nothing was switched. Measured so the candidate carries its cost: the 2021
-`TABLEEOS_2021_TP_Y0275_v1` has the **same header, columns and grid** as the 2019 table (53,361 points), so
-the reader needs only the filename changed — **but** inside the baked window (logT 2.0–4.4, logP −4…+4 GPa)
-grad_ad differs by more than 0.01 at **40.5 %** of points (max 0.40, median 6×10⁻⁵). Placeholder cells
-(the −8.8603 both tables store where the solve did not converge): 2021 has **three, on the single line
-logP = 2.50 at logT 2.45 / 2.50 / 2.55**, where 2019 has values; 2019 has **seven** at logT 2.70–2.85,
-logP 1.10–2.30, where 2021 has values. `make_hhe_table.py` already handles that sentinel (→ `None`) and
-records that 2019's seven lie below the 50 K reach line. Pre-registered ① (filename-only) versus ② (reader
-change): the answer is **①** — same header, columns, grid and sentinel convention; the switch is the
-filename, the sentinel cells move from seven to three in the same cold-dense corner, and the whole question
-is physics. **The 7 → 3 placeholder change is not an advantage for 2021**: both sets sit in the same
-cold-dense corner, both are handled by the existing guard, and 2019's seven are below the reach line — the
-decision rests on the grad_ad physics alone. *Correction (audit of Brief 51): the first version of this entry
-said "ten points … carry −8.86 in the 2021 table" and called the answer ③ with "a hole guard the current
-reader does not have" — the total of ten was right but mixed both tables' placeholders, and the guard exists.*
+to it is a **physics decision**, not housekeeping, so nothing was switched. What is actually measured, both
+editions parsed to (log T, log P) → grad_ad over the 7,889 baked-window points (logT 2.0–4.4, logP −4…+4 GPa):
+
+- **Format**: identical header, columns, grid (53,361 points) and sentinel convention (−8.8603 → `None` in
+  `make_hhe_table.py`); the reader needs only the filename. Sentinel cells move from seven (2019, logT
+  2.70–2.85, logP 1.10–2.30) to three (2021, logP 2.50 at logT 2.45–2.55), all in the same cold-dense corner
+  below the reach line — **not an advantage either way**.
+- **grad_ad differs by more than 0.01 at 40.5 % of window points, median 6.2×10⁻⁵.** Those two figures stand.
+- **The former headline "max 0.40" is a clamp-convention artifact and must not be quoted as a physical
+  change.** Both editions clamp unconverged grad_ad cells to round numbers, differently: 2019 carries exactly
+  0.1 (626 cells) and exactly 0.5 (263); 2021 carries exactly 0.1 (618) and exactly **0.4** (542). Every one of
+  the 47 maximum-difference points is 2019 = 0.5000 against 2021 = 0.1000. `make_hhe_table.py:113` had said
+  so already — *"배포 표의 결함(밀도 자리의 sentinel 7칸, 0.1/0.5 로 눌린 grad_ad)"*, all below the reach line — the
+  third time this week the generator held the answer before it was re-derived.
+- **Genuine large differences, with the definition stated**: of the 730 window points with |Δ| > 0.1, 497
+  (68.1 %) have either side sitting exactly on one of that edition's clamp values ({0.1, 0.5} for 2019, {0.1,
+  0.4} for 2021); the remaining **233** are genuine, **max 0.3289 at logT 2.55, logP +1.00** (2019 0.4610 vs
+  2021 0.1320), all at **logT 2.40–3.85**, the cold-dense corner. *(The audit's own count was 288 clamp-involved
+  / 442 genuine; its filter was not stated, and none of four definitions tried here reproduces it — the
+  conclusions below do not depend on which.)*
+- **The paper's stated departure region is inside our window and does not contain the large differences.**
+  Chabrier & Debras give *"≲5 % of the total entropy in the 5,000–10,000 K, 10–100 GPa … T–P maximum departure
+  range"* (읽음: c4) = logT 3.699–4.000, logP 1.0–2.0, **147 grid points, all baked**. Binned: |Δ| > 0.01 in
+  **80.3 %** of box points vs 39.8 % outside (2.0×); |Δ| > 0.05 in 34.7 % vs 20.3 % (1.7×); |Δ| > 0.1 in **0.0 %**
+  vs 9.4 %; |Δ| > 0.3 in 0.0 % vs 1.5 %. Zero box points among the top 100 differences; zero of the 233 genuine
+  large ones in the box. ⚠ "≲5 % of total entropy" is a bound on entropy, not on grad_ad — a different quantity,
+  and the clamp finding is exactly how a number attached to the wrong quantity survives in an entry.
+- **Passed through from c4, unverified here**: Paper II claims, against MH13 at Jupiter interior conditions,
+  density error < 1.0 % and entropy error < 0.5 %, versus several per cent on density and up to 30 % on
+  entropy for Miguel+ 2016.
+
+**What the three measurements jointly support** — narrower and more useful than the entry said before: (1) in
+the region the paper says its new physics matters, every difference is small (0.01–0.05, detectably enriched);
+(2) the differences that could move an envelope temperature sit in the cold-dense corner (logT 2.40–3.85),
+which the paper does not discuss; (3) the 0.40 is an artifact; so (4) the switch stays unmade for a
+**stronger** reason than before — the large differences are unattributed. **Named hole, not silence**: nothing
+yet explains the 233 genuine large differences in that corner; a future switch has to answer that first.
 Uranus/Neptune anchors would move; that is what "candidate" means here.
 
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
