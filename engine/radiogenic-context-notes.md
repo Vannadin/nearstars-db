@@ -96,11 +96,15 @@ the two half-lives above and initial ²⁶Al/²⁷Al, ⁶⁰Fe/⁵⁶Fe ratios f
 
 ## 5. Papers requested from the owner (identifiers read from ADS by title, not attempted)
 
-- `2020ApJ...903L..37N` — Nimmo & Primack, *Radiogenic Heating and Its Influence on Rocky Planet
-  Dynamos and Habitability* — highest value: exoplanet-facing, names both consumers.
+- ~~`2020ApJ...903L..37N` — Nimmo & Primack~~ — **obtained 2026-09-03 (owner), with source**; consumed by
+  Brief 44 (`engine/radiogenic-budget-context-notes.md`). Its isotope table is a dead-LaTeX draft after
+  `\end{document}`, absent from the PDF — read that note before citing anything from it.
 - `2001E&PSL.185...49A` — Allègre & Manhès, bulk-Earth U/Th/K abundances.
-- `2013GGG....14.4608D` — Davies, and `1980RvGSP..18..269S` — Sclater, Jaupart & Galson: both
-  already cited by our methodology and not held; needed for the Earth anchor with uncertainty.
+- ~~`2013GGG....14.4608D` — Davies, and `1980RvGSP..18..269S` — Sclater, Jaupart & Galson~~ — **off
+  the list (Brief 44)**: Nimmo & Primack 2020 `main.tex:261` cites both for exactly the number we
+  wanted them for — total surface heat flow **42–47 TW**, 35–40 TW with the crust's radiogenic
+  share removed, and total radiogenic production about **22 TW**. The Earth anchor pair now lives in
+  `engine/radiogenic-budget-context-notes.md` and the Phase-3 tooltip.
 - Candidate added by the reconciliation (§1): **Nettelmann+ 2011**, the giant-side prescription
   Vazan+ 2019 defers to. Not yet requested.
 
