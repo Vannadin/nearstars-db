@@ -941,22 +941,27 @@ editions parsed to (log T, log P) → grad_ad over the 7,889 baked-window points
   below the reach line — **not an advantage either way**.
 - **grad_ad differs by more than 0.01 at 40.5 % of window points, median 6.2×10⁻⁵.** Those two figures stand.
 - **The former headline "max 0.40" is a clamp-convention artifact and must not be quoted as a physical
-  change.** Both editions clamp unconverged grad_ad cells to round numbers, differently: 2019 carries exactly
-  0.1 (626 cells) and exactly 0.5 (263); 2021 carries exactly 0.1 (618) and exactly **0.4** (542). Every one of
+  change.** Both editions clamp unconverged grad_ad cells to round numbers, differently: 2019 carries 0.1 at
+  626 cells and 0.5 at 263; 2021 carries 0.1 at 618 and **0.4** at 542 — **rounded-match counts** (value equal
+  to the clamp at the baked table's four decimals; exact match gives 624 and 617, the difference being computed
+  values such as 0.100003 that the baked table cannot tell apart from the clamp — the rounded count is the one
+  that matters for anything the engine reads, and this is which one it is). Every one of
   the 47 maximum-difference points is 2019 = 0.5000 against 2021 = 0.1000. `make_hhe_table.py:113` had said
   so already — *"배포 표의 결함(밀도 자리의 sentinel 7칸, 0.1/0.5 로 눌린 grad_ad)"*, all below the reach line — the
   third time this week the generator held the answer before it was re-derived.
 - **Genuine large differences, with the definition stated**: of the 730 window points with |Δ| > 0.1, 497
   (68.1 %) have either side sitting exactly on one of that edition's clamp values ({0.1, 0.5} for 2019, {0.1,
   0.4} for 2021); the remaining **233** are genuine, **max 0.3289 at logT 2.55, logP +1.00** (2019 0.4610 vs
-  2021 0.1320), all at **logT 2.40–3.85**, the cold-dense corner. *(The audit's own count was 288 clamp-involved
-  / 442 genuine; its filter was not stated, and none of four definitions tried here reproduces it — the
-  conclusions below do not depend on which.)*
+  2021 0.1320), all at **logT 2.40–3.85**, the cold-dense corner. *(Superseded: the audit's first count, 288
+  clamp-involved / 442 genuine / 201 baked, came from an edition-blind filter that tested {0.1, 0.5} against
+  both editions and never tested 0.4, so every 2021 cell clamped at 0.4 fell into "genuine"; the audit
+  re-ran the edition-specific definition and reproduces 497 / 233 / 121 exactly. The conclusions below never
+  depended on the split.)*
 - **Against the table the engine actually reads** (`hhe_table.py`'s `KEEP`: per-isotherm cell counts summing
   to **5,495**, the baked cell count — the mapping checked; baked grad_ad is the distributed value rounded to
   four decimals, max |Δ| 5×10⁻⁵): **0 of the 47 maximum-difference (0.5 vs 0.1) points are baked** — the old
   0.40 headline sits at coordinates our table does not contain, both halves of that statement. Of the 233
-  genuine large differences, **121 are baked** (the audit, on its 442, counts 201); **the largest genuine
+  genuine large differences, **121 are baked**; **the largest genuine
   difference inside the baked table is 0.2607, at logT 3.35, logP +0.95 (2019 0.4056 vs 2021 0.1449)** — that is
   the number this entry carries. **0 of the baked genuine large points fall in the paper's departure box**
   (all 147 box points are baked). The generator's claim that the distributed table's defects are *"전부 거기
@@ -975,7 +980,7 @@ editions parsed to (log T, log P) → grad_ad over the 7,889 baked-window points
 
 **The corrected chain, in the order a reader needs it**: (1) the old headline 0.40 is a clamp-convention
 difference at coordinates our table does not contain — 0 of 47 baked; (2) the real in-table maximum is
-**0.2607 at logT 3.35, logP +0.95**, with 121 (audit: 201) of the genuine large differences baked; (3) none of
+**0.2607 at logT 3.35, logP +0.95**, with 121 of the genuine large differences baked; (3) none of
 them sit in the paper's maximum-departure box, which is itself 147/147 inside the baked table and enriched only
 at 0.01–0.05; so (4) the switch stays unmade **because a 0.26 difference in the quantity the envelope's
 temperature depends on is unattributed** — not because the differences are small. The Paper II accuracy
