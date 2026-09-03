@@ -952,6 +952,16 @@ editions parsed to (log T, log P) → grad_ad over the 7,889 baked-window points
   2021 0.1320), all at **logT 2.40–3.85**, the cold-dense corner. *(The audit's own count was 288 clamp-involved
   / 442 genuine; its filter was not stated, and none of four definitions tried here reproduces it — the
   conclusions below do not depend on which.)*
+- **Against the table the engine actually reads** (`hhe_table.py`'s `KEEP`: per-isotherm cell counts summing
+  to **5,495**, the baked cell count — the mapping checked; baked grad_ad is the distributed value rounded to
+  four decimals, max |Δ| 5×10⁻⁵): **0 of the 47 maximum-difference (0.5 vs 0.1) points are baked** — the old
+  0.40 headline sits at coordinates our table does not contain, both halves of that statement. Of the 233
+  genuine large differences, **121 are baked** (the audit, on its 442, counts 201); **the largest genuine
+  difference inside the baked table is 0.2607, at logT 3.35, logP +0.95 (2019 0.4056 vs 2021 0.1449)** — that is
+  the number this entry carries. **0 of the baked genuine large points fall in the paper's departure box**
+  (all 147 box points are baked). The generator's claim that the distributed table's defects are *"전부 거기
+  있다"* (all below the reach line) holds for the high clamp — **zero baked cells at exactly 0.5** — and only
+  partly for the low one: **72 baked cells sit at exactly 0.1**.
 - **The paper's stated departure region is inside our window and does not contain the large differences.**
   Chabrier & Debras give *"≲5 % of the total entropy in the 5,000–10,000 K, 10–100 GPa … T–P maximum departure
   range"* (읽음: c4) = logT 3.699–4.000, logP 1.0–2.0, **147 grid points, all baked**. Binned: |Δ| > 0.01 in
@@ -959,17 +969,20 @@ editions parsed to (log T, log P) → grad_ad over the 7,889 baked-window points
   vs 9.4 %; |Δ| > 0.3 in 0.0 % vs 1.5 %. Zero box points among the top 100 differences; zero of the 233 genuine
   large ones in the box. ⚠ "≲5 % of total entropy" is a bound on entropy, not on grad_ad — a different quantity,
   and the clamp finding is exactly how a number attached to the wrong quantity survives in an entry.
-- **Passed through from c4, unverified here**: Paper II claims, against MH13 at Jupiter interior conditions,
-  density error < 1.0 % and entropy error < 0.5 %, versus several per cent on density and up to 30 % on
-  entropy for Miguel+ 2016.
+- **Passed through from c4, unverified here, and qualified**: Paper II claims, **for Jupiter interior
+  conditions**, density error < 1.0 % and entropy error < 0.5 % against MH13, versus several per cent on
+  density and up to 30 % on entropy for Miguel+ 2016 — a Jupiter statement, not a global one.
 
-**What the three measurements jointly support** — narrower and more useful than the entry said before: (1) in
-the region the paper says its new physics matters, every difference is small (0.01–0.05, detectably enriched);
-(2) the differences that could move an envelope temperature sit in the cold-dense corner (logT 2.40–3.85),
-which the paper does not discuss; (3) the 0.40 is an artifact; so (4) the switch stays unmade for a
-**stronger** reason than before — the large differences are unattributed. **Named hole, not silence**: nothing
-yet explains the 233 genuine large differences in that corner; a future switch has to answer that first.
-Uranus/Neptune anchors would move; that is what "candidate" means here.
+**The corrected chain, in the order a reader needs it**: (1) the old headline 0.40 is a clamp-convention
+difference at coordinates our table does not contain — 0 of 47 baked; (2) the real in-table maximum is
+**0.2607 at logT 3.35, logP +0.95**, with 121 (audit: 201) of the genuine large differences baked; (3) none of
+them sit in the paper's maximum-departure box, which is itself 147/147 inside the baked table and enriched only
+at 0.01–0.05; so (4) the switch stays unmade **because a 0.26 difference in the quantity the envelope's
+temperature depends on is unattributed** — not because the differences are small. The Paper II accuracy
+figures above are *"for Jupiter interior conditions"* (c4 re-read the sentence) and must not be read as global.
+**Named hole, not silence**: nothing yet explains the genuine large differences in the cold-dense corner; a
+future switch has to answer that first. Uranus/Neptune anchors would move; that is what "candidate" means
+here.
 
 ### C7 — Partial differentiation — **closed 2026-08-30: the intermediate state is not a mixture**
 
