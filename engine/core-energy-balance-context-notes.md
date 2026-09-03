@@ -68,6 +68,31 @@ produced Table 4, so **① (component-wise reproduction) is only meaningful on i
 route itself: its M_c must reproduce `mass × core_mass_fraction` and its P(0) the `interior_layers` centre
 pressure (both are the same hydrostatics the interior solver ran).
 
+**Three boundaries, set by the directing seat before code (2026-09-03):**
+- **Route A lives in the test file only, never in the recipe.** Its consumer is the transcription test; a
+  recipe-side copy would invite someone to declare Earth's core shape (ρ_cen 12 500 · L 7 272 · D 5 969) on
+  another body.
+- **The ∫ρψ closure is an independent calculation checked against an independent printed value, not a
+  circle — and if it misses, it is reported, not adjusted.** Re-reading the garbled eq. 22 is what happens
+  then.
+- **C_r has two printed contexts and one derived value; none are mixed.** Gubbins' comparison model:
+  −9.56 km/K (Table 3 note, printed). This paper's nominal model: dR_i/dt 444 km/Gyr ÷ dT_c/dt −33 K/Gyr =
+  **−13.5 km/K — our division of two printed Table 4 values, not a printed number.** The slope derivation
+  (T_i/T_c)/(dT_melt/dr − dT_ad/dr) at R_i is a third thing, derived here, carried with its own label.
+
+*Scratch prototype before the code, recorded because it fixes what the code must reproduce (same numbers
+expected in the test):* on Table 1/2/4 inputs, Q_s 1.96 (2.0) · Q_L 2.40 (2.6) · Q_g 1.47 (1.6) · Q_R 2.89
+(2.9) · Q_k 6.18 (6.2) TW; T_i(model) 5 598 K (5 581); M_c 1.927e24 kg; ψ's zero point cancels in
+∫ρψ − M_oc ψ(R_i) (both choices give Q_g 1.47 — checked, not assumed); root-find on the paper's own mantle
+side (eq. 29 base 2 694 K) → **T_c 4 152 K (Table 4: 4 155)**, Q_C = rhs = 8.71 TW there. **All within the
+pre-registered 10 %; Q_L and Q_g sit 8 % low and are reported low, not tuned.** The slope-derived C_r on the
+paper's own curves (eq. 40 with Table 2's T_m0/T_m1/T_m2/θ, eq. 5, p(r) from eq. 7) is **−26.4 km/K against
+the −13.5 from Table 4's ratio — a factor 2**, because the melting curve and the adiabat are nearly parallel
+at the ICB (5 603 vs 5 598 K, the same knife-edge `core_state` already carries): C_r is a ratio of two nearly
+equal slopes and the printed ratio is not recoverable from the printed curves at this precision. The
+reproduction uses the Table 4 ratio (labelled as such); the slope route is what route B has to use, and its
+sensitivity is reported with it.
+
 **Both on the engine's Earth**, side by side: the spread between A and B on the same inputs is the width of
 the density-model choice (Brief 60 saw Q_k 6.79 vs 6.2 TW for the same reason).
 
