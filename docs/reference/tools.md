@@ -66,6 +66,7 @@ Correctness checks live across several functional groups. This index gathers the
 | Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [11](#11-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
 | Phase 4 board schema-v2 / emit-gate conformance | `scripts/check_phase4_gate.py` | [13](#13-phase-4-decision-board-tools) | After every board edit — invoked by `scripts/check.sh` gate 8 |
 | Paper cache: tables the `.md` render lost | `scripts/check_paper_tables.py` | [11](#11-dev-helpers) | On demand, never in `check.sh` — a re-check list (which render was a value read from?), not defects; needs both renders of the gitignored cache |
+| Paper cache: is this paper held? (bibcode **and** arXiv name, sub-folders) | `scripts/refs/check_paper_held.py <bibcode …>` · `--scan <doc.md …>` | [11](#11-dev-helpers) | On demand, never in `check.sh`: the cache names files by bibcode *or* by arXiv id and keeps some in sub-folders, so a bibcode-prefix glob manufactured six false "not held" on 2026-09-03/04 (RM22, Nettelmann 2011, Reiners & Christensen, Garraffo, Yadav & Thorngren, Zhang & Rogers). The arXiv id is **read** from ADS's `identifier` field (needs `ADS_API_TOKEN`; without it the tool exits rather than guess). Kept out of the gate because a token-less environment would fail it and because its negative is a cache state, not a repository defect. `--scan` over the two dynamo docs: 7/10 held, 4 of them under arXiv names. |
 
 ## 1. Data engine
 

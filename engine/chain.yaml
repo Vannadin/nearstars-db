@@ -650,7 +650,7 @@ edges:
   # core_state 는 클래스로 거절하고(철핵 유무가 기준이 아니다), dynamo_giant 는
   # 질량(< 0.3 M_J)으로 배제하고, dynamo_rocky 는 이 클래스를 받지 않는다. 이름 없이
   # 두면 사라지므로 gap 으로 적는다. 닫으려면 외피 아래 철핵의 다이나모 레시피가 필요하다.
-  - {from: body_class, to: dynamo_rocky, kind: selects, via: sub_neptune, status: gap, ref: "planetary-dynamo-scaling.md:97", note: "sub_neptune 에는 다이나모 경로가 없다. core_state · dynamo_giant · dynamo_rocky 셋 다 거절한다 — 외피 아래 철핵의 다이나모 레시피가 없는 소비처 공백. **C18, 2026-09-04 이름 있는 거절로 종결**: 빠진 것은 H/He 외피 아래 철핵 다이나모의 발표된 스케일링이고 보유 논문 중 그것을 인쇄하는 것이 없다(R&C 는 토성에서 멈추고 OC06/RM22/Gaidos 는 암석). 재개 조건은 그런 출처 보유, 또는 오너가 라벨과 함께 암석 사다리를 서브넵튠 핵에 돌리기로 결정. 간선은 실재하는 결합이라 gap 으로 남는다."}
+  - {from: body_class, to: dynamo_rocky, kind: selects, via: sub_neptune, status: gap, ref: "planetary-dynamo-scaling.md:97", note: "sub_neptune 에는 다이나모 경로가 없다. core_state · dynamo_giant · dynamo_rocky 셋 다 거절한다 — 외피 아래 철핵의 다이나모 레시피가 없는 소비처 공백. **C18, 2026-09-04 이름 있는 거절로 종결(같은 밤 정정)**: 서브넵튠 철핵 다이나모의 켜짐/꺼짐 기준은 발표돼 있다(Tang+ 2025 §4.2, Rm = μ₀σUD 식 46, 임계 50, F_conv = F_CMB − F_cond 식 48) — 자기모멘트·세기 스케일링은 발표돼 있지 않다(전문에 field 0회). dynamo_rocky 가 요구하는 것은 ℳ 이므로 이 간선은 닫히고, 존재 판정은 C23 으로 등재. 세 거절이 왕복을 이룬다는 것(rocky→giant→질량으로 되돌림)도 기록. 간선은 실재하는 결합이라 gap 으로 남는다."}
   - {from: mass_or_radius, to: dynamo_rocky, kind: requires, ref: "rocky-planet-dynamo-methodology.md:22"}
   - {from: orbit_elements, to: dynamo_rocky, kind: requires, via: period, ref: "rocky-planet-dynamo-methodology.md:22"}
   # RM22 는 둘을 다른 데서 받는다. 핵 **기하** 는 내부 구조가 풀고, 그 핵이 다이나모를

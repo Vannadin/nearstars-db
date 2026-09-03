@@ -126,3 +126,20 @@ Pozzo's 100 W/m/K for k and fits 60.)
   `dynamo_table --check` pass.
 - **⑥ Gate on `3c3652df`: FAIL 0, 485 PASS (+1, the C16 branch row), 02:38:57 → 02:59:29 = 1 232 s, AC 100 %
   `powermode 2` at both ends** — mains branch.
+
+## 5. Evidence that arrived after the build (2026-09-04, Tang+ 2025 read) — attached, not marked resolved
+
+- **q_conv (hole 2)**: Tang+ 2025 eq. 48 prints **F_conv = F_CMB − F_cond**, the super-adiabatic *excess*, with
+  the sentence *"The convective energy flux F_conv that triggers dynamo operation only occurs when the
+  conductive flux along the adiabat is insufficient to transport the cooling energy of the core."* ⚠ This
+  does **not** settle RM22's q_conv — a different paper, and RM22 still prints no definition. It is recorded
+  as *evidence that another paper in the same tradition (OC06 / Driscoll & Olson) uses the excess*, nothing
+  more; hole 2 stays open.
+- **The Rm threshold is a width, not a number**: Tang *"Rm must exceed a critical value of 50"*; our ladder
+  quotes 40 (Gaidos+ 2010 / RM22, OC06's measured onset). Both are "studies have shown"-class generic
+  citations → **40–50**, carried side by side.
+- **k_c cross-check**: Tang tests two core conductivities, 40 W/m/K (Konôpková+ 2016) and 100 (Pozzo+ 2012);
+  RM22 quotes *"Pozzo et al. (2012) a value of 100 W/m/K"* and then fits 60. The two papers confirm each
+  other's reading of Pozzo; recorded.
+- **Driscoll & Olson 2011 stays the Tier 1 request**: Tang does not cite it (`Driscoll`, `Olson` 0 hits; U
+  comes from Christensen 2010), so hole 1's γ_d = 0.2 and hole 2's definition are still behind that paper.

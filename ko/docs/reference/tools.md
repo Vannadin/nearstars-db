@@ -63,6 +63,7 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
 | Phase 3 합성 정책 적합성 | `nearstars-phase3` 의 audit-pass 절차 | [3](#3-phase-3-합성-파이프라인) | 합성 배치 후 — 수동, 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
 | 빌드 산출물 신선도 + 매니페스트 커버리지 | `scripts/check_build_freshness.py` | [11](#11-개발-헬퍼) | push 전 — `scripts/check.sh` 7번 항목에서 호출 |
 | Phase 4 보드 스키마 v2 / emit-게이트 정합성 | `scripts/check_phase4_gate.py` | [13](#13-phase-4-결정-보드-도구) | 보드를 고칠 때마다 — `scripts/check.sh` 게이트 8에서 호출 |
+| 논문 캐시: 이 논문을 보유 중인가? (bibcode **와** arXiv 이름, 하위 폴더) | `scripts/refs/check_paper_held.py <bibcode …>` · `--scan <doc.md …>` | [11](#11-개발-헬퍼) | 필요할 때만, `check.sh` 에는 넣지 않음. 캐시가 파일을 bibcode *또는* arXiv id 로 이름 짓고 일부는 하위 폴더에 두므로, bibcode 접두 glob 하나가 2026-09-03/04 에 거짓 미보유 여섯을 만들었다(RM22 · Nettelmann 2011 · Reiners & Christensen · Garraffo · Yadav & Thorngren · Zhang & Rogers). arXiv id 는 ADS 의 `identifier` 필드에서 **읽는다**(`ADS_API_TOKEN` 필요, 없으면 추측하지 않고 종료). 게이트에 안 넣는 이유: 토큰 없는 환경에서 게이트가 죽고, 이 도구의 부정은 캐시 상태이지 저장소 결함이 아니다. 두 다이나모 문서 `--scan`: 10 중 7 보유, 그중 4 가 arXiv 이름. |
 | 논문 캐시: `.md` 렌더가 떨어뜨린 표 | `scripts/check_paper_tables.py` | [11](#11-개발-헬퍼) | 필요할 때만, `check.sh` 에는 넣지 않음 — 재확인 목록(값을 어느 렌더에서 읽었나)이지 결함 목록이 아님. gitignored 캐시의 두 렌더가 필요 |
 
 ## 1. 데이터 엔진
