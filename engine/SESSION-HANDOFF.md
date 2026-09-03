@@ -61,6 +61,13 @@ the other. The follow-up — re-checking each claim against the merged cache —
 parallel seat's re-sweep found 25; the ones that were false are corrected in place, each with when it was
 written and when the paper arrived, so the reader can see it was true at the time (most were) or never was.
 **A negative about the cache is dated, and dated negatives are re-checked when the cache changes.**
+**Gate on `959d8d78` (Brief 64, four docs-only commits): FAIL 0, 456 PASS, 17:37:07 → 17:58:15 = 1268 s**
+(start/end stamps written by the launcher; Brief 60's run was 1265 s, so Brief 64 added nothing). ⚠ **The
+first run of this gate was killed at 382 PASS / FAIL 0 by the launching tool, not by a failure**: a
+backgrounded tool call carries a 10-minute ceiling and the gate takes ~20; the process vanished at ~17:32
+with no end stamp. **Launch the gate under `nohup … &` (detached from the tool), stamp start and end in the
+log, and read a run that died without an end stamp as *interrupted*, never as *failed*** — the same lesson
+as the earlier "killed and read as an owner signal", from the other direction.
 
 **Three owner-obtained PDFs had no PROVENANCE and now do (Brief 64; the files live in the gitignored
 cache, so this line is their record in the repository)**: `2020PhRvL.125s5501Q_SM` (Queyroux SM, 08-31
