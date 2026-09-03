@@ -214,10 +214,16 @@ and it is the product); ③ did not fire; ④ answered.**
   ① above the ceiling (deep mantle; fired at 1 035 GPa · 3 935 K) · ② below the floor (mantle top; fired at
   4.10 GPa · 4 749 K, by 0.6 %). Neither is declared; refusing by name is the correct state until then.
 - **⑥ Gate on `7393528f`: FAIL 0, 459 PASS (+2, the two new `test_ammonia` rows), 20:44:47 → 21:24:28 =
-  2 381 s.** The two rows cost ≈ 0 s (a handful of table lookups). The wall time is again far above the
-  1 268–1 293 s of the earlier runs and is **unexplained by this seat** — one `ps` at 20:39 and 21:2x showed
-  only this gate; whether the owner's low-power mode was on again is not known here. Trend for the record:
-  1 224 → 1 268 → 1 280 → 1 293 → 1 585 (low-power mode, owner-reported) → 2 381 s.
+  2 381 s.** The two rows cost ≈ 0 s (a handful of table lookups). **Attributed, by asking the machine**
+  (directing seat, reproduced by the work seat at 21:3x): `pmset -g` → `powermode 1` — **low-power mode was
+  still on**; `pmset -g therm` → *"No thermal warning level has been recorded"*, *"No performance warning
+  level has been recorded"* — **thermal throttling is excluded by evidence, not withdrawn as a guess**; the
+  machine was on battery (25 %, discharging). So 1 585 s and 2 381 s are **both low-power mode** — the
+  owner's *"아마 절전모드"* was right, and the mode stayed on, which is why the second run was slower.
+  **Trend, in two branches that must not be mixed**: on mains power 1 224 → 1 268 → 1 280 → 1 293 s, each
+  step with a cause (one new row + noise); in low-power mode 1 585 → 2 381 s, **not comparable to code
+  cost**. This project's gate is ~21 minutes, not 40. Before launching a gate: `pmset -g batt` — on battery,
+  ask the owner first (a dying machine mid-gate leaves the orphan-process situation of this morning).
 
 ## 7. The extrapolation axis above the table — closed on the literature, 2026-09-03
 
