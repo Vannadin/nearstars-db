@@ -77,7 +77,12 @@ sits in — this is why a rocky field is a *decision ladder*, not one closed for
    maximum *"to obtain a lower limit for the cosmic ray flux"*; Table 1 prints 0.37/0.65/0.96 for other
    locked cases; the paper contains no Rossby number and no 0.12. The `Ro_ℓ = 0.12` boundary and the
    multipolar collapse are OC06's, executed by RM22 (their eqs for F, Ra_Q, Ro, Ro_ℓ and Table 6 inputs).
-   The engine's grid is {0.05 OC06, 0.06 RM22}, a 1.2× spread of the same quantity).
+   The engine's grid is **OC06's own width, {0.05, 0.10}** — text *"nearly a factor of 20"*, abstract *"a factor
+   of 10 or more"* — with RM22's Solar-System point 0.06 inside it (RM22 adopts 0.05, its reading of OC06; OC06
+   prints no 0.05). ⚠ **Base-heated dynamos only** — OC06: internally heated cases are *"more gradual, show more
+   scatter, and begin at smaller Ro_l"*; RM22 carries the condition (*"as is the case on Earth"*). Whether a
+   roster body's core is base-heated is **not something this recipe can decide**, and the label rides on every
+   multipolar value and on the 0.12 threshold itself.)
 3. **Rotation** enters *only through the regime gate*, not the dipolar amplitude.
    In the dipolar linear zone the moment carries **no explicit angular-velocity
    dependence** (RM22 §5.1) — a crucial, counter-intuitive point: slow rotation

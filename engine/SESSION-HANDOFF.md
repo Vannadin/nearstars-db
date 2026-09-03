@@ -672,10 +672,10 @@ first, new axes last:**
 
    **What the brief is**: five ladder steps over quantities already emitted (`mass`, `radius`,
    `n`, class, `core_radius`, `conductor_phase`, `t_body`), four declarations as a **family with a
-   grid** (the regime multiplier's own spread — OC06 ≈ 0.05 vs RM22 0.06, the same quantity — is a
-   factor 1.2; *the 0.15 "Grießmeier" that made it 2.5× until 2026-09-04 was a different quantity, Earth's
-   present moment as denominator for one configuration, and was removed — `rocky-dynamo-context-notes.md`
-   step 4*), and the closing relation
+   grid** (the regime multiplier is **OC06's own width {0.05, 0.10}**, 2×, base-heated only, with RM22's
+   0.06 inside; *corrected three times on 09-03/04 — the 0.15 "Grießmeier" that made it 2.5× was a different
+   quantity, the {0.05, 0.06} "1.2×" that replaced it for an hour was two non-independent points —
+   `rocky-dynamo-context-notes.md` step 4*), and the closing relation
    `B_eq = 30·(ℳ/ℳ⊕)·(R/R⊕)⁻³`, already Solar-System-validated in the doc against five bodies.
 3. **Fe₃S core alloy — demotion lifted 2026-09-03 (Brief 64).** The owner kept branch A (iron-core σ +
    FeS) in the queue — *"근데 설명을 들으니 A도 하기는 해야겠어"* (1588ff47, 09-03 14:26) — and the only

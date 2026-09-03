@@ -27,8 +27,13 @@ structure + thermal-evolution solver per body." Closing relation, anchored on Ea
   **regimes 2 and 3 have no value in the doc** and are carried as grids with **no elected number** (C11).
 * **The regime gate is declared or emitted both ways.** `rossby` is a gap (a rotation period cannot give
   Ro_ℓ). Undeclared → dipolar and multipolar branches both emitted, the multipolar factor itself a grid
-  {0.05 (OC06, "nearly a factor of 20"), 0.06 (RM22, Solar-System "about 0.06")} — two printed values of
-  the SAME quantity (multipolar moment / the same dynamo's maximum dipolar moment), a 1.2× spread.
+  {0.05, 0.10} — OC06's own two printed statements of the SAME quantity (multipolar moment / the same dynamo's
+  maximum dipolar moment): "falls by nearly a factor of 20" (text) and "reduced by a factor of 10 or more"
+  (abstract) — a 2× width; RM22's Solar-System validation point 0.06 sits inside it (RM22's adopted value is
+  0.05, its reading of OC06). ⚠ Applies to base-heated dynamos only (MULTIPOLAR_CONDITION).
+  ⚠ This value was corrected three times on 2026-09-03/04 — {0.06, 0.15} "2.5×" → {0.05, 0.06} "1.2×" →
+  {0.05, 0.10} "2×, base-heated" — each time closer to the source, each time caught by a different seat:
+  the case that checking a secondary citation against its source is not done in one pass.
   ⚠ Until 2026-09-04 the second grid point was 0.15 "(Grießmeier 2009)" and the spread read 2.5× — that was a
   different quantity: Grießmeier §2.2 gives 0.02–0.15 M_E for ONE configuration (Earth-like, 0.2 AU,
   0.5 M☉), the denominator is Earth's present moment, and 0.15 is the range's maximum "adopted to obtain a
@@ -76,8 +81,16 @@ M_BASE = {                     # ℳ/ℳ⊕ — the declared family. None = the 
     5: (0.0, 0.0),             # low-density dry, Mars analog: dynamo-dead by a few Gyr
 }
 ELECTED = {1, 4, 5}            # regimes where the doc prints one value; 2 and 3 emit endpoints only
-MULTIPOLAR_FACTORS = (0.05, 0.06)   # OC06 "nearly a factor of 20" (≈ 0.05) · RM22 Solar-System "about 0.06" — same
-                                    # quantity, 1.2× spread. (0.15 removed 2026-09-04: a different quantity — docstring.)
+MULTIPOLAR_FACTORS = (0.05, 0.10)   # OC06's own two printed statements of ONE quantity (multipolar / the same dynamo's
+                                    # maximum dipolar moment): text "falls by nearly a factor of 20" (≳ 0.05) and abstract
+                                    # "reduced by a factor of 10 or more" (≤ 0.1) — a 2× width, base-heated dynamos only.
+                                    # (0.15 removed 2026-09-04 — a different quantity; {0.05, 0.06} stood for one hour and
+                                    # was not two independent sources: 0.05 is RM22's reading of OC06 — the docstring.)
+MULTIPOLAR_SOLAR_SYSTEM = 0.06      # RM22's Solar-System validation point inside that width ("about 0.06 … ratifies OC06");
+                                    # RM22's own adopted value is 0.05 (its eq. 22 / "of the order of 0.05").
+MULTIPOLAR_CONDITION = ("OC06's collapse is for base-heated dynamos ('as is the case on Earth', RM22); internally heated "
+                        "ones are 'more gradual, show more scatter, and begin at smaller Ro_l' (OC06) — a different value "
+                        "and a different threshold. This recipe cannot say which heating mode a roster body's core has.")
 DYNAMO_DEATH_AGE_GYR = {5: 7.0}     # the doc's one worked point ("Mars-mass by ~7 Gyr"); Zhang & Rogers 2022
                                     # §4.2.5 give 1 M⊕ shut-off at ~2.5–5 Gyr and 3 M⊕ at ~10–12 Gyr from a
                                     # different model — contested, carried, not adopted
@@ -196,9 +209,10 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
         f"단계 4 영역 게이트: rossby 엣지는 gap 이라 선언으로 받는다 → **{branch}**"
         + ("" if branch != "undeclared (both emitted)" else
            f"; 쌍극자 {dip_lo}–{dip_hi} ℳ⊕ 와 다극자 ×{MULTIPOLAR_FACTORS[0]}–{MULTIPOLAR_FACTORS[1]} "
-           f"({mp_lo:.3g}–{mp_hi:.3g} ℳ⊕) 를 둘 다 싣는다 — 다극자 계수 자체가 OC06 '거의 20배'(≈0.05) 대 RM22 태양계 "
-           "'약 0.06', 같은 양의 두 인쇄값이라 1.2배 (Grießmeier 의 0.15 는 다른 양 — 지구 현재 모멘트 대비 한 궤도의 "
-           "보수적 최댓값 — 이라 2026-09-04 에 뺐다)")
+           f"({mp_lo:.3g}–{mp_hi:.3g} ℳ⊕) 를 둘 다 싣는다 — 다극자 계수는 OC06 자신의 두 진술 '거의 20배'(≥0.05)와 "
+           f"'10배 이상'(≤0.1) 사이 2배 폭이고 RM22 태양계 검증점 {MULTIPOLAR_SOLAR_SYSTEM} 은 그 안(RM22 채택값은 0.05). "
+           "⚠ base-heated 다이나모 한정(지구가 그렇다, RM22) — 내부가열형은 더 완만하고 더 작은 Ro_ℓ 에서 시작(OC06); "
+           "이 천체의 핵이 어느 쪽인지 이 레시피는 판정하지 못한다. (Grießmeier 의 0.15 는 다른 양이라 2026-09-04 에 뺐다)")
         + f". 단계 5 B_eq = 30 µT · ℳ · (R/R⊕)⁻³ (R = {radius_earth:.4f} R⊕), B_pol = 2 B_eq. "
         "지구 30 µT 는 앵커의 재현이지 예측이 아니다. RM22 자신의 Table 8 은 수성 0.0003 · 금성 0.0007 · 화성 0.084 를 "
         "계산하고, 문서의 검증 표는 관측열을 쓰며 금성·화성을 0 으로 적는다 — 그 0 은 이 사다리의 클래스 판단이다.")
