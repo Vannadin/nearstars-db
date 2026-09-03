@@ -100,7 +100,10 @@ here.
   means **step 2 has two prerequisites, not one**: the deep-mantle rule (registered) **and** a cold-flank
   label on the ammonia table's refusals (new). Neither is done here — measurement, not repair, and both
   touch what the owner has not decided.
-- **⑤** Gate: see below.
+- **⑤ Gate on `2b869096`: FAIL 1** — 20:11:57, 456 PASS: `check_contracts` caught the new input missing from
+  the contract (*"interior_layers: 코드가 쓰는데 문서 Needs 에 없다 — ammonia_mass_fraction"*). The check did
+  its job: a declaration is not wired until the methodology doc's Needs line and domain table carry it. Added
+  (en + ko, one row beside the rock declaration), `check_contracts` 8/8, re-gated below.
 
 **Labels landed in code**: at w > 0 the recipe's note carries the five (methane asymmetry · ceiling below the
 mantle base · convention caveat on ∇_ad · fluid but molecular-vs-dissociated unsaid · partial N₂+H₂
