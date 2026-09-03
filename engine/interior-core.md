@@ -1008,13 +1008,17 @@ lean on and no source settles.** Each is a labelled condition, not an open item;
 a solver change makes it load-bearing in a new place.
 - **γ = 1.5** — `GAMMA_CORE`, a solid (h.c.p.) value on a liquid density fit; Earth's inner core exists in
   this recipe only at that value (Brief 42's knife-edge, 0.94 %), and now it rides upstream of `Q_adiabat`
-  (Brief 60). Not moved, because moving a constant to make an answer come out is prohibited. **C14
-  (2026-09-04) adds what this knife-edge does when the declared lower bound is replaced by a solution**: at
-  the declared 3 760 K Earth's inner core is 566 km (both `core_state` and the C14 profile, ICB 351.3–351.4
-  GPa, half of PREM's 1 220 km); at the balance's own T_c, 3 978 K, **it is gone** — the pressure profile
-  stays (`fe_prem` is temperature-independent) while the adiabat rises through the melting curve. *(A
-  "second face — the pressure profile's temperature" stood here for one evening and is withdrawn: it was a
-  numerical artefact of an unconverged Euler profile, `core-energy-balance-context-notes.md` §3b/§5.)*
+  (Brief 60). Not moved, because moving a constant to make an answer come out is prohibited. **One
+  knife-edge, three axes (C14, 2026-09-04)**: Earth's inner-core verdict in this recipe is thin and flips
+  within its own uncertainty on three independent axes — **γ** 1.500 declared, flips at 1.514 (0.94 %,
+  Brief 42) · **centre margin** −17.6 K (Brief 42, "thin") · **T_c** 3 760 K declared, flips at 3 772.5 K
+  (12.5 K; audit, 6 400-step bisection; 3 769.8 with the 2 % cutoff). At 3 760 K both `core_state` and the
+  C14 profile find a 566–572 km inner core (ICB 351.3–351.4 GPa, half of PREM's 1 220 km); at the balance's
+  own T_c, 3 978 K — 205 K past the threshold — **the core is all liquid** (a verdict, not a refusal: every
+  sample has a melting temperature, minimum margin +290 K), because the pressure profile stays
+  (`fe_prem` is temperature-independent) while the adiabat rises through the melting curve. *(A "second
+  face — the pressure profile's temperature" stood here for one evening and is withdrawn: it was a numerical
+  artefact of an unconverged Euler profile, `core-energy-balance-context-notes.md` §3b/§5.)*
 - **`Rm > 40` quoted, never evaluated** — the rocky dynamo's alive-gate sits in the ladder as a class
   judgement; no magnetic-Reynolds expression exists in the recipe (Brief 43). Building one is the larger
   brief the owner has not opened (C15 is its φ half).

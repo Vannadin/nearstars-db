@@ -148,7 +148,7 @@ work seat with `steps=` passed explicitly (⚠ `ce.STEPS = n` does *not* change 
 bound at definition time; the first convergence check that did that saw a false "step-independent"
 346 GPa):
 
-    steps    400: p_center 345.84 GPa  m residual −0.00328  all liquid          ← what shipped
+    steps    400: p_center 345.84 GPa  m residual −0.00328  all liquid          ← what shipped (at p_cmb 135.3e9; 346.16 at the exact 135.276e9 — audit/directing seat)
     steps   1600:          352.56             −0.00091  inner core, ICB 351.3 GPa
     steps   6400:          355.36             −0.00031  inner core, ICB 351.3 GPa
     steps  25600:          356.34             −0.00016  inner core, ICB 351.3 GPa
@@ -257,26 +257,46 @@ the answer is the finding · ⑤ both branches exercised · ⑥ anchors untouche
       RK4 1600 steps:          356.74             −1.16e-4               566 km,     351.3 GPa
 
   Step-independent to the last printed digit; ICB **351.3 GPa against `core_state`'s 351.4** — the two codes
-  agree. Centre pressure 356.74 vs `interior_layers`' 358.46 GPa = **−0.48 %**: inside the pre-registered
-  0.5 %, and the remainder is the inner 2 % cutoff (the untouched innermost ~70 km carries the last ~1.7 GPa);
-  the tolerance is met with little to spare and that is said here rather than widened. Mass residual now
-  1e-4 — the "closure" number reads as closure. Gate rows in `test_core_energy.py` §1b: centre pressure within
-  0.5 % of 358.46, |mass residual| < 1e-3, 4× steps moves the centre by < 0.2 %.
+  agree. **The remaining −0.48 % (356.74 vs 358.46) was *not* the cutoff — it was 4-digit rounding of the
+  transcribed inputs** (found by the directing seat and the audit the same night; reproduced here): with
+  the exact `interior.solve()` outputs (p_cmb 135.276 GPa, r_cmb 0.546978 R⊕) the centre is **358.47 GPa,
+  0.003 % from 358.458**; rounding r_cmb to 0.5470 alone gives 356.95, p_cmb to 135.3 alone 357.95, both
+  356.74. The inner 2 % cutoff costs **+0.105 GPa (0.029 %)** — the uniform-density estimate
+  (2/3)πGρ²r_min² and an RK4 continuation to r = 100 m agree to three decimals (audit). The mass residual
+  told the story too: −1.2e-4 with rounded inputs, +1.5e-5 with exact ones — an order of magnitude, unread.
+  Gate rows in `test_core_energy.py` §1b now take their inputs **from `interior.solve()` itself** (no
+  transcribed constant can round) and hold the centre pressure to **±0.1 %** (audit: RK4 error ≤ 0.015 %,
+  cutoff 0.03 % → 3× headroom, while a rounded input at −0.42 % or Euler at −3.4 % fails), |mass residual|
+  < 1e-3, and 4× steps moving the centre < 0.2 %.
 - **③ Re-solved Earth**: **T_c 3 978 K** (unchanged — the root lies in the all-liquid regime, whose terms do
   not depend on the centre), **band 3 770–4 284 K** (the low corner moved 3 750 → 3 770 because at cold T_c
   the now-present inner core adds Q_L, Q_g), Q_C **4.91 TW** = Q_s 2.00 + Q_R 2.91. Solve 4.5 s (RK4 costs
   4× Euler per step at the same 400 steps; the test's row cost is re-measured below).
-- **④ — one face, and it is the finding: closing the loop removes Earth's inner core.** At the *declared*
-  3 760 K both codes now find an inner core — route B: R_i 566 km, ICB 351.3 GPa, Q_L 0.93 + Q_g 0.65 TW
-  (PREM's inner core is 1 220 km; the engine's Earth already carries half of it, `core_state`'s "thin"
-  margin of −17.6 K). Between 3 760 and 3 850 K it vanishes — `fe_prem` is temperature-independent, so the
-  pressure profile stays put while the adiabat rises through the melting curve — and at the *solved*
-  **3 978 K the core is all liquid**: Q_L = Q_g = 0. **The "two faces of the γ knife-edge" reading is
-  withdrawn** (the C6 watch paragraph is corrected); there is one face, γ's, and this is what it does when
-  the declared lower bound is replaced by the balance's own solution. Consequence for C15: the two largest
-  entropy terms (latent heat, compositional) are absent on the solved Earth — the entropy budget C15 builds
-  will have to say so. Nothing moved: γ, `core_state`, `interior_layers` untouched; not fed back.
+- **④ — one knife-edge, three axes: closing the loop removes Earth's inner core.** At the *declared*
+  3 760 K both codes find an inner core — route B: R_i 566–572 km, ICB 351.3–351.4 GPa, Q_L 0.93 + Q_g
+  0.65 TW (PREM's inner core is 1 220 km; the engine's Earth carries half of it). **The threshold is
+  12.5 K away**: the centre margin reaches zero at **T_c = 3 772.5 K** (audit, 6 400-step bisection, no
+  cutoff; 3 769.8 K with this seat's 2 % cutoff — the 2.7 K is the cutoff's 0.1 GPa), so the declared
+  3 760 K sits **+9.8 to +12.5 K** below the disappearance of the inner core. The solved **3 978 K is 205 K
+  above it — the core is all liquid**, and *liquid* is a verdict, not a refusal: on the 6 400-step profile
+  every one of 6 272 samples has a melting temperature (`t_melt` None: 0 — that would route to
+  `core_status = "no_melting_curve"`, a different path) and the minimum (T_ad − T_melt) is **+292.7 K**
+  (audit +289.5). Q_L = Q_g = 0. The mechanism: `fe_prem` is temperature-independent, so the pressure
+  profile stays put while the adiabat rises through the melting curve. **So the C6 watch reads: Earth's
+  inner-core verdict is thin in this recipe and flips within its own uncertainty on three independent
+  axes** — γ (1.500 declared, flips at 1.514, 0.94 %; Brief 42) · centre margin (−17.6 K; Brief 42, "thin")
+  · T_c (3 760 declared, flips at 3 772.5, 12.5 K; today). *Withdrawn*: "two self-consistent constructions
+  disagree" (an Euler artefact). *Kept, strengthened*: one knife-edge, three axes. Consequence for C15: the
+  two largest entropy terms (latent heat, compositional) are absent on the solved Earth — the entropy
+  budget C15 builds will have to say so. Nothing moved: γ, `core_state`, `interior_layers` untouched; not
+  fed back.
 - **Reading errors, named**: (i) the mass residual −0.003 was a non-convergence signature read as closure;
   (ii) `ce.STEPS = n` does not change the default argument — pass `steps=`; (iii) the "lower-bound column vs
-  hot column" mechanism was a story fitted to a numerical artefact. All three are the directing seat's
-  catch, reproduced here before any line was changed.
+  hot column" mechanism was a story fitted to a numerical artefact; (iv) **4-digit rounding of transcribed
+  inputs showed up as a 0.5 % error and was explained as the cutoff's doing — the mass residual growing by
+  an order of magnitude was the fingerprint, and it was not read.** All four are the directing seat's and
+  the audit's catches, reproduced here before any line was changed.
+- **⑤ Gate on `db402d92`: FAIL 0, 472 PASS, 01:15:24 → 01:38:06 = 1 362 s — AC, 100 %, `powermode 2` at
+  both ends.** Wholly on mains, the time returns to the mains branch (1 224 → 1 268 → 1 280 → 1 293 →
+  **1 362** s; the +69 s over the last mains run is `test_core_energy` at 4.8 s plus noise), **which confirms
+  the low-power attribution of 1 585 and 2 381 s** — three points on one branch, two on the other.

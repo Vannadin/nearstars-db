@@ -135,7 +135,8 @@ the four corners of the dT_c/dt × H bands. **The solved value is not fed back t
 back moves anchors and is a separate decision). Transcription closure: on the paper's own inputs Nimmo's analytic core
 (test file only) reproduces Table 4 component by component within 10 % and the root lands at 4152 K against the printed
 4155. The profile is RK4 from the CMB inward and is anchored: its centre pressure must match `interior.solve()`'s own
-`core_pressure` for the same body (Earth: 356.7 vs 358.46 GPa, the inner 2 % of the radius not integrated), and at
+`core_pressure` for the same body (Earth: 358.47 vs 358.46 GPa, ±0.1 %, inputs taken from `interior.solve()` itself so no
+transcribed constant can round; the inner 2 % of the radius, 0.03 %, not integrated), and at
 the declared 3760 K it finds the same inner core as `core_state` (ICB 351.3 vs 351.4 GPa). On the engine's own Earth
 the solved T_c is 3978 K, and there the core is **all liquid** — closing the loop removes Earth's inner core
 (`fe_prem` is temperature-independent, so the pressure stays while the adiabat rises through the melting curve);

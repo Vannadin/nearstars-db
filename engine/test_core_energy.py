@@ -139,22 +139,31 @@ def main() -> int:
     # Two codes integrating the same material on the same body must give the same pressure profile:
     # interior.solve()'s own Earth core_pressure is 358.46 GPa (interior_layers, run.py bodies/earth.yaml).
     print("\n경로 B 프로파일 — 수렴: 중심압이 interior_layers 의 지구 핵 중심압과 같은가")
-    EARTH_CORE_PRESSURE_GPA = 358.46
-    r_cmb, m_core = 0.547 * cf.R_EARTH_M, 0.325 * cf.M_EARTH_KG
-    prof = ce.core_profile("fe_prem", 135.3e9, 3760.0, r_cmb, m_core)
+    # The inputs come from interior.solve() itself, never from transcribed constants: 4-digit rounding of
+    # r_cmb / p_cmb alone moved the centre by −0.48 % on 2026-09-04 and was misread as a cutoff effect.
+    # Tolerance ±0.1 % (audit, 2026-09-04): RK4 error ≤ 0.015 % at ≥ 50 steps, inner-2 % cutoff +0.03 %,
+    # so 3× headroom over the normal error while a rounded input (−0.42 %) or Euler at 400 steps (−3.4 %) fails.
+    from interior import solve as _isolve
+    earth = _isolve(1.0, core_mass_fraction=0.325, potential_temperature=1600.0)
+    ok(earth.applicable and earth.converged, "1b: interior.solve() Earth must converge")
+    ev = earth.values
+    r_cmb, m_core = ev["core_radius"] * cf.R_EARTH_M, 0.325 * cf.M_EARTH_KG
+    p_cmb_pa, t_m_base = ev["cmb_pressure"] * 1e9, ev["cmb_temperature"]
+    prof = ce.core_profile("fe_prem", p_cmb_pa, 3760.0, r_cmb, m_core)
     p_c = prof["p_center"] / 1e9
-    ok(abs(p_c - EARTH_CORE_PRESSURE_GPA) / EARTH_CORE_PRESSURE_GPA < 0.005,
-       f"1b: profile centre pressure {p_c:.2f} GPa vs interior_layers {EARTH_CORE_PRESSURE_GPA} — not within 0.5 %")
-    ok(abs(prof["m_center_residual"]) < 1e-3, f"1b: mass residual {prof['m_center_residual']:+.5f} ≥ 1e-3 — the profile is not converged")
-    prof2 = ce.core_profile("fe_prem", 135.3e9, 3760.0, r_cmb, m_core, steps=4 * ce.STEPS)
+    ok(abs(p_c - ev["core_pressure"]) / ev["core_pressure"] < 0.001,
+       f"1b: profile centre pressure {p_c:.3f} GPa vs interior_layers {ev['core_pressure']:.3f} — not within 0.1 %")
+    ok(abs(prof["m_center_residual"]) < 1e-3, f"1b: mass residual {prof['m_center_residual']:+.2e} ≥ 1e-3 — the profile is not converged")
+    prof2 = ce.core_profile("fe_prem", p_cmb_pa, 3760.0, r_cmb, m_core, steps=4 * ce.STEPS)
     ok(abs(prof2["p_center"] - prof["p_center"]) / prof["p_center"] < 0.002,
        f"1b: 4× steps moves the centre pressure by {(prof2['p_center'] / prof['p_center'] - 1) * 100:+.2f} % (> 0.2 %)")
-    print(f"  [{'PASS' if not fails else 'FAIL'}] 중심압 {p_c:.2f} GPa (interior_layers 358.46) · 질량 잔차 {prof['m_center_residual']:+.5f} · "
-          f"걸음 4× 에서 {(prof2['p_center'] / prof['p_center'] - 1) * 100:+.3f} % — RK4, {ce.STEPS} 걸음, 안쪽 2 % 반경(부피 10⁻⁵) 제외")
+    print(f"  [{'PASS' if not fails else 'FAIL'}] 중심압 {p_c:.3f} GPa (interior.solve() {ev['core_pressure']:.3f}, "
+          f"{(p_c / ev['core_pressure'] - 1) * 100:+.3f} %) · 질량 잔차 {prof['m_center_residual']:+.1e} · 걸음 4× 에서 "
+          f"{(prof2['p_center'] / prof['p_center'] - 1) * 100:+.3f} % — RK4, {ce.STEPS} 걸음, 안쪽 2 % 반경(부피 10⁻⁵, +0.03 %) 제외; 입력은 solve 출력 그대로")
 
     # ── 2. route B: the engine's Earth — printed, not asserted ──────────────
-    print("\n경로 B — 엔진 자신의 지구 (선언 3760 K 옆에 보고; 예상 없음)")
-    res = ce.solve(1.0, 0.325, 0.547, 135.3, 2526.0, 3760.0, core_material="fe_prem", body_class="rocky")
+    print("\n경로 B — 엔진 자신의 지구 (선언 3760 K 옆에 보고; 예상 없음; 입력은 interior.solve() 출력)")
+    res = ce.solve(1.0, 0.325, ev["core_radius"], ev["cmb_pressure"], t_m_base, 3760.0, core_material="fe_prem", body_class="rocky")
     ok(res.applicable, f"2: engine Earth must solve — {res.reason}")
     if res.applicable:
         v = res.values
@@ -167,9 +176,8 @@ def main() -> int:
               f"내핵 {'있음' if v['has_inner_core_solved'] else '없음'} · 프로파일 중심압 {v['core_center_pressure_solved']:.0f} GPa, 질량 잔차 {v['core_profile_mass_residual']:+.4f} · 잔차 {v['balance_residual']:.1e}")
     # ── 3. both branches of the inner-core question on the same profile ────
     print("\n분기 ⑤ — 내핵 없음(Q_L = Q_g = 0)과 내핵 있음, 같은 프로파일의 두 T_c 에서")
-    r_cmb, m_core = 0.547 * cf.R_EARTH_M, 0.325 * cf.M_EARTH_KG
-    _, _, cold = ce.balance(3300.0, 2526.0, "fe_prem", 135.3e9, r_cmb, m_core)
-    _, _, hot = ce.balance(4000.0, 2526.0, "fe_prem", 135.3e9, r_cmb, m_core)
+    _, _, cold = ce.balance(3300.0, t_m_base, "fe_prem", p_cmb_pa, r_cmb, m_core)
+    _, _, hot = ce.balance(4000.0, t_m_base, "fe_prem", p_cmb_pa, r_cmb, m_core)
     ok(cold["inner_core"] is not None and cold["q_l"] > 0.0 and cold["q_g"] > 0.0, "3: at 3300 K the profile must carry an inner core with Q_L, Q_g > 0")
     ok(hot["inner_core"] is None and hot["q_l"] == 0.0 and hot["q_g"] == 0.0 and hot.get("core_status") == "all_liquid",
        "3: at 4000 K the profile must be all liquid with Q_L = Q_g = 0")

@@ -715,17 +715,27 @@ off the *request* list (paywall, withdrawn), which is consistent with their stay
 `2001E&PSL.185...49A` Allègre & Manhès · `2013GGG....14.4608D` Davies · `1980RvGSP..18..269S` Sclater+
 (both cited by our own methodology) · `2020E&PSL.53416080T` Thompson+ · `2006JGRB..111.6209S` Seagle+ (Fe₃S)
 · `1993Sci...260..771K` Karato & Wu (request withdrawn, paywall) · `2019CRGeo.351..154W` Wagle+ ·
-`2012Natur.485..355P` Pozzo+ (request withdrawn — the recipe never computes σ, item 2) ·
-`2011ApJ...733....2N` Nettelmann+ 2011 · Solomatov 1995 (given up 15:18, paywall) · Fei+ 2000 · Sata+ 2010.
+`2012Natur.485..355P` Pozzo+ (request withdrawn — the recipe never computes σ, item 2; free arXiv route
+`1203.4970` exists — **not fetched, free is not needed**, C5) ·
+Solomatov 1995 (given up 15:18, paywall) · Fei+ 2000 (ADS candidate `2000AmMin..85.1830F` — ⚠ confirm against
+Mori+ 2017's reference list before use) · Sata+ 2010.
+**Removed 09-04 — held after all: `2011ApJ...733....2N` Nettelmann+ 2011 is `docs/phase3/_papers/1010.0277.md`
+/`.html` (arXiv-id filename), and `radiogenic-context-notes.md` §5 already said so — the same false negative
+as RM22 on 09-03. Cause: the cache uses two naming rules (bibcode, arXiv id) plus sub-folders, so a
+bibcode-prefix glob alone manufactures "not held". Check: glob both `<name>*` and `*/<name>*`, and read the
+arXiv id from ADS's `identifier` field so both names are tried.** Grießmeier+ 2009 `2009Icar..199..526G`
+(cited in this file's order section) is **held** — parallel seat, 09-04 01:25, free arXiv, PROVENANCE.
 *(Lichtenberg+ 2019 `2019NatAs...3..307L` stood here for twenty minutes on 09-03 and was **obtained by the
 owner the same evening** — arXiv v1 preprint with source, PROVENANCE written by the directing seat; see C21.)*
-Added 09-03 by C22 (0 cache hits each; **identifiers not yet read from ADS, so none written** — look up by
-title first): **Meyer+ 2015** (molecular aggregates in water–ammonia mixtures, cited by Bethkenhagen+ 2017) ·
-**Hirai+ 2009** (methane phase diagram, Bethkenhagen+ 2017 Fig. 6). Neither is needed for C22.
+Added 09-03 by C22 (0 cache hits each): **Meyer+ 2015** (molecular aggregates in water–ammonia mixtures, cited
+by Bethkenhagen+ 2017; ADS candidate `2015JChPh.143p4513M`, read 09-04, **candidate label kept**) ·
+**Hirai+ 2009** (methane phase diagram, Bethkenhagen+ 2017 Fig. 6; ADS candidate `2009PEPI..174..242H`,
+candidate). Neither is needed for C22.
 Added 09-03 by C22's extrapolation-axis closure (identifiers from the parallel seat's ADS lookup, 0 cache hits
 each, not needed — they bound what an extension would have to assert): `2014PhRvB..89q4103N` Ninet+ 2014
 (ionic ammonia ~180 GPa) · `2014NatCo...5.3460P` Palasyuk+ 2014 (ammonium amide ~120 GPa) ·
-`2021PhRvL.126b5003R` Ravasio+ 2021 (liquid → plasma, to ~350 GPa). Obtained the same evening by the owner:
+`2021PhRvL.126b5003R` Ravasio+ 2021 (liquid → plasma, to ~350 GPa; free arXiv route `2101.06692` — not fetched,
+not needed). Obtained the same evening by the owner:
 **Li+ 2013** `2013JChPh.139m4505L` (ammonia Hugoniot; preprint + source, PROVENANCE by the directing seat).
 A row here is a fact about the cache, not a request; requests go through the owner and are recorded near
 the top of this file.
