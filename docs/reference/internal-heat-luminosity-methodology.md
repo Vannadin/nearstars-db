@@ -223,7 +223,12 @@ The body class decides which mechanism dominates and how confident the estimate 
    not `T_eff`.** The internal flux is set by long-lived radioisotope decay (U, Th, ⁴⁰K) plus
    residual accretional/secular heat, *not* by Kelvin–Helmholtz contraction (rock barely
    contracts). The scale is the **Earth heat flux ~0.08–0.09 W/m²** (global ~46–47 TW:
-   Sclater, Jaupart & Galson 1980; Davies 2013; roughly half radiogenic, half secular). This
+   Sclater, Jaupart & Galson 1980; Davies 2013). The radiogenic share depends on the denominator:
+   Korenaga 2008 ([`2008RvGeo..46.2007K`](https://ui.adsabs.harvard.edu/abs/2008RvGeo..46.2007K), cached) gives a **bulk-Earth Urey ratio ≈ 0.35**
+   (radiogenic over total surface flux) and a **convective Urey ratio 0.23 ± 0.15** (radiogenic over the
+   convecting mantle's budget — §3.1: *"subtracting the continental heat production of 7.5 ± 2.5 TW from
+   the BSE heat production of 16 ± 3 TW gives 8.5 ± 5.5 TW for the convecting mantle"*); the convective
+   one is what a geotherm consumer needs. This
    corresponds to `T_int ≈ (0.087/σ)^(1/4) ≈ 35 K`: utterly negligible against any
    temperate/warm `T_eq`, so for almost all rocky planets `T_eff ≈ T_eq` and the §1 surface-
    temperature relation simply does not care about a rocky body's internal heat.
@@ -336,8 +341,16 @@ uncertainty, §4 Uranus caveat), not a point.
 
 **Earth (the rocky calibration: the heat goes into the interior, not `T_eff`).** Earth's
 global heat loss is **~46–47 TW** (Davies 2013; Sclater+ 1980), a mean surface flux of
-**~0.087 W/m²**, split **roughly half radiogenic** (U/Th/⁴⁰K decay) and **half secular**
-(residual accretional + core/mantle cooling). Plug the flux into §1:
+**~0.087 W/m²**. How much of it is radiogenic (U/Th/⁴⁰K decay) versus secular (residual accretional +
+core/mantle cooling) depends on which budget is the denominator (Korenaga 2008): **bulk Earth ≈ 0.35**, and
+for the **convecting mantle 0.23 ± 0.15** — *"only 20% of convective heat flux seems to originate from
+radiogenic elements at present, so the rest should be supported by secular cooling"*. Korenaga's argument is
+that the convective ratio is *lower* than conventionally assumed, so a range and a dissent are the honest
+content: Nimmo & Primack 2020's *"about 15 TW is sourced within the mantle"* sits at the very top of
+Korenaga's 8.5 ± 5.5 TW — a disagreement to carry, not reconcile. (Korenaga anchors the total on 44 TW,
+Pollack 1993, revised to 46 TW by Jaupart 2007, the increase entirely continental — compatible with the
+46–47 TW above. His 20 ± 3 TW BSE figure is McDonough & Sun 1995's, cited to contrast; do not pick it up.)
+Plug the flux into §1:
 `T_int = (0.087/σ)^(1/4) ≈ 35 K`: against Earth's `T_eq ≈ 255 K` this is a
 `(255⁴ + 35⁴)^(1/4) − 255 ≈ 0.001 K` correction, i.e. **completely negligible for the
 surface temperature**. Yet the *same* ~47 TW is exactly what keeps the mantle convecting
