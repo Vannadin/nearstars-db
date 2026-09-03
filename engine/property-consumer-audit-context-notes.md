@@ -171,6 +171,26 @@ changed here; named for the owner.**
   cited jointly; only Rovira-Navarro's E_a = 300 rests on it alone, labelled as an unchecked
   secondary citation at `rheology.py:47` and `viscosity-context-notes.md` §1).
 
+## 5. The stress finding — and "blocked" has meant two different things (Brief 59, c4 + 직, 여기 re-run)
+
+- **The engine carries no stress.** `stress|yield|strain|deviatoric|sigma_y` over `engine/*.py`
+  (tests excluded) and `chain.yaml`: the only hits are the word "constrains" in `mantle_flux.py`'s prose
+  (lines 19, 31). No stress exponent anywhere; every viscosity law held is Newtonian as transcribed.
+- **But the buoyancy stress scale αρgDΔT_rh is constructible from what is already computed.** α is not
+  stored; it recovers as `alpha_k / K_T` — silicate **2.32×10⁻⁵ /K at 24 GPa, 1.03×10⁻⁵ at 135 GPa**
+  (여기 reproduced through `Phase.k_t`). ΔT_rh from two overlapping routes: 1/ζ gives 67–200 K,
+  Frank-Kamenetskii RT²/E_v gives 53–106 K.
+- ⚠ **Caveat that rides with any α by this route**: `alpha_k` is a stored constant under the
+  volume-independent Anderson & Goto approximation — **6.92×10⁶ Pa/K at both pressures** (여기 checked;
+  it does not move) — so the 2.3× fall in α across that range is **K_T growing in the denominator, not a
+  measured α(P)**. Probably the right direction, wrong provenance for the magnitude. Nothing should emit
+  an α this way without saying so. **Not built.**
+- **The point.** What a regime criterion lacks is not the stress but **the threshold to compare it
+  against** — a yield strength, which nothing in the corpus prints. That is a *different kind* of gap from
+  the dynamo gate's: `Rm` was blocked on another computed quantity (φ, §2) that only Earth could anchor,
+  so it closed on itself; this is blocked on a material property with a value, which a paper can simply
+  supply. **A citation can close this one and could not close that one.** Solomatov 1995 is with the owner.
+
 ## Related
 
 - [`engine/thermal-conductivity-context-notes.md`](thermal-conductivity-context-notes.md) — the transcription, kept

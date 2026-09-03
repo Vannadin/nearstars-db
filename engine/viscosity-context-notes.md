@@ -45,7 +45,12 @@ line 412: *"where η_s is the viscosity at the solidus temperature, E_a is the a
 1993 alone, and that paper is withdrawn from the request list (paywall, then judged unneeded —
 `SESSION-HANDOFF.md` request list). It is corroborated at *range* level — inside Nimmo+ 2004's
 independently quoted 250–350 kJ/mol (Karato & Wu; Yamazaki+ 2000), a band also cited to Solomatov
-1995 — but not at *point* level. Two lookalikes: Gaidos+ 2010's b ≈ 17 cites **Karato, Riedel &
+1995 — but not at *point* level. **And the cost of the uncheckedness is bounded** (Brief 59): Foley &
+Smye 2018 (`2018AsBio..18..873F`, cached, 여기 re-grepped) is a fourth instance of the same 300 kJ/mol
+attributed to Karato & Wu alone — *"We use Ev ≈ 300 kJ mol⁻¹ as the baseline value in this study (Karato
+& Wu, 1993); test cases using Ev = 200 kJ mol⁻¹ and Ev = 400 kJ mol⁻¹ are shown in §4.2 and are consistent
+with our baseline model results."* Shown insensitive across ±100 kJ/mol, which makes the withdrawal of the
+Karato request retroactively better founded. Two lookalikes: Gaidos+ 2010's b ≈ 17 cites **Karato, Riedel &
 Yuen 2001**, a different paper; "Jaupart 2007" names at least two works.
 
 ## 2. The one agreement on this axis — and the ratio it rides on is ours

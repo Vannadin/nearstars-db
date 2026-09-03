@@ -47,7 +47,10 @@ GYR_S = 1e9 * 365.25 * 86400.0     # seconds per Gyr
 # "Mantle solidus viscosity" 1·10¹⁶ Pa·s and "Activation energy" 300 kJ/mol, footnote 4 =
 # Karato & Wu (1993) — RELAYED, see module docstring. E_a = 300 is an UNCHECKED SECONDARY CITATION
 # (Brief 55: Karato & Wu withdrawn from the request list; the 300 sits inside Nimmo+ 2004's
-# independently quoted 250–350 kJ/mol, so corroborated at range level, not at point level).
+# independently quoted 250–350 kJ/mol, so corroborated at range level, not at point level) — AND
+# SHOWN INSENSITIVE ACROSS ±100 kJ/mol: Foley & Smye 2018 (2018AsBio..18..873F) adopt the same 300
+# from Karato & Wu alone, run 200 and 400 kJ/mol as sensitivity cases, and report their conclusions
+# consistent with the baseline (Brief 59). What the uncheckedness costs is therefore bounded.
 # E_a's admissible range 300–540 kJ/mol is
 # the paper's own sentence (lines 413–421 of the extraction): "the activation pressure at
 # Mars' mantle varies between 300 KJ mol⁻¹ close to the surface to 540 KJ mol⁻¹ in the

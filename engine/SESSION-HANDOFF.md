@@ -87,7 +87,9 @@ item. Rows are kept, not deleted, so a resolved request is distinguishable from 
   Rovira-Navarro+ 2021's E_a = 300 kJ/mol rests on Karato & Wu alone — an *unchecked secondary
   citation*, corroborated at range level (inside Nimmo's independently quoted 250–350, which is
   both derivable from those energies via ζ = E/(RT²) → 0.00481–0.01644 against the printed
-  0.005–0.016 *and* cited to Solomatov 1995) but not at point level. Labelled at `rheology.py:47`
+  0.005–0.016 *and* cited to Solomatov 1995) but not at point level — and shown insensitive across
+  ±100 kJ/mol by Foley & Smye 2018, who adopt the same 300 from Karato & Wu alone and run 200/400 as
+  sensitivity cases consistent with their baseline (Brief 59). Labelled at `rheology.py:47`
   and `viscosity-context-notes.md` §1. ⚠ Lookalike: Gaidos+ 2010's b ≈ 17 is cited to **Karato,
   Riedel & Yuen 2001**, not Karato & Wu 1993 — grepping "Karato" for a viscosity constant grabs the
   wrong paper.

@@ -313,3 +313,13 @@ dimensionless. Our materials answer density, c_p and ∇_ad, not conductivity.
 **Author contact, recorded and NOT initiated (owner's call)**: the question is no
 longer "send the missing constants" but exactly one — **which T₀ entered the §6 Io
 calculation: §2's dimensionless 1, or Table 5's 1400 K?**
+
+## 8. `A_RH` is a point where the literature has a spread — recorded as a width (Brief 59)
+
+`tidal_transport.py:31` carries `A_RH = 2.4` (Kankanamge & Moore 2019 Table 1, a_rh, citing Solomatov
+1995 and Solomatov & Moresi 2000). Foley & Smye 2018 (`2018AsBio..18..873F`, cached, 여기 re-grepped:
+*"We use c1 = 0.5 and arh = 2.5"*, Table 1 row `arh 2.5`) prints **2.5**, same Solomatov lineage, arrived
+at independently. **Named width 2.4–2.5** — not a defect, not a correction: it sits inside a `Ra^(1/3)`
+scaling, so ~4 % on a_rh is small but real. The module stays quarantined (§7); nothing here changes it.
+Solomatov 1995 itself is with the owner, not on a session's request list.
+
