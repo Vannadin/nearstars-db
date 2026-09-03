@@ -103,7 +103,14 @@ here.
 - **⑤ Gate on `2b869096`: FAIL 1** — 20:11:57, 456 PASS: `check_contracts` caught the new input missing from
   the contract (*"interior_layers: 코드가 쓰는데 문서 Needs 에 없다 — ammonia_mass_fraction"*). The check did
   its job: a declaration is not wired until the methodology doc's Needs line and domain table carry it. Added
-  (en + ko, one row beside the rock declaration), `check_contracts` 8/8, re-gated below.
+  (en + ko, one row beside the rock declaration), `check_contracts` 8/8, re-gated below. **Worth its own
+  sentence: this was the day's first FAIL, and the contract check — not a person — caught the code–document
+  divergence**; that is the reason the check exists, and it becomes a pre-registration checklist line (§5).
+  **Gate on `20776346`: FAIL 0, 457 PASS, 20:13:26 → 20:39:51 = 1585 s.** ⚠ That is +292 s on gate66's
+  1293 s **on the same code** (gate66 → gate67 differs by the two methodology docs only), so the extra is not
+  the wiring; the step's own cost is gate66's +13 s over gate65's 1280 s, itself within run-to-run noise. The
+  1585 s is unexplained by this seat (no competing gate or solve was running; a single `ps` at 20:39 showed
+  only this gate) and is recorded rather than attributed.
 
 **Labels landed in code**: at w > 0 the recipe's note carries the five (methane asymmetry · ceiling below the
 mantle base · convention caveat on ∇_ad · fluid but molecular-vs-dissociated unsaid · partial N₂+H₂
@@ -111,3 +118,42 @@ dissociation figure-only) and drops the grade to analog; validation refuses w �
 w > 0 without a potential temperature. The P3 ③ gate row's static half now asserts the wrap exists with
 default 0 (instead of "no nh3 in the source"); its dynamic half (positive control 1, zero fires on the frozen
 standalone integrations) is unchanged and is what says the default path is inert.
+
+## 5. Step 2-② — the cold-flank label on the ammonia table's refusals (pre-registration, before code)
+
+Owner: *"일단 2부터 보자."* (`4b8e06ba`, 2026-09-03) — the refusal label (②) before the deep-mantle rule (①).
+
+**Diagnosis, reproduced from the table by the work seat.** `ammonia_table.density` raises one `ValueError`
+for both `p < p_lo(T)` and `p > p_hi(T)`; `Ammonia.check_temperature` already labels `too_cold` correctly
+for T outside 500–10 000 K, but `Ammonia.density` re-raises the table's error as `PhaseGap` with the default
+`too_cold=False`. The table's bounds are **both monotone increasing in T** (measured, 11 isotherms: floor
+0.309 → 7.70 GPa, ceiling 22.1 → 333.2 GPa from 500 to 10 000 K), so the direction is decidable:
+
+    p > p_hi(T)  → hotter brings the state inside → too_cold = True
+    p < p_lo(T)  → colder brings it inside          → too_cold = False
+
+The dead case (152 GPa · 545 K, ceiling 22.1–64.6 GPa there) is the ceiling side, so it went out as
+`False`, and `interior.py:1401` (`t_now * 1.6 if gap.too_cold else t_now / 1.6`) pushed the trial **colder** —
+steering exactly reversed. ⚠ A blanket `too_cold=True` would reverse the floor side instead.
+
+**Design.** Decide the direction in `eos.Ammonia.density` (the consumer), using the public
+`ammonia_table.p_bounds(t)`; `ammonia_table.py` is generated and is not touched. Freeze the monotonicity the
+direction logic rests on as a gate row (it is a fact of this table, not a guarantee; a regenerated table could
+break it silently). No other material's `too_cold` is touched; the default stays 0; no deep-mantle rule.
+
+**Registered outcomes.**
+- ① both directions exist and each carries the right flag (unit check on the two sides of the table at one
+  isotherm) → the ceiling-side refusal steers the temperature **up**.
+- ② the floor-side refusal never fires on the roster's paths → the direction logic stays, recorded as
+  "unfired" (C5 forbids machinery without a consumer, not one branch of a two-way decision).
+- ③ a temperature interval where either bound is not monotone → the premise is wrong: **stop and report**.
+- ④ the opt-in Uranus solve at w = 0.1159 gets past 152 GPa → **the next wall's location is the product**;
+  no expectation written (the last one was wrong).
+- ⑤ anchors: at w = 0 ammonia is never called → byte-identical, `--refresh` **not** needed. If it becomes
+  needed, stop and trace. (`Ammonia.density` is not a path-fingerprint function; `interior.py` is untouched.)
+- ⑥ gate FAIL 0, cost stated.
+
+**Checklist line, added after gate66's one FAIL (`check_contracts` caught the code–document divergence 21
+minutes after the commit):** a new declaration, output or node goes into the methodology doc's Needs line and
+domain table (en + ko) **in the same commit** as the code — a pre-registration item, not a follow-up. This
+step adds no declaration or output (a flag on an existing refusal), so the line is carried, not exercised.
