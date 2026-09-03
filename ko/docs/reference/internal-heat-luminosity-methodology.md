@@ -69,6 +69,30 @@ Primack 2020 의 **미발표 초안 표**(LaTeX 소스 `\end{document}` 뒤, PDF
 `radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) 는 붕괴 물리만이며, 열진화(Nimmo+ 2004, 미보유)는
 만들지 않았고 `dynamo_rocky` 로의 엣지는 gap 으로 남습니다.
 
+## 계약 — `cmb_heat_flux`
+
+**Returns** — `q_cmb` [W] · `q_cmb_min` [W] · `q_cmb_max` [W] · `cmb_boundary_layer` [km] ·
+`cmb_heat_flux_density` [W/m2] · `eta_bottom` [Pa s] · `q_adiabat` [W] · `q_adiabat_min` [W] · `q_adiabat_max` [W] ·
+`adiabat_gradient_cmb` [K/km] · `g_cmb` [m/s2] · `k_core` [W/(m K)] · `cmb_jump` [K] · `cmb_flux_verdict` [—] ·
+`q_cmb_in_paper_range` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
+`cmb_temperature` [K] · `core_cmb_temperature_used` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—]
+**분기키** — `body_class`. 암석체만 받습니다(거대행성에는 규산염 하단 경계층이 없습니다). `core_cmb_temperature`
+미선언 → 이름 대며 거절합니다. `core_state` 의 하한 갈래는 핵 쪽 온도를 맨틀 단열선과 같게 두므로 경계층을 몰
+점프가 없습니다. `core_radius` 나 `core_mass_fraction` 이 없어도 거절합니다.
+**등급** — **analog**. Nimmo+ 2004 식 37–39 는 현재 지구에 보정된 것이고, `k_b` 는 `k_t` 와 같은 단계로 도출
+(κ_b ρ_m C_pm = 5.76)했으며, 철 열전도 `k_core` = 50 ± 20 W/(m·K) (Nimmo Table 1, Gaidos+ 2010 의 28–100 안) 는
+물질 메서드가 아니라 **선언**입니다 — 브리프 54 의 k(P,T) 전선 거절은 그대로입니다. γ = 1.5 는 액체 핵에 쓰인
+고체값이라(`core_state` 의 조건) `q_adiabat` 에 실려 옵니다.
+
+`q_cmb` 는 Nimmo 식 37–39 의 하단 경계층입니다. 국소 레일리 수로 δ_b 를 내고, η_b(T_a) = f η₀ exp[−ζ(T_a − T₁)],
+T_a 는 핵 쪽 경계온도와 맨틀 밑 **실온**(식 29 — 포텐셜 온도로 읽으면 논문 자신의 140 km 를 5배 빗나갑니다.
+폐합으로 회수: 144 km / 8.9 TW 대 인쇄 140 km / 9 TW)의 평균입니다. `q_cmb_min/max` 는 ζ ± 0.5 × κ_b ± 2 의 폭.
+`q_adiabat` = 4π r² k |dT/dr| 이고 dT/dr 은 핵 단열선 T ∝ ρ^γ 과 dP/dr = −ρ g_cmb 에서, `q_adiabat_min/max` 는 k 30–70.
+`cmb_flux_verdict` 는 둘 중 어느 쪽이 큰지만 말하며 다이나모 판정은 하지 않습니다(φ 는 다음 단계). `q_cmb_in_paper_range`
+는 Nimmo 의 인쇄 범위 4.5–9 TW 와 비교하며, 엔진 자신의 지구(선언 핵 쪽 3760 K, 단열선 밑 2526 K)는 **밖**(≈ 2.75 TW)에
+떨어지고 조정 없이 보고합니다. `engine/cmb-heat-flux-context-notes.md`.
+
 ## 목차
 
 1. [관계식: T_eff⁴ = T_eq⁴ + T_int⁴](#1-관계식-t_eff--t_eq--t_int)

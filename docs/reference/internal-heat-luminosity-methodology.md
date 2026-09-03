@@ -78,6 +78,32 @@ instead of returning the bracket end. For a tidally heated body the floor is not
 `radiogenic_power_history_4gyr` = H(−4 Gyr)/H(now) is decay physics only; thermal evolution
 (Nimmo+ 2004, not held) is not built, and the edge to `dynamo_rocky` stays a gap.
 
+## Contract — `cmb_heat_flux`
+
+**Returns** — `q_cmb` [W] · `q_cmb_min` [W] · `q_cmb_max` [W] · `cmb_boundary_layer` [km] ·
+`cmb_heat_flux_density` [W/m2] · `eta_bottom` [Pa s] · `q_adiabat` [W] · `q_adiabat_min` [W] · `q_adiabat_max` [W] ·
+`adiabat_gradient_cmb` [K/km] · `g_cmb` [m/s2] · `k_core` [W/(m K)] · `cmb_jump` [K] · `cmb_flux_verdict` [—] ·
+`q_cmb_in_paper_range` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
+`cmb_temperature` [K] · `core_cmb_temperature_used` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—]
+**Discriminating keys** — `body_class`: rocky bodies only (a giant has no silicate bottom boundary layer).
+`core_cmb_temperature` undeclared → refused by name: `core_state`'s lower-bound branch sets the core-side
+temperature equal to the mantle adiabat, so there is no jump to drive a boundary layer. `core_radius` or
+`core_mass_fraction` absent → refused.
+**Grade** — **analog**: Nimmo+ 2004 eqs 37–39 are calibrated at source on present-day Earth; `k_b` is derived
+(κ_b ρ_m C_pm = 5.76, the same step as `k_t`); the iron conductivity `k_core` = 50 ± 20 W/(m·K) (Nimmo Table 1;
+inside Gaidos+ 2010's 28–100) is a **declaration**, not a material method — Brief 54's refusal of a k(P,T) front
+stands; γ = 1.5 is the solid value used on a liquid core (the `core_state` caveat, now riding on `q_adiabat`).
+
+`q_cmb` is Nimmo's eq. 37–39 bottom boundary layer: δ_b from the local Rayleigh number with η_b(T_a) = f η₀ exp[−ζ(T_a − T₁)],
+T_a the mean of the core-side CMB temperature and the mantle's **real** base temperature (eq. 29 — the potential-temperature
+reading misses the paper's own 140 km by 5×; recovered by closure: 144 km / 8.9 TW against the printed 140 km / 9 TW).
+`q_cmb_min/max` span ζ ± 0.5 × κ_b ± 2. `q_adiabat` = 4π r² k |dT/dr| with dT/dr from the core adiabat T ∝ ρ^γ and
+dP/dr = −ρ g_cmb; `q_adiabat_min/max` span k 30–70. `cmb_flux_verdict` says only which is larger — no dynamo statement
+is made here (φ is the next step). `q_cmb_in_paper_range` compares with Nimmo's printed 4.5–9 TW; on the engine's own
+Earth (declared core-side 3760 K, adiabat base 2526 K) it lands **outside** (≈ 2.75 TW) and is reported, not tuned.
+`engine/cmb-heat-flux-context-notes.md`.
+
 ## Table of Contents
 
 1. [The relation: T_eff⁴ = T_eq⁴ + T_int⁴](#1-the-relation-t_eff--t_eq--t_int)

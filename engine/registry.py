@@ -63,6 +63,7 @@ def load_all() -> None:
     import mass_radius   # noqa: F401
     import interior      # noqa: F401
     import core_state    # noqa: F401
+    import cmb_flux      # noqa: F401
     import body_class    # noqa: F401
     import radiogenic    # noqa: F401
     import dynamo_rocky  # noqa: F401

@@ -172,6 +172,17 @@ nodes:
               mantle_temperature_width_zeta, mantle_temperature_width_set,
               mantle_temperature_width_denominator, mantle_temperature_width_surface]
 
+  cmb_heat_flux:
+    kind: computed
+    recipe: internal-heat-luminosity-methodology
+    # 2026-09-03 브리프 60 (오너 승인): 핵-맨틀 경계 열류. Nimmo+ 2004 식 37–39 (맨틀 하단 경계층) 를
+    # 전사하고, 핵 쪽 단열 열류는 선언된 철 열전도 50 ± 20 (Table 1) 로 낸다. 핵 쪽 경계온도는
+    # 선언(core_cmb_temperature)이라 없으면 점프가 없어 이름 대며 거절한다. φ(엔트로피 생성)와
+    # 다이나모 배선은 다음 단계다 — 여기서는 Q_CMB 와 Q_adiabat 만.
+    outputs: [q_cmb, q_cmb_min, q_cmb_max, cmb_boundary_layer, cmb_heat_flux_density, eta_bottom,
+              q_adiabat, q_adiabat_min, q_adiabat_max, adiabat_gradient_cmb, g_cmb, k_core, cmb_jump,
+              cmb_flux_verdict, q_cmb_in_paper_range]
+
   # ── 클래스 표 상수 — 도출값이 아니라 조회값 ─────────────────────
   # 세 문서가 공통으로 인정한다. per-body 기록이 아니라 클래스별 표에서
   # 꺼내는 상수이고, 그런데도 J2·조석고정·조석가열 전부의 뿌리다.
@@ -428,6 +439,12 @@ edges:
   # core_state 는 핵의 압력과 온도를 융해곡선에 대야 한다. 압력은 2026-08-25 부터
   # 있었고 온도가 2026-08-27 에 생겼다. 그래서 이 두 엣지가 이제 선언될 수 있다 —
   # 노드 자체는 아직 미구현이고(status: missing) 융해곡선은 별도 논문이 필요하다.
+  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118", note: "브리프 60. 식 37 의 R 과 단열 열류의 4πr²."}
+  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118"}
+  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:118", note: "식 37 의 T̃_m — 맨틀 단열선이 경계에서 갖는 실온(식 29). 포텐셜 온도가 아니다."}
+  - {from: core_state, to: cmb_heat_flux, kind: requires, via: core_cmb_temperature_used, ref: "internal-heat-luminosity-methodology.md:118", note: "식 37 의 T_c. 선언되지 않으면 하한 갈래라 점프가 0 — 거절."}
+  - {from: mass_or_radius, to: cmb_heat_flux, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언) → g_cmb."}
+  - {from: body_class, to: cmb_heat_flux, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만. 거대행성은 규산염 하단 경계층이 없다."}
   - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: cmb_pressure, ref: "core-state-methodology.md:1"}
