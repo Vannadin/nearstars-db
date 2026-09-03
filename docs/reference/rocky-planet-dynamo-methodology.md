@@ -45,6 +45,14 @@ liquid-iron core:
 
     ℳ ∝ (dynamo scaling of the core buoyancy flux F, core geometry r₀, D)
 
+⚠ **Every value this scaling emits for an exoplanet is an extrapolation, and by how much is stated here.**
+OC06's fit was made on numerical dynamos whose *"model data space covers the ranges 3×10⁻⁶ ≤ E ≤ 10⁻²,
+and 10⁴ ≤ Ra ≤ 1.5×10¹⁰, and also 0.06 ≤ Pm ≤ 24, 0.1 ≤ Pr ≤ 20. In all cases we use r* = 2.85"* (p. 564).
+A planetary core sits near E ~ 10⁻¹² — **six decades below the lowest Ekman number the fit ever saw** — with
+Pm far below 0.06. This is the same shape as the conductivity exponent's case: a narrow instrument's output
+is not a general fact. RM22 apply the laws to the Solar System and recover the observed moments, which is
+what licenses the ladder; it does not shrink the extrapolation, and the recipe's grade (judgment) says so.
+
 OC06 identify four dimensionless controls. The pipeline treats three of them as
 **gates**, because they decide whether a field exists at all and which regime it
 sits in — this is why a rocky field is a *decision ladder*, not one closed form:
