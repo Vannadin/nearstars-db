@@ -65,6 +65,7 @@ Correctness checks live across several functional groups. This index gathers the
 | Phase 3 synthesis policy fit | `nearstars-phase3` audit-pass procedure | [3](#3-phase-3-synthesis-pipeline) | After a synthesis batch — manual, output at `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
 | Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [11](#11-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
 | Phase 4 board schema-v2 / emit-gate conformance | `scripts/check_phase4_gate.py` | [13](#13-phase-4-decision-board-tools) | After every board edit — invoked by `scripts/check.sh` gate 8 |
+| Paper cache: tables the `.md` render lost | `scripts/check_paper_tables.py` | [11](#11-dev-helpers) | On demand, never in `check.sh` — a re-check list (which render was a value read from?), not defects; needs both renders of the gitignored cache |
 
 ## 1. Data engine
 
