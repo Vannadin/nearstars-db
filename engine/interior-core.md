@@ -1993,9 +1993,13 @@ opposite for 10–100 km objects, a class the roster may want."* The owner's jud
   corresponding author upon reasonable request"* (`:219`) — no deposit; not needed, the ranges and anchors are
   printed; **not put on any request list**.
 - **(b) Measure dominance first** (owner: *"측정은 그때 가서"* — not now; first thing when started). Monteux's
-  "major role" is for **10–100 km** bodies; the roster's smallest are Chaos ~400 km (relayed), Dante 521 km
-  and Hades 750 km (`phase4/alpha_centauri.yaml`). Whether the formation pulse is actually dominant for
-  *our* bodies is a measurement: the two held half-lives plus a solar initial ratio give each body's pulse
+  "major role" is for **10–100 km** bodies, and the paper's own planetesimal scan is [1, 100] km with
+  ≳ 30–50 km expected (above); the roster's moons are **400–5724 km** on the committed board
+  (`phase4/alpha_centauri.yaml`, the `moons:` body definitions at main's HEAD: Chaos 400 · Hades 750 · Dante
+  900 · Cassandra 3400 · Pandora 5724 km — Dante is being resized in an uncommitted main working tree, so no
+  judgement here hangs on its value). **That is an order of magnitude above the paper's premise, stated as
+  the premise gap, not as the result** — whether the formation pulse is actually dominant for *our* bodies is
+  still a measurement: the two held half-lives plus a solar initial ratio give each body's pulse
   energy, compared against the long-lived budget — the `ice_x` / ammonia-ceiling template. If it does not
   reach, the refusal stands; if it does, (a)'s paper request and a declaration grid become justified.
 
@@ -2007,6 +2011,68 @@ continuous spectrum**. Following C11 ("the grid is the answer, no pair is electe
 is the owner's decision**, not settled here.
 
 **Start condition.** Not now. Order still P3 → C14.
+
+### C22 — ammonia fraction in the ice-giant mantle — **listed 2026-09-03; step 1 blocked pending a survey**
+
+Owner's decision on P3's C5 question, verbatim (`4b8e06ba`, 09-03): *"1로 하되 조심히 접근하자."* — wire it
+(option 1), carefully. The grounds are already written and are not re-surveyed here:
+`ammonia-table-context-notes.md` §"Grounds for the next decision (not taken)" — **for**: the material is
+grade *table* with its uncertainty carried; the mixing rule already exists in `Mixture`;
+`SOLAR_ICE_MASS_FRACTIONS` is a published default ratio; the mantle's (P, T) is *inside* the table
+(interpolation). **Against / wait**, which become the design constraints below: a water–ammonia mantle is not
+the ternary the field models; the convention caveat touches the adiabat; the table's ceiling is below the
+mantle base; wiring touches a path function.
+
+**"Carefully" as code — two steps.**
+- **Step 1 — wire it with default 0; the anchors do not move.** `ammonia_mass_fraction` becomes a declared
+  argument of the ice-giant layer (the same shape as `mantle_rock_fraction`, C5: mixed in `integrate` at the
+  deep-mantle water-material wrap, `_stack` untouched), default **0.0**, and at 0 the path must be
+  **bit-identical** to today's — that is the step's acceptance test. The bytecode of `integrate`/`solve`
+  changes, so the path fingerprint changes and `test_ice_giant.py --refresh` rides in the same commit; **the
+  refreshed values must equal the old ones bit for bit** — if they do not, the 0 path is not the old path:
+  stop and trace. An opt-in check shows the wiring works: at w_NH₃ = 0.1159 (0.08/(0.08+0.61), Bethkenhagen+
+  2017 §V — the value §113 of the notes already used) the mantle density on §113's eight (P, T) points must
+  move by the −2.9 to −3.5 % that table measured; that table is the prediction, this is the confirmation. A
+  full solve at w > 0 is expected to **refuse by name at the table ceiling** (`Mixture.p_max` is the lowest
+  component's, 333 GPa, against a mantle base of 820–1016 GPa) — the step-2 prerequisite made visible, not a
+  defect.
+- **Step 2 — raise the default to the solar ratio? Later, owner's decision.** Here the anchors move, and one
+  thing has to be decided first (the deep-mantle fallback below).
+
+**Three labels that ride on every value once w > 0** (the "against" items do not disappear):
+1. **Methane asymmetry.** Solar ice composition has methane at **0.31** against ammonia's **0.08**; ammonia
+   alone fixes the small term and leaves the large one as water — not the ternary the field models. Methane
+   is *not built* by C4 (*"decomposes into long-chained molecules"*). Every emitted value says so.
+2. **The table's ceiling is below the mantle base.** ≈ 290–333 GPa at mantle temperatures against a solved
+   mantle base of 820–1016 GPa — **most of the mantle is outside the table.** Step 1's default 0 never hits
+   it; step 2 cannot start without a stated deep-mantle rule (owner's decision, not made here).
+3. **The convention caveat reaches the adiabat.** The internal energy in this edition **includes** the
+   vibrational (nuclear-quantum) correction that the 2017 edition removed; §113 left ∇_ad as *"mechanism
+   named, sign ungrounded"* for that reason. The density side (−2.9 to −3.5 %) is grounded; the thermal side
+   is not. Do not blur them.
+
+**Not done, by instruction**: `SOLAR_ICE_MASS_FRACTIONS` is not switched on as a default (step 2); no
+deep-mantle fallback rule is chosen; methane is untouched; the water side's error is not quantified (§113 takes
+water as the reference).
+
+**⚠ Step 1 is blocked before it started — the owner put two questions ahead of the wiring** (`4b8e06ba`,
+09-03): *"암모니아 고압에서 분해되는지 어케되는지 조사부터 해보자. 메탄 선례 따라가자. 그리고 맨틀보다 위, 저압
+구역에 암모니아가 있을 수는 없나"*. The parallel seat is surveying; **the target layer itself may change**, so
+wiring now could be wasted. Why each question bites:
+- Methane was closed on Bethkenhagen+ 2017 §III, *"Pure methane does not become superionic but instead
+  decomposes into long-chained molecules"*. **If a corresponding sentence exists for ammonia, C22's scope is
+  cut** — that is exactly the precedent the owner named.
+- The low-pressure question meets our own notes: `ammonia-table-context-notes.md` calls the worst interpolation
+  corner *"the low-density dissociation corner"* (ρ 0.5 · 3000 K · 17.3 %), the 5 % flags sit in the same
+  corner, and *"3000 K is where the paper reports its first-order transition … the table does not mark it and
+  the interpolation crosses it"*. Coverage is actually better at low pressure — the table starts at
+  **0.309 GPa** while the mantle base is far outside it — and the envelope's ice is one constant
+  (`ENVELOPE_WATER`, `interior.py:310`), so an envelope wiring would be a single change point.
+- ⚠ **Do not read "low density = low pressure = envelope."** 3000 K is not an envelope temperature; which
+  layer, if any, the survey answers.
+
+**Start condition.** After the survey's result and the owner's reading of it. Pre-registration (branches named)
+is committed before code.
 
 ### P1–P3 — parked, each marked with the C it came from
 
@@ -2052,6 +2118,10 @@ is the owner's decision**, not settled here.
   row reports the measurement and does not judge.** Frozen as a gate row in `test_interior.py` (static check +
   positive control + zero fires on the two frozen ice-giant standalone integrations, ≈1 s) so the day someone
   wires ammonia into a layer, the row rings and the ceiling reach is re-measured under C6.
+  **Gate on `bd81b237` (P3 ①②③ · C20 · C21, five commits): FAIL 0, 457 PASS, 19:18:41 → 19:40:01 = 1280 s** —
+  +12 s on Brief 64's 1268 s, of which the new row is 0.81 s measured; the rest is run-to-run noise.
+  **P3 is now an owner decision** (C5: wire it or retire it) — and the owner took it the same evening:
+  see C22.
 
 ## What closing all of these does not do
 
