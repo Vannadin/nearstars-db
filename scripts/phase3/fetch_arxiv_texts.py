@@ -19,7 +19,9 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import glob
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -92,6 +94,18 @@ def _format_table(tag: Tag) -> str:
     return "\n".join(md)
 
 
+def _format_table_float(tag: Tag) -> str:
+    """표 float → 캡션 한 줄 + 본문. 2026-09-03 브리프 49 까지 캡션은 어디서도 나오지 않았다 — 캐시
+    .md 1588 개 중 'Table N:' 이 있는 파일이 11 개였고 전부 산문 언급이었다. 표가 무엇인지는 캡션이
+    말하므로 본문 앞에 붙인다."""
+    body = _format_table(tag if tag.name == "table" else (tag.find("table") or tag))
+    if not body:
+        return ""
+    cap = tag.find(class_="ltx_caption") if tag.name != "table" else None
+    head = f"**{_text_only(cap)}**\n\n" if cap else ""
+    return head + body
+
+
 def _format_figure(tag: Tag) -> str:
     """figure 의 caption 만 추출 (이미지 자체는 못 봄)."""
     cap = tag.find("figcaption")
@@ -126,9 +140,11 @@ def html_to_markdown(html: str) -> str:
         for p in abstract.find_all(class_="ltx_p"):
             out.append(_text_only(p) + "\n")
 
-    # 본문: 섹션 단위로 walk
+    # 본문: 섹션 단위로 walk. 2026-09-03 브리프 49: ltx_appendix 도 걷는다 — 빠져 있어서 RM22
+    # (2203.01065) 의 부록 표 7–10 (다이나모 사다리의 앵커 Table 8 포함) 이 .md 에서 사라졌다.
+    emitted_floats: set[int] = set()   # 섹션 패스에서 낸 표 float 의 id() — 아래 스윕의 중복 방지
     for sec in article.find_all(class_=["ltx_section", "ltx_subsection",
-                                         "ltx_subsubsection"], recursive=True):
+                                         "ltx_subsubsection", "ltx_appendix"], recursive=True):
         if _is_skip_class(sec):
             continue
         # 헤더 레벨
@@ -155,20 +171,74 @@ def html_to_markdown(html: str) -> str:
                 for p in child.find_all(class_="ltx_p"):
                     out.append(_text_only(p) + "\n")
             elif child.name == "table" or "ltx_table" in cls:
-                md = _format_table(child if child.name == "table"
-                                   else child.find("table") or child)
+                md = _format_table_float(child)
                 if md:
                     out.append("\n" + md + "\n")
+                    emitted_floats.add(id(child))
             elif child.name == "figure" or "ltx_figure" in cls:
                 cap = _format_figure(child)
                 if cap:
                     out.append("\n" + cap + "\n")
+
+    # 2026-09-03 브리프 49: 걷은 섹션의 직계 자식이 아닌 표 float 를 스윕한다. Seager+ 2007 (0707.2895)
+    # 은 네 표를 모두 article 직속에 두어 위 워커가 하나도 닿지 않았다 — eos.py 의 fe_eps · mgsio3_en
+    # 적합의 출처다. 중복 방지는 부모 클래스가 아니라 객체 동일성(id) 이다.
+    stray = [fl for fl in article.find_all(class_="ltx_table")
+             if id(fl) not in emitted_floats and not _is_skip_class(fl)]
+    if stray:
+        out.append("\n## Tables not reached by the section walk\n")
+        for fl in stray:
+            md = _format_table_float(fl)
+            if md:
+                out.append("\n" + md + "\n")
 
     text = "\n".join(out)
     # 공백 정리: 연속 빈 줄 1개로
     while "\n\n\n" in text:
         text = text.replace("\n\n\n", "\n\n")
     return text.strip() + "\n"
+
+
+# ── regeneration (2026-09-03, 브리프 49) ─────────────────────────────────────────
+# 캐시된 HTML 에서 .md 를 다시 뽑는다. 네트워크 없음. 두 가드가 있고 둘 다 사고에서 왔다:
+# (1) ar5iv 렌더가 아닌 HTML (arxiv.org 초록 페이지, 검색 페이지, 봇 차단 페이지) 은 건너뛴다 —
+#     그 .md 는 사람이 PDF 에서 뽑아 만든 것이고, 재생성하면 제목 한 줄이 된다 (실제로 다섯 개가
+#     그렇게 됐다가 백업에서 복원됐다).
+# (2) .md 머리말에 수동 작업 표식이 있으면 건너뛴다 — 같은 이유.
+MANUAL_SIGNATURE = re.compile(r"PDF-extracted|pdftotext|render failed|manually (?:extracted|transcribed|assembled)|hand-made", re.I)
+
+
+def _is_ar5iv_render(html: str) -> bool:
+    return "ltx_document" in html or "ltx_page_main" in html
+
+
+def regenerate_markdown(papers_dir: str) -> dict:
+    """모든 <id>.html 에 대해 <id>.md 를 다시 쓴다 (가드 둘 적용). 무엇을 했는지 센다."""
+    stats = {"rewritten": 0, "unchanged": 0, "skipped_non_ar5iv": 0, "skipped_manual": 0, "grew": 0, "shrank": 0}
+    for html_path in sorted(glob.glob(os.path.join(papers_dir, "*.html"))):
+        md_path = html_path[:-5] + ".md"
+        with open(html_path, encoding="utf-8", errors="ignore") as f:
+            html = f.read()
+        if not _is_ar5iv_render(html):
+            stats["skipped_non_ar5iv"] += 1
+            continue
+        old = None
+        if os.path.exists(md_path):
+            with open(md_path, encoding="utf-8") as f:
+                old = f.read()
+            if MANUAL_SIGNATURE.search("\n".join(old.split("\n")[:12])):
+                stats["skipped_manual"] += 1
+                continue
+        new = html_to_markdown(html)
+        if old == new:
+            stats["unchanged"] += 1
+            continue
+        if old is not None:
+            stats["grew" if len(new) > len(old) else "shrank"] += 1
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(new)
+        stats["rewritten"] += 1
+    return stats
 
 
 # ── main loop ────────────────────────────────────────────────────────────────
@@ -226,7 +296,15 @@ def main():
                         help="Stop after N fetches (debug)")
     parser.add_argument("--force-refetch", action="store_true",
                         help="Refetch even if HTML on disk exists")
+    parser.add_argument("--regenerate-md", action="store_true",
+                        help="No network: rewrite every .md from its cached ar5iv .html (skips non-ar5iv "
+                             "pages and manually made .md files). The bibliography argument is ignored.")
     args = parser.parse_args()
+
+    if args.regenerate_md:
+        stats = regenerate_markdown(PAPERS_DIR)
+        print(f"[Phase 3] regenerated markdown in {PAPERS_DIR}: " + ", ".join(f"{k} {v}" for k, v in stats.items()))
+        return
 
     with open(args.bibliography) as f:
         data = yaml.safe_load(f)
