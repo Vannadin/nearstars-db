@@ -32,8 +32,12 @@ Verbatim from `main.tex:494–499` (여기):
 
 Elemental concentrations in the same table: **Earth (1)** K 260 ppm / Th 85 ppb / U 22 ppb
 (Palme & O'Neill 2014, chondritic); **Earth (2)** 130 / 43 / 11 (O'Neill & Palme 2008,
-non-chondritic); geoneutrino total **25.5–51.8 TW** (Agostini 2019 — the table prints the range,
-not a central value). The **appendix** (`main.tex:420`) uses **K 260 ppm, U 23 ppb, Th 85 ppb →
+non-chondritic); geoneutrino total **25.5–51.8 TW** in the draft table; the **published** text (`main.tex:261`, also in
+the PDF) gives it as **38.2 +13.6/−12.7 TW total and 24.6 +11.1/−10.4 TW mantle** (Borexino, Agostini
+2019) — cite the published interval, not the unpublished range. *Correction (work seat): my first report
+said "38.2 is not printed in main.tex". It is. My grep matched line 261 and the terminal `cut` truncated
+the line before the number — a query whose output was clipped returned a clean, confident, wrong
+negative. Same family as the extraction-mode line numbers and the count without its rule.* The **appendix** (`main.tex:420`) uses **K 260 ppm, U 23 ppb, Th 85 ppb →
 "22 TW of heat production at the present day"**.
 
 **The closure (여기, with BSE mass 4.0×10²⁴ kg — a declared standard value, not from this paper):**
@@ -144,4 +148,12 @@ Nimmo+ 2004 not held). `check_via --gate`: 85 via-edges, 16 mismatches = 8 allow
 Path fingerprint unchanged.
 
 **Tooltip** (`radiogenic_heat_w_m2`) now carries the 22 TW radiogenic / 42–47 TW total pair with the
-geoneutrino range as the contested side; Sclater 1980 and Davies 2010 leave the paper-request list.
+published geoneutrino interval (38.2 +13.6/−12.7 TW total, 24.6 +11.1/−10.4 TW mantle) as the contested
+side; Sclater 1980 and Davies 2010 leave the paper-request list.
+
+**Checked on request — does the methodology state its 35 K as total or ambiguously?** Lines 221 and 335
+compute it explicitly from **0.087 W/m²**, the total, and line 192 says *"roughly half radiogenic, half
+secular"* — stated as total, correctly. **One ambiguous line**: `internal-heat-luminosity-methodology.md:348`
+reads *"radiogenic-dominated at the Earth scale (~0.08 W/m², T_int ~ 35 K)"* — 0.08 W/m² is the total,
+and "radiogenic-dominated" over a 50/50 split is the tooltip's disease in softer form. Flagged, not edited
+(it is a qualitative word in a doc with a ko mirror; the directing seat's call).
