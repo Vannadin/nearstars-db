@@ -73,6 +73,13 @@ def main() -> int:
        "4: the label must say the set/split are declared and the table is an unpublished draft")
     giant = rg.solve(120.0, None, 11.2, "giant", 5.3)
     ok(not giant.applicable and "냉각광도" in giant.reason, "4: a giant must refuse by name (cooling luminosity)")
+    # 얼음체 (감사, 44 후속 ①): 얼음 맨틀은 규산염이 아니다 — 같은 질량의 암석체 대비 예산이 규산염 분율만큼 준다
+    icy = rg.solve(0.025, 0.10, 0.38, "icy", 4.5, ice_mass_fraction=0.40)
+    rocky_same_mass = rg.solve(0.025, 0.10, 0.38, "rocky", 4.5, ice_mass_fraction=0.0)
+    ok(icy.applicable and abs(icy.values["radiogenic_power"] / rocky_same_mass.values["radiogenic_power"] - 0.50 / 0.90) < 1e-9,
+       "4: a 40 % ice body must carry (1 − 0.10 − 0.40)/(1 − 0.10) of the same-mass rocky budget")
+    absurd = rg.solve(0.025, 0.60, 0.38, "icy", 4.5, ice_mass_fraction=0.50)
+    ok(not absurd.applicable and "규산염 질량분율" in absurd.reason, "4: core 0.6 + ice 0.5 must refuse by name, not go negative")
     no_cmf = rg.solve(0.6, None, 0.9, "rocky", 5.0)
     ok(not no_cmf.applicable and "core_mass_fraction" in no_cmf.reason, "4: undeclared core_mass_fraction must refuse by name")
 
@@ -81,7 +88,7 @@ def main() -> int:
     if not fails:
         print(f"  [PASS] 방사성 예산 — 폐합 3세트(≤ 2.1 %) · 캡션 오독 {initial_read:.2f} TW · 과거 배율 {past:.2f} "
               f"(순방향 {fwd:.2f}, ²³⁵U 없이 {no_u235:.2f}) · 지구 {earth.values['radiogenic_power'] / 1e12:.2f} TW, "
-              f"t_int(방사성만) {earth.values['t_int']:.1f} K · 거대행성·핵질량분율 미선언 거절")
+              f"t_int(방사성만) {earth.values['t_int']:.1f} K · 얼음체 규산염만 · 거대행성·핵질량분율 미선언 거절")
     return 1 if fails else 0
 
 

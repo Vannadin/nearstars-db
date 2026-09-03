@@ -36,8 +36,8 @@
 **Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
 `crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
 `radiogenic_power_history_4gyr` [—]
-**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `radius_earth` [R_earth] ·
-`body_class` [—] · `age_gyr` [Gyr]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
+`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr]
 **분기키** — `body_class`. 암석체는 현재값 방사성 예산을 받고, 거대행성·서브넵튠·갈색왜성·항성은
 거절합니다. 그쪽 내부열은 냉각광도 L(M, age) 이고 이 레시피는 검증 안 된 냉각 궤적을 대지 않습니다
 (`dynamo.py` 와 같은 거절). `core_mass_fraction` 미선언 → 거절(농도를 걸 규산염 질량이 없음).
@@ -293,7 +293,7 @@ Neptune류 `T_int ~ 45–50 K`를 취하면 §1은 `T_eff = (40⁴ + 48⁴)^(1/4
 *내부* 결말이다. **암석 교훈은, `T_eff` 증분이 아니라 수지(~0.08–0.09 W/m², 절반/절반)와 그 내부 결과(화산활동,
 탈가스, 다이나모)를 보고하라는 것이다.** **도출/calibration**(측정된 수지).
 
-**NearStars 암석 바디(Proxima b / Proxima d: 방사성 지배, 관건은 화산활동과 다이나모).** M 왜성을 도는
+**NearStars 암석 바디(Proxima b / Proxima d: 방사성과 잔열이 비슷한 몫, 관건은 화산활동과 다이나모).** M 왜성을 도는
 온대~온난 암석 행성이라면 내부열은 **지구 규모(총 ~0.08 W/m², `T_int ~ 35 K`)**에서 방사성과 잔열이 비슷한 몫이고 따라서
 **표면온도에는 무관**하다. `T_eff ≈ T_eq`다(이런 세계는 전적으로 §1의 복사 지배 영역에 산다). 내부열이 *정하는*
 것은 바디가 지질학적으로 살아 있는지다. 충분한 내부열 → 맨틀 대류 → **화산 탈가스**(2차 대기의 Gate 3 공급)와

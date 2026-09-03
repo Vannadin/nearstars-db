@@ -32,7 +32,16 @@ from payload import Result, out_of_domain
 
 RECIPE = "internal-heat-luminosity-methodology"
 VERSION = "1"
-REFS = ("2020ApJ...903L..37N",)     # Nimmo & Primack 2020, ApJL 903, L37 (draft table + appendix)
+REFS = (
+    "2020ApJ...903L..37N",     # Nimmo & Primack 2020, ApJL 903, L37 — the appendix (22 TW, 70 %) is in
+                               # the paper; the four constants are in its UNPUBLISHED draft table only
+    # The constants are standard nuclear data; **the canonical tabulation is not held.** Read from
+    # N&P's draft table and closure-checked against that table's own totals — which certifies the
+    # transcription, not the constants (the authors computed those totals from the same numbers).
+    # Candidate standard source, named from memory and NOT read (on the request list):
+    # Ruedas 2017, Geochem. Geophys. Geosyst. — radioactive heat production of the long-lived nuclides.
+    "standard-nuclear-data (not held; see engine/radiogenic-budget-context-notes.md §5)",
+)
 
 SIGMA_SB = 5.670374419e-8            # W m⁻² K⁻⁴
 M_EARTH_KG = 5.972e24
@@ -102,8 +111,10 @@ GIANT_CLASSES = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf"
 
 
 def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: float | None,
-          body_class: str | None, age_gyr: float | None) -> Result:
+          body_class: str | None, age_gyr: float | None,
+          ice_mass_fraction: float = 0.0) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction,
+              "ice_mass_fraction": ice_mass_fraction,
               "radius_earth": radius_earth, "body_class": body_class, "age_gyr": age_gyr}
     if body_class in GIANT_CLASSES:
         return out_of_domain(
@@ -116,10 +127,17 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
             RECIPE, VERSION,
             "core_mass_fraction 이 선언되지 않아 규산염 질량을 잡을 수 없다 — 농도를 걸 조성이 없다. "
             "기본값을 넣지 않는다.", inputs=inputs, refs=REFS)
-    silicate_kg = mass_earth * M_EARTH_KG * (1.0 - core_mass_fraction)
-    if silicate_kg <= 0.0:
-        return out_of_domain(RECIPE, VERSION, "규산염 질량이 0 이다 — 방사성 예산을 걸 곳이 없다.",
-                             inputs=inputs, refs=REFS)
+    # 농도는 **벌크 규산염 1 kg 당** 이다. 핵도 얼음도 규산염이 아니므로 둘 다 뺀다 — 얼음 질량분율을
+    # 빼지 않으면 얼음 위성의 얼음 맨틀이 규산염으로 세어져 예산이 ~2배가 된다 (감사, 브리프 44 후속 ①;
+    # 브리프 39 의 '다른 층의 온도' 와 같은 병인데 여기서는 빼는 값이 있어 거절 대신 고친다).
+    imf = ice_mass_fraction or 0.0
+    silicate_frac = 1.0 - core_mass_fraction - imf
+    if silicate_frac <= 0.0 or core_mass_fraction < 0.0 or imf < 0.0:
+        return out_of_domain(
+            RECIPE, VERSION,
+            f"규산염 질량분율이 {silicate_frac:.3f} 다 (1 − 핵 {core_mass_fraction} − 얼음 {imf}) — "
+            "방사성 예산을 걸 규산염이 없거나 분율 선언이 어긋났다.", inputs=inputs, refs=REFS)
+    silicate_kg = mass_earth * M_EARTH_KG * silicate_frac
     b = budget(silicate_kg, DEFAULT_SET)
     b_low = budget(silicate_kg, LOW_SET)
     r_m = (radius_earth or 0.0) * R_EARTH_M
@@ -127,7 +145,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
     t_int = (flux / SIGMA_SB) ** 0.25 if flux else None
     hist = history_factor(-4.0)
     notes = (
-        f"방사성 예산 (현재값): 규산염 질량 {silicate_kg:.3e} kg (= 질량 × (1 − 핵질량분율), 도출) × "
+        f"방사성 예산 (현재값): 규산염 질량 {silicate_kg:.3e} kg (= 질량 × (1 − 핵질량분율 {core_mass_fraction} "
+        f"− 얼음질량분율 {imf}), 도출) × "
         f"Earth (1) 콘드라이트 농도(K 260 ppm · Th 85 ppb · U 22 ppb, Palme & O'Neill 2014) → 총 "
         f"{b['total_w'] / 1e12:.2f} TW; 맨틀 몫 70 % = {b['mantle_w'] / 1e12:.2f} TW, 지각 30 % = "
         f"{b['crust_w'] / 1e12:.2f} TW. **농도 세트와 70/30 은 선언이다** (Earth (2) 비콘드라이트 세트로는 "
@@ -140,7 +159,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
         "미보유)의 몫이라 dynamo_rocky 로는 배선하지 않는다.",
         "소비처 둘(interior_layers 의 포텐셜 온도, core_state 의 핵 쪽 경계 온도)은 이 예산을 받되 **여전히 "
         "선언한다** — 예산을 온도나 경계층 열류로 바꾸는 것은 이 레시피가 갖지 않은 열 모형이다.",
-        (f"t_int {t_int:.1f} K 는 **방사성만** 의 값이다 (F = {flux:.4f} W/m²). 방법론 §1 의 '지구 ≈ 35 K' 는 "
+        (f"t_int {t_int:.1f} K 는 **방사성만** 의 값이다 (F = {flux:.4f} W/m², R = {radius_earth:.4f} R⊕ — "
+         "interior_layers 의 도출 반지름이 있으면 그것, 없으면 선언된 radius_earth). 방법론 §1 의 '지구 ≈ 35 K' 는 "
          "총 표면 열류 0.087 W/m²(방사성 + 잔열)로 계산한 것이라, 잔열을 갖지 않은 이 값은 그 하한이다."
          if t_int else "반지름이 없어 표면 flux 와 t_int 를 내지 않는다."),
     )
@@ -167,4 +187,5 @@ def _from_state(state):
                  core_mass_fraction=state.get("core_mass_fraction"),
                  radius_earth=state.get("radius", state.get("radius_earth")),
                  body_class=state.get("body_class"),
-                 age_gyr=state.get("age_gyr"))
+                 age_gyr=state.get("age_gyr"),
+                 ice_mass_fraction=state.get("ice_mass_fraction", 0.0))

@@ -39,8 +39,8 @@ non-negligible, see that doc).
 **Returns** — `l_int` [W] · `t_int` [K] · `radiogenic_power` [W] · `mantle_radiogenic_power` [W] ·
 `crust_radiogenic_power` [W] · `radiogenic_power_low` [W] · `radiogenic_heat_w_m2` [W/m2] ·
 `radiogenic_power_history_4gyr` [—]
-**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `radius_earth` [R_earth] ·
-`body_class` [—] · `age_gyr` [Gyr]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
+`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr]
 **Discriminating keys** — `body_class`: rocky bodies get the present-day radiogenic budget; giant,
 sub-Neptune, brown-dwarf and stellar classes are refused, because their internal heat is the cooling
 luminosity L(M, age) and this recipe does not supply an unverified cooling track (the same refusal
@@ -343,7 +343,7 @@ outcome. **The rocky lesson: report the budget (~0.08–0.09 W/m², ~half/half) 
 interior consequences (volcanism, outgassing, dynamo), not a `T_eff` bump.** **Derived /
 calibration** (measured budget).
 
-**A NearStars rocky body (Proxima b / Proxima d: radiogenic-dominated, the question is
+**A NearStars rocky body (Proxima b / Proxima d: radiogenic and secular in comparable measure, the question is
 volcanism & dynamo).** For a temperate-to-warm rocky planet around an M dwarf, internal heat
 is radiogenic and secular in comparable measure at the **Earth scale (~0.08 W/m² total, `T_int ~ 35 K`)** and therefore
 **irrelevant to the surface temperature**: `T_eff ≈ T_eq` (these worlds live entirely in
