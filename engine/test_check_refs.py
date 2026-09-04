@@ -173,6 +173,27 @@ def main() -> int:
         ok(rc == 1 and "no edges" in buf.getvalue(),
            f"shape: a chain.yaml without its expected keys must fail, got rc={rc}\n{buf.getvalue()}")
 
+        # a citation form nobody taught the checker must fail, not vanish: `<doc>.md:Contract` sat in no
+        # bucket at all — not an anchor, not a line number, not a whole-document ref — and the run was
+        # green. A file name followed immediately by `:` or `@` is a pointer into that file and must
+        # land in a known form. Prose that merely names a file, and `module.py::symbol`, are not.
+        (root / "engine" / "chain.yaml").write_text(
+            "edges:\n"
+            '  - {from: a, to: b, ref: "synthetic-methodology.md:Contract"}\n'
+            '  - {from: a, to: b, note: "synthetic-methodology.md: a file named in prose"}\n'
+            '  - {from: a, to: b, note: "cited.py::some_symbol names a symbol, not a place"}\n',
+            encoding="utf-8")
+        check_refs.SCAN = (("engine/chain.yaml",),)
+        check_refs.CACHE.clear()
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            rc = check_refs.main()
+        out = buf.getvalue()
+        ok(rc == 1 and "알 수 없는 인용 형식" in out and ":Contract" in out,
+           f"unknown: an unrecognised citation form must fail by name, got rc={rc}\n{out}")
+        ok(out.count("알 수 없는 인용 형식") == 1,
+           f"unknown: prose naming a file and `py::symbol` must not be read as citations, got:\n{out}")
+
         # a sentence-length anchor across the document's hard wrap
         (root / "docs" / "reference" / "wrapped-methodology.md").write_text(
             "# Wrapped\n\nThe transport test must land inside the measured band, and\n"
@@ -210,7 +231,8 @@ def main() -> int:
         return 1
     print("  [PASS] 인용 체커 자기검증 — 고유 1회 통과 · 삭제된 구절 썩음 · 2회 매치 애매 · 남의 계약 블록 착지 · "
           "빈 줄 착지 · 줄번호는 미이행 카운트 · RECIPE 자기문서 해석 · 대문자 파일명 · bodies 스캔 · "
-          "비-.md 대상 · 접힌 인용 · 문서명만 계수 · YAML 파싱 실패 FAIL · 키 상실 FAIL · 주석 안 인용 · 하드랩 앵커")
+          "비-.md 대상 · 접힌 인용 · 문서명만 계수 · YAML 파싱 실패 FAIL · 키 상실 FAIL · 주석 안 인용 · 하드랩 앵커 · "
+          "알 수 없는 형식 FAIL")
     return 0
 
 

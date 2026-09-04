@@ -72,6 +72,16 @@ EDGE = re.compile(r"from: ([a-z_]+), to: ([a-z_]+)")
 # pinned by the edge's own `via:`), but it aims at nothing inside the file, so it is counted and
 # printed as its own class rather than passing invisibly.
 WHOLE = re.compile(rf'"({FILE})"')
+# Everything that POINTS INTO a file: a file name immediately followed by `:` or `@`. Every one of
+# these must fall into one of the known forms; one that does not is a citation form nobody taught the
+# checker, and the checker must say so rather than skip it. Three arrived that way — `<doc>.md:Contract`
+# — and sat in no bucket at all: not an anchor, not a line number, not a whole-document ref, absent
+# from the report, gate green. That is the same failure as the unparseable YAML and the citation in a
+# comment: the checker not saying that it did not look.
+# "points into" means the colon is followed immediately by the target — `foo.md:123`, `foo.md:Contract`,
+# `foo.md@«…»`. A colon followed by a space is prose introducing a file ("chain.yaml: outputs rewritten"),
+# and `module.py::function` names a symbol, not a place; neither is a citation.
+POINTER = re.compile(rf"({FILE})(?::(?![\s:])|@)")
 
 SCAN = (("engine/chain.yaml",), ("engine/bindings.yaml",), ("engine/bodies/*.yaml",),
         ("engine/*.py",), ("engine/tools/*.py",), ("engine/*.md",),
@@ -275,6 +285,7 @@ def main() -> int:
     external = 0                        # citations into a paper's own source, outside this repo
     unaimed: list[str] = []             # ⑤ whole-document refs: legitimate, but aimed at nothing inside
     preserved = 0                       # citations inside verbatim notes: the record, not a migration target
+    unknown: list[str] = []             # pointers into a file that match no known citation form
     shared: dict[tuple[str, str], list[tuple[str, list[str]]]] = {}   # anchor → the edges that share it
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
     warned: list[str] = []              # rule 3: a landing that moves easily but may well be meant
@@ -288,6 +299,9 @@ def main() -> int:
         mine = own_doc(path)
         ends: tuple[str, str] = ("", "")
         raw_lines = text(path).splitlines()
+        # value → the endpoints of each edge that uses it, in document order: two edges can carry the
+        # same ref, and collapsing them would evaluate the second against the first one's endpoints.
+        by_value: dict[str, list[tuple]] = {}
         units = []
         if path.suffix in (".yaml", ".yml"):
             try:
@@ -302,6 +316,10 @@ def main() -> int:
             for label, e, val, vias in parsed:
                 if not any(val in line for line in raw_lines):
                     units.append((f"{rel} {label} (folded)", e, val, vias))
+                # An edge written as a block mapping puts `from:`, `to:` and each ref on separate
+                # lines, so a regex over the citing line sees no endpoints and would inherit the last
+                # flow-style edge's — a false contract-owner mismatch. The parsed value knows them.
+                by_value.setdefault(val, []).append((e, vias))
         ends_seen: tuple[str, str] = ("", "")
         for i, line in enumerate(raw_lines, 1):
             m = EDGE.search(line)
@@ -321,6 +339,8 @@ def main() -> int:
                     rotten.append(f"{where0}: doc @«{m.group(1)[:50]}» — a bare `doc` citation in a file "
                                   f"that declares no RECIPE; name the document")
             for doc, phrase in hits:
+                queue = by_value.get(f"{doc}@«{phrase}»")
+                ends = queue.pop(0)[0] if queue else ends
                 why, n = resolve(doc, phrase, path)
                 where = f"{where0}: {doc}@«{phrase[:60]}»"
                 if why:
@@ -348,8 +368,16 @@ def main() -> int:
                     else:
                         whole += 1
                         unaimed.append(f"{where0}: {m.group(1)} — cites the whole document")
+            classified = {m.start() for m in ANCHOR.finditer(line)}
+            classified |= {m.start() for m in LINE_REF.finditer(line)}
+            for m in POINTER.finditer(line):
+                if m.start() not in classified:
+                    unknown.append(f"{where0}: {line[m.start():m.start() + 60].strip()} — a citation form "
+                                   f"this checker does not know; it was counted in no bucket")
             for m in LINE_REF.finditer(line):
-                unmigrated.append((where0, m.group(1), m.group(2), path, ends))
+                queue = by_value.get(f"{m.group(1)}:{m.group(2)}")
+                unmigrated.append((where0, m.group(1), m.group(2), path,
+                                   queue.pop(0)[0] if queue else ends))
             for m in SELF_LINE.finditer(line):
                 if mine:
                     unmigrated.append((where0, mine, m.group(1), path, ends))
@@ -388,7 +416,8 @@ def main() -> int:
           f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 보존 노트 인용 {preserved}건 · "
           f"미이행 줄번호 {len(unmigrated) - external - preserved}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous),
-                        ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead)):
+                        ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead),
+                        ("알 수 없는 인용 형식", unknown)):
         for r in rows:
             print(f"  [FAIL] {label} — {r}")
     for (doc, phrase), users in sorted(shared.items()):
@@ -416,7 +445,7 @@ def main() -> int:
                 print(f"  [미이행] {where}: {doc}:{loc} — lands on {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
         print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")
-    bad = len(rotten) + len(ambiguous) + len(mismatched) + len(dead)
+    bad = len(rotten) + len(ambiguous) + len(mismatched) + len(dead) + len(unknown)
     if bad:
         print(f"[FAIL] 인용 {bad}건이 해석되지 않는다")
         return 1

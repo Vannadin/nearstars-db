@@ -565,7 +565,7 @@ edges:
       per-body 값을 내기 시작한 뒤에도 소비처가 표를 계속 봤다 — 더 나은 수가 옆에서
       안 쓰인 채로 있었다는 뜻이다. 클래스 표는 적분이 거절하는 클래스에만 남는다.
     ref:
-      - "interior-structure-methodology.md:Contract"
+      - "interior-structure-methodology.md@«## Contract — `interior_layers`»"
       - "body-figure-methodology.md@«3. Pick NMoI from the body class (giant 0.20–0.26; rocky 0.30–0.36; star 0.05–0.08)»"
   - from: interior_layers
     to: cassini_state
@@ -575,7 +575,7 @@ edges:
       body_figure 와 같은 양을 같은 곳에서 받는다. 한쪽만 적분으로 옮기면 하나의
       C/MR² 에 공급자가 둘이 되고, 그게 이미 한 번 사고를 낸 모양이다.
     ref:
-      - "interior-structure-methodology.md:Contract"
+      - "interior-structure-methodology.md@«## Contract — `interior_layers`»"
       - "cassini-state-obliquity-methodology.md@«- **J₂** and, for locked bodies, **C̄₂₂**  · **C/MR²** (body class) · **spin ω** (= n if synchronous) and **mean motion n** · **e, a, host mass M⋆**.»"
 
   # ── figure · 자전 ──────────────────────────────────────────────
@@ -832,7 +832,7 @@ edges:
       걸려 있어서 문서 §7 의 기각 사례가 재현되지 않았다. 이제 반지름도 순철 곡선도
       interior_layers 의 적분에서 나온다.
     ref:
-      - "interior-structure-methodology.md:Contract"
+      - "interior-structure-methodology.md@«## Contract — `interior_layers`»"
   - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md@«- [mass-radius-relation-methodology](mass-radius-relation-methodology.md): internal heat **inflates the»"}
   - {from: internal_heat_nontidal, to: t_eff_body, kind: requires, via: t_int, ref: "internal-heat-luminosity-methodology.md@«⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴»"}
   - {from: t_eq_stellar, to: t_eff_body, kind: requires, textbook: true, ref: "internal-heat-luminosity-methodology.md@«⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴»"}

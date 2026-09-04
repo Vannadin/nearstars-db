@@ -62,7 +62,7 @@ def load(slug: str) -> dict:
 
 
 def slugify(name: str) -> str:
-    """Match scripts/phase3/build_bibliography.py:slugify exactly."""
+    """Match scripts/phase3/build_bibliography.py::slugify exactly."""
     import re
     s = name.lower().strip()
     s = re.sub(r"[^a-z0-9]+", "-", s)
