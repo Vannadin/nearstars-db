@@ -400,11 +400,86 @@ one history at h = 4 Myr; the discriminator named in advance was the inner core 
 Outcome **Ⓑ, with a sized residual**: the two conventions close **70 %** of the Q_M gap to his 41.8 (9.5 of 13.5 TW)
 and **76 %** of the T_m gap (67 of 88 K); ~4 TW / ~20 K remain (third, smaller cause — the adiabat ratio 1.579 vs
 1.69 and R_p are the sized candidates, untested). **The inner core still never appears, and T_c ends 150 K below
-his 4 155 K on every convention.** So the heat budget is (mostly) the conventions; **the core side is not** — C14's
-finding that closing the loop removes Earth's inner core is now **independent of the mantle conventions**. It says
-only that the cause is not on the mantle side: the core-side differences (our `fe_prem` melting curve vs his
-T_m0-anchored eq. 40 curve, θ 0.11; our Q_C 5 TW vs his 9 TW at present; γ) remain the candidates, and the C14
-question ("whose inner core is wrong — the model's or Earth's") stays open where it was. The "package" hypothesis
+his 4 155 K on every convention.** So the heat budget is (mostly) the conventions and the core side is not — the
+mantle conventions do not reach it. **The promotion written here at 12:40 ("C14's finding is now independent of
+the conventions") was reversed the same afternoon by the next diagnostic** — see "Melting curve" below: the
+inner core's absence is the light-element depression factor, a declaration, not a consequence of closing the
+loop. Q_C 5.2 vs his 9.0 TW is the core-side number the table leaves as the next question (it moves 2 % across
+the conventions while Q_M moves 70 %, and it is what drives the entropy budget) — *not* a claim that 9 TW would
+turn ΔE positive.
+
+**Melting curve — the diagnostic that demotes C14's finding (pre-registered Ⓧ/Ⓨ/Ⓩ, `scratchpad/c14-melting-curve-prereg.txt`;
+one evaluation, no integration).** At ICB pressures Nimmo's eq. 40 (θ = 0.11) is **~540 K hotter** than `fe_prem`
+(330 GPa: 5 621 vs 5 074 K). Our adiabat at the C20 T_c 4 027 K (centre 358 GPa, 5 672 K) does not meet our curve
+and **does meet his — at 277 GPa, an inner core of ≈ 2 000 km** (Earth's is 1 220; at his own T_c 4 155 our
+adiabat only grazes his curve, so the crossing is extremely sensitive there). **Ⓧ**: "closing the loop removes
+Earth's inner core" is **demoted** to "our melting curve is colder than his". Provenance sharpens it further: the
+pure-iron curves agree (Zhang+ 2015 Simon fit 6 342 K vs Alfè+ 2002's 6 300 ± 300 K at 330 GPa); the whole gap is
+the **light-element depression** — ours ×0.80 (`IRON_LIGHT_ELEMENT_FACTOR`, a declared convention of
+thermal-evolution models, checked against Sinmyo+ 2019's measured ICB 5 120 ± 390 K at −0.12 σ), his ×0.89 (Alfè
+2002b's ab initio 700 ± 100 K for 8 mol % S/Si). Sinmyo's measurement sits on our curve and 1.3 σ below his. The decomposition the directing seat asked for (pure-iron
+anchor vs depression) therefore lands on **Ⓟ, not Ⓠ**: the pure-iron anchor is not low — three sources agree
+at the ICB (Zhang+ 2015 fit 6 342 K; Alfè+ 2002 6 300 ± 300 K; Anzellini+ 2013 via Mori+ 2017 `2017E&PSL.464..135M`,
+secondary: Fe–Fe₃S eutectic ≈ 4 100 K at the ICB is *"about 2000 K lower than the melting points of pure Fe"* →
+≈ 6 100 K) — and our 5 074 K is the pure-iron curve × 0.80, sitting between the eutectic (4 100) and pure iron
+(6 100–6 300), as a depressed alloy curve should. Scope of the factor: `IRON_LIGHT_ELEMENT_FACTOR` is one declared
+constant applied engine-wide through `fe_prem` (C14's inner core at the declared 3 760 K, C15's E_L/E_g, C20's
+nucleation all stand on it), so **every body's inner-core verdict hangs on the same declaration** — the range is
+"all of them", by construction, not by defect. So:
+**on the 20 % convention (consistent with the measured ICB temperature) this model's core is too cool to freeze;
+on the 11 % ab-initio depression it freezes an oversized inner core. The inner core's existence hangs on one
+declared factor, and this session does not decide it.** **The honest statement this model can make is not "which factor is right" but this: in this model the
+inner core's existence and size are not robust** — a declared depression factor and a few per cent of T_c
+dominate the result: on his curve, T_c 4 027 → r_i ≈ 1 995 km and T_c 4 155 → 0 (128 K, 3 %, takes the inner
+core from 2 000 km to nothing); on our factor there is none. **This sentence must accompany any inner-core
+output of C20 on another body.** Inversion (pre-registered, report not adopt — the same kind as C14's C_r ×
+1.083): with T_c fixed at 4 027 K, the factor that puts the crossing at Earth's 1 220 km is **f ≈ 0.866** —
+between the two published values (0.80, 0.89), so the model *can* reproduce Earth's inner core with the factor
+as the knob; at C14's 3 978 K f ≈ 0.86, at Nimmo's 4 155 K f ≈ 0.895 (his own 0.89 gives ≈ 1 228 km there —
+his pair fits). Hypersensitivity in numbers: r_i runs 0 → 1 673 km across f 0.85 → 0.88 (3.5 %). The knob is
+really (f, T_c) jointly and they are degenerate. Labels: Sinmyo's 5 120 ± 390 K sitting on our curve is a check
+of the *curve*, not evidence that the model reproduces Earth — the model has no inner core, so it has no ICB
+temperature at all; 0.80 (Stevenson-1981-lineage convention) and 0.89 (Alfè 2002b, 8 mol % S/Si) are **both
+declarations, neither our derivation**. **The measurement breaks the (f, T_c) degeneracy — read against Sinmyo+ 2019 directly** (pre-registered):
+our adiabat at 330 GPa is **5 490 K at the C20 T_c 4 027** (+0.9 σ of the measured ICB 5 120 ± 390), 5 424 at
+C14's 3 978 (+0.8 σ), and **5 126 K at the declared 3 760 K — Sinmyo's own measured CMB temperature — matching
+the measured ICB to 6 K (+0.0 σ) and sitting 53 K above our melting curve, i.e. with an inner core** (C14's 566–
+572 km at 3 760). So the measured pair (CMB 3 760 ± 290, ICB 5 120 ± 390) is reproduced by our adiabat and our
+factor together: **γ and f are both measurement-consistent; what is hot is the *solved* T_c**, 220–270 K above the
+measured CMB value (+0.8–0.9 σ) — inside the measurement's band, but in this hypersensitive region those degrees
+are the whole inner core. The tension is therefore not "f is low" (the measurement backs f) but "the energy
+balance (C14) and the history (C20) close on a T_c ~1 σ above the measured one, and there the inner core is gone".
+That puts the cause on the **T_c side — Q_C / the CMB boundary-layer law (eqs 37–39) at the declared bottom-layer
+constants — at 1 σ significance, not more.** The two open items (inner core, Q_C 5.2 vs 9.0 TW) are one chain on
+measurement evidence, held at that significance. Nothing moved; f stays 0.80, T_c stays solved.
+**Not circular** — the declared 3 760 K is Sinmyo's measured CMB value, so this must be spelled out:
+
+    input     the measured CMB temperature, 3 760 K
+    through   our adiabat (γ = 1.5) and our melting curve (f = 0.80) — two independent declarations
+    output    5 126 K at 330 GPa
+    compared  with the measured ICB temperature 5 120 ± 390 K, which was never used → 6 K, +0.0 σ
+
+One measured point was fed in and the other predicted to 6 K; γ and f are checked *together* by it — the
+strongest comparison of the day.
+**The chain, in one piece** (direction, not proof — 1 σ):
+
+    CMB bottom boundary-layer law (eqs 37–39, declared constants κ_b, f, T₁)
+      → Q_C 5.2 vs 9.0 TW (43 % low; unresponsive to the mantle conventions)
+      → less heat leaves the core → the energy balance closes at a hotter T_c
+      → solved T_c 4 027, +220–270 K over the measured 3 760 ± 290 (+0.8–0.9 σ)
+      → a hotter adiabat (5 490 K at 330 GPa, +0.9 σ of the measured ICB)
+      → in the hypersensitive region, no inner core
+
+Q_C low ⇒ the core stays hot: the direction is right, and since Q_C did not respond to the mantle conventions,
+what sets it is the boundary-layer law. **Next target, named: eqs 37–39 — listed (C25), not touched today.**
+**The day's trajectory, kept on purpose** (the phenomenon stayed the same; the mechanism changed three times):
+early morning — "closing the loop removes Earth's inner core" (found again after the Euler-artefact
+retraction); afternoon — demoted to "our melting curve is 540 K colder" (thought to be a source difference);
+re-decomposed — "the whole gap is the declared factor, 0.80 vs 0.89"; now — "f and γ both match the
+measurement; what is hot is the solved T_c, and its cause is Q_C = the boundary-layer law". **Excluded today,
+and to stay excluded**: the melting-curve source (pure-iron anchors agree) and the depression factor as the
+cause (the measurement backs 0.80). The inversion's 0.866 is a measurement of "what this model would need to
+fit Earth", not a value. The "package" hypothesis
 above is *partly* supported inside our model (two conventions account for most of the mantle-side miss) and not
 tested on the core side. **Nothing adopted.**
 
