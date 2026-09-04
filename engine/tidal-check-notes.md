@@ -1,70 +1,73 @@
-<!-- 조석식 대조 — 판도라 보드 45 W/m² 재현(0.75 %), Dante 521/900 km, "×Io" 열이 출력 비라는 판정. 병렬석 기록, 원문 무편집 -->
-<!-- Landed 2026-09-04 from the parallel seat's scratch (TIDAL-CHECK.md, 19:41 KST), body unedited. Scripts tidal_check{,2,3}.py were re-run by the work seat the same evening (identical numbers; outputs in tidal-heating-context-notes.md §4 when C30 lands). -->
+<!-- 조석식 대조 — 판도라 보드 45 W/m² 재현(0.75 %), Dante 521/900 km, "×Io" 열이 출력 비라는 판정. 병렬석 기록 -->
+<!-- Landed 2026-09-04 from the parallel seat's scratch (TIDAL-CHECK.md, 19:41 KST). Scripts tidal_check{,2,3}.py were re-run by the work seat the same evening (identical numbers; outputs in tidal-heating-context-notes.md §4 when C30 lands). Translated from the original Korean message on 2026-09-05 for the English-source rule (gate98 section 6, 42.9 % hangul); every number, citation and table is the original's. -->
 
-# 조석식 대조 — 판도라 보드 45 W/m² 재현, Dante 521/900, "78×"의 정체
-Parallel seat, 2026-09-04. 스크립트 `tidal_check.py`·`tidal_check2.py`·`tidal_check3.py`.
-스크래치 전용, 레포 쓰기 없음. 판단 없이 수만.
-아래 본문은 2026-09-04 에 nearstars-77 로 보낸 메시지 그대로입니다.
+# The tidal law, checked: Pandora's 45 W/m² reproduced, Dante at 521 vs 900 km, and what "78×" is
 
-**결론 한 줄: 보드의 45 W/m² 가 문서 `tidal:56` 식으로 0.75 % 안에 재현됩니다.**
+Parallel seat, 2026-09-04. Scripts `tidal_check.py`, `tidal_check2.py`, `tidal_check3.py`.
+Scratch only, no repo writes. Numbers, no verdicts.
 
-## 상수
-`G = 6.67430e-11 m³ kg⁻¹ s⁻²` (CODATA 2018/NIST 권장), `M⊕ = 5.9722e24 kg` (IAU 2015 Resolution B3
-nominal). `M_p = 120 M⊕ = 7.166640e26 kg`(`phase4/alpha_centauri.yaml:354`),
-`a = 252 393 km`(`phase3/stability-sim/hypotheticals/alpha_centauri.json:33`),
-`R = 5724 km`(`phase4:2132`). 부수 확인 — 이 a·M_p 에서 `n = 5.454371e-05 rad/s → P_orb = 31.9987 h`,
-보드의 32 h 조석고정과 일치합니다(`phase4:2137`).
+**One line: the board's 45 W/m² reproduces to within 0.75 % under the law printed at `tidal:56`.**
 
-식은 `tidal:56` 그대로: `Ė = (21/2)·(k₂/Q)·(G M_p² R⁵ n e²)/a⁶`, `n = √(G M_p/a³)`.
+## Constants
 
-## 판도라 — (e, k₂/Q) 조합
+`G = 6.67430e-11 m³ kg⁻¹ s⁻²` (CODATA 2018 / NIST recommended), `M⊕ = 5.9722e24 kg` (IAU 2015
+Resolution B3 nominal). `M_p = 120 M⊕ = 7.166640e26 kg` (`phase4/alpha_centauri.yaml:354`),
+`a = 252 393 km` (`phase3/stability-sim/hypotheticals/alpha_centauri.json:33`),
+`R = 5724 km` (`phase4:2132`). Side check: at this a and M_p, `n = 5.454371e-05 rad/s → P_orb =
+31.9987 h`, which agrees with the board's 32 h tidal lock (`phase4:2137`).
 
-| e | 출처 | k₂/Q | Ė [W] | F [W/m²] | ×Io(플럭스 2.5) | F/45 |
+The law is `tidal:56` verbatim: `Ė = (21/2)·(k₂/Q)·(G M_p² R⁵ n e²)/a⁶`, `n = √(G M_p/a³)`.
+
+## Pandora, over the (e, k₂/Q) combinations
+
+| e | source | k₂/Q | Ė [W] | F [W/m²] | ×Io (flux 2.5) | F/45 |
 |---|---|---|---|---|---|---|
-| 0.005 | 보드 forced (`:2139`/`:2211`) | 0.0016 (`:2211` fitted) | 1.8667e16 | **45.337** | 18.14 | **1.0075** |
-| 0.005 | 같음 | 0.015 (Io-like) | 1.7500e17 | 425.04 | 170.0 | 9.445 |
-| 0.007215479742978246 | 시뮬 e_max (`summary.json`) | 0.0016 | 3.8874e16 | 94.416 | 37.77 | 2.098 |
-| 0.007215… | 같음 | 0.015 | 3.6444e17 | 885.15 | 354.1 | 19.670 |
-| 0.00016422372329501632 | 시뮬 e_min | 0.0016 | 2.0137e13 | 0.0489 | 0.020 | 0.0011 |
-| 0.000164… | 같음 | 0.015 | 1.8879e14 | 0.4585 | 0.183 | 0.0102 |
+| 0.005 | board forced (`:2139`/`:2211`) | 0.0016 (`:2211`, fitted) | 1.8667e16 | **45.337** | 18.14 | **1.0075** |
+| 0.005 | same | 0.015 (Io-like) | 1.7500e17 | 425.04 | 170.0 | 9.445 |
+| 0.007215479742978246 | sim e_max (`summary.json`) | 0.0016 | 3.8874e16 | 94.416 | 37.77 | 2.098 |
+| 0.007215… | same | 0.015 | 3.6444e17 | 885.15 | 354.1 | 19.670 |
+| 0.00016422372329501632 | sim e_min | 0.0016 | 2.0137e13 | 0.0489 | 0.020 | 0.0011 |
+| 0.000164… | same | 0.015 | 1.8879e14 | 0.4585 | 0.183 | 0.0102 |
 
-**역산** — 45 W/m² 를 정확히 맞추는 k₂/Q: e 0.005 → **0.00158809**(보드 인쇄값 0.0016 을 유효
-2자리로 반올림한 값), e 0.007215 → 0.000762581, e 0.000164 → 1.47212.
+**Inverted**: the k₂/Q that hits 45 W/m² exactly is **0.00158809** at e 0.005 (the board's printed
+0.0016 rounded to two significant figures), 0.000762581 at e 0.007215, and 1.47212 at e 0.000164.
 
-**`phase4:2232` 의 ~101 W/m² 폭주 천장 대비**: 채택 조합(0.005·0.0016) 45.34 = **0.449×**;
-e_max·0.0016 94.42 = **0.935×**; Io-like 0.015·e 0.005 425.04 = **4.21×**(보드가 "369K steam world"로
-적은 그 케이스, `:2215`).
+**Against the ~101 W/m² runaway ceiling at `phase4:2232`**: the adopted combination (0.005 · 0.0016)
+at 45.34 is **0.449×**; e_max · 0.0016 at 94.42 is **0.935×**; the Io-like 0.015 at e 0.005, 425.04,
+is **4.21×**, which is the case the board writes up as the "369 K steam world" (`:2215`).
 
-## Dante — 식이 보드와 같은 것인지 확인
+## Dante, to check that the law is the board's law
 
-| R | 출처 | Ė [W] | F [W/m²] | 보드 11,500 대비 | 문서 2,231 대비 |
+| R | source | Ė [W] | F [W/m²] | vs the board's 11,500 | vs the doc's 2,231 |
 |---|---|---|---|---|---|
-| **521 km** (보드 채택, `phase4:1472`) | e 0.0186 · k₂/Q 0.0155 (`:1553`) | 7.9284e15 | **2 324.4** | 0.2021 | **1.0418** |
-| **900 km** (시뮬 json `:15`) | 같음 | 1.2196e17 | **11 981.7** | **1.0419** | 5.3705 |
+| **521 km** (board-adopted, `phase4:1472`) | e 0.0186 · k₂/Q 0.0155 (`:1553`) | 7.9284e15 | **2 324.4** | 0.2021 | **1.0418** |
+| **900 km** (sim json `:15`) | same | 1.2196e17 | **11 981.7** | **1.0419** | 5.3705 |
 
-**두 비율이 1.0418 / 1.0419 로 정확히 같습니다** — 계통적인 4.2 %, e 0.018223 (또는 k₂/Q 0.014877)에
-해당하므로 인쇄된 0.0186/0.0155 의 반올림으로 설명됩니다. 즉 **식은 같은 식입니다.**
+**The two ratios are 1.0418 and 1.0419, the same number**: a systematic 4.2 %, which corresponds to
+e 0.018223 (or k₂/Q 0.014877) and is therefore explained by the rounding of the printed 0.0186 /
+0.0155. So **the law is the same law**.
 
-그리고 이것이 갈라놓는 것: **보드 `:1554` 의 "~11,500 W/m²" 는 R = 900 km 의 수이고, 보드가 채택한
-반지름은 521 km(`:1472`)** 입니다. 같은 입력에서 521 km 의 플럭스는 2,324 W/m²(문서 인쇄 2,231)입니다.
-문서 §6.5 표(`tidal:449-454`)가 그 대조를 이미 갖고 있습니다 — 900 km(초안) 1,200× / 11,500 W/m² →
-714 km 377× / 5,742 → **521 km(채택) 78× / 2,231** → 450 km 38× / 1,438. 보드 `:1486` 이 기록한
-"~820× → ~1200× 정정"은 채택값이 아니라 초안-900 쪽으로 옮긴 것입니다.
+And here is what that separates: **the "~11,500 W/m²" at board `:1554` is the R = 900 km number,
+while the radius the board adopts is 521 km (`:1472`)**. From the same inputs the flux at 521 km is
+2,324 W/m² (the doc prints 2,231). The §6.5 table (`tidal:449-454`) already holds that comparison:
+900 km (draft) 1,200× / 11,500 W/m² → 714 km 377× / 5,742 → **521 km (adopted) 78× / 2,231** →
+450 km 38× / 1,438. The "~820× → ~1200× correction" recorded at board `:1486` moved the row toward
+the 900 km draft, not toward the adopted value.
 
-## ⚠ "78× Io" 는 판도라가 아니라 Dante 입니다
+## ⚠ "78× Io" is Dante, not Pandora
 
-브리프가 "판도라 ~78× Io?" 로 물은 그 수는 **문서 `tidal:453` 의 Dante-at-521 km 행 라벨**입니다.
-그리고 그 열의 단위를 판정했습니다 — 문서 자신의 두 행이 `(900/521)³ = 5.1548` vs
-`11500/2231 = 5.1546`, `(900/521)⁵ = 15.3824` vs `1200/78 = 15.3846` 이므로 **"×Io" 열은 출력(Ė) 비이고
-W/m² 열은 플럭스**입니다. 두 행에서 역산한 이오 출력이 1.0163e14 · 1.0165e14 W(≈100 TW, 이오 실측치)로
-일치해 규약이 확정됩니다.
+The number the brief asked about as "Pandora ~78× Io?" is **the label on the doc's Dante-at-521 km
+row, `tidal:453`**. The column's unit is settled by the doc's own two rows: `(900/521)³ = 5.1548`
+against `11500/2231 = 5.1546`, and `(900/521)⁵ = 15.3824` against `1200/78 = 15.3846`, so **the "×Io"
+column is a ratio of outputs (Ė) and the W/m² column is a flux**. Inverting Io's output from the two
+rows gives 1.0163e14 and 1.0165e14 W (≈100 TW, Io's measured value), which fixes the convention.
 
-같은 규약으로 판도라를 환산하면 채택 조합(e 0.005 · k₂/Q 0.0016)에서
-**Ė = 1.8667e16 W = 186.7× Io(출력)**, 플럭스로는 18.1× Io 입니다.
+Converting Pandora under the same convention, the adopted combination (e 0.005 · k₂/Q 0.0016) gives
+**Ė = 1.8667e16 W = 186.7× Io by output**, and 18.1× Io by flux.
 
-## 판도라 출력비 전체 (Io_Ė = 1.0e14 W 규약)
+## Pandora's output ratios in full (Io_Ė = 1.0e14 W convention)
 
-| e | k₂/Q | Ė [W] | ×Io(출력) | F [W/m²] | ×Io(플럭스 2.5) |
+| e | k₂/Q | Ė [W] | ×Io (output) | F [W/m²] | ×Io (flux 2.5) |
 |---|---|---|---|---|---|
 | 0.005 | 0.0016 | 1.8667e16 | 186.7 | 45.337 | 18.13 |
 | 0.005 | 0.015 | 1.7500e17 | 1750.0 | 425.038 | 170.02 |
@@ -73,11 +76,12 @@ W/m² 열은 플럭스**입니다. 두 행에서 역산한 이오 출력이 1.01
 | 0.000164 | 0.0016 | 2.0137e13 | 0.2 | 0.049 | 0.02 |
 | 0.000164 | 0.015 | 1.8879e14 | 1.9 | 0.459 | 0.18 |
 
-⚠ 워크트리 상태(작성 시점): 작업석 미커밋 변경(C28)이 `engine/chain.yaml`·`dynamo_rocky.py`·
-`interior-core.md`·`test_dynamo_rocky.py` 에 있었고, 이 보고가 인용한 `phase4/*`·`docs/reference/*`·
-`hypotheticals/*`·`results/*` 는 전부 그 diff 밖입니다.
+⚠ Worktree state at the time of writing: the work seat's uncommitted C28 changes were in
+`engine/chain.yaml`, `dynamo_rocky.py`, `interior-core.md` and `test_dynamo_rocky.py`, and everything
+this report cites (`phase4/*`, `docs/reference/*`, `hypotheticals/*`, `results/*`) is outside that
+diff.
 
-⚠ 후속 사실(같은 날 늦게 확인, 이 보고 뒤): 시뮬 e_max 0.007215 는
-`results/_final32b/alpha_centauri_summary.json` 즉 **Dante 900 km · Hades e 0.05/i 11° 구성**의 결과이고,
-main 의 2026-08-21 미커밋 스냅샷은 같은 양을 `e 0.00366` 으로 적습니다 —
-`MAIN-7FILES-2026-08-21.md` 말미 참조.
+⚠ Established later the same day, after this report: the sim's e_max 0.007215 comes from
+`results/_final32b/alpha_centauri_summary.json`, that is from the **Dante 900 km · Hades e 0.05 /
+i 11° configuration**, and main's uncommitted 2026-08-21 snapshot writes the same quantity as
+**e 0.00366**. See the end of `MAIN-7FILES-2026-08-21.md`.
