@@ -1,0 +1,24 @@
+# Luhman 16 A — 로스터 갈색왜성. 값은 전부 db/systems/luhman_16_a.json 에서 읽었다 (2026-09-04). 도출값은 안 적는다.
+name: Luhman 16 A
+kind: brown_dwarf
+parent: null
+
+inputs:
+  mass_earth: 10654.0        # 0.0320 ± 0.0003 M☉ (연성 궤도, Lazorenko & Sahlmann 2018, recommended) × 332946 — 33.5 M_J
+  radius_rj: 0.876           # ⚠ 선언. DB: 0.09 ± 0.01 R☉ (evolutionary_model) — "No measured radius exists for either component"
+  radius_rj_min: 0.778       # DB 자신의 밴드 0.08 R☉ — 반지름은 R^(-7/6) 으로 들어가는 유일한 선언 입력
+  radius_rj_max: 0.973       # 0.10 R☉
+  age_gyr: 0.5               # 보드 phase4/luhman_16.yaml (Gagné 2023 이동군); DB 는 1.5 ± 1.5 (범위 중점) — O1, 이 가지는 나이를 읽지 않는다
+  body_class: brown_dwarf
+  luminosity_lsun: 2.14e-05  # 측정 — 볼로메트릭 플럭스, Faherty+ 2014 (2014ApJ...790...90F), ± 2e-06
+  rotation_period_h: 6.94    # DB rotation_period_days 0.2892
+  isolated: true             # 모항성 없음·핵융합 없음 → 관측 L_bol = 내부 냉각광도. 이 가지의 전제 조건 (선언)
+
+units:
+  mass_earth: M_earth
+  radius_rj: R_jup
+  radius_rj_min: R_jup
+  radius_rj_max: R_jup
+  age_gyr: Gyr
+  luminosity_lsun: L_sun
+  rotation_period_h: h

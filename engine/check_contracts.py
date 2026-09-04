@@ -96,6 +96,8 @@ def main() -> int:
             continue
 
         res = None
+
+        union_in = union_out = union_units = None
         for body in bodies:
             # 그래프를 통째로 돌린 뒤에 읽는다. 레시피를 하나만 불러서는 **다른 노드의
             # 출력을 먹는 노드** 의 계약을 확인할 수 없다 — core_state 가 그렇다.
@@ -104,8 +106,13 @@ def main() -> int:
                 continue
             res = res or candidate
             if candidate.applicable:
-                res = candidate
-                break
+                # 가지가 여럿인 레시피는 표본 하나로는 Returns 를 다 못 본다 — 값을 내는
+                # 표본 전부의 입력·출력을 합친다 (C19: dynamo_giant 의 갈색왜성 가지).
+                if union_in is None:
+                    res = candidate
+                    union_in, union_out, union_units = set(candidate.inputs), set(candidate.values), dict(candidate.units)
+                else:
+                    union_in |= set(candidate.inputs); union_out |= set(candidate.values); union_units.update(candidate.units)
         if res is None:
             print(f"  [건너뜀] {node}: 어느 표본 천체도 입력을 갖추지 못했다")
             continue
@@ -113,8 +120,8 @@ def main() -> int:
             print(f"  [건너뜀] {node}: 표본 천체가 전부 도메인 밖이다 "
                   f"— Returns 를 확인할 수 없다")
             continue
-        actual_in = set(res.inputs)
-        actual_out = set(res.values)
+        actual_in = union_in
+        actual_out = union_out
         checked += 1
 
         for label, want, got in (("Needs", declared.get("needs", set()), actual_in),
@@ -128,7 +135,7 @@ def main() -> int:
 
         # 선언된 출력에는 전부 단위가 붙어야 한다. 무차원이면 그렇게 적어야 한다.
         for name in sorted(actual_out):
-            if name not in res.units:
+            if name not in union_units:
                 fails.append(f"{node}: 출력 '{name}' 에 단위가 없다")
 
     total = sum(1 for d in g["nodes"].values() if d.get("kind") == "computed")

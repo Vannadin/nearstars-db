@@ -251,3 +251,47 @@ read the consumer (③) → domain + saturation guards (⑤ ④) → the band (�
 **① is read last.** It is the number everyone wants and the one most easily produced by a unit slip.
 
 **Resolved before code, by reading (③)**: `chain.yaml:718` is the only edge out of `dynamo_giant` — `magnetosphere_geometry` requires `b_eq` [µT]. So ③a: emit `b_eq = B_dyn/(2√2)` (RC10 eq. 2) with **no depth attenuation**, `b_pol = 2 b_eq`, and reuse the moment normalisation (a dipole moment is B_eq·R³ by definition; 4.5 G · 20000 only sets the ×Earth scale). **And a lowered expectation, stated up front**: `magnetosphere_geometry` has no recipe, so the giant branch's `b_eq` already has no consumer — building this branch removes one refusal inside the module and closes the `cooling_luminosity` gap edge; it does **not** wire the dynamo downstream and creates no new orphan output. Beside it: `tidal_locking → dynamo_giant` (`:648`, selects) — the tidal-locking recipe candidate has two consumers, not one. Recorded, not acted on.
+
+
+## 6. Run record — brown-dwarf branch built (2026-09-04, daytime)
+
+**Order kept**: consumer read (③, `b_eq`) → guards (⑤ 13–70 M_J kept, ④ saturation: rotation period required and ≤ 4 d
+— RC10 §2.1's own evidence bound, the critical rate itself "somewhat uncertain") → band (② radius band required;
+single value forbidden) → compute → ① magnitude read last.
+
+    body          M (M_J)   L (L☉, measured)   R (R_J, declared; band)   P_rot (h)   B_dyn (kG)   band (kG)     b_eq (kG)   moment (×Earth)
+    Luhman 16 A   33.5      2.14e-5            0.876 (0.778–0.973)       6.94        1.246        1.10–1.43     0.440       1.32e6
+    Luhman 16 B   28.6      1.95e-5            0.876 (0.778–0.973)       4.87        1.176        1.04–1.35     0.416       1.24e6
+
+- **Guards, seven rows, all refuse by name** (no luminosity / no rotation / no band / `isolated` undeclared /
+  `isolated=False` (the hot-Jupiter route) / P_rot 5 d / 80 M_J). The old "no inputs" brown-dwarf refusal
+  row still refuses, now naming the missing inputs instead of an L(M, age) track.
+- **By-hand check**: 4.8 (0.032 · (2.14e-5)² / 0.09⁷)^(1/6) = 1.246 kG, code 1.246 (0.04 %).
+- **② band**: width 26 % of B_dyn from R 0.08–0.10 R☉ alone (pre-registered ~±13 %) — **the width is
+  radius-driven**, written into the result's notes; the mass ±0.9 % is negligible beside it.
+- **③ consumer contract**: b_eq = B_dyn/(2√2), b_pol = 2 b_eq, no depth attenuation; moment reused.
+- **① magnitude, read last**: B_dyn 1.25 kG sits inside RC10 §4.1's printed brown-dwarf range ("a few kG
+  and a hundred G") → PASS. Against Christensen+ 2009's "~0.1 T for 1 Gyr · 0.05 M☉ · 1500 K" it is 1.25× —
+  **inside ①a's factor of 3, but on the *high* side, where the pre-registration expected "at or somewhat
+  below 1 kG" for a lighter, dimmer body.** Stated, not explained away: the 1 kG is an order-of-magnitude
+  sentence for a different object, and at that precision the direction "lighter → weaker" is not decidable;
+  what would decide it is Christensen's own L and R for that object, which the Letter does not tabulate.
+  Not a result about Luhman 16's field: **the field an energy-flux scaling predicts on a declared radius;
+  no brown-dwarf field has been detected** (Christensen+ 2009).
+- **Contract checker generalised** (`check_contracts.py`): a recipe with branches is now checked against the
+  union of inputs/outputs over all sample bodies that return a value (Polyphemus + Luhman 16 A/B), instead of
+  the first one — otherwise the brown-dwarf-only outputs could not be declared in Returns.
+- **Graph supplier, found by the via check**: `cooling_luminosity` has no supplier node, so the edge could not simply drop its gap mark — `check_via` refused the commit's first form (masked by `tail` in the launch chain; that gate was killed and stamped void). The supplier of a brown dwarf's measured bolometric luminosity is `star_physical.luminosity` (Luhman 16 A/B sit in the DB's `stars[]`), so the edge is now `star_physical → dynamo_giant via luminosity` (code name `luminosity_lsun`), the `body_age … cooling_luminosity` edge removed.
+- **What this closes and what it does not** (directing seat's framing): Luhman 16 A/B receive a value instead
+  of out-of-domain and the `cooling_luminosity` gap edge closes. **Not** "the dynamo is wired downstream":
+  `magnetosphere_geometry` has no recipe, so the giant branch's `b_eq` already has no consumer and this
+  branch adds none — one refusal inside the module is gone, no new orphan output was made. `tidal_locking →
+  dynamo_giant` (`chain.yaml:648`) means the tidal-locking recipe candidate has two consumers — recorded.
+- **Anchors**: no anchor path traverses `dynamo.py`; `test_ice_giant.py --fast` 모두 통과 on this tree, no `--refresh`.
+
+**Gate lines** (kept out of the powermode-2 table where marked):
+- gate79 on `0554889c` ('&' fix, docs): `GATE END sha=0554889c rc=0`, 485 PASS, FAIL 0, 10:05:15 → 10:47:41 =
+  **2546 s**, powermode 2 both ends, no throttle record (`pmset -g therm`). ⚠ **2.07× gate78 under the same
+  power condition — excluded from the table.** Directing seat's *estimate, not a measurement*: host contention
+  (it ran pdftotext on 9 MB PDFs, five repo-wide recursive greps, a 739-file cache loop and ADS round-trips in
+  that window). The control is the next gate with the directing seat idle.

@@ -14,8 +14,8 @@ home in [`rocky-planet-dynamo-methodology.md`](rocky-planet-dynamo-methodology.m
 
 ## Contract — `dynamo_giant`
 
-**Returns** — `b_pol` [µT] · `b_eq` [µT] · `dipole_moment` [×Earth]
-**Needs** — `mass_mj` [M_J] · `radius_rj` [R_jup] · `age_gyr` [Gyr] · `body_class` [—]
+**Returns** — `b_pol` [µT] · `b_eq` [µT] · `dipole_moment` [×Earth] · brown-dwarf branch only: `b_dyn` [µT] · `b_dyn_min` [µT] · `b_dyn_max` [µT] · `b_eq_min` [µT] · `b_eq_max` [µT]
+**Needs** — `mass_mj` [M_J] · `radius_rj` [R_jup] · `age_gyr` [Gyr] · `body_class` [—] · brown-dwarf branch only: `luminosity_lsun` [L_sun] · `rotation_period_h` [h] · `radius_rj_min` [R_jup] · `radius_rj_max` [R_jup] · `isolated` [—]
 **Discriminating keys** — mass (< 0.3 M_J sub-Saturn / 0.3–13 M_J giant / 13–70 M_J brown
 dwarf / > 70 M_J stellar), age (≥ 0.2 Gyr), `body_class` for the rocky case only.
 **Grade** — calibrated.
@@ -24,7 +24,7 @@ dwarf / > 70 M_J stellar), age (≥ 0.2 Gyr), `body_class` for the rocky case on
 |---|---|---|---|
 | giant | 0.3 ≤ M ≤ 13 M_J, age ≥ 0.2 Gyr | derives B from the cooling track | calibrated |
 | sub-Saturn | M < 0.3 M_J | declines — helium rain stratifies the conducting region, and RC10 excludes it | — |
-| brown dwarf | 13 < M ≤ 70 M_J | declines — needs an L(M, age) track this document does not supply | — |
+| brown dwarf | 13 < M ≤ 70 M_J, `isolated`, P_rot ≤ 4 d, radius band declared | B_dyn = 4.8 (M L²/R⁷)^(1/6) kG from the **measured** bolometric luminosity (an isolated brown dwarf's L_bol is its cooling luminosity — no track derived); B_eq = B_dyn/(2√2) with **no depth attenuation**; emitted as a **band over the declared radius** (R^(−7/6)); refuses when the luminosity, rotation period, radius band or `isolated` is missing, when not isolated, or when P_rot > 4 d (RC10's own saturation evidence bound) | calibrated |
 | rocky | `body_class = rocky` | declines — see [rocky-planet-dynamo-methodology.md](rocky-planet-dynamo-methodology.md) | — |
 | stellar | M > 70 M_J | declines — not a dynamo of this kind | — |
 | pre-calibration | age < 0.2 Gyr | declines — below the calibrated track | — |

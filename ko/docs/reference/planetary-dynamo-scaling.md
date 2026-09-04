@@ -15,8 +15,8 @@
 
 ## 계약 — `dynamo_giant`
 
-**Returns** — `b_pol` [µT] · `b_eq` [µT] · `dipole_moment` [×Earth]
-**Needs** — `mass_mj` [M_J] · `radius_rj` [R_jup] · `age_gyr` [Gyr] · `body_class` [—]
+**Returns** — `b_pol` [µT] · `b_eq` [µT] · `dipole_moment` [×Earth] · 갈색왜성 가지만: `b_dyn` [µT] · `b_dyn_min` [µT] · `b_dyn_max` [µT] · `b_eq_min` [µT] · `b_eq_max` [µT]
+**Needs** — `mass_mj` [M_J] · `radius_rj` [R_jup] · `age_gyr` [Gyr] · `body_class` [—] · 갈색왜성 가지만: `luminosity_lsun` [L_sun] · `rotation_period_h` [h] · `radius_rj_min` [R_jup] · `radius_rj_max` [R_jup] · `isolated` [—]
 **갈리는 축** — 질량(0.3 M_J 미만 서브새턴 / 0.3~13 거대행성 / 13~70 갈색왜성 /
 70 초과 항성), 나이(0.2 Gyr 이상), 그리고 암석 분기에서만 `body_class`.
 **등급** — calibrated.
@@ -25,7 +25,7 @@
 |---|---|---|---|
 | 거대행성 | 0.3 ≤ M ≤ 13 M_J, 나이 ≥ 0.2 Gyr | 냉각 트랙에서 B를 도출 | calibrated |
 | 서브새턴 | M < 0.3 M_J | 거절 — 헬륨 강우가 전도영역을 성층화하고, RC10이 명시적으로 제외 | — |
-| 갈색왜성 | 13 < M ≤ 70 M_J | 거절 — L(M, 나이) 트랙이 필요한데 이 문서가 주지 않는다 | — |
+| 갈색왜성 | 13 < M ≤ 70 M_J, `isolated`, P_rot ≤ 4 d, 반지름 밴드 선언 | **측정된** 볼로메트릭 광도로 B_dyn = 4.8 (M L²/R⁷)^(1/6) kG (고립 갈색왜성의 L_bol 이 곧 냉각광도 — 트랙을 유도하지 않음). B_eq = B_dyn/(2√2), **깊이 감쇠 없음**. 선언된 반지름(R^(−7/6)) 위의 **밴드**로 방출. 광도·자전주기·반지름 밴드·`isolated` 가 없거나, 고립이 아니거나, P_rot > 4 d(RC10 자신의 포화 증거 한계)면 거절 | calibrated |
 | 암석체 | `body_class = rocky` | 거절 — [rocky-planet-dynamo-methodology.md](rocky-planet-dynamo-methodology.md) 참조 | — |
 | 항성 | M > 70 M_J | 거절 — 이런 종류의 다이나모가 아니다 | — |
 | 보정 이전 | 나이 < 0.2 Gyr | 거절 — 보정된 트랙 아래다 | — |
