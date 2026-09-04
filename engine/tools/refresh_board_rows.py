@@ -23,6 +23,17 @@ Inputs come from the board itself, each with the line it was read from, so a ref
 alone: radius and semi-major axis from the satellites (moons) table, e_rms and k₂/Q from the tidal_heating value
 string, the parent mass from the parent body's own `mass` field. Edits are made on the raw lines rather than through a
 YAML round-trip, so comments, ordering and quoting survive — a dumped YAML would rewrite all 3 500 lines.
+
+Two input choices the satellites row makes ambiguous, recorded because the numbers differ and a later session would
+otherwise re-choose silently:
+- **e is the time-averaged e_rms from the tidal_heating value string, not the row's osculating `e`.** The heating goes
+  as ⟨e²⟩, so a snapshot eccentricity is the wrong average: Dante's 0.02432 snapshot returns 135× Io against 79× from
+  e_rms 0.0186, a factor 1.7. The board's e_rms is bracketed by the measured 0.017–0.022, which is why the tidal rows
+  move with the radius and not with the eccentricity — `phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:154-155`.
+  ⚠ On 2026-09-04 that evidence file is one of the MAIN checkout's seven uncommitted files, so this justification rests
+  on text that is not in any commit yet.
+- **a is the row's `design.a_km`, not its osculating `a_km`.** For Dante that is 110,000 against 110,044.5 km; through
+  a⁻⁶ the two differ by 0.24 %, far too little to move "~79×", but the report and the note name which one was used.
 """
 from __future__ import annotations
 
@@ -165,15 +176,20 @@ def main() -> int:
         raise SystemExit(f"the satellites row for {a.body} carries no radius_km/parent")
     r_km = moon["radius_km"]
     a_km = moon.get("design_a_km", moon.get("a_km"))
+    a_src = "design.a_km" if "design_a_km" in moon else "a_km (osculating; the row has no design block)"
+    a_other = (f" · the row's osculating a_km is {moon['a_km']:,.1f}, {abs(moon['a_km'] / a_km - 1) * 6 * 100:.2f} % in Ė"
+               if "design_a_km" in moon and "a_km" in moon else "")
     mp_kg, mp_line = parent_mass_kg(lines, moon["parent"])
 
     power, flux, n = th.tidal_power(k2q, mp_kg, r_km * 1e3, a_km * 1e3, e)
     ratio = power / th.IO_POWER_W
     today = date.today().isoformat()
     stamp = (f"refreshed {today} from the tidal_heating recipe @{sha()} at R {r_km:.0f} km "
-             f"(a {a_km:,.0f} km · e_rms {e} · k₂/Q {k2q} · M_p {mp_kg / M_EARTH_KG:.0f} M⊕)")
+             f"(a {a_km:,.0f} km from {a_src} · time-averaged e_rms {e}, not the row's osculating e · "
+             f"k₂/Q {k2q} · M_p {mp_kg / M_EARTH_KG:.0f} M⊕)")
     stamp_ko = (f"{today} tidal_heating 레시피 @{sha()}에서 갱신, R {r_km:.0f} km "
-                f"(a {a_km:,.0f} km · e_rms {e} · k₂/Q {k2q} · M_p {mp_kg / M_EARTH_KG:.0f} M⊕)")
+                f"(a {a_km:,.0f} km — {a_src} · 순간값 e 가 아니라 시간평균 e_rms {e} · "
+                f"k₂/Q {k2q} · M_p {mp_kg / M_EARTH_KG:.0f} M⊕)")
     partition = (f"stale {today}: this figure was partitioned from the 900 km flux, before the 2026-08-21 resize to "
                  f"{r_km:.0f} km; no recipe partitions the heat, so no value is computed here")
     partition_ko = (f"stale {today}: 이 값은 900 km 플럭스를 분배해 얻은 것으로, 2026-08-21 {r_km:.0f} km "
@@ -210,9 +226,13 @@ def main() -> int:
 
     # ── report ────────────────────────────────────────────────────────────────────────
     print(f"# board {path}  ·  body {a.body}  ·  {'APPLY' if a.apply else 'dry run'}")
-    print(f"# inputs: R {r_km:.0f} km · a {a_km:,.0f} km (satellites row, line {mrow + 1}) · "
-          f"e_rms {e} · k₂/Q {k2q} (tidal_heating value, line {th_rows[0] + 1}) · "
+    print(f"# inputs: R {r_km:.0f} km · a {a_km:,.0f} km from {a_src} (satellites row, line {mrow + 1}{a_other}) · "
+          f"e_rms {e} (time-averaged; not the row's osculating e {moon.get('e', '—')}) · "
+          f"k₂/Q {k2q} (tidal_heating value, line {th_rows[0] + 1}) · "
           f"M_p {mp_kg / M_EARTH_KG:.0f} M⊕ (line {mp_line})")
+    print("# e_rms is the right average because Ė ∝ ⟨e²⟩; the justification for this body lives in "
+          "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:154-155, which on 2026-09-04 is one of the main "
+          "checkout's seven uncommitted files")
     print(f"# recipe: Ė {power:.4e} W · F {flux:,.1f} W/m² · {ratio:.2f}× Io (Io = {th.IO_POWER_W:.0e} W) · "
           f"n {n:.4e} rad/s · regime \"{th.outcome_regime(flux)}\"")
     diff = "".join(difflib.unified_diff(lines, new, fromfile=str(path), tofile=f"{path} (refreshed)", n=1))
