@@ -1199,3 +1199,44 @@ not a verdict even with a thousand PASS lines behind it.
   today, which is right for a preserved note and wrong for `interior-core.md`).
 - The parallel seat's seven `.ko.md` files are **evidence records**, kept verbatim; every verdict they
   carry is in English in C33/C34 (`interior-core.md`).
+
+### Overnight, 2026-09-05: the checker had to be checked
+
+The migration finished the wiring and then spent the night on the instrument. Four things belong in
+whatever comes next.
+
+**1. An exemption ate the verdict, and no test caught it.** The `[인용문]` rule — a citation inside
+quoted material is not migration work — was written so that a quotation *skipped classification
+entirely*. The audit's control pair: the same dead citation bare → `rc=1`, wrapped in `*"…"` →
+`rc=0`. "Wrap it in quotation marks and the gate goes quiet" was live for two hours. Two errors in
+one: the date requirement went into one of three markers, and the exemption touched the verdict
+rather than the count. It now excuses a citation from being **rewritten**, never from being
+**resolved**, and only a file that declares itself a preserved record is exempt from failing. This
+got in because the exemption shipped without a test, on the same day "a commit that closes a hole
+brings the test that reproduces it" was written down.
+
+**2. A warning count nobody could trust.** L-3's payload rule extracted `via:` with `[a-z_, ]+`,
+which ran past the value into the next YAML key, so `ref` and `status` became payload names — and the
+membership test was a substring test, so that `ref` matched inside the word "reference" and silenced
+eight anchors. Narrowed to token equality, case-folded, with headings exempt: **26 warnings became
+5**, so 21 of 26 had been noise. The lesson is not about this rule: **before judging a rule by how
+much it fires, check that the number means what it says.** The five that remain are all symbol-versus-
+name (`b_eq` against "dipole field strength", `column`/`gravity` against `C`/`g`) and stay, because a
+symbol dictionary would cost more upkeep than the rule is worth.
+
+**3. The preserved exemption depended on the citation's form.** It held when the citation was written as a line
+number and not when the same citation was written as a phrase anchor. The audit's phrasing is the one to keep: *the exemption vanished at exactly the moment
+it would be needed* — the migration reaches a preserved note, rewrites its citation into an anchor,
+the gate reddens, and the only way back to green is editing the record that "preserved" exists to
+protect.
+
+**4. Read `engine/c32-o-anchor-risk-notes.ko.md` first.** It names the three decay mechanisms — the
+document grows, a reused citation inherits what happened to be there, a citation is mis-aimed at
+birth — and says plainly that anchors kill the first, cut the second, and **leave the third exactly
+where it was**. Its §4-9 carries the working rule this night produced: two seats found the same class
+of defect, one by doubting their own tool and one by being corrected; waiting to be corrected means
+the wrong instruction has already gone out.
+
+Numbers at close: 393 anchors, all resolving; 1 citation still on a line number; 257 inside preserved
+notes; 13 into a paper's own source; 7 whole-document. Shipped strings carry a section symbol and the
+anchor sits beside them in a comment (refusal 151 → 112 characters, Pandora's first note 282 → 164).
