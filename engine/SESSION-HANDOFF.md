@@ -1011,3 +1011,97 @@ places were quiet because nothing was checking them.
   entered Kankanamge & Moore's §6 Io calculation, the dimensionless 1 or Table 5's 1400 K).
   **Owner, 2026-09-03: "둘 다 지금은 안 한다" — neither, for now.** Nothing was drafted and
   nothing was sent. Carbon's closure above follows from this half.
+
+## 2026-09-04 evening — the magnetic-wiring day, written by the work seat at close
+
+**Seats (owner's assignment after the terminal crash, ~17:50):** `nearstars-77` directs · **`nearstars-b2` (this
+session, Fable 5.1, effort low) works** · `nearstars-5a` (Fable 5.1, low) audits · `nearstars-7a` (Opus, medium) is
+parallel. Names change on restart — `ListAgents`, then ask the owner.
+**From the night of 2026-09-04 the default assignment is every seat on Opus** (owner): Fable low was retired after its
+usage limit stopped the audit seat and the work seat for about an hour each today. **C30's audit was not started** (the audit
+seat hit its limit) — first audit tomorrow, baseline `results_53856339.json`.
+
+**The day's question:** can the interior domain supply what the magnetic side asks for? Answer Ⓢ
+(`interior-dynamo-handoff-context-notes.md`): the methodology's printed Needs (`rocky-planet-dynamo-methodology.md:24–25`)
+owe the interior exactly one quantity, `conductor_phase`, and it is supplied; the five interior → dynamo edges the chain draws
+beyond that have no printed Need and no code consumer. Pandora's `conductor_phase` needed a declared potential temperature
+(C29) and then still came out undecided (no core-side CMB temperature), so the owner declared the dynamo on (C29 c): engine
+B_eq 41.4 µT against the board's 75 µT, recorded, board untouched.
+
+**Landed tonight (engine/prototype, in order; gates 90–95 `GATE END … rc=0`, FAIL 0 (gate95 PASS 541); gate96 FAIL 1 (see its row); gate97 rc=0, PASS 542, FAIL 0 (22:19:03 → 23:30:34, 4 291 s — again slow, again unexplained)):**
+
+| sha | what | audit status as known here |
+|---|---|---|
+| 0ac3a951 · 839b2c7c | C27 listed; §5 Ⓢ (1800 K = SeaFreeze knot box) — previous work seat, pre-crash | handed to audit |
+| 35d6eead | ice_x temperature-ceiling refusal message: knot box, Millot 2019 dropped | directing seat verified; handed to audit |
+| 3a08ac47 | C27 symptom per fraction (0.2 GPa unreproduced, removed); C24 heading-precedence note | from audit's catch |
+| dd40c301 | §5 addendum (refusal point 923611757256.9896 Pa · 1800.0000005870 K, 7 PhaseGaps bit-identical) | audited numbers |
+| 5ad8f56c | interior → dynamo handoff inventory + chain.yaml ref corrections | audited → two corrections in 37247c5d |
+| 0cfad194 | four parallel-seat notes preserved | — |
+| 37247c5d | handoff note: Ⓢ evidence level (written after the probe, not pre-registered); ten refs, not eleven | audit's catches |
+| 844d0787 | check_paper_held.py reads `*.PROVENANCE.txt` sidecars (6 false ABSENT fixed; sidecars live in the gitignored cache) | pending |
+| b8d86b68 | C28 dynamo ice fraction from `interior.COMPOSITIONS` | **audit hold** (named refusal regressed on 3 bodies) |
+| 2493e72f | C29 Pandora `potential_temperature` 1600 K declared; core_state → undecided | pending |
+| ffff413f | C28 fix: preset lookup behind the ladder's gates; 5 bodies × all nodes bit-identical to 5ad8f56c | closes the hold |
+| 53856339 | C29(c) Pandora dynamo declared on; `dynamo_alive` only while undecided; 41.4 vs 75 µT | pending; ⚠ its commit body says "check_contracts 13/13" — the real count was **11/11** at that sha (13 is after C30); not amended because gate95 ran on it |
+| b29b556e | C30 tidal heat → interior budget (tidal_heating + heat_transport_mode; totals + heat-pipe floor guard); Pandora 45.33 W/m² vs 45 | gate96 (20:20:12 → 22:15:58, **6 946 s** against gate95's 1 436 s — no cause found, no power stamp; the machine was idle on the work seat's side): **rc=1, PASS 540, FAIL 1** — the dead-link scan, on three relative links inside the preserved `tidal-wiring-facts-notes.md`; code, tests and contracts all PASS. ⚠ its four new Contract blocks carry no date string (same structure as the other recipes' blocks — whether that is an exception to the dated-addendum rule is the owner's call) |
+| 0ace3863 | the 53 chain refs and the code citations b29b556e shifted (+18 tidal en / +15 ko / +1 heat) refreshed, old numbers kept; headers on the two records; `ref-drift-b29b556e-notes.md` preserved | docs only; parallel seat re-verified 23/23. ⚠ landed before the work seat had read gate96's rc |
+| ba907dd3 | three link targets in `tidal-wiring-facts-notes.md` re-pointed to ../docs/reference/ (gate96's FAIL) | accepted by the directing seat after the fact (grep: no other engine/*.md carries such links); gate97 on this sha: rc=0, PASS 542, FAIL 0 (22:19:03 → 23:30:34, 4 291 s — again slow, again unexplained). ⚠ landed before the directing seat's approval |
+
+**Push state:** `git rev-list --count origin/engine/prototype..HEAD` = **6** at the time of this commit — the directing
+seat pushed the earlier part of the evening with the owner's leave. Remeasure; do not quote.
+
+**C30 landed after all.** The owner stopped computation at ~19:45, then released it at ~20:10 ("조석 배선 다시 가보자");
+b29b556e landed at 20:20 with the Pandora chain measured on the worktree (Ė 1.866e16 W · 45.33 W/m² · heat pipe · l_int_total
+1.868e16 W · total floor cannot-say), gate96 on that sha — result in the row below. Record: `tidal-heating-context-notes.md`.
+
+**Not landed — drafts in the work seat's scratch, which dies with the session:**
+- C31 (Dante board rows refreshed from the C30 recipe): `scratchpad/c31/refresh_board_rows.py`, syntax-checked, never run, TODOs
+  marked. Constraints: board of record = **main checkout's** `phase4/alpha_centauri.yaml`; dry-run (diff only) on the worktree copy
+  first; `--apply` on main only by separate order; dependent rows get dated stale notes, no authored values.
+- The tidal_locking recipe drafted earlier (`scratchpad/tl/`) is **on hold** by the owner — never written to the worktree; its
+  input inventory is `tidal-locking-inventory-notes.md`.
+- Tomorrow's order (owner): C31 → C32.
+
+**Preserved tonight from the parallel seat's scratch (unedited, header only):** `aqua-substitution-context-notes.md`,
+`dynamo-input-requirements-notes.md`, `paper-cache-sweep-2026-09-04.md`, `pandora-1600k-analogy-notes.md` (0cfad194);
+`tidal-wiring-facts-notes.md`, `io-anchor-notes.md`, `dante-board-900km-notes.md` (b29b556e); `tidal-check-notes.md`,
+`tidal-locking-inventory-notes.md`, `magnetosphere-survey-notes.md`, `main-7files-2026-08-21-notes.md`, `aqua-substitution-gaps/`
+(3 JSON + README) — this commit. Twelve scratch notes, all in the repository now.
+
+**⚠ The main checkout (`/Users/vana/Desktop/NearStars`) holds 7 uncommitted files.** They are the 2026-08-21 20:21–20:31
+work (Dante 521 km propagation: identity rows, stability-sim json, evidence file, doc + ko mirror, checklist), **not** the
+pre-crash session's — `main-7files-2026-08-21-notes.md` has the diff. Half of that work (the bulk rows) is committed on
+engine/prototype as d6d78b63; the other half exists only in main's working copy, and engine/prototype does not have it.
+**Do not add, stash, checkout or edit anything in the main checkout; their disposition is the owner's decision.**
+
+**New rule (owner via the directing seat, 20:35):** a commit that inserts a block *above* lines a methodology document is
+cited by updates, in the same commit, every `chain.yaml` ref and code comment carrying those line numbers — or appends the
+block at the end of the document instead. b29b556e's contract blocks (+18 lines) moved 14 tidal edges and 39 heat edges; the
+next commit repaired them. Backlog, un-numbered (after C32): chain refs by anchor phrase or sha instead of line number.
+
+**Owner's push rule (20:35):** once ~10 gate-clean commits have piled up, the directing seat pushes without asking; the work
+seat still never pushes.
+
+**Two discipline facts for the ledger (directing seat, 22:25):** (1) 0ace3863 and ba907dd3 both landed before the END
+line's `rc` had been read, or before approval — the work seat's launcher counted `[PASS]` lines and went on; from now the
+launcher parses `GATE END … rc=` and stops on rc≠0. (2) gate96 ran 6 946 s (3.5–4.8× the evening's other gates) with no
+parallel computation on the work seat's side, `caffeinate` holding the machine awake and no power stamp — cause unknown,
+recorded as such. Also noted by the parallel seat, not repaired: chain refs heat:203 and :209 land on table-of-contents rows
+and :255 on a `---` rule; they did so before b29b556e too (the shift preserved them) — whether to re-aim them is tomorrow's.
+
+**Rules that bit tonight (short):** stage what you wrote (`git diff --stat` first) · the gate verdict is the `GATE END` line
+with HEAD's sha, never a "모두 통과" in the body · a background tool call dies at 10 min — gates run under `nohup` · a sha
+written into a note by the same commit is always wrong (the amend moves it) — point at the commit title instead · a named
+refusal is a value: an ordering change that turns "'giant' … 암석 사다리 밖" into "no composition preset" is a regression even
+when both are None (b8d86b68 → ffff413f) · when the directing seat's brief disagrees with the file, stop and quote the file.
+
+**Owner principle, 19:57 (relayed by the directing seat), verbatim:** *"자기장 세기는 밴드로 출력하면 좋겠다. 하나의 묶음에서
+다른 묶음으로 값이 오갈 때는 사용자한테 선택지가 있음 좋겠어."* Two rules follow, listed as **C32** in `interior-core.md`:
+(1) strength-type derived values (`dynamo_rocky` b_eq, `dynamo_giant`, later `magnetosphere_geometry`) emit a `*_min/*_max`
+band beside the point, with the width's source labelled (regime grid · multipolar 0.05–0.10 · declared range). (2) At a
+bundle boundary — engine result → phase4 board, declared input vs computed value, canonical vs interesting-first — the engine
+does not pick one: it emits a `choices` record (candidates + source + grade) and the owner records the pick on the board with
+a reason. **No silent default.** Trigger: Pandora 41.4 µT (engine) vs 75 µT (board) tonight.
+
+**Tomorrow's order (owner):** C30 → C31 → C32.

@@ -2361,6 +2361,16 @@ dated note ("refreshed … from tidal_heating @<sha>, R 521 km; was 900 km draft
 "stale: derived from the 900 km draft; awaiting moon_energy_budget recipe" note with the doc's 521 km values (223 K, 452 K)
 beside them — no value authored, no note deleted. Dry-run on the worktree copy (diff only) first; main is a separate order.
 
+### C32 — band output and handoff choices — **listed 2026-09-04 (owner, 19:57), not started; after C30 → C31**
+
+Owner: *"자기장 세기는 밴드로 출력하면 좋겠다. 하나의 묶음에서 다른 묶음으로 값이 오갈 때는 사용자한테 선택지가 있음 좋겠어."*
+(1) Strength-type derived values emit `*_min/*_max` beside the point, the width's source labelled. `dynamo_rocky` already carries
+`dipole_moment_min/max` and `b_eq_multipolar_min/max`, so `b_eq_min/max` come from that width (regime grid · multipolar 0.05–0.10
+· declared range); `dynamo_giant` and, later, `magnetosphere_geometry` follow. (2) At a bundle boundary (engine result → phase4
+board, declared input vs computed value, canonical vs interesting-first) the engine emits a `choices` record — candidates, source,
+grade — and the owner records the pick on the board with a reason; no silent default. The record's shape and its place in
+`BodyState` / `run.py` are designed after C30 and C31. Trigger: Pandora's 41.4 µT (engine, C29 c) against the board's 75 µT.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,
