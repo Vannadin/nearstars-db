@@ -2170,6 +2170,8 @@ structure carries over; what changes is that boundary condition and one δ branc
 
 ### C24 — a water-rich rocky body does not converge in `interior_layers` — **listed 2026-09-04; opened by the owner the same afternoon — diagnosed and fixed: `water-world-convergence-context-notes.md`**
 
+*Record note 2026-09-04: the heading's "fixed" was written in 1eea9957 (15:02) before the fix landed in 6113c804 (15:27); the state was true 25 min later. Kept as written; noted for the audit's ledger.*
+
 **Blocks**: C17 (its structural half cannot be measured until this converges).
 **Symptom** (`ocean-fraction-context-notes.md` §3): 1 M⊕ · CMF 0.325 · T_pot 1 600 K · no atmosphere,
 `ice_mass_fraction` 0.1 and 0.3 → the temperature loop misses the surface condition (`converged=False`,
@@ -2197,7 +2199,7 @@ Start is the owner's decision.
 
 ⚠ *(2026-09-04, evening)* **What closed is the diagnosed mechanism** — the coverage gap of near-surface water — **not the
 whole symptom in this title.** Water fractions 0.05 · 0.15 · 0.20 on the same body still do not converge, and with a different
-signature (no `PhaseGap` refusal loop; the surface condition is missed by 0.75 %) — **C27**. Read C24 as narrow.
+signature (no `PhaseGap` refusal loop — 0 raised in 120 / 279 / 355 structures; the surface condition is missed by −0.77 / +0.86 / −1.45 % at 0.05 / 0.15 / 0.20, corrected 2026-09-04 evening from a single "0.75 %") — **C27**. Read C24 as narrow.
 
 ### C25 — the measured CMB temperature and the published CMB heat-flow range cannot both be met in this model — **listed 2026-09-04, not started**
 
@@ -2232,9 +2234,21 @@ pass through". Listed only; the window stays closed under envelopes meanwhile.
 
 ### C27 — water fractions 0.05 · 0.15 · 0.20 do not converge on an Earth-mass rocky body — **listed 2026-09-04, not started**
 
-**Symptom**: `converged=False` with the surface condition missed by 0.75 % — the column tops out at 0.2 GPa · 1 588 K against the
-declared 1 600 K, with the water fluid all the way up. ⚠ **Unlike C24, this is not a `PhaseGap` refusal loop** (C24: refusal →
-1.6× oscillation → a fixed 2-cycle, identical twelve times).
+**Symptom** *(corrected 2026-09-04 evening after the audit's reproduction; the work seat reproduced it on a scratch copy of the engine at
+35d6eead — `interior.solve(1.0, cmf 0.325, imf, T_pot 1600)` with counters on `PhaseGap.__init__` and `Structure.__init__`)*:
+`converged=False` with the surface condition missed **by a fraction-dependent amount**, the water fluid all the way up:
+
+| ice_mass_fraction | T_surface | miss vs 1 600 K | p_surface | surface_reached | PhaseGap raised / structures built | T_cmb (unconverged, not read) |
+|---|---|---|---|---|---|---|
+| 0.05 | 1 587.7 K | −0.77 % | 0.000 GPa | True | 0 / 120 | 3 033 K |
+| 0.15 | 1 613.7 K | **+0.86 %** (overshoots) | 0.000 GPa | True | 0 / 279 | 3 123 K |
+| 0.20 | 1 576.7 K | −1.45 % | 0.000 GPa | True | 0 / 355 | 3 086 K |
+
+The first wording ("missed by 0.75 % — the column tops out at 0.2 GPa · 1 588 K") described the 0.05 column only, and its
+"0.2 GPa" is **unreproduced and removed**: every column reaches the surface (`p_surface` 0.000 GPa, `surface_reached` True), and
+no log in the previous work seat's scratch (`c17_curve.log` printed T_cmb only) carries that number. ⚠ **Unlike C24, this is not
+a `PhaseGap` refusal loop** — zero `PhaseGap` objects were constructed in any of the three solves (the counts above are the
+instrument's, not an inference); C24 was refusal → 1.6× oscillation → a fixed 2-cycle, identical twelve times.
 **Found**: during C17's measurement (`ocean-fraction-context-notes.md` §5), trying to bracket the maximum of the T_cmb curve.
 0.0 · 0.1 · 0.25 · 0.3 converge; the fractions between and below do not.
 **Mechanism**: **unknown.** Do not carry C24's diagnosis (a coverage gap) over to this item.
