@@ -1,11 +1,11 @@
 {
  "python": "3.9.6",
- "path_fingerprint": "8021c2c929cb7f0b",
- "frozen_at": "2026-09-03",
+ "path_fingerprint": "ed13b5bc8f426542",
+ "frozen_at": "2026-09-04",
  "steps": 1500,
  "bodies": {
   "Uranus": {
-   "seconds": 25.2,
+   "seconds": 23.6,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -43,7 +43,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 57.6,
+   "seconds": 55.5,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,

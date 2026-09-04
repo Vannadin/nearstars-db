@@ -517,6 +517,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
     liquid_mat = MATERIALS["h2o_liquid"]
     dense_mat = MATERIALS["h2o_liquid_dense"]
     hot_mat = MATERIALS["h2o_hot"]
+    # C24: 물 기둥이 가장 바깥 층일 때만(외피 없음) IF97 후보를 연다 — 위 liquid_material 의 주석.
+    column_steam_allowed = (gmf <= 0.0 and envelope_z <= 0.0)
     forced_liquid = None   # 방금 상 경계를 넘었다. 다음 걸음은 판정 없이 이 상으로 시작한다
     r_ocean_base = None
     r_ocean_top = None
@@ -594,7 +596,16 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 return hot_mat
             if water2_table.in_domain(pp, tt):
                 return dense_mat
-            # 조밀한 액체인데 water2 의 유효 천장 위(또는 압력 바닥 아래)이고 Mazevet 의 바닥 아래다.
+            if column_steam_allowed and steam_if97.in_domain(pp, tt):
+                # C24 (2026-09-04): IAPWS-IF97 r1·2 — 0.1 GPa 아래 · 500–1000 K 의 초임계 물. 브리프 25 가 같은
+                # 벽을 외피 물(_EnvelopeWater)에서만 메웠고 이 기둥에서는 안 메웠다. **마지막 후보**로 둔다 —
+                # water1·hot·water2 가 모두 거절한 창에서만 불린다. **외피가 없는 기둥에서만**: 얼음거대행성
+                # 앵커(해왕성)의 온도 괄호는 시험 사격에서 이 창(0.098 GPa · 817 K)을 밟고 *거절당해* 방향을
+                # 잡아 왔으므로, 외피 아래에서 거절 대신 IF97 을 주면 앵커의 경로가 바뀐다(2026-09-04 에 실제로
+                # 바뀌어 해왕성이 거절로 나갔다). 외피 아래의 같은 창은 오늘도 거절이고, 그것을 여는 것은 앵커
+                # 이동이라 오너 결정이다. 이음매는 0.1 GPa 에서 water2 와, 500 K 에서 water1 과 ≤ 0.04 %.
+                return COLUMN_STEAM
+            # 조밀한 액체인데 water2 의 유효 천장 위(또는 압력 바닥 아래)이고 Mazevet 의 바닥 아래이며 IF97 도 밖이다.
             # **온도가 막은 것으로, 위로 던진다** — 더 뜨거우면 water2 의 천장이 오르고 1000 K 부터는
             # Mazevet 이 받는다.
             raise PhaseGap(
@@ -604,7 +615,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 f"끝나고, 조밀한 액체 물 표(SeaFreeze water2 / Brown 2018)는 이 온도에서 "
                 f"{water2_table.P_MIN_PA / 1e9:.1f}–{water2_table.p_ceiling(tt) / 1e9:.1f} GPa 만 유효하며"
                 f"(스플라인이 그 위에서 비물리적), 뜨거운 물(Mazevet+ 2019)은 ρ ≳ 1 g/cc 에서 "
-                f"{water_hot.T_MIN:.0f} K 위를 적는다.",
+                f"{water_hot.T_MIN:.0f} K 위를 적으며, IAPWS-IF97 r1·2 (≤ {steam_if97.P_MAX_PA / 1e9:.1f} GPa · "
+                f"≤ {steam_if97.T_MAX_K:.0f} K) 도 이 (P, T) 밖이다.",
                 tt, too_cold=True)
         return liquid_mat
 
@@ -778,8 +790,17 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
             # 값으로 둔다 — 1 bar 의 수소-헬륨은 평균밀도의 10⁻⁴ 이라 질량에도
             # 반지름에도 유효숫자로 안 들어오고, 굳히지 않은 구간을 외삽하는 것보다
             # 이쪽이 정직하다.
-            rr_rho = (mat.density(max(pp, p_stop), t, t_pot) if pp > 0.0
-                      else mat.rho0)
+            if (column_steam_allowed and mat is dense_mat and 0.0 < pp < water2_table.P_MIN_PA
+                    and steam_if97.in_domain(pp, t)):
+                # C24 (2026-09-04): 걸음의 재료는 출발점에서 잠기는데, 조밀 액체 물(water2)로 잠긴 걸음의
+                # RK4 반 걸음이 표의 압력 바닥(0.1 GPa) 아래로 내려가면 water2 가 이름 대며 거절했다 —
+                # 물 많은 암석체(얼음 0.1·0.3)가 못 풀린 자리. 바닥 아래는 IAPWS-IF97 r1·2 가 같은 유체를
+                # 덮고(이음매 ≤ 0.04 %, test_water_column_steam) 다음 걸음의 liquid_material 도 STEAM 을
+                # 고르므로, 이 반 걸음만 IF97 로 잇는다. 오늘까지 이 갈래는 거절이었으니 앵커는 비트 그대로다.
+                rr_rho = COLUMN_STEAM.density(pp, t)
+            else:
+                rr_rho = (mat.density(max(pp, p_stop), t, t_pot) if pp > 0.0
+                          else mat.rho0)
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
             return (4.0 * math.pi * rr * rr * rr_rho,
@@ -1630,6 +1651,40 @@ class _Steam:
 
 
 STEAM = _Steam()
+
+
+class _SteamSlope:
+    """상 자리를 묻는 호출자에게 이름을 돌려준다 (LiquidWater 의 _LiquidWaterSlope 와 같은 역할)."""
+    name = "h2o_if97"
+    t_max = 0.0
+
+    def __init__(self, p: float) -> None:
+        self.p = p
+
+
+class _ColumnSteam(_Steam):
+    """C24 (2026-09-04): **물 기둥용** IF97 — `liquid_material` 의 마지막 후보와 water2 바닥 아래 반 걸음이 쓴다.
+
+    `_Steam` 자체에 메서드를 더하지 않는다: 그 클래스는 외피 물(_EnvelopeWater)의 위임 대상이라, 거기에
+    `dtdp_adiabat` 를 붙이면 외피가 다른 길로 단열 기울기를 읽어 얼음거대행성 앵커의 비트가 움직인다
+    (2026-09-04 에 실제로 움직였다 — 해왕성이 거절로 바뀜 — 그래서 갈라냈다). 기둥 적분이 묻는 두 인터페이스만
+    LiquidWater 와 같은 모양으로 든다: 단열 기울기는 표준 자신의 (∂lnT/∂lnP)_S 에서(조립하지 않는다),
+    gruneisen 은 그 길이 아니라는 0."""
+    name = "h2o_if97"
+
+    def dtdp_adiabat(self, p: float, t: float, t_pot: float = 0.0) -> float:
+        if t <= 0.0 or p <= 0.0:
+            return 0.0
+        return steam_if97.grad_ad(p, t) * t / p
+
+    def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
+        return 0.0
+
+    def phase_at(self, p: float, t: float = 0.0):
+        return _SteamSlope(p)
+
+
+COLUMN_STEAM = _ColumnSteam()
 
 
 class _EnvelopeWater:

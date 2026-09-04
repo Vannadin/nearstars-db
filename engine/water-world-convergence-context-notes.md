@@ -186,3 +186,42 @@ sources: **a coverage gap between three compatible tables, closed on one code pa
 the other (the water column).** Not a data problem — a "did not join what we already hold" problem, and that
 kind recurs. Observation, not a task: *our water representations' coverage map — which table covers which
 (P, T), and where the gaps are — lives in no single place; this gap surfaced by chance on one code path.*
+
+## 6. The fix — what changed, what did not, and what the anchors said (2026-09-04, after gate86)
+
+**Three edits in `interior.py`, all on paths that only ever raised:**
+1. `liquid_material` — after water1, hot water and water2 have all declined, `COLUMN_STEAM` (IAPWS-IF97 r1·2)
+   is the last candidate; the refusal that follows now names IF97's window too.
+2. `deriv` (inside `integrate`) — a step locked to water2 whose RK4 half-step falls below water2's 0.1 GPa floor
+   evaluates that half-step's density with IF97 instead of raising (seam ≤ 0.02 %; the next step's
+   `liquid_material` picks IF97 anyway). This was the actual refusal site: the material is locked at the step's
+   start, so the first fix (the candidate alone) changed nothing — the log showed the same 353.8 GPa / +60 %
+   two-cycle until the half-step was bridged.
+3. A separate `_ColumnSteam` (subclass of the envelope's `_Steam`) carrying the two interfaces the column
+   integration asks a liquid material for — `dtdp_adiabat` from the standard's own (∂lnT/∂lnP)_S (not
+   assembled) and `gruneisen = 0` ("not this path") — plus a phase-name object. **Not added to `_Steam`**: a
+   first attempt put them on `_Steam` itself, and `_adiabatic_dtdp` reads `dtdp_adiabat` by `getattr`, so the
+   envelope's water would have taken a different route.
+
+**Scope, forced by ⑤:** the candidate and the bridge are enabled **only when the water column is the outermost
+layer** (`gmf ≤ 0 and envelope_z ≤ 0`). The assumption "no anchor ever entered that window" was wrong in one
+respect: Neptune's temperature bracket enters it on *trial* shots (the dense table's own comment records
+0.098 GPa · 817 K) and is steered by the refusal; opening the window under an envelope changes the bracket's
+path. That is an anchor move and therefore the owner's decision, not this fix's. Under an envelope the same
+window is still refused today, by the same message. **Recorded, not done.**
+
+**⑤ evidence:** `test_ice_giant.py --refresh` after the scoped fix changes only `path_fingerprint`
+(8021c2c929cb7f0b → ed13b5bc8f426542, the path functions did change), `frozen_at` and the two timing lines;
+**every anchor value is byte-identical** (`git diff` shows no numeric line). Positive control unchanged: ice 0 →
+2–3 s · calibrated · R 1.0030 · centre 358.46 GPa.
+
+**⑥ result — both converge:**
+
+    ice_mass_fraction   converged   R (R⊕)   P_cmb (GPa)   T_cmb (K)   time    (before: R 1.1509 / 1.2934, T_cmb 4397 / 4372, unconverged)
+    0.1                 True        1.1313   132.2         3 105       ~50 s
+    0.3                 True        1.2585   117.7         3 050       ~54 s
+
+The grade stays `analog` — by `interior`'s grade rule (a flowing water column sets it, among other flags), not
+as a convergence verdict; the pre-registration's "grade back to `calibrated`" was written from the dry body's
+grade and could not hold for a water body. Recorded as a mis-specified criterion; ⑥'s substance (convergence,
+positive control, anchors) holds. **No next wall named itself at 0.1 or 0.3.** C17 is not opened here.
