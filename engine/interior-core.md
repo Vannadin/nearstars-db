@@ -1894,6 +1894,8 @@ Order among them is the owner's, brief by brief.
 
 ### C20 — the thermal-history integrator (forward integration in time) — **listed 2026-09-03; released 2026-09-04 ("C20 ㄱㄱ"), pre-registration and design in `core-thermal-history-context-notes.md`**
 
+**Built 2026-09-04 (daytime)** — `core_history.py`, node `core_thermal_history`, 11th recipe. ⑤ converged (0.001 %, sweep on demand), ① T_c 4 027 K inside C14's band with a colder, low-surface-flow history (the pre-registered (나) direction — recorded, 0.70 unmoved), ② never nucleates (consistent with C14, unlike Nimmo's nominal), ④ −36 K/Gyr inside 33–126, **③c: the four-corner ΔE_min band −259…+32 MW/K straddles zero — C20 built, C15 still cannot say.** Run record: `core-thermal-history-context-notes.md` §4.
+
 Owner's approval, verbatim (session `4b8e06ba`, 09-03 17:55): *"적분기 c20, ㅇㅇ 그게 좋겠다. 작은 의견 몇개.
 행성의 생성 시기는 모천체의 생성시기로, 그리고 방사성 동위원소 관련 열 생성도 같이 넝어야 할 것같아."* (quoted as
 typed; the last clause reads "넣어야" — radiogenic heat production is to be included).

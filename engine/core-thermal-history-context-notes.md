@@ -240,3 +240,62 @@ easily produced by an unconverged run. **Do not read ③ off a run that has not 
 - **Not claimed**: any value for a body other than "consistent with an Earth-calibrated model"; `t_form`
   (§1 trap); the short-lived radiogenic pulse (C21).
 - **Anchors**: the new module touches no path-fingerprint function; `--refresh` not run.
+
+
+## 4. Run record — 2026-09-04 (Earth; order kept: ⑤ → ① → ② → ④ → ③)
+
+**Inputs**: interior solve (1 M⊕, CMF 0.325, T_pot 1 600 K → core_radius 0.5470 R⊕, P_cmb 135.28 GPa, T̃_m 2 526 K,
+r_b 1.579); T_c(0) = 4 800 K, T̃_m(0) = 4 800 K (Nimmo's printed start, read as real temperatures → T_m(0) = 3 040 K);
+age 4.54 Gyr; H_m M_m(0) = 14.9 TW × history factor; H_core 1.5 pW/kg on the nominal path.
+
+**⑤ Convergence — passed, on record** (`test_core_history.py --sweep`, 414 s):
+
+    step     n      T_c(0) K   T_m(0) K   inner core   ΔE_min band (3.1 Gyr, 4 corners) MW/K
+    h        1135   4027.4     1525.5     never        −259.2 … +31.7
+    h/2      2270   4027.4     1525.5     never        −259.2 … +31.7
+    h/4      4540   4027.4     1525.5     never        −259.2 … +31.7
+    width |ΔE_min(h/4) − ΔE_min(h/2)| / |ΔE_min(h/2)| = 0.001 % (< 10 %), same inner-core case at all three → converged.
+
+Cost was mis-estimated in §3: each time step builds **four** core profiles (RK4) plus four corner evaluations, so a
+history at h costs ~53 s, not 12, and the sweep ~400 s. **The gate carries the single h run (+53 s); the sweep is on
+demand** — the brief's rule for a heavy sweep.
+
+**① Earth calibration — ①a, inside the band**: present T_c **4 027 K** (C14's band 3 750–4 284; C14's solved 3 978).
+Report lines, not gates: present T_m **1 525 K** against the declared 1 600 K (**−75 K**); present surface heat flow
+**Q_M 28.3 TW** against Nimmo's / the observed **42 TW**; present Q_C 5.07 TW (C14 4.91).
+**The pre-registered diagnosis applies even though ① passed**: the history ends *colder* than the declaration and
+with a *low* surface flow — the direction named in advance as evidence for (나), that eq. 32's H_m M_m term wants
+the crust-inclusive convention (Nimmo's 1.0, not our 0.70). It is evidence, not a decision: **0.70 did not move**, and
+the alternative reading (the mantle constants ζ / η₀ of Brief 46, declared on present-day Earth) was not tested here.
+
+**② Inner core — ②c**: never nucleates over 4.54 Gyr (r_i = 0 throughout) — consistent with C14's "no inner core at
+the solved T_c". Not celebrated: Nimmo's nominal model *does* grow an inner core (IC age 1.10 Gyr, ξ 0.36) — with
+400 ppm K, a hotter melting curve (T_m0 1 695 K-based) and 23.4 TW of mantle heating. Our core is 130 K cooler at
+present than Nimmo's 4 155 K and our melting curve is `fe_prem`'s. The disagreement with Earth's *observed* inner
+core is the standing C14 finding, unchanged by C20.
+
+**④ dT_c/dt — ④a**: present **−36 K/Gyr**, inside the declared 33–126. C14's declared band can narrow to the computed
+value **on this model** (the 126 was Gubbins' k = 60 model; our history sits at Nimmo's end). Not applied to C14
+tonight — it is a report.
+
+**③ ΔE_min over the last 3.1 Gyr — ③c, cannot-say** (read last, on the ⑤ record):
+
+    corner (k W/m/K, H pW/kg)   ΔE_min MW/K   at t (Gyr)   mean   present
+    30, 0.0                      −66           0 (now)      +10    −66
+    30, 1.5                      +32           0 (now)      +106   +32
+    70, 0.0                     −259           0 (now)     −183   −259
+    70, 1.5                     −162           0 (now)      −88   −162
+    band −259 … +32 · positive corners 1/4 · the minimum sits at the present epoch on every corner (ΔE declines monotonically)
+
+**Verdict string**: `cannot-say (the four-corner band straddles zero inside the last 3.1 Gyr — C20 built, C15 still
+cannot say)`. The band is **not** narrowed. What the curve does say, labelled: ΔE is strongly positive early
+(+429…+710 MW/K at −4.1 Gyr on all corners) and declines through zero on three corners — the model's dynamo weakens
+toward the present, and the corner that stays positive is the one with low conductivity *and* core potassium.
+**Not comparable to C15's present-day −264…+238** (one axis changed from declaration to computation).
+
+**Beside it, observed**: Q_C runs 26 TW at −4.1 Gyr to 5.1 TW now — a factor 5 — where Nimmo writes that an acceptable
+model needs the CMB heat flux to have *"varied by less than a factor of 2 over 4.5 Gyr"*. Recorded, not acted on.
+
+**Anchors**: none traverse `core_history.py`; `test_ice_giant.py --fast` 모두 통과; no `--refresh`.
+**What C20 does not do**: feed `entropy_history_verdict` into C15 (that node's string stays `cannot-say (needs C20)`
+until a wiring decision); supply `t_form`; include the short-lived pulse (C21).

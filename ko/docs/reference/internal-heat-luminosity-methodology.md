@@ -157,6 +157,22 @@ dT_c/dt 의 여덟 모서리, `_h0` 는 H = 0 모서리 — 우리 H 밴드의 �
 수렴하지만 그 표본 위의 적분은 1차 합이라 O(h) 이고, E_R·E_s 는 거의 같은 두 수의 차(한 자리 상쇄)입니다 — 지구 400 걸음에서
 ≈ 2.7 MW/K, 선언 밴드보다 두 자릿수 작으며 게이트가 < 10 MW/K 를 검사합니다. `engine/core-entropy-context-notes.md`.
 
+## 계약 — `core_thermal_history`
+
+**Returns** — `core_cmb_temperature_present` [K] · `mantle_potential_temperature_present` [K] · `dtc_dt_present_k_per_gyr` [K/Gyr] ·
+`q_cmb_present` [W] · `q_mantle_present` [W] · `inner_core_radius_present_km` [km] · `inner_core_case` [—] ·
+`inner_core_nucleation_gyr_ago` [Gyr] · `delta_e_min_3gyr_lo` [W/K] · `delta_e_min_3gyr_hi` [W/K] · `delta_e_present_lo` [W/K] ·
+`delta_e_present_hi` [W/K] · `entropy_history_verdict` [—] · `history_converged` [—] · `history_convergence_width` [—] · `history_steps` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] · `cmb_temperature` [K] ·
+`potential_temperature` [K] · `radius_earth` [R_earth] · `age_gyr` [Gyr] · `core_initial_temperature` [K] ·
+`mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] · `core_h_w_per_kg` [W/kg]
+**Discriminating keys** — `body_class`: 암석체만. 내부구조 해나 초기온도가 없으면 이름 붙여 거절.
+**Grade** — **analog**: Nimmo+ 2004 식 30·32 를 상태 (T_c, T_m) 위에서 시간 앞으로 적분(RK4, Nimmo 의 4 Myr 걸음). 맨틀 바닥
+온도는 내부구조 해의 단열비(식 29 형태), 방사성 열은 장수명 반쪽(K·Th·U)만. 초기온도는 지구에선 Nimmo 의 인쇄값 4 800 K,
+다른 천체에선 선언. 결과는 ≈24개 선언 위에 서고 "지구 보정 모형과의 일관성" 으로 읽는다. 엔트로피 밴드는 k × H 네 모서리 —
+C15 여덟 모서리의 선언 냉각률 축이 이 노드의 계산값이므로 두 밴드는 비교 불가. 걸음 수렴(3.1 Gyr 의 ΔE_min, h·h/2·h/4)이
+사전등록 시험이고 온디맨드(`test_core_history.py --sweep`)로 돈다.
+
 ## 목차
 
 1. [관계식: T_eff⁴ = T_eq⁴ + T_int⁴](#1-관계식-t_eff--t_eq--t_int)

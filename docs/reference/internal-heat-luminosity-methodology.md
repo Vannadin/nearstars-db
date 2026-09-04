@@ -179,6 +179,23 @@ RK4 (0.003 % converged) but the integrals on its samples are first-order sums, O
 nearly equal quantities (one digit cancels) — measured ≈ 2.7 MW/K on Earth at 400 steps, two orders below the
 declaration band, gated at < 10 MW/K. `engine/core-entropy-context-notes.md`.
 
+## Contract — `core_thermal_history`
+
+**Returns** — `core_cmb_temperature_present` [K] · `mantle_potential_temperature_present` [K] · `dtc_dt_present_k_per_gyr` [K/Gyr] ·
+`q_cmb_present` [W] · `q_mantle_present` [W] · `inner_core_radius_present_km` [km] · `inner_core_case` [—] ·
+`inner_core_nucleation_gyr_ago` [Gyr] · `delta_e_min_3gyr_lo` [W/K] · `delta_e_min_3gyr_hi` [W/K] · `delta_e_present_lo` [W/K] ·
+`delta_e_present_hi` [W/K] · `entropy_history_verdict` [—] · `history_converged` [—] · `history_convergence_width` [—] · `history_steps` [—]
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] · `cmb_temperature` [K] ·
+`potential_temperature` [K] · `radius_earth` [R_earth] · `age_gyr` [Gyr] · `core_initial_temperature` [K] ·
+`mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] · `core_h_w_per_kg` [W/kg]
+**Discriminating keys** — `body_class`: rocky bodies only. No interior solution or no initial temperatures → refused by name.
+**Grade** — **analog**: Nimmo+ 2004 eqs 30 and 32 integrated forward (RK4, Nimmo's 4 Myr step) on the state (T_c, T_m); the
+mantle base temperature by the interior solve's own adiabat ratio (eq. 29's form); long-lived radiogenic heat only (K·Th·U);
+the initial temperatures are Nimmo's printed 4 800 K on Earth and declarations elsewhere; the result stands on ≈24
+declarations in all and reads "consistent with an Earth-calibrated model". The entropy band is over the four k × H corners —
+the declared-rate axis of C15's eight is what this node computes, so the two bands are not comparable. Step convergence
+(ΔE_min over 3.1 Gyr at h, h/2, h/4) is the pre-registered test and runs on demand (`test_core_history.py --sweep`).
+
 ## Table of Contents
 
 1. [The relation: T_eff⁴ = T_eq⁴ + T_int⁴](#1-the-relation-t_eff--t_eq--t_int)

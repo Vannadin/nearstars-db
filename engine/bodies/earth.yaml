@@ -21,6 +21,10 @@ inputs:
   core_cmb_temperature: 3760.0
   # 정체 암석권 판단 — **선언**(사실: 지구는 판구조). dynamo_rocky 의 생존 게이트가 읽는다 (브리프 47).
   stagnant_lid: false
+  # C20 열진화의 초기온도 — Nimmo+ 2004 Fig. 2 캡션의 인쇄값 "starting temperature of both mantle and core was
+  # 4800 K", 실온도로 읽음: 핵 4800 K, 맨틀 바닥(실온도) 4800 K → 퍼텐셜 = 4800 / r_b(1.579, interior 단열비) = 3040 K.
+  core_initial_temperature: 4800.0
+  mantle_initial_potential_temperature: 3040.0
 
 units:
   mass_earth: M_earth
@@ -28,6 +32,8 @@ units:
   age_gyr: Gyr
   potential_temperature: K
   core_cmb_temperature: K
+  core_initial_temperature: K
+  mantle_initial_potential_temperature: K
 
 # 발표된 값. 엔진은 읽지 않고 대조만 한다.
 expected:

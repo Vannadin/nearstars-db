@@ -192,6 +192,8 @@ echo "── CMB 열류 (Nimmo 식 37–39 폐합 · 단열 열류 · 거절 라
 (cd engine && python3 test_core_energy.py) || fail=1
 # 핵 엔트로피 생성 φ (C15). Nimmo 해석 핵으로 Table 4 의 여섯 엔트로피 항 성분별 재현, 엔진 지구는 밴드로 보고, 내핵 두 분기, 3 Gyr 거절 라벨이 앵커다.
 (cd engine && python3 test_core_entropy.py) || fail=1
+# 열진화 적분기 (C20). 지구 단일 실행(Nimmo 4 Myr 걸음)이 사전등록 분기 ①②④③ 을 그 순서로 읽는다; 수렴 스윕은 온디맨드(--sweep, ~400 s).
+(cd engine && python3 test_core_history.py) || fail=1
 # 암석 다이나모 사다리 (Brief 47). 문서 표 재현·RM22 Table 8 차이·게이트 라벨·격자 미선출이 앵커다.
 (cd engine && python3 test_dynamo_rocky.py) || fail=1
 # chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.

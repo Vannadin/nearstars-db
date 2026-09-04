@@ -283,6 +283,19 @@ nodes:
               icb_radius_solved, icb_pressure_solved, c_r_km_per_k, has_inner_core_solved,
               core_profile_mass_residual, core_center_pressure_solved, balance_residual, band_corners_with_root]
 
+  core_thermal_history:
+    layer: "2층. 허브"
+    domain: interior
+    kind: computed
+    recipe: internal-heat-luminosity-methodology
+    # 2026-09-04 C20 (오너 "C20 ㄱㄱ"): Nimmo+ 2004 식 30·32 를 시간 앞으로 RK4 적분(Nimmo 의 4 Myr 걸음)해
+    # T_c(t)·T_m(t)·dT_c/dt(t)·내핵 핵생성·ΔE(t) 를 낸다. 초기온도는 Nimmo Fig. 2 캡션의 4800 K(지구 인쇄값).
+    # 방사성 열은 장수명 반쪽(K·Th·U, history_factor)만. 수렴(h·h/2·h/4, ΔE_min 기준)이 사전등록 판정선.
+    # 결과는 "지구 보정 모형과의 일관성" 이지 이 천체의 실제 값이 아니다. C15 의 이력 판정을 공급한다(배선은 별도).
+    outputs: [core_cmb_temperature_present, mantle_potential_temperature_present, dtc_dt_present_k_per_gyr,
+              q_cmb_present, q_mantle_present, inner_core_radius_present_km, inner_core_case,
+              inner_core_nucleation_gyr_ago, delta_e_min_3gyr_lo, delta_e_min_3gyr_hi, delta_e_present_lo,
+              delta_e_present_hi, entropy_history_verdict, history_converged, history_convergence_width, history_steps]
   core_entropy_production:
     layer: "2층. 허브"
     domain: interior
@@ -700,6 +713,15 @@ edges:
   - {from: interior_layers, to: core_entropy_production, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118"}
   - {from: mass_or_radius, to: core_entropy_production, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언)."}
   - {from: body_class, to: core_entropy_production, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
+  - {from: interior_layers, to: core_thermal_history, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118", note: "C20. 핵 프로파일의 바깥 끝, 식 31 의 R."}
+  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118"}
+  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:118", note: "기준 퍼텐셜 온도에서의 맨틀 바닥 온도 → 단열비 r_b = T̃_m/T_m (식 29 형태), 시간에 따라 고정."}
+  - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량·맨틀 질량 = 질량 × (CMF, 1−CMF)."}
+  - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md:118", note: "식 33 의 R_p 와 표면 중력."}
+  - {from: body_age, to: core_thermal_history, kind: requires, via: t_body, ref: "internal-heat-luminosity-methodology.md:118", note: "적분 구간 = 계의 나이 (오너 조건 1)."}
+  - {from: internal_heat_nontidal, to: core_thermal_history, kind: requires, via: mantle_radiogenic_power, ref: "internal-heat-luminosity-methodology.md:118", note: "장수명 방사성 열 H_m M_m(t) = 현재 맨틀 몫 × history_factor(t). 단수명 펄스(C21)는 아니다."}
+  - {from: body_class, to: core_thermal_history, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
+  - {from: core_thermal_history, to: core_entropy_production, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md:118", note: "C20 이 entropy_history_verdict 를 낸다. C15 의 같은 이름 출력은 아직 'cannot-say (needs C20)' 고정 — 소비 배선은 별도 결정."}
   - {from: core_entropy_production, to: dynamo_rocky, kind: influences, sign: non-monotonic, status: gap, ref: "rocky-planet-dynamo-methodology.md:60", note: "C15 는 φ 를 내기까지. 문턱이 판정을 못 내므로(0.1–1000 MW/K) 사다리 교체는 별도 오너 결정 — 배선하지 않는다. 논문도 Q_C 대 Q_k 와 φ 를 나란히 둔다."}
   - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md:1"}
