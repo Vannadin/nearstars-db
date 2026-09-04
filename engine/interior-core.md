@@ -2460,6 +2460,14 @@ shared by two or more edges must literally name the payload each wants (8/8 on t
 useless on single-use ones). `test_check_refs.py` aims the checker at a synthetic document where all five
 outcomes are known by construction, because a checker that only ever passes is the thing being replaced.
 
+The same inheritance mechanism turned out to be inside the checker, which is the finding worth
+carrying: rule 2 read each citation's edge endpoints with a regex over the citing line, so an edge
+written as a block mapping — `from:`, `to:` and `ref:` on separate lines — silently inherited the
+previous flow-style edge's endpoints, exactly as a new chain edge had been inheriting whatever
+happened to sit on `heat:119`. The same disease in the data and in the instrument built to find it.
+Endpoints now come from the parsed structure, queued per value so two edges sharing one ref are each
+judged against their own. **Anything read line by line inherits from the line above; ask what.**
+
 The audit found five enumeration holes, all "passes silently", all closed: an upper-case file name was
 invisible (`DANTE_HEAT_TRANSPORT_EVIDENCE.md`), non-`.md` targets were not counted at all (unmigrated 204
 → 392 when that opened), `bodies/*.yaml` was outside the scan, a folded `note: >` block could hide a

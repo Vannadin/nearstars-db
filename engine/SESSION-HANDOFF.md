@@ -1105,3 +1105,97 @@ does not pick one: it emits a `choices` record (candidates + source + grade) and
 a reason. **No silent default.** Trigger: Pandora 41.4 µT (engine) vs 75 µT (board) tonight.
 
 **Tomorrow's order (owner):** C30 → C31 → C32.
+
+## 2026-09-05 overnight — C31 landed, and citations stopped being line numbers
+
+Written by the work seat at close. Seats: directing `nearstars-77`, work (this), plus the audit and
+parallel seats. All Opus. The work seat never pushed; the directing seat pushed twice, at `5dcf26c3`
+and at `b5b88c94` (gate103 rc=0). **main has three unpushed commits of its own** (`7fd5a6ea`,
+`30317daf`, `b99b16a9`) — the owner was asked whether to back those up.
+
+**The owner's instruction, verbatim:** *"인용 부패 싹다 고쳐 — 방법론 문서와 우리 도구 범위에서."*
+By close, `chain.yaml` carries **no line numbers at all**: 212 anchors, every one resolving exactly
+once. This morning 202 of its citations were line numbers.
+
+### C31 — Dante's board rows are on the 521 km figure
+
+Landed in the MAIN checkout (`7fd5a6ea` · `30317daf` · `b99b16a9`), after the directing seat cleared
+that checkout's seven uncommitted files (`24587c5f`). Seven values moved (mass, radius,
+reference_radius, gravity, tidal_heating ~1200× → ~79× Io, tidal_surface_flux ~11,500 → ~2,324 W/m²,
+and the `internal_heat` echo); the identity row's frozen sentence had one digit corrected, 78 → 79,
+the old figure being the rounded 1200 scaled rather than the law's own 79.28; three rows no recipe can
+produce (`surface_temperature`, `albedo`, `geopotential_j2`) kept their values and gained dated stale
+notes, the last carrying the size of its own delay (0.039 against 900 km is 0.0131 against 521 km, a
+factor 3 read literally). J₂, C₂₂, flattening and rotation_period do not move because the invariant is
+**R³/M**, not R or M.
+
+`engine/tools/refresh_board_rows.py` did it and is indexed in `docs/reference/tools.md` §13. It
+**refuses by name** when the satellites table and the bulk rows disagree about radius or mass;
+`--take-satellites-figure` is how the operator declares which side is current. The guard would
+otherwise have blocked the very repair it exists for — the board disagreed with itself on purpose.
+
+### C33 — the engine cites phrases
+
+`<doc>.md@«a phrase that occurs exactly once in that document»`, resolved by `engine/check_refs.py`,
+self-tested by `engine/test_check_refs.py`, wired into `check.sh`. Guillemets because a phrase carries
+quotes and apostrophes and must survive YAML, Python and Markdown unescaped. In a recipe module that
+declares `RECIPE = "<slug>"`, the bare word `doc` means its own document and **only** its own.
+
+**Why line numbers were abandoned.** `internal-heat-luminosity-methodology.md:119` was a contract
+block's Needs line when 30 edges were drawn against it, then a different block's Needs line, then a
+Returns line — and that last move happened **inside the commit that went to fix citations**
+(`25980fdc`). 24 of the 30 were wrong, 20 from birth, and no reader could see it: five contract blocks
+in that one document carry near-identical Needs lines. A line number the directing seat had read by
+hand with `sed` was off by four lines three hours later.
+
+**The hard-wrap problem, and the third option taken.** Methodology prose wraps at ~80 columns, so a
+sentence-length anchor cannot sit on one line. Matching happens against a copy where a newline plus the
+following indent becomes one space; **nothing inside a line is touched**, so the strictness that is
+doing work survives (`⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴` is unique only with its double spaces).
+
+**The checker's own case history — the most useful thing to carry forward.** One disease, five
+appearances, always the same shape: *the checker not saying that it did not look.*
+1. `heat:119` — each new edge inherited whatever happened to be on that line.
+2. The audit's five enumeration holes (upper-case names, non-`.md` targets, `bodies/*.yaml`, folded
+   blocks, bare file names), closed in `5a056357` **with no test** — which is how the next two got in.
+3. An unparseable `chain.yaml` reporting zero problems over the 8 % it could still read.
+4. Citations inside YAML comments going silent when the scan moved to parsed values.
+5. `<doc>.md:Contract`, a form in no bucket at all, found by the directing seat.
+Each is now a named failure with an assertion behind it. **The rule this leaves: a commit that closes a
+hole brings the test that reproduces it.**
+
+**And the same inheritance mechanism was inside the checker.** Rule 2 read each citation's edge
+endpoints with a regex over the citing line, so an edge written as a block mapping — `from:`, `to:` and
+`ref:` on separate lines — silently inherited the previous flow-style edge's endpoints. The data had
+been inheriting a document line; the checker was inheriting a neighbour's endpoints. Endpoints now come
+from the parsed structure, queued per value so two edges sharing one ref are each judged against their
+own. **If you read anything line by line, ask what it inherits from the line above.**
+
+**The tool got ahead of the human once**, which is the point of building it: the parse-failure FAIL,
+added an hour earlier, immediately caught the work seat's own sweep breaking `chain.yaml` with an
+anchor containing a double quote.
+
+### Gates, and why they were slow
+
+`gate98` rc=1 on a preserved note that was 42.9 % hangul — it landed in `a01d7277`, **after** gate97
+ran, so no gate had ever seen it (`ec707ad3` translated it). `gate100` rc=0. `gate101` rc=1 on seven
+dead links from the newly preserved notes. `gate103` rc=0, 532 PASS, 24 min, and covers everything
+above.
+
+**Two or three gates were running at once** — that, not any single gate, is why some took 6 946 s.
+⚠ `pgrep -f "scripts/check.sh"` counts **parent and child**, so one gate shows as two: treat 3+ as
+"someone else is running one". And the verdict is the `GATE END … rc=` line only; a cancelled run is
+not a verdict even with a thousand PASS lines behind it.
+
+### State, and what is next
+
+- **C31** built. **C33** in progress: 175 citations still on line numbers, in code and living notes;
+  130 more sit inside preserved notes and are counted apart, because their line numbers were true when
+  written. The place to tighten to "unmigrated → 0" is marked in a comment on `main()`'s last lines.
+- **C34** listed, code verdicts untouched, awaiting the owner on one question: **what quantity the
+  heat-transport table is fed** (four candidates for Earth, spanning 2.20×).
+- Backlog in `engine/tools/README.md`: contract-heading anchors → unique Need items where one exists;
+  and re-grade the living notes in `engine/` to the wiring's standard (a dead landing there only warns
+  today, which is right for a preserved note and wrong for `interior-core.md`).
+- The parallel seat's seven `.ko.md` files are **evidence records**, kept verbatim; every verdict they
+  carry is in English in C33/C34 (`interior-core.md`).
