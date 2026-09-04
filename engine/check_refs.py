@@ -48,6 +48,10 @@ SELF_LINE = re.compile(r"(?<![a-z0-9-])doc :([0-9]+(?:[-–][0-9]+)?)")
 RECIPE_DECL = re.compile(r'^RECIPE = "([a-z0-9-]+)"', re.M)
 # chain.yaml writes each edge as a one-line flow mapping, so the endpoints sit on the citing line itself
 EDGE = re.compile(r"from: ([a-z_]+), to: ([a-z_]+)")
+# A ref that is a bare file name cites the whole document. Two docs are cited that way on purpose:
+# their payload is pinned by the edge's own `via:`, and their first line is a Korean header comment,
+# so a line number there would cite the comment and an anchor would have to quote it.
+WHOLE = re.compile(r'"([a-z0-9-]+\.md)"')
 
 SCAN = (("engine/chain.yaml",), ("engine/bindings.yaml",),
         ("engine/*.py",), ("engine/tools/*.py",), ("engine/*.md",),
@@ -166,6 +170,7 @@ def main() -> int:
     rotten: list[str] = []
     ambiguous: list[str] = []
     mismatched: list[str] = []          # rule 2: landed inside another node's contract block
+    whole = 0                           # refs that cite a whole document, which is a legitimate form
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
     warned: list[str] = []              # rule 3: a landing that moves easily but may well be meant
     unmigrated: list[tuple] = []
@@ -200,6 +205,12 @@ def main() -> int:
                         ok += 1
                         if listing:
                             print(f"  [ok] {where}")
+            if path.suffix == ".yaml":
+                for m in WHOLE.finditer(line):
+                    if target_of(m.group(1), path) is None:
+                        rotten.append(f"{rel}:{i}: {m.group(1)} — no such document")
+                    else:
+                        whole += 1
             for m in LINE_REF.finditer(line):
                 unmigrated.append((f"{rel}:{i}", m.group(1), m.group(2), path))
             for m in SELF_LINE.finditer(line):
@@ -226,7 +237,7 @@ def main() -> int:
             warned.append(f"{where}: {doc}:{loc} — lands on a {kind}, which moves when the document grows")
 
     print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
-          f"미이행 줄번호 {len(unmigrated)}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
+          f"문서 전체 인용 {whole}건 · 미이행 줄번호 {len(unmigrated)}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous),
                         ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead)):
         for r in rows:
@@ -244,7 +255,8 @@ def main() -> int:
         print(f"[FAIL] 인용 {bad}건이 해석되지 않는다")
         return 1
     # C33 이 끝나면 여기서 미이행 0 을 요구하도록 조인다.
-    print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 미이행 {len(unmigrated)}건은 배치 이행 대기")
+    print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 문서 전체 인용 {whole}건 · "
+          f"미이행 {len(unmigrated)}건은 배치 이행 대기")
     return 0
 
 
