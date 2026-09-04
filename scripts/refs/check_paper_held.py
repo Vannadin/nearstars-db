@@ -32,6 +32,17 @@ Two defects of its own, found 2026-09-04 within hours of installation (recorded,
   "checked ..." list says which names were tried - compare it with `ls` before believing it.
   Seen but not folded in: 2020SciA_6_7467D uses '_' where a dot run would be - a different
   variant, recorded here, not guessed at.
+- Fourth and fifth naming classes (2026-09-04 evening, parallel seat's sweep of 21 ABSENT verdicts,
+  engine/paper-cache-sweep-2026-09-04.md): DESCRIPTIVE names (mauk_fox_2010_electron_belts.pdf,
+  summers_2014_limiting_spectrum.pdf, mauk_fox_KP_run.pdf) and UNDERSCORE + AUTHOR-YEAR names
+  (_shue1997.pdf, _shue1998.pdf). Six of the 21 ABSENT papers were on disk under such names. There
+  is no regex from summers_2014_limiting_spectrum to 2014JGRA..119.6313S, so the fix is not a
+  smarter pattern but a RECORDED MAPPING: the cache's existing *.PROVENANCE.txt sidecars carry a
+  "bibcode  <id>" line (and an "arXiv  <id>" line), and this tool now reads them into an id -> base
+  name index consulted after the name rules fail. Rule that follows: WHOEVER CACHES A PAPER UNDER A
+  DESCRIPTIVE NAME LEAVES A <base>.PROVENANCE.txt BESIDE IT WITH A bibcode LINE - the sidecar is the
+  mapping. HELD still requires a body under that base (a sidecar alone is SIDECAR-ONLY, the
+  "name whose only file is .PROVENANCE.txt" case above, kept as its own state).
 """
 from __future__ import annotations
 
@@ -52,6 +63,8 @@ ARXIV = re.compile(r"\b\d{4}\.\d{4,5}\b")
 ARXIV_OLD = re.compile(r"\b([a-z-]+(?:\.[A-Z]{2})?)/(\d{7})\b")
 BODY_MIN_BYTES = 2000  # an arXiv abstract page saved as .md is ~50 bytes; a full text is tens of KB
 STRIP = re.compile(r"\.(pdf|txt|src|md|json|html|xml|ps|eps|zip)$")
+# 사이드카의 "bibcode  2009P&SS...57.2053F ..." / "arXiv    1908.10682 ..." 줄. NONE 은 매핑이 아니다.
+SIDECAR_LINE = re.compile(r"^(bibcode|arxiv)\s+(\S+)", re.IGNORECASE)
 
 
 def _has_body(path: str) -> bool:
@@ -85,6 +98,34 @@ def cache_names(root: str = CACHE) -> dict[str, bool]:
             base = STRIP.sub("", name)
             names[base] = names.get(base, False) or _has_body(os.path.join(dirpath, name))
     return names
+
+
+def sidecar_index(root: str = CACHE) -> dict[str, str]:
+    """id (bibcode or arXiv, as written in a *.PROVENANCE.txt) -> the sidecar's base name.
+
+    The recorded mapping for cache names that carry no bibcode. Read, never derived from the file name."""
+    index: dict[str, str] = {}
+    for dirpath, _dirnames, filenames in os.walk(root):
+        for name in filenames:
+            if not name.endswith(".PROVENANCE.txt"):
+                continue
+            base = name.removesuffix(".PROVENANCE.txt")
+            with open(os.path.join(dirpath, name), encoding="utf-8", errors="replace") as fh:
+                for line in fh:
+                    m = SIDECAR_LINE.match(line)
+                    if not m or m.group(2).upper().startswith("NONE"):
+                        continue
+                    ident = m.group(2)
+                    if m.group(1).lower() == "arxiv":
+                        ident = ident.removeprefix("arXiv:").removeprefix("arxiv:")
+                        if (n := ARXIV.search(ident)):
+                            ident = n.group(0)
+                        elif (n := ARXIV_OLD.search(ident)):
+                            ident = f"{n.group(1)}_{n.group(2)}"
+                        else:
+                            continue
+                    index.setdefault(ident, base)
+    return index
 
 
 def ads_identifiers(bibcodes: list[str]) -> dict[str, list[str]]:
@@ -121,6 +162,7 @@ def main(argv: list[str]) -> int:
         return int(bool(sys.stderr.write(__doc__ or "")))
 
     names = cache_names()
+    sidecars = sidecar_index()
     arxiv = ads_identifiers(bibcodes)
     missing = 0
     for b in bibcodes:
@@ -141,6 +183,14 @@ def main(argv: list[str]) -> int:
             missing += 1
             how = "bibcode" if shells[0] == b else f"arXiv {shells[0]}"
             print(f"ABSTRACT-ONLY  {b}  (as {how}; no pdf, no ltx_document html, md ≤ {BODY_MIN_BYTES} B)")
+        elif (via := [sidecars[c] for c in candidates if c in sidecars]):
+            # 이름 규칙이 다 빗나간 뒤에만 본다 — 사이드카가 기록한 매핑. 본문 요구는 그대로.
+            base = via[0]
+            if names.get(base):
+                print(f"HELD    {b}  (as {base}, via {base}.PROVENANCE.txt)")
+            else:
+                missing += 1
+                print(f"SIDECAR-ONLY  {b}  (via {base}.PROVENANCE.txt; no body under that name)")
         else:
             missing += 1
             print(f"ABSENT  {b}  (checked {', '.join(candidates)})")
