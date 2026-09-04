@@ -42,6 +42,24 @@ locking treatment first.
 9. [Annotated Bibliography](#9-annotated-bibliography)
 10. [Related](#related)
 
+## Contract — `tidal_heating`
+
+**Returns** — `power` [W] · `surface_flux` [W/m2] · `io_power_ratio` [—] · `heat_transport_regime` [—] · `orbital_period` [h]
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_m` [m] · `perturber_mass_earth` [M_earth] ·
+`eccentricity_forced` [—] · `k2_over_q` [—]
+**Discriminating keys** — none inside the law; `heat_transport_regime` is the §6.1 outcome table (guides, not sharp lines)
+read on the tidal flux alone. `eccentricity_forced` and `k2_over_q` are declarations (the board fits k₂/Q).
+**Grade** — analog: the fixed-Q form is the standard first-order law; the two declared inputs carry the uncertainty.
+Not emitted in v1: `radius_ceiling`, `plains_temperature` (§6.3–6.5, the lid axis).
+
+## Contract — `heat_transport_mode`
+
+**Returns** — `mode` [—] · `total_surface_flux` [W/m2]
+**Needs** — `surface_flux` [W/m2] · `radiogenic_power` [W] · `radius_earth` [R_earth]
+**Discriminating keys** — the §6.2 table (plate tectonics · stagnant lid · heat pipe) read on the total surface flux
+(tidal + radiogenic/4πR²); there is no published W/m² boundary between the modes (§6, "no published W/m² boundary").
+**Grade** — analog. `resurfacing_rate` is not emitted (no formula printed).
+
 ---
 
 ## 1. The law: the fixed-Q tidal-heating formula

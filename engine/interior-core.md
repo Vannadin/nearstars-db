@@ -2336,6 +2336,29 @@ potential temperature, so consumers still declare it. And the loop is not yet be
 on Earth C20's present T_m is **1 525 K**, −75 K (−4.7 %) against the declared 1 600 K and −88 K against Nimmo's own 1 613 K
 (`core-thermal-history-context-notes.md:264`, a report line, not a gate). Listed by owner decision.
 
+### C30 — tidal heat wired into the interior heat budget — **listed and built 2026-09-04 (owner: "조석 배선 다시 가보자"); `tidal-heating-context-notes.md`**
+
+Owner: Pandora's temperature is held by tidal heating, so the heat budget must carry it. Built: `engine/tidal_heating.py`
+(recipes `tidal_heating` — the doc's §1 fixed-Q law, `io_power_ratio` on the printed ~1e14 W, the §6.1 outcome labels — and
+`heat_transport_mode` — the §6.2 mode on the total surface flux); `internal_heat_nontidal` gains `l_int_total` · `t_int_total`
+and a total-heat floor that is inverted only in a boundary-layer mode and refused by name under a heat pipe; chain.yaml,
+contract blocks (en + ko), `bodies/pandora.yaml` tidal inputs (a, M_p, forced e, fitted k₂/Q — declarations with sources).
+**Pandora**: Ė 1.866e16 W · F 45.33 W/m² (board 45, 0.7 %) · 186.6× Io · regime vigorous · mode heat pipe · l_int_total
+1.868e16 W, t_int_total 168 K · total floor cannot-say (heat pipe). Io: 9.343e13 W inside the printed 0.6–1.6e14 band. Earth
+unchanged; giants/BDs cannot-say (no orbit). Pre-registered Ⓟ. Not emitted in v1: `radius_ceiling`, `plains_temperature`
+(§6.3–6.5 lid axis; the two edges carrying them are `status: gap`, dated); `tidal_transport.derive_potential_temperature` not
+consulted (validation-failed). Dante's stale 900 km board rows are recorded in the note (§5), not repaired — that is C31.
+
+### C31 — Dante's tidal and dependent board rows refreshed from the C30 recipe — **announced 2026-09-04, not started**
+
+Constraints (owner, relayed): the board of record is the **main checkout's** `phase4/alpha_centauri.yaml`, which carries
+uncommitted pre-crash changes — nothing is written there until instructed. Tool: `engine/tools/refresh_board_rows.py --board
+<path> --body Dante` (draft in scratch) runs `tidal_heating` and rewrites `bulk.tidal_heating` / `tidal_surface_flux` with a
+dated note ("refreshed … from tidal_heating @<sha>, R 521 km; was 900 km draft"); `geopotential_j2 reference_radius_km`
+900 → 521 is a plain correction; the dependent rows (360 K / 673 K / 5.7 % / 2.1–2.4 m / albedo, glow) get only a dated
+"stale: derived from the 900 km draft; awaiting moon_energy_budget recipe" note with the doc's 521 km values (223 K, 452 K)
+beside them — no value authored, no note deleted. Dry-run on the worktree copy (diff only) first; main is a separate order.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,

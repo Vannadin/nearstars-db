@@ -22,15 +22,29 @@ inputs:
   # source: owner declaration 2026-09-04 (C29 c); board phase4/alpha_centauri.yaml:2139 ("continental drift"), :2259
   # ("fast continental drift") — mobile lid, not stagnant. grade declared.
   stagnant_lid: false
+  # ── tidal inputs (C30, 2026-09-04). e and k₂/Q are declarations; the board fits k₂/Q to its flux (:2212).
+  semi_major_axis_km: 252393     # source: phase3/stability-sim/hypotheticals/alpha_centauri.json:33 (design-of-record 2026-06-21)
+  perturber_mass_earth: 120.0    # source: phase4/alpha_centauri.yaml:354 (Polyphemus 120 M⊕)
+  eccentricity_forced: 0.005     # source: phase4/alpha_centauri.yaml:2139 "forced e ~0.005", :2211 (sim e_max 0.0072, e_min 0.00016)
+  k2_over_q: 0.0016              # source: phase4/alpha_centauri.yaml:2212 "k₂/Q ≈ 0.0016 … fitted rather than predicted" — declared
 
 units:
   mass_earth: M_earth
   age_gyr: Gyr
   radius_earth: R_earth
   potential_temperature: K
+  semi_major_axis_km: km
+  perturber_mass_earth: M_earth
+  eccentricity_forced: dimensionless
+  k2_over_q: dimensionless
 
 # 이미 출하된 값. 엔진은 읽지 않고 대조만 한다.
 expected:
+  surface_flux:
+    value: 45
+    unit: W/m2
+    tol: 0.01
+    source: "phase4/alpha_centauri.yaml:2211 · solid-body tidal heating 45 W/m² (the board's own fit, :2212)"
   b_eq:
     value: 75
     unit: uT

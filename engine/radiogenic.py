@@ -116,11 +116,12 @@ GIANT_CLASSES = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf"
 
 def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: float | None,
           body_class: str | None, age_gyr: float | None,
-          ice_mass_fraction: float = 0.0, potential_temperature: float | None = None) -> Result:
+          ice_mass_fraction: float = 0.0, potential_temperature: float | None = None,
+          tidal_power: float | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction,
               "ice_mass_fraction": ice_mass_fraction,
               "radius_earth": radius_earth, "body_class": body_class, "age_gyr": age_gyr,
-              "potential_temperature": potential_temperature}
+              "potential_temperature": potential_temperature, "tidal_power": tidal_power}
     if body_class in GIANT_CLASSES:
         return out_of_domain(
             RECIPE, VERSION,
@@ -163,6 +164,12 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
                  LOW_SET: {"mantle_w": b_low["mantle_w"], "total_w": b_low["total_w"]}}, g_body, r_m)
             if g_body else {"verdict": "cannot-say (no radius)", "t_min": None, "t_max": None, "widths": {}})
     w = band["widths"]
+    # C30 (2026-09-04) — the heat doc's own instruction (:34 "add the tidal flux into T_int if it is non-negligible"):
+    # when tidal_heating supplied a power, emit the TOTAL beside the radiogenic-only values (which do not move), and
+    # invert the floor against the total ONLY when the surface passes heat by a boundary layer. Under a heat pipe
+    # (tidal doc §6.2, ≥ ~2.5 W/m²) melt carries the heat and Nimmo's top-boundary-layer inversion does not apply —
+    # this file already says so of tidally heated bodies (the band note below) — so the total floor is a named refusal.
+    total = _total_heat(b, b_low, tidal_power, r_m, g_body, flux)
     band_note = (
         f"맨틀 온도 하한 밴드 (브리프 57, {band['verdict']}): "
         + ((f"{band['t_min']:.0f}" if band['t_min'] is not None else f"< {mantle_flux.BRACKET_K[0]:.0f}")
@@ -215,8 +222,14 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
               "mantle_temperature_floor_verdict": band["verdict"],
               "mantle_temperature_width_zeta": w.get("zeta"), "mantle_temperature_width_set": w.get("set"),
               "mantle_temperature_width_denominator": w.get("denominator"),
-              "mantle_temperature_width_surface": w.get("surface")}
+              "mantle_temperature_width_surface": w.get("surface"),
+              "l_int_total": total["l_int_total"], "t_int_total": total["t_int_total"],
+              "mantle_temperature_floor_total_min": total["floor_min"], "mantle_temperature_floor_total_max": total["floor_max"],
+              "mantle_temperature_floor_total_verdict": total["verdict"]}
+    notes = notes + (total["note"],)
     units = {"l_int": "W", "t_int": "K", "radiogenic_power": "W", "mantle_radiogenic_power": "W",
+             "l_int_total": "W", "t_int_total": "K", "mantle_temperature_floor_total_min": "K",
+             "mantle_temperature_floor_total_max": "K", "mantle_temperature_floor_total_verdict": "",
              "crust_radiogenic_power": "W", "radiogenic_power_low": "W",
              "radiogenic_heat_w_m2": "W/m2", "radiogenic_power_history_4gyr": "dimensionless",
              "mantle_top_boundary_layer": "km", "implied_surface_heat_flux": "W/m2",
@@ -233,6 +246,39 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
                   grade="analog", inputs=inputs, values=values, units=units, refs=REFS, notes=notes)
 
 
+NO_TIDAL = "cannot-say (no tidal_heating value — total equals radiogenic; nothing added)"
+HEAT_PIPE_FLOOR = "cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; radiogenic.py:183)"
+
+
+def _total_heat(b: dict, b_low: dict, tidal_power: float | None, r_m: float, g_body: float | None,
+                radiogenic_flux: float | None) -> dict:
+    """Radiogenic + tidal (C30). The floor inversion is re-run against the total only inside a boundary-layer mode."""
+    if tidal_power is None:
+        return {"l_int_total": None, "t_int_total": None, "floor_min": None, "floor_max": None, "verdict": NO_TIDAL,
+                "note": "총 내부열 (C30): tidal_heating 이 값을 내지 않아 총량을 내지 않는다 — 방사성만의 값이 위에 있다."}
+    l_total = b["total_w"] + tidal_power
+    area = 4.0 * math.pi * r_m ** 2 if r_m > 0.0 else None
+    t_total = ((l_total / area) / SIGMA_SB) ** 0.25 if area else None
+    total_flux = (l_total / area) if area else None
+    import tidal_heating  # 라벨 표는 조석 문서의 것이라 그 모듈이 갖는다 (§6.2, doc :277–281)
+    mode = tidal_heating.transport_mode(total_flux) if total_flux is not None else None
+    if mode == tidal_heating.MODE_HEAT_PIPE or g_body is None:
+        fmin = fmax = None
+        verdict = HEAT_PIPE_FLOOR if g_body is not None else "cannot-say (no radius)"
+    else:
+        # 조석 소산은 맨틀에서 일어난다고 두어 두 분모에 같은 W 를 더한다 — 선언, 그렇게 라벨한다.
+        tb = mantle_flux.radiogenic_temperature_band(
+            {DEFAULT_SET: {"mantle_w": b["mantle_w"] + tidal_power, "total_w": b["total_w"] + tidal_power},
+             LOW_SET: {"mantle_w": b_low["mantle_w"] + tidal_power, "total_w": b_low["total_w"] + tidal_power}}, g_body, r_m)
+        fmin, fmax, verdict = tb["t_min"], tb["t_max"], tb["verdict"] + " (total heat: radiogenic + tidal, tidal counted in the mantle — declared)"
+    note = (f"총 내부열 (C30, heat doc :34): l_int_total = 방사성 {b['total_w'] / 1e12:.2f} + 조석 {tidal_power / 1e12:.2f} = "
+            f"{l_total / 1e12:.2f} TW → 표면 플럭스 {total_flux:.4g} W/m², t_int_total {t_total:.1f} K (방사성만 {radiogenic_flux:.4g} W/m²). "
+            f"수송 모드(§6.2 표, 총 플럭스로): **{mode}** → 바닥 역산 " + ("**하지 않음** — " + HEAT_PIPE_FLOOR if fmin is None and mode == tidal_heating.MODE_HEAT_PIPE
+            else f"{fmin:.0f}–{fmax:.0f} K (총열; 조석은 맨틀 몫에 더함, 선언)" if fmin is not None else verdict)
+            + ". 방사성만의 값들은 그대로다.")
+    return {"l_int_total": l_total, "t_int_total": t_total, "floor_min": fmin, "floor_max": fmax, "verdict": verdict, "note": note}
+
+
 from registry import recipe  # noqa: E402
 
 
@@ -246,4 +292,5 @@ def _from_state(state):
                  body_class=state.get("body_class"),
                  age_gyr=state.get("age_gyr"),
                  ice_mass_fraction=state.get("ice_mass_fraction", 0.0),
-                 potential_temperature=state.get("potential_temperature"))
+                 potential_temperature=state.get("potential_temperature"),
+                 tidal_power=state.get("power"))                 # C30: tidal_heating's Ė (chain :653 via power); absent → totals not emitted

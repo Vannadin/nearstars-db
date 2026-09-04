@@ -39,9 +39,10 @@
 `implied_surface_heat_flow` [W] · `heat_flow_consistency` [—] · `urey_ratio` [—] ·
 `mantle_temperature_floor_min` [K] · `mantle_temperature_floor_max` [K] · `mantle_temperature_floor_verdict` [—] ·
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
-`mantle_temperature_width_surface` [K]
+`mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
+`mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
-`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K]
+`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
 **분기키** — `body_class`. 암석체는 현재값 방사성 예산을 받고, 거대행성·서브넵튠·갈색왜성·항성은
 거절합니다. 그쪽 내부열은 냉각광도 L(M, age) 이고 이 레시피는 검증 안 된 냉각 궤적을 대지 않습니다
 (`dynamo.py` 와 같은 거절). `core_mass_fraction` 미선언 → 거절(농도를 걸 규산염 질량이 없음).

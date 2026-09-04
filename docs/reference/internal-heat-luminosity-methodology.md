@@ -42,9 +42,10 @@ non-negligible, see that doc).
 `implied_surface_heat_flow` [W] · `heat_flow_consistency` [—] · `urey_ratio` [—] ·
 `mantle_temperature_floor_min` [K] · `mantle_temperature_floor_max` [K] · `mantle_temperature_floor_verdict` [—] ·
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
-`mantle_temperature_width_surface` [K]
+`mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
+`mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
-`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K]
+`radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
 **Discriminating keys** — `body_class`: rocky bodies get the present-day radiogenic budget; giant,
 sub-Neptune, brown-dwarf and stellar classes are refused, because their internal heat is the cooling
 luminosity L(M, age) and this recipe does not supply an unverified cooling track (the same refusal
