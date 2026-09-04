@@ -5,7 +5,7 @@
 
 ## 1. What the edge says, and what the code says
 
-`chain.yaml@«T_eq 로 끝난다 — 그래서 값을 바꾸는 게 아니라 레시피를 쓸지 말지를 고른다.»`: `body_age → dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref:
+`chain.yaml@«from: t_eq_stellar, to: day_night_contrast»`: `body_age → dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref:
 `planetary-dynamo-scaling.md`:34 (the 2026-09-03 line; that line is blank today, and the
 edge's ref is now a phrase anchor), note (2026-09-03): *"the graph was more optimistic than the module —
 `dynamo.py` writes that it refuses to supply L(M, age) from an unverified cooling track and the brown-dwarf

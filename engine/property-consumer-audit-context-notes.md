@@ -12,7 +12,7 @@ seat, (병) parallel seat, (여기) work seat re-ran the greps and reproduced ev
 **Outcome: the directing seat's branch ② by the letter, ① in effect.** Exactly one property
 (viscosity) has a live consumer that a transcription serves — and that transcription **already
 landed in Brief 39** (`rheology.py`). The other two refuse for two different causes that share
-one root, the missing CMB heat flux (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»`, both `status: gap`). **Nothing is
+one root, the missing CMB heat flux (`chain.yaml@«day_night_contrast:»`, both `status: gap`). **Nothing is
 built; the work-order item closes.**
 
 ## 0. The greps, re-run rather than trusted (여기)
@@ -57,7 +57,7 @@ reproduction that makes the consistency verdict trustworthy. Same shape for K&M'
 **So the refusal is the directing seat's reading, confirmed on the numbers.**
 
 **The nearest future consumer, and why it is the worst place to start.** The one node that
-*would* want a physical k is the CMB heat flux (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»` `cmb_heat_flux`, `:418`
+*would* want a physical k is the CMB heat flux (`chain.yaml@«day_night_contrast:»` `cmb_heat_flux`, `:418`
 `geotherm`, both gap) — and Gaidos+ 2010 eq. 14 (now cached, read 여기, extraction line 398)
 shows what it needs: `Q_K ≈ 4π R_c² k α_c g_c T_c / c_p`, the **iron** conductivity, which no
 survey touched and which Gaidos themselves span 28–29 vs ~100 W/(m·K) (lines 972-989). The
@@ -90,7 +90,7 @@ but Gaidos's own route never uses V. Their eq. 3–4 (lines 183-200, 여기):
 
 V is eliminated through the dimensionless convective power p; what remains is **φ, the entropy
 available per unit mass and time in the core** — set by the CMB heat flow minus the adiabatic
-conduction Q_K (eq. 14). That is `chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»` again: **no node emits a core-side heat
+conduction Q_K (eq. 14). That is `chain.yaml@«day_night_contrast:»` again: **no node emits a core-side heat
 flux**, `internal_heat_nontidal` stops at the mantle top (`implied_surface_heat_flow`) and has no
 thermal evolution. The directing seat's "`Rem ~ 16(B_c/1 µT)` needs the field we predict" is
 Gaidos's *terrestrial shortcut* (line 207), not the general form; the general form is not
@@ -161,7 +161,7 @@ changed here; named for the owner.**
   transcriptions stay where they are (survey notes §1/§3 each) and are ready if a consumer
   appears.
 - **The one thing that would re-open three rows at once** (directing seat drew the third): a CMB
-  heat flux node (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»`). It is the consumer for iron k (eq. 14), for φ (eq. 3–4)
+  heat flux node (`chain.yaml@«day_night_contrast:»`). It is the consumer for iron k (eq. 14), for φ (eq. 3–4)
   and hence for σ — **and φ ~ 100 MW/K is the same quantity as the parked owner decision on
   replacing the dynamo ladder with Nimmo+ 2004's entropy-production criterion**, whose threshold is
   uncertain over four orders (0.1–1000 MW/K). It is also the thermal-evolution model Nimmo & Primack

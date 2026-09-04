@@ -659,7 +659,7 @@ first, new axes last:**
    consumers. The short-lived (²⁶Al) half **closes as a named refusal** on our missing formation
    chronology. The `radiogenic_heat_w_m2` tooltip's 2× mislabel is fixed (Brief 40).
 2. **The rocky dynamo — scoped 2026-09-03, and it is SMALL and needs NO paper.** `dynamo_rocky`
-   is declared at `chain.yaml@«2026-08-27 에 온도가 들어왔다. core_temperature 와 cmb_temperature 는»` with 11 edges and no module registering its recipe. The
+   is declared at `chain.yaml@«interior_layers:»` with 11 edges and no module registering its recipe. The
    methodology's two sections do **not** conflict: the first *derives*, the second *executes*,
    and the document says so — *"the whole recipe reduces to estimating the normalized moment
    ℳ/ℳ⊕ from the regime ladder"*. **The ladder is the recipe.**
@@ -902,7 +902,7 @@ places were quiet because nothing was checking them.
    survey ㉑'s two laws). Thermal conductivity refuses: its two holders are reproduction
    constants (k = 3.456 → 4.0 moves Nimmo's 42 TW closure 1614 → 1580 K). Electrical
    conductivity refuses: Gaidos's Rm route eliminates V and is blocked on φ, the core entropy
-   production = the CMB heat flux nobody emits (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»`); σ moves Rm by its own
+   production = the CMB heat flux nobody emits (`chain.yaml@«day_night_contrast:»`); σ moves Rm by its own
    factor against a gate cleared by decades. The transcriptions stay in their survey notes.
    Full measurement: `engine/property-consumer-audit-context-notes.md`.
 

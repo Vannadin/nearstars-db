@@ -105,7 +105,7 @@ Paper: 6.2 TW on its own density model (line 1341). **Verdict on the engine's Ea
 
 **Refusals pinned**: undeclared core-side temperature → `cannot-say (no declared core-side CMB
 temperature …)` (Pandora, which declares none, refuses by name in the chain); T_c ≤ T̃_m → refuse; giant →
-out of domain. **Not touched**: `chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»` (the `cmb_heat_flux` / `geotherm` gaps into
+out of domain. **Not touched**: `chain.yaml@«day_night_contrast:»` (the `cmb_heat_flux` / `geotherm` gaps into
 `dynamo_rocky`) — the supplier now exists, the consumer wiring is the φ step and stays a gap until then.
 
 **Anchors** bit-identical by construction (`interior.py`, `core_state.py`, `solve()` untouched; new

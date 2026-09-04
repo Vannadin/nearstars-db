@@ -98,3 +98,22 @@ anchor whose only failure mode is the function being renamed, and a rename shoul
 The same holds for any note or reason that leaves the engine. Inside the engine, an anchor with a
 phrase is fine anywhere; what must not travel outward is a number that means nothing to the reader
 and everything to the next edit.
+
+## What an anchor can still get wrong (2026-09-05, C33)
+
+Anchors end the failure where a document grows under a line number, and they cut the one where a
+reused citation inherits whatever now sits there. They do **not** touch the third: a citation that
+was aimed at the wrong place to begin with resolves perfectly forever. `c32-o-anchor-risk-notes.ko.md`
+is the measurement behind that; read it before extending this scheme.
+
+Two specific hazards, both met tonight:
+
+- **An identifier anchor rots when the identifier goes, and turns ambiguous when a second one
+  arrives.** `chain.yaml@«body_age:»` is unique today. Add a second node whose block prints the same
+  line and the anchor stops being able to say which — the checker will call it ambiguous, which is
+  the right verdict, but it is a failure mode the "it only rots if removed" reading misses.
+- **Note prose is the worst anchor target in this repo.** chain.yaml took 1 688 additions and 712
+  deletions across 62 commits in a month, against 395/4 for the tidal document: its notes are the
+  most-rewritten text we have, and four citations were anchored to them. They now point at the node
+  key or the `from: … , to: …` pair of the edge whose note it was, which changes only when the graph
+  changes.

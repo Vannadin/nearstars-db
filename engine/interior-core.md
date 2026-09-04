@@ -2331,7 +2331,7 @@ temperature from C20's thermal history (`core_thermal_history` already emits `ma
 1 525 K on Earth) and iterate it against `interior_layers` (whose `cmb_pressure` C20 consumes — a cycle). Why not now: it moves
 one declaration onto two unmeasurable ones (`mantle_initial_potential_temperature`, `core_initial_temperature`) plus the
 radiogenic budget, and it is exactly the structure + thermal-evolution coupling `rocky-planet-dynamo-methodology.md@«NearStars does not re-run RM22's full internal-structure + thermal-evolution»`
-says this project does not re-run per body. `chain.yaml@«# 내지 않으므로 requires 로 걸면 아무도 못 지키는 약속이 된다. 실재하는 결합을»`'s note stands: no thermal model turns the heat budget into a
+says this project does not re-run per body. `chain.yaml@«from: internal_heat_nontidal, to: dynamo_rocky»`'s note stands: no thermal model turns the heat budget into a
 potential temperature, so consumers still declare it. And the loop is not yet better than the declaration where it can be checked:
 on Earth C20's present T_m is **1 525 K**, −75 K (−4.7 %) against the declared 1 600 K and −88 K against Nimmo's own 1 613 K
 (`core-thermal-history-context-notes.md@«Report lines, not gates: present T_m **1 525 K** against the declared 1 600 K (**−75 K**); present surface heat flow»`, a report line, not a gate). Listed by owner decision.
