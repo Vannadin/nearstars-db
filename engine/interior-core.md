@@ -2195,6 +2195,10 @@ Start is the owner's decision.
 | O4 | Two methodology docs label those shells "cached": Crossfield 2014 (`spin-axis-inclination-methodology.md:158`, claims v sin i for both components — not in the abstract) and Heller & Barnes 2013 (`ice-stability-methodology.md:202`, claims the satellite energy budget — the abstract only names four terms). **The values are safe**: the board's spin-axis row (`phase4/luhman_16.yaml:133`) cites only Apai+ 2021, held in full. The defect is the label — *false provenance* — en and ko alike | those two docs + ko mirrors | `check_paper_held.py --scan` | not a number error; do not inflate |
 | O5 | C19's brown-dwarf branch: two routes to L(M, age) — a grounded track (Burrows eq. 1 with declared κ_R, or Baraffe+ 2003) or the DB's measured luminosity (Faherty+ 2014) — written side by side, hanging on O1 | `giant-dynamo-age-context-notes.md` §4 | — | not decided |
 
+⚠ *(2026-09-04, evening)* **What closed is the diagnosed mechanism** — the coverage gap of near-surface water — **not the
+whole symptom in this title.** Water fractions 0.05 · 0.15 · 0.20 on the same body still do not converge, and with a different
+signature (no `PhaseGap` refusal loop; the surface condition is missed by 0.75 %) — **C27**. Read C24 as narrow.
+
 ### C25 — the measured CMB temperature and the published CMB heat-flow range cannot both be met in this model — **listed 2026-09-04, not started**
 
 Re-stated the same hour it was listed (the first form, "eqs 37–39 as the source of the low Q_C", was wrong: the
@@ -2219,6 +2223,20 @@ search itself is the first item.
 a refusal anyway; here the consumer already sits in the anchors.
 **What this is not**: not "Neptune is wrong" — it is "we cannot yet evaluate the region Neptune's solution has to
 pass through". Listed only; the window stays closed under envelopes meanwhile.
+
+### C27 — water fractions 0.05 · 0.15 · 0.20 do not converge on an Earth-mass rocky body — **listed 2026-09-04, not started**
+
+**Symptom**: `converged=False` with the surface condition missed by 0.75 % — the column tops out at 0.2 GPa · 1 588 K against the
+declared 1 600 K, with the water fluid all the way up. ⚠ **Unlike C24, this is not a `PhaseGap` refusal loop** (C24: refusal →
+1.6× oscillation → a fixed 2-cycle, identical twelve times).
+**Found**: during C17's measurement (`ocean-fraction-context-notes.md` §5), trying to bracket the maximum of the T_cmb curve.
+0.0 · 0.1 · 0.25 · 0.3 converge; the fractions between and below do not.
+**Mechanism**: **unknown.** Do not carry C24's diagnosis (a coverage gap) over to this item.
+**Candidate, unconfirmed** — an observation recorded the same day: 1 600 K is Earth's *mantle* potential temperature, and put
+on a body whose outside is water it lays a hot fluid layer at the surface; a water world's potential temperature should be
+the water's. ⚠ No measurement says this is the cause.
+The unconverged trial values (T_cmb 3 033 · 3 123 · 3 086 K) are recorded in §5's table and not read. **Listed only; start is
+the owner's decision.**
 
 ### P1–P3 — parked, each marked with the C it came from
 
