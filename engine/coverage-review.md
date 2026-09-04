@@ -127,7 +127,7 @@ disproved one at a time, with the authority of a figure. So:
    coverage: `h_he`'s density is fine where its `grad_ad` is clamped (70 clamped cells above
    the reach line, Brief 29). So the row is (material × property), and a property whose
    values were clamped rather than computed is a different colour, not a footnote.
-3. **A mixture's band is not a combination of its parts.** `eos.py:509` takes
+3. **A mixture's band is not a combination of its parts.** `eos.py@«# #   * 이성분 — "deviati»` takes
    `min(p_max for parts with w > 0)` — **weight-blind by design**, so the ceiling is the
    lowest component's whatever its weight. Brief 28 measured a veto from a component at
    weight 6.87 × 10⁻⁶, whose actual contribution sits 25–30× below the anchors' own jitter

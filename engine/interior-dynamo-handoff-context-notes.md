@@ -23,10 +23,10 @@ note's own statement only.*
 
 ## §2 What the consumers actually read (instrument-fired, per body)
 
-`dynamo_rocky._from_state` (dynamo_rocky.py:263) read, on every body: `mass_earth`, `radius`/`radius_earth`,
+`dynamo_rocky._from_state` (dynamo_rocky.py@«+ f" (다극자면 {values['b_eq_multipolar_min']:.3g}–{values['b_eq_multipolar_max']:.3g} µT)."),») read, on every body: `mass_earth`, `radius`/`radius_earth`,
 `conductor_phase`, `stagnant_lid`, `age_gyr`, `ice_mass_fraction`, `body_class`, `dynamo_regime`, `locked`,
 `rotation_period`. **It never read `core_radius`, `q_cmb`, any thermal-history output, or `entropy_production`.**
-`dynamo_giant._from_state` (dynamo.py:257) read `mass_earth`, `radius_rj`, `age_gyr`, `body_class`,
+`dynamo_giant._from_state` (dynamo.py@«radius_rj=state["radius_rj"],») read `mass_earth`, `radius_rj`, `age_gyr`, `body_class`,
 `luminosity_lsun`, `rotation_period_h`, `radius_rj_min/max`, `isolated`. **It never read `l_int`.**
 
 | key the dynamo reads | Earth | Pandora | α Cen A b | Luhman 16 A / B |

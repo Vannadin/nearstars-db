@@ -145,7 +145,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
              "q_adiabat_max": "W", "adiabat_gradient_cmb": "K/km", "g_cmb": "m/s2", "k_core": "W/(m K)",
              "cmb_jump": "K", "cmb_flux_verdict": "", "q_cmb_in_paper_range": ""}
     notes = (
-        "⚠ **Q_CMB 는 하한이다** (브리프 62): 핵 쪽 경계온도는 선언된 **하한** 이고(core-state-methodology.md:60 — "
+        "⚠ **Q_CMB 는 하한이다** (브리프 62): 핵 쪽 경계온도는 선언된 **하한** 이고(core-state-methodology.md@«The core-side value on Earth is 3760 ± 290 K.» — "
         "지구 3760 ± 290 K, D″ 점프는 CMB 열류가 정하는데 이 리포지토리는 그 열류를 도출하지 않았고, 이름 붙은 편향 둘이 "
         "모두 아래를 가리킨다), η_b 가 T_a 에 지수적이라 하한 입력은 하한 열류를 낸다. 참값은 이보다 높다 — "
         "이 수로 '다이나모 없음' 을 읽지 말 것. 하한을 해로 바꾸는 것은 핵 에너지 수지의 폐합(브리프 62 B)이다.",

@@ -167,7 +167,7 @@ with the cost stated:**
 
 **Done regardless, as briefed — Q_CMB labelled a lower bound where it is emitted**: see the recipe note
 and contract (same commit, `6fdfbaeb` — `cmb_flux.py` `SUB_ADIABATIC` and the emit note): the core-side temperature is a declared lower bound whose two named biases
-point down (`core-state-methodology.md:60`), so a lower-bound input yields a lower-bound flux; the true
+point down (`core-state-methodology.md@«using a similar method to ours". The core-side value on Earth is 3760 ± 290 K.»`), so a lower-bound input yields a lower-bound flux; the true
 Q_CMB is higher, and 2.75 TW must not be read as "Earth has no dynamo".
 
 **Gate on `6fdfbaeb` (Brief 61 `aae65a59` + Brief 62 step 1, one run): FAIL 0, 456 PASS, 16:06:30 → 16:26:54 =

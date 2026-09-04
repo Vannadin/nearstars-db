@@ -31,7 +31,7 @@ the body's age, so it is composed in `interior.py`'s `@recipe("interior_layers")
 `PATH_FUNCTIONS`, so touching it would move the path fingerprint for a change that does not
 alter any solved number. Reading the verdict off the finished `Result` keeps the anchors
 bit-identical **by construction**, and that is checkable rather than asserted. `dataclasses.replace`
-adds the values (precedent: `eos.py:2073`).
+adds the values (precedent: `eos.py@«"그 수가 그림에만 산다(인쇄 표는 100 GPa 까지). 규산염 EOS 사다리는 "»`).
 
 **Temperature — the solver's own mantle range, verdict at the coldest end.** `interior_layers`
 solves a temperature column when `potential_temperature` is declared: `st.t_surface` (top of the

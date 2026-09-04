@@ -6,7 +6,8 @@
 ## 1. What the edge says, and what the code says
 
 `chain.yaml@«T_eq 로 끝난다 — 그래서 값을 바꾸는 게 아니라 레시피를 쓸지 말지를 고른다.»`: `body_age → dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref:
-planetary-dynamo-scaling.md:34`, note (2026-09-03): *"the graph was more optimistic than the module —
+`planetary-dynamo-scaling.md`:34 (the 2026-09-03 line; that line is blank today, and the
+edge's ref is now a phrase anchor), note (2026-09-03): *"the graph was more optimistic than the module —
 `dynamo.py` writes that it refuses to supply L(M, age) from an unverified cooling track and the brown-dwarf
 branch returns out_of_domain. The code is right and this mark was missing."*
 
@@ -15,13 +16,13 @@ now has a supplier), and C33 replaced its line-number ref with a phrase anchor o
 quotation is left as it was: it records what the edge said when this was measured.
 
 Read before measuring — `dynamo.py` has **two** age-bearing branches, and the `via` names only one of them:
-- **giant, 0.3–13 M_J, age ≥ 0.2 Gyr** (`dynamo.py:122–135`): B_pol = 9 G · (age/4.5 Gyr)^−0.33 ·
+- **giant, 0.3–13 M_J, age ≥ 0.2 Gyr** (`dynamo.py@«f"반지름 밴드가 물리적이지 않다 (min {radius_rj_min}, value {radius_rj}, max {radius_rj_max}) "»`): B_pol = 9 G · (age/4.5 Gyr)^−0.33 ·
   (M/M_J)^0.93 — an interpolation of Reiners & Christensen 2010's cooling-track results in (mass, age).
   **The luminosity never appears as a quantity**; the branch consumes `age_gyr` directly and the −0.33
   exponent *is* the cooling track, folded in. The method doc (`planetary-dynamo-scaling.md@«Rather than re-derive internal cooling luminosities L(M, age) from scratch (which»`) says so:
   *"rather than re-derive internal cooling luminosities L(M, age) from scratch … tabulate, and interpolate
   in (mass, age)."*
-- **brown dwarf, 13–70 M_J** (`dynamo.py:94–102`): out_of_domain, *"needs the internal cooling luminosity
+- **brown dwarf, 13–70 M_J** (`dynamo.py@«("rotation_period_h", rotation_period_h),»`): out_of_domain, *"needs the internal cooling luminosity
   L(M, age) … the document chose not to supply L rather than use an unverified cooling track."*
 - **age < 0.2 Gyr**: out_of_domain (cooling luminosity changes too fast for the interpolation).
 

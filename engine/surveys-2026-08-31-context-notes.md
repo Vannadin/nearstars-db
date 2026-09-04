@@ -21,7 +21,7 @@ the repository. What survives here is what changed.
 **Answer: there is no wall to raise.** 1 TPa is the *cold* ladder's ceiling. `eos.H2O_HOT.p_max`
 is **407,517.73 GPa** — 407.5× further — and the 21.29 M⊕ water ceiling everyone quoted comes
 from `CEILING_CASES`' water row running `composition="water"` with **no potential temperature**
-(`test_interior.py:455`), so it was the cold path's number all along. On the warm path the
+(`test_interior.py@«# 시험압이 버려질 자리에서 깨지는 결함에 걸렸다. 그 대비가 이 행의 내용이다.»`), so it was the cold path's number all along. On the warm path the
 wall does not exist, and `h2o` moves from lowest of the four material ceilings to highest.
 
 **The grid is clean** — 328,993 rows = 1093 pressures × 301 temperatures exactly, no missing

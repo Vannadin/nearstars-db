@@ -275,7 +275,7 @@ def _total_heat(b: dict, b_low: dict, tidal_power: float | None, r_m: float, g_b
             {DEFAULT_SET: {"mantle_w": b["mantle_w"] + tidal_power, "total_w": b["total_w"] + tidal_power},
              LOW_SET: {"mantle_w": b_low["mantle_w"] + tidal_power, "total_w": b_low["total_w"] + tidal_power}}, g_body, r_m)
         fmin, fmax, verdict = tb["t_min"], tb["t_max"], tb["verdict"] + " (total heat: radiogenic + tidal, tidal counted in the mantle — declared)"
-    note = (f"총 내부열 (C30, heat doc :34): l_int_total = 방사성 {b['total_w'] / 1e12:.2f} + 조석 {tidal_power / 1e12:.2f} = "
+    note = (f"총 내부열 (C30, heat doc @«here folds in only the non-tidal sources (add the tidal flux into `T_int` if it is»): l_int_total = 방사성 {b['total_w'] / 1e12:.2f} + 조석 {tidal_power / 1e12:.2f} = "
             f"{l_total / 1e12:.2f} TW → 표면 플럭스 {total_flux:.4g} W/m², t_int_total {t_total:.1f} K (방사성만 {radiogenic_flux:.4g} W/m²). "
             f"수송 모드(§6.2 표, 총 플럭스로): **{mode}** → 바닥 역산 " + ("**하지 않음** — " + HEAT_PIPE_FLOOR if fmin is None and mode == tidal_heating.MODE_HEAT_PIPE
             else f"{fmin:.0f}–{fmax:.0f} K (총열; 조석은 맨틀 몫에 더함, 선언)" if fmin is not None else verdict)

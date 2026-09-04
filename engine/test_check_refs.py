@@ -173,6 +173,26 @@ def main() -> int:
         ok(rc == 1 and "no edges" in buf.getvalue(),
            f"shape: a chain.yaml without its expected keys must fail, got rc={rc}\n{buf.getvalue()}")
 
+        # the audit's control experiment: the SAME dead citation, bare and wrapped in a quotation.
+        # Wrapping must not turn a failure green — an exemption from being rewritten is not an
+        # exemption from being checked — and a quotation without a date is not a record at all.
+        (root / "engine" / "chain.yaml").unlink(missing_ok=True)
+        for name, body, want_fail in (
+                ("bare.md", "A citation with no quoting: synthetic-methodology.md:4\n", True),
+                ("wrapped.md", 'Quoted with a date, note (2026-09-04): *"synthetic-methodology.md:4"*\n', True),
+                ("nodate.md", 'Quoted with no date: *"synthetic-methodology.md:4"*\n', True)):
+            (root / "engine" / name).write_text(body, encoding="utf-8")
+            check_refs.SCAN = ((f"engine/{name}",),)
+            check_refs.CACHE.clear()
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                rc = check_refs.main()
+            got = buf.getvalue()
+            ok(rc == (1 if want_fail else 0) and ("있을 수 없는 착지" in got) == want_fail,
+               f"quote exemption ({name}): a blank-line landing must be reported either way, "
+               f"got rc={rc}\n{got}")
+            (root / "engine" / name).unlink()
+
         # a bare file name that two files in the repo share must fail with the candidates, instead of
         # being resolved by whichever copy sits nearest the citing file. The repo has 68 files called
         # checklist.md; proximity was choosing among them silently.

@@ -409,7 +409,7 @@ consumers:
     consumes: [geopotential_j2, obliquity]
     args: ["--j2", "0.023", "--j2-obliquity-deg", "5"]
     ref:
-      - "phase3/stability-sim/validation-manifest.yaml:58"
+      - 'phase3/stability-sim/validation-manifest.yaml@«--j2-obliquity-deg»'
       - "phase3/stability-sim/STABILITY_REPORT.md@«on file mtimes, because the accurate cells cost hours (α Cen:»"
     invalidates:
       - "A b 위성 5개의 Hill-bound 판정 (MEGNO 3.65, 거의 정칙)"
@@ -424,7 +424,7 @@ consumers:
     consumes: [semi_major_axis_au, eccentricity, inclination_deg]
     args: ["--acen-a-au", "1.6", "--acen-e", "0.1", "--acen-incl-deg", "16"]
     ref:
-      - "phase3/stability-sim/validation-manifest.yaml:55"
+      - 'phase3/stability-sim/validation-manifest.yaml@«--acen-incl-deg»'
       - "phase3/stability-sim/STABILITY_REPORT.md@«on file mtimes, because the accurate cells cost hours (α Cen:»"
     invalidates:
       - "A b 궤도의 장기 카오스 판정 (a·e 봉투 유계, 1억 년)"

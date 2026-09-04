@@ -30,8 +30,8 @@ The directing seat's leads reproduce, with one addition it did not have:
 - Electrical conductivity / magnetic Reynolds: `dynamo_rocky.py@«* **`Rm > 40` is QUOTED, NEVER EVALUATED.** The doc lists it at step 2 as a disqualifier beside two class»,79` and
   `rocky-planet-dynamo-methodology.md@«**quoted, not evaluated here**» and rocky-planet-dynamo-methodology.md@«evaluated** — this document carries no magnetic-Reynolds formula»,103-104`, every hit saying **quoted, not evaluated**.
   No `sigma`, no `μ₀`, no velocity anywhere executable.
-- Viscosity: **two** consumers, not one — `rheology.py:90-101` (Rovira-Navarro eq. 5, Monteux
-  eq. 8, Maxwell time) consumed at `interior.py:3161`, and `mantle_flux.py@«def viscosity(t_m_k: float, zeta: float = ZETA) -> float:»`
+- Viscosity: **two** consumers, not one — `rheology.py@«"unobtained Karato & Wu 1993; the temperature is the top of the convecting adiabat "»` (Rovira-Navarro eq. 5, Monteux
+  eq. 8, Maxwell time) consumed at `interior.py@«RECIPE, VERSION, "3층 역산에는 포텐셜 온도 선언이»`, and `mantle_flux.py@«def viscosity(t_m_k: float, zeta: float = ZETA) -> float:»`
   (Nimmo+ 2004 eq. 35, `η₀ exp[−ζ(T−T₀)]`) consumed by `implied_flux`.
 - **Named non-consumers — the words a grep for these properties will hit, and what they are:**
   `tidal_transport.py@«conductive_flux=dict(value_wm2»` `conductive_flux` is `HD − F_m`, a residual from Ė, no k in it;
@@ -112,7 +112,7 @@ in full, not the handoff's one line):
 
 - Consumer named by the owner: `body_figure`'s fossil-bulge caveat. Built as one labelled
   verdict (`figure_relaxation`, `maxwell_time_mantle_top`, `relaxation_threshold_max`) composed
-  in the `interior_layers` wrapper (`interior.py:3161`), not in `solve()`; anchors bit-identical
+  in the `interior_layers` wrapper (`interior.py@«RECIPE, VERSION, "3층 역산에는 포텐셜 온도 선언이»`), not in `solve()`; anchors bit-identical
   by construction.
 - **The two transcribable laws of survey ㉑ are exactly `rheology.py`'s two laws** —
   Rovira-Navarro+ 2021 eq. 5 (`viscosity_rovira`) and Monteux+ 2016 eq. 8
@@ -169,7 +169,7 @@ changed here; named for the owner.**
   item, not proposed here.
 - **Not a refusal cause anywhere**: Karato & Wu 1993 — Brief 55 withdrew it (every constant is
   cited jointly; only Rovira-Navarro's E_a = 300 rests on it alone, labelled as an unchecked
-  secondary citation at `rheology.py:47` and `viscosity-context-notes.md` §1).
+  secondary citation at `rheology.py@«# "Mantle solidus viscosity" 1·10¹⁶ Pa·s and "Activation energy" 300 kJ/mol, footnote 4 =»` and `viscosity-context-notes.md` §1).
 
 ## 5. The stress finding — and "blocked" has meant two different things (Brief 59, c4 + 직, 여기 re-run)
 

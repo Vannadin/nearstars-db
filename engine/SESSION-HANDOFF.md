@@ -135,7 +135,7 @@ item. Rows are kept, not deleted, so a resolved request is distinguishable from 
   both derivable from those energies via ζ = E/(RT²) → 0.00481–0.01644 against the printed
   0.005–0.016 *and* cited to Solomatov 1995) but not at point level — and shown insensitive across
   ±100 kJ/mol by Foley & Smye 2018, who adopt the same 300 from Karato & Wu alone and run 200/400 as
-  sensitivity cases consistent with their baseline (Brief 59). Labelled at `rheology.py:47`
+  sensitivity cases consistent with their baseline (Brief 59). Labelled at `rheology.py@«# "Mantle solidus viscosity" 1·10¹⁶ Pa·s and "Activation energy" 300 kJ/mol, footnote 4 =»`
   and `viscosity-context-notes.md` §1. ⚠ Lookalike: Gaidos+ 2010's b ≈ 17 is cited to **Karato,
   Riedel & Yuen 2001**, not Karato & Wu 1993 — grepping "Karato" for a viscosity constant grabs the
   wrong paper.
@@ -627,7 +627,7 @@ paper defects #11 and #12; the handoff's own stale rows.
 the interior solver now *supplies* a verdict it can consume. Branch ① fired: hydrostatic is
 supported for every body that has a temperature. ⚠ **The reason is about the roster, not the
 code and not the planets** — `potential_temperature` has no floor (only a negative refusal at
-`interior.py:2099`) and the anchors declare 76 K and 72 K, so the cold branch is reachable; the
+`interior.py@«"brown_dwarf": ("중수소가 탄다. 13 M_J 위는 광도가 시간에 따라 변하고 "»`) and the anchors declare 76 K and 72 K, so the cold branch is reachable; the
 bodies that currently reach the wrapper simply declare hot mantle tops. **The verdict is
 insensitive to every ungrounded constant**: η_s over two orders and E_a over 80 % move the
 4.5 Gyr threshold only 700→1009 K, because τ_M spans 20+ decades. That reason is written beside
@@ -851,7 +851,7 @@ places were quiet because nothing was checking them.
 
    ⚠ **Two corrections to how this row was first written** (2026-09-02, survey ⑮ + the owner).
    **The density half of it was wrong**: `earth_like` resolves to `fe_prem`, not pure iron
-   (`interior.py:82`; `fe_eps` is reached only by `composition="iron"`), and `fe_prem` is already
+   (`interior.py@«"iron":       (1.000, 0.00, 0.00, "fe_eps"),»`; `fe_eps` is reached only by `composition="iron"`), and `fe_prem` is already
    alloy-grade — **7 050 kg/m³ at ambient against pure iron's 8 300, i.e. 0.849**, which is *below*
    Wicks+ 2018's measured Fe-15Si (7 168). So there is little density headroom on this axis, and
    the earlier claim that a pure-iron assumption drove a roster body's radius sensitivity is

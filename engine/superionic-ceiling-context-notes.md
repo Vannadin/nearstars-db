@@ -121,7 +121,7 @@ box over a 355 GPa data ceiling (C6), only in the other direction: there the box
 Ⓡ's instruction is kept: nothing is filled from AQUA. **The ceiling does not move** (a move is a separate decision
 and moves anchors).
 
-Two consistency notes, recorded not repaired: (a) the refusal *message* (`eos.py:2449` ff.) still explains the ceiling
+Two consistency notes, recorded not repaired: (a) the refusal *message* (`eos.py@«t_over_reason=("얼음 기둥의 온도 {t_k:.0f} K 가 '{phase}' 적합의 상한"»` ff.) still explains the ceiling
 with Millot+ 2019's *"100 GPa · above 2000 K"* sentence, which the constant's own comment (`eos.py@«# 온도 천장. **매듭 구간의 상한이지 상 경계가 아니다.** 1800 K 위에 초이온상이 놓인다는»`) had already
 found misattributed (Brief 34) — message and comment disagree; (b) `test_interior.py` (d) guards that the 1800 K
 ceiling and the Reinhardt melting line at 47 GPa, equal as numbers, stay different objects — consistent with Ⓢ.

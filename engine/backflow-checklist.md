@@ -11,7 +11,7 @@ far lived in that unmapped layer. This layer maps it.
   of it and were never recomputed. Nothing could catch it — the relation was in nobody's
   file.
 - `geopotential_j2 = 0.023` is not a conclusion. It is passed to the stability sim as
-  `--j2 0.023` (`phase3/stability-sim/validation-manifest.yaml:58`), and
+  `--j2 0.023` (`phase3/stability-sim/validation-manifest.yaml@«args: ["--j2", "0.023", "--j2-obliquity-deg", "5"]»`), and
   `STABILITY_REPORT.md@«### A b moons with J₂ — the oblateness reverses the moon-orbit choice»` records that the oblateness *reverses* the moon-orbit choice.
   Changing NMoI re-opens a 21 h run and the decision that came out of it.
 - 40 Eri A c shipped at 0.38 R⊕. A future `mass_radius_relation` function must reproduce

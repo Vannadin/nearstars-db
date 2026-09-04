@@ -418,8 +418,12 @@ def main() -> int:
                     unknown.append(f"{where0}: {line[m.start():m.start() + 60].strip()} — a citation form "
                                    f"this checker does not know; it was counted in no bucket")
             near = "\n".join(raw_lines[max(0, i - 3):i]) if where0.endswith(str(i)) else ""
-            in_quote = bool(re.search(r'\*"|^\s*>|note \(\d{4}-\d{2}-\d{2}\):', line)
-                            or re.search(r'note \(\d{4}-\d{2}-\d{2}\):|\*"', near))
+            # A quotation is a record only if it says WHEN it was true. Without a date, `*"…"` and a
+            # `>` blockquote are just quotation marks, and "wrap it and the checker goes quiet" is a
+            # path this must not open. The date may sit in the marker or in the quoted block itself.
+            DATE = r"\d{4}-\d{2}-\d{2}"
+            marker = re.search(r'\*"|^\s*>|note \(' + DATE + r'\):', line) or re.search(r'\*"|^\s*>', near)
+            in_quote = bool(marker and (re.search(DATE, line) or re.search(DATE, near)))
             for m in LINE_REF.finditer(line):
                 if ambiguous(m.group(1)):
                     others = ", ".join(str(q.relative_to(ROOT)) for q in ambiguous(m.group(1))[:4])
@@ -453,12 +457,14 @@ def main() -> int:
         if is_preserved(citing):
             preserved += 1
             continue
-        if quoted.get((where, doc, loc)):
+        record = quoted.get((where, doc, loc))
+        if record:
             # This repo quotes past state verbatim on purpose — context-notes-log, provenance blocks,
-            # a note reproducing the edge text of the day. Rewriting a citation inside a quotation
-            # would edit the quotation, so it is reported and left.
+            # a note reproducing the edge text of the day. Rewriting such a citation would edit the
+            # quotation, so it is not migration work. It is still resolved: an exemption from being
+            # rewritten is not an exemption from being checked, or wrapping a citation in quotes
+            # would turn a failure green.
             quoted_n += 1
-            continue
         kind = lands_on(doc, loc, citing)
         kinds[kind] = kinds.get(kind, 0) + 1
         owner = contract_owner(doc, citing, line_no=int(re.split(r"[-–]", loc)[0])
@@ -470,7 +476,12 @@ def main() -> int:
             external += 1
         elif kind in DEAD:
             row = f"{where}: {doc}:{loc} — lands on {kind}, which cannot have been the intent"
-            (dead if citing.suffix in live else note_dead).append(row)
+            if record:
+                row += " (inside a dated quotation: report, do not rewrite — the quotation stands)"
+            # Only a file that DECLARES itself a preserved record is exempt from failing. A quotation
+            # inside a living document is not: the fact that its citation now points at nothing is
+            # true whether or not the sentence around it is a quotation.
+            (note_dead if is_preserved(citing) else dead).append(row)
         elif kind in MOVES:
             warned.append(f"{where}: {doc}:{loc} — lands on {kind}, which moves when the document grows")
 

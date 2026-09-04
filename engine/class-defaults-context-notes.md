@@ -35,7 +35,7 @@ table's emptiness."* A default that would fill a phase cell is refused by the ph
   (C16) are candidates; the owner orders them. Nothing beyond the mechanism and the first row is built here.
 
 **Grade propagation — the most dangerous gap, added before ② is built (directing seat's code read, reproduced):**
-no recipe reads the grade of its inputs — `cmb_flux.py:166` and `core_energy.py:289` write `grade="analog"` as
+no recipe reads the grade of its inputs — `cmb_flux.py@«grade="analog", inputs=inputs, values=values, units=units, refs=REFS, notes=notes)»` and `core_energy.py@«grade="analog", inputs=inputs, values=values, units=units, refs=REFS, notes=notes)»` write `grade="analog"` as
 literals, `core_state.py@«grade=grade, inputs=inputs, refs=REFS,»` sets its own — so once ② supplies an `authored` default to a recipe whose grade is
 a literal `calibrated`, the output still says `calibrated`. Over a five-step chain each step can absorb one
 authored input and the final value still carries the literal grade: **false provenance manufactured by the

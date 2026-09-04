@@ -33,7 +33,7 @@ bit-identical", which was too loose and the audit said so: Earth's `internal_hea
 - `radiogenic.py` (`internal_heat_nontidal`): existing outputs untouched; new `l_int_total`, `t_int_total`,
   `mantle_temperature_floor_total_min/max/_verdict` — emitted only when `tidal_heating` supplied `power`; the floor is
   re-inverted against the total (tidal counted in the mantle, declared) only in a boundary-layer mode; under a heat pipe the
-  verdict is "cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; radiogenic.py:183)". New Need
+  verdict is "cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; radiogenic.py@«f"잰 값이라 천체마다 움직인다. ζ 상단은 모듈 선언 {mantle_flux.ZETA_RANGE[1]:.3f} (Table 2 의 ±0.5) 이고 논문이 "»)". New Need
   `tidal_power` [W] (chain :653 via power).
 - chain.yaml: `tidal_heating` outputs rewritten (old kept in note), `heat_transport_mode` outputs [mode, total_surface_flux]
   (old kept), :631 units note, :632 via mantle_radiogenic_power → radiogenic_power (dated), :653 via power (built), :686 note
@@ -57,7 +57,7 @@ heat_transport_mode → plate tectonics at 0.0418 W/m² (radiogenic only).
 |---|---|
 | `tidal_heating` | power **1.866e16 W** · surface_flux **45.33 W/m²** · io_power_ratio **186.6** · regime **vigorous silicate volcanism, possible magma ocean** · orbital_period 32.0 h |
 | `heat_transport_mode` | **heat pipe** · total_surface_flux 45.36 W/m² (tidal 45.33 + radiogenic 0.0334) |
-| `internal_heat_nontidal` | radiogenic-only values unchanged (l_int 1.374e13 W, t_int 27.7 K, floor 1017–1468 K) · **l_int_total 1.868e16 W · t_int_total 168.2 K** · mantle_temperature_floor_total_min/max **None** · verdict **cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; radiogenic.py:183)** |
+| `internal_heat_nontidal` | radiogenic-only values unchanged (l_int 1.374e13 W, t_int 27.7 K, floor 1017–1468 K) · **l_int_total 1.868e16 W · t_int_total 168.2 K** · mantle_temperature_floor_total_min/max **None** · verdict **cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; radiogenic.py@«f"잰 값이라 천체마다 움직인다. ζ 상단은 모듈 선언 {mantle_flux.ZETA_RANGE[1]:.3f} (Table 2 의 ±0.5) 이고 논문이 "»)** |
 | `dynamo_rocky` | unchanged from C29(c): alive by declaration, B_eq 41.37 µT |
 | expected | surface_flux engine 45.33 vs board 45 (0.7 %, tol 1 %) 일치; b_eq 41.37 vs 75 (44.8 %, comparison) |
 
@@ -76,7 +76,7 @@ the ×Io column is an OUTPUT ratio; both Dante rows imply Io ≈ 1.016e14 W. io_
 
 ## §5 Note 7 — Dante's stale board rows (recorded, NOT repaired; board changes go through C31's emit path)
 
-Source: `dante-board-900km-notes.md` (parallel seat, 19:35). (a) The tidal block `phase4/alpha_centauri.yaml:1524–1607`
+Source: `dante-board-900km-notes.md` (parallel seat, 19:35). (a) The tidal block `phase4/alpha_centauri.yaml@«axis: bulk.tidal_heating provenance: >               # 뷰어 미렌더 — 값 이력 전용 2026-07-26: e 가정 평균»`
 never mentions a radius; `DANTE_HEAT_TRANSPORT_EVIDENCE.md@«combo. Hades e_rms 0.033–0.046 and Dante e_rms 0.017–0.022 both bracket the board's existing 0.0385 / 0.0186, so the tidal-heating rows move because of SIZE, not eccentricity.»` says "the tidal-heating rows move because of SIZE, not
 eccentricity". (b) Rows resting on the 900 km draft: `:1553` "~1200× Io" and `:1554` "~11,500 W/m²" (521 km: 78× · 2 231
 W/m², tidal-heating-methodology.md@«adopted by [arXiv:2305.03410](https://arxiv.org/abs/2305.03410)).»), plains 360 K (doc 223 K), area-weighted 673 K (452 K), melt area 5.7 %, crust 2.1 / 2.4 m, the albedo and
@@ -89,7 +89,7 @@ of record is the **main checkout's** copy, which holds uncommitted changes — n
 The audit approved C30's numbers and rejected five citations or sentences around them. None of the five moves a value.
 
 - **(a) A self-citation that pointed at the wrong line of its own file.** `HEAT_PIPE_FLOOR` named
-  `radiogenic.py:183`, which is the band note's ζ prose; the decision it describes is at `:265-267` and its explanation
+  `radiogenic.py@«f"잰 값이라 천체마다 움직인다. ζ 상단은 모듈 선언 {mantle_flux.ZETA_RANGE[1]:.3f} (Table 2 의 ±0.5) 이고 논문이 "»`, which is the band note's ζ prose; the decision it describes is at `:265-267` and its explanation
   at `:167-171`. The string is *shipped as a result value* and copied into two rows of this file, so the wrong line
   travelled. Now `radiogenic.py _total_heat:265-267`: naming the function as well as the line means the next block
   inserted above it degrades the citation instead of falsifying it. `0ace3863` refreshed 53 refs and missed this one
