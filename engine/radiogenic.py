@@ -248,7 +248,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
 
 NO_TIDAL = "cannot-say (no tidal_heating value — total equals radiogenic; nothing added)"
 HEAT_PIPE_FLOOR = ("cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; "
-                   "radiogenic.py _total_heat:265-267)")
+                   "radiogenic.py@«def _total_heat(»)")   # 자기 인용은 코드 줄이 아니라 함수 정의를 가리킨다 — 인용문이
+                                                       # 그 코드 줄을 그대로 담으면 매치가 둘이 된다
 
 
 def _total_heat(b: dict, b_low: dict, tidal_power: float | None, r_m: float, g_body: float | None,

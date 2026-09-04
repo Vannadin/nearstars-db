@@ -34,7 +34,7 @@ otherwise re-choose silently:
 - **e is the time-averaged e_rms from the tidal_heating value string, not the row's osculating `e`.** The heating goes
   as ⟨e²⟩, so a snapshot eccentricity is the wrong average: Dante's 0.02432 snapshot returns 135× Io against 79× from
   e_rms 0.0186, a factor 1.7. The board's e_rms is bracketed by the measured 0.017–0.022, which is why the tidal rows
-  move with the radius and not with the eccentricity — `phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:154-155`
+  move with the radius and not with the eccentricity — `phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md@«combo. Hades e_rms 0.033–0.046 and Dante e_rms 0.017–0.022 both bracket the board's existing 0.0385 / 0.0186, so the tidal-heating rows move because of SIZE, not eccentricity.»`
   (committed in 8b9f0408).
 - **a is the row's `design.a_km`, not its osculating `a_km`.** For Dante that is 110,000 against 110,044.5 km; through
   a⁻⁷·⁵ the two differ by 0.30 %, far too little to move "~79×", but the report and the note name which one was used.
@@ -341,7 +341,7 @@ def main() -> int:
           f"k₂/Q {k2q} (tidal_heating value, line {th_rows[0] + 1}) · "
           f"M_p {mp_kg / M_EARTH_KG:.0f} M⊕ (line {mp_line})")
     print("# e_rms is the right average because Ė ∝ ⟨e²⟩; the justification for this body lives in "
-          "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:154-155 (committed in 8b9f0408)")
+          "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md@«combo. Hades e_rms 0.033–0.046 and Dante e_rms 0.017–0.022 both bracket the board's existing 0.0385 / 0.0186, so the tidal-heating rows move because of SIZE, not eccentricity.» (committed in 8b9f0408)")
     print(f"# recipe: Ė {power:.4e} W · F {flux:,.1f} W/m² · {ratio:.2f}× Io (Io = {th.IO_POWER_W:.0e} W) · "
           f"n {n:.4e} rad/s · regime \"{th.outcome_regime(flux)}\"")
     diff = "".join(difflib.unified_diff(lines, new, fromfile=str(path), tofile=f"{path} (refreshed)", n=1))

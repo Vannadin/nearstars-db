@@ -10,10 +10,10 @@ inputs:
   composition_intent: earth_like
   radius_earth: 0.8984     # 보드 5724 km / 6371
   core_mass_fraction: 0.325   # 지구식. composition_intent 가 정할 자리다.
-  # source: Earth analog (earth.yaml:17, petrological); grade analog — dry rocky, composition_intent earth_like.
+  # source: Earth analog (earth.yaml@«potential_temperature: 1600.0», petrological); grade analog — dry rocky, composition_intent earth_like.
   # Owner declaration 2026-09-04 (C29). Not scaled — the analogy is the value; the source itself (Unterborn+ 2019 §3.2)
   # relaxes it to 1400–1900 K. Gives core_state a lower-bound verdict only;
-  # the core-side CMB temperature (earth.yaml:24) is a separate, undeclared thing.
+  # the core-side CMB temperature (earth.yaml@«# C20 열진화의 초기온도 — Nimmo+ 2004») is a separate, undeclared thing.
   potential_temperature: 1600.0
   # source: owner declaration 2026-09-04 (C29 c) — grade declared. core_state's lower-bound branch cannot decide the
   # core label without a core-side CMB temperature, and the owner declares the dynamo on instead of authoring that

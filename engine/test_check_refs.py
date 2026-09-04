@@ -194,6 +194,25 @@ def main() -> int:
         ok(out.count("알 수 없는 인용 형식") == 1,
            f"unknown: prose naming a file and `py::symbol` must not be read as citations, got:\n{out}")
 
+        # a file citing itself: writing the anchor puts the phrase in the file a second time, and that
+        # second occurrence must not make its own citation ambiguous. radiogenic.py's heat-pipe refusal
+        # is exactly this, and it ships as a result value.
+        (root / "engine" / "cited.py").write_text(
+            '# 합성 인용 표본\n'
+            'RECIPE = "synthetic-methodology"\n'
+            'def the_decision():\n'
+            '    return "cannot-say (see cited.py@«def the_decision():»)"\n',
+            encoding="utf-8")
+        (root / "engine" / "chain.yaml").unlink(missing_ok=True)
+        check_refs.SCAN = (("engine/*.py",),)
+        check_refs.CACHE.clear()
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            rc = check_refs.main()
+        ok(rc == 0 and "해석 성공 1" in buf.getvalue(),
+           f"self: a file citing itself must resolve, not read its own citation as a second place, "
+           f"got rc={rc}\n{buf.getvalue()}")
+
         # a sentence-length anchor across the document's hard wrap
         (root / "docs" / "reference" / "wrapped-methodology.md").write_text(
             "# Wrapped\n\nThe transport test must land inside the measured band, and\n"
@@ -232,7 +251,7 @@ def main() -> int:
     print("  [PASS] 인용 체커 자기검증 — 고유 1회 통과 · 삭제된 구절 썩음 · 2회 매치 애매 · 남의 계약 블록 착지 · "
           "빈 줄 착지 · 줄번호는 미이행 카운트 · RECIPE 자기문서 해석 · 대문자 파일명 · bodies 스캔 · "
           "비-.md 대상 · 접힌 인용 · 문서명만 계수 · YAML 파싱 실패 FAIL · 키 상실 FAIL · 주석 안 인용 · 하드랩 앵커 · "
-          "알 수 없는 형식 FAIL")
+          "알 수 없는 형식 FAIL · 자기 인용")
     return 0
 
 

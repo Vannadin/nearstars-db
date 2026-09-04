@@ -230,6 +230,11 @@ def resolve(doc: str, phrase: str, citing: Path) -> tuple[str, int]:
     # it sees that doubling; the document does not have it.
     if n == 0 and "''" in phrase:
         n = body.count(phrase.replace("''", "'"))
+    # A file may cite itself — radiogenic.py's heat-pipe refusal names the function it is decided in,
+    # and that string ships as a result value. Writing the anchor puts the phrase in the file a second
+    # time, so its own occurrences inside `@«…»` do not count as places the citation could mean.
+    if target == citing:
+        n -= body.count(f"@«{phrase}»")
     return "", n
 
 

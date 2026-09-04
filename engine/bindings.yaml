@@ -401,7 +401,7 @@ fields:
     kind: unmapped
     note: 중성 토러스 공급률(kg/s). 벨트 소스 항의 실입력인데 노드가 없다.
 
-# 전부 실측 — 인자는 validation-manifest.yaml, 비용은 STABILITY_REPORT.md:81.
+# 전부 실측 — 인자는 validation-manifest.yaml, 비용은 STABILITY_REPORT.md@«on file mtimes, because the accurate cells cost hours (α Cen:».
 consumers:
   - id: stability-sim/alpha_centauri/moons
     kind: simulation
@@ -410,7 +410,7 @@ consumers:
     args: ["--j2", "0.023", "--j2-obliquity-deg", "5"]
     ref:
       - "phase3/stability-sim/validation-manifest.yaml:58"
-      - "phase3/stability-sim/STABILITY_REPORT.md:81"
+      - "phase3/stability-sim/STABILITY_REPORT.md@«on file mtimes, because the accurate cells cost hours (α Cen:»"
     invalidates:
       - "A b 위성 5개의 Hill-bound 판정 (MEGNO 3.65, 거의 정칙)"
       - "위성 궤도 선택 자체 — 리포트 §284 가 편평도가 이 선택을 뒤집는다고 기록"
@@ -425,7 +425,7 @@ consumers:
     args: ["--acen-a-au", "1.6", "--acen-e", "0.1", "--acen-incl-deg", "16"]
     ref:
       - "phase3/stability-sim/validation-manifest.yaml:55"
-      - "phase3/stability-sim/STABILITY_REPORT.md:81"
+      - "phase3/stability-sim/STABILITY_REPORT.md@«on file mtimes, because the accurate cells cost hours (α Cen:»"
     invalidates:
       - "A b 궤도의 장기 카오스 판정 (a·e 봉투 유계, 1억 년)"
     note: >
@@ -437,7 +437,7 @@ fixed_points:
   - id: pause-smooth-radius
     members: [pause_smooth, pause_radius_smoothed]
     ref:
-      - "docs/reference/planetary-magnetosphere-geometry-methodology.md:874"
+      - "docs/reference/planetary-magnetosphere-geometry-methodology.md@«`pause_smooth` = 0.5 × `pause_radius` is solved as a fixed point, since the radius itself depends on the smoothing.»"
     note: >
       pause_smooth = 0.5 × pause_radius 를 고정점 반복으로 푼다 — 반지름 자체가
       스무딩에 의존하기 때문이다. 문서가 명시한다. 다만 그 "radius" 가
@@ -463,7 +463,7 @@ decisions:
     field: radius
     value: 521
     unit: km
-    source: "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:143"
+    source: "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md@«| **521 km (chosen)** | **1.552e21** | **78×** | **2,231** | **44.6 kW/m²** | **Erta Ale class — inside the band** |»"
     note: >
       표면 열수송 게이트가 고른 값. 900 km 는 5 % 용융호에 관측 최대의 2.1 배
       면적유속을 요구해서 기각됐다. 521 km 는 super-Io 봉투 안(2231 < 2500 W/m²).
@@ -471,5 +471,5 @@ decisions:
     field: mass
     value: 1.552e21
     unit: kg
-    source: "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md:143"
+    source: "phase3/stability-sim/DANTE_HEAT_TRANSPORT_EVIDENCE.md@«| **521 km (chosen)** | **1.552e21** | **78×** | **2,231** | **44.6 kW/m²** | **Erta Ale class — inside the band** |»"
     note: 밀도 2620 kg/m³ 를 고정한 채 반지름에서 따라온 값.
