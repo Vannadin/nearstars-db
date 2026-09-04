@@ -108,6 +108,9 @@ def main() -> int:
        "5/C28: through _from_state a water body reaches regime 4 with the source printed")
     refused = dr._from_state(st(mass_earth=1.0, radius_earth=1.0, body_class="rocky", composition_intent="carbon_rich"))
     ok(not refused.applicable and "no composition preset" in refused.reason, "5/C28: _from_state refuses an unknown preset by name")
+    giant_state = dr._from_state(st(mass_earth=120.0, radius_earth=11.2, age_gyr=5.3, body_class="giant"))   # no composition_intent
+    ok(not giant_state.applicable and "암석 사다리 밖" in giant_state.reason and "composition preset" not in giant_state.reason,
+       "5/C28: a giant with no composition_intent keeps the class-gate refusal, not a preset refusal (audit hold on b8d86b68)")
     if not fails:
         print(f"  [PASS] C28 얼음 분율: earth_like 0.00 · water 0.50 (regime {wet.values['ladder_regime']}) · 선언 0.1 우선 · 미지 프리셋 거절")
 

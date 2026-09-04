@@ -277,22 +277,34 @@ def ice_fraction_from_state(state) -> tuple[float | None, str]:
     return None, f"cannot-say (no composition preset): composition_intent '{intent}' 는 interior.COMPOSITIONS 에 없고 ice_mass_fraction 선언도 없다"
 
 
+def _ladder_from_state(state, imf: float) -> Result:
+    return ladder(mass_earth=state["mass_earth"],
+                  radius_earth=state.get("radius_earth", state.get("radius")),
+                  conductor_phase=state.get("conductor_phase"),
+                  stagnant_lid=state.get("stagnant_lid"),
+                  age_gyr=state.get("age_gyr"),
+                  ice_mass_fraction=imf,
+                  body_class=state.get("body_class"),
+                  dynamo_regime=state.get("dynamo_regime"),
+                  locked=state.get("locked"),                      # tidal_locking's output — absent until that node has a recipe
+                  rotation_period_h=state.get("rotation_period"))
+
+
 @recipe("dynamo_rocky")
 def _from_state(state):
+    # C28 (fixed after the audit hold on b8d86b68): the ladder's own gates — class, mass, radius — come FIRST.
+    # A giant or brown dwarf keeps its named refusal ("… 암석 사다리 밖이다"); the composition preset is
+    # consulted only for a body the ladder would actually classify. Probing with the old default 0.0 keeps
+    # every out-of-domain reason bit-identical to what it was before C28.
+    probe = _ladder_from_state(state, 0.0)
+    if not probe.applicable:
+        return probe
     imf, imf_source = ice_fraction_from_state(state)
     if imf is None:
         return out_of_domain(RECIPE, VERSION, imf_source,
                              inputs={"mass_earth": state["mass_earth"], "composition_intent": state.get("composition_intent"),
                                      "ice_mass_fraction": None}, refs=REFS)
-    res = ladder(mass_earth=state["mass_earth"],
-                  radius_earth=state.get("radius_earth", state.get("radius")),
-                  conductor_phase=state.get("conductor_phase"),
-                  stagnant_lid=state.get("stagnant_lid"),
-                  age_gyr=state.get("age_gyr"),
-                  ice_mass_fraction=imf,                            # C28: declared, else the composition preset (see above)
-                  body_class=state.get("body_class"),
-                  dynamo_regime=state.get("dynamo_regime"),
-                  locked=state.get("locked"),                      # tidal_locking's output — absent until that node has a recipe
-                  rotation_period_h=state.get("rotation_period"))
+    res = _ladder_from_state(state, imf)
     # 어디서 온 분율인지 결과에 인쇄한다 (C28). Result 는 frozen 이라 notes 만 덧붙인다.
     return dataclasses.replace(res, notes=res.notes + (f"ice_mass_fraction {imf:.2f} ({imf_source})",))
+

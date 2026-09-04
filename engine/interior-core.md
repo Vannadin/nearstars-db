@@ -2270,6 +2270,12 @@ preset is *read* from `interior.COMPOSITIONS` (referenced, not copied; earth_lik
 (no composition preset)`, never 0. The source is printed in the result's notes ("ice_mass_fraction 0.50 (composition preset:
 water …, grade class)"). No value authored. `chain.yaml:684` drops `status: gap` (the edge now flows); the old status and its text are kept in the note, dated. Anchors: every roster
 body is earth_like (0.00), so no emitted value moves — the gate is the check. Tests: `test_dynamo_rocky.py` §5.
+⚠ *Corrected 2026-09-04 (audit hold on b8d86b68)*: "every roster body is earth_like" was 2 of 5 — only `earth.yaml` and
+`pandora.yaml` declare `composition_intent`; the other three (A b, Luhman 16 A/B) are outside the rocky ladder and must never reach the
+preset lookup. b8d86b68 consulted the preset **before** the ladder's class gate, so their named refusal ("… 암석 사다리 밖이다")
+regressed to "cannot-say (no composition preset)" — values None either way, but a named refusal lost its name. the follow-up commit "fix(dynamo_rocky): C28 - consult the composition preset only inside the rocky ladder" moves
+the lookup behind the ladder's own gates (probe with the old default 0.0 first; consult the preset only for a body the ladder classifies);
+all five bodies' results compared node by node as JSON against 5ad8f56c's `dynamo_rocky.py` on the same inputs — identical.
 
 ### C29 — the mantle potential temperature: an Earth-analog declaration now, self-derivation listed — **declared 2026-09-04 (owner); the loop is listed, not started**
 
