@@ -3,6 +3,7 @@
 
     python3 engine/check_refs.py            # report + verdict
     python3 engine/check_refs.py --list     # also list every citation it found
+    python3 engine/check_refs.py --suspect  # classify the unmigrated ones by what their line lands on
 
 A line number is not a citation, it is a bet that the document will not grow. It keeps losing:
 `internal-heat-luminosity-methodology.md:119` was a contract block's Needs line when 30 edges were
@@ -78,15 +79,57 @@ def own_doc(path: Path) -> str | None:
     return f"{m.group(1)}.md" if m else None
 
 
-def resolve(doc: str, phrase: str) -> tuple[str, int]:
-    target = DOCS / doc
-    if not target.exists():
+def target_of(doc: str, citing: Path) -> Path | None:
+    """Where a cited file name resolves. Methodology docs live in docs/reference, but the engine's
+    notes cite each other by bare file name too, so the citing file's own directory counts."""
+    for cand in (DOCS / doc, citing.parent / doc, ROOT / "engine" / doc):
+        if cand.exists():
+            return cand
+    return None
+
+
+def lands_on(doc: str, loc: str, citing: Path) -> str:
+    """What a line-number citation currently points at. The kind is the first thing to look at when
+    deciding whether a citation is worth trusting: a contract Needs/Returns line is the shape that
+    rotted 30 edges at once (five blocks, near-identical lines), a `## Related` item moves whenever
+    a sibling doc is added, and a blank line means the target is already gone."""
+    target = target_of(doc, citing)
+    if target is None:
+        return "no such document"
+    lines = text(target).splitlines()
+    n = int(re.split(r"[-–]", loc)[0])
+    if not (1 <= n <= len(lines)):
+        return "past the end of the document"
+    raw = lines[n - 1]
+    body = raw.strip()
+    if not body:
+        return "blank line"
+    if body.startswith("**Needs**") or body.startswith("**Returns**"):
+        return "contract Needs/Returns line"
+    if body.startswith("#"):
+        return "heading"
+    if body.startswith("|"):
+        return "table row"
+    if re.match(r"^\d+\. \[", body):
+        return "table of contents"
+    # a `## Related` list item: a bullet inside that section
+    before = "\n".join(lines[:n - 1])
+    section = before.rfind("\n## ")
+    if section != -1 and before[section:section + 20].startswith("\n## Related") and body.startswith("-"):
+        return "Related list item"
+    return "body text"
+
+
+def resolve(doc: str, phrase: str, citing: Path) -> tuple[str, int]:
+    target = target_of(doc, citing)
+    if target is None:
         return "no such document", 0
     return "", text(target).count(phrase)
 
 
 def main() -> int:
     listing = "--list" in sys.argv
+    suspect = "--suspect" in sys.argv          # classify every unmigrated citation by what it lands on
     rotten: list[str] = []
     ambiguous: list[str] = []
     unmigrated: list[str] = []
@@ -99,7 +142,7 @@ def main() -> int:
             hits = [(m.group(1), m.group(2)) for m in ANCHOR.finditer(line)]
             hits += [(mine, m.group(1)) for m in SELF_ANCHOR.finditer(line) if mine]
             for doc, phrase in hits:
-                why, n = resolve(doc, phrase)
+                why, n = resolve(doc, phrase, path)
                 where = f"{rel}:{i}: {doc}@«{phrase[:60]}»"
                 if why:
                     rotten.append(f"{where} — {why}")
@@ -112,18 +155,25 @@ def main() -> int:
                     if listing:
                         print(f"  [ok] {where}")
             for m in LINE_REF.finditer(line):
-                unmigrated.append(f"{rel}:{i}: {m.group(1)}:{m.group(2)}")
+                unmigrated.append((f"{rel}:{i}", m.group(1), m.group(2), path))
             for m in SELF_LINE.finditer(line):
-                unmigrated.append(f"{rel}:{i}: {mine or 'doc'} :{m.group(1)}")
+                if mine:
+                    unmigrated.append((f"{rel}:{i}", mine, m.group(1), path))
 
     print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
           f"미이행 줄번호 {len(unmigrated)}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous)):
         for r in rows:
             print(f"  [FAIL] {label} — {r}")
-    if unmigrated and listing:
-        for u in unmigrated:
-            print(f"  [미이행] {u}")
+    if unmigrated and (listing or suspect):
+        kinds: dict[str, int] = {}
+        for where, doc, loc, citing in unmigrated:
+            kind = lands_on(doc, loc, citing)
+            kinds[kind] = kinds.get(kind, 0) + 1
+            if listing or kind != "body text":
+                print(f"  [미이행] {where}: {doc}:{loc} — lands on a {kind}")
+        print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
+        print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")
     if rotten or ambiguous:
         print(f"[FAIL] 인용 {len(rotten) + len(ambiguous)}건이 해석되지 않는다")
         return 1
