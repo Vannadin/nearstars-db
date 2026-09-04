@@ -2271,6 +2271,44 @@ preset is *read* from `interior.COMPOSITIONS` (referenced, not copied; earth_lik
 water …, grade class)"). No value authored. `chain.yaml:684` drops `status: gap` (the edge now flows); the old status and its text are kept in the note, dated. Anchors: every roster
 body is earth_like (0.00), so no emitted value moves — the gate is the check. Tests: `test_dynamo_rocky.py` §5.
 
+### C29 — the mantle potential temperature: an Earth-analog declaration now, self-derivation listed — **declared 2026-09-04 (owner); the loop is listed, not started**
+
+**(a) Declaration and measurement.** `earth.yaml:17` declares `potential_temperature: 1600.0` (petrological, the anchor); Pandora
+declared none, so `interior_layers` solved isothermal and `core_state` refused ("온도가 없다"), and the one quantity the dynamo
+asks of the interior (`conductor_phase`) never existed for Pandora. Owner declaration 2026-09-04: `bodies/pandora.yaml`
+`potential_temperature: 1600.0` — **Earth analog, grade analog, not scaled** (dry rocky, composition_intent earth_like; source
+comment beside the value). Measured with the read hook on `BodyState.__getitem__` (`run.py`, scratch copy):
+
+| step | before the declaration | after (1600 K declared) |
+|---|---|---|
+| `interior_layers` | isothermal — `cmb_temperature` 0 | mantle-side T_cmb **2 347 K**, T_center 2 474 K, P_cmb 91.25 GPa (calibrated) |
+| `core_state` | refuses: "온도가 없다" | **`lower_bound` · `conductor_phase` "undecided"** (judgment): the mantle-side lower bound 2 347 K sits under the melting curve 2 714 K, and a one-sided bound decides neither liquid nor solid — "declare `core_cmb_temperature` and this node answers" |
+| `dynamo_rocky` | cannot-say (conductor_phase undecided); the key had no source | reads it (hook fired, source `core_state`) → still **cannot-say (conductor_phase undecided)** |
+| C14 · cmb_heat_flux · C15 · C20 | refuse | refuse unchanged: "no core-side CMB temperature declared" |
+
+So the declaration gives Pandora a geotherm and a `core_state` verdict *of the lower-bound kind*; the dynamo's key stays
+undecided for a **second missing declaration** — the core-side CMB temperature that Earth declares separately
+(`earth.yaml:24`, 3 760 ± 290 K, Sinmyo+ 2019). Whether to declare it for Pandora by analogy is a separate owner decision,
+recorded here, not taken (P_cmb 91 vs Earth's 135 GPa makes the analogy weaker than the potential temperature's).
+
+**Grounding level of the 1600 K itself** (parallel seat, `pandora-1600k-analogy-notes.md`, printed facts): (1) the only source is
+Unterborn+ 2019 (arXiv:1905.06530, held), which calls 1600 K an **"Earth-like"** single-value simplification (`:94`) and **relaxes it
+to 1400 / 1900 K** in its §3.2 (`:98`, 1900 K flagged as a surface-magma-ocean case); nothing there ties 1600 K to a mass or an age.
+(2) No held paper prints a mass/age scaling of the potential temperature: Noack & Lasbleis 2020 eq. 22 holds T_um = 2000 K fixed
+over 0.8–2 M⊕, Nimmo+ 2004 integrates Earth to T_m 1 613 K. The engine's `mantle_temperature_floor_min/max` (Brief 57) is
+1 017–1 468 K for Pandora — a **floor family**, not an estimate, its own doc says. So the grade stays *analog* and the declaration's
+comment says the source relaxes it to 1400–1900 K.
+
+**(b) Self-derivation — listed, not started.** The loop that would replace the declaration: obtain the present potential
+temperature from C20's thermal history (`core_thermal_history` already emits `mantle_potential_temperature_present`,
+1 525 K on Earth) and iterate it against `interior_layers` (whose `cmb_pressure` C20 consumes — a cycle). Why not now: it moves
+one declaration onto two unmeasurable ones (`mantle_initial_potential_temperature`, `core_initial_temperature`) plus the
+radiogenic budget, and it is exactly the structure + thermal-evolution coupling `rocky-planet-dynamo-methodology.md:108–109`
+says this project does not re-run per body. `chain.yaml:693`'s note stands: no thermal model turns the heat budget into a
+potential temperature, so consumers still declare it. And the loop is not yet better than the declaration where it can be checked:
+on Earth C20's present T_m is **1 525 K**, −75 K (−4.7 %) against the declared 1 600 K and −88 K against Nimmo's own 1 613 K
+(`core-thermal-history-context-notes.md:264`, a report line, not a gate). Listed by owner decision.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,
