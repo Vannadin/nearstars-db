@@ -22,6 +22,12 @@ and, inside a recipe module that declares `RECIPE = "<slug>"`, the same thing ag
 Verdicts per anchor: exactly one match → ok. Zero → **rotten** (the phrase is gone or was never
 there). Two or more → **ambiguous** (the anchor cannot say which place it means). Both fail.
 
+The bare form is reserved for a module's own document, and the checker enforces it: in a file with no
+`RECIPE` declaration a bare `doc` citation fails, and a phrase from some *other* document fails for
+the ordinary reason (it is not in the RECIPE document). This closes the case `radiogenic.py` was in,
+where a bare `doc :295–299` pointed at the tidal document's table while `doc` meant the heat one — a
+citation naming the wrong document entirely, which no line number could have revealed.
+
 Citations still written as `<doc>.md:123` or inline `doc :123` are counted as **unmigrated** and
 listed, but do not fail: C33 is migrating them in batches. Tighten the last line of `main()` to
 require zero once that is done.
@@ -67,7 +73,8 @@ def text(path: Path) -> str:
 
 # The self-test builds deliberately rotten anchors against a synthetic document; scanning them here
 # would report the test's own fixtures as failures.
-SKIP = {"test_check_refs.py"}
+# This file and its test document the syntax in prose, so scanning them reports the documentation.
+SKIP = {"check_refs.py", "test_check_refs.py"}
 
 
 def files() -> list[Path]:
@@ -186,7 +193,15 @@ def main() -> int:
             if m:
                 ends = (m.group(1), m.group(2))
             hits = [(m.group(1), m.group(2)) for m in ANCHOR.finditer(line)]
-            hits += [(mine, m.group(1)) for m in SELF_ANCHOR.finditer(line) if mine]
+            for m in SELF_ANCHOR.finditer(line):
+                # The bare form is only ever the module's OWN document. radiogenic.py used it for the
+                # tidal document's section 6.2 table, so the citation named the wrong document while
+                # looking right; a citation that crosses documents has to say which one.
+                if mine:
+                    hits.append((mine, m.group(1)))
+                else:
+                    rotten.append(f"{rel}:{i}: doc @«{m.group(1)[:50]}» — a bare `doc` citation in a file "
+                                  f"that declares no RECIPE; name the document")
             for doc, phrase in hits:
                 why, n = resolve(doc, phrase, path)
                 where = f"{rel}:{i}: {doc}@«{phrase[:60]}»"
@@ -216,6 +231,9 @@ def main() -> int:
             for m in SELF_LINE.finditer(line):
                 if mine:
                     unmigrated.append((f"{rel}:{i}", mine, m.group(1), path))
+                else:
+                    rotten.append(f"{rel}:{i}: doc :{m.group(1)} — a bare `doc` citation in a file that "
+                                  f"declares no RECIPE; name the document")
 
     DEAD = {"blank line", "table separator", "horizontal rule", "table of contents",
             "past the end of the document", "no such document"}

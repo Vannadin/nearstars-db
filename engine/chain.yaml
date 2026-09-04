@@ -652,7 +652,7 @@ edges:
     status: gap   # C30 (2026-09-04): plains_temperature is not emitted by tidal_heating v1 — the §6.3–6.5 lid axis is a separate item; edge kept as drawn
     note: 평원 온도가 어느 휘발성 물질이 안정한지를 정한다 — 황이냐 SO2 서리냐가 표면 색조를 가른다.
     ref: "tidal-heating-methodology.md:478"   # ref was :460 (shifted by b29b556e's contract block, 2026-09-04)
-  - {from: tidal_heating, to: internal_heat_nontidal, kind: requires, via: power, ref: "internal-heat-luminosity-methodology.md:34", note: "C30 (2026-09-04, built): internal_heat_nontidal reads tidal_heating's power and emits l_int_total · t_int_total beside the radiogenic-only values (heat doc :34 'add the tidal flux into T_int'); the floor is re-inverted against the total only in a boundary-layer mode, refused by name under a heat pipe."}
+  - {from: tidal_heating, to: internal_heat_nontidal, kind: requires, via: power, ref: "internal-heat-luminosity-methodology.md@«here folds in only the non-tidal sources (add the tidal flux into `T_int` if it is»", note: "C30 (2026-09-04, built): internal_heat_nontidal reads tidal_heating's power and emits l_int_total · t_int_total beside the radiogenic-only values (the heat doc's own instruction, «add the tidal flux into `T_int` if it is» non-negligible 'add the tidal flux into T_int'); the floor is re-inverted against the total only in a boundary-layer mode, refused by name under a heat pipe."}
 
   # ── 자기 ───────────────────────────────────────────────────────
   - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md@«    B_dyn  =  4.8 · (M · L² / R⁷)^(1/6)   [kG]»"}

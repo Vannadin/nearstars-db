@@ -10,7 +10,7 @@ item was frozen; §3's Pandora capture ran on the scratch copy after the release
 ## §1 Pre-registration (written 2026-09-04 ~19:30 KST, before any worktree run; ⚠ the scratch dry-runs listed in §3 ran
 ## after this list was fixed in the brief but before this file was written — evidence level stated, not claimed)
 
-Ⓟ Pandora reproduces the board's 45 W/m² within 5 % (tidal doc :56 with a 252 393 km · e 0.005 · k₂/Q 0.0016 · M_p 120 M⊕ ·
+Ⓟ Pandora reproduces the board's 45 W/m² within 5 % (tidal tidal-heating-methodology.md:56 with a 252 393 km · e 0.005 · k₂/Q 0.0016 · M_p 120 M⊕ ·
 R 5724 km), its §6.2 mode on the total flux is **heat pipe**, its §6.1 regime "vigorous silicate volcanism, possible magma
 ocean", and the total-heat floor is refused by name (heat-pipe guard) · Ⓠ reproduction misses by > 5 % → re-check the input
 sources, do not land · Ⓡ Earth, A b, Luhman 16 A/B carry no tidal inputs → `tidal_heating` cannot-say (no orbit), and every
@@ -28,7 +28,7 @@ bit-identical", which was too loose and the audit said so: Earth's `internal_hea
   "unclassified"), total_surface_flux; `resurfacing_rate` not emitted (no formula printed). Not emitted: radius_ceiling,
   plains_temperature (the Dante lid axis) — the two chain edges carrying them (:626, :650) become `status: gap`, dated.
   `tidal_transport.derive_potential_temperature` is not consulted (validation-failed label; Pandora is not a §6 lid case,
-  doc :330–338). Two Io flux anchors carry their different sources in comments: ~2 W/m² Veeder+ 2012 (ABSENT), 2.5 W/m²
+  tidal-heating-methodology.md:330–338). Two Io flux anchors carry their different sources in comments: ~2 W/m² Veeder+ 2012 (ABSENT), 2.5 W/m²
   Kankanamge & Moore 2019 (HELD).
 - `radiogenic.py` (`internal_heat_nontidal`): existing outputs untouched; new `l_int_total`, `t_int_total`,
   `mantle_temperature_floor_total_min/max/_verdict` — emitted only when `tidal_heating` supplied `power`; the floor is
@@ -79,7 +79,7 @@ the ×Io column is an OUTPUT ratio; both Dante rows imply Io ≈ 1.016e14 W. io_
 Source: `dante-board-900km-notes.md` (parallel seat, 19:35). (a) The tidal block `phase4/alpha_centauri.yaml:1524–1607`
 never mentions a radius; `DANTE_HEAT_TRANSPORT_EVIDENCE.md:154–155` says "the tidal-heating rows move because of SIZE, not
 eccentricity". (b) Rows resting on the 900 km draft: `:1553` "~1200× Io" and `:1554` "~11,500 W/m²" (521 km: 78× · 2 231
-W/m², doc :453), plains 360 K (doc 223 K), area-weighted 673 K (452 K), melt area 5.7 %, crust 2.1 / 2.4 m, the albedo and
+W/m², tidal-heating-methodology.md:453), plains 360 K (doc 223 K), area-weighted 673 K (452 K), melt area 5.7 %, crust 2.1 / 2.4 m, the albedo and
 glow rationales at 360 K, and `:1480` `geopotential_j2 reference_radius_km: 900` against `:1477` reference_radius 521.
 (c) The doc labels those values "drafted" (`tidal:445–447`); the board carries them unlabelled in adopted slots. The board
 of record is the **main checkout's** copy, which holds uncommitted changes — not touched (owner decision).
@@ -94,7 +94,7 @@ The audit approved C30's numbers and rejected five citations or sentences around
   travelled. Now `radiogenic.py _total_heat:265-267`: naming the function as well as the line means the next block
   inserted above it degrades the citation instead of falsifying it. `0ace3863` refreshed 53 refs and missed this one
   because it lives inside a string constant, not in a comment.
-- **(b) `tidal_heating.py:104` cited `doc :440` for `F ∝ R³`.** That line is now the 384 kW/m² bare-melt ceiling; the
+- **(b) `tidal_heating.py:104` cited `tidal-heating-methodology.md:440` for `F ∝ R³`.** That line is now the 384 kW/m² bare-melt ceiling; the
   scaling sentence is `:458`. Two more of the same kind in the same file, found by the directing seat: lines 4 and 59
   cited `:58` for `n = √(GM_p/a³)`, and `:58` is now inside the `heat_transport_mode` contract block that b29b556e
   itself added, while line 113 of the same file already cited that sentence correctly as `:76`. One file, one sentence,
