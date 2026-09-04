@@ -115,3 +115,59 @@ file, the C17 row in `interior-core.md`, the rocky-dynamo methodology (en and ko
 One went stale, so five went stale, and when C17 actually starts the same five places will need the same edit
 again. Item ① (the phase side tables) was built today so that a *value* has one home; the prose already had
 five homes for this one. The same problem with another face; recorded for the day it is addressed.
+
+## 5. C17 opened (2026-09-04, owner) — pre-registration, written before any run
+
+Reason it can be measured now: reason (1) of the closure — the water-rich column did not converge — was removed
+by C24 the same day. Reason (2) — the methodology's item 4 has no citation and states the temperature direction
+opposite to our column — is what this section measures. The converged points in hand before this section:
+dry 2 526 K · ice 0.1 → 3 105 K · ice 0.3 → 3 050 K (T_cmb, mantle side, Earth mass, cmf 0.325, T_pot 1 600 K).
+
+Order: ② first (is the −55 K a turnover or noise), then ③ (does the dynamo verdict move), then ① (what to do
+with the document). ① is last because it is a *reading* of ② and ③, not a measurement of its own.
+
+### ② The curve is not monotone — noise or turnover?  (measured first)
+`0.0 → 2 526 · 0.1 → 3 105 (+579) · 0.3 → 3 050 (−55)`.
+- **Noise floor, measured not assumed**: |T_cmb(0.301) − T_cmb(0.300)|, one perturbation of 0.001 in the water
+  fraction. The solver's own bounds are T_TOL 1e-6 (temperature loop) and T_SURFACE_TOL 1e-3 on the surface
+  temperature (≈ 1.6 K at 1 600 K); the perturbation is the empirical version, which also sees any layer-boundary
+  step quantisation (the C13 staircase).
+- **Curve points**: ice 0.05 · 0.15 · 0.20 · 0.25, added to the three in hand (7 points, ~50 s each).
+- **②a** the interior maximum exceeds 3 × the measured noise floor → a real turnover; report where the maximum sits
+  and the two competing lengths (the water column above the rock lengthens the adiabat; the lower P_cmb shortens
+  the rock column) as the reading, not as a proven mechanism.
+- **②b** the −55 K is within 3 × the noise floor → the curve is "rise, then saturate"; no turnover is claimed.
+- **②c** the added points do not converge → the measurement stops there and says so (C24's window is not
+  reopened for this; the refusal is the result).
+
+### ③ Does the water fraction move the dynamo verdict?  (the C17 question)
+Run the present-epoch chain the way `test_core_history.py` builds it — `interior.solve` → `cmb_flux.solve` →
+`core_energy.solve` (C14, solves T_c) → `core_entropy.solve` (C15, ΔE band) — at ice 0.0 / 0.1 / 0.3, everything
+else Earth's: cmf 0.325, T_pot 1 600 K, **the core-side CMB temperature 3 760 K stays Earth's declared value**
+(labelled: an Earth declaration on a water world, not a water world's own; the dry/wet difference is then the
+mantle-side temperature and the CMB pressure only).
+Dry reference already on record: Q_CMB 2.750 TW at the declared T_c (δ_b 394 km); C14 T_c 3 978 K;
+C15 ΔE −69 MW/K, band −264…+238, 4/8 corners positive → `cannot-say`.
+- **③a** the C15 band changes its sign structure (all corners one sign) at 0.1 or 0.3 → the mechanism is real and
+  its size is measured; the verdict string changes.
+- **③b** Q_C, T_c and ΔE move but the band still straddles zero → the mechanism is real and measured, and *C15
+  cannot use it*. **This is the expected outcome and it is not a failure of C17**: the band already straddles
+  zero on the dry body. C17 closes as a named refusal — "measured; the consumer cannot resolve it".
+- **③c** nothing moves (|ΔQ_C| < 0.01 TW and |ΔΔE| < 1 MW/K) → the mechanism does not reach the dynamo on this
+  chain; the document's item stands on nothing.
+- Thresholds are fixed here; whichever fires is reported with the three numbers per water fraction.
+
+### ① The document: item 4 says "cooler, lower-pressure CMB → lower Q_c"
+The item cites nothing, so the outcome is a correction of *our* sentence, not a rebuttal of anyone.
+- **①a** the doc is wrong on the temperature half → rewrite item 4 (en + ko) from the measured curve: the pressure
+  half as written, the temperature half reversed, and Q_C's direction as ③ measured it.
+- **①b** we misread it → quote the sentence and state what it does say. (Ruled out or in by the text alone.)
+- **①c** a different condition — the sentence could be about the core-side temperature of a body that formed
+  with less accretional heat, or about a different mass. It fires only if a condition can be named from the
+  text; the text names none, so ①c needs the owner's word, not ours.
+- The five copies of the 3 105 / 3 050 pair (this file §4, the C17 row, the methodology en/ko, the chain note)
+  get one dated addendum each; no number is edited in place.
+
+### Scope (held)
+No code change is expected; the three `f_ocean` meanings are already measured (§2) and are not re-measured;
+C24's window and the anchors are untouched; `dynamo_rocky` is not wired.
