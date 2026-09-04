@@ -68,3 +68,33 @@ So today the table prevents a *future* double entry, not an existing one — rec
 
 Side note: the directing seat corrected its own count today — 35 computed nodes, 28 with a recipe field, 11
 registered in code, **17** documented-but-uncoded (not "two"). This file's author had not written "two" anywhere.
+
+## 3. Run record — 2026-09-04 (① built: two tables, mostly empty on purpose)
+
+`engine/phase_tables.py` + `engine/test_phase_tables.py`, gate row after `test_payload.py`. The key set is
+**read from `eos` at import** (17 keys — the pre-registration's list had 16 written out; `h2o_hot` was the one
+counted twice in the head and once on paper) and the test fails when either table's key set differs from it.
+
+    axis           filled / total   authored   filled cells
+    conductivity      1 / 17          0        fe_prem — 1.36e6 S/m, RM22 (`2203.01065`) core table, mark D; analog (Earth's alloy core
+                                               applied to any fe_prem layer). Cross-check: Tang+ 2025 Table "σ 1×10⁶ S m⁻¹" (their ref. 46);
+                                               RM22's own printed λ_m 1.32 vs 1/(μ₀σ) = 0.585 (paper-defects row 14) kept, not resolved.
+    tidal_kq         10 / 17          0        mgsio3_en/prem/pv — rocky class band 1e-3…1e-2; ice_ih…ice_x — icy+ocean band 1e-4…1e-2;
+                                               h_he — giant band 1e-5…1e-3. All `analog`, source: tidal-heating-methodology §5 class table
+                                               (Io / Enceladus / giant anchors). A class band on a phase, labelled so.
+
+**Empty on purpose, with the reason each** (the research queue, ⑧): σ — `fe_eps` (laboratory pure iron is not
+the alloy core; no held value), the three silicates (Kislyakova+ 2017 `1710.08761` uses an "Earth-like conductivity
+profile for a dry and iron-poor silicate mantle" whose numbers live in its figure, not its text — no printed
+value to cite), `antigorite`, the six ices, the three waters (Nettelmann+ 2014 `1402.7299` prints only the
+ionic → plasma threshold "> 100 Ω⁻¹ cm⁻¹", a transition marker), `h_he`, `nh3`; k₂/Q — the two irons (the core is
+not the dissipating layer in the fixed-Q recipe; no band printed), `antigorite`, the three waters (k₂/Q is a
+solid-body quantity; the doc's icy band is for a shell + ocean body), `nh3`. Papers not held (Pozzo+ 2012
+`2012Natur.485..355P`, Ohta+ 2016 `2016Natur.534...95O`, checked with `check_paper_held.py`) are **not** on the
+request list — they become needed when a consumer exists (⑥).
+
+**② outcome (the success criterion)**: no existing double entry was found to remove; the single home for σ
+and k₂/Q now exists before C23 and `tidal_heating` are written — a future double entry prevented, as
+pre-registered. **③**: no consumer rewired (there was nothing to rewire). **④**: anchors untouched, no
+`--refresh`; `check_paper_tables` rc 0. **⑨** is written into the module docstring: item ② attaches to the
+body-class axis only. **No value from the predecessor.**
