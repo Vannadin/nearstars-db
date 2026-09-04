@@ -81,7 +81,7 @@ WHOLE = re.compile(rf'"({FILE})"')
 # "points into" means the colon is followed immediately by the target — `foo.md:123`, `foo.md:Contract`,
 # `foo.md@«…»`. A colon followed by a space is prose introducing a file ("chain.yaml: outputs rewritten"),
 # and `module.py::function` names a symbol, not a place; neither is a citation.
-POINTER = re.compile(rf"({FILE})(?::(?![\s:])|@)")
+POINTER = re.compile(rf"({FILE})(?::(?![\s:])|@|#)")
 
 SCAN = (("engine/chain.yaml",), ("engine/bindings.yaml",), ("engine/bodies/*.yaml",),
         ("engine/*.py",), ("engine/tools/*.py",), ("engine/*.md",),
@@ -108,6 +108,9 @@ def files() -> list[Path]:
     return [p for p in out if p.is_file() and p.name not in SKIP]
 
 
+# A paper's own source lives in the gitignored cache, so it cannot be anchored here; that is a
+# classification, not a defect, and the listing must not offer it as work.
+EXT = re.compile(r"\.tex$")
 PRESERVED = re.compile(r"Preserved verbatim|원문 무편집|body unedited|from the parallel seat's scratch")
 
 
@@ -327,6 +330,19 @@ def main() -> int:
     shared: dict[tuple[str, str], list[tuple[str, list[str]]]] = {}   # anchor → the edges that share it
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
     warned: list[str] = []              # rule 3: a landing that moves easily but may well be meant
+    # L-3, narrowed 2026-09-05 after measurement: of 91 anchors without their payload's name, a hand
+    # check of 20 found ZERO genuinely loose aims — all three failure sources were structural (unicode
+    # symbols, capitalisation, and the heading anchors we chose on purpose). Narrowed to case-folded
+    # token equality, a one-line window, and no headings, it catches **nothing in this repo today**,
+    # and that is the rule being right rather than idle: it is the net under a future mis-aim, and it
+    # costs nothing to keep. Do not delete it for being quiet.
+    warned_aim: list[str] = []
+    # A preserved note is exempt in EVERY citation form, not only the line-number one. The exemption
+    # has to hold on the anchor path too, or the migration programme reaches such a note, rewrites a
+    # citation into an anchor, and the only way back to green is editing the preserved record —
+    # exactly what "preserved" forbids.
+    note_name: list[str] = []           # an ambiguous bare name inside a preserved note
+    note_rot: list[str] = []            # an anchor or form inside a preserved note that no longer resolves
     note_dead: list[str] = []           # rule 3 in a preserved note: dead, but a note records what was
     unmigrated: list[tuple] = []
     ok = 0
@@ -363,8 +379,11 @@ def main() -> int:
             m = EDGE.search(line)
             if m:
                 ends_seen = (m.group(1), m.group(2))
+            vias_here = []
+            for g in re.findall(r"via: (\[[^\]]*\]|[a-z_0-9]+)", line):
+                vias_here += [v.strip(" []") for v in g.split(",") if v.strip(" []")]
             units.append((f"{rel}:{i}", ends_seen if path.suffix in (".yaml", ".yml") else ("", ""), line,
-                          [v.strip() for v in re.findall(r"via: \[?([a-z_, ]+)\]?", line) for v in v.split(",")]))
+                          vias_here))
         for where0, ends, line, via_names in units:
             hits = [(m.group(1), m.group(2)) for m in ANCHOR.finditer(line)]
             for m in SELF_ANCHOR.finditer(line):
@@ -374,24 +393,28 @@ def main() -> int:
                 if mine:
                     hits.append((mine, m.group(1)))
                 else:
-                    rotten.append(f"{where0}: doc @«{m.group(1)[:50]}» — a bare `doc` citation in a file "
-                                  f"that declares no RECIPE; name the document")
+                    (note_rot if is_preserved(path) else rotten).append(
+                        f"{where0}: doc @«{m.group(1)[:50]}» — a bare `doc` citation in a file "
+                        f"that declares no RECIPE; name the document")
             for doc, phrase in hits:
                 if ambiguous(doc):
                     others = ", ".join(str(q.relative_to(ROOT)) for q in ambiguous(doc)[:4])
-                    ambig.append(f"{where0}: {doc}@«{phrase[:40]}» — {len(ambiguous(doc))} files share that "
-                                 f"name ({others}…); write the path")
+                    row = (f"{where0}: {doc}@«{phrase[:40]}» — {len(ambiguous(doc))} files share that "
+                           f"name ({others}…); write the path")
+                    (note_name if is_preserved(path) else ambig).append(row)
                     continue
                 queue = by_value.get(f"{doc}@«{phrase}»")
                 ends = queue.pop(0)[0] if queue else ends
                 why, n = resolve(doc, phrase, path)
                 where = f"{where0}: {doc}@«{phrase[:60]}»"
+                bucket = note_rot if is_preserved(path) else None
                 if why:
-                    rotten.append(f"{where} — {why}")
+                    (bucket if bucket is not None else rotten).append(f"{where} — {why}")
                 elif n == 0:
-                    rotten.append(f"{where} — no such phrase in {doc}")
+                    (bucket if bucket is not None else rotten).append(f"{where} — no such phrase in {doc}")
                 elif n > 1:
-                    ambiguous_a.append(f"{where} — matches {n}x, the anchor cannot say which")
+                    (bucket if bucket is not None else ambiguous_a).append(
+                        f"{where} — matches {n}x, the anchor cannot say which")
                 else:
                     owner = contract_owner(doc, path, phrase=phrase)
                     if owner and ends != ("", "") and owner not in ends:
@@ -415,8 +438,9 @@ def main() -> int:
             classified |= {m.start() for m in LINE_REF.finditer(line)}
             for m in POINTER.finditer(line):
                 if m.start() not in classified:
-                    unknown.append(f"{where0}: {line[m.start():m.start() + 60].strip()} — a citation form "
-                                   f"this checker does not know; it was counted in no bucket")
+                    (note_rot if is_preserved(path) else unknown).append(
+                        f"{where0}: {line[m.start():m.start() + 60].strip()} — a citation form "
+                        f"this checker does not know; it was counted in no bucket")
             near = "\n".join(raw_lines[max(0, i - 3):i]) if where0.endswith(str(i)) else ""
             # A quotation is a record only if it says WHEN it was true. Without a date, `*"…"` and a
             # `>` blockquote are just quotation marks, and "wrap it and the checker goes quiet" is a
@@ -431,7 +455,7 @@ def main() -> int:
                            f"name ({others}…); write the path")
                     # In a preserved note the citation is a record of what someone wrote, so an
                     # ambiguous name there is reported, not failed.
-                    (warned if is_preserved(path) else ambig).append(row)
+                    (note_name if is_preserved(path) else ambig).append(row)
                     continue
                 if in_quote:
                     quoted[(where0, m.group(1), m.group(2))] = True
@@ -450,7 +474,7 @@ def main() -> int:
     # A paper's own source is cited the same way but lives in the gitignored paper cache, so it cannot
     # be resolved here. That is not rot: it is a citation into something outside the repo, like a
     # bibcode, and it is counted as such rather than failed.
-    EXTERNAL = re.compile(r"(^|/)main\.tex$|\.tex$")
+    EXTERNAL = EXT
     MOVES = {"a table row", "a heading", "a Related list item", "a contract Needs/Returns line"}
     kinds: dict[str, int] = {}
     for where, doc, loc, citing, ends in unmigrated:
@@ -500,14 +524,37 @@ def main() -> int:
         # that edge is aiming loosely; measured 8/8 on the reused targets, and useless on single-use
         # ones (most of those cite prose that names nothing). A warning, not a failure: a sentence can
         # be the right place without spelling the field name.
-        if len(users) < 2:
+        if len(users) < 2 or phrase.lstrip().startswith("#"):
+            # A heading anchor is exempt: a section title is not supposed to spell a field name, and
+            # heading anchors are what this project deliberately chose for the contract blocks.
             continue
+        window = phrase
+        target = target_of(doc, ROOT / "engine" / "chain.yaml")
+        if target is not None:                     # ⑤ one line past the anchor counts as naming it
+            body = unwrapped(text(target))
+            at = body.find(phrase)
+            if at >= 0:
+                # to the end of the paragraph the anchor sits in: after folding, "one line further"
+                # is the rest of that paragraph, and a document names its payload in the sentence
+                # around the formula as often as in the formula itself
+                end = body.find("\n\n", at)
+                window = body[at:end if end > at else at + len(phrase) + 240]
+        words = {w.lower() for w in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", window)}
         for where0, via_names in users:
-            if not any(v in phrase for v in via_names):
-                warned.append(f"{where0}: {doc}@«{phrase[:50]}» — shared by {len(users)} edges and does not "
-                              f"name {'/'.join(via_names)}, the payload this one wants")
+            # token equality, case-folded: a substring test made "ref" match inside "reference", which
+            # silenced eight anchors. Symbol-versus-name (`k2_over_q` against `k₂/Q`) is NOT bridged —
+            # a symbol dictionary would cost more upkeep than the rule is worth.
+            if not any(v.lower() in words for v in via_names):
+                warned_aim.append(f"{where0}: {doc}@«{phrase[:50]}» — shared by {len(users)} edges and does "
+                                  f"not name {'/'.join(via_names)}, the payload this one wants")
     for w in warned:
         print(f"  [WARN] 쉽게 밀리는 착지 — {w}")
+    for w in warned_aim:
+        print(f"  [WARN] 느슨한 조준 — {w}")
+    for w in note_name:
+        print(f"  [WARN] 보존 노트의 모호한 이름 — {w}")
+    for w in note_rot:
+        print(f"  [WARN] 보존 노트의 안 풀리는 인용 — {w}")
     for w in note_dead:
         print(f"  [WARN] 노트 안의 죽은 착지 — {w}")
     if listing:
@@ -516,7 +563,9 @@ def main() -> int:
     if unmigrated and (listing or suspect):
         for where, doc, loc, citing, _ends in unmigrated:
             if listing or lands_on(doc, loc, citing) != "body text":
-                tag = "보존" if is_preserved(citing) else ("인용문" if quoted.get((where, doc, loc)) else "미이행")
+                tag = ("보존" if is_preserved(citing)
+                       else "외부" if EXT.search(doc)
+                       else "인용문" if quoted.get((where, doc, loc)) else "미이행")
                 print(f"  [{tag}] {where}: {doc}:{loc} — lands on {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
         print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")

@@ -193,10 +193,32 @@ def main() -> int:
                f"got rc={rc}\n{got}")
             (root / "engine" / name).unlink()
 
+        # the preserved exemption must not depend on the citation's FORM. The audit's control pair:
+        # the same preserved note, the same ambiguous name, once as a line number and once as an
+        # anchor. If only the line-number path is exempt, the migration programme turns a preserved
+        # note's citation into an anchor and the only way back to green is editing the record.
+        (root / "one").mkdir(exist_ok=True); (root / "two").mkdir(exist_ok=True)
+        (root / "one" / "shared-note.md").write_text("# one\n\nshared line two\n", encoding="utf-8")
+        (root / "two" / "shared-note.md").write_text("# two\n\nshared line two\n", encoding="utf-8")
+        for form in ("shared-note.md:3", "shared-note.md@«shared line two»"):
+            (root / "engine" / "kept.md").write_text(
+                "<!-- Preserved verbatim from the parallel seat's scratch, 2026-09-05 -->\n"
+                f"A record citing {form}\n", encoding="utf-8")
+            check_refs.BASENAMES.clear()
+            check_refs.SCAN = (("engine/kept.md",),)
+            check_refs.CACHE.clear()
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                rc = check_refs.main()
+            ok(rc == 0 and "보존 노트의" in buf.getvalue(),
+               f"preserved form-independence ({form}): a preserved note must be exempt in every "
+               f"citation form, got rc={rc}\n{buf.getvalue()}")
+        (root / "engine" / "kept.md").unlink()
+        check_refs.BASENAMES.clear()
+
         # a bare file name that two files in the repo share must fail with the candidates, instead of
         # being resolved by whichever copy sits nearest the citing file. The repo has 68 files called
         # checklist.md; proximity was choosing among them silently.
-        (root / "one").mkdir(); (root / "two").mkdir()
         (root / "one" / "checklist.md").write_text("# one\n\nAlpha line.\n", encoding="utf-8")
         (root / "two" / "checklist.md").write_text("# two\n\nBeta line.\n", encoding="utf-8")
         (root / "engine" / "chain.yaml").write_text(
