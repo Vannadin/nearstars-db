@@ -47,6 +47,8 @@ structure + thermal-evolution solver per body." Closing relation, anchored on Ea
 """
 from __future__ import annotations
 
+import dataclasses
+
 from payload import Result, out_of_domain
 
 RECIPE = "rocky-planet-dynamo-methodology"
@@ -259,15 +261,38 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
 from registry import recipe  # noqa: E402
 
 
+def ice_fraction_from_state(state) -> tuple[float | None, str]:
+    """(ice_mass_fraction, where it came from) — C28 (2026-09-04).
+
+    A declared `ice_mass_fraction` wins. Otherwise the value is READ from `interior.COMPOSITIONS`
+    (the composition preset the body already chose with `composition_intent`; tuple slot 1 is the
+    ice fraction) — referenced, not copied, so the interior and the dynamo know one number for the
+    same body. No preset → (None, reason): the caller refuses by name instead of assuming 0."""
+    if state.get("ice_mass_fraction") is not None:
+        return float(state["ice_mass_fraction"]), "declared ice_mass_fraction"
+    intent = state.get("composition_intent")
+    from interior import COMPOSITIONS  # 조회만. dynamo 가 interior 의 표를 복제하지 않는다.
+    if intent in COMPOSITIONS:
+        return COMPOSITIONS[intent][1], f"composition preset: {intent} (interior.COMPOSITIONS, grade class)"
+    return None, f"cannot-say (no composition preset): composition_intent '{intent}' 는 interior.COMPOSITIONS 에 없고 ice_mass_fraction 선언도 없다"
+
+
 @recipe("dynamo_rocky")
 def _from_state(state):
-    return ladder(mass_earth=state["mass_earth"],
+    imf, imf_source = ice_fraction_from_state(state)
+    if imf is None:
+        return out_of_domain(RECIPE, VERSION, imf_source,
+                             inputs={"mass_earth": state["mass_earth"], "composition_intent": state.get("composition_intent"),
+                                     "ice_mass_fraction": None}, refs=REFS)
+    res = ladder(mass_earth=state["mass_earth"],
                   radius_earth=state.get("radius_earth", state.get("radius")),
                   conductor_phase=state.get("conductor_phase"),
                   stagnant_lid=state.get("stagnant_lid"),
                   age_gyr=state.get("age_gyr"),
-                  ice_mass_fraction=state.get("ice_mass_fraction", 0.0),
+                  ice_mass_fraction=imf,                            # C28: declared, else the composition preset (see above)
                   body_class=state.get("body_class"),
                   dynamo_regime=state.get("dynamo_regime"),
                   locked=state.get("locked"),                      # tidal_locking's output — absent until that node has a recipe
                   rotation_period_h=state.get("rotation_period"))
+    # 어디서 온 분율인지 결과에 인쇄한다 (C28). Result 는 frozen 이라 notes 만 덧붙인다.
+    return dataclasses.replace(res, notes=res.notes + (f"ice_mass_fraction {imf:.2f} ({imf_source})",))

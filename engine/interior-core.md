@@ -2260,6 +2260,17 @@ the water's. ⚠ No measurement says this is the cause.
 The unconverged trial values (T_cmb 3 033 · 3 123 · 3 086 K) are recorded in §5's table and not read. **Listed only; start is
 the owner's decision.**
 
+### C28 — the dynamo's ice fraction comes from the composition preset, not a second declaration — **listed and built 2026-09-04 (owner-approved)**
+
+**Ground**: the handoff inventory (`interior-dynamo-handoff-context-notes.md` §3, edge `:684`) found the one gap of kind *no
+value*: `ladder(..., ice_mass_fraction=0.0)` took a separate input with a literal-0 default while `interior.COMPOSITIONS`
+(`interior.py:81–87`, slot 1) already carried the same body's ice fraction under `composition_intent` — two places knowing one
+number, the second silently. **Built**: `dynamo_rocky.ice_fraction_from_state` — a declared `ice_mass_fraction` wins; else the
+preset is *read* from `interior.COMPOSITIONS` (referenced, not copied; earth_like 0.00 · water 0.50); no preset → `cannot-say
+(no composition preset)`, never 0. The source is printed in the result's notes ("ice_mass_fraction 0.50 (composition preset:
+water …, grade class)"). No value authored. `chain.yaml:684` drops `status: gap` (the edge now flows); the old status and its text are kept in the note, dated. Anchors: every roster
+body is earth_like (0.00), so no emitted value moves — the gate is the check. Tests: `test_dynamo_rocky.py` §5.
+
 ### P1–P3 — parked, each marked with the C it came from
 
 - **P1 · Queyroux seam retrial (from C3).** The adopted below-kink mean (Queyroux+ 2020 · Prakapenka+ 2021,

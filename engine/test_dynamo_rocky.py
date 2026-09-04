@@ -91,6 +91,25 @@ def main() -> int:
     ok(both.grade == "judgment", "4: the ladder never grades above judgment — its gates are labels")
     giant = dr.ladder(120.0, 11.2, "liquid", False, 5.3, body_class="giant")
     ok(not giant.applicable, "4: a giant is out of domain here (dynamo_giant's recipe)")
+    # ── 5. C28: the ice fraction comes from the composition preset unless declared ──────────
+    from state import BodyState
+    def st(**inputs):
+        return BodyState(name="t", kind="planet", inputs=inputs)
+    ok(dr.ice_fraction_from_state(st(composition_intent="earth_like")) == (0.0, "composition preset: earth_like (interior.COMPOSITIONS, grade class)"),
+       "5/C28: earth_like preset → 0.0, labelled as the preset")
+    ok(dr.ice_fraction_from_state(st(composition_intent="water"))[0] == 0.50, "5/C28: water preset → 0.50 (interior.COMPOSITIONS slot 1)")
+    ok(dr.ice_fraction_from_state(st(composition_intent="water", ice_mass_fraction=0.1)) == (0.1, "declared ice_mass_fraction"),
+       "5/C28: an explicit declaration overrides the preset")
+    none_v, none_why = dr.ice_fraction_from_state(st(composition_intent="carbon_rich"))
+    ok(none_v is None and "no composition preset" in none_why, "5/C28: an unknown preset refuses by name, it does not default to 0")
+    wet = dr._from_state(st(mass_earth=1.0, radius_earth=1.0, conductor_phase="liquid_outer_solid_inner", stagnant_lid=False,
+                            age_gyr=4.5, body_class="rocky", composition_intent="water"))
+    ok(wet.applicable and wet.values["ladder_regime"] == 4 and "composition preset: water" in " ".join(wet.notes),
+       "5/C28: through _from_state a water body reaches regime 4 with the source printed")
+    refused = dr._from_state(st(mass_earth=1.0, radius_earth=1.0, body_class="rocky", composition_intent="carbon_rich"))
+    ok(not refused.applicable and "no composition preset" in refused.reason, "5/C28: _from_state refuses an unknown preset by name")
+    if not fails:
+        print(f"  [PASS] C28 얼음 분율: earth_like 0.00 · water 0.50 (regime {wet.values['ladder_regime']}) · 선언 0.1 우선 · 미지 프리셋 거절")
 
     for f in fails:
         print(f"  [FAIL] {f}")
