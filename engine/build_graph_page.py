@@ -44,7 +44,7 @@ LABELS = {
     "stellar_wind": "항성풍", "magnetosphere_geometry": "자기권 · 방사선대",
     "tidal_heating": "조석 가열", "heat_transport_mode": "열 수송 방식", "day_night_contrast": "낮밤 대비",
     "global_fluid_layer": "전 지구 유체층",
-    "t_eq_stellar": "평형 온도", "moon_energy_budget": "위성 에너지수지",
+    "t_eq_stellar": "평형 온도", "moon_energy_budget": "위성 에너지 수지",
     "t_eff_body": "유효 온도", "atmospheric_escape": "대기 탈출",
     "atmosphere_choice": "대기 조성·기압", "greenhouse": "온실 효과",
     "ice_stability": "얼음 안정성", "surface_albedo": "표면색 · 알베도",
