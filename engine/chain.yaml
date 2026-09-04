@@ -30,7 +30,7 @@ updated: 2026-08-24
 
 kinds: [requires, selects, influences, excludes]
 node_kinds: [measured, owner, computed, class_table]
-grades: [measured, calibrated, analog, judgment]
+grades: [measured, calibrated, analog, judgment, authored]   # authored (2026-09-04, 오너): 프로젝트 공급값 — engine/AUTHORED-VALUES-POLICY.md
 scopes: [self, parent, system]
 
 # 노드 축 둘 (2026-09-03 브리프 61, 오너 지시). 둘은 교차한다 — interior_layers 와 core_state 는

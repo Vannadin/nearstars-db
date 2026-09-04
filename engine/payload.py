@@ -26,7 +26,11 @@ from dataclasses import dataclass, field
 from typing import Any
 
 # chain.yaml 의 grades 와 같은 어휘를 쓴다.
-GRADES = ("measured", "calibrated", "analog", "judgment")
+# authored (2026-09-04, 오너 결정 — engine/AUTHORED-VALUES-POLICY.md): 이 프로젝트가 공급한 값. 어느 보유 출처도
+# 주지 않으며, 근거 있는 것과 모순되지 않는다. judgment(발표된 선택지 사이의 판단)와 섞지 않는다.
+GRADES = ("measured", "calibrated", "analog", "judgment", "authored")
+# authored 결과가 notes 에 반드시 달아야 하는 두 표지. 없으면 생성 시점에 거절한다.
+AUTHORED_MARKERS = ("gap:", "consistent-with:")
 
 OUT_OF_DOMAIN = "out-of-domain"
 
@@ -37,7 +41,7 @@ class Result:
     version: str                      # 레시피 버전. 바뀌면 캐시된 값이 낡은 것
     regime: str                       # 어느 분기를 탔는가
     reason: str                       # 그 분기를 고른 이유 (분기 자리에서 생성)
-    grade: str                        # measured | calibrated | analog | judgment
+    grade: str                        # measured | calibrated | analog | judgment | authored
     inputs: dict[str, Any]            # 소비한 입력 전부
     values: dict[str, Any] = field(default_factory=dict)
     units: dict[str, str] = field(default_factory=dict)
@@ -49,6 +53,11 @@ class Result:
     def __post_init__(self) -> None:
         if self.grade not in GRADES:
             raise ValueError(f"grade '{self.grade}' 는 {GRADES} 밖")
+        if self.grade == "authored":
+            joined = " ".join(self.notes)
+            missing = [m for m in AUTHORED_MARKERS if m not in joined]
+            if missing:
+                raise ValueError(f"{self.recipe}: authored 값에는 notes 에 {AUTHORED_MARKERS} 가 다 있어야 한다 — 없는 것 {missing}")
         if self.regime != OUT_OF_DOMAIN and not self.values:
             raise ValueError(f"{self.recipe}: 도메인 안인데 값이 비었다")
         for k in self.values:
