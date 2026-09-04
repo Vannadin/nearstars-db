@@ -539,7 +539,7 @@ edges:
   - {from: mass_radius_relation, to: surface_albedo, kind: influences, sign: non-monotonic, ref: "mass-radius-relation-methodology.md@«- [surface-color-albedo-methodology](surface-color-albedo-methodology.md): the rocky-vs-volatile»"}
 
   # ── 클래스 표 상수가 실제 공급자다 ─────────────────────────────
-  - {from: body_class, to: nmoi_class_table, kind: selects, ref: "body-figure-methodology.md:256"}
+  - {from: body_class, to: nmoi_class_table, kind: selects, ref: "body-figure-methodology.md@«3. Pick NMoI from the body class (giant 0.20–0.26; rocky 0.30–0.36; star 0.05–0.08)»"}
   - {from: body_class, to: k2q_class_table, kind: selects, ref: "tidal-heating-methodology.md:212", note: "ref was :194 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: body_class, to: omega0_class_table, kind: selects, ref: "tidal-locking-timescale-methodology.md:431"}
   # 클래스 조회는 이제 **적분이 못 미치는 클래스에서만** 공급자다. 응축상 천체도
@@ -550,7 +550,7 @@ edges:
   # 레시피에 진화 트랙이 없고, 갈색왜성은 중수소 연소가 있고, 항성은 n = 3/2 의
   # 0.205 로 body_figure 의 별도 갈래에 있다.
   # (interior-structure-methodology.md §Domain of validity)
-  - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — brown_dwarf · star. ice_giant 는 2026-08-27, sub_neptune 은 2026-08-30 에 적분으로 넘어갔다.", ref: "body-figure-methodology.md:256"}
+  - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — brown_dwarf · star. ice_giant 는 2026-08-27, sub_neptune 은 2026-08-30 에 적분으로 넘어갔다.", ref: "body-figure-methodology.md@«3. Pick NMoI from the body class (giant 0.20–0.26; rocky 0.30–0.36; star 0.05–0.08)»"}
   - {from: nmoi_class_table, to: cassini_state, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — brown_dwarf · star. ice_giant 는 2026-08-27, sub_neptune 은 2026-08-30 에 적분으로 넘어갔다.", ref: "cassini-state-obliquity-methodology.md:166"}
   - {from: k2q_class_table, to: tidal_heating, kind: requires, via: k2_over_q, ref: "tidal-heating-methodology.md:212", note: "ref was :194 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: k2q_class_table, to: tidal_locking, kind: requires, via: k2_over_q, ref: "tidal-locking-timescale-methodology.md:266"}
@@ -566,7 +566,7 @@ edges:
       안 쓰인 채로 있었다는 뜻이다. 클래스 표는 적분이 거절하는 클래스에만 남는다.
     ref:
       - "interior-structure-methodology.md:Contract"
-      - "body-figure-methodology.md:256"
+      - "body-figure-methodology.md@«3. Pick NMoI from the body class (giant 0.20–0.26; rocky 0.30–0.36; star 0.05–0.08)»"
   - from: interior_layers
     to: cassini_state
     kind: requires
@@ -658,7 +658,7 @@ edges:
   - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md@«    B_dyn  =  4.8 · (M · L² / R⁷)^(1/6)   [kG]»"}
   - {from: body_age, to: dynamo_giant, kind: requires, via: t_body, ref: "planetary-dynamo-scaling.md:83", note: "C19 (2026-09-04) 측정: 거대행성 가지(0.3–13 M_J, ≥ 0.2 Gyr)는 냉각광도가 아니라 나이(그래프 t_body, 코드 age_gyr)를 직접 소비한다 — −0.33 지수가 냉각 트랙 자체. run.py 가 body_age 만으로 Polyphemus 344.7 µT 를 낸다. 이미 배선, 오표기였다."}
   - {from: star_physical, to: dynamo_giant, kind: requires, via: luminosity, ref: "planetary-dynamo-scaling.md:27", note: "ref was :34 (a blank line), now the brown-dwarf row (measured L_bol). C19 (2026-09-04 낮) 갈색왜성 가지. 이전엔 body_age → via cooling_luminosity, status: gap 이었다 — 냉각광도를 유도할 공급자가 없었다. 고립 갈색왜성은 관측 볼로메트릭 광도(star_physical.luminosity, 코드 luminosity_lsun, 측정)가 곧 냉각광도이므로(선언 isolated) 공급자가 이 노드다. 모듈 안 거절 하나가 사라진 것이지 하류 배선이 아니다(magnetosphere_geometry 레시피 없음). 조사받는 행성에는 이 동일시가 거짓이라 가지가 거절한다."}
-  - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md", note: "2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (planetary-dynamo-scaling.md:18 lists none from the interior; :78–81 declines to derive L(M, age)), no code consumer (dipole_field reads luminosity_lsun on the brown-dwarf branch only; hook never read l_int on any body); on every roster giant/BD internal_heat_nontidal refuses by design, and l_int exists only on rocky bodies (Earth 21.3 TW radiogenic, analog). Edge kept as drawn (C19 owns its premise)."}
+  - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md@«- [planetary-dynamo-scaling](planetary-dynamo-scaling.md): the gold-standard sibling scaling-law doc,»", note: "2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (planetary-dynamo-scaling.md:18 lists none from the interior; :78–81 declines to derive L(M, age)), no code consumer (dipole_field reads luminosity_lsun on the brown-dwarf branch only; hook never read l_int on any body); on every roster giant/BD internal_heat_nontidal refuses by design, and l_int exists only on rocky bodies (Earth 21.3 TW radiogenic, analog). Edge kept as drawn (C19 owns its premise)."}
   - {from: body_class, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:18", note: "ref was :82 (a blank line), now the Needs line (2026-09-04)"}
   - {from: tidal_locking, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md@«dwarfs, young exoplanets, and giants not tidally locked very close to their star.»"}
   - {from: body_class, to: dynamo_rocky, kind: selects, ref: "rocky-planet-dynamo-methodology.md@«## Domain of validity: regimes by body class»"}
@@ -739,8 +739,8 @@ edges:
   # 없다 (system_age 가 t_sys, body_age 가 t_body). 항성풍의 나이는 항성의 나이 = 계의 나이.
   - {from: system_age, to: stellar_wind, kind: requires, via: t_sys}
   - {from: stellar_wind, to: magnetosphere_geometry, kind: requires, via: p_ram, ref: "planetary-magnetosphere-geometry-methodology.md:83"}
-  - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
-  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md:4"}
+  - {from: dynamo_giant, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md@«Method reference for turning a body's **dipole field strength** (from the»"}
+  - {from: dynamo_rocky, to: magnetosphere_geometry, kind: requires, via: b_eq, ref: "planetary-magnetosphere-geometry-methodology.md@«Method reference for turning a body's **dipole field strength** (from the»"}
   - {from: dynamo_rocky, to: magnetosphere_geometry, kind: selects, via: regime, ref: "planetary-magnetosphere-geometry-methodology.md:1154"}
   - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, note: "판별자 ionosphere — 소비처가 pressure·composition 에서 형성 (2026-09-03, via 에서 내림)", ref: "planetary-magnetosphere-geometry-methodology.md:30"}
   - {from: atmosphere_choice, to: magnetosphere_geometry, kind: selects, note: "판별자 plasmasphere_slot — 소비처가 pressure·composition 에서 형성 (2026-09-03, via 에서 내림)", ref: "planetary-magnetosphere-geometry-methodology.md:133"}
@@ -784,8 +784,8 @@ edges:
   # ── 열 · 대기 ──────────────────────────────────────────────────
   - {from: star_physical, to: xuv_history, kind: requires, ref: "exoplanet-atmosphere-methodology.md:111"}
   - {from: body_age, to: xuv_history, kind: requires}
-  - {from: xuv_history, to: atmospheric_escape, kind: requires, ref: "exoplanet-atmosphere-methodology.md:66"}
-  - {from: mass_or_radius, to: atmospheric_escape, kind: requires, via: v_esc, ref: "exoplanet-atmosphere-methodology.md:66"}
+  - {from: xuv_history, to: atmospheric_escape, kind: requires, ref: "exoplanet-atmosphere-methodology.md@«roughly `v_esc ∝ I_XUV^(1/4)`»"}
+  - {from: mass_or_radius, to: atmospheric_escape, kind: requires, via: v_esc, ref: "exoplanet-atmosphere-methodology.md@«roughly `v_esc ∝ I_XUV^(1/4)`»"}
   - {from: stellar_wind, to: atmospheric_escape, kind: requires, ref: "exoplanet-atmosphere-methodology.md:115"}
   - {from: tidal_locking, to: atmospheric_escape, kind: influences, sign: negative, ref: "exoplanet-atmosphere-methodology.md:102"}
   - {from: tidal_heating, to: atmospheric_escape, kind: influences, sign: positive, ref: "moon-energy-budget-methodology.md:80"}
@@ -821,7 +821,7 @@ edges:
   - {from: interior_layers, to: internal_heat_nontidal, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md@«## Contract — `internal_heat_nontidal`»", note: "radius_earth 미선언 시의 대체 경로. 둘 다 16노드 코어 안이라 반복이 순서를 처리한다."}
   - {from: body_age, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md@«## Contract — `internal_heat_nontidal`»"}
   - {from: body_class, to: internal_heat_nontidal, kind: selects, ref: "internal-heat-luminosity-methodology.md@«The body class decides which mechanism dominates»"}
-  - {from: star_metallicity, to: internal_heat_nontidal, kind: influences, status: gap, ref: "internal-heat-luminosity-methodology.md@«Spiegel, Burrows & Milsom 2011 pinned the deuterium-burning mass limit»"}
+  - {from: star_metallicity, to: internal_heat_nontidal, kind: influences, status: gap, ref: "internal-heat-luminosity-methodology.md@«- **Composition matters.** Helium rain (Saturn-type, §6) and metallicity (deuterium-burning»"}
   - from: interior_layers
     to: mass_radius_relation
     kind: requires
@@ -833,7 +833,7 @@ edges:
       interior_layers 의 적분에서 나온다.
     ref:
       - "interior-structure-methodology.md:Contract"
-  - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md"}
+  - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md@«- [mass-radius-relation-methodology](mass-radius-relation-methodology.md): internal heat **inflates the»"}
   - {from: internal_heat_nontidal, to: t_eff_body, kind: requires, via: t_int, ref: "internal-heat-luminosity-methodology.md@«⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴»"}
   - {from: t_eq_stellar, to: t_eff_body, kind: requires, textbook: true, ref: "internal-heat-luminosity-methodology.md@«⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴»"}
 

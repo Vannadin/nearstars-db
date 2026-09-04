@@ -43,13 +43,19 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 DOCS = ROOT / "docs" / "reference"
 
-ANCHOR = re.compile(r"([a-z0-9-]+\.md)@«([^»]*)»")
+# ① A citation can name any file in the repo, not just a lower-case .md: DANTE_HEAT_TRANSPORT_EVIDENCE.md
+# carries the e_rms justification the board rests on, and boards and modules are cited too.
+FILE = r"[A-Za-z0-9_./-]+\.(?:md|yaml|yml|py|json|tex|sh)"
+ANCHOR = re.compile(rf"({FILE})@«([^»]*)»")
 SELF_ANCHOR = re.compile(r"(?<![a-z0-9-])doc @«([^»]*)»")
-LINE_REF = re.compile(r"([a-z0-9-]+\.md):([0-9]+(?:[-–][0-9]+)?)")
+# ② and a line-number citation into any of them counts as unmigrated, not only into a .md
+LINE_REF = re.compile(rf"({FILE}):([0-9]+(?:[-–][0-9]+)?)")
 SELF_LINE = re.compile(r"(?<![a-z0-9-])doc :([0-9]+(?:[-–][0-9]+)?)")
 RECIPE_DECL = re.compile(r'^RECIPE = "([a-z0-9-]+)"', re.M)
 # chain.yaml writes each edge as a one-line flow mapping, so the endpoints sit on the citing line itself
@@ -57,9 +63,12 @@ EDGE = re.compile(r"from: ([a-z_]+), to: ([a-z_]+)")
 # A ref that is a bare file name cites the whole document. Two docs are cited that way on purpose:
 # their payload is pinned by the edge's own `via:`, and their first line is a Korean header comment,
 # so a line number there would cite the comment and an anchor would have to quote it.
-WHOLE = re.compile(r'"([a-z0-9-]+\.md)"')
+# ⑤ A ref that is a bare file name cites a whole document. That is a legitimate form (the payload is
+# pinned by the edge's own `via:`), but it aims at nothing inside the file, so it is counted and
+# printed as its own class rather than passing invisibly.
+WHOLE = re.compile(rf'"({FILE})"')
 
-SCAN = (("engine/chain.yaml",), ("engine/bindings.yaml",),
+SCAN = (("engine/chain.yaml",), ("engine/bindings.yaml",), ("engine/bodies/*.yaml",),
         ("engine/*.py",), ("engine/tools/*.py",), ("engine/*.md",),
         ("scripts/**/*.py",))
 CACHE: dict[Path, str] = {}
@@ -93,11 +102,17 @@ def own_doc(path: Path) -> str | None:
 
 
 def target_of(doc: str, citing: Path) -> Path | None:
-    """Where a cited file name resolves. Methodology docs live in docs/reference, but the engine's
-    notes cite each other by bare file name too, so the citing file's own directory counts."""
-    for cand in (DOCS / doc, citing.parent / doc, ROOT / "engine" / doc):
-        if cand.exists():
+    """Where a cited file name resolves. Methodology docs live in docs/reference; the engine's notes
+    cite each other by bare name; boards, evidence files and modules are cited by repo path or by
+    bare name from anywhere, so the search widens outward from the citing file."""
+    for cand in (DOCS / doc, citing.parent / doc, ROOT / "engine" / doc, ROOT / doc):
+        if cand.exists() and cand.is_file():
             return cand
+    bare = Path(doc).name
+    if bare == doc:                       # a bare name: look for exactly one file with it
+        found = [q for q in ROOT.rglob(bare) if ".git" not in q.parts and q.is_file()]
+        if len(found) == 1:
+            return found[0]
     return None
 
 
@@ -171,6 +186,36 @@ def resolve(doc: str, phrase: str, citing: Path) -> tuple[str, int]:
     return "", text(target).count(phrase)
 
 
+def yaml_units(path: Path):
+    """(label, endpoints, string) for every string in a YAML file, from the PARSED document.
+
+    ④ The raw-line scan cannot see a citation that a folded `note: >` block splits across two lines:
+    no match, no count, no failure. chain.yaml carries sixteen folded blocks, so the path is real.
+    Reading the parsed values closes it, and for chain.yaml it also gives each citation its edge's
+    endpoints exactly, instead of a regex over the citing line."""
+    try:
+        doc = yaml.safe_load(text(path))
+    except Exception as exc:                       # a malformed board is a different check's problem
+        return [(f"{path.name}", ("", ""), f"__yaml_error__ {exc}", [])]
+    out = []
+
+    def walk(node, label, ends, vias):
+        if isinstance(node, str):
+            out.append((label, ends, node, vias))
+        elif isinstance(node, dict):
+            local = (str(node.get("from", "")), str(node.get("to", ""))) if "from" in node and "to" in node else ends
+            v_here = node.get("via", vias)
+            v_here = [v_here] if isinstance(v_here, str) else (v_here if isinstance(v_here, list) else vias)
+            for k, v in node.items():
+                walk(v, f"{label}.{k}" if label else str(k), local, v_here)
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                walk(v, f"{label}[{i}]", ends, vias)
+
+    walk(doc, "", ("", ""), [])
+    return out
+
+
 def main() -> int:
     listing = "--list" in sys.argv
     suspect = "--suspect" in sys.argv          # classify every unmigrated citation by what it lands on
@@ -178,6 +223,9 @@ def main() -> int:
     ambiguous: list[str] = []
     mismatched: list[str] = []          # rule 2: landed inside another node's contract block
     whole = 0                           # refs that cite a whole document, which is a legitimate form
+    external = 0                        # citations into a paper's own source, outside this repo
+    unaimed: list[str] = []             # ⑤ whole-document refs: legitimate, but aimed at nothing inside
+    shared: dict[tuple[str, str], list[tuple[str, list[str]]]] = {}   # anchor → the edges that share it
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
     warned: list[str] = []              # rule 3: a landing that moves easily but may well be meant
     unmigrated: list[tuple] = []
@@ -188,10 +236,11 @@ def main() -> int:
         rel = path.relative_to(ROOT)
         mine = own_doc(path)
         ends: tuple[str, str] = ("", "")
-        for i, line in enumerate(text(path).splitlines(), 1):
-            m = EDGE.search(line)
-            if m:
-                ends = (m.group(1), m.group(2))
+        if path.suffix in (".yaml", ".yml"):
+            units = [(f"{rel} {label}", e, val, vias) for label, e, val, vias in yaml_units(path)]
+        else:
+            units = [(f"{rel}:{i}", ("", ""), line, []) for i, line in enumerate(text(path).splitlines(), 1)]
+        for where0, ends, line, via_names in units:
             hits = [(m.group(1), m.group(2)) for m in ANCHOR.finditer(line)]
             for m in SELF_ANCHOR.finditer(line):
                 # The bare form is only ever the module's OWN document. radiogenic.py used it for the
@@ -200,11 +249,11 @@ def main() -> int:
                 if mine:
                     hits.append((mine, m.group(1)))
                 else:
-                    rotten.append(f"{rel}:{i}: doc @«{m.group(1)[:50]}» — a bare `doc` citation in a file "
+                    rotten.append(f"{where0}: doc @«{m.group(1)[:50]}» — a bare `doc` citation in a file "
                                   f"that declares no RECIPE; name the document")
             for doc, phrase in hits:
                 why, n = resolve(doc, phrase, path)
-                where = f"{rel}:{i}: {doc}@«{phrase[:60]}»"
+                where = f"{where0}: {doc}@«{phrase[:60]}»"
                 if why:
                     rotten.append(f"{where} — {why}")
                 elif n == 0:
@@ -218,36 +267,45 @@ def main() -> int:
                                           f"but this edge runs {ends[0]} → {ends[1]}")
                     else:
                         ok += 1
+                        if via_names:
+                            shared.setdefault((doc, phrase), []).append((where0, via_names))
                         if listing:
                             print(f"  [ok] {where}")
-            if path.suffix == ".yaml":
-                for m in WHOLE.finditer(line):
-                    if target_of(m.group(1), path) is None:
-                        rotten.append(f"{rel}:{i}: {m.group(1)} — no such document")
+            if path.suffix in (".yaml", ".yml"):
+                # a whole-document ref is the entire value, not a substring of prose
+                if re.fullmatch(FILE, line.strip()):
+                    if target_of(line.strip(), path) is None:
+                        rotten.append(f"{where0}: {line.strip()} — no such document")
                     else:
                         whole += 1
+                        unaimed.append(f"{where0}: {line.strip()} — cites the whole document")
             for m in LINE_REF.finditer(line):
-                unmigrated.append((f"{rel}:{i}", m.group(1), m.group(2), path))
+                unmigrated.append((where0, m.group(1), m.group(2), path, ends))
             for m in SELF_LINE.finditer(line):
                 if mine:
-                    unmigrated.append((f"{rel}:{i}", mine, m.group(1), path))
+                    unmigrated.append((where0, mine, m.group(1), path, ends))
                 else:
-                    rotten.append(f"{rel}:{i}: doc :{m.group(1)} — a bare `doc` citation in a file that "
+                    rotten.append(f"{where0}: doc :{m.group(1)} — a bare `doc` citation in a file that "
                                   f"declares no RECIPE; name the document")
 
     DEAD = {"blank line", "table separator", "horizontal rule", "table of contents",
             "past the end of the document", "no such document"}
+    # A paper's own source is cited the same way but lives in the gitignored paper cache, so it cannot
+    # be resolved here. That is not rot: it is a citation into something outside the repo, like a
+    # bibcode, and it is counted as such rather than failed.
+    EXTERNAL = re.compile(r"(^|/)main\.tex$|\.tex$")
     MOVES = {"table row", "heading", "Related list item", "contract Needs/Returns line"}
     kinds: dict[str, int] = {}
-    for where, doc, loc, citing in unmigrated:
+    for where, doc, loc, citing, ends in unmigrated:
         kind = lands_on(doc, loc, citing)
         kinds[kind] = kinds.get(kind, 0) + 1
         owner = contract_owner(doc, citing, line_no=int(re.split(r"[-–]", loc)[0])
                                if kind not in ("no such document", "past the end of the document") else None)
-        ends = EDGE.search(text(citing).splitlines()[int(where.rsplit(":", 1)[1]) - 1] if citing.suffix == ".yaml" else "")
-        if owner and ends and owner not in (ends.group(1), ends.group(2)):
+        if owner and ends != ("", "") and owner not in ends:
             mismatched.append(f"{where}: {doc}:{loc} — lands in {owner}'s contract block, "
-                              f"but this edge runs {ends.group(1)} → {ends.group(2)}")
+                              f"but this edge runs {ends[0]} → {ends[1]}")
+        elif EXTERNAL.search(doc):
+            external += 1
         elif kind in DEAD:
             row = f"{where}: {doc}:{loc} — lands on a {kind}, which cannot have been the intent"
             (dead if citing.suffix in live else warned).append(row)
@@ -255,15 +313,31 @@ def main() -> int:
             warned.append(f"{where}: {doc}:{loc} — lands on a {kind}, which moves when the document grows")
 
     print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
-          f"문서 전체 인용 {whole}건 · 미이행 줄번호 {len(unmigrated)}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
+          f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 미이행 줄번호 {len(unmigrated) - external}건 · "
+          f"문서 {len(list(DOCS.glob('*.md')))}종")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous),
                         ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead)):
         for r in rows:
             print(f"  [FAIL] {label} — {r}")
+    for (doc, phrase), users in sorted(shared.items()):
+        # L-3: a value cited by two or more edges is where inheritance happened — heat:119 was cited
+        # thirty times. If the anchored sentence does not literally name the payload an edge wants,
+        # that edge is aiming loosely; measured 8/8 on the reused targets, and useless on single-use
+        # ones (most of those cite prose that names nothing). A warning, not a failure: a sentence can
+        # be the right place without spelling the field name.
+        if len(users) < 2:
+            continue
+        for where0, via_names in users:
+            if not any(v in phrase for v in via_names):
+                warned.append(f"{where0}: {doc}@«{phrase[:50]}» — shared by {len(users)} edges and does not "
+                              f"name {'/'.join(via_names)}, the payload this one wants")
     for w in warned:
         print(f"  [WARN] 쉽게 밀리는 착지 — {w}")
+    if listing:
+        for u in unaimed:
+            print(f"  [미조준] {u}")
     if unmigrated and (listing or suspect):
-        for where, doc, loc, citing in unmigrated:
+        for where, doc, loc, citing, _ends in unmigrated:
             if listing or lands_on(doc, loc, citing) != "body text":
                 print(f"  [미이행] {where}: {doc}:{loc} — lands on a {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
@@ -274,7 +348,7 @@ def main() -> int:
         return 1
     # C33 이 끝나면 여기서 미이행 0 을 요구하도록 조인다.
     print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 문서 전체 인용 {whole}건 · "
-          f"미이행 {len(unmigrated)}건은 배치 이행 대기")
+          f"미이행 {len(unmigrated) - external}건은 배치 이행 대기")
     return 0
 
 

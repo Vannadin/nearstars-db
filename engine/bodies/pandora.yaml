@@ -17,16 +17,18 @@ inputs:
   potential_temperature: 1600.0
   # source: owner declaration 2026-09-04 (C29 c) — grade declared. core_state's lower-bound branch cannot decide the
   # core label without a core-side CMB temperature, and the owner declares the dynamo on instead of authoring that
-  # temperature. Board: phase4/alpha_centauri.yaml:2296 ("a tidally driven iron-core dynamo"), :2139, :2259.
+  # temperature. Board: phase4/alpha_centauri.yaml@«a tidally driven iron-core dynamo» and the two rows behind it, phase4/alpha_centauri.yaml@«Radiogenic plus weak tidal heating (forced e ~0.005), enough to drive volcanism, continental drift and a dynamo»
+  # and phase4/alpha_centauri.yaml@«Active volcanic belts and fast continental drift (tidal plus radiogenic)».
   dynamo_alive: true
-  # source: owner declaration 2026-09-04 (C29 c); board phase4/alpha_centauri.yaml:2139 ("continental drift"), :2259
-  # ("fast continental drift") — mobile lid, not stagnant. grade declared.
+  # source: owner declaration 2026-09-04 (C29 c); board phase4/alpha_centauri.yaml@«Radiogenic plus weak tidal heating (forced e ~0.005), enough to drive volcanism, continental drift and a dynamo»
+  # and phase4/alpha_centauri.yaml@«Active volcanic belts and fast continental drift (tidal plus radiogenic)» — mobile lid, not stagnant. grade declared.
   stagnant_lid: false
-  # ── tidal inputs (C30, 2026-09-04). e and k₂/Q are declarations; the board fits k₂/Q to its flux (:2212).
+  # ── tidal inputs (C30, 2026-09-04). e and k₂/Q are declarations; the board fits k₂/Q to its flux, phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it».
   semi_major_axis_km: 252393     # source: phase3/stability-sim/hypotheticals/alpha_centauri.json:33 (design-of-record 2026-06-21)
-  perturber_mass_earth: 120.0    # source: phase4/alpha_centauri.yaml:354 (Polyphemus 120 M⊕)
-  eccentricity_forced: 0.005     # source: phase4/alpha_centauri.yaml:2139 "forced e ~0.005", :2211 (sim e_max 0.0072, e_min 0.00016)
-  k2_over_q: 0.0016              # source: phase4/alpha_centauri.yaml:2212 "k₂/Q ≈ 0.0016 … fitted rather than predicted" — declared
+  perturber_mass_earth: 120.0    # source: phase4/alpha_centauri.yaml@«- { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }» (Polyphemus 120 M⊕)
+  eccentricity_forced: 0.005     # source: phase4/alpha_centauri.yaml@«Radiogenic plus weak tidal heating (forced e ~0.005), enough to drive volcanism, continental drift and a dynamo»
+  # (sim e_max 0.0072, e_min 0.00016 in the same row block)
+  k2_over_q: 0.0016              # source: phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it» — declared
 
 units:
   mass_earth: M_earth
@@ -44,7 +46,7 @@ expected:
     value: 45
     unit: W/m2
     tol: 0.01
-    source: "phase4/alpha_centauri.yaml:2211 · solid-body tidal heating 45 W/m² (the board's own fit, :2212)"
+    source: "phase4/alpha_centauri.yaml@«plus solid-body tidal heating 45 W/m², giving Teq 237K; +54K greenhouse = 291K. So the lift IS partly tidal.»"
   b_eq:
     value: 75
     unit: uT
@@ -52,7 +54,7 @@ expected:
     tol_reason: >
       대조용이지 강제가 아니다 (C29 c). 보드 75 µT 는 "rocky-dynamo ℳ⁺ 상한" 으로 적힌 선택이고, 엔진의
       사다리는 지구 앵커 30 µT · ℳ_base · (R/R⊕)⁻³ 를 낸다. 차이는 기록한다 — 보드 갱신은 별도 결정.
-    source: "phase4/alpha_centauri.yaml:2296 · magnetism.magnetic_field"
+    source: "phase4/alpha_centauri.yaml@«a tidally driven iron-core dynamo» · magnetism.magnetic_field"
   radius:
     value: 0.8984
     unit: R_earth
