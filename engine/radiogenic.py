@@ -260,7 +260,7 @@ def _total_heat(b: dict, b_low: dict, tidal_power: float | None, r_m: float, g_b
     area = 4.0 * math.pi * r_m ** 2 if r_m > 0.0 else None
     t_total = ((l_total / area) / SIGMA_SB) ** 0.25 if area else None
     total_flux = (l_total / area) if area else None
-    import tidal_heating  # 라벨 표는 조석 문서의 것이라 그 모듈이 갖는다 (§6.2, doc :277–281)
+    import tidal_heating  # 라벨 표는 조석 문서의 것이라 그 모듈이 갖는다 (§6.2, doc :295–299)
     mode = tidal_heating.transport_mode(total_flux) if total_flux is not None else None
     if mode == tidal_heating.MODE_HEAT_PIPE or g_body is None:
         fmin = fmax = None

@@ -1,6 +1,8 @@
 <!-- C30 — 조석열을 내부구조 열 예산에 배선: 사전등록 → 스크래치 dry-run 기록 → 판도라 결과 → 착지 -->
 # Tidal heating wired into the interior heat budget (C30) — context notes
 
+*Doc line numbers cited in this section are those of 839b2c7c (before b29b556e's contract blocks); add 18 (tidal en) / 15 (tidal ko) / 1 (heat, below :44) for the current files.*
+
 2026-09-04, evening. Owner-approved brief (directing seat). Prepared in the work seat's scratch during a computation stop
 (~19:45–20:05), then released by the owner ("조석 배선 다시 가보자") and landed the same night. §1–§2 were written while the
 item was frozen; §3's Pandora capture ran on the scratch copy after the release, before the worktree write.

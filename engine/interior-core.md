@@ -2338,6 +2338,8 @@ on Earth C20's present T_m is **1 525 K**, −75 K (−4.7 %) against the declar
 
 ### C30 — tidal heat wired into the interior heat budget — **listed and built 2026-09-04 (owner: "조석 배선 다시 가보자"); `tidal-heating-context-notes.md`**
 
+*Doc line numbers cited in this section are those of 839b2c7c (before b29b556e's contract blocks); add 18 (tidal en) / 15 (tidal ko) / 1 (heat, below :44) for the current files.*
+
 Owner: Pandora's temperature is held by tidal heating, so the heat budget must carry it. Built: `engine/tidal_heating.py`
 (recipes `tidal_heating` — the doc's §1 fixed-Q law, `io_power_ratio` on the printed ~1e14 W, the §6.1 outcome labels — and
 `heat_transport_mode` — the §6.2 mode on the total surface flux); `internal_heat_nontidal` gains `l_int_total` · `t_int_total`

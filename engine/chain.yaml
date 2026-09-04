@@ -540,7 +540,7 @@ edges:
 
   # ── 클래스 표 상수가 실제 공급자다 ─────────────────────────────
   - {from: body_class, to: nmoi_class_table, kind: selects, ref: "body-figure-methodology.md:256"}
-  - {from: body_class, to: k2q_class_table, kind: selects, ref: "tidal-heating-methodology.md:194"}
+  - {from: body_class, to: k2q_class_table, kind: selects, ref: "tidal-heating-methodology.md:212", note: "ref was :194 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: body_class, to: omega0_class_table, kind: selects, ref: "tidal-locking-timescale-methodology.md:431"}
   # 클래스 조회는 이제 **적분이 못 미치는 클래스에서만** 공급자다. 응축상 천체도
   # H/He 봉투를 가진 거대행성도 interior_layers 가 per-body 로 낸다(아래).
@@ -552,7 +552,7 @@ edges:
   # (interior-structure-methodology.md §Domain of validity)
   - {from: nmoi_class_table, to: body_figure, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — brown_dwarf · star. ice_giant 는 2026-08-27, sub_neptune 은 2026-08-30 에 적분으로 넘어갔다.", ref: "body-figure-methodology.md:256"}
   - {from: nmoi_class_table, to: cassini_state, kind: requires, via: nmoi, note: "적분이 거절하는 클래스에 한한다 — brown_dwarf · star. ice_giant 는 2026-08-27, sub_neptune 은 2026-08-30 에 적분으로 넘어갔다.", ref: "cassini-state-obliquity-methodology.md:166"}
-  - {from: k2q_class_table, to: tidal_heating, kind: requires, via: k2_over_q, ref: "tidal-heating-methodology.md:194"}
+  - {from: k2q_class_table, to: tidal_heating, kind: requires, via: k2_over_q, ref: "tidal-heating-methodology.md:212", note: "ref was :194 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: k2q_class_table, to: tidal_locking, kind: requires, via: k2_over_q, ref: "tidal-locking-timescale-methodology.md:266"}
   - {from: omega0_class_table, to: tidal_locking, kind: requires, via: p_init, ref: "tidal-locking-timescale-methodology.md:270"}
   - {from: t_exo_bracket, to: atmospheric_escape, kind: requires, via: t_exo, ref: "exoplanet-atmosphere-methodology.md:284"}
@@ -606,7 +606,7 @@ edges:
   # 내서 fossil_bulge 의 상류 값으로 준다 — 도형 솔버는 손대지 않았고(오너 결정), 판정은
   # 라벨 문자열이지 화석 비율이 아니다. engine/figure-relaxation-context-notes.md.
   - {from: interior_layers, to: body_figure, kind: selects, via: figure_relaxation, ref: "body-figure-methodology.md:131", note: "정유체 가정이 이 천체에서 방어 가능한가 — 맥스웰 완화시간 대 나이. 선언된 가족(E_a × η_s)의 문턱 전체와 비교하고 안쪽이면 cannot-say. 화석 도형을 예측하지 않는다."}
-  - {from: body_figure, to: crater_state, kind: requires, via: relief, ref: "tidal-heating-methodology.md:471"}
+  - {from: body_figure, to: crater_state, kind: requires, via: relief, ref: "tidal-heating-methodology.md:489", note: "ref was :471 (shifted by b29b556e's contract block, 2026-09-04)"}
 
   # ── 조석 ───────────────────────────────────────────────────────
   - {from: orbit_elements, to: tidal_locking, kind: requires, via: [a, e], ref: "tidal-locking-timescale-methodology.md:141"}
@@ -614,12 +614,12 @@ edges:
   - {from: system_age, to: tidal_locking, kind: requires, via: t_sys, ref: "tidal-locking-timescale-methodology.md:89"}
   - {from: atmosphere_choice, to: tidal_locking, kind: selects, note: "판별자 thermal_tide — 소비처가 pressure·composition 에서 형성한다 (2026-09-03, via 에서 내림)", ref: "tidal-locking-timescale-methodology.md:247"}
   - {from: tidal_locking, to: tidal_heating, kind: selects, ref: "tidal-locking-timescale-methodology.md:438"}
-  - {from: orbit_elements, to: tidal_heating, kind: requires, via: [a, e, n], ref: "tidal-heating-methodology.md:61"}
+  - {from: orbit_elements, to: tidal_heating, kind: requires, via: [a, e, n], ref: "tidal-heating-methodology.md:79", note: "ref was :61 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: mass_radius_relation, to: tidal_heating, kind: requires, via: radius, ref: "mass-radius-relation-methodology.md:371"}
-  - {from: resonance_architecture, to: tidal_heating, kind: requires, via: forced_e, status: gap, ref: "tidal-heating-methodology.md:182"}
+  - {from: resonance_architecture, to: tidal_heating, kind: requires, via: forced_e, status: gap, ref: "tidal-heating-methodology.md:200", note: "ref was :182 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: cassini_state, to: tidal_heating, kind: requires, via: obliquity, ref: "moon-energy-budget-methodology.md:318"}
   - {from: ocean_depth, to: tidal_heating, kind: requires, via: d_ocean, status: gap, ref: "moon-energy-budget-methodology.md:237"}
-  - {from: tidal_heating, to: interior_layers, kind: influences, sign: non-monotonic, ref: "tidal-heating-methodology.md:199"}
+  - {from: tidal_heating, to: interior_layers, kind: influences, sign: non-monotonic, ref: "tidal-heating-methodology.md:217", note: "ref was :199 (shifted by b29b556e's contract block, 2026-09-04)"}
   - from: tidal_heating
     to: mass_radius_relation
     kind: requires
@@ -628,11 +628,11 @@ edges:
     note: >
       수송 테스트가 하드 반지름 상한을 돌려준다. 제한받는 것은 *측정된* 반지름이
       아니라 우리가 배정하는 반지름이다 — Dante 521 km 가 그 상한의 산물이다.
-    ref: "tidal-heating-methodology.md:442"
-  - {from: tidal_heating, to: heat_transport_mode, kind: requires, via: surface_flux, ref: "tidal-heating-methodology.md:273", note: "C30: supplies W/m²; the sibling edge :632 supplies W and the consumer divides it by 4πR² — units differ by design, recorded 2026-09-04."}
-  - {from: internal_heat_nontidal, to: heat_transport_mode, kind: requires, via: radiogenic_power, ref: "tidal-heating-methodology.md:266", note: "C30 (2026-09-04): via was mantle_radiogenic_power; the mode is judged on the whole radiogenic output (l_int = radiogenic_power) plus the tidal flux — the mantle share is a 70 % declaration and the table asks for the surface flux."}
-  - {from: global_fluid_layer, to: heat_transport_mode, kind: selects, ref: "tidal-heating-methodology.md:332"}
-  - {from: t_eq_stellar, to: heat_transport_mode, kind: requires, ref: "tidal-heating-methodology.md:341"}
+    ref: "tidal-heating-methodology.md:460"   # ref was :442 (shifted by b29b556e's contract block, 2026-09-04)
+  - {from: tidal_heating, to: heat_transport_mode, kind: requires, via: surface_flux, ref: "tidal-heating-methodology.md:291", note: "ref was :273 (shifted by b29b556e's contract block, 2026-09-04). C30: supplies W/m²; the sibling edge :632 supplies W and the consumer divides it by 4πR² — units differ by design, recorded 2026-09-04."}
+  - {from: internal_heat_nontidal, to: heat_transport_mode, kind: requires, via: radiogenic_power, ref: "tidal-heating-methodology.md:284", note: "ref was :266 (shifted by b29b556e's contract block, 2026-09-04). C30 (2026-09-04): via was mantle_radiogenic_power; the mode is judged on the whole radiogenic output (l_int = radiogenic_power) plus the tidal flux — the mantle share is a 70 % declaration and the table asks for the surface flux."}
+  - {from: global_fluid_layer, to: heat_transport_mode, kind: selects, ref: "tidal-heating-methodology.md:350", note: "ref was :332 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: t_eq_stellar, to: heat_transport_mode, kind: requires, ref: "tidal-heating-methodology.md:359", note: "ref was :341 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: atmosphere_choice, to: day_night_contrast, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md:117"}
   - {from: omega0_class_table, to: day_night_contrast, kind: selects, note: "판별자 circulation_regime(이류 대 복사) — 표는 p_init 만 내고 순환 영역은 소비처의 판정이다 (2026-09-03, via 에서 내림)", ref: "tidally-locked-temperature-methodology.md:117"}
   - {from: t_eq_stellar, to: day_night_contrast, kind: requires, ref: "tidally-locked-temperature-methodology.md:61"}
@@ -643,22 +643,22 @@ edges:
       이 문서는 동기자전 암석행성만 다룬다. 비동기 자전체에서는 대비를 묻지 않고
       T_eq 로 끝난다 — 그래서 값을 바꾸는 게 아니라 레시피를 쓸지 말지를 고른다.
     ref: "tidally-locked-temperature-methodology.md:29"
-  - {from: tidal_heating, to: ice_stability, kind: requires, ref: "tidal-heating-methodology.md:717"}
-  - {from: tidal_heating, to: crater_state, kind: requires, ref: "tidal-heating-methodology.md:720"}
+  - {from: tidal_heating, to: ice_stability, kind: requires, ref: "tidal-heating-methodology.md:735", note: "ref was :717 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: tidal_heating, to: crater_state, kind: requires, ref: "tidal-heating-methodology.md:738", note: "ref was :720 (shifted by b29b556e's contract block, 2026-09-04)"}
   - from: tidal_heating
     to: surface_albedo
     kind: requires
     via: plains_temperature
     status: gap   # C30 (2026-09-04): plains_temperature is not emitted by tidal_heating v1 — the §6.3–6.5 lid axis is a separate item; edge kept as drawn
     note: 평원 온도가 어느 휘발성 물질이 안정한지를 정한다 — 황이냐 SO2 서리냐가 표면 색조를 가른다.
-    ref: "tidal-heating-methodology.md:460"
+    ref: "tidal-heating-methodology.md:478"   # ref was :460 (shifted by b29b556e's contract block, 2026-09-04)
   - {from: tidal_heating, to: internal_heat_nontidal, kind: requires, via: power, ref: "internal-heat-luminosity-methodology.md:34", note: "C30 (2026-09-04, built): internal_heat_nontidal reads tidal_heating's power and emits l_int_total · t_int_total beside the radiogenic-only values (heat doc :34 'add the tidal flux into T_int'); the floor is re-inverted against the total only in a boundary-layer mode, refused by name under a heat pipe."}
 
   # ── 자기 ───────────────────────────────────────────────────────
   - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md:29"}
   - {from: body_age, to: dynamo_giant, kind: requires, via: t_body, ref: "planetary-dynamo-scaling.md:83", note: "C19 (2026-09-04) 측정: 거대행성 가지(0.3–13 M_J, ≥ 0.2 Gyr)는 냉각광도가 아니라 나이(그래프 t_body, 코드 age_gyr)를 직접 소비한다 — −0.33 지수가 냉각 트랙 자체. run.py 가 body_age 만으로 Polyphemus 344.7 µT 를 낸다. 이미 배선, 오표기였다."}
   - {from: star_physical, to: dynamo_giant, kind: requires, via: luminosity, ref: "planetary-dynamo-scaling.md:27", note: "ref was :34 (a blank line), now the brown-dwarf row (measured L_bol). C19 (2026-09-04 낮) 갈색왜성 가지. 이전엔 body_age → via cooling_luminosity, status: gap 이었다 — 냉각광도를 유도할 공급자가 없었다. 고립 갈색왜성은 관측 볼로메트릭 광도(star_physical.luminosity, 코드 luminosity_lsun, 측정)가 곧 냉각광도이므로(선언 isolated) 공급자가 이 노드다. 모듈 안 거절 하나가 사라진 것이지 하류 배선이 아니다(magnetosphere_geometry 레시피 없음). 조사받는 행성에는 이 동일시가 거짓이라 가지가 거절한다."}
-  - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md:472", note: "2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (planetary-dynamo-scaling.md:18 lists none from the interior; :78–81 declines to derive L(M, age)), no code consumer (dipole_field reads luminosity_lsun on the brown-dwarf branch only; hook never read l_int on any body); on every roster giant/BD internal_heat_nontidal refuses by design, and l_int exists only on rocky bodies (Earth 21.3 TW radiogenic, analog). Edge kept as drawn (C19 owns its premise)."}
+  - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md:473", note: "ref was :472 (shifted by b29b556e's contract block, 2026-09-04). 2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (planetary-dynamo-scaling.md:18 lists none from the interior; :78–81 declines to derive L(M, age)), no code consumer (dipole_field reads luminosity_lsun on the brown-dwarf branch only; hook never read l_int on any body); on every roster giant/BD internal_heat_nontidal refuses by design, and l_int exists only on rocky bodies (Earth 21.3 TW radiogenic, analog). Edge kept as drawn (C19 owns its premise)."}
   - {from: body_class, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:18", note: "ref was :82 (a blank line), now the Needs line (2026-09-04)"}
   - {from: tidal_locking, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:33"}
   - {from: body_class, to: dynamo_rocky, kind: selects, ref: "planetary-dynamo-scaling.md:97"}
@@ -686,7 +686,7 @@ edges:
   - {from: composition_intent, to: dynamo_rocky, kind: influences, via: layer_fractions, sign: negative, ref: "rocky-planet-dynamo-methodology.md:27", note: "C28 (2026-09-04, built): status was gap until this date — dynamo_rocky now READS the ice fraction from interior.COMPOSITIONS[composition_intent] (slot 1; earth_like 0.00, water 0.50) when no ice_mass_fraction is declared, a declaration wins, an unknown preset refuses by name (cannot-say (no composition preset)) instead of defaulting to 0; the source is printed in the result notes. One table, referenced not copied. Older text kept: ref was :109 (the 'solver not re-run' sentence), now :27 ('the declared ice fraction'). 2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): the Need is the *declared* input ice_mass_fraction (:25, :27); no node emits layer_fractions and no roster body declares the input → the consumer read its default 0.0 on every body (hook fired, source absent). Gap of kind: no value. C17 (2026-09-04) 공급자 정정: 이전엔 ocean_fraction(f_ocean) 이 공급자로 적혀 있었으나 이 간선의 payload 는 내부 물 분율 — 그래프 이름 layer_fractions, 코드 이름 ice_mass_fraction — 이다. 측정: 이 간선의 실제 payload 는 f_ocean(표면 바다)이 아니라 ice_mass_fraction(내부 물 분율)이고, 그 절반(클래스 → 사다리 regime 4)은 이미 배달된다. 구조 절반(물 분율 → interior_layers → cmb_heat_flux)은 지구질량 암석체가 물 0.1/0.3 에서 수렴하지 않아 시험 불가 — 미수렴 시험 상태는 CMB 를 더 뜨겁게(2526 → ~4400 K) 놓아 문서의 '더 차갑다' 와 반대이나 결과로 읽지 않는다. 같은 날 C24 가 닫힌 뒤 수렴값: 물 0.1 → T_cmb 3105 K · 0.3 → 3050 K(마른 2526) — 방향 그대로, 크기는 수렴값. 구조 절반은 이제 측정 가능, 착수는 별도. C17 측정(2026-09-04 개시·종결, ocean-fraction-context-notes.md §5): 수렴점 T_cmb 2526→3105→3065→3050 K(실재 꺾임, 잡음 0.7 K), 지구 선언 T_c 에서 Q_C 2.75→3.11→3.20 TW 상승(문서의 '더 낮다' 와 반대), C15 밴드 이동하나 0 을 걸침 → cannot-say 그대로. ③b 로 닫힘 — 기전은 측정됐고 소비자가 못 쓴다. 배선 없음."}
   - {from: body_age, to: dynamo_rocky, kind: influences, sign: negative, ref: "rocky-planet-dynamo-methodology.md:28", note: "ref was :70 (the Rossby gate), now :28 (the declared per-class death age) (2026-09-04)"}
   - {from: heat_transport_mode, to: dynamo_rocky, kind: selects, via: cmb_heat_flux, status: gap, ref: "rocky-planet-dynamo-methodology.md:113", note: "ref was :70 (the Rossby gate), now :113–114, the only CMB-flux sentence ('stagnant-lid … low CMB heat flux'). 2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (:24–25), no code consumer (hook never fired); the value now exists — the cmb_heat_flux node (Brief 60) emits q_cmb 2.75 TW on Earth, analog — so the sentence '내는 노드가 없다' below is stale as of Brief 60; this edge's from-node heat_transport_mode still has no recipe. Gap of kind: value exists, consumer does not read it. C30 (2026-09-04): the from-node heat_transport_mode now HAS a recipe (engine/tidal_heating.py) — its output is the §6.2 mode label; dynamo_rocky still reads neither the mode nor q_cmb (hook: no read), so the gap stands with the same kind. Older text kept: mode 는 라벨이고 열류는 수다. 소비처 둘(core_state · dynamo_rocky)이 원하는데 내는 노드가 없다 — internal_heat_nontidal → core_state 도 같은 양으로 gap. 공급자 하나로 닫아야 한다 (2026-09-03)."}
-  - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, status: gap, ref: "internal-heat-luminosity-methodology.md:202", note: "2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need in either dynamo doc, no code consumer (hook never fired), no node emits a value named geotherm; the thermal-evolution model this note asks for now exists — core_thermal_history (C20) emits core_cmb_temperature_present 4028 K and q_cmb_present 5.07 TW on Earth, analog — so '열진화 모형이 필요하다' is stale as of C20. Gap of kind: value exists, consumer does not read it. Older text kept: 핵이 **지금도** 대류하는가(Rm > 40)는 붕괴 이력 H(t)만이 아니라 열진화 모형이 필요하다 — Nimmo & Primack 2020 이 Nimmo+ 2004 (2004GeoJI.156..363N, 보유)에 맡기는 부분. 붕괴 물리는 우리 것(radiogenic_power_history_4gyr), 열진화는 아니다. 공급자 cmb_heat_flux 는 브리프 60 에 생겼고 소비자 배선은 φ 단계다. 2026-09-03 브리프 44 gap, 브리프 64 라벨 정정."}
+  - {from: internal_heat_nontidal, to: dynamo_rocky, kind: requires, via: geotherm, status: gap, ref: "internal-heat-luminosity-methodology.md:203", note: "ref was :202 (shifted by b29b556e's contract block, 2026-09-04). 2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need in either dynamo doc, no code consumer (hook never fired), no node emits a value named geotherm; the thermal-evolution model this note asks for now exists — core_thermal_history (C20) emits core_cmb_temperature_present 4028 K and q_cmb_present 5.07 TW on Earth, analog — so '열진화 모형이 필요하다' is stale as of C20. Gap of kind: value exists, consumer does not read it. Older text kept: 핵이 **지금도** 대류하는가(Rm > 40)는 붕괴 이력 H(t)만이 아니라 열진화 모형이 필요하다 — Nimmo & Primack 2020 이 Nimmo+ 2004 (2004GeoJI.156..363N, 보유)에 맡기는 부분. 붕괴 물리는 우리 것(radiogenic_power_history_4gyr), 열진화는 아니다. 공급자 cmb_heat_flux 는 브리프 60 에 생겼고 소비자 배선은 φ 단계다. 2026-09-03 브리프 44 gap, 브리프 64 라벨 정정."}
   # 내부 온도 프로파일의 앵커(맨틀 포텐셜 온도)는 열 예산이 정한다. 그 예산이
   # internal_heat_nontidal 의 것이고, 표면 온도와 포텐셜 온도 사이의 전도하는
   # 뚜껑 두께가 열류의 함수다 (Unterborn+ 2019 §2). 그러나 저 레시피는 프로파일을
@@ -696,34 +696,34 @@ edges:
   # core_state 는 핵의 압력과 온도를 융해곡선에 대야 한다. 압력은 2026-08-25 부터
   # 있었고 온도가 2026-08-27 에 생겼다. 그래서 이 두 엣지가 이제 선언될 수 있다 —
   # 노드 자체는 아직 미구현이고(status: missing) 융해곡선은 별도 논문이 필요하다.
-  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118", note: "브리프 60. 식 37 의 R 과 단열 열류의 4πr²."}
-  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118"}
-  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:118", note: "식 37 의 T̃_m — 맨틀 단열선이 경계에서 갖는 실온(식 29). 포텐셜 온도가 아니다."}
-  - {from: core_state, to: cmb_heat_flux, kind: requires, via: core_cmb_temperature_used, ref: "internal-heat-luminosity-methodology.md:118", note: "식 37 의 T_c. 선언되지 않으면 하한 갈래라 점프가 0 — 거절."}
-  - {from: mass_or_radius, to: cmb_heat_flux, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언) → g_cmb."}
-  - {from: body_class, to: cmb_heat_flux, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만. 거대행성은 규산염 하단 경계층이 없다."}
+  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 브리프 60. 식 37 의 R 과 단열 열류의 4πr²."}
+  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 식 37 의 T̃_m — 맨틀 단열선이 경계에서 갖는 실온(식 29). 포텐셜 온도가 아니다."}
+  - {from: core_state, to: cmb_heat_flux, kind: requires, via: core_cmb_temperature_used, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 식 37 의 T_c. 선언되지 않으면 하한 갈래라 점프가 0 — 거절."}
+  - {from: mass_or_radius, to: cmb_heat_flux, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 핵 질량 = 질량 × core_mass_fraction(선언) → g_cmb."}
+  - {from: body_class, to: cmb_heat_flux, kind: selects, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 암석체만. 거대행성은 규산염 하단 경계층이 없다."}
   # C14 (2026-09-03): 핵 에너지 수지 — 좌변은 cmb_heat_flux 와 같은 하단 경계층(식 37–39), 우변은 핵 프로파일 위의 Q_s+Q_L+Q_g+Q_R.
-  - {from: interior_layers, to: core_energy_balance, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118", note: "C14. 식 31 의 R, 프로파일 적분의 바깥 끝."}
-  - {from: interior_layers, to: core_energy_balance, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118", note: "프로파일 적분의 시작 압력."}
-  - {from: interior_layers, to: core_energy_balance, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:118", note: "식 37 의 T̃_m — T_c 와 무관해 근찾기 밖에 서는 쪽."}
-  - {from: mass_or_radius, to: core_energy_balance, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언) → 프로파일의 m(r)."}
-  - {from: body_class, to: core_energy_balance, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
-  - {from: core_state, to: core_energy_balance, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md:118", note: "같은 단열선(γ = 1.5)과 같은 융해곡선으로 내핵을 찾는다 — 값을 받지는 않고 방법을 공유한다. 풀린 T_c 는 core_state 로 되돌아가지 않는다(C14 범위)."}
+  - {from: interior_layers, to: core_energy_balance, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). C14. 식 31 의 R, 프로파일 적분의 바깥 끝."}
+  - {from: interior_layers, to: core_energy_balance, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 프로파일 적분의 시작 압력."}
+  - {from: interior_layers, to: core_energy_balance, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 식 37 의 T̃_m — T_c 와 무관해 근찾기 밖에 서는 쪽."}
+  - {from: mass_or_radius, to: core_energy_balance, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 핵 질량 = 질량 × core_mass_fraction(선언) → 프로파일의 m(r)."}
+  - {from: body_class, to: core_energy_balance, kind: selects, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 암석체만."}
+  - {from: core_state, to: core_energy_balance, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 같은 단열선(γ = 1.5)과 같은 융해곡선으로 내핵을 찾는다 — 값을 받지는 않고 방법을 공유한다. 풀린 T_c 는 core_state 로 되돌아가지 않는다(C14 범위)."}
   # C15 (2026-09-04): 엔트로피 생성 φ — C14 의 풀린 T_c 위에서, 같은 프로파일과 같은 에너지 항(Q_L·Q_g)을 다시 짓는다.
-  - {from: core_energy_balance, to: core_entropy_production, kind: requires, via: core_cmb_temperature_solved, ref: "internal-heat-luminosity-methodology.md:118", note: "C15. φ 는 풀린 T_c 의 프로파일 위에서 낸다 — 선언 하한이 아니라."}
-  - {from: interior_layers, to: core_entropy_production, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118"}
-  - {from: interior_layers, to: core_entropy_production, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118"}
-  - {from: mass_or_radius, to: core_entropy_production, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량 = 질량 × core_mass_fraction(선언)."}
-  - {from: body_class, to: core_entropy_production, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
-  - {from: interior_layers, to: core_thermal_history, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:118", note: "C20. 핵 프로파일의 바깥 끝, 식 31 의 R."}
-  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:118"}
-  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:118", note: "기준 퍼텐셜 온도에서의 맨틀 바닥 온도 → 단열비 r_b = T̃_m/T_m (식 29 형태), 시간에 따라 고정."}
-  - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:118", note: "핵 질량·맨틀 질량 = 질량 × (CMF, 1−CMF)."}
-  - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md:118", note: "식 33 의 R_p 와 표면 중력."}
-  - {from: body_age, to: core_thermal_history, kind: requires, via: t_body, ref: "internal-heat-luminosity-methodology.md:118", note: "적분 구간 = 계의 나이 (오너 조건 1)."}
-  - {from: internal_heat_nontidal, to: core_thermal_history, kind: requires, via: mantle_radiogenic_power, ref: "internal-heat-luminosity-methodology.md:118", note: "장수명 방사성 열 H_m M_m(t) = 현재 맨틀 몫 × history_factor(t). 단수명 펄스(C21)는 아니다."}
-  - {from: body_class, to: core_thermal_history, kind: selects, ref: "internal-heat-luminosity-methodology.md:118", note: "암석체만."}
-  - {from: core_thermal_history, to: core_entropy_production, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md:118", note: "C20 이 entropy_history_verdict 를 낸다. C15 의 같은 이름 출력은 아직 'cannot-say (needs C20)' 고정 — 소비 배선은 별도 결정."}
+  - {from: core_energy_balance, to: core_entropy_production, kind: requires, via: core_cmb_temperature_solved, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). C15. φ 는 풀린 T_c 의 프로파일 위에서 낸다 — 선언 하한이 아니라."}
+  - {from: interior_layers, to: core_entropy_production, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: interior_layers, to: core_entropy_production, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: mass_or_radius, to: core_entropy_production, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 핵 질량 = 질량 × core_mass_fraction(선언)."}
+  - {from: body_class, to: core_entropy_production, kind: selects, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 암석체만."}
+  - {from: interior_layers, to: core_thermal_history, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). C20. 핵 프로파일의 바깥 끝, 식 31 의 R."}
+  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: interior_layers, to: core_thermal_history, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 기준 퍼텐셜 온도에서의 맨틀 바닥 온도 → 단열비 r_b = T̃_m/T_m (식 29 형태), 시간에 따라 고정."}
+  - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 핵 질량·맨틀 질량 = 질량 × (CMF, 1−CMF)."}
+  - {from: mass_or_radius, to: core_thermal_history, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 식 33 의 R_p 와 표면 중력."}
+  - {from: body_age, to: core_thermal_history, kind: requires, via: t_body, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 적분 구간 = 계의 나이 (오너 조건 1)."}
+  - {from: internal_heat_nontidal, to: core_thermal_history, kind: requires, via: mantle_radiogenic_power, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 장수명 방사성 열 H_m M_m(t) = 현재 맨틀 몫 × history_factor(t). 단수명 펄스(C21)는 아니다."}
+  - {from: body_class, to: core_thermal_history, kind: selects, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 암석체만."}
+  - {from: core_thermal_history, to: core_entropy_production, kind: influences, sign: non-monotonic, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). C20 이 entropy_history_verdict 를 낸다. C15 의 같은 이름 출력은 아직 'cannot-say (needs C20)' 고정 — 소비 배선은 별도 결정."}
   - {from: core_entropy_production, to: dynamo_rocky, kind: influences, sign: non-monotonic, status: gap, ref: "rocky-planet-dynamo-methodology.md:183", note: "ref was :60 (the Rm > 40 gate), now :183, the doc's only MW/K line. 2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need, no code consumer (hook never fired); φ is emitted on Earth (−69 MW/K, band −264…+238, analog) and its band straddles zero. Gap of kind: value exists, no verdict can be drawn. C15 는 φ 를 내기까지. 문턱이 판정을 못 내므로(0.1–1000 MW/K) 사다리 교체는 별도 오너 결정 — 배선하지 않는다. 논문도 Q_C 대 Q_k 와 φ 를 나란히 둔다."}
   - {from: interior_layers, to: core_state, kind: requires, via: core_pressure, ref: "interior-structure-methodology.md:1"}
   - {from: interior_layers, to: core_state, kind: requires, via: core_temperature, ref: "interior-structure-methodology.md:1"}
@@ -792,7 +792,7 @@ edges:
   - {from: atmospheric_escape, to: atmosphere_choice, kind: selects, ref: "exoplanet-atmosphere-methodology.md:76"}
   - {from: atmospheric_escape, to: composition_intent, kind: influences, note: "선택적 손실(selective_loss) — retained·loss_rate 에서 소비처가 읽는 라벨, 수치 계약 없음 (2026-09-03, via 에서 내림)", ref: "exoplanet-atmosphere-methodology.md:224"}
   - {from: composition_intent, to: atmosphere_choice, kind: requires, via: mantle_redox, ref: "exoplanet-atmosphere-methodology.md:152"}
-  - {from: internal_heat_nontidal, to: atmosphere_choice, kind: requires, via: outgassing, status: gap, ref: "internal-heat-luminosity-methodology.md:208", note: "탈가스율 — 그 노드는 [l_int, t_int, geotherm] 을 내고, 서베이 ㉓ 은 그 노드가 아직 아무것도 계산하지 않음을 확정했다 (캐시의 모든 출처가 열 예산을 소비만 한다). 2026-09-03 gap."}
+  - {from: internal_heat_nontidal, to: atmosphere_choice, kind: requires, via: outgassing, status: gap, ref: "internal-heat-luminosity-methodology.md:209", note: "ref was :208 (shifted by b29b556e's contract block, 2026-09-04). 탈가스율 — 그 노드는 [l_int, t_int, geotherm] 을 내고, 서베이 ㉓ 은 그 노드가 아직 아무것도 계산하지 않음을 확정했다 (캐시의 모든 출처가 열 예산을 소비만 한다). 2026-09-03 gap."}
   - {from: t_eq_stellar, to: atmosphere_choice, kind: requires, via: scale_height, ref: "exoplanet-atmosphere-methodology.md:522"}
   - {from: surface_albedo, to: t_eq_stellar, kind: requires, via: albedo, textbook: true, ref: "greenhouse-warming-methodology.md:197"}
   - {from: star_physical, to: t_eq_stellar, kind: requires, via: luminosity, textbook: true}
@@ -815,13 +815,13 @@ edges:
   - {from: star_physical, to: greenhouse, kind: requires, via: teff, ref: "greenhouse-warming-methodology.md:162"}
   - {from: star_physical, to: greenhouse, kind: selects, via: sed, ref: "greenhouse-warming-methodology.md:283"}
   - {from: tidal_heating, to: greenhouse, kind: influences, status: gap, ref: "moon-energy-budget-methodology.md:124"}
-  - {from: mass_or_radius, to: internal_heat_nontidal, kind: requires, via: [mass, radius], ref: "internal-heat-luminosity-methodology.md:118", note: "2026-09-03 브리프 46 후속 ③: 레시피가 읽는 것은 mass_earth 와 **선언된** radius_earth 다 — via 가 없던 엣지를 이름 붙였다."}
+  - {from: mass_or_radius, to: internal_heat_nontidal, kind: requires, via: [mass, radius], ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). 2026-09-03 브리프 46 후속 ③: 레시피가 읽는 것은 mass_earth 와 **선언된** radius_earth 다 — via 가 없던 엣지를 이름 붙였다."}
   # 브리프 46 후속 ③: radius_earth 가 미선언이면 interior_layers 의 도출 반지름을 읽는다. 읽는 입력에 화살표가
   # 없었다 — check_via 는 '있는 via 가 틀린 것' 만 보고 '읽는데 via 가 없는 것' 은 못 본다 (via-context-notes.md).
-  - {from: interior_layers, to: internal_heat_nontidal, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md:118", note: "radius_earth 미선언 시의 대체 경로. 둘 다 16노드 코어 안이라 반복이 순서를 처리한다."}
-  - {from: body_age, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:118"}
-  - {from: body_class, to: internal_heat_nontidal, kind: selects, ref: "internal-heat-luminosity-methodology.md:187"}
-  - {from: star_metallicity, to: internal_heat_nontidal, kind: influences, status: gap, ref: "internal-heat-luminosity-methodology.md:254"}
+  - {from: interior_layers, to: internal_heat_nontidal, kind: requires, via: radius, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04). radius_earth 미선언 시의 대체 경로. 둘 다 16노드 코어 안이라 반복이 순서를 처리한다."}
+  - {from: body_age, to: internal_heat_nontidal, kind: requires, ref: "internal-heat-luminosity-methodology.md:119", note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: body_class, to: internal_heat_nontidal, kind: selects, ref: "internal-heat-luminosity-methodology.md:188", note: "ref was :187 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: star_metallicity, to: internal_heat_nontidal, kind: influences, status: gap, ref: "internal-heat-luminosity-methodology.md:255", note: "ref was :254 (shifted by b29b556e's contract block, 2026-09-04)"}
   - from: interior_layers
     to: mass_radius_relation
     kind: requires
@@ -833,9 +833,9 @@ edges:
       interior_layers 의 적분에서 나온다.
     ref:
       - "interior-structure-methodology.md:Contract"
-  - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md:477"}
-  - {from: internal_heat_nontidal, to: t_eff_body, kind: requires, via: t_int, ref: "internal-heat-luminosity-methodology.md:60"}
-  - {from: t_eq_stellar, to: t_eff_body, kind: requires, textbook: true, ref: "internal-heat-luminosity-methodology.md:60"}
+  - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md:478", note: "ref was :477 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: internal_heat_nontidal, to: t_eff_body, kind: requires, via: t_int, ref: "internal-heat-luminosity-methodology.md:61", note: "ref was :60 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: t_eq_stellar, to: t_eff_body, kind: requires, textbook: true, ref: "internal-heat-luminosity-methodology.md:61", note: "ref was :60 (shifted by b29b556e's contract block, 2026-09-04)"}
 
   # ── 표면 ───────────────────────────────────────────────────────
   - {from: greenhouse, to: ice_stability, kind: requires, via: t_surf}
@@ -893,8 +893,8 @@ edges:
   - {from: mass_or_radius, to: hapke_shader_values, kind: excludes, ref: "hapke-shader-methodology.md:148", note: "corr(K, log g) = +0.58 뿐이고 이상치가 끌고 있다. K 는 표면중력을 따라가지 않는다."}
   - {from: interior_layers, to: hapke_shader_values, kind: excludes, ref: "hapke-shader-methodology.md:144", note: "phi 는 근표면 광학 packing 이지 벌크 다공도가 아니다."}
   - {from: composition_intent, to: surface_dose, kind: excludes, ref: "surface-radiation-dose-methodology.md:89", note: 조성은 거의 상관없다. 기둥밀도가 정한다.}
-  - {from: internal_heat_nontidal, to: t_eff_body, kind: excludes, scope: self, ref: "internal-heat-luminosity-methodology.md:308", note: 암석체에서는 0.001 K 보정이라 표면온도에 무의미하다. 거대행성 엣지와 구분할 것.}
-  - {from: star_physical, to: internal_heat_nontidal, kind: excludes, ref: "internal-heat-luminosity-methodology.md:118", note: 나이와 질량이 정하지 호스트가 정하지 않는다.}
+  - {from: internal_heat_nontidal, to: t_eff_body, kind: excludes, scope: self, ref: "internal-heat-luminosity-methodology.md:309", note: 암석체에서는 0.001 K 보정이라 표면온도에 무의미하다. 거대행성 엣지와 구분할 것., note: "ref was :308 (shifted by b29b556e's contract block, 2026-09-04)"}
+  - {from: star_physical, to: internal_heat_nontidal, kind: excludes, ref: "internal-heat-luminosity-methodology.md:119", note: 나이와 질량이 정하지 호스트가 정하지 않는다., note: "ref was :118 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: orbit_elements, to: day_night_contrast, kind: excludes, ref: "tidally-locked-temperature-methodology.md:47", note: 낮밤 대비는 대기가 정하지 궤도가 정하지 않는다.}
   - {from: heat_transport_mode, to: surface_albedo, kind: excludes, ref: "surface-color-albedo-methodology.md:191", note: "화산 재표면화 → 알베도는 어느 문서도 서술하지 않는다. 가장 가까운 건 충돌·풍화 노출연령이고 그건 다른 것이다."}
   - {from: cassini_state, to: spin_axis_inclination, kind: excludes, ref: "cassini-state-obliquity-methodology.md:203", note: 조석 감쇠된 것과 아닌 것. 교차적용 금지.}

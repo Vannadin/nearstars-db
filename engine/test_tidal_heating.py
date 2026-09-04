@@ -3,8 +3,8 @@
 
     python3 engine/test_tidal_heating.py
 
-1. Io (doc :479–480 inputs: a 421,700 km, e 0.0041, k₂/Q 0.015, R 1822 km, M_p = M_J 1.89813e27): Ė inside the printed
-   observed band ~0.6–1.6e14 W (doc :100) and P_orb 1.769 d. A band, not a point — the doc itself says "~10¹⁴ W".
+1. Io (doc :497–498 inputs: a 421,700 km, e 0.0041, k₂/Q 0.015, R 1822 km, M_p = M_J 1.89813e27): Ė inside the printed
+   observed band ~0.6–1.6e14 W (doc :118) and P_orb 1.769 d. A band, not a point — the doc itself says "~10¹⁴ W".
 2. Pandora (board inputs a 252,393 km · e 0.005 · k₂/Q 0.0016 · M_p 120 M⊕ · R 5724 km): F 45.34 W/m², the board's 45
    within 0.75 %; ×Io 187 on the printed 1e14 W denominator; regime "vigorous …"; total-flux mode "heat pipe".
 3. ×Io convention: the doc's Dante rows (:451/:453) scale as R⁵ in the ×Io column and R³ in W/m² — output ratio, not flux.
