@@ -25,6 +25,19 @@ import math
 
 from payload import Result, out_of_domain
 
+# Anchors for the sentences the values below stand on. They are cited here rather than inside the
+# shipped strings, because a citation that reaches a reader should be short: the string says §6.2,
+# this comment says which sentence, and check_refs resolves the comment.
+#   the law            doc @«Ė  =  (21/2) · (k₂/Q) · (G M_p² R⁵ n e²) / a⁶»
+#   the flux           doc @«`F = Ė / (4πR²)`, the number that decides volcanism/melting»
+#   mean motion        doc @«with the mean motion `n = √(G(M_p + m)/a³) ≈ √(G M_p / a³)`»
+#   §6.1 label table   doc @«### 6.1 The flux → regime table»
+#   §6.2 mode table    doc @«### 6.2 How the heat actually leaves: the three-mode ladder»
+#   §6.3 lid scope     doc @«**Scope — lid-bearing bodies only.**»
+#   §6.5 size ceiling  doc @«### 6.5 The super-Io ceiling: what size a lava moon can be»
+#   Io calibration     doc @«output at ~10¹⁴ W, i.e. a surface flux ~2 W/m²»
+#   k₂/Q spread        doc @«`k₂/Q` is the **dominant uncertainty**»
+#   R³ flux scaling    doc @«**surface flux scales as `R³` at fixed density**»
 RECIPE = "tidal-heating-methodology"
 VERSION = "1"
 REFS = ("docs/reference/tidal-heating-methodology.md@«Ė  =  (21/2) · (k₂/Q) · (G M_p² R⁵ n e²) / a⁶»", ":99-100", ":264-269", ":295-299")
@@ -52,8 +65,10 @@ MODE_PLATE = "plate tectonics"
 MODE_STAGNANT = "stagnant lid"
 MODE_HEAT_PIPE = "heat pipe"
 MODE_UNCLASSIFIED = "unclassified (between table rows)"
-GUIDES = ("doc @«(these are guides, not sharp lines):»; doc @«published W/m² boundary** between the modes» "
-          "— every label here is a conversion of a flux, not a citation")
+# The two sentences these labels rest on: doc @«(these are guides, not sharp lines):»
+# and doc @«published W/m² boundary** between the modes». They are cited here, in a comment, and
+# NOT inside the shipped string: a value's reader gets the pointer, not the document's prose.
+GUIDES = "§6: guides, not sharp lines, and no published W/m² boundary between the modes"
 
 
 def tidal_power(k2_over_q: float, perturber_kg: float, radius_m: float, a_m: float, e: float) -> tuple[float, float, float]:
@@ -100,28 +115,28 @@ def solve(mass_earth: float, radius_earth: float | None, semi_major_axis_km: flo
     missing = [k for k, v in (("semi_major_axis", semi_major_axis_m), ("perturber_mass", perturber_mass_earth),
                               ("eccentricity_forced", eccentricity_forced)) if v is None]
     if missing:
-        return out_of_domain(RECIPE, VERSION, f"cannot-say (no orbit): {', '.join(missing)} 미선언 — Ė ∝ M_p² e²/a⁶ (doc @«Ė  =  (21/2) · (k₂/Q) · (G M_p² R⁵ n e²) / a⁶»)",
+        return out_of_domain(RECIPE, VERSION, f"cannot-say (no orbit): {', '.join(missing)} 미선언 — Ė ∝ M_p² e²/a⁶ (§1의 fixed-Q 식)",
                              inputs, REFS)
     if k2_over_q is None:
         return out_of_domain(RECIPE, VERSION, "cannot-say (no k2_over_q): 조석 소산 k₂/Q 미선언 — 클래스 밴드는 2–3 자리수 폭이라 "
-                             "(doc @«`k₂/Q` is the **dominant uncertainty**») 값을 고르지 않는다", inputs, REFS)
+                             "(§4의 k₂/Q 표) 값을 고르지 않는다", inputs, REFS)
     if radius_earth is None:
-        return out_of_domain(RECIPE, VERSION, "cannot-say (no radius): Ė ∝ R⁵, F ∝ R³ (doc @«Ė  =  (21/2) · (k₂/Q) · (G M_p² R⁵ n e²) / a⁶», doc @«**surface flux scales as `R³` at fixed density**»)", inputs, REFS)
+        return out_of_domain(RECIPE, VERSION, "cannot-say (no radius): Ė ∝ R⁵, F ∝ R³ (§1 · §6.5)", inputs, REFS)
     power, flux, n = tidal_power(k2_over_q, perturber_mass_earth * M_EARTH_KG, radius_earth * R_EARTH_M,
                                  semi_major_axis_m, eccentricity_forced)
     regime = outcome_regime(flux)
     notes = (
-        f"fixed-Q law doc @«Ė  =  (21/2) · (k₂/Q) · (G M_p² R⁵ n e²) / a⁶» with n = √(G M_p/a³) (m ≪ M_p, doc @«with the mean motion `n = √(G(M_p + m)/a³) ≈ √(G M_p / a³)`»): k₂/Q {k2_over_q} · e {eccentricity_forced} · "
+        f"fixed-Q law §1 with n = √(G M_p/a³) (m ≪ M_p): k₂/Q {k2_over_q} · e {eccentricity_forced} · "
         f"a {semi_major_axis_m / 1e3:,.0f} km · M_p {perturber_mass_earth:.4g} M⊕ · R {radius_earth:.4f} R⊕ → P_orb "
         f"{2 * math.pi / n / 3600:.3f} h. G CODATA 2018, M⊕ IAU 2015 nominal.",
         "e and k₂/Q are DECLARATIONS (grade declared): the board fits k₂/Q to its chosen flux (phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it» "
         "'fitted rather than predicted'); the class band for k₂/Q spans 2–3 decades (doc §5) and is not elected here.",
-        f"io_power_ratio = Ė / {IO_POWER_W:.1e} W, the document's printed '~10¹⁴ W' (doc @«output at ~10¹⁴ W, i.e. a surface flux ~2 W/m²»). The §6.5 Dante "
-        "rows (doc @«### 6.5 The super-Io ceiling: what size a lava moon can be») invert to 1.016e14 W (2.44 W/m² at R 1822 km), 1.6 % from this constant — a convention difference.",
-        f"heat_transport_regime is the §6.1 outcome table (doc @«### 6.1 The flux → regime table») read on the TIDAL flux alone; {GUIDES}.",
+        f"io_power_ratio = Ė / {IO_POWER_W:.1e} W, the document's printed '~10¹⁴ W' (§2). The §6.5 Dante "
+        "rows invert to 1.016e14 W (2.44 W/m² at R 1822 km), 1.6 % from this constant — a convention difference.",
+        f"heat_transport_regime is the §6.1 outcome table read on the TIDAL flux alone; {GUIDES}.",
         "not emitted: radius_ceiling · plains_temperature (§6.3–6.5, the Dante lid axis — a separate item); "
         "tidal_transport.derive_potential_temperature is not consulted (validation failed by its own docstring; Pandora is not a "
-        "§6 lid-bearing case, doc @«**Scope — lid-bearing bodies only.**»).",
+        "§6 lid-bearing case, §6.3).",
     )
     return Result(recipe=RECIPE, version=VERSION, regime="fixed_q_synchronous",
                   reason=f"Ė {power:.3e} W · F {flux:.4g} W/m² ({power / IO_POWER_W:.3g}× Io's ~10¹⁴ W) → {regime}",
@@ -154,11 +169,11 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     else:
         parts.append("radiogenic absent")
     notes = (
-        f"§6.2 table (doc @«### 6.2 How the heat actually leaves: the three-mode ladder») read on the TOTAL surface flux {total:.4g} W/m² = {' + '.join(parts)} W/m²; "
+        f"§6.2 table read on the TOTAL surface flux {total:.4g} W/m² = {' + '.join(parts)} W/m²; "
         f"chain :631 supplies W/m² and :632 supplies W — the W is divided by 4πR² here. {GUIDES}.",
         "resurfacing_rate (chain.yaml outputs) is not emitted: the document prints no formula for it.",
         "selectors not wired in this version: global_fluid_layer (chain :633, no recipe) and t_eq_stellar (:634) — "
-        "doc @«**Scope — lid-bearing bodies only.**» names Pandora a global-fluid-layer case, so its selector is the next item.",
+        "§6.3 names Pandora a global-fluid-layer case, so its selector is the next item.",
     )
     return Result(recipe=RECIPE, version=VERSION, regime=f"mode_{mode.split()[0]}",
                   reason=f"total surface flux {total:.4g} W/m² → {mode}",
