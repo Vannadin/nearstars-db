@@ -73,6 +73,19 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
 
 ## Backlog — 2026-09-05 (C33)
 
+- ~~**Tighten the contract-heading anchors to a unique Need item, where one exists.**~~ **Done
+  2026-09-05, and the measurement is the result: of 35 contract-heading anchors, exactly **two** could
+  tighten. The payload names repeat across the five contract blocks of the heat document —
+  `core_radius` five times, `cmb_pressure`, `cmb_temperature` and `nmoi` four each, `mass` not at all —
+  which is the same property that let one line number serve 30 edges. The other 33 keep the heading,
+  and the reason is this paragraph.
+- ~~**Re-grade the engine notes once the migration is done.**~~ **Done 2026-09-05**: a dead landing now
+  fails in any `engine/*.md` that does not declare itself a preserved record, same as in wiring and
+  code. Counted before tightening: zero new failures, because the exemptions that remain (external
+  paper sources, dated quotations, declared records) already covered every one.
+
+Superseded backlog entries, kept for the reasoning:
+
 - **Tighten the contract-heading anchors to a unique Need item, where one exists.** The
   shared-target rule reports them as loosely aimed and it is right: five edges cite
   `## Contract — \`cmb_heat_flux\`` for five different payloads, none of which the heading names.

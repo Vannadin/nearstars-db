@@ -347,7 +347,11 @@ def main() -> int:
     unmigrated: list[tuple] = []
     ok = 0
 
-    live = {".py", ".yaml"}             # wiring and code must resolve; a note records what was true then
+    # Wiring, code, and any note that does NOT declare itself a preserved record: all held to the same
+    # standard, because engine/ holds living documents (interior-core.md, SESSION-HANDOFF.md, the
+    # checklists) beside preserved ones, and a living document's dead citation is a defect like any
+    # other. Measured before tightening: zero new failures, so this closes the class for free.
+    live = {".py", ".yaml", ".md"}
     for path in files():
         rel = path.relative_to(ROOT)
         mine = own_doc(path)
@@ -505,7 +509,7 @@ def main() -> int:
             # Only a file that DECLARES itself a preserved record is exempt from failing. A quotation
             # inside a living document is not: the fact that its citation now points at nothing is
             # true whether or not the sentence around it is a quotation.
-            (note_dead if is_preserved(citing) else dead).append(row)
+            (note_dead if is_preserved(citing) else dead).append(row)   # `live` no longer decides this
         elif kind in MOVES:
             warned.append(f"{where}: {doc}:{loc} — lands on {kind}, which moves when the document grows")
 

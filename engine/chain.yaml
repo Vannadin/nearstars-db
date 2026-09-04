@@ -699,7 +699,7 @@ edges:
   - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: core_radius, ref: "internal-heat-luminosity-methodology.md@«## Contract — `cmb_heat_flux`»", note: "브리프 60. 식 37 의 R 과 단열 열류의 4πr²."}
   - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_pressure, ref: "internal-heat-luminosity-methodology.md@«## Contract — `cmb_heat_flux`»"}
   - {from: interior_layers, to: cmb_heat_flux, kind: requires, via: cmb_temperature, ref: "internal-heat-luminosity-methodology.md@«## Contract — `cmb_heat_flux`»", note: "식 37 의 T̃_m — 맨틀 단열선이 경계에서 갖는 실온(식 29). 포텐셜 온도가 아니다."}
-  - {from: core_state, to: cmb_heat_flux, kind: requires, via: core_cmb_temperature_used, ref: "internal-heat-luminosity-methodology.md@«## Contract — `cmb_heat_flux`»", note: "식 37 의 T_c. 선언되지 않으면 하한 갈래라 점프가 0 — 거절."}
+  - {from: core_state, to: cmb_heat_flux, kind: requires, via: core_cmb_temperature_used, ref: "internal-heat-luminosity-methodology.md@«`core_cmb_temperature_used`»", note: "식 37 의 T_c. 선언되지 않으면 하한 갈래라 점프가 0 — 거절."}
   - {from: mass_or_radius, to: cmb_heat_flux, kind: requires, via: mass, ref: "internal-heat-luminosity-methodology.md@«## Contract — `cmb_heat_flux`»", note: "핵 질량 = 질량 × core_mass_fraction(선언) → g_cmb."}
   - {from: body_class, to: cmb_heat_flux, kind: selects, ref: "internal-heat-luminosity-methodology.md@«## Contract — `cmb_heat_flux`»", note: "암석체만. 거대행성은 규산염 하단 경계층이 없다."}
   # C14 (2026-09-03): 핵 에너지 수지 — 좌변은 cmb_heat_flux 와 같은 하단 경계층(식 37–39), 우변은 핵 프로파일 위의 Q_s+Q_L+Q_g+Q_R.
@@ -832,7 +832,7 @@ edges:
       걸려 있어서 문서 §7 의 기각 사례가 재현되지 않았다. 이제 반지름도 순철 곡선도
       interior_layers 의 적분에서 나온다.
     ref:
-      - "interior-structure-methodology.md@«## Contract — `interior_layers`»"
+      - "interior-structure-methodology.md@«`radius` [R_earth] · `core_pressure` [GPa]»"
   - {from: internal_heat_nontidal, to: mass_radius_relation, kind: influences, sign: positive, ref: "internal-heat-luminosity-methodology.md@«- [mass-radius-relation-methodology](mass-radius-relation-methodology.md): internal heat **inflates the»"}
   - {from: internal_heat_nontidal, to: t_eff_body, kind: requires, via: t_int, ref: "internal-heat-luminosity-methodology.md@«⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴»"}
   - {from: t_eq_stellar, to: t_eff_body, kind: requires, textbook: true, ref: "internal-heat-luminosity-methodology.md@«⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴»"}
