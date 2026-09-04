@@ -50,7 +50,7 @@ promise was the supplier's list being short (below).
   Deviation from the brief's step 3, argued here; the brief's own ③ registered it.
 - **`circulation_regime`** was called the class table's own verdict; `omega0_class_table` outputs
   `p_init` (initial spin), and the advection-versus-radiation regime is `day_night_contrast`'s
-  judgement (`tidally-locked-temperature-methodology.md:117`). Treated as consumer-formed.
+  judgement (`tidally-locked-temperature-methodology.md@«### What sets the contrast: advection vs radiation»`). Treated as consumer-formed.
 
 ## 3. The six gaps, and what closes each
 

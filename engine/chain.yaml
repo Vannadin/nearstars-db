@@ -505,7 +505,7 @@ nodes:
 edges:
 
   # ── 질량·반지름이 뿌리에 가깝다 ────────────────────────────────
-  - {from: mass_or_radius, to: mass_radius_relation, kind: requires, ref: "mass-radius-relation-methodology.md:62"}
+  - {from: mass_or_radius, to: mass_radius_relation, kind: requires, ref: "mass-radius-relation-methodology.md@«So for almost every curated body we have one of {M, R} and must **assign the»"}
   - {from: composition_intent, to: mass_radius_relation, kind: selects, ref: "mass-radius-relation-methodology.md:191"}
   - {from: star_physical, to: mass_radius_relation, kind: influences, sign: positive, via: insolation, ref: "mass-radius-relation-methodology.md:107"}
   - from: mass_radius_relation
@@ -579,9 +579,9 @@ edges:
       - "cassini-state-obliquity-methodology.md:166"
 
   # ── figure · 자전 ──────────────────────────────────────────────
-  - {from: tidal_locking, to: body_figure, kind: requires, via: locked, ref: "body-figure-methodology.md:252"}
+  - {from: tidal_locking, to: body_figure, kind: requires, via: locked, ref: "body-figure-methodology.md@«## 7. Procedure (per body)»"}
   - {from: body_figure, to: tidal_locking, kind: selects, via: [j2, c22], ref: "tidal-locking-timescale-methodology.md:204"}
-  - {from: mass_radius_relation, to: body_figure, kind: requires, via: radius, ref: "body-figure-methodology.md:353"}
+  - {from: mass_radius_relation, to: body_figure, kind: requires, via: radius, ref: "body-figure-methodology.md@«- [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md): the radius input.»"}
   - {from: orbit_elements, to: body_figure, kind: requires, via: n, ref: "body-figure-methodology.md:37"}
   - {from: body_class, to: body_figure, kind: selects, ref: "body-figure-methodology.md:79"}
   - {from: star_physical, to: body_figure, kind: requires, via: p_rot, ref: "body-figure-methodology.md:238"}
@@ -610,14 +610,14 @@ edges:
 
   # ── 조석 ───────────────────────────────────────────────────────
   - {from: orbit_elements, to: tidal_locking, kind: requires, via: [a, e], ref: "tidal-locking-timescale-methodology.md:141"}
-  - {from: mass_radius_relation, to: tidal_locking, kind: requires, ref: "tidal-locking-timescale-methodology.md:450"}
+  - {from: mass_radius_relation, to: tidal_locking, kind: requires, ref: "tidal-locking-timescale-methodology.md@«- [mass-radius-relation-methodology](mass-radius-relation-methodology.md): `R` (and `m`, via `I`) enter the»"}
   - {from: system_age, to: tidal_locking, kind: requires, via: t_sys, ref: "tidal-locking-timescale-methodology.md:89"}
   - {from: atmosphere_choice, to: tidal_locking, kind: selects, note: "판별자 thermal_tide — 소비처가 pressure·composition 에서 형성한다 (2026-09-03, via 에서 내림)", ref: "tidal-locking-timescale-methodology.md:247"}
-  - {from: tidal_locking, to: tidal_heating, kind: selects, ref: "tidal-locking-timescale-methodology.md:438"}
+  - {from: tidal_locking, to: tidal_heating, kind: selects, ref: "tidal-locking-timescale-methodology.md@«- [tidal-heating-methodology](tidal-heating-methodology.md): the sibling that **assumes the lock»"}
   - {from: orbit_elements, to: tidal_heating, kind: requires, via: [a, e, n], ref: "tidal-heating-methodology.md:79", note: "ref was :61 (shifted by b29b556e's contract block, 2026-09-04)"}
-  - {from: mass_radius_relation, to: tidal_heating, kind: requires, via: radius, ref: "mass-radius-relation-methodology.md:371"}
+  - {from: mass_radius_relation, to: tidal_heating, kind: requires, via: radius, ref: "mass-radius-relation-methodology.md@«- [tidal-heating-methodology](tidal-heating-methodology.md): the tidal-heating rate goes as»"}
   - {from: resonance_architecture, to: tidal_heating, kind: requires, via: forced_e, status: gap, ref: "tidal-heating-methodology.md:200", note: "ref was :182 (shifted by b29b556e's contract block, 2026-09-04)"}
-  - {from: cassini_state, to: tidal_heating, kind: requires, via: obliquity, ref: "moon-energy-budget-methodology.md:318"}
+  - {from: cassini_state, to: tidal_heating, kind: requires, via: obliquity, ref: "moon-energy-budget-methodology.md@«- [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md) —»"}
   - {from: ocean_depth, to: tidal_heating, kind: requires, via: d_ocean, status: gap, ref: "moon-energy-budget-methodology.md:237"}
   - {from: tidal_heating, to: interior_layers, kind: influences, sign: non-monotonic, ref: "tidal-heating-methodology.md:217", note: "ref was :199 (shifted by b29b556e's contract block, 2026-09-04)"}
   - from: tidal_heating
@@ -633,16 +633,16 @@ edges:
   - {from: internal_heat_nontidal, to: heat_transport_mode, kind: requires, via: radiogenic_power, ref: "tidal-heating-methodology.md:284", note: "ref was :266 (shifted by b29b556e's contract block, 2026-09-04). C30 (2026-09-04): via was mantle_radiogenic_power; the mode is judged on the whole radiogenic output (l_int = radiogenic_power) plus the tidal flux — the mantle share is a 70 % declaration and the table asks for the surface flux."}
   - {from: global_fluid_layer, to: heat_transport_mode, kind: selects, ref: "tidal-heating-methodology.md:350", note: "ref was :332 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: t_eq_stellar, to: heat_transport_mode, kind: requires, ref: "tidal-heating-methodology.md:359", note: "ref was :341 (shifted by b29b556e's contract block, 2026-09-04)"}
-  - {from: atmosphere_choice, to: day_night_contrast, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md:117"}
-  - {from: omega0_class_table, to: day_night_contrast, kind: selects, note: "판별자 circulation_regime(이류 대 복사) — 표는 p_init 만 내고 순환 영역은 소비처의 판정이다 (2026-09-03, via 에서 내림)", ref: "tidally-locked-temperature-methodology.md:117"}
-  - {from: t_eq_stellar, to: day_night_contrast, kind: requires, ref: "tidally-locked-temperature-methodology.md:61"}
+  - {from: atmosphere_choice, to: day_night_contrast, kind: requires, via: pressure, ref: "tidally-locked-temperature-methodology.md@«### What sets the contrast: advection vs radiation»"}
+  - {from: omega0_class_table, to: day_night_contrast, kind: selects, note: "판별자 circulation_regime(이류 대 복사) — 표는 p_init 만 내고 순환 영역은 소비처의 판정이다 (2026-09-03, via 에서 내림)", ref: "tidally-locked-temperature-methodology.md@«### What sets the contrast: advection vs radiation»"}
+  - {from: t_eq_stellar, to: day_night_contrast, kind: requires, ref: "tidally-locked-temperature-methodology.md@«## 2. Layer 1: Equilibrium Temperature (Closed-Form)»"}
   - from: tidal_locking
     to: day_night_contrast
     kind: selects
     note: >
       이 문서는 동기자전 암석행성만 다룬다. 비동기 자전체에서는 대비를 묻지 않고
       T_eq 로 끝난다 — 그래서 값을 바꾸는 게 아니라 레시피를 쓸지 말지를 고른다.
-    ref: "tidally-locked-temperature-methodology.md:29"
+    ref: "tidally-locked-temperature-methodology.md@«## 1. Why Tidally-Locked Planets Need Special Treatment»"
   - {from: tidal_heating, to: ice_stability, kind: requires, ref: "tidal-heating-methodology.md:735", note: "ref was :717 (shifted by b29b556e's contract block, 2026-09-04)"}
   - {from: tidal_heating, to: crater_state, kind: requires, ref: "tidal-heating-methodology.md:738", note: "ref was :720 (shifted by b29b556e's contract block, 2026-09-04)"}
   - from: tidal_heating
@@ -655,18 +655,18 @@ edges:
   - {from: tidal_heating, to: internal_heat_nontidal, kind: requires, via: power, ref: "internal-heat-luminosity-methodology.md:34", note: "C30 (2026-09-04, built): internal_heat_nontidal reads tidal_heating's power and emits l_int_total · t_int_total beside the radiogenic-only values (heat doc :34 'add the tidal flux into T_int'); the floor is re-inverted against the total only in a boundary-layer mode, refused by name under a heat pipe."}
 
   # ── 자기 ───────────────────────────────────────────────────────
-  - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md:29"}
+  - {from: mass_or_radius, to: dynamo_giant, kind: requires, ref: "planetary-dynamo-scaling.md@«    B_dyn  =  4.8 · (M · L² / R⁷)^(1/6)   [kG]»"}
   - {from: body_age, to: dynamo_giant, kind: requires, via: t_body, ref: "planetary-dynamo-scaling.md:83", note: "C19 (2026-09-04) 측정: 거대행성 가지(0.3–13 M_J, ≥ 0.2 Gyr)는 냉각광도가 아니라 나이(그래프 t_body, 코드 age_gyr)를 직접 소비한다 — −0.33 지수가 냉각 트랙 자체. run.py 가 body_age 만으로 Polyphemus 344.7 µT 를 낸다. 이미 배선, 오표기였다."}
   - {from: star_physical, to: dynamo_giant, kind: requires, via: luminosity, ref: "planetary-dynamo-scaling.md:27", note: "ref was :34 (a blank line), now the brown-dwarf row (measured L_bol). C19 (2026-09-04 낮) 갈색왜성 가지. 이전엔 body_age → via cooling_luminosity, status: gap 이었다 — 냉각광도를 유도할 공급자가 없었다. 고립 갈색왜성은 관측 볼로메트릭 광도(star_physical.luminosity, 코드 luminosity_lsun, 측정)가 곧 냉각광도이므로(선언 isolated) 공급자가 이 노드다. 모듈 안 거절 하나가 사라진 것이지 하류 배선이 아니다(magnetosphere_geometry 레시피 없음). 조사받는 행성에는 이 동일시가 거짓이라 가지가 거절한다."}
   - {from: internal_heat_nontidal, to: dynamo_giant, kind: requires, via: l_int, ref: "internal-heat-luminosity-methodology.md", note: "2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (planetary-dynamo-scaling.md:18 lists none from the interior; :78–81 declines to derive L(M, age)), no code consumer (dipole_field reads luminosity_lsun on the brown-dwarf branch only; hook never read l_int on any body); on every roster giant/BD internal_heat_nontidal refuses by design, and l_int exists only on rocky bodies (Earth 21.3 TW radiogenic, analog). Edge kept as drawn (C19 owns its premise)."}
   - {from: body_class, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:18", note: "ref was :82 (a blank line), now the Needs line (2026-09-04)"}
   - {from: tidal_locking, to: dynamo_giant, kind: selects, ref: "planetary-dynamo-scaling.md:33"}
-  - {from: body_class, to: dynamo_rocky, kind: selects, ref: "planetary-dynamo-scaling.md:97"}
+  - {from: body_class, to: dynamo_rocky, kind: selects, ref: "planetary-dynamo-scaling.md@«4. **Rocky planets**: the giant dynamo law does **not** apply. Use the rocky»"}
   # 2026-08-30 C1 이 서브넵튠을 적분으로 넘겼지만 다이나모 갈래는 아직 없다 —
   # core_state 는 클래스로 거절하고(철핵 유무가 기준이 아니다), dynamo_giant 는
   # 질량(< 0.3 M_J)으로 배제하고, dynamo_rocky 는 이 클래스를 받지 않는다. 이름 없이
   # 두면 사라지므로 gap 으로 적는다. 닫으려면 외피 아래 철핵의 다이나모 레시피가 필요하다.
-  - {from: body_class, to: dynamo_rocky, kind: selects, via: sub_neptune, status: gap, ref: "planetary-dynamo-scaling.md:97", note: "sub_neptune 에는 다이나모 경로가 없다. core_state · dynamo_giant · dynamo_rocky 셋 다 거절한다 — 외피 아래 철핵의 다이나모 레시피가 없는 소비처 공백. **C18, 2026-09-04 이름 있는 거절로 종결(같은 밤 정정)**: 서브넵튠 철핵 다이나모의 켜짐/꺼짐 기준은 발표돼 있다(Tang+ 2025 §4.2, Rm = μ₀σUD 식 46, 임계 50, F_conv = F_CMB − F_cond 식 48) — 자기모멘트·세기 스케일링은 발표돼 있지 않다(전문에 field 0회). dynamo_rocky 가 요구하는 것은 ℳ 이므로 이 간선은 닫히고, 존재 판정은 C23 으로 등재. 세 거절이 왕복을 이룬다는 것(rocky→giant→질량으로 되돌림)도 기록. 간선은 실재하는 결합이라 gap 으로 남는다."}
+  - {from: body_class, to: dynamo_rocky, kind: selects, via: sub_neptune, status: gap, ref: "planetary-dynamo-scaling.md@«4. **Rocky planets**: the giant dynamo law does **not** apply. Use the rocky»", note: "sub_neptune 에는 다이나모 경로가 없다. core_state · dynamo_giant · dynamo_rocky 셋 다 거절한다 — 외피 아래 철핵의 다이나모 레시피가 없는 소비처 공백. **C18, 2026-09-04 이름 있는 거절로 종결(같은 밤 정정)**: 서브넵튠 철핵 다이나모의 켜짐/꺼짐 기준은 발표돼 있다(Tang+ 2025 §4.2, Rm = μ₀σUD 식 46, 임계 50, F_conv = F_CMB − F_cond 식 48) — 자기모멘트·세기 스케일링은 발표돼 있지 않다(전문에 field 0회). dynamo_rocky 가 요구하는 것은 ℳ 이므로 이 간선은 닫히고, 존재 판정은 C23 으로 등재. 세 거절이 왕복을 이룬다는 것(rocky→giant→질량으로 되돌림)도 기록. 간선은 실재하는 결합이라 gap 으로 남는다."}
   - {from: mass_or_radius, to: dynamo_rocky, kind: requires, ref: "rocky-planet-dynamo-methodology.md:24", note: "ref was :22 (a Returns line), now the Needs line (2026-09-04)"}
   - {from: orbit_elements, to: dynamo_rocky, kind: requires, via: period, ref: "rocky-planet-dynamo-methodology.md:25", note: "ref was :22 (a Returns line), now the Needs line carrying rotation_period (2026-09-04)"}
   # RM22 는 둘을 다른 데서 받는다. 핵 **기하** 는 내부 구조가 풀고, 그 핵이 다이나모를
@@ -676,7 +676,7 @@ edges:
   # interior_layers 에서 오는 것으로 적혀 있었고, interior_layers 는 conductor_phase 를
   # 내지 않으므로 그 엣지는 아무도 못 지키는 약속이었다. core_state 가 출력 쪽으로
   # 배선되지 못한 이유이기도 하다.
-  - {from: interior_layers, to: dynamo_rocky, kind: requires, via: core_radius, ref: "rocky-planet-dynamo-methodology.md:258", note: "2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (Needs :24–25 do not list core_radius; :108–109 says RM22's structure solver is not re-run), no code consumer (ladder() has no core_radius argument; hook never fired on Earth or Pandora although interior_layers emits it, calibrated). The only claim of consumption is the Related line :258 — ref was :23 (a Returns line). Edge kept as drawn; the mark is the owner's call."}
+  - {from: interior_layers, to: dynamo_rocky, kind: requires, via: core_radius, ref: "rocky-planet-dynamo-methodology.md@«- [`interior-structure-methodology.md`](interior-structure-methodology.md): supplies the core radius this recipe consumes.»", note: "2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): no printed Need (Needs :24–25 do not list core_radius; :108–109 says RM22's structure solver is not re-run), no code consumer (ladder() has no core_radius argument; hook never fired on Earth or Pandora although interior_layers emits it, calibrated). The only claim of consumption is the Related line :258 — ref was :23 (a Returns line). Edge kept as drawn; the mark is the owner's call."}
   - {from: core_state, to: dynamo_rocky, kind: requires, via: conductor_phase, ref: "rocky-planet-dynamo-methodology.md:24", note: "ref was :25; conductor_phase sits on :24. 2026-09-04 handoff inventory (interior-dynamo-handoff-context-notes.md): live — printed Need (:24, :28), emitted by core_state on Earth (analog), read by dynamo_rocky (hook fired, source core_state); on Pandora core_state refuses (no potential_temperature declared) and the consumer says cannot-say (conductor_phase undecided) by name."}
   # C16 (2026-09-04): 분기 열쇠는 tidal_locking 의 `locked` (그 노드는 아직 레시피가 없다 — 계산 노드 34 중 등록 10). 자유 자전이면
   # RM22 규칙으로 쌍극자(Ro_ℓ 안 거침), 잠김이면 Ro_ℓ 경로인데 세 이유(ν 값 없음 · q_conv 정의 없음 · 인쇄 식이 Table 8 과 4–5배
@@ -793,7 +793,7 @@ edges:
   - {from: atmospheric_escape, to: composition_intent, kind: influences, note: "선택적 손실(selective_loss) — retained·loss_rate 에서 소비처가 읽는 라벨, 수치 계약 없음 (2026-09-03, via 에서 내림)", ref: "exoplanet-atmosphere-methodology.md:224"}
   - {from: composition_intent, to: atmosphere_choice, kind: requires, via: mantle_redox, ref: "exoplanet-atmosphere-methodology.md:152"}
   - {from: internal_heat_nontidal, to: atmosphere_choice, kind: requires, via: outgassing, status: gap, ref: "internal-heat-luminosity-methodology.md@«mantle convection → volcanism → outgassing»", note: "탈가스율 — 그 노드는 [l_int, t_int, geotherm] 을 내고, 서베이 ㉓ 은 그 노드가 아직 아무것도 계산하지 않음을 확정했다 (캐시의 모든 출처가 열 예산을 소비만 한다). 2026-09-03 gap."}
-  - {from: t_eq_stellar, to: atmosphere_choice, kind: requires, via: scale_height, ref: "exoplanet-atmosphere-methodology.md:522"}
+  - {from: t_eq_stellar, to: atmosphere_choice, kind: requires, via: scale_height, ref: "exoplanet-atmosphere-methodology.md@«- [tidally-locked-temperature-methodology](tidally-locked-temperature-methodology.md): the sibling recipe»"}
   - {from: surface_albedo, to: t_eq_stellar, kind: requires, via: albedo, textbook: true, ref: "greenhouse-warming-methodology.md:197"}
   - {from: star_physical, to: t_eq_stellar, kind: requires, via: luminosity, textbook: true}
   - {from: orbit_elements, to: t_eq_stellar, kind: requires, via: a, textbook: true}
@@ -810,8 +810,8 @@ edges:
   - {from: heat_transport_mode, to: moon_energy_budget, kind: selects, ref: "moon-energy-budget-methodology.md:132"}
   - {from: atmosphere_choice, to: greenhouse, kind: requires, ref: "greenhouse-warming-methodology.md:17"}
   - {from: atmosphere_choice, to: greenhouse, kind: influences, sign: non-monotonic, via: haze, ref: "greenhouse-warming-methodology.md:213"}
-  - {from: t_eq_stellar, to: greenhouse, kind: requires, ref: "greenhouse-warming-methodology.md:439"}
-  - {from: moon_energy_budget, to: greenhouse, kind: requires, via: t_eq_4term, ref: "greenhouse-warming-methodology.md:441"}
+  - {from: t_eq_stellar, to: greenhouse, kind: requires, ref: "greenhouse-warming-methodology.md@«- [`tidally-locked-temperature-methodology.md`](tidally-locked-temperature-methodology.md)»"}
+  - {from: moon_energy_budget, to: greenhouse, kind: requires, via: t_eq_4term, ref: "greenhouse-warming-methodology.md@«- [`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md) — for a»"}
   - {from: star_physical, to: greenhouse, kind: requires, via: teff, ref: "greenhouse-warming-methodology.md:162"}
   - {from: star_physical, to: greenhouse, kind: selects, via: sed, ref: "greenhouse-warming-methodology.md:283"}
   - {from: tidal_heating, to: greenhouse, kind: influences, status: gap, ref: "moon-energy-budget-methodology.md:124"}
@@ -865,14 +865,14 @@ edges:
       대기가 없으면 이 채널이 아예 없고 열화는 충돌·완화에만 의존한다.
       D ≳ 10 km 소거 시간은 화성·타이탄 수준에서 수억 년.
     ref:
-      - "crater-degradation-methodology.md:100-112"
+      - "crater-degradation-methodology.md@«### 4. Fluvial / aeolian (thick-atmosphere worlds)»"
       - "2012P&SS...60...26N"
   - {from: body_age, to: crater_state, kind: requires, ref: "crater-degradation-methodology.md:143"}
   - {from: star_physical, to: atmosphere_reflected_color, kind: requires, via: sed, ref: "atmosphere-reflected-color-methodology.md:233"}
   - {from: atmosphere_choice, to: atmosphere_reflected_color, kind: requires, ref: "atmosphere-reflected-color-methodology.md:55"}
   - {from: t_eq_stellar, to: atmosphere_reflected_color, kind: selects, note: "판별자 cloud_class — t_eq 에서 소비처가 형성하는 등급 라벨 (2026-09-03, via 에서 내림)", ref: "atmosphere-reflected-color-methodology.md:58"}
   - {from: atmosphere_reflected_color, to: surface_albedo, kind: influences, ref: "surface-color-albedo-methodology.md:277"}
-  - {from: atmosphere_reflected_color, to: greenhouse, kind: influences, ref: "atmosphere-reflected-color-methodology.md:439"}
+  - {from: atmosphere_reflected_color, to: greenhouse, kind: influences, ref: "atmosphere-reflected-color-methodology.md@«- [greenhouse-warming-methodology](greenhouse-warming-methodology.md): organic haze is»"}
   - {from: body_class, to: hapke_shader_values, kind: selects, ref: "hapke-shader-methodology.md:165"}
   - {from: surface_albedo, to: hapke_shader_values, kind: influences, sign: non-monotonic, ref: "hapke-shader-methodology.md:81"}
   - from: atmosphere_choice
@@ -897,7 +897,7 @@ edges:
   - {from: star_physical, to: internal_heat_nontidal, kind: excludes, ref: "internal-heat-luminosity-methodology.md@«Age and mass, not the host»", note: 나이와 질량이 정하지 호스트가 정하지 않는다.}
   - {from: orbit_elements, to: day_night_contrast, kind: excludes, ref: "tidally-locked-temperature-methodology.md:47", note: 낮밤 대비는 대기가 정하지 궤도가 정하지 않는다.}
   - {from: heat_transport_mode, to: surface_albedo, kind: excludes, ref: "surface-color-albedo-methodology.md:191", note: "화산 재표면화 → 알베도는 어느 문서도 서술하지 않는다. 가장 가까운 건 충돌·풍화 노출연령이고 그건 다른 것이다."}
-  - {from: cassini_state, to: spin_axis_inclination, kind: excludes, ref: "cassini-state-obliquity-methodology.md:203", note: 조석 감쇠된 것과 아닌 것. 교차적용 금지.}
+  - {from: cassini_state, to: spin_axis_inclination, kind: excludes, ref: "cassini-state-obliquity-methodology.md@«- [`spin-axis-inclination-methodology.md`](spin-axis-inclination-methodology.md): the»", note: 조석 감쇠된 것과 아닌 것. 교차적용 금지.}
 
 cycles:
   - id: 1

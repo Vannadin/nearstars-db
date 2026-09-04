@@ -171,7 +171,8 @@ FIELD_TOOLTIPS: dict[str, dict[str, str]] = {
         'en': 'Stellar-field induction heating (W/m²).',
     },
     'radiogenic_heat_w_m2': {
-        # 0.087 은 지구 표면 총 열류다 (internal-heat-luminosity-methodology.md:306). 방사성
+        # 0.087 은 지구 표면 총 열류다 (2026-09-05 인용 이행: 옛 인용 :306 은 hot/cold start 절의 빈 줄에
+        # 착지해 있었다 — 뜻한 문장은 internal-heat-luminosity-methodology.md@«**~0.087 W/m²**. How much of it is radiogenic»). 방사성
         # 몫은 그 대략 절반이고 비율은 U/Th 벌크 예산에 걸려 아직 논쟁 중 — 총량을 이 필드
         # 이름에 붙였던 것을 2026-09-03 에 고쳤다 (engine/radiogenic-context-notes.md).
         'ko': '방사성 동위원소 붕괴 열 (W/m²). 지구: 방사성 ≈ 22 TW (≈ 0.043 W/m²) 대 표면 총 열류 42–47 TW (≈ 0.087) — Nimmo & Primack 2020 이 Sclater+ 1980·Davies 2010 을 인용한 값. 지구뉴트리노(Borexino)는 총 38.2 +13.6/−12.7 TW, 맨틀 24.6 +11.1/−10.4 TW (Agostini 2019, 같은 논문 main.tex:261) 로 아직 다투는 쪽.',

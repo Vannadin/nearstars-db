@@ -46,6 +46,8 @@ SELF_ANCHOR = re.compile(r"(?<![a-z0-9-])doc @«([^»]*)»")
 LINE_REF = re.compile(r"([a-z0-9-]+\.md):([0-9]+(?:[-–][0-9]+)?)")
 SELF_LINE = re.compile(r"(?<![a-z0-9-])doc :([0-9]+(?:[-–][0-9]+)?)")
 RECIPE_DECL = re.compile(r'^RECIPE = "([a-z0-9-]+)"', re.M)
+# chain.yaml writes each edge as a one-line flow mapping, so the endpoints sit on the citing line itself
+EDGE = re.compile(r"from: ([a-z_]+), to: ([a-z_]+)")
 
 SCAN = (("engine/chain.yaml",), ("engine/bindings.yaml",),
         ("engine/*.py",), ("engine/tools/*.py",), ("engine/*.md",),
@@ -104,6 +106,10 @@ def lands_on(doc: str, loc: str, citing: Path) -> str:
     body = raw.strip()
     if not body:
         return "blank line"
+    if re.fullmatch(r"\|[\s\-:|]+\|", body):
+        return "table separator"
+    if re.fullmatch(r"-{3,}|_{3,}|\*{3,}", body):
+        return "horizontal rule"
     if body.startswith("**Needs**") or body.startswith("**Returns**"):
         return "contract Needs/Returns line"
     if body.startswith("#"):
@@ -120,6 +126,33 @@ def lands_on(doc: str, loc: str, citing: Path) -> str:
     return "body text"
 
 
+CONTRACT = re.compile(r"^## Contract — `([a-z0-9_]+)`")
+
+
+def contract_owner(doc: str, citing: Path, line_no: int | None = None, phrase: str | None = None) -> str | None:
+    """The node whose `## Contract — \u0060X\u0060` block a landing falls inside, or None.
+
+    This is the one deterministic test for the failure that rotted 30 edges: they did not land on a
+    contract block by accident, they landed on **another node's** contract block. Five blocks in one
+    document carry near-identical Needs lines, so nothing about the line's text gave it away."""
+    target = target_of(doc, citing)
+    if target is None:
+        return None
+    lines = text(target).splitlines()
+    if phrase is not None:
+        offset = text(target).find(phrase)
+        if offset < 0:
+            return None
+        line_no = text(target)[:offset].count("\n") + 1
+    if line_no is None or not (1 <= line_no <= len(lines)):
+        return None
+    for l in reversed(lines[:line_no]):
+        if l.startswith("## "):
+            m = CONTRACT.match(l)
+            return m.group(1) if m else None
+    return None
+
+
 def resolve(doc: str, phrase: str, citing: Path) -> tuple[str, int]:
     target = target_of(doc, citing)
     if target is None:
@@ -132,13 +165,21 @@ def main() -> int:
     suspect = "--suspect" in sys.argv          # classify every unmigrated citation by what it lands on
     rotten: list[str] = []
     ambiguous: list[str] = []
-    unmigrated: list[str] = []
+    mismatched: list[str] = []          # rule 2: landed inside another node's contract block
+    dead: list[str] = []                # rule 3: a landing that cannot have been intended
+    warned: list[str] = []              # rule 3: a landing that moves easily but may well be meant
+    unmigrated: list[tuple] = []
     ok = 0
 
+    live = {".py", ".yaml"}             # wiring and code must resolve; a note records what was true then
     for path in files():
         rel = path.relative_to(ROOT)
         mine = own_doc(path)
+        ends: tuple[str, str] = ("", "")
         for i, line in enumerate(text(path).splitlines(), 1):
+            m = EDGE.search(line)
+            if m:
+                ends = (m.group(1), m.group(2))
             hits = [(m.group(1), m.group(2)) for m in ANCHOR.finditer(line)]
             hits += [(mine, m.group(1)) for m in SELF_ANCHOR.finditer(line) if mine]
             for doc, phrase in hits:
@@ -151,31 +192,56 @@ def main() -> int:
                 elif n > 1:
                     ambiguous.append(f"{where} — matches {n}x, the anchor cannot say which")
                 else:
-                    ok += 1
-                    if listing:
-                        print(f"  [ok] {where}")
+                    owner = contract_owner(doc, path, phrase=phrase)
+                    if owner and ends != ("", "") and owner not in ends:
+                        mismatched.append(f"{where} — lands in {owner}'s contract block, "
+                                          f"but this edge runs {ends[0]} → {ends[1]}")
+                    else:
+                        ok += 1
+                        if listing:
+                            print(f"  [ok] {where}")
             for m in LINE_REF.finditer(line):
                 unmigrated.append((f"{rel}:{i}", m.group(1), m.group(2), path))
             for m in SELF_LINE.finditer(line):
                 if mine:
                     unmigrated.append((f"{rel}:{i}", mine, m.group(1), path))
 
+    DEAD = {"blank line", "table separator", "horizontal rule", "table of contents",
+            "past the end of the document", "no such document"}
+    MOVES = {"table row", "heading", "Related list item", "contract Needs/Returns line"}
+    kinds: dict[str, int] = {}
+    for where, doc, loc, citing in unmigrated:
+        kind = lands_on(doc, loc, citing)
+        kinds[kind] = kinds.get(kind, 0) + 1
+        owner = contract_owner(doc, citing, line_no=int(re.split(r"[-–]", loc)[0])
+                               if kind not in ("no such document", "past the end of the document") else None)
+        ends = EDGE.search(text(citing).splitlines()[int(where.rsplit(":", 1)[1]) - 1] if citing.suffix == ".yaml" else "")
+        if owner and ends and owner not in (ends.group(1), ends.group(2)):
+            mismatched.append(f"{where}: {doc}:{loc} — lands in {owner}'s contract block, "
+                              f"but this edge runs {ends.group(1)} → {ends.group(2)}")
+        elif kind in DEAD:
+            row = f"{where}: {doc}:{loc} — lands on a {kind}, which cannot have been the intent"
+            (dead if citing.suffix in live else warned).append(row)
+        elif kind in MOVES:
+            warned.append(f"{where}: {doc}:{loc} — lands on a {kind}, which moves when the document grows")
+
     print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
           f"미이행 줄번호 {len(unmigrated)}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
-    for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous)):
+    for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous),
+                        ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead)):
         for r in rows:
             print(f"  [FAIL] {label} — {r}")
+    for w in warned:
+        print(f"  [WARN] 쉽게 밀리는 착지 — {w}")
     if unmigrated and (listing or suspect):
-        kinds: dict[str, int] = {}
         for where, doc, loc, citing in unmigrated:
-            kind = lands_on(doc, loc, citing)
-            kinds[kind] = kinds.get(kind, 0) + 1
-            if listing or kind != "body text":
-                print(f"  [미이행] {where}: {doc}:{loc} — lands on a {kind}")
+            if listing or lands_on(doc, loc, citing) != "body text":
+                print(f"  [미이행] {where}: {doc}:{loc} — lands on a {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
         print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")
-    if rotten or ambiguous:
-        print(f"[FAIL] 인용 {len(rotten) + len(ambiguous)}건이 해석되지 않는다")
+    bad = len(rotten) + len(ambiguous) + len(mismatched) + len(dead)
+    if bad:
+        print(f"[FAIL] 인용 {bad}건이 해석되지 않는다")
         return 1
     # C33 이 끝나면 여기서 미이행 0 을 요구하도록 조인다.
     print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 미이행 {len(unmigrated)}건은 배치 이행 대기")
