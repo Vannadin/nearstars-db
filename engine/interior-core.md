@@ -2212,6 +2212,12 @@ constants, the melting-curve source, the mantle conventions. **Listed only; star
 
 ### C26 — the superionic-ice representation above ice_x's 1 800 K ceiling — **listed 2026-09-04, not started**
 
+⚠ *(2026-09-04, evening — owner's question, `superionic-ceiling-context-notes.md` §5)* **The 1800 K ceiling is the
+intermediary's box, not the source's bound**: SeaFreeze v1.1.0's `VII_X_French` knot ceiling, read 08-27; French & Redmer 2015's
+own grid runs to 2000 K and its stated validity is the *stability region*. Neptune's open-window column meets the ceiling at
+**923.6 GPa · 1800 K, first contact** — above the ≈520 GPa where the same authors' ices field closes — so C26's object is a
+fluid/superionic water representation at ~500–1000 GPa, not "ice above 1800 K". The ceiling did not move; nothing filled from AQUA.
+
 **Why it opens**: close the near-surface water coverage gap under an envelope (the IF97 window of C24) and
 Neptune's temperature bracket reaches ice_x's 1 800 K ceiling. Today an *earlier* gap sends the search elsewhere
 and that wall is never met — the avoidance is a by-product, not a design (`water-world-convergence-context-notes.md`

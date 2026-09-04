@@ -77,3 +77,63 @@ crystalline predictions exist [69–75] but "the derivation of accurate thermody
 potentials for them is not an easy task" — **the field closes; nothing published here
 replaces it.** No printed boundary equation or table exists in French+ 2016 (§IV gives
 the method only — a legitimate "not found"; the boundary lives as Fig. 4's lines).
+
+## §5 Where the 1800 K ceiling comes from — the owner's question (2026-09-04, evening)
+
+**Pre-registered outcomes** (directing seat, before the reading): Ⓟ 1800 K is the source's *printed* validity bound →
+our ceiling is right, and a Neptune that needs more is "this model cannot solve Neptune", which changes C26's kind;
+Ⓠ 1800 K is a number *we* drew → find why, and an absent reason is itself the finding; Ⓡ the source states no upper
+bound → record as unresolved, and do not fill it with AQUA's 2291 K (a seam of someone else's table, not our fit's
+range). **In no outcome does the ceiling move**; AQUA is not evidence here (its region is M19, the same source as
+`h2o_hot`, and its 2291 K flat line is AQUA's own construction).
+
+**① What the number is.** `ICE_VII_X_T_MAX = 1800.0` (`eos.py`) is the **upper knot of the temperature axis of
+SeaFreeze v1.1.0's `VII_X_French` spline**, read out of the shipped `.mat` on 2026-08-27 (`ice-x-context-notes.md`:
+*"Reading its knot domain out of the shipped spline gives 1.7 GPa to 1000 GPa, 20 K to 1800 K"*; the same reading
+gave `ICE_X_P_MAX` = 1000 GPa). It is stored as a `Phase.t_max` and the refusal fires at `t > t_max` (`eos.py:370`).
+⚠ The reading could not be repeated tonight: no `seafreeze` module is importable from `/usr/bin/python3` or
+`/opt/homebrew/bin/python3`, and no venv was found under `~/Desktop` (SESSION-HANDOFF names the rebuild,
+`pip install SeaFreeze==1.1.0`). The 08-27 record stands as the provenance; it is not re-verified here.
+
+**③ What the source says above 1800 K.** French & Redmer 2015 (`2015PhRvB..91a4308F`, cached PDF; the cache's
+`1411.6017.md` is a different paper — HD 209458b — and was not used):
+- §III (extraction line 211): *"The densities were varied between 1.6 and 4.25 g/cm³, and the temperatures were chosen
+  from 295 up to 2000 K. Additional simulation runs at 2250 K and higher temperatures resulted in either molten or
+  superionic structures."* — the **data ceiling in temperature is 2000 K**, 200 K above our knot.
+- Abstract (line 38): *"The EOS derived in the present work is valid in the entire stability region of ices VII, VII*,
+  and X and is well behaved in extrapolation."* — the validity bound is the **stability region**, not a temperature;
+  the same authors draw that region as a curve in French+ 2016 Fig. 4 (peak ≈2124 K at 193 GPa, through 1800 K at
+  ≈329 GPa, closing at ≈523 GPa — §1 above).
+- No sentence prints 1800 K, and no sentence prints a temperature limit as a number other than the 2000 K of the grid.
+
+**Outcome — none of Ⓟ/Ⓠ/Ⓡ as written; named Ⓢ, "the intermediary's box".** The ceiling is neither the source's printed
+bound (Ⓟ: the source's own grid goes to 2000 K and its stated bound is the stability *region*) nor a number we chose
+(Ⓠ: we read it, we did not draw it); it is the knot box of the packager's spline, **200 K under the source's data
+ceiling and unrelated to the stability boundary** — the same kind of fact as `ICE_X_P_MAX` = 1000 GPa being the knot
+box over a 355 GPa data ceiling (C6), only in the other direction: there the box is too wide, here it is too narrow.
+Ⓡ's instruction is kept: nothing is filled from AQUA. **The ceiling does not move** (a move is a separate decision
+and moves anchors).
+
+Two consistency notes, recorded not repaired: (a) the refusal *message* (`eos.py:2449` ff.) still explains the ceiling
+with Millot+ 2019's *"100 GPa · above 2000 K"* sentence, which the constant's own comment (`eos.py:2308`) had already
+found misattributed (Brief 34) — message and comment disagree; (b) `test_interior.py` (d) guards that the 1800 K
+ceiling and the Reinhardt melting line at 47 GPa, equal as numbers, stay different objects — consistent with Ⓢ.
+
+**② Does Neptune need more than 1800 K, and how much?** Measured on a scratch copy of `engine/` with
+`column_steam_allowed = True` (the window open under envelopes; worktree untouched, nothing committed):
+`test_ice_giant._solve("Neptune")` refuses in 1 s, at first contact —
+
+    막힌 재료: h2o, 압력 923.6118 GPa, 온도 1800 K   (t > 1800 by less than 0.5 K; printed rounded)
+
+so the wall is met at **≈924 GPa**, which is above the *stability* ceiling (≈520 GPa — French+ 2016's ices field is
+closed there at every temperature) and far above the data ceiling (≈355 GPa). Reading: what Neptune's open-window
+column meets at 1800 K is not a superionic-ice question at all — at 924 GPa the source's own authors have no ice of
+any kind — it is the ladder being consulted where only its extrapolation exists (C6's "upper two thirds"). **How much
+above 1800 K the converged column would sit cannot be measured**: the solve stops at first contact and there is no
+representation to continue on (that is C26). The C24 record "refuses at ice_x's 1 800 K ceiling" is now specific:
+924 GPa · 1800 K, first contact.
+
+**What this changes for C26**: its object is a *fluid/superionic water representation at ~500–1000 GPa*, above the
+ices field, not "ice above 1800 K" — French & Redmer 2016's two superionic potentials (named in the refusal message)
+are the candidate; whether `h2o_hot` (M19) should be consulted there instead is a dispatch question the ladder's
+`liquid_material` does not ask today. Listed as the question; not started.
