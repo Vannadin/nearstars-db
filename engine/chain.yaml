@@ -92,7 +92,7 @@ nodes:
     domain: given
     kind: measured
     outputs: [t_body]
-    note: 천체 자신의 나이. 항성 나이와 다르고, 거대행성 냉각광도의 실입력이다.
+    note: "천체 자신의 나이 — 로스터에서는 계의 나이와 같다(행성 형성은 항성 탄생 뒤 ~5 Myr 안, 적분 한 걸음 크기; alpha_centauri_a_b·pandora 5.3 = 계 나이, C20 사전등록 §1). 거대행성 냉각광도의 실입력이다(C19 2026-09-04 실측 — 거대행성 가지가 t_body 를 직접 소비, via t_body). Ma 규모 소비자(공극률·C21)는 여전히 t_form 이 필요하고 이 노드가 그것을 주지 않는다."
   orbit_elements:
     layer: "0층. 계산되지 않는 것"
     domain: given
