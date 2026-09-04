@@ -1487,6 +1487,14 @@ decisions:
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
       2026-07-28: internal_heat 에코를 ~820×→~1200× Io로 정정 — 소유 행 bulk.tidal_heating의
       2026-07-26 재도출이 이 에코에 전파되지 않고 있었다(감사 C3).
+      2026-09-05: 2026-08-21 리사이즈(900→521 km)를 이 행에 반영 — mass 8.0e21→1.552e21,
+      radius 900→521, reference_radius 900→521, gravity 0.659→0.382(GM/R²=0.3816). 갱신 도구는
+      engine/tools/refresh_board_rows.py 이고, 값 이력은 각 필드 note 에 원문 그대로 있다.
+      J₂ 0.039·C₂₂ 0.0118·flattening 0.098·rotation_period 는 움직이지 않는다. 불변량이 R 도 M 도
+      아니라 R³/M(=1/ρ)이기 때문이다. J₂=(2/3)k₂q 의 q=ω²R³/GM 이고 C₂₂∝M_p R³/(M a³)이라 둘 다
+      R³/M 과 ω 만 탄다. 조석고정이라 ω 는 궤도가 주고 궤도는 건드리지 않았다. 두 계수가 0.0037 %
+      움직이는데 그조차 불일치가 아니라 표기 정밀도다. 밀도를 정확히 보존하는 질량은 1.551943e21 kg
+      이고 보드가 1.552e21 로 반올림했다.
     refs: ["docs/reference/body-figure-methodology.md", "docs/reference/tidal-locking-timescale-methodology.md"]
     gate:
       criterion: [physics]
