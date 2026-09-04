@@ -276,6 +276,18 @@ single value forbidden) → compute → ① magnitude read last.
   below 1 kG" for a lighter, dimmer body.** Stated, not explained away: the 1 kG is an order-of-magnitude
   sentence for a different object, and at that precision the direction "lighter → weaker" is not decidable;
   what would decide it is Christensen's own L and R for that object, which the Letter does not tabulate.
+  **Reconstructed after the gate (directing seat's route, independently recomputed here)**: the Letter does
+  not tabulate L and R but it prints ⟨ρ⟩ = 90 000 kg m⁻³ and T_eff = 1 500 K for that 0.05 M☉ example
+  (pdftotext lines 326–331), and those recover both: R = (3M/4πρ)^⅓ = 0.0922 R☉, L = 4πR²σT⁴ = 3.88e-5 L☉.
+  Put through the same RC10 eq. 1: **B_dyn = 1.59 kG** against the Letter's "of the order of 0.1 T" —
+  1.6×, inside "of order", so **the two formulations are one family, checked in our own hands**. And on the
+  same formula Luhman 16 A (1.25) < the example (1.59), ratio 0.78: **the direction "lighter and dimmer →
+  weaker" holds.** The pre-registered expectation was not overturned; its comparison value was 1.59 kG,
+  not 1 kG. Radius is not the confounder: ours 0.0900 R☉ vs the example's 0.0922 R☉ (written in R☉, not
+  R_J — the Jupiter-radius convention, equatorial 7.1492e7 m vs mean 6.9911e7 m, moves the R_J number by
+  2 % and Faherty's "0.9 R_Jup" was not checked for which one it used), i.e. the example is 2.4 % larger,
+  which through R^(−7/6) is −2.8 % in B and cannot carry the 22 % gap between 1.25 and 1.59. Band wording
+  corrected: the pre-registration's "~±13 %" was one-sided; the full width is 26 %.
   Not a result about Luhman 16's field: **the field an energy-flux scaling predicts on a declared radius;
   no brown-dwarf field has been detected** (Christensen+ 2009).
 - **Contract checker generalised** (`check_contracts.py`): a recipe with branches is now checked against the
@@ -295,3 +307,10 @@ single value forbidden) → compute → ① magnitude read last.
   power condition — excluded from the table.** Directing seat's *estimate, not a measurement*: host contention
   (it ran pdftotext on 9 MB PDFs, five repo-wide recursive greps, a 739-file cache loop and ADS round-trips in
   that window). The control is the next gate with the directing seat idle.
+- gate80b on `76677df8` (brown-dwarf branch): `GATE END sha=76677df8 rc=0`, **498 PASS** (+13 rows from
+  `test_dynamo.py`), FAIL 0, 10:52:36 → 11:18:37 = **1561 s**, powermode 2, directing seat idle throughout.
+  ⚠ The control did *not* return to the 1224–1362 s band: 1561 is +15 % over its top with the peer quiet,
+  so the host-contention estimate for gate79 is **partly supported at best** (2546 → 1561 with the peer
+  idle) and the residual +200–300 s is **unexplained** — the added work (13 trivial rows, two brown-dwarf
+  bodies whose interior recipes refuse at once) does not account for it. Kept out of the table, labelled.
+- gate80 on `a87124f8`: killed at launch (via failure masked by `| tail -1` in the launch chain), void.

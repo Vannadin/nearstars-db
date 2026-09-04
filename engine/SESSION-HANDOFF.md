@@ -78,6 +78,12 @@ pid= at=` and `GATE END sha= pid= at= rc=` lines** (`scripts/check.sh`), which n
 **The verdict "the gate finished" rests on the `GATE END` line alone** — with its sha naming the tree it
 ran on — never on any "통과" text in the body, and never on a PID being gone. A gate whose `GATE END` sha
 differs from HEAD ran on an older tree.
+⚠ **Checks chained before a commit must run under `set -o pipefail`** (2026-09-04 daytime): a launch chain
+of the form `python3 check_via.py --gate | tail -1 && git commit …` committed a tree whose via check had
+FAILED, and launched a gate on it — because a pipe returns the exit status of its *last* command, and
+`tail` succeeds. The cause is not `tail`; `head`, `grep`, `sort` mask a failure the same way. Either
+`set -o pipefail` at the top of the chain, or run the check bare and read its status, or let the gate be
+the only judge. The gate on that tree was killed and stamped void; the commit was amended.
 
 **Three owner-obtained PDFs had no PROVENANCE and now do (Brief 64; the files live in the gitignored
 cache, so this line is their record in the repository)**: `2020PhRvL.125s5501Q_SM` (Queyroux SM, 08-31
