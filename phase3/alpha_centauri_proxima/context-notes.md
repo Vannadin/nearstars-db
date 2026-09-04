@@ -591,7 +591,10 @@ the two missing **planet-level** Phase 3 reports. Structural base:
 envelope-dominated, no solid surface).
 
 Deep-read sources (all cached, no live network):
-- Proxima c: `2020SciA_6_7467D.md` (Damasso 2020, the only primary; arXiv-less).
+- Proxima c: `2020SciA....6.7467D.md` (Damasso 2020, the only primary; arXiv-less).
+  *Renamed 2026-09-04 from `2020SciA_6_7467D.md`: the old name mangled the bibcode's dots
+  to underscores, so a bibcode lookup reported the paper absent although the full text
+  (84 KB) was held. The file now carries its true bibcode; nothing else changed.*
   Disputers in cache: NIRPS 2025 `2507.21751`, Artigau 2022 (via NIRPS), ESPRESSO
   baseline-too-short non-tests (`2005.12114`, `2202.05188`).
 - Alpha Cen A b: `2508.03814` (Beichman I) + `2508.03812` (Sanghi & Beichman II).

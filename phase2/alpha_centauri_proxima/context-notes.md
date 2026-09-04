@@ -179,7 +179,9 @@ assumed, T_eq ~39 K. Astrometric true mass ~7 M⊕ (Benedict & McArthur
 - **No arXiv preprint** for Damasso 2020 (Science Advances). The standard
   `fetch_arxiv_texts.py` (ar5iv) cannot retrieve it, so the full text was
   cached manually from open-access PMC6962037 to
-  `docs/phase3/_papers/2020SciA_6_7467D.md`, keeping the recommended values
+  `docs/phase3/_papers/2020SciA....6.7467D.md` (renamed 2026-09-04 from
+  `2020SciA_6_7467D.md`, whose mangled dots made bibcode lookups report it
+  absent), keeping the recommended values
   value-checkable against frozen text.
 - **No rings.** The popular "Proxima c may have rings" line traces to
   Gratton et al. 2020's SPHERE imaging counterpart, which was itself

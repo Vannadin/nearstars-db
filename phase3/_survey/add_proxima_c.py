@@ -21,7 +21,7 @@ ring-fabrication guardrail we do NOT add a rings block; the speculation is left
 out of the structured DB.
 
 Damasso 2020 has no arXiv preprint; its full text is cached manually at
-docs/phase3/_papers/2020SciA_6_7467D.md (open-access via PMC6962037) so the
+docs/phase3/_papers/2020SciA....6.7467D.md (open-access via PMC6962037) so the
 recommended values stay value-checkable against frozen text.
 """
 
