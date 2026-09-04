@@ -118,6 +118,7 @@ Two consistency notes, recorded not repaired: (a) the refusal *message* (`eos.py
 with Millot+ 2019's *"100 GPa · above 2000 K"* sentence, which the constant's own comment (`eos.py:2308`) had already
 found misattributed (Brief 34) — message and comment disagree; (b) `test_interior.py` (d) guards that the 1800 K
 ceiling and the Reinhardt melting line at 47 GPa, equal as numbers, stay different objects — consistent with Ⓢ.
+⚠ (a) repaired 2026-09-04 (owner-approved; the commit titled "fix(eos): the ice_x temperature-ceiling refusal now names the knot box"): the message now names the knot box, drops Millot+ 2019, keeps FR2016 — string only, constants and anchors unchanged.
 
 **② Does Neptune need more than 1800 K, and how much?** Measured on a scratch copy of `engine/` with
 `column_steam_allowed = True` (the window open under envelopes; worktree untouched, nothing committed):
