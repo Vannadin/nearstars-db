@@ -42,14 +42,14 @@ eutectic 3992.7 K → −2.56 σ. **The value stays; its provenance gets repaire
   unobtained Fei+ 2000 anchor (the four checks confirm the fit, not the anchor).
   Coverage: measured 21→254 GPa, self-extrapolated ~350; **10–21 GPa covered by
   neither Mori nor Buono → named refusal, never a silent interpolation**.
-- [x] **D (provenance repair, value unmoved)**: eos.py:1427's "Stevenson+ 1983 관례" →
+- [x] **D (provenance repair, value unmoved)**: eos.py@«# 녹는곡선 자신의 분기점 [Pa]. 위 삼중점 표에서 오고, 상 사다리의 전이압과 다르다.»'s "Stevenson+ 1983 관례" →
   the real pedigree (Stevenson 1981 ideal-mixing, Boehler 1996 p. 29's "crude
   assumptions" quote; Zhang & Rogers 2022's "artificial"/"fine tune") + what now
   stands under it (a 1981 estimate that a 2019 measurement independently lands on at
   Earth's ICB, −0.12 σ) + the negative finding (Boehler convergence unsupported;
   absolute depression grows, fractional flat — a constant factor is a defensible
   shape).
-- [x] **E (Sinmyo check computed, not asserted)**: core_state.py:209's literal
+- [x] **E (Sinmyo check computed, not asserted)**: core_state.py@«core_cmb_temperature: float | None = None,»'s literal
   "19.1 %" recomputed (directing seat gets 19.3 % at 330 GPa) — computed value +
   a gate test so it cannot drift silently.
 - [x] **F (the bound, only if it fires)**: measure whether any roster body can violate

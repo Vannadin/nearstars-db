@@ -31,7 +31,7 @@ promise was the supplier's list being short (below).
 ## 2. Three places the triage moved, said rather than absorbed
 
 - **`star_physical → body_figure via p_rot` is not misrouted (class 5 → 2 rows).** It refs
-  `body-figure-methodology.md:238`, the **α Cen A** row (P_rot 22 d, *measured*); the
+  `body-figure-methodology.md@«| **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | – | solar-anchored scaling (0.0105·q); ±~30 % from P_rot ±3 d, first star rows emitted under the always-emit policy |»`, the **α Cen A** row (P_rot 22 d, *measured*); the
   `spin_axis_inclination` edge refs `:244`, the **Fomalhaut A** row (P_rot *derived* from v sin i and
   i★). Two routes, both real, separated by their refs on purpose. The defect was `star_physical`'s
   output list lacking a measured stellar rotation period — and the DB does carry one

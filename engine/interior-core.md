@@ -872,7 +872,7 @@ The stability ceiling is the new one and it is **not a competing source**: the i
 boundary is French, Desjarlais & Redmer 2016's Fig. 4, whose ices potential is *"taken from
 Ref. [30]"* = French & Redmer 2015 ([`2015PhRvB..91a4308F`](https://ui.adsabs.harvard.edu/abs/2015PhRvB..91a4308F)),
 **the same potential SeaFreeze's `VII_X_French` carries and `eos.py`'s `ice_x` is fitted to**
-(`eos.py:1852-1853`, `2027-2036`). So this is *the authors of our own ice potential computing
+(`eos.py@«#     ρ₀ = 4.10 Mg/m³ · K₀ = 247 ± 4 GPa · K₀′ = 3.97 · 적합 BME4 · K₀″ = −0.016 /GPa»`, `2027-2036`). So this is *the authors of our own ice potential computing
 where their ice stops being the stable phase* — the bcc–ices boundary turns back down and
 leaves the plotted temperature range near 520 GPa, above which their calculation shows no ice
 region at any plotted temperature. They say it closes and do not say what replaces it: *"There
@@ -890,12 +890,12 @@ unmeasured is the trial path**, and that is what separates a labelling defect fr
 convergence defect.
 
 **And a second finding rides with it, which is a label rather than a ceiling.** The gate's
-superionic floor (`test_interior.py:220`, `MILLOT_SUPERIONIC = (100.0e9, 2000.0)`) is **flat**,
+superionic floor (`test_interior.py@«# 거짓을 주장했다. 대체 검사 = test_ice_giant 의 교란-불변 회귀 (eos.py ICE_VII_X_T_MAX 주석).»`, `MILLOT_SUPERIONIC = (100.0e9, 2000.0)`) is **flat**,
 and the boundary is not: it rises to a maximum near 200 GPa and descends through 1800 K
 somewhere in **305–375 GPa** (two independent figure renderings; the maximum agrees to 0.7 % in
 T and 5 % in P, the crossing disagrees by 29 GPa with error bars barely touching, and **was not
 adjudicated** — a figure reading does not settle a figure disagreement). So `ICE_VII_X_T_MAX <
-t_sup` **passes while asserting something false**, and the promise in `eos.py:1929-1934` — that
+t_sup` **passes while asserting something false**, and the promise in `eos.py@«#   500 GPa 위      **이름 대고 거절** — 여섯 논문 어디에도 자료가 있는 전사 가능한»` — that
 superionic ice will not quietly be called ice X — is reachable. Worse, the constants'
 provenance is false in the way subspecies 7 describes: Millot+ 2019's *"exceeding 100 gigapascals
 and high temperatures above 2,000 kelvin"* is that paper restating **the prediction of its own
@@ -1929,15 +1929,15 @@ spatial integration (shooting, already built) and from C14's root-find (no integ
    *"Disk lifetimes are distributed around 5 Myr, which is controlled via the photoevaporation rate"* (their
    ref. `2013A&A...549A..44F`) — planet formation ends within about one step of the star's birth. And the
    roster already does this: `bodies/alpha_centauri_a_b.yaml` and `bodies/pandora.yaml` both carry
-   `age_gyr: 5.3` (the system's age), `earth.yaml` 4.54; only the `chain.yaml:94` note says otherwise.
+   `age_gyr: 5.3` (the system's age), `earth.yaml` 4.54; only the `chain.yaml@«outputs: [t_body]»` note says otherwise.
    ⚠ **The opposite trap, from the same C9 paragraph, rides with this**: *"Feeding `body_age` (Gyr) into
    this node would give it the number it is least sensitive to while the number it is most sensitive to
    stays undefined"* and *"Do not draw a `body_age → porosity` edge … it must carry `t_form` (Ma after CAI),
    not `t_body` (Gyr); a Gyr endpoint is at most an `influences`"*. Unifying the age does **not** make age
    the input for everything; the Ma-scale consumers keep needing `t_form`, which no body declares.
 2. *"방사성 동위원소 관련 열 생성도 같이 넝어야 할 것같아"* — **wiring, not building**: `radiogenic.history_factor`
-   is that input already, and the module says so (`radiogenic.py:22` *"H(t) is four exponentials and is
-   built"*; `radiogenic-budget-context-notes.md:86` *"H(t) is built and NOT wired to the third consumer"*).
+   is that input already, and the module says so (`radiogenic.py@«What this module does not do: thermal evolution. H(t) is four exponentials and is built; turning it»` *"H(t) is four exponentials and is
+   built"*; `radiogenic-budget-context-notes.md@«**H(t) is built and NOT wired to the third consumer.** `→ dynamo_rocky via geotherm` (`:404`) asks whether the core is *still* convecting, which needs thermal evolution — Nimmo+ 2004.»` *"H(t) is built and NOT wired to the third consumer"*).
    Condition 2 names exactly that unwired consumer. **But it is half of radiogenic heating, and the row must
    say which half**, or the next seat reads "radiogenic heat included" as complete:
 
@@ -2085,7 +2085,7 @@ wiring now could be wasted. Why each question bites:
   corner, and *"3000 K is where the paper reports its first-order transition … the table does not mark it and
   the interpolation crosses it"*. Coverage is actually better at low pressure — the table starts at
   **0.309 GPa** while the mantle base is far outside it — and the envelope's ice is one constant
-  (`ENVELOPE_WATER`, `interior.py:310`), so an envelope wiring would be a single change point.
+  (`ENVELOPE_WATER`, `interior.py@«parts.append((ENVELOPE_WATER, z_ice))»`), so an envelope wiring would be a single change point.
 - ⚠ **Do not read "low density = low pressure = envelope."** 3000 K is not an envelope temperature; which
   layer, if any, the survey answers.
 
@@ -2196,7 +2196,7 @@ Start is the owner's decision.
 | O1 | Luhman 16 A/B age: DB 1.5 ± 1.5 Gyr ("unverified" — the midpoint of a 0.1–3 Gyr range put in the value slot) and board 0.5 Gyr (Gagné 2023 moving group). **Not a contradiction but a precision difference**: 0.5 lies inside the DB's range; Burrows supports the narrow one (directing seat's correction of its own first wording) | `db/systems/luhman_16_{a,b}.json` vs `phase4/luhman_16.yaml:80,640` | Burrows+ 2001 eq. 4 with the DB's own g → 0.54 / 0.44 Gyr; eq. 1 closes the DB luminosity within 20–30 % at 0.5 Gyr, 3–4× off at 1.5 | not a worktree edit — `db/systems` is build output; fix in the source layer |
 | O2 | Luhman 16 A and B carry the same radius 62 613 km in the `principia` block, source unrecorded | same files, `principia.mean_radius_km` | eqs 3–4 are sensitive to it through g | not a value judgement — a provenance check |
 | O3 | Three cache names are arXiv abstract pages, not papers: `1004.1091`, `1209.5323`, `1401.8145` (50-byte .md, .html without `ltx_document`) | `docs/phase3/_papers/` | `check_paper_held.py` now says ABSTRACT-ONLY for them | not an engine citation — none of the engine axis cites them |
-| O4 | Two methodology docs label those shells "cached": Crossfield 2014 (`spin-axis-inclination-methodology.md:158`, claims v sin i for both components — not in the abstract) and Heller & Barnes 2013 (`ice-stability-methodology.md:202`, claims the satellite energy budget — the abstract only names four terms). **The values are safe**: the board's spin-axis row (`phase4/luhman_16.yaml:133`) cites only Apai+ 2021, held in full. The defect is the label — *false provenance* — en and ko alike | those two docs + ko mirrors | `check_paper_held.py --scan` | not a number error; do not inflate |
+| O4 | Two methodology docs label those shells "cached": Crossfield 2014 (`spin-axis-inclination-methodology.md@«- **Crossfield et al. 2014**, Nature 505, 654 ([`2014Natur.505..654C`](https://ui.adsabs.harvard.edu/abs/2014Natur.505..654C), arXiv [1401.8145](https://arxiv.org/abs/1401.8145), **cached**).»`, claims v sin i for both components — not in the abstract) and Heller & Barnes 2013 (`ice-stability-methodology.md@«- **Heller & Barnes 2013** ([arXiv:1209.5323](https://arxiv.org/abs/1209.5323), cached).»`, claims the satellite energy budget — the abstract only names four terms). **The values are safe**: the board's spin-axis row (`phase4/luhman_16.yaml:133`) cites only Apai+ 2021, held in full. The defect is the label — *false provenance* — en and ko alike | those two docs + ko mirrors | `check_paper_held.py --scan` | not a number error; do not inflate |
 | O5 | C19's brown-dwarf branch: two routes to L(M, age) — a grounded track (Burrows eq. 1 with declared κ_R, or Baraffe+ 2003) or the DB's measured luminosity (Faherty+ 2014) — written side by side, hanging on O1 | `giant-dynamo-age-context-notes.md` §4 | — | not decided |
 
 ⚠ *(2026-09-04, evening)* **What closed is the diagnosed mechanism** — the coverage gap of near-surface water — **not the
@@ -2264,11 +2264,11 @@ the owner's decision.**
 
 **Ground**: the handoff inventory (`interior-dynamo-handoff-context-notes.md` §3, edge `:684`) found the one gap of kind *no
 value*: `ladder(..., ice_mass_fraction=0.0)` took a separate input with a literal-0 default while `interior.COMPOSITIONS`
-(`interior.py:81–87`, slot 1) already carried the same body's ice fraction under `composition_intent` — two places knowing one
+(`interior.py@«COMPOSITIONS: dict[str, tuple[float, float, float, str]] = {»`, slot 1) already carried the same body's ice fraction under `composition_intent` — two places knowing one
 number, the second silently. **Built**: `dynamo_rocky.ice_fraction_from_state` — a declared `ice_mass_fraction` wins; else the
 preset is *read* from `interior.COMPOSITIONS` (referenced, not copied; earth_like 0.00 · water 0.50); no preset → `cannot-say
 (no composition preset)`, never 0. The source is printed in the result's notes ("ice_mass_fraction 0.50 (composition preset:
-water …, grade class)"). No value authored. `chain.yaml:684` drops `status: gap` (the edge now flows); the old status and its text are kept in the note, dated. Anchors: every roster
+water …, grade class)"). No value authored. `chain.yaml@«- {from: tidal_locking, to: dynamo_rocky, kind: selects, via: locked,»` drops `status: gap` (the edge now flows); the old status and its text are kept in the note, dated. Anchors: every roster
 body is earth_like (0.00), so no emitted value moves — the gate is the check. Tests: `test_dynamo_rocky.py` §5.
 ⚠ *Corrected 2026-09-04 (audit hold on b8d86b68)*: "every roster body is earth_like" was 2 of 5 — only `earth.yaml` and
 `pandora.yaml` declare `composition_intent`; the other three (A b, Luhman 16 A/B) are outside the rocky ladder and must never reach the
@@ -2279,7 +2279,7 @@ all five bodies' results compared node by node as JSON against 5ad8f56c's `dynam
 
 ### C29 — the mantle potential temperature: an Earth-analog declaration now, self-derivation listed — **declared 2026-09-04 (owner); the loop is listed, not started**
 
-**(a) Declaration and measurement.** `earth.yaml:17` declares `potential_temperature: 1600.0` (petrological, the anchor); Pandora
+**(a) Declaration and measurement.** `earth.yaml@«potential_temperature: 1600.0»` declares `potential_temperature: 1600.0` (petrological, the anchor); Pandora
 declared none, so `interior_layers` solved isothermal and `core_state` refused ("온도가 없다"), and the one quantity the dynamo
 asks of the interior (`conductor_phase`) never existed for Pandora. Owner declaration 2026-09-04: `bodies/pandora.yaml`
 `potential_temperature: 1600.0` — **Earth analog, grade analog, not scaled** (dry rocky, composition_intent earth_like; source
@@ -2294,7 +2294,7 @@ comment beside the value). Measured with the read hook on `BodyState.__getitem__
 
 So the declaration gives Pandora a geotherm and a `core_state` verdict *of the lower-bound kind*; the dynamo's key stays
 undecided for a **second missing declaration** — the core-side CMB temperature that Earth declares separately
-(`earth.yaml:24`, 3 760 ± 290 K, Sinmyo+ 2019). Whether to declare it for Pandora by analogy is a separate owner decision,
+(`earth.yaml@«# C20 열진화의 초기온도 — Nimmo+ 2004»`, 3 760 ± 290 K, Sinmyo+ 2019). Whether to declare it for Pandora by analogy is a separate owner decision,
 recorded here, not taken (P_cmb 91 vs Earth's 135 GPa makes the analogy weaker than the potential temperature's).
 
 **Grounding level of the 1600 K itself** (parallel seat, `pandora-1600k-analogy-notes.md`, printed facts): (1) the only source is
@@ -2311,7 +2311,7 @@ owner declares what the board already states: `phase4/alpha_centauri.yaml:2296` 
 continental drift". `bodies/pandora.yaml` gains `dynamo_alive: true` and `stagnant_lid: false` (grade declared, sources beside
 each). `dynamo_rocky.ladder` honours `dynamo_alive` **only while `conductor_phase` is undecided**; a computed liquid or solid
 core is never overridden — the declaration is then ignored and the note says "declaration ignored: core_state decided …".
-Grade stays judgment. Priority rule, read from the code: `BodyState.__getitem__` (`state.py:47–52`) returns a declared
+Grade stays judgment. Priority rule, read from the code: `BodyState.__getitem__` (`state.py@«def __getitem__(self, key: str) -> Any:»`) returns a declared
 *input* before any recipe's value, so a declared key with the same name as a computed output would win — `conductor_phase`
 is therefore **not** declared anywhere (it must stay computed), and the declaration takes its own name, `dynamo_alive`.
 
@@ -2330,11 +2330,11 @@ solid and liquid ignore it, liquid bit-identical).
 temperature from C20's thermal history (`core_thermal_history` already emits `mantle_potential_temperature_present`,
 1 525 K on Earth) and iterate it against `interior_layers` (whose `cmb_pressure` C20 consumes — a cycle). Why not now: it moves
 one declaration onto two unmeasurable ones (`mantle_initial_potential_temperature`, `core_initial_temperature`) plus the
-radiogenic budget, and it is exactly the structure + thermal-evolution coupling `rocky-planet-dynamo-methodology.md:108–109`
-says this project does not re-run per body. `chain.yaml:693`'s note stands: no thermal model turns the heat budget into a
+radiogenic budget, and it is exactly the structure + thermal-evolution coupling `rocky-planet-dynamo-methodology.md@«NearStars does not re-run RM22's full internal-structure + thermal-evolution»`
+says this project does not re-run per body. `chain.yaml@«# 내지 않으므로 requires 로 걸면 아무도 못 지키는 약속이 된다. 실재하는 결합을»`'s note stands: no thermal model turns the heat budget into a
 potential temperature, so consumers still declare it. And the loop is not yet better than the declaration where it can be checked:
 on Earth C20's present T_m is **1 525 K**, −75 K (−4.7 %) against the declared 1 600 K and −88 K against Nimmo's own 1 613 K
-(`core-thermal-history-context-notes.md:264`, a report line, not a gate). Listed by owner decision.
+(`core-thermal-history-context-notes.md@«Report lines, not gates: present T_m **1 525 K** against the declared 1 600 K (**−75 K**); present surface heat flow»`, a report line, not a gate). Listed by owner decision.
 
 ### C30 — tidal heat wired into the interior heat budget — **listed and built 2026-09-04 (owner: "조석 배선 다시 가보자"); `tidal-heating-context-notes.md`**
 
@@ -2402,7 +2402,7 @@ grade — and the owner records the pick on the board with a reason; no silent d
   held. So the 09-01 closure stands (see the C4 paragraph). What P3 actually is, three parts: ① the two
   stale "AIP paywall" phrasings corrected (done, this brief); ② the one-line reason the closure holds written
   into C4 (done); ③ **a C6-class measurement**: `ammonia_table.P_MAX_PA = 333.2 GPa` is the material's domain
-  ceiling (`eos.py:883`) and its isotherm range 500–10 000 K refuses outside (`eos.py:912-917`), and **no gate
+  ceiling (`eos.py@«return ammonia_table.P_MAX_PA»`) and its isotherm range 500–10 000 K refuses outside (`eos.py@«if t < ammonia_table.T_MIN_K or t > ammonia_table.T_MAX_K:»`), and **no gate
   row says whether any roster column ever reaches either** — `test_interior.py` has no ammonia row
   (`test_ammonia.py` checks the transcription, not the reach). Measured by the `ice_x` template (a spy on the
   material, evaluation counts, positive control first). Measurement, not repair: a reach, if any, is reported
@@ -2435,7 +2435,7 @@ grade — and the owner records the pick on the board with a reason; no silent d
 ### C33 — citations resolved against the document instead of a line number — **built 2026-09-05 (owner: "인용 부패 싹다 고쳐"); `engine/check_refs.py`**
 
 A line number is not a citation, it is a bet that the document will not grow, and the bet kept losing
-silently. `internal-heat-luminosity-methodology.md:119` was a contract block's Needs line when 30 chain
+silently. `internal-heat-luminosity-methodology.md@«**Returns** — `core_cmb_temperature_solved` [K] · `core_cmb_temperature_solved_min` [K] · `core_cmb_temperature_solved_max` [K] ·»` was a contract block's Needs line when 30 chain
 edges were drawn against it, then another block's Needs line, then a Returns line — that last shift
 happened inside `25980fdc`, the commit that went to *fix* citations. 24 of the 30 were wrong, 20 of them
 from birth, and no reader could see it: five contract blocks in that one document carry near-identical

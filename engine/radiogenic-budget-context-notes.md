@@ -154,7 +154,7 @@ side; Sclater 1980 and Davies 2010 leave the paper-request list.
 
 **Checked on request — does the methodology state its 35 K as total or ambiguously?** Lines 221 and 335
 compute it explicitly from **0.087 W/m²**, the total, and line 192 says *"roughly half radiogenic, half
-secular"* — stated as total, correctly. **One ambiguous line**: `internal-heat-luminosity-methodology.md:348`
+secular"* — stated as total, correctly. **One ambiguous line**: `internal-heat-luminosity-methodology.md@«prediction is good to a factor of a few, not better.»`
 reads *"radiogenic-dominated at the Earth scale (~0.08 W/m², T_int ~ 35 K)"* — 0.08 W/m² is the total,
 and "radiogenic-dominated" over a 50/50 split is the tooltip's disease in softer form. Flagged, not edited
 (it is a qualitative word in a doc with a ko mirror; the directing seat's call).

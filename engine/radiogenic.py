@@ -13,7 +13,7 @@ heat production per kg of isotope): any handbook prints them, which is why the c
 compiled, caption ending `\\textcolor{red}{check}`, absent from the PDF (0 hits for every number).
 **There is no "Nimmo & Primack 2020 Table 1"; never cite one.** The closure in `test_radiogenic.py`
 is the check that we read them right: 21.15 / 10.63 / 21.55 TW against the draft's own 21.4 / 10.8
-and the appendix's printed "22 TW at the present day" (`main.tex:420–421`).
+and the appendix's printed "22 TW at the present day" (`Nimmo & Primack 2020 unpublished draft main.tex:420–421`).
 
 ⚠ The draft caption says the heating rates refer to the *initial* composition. Read that way the set
 gives 11.59 TW today, 1.9× short of the paper's own appendix; **the concentrations are present-day**
@@ -52,7 +52,7 @@ M_EARTH_KG = 5.972e24
 R_EARTH_M = 6.371e6
 GYR_S = 1e9 * 365.25 * 86400.0
 
-# (half-life Gyr, isotopic mass fraction of the element, W per kg of isotope) — main.tex:494-499
+# (half-life Gyr, isotopic mass fraction of the element, W per kg of isotope) — Nimmo & Primack 2020 unpublished draft main.tex:494-499
 ISOTOPES = {
     "K40":   (1.25,  0.0117e-2, 2.92e-5),
     "Th232": (14.0,  1.0,       2.64e-5),
@@ -61,7 +61,7 @@ ISOTOPES = {
 }
 ELEMENT_OF = {"K40": "K", "Th232": "Th", "U238": "U", "U235": "U"}
 
-# Bulk-silicate concentrations (element mass fractions), the declared family — main.tex:494-499,
+# Bulk-silicate concentrations (element mass fractions), the declared family — Nimmo & Primack 2020 unpublished draft main.tex:494-499,
 # :420. Neither set is elected; the recipe emits the default and the second beside it.
 CONCENTRATION_SETS = {
     "earth_1_chondritic":      {"K": 260e-6, "Th": 85e-9, "U": 22e-9},   # Palme & O'Neill 2014

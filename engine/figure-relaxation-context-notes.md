@@ -11,10 +11,10 @@ onward is filled in after the run. Verifiers per item: (병) parallel seat, (직
 있는 값을 구할 수 있도록 내부구조 솔버 안에서의 배선만 해놓는 거지."* So:
 
 - `scripts/refs/body_figure.py` is **not touched**. Its `C22 = 0.3·J2` (hydrostatic 10/3) stays
-  as the blanket declaration `body-figure-methodology.md:131-137` says it is.
+  as the blanket declaration `body-figure-methodology.md@«because rotation and tide add.»` says it is.
 - What is built: **one labelled verdict the interior solver emits** — *could this body's
   degree-2 figure have relaxed to hydrostatic within its age?* — so the figure solver has a
-  grounded input for the fossil-bulge caveat instead of a blanket assumption. `chain.yaml:315`
+  grounded input for the fossil-bulge caveat instead of a blanket assumption. `chain.yaml@«nmoi_class_table:»`
   wires `fossil_bulge` out of `body_figure` with nothing setting it; this supplies the value
   *upstream* of it.
 - **Not built**: a fossil-bulge predictor. A fossil figure needs a history (earlier spin or

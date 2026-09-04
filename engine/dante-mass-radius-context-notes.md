@@ -2,7 +2,7 @@
 
 Owner request (2026-09-02, via directing seat), **measurement only, zero adoption**.
 The board's Dante mass–radius pair is marked INVENTED on both sides
-(phase4/alpha_centauri.yaml:1469,1472) and was built by *assuming* a constant density
+(phase4/alpha_centauri.yaml@«- { name: mass, value: 1.552e21, unit: kg, op: set,»,1472) and was built by *assuming* a constant density
 of 2,620 kg/m³ across the whole design family. The engine's reason to exist is deriving
 radius from mass, so the open question (memory: "압밀 모형이 INVENTED 질량-반지름 쌍을
 의심") is whether our tool supports that invented pair — and whether the solver's

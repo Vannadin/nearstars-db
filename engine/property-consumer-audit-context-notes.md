@@ -12,7 +12,7 @@ seat, (병) parallel seat, (여기) work seat re-ran the greps and reproduced ev
 **Outcome: the directing seat's branch ② by the letter, ① in effect.** Exactly one property
 (viscosity) has a live consumer that a transcription serves — and that transcription **already
 landed in Brief 39** (`rheology.py`). The other two refuse for two different causes that share
-one root, the missing CMB heat flux (`chain.yaml:417-418`, both `status: gap`). **Nothing is
+one root, the missing CMB heat flux (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»`, both `status: gap`). **Nothing is
 built; the work-order item closes.**
 
 ## 0. The greps, re-run rather than trusted (여기)
@@ -20,23 +20,23 @@ built; the work-order item closes.**
 The directing seat's leads reproduce, with one addition it did not have:
 
 - `q_cmb | cmb_flux | core_flux | \bq_c\b | adiabatic heat flux` over `engine/*.py`,
-  `chain.yaml` → **nothing executable**. The only hits are prose (`mantle_flux.py:23-26` on
-  Nimmo's κ_t, `rheology.py:85,198` "no conductive lid") and one *name*:
-  `tidal_transport.py:269` emits `conductive_flux = HD − F_m`, a residual **derived from Ė**,
+  `chain.yaml` → **nothing executable**. The only hits are prose (`mantle_flux.py@«thermal conductivity at the to»` on
+  Nimmo's κ_t, `rheology.py@«# the 1-bar or ice-surface temperature — the ice-giant anchors declare 76 K and 72 K through»,198` "no conductive lid") and one *name*:
+  `tidal_transport.py@«conductive_flux=dict(value_wm2»` emits `conductive_flux = HD − F_m`, a residual **derived from Ė**,
   not from any conductivity.
 - Thermal conductivities in the engine: exactly two, both constants —
-  `mantle_flux.py:50,60` (`KAPPA_T = 6.0e-7` → `K_T = 3.456 W/(m·K)`) and
-  `tidal_transport.py:49` (`k = 4.0`, Kankanamge & Moore Table 5).
-- Electrical conductivity / magnetic Reynolds: `dynamo_rocky.py:16-17,79` and
-  `rocky-planet-dynamo-methodology.md:60-64,103-104`, every hit saying **quoted, not evaluated**.
+  `mantle_flux.py@«KAPPA_T = 6.0e-7             # m²/s, mantle thermal diffusivity (eq. 34)»,60` (`KAPPA_T = 6.0e-7` → `K_T = 3.456 W/(m·K)`) and
+  `tidal_transport.py@«k=4.0,            # W/(m K), Table 5»` (`k = 4.0`, Kankanamge & Moore Table 5).
+- Electrical conductivity / magnetic Reynolds: `dynamo_rocky.py@«* **`Rm > 40` is QUOTED, NEVER EVALUATED.** The doc lists it at step 2 as a disqualifier beside two class»,79` and
+  `rocky-planet-dynamo-methodology.md@«**quoted, not evaluated here**» and rocky-planet-dynamo-methodology.md@«evaluated** — this document carries no magnetic-Reynolds formula»,103-104`, every hit saying **quoted, not evaluated**.
   No `sigma`, no `μ₀`, no velocity anywhere executable.
 - Viscosity: **two** consumers, not one — `rheology.py:90-101` (Rovira-Navarro eq. 5, Monteux
-  eq. 8, Maxwell time) consumed at `interior.py:3161`, and `mantle_flux.py:86-88`
+  eq. 8, Maxwell time) consumed at `interior.py:3161`, and `mantle_flux.py@«def viscosity(t_m_k: float, zeta: float = ZETA) -> float:»`
   (Nimmo+ 2004 eq. 35, `η₀ exp[−ζ(T−T₀)]`) consumed by `implied_flux`.
 - **Named non-consumers — the words a grep for these properties will hit, and what they are:**
-  `tidal_transport.py:269` `conductive_flux` is `HD − F_m`, a residual from Ė, no k in it;
+  `tidal_transport.py@«conductive_flux=dict(value_wm2»` `conductive_flux` is `HD − F_m`, a residual from Ė, no k in it;
   `fermi.py`'s `ETA_*` is the electron degeneracy parameter η, not a viscosity;
-  `mantle_flux.py:23-26` and `rheology.py:85,198` say "conductivity"/"conductive" in prose only.
+  `mantle_flux.py@«thermal conductivity at the to»` and `rheology.py@«# the 1-bar or ice-surface temperature — the ice-giant anchors declare 76 K and 72 K through»,198` say "conductivity"/"conductive" in prose only.
 
 ## 1. Thermal conductivity — refuse: no consumer; both holders are reproduction constants
 
@@ -45,8 +45,8 @@ a constant:
 
 | site | value | what it is inside | what pins it |
 |---|---|---|---|
-| `mantle_flux.py:60` | `K_T = κ_t ρ_m C_pm = 3.456` | Nimmo+ 2004 eqs 34–36, F_t = k ΔT/δ_t (line 96) | `test_mantle_flux.py` §1: 42 TW ← **1614 K** against the paper's printed 1603 K; the derivation is licensed by Nimmo's own Hofmeister sentence (`mantle_flux.py:25`) |
-| `tidal_transport.py:49` | `k = 4.0` | K&M 2019 eq. 36 rearranged: κ (line 90), F_conv (105), Pe (107), G (108) | the §6 printed-flux closure HD = 2.509 (`tidal-interior-context-notes.md` §4) |
+| `mantle_flux.py@«K_T = KAPPA_T * RHO_M * C_PM   # 3.456 W/(m·K)»` | `K_T = κ_t ρ_m C_pm = 3.456` | Nimmo+ 2004 eqs 34–36, F_t = k ΔT/δ_t (line 96) | `test_mantle_flux.py` §1: 42 TW ← **1614 K** against the paper's printed 1603 K; the derivation is licensed by Nimmo's own Hofmeister sentence (`mantle_flux.py@«Hofmeister's (1999) calculatio»`) |
+| `tidal_transport.py@«k=4.0,            # W/(m K), Table 5»` | `k = 4.0` | K&M 2019 eq. 36 rearranged: κ (line 90), F_conv (105), Pe (107), G (108) | the §6 printed-flux closure HD = 2.509 (`tidal-interior-context-notes.md` §4) |
 
 **What would change if either asked a material instead.** Q_M is linear in k (δ_t carries no k),
 so the closure moves with it — measured (여기): at T_m = 1600 K, k = 3.456 → **39.55 TW**;
@@ -57,7 +57,7 @@ reproduction that makes the consistency verdict trustworthy. Same shape for K&M'
 **So the refusal is the directing seat's reading, confirmed on the numbers.**
 
 **The nearest future consumer, and why it is the worst place to start.** The one node that
-*would* want a physical k is the CMB heat flux (`chain.yaml:417` `cmb_heat_flux`, `:418`
+*would* want a physical k is the CMB heat flux (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»` `cmb_heat_flux`, `:418`
 `geotherm`, both gap) — and Gaidos+ 2010 eq. 14 (now cached, read 여기, extraction line 398)
 shows what it needs: `Q_K ≈ 4π R_c² k α_c g_c T_c / c_p`, the **iron** conductivity, which no
 survey touched and which Gaidos themselves span 28–29 vs ~100 W/(m·K) (lines 972-989). The
@@ -69,7 +69,7 @@ the value exactly there is not a reason to transcribe it now.
 
 ## 2. Electrical conductivity — refuse: the gate is blocked on φ, and σ has no leverage on it
 
-**Who consumes it today.** `Rm > 40` at `dynamo_rocky.py:79` — a *label* in the ladder, quoted
+**Who consumes it today.** `Rm > 40` at `dynamo_rocky.py@«1: (1.0, 1.0),             # d»` — a *label* in the ladder, quoted
 from Gaidos+ 2010 and never evaluated. Brief 52 wrote the formula into the methodology
 (`Rm = V L/λ`, `λ = 1/(μ₀σ)`) as quoted-not-evaluated. Survey ⑱'s transcription (Stixrude+ 2020)
 is **silicate liquid**, the input of a basal-magma-ocean dynamo that is not a node; the core
@@ -90,7 +90,7 @@ but Gaidos's own route never uses V. Their eq. 3–4 (lines 183-200, 여기):
 
 V is eliminated through the dimensionless convective power p; what remains is **φ, the entropy
 available per unit mass and time in the core** — set by the CMB heat flow minus the adiabatic
-conduction Q_K (eq. 14). That is `chain.yaml:417-418` again: **no node emits a core-side heat
+conduction Q_K (eq. 14). That is `chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»` again: **no node emits a core-side heat
 flux**, `internal_heat_nontidal` stops at the mantle top (`implied_surface_heat_flow`) and has no
 thermal evolution. The directing seat's "`Rem ~ 16(B_c/1 µT)` needs the field we predict" is
 Gaidos's *terrestrial shortcut* (line 207), not the general form; the general form is not
@@ -101,7 +101,7 @@ gate stays a quotation until a CMB-heat-flux node exists.
 Earth-size core L ~ 3×10⁶ m, V as small as 10⁻⁴ m/s gives Rm > 40 (lines 101-103; 여기:
 10⁻⁴·3×10⁶/2 = 150); their terrestrial estimate is Rem ~ 10⁴. A factor-2 uncertainty in σ moves
 Rm by a factor 2 against a threshold it clears by 2–3 decades. This is the Zhang & Rogers §2.8
-point already recorded at `dynamo_rocky.py:19`: the gate is generically met while the liquid core
+point already recorded at `dynamo_rocky.py@«Zhang & Rogers 2022 §2.8 argue the threshold is generically met while the liquid core convects — which»`: the gate is generically met while the liquid core
 convects, and *whether it convects* is the φ question. **A transcribed σ would therefore be the
 least informative input to a gate that cannot be evaluated anyway.**
 
@@ -132,7 +132,7 @@ creep) have **no source in the cache** and end as not found, not as a build.
 
 **Two live consumers that both already have what they need is a stronger closed state than
 one** — the refusal to build a third viscosity law is safe on both sides, not just on the figure
-verdict's. **The second consumer is a reproduction constant, same verdict as §1.** `mantle_flux.py:86`
+verdict's. **The second consumer is a reproduction constant, same verdict as §1.** `mantle_flux.py@«def viscosity(t_m_k: float, zeta: float = ZETA) -> float:»`
 is Nimmo's Frank-Kamenetskii form with ζ = 0.01 (declared, ±0.5×10⁻² kept). Substituting
 `rheology.py`'s Arrhenius law there would move the 1614 K closure for the reason §1 gives.
 Recorded here from Brief 55, reproduced (여기): ζ = E/(RT²) over E = 250–350 kJ/mol,
@@ -142,7 +142,7 @@ floor, re-entering it only at **T ≈ 1734 K**. Internally consistent, but ζ = 
 low edge of its band, not the midpoint. It matters only if ζ is ever varied; it needs no paper.
 
 **What "wired" in the handoff's row 3 turned out to mean — a missing call, not missing physics,
-and an unstated denominator.** `radiogenic.py:153` *does* pass its budget into
+and an unstated denominator.** `radiogenic.py@«# Brief 46 — the declared potential temperature, checked against this budget (Nimmo+ 2004 eqs 34–36).»` *does* pass its budget into
 `mantle_flux.consistency` (forward direction wired; `test_mantle_flux.py` §4 exercises it through
 `rg.solve`). What nobody calls in production is `invert_for_flow` — the inverse, budget → T_m —
 which is what Brief 57 composes. Found on the way: the forward direction compares Q_M against
@@ -161,7 +161,7 @@ changed here; named for the owner.**
   transcriptions stay where they are (survey notes §1/§3 each) and are ready if a consumer
   appears.
 - **The one thing that would re-open three rows at once** (directing seat drew the third): a CMB
-  heat flux node (`chain.yaml:417-418`). It is the consumer for iron k (eq. 14), for φ (eq. 3–4)
+  heat flux node (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»`). It is the consumer for iron k (eq. 14), for φ (eq. 3–4)
   and hence for σ — **and φ ~ 100 MW/K is the same quantity as the parked owner decision on
   replacing the dynamo ladder with Nimmo+ 2004's entropy-production criterion**, whose threshold is
   uncertain over four orders (0.1–1000 MW/K). It is also the thermal-evolution model Nimmo & Primack

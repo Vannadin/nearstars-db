@@ -13,7 +13,7 @@ counted only when the hook fires, not when a grep finds the name). Probe and raw
 Ⓟ all four `status: gap` edges are stale — every quantity is supplied and consumed · Ⓠ some are real gaps, each of
 one of three kinds: **no value** / **value exists, consumer does not read it** / **value exists, no verdict can be
 drawn from it** · Ⓡ supply exists but every grade is judgment or below, so the consumer cannot use it · Ⓢ (added
-before the run, after the parallel seat read the methodology's printed **Needs**, `rocky-planet-dynamo-methodology.md:24–25`):
+before the run, after the parallel seat read the methodology's printed **Needs**, `rocky-planet-dynamo-methodology.md@«**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·»`):
 the interior domain owes the dynamo exactly one quantity, `conductor_phase`, and already supplies it; every other
 interior output the chain draws into `dynamo_rocky` (C14 · C15 · C17 · C20) has **no consumer by the methodology's
 design** (`:108–109` — RM22's structure/thermal solver is not re-run per body).

@@ -84,3 +84,17 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
   when it was written. But that directory also holds living documents — `interior-core.md`,
   `SESSION-HANDOFF.md`, `backflow-checklist.md` — which should be held to the wiring's standard. The
   split is by the header declaration `is_preserved()` already reads.
+
+## A rule for citations that ship (2026-09-05, C33)
+
+**A string that reaches a user carries no line number.** `HEAT_PIPE_FLOOR` in `radiogenic.py` is
+emitted as `mantle_temperature_floor_total_verdict`, so its citation is read by whoever reads the
+verdict. A line number there is guaranteed to rot on the next refactor, and it rotted twice in one
+day: the audit found it three sections away from what it described, and the repair that added the
+function name still had the line three lines off. It now names the function alone,
+`radiogenic.py@«def _total_heat(»`, which a reader can find and which the checker resolves — an
+anchor whose only failure mode is the function being renamed, and a rename should invalidate it.
+
+The same holds for any note or reason that leaves the engine. Inside the engine, an anchor with a
+phrase is fine anywhere; what must not travel outward is a number that means nothing to the reader
+and everything to the next edit.

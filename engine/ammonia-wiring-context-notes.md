@@ -140,7 +140,7 @@ for T outside 500–10 000 K, but `Ammonia.density` re-raises the table's error 
     p < p_lo(T)  → colder brings it inside          → too_cold = False
 
 The dead case (152 GPa · 545 K, ceiling 22.1–64.6 GPa there) is the ceiling side, so it went out as
-`False`, and `interior.py:1401` (`t_now * 1.6 if gap.too_cold else t_now / 1.6`) pushed the trial **colder** —
+`False`, and `interior.py@«뚫는데, 그건 이 천체가 안 풀린다는 뜻이 아니라 **시험값이 낮았다** 는 뜻이다.»` (`t_now * 1.6 if gap.too_cold else t_now / 1.6`) pushed the trial **colder** —
 steering exactly reversed. ⚠ A blanket `too_cold=True` would reverse the floor side instead.
 
 **Design.** Decide the direction in `eos.Ammonia.density` (the consumer), using the public

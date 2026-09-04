@@ -316,7 +316,7 @@ calculation: §2's dimensionless 1, or Table 5's 1400 K?**
 
 ## 8. `A_RH` is a point where the literature has a spread — recorded as a width (Brief 59)
 
-`tidal_transport.py:31` carries `A_RH = 2.4` (Kankanamge & Moore 2019 Table 1, a_rh, citing Solomatov
+`tidal_transport.py@«A_RH = 2.4    # Kankanamge & Moore 2019 Table 1, a_rh (Solomatov 1995; Solomatov & Moresi 2000)»` carries `A_RH = 2.4` (Kankanamge & Moore 2019 Table 1, a_rh, citing Solomatov
 1995 and Solomatov & Moresi 2000). Foley & Smye 2018 (`2018AsBio..18..873F`, cached, 여기 re-grepped:
 *"We use c1 = 0.5 and arh = 2.5"*, Table 1 row `arh 2.5`) prints **2.5**, same Solomatov lineage, arrived
 at independently. **Named width 2.4–2.5** — not a defect, not a correction: it sits inside a `Ra^(1/3)`

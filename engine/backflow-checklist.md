@@ -12,7 +12,7 @@ far lived in that unmapped layer. This layer maps it.
   file.
 - `geopotential_j2 = 0.023` is not a conclusion. It is passed to the stability sim as
   `--j2 0.023` (`phase3/stability-sim/validation-manifest.yaml:58`), and
-  `STABILITY_REPORT.md:284` records that the oblateness *reverses* the moon-orbit choice.
+  `STABILITY_REPORT.md@«### A b moons with J₂ — the oblateness reverses the moon-orbit choice»` records that the oblateness *reverses* the moon-orbit choice.
   Changing NMoI re-opens a 21 h run and the decision that came out of it.
 - 40 Eri A c shipped at 0.38 R⊕. A future `mass_radius_relation` function must reproduce
   it; the standard Zeng curve gives ~0.41 at that mass. The conflict exists today and is
@@ -70,7 +70,7 @@ far lived in that unmapped layer. This layer maps it.
   Three names for one value, updated by hand, is how the Proxima update missed two of
   its dependants.
 - **An undeclared derived-value cycle**, `pause_smooth ↔ pause_radius_smoothed`. Reading
-  the doc showed it is a genuine fixed point (`…geometry-methodology.md:874`), so the
+  the doc showed it is a genuine fixed point (`planetary-magnetosphere-geometry-methodology.md@«`pause_smooth` = 0.5 × `pause_radius` is solved as a fixed point»`), so the
   check now follows `chain.py`'s rule: cycles are allowed, *undeclared* cycles are not,
   and a declaration needs a citation. The doc names the partner inconsistently
   (`pause_radius` vs `pause_radius_smoothed`); recorded, to settle when the recipe is written.

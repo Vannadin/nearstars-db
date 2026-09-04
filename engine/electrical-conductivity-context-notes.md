@@ -149,7 +149,7 @@ year.
 
 ## 6. What this means for `dynamo_rocky`
 
-`chain.yaml:181` declares `dynamo_rocky` (recipe `rocky-planet-dynamo-methodology`, 11 edges:
+`chain.yaml@«2026-08-27 에 온도가 들어왔다. core_temperature 와 cmb_temperature 는»` declares `dynamo_rocky` (recipe `rocky-planet-dynamo-methodology`, 11 edges:
 9 wired, 2 recorded gaps, 5 of them `requires`) and **no module registers it**. An electrical
 conductivity of the *silicate liquid* is an input a basal-magma-ocean dynamo would need; the
 core dynamo needs the *iron* conductivity, which neither paper here prints. So this survey

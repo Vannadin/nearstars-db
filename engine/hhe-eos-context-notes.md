@@ -191,7 +191,7 @@ materials **meet exactly**: `h2o` runs 20–1800 K, `h2o_hot` runs 1800 K up, an
 work made that deliberate — a gate still checks it ("온도 축에 틈이 없다"). 1797 K is
 inside the condensed ladder's declared domain.
 
-The real cause is one line, `interior.py:960`:
+The real cause is one line, `interior.py@«# 경계에 섰다. 다음 걸음은 새 재료로 시작한다 — material_for 의 문턱에 맡기지»`:
 
     ice_material = "h2o_hot" if body_class in ICE_GIANT_CLASSES else "h2o"
 

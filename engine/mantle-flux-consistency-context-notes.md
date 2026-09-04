@@ -186,7 +186,7 @@ point. **This brief stops at the band; no regime classification** (boundaries ar
 their own brief). **Nothing in `mantle_flux.py`'s constants moves and ζ is not tuned.**
 
 **What is built.** `invert_for_flow` is already the inverse of eqs 34–36 and is called by nothing in
-production (the forward `consistency` is wired at `radiogenic.py:153`). The composition: for the
+production (the forward `consistency` is wired at `radiogenic.py@«# Brief 46 — the declared potential temperature, checked against this budget (Nimmo+ 2004 eqs 34–36).»`). The composition: for the
 radiogenic budget alone, the mantle temperature at which the top boundary layer sheds exactly that
 power — a **floor** on T_m (secular cooling adds to the flow, never subtracts). Emitted from
 `internal_heat_nontidal` as a family, not a point (C11): the union's endpoints plus each named width.

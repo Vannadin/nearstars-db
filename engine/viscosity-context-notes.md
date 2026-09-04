@@ -129,7 +129,7 @@ against the printed 0.005–0.016, the range independently attributed to Solomat
 **Caveat that rides with it**: the adopted ζ = 0.01 back-converts to E ≈ 213 kJ/mol at 1600 K, below
 the quoted 250 floor, re-entering at T ≈ 1734 K — internally consistent, but near the low edge of the
 range that motivated it, not its midpoint. (The top-layer twin, eq. 35 with η₀ and T₀, is what
-`mantle_flux.py:86` carries.)
+`mantle_flux.py@«def viscosity(t_m_k: float, zeta: float = ZETA) -> float:»` carries.)
 
 ## 7. A search-method trap worth its own line
 

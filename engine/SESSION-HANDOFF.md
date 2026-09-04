@@ -659,7 +659,7 @@ first, new axes last:**
    consumers. The short-lived (²⁶Al) half **closes as a named refusal** on our missing formation
    chronology. The `radiogenic_heat_w_m2` tooltip's 2× mislabel is fixed (Brief 40).
 2. **The rocky dynamo — scoped 2026-09-03, and it is SMALL and needs NO paper.** `dynamo_rocky`
-   is declared at `chain.yaml:181` with 11 edges and no module registering its recipe. The
+   is declared at `chain.yaml@«2026-08-27 에 온도가 들어왔다. core_temperature 와 cmb_temperature 는»` with 11 edges and no module registering its recipe. The
    methodology's two sections do **not** conflict: the first *derives*, the second *executes*,
    and the document says so — *"the whole recipe reduces to estimating the normalized moment
    ℳ/ℳ⊕ from the regime ladder"*. **The ladder is the recipe.**
@@ -902,7 +902,7 @@ places were quiet because nothing was checking them.
    survey ㉑'s two laws). Thermal conductivity refuses: its two holders are reproduction
    constants (k = 3.456 → 4.0 moves Nimmo's 42 TW closure 1614 → 1580 K). Electrical
    conductivity refuses: Gaidos's Rm route eliminates V and is blocked on φ, the core entropy
-   production = the CMB heat flux nobody emits (`chain.yaml:417-418`); σ moves Rm by its own
+   production = the CMB heat flux nobody emits (`chain.yaml@«heat_transport_mode 안에 들어 있었는데, 그건 안에서 나오는 열이고»`); σ moves Rm by its own
    factor against a gate cleared by decades. The transcriptions stay in their survey notes.
    Full measurement: `engine/property-consumer-audit-context-notes.md`.
 
@@ -1001,7 +1001,7 @@ places were quiet because nothing was checking them.
     single anchor — unobtained, load-bearing, **and contradicted at that pressure by the cached
     Pommier+ 2018**, `core-melt-depression-context-notes.md` §8; not re-added to the closed request
     list) and **Sata+ 2010** (load-bearing under Hakim's density table).
-    `core-melt-depression-context-notes.md:126-127` lists four more as blocked: Fischer+ 2014,
+    `core-melt-depression-context-notes.md@«still blocked: **Sata+ 2010** (load-bearing under Hakim's table), Fischer+ 2014,»` lists four more as blocked: Fischer+ 2014,
     Komabayashi 2014, Noack+ 2020, Chen+ 2008.
 
 - **Author contact — a row this section never had, and the owner has now closed it.** Two asks
@@ -1022,7 +1022,7 @@ usage limit stopped the audit seat and the work seat for about an hour each toda
 seat hit its limit) — first audit tomorrow, baseline `results_53856339.json`.
 
 **The day's question:** can the interior domain supply what the magnetic side asks for? Answer Ⓢ
-(`interior-dynamo-handoff-context-notes.md`): the methodology's printed Needs (`rocky-planet-dynamo-methodology.md:24–25`)
+(`interior-dynamo-handoff-context-notes.md`): the methodology's printed Needs (`rocky-planet-dynamo-methodology.md@«**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·»`)
 owe the interior exactly one quantity, `conductor_phase`, and it is supplied; the five interior → dynamo edges the chain draws
 beyond that have no printed Need and no code consumer. Pandora's `conductor_phase` needed a declared potential temperature
 (C29) and then still came out undecided (no core-side CMB temperature), so the owner declared the dynamo on (C29 c): engine
@@ -1141,7 +1141,7 @@ self-tested by `engine/test_check_refs.py`, wired into `check.sh`. Guillemets be
 quotes and apostrophes and must survive YAML, Python and Markdown unescaped. In a recipe module that
 declares `RECIPE = "<slug>"`, the bare word `doc` means its own document and **only** its own.
 
-**Why line numbers were abandoned.** `internal-heat-luminosity-methodology.md:119` was a contract
+**Why line numbers were abandoned.** `internal-heat-luminosity-methodology.md@«**Returns** — `core_cmb_temperature_solved` [K] · `core_cmb_temperature_solved_min` [K] · `core_cmb_temperature_solved_max` [K] ·»` was a contract
 block's Needs line when 30 edges were drawn against it, then a different block's Needs line, then a
 Returns line — and that last move happened **inside the commit that went to fix citations**
 (`25980fdc`). 24 of the 30 were wrong, 20 from birth, and no reader could see it: five contract blocks

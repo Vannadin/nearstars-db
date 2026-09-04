@@ -290,6 +290,8 @@ def main() -> int:
     external = 0                        # citations into a paper's own source, outside this repo
     unaimed: list[str] = []             # ⑤ whole-document refs: legitimate, but aimed at nothing inside
     preserved = 0                       # citations inside verbatim notes: the record, not a migration target
+    quoted_n = 0                        # citations inside quoted material: the quote's, not the note's
+    quoted: dict[tuple, bool] = {}
     unknown: list[str] = []             # pointers into a file that match no known citation form
     shared: dict[tuple[str, str], list[tuple[str, list[str]]]] = {}   # anchor → the edges that share it
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
@@ -379,7 +381,12 @@ def main() -> int:
                 if m.start() not in classified:
                     unknown.append(f"{where0}: {line[m.start():m.start() + 60].strip()} — a citation form "
                                    f"this checker does not know; it was counted in no bucket")
+            near = "\n".join(raw_lines[max(0, i - 3):i]) if where0.endswith(str(i)) else ""
+            in_quote = bool(re.search(r'\*"|^\s*>|note \(\d{4}-\d{2}-\d{2}\):', line)
+                            or re.search(r'note \(\d{4}-\d{2}-\d{2}\):|\*"', near))
             for m in LINE_REF.finditer(line):
+                if in_quote:
+                    quoted[(where0, m.group(1), m.group(2))] = True
                 queue = by_value.get(f"{m.group(1)}:{m.group(2)}")
                 unmigrated.append((where0, m.group(1), m.group(2), path,
                                    queue.pop(0)[0] if queue else ends))
@@ -402,6 +409,12 @@ def main() -> int:
         if is_preserved(citing):
             preserved += 1
             continue
+        if quoted.get((where, doc, loc)):
+            # This repo quotes past state verbatim on purpose — context-notes-log, provenance blocks,
+            # a note reproducing the edge text of the day. Rewriting a citation inside a quotation
+            # would edit the quotation, so it is reported and left.
+            quoted_n += 1
+            continue
         kind = lands_on(doc, loc, citing)
         kinds[kind] = kinds.get(kind, 0) + 1
         owner = contract_owner(doc, citing, line_no=int(re.split(r"[-–]", loc)[0])
@@ -419,7 +432,8 @@ def main() -> int:
 
     print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
           f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 보존 노트 인용 {preserved}건 · "
-          f"미이행 줄번호 {len(unmigrated) - external - preserved}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
+          f"인용문 안 인용 {quoted_n}건 · 미이행 줄번호 {len(unmigrated) - external - preserved - quoted_n}건 · "
+          f"문서 {len(list(DOCS.glob('*.md')))}종")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous),
                         ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead),
                         ("알 수 없는 인용 형식", unknown)):
@@ -447,7 +461,8 @@ def main() -> int:
     if unmigrated and (listing or suspect):
         for where, doc, loc, citing, _ends in unmigrated:
             if listing or lands_on(doc, loc, citing) != "body text":
-                print(f"  [미이행] {where}: {doc}:{loc} — lands on {lands_on(doc, loc, citing)}")
+                tag = "보존" if is_preserved(citing) else ("인용문" if quoted.get((where, doc, loc)) else "미이행")
+                print(f"  [{tag}] {where}: {doc}:{loc} — lands on {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
         print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")
     bad = len(rotten) + len(ambiguous) + len(mismatched) + len(dead) + len(unknown)
@@ -456,8 +471,8 @@ def main() -> int:
         return 1
     # C33 이 끝나면 여기서 미이행 0 을 요구하도록 조인다.
     print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 문서 전체 인용 {whole}건 · "
-          f"보존 노트 인용 {preserved}건은 기록이라 이행 대상이 아니다 · "
-          f"미이행 {len(unmigrated) - external - preserved}건은 배치 이행 대기")
+          f"보존 노트 인용 {preserved}건 · 인용문 안 인용 {quoted_n}건은 기록이라 이행 대상이 아니다 · "
+          f"미이행 {len(unmigrated) - external - preserved - quoted_n}건은 배치 이행 대기")
     return 0
 
 

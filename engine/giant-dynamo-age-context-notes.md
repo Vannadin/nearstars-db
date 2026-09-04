@@ -5,16 +5,20 @@
 
 ## 1. What the edge says, and what the code says
 
-`chain.yaml:644`: `body_age → dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref:
+`chain.yaml@«T_eq 로 끝난다 — 그래서 값을 바꾸는 게 아니라 레시피를 쓸지 말지를 고른다.»`: `body_age → dynamo_giant, kind: requires, via: cooling_luminosity, status: gap, ref:
 planetary-dynamo-scaling.md:34`, note (2026-09-03): *"the graph was more optimistic than the module —
 `dynamo.py` writes that it refuses to supply L(M, age) from an unverified cooling track and the brown-dwarf
 branch returns out_of_domain. The code is right and this mark was missing."*
+
+⚠ The edge quoted above is the 2026-09-03 one. C19 replaced it on 2026-09-04 (the brown-dwarf branch
+now has a supplier), and C33 replaced its line-number ref with a phrase anchor on 2026-09-05. The
+quotation is left as it was: it records what the edge said when this was measured.
 
 Read before measuring — `dynamo.py` has **two** age-bearing branches, and the `via` names only one of them:
 - **giant, 0.3–13 M_J, age ≥ 0.2 Gyr** (`dynamo.py:122–135`): B_pol = 9 G · (age/4.5 Gyr)^−0.33 ·
   (M/M_J)^0.93 — an interpolation of Reiners & Christensen 2010's cooling-track results in (mass, age).
   **The luminosity never appears as a quantity**; the branch consumes `age_gyr` directly and the −0.33
-  exponent *is* the cooling track, folded in. The method doc (`planetary-dynamo-scaling.md:78–88`) says so:
+  exponent *is* the cooling track, folded in. The method doc (`planetary-dynamo-scaling.md@«Rather than re-derive internal cooling luminosities L(M, age) from scratch (which»`) says so:
   *"rather than re-derive internal cooling luminosities L(M, age) from scratch … tabulate, and interpolate
   in (mass, age)."*
 - **brown dwarf, 13–70 M_J** (`dynamo.py:94–102`): out_of_domain, *"needs the internal cooling luminosity
@@ -250,7 +254,7 @@ state it in the commit. Gate **FAIL 0**, and say what it adds to gate time.
 read the consumer (③) → domain + saturation guards (⑤ ④) → the band (②) → compute → ① check.
 **① is read last.** It is the number everyone wants and the one most easily produced by a unit slip.
 
-**Resolved before code, by reading (③)**: `chain.yaml:718` is the only edge out of `dynamo_giant` — `magnetosphere_geometry` requires `b_eq` [µT]. So ③a: emit `b_eq = B_dyn/(2√2)` (RC10 eq. 2) with **no depth attenuation**, `b_pol = 2 b_eq`, and reuse the moment normalisation (a dipole moment is B_eq·R³ by definition; 4.5 G · 20000 only sets the ×Earth scale). **And a lowered expectation, stated up front**: `magnetosphere_geometry` has no recipe, so the giant branch's `b_eq` already has no consumer — building this branch removes one refusal inside the module and closes the `cooling_luminosity` gap edge; it does **not** wire the dynamo downstream and creates no new orphan output. Beside it: `tidal_locking → dynamo_giant` (`:648`, selects) — the tidal-locking recipe candidate has two consumers, not one. Recorded, not acted on.
+**Resolved before code, by reading (③)**: `chain.yaml@«- {from: interior_layers, to: core_thermal_history, kind: requires, via: core_ra»` is the only edge out of `dynamo_giant` — `magnetosphere_geometry` requires `b_eq` [µT]. So ③a: emit `b_eq = B_dyn/(2√2)` (RC10 eq. 2) with **no depth attenuation**, `b_pol = 2 b_eq`, and reuse the moment normalisation (a dipole moment is B_eq·R³ by definition; 4.5 G · 20000 only sets the ×Earth scale). **And a lowered expectation, stated up front**: `magnetosphere_geometry` has no recipe, so the giant branch's `b_eq` already has no consumer — building this branch removes one refusal inside the module and closes the `cooling_luminosity` gap edge; it does **not** wire the dynamo downstream and creates no new orphan output. Beside it: `tidal_locking → dynamo_giant` (`:648`, selects) — the tidal-locking recipe candidate has two consumers, not one. Recorded, not acted on.
 
 
 ## 6. Run record — brown-dwarf branch built (2026-09-04, daytime)

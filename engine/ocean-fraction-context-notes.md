@@ -7,8 +7,8 @@ so the edge may already be carried by structure. Recorded as a hypothesis; **no 
 
 ## 1. What the edge says, and what its supplier is
 
-`chain.yaml:670`: `ocean_fraction → dynamo_rocky, kind: influences, sign: negative, status: gap, ref:
-rocky-planet-dynamo-methodology.md:109`. The supplier `ocean_fraction` is a **layer-0 owner declaration** with
+`chain.yaml@«- {from: mass_or_radius, to: dynamo_rock»`: `ocean_fraction → dynamo_rocky, kind: influences, sign: negative, status: gap, ref:
+rocky-planet-dynamo-methodology.md@«NearStars does not re-run RM22's full internal-structure + thermal-evolution solver per body.»`. The supplier `ocean_fraction` is a **layer-0 owner declaration** with
 one output, `f_ocean`, itself `status: gap` — no body declares it, nothing computes it. The methodology's
 sentence behind the edge (step 4 of the regime list): *"Water-rich rocky (ocean worlds): for the same mass and
 core size, the CMB heat flux Q_c is lower (cooler, lower-pressure CMB) → weaker moment. Ganymede analog

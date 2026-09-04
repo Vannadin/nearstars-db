@@ -35,7 +35,7 @@ hit (two mentions) that a sweep skims past, recorded so the next sweep does not 
 
 `scripts/phase3/field_tooltips.py` said *"지구 ≈ 0.087"* / *"Earth ≈ 0.087"* W/m² for a field
 named for **radiogenic** heat. **0.087 W/m² is Earth's total surface heat flux.** Our own
-methodology is careful and correct — `internal-heat-luminosity-methodology.md:306`: *"~0.087
+methodology is careful and correct — `internal-heat-luminosity-methodology.md@«**~0.087 W/m²**. How much of it is radiogenic»`: *"~0.087
 W/m², split roughly half radiogenic (U/Th/⁴⁰K decay) and half secular"*, and line 192 with its
 sources (Sclater, Jaupart & Galson 1980; Davies 2013) (직, 여기 both read). The tooltip attached
 the **total** to a field named for the **part** — a 2× mislabel, user-visible, same shape as the
@@ -82,7 +82,7 @@ the two half-lives above and initial ²⁶Al/²⁷Al, ⁶⁰Fe/⁵⁶Fe ratios f
 - **One computation read at two depths, not two.** `interior_layers` wants the
   potential-temperature anchor; `core_state` wants the CMB flux across one boundary; a single
   H(r) gives both. **Present-day suffices for those two.** A third consumer, `internal_heat_nontidal
-  → dynamo_rocky` via `geotherm` (`chain.yaml:395`), wants the **decay history**, because
+  → dynamo_rocky` via `geotherm` (`chain.yaml@«tidal_heating:»`), wants the **decay history**, because
   `Rm > 40` asks whether the core is *still* convecting. **Build present-day first; history is
   the second increment.**
 - **Naming hazard, recorded not fixed.** `chain.yaml:99–102` already flags that

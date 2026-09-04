@@ -97,7 +97,7 @@ scratch, not the repository.*
 **① What the number is.** `ICE_VII_X_T_MAX = 1800.0` (`eos.py`) is the **upper knot of the temperature axis of
 SeaFreeze v1.1.0's `VII_X_French` spline**, read out of the shipped `.mat` on 2026-08-27 (`ice-x-context-notes.md`:
 *"Reading its knot domain out of the shipped spline gives 1.7 GPa to 1000 GPa, 20 K to 1800 K"*; the same reading
-gave `ICE_X_P_MAX` = 1000 GPa). It is stored as a `Phase.t_max` and the refusal fires at `t > t_max` (`eos.py:370`).
+gave `ICE_X_P_MAX` = 1000 GPa). It is stored as a `Phase.t_max` and the refusal fires at `t > t_max` (`eos.py@«if ph.t_max and t > ph.t_max:»`).
 ⚠ The reading could not be repeated tonight: no `seafreeze` module is importable from `/usr/bin/python3` or
 `/opt/homebrew/bin/python3`, and no venv was found under `~/Desktop` (SESSION-HANDOFF names the rebuild,
 `pip install SeaFreeze==1.1.0`). The 08-27 record stands as the provenance; it is not re-verified here.
@@ -122,7 +122,7 @@ box over a 355 GPa data ceiling (C6), only in the other direction: there the box
 and moves anchors).
 
 Two consistency notes, recorded not repaired: (a) the refusal *message* (`eos.py:2449` ff.) still explains the ceiling
-with Millot+ 2019's *"100 GPa · above 2000 K"* sentence, which the constant's own comment (`eos.py:2308`) had already
+with Millot+ 2019's *"100 GPa · above 2000 K"* sentence, which the constant's own comment (`eos.py@«# 온도 천장. **매듭 구간의 상한이지 상 경계가 아니다.** 1800 K 위에 초이온상이 놓인다는»`) had already
 found misattributed (Brief 34) — message and comment disagree; (b) `test_interior.py` (d) guards that the 1800 K
 ceiling and the Reinhardt melting line at 47 GPa, equal as numbers, stay different objects — consistent with Ⓢ.
 ⚠ (a) repaired 2026-09-04 (owner-approved; the commit titled "fix(eos): the ice_x temperature-ceiling refusal now names the knot box"): the message now names the knot box, drops Millot+ 2019, keeps FR2016 — string only, constants and anchors unchanged.

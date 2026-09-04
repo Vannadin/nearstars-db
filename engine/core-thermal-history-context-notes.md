@@ -49,7 +49,7 @@ read as supplying `t_form`.
 
 ⚠ **And edit only HALF of it.** Verified by the directing seat 2026-09-04 against the roster:
 
-    chain.yaml:94  "천체 자신의 나이. 항성 나이와 다르고, 거대행성 냉각광도의 실입력이다."
+    chain.yaml@«outputs: [t_body]»  "천체 자신의 나이. 항성 나이와 다르고, 거대행성 냉각광도의 실입력이다."
                     ^^^^^^^^^^^^^^^^^ out of step   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TRUE, keep
 
     roster: alpha_centauri_a_b 5.3 · pandora 5.3  (both the SYSTEM age)
@@ -153,7 +153,7 @@ the count of declarations the way the other rows do.
 
 #### 4. Order
 
-`chain.yaml:94` note fix → ⑤ convergence harness → ① calibration → ② → ④ → ③.
+`chain.yaml@«outputs: [t_body]»` note fix → ⑤ convergence harness → ① calibration → ② → ④ → ③.
 
 ⚠ **③ is last on purpose.** It is the one everybody wants the answer to, and it is the one most
 easily produced by an unconverged run. **Do not read ③ off a run that has not passed ⑤.**
@@ -308,7 +308,7 @@ its own map's *"final value of 45 TW"* (line 501). That total **includes the cru
 passes through mantle convection; our share-0.70 Q_M is the heat the convecting mantle carries with the crust's
 share withheld, so 28.3 against 44–47 compares two different quantities (a first version of this paragraph did
 exactly that and called it "~37–40 % low" — withdrawn). Like for like, with the numbers this project already holds
-(Nimmo & Primack 2020 `main.tex:261`, citing Davies 2013 and Sclater+ 1980, in `radiogenic-context-notes.md`):
+(Nimmo & Primack 2020 `Nimmo & Primack 2020 unpublished draft main.tex:261`, citing Davies 2013 and Sclater+ 1980, in `radiogenic-context-notes.md`):
 total **42–47 TW**, and **35–40 TW with the crust's radiogenic share removed**, total radiogenic ≈ 22 TW.
 
     share 1.00 (crust in the mantle equation)   Q_M 34.8 TW   vs total 44–47          → ~25 % low

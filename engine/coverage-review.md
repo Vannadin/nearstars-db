@@ -19,11 +19,11 @@ The physics core is clean; the confinement lives in the survey/validation layer:
 
 - `test_interior.py` `ROSTER` — six hand-typed NearStars moons. Fine as a *consumer*
   check, but it is not a generality test.
-- `rocky_roster.py:47` — `SYSTEMS = ("40_eridani", "barnards_star", "proxima_cen",
+- `rocky_roster.py@«from interior import (EARTH_MASS_KG, EARTH_RADIUS_M,  # noqa: E402»` — `SYSTEMS = ("40_eridani", "barnards_star", "proxima_cen",
   "trappist_1")` hardcodes the implementation-candidate roster. The file already grades
   evidence (measured / estimated / mass-only); let the system list be data-driven from
   `db/systems` (or an external catalog) instead of a tuple.
-- `interior.py:1085` and `interior.py:1122` — notes say "보드가" (the board). Pipeline
+- `interior.py@«break                        # 괄호가 잡혔다. 정밀도는 할선법의 일이다»` and `interior.py@«# 2026-08-31 — C13 끝 B 가 여기서 죽었다). 사다리의 1 TPa 는 French & Redmer 2015»` — notes say "보드가" (the board). Pipeline
   vocabulary inside general solver output. The declaration (`ice_allowed`) is general;
   only the sentence needs to say "the caller" instead of "the board".
 
@@ -63,7 +63,7 @@ the melting/thermal commits — it is still growing, and the temperature checkli
    Salpeter & Zapolsky 1967 (TFD) is the same expansion family and is on the owner's
    paper-request list.
 2. **Ice-giant envelope (water–ammonia–methane mixture).** `ice_giant` still sits in
-   `FLUID_CLASSES` (`interior.py:609`), so the Uranus/Neptune class — the most common
+   `FLUID_CLASSES` (`interior.py@«# **온도가 막은 것으로, 위로 던진다** — 더 뜨거우면 water2 의 천장이 오르고 1000 K 부터는»`), so the Uranus/Neptune class — the most common
    planet class — is refused. Needs a Redmer+ 2011-family EOS; the existing
    Mixture/polytrope infrastructure is the right substrate.
 
