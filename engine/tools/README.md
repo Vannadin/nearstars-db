@@ -130,3 +130,16 @@ Two specific hazards, both met tonight:
   most-rewritten text we have, and four citations were anchored to them. They now point at the node
   key or the `from: … , to: …` pair of the edge whose note it was, which changes only when the graph
   changes.
+
+## Two things the next migration will hit
+
+- **A span may need the line *before*, not after.** The folding that lets an anchor cross a hard wrap
+  is direction-agnostic, but the migrator only ever tried the following line, so it stalled on a
+  target whose next line was blank — a `refs:` row that occurs twice in `phase4/luhman_16.yaml`. The
+  line above it made the phrase unique. Try both directions.
+- **You cannot use the citation syntax as an example in prose.** Write `<file>:<line>` or the anchor
+  form inside a sentence and the checker reads it as a citation, because it is one. It happened twice
+  in one day, in the C33 entry and again in this handoff. Describe the forms in words instead ("a
+  citation written as a line number, and the same one written as a phrase anchor"), or put a backtick
+  inside the token to break it. This is why the documentation of the scheme carries no literal
+  examples of the scheme.

@@ -259,6 +259,21 @@ def main() -> int:
         ok(out.count("알 수 없는 인용 형식") == 1,
            f"unknown: prose naming a file and `py::symbol` must not be read as citations, got:\n{out}")
 
+        # the tightening: with the migration done, a line-number citation is a failure, and the three
+        # legitimate classes beside it (a preserved record, a paper's own source, a whole-document ref)
+        # still pass.
+        (root / "engine" / "chain.yaml").unlink(missing_ok=True)
+        (root / "engine" / "fresh.py").write_text(
+            '# 새 인용\nX = "synthetic-methodology.md:3"\n', encoding="utf-8")
+        check_refs.SCAN = (("engine/fresh.py",),)
+        check_refs.CACHE.clear()
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            rc = check_refs.main()
+        ok(rc == 1 and "줄번호 인용" in buf.getvalue(),
+           f"tightened: a new line-number citation must fail, got rc={rc}\n{buf.getvalue()}")
+        (root / "engine" / "fresh.py").unlink()
+
         # a file citing itself: writing the anchor puts the phrase in the file a second time, and that
         # second occurrence must not make its own citation ambiguous. radiogenic.py's heat-pipe refusal
         # is exactly this, and it ships as a result value.

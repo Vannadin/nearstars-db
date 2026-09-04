@@ -573,14 +573,23 @@ def main() -> int:
                 print(f"  [{tag}] {where}: {doc}:{loc} — lands on {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
         print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")
+    unmigrated_left = [f"{w}: {d}:{l}" for w, d, l, c, _e in unmigrated
+                       if not (is_preserved(c) or EXT.search(d) or quoted.get((w, d, l)))]
     bad = len(rotten) + len(ambiguous_a) + len(mismatched) + len(dead) + len(unknown) + len(ambig)
     if bad:
         print(f"[FAIL] 인용 {bad}건이 해석되지 않는다")
         return 1
-    # C33 이 끝나면 여기서 미이행 0 을 요구하도록 조인다.
-    print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 문서 전체 인용 {whole}건 · "
-          f"보존 노트 인용 {preserved}건 · 인용문 안 인용 {quoted_n}건은 기록이라 이행 대상이 아니다 · "
-          f"미이행 {len(unmigrated) - external - preserved - quoted_n}건은 배치 이행 대기")
+    # C33 done, 2026-09-05: the migration reached zero, so a new line-number citation now fails here.
+    # The three counts beside it are NOT expected to reach zero and never gate: a preserved record, a
+    # paper's own source outside the repo, and a whole-document reference are all legitimate forms.
+    if unmigrated_left:
+        for u in unmigrated_left:
+            print(f"  [FAIL] 줄번호 인용 — {u}")
+        print(f"[FAIL] 줄번호로 쓴 인용 {len(unmigrated_left)}건 — 구절 앵커로 쓰세요 "
+              f"(`<file>` 뒤에 @ 와 기욤으로 감싼, 그 문서에서 한 번만 나오는 구절)")
+        return 1
+    print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 줄번호 인용 0건 · 문서 전체 인용 {whole}건 · "
+          f"보존 노트 인용 {preserved}건 · 인용문 안 인용 {quoted_n}건은 기록이라 이행 대상이 아니다")
     return 0
 
 
