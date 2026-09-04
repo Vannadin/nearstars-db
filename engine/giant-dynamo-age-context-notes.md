@@ -288,6 +288,43 @@ single value forbidden) → compute → ① magnitude read last.
   2 % and Faherty's "0.9 R_Jup" was not checked for which one it used), i.e. the example is 2.4 % larger,
   which through R^(−7/6) is −2.8 % in B and cannot carry the 22 % gap between 1.25 and 1.59. Band wording
   corrected: the pre-registration's "~±13 %" was one-sided; the full width is 26 %.
+  **① closed — final form (directing seat and audit seat converged 2026-09-04; each line re-checked here
+  against the cached texts)**:
+  1. The pre-registered expectation was "at or somewhat below 1 kG"; the result 1.246 kG was above it.
+     Cause: the comparison value was 1.59 kG, not 1 kG — the Letter's *"of the order of 0.1 T"* is not a
+     printed observation but its own formula's 0.159 T written to one digit.
+  2. The two formulations are not "one family" but **the same formula**: Letter eq. 2 with c = 0.63, F = 1,
+     f_ohm = 1 and surface = internal rms / 3.5 (its line 218), rewritten in solar units, gives a prefactor
+     of **4.79** (recomputed here: rms 16.76 kG for a Sun-unit body, /3.5 = 4.79) against RC10's printed
+     4.8; ⟨ρ⟩^(1/3) q_o^(2/3) ∝ M^(1/3) L^(2/3) R^(−7/3), whose square root is (M L²/R⁷)^(1/6).
+  3. Reading ⟨ρ⟩ as the bulk density is justified **by definition for this body**: the Letter defines ⟨ρ⟩ as
+     the mean over the convecting shell (its line 74), calls stars below 0.35 M☉ fully convective (line 36)
+     and its example a 0.05 M☉ brown dwarf — for a fully convective body the shell *is* the body, so the
+     shell mean is M/V. Supporting evidence, found first: the Fig. 2 caption uses ⟨ρ⟩ = 1 330 kg m⁻³ for
+     Jupiter (bulk 1 326) although Jupiter's dynamo shell is the inner 0.83 R; Earth's 10⁴ is the case the
+     text sets aside as *"except for Earth's core"* (line 76), so it is not a counter-example.
+  4. The direction verdict stands: same formula on both sides, 1.246 < 1.59, ratio 0.78; the radius
+     (0.0900 vs 0.0922 R☉, −2.8 % in B) cannot carry the 22 % gap.
+  5. **The original "not decidable at that precision" was correct when "1 kG" was read as a printed value.**
+     It closed because that premise changed — the 1 kG turned out to be a rounded computed value — so the
+     comparison-value correction (1 → 1.59) is a change of premise, not a reversal of the judgement.
+  **3.5 and 2√2 — do not double-count**: the 3.5 (internal rms → surface) is already inside the 4.8
+  prefactor; the 2√2 (rms → equatorial dipole) is separate pure geometry, depth-independent — RC10 line 30:
+  dipole "half of the rms" × equatorial dipole "1/√2 of the rms dipole". Neither is applied twice. For a
+  brown dwarf B_dyn ≈ the average surface field (RC10 lines 28, 72), so no depth attenuation.
+  **Observational anchor — a supporting line only, not a validation**: no direct (Zeeman) detection exists —
+  RC10 line 125 opens *"So far, no Zeeman measurements were successful in old brown dwarfs"*, repeating
+  Christensen 2009, not contradicting it. The same paragraph relays Hallinan+ 2008 (not held; secondary
+  through RC10): electron-cyclotron-maser radio detections at 4.88 and 8.44 GHz from which Hallinan
+  concluded **local** field regions with **B > 1.7 kG and B > 3 kG** in three 0.06–0.08 M☉ brown dwarfs
+  older than a few hundred Myr — lower bounds, local, another mass band, second-hand; RC10 adds that its own
+  prediction for that class is ∼3 kG *"in good agreement"*. The two numbers are RC10's printed values; RC10's
+  f_ce = 2.8 B_dip^pol (line 50) is for giant-planet cutoff frequencies and is not applied to them here.
+  What this buys is one thing: RC10 is a model that was checked once against an observation, so "our value
+  is inside RC10's printed range" carries a little more weight. Our 1.25 kG at 0.03 M☉ sits below RC10's
+  ∼3 kG for 0.06–0.08 M☉ — the direction does not conflict; nothing more. Not a model-vs-observation branch.
+  Open line: if Hallinan's paper is ever obtained, check how the bounds were derived — not a request (C5:
+  no consumer).
   Not a result about Luhman 16's field: **the field an energy-flux scaling predicts on a declared radius;
   no brown-dwarf field has been detected** (Christensen+ 2009).
 - **Contract checker generalised** (`check_contracts.py`): a recipe with branches is now checked against the
@@ -306,11 +343,19 @@ single value forbidden) → compute → ① magnitude read last.
   **2546 s**, powermode 2 both ends, no throttle record (`pmset -g therm`). ⚠ **2.07× gate78 under the same
   power condition — excluded from the table.** Directing seat's *estimate, not a measurement*: host contention
   (it ran pdftotext on 9 MB PDFs, five repo-wide recursive greps, a 739-file cache loop and ADS round-trips in
-  that window). The control is the next gate with the directing seat idle.
+  that window). The control is the next gate with the directing seat idle. **Closed by the owner (11:24)**: the
+  machine was moved during the gate and low-power mode ran for part of it (*"중간에 이동(절전)이 잠깐 겹쳐서
+  그래"*). The stamps sample the power state only at both ends, so the mid-run change was invisible to the
+  log. The directing seat's host-contention estimate **was wrong** — gate80b with every seat idle did not
+  return to the band either. Both gates stay out of the table, now with a cause. **Performance tracking
+  stops here** (owner: stability over speed); from now on gate times are recorded, not interpreted.
 - gate80b on `76677df8` (brown-dwarf branch): `GATE END sha=76677df8 rc=0`, **498 PASS** (+13 rows from
   `test_dynamo.py`), FAIL 0, 10:52:36 → 11:18:37 = **1561 s**, powermode 2, directing seat idle throughout.
   ⚠ The control did *not* return to the 1224–1362 s band: 1561 is +15 % over its top with the peer quiet,
   so the host-contention estimate for gate79 is **partly supported at best** (2546 → 1561 with the peer
   idle) and the residual +200–300 s is **unexplained** — the added work (13 trivial rows, two brown-dwarf
   bodies whose interior recipes refuse at once) does not account for it. Kept out of the table, labelled.
+  → superseded the same hour: cause = mid-run low-power mode (owner), see gate79's line. The pre-registered
+  reading of gate81's time (`scratchpad/gate81-prereg.txt`, 11:22:08 / 11:23:01, before its GATE END) was
+  not applied — nothing to decide once the cause was known; the file is kept as a record.
 - gate80 on `a87124f8`: killed at launch (via failure masked by `| tail -1` in the launch chain), void.

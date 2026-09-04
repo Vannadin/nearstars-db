@@ -84,6 +84,11 @@ FAILED, and launched a gate on it — because a pipe returns the exit status of 
 `tail` succeeds. The cause is not `tail`; `head`, `grep`, `sort` mask a failure the same way. Either
 `set -o pipefail` at the top of the chain, or run the check bare and read its status, or let the gate be
 the only judge. The gate on that tree was killed and stamped void; the commit was amended.
+⚠ **The power stamps are two-point samples** (start and end); a low-power interval *inside* a gate is
+invisible to them. On 2026-09-04 two gates ran 2546 s and 1561 s with `powermode 2` at both ends, every
+seat idle and no throttle record, and 300 s were about to be filed as "unexplained" — the owner then said
+the machine had been moved mid-gate and low-power mode ran for a while. Not implemented (owner: stability
+over speed): a stamp that answers "did the state change during this interval" would close the hole.
 
 **Three owner-obtained PDFs had no PROVENANCE and now do (Brief 64; the files live in the gitignored
 cache, so this line is their record in the repository)**: `2020PhRvL.125s5501Q_SM` (Queyroux SM, 08-31
