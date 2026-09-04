@@ -175,6 +175,15 @@ RM22's grid runs 0.1–48 M⊕ but the physics branches sharply:
    0.1 water and 3 050 K at 0.3** (converged; dry 2 526 K) — still *hotter* than dry, the opposite of "cooler", but
    the ~4 400 K figure above was the unconverged state and is superseded. The structural half of C17 is now
    measurable; its start is a separate decision.
+   ⚠ **Measured 2026-09-04 (C17 opened and closed; `engine/ocean-fraction-context-notes.md` §5)**: on the converged
+   points the mantle-side CMB temperature goes 2 526 (dry) → 3 105 (0.1) → 3 065 (0.25) → 3 050 K (0.3) — a rise, then a
+   real fall (noise floor 0.7 K); the pressure half stands (135 → 132 → 122 → 118 GPa). With Earth's declared core-side
+   3 760 K the boundary-layer flux *rises*, 2.75 → 3.11 → 3.20 TW — a hotter layer is less viscous (eq. 39) and that wins
+   over the smaller jump — so "lower Q_c" is the opposite of this column on both halves it can be tested on. The
+   C14-solved T_c falls ~90 K; the C15 entropy band moves (−69 → −68 → −82 MW/K) but still straddles zero, so the
+   verdict stays `cannot-say`. **Correction of this item's sentence (it never had a source)**: for the same mass and core
+   size, water *raises* the mantle-side CMB temperature and Q_c on this engine; the moment consequence is unresolved
+   because C15 cannot resolve it. The Ganymede anchor is untouched by this.
 5. **Low-density dry (ρ < 0.8 ρ⊕, Mars-analog)**: small core, cools fast, likely
    dynamo-dead by a few Gyr → `ℳ = 0` today.
 

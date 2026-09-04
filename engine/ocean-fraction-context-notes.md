@@ -116,6 +116,8 @@ One went stale, so five went stale, and when C17 actually starts the same five p
 again. Item ① (the phase side tables) was built today so that a *value* has one home; the prose already had
 five homes for this one. The same problem with another face; recorded for the day it is addressed.
 
+*(2026-09-04, later: C17 was opened and measured — §5. The five copies each carry a dated addendum; the numbers above stand.)*
+
 ## 5. C17 opened (2026-09-04, owner) — pre-registration, written before any run
 
 Reason it can be measured now: reason (1) of the closure — the water-rich column did not converge — was removed
@@ -171,3 +173,49 @@ The item cites nothing, so the outcome is a correction of *our* sentence, not a 
 ### Scope (held)
 No code change is expected; the three `f_ocean` meanings are already measured (§2) and are not re-measured;
 C24's window and the anchors are untouched; `dynamo_rocky` is not wired.
+
+### Run record — 2026-09-04 (after the pre-registration commit `d7570d96`)
+
+**② — ②a on the converged points, ②c on three of the four added points.**
+
+    ice     converged   R (R⊕)   r_c      P_cmb (GPa)   T_cmb (K)    time
+    0.000   yes         1.0030   0.5470   135.28        2 526.21     2 s
+    0.050   NO          1.0861   0.5472   134.21        3 033.28     15 s   (trial state, not read)
+    0.100   yes         1.1313   0.5477   132.19        3 105.17     49 s
+    0.150   NO          1.1683   0.5483   129.49        3 123.38     70 s   (trial state, not read)
+    0.200   NO          1.1993   0.5491   126.23        3 085.77     94 s   (trial state, not read)
+    0.250   yes         1.2293   0.5500   122.37        3 065.14     58 s
+    0.300   yes         1.2585   0.5511   117.67        3 049.64     51 s
+    0.301   yes         1.2591   0.5512   117.57        3 048.95     52 s   (noise-floor perturbation)
+
+- **Noise floor 0.69 K** (0.300 → 0.301; ~0.3 K of it is the curve's own slope, so the floor is at most 0.7 K). 3 × floor = 2 K.
+  The falls 3 105 → 3 065 (−40 K) and → 3 050 (−15 K) both exceed it: **the turnover is real** on the converged points.
+- **Where the maximum sits is not bracketed**: 0.05, 0.15 and 0.20 return `converged=False` — the surface condition is
+  missed (the trial column tops out at 0.2 GPa · 1 588 K against the 1 600 K target, a 0.75 % miss above
+  `T_SURFACE_TOL` 1e-3, with the water fluid all the way up). So C24's fix made 0.1 and 0.3 converge but not the
+  fractions between and below them. **A C24-adjacent coverage finding, recorded here and not repaired** (C24 is not
+  reopened by this section; the anchors are untouched). The reading of the mechanism — the water column lengthens the
+  adiabat, the lower CMB pressure shortens the rock column — is a reading, not shown.
+
+**③ — ③b, as named in advance.** Everything Earth's except the water fraction; core-side 3 760 K is Earth's declaration.
+
+    ice    T̃_m (K)   Q_C at declared T_c (TW)   C14 T_c solved (K)   Q_C solved (TW)   C15 ΔE (MW/K)   band            corners +   verdict
+    0.0    2 526     2.750 (1.54–4.77)          3 978 (3 769–4 284)  4.91              −69             −264…+238       4/8         cannot-say
+    0.1    3 105     3.110 (2.54–3.71)          3 890 (3 736–4 133)  4.91              −68             −268…+247       4/8         cannot-say
+    0.3    3 050     3.199 (2.74–3.64)          3 887 (3 636–4 138)  4.93              −82             −294…+251       4/8         cannot-say
+
+- **The boundary-layer flux rises with water, not falls**: the jump T_c − T̃_m shrinks (1 234 → 655 → 710 K) but the
+  layer's mean temperature rises and eq. 39's viscosity falls faster than the jump shrinks — Q_C 2.75 → 3.11 → 3.20 TW.
+  The document's "lower Q_c" is the opposite of this column.
+- **C14's solved T_c falls ~90 K** and its Q_C stays ≈4.9 TW — as it must: C14's Q_C is the core-supply side under a
+  *declared* cooling rate, so a hotter mantle side lowers the T_c that balances it rather than the flux.
+- **C15 moves and still straddles zero**: ΔE −69 → −68 → −82 MW/K; 4 of 8 corners positive at every fraction; no inner
+  core at any. **The mechanism is real and its size is measured; C15 cannot resolve it.** That is C15's limit (the dry
+  band already straddles zero), not C17's failure.
+
+**① — ①a.** Item 4 cites nothing, and both testable halves of its sentence go the other way on this engine: the
+mantle-side CMB temperature rises, and Q_C rises. The correction is written into the item (en + ko) as a dated addendum,
+with the pressure half left standing. ①c was not fired: the text names no condition, so none can be claimed for it.
+
+**Closure.** C17 closes as **③b — measured; the consumer cannot use it.** Nothing wired into `dynamo_rocky`; the ladder's
+regime-4 class path is unchanged; the Ganymede anchor is untouched. Five copies got one dated addendum each.
