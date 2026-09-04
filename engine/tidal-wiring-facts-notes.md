@@ -1,5 +1,5 @@
 <!-- 조석열 → 내부구조 열 예산 배선(C30)의 근거 사실 — 조석 문서 식·간선·판도라 입력·tidal_transport 상태를 인쇄된 문장으로 모은 병렬석 기록, 원문 무편집 -->
-<!-- Landed 2026-09-04 from the parallel seat's scratch (TIDAL-WIRING-FACTS.md, 19:15 KST), body unedited. Line numbers refer to the engine worktree copies at 839b2c7c. Consumed by C30 (interior-core.md, tidal-heating-context-notes.md). -->
+<!-- Landed 2026-09-04 from the parallel seat's scratch (TIDAL-WIRING-FACTS.md, 19:15 KST), body unedited. Line numbers refer to the engine worktree copies at 839b2c7c. Consumed by C30 (interior-core.md, tidal-heating-context-notes.md). Three relative link targets (lines 71, 96, 102) were re-pointed to ../docs/reference/ after gate96's dead-link scan failed on them (2026-09-04 22:20); the text is otherwise unedited. -->
 
 # Facts for the tidal-heat → interior-budget wiring brief
 Parallel seat, 2026-09-04. Read-only; worktree HEAD 839b2c7c, `git status --porcelain` empty.
@@ -68,7 +68,7 @@ in 799 lines, and each is one of the following:
 scope box): "**Scope — lid-bearing bodies only.** … Where a **global fluid layer** exists, it
 redistributes the interior flux and the whole argument below is void — the tidal term then
 belongs in the body's global energy balance instead, via
-[`moon-energy-budget-methodology.md`](moon-energy-budget-methodology.md). Which of the two
+[`moon-energy-budget-methodology.md`](../docs/reference/moon-energy-budget-methodology.md). Which of the two
 applies is a *selector*, not a number … **Dante (silicate, airless) takes this branch; Alpha
 Centauri A b III (Pandora), half ocean under 1.1 bar, takes the other one.**"
 
@@ -93,13 +93,13 @@ criterion is melt fraction and any flux threshold is a conversion, not a citatio
 ### 2a. The sentence `chain.yaml:653` cites (`heat:31-35`)
 
     :31  The **irradiation / equilibrium temperature** `T_eq` (what the star delivers) is the
-    :32  [tidally-locked-temperature doc](tidally-locked-temperature-methodology.md). All of these
+    :32  [tidally-locked-temperature doc](../docs/reference/tidally-locked-temperature-methodology.md). All of these
     :33  **combine** through the single relation in §1: `T_eff⁴ = T_eq⁴ + T_int⁴`, where `T_int`
     :34  here folds in only the non-tidal sources (add the tidal flux into `T_int` if it is
     :35  non-negligible, see that doc).
 
 That is the whole of it. The doc's routing table two lines above sends tidal dissipation
-elsewhere: `heat:29` "| **Tidal dissipation** | [`tidal-heating-methodology.md`](tidal-heating-methodology.md) |".
+elsewhere: `heat:29` "| **Tidal dissipation** | [`tidal-heating-methodology.md`](../docs/reference/tidal-heating-methodology.md) |".
 
 ⚠ **`tidal_heating` is not in this recipe's Needs line.** `heat:46-47`: "**Needs** —
 `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] · `radius_earth`
