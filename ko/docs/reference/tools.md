@@ -18,7 +18,7 @@
 | 10 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
 | 11 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D 성도 | `db/systems/` → 인터랙티브 3D 지도 (광년 스케일 + 시스템별 AU 뷰) | `scripts/viz/build_starmap.py` |
-| 13 | Phase 4 보드 도구 | 결정 보드 검증(emit 게이트) + 바디별 보드 HTML 렌더 | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
+| 13 | Phase 4 보드 도구 | 결정 보드 검증(emit 게이트), 바디별 보드 HTML 렌더, 레시피가 소유한 행 갱신 | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py`, `engine/tools/refresh_board_rows.py` |
 | 14 | 방사선대 + 도출값 계산기 | 벨트 단면, Kerbalism 이미터, `scripts/refs/` 방법론 계산기 | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
 | 15 | 표면 얼음 안정성 | 노출된 얼음(6종)이 이 일사량에서 존속하는가? 알베도 → 손실률·수명·lag 맨틀 깊이 | `docs/ice-stability.html` |
 | 16 | 자기장 기하(쌍극 vs 다중극) | 자오면 자기력선 + 표면 B_r 지도 + 열린 자기력선 추적 오로라 발자국. Ro_l 게이트의 *형태* 귀결 | `scripts/viz/render_field_geometry.py` |
@@ -305,6 +305,10 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
 
 **파일.**
 - `scripts/check_phase4_gate.py` — 보드 validator. `schema_version: 2` 보드는 hard-check (status/verdict/op enum, 축 메뉴, typed `fields[]` 형태 검사 — 숫자가 prose에만 있는 행 거부 포함 —, `(body, axis)` 유일성, `refs` 리스트 타입, `colors` hex 형식, divergence-note 필수, passthrough는 gate 금지). 레거시 v1 보드는 한 줄 soft 요약만 내서 파일 단위 마이그레이션이 가능하다. 계약 문서: `phase4/SPEC.md` §0/§3.1.
+- `engine/tools/refresh_board_rows.py --board <경로> --body <이름>` — 한 천체의 조석 행을 `tidal_heating`
+  레시피에서 갱신한다(엔진 C30/C31). 기본은 dry-run이고, 입력이 보드 어느 줄에서 왔는지·레시피 산출·통합
+  diff·건드리지 않은 stale 텍스트를 함께 찍는다. 쓰기는 `--apply`이며 오너의 별도 지시가 있을 때만 돈다.
+  레시피가 낼 수 없는 값(Dante 열 분배)에는 저작값 대신 날짜 붙은 stale 주석만 붙는다.
 - `scripts/phase4/build_phase4_html.py <system>` — v2 보드를 `docs/phase4/<system-slug>/` (인덱스 + 바디별 1페이지)로 렌더. 산문 narrative + typed spec 표(hex 칩, window, 바이옴 색 스와치, 필드별 note), 게이트 evidence/divergence, 한/영 토글. 슬러그는 `scripts/pipeline/_naming.py` 사용. 결정론적 (재실행해도 diff 없음).
 
 **출력.** validator: exit 0/1 + 행 단위 진단. 빌더: `docs/phase4/<system-slug>/*.html`.

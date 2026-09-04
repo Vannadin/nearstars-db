@@ -18,7 +18,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 10 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
 | 11 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
-| 13 | Phase 4 board tools | Validate decision boards (emit gate) + render per-body board HTML | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
+| 13 | Phase 4 board tools | Validate decision boards (emit gate), render per-body board HTML, refresh recipe-owned rows | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py`, `engine/tools/refresh_board_rows.py` |
 | 14 | Radiation belts + derived-value calculators | Belt cross-sections, Kerbalism emitter, and the `scripts/refs/` methodology calculators | `scripts/viz/render_belts_bodies.py`, `scripts/refs/*.py` |
 | 15 | Surface ice stability | Can exposed ice (6 species) survive at this insolation? Albedo → loss rate, lifetime, lag-mantle depth | `docs/ice-stability.html` |
 | 16 | Magnetic field geometry (dipolar vs multipolar) | Meridional field lines + surface B_r map + traced open-field auroral footprint, for the Ro_l gate's *shape* consequence | `scripts/viz/render_field_geometry.py` |
@@ -314,6 +314,10 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Files.**
 - `scripts/check_phase4_gate.py` — board validator. `schema_version: 2` boards are hard-checked (status/verdict/op enums, axis menu, typed `fields[]` shape incl. prose-only-number rejection, `(body, axis)` uniqueness, `refs` list type, `colors` hex format, divergence-note requirement, passthrough-carries-no-gate); legacy v1 boards get a soft one-line summary so migration proceeds file-by-file. Contract: `phase4/SPEC.md` §0/§3.1.
+- `engine/tools/refresh_board_rows.py --board <path> --body <name>` — refreshes one body's tidal rows from the
+  `tidal_heating` recipe (engine C30/C31). Dry run by default: prints the board line every input came from, the
+  recipe output, a unified diff, and the stale text it does not own. `--apply` writes, and is the owner's separate
+  order. Rows a recipe cannot produce (the Dante heat partition) get a dated stale note, never an authored value.
 - `scripts/phase4/build_phase4_html.py <system>` — renders a v2 board into `docs/phase4/<system-slug>/` (index + one page per body): narrative prose + typed spec table (hex chips, windows, biome color swatches, per-field notes), gate evidence/divergence, KO/EN toggle. Slugs via `scripts/pipeline/_naming.py`. Deterministic (rerun → no diff).
 
 **Output.** Validator: exit 0/1 + per-row diagnostics. Builder: `docs/phase4/<system-slug>/*.html`.
