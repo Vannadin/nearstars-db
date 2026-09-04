@@ -173,6 +173,29 @@ def main() -> int:
         ok(rc == 1 and "no edges" in buf.getvalue(),
            f"shape: a chain.yaml without its expected keys must fail, got rc={rc}\n{buf.getvalue()}")
 
+        # a bare file name that two files in the repo share must fail with the candidates, instead of
+        # being resolved by whichever copy sits nearest the citing file. The repo has 68 files called
+        # checklist.md; proximity was choosing among them silently.
+        (root / "one").mkdir(); (root / "two").mkdir()
+        (root / "one" / "checklist.md").write_text("# one\n\nAlpha line.\n", encoding="utf-8")
+        (root / "two" / "checklist.md").write_text("# two\n\nBeta line.\n", encoding="utf-8")
+        (root / "engine" / "chain.yaml").write_text(
+            "edges:\n"
+            '  - {from: a, to: b, ref: "checklist.md:3"}\n'
+            '  - {from: a, to: b, ref: "one/checklist.md:3"}\n', encoding="utf-8")
+        check_refs.BASENAMES.clear()
+        check_refs.SCAN = (("engine/chain.yaml",),)
+        check_refs.CACHE.clear()
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            rc = check_refs.main()
+        out = buf.getvalue()
+        ok(rc == 1 and "모호한 문서 이름" in out and "checklist.md" in out,
+           f"ambiguous name: a shared base name must fail with its candidates, got rc={rc}\n{out}")
+        ok(out.count("모호한 문서 이름") == 1,
+           f"ambiguous name: the path-qualified citation must be accepted, got:\n{out}")
+        check_refs.BASENAMES.clear()
+
         # a citation form nobody taught the checker must fail, not vanish: `<doc>.md:Contract` sat in no
         # bucket at all — not an anchor, not a line number, not a whole-document ref — and the run was
         # green. A file name followed immediately by `:` or `@` is a pointer into that file and must
@@ -251,7 +274,7 @@ def main() -> int:
     print("  [PASS] 인용 체커 자기검증 — 고유 1회 통과 · 삭제된 구절 썩음 · 2회 매치 애매 · 남의 계약 블록 착지 · "
           "빈 줄 착지 · 줄번호는 미이행 카운트 · RECIPE 자기문서 해석 · 대문자 파일명 · bodies 스캔 · "
           "비-.md 대상 · 접힌 인용 · 문서명만 계수 · YAML 파싱 실패 FAIL · 키 상실 FAIL · 주석 안 인용 · 하드랩 앵커 · "
-          "알 수 없는 형식 FAIL · 자기 인용")
+          "알 수 없는 형식 FAIL · 자기 인용 · 모호한 문서 이름 FAIL")
     return 0
 
 

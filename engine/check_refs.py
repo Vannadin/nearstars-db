@@ -129,6 +129,36 @@ def own_doc(path: Path) -> str | None:
     return f"{m.group(1)}.md" if m else None
 
 
+BASENAMES: dict[str, list[Path]] = {}
+
+
+def sharing_the_name(bare: str) -> list[Path]:
+    """Every file in the repo with this base name."""
+    if not BASENAMES:
+        # `ko/` holds a translation of the same document, not a different file, so a mirror is not a
+        # second meaning; caches and archives are not citable targets at all.
+        skip = {".git", "ko", ".archive", "_papers", "node_modules", ".venv"}
+        for q in ROOT.rglob("*"):
+            if q.is_file() and not (skip & set(q.parts)):
+                BASENAMES.setdefault(q.name, []).append(q)
+    return BASENAMES.get(bare, [])
+
+
+def ambiguous(doc: str) -> list[Path]:
+    """The candidates a bare name could mean, when it could mean more than one.
+
+    Resolution used to walk `docs/reference` → the citing file's directory → `engine/` → the repo
+    root and stop at the first hit, so a citation to `checklist.md` quietly meant whichever one sat
+    next to the citing file — and the repo has 68 of those, 68 `context-notes.md`, 22 `README.md`.
+    Choosing by proximity is choosing without saying so, which is the thing this checker exists to
+    stop. A bare name that could mean more than one file is now a failure, and the fix is to write
+    the path."""
+    if "/" in doc:
+        return []
+    found = sharing_the_name(doc)
+    return found if len(found) > 1 else []
+
+
 def target_of(doc: str, citing: Path) -> Path | None:
     """Where a cited file name resolves. Methodology docs live in docs/reference; the engine's notes
     cite each other by bare name; boards, evidence files and modules are cited by repo path or by
@@ -284,7 +314,7 @@ def main() -> int:
     listing = "--list" in sys.argv
     suspect = "--suspect" in sys.argv          # classify every unmigrated citation by what it lands on
     rotten: list[str] = []
-    ambiguous: list[str] = []
+    ambiguous_a: list[str] = []
     mismatched: list[str] = []          # rule 2: landed inside another node's contract block
     whole = 0                           # refs that cite a whole document, which is a legitimate form
     external = 0                        # citations into a paper's own source, outside this repo
@@ -292,6 +322,7 @@ def main() -> int:
     preserved = 0                       # citations inside verbatim notes: the record, not a migration target
     quoted_n = 0                        # citations inside quoted material: the quote's, not the note's
     quoted: dict[tuple, bool] = {}
+    ambig: list[str] = []               # a bare file name that could mean more than one file
     unknown: list[str] = []             # pointers into a file that match no known citation form
     shared: dict[tuple[str, str], list[tuple[str, list[str]]]] = {}   # anchor → the edges that share it
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
@@ -346,6 +377,11 @@ def main() -> int:
                     rotten.append(f"{where0}: doc @«{m.group(1)[:50]}» — a bare `doc` citation in a file "
                                   f"that declares no RECIPE; name the document")
             for doc, phrase in hits:
+                if ambiguous(doc):
+                    others = ", ".join(str(q.relative_to(ROOT)) for q in ambiguous(doc)[:4])
+                    ambig.append(f"{where0}: {doc}@«{phrase[:40]}» — {len(ambiguous(doc))} files share that "
+                                 f"name ({others}…); write the path")
+                    continue
                 queue = by_value.get(f"{doc}@«{phrase}»")
                 ends = queue.pop(0)[0] if queue else ends
                 why, n = resolve(doc, phrase, path)
@@ -355,7 +391,7 @@ def main() -> int:
                 elif n == 0:
                     rotten.append(f"{where} — no such phrase in {doc}")
                 elif n > 1:
-                    ambiguous.append(f"{where} — matches {n}x, the anchor cannot say which")
+                    ambiguous_a.append(f"{where} — matches {n}x, the anchor cannot say which")
                 else:
                     owner = contract_owner(doc, path, phrase=phrase)
                     if owner and ends != ("", "") and owner not in ends:
@@ -385,6 +421,14 @@ def main() -> int:
             in_quote = bool(re.search(r'\*"|^\s*>|note \(\d{4}-\d{2}-\d{2}\):', line)
                             or re.search(r'note \(\d{4}-\d{2}-\d{2}\):|\*"', near))
             for m in LINE_REF.finditer(line):
+                if ambiguous(m.group(1)):
+                    others = ", ".join(str(q.relative_to(ROOT)) for q in ambiguous(m.group(1))[:4])
+                    row = (f"{where0}: {m.group(0)} — {len(ambiguous(m.group(1)))} files share that "
+                           f"name ({others}…); write the path")
+                    # In a preserved note the citation is a record of what someone wrote, so an
+                    # ambiguous name there is reported, not failed.
+                    (warned if is_preserved(path) else ambig).append(row)
+                    continue
                 if in_quote:
                     quoted[(where0, m.group(1), m.group(2))] = True
                 queue = by_value.get(f"{m.group(1)}:{m.group(2)}")
@@ -430,13 +474,13 @@ def main() -> int:
         elif kind in MOVES:
             warned.append(f"{where}: {doc}:{loc} — lands on {kind}, which moves when the document grows")
 
-    print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
+    print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous_a)}건 (해석 성공 {ok}) · "
           f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 보존 노트 인용 {preserved}건 · "
           f"인용문 안 인용 {quoted_n}건 · 미이행 줄번호 {len(unmigrated) - external - preserved - quoted_n}건 · "
           f"문서 {len(list(DOCS.glob('*.md')))}종")
-    for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous),
+    for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous_a),
                         ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead),
-                        ("알 수 없는 인용 형식", unknown)):
+                        ("알 수 없는 인용 형식", unknown), ("모호한 문서 이름", ambig)):
         for r in rows:
             print(f"  [FAIL] {label} — {r}")
     for (doc, phrase), users in sorted(shared.items()):
@@ -465,7 +509,7 @@ def main() -> int:
                 print(f"  [{tag}] {where}: {doc}:{loc} — lands on {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
         print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")
-    bad = len(rotten) + len(ambiguous) + len(mismatched) + len(dead) + len(unknown)
+    bad = len(rotten) + len(ambiguous_a) + len(mismatched) + len(dead) + len(unknown) + len(ambig)
     if bad:
         print(f"[FAIL] 인용 {bad}건이 해석되지 않는다")
         return 1
