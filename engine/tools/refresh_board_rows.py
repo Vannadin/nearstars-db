@@ -3,6 +3,11 @@
 
     python3 engine/tools/refresh_board_rows.py --board <path/to/phase4/alpha_centauri.yaml> --body Dante [--apply]
 
+If the satellites table and the bulk rows disagree about radius or mass, the run refuses by name and prints both
+values with both line numbers: one side is ahead and the file does not say which. `--take-satellites-figure` declares
+that the table is the current figure, which is the ordinary case for a resize (the table moves first), and every note
+the run writes then says the figure was taken over the bulk row's own.
+
 Without `--apply` it is a dry run: it prints where every input came from, what the recipe returned, a unified diff,
 and the 900-km-era text it deliberately did NOT touch. It writes nothing. `--apply` rewrites the board in place and
 is the owner's separate order — the board of record is the MAIN checkout's copy, which carried uncommitted changes on
@@ -189,6 +194,10 @@ def main() -> int:
     ap.add_argument("--board", required=True)
     ap.add_argument("--body", required=True)
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--take-satellites-figure", action="store_true",
+                    help="when the satellites table and the bulk rows disagree about radius or mass, proceed by taking "
+                         "the table as the current figure (the direction of the 2026-08-21 resize). Without it, a "
+                         "disagreement is a named refusal.")
     a = ap.parse_args()
     path = Path(a.board)
     lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
@@ -208,20 +217,25 @@ def main() -> int:
     if "radius_km" not in moon or "parent" not in moon:
         raise SystemExit(f"the satellites row for {a.body} carries no radius_km/parent")
     r_km = moon["radius_km"]
-    # The satellites table is this tool's only source for the figure, and the bulk rows are what it overwrites. If the
-    # two already disagree, whichever one the tool reads is a guess about which is current: on a board where bulk is
-    # ahead, reading the table would quietly undo the newer figure and report a confident ratio for it. Refuse by name.
+    # The satellites table is this tool's only source for the figure, and the bulk rows are what it overwrites. Which
+    # of the two is current cannot be read off the file: on a board where bulk is ahead, taking the table would quietly
+    # undo the newer figure and report a confident ratio for it. So a disagreement is a refusal unless the operator
+    # names the direction — which is the ordinary case for a resize, where the table moved first on purpose.
+    disagree = []
     for name, key, unit in (("radius", "radius_km", "km"), ("mass", "mass_kg", "kg")):
         if key not in moon:
             continue
         for i in field_lines(lines, ranges, name):
             m = re.search(r"value: ([\d.eE+-]+)", lines[i])
             if m and abs(float(m.group(1)) / moon[key] - 1.0) > 1e-6:
-                raise SystemExit(
-                    f"refusing: the satellites table and the bulk row disagree about {a.body}'s {name} "
-                    f"({moon[key]:g} {unit} at line {mrow + 1} vs {float(m.group(1)):g} {unit} at line {i + 1}). "
-                    f"One of the two is ahead of the other, and this tool cannot tell which: reading the table would "
-                    f"overwrite the bulk row, reading the row would contradict the dynamics. Reconcile them first.")
+                disagree.append(f"{name}: {moon[key]:g} {unit} in the satellites table (line {mrow + 1}) vs "
+                                f"{float(m.group(1)):g} {unit} in the bulk row (line {i + 1})")
+    if disagree and not a.take_satellites_figure:
+        raise SystemExit(
+            f"refusing: the satellites table and the bulk rows disagree about {a.body}'s figure.\n  "
+            + "\n  ".join(disagree)
+            + "\nOne side is ahead of the other and this tool cannot tell which. If the table is the current figure, "
+              "say so with --take-satellites-figure; if the bulk row is, reconcile the table first.")
     a_km = moon.get("design_a_km", moon.get("a_km"))
     a_src = "design.a_km" if "design_a_km" in moon else "a_km (osculating; the row has no design block)"
     # Ė ∝ a⁻⁷·⁵, not a⁻⁶: the a⁻⁶ in the law multiplies n = √(GM_p/a³), which the recipe computes from the same a
@@ -251,8 +265,10 @@ def main() -> int:
              f"before the 2026-08-21 resize to {r_km:.0f} km; the plains have no recipe, so nothing is recomputed here")
     rests_ko = (f"stale {today}: 이 값은 360 K 평원에 기대고 있고, 그 평원은 2026-08-21 {r_km:.0f} km 리사이즈 이전의 "
                 f"900 km 플럭스를 분배해 얻은 것이다. 평원에는 레시피가 없으므로 여기서 다시 계산하지 않는다")
-    stamp_size = f"refreshed {today} to the {r_km:.0f} km figure adopted 2026-08-21"
-    stamp_size_ko = f"2026-08-21 채택된 {r_km:.0f} km 형상에 맞춰 {today} 갱신"
+    took = ", taken over the bulk row's own figure on --take-satellites-figure" if disagree else ""
+    took_ko = ", bulk 행의 값 대신 --take-satellites-figure 로 이 값을 택함" if disagree else ""
+    stamp_size = f"refreshed {today} to the {r_km:.0f} km figure adopted 2026-08-21{took}"
+    stamp_size_ko = f"2026-08-21 채택된 {r_km:.0f} km 형상에 맞춰 {today} 갱신{took_ko}"
     stale_reason = {"geopotential_j2": (figure, figure_ko),
                     "surface_temperature": (partition, partition_ko),
                     "albedo": (rests, rests_ko)}
@@ -316,6 +332,10 @@ def main() -> int:
 
     # ── report ────────────────────────────────────────────────────────────────────────
     print(f"# board {path}  ·  body {a.body}  ·  {'APPLY' if a.apply else 'dry run'}")
+    if disagree:
+        print("# the board disagreed with itself and --take-satellites-figure said which side is current:")
+        for d in disagree:
+            print(f"#   {d}")
     print(f"# inputs: R {r_km:.0f} km · a {a_km:,.0f} km from {a_src} (satellites row, line {mrow + 1}{a_other}) · "
           f"e_rms {e} (time-averaged; not the row's osculating e {moon.get('e', '—')}) · "
           f"k₂/Q {k2q} (tidal_heating value, line {th_rows[0] + 1}) · "
