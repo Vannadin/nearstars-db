@@ -2165,7 +2165,7 @@ three times (mantle / magma-ocean energy balance; the local-Rayleigh boundary-la
 source (7)) — and *"the envelope limits cooling"* is not a new equation but a **top boundary condition**: the
 H/He blanket *"sets the mantle surface temperature above 1000 K"*, shrinking ΔT_CMB. Our `cmb_heat_flux`
 structure carries over; what changes is that boundary condition and one δ branch for a molten mantle.
-**Tang does not unlock Driscoll & Olson 2011** (`Driscoll`, `Olson` 0 hits) — RM22's `q_conv` definition and
+⚠ **σ for the Rm criterion is self-contradictory inside RM22** (phase table, 2026-09-04): the printed 1.36e6 S/m and the printed λ_m 1.32 m²/s (⇒ 6.03e5) differ by 2.26×, and Rm = μ₀σUD carries that factor whole against the threshold of 50. Pre-registered for the start of C23: compute Rm with both values and report first whether the on/off verdict flips; Tang's ~1e6 fixes only the order. **Tang does not unlock Driscoll & Olson 2011** (`Driscoll`, `Olson` 0 hits) — RM22's `q_conv` definition and
 `γ_d = 0.2` still sit behind that unheld paper (C16, Tier 1 request).
 
 ### C24 — a water-rich rocky body does not converge in `interior_layers` — **listed 2026-09-04, not started**

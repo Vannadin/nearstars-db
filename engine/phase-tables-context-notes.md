@@ -93,6 +93,14 @@ solid-body quantity; the doc's icy band is for a shell + ocean body), `nh3`. Pap
 `2012Natur.485..355P`, Ohta+ 2016 `2016Natur.534...95O`, checked with `check_paper_held.py`) are **not** on the
 request list — they become needed when a consumer exists (⑥).
 
+**Two labels added the same hour (directing seat)**: (1) the ten `tidal_kq` cells are the class band replicated per
+phase, **not a phase decomposition** — the difference between phases of one class is 0, and that 0 means "not
+distinguished", not "equal"; the phase key carries no information on this axis yet, and a per-phase value replaces
+a cell when one arrives. (2) The σ cell is **self-contradictory inside RM22**: the printed λ_m 1.32 m²/s implies
+6.03e5 S/m, a factor **2.26** below the printed 1.36e6. C23's Rm = μ₀σUD against a threshold of 50 carries that
+factor whole, so C23 must compute Rm with both values and report first whether the on/off verdict flips —
+pre-registered now so the choice is not made after seeing the result. Tang+ 2025's ~1e6 fixes the order only.
+
 **② outcome (the success criterion)**: no existing double entry was found to remove; the single home for σ
 and k₂/Q now exists before C23 and `tidal_heating` are written — a future double entry prevented, as
 pre-registered. **③**: no consumer rewired (there was nothing to rewire). **④**: anchors untouched, no

@@ -87,13 +87,17 @@ CONDUCTIVITY["fe_prem"] = Cell(
     source="2203.01065 (RM22) Table, core row 'Electric conductivity (σ) 1.36·10⁶ S m⁻¹', source mark D",
     note=("Earth's liquid-alloy core value applied to any fe_prem layer (analog, not this body's). Cross-checks: "
           "Tang+ 2025 (2025ApJ...989...28T) Table, 'σ 1×10⁶ S m⁻¹, electrical conductivity of core' (their ref. 46) — "
-          "the same order; RM22's own printed λ_m = 1.32 m²/s disagrees with 1/(μ₀σ) = 0.585 for this σ "
-          "(paper-defects row 14) — recorded, not resolved."),
+          "the same order. ⚠ SELF-CONTRADICTORY WITHIN RM22: the printed λ_m = 1.32 m²/s implies σ = 6.03e5 S/m, "
+          "a factor 2.26 below this cell (paper-defects row 14). C23's Rm = μ₀σUD against a threshold of 50 carries "
+          "that factor whole; C23 must compute Rm with BOTH values and report first whether the on/off verdict "
+          "flips. Tang+ 2025's ~1e6 supports the order of magnitude only and does not split the 2.26."),
 )
 
 # ── axis 2: tidal k₂/Q band [—] — consumer: tidal_heating (not written) ──
 # Bands are the class bands of docs/reference/tidal-heating-methodology.md §5 (Io / Enceladus / giant anchors),
-# attached to the phases those classes are made of. Empty on purpose: iron (the core is not the dissipating
+# attached to the phases those classes are made of. ⚠ These ten cells are a CLASS band copied onto each phase,
+# not a per-phase measurement: the difference between phases of one class is 0 here, and that 0 means "not
+# distinguished", not "equal". A per-phase value replaces the cell when one arrives. Empty on purpose: iron (the core is not the dissipating
 # layer in the fixed-Q recipe; no band printed), antigorite (hydrated silicate, no band), liquid / hot water
 # (k₂/Q is a solid-body quantity; the doc's icy band is for a SHELL + ocean body, not a liquid layer), ammonia.
 _TIDAL_DOC = "docs/reference/tidal-heating-methodology.md §5 (class table)"
