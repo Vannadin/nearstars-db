@@ -17,6 +17,9 @@ before the run, after the parallel seat read the methodology's printed **Needs**
 the interior domain owes the dynamo exactly one quantity, `conductor_phase`, and already supplies it; every other
 interior output the chain draws into `dynamo_rocky` (C14 · C15 · C17 · C20) has **no consumer by the methodology's
 design** (`:108–109` — RM22's structure/thermal solver is not re-run per body).
+*Evidence level (audit 2026-09-04): no pre-registration file exists in scratch; the Ⓟ–Ⓢ list was written into this note at
+drafting time (18:43), after the probe ran (18:38). The verdict stands by reproduction; the "pre-registered" claim rests on this
+note's own statement only.*
 
 ## §2 What the consumers actually read (instrument-fired, per body)
 
@@ -79,6 +82,8 @@ give) is a design decision, not a supply failure. Nothing wired; `dynamo_rocky.p
 declaration gap. Giants and brown dwarfs are outside the rocky chain by design and their dynamo runs on declared
 inputs alone (A b: B_eq 172 µT calibrated; Luhman 16 A/B: 44 / 42 mT calibrated).
 
-**Also found, not repaired.** Twelve `ref:` line numbers on dynamo-inbound edges pointed at Returns lines, blank
-lines or unrelated gates (parallel seat's sweep, re-checked line by line here); the eleven in this inventory's scope
-are corrected with the old number kept in each note. The stale sentences are kept beneath the dated correction.
+**Also found, not repaired.** The parallel seat's sweep listed dynamo-inbound `ref:` line numbers that land on Returns
+lines, blank lines or unrelated gates (re-checked line by line here). Twelve edges were touched in 5ad8f56c: **ten** refs
+corrected with the old number kept in each note (`:658 :660 :668 :669 :677 :678 :684 :685 :686 :725`), and two edges
+(`:659`, `:687`) given a note only, their refs left as they were. *(Corrected 2026-09-04 after the audit: this paragraph
+first said "twelve refs … eleven corrected"; the diff carries ten `ref was` lines.)* The stale sentences are kept beneath the dated correction.
