@@ -225,3 +225,26 @@ The grade stays `analog` — by `interior`'s grade rule (a flowing water column 
 as a convergence verdict; the pre-registration's "grade back to `calibrated`" was written from the dry body's
 grade and could not hold for a water body. Recorded as a mis-specified criterion; ⑥'s substance (convergence,
 positive control, anchors) holds. **No next wall named itself at 0.1 or 0.3.** C17 is not opened here.
+
+## 7. The window under an envelope — measured, not opened (2026-09-04, owner's question; report ⓐ approved)
+
+Owner's question: *does using a refusal as a signal make the model more faithful, or not?* The refusal-as-signal
+is a numerical bracketing strategy, not a paper; "a cold wall ⇒ the answer is above" is right only when the wall
+is a real physical limit. When it is a coverage gap, the search direction is drawn from our ignorance — exactly
+C24. Measurement (threshold |Δx/x| ≤ 1e-9 written before the run; one line changed — `column_steam_allowed =
+True` — then reverted; no commit):
+
+    Jupiter · Saturn ×2 · Uranus   bit-identical (not even noise) — the window does not touch their paths
+    Neptune                        the solution DISAPPEARS: the full solve refuses at ice_x's 1 800 K ceiling (superionic above)
+                                   where the committed anchor is converged (R 4.2101 R⊕ · T_c 6 296 K · centre 1 533 GPa · column 'molten')
+
+Reading: the refusal at 0.098 GPa · 817 K is what steers Neptune's temperature bracket to its recorded solution;
+replace that refusal with physics (IF97) and the solution is gone and another wall shows — **a real table limit,
+not a coverage gap**. So **Neptune's recorded solution is reached by way of a gap in our tables**: valid as a
+regression anchor (it reproduces, and moves are caught), shaky as a physical claim (its path depends on our
+ignorance). Its radius, 4.210 R⊕, is +8–9 % over the observed 3.86–3.89 — the anchor's standing before and after.
+**The window stays closed under envelopes not because closed is physically right but because opening it exposes
+a region we cannot evaluate** — the closed state is not the correct state. Ⓑ's comparison with observation could
+not be made: there is no new value. Corollary: the anchor move seen earlier had **both** causes — methods added
+to `_Steam` re-routing the envelope through `getattr`, and the open window itself. The superionic representation
+is listed as **C26**.

@@ -2183,7 +2183,7 @@ Tau Cet) declares a water-rich rocky body — Pandora is Earth-density with a su
 interior water fraction. The roster's only water-rich rocky candidates are **TRAPPIST-1 f/g/h** (Phase 3
 triage only, no board yet). **Priority: low until a TRAPPIST-1 board exists, high the day it does.**
 Start is the owner's decision.
-**Diagnosed 2026-09-04 (compute-only, pre-registered)**: not the temperature update, not the pressure bracket — every centre temperature below ≈ 4 100 K is refused by the water column, and the answer (≈ 2 900 K) lies inside that refused window (**(b)**): near-surface water at ~0.09 GPa · 560–870 K, below the dense-liquid table's 0.1 GPa floor and under Mazevet's 1 000 K. **A held table covers exactly that window (IAPWS-IF97, `_Steam`/`h2o_if97`) and the water column's dispatch never consulted it** — Brief 25 closed the same wall for envelope water only; a coverage gap between three IAPWS-lineage tables (seams ≤ 0.04 %), not a data problem. Fix: one candidate line, placed last in `liquid_material` so anchors stay bit-identical by construction. Beside it: 1 600 K is the rock's potential temperature, not a water world's (independent, not causal); the dispute band is a two-sided strip on a one-way flag (③, off the critical path).
+**Diagnosed 2026-09-04 (compute-only, pre-registered)**: not the temperature update, not the pressure bracket — every centre temperature below ≈ 4 100 K is refused by the water column, and the answer (≈ 2 900 K) lies inside that refused window (**(b)**): near-surface water at ~0.09 GPa · 560–870 K, below the dense-liquid table's 0.1 GPa floor and under Mazevet's 1 000 K. **A held table covers exactly that window (IAPWS-IF97, `_Steam`/`h2o_if97`) and the water column's dispatch never consulted it** — Brief 25 closed the same wall for envelope water only; a coverage gap between three IAPWS-lineage tables (seams ≤ 0.04 %), not a data problem. Fix: one candidate line, placed last in `liquid_material` so anchors stay bit-identical by construction. Under an envelope the window stays closed: opening it makes Neptune's solution disappear at ice_x's ceiling (measured 2026-09-04; C26) — closed is not "right", it is "not yet evaluable". Beside it: 1 600 K is the rock's potential temperature, not a water world's (independent, not causal); the dispute band is a two-sided strip on a one-way flag (③, off the critical path).
 
 ### Owner list — main-repository findings of 2026-09-04 (outside this worktree; not tonight's work)
 
@@ -2205,6 +2205,20 @@ Nimmo's printed 4.5–9.0; at 4 155 K Q_C is inside the range but the inner core
 picks T_c (C14's energy balance / C20's history), the mantle-base adiabat ratio (our 1.579 vs his 1.69 is 15 % of
 Q_C at his inputs), and the depression factor's hypersensitivity (C20 §5). Excluded: the boundary-layer law's
 constants, the melting-curve source, the mantle conventions. **Listed only; start is the owner's decision.**
+
+### C26 — the superionic-ice representation above ice_x's 1 800 K ceiling — **listed 2026-09-04, not started**
+
+**Why it opens**: close the near-surface water coverage gap under an envelope (the IF97 window of C24) and
+Neptune's temperature bracket reaches ice_x's 1 800 K ceiling. Today an *earlier* gap sends the search elsewhere
+and that wall is never met — the avoidance is a by-product, not a design (`water-world-convergence-context-notes.md`
+§7; `test_ice_giant.py` header).
+**What is needed**: a density and adiabatic-gradient representation of superionic ice, or a named refusal at that
+boundary. The first step is the usual literature search — ⚠ which papers exist has **not** been checked; the
+search itself is the first item.
+**Consumers**: Neptune (an anchor) and ice giants generally. Under the relaxed C5 "not on the roster" would not be
+a refusal anyway; here the consumer already sits in the anchors.
+**What this is not**: not "Neptune is wrong" — it is "we cannot yet evaluate the region Neptune's solution has to
+pass through". Listed only; the window stays closed under envelopes meanwhile.
 
 ### P1–P3 — parked, each marked with the C it came from
 
