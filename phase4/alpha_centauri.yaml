@@ -1445,12 +1445,12 @@ decisions:
       verdict: pass-in-window
       evidence: >
         Classified an Io-type volcanic moon. Check: ρ ≈ 2620 kg/m³ sits in the silicate-body range, and the
-        volcanism is powered by the ~78× Io flux in the bulk.tidal_heating row. The designation follows
+        volcanism is powered by the ~79× Io flux in the bulk.tidal_heating row. The designation follows
         the moon-numbering convention (Alpha Centauri A b I); fictional, so the db-parity check does not apply.
         The radius was 900 km until 2026-08-21; the surface heat-transport check retired it (bulk row).
       evidence_ko: >
         Io형 화산 위성으로 분류. 확인: 밀도 ~2620 kg/m³는 규산염 몸체 범위이고, 화산 활동은
-        bulk.tidal_heating 행의 ~78× Io 플럭스가 뒷받침한다. 명명은 위성 순번 규약(Alpha Centauri A b I)을
+        bulk.tidal_heating 행의 ~79× Io 플럭스가 뒷받침한다. 명명은 위성 순번 규약(Alpha Centauri A b I)을
         따르며, 픽션 천체라 DB 대조 검사는 면제. 반경은 2026-08-21까지 900 km였고, 표면 열수송 검사에서
         폐기됐다(bulk 행 참조).
 
@@ -1472,16 +1472,16 @@ decisions:
       궤도는 로슈 한계 바깥에 넉넉히 자리하고, 내부는 조석으로 뜨겁게 유지된다.
     fields:
       - { name: kopernicus_name, value: "Alpha Centauri A b I", op: set, note: "Kopernicus body name. The formal designation verbatim (_naming.to_kopernicus_name): the in-game label is a separate field, so the internal name carries the designation rather than the culture name, and the whole designation is kept because tails collide across systems", note_ko: "Kopernicus 바디명. 공식 명칭 그대로다(_naming.to_kopernicus_name). 인게임 표시명은 별도 필드이므로 내부 이름은 문화명이 아니라 명칭을 쓰고, 꼬리만 쓰면 계 사이에서 충돌하므로 명칭 전체를 유지한다" }
-      - { name: mass, value: 8.0e21, unit: kg, op: set, note: "INVENTED" }
-      - { name: radius, value: 900, unit: km, op: set, note: "INVENTED" }
-      - { name: gravity, value: 0.659, unit: m/s2, op: set, note: "derived echo of GM/R^2", note_ko: "GM/R² 파생 에코" }
+      - { name: mass, value: 1.552e21, unit: kg, op: set, note: "INVENTED · refreshed 2026-09-05 to the 521 km figure adopted 2026-08-21: echo of the satellites table (line 3431); was: 8.0e21" }
+      - { name: radius, value: 521, unit: km, op: set, note: "INVENTED · refreshed 2026-09-05 to the 521 km figure adopted 2026-08-21: echo of the satellites table (line 3431); was: 900" }
+      - { name: gravity, value: 0.382, unit: m/s2, op: set, note: "derived echo of GM/R^2 · refreshed 2026-09-05 to the 521 km figure adopted 2026-08-21: GM/R² = 0.3816 m/s² at M 1.552e21 kg · R 521 km, printed at this row's three decimals; was: 0.659", note_ko: "GM/R² 파생 에코 · 2026-08-21 채택된 521 km 형상에 맞춰 2026-09-05 갱신: GM/R² = 0.3816 m/s² (M 1.552e21 kg · R 521 km), 이 행의 소수 세 자리 표기. 구값: 0.659" }
       - { name: flattening, value: 0.098, op: set, note: "= (5/2)·J₂ mean-equatorial spheroid; the visual slot. The egg's long axis, a-c ~16%, is in the C₂₂ row's note", note_ko: "= (5/2)·J₂ 평균적도 spheroid; 시각 슬롯; 계란 장축 a−c~16%는 C22 행 note" }
-      - { name: reference_radius, value: 900, unit: km, op: set, note: "J₂/C₂₂ reference radius = radius", note_ko: "J2/C22 기준 반경 = radius" }
+      - { name: reference_radius, value: 521, unit: km, op: set, note: "J₂/C₂₂ reference radius = radius · refreshed 2026-09-05 to the 521 km figure adopted 2026-08-21: follows radius, per this row's own note that the J₂/C₂₂ reference radius is the radius; J₂ and C₂₂ themselves are dimensionless and unchanged by a density-preserving resize; was: 900", note_ko: "J2/C22 기준 반경 = radius · 2026-08-21 채택된 521 km 형상에 맞춰 2026-09-05 갱신: 이 행 자신의 note 대로 J₂/C₂₂ 기준 반경 = radius 를 따른다. J₂·C₂₂ 자체는 무차원이라 밀도를 보존하는 리사이즈에서 움직이지 않는다. 구값: 900" }
       - { name: rotation_period, value: 9.2, unit: h, op: set, note: "tidally locked (rotation = orbit)", note_ko: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
-      - { name: geopotential_j2, value: 0.039, reference_radius_km: 900, op: set, note: "= 10/3·C̄₂₂, φ0.80" }
+      - { name: geopotential_j2, value: 0.039, reference_radius_km: 900, op: set, note: "= 10/3·C̄₂₂, φ0.80 · stale 2026-09-05: reference_radius_km is still 900 km, which the body_figure decision owns; the satellites table has carried 521 km since 2026-08-21" }
       - { name: geopotential_c22, value: 0.0118, op: set, note: "Tidal triaxiality, an a-c ~16% egg shape pointed at the parent", note_ko: "조석 삼축, a−c~16% 계란형(모행성 방향)" }
-      - { name: internal_heat, value: "tidal (see bulk.tidal_heating row, ~1200× Io)", op: set }
+      - { name: internal_heat, value: "tidal (see bulk.tidal_heating row, ~79× Io)", op: set, note: "refreshed 2026-09-05 from the tidal_heating recipe @fc8532be at R 521 km (a 110,000 km from design.a_km · time-averaged e_rms 0.0186, not the row's osculating e · k₂/Q 0.0155 · M_p 120 M⊕), echo of the owning row; was: tidal (see bulk.tidal_heating row, ~1200× Io)" }
       - { name: age, value: 5.3, unit: Gyr, op: set }
       - { name: spin_axis_orientation, value: "orbit normal", op: set }
     provenance: >               # 뷰어 미렌더 — 값 이력 전용
@@ -1552,8 +1552,8 @@ decisions:
       사이 평원이 360 K 근처에 머문다. 이 분배는 아트 선택이고, 후한 선택이다. 같은 열을 고르게 펴면 표면 전체가
       제 황이 녹는 온도 위에 있게 된다.
     fields:
-      - { name: tidal_heating, value: "~1200× Io (simulated e_rms 0.0186, k₂/Q ~0.0155)", value_ko: "~1200× Io (시뮬 e_rms 0.0186, k₂/Q≈0.0155)", op: set, note: "The old ~820× assumed e 0.0175", note_ko: "구값 ~820×는 e 0.0175 가정" }
-      - { name: tidal_surface_flux, value: "~11,500 W/m² (360 K plains; the exposed melt at 1350 K covers ~5.7% of the area)", value_ko: "~11,500 W/m² (평원 360K; 노출 용융부 1350K이 면적 ~5.7%)", op: set, note: "Conductive crust ~2.1 m thick (plains). Read as a uniform radiating surface it would be 673 K with a 0.12 m crust", note_ko: "전도 지각 두께 ~2.1 m (평원). 균일 복사면 독법은 주변 673 K + 지각 0.12 m" }
+      - { name: tidal_heating, value: "~79× Io (simulated e_rms 0.0186, k₂/Q ~0.0155)", value_ko: "~79× Io (시뮬 e_rms 0.0186, k₂/Q≈0.0155)", op: set, note: "The old ~820× assumed e 0.0175 · refreshed 2026-09-05 from the tidal_heating recipe @fc8532be at R 521 km (a 110,000 km from design.a_km · time-averaged e_rms 0.0186, not the row's osculating e · k₂/Q 0.0155 · M_p 120 M⊕); was: ~1200× Io (simulated e_rms 0.0186, k₂/Q ~0.0155)", note_ko: "구값 ~820×는 e 0.0175 가정 · 2026-09-05 tidal_heating 레시피 @fc8532be에서 갱신, R 521 km (a 110,000 km, design.a_km · 순간값 e 가 아니라 시간평균 e_rms 0.0186 · k₂/Q 0.0155 · M_p 120 M⊕); 구값: ~1200× Io (simulated e_rms 0.0186, k₂/Q ~0.0155)" }
+      - { name: tidal_surface_flux, value: "~2,324 W/m²", value_ko: "~2,324 W/m²", op: set, note: "Conductive crust ~2.1 m thick (plains). Read as a uniform radiating surface it would be 673 K with a 0.12 m crust · refreshed 2026-09-05 from the tidal_heating recipe @fc8532be at R 521 km (a 110,000 km from design.a_km · time-averaged e_rms 0.0186, not the row's osculating e · k₂/Q 0.0155 · M_p 120 M⊕); was: ~11,500 W/m² (360 K plains; the exposed melt at 1350 K covers ~5.7% of the area) (the partition text in that value is stale too)", note_ko: "전도 지각 두께 ~2.1 m (평원). 균일 복사면 독법은 주변 673 K + 지각 0.12 m · 2026-09-05 tidal_heating 레시피 @fc8532be에서 갱신, R 521 km (a 110,000 km, design.a_km · 순간값 e 가 아니라 시간평균 e_rms 0.0186 · k₂/Q 0.0155 · M_p 120 M⊕); 구값: ~11,500 W/m² (360 K plains; the exposed melt at 1350 K covers ~5.7% of the area) (그 값에 붙어 있던 분배 서술도 stale)" }
     refs: ["docs/reference/tidal-heating-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "phase3/stability-sim/STABILITY_REPORT.md", "2012Icar..219..701V", "1994JGR....9917095V"]
     gate:
       criterion: [stability, canon-consistency]
@@ -1636,8 +1636,8 @@ decisions:
       유지할 만큼 서늘하고, 노출된 용융부는 1350 K에 이른다.
     fields:
       - { name: surface_type, value: "silicate volcanic (Io-type)", op: set }
-      - { name: albedo, value: 0.30, op: set, note: "Bulk average of ~0.5 over the sulfur half and ~0.10 over the basalt half; it holds because solid orthorhombic sulfur is the stable phase on the 360 K plains", note_ko: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균; 360 K 평원에서 고체 사방정계 황이 안정상이라 성립" }
-      - { name: surface_temperature, value: "360 K plains (87 C) plus exposed melt at ~1350 K (1077 C), the melt covering ~5.7% of the area", value_ko: "360 K 평원 (87°C) + ~1350 K (1077°C) 노출 용융부, 용융부 면적 ~5.7%", unit: K, op: set, note: "Read as a uniform radiating surface the plains would be 673 K and the sulfur would melt (see the divergence note on the bulk.tidal_heating row). The old 230 K + 600 K violated energy conservation against the 11,500 W/m² tidal flux", note_ko: "평원을 균일 복사면으로 읽으면 673 K이고 황이 녹는다(bulk.tidal_heating 행의 다이버전스 노트 참조). 구값 230K+600K는 조석 플럭스 11,500 W/m²와 에너지 보존 위반" }
+      - { name: albedo, value: 0.30, op: set, note: "Bulk average of ~0.5 over the sulfur half and ~0.10 over the basalt half; it holds because solid orthorhombic sulfur is the stable phase on the 360 K plains · stale 2026-09-05: this value rests on the 360 K plains, which were partitioned from the 900 km flux before the 2026-08-21 resize to 521 km; the plains have no recipe, so nothing is recomputed here", note_ko: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균; 360 K 평원에서 고체 사방정계 황이 안정상이라 성립 · stale 2026-09-05: 이 값은 360 K 평원에 기대고 있고, 그 평원은 2026-08-21 521 km 리사이즈 이전의 900 km 플럭스를 분배해 얻은 것이다. 평원에는 레시피가 없으므로 여기서 다시 계산하지 않는다" }
+      - { name: surface_temperature, value: "360 K plains (87 C) plus exposed melt at ~1350 K (1077 C), the melt covering ~5.7% of the area", value_ko: "360 K 평원 (87°C) + ~1350 K (1077°C) 노출 용융부, 용융부 면적 ~5.7%", unit: K, op: set, note: "Read as a uniform radiating surface the plains would be 673 K and the sulfur would melt (see the divergence note on the bulk.tidal_heating row). The old 230 K + 600 K violated energy conservation against the 11,500 W/m² tidal flux · stale 2026-09-05: this figure was partitioned from the 900 km flux, before the 2026-08-21 resize to 521 km; no recipe partitions the heat, so no value is computed here", note_ko: "평원을 균일 복사면으로 읽으면 673 K이고 황이 녹는다(bulk.tidal_heating 행의 다이버전스 노트 참조). 구값 230K+600K는 조석 플럭스 11,500 W/m²와 에너지 보존 위반 · stale 2026-09-05: 이 값은 900 km 플럭스를 분배해 얻은 것으로, 2026-08-21 521 km 리사이즈 이전이다. 열을 분배하는 레시피가 없으므로 여기서 값을 새로 내지 않는다" }
     refs: ["docs/reference/tidal-heating-methodology.md", "docs/reference/moon-energy-budget-methodology.md", "docs/reference/surface-color-albedo-methodology.md"]
     gate:
       criterion: [canon-consistency, physics]
