@@ -299,3 +299,114 @@ model needs the CMB heat flux to have *"varied by less than a factor of 2 over 4
 **Anchors**: none traverse `core_history.py`; `test_ice_giant.py --fast` 모두 통과; no `--refresh`.
 **What C20 does not do**: feed `entropy_history_verdict` into C15 (that node's string stays `cannot-say (needs C20)`
 until a wiring decision); supply `t_form`; include the short-lived pulse (C21).
+
+## 5. After the first run — observation, diagnostics, and what closed (2026-09-04 afternoon; directing seat's review, everything re-read here)
+
+**① against the observation, not against Nimmo — like for like.** Davies 2013 (`2013GGG....14.4608D`, cached,
+owner-obtained) prints Earth's total surface heat flow: *"refined and are agreeing at around 44–47 TW"* (line 58),
+its own map's *"final value of 45 TW"* (line 501). That total **includes the crust's radiogenic heat**, which never
+passes through mantle convection; our share-0.70 Q_M is the heat the convecting mantle carries with the crust's
+share withheld, so 28.3 against 44–47 compares two different quantities (a first version of this paragraph did
+exactly that and called it "~37–40 % low" — withdrawn). Like for like, with the numbers this project already holds
+(Nimmo & Primack 2020 `main.tex:261`, citing Davies 2013 and Sclater+ 1980, in `radiogenic-context-notes.md`):
+total **42–47 TW**, and **35–40 TW with the crust's radiogenic share removed**, total radiogenic ≈ 22 TW.
+
+    share 1.00 (crust in the mantle equation)   Q_M 34.8 TW   vs total 44–47          → ~25 % low
+    share 0.70 (crust withheld)                 Q_M 28.3 TW   vs crust-removed 35–40   → ~20–30 % low
+    Nimmo's own 42 (crust included)                            vs total 44–47          → ~5–10 % low
+
+So the shortfall against the observation is **about a quarter**, on either convention, and Nimmo's model is itself
+a little low. The crust-removed 35–40 is a secondary relay (Nimmo & Primack's reading of Davies / Sclater), not
+a value read from Davies here — a strict like-for-like number of our own is not held.
+
+**The line that matters most in this section — a hypothesis, neither adopted nor tested.** The two convention
+differences push the same way, and undoing both lands near Nimmo's 42, which is near the observation; the more
+physically faithful inputs (Earth's actual silicate mass, the crust withheld) move the result *away* from the
+observation. One reading: *the parametrised equations and their conventions are a package — calibrated to
+reproduce Earth under those conventions — and importing the equations without the conventions leaves the
+calibration undone.* If so, the way C20 is applied to other bodies changes: "more correct inputs" would be a
+mis-use of this equation set, not an improvement. The opposite reading, written beside it: *the equations were
+fitted to one Earth point, and the conventions were merely the free choices used to hit it* — in which case the
+equations carry no more than that point either way. Deciding between the two needs a third body the model can
+be checked on, which we do not have. Until then ① reads: **passed on T_c, ~25 % low on surface heat flow, and
+the miss may be a usage question, not a precision one.**
+
+**Eq. 35 cross-check — the implementation is clean.** Term by term, `mantle_flux` is eq. 35 with η₀ 1e21, ζ 0.01,
+T₀ 1 573 K, evaluated at the **potential** temperature (Nimmo line 341: *"viscosity at the mantle potential
+temperature η_t(T_m)"*), and eqs 34/36 as printed. Put Nimmo's own present T_m = 1 613 K in: η_t **6.70e20 Pa·s**,
+Q_M **41.8 TW** — his Table 4 exactly (6.7e20, 41.8). At our endpoint 1 525 K the same law gives 28.5. **The
+shortfall is the mantle temperature, not the viscosity law**; the mantle temperature is the heat budget.
+
+**Initial condition — a reading, counted as a declaration (24 → 25).** The Fig. 2 caption plots potential and real
+curves for both mantle and core and says only *"the starting temperature of both mantle and core was 4800 K"*; it
+does not say which. We read it as the **real** temperatures (T_c(0) = T̃_m(0) = 4 800 K, potential T_m(0) = 3 040 K).
+Support from the paper's own eq. 35: at a *potential* 4 800 K the viscosity is η₀ exp(−32) ≈ 1e7 Pa·s and Q_M runs
+away — our integrator blows up on the first RK4 substep at 4, 0.5 and 0.1 Myr (T_m −86 000 / −6 578 / 256 K) — and
+Nimmo prints that he integrated at 4 Myr, so his own law excludes the potential reading. Not a printed statement,
+hence a declaration; the sensitivity to the alternative reading could not be measured because the alternative does
+not integrate in this model at any step tried.
+
+**Share diagnostic — report, not adopt** (three outcomes named before the run, `scratchpad/c20-share-diagnostic-prereg.txt`
+12:3x; the same kind of diagnostic as C14's "×1.083 lands both — observed, not adopted"):
+
+    mantle share   H_m(0) TW   T_m(0) K   Q_M(0) TW   T_c(0) K   Q_C(0) TW   dT_c/dt   ΔE_min band (3.1 Gyr) MW/K   positive corners
+    0.70 (ours)    14.9        1 525      28.3        4 027      5.07        −36       −259 … +32                    1/4
+    1.00 (Nimmo)   21.3        1 573      34.8        4 009      5.15        −37       −256 … +35                    1/4
+
+Outcome **⓶**: the crust-inclusive convention closes **55 %** of the T_m gap (48 of 88 K) and **48 %** of the Q_M gap
+(6.5 of 13.5 TW). The crust convention is the main cause and a second cause of about the same size exists.
+The linear arithmetic "add 6.4 TW back → 34.7" happens to sit near the integrated 34.8 but is not the right test
+— the budget has to be integrated with the viscosity feedback; keep the coincidence from being read as a
+confirmation of the arithmetic. **0.70 did not move.**
+**ΔE_min is insensitive to the convention** (−259…+32 → −256…+35, still 1 of 4 corners positive): the possibility
+raised before the run — that the dynamo verdict hangs on one convention — is **closed, not open**.
+
+**Two unresolved items, kept apart (they were briefly one):**
+- **(i) The other half of the T_m / Q_M shortfall — closed as Nimmo's construction, not our defect.** At share 1.00
+  the remaining H_m gap (21.3 vs 23.4 TW) is entirely the mantle mass: the same 5.3 pW/kg on our (1 − CMF) M =
+  4.031e24 kg gives 21.4, on his implied 23.4 / 5.3 = 4.415e24 gives 23.4 (mass ratio 0.913, H_m ratio 0.910 —
+  directing seat's check). That mass is not printed; it is what his printed constants **construct**: a uniform
+  mantle of ρ_m = 4 800 kg m⁻³ (Table 2) between R = 3 480 km (Table 1) and R_p = 6 400 km (Table 2) — (4/3)π(R_p³
+  − R³)ρ_m = **4.423e24 kg**, ratio 1.002 to the division. Earth's real silicate shell (mantle + crust, CMF 0.325)
+  is 4.031e24 kg, a mean density of 4 446 kg m⁻³ over that shell; his Earth's mantle is ~10 % heavier by
+  construction (a core mass fraction of 0.26 instead of 0.325). So **both halves of the shortfall are Nimmo's
+  conventions** — the crust inside the mantle equation, and a uniform-density mantle — and our history is
+  colder because it carries Earth's actual silicate mass and withholds the crust. Neither is adopted; neither
+  is a defect to chase. Beside it, sized and labelled: the mantle-base adiabat ratio (ours 1.579 from the
+  interior solve vs 1.69 from his eq. 29 constants) is a computed value against printed constants — a difference
+  of source, not an error; and R_p: our history uses Earth's 6 371 km (`cmb_flux.R_EARTH_M`), his 6 400 appeared
+  here only in the cross-check that reproduces his Table 4 (Q_M ∝ R², +0.9 %). A one-point comparison with
+  Fig. 2's early T_m is not possible — the figure is an image with no values in the text layer — and is left
+  undone rather than read off tick marks.
+- **(ii) Q_C's decline — closed as a property of the model family, not a defect.** Ours: time-average 13.2 TW, present
+  5.07, peak 93 TW in the first 20 Myr (the mantle collapsing from its 3 040 K start), average/present **2.6×**.
+  Nimmo's nominal (Table 6): time-average **21.5** TW, present 9.0, average/present **2.4×** — the same shape. The
+  *"varied by less than a factor of 2 over 4.5 Gyr"* sentence (line 892) is the condition on the **eq. 44
+  alternative** (exponential F_b, Table 6 col. 2), not a constraint his nominal model meets; an earlier line of this
+  file called it a violated constraint — that reading was wrong and is withdrawn.
+
+**Nothing adopted; the recipe path is unchanged.** Declarations: new 2 (+1 reading) · standing ≈ 25.
+
+**Both conventions at once — the last diagnostic (pre-registered 12:31:31, `scratchpad/c20-both-conventions-prereg.txt`;
+report, not adopt).** Mantle share 1.00 *and* Nimmo's constructed mantle mass 4.4234e24 kg (H_m M_m(0) = 23.4 TW),
+one history at h = 4 Myr; the discriminator named in advance was the inner core (Nimmo's nominal: IC age 1.10 Gyr).
+
+    conventions                       T_m(0) K   Q_M(0) TW   T_c(0) K   Q_C(0) TW   inner core   ΔE_min band MW/K (positive)
+    ours (0.70, Earth's mass)         1 525      28.3        4 027      5.07        never        −259 … +32 (1/4)
+    share 1.00                        1 573      34.8        4 009      5.15        never        −256 … +35 (1/4)
+    share 1.00 + Nimmo's M_m          1 592      37.8        4 001      5.17        never        −255 … +36 (1/4)
+    Nimmo Table 4                     1 613      41.8        4 155      9.0         IC 1.10 Gyr  E_min 134 (his single model)
+
+Outcome **Ⓑ, with a sized residual**: the two conventions close **70 %** of the Q_M gap to his 41.8 (9.5 of 13.5 TW)
+and **76 %** of the T_m gap (67 of 88 K); ~4 TW / ~20 K remain (third, smaller cause — the adiabat ratio 1.579 vs
+1.69 and R_p are the sized candidates, untested). **The inner core still never appears, and T_c ends 150 K below
+his 4 155 K on every convention.** So the heat budget is (mostly) the conventions; **the core side is not** — C14's
+finding that closing the loop removes Earth's inner core is now **independent of the mantle conventions**. It says
+only that the cause is not on the mantle side: the core-side differences (our `fe_prem` melting curve vs his
+T_m0-anchored eq. 40 curve, θ 0.11; our Q_C 5 TW vs his 9 TW at present; γ) remain the candidates, and the C14
+question ("whose inner core is wrong — the model's or Earth's") stays open where it was. The "package" hypothesis
+above is *partly* supported inside our model (two conventions account for most of the mantle-side miss) and not
+tested on the core side. **Nothing adopted.**
+
+**Gate lines** (recorded, not interpreted): gate82 on `d5ac48b7` (C20 code): `GATE END sha=d5ac48b7 rc=0`, 507 PASS
+(+9), FAIL 0, 12:12:43 → 12:36:59 = 1456 s, powermode 2 both ends.
