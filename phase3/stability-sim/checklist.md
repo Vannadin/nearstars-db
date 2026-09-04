@@ -127,10 +127,10 @@ Note: `STABILITY_REPORT.md` lives under `phase3/`, outside the `ko/` mirror scop
 - [x] Dante size grounded via four ADS research angles → `DANTE_HEAT_TRANSPORT_EVIDENCE.md`
 - [x] Dante 521 km chosen (78× Io, 2,231 W/m², 5 % lakes = 44.6 kW/m² = Erta Ale class)
 - [x] Dynamics at 521 km + combo: **4/4 no moon lost**
-- [ ] Author the `tidal-heating-methodology.md` §6 extension from the evidence file
+- [x] Author the `tidal-heating-methodology.md` §6 extension from the evidence file
       (owner decision 2026-08-21: fold into the existing doc, do NOT create a new one —
-      heat generation and its exit are one package)
-- [ ] Index row + ko mirror wording update for the tidal-heating recipe; build_docs; check.sh
+      heat generation and its exit are one package) — §6.1–6.5, `c29204a5`
+- [x] Index row + ko mirror wording update for the tidal-heating recipe; build_docs; check.sh
 - [ ] Phase 4 rows to re-run once the doc lands: Dante bulk (radius/mass/gravity —
       J₂/C₂₂/flattening/rotation are radius-INDEPENDENT and do not change),
       Dante bulk.tidal_heating, Dante identity string, Dante surface/appearance/gameplay,

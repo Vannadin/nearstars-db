@@ -155,11 +155,19 @@ combo. Hades e_rms 0.033–0.046 and Dante e_rms 0.017–0.022 both bracket the 
 existing 0.0385 / 0.0186, so the tidal-heating rows move because of SIZE, not eccentricity.
 
 **Figure (triaxial, from the board's J₂ 0.039 / C₂₂ 0.0118, which are radius-independent
-at fixed density):** a = 549.6 km (sub/anti-planet), b = 512.7, c = 500.7 (polar).
-Relief a−c = **48.9 km**. KSP forces a spherical ocean, so put the lava sea just below
-c (~500.2 km) for zero global flooding and cut Grand Chasma's floor below it — and site
-the chasm near the poles or the leading/trailing lows, where the figure is already
-12–49 km below the tidal bulge.
+at fixed density).** Use the project's volume-conserving synchronous figure
+(`docs/reference/body-figure-methodology.md`: a/R = 1 + 7J₂/3, b/R = 1 − 2J₂/3,
+c/R = 1 − 5J₂/3, and `scripts/refs/body_figure.py::ellipsoid_ratios` for the a:b:c
+Kopernicus emit). At R = 521 km: **a = 568.4 km** (sub/anti-planet), **b = 507.4**,
+**c = 487.1** (polar); relief a−c = **81.2 km**, i.e. 16.7 % of the polar radius, which
+reproduces the board's existing "a−c ~16 % egg" note. KSP forces a spherical ocean, so
+the PQS base sphere is the polar radius: put the lava sea just under c and the
+sub-Polyphemus bulge stands up to 81 km above it, which is the Grand Chasma wall budget
+(Valles Marineris is 7 km deep, so the art only needs a fraction of it).
+
+*Correction:* an earlier pass of this file used a = R(1 + J₂/2 + 3C₂₂) and reported
+48.9 km. That form is not volume-conserving and is not the project convention; the
+numbers above supersede it.
 
 ## Related
 

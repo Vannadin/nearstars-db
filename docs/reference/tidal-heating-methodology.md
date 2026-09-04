@@ -458,9 +458,12 @@ Two by-products worth recording, because they are what make the check cheap to r
   parameter is `q = M_p / ((4/3)πρa³)`, in which the heated body's own radius does not
   appear. Resizing a moon changes its mass, gravity and flux; it does **not** change
   its flattening, its triaxial *ratios*, or its rotation period.
-- The absolute relief does scale. Dante's `J₂ = 0.039` / `C₂₂ = 0.0118` give
-  `a = 549.6`, `b = 512.7`, `c = 500.7 km`, a sub-planet-to-pole relief of **48.9 km**
-  — the height budget available to a canyon wall once a spherical sea level is imposed.
+- The absolute relief does scale. Dante's `J₂ = 0.039` through the volume-conserving
+  synchronous figure of [`body-figure-methodology.md`](body-figure-methodology.md)
+  (`a/R = 1 + 7J₂/3`, `b/R = 1 − 2J₂/3`, `c/R = 1 − 5J₂/3`) gives `a = 568.4`,
+  `b = 507.4`, `c = 487.1 km`: a sub-planet-to-pole relief of **81.2 km**, which is the
+  height budget available to a canyon wall once a spherical sea level is imposed at the
+  polar radius.
 
 ---
 
