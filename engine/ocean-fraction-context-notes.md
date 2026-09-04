@@ -99,3 +99,19 @@ methodology (en + ko), beside the Ganymede row, which likewise carries no citati
 What C17 *did* settle: the edge's supplier is mislabelled — its payload is
 `ice_mass_fraction`, not `f_ocean` — and half of it (the class → regime 4) already arrives. **Nothing wired
 into `dynamo_rocky`; the moment step was not attempted** (it needs `locked`, C16).
+
+## 4. After C24 closed (2026-09-04, later the same day) — the numbers above are superseded
+
+The unconverged rows of §3 (ice 0.1 → T̃_m 4 397 K, ice 0.3 → 4 372 K) were the stuck-hot state of a loop blocked by
+the water column's coverage gap (`water-world-convergence-context-notes.md`). With the gap bridged the column
+converges: **ice 0.1 → R 1.1313 R⊕ · P_cmb 132.2 GPa · T_cmb 3 105 K; ice 0.3 → R 1.2585 · 117.7 GPa · 3 050 K**
+(dry: 1.0030 · 135.3 · 2 526 K). The direction stands — a water-rich body's CMB is *hotter* than the dry one's,
+not cooler as the methodology's item 4 says — but the size is now a converged one, and the "~4 400 K" in §3 and
+in the methodology is superseded. **C17's structural half is measurable from here; opening it is a separate
+start, not done in this file.**
+
+**Observation, not a task (directing seat):** the same derived number had been copied into five places — this
+file, the C17 row in `interior-core.md`, the rocky-dynamo methodology (en and ko) and the `chain.yaml` edge note.
+One went stale, so five went stale, and when C17 actually starts the same five places will need the same edit
+again. Item ① (the phase side tables) was built today so that a *value* has one home; the prose already had
+five homes for this one. The same problem with another face; recorded for the day it is addressed.

@@ -171,6 +171,10 @@ RM22's grid runs 0.1–48 M⊕ but the physics branches sharply:
    interior, measured 2026-09-04 (C17)**: at 0.1 / 0.3 water on an Earth-mass body the CMB *pressure* falls
    as written (135 → 116 GPa) but the CMB *temperature rises* (2 526 → ~4 400 K), the opposite of "cooler" —
    an **unconverged** trial (C24), so an observation, not a verdict. The edge stays a gap on both counts.
+   ⚠ **Updated the same day, after C24 closed**: with the column converging, the CMB temperature is **3 105 K at
+   0.1 water and 3 050 K at 0.3** (converged; dry 2 526 K) — still *hotter* than dry, the opposite of "cooler", but
+   the ~4 400 K figure above was the unconverged state and is superseded. The structural half of C17 is now
+   measurable; its start is a separate decision.
 5. **Low-density dry (ρ < 0.8 ρ⊕, Mars-analog)**: small core, cools fast, likely
    dynamo-dead by a few Gyr → `ℳ = 0` today.
 
