@@ -86,6 +86,13 @@ our ceiling is right, and a Neptune that needs more is "this model cannot solve 
 bound → record as unresolved, and do not fill it with AQUA's 2291 K (a seam of someone else's table, not our fit's
 range). **In no outcome does the ceiling move**; AQUA is not evidence here (its region is M19, the same source as
 `h2o_hot`, and its 2291 K flat line is AQUA's own construction).
+*Addendum 2026-09-04 (parallel seat, scratch-only, audited): the M19 identity holds at the refusal point — 923.6 GPa lies above
+AQUA's own 700 GPa hand-over to M19 (AQUA §2.3.3); between 100 and ≈722 GPa the AQUA and Mazevet densities differ (+6.33 % at
+100 GPa · 1995 K, zero crossing ≈228 GPa, −2.1 % at 317 GPa). Substituting AQUA's region 5 (Brown 2018) into `h2o_hot` over
+1–100 GPa perturbs the `h2o_hot` call path (branch at call 1533; 8837 → 8308 calls) yet leaves every `PhaseGap` the solve raises
+bit-identical — all seven, including the ceiling refusal at h2o · 923611757256.9896 Pa · 1800.0000005870 K (t − 1800 = 5.9e−7 K,
+consistent with the "< 0.5 K" in ② below). Pre-registered outcome Ⓐ; the report and pre-registration live in the parallel seat's
+scratch, not the repository.*
 
 **① What the number is.** `ICE_VII_X_T_MAX = 1800.0` (`eos.py`) is the **upper knot of the temperature axis of
 SeaFreeze v1.1.0's `VII_X_French` spline**, read out of the shipped `.mat` on 2026-08-27 (`ice-x-context-notes.md`:
