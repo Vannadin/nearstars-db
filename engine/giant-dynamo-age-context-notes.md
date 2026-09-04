@@ -122,3 +122,132 @@ exists in the DB as `derived.luminosity_lsun` (A 2.14e-05, B 1.95e-05) — and i
   a dynamo scaling* (Reiners & Christensen's B_dyn wants the internal flux, which the measurement gives
   only if nothing else contributes).
 Both go to the owner's list with ③.
+
+## 5. Pre-registration for the brown-dwarf branch (directing seat's brief, copied verbatim before any code — 2026-09-04)
+
+##### C19 brown-dwarf branch — pre-registration
+
+**Owner released this 2026-09-04 knowing it sits OUTSIDE the interior-structure stem.** The
+owner asked *"지금 혹시 내부구조 그룹 밖 작업 하려는거야?"*, the directing seat confirmed it does
+(this branch consumes mass, luminosity and radius and touches nothing the interior solver
+produces), and the owner answered *"뭐 이미 시작했으니까 걍 2,3 하는데까지 해보자."*
+**Record that in the commit.** C19 stays on the interior C-list because that is where it was
+opened; the *work* is a `dynamo.py` job, and the next seat must not read this as the stem moving.
+
+#### 1. Why the old refusal no longer holds
+
+`dynamo.py`'s docstring refuses the brown-dwarf branch like this:
+
+    "The document sends it to B_dyn = 4.8 (M L^2 / R^7)^(1/6), which needs the body's
+     internal cooling luminosity, and the same document explicitly refuses to supply
+     L(M, age) rather than ground a cooling track it has not verified."
+
+**The refusal was about deriving L, not about the scaling.** The scaling is published and held:
+Reiners & Christensen 2010 (`2010A&A...522A..13R`, cached as arXiv `1007.1514`), relayed in
+`docs/reference/planetary-dynamo-scaling.md` §"Brown dwarfs, 13–70 M_J: use B_dyn directly".
+
+For **an isolated brown dwarf there is no cooling track to derive** — the body has no host star
+and no fusion, so its observed bolometric luminosity *is* the internal cooling luminosity, and
+the DB already holds it as a **measurement**. Christensen, Holzwarth & Reiners 2009
+(`2009Natur.457..167C`, obtained by the owner 2026-09-04) makes the same move explicitly: its
+`q_o` is *"the bolometric flux at the outer boundary"*, and for stars it is taken from the
+effective temperature, not from a track.
+
+⚠ **The one thing that must be stated, not assumed**: that identification (observed L_bol =
+internal cooling L) is *sound for an isolated brown dwarf* and *false for an irradiated
+planet*. Write the condition into the code beside the branch, or a later seat will apply this
+to a hot Jupiter.
+
+#### 2. Inputs — and their honest status
+
+Read from `db/systems/luhman_16_{a,b}.json` on 2026-09-04:
+
+| input | A | B | status |
+|---|---|---|---|
+| M [M☉] | 0.032 ± 0.0003 | 0.0273 ± 0.0003 | **measured** — binary orbit, Lazorenko & Sahlmann 2018 (`2018A&A...618A.111L`), `recommended: true` |
+| L [L☉] | 2.14e-05 | 1.95e-05 | **measured** — bolometric, Faherty+ 2014 |
+| R [R☉] | 0.09 ± 0.01 | 0.09 ± 0.01 | ⚠ **DECLARED, not measured** |
+
+⚠⚠ **The radius is an assumption and it is the most sensitive input.** The DB says so itself:
+*"No measured radius exists for either component. Faherty 2014 adopts R = 0.9 R_Jup via the
+Vrba et al. 2004 prescription … this is the standard field-brown-dwarf radius assumption, not a
+measurement. ~0.08–0.10 R☉ over the 0.1–3 Gyr age range."* Both components carry the same value
+**because it is the same assumption**, not because anyone measured them equal — this was raised
+as suspect (owner list O2) and is hereby **closed as correctly labelled**.
+
+In `B_dyn ∝ (M L² / R⁷)^(1/6)` the radius enters as **R^(−7/6)** — the steepest exponent in the
+formula, applied to the only input that is a declaration. **This is the branch's dominant
+uncertainty and it must be reported as a band, never as a single number.**
+
+#### 3. Branches — named before any number is computed
+
+##### ① Magnitude against the published expectation
+Two independent published statements exist *before* we compute, and they are the pre-registered
+target:
+- Christensen+ 2009: a typical **1-Gyr-old BD of 0.05 M☉ at T_eff 1500 K** → surface field
+  **of order 0.1 T = 1 kG**.
+- `planetary-dynamo-scaling.md` §domain: *"massive BDs reach a few kG when young, weakening
+  ~10× by 10 Gyr."*
+
+Luhman 16 A/B are **less massive** (0.032 / 0.027 vs 0.05 M☉) and **less luminous**, so a value
+*at or somewhat below 1 kG* is the expectation.
+- **①a within a factor of ~3 of 1 kG** → consistent; report with the band from ②.
+- **①b an order of magnitude or more away** → **do not report the number as a result.** Find
+  the disagreement first: unit slip (the formula is in **solar units** and returns **kG**), or
+  the L identification of §1, or the radius.
+- **①c the formula returns something unphysical** (non-finite, negative) → a coding fault, stop.
+
+##### ② The band is mandatory, and its width is pre-declared
+Propagate **R over the DB's own 0.08–0.10 R☉**, not over ±1σ of a fictional measurement. That
+is ~±11 % in R, hence **~±13 % in B** through R^(−7/6). Also carry the mass uncertainty
+(±0.9 %, negligible by comparison) so the report shows which input dominates.
+- **Emit `b_dyn_min` / `b_dyn_max`, and state in the result that the width is radius-driven.**
+- ⚠ **A single-valued `b_dyn` is forbidden on this branch.** The radius is declared; a bare
+  number would be the most confident-looking output in the engine and the least earned.
+
+##### ③ What the consumer actually wants — check before wiring
+`dynamo.py` today returns `B_pol`, `B_eq` and a moment normalised to Earth. The giant branch
+gets there via `B_dip^eq = B_dyn / (2√2)` **plus a mass-dependent depth attenuation**, because
+in a giant the dynamo sits below the visible surface (~0.83 R in Jupiter).
+- ⚠ **The methodology says brown dwarfs are different**: *"use B_dyn directly (dynamo near the
+  surface)"*. So for a BD, **do not apply the giant's depth attenuation.**
+- **③a the consumer wants a surface dipole** → the 2√2 conversion applies but the depth
+  correction does not; say so in the code.
+- **③b the consumer wants B_dyn itself** → emit it and label it as the dynamo-surface rms field,
+  not a surface dipole.
+- **③c the consumer wants a magnetic moment** → the moment normalisation uses `(R/R_J)³`;
+  confirm it is meaningful for a BD before reusing the giant's constant.
+**Resolve ③ by reading the consumer, not by choosing.**
+
+##### ④ The saturation condition must be checked, not assumed
+The scaling is rotation-independent **only above a critical rotation rate**. The methodology
+says this *"holds for isolated brown dwarfs"*, and Luhman 16 rotates in **6.94 h (A)** and
+**4.87 h (B)** (`rotation_period_days` 0.2892 / 0.2029) — fast. **Assert the condition in the
+code with those numbers**, so a slow rotator later cannot silently take this path.
+
+##### ⑤ Domain guard
+Branch applies to **13–70 M_J**. Luhman 16 A/B are ~33.5 / ~28.5 M_J — inside. Bodies outside
+must keep returning out-of-domain, and the existing giant / ice-giant / rocky refusals must not
+be disturbed.
+
+##### ⑥ Anchors and gate
+Confirm no anchor path traverses this branch; if so **anchors untouched, no `--refresh`** —
+state it in the commit. Gate **FAIL 0**, and say what it adds to gate time.
+
+#### 4. What must NOT be claimed
+
+- Not *"Luhman 16's magnetic field is X"* — it is **the field an energy-flux dynamo scaling
+  predicts, on a declared radius**. Christensen+ 2009 itself notes *"Magnetic fields have not
+  been detected at brown dwarfs so far."* There is no measurement to agree with.
+- Not that C19 is closed for anything but this branch. The **giant** half was already wired
+  (mislabelled, fixed 2026-09-04); the **`internal_heat_nontidal` for giants** consumer named in
+  the C19 row is a separate waiting consumer and this does not serve it.
+- ⚠ Do not equate Christensen+ 2009's `c = 0.63` with Driscoll & Olson's `c_d = 0.2`; different
+  quantities (energy density vs dipole intensity). Recorded in `2009Natur.457..167C.PROVENANCE.txt`.
+
+#### 5. Order
+
+read the consumer (③) → domain + saturation guards (⑤ ④) → the band (②) → compute → ① check.
+**① is read last.** It is the number everyone wants and the one most easily produced by a unit slip.
+
+**Resolved before code, by reading (③)**: `chain.yaml:718` is the only edge out of `dynamo_giant` — `magnetosphere_geometry` requires `b_eq` [µT]. So ③a: emit `b_eq = B_dyn/(2√2)` (RC10 eq. 2) with **no depth attenuation**, `b_pol = 2 b_eq`, and reuse the moment normalisation (a dipole moment is B_eq·R³ by definition; 4.5 G · 20000 only sets the ×Earth scale). **And a lowered expectation, stated up front**: `magnetosphere_geometry` has no recipe, so the giant branch's `b_eq` already has no consumer — building this branch removes one refusal inside the module and closes the `cooling_luminosity` gap edge; it does **not** wire the dynamo downstream and creates no new orphan output. Beside it: `tidal_locking → dynamo_giant` (`:648`, selects) — the tidal-locking recipe candidate has two consumers, not one. Recorded, not acted on.
