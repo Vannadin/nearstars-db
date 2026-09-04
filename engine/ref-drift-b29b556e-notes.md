@@ -1,5 +1,10 @@
 <!-- b29b556e 계약 블록 삽입이 chain.yaml ref 줄번호를 얼마나 밀었는지의 전수 대조(tidal +18 / heat +1) — 병렬석 기록, 원문 무편집 -->
 <!-- Landed 2026-09-04 from the parallel seat's scratch (REF-DRIFT-b29b556e.md, 20:32:13 KST), body unedited. The repair commit that follows b29b556e applies exactly this table. -->
+<!-- Two later corrections, both in the notes that arrived on 2026-09-05, body here left as written:
+     (1) the `old[n] == cur[shift(n)]` test cannot show whether a ref was right to begin with, only that it
+     moved by the shift — see c32-h-ref-anchors-notes.ko.md; (2) using `--ignore-revs` for the delta baseline
+     back-fires, because the commit it would ignore is the one that already applied the shift, so the shift is
+     counted twice — see c32-k-drift-reuse-wrongdoc-notes.ko.md. -->
 
 # chain.yaml ref 드리프트 — b29b556e 이후
 Parallel seat, 2026-09-04. HEAD `b29b556e`, 워크트리 clean, 읽기 전용.
