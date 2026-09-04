@@ -805,7 +805,7 @@ prescription — record the effective ceiling with the table — is what this pa
 **Where it bites, stated precisely, because the obvious reading is wrong.** It is *not* true
 that the anchors stay under 355 GPa: the ice giants' mantles span 34.5–820 GPa (Uranus) and
 39.2–1016 GPa (Neptune). They are unaffected for a different reason — their mantles run
-2553–6066 K, above `ICE_VII_X_T_MAX` = 1800 K (`eos.py:1840`), so the ladder branch never
+2553–6066 K, above `ICE_VII_X_T_MAX` = 1800 K (`eos.py@«# # **그 처방을 따르지 않았다.**»`), so the ladder branch never
 fires there and Mazevet carries the column. **The extrapolation therefore bites only on a
 cold, dense water column: T < 1800 K above ~355 GPa** — the same cold flank this list has
 been tracking all day, and a second reason (beyond "no table at all") that AQUA's high-
@@ -1915,7 +1915,7 @@ spatial integration (shooting, already built) and from C14's root-find (no integ
 **Two design conditions from the owner, in the same message:**
 1. *"행성의 생성 시기는 모천체의 생성시기로"* — the integration's t = 0 is pinned to the **star's / system's
    age**, not a per-body declaration; one declaration fewer. ⚠ **This conflicts with the graph as it stands**:
-   `chain.yaml:90` `body_age` is `kind: measured`, `domain: given`, layer 0, with the note *"천체 자신의 나이.
+   `chain.yaml@«body_age:»` `body_age` is `kind: measured`, `domain: given`, layer 0, with the note *"천체 자신의 나이.
    항성 나이와 다르고, 거대행성 냉각광도의 실입력이다"*, and `system_age` (`t_sys`, `:85`) is a separate node
    (`:666`: *"항성풍의 나이는 항성의 나이 = 계의 나이"*). **Resolving the `body_age` / `system_age` relation is a
    prerequisite of starting C20** — recorded here as a fact, nothing in `chain.yaml` changed.
@@ -2193,7 +2193,7 @@ Start is the owner's decision.
 
 | # | finding | where | evidence | what it is not |
 |---|---|---|---|---|
-| O1 | Luhman 16 A/B age: DB 1.5 ± 1.5 Gyr ("unverified" — the midpoint of a 0.1–3 Gyr range put in the value slot) and board 0.5 Gyr (Gagné 2023 moving group). **Not a contradiction but a precision difference**: 0.5 lies inside the DB's range; Burrows supports the narrow one (directing seat's correction of its own first wording) | `db/systems/luhman_16_{a,b}.json` vs `phase4/luhman_16.yaml:80,640` | Burrows+ 2001 eq. 4 with the DB's own g → 0.54 / 0.44 Gyr; eq. 1 closes the DB luminosity within 20–30 % at 0.5 Gyr, 3–4× off at 1.5 | not a worktree edit — `db/systems` is build output; fix in the source layer |
+| O1 | Luhman 16 A/B age: DB 1.5 ± 1.5 Gyr ("unverified" — the midpoint of a 0.1–3 Gyr range put in the value slot) and board 0.5 Gyr (phase4/luhman_16.yaml@«- { name: age, value: 0.5, unit: Gyr, op: passthrough, note: "Phase 3 resolved: Oceanus ») (Gagné 2023 moving group). **Not a contradiction but a precision difference**: 0.5 lies inside the DB's range; Burrows supports the narrow one (directing seat's correction of its own first wording) | `db/systems/luhman_16_{a,b}.json` vs `phase4/luhman_16.yaml:80,640` | Burrows+ 2001 eq. 4 with the DB's own g → 0.54 / 0.44 Gyr; eq. 1 closes the DB luminosity within 20–30 % at 0.5 Gyr, 3–4× off at 1.5 | not a worktree edit — `db/systems` is build output; fix in the source layer |
 | O2 | Luhman 16 A and B carry the same radius 62 613 km in the `principia` block, source unrecorded | same files, `principia.mean_radius_km` | eqs 3–4 are sensitive to it through g | not a value judgement — a provenance check |
 | O3 | Three cache names are arXiv abstract pages, not papers: `1004.1091`, `1209.5323`, `1401.8145` (50-byte .md, .html without `ltx_document`) | `docs/phase3/_papers/` | `check_paper_held.py` now says ABSTRACT-ONLY for them | not an engine citation — none of the engine axis cites them |
 | O4 | Two methodology docs label those shells "cached": Crossfield 2014 (`spin-axis-inclination-methodology.md@«- **Crossfield et al. 2014**, Nature 505, 654 ([`2014Natur.505..654C`](https://ui.adsabs.harvard.edu/abs/2014Natur.505..654C), arXiv [1401.8145](https://arxiv.org/abs/1401.8145), **cached**).»`, claims v sin i for both components — not in the abstract) and Heller & Barnes 2013 (`ice-stability-methodology.md@«- **Heller & Barnes 2013** ([arXiv:1209.5323](https://arxiv.org/abs/1209.5323), cached).»`, claims the satellite energy budget — the abstract only names four terms). **The values are safe**: the board's spin-axis row (`phase4/luhman_16.yaml:133`) cites only Apai+ 2021, held in full. The defect is the label — *false provenance* — en and ko alike | those two docs + ko mirrors | `check_paper_held.py --scan` | not a number error; do not inflate |
@@ -2306,7 +2306,7 @@ over 0.8–2 M⊕, Nimmo+ 2004 integrates Earth to T_m 1 613 K. The engine's `ma
 comment says the source relaxes it to 1400–1900 K.
 
 **(c) The dynamo declared on — owner decision 2026-09-04.** Rather than author a core-side CMB temperature for Pandora, the
-owner declares what the board already states: `phase4/alpha_centauri.yaml:2296` "75 µT … a tidally driven iron-core dynamo",
+owner declares what the board already states: `phase4/alpha_centauri.yaml@«- { name: magnetic_field, value: "75 µT (~1.8× Earth; the upper bound of the rocky-dynamo M+ lad»` "75 µT … a tidally driven iron-core dynamo",
 `:2139` "Radiogenic plus weak tidal heating … enough to drive volcanism, continental drift and a dynamo", `:2259` "fast
 continental drift". `bodies/pandora.yaml` gains `dynamo_alive: true` and `stagnant_lid: false` (grade declared, sources beside
 each). `dynamo_rocky.ladder` honours `dynamo_alive` **only while `conductor_phase` is undecided**; a computed liquid or solid

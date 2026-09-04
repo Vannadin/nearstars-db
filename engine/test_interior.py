@@ -88,7 +88,8 @@ DECLINES = [
 # (Bierson+ 2019 §2.2 의 제외 목록).
 #
 # 지금 True 인 둘은 보드에 `tidal_heating` 행을 실제로 가진 둘이다
-# (phase4/alpha_centauri.yaml:1553 Dante ~1200× Io · :1888 Hades ~15× Io). 나머지
+# (the two boards rows: phase4/alpha_centauri.yaml@«- { name: tidal_heating, value: "~1200× Io (simulated e_rms 0.0186»
+# Dante, and the Hades row beside it ~15× Io). 나머지
 # 넷에는 그 행이 없다.
 #
 # (이름, 질량 kg, 반지름 km, 얼음 허용, 조석가열 선언, 보드 근거)

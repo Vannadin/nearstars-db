@@ -30,7 +30,7 @@ looks right.** Branch ⑤ exists for that reason and is not a formality.
 
 #### 1. Prerequisite to settle *before* the first line of code
 
-`body_age` vs `system_age`. `chain.yaml:90` calls `body_age` `kind: measured, domain: given` with a
+`body_age` vs `system_age`. `chain.yaml@«body_age:»` calls `body_age` `kind: measured, domain: given` with a
 note (`:94`) saying the body's age *differs* from the star's. The roster does not do that —
 `alpha_centauri_a_b.yaml` and `pandora.yaml` both carry the **system** age 5.3 Gyr, `earth.yaml` 4.54.
 

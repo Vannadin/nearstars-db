@@ -105,7 +105,7 @@ to `dynamo.py` tonight (a reason-string change is a code change; it goes with th
 **③ Two of our own records disagree on Luhman 16's age** (directing seat's check, verified here):
 
     db/systems/luhman_16_{a,b}.json   stars[].derived.age_gyr = 1.5   ← age_measurements: 1.5 ± 1.5 Gyr, method "unverified", attributed Faherty+ 2014 (2014ApJ...790...90F)
-    phase4/luhman_16.yaml:80, :640    age = 0.5 Gyr, op: passthrough   ← "Oceanus moving group (Gagné 2023), 12C/13C corroboration (de Regt 2026)"
+    phase4/luhman_16.yaml@«- { name: age, value: 0.5, unit: Gyr, op: passthrough, note: "Phase 3 resolved: Oceanus » (and the B-side row)    age = 0.5 Gyr, op: passthrough   ← "Oceanus moving group (Gagné 2023), 12C/13C corroboration (de Regt 2026)"
 
 The DB's 1.5 ± 1.5 reads as the midpoint of a 0.1–3 Gyr range, not a measurement. Three pieces of evidence
 point at 0.5: the board's Gagné 2023 membership; eq. 4 with g from the DB's own mass and radius gives
@@ -339,7 +339,7 @@ single value forbidden) → compute → ① magnitude read last.
   of out-of-domain and the `cooling_luminosity` gap edge closes. **Not** "the dynamo is wired downstream":
   `magnetosphere_geometry` has no recipe, so the giant branch's `b_eq` already has no consumer and this
   branch adds none — one refusal inside the module is gone, no new orphan output was made. `tidal_locking →
-  dynamo_giant` (`chain.yaml:648`) means the tidal-locking recipe candidate has two consumers — recorded.
+  dynamo_giant` (`chain.yaml@«from: tidal_locking, to: dynamo_giant»`) means the tidal-locking recipe candidate has two consumers — recorded.
 - **Anchors**: no anchor path traverses `dynamo.py`; `test_ice_giant.py --fast` 모두 통과 on this tree, no `--refresh`.
 
 **Gate lines** (kept out of the powermode-2 table where marked):

@@ -85,7 +85,7 @@ the two half-lives above and initial ²⁶Al/²⁷Al, ⁶⁰Fe/⁵⁶Fe ratios f
   → dynamo_rocky` via `geotherm` (`chain.yaml@«tidal_heating:»`), wants the **decay history**, because
   `Rm > 40` asks whether the core is *still* convecting. **Build present-day first; history is
   the second increment.**
-- **Naming hazard, recorded not fixed.** `chain.yaml:99–102` already flags that
+- **Naming hazard, recorded not fixed.** `chain.yaml@«internal_heat_nontidal:»` (그 노드 블록. 줄번호 :99–102 는 2026-09-05 이행 이전 표기) already flags that
   `internal_heat_nontidal` outputs `geotherm` while `interior_layers` carries `cmb_temperature`
   — one word covering two quantities (a heat *budget* versus a T(P) *profile*), and the file
   says the geotherm-side name should be split. **Do that before wiring H(r) into either.**

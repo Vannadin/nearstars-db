@@ -67,7 +67,7 @@ track; the registration returns out-of-domain there, naming that refusal. `l_int
 **is** the radiogenic power, and `t_int = (F/σ)^¼` is the methodology's own §1 (≈ 35 K for Earth) —
 so the existing contract names are honest for rocky bodies without inventing a giant model.
 
-**The `geotherm` name is retired, as Brief 40 §4 required before wiring.** `chain.yaml:99–102`
+**The `geotherm` name is retired, as Brief 40 §4 required before wiring.** `chain.yaml@«internal_heat_nontidal:»` (그 노드 블록, 옛 :99–102)
 already said one word covered two quantities (a heat *budget* here, a T(P) *profile* in
 `interior_layers`). The output becomes **`mantle_radiogenic_power`** [W] (the 70 % share that heats
 the convecting mantle) beside `radiogenic_power` [W] (total), `crust_radiogenic_power` [W],
@@ -75,7 +75,7 @@ the convecting mantle) beside `radiogenic_power` [W] (total), `crust_radiogenic_
 `radiogenic_power_history_4gyr` [—] (H(−4 Gyr)/H(now)), and `l_int` / `t_int`.
 
 **The two gap edges this closes.** `internal_heat_nontidal → interior_layers` (the
-potential-temperature anchor, `chain.yaml:410`) and `→ core_state` (the CMB flux, `:422`) both
+potential-temperature anchor, `chain.yaml@«from: internal_heat_nontidal, to: interior_layers»`) and `→ core_state` (the CMB flux, `chain.yaml@«from: internal_heat_nontidal, to: core_state»`) both
 carried *"저쪽이 프로파일도 열류도 내지 않으므로 지금은 선언으로 받는다"*. The supplier now emits the
 budget; **the consumers keep declaring** `potential_temperature` and `core_cmb_temperature`, because
 turning a budget into a temperature or a boundary-layer flux is the thermal model this paper defers

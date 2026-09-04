@@ -83,7 +83,7 @@ said the block was V. It is φ.** The brief's expectation was made from the `Rem
 shortcut; the cached paper's general form eliminates V. The refusal reads "blocked on φ".
 
 **Is V reachable from anything we solve? — checked against the cached paper, not the summary.**
-L is: `interior_layers` emits `core_radius` and `chain.yaml:412` already wires it. V is **not** —
+L is: `interior_layers` emits `core_radius` and `chain.yaml@«tidal_locking:»` already wires it. V is **not** —
 but Gaidos's own route never uses V. Their eq. 3–4 (lines 183-200, 여기):
 
     Rem ≈ a₂′ [φ T̄ (R_c − R_i)]^{1/3} (R_c − R_i) / λ,   p = φT̄ / (Ω³(R_c−R_i)²),  φ = Φ/M_c

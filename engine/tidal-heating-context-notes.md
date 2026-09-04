@@ -94,7 +94,7 @@ The audit approved C30's numbers and rejected five citations or sentences around
   travelled. Now `radiogenic.py _total_heat:265-267`: naming the function as well as the line means the next block
   inserted above it degrades the citation instead of falsifying it. `0ace3863` refreshed 53 refs and missed this one
   because it lives inside a string constant, not in a comment.
-- **(b) `tidal_heating.py:104` cited `tidal-heating-methodology.md@«> and comfortably below the 384 kW/m² bare-melt ceiling.»` for `F ∝ R³`.** That line is now the 384 kW/m² bare-melt ceiling; the
+- **(b) `tidal_heating.py@«inputs, REFS) if k2_over_q is None»` cited `tidal-heating-methodology.md@«> and comfortably below the 384 kW/m² bare-melt ceiling.»` for `F ∝ R³`.** That line is now the 384 kW/m² bare-melt ceiling; the
   scaling sentence is `:458`. Two more of the same kind in the same file, found by the directing seat: lines 4 and 59
   cited `:58` for `n = √(GM_p/a³)`, and `:58` is now inside the `heat_transport_mode` contract block that b29b556e
   itself added, while line 113 of the same file already cited that sentence correctly as `:76`. One file, one sentence,
