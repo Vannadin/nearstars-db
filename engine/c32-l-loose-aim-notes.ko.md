@@ -14,7 +14,7 @@ Parallel seat, 2026-09-05. HEAD 6654d314, 읽기 전용, 레포 쓰기 없음.
 글자까지 같습니다**(Δ=0, 문서 머리 12줄 전체가 무변경). 그 줄은 —
 
 > `:4-6` **Method reference for turning a body's **dipole field strength** (from the
-> [rocky](rocky-planet-dynamo-methodology.md) or [giant](planetary-dynamo-scaling.md)
+> [rocky](../docs/reference/rocky-planet-dynamo-methodology.md) or [giant](../docs/reference/planetary-dynamo-scaling.md)
 > dynamo recipes) into the **shape and size of its magnetosphere** …**
 
 두 간선은 `dynamo_giant → magnetosphere_geometry, requires, via: b_eq` 와

@@ -34,8 +34,8 @@ tidal:735→795)과 제 결과가 전부 일치합니다.
 | `896` | `internal_heat_nontidal → t_eff_body, excludes, scope: self` | `heat:309` | **`heat:484`** | +176 | ⚠ 원래 후보 `(0.087/σ)^(1/4) ≈ 35 K` 는 **두 줄(`:362`·`:484`)에 나옵니다.** 유일한 대안 → `` against Earth's `T_eq ≈ 255 K` `` (또는 바로 위 `:483` 의 `Plug the flux into §1:`) | `## 7. Worked examples` |
 | `661` | `internal_heat_nontidal → dynamo_giant via l_int` | `heat:473` | **`heat:648`** | +176 | `[planetary-dynamo-scaling](planetary-dynamo-scaling.md)` | `## Related` ⚠ |
 | `836` | `internal_heat_nontidal → mass_radius_relation, influences +` | `heat:478` | **`heat:653`** | +176 | `[mass-radius-relation-methodology](mass-radius-relation-methodology.md)` | `## Related` ⚠ |
-| `646` | `tidal_heating → ice_stability, requires` | `tidal:735` | **`tidal:795`** | +78 | `` [`ice-stability-methodology.md`](ice-stability-methodology.md) `` | `## Related` ⚠ |
-| `647` | `tidal_heating → crater_state, requires` | `tidal:738` | **`tidal:798`** | +78 | `` [`crater-degradation-methodology.md`](crater-degradation-methodology.md) `` | `## Related` ⚠ |
+| `646` | `tidal_heating → ice_stability, requires` | `tidal:735` | **`tidal:795`** | +78 | `` [`ice-stability-methodology.md`](../docs/reference/ice-stability-methodology.md) `` | `## Related` ⚠ |
+| `647` | `tidal_heating → crater_state, requires` | `tidal:738` | **`tidal:798`** | +78 | `` [`crater-degradation-methodology.md`](../docs/reference/crater-degradation-methodology.md) `` | `## Related` ⚠ |
 
 시프트가 heat 에서 **163 / 168 / 176** 세 값으로 뭉치고 tidal 은 **78** 하나 — 08-24 이후 문서가
 블록 단위로 자란 결과이고, 지휘석이 이미 확인한 그림과 같습니다.

@@ -123,32 +123,32 @@ def lands_on(doc: str, loc: str, citing: Path) -> str:
     a sibling doc is added, and a blank line means the target is already gone."""
     target = target_of(doc, citing)
     if target is None:
-        return "no such document"
+        return "a name no file in the repo has"
     lines = text(target).splitlines()
     n = int(re.split(r"[-–]", loc)[0])
     if not (1 <= n <= len(lines)):
-        return "past the end of the document"
+        return "a line past the end of the document"
     raw = lines[n - 1]
     body = raw.strip()
     if not body:
-        return "blank line"
+        return "a blank line"
     if re.fullmatch(r"\|[\s\-:|]+\|", body):
-        return "table separator"
+        return "a table separator"
     if re.fullmatch(r"-{3,}|_{3,}|\*{3,}", body):
-        return "horizontal rule"
+        return "a horizontal rule"
     if body.startswith("**Needs**") or body.startswith("**Returns**"):
-        return "contract Needs/Returns line"
+        return "a contract Needs/Returns line"
     if body.startswith("#"):
-        return "heading"
+        return "a heading"
     if body.startswith("|"):
-        return "table row"
+        return "a table row"
     if re.match(r"^\d+\. \[", body):
-        return "table of contents"
+        return "a table-of-contents row"
     # a `## Related` list item: a bullet inside that section
     before = "\n".join(lines[:n - 1])
     section = before.rfind("\n## ")
     if section != -1 and before[section:section + 20].startswith("\n## Related") and body.startswith("-"):
-        return "Related list item"
+        return "a Related list item"
     return "body text"
 
 
@@ -179,11 +179,27 @@ def contract_owner(doc: str, citing: Path, line_no: int | None = None, phrase: s
     return None
 
 
+UNWRAP = re.compile(r"\n[ \t]*(?=\S)")
+
+
+def unwrapped(t: str) -> str:
+    """The document with its hard wrapping folded: a newline plus the following indent becomes one
+    space, and nothing inside a line is touched. The methodology docs wrap prose at ~80 columns, so a
+    sentence-long anchor cannot fit on one line otherwise; the alternative, normalising whitespace
+    generally, would throw away the strictness that is doing work — `⇒  T_eff⁴  =  T_eq⁴  +  T_int⁴`
+    is unique only with its double spaces."""
+    return UNWRAP.sub(" ", t)
+
+
 def resolve(doc: str, phrase: str, citing: Path) -> tuple[str, int]:
     target = target_of(doc, citing)
     if target is None:
-        return "no such document", 0
-    return "", text(target).count(phrase)
+        return "a name no file in the repo has", 0
+    return "", unwrapped(text(target)).count(phrase)
+
+
+class BrokenYAML(Exception):
+    """A YAML file whose citations could not be read at all."""
 
 
 def yaml_units(path: Path):
@@ -195,8 +211,16 @@ def yaml_units(path: Path):
     endpoints exactly, instead of a regex over the citing line."""
     try:
         doc = yaml.safe_load(text(path))
-    except Exception as exc:                       # a malformed board is a different check's problem
-        return [(f"{path.name}", ("", ""), f"__yaml_error__ {exc}", [])]
+    except Exception as exc:
+        # Silence here is the disease this checker exists to end: with the parse failing, the citations
+        # simply were not read, and a report of "0 failures" over 8 % of them is worse than no report.
+        raise BrokenYAML(f"{path.relative_to(ROOT)} does not parse, so its citations were not read: {exc}")
+    # only the key the citations actually live under: refs hang off edges, never off nodes
+    expected = {"engine/chain.yaml": ("edges",)}.get(str(path.relative_to(ROOT)), ())
+    missing = [k for k in expected if not isinstance(doc, dict) or k not in doc]
+    if missing:
+        raise BrokenYAML(f"{path.relative_to(ROOT)} parses but has no {', '.join(missing)} — "
+                         f"its citations were not where they were looked for")
     out = []
 
     def walk(node, label, ends, vias):
@@ -228,6 +252,7 @@ def main() -> int:
     shared: dict[tuple[str, str], list[tuple[str, list[str]]]] = {}   # anchor → the edges that share it
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
     warned: list[str] = []              # rule 3: a landing that moves easily but may well be meant
+    note_dead: list[str] = []           # rule 3 in a preserved note: dead, but a note records what was
     unmigrated: list[tuple] = []
     ok = 0
 
@@ -236,10 +261,28 @@ def main() -> int:
         rel = path.relative_to(ROOT)
         mine = own_doc(path)
         ends: tuple[str, str] = ("", "")
+        raw_lines = text(path).splitlines()
+        units = []
         if path.suffix in (".yaml", ".yml"):
-            units = [(f"{rel} {label}", e, val, vias) for label, e, val, vias in yaml_units(path)]
-        else:
-            units = [(f"{rel}:{i}", ("", ""), line, []) for i, line in enumerate(text(path).splitlines(), 1)]
+            try:
+                parsed = yaml_units(path)
+            except BrokenYAML as exc:
+                rotten.append(f"{rel}: {exc}")
+                parsed = []
+            # A citation the raw scan can see is counted there, with its line number. A citation the raw
+            # scan CANNOT see — folded across lines by a `note: >` block — is counted from the parsed
+            # value. The union covers both, and keeps YAML comments visible: parsing drops them, and
+            # "write it in a comment and it goes quiet" is a path this checker must not reopen.
+            for label, e, val, vias in parsed:
+                if not any(val in line for line in raw_lines):
+                    units.append((f"{rel} {label} (folded)", e, val, vias))
+        ends_seen: tuple[str, str] = ("", "")
+        for i, line in enumerate(raw_lines, 1):
+            m = EDGE.search(line)
+            if m:
+                ends_seen = (m.group(1), m.group(2))
+            units.append((f"{rel}:{i}", ends_seen if path.suffix in (".yaml", ".yml") else ("", ""), line,
+                          [v.strip() for v in re.findall(r"via: \[?([a-z_, ]+)\]?", line) for v in v.split(",")]))
         for where0, ends, line, via_names in units:
             hits = [(m.group(1), m.group(2)) for m in ANCHOR.finditer(line)]
             for m in SELF_ANCHOR.finditer(line):
@@ -273,12 +316,12 @@ def main() -> int:
                             print(f"  [ok] {where}")
             if path.suffix in (".yaml", ".yml"):
                 # a whole-document ref is the entire value, not a substring of prose
-                if re.fullmatch(FILE, line.strip()):
-                    if target_of(line.strip(), path) is None:
-                        rotten.append(f"{where0}: {line.strip()} — no such document")
+                for m in WHOLE.finditer(line):
+                    if target_of(m.group(1), path) is None:
+                        rotten.append(f"{where0}: {m.group(1)} — no file in the repo has that name")
                     else:
                         whole += 1
-                        unaimed.append(f"{where0}: {line.strip()} — cites the whole document")
+                        unaimed.append(f"{where0}: {m.group(1)} — cites the whole document")
             for m in LINE_REF.finditer(line):
                 unmigrated.append((where0, m.group(1), m.group(2), path, ends))
             for m in SELF_LINE.finditer(line):
@@ -288,29 +331,29 @@ def main() -> int:
                     rotten.append(f"{where0}: doc :{m.group(1)} — a bare `doc` citation in a file that "
                                   f"declares no RECIPE; name the document")
 
-    DEAD = {"blank line", "table separator", "horizontal rule", "table of contents",
-            "past the end of the document", "no such document"}
+    DEAD = {"a blank line", "a table separator", "a horizontal rule", "a table-of-contents row",
+            "a line past the end of the document", "a name no file in the repo has"}
     # A paper's own source is cited the same way but lives in the gitignored paper cache, so it cannot
     # be resolved here. That is not rot: it is a citation into something outside the repo, like a
     # bibcode, and it is counted as such rather than failed.
     EXTERNAL = re.compile(r"(^|/)main\.tex$|\.tex$")
-    MOVES = {"table row", "heading", "Related list item", "contract Needs/Returns line"}
+    MOVES = {"a table row", "a heading", "a Related list item", "a contract Needs/Returns line"}
     kinds: dict[str, int] = {}
     for where, doc, loc, citing, ends in unmigrated:
         kind = lands_on(doc, loc, citing)
         kinds[kind] = kinds.get(kind, 0) + 1
         owner = contract_owner(doc, citing, line_no=int(re.split(r"[-–]", loc)[0])
-                               if kind not in ("no such document", "past the end of the document") else None)
+                               if kind not in ("a name no file in the repo has", "a line past the end of the document") else None)
         if owner and ends != ("", "") and owner not in ends:
             mismatched.append(f"{where}: {doc}:{loc} — lands in {owner}'s contract block, "
                               f"but this edge runs {ends[0]} → {ends[1]}")
         elif EXTERNAL.search(doc):
             external += 1
         elif kind in DEAD:
-            row = f"{where}: {doc}:{loc} — lands on a {kind}, which cannot have been the intent"
-            (dead if citing.suffix in live else warned).append(row)
+            row = f"{where}: {doc}:{loc} — lands on {kind}, which cannot have been the intent"
+            (dead if citing.suffix in live else note_dead).append(row)
         elif kind in MOVES:
-            warned.append(f"{where}: {doc}:{loc} — lands on a {kind}, which moves when the document grows")
+            warned.append(f"{where}: {doc}:{loc} — lands on {kind}, which moves when the document grows")
 
     print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
           f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 미이행 줄번호 {len(unmigrated) - external}건 · "
@@ -333,13 +376,15 @@ def main() -> int:
                               f"name {'/'.join(via_names)}, the payload this one wants")
     for w in warned:
         print(f"  [WARN] 쉽게 밀리는 착지 — {w}")
+    for w in note_dead:
+        print(f"  [WARN] 노트 안의 죽은 착지 — {w}")
     if listing:
         for u in unaimed:
             print(f"  [미조준] {u}")
     if unmigrated and (listing or suspect):
         for where, doc, loc, citing, _ends in unmigrated:
             if listing or lands_on(doc, loc, citing) != "body text":
-                print(f"  [미이행] {where}: {doc}:{loc} — lands on a {lands_on(doc, loc, citing)}")
+                print(f"  [미이행] {where}: {doc}:{loc} — lands on {lands_on(doc, loc, citing)}")
         print("  미이행 착지 종류: " + " · ".join(f"{k} {v}" for k, v in sorted(kinds.items(), key=lambda x: -x[1])))
         print("  (본문 착지가 정답을 뜻하지는 않는다 — heat:119 부류가 정확히 그랬다. 종류는 의심의 순서일 뿐이다.)")
     bad = len(rotten) + len(ambiguous) + len(mismatched) + len(dead)
