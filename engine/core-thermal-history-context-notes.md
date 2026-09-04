@@ -461,17 +461,26 @@ measurement evidence, held at that significance. Nothing moved; f stays 0.80, T_
 
 One measured point was fed in and the other predicted to 6 K; γ and f are checked *together* by it — the
 strongest comparison of the day.
-**The chain, in one piece** (direction, not proof — 1 σ):
+**The chain — corrected the same hour (directing seat's own re-measurement; reproduced here).** The version
+written first ran *"boundary-layer law (declared constants) → low Q_C → the core keeps its heat → hot T_c → no
+inner core"*. Two things were wrong with it. (1) **The law is faithful**: `cmb_flux.bottom_layer` at Nimmo's own
+inputs (T_c 4 155, T_m 1 613, his adiabat ratio 1.69, R 3 480 km) gives **Q_C 8.99 TW, δ_b 139.4 km** against the
+printed 9.0 / 140 — 1 %; so the declared constants κ_b, f, T₁, ζ are not a cause to chase. (2) **In this module
+T_c is the input and Q_C the output, and the direction is the reverse**: on our T̃_m 2 526 K, T_c 3 760 → Q_C
+2.75 TW, 3 978 → 4.91, 4 027 → 5.57, 4 155 → 7.69 (3.2× over 395 K). A low Q_C does not make T_c hot; a low T_c
+makes Q_C low. In the closure the two are linked both ways, so "Q_C causes T_c" is not a mechanism that can be
+pinned on the law. **What remains is a tension between two observations inside this model**:
 
-    CMB bottom boundary-layer law (eqs 37–39, declared constants κ_b, f, T₁)
-      → Q_C 5.2 vs 9.0 TW (43 % low; unresponsive to the mantle conventions)
-      → less heat leaves the core → the energy balance closes at a hotter T_c
-      → solved T_c 4 027, +220–270 K over the measured 3 760 ± 290 (+0.8–0.9 σ)
-      → a hotter adiabat (5 490 K at 330 GPa, +0.9 σ of the measured ICB)
-      → in the hypersensitive region, no inner core
+    T_c 3 760 (the measured CMB)   → inner core 566–572 km, Earth-like ✓   but Q_C 2.75 TW, below Nimmo's printed 4.5–9.0
+    T_c 4 155 (Nimmo's)            → Q_C ≈ 7.7–9.0, inside the range ✓     but no inner core on our curve (and 2 000 km on his)
 
-Q_C low ⇒ the core stays hot: the direction is right, and since Q_C did not respond to the mantle conventions,
-what sets it is the boundary-layer law. **Next target, named: eqs 37–39 — listed (C25), not touched today.**
+**No single T_c satisfies both**: the temperature that fits the inner core makes the CMB heat flow too low, and
+the temperature that fits the heat flow removes the inner core. That is C25's correct form — not "a defect in
+eqs 37–39" but "the measured CMB temperature and the published CMB heat-flow range cannot both be met in this
+model". A second knob sits inside it: **the mantle-base adiabat ratio** — at Nimmo's inputs, his 1.69 gives 8.99
+TW and our interior-solve 1.579 gives 7.81 (**15 %**), so "source differs" is not a small label in the Q_C
+question; it belongs in C25's scope. Nothing touched.
+
 **The day's trajectory, kept on purpose** (the phenomenon stayed the same; the mechanism changed three times):
 early morning — "closing the loop removes Earth's inner core" (found again after the Euler-artefact
 retraction); afternoon — demoted to "our melting curve is 540 K colder" (thought to be a source difference);

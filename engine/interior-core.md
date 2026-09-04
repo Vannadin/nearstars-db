@@ -2194,14 +2194,16 @@ Start is the owner's decision.
 | O4 | Two methodology docs label those shells "cached": Crossfield 2014 (`spin-axis-inclination-methodology.md:158`, claims v sin i for both components — not in the abstract) and Heller & Barnes 2013 (`ice-stability-methodology.md:202`, claims the satellite energy budget — the abstract only names four terms). **The values are safe**: the board's spin-axis row (`phase4/luhman_16.yaml:133`) cites only Apai+ 2021, held in full. The defect is the label — *false provenance* — en and ko alike | those two docs + ko mirrors | `check_paper_held.py --scan` | not a number error; do not inflate |
 | O5 | C19's brown-dwarf branch: two routes to L(M, age) — a grounded track (Burrows eq. 1 with declared κ_R, or Baraffe+ 2003) or the DB's measured luminosity (Faherty+ 2014) — written side by side, hanging on O1 | `giant-dynamo-age-context-notes.md` §4 | — | not decided |
 
-### C25 — the CMB bottom boundary-layer law (eqs 37–39) as the source of the low Q_C — **listed 2026-09-04, not started**
+### C25 — the measured CMB temperature and the published CMB heat-flow range cannot both be met in this model — **listed 2026-09-04, not started**
 
-Where the chain of C20 §5 ends (direction at 1 σ, not proof): Q_C closes at 5.2 TW against Nimmo's 9.0 and does not
-respond to the mantle conventions (2 % across them while Q_M moves 70 %), so what sets it is the bottom
-boundary-layer law with its declared constants (κ_b 1e-6 ± 2, f 10, T₁ 3 400, ζ) — and a low Q_C keeps the core hot
-(solved T_c +220–270 K over the measured CMB), which in the hypersensitive region removes the inner core. Excluded
-already: the melting-curve source, the depression factor, the mantle conventions. **Next target; nothing touched.**
-Start is the owner's decision.
+Re-stated the same hour it was listed (the first form, "eqs 37–39 as the source of the low Q_C", was wrong: the
+law reproduces Nimmo's printed 9.0 TW / 140 km at his own inputs to 1 %, and in the module T_c is the input, Q_C
+the output — low T_c gives low Q_C, 2.75 → 7.69 TW over 3 760 → 4 155 K, not the reverse). The tension: at the
+measured CMB temperature 3 760 K the model has an Earth-like inner core (566–572 km) but Q_C 2.75 TW, below
+Nimmo's printed 4.5–9.0; at 4 155 K Q_C is inside the range but the inner core is gone. Scope: the closure that
+picks T_c (C14's energy balance / C20's history), the mantle-base adiabat ratio (our 1.579 vs his 1.69 is 15 % of
+Q_C at his inputs), and the depression factor's hypersensitivity (C20 §5). Excluded: the boundary-layer law's
+constants, the melting-curve source, the mantle conventions. **Listed only; start is the owner's decision.**
 
 ### P1–P3 — parked, each marked with the C it came from
 
