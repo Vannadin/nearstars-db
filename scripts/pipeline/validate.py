@@ -184,7 +184,9 @@ for sys_name, entry in (binary_data or {}).items():
     # 각 컴포넌트별로 어느 궤도에 secondary 로 묶여있는지 + 그 궤도의 phase_reliable 추적.
     # phase_reliable=false 인 외곽(primary_is_barycenter_of) 궤도의 secondary 는
     # build_systems.py 가 의도적으로 단일 항성 경로(linear)로 폴백한다.
-    # (build_systems.py:307-313 의 설계 참고).
+    # (설계는 build_systems.py@«별도 분기. phase_reliable=false 외곽 궤도는 단일 항성 폴백에 맡겨 회귀를 방지.» —
+#  그 분기 자체를 가리킨다. 앞서 쓰던 dict 항목 한 줄은 폴백과 무관한 자리였고, 한 줄짜리 항목은
+#  파일이 조금만 바뀌어도 애매해진다.)
     in_orbit_names = set()
     component_orbit_info = {}   # cname → {'phase_reliable': bool, 'is_outer_companion': bool}
     for orbit in entry.get("orbits", []):
