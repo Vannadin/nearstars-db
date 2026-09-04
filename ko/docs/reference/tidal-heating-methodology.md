@@ -43,7 +43,7 @@ Alpha Centauri A b I~III과 A b V(Dante·Hades·Pandora·Chaos)를 두고 네 �
 ## 계약 — `tidal_heating`
 
 **Returns** — `power` [W] · `surface_flux` [W/m2] · `io_power_ratio` [—] · `heat_transport_regime` [—] · `orbital_period` [h]
-**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_m` [m] · `perturber_mass_earth` [M_earth] ·
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_km` [km] · `perturber_mass_earth` [M_earth] ·
 `eccentricity_forced` [—] · `k2_over_q` [—]
 **분기키** — 법칙 안에는 없다. `heat_transport_regime` 은 §6.1 결과 표(경계는 지침이지 선이 아니다)를 조석 플럭스만으로 읽은 라벨이다. `eccentricity_forced`·`k2_over_q` 는 선언이다(보드가 k₂/Q 를 맞춰 넣었다).
 **등급** — analog. fixed-Q 형은 표준 1차 법칙이고 불확실성은 선언 입력 둘이 진다. v1 미출력: `radius_ceiling`·`plains_temperature`(§6.3–6.5, 뚜껑 축).

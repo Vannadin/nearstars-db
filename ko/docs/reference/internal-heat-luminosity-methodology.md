@@ -43,6 +43,9 @@
 `mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
+**상태 키 주의** — `tidal_power` 는 상태 키 `power` 로 들어온다. tidal_heating 이 Ė 를 그 이름으로 내기
+때문이다(chain.yaml 의 tidal_heating → internal_heat_nontidal 간선, via power). 이 이름은 총칭이다.
+지금은 tidal_heating 이 유일한 emitter 이지만, power 를 내는 노드가 둘이 되면 여기서 조용히 합산된다.
 **분기키** — `body_class`. 암석체는 현재값 방사성 예산을 받고, 거대행성·서브넵튠·갈색왜성·항성은
 거절합니다. 그쪽 내부열은 냉각광도 L(M, age) 이고 이 레시피는 검증 안 된 냉각 궤적을 대지 않습니다
 (`dynamo.py` 와 같은 거절). `core_mass_fraction` 미선언 → 거절(농도를 걸 규산염 질량이 없음).

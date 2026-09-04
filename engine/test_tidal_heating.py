@@ -34,7 +34,7 @@ def main() -> int:
     ok(abs(2 * math.pi / n_io / 86400 - 1.769) < 0.002, f"1: Io P_orb {2 * math.pi / n_io / 86400:.4f} d, expected 1.769")
     ok(abs(p_io - 9.343e13) / 9.343e13 < 1e-3, f"1: Io Ė {p_io:.4e} W should reproduce the parallel seat's 9.343e13")
     # 2. Pandora
-    pan = th.solve(0.6447, 5724e3 / th.R_EARTH_M, 252_393e3, 120.0, 0.005, 0.0016)
+    pan = th.solve(0.6447, 5724e3 / th.R_EARTH_M, 252_393, 120.0, 0.005, 0.0016)   # a in km, the declared key
     ok(pan.applicable and abs(pan.values["surface_flux"] / 45.0 - 1.0) < 0.0075,
        f"2: Pandora F {pan.values.get('surface_flux')} W/m² vs board 45 (tol 0.75 %)")
     ok(pan.applicable and abs(pan.values["surface_flux"] - 45.337) < 0.01, f"2: Pandora F should be 45.337 W/m² (tidal_check), got {pan.values.get('surface_flux')}")
@@ -58,8 +58,8 @@ def main() -> int:
        [th.MODE_HEAT_PIPE, th.MODE_PLATE, th.MODE_STAGNANT, th.MODE_UNCLASSIFIED], "4: §6.2 modes (Earth 92.1 mW/m² → plate tectonics) and the gap")
     # 5. refusals
     ok(not th.solve(1.0, 1.0, None, None, None, 0.01).applicable and "no orbit" in th.solve(1.0, 1.0, None, None, None, 0.01).reason, "5: no orbit refuses by name")
-    ok("no k2_over_q" in th.solve(1.0, 1.0, 3.8e8, 1.0, 0.05, None).reason, "5: no k₂/Q refuses by name")
-    ok("no radius" in th.solve(1.0, None, 3.8e8, 1.0, 0.05, 0.01).reason, "5: no radius refuses by name")
+    ok("no k2_over_q" in th.solve(1.0, 1.0, 3.8e5, 1.0, 0.05, None).reason, "5: no k₂/Q refuses by name")
+    ok("no radius" in th.solve(1.0, None, 3.8e5, 1.0, 0.05, 0.01).reason, "5: no radius refuses by name")
     ok("no heat source" in th.solve_mode(None, None, 1.0).reason, "5: mode with no heat source refuses by name")
 
     for f in fails:

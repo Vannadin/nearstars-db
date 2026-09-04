@@ -45,7 +45,7 @@ locking treatment first.
 ## Contract — `tidal_heating`
 
 **Returns** — `power` [W] · `surface_flux` [W/m2] · `io_power_ratio` [—] · `heat_transport_regime` [—] · `orbital_period` [h]
-**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_m` [m] · `perturber_mass_earth` [M_earth] ·
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_km` [km] · `perturber_mass_earth` [M_earth] ·
 `eccentricity_forced` [—] · `k2_over_q` [—]
 **Discriminating keys** — none inside the law; `heat_transport_regime` is the §6.1 outcome table (guides, not sharp lines)
 read on the tidal flux alone. `eccentricity_forced` and `k2_over_q` are declarations (the board fits k₂/Q).

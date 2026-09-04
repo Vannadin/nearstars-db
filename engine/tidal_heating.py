@@ -1,7 +1,7 @@
 # 조석 가열 — fixed-Q 식으로 Ė·표면 플럭스를 내고(§1), 표면 열수송 모드·결과 분류 라벨을 붙인다(§6.1·§6.2); C30
 """Tidal heating from the fixed-Q law (`tidal-heating-methodology.md`), plus the two label sets §6 attaches to it.
 
-    Ė = (21/2) · (k₂/Q) · G M_p² R⁵ n e² / a⁶,   n = √(G M_p / a³)   (doc :74, :58; m ≪ M_p)
+    Ė = (21/2) · (k₂/Q) · G M_p² R⁵ n e² / a⁶,   n = √(G M_p / a³)   (doc :74, :76; m ≪ M_p)
     F = Ė / (4πR²)                                                 (doc :99–100)
 
 Two recipes live here because both are the same document's outputs:
@@ -56,7 +56,7 @@ GUIDES = ("doc :262 'these are guides, not sharp lines'; doc :454–456 'there i
 
 
 def tidal_power(k2_over_q: float, perturber_kg: float, radius_m: float, a_m: float, e: float) -> tuple[float, float, float]:
-    """(Ė [W], F [W/m²], n [rad/s]) — doc :74, :58, :99–100."""
+    """(Ė [W], F [W/m²], n [rad/s]) — doc :74, :76, :99–100."""
     n = math.sqrt(G * perturber_kg / a_m ** 3)
     power = 10.5 * k2_over_q * G * perturber_kg ** 2 * radius_m ** 5 * n * e ** 2 / a_m ** 6
     return power, power / (4.0 * math.pi * radius_m ** 2), n
@@ -77,7 +77,8 @@ def outcome_regime(flux_w_m2: float) -> str:
 
 def transport_mode(total_flux_w_m2: float) -> str:
     """§6.2 table, doc :295–299, read on the total surface flux. Plate tectonics sits at ~0.09 W/m² (Earth 92.1 mW/m²);
-    the stagnant-lid ceiling is 10–30 mW/m²; heat pipe from ≥ ~2.5 W/m². Between 0.09 and 2.5 W/m² the table has no row."""
+    the stagnant-lid ceiling is 10–30 mW/m²; heat pipe from ≥ ~2.5 W/m². Between 0.14 (the plate row read at +50 %, the
+    branch below) and 2.5 W/m² the table has no row."""
     if total_flux_w_m2 >= IO_FLUX_KM2019_W_M2:
         return MODE_HEAT_PIPE
     if total_flux_w_m2 <= 0.03:
@@ -87,9 +88,12 @@ def transport_mode(total_flux_w_m2: float) -> str:
     return MODE_UNCLASSIFIED
 
 
-def solve(mass_earth: float, radius_earth: float | None, semi_major_axis_m: float | None,
+def solve(mass_earth: float, radius_earth: float | None, semi_major_axis_km: float | None,
           perturber_mass_earth: float | None, eccentricity_forced: float | None, k2_over_q: float | None) -> Result:
-    inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth, "semi_major_axis_m": semi_major_axis_m,
+    # km, not m: this is the key a body declares (`semi_major_axis_km`, e.g. bodies/pandora.yaml), and the contract is
+    # only a signature if the name it prints is the name that works. The law wants metres, so convert at the call.
+    semi_major_axis_m = semi_major_axis_km * 1e3 if semi_major_axis_km is not None else None
+    inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth, "semi_major_axis_km": semi_major_axis_km,
               "perturber_mass_earth": perturber_mass_earth, "eccentricity_forced": eccentricity_forced,
               "k2_over_q": k2_over_q}
     missing = [k for k, v in (("semi_major_axis", semi_major_axis_m), ("perturber_mass", perturber_mass_earth),
@@ -101,7 +105,7 @@ def solve(mass_earth: float, radius_earth: float | None, semi_major_axis_m: floa
         return out_of_domain(RECIPE, VERSION, "cannot-say (no k2_over_q): 조석 소산 k₂/Q 미선언 — 클래스 밴드는 2–3 자리수 폭이라 "
                              "(doc :212–220) 값을 고르지 않는다", inputs, REFS)
     if radius_earth is None:
-        return out_of_domain(RECIPE, VERSION, "cannot-say (no radius): Ė ∝ R⁵, F ∝ R³ (doc :74, :440)", inputs, REFS)
+        return out_of_domain(RECIPE, VERSION, "cannot-say (no radius): Ė ∝ R⁵, F ∝ R³ (doc :74, :458)", inputs, REFS)
     power, flux, n = tidal_power(k2_over_q, perturber_mass_earth * M_EARTH_KG, radius_earth * R_EARTH_M,
                                  semi_major_axis_m, eccentricity_forced)
     regime = outcome_regime(flux)
@@ -165,17 +169,11 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
 from registry import recipe  # noqa: E402
 
 
-def _semi_major_axis_m(state) -> float | None:
-    if state.get("semi_major_axis_km") is not None:
-        return float(state["semi_major_axis_km"]) * 1e3
-    return None
-
-
 @recipe("tidal_heating")
 def _from_state(state):
     return solve(mass_earth=state["mass_earth"],
                  radius_earth=state.get("radius_earth", state.get("radius")),
-                 semi_major_axis_m=_semi_major_axis_m(state),
+                 semi_major_axis_km=state.get("semi_major_axis_km"),
                  perturber_mass_earth=state.get("perturber_mass_earth"),
                  eccentricity_forced=state.get("eccentricity_forced"),
                  k2_over_q=state.get("k2_over_q"))

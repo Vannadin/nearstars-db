@@ -46,6 +46,10 @@ non-negligible, see that doc).
 `mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
+**State-key note** — `tidal_power` reaches this recipe under the state key `power`, which is the name
+`tidal_heating` emits its Ė under (chain.yaml, the tidal_heating to internal_heat_nontidal edge, via power).
+That name is generic: today tidal_heating is its only emitter, and a second node emitting power would be
+summed in here silently.
 **Discriminating keys** — `body_class`: rocky bodies get the present-day radiogenic budget; giant,
 sub-Neptune, brown-dwarf and stellar classes are refused, because their internal heat is the cooling
 luminosity L(M, age) and this recipe does not supply an unverified cooling track (the same refusal

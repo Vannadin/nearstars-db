@@ -247,7 +247,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, radius_earth: flo
 
 
 NO_TIDAL = "cannot-say (no tidal_heating value — total equals radiogenic; nothing added)"
-HEAT_PIPE_FLOOR = "cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; radiogenic.py:183)"
+HEAT_PIPE_FLOOR = ("cannot-say (heat-pipe regime: the boundary-layer inversion does not apply; "
+                   "radiogenic.py _total_heat:265-267)")
 
 
 def _total_heat(b: dict, b_low: dict, tidal_power: float | None, r_m: float, g_body: float | None,
@@ -293,4 +294,7 @@ def _from_state(state):
                  age_gyr=state.get("age_gyr"),
                  ice_mass_fraction=state.get("ice_mass_fraction", 0.0),
                  potential_temperature=state.get("potential_temperature"),
-                 tidal_power=state.get("power"))                 # C30: tidal_heating's Ė (chain :653 via power); absent → totals not emitted
+                 # C30: tidal_heating's Ė (chain :653 via power); absent → totals not emitted. The contract calls this
+                 # `tidal_power`, the state key is the generic `power`: today tidal_heating is the only emitter of that
+                 # name, and if a second node ever emits `power` this line would silently add the wrong term.
+                 tidal_power=state.get("power"))
