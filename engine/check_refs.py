@@ -28,6 +28,11 @@ the ordinary reason (it is not in the RECIPE document). This closes the case `ra
 where a bare `doc :295–299` pointed at the tidal document's table while `doc` meant the heat one — a
 citation naming the wrong document entirely, which no line number could have revealed.
 
+Three kinds of citation are counted but never migrated: one that names a whole document (the payload
+is pinned by the edge's own `via:`), one into a paper's own source in the gitignored cache, and one
+inside a note that declares itself a verbatim record — that note's line numbers were true when it was
+written, and rewriting them would edit the evidence.
+
 Citations still written as `<doc>.md:123` or inline `doc :123` are counted as **unmigrated** and
 listed, but do not fail: C33 is migrating them in batches. Tighten the last line of `main()` to
 require zero once that is done.
@@ -91,6 +96,19 @@ def files() -> list[Path]:
     for (pattern,) in SCAN:
         out += sorted(ROOT.glob(pattern))
     return [p for p in out if p.is_file() and p.name not in SKIP]
+
+
+PRESERVED = re.compile(r"Preserved verbatim|원문 무편집|body unedited|from the parallel seat's scratch")
+
+
+def is_preserved(path: Path) -> bool:
+    """A note that declares itself a verbatim record of what someone measured at a moment.
+
+    Its citations are part of the record: they were true when written, and rewriting them would edit
+    the evidence. They are counted apart so that "unmigrated → 0" stays a reachable target."""
+    if path.suffix != ".md":
+        return False
+    return bool(PRESERVED.search("\n".join(text(path).splitlines()[:6])))
 
 
 def own_doc(path: Path) -> str | None:
@@ -195,7 +213,14 @@ def resolve(doc: str, phrase: str, citing: Path) -> tuple[str, int]:
     target = target_of(doc, citing)
     if target is None:
         return "a name no file in the repo has", 0
-    return "", unwrapped(text(target)).count(phrase)
+    body = unwrapped(text(target))
+    n = body.count(phrase)
+    # A phrase containing a double quote has to live in a single-quoted YAML scalar, where an
+    # apostrophe is written twice. The raw-line scan reads YAML source rather than parsed values, so
+    # it sees that doubling; the document does not have it.
+    if n == 0 and "''" in phrase:
+        n = body.count(phrase.replace("''", "'"))
+    return "", n
 
 
 class BrokenYAML(Exception):
@@ -249,6 +274,7 @@ def main() -> int:
     whole = 0                           # refs that cite a whole document, which is a legitimate form
     external = 0                        # citations into a paper's own source, outside this repo
     unaimed: list[str] = []             # ⑤ whole-document refs: legitimate, but aimed at nothing inside
+    preserved = 0                       # citations inside verbatim notes: the record, not a migration target
     shared: dict[tuple[str, str], list[tuple[str, list[str]]]] = {}   # anchor → the edges that share it
     dead: list[str] = []                # rule 3: a landing that cannot have been intended
     warned: list[str] = []              # rule 3: a landing that moves easily but may well be meant
@@ -340,6 +366,9 @@ def main() -> int:
     MOVES = {"a table row", "a heading", "a Related list item", "a contract Needs/Returns line"}
     kinds: dict[str, int] = {}
     for where, doc, loc, citing, ends in unmigrated:
+        if is_preserved(citing):
+            preserved += 1
+            continue
         kind = lands_on(doc, loc, citing)
         kinds[kind] = kinds.get(kind, 0) + 1
         owner = contract_owner(doc, citing, line_no=int(re.split(r"[-–]", loc)[0])
@@ -356,8 +385,8 @@ def main() -> int:
             warned.append(f"{where}: {doc}:{loc} — lands on {kind}, which moves when the document grows")
 
     print(f"인용 점검 — 앵커 {ok + len(rotten) + len(ambiguous)}건 (해석 성공 {ok}) · "
-          f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 미이행 줄번호 {len(unmigrated) - external}건 · "
-          f"문서 {len(list(DOCS.glob('*.md')))}종")
+          f"문서 전체 인용 {whole}건 · 레포 밖 인용 {external}건 · 보존 노트 인용 {preserved}건 · "
+          f"미이행 줄번호 {len(unmigrated) - external - preserved}건 · 문서 {len(list(DOCS.glob('*.md')))}종")
     for label, rows in (("썩은 앵커", rotten), ("애매한 앵커", ambiguous),
                         ("계약 주인 불일치", mismatched), ("있을 수 없는 착지", dead)):
         for r in rows:
@@ -393,7 +422,8 @@ def main() -> int:
         return 1
     # C33 이 끝나면 여기서 미이행 0 을 요구하도록 조인다.
     print(f"  [PASS] 앵커 {ok}건 전부 대상 문서에서 정확히 1회 매치 · 문서 전체 인용 {whole}건 · "
-          f"미이행 {len(unmigrated) - external}건은 배치 이행 대기")
+          f"보존 노트 인용 {preserved}건은 기록이라 이행 대상이 아니다 · "
+          f"미이행 {len(unmigrated) - external - preserved}건은 배치 이행 대기")
     return 0
 
 

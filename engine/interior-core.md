@@ -2351,7 +2351,7 @@ unchanged; giants/BDs cannot-say (no orbit). Pre-registered Ⓟ. Not emitted in 
 (§6.3–6.5 lid axis; the two edges carrying them are `status: gap`, dated); `tidal_transport.derive_potential_temperature` not
 consulted (validation-failed). Dante's stale 900 km board rows are recorded in the note (§5), not repaired — that is C31.
 
-### C31 — Dante's tidal and dependent board rows refreshed from the C30 recipe — **announced 2026-09-04, not started**
+### C31 — Dante's tidal and dependent board rows refreshed from the C30 recipe — **built 2026-09-05; main `7fd5a6ea`, `30317daf`, `b99b16a9`**
 
 Constraints (owner, relayed): the board of record is the **main checkout's** `phase4/alpha_centauri.yaml`, which carries
 uncommitted pre-crash changes — nothing is written there until instructed. Tool: `engine/tools/refresh_board_rows.py --board
@@ -2360,6 +2360,18 @@ dated note ("refreshed … from tidal_heating @<sha>, R 521 km; was 900 km draft
 900 → 521 is a plain correction; the dependent rows (360 K / 673 K / 5.7 % / 2.1–2.4 m / albedo, glow) get only a dated
 "stale: derived from the 900 km draft; awaiting moon_energy_budget recipe" note with the doc's 521 km values (223 K, 452 K)
 beside them — no value authored, no note deleted. Dry-run on the worktree copy (diff only) first; main is a separate order.
+
+**Built 2026-09-05.** Seven values moved (mass 8.0e21 → 1.552e21 kg, radius and reference_radius 900 → 521 km,
+gravity 0.659 → 0.382 m/s², tidal_heating ~1200× → ~79× Io, tidal_surface_flux ~11,500 → ~2,324 W/m², and the
+`internal_heat` echo), the identity row's frozen sentence had its one digit corrected (78 → 79, the old figure
+being the rounded 1200 scaled rather than the law's own 79.28), and three rows no recipe can produce
+(`surface_temperature`, `albedo`, `geopotential_j2`) kept their values and gained a dated stale note. J₂, C₂₂,
+flattening and rotation_period do not move because the invariant is R³/M, not R or M — the resize preserves
+density, and a tide-locked body takes ω from an untouched orbit; the 0.0037 % residual is the board rounding
+1.551943e21 to 1.552e21. The `geopotential_j2` note carries the size of its own delay: 0.039 against 900 km is
+0.0131 against 521 km, a factor 3 if read literally. The tool refuses by name when the satellites table and the
+bulk rows disagree, and `--take-satellites-figure` is how the operator says which side is current — the guard
+would otherwise have blocked the very repair it exists for, since the board disagreed with itself on purpose.
 
 ### C32 — band output and handoff choices — **listed 2026-09-04 (owner, 19:57), not started; after C30 → C31**
 
@@ -2419,6 +2431,84 @@ grade — and the owner records the pick on the board with a reason; no silent d
   +12 s on Brief 64's 1268 s, of which the new row is 0.81 s measured; the rest is run-to-run noise.
   **P3 is now an owner decision** (C5: wire it or retire it) — and the owner took it the same evening:
   see C22.
+
+### C33 — citations resolved against the document instead of a line number — **built 2026-09-05 (owner: "인용 부패 싹다 고쳐"); `engine/check_refs.py`**
+
+A line number is not a citation, it is a bet that the document will not grow, and the bet kept losing
+silently. `internal-heat-luminosity-methodology.md:119` was a contract block's Needs line when 30 chain
+edges were drawn against it, then another block's Needs line, then a Returns line — that last shift
+happened inside `25980fdc`, the commit that went to *fix* citations. 24 of the 30 were wrong, 20 of them
+from birth, and no reader could see it: five contract blocks in that one document carry near-identical
+Needs lines. A line number the directing seat had read by hand at 22:00 (`:281-282`) was `:285` three
+hours later.
+
+So the engine cites phrases, and the citation carries its own test: `<doc>.md@«a phrase that occurs
+exactly once in that document»`, with guillemets because a phrase contains quotes and apostrophes and has
+to survive YAML, Python and Markdown unescaped. Inside a recipe module that declares `RECIPE = "<slug>"`,
+the bare word `doc` in place of a file name means its own document, and *only* its own, because `radiogenic.py`
+had used that form for
+the tidal document's §6.2 table while `doc` meant the heat one. A citation can name the wrong document
+entirely, which no line number can reveal.
+
+`check_refs.py` enumerates every citation in `chain.yaml`, `bindings.yaml`, `bodies/*.yaml`, the engine and
+scripts modules and the engine notes, and resolves each anchor: one match passes, zero is rotten, two or
+more is ambiguous — a verdict the old scheme could not even express. Three more rules: an edge whose
+citation lands inside `## Contract — \`X\`` must have X as one of its own endpoints (the only deterministic
+test for the `:119` failure, and written so the four legitimate contract landings still pass); a landing on
+a blank line, table separator or rule fails in wiring and code and warns in a preserved note; and a target
+shared by two or more edges must literally name the payload each wants (8/8 on the reused targets,
+useless on single-use ones). `test_check_refs.py` aims the checker at a synthetic document where all five
+outcomes are known by construction, because a checker that only ever passes is the thing being replaced.
+
+The audit found five enumeration holes, all "passes silently", all closed: an upper-case file name was
+invisible (`DANTE_HEAT_TRANSPORT_EVIDENCE.md`), non-`.md` targets were not counted at all (unmigrated 204
+→ 392 when that opened), `bodies/*.yaml` was outside the scan, a folded `note: >` block could hide a
+citation from the line scan (YAML is now read from parsed values, which also makes the endpoints exact),
+and a bare file name matched no pattern at all — that last one had already let two `## Related` citations
+be quietly abandoned.
+
+Measured basis for the design, from a month of edit history (parallel seat, `c32-l-loose-aim-notes.ko.md`):
+citations break at ~1.4 %/month overall, **table rows are the worst target at 3.5 %** with 31 of 40
+failures being ambiguity rather than rot, and list-like documents survive best when anchored on headings
+(`data-sources.md` 78.4 %, `methodology-index.md` 87.0 %). Hence: anchor prose, not table rows; extend a
+phrase until it is unique rather than truncating it, so the anchor still carries a claim.
+
+chain.yaml is fully migrated: 209 anchors, every one resolving, no line number left in the wiring. Open: 174
+citations on line numbers in code and notes, migrating in batches (`c32-h/i/k/l-*-notes.ko.md` carry the
+blame traces). And the contract-heading anchors are loosely aimed by the shared-target rule's own report —
+tightening them to a unique Need item where one exists (`` `mantle_radiogenic_power` [W] `` is unique;
+`core_cmb_temperature_solved` occurs 5×, `t_body` 0×) is the next pass.
+
+### C34 — what the heat-transport table is fed, and where its thresholds come from — **listed 2026-09-05 (owner: 등재만, 판정 변경 없음)**
+
+Three facts, named and not repaired. The code's verdicts are unchanged by this entry.
+
+**Venus splits.** The §6.2 table prints Venus as its stagnant-lid anchor body at a measured 10–20 mW/m²,
+and the engine computes 37.75 mW/m² for it and returns **plate tectonics**. The arithmetic is Earth's
+21.32 TW scaled by mass to 17.37 TW over 4.6023e14 m². No core-mass fraction in 0.20–0.40 flips it; the
+flip is at 0.4636.
+
+**The plate-tectonics ceiling 0.135 W/m² is authored.** It is `0.09 * 1.5` in `tidal_heating.py`, and the
+document prints the 0.09 capacity but not the ±50 % width: a full sweep for `50 %`, `factor of 1.5` and
+`×1.5` returns two hits, both a different quantity (Io's heat concentration, 50 % of the flow from 1.2 %
+of the surface). The comment "read ±50 % as its row" is the code's own reading of the table.
+
+**The document does not say what quantity to feed the table.** Earth alone has four candidates spanning
+**2.20×**: the measured surface heat flow 0.0921, the total flux the engine actually feeds 0.0418,
+`implied_surface_heat_flux` 0.0769, and §6.1's own 0.08. The single sentence that says "the total flux"
+is the contract block at `tidal:59`, which `b29b556e` added — the recipe's own declaration, not the
+methodology's statement, the same shape as C30's finding (e). The document meanwhile writes that there is
+no published W/m² boundary between the modes and that any flux threshold is a conversion rather than a
+citation, so of the three thresholds the 0.03 is the cheapest to turn into a C32 band (the document
+already prints 10–30 mW/m²).
+
+Two more from the same batch, for the facets they belong to: **ε Eri b's 540–810 µT band is authored** —
+of the six endpoints across three brackets only one reproduces from the document's printed inputs (546.5,
++1.2 %), and GJ 896 A b's upper bound comes from an age the recipe itself refuses; and **Cassandra's
+verdict is carried by one declaration, not by its mass and radius** — `composition_intent` `earth_like`
+(ice 0.00) gives 197.38 µT against `water` (ice 0.50) giving 0.3948 µT, a factor 500, and the board's own
+9.0e23 kg / 3400 km is 5 467 kg/m³ = 0.991 ρ⊕, rocky, which runs opposite to declaring the ice-rich
+preset (real Ganymede is 1 936 kg/m³). Both are in `c32-d-e-epseri-cassandra-notes.ko.md`.
 
 ## What closing all of these does not do
 

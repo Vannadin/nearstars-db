@@ -70,3 +70,17 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
   about log ρ; this one shows the same file also answered a grad_ad question.
 - **Every kept source directory carries a `PROVENANCE.txt`** (who obtained it, when, from where, what is in
   it). `militzer2024_zenodo/` lacked one until 2026-09-03; added.
+
+## Backlog — 2026-09-05 (C33)
+
+- **Tighten the contract-heading anchors to a unique Need item, where one exists.** The
+  shared-target rule reports them as loosely aimed and it is right: five edges cite
+  `## Contract — \`cmb_heat_flux\`` for five different payloads, none of which the heading names.
+  Some tighten cleanly (`` `mantle_radiogenic_power` [W] `` occurs exactly once in the heat
+  document), some cannot (`core_cmb_temperature_solved` occurs five times, `t_body` none), so the
+  pass is "tighten where it is unique, keep the heading and say why where it is not".
+- **Re-grade the engine notes once the migration is done.** `check_refs.py` currently warns rather
+  than fails on a dead landing in any `engine/*.md`, because a preserved note records what was true
+  when it was written. But that directory also holds living documents — `interior-core.md`,
+  `SESSION-HANDOFF.md`, `backflow-checklist.md` — which should be held to the wiring's standard. The
+  split is by the header declaration `is_preserved()` already reads.

@@ -23,6 +23,8 @@ inputs:
   # source: owner declaration 2026-09-04 (C29 c); board phase4/alpha_centauri.yaml@«Radiogenic plus weak tidal heating (forced e ~0.005), enough to drive volcanism, continental drift and a dynamo»
   # and phase4/alpha_centauri.yaml@«Active volcanic belts and fast continental drift (tidal plus radiogenic)» — mobile lid, not stagnant. grade declared.
   stagnant_lid: false
+  # ── 이 아래 보드 인용은 값 행 자체를 앵커로 잡는다. 보드가 그 값을 바꾸면 앵커가 썩는데, provenance 인용에서는
+  # 그게 옳은 동작이다 — 인용이 가리키던 근거가 실제로 사라진 것이므로 조용히 다른 줄을 가리키는 편보다 낫다.
   # ── tidal inputs (C30, 2026-09-04). e and k₂/Q are declarations; the board fits k₂/Q to its flux, phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it».
   semi_major_axis_km: 252393     # source: phase3/stability-sim/hypotheticals/alpha_centauri.json:33 (design-of-record 2026-06-21)
   perturber_mass_earth: 120.0    # source: phase4/alpha_centauri.yaml@«- { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }» (Polyphemus 120 M⊕)
