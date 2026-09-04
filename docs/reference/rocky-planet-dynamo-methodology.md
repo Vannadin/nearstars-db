@@ -22,7 +22,8 @@ the ad-hoc reasoning in the TRAPPIST-1 / AU Mic decisions.
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
 `ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
-`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period` [h]
+`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period` [h] ·
+`dynamo_alive` [—]
 **Discriminating keys** — the ladder regime (1 dry < 2 M⊕ · 2 dry 2–2.5 · 3 dry > 2.5 · 4 water-rich · 5
 low-density dry), from mass, radius and the declared ice fraction; the alive gate, which is three labels
 (`conductor_phase` from `core_state`, the declared `stagnant_lid`, the declared per-class death age) and

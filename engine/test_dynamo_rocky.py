@@ -91,6 +91,21 @@ def main() -> int:
     ok(both.grade == "judgment", "4: the ladder never grades above judgment — its gates are labels")
     giant = dr.ladder(120.0, 11.2, "liquid", False, 5.3, body_class="giant")
     ok(not giant.applicable, "4: a giant is out of domain here (dynamo_giant's recipe)")
+    # ── 4b. C29(c): a declared dynamo_alive passes the alive gate only while the core is undecided ─────
+    decl = dr.ladder(0.6447, 0.8984, "undecided", False, 5.3, dynamo_alive=True)
+    ok(decl.applicable and decl.values["dynamo_alive"] == dr.ALIVE and decl.values["b_eq"] is not None
+       and "alive by owner declaration" in " ".join(decl.notes),
+       f"4b/C29c: undecided core + declared alive must pass the gate with the declaration printed; got {decl.values.get('dynamo_alive')}")
+    undecl = dr.ladder(0.6447, 0.8984, "undecided", False, 5.3)
+    ok(undecl.values["dynamo_alive"] == dr.UNDECIDED_CORE, "4b/C29c: undecided core without a declaration stays cannot-say")
+    solid_decl = dr.ladder(1.0, 1.0, "solid", False, 4.5, dynamo_alive=True)
+    ok(solid_decl.values["dynamo_alive"] == dr.DEAD_SOLID and "declaration ignored: core_state decided 'solid'" in " ".join(solid_decl.notes),
+       "4b/C29c: a computed solid core is not overridden by the declaration")
+    liquid_decl = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, dynamo_alive=True)
+    ok(liquid_decl.values["b_eq"] == both.values["b_eq"] and "declaration ignored" in " ".join(liquid_decl.notes),
+       "4b/C29c: a computed liquid core gives the same answer with or without the declaration")
+    ok(decl.grade == "judgment", "4b/C29c: grade stays judgment")
+
     # ── 5. C28: the ice fraction comes from the composition preset unless declared ──────────
     from state import BodyState
     def st(**inputs):
@@ -112,6 +127,7 @@ def main() -> int:
     ok(not giant_state.applicable and "암석 사다리 밖" in giant_state.reason and "composition preset" not in giant_state.reason,
        "5/C28: a giant with no composition_intent keeps the class-gate refusal, not a preset refusal (audit hold on b8d86b68)")
     if not fails:
+        print(f"  [PASS] C29(c) 선언 켜짐: undecided+선언 → {decl.values['dynamo_alive']} (B_eq {decl.values['b_eq']:.1f} µT) · 선언 없음 → cannot-say · solid/liquid 는 선언 무시")
         print(f"  [PASS] C28 얼음 분율: earth_like 0.00 · water 0.50 (regime {wet.values['ladder_regime']}) · 선언 0.1 우선 · 미지 프리셋 거절")
 
     for f in fails:

@@ -15,6 +15,13 @@ inputs:
   # relaxes it to 1400–1900 K. Gives core_state a lower-bound verdict only;
   # the core-side CMB temperature (earth.yaml:24) is a separate, undeclared thing.
   potential_temperature: 1600.0
+  # source: owner declaration 2026-09-04 (C29 c) — grade declared. core_state's lower-bound branch cannot decide the
+  # core label without a core-side CMB temperature, and the owner declares the dynamo on instead of authoring that
+  # temperature. Board: phase4/alpha_centauri.yaml:2296 ("a tidally driven iron-core dynamo"), :2139, :2259.
+  dynamo_alive: true
+  # source: owner declaration 2026-09-04 (C29 c); board phase4/alpha_centauri.yaml:2139 ("continental drift"), :2259
+  # ("fast continental drift") — mobile lid, not stagnant. grade declared.
+  stagnant_lid: false
 
 units:
   mass_earth: M_earth
@@ -24,6 +31,14 @@ units:
 
 # 이미 출하된 값. 엔진은 읽지 않고 대조만 한다.
 expected:
+  b_eq:
+    value: 75
+    unit: uT
+    tol: 1.0
+    tol_reason: >
+      대조용이지 강제가 아니다 (C29 c). 보드 75 µT 는 "rocky-dynamo ℳ⁺ 상한" 으로 적힌 선택이고, 엔진의
+      사다리는 지구 앵커 30 µT · ℳ_base · (R/R⊕)⁻³ 를 낸다. 차이는 기록한다 — 보드 갱신은 별도 결정.
+    source: "phase4/alpha_centauri.yaml:2296 · magnetism.magnetic_field"
   radius:
     value: 0.8984
     unit: R_earth

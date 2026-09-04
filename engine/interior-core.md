@@ -2305,6 +2305,27 @@ over 0.8–2 M⊕, Nimmo+ 2004 integrates Earth to T_m 1 613 K. The engine's `ma
 1 017–1 468 K for Pandora — a **floor family**, not an estimate, its own doc says. So the grade stays *analog* and the declaration's
 comment says the source relaxes it to 1400–1900 K.
 
+**(c) The dynamo declared on — owner decision 2026-09-04.** Rather than author a core-side CMB temperature for Pandora, the
+owner declares what the board already states: `phase4/alpha_centauri.yaml:2296` "75 µT … a tidally driven iron-core dynamo",
+`:2139` "Radiogenic plus weak tidal heating … enough to drive volcanism, continental drift and a dynamo", `:2259` "fast
+continental drift". `bodies/pandora.yaml` gains `dynamo_alive: true` and `stagnant_lid: false` (grade declared, sources beside
+each). `dynamo_rocky.ladder` honours `dynamo_alive` **only while `conductor_phase` is undecided**; a computed liquid or solid
+core is never overridden — the declaration is then ignored and the note says "declaration ignored: core_state decided …".
+Grade stays judgment. Priority rule, read from the code: `BodyState.__getitem__` (`state.py:47–52`) returns a declared
+*input* before any recipe's value, so a declared key with the same name as a computed output would win — `conductor_phase`
+is therefore **not** declared anywhere (it must stay computed), and the declaration takes its own name, `dynamo_alive`.
+
+| step | before (c) | after (c) |
+|---|---|---|
+| `core_state` | `lower_bound` · `conductor_phase` undecided (2 347 vs 2 714 K) | unchanged — the declaration does not touch it |
+| `dynamo_rocky` alive gate | `cannot-say (conductor_phase undecided)` | **alive** by owner declaration (note printed) |
+| `dynamo_rocky` result | dipole null, B_eq null | regime 1 (dry, 0.64 M⊕), ℳ_base 1.0 ℳ⊕ (declared family), **B_eq 41.4 µT · B_pol 82.7 µT** (30 µT · ℳ · (0.8984 R⊕)⁻³), regime gate `undeclared (both emitted)` (no `tidal_locking`), multipolar 2.1–4.1 µT |
+| board comparison | — | board 75 µT (`:2296`, "the upper bound of the rocky-dynamo ℳ⁺ ladder") vs engine 41.4 µT: **−44.8 %**, recorded in `expected.b_eq` (tol 100 %, comparison not enforcement); the board is not changed |
+
+The difference is the board's choice of the ladder's upper bound against the engine's elected Earth-anchored ℳ_base = 1; the
+engine cannot elect ℳ⁺ from anything it holds. Tests: `test_dynamo_rocky.py` §4b (declaration passes only an undecided core;
+solid and liquid ignore it, liquid bit-identical).
+
 **(b) Self-derivation — listed, not started.** The loop that would replace the declaration: obtain the present potential
 temperature from C20's thermal history (`core_thermal_history` already emits `mantle_potential_temperature_present`,
 1 525 K on Earth) and iterate it against `interior_layers` (whose `cmb_pressure` C20 consumes — a cycle). Why not now: it moves

@@ -20,7 +20,8 @@
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
 `ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
-`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period` [h]
+`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period` [h] ·
+`dynamo_alive` [—]
 **분기키** — 사다리 regime(1 건조 < 2 M⊕ · 2 건조 2–2.5 · 3 건조 > 2.5 · 4 물 풍부 · 5 저밀도 건조), 질량·반지름·
 선언된 얼음 분율로 정함. 생존 게이트는 라벨 셋(`core_state` 의 `conductor_phase`, 선언된 `stagnant_lid`, 클래스별
 선언 사멸 연령)과 인용 하나(`Rm > 40`, 평가하지 않음). 영역 게이트는 선언(`dynamo_regime`) 또는 두 갈래 모두 출력.

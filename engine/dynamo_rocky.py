@@ -139,11 +139,12 @@ FREE_ROTATION = ("dipolar by rule — RM22 §5.2: 'If the planet is not tidally 
 def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str | None,
            stagnant_lid: bool | None, age_gyr: float | None, ice_mass_fraction: float = 0.0,
            body_class: str | None = "rocky", dynamo_regime: str | None = None,
-           locked: bool | None = None, rotation_period_h: float | None = None) -> Result:
+           locked: bool | None = None, rotation_period_h: float | None = None,
+           dynamo_alive: bool | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth, "conductor_phase": conductor_phase,
               "stagnant_lid": stagnant_lid, "age_gyr": age_gyr, "ice_mass_fraction": ice_mass_fraction,
               "body_class": body_class, "dynamo_regime": dynamo_regime,
-              "locked": locked, "rotation_period": rotation_period_h}
+              "locked": locked, "rotation_period": rotation_period_h, "dynamo_alive": dynamo_alive}
     if body_class not in ROCKY_CLASSES or mass_earth > MAX_ROCKY_MASS:
         return out_of_domain(RECIPE, VERSION,
                              f"'{body_class}' {mass_earth} M⊕ 는 암석 사다리 밖이다 (암석 클래스, ≤ {MAX_ROCKY_MASS} M⊕) "
@@ -156,7 +157,17 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
     # step 1 — classify
     reg = regime_class(mass_earth, radius_earth, ice_mass_fraction or 0.0)
     # step 2 — alive gate: three labels, no formula
-    if conductor_phase in (None, "undecided"):
+    # C29(c) (2026-09-04, owner): a DECLARED dynamo_alive=True stands in for the core label ONLY while core_state
+    # is undecided (its lower-bound branch cannot decide without a core-side CMB temperature). A computed
+    # liquid/solid is never overridden — the declaration is then ignored and the note says so.
+    declared_alive = False
+    alive_note = None
+    if conductor_phase in (None, "undecided") and dynamo_alive is True:
+        declared_alive = True
+        alive_note = "alive by owner declaration (core_state undecided) — dynamo_alive: true declared; the core label is not computed"
+    elif dynamo_alive is not None and conductor_phase not in (None, "undecided"):
+        alive_note = f"declaration ignored: core_state decided '{conductor_phase}'"
+    if conductor_phase in (None, "undecided") and not declared_alive:
         alive = UNDECIDED_CORE
     elif conductor_phase == "solid":
         alive = DEAD_SOLID
@@ -177,7 +188,7 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
         f"얼음질량분율 {ice_mass_fraction or 0.0:.2f}, 문턱 {WATER_RICH_IMF} 는 선언). 단계 2 생존 게이트 = "
         f"라벨 셋: conductor_phase '{conductor_phase}' (core_state), 정체 암석권 선언 {stagnant_lid}, "
         f"클래스별 사멸 연령 선언 {DYNAMO_DEATH_AGE_GYR} → **{alive}**. {RM_NOTE}.",
-    ]
+    ] + ([alive_note] if alive_note else [])
     if alive != ALIVE:
         values = {"dipole_moment": 0.0 if alive.startswith("dead") else None, "b_eq": 0.0 if alive.startswith("dead") else None,
                   "b_pol": 0.0 if alive.startswith("dead") else None, "regime": alive, "ladder_regime": reg,
@@ -287,7 +298,8 @@ def _ladder_from_state(state, imf: float) -> Result:
                   body_class=state.get("body_class"),
                   dynamo_regime=state.get("dynamo_regime"),
                   locked=state.get("locked"),                      # tidal_locking's output — absent until that node has a recipe
-                  rotation_period_h=state.get("rotation_period"))
+                  rotation_period_h=state.get("rotation_period"),
+                  dynamo_alive=state.get("dynamo_alive"))          # C29(c): owner declaration, honoured only while core_state is undecided
 
 
 @recipe("dynamo_rocky")
