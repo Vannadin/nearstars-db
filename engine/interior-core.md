@@ -2168,7 +2168,7 @@ structure carries over; what changes is that boundary condition and one δ branc
 ⚠ **σ for the Rm criterion is self-contradictory inside RM22** (phase table, 2026-09-04): the printed 1.36e6 S/m and the printed λ_m 1.32 m²/s (⇒ 6.03e5) differ by 2.26×, and Rm = μ₀σUD carries that factor whole against the threshold of 50. Pre-registered for the start of C23: compute Rm with both values and report first whether the on/off verdict flips; Tang's ~1e6 fixes only the order. **Tang does not unlock Driscoll & Olson 2011** (`Driscoll`, `Olson` 0 hits) — RM22's `q_conv` definition and
 `γ_d = 0.2` still sit behind that unheld paper (C16, Tier 1 request).
 
-### C24 — a water-rich rocky body does not converge in `interior_layers` — **listed 2026-09-04, not started**
+### C24 — a water-rich rocky body does not converge in `interior_layers` — **listed 2026-09-04; opened by the owner the same afternoon — diagnosed and fixed: `water-world-convergence-context-notes.md`**
 
 **Blocks**: C17 (its structural half cannot be measured until this converges).
 **Symptom** (`ocean-fraction-context-notes.md` §3): 1 M⊕ · CMF 0.325 · T_pot 1 600 K · no atmosphere,
@@ -2183,6 +2183,7 @@ Tau Cet) declares a water-rich rocky body — Pandora is Earth-density with a su
 interior water fraction. The roster's only water-rich rocky candidates are **TRAPPIST-1 f/g/h** (Phase 3
 triage only, no board yet). **Priority: low until a TRAPPIST-1 board exists, high the day it does.**
 Start is the owner's decision.
+**Diagnosed 2026-09-04 (compute-only, pre-registered)**: not the temperature update, not the pressure bracket — every centre temperature below ≈ 4 100 K is refused by the water column, and the answer (≈ 2 900 K) lies inside that refused window (**(b)**): near-surface water at ~0.09 GPa · 560–870 K, below the dense-liquid table's 0.1 GPa floor and under Mazevet's 1 000 K. **A held table covers exactly that window (IAPWS-IF97, `_Steam`/`h2o_if97`) and the water column's dispatch never consulted it** — Brief 25 closed the same wall for envelope water only; a coverage gap between three IAPWS-lineage tables (seams ≤ 0.04 %), not a data problem. Fix: one candidate line, placed last in `liquid_material` so anchors stay bit-identical by construction. Beside it: 1 600 K is the rock's potential temperature, not a water world's (independent, not causal); the dispute band is a two-sided strip on a one-way flag (③, off the critical path).
 
 ### Owner list — main-repository findings of 2026-09-04 (outside this worktree; not tonight's work)
 
