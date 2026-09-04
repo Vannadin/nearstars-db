@@ -25,6 +25,13 @@ Two defects of its own, found 2026-09-04 within hours of installation (recorded,
   name whose only file is .PROVENANCE.txt would also have counted. A held paper must have a
   body: a .pdf, an .html carrying ltx_document, or an .md above BODY_MIN_BYTES. Otherwise
   the verdict is ABSTRACT-ONLY — a different state from ABSENT, calling for a different fix.
+- Third naming trap (2026-09-04, later that day): bibcodes carrying '&' (2001E&PSL.185...49A)
+  are cached with '&' -> '_' (2001E_PSL.185...49A.pdf, four such names), and the tool did not
+  know that rule either. Generalised: DOUBT THAT THIS TOOL KNOWS EVERY CACHE NAMING RULE.
+  Three rules surfaced in one day; when a paper you can see on disk comes back ABSENT, the
+  "checked ..." list says which names were tried - compare it with `ls` before believing it.
+  Seen but not folded in: 2020SciA_6_7467D uses '_' where a dot run would be - a different
+  variant, recorded here, not guessed at.
 """
 from __future__ import annotations
 
@@ -118,10 +125,17 @@ def main(argv: list[str]) -> int:
     missing = 0
     for b in bibcodes:
         candidates = [b] + arxiv.get(b, [])
+        if "&" in b:
+            candidates.append(b.replace("&", "_"))  # cache convention: '&' in a file name is written '_' 
         held = [c for c in candidates if names.get(c)]
         shells = [c for c in candidates if c in names and not names[c]]
         if held:
-            how = "bibcode" if held[0] == b else f"arXiv {held[0]}"
+            if held[0] == b:
+                how = "bibcode"
+            elif held[0] == b.replace("&", "_"):
+                how = f"bibcode with & as _: {held[0]}"
+            else:
+                how = f"arXiv {held[0]}"
             print(f"HELD    {b}  (as {how})")
         elif shells:
             missing += 1
