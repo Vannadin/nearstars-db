@@ -49,7 +49,7 @@ R_EARTH_M = 6.371e6
 # imply 1.016e14 W when inverted (2.44 W/m² at R 1822 km) — 1.6 % from this constant; that is a convention difference.
 IO_POWER_W = 1.0e14
 # Two Io flux anchors with different sources: ~2 W/m² = Veeder+ 2012 (2012Icar..219..701V, ABSENT from the cache);
-# 2.5 W/m² = Kankanamge & Moore 2019 (2019JGRE..124..114K, HELD; doc @«| **Heat pipe** | melt migrates through the lid and erupts | ≥ ~2.5 W/m², no firm upper bound»,
+# 2.5 W/m² = Kankanamge & Moore 2019 (2019JGRE..124..114K, HELD; doc @«| **Heat pipe** | melt migrates through the lid and erupts | Io's own melt flux, 2.5 W/m²; a floor, not a boundary»,
 # doc @«**Do not transcribe Kankanamge §6's "totaling ∼1 TW".**»). Neither is used in a verdict here.
 IO_FLUX_VEEDER_W_M2 = 2.0
 IO_FLUX_KM2019_W_M2 = 2.5
@@ -59,12 +59,16 @@ REGIME_VIGOROUS = "vigorous silicate volcanism, possible magma ocean"
 REGIME_ACTIVE = "active resurfacing, episodic volcanism"
 REGIME_OCEAN = "enough to maintain a subsurface ocean under an ice shell"
 REGIME_DEAD = "geologically dead; no ocean, no plumes from tides alone"
-REGIME_UNCLASSIFIED = "unclassified (between table rows)"
+# "unclassified" is not a classifier failure — it is the band where the DOCUMENT prints no row.
+# The two tables have different empty bands, so the two labels must not read alike: a value's
+# consumer could not tell which table declined to answer when both said the same words.
+REGIME_UNCLASSIFIED = "unclassified — §6.1 prints no row for this flux"
 # §6.2 transport-mode table, doc @«### 6.2 How the heat actually leaves: the three-mode ladder»
 MODE_PLATE = "plate tectonics"
 MODE_STAGNANT = "stagnant lid"
 MODE_HEAT_PIPE = "heat pipe"
-MODE_UNCLASSIFIED = "unclassified (between table rows)"
+MODE_UNCLASSIFIED = ("unclassified — §6.2 prints no boundary for this flux; §6.1's own figure for Io, "
+                     "~2 W/m², lands in this band too")
 # The two sentences these labels rest on: doc @«(these are guides, not sharp lines):»
 # and doc @«published W/m² boundary** between the modes». They are cited here, in a comment, and
 # NOT inside the shipped string: a value's reader gets the pointer, not the document's prose.
@@ -99,7 +103,12 @@ def transport_mode(total_flux_w_m2: float) -> str:
         return MODE_HEAT_PIPE
     if total_flux_w_m2 <= 0.03:
         return MODE_STAGNANT
-    if total_flux_w_m2 <= 0.09 * 1.5:          # the plate-tectonics anchor is one body, 92.1 mW/m²; read ±50 % as its row
+    # ⚠ AUTHORED. The 0.09 is printed (Earth); the ×1.5 is not — no paper prints a ±50 % width for
+    # that row, and this line invents a lower edge for the band so it has one. Consequence today,
+    # measured: none. No roster body's total flux falls between 0.135 and 2.5 — Earth is 0.0418, well
+    # under, and Pandora is 45.36, well over — so no verdict in this engine depends on where the edge
+    # sits. It is written here rather than hidden because the next body could land in that gap.
+    if total_flux_w_m2 <= 0.09 * 1.5:
         return MODE_PLATE
     return MODE_UNCLASSIFIED
 

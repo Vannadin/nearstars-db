@@ -296,7 +296,7 @@ itself, so the mode is an output of §6.1, not a free choice.
 |---|---|---|---|
 | **Plate tectonics** | the lid itself is recycled | ~0.09 W/m² | Earth, **92.1 mW/m²** (47±2 TW from 38,347 measurements, [`2010SolE....1....5D`](https://ui.adsabs.harvard.edu/abs/2010SolE....1....5D)) |
 | **Stagnant lid** | conduction through an immobile lid | ceiling **10–30 mW/m²** | Venus 10–20, Mars 15–30 ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)) |
-| **Heat pipe** | melt migrates through the lid and erupts | ≥ ~2.5 W/m², no firm upper bound | Io; early Earth ([`2019JGRE..124..114K`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124..114K)) |
+| **Heat pipe** | melt migrates through the lid and erupts | Io's own melt flux, 2.5 W/m²; a floor, not a boundary — nothing published sets an upper one | Io; early Earth ([`2019JGRE..124..114K`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124..114K)) |
 
 The decisive fact for any tidally heated body above ~0.1 W/m²: **conduction is not an
 option.** Reese, Solomatov & Moresi 1998 ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)) put the
@@ -342,6 +342,23 @@ So the design rule is the inverse of the intuitive one: **you cannot buy a thick
 crust by raising the heat, and a high-flux body does not have a centimetre-scale
 crust.** It has a thick cold lid pierced by discrete melt conduits, and *those* have
 to carry essentially all of the power.
+
+**What the three numbers in the Capacity column are, and are not.** None of them is a published
+boundary between modes. §6 already says so — *there is no published W/m² boundary between the modes,
+because the real criterion is melt fraction and any flux threshold is a conversion, not a citation* —
+and the §7 caution box says the same of this one: *2.5 W/m² itself agrees with Io's measured output*.
+Read the column as three measured bodies, not three thresholds.
+
+- **2.5 W/m² is one body's result.** Kankanamge & Moore 2019 solve their system for Io's parameters
+  and report *"The heat flux carried by melt, Fm is 2.5 W/m², while that by conduction is 9 mW/m²"*.
+  It is Io's melt-carried flux under their model. (The other half of that same sentence, *"totaling
+  ∼1 TW"*, is the one §7 warns against transcribing: half a sentence is a mode boundary here, half is
+  flagged as not transcribable.)
+- **0.09 W/m² is Earth** and **10–30 mW/m² is the Venus and Mars pair.** Same reading.
+- **The clearest evidence that these are bodies and not boundaries**: feed §6.1's own Io figure,
+  ~2 W/m² (Veeder+ 2012), into the ladder and Io comes back `unclassified` — the anchor body of the
+  heat-pipe row is not classified as a heat pipe by this document's other number for the same body.
+  Two Io measurements 25 % apart, and the choice between them *is* the mode boundary.
 
 ### 6.3 The plains are not an exit
 

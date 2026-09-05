@@ -265,7 +265,7 @@ divergence**로 표시한다. **(6)** `F ≳ 1 W/m²`이면 "격렬한 화산활
 |---|---|---|---|
 | **Plate tectonics** | the lid itself is recycled | ~0.09 W/m² | Earth, **92.1 mW/m²** (47±2 TW from 38,347 measurements, [`2010SolE....1....5D`](https://ui.adsabs.harvard.edu/abs/2010SolE....1....5D)) |
 | **Stagnant lid** | conduction through an immobile lid | ceiling **10–30 mW/m²** | Venus 10–20, Mars 15–30 ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)) |
-| **Heat pipe** | melt migrates through the lid and erupts | ≥ ~2.5 W/m², no firm upper bound | Io; early Earth ([`2019JGRE..124..114K`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124..114K)) |
+| **Heat pipe** | melt migrates through the lid and erupts | Io's own melt flux, 2.5 W/m²; a floor, not a boundary — nothing published sets an upper one | Io; early Earth ([`2019JGRE..124..114K`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124..114K)) |
 
 ~0.1 W/m²를 넘는 조석가열 바디에 대해 결정적인 사실은 이것이다. **전도는 선택지가 아니다.**
 Reese, Solomatov & Moresi 1998([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R))은 광범위한 융해가
