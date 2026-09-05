@@ -205,3 +205,28 @@ Chain them, and make an empty diff refuse:
 opposite of what it reads like; the form above was run both ways before being written here. The
 commit message is a claim about the tree, and a claim nobody checked is how a document ends up
 describing a table it does not contain.
+
+## Three checks that read correctly and were wrong when run (2026-09-05)
+
+One of these is an anecdote. Three in a day is the reason the rule above exists, so they are kept
+together — a rule with one example gets read as bad luck.
+
+1. **`pgrep -x python3` as a liveness test.** The interpreter running the checks reports its `comm` as
+   `Python`, so the pattern matched on no run at all. Read as "the child is gone", it got two healthy
+   gates discarded and put an invented failure mode into the handoff for half an hour.
+2. **`pgrep -P "$P"` as the fix for it.** `check.sh` runs each check in a subshell, so the gate's
+   immediate child is another idle `bash` at 0.0 %. The corrected diagnostic told the same lie as the
+   one it replaced, and was caught only because it was executed against a live gate before being
+   committed.
+3. **`git diff --quiet` as a commit guard.** It exits **0 when there is no change**. Written the way
+   it reads, the guard would have refused exactly the commits that had something to commit — under
+   the name of a guard protecting them.
+
+What the three share is not carelessness. Each was written by someone who knew what they meant, and
+each is a **plausible reading of a name**: a process called python is `python3`, a child is one level
+down, a quiet diff means nothing happened. The name was the evidence, and the name was wrong.
+
+So: **run the check against the case you expect to pass, not only the case you expect to fail.** All
+three would have survived a test that only looked for the failure — a dead gate really does report no
+`python3`, and an empty diff really is quiet. What none of them survived was being pointed at a
+healthy run.
