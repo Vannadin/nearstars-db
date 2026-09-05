@@ -98,6 +98,24 @@ def main() -> int:
     except ValueError:
         pass
 
+    # 3b. in step is a claim too: a bundle nobody published a pairing for refuses to be walked
+    try:
+        corners({"co2": Band(None, 1.3, 4.0, "Ramirez 2014", "calibrated", bundle="early-mars",
+                             pairing="unknown"),
+                 "h2": Band(None, 0.05, 0.20, "Ramirez 2014", "calibrated", bundle="early-mars",
+                            pairing="unknown")})
+        fails.append("3b: a bundle with an unpublished pairing must refuse — the diagonal is a claim too")
+    except ValueError as e:
+        ok("unknown" in str(e) and "early-mars" in str(e),
+           f"3b: the refusal must name the bundle and why, got {e}")
+    ok(corners({"q": q, "p": p}) and all(b.pairing == "in step" for b in (q, p)),
+       "3b: a bundle whose pairing IS published still walks")
+    try:
+        Band(1.0, 0.9, 1.1, "doc", "measured", pairing="unknown")
+        fails.append("3b: pairing on a band with no bundle must be refused — nothing to pair with")
+    except ValueError:
+        pass
+
     # 4/5. a choice needs candidates and consequences
     cands = ({"value": 0.010, "end": "low", "source": "Venus 10–20 mW/m²", "grade": "measured"},
              {"value": 0.030, "end": "high", "source": "Mars 15–30 mW/m²", "grade": "measured"})
@@ -126,7 +144,7 @@ def main() -> int:
     if fails:
         return 1
     print("  [PASS] 밴드 규칙 — 등급 어휘 단일 · 세 상태(구간·바닥 있는 점·점) · 출처 없는 폭 거절 · 값이 밴드 밖이면 거절 · "
-          "값 없는 구간 emit 거절 · 묶음 불가분(9조합, 교차 없음) · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
+          "값 없는 구간 emit 거절 · 묶음 불가분(9조합, 교차 없음) · 짝짓기 미상 묶음 거절 · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
     return 0
 
 

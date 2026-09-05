@@ -37,6 +37,12 @@ emitted — the game takes one number, and nobody has said which.
 3. **The emit boundary** — always one number. Every band collapses eventually; (1) collapses as late
    as possible and (2) collapses at the classifier.
 
+**A bundle whose pairing nobody published cannot be walked at all.** Moving members in step is not
+the neutral option — it is a second assumption, and the greenhouse cases are where it shows: raising
+CO₂ lets a run reach the same temperature on less H₂, so pairing both low ends is a combination the
+paper no more published than the crossed corners are. Such a band declares `pairing="unknown"` and
+`corners()` refuses it by name, rather than quietly walking the diagonal.
+
 **Bundled widths are chosen whole.** `A_Bond = q · p` ties the Bond-albedo width to the phase-integral
 width; multiplying them as if independent invents a spread neither source supports. The greenhouse
 forcing is worse — CO₂ 1.3–4 bar, H₂ 5–20 %, N₂ 2–3× are a published *combination grid*, and splitting
@@ -75,12 +81,18 @@ class Band:
     grade: str = "authored"
     bundle: str | None = None       # None = independent; a name = chosen whole with its siblings
     floor_grade: str | None = None  # a floor can be weaker than the value it bounds
+    pairing: str = "in step"        # "in step" | "unknown" — is it published which end goes with which
 
     def __post_init__(self) -> None:
         if self.value is None and self.low is None and self.high is None:
             raise ValueError("a band with neither a value nor an end says nothing")
         if self.grade not in GRADES:
             raise ValueError(f"unknown grade {self.grade!r}; one of {GRADES}")
+        if self.pairing not in ("in step", "unknown"):
+            raise ValueError(f"unknown pairing {self.pairing!r}; 'in step' or 'unknown'")
+        if self.pairing == "unknown" and self.bundle is None:
+            raise ValueError("pairing describes how a band moves with its bundle siblings; "
+                             "an independent band has nothing to pair with")
         for end in (self.low, self.high):
             if end is not None and not (end == end):        # NaN
                 raise ValueError("a band end may not be NaN")
@@ -143,6 +155,13 @@ def corners(bands: dict[str, Band]) -> list[dict[str, float]]:
         if v.bundle is not None:
             bundles.setdefault(v.bundle, {})[k] = v
     for name, members in bundles.items():
+        unknown = sorted(k for k, b in members.items() if b.pairing == "unknown")
+        if unknown:
+            raise ValueError(
+                f"bundle {name!r} cannot be walked: {unknown} declare their pairing unknown. "
+                "Crossing the members invents combinations nobody published, and walking them in "
+                "step invents a different one — the diagonal is a claim too. Choose a published "
+                "case instead.")
         widths = {len(b.ends()) for b in members.values()}
         if len(widths) != 1:
             raise ValueError(f"bundle {name!r} members must have the same number of ends to move in "
