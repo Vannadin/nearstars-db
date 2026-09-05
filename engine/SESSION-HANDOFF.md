@@ -1317,3 +1317,37 @@ for the next gate. Anything else pushes untested commits under a green line that
 
 Working during a long gate is right — forty minutes is not a break. The mistake would be letting the
 green line spread backwards over whatever happened to be sitting on the branch when it landed.
+
+## A citation that resolves while its sentence lies — 2026-09-06
+
+Three of these in one day. Each has a pointer that a checker verifies happily, wrapped in a claim
+that had stopped being true:
+
+1. **After the `CORELESS_CLASSES` rename**, the anchor was re-aimed and the sentence around it still
+   said the contradiction was *"recorded, not repaired"* — which the rename had just repaired.
+2. **C34's title** said *listed, no verdict changed* after its thresholds half had been answered and
+   one of its numbers had become a band.
+3. **C16's blocker** read *"two inputs still sit behind that unheld paper"*. The paper had been in the
+   cache since 2026-09-04, and that sentence was holding up a work item rather than merely being
+   wrong.
+
+Only the first would have shown any signal at all, and only because the rename broke the pointer. A
+citation that still resolves emits nothing. **This is worse than the rot the citation work was built
+to stop**: visible rot fails a gate, while a stale sentence around a valid pointer passes every check
+we own and is read as current.
+
+So the rule, and it is manual because no checker reaches it: **when you re-aim, re-read.** The
+sentence around a citation is part of the citation.
+
+⚠ **The tool cannot be extended to catch case 3, and it was tried before this was written.**
+`check_paper_held.py --contradictions` is keyed on **bibcodes**, and the C list names its blockers by
+author and year — `2011Icar..213...12D` appears exactly once in `interior-core.md`, in the
+adjudication table, and nowhere near C16. Widening the denial vocabulary with `unheld` and `not held`
+was tested: it does not reach C16, and it does surface nine hits, most of them rows of the
+adjudication table saying the words while reporting the opposite. Matching on author-year instead
+would be the window-widening the C33 record already warns against.
+
+**The cheap fix is on the other side: a blocker gets named with its bibcode.** C16's line now carries
+one, so the existing check reaches it with no change to the tool. Where a C entry says it is waiting
+on a paper, write the bibcode, and the machine that already looks for held-but-called-absent will
+find it the next time it runs.

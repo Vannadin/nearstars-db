@@ -49,7 +49,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C13 | fuzzy core vs the moment-of-inertia deficit | closed 2026-09-01 as a named refusal | — |
 | **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` | **open** (`status: gap`) | needs thermal evolution, not decay history alone; C20's integrator is the supplier to wire |
 | **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` | **open** (`status: gap`) | the supplier exists (Brief 60); what is missing is the consumer wiring through φ and core entropy |
-| **C16** | `tidal_locking → dynamo_rocky via rossby` | **open** (`status: gap`) | two inputs sit behind Driscoll & Olson 2011, **which is now held** (2026-09-04) — the request that blocked it is stale |
+| **C16** | `tidal_locking → dynamo_rocky via rossby` | **open** (`status: gap`) | two inputs sit behind Driscoll & Olson 2011 ([`2011Icar..213...12D`](https://ui.adsabs.harvard.edu/abs/2011Icar..213...12D)), **held since 2026-09-04** — read it; the standing request for it is stale |
 | **C17** | `ocean_fraction →` three consumers | **open** (`status: gap`) | three consumers, no supplier; nothing emits an ocean fraction |
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | **C19** | `body_age → dynamo_giant via cooling_luminosity` | **open** (`status: gap`) | no node emits `L(M, age)`; the brown-dwarf branch was rewired 2026-09-04 and the giant branch was not |
@@ -2273,7 +2273,7 @@ all, and C32's structure has no way yet to say "this decision is empty on that b
 
 **Pre-registration as written on 2026-09-04, kept for the record.** ⚠ **σ for the Rm criterion is
 self-contradictory inside RM22** (phase table, 2026-09-04): the printed 1.36e6 S/m and the printed λ_m 1.32 m²/s (⇒ 6.03e5) differ by 2.26×, and Rm = μ₀σUD carries that factor whole against the threshold of 50. Pre-registered for the start of C23: compute Rm with both values and report first whether the on/off verdict flips; Tang's ~1e6 fixes only the order. **Tang does not unlock Driscoll & Olson 2011** (`Driscoll`, `Olson` 0 hits) — RM22's `q_conv` definition and
-`γ_d = 0.2` still sit behind that unheld paper (C16, Tier 1 request).
+`γ_d = 0.2` still sit behind Driscoll & Olson 2011 ([`2011Icar..213...12D`](https://ui.adsabs.harvard.edu/abs/2011Icar..213...12D)) — ⚠ **held since 2026-09-04 09:17**, so C16's next step is to read it rather than to request it; the standing request is stale (corrected 2026-09-06).
 
 ### C24 — a water-rich rocky body does not converge in `interior_layers` — **listed 2026-09-04; opened by the owner the same afternoon — diagnosed and fixed: `water-world-convergence-context-notes.md`**
 
