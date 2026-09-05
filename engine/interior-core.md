@@ -2619,12 +2619,40 @@ Four were repaired the same day — the two Summers papers and Mauk & Fox in the
 (all three resolvable only through their cache sidecars), and Bethkenhagen+ 2013 in the
 ammonia-methane note, which the ledger in this file had already recorded as held and baked.
 **The count is the argument for the tool**: two people looked for this class by hand — one by grep,
-one by close reading — and each found four. The tool found nineteen on its first run. **17 remain and
-need a reader.** They are not "false positives": the checker matches by
-proximity, and whether a sentence three lines away is about *this* paper is a judgement it cannot
-make. That is the limit of the check, not a bug in it. ⚠ **Do not widen the window to fix them** — a
+one by close reading — and each found four. The tool found nineteen on its first run. **All 17 were read on
+2026-09-05** (14 distinct places; three lines are reported twice). They are not "false positives":
+the checker matches by proximity, and whether a sentence three lines away is about *this* paper is a
+judgement it cannot make. That is the limit of the check, not a bug in it. ⚠ **Do not widen the window to fix them** — a
 wider window means more to dismiss, more dismissing means the check gets ignored, and an ignored
 check is no check. (Same reason the citation checker's total-count reconciliation was dropped.)
+
+The verdict is recorded per place so that nobody adjudicates the same line twice. **Four were real
+and are corrected; ten stand as written.** The test applied: does the sentence claim *we* cannot read
+the paper, or does it describe the paper's publication status — and is the word even about this
+bibcode?
+
+| place | bibcode | verdict |
+|---|---|---|
+| `SESSION-HANDOFF` "Still not held" list | `2001E&PSL.185...49A` Allègre & Manhès | **corrected** — held; cached under the `&`→`_` name, which is why a hand grep missed it |
+| same list | `2013GGG....14.4608D` Davies | **corrected** — held since 09-04 |
+| `SESSION-HANDOFF` Tier 1 want-list | `2011Icar..213...12D` Driscoll & Olson | **corrected** — the paywall is the publisher's; the PDF landed 09-04 09:17 |
+| `SESSION-HANDOFF` Tier 2 want-list | `2009Natur.457..167C` Christensen+ | **corrected** — "not held" was true when the tier list was written and stopped being true the same morning |
+| `ice-stability` citations | `2009P&SS...57.2053F` Fray & Schmitt | stands — the same sentence says *paywalled … obtained through the owner's institutional access* |
+| `interior-structure` citations | `2019Natur.569..251M` Millot+ | stands — "no preprint" is about arXiv, not about us |
+| `interior-core` ammonia route table | `2017ApJ...848...67B` Bethkenhagen+ | stands — a different defect, recorded just below: the grid was never published, so "not obtainable" should read "not published" |
+| `SESSION-HANDOFF` obtained list | `2008RvGeo..46.2007K` Korenaga | stands — marked **obtained**; the paywall two lines down is Jaupart+ 2007 |
+| same | `2017GGG....18.3530R` Ruedas | stands — marked **obtained**; the paywall is Karato & Wu |
+| `SESSION-HANDOFF` not-held list | `2020ApJ...903L..37N` Nimmo & Primack | stands — the line says *held and consumed* |
+| `SESSION-HANDOFF` conductivity note | `2012E&PSL.349..109O` Ohta | stands — *the only … conductivity we hold*; "unobtained" is Fei+ 2000 in the next bullet |
+| `silicate-melt-checklist` | `2011E&PSL.304..251A` Andrault+ | stands — "still unobtained" is Herzberg & Zhang 1996, the neighbouring paper |
+| `silicate-melt-context-notes` | `2011E&PSL.304..251A` Andrault+ | stands — same sentence, same neighbour; it says Andrault is **held since 2026-09-05** |
+| `surveys-2026-08-31` | `2021NatPh..17.1233P` Prakapenka+ | stands — *Obtained the same day*, with the cache path and the repository it came from |
+
+**The count will not reach zero, and should not be read as if it could.** Most of the ten that stand
+say "paywalled" or "unobtained" *and* resolve it in the same breath, which is the right thing for
+those sentences to say — a paper's publication status is worth recording beside the fact that we got
+it anyway. The four corrections were annotated in place with the date rather than rewritten, because
+the sentences were true when written; what they lacked was a second visit.
 
 One is a defect of a different kind. Bethkenhagen+ **2017** (`2017ApJ...848...67B`) is open access
 and its full text is in the cache; what blocks C22 is not access but that **the grid values were
