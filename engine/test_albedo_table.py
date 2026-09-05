@@ -46,9 +46,9 @@ def main() -> int:
             fails.append(f"2: {name} carries a working point the document does not print")
         if band.kind != "interval":
             fails.append(f"2: {name} should be an interval, got {band.kind}")
-        if band.bundle is not None:
+        if band.co_selected is not None:
             fails.append(f"2: {name} is an analog reading of A itself, not a factor of one — "
-                         "the q·p bundle is the other path")
+                         "the q·p pairing is the other path")
     # a row still emits — the game needs a number — but it goes out labelled unchosen, with its ends
     # and their source beside it, so nobody later reads the filled middle as a reviewed decision
     row = BOND_ALBEDO["volatile-ice plains (N₂/CH₄/CO₂)"]

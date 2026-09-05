@@ -17,11 +17,11 @@ Two things follow, and both are refusals:
 
 1. **The cases do not multiply.** Ramirez's CO₂ width against Wordsworth's N₂ width is not a wider
    band, it is a body that neither paper modelled. So the cases are `Choice` candidates — one axis
-   with two options — and not two bundles that a corner grid would happily cross.
+   with two options — and not two co_groups that a corner grid would happily cross.
 2. **Neither case can be walked inside, either.** Raising CO₂ lets a run reach the same temperature on
    less H₂, so the low ends do not belong together any more than the crossed corners do. Our document
    prints the extent of each published region and not which combinations inside it clear freezing, so
-   both members declare `pairing="unknown"` and `corners()` refuses them by name. Walking a bundle in
+   both members declare `pairing="unknown"` and `corners()` refuses them by name. Walking a co-selected group in
    step looks like the cautious option and is a second assumption.
 
 What is left is what the document itself recommends: *"find a published run whose composition,
@@ -48,12 +48,12 @@ _WORDSWORTH = f"{DOC} §borrow: Wordsworth & Pierrehumbert 2013 (2013Sci...339..
 #: 사례 안의 값들. 짝짓기가 인쇄돼 있지 않으므로 `pairing="unknown"` 이고, 그래서 걸을 수 없다.
 CASES = {
     "early Mars (Ramirez 2014)": {
-        "co2_bar": Band(None, 1.3, 4.0, _RAMIREZ, "calibrated", bundle="early-mars", pairing="unknown"),
-        "h2_fraction": Band(None, 0.05, 0.20, _RAMIREZ, "calibrated", bundle="early-mars", pairing="unknown"),
+        "co2_bar": Band(None, 1.3, 4.0, _RAMIREZ, "calibrated", co_selected="early-mars", pairing="unknown"),
+        "h2_fraction": Band(None, 0.05, 0.20, _RAMIREZ, "calibrated", co_selected="early-mars", pairing="unknown"),
     },
     "early Earth (Wordsworth & Pierrehumbert 2013)": {
-        "n2_present": Band(None, 2.0, 3.0, _WORDSWORTH, "calibrated", bundle="early-earth", pairing="unknown"),
-        "co2_present": Band(None, 2.0, 25.0, _WORDSWORTH, "calibrated", bundle="early-earth", pairing="unknown"),
+        "n2_present": Band(None, 2.0, 3.0, _WORDSWORTH, "calibrated", co_selected="early-earth", pairing="unknown"),
+        "co2_present": Band(None, 2.0, 25.0, _WORDSWORTH, "calibrated", co_selected="early-earth", pairing="unknown"),
         # 밴드가 아니다 — 문서가 혼합비 0.1 을 점으로 인쇄한다. 폭을 지어 붙이지 않는다.
         "h2_mixing_ratio": Band(0.1, None, None, "", "calibrated"),
     },

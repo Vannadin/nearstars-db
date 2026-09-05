@@ -17,10 +17,10 @@ joins them with *or*, in one sentence:
 So `A_analog` (the eight rows) and `q · p` (the phase integral times the geometric albedo) are two
 estimates **of the same quantity**. Multiplying the analog table's band by the phase integral's band
 is not a wide band, it is a category error — `A = q·p` already has `A` on the left. Where a real
-bundle does live is inside the second path: `q` and `p` co-vary by surface type (dark back-scattering
+co-selection does live is inside the second path: `q` and `p` co-vary by surface type (dark back-scattering
 regolith is low in both; bright icy and cloudy bodies are high in both), so crossing the high end of
 one against the low end of the other invents a surface nobody described. This module cannot yet
-demonstrate that bundle, because no per-surface-type `p` table exists — §5 estimates `p` spectrally,
+demonstrate that co-selection, because no per-surface-type `p` table exists — §5 estimates `p` spectrally,
 per body. That gap is named here rather than filled with invented numbers.
 
 **Consequences run on two axes and they disagree.** The albedo is both what the body looks like and a
@@ -77,18 +77,18 @@ _Q_SENTENCE = ("The phase integral `q` (≈ 1 for a Lambert surface; ~0.3–0.5 
                "regolith like the Moon, ~0.7–1.3 for bright icy/cloud bodies with forward scattering)")
 
 #: 위상적분 q — 문서는 표면 계열 **둘**에만 값을 인쇄한다. 나머지 여섯 행에는 q 가 없다.
-#: `bundle="scattering"` 는 두 번째 경로(q·p)의 묶음 이름이다. 짝인 p 표가 아직 없어
+#: `co_selected="scattering"` 는 두 번째 경로(q·p)의 묶음 이름이다. 짝인 p 표가 아직 없어
 #: `corners()` 로 걸을 대상이 지금은 하나뿐이고, 그 사실 자체가 아래에 기록된다.
 PHASE_INTEGRAL = {
     "dark back-scattering regolith": Band(None, 0.3, 0.5, f"{DOC}@«{_Q_SENTENCE}»", "analog",
-                                          bundle="scattering", estimates="A_Bond"),
+                                          co_selected="scattering", estimates="A_Bond"),
     "bright icy or cloudy":          Band(None, 0.7, 1.3, f"{DOC}@«{_Q_SENTENCE}»", "analog",
-                                          bundle="scattering", estimates="A_Bond"),
+                                          co_selected="scattering", estimates="A_Bond"),
 }
 
 #: q·p 의 짝. §5 는 p 를 표면 유형별이 아니라 천체별로 분광 추정하므로 표가 없다.
 GEOMETRIC_ALBEDO_GAP = ("no per-surface-type `p` table exists — §5 estimates the geometric albedo "
-                        "spectrally per body, so the `scattering` bundle has one member here and "
+                        "spectrally per body, so the `scattering` group has one member here and "
                         "cannot be walked until the second one is built")
 
 

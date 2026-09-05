@@ -1303,3 +1303,16 @@ Two rules came out of it, and both are cheap:
 
 The fix that generalises: **the test forbids silence.** A band that does not say what it estimates
 fails the gate, because a band that says nothing gets counted as a decision of its own.
+
+## A gate judges one sha, not a queue — 2026-09-05
+
+`gate112` came back `rc=0` on `51f6dfac` while the branch had moved fifteen commits past it, because
+work continued during the forty minutes the gate ran. The verdict was real and covered ten of the
+twenty-five unpushed commits. The other fifteen had no verdict at all — not a failing one, none.
+
+So: **push only up to the gate's own sha.** The `GATE END` line prints it for exactly this reason.
+Read the sha, `git log --oneline @{u}..<that sha>` to see what it actually covers, and leave the rest
+for the next gate. Anything else pushes untested commits under a green line that was never about them.
+
+Working during a long gate is right — forty minutes is not a break. The mistake would be letting the
+green line spread backwards over whatever happened to be sitting on the branch when it landed.

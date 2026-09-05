@@ -11,8 +11,8 @@ The rules exist because each of them was broken somewhere before it was written 
    that 2.5 is one body's computed flux rather than a published boundary.
 2. **A width without a source is not a band.** Two numbers with nothing behind them look exactly like
    a measurement to whoever reads the value next.
-3. **A bundle moves in step.** `A_Bond = q · p` ties two widths together, and the greenhouse forcing
-   is a published combination grid; crossing bundle members produces combinations nobody published,
+3. **A co-selected group moves in step.** `A_Bond = q · p` ties two widths together, and the greenhouse forcing
+   is a published combination grid; crossing co-selected members produces combinations nobody published,
    with a spread neither source supports.
 4. **A choice needs at least two candidates and a measured consequence.** One candidate is a default
    wearing a costume; a consequence-free choice is a question, not a choice.
@@ -110,43 +110,43 @@ def main() -> int:
     except ValueError:
         pass
 
-    # 3. bundles move in step; independents cross
-    q = Band(0.5, 0.3, 0.8, "albedo table, eight rows", "measured", bundle="albedo")
-    p = Band(1.0, 0.8, 1.2, "phase-integral table", "measured", bundle="albedo")
+    # 3. co_groups move in step; independents cross
+    q = Band(0.5, 0.3, 0.8, "albedo table, eight rows", "measured", co_selected="albedo")
+    p = Band(1.0, 0.8, 1.2, "phase-integral table", "measured", co_selected="albedo")
     grid = corners({"q": q, "p": p, "x": interval})
-    ok(len(grid) == 9, f"3: 3 bundle steps × 3 independent ends = 9 combinations, got {len(grid)}")
+    ok(len(grid) == 9, f"3: 3 co-selected steps × 3 independent ends = 9 combinations, got {len(grid)}")
     allowed = {(0.3, 0.8), (0.5, 1.0), (0.8, 1.2)}
     ok(all((c["q"], c["p"]) in allowed for c in grid),
-       "3: a bundle's members must never be crossed against each other")
+       "3: a co-selected group's members must never be crossed against each other")
     try:
-        corners({"a": Band(1, 0, 2, "doc", "measured", bundle="b"),
-                 "c": Band(1, None, None, "", "authored", bundle="b")})
-        fails.append("3: bundle members with different end counts must be refused")
+        corners({"a": Band(1, 0, 2, "doc", "measured", co_selected="b"),
+                 "c": Band(1, None, None, "", "authored", co_selected="b")})
+        fails.append("3: co-selected members with different end counts must be refused")
     except ValueError:
         pass
 
-    # 3b. in step is a claim too: a bundle nobody published a pairing for refuses to be walked
+    # 3b. in step is a claim too: a co_selected nobody published a pairing for refuses to be walked
     try:
-        corners({"co2": Band(None, 1.3, 4.0, "Ramirez 2014", "calibrated", bundle="early-mars",
+        corners({"co2": Band(None, 1.3, 4.0, "Ramirez 2014", "calibrated", co_selected="early-mars",
                              pairing="unknown"),
-                 "h2": Band(None, 0.05, 0.20, "Ramirez 2014", "calibrated", bundle="early-mars",
+                 "h2": Band(None, 0.05, 0.20, "Ramirez 2014", "calibrated", co_selected="early-mars",
                             pairing="unknown")})
-        fails.append("3b: a bundle with an unpublished pairing must refuse — the diagonal is a claim too")
+        fails.append("3b: a co_selected with an unpublished pairing must refuse — the diagonal is a claim too")
     except ValueError as e:
         ok("unknown" in str(e) and "early-mars" in str(e),
-           f"3b: the refusal must name the bundle and why, got {e}")
+           f"3b: the refusal must name the co_selected and why, got {e}")
     ok(corners({"q": q, "p": p}) and all(b.pairing == "in step" for b in (q, p)),
-       "3b: a bundle whose pairing IS published still walks")
+       "3b: a co_selected whose pairing IS published still walks")
     # and it has no middle of its own either: filling one per sibling rebuilds the refused combination
     try:
-        Band(None, 1.3, 4.0, "Ramirez 2014", "calibrated", bundle="early-mars",
+        Band(None, 1.3, 4.0, "Ramirez 2014", "calibrated", co_selected="early-mars",
              pairing="unknown").emit("co2_bar")
         fails.append("3b: a pairing-unknown member must not fill a middle of its own")
     except ValueError as e:
         ok("whole" in str(e), f"3b: the refusal must send the caller to the case, got {e}")
     try:
         Band(1.0, 0.9, 1.1, "doc", "measured", pairing="unknown")
-        fails.append("3b: pairing on a band with no bundle must be refused — nothing to pair with")
+        fails.append("3b: pairing on a band with no co_selected must be refused — nothing to pair with")
     except ValueError:
         pass
 

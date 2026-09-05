@@ -7,7 +7,7 @@
    `greenhouse-warming-methodology.md` itself, and the one unit conversion (a percent to a fraction)
    is written out here rather than done silently.
 2. **The two cases do not multiply.** They are two options on one axis. Merging their members into one
-   dictionary and walking it would produce an atmosphere neither paper modelled; the bundles refuse.
+   dictionary and walking it would produce an atmosphere neither paper modelled; the co_groups refuse.
 3. **Neither case can be walked inside.** The pairing is not published, so in step is as much an
    invention as crossing.
 4. **The H₂ mixing ratio is a point.** The document prints 0.1, not a range, and no width was added.

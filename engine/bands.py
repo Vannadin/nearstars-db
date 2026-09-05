@@ -32,7 +32,7 @@ now and there is no way to tell a reviewed decision from a gap someone never fil
 misreading is the defect this whole day was spent removing, so the number never travels alone. Every
 emit carries the ends and their source alongside.
 
-The one band this does not reach is a member of a bundle whose pairing nobody published. It has no
+The one band this does not reach is a member of a co-selected group whose pairing nobody published. It has no
 middle *of its own*: filling one here and one in each sibling rebuilds exactly the combination
 `corners()` refuses, so `emit()` sends the caller to the case's `Choice` instead. Nothing stalls,
 because choosing the case supplies every member at once.
@@ -63,18 +63,19 @@ declares its own and silence means arithmetic. On a narrow band the two agree an
 3. **The emit boundary** — always one number. Every band collapses eventually; (1) collapses as late
    as possible and (2) collapses at the classifier.
 
-**A bundle whose pairing nobody published cannot be walked at all.** Moving members in step is not
+**A co-selected group whose pairing nobody published cannot be walked at all.** Moving members in step is not
 the neutral option — it is a second assumption, and the greenhouse cases are where it shows: raising
 CO₂ lets a run reach the same temperature on less H₂, so pairing both low ends is a combination the
 paper no more published than the crossed corners are. Such a band declares `pairing="unknown"` and
 `corners()` refuses it by name, rather than quietly walking the diagonal.
 
-⚠ **`bundle` here is not `bindings.yaml`'s `bundled`.** That flag, rendered by `build_graph_page` as
-"벌크라 재도출 불가", says a field is a bulk figure that cannot be re-derived per component. This one
-says two widths are chosen together. Same word, unrelated meanings, one repository — if either grows
-a renderer, name the meaning in it rather than the word.
+⚠ **This field is called `co_selected` and not `bundle` on purpose.** `bindings.yaml` already has a
+`bundled`, rendered by `build_graph_page` and read by `backflow` as "벌크라 재도출 불가": a field that is
+a bulk figure and cannot be re-derived per component. Unrelated meaning, and the two would never have
+collided anywhere — which is exactly the danger, because nothing would have failed on the day one
+slid into the other's place. A comment stops the people who read; a different name stops the rest.
 
-**Alternatives are not seats.** `bundle` says *chosen together*; `estimates` says *chosen instead of
+**Alternatives are not seats.** `co_selected` says *chosen together*; `estimates` says *chosen instead of
 each other*. The eight rows of the Bond-albedo table and the two phase-integral families all estimate
 `A_Bond` — the document reaches it by an analog table **or** by `q·p` — so they are ten options on one
 seat, not ten seats. Counting them as ten would show the owner the same quantity to decide twice.
@@ -82,8 +83,8 @@ seat, not ten seats. Counting them as ten would show the owner the same quantity
 **Bundled widths are chosen whole.** `A_Bond = q · p` ties the Bond-albedo width to the phase-integral
 width; multiplying them as if independent invents a spread neither source supports. The greenhouse
 forcing is worse — CO₂ 1.3–4 bar, H₂ 5–20 %, N₂ 2–3× are a published *combination grid*, and splitting
-them produces combinations nobody published. A band therefore carries a `bundle` name, and `corners()`
-walks bundle members in step instead of crossing them.
+them produces combinations nobody published. A band therefore carries a `co_selected` group name, and
+`corners()` walks that group's members in step instead of crossing them.
 
 **A collapse is recorded, not just performed**: what was chosen, which end of the band it came from,
 and why. The hand-written version of that record already exists on the α Cen board, where a narrative
@@ -115,7 +116,7 @@ class Band:
     high: float | None = None
     width_source: str = ""          # in words: which document prints the ends, or why there are none
     grade: str = "authored"
-    bundle: str | None = None       # None = independent; a name = chosen whole with its siblings
+    co_selected: str | None = None       # None = independent; a name = chosen whole with its siblings
     floor_grade: str | None = None  # a floor can be weaker than the value it bounds
     pairing: str = "in step"        # "in step" | "unknown" — is it published which end goes with which
     estimates: str | None = None    # the quantity this band is ONE estimate of; siblings naming the
@@ -136,8 +137,8 @@ class Band:
             raise ValueError(f"unknown mean {self.mean!r}; 'arithmetic' or 'geometric'")
         if self.mean == "geometric" and any(e is not None and e <= 0 for e in (self.low, self.high)):
             raise ValueError("a geometric mean needs both ends positive")
-        if self.pairing == "unknown" and self.bundle is None:
-            raise ValueError("pairing describes how a band moves with its bundle siblings; "
+        if self.pairing == "unknown" and self.co_selected is None:
+            raise ValueError("pairing describes how a band moves with its co-selected siblings; "
                              "an independent band has nothing to pair with")
         for end in (self.low, self.high):
             if end is not None and not (end == end):        # NaN
@@ -186,7 +187,7 @@ class Band:
         the label that says how the point came to exist and where its ends are printed."""
         if self.value is None and self.pairing == "unknown":
             raise ValueError(
-                f"{name}: this band belongs to bundle {self.bundle!r}, whose pairing nobody "
+                f"{name}: this band belongs to the co-selected group {self.co_selected!r}, whose pairing nobody "
                 "published, so it has no middle of its own — filling one here and one in each "
                 "sibling rebuilds the very combination corners() refuses. Choose the case whole "
                 "(its Choice), then emit the case's own numbers.")
@@ -217,32 +218,32 @@ def floored(value: float, floor: float, width_source: str, grade: str, floor_gra
 
 
 def corners(bands: dict[str, Band]) -> list[dict[str, float]]:
-    """Every combination a formula consumer should evaluate, with bundles kept whole.
+    """Every combination a formula consumer should evaluate, with co_groups kept whole.
 
-    Independent bands cross with everything. Bands sharing a `bundle` name move together: member i of
+    Independent bands cross with everything. Bands sharing a `co_selected` name move together: member i of
     one is taken with member i of its siblings, never with member j, because the combination is what
     the source published."""
-    independent = {k: v for k, v in bands.items() if v.bundle is None}
-    bundles: dict[str, dict[str, Band]] = {}
+    independent = {k: v for k, v in bands.items() if v.co_selected is None}
+    co_groups: dict[str, dict[str, Band]] = {}
     for k, v in bands.items():
-        if v.bundle is not None:
-            bundles.setdefault(v.bundle, {})[k] = v
-    for name, members in bundles.items():
+        if v.co_selected is not None:
+            co_groups.setdefault(v.co_selected, {})[k] = v
+    for name, members in co_groups.items():
         unknown = sorted(k for k, b in members.items() if b.pairing == "unknown")
         if unknown:
             raise ValueError(
-                f"bundle {name!r} cannot be walked: {unknown} declare their pairing unknown. "
+                f"co-selected group {name!r} cannot be walked: {unknown} declare their pairing unknown. "
                 "Crossing the members invents combinations nobody published, and walking them in "
                 "step invents a different one — the diagonal is a claim too. Choose a published "
                 "case instead.")
         widths = {len(b.ends()) for b in members.values()}
         if len(widths) != 1:
-            raise ValueError(f"bundle {name!r} members must have the same number of ends to move in "
+            raise ValueError(f"co-selected group {name!r} members must have the same number of ends to move in "
                              f"step; got {widths}")
     axes: list[list[dict[str, float]]] = []
     for k, b in independent.items():
         axes.append([{k: e} for e in b.ends()])
-    for members in bundles.values():
+    for members in co_groups.values():
         n = len(next(iter(members.values())).ends())
         axes.append([{k: b.ends()[i] for k, b in members.items()} for i in range(n)])
     out = []

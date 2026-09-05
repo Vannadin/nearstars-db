@@ -83,7 +83,7 @@ def main() -> int:
         print(f"\n중간값을 채우지 않는 자리 {len(whole)}건 — 짝짓기가 인쇄 안 된 묶음의 구성원이다.")
         print("각자 중간을 채우면 corners() 가 거절하는 그 조합을 그대로 다시 만든다. 사례를 통째로 고른다.")
         for mod_name, path, band in whole:
-            print(f"  {mod_name}.{path}  ({band.bundle}, {band.low}–{band.high})")
+            print(f"  {mod_name}.{path}  ({band.co_selected}, {band.low}–{band.high})")
     if not shipping and not whole:
         print("  없음 — 모든 밴드가 고른 점을 가지고 있다.")
     else:
