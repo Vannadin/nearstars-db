@@ -177,3 +177,10 @@ A live gate shows three rows: the parent `bash` at 0.0 %, a subshell `bash` at 0
 near 100 %. **That worker is the only signal that separates busy from dead.** If the group holds
 nothing but idle shells and the log has not grown, then discard the run — and even then, the run has
 produced no verdict either way.
+
+**A diagnostic gets run before it gets written down.** The paragraph above was first written as
+"find the child by parentage" — and running it on a live gate returned that idle subshell, 0.0 %, the
+same lie the process-name guess told. It was caught only because it was executed before it was
+committed. This is the documentation half of the rule the engine already keeps for code: *a commit
+that closes a hole brings the test that reproduces it.* A written-down diagnostic that has never been
+run against the healthy case is a guess with formatting.
