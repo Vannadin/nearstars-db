@@ -1243,19 +1243,32 @@ Numbers at close: 393 anchors, all resolving; 1 citation still on a line number;
 notes; 13 into a paper's own source; 7 whole-document. Shipped strings carry a section symbol and the
 anchor sits beside them in a comment (refusal 151 → 112 characters, Pandora's first note 282 → 164).
 
-## A gate can die without an rc — 2026-09-05
+## Two healthy gates were killed by a liveness check that could not see the process — 2026-09-05
 
-`gate110` produced a long column of PASS lines and then stopped: no log growth for 45 s, no `python3`
-child alive, the parent at 0.0 % CPU, 43 minutes in. A low-memory event had killed the child; the
-parent kept the pid and never wrote a `GATE END` line. There was no failure, and there was no verdict
-either. It was discarded and `gate111` launched in its place.
+`gate110` and `gate111` were both discarded as stalled: no log growth for 45 s, parent bash at 0.0 %
+CPU, and — the line that decided it — **`pgrep -x python3` returning 0, read as "the child is gone"**.
+A low-memory kill was inferred from swap sitting at 3503 of 4096 MB, and the failure mode was written
+up here as new.
 
-The rule that caught this — **judge only by the `GATE END sha= pid= at= rc=` line** — was written to
-stop a green-looking run from being read as a pass before it finished. It turned out to do a second
-job nobody designed it for: a run that *cannot* finish looks exactly like a run that has not finished
-yet, and both fail the same test. Two consequences, both cheap:
+It was wrong, and `gate112` showed why by looking alive under the same test. The interpreter that
+runs the checks reports its `comm` as **`Python`**, not `python3` — it is the
+CommandLineTools framework binary — so `pgrep -x python3` was never going to match it, on any run,
+healthy or not. The check returned 0 the way a broken thermometer returns zero degrees.
 
-- **A stalled gate has no shortcut.** Counting PASS lines, or noticing that the last few checks are
-  usually the quick ones, would have produced a confident wrong pass here.
-- **`pgrep -f "scripts/check.sh"` returning 2 does not mean a gate is running.** It means a process
-  named that exists. Growth in the log within the last minute is what says it is alive.
+What the three signals actually mean:
+
+- **A 45-second flat log is normal.** `test_interior.py` runs the shooting solver over the roster and
+  holds the log for minutes at a time. Both discarded gates stopped at a heavy test.
+- **The parent at 0.0 % CPU is normal.** It is a `bash` waiting on a child; it is supposed to be idle.
+- **The only signal that separates dead from busy is a child burning CPU**, and it has to be found by
+  parentage rather than by name:
+
+      P=$(pgrep -f "scripts/check.sh" | head -1)      # the gate's own parent
+      pgrep -P "$P"                                   # its child, whatever the child is called
+      ps -o %cpu=,etime=,command= -p <that child>     # busy, or not
+
+So no gate has been observed dying without an `rc`. Two were killed by this session while working.
+The rule that survives is the one that was already written — **judge only by the `GATE END` line** —
+and the correction is to its inverse: *the absence of an END line is not evidence of death.* Before
+discarding a run, find the child by parentage and look at its CPU. Guessing a process name is how a
+healthy 40-minute gate gets thrown away twice, and how a swap statistic gets promoted to a cause.
