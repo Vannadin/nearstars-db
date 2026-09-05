@@ -212,6 +212,7 @@ python3 engine/check_via.py --gate || fail=1
 # 밴드 규칙 (C32). 세 상태 · 출처 없는 폭 거절 · 묶음 불가분 · 선택지 요건이 앵커다.
 (cd engine && python3 test_bands.py) || fail=1
 (cd engine && python3 test_albedo_table.py) || fail=1
+(cd engine && python3 test_greenhouse_cases.py) || fail=1
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
 python3 engine/dynamo_table.py --check || fail=1
