@@ -69,6 +69,11 @@ CO₂ lets a run reach the same temperature on less H₂, so pairing both low en
 paper no more published than the crossed corners are. Such a band declares `pairing="unknown"` and
 `corners()` refuses it by name, rather than quietly walking the diagonal.
 
+⚠ **`bundle` here is not `bindings.yaml`'s `bundled`.** That flag, rendered by `build_graph_page` as
+"벌크라 재도출 불가", says a field is a bulk figure that cannot be re-derived per component. This one
+says two widths are chosen together. Same word, unrelated meanings, one repository — if either grows
+a renderer, name the meaning in it rather than the word.
+
 **Alternatives are not seats.** `bundle` says *chosen together*; `estimates` says *chosen instead of
 each other*. The eight rows of the Bond-albedo table and the two phase-integral families all estimate
 `A_Bond` — the document reaches it by an analog table **or** by `q·p` — so they are ten options on one
