@@ -254,3 +254,31 @@ So: **when you re-aim an anchor, read the sentence it sits in and ask whether it
 is the same rule as *a count is only as true as the sentence under it*, one layer down — and the same
 failure the whole citation exercise exists to stop, since a citation that resolves while its sentence
 lies is worse than one that visibly rots.
+
+## Four times the answer was to reshape the input, not to widen the detector (2026-09-06)
+
+The instinct when a check misses something is to make the check see more. Four decisions this week
+went the other way, and together they are the reason to distrust that instinct.
+
+1. **The citation checker's total-count reconciliation was dropped.** Making every citation add up to
+   a single total meant maintaining a second accounting of what counts as a citation. Capture is by
+   position instead: each match is classified where it sits.
+2. **`--contradictions` kept its three-line window.** A wider window finds more, and more of what it
+   finds is noise; more dismissing means the check gets ignored, and an ignored check is no check.
+3. **An unrecognised citation form is caught by a general rule**, not by teaching the checker each new
+   form: anything matched and unclassified is reported as *"a citation form this checker does not
+   know; it was counted in no bucket"*. The catch-all is what makes the buckets trustworthy.
+4. **A blocking paper is named with its bibcode** rather than teaching the tool author-year matching.
+   Widening the denial vocabulary was tried first and measured: it still missed the case it was aimed
+   at — C16, whose blocker is written *"Driscoll & Olson 2011"* — while surfacing nine hits, most of
+   them adjudication rows that use the words while reporting the opposite. Adding the bibcode to that
+   one line made the existing check reach it with no change to the tool.
+
+The rule: **do not widen the detector; write the data in a shape the detector already reads.** A
+wider detector costs precision everywhere to gain recall in one place, and precision is what makes
+anyone read the output at all.
+
+⚠ **One known imprecision, deliberately left.** `--contradictions` counts a line twice when the
+bibcode appears in both a code span and its ADS link. It is harmless while that count is not aiming
+at zero — but **if this check is ever tightened to require zero, deduplicate by (file, line, bibcode)
+first**, or the target will be unreachable for a reason that has nothing to do with any paper.
