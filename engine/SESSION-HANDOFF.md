@@ -1001,8 +1001,10 @@ places were quiet because nothing was checking them.
     single anchor — unobtained, load-bearing, **and contradicted at that pressure by the cached
     Pommier+ 2018**, `core-melt-depression-context-notes.md` §8; not re-added to the closed request
     list) and **Sata+ 2010** (load-bearing under Hakim's density table).
-    `core-melt-depression-context-notes.md@«still blocked: **Sata+ 2010** (load-bearing under Hakim's table), Fischer+ 2014,»` lists four more as blocked: Fischer+ 2014,
-    Komabayashi 2014, Noack+ 2020, Chen+ 2008.
+    **Superseded 2026-09-05**: the owner supplied five of the six, so Sata+ 2010, Fischer+ 2014,
+    Komabayashi 2014, Noack & Lasbleis 2020 and a candidate for Chen+ 2008 are held, and
+    `core-melt-depression-context-notes.md@«Five of the six cleared on 2026-09-05»` now carries the
+    state. What is left is one paper, Fei+ 2000, and the Chen identification is unconfirmed.
 
 - **Author contact — a row this section never had, and the owner has now closed it.** Two asks
   were recorded and never initiated, each in its own note rather than here: **carbon's five

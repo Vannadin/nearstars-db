@@ -13,3 +13,7 @@ above 1.05 R⊕ on the measured spread.
 - [x] grade note in `solve` restated on the spread (path function: `--refresh`, values identical)
 - [x] domain row + validation section + citation, EN and KO
 - [x] C8 row closed with the 2 M⊕ ceiling; anchors bit-identical; gate FAIL 0; report
+- [x] 2026-09-05: re-checked against the cached PDF after the paper arrived a second time on a
+  request list — the equation number is (22) as written here, and its four supporting constants
+  (7030 − 1840·X_Fe · 4850·X_CMF · 13 + 0.738·X_CMF − 11 · 1275 − 585·X_FeM) read the same. The
+  `--adiabat` table reproduces unchanged: Earth 2563 K, band −2.2…−0.8 %, slope +11.6…+13.5 %.

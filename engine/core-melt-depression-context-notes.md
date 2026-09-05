@@ -122,13 +122,29 @@ were not used to calibrate its model.
 
 ## 7. Blocked list (owner-request candidates, from ⑮ §5)
 
-Mori+ 2017 · Buono & Walker 2011 (both since obtained and read — the two rows above);
-still blocked: **Sata+ 2010** (load-bearing under Hakim's table), Fischer+ 2014,
-Komabayashi 2014, Noack+ 2020, Chen+ 2008, **Fei+ 2000** (Mori's single anchor point —
-**unobtained, load-bearing, and contradicted at the pressure where it is load-bearing by a paper we
-hold**; §8 below. Not on the request list: the list closed 2026-09-03 and stays the owner's).
-Three of these answer 403 to plain fetches while marked OA — bot checks, not paywalls;
-not worked around.
+Mori+ 2017 · Buono & Walker 2011 (both since obtained and read — the two rows above).
+
+**Five of the six cleared on 2026-09-05**, when the owner supplied them:
+[`2010JGRB..115.9204S`](https://ui.adsabs.harvard.edu/abs/2010JGRB..115.9204S) Sata+ 2010, the one
+load-bearing under Hakim's table; [`2014JGRB..119.2810F`](https://ui.adsabs.harvard.edu/abs/2014JGRB..119.2810F)
+Fischer+ 2014; [`2014JGRB..119.4164K`](https://ui.adsabs.harvard.edu/abs/2014JGRB..119.4164K)
+Komabayashi 2014; [`2020A&A...638A.129N`](https://ui.adsabs.harvard.edu/abs/2020A&A...638A.129N)
+Noack & Lasbleis 2020 (already transcribed for a different purpose — the adiabat anchor, C8);
+and [`2008GeoRL..35.7201C`](https://ui.adsabs.harvard.edu/abs/2008GeoRL..35.7201C) Chen, Li & Hauck
+2008. ⚠ **That last identification is not confirmed.** This note names it only as "Chen+ 2008"; the
+cached paper was chosen by subject match (Fe–S liquidus) and Mori+ 2017, which supplies the rest of
+this list, cites no Chen 2008. The other candidate was `2008HPR....28..315C`. The sidecar says so,
+and the audit seat is checking it against this note's own source (⑮ §5). **Until that comes back,
+nothing here rests on Chen+ 2008.**
+
+⚠ **One is left, and it is the one that matters: [`2000AmMin..85.1830F`](https://ui.adsabs.harvard.edu/abs/2000AmMin..85.1830F)
+Fei+ 2000** — Mori's single anchor point, still **unobtained, still load-bearing, and still
+contradicted at the pressure where it is load-bearing by a paper we do hold** (§8 below). It was the
+only one of the six the owner could not get. That makes it the sole remaining hole in this note, not
+one item on a list of six.
+
+(Not on the request list: the list closed 2026-09-03 and stays the owner's. Of the six, three
+answered 403 to plain fetches while marked OA — bot checks, not paywalls; not worked around.)
 
 Gate delta 0 (nothing new executes — prose only); anchors untouched by construction.
 

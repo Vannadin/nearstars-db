@@ -40,8 +40,11 @@ C_p/C′_p in-window. `interior.solve` returns `silicate_melt_state` /
   branches meet at 20 GPa within 0.040 K (1.6 parts in 10⁵) and the solidus pair
   within 1.002 K — someone constructed that agreement and the paper does not say who
   (Andrault is both a co-author and the 2011 fit's author, so it may be upstream).
-  Party unnamed; Andrault+ 2011 / Herzberg & Zhang 1996 (both unobtained) would close
-  it. Pinned in the gate as transcription checks.
+  Party unnamed. Andrault+ 2011 [`2011E&PSL.304..251A`](https://ui.adsabs.harvard.edu/abs/2011E&PSL.304..251A) is **held since 2026-09-05**;
+  Herzberg & Zhang 1996 [`1996JGR...101.8271H`](https://ui.adsabs.harvard.edu/abs/1996JGR...101.8271H) is **still unobtained** — the owner
+  could not get it, and it is one of the only two papers this engine still wants. Whether the one we
+  now hold closes this on its own, or the pair was needed, is a verdict the audit seat is forming;
+  **this note claims neither**. Pinned in the gate as transcription checks.
 - **The 140 GPa seam boundary is range-unconfirmed.** Monteux prints no number for
   Andrault's fitted range ("up to … Earth's lowermost mantle conditions"); 140 GPa
   chosen because Monteux's own model exercises the curves there ("melt fraction ≈ 40 %
