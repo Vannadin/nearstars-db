@@ -2373,7 +2373,7 @@ density, and a tide-locked body takes ω from an untouched orbit; the 0.0037 % r
 bulk rows disagree, and `--take-satellites-figure` is how the operator says which side is current — the guard
 would otherwise have blocked the very repair it exists for, since the board disagreed with itself on purpose.
 
-### C32 — band output and handoff choices — **listed 2026-09-04 (owner, 19:57), not started; after C30 → C31**
+### C32 — band output and handoff choices — **listed 2026-09-04 (owner, 19:57); structure built 2026-09-05, `engine/bands.py`; instances landing one at a time**
 
 Owner: *"자기장 세기는 밴드로 출력하면 좋겠다. 하나의 묶음에서 다른 묶음으로 값이 오갈 때는 사용자한테 선택지가 있음 좋겠어."*
 (1) Strength-type derived values emit `*_min/*_max` beside the point, the width's source labelled. `dynamo_rocky` already carries
@@ -2382,6 +2382,41 @@ Owner: *"자기장 세기는 밴드로 출력하면 좋겠다. 하나의 묶음�
 board, declared input vs computed value, canonical vs interesting-first) the engine emits a `choices` record — candidates, source,
 grade — and the owner records the pick on the board with a reason; no silent default. The record's shape and its place in
 `BodyState` / `run.py` are designed after C30 and C31. Trigger: Pandora's 41.4 µT (engine, C29 c) against the board's 75 µT.
+
+**Built (structure).** `engine/bands.py`: three shapes, not two — interval, *floored point* (one end
+printed, which is real information), point. A width with no printed source is refused; a bundle moves
+in step so a corner grid cannot cross its members; a `Choice` needs at least two candidates and a
+mapping of consequences, because a pick can improve one axis and cost another. The first instance
+added a fourth state the design missed: **a band may have ends and no point inside them.** Eight
+albedo rows are in exactly that state, and emitting one is refused — picking the point is a
+`Collapse`, not a default.
+
+**Instance 1 — Bond albedo (`engine/albedo_table.py`).** All eight surface types of
+`surface-color-albedo-methodology` are ranges; the test parses them out of the document, so a doc edit
+that moves a range fails the gate rather than drifting. The two consequence axes are printed and
+**not ranked**: the ends of the volatile-ice row move `T_eq` by 1.351×, while the carbonaceous row is
+three times wide and moves `T_eq` by 1.010×. No printed exchange rate says how many kelvin a factor of
+three in brightness is worth, so the engine prints both and the ranking is the owner's.
+
+**A correction to the brief, with the document quoted.** The relay called the albedo band and the
+phase-integral band a bundle. They are not: the document joins the two routes with *or* — *"adopt a `q`
+appropriate to the surface type (analog-grounded), **or** take the Bond albedo directly from a
+solar-system analog"* — and `A = q·p` already has `A` on the left, so multiplying the analog table by
+the phase integral is a category error, not a wide band. The real bundle is `q` with `p`, inside the
+second route; it cannot be walked yet because no per-surface-type `p` table exists (§5 estimates `p`
+spectrally per body). Named, not filled.
+
+**Held for the owner — two findings on the α Cen Class II line.** The board's gas-giant evidence
+adopts `A_B = 0.3` and its own sentence prints the Class II albedo as 0.5–0.8. (a) The adopted value
+lies **below both ends** of the band it cites, so it is not a collapse to an end — the `Collapse`
+record has no shape for it, and inventing one would hide the disagreement. (b) That 0.5–0.8 band is
+printed on the board and in **no methodology document**; the eight-row table does not cover cloud
+decks. Both are left as they stand.
+
+**Verified, no work.** The multipolar grid `{0.05, 0.10}` already emits both ends from `dynamo_rocky`
+(relay item 6, confirmed). The Hapke roughness presets are the enumerated form, not a band —
+`hapke-shader-methodology` calls them *"discrete family presets"* and lists the set — and `Choice` is
+that shape, so nothing is forced into an interval.
 
 ### P1–P3 — parked, each marked with the C it came from
 

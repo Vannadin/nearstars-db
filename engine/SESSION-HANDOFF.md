@@ -1242,3 +1242,20 @@ the wrong instruction has already gone out.
 Numbers at close: 393 anchors, all resolving; 1 citation still on a line number; 257 inside preserved
 notes; 13 into a paper's own source; 7 whole-document. Shipped strings carry a section symbol and the
 anchor sits beside them in a comment (refusal 151 → 112 characters, Pandora's first note 282 → 164).
+
+## A gate can die without an rc — 2026-09-05
+
+`gate110` produced a long column of PASS lines and then stopped: no log growth for 45 s, no `python3`
+child alive, the parent at 0.0 % CPU, 43 minutes in. A low-memory event had killed the child; the
+parent kept the pid and never wrote a `GATE END` line. There was no failure, and there was no verdict
+either. It was discarded and `gate111` launched in its place.
+
+The rule that caught this — **judge only by the `GATE END sha= pid= at= rc=` line** — was written to
+stop a green-looking run from being read as a pass before it finished. It turned out to do a second
+job nobody designed it for: a run that *cannot* finish looks exactly like a run that has not finished
+yet, and both fail the same test. Two consequences, both cheap:
+
+- **A stalled gate has no shortcut.** Counting PASS lines, or noticing that the last few checks are
+  usually the quick ones, would have produced a confident wrong pass here.
+- **`pgrep -f "scripts/check.sh"` returning 2 does not mean a gate is running.** It means a process
+  named that exists. Growth in the log within the last minute is what says it is alive.
