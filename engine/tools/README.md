@@ -238,3 +238,19 @@ So: **run the check against the case you expect to pass, not only the case you e
 three of the tools would have survived a test that only looked for the failure — a dead gate really does report no
 `python3`, and an empty diff really is quiet. What none of them survived was being pointed at a
 healthy run.
+
+## Re-aiming an anchor is not the whole repair (2026-09-06)
+
+Renaming a constant in `core_state.py` broke an anchor in `interior-core.md`, and `check_refs`
+failed it — the citation work doing its own job on the same day it was finished. Before anchors, that
+line would have kept a line number and pointed silently at whatever moved into place.
+
+The repair had two halves and only one is mechanical. The anchor was re-aimed at the new constant;
+the **sentence around it** still read that the contradiction was "recorded, not repaired", which had
+just stopped being true. A checker can find the dead pointer. Nothing can find a live pointer wrapped
+in a stale claim.
+
+So: **when you re-aim an anchor, read the sentence it sits in and ask whether it is still true.** It
+is the same rule as *a count is only as true as the sentence under it*, one layer down — and the same
+failure the whole citation exercise exists to stop, since a citation that resolves while its sentence
+lies is worse than one that visibly rots.

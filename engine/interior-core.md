@@ -22,6 +22,60 @@ as "a branch of C<n>" first and returns when done. The three standing watches (�
 never evaluated, the 0.06 multipolar factor as a secondary citation) hang **under C6**, not in a new file —
 this file stays the one place. The C14–C19 and P1–P3 rows are at the end of the list.
 
+## Where everything stands — 2026-09-06
+
+This file is 2 700 lines. The table is here so that "what is open right now" does not require reading
+them. **The table navigates; the entries below carry the evidence, and no closed entry is deleted** —
+the record is the point of the file.
+
+⚠ **A title is read by people who read nothing else.** C24's once said *fixed* twenty-five minutes
+before the fix existed, and that is recorded in its own entry. Every title here was re-read against
+its body on 2026-09-06; where one over-claimed it was rewritten rather than left to be caught again.
+
+| # | what it is | state | next step, if open |
+|---|---|---|---|
+| C1 | sub-Neptunes, and the defect behind them | closed 2026-08-30 | — |
+| C2 | the ocean layer, and multi-axis inversion | closed 2026-08-29 | — |
+| C3 | the melting-curve gap, dispatch by class | closed 2026-08-30 | — |
+| C4 | ammonia and methane | ammonia half closed and built 2026-08-30; methane half not | see P-row and C22 |
+| C5 | where the giants' leftovers belong | closed 2026-08-30 | — |
+| **C6** | material ceilings | **standing watch** — never closes | three watches hang here: γ = 1.5, `Rm > 40` quoted and never evaluated, the 0.06 multipolar factor as a secondary citation |
+| C7 | partial differentiation | closed 2026-08-30 — the intermediate state is not a mixture | — |
+| C8 | the temperature branch's validated window | closed 2026-08-30 | — |
+| C9 | porosity on a heated body | closed 2026-08-30 | — |
+| C10 | lighter rock | closed 2026-08-30 — the axis exists and does not reach | — |
+| C11 | declared differentiation front, never-melted crust | closed 2026-08-30; the pair settled 2026-09-01 | — |
+| C12 | a ternary anchor from a diffusion table | closed 2026-08-31, recorded | — |
+| C13 | fuzzy core vs the moment-of-inertia deficit | closed 2026-09-01 as a named refusal | — |
+| **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` | **open** (`status: gap`) | needs thermal evolution, not decay history alone; C20's integrator is the supplier to wire |
+| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` | **open** (`status: gap`) | the supplier exists (Brief 60); what is missing is the consumer wiring through φ and core entropy |
+| **C16** | `tidal_locking → dynamo_rocky via rossby` | **open** (`status: gap`) | two inputs sit behind Driscoll & Olson 2011, **which is now held** (2026-09-04) — the request that blocked it is stale |
+| **C17** | `ocean_fraction →` three consumers | **open** (`status: gap`) | three consumers, no supplier; nothing emits an ocean fraction |
+| C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
+| **C19** | `body_age → dynamo_giant via cooling_luminosity` | **open** (`status: gap`) | no node emits `L(M, age)`; the brown-dwarf branch was rewired 2026-09-04 and the giant branch was not |
+| C20 | the thermal-history integrator | built 2026-09-04 | — |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **listed, not started** | nothing blocks it; it has never been scheduled |
+| **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
+| **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
+| C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
+| **C25** | measured CMB temperature vs published CMB heat flow | **listed, not started** | the two cannot both be met in this model; nobody has chosen which gives |
+| **C26** | superionic ice above `ice_x`'s 1 800 K ceiling | **listed, not started** | representation question; no work done |
+| **C27** | water fractions 0.05 · 0.15 · 0.20 do not converge | **listed, not started** | a convergence failure, not a physics question — same class as C24, which did close |
+| C28 | dynamo ice fraction from the composition preset | built 2026-09-04 | — |
+| **C29** | mantle potential temperature | **half open** — the Earth-analog declaration stands | the self-derivation loop is listed and not started |
+| C30 | tidal heat into the interior budget | built 2026-09-04 | — |
+| C31 | Dante's tidal and dependent board rows | built 2026-09-05 (main) | — |
+| **C32** | band output and handoff choices | **structure built 2026-09-05; instances landing one at a time** | built: albedo, stagnant-lid ceiling, greenhouse cases, `k_c`. Open: whoever picks the ten unchosen options that `engine/tools/unchosen_defaults.py` counts |
+| C33 | citations resolved against the document | built 2026-09-05 | — |
+| **C34** | what the transport table is fed, and where its thresholds come from | **half answered** | the thresholds half is answered — none is published, they are conversions, and the 0.03 became a C32 band on 2026-09-06. **What quantity to feed the table is still the owner's**, and Earth alone has four candidates spanning 2.20× |
+| **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
+
+⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
+the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
+*magnetic moment*, *field strength* and *Gauss* zero times. A title reading "closed" would be read as
+"a sub-Neptune's field can now be emitted", which is false. Aurorae, magnetosphere size and every
+other visual axis stay shut until something else opens them.
+
 **Keeping this file alive.** C2 was stale within a day of being written. So each brief's
 Landing section carries one checkbox — *update the matching row in `interior-core.md`* — and
 a row is not closed by the work being done but by that line being written here.
@@ -2149,7 +2203,23 @@ not appendable; an author request is the only route and is **recorded as possibl
 closed that class on 09-03). **State tonight**: step 1 landed · step 2-② landed · step 2-① waits on the
 owner (two decisions) · default 0.
 
-### C23 — does a sub-Neptune's iron core run a dynamo at all? (existence, not strength) — **listed 2026-09-04; the pre-registration was rewritten 2026-09-05 after reading Tang: the gate is the mantle, not the core**
+### C23 — does a sub-Neptune's iron core run a dynamo at all? (existence, not strength) — **existence judged 2026-09-06; the field strength is not available and this item cannot produce it**
+
+**Built 2026-09-06.** `sub_neptune_dynamo.dynamo_verdict` reads the two gates in Tang's order. Gate 1
+is `eos.silicate_solidus`: while the mantle surface is molten the dynamo runs and `k_c` is never
+consulted, which the test enforces by requiring both candidates to return the same answer on that
+branch. Gate 2 is `k_c`, and with nobody having chosen the verdict stops at `choice required` rather
+than the engine picking. Off the solidus curve the answer is `undetermined`, kept distinct from
+`solid` so that a consumer cannot read an absent verdict as a verdict.
+
+The three-way refusal loop is broken where it was actually closed: `core_state`'s sub-Neptune refusal
+said no branch received that core, and one does now, so it names it — while still declining, because
+the first gate is silicate melting rather than the iron melting curve. `CORELESS_CLASSES` became
+`NOT_THIS_NODES_QUESTION`, since the old name said the class had no core while the reason beneath it
+said the iron core sits under the envelope.
+
+⚠ **What this does not give.** No field strength, no moment, no aurora. Tang prints none, and the
+existence gate cannot be turned into one.
 
 Opened by C18's closure. Tang+ 2025 (`2025ApJ...989...28T`, cached) publishes the **on/off criterion** and every
 input of it is held or declarable:
@@ -2601,7 +2671,7 @@ blame traces). And the contract-heading anchors are loosely aimed by the shared-
 tightening them to a unique Need item where one exists (`` `mantle_radiogenic_power` [W] `` is unique;
 `core_cmb_temperature_solved` occurs 5×, `t_body` 0×) is the next pass.
 
-### C34 — what the heat-transport table is fed, and where its thresholds come from — **listed 2026-09-05 (owner: 등재만, 판정 변경 없음)**
+### C34 — what the heat-transport table is fed, and where its thresholds come from — **thresholds half answered 2026-09-06: none is published, and the 0.03 became a C32 band. What the table is fed is still the owner's**
 
 Three facts, named and not repaired. The code's verdicts are unchanged by this entry.
 
