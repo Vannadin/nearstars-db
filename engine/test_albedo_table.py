@@ -8,8 +8,9 @@ itself rather than against a second copy of the numbers:
 
 1. **Every row's ends are the document's ends.** The table is parsed out of the Markdown, so a doc
    edit that moves a range fails here instead of silently disagreeing with the engine.
-2. **No row carries a chosen point.** The document prints eight intervals and no midpoints; the
-   engine may not invent one, and an emit that needs a number must fail loudly.
+2. **No row carries a chosen point.** The document prints eight intervals and no midpoints. A row
+   still emits — the game needs a number — but the filled middle goes out labelled `unchosen`, with
+   its ends and their source beside it, so it can never be mistaken later for a reviewed decision.
 3. **The two consequence axes really do disagree.** The row whose ends move `T_eq` most is not the
    row whose ends move visual brightness most — so any single "how wide is this" number would be
    reporting one axis and hiding the other.
@@ -48,11 +49,14 @@ def main() -> int:
         if band.bundle is not None:
             fails.append(f"2: {name} is an analog reading of A itself, not a factor of one — "
                          "the q·p bundle is the other path")
-    try:
-        next(iter(BOND_ALBEDO.values())).emit("albedo")
-        fails.append("2: emitting a row before anyone picks a point must be refused")
-    except ValueError:
-        pass
+    # a row still emits — the game needs a number — but it goes out labelled unchosen, with its ends
+    # and their source beside it, so nobody later reads the filled middle as a reviewed decision
+    row = BOND_ALBEDO["volatile-ice plains (N₂/CH₄/CO₂)"]
+    out = row.emit("albedo")
+    if abs(out["albedo"] - 0.675) > 1e-12 or not out["albedo_pick"].startswith("unchosen"):
+        fails.append(f"2: a row must emit its middle labelled unchosen, got {out}")
+    if not {"albedo_min", "albedo_max", "albedo_width_source"} <= set(out):
+        fails.append("2: the filled point must carry the ends and where they are printed")
 
     # 3. the axes disagree about which row matters most
     hottest = max(BOND_ALBEDO, key=lambda n: t_eq_ratio(BOND_ALBEDO[n]))
@@ -71,7 +75,7 @@ def main() -> int:
         print(f"  [FAIL] {f}")
     if fails:
         return 1
-    print(f"  [PASS] 알베도 표 — 여덟 행 전부 문서의 구간과 일치 · 고른 점 없음(emit 거절) · "
+    print(f"  [PASS] 알베도 표 — 여덟 행 전부 문서의 구간과 일치 · 고른 점 없음(미선택 라벨로 emit) · "
           f"두 축 어긋남(T_eq 최대 {hottest}, 대비 최대 {starkest}) · q 는 두 계열만")
     return 0
 

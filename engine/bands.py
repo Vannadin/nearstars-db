@@ -23,8 +23,34 @@ published. So a value has three possible shapes, and `Band.kind` says which:
 
 A band's working `value` may be `None`, which says *the document prints the ends and no point inside
 them*. That is the state the eight rows of the Bond-albedo table are in, and it is not the same as a
-midpoint: a midpoint is a pick, and a pick is a `Collapse`. A band with no chosen point cannot be
-emitted — the game takes one number, and nobody has said which.
+midpoint: a midpoint is a pick, and a pick is a `Collapse`.
+
+Such a band **is** emitted, because the game cannot start without a number (owner, 2026-09-05). What
+the refusal used to protect is protected by a label instead: the emitted point carries
+`<name>_pick`, and for a band nobody has chosen it reads **unchosen**. Read a bare number a year from
+now and there is no way to tell a reviewed decision from a gap someone never filled; that
+misreading is the defect this whole day was spent removing, so the number never travels alone. Every
+emit carries the ends and their source alongside.
+
+The one band this does not reach is a member of a bundle whose pairing nobody published. It has no
+middle *of its own*: filling one here and one in each sibling rebuilds exactly the combination
+`corners()` refuses, so `emit()` sends the caller to the case's `Choice` instead. Nothing stalls,
+because choosing the case supplies every member at once.
+
+Three ways a point can come to exist, and they must never share a label:
+
+- **printed** — the document prints a centre with its band, `660 µT (540–810)`. That centre is the
+  default. **Never compute a midpoint over a printed one**; 675 would be our arithmetic overwriting
+  a published number.
+- **chosen** — someone picked a point, and a `Collapse` says which end and why.
+- **unchosen** — nobody picked, so the engine fills the middle to keep the pipeline moving. Not a
+  judgment: no judgment happened. The grade stays whatever the *ends* are graded, because inventing a
+  grade for "we filled it in" would put that fiction into the same vocabulary as measurement.
+
+The middle is arithmetic unless the band says `mean="geometric"`. A quantity that spreads by factors
+(the multipolar grid 0.05–0.10: arithmetic 0.075, geometric 0.0707) is more natural in the geometric
+mean, but choosing one for every band would be an exchange rate the engine invented, so each band
+declares its own and silence means arithmetic. On a narrow band the two agree and it does not matter.
 
 **Where a band stops.** The width does not travel forever, and where it ends depends on the consumer:
 
@@ -82,6 +108,8 @@ class Band:
     bundle: str | None = None       # None = independent; a name = chosen whole with its siblings
     floor_grade: str | None = None  # a floor can be weaker than the value it bounds
     pairing: str = "in step"        # "in step" | "unknown" — is it published which end goes with which
+    value_origin: str = "chosen"    # "printed" (the document prints the centre) | "chosen" (someone picked)
+    mean: str = "arithmetic"        # "arithmetic" | "geometric" — how an unchosen middle is filled
 
     def __post_init__(self) -> None:
         if self.value is None and self.low is None and self.high is None:
@@ -90,6 +118,12 @@ class Band:
             raise ValueError(f"unknown grade {self.grade!r}; one of {GRADES}")
         if self.pairing not in ("in step", "unknown"):
             raise ValueError(f"unknown pairing {self.pairing!r}; 'in step' or 'unknown'")
+        if self.value_origin not in ("printed", "chosen"):
+            raise ValueError(f"unknown value_origin {self.value_origin!r}; 'printed' or 'chosen'")
+        if self.mean not in ("arithmetic", "geometric"):
+            raise ValueError(f"unknown mean {self.mean!r}; 'arithmetic' or 'geometric'")
+        if self.mean == "geometric" and any(e is not None and e <= 0 for e in (self.low, self.high)):
+            raise ValueError("a geometric mean needs both ends positive")
         if self.pairing == "unknown" and self.bundle is None:
             raise ValueError("pairing describes how a band moves with its bundle siblings; "
                              "an independent band has nothing to pair with")
@@ -115,21 +149,48 @@ class Band:
             return "floored point"
         return "point"
 
+    @property
+    def pick(self) -> str:
+        """How the emitted point came to exist. Never the same word for two different origins."""
+        if self.value is None:
+            return "unchosen"
+        return self.value_origin
+
+    def middle(self) -> float | None:
+        """The point the engine fills when nobody has chosen one, by the band's own declared mean."""
+        if self.low is None or self.high is None:
+            return None
+        if self.mean == "geometric":
+            return (self.low * self.high) ** 0.5
+        return (self.low + self.high) / 2.0
+
     def ends(self) -> tuple[float, ...]:
         """The points a formula consumer should walk: both ends and the value, without duplicates."""
         seen = [e for e in (self.value, self.low, self.high) if e is not None]
         return tuple(sorted(set(seen)))
 
     def emit(self, name: str) -> dict:
-        """The `*_min` / `*_max` shape the recipes already use (dynamo.py's brown-dwarf branch)."""
+        """The `*_min` / `*_max` shape the recipes already use (dynamo.py's brown-dwarf branch), plus
+        the label that says how the point came to exist and where its ends are printed."""
+        if self.value is None and self.pairing == "unknown":
+            raise ValueError(
+                f"{name}: this band belongs to bundle {self.bundle!r}, whose pairing nobody "
+                "published, so it has no middle of its own — filling one here and one in each "
+                "sibling rebuilds the very combination corners() refuses. Choose the case whole "
+                "(its Choice), then emit the case's own numbers.")
+        value = self.value if self.value is not None else self.middle()
+        if value is None:
+            raise ValueError(f"{name}: no point and no pair of ends to take a middle between")
+        out = {name: value, f"{name}_pick": self.pick}
         if self.value is None:
-            raise ValueError(f"{name}: the ends are printed but no point inside them was chosen — "
-                             "an emit takes one number, and choosing it is a Collapse")
-        out = {name: self.value}
+            out[f"{name}_pick"] = (f"unchosen — nobody has picked a point in this band, so the engine "
+                                   f"filled the {self.mean} middle")
         if self.low is not None:
             out[f"{name}_min"] = self.low
         if self.high is not None:
             out[f"{name}_max"] = self.high
+        if self.width_source:
+            out[f"{name}_width_source"] = self.width_source
         return out
 
 
@@ -205,13 +266,22 @@ class Choice:
 
 @dataclass(frozen=True)
 class Collapse:
-    """The record left where a width became one number: what, which end, why."""
+    """The record left where a width became one number: what, which end, why.
+
+    `end="outside"` is not a pick from the band at all — it is an adopted value that disagrees with
+    the band its own source prints, and the α Cen board holds one (`A_B = 0.3` beside a printed Class
+    II albedo of 0.5–0.8). It gets its own word so that filling an unchosen middle can never quietly
+    stand in for it: replace that 0.3 with 0.65 and the disagreement is gone from the record."""
 
     quantity: str
     chosen: float
-    end: str            # "low" | "value" | "high"
+    end: str            # "low" | "value" | "high" | "outside"
     why: str
     by: str             # "owner" | "engine (formula consumer)" | "emit"
+
+    def __post_init__(self) -> None:
+        if self.end not in ("low", "value", "high", "outside"):
+            raise ValueError(f"unknown end {self.end!r}; 'low', 'value', 'high' or 'outside'")
 
     def line(self) -> str:
         return f"{self.quantity} = {self.chosen:g} ({self.end} end, {self.by}): {self.why}"

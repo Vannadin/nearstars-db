@@ -50,9 +50,9 @@ def main() -> int:
        "1: a floor keeps its own grade — the heat-pipe floor is one body's computed flux")
 
     # the emitted shape is the one the recipes already use
-    ok(interval.emit("b_eq") == {"b_eq": 1.0, "b_eq_min": 0.9, "b_eq_max": 1.1},
-       f"1: emit must match dynamo.py's existing *_min/*_max shape, got {interval.emit('b_eq')}")
-    ok(set(plate.emit("x")) == {"x"}, "1: a point emits no band keys")
+    ok({"b_eq": 1.0, "b_eq_min": 0.9, "b_eq_max": 1.1}.items() <= interval.emit("b_eq").items(),
+       f"1: emit must keep dynamo.py's existing *_min/*_max shape, got {interval.emit('b_eq')}")
+    ok(not {"x_min", "x_max"} & set(plate.emit("x")), "1: a point emits no band ends")
 
     # 1b. a band may have ends and no point inside them — the eight albedo rows are all like this
     unchosen = Band(None, 0.5, 0.85, "the albedo table prints the row and no point in it", "analog")
@@ -60,11 +60,38 @@ def main() -> int:
        "1b: ends printed with no pick is still an interval, and says so")
     ok(interval.chosen, "1b: a band given a working point says so")
     ok(unchosen.ends() == (0.5, 0.85), f"1b: an unchosen band walks its ends, got {unchosen.ends()}")
-    try:
-        unchosen.emit("albedo")
-        fails.append("1b: emitting a band nobody picked a point in must be refused — that pick is a Collapse")
-    except ValueError:
-        pass
+
+    # 1c. an unchosen band still emits (the game needs a number), but never as a bare one:
+    # the label says nobody picked it, and the ends travel with it. (Owner, 2026-09-05.)
+    e = unchosen.emit("albedo")
+    ok(e["albedo"] == 0.675, f"1c: an unchosen middle is filled, got {e['albedo']}")
+    ok(e["albedo_pick"].startswith("unchosen"),
+       f"1c: the filled point must be labelled unchosen, got {e['albedo_pick']!r}")
+    ok({"albedo_min", "albedo_max", "albedo_width_source"} <= set(e),
+       "1c: a filled point never travels without its ends and their source")
+    ok(unchosen.pick == "unchosen" and interval.pick == "chosen",
+       "1c: chosen and unchosen must not share a label")
+
+    # 1d. Z-2: a printed centre is the default; computing a midpoint over it overwrites the document
+    printed = Band(660.0, 540.0, 810.0, "the dynamo table prints 660 µT (540–810)", "calibrated",
+                   value_origin="printed")
+    ok(printed.emit("b_eq")["b_eq"] == 660.0 and printed.pick == "printed",
+       "1d: a printed centre is emitted as printed, not replaced by the midpoint 675")
+    ok(printed.middle() == 675.0, "1d: the midpoint is still computable, it is just not what is used")
+
+    # 1e. Z-3: the mean is the band's to declare, because picking one for all bands invents a rate
+    geo = Band(None, 0.05, 0.10, "OC06 prints both ends", "measured", mean="geometric")
+    ok(abs(geo.emit("multipolar")["multipolar"] - 0.0707106781) < 1e-9,
+       f"1e: a geometric band fills the geometric middle, got {geo.emit('multipolar')['multipolar']}")
+    ok(abs(Band(None, 0.05, 0.10, "OC06", "measured").middle() - 0.075) < 1e-12,
+       "1e: silence means arithmetic")
+    for kw, why in ((dict(mean="geometric", low=-1.0, high=1.0), "1e: a geometric mean needs positive ends"),
+                    (dict(mean="harmonic"), "1e: an undeclared mean must be refused, not guessed")):
+        try:
+            Band(None, kw.pop("low", 0.5), kw.pop("high", 0.85), "doc", "analog", **kw)
+            fails.append(why)
+        except ValueError:
+            pass
     try:
         Band(None, None, None, "", "analog")
         fails.append("1b: a band with neither a value nor an end must be refused")
@@ -110,6 +137,13 @@ def main() -> int:
            f"3b: the refusal must name the bundle and why, got {e}")
     ok(corners({"q": q, "p": p}) and all(b.pairing == "in step" for b in (q, p)),
        "3b: a bundle whose pairing IS published still walks")
+    # and it has no middle of its own either: filling one per sibling rebuilds the refused combination
+    try:
+        Band(None, 1.3, 4.0, "Ramirez 2014", "calibrated", bundle="early-mars",
+             pairing="unknown").emit("co2_bar")
+        fails.append("3b: a pairing-unknown member must not fill a middle of its own")
+    except ValueError as e:
+        ok("whole" in str(e), f"3b: the refusal must send the caller to the case, got {e}")
     try:
         Band(1.0, 0.9, 1.1, "doc", "measured", pairing="unknown")
         fails.append("3b: pairing on a band with no bundle must be refused — nothing to pair with")
@@ -135,6 +169,17 @@ def main() -> int:
             pass
 
     # a collapse says what, which end, and why
+    # an adopted value that disagrees with its own printed band is not a pick from it
+    outside = Collapse("A_Bond", 0.30, "outside", "the board adopts 0.3 beside a printed Class II "
+                       "albedo of 0.5–0.8", "owner")
+    ok("outside" in outside.line() or outside.end == "outside",
+       "5b: a value outside its band gets its own word, so a filled middle cannot stand in for it")
+    try:
+        Collapse("x", 1.0, "middle", "y", "owner")
+        fails.append("5b: an unknown end word must be refused")
+    except ValueError:
+        pass
+
     line = Collapse("A_Bond", 0.30, "value", "board pick, 2026-06", "owner").line()
     ok("low" not in line and "0.3" in line and "owner" in line,
        f"collapse must record the value, the end and who chose: {line}")
@@ -144,7 +189,7 @@ def main() -> int:
     if fails:
         return 1
     print("  [PASS] 밴드 규칙 — 등급 어휘 단일 · 세 상태(구간·바닥 있는 점·점) · 출처 없는 폭 거절 · 값이 밴드 밖이면 거절 · "
-          "값 없는 구간 emit 거절 · 묶음 불가분(9조합, 교차 없음) · 짝짓기 미상 묶음 거절 · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
+          "미선택 emit=라벨+양끝 동반 · 인쇄된 중심 보존 · 평균 선언 · 묶음 불가분(9조합, 교차 없음) · 짝짓기 미상 묶음 거절(걸음·중간값 둘 다) · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
     return 0
 
 
