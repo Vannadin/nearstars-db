@@ -107,13 +107,33 @@ were not used to calibrate its model.
 - **Hakim+ 2018** (cached, arXiv:1805.10530) Table 3 + §5.2: M–R curves with **0.8 ρ_Fe**
   are *"almost overlapping"* with FeS, FeSi and Fe₀.₉₅O cores — the composition axis
   collapses to **one density-scale number** on pure Fe (structural twin of melt_scale).
-  Underlying alloy EOS = Sata+ 2010, paywalled — held second-hand only.
+  Underlying alloy EOS = Sata+ 2010, **held since 2026-09-05**
+  ([`2010JGRB..115.9204S`](https://ui.adsabs.harvard.edu/abs/2010JGRB..115.9204S)). ⚠ **Reading it
+  moved the attribution**: the FeS equation of state is not Sata's own measurement. Sata's abstract
+  says *"Combined with our previous data on FeS VI and B2-type VII phases to 270 GPa"* and the text
+  points at [Ohfuji et al., 2007; Sata et al., 2008] four times. Hakim attributed FeS to Sata+ 2010
+  and we inherited it; the primary source is the 2007/2008 pair, which we do not hold.
 - **Wicks+ 2018** (Sci Adv, PMC full text): Vinet fits for Fe-7Si/Fe-15Si with printed
   V₀·K₀·K₀′; transcription-checked against its own "compression 2.5" and "17–18 g/cm³
   at 1300 GPa" (병; ρ₀ from stoichiometry is derived, marked as such). Ambient ratios
-  0.896/0.864 ρ_Fe land inside Hakim's 0.8–0.9 bracket — genuine cross-check (mutual
-  citations checked: 0). Scale factor drifts: good to ~1 % below 330 GPa, ~7 points
-  off by 1.3 TPa.
+  0.896/0.864 ρ_Fe land inside Hakim's 0.8–0.9 bracket. ⚠ **That is not a cross-check, and the
+  2026-09-05 reading says why**: 0.8 ρ_Fe is a *stoichiometric compound* endpoint (FeSi, Si 33.5 wt%)
+  while Wicks measures *dilute alloys* (7 and 15 wt%). Different composition families, so the two
+  numbers agreeing is a monotonic trend holding, not two measurements of one quantity. The arithmetic
+  was right and the word "cross-check" was wrong.
+  **The real cross-check arrived with the new papers**: Fischer+ 2014
+  ([`2014JGRB..119.2810F`](https://ui.adsabs.harvard.edu/abs/2014JGRB..119.2810F)) measures D03
+  Fe–9Si with V₀ fixed to their own experiment — same dilute-alloy family, independent group — and
+  its ambient ratio 0.888 (audit seat's arithmetic; not re-derived here from the paper's table) falls
+  **between** Wicks' 0.896 (7 wt%) and 0.864 (15 wt%), exactly where 9 wt% belongs.
+  ⚠ **But Fischer is not independent of Sata for B2 FeSi**: *"V₀ was set to the value measured after
+  decompression by Sata et al. [2010] and Ono et al. [2007] … K₀′ was set to the fitted value of Sata
+  et al. [2010]"* — read in Fischer's own text. Do not count Fischer as confirmation of Sata on that
+  phase; the Fe–9Si D03 measurement above is the part that is theirs.
+  Scale factor drifts: good to ~1 % below 330 GPa, ~7 points off by 1.3 TPa.
+- **Komabayashi 2014** ([`2014JGRB..119.4164K`](https://ui.adsabs.harvard.edu/abs/2014JGRB..119.4164K),
+  held 2026-09-05): **read, and it says nothing on this axis.** It is Fe–FeO, not Fe–FeS. Written down
+  so the next reader does not fetch it expecting testimony it does not carry.
 - **Premise correction the survey found (⑮ §0)**: `earth_like` already runs on
   `fe_prem` (= 0.849 ρ_Fe at ambient — lighter than Fe-7Si below 1 TPa), so **the
   Dante −12.5 % measurement was already alloy-equivalent in the core; core alloying
