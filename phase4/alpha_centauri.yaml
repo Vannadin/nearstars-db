@@ -1513,7 +1513,7 @@ decisions:
       Dante는 이오와 같이 유도 자기장만을 갖는다. 대신 이오와 동일하게 가장 안쪽 위성으로서 플라스마 공급원
       역할을 하며, 화산이 뿜어낸 황 토러스가 Polyphemus의 방사선대를 포화시킨다.
     fields:
-      - { name: magnetic_field, value: "none (no intrinsic dynamo; only an Io-style induced field)", value_ko: "none (no intrinsic dynamo; Io식 유도장만)", op: set }
+      - { name: magnetic_field, value: "none (no intrinsic dynamo; an induced field is undetermined)", value_ko: "none (고유 dynamo 없음; 유도장 유무는 미정)", op: set, note: "Corrected 2026-09-05. The 2026-06-22 facet-walk decided one thing: '고유 자기장 없음 - Io처럼 격렬 화산이어도 자체 dynamo 불가(Io도 유도장만). 단 Dante는 최내곽(1.54 R_p) 플라스마 공급원.' There, 'Io도 유도장만' is a statement about Io, carrying the argument that violent volcanism does not make a dynamo. A schema migration compressed 'Io도' to 'Io식', which moved the subject onto Dante, and the value then read as Dante having an induced field. That was never decided. Room for one is real, since all five moons orbit inside Polyphemus's magnetosphere, but no branch judges it yet.", note_ko: "2026-09-05 교정. 2026-06-22 facet-walk이 판정한 것은 하나다. '고유 자기장 없음 - Io처럼 격렬 화산이어도 자체 dynamo 불가(Io도 유도장만). 단 Dante는 최내곽(1.54 R_p) 플라스마 공급원.' 여기서 'Io도 유도장만'은 Io에 대한 진술이고, 화산이 격렬해도 dynamo는 아니라는 논거다. 스키마 마이그레이션이 'Io도'를 'Io식'으로 압축하면서 주어가 Dante로 넘어갔고, 값이 Dante가 유도장을 가진다고 읽히게 됐다. 그건 판정된 적이 없다. 다섯 위성 모두 폴리페무스 자기권 안을 도니 유도장이 있을 여지는 실재하지만, 그걸 판정하는 분기가 아직 없다." }
     refs: ["docs/reference/rocky-planet-dynamo-methodology.md"]
     gate:
       criterion: [derived-grounding]
