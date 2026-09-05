@@ -2413,6 +2413,28 @@ record has no shape for it, and inventing one would hide the disagreement. (b) T
 printed on the board and in **no methodology document**; the eight-row table does not cover cloud
 decks. Both are left as they stand.
 
+**Instance 2 — the stagnant-lid ceiling (`tidal_heating.py`).** §6.2 prints the ceiling as 10–30
+mW/m² and the code used 0.030: not a width dropped, an end chosen silently. The consumer is a label
+table, so the width cannot pass through — it splits into branches, and this is the case where a
+`Choice` is mandatory. The stated consequence is machine-checked: fed the four control fluxes the
+engine itself produces, the high end reproduces the document's own label for three of them (Venus is
+the exception, and it is the document's own stagnant-lid anchor), the low end for one. The second
+axis is what the losers become — the table has nothing between the ceiling and the plate row, so a
+body under the ceiling is not called unknown but *plate tectonics*, a positive claim made at 0.010
+about Mercury and Mars, which the same table lists as stagnant lid. Default stays the high end.
+
+**Instance 3 — the two greenhouse cases (`greenhouse_cases.py`), and a rule the structure was
+missing.** The relay called them a published combination grid; they are two runs on two different
+bodies by two different papers (Ramirez 2014 on early Mars, Wordsworth & Pierrehumbert 2013 on early
+Earth), and Wordsworth's H₂ is a point, 0.1, not a range. So they are `Choice` candidates — one axis
+with two options, the first place a candidate's value is a case name rather than a scalar — with no
+default, because the document's instruction is to borrow a run that brackets the body.
+
+The rule they forced: **walking a bundle in step is a second assumption, not the cautious option.**
+Raising CO₂ lets a run reach the same temperature on less H₂, so pairing the low ends invents a
+combination exactly as much as crossing the corners does. A band now declares `pairing="unknown"` and
+`corners()` refuses it by name. Both cases are in that state, and the refusal is tested.
+
 **Verified, no work.** The multipolar grid `{0.05, 0.10}` already emits both ends from `dynamo_rocky`
 (relay item 6, confirmed). The Hapke roughness presets are the enumerated form, not a band —
 `hapke-shader-methodology` calls them *"discrete family presets"* and lists the set — and `Choice` is
