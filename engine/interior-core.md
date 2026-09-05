@@ -2435,6 +2435,28 @@ Raising CO₂ lets a run reach the same temperature on less H₂, so pairing the
 combination exactly as much as crossing the corners does. A band now declares `pairing="unknown"` and
 `corners()` refuses it by name. Both cases are in that state, and the refusal is tested.
 
+**Owner decision, 2026-09-05 — a band with no chosen point is emitted after all, and the label does
+the work the refusal was doing.** The game cannot start without a number. So the point goes out
+labelled, and the three origins never share a word: `printed` (the document prints the centre),
+`chosen` (someone picked, and a `Collapse` says which end and why), `unchosen` (the engine filled the
+middle). Ends and their source travel with the value. The grade vocabulary is untouched — filling a
+middle is not a judgment, and "we filled it in" must not enter the same vocabulary as measurement.
+A printed centre is never replaced by a computed one (660 µT stays 660, not the midpoint 675), and
+the mean is arithmetic unless a band declares `mean="geometric"`, because choosing one for every band
+would be an exchange rate the engine invented. `engine/tools/unchosen_defaults.py` counts the seats a
+default is holding open — ten today — the same shape as C33's unmigrated-citation count.
+
+That decision collided with the pairing rule in one place, and the collision is the interesting part.
+A member of a bundle whose pairing nobody published has **no middle of its own**: filling one per
+sibling rebuilds precisely the combination `corners()` refuses, so the guard on the corner grid would
+have been reopened through the back door. Its emit sends the caller to the case's `Choice` instead,
+and nothing stalls, because choosing the case supplies every member at once. The report separates the
+two states rather than adding them up, since a count the owner reads must not blur them.
+
+`Collapse` also gained `end="outside"`, for an adopted value that disagrees with the band its own
+source prints. It exists so the α Cen `A_B = 0.3` cannot be quietly replaced by the midpoint 0.65 of
+the 0.5–0.8 it sits beside — the disagreement stays visible while the owner decides.
+
 **Verified, no work.** The multipolar grid `{0.05, 0.10}` already emits both ends from `dynamo_rocky`
 (relay item 6, confirmed). The Hapke roughness presets are the enumerated form, not a band —
 `hapke-shader-methodology` calls them *"discrete family presets"* and lists the set — and `Choice` is
