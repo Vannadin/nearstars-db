@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import math
 
+from bands import Band, Choice
 from payload import Result, out_of_domain
 
 # Anchors for the sentences the values below stand on. They are cited here rather than inside the
@@ -69,6 +70,38 @@ MODE_STAGNANT = "stagnant lid"
 MODE_HEAT_PIPE = "heat pipe"
 MODE_UNCLASSIFIED = ("unclassified — §6.2 prints no boundary for this flux; §6.1's own figure for Io, "
                      "~2 W/m², lands in this band too")
+# 정체뚜껑 상한은 **문서가 양끝을 다 인쇄한** 유일한 문턱이다 (10–30 mW/m², Reese+ 1998).
+# 코드는 그동안 위쪽 끝만 썼다 — 폭을 버린 게 아니라 한쪽 끝을 조용히 고른 것이었다.
+# 여기서는 밴드로 싣고, 어느 끝이 서 있는지는 아래 선택지가 말한다.
+# doc @«| **Stagnant lid** | conduction through an immobile lid | ceiling **10–30 mW/m²** | Venus 10–20, Mars 15–30»
+STAGNANT_LID_CEILING = Band(0.030, 0.010, 0.030,
+                            "tidal-heating-methodology §6.2 prints the ceiling as 10–30 mW/m² "
+                            "(Reese, Solomatov & Moresi 1998, 1998JGR...10313643R)",
+                            "calibrated")
+# 이 밴드는 **분류기**로 들어간다 — 소비처가 식이 아니라 라벨표라 폭이 통과하지 못하고 **갈래로 쪼개진다**.
+# 그래서 엔진이 조용히 고르지 않고 선택지를 낸다 (C32 ②).
+STAGNANT_LID_CEILING_CHOICE = Choice(
+    at="heat_transport_mode",
+    quantity="stagnant-lid ceiling [W/m²]",
+    candidates=({"value": 0.010, "end": "low", "grade": "calibrated",
+                 "source": "§6.2, Reese+ 1998 — the low end of the printed 10–30 mW/m² ceiling"},
+                {"value": 0.030, "end": "high", "grade": "calibrated",
+                 "source": "§6.2, Reese+ 1998 — the high end, and what this code has used all along"}),
+    consequences={
+        "solar-system control": "at 0.030 three of the four control bodies get the document's own "
+                                "label (Mercury 15.75, Earth 41.80, Mars 15.87 mW/m² agree; Venus at "
+                                "37.75 does not, and it is the document's own stagnant-lid anchor). "
+                                "At 0.010 that becomes one of four — Mercury and Mars leave stagnant "
+                                "lid as well.",
+        "what the loser becomes": "the table has nothing between the ceiling and the plate row, so a "
+                                  "body under the ceiling is not called unknown, it is called plate "
+                                  "tectonics. At 0.010 that positive claim is made about Mercury and "
+                                  "Mars, which the same table lists as stagnant lid.",
+    },
+    default=0.030,
+    note="the owner has already said this one goes to the player as a choice; the default keeps "
+         "today's behaviour until it does")
+
 # The two sentences these labels rest on: doc @«(these are guides, not sharp lines):»
 # and doc @«published W/m² boundary** between the modes». They are cited here, in a comment, and
 # NOT inside the shipped string: a value's reader gets the pointer, not the document's prose.
@@ -95,13 +128,15 @@ def outcome_regime(flux_w_m2: float) -> str:
     return REGIME_UNCLASSIFIED
 
 
-def transport_mode(total_flux_w_m2: float) -> str:
+def transport_mode(total_flux_w_m2: float, stagnant_lid_ceiling: float | None = None) -> str:
     """§6.2 table, doc @«### 6.2 How the heat actually leaves: the three-mode ladder», read on the total surface flux. Plate tectonics sits at ~0.09 W/m² (Earth 92.1 mW/m²);
-    the stagnant-lid ceiling is 10–30 mW/m²; heat pipe from ≥ ~2.5 W/m². Between 0.14 (the plate row read at +50 %, the
+    the stagnant-lid ceiling is 10–30 mW/m² — **both ends printed**, and which one is in force is
+    `STAGNANT_LID_CEILING_CHOICE`, defaulting to the high end; heat pipe from ≥ ~2.5 W/m². Between 0.14 (the plate row read at +50 %, the
     branch below) and 2.5 W/m² the table has no row."""
+    ceiling = STAGNANT_LID_CEILING.high if stagnant_lid_ceiling is None else stagnant_lid_ceiling
     if total_flux_w_m2 >= IO_FLUX_KM2019_W_M2:
         return MODE_HEAT_PIPE
-    if total_flux_w_m2 <= 0.03:
+    if total_flux_w_m2 <= ceiling:
         return MODE_STAGNANT
     # ⚠ AUTHORED. The 0.09 is printed (Earth); the ×1.5 is not — no paper prints a ±50 % width for
     # that row, and this line invents a lower edge for the band so it has one. Consequence today,

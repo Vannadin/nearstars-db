@@ -56,6 +56,21 @@ def main() -> int:
        [th.REGIME_VIGOROUS, th.REGIME_ACTIVE, th.REGIME_OCEAN, th.REGIME_UNCLASSIFIED, th.REGIME_DEAD], "4: §6.1 rows and the unclassified decade")
     ok([th.transport_mode(f) for f in (3.0, 0.0921, 0.02, 0.5)] ==
        [th.MODE_HEAT_PIPE, th.MODE_PLATE, th.MODE_STAGNANT, th.MODE_UNCLASSIFIED], "4: §6.2 modes (Earth 92.1 mW/m² → plate tectonics) and the gap")
+    # 4b. 정체뚜껑 상한 선택지 (C32 ②) — `consequences` 에 적힌 3/4 대 1/4 을 문장이 아니라 기계로 확인한다.
+    # 엔진이 방사성만으로 낸 네 대조군 플럭스 [W/m²] 와 문서 §6.2 가 그 바디에 붙인 라벨
+    # (c32-f-g-transport-thresholds-notes.ko.md 의 실행표; Mercury 는 측정 플럭스가 없고 라벨만 있다).
+    controls = ((0.01575, th.MODE_STAGNANT), (0.03775, th.MODE_STAGNANT),   # Mercury, Venus
+                (0.04180, th.MODE_PLATE),    (0.01587, th.MODE_STAGNANT))   # Earth, Mars
+    agree = {c["value"]: sum(th.transport_mode(f, c["value"]) == want for f, want in controls)
+             for c in th.STAGNANT_LID_CEILING_CHOICE.candidates}
+    ok(agree == {0.030: 3, 0.010: 1},
+       f"4b: the choice's stated consequence is 3 of 4 at the high end and 1 of 4 at the low end, got {agree}")
+    ok(th.STAGNANT_LID_CEILING_CHOICE.default == th.STAGNANT_LID_CEILING.high and
+       th.transport_mode(0.02) == th.MODE_STAGNANT,
+       "4b: until someone chooses, the high end stands and today's behaviour is unchanged")
+    ok(th.transport_mode(0.01587, 0.010) == th.MODE_PLATE,
+       "4b: below the ceiling the table has no 'neither' — the low end calls Mars plate tectonics")
+
     # 5. refusals
     ok(not th.solve(1.0, 1.0, None, None, None, 0.01).applicable and "no orbit" in th.solve(1.0, 1.0, None, None, None, 0.01).reason, "5: no orbit refuses by name")
     ok("no k2_over_q" in th.solve(1.0, 1.0, 3.8e5, 1.0, 0.05, None).reason, "5: no k₂/Q refuses by name")
@@ -67,7 +82,7 @@ def main() -> int:
     if not fails:
         print(f"  [PASS] 조석 가열 — 이오 Ė {p_io:.3e} W (밴드 0.6–1.6e14 안, P {2 * math.pi / n_io / 86400:.3f} d) · 판도라 F {pan.values['surface_flux']:.2f} W/m² "
               f"(보드 45, {(pan.values['surface_flux'] / 45 - 1) * 100:+.2f} %) {pan.values['io_power_ratio']:.0f}× Io → {th.REGIME_VIGOROUS[:9]}… / {th.MODE_HEAT_PIPE} · "
-              f"×Io 규약 R⁵ · 라벨 표 둘 · 거절 4")
+              f"×Io 규약 R⁵ · 라벨 표 둘 · 정체뚜껑 선택지 3/4 대 1/4 · 거절 4")
     return 1 if fails else 0
 
 
