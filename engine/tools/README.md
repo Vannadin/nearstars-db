@@ -206,7 +206,7 @@ opposite of what it reads like; the form above was run both ways before being wr
 commit message is a claim about the tree, and a claim nobody checked is how a document ends up
 describing a table it does not contain.
 
-## Three checks that read correctly and were wrong when run (2026-09-05)
+## Four names that read correctly and were wrong when checked (2026-09-05)
 
 One of these is an anecdote. Three in a day is the reason the rule above exists, so they are kept
 together — a rule with one example gets read as bad luck.
@@ -222,11 +222,19 @@ together — a rule with one example gets read as bad luck.
    it reads, the guard would have refused exactly the commits that had something to commit — under
    the name of a guard protecting them.
 
-What the three share is not carelessness. Each was written by someone who knew what they meant, and
+A fourth is not a tool at all. `core_state.py`'s `CORELESS_CLASSES` lists `sub_neptune`, and the
+refusal eight lines below says *"서브넵튠의 철핵은 가스 외피 아래 앉아 있지만"* — the constant's name
+says there is no core, its own reason says there is one. **Three of the four were tools and one is
+data**, which is the point worth keeping: this is not a bug class that lives in shell commands. It
+lives wherever a name is allowed to stand in for the thing it names. (That one belongs to C23; it is
+recorded here, not touched.)
+
+What the four share is not carelessness. Each was written by someone who knew what they meant, and
 each is a **plausible reading of a name**: a process called python is `python3`, a child is one level
-down, a quiet diff means nothing happened. The name was the evidence, and the name was wrong.
+down, a quiet diff means nothing happened, a list called coreless holds bodies without cores. The name
+was the evidence, and the name was wrong.
 
 So: **run the check against the case you expect to pass, not only the case you expect to fail.** All
-three would have survived a test that only looked for the failure — a dead gate really does report no
+three of the tools would have survived a test that only looked for the failure — a dead gate really does report no
 `python3`, and an empty diff really is quiet. What none of them survived was being pointed at a
 healthy run.
