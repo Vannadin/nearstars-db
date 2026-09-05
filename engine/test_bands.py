@@ -50,6 +50,23 @@ def main() -> int:
        f"1: emit must match dynamo.py's existing *_min/*_max shape, got {interval.emit('b_eq')}")
     ok(set(plate.emit("x")) == {"x"}, "1: a point emits no band keys")
 
+    # 1b. a band may have ends and no point inside them — the eight albedo rows are all like this
+    unchosen = Band(None, 0.5, 0.85, "the albedo table prints the row and no point in it", "analog")
+    ok(unchosen.kind == "interval" and not unchosen.chosen,
+       "1b: ends printed with no pick is still an interval, and says so")
+    ok(interval.chosen, "1b: a band given a working point says so")
+    ok(unchosen.ends() == (0.5, 0.85), f"1b: an unchosen band walks its ends, got {unchosen.ends()}")
+    try:
+        unchosen.emit("albedo")
+        fails.append("1b: emitting a band nobody picked a point in must be refused — that pick is a Collapse")
+    except ValueError:
+        pass
+    try:
+        Band(None, None, None, "", "analog")
+        fails.append("1b: a band with neither a value nor an end must be refused")
+    except ValueError:
+        pass
+
     # 2. a width must say where its ends are printed
     try:
         Band(1.0, 0.9, 1.1, "", "measured")
@@ -105,7 +122,7 @@ def main() -> int:
     if fails:
         return 1
     print("  [PASS] 밴드 규칙 — 세 상태(구간·바닥 있는 점·점) · 출처 없는 폭 거절 · 값이 밴드 밖이면 거절 · "
-          "묶음 불가분(9조합, 교차 없음) · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
+          "값 없는 구간 emit 거절 · 묶음 불가분(9조합, 교차 없음) · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
     return 0
 
 

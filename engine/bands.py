@@ -20,6 +20,11 @@ published. So a value has three possible shapes, and `Band.kind` says which:
 - **point** — nothing printed to widen it. Carries `grade="authored"` if the value itself was chosen
   rather than measured.
 
+A band's working `value` may be `None`, which says *the document prints the ends and no point inside
+them*. That is the state the eight rows of the Bond-albedo table are in, and it is not the same as a
+midpoint: a midpoint is a pick, and a pick is a `Collapse`. A band with no chosen point cannot be
+emitted — the game takes one number, and nobody has said which.
+
 **Where a band stops.** The width does not travel forever, and where it ends depends on the consumer:
 
 1. **A formula consumer** — the band passes through. Walk the corners and carry the spread out the
@@ -59,7 +64,7 @@ GRADES = ("measured", "calibrated", "analog", "declared", "authored")
 class Band:
     """A value that may carry a width, and always carries where the width came from."""
 
-    value: float
+    value: float | None
     low: float | None = None
     high: float | None = None
     width_source: str = ""          # in words: which document prints the ends, or why there are none
@@ -68,15 +73,23 @@ class Band:
     floor_grade: str | None = None  # a floor can be weaker than the value it bounds
 
     def __post_init__(self) -> None:
+        if self.value is None and self.low is None and self.high is None:
+            raise ValueError("a band with neither a value nor an end says nothing")
         if self.grade not in GRADES:
             raise ValueError(f"unknown grade {self.grade!r}; one of {GRADES}")
         for end in (self.low, self.high):
             if end is not None and not (end == end):        # NaN
                 raise ValueError("a band end may not be NaN")
-        if self.low is not None and self.high is not None and not (self.low <= self.value <= self.high):
+        if (self.low is not None and self.high is not None and self.value is not None
+                and not (self.low <= self.value <= self.high)):
             raise ValueError(f"value {self.value} outside its own band [{self.low}, {self.high}]")
         if (self.low is not None or self.high is not None) and not self.width_source:
             raise ValueError("a width without a source is not a band — say where the ends are printed")
+
+    @property
+    def chosen(self) -> bool:
+        """Whether a working point inside the band has been picked yet."""
+        return self.value is not None
 
     @property
     def kind(self) -> str:
@@ -88,11 +101,14 @@ class Band:
 
     def ends(self) -> tuple[float, ...]:
         """The points a formula consumer should walk: both ends and the value, without duplicates."""
-        seen = [self.value] + [e for e in (self.low, self.high) if e is not None]
+        seen = [e for e in (self.value, self.low, self.high) if e is not None]
         return tuple(sorted(set(seen)))
 
     def emit(self, name: str) -> dict:
         """The `*_min` / `*_max` shape the recipes already use (dynamo.py's brown-dwarf branch)."""
+        if self.value is None:
+            raise ValueError(f"{name}: the ends are printed but no point inside them was chosen — "
+                             "an emit takes one number, and choosing it is a Collapse")
         out = {name: self.value}
         if self.low is not None:
             out[f"{name}_min"] = self.low
