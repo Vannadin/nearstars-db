@@ -148,3 +148,28 @@ Two specific hazards, both met tonight:
   that checker looks for. Three is not coincidence, it is the property: **a checker that reads prose
   will read the prose written about it.** Expect it, and write around it rather than exempting the
   file — an exemption is a hole, and the wording is cheap.
+
+## Telling a busy gate from a dead one (2026-09-05)
+
+`scripts/check.sh` is judged by one line, `GATE END sha= pid= at= rc=`. That rule was written to stop
+a run full of PASS lines being read as a pass before it finished. It has a missing half, and the
+missing half cost two healthy gates on 2026-09-05: **the absence of an END line is not evidence of
+death.**
+
+Three signals look like a stall and are all normal:
+
+- **A flat log for a minute or more.** `test_interior.py` runs the shooting solver over the roster and
+  holds the log while it works.
+- **The parent at 0.0 % CPU.** It is a `bash` waiting on a child. It is supposed to be idle.
+- **`pgrep -x python3` returning 0.** This one is not a signal at all. The interpreter that runs the
+  checks reports its `comm` as **`Python`** (the CommandLineTools framework binary), so that pattern
+  matches on no run, healthy or dead. It returns 0 the way a broken thermometer returns zero degrees.
+
+Find the child by **parentage**, never by guessing its name:
+
+    P=$(pgrep -f "scripts/check.sh" | head -1)      # the gate's own parent
+    pgrep -P "$P"                                   # its child, whatever it is called
+    ps -o %cpu=,etime=,command= -p <that child>     # busy, or not
+
+A child burning CPU is the only signal that separates busy from dead. If there is no child and the log
+has not grown, then discard the run — and even then, the run has produced no verdict either way.
