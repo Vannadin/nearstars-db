@@ -24,7 +24,8 @@ from __future__ import annotations
 
 import sys
 
-from bands import Band, Choice, Collapse, corners, floored, point
+from bands import GRADES, Band, Choice, Collapse, corners, floored, point
+from payload import GRADES as PAYLOAD_GRADES
 
 
 def main() -> int:
@@ -33,6 +34,9 @@ def main() -> int:
     def ok(cond: bool, msg: str) -> None:
         if not cond:
             fails.append(msg)
+
+    # 0. one grade vocabulary, not two — this file once held a `declared` that payload has never had
+    ok(GRADES is PAYLOAD_GRADES, "0: the grade vocabulary must be payload's own tuple, not a copy")
 
     # 1. three shapes
     interval = Band(1.0, 0.9, 1.1, "OC06 prints both 0.05 and 0.10", "measured")
@@ -121,7 +125,7 @@ def main() -> int:
         print(f"  [FAIL] {f}")
     if fails:
         return 1
-    print("  [PASS] 밴드 규칙 — 세 상태(구간·바닥 있는 점·점) · 출처 없는 폭 거절 · 값이 밴드 밖이면 거절 · "
+    print("  [PASS] 밴드 규칙 — 등급 어휘 단일 · 세 상태(구간·바닥 있는 점·점) · 출처 없는 폭 거절 · 값이 밴드 밖이면 거절 · "
           "값 없는 구간 emit 거절 · 묶음 불가분(9조합, 교차 없음) · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
     return 0
 

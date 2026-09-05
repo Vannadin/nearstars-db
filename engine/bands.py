@@ -18,7 +18,8 @@ published. So a value has three possible shapes, and `Band.kind` says which:
   below it, unknown), so it is kept as a floor rather than flattened into a bare point — and the
   floor's own grade is recorded separately, because *that* 2.5 is one body's computed flux.
 - **point** — nothing printed to widen it. Carries `grade="authored"` if the value itself was chosen
-  rather than measured.
+  rather than measured. A pick between two *published* ends is not `authored` but `judgment`, which is
+  the grade a `Collapse` leaves behind.
 
 A band's working `value` may be `None`, which says *the document prints the ends and no point inside
 them*. That is the state the eight rows of the Bond-albedo table are in, and it is not the same as a
@@ -57,7 +58,10 @@ from __future__ import annotations
 import itertools
 from dataclasses import dataclass, field
 
-GRADES = ("measured", "calibrated", "analog", "declared", "authored")
+# 등급 어휘는 payload 가 하나만 가진다 — 여기서 다시 적으면 그 순간 두 번째 사본이고,
+# 실제로 그렇게 됐었다: 이 파일은 payload 에 없는 `declared` 를 지어내고, 발표된 선택지
+# 사이의 판단을 뜻하는 `judgment` 를 빠뜨렸다. 하필 C32 의 붕괴가 바로 그 등급이다.
+from payload import GRADES  # noqa: F401
 
 
 @dataclass(frozen=True)
