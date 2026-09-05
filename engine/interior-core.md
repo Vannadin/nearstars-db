@@ -2539,9 +2539,13 @@ and both left such sentences behind, so the check is a tool's job now rather tha
 Four were repaired the same day — the two Summers papers and Mauk & Fox in the magnetosphere document
 (all three resolvable only through their cache sidecars), and Bethkenhagen+ 2013 in the
 ammonia-methane note, which the ledger in this file had already recorded as held and baked.
-**17 more are listed and not yet read.** They are not all defects: the checker matches by proximity,
-so a sentence about an unobtained paper standing beside a held one's bibcode looks the same to it.
-Each needs a reader, and the list is the work item.
+**The count is the argument for the tool**: two people looked for this class by hand — one by grep,
+one by close reading — and each found four. The tool found nineteen on its first run. **17 remain and
+need a reader.** They are not "false positives": the checker matches by
+proximity, and whether a sentence three lines away is about *this* paper is a judgement it cannot
+make. That is the limit of the check, not a bug in it. ⚠ **Do not widen the window to fix them** — a
+wider window means more to dismiss, more dismissing means the check gets ignored, and an ignored
+check is no check. (Same reason the citation checker's total-count reconciliation was dropped.)
 
 One is a defect of a different kind. Bethkenhagen+ **2017** (`2017ApJ...848...67B`) is open access
 and its full text is in the cache; what blocks C22 is not access but that **the grid values were

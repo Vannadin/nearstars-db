@@ -143,3 +143,8 @@ Two specific hazards, both met tonight:
   citation written as a line number, and the same one written as a phrase anchor"), or put a backtick
   inside the token to break it. This is why the documentation of the scheme carries no literal
   examples of the scheme.
+  **Three times in one day** (2026-09-05): the C33 entry in `interior-core.md`, the session handoff,
+  and the corrections written for the paper-claim checker, whose own sentences contained the words
+  that checker looks for. Three is not coincidence, it is the property: **a checker that reads prose
+  will read the prose written about it.** Expect it, and write around it rather than exempting the
+  file — an exemption is a hole, and the wording is cheap.
