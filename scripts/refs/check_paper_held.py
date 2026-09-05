@@ -177,6 +177,14 @@ def contradictions(paths: list[str]) -> int:
                     print(f"[HELD but called unobtainable] {path}:{i + 1}: {b} — "
                           f"the text says {m.group(0)!r} within three lines")
     print(f"{found} place(s) where a document calls a held paper unobtainable")
+    # ⚠ 이 숫자는 0 을 목표로 하지 않는다. C33 의 미이행 인용 카운트와 어휘가 비슷해 보이지만
+    # 성격이 반대다 — 저쪽은 0 이 목표라 체커를 조였고, 이쪽은 남는 것이 대부분 **옳은 문장**이다.
+    if found:
+        print("  ⚠ 0 을 목표로 하는 카운트가 아니다. 이 검사는 근접성으로 맞히므로, 세 줄 옆 문장이 "
+              "이 논문 이야기인지는\n     사람만 안다. \"paywalled 지만 구했다\"처럼 같은 숨에 해소하는 "
+              "문장은 **틀린 게 아니라 완전한 것**이고,\n     지워서 0 을 만들면 정보가 사라진다. 건별 "
+              "판정은 engine/interior-core.md 의 표에 있다 — 같은 줄을\n     두 번 판정하지 말 것. "
+              "(0 을 목표로 하는 카운트는 engine/check_refs.py 의 미이행 줄번호 쪽이다.)")
     return 1 if found else 0
 
 

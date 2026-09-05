@@ -2619,7 +2619,12 @@ Four were repaired the same day — the two Summers papers and Mauk & Fox in the
 (all three resolvable only through their cache sidecars), and Bethkenhagen+ 2013 in the
 ammonia-methane note, which the ledger in this file had already recorded as held and baked.
 **The count is the argument for the tool**: two people looked for this class by hand — one by grep,
-one by close reading — and each found four. The tool found nineteen on its first run. **All 17 were read on
+one by close reading — and each found four. The tool found nineteen on its first run. **Why the two
+people found the same four is now known**, and it is not carelessness: four bibcodes contain an `&`,
+and the cache stores them with the `&` written as `_` (`2001E_PSL.185...49A.pdf`). A person searching
+the cache for the bibcode they are reading cannot match those files — not "might miss", *cannot*. The
+Allègre & Manhès line was one of them, and it sat on a want-list telling the owner to go find a paper
+already on disk. That is the class only a tool reaches, and it is the argument for having built it. **All 17 were read on
 2026-09-05** (14 distinct places; three lines are reported twice). They are not "false positives":
 the checker matches by proximity, and whether a sentence three lines away is about *this* paper is a
 judgement it cannot make. That is the limit of the check, not a bug in it. ⚠ **Do not widen the window to fix them** — a

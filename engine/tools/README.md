@@ -184,3 +184,24 @@ same lie the process-name guess told. It was caught only because it was executed
 committed. This is the documentation half of the rule the engine already keeps for code: *a commit
 that closes a hole brings the test that reproduces it.* A written-down diagnostic that has never been
 run against the healthy case is a guess with formatting.
+
+## An edit script that fails must not be followed by a commit (2026-09-05)
+
+A one-off edit script asserted on a string that no longer matched, stopped, and changed nothing. The
+commit ran anyway, in a separate step, carrying a message that described the table the script had not
+written. Nothing was wrong with either half: the script failed loudly and the commit succeeded
+honestly. **They were two statements and only one of them was checked.**
+
+Chain them, and make an empty diff refuse:
+
+    python3 - <<'PY' || exit 1
+    ... the edit, which raises on any string it cannot find ...
+    PY
+    git diff --quiet -- <the files it should have changed> && {
+        echo "the edit changed nothing — refusing to commit"; exit 1; }
+    git add <files> && git commit ...
+
+`git diff --quiet -- <path>` exits **0 when there is no change** and 1 when there is, which is the
+opposite of what it reads like; the form above was run both ways before being written here. The
+commit message is a claim about the tree, and a claim nobody checked is how a document ends up
+describing a table it does not contain.
