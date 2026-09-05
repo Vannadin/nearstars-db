@@ -18,8 +18,9 @@ would replace it were looked for on 2026-08-27 (the coverage review) and again o
    sentence about literature values). The grid is described; the numbers are not published.
 2. **Bethkenhagen+ 2013** (2013JChPh.138w4504B, doi 10.1063/1.4810883), the ammonia source
    the 2017 paper extends — 330 GPa, 500–10 000 K, with nuclear-quantum corrections the
-   2017 work removes for consistency. **AIP paywall**; the abstract carries no numbers a
-   table could be built from.
+   2017 work removes for consistency. Written here as an AIP paywall, and **that is out of date**:
+   the owner obtained it on 2026-08-30 and `ammonia_table.py` was baked from it (the ledger in
+   `interior-core.md` has said so since). What the abstract alone could not give, the paper did.
 3. **FPEOS**, Militzer+ 2021 (2021PhRvE.103a3203M, open access). It genuinely distributes
    tables and interpolation code for H, He, B, C, N, O, Ne, Na, Mg, Al, Si and eleven
    compounds including **CH₄** — but **no NH₃**, and its range is "∼10⁴ to 10⁹ K", which

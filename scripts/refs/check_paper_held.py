@@ -3,6 +3,7 @@
 
     python3 scripts/refs/check_paper_held.py 2004GeoJI.156..363N 2022A&A...661A.101R
     python3 scripts/refs/check_paper_held.py --scan docs/reference/*.md engine/*.md
+    python3 scripts/refs/check_paper_held.py --contradictions docs/reference/*.md engine/*.md
 
 Why this exists: `docs/phase3/_papers/` files are named EITHER by bibcode
 (2013JChPh.138w4504B.pdf) OR by bare arXiv number (2203.01065.md), and some live in
@@ -150,7 +151,38 @@ def ads_identifiers(bibcodes: list[str]) -> dict[str, list[str]]:
     return out
 
 
+# Words a document uses to say a paper cannot be read. If one of these sits within three lines of a
+# bibcode the cache HOLDS, the document is telling its next reader not to look — which is worse than a
+# wrong value, because a wrong value eventually fails a reproduction and "we do not have it" simply
+# stops anyone checking. Twice in one day (2026-09-05) a batch of papers arrived and the sentences
+# calling them unobtainable stayed behind, so the rule is now the tool's rather than a habit's.
+DENIES = re.compile(r"paywall|no preprint|unobtained|not obtained|미보유|받지 못|구하지 못|blocked|"
+                    r"cannot be obtained|second-hand only", re.I)
+
+
+def contradictions(paths: list[str]) -> int:
+    names, sidecars = cache_names(), sidecar_index()
+    found = 0
+    for path in paths:
+        lines = open(path, encoding="utf-8", errors="replace").read().splitlines()
+        for i, line in enumerate(lines):
+            for b in BIBCODE.findall(line):
+                cands = [b, b.replace("&", "_")] + ([sidecars.get(b)] if sidecars.get(b) else [])
+                if not any(names.get(c) for c in cands if c):
+                    continue
+                near = "\n".join(lines[max(0, i - 3):i + 4])
+                m = DENIES.search(near)
+                if m:
+                    found += 1
+                    print(f"[HELD but called unobtainable] {path}:{i + 1}: {b} — "
+                          f"the text says {m.group(0)!r} within three lines")
+    print(f"{found} place(s) where a document calls a held paper unobtainable")
+    return 1 if found else 0
+
+
 def main(argv: list[str]) -> int:
+    if len(argv) > 1 and argv[1] == "--contradictions":
+        return contradictions(argv[2:])
     if len(argv) > 1 and argv[1] == "--scan":
         wanted: set[str] = set()
         for path in argv[2:]:

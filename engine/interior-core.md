@@ -2528,6 +2528,27 @@ than one it fell into.
 That is the standard the rest of the engine is held to, and it is what "finished" means
 here.
 
+## Papers a document calls unreadable while the cache holds them
+
+`python3 scripts/refs/check_paper_held.py --contradictions docs/reference/*.md engine/*.md` lists
+every place where a bibcode the cache HOLDS sits within three lines of a sentence saying it cannot be
+read. **This class is worse than a wrong number**: a wrong number eventually fails a reproduction,
+while "we do not have it" makes sure nobody looks again. Two batches of papers arrived on 2026-09-05
+and both left such sentences behind, so the check is a tool's job now rather than a habit's.
+
+Four were repaired the same day — the two Summers papers and Mauk & Fox in the magnetosphere document
+(all three resolvable only through their cache sidecars), and Bethkenhagen+ 2013 in the
+ammonia-methane note, which the ledger in this file had already recorded as held and baked.
+**17 more are listed and not yet read.** They are not all defects: the checker matches by proximity,
+so a sentence about an unobtained paper standing beside a held one's bibcode looks the same to it.
+Each needs a reader, and the list is the work item.
+
+One is a defect of a different kind. Bethkenhagen+ **2017** (`2017ApJ...848...67B`) is open access
+and its full text is in the cache; what blocks C22 is not access but that **the grid values were
+never published** — no data-availability statement, no URL. That line should say "not published"
+rather than "not obtainable": buying or requesting it changes nothing, and only an author enquiry
+would, which is the owner's call.
+
 ## Related
 
 - [`interior-structure-methodology.md`](../docs/reference/interior-structure-methodology.md)

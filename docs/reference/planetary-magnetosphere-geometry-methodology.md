@@ -356,7 +356,7 @@ Python port of Mauk & Fox's own published implementation (their open Zenodo
 software [`10.5281/zenodo.4782323`](https://zenodo.org/records/4782323),
 bibcode [`2021zndo...4782323M`](https://ui.adsabs.harvard.edu/abs/2021zndo...4782323M) — the paper itself,
 [`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M),
-is paywalled with no preprint). The chain: flexible differential spectrum
+was recorded as unreadable; the PDF is in the cache since 2026-09-04). The chain: flexible differential spectrum
 `j(E) = C·E·(kT(γ₁+1)+E)^(−γ₁−1)/(1+(E/E₀)^γ₂)` with pitch factor sin^2s α →
 relativistic cyclotron resonance (Summers, Tang & Thorne 2009
 [`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S),
@@ -1214,8 +1214,12 @@ a documented regime call rather than a computed number.
 - **Summers, Tang & Thorne 2009**, JGRA 114, A10210 ([`2009JGRA..11410210S`](https://ui.adsabs.harvard.edu/abs/2009JGRA..11410210S));
   **Summers et al. 2014**, JGRA 119, 6313 ([`2014JGRA..119.6313S`](https://ui.adsabs.harvard.edu/abs/2014JGRA..119.6313S)).
   The relativistic K–P formulation (eqs A1–A8) and the ~E⁻¹ limited spectrum
-  (relativistic coefficient 2× non-relativistic). Both paywalled, no preprint —
-  equations recovered via the Mauk & Fox Zenodo software below.
+  (relativistic coefficient 2× non-relativistic). Both were recorded here as unreadable, and
+  **that stopped being true**: both PDFs are in the paper cache with sidecars
+  (`summers_tang_thorne_2009_kp_limit.pdf`, `summers_2014_limiting_spectrum.pdf`), which is how
+  `check_paper_held.py` resolves them since it learned to read sidecars. The equations were
+  originally recovered via the Mauk & Fox Zenodo software below; the papers themselves are now
+  readable, so a future check goes to the source rather than the reimplementation.
 - **Mauk & Fox 2010**, JGRA 115, A12220 ([`2010JGRA..11512220M`](https://ui.adsabs.harvard.edu/abs/2010JGRA..11512220M)).
   The cross-planet differential K–P framework: Earth/Jupiter/Uranus at the cap,
   Neptune below (injection-starved), Saturn below (material losses). Paywalled;
