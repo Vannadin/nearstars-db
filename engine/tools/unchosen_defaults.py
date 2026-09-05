@@ -24,7 +24,7 @@ sys.path.insert(0, str(ENGINE))
 from bands import Band  # noqa: E402
 
 # 밴드를 들고 있는 모듈들. 새 밴드를 만들면 여기 한 줄 — 자동 스캔은 등록 실패를 조용히 지나간다.
-SOURCES = ("albedo_table", "greenhouse_cases", "tidal_heating")
+SOURCES = ("albedo_table", "greenhouse_cases", "tidal_heating", "sub_neptune_dynamo")
 
 
 def _bands(obj, path: str, seen: set[int]) -> list[tuple[str, Band]]:

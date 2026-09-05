@@ -168,6 +168,18 @@ def main() -> int:
         except ValueError:
             pass
 
+    # 5c. a choice that is inert outside a condition is not a choice without consequence
+    cond = Choice(at="dynamo_sub_neptune", quantity="core thermal conductivity",
+                  candidates=({"value": 40.0, "end": "low", "source": "Konôpková+ 2016",
+                               "grade": "calibrated"},
+                              {"value": 100.0, "end": "high", "source": "Pozzo+ 2012",
+                               "grade": "calibrated"}),
+                  consequences={"dynamo": "on or off on a low-mass thin-envelope body"},
+                  only_when="the mantle surface has solidified")
+    ok(cond.conditional and not good.conditional,
+       "5c: a conditional choice must be distinguishable from an unconditional one")
+    ok(cond.consequences, "5c: the consequence describes what changes inside the condition")
+
     # a collapse says what, which end, and why
     # an adopted value that disagrees with its own printed band is not a pick from it
     outside = Collapse("A_Bond", 0.30, "outside", "the board adopts 0.3 beside a printed Class II "
@@ -189,7 +201,7 @@ def main() -> int:
     if fails:
         return 1
     print("  [PASS] 밴드 규칙 — 등급 어휘 단일 · 세 상태(구간·바닥 있는 점·점) · 출처 없는 폭 거절 · 값이 밴드 밖이면 거절 · "
-          "미선택 emit=라벨+양끝 동반 · 인쇄된 중심 보존 · 평균 선언 · 묶음 불가분(9조합, 교차 없음) · 짝짓기 미상 묶음 거절(걸음·중간값 둘 다) · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 붕괴 기록")
+          "미선택 emit=라벨+양끝 동반 · 인쇄된 중심 보존 · 평균 선언 · 묶음 불가분(9조합, 교차 없음) · 짝짓기 미상 묶음 거절(걸음·중간값 둘 다) · 후보 2개 미만 거절 · 귀결 없는 선택지 거절 · 귀결 복수 · 조건부 선택지 구별 · 붕괴 기록")
     return 0
 
 

@@ -257,7 +257,19 @@ def corners(bands: dict[str, Band]) -> list[dict[str, float]]:
 
 @dataclass(frozen=True)
 class Choice:
-    """What the engine refuses to decide, handed to the owner with everything needed to decide it."""
+    """What the engine refuses to decide, handed to the owner with everything needed to decide it.
+
+    A choice may be **conditional**: outside some condition every candidate gives the same answer, and
+    inside it they part. `only_when` names that condition in words. This is not the same thing as a
+    choice with no consequence, which is refused as a question — and the two look identical if the
+    structure has only one slot for "what does this change". The live case is the core thermal
+    conductivity of a sub-Neptune: while the mantle surface is still molten the dynamo runs either
+    way and the pick is inert; once it solidifies the same pick turns the dynamo on or off.
+
+    An owner reading a list of open decisions needs that distinction, because a conditional choice can
+    be left open safely for every body outside its condition, and cannot be left open for one inside
+    it. `consequences` therefore describes what changes **inside** the condition, and stating the
+    condition is mandatory whenever one exists rather than being folded into prose nobody parses."""
 
     at: str                                  # the node or boundary where the width could not go on
     quantity: str
@@ -265,6 +277,12 @@ class Choice:
     consequences: dict[str, str] = field(default_factory=dict)   # axis → what changes, in words
     default: float | None = None             # what runs until someone chooses; None = nothing runs
     note: str = ""
+    only_when: str = ""                      # 이 선택이 무언가를 바꾸는 조건. 밖에서는 후보들이 같은 답을 낸다
+
+    @property
+    def conditional(self) -> bool:
+        """Whether this choice is inert outside some condition — see `only_when`."""
+        return bool(self.only_when)
 
     def __post_init__(self) -> None:
         if len(self.candidates) < 2:
