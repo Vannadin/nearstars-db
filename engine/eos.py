@@ -1948,11 +1948,24 @@ SILICATE_MELT_REF = "Monteux+ 2016 (2016E&PSL.448..140M) §2.2.1 식 (10)–(13)
 # 전 범위에서 750 K 차갑다. test_silicate_melt.py 가 이 함정을 조인 잔차로 고정한다.
 MONTEUX_SOL_LOW = (1661.2, 1.336e9, 7.437)    # 식 (10)
 MONTEUX_LIQ_LOW = (1982.1, 6.594e9, 5.374)    # 식 (11)
-MONTEUX_SOL_HIGH = (2081.8, 101.69e9, 1.226)  # 식 (12), A-콘드라이트 (Andrault+ 2011)
+# 식 (12) 축자. ⚠ 귀속 사슬을 드러낸다 — Monteux 자신이 이 계수를 "the experimentally determined
+# A-chondritic solidus from Andrault et al. (2011)" 이라 소개하지만, **Andrault 가 인쇄한 계수는
+# (2045 K, 92 GPa, 1.3)** 이고 20–140 GPa 에서 최대 52 K 차이다(리퀴더스는 (1940, 29, 1.9), 최대 81 K).
+# 둘 다 Andrault 자신의 ±150 K 안이고, CMB 135 GPa 에서는 **식 (12) 쪽이 더 정확하다** — Andrault 초록의
+# 4150/4725 K 를 식 (12) 는 4146.7/4749.1 로, Andrault 자신의 계수는 4096.5/4828.7 로 낸다. 우리 전재는
+# Monteux 축자로 정확하고, 다른 것은 Monteux 가 그렇게 적었기 때문이다.
+MONTEUX_SOL_HIGH = (2081.8, 101.69e9, 1.226)  # 식 (12)
 # 식 (13): T_liq = c₁(P/c₂ + 1)^(1/c₃). 두 조성이 여기서 갈린다.
 MONTEUX_LIQ_F = (78.74, 4.054e6, 2.44)        # F-페리도타이트 (Fiquet+ 2010)
-MONTEUX_LIQ_A = (2006.8, 34.65e9, 1.844)      # A-콘드라이트 (Andrault+ 2011)
-MONTEUX_JOIN_PA = 20e9                        # 논문 자신의 저압/고압 가지 전환
+MONTEUX_LIQ_A = (2006.8, 34.65e9, 1.844)      # 식 (13) A-콘드라이트, 위와 같은 귀속 사슬
+# 논문 자신의 저압/고압 가지 전환. ⚠ **20–24 GPa 창 = 등재된 gap (2026-09-05)**: Monteux 는 이 경계를
+# "F-페리도타이트와 A-콘드라이트 솔리더스 차이가 20 GPa 위에서 크지 않다" 는 이유로 골랐는데, Andrault 는
+# 자기 T₀ 를 "the virtual (this mineral assemblage is only stable above 24 GPa) melting temperature" 라
+# 부른다. 20–24 GPa 에서 우리는 Monteux 의 구성을 충실히 따르고, 그 구간은 Andrault 조합의 안정영역 아래다.
+# **24 GPa 로 옮기지 않는다** — 옮기면 식 (10)/(11) 을 0–24 GPa 에 쓰게 되는데 Monteux 는 그렇게 하지 않고,
+# Herzberg & Zhang 1996 의 실험 범위가 거기까지 닿는지는 그 논문이 미보유라 확인할 수 없다. 그 선택지는
+# 논문을 확보하기 전에는 평가 자체가 불가능하다. 오너 판단 대기.
+MONTEUX_JOIN_PA = 20e9
 SILICATE_ROCK_MAX_PA = 140e9                  # 암석→순수 MgSiO₃ 이음매 (위 주석의 근거)
 # Deng+ 2023 (2023PhRvB.107f4103D) 본문의 두 Simon 적합 (T [K], P [GPa]).
 # 전사 확정: 인쇄된 외삽점 "9376 ± 656 K at 500 GPa" 를 전사식이 9376.6 K 로 낸다.
