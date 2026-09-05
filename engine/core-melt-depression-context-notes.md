@@ -151,11 +151,13 @@ Fischer+ 2014; [`2014JGRB..119.4164K`](https://ui.adsabs.harvard.edu/abs/2014JGR
 Komabayashi 2014; [`2020A&A...638A.129N`](https://ui.adsabs.harvard.edu/abs/2020A&A...638A.129N)
 Noack & Lasbleis 2020 (already transcribed for a different purpose — the adiabat anchor, C8);
 and [`2008GeoRL..35.7201C`](https://ui.adsabs.harvard.edu/abs/2008GeoRL..35.7201C) Chen, Li & Hauck
-2008. ⚠ **That last identification is not confirmed.** This note names it only as "Chen+ 2008"; the
-cached paper was chosen by subject match (Fe–S liquidus) and Mori+ 2017, which supplies the rest of
-this list, cites no Chen 2008. The other candidate was `2008HPR....28..315C`. The sidecar says so,
-and the audit seat is checking it against this note's own source (⑮ §5). **Until that comes back,
-nothing here rests on Chen+ 2008.**
+2008. **That identification is now confirmed** (2026-09-05): the paper's abstract reports non-ideal
+solution behaviour at 14 GPa *"as indicated by the presence of two inflection points on the liquidus
+curve"*, and the sigmoidal shape §8 attributes to "Chen et al., 2008a" is exactly that. The other
+candidate, `2008HPR....28..315C`, is off the request list.
+⚠ **One condition travels with it**: Chen's own non-ideality measurement is at **14 GPa**, and their
+10 GPa curve is *"relatively"* ideal. The 21 GPa inflection is not Chen's measurement — it is
+inferred from Fei's Fe₃S stabilisation. Citing Chen for a claim at 21 GPa mismatches the conditions.
 
 ⚠ **One is left, and it is the one that matters: [`2000AmMin..85.1830F`](https://ui.adsabs.harvard.edu/abs/2000AmMin..85.1830F)
 Fei+ 2000** — Mori's single anchor point, still **unobtained, still load-bearing, and still
@@ -191,7 +193,18 @@ temperature of 1900 °C, while an additional data point from our experiments sug
 dispute, not an offset — the field *"suggested either a parabolic (Fei et al., 2000) or a sigmoidal
 shape (Chen et al., 2008a)"* and this paper concludes *"our results show the liquidus curve is not
 parabolic"*, with a steep slope between 2000 and ~1600 °C. Mori's 1348 K @ 21 GPa anchor is Fei's;
-obtaining Fei would yield two disagreeing sources, not a settlement. Provenance fact, not
+obtaining Fei would yield two disagreeing sources, not a settlement.
+
+⚠ **And obtaining it would settle even less than that — 2026-09-05, from two independent reference
+lists.** Chen+ 2008 and Pommier+ 2018 both cite it as *"Fei, Y., J. Li, C. M. Bertka, and
+C. T. Prewitt (2000), Structure type and bulk modulus of Fe₃S, a new iron-sulfur compound,
+Am. Mineral., 85, 1830–1833"* — a **four-page structure and bulk-modulus note, not a melting-curve
+paper**. This note has carried it for weeks as "the single anchor of the melting curve"; that
+description is wrong, and the liquidus attributed to it is a *prediction* read off it by others.
+The pressure makes it worse rather than better: **21 GPa is where Fe₃S itself stabilises**
+(Chen's text: *"Fe₃S near 21 GPa [Fei et al., 2000]"*). So the accurate sentence is not "two sources
+disagree" but **"two sources disagree across a phase boundary both of them acknowledge"**, which is
+the worst pressure in this system at which to hang a single-point anchor. Provenance fact, not
 corroboration: the paper cites **our** melting-curve source — *"The eutectic composition is expected
 to have more than ≈13 wt.% S over the entire depth of the Martian core (Mori et al., 2017)."*
 
