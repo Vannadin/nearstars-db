@@ -2149,7 +2149,7 @@ not appendable; an author request is the only route and is **recorded as possibl
 closed that class on 09-03). **State tonight**: step 1 landed · step 2-② landed · step 2-① waits on the
 owner (two decisions) · default 0.
 
-### C23 — does a sub-Neptune's iron core run a dynamo at all? (existence, not strength) — **listed 2026-09-04, not built**
+### C23 — does a sub-Neptune's iron core run a dynamo at all? (existence, not strength) — **listed 2026-09-04; the pre-registration was rewritten 2026-09-05 after reading Tang: the gate is the mantle, not the core**
 
 Opened by C18's closure. Tang+ 2025 (`2025ApJ...989...28T`, cached) publishes the **on/off criterion** and every
 input of it is held or declarable:
@@ -2167,7 +2167,42 @@ three times (mantle / magma-ocean energy balance; the local-Rayleigh boundary-la
 source (7)) — and *"the envelope limits cooling"* is not a new equation but a **top boundary condition**: the
 H/He blanket *"sets the mantle surface temperature above 1000 K"*, shrinking ΔT_CMB. Our `cmb_heat_flux`
 structure carries over; what changes is that boundary condition and one δ branch for a molten mantle.
-⚠ **σ for the Rm criterion is self-contradictory inside RM22** (phase table, 2026-09-04): the printed 1.36e6 S/m and the printed λ_m 1.32 m²/s (⇒ 6.03e5) differ by 2.26×, and Rm = μ₀σUD carries that factor whole against the threshold of 50. Pre-registered for the start of C23: compute Rm with both values and report first whether the on/off verdict flips; Tang's ~1e6 fixes only the order. **Tang does not unlock Driscoll & Olson 2011** (`Driscoll`, `Olson` 0 hits) — RM22's `q_conv` definition and
+**⚠ The question above was asked of the wrong body.** Read against Tang's own text on 2026-09-05
+(`pdftotext` of the cached PDF; every quotation below is verbatim), **Rm is not the gate**. The paper
+says *"as long as a convective layer is present in the liquid iron, Rm can readily exceed the
+critical value. Our numerical results show that **Rm typically ranges from 10³ − 10⁵, well surpassing
+the critical threshold**"*. Against a threshold of 40 or 50 that is a margin of 20× to 2500×, so the
+three worries this entry was built on — RM22's 2.26× σ contradiction, the 40-vs-50 threshold width,
+Christensen's velocity scaling — **all die inside it**. They were real discrepancies about a quantity
+that turns out not to decide anything.
+
+What decides it is the **mantle**, and the paper says so in its own abstract: *"dynamo action in
+sub-Neptune iron cores persists **as long as the mantle surface remains molten**, often exceeding
+10 Gyr, and becomes sensitive to core thermal conductivity after solidification."* Figure 19 repeats
+it: *"a dynamo exists in the iron core as long as the mantle surface remains in the liquid phase.
+Once the mantle surface solidifies … the cooling rate of the iron core sharply declines … dynamo
+operation starts to become sensitive to the conductivity choice."*
+
+So the gates are ordered, and neither of them is Rm:
+
+1. **Is the mantle surface still molten?** While it is, the dynamo is on and nothing else is consulted.
+2. **Only after it solidifies**, `k_c`: 40 or 100 W/m/K.
+
+**This moves where C23 starts.** Not `core_state`, which asks whether the metal core is liquid — the
+silicate melting judgement (`eos.silicate_solidus`) is what answers gate 1. *"Does the iron core run a
+dynamo"* turned out to be a question about the mantle. The pre-registration below is kept as written,
+because what it got wrong is the useful part of the record.
+
+**⚠ And `k_c` is the A-grade band this looked for and did not find.** Tang prints **both** ends and
+attributes each: *"a value of 4 × 10⁶ erg s⁻¹ cm⁻¹ K⁻¹ (Konôpková et al. 2016, solid) and a high value
+of 1 × 10⁷ erg s⁻¹ cm⁻¹ K⁻¹ (Pozzo et al. 2012, dashed)"* — that is **40 and 100 W m⁻¹ K⁻¹**. Both
+printed, both attributed, and the pick flips a dynamo on or off on a low-mass thin-envelope
+sub-Neptune, which in art terms is aurora or no aurora. ⚠ It is also the first `Choice` whose
+consequence is **conditional**: before the mantle surface solidifies the choice changes nothing at
+all, and C32's structure has no way yet to say "this decision is empty on that branch".
+
+**Pre-registration as written on 2026-09-04, kept for the record.** ⚠ **σ for the Rm criterion is
+self-contradictory inside RM22** (phase table, 2026-09-04): the printed 1.36e6 S/m and the printed λ_m 1.32 m²/s (⇒ 6.03e5) differ by 2.26×, and Rm = μ₀σUD carries that factor whole against the threshold of 50. Pre-registered for the start of C23: compute Rm with both values and report first whether the on/off verdict flips; Tang's ~1e6 fixes only the order. **Tang does not unlock Driscoll & Olson 2011** (`Driscoll`, `Olson` 0 hits) — RM22's `q_conv` definition and
 `γ_d = 0.2` still sit behind that unheld paper (C16, Tier 1 request).
 
 ### C24 — a water-rich rocky body does not converge in `interior_layers` — **listed 2026-09-04; opened by the owner the same afternoon — diagnosed and fixed: `water-world-convergence-context-notes.md`**
