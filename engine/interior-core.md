@@ -2632,6 +2632,37 @@ verdict is carried by one declaration, not by its mass and radius** — `composi
 9.0e23 kg / 3400 km is 5 467 kg/m³ = 0.991 ρ⊕, rocky, which runs opposite to declaring the ice-rich
 preset (real Ganymede is 1 936 kg/m³). Both are in `c32-d-e-epseri-cassandra-notes.ko.md`.
 
+### C35 — `stellar_wind` computes, and has no document to be a recipe in — **listed 2026-09-06, deliberately not registered**
+
+`engine/stellar_wind.py` produces all three of the node's declared outputs from real routes (`v_sw`
+declared, `n_sw` derived, `p_ram` wired) and the Ramstad IMB on top of them. It is **not** registered
+with `registry.recipe`, and that is a decision rather than an omission: `chain.yaml`'s `stellar_wind`
+node has no `recipe:` document, so a `## Contract` block has nowhere to live and `check_contracts`
+fails the moment it registers. No stellar-wind methodology document exists — `docs/reference/` has
+`stellar-photosphere-color` and nothing else on the wind — and the magnetosphere document is the
+**consumer** of the wind, not its owner, so hanging the contract there would misfile it.
+
+**What a future stellar-wind document owes, so nobody researches this twice:**
+
+- **`n = Ṁ / (4π r² v m_p)`** — spherical steady-state mass conservation, a textbook identity and
+  therefore exempt from the paper-grounding rule. At solar values it returns 6.70 cm⁻³ at 1 AU,
+  inside the observed 5–7.
+- **`v_sw = 400 km/s` is an assumption, not a measurement**, and the repository has exactly one of
+  them: *"stellar_wind_speed_kms = 400 (assumed, Wood) unless measured"*
+  (`phase3/stellar_wind_synthesis/context-notes.md`). No host carries a measured wind speed.
+- **The hosts that carry `Ṁ`** — five, and **all five are measured**, by one method and one group:
+  astrospheric Lyman-α, Wood et al. Alpha Centauri A **2.0**, Barnard's Star **0.2**, ε Ind A **0.5**,
+  Proxima Cen **0.2**, τ Cet **0.1**, in solar units. ⚠ Two corrections to the working list this was
+  relayed as: **40 Eri A carries none**, and **Barnard's Star does**. ⚠ And α Cen A's own note says
+  its 2.0 is the **combined A+B astrosphere value**, the pair sharing one astrosphere at a ≈ 24 AU —
+  so it is not A's wind, and a future document must decide how to split or refuse to.
+- **`P_SOLAR_1AU_NPA = 2.0` in `scripts/refs/magnetopause_geometry.py` carries no bibcode.** Two
+  Proxima boards already depend on it.
+- ⚠ **The 10 % gap.** That 2.0 nPa anchor against 1.79 nPa from the identity above, at the same place
+  and the same wind. Left standing on purpose. A future document either reconciles them or writes
+  down why it cannot — replacing one with the other silently would move two boards' values under a
+  commit about something else.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
