@@ -165,11 +165,15 @@ Three signals look like a stall and are all normal:
   checks reports its `comm` as **`Python`** (the CommandLineTools framework binary), so that pattern
   matches on no run, healthy or dead. It returns 0 the way a broken thermometer returns zero degrees.
 
-Find the child by **parentage**, never by guessing its name:
+Find the worker by **process group**, never by guessing its name — and not by one level of parentage
+either, because `check.sh` runs its checks in a subshell, so the gate's immediate child is another
+idle `bash` and a one-level lookup reports 0.0 % just as misleadingly:
 
-    P=$(pgrep -f "scripts/check.sh" | head -1)      # the gate's own parent
-    pgrep -P "$P"                                   # its child, whatever it is called
-    ps -o %cpu=,etime=,command= -p <that child>     # busy, or not
+    P=$(pgrep -f "scripts/check.sh" | head -1)              # the gate's own parent
+    G=$(ps -o pgid= -p "$P" | tr -d ' ')                    # everything it spawned shares this group
+    ps -A -o pgid=,pid=,%cpu=,etime=,comm= | awk -v g="$G" '$1==g'
 
-A child burning CPU is the only signal that separates busy from dead. If there is no child and the log
-has not grown, then discard the run — and even then, the run has produced no verdict either way.
+A live gate shows three rows: the parent `bash` at 0.0 %, a subshell `bash` at 0.0 %, and one worker
+near 100 %. **That worker is the only signal that separates busy from dead.** If the group holds
+nothing but idle shells and the log has not grown, then discard the run — and even then, the run has
+produced no verdict either way.
