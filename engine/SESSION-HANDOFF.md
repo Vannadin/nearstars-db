@@ -1272,3 +1272,34 @@ The rule that survives is the one that was already written — **judge only by t
 and the correction is to its inverse: *the absence of an END line is not evidence of death.* Before
 discarding a run, find the child by parentage and look at its CPU. Guessing a process name is how a
 healthy 40-minute gate gets thrown away twice, and how a swap statistic gets promoted to a cause.
+
+## Fixing the concept does not fix the expression — 2026-09-05
+
+The brief called the Bond-albedo band and the phase-integral band a bundle. They are not: the
+document reaches `A_Bond` by an analog table **or** by `q·p`, and `A = q·p` already has `A` on the
+left, so multiplying them is a category error rather than a wide band. That was caught, corrected,
+written into the module, and quoted back to the seat that raised it.
+
+Then the unchosen-defaults report listed ten seats — eight table rows and two phase-integral families,
+flat, one line each. **The same confusion, one layer down.** An owner reading that count would decide
+the same quantity ten times. The concept had been fixed in the prose and in the data, and the thing
+that displays them had never been told.
+
+The vocabulary that was missing, and now exists on `Band`:
+
+- **`bundle` — chosen together.** Members move in step, and a corner grid may not cross them.
+- **`estimates` — chosen instead of each other.** Bands naming the same quantity are alternative
+  routes to it; the count is one seat with N options.
+
+Two rules came out of it, and both are cheap:
+
+1. **When a concept is corrected, grep for everything that renders it.** A count, a label, a summary
+   line. The correction is not done while some other layer still speaks the old version.
+2. **A count is only as true as the sentence under it.** The report's closing line still read "each
+   line is a seat the owner has not chosen" after the grouping was right — the number said one seat,
+   the sentence said ten, and a reader believes the sentence. Same failure as the `[미이행]` label
+   earlier today, which was accurate about citations and wrong about the preserved notes it also
+   printed itself over.
+
+The fix that generalises: **the test forbids silence.** A band that does not say what it estimates
+fails the gate, because a band that says nothing gets counted as a decision of its own.
