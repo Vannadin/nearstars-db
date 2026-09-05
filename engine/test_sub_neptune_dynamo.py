@@ -17,7 +17,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sub_neptune_dynamo import (CORE_CONDUCTIVITY, CORE_CONDUCTIVITY_CHOICE,  # noqa: E402
-                                K_C_HIGH_W_M_K, K_C_LOW_W_M_K)
+                                K_C_HIGH_W_M_K, K_C_LOW_W_M_K, dynamo_verdict,
+                                mantle_surface_molten)
 
 
 def main() -> int:
@@ -50,13 +51,33 @@ def main() -> int:
     if {cand["value"] for cand in c.candidates} != {40.0, 100.0}:
         fails.append("3: the candidates are the two printed ends, nothing between them")
 
+    # 4. the two gates are read in Tang's order, and gate 1 does not consult k_c
+    molten, _ = mantle_surface_molten(25e9, 3000.0)
+    solid, _ = mantle_surface_molten(25e9, 1200.0)
+    if not (molten is True and solid is False):
+        fails.append(f"4: gate 1 is the silicate solidus; got molten={molten}, solid={solid}")
+    if dynamo_verdict(25e9, 3000.0)[0] != "dynamo":
+        fails.append("4: while the mantle surface is molten the dynamo runs with no k_c at all")
+    if dynamo_verdict(25e9, 3000.0, 40.0)[0] != dynamo_verdict(25e9, 3000.0, 100.0)[0]:
+        fails.append("4: on the molten branch the two candidates must give the same answer, or the "
+                     "choice is not conditional after all")
+    if dynamo_verdict(25e9, 1200.0)[0] != "choice required":
+        fails.append("4: once gate 1 closes and nobody has picked k_c, the engine must stop and say so")
+
+    # 5. no curve is not the same answer as solid — a consumer has to be able to tell them apart
+    off_curve, why = mantle_surface_molten(900e9, 3000.0)
+    if off_curve is not None or "판정 없음" not in why:
+        fails.append(f"5: above the solidus curve's range the verdict is absent, not 'solid': {why}")
+    if dynamo_verdict(900e9, 3000.0)[0] != "undetermined":
+        fails.append("5: an absent curve must not be reported as a dynamo verdict")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if fails:
         return 1
     print(f"  [PASS] 서브넵튠 다이나모 — 단위 환산 확인(4e6·1e7 erg → {K_C_LOW_W_M_K:.0f}·"
           f"{K_C_HIGH_W_M_K:.0f} W/m/K) · 조건부 선택지(맨틀 고화 후에만) · 기본값 없음 · "
-          f"고른 점 없음(중점 {mid:.0f} 은 후보 아님)")
+          f"고른 점 없음(중점 {mid:.0f} 은 후보 아님) · 게이트 순서(융해→k_c) · 곡선 없음≠고체")
     return 0
 
 

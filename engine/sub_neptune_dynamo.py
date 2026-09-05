@@ -40,6 +40,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bands import Band, Choice  # noqa: E402
+from eos import silicate_melt_fraction, silicate_solidus  # noqa: E402
 
 #: 게이트 1. 이 노드가 아니라 규산염 용융 판정이 답한다 — 그래서 여기엔 값이 아니라 이름만 있다.
 MANTLE_GATE = ("the mantle surface is molten — while it is, the dynamo runs and `k_c` changes "
@@ -81,6 +82,52 @@ CORE_CONDUCTIVITY_CHOICE = Choice(
     only_when="the mantle surface has solidified",
     note="no default: while gate 1 is open both candidates give a dynamo, so a default would be a "
          "pick nobody needs; once gate 1 closes the pick is load-bearing and belongs to the owner")
+
+
+#: 게이트 1 이 "녹아 있다"로 읽는 최소 용융분율. 탱은 "the mantle surface remains molten" 이라고만
+#: 적고 분율을 인쇄하지 않는다. 0 초과면 솔리더스 위라는 뜻이고, 그게 이 문장이 지지하는 전부다.
+MOLTEN_FRACTION_FLOOR = 0.0
+
+
+def mantle_surface_molten(pressure_pa: float, temperature_k: float,
+                          variant: str = "peridotitic") -> tuple[bool | None, str]:
+    """게이트 1. 맨틀 표면이 규산염 솔리더스 위인가.
+
+    (판정, 이유) 를 돌려준다. 판정이 None 이면 이 압력에 곡선이 없다는 뜻이지 "안 녹았다"가 아니다 —
+    둘을 같은 값으로 내면 소비처가 구별하지 못한다."""
+    sol = silicate_solidus(pressure_pa, variant)
+    if sol is None:
+        return None, (f"규산염 솔리더스가 {pressure_pa / 1e9:.3g} GPa 에서 곡선을 갖지 않는다 "
+                      f"(0–500 GPa 밖). 판정 없음이지 '고체'가 아니다.")
+    phi = silicate_melt_fraction(pressure_pa, temperature_k, variant)
+    molten = temperature_k > sol
+    return molten, (f"맨틀 표면 {temperature_k:.0f} K vs 솔리더스 {sol:.0f} K "
+                    f"({pressure_pa / 1e9:.3g} GPa) → 용융분율 "
+                    f"{'없음' if phi is None else f'{phi:.2f}'}; "
+                    f"{'액체' if molten else '고체'}")
+
+
+def dynamo_verdict(pressure_pa: float, temperature_k: float,
+                   k_c_w_m_k: float | None = None,
+                   variant: str = "peridotitic") -> tuple[str, str]:
+    """두 게이트를 순서대로 읽는다. Tang 의 문장이 정하는 순서 그대로다.
+
+    `k_c` 는 게이트 1 이 닫힌 뒤에만 읽힌다. 고르지 않았으면 (None) 그 자리에서 판정을 멈추고
+    선택지를 가리킨다 — 엔진이 대신 고르지 않는다 (C32)."""
+    molten, why = mantle_surface_molten(pressure_pa, temperature_k, variant)
+    if molten is None:
+        return "undetermined", why
+    if molten:
+        return "dynamo", (f"{why} — 맨틀 표면이 녹아 있는 한 다이나모는 돈다. "
+                          f"핵 전도도는 이 가지에서 아무것도 바꾸지 않는다.")
+    if k_c_w_m_k is None:
+        return "choice required", (
+            f"{why} — 게이트 1 이 닫혔으므로 이제 핵 전도도가 판정을 가른다. "
+            f"{CORE_CONDUCTIVITY_CHOICE.quantity} 가 아직 선택되지 않았다 "
+            f"(후보 {K_C_LOW_W_M_K:.0f} / {K_C_HIGH_W_M_K:.0f}).")
+    return "conductivity-dependent", (
+        f"{why} — 고화 후이므로 판정은 선택된 k_c = {k_c_w_m_k:g} W/m/K 위에 선다. "
+        f"⚠ Tang 은 이 가지에서 '전도도 선택에 민감해진다'까지만 말하고 켜짐/꺼짐 문턱을 인쇄하지 않는다.")
 
 
 def main() -> int:
