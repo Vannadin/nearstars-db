@@ -214,6 +214,7 @@ python3 engine/check_via.py --gate || fail=1
 (cd engine && python3 test_albedo_table.py) || fail=1
 (cd engine && python3 test_greenhouse_cases.py) || fail=1
 (cd engine && python3 test_sub_neptune_dynamo.py) || fail=1
+(cd engine && python3 test_stellar_wind.py) || fail=1
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
 python3 engine/dynamo_table.py --check || fail=1

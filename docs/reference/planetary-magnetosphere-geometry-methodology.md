@@ -33,7 +33,7 @@ all: the only obstacle is the field itself and the only floor is the surface, `1
 
 **Step 1 — which boundary wins.**
 
-- **With an atmosphere**, the crossover test is `R_mp(B_eq) > r_ionopause` (Egan 2019,
+- **With an atmosphere**, the crossover test is `R_mp(B_eq) > r_IMB` (Egan 2019,
   [`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)), **not** `B_eq > 0`. Above it the body is intrinsic; below it
   the body is induced, and there a weak dipole is actively worse than none.
 - **Airless**, the same test reads against the surface: `R_mp(B_eq) > 1 R_p`. Above it,
@@ -199,8 +199,43 @@ field parameter to derive it from.
 can be worse than none. In hybrid simulations of a Mars-sized planet, increasing the
 field **increases** ion escape until the dipole's standoff exceeds the induced
 boundary, and only past that does a field start shielding (Egan 2019,
-[`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)). So the crossover test is `R_mp(B_eq) > r_ionopause`, not
+[`2019MNRAS.488.2108E`](https://ui.adsabs.harvard.edu/abs/2019MNRAS.488.2108E)). So the crossover test is `R_mp(B_eq) > r_IMB`, not
 `B_eq > 0`. Below it, treat the body as induced.
+
+**The surface in that inequality is the induced magnetosphere boundary, not the ionopause** (corrected
+2026-09-06). Egan's own sentence puts the transition *"where the magnetic stand-off crosses the
+unmagnetized induced magnetosphere boundary (847 km)"*, and the word *ionopause* appears nowhere in
+that paper's body. At Mars the two are different surfaces with the IMB above: Vignes 2000 reports the
+ionopause signature *"at an altitude of 300 kilometres"* and names the magnetic pile-up boundary as a
+**third** boundary between it and the bow shock. So the numbers are `1.089 R_p` for the Martian
+ionopause against `1.250 R_p` for the IMB, and putting the first into an inequality written for the
+second **understates the crossover field by 1.13× to 1.69×** — in the one branch whose whole point is
+that a weak field can be worse than none.
+
+⚠ The name drift did not start here. Egan defines the MPB and the IMB separately and then cites
+Trotignon 2006 — whose own title says magnetic pile-up boundary — as the *"unmagnetized induced
+magnetosphere boundary"*. Reading the primary source does not settle a name that the primary source
+also moves.
+
+**The boundary is a published function of the stellar wind**, not a constant: Ramstad 2018
+([`2017JGRA..122.7279R`](https://ui.adsabs.harvard.edu/abs/2017JGRA..122.7279R)) fits the IMB as a double conic driven by `n_sw` and `v_sw`, whose subsolar
+point is `1.2417 R_p` at the nominal solar wind — within 0.66 % in radius of Egan's constant, so the
+two are one value rather than a choice between two. Across the 110× pressure range that paper
+studies, the subsolar point moves only 1.42 to 1.16 R_p. ⚠ Two of its printed units are wrong; see
+[`paper-defects.md`](paper-defects.md) #20 and #21 before implementing it.
+
+⚠ **`1.05–1.2 R_p` stays in this document and leaves this inequality.** It is a range of *ionopause*
+altitudes, which is a different quantity, and it is well supported as one: the three Venus
+measurements convert to 1.0545, 1.1157 and 1.1652 R_p, and the Martian ionopause at 1.089 R_p falls
+inside the same span. Ramstad's ionospheric boundary, nominal `1.195 R_M`, sits just under the top of
+it — an observation about where two bodies' ionospheric boundaries land, not a licence to treat the
+IB and the ionopause as one surface.
+
+⚠ **This model is Martian by construction.** Its only variables are `n_sw` and `v_sw`; the neutral
+atmosphere is not a variable but is absorbed into the fitted constants, and the paper says so — the
+effects of atmospheric variation are *"assumed to average out"*. Using it on a roster body borrows
+Mars's atmosphere, and unlike Egan's `B_max ∝ P_sw^(1/2)` the paper offers **no rule for carrying it
+to another planet**.
 
 **Close-in caution.** The induced magnetosphere can disappear outright when the IMF
 turns nearly radial, and by extension under the extreme wind pressures of a close-in

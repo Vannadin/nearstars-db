@@ -44,6 +44,12 @@ would silently produce a wrong answer, say whether a gate catches it.**
 
 ---
 
+⚠ **#20 and #21 are one defect, not two.** The equation whose unit is misprinted (#21) is the same
+short form that catches the misprinted unit in the fitted equation (#20). A reader who trusts the
+printed units loses the only cross-check the paper supplies, and the two slips conceal each other. A
+defect that disables the check for another defect deserves its own line here, because the pattern is
+not additive.
+
 ## Two that are not paper defects, kept here because they read like one
 
 - **SeaFreeze `water2`** returns **negative density inside its own knot box** — the printed

@@ -112,10 +112,18 @@ reader will meet the same ambiguity.
 #21). The velocity is declared in km/s and the fit needs 100 km/s (130 km if taken as printed), and
 the check equation declares its pressure *"in units of nT"* where it must be nPa.
 
+⚠ **Say which file a count was taken from.** This note first reported the word counts of the arXiv
+version and later those of the published PDF, side by side, as though one contradicted the other. The
+two versions of the same paper genuinely differ — `ionopause` 0 against 1, `IMB` 8 against 5 — so a
+bare count is not a fact about "the paper" at all. Quote the count with its file, the way a number is
+quoted with its unit.
+
 ⚠ **State the agreement in the same quantity both times.** Egan's 847 km and Ramstad's 819 km are
 **altitudes**, 3.3 % apart; as planetocentric radii the same two numbers are 1.2499 and 1.2417,
 **0.66 %** apart. Nothing changed but the quantity, and the apparent agreement moved by a factor of
-five. Quote the altitude pair, since that is the form both papers print.
+five. Quote the altitude pair, since that is the form both papers print. ⚠ But the inequality runs on radii, so the
+error that matters to a verdict is the **0.66 %**, not the 3.3 % the citation shows. Both numbers are
+correct and they answer different questions.
 
 Across the wind range the paper studies, the subsolar IMB runs **1.42 R_p** at 0.031 nPa to **1.16
 R_p** at 9.8 nPa — a 110× pressure swing moving the boundary by about ±10 %.
@@ -157,6 +165,14 @@ body on our boards is hundreds of times above it. The "a weak field is worse tha
 therefore bears on the **induced candidates** — the bodies we would classify as unmagnetised anyway —
 and not on the strong-field ones, where the standoff clears any of these boundaries by orders of
 magnitude.
+
+## Housekeeping seen in passing, not fixed here
+
+`scripts/check-mirrors.sh` reports `README.md` out of step with `ko/README.md`. The English side was
+last touched by `b546e2a0` and the Korean by `2c04cd0a`, both on 2026-08-17 — it predates this work
+and belongs to whoever owns that page. Left alone rather than folded into a commit about
+magnetospheres. `planetary-magnetosphere-geometry-methodology.md` is also out of step, and that one is
+this branch's to fix.
 
 ## What follows for the branch
 
