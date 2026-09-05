@@ -58,6 +58,69 @@ it is the paper's own number and it is not in our document.
   function is used four times beyond the data it was fitted to. Edberg is what supports it out there —
   which makes Edberg load-bearing, not merely corroborating.
 
+## Second pass, 2026-09-06: the paper itself, and the verdict
+
+The PDF arrived (green OA), and five things in it change the picture. All quotations below were read
+out of the cached PDF here, not taken from a summary.
+
+- **The threshold has a number, and it is outside our band.** *"This transition occurs where the
+  magnetic stand-off crosses the unmagnetized induced magnetosphere boundary (**847 km**) (Trotignon
+  et al. 2006)."* At Mars that is `(3389.5 + 847) / 3389.5` = **1.250 R_p**. Our adopted `1.05–1.2 R_p`
+  does not contain it.
+- **The single word "ionopause" in the paper is a reference title** — *"Ionopause-like density
+  gradients in the Martian ionosphere"* — and even that title says *ionopause-**like***. The body text
+  uses IMB throughout.
+- **Moving to another star is a rule the paper prints and our document drops.** *"Because Bmax occurs
+  when the intrinsic magnetosphere reaches the induced magnetosphere, it will also scale with stellar
+  wind pressure as `Bmax ∝ Psw^(1/2)`."* And the other side of it: *"The induced magnetosphere
+  boundary has also been shown to depend weakly on dynamic pressure and extreme ultra-violet input,
+  but much less so than the intrinsic magnetosphere (Ramstad et al. 2017b)."*
+- **The tested field range is far below our roster.** *"The range of planetary magnetic fields runs
+  from unmagnetized to an equatorial surface dipole field of Bp = 150 nT, which corresponds to
+  approximately 1/400th of the Earths equatorial surface magnetic field."* Pandora's 75 µT is **500×**
+  the top of that range.
+- **The transition's location is resolved to 25 nT.** The runs are *"0, 10, 25, 50, 75, 100, 150 nT"*,
+  so `B_P = 50 nT` is a grid point as much as a result.
+
+⚠ **`B_P = 50 nT` and Tang's `Rm > 50` have nothing to do with each other.** One is a field strength
+in nanotesla, the other a dimensionless Reynolds number. The digits coincide; nothing else does. Both
+appear in this engine's notes, so it is written down here once.
+
+### Verdict: ㉮ — the surface is the IMB, and `1.05–1.2 R_p` is not it
+
+㉯ cannot be supported. The equation `ionopause = IMB` has **no held source** (Bertucci 2011 and
+Luhmann 1991 are both absent), and it is not merely unevidenced: Egan's own IMB sits at 1.250 R_p
+while the band derived from Venus ionopause altitudes stops at 1.2. The one number we can check falls
+outside the band, which is evidence against the equation rather than absence of evidence for it.
+
+㉰ is heavier than the case needs, because **the pressure dependence sits almost entirely on the side
+we compute**. `R_mp` carries `P_sw^(1/2)`; the IMB depends on pressure *"weakly … much less so than
+the intrinsic magnetosphere"*. So carrying the IMB altitude as roughly fixed while the standoff moves
+with the wind is the paper's own division, not our invention.
+
+What the branch should therefore do:
+
+1. **Compare against the IMB**, and stop attributing an `r_ionopause` to Egan — that word is not in
+   the paper's body at all.
+2. **Anchor the IMB altitude on Egan's 847 km (1.250 R_p at Mars)** as a *declared* value, and say in
+   the same breath that it is one body under one wind. ⚠ Trotignon+ 2006 is **not held**, so the
+   altitude is carried as *what Egan cites it for*, not as read.
+3. **Keep `1.05–1.2 R_p` in the document as what it is** — Venus ionopause altitudes, from an absent
+   Brace 1980 — and stop using it as this test's threshold. ⚠ It is also authored at the top: the
+   three Venus measurements convert to 1.0545 · 1.1157 · 1.1652, and **1.2 is in none of them**.
+4. **Carry `Bmax ∝ Psw^(1/2)` into the branch**, or the criterion is valid only at Mars under one wind.
+
+⚠ **One thing here is the owner's, not the engine's**: whether a single body's boundary altitude may
+stand in for every atmosphered body, or whether the branch should refuse until a second measured IMB
+exists. That is a `Choice` in C32's sense — two candidates, consequences measured — and it is left
+open rather than settled here.
+
+**And the crossover barely touches our roster.** Egan's regime tops out at 150 nT; every magnetised
+body on our boards is hundreds of times above it. The "a weak field is worse than none" finding
+therefore bears on the **induced candidates** — the bodies we would classify as unmagnetised anyway —
+and not on the strong-field ones, where the standoff clears any of these boundaries by orders of
+magnitude.
+
 ## What follows for the branch
 
 Three things, none of them decided here:
