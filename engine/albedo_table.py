@@ -68,7 +68,7 @@ _ROWS = (
 
 #: 표면 유형 → Bond 알베도 밴드. 전부 `chosen=False` 다.
 BOND_ALBEDO = {
-    name: Band(None, lo, hi, f"{DOC}@«{anchor}»", "analog")
+    name: Band(None, lo, hi, f"{DOC}@«{anchor}»", "analog", estimates="A_Bond")
     for name, lo, hi, _analog, anchor in _ROWS
 }
 ANALOG = {name: analog for name, _lo, _hi, analog, _a in _ROWS}
@@ -81,9 +81,9 @@ _Q_SENTENCE = ("The phase integral `q` (≈ 1 for a Lambert surface; ~0.3–0.5 
 #: `corners()` 로 걸을 대상이 지금은 하나뿐이고, 그 사실 자체가 아래에 기록된다.
 PHASE_INTEGRAL = {
     "dark back-scattering regolith": Band(None, 0.3, 0.5, f"{DOC}@«{_Q_SENTENCE}»", "analog",
-                                          bundle="scattering"),
+                                          bundle="scattering", estimates="A_Bond"),
     "bright icy or cloudy":          Band(None, 0.7, 1.3, f"{DOC}@«{_Q_SENTENCE}»", "analog",
-                                          bundle="scattering"),
+                                          bundle="scattering", estimates="A_Bond"),
 }
 
 #: q·p 의 짝. §5 는 p 를 표면 유형별이 아니라 천체별로 분광 추정하므로 표가 없다.

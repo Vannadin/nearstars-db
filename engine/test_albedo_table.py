@@ -58,6 +58,12 @@ def main() -> int:
     if not {"albedo_min", "albedo_max", "albedo_width_source"} <= set(out):
         fails.append("2: the filled point must carry the ends and where they are printed")
 
+    # 2b. all ten bands estimate the same quantity by two routes — one seat, not ten
+    every = list(BOND_ALBEDO.values()) + list(PHASE_INTEGRAL.values())
+    if {b.estimates for b in every} != {"A_Bond"}:
+        fails.append("2b: every row and every q family is one estimate of A_Bond; a band that does "
+                     "not say so gets counted as a separate decision the owner has to make")
+
     # 3. the axes disagree about which row matters most
     hottest = max(BOND_ALBEDO, key=lambda n: t_eq_ratio(BOND_ALBEDO[n]))
     starkest = max(BOND_ALBEDO, key=lambda n: contrast_ratio(BOND_ALBEDO[n]))
@@ -76,7 +82,7 @@ def main() -> int:
     if fails:
         return 1
     print(f"  [PASS] 알베도 표 — 여덟 행 전부 문서의 구간과 일치 · 고른 점 없음(미선택 라벨로 emit) · "
-          f"두 축 어긋남(T_eq 최대 {hottest}, 대비 최대 {starkest}) · q 는 두 계열만")
+          f"두 축 어긋남(T_eq 최대 {hottest}, 대비 최대 {starkest}) · q 는 두 계열만 · 열 밴드 전부 A_Bond 한 자리")
     return 0
 
 

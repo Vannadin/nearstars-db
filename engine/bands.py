@@ -69,6 +69,11 @@ CO₂ lets a run reach the same temperature on less H₂, so pairing both low en
 paper no more published than the crossed corners are. Such a band declares `pairing="unknown"` and
 `corners()` refuses it by name, rather than quietly walking the diagonal.
 
+**Alternatives are not seats.** `bundle` says *chosen together*; `estimates` says *chosen instead of
+each other*. The eight rows of the Bond-albedo table and the two phase-integral families all estimate
+`A_Bond` — the document reaches it by an analog table **or** by `q·p` — so they are ten options on one
+seat, not ten seats. Counting them as ten would show the owner the same quantity to decide twice.
+
 **Bundled widths are chosen whole.** `A_Bond = q · p` ties the Bond-albedo width to the phase-integral
 width; multiplying them as if independent invents a spread neither source supports. The greenhouse
 forcing is worse — CO₂ 1.3–4 bar, H₂ 5–20 %, N₂ 2–3× are a published *combination grid*, and splitting
@@ -108,6 +113,8 @@ class Band:
     bundle: str | None = None       # None = independent; a name = chosen whole with its siblings
     floor_grade: str | None = None  # a floor can be weaker than the value it bounds
     pairing: str = "in step"        # "in step" | "unknown" — is it published which end goes with which
+    estimates: str | None = None    # the quantity this band is ONE estimate of; siblings naming the
+                                    # same quantity are alternatives, and picking two double-counts
     value_origin: str = "chosen"    # "printed" (the document prints the centre) | "chosen" (someone picked)
     mean: str = "arithmetic"        # "arithmetic" | "geometric" — how an unchosen middle is filled
 

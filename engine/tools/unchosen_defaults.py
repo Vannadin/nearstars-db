@@ -54,12 +54,30 @@ def main() -> int:
     shipping = [r for r in rows if r[2].pairing != "unknown"]
     whole = [r for r in rows if r[2].pairing == "unknown"]
 
-    print(f"미선택 기본값이 나가고 있는 자리 — 밴드 {total}건 중 {len(shipping)}건")
-    for mod_name, path, band in shipping:
+    # 같은 양을 추정하는 밴드들은 **한 자리의 여러 옵션**이다. 따로 세면 오너는 같은 양을
+    # 두 번 고르는 것처럼 보게 된다 — `estimates` 가 그 구별을 들고 있다.
+    alternatives: dict[str, list] = {}
+    seats: list = []
+    for row in shipping:
+        key = row[2].estimates
+        (alternatives.setdefault(key, []) if key else seats).append(row)
+
+    n_seats = len(seats) + len(alternatives)
+    print(f"미선택 자리 {n_seats}개 — 밴드 {total}건 중 고른 점이 없는 것 {len(shipping)}건")
+
+    def _line(mod_name, path, band, indent="  "):
         mid = band.middle()
         mid_s = f"{mid:.4g}" if mid is not None else "—"
-        print(f"  {mod_name}.{path}")
-        print(f"      {band.low}–{band.high} → {mid_s} ({band.mean}) · {band.width_source[:78]}")
+        print(f"{indent}{mod_name}.{path}")
+        print(f"{indent}    {band.low}–{band.high} → {mid_s} ({band.mean}) · {band.width_source[:74]}")
+
+    for quantity, opts in alternatives.items():
+        print(f"\n  자리 «{quantity}» — 옵션 {len(opts)}개 중 **하나**를 고르는 자리다.")
+        print("  같은 양의 서로 다른 추정이라 여러 개를 고르는 게 아니다.")
+        for row in opts:
+            _line(*row, indent="    ")
+    for row in seats:
+        _line(*row)
 
     if whole:
         print(f"\n중간값을 채우지 않는 자리 {len(whole)}건 — 짝짓기가 인쇄 안 된 묶음의 구성원이다.")
@@ -69,7 +87,8 @@ def main() -> int:
     if not shipping and not whole:
         print("  없음 — 모든 밴드가 고른 점을 가지고 있다.")
     else:
-        print("\n각 줄은 오너가 아직 고르지 않은 한 자리다. 고르면 그 줄이 사라지고 Collapse 가 남는다.")
+        print("\n자리 하나를 고르면 그 자리 전체가 목록에서 사라지고 Collapse 하나가 남는다 — 옵션마다가")
+        print("아니라 자리마다다. 위의 «…» 묶음은 옵션 목록이지 결정 목록이 아니다.")
     return 0
 
 
