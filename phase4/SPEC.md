@@ -322,6 +322,14 @@ decisions:
       superseded, because `science_biomes` *is* what the row decides, so the prose has to be
       about it. Everything else engine-side (RB difficulty levels, `ScienceValues`, SOI
       tuning, why Poles is geographic rather than seasonal) still belongs in `evidence`.
+  - **When the value and the narrative disagree, the value is what is right** (owner, 2026-09-05).
+    The narrative follows it by the **smallest edit that removes the disagreement** — the one sentence
+    that carries it, and no more. Approved prose is frozen against being rewritten, not against being
+    corrected; leaving a sentence that contradicts the row's own value is the worse breach, because a
+    reader takes the story and not the field. Record what changed and why in `note`/`evidence` with the
+    date, never in the narrative (dates and decision history are excluded from it above). First case:
+    Dante's magnetic row, where a schema migration moved the subject of "only an induced field" from Io
+    onto Dante and the prose then claimed a field the board had never judged.
   - **Never dress up what is definitional for the body class** (owner, 2026-08-04).
     "There is no surface to stand on" for a gas planet, "it has no air" for an airless
     moon, "it is far from its star" for an outer body: the reader already knows from
