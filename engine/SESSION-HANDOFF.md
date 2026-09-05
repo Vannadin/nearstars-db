@@ -735,18 +735,19 @@ of this file: that sentence is about the *request* list (what has been asked of 
 mixed them. Removed from here because held or withdrawn: `2020ApJ...903L..37N` Nimmo & Primack (held and
 consumed, Briefs 44/57); Karato & Wu, Sclater+ and Davies are *not* removed — other notes say they came
 off the *request* list (paywall, withdrawn), which is consistent with their staying unheld. Still not held:
-`2001E&PSL.185...49A` Allègre & Manhès · `2013GGG....14.4608D` Davies · `1980RvGSP..18..269S` Sclater+
+`2001E&PSL.185...49A` Allègre & Manhès ⚠ **held since 2026-09-04, corrected 09-05** (cached as `2001E_PSL.185...49A.pdf` — the `&`→`_` name) · `2013GGG....14.4608D` Davies ⚠ **held since 2026-09-04, corrected 09-05** · `1980RvGSP..18..269S` Sclater+
 (both cited by our own methodology) · `2020E&PSL.53416080T` Thompson+ · `2006JGRB..111.6209S` Seagle+ (Fe₃S)
 · `1993Sci...260..771K` Karato & Wu (request withdrawn, paywall) · `2019CRGeo.351..154W` Wagle+ ·
 `2012Natur.485..355P` Pozzo+ (request withdrawn — the recipe never computes σ, item 2; free arXiv route
 `1203.4970` exists — **not fetched, free is not needed**, C5) ·
 Solomatov 1995 (given up 15:18, paywall) · Fei+ 2000 (ADS candidate `2000AmMin..85.1830F` — ⚠ confirm against
 Mori+ 2017's reference list before use) · Sata+ 2010 ·
-**Tier 1 (09-04): `2011Icar..213...12D` Driscoll & Olson 2011** (c = 49, paywalled) — *RM22 delegates the
+**Tier 1 (09-04): `2011Icar..213...12D` Driscoll & Olson 2011** (c = 49, paywalled — ⚠ **held since 2026-09-04 09:17, corrected 09-05**: the paywall statement is about the publisher, and the paper itself is in the cache with its PROVENANCE) — *RM22 delegates the
 definition of `q_conv` and `γ_d = 0.2` to this paper and derives neither in its own text; two of C16's
 unresolved inputs sit behind this one paper. Tang+ 2025 does not unlock it (0 citations of it there).*
 Tier 2 (09-04): `2009Natur.457..167C` Christensen, Holzwarth & Reiners 2009 (c = 356; cited by our
-`planetary-dynamo-scaling.md`, not held) · Christensen 2010, SSRv 152, 565 (Tang+ 2025's U scaling; not
+`planetary-dynamo-scaling.md` — ⚠ **held since 2026-09-04 09:21, corrected 09-05**; the "not held"
+was true when the tier list was written and stopped being true the same morning) · Christensen 2010, SSRv 152, 565 (Tang+ 2025's U scaling; not
 needed until C16/C23 is actually built). Obtained 09-04 by the owner: **Tang+ 2025** `2025ApJ...989...28T`
 (free arXiv 2410.21584; PROVENANCE) — C18's closure and C23's listing rest on it.
 **Removed 09-04 — held after all: `2011ApJ...733....2N` Nettelmann+ 2011 is `docs/phase3/_papers/1010.0277.md`
