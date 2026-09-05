@@ -32,8 +32,12 @@ sentence is:
 > increasing the planetary magnetic field begins to inhibit ion escape.
 
 and, on the same transition, *"the magnetic standoff reaches the **terminator IMB**"*. The word
-**ionopause does not occur in the paper at all** — 0 occurrences against 13 for the induced
-magnetosphere boundary. The document elsewhere joins the two with a slash, *"the **ionopause /
+**ionopause does not occur in the arXiv version at all** — 0 occurrences, against 13 for the two
+spellings of the induced magnetosphere boundary counted together. ⚠ Corrected 2026-09-06: that 13 was
+`IMB` (8) and `induced magnetosphere boundary` (6) summed in one grep and reported as if it were one
+count, and the two figures below are from the **published PDF**, which reads 1 and 5. Neither number
+was wrong about its own file; presenting a combined count as a single one, and then a second file's
+count beside it without saying so, is what made the note contradict itself. The document elsewhere joins the two with a slash, *"the **ionopause /
 induced magnetosphere boundary**"*, which is where the substitution happens; the authority for that
 equation would be Bertucci 2011 or Luhmann 1991, and **neither is held**.
 
@@ -54,7 +58,10 @@ it is the paper's own number and it is not in our document.
   says "found valid to at least 20 R_V unchanged", which is one notch firmer than "still seems to be
   valid"; Edberg notes "a considerable spread in the location of the crossings".
 - ⚠ And a piece of context the document does not carry: the Martinecz, Whittaker and Signoles models
-  *"were all confined to within 5 R_V, i.e., the orbital limit of Venus Express."* So the shape
+  *"were all confined to within 5 R_V, i.e., the orbital limit of Venus Express."* ⚠ The balance to
+  that: Edberg prints the agreement as numbers, not only as a verdict — slope −0.097 against −0.101,
+  intercept 1.10 against 1.13 R_V, and the IMB position moving only 0.1 R_V out at 20 R_V. Few
+  crossings, but the conclusion is quantitative. So the shape
   function is used four times beyond the data it was fitted to. Edberg is what supports it out there —
   which makes Edberg load-bearing, not merely corroborating.
 
@@ -74,7 +81,10 @@ out of the cached PDF here, not taken from a summary.
   when the intrinsic magnetosphere reaches the induced magnetosphere, it will also scale with stellar
   wind pressure as `Bmax ∝ Psw^(1/2)`."* And the other side of it: *"The induced magnetosphere
   boundary has also been shown to depend weakly on dynamic pressure and extreme ultra-violet input,
-  but much less so than the intrinsic magnetosphere (Ramstad et al. 2017b)."*
+  but much less so than the intrinsic magnetosphere (Ramstad et al. **2017a**)."* ⚠ This note first
+  wrote 2017b inside those quotation marks. Both papers exist and Egan cites both, so it is not a
+  typo but the wrong one of two — and 2017a is the one we now hold, so the error would have sent a
+  reader looking for a paper we lack instead of opening the one on the shelf.
 - **The tested field range is far below our roster.** *"The range of planetary magnetic fields runs
   from unmagnetized to an equatorial surface dipole field of Bp = 150 nT, which corresponds to
   approximately 1/400th of the Earths equatorial surface magnetic field."* Pandora's 75 µT is **500×**
@@ -85,6 +95,30 @@ out of the cached PDF here, not taken from a summary.
 ⚠ **`B_P = 50 nT` and Tang's `Rm > 50` have nothing to do with each other.** One is a field strength
 in nanotesla, the other a dimensionless Reynolds number. The digits coincide; nothing else does. Both
 appear in this engine's notes, so it is written down here once.
+
+### The boundary is a published function of the wind, and it reproduces
+
+Ramstad+ 2017a arrived and was worked through end to end rather than taken on report. Its IMB is a
+double conic whose only wind-dependent parameter is `L_n = a·n^b·(v/100)^c + d` (Table 2: 0.59,
+−0.30, −0.81, 0.49) with `ε_n 0.95 · x_Fn 1.64 · ε_d 0.57` fixed; `L_d` and `x_Fd` are *not* printed
+and come through eqs (7), (8), (5), (6), and the subsolar point is eq (9) `r_SD = x_Fd + L_d/(1+ε_d)`.
+
+Carried through, `(2 cm⁻³, 400 km/s)` gives **`r_SD = 1.2417 R_M`**, reproducing the relayed figure
+exactly. ⚠ Eq (6) admits two readings from the text, and only `x_Fd = (ε_d L_d + ξ)/(1 − ε_d²)` works
+— the other gives 0.887 R_M, inside the planet's own atmosphere. Worth writing down, because the next
+reader will meet the same ambiguity.
+
+⚠ **Two printed-unit defects in that equation block**, both registered in `paper-defects.md` (#20,
+#21). The velocity is declared in km/s and the fit needs 100 km/s (130 km if taken as printed), and
+the check equation declares its pressure *"in units of nT"* where it must be nPa.
+
+⚠ **State the agreement in the same quantity both times.** Egan's 847 km and Ramstad's 819 km are
+**altitudes**, 3.3 % apart; as planetocentric radii the same two numbers are 1.2499 and 1.2417,
+**0.66 %** apart. Nothing changed but the quantity, and the apparent agreement moved by a factor of
+five. Quote the altitude pair, since that is the form both papers print.
+
+Across the wind range the paper studies, the subsolar IMB runs **1.42 R_p** at 0.031 nPa to **1.16
+R_p** at 9.8 nPa — a 110× pressure swing moving the boundary by about ±10 %.
 
 ### Verdict: ㉮ — the surface is the IMB, and `1.05–1.2 R_p` is not it
 
@@ -103,8 +137,11 @@ What the branch should therefore do:
 1. **Compare against the IMB**, and stop attributing an `r_ionopause` to Egan — that word is not in
    the paper's body at all.
 2. **Anchor the IMB altitude on Egan's 847 km (1.250 R_p at Mars)** as a *declared* value, and say in
-   the same breath that it is one body under one wind. ⚠ Trotignon+ 2006 is **not held**, so the
-   altitude is carried as *what Egan cites it for*, not as read.
+   the same breath that it is one body under one wind. ⚠ **Superseded 2026-09-06**: this said the
+   altitude was second-hand because Trotignon+ 2006 is not held. Ramstad+ 2017a, which we do hold,
+   puts the nominal subsolar IMB at **1.2417 R_p (819 km)** — within **3.3 %** of Egan's 847 km. It is
+   not a re-quotation any more; one held paper independently reproduces it, and gives it as a function
+   of the wind rather than a constant.
 3. **Keep `1.05–1.2 R_p` in the document as what it is** — Venus ionopause altitudes, from an absent
    Brace 1980 — and stop using it as this test's threshold. ⚠ It is also authored at the top: the
    three Venus measurements convert to 1.0545 · 1.1157 · 1.1652, and **1.2 is in none of them**.
