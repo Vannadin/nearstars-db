@@ -77,9 +77,10 @@ built: rock (Monteux eqs 10–13, A/F seeded by `differentiated`) to **140 GPa**
 seam moves from 20 to ~140 GPa and is a **material-kind change** (rock → pure MgSiO₃),
 not a composition step; Deng bdg 140–180 (printed triple point; 160–180 is
 extrapolation past Table I), ppv 180–200, Fei upper 200–500, refuse above. The 140
-boundary is labelled range-unconfirmed (Andrault+ 2011 [`2011E&PSL.304..251A`](https://ui.adsabs.harvard.edu/abs/2011E&PSL.304..251A) obtained 2026-09-05 —
-whether one paper closes this label, or it needs Herzberg & Zhang 1996 too, is with the audit seat;
-the label is untouched until that verdict; Monteux prints no
+boundary's **range half is closed** (Andrault+ 2011 [`2011E&PSL.304..251A`](https://ui.adsabs.harvard.edu/abs/2011E&PSL.304..251A), read 2026-09-05:
+the paper prints its curves "at 30 to 140 GPa", so the seam sits on the top edge of the measured
+range, and this half never needed Herzberg & Zhang). The **20 GPa junction half stays open** — its
+low-pressure branch is Herzberg's, still unobtained. Monteux prints no
 number, but its own model exercises the curves at 140 GPa — chosen over Earth-CMB 136
 for that reason). The pure-mineral chain above 140 is read as an **upper bound on the
 rock solidus** (above it: definitely molten; below it: indeterminate, and the verdict

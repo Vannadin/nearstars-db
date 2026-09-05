@@ -45,10 +45,18 @@ C_p/C′_p in-window. `interior.solve` returns `silicate_melt_state` /
   could not get it, and it is one of the only two papers this engine still wants. Whether the one we
   now hold closes this on its own, or the pair was needed, is a verdict the audit seat is forming;
   **this note claims neither**. Pinned in the gate as transcription checks.
-- **The 140 GPa seam boundary is range-unconfirmed.** Monteux prints no number for
-  Andrault's fitted range ("up to … Earth's lowermost mantle conditions"); 140 GPa
-  chosen because Monteux's own model exercises the curves there ("melt fraction ≈ 40 %
-  at P = 140 GPa"); the alternative was Earth-CMB 136 GPa.
+- **The 140 GPa seam boundary: the range half is closed, the composition half is not.**
+  Monteux prints no number for Andrault's fitted range ("up to … Earth's lowermost mantle
+  conditions") and 140 GPa was chosen because Monteux's own model exercises the curves there
+  ("melt fraction ≈ 40 % at P = 140 GPa"); the alternative was Earth-CMB 136 GPa.
+  **Closed 2026-09-05 by reading Andrault directly** [`2011E&PSL.304..251A`](https://ui.adsabs.harvard.edu/abs/2011E&PSL.304..251A): the paper
+  prints its melting curves *"at 30 to 140 GPa"*, so our seam is not outside the measured range —
+  it is exactly its top edge. This half needed only Andrault, and Herzberg & Zhang 1996 was never
+  required for it.
+  ⚠ **What stays open is the 20 GPa junction**, and that one does need the paper we do not hold:
+  the low-pressure branch is Herzberg & Zhang's, so "who constructed the agreement at the junction"
+  cannot be answered from one side. See also the registered 20–24 GPa window in `eos.py` — Andrault
+  calls his own T₀ *"virtual"* because that mineral assemblage is only stable above 24 GPa.
 - **The pure-mineral chain above 140 GPa is an upper bound on the rock solidus**
   (refractory pure MgSiO₃ melts above multi-component rock): above it — definitely at
   least partially molten; below it — indeterminate, and the verdict labels the
