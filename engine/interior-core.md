@@ -3017,6 +3017,40 @@ item is closed.
 anyone registers a real `orbit_elements` recipe the gate goes red and the placeholder must be removed
 with the tests written against it.
 
+### What building `orbit_elements` will actually involve — measured, not scoped
+
+The obvious question is whether the node owes eccentricity or more than that, and the files answer it
+without anyone deciding. **The node already exists** — `chain.yaml:96`, with **seven `requires` edges**
+to `body_figure`, `cassini_state`, `tidal_locking`, `tidal_heating`, `dynamo_rocky`, `t_eq_stellar`
+and `moon_energy_budget`, plus an `influences` and an `excludes`. What is missing is the recipe, not
+the node. `bindings.yaml` lists **ten owed values**: the six elements, plus `orbital_period`,
+`hill_radius` and `satellite_stability_limit` (all derived) and `barycentric_split`.
+
+⚠ **One of the ten cannot be supplied and the file says so.** `barycentric_split`'s own note reads
+*"binary-epoch-pipeline 이 근거인데 chain 에는 노드가 없다"* — the procedure has a methodology document
+and **no node in the chain**. That is not a decision waiting to be made; it is a named hole, and it
+should be visible before anyone starts rather than discovered at the eighth value.
+
+⚠ **And the same quantity is called three things at three layers.** This is C37's class, except that
+C37 had one wrong name while here every name is live and in use:
+
+| layer | name |
+|---|---|
+| `chain.yaml` edge `via` | `a`, `e`, `n`, `i`, `period` |
+| `bindings.yaml` | `semi_major_axis_au`, `eccentricity`, `inclination_deg`, `orbital_period` |
+| body files | `semi_major_axis_km`, `eccentricity_forced` |
+
+`tidal_locking` and `tidal_heating` read `semi_major_axis_km`; `body_class` reads
+`semi_major_axis_au`. **Nothing bites today** — the two tidal recipes take the body file's key directly
+and bypass the binding, and `body_class` falls back to a reference value when the `_au` name is absent,
+so `check_via --gate` passes. **But `hill_radius` and `orbital_period` both name `semi_major_axis_au` in
+their `derived_from`**, so the first real `orbit_elements` meets it head-on.
+
+⚠ **Two things here are the owner's, not the engine's**: whether to supply the four elements no recipe
+reads today (`inclination_deg`, `longitude_ascending_node`, `argument_periapsis`, `mean_anomaly` — read
+in **zero** places), and which spelling of the semi-major axis is canonical, or whether the conversion
+gets one named home the way `q_over_k2_from_declaration` did in C39.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
