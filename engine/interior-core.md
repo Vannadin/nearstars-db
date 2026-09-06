@@ -84,6 +84,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **next, owner-set 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled three ways | **listed 2026-09-06, one-line bug** | `dynamo_rocky` reads `rotation_period`, bodies declare `rotation_period_h`, `chain.yaml` labels the output `rotation_period`. The sibling `dynamo.py` already reads the right one, so there is no schema question — only the fix, and the graph label |
 | **C38** | `tidal_locking` stands on two tidal models at once | **listed 2026-09-06** | `τ_lock` is constant-phase-lag (Goldreich & Soter, per Barnes §2.1); `ω_eq/n` is Hut 1981, which Barnes cites for constant-**time**-lag. They agree only under an assumption neither our document nor our code states, and Hut is held as an unreadable scan |
+| **C40** | a fitted value has no seat in the value vocabulary, so it travels as a bare point | **listed 2026-09-06** | C32 gave three words for where a number came from — printed, chosen, engine-filled — and a value solved backwards from a wanted output is none of them. Observed in C39: wiring Dante's declared `k₂/Q` turned `τ` from a band into a point with no width anywhere. Every `tidal_heating` declaration is in the same position |
 | **C39** | the same `Q/k₂` is a per-body declaration in one node and a class band in another | **closed 2026-09-06** | Unified: **a declaration wins, the class band is the fallback**, inverted at one named place (`q_over_k2_from_declaration`) and named in the output. No roster verdict moved — Dante and Hades read 1:1 before and after, the a⁶ gate deciding them by nine orders of magnitude. The class band still fails to describe them, which is now C39's finding rather than its blocker |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
@@ -2854,8 +2855,10 @@ and it was deciding a verdict on its own. Holding everything else fixed and movi
 | 1500 | 6.89 h | ⚠ excluded |
 | 2000 | 9.18 h | ⚠ excluded |
 
-A 50 % move in a number nobody has measured for our bodies flips the answer. Every body that declares
-its own `k₂/Q` is one body that no longer rests on it.
+**The 5 h default is excluded if the ceiling is under 10 % higher than the printed one** — and the
+document prints `~10³`, with the tilde, so no tighter statement is available. A number nobody has
+measured for our bodies decides the answer, and it decides it within its own printing error. Every
+body that declares its own `k₂/Q` is one body that no longer rests on it.
 
 **What moved on the boards: nothing.** Measured before and after on the two roster bodies that
 declare a tidal quality, at the board's own mass and radius:
@@ -2870,9 +2873,53 @@ the declaration moves `τ` and moves no verdict. **That is the finding, not a nu
 before-and-after was run precisely because a flip would have moved a board value the owner has already
 approved, and it is recorded so the next person does not have to re-run it to find out.
 
+⚠ **What the same table shows and the verdict column hides.** Read the two `τ` columns again:
+
+    Dante   0.0315 – 0.315 yr   →   0.0203 yr
+    Hades   0.288  – 2.88  yr   →   2.88   yr
+
+**Wiring the declaration turned `τ` from a band into a point, and that point's uncertainty is now
+carried nowhere.** Physically it follows — a declaration is one number, so the result is one number —
+but Dante's 0.0155 is not a measurement: the board says in its own words that it is *"fitted rather
+than predicted"*. While the class band ran, not knowing showed up as a width. It no longer does. **That
+is not a cost of this change so much as a thing this change made visible**, and it is C40.
+
 ⚠ **Wiring `k₂` from the interior solver is only half a route.** `k₂` follows from structure, but `Q`
 is rheology, and Barnes writes that the *"tidal dissipation rate is poorly constrained"*. And the
 solver computes neither rigidity nor `k₂` today. A separate item, not this one.
+
+### C40 — a fitted value has no seat in the vocabulary — **listed 2026-09-06, not started**
+
+C32 gave three words for where an emitted number came from: **printed** (a document prints it),
+**chosen** (a person picked it from a band), **unchosen** (the engine filled a middle and said so). A
+value **fitted backwards from a wanted output** is none of the three, and the boards are full of them.
+
+The clearest is Dante's `k₂/Q`, because the board does not hide it: *"The tidal term needs k₂/Q ≈
+0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted."* The number exists because
+a chosen tidal-heating flux needed it, so asking what its uncertainty is means asking how tightly that
+target was chosen — which nobody has written down.
+
+**C39 made this visible rather than creating it.** Wiring the declaration into `tidal_locking` turned
+`τ` from `0.0315–0.315 yr` into `0.0203 yr` for Dante, and from `0.288–2.88 yr` into `2.88 yr` for
+Hades. Before, not knowing was a width; now it is nothing. `tidal_heating` reads two declarations of
+this kind (`k2_over_q` and `eccentricity_forced`) and its own header already calls them declarations,
+so every body carrying one has the same hole.
+
+⚠ **Two different things are called "fitted", and merging them would be the first mistake.**
+
+- **Fitted to our own output** — Dante's `k₂/Q`, Hades's `1e-3`. No independent existence; the residual
+  is whatever the target was.
+- **Fitted in the literature, then clamped by us** — `pause_alpha = 0.42`, Jupiter's fitted ceiling
+  from Rutala 2025, held rather than extrapolated because the planet sits outside the calibration
+  range. Here a published fit quality *does* exist, and the clamp is a recorded owner decision.
+
+These need different treatment, and this item does not yet say what either one is.
+
+⚠ **What this item is not asking for.** It is not asking anyone to give a fitted value a band. Choosing
+a width for one means deciding what the fit's residual is, which nobody has done and which is the
+owner's call, not the engine's — the same line drawn three times already today. What it asks for first
+is the **word**: somewhere to record that a number was solved backwards, so a reader can tell it apart
+from a measurement at a glance instead of following a citation to find out.
 
 ## What closing all of these does not do
 

@@ -341,10 +341,22 @@ lost between the nodes.
 **The reason is the ceiling, not the tidiness.** §8's consistency window is built at both ends of the
 class band, and the *ceiling* is the uncertain one. Moving only it — the table in
 [`interior-core.md`](interior-core.md) under C39 — the window floor climbs 2.30 → 4.60 → 6.89 → 9.18 h
-across ceilings 500 → 2000, and this code's 5 h default survives only up to a ceiling of about 1086 —
-8.6 % above the one the document prints.
-A 50 % move in a number nobody has measured for our bodies decides the answer. Every body that
-declares its own `k₂/Q` is one body whose verdict no longer rests on that ceiling.
+across ceilings 500 → 2000. **The 5 h default is excluded if the ceiling is under 10 % higher than the
+one the document prints**, and no tighter statement than that is available from this document, because
+what it prints is `~10³` — with the tilde. A number nobody has measured for our bodies decides the
+answer, and it decides it within its own printing error. Every body that declares its own `k₂/Q` is one
+body whose verdict no longer rests on that ceiling.
+
+⚠ **Where to stop measuring, which is the part worth keeping.** Three seats bisected that crossing
+point and got 1086, 1087.4 and 1089 — a spread in the third digit. It is not a method disagreement;
+all three used bisection, and the spread is the input constants each stood on (this one used the
+engine's `G` and `M_EARTH_KG` with the test's 5.791×10⁷ km for Mercury). ⚠ And the floor is **not**
+exactly proportional to the ceiling: the floor/ceiling ratio drifts 4.6040 → 4.5890 across ceilings
+500 → 2000, which the `n` term makes real, and which is why extrapolating from one bracket is the
+wrong method here. **But that drift is 0.3 %, smaller than the third-digit spread we were comparing** —
+so the method argument was already outside the precision the `~` allows. Recorded so the next person
+does not re-run it: the answer to "how much higher?" is *under 10 %*, and there is no fourth digit to
+find.
 
 **No board verdict moved**, which was the thing to check before touching anything: Dante and Hades are
 the only roster bodies carrying a declaration, and both read 1:1 before and after. Their τ is

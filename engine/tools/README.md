@@ -701,6 +701,9 @@ And the teeth are elsewhere: run the inversion on **every body whose present spi
 whether the bands overlap at the same end of `Q/k₂`. That constrains without any slow-side limit, and
 it can actually fail.
 
+→ The same disease with a different organ: *"What converged was my arithmetic, not my input"* below,
+where the machine chose the **precision** rather than the value.
+
 ## An absence claim about the literature is a search result, not an inference (2026-09-06)
 
 Venus's moment of inertia was recorded here as *"not measured — no orbiter has determined it well"*.
@@ -728,3 +731,42 @@ at 4.597 h because a different body sets it.
 Using the measured 0.337 rather than the assumed 0.33 moves the ceiling 17.98 → **18.36 h**. The
 verdict does not change and the margin at the floor is untouched at +8.8 %, which is the point: the
 correction was worth making for the record's honesty, not because it rescued a conclusion.
+
+## What converged was my arithmetic, not my input (2026-09-06)
+
+← The same family as *"The wanted conclusion picking the constant"* above: in both, a number's
+authority came from a machine rather than from evidence. There it chose the **value**; here it chose
+the **number of digits**, which is why the check is a different one — *did I look at where the input's
+precision ends?* — and why it is filed separately.
+
+Asked how much higher the `Q/k₂` ceiling would have to be to exclude this code's default `ω₀`, this
+seat bisected until the answer stopped moving and reported **1087.4**. Five significant figures.
+
+The constant it is a fraction of is written, in our own source, as `~10³`. **With the tilde.** The
+document does not claim that boundary to one significant figure, so a crossing point expressed to five
+is not a measurement of anything — the answer inherits the input's precision, and nobody had looked at
+what that was.
+
+**What made it look sound**: the bisection genuinely converged, to a floor of 5.000000 h. But a
+bisection converges on the function it was handed, and the uncertainty was never in the function. **The
+convergence was of the arithmetic, not of the input.**
+
+⚠ **The confirming evidence pointed the wrong way, and that is the part to remember.** Three seats
+computed this crossing and got **1086, 1087.4, 1089** — and the near-agreement read as corroboration.
+It was the opposite: all three used bisection, so the spread is nothing but the input constants each
+stood on, and three seats agreeing to three digits on differing inputs is a **measurement of how little
+the third digit means**. Agreement in a digit that no input supports is not agreement.
+
+There is even a real effect here, and it also does not survive the check: the window floor is **not**
+exactly proportional to the ceiling (floor/ceiling drifts 4.6040 → 4.5890 across ceilings 500 → 2000,
+which the `n` term makes real), so extrapolating from a bracket is genuinely the wrong method. ⚠ But
+that drift is **0.3 %, smaller than the third-digit spread being argued over** — so the methodological
+point, correct in itself, was already outside the precision the tilde allows. **Being right about the
+method does not license a digit the input cannot support.**
+
+**What is written instead**: *the 5 h default is excluded if the ceiling is under 10 % higher than the
+printed one, and the printed one carries a tilde.* One digit, and it says the same thing.
+
+**The check, before quoting a derived number**: find the *least* precise input it stands on and count
+its significant figures. A tilde in a source is that count already — it is the source saying it will
+not be read more closely than this.
