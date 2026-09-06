@@ -962,3 +962,33 @@ pairing worth having.
 
 ⚠ **And getting the attribution right matters for the same reason the errors do.** A record that says
 the directing seat caught three and made none teaches the next reader to take briefs at face value.
+
+## A unit suffix and a frame difference look identical (2026-09-07)
+
+C37 was `rotation_period` against `rotation_period_h`: one quantity, two spellings, a genuine
+one-line bug. `semi_major_axis_km` against `semi_major_axis_au` has the same shape — same stem, a unit
+suffix, two recipes reading one and one reading the other — and the same repair would have written a
+wrong number into the engine.
+
+They are **not one quantity in two units**. A moon's `semi_major_axis_km` is planetocentric; the
+`semi_major_axis_au` that `body_class` consumes is the distance from the star, because its only
+consumer asks where in the protoplanetary disc a core grew. Converting kilometres to AU produces a
+number of the right dimension in the wrong frame, and Pandora's pebble-isolation boundary flips
+BELOW→ABOVE on it.
+
+⚠ **What makes this one worth its own entry**: the surface did not merely look like a generic naming
+bug, **it looked like our own previous fix.** C37 was recent, correct, and shaped exactly like this,
+which supplied both the pattern and the confidence. Matching against a repair you yourself made a day
+earlier feels like experience rather than like guessing.
+
+**The check that separates them**: for two names of an apparently identical quantity, ask what each
+consumer *does* with the value, not what the names say. `pebble_isolation_mass` reads its argument as
+a heliocentric distance; `despin_timescale_yr` reads its argument as an orbit about the perturber it
+was handed. Two readings, so two quantities — visible in the consumers and in nothing else.
+
+⚠ **A second thing in the same edit, and it is the same disease as the entry above.** The citations to
+`body_class.py` were first written as `` `body_class.py`@«…» `` — a backtick after the filename rather
+than around the whole citation. `check_refs` reported **406 anchors before the edit and 406 after**:
+the new citations were not wrong, they were **invisible**, and the gate would have stayed green over
+them. Caught by comparing the count across the change rather than by reading the `[PASS]` line. **A
+format that is not parsed and a format that is correct produce the same green.**
