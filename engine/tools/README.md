@@ -327,3 +327,28 @@ was searching for a shape that cannot occur. `^660:` gives the 15-of-28.
 The rule, then, in the narrowest form that holds: **when a file's prose can quote its own schema, grep
 is a search tool and not an oracle.** Parse the structure. And when a command is truncated for
 display, the truncation is part of the evidence — `| head` is not a neutral rendering.
+
+## `pgrep -f "scripts/check.sh"` counts other seats too (2026-09-06)
+
+The habit is: before launching a gate, run `pgrep -f "scripts/check.sh"` and treat **3 or more** as
+"another gate is already running", because the pattern matches the parent and its child. On 2026-09-06
+it returned 5, and the extra three belonged to **another seat's timing experiment in a different
+session's scratchpad** — a `zsh` whose command line happened to contain the string.
+
+`-f` matches the whole command line, so it finds anything mentioning the script, in any worktree, in
+any session. The count answers "how many processes mention this path", which is not the question.
+
+What the question actually is: **is another gate running in _this_ tree?** Answer it by group and
+working directory:
+
+    for p in $(pgrep -f "scripts/check.sh"); do
+      printf "%s %s %s\n" "$p" "$(ps -o pgid= -p $p | tr -d ' ')" \
+        "$(lsof -a -p $p -d cwd 2>/dev/null | tail -1 | awk '{print $NF}')"
+    done
+
+Rows sharing a pgid are one gate; the `cwd` says whose tree it is. Two gates in two different
+worktrees are independent for correctness and only compete for CPU; two in the same tree are the thing
+to avoid, since `check.sh` reads the working tree.
+
+Same family as the rest of this file: a matcher was taken for a measurement. The pattern was never
+wrong — it answered exactly what it was asked, and the question was the wrong one.
