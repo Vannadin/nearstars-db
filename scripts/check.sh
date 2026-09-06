@@ -6,7 +6,29 @@ fail=0
 # 게이트 자신만 찍는 시작/종료선. 테스트 파일들이 찍는 "모두 통과" 와 겹칠 수 없는 형식이고,
 # 종료선 없이는 "무엇이 언제 무슨 트리 위에서 끝났는지" 를 말할 수 없다 (2026-09-04, 두 좌석에서 같은 오독).
 gate_sha=$(git rev-parse --short HEAD)
-echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T)"
+
+# ── 층: 무엇이 바뀌었는지가 정한다. 사람이 "이번엔 문서만이야" 라고 판단하지 않는다 ──
+# `--wiring` 은 물리 시험(약 24 분)을 건너뛴다. 언제 그래도 되는지는 바뀐 경로 목록이 답한다.
+# 기본값은 전부 도는 것이다. 애매하면 전부 돈다 — 틀렸을 때 잃는 게 시간뿐인 쪽으로 기운다.
+lane="full"
+if [ "${1:-}" = "--wiring" ]; then
+  # 비교 대상은 upstream. 없으면 판단을 포기하고 전부 돈다.
+  base=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)
+  if [ -n "$base" ]; then
+    changed=$(git diff --name-only "$base"...HEAD; git diff --name-only; git ls-files --others --exclude-standard)
+    # 코드가 하나라도 바뀌었으면 wiring 층은 성립하지 않는다. answer 시험이 거기 있다.
+    if echo "$changed" | grep -qE '\.(py|yaml|yml|json|sh)$'; then
+      echo "── 층: full (코드가 바뀌었다 — answer 시험은 어떤 경우에도 안 빠진다) ──"
+    else
+      lane="wiring"
+      echo "── 층: wiring (바뀐 것이 전부 문서다 — 물리 시험을 건너뛴다) ──"
+    fi
+  else
+    echo "── 층: full (upstream 이 없어 무엇이 바뀌었는지 말할 수 없다) ──"
+  fi
+fi
+
+echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane"
 
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 python3 scripts/pipeline/validate.py || fail=1
@@ -171,6 +193,11 @@ python3 engine/check_via.py --gate || fail=1
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
 
+if [ "$lane" = "wiring" ]; then
+  echo ""
+  echo "── 13–14 물리 시험 건너뜀 (wiring 층). 코드가 바뀐 커밋에서는 절대 건너뛰지 않는다 ──"
+else
+
 echo ""
 echo "── 13. 엔진 그래프 + 역류 층 ──"
 # chain.yaml 은 방법론끼리의 의존, bindings.yaml 은 이미 출하된 확정값이 어느
@@ -237,11 +264,13 @@ echo "── CMB 열류 (Nimmo 식 37–39 폐합 · 단열 열류 · 거절 라
 (cd engine && python3 test_dynamo_rocky.py) || fail=1
 python3 engine/dynamo_table.py --check || fail=1
 
+fi   # lane
+
 echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else
   echo "──────── 일부 점검 실패 ────────"
 fi
-echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) rc=$fail"
+echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane rc=$fail"
 exit $fail

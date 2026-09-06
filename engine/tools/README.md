@@ -369,3 +369,65 @@ Both are today's standing rule seen once more — **a count is only as true as t
 it** — and on a scanned PDF there is a third hazard on top: OCR that reads cleanly is still OCR. When
 a count is about to become an argument, quote the passages it found and the passages a neighbouring
 search finds, and let the quotations carry the claim.
+
+## Counts and quotations are both only as true as the sentence over them (2026-09-06)
+
+Two failures on the same paper within half an hour, one in each direction, and they are one item.
+
+**A count, generalised.** This seat searched Goldreich & Peale 1966 for `"atmospheric tide"` and
+`"thermal tide"`, found zero, and wrote that the paper *"never mentions thermal or atmospheric tides
+anywhere"*. The count was true of the phrases and false of the concept: the stem `atmospher` occurs
+three times and every one is about torques on Venus's spin.
+
+**A quotation, truncated.** The reply that caught it quoted the paper as calling atmospheric proposals
+*"quite reasonable"* and cited the next sentence as agreement — stopping at the conditional clause.
+The sentence continues: *"**However**, if the atmosphere is capable of pushing Venus through the
+otherwise stable synchronous state of rotation, **present control of the rotation of Venus by the
+earth would be hard to understand.**"* The paper raises the atmospheric explanation and then argues
+against it. Verbatim, and the wrong way round.
+
+So: **a quotation cut at a conjunction is not a quotation.** If the excerpt ends before a `However`,
+`But`, `Although` or `Yet`, read to the end of the sentence before it becomes an argument. Both
+failures are the standing rule — *a count is only as true as the sentence under it* — with quotation
+added to counting.
+
+⚠ **And the obvious repair for the first one is not a repair.** Searching by stem rather than phrase
+looks safer and is only differently wrong: in the same paper `therm` matches four times and all four
+are **"Furthermore"**. On a scanned PDF there is a third layer, since OCR that reads cleanly is still
+OCR. When a search is about to become a claim, quote what it found *and* what a neighbouring search
+finds, and let the quotations carry the claim.
+
+## A gate is a process group, and every simpler handle fails (2026-09-06)
+
+Three attempts at "is a gate running, and how do I stop it", each defeated by the same fact.
+
+1. **By name.** `pgrep -x python3` matched nothing on any run, healthy or dead — the interpreter's
+   `comm` is `Python`. Two healthy gates were discarded on that reading.
+2. **By one level of parentage.** `pgrep -P` returns the subshell `check.sh` runs its checks in, idle
+   at 0.0 %, so it looks stopped while the worker below is at 100 %.
+3. **By pid, to stop one.** `kill <parent pid>` returned without error and the gate kept running for
+   another eight minutes, overlapping the replacement gate in the same worktree. `kill -TERM -<pgid>`
+   ended it at once.
+
+⚠ And `pgrep -f "scripts/check.sh"` counts the **watch loops** too — a `while ... until grep -q "GATE
+END"` shell has that path in its command line and is not a gate.
+
+So the handle is the **process group**, and the question always has two halves — *which group*, and
+*whose worktree*:
+
+    for p in $(pgrep -f "scripts/check.sh"); do
+      c=$(lsof -a -p $p -d cwd 2>/dev/null | tail -1 | awk '{print $NF}')
+      [ "$c" = "$PWD" ] && [ "$(ps -o comm= -p $p)" = "bash" ] &&
+        echo "pid $p pgid $(ps -o pgid= -p $p | tr -d ' ')"
+    done
+
+Filtering to `comm=bash` drops the watchers; the `pgid` is what to read CPU from and what to signal.
+
+⚠ **The third of those is a worse grade than the first two.** A wrong name and a wrong parent level
+both **give a false answer**, and a second measurement catches them. `kill <pid>` **succeeded** —
+returned zero, printed nothing — and the gate went on running for eight more minutes. A query that
+lies is caught by asking again; a command that fails quietly is caught only by checking the result.
+
+So: **after killing a gate, confirm it is gone before starting the next one.** The six minutes of
+overlap on 2026-09-06 cost nothing but CPU, and only because `check.sh` reads the tree without writing
+it and has no timed checks. That is luck, not design.
