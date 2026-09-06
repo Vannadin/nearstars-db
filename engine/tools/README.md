@@ -781,3 +781,41 @@ compatible states.
 inspector** — a repository where the thing is present, a set the registry really returns, a directory
 you have listed by hand. A passing self-report is the weakest evidence available, because a checker
 that does nothing reports success exactly the same way.
+
+## A green gate needs the end; a red one does not (2026-09-06)
+
+The rule written this morning — *the `GATE END … rc=` line is the verdict, never the body's "통과"
+text* — was applied to failures as well, and it should not have been. **The two directions are not
+symmetric.**
+
+- **`rc=0` needs the whole run.** A check that has not run yet can still fail, so no amount of `[PASS]`
+  in the body licenses a push.
+- **One `[FAIL]` line settles it immediately.** Whatever follows, `rc` will be 1. There is nothing to
+  wait for.
+
+gate135 printed two `[FAIL]` lines for unlinked citations inside its first minute, and this seat waited
+**24 minutes** for the `rc=` line before reading them. The failure was visible the whole time.
+
+⚠ **The block order was moved earlier that same afternoon for exactly this** — so a broken document
+reports in about a minute instead of at the end — and the benefit went unused, because the discipline
+built around *not* trusting the body text was applied where the body text is conclusive.
+
+⚠ **What killing early costs**: the checks after the failure never run, so the next round can surface
+something new. That is still much cheaper than 24 minutes, a fix, and 24 more.
+
+**The check**: watch the log for `[FAIL]`, not only for `GATE END`. On a hit, kill the process group,
+fix, restart.
+
+## Run the checks the file you touched is subject to, not the checks you wrote (2026-09-06)
+
+The local dry run before that commit was three checks — the Markdown table renderer, the duplicate
+section finder, and the recipe's own tests. All three were written by this seat in the preceding hours.
+The file actually edited was `docs/reference/paper-defects.md`, and the check it is subject to —
+citation links must be clickable ADS URLs — was not among them.
+
+**The step that was missing is one line**: list the files in `git diff --name-only`, then find every
+gate check that reads that path and run those. `grep -n "python3 scripts/" scripts/check.sh` prints
+the whole set in one screen.
+
+**Why it happened is worth naming**: recently-written checks are the ones in mind, and running them
+feels like having run the checks. Familiarity is not coverage.
