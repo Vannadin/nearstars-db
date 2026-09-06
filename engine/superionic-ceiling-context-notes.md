@@ -38,12 +38,14 @@ seat's edit, not this file's.
    line-centre ±15 px → ±7 % in P. No curve was transcribed in either — inequalities
    and feature positions only.
 3. **`ice_x` now has three ceilings, all different, in one place:**
-   | ceiling | value | what it is |
-   |---|---|---|
-   | data | **≈355 GPa** | French & Redmer 2015's own highest simulated density (4.25 g/cc at 300 K) — C6 |
-   | stability | **≈520 GPa** (new, ⑩b) | where the ices field closes in French+ 2016 Fig. 4 |
-   | printed | **1000 GPa** | SeaFreeze's knot box — **the one the code carries** |
-   The smallest is the data ceiling; the one we use is the largest.
+
+| ceiling | value | what it is |
+|---|---|---|
+| data | **≈355 GPa** | French & Redmer 2015's own highest simulated density (4.25 g/cc at 300 K) — C6 |
+| stability | **≈520 GPa** (new, ⑩b) | where the ices field closes in French+ 2016 Fig. 4 |
+| printed | **1000 GPa** | SeaFreeze's knot box — **the one the code carries** |
+
+The smallest is the data ceiling; the one we use is the largest.
 4. **Today's answers are not wrong.** The U/N converged mantles sit at ≥2553 K —
    well above the boundary everywhere. **Trial paths are unmeasured**, and that is
    what separates a labeling defect from a convergence defect — Brief 34's first item.

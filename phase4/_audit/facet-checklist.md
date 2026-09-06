@@ -191,6 +191,7 @@ choices as INPUTS (obliquity→axial curve, e→eccentricity curve, tidal-lock�
 
 ## Proxima Centauri b (α Cen C) — continental lake world (separate board `proxima_cen.yaml`)
 Methodology-grounded walk 2026-06-23, all 11 groups gated.
+
 | group | axis | status |
 |---|---|---|
 | identity | body_type (rocky lake world) / designation / discoverability (confirmed → T F F F) | ✅ |

@@ -44,6 +44,7 @@ Alpha Cen's −0.3% mass mismatch → −1.2% period; a pair caught at apastron 
 factor 0.69) *damps* its large +24% mismatch to +16.6%.
 
 Post-fix residual budget (P_osc vs catalog P):
+
 | pair            | resid  | cause |
 |-----------------|--------|-------|
 | Luhman 16 AB    | +0.08% | — |
