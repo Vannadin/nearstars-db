@@ -133,19 +133,108 @@ def mean_motion(a_m: float, perturber_mass_kg: float) -> float:
     return math.sqrt(G * perturber_mass_kg / a_m ** 3)
 
 
+class NoExcessSpin(ValueError):
+    """`|ω₀| ≤ n` — 걷어낼 초과가 없다. 이 공식이 서술하는 과정이 아니다."""
+
+
+def despin_coefficient_yr_per_rad_s(mass_kg: float, radius_m: float, alpha: float, a_m: float,
+                                    perturber_mass_kg: float, q_over_k2: float) -> float:
+    """τ = C · |ω₀ − n| 의 C [yr per rad/s]. 역산이 이 값 하나로 닫힌다."""
+    inertia = alpha * mass_kg * radius_m ** 2
+    return q_over_k2 * inertia * a_m ** 6 / (3.0 * G * perturber_mass_kg ** 2 * radius_m ** 5) / YEAR_S
+
+
 def despin_timescale_yr(mass_kg: float, radius_m: float, alpha: float, a_m: float,
                         perturber_mass_kg: float, q_over_k2: float,
                         omega0_period_h: float = OMEGA0_PERIOD_H) -> float:
     """문서 §1 이 인쇄한 식 그대로. 반환은 년."""
     n = mean_motion(a_m, perturber_mass_kg)
     omega0 = 2.0 * math.pi / (omega0_period_h * 3600.0)
-    inertia = alpha * mass_kg * radius_m ** 2
     # 걷어낼 것은 **초과** 각운동량이라 크기다 — 문서 §1: "the time for that torque to remove the
     # **excess** spin angular momentum", 그리고 토크는 "drives the spin toward n". 부호 있는 차를 그대로
     # 쓰면 역행 출발에서 τ 가 음수로 나오고, `solve` 의 `hi < age` 가 그걸 **조용히 '잠김'으로** 읽는다.
     # 역행 출발은 도메인 밖이 아니다 — Goldreich & Peale 이 그 경우의 포획 확률을 그림 둘로 계산한다.
-    tau_s = abs(omega0 - n) * q_over_k2 * inertia * a_m ** 6 / (3.0 * G * perturber_mass_kg ** 2 * radius_m ** 5)
-    return tau_s / YEAR_S
+    # ⚠ 크기가 n 이하면 걷어낼 **초과**가 없다 — 오히려 가속해야 한다. `abs()` 만으로는 그 경우도
+    # 양수 τ 를 내고 `solve` 가 그걸 '잠김'으로 읽는다. 부호 버그를 고치면서 열린 문이라 여기서 닫는다.
+    # 문서 §1 이 "remove the **excess** spin angular momentum" 이라 적고, G&P 의 역행 논의도 |ω₀| > n
+    # 이다. 초과가 없는 경우는 원문에도 우리 문서에도 없는 과정이다.
+    if abs(omega0) <= n:
+        raise NoExcessSpin(
+            f"|ω₀| = {abs(omega0):.4g} rad/s is not above n = {n:.4g}: no excess spin to remove, so "
+            f"this formula does not describe what would happen. The initial period must be shorter "
+            f"than the orbital period, {2.0 * math.pi / n / 3600.0:.4g} h.")
+    return abs(omega0 - n) * despin_coefficient_yr_per_rad_s(
+        mass_kg, radius_m, alpha, a_m, perturber_mass_kg, q_over_k2)
+
+
+def initial_period_h(target_tau_yr: float, mass_kg: float, radius_m: float, alpha: float,
+                     a_m: float, perturber_mass_kg: float, q_over_k2: float) -> float:
+    """역방향. 이 τ 를 내려면 원시 자전주기가 얼마여야 했는가 [h].
+
+    유효 구간(`ω₀ > n`)에서 τ 는 `ω₀` 에 **선형**이라 대수 한 줄로 뒤집힌다 — `ω₀ = n + τ/C`.
+    ⚠ **수치 탐색을 쓰지 않는 것이 요점이다.** `abs()` 때문에 τ 는 `ω₀ = n` 에서 최소인 V자라 같은 τ 를
+    주는 `ω₀` 가 위아래로 둘 있고, 탐색기는 초기 추정값에 따라 **아래 가지로 수렴할 수 있다.** 그 가지는
+    `τ/C` 를 빼는 해이고 물리적으로는 가속해야 하는 천체다. 대수로 풀면 그 가지가 아예 생기지 않는다.
+    """
+    n = mean_motion(a_m, perturber_mass_kg)
+    c = despin_coefficient_yr_per_rad_s(mass_kg, radius_m, alpha, a_m, perturber_mass_kg, q_over_k2)
+    omega0 = n + target_tau_yr / c
+    if omega0 <= n:                      # 도중에 물리적으로 불가능해지는 양을 여기서 잡는다
+        raise NoExcessSpin(f"the inversion returned ω₀ = {omega0:.4g} rad/s, not above n = {n:.4g}")
+    return 2.0 * math.pi / omega0 / 3600.0
+
+
+def initial_period_band_h(target_tau_yr: float, mass_earth: float, radius_earth: float, a_km: float,
+                          perturber_mass_earth: float, nmoi: float | None = None) -> Band:
+    """역산 밴드. 폭은 전적으로 `Q/k₂` 클래스 폭에서 온다 — 다른 불확실성은 안 들어간다.
+
+    ⚠ 낙관 끝(`Q/k₂` 작음)이 **짧은** 주기다: 덜 흩는 천체는 같은 시간을 쓰려면 더 적은 초과에서
+    출발해야 한다. 라벨이 어느 끝이 어느 가정인지 말한다."""
+    args = (mass_earth * M_EARTH_KG, radius_earth * R_EARTH_M, nmoi if nmoi else 0.33,
+            a_km * 1e3, perturber_mass_earth * M_EARTH_KG)
+    fast = initial_period_h(target_tau_yr, *args, Q_OVER_K2_ROCKY.low)
+    slow = initial_period_h(target_tau_yr, *args, Q_OVER_K2_ROCKY.high)
+    lo, hi = sorted((fast, slow))
+    return Band(None, lo, hi,
+                f"the whole width is the Q/k₂ class band 10²–10³: {fast:.4g} h at the low end "
+                f"(less dissipative) and {slow:.4g} h at the high end, for τ = {target_tau_yr:.3g} yr",
+                "analog", estimates="omega_0")
+
+
+def breakup_period_h(mass_earth: float, radius_earth: float) -> float:
+    """자전 분열 한계 [h] — 적도 원심가속도 = 표면중력.
+
+    `P_min = 2π√(R³/GM)` 인데 `M = (4/3)πR³ρ` 를 넣으면 **R 이 소거되어 `√(3π/Gρ)`** 가 된다. 즉 질량도
+    반지름도 아니고 **밀도만**의 함수다. ⚠ 그래서 이 한계는 천체를 거의 안 가른다 — 밀도 3000–5500 이
+    전부 1.9–1.4 h 안에 든다. 물리 한계라 지어낼 여지가 없다는 게 장점이고, **변별력이 없다는 게 한계**다.
+    ⚠ 느린 쪽에는 이런 한계가 **없다**: 문헌이 초기 자전을 채택값으로만 인쇄한다 (Barnes: Kasting 13.5 h,
+    지구 3 일). 그래서 허용 구간은 **한쪽만 닫혀 있다.**"""
+    return 2.0 * math.pi * math.sqrt((radius_earth * R_EARTH_M) ** 3 /
+                                     (G * mass_earth * M_EARTH_KG)) / 3600.0
+
+
+def consistency_window_h(bodies, target_tau_yr: float, q_over_k2: float):
+    """현재 자전이 측정된 천체들이 **하나의** ω₀ 로 동시에 설명되는가.
+
+    각 천체는 관측 상태에 따라 **반대 방향의 경계**를 준다 — 감속한 천체는 `τ ≤ age` 라 `P₀ >` 어떤 값,
+    감속 안 한 천체는 `τ > age` 라 `P₀ <` 어떤 값. ⚠ 그래서 이건 밴드끼리 겹치는지를 보는 게 아니다.
+    한쪽은 바닥이고 한쪽은 천장이며, **창이 비면 그 `Q/k₂` 로는 네 천체를 함께 설명할 수 없다.**
+
+    `bodies`: (label, m_earth, r_earth, a_km, perturber_m_earth, despun: bool) 의 순회 가능한 것.
+    반환: (floor, ceiling, floor 를 정한 이름, ceiling 을 정한 이름)."""
+    floor, ceiling = 0.0, math.inf
+    who_lo, who_hi = "—", "—"
+    for label, m, r, a_km, mp, despun in bodies:
+        p_break = breakup_period_h(m, r)
+        if p_break > floor:
+            floor, who_lo = p_break, f"{label} breakup"
+        p = initial_period_h(target_tau_yr, m * M_EARTH_KG, r * R_EARTH_M, 0.33,
+                             a_km * 1e3, mp * M_EARTH_KG, q_over_k2)
+        if despun and p > floor:
+            floor, who_lo = p, label
+        if not despun and p < ceiling:
+            ceiling, who_hi = p, label
+    return floor, ceiling, who_lo, who_hi
 
 
 def equilibrium_spin_ratio(e: float) -> float:

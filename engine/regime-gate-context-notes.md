@@ -263,3 +263,52 @@ have to build one.
 chosen so the chain runs. The tests are named `wiring` for that reason and there is deliberately no
 `answer` test — a green run here means the plumbing carries a value, and a reader who takes it for
 evidence about rotation has read the opposite of what it says.
+
+## 8. The despin recipe run backwards, and the one test that could have failed — 2026-09-06
+
+Brief 124. `tidal_locking` now runs in both directions, and which way is decided by what is known:
+forward from a stated `ω₀`, backward from a present spin that was **measured** (Venus, Mercury) or
+**wanted** (a designed body). The two are the same calculation and differ only in where the number
+comes from.
+
+**The inversion is closed-form, on purpose.** In the valid region `τ` is linear in `ω₀`, so
+`ω₀ = n + τ/C` inverts in one line. ⚠ A numerical search would have been a trap: `abs(ω₀ − n)` makes
+`τ` a **V** with its minimum at synchronous, so two `ω₀` give the same `τ` — one above `n`, one below —
+and a solver can land on the lower branch depending on its first guess. That branch subtracts `τ/C`
+and describes a body that must be **spun up**. Algebra never produces it.
+
+**A door the earlier fix opened, now closed.** Changing the signed difference to `|ω₀ − n|` was right
+for retrograde starts, and it silently admitted `|ω₀| ≤ n`: a positive, plausible timescale for a body
+with **no excess to remove**. Refused now, and the refusal hands back the orbital period, so a designer
+reads *"the initial period has to be shorter than this"* rather than a rejection.
+
+### The consistency test, which is the only part with teeth
+
+The allowed range is a weak floor: the fast end is `√(3π/Gρ)`, a **density function** — R cancels — so
+every rocky body sits between 1.4 and 1.9 h and it separates nothing. The slow end has no literature
+limit at all. So instead: **do the bodies whose present spin is measured admit a single `ω₀`?** Each
+gives a bound, and the bounds point opposite ways — a despun body needs `τ ≤ age` and so floors `P₀`,
+an undespun one needs `τ > age` and so caps it.
+
+| `Q/k₂` | floor | ceiling | window |
+|---|---|---|---|
+| 10² | 1.805 h (Moon's breakup limit) | 17.98 h (Venus) | exists |
+| 10³ | 4.385 h (Mercury) | 174.6 h (Venus) | exists |
+
+**A window exists at both ends, and the 5 h default sits inside both.** ⚠ This could have come out
+empty — that is what makes it worth running. It does not show 5 h is right; it shows the four measured
+bodies do not exclude it, which is more than was known this morning, when the anchors checked only the
+sign.
+
+⚠ Note which constraint binds where: at the optimistic end it is **the Moon's breakup limit**, not any
+despin requirement, and at the pessimistic end it is **Mercury**. The structure of the constraint
+changes with `Q/k₂`, so quoting one end's binding body as *the* limit would be wrong.
+
+### What is deliberately not concluded
+
+Venus's inverted `ω₀` is **18.0–174.7 h**, and the whole width comes from the `Q/k₂` class. It is
+tempting to call the slow end implausible and thereby prefer the optimistic `Q/k₂`. **That is refused**
+— Barnes uses 3 days = 72 h for Earth as a worked example, so 174.7 h is a factor of **2.4** from a
+value the literature itself adopts, and no slow-side limit exists to judge either. The mechanism is
+recorded and the conclusion withheld: **the inversion constrains `Q/k₂` the moment a slow-side limit
+on primordial spin exists; none exists, so it constrains nothing today.**

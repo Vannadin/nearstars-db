@@ -21,9 +21,11 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from tidal_locking import (E_MERCURY_RESONANT, E_MOON_ONE_TO_ONE, STATE_RESONANCE,  # noqa: E402
-                           STATE_SYNCHRONOUS, STATE_UNCLASSIFIED, despin_timescale_yr,
-                           equilibrium_spin_ratio, rotation_state, solve)
+from tidal_locking import (E_MERCURY_RESONANT, E_MOON_ONE_TO_ONE, OMEGA0_PERIOD_H,  # noqa: E402
+                           STATE_RESONANCE, STATE_SYNCHRONOUS, STATE_UNCLASSIFIED, NoExcessSpin,
+                           breakup_period_h, consistency_window_h, despin_timescale_yr,
+                           equilibrium_spin_ratio, initial_period_band_h, initial_period_h,
+                           rotation_state, solve)
 
 M_EARTH = 5.9722e24
 R_EARTH = 6.371e6
@@ -122,6 +124,51 @@ def main() -> int:
        f"6b: the slow end must stay under Barnes's 10^6 yr, got {prox.values['t_lock_yr_max']:.3g}")
     ok(prox.values["locked"] is True, "6b: and Proxima b comes out locked, as Barnes has it")
 
+    # 8. ⚠ no excess, no despin. |ω₀| ≤ n means the body would have to be *sped up*, which this
+    # formula does not describe — and abs() made that case return a positive, plausible timescale.
+    try:
+        despin_timescale_yr(0.815 * M_EARTH, 0.9499 * R_EARTH, 0.33, 1.082e11,
+                            M_SUN_IN_EARTHS * M_EARTH, 1e2, 10783.0)   # ω₀/n ≈ 0.5
+        fails.append("8: a sub-synchronous ω₀ must be refused, not given a despin time")
+    except NoExcessSpin as exc:
+        ok("orbital period" in str(exc),
+           f"8: the refusal must hand back the orbital period, or it is not design feedback: {exc}")
+
+    # 9. inversion: closed form, and it round-trips exactly. No search, so no wrong branch.
+    for p0 in (5.0, 19.0, 100.0):
+        for qk in (1e2, 1e3):
+            tau_yr = despin_timescale_yr(0.815 * M_EARTH, 0.9499 * R_EARTH, 0.33, 1.082e11,
+                                         M_SUN_IN_EARTHS * M_EARTH, qk, p0)
+            back = initial_period_h(tau_yr, 0.815 * M_EARTH, 0.9499 * R_EARTH, 0.33, 1.082e11,
+                                    M_SUN_IN_EARTHS * M_EARTH, qk)
+            ok(abs(back / p0 - 1) < 1e-9, f"9: inversion must round-trip; {p0} h → {back} h")
+    band = initial_period_band_h(4.5e9, 0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS)
+    ok(abs(band.low - 18.0) < 0.2 and abs(band.high - 174.6) < 1.0,
+       f"9: Venus needs 18.0–174.6 h to despin within the age; got {band.low:.1f}–{band.high:.1f}")
+    ok(not band.chosen and "Q/k₂ class band" in band.width_source,
+       "9: the inverted period is a band whose whole width is the Q/k₂ class, and no point is picked")
+
+    # 10. the breakup limit is a density function, so it barely separates bodies
+    ok(abs(breakup_period_h(1.0, 1.0) - 1.41) < 0.02, "10: Earth breaks up near 1.41 h")
+    ok(abs(breakup_period_h(0.0123, 0.2727) - 1.81) < 0.02, "10: the Moon, less dense, near 1.81 h")
+    ok(abs(breakup_period_h(2.0, 2.0 ** (1 / 3)) - breakup_period_h(1.0, 1.0)) < 1e-9,
+       "10: same density, same limit, whatever the mass — R cancels, so this axis cannot separate bodies")
+
+    # 11. ⚠ the test with teeth: do the measured bodies admit ONE initial spin?
+    # Despun bodies floor it (τ ≤ age), an undespun one caps it (τ > age). An empty window would mean
+    # no single ω₀ explains the Solar System at that Q/k₂.
+    measured = [("Venus", 0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, False),
+                ("Mercury", 0.0553, 0.3829, 5.791e7, M_SUN_IN_EARTHS, True),
+                ("Moon", 0.0123, 0.2727, 3.844e5, 1.0, True),
+                ("Io", 0.0150, 0.2860, 4.217e5, 317.8, True)]
+    for qk, want_lo, want_hi in ((1e2, 1.805, 17.98), (1e3, 4.385, 174.6)):
+        lo, hi, _who_lo, _who_hi = consistency_window_h(measured, 4.5e9, qk)
+        ok(lo < hi, f"11: the four measured bodies must admit one ω₀ at Q/k₂ = {qk:.0e}; window empty")
+        ok(abs(lo - want_lo) < 0.02 and abs(hi - want_hi) < 0.5,
+           f"11: window at {qk:.0e} is {lo:.3f}–{hi:.3f} h, expected {want_lo}–{want_hi}")
+        ok(lo < OMEGA0_PERIOD_H < hi,
+           f"11: the {OMEGA0_PERIOD_H:g} h default must sit inside the window, not merely be plausible")
+
     # 7. the band decides, or nothing does
     straddle = solve(0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, 50.0, 0.007)
     ok(straddle.values["locked"] is None and "cannot say" in straddle.reason,
@@ -135,7 +182,8 @@ def main() -> int:
     print(f"  [PASS] 조석 잠김 — 앵커 셋 상태까지 일치(달 1:1 · 수성 p:q · 이오 1:1) · "
           f"⚠ 금성은 표와 어긋남을 고정(Leconte 는 고체조석이 동기화한다고 말한다 → 결함은 표의 상수 쪽) · 비 {ratio:.2g}× 가 Q/k₂ 에 불변 "
           f"→ 어떤 상수로도 §2 표 재현 불가 · §4 경계 미인쇄 구간 거절 · Hut 소극한 · "
-          f"역행=양수·근소하게 김 · 판도라 32 h(보드 독립 일치) · Proxima b {prox.values['t_lock_yr_max']:.2g} yr < Barnes 1e6 · 밴드가 나이를 걸치면 보류")
+          f"역행=양수·근소하게 김 · 판도라 32 h(보드 독립 일치) · Proxima b {prox.values['t_lock_yr_max']:.2g} yr < Barnes 1e6 · |ω₀|≤n 거절(궤도주기 동반) · 역산 왕복 정확 · 금성 18–175 h · 분열 한계=밀도만 · "
+          f"⚠ 일관성 창 존재(Q/k₂ 양 끝 모두, 기본값 5 h 안) · 밴드가 나이를 걸치면 보류")
     return 0
 
 

@@ -662,3 +662,41 @@ sentences up is *the capture probability **at the 3/2 resonance***. Read without
 supports the opposite reading — that our model predicts Mercury should be synchronous, which it is
 not. The OCR flattens that sentence to `at the § resonance is rather small (<i)`, so the page image is
 what settled it.
+
+## The wanted conclusion picking the constant, three times in one day (2026-09-06)
+
+One entry, not three, because the third only survived as long as it did by looking like the opposite
+of the first two.
+
+Venus will not despin under the printed formula with the printed `Q/k₂` class of 10²–10³; it needs
+about 28. Three ways of resolving that came up, and all three are the same move — **the constant
+chosen by the answer wanted, rather than by data.**
+
+1. **Give Venus its own `Q/k₂`.** Rejected: the document prints no such number, and inventing one is
+   the silent default this engine spent two days removing.
+2. **Widen the class band until Venus falls inside.** Rejected for the same reason with a different
+   handle — the band's ends come from the document or they are ours.
+3. ⚠ **Distrust the inverted `ω₀` because it looks slow, and prefer the optimistic `Q/k₂`.** The
+   inversion puts Venus's required initial period at **18.0–174.7 h**, and this seat called the slow
+   end *"suspiciously slow for a primordial spin"* — which would have pushed `Q/k₂` toward its
+   optimistic end for no reason but discomfort.
+
+⚠ **The third looked like the opposite of the first two, and that is why it nearly passed.** One and
+two try to let Venus **in**; three doubts Venus's own number. Opposite intentions, identical mechanics.
+Whatever comes fourth will not look like these either.
+
+**The measurement that killed it.** Barnes uses an initial period of **3 days = 72 h** for the Earth as
+a worked example. The value called suspicious is **174.7 h = 7.3 days** — a factor of **2.4**. Not an
+order of magnitude, and not against a limit: 72 h is itself an adopted value, so calling 175 h odd
+while accepting 72 h states a preference and nothing more. **The literature gives no slow-side limit
+at all** — that was established the same afternoon and then forgotten one message later.
+
+**What is kept instead.** The mechanism, with the conclusion withheld: *the inversion constrains
+`Q/k₂` the moment a slow-side limit on primordial spin exists, and no such limit exists, so it
+constrains nothing today.* That sentence goes to work by itself when someone arrives with a limit. A
+band narrowed now by intuition would be inherited as a number whose reason had evaporated — the exact
+failure this file records elsewhere.
+
+And the teeth are elsewhere: run the inversion on **every body whose present spin is measured** and see
+whether the bands overlap at the same end of `Q/k₂`. That constrains without any slow-side limit, and
+it can actually fail.
