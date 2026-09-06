@@ -88,6 +88,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C40** | a fitted value has no seat in the value vocabulary, so it travels as a bare point | **listed 2026-09-06** | C32 gave three words for where a number came from — printed, chosen, engine-filled — and a value solved backwards from a wanted output is none of them. Observed in C39: wiring Dante's declared `k₂/Q` turned `τ` from a band into a point with no width anywhere. Every `tidal_heating` declaration is in the same position |
 | **C41** | `eccentricity` has no supplier, and the recipe answered anyway | **provisional landed 2026-09-06** | `orbit_elements` has no recipe, so no body supplies `eccentricity`; the recipe substituted `0.0` and every body came out **1:1 synchronous** on a value nobody set. Owner chose the provisional pattern: `e = 0.10`, in §4's unprinted gap, so the output now declines to classify. ⚠ **One value decides the whole roster** — no body's own data can outvote it. The boards' `eccentricity_forced` is deliberately **not** read: a resonance's maintained value is not the orbit's actual one |
 | **C42** | guardrail ⑤ watches an event that never happens on a measured node | **listed 2026-09-06** | `recipe_arrived()` releases a placeholder when its node gains a registered recipe. `chain.yaml` marks `orbit_elements` `kind: measured` — it is supplied, not computed, and **that day never comes**. ⚠ Not one placeholder's problem: the same hole opens under any placeholder on any measured node, and the failure it was built to prevent is a placeholder quietly becoming permanent |
+| **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **listed 2026-09-07** | `body_class` decides ice-giant vs gas-giant by pebble isolation, which asks how far a body sits **from its star**. Pandora is a moon and its file carries a **planetocentric** axis; `pebble_isolation_mass` takes `semi_major_axis_au or PEBBLE_ISO_REF_AU`, so today it silently uses 5 AU. ⚠ Converting km→au would flip that boundary BELOW→ABOVE. The emitted class does not move only because the radius valley settles Pandora first |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3014,7 +3015,30 @@ the CPL model would say 1:1. Parking a placeholder there would manufacture C38's
 number nobody measured. **That the gap exists at all is what keeps C38's seam alive** even while the
 item is closed.
 
-⚠ **Guardrail ⑤ is aimed at the wrong event, and that is worth more than the placeholder.**
+⚠ ### If the boards' forced eccentricities were declared — measured, nothing written
+
+Asked overnight, with the owner asleep and nothing declared: what would each roster body's rotation
+state become if `eccentricity` were taken from the `eccentricity_forced` already on the boards?
+
+| body | `eccentricity_forced` | today (provisional 0.10) | if declared | vs our 0.206 / CPL 0.2294 |
+|---|---|---|---|---|
+| Pandora | 0.005 | `unclassified` | **1:1 synchronous** | 0.024× / 0.022× |
+| Dante | 0.0186 | `unclassified` | **1:1 synchronous** | 0.090× / 0.081× |
+| Hades | 0.0385 | `unclassified` | **1:1 synchronous** | 0.187× / 0.168× |
+
+**No body reaches `STATE_PSEUDO`, so C38 stays closed.** All three sit far below both thresholds; the
+largest, Hades, reaches 0.187 of ours.
+
+⚠ **But the reason C38 stays closed would change, and improve.** Today it is closed because *our
+placeholder sits below the state threshold* — a choice of ours. On declared values it would be closed
+because *the three bodies' forced eccentricities are all below it* — **data rather than a decision.**
+That is the sentence this table exists for.
+
+⚠ **Nothing was declared.** Every body moves `unclassified` → `1:1`, which is a verdict changing, and
+the forced eccentricity may not even be the quantity the despin formula wants (C41 above). The table
+is here so the decision is cheap, not so it looks made.
+
+**Guardrail ⑤ is aimed at the wrong event, and that is worth more than the placeholder.**
 `test_provisional.py` fires when `orbit_elements` gains a **registered recipe** — and `chain.yaml`
 declares that node `kind: measured`, `domain: given`, in the layer it names
 `chain.yaml`@«0층. 계산되지 않는 것». **It is not supposed to acquire a recipe.** Ten of the eleven `given`
@@ -3108,6 +3132,49 @@ the placeholder has gone stale for everyone else**, which is precisely what ⑤ 
 none of the four. **Two files disagree about what this node produces**, and `barycentric_split`'s own
 binding note already records that its chain node does not exist at all. Whoever builds the supply side
 meets both.
+
+### C43 — a disc criterion on a moon, fed by a silent default — **listed 2026-09-07, not started**
+
+Brief 127 asked for something that sounded mechanical: `bindings.yaml` names `semi_major_axis_au` and
+the bodies declare `semi_major_axis_km`, so unify them at one named conversion, the way C39 unified
+the tidal quality. **The conversion does not exist**, and finding out why turned up something larger.
+
+**The two names are not one quantity in two units.** `bodies/pandora.yaml` declares `kind: moon` with
+`parent: Alpha Centauri A b`, so its `semi_major_axis_km` is the orbit **around its planet** — the same
+file's `perturber_mass_earth: 120.0` (Polyphemus) confirms which body it orbits.
+`body_class`'s `semi_major_axis_au` is the distance **from the star**: its only consumer is
+`pebble_isolation_mass`, `body_class.py@«Lambrechts & Johansen 2014 의 페블 고립질량»`, which asks where
+in the **protoplanetary disc** a core grew. One key, two frames — and a moon's planetocentric axis
+cannot produce a heliocentric distance, because that number belongs to the parent and is not in this
+file.
+
+⚠ **What the attempted conversion would have done**, measured before anything was edited:
+
+| `semi_major_axis_au` | pebble isolation mass | Pandora at 0.6447 M⊕ |
+|---|---|---|
+| absent → 5 AU default | 20.000 M⊕ | BELOW |
+| 252 393 km → 0.001687 AU | 0.00215 M⊕ | ⚠ **ABOVE** |
+
+The ice-giant/gas-giant boundary flips. **The emitted class does not move** — both readings give
+`rocky`, `decided_by=radius valley`, because that boundary settles Pandora before this one is
+consulted. **That is luck, not safety**: a slightly larger moon surfaces it, and even here the flipped
+boundary would sit underneath a correct answer.
+
+⚠ **The bigger finding is not the naming.** Strip the conversion away and the code still applies a
+disc-formation criterion to a moon — and, lacking the distance, fills it in:
+`body_class.py@«a = semi_major_axis_au or PEBBLE_ISO_REF_AU»`. **A moon did not grow by accreting
+pebbles in the protoplanetary disc**, so the question is not merely being asked with a wrong number;
+it is the wrong question for this body, answered from a quiet 5 AU that nobody wrote.
+
+**Three routes, all the owner's**:
+1. A moon inherits its parent's `semi_major_axis_au` — the chain already has `scope: parent` edges for
+   exactly this shape.
+2. `body_class` does not evaluate the pebble-isolation boundary for a moon at all, which may be the
+   physically right answer rather than a workaround.
+3. Split the names, so the frame is in the name: planetocentric axis versus stellar distance. The most
+   honest, and a rename, which is why it was not started at night.
+
+**Nothing was changed.** The measurement above is the whole of the work.
 
 ## What closing all of these does not do
 
