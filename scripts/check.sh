@@ -217,6 +217,8 @@ python3 engine/check_via.py --gate || fail=1
 (cd engine && python3 test_greenhouse_cases.py) || fail=1
 (cd engine && python3 test_sub_neptune_dynamo.py) || fail=1
 (cd engine && python3 test_stellar_wind.py) || fail=1
+# 임시값 가드레일 다섯. ⑤ 는 레시피가 도착하면 FAIL — 그 발화를 시험이 오늘 증명한다.
+(cd engine && python3 test_provisional.py) || fail=1
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
 python3 engine/dynamo_table.py --check || fail=1
