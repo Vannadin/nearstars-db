@@ -3013,18 +3013,31 @@ the CPL model would say 1:1. Parking a placeholder there would manufacture C38's
 number nobody measured. **That the gap exists at all is what keeps C38's seam alive** even while the
 item is closed.
 
-**Guardrail ⑤ is already aimed at this**: `test_provisional.py` reads the live registry, so the day
-anyone registers a real `orbit_elements` recipe the gate goes red and the placeholder must be removed
-with the tests written against it.
+⚠ **Guardrail ⑤ is aimed at the wrong event, and that is worth more than the placeholder.**
+`test_provisional.py` fires when `orbit_elements` gains a **registered recipe** — and `chain.yaml`
+declares that node `kind: measured`, `domain: given`, in the layer it names
+`chain.yaml`@«0층. 계산되지 않는 것». **It is not supposed to acquire a recipe.** Ten of the eleven `given`
+nodes have none, by design; the one that does, `body_class`, carries `kind: computed` and its own
+`recipe:` key, so `kind` is the discriminator and `domain` is not. **The day that trigger fires may
+never come**, which makes the guardrail decorative here even though the pattern is right in general.
+
+**The event that should release this placeholder is a body declaring the value.** The mechanism
+already behaves correctly — `solve` uses the placeholder only when `eccentricity is None`, so any body
+that declares one stops using it immediately — but nothing *notices* that the placeholder has gone
+stale for the rest. That check is a scan of `engine/bodies/*.yaml`, and it is the honest form of
+guardrail ⑤ for a measured node.
 
 ### What building `orbit_elements` will actually involve — measured, not scoped
 
 The obvious question is whether the node owes eccentricity or more than that, and the files answer it
-without anyone deciding. **The node already exists** — `chain.yaml:96`, with **seven `requires` edges**
-to `body_figure`, `cassini_state`, `tidal_locking`, `tidal_heating`, `dynamo_rocky`, `t_eq_stellar`
-and `moon_energy_budget`, plus an `influences` and an `excludes`. What is missing is the recipe, not
-the node. `bindings.yaml` lists **ten owed values**: the six elements, plus `orbital_period`,
-`hill_radius` and `satellite_stability_limit` (all derived) and `barycentric_split`.
+without anyone deciding. **The node already exists and is not a recipe's job.** `chain.yaml` gives it
+`kind: measured`, `domain: given`, `chain.yaml`@«0층. 계산되지 않는 것», with
+`outputs: [a, e, i, lan, aop, n]` and **seven `requires` edges** — to `body_figure`, `cassini_state`,
+`tidal_locking`, `tidal_heating`, `dynamo_rocky`, `t_eq_stellar` and `moon_energy_budget` — plus an
+`influences` and an `excludes`. **So "build `orbit_elements`" means make bodies declare these values,
+not write a solver.** `bindings.yaml` additionally attributes four derived values to it —
+`orbital_period`, `hill_radius`, `satellite_stability_limit`, `barycentric_split` — **none of which
+appear in the node's own `outputs`**, so bindings and chain do not agree on what this node produces.
 
 ⚠ **One of the ten cannot be supplied and the file says so.** `barycentric_split`'s own note reads
 *"binary-epoch-pipeline 이 근거인데 chain 에는 노드가 없다"* — the procedure has a methodology document
@@ -3046,10 +3059,17 @@ and bypass the binding, and `body_class` falls back to a reference value when th
 so `check_via --gate` passes. **But `hill_radius` and `orbital_period` both name `semi_major_axis_au` in
 their `derived_from`**, so the first real `orbit_elements` meets it head-on.
 
-⚠ **Two things here are the owner's, not the engine's**: whether to supply the four elements no recipe
-reads today (`inclination_deg`, `longitude_ascending_node`, `argument_periapsis`, `mean_anomaly` — read
-in **zero** places), and which spelling of the semi-major axis is canonical, or whether the conversion
-gets one named home the way `q_over_k2_from_declaration` did in C39.
+⚠ **Four of the six elements are read by no registered recipe — and the reason is not that nobody
+wants them.** `inclination_deg`, `longitude_ascending_node`, `argument_periapsis` and `mean_anomaly`
+are read in zero places because **their consumers are unbuilt too**: of the seven `requires` edges,
+only `tidal_locking`, `tidal_heating` and `dynamo_rocky` have recipes, while `body_figure`,
+`cassini_state`, `t_eq_stellar` and `moon_energy_budget` do not. Inclination's consumer is
+`moon_energy_budget` (`via [a, i, e]`), which does not exist yet. **The question is therefore about
+order, not about need** — supply ahead of the consumers, or with them.
+
+⚠ **Two things here are the owner's, not the engine's**: that ordering question, and which spelling of
+the semi-major axis is canonical — or whether the conversion gets one named home the way
+`q_over_k2_from_declaration` did in C39.
 
 ## What closing all of these does not do
 

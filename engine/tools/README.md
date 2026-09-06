@@ -886,3 +886,25 @@ the square root would have propagated into a brief, an item and a recipe.
 **The reading to avoid**: *my errors tend not to touch values.* They tend not to **survive**, which is a
 statement about the checking and not about the errors. Written down because the first reading is the
 comfortable one, and it would quietly license loosening the second.
+
+## The seat that built the check is the one it caught, twice in a day (2026-09-06)
+
+Two failures reached the gate from newly written prose, and both broke a citation rule this repository
+already enforces.
+
+- **gate135**: a bibcode shipped without its ADS link, in a file where every other row carries one.
+- **gate139**: `chain.yaml:96` — a line-number citation, in the file whose own C33 work replaced line
+  numbers with phrase anchors **because line numbers drift**. The checker that caught it was written
+  by this seat the day before.
+
+⚠ **This is the sibling of the entry above.** There, the thing that inspects was in the state it
+inspects for. Here, the person who wrote the rule broke the rule — and neither is carelessness in the
+usual sense: **the rule was fresh enough to be top of mind and still did not fire while writing.**
+Knowing a rule and applying it while composing a sentence are separate faculties, and only the second
+one is checkable.
+
+**Both were caught, both cost a gate run, and both were avoidable for 106 seconds.**
+`bash scripts/check.sh --wiring` before the commit runs every documentation check the changed paths
+are subject to. The lesson is not "remember the citation rules" — that is what failed twice. It is
+**stop treating the pre-commit run as optional for prose**, since prose is where the citation rules
+live.
