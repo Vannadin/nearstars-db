@@ -87,6 +87,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C39** | the same `Q/k₂` is a per-body declaration in one node and a class band in another | **closed 2026-09-06** | Unified: **a declaration wins, the class band is the fallback**, inverted at one named place (`q_over_k2_from_declaration`) and named in the output. No roster verdict moved — Dante and Hades read 1:1 before and after, the a⁶ gate deciding them by nine orders of magnitude. The class band still fails to describe them, which is now C39's finding rather than its blocker |
 | **C40** | a fitted value has no seat in the value vocabulary, so it travels as a bare point | **listed 2026-09-06** | C32 gave three words for where a number came from — printed, chosen, engine-filled — and a value solved backwards from a wanted output is none of them. Observed in C39: wiring Dante's declared `k₂/Q` turned `τ` from a band into a point with no width anywhere. Every `tidal_heating` declaration is in the same position |
 | **C41** | `eccentricity` has no supplier, and the recipe answered anyway | **provisional landed 2026-09-06** | `orbit_elements` has no recipe, so no body supplies `eccentricity`; the recipe substituted `0.0` and every body came out **1:1 synchronous** on a value nobody set. Owner chose the provisional pattern: `e = 0.10`, in §4's unprinted gap, so the output now declines to classify. ⚠ **One value decides the whole roster** — no body's own data can outvote it. The boards' `eccentricity_forced` is deliberately **not** read: a resonance's maintained value is not the orbit's actual one |
+| **C42** | guardrail ⑤ watches an event that never happens on a measured node | **listed 2026-09-06** | `recipe_arrived()` releases a placeholder when its node gains a registered recipe. `chain.yaml` marks `orbit_elements` `kind: measured` — it is supplied, not computed, and **that day never comes**. ⚠ Not one placeholder's problem: the same hole opens under any placeholder on any measured node, and the failure it was built to prevent is a placeholder quietly becoming permanent |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3070,6 +3071,43 @@ order, not about need** — supply ahead of the consumers, or with them.
 ⚠ **Two things here are the owner's, not the engine's**: that ordering question, and which spelling of
 the semi-major axis is canonical — or whether the conversion gets one named home the way
 `q_over_k2_from_declaration` did in C39.
+
+### C42 — the release event never happens on a measured node — **listed 2026-09-06, not started**
+
+Guardrail ⑤ exists for one reason: **a placeholder must not quietly become permanent.**
+`recipe_arrived(registry.registered())` reports any placeholder whose node has acquired a real recipe,
+and `test_provisional.py` reads the live registry so the gate goes red on the day that happens.
+
+⚠ **For `orbit_elements` that day is not coming.** `chain.yaml` marks it
+`chain.yaml`@«0층. 계산되지 않는 것» with `kind: measured`, `domain: given` — the value is *supplied*,
+not computed. Of the eleven `domain: given` nodes exactly one has a recipe, `body_class`, and it
+carries `kind: computed` and its own `recipe:` key. **`kind` is the discriminator; `domain` is not.**
+
+**The machinery is not broken — it is aimed at the wrong event, and the outcome is the same one it was
+built to prevent.** The first real instance of the pattern is, today, on a trajectory to permanence,
+guarded by a check that cannot fire.
+
+⚠ **And this is not one placeholder's problem.** ⑤ consults the registered-recipe set and nothing else,
+so **any** placeholder standing for **any** measured node inherits the same hole. It is a gap in the
+general form, found by its first use.
+
+**The shape of the repair**: the release condition depends on the node's `kind`.
+
+| node `kind` | release event | how it is checked |
+|---|---|---|
+| `computed` | a recipe is registered for the node | `recipe_arrived()`, as today |
+| `measured` | **a body file declares the value** | scan `engine/bodies/*.yaml` for the output's key |
+
+The mechanism downstream is already correct — `solve` uses the placeholder only when `eccentricity is
+None`, so a body that declares one stops using it at once. What is missing is that **nothing notices
+the placeholder has gone stale for everyone else**, which is precisely what ⑤ is for.
+
+⚠ **A second disagreement sits in the same node, and it is separate.** `bindings.yaml` names
+`orbit_elements` as producer of `orbital_period`, `hill_radius`, `satellite_stability_limit` and
+`barycentric_split`; the node's own `outputs` in `chain.yaml` are `[a, e, i, lan, aop, n]` and list
+none of the four. **Two files disagree about what this node produces**, and `barycentric_split`'s own
+binding note already records that its chain node does not exist at all. Whoever builds the supply side
+meets both.
 
 ## What closing all of these does not do
 
