@@ -77,6 +77,16 @@ def main() -> int:
     ok(recipe_arrived({"dynamo_rocky"}) == [],
        "5: and it must not fire on some other node acquiring a recipe")
 
+    # ⚠ 5b. and it must be pointed at the LIVE registry, or the promise is untested where it matters.
+    # Handing it a made-up set proves the function works; it does not make the gate red on the day a
+    # recipe actually lands. This is the check that does.
+    import registry  # noqa: E402
+    registry.load_all()
+    live = recipe_arrived(registry.registered())
+    ok(live == [],
+       "5b: a placeholder is standing for a node that now has a registered recipe — "
+       + " ".join(live))
+
     # wiring: the placeholder carries a value into the gate that never received one
     without = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, locked=None,
                         rotation_period_h=32.0)

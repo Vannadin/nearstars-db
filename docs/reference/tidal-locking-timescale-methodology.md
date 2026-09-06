@@ -43,6 +43,26 @@ there `a⁻⁷·⁵`).
 
 ---
 
+## Contract — `tidal_locking`
+
+**Returns** — `locked` [—] · `rotation_state` [—] · `t_lock_yr_min` [yr] · `t_lock_yr_max` [yr] ·
+`orbital_period_h` [h] · `rotation_period_h` [h, only when despun] · `t_lock_width_source` [—]
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_km` [km] ·
+`perturber_mass_earth` [M_earth] · `age_gyr` [Gyr] · `eccentricity` [—] ·
+`permanent_quadrupole` [—] · `nmoi` [—]
+**Discriminating keys** — `eccentricity` and `permanent_quadrupole` choose among §4's states once the
+body has despun; neither affects whether it despun. `permanent_quadrupole` is a declaration.
+**Grade** — analog. ⚠ **None of the six sources cited below is held**, so every formula is carried as
+what this document prints rather than as what a paper says.
+**Not emitted** — which p:q resonance a captured body settles into (§4 calls capture probabilistic),
+and the §5 thermal-tide override.
+
+⚠ **`τ_lock` is a band, not a number.** `Q/k₂` is printed here as a class range (10²–10³) and `ω₀` is
+unknown (§6), so the recipe returns both ends and decides only when the whole band falls on one side
+of the system age.
+
+---
+
 ## 1. The timescale: the despin (synchronization) formula
 
 A body that starts with some primordial spin `ω₀` feels a tidal torque from its
