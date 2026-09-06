@@ -908,3 +908,25 @@ one is checkable.
 are subject to. The lesson is not "remember the citation rules" — that is what failed twice. It is
 **stop treating the pre-commit run as optional for prose**, since prose is where the citation rules
 live.
+
+## Every citation rule we have is a format check, and none of them reads the citation (2026-09-06)
+
+Three citation disciplines were tightened or enforced today — phrase anchors instead of line numbers,
+bibcodes as clickable ADS URLs, quotations checked against the sentence they sit in. **All three are
+checks on the shape of the reference. None of them opens what is referenced.**
+
+The gap showed itself at the end of the day. `chain.yaml:96` failed the line-number check, and the
+cheapest repair was to swap the line number for a phrase from that line — form satisfied, gate green,
+two minutes. Opening the node instead turned up that it is declared `kind: measured`: **it is supplied,
+not computed, so the recipe this item was waiting for is never coming**, and the guardrail meant to
+stop a placeholder becoming permanent watches an event that cannot happen. That became C42, and none
+of it is visible from the citation's shape.
+
+⚠ **The incentive runs the wrong way, and that is the part to keep.** *The cheapest way to fix a
+citation is not to read what it cites.* Every format rule can be satisfied without opening the source,
+and a fix made that way leaves a reference that is correctly formatted and wrong. **The checks catch
+the class of error that costs least and cannot see the class that costs most.**
+
+**What follows from it**: a citation repair is a reason to open the source, not a reason to avoid it.
+Not because reading is a virtue — because a citation that needed repairing is evidence that whoever
+wrote it had the source less firmly in hand than they thought.
