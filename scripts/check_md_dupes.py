@@ -50,6 +50,7 @@ Exit code 1 on any unexempted hit.
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -90,12 +91,30 @@ def duplicate_sections(path: Path) -> list[tuple[int, int, str]]:
     return out
 
 
+def _present_dirs() -> set[str]:
+    """SKIP_DIRS 중 트리에 실제로 있는 이름. ⚠ 루트만 보면 안 된다 — 이 레포에서 스킵 대상은
+    전부 중첩돼 있다(`engine/.venv`, `docs/phase3/_papers`). 첫 판이 `(ROOT / d).exists()` 였고,
+    그래서 `_papers` 를 "트리에 없음" 이라고 보고했다. 심링크는 내려가지 않되 이름은 센다."""
+    found: set[str] = set()
+    for base, dirs, _files in os.walk(ROOT):
+        for d in list(dirs):
+            if d in SKIP_DIRS:
+                found.add(d)
+                dirs.remove(d)          # 안으로는 안 들어간다. 있다는 것만 안다.
+    return found
+
+
 def main() -> int:
     bad: list[str] = []
     exempted = scanned = 0
     #: 스킵이 실제로 무엇을 걷어냈는지 센다. 0 이면 그 항목은 오늘 아무 일도 안 하고 있다는 뜻이고,
     #: 그 사실이 보여야 한다 — 발화하는 스킵과 도달조차 못 하는 스킵은 소스에서 똑같이 생겼다.
+    #: ⚠ 0 에도 두 뜻이 있어 갈라 센다. **부재**는 그 경로가 트리에 아예 없다는 것이고, **미도달**은
+    #: 있는데 스캔이 안 내려갔다는 것이다(`_papers` 가 심링크라 그렇다). 둘을 한 칸에 넣으면, 나중에
+    #: 누가 스킵 줄을 지워도 출력이 안 변해서 지워도 되는 줄 알게 된다 — 그러다 심링크가 실제
+    #: 디렉터리로 바뀌는 날 741개가 쏟아진다.
     skipped: dict[str, int] = {d: 0 for d in SKIP_DIRS}
+    present = _present_dirs()
     for path in sorted(ROOT.rglob("*.md")):
         hit = [p for p in path.parts if p in SKIP_DIRS]
         if hit:
@@ -117,12 +136,16 @@ def main() -> int:
               f"중복이 아니라 편집 충돌입니다.")
         return 1
     fired = ", ".join(f"{d} {n}개" for d, n in sorted(skipped.items()) if n) or "없음"
-    inert = sorted(d for d, n in skipped.items() if n == 0)
+    #: 0 인데 경로가 있다 = 스캔이 못 내려갔다. 0 이고 경로도 없다 = 걷어낼 것이 애초에 없다.
+    unreached = sorted(d for d, n in skipped.items() if n == 0 and d in present)
+    absent = sorted(d for d, n in skipped.items() if n == 0 and d not in present)
     print(f"  [PASS] 마크다운 절 중복 — {scanned}개 파일, {MIN_LINES}줄 이상 동일 절 0건 "
           f"(의도적 예외 {exempted}건: {', '.join(EXEMPT) if exempted else '없음'})")
     line = f"         스킵 발화: {fired}"
-    if inert:
-        line += "  ·  오늘 아무것도 안 걷어낸 항목: " + ", ".join(inert)
+    if unreached:
+        line += "  ·  ⚠ 있는데 스캔이 못 내려간 항목(스킵이 일한 게 아니다): " + ", ".join(unreached)
+    if absent:
+        line += "  ·  트리에 없는 항목: " + ", ".join(absent)
     print(line)
     return 0
 

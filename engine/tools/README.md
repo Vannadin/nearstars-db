@@ -717,3 +717,37 @@ printed one, and the printed one carries a tilde.* One digit, and it says the sa
 **The check, before quoting a derived number**: find the *least* precise input it stands on and count
 its significant figures. A tilde in a source is that count already — it is the source saying it will
 not be read more closely than this.
+
+## A square root that extracts as a lone letter, and the factor of 4.4 it cost (2026-09-06)
+
+Barnes 2017's equation (6) sets the eccentricity at which the CPL model's equilibrium spin jumps from
+1:1 to 3:2. A brief carried that threshold as **1/19 = 0.0526**, quoted from a plain-text extraction.
+The page image says **√(1/19) = 0.2294**.
+
+`pdftotext -raw` renders the radical as a bare `p` on its own line, and it lands in the middle of a
+sentence:
+
+    eccentricities below
+    p
+    1/19, the torque on the rotation by the tidal waves is insufficient
+
+A lone `p` in running prose is not a word. That is the tell, and it is available without the image —
+but only to a reader who notices that the sentence has a letter in it that cannot be there.
+
+**What the factor of 4.4 decided**: at 0.0526 the Moon (e = 0.0549) sits 4 % *above* the threshold, so
+CPL predicts 3:2 against the Moon's observed 1:1 — an apparent contradiction, and a brief was written
+around resolving it. At 0.2294 the Moon is at 0.24 of the threshold, CPL predicts 1:1, and there is
+nothing to resolve. **The body that actually lands near the threshold is Mercury**, at 0.90 of it —
+and there the direction is reversed: CPL predicts 1:1 where the observation is 3:2, which is a
+capture question, not an equilibrium one.
+
+⚠ **The seat that wrote the brief had already written "verify equations (6), (15) and (16) on the page
+image, the plain text mangles subscripts" into that same brief** — and then took its own quotation from
+the text layer. Writing the precaution and applying it are separate acts, and the first does not
+perform the second.
+
+**The check**: when a quoted number comes from an extracted PDF, render the page. `pdftoppm -f <page>
+-l <page> -r 150 -png <pdf> <out>` costs one command. Everything a maths glyph can lose in extraction —
+a radical, an exponent, a subscript, a minus sign — loses it silently and leaves a plausible number
+behind. Equations (15) and (16) came through the same extraction **correctly**, which is exactly why
+the wrong one was believed.
