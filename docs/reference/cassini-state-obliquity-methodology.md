@@ -1,6 +1,10 @@
 <!-- 조석 감쇠된 천체의 평형 자전축 기울기(Cassini state obliquity)를 근거화 계산해 "고정=obliquity 0" 가정을 실제 평형값으로 대체하는 방법 -->
 # Cassini-state obliquity: equilibrium spin-axis tilt of a damped body
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for the **equilibrium obliquity ε** of a body whose spin has been
 tidally damped into a **Cassini state**. It replaces the lazy "tidally locked ⟹
 obliquity = 0 exactly" assumption with the true Cassini-state value, which is

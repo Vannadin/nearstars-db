@@ -1,6 +1,10 @@
 <!-- 조석고정(despin) 타임스케일로 동기자전 여부와 자전 상태(1:1·3:2·유사동기)를 판정하는 방법론 레퍼런스 -->
 # Tidal-Locking Methodology: Despin Timescale, Rotation State & the Thermal-Tide Exception
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for deciding **whether a body is tidally locked, and into which
 rotation state**, by comparing its tidal-synchronization (despin) timescale `τ_lock`
 to the system age. Same "cite the relation + a calibration that reproduces known

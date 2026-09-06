@@ -1,6 +1,10 @@
 <!-- Phase 3 디스크색 합성: Mie 산란광 reflectance로 disk_tint_rgb_hex 도출, 고증/vivid 변종 + B/I 검증 -->
 # Debris-Disk Color Methodology: 조성 + 입자 크기 → Mie 산란 → reflectance → sRGB
 
+> **레거시.** 노드·체인 구조 이전에 쓰였고, 어느 노드의 코드에도 매여 있지 않다.
+> 해당 노드를 지을 때 노드별 방법론으로 다시 쓰며, 그 문서는 코드가 재현하는 기준값을 갖는다.
+> 그때까지 이 문서는 근거가 아니라 기초 자료로 인용한다.
+
 > 출처: debris disk 산란광 및 입자 광학 문헌 종합
 > (Mie 커널은 Bohren & Huffman 1983, 충돌 입자 크기 분포는 Dohnanyi 1969,
 > 조성별 광학상수는 Draine 2003, Rouleau & Martin 1991, Warren & Brandt 2008,

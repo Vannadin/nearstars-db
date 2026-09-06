@@ -1,6 +1,10 @@
 <!-- 천체의 구-대비 변형(자전 편평 J2 + 조석고정 triaxial C22)을 근거화 계산해 Principia 중력모델에 채우는 방법 -->
 # Body figure grounding: rotational oblateness (J₂) and tidal triaxiality (C₂₂)
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for the degree-2 **figure** of every NearStars body: how far it
 departs from a sphere, and which gravity coefficients capture that. Two physical
 causes, two coefficients:

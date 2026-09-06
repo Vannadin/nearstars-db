@@ -1,6 +1,10 @@
 <!-- 직접검출 행성의 emit 궤도 위상을 관측 하늘 PA에 정합하고 게임 에포크로 되감는 방법(관측 근거 + 교과서 천체역학) -->
 # Observation-anchored emit orbital phase: sky-PA match + epoch rewind
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for setting the **emit orbital phase** (longitude of ascending
 node Ω, argument of periapsis ω, and mean anomaly M) of a planet that has a **real
 direct-imaging or astrometric detection**, so that the in-game body reaches the

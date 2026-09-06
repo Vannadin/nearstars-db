@@ -1,6 +1,10 @@
 <!-- 크레이터가 다른 지형에 지워지기까지 걸리는 시간을 풍화 채널별로 도출하는 방법(논문 근거) — 표면 비주얼(크레이터 밀도) 결정용 -->
 # Crater degradation grounding: how long a crater survives each resurfacing process
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for the question every surface visual depends on: **does this
 body render cratered, partially cratered, or crater-free?** The answer is a race
 between two clocks — the rate at which impacts *add* craters and the rate at

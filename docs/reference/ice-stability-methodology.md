@@ -1,6 +1,10 @@
 <!-- 노출/매장 얼음의 승화 수명과 존속 알베도 임계를 증기압 곡선+Hertz-Knudsen으로 도출하는 방법(논문 근거) -->
 # Surface-ice survival grounding: sublimation lifetime and the albedo threshold
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for deciding whether a body can **keep exposed ice** at its orbit,
 and what albedo it takes to do so. The question is not cosmetic: an icy surface, a
 bright albedo, an ice-cap map and a cryovolcanic look all rest on the same claim,

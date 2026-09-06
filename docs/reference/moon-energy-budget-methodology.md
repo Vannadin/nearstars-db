@@ -1,6 +1,10 @@
 <!-- 위성의 T_eq를 4항 에너지 예산(별빛−식+행성열복사+행성반사+조석)으로 도출하는 방법(논문 근거) -->
 # Satellite energy budget: the four terms a planet does not have
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for the **equilibrium temperature of a moon**. A satellite is not a
 planet on a slightly different orbit. Four terms that are zero or negligible for a planet
 are first-order for a close-in moon, and three of them are easy to forget:

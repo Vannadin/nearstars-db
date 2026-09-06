@@ -1,6 +1,10 @@
 <!-- 암석형 외계행성 대기 표면기압·평균분자량·스케일높이 결정 방법론 레퍼런스 -->
 # Rocky-Exoplanet Atmosphere Methodology: Surface Pressure & Scale Height
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 > Source: synthesis of the rocky-exoplanet atmosphere-retention and outgassing
 > literature (Zahnle & Catling 2017, Owen 2019, Lopez 2017, Dong+ 2017/2018,
 > Garraffo+ 2016, Ribas+ 2016, Meadows+ 2018, Herbort+ 2020, Wogan+ 2020,

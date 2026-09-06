@@ -1,6 +1,10 @@
 <!-- 항성 플레어 입자가 대기 기둥을 통과해 지표에 남기는 방사선 선량을 도출하는 방법(논문 근거) -->
 # Surface radiation dose grounding: stellar particle events through an atmospheric column
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for the dose a **surface** receives, as distinct from the trapped-belt
 dose that [`planetary-magnetosphere-geometry-methodology.md`](planetary-magnetosphere-geometry-methodology.md)
 owns. Those are different chains: belts are about particles a magnetosphere *captures*,

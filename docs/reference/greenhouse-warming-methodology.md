@@ -1,6 +1,10 @@
 <!-- 임의 기체 조합의 온실 상승폭(T_surf − T_eq)을 4개 층으로 도출하는 방법(논문 근거) -->
 # Greenhouse warming grounding: four layers from any gas mixture to a surface temperature
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for the **greenhouse temperature increment**
 
     ΔT_gh  =  T_surface  −  T_eq

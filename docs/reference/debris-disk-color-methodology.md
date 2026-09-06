@@ -1,6 +1,10 @@
 <!-- Phase 3 디스크색 합성: Mie 산란광 reflectance로 disk_tint_rgb_hex 도출, 고증/vivid 변종 + B/I 검증 -->
 # Debris-Disk Color Methodology: Composition + Grain Size → Mie Scattering → Reflectance → sRGB
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 > Source: synthesis of the debris-disk scattered-light and grain-optics literature
 > (Bohren & Huffman 1983 for the Mie kernel; Dohnanyi 1969 for the collisional
 > size distribution; the per-composition optical-constant papers Draine 2003,

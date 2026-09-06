@@ -1,6 +1,10 @@
 <!-- 쌍극 자기장 세기+항성풍에서 자기권 크기·모양과 방사선대 강도(다요인)를 도출해 Kerbalism 지오메트리로 매핑하는 방법(논문 근거) -->
 # Planetary magnetosphere geometry grounding: standoff, belts, and Kerbalism mapping
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for turning a body's **dipole field strength** (from the
 [rocky](rocky-planet-dynamo-methodology.md) or [giant](planetary-dynamo-scaling.md)
 dynamo recipes) into the **shape and size of its magnetosphere** — the

@@ -1,6 +1,10 @@
 <!-- 관측된 질량 또는 반경에서 나머지 하나를 조성-근거 질량-반경 관계로 도출하고 밀도 정합성을 검증하는 방법론 레퍼런스 -->
 # Mass–Radius Relation Methodology: Assigning the Missing M or R, and Gating Density
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 > Source: synthesis of the planetary mass–radius literature: the physical
 > interior grids (Seager+ 2007, Fortney+ 2007, Zeng+ 2016, Baraffe+ 2008), the
 > empirical/probabilistic relations (Weiss & Marcy 2014, Chen & Kipping 2017,

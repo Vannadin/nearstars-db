@@ -1,6 +1,10 @@
 <!-- 고체 표면(암석·레골리스·얼음) 조성에서 가시광 색과 Bond/기하 알베도를 도출하는 방법론 레퍼런스 -->
 # Surface Color & Albedo Methodology: Composition → Reflectance → sRGB + Bond Albedo
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 > Source: synthesis of the planetary-surface reflectance-spectroscopy literature
 > (Burns 1993, Sherman 1985, Morris+ 1985/2000, Clark 1981, Hapke 1981/1993/2012,
 > Hapke 2001, Pieters+ 2000, Kokaly+ 2017 / USGS Spectral Library v7, Warren 1984 /

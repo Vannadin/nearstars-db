@@ -1,6 +1,10 @@
 <!-- 궤도·내부물성에서 조석가열 출력(Ė)을 도출하고 화산·지하해·플룸 가능성을 판정하는 방법론 레퍼런스 -->
 # Tidal-Heating Methodology: Internal Power, Volcanism & Subsurface Oceans
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for deriving the **internal tidal-heating power** `Ė` of a
 synchronously rotating body (a moon around a planet, or a planet around its star)
 from its orbit and interior, and for deciding whether that heat can sustain

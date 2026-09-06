@@ -1,6 +1,10 @@
 <!-- 항성 Teff(+금속함량, M왜성 TiO/VO 분자밴드)에서 광구 가시색(sRGB)을 도출하는 방법론 레퍼런스 -->
 # Stellar Photospheric-Color Methodology: Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 > Source: synthesis of the stellar effective-temperature / synthetic-photometry
 > literature (Bessell+ 1998, Husser+ 2013 PHOENIX, Castelli & Kurucz 2003 ATLAS9,
 > Allard+ 2011 BT-Settl, Rajpurohit+ 2013, Mann+ 2015, Ramírez & Meléndez 2005,

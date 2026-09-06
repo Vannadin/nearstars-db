@@ -1,6 +1,10 @@
 <!-- Principia far-field gravity 절단(a_floor·shell ratio)을 문헌으로 근거화한 방법론 문서 -->
 # Gravity Significance Floor: Methodology & Literature Grounding
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 This note grounds **two numerical parameters** of a per-pair far-field gravity-truncation
 scheme built into a Principia (KSP n-body) fork:
 

@@ -1,6 +1,10 @@
 <!-- 행성·갈색왜성 내부열(잔여+Kelvin-Helmholtz+방사성) → T_int → 유효온도 T_eff를 도출하는 방법론 레퍼런스 -->
 # Internal-Heat / Self-Luminosity Methodology: T_int and the Effective Temperature
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for deriving a planet's or brown dwarf's **non-tidal internal heat**
 (its self-luminosity `L_int`), turning it into an internal-only effective temperature
 `T_int`, and combining that with the irradiation equilibrium temperature `T_eq` to get

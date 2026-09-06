@@ -1,6 +1,10 @@
 <!-- 미측정 항성/갈색왜성 자전축 시선경사 i★를 v sin i + 자전주기 + 반지름 결합으로 도출하는 방법(논문 근거) -->
 # Spin-axis inclination grounding: i★ from v sin i + rotation period + radius
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for deriving the **line-of-sight spin inclination i★** of a
 star or brown dwarf that has **no direct i★ measurement**, by combining three
 observables: the projected rotation velocity (v sin i, spectroscopic), the

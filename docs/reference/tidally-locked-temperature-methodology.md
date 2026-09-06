@@ -1,6 +1,10 @@
 <!-- 조석고정 외계행성 표면온도 추정 방법론 레퍼런스 -->
 # Tidally-Locked Exoplanet Surface-Temperature Methodology
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 > Source: synthesis of the tidally-locked-planet climate literature (Joshi 1997,
 > Pierrehumbert 2011, Kite+ 2011, Yang+ 2013, Hu & Yang 2014, Wordsworth 2015,
 > Koll & Abbot 2016, Kopparapu+ 2013/2016, Checlair+ 2017, Haqq-Misra+ 2018,

@@ -1,6 +1,10 @@
 <!-- 대기 조성에서 반사·산란 가시광 색(스펙트럼→sRGB)을 도출하는 방법론 레퍼런스 -->
 # Atmosphere Reflected-Color Methodology: Composition → Spectrum → sRGB
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 > Source: synthesis of the planetary reflected-light / albedo-spectrum literature
 > (Sudarsky+ 2000/2003, Marley+ 1999, Cahoy+ 2010, Karkoschka 1994, Irwin+ 2024,
 > Khare+ 1984, Tomasko+ 2008, Carlson+ 2016, Gao+ 2021, Sneep & Ubachs 2005,

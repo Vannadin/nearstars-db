@@ -1,6 +1,10 @@
 <!-- Sol의 Hapke 셰이더 값(_Hapke 지형/스케일드)을 앵커 보간 + 광도 문헌으로 처방하는 방법 -->
 # Hapke shader value grounding: Sol anchor families + photometric regimes
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for assigning the two **`_Hapke` shader values** every NearStars
 body needs for the Sol (RSS-Reborn) rendering stack: the **Parallax terrain**
 material's `_Hapke` (ground-level look) and the **`Custom/HapkeScaled`** scaled-space
