@@ -84,7 +84,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **next, owner-set 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled three ways | **listed 2026-09-06, one-line bug** | `dynamo_rocky` reads `rotation_period`, bodies declare `rotation_period_h`, `chain.yaml` labels the output `rotation_period`. The sibling `dynamo.py` already reads the right one, so there is no schema question — only the fix, and the graph label |
 | **C38** | `tidal_locking` stands on two tidal models at once | **listed 2026-09-06** | `τ_lock` is constant-phase-lag (Goldreich & Soter, per Barnes §2.1); `ω_eq/n` is Hut 1981, which Barnes cites for constant-**time**-lag. They agree only under an assumption neither our document nor our code states, and Hut is held as an unreadable scan |
-| **C39** | the same `Q/k₂` is a per-body declaration in one node and a class band in another | **listed 2026-09-06** | `tidal_heating` reads a declared `k2_over_q`; `tidal_locking` uses the printed class 10²–10³. Dante's declared 0.0155 is **Q/k₂ = 64.5**, outside that band on the same side Venus falls — so the class does not describe our own bodies |
+| **C39** | the same `Q/k₂` is a per-body declaration in one node and a class band in another | **closed 2026-09-06** | Unified: **a declaration wins, the class band is the fallback**, inverted at one named place (`q_over_k2_from_declaration`) and named in the output. No roster verdict moved — Dante and Hades read 1:1 before and after, the a⁶ gate deciding them by nine orders of magnitude. The class band still fails to describe them, which is now C39's finding rather than its blocker |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -2826,7 +2826,7 @@ this family's known failure is unavailable on a waterless planet.
 **Next step**: read Hut 1981 as page images and record which lag model its `ω_eq/n` assumes. Until
 then the recipe carries a mixture it cannot justify, and says so.
 
-### C39 — one tidal quality, two ways of getting it — **listed 2026-09-06, not started**
+### C39 — one tidal quality, two ways of getting it — **closed 2026-09-06**
 
 `tidal_heating` takes `k2_over_q` as a **per-body declaration** and the boards carry values;
 `tidal_locking` uses the **class band** `Q/k₂` 10²–10³ that its document prints. Same physical
@@ -2839,10 +2839,36 @@ molten moon that is physically reasonable, which is the uncomfortable part — *
 describe our own roster**, and Venus is then not an isolated failure of that band but the second
 instance.
 
-**A shape for it already exists**: whatever was declared wins, and the class band is the fallback —
-the same pattern `ω₀` acquired in C36/brief 124. ⚠ **Not applied here without the owner**, because it
-changes which number `tidal_locking` uses for bodies that already have a declaration, and that moves
-verdicts.
+**The shape it took**: whatever was declared wins, and the class band is the fallback — the same
+pattern `ω₀` acquired in C36/brief 124. The inversion lives at one named function so the direction
+cannot be lost between the two nodes, and the output carries `q_over_k2_source`, which says in words
+which of the two the verdict stood on.
+
+**Why it was worth doing, which is not tidiness.** The class band's *ceiling* is the uncertain end,
+and it was deciding a verdict on its own. Holding everything else fixed and moving only that ceiling:
+
+| `Q/k₂` ceiling | consistency-window floor | this code's 5 h default |
+|---|---|---|
+| 500 | 2.30 h | passes |
+| **1000** (the document's) | **4.60 h** | **passes, by 8.8 %** |
+| 1500 | 6.89 h | ⚠ excluded |
+| 2000 | 9.18 h | ⚠ excluded |
+
+A 50 % move in a number nobody has measured for our bodies flips the answer. Every body that declares
+its own `k₂/Q` is one body that no longer rests on it.
+
+**What moved on the boards: nothing.** Measured before and after on the two roster bodies that
+declare a tidal quality, at the board's own mass and radius:
+
+| body | declared `k₂/Q` | `Q/k₂` | τ before (class band) | τ after (declaration) | verdict |
+|---|---|---|---|---|---|
+| Dante | 0.0155 | 64.5 | 0.0315–0.315 yr | 0.0203 yr | 1:1 → 1:1 |
+| Hades | 1e-3 | 1000 | 0.288–2.88 yr | 2.88 yr | 1:1 → 1:1 |
+
+Against a 5.3 Gyr age, both are decided by the `a⁶` gate with nine orders of magnitude to spare, so
+the declaration moves `τ` and moves no verdict. **That is the finding, not a null result** — the
+before-and-after was run precisely because a flip would have moved a board value the owner has already
+approved, and it is recorded so the next person does not have to re-run it to find out.
 
 ⚠ **Wiring `k₂` from the interior solver is only half a route.** `k₂` follows from structure, but `Q`
 is rheology, and Barnes writes that the *"tidal dissipation rate is poorly constrained"*. And the

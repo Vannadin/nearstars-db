@@ -330,3 +330,29 @@ tempting to call the slow end implausible and thereby prefer the optimistic `Q/k
 value the literature itself adopts, and no slow-side limit exists to judge either. The mechanism is
 recorded and the conclusion withheld: **the inversion constrains `Q/k₂` the moment a slow-side limit
 on primordial spin exists; none exists, so it constrains nothing today.**
+
+## 9. C39 — a declaration wins, and the class band is the fallback (2026-09-06)
+
+`tidal_heating` refuses to run without a per-body declared `k₂/Q`; `tidal_locking` read the class band
+`Q/k₂` = 10²–10³ and ignored the same declaration. One quantity, two readings. It has one now, and the
+reciprocal lives at a single named function, `q_over_k2_from_declaration`, so the direction cannot be
+lost between the nodes.
+
+**The reason is the ceiling, not the tidiness.** §8's consistency window is built at both ends of the
+class band, and the *ceiling* is the uncertain one. Moving only it — the table in
+[`interior-core.md`](interior-core.md) under C39 — the window floor climbs 2.30 → 4.60 → 6.89 → 9.18 h
+across ceilings 500 → 2000, and this code's 5 h default survives only up to a ceiling of about 1086 —
+8.6 % above the one the document prints.
+A 50 % move in a number nobody has measured for our bodies decides the answer. Every body that
+declares its own `k₂/Q` is one body whose verdict no longer rests on that ceiling.
+
+**No board verdict moved**, which was the thing to check before touching anything: Dante and Hades are
+the only roster bodies carrying a declaration, and both read 1:1 before and after. Their τ is
+0.02–2.9 yr against a 5.3 Gyr age — the `a⁶` gate decides them by nine orders of magnitude, so the
+declaration moves τ and cannot move the verdict. Numbers in the C39 section; the before-and-after is
+pinned as a test rather than left as a claim, because a flip would have moved an owner-approved value.
+
+⚠ **What this does not fix.** Dante's declared `Q/k₂` = 64.5 still sits *below* the class floor of 100,
+and misses on the same side Venus does (§6): both want to dissipate more than the class allows. Wiring
+the declaration means our own bodies no longer depend on a band that does not describe them — it does
+not repair the band. That remains what §2's table owes, and C39's closure is not a claim otherwise.
