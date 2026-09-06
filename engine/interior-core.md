@@ -83,6 +83,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **next, owner-set 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled three ways | **listed 2026-09-06, one-line bug** | `dynamo_rocky` reads `rotation_period`, bodies declare `rotation_period_h`, `chain.yaml` labels the output `rotation_period`. The sibling `dynamo.py` already reads the right one, so there is no schema question — only the fix, and the graph label |
+| **C38** | `tidal_locking` stands on two tidal models at once | **listed 2026-09-06** | `τ_lock` is constant-phase-lag (Goldreich & Soter, per Barnes §2.1); `ω_eq/n` is Hut 1981, which Barnes cites for constant-**time**-lag. They agree only under an assumption neither our document nor our code states, and Hut is held as an unreadable scan |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -2784,6 +2785,45 @@ first person to be misled would be someone auditing that record later.
 **Not fixed here, deliberately.** It landed in the middle of Brief 121, and folding a schema repair
 into the placeholder commit would have meant the wiring and a value changed together — exactly what the
 A/B for C36 exists to avoid.
+
+### C38 — the recipe draws from two tidal models, and nothing says they may be mixed — **listed 2026-09-06**
+
+`tidal_locking` takes its despin timescale from **Goldreich & Soter 1966** and its equilibrium spin
+from **Hut 1981**. Barnes 2017 (held) puts those in different camps: §2.1, *"The Constant Phase Lag
+Model … commonly utilized in Solar System studies (e.g. Goldreich and Soter 1966; Greenberg 2009)"*,
+and separately *"the 'constant-timelag,' or CTL, model (Mignard 1979; **Hut 1981**; Greenberg 2009)"*.
+
+⚠ **Barnes calls them "qualitatively different"** and says they coincide *"if a linear dependence
+between phase lags and tidal frequencies is assumed"*. Neither our document nor our code states that
+assumption. **And it cannot be checked here**: Hut 1981 is in the cache **as a scan**, so what it
+actually assumes is unreadable — the first time the "held but unreadable" grade has cost anything.
+
+⚠ **The seam is quantitative, not formal.** Barnes: *"the **CTL model does not predict such short tidal
+locking times** for Earth-like planets in the HZ of G dwarfs."* The two models disagree about the very
+number this recipe returns.
+
+**Do not read this as licence to blame the Venus mismatch on the seam.** Barnes prints a known failure
+of this model family — *"As is well known, the current estimates for Q and τ of Earth, 12 and 640 s,
+respectively, predict that the Moon has only been in orbit for 1–2 Gyr … far less than its actual age
+of 4.5 Gyr"* — and the literature's escape is to move Q: *"many researchers … assume that the
+historical averages of Earth's tidal Q and τ have been about 10 times different. Indeed, Kasting et
+al. (1993) assumed Q = 100"*. That is the same shape as Venus needing `Q/k₂ ≲ 28` against a printed
+class of 10²–10³.
+
+⚠ **But that escape does not reach Venus, and the reason is printed.** The justification is oceanic:
+*"tidal dissipation in the oceans is a complex function of continental positions and in the past
+different arrangements could have allowed for weaker dissipation."* Venus has no ocean, and neither do
+the dry rocky bodies and moons of this roster. **The same qualifier bounds the model warning itself** —
+the models are *"poor approximations to the physics of the deformations of planetary surfaces,
+**particularly those with oceans and continents**"*. ⚠ And the escape is shaky on its own terms: a
+measurement puts the factor at **two**, not ten — *"the modern Earth is about twice as dissipative as
+compared to the historical average (Green et al. 2017)"*.
+
+So the Venus finding is **not** dissolved by the seam. If anything it hardens: the standard way out of
+this family's known failure is unavailable on a waterless planet.
+
+**Next step**: read Hut 1981 as page images and record which lag model its `ω_eq/n` assumes. Until
+then the recipe carries a mixture it cannot justify, and says so.
 
 ## What closing all of these does not do
 
