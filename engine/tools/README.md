@@ -930,3 +930,35 @@ the class of error that costs least and cannot see the class that costs most.**
 **What follows from it**: a citation repair is a reason to open the source, not a reason to avoid it.
 Not because reading is a virtue — because a citation that needed repairing is evidence that whoever
 wrote it had the source less firmly in hand than they thought.
+
+## A directing seat's error does not stay local — it ships as an instruction (2026-09-06)
+
+Counting the day's cross-seat corrections honestly, because the first count was wrong in a way worth
+keeping.
+
+This seat's summary claimed the directing seat had corrected three of its conclusions and been
+corrected twice. **Two of those three were the other way round**, and one item was listed on both
+sides:
+
+- **√(1/19)** — the directing seat's brief carried the CPL threshold as `1/19`, taken from a
+  plain-text extraction where the radical had dropped out. **This seat rendered the page and caught
+  it.** Their error, our find.
+- **The duplicate-heading predicate** — proposed by the directing seat as "one line is enough".
+  **Measured here before building**: 11 files match, every one of them legitimate structure. Replaced
+  with a body comparison. Their proposal, our correction.
+- **The five significant figures** — this seat produced `1087.4` against an input printed with a
+  tilde, and the directing seat caught it. Correctly attributed the first time.
+
+⚠ **The asymmetry is the point, not the tally.** A working seat's error is one commit and lives until
+a gate or a review finds it. **A directing seat's error becomes a brief**, is read as an instruction,
+and gets built on before anyone checks it. The `√(1/19)` case is exactly that shape: had the page not
+been rendered, the wrong threshold would have propagated into a brief, an item and a recipe — and the
+recipe would have contradicted the Moon, our own anchor.
+
+**So the checking is not symmetric either.** Verifying an instruction before acting on it is not
+insubordination or duplicated effort; it is the only place that class of error can still be caught
+cheaply. Both seats spent the day re-measuring what the other handed over, and that is what made the
+pairing worth having.
+
+⚠ **And getting the attribution right matters for the same reason the errors do.** A record that says
+the directing seat caught three and made none teaches the next reader to take briefs at face value.
