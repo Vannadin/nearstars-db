@@ -84,6 +84,14 @@ archive was not. Same kind of thing, opposite treatment, and until now nothing s
   code. Counted before tightening: zero new failures, because the exemptions that remain (external
   paper sources, dated quotations, declared records) already covered every one.
 
+- **One helper owns the failure marker, at all 60 call sites.** `check.sh` has 60 `|| fail=1`, and
+  after the fix above three of them also echo a `[FAIL]`. The right shape is
+  `run_check() { "$@" || { echo "  [FAIL] $1"; fail=1; }; }` wrapping every call, so that **every
+  check — including ones added later — reports failure in one format**, and a log-watching loop can
+  be complete rather than mostly complete. ⚠ Not done now: it touches 60 lines and belongs in its own
+  commit, not bolted onto a documentation round. The three above are the ones that print nothing at
+  all today, which is what made the watcher blind rather than merely inconsistent.
+
 Superseded backlog entries, kept for the reasoning:
 
 - **Tighten the contract-heading anchors to a unique Need item, where one exists.** The
@@ -819,3 +827,41 @@ the whole set in one screen.
 
 **Why it happened is worth naming**: recently-written checks are the ones in mind, and running them
 feels like having run the checks. Familiarity is not coverage.
+
+## Survey an output format from the logs, not from the source (2026-09-06)
+
+The rule above — *watch the log for `[FAIL]`, not only for `GATE END`* — needs to know what a failure
+looks like. Grepping the checks for the literal `[FAIL]` said seventeen files had it and sixteen engine
+tests did not. **Both halves of that were wrong.**
+
+- **Invisible to grep, present at runtime.** `print(f"  [{'PASS' if mono else 'FAIL'}] …")` emits
+  `[FAIL]` and contains no such literal. Most of those sixteen were this.
+- **Visible to grep, useless as a pattern.** Three more report failure only by returning 1 —
+  `check_via.py`, `dynamo_table.py`, `build_sitemap.py` print no marker at all, so no log watcher can
+  see them. They are fixed at the **call site** rather than in the tools: the format should belong to
+  the gate, and those three are run by hand elsewhere.
+
+Counting the real formats needed the logs, and there were four: `[FAIL]`, `실패 N건`, `N건 실패`, and
+`test_silicate_melt: FAIL N`.
+
+⚠ **Then the pattern itself had to be measured**, because the obvious one is wrong here too. `FAIL|실패`
+matches **ten times in a fully green log** — a `FAIL: 0` counter, a section heading reading
+*(missing = 실패, stale = 경고)*, and the word inside a `[PASS]` summary. A watcher on that pattern
+would have woken on every run. Excluding the zero cases —
+`\[FAIL\]|FAIL [1-9]|실패 [1-9][0-9]*건|[1-9][0-9]*건 실패` — gives **0 hits across three green logs
+and exactly the two real lines in the red one.**
+
+**The check**: to learn what a program prints, read what it printed. Source tells you what someone
+typed, and a formatted string is assembled from pieces none of which is the output.
+
+## The list of checks to run is made by a path, not by a person (2026-09-06)
+
+The entry above says: run the checks the file you touched is subject to. The next question is who
+builds that list, and the answer must not be "whoever is at the keyboard" — that is the failure being
+repaired, one level up.
+
+`bash scripts/check.sh --wiring` already does it. It reads `git diff --name-only`, decides from the
+paths whether the physics lane is needed, and runs the documentation checks in about two minutes.
+After the citation-link failure this seat picked six checks by hand, got all six right, and **still
+did the wrong thing**: a correct hand-built list is one correct instance of a judgement that has
+already failed once. The lane makes the same list from the paths every time.

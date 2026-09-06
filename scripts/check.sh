@@ -171,7 +171,7 @@ python3 scripts/check_pipeline_flow.py || fail=1
 echo ""
 echo "── 11. 사이트맵 연결성 게이트 (신규 고아 페이지 감지) ──"
 if [ -f docs/index.html ]; then
-  python3 scripts/build_sitemap.py --audit-only || fail=1
+  python3 scripts/build_sitemap.py --audit-only || { echo "  [FAIL] build_sitemap"; fail=1; }
 else
   echo "  [SKIP] 사이트가 빌드되지 않은 트리"
 fi
@@ -187,7 +187,7 @@ echo "── 12b. 계약 · 인용 앵커 · 밴드 (문서가 깨뜨릴 수 있
 # 로컬로 미리 돌리는 습관이 없는 사람에게는 옛 순서가 곧 24분이었다. 이 블록은 약 80초이고
 # 그중 77초가 check_contracts 다 (표본 천체로 레시피를 실제로 돌리므로 싼 검사가 아니다).
 # chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
-python3 engine/check_via.py --gate || fail=1
+python3 engine/check_via.py --gate || { echo "  [FAIL] check_via"; fail=1; }
 (cd engine && python3 check_contracts.py) || fail=1
 # 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
 # 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
@@ -272,7 +272,7 @@ echo "── CMB 열류 (Nimmo 식 37–39 폐합 · 단열 열류 · 거절 라
 (cd engine && python3 test_water_column_steam.py) || fail=1
 # 암석 다이나모 사다리 (Brief 47). 문서 표 재현·RM22 Table 8 차이·게이트 라벨·격자 미선출이 앵커다.
 (cd engine && python3 test_dynamo_rocky.py) || fail=1
-python3 engine/dynamo_table.py --check || fail=1
+python3 engine/dynamo_table.py --check || { echo "  [FAIL] dynamo_table"; fail=1; }
 
 fi   # lane
 
