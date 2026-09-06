@@ -28,6 +28,9 @@ This file is 2 700 lines. The table is here so that "what is open right now" doe
 them. **The table navigates; the entries below carry the evidence, and no closed entry is deleted** —
 the record is the point of the file.
 
+⚠ **This file now holds two tables keyed by C number** — this one and the C14–C19 detail table below.
+A script that edits either must select on cell content, never on the first match; see `engine/tools/README.md`.
+
 ⚠ **A title is read by people who read nothing else.** C24's once said *fixed* twenty-five minutes
 before the fix existed, and that is recorded in its own entry. Every title here was re-read against
 its body on 2026-09-06; where one over-claimed it was rewritten rather than left to be caught again.

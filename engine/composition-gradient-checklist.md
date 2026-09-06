@@ -129,6 +129,7 @@ signal ONLY**: run `scratchpad/zprofile_grid.py <U|N> <w>` for the 8 missing poi
 `U 0.075 64`, then the landing gate.
 
 Done (32 shells, conv=True all):
+
 | pt | λ | R resid | renorm | P_c | T_c |
 |---|---|---|---|---|---|
 | U w=0.01 | 0.174208 | +5.44 % | 0.1937 | 1220 | 6149 |
@@ -151,6 +152,7 @@ point **U w=0.075 @64 shells** (~60 s), then anchors --refresh (the gradient-rad
 marks moved the fingerprint) and the landing gate. RESUME ON THE OWNER'S SIGNAL ONLY.
 
 Wide half done (32 shells, conv=True all):
+
 | pt | λ | R resid | renorm | P_c | T_c |
 |---|---|---|---|---|---|
 | U w=0.075 | 0.178521 | +4.27 % | 0.1941 | 1213 | 5909 |

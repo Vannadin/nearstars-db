@@ -282,3 +282,27 @@ anyone read the output at all.
 bibcode appears in both a code span and its ADS link. It is harmless while that count is not aiming
 at zero — but **if this check is ever tightened to require zero, deduplicate by (file, line, bibcode)
 first**, or the target will be unreachable for a reason that has nothing to do with any paper.
+
+## Two tables in one file make "the first match" unusable (2026-09-06)
+
+`interior-core.md` gained a status table at its top on 2026-09-06, above the C14–C19 detail table that
+was already there. Both have a row keyed `C19`. A repair script that reached for the first match landed
+in the new table and moved three rows out of the old one.
+
+**Once a file holds the same key in two tables, position stops identifying anything.** Select on cell
+content that only one of them has — `:614` for the detail row — and never on order. This is not a fact
+about this file: a summary table over an existing one is a shape we will add to other documents, and it
+breaks first-match selection the moment it lands.
+
+⚠ **And a repair script must not assume the defect it is repairing is absent.** The same script took
+"a paragraph runs until a blank line" as its boundary while fixing a paragraph whose *missing blank
+line* was the defect — so it swallowed the three table rows that followed. Caught before the commit by
+reading `git diff --stat` (5 insertions, 5 deletions, no content lost), reverted, redone with the
+paragraph's single-line extent asserted rather than inferred.
+
+**Scope of the sweep that followed.** "No others" was measured **in `interior-core.md`**. Across
+`engine/**/*.md` there were three more: two in `composition-gradient-checklist.md`, now fixed, and one
+in `c32-k4-basename-notes.ko.md`, **left broken on purpose**. That file's own header declares it
+*"원문 무편집"* / *"Preserved verbatim from the parallel seat's scratch"*, and a third line separates
+the author's own revisions from edits by the work seat. Inserting a blank line to rescue its rendering
+would break the guarantee the file exists to make. A broken table there is the cheaper loss.
