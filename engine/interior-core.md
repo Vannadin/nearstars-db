@@ -81,11 +81,12 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C33 | citations resolved against the document | built 2026-09-05 | — |
 | **C34** | what the transport table is fed, and where its thresholds come from | **half answered** | the thresholds half is answered — none is published, they are conversions, and the 0.03 became a C32 band on 2026-09-06. **What quantity to feed the table is still the owner's**, and Earth alone has four candidates spanning 2.20× |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
-| **C36** | `tidal_locking` has no recipe — the locking timescale | **next, owner-set 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
+| **C36** | `tidal_locking` has no recipe — the locking timescale | **landed 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled three ways | **listed 2026-09-06, one-line bug** | `dynamo_rocky` reads `rotation_period`, bodies declare `rotation_period_h`, `chain.yaml` labels the output `rotation_period`. The sibling `dynamo.py` already reads the right one, so there is no schema question — only the fix, and the graph label |
-| **C38** | `tidal_locking` stands on two tidal models at once | **listed 2026-09-06** | `τ_lock` is constant-phase-lag (Goldreich & Soter, per Barnes §2.1); `ω_eq/n` is Hut 1981, which Barnes cites for constant-**time**-lag. They agree only under an assumption neither our document nor our code states, and Hut is held as an unreadable scan |
-| **C40** | a fitted value has no seat in the value vocabulary, so it travels as a bare point | **listed 2026-09-06** | C32 gave three words for where a number came from — printed, chosen, engine-filled — and a value solved backwards from a wanted output is none of them. Observed in C39: wiring Dante's declared `k₂/Q` turned `τ` from a band into a point with no width anywhere. Every `tidal_heating` declaration is in the same position |
+| **C38** | `tidal_locking` stands on two tidal models at once | **closed by record 2026-09-06** | `τ_lock` is constant-phase-lag (Goldreich & Soter, per Barnes §2.1); `ω_eq/n` is Hut 1981, which Barnes cites for constant-**time**-lag. They agree only under an assumption neither our document nor our code states, and Hut is held as an unreadable scan |
 | **C39** | the same `Q/k₂` is a per-body declaration in one node and a class band in another | **closed 2026-09-06** | Unified: **a declaration wins, the class band is the fallback**, inverted at one named place (`q_over_k2_from_declaration`) and named in the output. No roster verdict moved — Dante and Hades read 1:1 before and after, the a⁶ gate deciding them by nine orders of magnitude. The class band still fails to describe them, which is now C39's finding rather than its blocker |
+| **C40** | a fitted value has no seat in the value vocabulary, so it travels as a bare point | **listed 2026-09-06** | C32 gave three words for where a number came from — printed, chosen, engine-filled — and a value solved backwards from a wanted output is none of them. Observed in C39: wiring Dante's declared `k₂/Q` turned `τ` from a band into a point with no width anywhere. Every `tidal_heating` declaration is in the same position |
+| **C41** | `eccentricity` has no supplier, and the recipe answered anyway | **provisional landed 2026-09-06** | `orbit_elements` has no recipe, so no body supplies `eccentricity`; the recipe substituted `0.0` and every body came out **1:1 synchronous** on a value nobody set. Owner chose the provisional pattern: `e = 0.10`, in §4's unprinted gap, so the output now declines to classify. ⚠ **One value decides the whole roster** — no body's own data can outvote it. The boards' `eccentricity_forced` is deliberately **not** read: a resonance's maintained value is not the orbit's actual one |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -2788,7 +2789,7 @@ first person to be misled would be someone auditing that record later.
 into the placeholder commit would have meant the wiring and a value changed together — exactly what the
 A/B for C36 exists to avoid.
 
-### C38 — the recipe draws from two tidal models, and nothing says they may be mixed — **listed 2026-09-06**
+### C38 — the recipe draws from two tidal models, and nothing says they may be mixed — **closed by record 2026-09-06**
 
 `tidal_locking` takes its despin timescale from **Goldreich & Soter 1966** and its equilibrium spin
 from **Hut 1981**. Barnes 2017 (held) puts those in different camps: §2.1, *"The Constant Phase Lag
@@ -2824,8 +2825,43 @@ compared to the historical average (Green et al. 2017)"*.
 So the Venus finding is **not** dissolved by the seam. If anything it hardens: the standard way out of
 this family's known failure is unavailable on a waterless planet.
 
-**Next step**: read Hut 1981 as page images and record which lag model its `ω_eq/n` assumes. Until
-then the recipe carries a mixture it cannot justify, and says so.
+**How it closes, and it is not by being fixed.** The mixed quantity is `ω_eq`, and `ω_eq` is reached
+only through `STATE_PSEUDO`, which needs `e ≥ 0.206`. No body reaches it, so that branch has never
+executed and no verdict in the engine depends on which lag model it came from. The seam is inert, and
+it is closed as a record rather than as a repair.
+
+⚠ **The reason it is inert is a worse thing than the seam, and it moved the same day.** It was never
+that our bodies are on circular orbits. `eccentricity` has **no supplier** — `orbit_elements` has no
+recipe — and `tidal_locking` used to substitute `0.0`, classifying every body `1:1 synchronous` on a
+number nobody set. That is C41, and it is the finding this item produced. As of the owner's decision
+the substitution is a registered placeholder at `e = 0.10`, which lands in §4's unprinted gap, so
+every body now reads `unclassified` — still short of `STATE_PSEUDO`, and the seam is still not reached.
+
+⚠ **So the closure now rests on a choice of ours, not on data.** Before, the seam was unreachable
+because a value was missing; now it is unreachable because the placeholder sits below the state
+threshold. **Move that placeholder to 0.25 and C38 is live again** — the CPL/CTL disagreement would
+start deciding rotation states. Whoever changes that number is changing this item's status, and this
+paragraph is where they find that out.
+
+**The replacement is available whenever eccentricity starts flowing.** Barnes 2017 prints a CPL-native
+equilibrium period, so the recipe could stand on one model instead of two:
+
+    P_eq^CPL = P for e < √(1/19);  2P/3 above          (Barnes eq. 6, verified on the page image, p. 8)
+    P_eq^CTL = P / (1 + 6e²) at low e, ψ = 0           (eq. 16 — what Hut gives us today)
+
+⚠ **√(1/19) = 0.2294, not 1/19 = 0.0526.** A plain-text extraction of that page drops the radical and
+leaves a lone `p` on its own line, and the difference is a factor of 4.4 that decides an anchor: at
+0.0526 the Moon (e = 0.0549) sits just above the threshold and CPL would predict **3:2** against its
+observed 1:1; at 0.2294 the Moon is far below and CPL predicts 1:1, agreeing. **The body that lands
+near the threshold is Mercury** — e = 0.206, nine-tenths of the way to it, still below — where CPL
+predicts 1:1 and the observation is 3:2. ⚠ That is not CPL failing: an equilibrium period is where the
+tide alone would drive a body, and Mercury's 3:2 is a **capture** outcome. This recipe does not compute
+capture and says so; Goldreich & Peale 1966 puts the Moon's synchronous capture probability at 0.71.
+
+**Switching would also end a dependency we cannot read**: Hut 1981 is held only as a scan, and the
+linear-phase-lag assumption that lets the two models coincide would no longer be needed. ⚠ **Neither
+closes what stays open**: Goldreich & Soter 1966 and Murray & Dermott 1999 are still not held, so
+`τ_lock` remains carried as what the methodology document prints. C38 closing does not close that.
 
 ### C39 — one tidal quality, two ways of getting it — **closed 2026-09-06**
 
@@ -2920,6 +2956,66 @@ a width for one means deciding what the fit's residual is, which nobody has done
 owner's call, not the engine's — the same line drawn three times already today. What it asks for first
 is the **word**: somewhere to record that a number was solved backwards, so a reader can tell it apart
 from a measurement at a glance instead of following a citation to find out.
+
+### C41 — `eccentricity` has no supplier, and the recipe answers anyway — **listed 2026-09-06, not started**
+
+`tidal_locking` reads `eccentricity` to choose among §4's rotation states. **Nothing produces it.**
+`bindings.yaml` says `eccentricity: {produced_by: [orbit_elements]}`, and `orbit_elements` is not among
+the fifteen registered recipes. So the value is absent for every body, and `solve` fills it with `0.0`.
+
+The consequence is not a refusal, which is what makes it worth an item: **every body comes out `1:1
+synchronous`**, and the reason line says "despun" without ever saying that the eccentricity behind the
+classification was assumed. Pandora, Dante and Hades are all classified on a zero nobody wrote.
+
+⚠ **The boards are not silent about eccentricity — they use a different name.** `eccentricity_forced`
+is declared for Pandora (0.005), Dante (0.0186) and Hades (0.0385), and `tidal_heating` reads it.
+**Do not assume the two names are one quantity.** A forced eccentricity is what a resonance maintains;
+the despin formula wants the orbit's actual eccentricity at that moment. For a body locked in
+resonance they coincide, and for a body with a free eccentricity they do not. Treating similar names
+as the same quantity is the failure this engine hit four times on 2026-09-06 alone — `rotation_period`
+spelled three ways, "constant Q" meaning two models, RM22's `ν`, and a phrase count read as a claim
+about a concept.
+
+**Related but not the same as C37.** There a name mismatch made a node **refuse**; here it makes the
+node **answer**. A refusal is visible in the output and gets fixed; an answer on a substituted zero
+propagates to eight consumers of `locked` and looks exactly like a result.
+
+**Owner decision, 2026-09-06: (b), the provisional pattern.** Three routes were on the table and they
+differed in what each claims — (a) keep the `0.0` default, which is the silence this engine has spent
+two days removing; (b) take it through `engine/provisional.py`, so the substitution is counted, barred
+from emit and recorded at both ends; (c) read `eccentricity_forced`, which asserts the two names are
+one quantity and needs someone who knows that they are. **(b) landed the same day**, and
+`orbit_elements.eccentricity` is the pattern's first real instance.
+
+⚠ **The value chosen classifies the entire roster, uniformly.** Not one body supplies its own
+eccentricity, so unlike `ω₀` — which is at least multiplied by per-body data before it decides
+anything — this one number is the answer for everybody:
+
+| provisional `e` | Pandora | Dante | Hades |
+|---|---|---|---|
+| 0.0 (what ran before) | 1:1 | 1:1 | 1:1 |
+| 0.03 | 1:1 | 1:1 | 1:1 |
+| **0.10 (chosen)** | **unclassified** | **unclassified** | **unclassified** |
+| 0.25 | pseudo-synchronous | pseudo-synchronous | pseudo-synchronous |
+
+⚠ **What was chosen is the interval, not the number.** Any value in §4's unprinted gap `(0.055,
+0.206)` gives that row exactly; `0.10` has no standing of its own and must not acquire one by sitting
+in a file. **And the input is not neutral** — `0.10` asserts *this body's eccentricity is middling*
+just as surely as `0.0` asserts *circular*. What the interval buys is not an input that claims
+nothing; it is an input whose **output declines to classify**, which is the only one of the three
+rotation states that carries the placeholder's own meaning of *not yet a value*. Those two are
+different sentences, and reading the first for the second is how `0.10` would become a neutral value
+in someone's mind.
+
+⚠ **The interval stops below 0.206 on purpose.** Between our pseudo threshold and Barnes's CPL
+threshold `√(1/19) = 0.2294` there is an 11 % gap where this engine would say pseudo-synchronous and
+the CPL model would say 1:1. Parking a placeholder there would manufacture C38's disagreement out of a
+number nobody measured. **That the gap exists at all is what keeps C38's seam alive** even while the
+item is closed.
+
+**Guardrail ⑤ is already aimed at this**: `test_provisional.py` reads the live registry, so the day
+anyone registers a real `orbit_elements` recipe the gate goes red and the placeholder must be removed
+with the tests written against it.
 
 ## What closing all of these does not do
 
