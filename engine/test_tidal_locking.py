@@ -157,17 +157,34 @@ def main() -> int:
     # 11. ⚠ the test with teeth: do the measured bodies admit ONE initial spin?
     # Despun bodies floor it (τ ≤ age), an undespun one caps it (τ > age). An empty window would mean
     # no single ω₀ explains the Solar System at that Q/k₂.
-    measured = [("Venus", 0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, False),
-                ("Mercury", 0.0553, 0.3829, 5.791e7, M_SUN_IN_EARTHS, True),
-                ("Moon", 0.0123, 0.2727, 3.844e5, 1.0, True),
-                ("Io", 0.0150, 0.2860, 4.217e5, 317.8, True)]
-    for qk, want_lo, want_hi in ((1e2, 1.805, 17.98), (1e3, 4.385, 174.6)):
+    # ⚠ Each body's own measured C/MR², not one default for all four. It is not a detail: using 0.33
+    # everywhere put the floor at 4.385 h and the measured values put it at 4.597 h, a 5 % move at a
+    # place where the margin is 9 %. A constant that shifts the verdict line is not allowed to be quiet.
+    measured = [("Venus", 0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, False, 0.337),   # Margot+ 2021, ±0.024
+                ("Mercury", 0.0553, 0.3829, 5.791e7, M_SUN_IN_EARTHS, True, 0.346),  # MESSENGER
+                ("Moon", 0.0123, 0.2727, 3.844e5, 1.0, True, 0.3929),                # lunar laser ranging
+                ("Io", 0.0150, 0.2860, 4.217e5, 317.8, True, 0.37824)]               # Galileo
+    windows = []
+    for qk, want_lo, want_hi in ((1e2, 1.805, 18.36), (1e3, 4.597, 178.3)):
         lo, hi, _who_lo, _who_hi = consistency_window_h(measured, 4.5e9, qk)
+        windows.append((lo, hi))
         ok(lo < hi, f"11: the four measured bodies must admit one ω₀ at Q/k₂ = {qk:.0e}; window empty")
         ok(abs(lo - want_lo) < 0.02 and abs(hi - want_hi) < 0.5,
            f"11: window at {qk:.0e} is {lo:.3f}–{hi:.3f} h, expected {want_lo}–{want_hi}")
-        ok(lo < OMEGA0_PERIOD_H < hi,
-           f"11: the {OMEGA0_PERIOD_H:g} h default must sit inside the window, not merely be plausible")
+
+    # ⚠ 11b. The verdict is the INTERSECTION, not either end on its own. Q/k₂'s true value is unknown,
+    # so an ω₀ has to work at both ends — and reporting the two windows separately reads far safer
+    # than the intersection is.
+    ilo, ihi = max(w[0] for w in windows), min(w[1] for w in windows)
+    ok(abs(ilo - 4.597) < 0.02 and abs(ihi - 18.36) < 0.5,
+       f"11b: the intersection is 4.597–18.36 h; got {ilo:.3f}–{ihi:.3f}")
+    ok(ilo < OMEGA0_PERIOD_H < ihi,
+       f"11b: the {OMEGA0_PERIOD_H:g} h default must survive the intersection, not just one end")
+    margin = OMEGA0_PERIOD_H / ilo - 1.0
+    ok(margin < 0.15,
+       f"11b: the margin above the floor is {margin * 100:.1f} % — recorded because it is small. "
+       f"A 10 % stronger Mercury constraint would have excluded the default, which is what makes "
+       f"this test worth running rather than a formality")
 
     # 7. the band decides, or nothing does
     straddle = solve(0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, 50.0, 0.007)
@@ -183,7 +200,7 @@ def main() -> int:
           f"⚠ 금성은 표와 어긋남을 고정(Leconte 는 고체조석이 동기화한다고 말한다 → 결함은 표의 상수 쪽) · 비 {ratio:.2g}× 가 Q/k₂ 에 불변 "
           f"→ 어떤 상수로도 §2 표 재현 불가 · §4 경계 미인쇄 구간 거절 · Hut 소극한 · "
           f"역행=양수·근소하게 김 · 판도라 32 h(보드 독립 일치) · Proxima b {prox.values['t_lock_yr_max']:.2g} yr < Barnes 1e6 · |ω₀|≤n 거절(궤도주기 동반) · 역산 왕복 정확 · 금성 18–175 h · 분열 한계=밀도만 · "
-          f"⚠ 일관성 창 존재(Q/k₂ 양 끝 모두, 기본값 5 h 안) · 밴드가 나이를 걸치면 보류")
+          f"⚠ 일관성 교집합 4.60–18.36 h 존재(기본값 5 h, 바닥 여유 +8.8 %) · 밴드가 나이를 걸치면 보류")
     return 0
 
 

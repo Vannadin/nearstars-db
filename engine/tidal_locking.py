@@ -220,15 +220,17 @@ def consistency_window_h(bodies, target_tau_yr: float, q_over_k2: float):
     감속 안 한 천체는 `τ > age` 라 `P₀ <` 어떤 값. ⚠ 그래서 이건 밴드끼리 겹치는지를 보는 게 아니다.
     한쪽은 바닥이고 한쪽은 천장이며, **창이 비면 그 `Q/k₂` 로는 네 천체를 함께 설명할 수 없다.**
 
-    `bodies`: (label, m_earth, r_earth, a_km, perturber_m_earth, despun: bool) 의 순회 가능한 것.
+    `bodies`: `(label, m_earth, r_earth, a_km, perturber_m_earth, despun, nmoi)` 의 순회 가능한 것.
+    ⚠ `nmoi` 는 **천체별 측정 C/MR²** 를 넘기라고 있는 자리다 — 넷에 0.33 을 일괄로 쓰면 바닥이 4.385 h,
+    측정치를 쓰면 4.597 h 다. 판정선에서 여유가 9 % 인 자리에서 5 % 가 움직이므로 조용할 수 없다.
     반환: (floor, ceiling, floor 를 정한 이름, ceiling 을 정한 이름)."""
     floor, ceiling = 0.0, math.inf
     who_lo, who_hi = "—", "—"
-    for label, m, r, a_km, mp, despun in bodies:
+    for label, m, r, a_km, mp, despun, nmoi in bodies:
         p_break = breakup_period_h(m, r)
         if p_break > floor:
             floor, who_lo = p_break, f"{label} breakup"
-        p = initial_period_h(target_tau_yr, m * M_EARTH_KG, r * R_EARTH_M, 0.33,
+        p = initial_period_h(target_tau_yr, m * M_EARTH_KG, r * R_EARTH_M, nmoi,
                              a_km * 1e3, mp * M_EARTH_KG, q_over_k2)
         if despun and p > floor:
             floor, who_lo = p, label

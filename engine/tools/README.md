@@ -700,3 +700,31 @@ failure this file records elsewhere.
 And the teeth are elsewhere: run the inversion on **every body whose present spin is measured** and see
 whether the bands overlap at the same end of `Q/k₂`. That constrains without any slow-side limit, and
 it can actually fail.
+
+## An absence claim about the literature is a search result, not an inference (2026-09-06)
+
+Venus's moment of inertia was recorded here as *"not measured — no orbiter has determined it well"*.
+The reasoning was sound and the conclusion was wrong: **Margot et al. 2021** (`2021NatAs...5..676M`,
+Nature Astronomy, 53 citations) measures it from the spin-axis precession using **radar speckle
+tracking from Earth** — *"which gives a normalized moment of inertia of 0.337 ± 0.024"*. Orbiters were
+the wrong place to look, and "no orbiter did it" was quietly promoted to "nobody did it".
+
+⚠ **The second time this shape has appeared.** On 2026-09-04, C18 was written as *"no held paper prints
+this scaling"*, and the paper existed. Both were arrived at by reasoning about **what such a
+measurement would require** and concluding from difficulty that it had not happened. Neither was a
+search.
+
+**So: an absence claim about the literature has to come from a query, not from an argument.** Two ADS
+lines settle it. The argument only ever establishes that *we* have not seen it.
+
+⚠ **And the correction changed the record's shape, not just a number.** The note about to be written
+said the consistency window's two ends carry different **grades** — floor from measurements, ceiling
+from an estimate. All four are measurements. What is true instead is a difference in **precision**:
+Venus's `C/MR²` carries ±7 % (*"residual uncertainties of 7 % with the data obtained to date"*) where
+Mercury's, the Moon's and Io's are far tighter. So the ceiling carries a band and the floor does not —
+`α_Venus` moving from 0.313 to 0.361 slides the ceiling from 17.06 to 19.67 h, while the floor stays
+at 4.597 h because a different body sets it.
+
+Using the measured 0.337 rather than the assumed 0.33 moves the ceiling 17.98 → **18.36 h**. The
+verdict does not change and the margin at the floor is untouched at +8.8 %, which is the point: the
+correction was worth making for the record's honesty, not because it rescued a conclusion.

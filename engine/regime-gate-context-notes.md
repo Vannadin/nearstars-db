@@ -290,12 +290,30 @@ limit at all. So instead: **do the bodies whose present spin is measured admit a
 gives a bound, and the bounds point opposite ways — a despun body needs `τ ≤ age` and so floors `P₀`,
 an undespun one needs `τ > age` and so caps it.
 
-| `Q/k₂` | floor | ceiling | window |
-|---|---|---|---|
-| 10² | 1.805 h (Moon's breakup limit) | 17.98 h (Venus) | exists |
-| 10³ | 4.385 h (Mercury) | 174.6 h (Venus) | exists |
+| `Q/k₂` | floor | ceiling |
+|---|---|---|
+| 10² | 1.805 h (Moon's breakup limit) | 18.36 h (Venus) |
+| 10³ | 4.597 h (Mercury) | 178.3 h (Venus) |
 
-**A window exists at both ends, and the 5 h default sits inside both.** ⚠ This could have come out
+⚠ **The verdict is the intersection, not either row.** `Q/k₂`'s true value is unknown, so an `ω₀` has
+to work at both ends: **4.597 – 18.36 h**. Reporting the two rows separately reads far safer than the
+intersection is.
+
+**The 5 h default survives it — by 8.8 %.** A Mercury constraint ten per cent stronger would have
+excluded it. That margin is the reason this test is worth running rather than a formality: it could
+have come out empty, and it could have killed the default.
+
+⚠ **Each body's own measured `C/MR²`, not one default.** Using 0.33 for all four put the floor at
+4.385 h; the measured values put it at 4.597 h — a 5 % move where the margin is 9 %. Two seats
+computed this window and differed by exactly that, which is how the assumption surfaced. **A constant
+that moves the verdict line does not get to be quiet.** Venus 0.337 ± 0.024 (Margot+ 2021, radar
+speckle tracking), Mercury 0.346 (MESSENGER), Moon 0.3929 (lunar laser ranging), Io 0.37824 (Galileo).
+
+⚠ **All four are measured, but not equally well.** Venus's carries ±7 % — *"residual uncertainties of
+7 % with the data obtained to date"* — against far tighter figures for the others. So the **ceiling**
+inherits a band and the floor does not: `α_Venus` across its 1σ range slides the ceiling from 17.06 to
+19.67 h, while the floor stays at 4.597 h because a different body sets it. An earlier draft of this
+note had Venus's moment down as *unmeasured*; that was an inference about orbiters, not a search. ⚠ This could have come out
 empty — that is what makes it worth running. It does not show 5 h is right; it shows the four measured
 bodies do not exclude it, which is more than was known this morning, when the anchors checked only the
 sign.
