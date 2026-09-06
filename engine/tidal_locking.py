@@ -94,6 +94,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bands import Band  # noqa: E402
 from payload import Result, out_of_domain  # noqa: E402
+from provisional import PROVISIONAL, Placeholder, register, supply  # noqa: E402
 from registry import recipe  # noqa: E402
 
 RECIPE = "tidal-locking-timescale-methodology"
@@ -119,6 +120,36 @@ Q_OVER_K2_ROCKY = Band(None, 1e2, 1e3,
 #: 나이 안에 든다. 하필 시험이 고정한 그 천체에서 깨진다. 정당화를 쓰면서 그 정당화를 시험하지 않은
 #: 것이고, 그래서 이 값은 이제 **기본값이라고만** 불린다.
 OMEGA0_PERIOD_H = 5.0
+
+#: ⚠ **아무도 이심률을 공급하지 않는다.** `bindings.yaml` 이 `eccentricity: {produced_by:
+#: [orbit_elements]}` 라 적어 두었는데 `orbit_elements` 에 레시피가 없다. 그래서 여기 임시값을
+#: 세운다 (오너 결정 2026-09-06, 브리프 121 의 패턴).
+#:
+#: ⚠ **0.10 이라는 수 자체에는 아무 근거가 없다.** 고른 것은 숫자가 아니라 **구간**이다 —
+#: (0.055, 0.206) 안의 어떤 값이든 결과가 같다. 그 구간은 §4 가 경계를 인쇄하지 않아 생긴
+#: 구멍이고, 거기 놓인 값은 `rotation_state` 를 `unclassified` 로 만든다.
+#:
+#: ⚠ **그렇다고 이 입력이 중립인 것은 아니다.** `0.10` 은 여전히 *"이 천체의 이심률은 중간이다"*
+#: 라고 주장한다. `0.0` 이 *원궤도다*를 주장하는 것과 같다. 고른 것은 **주장하지 않는 입력**이
+#: 아니라 **출력이 분류를 거부하게 만드는 입력**이다. 그 둘은 다르고, 섞으면 다음 사람이
+#: 0.10 을 중립값으로 읽는다.
+#:
+#: ⚠ **피한 구간**: (0.206, 0.2294). 우리 pseudo 문턱과 Barnes 의 CPL 문턱 `√(1/19)` 가
+#: 1.11 배로 어긋나 있어서, 그 사이 값은 *우리는 pseudo · CPL 은 1:1* 을 만든다. 그 틈이
+#: 존재한다는 것 자체가 C38 의 이음매가 아직 살아 있다는 증거다.
+ECCENTRICITY = register(Placeholder(
+    node="orbit_elements",
+    output="eccentricity",
+    value=0.10,
+    why=("`orbit_elements` must supply each body's actual orbital eccentricity. ⚠ One value here "
+         "classifies EVERY body, because not one of them supplies its own — unlike ω₀, which is at "
+         "least multiplied by per-body data. ⚠ The boards carry `eccentricity_forced` (Pandora "
+         "0.005, Dante 0.0186, Hades 0.0385) and it is NOT this quantity: a forced eccentricity is "
+         "what a resonance maintains, while the despin formula wants the orbit's actual "
+         "eccentricity. They coincide for a body locked in resonance and diverge for one with a "
+         "free eccentricity, so whoever builds `orbit_elements` must decide which is being asked "
+         "for rather than assume the names match."),
+    consumers=("tidal_locking.rotation_state",)))
 
 #: §4 상태 이름. bool 이 아니다 — 'despun' 과 '1:1' 은 같은 말이 아니라고 문서가 절 하나를 들여 말한다.
 STATE_SYNCHRONOUS = "1:1 synchronous"
@@ -279,7 +310,7 @@ def rotation_state(e: float, permanent_quadrupole: bool) -> str:
 
 def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_km: float | None,
           perturber_mass_earth: float | None, age_gyr: float | None,
-          eccentricity: float | None = 0.0, permanent_quadrupole: bool = False,
+          eccentricity: float | None = None, permanent_quadrupole: bool = False,
           nmoi: float | None = None, k2_over_q: float | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
               "semi_major_axis_km": semi_major_axis_km, "perturber_mass_earth": perturber_mass_earth,
@@ -292,6 +323,12 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
         return out_of_domain(RECIPE, VERSION,
                              f"no {', '.join(missing)} — the despin formula needs all of them "
                              f"(§1: ω₀, n, I, a, M_p)", inputs=inputs, refs=REFS)
+
+    # 가드레일 ④ — 소비 쪽도 자기가 무엇 위에 섰는지 말한다.
+    on_provisional = eccentricity is None
+    if on_provisional:
+        eccentricity = ECCENTRICITY.value
+        inputs["eccentricity"] = eccentricity
 
     alpha = nmoi if nmoi else 0.33
     m = mass_earth * M_EARTH_KG
@@ -341,13 +378,17 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
               "q_over_k2_source": q_source}
     if locked:
         values["rotation_period_h"] = period_h
+    if on_provisional:
+        values["eccentricity_pick"] = PROVISIONAL
+        values["eccentricity_source"] = ECCENTRICITY.line()
     return Result(recipe=RECIPE, version=VERSION,
                   regime=state, reason=verdict, grade="analog", inputs=inputs,
                   values=values,
                   units={"t_lock_yr_min": "yr", "t_lock_yr_max": "yr", "rotation_period_h": "h",
                          "orbital_period_h": "h", "locked": "", "rotation_state": "",
                          "t_lock_width_source": "", "q_over_k2_min": "", "q_over_k2_max": "",
-                         "q_over_k2_source": ""},
+                         "q_over_k2_source": "", "eccentricity_pick": "",
+                         "eccentricity_source": ""},
                   refs=REFS,
                   notes=("⚠ the despin formula is carried as what the methodology document prints: "
                          "its own sources (Goldreich & Soter 1966, Murray & Dermott 1999) are not "
@@ -356,11 +397,16 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
 
 @recipe("tidal_locking")
 def _(state) -> Result:
+    # 없으면 임시값 표시를 state 에 남긴다. `solve` 는 None 을 받아 스스로 임시값을 쓰고,
+    # 표시는 하류의 `refuse_emit` 이 읽는다 — 두 끝이 각자 기록한다 (가드레일 ③·④).
+    eccentricity = state.get("eccentricity")
+    if eccentricity is None:
+        supply(state, ECCENTRICITY)
     return solve(mass_earth=state.get("mass_earth"), radius_earth=state.get("radius_earth"),
                  semi_major_axis_km=state.get("semi_major_axis_km"),
                  perturber_mass_earth=state.get("perturber_mass_earth"),
                  age_gyr=state.get("age_gyr"),
-                 eccentricity=state.get("eccentricity", 0.0),
+                 eccentricity=eccentricity,
                  permanent_quadrupole=bool(state.get("permanent_quadrupole", False)),
                  nmoi=state.get("nmoi"),
                  k2_over_q=state.get("k2_over_q"))

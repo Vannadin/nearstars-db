@@ -90,13 +90,59 @@ def main() -> int:
     # as the control table in `regime-gate-context-notes.md` §7, which is the other half of C36's A/B:
     # the wiring was frozen and stipulated first, so when the physics landed only the answer moved.
 
+    # 6. the first real instance: `orbit_elements.eccentricity` (owner decision (b), 2026-09-06).
+    # ⚠ It is tested here rather than only in the recipe's own file because the thing worth pinning is
+    # not what tidal_locking does with it — it is that ONE value classifies EVERY body. No body
+    # supplies its own eccentricity, so unlike ω₀ (which is at least multiplied by per-body data)
+    # this placeholder is not a default that data can outvote. If that ever stops being true, this
+    # test should be the thing that notices.
+    import tidal_locking  # noqa: E402
+    ph = REGISTRY[("orbit_elements", "eccentricity")]
+    ok(ph.value == 0.10, f"6: the placeholder's value lives in one place; got {ph.value}")
+    roster = [("Pandora", 0.6447, 0.8984, 252393.0, 120.0),
+              ("Dante", 1.552e21 / tidal_locking.M_EARTH_KG, 521e3 / tidal_locking.R_EARTH_M,
+               110000.0, 120.0),
+              ("Hades", 5.0e21 / tidal_locking.M_EARTH_KG, 750e3 / tidal_locking.R_EARTH_M,
+               148000.0, 120.0)]
+    states = {tidal_locking.solve(m, r, a, mp, 5.3).values["rotation_state"] for _n, m, r, a, mp in roster}
+    ok(len(states) == 1 and states.pop().startswith("unclassified"),
+       "6: one provisional decides all three bodies identically, and the state it decides is the one "
+       "that declines to classify — that uniformity IS the finding, not a side effect")
+    res = tidal_locking.solve(*roster[0][1:], 5.3)
+    ok(res.values.get("eccentricity_pick") == PROVISIONAL,
+       "6: a result standing on the placeholder must say so in its own values (guardrail 4)")
+    ok(tidal_locking.solve(*roster[0][1:], 5.3, 0.0).values.get("eccentricity_pick") is None,
+       "6: and a body that supplies its own eccentricity must carry no such mark")
+
+    # ⚠ 6b. the value is not neutral, and the note must not claim it is. What was chosen is the
+    # INTERVAL (0.055, 0.206) — §4's unprinted gap — not the number: every value in it gives the same
+    # answer, and 0.10 has no standing of its own. The input still asserts "this body's eccentricity
+    # is middling", exactly as 0.0 asserts "circular".
+    for alt in (0.06, 0.15, 0.205):
+        ok(tidal_locking.rotation_state(alt, False) == tidal_locking.rotation_state(0.10, False),
+           f"6b: any value in the gap gives the same state, so the number is not the choice; {alt}")
+    ok(tidal_locking.rotation_state(0.0, False) != tidal_locking.rotation_state(0.10, False),
+       "6b: and it is not the same as zero — the placeholder is a different assertion, not the absence "
+       "of one")
+    # ⚠ 6c. the interval deliberately stops below 0.206. Between our pseudo threshold and Barnes's CPL
+    # threshold √(1/19) = 0.2294 there is an 11 % gap where this engine says pseudo-synchronous and
+    # the CPL model says 1:1 — C38's seam, still live. A placeholder must not be parked inside it.
+    import math  # noqa: E402
+    cpl = math.sqrt(1.0 / 19.0)
+    ok(tidal_locking.E_MERCURY_RESONANT < ph.value < cpl or ph.value < tidal_locking.E_MERCURY_RESONANT,
+       "6c: the placeholder must not sit between our threshold and the CPL threshold")
+    ok(ph.value < tidal_locking.E_MERCURY_RESONANT,
+       f"6c: and specifically below ours, {ph.value} vs {tidal_locking.E_MERCURY_RESONANT}")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if fails:
         return 1
     print(f"  [PASS] 임시값 가드레일 — ①넷째 단어(등급 아님) · ②값 단위 {len(REGISTRY)}개(중복 등록 거절) · "
           f"③emit 거절 · ④양쪽 기록 · ⑤레시피 도착 시 발화(오늘 증명) · "
-          f"실물 인스턴스 0개 — C36 착지로 제거됨(대조표는 §7 에 남음)")
+          f"실물 인스턴스 1개(orbit_elements.eccentricity) — ⚠ 값 하나가 로스터 전원을 동일하게 "
+          f"분류한다(천체별 데이터가 뒤집지 못함) · 고른 것은 수가 아니라 구간 · 우리 문턱과 CPL "
+          f"문턱 사이 틈은 피함")
     return 0
 
 
