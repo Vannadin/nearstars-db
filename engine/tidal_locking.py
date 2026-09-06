@@ -104,8 +104,12 @@ Q_OVER_K2_ROCKY = Band(None, 1e2, 1e3,
                        "tidal-locking-timescale-methodology §2 prints the rocky class as ~10²–10³",
                        "analog", estimates="Q/k2")
 
-#: 원시 자전. §6 이 미상이라고 명시한다. 5 h 는 이 코드가 고른 작업값이고 문서의 수가 아니다.
-#: 판정을 흔드는지는 test 가 잰다 — 흔들지 않는 것이 이 값을 쓸 수 있는 유일한 이유다.
+#: 원시 자전의 **기본값**. §6 이 미상이라고 명시하고, 5 h 는 이 코드가 고른 출발점이지 문서의 수도
+#: 진리도 아니다.
+#: ⚠ 여기 처음 적혀 있던 정당화 — "판정을 흔들지 않는 것이 이 값을 쓸 수 있는 유일한 이유" — 는
+#: **거짓이었다.** 금성에서 흔든다: P₀ 를 5 h 에서 19 h 로 옮기면 τ 가 1.62e10 → 4.26e9 yr 로 내려와
+#: 나이 안에 든다. 하필 시험이 고정한 그 천체에서 깨진다. 정당화를 쓰면서 그 정당화를 시험하지 않은
+#: 것이고, 그래서 이 값은 이제 **기본값이라고만** 불린다.
 OMEGA0_PERIOD_H = 5.0
 
 #: §4 상태 이름. bool 이 아니다 — 'despun' 과 '1:1' 은 같은 말이 아니라고 문서가 절 하나를 들여 말한다.
@@ -136,7 +140,11 @@ def despin_timescale_yr(mass_kg: float, radius_m: float, alpha: float, a_m: floa
     n = mean_motion(a_m, perturber_mass_kg)
     omega0 = 2.0 * math.pi / (omega0_period_h * 3600.0)
     inertia = alpha * mass_kg * radius_m ** 2
-    tau_s = (omega0 - n) * q_over_k2 * inertia * a_m ** 6 / (3.0 * G * perturber_mass_kg ** 2 * radius_m ** 5)
+    # 걷어낼 것은 **초과** 각운동량이라 크기다 — 문서 §1: "the time for that torque to remove the
+    # **excess** spin angular momentum", 그리고 토크는 "drives the spin toward n". 부호 있는 차를 그대로
+    # 쓰면 역행 출발에서 τ 가 음수로 나오고, `solve` 의 `hi < age` 가 그걸 **조용히 '잠김'으로** 읽는다.
+    # 역행 출발은 도메인 밖이 아니다 — Goldreich & Peale 이 그 경우의 포획 확률을 그림 둘로 계산한다.
+    tau_s = abs(omega0 - n) * q_over_k2 * inertia * a_m ** 6 / (3.0 * G * perturber_mass_kg ** 2 * radius_m ** 5)
     return tau_s / YEAR_S
 
 

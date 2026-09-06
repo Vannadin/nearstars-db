@@ -79,6 +79,17 @@ def main() -> int:
            f"cannot be a shared coefficient — it has to be a per-body Q/k₂, and §2's Venus cell is "
            f"the one that names no number")
 
+    # 3b. ⚠ a retrograde start must not read as "locked" through a negative timescale.
+    # Before abs(), (ω₀ − n) went negative and `hi < age` accepted it silently — the shape this whole
+    # engine keeps removing, an absent verdict read as a verdict. Aimed at the case that must fail.
+    fwd = despin_timescale_yr(0.815 * M_EARTH, 0.9499 * R_EARTH, 0.33, 1.082e11, M_SUN_IN_EARTHS * M_EARTH, 1e2, 5.0)
+    rev = despin_timescale_yr(0.815 * M_EARTH, 0.9499 * R_EARTH, 0.33, 1.082e11, M_SUN_IN_EARTHS * M_EARTH, 1e2, -5.0)
+    ok(rev > 0, f"3b: a retrograde start must give a positive timescale, got {rev:.3g}")
+    ok(rev > fwd, "3b: and a longer one — it has further to travel, which is the whole content of |ω₀ − n|")
+    ok(abs(rev / fwd - 1) < 0.01,
+       f"3b: barely longer, since ω₀ ≫ n: {(rev / fwd - 1) * 100:.2f} % — the sign matters for the "
+       f"verdict's honesty, not for the number")
+
     # 4. §4's boundary is not printed, so the anchors set it and the gap between them refuses
     ok(rotation_state(E_MOON_ONE_TO_ONE, False) == STATE_SYNCHRONOUS,
        "4: the Moon's own eccentricity must still read 1:1 — an earlier 0.01 threshold called the "
@@ -101,6 +112,16 @@ def main() -> int:
        f"6: synchronous rotation from the orbit gives 32 h, which is what the α Cen board already "
        f"declares for it; got {pandora.values['rotation_period_h']:.2f} h")
 
+    # 6b. the first magnitude check this recipe has had. Barnes 2017 (held): "Proxima b is found to
+    # have a tidal locking time of less than 10^6 years for all plausible assumptions" — a bound that
+    # does not depend on which tidal model is picked. Both ends of our band must fall under it.
+    # ⚠ Order-of-magnitude only: Proxima b does not transit, so the radius is an estimate and the mass
+    # is an m·sin i. The anchors above check the sign; this is the only thing checking the size.
+    prox = solve(1.27, 1.1, 0.04856 * 1.495979e8, 0.1221 * 332946.0, 4.85, 0.0)
+    ok(prox.values["t_lock_yr_max"] < 1e6,
+       f"6b: the slow end must stay under Barnes's 10^6 yr, got {prox.values['t_lock_yr_max']:.3g}")
+    ok(prox.values["locked"] is True, "6b: and Proxima b comes out locked, as Barnes has it")
+
     # 7. the band decides, or nothing does
     straddle = solve(0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, 50.0, 0.007)
     ok(straddle.values["locked"] is None and "cannot say" in straddle.reason,
@@ -114,7 +135,7 @@ def main() -> int:
     print(f"  [PASS] 조석 잠김 — 앵커 셋 상태까지 일치(달 1:1 · 수성 p:q · 이오 1:1) · "
           f"⚠ 금성은 표와 어긋남을 고정(Leconte 는 고체조석이 동기화한다고 말한다 → 결함은 표의 상수 쪽) · 비 {ratio:.2g}× 가 Q/k₂ 에 불변 "
           f"→ 어떤 상수로도 §2 표 재현 불가 · §4 경계 미인쇄 구간 거절 · Hut 소극한 · "
-          f"판도라 32 h(보드 선언과 독립 일치) · 밴드가 나이를 걸치면 판정 보류")
+          f"역행=양수·근소하게 김 · 판도라 32 h(보드 독립 일치) · Proxima b {prox.values['t_lock_yr_max']:.2g} yr < Barnes 1e6 · 밴드가 나이를 걸치면 보류")
     return 0
 
 
