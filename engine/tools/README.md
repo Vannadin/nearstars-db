@@ -306,3 +306,24 @@ in `c32-k4-basename-notes.ko.md`, **left broken on purpose**. That file's own he
 *"원문 무편집"* / *"Preserved verbatim from the parallel seat's scratch"*, and a third line separates
 the author's own revisions from edits by the work seat. Inserting a blank line to rescue its rendering
 would break the guarantee the file exists to make. A broken table there is the cheaper loss.
+
+## The note that says it is gone, and greps as if it were here (2026-09-06)
+
+`chain.yaml` carries a note reading *"이전엔 body_age → via cooling_luminosity, status: gap 이었다"* —
+past tense, recording that a gap edge closed. `grep "status: gap"` matches it, because the phrase is
+inside the note. Parsing the YAML gives the true answer: **no edge into `dynamo_giant` carries a
+status, and no edge anywhere uses `via: cooling_luminosity`.**
+
+⚠ **And the check that was believed to have avoided this trap had not avoided it.** The evidence used
+was `grep "status: gap" chain.yaml | head -12`. Line 660 is match **15 of 28**, so `head` cut at match
+12 (line 621) and the note never appeared. **The truncation removed a false positive**, so a method
+that could not have shown the answer produced the right one anyway. Untruncated, that grep would have
+displayed an apparent counterexample and only the parse could have refuted it.
+
+⚠ **A third slip, inside the check of the check.** Confirming the above, `grep -n … | grep -c ":660:"`
+returned 0 and was nearly read as "line 660 does not match". `grep -n` prefixes `660:` — the pattern
+was searching for a shape that cannot occur. `^660:` gives the 15-of-28.
+
+The rule, then, in the narrowest form that holds: **when a file's prose can quote its own schema, grep
+is a search tool and not an oracle.** Parse the structure. And when a command is truncated for
+display, the truncation is part of the evidence — `| head` is not a neutral rendering.

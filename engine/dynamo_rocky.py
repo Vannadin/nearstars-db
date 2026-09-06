@@ -212,7 +212,8 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
     # the key is `locked` — tidal_locking's output, which the engine does not yet compute (no recipe) and which
     # this node does NOT declare for itself (tidal lock is a Phase 4 fact, as C22 kept its dial at 0):
     #   locked False → dipolar by the paper's rule (free rotation, eq. 20 = the ladder's base; no Ro_ℓ)
-    #   locked True  → the locked branch, whose Ro_ℓ is refused by three names → both branches emitted
+    #   locked True  → the locked branch, whose Ro_ℓ is refused by two names (C16, 2026-09-06:
+    #                  q_conv left when Driscoll & Olson 2011 was read) → both branches emitted
     #   locked None  → cannot-say (no tidal_locking) → both branches emitted, as before
     if dynamo_regime in ("dipolar", "multipolar"):
         branch, rossby = dynamo_regime, f"declared regime '{dynamo_regime}' (Phase 4) — Ro_ℓ not consulted"
