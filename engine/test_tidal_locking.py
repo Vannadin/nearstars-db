@@ -51,10 +51,12 @@ def main() -> int:
         ok(res.values["rotation_state"] == want_state,
            f"1: {label} is observed in {want_state[:20]}…; got {res.values['rotation_state'][:40]}")
 
-    # 2. ⚠ Venus: the document says the bare formula calls it near-synchronous. It does not.
+    # 2. ⚠ Venus: the printed formula and the printed class cannot despin it, while the literature
+    # says the solid tide would. The defect is in the table's constants, not in the physics claim.
     venus = solve(0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, 4.5, 0.007)
     ok(venus.values["locked"] is False,
-       f"2: the printed formula must say Venus never despun — that is the finding, not a bug. "
+       f"2: with the printed rocky class Venus does not despin — pinned because Leconte 2015 says "
+       f"the solid tide would synchronise it, so this gap is the document's to close, not physics'. "
        f"got locked={venus.values['locked']}")
     ok(venus.values["t_lock_yr_min"] > 4.5e9,
        f"2: even the fast end must exceed the age; got {venus.values['t_lock_yr_min']:.3g} yr")
@@ -73,8 +75,9 @@ def main() -> int:
     for moon_tau in (1e7, 1e8):
         ok(moon_tau * ratio / 4.5e9 > 10.0,
            f"3: with the Moon at the document's {moon_tau:.0e} yr, Venus lands at "
-           f"{moon_tau * ratio / 4.5e9:.0f}× the system age — the §5 exception is offered to rescue "
-           f"a prediction the formula never makes")
+           f"{moon_tau * ratio / 4.5e9:.0f}× the system age. Since the ratio is constant, the repair "
+           f"cannot be a shared coefficient — it has to be a per-body Q/k₂, and §2's Venus cell is "
+           f"the one that names no number")
 
     # 4. §4's boundary is not printed, so the anchors set it and the gap between them refuses
     ok(rotation_state(E_MOON_ONE_TO_ONE, False) == STATE_SYNCHRONOUS,
@@ -109,7 +112,7 @@ def main() -> int:
     if fails:
         return 1
     print(f"  [PASS] 조석 잠김 — 앵커 셋 상태까지 일치(달 1:1 · 수성 p:q · 이오 1:1) · "
-          f"⚠ 금성은 문서와 어긋남을 고정(τ 하한도 나이 초과) · 비 {ratio:.2g}× 가 Q/k₂ 에 불변 "
+          f"⚠ 금성은 표와 어긋남을 고정(Leconte 는 고체조석이 동기화한다고 말한다 → 결함은 표의 상수 쪽) · 비 {ratio:.2g}× 가 Q/k₂ 에 불변 "
           f"→ 어떤 상수로도 §2 표 재현 불가 · §4 경계 미인쇄 구간 거절 · Hut 소극한 · "
           f"판도라 32 h(보드 선언과 독립 일치) · 밴드가 나이를 걸치면 판정 보류")
     return 0

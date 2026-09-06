@@ -26,10 +26,23 @@ constants fixes it.** With `Q/k₂` and `ω₀` shared across bodies their ratio
 formula multiplies both rows and cancels out of the ratio, so obtaining the missing sources cannot
 change this. `test_tidal_locking.py` pins it.
 
-**The consequence is not small.** §2 and §7 justify the §5 thermal-tide exception by saying the bare
-formula would call Venus near-synchronous. It does not: under the printed formula Venus never despins
-on gravitational tides alone. The exception may still be right about Venus's *retrograde* spin, but
-the thing it is offered to rescue does not need rescuing.
+**Where the defect is, corrected 2026-09-06 after reading the primary sources.** The first reading
+here was that §5's thermal-tide exception rescues a prediction the formula never makes. **That is
+wrong, and Leconte 2015 (`2015Sci...347..632L`, now held) says so**: *"although tidal friction inside
+the planet is continuously trying to spin it down to a state of synchronous rotation, thermal tides
+are strong enough to drive the planet out of synchronicity."* The literature holds that the solid tide
+**would** synchronise Venus. So the exception is well-founded and the failure is ours.
+
+The ratio argument then locates it exactly. Since no shared constant can move `τ(Venus)/τ(Moon)`, the
+repair cannot be a global coefficient — **it has to be per-body**, and the direction is fixed: Venus
+needs `Q/k₂ ≲ 28` to despin within the age, below the floor of the rocky class this document prints
+as 10²–10³. §2's own Venus cell says *"rocky + atmosphere"* where every other row names a class range,
+and that missing number is the defect. **A single class band cannot carry Venus**, which is a
+statement about the table rather than about the formula.
+
+⚠ Goldreich & Peale 1966 (`1966AJ.....71..425G`, held) devotes §V to Venus and explains its spin by a
+**Venus–Earth synodic resonance**, with no mention of thermal or atmospheric tides anywhere in the
+paper. That is a third explanation, older than §5's, and this recipe takes no position among them.
 
 **Three rotation states, not two** (§4). Despinning is not synchronisation:
 
