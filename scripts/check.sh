@@ -105,6 +105,8 @@ echo "── 6. 영문 source-of-truth 영역 한글 dominant 검사 ──"
 python3 scripts/check_language.py || fail=1
 # 마크다운 표가 산문에 붙어 렌더 안 되는 자리 (2026-09-06). 예외는 스크립트 안에 이유와 함께.
 python3 scripts/check_md_tables.py || fail=1
+# 같은 절이 한 파일에 두 번 (2026-09-06). gate129 가 그런 파일을 초록으로 통과시킨 뒤 붙였다.
+python3 scripts/check_md_dupes.py || fail=1
 
 echo ""
 echo "── 7. 빌드 산출물 신선도 + 매니페스트 커버리지 ──"
