@@ -1351,3 +1351,125 @@ would be the window-widening the C33 record already warns against.
 one, so the existing check reaches it with no change to the tool. Where a C entry says it is waiting
 on a paper, write the bibcode, and the machine that already looks for held-but-called-absent will
 find it the next time it runs.
+
+---
+
+# Handoff — the nights of 2026-09-05 and 09-06
+
+Read this first if you are taking the directing seat. It is written as what we meant to do, what
+actually happened, and where that leaves the tree — not as a list of events.
+
+## What we set out to do
+
+Get off the verification layer and back onto the thing itself. The citation work (C33) had eaten a
+night and was finished; the queue said **C23 first — does a sub-Neptune's iron core run a dynamo —
+then the induced-magnetosphere branch**.
+
+## What changed the route, and why
+
+Two owner questions turned it, and neither was a change of mind about the goal.
+
+**"Why is a magnetic field 0 or 1?"** opened the induced-magnetosphere axis, and that axis turned out
+to sit *in front of* C23 rather than behind it, so the order inverted. A body without a dynamo is not
+a body without a magnetosphere: an ionosphere builds one from the wind, and Egan 2019's finding is
+that a *weak* dipole is worse than none until its standoff clears the induced boundary.
+
+**"Treat our own methodology documents as starting points, not evidence."** This one did the real
+damage, in the useful sense. Applied to the branch we were about to implement, it found that our
+document wrote the crossover test against `r_ionopause` while the paper it credits never uses that
+word — the surfaces differ, the IMB sits above the ionopause, and feeding the wrong one understates
+the crossover field by 1.13× to 1.69×. Five of that branch's six sources were not held at all. The
+premise had to be rebuilt before anything could be built on it.
+
+C23 took the same treatment and lost its own premise. The pre-registration worried about a 2.26×
+conductivity disagreement, a 40-vs-50 threshold and an unheld velocity scaling — and Tang's own
+sentence says `Rm` runs 10³–10⁵, twenty to two thousand times past any of them. **All three worries
+were real discrepancies about a quantity that decides nothing.** What decides it is in the abstract:
+the dynamo runs while the mantle surface is molten. The question was about the mantle, not the core.
+
+## Where that leaves the tree
+
+- **C23 — existence judged; strength is not available and this item cannot produce it.** Gate 1 is
+  the silicate solidus, gate 2 is `k_c` and only after gate 1 closes. Tang's 37 pages contain
+  *magnetic moment*, *field strength* and *Gauss* zero times, so no aurora, no magnetosphere size.
+  The title says so deliberately: a "closed" would be read as "the field can be emitted now".
+- **The induced branch compares the right surface.** The inequality is `R_mp > r_IMB` in both
+  languages, the boundary is Ramstad 2017a's published function of the wind (1.2417 R_p nominal,
+  meeting Egan's constant within 0.66 % in radius), and `1.05–1.2 R_p` stays in the document as what
+  it is — ionopause altitudes, a different quantity. ⚠ The fit is **Martian by construction**; using
+  it elsewhere borrows Mars's atmosphere and the paper gives no rule for carrying it.
+- **C35 listed, deliberately unregistered.** `stellar_wind` computes all three outputs from real
+  routes but has no `recipe:` document to hold a contract block.
+- **The core list has a status table** at the top of `interior-core.md`. C14–C19 are split; every
+  title was re-read against its body.
+
+## Two policies changed
+
+- **Our documents are the starting point, not the evidence.** Open the primary source; if you cannot,
+  write "the document says so" and do not attribute it to the paper.
+- **The provisional-value pattern exists** (temporary value + five guardrails: its own grade, it is
+  counted, it may not emit, both sides record it, and the gate fails once the real recipe lands). ⚠
+  **It has not been used once.** Both candidates turned out to be wiring, declaration or a textbook
+  identity — which is the pattern working, since a placeholder where a real route exists costs the
+  count its meaning from the first use.
+
+## What is handed over
+
+**Owner decisions waiting:** whether one body's boundary altitude may stand for every atmosphered
+body; what quantity the heat-transport table is fed (Earth alone has four candidates spanning 2.20×);
+whether to enquire with Bethkenhagen's authors about the unpublished grid (C22); and the ten unchosen
+band options that `engine/tools/unchosen_defaults.py` counts.
+
+⚠ **C16 is not blocked.** Its two inputs sit behind Driscoll & Olson 2011, which has been cached
+since 2026-09-04. The next step is to read it, not to request it.
+
+⚠ **`main` has seven local commits and no push.** Two are last night's (`b40d45ee`, `163c7735`); five
+are from 09-04/09-05 (`3fce625f`, `24587c5f`, and C31's three). The worktree is clean and pushed
+through `7e47c957`.
+
+**The owner-facing board:** https://claude.ai/code/artifact/f5b24dd9-5157-47b0-84e1-941544549267
+
+## Operating facts you will need on day one
+
+- **Push only up to the gate's own sha.** A gate judges one commit. Work continues while it runs, and
+  those commits have no verdict — not a failing one, none. The `GATE END` line prints the sha for
+  exactly this.
+- **`GATE END sha= pid= at= rc=` is the only verdict.** And its absence is *not* evidence of death:
+  a flat log and an idle parent `bash` are what a long test looks like. Check liveness by **process
+  group** — a live gate shows three rows and only the one near 100 % CPU answers the question. Print
+  the pid when you launch, or you will be guessing later whose run a log belongs to.
+- **Seat names change between shifts.** Re-check with `ListAgents` rather than assuming.
+
+## The rules this stretch produced
+
+- **A commit that closes a hole brings the test that reproduces it.** Broken the same day it was
+  written; five holes were closed with no test and two of the fixes opened new silent passes.
+- **Run a diagnostic before writing it down.** Three checks read correctly and were wrong when run —
+  `pgrep -x python3` (the interpreter's comm is `Python`), `pgrep -P` (the child is another idle
+  shell), `git diff --quiet` (exits 0 when there is *no* change). Two healthy gates were killed by
+  the first. Point a check at the case you expect to **pass**, not only the one you expect to fail.
+- **Do not widen the detector; write the data in the shape it already reads.** Four decisions went
+  that way, and the fourth was measured: widening the denial vocabulary still missed its target and
+  added nine false hits, while putting a bibcode on one line made the existing check reach it.
+- **A count is only as true as the sentence under it.** The number said one seat while the sentence
+  said ten, and a reader believes the sentence.
+- **When you re-aim an anchor, re-read the sentence around it.** A dead pointer fails a gate; a live
+  pointer wrapped in a claim that stopped being true passes every check we own. Three of those in one
+  day, and one was holding up a work item.
+- **The name was the evidence, and the name was wrong.** Four cases: a process called python is
+  `python3`; a child is one level down; a quiet diff means nothing happened; a list called
+  `CORELESS_CLASSES` holds bodies without cores — while its own reason said the iron core sits under
+  the envelope. Three were tools; **the fourth was data**, which is the point.
+
+## Where the directing seat's own mistakes were
+
+Recorded by that seat's own request, so the next one does not repeat them. **Four times it relayed a
+report without opening the file or the code**: the mass-loss host list (40 Eri A has none, Barnard's
+Star does, and α Cen A's value is the combined A+B astrosphere); "13 appears under no count" (it was
+two spellings summed in one grep, and the two figures were from different versions of the same
+paper); "the gate died" (it was alive, and the liveness test could never have matched); and C34
+called resolved when only its thresholds half was.
+
+**All four were caught downstream, none by the seat itself.** The relay is a place where a claim
+gains confidence without gaining evidence — which is the same defect as a citation that resolves
+while its sentence lies, one layer up in the org chart.
