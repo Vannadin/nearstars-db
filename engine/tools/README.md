@@ -992,3 +992,37 @@ than around the whole citation. `check_refs` reported **406 anchors before the e
 the new citations were not wrong, they were **invisible**, and the gate would have stayed green over
 them. Caught by comparing the count across the change rather than by reading the `[PASS]` line. **A
 format that is not parsed and a format that is correct produce the same green.**
+
+## Never `git stash` here, and the reason is not tidiness (2026-09-07)
+
+Comparing an anchor count across an edit needed the file in its pre-edit state for one command, and
+this seat reached for `git stash -q --keep-index`, popped immediately, and verified the stack was
+empty and the tree intact. **The execution was clean and the choice of tool was still wrong.**
+
+**The stash stack is shared by every worktree of one repository.** This repository currently has
+three — `NearStars` on `main`, `NearStars-wt/engine-prototype` on `engine/prototype`,
+`NearStars-wt/site` on `gh-pages` — and several seats work across them. A push and a pop are separate
+operations on one shared stack, so **another seat stashing at the same moment means this seat's pop
+takes someone else's work.** Nothing about doing it carefully closes that window; it is not atomic.
+
+**The replacement is read-only and touches nothing shared**:
+
+    git show HEAD:engine/interior-core.md > /tmp/before.md
+
+Compare against that. It cannot lose another seat's changes because it never writes.
+
+## If a check counts something, check that the count grows (2026-09-07)
+
+`check_refs` reports a total: *"앵커 406건 전부 대상 문서에서 정확히 1회 매치"*. Two code citations were
+added and it reported **406 again** — because they were written `` `file`@«…» `` instead of
+`` `file@«…»` `` and the parser did not recognise them as citations at all. Nothing to match, so
+nothing to fail. `[PASS]`. After the form was corrected: **408.**
+
+⚠ **This is the worst shape in today's family of blind checks.** The others — a skip that never
+reached its directory, a guardrail watching an event that cannot occur — were checks doing *nothing*.
+This one **did not recognise its own subject**: citations can be added indefinitely and the count will
+not move, so the check never grows with what it is supposed to cover.
+
+**The check on the check**: when a checker reports a total, occasionally confirm the total moves when
+you have given it more to count. **A number that does not grow when the corpus grew is a checker that
+has gone blind**, and it is indistinguishable from a passing one in every other respect.
