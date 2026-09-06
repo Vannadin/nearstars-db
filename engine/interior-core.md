@@ -84,6 +84,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **next, owner-set 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled three ways | **listed 2026-09-06, one-line bug** | `dynamo_rocky` reads `rotation_period`, bodies declare `rotation_period_h`, `chain.yaml` labels the output `rotation_period`. The sibling `dynamo.py` already reads the right one, so there is no schema question — only the fix, and the graph label |
 | **C38** | `tidal_locking` stands on two tidal models at once | **listed 2026-09-06** | `τ_lock` is constant-phase-lag (Goldreich & Soter, per Barnes §2.1); `ω_eq/n` is Hut 1981, which Barnes cites for constant-**time**-lag. They agree only under an assumption neither our document nor our code states, and Hut is held as an unreadable scan |
+| **C39** | the same `Q/k₂` is a per-body declaration in one node and a class band in another | **listed 2026-09-06** | `tidal_heating` reads a declared `k2_over_q`; `tidal_locking` uses the printed class 10²–10³. Dante's declared 0.0155 is **Q/k₂ = 64.5**, outside that band on the same side Venus falls — so the class does not describe our own bodies |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -2824,6 +2825,28 @@ this family's known failure is unavailable on a waterless planet.
 
 **Next step**: read Hut 1981 as page images and record which lag model its `ω_eq/n` assumes. Until
 then the recipe carries a mixture it cannot justify, and says so.
+
+### C39 — one tidal quality, two ways of getting it — **listed 2026-09-06, not started**
+
+`tidal_heating` takes `k2_over_q` as a **per-body declaration** and the boards carry values;
+`tidal_locking` uses the **class band** `Q/k₂` 10²–10³ that its document prints. Same physical
+quantity, two sources, so **two nodes can look at one body and see different numbers**.
+
+The values make the point. Hades declares `k₂/Q = 1e-3`, i.e. `Q/k₂ = 1000` — the top of the class
+band. **Dante declares 0.0155, i.e. `Q/k₂ = 64.5` — below the band's floor.** ⚠ And it misses on the
+same side as Venus: both want a body that dissipates *more* than the class allows. For a tidally
+molten moon that is physically reasonable, which is the uncomfortable part — **the class band does not
+describe our own roster**, and Venus is then not an isolated failure of that band but the second
+instance.
+
+**A shape for it already exists**: whatever was declared wins, and the class band is the fallback —
+the same pattern `ω₀` acquired in C36/brief 124. ⚠ **Not applied here without the owner**, because it
+changes which number `tidal_locking` uses for bodies that already have a declaration, and that moves
+verdicts.
+
+⚠ **Wiring `k₂` from the interior solver is only half a route.** `k₂` follows from structure, but `Q`
+is rheology, and Barnes writes that the *"tidal dissipation rate is poorly constrained"*. And the
+solver computes neither rigidity nor `k₂` today. A separate item, not this one.
 
 ## What closing all of these does not do
 
