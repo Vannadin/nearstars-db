@@ -224,3 +224,42 @@ The Rossby path wants the **core's** kinematic viscosity and an `Ro_ℓ` equatio
 own table. Neither is in DO11. ⚠ And nothing evaluates on any body regardless: `tidal_locking` has no
 recipe, so every body takes the `NO_LOCK` branch before the refusal is ever reached. **That is a
 separate hole, and it gates this one** — resolving `ν` tomorrow would still change no verdict.
+
+## 7. The regime gate reached, on a placeholder — 2026-09-06
+
+Brief 121. `tidal_locking` is declared with a recipe document and has no registered recipe, so `locked`
+never arrived and **the C16 refusal had never been reached by anything**. Its wording had been argued
+over for two days without a single body ever getting to it.
+
+**Pre-registered before running** (`engine/tidal_locking_provisional.py` carries the same text): a body
+with `locked` False should take the free-rotation branch and be **dipolar by the paper's rule** (RM22
+§5.2, eq. 20, `Ro_ℓ` not evaluated); a body with `locked` True should reach the locked branch and be
+**refused by the two remaining names**. Anything else — a failure elsewhere, or a consumer swallowing
+the placeholder quietly — would have been the finding.
+
+Both came out as written. The third state is worth recording beside them:
+
+| `locked` | regime | verdict |
+|---|---|---|
+| absent (today's every body) | `undeclared (both emitted)` | `cannot-say (no tidal_locking)` |
+| False | `dipolar` | dipolar by rule, eq. 20 |
+| True | `undeclared (both emitted)` | the C16 refusal — **first time it has been reached** |
+
+**The counting unit is the value, not the node.** `tidal_locking` owes three outputs and exactly one is
+stood in for; counting by node would have reported a whole unbuilt node where one of its three values
+is missing. `t_lock` has no consumer, and `rotation_period` is a different defect (C37).
+
+⚠ **One placeholder reaches eight consumers** — `body_figure`, `cassini_state`, `tidal_heating`,
+`day_night_contrast`, `dynamo_giant`, `dynamo_rocky`, `atmospheric_escape`, `t_eq_stellar`. That blast
+radius is why guardrails 3 and 4 are the substance here rather than ceremony: a value nobody computed
+can run through eight branches, and nothing may be published off the far end of them.
+
+**This freezes the wiring for C36 as a controlled A/B.** The answer is stipulated now and the plumbing
+is fixed; when the locking timescale lands, the answer changes and the wiring does not, so whatever
+moves then moved because of the physics. The table above is the control, and the next brief does not
+have to build one.
+
+⚠ **What this does not measure.** Nothing here says whether any body is tidally locked. `False` was
+chosen so the chain runs. The tests are named `wiring` for that reason and there is deliberately no
+`answer` test — a green run here means the plumbing carries a value, and a reader who takes it for
+evidence about rotation has read the opposite of what it says.

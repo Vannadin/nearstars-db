@@ -61,7 +61,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C13 | fuzzy core vs the moment-of-inertia deficit | closed 2026-09-01 as a named refusal | — |
 | **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` | **open** (`status: gap`) | needs thermal evolution, not decay history alone; C20's integrator is the supplier to wire |
 | **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` | **open** (`status: gap`) | the supplier exists (Brief 60); what is missing is the consumer wiring through φ and core entropy |
-| **C16** | `tidal_locking → dynamo_rocky via rossby` | **open**, one reason of three retired 2026-09-06 | DO11 read: `q_conv` resolved (super-adiabatic excess per CMB area), **`ν` and the Table 8 4–5× remain** — and the paper's own ν is the mantle's, a decoy. ⚠ `tidal_locking` has no recipe, so no body reaches this gate anyway; that hole gates this one |
+| **C16** | `tidal_locking → dynamo_rocky via rossby` | **open**, one reason of three retired 2026-09-06 | DO11 read: `q_conv` resolved (super-adiabatic excess per CMB area), **`ν` and the Table 8 4–5× remain** — the paper's own ν is the mantle's, a decoy. The gate is now **reached** on a provisional `locked`; the real value is **C36**, which the owner set as the next item |
 | **C17** | `ocean_fraction →` three consumers | **open** (`status: gap`) | three consumers, no supplier; nothing emits an ocean fraction |
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
@@ -81,6 +81,8 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C33 | citations resolved against the document | built 2026-09-05 | — |
 | **C34** | what the transport table is fed, and where its thresholds come from | **half answered** | the thresholds half is answered — none is published, they are conversions, and the 0.03 became a C32 band on 2026-09-06. **What quantity to feed the table is still the owner's**, and Earth alone has four candidates spanning 2.20× |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
+| **C36** | `tidal_locking` has no recipe — the locking timescale | **next, owner-set 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
+| **C37** | `rotation_period` is spelled three ways | **listed 2026-09-06, one-line bug** | `dynamo_rocky` reads `rotation_period`, bodies declare `rotation_period_h`, `chain.yaml` labels the output `rotation_period`. The sibling `dynamo.py` already reads the right one, so there is no schema question — only the fix, and the graph label |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -2746,6 +2748,42 @@ fails the moment it registers. No stellar-wind methodology document exists — `
   and the same wind. Left standing on purpose. A future document either reconciles them or writes
   down why it cannot — replacing one with the other silently would move two boards' values under a
   commit about something else.
+
+### C36 — the tidal-locking timescale — **released by the owner 2026-09-06 as the next item**
+
+`tidal_locking` is declared with `recipe: tidal-locking-timescale-methodology` and nothing registered
+against it, so `locked` has never reached any of its **eight** consumers. Brief 121 stood a placeholder
+in its place; C36 replaces that with the computation.
+
+⚠ **Two things are already set up for it and should not be rebuilt.** The wiring is frozen and tested
+(`test_provisional.py`), so when the recipe lands only the answer moves — whatever changes then changed
+because of the physics. And the pre-registered outcomes are recorded in `regime-gate-context-notes.md`
+§7 as a control table: `locked` False → dipolar by rule; True → the C16 two-name refusal.
+
+⚠ **The gate will fail on the day it lands, by design.** `provisional.recipe_arrived()` reports any
+placeholder whose node has acquired a recipe, and `test_provisional.py` proves that fires. Deleting the
+placeholder is part of landing C36, not an afterthought — the gate will say so.
+
+### C37 — `rotation_period` under three spellings, and a `None` nobody noticed — **listed 2026-09-06**
+
+`dynamo_rocky` asks `state.get("rotation_period")`; bodies declare `rotation_period_h`;
+`chain.yaml` names the node's output `rotation_period`. Measured on Luhman 16 A: the declared key is
+`rotation_period_h` = 6.94, and `state.get("rotation_period")` returns **None**. So every body has been
+handing the rocky ladder a rotation period of `None`.
+
+**It is a one-line bug, not a schema decision.** The sibling `dynamo.py` already reads
+`state.get("rotation_period_h")` and works — the answer exists in a module that runs. What is left over
+is the graph label, a third spelling of the same field.
+
+⚠ **Nothing has been wrong in any verdict, and that is the uncomfortable part.** `rotation_period_h`
+has no consumer inside `dynamo_rocky` — it appears in the signature, in the recorded inputs, and in the
+call, and no branch reads it. So the engine has been writing `"rotation_period": None` into its own
+evidence record for every body and **emitting no signal at all**, because nothing depended on it. The
+first person to be misled would be someone auditing that record later.
+
+**Not fixed here, deliberately.** It landed in the middle of Brief 121, and folding a schema repair
+into the placeholder commit would have meant the wiring and a value changed together — exactly what the
+A/B for C36 exists to avoid.
 
 ## What closing all of these does not do
 
