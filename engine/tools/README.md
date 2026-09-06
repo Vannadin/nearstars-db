@@ -485,59 +485,6 @@ two of them, both false positives (a citation inside another paper's provenance,
 surname). `scripts/refs/check_paper_held.py` exists for exactly this. Run on those six bibcodes it
 returns one held and five absent, which is what the sentence now says.
 
-## When output appeared is not when the work happened (2026-09-06)
-
-The gate's per-check timings were read off a timestamped log, and the contract check was reported as
-costing 2.4 seconds. It costs **84**. The 2.4 was the span between the contract check *printing its
-result* and the gate ending; the 84 seconds of work sat in the silence **before** that print, and the
-timestamp of the line was read as the moment the work finished.
-
-Measured directly instead — running the check alone and timing it — gives 76.6 s, agreeing with the
-84 s gap between consecutive log lines. The fast lane is therefore ~113 s, not ~36 s. Still 13× better
-than 1486 s, so the decision it supported stands; the number in it did not.
-
-⚠ **A pipe makes this worse, not better.** Output through `|` is block-buffered, so a line can appear
-long after the work that produced it — or several lines can appear at once, all sharing a timestamp
-none of them earned. `grep --line-buffered` and `awk`'s `fflush()` exist for exactly this.
-
-This is the third member of one family in a single day, and all three read a tool's *presentation* as
-a fact: `grep -n | head` truncating the evidence before the counterexample; a quotation cut at the
-conjunction that reversed it; and now a log timestamp taken for a completion time.
-
-**So: to time a step, time the step.** Run it alone with a clock around it. Deriving durations from
-the gaps between log lines measures when things were printed, which is a different quantity that
-usually agrees and did not here.
-
-## The reader and the recorder were the same person, and they still diverged (2026-09-06)
-
-`tidal_locking.py` opened by stating that **none** of the six sources its document cites was held. Four
-arrived that afternoon; two of them were read closely enough to **reverse this recipe's conclusion
-about Venus**, and the header saying they did not exist was left standing. Worse, the same sentence
-sat in `Result.notes`, so every body the recipe touched shipped the claim.
-
-There was no handoff to lose it across. The seat that read the papers and the seat that should have
-updated the sentence were the same seat, in the same hour, in the same file. **A number in prose
-acquires the duty to be updated, and proximity does not discharge it** — the work of reading and the
-work of recording are different acts, and doing both does not make them one.
-
-The repair is not "all six are held now" either. Four states, not two:
-
-| state | which | what it means for the recipe |
-|---|---|---|
-| not held | Goldreich & Soter 1966 · Murray & Dermott 1999 | `τ_lock` is carried as *what the document prints* |
-| held and read | Leconte 2015 · Goldreich & Peale 1966 | the Venus reasoning stands on the papers |
-| held, unread | Barnes 2017 | nothing rests on it yet |
-| ⚠ held as a scan | Hut 1981 | `ω_eq/n` **still** comes from the document — the file exists and cannot be searched |
-
-That last row is the one no two-way split has room for. **Having a paper and being able to read it are
-different facts**, and a status that collapses them will send someone to grep an image.
-
-⚠ **And check the count with the tool that counts.** A neighbouring claim — that five of a *different*
-six were still absent — was nearly asserted from memory, and a grep of the provenance files "found"
-two of them, both false positives (a citation inside another paper's provenance, and a common
-surname). `scripts/refs/check_paper_held.py` exists for exactly this. Run on those six bibcodes it
-returns one held and five absent, which is what the sentence now says.
-
 ## A complete sentence can still be out of scope (2026-09-06)
 
 Goldreich & Peale, on capture from a retrograde start: *"In all cases, the capture probability is less
