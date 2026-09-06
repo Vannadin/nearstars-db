@@ -94,7 +94,14 @@ def duplicate_sections(path: Path) -> list[tuple[int, int, str]]:
 def _present_dirs() -> set[str]:
     """SKIP_DIRS 중 트리에 실제로 있는 이름. ⚠ 루트만 보면 안 된다 — 이 레포에서 스킵 대상은
     전부 중첩돼 있다(`engine/.venv`, `docs/phase3/_papers`). 첫 판이 `(ROOT / d).exists()` 였고,
-    그래서 `_papers` 를 "트리에 없음" 이라고 보고했다. 심링크는 내려가지 않되 이름은 센다."""
+    그래서 `_papers` 를 "트리에 없음" 이라고 보고했다. 심링크는 내려가지 않되 이름은 센다.
+
+    ⚠ 그리고 **같은 코드가 체크아웃 종류에 따라 다른 답을 낸다.** git **워크트리**에서 `.git` 은
+    디렉터리가 아니라 70바이트짜리 **파일**(`gitdir: …`)이라 여기 안 잡히고, 그래서 "트리에 없는
+    항목" 으로 보고된다 — 사실이다, 스킵할 디렉터리가 없다. 보통 체크아웃에서 돌리면 같은 코드가
+    `.git` 을 "있는데 못 내려감" 으로 낸다. **둘 다 맞다.** 이 문단이 없으면 다음 사람이 그 차이를
+    결함으로 읽는다.
+    """
     found: set[str] = set()
     for base, dirs, _files in os.walk(ROOT):
         for d in list(dirs):

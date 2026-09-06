@@ -298,7 +298,8 @@ breaks first-match selection the moment it lands.
 "a paragraph runs until a blank line" as its boundary while fixing a paragraph whose *missing blank
 line* was the defect — so it swallowed the three table rows that followed. Caught before the commit by
 reading `git diff --stat` (5 insertions, 5 deletions, no content lost), reverted, redone with the
-paragraph's single-line extent asserted rather than inferred.
+paragraph's single-line extent asserted rather than inferred. → One of three, collected under
+*"The checker was in the state it was checking for"* below.
 
 **Scope of the sweep that followed.** "No others" was measured **in `interior-core.md`**. Across
 `engine/**/*.md` there were three more: two in `composition-gradient-checklist.md`, now fixed, and one
@@ -751,3 +752,32 @@ perform the second.
 a radical, an exponent, a subscript, a minus sign — loses it silently and leaves a plausible number
 behind. Equations (15) and (16) came through the same extraction **correctly**, which is exactly why
 the wrong one was believed.
+
+## The checker was in the state it was checking for, three times (2026-09-06)
+
+One entry, not three, because the check that catches all of them is the same one: **before trusting a
+thing that inspects, inspect it with its own criterion.** They do not look alike otherwise, which is
+why they were nearly filed apart.
+
+1. **A repair script assumed the defect it was repairing was absent.** It took "a paragraph runs until
+   a blank line" as its boundary while fixing a paragraph whose *missing blank line* was the defect,
+   and swallowed the three table rows that followed. Recorded above under the two-tables entry.
+2. **Guardrail ⑤ was checked against a set someone typed.** `recipe_arrived()` was proven to work by
+   handing it a made-up node name — which shows the function returns the right thing, and does not
+   make the gate red on the day a recipe actually lands. It reads the live registry now, and that
+   distinction is written into the test beside the call.
+3. **A diagnostic reported the wrong diagnosis.** `check_md_dupes.py` was extended to say whether a
+   skip entry had excluded anything, precisely so that a skip doing no work would stop looking like a
+   skip doing work. The first version asked `(ROOT / d).exists()` — **every skip target in this
+   repository is nested** (`engine/.venv`, `docs/phase3/_papers`), so it reported `_papers` as absent
+   from a tree that contains it. ⚠ The check existed to expose a claim that was not what it appeared;
+   it made one.
+
+**Why the third stings most**: it was written *in response to* the second, in the same hour, with the
+lesson stated in its own docstring. Knowing the failure mode and being about to commit it are
+compatible states.
+
+**The check**: run the inspector against a case whose answer you already know **from outside the
+inspector** — a repository where the thing is present, a set the registry really returns, a directory
+you have listed by hand. A passing self-report is the weakest evidence available, because a checker
+that does nothing reports success exactly the same way.
