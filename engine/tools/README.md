@@ -484,3 +484,181 @@ six were still absent — was nearly asserted from memory, and a grep of the pro
 two of them, both false positives (a citation inside another paper's provenance, and a common
 surname). `scripts/refs/check_paper_held.py` exists for exactly this. Run on those six bibcodes it
 returns one held and five absent, which is what the sentence now says.
+
+## When output appeared is not when the work happened (2026-09-06)
+
+The gate's per-check timings were read off a timestamped log, and the contract check was reported as
+costing 2.4 seconds. It costs **84**. The 2.4 was the span between the contract check *printing its
+result* and the gate ending; the 84 seconds of work sat in the silence **before** that print, and the
+timestamp of the line was read as the moment the work finished.
+
+Measured directly instead — running the check alone and timing it — gives 76.6 s, agreeing with the
+84 s gap between consecutive log lines. The fast lane is therefore ~113 s, not ~36 s. Still 13× better
+than 1486 s, so the decision it supported stands; the number in it did not.
+
+⚠ **A pipe makes this worse, not better.** Output through `|` is block-buffered, so a line can appear
+long after the work that produced it — or several lines can appear at once, all sharing a timestamp
+none of them earned. `grep --line-buffered` and `awk`'s `fflush()` exist for exactly this.
+
+This is the third member of one family in a single day, and all three read a tool's *presentation* as
+a fact: `grep -n | head` truncating the evidence before the counterexample; a quotation cut at the
+conjunction that reversed it; and now a log timestamp taken for a completion time.
+
+**So: to time a step, time the step.** Run it alone with a clock around it. Deriving durations from
+the gaps between log lines measures when things were printed, which is a different quantity that
+usually agrees and did not here.
+
+## The reader and the recorder were the same person, and they still diverged (2026-09-06)
+
+`tidal_locking.py` opened by stating that **none** of the six sources its document cites was held. Four
+arrived that afternoon; two of them were read closely enough to **reverse this recipe's conclusion
+about Venus**, and the header saying they did not exist was left standing. Worse, the same sentence
+sat in `Result.notes`, so every body the recipe touched shipped the claim.
+
+There was no handoff to lose it across. The seat that read the papers and the seat that should have
+updated the sentence were the same seat, in the same hour, in the same file. **A number in prose
+acquires the duty to be updated, and proximity does not discharge it** — the work of reading and the
+work of recording are different acts, and doing both does not make them one.
+
+The repair is not "all six are held now" either. Four states, not two:
+
+| state | which | what it means for the recipe |
+|---|---|---|
+| not held | Goldreich & Soter 1966 · Murray & Dermott 1999 | `τ_lock` is carried as *what the document prints* |
+| held and read | Leconte 2015 · Goldreich & Peale 1966 | the Venus reasoning stands on the papers |
+| held, unread | Barnes 2017 | nothing rests on it yet |
+| ⚠ held as a scan | Hut 1981 | `ω_eq/n` **still** comes from the document — the file exists and cannot be searched |
+
+That last row is the one no two-way split has room for. **Having a paper and being able to read it are
+different facts**, and a status that collapses them will send someone to grep an image.
+
+⚠ **And check the count with the tool that counts.** A neighbouring claim — that five of a *different*
+six were still absent — was nearly asserted from memory, and a grep of the provenance files "found"
+two of them, both false positives (a citation inside another paper's provenance, and a common
+surname). `scripts/refs/check_paper_held.py` exists for exactly this. Run on those six bibcodes it
+returns one held and five absent, which is what the sentence now says.
+
+## A complete sentence can still be out of scope (2026-09-06)
+
+Goldreich & Peale, on capture from a retrograde start: *"In all cases, the capture probability is less
+than 10% at the present value of e."* Quoted here as a general fact about retrograde starts. The next
+sentence says whose: *"**Therefore, an initially retrograde spin for Mercury** could easily have been
+accelerated through the synchronous state to its present value."*
+
+⚠ **Nothing was cut mid-sentence.** The quotation was a whole sentence, accurately transcribed. Its
+**scope** lived in the sentence after it — and the same paper gives the opposite figure for the other
+body: *"For 0.0549 and (B−A)/C = 2×10⁻⁴, **P = 0.71**"*, which is the Moon's eccentricity. Retrograde
+starts reach synchronous 71 % of the time there. Mercury under 10 %, the Moon 71 %, one paper.
+
+So the earlier rule — *a quotation cut at a conjunction is not a quotation* — is too narrow. It catches
+`However`, `But`, `Although`, `Yet`; it does not catch a quotation that ends cleanly and is then
+narrowed. **The question is not where the sentence ends but where the claim's subject is pinned**, and
+that can be one sentence later, or in a figure caption (Fig. 12 carries `(B−A)/C = 10⁻⁴`; the Moon's
+number uses twice that, so *both* variables differ between the two cases).
+
+⚠ **What this nearly cost.** The rule about to be written was "a retrograde start is not classified
+1:1". It would have thrown out the Moon — the document's own canonical 1:1 anchor — which is the same
+body that killed an eccentricity threshold of 0.01 earlier the same day, for the same reason. Twice in
+one day, a general rule was drafted from one body's number and the Moon caught it.
+
+⚠ **Read as page images, the gap is wider than either seat had it.** The OCR gives the Moon's
+quadrupole as `2X10~\`, an exponent that is simply not in the text layer — so it was recovered, not
+read. On the page it is **2×10⁻⁴, and it is Jeffreys 1961's derived value**, not the authors' own.
+The same page says **six of the seven trials trapped the moon at synchronous rotation**, which is the
+empirical claim behind the analytic `P = 0.71`.
+
+And the two figures differ in **three** ways, not two. Fig. 12's caption reads `(B−A)/C = 10⁻⁴`, Fig.
+13's `10⁻⁶`, and both say **MacDonald's torques** — while the Moon's 0.71 comes from **Darwin's**
+torque. The paper then declines to choose between the models: with Darwin's torque *"the capture
+probability is >0.7 for e=0.2 and still >0.2 for e=0.1"*, i.e. Mercury-like eccentricities give the
+opposite answer, and the authors write that they *"prefer to reserve judgment on this matter until
+more information is available."*
+
+So the "<10 %" is not a fact about retrograde starts, nor even about Mercury: it is a fact about
+Mercury **under one of two tidal-torque models the paper refuses to pick between**.
+
+The honest form: **retrograde does not decide the state.** Capture probability depends on `e` and
+`(B−A)/C`, we compute neither, so a retrograde start is **recorded as a state and never used as a
+classifier**.
+
+(Third finding from an OCR scan today. The provenance warning written for Hut 1981 belongs on this
+file too.)
+
+## A confirmation that did not survive being checked (2026-09-06)
+
+Almost everything recorded about `tidal_locking` on the day it was built is a defect, and a reader
+meeting only that list would trust the recipe less than it deserves. So a confirmation was drafted — at the directing seat's request, and this seat agreed with the reason
+and wrote it. **The request opened the slot and this seat filled it with something under-checked**;
+recording only one half would let the next reader blame either the asking or the writing, and it took
+both. A confirmation has to arrive on its own; a slot held open for one gets filled by whatever is
+nearest.
+
+The draft ran:
+Goldreich & Peale compare two tidal-torque forms, and capture into Mercury's observed 3:2 resonance is
+*"rather small (≲1/3)"* under MacDonald's but *">0.7 for e=0.2"* under **Darwin's with Q = const** —
+so if our formula is the latter, the model this engine inherited predicts the state Mercury is
+actually in.
+
+**The identification does not hold.** It rested on the phrase *"constant Q"* matching our document's
+*"constant-phase-lag (fixed-Q)"*. Read further, **both** of G&P's forms are phase-lag models: MacDonald's
+puts a lag angle δ on a single bulge (*"we have used this expression for three different functional
+forms of δ"* — the three curves in Figs. 12–13), while Darwin's expands the potential into Fourier
+components and gives each one a lag with *"sin ε_i ≈ 1/Q"*. And Barnes 2017, which we hold, lists
+**MacDonald 1964 and Goldreich & Soter 1966 in the same CPL camp**. Our formula cites Goldreich &
+Soter, so CPL is established — and CPL does not separate G&P's two forms.
+
+⚠ **So the confirmation is withdrawn, not weakened.** Which of G&P's two torques our `τ_lock`
+corresponds to is not settled by anything held: the formula's own source is Goldreich & Soter 1966,
+and it is not in the cache. **A wrong positive is worse than no positive**, because it is the entry a
+later reader would lean on hardest.
+
+What survives is smaller and real. Barnes 2017 **§2.1, "The Constant Phase Lag Model"**, says *"This
+approach is commonly utilized in Solar System studies (e.g. **Goldreich and Soter 1966**; Greenberg
+2009)"* — a section heading naming the model and citing our formula's source as an instance of it. So
+**`τ_lock` is a constant-phase-lag form**, settled from a held paper. The finer question — which of
+G&P's two phase-lag torques it is — stays open, because CPL does not separate them.
+
+⚠ **Cite §2.1 and not the other list.** Elsewhere Barnes writes *"despite its relative success at
+reproducing features in the Solar System, e.g. (MacDonald 1964; Hut 1981; Goldreich and Soter 1966;
+Peale et al. 1979)"*, which reads like a CPL roster and is not one: **Hut 1981 also appears in Barnes's
+CTL list** — *"the 'constant-timelag,' or CTL, model (Mignard 1979; Hut 1981; Greenberg 2009)"*. A
+paper in both lists is the proof that the first is a list of successes, not of memberships. Leaning on
+it would have handed the next reader an obvious objection.
+
+⚠ **And that opens something about this recipe.** Its `τ_lock` comes from Goldreich & Soter — CPL by
+§2.1 — while its equilibrium spin `ω_eq/n` comes from **Hut 1981, which Barnes cites for CTL**. Barnes
+adds that the two *"reduce to the same set of governing equations **if** a linear dependence between
+phase lags and tidal frequencies is assumed"*, so the mixture is safe only under that assumption, and
+this recipe does not state it. ⚠ It cannot be checked either: Hut 1981 is held **as a scan**, so what
+it actually assumes is unreadable here. Named, not resolved.
+
+⚠ And the shape of the near-miss is the day's own: a technical phrase — *"constant Q"* — was matched
+across two documents and taken for the same object. Same family as reading a name for a measurement,
+one level up in abstraction. **The balancing entry the record wanted did not get to be written, and
+that is the correct outcome.**
+## (Superseded by the entry above) The draft confirmation, kept for its evidence
+
+Almost everything recorded about `tidal_locking` on the day it was built is a defect — a table its own
+formula cannot reproduce, a header claiming its sources were absent while standing on two of them, a
+justification comment that fails on the body its test pins, a sign that read "not despun" as "locked".
+A reader meeting only that list would trust this recipe less than it deserves. **A confirmation is
+evidence too, and this one is worth its line.**
+
+Goldreich & Peale compare two tidal-torque models. Under **MacDonald's**, capture into Mercury's 3:2
+resonance is *"rather small (≲1/3)"* — which sits badly with Mercury being observed in exactly that
+state. Under **Darwin's with Q = const**, *"the capture probability is >0.7 for e=0.2"*. Our
+methodology document specifies the **constant-phase-lag (fixed-Q)** form, which is the second of those.
+**The model this engine inherited is the one that predicts the state Mercury is actually in**, and the
+alternative is the one that struggles with it.
+
+⚠ **Credit it to the right thing.** This engine does not compute capture probabilities at all — it
+classifies on eccentricity and a boolean quadrupole. So the agreement belongs to **the document's
+choice of model**, not to any code here, and the green test does not test it. Same wiring/answer split
+as everywhere else: the test says the pipe carries a value, and this paragraph is the only thing that
+says the value's family is the right one.
+
+⚠ And the number needed its subject to mean this. `>0.7` read alone says nothing; the antecedent two
+sentences up is *the capture probability **at the 3/2 resonance***. Read without it, the same figure
+supports the opposite reading — that our model predicts Mercury should be synchronous, which it is
+not. The OCR flattens that sentence to `at the § resonance is rather small (<i)`, so the page image is
+what settled it.
