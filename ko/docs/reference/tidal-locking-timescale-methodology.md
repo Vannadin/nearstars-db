@@ -38,6 +38,25 @@
 
 ---
 
+## 계약 — `tidal_locking`
+
+**Returns** — `locked` [—] · `rotation_state` [—] · `t_lock_yr_min` [yr] · `t_lock_yr_max` [yr] ·
+`orbital_period_h` [h] · `rotation_period_h` [h, 감속했을 때만] · `t_lock_width_source` [—]
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_km` [km] ·
+`perturber_mass_earth` [M_earth] · `age_gyr` [Gyr] · `eccentricity` [—] ·
+`permanent_quadrupole` [—] · `nmoi` [—]
+**분기 키** — `eccentricity` 와 `permanent_quadrupole` 은 감속한 뒤 §4 의 상태를 고를 뿐, 감속 여부에는
+관여하지 않는다. `permanent_quadrupole` 은 선언값이다.
+**등급** — analog. ⚠ **아래 서지의 여섯 출처 중 보유한 것이 없으므로**, 모든 식은 논문이 말하는 것이 아니라
+**이 문서가 인쇄한 것**으로 싣는다.
+**내보내지 않는 것** — 포획된 천체가 어느 p:q 로 안착하는지(§4 가 포획을 확률적이라 적는다), 그리고 §5 의
+열조석 역전.
+
+⚠ **`τ_lock` 은 수가 아니라 밴드다.** `Q/k₂` 가 클래스 범위(10²–10³)로 인쇄돼 있고 `ω₀` 는 미상이라(§6),
+레시피는 양끝을 다 내고 **밴드 전체가 계 나이의 한쪽에 놓일 때만** 판정한다.
+
+---
+
 ## 1. 시간척도: despin(동기화) 공식
 
 어떤 원시 자전 `ω₀`로 출발한 바디는 섭동체(행성이라면 별, 위성이라면 행성)로부터 조석 토크를
