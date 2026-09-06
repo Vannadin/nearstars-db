@@ -40,9 +40,24 @@ as 10²–10³. §2's own Venus cell says *"rocky + atmosphere"* where every oth
 and that missing number is the defect. **A single class band cannot carry Venus**, which is a
 statement about the table rather than about the formula.
 
-⚠ Goldreich & Peale 1966 (`1966AJ.....71..425G`, held) devotes §V to Venus and explains its spin by a
-**Venus–Earth synodic resonance**, with no mention of thermal or atmospheric tides anywhere in the
-paper. That is a third explanation, older than §5's, and this recipe takes no position among them.
+⚠ Goldreich & Peale 1966 (`1966AJ.....71..425G`, held) devotes §V to Venus and **agrees with Leconte
+on the premise**: it calls the synchronous state *"the otherwise stable synchronous state of
+rotation"*, i.e. where the solid tide drives Venus. Two sources fifty years apart, one conclusion, and
+it is the one our §2 row cannot reproduce.
+
+They part on the *cause* of the escape. G&P report atmospheric-torque proposals (Gold; MacDonald 1964)
+and call them *"quite reasonable"* on mass grounds — and then object: *"However, if the atmosphere is
+capable of pushing Venus through the otherwise stable synchronous state of rotation, present control
+of the rotation of Venus by the earth would be hard to understand."* Their Venus–Earth synodic
+resonance is not a separate topic from the atmospheric explanation; it is their reason for doubting
+it. This recipe takes no position on the cause, only on the premise both accept.
+
+⚠ **A correction about how this was read.** The first version of this note said the paper never
+mentions thermal or atmospheric tides. The count behind that was real — the phrases *"atmospheric
+tide"* and *"thermal tide"* occur zero times — but the sentence written over it was not: the stem
+`atmospher` occurs three times and every one is about torques on Venus's spin. A phrase count was
+reported as a claim about the concept. (In the same scan, `therm` matches four times and all four are
+*"Furthermore"*, so the errors run in both directions.)
 
 **Three rotation states, not two** (§4). Despinning is not synchronisation:
 

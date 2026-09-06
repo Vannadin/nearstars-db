@@ -352,3 +352,20 @@ to avoid, since `check.sh` reads the working tree.
 
 Same family as the rest of this file: a matcher was taken for a measurement. The pattern was never
 wrong — it answered exactly what it was asked, and the question was the wrong one.
+
+## A phrase count reported as a claim about the concept (2026-09-06)
+
+Reading Goldreich & Peale 1966 on Venus, this seat searched for `"atmospheric tide"` and `"thermal
+tide"`, found zero, and wrote that the paper *"never mentions thermal or atmospheric tides anywhere"*.
+
+The count was true. The sentence was not. The stem `atmospher` occurs three times and every one is
+about torques on Venus's spin — including the paper calling atmospheric proposals *"quite
+reasonable"*. The search asked about two phrases and the sentence answered for a concept.
+
+⚠ **The same scan misleads in the other direction.** `therm` matches four times in that paper and all
+four are **"Furthermore"**. A stem search is not a safer default; it is a different set of errors.
+
+Both are today's standing rule seen once more — **a count is only as true as the sentence written over
+it** — and on a scanned PDF there is a third hazard on top: OCR that reads cleanly is still OCR. When
+a count is about to become an argument, quote the passages it found and the passages a neighbouring
+search finds, and let the quotations carry the claim.
