@@ -1,6 +1,10 @@
 <!-- 질량과 조성에서 정수압 평형을 적분해 반지름·핵 경계·관성모멘트·중심압을 내는 방법(논문 근거) — J₂·다이나모·핵 상태의 입력 -->
 # Interior structure grounding: integrating the layers instead of assuming them
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Method reference for the question underneath the figure, the field and the core: **how is
 this body's mass arranged inside it?** The answer is a density profile, and four numbers
 fall out of it: the radius, the core boundary, the normalised moment of inertia C/MR², and

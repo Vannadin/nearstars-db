@@ -1,6 +1,10 @@
 <!-- 천체가 무엇인가 — 질량과 반지름을 발표된 경계에 대서 클래스를 좁히는 방법(논문 근거) -->
 # Body class grounding: narrowing a body to the physics that applies to it
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 Eight `selects` edges leave `body_class`, and every one of them picks which model runs:
 the interior integration, the three class tables, the figure, the spin axis, the two
 dynamos and the core state. The key those edges read is not a preference. Calling Neptune a

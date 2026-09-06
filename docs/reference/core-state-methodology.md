@@ -1,6 +1,10 @@
 <!-- 핵이 다이나모를 돌릴 수 있는 액체인가 — 핵의 압력·온도를 철의 융해곡선에 대는 방법(논문 근거) -->
 # Core state grounding: is the metal core a conducting liquid
 
+> **Legacy.** Written before the node/chain structure, and not held to a node's code.
+> When its node is built, this is replaced by a per-node methodology carrying an anchor
+> the node's code reproduces. Until then cite it as base material, not as authority.
+
 [Interior structure](interior-structure-methodology.md) solves the core's **geometry**.
 Whether that core can run a dynamo is a separate question with separate literature: the
 rocky-dynamo recipe asks for "convective buoyancy flux through a conducting liquid-iron
