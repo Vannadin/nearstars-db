@@ -126,10 +126,12 @@ def b_eq_ut(moment_earth: float, radius_earth: float) -> float:
     return B_EQ_EARTH_UT * moment_earth * radius_earth ** -3
 
 
+# C16, 2026-09-06: 셋이 둘로 줄었다. q_conv 는 Driscoll & Olson 2011 을 읽어 풀렸고(§6), ν 와 Table 8 은
+# 남는다 — DO11 은 Rossby 를 한 번도 쓰지 않고(0회) RM22 보다 11년 앞서므로 그 표를 논할 수 없다.
 ROSSBY_REFUSAL = ("cannot-say (Ro_ℓ: ν has no value in RM22 — Appendix A.2's η_c is a mineral's viscosity in a different "
-                  "equation; q_conv has one phrase and no definition — total vs super-adiabatic excess undecided; and the "
-                  "printed Ro_ℓ equation misses RM22's own Table 8 by 4–5× on the slow rotators, a table that is itself a "
-                  "fit of k = 60)")
+                  "equation, and Driscoll & Olson 2011's 6.2e16 m²/s is the MANTLE's, from post-glacial rebound, not the "
+                  "core's; and the printed Ro_ℓ equation misses RM22's own Table 8 by 4–5× on the slow rotators, a table "
+                  "that is itself a fit of k = 60. q_conv is no longer one of these — see §6 of the regime-gate notes)")
 NO_LOCK = "cannot-say (no tidal_locking — the branch key `locked` is that node's output and it has no recipe yet)"
 FREE_ROTATION = ("dipolar by rule — RM22 §5.2: 'If the planet is not tidally coupled, we assume free rotation leading to a "
                  "dipolar magnetic moment … we use equation 20'; the dipolar zone 'does not present an explicit dependence "
@@ -245,7 +247,7 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
            f"**문서에 값이 없다** — 격자 {lo}–{hi} ℳ⊕ 를 싣고 하나를 뽑지 않는다 (C11); 소비처가 자기 값을 선언하고 라벨을 단다")
         + ". 문서의 '(table below)' 는 클래스 앵커가 아니라 천체별 검증 표를 가리킨다 — 잘못된 표를 가리키는 포인터. "
         f"단계 4 영역 게이트 (C16): 열쇠는 tidal_locking 의 `locked` — 자유 자전이면 논문 규칙으로 쌍극자(식 20, Ro_ℓ 안 거침), "
-        f"잠김이면 Ro_ℓ 경로인데 세 이유로 거절(ν 값 없음 · q_conv 정의 없음 · 인쇄 식이 Table 8 과 4–5배 불일치), 열쇠가 없으면 "
+        f"잠김이면 Ro_ℓ 경로인데 두 이유로 거절(ν 값 없음 · 인쇄 식이 Table 8 과 4–5배 불일치 — q_conv 는 2026-09-06 DO11 로 풀렸다), 열쇠가 없으면 "
         f"cannot-say → **{branch}** [{rossby}]"
         + ("" if branch != "undeclared (both emitted)" else
            f"; 쌍극자 {dip_lo}–{dip_hi} ℳ⊕ 와 다극자 ×{MULTIPOLAR_FACTORS[0]}–{MULTIPOLAR_FACTORS[1]} "

@@ -75,10 +75,16 @@ def main() -> int:
        and abs(free.values["b_eq"] - 30.0) < 1e-9, "3/C16: a free rotator is dipolar by rule, Ro_ℓ not evaluated")
     lockd = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, locked=True, rotation_period_h=32.0)
     ok(lockd.values["regime"] == "undeclared (both emitted)" and lockd.values["rossby_verdict"] == dr.ROSSBY_REFUSAL
-       and "ν" in dr.ROSSBY_REFUSAL and "q_conv" in dr.ROSSBY_REFUSAL and "Table 8" in dr.ROSSBY_REFUSAL,
-       "3/C16: a locked body's Ro_ℓ is refused by the three names and both branches are emitted")
+       and "ν" in dr.ROSSBY_REFUSAL and "Table 8" in dr.ROSSBY_REFUSAL,
+       "3/C16: a locked body's Ro_ℓ is refused by the two names that remain, and both branches are emitted")
+    # C16 (2026-09-06): q_conv left the refusal when DO11 was read. It may still be *named* there, but only
+    # as resolved — if it ever returns as a reason, this fails and someone has to say why.
+    ok("q_conv is no longer one of these" in dr.ROSSBY_REFUSAL,
+       "3/C16: q_conv was resolved by Driscoll & Olson 2011 and must not be listed as an open reason again")
+    ok("MANTLE" in dr.ROSSBY_REFUSAL,
+       "3/C16: the refusal must name DO11's viscosity as the mantle's, or the next reader takes it for the core's")
     ok(both.values["rossby_verdict"] == dr.NO_LOCK, "3/C16: without tidal_locking the gate says cannot-say (no tidal_locking)")
-    print(f"  [PASS] C16 분기: 자유 자전 → {free.values['regime']} (Ro_ℓ 안 거침) · 잠김 → {lockd.values['regime']} + 세 이유 거절 · 열쇠 없음 → {both.values['rossby_verdict'][:40]}…")
+    print(f"  [PASS] C16 분기: 자유 자전 → {free.values['regime']} (Ro_ℓ 안 거침) · 잠김 → {lockd.values['regime']} + 두 이유 거절 · 열쇠 없음 → {both.values['rossby_verdict'][:40]}…")
     dec = dr.ladder(1.0, 1.0, "liquid_outer_solid_inner", False, 4.54, dynamo_regime="multipolar")
     ok(dec.values["regime"] == "multipolar" and dec.values["dipole_moment_min"] == 0.05 and dec.values["dipole_moment_max"] == 0.10,
        "3: a declared multipolar regime must carry the factor grid")

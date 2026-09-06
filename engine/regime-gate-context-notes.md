@@ -143,3 +143,84 @@ Pozzo's 100 W/m/K for k and fits 60.)
   other's reading of Pozzo; recorded.
 - **Driscoll & Olson 2011 stays the Tier 1 request**: Tang does not cite it (`Driscoll`, `Olson` 0 hits; U
   comes from Christensen 2010), so hole 1's γ_d = 0.2 and hole 2's definition are still behind that paper.
+
+## 6. C16 measured against Driscoll & Olson 2011 — 2026-09-06
+
+The paper has been in the cache since 2026-09-04 (`2011Icar..213...12D.pdf`, owner-obtained). Everything
+below was read out of that PDF, not out of its provenance sidecar; where the sidecar was right, that is
+recorded as a result too.
+
+**Pre-registered before reading**: the locked-branch refusal names three things, and the sidecar said the
+paper prints two of RM22's delegated inputs, one of which (`c_d`) belongs to the field-strength path and
+not to the regime gate. So the expected outcome was *one of three resolves*. That is what happened.
+
+### 1. `q_conv` — resolved, super-adiabatic excess
+
+Eq. (22) prints `c_d (ρ μ₀)^(1/2) (r_cmb F)^(1/3)` and defines *"F = α g q_conv/(ρ c_p) is the buoyancy
+flux, and q_conv is the convective heat flux"*. That alone names a flux and settles nothing. §5 then
+prints the flow: *"the super-adiabatic heat flow available to drive convection there is Q_conv = Q_c −
+Q_ad"*.
+
+What links them is the paper's **own notation, printed elsewhere**: *"the average surface heat flux
+(q₁ = Q₁/A₁)"*. Lower-case q is upper-case Q over its area, stated by the paper about a different
+quantity and applied here. So `q_conv = (Q_c − Q_ad)/(4π r_cmb²)` — the **super-adiabatic excess**, per
+unit CMB area. RM22's undecided *total vs excess* is decided: **excess**.
+
+⚠ The relation itself is **never printed for `q_conv`**. It follows from a convention the paper
+demonstrates once, on `q₁`. That is stronger than an inference and weaker than a printed equation, and
+the difference is worth keeping: a future reader who needs the equation will not find it.
+
+⚠ **The flux/flow trap is real and is in the paper's own prose**: *"the average CMB heat flow must
+exceed the adiabatic heat flux"* — one sentence, both units. Our chain must say which it carries;
+dropping `Q_conv = Q_c − Q_ad` into eq. (23) is wrong by the CMB area.
+
+Verified worked point, verbatim and self-consistent: *"Qc = 9.7 TW, Qad = 2.4 TW, and Qconv = 7.2 TW"*
+(9.7 − 2.4 = 7.2).
+
+### 2. `ν` — not resolved, and there is a decoy
+
+⚠ The paper **does** print a kinematic viscosity: *"a dynamic viscosity of η = 2 × 10²⁰ Pa s consistent
+with models of post-glacial rebound (Paulson et al., 2005), corresponding to a kinematic viscosity of
+ν = η/ρ₀ = 6.2 × 10¹⁶ m² s⁻¹"*. **It is the mantle's**, from glacial rebound, used for the mantle
+Rayleigh number in eq. (18). `Ro_ℓ` needs the **core's**.
+
+This is the same shape as RM22's own Appendix A.2 trap, one paper further along: a symbol that matches
+and a quantity that does not. It is named in the refusal string now, because a reader who finds `ν` in
+a held paper and stops there will wire a number 20 orders of magnitude from anything a liquid iron core
+does.
+
+### 3. RM22's Table 8, 4–5× — not resolvable here, and not for chronology alone
+
+**`Rossby` occurs zero times in the paper**, as does `Ekman`. DO11 does not use the regime gate at all,
+so there is nothing in it to reconcile with RM22's table — and it predates RM22 by eleven years, so it
+could not have addressed it in any case. The count is the stronger statement of the two. **This stays
+RM22's own problem**, and stays in the refusal.
+
+### 4. `c_d = 0.2` — printed, conditioned, and the condition cannot be tested from here
+
+Verbatim: *"c_d = 0.2 is the saturation constant for fast rotating dipolar dynamos"*. ⚠ **The paper
+never gives "fast rotating" a numeric criterion** — its only statement is a limit, *"the intensity …
+becomes independent of the rotation rate in the limit of fast rotation"* — and with no Ekman or Rossby
+number anywhere in the text there is no test to apply to a roster body. The condition travels with the
+number and arrives untestable. Whether any of our bodies satisfies it **cannot be answered from this
+source**, which is the answer.
+
+⚠ **The attribution runs one step further back and is not closed by holding this paper**: *"We adopt a
+form of this scaling law from Olson and Christensen (2006)"*. Whether the 0.2 is theirs relayed or
+Driscoll & Olson's own is unresolved. No bibcode is constructed here.
+
+⚠ This constant is on the **B_c** path (eq. 22/23), not the `Ro_ℓ` regime gate — a different consumer,
+outside this item. Named, not wired.
+
+### What changed in the code
+
+`ROSSBY_REFUSAL` goes from three reasons to two. `q_conv` still appears in the string, but only as
+resolved, and `test_dynamo_rocky.py` now fails if it ever returns as an open reason — a reason that
+leaves has to be argued back in, not slipped back in.
+
+### What C16 still needs
+
+The Rossby path wants the **core's** kinematic viscosity and an `Ro_ℓ` equation that reproduces RM22's
+own table. Neither is in DO11. ⚠ And nothing evaluates on any body regardless: `tidal_locking` has no
+recipe, so every body takes the `NO_LOCK` branch before the refusal is ever reached. **That is a
+separate hole, and it gates this one** — resolving `ν` tomorrow would still change no verdict.
