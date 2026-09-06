@@ -149,6 +149,29 @@ echo "── 12. 방법론 등재 게이트 (EN 인덱스 / KO 미러 / 위키 �
 python3 scripts/check_methodology_coverage.py || fail=1
 
 echo ""
+echo "── 12b. 계약 · 인용 앵커 · 밴드 (문서가 깨뜨릴 수 있는 것들, 물리보다 먼저) ──"
+# 2026-09-06 에 게이트 맨 끝에서 여기로 옮겼다. 빨라져서가 아니다 — 총 시간은 그대로다.
+# 문서 한 줄이 앵커나 계약을 깨뜨렸을 때 **24분 뒤가 아니라 2분 안에** 보이기 때문이다.
+# 로컬로 미리 돌리는 습관이 없는 사람에게는 옛 순서가 곧 24분이었다. 이 블록은 약 80초이고
+# 그중 77초가 check_contracts 다 (표본 천체로 레시피를 실제로 돌리므로 싼 검사가 아니다).
+# chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
+python3 engine/check_via.py --gate || fail=1
+(cd engine && python3 check_contracts.py) || fail=1
+# 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
+# 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
+# 밴드 규칙 (C32). 세 상태 · 출처 없는 폭 거절 · 묶음 불가분 · 선택지 요건이 앵커다.
+(cd engine && python3 test_bands.py) || fail=1
+(cd engine && python3 test_albedo_table.py) || fail=1
+(cd engine && python3 test_greenhouse_cases.py) || fail=1
+(cd engine && python3 test_sub_neptune_dynamo.py) || fail=1
+(cd engine && python3 test_stellar_wind.py) || fail=1
+# 임시값 가드레일 다섯. ⑤ 는 레시피가 도착하면 FAIL — 그 발화를 시험이 오늘 증명한다.
+(cd engine && python3 test_tidal_locking.py) || fail=1
+(cd engine && python3 test_provisional.py) || fail=1
+(cd engine && python3 test_check_refs.py) || fail=1
+python3 engine/check_refs.py || fail=1
+
+echo ""
 echo "── 13. 엔진 그래프 + 역류 층 ──"
 # chain.yaml 은 방법론끼리의 의존, bindings.yaml 은 이미 출하된 확정값이 어느
 # 노드에서 나왔고 무엇이 그걸 먹는지. 후자가 없어서 Proxima pause_nose 사고가 났다.
@@ -165,6 +188,12 @@ python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_water_hot.py) || fail=1
 (cd engine && python3 test_ammonia.py) || fail=1
 (cd engine && python3 test_water2.py) || fail=1
+# ⚠ ANSWER 시험 — 게이트에서 가장 긴 단일 구간(약 459 초, 전체의 31 %)이고, 그 시간이 사는 곳이다.
+# 이 시험만이 엔진을 **현실**과 대조한다. 자기 헤더가 그렇게 적는다 — 앵커는 전부 측정값이고
+# (반지름은 측지, C/MR² 는 중력장·세차), "우리 출력으로 우리를 시험하면 아무것도 검증되지 않는다".
+# 다른 시험들은 배선이 도는지 본다. 이것은 답이 맞는지 본다.
+# ⇒ 층을 나눌 때 **"느린 시험"으로 분류해 빼면 안 된다.** 뺄 수 있는 유일한 경우는 코드가 하나도
+#    안 바뀐 커밋이고, 그 판단은 사람이 아니라 바뀐 경로 목록이 한다 (12b 위 주석 참조).
 (cd engine && python3 test_interior.py) || fail=1
 # 얼음거대행성 앵커. 천왕성·해왕성을 실제로 풀어(각 ~50 초) 굳힌 값과 비트까지 대조하고,
 # 격자 위상·격자 수렴도 본다. 답을 바꾸는 작업은 --refresh 로 다시 굳혀 diff 에 남긴다.
@@ -206,22 +235,6 @@ echo "── CMB 열류 (Nimmo 식 37–39 폐합 · 단열 열류 · 거절 라
 (cd engine && python3 test_water_column_steam.py) || fail=1
 # 암석 다이나모 사다리 (Brief 47). 문서 표 재현·RM22 Table 8 차이·게이트 라벨·격자 미선출이 앵커다.
 (cd engine && python3 test_dynamo_rocky.py) || fail=1
-# chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
-python3 engine/check_via.py --gate || fail=1
-(cd engine && python3 check_contracts.py) || fail=1
-# 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
-# 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
-# 밴드 규칙 (C32). 세 상태 · 출처 없는 폭 거절 · 묶음 불가분 · 선택지 요건이 앵커다.
-(cd engine && python3 test_bands.py) || fail=1
-(cd engine && python3 test_albedo_table.py) || fail=1
-(cd engine && python3 test_greenhouse_cases.py) || fail=1
-(cd engine && python3 test_sub_neptune_dynamo.py) || fail=1
-(cd engine && python3 test_stellar_wind.py) || fail=1
-# 임시값 가드레일 다섯. ⑤ 는 레시피가 도착하면 FAIL — 그 발화를 시험이 오늘 증명한다.
-(cd engine && python3 test_tidal_locking.py) || fail=1
-(cd engine && python3 test_provisional.py) || fail=1
-(cd engine && python3 test_check_refs.py) || fail=1
-python3 engine/check_refs.py || fail=1
 python3 engine/dynamo_table.py --check || fail=1
 
 echo ""
