@@ -28,6 +28,15 @@ This file is 2 700 lines. The table is here so that "what is open right now" doe
 them. **The table navigates; the entries below carry the evidence, and no closed entry is deleted** —
 the record is the point of the file.
 
+⚠ **This table was born with a wrong row.** C19 was written here as open with `status: gap` on 2026-09-06,
+after both of its branches had closed on 09-04 — and its two branches were described the wrong way round
+(the giant branch was already wired and mislabelled; the brown-dwarf branch is the one that was built).
+Corrected the same day. The standing rule is that a summary must not show a row closed before the work
+lands; this is that rule's mirror, **a summary showing closed work as open**, and it is the more
+expensive direction: a stale "closed" gets challenged by the next person who looks, while a stale "open"
+sends someone to redo what is already done. A summary row is checked against its own entry when written,
+not only when it later drifts.
+
 ⚠ **This file now holds two tables keyed by C number** — this one and the C14–C19 detail table below.
 A script that edits either must select on cell content, never on the first match; see `engine/tools/README.md`.
 
@@ -55,7 +64,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C16** | `tidal_locking → dynamo_rocky via rossby` | **open**, one reason of three retired 2026-09-06 | DO11 read: `q_conv` resolved (super-adiabatic excess per CMB area), **`ν` and the Table 8 4–5× remain** — and the paper's own ν is the mantle's, a decoy. ⚠ `tidal_locking` has no recipe, so no body reaches this gate anyway; that hole gates this one |
 | **C17** | `ocean_fraction →` three consumers | **open** (`status: gap`) | three consumers, no supplier; nothing emits an ocean fraction |
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
-| **C19** | `body_age → dynamo_giant via cooling_luminosity` | **open** (`status: gap`) | no node emits `L(M, age)`; the brown-dwarf branch was rewired 2026-09-04 and the giant branch was not |
+| C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
 | **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **listed, not started** | nothing blocks it; it has never been scheduled |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
