@@ -52,8 +52,9 @@ there `a⁻⁷·⁵`).
 `permanent_quadrupole` [—] · `nmoi` [—]
 **Discriminating keys** — `eccentricity` and `permanent_quadrupole` choose among §4's states once the
 body has despun; neither affects whether it despun. `permanent_quadrupole` is a declaration.
-**Grade** — analog. ⚠ **None of the six sources cited below is held**, so every formula is carried as
-what this document prints rather than as what a paper says.
+**Grade** — analog. ⚠ **The despin formula's own sources are not held** (Goldreich & Soter 1966;
+Murray & Dermott 1999), so `τ_lock` is carried as what this document prints. Four of the six cited
+below are held as of 2026-09-06, two of them read — see the recipe's header for which carries what.
 **Not emitted** — which p:q resonance a captured body settles into (§4 calls capture probabilistic),
 and the §5 thermal-tide override.
 

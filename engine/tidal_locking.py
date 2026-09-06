@@ -7,11 +7,19 @@ The chain has had a `tidal_locking` node since it was drawn, with a recipe docum
 it, so `locked` never reached any of its **eight** consumers and every body took `cannot-say`. This is
 the supplier.
 
-⚠ **Nothing here is attributed to a paper.** The despin formula, Hut 1981's equilibrium spin and the
-`Q/k₂` classes all come from `tidal-locking-timescale-methodology.md`, and **none of the six sources
-that document cites is held** — Goldreich & Soter 1966, Murray & Dermott 1999, Hut 1981, Goldreich &
-Peale 1966, Barnes 2017, Leconte 2015 are all absent from the cache. So the grade is what the document
-supports and the citations say *"the document prints this"*, not *"the paper says this"*.
+⚠ **What rests on the document and what rests on a paper — they are different here, and the split
+moved on 2026-09-06.** Of the six sources the document cites:
+
+- **Not held, and the formula's own sources**: Goldreich & Soter 1966 (Elsevier, paywalled) and Murray
+  & Dermott 1999 (a textbook). So `τ_lock` itself is carried as *"the document prints this"*.
+- **Held and read**: Leconte 2015 and Goldreich & Peale 1966. The Venus reasoning below stands on
+  those two directly, quoted from the PDFs.
+- **Held, not yet read**: Barnes 2017. And **Hut 1981 is held as a scan**, so its `ω_eq/n` is still
+  carried from the document rather than from the paper — an image cannot be searched, and a clean-
+  looking OCR is still OCR.
+
+An earlier version of this header said all six were absent. Four arrived the same afternoon; **not
+obtainable and not yet read are different grades**, and only the first is permanent.
 
 **What the document prints** (§1):
 
@@ -206,8 +214,9 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
                          "orbital_period_h": "h", "locked": "", "rotation_state": "",
                          "t_lock_width_source": ""},
                   refs=REFS,
-                  notes=("⚠ none of the six sources this recipe's document cites is held; every "
-                         "formula here is carried as what that document prints.",))
+                  notes=("⚠ the despin formula is carried as what the methodology document prints: "
+                         "its own sources (Goldreich & Soter 1966, Murray & Dermott 1999) are not "
+                         "held. Four of the document's six sources are held, two of them read.",))
 
 
 @recipe("tidal_locking")
