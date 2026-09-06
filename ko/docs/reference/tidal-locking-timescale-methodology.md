@@ -41,10 +41,11 @@
 ## 계약 — `tidal_locking`
 
 **Returns** — `locked` [—] · `rotation_state` [—] · `t_lock_yr_min` [yr] · `t_lock_yr_max` [yr] ·
-`orbital_period_h` [h] · `rotation_period_h` [h, 감속했을 때만] · `t_lock_width_source` [—]
+`orbital_period_h` [h] · `rotation_period_h` [h, 감속했을 때만] · `t_lock_width_source` [—] ·
+`q_over_k2_min` [—] · `q_over_k2_max` [—] · `q_over_k2_source` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_km` [km] ·
 `perturber_mass_earth` [M_earth] · `age_gyr` [Gyr] · `eccentricity` [—] ·
-`permanent_quadrupole` [—] · `nmoi` [—]
+`permanent_quadrupole` [—] · `nmoi` [—] · `k2_over_q` [—, 선택]
 **분기 키** — `eccentricity` 와 `permanent_quadrupole` 은 감속한 뒤 §4 의 상태를 고를 뿐, 감속 여부에는
 관여하지 않는다. `permanent_quadrupole` 은 선언값이다.
 **등급** — analog. ⚠ **despin 식 자신의 출처는 미보유다**(Goldreich & Soter 1966 · Murray & Dermott 1999).
@@ -53,8 +54,16 @@
 **내보내지 않는 것** — 포획된 천체가 어느 p:q 로 안착하는지(§4 가 포획을 확률적이라 적는다), 그리고 §5 의
 열조석 역전.
 
-⚠ **`τ_lock` 은 수가 아니라 밴드다.** `Q/k₂` 가 클래스 범위(10²–10³)로 인쇄돼 있고 `ω₀` 는 미상이라(§6),
-레시피는 양끝을 다 내고 **밴드 전체가 계 나이의 한쪽에 놓일 때만** 판정한다.
+⚠ **`τ_lock` 은 수가 아니라 밴드다** — *그 천체가 자기 조석 품질을 선언하지 않았다면.* `Q/k₂` 가 클래스
+범위(10²–10³)로 인쇄돼 있고 `ω₀` 는 미상이라(§6), 레시피는 양끝을 다 내고 **밴드 전체가 계 나이의
+한쪽에 놓일 때만** 판정한다.
+
+**선언이 이기고, 클래스 밴드는 대체값이다.** 보드가 어떤 천체에 `k₂/Q` 를 선언해 두었다면, 레시피는
+이름 붙은 한 지점(`q_over_k2_from_declaration`)에서 그것을 뒤집어 클래스 범위 대신 읽는다. `tidal_heating`
+이 이미 없으면 아예 돌지 않겠다고 거절하는 바로 그 선언이다. 출력은 둘 중 무엇을 딛고 섰는지 이름으로
+밝히므로, 읽는 쪽이 짐작할 일이 없다. 이유는 두 노드를 서로 맞추는 정돈 자체가 아니다. 클래스 범위의
+상한이 불확실한데, 상한이 1000 이 아니라 1500 이면 §6 의 일관성 구간이 이 코드 자신의 기본 `ω₀` 를
+배제한다. 선언값은 밴드가 감당하지 못하는 무게를 감당한다.
 
 ---
 

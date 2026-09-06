@@ -27,6 +27,14 @@ obtainable and not yet read are different grades**, and only the first is perman
 
 with `n = √(G M_p / a³)`. The verdict is one comparison: `τ_lock ≪ t_sys` → despun.
 
+**Where `Q/k₂` comes from, and it is not always this document (C39, 2026-09-06).** A board that
+declares a body's own `k₂/Q` wins; the class band 10²–10³ is what runs when nothing is declared.
+`tidal_heating` reads that same declaration and refuses to run without it, so one quantity used to
+have two readings across two nodes. `q_over_k2_from_declaration` is the only place the reciprocal is
+taken, and `q_over_k2_source` in the output says which of the two the verdict stood on. ⚠ The reason
+is that the class band's *ceiling* was deciding verdicts on its own: raise it from 1000 to about 1086
+and §6's consistency window excludes this module's own default `ω₀`.
+
 ⚠ **The document's own calibration table does not reproduce under this formula, and no choice of
 constants fixes it.** With `Q/k₂` and `ω₀` shared across bodies their ratio is fixed —
 `τ(Venus)/τ(Moon) ≈ 6.1×10³` — so if the Moon lands where §2 prints it (10⁷–10⁸ yr) Venus lands at
@@ -131,6 +139,20 @@ STATE_UNCLASSIFIED = ("unclassified — §4 prints no eccentricity boundary; the
 def mean_motion(a_m: float, perturber_mass_kg: float) -> float:
     """n = √(G M_p / a³) [rad/s]."""
     return math.sqrt(G * perturber_mass_kg / a_m ** 3)
+
+
+#: 조석 품질을 뒤집는 **유일한 지점**. 두 노드가 같은 양을 서로 역수인 관습으로 부른다 —
+#: `tidal_heating` 은 보드가 선언한 `k2_over_q` 를 그대로 받고, §1 의 despin 공식은 `Q/k₂` 를 받는다.
+#: 그래서 변환은 흩어놓지 않고 여기 한 곳에 이름과 함께 둔다. 이름이 방향을 말한다.
+def q_over_k2_from_declaration(k2_over_q: float) -> float:
+    """A board's declared `k₂/Q` as §1's `Q/k₂`. The only reciprocal in this module.
+
+    `tidal_heating` refuses to run without this declaration; `tidal_locking` used to ignore it and
+    read the class band instead, so one quantity had two readings. It has one now: **a declaration
+    wins, and the class band is the fallback.**"""
+    if k2_over_q is None or k2_over_q <= 0.0:
+        raise ValueError(f"a declared k₂/Q must be positive to invert; got {k2_over_q!r}")
+    return 1.0 / k2_over_q
 
 
 class NoExcessSpin(ValueError):
@@ -258,11 +280,12 @@ def rotation_state(e: float, permanent_quadrupole: bool) -> str:
 def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_km: float | None,
           perturber_mass_earth: float | None, age_gyr: float | None,
           eccentricity: float | None = 0.0, permanent_quadrupole: bool = False,
-          nmoi: float | None = None) -> Result:
+          nmoi: float | None = None, k2_over_q: float | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth,
               "semi_major_axis_km": semi_major_axis_km, "perturber_mass_earth": perturber_mass_earth,
               "age_gyr": age_gyr, "eccentricity": eccentricity,
-              "permanent_quadrupole": permanent_quadrupole, "nmoi": nmoi}
+              "permanent_quadrupole": permanent_quadrupole, "nmoi": nmoi,
+              "k2_over_q": k2_over_q}
     missing = [k for k in ("mass_earth", "radius_earth", "semi_major_axis_km", "perturber_mass_earth",
                            "age_gyr") if inputs[k] in (None, 0)]
     if missing:
@@ -277,10 +300,20 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
     mp = perturber_mass_earth * M_EARTH_KG
     age_yr = age_gyr * 1e9
 
-    lo = despin_timescale_yr(m, r, alpha, a, mp, Q_OVER_K2_ROCKY.low)
-    hi = despin_timescale_yr(m, r, alpha, a, mp, Q_OVER_K2_ROCKY.high)
+    # C39: a declaration wins, the class band is the fallback. `tidal_heating` already refuses to run
+    # without a declared k₂/Q, so the same board row now reaches both nodes instead of one.
+    if k2_over_q is not None:
+        q_lo = q_hi = q_over_k2_from_declaration(k2_over_q)
+        q_source = (f"declared k₂/Q = {k2_over_q:g} on this body, inverted to Q/k₂ = {q_lo:.4g}; "
+                    f"no class band is read")
+    else:
+        q_lo, q_hi = Q_OVER_K2_ROCKY.low, Q_OVER_K2_ROCKY.high
+        q_source = f"no declared k₂/Q on this body, so {Q_OVER_K2_ROCKY.width_source}"
+
+    lo = despin_timescale_yr(m, r, alpha, a, mp, q_lo)
+    hi = despin_timescale_yr(m, r, alpha, a, mp, q_hi)
     tau = Band(None, lo, hi,
-               f"the Q/k₂ class band 10²–10³ carried through §1's formula "
+               f"{q_source}, carried through §1's formula "
                f"(ω₀ from a {OMEGA0_PERIOD_H:g} h primordial period, this code's working value)",
                "analog", estimates="tau_lock")
 
@@ -303,7 +336,9 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
     values = {"locked": locked, "rotation_state": state,
               "orbital_period_h": 2.0 * math.pi / n / 3600.0,
               "t_lock_yr_min": lo, "t_lock_yr_max": hi,
-              "t_lock_width_source": tau.width_source}
+              "t_lock_width_source": tau.width_source,
+              "q_over_k2_min": q_lo, "q_over_k2_max": q_hi,
+              "q_over_k2_source": q_source}
     if locked:
         values["rotation_period_h"] = period_h
     return Result(recipe=RECIPE, version=VERSION,
@@ -311,7 +346,8 @@ def solve(mass_earth: float | None, radius_earth: float | None, semi_major_axis_
                   values=values,
                   units={"t_lock_yr_min": "yr", "t_lock_yr_max": "yr", "rotation_period_h": "h",
                          "orbital_period_h": "h", "locked": "", "rotation_state": "",
-                         "t_lock_width_source": ""},
+                         "t_lock_width_source": "", "q_over_k2_min": "", "q_over_k2_max": "",
+                         "q_over_k2_source": ""},
                   refs=REFS,
                   notes=("⚠ the despin formula is carried as what the methodology document prints: "
                          "its own sources (Goldreich & Soter 1966, Murray & Dermott 1999) are not "
@@ -326,4 +362,5 @@ def _(state) -> Result:
                  age_gyr=state.get("age_gyr"),
                  eccentricity=state.get("eccentricity", 0.0),
                  permanent_quadrupole=bool(state.get("permanent_quadrupole", False)),
-                 nmoi=state.get("nmoi"))
+                 nmoi=state.get("nmoi"),
+                 k2_over_q=state.get("k2_over_q"))

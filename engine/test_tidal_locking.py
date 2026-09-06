@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tidal_locking import (E_MERCURY_RESONANT, E_MOON_ONE_TO_ONE, OMEGA0_PERIOD_H,  # noqa: E402
                            STATE_RESONANCE, STATE_SYNCHRONOUS, STATE_UNCLASSIFIED, NoExcessSpin,
                            breakup_period_h, consistency_window_h, despin_timescale_yr,
+                           q_over_k2_from_declaration,
                            equilibrium_spin_ratio, initial_period_band_h, initial_period_h,
                            rotation_state, solve)
 
@@ -186,6 +187,53 @@ def main() -> int:
        f"A 10 % stronger Mercury constraint would have excluded the default, which is what makes "
        f"this test worth running rather than a formality")
 
+    # 12. C39: one tidal quality, one reading. A declaration wins; the class band is the fallback.
+    # ⚠ The reason for this is not tidiness between two nodes. Measured before the change: at a
+    # Q/k₂ ceiling of 1500 the consistency window's floor rises to 6.89 h and excludes the 5 h
+    # default, so an *uncertain band ceiling* was deciding a verdict. A declared value carries the
+    # weight the band cannot.
+    ok(abs(q_over_k2_from_declaration(0.0155) - 64.5161) < 1e-3,
+       "12: the one inversion point must turn a declared k₂/Q into §1's Q/k₂")
+    ok(abs(q_over_k2_from_declaration(q_over_k2_from_declaration(0.0155)) - 0.0155) < 1e-12,
+       "12: and it is its own inverse, so the direction cannot be lost between the two nodes")
+    for bad in (0.0, -1e-3, None):
+        try:
+            q_over_k2_from_declaration(bad)
+            fails.append(f"12: a non-positive declaration must be refused, not inverted; {bad!r}")
+        except (ValueError, TypeError):
+            pass
+
+    # 12b. a body with no declaration must be untouched — asserted against the values, not by eye
+    plain = solve(0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, 4.5, 0.007)
+    ok(plain.values["t_lock_yr_min"] == despin_timescale_yr(
+        0.815 * M_EARTH, 0.9499 * R_EARTH, 0.33, 1.082e11, M_SUN_IN_EARTHS * M_EARTH, 1e2),
+       "12b: with no declaration the fast end is still the class band's 10²")
+    ok(plain.values["q_over_k2_min"] == 1e2 and plain.values["q_over_k2_max"] == 1e3
+       and "no declared" in plain.values["q_over_k2_source"],
+       "12b: and the output says the class band was read, rather than leaving the reader to assume it")
+
+    # 12c. Dante and Hades, the two roster bodies whose boards declare a k₂/Q. Both were 1:1 before
+    # this change and both must still be: the a⁶ gate decides them by nine orders of magnitude, so
+    # the declaration moves τ and moves no verdict. That is the whole finding — recorded because a
+    # verdict flip here would have moved a board value the owner has already approved.
+    for label, m_kg, r_km, a_km, e, k2q, tau_want in (
+            ("Dante", 1.552e21, 521.0, 110000.0, 0.0186, 0.0155, 0.02034),
+            ("Hades", 5.0e21, 750.0, 148000.0, 0.0385, 1e-3, 2.883)):
+        m_e, r_e = m_kg / M_EARTH, r_km * 1e3 / R_EARTH
+        before = solve(m_e, r_e, a_km, 120.0, 5.3, e)
+        after = solve(m_e, r_e, a_km, 120.0, 5.3, e, k2_over_q=k2q)
+        ok(before.values["locked"] is True and after.values["locked"] is True,
+           f"12c: {label} reads 1:1 both before and after the declaration is wired")
+        ok(before.values["rotation_state"] == after.values["rotation_state"],
+           f"12c: {label}'s rotation state must not move: "
+           f"{before.values['rotation_state']} → {after.values['rotation_state']}")
+        ok(abs(after.values["t_lock_yr_min"] / tau_want - 1) < 1e-3,
+           f"12c: {label}'s declared τ is {after.values['t_lock_yr_min']:.4g} yr, expected {tau_want}")
+        ok(after.values["t_lock_yr_min"] == after.values["t_lock_yr_max"],
+           f"12c: a declaration is one number, so {label}'s τ must come out as a point, not a band")
+        ok("declared" in after.values["q_over_k2_source"],
+           f"12c: {label}'s output must name the declaration it stood on")
+
     # 7. the band decides, or nothing does
     straddle = solve(0.815, 0.9499, 1.082e8, M_SUN_IN_EARTHS, 50.0, 0.007)
     ok(straddle.values["locked"] is None and "cannot say" in straddle.reason,
@@ -200,7 +248,7 @@ def main() -> int:
           f"⚠ 금성은 표와 어긋남을 고정(Leconte 는 고체조석이 동기화한다고 말한다 → 결함은 표의 상수 쪽) · 비 {ratio:.2g}× 가 Q/k₂ 에 불변 "
           f"→ 어떤 상수로도 §2 표 재현 불가 · §4 경계 미인쇄 구간 거절 · Hut 소극한 · "
           f"역행=양수·근소하게 김 · 판도라 32 h(보드 독립 일치) · Proxima b {prox.values['t_lock_yr_max']:.2g} yr < Barnes 1e6 · |ω₀|≤n 거절(궤도주기 동반) · 역산 왕복 정확 · 금성 18–175 h · 분열 한계=밀도만 · "
-          f"⚠ 일관성 교집합 4.60–18.36 h 존재(기본값 5 h, 바닥 여유 +8.8 %) · 밴드가 나이를 걸치면 보류")
+          f"⚠ 일관성 교집합 4.60–18.36 h 존재(기본값 5 h, 바닥 여유 +8.8 %) · 밴드가 나이를 걸치면 보류 · C39 선언 우선(역수 한 지점·자기역함수·비양수 거절) · 선언 없으면 클래스 밴드 그대로 · Dante·Hades 판정 불변(τ만 이동, 점으로 나옴)")
     return 0
 
 
