@@ -865,3 +865,24 @@ paths whether the physics lane is needed, and runs the documentation checks in a
 After the citation-link failure this seat picked six checks by hand, got all six right, and **still
 did the wrong thing**: a correct hand-built list is one correct instance of a judgement that has
 already failed once. The lane makes the same list from the paths every time.
+
+## No value was wrong today, and that is not a property of the mistakes (2026-09-06)
+
+Counting this seat's errors over one day: a threshold read as `1/19` where the page prints `√(1/19)`;
+a crossing point quoted to five significant figures against a one-figure input; a bibcode shipped
+without its ADS link; a presence check that asked the wrong directory; a log watcher that matched one
+of four failure formats; a gate left running for 24 minutes after it had already failed.
+
+**Exactly one of those could have reached a value**, and it was caught — on the page image, before it
+was written anywhere. The rest were quality, not arithmetic.
+
+⚠ **That is a fact about today, not about the class of mistake.** The reason nothing landed is that the
+reproductions were tight: before-and-after measured on real bodies, tests written so that reverting the
+change breaks them, patterns validated against known-green and known-red logs, anchors dry-run for
+uniqueness before any file was touched. **Take one of those away and the same list ends differently** —
+the five-significant-figure number was already committed and would have stood if it had shipped, and
+the square root would have propagated into a brief, an item and a recipe.
+
+**The reading to avoid**: *my errors tend not to touch values.* They tend not to **survive**, which is a
+statement about the checking and not about the errors. Written down because the first reading is the
+comfortable one, and it would quietly license loosening the second.
