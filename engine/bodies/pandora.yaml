@@ -30,6 +30,12 @@ inputs:
   perturber_mass_earth: 120.0    # source: phase4/alpha_centauri.yaml@«- { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }» (Polyphemus 120 M⊕)
   eccentricity_forced: 0.005     # source: phase4/alpha_centauri.yaml@«Radiogenic plus weak tidal heating (forced e ~0.005), enough to drive volcanism, continental drift and a dynamo»
   # (sim e_max 0.0072, e_min 0.00016 in the same row block)
+  # ⚠ 같은 수를 두 이름으로 싣는다. `eccentricity_forced` 는 조석열이 읽는 기존 키이고, `eccentricity` 는
+  # 궤도 이심률을 요구하는 소비자(§4 자전 상태 분류)가 읽는 키다. 이름이 다른 두 양이라 의심했는데,
+  # 오너 판정(2026-09-07): **시뮬에서 나온 실측 궤도 이심률이므로 같은 수다.** 공명이 유지시키는 값이라
+  # 해서 궤도의 실제 이심률이 아닌 것이 아니다 — 그것이 바로 이 궤도의 이심률이다.
+  # 진동 구간 0.00016–0.0072 전체가 §4 의 1:1 상한 0.055 아래라, 점이 우연히 아래 있는 것이 아니다.
+  eccentricity: 0.005            # source: phase4/alpha_centauri.yaml@«at the simulated e ≈ 0.005»
   k2_over_q: 0.0016              # source: phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it» — declared
 
 units:
@@ -40,6 +46,7 @@ units:
   semi_major_axis_km: km
   perturber_mass_earth: M_earth
   eccentricity_forced: dimensionless
+  eccentricity: dimensionless
   k2_over_q: dimensionless
 
 # 이미 출하된 값. 엔진은 읽지 않고 대조만 한다.
