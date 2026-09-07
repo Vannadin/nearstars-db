@@ -91,6 +91,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **resolved 2026-09-07** | Owner chose route 2: a satellite does not take the pebble-isolation branch, because neither formation path in the literature uses a distance from the star — giant impact or **circumplanetary** disc. The `semi_major_axis_au` / `_km` question closes with it: a moon consumes no stellar distance, so there is nothing to fill. Satellite mass budget recorded, all five exempt, no value changed |
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
+| **C46** | the transport table is missing rows **and** discriminates on a different axis | **listed 2026-09-07** | The literature's regime set is **five** (Lourenço+ 2020, held): mobile lid · stagnant lid · **heat pipe, nested inside stagnant lid** · plutonic-squishy lid · episodic lid. We have three, ordered by flux; theirs are cut by **mobility and plateness** — surface kinematics, not W/m². ⚠ And their discriminators are **unobservable for an exoplanet**, so adopting their axis is not available either. Venus gets two different literature answers |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -2982,7 +2983,9 @@ tightening them to a unique Need item where one exists (`` `mantle_radiogenic_po
 
 Three facts, named and not repaired. The code's verdicts are unchanged by this entry.
 
-**Venus splits.** The §6.2 table prints Venus as its stagnant-lid anchor body at a measured 10–20 mW/m²,
+**Venus splits** — ⚠ **and it is C46's, not this item's.** What follows is the measurement; *why* the
+table cannot place Venus is a question about the table's axis, and it moved to C46 on 2026-09-07.
+The §6.2 table prints Venus as its stagnant-lid anchor body at a measured 10–20 mW/m²,
 and the engine computes 37.75 mW/m² for it and returns **plate tectonics**. The arithmetic is Earth's
 21.32 TW scaled by mass to 17.37 TW over 4.6023e14 m². No core-mass fraction in 0.20–0.40 flips it; the
 flip is at 0.4636.
@@ -3723,6 +3726,75 @@ file make the first match unusable"*. Whoever builds this must key on the block,
 repeated is **exactly what this check exists to answer**, and it is not answered here.
 
 **Not built now**: it is a new gate check and needs a full lane. The item comes first; the tool follows.
+
+### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
+
+C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the
+table cuts on, and whether its rows are the literature's rows.** Venus is where it surfaced — the
+document prints it as the stagnant-lid anchor at 10–20 mW/m², and the engine computes 37.75 and returns
+plate tectonics.
+
+**The literature's set is five, from a held paper's full text.** Lourenço+ 2020
+([`2020GGG....2108756L`](https://ui.adsabs.harvard.edu/abs/2020GGG....2108756L), 24 pp, text layer
+intact) builds a regime diagram and states its criteria outright:
+
+| regime | criterion, verbatim from §3.4 |
+|---|---|
+| mobile lid | time-averaged **mobility > 0.5** |
+| stagnant lid | time-averaged **mobility < 5×10⁻³** |
+| **heat pipe** | the stagnant-lid criterion **and eruption efficiency = 100 %** |
+| plutonic-squishy lid | **quiescent plateness ≥ 0.4** |
+| episodic lid | mobility between 5×10⁻³ and 0.5, **and** plateness < 0.4 |
+
+⚠ **A pre-registration was wrong, and in a useful direction.** It was expected that our *heat pipe* row
+would turn out to be Turcotte's Venus proposal rather than one of the literature's regimes. **It is one
+of them** — but **not as a third rung above plate tectonics.** It is a *sub-case of stagnant lid*, the
+one where every drop of melt erupts. **Our ladder orders the three by increasing flux; the literature
+nests one inside another.** That is a structural mismatch, not a missing row.
+
+**What cuts the regimes is surface kinematics**, and the definitions are printed:
+
+    mobility     M = v_rms(surface) / v_rms(mantle)          Lourenço §3.1, after Tackley 2000
+    plateness    from f₈₀, the surface-area fraction over
+                 which 80 % of the deformation occurs        Lourenço §3.3, after Weinstein & Olson 1992
+
+The control parameters of the diagram are **yield stress (20–300 MPa) and eruption efficiency** at a
+reference viscosity of 10²⁰ or 10²¹ Pa·s. **No heat flux appears anywhere in the criteria.**
+
+**Moresi & Solomatov 1998 cuts on the same kind of axis and names a number.**
+[`1998GeoJI.133..669M`](https://ui.adsabs.harvard.edu/abs/1998GeoJI.133..669M), *"Mantle convection with
+a brittle lithosphere: thoughts on the global tectonic styles of the Earth and Venus"* — ⚠ **read from a
+rendered page image, because this PDF has no text layer at all** (294 bytes of extraction, all of it ADS
+stamps; a `grep` of it returns 0 for everything and that 0 means nothing). Its summary: high yield
+stress → stagnant lid, low → mobilized, **intermediate → episodic cycling**, and *"mobilization of the
+Earth's lithosphere can occur if the friction coefficient in the lithosphere is less than
+**0.03–0.13**"*. On Venus, *"the friction coefficient may be high as a result of the dry conditions, and
+brittle mobilization of the lithosphere would then be **episodic and catastrophic**."*
+
+⚠ **So the literature gives Venus two different answers, and neither is a row we have.** Moresi &
+Solomatov say **episodic**; Lourenço and Smrekar+ 2023 point at **plutonic-squishy lid**. Both are
+non-stagnant, both are absent from our table.
+
+⚠ **And the sharpest part: we could not adopt their axis if we wanted to.** Mobility and plateness are
+**outputs of a 4.5 Gyr convection simulation** — `v_rms` of a surface against `v_rms` of a mantle, and
+the area fraction carrying 80 % of the strain rate. **For a body we will never observe, neither is
+measurable.** Yield stress and friction coefficient are rheological properties we do not have either.
+**That is why our own document says what it says**: *"there is no published W/m² boundary between the
+modes, because the real criterion is melt fraction and any flux threshold is a conversion, not a
+citation."* The flux ladder is a proxy for an axis we cannot reach, and this item is about admitting
+that rather than adding two rows.
+
+⚠ **Which also means the document contradicts itself, and the contradiction is now sourced.** The same
+document that denies a published flux boundary uses a flux ceiling table to assign modes. C34's
+decision is untouched by this — it was about which quantity is fed, and Mercury, Earth and Mars still
+come out at the document's labels. **Venus moves here.**
+
+**Still at abstract level, and labelled as such**: Smrekar+ 2023's 11 ± 7 km → 78 ± 69 mW/m² and its
+squishy-lid conclusion (the held copy is the one-page conference abstract, which carries the numbers
+without method or errors), and Turcotte 1989's heat-pipe proposal for Venus with its 150 km lithosphere
+and 200 km³/yr requirement. ⚠ **Smrekar+ 2018 and Turcotte 1989 are not held** — the first is
+paywalled, the second failed at the gateway. **No statement here rests on them beyond what an abstract
+supports.**
 
 ## What closing all of these does not do
 
