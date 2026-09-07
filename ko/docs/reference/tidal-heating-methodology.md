@@ -50,9 +50,14 @@ Alpha Centauri A b I~III과 A b V(Dante·Hades·Pandora·Chaos)를 두고 네 �
 
 ## 계약 — `heat_transport_mode`
 
-**Returns** — `mode` [—] · `total_surface_flux` [W/m2]
+**Returns** — `mode` [—] · `total_surface_flux` [W/m2] · `regime_candidates` [—] ·
+`regime_flux_cannot_decide` [—] · `regime_excluded` [—]
 **Needs** — `surface_flux` [W/m2] · `radiogenic_power` [W] · `radius_earth` [R_earth]
 **분기키** — §6.2 표(판구조 · 정체 뚜껑 · 열파이프)를 총 표면 플럭스(조석 + 방사성/4πR²)로 읽는다. 모드 사이에 발표된 W/m² 경계는 없다(§6).
+⚠ **`mode` 는 그 표의 사다리 칸이지 판구조 체제가 아니다**(C46, 2026-09-07). 문헌의 체제는 mobility 와
+plateness 로 갈리는데 둘 다 시뮬레이션 출력이라 여기서는 관측할 수 없다. 그래서 `regime_*` 셋은
+**집합**을 싣는다 — 인쇄된 열류와 총 플럭스가 양립하는 체제 전부, 배제된 것, 그리고 인쇄된 열류가
+아무 말도 못 하는 것. **후보가 둘 이상인 동안 단일 체제 이름은 내지 않는다.**
 **등급** — analog. `resurfacing_rate` 는 내지 않는다(인쇄된 식이 없다).
 
 ---

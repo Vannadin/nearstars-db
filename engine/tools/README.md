@@ -1245,3 +1245,28 @@ query was run, output was read, a conclusion was drawn.
 every row mechanically. Branch B's criterion is `parent` is a star. Five rows, five checks, no picture
 required. **When a definition exists, match rows against the definition and not against the example you
 have in mind** — the example is what the definition was written to generalise past.
+
+## Adding an output and forgetting its contract, twice in one day (2026-09-07)
+
+Two commits added values to a recipe's `Result` and neither updated the methodology document's
+`Returns` line. `check_contracts` caught both, at the cost of a full-lane gate each time:
+
+- **C43** added `is_satellite` to `body_class`'s inputs. Caught at the *next* gate, which was a
+  24-minute run whose only finding was this.
+- **C46** added `regime_candidates`, `regime_excluded` and `regime_flux_cannot_decide` to
+  `heat_transport_mode`. Caught the same way, 25 minutes later.
+
+⚠ **Both were preceded by a local dry run that could not have caught them.** The pre-commit checks used
+were the markdown and citation ones plus the recipe's own tests — and `check_contracts` was in neither
+set, because it takes minutes and reads every body. **The habit recorded earlier this week — run the
+checks the file you touched is subject to — was followed, and the file touched was a `.py` whose
+contract lives in a `.md` two directories away.**
+
+**The check that costs seconds**: after changing any recipe's `values`, `inputs` or `units`, run
+`cd engine && python3 check_contracts.py`. It is not fast, but it is far faster than the gate that will
+run it anyway.
+
+⚠ **And note which half of that checker works.** C45 records that `check_contracts` never sees the keys
+a recipe *looks up* — it compares the labels a recipe puts on its evidence. **The `Returns` side it does
+see**, and it caught both of these. The blind spot is the input side only, which makes the working half
+worth using deliberately rather than waiting for the gate to use it.

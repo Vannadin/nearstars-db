@@ -54,9 +54,15 @@ Not emitted in v1: `radius_ceiling`, `plains_temperature` (§6.3–6.5, the lid 
 
 ## Contract — `heat_transport_mode`
 
-**Returns** — `mode` [—] · `total_surface_flux` [W/m2]
+**Returns** — `mode` [—] · `total_surface_flux` [W/m2] · `regime_candidates` [—] ·
+`regime_flux_cannot_decide` [—] · `regime_excluded` [—]
 **Needs** — `surface_flux` [W/m2] · `radiogenic_power` [W] · `radius_earth` [R_earth]
-**Discriminating keys** — the §6.2 table (plate tectonics · stagnant lid · heat pipe) read on the total surface flux
+**Discriminating keys** — the §6.2 table (plate tectonics · stagnant lid · heat pipe) read on the total surface flux.
+⚠ **`mode` is that table's ladder cell, not a tectonic regime** (C46, 2026-09-07). The literature's
+regimes are cut on mobility and plateness, which are simulation outputs and not observable here, so the
+three `regime_*` values carry a **set** — every regime whose printed heat flow the total is compatible
+with, plus those it excludes and those no printed flux can speak to. **No single regime is emitted while
+more than one stands.**
 (tidal + radiogenic/4πR²); there is no published W/m² boundary between the modes (§6, "no published W/m² boundary").
 **Grade** — analog. `resurfacing_rate` is not emitted (no formula printed).
 
