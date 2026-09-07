@@ -92,6 +92,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
 | **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07, then corrected the same day; rows still absent** | The flux fixes **one** cell: **floors** at 0.09 (Earth) and 2.5 W/m² (Io), and below them a stagnant cell bounded by a **ceiling** — Venus 10–20, Mars 15–30, union 10–30 transferred to anything else — with a `plutonic-squishy lid` cell for exceeding it. The band travels beside the cell. ⚠ **The first build of this ladder stood that ceiling up as a floor at 0.010** and put every cold body one cell too high; our own §6.2 table already said `ceiling`, and one bullet under it did not — C46 (c). ⚠ Three cells, three provenances: `analogy-rung` (Io), held body text (Earth), `abstract-level` (the ceiling, body not held). ⚠ Venus's 78 is **3.9× its own ceiling**, so the ladder now contradicts our anchor column and agrees with the paper it cites; the Moon stays **independent 1/1** only because the stagnant cell was given no floor. Not added to self-scored 3/4 |
+| **C47** | the transport table is fed radiogenic production, and its thresholds are defined on surface heat flow | **measured 2026-09-07, not fixed** | Verdict: **a different quantity**, not an inaccurate one. The low feed reproduces radiogenic production on two bodies (Earth 1.07–1.33× of Korenaga 2008's 16–20 TW; Mars 1.11× of Parro+ 2017's 14.3 mW/m²) and misses surface heat flow by **body-dependent** factors (Earth 0.45×, Mars 0.84×). ⚠ **That factor is the Urey ratio** — 0.35 for Earth, 0.68–0.75 for Mars — so `1/Ur` would be 2.2–2.9 against 1.3–1.5 and **no correction constant can serve both.** The missing term is secular cooling, which our own §6 already names (*"radiogenic, accretional, primordial"*) and no node emits. ⚠ Consequence for C34: Mars passing and Earth failing at the low feed measured **how close each body's Urey ratio is to 1**, not whether the feed is right. Next: a grounded secular-cooling recipe, never a multiplier — and ⚠ this is wider than C34, it applies to every body we feed |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -4057,6 +4058,84 @@ right number carrying the wrong sign of an inequality, and no check in this repo
 an inequality against its source. That is the same class as the two errors this seat was corrected on
 earlier: **the gate catches wrong values; it does not catch a conclusion given a status it has not
 earned.**
+
+### C47 — the table is fed radiogenic production, and its thresholds are defined on surface heat flow — **measured 2026-09-07, not fixed**
+
+**The question this answers is not "which end", it is "why half".** The low feed gives Earth
+41.80 mW/m² where the measurement is 92.1. A factor of two does not look like an inaccuracy, and if a
+term is missing then it is not something to choose between — it is something to fill.
+
+**What the code is actually fed, read from `chain.yaml` rather than assumed.** `heat_transport_mode`
+has exactly **two** incoming `requires` edges: `tidal_heating` → `surface_flux` and
+`internal_heat_nontidal` → `radiogenic_power`. The second edge's own note says the judgement is made
+on *"the whole radiogenic output (l_int = radiogenic_power) plus the tidal flux"*. **There is no
+secular-cooling edge, and no node in the chain emits such a value.**
+
+**What the thresholds are defined on, from both papers.** Reese+ 1998: *"the critical **heat flux**
+which can be removed without widespread melting"*. Lourenço+ 2020 §4.3: *"the **total surface heat
+flow** (i.e., the sum of magmatic and conductive heat flows)"*. Both are surface heat flow. So the fed
+quantity and the threshold quantity are not the same physical quantity.
+
+**Two bodies, measured.** Earth alone cannot settle this, because Earth is the only body with a
+measured surface flux sitting beside our number.
+
+| body | our low feed | that body's **radiogenic production** | ours ÷ radiogenic | that body's **surface heat flow** | ours ÷ surface |
+|---|---|---|---|---|---|
+| Earth | 41.80 mW/m² = **21.32 TW** | Korenaga 2008 §41: BSE **16 ± 3 TW**; §2's sketch says *"about 20 TW"* | **1.33×** (1.12–1.64 across 13–19 TW); **1.07×** against the sketch | Davies & Davies 2010: **47 ± 2 TW** = 92.1 mW/m² | **0.45×** |
+| Mars | 15.87 mW/m² | Parro+ 2017: **14.3 mW/m²**, Wänke & Dreibus composition | **1.11×** | Parro+ 2017's own model: **19 mW/m²** (range 14–25) | **0.84×** |
+
+⚠ **Verdict: (b) — a different quantity, not an inaccurate one.** It agrees with radiogenic production
+on both bodies to within 11–33 % and misses surface heat flow by factors that differ *between* the
+bodies. An inaccurate surface flux would miss by a similar factor on both.
+
+**⚠ Which is why no multiplier is allowed here, and the reason is quantitative.** The gap between the
+two quantities is the **Urey ratio**, and it is a property of the body:
+
+| body | Urey ratio, and whose | `1/Ur` |
+|---|---|---|
+| Earth | **0.35**, Korenaga 2008's bulk-Earth value (= 16/46 TW, which this seat reproduced by arithmetic); our own 21.32/47 gives 0.454; his **convective** Urey ratio is 0.23 ± 0.15 and is a different quantity again | **2.2–2.9** |
+| Mars | **0.68–0.75**, Parro+ 2017 (0.715 at 20 mW/m²); convective-history models give 0.52–0.62 and 0.594 ± 0.024 | **1.3–1.5** |
+
+**A single constant cannot serve both**, and the two bodies we can check are the two that disagree most.
+Multiplying Earth by ~2 to seat it at 90 mW/m² is the exact defect class this ledger spent 2026-09-07
+removing.
+
+**What the missing term is, in the source's words.** Korenaga 2008 §2: *"Loss of internal energy is
+balanced primarily by (1) heat production from radiogenic elements and (2) a decrease in the primordial
+heat content of Earth (i.e., secular cooling)… Other energy sources such as tidal dissipation are
+negligible compared to these two processes"*, and *"the present-day internal heat production is about
+20 TW …, so the rest of the surface heat flux must be from secular cooling."* Parro+ 2017 says the same
+of Mars in the other direction — Ur near 0.7 means *"a relatively small difference between the total
+radioactive heat production and heat loss through the surface, and therefore a **moderate** contribution
+from secular cooling."*
+
+⚠ **Our own document already names the term.** §6 of `tidal-heating-methodology.md`: *"Note that tidal
+heating is one heat source among several (radiogenic, **accretional, primordial**)."* Four sources are
+named in our text and the chain feeds two of them. This is not an undiscovered gap; it is an unfilled
+one.
+
+⚠ **And that same sentence carries a second defect.** It continues: *"For an Earth-mass body radiogenic
+heating alone is ~0.08 W/m²; tidal heating matters when it exceeds that."* The figure is **uncited**,
+and it is **2.1× both held estimates** of Earth's radiogenic production (Korenaga's 16–20 TW =
+0.031–0.039 W/m²; our own engine 0.0418) while being **87 % of Earth's measured total** (0.0921). It
+sits with the totals, not with the components. ⚠ **It is also one of C34's four candidates** — listed
+there as *"0.08 §6.1"* — so one of the four values that decision was choosing between is a figure whose
+own label is in doubt. Not repaired here; its source has to be found first.
+
+**⚠ What this does to C34's score, and it is not a small correction.** At the low feed Mars passed and
+Earth failed. That difference is **not** evidence about the fed quantity — it is a measure of how close
+each body's Urey ratio is to 1. Mars's 0.68–0.75 means a radiogenic number fed into a surface threshold
+still lands in the right cell; Earth's 0.35–0.45 means it does not. **The 3-of-4 was scoring the Urey
+ratio.** Mercury and Venus have no measured surface heat flow, so they cannot even be checked this way.
+
+**⚠ Not fixed, and wider than C34.** The same shortfall applies to **every body this engine feeds**; it
+is visible only on Earth and Mars because only they have an independent number beside ours. Filling it
+needs a grounded secular-cooling recipe — a cooling rate times a heat capacity times a mass, of the
+shape Korenaga's own eq. (8) uses (`C dTi/dt = H(t) − Q(t)`, with `C = 7×10²⁷ J K⁻¹` for the whole
+Earth) — not a factor. C20 (`core_thermal_history`) already emits `q_cmb_present` 5.07 TW for Earth,
+but that is the core's contribution across the CMB, not the planet's secular cooling, so it does not
+close this on its own. **The low/high choice in C34 stays the owner's, and this section exists so that
+it is made knowing the low candidate is a different quantity rather than a smaller one.**
 
 ## What closing all of these does not do
 
