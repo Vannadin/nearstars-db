@@ -79,7 +79,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C31 | Dante's tidal and dependent board rows | built 2026-09-05 (main) | — |
 | **C32** | band output and handoff choices | **structure built 2026-09-05; instances landing one at a time** | built: albedo, stagnant-lid ceiling, greenhouse cases, `k_c`. Open: whoever picks the ten unchosen options that `engine/tools/unchosen_defaults.py` counts |
 | C33 | citations resolved against the document | built 2026-09-05 | — |
-| **C34** | what the transport table is fed, and where its thresholds come from | **half answered** | the thresholds half is answered — none is published, they are conversions, and the 0.03 became a C32 band on 2026-09-06. **What quantity to feed the table is still the owner's**, and Earth alone has four candidates spanning 2.20× |
+| **C34** | what the transport table is fed, and where its thresholds come from | **fed-quantity resolved 2026-09-07; thresholds still unpublished** | The four candidates span 2.203× and are **not verdict-neutral**: the low end (tidal + radiogenic, already fed) reproduces **3 of 4** of the document's anchor labels, the high end **1 of 4**. ⚠ The document's own anchors picked; no value moves, only the grounds. Still open: Venus disagrees at both ends, and the plate ceiling 0.135 remains authored |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **landed 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled two ways, and the contract check cannot see it | **closed 2026-09-07** | ⚠ **Two spellings, not three** — `rotation_period_days` is a comment recording a pre-converted DB value, read by nothing. `dynamo_rocky` looked up `rotation_period` while every supplier writes `rotation_period_h`, so it received **None on every body** and recorded that as evidence. Unified across code, contract (en+ko), chain label and the evidence key; no verdict moves, because the value was never in a branch |
@@ -2991,6 +2991,41 @@ flip is at 0.4636.
 document prints the 0.09 capacity but not the ±50 % width: a full sweep for `50 %`, `factor of 1.5` and
 `×1.5` returns two hits, both a different quantity (Io's heat concentration, 50 % of the flow from 1.2 %
 of the surface). The comment "read ±50 % as its row" is the code's own reading of the table.
+
+### Resolved 2026-09-07 — the document's own anchors picked, and we took the result
+
+**Owner**: *"고증에 맞는 건 아래쪽 아냐?"* ⚠ **Not a choice of ours.** Yesterday's decision was to carry
+a band; measuring the band showed it is **not verdict-neutral**, and the discriminator was already in
+the document.
+
+| what is fed | reproduces the document's own §6.2 anchor labels |
+|---|---|
+| **low end** — tidal + radiogenic, what the engine already feeds | **3 of 4** |
+| high end — the measured surface heat flow | **1 of 4** (Earth alone) |
+
+⚠ **This is the same shape as the neutrino case earlier today**: two readings disagreed, and a third
+body of evidence said which one. There it was Ruedas's table; here it is **the document's own anchor
+bodies**. In neither case did a seat pick.
+
+**Why the margin matters, and it is the only number that shows why this decision has weight.** The
+candidates span **2.203×**, while Mercury (0.01575) and Mars (0.01587) sit only **1.90× and 1.89×**
+below the stagnant/plate boundary at 0.030. **The spread is wider than their margin**, so any upward
+revision of the fed quantity past ~1.9× moves both out of stagnant lid — and the document labels both
+stagnant lid. ⚠ **That statement does not assume uniform scaling**; an earlier draft multiplied every
+body by Earth's 2.203× and that construction was ours, not a measurement of those bodies. **The margin
+comparison stands without it.**
+
+⚠ **Nothing in the output moves.** The engine already feeds the low end, so no value changes anywhere.
+**What changes is the grounds**: it was the recipe's own contract sentence at `tidal:59`, added by
+`b29b556e` — the code declaring what it feeds — and it is now the document reproducing three of its
+four anchors.
+
+⚠ **Two things this does not fix.**
+1. **Venus disagrees at both ends.** The document prints it stagnant lid at 10–20 mW/m²; the engine
+   computes 37.75 and returns plate tectonics. **Three of four, not four**, and the Venus mismatch is
+   independent of this decision — see the paragraph below, which was written before it.
+2. **The plate ceiling 0.135 is still authored** (`0.09 * 1.5`). This decision is about **which quantity
+   is fed**, not about where the thresholds sit. Different question, still open.
 
 **The document does not say what quantity to feed the table.** Earth alone has four candidates spanning
 **2.20×**: the measured surface heat flow 0.0921, the total flux the engine actually feeds 0.0418,
