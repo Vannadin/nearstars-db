@@ -2168,11 +2168,18 @@ Neumann & Kruse 2019 is [`2019ApJ...882...47N`](https://ui.adsabs.harvard.edu/ab
 — **the same paper whose Table 2 supplied every constant above.** What agrees is a hand-built energy
 budget against that paper's own thermal-evolution model, using that paper's own numbers.
 
-**So what the closure is worth, stated exactly**: it says the arithmetic and the constants were not
-fumbled — a simple energy argument reproduces the paper's modelled threshold to within its band, which
-would not happen if a factor were dropped or a unit mistaken. **It says nothing about whether the
-constants or the framing are right**, because both came from the paper it agrees with. An outside check
-would need a source this measurement did not draw from, and there is not one here.
+**So what the closure is worth, stated as two sentences that must travel together** — because either
+one alone is misleading:
+
+- ✅ **It is evidence the implementation is right.** From that paper's constants, a hand energy budget
+  reproduces that paper's own modelled threshold. A dropped factor, a mis-set unit, a mistaken exponent
+  — the failures that cost us a square root, an atomic mass and five significant figures **on this same
+  day** — would each have broken it. That is a real check and not a small one.
+- ⚠ **It is not evidence the constants or the framing are right.** Both came from the paper it agrees
+  with. An outside check needs a source this measurement did not draw from, and there is not one here.
+
+**Reading only the second turns a genuine implementation check into nothing**, which would be the
+opposite error and just as wrong.
 
 ⚠ **The mis-description mattered more than the number.** "Independent" was the word that made this look
 like the strongest result of the day, and it survived one round of reporting before the bibcodes were

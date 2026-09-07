@@ -1074,3 +1074,16 @@ is left is the independence you actually have.
 **And the appetite is the tell.** This closure was welcome precisely because the measurement had
 contradicted its own pre-registration and wanted corroborating. **A result that arrives when you need
 one deserves the bibcode check first**, not last.
+
+⚠ **The claim also grew as it was passed along, and the growth is worth recording separately.** The
+working seat wrote "closure" in its own section and "independent … from a different paper" alongside
+it; the directing seat promoted that to *"the strongest result of the day"* and **sent it onward to the
+owner**. Two seats, two steps, and **the amplification happened at the one that had to present it** —
+the further from the arithmetic, the larger the claim. Neither step involved a check; each involved
+agreeing with the previous one.
+
+⚠ **Correcting it must not overshoot either.** Struck to "not independent" alone, the record would call
+a real implementation check worthless: reproducing a paper's own threshold from its own constants does
+rule out a dropped factor or a mistaken unit, which is exactly the failure class that cost this project
+a square root, an atomic mass and five significant figures **the same day**. **What it is and what it is
+not have to be written as one pair**, or the next correction over-corrects.
