@@ -4499,6 +4499,58 @@ taking its ends is the same error class as C46's ceiling-used-as-floor, repeated
 hours after repairing it. **The conclusion that Korenaga is the remaining unexhausted route stands; the
 claim that it already lands does not.**
 
+### C47 (f) 2026-09-08 — step 1 passes: the transcription reproduces the only row-level anchor this engine has
+
+**Built: `engine/stagnant_lid.py` + `engine/test_stagnant_lid.py`, wired into the gate.** Brief 148's
+step 1 was to match eq. 43's stability analysis against Table 2's printed rows and **stop if it does
+not match**. It matches.
+
+**⚠ First, the directing seat corrected this seat's stopping line, and the correction is right.** C47
+(e) recommended abandoning the build because the absolute flux has no anchor. But the pass condition is
+a **ratio**:
+
+    Ur_Mars / Ur_Earth  =  (H_Mars/H_Earth) × (q_Earth/q_Mars)
+
+`H` is known absolutely for both bodies, and if `b` is **one global declaration** then `q ∝ b^{−β/n}`
+appears on both sides of `q_Earth/q_Mars` and cancels. **So the direction test does not need the
+absolute scale, and the missing anchor does not block it.** My stopping line was drawn around the wrong
+quantity. ⚠ It survives in one narrowed place — the *absolute* flux still has no anchor and must not be
+emitted — which is now the recorded reason for a refusal rather than a reason to stop.
+
+**⚠ Second, two things this seat had told the directing seat turned out wrong on reading.**
+
+1. **The equation to test is eq. 29, not eq. 30.** The paper introduces eq. 30 with *"In the limit of
+   `Nu ≫ 1`, it approaches the following asymptotic formula"*, and Table 2's `Nu` is **3.1–7.2**. Read
+   from the page image of p. 158, eq. 29 is
+   `Nu[1 − 2Nu⁻¹(1 − a_rh θ⁻¹)]^{1−β(n+2)/(2n)} = a θ^{−1−β} Ra_i^β` — and `a ≈ 0.30 + 0.25n` was
+   **fitted to eq. 29, not eq. 30**. ⚠ So **C47 (c)'s direction test ran the asymptotic form outside
+   its own stated limit.** At Table 2's scale the two forms differ by **27 %**; they converge to 0.1 %
+   only when `Ra_i` is raised 10⁸×. That does not overturn C47 (c)'s finding — `D` still cancels and
+   both laws still go as `g^{1/3}` — but the test has to be re-run on eq. 29 in step 4.
+2. **Table 1 cannot be an anchor.** C47 (e) listed it as one. Its linear-exponential block prints `Nu`
+   but its `θ` and `Ra_i` sit in the **Arrhenius** columns, so no `(θ, Ra_i, Nu)` triple exists there.
+   **Table 2's Δη = 1 block is the only row-level anchor in this paper**, ten rows of it.
+
+**Step 1's result.**
+
+| check | result |
+|---|---|
+| eq. 29 against Table 2's ten `Δη = 1` rows | **rms 2.27 %**, bias **−0.44 %p**, worst row **4.63 %** |
+| the paper's own stated fit quality | *"The rms error of the fit is ∼1.2 per cent"* — ⚠ **on Table 1**, the set the fit was made to. 2.27 % on a held-out set is the expected degradation |
+| eq. 44's `Ra_crit(n)` against the text's ∼450 / ∼134 / ∼104 | 441 · **143** · 98 — n = 1 and 3 pass, ⚠ **n = 2 off by 7 %**, now pinned by a test that fires if it ever changes |
+| eq. 30 as the `Nu ≫ 1` limit of eq. 29 | ratio **1.270** at Table 2's scale → **1.001** at 10⁸× `Ra_i` |
+| free cross-check: Nimmo's `ζ = 10⁻²` at `ΔT = 1350` gives `θ = 13.50` | inside Table 2's `θ` range 7.93–16.05. **Two independently transcribed modules agree on a quantity that means the same thing in both papers** |
+
+**⚠ And the residual was tested for tunability, then left alone.** Refitting `a_rh` from the text's
+2.5 gives 2.256 and buys **0.08 percentage points** of rms. A residual that refitting cannot move is
+not a knob, so the text's single value stands and `Δη`-free `a_rh` is not read off Fig. 3. **A test
+pins that**: if refitting ever buys more than 0.5 %p, it fires, because that would mean the residual
+*is* adjustable and the single value would need re-arguing.
+
+**What is not built, and stays not built until later steps:** any flux, dimensional or not. This module
+emits nothing into the chain. The melting correction (eqs 41–56), the `b` sensitivity measurement, and
+the Earth-vs-Mars direction test are steps 2–4.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
