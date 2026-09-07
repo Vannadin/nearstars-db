@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | ⚠ The pre-registered expectation (does not reach) was wrong: at `t₀ = 0` the pulse is **12.2×** the whole long-lived budget and **3.93×** the sensible heat to the silicate solidus. But it decays with `τ ≈ 1.03 Myr`, so **the answer is `t₀`**, which no body declares. The refusal is renamed, not lifted |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | ⚠ The pre-registered expectation (does not reach) was wrong: at `t₀ = 0` the pulse is **12.2×** the whole long-lived budget and **3.93×** the sensible heat to the silicate solidus. But it decays with `τ ≈ 1.03 Myr`, so **the answer is `t₀`**, which no body declares. The refusal is renamed, not lifted. ⚠ The agreement with C9's published band is **not** an independent closure — same paper |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -2158,10 +2158,26 @@ large two.
 | 3 | 3.665×10⁵ | 0.671× | 0.216× |
 | 5 | 5.301×10⁴ | 0.097× | 0.031× |
 
-⚠ **An independent closure, and it is the reason to trust this at all.** The `t₀` at which the pulse
-exactly meets the melting requirement comes out at **1.42–1.44 Myr**, and C9's paragraph — already in
-this file, from a different paper and a different method — prints *"wet olivine succeeds only for
-t₀ ≈ 1.3–1.9 Ma"*. **The number lands inside a published band this measurement did not use.**
+**A closure, and ⚠ a correction to how it was first described.** The `t₀` at which the pulse exactly
+meets the melting requirement comes out at **1.42–1.44 Myr**, and C9's paragraph prints *"for the wet
+olivine rheology successful models live in t₀ ≈ 1.3–1.9 Ma (§3.3)"*. The threshold lands inside that
+band.
+
+⚠ **It was first written here as an *independent* closure "from a different paper". It is not.** C9's
+Neumann & Kruse 2019 is [`2019ApJ...882...47N`](https://ui.adsabs.harvard.edu/abs/2019ApJ...882...47N)
+— **the same paper whose Table 2 supplied every constant above.** What agrees is a hand-built energy
+budget against that paper's own thermal-evolution model, using that paper's own numbers.
+
+**So what the closure is worth, stated exactly**: it says the arithmetic and the constants were not
+fumbled — a simple energy argument reproduces the paper's modelled threshold to within its band, which
+would not happen if a factor were dropped or a unit mistaken. **It says nothing about whether the
+constants or the framing are right**, because both came from the paper it agrees with. An outside check
+would need a source this measurement did not draw from, and there is not one here.
+
+⚠ **The mis-description mattered more than the number.** "Independent" was the word that made this look
+like the strongest result of the day, and it survived one round of reporting before the bibcodes were
+compared. **A closure is only as independent as its least independent input**, and checking that means
+reading the citation, not the claim.
 
 **The three printed half-lives do not matter.** 0.73 My (Monteux), ≈0.72 Myr (Kimura), 7.17×10⁵ a
 (Neumann) move that threshold 1.4424 → 1.4226 → 1.4167 Myr — **1.8 % across the whole spread.** Per
@@ -2187,6 +2203,12 @@ formula gives **6.912×10⁶ J/kg**, 3.77 % higher. **Neither reading is elected
 no initial heat-production rate to close against. The discriminant is recorded so the next person who
 meets an ordinary-chondrite ²⁶Al figure can settle it without going looking: **`H₀ = 2.041×10⁻⁷ W/kg`
 for 26.98, `2.118×10⁻⁷ W/kg` for 26.**
+
+⚠ **Two limits travel with the conclusion, not in an appendix.** The melting requirement **excludes
+latent heat** — no held source gives one for silicate — so it is a lower bound and every ratio against
+it is an upper bound. And the pulse scales with rock fraction: **at 30 % rock the margin is 18 %, which
+the excluded latent heat could erase by itself.** Our moons carry ice. Neither limit is a footnote to
+the result; they bound how far it may be carried.
 
 **What this changes.** ⚠ **The refusal is not lifted; it is renamed.** It was *"we have no input"*. It is
 now *"the input has narrowed to one: `t₀`"* — the formation time after CAIs, which no body declares and

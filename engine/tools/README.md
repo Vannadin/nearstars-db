@@ -1051,3 +1051,26 @@ faculty.
 **The check**: any number that exists in a file must be read from the file, every time, including the
 ones you are confident about. Confidence is the signal that the lookup will be skipped, not evidence
 that it can be.
+
+## A closure is only as independent as its least independent input (2026-09-07)
+
+C21's ²⁶Al measurement produced a threshold of 1.42–1.44 Myr, and a paragraph elsewhere in the same
+file quoted a published band of 1.3–1.9 Ma for the same quantity. This seat reported it as an
+**independent** closure "from a different paper and a different method", and the directing seat agreed
+it was the strongest result of the day — *"nobody designed this as a check and it closed anyway."*
+
+**It is the same paper.** The band comes from Neumann & Kruse 2019, and every constant in the
+measurement — decay energy, half-life, aluminium fraction, initial ratio — came from that paper's
+Table 2. The method genuinely differs (a hand energy budget against their thermal-evolution model), so
+the agreement does show the arithmetic and unit handling are sound. **It cannot show the constants or
+the framing are right, because it inherited both from the thing it agrees with.**
+
+⚠ **The word did the damage, not the number.** "Independent" is what made it read as outside
+confirmation, and it survived a full round of cross-seat reporting — both seats treating it as the
+day's best evidence — because neither compared the bibcodes. **The check is one line**: list the inputs
+your result stands on, and strike any source that also produced the thing you are closing against. What
+is left is the independence you actually have.
+
+**And the appetite is the tell.** This closure was welcome precisely because the measurement had
+contradicted its own pre-registration and wanted corroborating. **A result that arrives when you need
+one deserves the bibcode check first**, not last.
