@@ -1164,8 +1164,19 @@ directing seat as self-criticism, and self-criticism is the form of claim least 
 disagreeing with it feels like arguing for someone's comfort rather than for accuracy. It was still
 **counted from memory, and the record supports two.**
 
-The seat reports the mirror image from earlier the same day: a `main` commit count given as 2 where the
-true number was 7. ⚠ **That earlier case is their account and is not in this record**, so it is written
-here as reported rather than as verified. **If both hold, the pair is the useful part** — one
-undercount, one overcount, opposite directions, and **the same cause: a number recalled instead of
-queried.** Whether the recollection flatters or accuses changes nothing about which one it is.
+**The mirror image from earlier the same day is verified too**, and by the same kind of one-line query:
+a `main` commit count reported as 2 where there were 7.
+
+    git log --oneline 4ab21351..163c7735   # 4ab21351 was origin/main, 163c7735 the local HEAD → 7
+
+⚠ **An earlier draft of this paragraph filed that one as "their account, not verified", because it does
+not appear in `interior-core.md`.** It was in `main`'s history the whole time. **"Not in the record I
+was reading" is not the same as "not checkable"**, and treating them as equivalent is how a verifiable
+claim gets archived as hearsay — the conservative-looking move, and still wrong.
+
+**The pair is the useful part.** One count too low, one too high, opposite directions, **the same
+cause: a number recalled instead of queried** — and each separated from the truth by a single command.
+Whether the recollection flatters or accuses changes nothing about which it is. ⚠ Note which direction
+each ran: the morning's error made a mistake sound **smaller**, the afternoon's made one sound
+**larger**. Memory does not err in a consistent direction, so "it was against my own interest" predicts
+nothing about accuracy.
