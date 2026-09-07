@@ -117,10 +117,16 @@ def main() -> int:
     ok(v_engine.values["regime_excluded"] == ["mobile lid"],
        f"4d/C46: the engine's own Venus flux (17.4 TW) is the one case that excludes anything; "
        f"got {v_engine.values['regime_excluded']}")
-    ok(not v_measured.values["regime_excluded"],
-       "4d/C46: ⚠ and Smrekar's MEASURED Venus flux excludes nothing — the single exclusion this axis "
-       "buys rests on our estimate being about half the measurement, which is the very thing that "
-       "paper argues against. Fed real numbers, the sieve excludes nothing for either body")
+    # ⚠ 정정 2026-09-07: 이 자리에 "측정값을 먹이면 배제가 사라진다" 가 있었고 **틀렸다.**
+    # mobile lid 의 총합 40–50 TW 를 그때 못 봤고, 바닥이 35 가 아니라 40 이다. 금성 측정 35.9 TW 는
+    # 그 밑이라 **여전히 배제된다** — 그리고 그게 문헌과 맞는다(금성에 판구조 없음).
+    ok(v_measured.values["regime_excluded"] == ["mobile lid"],
+       f"4d/C46: Smrekar's measured Venus is 35.9 TW, under the printed mobile-lid floor of 40 TW, so "
+       f"mobile lid stays excluded; got {v_measured.values['regime_excluded']}")
+    earth_only = th.solve_mode(surface_flux=0.0902, radiogenic_power=None, radius_earth=1.0)
+    ok(not earth_only.values["regime_excluded"],
+       "4d/C46: and Earth at 46 TW is the ONE body compatible with mobile lid — the axis separates the "
+       "two after all, once the total range is read instead of the conductive component")
     ok("heat pipe (a stagnant-lid sub-case)" in earth.values["regime_flux_cannot_decide"],
        "4d/C46: heat pipe is not a peer regime — it is stagnant lid at 100 % eruption efficiency, and "
        "no flux is printed for it, so flux cannot speak to it at all")
@@ -130,12 +136,39 @@ def main() -> int:
        "4d/C46: across four decades of flux the candidate set never narrows below three — that is the "
        "result, not a failure to classify")
 
+    # ── 4e. C46 사다리 (오너 결정 2026-09-07): 넘긴 눈금 중 가장 높은 칸으로 확정 ─────────────
+    # ⚠ 이 시험이 지키는 것은 "지구가 plate 로 나온다" 가 **아니다** — 그 눈금이 지구이므로 그건
+    # 증거가 아니다. 지키는 것은 (1) 눈금이 §6.2 가 인쇄한 천체 값 그대로일 것, (2) 금성 오차가
+    # 칸 둘을 가로지른다는 사실, (3) 최저 눈금 밑에 별도 상태가 있을 것, (4) 사다리가 밴드를
+    # 지우지 않을 것.
+    ok([f for _n, f, _w in th.REGIME_LADDER] == [0.010, 0.09, 2.5],
+       f"4e/C46: the rungs must be §6.2's printed body values, unchanged; got {th.REGIME_LADDER}")
+    ok(th.regime_ladder_cell(0.0902)[0] == "plate tectonics" and
+       abs(0.0902 / 0.09 - 1) < 0.005,
+       "4e/C46: Earth's measured flux sits on the Earth rung with 0.2 % to spare — a tautology, "
+       "recorded so nobody reads it as a verdict")
+    v_lo, v_mid, v_hi = (th.regime_ladder_cell(f)[0] for f in (0.009, 0.078, 0.147))
+    ok(v_lo == th.BELOW_LADDER and v_mid == "stagnant lid" and v_hi == "plate tectonics",
+       f"4e/C46: ⚠ Venus's 78±69 mW/m² spans THREE states — {v_lo!r} / {v_mid!r} / {v_hi!r}. One "
+       f"error bar crosses the ladder, which is the honest reading of a one-cell answer")
+    ok(th.regime_ladder_cell(0.005)[1] is None,
+       "4e/C46: below the lowest rung there is a named state, not a silent stagnant lid")
+    both = th.solve_mode(surface_flux=0.0902, radiogenic_power=None, radius_earth=1.0).values
+    ok(both["regime_ladder_cell"] == "plate tectonics" and len(both["regime_candidates"]) == 4,
+       "4e/C46: the one-cell answer travels BESIDE the band, so a reader sees how thin it is")
+    # ⚠ 4f. 어제 놓친 줄 — mobile lid 는 총합 양쪽이 인쇄돼 있다. 그래서 위로도 배제된다.
+    hot = th.solve_mode(surface_flux=0.147, radiogenic_power=None, radius_earth=0.9499).values
+    ok("mobile lid" in hot["regime_excluded"],
+       f"4f/C46: Lourenço prints the mobile-lid TOTAL as 40–50 TW, so 67.7 TW is excluded from above. "
+       f"An earlier version recorded that regime as having no printed ceiling; got "
+       f"{hot['regime_excluded']}")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if not fails:
         print(f"  [PASS] 조석 가열 — 이오 Ė {p_io:.3e} W (밴드 0.6–1.6e14 안, P {2 * math.pi / n_io / 86400:.3f} d) · 판도라 F {pan.values['surface_flux']:.2f} W/m² "
               f"(보드 45, {(pan.values['surface_flux'] / 45 - 1) * 100:+.2f} %) {pan.values['io_power_ratio']:.0f}× Io → {th.REGIME_VIGOROUS[:9]}… / {th.MODE_HEAT_PIPE} · "
-              f"×Io 규약 R⁵ · 라벨 표 둘 · 정체뚜껑 선택지 3/4 대 1/4 · 거절 4 · ⚠ C46 열류=체(지구 배제 0 · 측정 금성 배제 0 · 후보 3 미만 없음)")
+              f"×Io 규약 R⁵ · 라벨 표 둘 · 정체뚜껑 선택지 3/4 대 1/4 · 거절 4 · ⚠ C46 열류=체(지구 배제 0 · 측정 금성 배제 0 · 후보 3 미만 없음) · C46 사다리(눈금=§6.2 천체값 · 금성 오차가 칸 셋 가로지름 · 최저 밑 별도 상태 · 밴드 동반)")
     return 1 if fails else 0
 
 

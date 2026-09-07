@@ -125,9 +125,11 @@ EARTH_AREA_M2 = 4.0 * math.pi * R_EARTH_M ** 2
 #: 체제별로 문헌이 인쇄한 것. (성분, 하한 TW, 상한 TW, 근거). 상한 None = 인쇄된 총합 상한 없음.
 #: 전부 Lourenço+ 2020 §4.3, 지구 크기 모형, 마지막 2 Gyr 평균.
 REGIME_PRINTED_TW = {
-    "mobile lid": [("conductive", 35.0, 45.0,
-                    "Lourenço+ 2020 (2020GGG....2108756L) §4.3: «The conductive heat flow is very high for cases in a mobile-lid regime, with values in the range of 35–45 TW»"),
-                   ("magmatic", None, None, "printed as 'low', no number")],
+    # ⚠ 정정 2026-09-07: 어제 이 항목을 "전도 성분만 인쇄, 총합 상한 없음" 으로 적었는데 **틀렸다.**
+    # 같은 절이 **총합**을 인쇄한다 — 지휘석이 원문에서 찾았고 이 좌석이 놓쳤다. mobile lid 만은
+    # 총합 양쪽이 다 묶이고, 나머지 셋은 여전히 한 성분의 상한뿐이다.
+    "mobile lid": [("total", 40.0, 50.0,
+                    "Lourenço+ 2020 (2020GGG....2108756L) §4.3: «the total surface heat flow (i.e., the sum of magmatic and conductive heat flows) for cases with a mobile lid obtained in our simulations are ∼40–50 TW»")],
     "stagnant lid": [("magmatic", None, 35.0,
                       "Lourenço+ 2020 (2020GGG....2108756L) §4.3: «cases in the stagnant-lid regime show a strong increase in the magmatic heat flow with increasing eruption efficiency, with values as high as 30–35 TW»"),
                      ("conductive", None, None, "printed as 'generally low', no number")],
@@ -142,6 +144,44 @@ REGIME_PRINTED_TW = {
     "heat pipe (a stagnant-lid sub-case)": [("total", None, None,
                                              "no flux printed for this sub-case; it is defined by eruption efficiency, not by flux")],
 }
+
+
+#: ⚠ **넷째 출처 단어.** `bands.py` 의 printed/chosen/unchosen 도 `provisional.PROVISIONAL` 도 아니다.
+#: 이 사다리의 눈금은 **경계를 잰 값이 아니라 우리가 아는 천체가 실제로 내는 값**이다. §6.2 자신이
+#: 그렇게 적는다 — doc @«**0.09 W/m² is Earth** and **10–30 mW/m² is the Venus and Mars pair.**»
+#: 그래서 이 사다리는 분류기가 아니라 **유추 눈금**이고, 하는 말은 *"지구만 한 열이면 지구만 한
+#: 지각"* 이다. 그 문장이 출력에 그대로 실려야 한다.
+ANALOGY_RUNG = "analogy-rung"
+
+#: 오름차순. 천체의 총 플럭스가 넘긴 눈금 중 **가장 높은 것**의 칸으로 확정한다 (오너 결정
+#: 2026-09-07). 천장이 없어도 사다리가 서고, 맨 위 칸에 천장이 없으니 `unclassified` 가 사라진다.
+#: ⚠ **사다리 규칙은 우리 것이다.** 문헌은 열류로 체제를 가르지 않는다 — 판별자는 mobility 와
+#: plateness 이고(Lourenço §3.1·§3.3) 둘 다 4.5 Gyr 시뮬레이션 출력이라 관측할 수 없다. 문서가
+#: 적어 둔 *"어떤 플럭스 문턱이든 환산이지 인용이 아니다"* 는 이제 이 사다리에 대한 정확한 설명이다.
+REGIME_LADDER = (
+    ("stagnant lid", 0.010,
+     "§6.2 prints 10–30 mW/m² for the Venus and Mars pair. ⚠ ORIGINALLY A CEILING, USED HERE AS A "
+     "FLOOR — the form changed, and the value did not"),
+    ("plate tectonics", 0.09,
+     "§6.2 prints 0.09 W/m² for Earth. ⚠ Independently bracketed: Lourenço+ 2020 §4.3's mobile-lid "
+     "total of 40–50 TW is 0.0784–0.0980 W/m² over Earth's area, and 0.09 falls inside it; that "
+     "paper's own Earth reference is 44.4 TW = 0.0870 W/m² (Turcotte & Schubert 2014)"),
+    ("heat pipe", 2.5,
+     "§6.2 prints Io's 2.5 W/m², and the document already calls it a floor rather than a boundary"),
+)
+BELOW_LADDER = "below the lowest rung — no known body anchors this range"
+
+
+def regime_ladder_cell(total_flux_w_m2: float) -> tuple:
+    """확정 칸 하나. (칸, 눈금값, 그 눈금의 근거) — 넘긴 눈금 중 가장 높은 것.
+
+    ⚠ 이것은 문헌의 판정이 아니라 **우리 규칙**이고, 눈금은 천체가 내는 값이지 경계가 아니다."""
+    passed = [(n, f, w) for n, f, w in REGIME_LADDER if total_flux_w_m2 >= f]
+    if not passed:
+        return (BELOW_LADDER, None,
+                f"{total_flux_w_m2:.4g} W/m² is under the lowest rung {REGIME_LADDER[0][1]:g}; no "
+                f"known body sits here, so the ladder has nothing to compare it with")
+    return passed[-1]
 
 
 def regime_candidates(total_flux_w_m2: float, radius_earth: float) -> dict:
@@ -278,6 +318,7 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     total = (surface_flux or 0.0) + radiogenic_flux
     mode = transport_mode(total)
     # C46 (b): 우리 칸 이름은 **체제 이름이 아니다.** §6.2 사다리의 칸이고, 문헌 체제는 따로 낸다.
+    cell, rung, rung_why = regime_ladder_cell(total)
     cand = regime_candidates(total, radius_earth)
     compatible = sorted(k for k, (v, _w) in cand.items() if v == "compatible")
     undecided = sorted(k for k, (v, _w) in cand.items() if v == "cannot decide")
@@ -289,6 +330,15 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
         parts.append(f"radiogenic {radiogenic_flux:.4g}")
     else:
         parts.append("radiogenic absent")
+    ladder_note = (
+        f"⚠ `regime_ladder_cell` = {cell!r}, fixed by the highest rung the flux passed"
+        + (f" ({rung:g} W/m²)" if rung is not None else "") + f". {rung_why} "
+        f"⚠ **The ladder rule is OURS, origin `{ANALOGY_RUNG}`** — not the literature's verdict and not "
+        f"a measured boundary. Its rungs are what bodies we know actually radiate, so the ladder says "
+        f"*'Earth's worth of heat, Earth's worth of crust'* and nothing stronger. The literature cuts "
+        f"these regimes on mobility and plateness (Lourenço+ 2020 §3.1, §3.3), which are outputs of a "
+        f"4.5 Gyr simulation. ⚠ Earth coming out `plate tectonics` is therefore **not evidence** — that "
+        f"rung IS Earth, and its margin is 0.2 %.")
     regime_note = (
         f"C46: flux is a sieve, not a classifier. Compatible with {len(compatible)} literature regime(s) "
         f"({', '.join(compatible) or 'none'}); excluded {', '.join(excluded) or 'none'}; "
@@ -297,6 +347,7 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
         f"§3.3), which are outputs of a 4.5 Gyr simulation and not observable here. No single regime is "
         f"emitted while more than one stands.")
     notes = (
+        ladder_note,
         regime_note,
         f"§6.2 table read on the TOTAL surface flux {total:.4g} W/m² = {' + '.join(parts)} W/m²; "
         f"chain :631 supplies W/m² and :632 supplies W — the W is divided by 4πR² here. {GUIDES}.",
@@ -308,10 +359,12 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
                   reason=f"total surface flux {total:.4g} W/m² → {mode}",
                   grade="analog", inputs=inputs,
                   values={"mode": mode, "total_surface_flux": total,
+                          "regime_ladder_cell": cell, "regime_ladder_rung": rung,
                           "regime_candidates": compatible,
                           "regime_flux_cannot_decide": undecided,
                           "regime_excluded": excluded},
                   units={"mode": "", "total_surface_flux": "W/m2", "regime_candidates": "",
+                         "regime_ladder_cell": "", "regime_ladder_rung": "W/m2",
                          "regime_flux_cannot_decide": "", "regime_excluded": ""},
                   refs=refs, notes=notes)
 
