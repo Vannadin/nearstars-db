@@ -91,7 +91,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **resolved 2026-09-07** | Owner chose route 2: a satellite does not take the pebble-isolation branch, because neither formation path in the literature uses a distance from the star — giant impact or **circumplanetary** disc. The `semi_major_axis_au` / `_km` question closes with it: a moon consumes no stellar distance, so there is nothing to fill. Satellite mass budget recorded, all five exempt, no value changed |
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
-| **C46** | the transport table is missing rows **and** discriminates on a different axis | **band built 2026-09-07; rows still absent** | The recipe now emits the **set** of literature regimes a flux is compatible with, excluding only outside a printed range. ⚠ **Fed real measurements it excludes nothing** — Earth at 46 TW is compatible with stagnant lid, and the one exclusion (mobile lid for Venus) appears only on our own estimate and vanishes on Smrekar's measurement. `mode` is relabelled a ladder cell, not a regime |
+| **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07; rows still absent** | The flux now fixes **one** cell by the highest rung it passes (0.010 · 0.09 · 2.5 W/m², plus a named state below), with the band kept beside it. ⚠ **The rungs are bodies, not boundaries** — origin `analogy-rung`, our rule and not the literature's verdict, so Earth reading `plate tectonics` is a tautology. ⚠ Venus's 78±69 mW/m² spans three cells, and the ladder **inverts C34's grounds** — reported, not acted on |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3806,9 +3806,16 @@ relation available is: collect the heat-flow values the literature **actually pr
 exclude a regime **only** where our number falls outside a printed range. Lourenço+ 2020 §4.3 prints
 them, for an Earth-sized model, averaged over the last 2 Gyr:
 
+⚠ **A correction to the row below, and it changed the finding.** This section first recorded mobile lid
+as *"conductive 35–45 TW, magmatic low"* — one component numeric, so no printed ceiling on the total.
+**The same section prints the total**, and this seat missed the line while the directing seat found it:
+*"the total surface heat flow (i.e., the sum of magmatic and conductive heat flows) for cases with a
+mobile lid obtained in our simulations are ∼40–50 TW"*, with that paper's own Earth reference at
+**44.4 TW** (Turcotte & Schubert 2014). **Mobile lid is bounded on both sides; the other three are not.**
+
 | regime | printed | kind |
 |---|---|---|
-| mobile lid | conductive **35–45 TW**; magmatic "low" | one numeric range |
+| mobile lid | **total 40–50 TW** | both bounds |
 | stagnant lid | magmatic **up to 30–35 TW**; conductive "generally low" | one bound, one word |
 | episodic lid | magmatic **up to 20 TW**; conductive "intermediate" | one bound, one word |
 | plutonic-squishy lid | magmatic **up to ~10 TW**; conductive "intermediate", "very high compared to a stagnant lid" | one bound, one word |
@@ -3828,16 +3835,26 @@ excluded from above at all. That single fact is why the sieve barely sieves.
 | Venus, Smrekar+ 2023 **measured 78 mW/m²** | 0.078 W/m² = 35.9 TW | plate tectonics | **4** | **none** |
 | Venus, that value's upper error, 147 mW/m² | 0.147 W/m² = 67.7 TW | ⚠ *unclassified* | **4** | **none** |
 
-⚠ **The pre-registration said Earth and Venus would not separate on this axis. They separate — and the
-separation is an artefact of our own number.** The one exclusion the sieve ever makes is mobile lid for
-Venus, and it appears **only** when Venus is fed our mass-scaled estimate of 17.4 TW. Fed Smrekar's
-**measurement**, the exclusion vanishes. And Smrekar's argument is precisely that models predicting
-Venus at about half of Earth's flux are wrong — **so the exclusion rests on the assumption that paper
-exists to refute.**
+⚠ **This paragraph said the opposite until the missed line was found, and the correction matters.** It
+read: *the one exclusion is an artefact of our own number, and fed Smrekar's measurement it vanishes.*
+With the floor at **40 TW** rather than 35, it does not vanish:
 
-**Fed real measurements, this axis excludes nothing for either body.** Earth — the textbook mobile lid —
-comes out compatible with stagnant lid. **That is the result.** A test pins it, including that the
-candidate set never falls below three across four decades of flux.
+| body fed | total | mobile lid |
+|---|---|---|
+| Earth, measured | 46 TW | **compatible** — the only body that is |
+| Venus, our estimate | 17.4 TW | excluded, below the floor |
+| Venus, Smrekar measured | 35.9 TW | **excluded**, still below the floor |
+| Venus, upper error | 67.7 TW | **excluded**, now above the ceiling |
+
+**So the axis does separate Earth from Venus, on measured values, and in the direction the literature
+says** — Venus lacks plate tectonics (Smrekar+ 2018). ⚠ **The earlier reading was wrong because one
+sentence of a held paper had not been read**, not because the reasoning was loose: the conductive
+component alone gives 35 TW and no ceiling, and that is what was recorded. **A component read in place
+of a total was the whole of the error.**
+
+**What still stands from the band**: the other three regimes cannot be excluded from above at all, so
+Earth at 46 TW remains compatible with stagnant lid, episodic and squishy. **The candidate set never
+falls below three across four decades of flux**, and a test pins that.
 
 ⚠ **And the ladder cell is no longer called a regime.** `mode` stays in the output because eight
 consumers read it, but the note beside it now says what it is: **the §6.2 flux-ladder cell, not a
@@ -3847,6 +3864,62 @@ classification.
 **The sentence that was a footnote is now the finding.** Our own document already said it: *"there is no
 published W/m² boundary between the modes, because the real criterion is melt fraction and any flux
 threshold is a conversion, not a citation."* This section is that sentence with the measurement attached.
+
+### C46 — the ladder, built 2026-09-07: always one cell, and the cell is an analogy
+
+**Owner**: *"이것보다는 크다를 기준으로 종류를 확정지어버리는게 어때?"* — so the flux picks **one** cell,
+by the highest rung it passes. No ceiling is needed, which also disposes of `unclassified`: the top
+cell has no upper edge.
+
+| rung | W/m² | where the number comes from |
+|---|---|---|
+| stagnant lid | **0.010** | §6.2's Venus–Mars pair, 10–30 mW/m². ⚠ **originally a ceiling, used here as a floor** — the form changed, the value did not |
+| plate tectonics | **0.09** | §6.2's Earth. ⚠ **Independently bracketed**: Lourenço's mobile-lid total of 40–50 TW is **0.0784–0.0980 W/m²** over Earth's area, and 0.09 sits inside |
+| heat pipe | **2.5** | §6.2's Io, which the document already calls a floor rather than a boundary |
+| *below the lowest rung* | — | a named state, not a silent stagnant lid |
+
+⚠ **The rungs are not boundaries. They are what bodies we know actually radiate** — §6.2 says so
+itself: *"**0.09 W/m² is Earth** and **10–30 mW/m² is the Venus and Mars pair.**"* So this is an **analogy
+scale**, carried under its own origin word `analogy-rung` — not `printed`, not `chosen`, not
+`provisional`, not a grade. What it says is *"Earth's worth of heat, Earth's worth of crust"* and
+nothing stronger, and the output says that in words.
+
+⚠ **Therefore Earth coming out `plate tectonics` is not evidence. That rung is Earth.** Its margin is
+**0.2 %** (0.0902 against 0.09), and the test that pins it says in its own comment that it is a
+tautology recorded so nobody reads it as a verdict.
+
+**What the ladder produces:**
+
+| body fed | flux | cell |
+|---|---|---|
+| Earth, measured | 0.0902 W/m² | plate tectonics |
+| Venus, 78−69 = 9 mW/m² | 0.009 | **below the lowest rung** |
+| Venus, 78 mW/m² | 0.078 | stagnant lid |
+| Venus, 78+69 = 147 mW/m² | 0.147 | **plate tectonics** |
+| Pandora | 45.36 | heat pipe |
+
+⚠ **One error bar crosses three states.** Smrekar's 78 ± 69 mW/m² puts Venus below the ladder, on the
+stagnant rung, and on the Earth rung depending on where in its own uncertainty you read it. **The
+one-cell answer is that thin**, which is why the band travels beside it in the same output rather than
+being replaced by it.
+
+### C34, re-measured under the ladder — the argument inverts
+
+C34 chose the low end because it reproduced **3 of 4** of §6.2's anchor labels while the high end got
+**1 of 4**. ⚠ **That measurement was made under a ceiling ladder.** Re-run against floors:
+
+| fed quantity | scored on bodies with a measured flux | fails |
+|---|---|---|
+| low end — tidal + radiogenic, current | **1 of 2** | **Earth**, which reads stagnant lid |
+| high end — measured surface heat flow | **2 of 2** | none |
+
+⚠ **Mercury and Mars are not scored.** Neither has a measured surface heat flow we hold, and the
+10–30 mW/m² the document attaches to them **is the stagnant-lid rung itself** — scoring the ladder with
+its own rung is circular. They are `cannot verify`, not `pass`.
+
+**So changing the ladder's form moves the grounds for C34's choice**, and in the opposite direction.
+⚠ **Not resolved here**: this section reports the inversion rather than acting on it, because quietly
+keeping C34 and quietly reversing it are both worse than saying that the two decisions are one.
 
 ## What closing all of these does not do
 
