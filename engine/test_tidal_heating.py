@@ -100,12 +100,42 @@ def main() -> int:
     ok("no radius" in th.solve(1.0, None, 3.8e5, 1.0, 0.05, 0.01).reason, "5: no radius refuses by name")
     ok("no heat source" in th.solve_mode(None, None, 1.0).reason, "5: mode with no heat source refuses by name")
 
+    # ── 4d. C46 (b): 열류는 체이고 분류기가 아니다 (오너 결정 2026-09-07, 밴드) ──────────────
+    # ⚠ 이 시험이 지키는 것은 수가 아니라 **밴드가 좁혀지지 않는다**는 사실이다. 문헌은 이 체제들을
+    # mobility 와 plateness 로 가르고(Lourenço+ 2020 §3.1·§3.3) 둘 다 4.5 Gyr 시뮬레이션 출력이라
+    # 관측 못 하는 천체에는 잴 수 없다. 그래서 우리가 열류로 할 수 있는 일은 **인쇄된 구간 밖을
+    # 배제하는 것**뿐이고, 대개 그것도 못 한다.
+    E_AREA = th.EARTH_AREA_M2
+    earth = th.solve_mode(surface_flux=46.0e12 / E_AREA, radiogenic_power=None, radius_earth=1.0)
+    ok(len(earth.values["regime_candidates"]) == 4 and not earth.values["regime_excluded"],
+       f"4d/C46: Earth at its measured 46 TW excludes NOTHING — the textbook mobile-lid planet is "
+       f"compatible with stagnant lid on this axis. Got {earth.values['regime_candidates']} / "
+       f"excluded {earth.values['regime_excluded']}")
+    # ⚠ 엔진의 금성 값은 mobile lid 를 배제한다. 그런데 **측정값은 배제하지 않는다.**
+    v_engine = th.solve_mode(surface_flux=0.03775, radiogenic_power=None, radius_earth=0.9499)
+    v_measured = th.solve_mode(surface_flux=0.078, radiogenic_power=None, radius_earth=0.9499)
+    ok(v_engine.values["regime_excluded"] == ["mobile lid"],
+       f"4d/C46: the engine's own Venus flux (17.4 TW) is the one case that excludes anything; "
+       f"got {v_engine.values['regime_excluded']}")
+    ok(not v_measured.values["regime_excluded"],
+       "4d/C46: ⚠ and Smrekar's MEASURED Venus flux excludes nothing — the single exclusion this axis "
+       "buys rests on our estimate being about half the measurement, which is the very thing that "
+       "paper argues against. Fed real numbers, the sieve excludes nothing for either body")
+    ok("heat pipe (a stagnant-lid sub-case)" in earth.values["regime_flux_cannot_decide"],
+       "4d/C46: heat pipe is not a peer regime — it is stagnant lid at 100 % eruption efficiency, and "
+       "no flux is printed for it, so flux cannot speak to it at all")
+    ok(all(len(th.solve_mode(surface_flux=f, radiogenic_power=None,
+                             radius_earth=1.0).values["regime_candidates"]) >= 3
+           for f in (0.01, 0.05, 0.09, 0.2)),
+       "4d/C46: across four decades of flux the candidate set never narrows below three — that is the "
+       "result, not a failure to classify")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if not fails:
         print(f"  [PASS] 조석 가열 — 이오 Ė {p_io:.3e} W (밴드 0.6–1.6e14 안, P {2 * math.pi / n_io / 86400:.3f} d) · 판도라 F {pan.values['surface_flux']:.2f} W/m² "
               f"(보드 45, {(pan.values['surface_flux'] / 45 - 1) * 100:+.2f} %) {pan.values['io_power_ratio']:.0f}× Io → {th.REGIME_VIGOROUS[:9]}… / {th.MODE_HEAT_PIPE} · "
-              f"×Io 규약 R⁵ · 라벨 표 둘 · 정체뚜껑 선택지 3/4 대 1/4 · 거절 4")
+              f"×Io 규약 R⁵ · 라벨 표 둘 · 정체뚜껑 선택지 3/4 대 1/4 · 거절 4 · ⚠ C46 열류=체(지구 배제 0 · 측정 금성 배제 0 · 후보 3 미만 없음)")
     return 1 if fails else 0
 
 

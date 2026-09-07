@@ -107,6 +107,68 @@ STAGNANT_LID_CEILING_CHOICE = Choice(
 # NOT inside the shipped string: a value's reader gets the pointer, not the document's prose.
 GUIDES = "§6: guides, not sharp lines, and no published W/m² boundary between the modes"
 
+# ── C46 (b): 열류로 체제 한 칸을 고르지 않고, **양립 가능한 체제 집합**을 낸다 ─────────────
+# 오너 결정 2026-09-07. 문헌은 이 체제들을 **열류로 가르지 않는다** — Lourenço+ 2020 §3.4 의
+# 판별자는 mobility(= v_rms 표면/맨틀)와 quiescent plateness(변형 80 % 가 일어나는 면적 분율)
+# 이고, 둘 다 4.5 Gyr 시뮬레이션의 출력이라 관측 못 하는 천체에는 잴 수 없다. 그래서 **여기서
+# 열류 문턱을 새로 만들지 않는다.** 하는 일은 하나뿐이다 — 문헌이 각 체제에 대해 **실제로
+# 인쇄한 열류 값**을 모아 두고, 우리 계산값이 그 인쇄 구간 **밖일 때만 배제**한다.
+# 열류는 **체**이지 분류기가 아니고, 대개 배제도 못 한다.
+#
+# ⚠ 인쇄된 것은 TW 이고 지구 크기 모형에 대한 값이다(Lourenço §2: *"realistic parameter values
+# and physics descriptive of planet Earth"*). TW ↔ W/m² 변환은 **우리 것**이므로 라벨한다.
+# ⚠ 그리고 인쇄값은 **성분별**이다 — 자기(magmatic)와 전도(conductive)가 따로 나오고, 각 체제에서
+# 한쪽만 수로 인쇄되고 다른 쪽은 "낮다/중간" 같은 말이다. 우리 엔진이 내는 것은 **총 플럭스**라,
+# 한 성분만 수로 묶인 체제는 총합에 대한 **상한이 없다**. 그래서 대부분 배제가 안 된다.
+EARTH_AREA_M2 = 4.0 * math.pi * R_EARTH_M ** 2
+
+#: 체제별로 문헌이 인쇄한 것. (성분, 하한 TW, 상한 TW, 근거). 상한 None = 인쇄된 총합 상한 없음.
+#: 전부 Lourenço+ 2020 §4.3, 지구 크기 모형, 마지막 2 Gyr 평균.
+REGIME_PRINTED_TW = {
+    "mobile lid": [("conductive", 35.0, 45.0,
+                    "Lourenço+ 2020 (2020GGG....2108756L) §4.3: «The conductive heat flow is very high for cases in a mobile-lid regime, with values in the range of 35–45 TW»"),
+                   ("magmatic", None, None, "printed as 'low', no number")],
+    "stagnant lid": [("magmatic", None, 35.0,
+                      "Lourenço+ 2020 (2020GGG....2108756L) §4.3: «cases in the stagnant-lid regime show a strong increase in the magmatic heat flow with increasing eruption efficiency, with values as high as 30–35 TW»"),
+                     ("conductive", None, None, "printed as 'generally low', no number")],
+    "episodic lid": [("magmatic", None, 20.0,
+                      "Lourenço+ 2020 (2020GGG....2108756L) §4.3: «the magmatic heat flow increases slightly (up to 20 TW) with increasing surface yield stress»"),
+                     ("conductive", None, None, "printed as 'intermediate', no number")],
+    "plutonic-squishy lid": [("magmatic", None, 10.0,
+                              "Lourenço+ 2020 (2020GGG....2108756L) §4.3: «the magmatic heat flux is also low, and always increases by a small amount with both increasing yield stress and eruption rate, up to ∼10 TW»"),
+                             ("conductive", None, None,
+                              "printed as 'intermediate', and 'very high compared to a planet covered with a stagnant lid' — relational, no number")],
+    # ⚠ 열파이프는 별개 체제가 아니다. Lourenço §3.4 기준 (3): 정체뚜껑 조건 + 용출효율 100 %.
+    "heat pipe (a stagnant-lid sub-case)": [("total", None, None,
+                                             "no flux printed for this sub-case; it is defined by eruption efficiency, not by flux")],
+}
+
+
+def regime_candidates(total_flux_w_m2: float, radius_earth: float) -> dict:
+    """이 열류와 **양립 가능한** 체제 집합. 배제는 인쇄된 구간 밖일 때만 한다 (C46 (b)).
+
+    반환: {체제: (판정, 이유)} — 판정은 "compatible" · "excluded" · "cannot decide".
+    ⚠ 단일 체제 이름을 내지 않는다. 후보가 하나로 좁혀지는 것은 이 축에서 거의 일어나지 않는다."""
+    area = 4.0 * math.pi * (radius_earth * R_EARTH_M) ** 2
+    tw = total_flux_w_m2 * area / 1e12
+    out = {}
+    for regime, parts in REGIME_PRINTED_TW.items():
+        lo = max((p[1] for p in parts if p[1] is not None), default=None)
+        hi = min((p[2] for p in parts if p[2] is not None), default=None)
+        # 총합에 대한 상한은 **모든** 성분이 수로 인쇄됐을 때만 성립한다.
+        bounded_above = hi is not None and all(p[2] is not None for p in parts)
+        if lo is None and hi is None:
+            out[regime] = ("cannot decide", "no flux value is printed for this regime")
+        elif lo is not None and tw < lo:
+            out[regime] = ("excluded", f"{tw:.3g} TW is below the printed {lo:g} TW floor")
+        elif bounded_above and tw > hi:
+            out[regime] = ("excluded", f"{tw:.3g} TW is above the printed {hi:g} TW ceiling")
+        else:
+            why = f"{tw:.3g} TW is inside the printed range" if lo is not None else \
+                  f"one component is printed (≤ {hi:g} TW) and the other only in words, so the total has no printed ceiling"
+            out[regime] = ("compatible", why)
+    return out
+
 
 def tidal_power(k2_over_q: float, perturber_kg: float, radius_m: float, a_m: float, e: float) -> tuple[float, float, float]:
     """(Ė [W], F [W/m²], n [rad/s]) — doc @«Ė  =  (21/2) · (k₂/Q) · (G M_p² R⁵ n e²) / a⁶», doc @«`F = Ė / (4πR²)`, the number that decides volcanism/melting»."""
@@ -215,6 +277,11 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     radiogenic_flux = (radiogenic_power or 0.0) / area
     total = (surface_flux or 0.0) + radiogenic_flux
     mode = transport_mode(total)
+    # C46 (b): 우리 칸 이름은 **체제 이름이 아니다.** §6.2 사다리의 칸이고, 문헌 체제는 따로 낸다.
+    cand = regime_candidates(total, radius_earth)
+    compatible = sorted(k for k, (v, _w) in cand.items() if v == "compatible")
+    undecided = sorted(k for k, (v, _w) in cand.items() if v == "cannot decide")
+    excluded = sorted(k for k, (v, _w) in cand.items() if v == "excluded")
     parts = []
     if surface_flux is not None:
         parts.append(f"tidal {surface_flux:.4g}")
@@ -222,7 +289,15 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
         parts.append(f"radiogenic {radiogenic_flux:.4g}")
     else:
         parts.append("radiogenic absent")
+    regime_note = (
+        f"C46: flux is a sieve, not a classifier. Compatible with {len(compatible)} literature regime(s) "
+        f"({', '.join(compatible) or 'none'}); excluded {', '.join(excluded) or 'none'}; "
+        f"flux cannot decide for {', '.join(undecided) or 'none'}. ⚠ `mode` above is the §6.2 LADDER CELL, "
+        f"not a tectonic regime — the literature cuts these on mobility and plateness (Lourenço+ 2020 §3.1, "
+        f"§3.3), which are outputs of a 4.5 Gyr simulation and not observable here. No single regime is "
+        f"emitted while more than one stands.")
     notes = (
+        regime_note,
         f"§6.2 table read on the TOTAL surface flux {total:.4g} W/m² = {' + '.join(parts)} W/m²; "
         f"chain :631 supplies W/m² and :632 supplies W — the W is divided by 4πR² here. {GUIDES}.",
         "resurfacing_rate (chain.yaml outputs) is not emitted: the document prints no formula for it.",
@@ -232,8 +307,13 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     return Result(recipe=RECIPE, version=VERSION, regime=f"mode_{mode.split()[0]}",
                   reason=f"total surface flux {total:.4g} W/m² → {mode}",
                   grade="analog", inputs=inputs,
-                  values={"mode": mode, "total_surface_flux": total},
-                  units={"mode": "", "total_surface_flux": "W/m2"}, refs=refs, notes=notes)
+                  values={"mode": mode, "total_surface_flux": total,
+                          "regime_candidates": compatible,
+                          "regime_flux_cannot_decide": undecided,
+                          "regime_excluded": excluded},
+                  units={"mode": "", "total_surface_flux": "W/m2", "regime_candidates": "",
+                         "regime_flux_cannot_decide": "", "regime_excluded": ""},
+                  refs=refs, notes=notes)
 
 
 from registry import recipe  # noqa: E402
