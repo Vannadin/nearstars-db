@@ -1091,6 +1091,31 @@ anyone inspected the story.
 in a record regardless of its accuracy. Here the procedural cause is complete on its own — **the source
 was named before it was checked** — and a reader can verify that by opening the same two bibcodes.
 
+### Two near-misses, and only one of them can become a tool
+
+The day's two most dangerous errors did not touch a value; each would have made a conclusion carry more
+weight than it had earned. **No gate looks at that.** But they are not the same kind of thing, and
+filing them together would bury the one that is fixable.
+
+| the claim | why it was wrong | can a check find it? |
+|---|---|---|
+| *"an **independent** closure"* | the comparison's source was also the source of the inputs | **yes** — compare bibcodes |
+| *"the pre-registration was **refuted**"* | our bodies are invented, so nothing could refute it | **no** — it asks what the objects are |
+
+**The first is mechanisable, and the check is already written above**: list what a result stands on,
+strike any source that also produced what it closes against. A crude form would catch the actual case —
+*a section that claims independence while citing a bibcode that also appears among its own inputs.*
+⚠ **Measured before proposing it**: "independent" appears 19 times in `interior-core.md` alone, so a
+naive matcher would be noisy and would need the two bibcode sets, not the word. **Not built now** —
+C45 comes first — but recorded here as a **candidate**, because filing it under "checks cannot catch
+this" guarantees nobody looks again.
+
+**The second is not mechanisable and should not be dressed up as if it were.** Whether a calculation
+can be refuted depends on whether its subject is a thing in the world or a thing we chose, and that is
+a question about the object, not about the text. **It took the owner one sentence.** ⚠ A record that
+files both under "tooling gap" hides the fact that **one of them needs a person**, and pretending
+otherwise is how the reading gets dropped.
+
 ⚠ **The claim also grew as it was passed along, and the growth is worth recording separately.** The
 working seat wrote "closure" in its own section and "independent … from a different paper" alongside
 it; the directing seat promoted that to *"the strongest result of the day"* and **sent it onward to the
