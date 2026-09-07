@@ -4402,13 +4402,24 @@ rejects. That is not a number worth emitting.
 The paper's advertised contribution is that mantle melting *"may reduce the conventional prediction of
 surface heat flux by up to a factor of ∼5–10"*. Apply that:
 
-| body | eq. 30 | with the melting reduction (÷5 to ÷10) | ceiling 10–30 |
-|---|---|---|---|
-| Earth-size | 50 | **5.0 – 10.0 mW/m²** | at or under the bottom |
-| Mars-size | 36 | **3.6 – 7.2 mW/m²** | under the bottom |
+⚠ **Corrected 2026-09-08, same seat, a few hours later — the table below originally read the ÷5–10 as
+a two-sided interval and it is an upper bound.** The paper's words, in both places it says this
+(Summary and §5), are *"could reduce the conventional prediction of surface heat flux **by up to** a
+factor of ∼5–10"*, and it is prose summarising Figs 12–13, not a printed range of computed values. **A
+reduction of *at most* 5–10× means the reduced flux lies somewhere in `[q/10, q]`** — it does not mean
+the flux is `q/10` or `q/5`. Reading "up to X" as an interval and then taking its ends is the same
+error class as C46's ceiling-used-as-floor, made by this seat hours after repairing that one.
 
-**Both land at or below the ceiling's bottom edge**, which is where a stagnant lid belongs. ⚠ **So
-Korenaga 2009 is not exhausted: C47 (c) tested only the law the paper argues *against*.** Eq. 43 with
+| body | eq. 30 | what the paper's *"up to ∼5–10"* actually licenses | ceiling 10–30 |
+|---|---|---|---|
+| Earth-size | 50 | somewhere in **5.0 – 50 mW/m²** | **may** reach it; not delivered |
+| Mars-size | 36 | somewhere in **3.6 – 36 mW/m²** | **may** reach it; not delivered |
+
+**So the melting correction permits the ceiling to be satisfied and does not deliver it.** The
+conclusion below survives — Korenaga is the remaining candidate and C47 (c) tested the wrong equation —
+but it survives as *the only unexhausted route inside this paper*, not as a route already shown to
+land. ⚠ **Korenaga 2009 is not exhausted: C47 (c) tested only the law the paper argues *against*.**
+Eq. 43 with
 the melting correction (eqs 41–56, solved iteratively with `z*_D = Nu^{−1}`) is the paper's actual law,
 and it is the single build that serves **both** open paths — D's flux output, and the direction test
 that C47 (c) ran on the wrong equation.
@@ -4417,6 +4428,76 @@ that C47 (c) ran on the wrong equation.
 appeared to change the order, so this stops here. **The proposed order is: Korenaga eq. 43 + melting
 first** (it serves D and re-runs A's test on the right equation), with Foley & Bercovici held as the
 genuinely independent third family for the pre-registered "three families, same direction" verdict.
+
+### C47 (e) 2026-09-08 — the law was read before building, and the build is C20-sized
+
+**Brief 147 put one step in front of the build: read, size it, then decide. This is the size.**
+
+**The chain, counted.** Korenaga 2009's actual law is not one equation:
+
+| what | equations | note |
+|---|---|---|
+| Arrhenius correction to `θ` | 39, 40, **41** | `θ_eff = (c₁c₂)^{1/2}`, a geometric mean of two correction factors, *"c₁ tends to be too low for higher n whereas c₂ too high"* |
+| local Rayleigh number | **42** | `Ra_l(δ) = Ra_i · max[ δ_eff^{(n+2)/n} T*_eff / η*_eff ]` — a **maximum over sublayers**, with `η*_eff` a **logarithmic average** |
+| stability criterion | **43**, 44 | `Ra_l(δ) = Ra_crit(n)`, `Ra_crit(n) ≈ exp(3.84 + 2.25/n)`; `Nu = δ^{−1}` |
+| dry solidus | **45** | `P₀ = (T_p − 1150)/100`, Takahashi & Kushiro 1983 |
+| depth-dependent viscosity | 46, **47** | a step: `1` below `z*_D`, `Δη` above |
+| density stratification | **48**, 52 | and eq. 52 is a **second branch** for when `Nu > 1/z*_D` |
+| compositional buoyancy | **50**, 51 | `dρ/dF ≈ −1.2 kg m⁻³ per per cent` (Korenaga 2006), and a mean degree of melting |
+| equivalent temperature contrast | 53, **54** | `T*_ρ`, how the density contrast enters as a temperature |
+| the outer solve | **56** | `Nu = F_Nu(n, E, T_s, ΔT, Ra_i, Δη, Δρ, z*_D)`, iterated by setting `z*_D = Nu^{−1}` when `Nu > 1/z*_D` |
+
+**Fourteen equations, and three nested numerical levels** — a maximization over `δ_eff` inside a
+root-find for `δ` inside a fixed-point iteration on `z*_D`. ⚠ **That is C20-sized**, not a
+transcription: `core_history.py` is the closest thing this engine already has to it.
+
+**⚠ Two declared inputs we would have to supply, and one of them comes from a figure.**
+
+- `Δη`, the dehydration viscosity contrast: §4 **sets it to 10²**, while §3 reports experiments
+  suggesting *"a factor of ∼10³ increase in viscosity due to dehydration"* for diffusion creep. Printed
+  ends, different values, no election — **a C32 band, not a constant.**
+- `Δρ`: §4 says *"compositional buoyancy is calculated based on **Fig. 11**"*. ⚠ **An input read off a
+  graph.** Everything else here is a formula; this one is not.
+- Also declared and ours to carry: melt productivity `(dF/dP)_S = 15 %/GPa` (Korenaga 2006) and
+  `P_f = 0`, *"for simplicity"*.
+
+**⚠ What we already hold — and the honest answer is nothing that fits.** Brief 147 asked this first
+because two builds today turned out to exist already. This one does not.
+
+| candidate | what it is | verdict |
+|---|---|---|
+| `eos.py`'s `silicate_solidus(p, variant)` | melting **temperature as a function of pressure**, Andrault+ 2011 A-chondritic/peridotitic | ✗ **the inverse quantity from a different source.** Eq. 45 gives the **pressure at which a mantle of potential temperature `T_p` begins to melt**. Substituting ours moves the paper's own depleted-layer depth |
+| `mantle_flux.py`'s `viscosity()` | `η₀ exp(−ζ(T − T₀))`, **linear-exponential**, Nimmo eq. 35 | ✗ **this is the rheology the paper argues against.** Korenaga 2009's subject *is* Arrhenius versus linear-exponential, and its eq. 21 carries `exp[E/(nRT_i)]` |
+
+⚠ One thing does come free from the comparison: Nimmo's `ζ = 10⁻² K⁻¹` gives `θ = ζΔT = 13.5` at
+`ΔT = 1350 K`, and Korenaga's Table 2 lists `θ` from **7.93 to 15.11** across `Δη = 3–30000`. **The two
+papers' `θ` mean the same thing and sit in the same range** — a free consistency check between two
+independently transcribed modules.
+
+**⚠ Reproduction anchors — and this is where it is stronger than the last transcription this engine
+tried.** `tidal_transport.py` carries `failed-io-reproduction` because Kankanamge & Moore 2019 cannot
+reproduce its own printed result. Korenaga 2009 offers three checks, and two already pass:
+
+| anchor | status |
+|---|---|
+| §4.1's printed *"`Ra_i` varies from ∼10⁹ to ∼10¹³"* over `T_i` 1200–1800 °C | ✅ **passes** — this seat's transcription gives **1.26 × 10⁹ → 2.27 × 10¹²**. ⚠ Note `Ra_i` at the Earth condition is pinned by `q = 50 mW/m²` alone, so this tests the `θ`/`Ra_i`/`Nu` chain and says nothing about `α` |
+| eq. 44's `Ra_crit(n)` against the text's *"∼450 (n = 1), ∼134 (n = 2), ∼104 (n = 3)"* | ✅ **passes at n = 1 and 3** — `exp(3.84 + 2.25/n)` gives 440 and 98.5. ⚠ `n = 2` gives 143 against ∼134, **7 % off** |
+| **Table 2**, which prints per-row `θ`, `Ra`, `Nu`, `δ` for `Δη = 3 … 30000` | **the real anchor, unused so far** — row-by-row numbers for exactly the stability analysis eq. 43 performs |
+| §4's dimensional planetary results | ⚠ **Figs 12–14 only.** No printed dimensional flux to check against, so the absolute scale has no anchor — consistent with C47 (c)'s finding that the absolute scale is declared arbitrary |
+
+**Size verdict: a multi-session build with a good row-level anchor and no absolute-scale anchor.** The
+stability analysis can be verified against Table 2 row by row; the dimensionalized planetary flux
+cannot be verified against anything the paper prints.
+
+**⚠ And the guardrail check found an error in this seat's own C47 (d), corrected there.** The
+*"÷5–10"* is **prose, appearing twice** (Summary and §5) and reading *"could reduce … **by up to** a
+factor of ∼5–10"* — a summary of Figs 12–13, not a printed range of computed values, and an **upper
+bound on the reduction**. C47 (d) put ÷5 and ÷10 at the ends of an interval and observed that both
+landed under the ceiling. **An "up to" is one-sided**: the reduced flux lies in `[q/10, q]`, so the
+melting correction **permits** the ceiling and does not deliver it. Reading a bound as an interval and
+taking its ends is the same error class as C46's ceiling-used-as-floor, repeated by the same seat a few
+hours after repairing it. **The conclusion that Korenaga is the remaining unexhausted route stands; the
+claim that it already lands does not.**
 
 ## What closing all of these does not do
 
