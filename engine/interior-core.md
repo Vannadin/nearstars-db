@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance closed · differentiation open, 2026-09-07** | Pulse is **9.59×** the long-lived budget at `t₀ = 0`, decaying with `τ ≈ 1.03 Myr`. ⚠ **An ice-rich body (rock ≲ 35 %) is not melted at all.** `t₀` declared **late** from the formation order — gas-giant moons post-date their planet (Canup & Ward 2002) — so the pulse is **not available** to the five, with the caveat that the scales share an order of magnitude. ⚠ Still open: the differentiation question needs a melt-fraction threshold, and paper defect #23 is under review |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance closed · differentiation open, 2026-09-07** | Pulse is **9.59×** the long-lived budget at `t₀ = 0`, decaying with `τ ≈ 1.03 Myr`. ⚠ **An ice-rich body (rock ≲ 35 %) is not melted at all.** `t₀` declared **late** from the formation order — gas-giant moons post-date their planet (Canup & Ward 2002) — so the pulse is **not available** to the five, with the caveat that the scales share an order of magnitude. ⚠ Still open: **branch B** (a body orbiting a star directly forms early, so the pulse IS available and the same tables answer the opposite way — no roster body there yet), the differentiation question's melt-fraction threshold, and paper defect #23 |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -2312,9 +2312,49 @@ measurement of Jupiter. **It is cited here as the scale the literature works at,
 magnitude.** A giant that finished inside ~1 Myr would leave some pulse; nothing we hold says one did,
 and nothing we hold rules it out. **The margin is not large and the record should not imply it is.**
 
-⚠ **The argument is limited to moons of gas giants.** All five are, so it covers the roster today. **It
-does not transfer** to a small body orbiting a star directly — that one grows in the stellar disc, its
-`t₀` is early, and the pulse tables above apply to it in full. Adding such a body reopens this.
+### ⚠ Two branches, because the argument above is about *where a body formed*, not about our numbers
+
+**Owner, 2026-09-07**: *"위성이 아니라 행성의 케이스도 고려해봐야 하지 않아?"* The `t₀` conclusion was
+first written as a scope footnote. It is a branch, and the tables serve both branches equally.
+
+| | branch A — moon of a gas giant | branch B — body orbiting a star directly |
+|---|---|---|
+| where it forms | circumplanetary disc, **after** the planet's gas accretion | the stellar disc, from the start |
+| `t₀` | late (Canup & Ward 2002) | **early** |
+| the pulse | **not available** | **available**, and the tables apply in full |
+| roster today | all five moons | ⚠ see below |
+
+**Same tables, opposite answers.** Nothing in the melting comparison changes between the branches —
+only when the body starts.
+
+⚠ **And size does not enter the melting comparison at all.** This must be said plainly, because it has
+been said loosely more than once today. **Both sides of that comparison are per kilogram**, so the body
+mass divides out:
+
+    pulse            5.240×10⁶ J/kg
+    to begin melting 1.693×10⁶ J/kg      to melt completely 2.093×10⁶ J/kg
+
+**A 10 km belt object and 5724 km Pandora read the same row.** What separates them is rock fraction,
+nothing else. **Size enters only the gravitational-binding axis**, which asks a different question
+(accretion heat), and *that* is where "large bodies are dominated by their own budget" belongs. Carry
+the two apart or the record teaches that big bodies are safe from the pulse, which the table does not
+say.
+
+⚠ **Branch B has no roster body, and one anchor.** The engine holds five bodies — two planets, two
+brown dwarfs, one moon — and no belt object; `phase4/alpha_centauri.yaml` mentions belts **144 times
+across 112 lines** without a single `- body:` entry for one. **But `bodies/earth.yaml` is branch B**
+(`kind: planet`, `parent: Sun`), and it is an anchor rather than a roster body. At 100 % rock the table
+puts it well past melting, which is the direction the Earth actually went — a weak check, and worth
+noting because branch B currently has nothing else in it. **A belt is the first candidate that would
+put a real body there.**
+
+⚠ **A limit that binds branch B harder than branch A: our calculation has no heat-loss term.** The
+pulse is compared against an energy requirement as if every joule stayed in the body. A small object
+loses heat faster than it accumulates it, so **for small bodies these numbers are an upper bound**, and
+the smaller the body the looser the bound. **This is stated as a property of our calculation, not as an
+explanation of anything published**: the 10–100 km range Monteux attributes to Yoshino is quoted
+without a rationale, and searching Monteux's text produces no argument for the lower end. **We do not
+know why that range starts at 10 km.**
 
 **This is a Phase 4 fact, not an engine measurement**: it is a statement about how our system formed,
 declared from the literature's ordering, and the engine reads it rather than deriving it.
