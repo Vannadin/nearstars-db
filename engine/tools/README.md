@@ -1128,3 +1128,32 @@ a real implementation check worthless: reproducing a paper's own threshold from 
 rule out a dropped factor or a mistaken unit, which is exactly the failure class that cost this project
 a square root, an atomic mass and five significant figures **the same day**. **What it is and what it is
 not have to be written as one pair**, or the next correction over-corrects.
+
+## A proposed shape is a sketch until someone measures it (2026-09-07)
+
+Twice in two days the directing seat handed over a detector's shape and the working seat measured it
+before building, and both times the shape was wrong:
+
+- **The duplicate-section check** — proposed as *"one line is enough: the same `##` twice in one file"*.
+  Measured first: **11 files match and every one is legitimate structure** — per-planet sections,
+  per-field sections, a per-case template. Rebuilt on identical bodies with a length floor, which gives
+  zero false positives.
+- **The independence check** — proposed with the suggestion that the word could carry it. Measured
+  first: **`independent` occurs 19 times in `interior-core.md` alone**, so a word matcher would be
+  noise and the real predicate needs two bibcode sets.
+
+⚠ **A third instance was claimed in conversation — the Markdown table checker — and this record does not
+support it.** That checker's header says only that the obvious test *"was tried first and is wrong
+here"*, attributing it to nobody. **Two verified, one unattributed**, which is the count that goes in.
+
+**What this is not**: a claim that the directing seat proposes badly. A first shape is *supposed* to be
+the obvious one — that is what makes it worth measuring, and the obvious form is the right place to
+start. **What it is**: the measuring step is not optional politeness toward a proposal, it is the step
+that decides whether the proposal survives. Both surviving detectors look nothing like their first
+draft.
+
+⚠ **And the direction matters for whoever reads a brief next.** A shape arriving as an instruction is
+easy to build as given; measuring it first can feel like doubting the sender. **Neither of the two
+above would have worked as sent**, and each was cheap to check — one `grep -c`, one small script.
+Measure, then build, and say what the measurement was in the checker's own header so the dead end stays
+marked rather than merely avoided.
