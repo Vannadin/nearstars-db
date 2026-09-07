@@ -1473,3 +1473,112 @@ called resolved when only its thresholds half was.
 **All four were caught downstream, none by the seat itself.** The relay is a place where a claim
 gains confidence without gaining evidence — which is the same defect as a citation that resolves
 while its sentence lies, one layer up in the org chart.
+
+## 2026-09-07 — the day the tidal-locking build turned into a naming audit, written by the work seat at close
+
+**What was meant to happen.** Finish C36's `tidal_locking` and move on.
+
+**What turned the path.** Every consumer of that recipe disagreed with its suppliers about a name, a
+unit, or a frame, and each disagreement was a separate item:
+
+- **C37** — `dynamo_rocky` looked up `rotation_period`; every supplier writes `rotation_period_h`. It
+  received `None` on every body since the node existed and filed that `None` as evidence.
+- **C41** — nothing supplies `eccentricity` at all. The recipe substituted `0.0`, so **every body came
+  out 1:1 synchronous on a value nobody set.** Now a registered placeholder, and the owner later
+  declared the real value.
+- **C43** — `body_class` applies a **protoplanetary-disc** criterion to a moon and, lacking the
+  distance, fills it with a silent 5 AU. A moon's axis is planetocentric; the criterion wants
+  heliocentric. **A unit suffix and a frame difference look identical.**
+- **C44** — `eccentricity_forced` holds a *measured* eccentricity, and the name argued two seats out of
+  using it for a day.
+- **C45** — `check_contracts` compares the document's `Needs` against the **labels a recipe puts on its
+  evidence**, never the strings it looked up. That is how C37 stayed green.
+
+**Then C21 became the owner's target** — the short-lived ²⁶Al pulse. The dominance question closed: at
+formation the pulse is **9.59×** the whole long-lived budget, but it decays with `τ ≈ 1.03 Myr`, so
+**the answer is `t₀`**. The owner declared `t₀` late, argued from the formation order (gas-giant moons
+post-date their planet) rather than from our own threshold.
+
+⚠ **A constant was the total decay energy, not the heat.** Ruedas 2017 prints both for ²⁶Al: `Q` = 4004
+keV and `E_H` = 3150 keV after the neutrino leaves. **We had used `Q` for 27 % too much heat.** It was
+not two papers disagreeing — our own long-lived table was already heat-effective, which is why only
+²⁶Al differed. **A conclusion flipped**: at 30 % rock the pulse no longer melts a body at all.
+
+**C34** then re-decided from a band to the low end, because measuring the band showed it is not
+verdict-neutral — the low end reproduces **3 of 4** of the document's own anchor labels and the high end
+**1 of 4**. **The document's anchors picked; no seat chose, and no value moved — only the grounds.**
+
+**Venus fell out of that**, and became **C46**: the transport table is short of rows *and* cut on a
+different axis. The literature's set is five, discriminated by **mobility and plateness** — surface
+kinematics, not W/m² — and ⚠ **those are outputs of a 4.5 Gyr simulation, so we could not adopt that
+axis even if we wanted to.** Our own document already said any flux threshold is a conversion rather
+than a citation; C46 is where that stops being a footnote.
+
+### What was actually dangerous today, and no gate looks at it
+
+⚠ **Twice a conclusion was given a status it had not earned, and both times a person caught it.**
+
+1. **"An independent closure."** C21's threshold landed inside a published band, and it was reported as
+   independent confirmation from a different paper. **It was the same paper** whose Table 2 supplied
+   every constant. What the agreement shows is that the arithmetic and units are sound — a real check,
+   worth keeping — and nothing about whether the constants are right.
+2. **"The pre-registration was refuted."** Our moons are invented, so a calculation about them is
+   arithmetic on objects we defined; **there was no fact for it to be refuted by.** The owner said so
+   in one sentence.
+
+**Neither is a wrong number, and no check we own can see either.** One is mechanisable — compare the
+bibcodes your result stands on against the bibcodes of what you are closing against — and the other
+needs a reader, because it asks whether the subject is a thing in the world or a thing we chose.
+
+### Paper status — four grades, and they are not interchangeable
+
+| grade | today's examples |
+|---|---|
+| **held and read** | Ruedas 2017 · Lourenço+ 2020 · Canup & Ward 2002 · Neumann+ 2019 · Bierson & Nimmo 2019 |
+| **held, no text layer — read by page image** | Moresi & Solomatov 1998 (extraction is 294 bytes of ADS stamps; a `grep` of it returns 0 for everything and **that 0 means nothing**) |
+| **abstract only** | Smrekar+ 2023 (the held copy is the one-page conference abstract: numbers, no method or errors) |
+| **not held** | Smrekar+ 2018 (paywalled) · Turcotte 1989 (gateway failed) · Yoshino+ 2003 (the source of the "10–100 km" premise this project has been quoting second-hand) |
+
+⚠ **Two operational facts the next seat needs.** The ADS link gateway failed repeatedly today while
+**`articles.adsabs.harvard.edu/pdf/<bibcode>` worked** — without that, a paper reads as unobtainable.
+And **Nature Geoscience is not reachable on the owner's account**; try arXiv before adding it to a
+request list.
+
+### Wiring that is named but not built
+
+- **The pulse node.** It belongs at the head of C20's time axis (0.1 Ma steps for the first ~10 Ma, then
+  Nimmo's 4 Myr), not as a separate integrator. ⚠ **Blocked on a number, not on code**: `t₀` is declared
+  *late* and *unmeasured*, so there is nothing to put in. **What would close it is not a value but a
+  grounded lower bound** — the pulse shrinks as `t₀` grows, so `t₀ ≥ X` gives `pulse ≤ f(X)`, and if
+  that ceiling sits under the melting requirement the verdict is fixed. ⚠ Canup & Ward's `τ_G = 5×10⁶
+  yr` is **an input to their worked figures**, not a measurement, and must not be used as that bound.
+  ⚠ Also worth knowing before starting: **C20 solves exactly one body, Earth** — the five moons never
+  reach it for want of declared initial temperatures, so the node's visible effect is on Earth alone.
+- **The differentiation threshold.** Our own reference doc carries `0.30 / 0.45 / 0.50` as a *disputed*
+  magma-ocean melt fraction **with no bibcode**, and the paper it cites nearby does not print those
+  numbers. ⚠ **And a magma ocean is not iron segregation** — the stronger condition, so not necessarily
+  the same number. Until a source is found, the honest output is the melt fraction with no verdict;
+  `eos.silicate_melt_fraction` already calls itself the single source of truth for `φ`.
+
+### Ordering the owner set
+
+**Belts come last** — after C14 · C15 · C17. ⚠ Not declined: **last in order**, and the reasons are
+about the pipeline rather than the belt. Bodies added before the wiring holes close add one
+*cannot-say* each, and **C43 and C45 sit in the layer that handles body kinds**, so a new kind
+multiplies them rather than adding to them. When the wiring is continuous, one belt object can be
+declared and judged, which is the point of waiting.
+
+### Three rules earned today, in the order they were learned
+
+- **A gate's `rc=0` needs the whole run; one `[FAIL]` settles it immediately.** The morning rule — only
+  the `GATE END` line is the verdict — is true for passes and wrong for failures. Watch the log for
+  failure, not only for the end line. ⚠ And **the failure formats are four**, surveyed from real logs
+  rather than from source, because an f-string assembles `[FAIL]` out of pieces that do not contain it.
+- **The list of checks to run is made by a path, not a person.** `bash scripts/check.sh --wiring` reads
+  the diff and runs the documentation lane in under two minutes. Picking checks by hand and getting
+  them all right is one correct instance of a judgement that has already failed once.
+- **An absence claim fails three ways, and all three happened today.** Not searching (the literature);
+  searching too narrowly (a latent heat six lines from a function already in use); and **searching,
+  getting the right row back, and reading past it** because the answer did not match the mental picture.
+  The third is hardest: it happens inside the step meant to catch it and leaves the same evidence as
+  success.
