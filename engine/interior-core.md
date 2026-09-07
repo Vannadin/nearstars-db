@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | At `t₀ = 0` the pulse is **9.59×** the whole long-lived budget, decaying with `τ ≈ 1.03 Myr`, so **the answer is `t₀`** — which no body declares. ⚠ **An ice-rich body (rock ≲ 35 %) is not melted at all**, under either reading. Energies are heat-effective (`E_H`); an earlier version used the total `Q` and ran 1.271× high, and twice claimed a latent heat was unheld that `eos.py` carries |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance closed · differentiation open, 2026-09-07** | Pulse is **9.59×** the long-lived budget at `t₀ = 0`, decaying with `τ ≈ 1.03 Myr`. ⚠ **An ice-rich body (rock ≲ 35 %) is not melted at all.** `t₀` declared **late** from the formation order — gas-giant moons post-date their planet (Canup & Ward 2002) — so the pulse is **not available** to the five, with the caveat that the scales share an order of magnitude. ⚠ Still open: the differentiation question needs a melt-fraction threshold, and paper defect #23 is under review |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -2281,6 +2281,43 @@ the tool are recorded together so the next step is a step, not a restart.
 
 **What stands after both corrections**: an ice-rich body — rock fraction below roughly 35 % — is not
 melted by the formation pulse under either reading, and above that the answer turns on `t₀`.
+
+### `t₀` declared 2026-09-07 — late, and from the formation order rather than from our own threshold
+
+**Owner**: *"늦게 잡는 걸로."*
+
+⚠ **The reasoning must not run through our own answer.** "Our threshold is 1.17 Myr, so `t₀` is later"
+would be choosing an input to produce a wanted output — the move this file refuses in three separate
+places. **`t₀` is argued from the formation order, which knows nothing about our threshold, and only
+then compared against it.**
+
+**The order, from a held paper's abstract.** Canup & Ward 2002
+([`2002AJ....124.3404C`](https://ui.adsabs.harvard.edu/abs/2002AJ....124.3404C)): *"the satellites form
+in a circumplanetary accretion disk produced during the **very end stages of gas accretion onto
+Jupiter**"*, with *"protracted satellite accretion times of 10⁵ yr"*. **A gas giant's moons post-date
+the giant.** That is a statement about sequence, and it is the whole of the non-circular part.
+
+⚠ **The clock is weaker than the order, and both belong in the record.** Nothing we hold measures when
+Polyphemus finished accreting. The only Myr-scale figure in that paper is `τ_G = 5×10⁶ yr`, and it is
+an **input to the worked figures** — *"Figure 5a shows … for τ_G = 5×10⁶ yr"* — a model choice, not a
+measurement of Jupiter. **It is cited here as the scale the literature works at, nothing more.**
+
+**So the declaration is:**
+
+> `t₀` for these five moons is **after Polyphemus finished accreting**. We have not measured when that
+> was; the only figure in hand puts giant gas accretion at the **Myr scale**, against an onset
+> threshold of **1.17 Myr**. **The formation pulse is therefore not available to them.**
+
+⚠ **"Not available" rather than "certainly absent", because the two numbers share an order of
+magnitude.** A giant that finished inside ~1 Myr would leave some pulse; nothing we hold says one did,
+and nothing we hold rules it out. **The margin is not large and the record should not imply it is.**
+
+⚠ **The argument is limited to moons of gas giants.** All five are, so it covers the roster today. **It
+does not transfer** to a small body orbiting a star directly — that one grows in the stellar disc, its
+`t₀` is early, and the pulse tables above apply to it in full. Adding such a body reopens this.
+
+**This is a Phase 4 fact, not an engine measurement**: it is a statement about how our system formed,
+declared from the literature's ordering, and the engine reads it rather than deriving it.
 
 **What this changes.** ⚠ **The refusal is not lifted; it is renamed.** It was *"we have no input"*. It is
 now *"the input has narrowed to one: `t₀`"* — the formation time after CAIs, which no body declares and
