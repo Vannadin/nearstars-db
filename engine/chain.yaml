@@ -346,7 +346,7 @@ nodes:
     # 2026-09-04 (C16): **레시피 미등록** — 계산 노드 34 중 등록 10. 이 노드의 `locked` 가 dynamo_rocky 영역 게이트의 분기
     # 열쇠라, 이 노드가 없는 동안 그 게이트는 모든 천체에 cannot-say (no tidal_locking) 다. 잠김 여부는 Phase 4 성격이라
     # 소비자가 스스로 선언하지 않는다(판도라의 32 h 잠김은 보드에 있고 엔진이 읽는 자리에는 없다).
-    outputs: [locked, t_lock, rotation_period]
+    outputs: [locked, t_lock, rotation_period_h]
   body_figure:
     layer: "3층. 갈래"
     domain: spin_figure
@@ -668,7 +668,7 @@ edges:
   # 두면 사라지므로 gap 으로 적는다. 닫으려면 외피 아래 철핵의 다이나모 레시피가 필요하다.
   - {from: body_class, to: dynamo_rocky, kind: selects, via: sub_neptune, status: gap, ref: "rocky-planet-dynamo-methodology.md@«whose §3 already flags sub-Neptune as *below* the validated giant domain.»", note: "sub_neptune 에는 다이나모 경로가 없다. core_state · dynamo_giant · dynamo_rocky 셋 다 거절한다 — 외피 아래 철핵의 다이나모 레시피가 없는 소비처 공백. **C18, 2026-09-04 이름 있는 거절로 종결(같은 밤 정정)**: 서브넵튠 철핵 다이나모의 켜짐/꺼짐 기준은 발표돼 있다(Tang+ 2025 §4.2, Rm = μ₀σUD 식 46, 임계 50, F_conv = F_CMB − F_cond 식 48) — 자기모멘트·세기 스케일링은 발표돼 있지 않다(전문에 field 0회). dynamo_rocky 가 요구하는 것은 ℳ 이므로 이 간선은 닫히고, 존재 판정은 C23 으로 등재. 세 거절이 왕복을 이룬다는 것(rocky→giant→질량으로 되돌림)도 기록. 간선은 실재하는 결합이라 gap 으로 남는다."}
   - {from: mass_or_radius, to: dynamo_rocky, kind: requires, ref: "rocky-planet-dynamo-methodology.md@«## Contract — `dynamo_rocky`»", note: "ref was :22 (a Returns line), now the Needs line (2026-09-04)"}
-  - {from: orbit_elements, to: dynamo_rocky, kind: requires, via: period, ref: "rocky-planet-dynamo-methodology.md@«`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period` [h] ·»", note: "ref was :22 (a Returns line), now the Needs line carrying rotation_period (2026-09-04)"}
+  - {from: orbit_elements, to: dynamo_rocky, kind: requires, via: period, ref: "rocky-planet-dynamo-methodology.md@«`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period_h` [h] ·»", note: "ref was :22 (a Returns line), now the Needs line carrying rotation_period (2026-09-04)"}
   # RM22 는 둘을 다른 데서 받는다. 핵 **기하** 는 내부 구조가 풀고, 그 핵이 다이나모를
   # 돌릴 수 있는 **상태** 인가는 별개의 판정이다 — 문서가 "convective buoyancy flux
   # through a conducting liquid-iron core" 라고 적는다. conductor_phase 는 core_state

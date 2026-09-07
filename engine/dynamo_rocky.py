@@ -146,7 +146,7 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth, "conductor_phase": conductor_phase,
               "stagnant_lid": stagnant_lid, "age_gyr": age_gyr, "ice_mass_fraction": ice_mass_fraction,
               "body_class": body_class, "dynamo_regime": dynamo_regime,
-              "locked": locked, "rotation_period": rotation_period_h, "dynamo_alive": dynamo_alive}
+              "locked": locked, "rotation_period_h": rotation_period_h, "dynamo_alive": dynamo_alive}
     if body_class not in ROCKY_CLASSES or mass_earth > MAX_ROCKY_MASS:
         return out_of_domain(RECIPE, VERSION,
                              f"'{body_class}' {mass_earth} M⊕ 는 암석 사다리 밖이다 (암석 클래스, ≤ {MAX_ROCKY_MASS} M⊕) "
@@ -301,7 +301,7 @@ def _ladder_from_state(state, imf: float) -> Result:
                   body_class=state.get("body_class"),
                   dynamo_regime=state.get("dynamo_regime"),
                   locked=state.get("locked"),                      # tidal_locking's output — absent until that node has a recipe
-                  rotation_period_h=state.get("rotation_period"),
+                  rotation_period_h=state.get("rotation_period_h"),
                   dynamo_alive=state.get("dynamo_alive"))          # C29(c): owner declaration, honoured only while core_state is undecided
 
 

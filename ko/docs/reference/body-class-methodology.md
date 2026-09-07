@@ -17,7 +17,8 @@
 
 **Returns** — `class` [—] · `classes` [—] · `decided_by` [—] · `agrees_with_declared` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `declared_class` [—] ·
-`composition_intent` [—] · `gas_mass_fraction` [—] · `semi_major_axis_au` [au]
+`composition_intent` [—] · `gas_mass_fraction` [—] · `semi_major_axis_au` [au] ·
+`is_satellite` [—]
 **분기키** — 반지름이 있는가(사다리의 아래쪽 절반을 읽을 수 있는지가 여기서 갈립니다),
 그리고 봉투 조성이 선언됐는가(가스거대행성과 얼음거대행성을 관례가 아니라 근거로 가르는
 유일한 것입니다).

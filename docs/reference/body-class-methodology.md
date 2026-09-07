@@ -19,7 +19,8 @@ with both neighbours alive.
 
 **Returns** — `class` [—] · `classes` [—] · `decided_by` [—] · `agrees_with_declared` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `declared_class` [—] ·
-`composition_intent` [—] · `gas_mass_fraction` [—] · `semi_major_axis_au` [au]
+`composition_intent` [—] · `gas_mass_fraction` [—] · `semi_major_axis_au` [au] ·
+`is_satellite` [—]
 **Discriminating keys** — whether a radius is available, which decides if the lower half of
 the ladder can be read at all; and whether an envelope composition is declared, which is the
 only thing that separates a gas giant from an ice giant on evidence rather than convention.

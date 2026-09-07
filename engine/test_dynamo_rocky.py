@@ -136,11 +136,34 @@ def main() -> int:
         print(f"  [PASS] C29(c) 선언 켜짐: undecided+선언 → {decl.values['dynamo_alive']} (B_eq {decl.values['b_eq']:.1f} µT) · 선언 없음 → cannot-say · solid/liquid 는 선언 무시")
         print(f"  [PASS] C28 얼음 분율: earth_like 0.00 · water 0.50 (regime {wet.values['ladder_regime']}) · 선언 0.1 우선 · 미지 프리셋 거절")
 
+    # ── 6. C37: 이 레시피가 읽는 자전주기 키가 실제로 공급되는 이름인가 ──────────────
+    # ⚠ 2026-09-07 까지 `state.get("rotation_period")` 를 읽었고, 그 이름은 어디에서도
+    # 공급되지 않는다 — 바디 셋과 형제 노드(`dynamo.py`)와 `tidal_locking` 의 출력이 전부
+    # `rotation_period_h` 다. 그래서 이 레시피는 **모든 천체에서 None 을 받아 증거에 적어
+    # 왔고**, 아무 신호도 안 났다. 판정은 안 바뀐다(그 값은 분기에 안 쓰인다) — 바뀐 것은
+    # 증거가 참이 되었다는 것뿐이고, 그게 이 시험이 지키는 것이다.
+    # ⚠ 계약 검사가 이걸 못 잡는다: 그 검사는 레시피가 `inputs` 에 **붙인 라벨**을 문서와
+    # 대조하지, `state.get` 이 **찾은 키**를 보지 않는다. 라벨과 조회가 다른 문자열이면
+    # 초록인 채로 영영 None 이 흐른다. 그래서 여기 시험이 필요하다.
+    from state import BodyState as _BS
+    probe = _BS(name="probe", kind="planet", inputs={
+        "mass_earth": 1.0, "radius_earth": 1.0, "body_class": "rocky",
+        "conductor_phase": "liquid", "stagnant_lid": False, "age_gyr": 4.5,
+        "composition_intent": "earth_like", "rotation_period_h": 24.0})
+    got = dr._from_state(probe)
+    ok(got.applicable, f"6/C37: 탐침이 도메인 안이어야 이 시험이 뜻을 갖는다 — {got.regime}")
+    ok(got.inputs.get("rotation_period_h") == 24.0,
+       f"6/C37: 선언된 rotation_period_h 24.0 이 레시피에 도달해야 한다 — "
+       f"받은 값 {got.inputs.get('rotation_period_h')!r}. None 이면 조회 키가 공급되는 "
+       f"이름과 다르다는 뜻이고, 그건 2026-09-07 이전 상태다")
+    ok("rotation_period" not in got.inputs,
+       "6/C37: 증거 키도 접미사를 달아야 한다 — 라벨과 조회가 한 문자열이어야 계약 검사가 덮는다")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if not fails:
         print("  [PASS] 암석 다이나모 사다리 — 문서 표 재현(수성 0.22 · 가니메데 0.87 · 지구 30 µT) + RM22 Table 8 차이 고정 "
-              "(수성 0.16 · 금성 0.024 µT) · 게이트 라벨 5건 · 격자 미선출(regime 2·3) · 지구 30 µT / 다극자 1.5–3.0 µT · Rm 인용 표기")
+              "(수성 0.16 · 금성 0.024 µT) · 게이트 라벨 5건 · 격자 미선출(regime 2·3) · 지구 30 µT / 다극자 1.5–3.0 µT · Rm 인용 표기 · ⚠ C37 자전주기 키가 공급되는 이름과 일치(라벨·조회 한 문자열)")
     return 1 if fails else 0
 
 
