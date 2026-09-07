@@ -1463,6 +1463,16 @@ through `7e47c957`.
 
 ## Where the directing seat's own mistakes were
 
+**2026-09-08 — approving a transfer without separating the printed value from the derived one.** Brief
+149 approved carrying Nimmo+ 2004's 4800 K initial temperature to Mars, and the approval covered both
+of Earth's initial temperatures. ⚠ **Only one of them is Nimmo's.** Earth's mantle figure, 3040 K, is
+`4800 / r_b` with `r_b = 1.579` — **Earth's own adiabat ratio**, reproduced by the interior solve to
+1.5789. Mars's is 1.1937, so the same transfer is `4800 / 1.1937 = 4021 K`. **Carrying 3040 K would
+have smuggled Earth's compression into Mars.** The work seat caught the distinction while writing the
+body file. The rule it leaves: **when transferring an Earth number, check whether it is the printed one
+or something derived from it — only the printed one travels.**
+
+
 Recorded by that seat's own request, so the next one does not repeat them. **Four times it relayed a
 report without opening the file or the code**: the mass-loss host list (40 Eri A has none, Barnard's
 Star does, and α Cen A's value is the combined A+B astrosphere); "13 appears under no count" (it was
@@ -1582,3 +1592,34 @@ declared and judged, which is the point of waiting.
   getting the right row back, and reading past it** because the answer did not match the mental picture.
   The third is hardest: it happens inside the step meant to catch it and leaves the same evidence as
   success.
+
+### 2026-09-08 — reading before building went four for four, and that is now a fact about this engine
+
+**Four times in one stretch a build was authorized, reading came first, and the thing was already
+there or already different.** The count matters more than any one instance, because a discipline that
+pays once is luck and one that pays four times out of four is a property of the codebase.
+
+| what was to be built | what reading found instead |
+|---|---|
+| a secular-cooling recipe (C47) | **C20 was already solving Korenaga eq. (8)**, and `q_mantle_present` already **was** the surface heat flow |
+| a declared-regime → flux path (C47 (d)) | **`tidal_transport.py` had run on declared modes since Brief 35** — the opposite direction, `heat-pipe` only, and marked do-not-adopt |
+| Korenaga's scaling law from eq. 30 (C47 (e)–(f)) | **eq. 30 is the law the paper argues against**; its own law is eq. 43, and eq. 30 sits outside its stated `Nu ≫ 1` limit at the scale we needed |
+| Mars's published mass, radius, CMF for a new body file (C47 (h)) | **`test_interior.py`'s `ANCHORS` already carried them with sources** — and its comment already said *"not turned to make our answer come out"*, the sentence being reached for |
+| a diagnosis of why C20 diverges on Mars (C48) | ⚠ **a different shape: not existing code but an already-declared limit.** `mantle_flux.py` carries `BRACKET_K` and refuses outside it by name on another path, while `core_history` calls straight through — and the real constraint was narrower still, printed in Nimmo's own Table 2 as the expansion point `T₀ = 1573 K` |
+
+**Five for five, and the fifth is worth separating.** The first four were *"the thing exists already"*.
+The fifth was *"the limit is already written down"* — in a constant in our own module, on a path that
+enforces it elsewhere, and behind that in a number the source paper prints. ⚠ **Reading finds declared
+limits as often as it finds declared code, and the limit is the one nobody thinks to look for.**
+
+⚠ **Every one was caught before code was written, and every one by reading rather than by a gate.**
+No check in this repo can find "the thing you are about to build exists" or "you are transcribing the
+equation the paper rejects". **That is the argument for the rule, not a feeling about tidiness:**
+
+> **Before building anything named in a brief, read what the brief names — in this repo and in the
+> source — and report what is already there.** Four for four.
+
+⚠ **And the failure mode it guards against is not wasted work.** In three of the four the wrong build
+would have *run*, produced numbers, and passed the gate. `tidal_transport.py` is the standing proof:
+verbatim transcription, machine-precision residuals, and its own header saying the numbers may not be
+adopted because the source cannot reproduce its own result.

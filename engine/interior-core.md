@@ -93,6 +93,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
 | **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07, then corrected the same day; rows still absent** | The flux fixes **one** cell: **floors** at 0.09 (Earth) and 2.5 W/m² (Io), and below them a stagnant cell bounded by a **ceiling** — Venus 10–20, Mars 15–30, union 10–30 transferred to anything else — with a `plutonic-squishy lid` cell for exceeding it. The band travels beside the cell. ⚠ **The first build of this ladder stood that ceiling up as a floor at 0.010** and put every cold body one cell too high; our own §6.2 table already said `ceiling`, and one bullet under it did not — C46 (c). ⚠ Three cells, three provenances: `analogy-rung` (Io), held body text (Earth), `abstract-level` (the ceiling, body not held). ⚠ Venus's 78 is **3.9× its own ceiling**, so the ladder now contradicts our anchor column and agrees with the paper it cites; the Moon stays **independent 1/1** only because the stagnant cell was given no floor. Not added to self-scored 3/4 |
 | **C47** | the transport table is fed radiogenic production, and its thresholds are defined on surface heat flow | **measured 2026-09-07, not fixed** | Verdict: **a different quantity**, not an inaccurate one. The low feed reproduces radiogenic production on two bodies (Earth 1.07–1.33× of Korenaga 2008's 16–20 TW; Mars 1.11× of Parro+ 2017's 14.3 mW/m²) and misses surface heat flow by **body-dependent** factors (Earth 0.45×, Mars 0.84×). ⚠ **That factor is the Urey ratio** — 0.35 for Earth, 0.68–0.75 for Mars — so `1/Ur` would be 2.2–2.9 against 1.3–1.5 and **no correction constant can serve both.** The missing term is secular cooling, which our own §6 already names (*"radiogenic, accretional, primordial"*) and no node emits. ⚠ Consequence for C34: Mars passing and Earth failing at the low feed measured **how close each body's Urey ratio is to 1**, not whether the feed is right. ⚠ **Attempted 2026-09-07 (C47 (b)) and it does not close by code.** The quantity already exists — C20's `q_mantle_present` **is** `Q_M`, from Nimmo eqs 34–36, and it reads no measured flux — but one law cannot serve both bodies: at a common `T_m` Earth lands on 0.35 while Mars reads **0.209 against 0.68–0.75**, and `Ur` **falls** ×1.69 toward smaller bodies where the literature has it **rise** ×2.0. ⚠ **The ordering is wrong, so no `T_m` fixes it** — `implied_flux` is a mobile-lid law (our own docstring says it was tuned on four present-day Earth constraints) and Mars is the archetypal stagnant lid; it hands Mars 85.7 mW/m² against Reese's own 15–30 ceiling, **2.9–5.7× what C46's own bottom rung allows.** ⚠ Also blocked outright: only `earth.yaml` declares C20's two initial temperatures, so **C20 cannot run on Mars**. **The block is C46's circularity** (the flow needs the regime, the regime needs the flow) plus a paper we do not hold — Reese+ 1998's stagnant-lid scaling, abstract only |
+| **C48** | the thermal-history integrator was validated on Earth alone, and calls its flux law far outside that law's expansion point | **named 2026-09-08, not repaired** | C20 diverges on Mars at every pre-registered `T_pot` (`T_m` → −6244 … −8208 K). ⚠ **The divergence is not the finding** — the flux law is called at **719,546 mW/m² on Mars and 25,144 on Earth**, against measured 19 and 92.1, because Nimmo's eq. 35 is a linearisation about `T₀ = 1573 K` and C20 feeds it **+1467 K (Earth) and +2448 K (Mars)**, giving mantle viscosities of `η₀`÷2.35 M and ÷42.8 G. **Earth's own outputs come from the same out-of-range call and survive only on heat capacity.** ⚠ No published range was violated — **none is printed**; our `BRACKET_K` is a Brief 57 bisection aid. **Two values from one paper fail to compose on a second body**, which is the failure mode of this engine's Earth-number-on-every-body pattern. Blast radius counted: **one consuming edge** (`core_entropy_production`), no board row, no `db/`. Next: a usable flux law, or a grounded starting epoch — ⚠ **never a starting value chosen because it integrates** |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -4769,10 +4770,96 @@ blocked in C47 (g)'s fourth cell and would otherwise repeat one section later.
 | **criterion B** | the 3.7 Ga checkpoint verdict must be **the same at both sweep ends** | if sweeping our declaration flips the checkpoint, the checkpoint is testing the declaration and not the trajectory |
 | **rule** | **both** must hold to proceed. Either failing stops step 0 and the transfer is refused | — |
 
+⚠ **Criterion A measures the declaration's effect on the *output `T_p`*, not on `q_E/q_M`, and that
+is deliberate.** The end-to-end sensitivity looks like the more relevant one and it is the one that
+must not gate this decision: **fixing a threshold on the final answer means letting the answer decide
+whether the input was legitimate.** A is on the intermediate quantity because the question is whether
+Earth's number propagates into Mars's state — which is answerable without knowing what that state then
+implies. **Not an omission; the placement is the point**, and it is written here because the obvious
+"improvement" is to move it.
+
+**The end-to-end sensitivity is measured afterwards and kept as a record.** Once the verdict is fixed
+it can no longer influence it, and what the result depends on, and by how much, still gets written
+down. Order buys both.
+
 ⚠ **And the checkpoint's own limit, recorded beside it so a pass is not over-read:** Monders gives a
 **qualitative** statement, not a number. The checkpoint can only catch a badly wrong trajectory. **A
 pass is not a precision validation of the Martian thermal history**, and nothing downstream may cite
 it as one.
+
+### C48 — the integrator was validated on Earth, and Earth survived by not blowing up rather than by being right — **named 2026-09-08, not repaired**
+
+**C20 ran on a second body for the first time today and diverged.** Mars's mantle integrates to
+`T_m = −6244 K` at the declared potential temperature of 1600 K, and to −6977 … −8208 K across the
+whole pre-registered 1400–1800 K sweep. Every point. ⚠ **The divergence is not the interesting part.**
+
+**What the flux law returns at the temperatures the integrator actually feeds it:**
+
+| body | `T_m` | `F_t` | `Q_M` | measured, for scale |
+|---|---|---|---|---|
+| Mars | **4021 K** (its initial condition) | **719,546 mW/m²** | **103,882 TW** | Parro+ 2017: **19 mW/m²** |
+| Mars | 1600 K | 55.6 | 8.03 TW | Reese ceiling 15–30 mW/m² |
+| **Earth** | **3040 K** (its initial condition) | **25,144 mW/m²** | **12,825 TW** | Davies & Davies 2010: **92.1 mW/m², 47 TW** |
+| Earth | 1600 K | 76.9 | 39.2 TW | — |
+
+**Earth is called at 273× its own measured flux and Mars at ~38,000× Parro's.** ⚠ **Earth's numbers
+come out of the same out-of-range call; Earth simply has the mantle heat capacity to survive it.**
+That is the finding, and it is about C20 rather than about Mars.
+
+**Why, precisely — and the answer is not the one this seat first reached for.** `mantle_flux.py`
+declares `BRACKET_K = (1000, 2500)` and its `consistency` path refuses outside it by name. `core_history`
+calls `implied_flux` directly with no such check. But ⚠ **that bracket is ours, not Nimmo's**: its own
+comment calls it *"the bisection bracket"*, and `invert_for_flow`'s docstring dates it to Brief 57,
+where a bisection on the **inverse** problem was returning an endpoint as a value. **Nimmo+ 2004 prints
+no validity range for eq. 35 at all.**
+
+**The real constraint is in the equation's form.** Eq. 35 is a linear-exponential expansion about a
+reference temperature, and Nimmo's Table 2 fixes it: *"We adopt this value for `T₁` and **1573 K for
+`T₀`**"*, with `η₀ = 10²¹ Pa·s` there. Evaluated away from that point:
+
+| `T_m` | distance from `T₀` | viscosity | as a fraction of `η₀` |
+|---|---|---|---|
+| 1600 K — Nimmo's own present-day Earth | +27 K | 7.6 × 10²⁰ Pa·s | ÷ 1 |
+| 2500 K — our bracket ceiling | +927 K | 9.4 × 10¹⁶ | ÷ 10,615 |
+| **3040 K — C20's Earth initial** | **+1467 K** | 4.3 × 10¹⁴ | **÷ 2,350,174** |
+| **4021 K — C20's Mars initial** | **+2448 K** | 2.3 × 10¹⁰ | **÷ 42,808,392,211** |
+
+**A mantle viscosity of 2.3 × 10¹⁰ Pa·s is not a mantle.** So no published range was violated — **none
+is printed** — and this is not a bracket that wants widening. **A linearisation was evaluated 1467 and
+2448 K from its expansion point.**
+
+**⚠ And the sharpest way to say it: two numbers from the same paper do not compose on a second body.**
+The 4800 K initial condition is what Nimmo prints **for Earth**, and the flux law's blow-up point moves
+with gravity and radius, so it sits **somewhere different on every body**. A starting temperature that
+Earth barely survives is outside the usable region on Mars. **Not our arithmetic error — a
+composition failure between two of one paper's own values**, found only by running a second body.
+
+⚠ **That generalises past C20, and it is the reason to record it somewhere wider.** This engine
+declares Earth's numbers on every rocky body by design — `MANTLE_SHARE = 0.70`, `T_s = 293 K`,
+Korenaga's `b`, and now Nimmo's 4800 K. **The pattern is sound and this is its failure mode: a transfer
+that is safe on the body it came from can be outside the usable region on another, and only running the
+second body shows it.** Transfers need a per-body check, not just a label.
+
+**Blast radius, counted rather than estimated.** `core_thermal_history` has **one** consuming edge —
+`core_entropy_production` (`chain.yaml`, `kind: influences`) — plus `core_entropy.py` and its test.
+**No board row and no `db/` entry stands on any C20 output.** Nine markdown records mention
+`entropy_history_verdict`. ⚠ **And one C20 output was used in argument today**: C47 (h) cited Earth's
+`mantle_potential_temperature_present = 1525 K` as evidence that route (ii) already produces a value.
+**It does — from an out-of-range call.**
+
+**⚠ Not repaired tonight, and the two directions are named rather than taken.**
+
+1. **A flux law the integrator can use at early high temperatures.** Not this one, outside ~1573 ± a
+   few hundred K.
+2. **Starting the integration inside the usable region, on grounds.** ⚠ **This is not "lower the
+   initial temperature until it runs."** Choosing a starting value because it integrates is the defect
+   this whole item exists to name. A grounded starting *epoch* is a different thing from a working
+   starting *value*.
+
+**⚠ And C47's verdict does not move.** Inside the usable region — Mars at 1600 K — the flux is
+**55.6 mW/m²**, about **2× Reese's own ceiling** for Mars. The original defect stands exactly where
+C47 (b) put it. **The divergence is a separate cause, and repairing it would not make the direction
+test pass.**
 
 ## What closing all of these does not do
 

@@ -1,0 +1,66 @@
+# Mars — 이 엔진의 둘째 대조 바디. earth.yaml 과 같은 자격이다: **보드 천체가 아니라
+# 발표된 값으로 엔진을 대보는 표본**이고, 보드에도 emit 에도 올라가지 않는다.
+# 왜 생겼나: C47 (h). 단계 4 방향 시험이 지구·화성에 **공통 T_p** 를 줬는데, 문헌은 화성의
+# 높은 Urey ratio 를 "화성이 더 식었다" 로 설명한다 — 즉 시험이 재려는 물리를 입력에서
+# 뺐을 수 있다. 바디별 T_p 를 열이력에서 받으려면 화성이 C20 에서 돌아야 하고, 그러려면
+# 이 파일이 있어야 한다.
+name: Mars
+kind: planet
+parent: Sun
+
+inputs:
+  # 질량·반지름·핵질량비 — engine/test_interior.py 의 ANCHORS 표에 이미 있던 값을 그대로.
+  # 출처 "Konopliv+ 2011 · InSight". 그 표 자신의 주석이 조건을 적어 놨다:
+  # *"CMF 는 조성 선언이지 적합 매개변수가 아니다 … 우리 답이 맞도록 돌려 맞춘 값이 아니다."*
+  mass_earth: 0.1074
+  radius_earth: 0.5320
+  core_mass_fraction: 0.24
+  # 태양계와 함께 강착했다는 표준 진술. 지구가 쓰는 4.54 와 같은 수이고, 화성만의 별도
+  # 연대 측정이 아니라 계 전체의 나이다 — 그래서 지구와 같은 값을 쓰는 것이 선언이 아니라
+  # 같은 사실의 재사용이다.
+  age_gyr: 4.54
+  body_class: rocky
+  composition_intent: earth_like
+  # 사실. 화성은 단일판이고, 그것이 Reese+ 1998 이 화성에 정체뚜껑 천장을 계산한 이유다.
+  stagnant_lid: true
+  # ⚠⚠ **이 값이 C47 (h) 0단계가 시험하는 대상 그 자체다. 확정된 값이 아니다.**
+  # 화성의 현재 맨틀 포텐셜 온도는 **발표된 적이 없다** — 화성에 현재 화산활동이 없어
+  # 그것을 기록할 분출 용융이 없고, 문헌의 "현재 화성 T_p" 는 전부 열진화 모형의 출력이다
+  # (Monders, Médard & Grove 2007, 2007M&PS...42..131M — 3.7 Ga 까지 "현대 지구와 비슷").
+  # 여기 적힌 1600 K 는 지구 선언값(Unterborn+ 2019 §2)을 옮긴 것이고, **옮겨도 되는지가
+  # 바로 0단계의 질문이다.** 0단계가 기준 A·B 를 통과하기 전에는 이 수를 근거로 아무것도
+  # 주장하지 말 것. 통과하면 근거를 여기 다시 적고, 실패하면 이 바디는 C20 을 못 돌린다.
+  potential_temperature: 1600.0
+  # C20 열진화의 초기온도 — 지구와 **같은 인쇄값을 그대로 전이**한다. Nimmo+ 2004 Fig. 2
+  # 캡션의 *"starting temperature of both mantle and core was 4800 K"*, 실온도로 읽음.
+  # ⚠ **지구의 3040 K 를 옮기면 안 된다** — 그것은 4800/r_b 이고 r_b 는 **바디마다 다르다.**
+  # 지구 r_b = 1.5789(내부구조 해가 재현한다, yaml 주석의 1.579), 화성 r_b ≈ 1.1937.
+  # 그래서 옮기는 것은 **핵·맨틀 바닥의 실온도 4800 K 하나**이고, 맨틀 퍼텐셜은 이 바디의
+  # 해로 다시 나눈다: 4800 / 1.1937 = 4021 K. 3040 을 그대로 쓰면 지구의 압축을 화성에
+  # 밀수하는 것이 된다.
+  # ⚠ 이 전이의 값은 "이 좌석이 고를 것이 없다" 는 데 있다. MANTLE_SHARE = 0.70 이나
+  # T_s = 293 K 처럼 지구 수를 모든 암석체에 선언하는 이 엔진의 기존 패턴이고, 전이가
+  # 옳은지는 3.7 Ga 검문소가 검증하거나 반증한다.
+  # ⚠ r_b 는 선언 T_pot 에 거의 안 딸린다 — 1400·1600·1800 K 에서 1.1882·1.1937·1.1799,
+  # 폭 1.2 %. 그래서 0단계의 스윕에서도 이 값은 사실상 고정이다.
+  core_initial_temperature: 4800.0
+  mantle_initial_potential_temperature: 4021.0
+
+units:
+  mass_earth: M_earth
+  radius_earth: R_earth
+  age_gyr: Gyr
+  potential_temperature: K
+  core_initial_temperature: K
+  mantle_initial_potential_temperature: K
+
+# 발표된 값. 엔진은 읽지 않고 대조만 한다.
+expected:
+  nmoi:
+    value: 0.3644
+    tol: 0.01
+    source: "Konopliv+ 2011 · InSight — engine/test_interior.py 의 ANCHORS 와 같은 값"
+  core_radius_fraction:
+    value: 0.5398
+    tol: 0.03
+    source: "1830 / 3390 km, 같은 표"
