@@ -1463,6 +1463,15 @@ through `7e47c957`.
 
 ## Where the directing seat's own mistakes were
 
+**2026-09-08 — proposing a band whose width came from our own failure boundary.** After the work
+seat measured that the output moves 1.07 % across a 2000 K span of initial temperature, the directing
+seat proposed carrying 2000–4000 K as a band rather than picking a point, on the C34 precedent. ⚠ **The
+width was the interval over which our integrator happened not to diverge** — a property of our code,
+not of Mars. Carrying it would have shipped a numerical failure boundary as if it were a physical
+range, and it would have become a ghost the moment C48 was repaired. **A band is the opposite of a
+knob only when its width comes from the physics**; that condition was missing from the proposal. The
+work seat declined it and gave that reason. Third of the night on this side of the ledger.
+
 **2026-09-08 — approving a transfer without separating the printed value from the derived one.** Brief
 149 approved carrying Nimmo+ 2004's 4800 K initial temperature to Mars, and the approval covered both
 of Earth's initial temperatures. ⚠ **Only one of them is Nimmo's.** Earth's mantle figure, 3040 K, is

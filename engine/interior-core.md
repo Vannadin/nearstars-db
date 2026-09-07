@@ -4722,7 +4722,10 @@ tested, in which case the failure is the setup's and not Korenaga's.
 **And route (ii) is not hypothetical.** `core_history` already emits
 `mantle_potential_temperature_present`, and on Earth it returns **1525 K** against the 1623 K this
 seat fed step 4 from Korenaga's own §4 condition — a 98 K difference between two non-arbitrary
-sources. It cannot run on Mars because `earth.yaml` is the only body declaring the two initial
+sources. ⚠ **Corrected later the same night by C48: that 1525 K comes out of a call made far outside
+the flux law's expansion point.** The blast radius of C48 is small — one consuming edge, no board row,
+no `db/` entry — **but a small blast radius does not exempt this citation**, which is inside it. The
+argument above stands only as far as C48 leaves it standing. It cannot run on Mars because `earth.yaml` is the only body declaring the two initial
 temperatures.
 
 **⚠ Route (i) is closed, and not for want of looking.** Monders, Médard & Grove 2007
@@ -4789,9 +4792,18 @@ it as one.
 
 ### C48 — the integrator was validated on Earth, and Earth survived by not blowing up rather than by being right — **named 2026-09-08, not repaired**
 
+**This one number is the whole item:**
+
+> ⚠ **`2.3 × 10¹⁰ Pa·s`** — the mantle viscosity `core_history` asks Nimmo's law for, at the
+> temperature it starts Mars from. **That is not a mantle.** Solid rock near its solidus is
+> `10¹⁸–10²¹`; this is eight orders below the bottom of that, in the neighbourhood of a warm lava
+> rather than of a convecting mantle. Earth's own start asks for `4.3 × 10¹⁴` — still four orders
+> under solid rock.
+
 **C20 ran on a second body for the first time today and diverged.** Mars's mantle integrates to
 `T_m = −6244 K` at the declared potential temperature of 1600 K, and to −6977 … −8208 K across the
-whole pre-registered 1400–1800 K sweep. Every point. ⚠ **The divergence is not the interesting part.**
+whole pre-registered 1400–1800 K sweep. Every point. ⚠ **The divergence is not the interesting part** —
+a body that survives the same call is not thereby getting a right answer.
 
 **What the flux law returns at the temperatures the integrator actually feeds it:**
 
@@ -4824,9 +4836,15 @@ reference temperature, and Nimmo's Table 2 fixes it: *"We adopt this value for `
 | **3040 K — C20's Earth initial** | **+1467 K** | 4.3 × 10¹⁴ | **÷ 2,350,174** |
 | **4021 K — C20's Mars initial** | **+2448 K** | 2.3 × 10¹⁰ | **÷ 42,808,392,211** |
 
-**A mantle viscosity of 2.3 × 10¹⁰ Pa·s is not a mantle.** So no published range was violated — **none
-is printed** — and this is not a bracket that wants widening. **A linearisation was evaluated 1467 and
-2448 K from its expansion point.**
+So no published range was violated — **none is printed** — and **a linearisation was evaluated 1467
+and 2448 K from its expansion point.**
+
+⚠ **The obvious repair does not exist, and it is the first thing the next reader will reach for.**
+`BRACKET_K` looks like the guard that failed, so widening it — or adding it to `core_history`'s call —
+looks like the fix. **It is not.** That constant is ours and it is about a different problem (a
+bisection on the inverse map, Brief 57). Enforcing it would turn a wrong number into a refusal, which
+is better, but it would not give the integrator a flux at 3000 K. **There is no value of `BRACKET_K`
+that makes eq. 35 usable 1500 K from its expansion point.**
 
 **⚠ And the sharpest way to say it: two numbers from the same paper do not compose on a second body.**
 The 4800 K initial condition is what Nimmo prints **for Earth**, and the flux law's blow-up point moves
