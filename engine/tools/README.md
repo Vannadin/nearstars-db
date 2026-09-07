@@ -1180,3 +1180,45 @@ Whether the recollection flatters or accuses changes nothing about which it is. 
 each ran: the morning's error made a mistake sound **smaller**, the afternoon's made one sound
 **larger**. Memory does not err in a consistent direction, so "it was against my own interest" predicts
 nothing about accuracy.
+
+## The absence rule applies to our own repository too (2026-09-07)
+
+An earlier rule in this file says: *an absence claim about the literature is a search result, not an
+inference.* It was written about ADS. **It holds for `grep` as well, and this is the case that shows
+it.**
+
+C21's melting requirement was published here twice saying latent heat was excluded *"because no held
+source gives one for silicate"*. `engine/eos.py` line 1989:
+
+    SILICATE_MELT_DH = 4.0e5      # J/kg. Monteux+ 2016 Table 1, ΔH (Ghosh & McSween 1998)
+
+⚠ **The measurement called `eos.silicate_solidus` from that same file.** The constant sat six lines from
+a function already in use, cited, in a paper already held and already quoted elsewhere in the same
+section. Nothing was hidden; nothing was searched.
+
+**Why "our own code" is the harder case.** An absence claim about the literature at least feels like a
+claim — you know you have not read everything. A claim about your own repository feels like knowledge,
+because you wrote it. **Familiarity is what makes the search feel unnecessary**, which is the same
+sentence this file already carries about running the checks you wrote rather than the ones the file is
+subject to.
+
+**The check is the same as the literature one, pointed inward**: before writing *we do not have X*, run
+the query. `grep -rn "latent\|MELT_DH" engine/` costs a second and is the whole difference between a
+recorded fact and a recorded guess.
+
+## An unevaluated term is not evidence for either side (2026-09-07)
+
+Both seats predicted that adding the missing latent heat would sink the 50 % rock row. It survives at
+**1.25×**: `ΔH` is 24 % of the sensible heat, not a term of comparable size.
+
+⚠ **Both guesses ran the same direction** — each assumed the unquantified term was large enough to
+overturn the result. That is not symmetric error; it is a shared bias toward treating *unknown* as
+*decisive*, which reads as caution and functions as a prediction.
+
+**What it cost**: the section carried "latent heat could erase this margin by itself" as a live caveat
+across several rounds of reporting, shaping how the result was described, and the number that settles
+it was one multiplication away the whole time.
+
+**The check**: when a missing term is named, either evaluate it or say only that it is missing.
+**Saying it might overturn the result is a claim about its size**, and if you can make that claim you
+can compute it.
