@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance closed · differentiation open, 2026-09-07** | Pulse is **9.59×** the long-lived budget at `t₀ = 0`, decaying with `τ ≈ 1.03 Myr`. ⚠ **An ice-rich body (rock ≲ 35 %) is not melted at all.** `t₀` declared **late** from the formation order — gas-giant moons post-date their planet (Canup & Ward 2002) — so the pulse is **not available** to the five, with the caveat that the scales share an order of magnitude. ⚠ Still open: **branch B** (a body orbiting a star directly forms early, so the pulse IS available and the same tables answer the opposite way — no roster body there yet), the differentiation question's melt-fraction threshold, and paper defect #23 |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance closed · differentiation open, 2026-09-07** | Pulse is **9.59×** the long-lived budget at `t₀ = 0`, decaying with `τ ≈ 1.03 Myr`. ⚠ **An ice-rich body (rock ≲ 35 %) is not melted at all.** `t₀` declared **late** from the formation order — gas-giant moons post-date their planet (Canup & Ward 2002) — so the pulse is **not available** to the five, with the caveat that the scales share an order of magnitude. One path, no branch on body kind: `t₀` is a per-body declaration and the tables serve every body. ⚠ Still open: the differentiation question's melt-fraction threshold, paper defect #23, and no heat-loss term (so small bodies read as an upper bound). Belts are last in order, after C14·C15·C17 |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -2312,20 +2312,35 @@ measurement of Jupiter. **It is cited here as the scale the literature works at,
 magnitude.** A giant that finished inside ~1 Myr would leave some pulse; nothing we hold says one did,
 and nothing we hold rules it out. **The margin is not large and the record should not imply it is.**
 
-### ⚠ Two branches, because the argument above is about *where a body formed*, not about our numbers
+### One path, and `t₀` is a declaration rather than a branch
 
-**Owner, 2026-09-07**: *"위성이 아니라 행성의 케이스도 고려해봐야 하지 않아?"* The `t₀` conclusion was
-first written as a scope footnote. It is a branch, and the tables serve both branches equally.
+**Owner, 2026-09-07**: *"우리 규칙대로, 모든 케이스에 대응 가능하게."*
 
-| | branch A — moon of a gas giant | branch B — body orbiting a star directly |
-|---|---|---|
-| where it forms | circumplanetary disc, **after** the planet's gas accretion | the stellar disc, from the start |
-| `t₀` | late (Canup & Ward 2002) | **early** |
-| the pulse | **not available** | **available**, and the tables apply in full |
-| roster today | all five moons | ⚠ see below |
+⚠ **An earlier version of this section split into "branch A — moon of a gas giant" and "branch B — body
+orbiting a star directly". That split is removed.** It was a hardcoded fork where this repository's rule
+is a data-driven general path, and **the physics gives it no reason to exist**: both sides of the
+melting comparison are energy per kilogram, so neither the body's size nor its type enters. **The only
+thing that differs between a moon and a planet is `t₀`, and `t₀` is a fact about the body, not a code
+path.**
 
-**Same tables, opposite answers.** Nothing in the melting comparison changes between the branches —
-only when the body starts.
+    path      one. It does not ask what kind of body this is
+    input     t₀, declared per body
+    output    the melt ratios by rock fraction — the table already computed above
+
+⚠ **Do not branch on `kind` to implement this.** C43, found the same day, is exactly that disease:
+`body_class` applied a protoplanetary-disc criterion to a moon and filled the missing distance with a
+silent default. **A second instance must not be built on purpose.**
+
+**Where `t₀` comes from is a list of sources for a declaration, not a set of branches:**
+
+| the body formed | `t₀` | grounds | who is here |
+|---|---|---|---|
+| in a circumplanetary disc, after its planet's gas accretion | late | Canup & Ward 2002 | our five moons |
+| in the stellar disc, directly | as the disc gives it, possibly early | — | `bodies/earth.yaml` |
+
+**Nothing is unimplemented.** ⚠ An earlier draft called the second row an "open branch with no roster
+body"; **there is no branch to open.** The path is one, Earth already runs through it, and what a new
+body brings is a `t₀` value — not a new route.
 
 ⚠ **And size does not enter the melting comparison at all.** This must be said plainly, because it has
 been said loosely more than once today. **Both sides of that comparison are per kilogram**, so the body
@@ -2340,18 +2355,25 @@ nothing else. **Size enters only the gravitational-binding axis**, which asks a 
 the two apart or the record teaches that big bodies are safe from the pulse, which the table does not
 say.
 
-⚠ **Branch B has no roster body, and one anchor.** The engine holds five bodies — two planets, two
-brown dwarfs, one moon — and no belt object. `phase4/alpha_centauri.yaml` discusses belts at length and
-declares **no `- body:` entry** for one. ⚠ **An occurrence count stood here and is removed**: three
-seats counted it three ways (144, 185, 139) under three definitions, and **no claim in this paragraph
-rests on the number.** The fact is that belts are discussed and not instantiated; the count adds
-precision the question never asked for. **But `bodies/earth.yaml` is branch B**
-(`kind: planet`, `parent: Sun`), and it is an anchor rather than a roster body. At 100 % rock the table
-puts it well past melting, which is the direction the Earth actually went — a weak check, and worth
-noting because branch B currently has nothing else in it. **A belt is the first candidate that would
-put a real body there.**
+**What the roster holds today.** Five bodies — two planets, two brown dwarfs, one moon — and no belt
+object; `phase4/alpha_centauri.yaml` discusses belts at length and declares **no `- body:` entry** for
+one. ⚠ **An occurrence count stood here and is removed**: three seats counted it three ways under three
+definitions, and **no claim here rests on the number.** Belts are discussed and not instantiated; that
+is the whole fact.
 
-⚠ **A limit that binds branch B harder than branch A: our calculation has no heat-loss term.** The
+⚠ **`bodies/earth.yaml` already takes the second row** (`kind: planet`, `parent: Sun`). It is an anchor
+rather than a roster body, and at 100 % rock the table puts it well past melting, which is the
+direction the Earth actually went — a weak check, and the only one this row has.
+
+**Belts come last — owner, 2026-09-07**: *"벨트는 진짜 맨 마지막에 해도 괜찮을 것 같아."* ⚠ **Last in
+order, not declined.** Two reasons, and both are about the pipeline rather than the belt: adding bodies
+before the wiring holes close (C14 · C15 · C17) **adds one "cannot say" per body added**, and the two
+gaps found the same day — C43 and C45 — **sit in the layer that handles body kinds**, so a new kind
+multiplies them rather than adding to them. When the wiring is continuous, one belt object can be
+declared and judged, which is the point of waiting. **A belt is the first body that would exercise
+the second `t₀` row with something other than an anchor.**
+
+⚠ **A limit of the calculation, not of any body class: there is no heat-loss term.** The
 pulse is compared against an energy requirement as if every joule stayed in the body. A small object
 loses heat faster than it accumulates it, so **for small bodies these numbers are an upper bound**, and
 the smaller the body the looser the bound. **This is stated as a property of our calculation, not as an
