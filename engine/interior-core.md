@@ -79,7 +79,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C31 | Dante's tidal and dependent board rows | built 2026-09-05 (main) | — |
 | **C32** | band output and handoff choices | **structure built 2026-09-05; instances landing one at a time** | built: albedo, stagnant-lid ceiling, greenhouse cases, `k_c`. Open: whoever picks the ten unchosen options that `engine/tools/unchosen_defaults.py` counts |
 | C33 | citations resolved against the document | built 2026-09-05 | — |
-| **C34** | what the transport table is fed, and where its thresholds come from | **fed-quantity resolved 2026-09-07; re-scored the same day and the count moved** | The four candidates span 2.203× and are **not verdict-neutral**. On `transport_mode`, unchanged, the low end (tidal + radiogenic, already fed) still reproduces **3 of 4** of the document's anchor labels to the high end's 1. ⚠ On the **C46 ladder cell** it reverses — low **2 of 4**, high **2 of 3 scored plus the Moon 1 of 1 independent** — because naming the gap between the stagnant ceiling and the plate rung took away a free pass Earth's low feed had been collecting. **Which function to score is the owner's, and it is the same question as C46's missing row.** Still open with it: Venus fails under both feeds, and the plate ceiling 0.135 remains authored |
+| **C34** | what the transport table is fed, and where its thresholds come from | ⚠ **does not close by choosing — waiting on C47** (2026-09-07) | The four candidates span 2.203× and are **not verdict-neutral**. On `transport_mode`, unchanged, the low end (tidal + radiogenic, already fed) still reproduces **3 of 4** of the document's anchor labels to the high end's 1. ⚠ On the **C46 ladder cell** it reverses — low **2 of 4**, high **2 of 3 scored plus the Moon 1 of 1 independent** — because naming the gap between the stagnant ceiling and the plate rung took away a free pass Earth's low feed had been collecting. ⚠ **And the four candidates are not four readings of one quantity — they are four quantities, two of them disqualified** (0.0418 is radiogenic production, the wrong quantity; 0.08 has no source in any version of the document and is used there under two labels). Of the two survivors the measured 0.0921 exists for no body in this project, and the computable 0.0769 is a mobile-lid law that C47 (b) shows failing on Mars. **So this is not a choice among candidates any more, and putting one to the owner would be asking them to pick among things that are all disqualified.** Held until C47 closes, which will re-draw the candidate set. Still open with it: Venus fails under both feeds, and the plate ceiling 0.135 remains authored |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **landed 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled two ways, and the contract check cannot see it | **closed 2026-09-07** | ⚠ **Two spellings, not three** — `rotation_period_days` is a comment recording a pre-converted DB value, read by nothing. `dynamo_rocky` looked up `rotation_period` while every supplier writes `rotation_period_h`, so it received **None on every body** and recorded that as evidence. Unified across code, contract (en+ko), chain label and the evidence key; no verdict moves, because the value was never in a branch |
@@ -3999,6 +3999,12 @@ no source, and of the two survivors the measured one cannot be computed for any 
 **What is left is 0.0769 — the only candidate that is both the right quantity and computable
 everywhere — and C47 (b) shows it fails on Mars.** That is why C34 does not close by choosing.
 
+**⚠ Status changed 2026-09-07: this does not close by choosing, and it is not being put to the owner.**
+Two of the four candidates are disqualified outright, the measured survivor cannot be computed for any
+body in this project, and the computable survivor fails on Mars (C47 (b)). Asking for a choice now would
+be asking which disqualified value to adopt. **Held until C47 closes**, at which point the candidate set
+is re-drawn rather than re-ranked.
+
 ⚠ **Not resolved here, and not resolvable here.** Which function C34 should be scored on is the same
 question as whether §6.2's missing row should exist — and the owner has already been given that gap as
 C46. The low feed's 3-of-4 was true and is still true of the function it was measured on; it is not
@@ -4066,6 +4072,15 @@ verdict.**
 applied to the whole ladder; it fits only the heat-pipe rung now. Earth's 0.09 is bracketed by body
 text we hold (Lourenço's mobile-lid **total** 40–50 TW = 0.0784–0.0980 W/m²), and the stagnant ceiling
 carries a fifth origin word, **`abstract-level`**, because its paper's body is unread.
+
+**The knot this cell sits in, written in both places it binds:** *a correct surface heat flow needs
+the regime, and placing the regime needs the surface heat flow.* C46 needs the flux to place the cell;
+the flux needs a boundary-layer law, and which law applies is the regime. ⚠ **A stagnant-lid law does
+not cut the knot** — C47 (c) tested that and removed it: Korenaga 2009's conventional stagnant-lid
+scaling gives the same Earth→Mars flux ratio as the mobile-lid law we already had, 0.723 against 0.724,
+because `D` cancels and both go as `g^{1/3}`. **A law that spans both regimes would cut it**, which is
+what makes Foley & Bercovici 2014 the candidate worth a build. Until then this cell's bottom stands on
+an abstract-level ceiling, and no single regime is emitted.
 
 ⚠ **What caught this was a person, not the gate.** The floor version computed correctly, emitted its
 reasoning in words, and passed a full lane. A ceiling used as a floor is not a wrong number — it is a
@@ -4239,6 +4254,83 @@ we do not have.**
 **Nothing was changed in the engine by this section.** No node, no edge, no value. Item B of the
 brief — no regime name is emitted while this stands — is already the state of the code: `solve_mode`
 emits `regime_candidates` and refuses a single regime whenever more than one stands.
+
+### C47 (c) 2026-09-07 — the stagnant-lid law was read, and the mobile/stagnant distinction is not what was breaking C47
+
+**A paper was found on an open route and read from source. It changes the diagnosis, and it does not
+close the item.** Korenaga 2009 ([`2009GeoJI.179..154K`](https://ui.adsabs.harvard.edu/abs/2009GeoJI.179..154K)),
+*"Scaling of stagnant-lid convection with Arrhenius rheology and the effects of mantle melting"* — same
+author as the Urey-ratio review this project already cites for C47's Earth numbers, adjacent year.
+
+**⚠ First correction: the law is not eq. 30.** The brief identified eq. 30 as the scaling law. The
+paper's §4 says the opposite in its own voice — *"The boundary-layer stability criterion (**eq. 43**)
+is used to calculate `Nu`"* — and describes eq. 30 as *"**the conventional scaling** of `Ra_i^{1/3}`"*
+that its results *"deviate considerably from"*. **Eq. 30 is the law this paper argues against.** Its
+contribution is that mantle melting *"may reduce the conventional prediction of surface heat flux by up
+to a factor of ∼5–10"* (Summary, read in full).
+
+**⚠ Second, and this is the finding: the conventional stagnant-lid law fails the direction test, and
+fails it *identically* to the mobile-lid law we already had.** Eq. 30 is
+`Nu ≈ a θ^(−1−β) Ra_i^β` with `a ≈ 0.30 + 0.25n` and `β = n/(n+2)`, `Ra_i` from eq. 21 (Arrhenius),
+`q = Nu k ΔT / D` from eq. 19. Evaluated with the paper's own constants and **one shared `b`**, at a
+common `ΔT` and `T_i`:
+
+| law | Mars/Earth surface flux | `Ur` Earth → Mars | needed |
+|---|---|---|---|
+| Nimmo eqs 34–36, **mobile lid** (what we had) | **0.724** | falls ×0.59 | — |
+| Korenaga eq. 30, **stagnant lid**, `n = 1` | **0.723** | falls ×0.59 | rises ×2.0 |
+| Korenaga eq. 30, **stagnant lid**, `n = 3` | 0.557 | falls ×0.77 | rises ×2.0 |
+
+⚠ **0.724 and 0.723 are the same number, and it is not a coincidence.** Both laws put the flux at
+`q ∝ g^{1/3} ΔT^{4/3}` for `n = 1`: the boundary layer thickens as `g^{−1/3}`, and **`D` cancels
+analytically** out of `q = Nu k ΔT/D` for every `n`, because `Ra_i ∝ g ΔT D^{(n+2)/n}` raised to
+`β = n/(n+2)` returns exactly one factor of `D`. **So swapping a mobile-lid law for a conventional
+stagnant-lid law changes the Earth→Mars ordering not at all.** The mobile/stagnant distinction was the
+wrong suspect — C47 (b) named it as the cause and that was too quick.
+
+**What does carry the direction is the melting correction**, and the paper says so in its own §4.2:
+mantle melting *"starts to affect heat-flow scaling at **lower temperatures for Mars than Earth**
+because the **low gravity of Mars results in the formation of thicker depleted mantle** for a given
+potential temperature."* Suppressing Mars's flux harder than Earth's is exactly the direction `Ur`
+needs. ⚠ But that is eqs 41–56 solved iteratively with `z*_D = Nu^{−1}`, not a formula to transcribe —
+**it is a build, and nothing was built here.**
+
+**⚠ Third, and it is a harder stop than the direction: this law cannot give an absolute Urey ratio
+either, by the author's own statement.** From p. 163, verified on the page image rather than the text
+layer:
+
+> *"the pre-exponential factor `b` in eq. (1) is determined so that the surface heat flux is
+> **50 mW m⁻²** at the present-day Earth condition … **different planets may take different
+> pre-exponential factors** … The purpose of this **(arbitrary) normalization** for mantle rheology is
+> to provide a simple reference point and highlight differences caused by mantle melting and the size
+> of a planet."*
+
+And the Earth it normalizes to is **counterfactual**: *"Earth does not presently exhibit stagnant-lid
+convection … it is convenient to use this familiar planet first to derive a **hypothetical** heat-flow
+scaling law, **against which results for other planets may be compared**."* The 50 mW/m² is not
+Earth's measured 92.1. **So the absolute scale is free per planet, declared arbitrary, and anchored to
+an Earth that does not exist.** Choosing `b` per body to land the two Urey ratios is the per-body
+tuning guardrail ④ forbids — with a citation attached, which makes it worse rather than better.
+
+**⚠ The pass condition is therefore not obtainable from this paper.** Not because its physics is wrong,
+but because it is built as a **relative** comparison instrument and says so.
+
+**The reserve law was given a qualification check only — not a fit.** Foley & Bercovici 2014
+([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F), ⚠ **arXiv eprint; its
+page and equation numbers are not the journal's**) was opened for one question: does it carry a
+constant fixed by calibrating to Earth? **It does not** — its exponents come from least-squares fits to
+its own numerical experiments. And its abstract claims the shape C47 actually needs: scalings
+*"across the stagnant lid and plate-tectonic regimes"*, i.e. **a law that does not require the regime
+as an input.** ⚠ It has freedom of its own kind (grain-damage material parameters, and it *"treat[s]
+the plate length as an unknown"*), and evaluating it is a build. **It was not fitted, and no number was
+taken from it**, because brief 145's own warning applies: trying two laws and keeping the one that
+lands is per-body tuning wearing two citations.
+
+**The knot, written in both places it binds:** *a correct surface heat flow needs the regime, and placing the regime needs the surface heat flow.* ⚠ **And the stagnant-lid
+law does not cut it** — that was the hope this section tested and removed. A law that spans both
+regimes would, which is why Foley & Bercovici is the one worth a build if the owner spends one.
+
+**Nothing was changed in the engine.** No node, no edge, no value, no constant transcribed.
 
 ## What closing all of these does not do
 
