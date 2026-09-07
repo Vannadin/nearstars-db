@@ -79,7 +79,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C31 | Dante's tidal and dependent board rows | built 2026-09-05 (main) | — |
 | **C32** | band output and handoff choices | **structure built 2026-09-05; instances landing one at a time** | built: albedo, stagnant-lid ceiling, greenhouse cases, `k_c`. Open: whoever picks the ten unchosen options that `engine/tools/unchosen_defaults.py` counts |
 | C33 | citations resolved against the document | built 2026-09-05 | — |
-| **C34** | what the transport table is fed, and where its thresholds come from | **fed-quantity resolved 2026-09-07; thresholds still unpublished** | The four candidates span 2.203× and are **not verdict-neutral**: the low end (tidal + radiogenic, already fed) reproduces **3 of 4** of the document's anchor labels, the high end **1 of 4**. ⚠ The document's own anchors picked; no value moves, only the grounds. Still open: Venus disagrees at both ends, and the plate ceiling 0.135 remains authored |
+| **C34** | what the transport table is fed, and where its thresholds come from | **fed-quantity resolved 2026-09-07; re-scored the same day and the count moved** | The four candidates span 2.203× and are **not verdict-neutral**. On `transport_mode`, unchanged, the low end (tidal + radiogenic, already fed) still reproduces **3 of 4** of the document's anchor labels to the high end's 1. ⚠ On the **C46 ladder cell** it reverses — low **2 of 4**, high **2 of 3 scored plus the Moon 1 of 1 independent** — because naming the gap between the stagnant ceiling and the plate rung took away a free pass Earth's low feed had been collecting. **Which function to score is the owner's, and it is the same question as C46's missing row.** Still open with it: Venus fails under both feeds, and the plate ceiling 0.135 remains authored |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **landed 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled two ways, and the contract check cannot see it | **closed 2026-09-07** | ⚠ **Two spellings, not three** — `rotation_period_days` is a comment recording a pre-converted DB value, read by nothing. `dynamo_rocky` looked up `rotation_period` while every supplier writes `rotation_period_h`, so it received **None on every body** and recorded that as evidence. Unified across code, contract (en+ko), chain label and the evidence key; no verdict moves, because the value was never in a branch |
@@ -91,7 +91,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **resolved 2026-09-07** | Owner chose route 2: a satellite does not take the pebble-isolation branch, because neither formation path in the literature uses a distance from the star — giant impact or **circumplanetary** disc. The `semi_major_axis_au` / `_km` question closes with it: a moon consumes no stellar distance, so there is nothing to fill. Satellite mass budget recorded, all five exempt, no value changed |
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
-| **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07; rows still absent** | The flux now fixes **one** cell by the highest rung it passes (0.010 · 0.09 · 2.5 W/m², plus a named state below), with the band kept beside it. ⚠ **The rungs are bodies, not boundaries** — origin `analogy-rung`, our rule and not the literature's verdict, so Earth reading `plate tectonics` is a tautology. ⚠ Venus's 78±69 mW/m² spans three cells, the ladder **inverts C34's grounds**, and re-scoring with the Moon — the only body in no rung — gives **independent 1/1 beside self-scored 4/4**, not added. ⚠ And the stagnant rung's Venus half (10–20 mW/m², 1998, not held) is superseded by Smrekar's 78 while the rung has not moved |
+| **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07, then corrected the same day; rows still absent** | The flux fixes **one** cell: **floors** at 0.09 (Earth) and 2.5 W/m² (Io), and below them a stagnant cell bounded by a **ceiling** — Venus 10–20, Mars 15–30, union 10–30 transferred to anything else — with a `plutonic-squishy lid` cell for exceeding it. The band travels beside the cell. ⚠ **The first build of this ladder stood that ceiling up as a floor at 0.010** and put every cold body one cell too high; our own §6.2 table already said `ceiling`, and one bullet under it did not — C46 (c). ⚠ Three cells, three provenances: `analogy-rung` (Io), held body text (Earth), `abstract-level` (the ceiling, body not held). ⚠ Venus's 78 is **3.9× its own ceiling**, so the ladder now contradicts our anchor column and agrees with the paper it cites; the Moon stays **independent 1/1** only because the stagnant cell was given no floor. Not added to self-scored 3/4 |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3871,18 +3871,22 @@ threshold is a conversion, not a citation."* This section is that sentence with 
 by the highest rung it passes. No ceiling is needed, which also disposes of `unclassified`: the top
 cell has no upper edge.
 
-| rung | W/m² | where the number comes from |
-|---|---|---|
-| stagnant lid | **0.010** | §6.2's Venus–Mars pair, 10–30 mW/m². ⚠ **originally a ceiling, used here as a floor** — the form changed, the value did not |
-| plate tectonics | **0.09** | §6.2's Earth. ⚠ **Independently bracketed**: Lourenço's mobile-lid total of 40–50 TW is **0.0784–0.0980 W/m²** over Earth's area, and 0.09 sits inside |
-| heat pipe | **2.5** | §6.2's Io, which the document already calls a floor rather than a boundary |
-| *below the lowest rung* | — | a named state, not a silent stagnant lid |
+⚠ **Corrected 2026-09-07 — the version of this table built earlier today had the lowest rung upside
+down.** What stands now is below; what was wrong and how it was found is C46 (c).
 
-⚠ **The rungs are not boundaries. They are what bodies we know actually radiate** — §6.2 says so
-itself: *"**0.09 W/m² is Earth** and **10–30 mW/m² is the Venus and Mars pair.**"* So this is an **analogy
-scale**, carried under its own origin word `analogy-rung` — not `printed`, not `chosen`, not
-`provisional`, not a grade. What it says is *"Earth's worth of heat, Earth's worth of crust"* and
-nothing stronger, and the output says that in words.
+| cell | bounded by | W/m² | where the number comes from |
+|---|---|---|---|
+| stagnant lid | **a ceiling** | Venus **10–20** · Mars **15–30** · union 10–30 for any other body | Reese, Solomatov & Moresi 1998 ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)), ⚠ **body not held — ADS abstract only.** *"the critical heat flux which can be removed without widespread melting"*, from finite-element simulations of stagnant-lid convection — **a model output, and two different numbers for two bodies.** ⚠ **No floor, and none is wanted**: a colder body is *more* stagnant, not less |
+| plutonic-squishy lid (ceiling exceeded) | that same ceiling, from below | above its own ceiling, under 0.09 | ⚠ **our join of two papers, not a sentence in either.** Reese+ 1998 says a stagnant lid asked to pass more than its ceiling melts widely; Lourenço+ 2020 §3.4's plutonic-squishy lid is a lid that stays immobile and carries melt. Does not collide with Smrekar+ 2018's *no plate tectonics on Venus* — squishy is a sub-kind of immobile lid |
+| plate tectonics | **a floor** | **0.09** | §6.2's Earth, and Earth's is a measurement (92.1 mW/m², 47±2 TW from 38,347 observations, [`2010SolE....1....5D`](https://ui.adsabs.harvard.edu/abs/2010SolE....1....5D)). ⚠ **Independently bracketed by body text we hold**: Lourenço's mobile-lid TOTAL of 40–50 TW is **0.0784–0.0980 W/m²** over Earth's area, and 0.09 sits inside |
+| heat pipe | **a floor** | **2.5** | §6.2's Io — Kankanamge & Moore 2019's melt-carried flux for Io's parameters. ⚠ the one rung that is still nothing but an analogy to a single body |
+
+⚠ **The floors are not boundaries. They are what bodies we know actually radiate**, so they carry
+their own origin word `analogy-rung` — not `printed`, not `chosen`, not `provisional`, not a grade.
+What the ladder says is *"Earth's worth of heat, Earth's worth of crust"* and nothing stronger, and
+the output says that in words. ⚠ **The bottom of the ladder is not of that kind at all** — it is a
+ceiling from a paper whose body we do not hold, so it carries a fifth word, `abstract-level`. Three
+cells, three different provenances; earlier today all three shared one word.
 
 ⚠ **Therefore Earth coming out `plate tectonics` is not evidence. That rung is Earth.** Its margin is
 **0.2 %** (0.0902 against 0.09), and the test that pins it says in its own comment that it is a
@@ -3890,18 +3894,18 @@ tautology recorded so nobody reads it as a verdict.
 
 **What the ladder produces:**
 
-| body fed | flux | cell |
+| body fed | flux | cell (corrected ladder) |
 |---|---|---|
 | Earth, measured | 0.0902 W/m² | plate tectonics |
-| Venus, 78−69 = 9 mW/m² | 0.009 | **below the lowest rung** |
-| Venus, 78 mW/m² | 0.078 | stagnant lid |
+| Venus, 78−69 = 9 mW/m² | 0.009 | stagnant lid — under its own 20 mW/m² ceiling |
+| Venus, 78 mW/m² *(the measurement)* | 0.078 | **plutonic-squishy lid — 3.9× its own ceiling** |
 | Venus, 78+69 = 147 mW/m² | 0.147 | **plate tectonics** |
 | Pandora | 45.36 | heat pipe |
 
-⚠ **One error bar crosses three states.** Smrekar's 78 ± 69 mW/m² puts Venus below the ladder, on the
-stagnant rung, and on the Earth rung depending on where in its own uncertainty you read it. **The
-one-cell answer is that thin**, which is why the band travels beside it in the same output rather than
-being replaced by it.
+⚠ **One error bar still crosses three cells** — but no longer one unnamed one. Smrekar's 78 ± 69 mW/m²
+puts Venus under its ceiling, over its ceiling, and on the Earth rung depending on where in its own
+uncertainty you read it. **The one-cell answer is that thin**, which is why the band travels beside it
+in the same output rather than being replaced by it.
 
 ### Re-scored 2026-09-07 with a body that is not one of our rungs
 
@@ -3924,43 +3928,135 @@ model **14–25 mW/m², average 19**, and *"we propose an upper limit of 20 ± 1
 global average"*. The method — crustal and mantle radiogenic production scaled by crustal thickness and
 topography, anchored on polar elastic thickness — has nothing to do with a stagnant-lid flux conversion.
 
+⚠ **Re-run on the corrected ladder** (the table below is the second version; the first was scored
+against the inverted rung and is void — see C46 (c)):
+
 | body | flux | cell | | what the score is worth |
 |---|---|---|---|---|
-| **Moon** | 18 mW/m² | stagnant lid | ✓ | **independent** — in no rung, undisputed one-plate body, *in situ* measurement |
-| Mars | 19 mW/m² | stagnant lid | ✓ | rung body, but this value comes from a method unrelated to the rung |
-| Venus | 78 mW/m² | stagnant lid | ✓ | same — and see below |
+| **Moon** | 18 mW/m² | stagnant lid | ✓ | **independent, and still independent** — the Moon anchors no cell, is an undisputed one-plate body, and 18 mW/m² is an *in situ* measurement. ⚠ It stayed independent only because the stagnant cell was given **no floor**. Making the Moon's 18 that floor was the obvious way to build the cell, and it would have spent the only non-circular score this ladder has |
+| Mars | 19 mW/m² | stagnant lid | ✓ | the 19 (Parro+ 2017) comes from a method unrelated to the ceiling — but the ceiling read here is **Mars's own 15–30**, so the score is half circular |
+| Venus | 78 mW/m² | **plutonic-squishy lid** | ✗ / ✓ | ⚠ **the ladder now contradicts our own document and agrees with the paper the document cites.** §6.2's anchor column labels Venus a stagnant lid; 78 mW/m² is **3.9×** Venus's own 10–20 ceiling, and Reese+ 1998's criterion for exceeding it is *widespread melting* |
 | Earth | 0.0902 W/m² | plate tectonics | ✓ | **circular**: that rung is Earth |
 | Io | 2.5 W/m² | heat pipe | ✓ | **circular**: that rung is Io |
 
-**Independent 1 of 1. Self-scored 4 of 4** — ⚠ **and the scores are not added**, because summing them
+**Independent 1 of 1. Self-scored 3 of 4** — ⚠ **and the two are not added**, because summing them
 counts a tautology as evidence. Mercury has no measured surface heat flow at all and is scored nowhere.
 
-⚠ **A rung is superseded, and the ladder still stands on the old value.** The stagnant rung's 10–30
-mW/m² comes from [`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)
-(**not held**), whose Venus half is **10–20 mW/m²**. Smrekar+ 2023 measures Venus at **78**, four to
-eight times that. **The measurement that sets half of our lowest rung was replaced twenty-five years
-later, and the rung did not move.** ⚠ This is not repaired here — the 1998 paper is not held, so what
-exactly it claimed for Mars is unread, and moving a rung is the owner's call. **But the Moon's 18 and
-Mars's 19 sit near the old value while Venus's measurement does not**, which is the shape of the
-problem: the rung may be right for two bodies and wrong for the one it was named after.
+⚠ **What looked like a superseded rung was a misread form.** Yesterday this section recorded that
+Smrekar+ 2023's Venus measurement (78 mW/m²) is four to eight times the 10–20 that
+[`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R) gives for Venus, and
+concluded that *"the measurement that sets half of our lowest rung was replaced twenty-five years
+later, and the rung did not move."* **That was wrong about what the 1998 number is.** It is not a
+value Venus was observed to emit — it is the *ceiling* Venus would have to stay under to shed its heat
+by conduction, and 78 exceeding it is **the criterion firing, not a stale rung.** Nothing is
+superseded; the two papers agree, and together they say Venus's lid is melting. The anomaly was the
+verdict.
 
-### C34, re-measured under the ladder — the argument inverts
+### C34, re-scored on the corrected ladder — the count moves, and which function you score decides which way
 
-C34 chose the low end because it reproduced **3 of 4** of §6.2's anchor labels while the high end got
-**1 of 4**. ⚠ **That measurement was made under a ceiling ladder.** Re-run against floors:
+⚠ **The version of this section written earlier today is void.** It scored the fed quantity against a
+ladder whose lowest rung was a ceiling turned into a floor, so its 1-of-2 and 2-of-2 mean nothing.
+This is the re-run, and every cell below came out of `regime_ladder_cell` rather than out of arithmetic
+done by hand.
 
-| fed quantity | scored on bodies with a measured flux | fails |
+C34's decision — **what the transport table is fed** — was made on `transport_mode`, the function that
+reads §6.2's three-row table literally. That function is **unchanged**, and it still reproduces exactly
+what C34 recorded:
+
+| fed quantity, scored on `transport_mode` (unchanged) | §6.2 anchor labels reproduced | fails |
 |---|---|---|
-| low end — tidal + radiogenic, current | **1 of 2** | **Earth**, which reads stagnant lid |
-| high end — measured surface heat flow | **2 of 2** | none |
+| low end — tidal + radiogenic, current | **3 of 4** | Venus |
+| high end — measured surface heat flow | 1 of 4 → **2 of 3 scored** | Venus; Mercury has no measured flux to feed |
 
-⚠ **Mercury and Mars are not scored.** Neither has a measured surface heat flow we hold, and the
-10–30 mW/m² the document attaches to them **is the stagnant-lid rung itself** — scoring the ladder with
-its own rung is circular. They are `cannot verify`, not `pass`.
+The C46 ladder cell is a **different function**, and on it the count reverses:
 
-**So changing the ladder's form moves the grounds for C34's choice**, and in the opposite direction.
-⚠ **Not resolved here**: this section reports the inversion rather than acting on it, because quietly
-keeping C34 and quietly reversing it are both worse than saying that the two decisions are one.
+| fed quantity, scored on `regime_ladder_cell` | §6.2 anchor labels reproduced | independent | fails |
+|---|---|---|---|
+| low end — tidal + radiogenic, current | **2 of 4** (Mercury 15.75 ✓ · Mars 15.87 ✓) | — | **Earth 41.80**, and Venus 37.75 |
+| high end — measured surface heat flow | **2 of 3 scored** (Earth 92.1 ✓ · Mars 19 ✓) | **Moon 18 ✓** | Venus 78; Mercury unscored |
+
+⚠ **One body moved, and it is Earth.** At the low feed Earth's 41.80 mW/m² is above the 30 mW/m²
+ceiling and below the 90 mW/m² plate rung. `transport_mode` calls that **plate tectonics** — correctly,
+by its own docstring, because *"the table has nothing between the ceiling and the plate row, so a body
+under the ceiling is not called unknown, it is called plate tectonics."* **That was a free pass, and
+naming the gap took it away.** The C46 ladder now has a cell there, so the same 41.80 reads
+`plutonic-squishy lid` and Earth becomes a fail. Venus fails under both feeds and on both functions, so
+Venus is not what discriminates.
+
+⚠ **Not resolved here, and not resolvable here.** Which function C34 should be scored on is the same
+question as whether §6.2's missing row should exist — and the owner has already been given that gap as
+C46. The low feed's 3-of-4 was true and is still true of the function it was measured on; it is not
+true of the function that fills the gap C46 opened. **Reporting both and picking neither is the whole
+of what this section does.**
+
+### C46 (c) 2026-09-07 — the lowest rung was a ceiling stood on its head
+
+**A brief told this seat to build the stagnant cell as a floor at 0.010 W/m². The instruction was
+wrong, and our own document already said so.** This is where that is recorded, because the value it
+produced was plausible and the gate passed it.
+
+**What the source actually prints.** Reese, Solomatov & Moresi 1998
+([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)) — ⚠ **body not held;
+every AGU and ADS scan returns 403, so the abstract is all of it** — reads verbatim:
+
+> *"For Venus, the critical heat flux which can be removed **without widespread melting** is only
+> 10-20 mW/m². For Mars, it is 15-30 mW/m²."*
+
+and gets there by *"thermal boundary layer analyses as well as finite element simulations of stagnant
+lid convection with non-Newtonian viscosity."* Three facts follow, and the floor version had all three
+backwards. It is a **ceiling**, not a floor. It is a **model output**, not a measurement. And it is
+**two numbers for two bodies**, not one number for a pair.
+
+**Where the merge happened, checked line by line rather than taken from the brief.** In
+`docs/reference/tidal-heating-methodology.md`:
+
+| line | what it says | verdict |
+|---|---|---|
+| §6.2 table row | *"ceiling **10–30 mW/m²** \| Venus 10–20, Mars 15–30"* | ✓ **correct** — the word `ceiling` is there and the two bodies are apart |
+| §6.2 prose | *"put the stagnant-lid conductive ceiling at 10–30 mW/m² before widespread melting sets in"* | ✓ **correct** — `ceiling` again; the two bodies are merged, harmlessly |
+| §6.2 bullet | *"**0.09 W/m² is Earth** and **10–30 mW/m² is the Venus and Mars pair.** Same reading."* | ✗ **the one that inverted it** — `ceiling` is gone, the bodies are merged, and the sentence above it calls the whole column *"three measured bodies"* |
+
+**So the document was right twice and wrong once, and the wrong one is the one that got read.** The
+bullet sits under a heading arguing that these numbers are bodies rather than thresholds — a true and
+useful point about Earth and Io that is false about this pair, since 10–30 is neither a body nor
+measured. Both the bullet and that heading are corrected in the same commit as the code.
+
+**What the corrected ladder does that the floor version could not.** Venus's measured 78 mW/m²
+(Smrekar+ 2023) had been the ladder's embarrassment: on the floor version it read `stagnant lid`,
+agreeing with our anchor column for the wrong reason, and yesterday's note called the rung
+*superseded*. With the ceiling restored and split per body, 78 is **3.9× Venus's own 10–20** and the
+cell becomes `plutonic-squishy lid` — which is Reese's own criterion (*widespread melting*) joined to
+Lourenço+ 2020 §3.4's regime for a lid that stays immobile and carries melt. ⚠ **That join is ours**,
+in neither paper's words, and it is labelled as ours in the code. It does not collide with Smrekar+
+2018's *no plate tectonics on Venus*: squishy is a sub-kind of immobile lid. **The anomaly was the
+verdict.**
+
+**Two things this seat decided rather than was told, and both are reversible.**
+
+1. **The stagnant cell was given no floor.** The obvious build — brief 142's own sketch has it — makes
+   the Moon's 18 mW/m² the bottom rung. That is a real value a real body emits, so it would have been
+   a legitimate `analogy-rung`. ⚠ **It would also have consumed the only non-circular anchor this
+   ladder has.** The Moon is the one body that scores a cell it does not define; the moment it becomes
+   the rung, scoring the Moon against it is as empty as scoring Earth against Earth. A stagnant lid
+   needs no floor anyway — a colder body is *more* stagnant, not less — so the cell is bounded above
+   only, and `BELOW_LADDER` is gone: a cold body is a stagnant lid, and the Moon and Mars are measured
+   there.
+2. **A body with no published ceiling gets the Venus∪Mars union, 10–30, transferred to it.** ⚠ The
+   transfer is ours. Reese solved two bodies, and a conduction ceiling is a function of each body's
+   size, gravity and rheology. Every invented body in this project takes this path, so the label
+   travels in the output.
+
+**Three cells, three provenances, where yesterday all three shared one word.** `analogy-rung` was
+applied to the whole ladder; it fits only the heat-pipe rung now. Earth's 0.09 is bracketed by body
+text we hold (Lourenço's mobile-lid **total** 40–50 TW = 0.0784–0.0980 W/m²), and the stagnant ceiling
+carries a fifth origin word, **`abstract-level`**, because its paper's body is unread.
+
+⚠ **What caught this was a person, not the gate.** The floor version computed correctly, emitted its
+reasoning in words, and passed a full lane. A ceiling used as a floor is not a wrong number — it is a
+right number carrying the wrong sign of an inequality, and no check in this repo tests the direction of
+an inequality against its source. That is the same class as the two errors this seat was corrected on
+earlier: **the gate catches wrong values; it does not catch a conclusion given a status it has not
+earned.**
 
 ## What closing all of these does not do
 

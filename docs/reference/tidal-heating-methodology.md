@@ -55,8 +55,8 @@ Not emitted in v1: `radius_ceiling`, `plains_temperature` (§6.3–6.5, the lid 
 ## Contract — `heat_transport_mode`
 
 **Returns** — `mode` [—] · `total_surface_flux` [W/m2] · `regime_ladder_cell` [—] ·
-`regime_ladder_rung` [W/m2] · `regime_candidates` [—] · `regime_flux_cannot_decide` [—] ·
-`regime_excluded` [—]
+`regime_ladder_rung` [W/m2] · `regime_ladder_bound` [—] · `regime_candidates` [—] ·
+`regime_flux_cannot_decide` [—] · `regime_excluded` [—]
 **Needs** — `surface_flux` [W/m2] · `radiogenic_power` [W] · `radius_earth` [R_earth]
 **Discriminating keys** — the §6.2 table (plate tectonics · stagnant lid · heat pipe) read on the total surface flux.
 ⚠ **`mode` is that table's ladder cell, not a tectonic regime** (C46, 2026-09-07). The literature's
@@ -354,14 +354,25 @@ to carry essentially all of the power.
 boundary between modes. §6 already says so — *there is no published W/m² boundary between the modes,
 because the real criterion is melt fraction and any flux threshold is a conversion, not a citation* —
 and the §7 caution box says the same of this one: *2.5 W/m² itself agrees with Io's measured output*.
-Read the column as three measured bodies, not three thresholds.
+Read the column as **two measured bodies and one modelled ceiling pair**, not three thresholds.
 
 - **2.5 W/m² is one body's result.** Kankanamge & Moore 2019 solve their system for Io's parameters
   and report *"The heat flux carried by melt, Fm is 2.5 W/m², while that by conduction is 9 mW/m²"*.
   It is Io's melt-carried flux under their model. (The other half of that same sentence, *"totaling
   ∼1 TW"*, is the one §7 warns against transcribing: half a sentence is a mode boundary here, half is
   flagged as not transcribable.)
-- **0.09 W/m² is Earth** and **10–30 mW/m² is the Venus and Mars pair.** Same reading.
+- **0.09 W/m² is Earth**, and that one is a measurement. **10–30 mW/m² is neither one body nor a
+  measurement.** Reese, Solomatov & Moresi 1998
+  ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R), ⚠ **body not held —
+  ADS abstract only**) prints *"For Venus, the critical heat flux which can be removed without
+  widespread melting is only 10-20 mW/m². For Mars, it is 15-30 mW/m²"*, obtained from *"thermal
+  boundary layer analyses as well as finite element simulations of stagnant lid convection with
+  non-Newtonian viscosity"*. So it is **two model outputs, for two bodies, and each one a ceiling its
+  own body must stay under** — not a flux either body was seen to emit. ⚠ **This line used to read
+  "10–30 mW/m² is the Venus and Mars pair", which dropped the word *ceiling* and merged the two
+  bodies.** The table at the head of this section keeps both facts; someone reading only this bullet
+  rebuilt the ceiling as a floor, and every body under it came out one cell too high. Corrected
+  2026-09-07.
 - **The clearest evidence that these are bodies and not boundaries**: feed §6.1's own Io figure,
   ~2 W/m² (Veeder+ 2012), into the ladder and Io comes back `unclassified` — the anchor body of the
   heat-pipe row is not classified as a heat pipe by this document's other number for the same body.

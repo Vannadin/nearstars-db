@@ -136,23 +136,41 @@ def main() -> int:
        "4d/C46: across four decades of flux the candidate set never narrows below three — that is the "
        "result, not a failure to classify")
 
-    # ── 4e. C46 사다리 (오너 결정 2026-09-07): 넘긴 눈금 중 가장 높은 칸으로 확정 ─────────────
+    # ── 4e. C46 사다리 (오너 결정 2026-09-07, brief 142 로 방향 정정) ─────────────────────────
     # ⚠ 이 시험이 지키는 것은 "지구가 plate 로 나온다" 가 **아니다** — 그 눈금이 지구이므로 그건
-    # 증거가 아니다. 지키는 것은 (1) 눈금이 §6.2 가 인쇄한 천체 값 그대로일 것, (2) 금성 오차가
-    # 칸 둘을 가로지른다는 사실, (3) 최저 눈금 밑에 별도 상태가 있을 것, (4) 사다리가 밴드를
-    # 지우지 않을 것.
-    ok([f for _n, f, _w in th.REGIME_LADDER] == [0.010, 0.09, 2.5],
-       f"4e/C46: the rungs must be §6.2's printed body values, unchanged; got {th.REGIME_LADDER}")
+    # 증거가 아니다. 지키는 것은 (1) 바닥이 §6.2 가 인쇄한 천체 값일 것, (2) 정체뚜껑이 바닥
+    # 목록에 **없을** 것(그 칸은 천장으로만 잘린다), (3) 바디별 천장이 갈라진 채일 것, (4) 금성
+    # 오차가 칸 셋을 가로지른다는 사실, (5) 사다리가 밴드를 지우지 않을 것.
+    ok([f for _n, f, _g, _w in th.REGIME_LADDER] == [0.09, 2.5],
+       f"4e/C46: the FLOORS are §6.2's printed body values and the stagnant cell is NOT among them — "
+       f"a colder body is more stagnant, not less, so that cell has no floor; got {th.REGIME_LADDER}")
+    ok(not hasattr(th, "BELOW_LADDER"),
+       "4e/C46: there is no 'below the ladder' state any more — a cold body IS a stagnant lid, and "
+       "the Moon and Mars are measured there")
+    ok(th.stagnant_lid_ceiling_for("venus")[0] == 0.020 and th.stagnant_lid_ceiling_for("mars")[0] == 0.030,
+       f"4e/C46: ⚠ Reese+ 1998 prints Venus 10–20 and Mars 15–30 as DIFFERENT ceilings. Merging them "
+       f"into one number is what let a ceiling be rebuilt as a floor; got "
+       f"{th.stagnant_lid_ceiling_for('venus')[0]} / {th.stagnant_lid_ceiling_for('mars')[0]}")
     ok(th.regime_ladder_cell(0.0902)[0] == "plate tectonics" and
        abs(0.0902 / 0.09 - 1) < 0.005,
        "4e/C46: Earth's measured flux sits on the Earth rung with 0.2 % to spare — a tautology, "
        "recorded so nobody reads it as a verdict")
-    v_lo, v_mid, v_hi = (th.regime_ladder_cell(f)[0] for f in (0.009, 0.078, 0.147))
-    ok(v_lo == th.BELOW_LADDER and v_mid == "stagnant lid" and v_hi == "plate tectonics",
-       f"4e/C46: ⚠ Venus's 78±69 mW/m² spans THREE states — {v_lo!r} / {v_mid!r} / {v_hi!r}. One "
-       f"error bar crosses the ladder, which is the honest reading of a one-cell answer")
-    ok(th.regime_ladder_cell(0.005)[1] is None,
-       "4e/C46: below the lowest rung there is a named state, not a silent stagnant lid")
+    moon = th.regime_ladder_cell(0.018)
+    ok(moon[0] == th.STAGNANT_LID_CELL and moon[2] == "ceiling",
+       f"4e/C46: the Moon's 18 mW/m² (Langseth+ 1976, in situ) reads stagnant lid, bounded by a "
+       f"CEILING and not a floor. ⚠ It is the only body that anchors no rung, so it is the only "
+       f"non-circular score this ladder has; got {moon[0]!r} by {moon[2]!r}")
+    ok(th.regime_ladder_cell(0.019, "mars")[0] == th.STAGNANT_LID_CELL,
+       "4e/C46: Mars's 19 mW/m² (Parro+ 2017) is under its OWN 15–30 ceiling — the method behind the "
+       "19 is unrelated to the ceiling, but the ceiling is still Mars's own, so the score is partly "
+       "circular")
+    v_lo, v_mid, v_hi = (th.regime_ladder_cell(f, "venus")[0] for f in (0.009, 0.078, 0.147))
+    ok(v_lo == th.STAGNANT_LID_CELL and v_mid == th.CEILING_EXCEEDED_CELL and
+       v_hi == "plate tectonics",
+       f"4e/C46: ⚠ Venus's 78±69 mW/m² spans THREE cells — {v_lo!r} / {v_mid!r} / {v_hi!r}. And the "
+       f"middle one is the measurement: 78 is 3.9× Venus's own 20 mW/m² ceiling, so the ladder now "
+       f"disagrees with our §6.2 anchor column (which labels Venus a stagnant lid) and agrees with "
+       f"Reese+ 1998's own criterion instead")
     both = th.solve_mode(surface_flux=0.0902, radiogenic_power=None, radius_earth=1.0).values
     ok(both["regime_ladder_cell"] == "plate tectonics" and len(both["regime_candidates"]) == 4,
        "4e/C46: the one-cell answer travels BESIDE the band, so a reader sees how thin it is")
@@ -168,7 +186,7 @@ def main() -> int:
     if not fails:
         print(f"  [PASS] 조석 가열 — 이오 Ė {p_io:.3e} W (밴드 0.6–1.6e14 안, P {2 * math.pi / n_io / 86400:.3f} d) · 판도라 F {pan.values['surface_flux']:.2f} W/m² "
               f"(보드 45, {(pan.values['surface_flux'] / 45 - 1) * 100:+.2f} %) {pan.values['io_power_ratio']:.0f}× Io → {th.REGIME_VIGOROUS[:9]}… / {th.MODE_HEAT_PIPE} · "
-              f"×Io 규약 R⁵ · 라벨 표 둘 · 정체뚜껑 선택지 3/4 대 1/4 · 거절 4 · ⚠ C46 열류=체(지구 배제 0 · 측정 금성 배제 0 · 후보 3 미만 없음) · C46 사다리(눈금=§6.2 천체값 · 금성 오차가 칸 셋 가로지름 · 최저 밑 별도 상태 · 밴드 동반)")
+              f"×Io 규약 R⁵ · 라벨 표 둘 · 정체뚜껑 선택지 3/4 대 1/4 · 거절 4 · ⚠ C46 열류=체(지구 배제 0 · 측정 금성 배제 0 · 후보 3 미만 없음) · C46 사다리(바닥=§6.2 천체값 · 정체뚜껑은 천장으로만 · 바디별 천장 갈림 · 달 18 비순환 · 금성 78 = 자기천장 3.9× · 밴드 동반)")
     return 1 if fails else 0
 
 

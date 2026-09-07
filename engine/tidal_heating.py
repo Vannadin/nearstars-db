@@ -147,41 +147,102 @@ REGIME_PRINTED_TW = {
 
 
 #: ⚠ **넷째 출처 단어.** `bands.py` 의 printed/chosen/unchosen 도 `provisional.PROVISIONAL` 도 아니다.
-#: 이 사다리의 눈금은 **경계를 잰 값이 아니라 우리가 아는 천체가 실제로 내는 값**이다. §6.2 자신이
-#: 그렇게 적는다 — doc @«**0.09 W/m² is Earth** and **10–30 mW/m² is the Venus and Mars pair.**»
-#: 그래서 이 사다리는 분류기가 아니라 **유추 눈금**이고, 하는 말은 *"지구만 한 열이면 지구만 한
-#: 지각"* 이다. 그 문장이 출력에 그대로 실려야 한다.
+#: 이 사다리의 **바닥(floor)** 은 경계를 잰 값이 아니라 우리가 아는 천체가 실제로 내는 값이다.
+#: 그래서 사다리는 분류기가 아니라 **유추 눈금**이고, 하는 말은 *"지구만 한 열이면 지구만 한
+#: 지각"* 뿐이다. 그 문장이 출력에 그대로 실려야 한다.
+#: ⚠ 어제는 이 단어를 사다리 세 칸 전부에 붙였는데 **셋의 출처가 다르다.** 이제 칸마다 자기
+#: 등급을 들고 다닌다 — 아래 `REGIME_LADDER` 셋째 항.
 ANALOGY_RUNG = "analogy-rung"
 
-#: 오름차순. 천체의 총 플럭스가 넘긴 눈금 중 **가장 높은 것**의 칸으로 확정한다 (오너 결정
-#: 2026-09-07). 천장이 없어도 사다리가 서고, 맨 위 칸에 천장이 없으니 `unclassified` 가 사라진다.
+#: ⚠ **다섯째 출처 단어 — 본문 미보유.** 초록에 인쇄된 수는 근거로 쓰되 이 등급을 붙인다.
+#: Reese, Solomatov & Moresi 1998 은 ADS 초록만 있고 본문은 AGU·ADS 스캔이 전부 403 이다.
+ABSTRACT_LEVEL = "abstract-level"
+
+#: ⚠ **정정 2026-09-07 (brief 142) — 어제 이 사다리의 맨 아래 눈금은 천장을 뒤집어 만든 것이었다.**
+#: `10–30 mW/m²` 는 바닥이 아니라 **천장**이고, 한 수가 아니라 **바디별로 다른 두 수**다.
+#: Reese, Solomatov & Moresi 1998 (1998JGR...10313643R, ⚠ 본문 미보유 · 초록만) 초록 원문:
+#:   «For Venus, the critical heat flux which can be removed without widespread melting is only
+#:    10-20 mW/m². For Mars, it is 15-30 mW/m².»
+#: 방법은 «thermal boundary layer analyses as well as finite element simulations of stagnant lid
+#: convection with non-Newtonian viscosity» — **모형 출력이지 측정이 아니다.**
+#: ⚠ 그리고 **우리 문서는 이미 맞게 적어놨다.** §6.2 표가 그 수를 `ceiling` 이라 부르고 두 바디를
+#: `Venus 10–20, Mars 15–30` 으로 갈라 둔다. 거꾸로 선 것은 문서가 아니라 그 표 **아래 산문 한 줄**
+#: (*"10–30 mW/m² is the Venus and Mars pair"* — 천장이라는 말이 빠지고 두 바디가 뭉쳐 있다) 이고,
+#: 그 줄만 읽고 세운 눈금이 뒤집혔다. 같은 커밋에서 그 산문도 고친다.
+STAGNANT_LID_CEILING_BY_BODY = {
+    "venus": (0.010, 0.020),
+    "mars": (0.015, 0.030),
+}
+
+#: 오름차순 **바닥**. 천체의 총 플럭스가 넘긴 바닥 중 **가장 높은 것**의 칸으로 확정한다 (오너
+#: 결정 2026-09-07). 셋째 항은 그 칸 자신의 출처 등급이다 — 어제는 셋이 한 단어를 공유했다.
+#: ⚠ **정체뚜껑은 이 사다리에 없다 — 바닥이 없기 때문이다.** 더 차가운 천체는 정체뚜껑에서
+#: 벗어나는 것이 아니라 **더 정체뚜껑**이 된다. 문헌이 그 칸에 인쇄한 것은 천장 하나뿐이므로
+#: 정체뚜껑은 사다리 **밑의 기본값**이고 위로만 잘린다. 그래서 `BELOW_LADDER` 가 사라졌다 —
+#: 차가운 천체는 이름 없는 상태가 아니라 정체뚜껑이고, 달과 화성이 실제로 거기 있다.
 #: ⚠ **사다리 규칙은 우리 것이다.** 문헌은 열류로 체제를 가르지 않는다 — 판별자는 mobility 와
-#: plateness 이고(Lourenço §3.1·§3.3) 둘 다 4.5 Gyr 시뮬레이션 출력이라 관측할 수 없다. 문서가
-#: 적어 둔 *"어떤 플럭스 문턱이든 환산이지 인용이 아니다"* 는 이제 이 사다리에 대한 정확한 설명이다.
+#: plateness 이고(Lourenço §3.1·§3.3) 둘 다 4.5 Gyr 시뮬레이션 출력이라 관측할 수 없다.
 REGIME_LADDER = (
-    ("stagnant lid", 0.010,
-     "§6.2 prints 10–30 mW/m² for the Venus and Mars pair. ⚠ ORIGINALLY A CEILING, USED HERE AS A "
-     "FLOOR — the form changed, and the value did not"),
-    ("plate tectonics", 0.09,
-     "§6.2 prints 0.09 W/m² for Earth. ⚠ Independently bracketed: Lourenço+ 2020 §4.3's mobile-lid "
-     "total of 40–50 TW is 0.0784–0.0980 W/m² over Earth's area, and 0.09 falls inside it; that "
-     "paper's own Earth reference is 44.4 TW = 0.0870 W/m² (Turcotte & Schubert 2014)"),
-    ("heat pipe", 2.5,
-     "§6.2 prints Io's 2.5 W/m², and the document already calls it a floor rather than a boundary"),
+    ("plate tectonics", 0.09, "held body text",
+     "§6.2 prints 0.09 W/m² for Earth, and Earth's is a measurement — 92.1 mW/m², 47±2 TW from "
+     "38,347 observations (2010SolE....1....5D). ⚠ Independently bracketed by body text we hold: "
+     "Lourenço+ 2020 §4.3's mobile-lid TOTAL of 40–50 TW is 0.0784–0.0980 W/m² over Earth's area "
+     "and 0.09 falls inside it; that paper's own Earth reference is 44.4 TW = 0.0870 W/m²"),
+    ("heat pipe", 2.5, ANALOGY_RUNG,
+     "§6.2 prints Io's 2.5 W/m² — Kankanamge & Moore 2019's melt-carried flux for Io's parameters, "
+     "one body's model result and not a boundary; the document already calls it a floor. ⚠ This is "
+     "the one rung that is still nothing but an analogy to a single body"),
 )
-BELOW_LADDER = "below the lowest rung — no known body anchors this range"
+STAGNANT_LID_CELL = "stagnant lid"
+#: 천장을 넘긴 정체뚜껑. ⚠ **이 칸 이름은 우리 것이고, 논문 둘을 이어 붙인 것이다** — 어느 쪽
+#: 문장도 아니다. Reese+ 1998 은 천장을 넘긴 정체뚜껑이 «widespread melting» 에 든다고만 하고,
+#: Lourenço+ 2020 §3.4 의 plutonic-squishy lid 는 *부동인 채 용융을 나르는* 뚜껑이다(plateness
+#: ≥ 0.4, mobility 는 여전히 낮음). "널리 녹는다" 에서 그 체제 이름으로 가는 걸음이 우리 것이다.
+#: Smrekar+ 2018 의 *"금성에 판구조 없음"* 과 부딪히지 않는다 — squishy 는 부동 뚜껑의 하위 종류다.
+CEILING_EXCEEDED_CELL = "plutonic-squishy lid (its stagnant-lid ceiling is exceeded)"
 
 
-def regime_ladder_cell(total_flux_w_m2: float) -> tuple:
-    """확정 칸 하나. (칸, 눈금값, 그 눈금의 근거) — 넘긴 눈금 중 가장 높은 것.
+def stagnant_lid_ceiling_for(body: str | None = None) -> tuple:
+    """이 바디의 전도 천장 (값 [W/m²], 근거). 바디별 수가 있으면 그것, 없으면 두 바디의 합집합.
 
-    ⚠ 이것은 문헌의 판정이 아니라 **우리 규칙**이고, 눈금은 천체가 내는 값이지 경계가 아니다."""
-    passed = [(n, f, w) for n, f, w in REGIME_LADDER if total_flux_w_m2 >= f]
-    if not passed:
-        return (BELOW_LADDER, None,
-                f"{total_flux_w_m2:.4g} W/m² is under the lowest rung {REGIME_LADDER[0][1]:g}; no "
-                f"known body sits here, so the ladder has nothing to compare it with")
-    return passed[-1]
+    ⚠ 합집합을 다른 바디에 쓰는 것은 **우리 전이**다 — Reese+ 1998 은 금성과 화성만 풀었고,
+    천장은 그 바디의 크기·중력·점성의 함수라 다른 바디에 대해 인쇄된 적이 없다."""
+    end_high = STAGNANT_LID_CEILING.value == STAGNANT_LID_CEILING.high
+    key = (body or "").lower()
+    if key in STAGNANT_LID_CEILING_BY_BODY:
+        lo, hi = STAGNANT_LID_CEILING_BY_BODY[key]
+        v = hi if end_high else lo
+        return (v, f"{body}'s own printed ceiling {lo*1e3:g}–{hi*1e3:g} mW/m² read at the "
+                   f"{'high' if end_high else 'low'} end (Reese+ 1998, 1998JGR...10313643R, "
+                   f"⚠ abstract-level: body not held)")
+    return (STAGNANT_LID_CEILING.value,
+            f"no ceiling has ever been printed for this body, so the Venus∪Mars union "
+            f"{STAGNANT_LID_CEILING.low*1e3:g}–{STAGNANT_LID_CEILING.high*1e3:g} mW/m² is "
+            f"transferred to it at the {'high' if end_high else 'low'} end — ⚠ **the transfer is "
+            f"ours**; Reese+ 1998 solved two bodies and a ceiling is a function of each body's "
+            f"size, gravity and rheology")
+
+
+def regime_ladder_cell(total_flux_w_m2: float, body: str | None = None) -> tuple:
+    """확정 칸 하나. (칸, 그 칸을 정한 수, 그 수가 `floor` 인지 `ceiling` 인지, 근거).
+
+    위쪽 칸들은 **바닥**으로 확정하고, 밑바닥의 정체뚜껑은 **천장**으로 확정한다 — 그 칸에
+    문헌이 인쇄한 것이 천장뿐이기 때문이다. ⚠ 사다리 규칙은 문헌의 판정이 아니라 우리 것이다."""
+    passed = [r for r in REGIME_LADDER if total_flux_w_m2 >= r[1]]
+    if passed:
+        name, floor, grade, why = passed[-1]
+        return (name, floor, "floor", f"{why} [rung origin: {grade}]")
+    ceiling, ceiling_why = stagnant_lid_ceiling_for(body)
+    if total_flux_w_m2 > ceiling:
+        return (CEILING_EXCEEDED_CELL, ceiling, "ceiling",
+                f"{total_flux_w_m2*1e3:.4g} mW/m² is {total_flux_w_m2/ceiling:.3g}× the "
+                f"{ceiling*1e3:g} mW/m² a stagnant lid can conduct away without widespread "
+                f"melting, and it is under the {REGIME_LADDER[0][1]:g} W/m² plate rung — so the "
+                f"lid is neither conducting nor recycling. {ceiling_why}")
+    return (STAGNANT_LID_CELL, ceiling, "ceiling",
+            f"{total_flux_w_m2*1e3:.4g} mW/m² is within what a stagnant lid conducts away without "
+            f"widespread melting. ⚠ There is no floor here and none is wanted — a colder body is "
+            f"MORE stagnant, not less. {ceiling_why}")
 
 
 def regime_candidates(total_flux_w_m2: float, radius_earth: float) -> dict:
@@ -318,7 +379,7 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     total = (surface_flux or 0.0) + radiogenic_flux
     mode = transport_mode(total)
     # C46 (b): 우리 칸 이름은 **체제 이름이 아니다.** §6.2 사다리의 칸이고, 문헌 체제는 따로 낸다.
-    cell, rung, rung_why = regime_ladder_cell(total)
+    cell, bound, bound_kind, rung_why = regime_ladder_cell(total)
     cand = regime_candidates(total, radius_earth)
     compatible = sorted(k for k, (v, _w) in cand.items() if v == "compatible")
     undecided = sorted(k for k, (v, _w) in cand.items() if v == "cannot decide")
@@ -331,14 +392,17 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     else:
         parts.append("radiogenic absent")
     ladder_note = (
-        f"⚠ `regime_ladder_cell` = {cell!r}, fixed by the highest rung the flux passed"
-        + (f" ({rung:g} W/m²)" if rung is not None else "") + f". {rung_why} "
-        f"⚠ **The ladder rule is OURS, origin `{ANALOGY_RUNG}`** — not the literature's verdict and not "
-        f"a measured boundary. Its rungs are what bodies we know actually radiate, so the ladder says "
-        f"*'Earth's worth of heat, Earth's worth of crust'* and nothing stronger. The literature cuts "
-        f"these regimes on mobility and plateness (Lourenço+ 2020 §3.1, §3.3), which are outputs of a "
-        f"4.5 Gyr simulation. ⚠ Earth coming out `plate tectonics` is therefore **not evidence** — that "
-        f"rung IS Earth, and its margin is 0.2 %.")
+        f"⚠ `regime_ladder_cell` = {cell!r}, fixed by its {bound_kind} at {bound * 1e3:g} mW/m². "
+        f"{rung_why} "
+        f"⚠ **The ladder rule is OURS** — not the literature's verdict and not a measured boundary. "
+        f"Above the plate rung it stands on FLOORS, which are what bodies we know actually radiate, so "
+        f"it says *'Earth's worth of heat, Earth's worth of crust'* and nothing stronger. Below that "
+        f"rung it stands on a CEILING instead, because a ceiling is the only thing the literature "
+        f"prints for a stagnant lid (Reese+ 1998, ⚠ `{ABSTRACT_LEVEL}` — body not held) and a stagnant "
+        f"lid has no floor at all. The literature cuts these regimes on mobility and plateness "
+        f"(Lourenço+ 2020 §3.1, §3.3), which are outputs of a 4.5 Gyr simulation. ⚠ Earth coming out "
+        f"`plate tectonics` is therefore **not evidence** — that rung IS Earth, and its margin is "
+        f"0.2 %; the one cell no body of ours anchors is the stagnant one, where the Moon sits.")
     regime_note = (
         f"C46: flux is a sieve, not a classifier. Compatible with {len(compatible)} literature regime(s) "
         f"({', '.join(compatible) or 'none'}); excluded {', '.join(excluded) or 'none'}; "
@@ -359,12 +423,14 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
                   reason=f"total surface flux {total:.4g} W/m² → {mode}",
                   grade="analog", inputs=inputs,
                   values={"mode": mode, "total_surface_flux": total,
-                          "regime_ladder_cell": cell, "regime_ladder_rung": rung,
+                          "regime_ladder_cell": cell, "regime_ladder_rung": bound,
+                          "regime_ladder_bound": bound_kind,
                           "regime_candidates": compatible,
                           "regime_flux_cannot_decide": undecided,
                           "regime_excluded": excluded},
                   units={"mode": "", "total_surface_flux": "W/m2", "regime_candidates": "",
                          "regime_ladder_cell": "", "regime_ladder_rung": "W/m2",
+                         "regime_ladder_bound": "",
                          "regime_flux_cannot_decide": "", "regime_excluded": ""},
                   refs=refs, notes=notes)
 
