@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | At `t₀ = 0` the pulse is **12.2×** the whole long-lived budget and **3.93×** the sensible heat to the silicate solidus, but it decays with `τ ≈ 1.03 Myr`, so **the answer is `t₀`** — which no body declares. The refusal is renamed, not lifted. ⚠ Two statements kept apart: the threshold is about physics and testable; *our* moons sitting below it is about our design choices and is not. The agreement with C9's band is **not** an independent closure — same paper |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | At `t₀ = 0` the pulse is **9.59×** the whole long-lived budget and **3.09×** the sensible heat to the silicate solidus, decaying with `τ ≈ 1.03 Myr`, so **the answer is `t₀`** — which no body declares. ⚠ At **30 % rock it reaches only 0.928×**, so an ice-rich moon is not melted at all, before latent heat is counted. Energies are heat-effective (`E_H`, neutrino subtracted); an earlier version used the total `Q` and ran 1.271× high |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -2130,25 +2130,50 @@ Carlson & Lugmair 2000), and its *"major role … for 10 to 100 km size objects"
 **Yoshino et al. 2003**, not a Monteux result. **The premise this item has been quoting belongs to a
 paper we do not hold.**
 
-**The constants come from Neumann+ 2019**
-([`2019ApJ...882...47N`](https://ui.adsabs.harvard.edu/abs/2019ApJ...882...47N), held), Table 2, which
-prints all four: decay energy `6.416×10⁻¹³ J`, half-life `7.17×10⁵ a`, stable-isotope mass fraction
-`8.86×10⁻³`, initial ratio `5.25×10⁻⁵`. ⚠ **Read from the publisher's HTML table cells, not from a page
-image** — the cache holds no PDF for this paper. Cell boundaries remove the layout guessing that a PDF
-text extraction requires, which is the failure mode that cost a factor of 4.4 on 2026-09-06.
+**The constants.** Abundances from Neumann+ 2019
+([`2019ApJ...882...47N`](https://ui.adsabs.harvard.edu/abs/2019ApJ...882...47N), held), Table 2 —
+stable-isotope mass fraction `8.86×10⁻³`, initial ratio `5.25×10⁻⁵`. ⚠ **Read from the publisher's HTML
+table cells, not a page image** — the cache holds no PDF for this paper, and cell boundaries remove the
+layout guessing that cost a factor of 4.4 on 2026-09-06.
+
+⚠ **The energy is NOT that table's `6.416×10⁻¹³ J`, and an earlier version of this section used it.**
+Ruedas 2017 ([`2017GGG....18.3530R`](https://ui.adsabs.harvard.edu/abs/2017GGG....18.3530R), held)
+Table 2 prints both quantities for ²⁶Al in one row, and the difference is the whole point:
+
+| | keV | J | what it is |
+|---|---|---|---|
+| `Q` | 4004.393 | 6.416×10⁻¹³ | total decay energy — **identical to Neumann's figure** |
+| `E_H` | 3150.155 | **5.047×10⁻¹³** | heat-effective, after the neutrino is subtracted |
+| `H` | | 0.3583 W/kg | specific heat production per kg of ²⁶Al |
+
+Ruedas states why: *"a part `E_ν` of the energy is carried away by a neutrino or antineutrino, whose
+interaction with matter is almost nil and **which therefore does not contribute to heat production**"*,
+giving `E_H = (m_P − m_D)c² − E_ν`. **A neutrino does not warm a moon.** Every number below uses `E_H`,
+and the earlier ones were **1.271× too high**.
+
+⚠ **This was not a conflict between sources — it was one seat's inconsistency.** Bierson & Nimmo 2019
+([`2019Icar..326...10B`](https://ui.adsabs.harvard.edu/abs/2019Icar..326...10B), held) print
+`0.355 W/kg`, within 0.9 % of Ruedas's `H`, and this section first read that 28 % gap as two papers
+disagreeing. They never did. **What made it visible was a falsification test**: our own long-lived
+table agrees with Ruedas to 0.1–1.5 % on all four nuclides, so it is already heat-effective — and the
+question became *why does only ²⁶Al differ?* **Because only there had `Q` been substituted by hand.**
+
+⚠ **And an argument used the day before was weaker than it looked.** "Our long-lived table matches
+theirs, so the conventions match" — our table is Nimmo & Primack, theirs is Robuchon & Nimmo. **Shared
+lineage, not agreement.** Ruedas is the third lineage that actually settles it.
 
 **Three axes, because the three ask different questions.** The pulse's energy per kilogram does not
 depend on body size; size enters only by changing what it is compared against.
 
 | what the pulse is compared with | J/kg | pulse ÷ it, at `t₀ = 0` |
 |---|---|---|
-| long-lived K·Th·U, integrated over 4.5 Gyr | 5.461×10⁵ | **12.2×** |
-| sensible heat to the surface solidus | 1.693×10⁶ | **3.93×** |
-| gravitational binding, Chaos (400 km) | 5.405×10⁴ | 123× |
-| gravitational binding, Dante (521 km) | 1.193×10⁵ | 55.8× |
-| gravitational binding, Hades (750 km) | 2.669×10⁵ | 25.0× |
-| gravitational binding, Cassandra (3400 km) | 1.060×10⁷ | 0.628× |
-| gravitational binding, Pandora (5724 km) | 2.693×10⁷ | 0.247× |
+| long-lived K·Th·U, integrated over 4.5 Gyr | 5.461×10⁵ | **9.59×** |
+| sensible heat to the surface solidus | 1.693×10⁶ | **3.09×** |
+| gravitational binding, Chaos (400 km) | 5.405×10⁴ | 96.9× |
+| gravitational binding, Dante (521 km) | 1.193×10⁵ | 43.9× |
+| gravitational binding, Hades (750 km) | 2.669×10⁵ | 19.6× |
+| gravitational binding, Cassandra (3400 km) | 1.060×10⁷ | 0.494× |
+| gravitational binding, Pandora (5724 km) | 2.693×10⁷ | 0.195× |
 
 The first axis is the one this section specified. **The second is the question Yoshino's claim actually
 makes** — differentiation — built from engine materials: `C_PM` 1200 J/(kg·K) (`mantle_flux.py`, eq. 32)
@@ -2162,14 +2187,14 @@ large two.
 
 | `t₀` [Myr] | remaining pulse [J/kg] | ÷ long-lived | ÷ solidus requirement |
 |---|---|---|---|
-| 0 | 6.661×10⁶ | 12.2× | 3.93× |
-| 1 | 2.534×10⁶ | 4.64× | 1.50× |
-| 2 | 9.637×10⁵ | 1.76× | 0.569× |
-| 3 | 3.665×10⁵ | 0.671× | 0.216× |
-| 5 | 5.301×10⁴ | 0.097× | 0.031× |
+| 0 | 5.240×10⁶ | 9.59× | 3.09× |
+| 1 | 1.993×10⁶ | 3.65× | 1.18× |
+| 2 | 7.580×10⁵ | 1.39× | 0.448× |
+| 3 | 2.883×10⁵ | 0.528× | 0.170× |
+| 5 | 4.170×10⁴ | 0.076× | 0.025× |
 
 **A closure, and ⚠ a correction to how it was first described.** The `t₀` at which the pulse exactly
-meets the melting requirement comes out at **1.42–1.44 Myr**, and C9's paragraph prints *"for the wet
+meets the melting requirement comes out at **1.17–1.19 Myr**, and C9's paragraph prints *"for the wet
 olivine rheology successful models live in t₀ ≈ 1.3–1.9 Ma (§3.3)"*. The threshold lands inside that
 band.
 
@@ -2202,21 +2227,24 @@ like the strongest result of the day, and it survived one round of reporting bef
 compared. **A closure is only as independent as its least independent input**, and checking that means
 reading the citation, not the claim.
 
-**The three printed half-lives do not matter.** 0.73 My (Monteux), ≈0.72 Myr (Kimura), 7.17×10⁵ a
-(Neumann) move that threshold 1.4424 → 1.4226 → 1.4167 Myr — **1.8 % across the whole spread.** Per
-this engine's convention, all three are carried and none is elected.
+**The printed half-lives do not matter.** 0.73 My (Monteux), ≈0.72 Myr (Kimura), 7.17×10⁵ a (Neumann),
+0.717 My (Ruedas) move that threshold 1.1896 → 1.1733 → 1.1684 Myr — **1.8 % across the whole spread.**
+Per this engine's convention, all are carried and none is elected.
 
 ⚠ **Composition does matter, and our moons have ice.** The pulse scales with the rock fraction, since
 aluminium rides in the silicate:
 
 | rock mass fraction | pulse [J/kg] | ÷ solidus requirement |
 |---|---|---|
-| 1.0 | 6.661×10⁶ | 3.93× |
-| 0.7 | 4.663×10⁶ | 2.75× |
-| 0.5 | 3.331×10⁶ | 1.97× |
-| 0.3 | 1.998×10⁶ | 1.18× |
+| 1.0 | 5.240×10⁶ | 3.09× |
+| 0.7 | 3.668×10⁶ | 2.17× |
+| 0.5 | 2.620×10⁶ | 1.55× |
+| 0.3 | 1.572×10⁶ | ⚠ **0.928×** |
 
-At 30 % rock the margin is 18 %, which the excluded latent heat could erase on its own.
+⚠ **At 30 % rock the pulse no longer melts the body at all — and that is before latent heat is added.**
+On the earlier `Q`-based numbers this row read 1.18×, an 18 % margin. It is now short by 7 %. Adding
+the missing latent heat puts the 50 % row in the same position. **Our moons carry ice**, so this is not
+a corner case of the table; it is the part of the table that describes them.
 
 ⚠ **Two numbers in the source disagree with each other.** Neumann defines `f_i` as *"the number of
 atoms of **the stable isotope** per 1 kg"* and then prints `f_i = 10³ x_i N_A / m_{a,i}` *"with the
@@ -2227,11 +2255,12 @@ no initial heat-production rate to close against. The discriminant is recorded s
 meets an ordinary-chondrite ²⁶Al figure can settle it without going looking: **`H₀ = 2.041×10⁻⁷ W/kg`
 for 26.98, `2.118×10⁻⁷ W/kg` for 26.**
 
-⚠ **Two limits travel with the conclusion, not in an appendix.** The melting requirement **excludes
-latent heat** — no held source gives one for silicate — so it is a lower bound and every ratio against
-it is an upper bound. And the pulse scales with rock fraction: **at 30 % rock the margin is 18 %, which
-the excluded latent heat could erase by itself.** Our moons carry ice. Neither limit is a footnote to
-the result; they bound how far it may be carried.
+⚠ **The limit that now decides an outcome, kept beside the conclusion.** The melting requirement still
+**excludes latent heat** — no held source gives one for silicate — so it is a lower bound and every
+ratio against it is an upper bound. **With the energy corrected to `E_H`, that no longer only bounds
+the result; it settles a row.** At 30 % rock the pulse reaches **0.928×** the requirement, so an
+ice-rich moon is not melted by the formation pulse **before latent heat is even counted**, and adding
+it puts the 50 % row in the same place. Our moons carry ice.
 
 **What this changes.** ⚠ **The refusal is not lifted; it is renamed.** It was *"we have no input"*. It is
 now *"the input has narrowed to one: `t₀`"* — the formation time after CAIs, which no body declares and
