@@ -4332,6 +4332,92 @@ regimes would, which is why Foley & Bercovici is the one worth a build if the ow
 
 **Nothing was changed in the engine.** No node, no edge, no value, no constant transcribed.
 
+### C47 (d) 2026-09-08 — the declared-regime path already exists, runs the other way, and the law contradicts the declaration it would serve
+
+**Guardrail ① asked for a sweep of the grade names before a fifth one was coined. The sweep found the
+word already in use, and then found the module that uses it.**
+
+**The vocabulary, swept.** Four axes, and they do not collide:
+
+| axis | words | where |
+|---|---|---|
+| `Result.grade` | `measured` · `calibrated` · `analog` · `judgment` · `authored` | `payload.GRADES` |
+| `Band.value_origin` | `printed` · `chosen` | `bands.py` |
+| `Band.pick` | `printed` · `chosen` · `unchosen`, plus `provisional` as a fourth pick word | `bands.py`, `provisional.py` |
+| ladder rung origin | `analogy-rung` · `abstract-level` · `held body text` | `tidal_heating.py` |
+
+⚠ **A fifth word is not needed, because `declared` already exists.** `engine/tidal_transport.py` has
+carried `mode=dict(value=mode, provenance="declared")` since **Brief 35, 2026-09-01**, on a `provenance`
+axis of its own. Coining a grade for declared regimes would duplicate a word this engine has been using
+for a week.
+
+⚠ **And the sweep turned up an inconsistency this seat made yesterday**: `REGIME_LADDER`'s third rung
+origin is the bare literal `"held body text"` while its two siblings are named constants
+(`ANALOGY_RUNG`, `ABSTRACT_LEVEL`). Three origins, two of them named. Not repaired in this section —
+recorded so it is repaired deliberately rather than noticed again.
+
+**⚠ The bigger find: D is already built, and it runs the other way.** `engine/tidal_transport.py`,
+Brief 35, opens with *"Ė → (internal temperature, lithosphere thickness) under a **DECLARED** transport
+mode"* and argues D's exact case — *"수송 모드는 **선언**이고 도출이 아니다"*, citing Kankanamge & Moore
+2019 §6 doing the same thing (*"the internal heating rate is chosen to satisfy the observed thermal
+emission"*). Its `TRANSPORT_MODES` are `heat-pipe`, `stagnant-lid`, `plate-tectonics`.
+
+But three things separate it from what D needs:
+
+1. ⚠ **The flux is an INPUT, not an output.** It takes `surface_flux_wm2`, sets `H = F_s / D`, and
+   returns internal temperature, lithosphere thickness, and the melt/conductive **split** of the flux it
+   was given. **Flux in, state out.** D asks for regime in, flux out — the opposite direction.
+2. ⚠ **Only `heat-pipe` is solved at all.** `stagnant-lid` and `plate-tectonics` return
+   `internal_temperature=None` with the module's own note that other modes are *"§6.2의 용량 사다리로
+   판정만 한다"* — judged by the ladder, not converted. **The two regimes C47 needs are the two it does
+   not solve.**
+3. ⚠ **Its verification status is `failed-io-reproduction`, and its numbers are marked 채택 금지.** The
+   transcription is verbatim and solves to ~10⁻¹⁴ residual, but Kankanamge & Moore 2019 cannot reproduce
+   its own printed Io result (1471 K, 12.6 km) from its own printed constants; back-solving the constants
+   that make it a root gives `α = 8.71×10⁻⁷ K⁻¹` — **1/34 of rock's** — and `ΔT_rh = 354 K` against a
+   rheological scale of 40–100 K.
+
+**The `b` question, answered — and the answer is what stops D.** Guardrail: an absolute flux from the
+declared path needs `b` fixed, or the regime refuses flux. **It can be fixed**: take Korenaga 2009's own
+`b`, re-fitted on the paper's own printed Earth condition using the paper's own printed constant list
+(including its `α`, self-consistently — see paper defect #24), as **one global declaration** for every
+body. That is not per-body tuning; it is the same shape as `mantle_flux`'s `T_s = 293 K` or
+`radiogenic`'s `MANTLE_SHARE = 0.70`, both of which are Earth's numbers declared for every rocky body.
+⚠ Its width is **unquantified by the paper** — *"different planets may take different pre-exponential
+factors … grain size and mantle composition"*, with no range printed — and `q ∝ b^{−β/n}`, so a decade
+of grain size is **2.15×** in flux at `n = 1`.
+
+**⚠ But at that normalization the law contradicts the declaration it is being asked to serve.**
+
+| body declared **stagnant-lid** | eq. 30 flux | against Reese's stagnant ceiling 10–30 mW/m² |
+|---|---|---|
+| Earth-size | **50 mW/m²** (by construction) | **1.7× the top, 5.0× the bottom** |
+| Mars-size | **36 mW/m²** | **1.2× the top, 3.6× the bottom** |
+
+**Declare "stagnant lid", compute the flux, and C46 answers that the body cannot be a stagnant lid.**
+The declaration and the law disagree, so D's flux path would emit a value that its own consumer
+rejects. That is not a number worth emitting.
+
+**⚠ And the repair is in Korenaga, not in Foley & Bercovici — which is the reason to stop and report.**
+The paper's advertised contribution is that mantle melting *"may reduce the conventional prediction of
+surface heat flux by up to a factor of ∼5–10"*. Apply that:
+
+| body | eq. 30 | with the melting reduction (÷5 to ÷10) | ceiling 10–30 |
+|---|---|---|---|
+| Earth-size | 50 | **5.0 – 10.0 mW/m²** | at or under the bottom |
+| Mars-size | 36 | **3.6 – 7.2 mW/m²** | under the bottom |
+
+**Both land at or below the ceiling's bottom edge**, which is where a stagnant lid belongs. ⚠ **So
+Korenaga 2009 is not exhausted: C47 (c) tested only the law the paper argues *against*.** Eq. 43 with
+the melting correction (eqs 41–56, solved iteratively with `z*_D = Nu^{−1}`) is the paper's actual law,
+and it is the single build that serves **both** open paths — D's flux output, and the direction test
+that C47 (c) ran on the wrong equation.
+
+**Nothing was built, and nothing in the engine changed.** Per brief 146's own instruction: a reason
+appeared to change the order, so this stops here. **The proposed order is: Korenaga eq. 43 + melting
+first** (it serves D and re-runs A's test on the right equation), with Foley & Bercovici held as the
+genuinely independent third family for the pre-registered "three families, same direction" verdict.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
