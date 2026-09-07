@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | ⚠ The pre-registered expectation (does not reach) was wrong: at `t₀ = 0` the pulse is **12.2×** the whole long-lived budget and **3.93×** the sensible heat to the silicate solidus. But it decays with `τ ≈ 1.03 Myr`, so **the answer is `t₀`**, which no body declares. The refusal is renamed, not lifted. ⚠ The agreement with C9's published band is **not** an independent closure — same paper |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | At `t₀ = 0` the pulse is **12.2×** the whole long-lived budget and **3.93×** the sensible heat to the silicate solidus, but it decays with `τ ≈ 1.03 Myr`, so **the answer is `t₀`** — which no body declares. The refusal is renamed, not lifted. ⚠ Two statements kept apart: the threshold is about physics and testable; *our* moons sitting below it is about our design choices and is not. The agreement with C9's band is **not** an independent closure — same paper |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -2108,9 +2108,19 @@ is the owner's decision**, not settled here.
 
 ### (b) measured 2026-09-07 — the answer is `t₀`, and the refusal is renamed rather than lifted
 
-⚠ **The pre-registered expectation was that the pulse does not reach, and it was wrong.** Recorded
-before measuring, and recorded here because a result that contradicts its own pre-registration is the
-one to probe hardest.
+⚠ **What this measurement can and cannot be about (owner, 2026-09-07).** *"우리 천체는 아바타 설정
+기반이라 원래 지어낸 거고 확증할 방법이 없잖아. 반박 안 된 거지 이거는."* **Our moons are ours.** A
+calculation about them is arithmetic on objects we defined, not a measurement of the world, and there is
+no fact for it to be refuted by. Two statements are therefore mixed in what follows and are kept apart:
+
+| statement | kind | testable? |
+|---|---|---|
+| the pulse meets the melting requirement at `t₀ ≈ 1.4 Myr` | about physics | **yes** — against real meteorite parent bodies |
+| three of our moons sit below that | about our design choices | **no**, and not the kind of thing that could be |
+
+⚠ **So "the pre-registration was refuted" was the wrong frame**, and it is struck. What was actually
+wrong was an inference: the roster was summarised as *"all too large for the pulse to matter"*, and the
+**400–750 km three are not that large.** A rough generalisation, not a world that surprised us.
 
 ⚠ **The recipe this section wrote for itself was not executable.** It said *"the two held half-lives
 plus a solar initial ratio give each body's pulse energy"* — they do not. A half-life and an isotopic
@@ -2177,6 +2187,12 @@ one alone is misleading:
   day** — would each have broken it. That is a real check and not a small one.
 - ⚠ **It is not evidence the constants or the framing are right.** Both came from the paper it agrees
   with. An outside check needs a source this measurement did not draw from, and there is not one here.
+
+⚠ **And this is the one result here that does not depend on our bodies being invented.** Whether
+Pandora exists has no bearing on whether a given set of constants reproduces a given threshold. Every
+other line in this section is either physics we borrowed or arithmetic about objects we chose; **the
+implementation check is the part that would still stand if the roster were replaced tomorrow.** Without
+that sentence the whole item reads as void, and it is not.
 
 **Reading only the second turns a genuine implementation check into nothing**, which would be the
 opposite error and just as wrong.

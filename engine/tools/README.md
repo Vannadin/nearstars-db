@@ -1071,9 +1071,25 @@ day's best evidence — because neither compared the bibcodes. **The check is on
 your result stands on, and strike any source that also produced the thing you are closing against. What
 is left is the independence you actually have.
 
-**And the appetite is the tell.** This closure was welcome precisely because the measurement had
-contradicted its own pre-registration and wanted corroborating. **A result that arrives when you need
-one deserves the bibcode check first**, not last.
+⚠ **A motive was first written here as the cause — "the measurement had contradicted its own
+pre-registration and wanted corroborating" — and it is struck.** The owner pointed out that our bodies
+are invented, so nothing had been refuted and there was no shortfall to make up. The story was
+plausible, which is the whole problem with it.
+
+**The rule that replaces it is stronger than "beware wrong motives":**
+
+> **When a procedural cause and a motivational cause both fit, record only the procedural one.
+> Procedure can be checked; motive cannot.**
+
+The two failures in this file's neighbouring entries make the asymmetry concrete. A fabricated density
+optimises for plausibility **and can still be caught** — the board holds the real number, so there is
+something to compare against. A fabricated motive optimises for plausibility **and there is nothing to
+compare against at all.** This one surfaced only because the owner knocked out its premise, not because
+anyone inspected the story.
+
+⚠ **This holds even when the motive happens to be true.** An unfalsifiable sentence earns little space
+in a record regardless of its accuracy. Here the procedural cause is complete on its own — **the source
+was named before it was checked** — and a reader can verify that by opening the same two bibcodes.
 
 ⚠ **The claim also grew as it was passed along, and the growth is worth recording separately.** The
 working seat wrote "closure" in its own section and "independent … from a different paper" alongside
