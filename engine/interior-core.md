@@ -92,7 +92,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
 | **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07, then corrected the same day; rows still absent** | The flux fixes **one** cell: **floors** at 0.09 (Earth) and 2.5 W/m² (Io), and below them a stagnant cell bounded by a **ceiling** — Venus 10–20, Mars 15–30, union 10–30 transferred to anything else — with a `plutonic-squishy lid` cell for exceeding it. The band travels beside the cell. ⚠ **The first build of this ladder stood that ceiling up as a floor at 0.010** and put every cold body one cell too high; our own §6.2 table already said `ceiling`, and one bullet under it did not — C46 (c). ⚠ Three cells, three provenances: `analogy-rung` (Io), held body text (Earth), `abstract-level` (the ceiling, body not held). ⚠ Venus's 78 is **3.9× its own ceiling**, so the ladder now contradicts our anchor column and agrees with the paper it cites; the Moon stays **independent 1/1** only because the stagnant cell was given no floor. Not added to self-scored 3/4 |
-| **C47** | the transport table is fed radiogenic production, and its thresholds are defined on surface heat flow | **measured 2026-09-07, not fixed** | Verdict: **a different quantity**, not an inaccurate one. The low feed reproduces radiogenic production on two bodies (Earth 1.07–1.33× of Korenaga 2008's 16–20 TW; Mars 1.11× of Parro+ 2017's 14.3 mW/m²) and misses surface heat flow by **body-dependent** factors (Earth 0.45×, Mars 0.84×). ⚠ **That factor is the Urey ratio** — 0.35 for Earth, 0.68–0.75 for Mars — so `1/Ur` would be 2.2–2.9 against 1.3–1.5 and **no correction constant can serve both.** The missing term is secular cooling, which our own §6 already names (*"radiogenic, accretional, primordial"*) and no node emits. ⚠ Consequence for C34: Mars passing and Earth failing at the low feed measured **how close each body's Urey ratio is to 1**, not whether the feed is right. Next: a grounded secular-cooling recipe, never a multiplier — and ⚠ this is wider than C34, it applies to every body we feed |
+| **C47** | the transport table is fed radiogenic production, and its thresholds are defined on surface heat flow | **measured 2026-09-07, not fixed** | Verdict: **a different quantity**, not an inaccurate one. The low feed reproduces radiogenic production on two bodies (Earth 1.07–1.33× of Korenaga 2008's 16–20 TW; Mars 1.11× of Parro+ 2017's 14.3 mW/m²) and misses surface heat flow by **body-dependent** factors (Earth 0.45×, Mars 0.84×). ⚠ **That factor is the Urey ratio** — 0.35 for Earth, 0.68–0.75 for Mars — so `1/Ur` would be 2.2–2.9 against 1.3–1.5 and **no correction constant can serve both.** The missing term is secular cooling, which our own §6 already names (*"radiogenic, accretional, primordial"*) and no node emits. ⚠ Consequence for C34: Mars passing and Earth failing at the low feed measured **how close each body's Urey ratio is to 1**, not whether the feed is right. ⚠ **Attempted 2026-09-07 (C47 (b)) and it does not close by code.** The quantity already exists — C20's `q_mantle_present` **is** `Q_M`, from Nimmo eqs 34–36, and it reads no measured flux — but one law cannot serve both bodies: at a common `T_m` Earth lands on 0.35 while Mars reads **0.209 against 0.68–0.75**, and `Ur` **falls** ×1.69 toward smaller bodies where the literature has it **rise** ×2.0. ⚠ **The ordering is wrong, so no `T_m` fixes it** — `implied_flux` is a mobile-lid law (our own docstring says it was tuned on four present-day Earth constraints) and Mars is the archetypal stagnant lid; it hands Mars 85.7 mW/m² against Reese's own 15–30 ceiling, **2.9–5.7× what C46's own bottom rung allows.** ⚠ Also blocked outright: only `earth.yaml` declares C20's two initial temperatures, so **C20 cannot run on Mars**. **The block is C46's circularity** (the flow needs the regime, the regime needs the flow) plus a paper we do not hold — Reese+ 1998's stagnant-lid scaling, abstract only |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3984,6 +3984,21 @@ naming the gap took it away.** The C46 ladder now has a cell there, so the same 
 `plutonic-squishy lid` and Earth becomes a fail. Venus fails under both feeds and on both functions, so
 Venus is not what discriminates.
 
+**⚠ All four of C34's candidates are now identified, and two of them are disqualified.** The
+decision has been carrying them as four readings of one quantity; they are four different quantities.
+
+| candidate | what it actually is | fit to be fed to a §6.2 threshold |
+|---|---|---|
+| **0.0418** W/m² | Earth's **radiogenic production**, `radiogenic.py` default set (21.3 TW) — C47 | ✗ **wrong quantity**: the thresholds are surface heat flow |
+| **0.0769** | `mantle_flux.implied_flux` at `T_m ≈ 1600 K` — Nimmo+ 2004 eqs 34–36, a **model surface flow** reading no measurement | ✓ right quantity, ⚠ but a **mobile-lid** law: C47 (b) measures it handing Mars 2.9–5.7× Reese's own ceiling |
+| **0.08** | ⚠ **no source, ever** (`98774764`, 2026-06-23; `git log -S` finds no cited version). 2.1× both held radiogenic estimates, 87 % of the measured total — **and the same document uses it under the other label**, §5 calling Io's 2 W/m² *"an order of magnitude above **Earth's** ~0.08"*, where only the total makes the comparison work | ✗ **disqualified** — no source, and two labels for one number |
+| **0.0921** | Earth's **measured surface heat flow**, Davies & Davies 2010 (47 ± 2 TW) | ✓ right quantity, ⚠ but exists for **three bodies in the solar system and none of ours** |
+
+⚠ **So the four-way choice was never four-way.** One candidate is a different quantity (C47), one has
+no source, and of the two survivors the measured one cannot be computed for any body in this project.
+**What is left is 0.0769 — the only candidate that is both the right quantity and computable
+everywhere — and C47 (b) shows it fails on Mars.** That is why C34 does not close by choosing.
+
 ⚠ **Not resolved here, and not resolvable here.** Which function C34 should be scored on is the same
 question as whether §6.2's missing row should exist — and the owner has already been given that gap as
 C46. The low feed's 3-of-4 was true and is still true of the function it was measured on; it is not
@@ -4136,6 +4151,94 @@ Earth) — not a factor. C20 (`core_thermal_history`) already emits `q_cmb_prese
 but that is the core's contribution across the CMB, not the planet's secular cooling, so it does not
 close this on its own. **The low/high choice in C34 stays the owner's, and this section exists so that
 it is made knowing the low candidate is a different quantity rather than a smaller one.**
+
+### C47 (b) 2026-09-07 — the integrator was opened first, and the two-body condition fails on the ordering
+
+**The instruction was to look before building, and looking changed the answer twice.**
+
+**Answer to the three-way question: (ii) for the cooling rate, and *already an output* for the thing
+C47 actually needs.**
+
+1. **C20's mantle equation *is* Korenaga eq. (8).** `engine/core_history.py` line 8 prints it:
+   `mantle (eq. 32)   H_m M_m − Q_M + Q_C = M_m C_pm · dT_h/dt`. That is `C dT/dt = H − Q` with
+   `C = M_m C_pm`. The integrator has been solving this equation since 2026-09-04.
+2. **`dT_h/dt` is computed and not emitted** — the output list carries `dtc_dt_present_k_per_gyr`,
+   which is the **core**'s rate. So the mantle rate is case (ii), inside and unpromoted.
+3. ⚠ **But promoting it is not needed, because the surface flow is already an output.**
+   `q_mantle_present` **is** `Q_M = 4π R_p² F_t`, from `mantle_flux.implied_flux` (Nimmo+ 2004 eqs
+   34–36). The quantity C47 was going to build already exists and is already emitted. **Guardrail ①
+   (fix `C` from the paper) is therefore moot for this route** — no `C` is used.
+4. **Guardrail ③ holds.** `implied_flux(t_m_k, g, r_m)` takes a mantle potential temperature, gravity
+   and radius. **No measured surface heat flux enters anywhere**, which is what the guardrail asked.
+
+⚠ **And our own module diagnosed C47 sixteen days ago.** `engine/mantle_flux.py`'s header, written at
+Brief 46: *"The implied flow and the radiogenic budget are not required to match; **secular cooling is
+the expected difference** (the paper: Earth 'loses heat roughly twice as fast as it is being generated
+by radioactive decay')."* That is C47's whole finding, in our own code, citing Nimmo for it — the
+**third** independent place this was already written down, after §6's *"accretional, primordial"* and
+Korenaga's own §2. The consumer never read any of them.
+
+**The pass condition, measured.** One recipe, `Ur = radiogenic / implied_flux`, no per-body adjustment,
+default concentration set:
+
+| common `T_m` | Earth `Ur` | Mars `Ur` |
+|---|---|---|
+| 1603 K (Nimmo's own printed present-day Earth value) | 0.537 | 0.317 |
+| 1700 K | **0.353** — Korenaga's 0.35 almost exactly | **0.209** |
+| **published** | **0.35** (Korenaga, 16/46) | **0.68–0.75** (Parro+ 2017) |
+
+**Earth can be landed. Mars misses by 3.4×.** ⚠ **And the failure is in the ordering, which no choice
+of `T_m` repairs.** Earth → Mars under this law:
+
+| quantity | Earth | Mars | factor |
+|---|---|---|---|
+| `δ_t` top boundary layer | 41.1 km | 56.8 km | **×1.38 thicker** (`δ ∝ g^−1/3`) |
+| `F_t` | 118.3 mW/m² | 85.7 mW/m² | ×0.72 |
+| `Q_M` | 60.4 TW | 12.4 TW | ÷4.88 |
+| `H` radiogenic | 21.3 TW | 2.58 TW | ÷8.27 |
+| **`Ur = H/Q_M`** | | | **falls ×1.69** |
+
+The literature has `Ur` **rise** ×2.0 from Earth to Mars. **A recipe that reverses the direction is not
+off by a constant, and the two bodies we can check are the only two we can check.** To pass, Mars would
+need `T_m = 1419 K` against Earth's 1702 K — **283 K colder, chosen because it makes `Ur` come out.**
+That is per-body tuning wearing a physical name.
+
+⚠ **Why it inverts, in our own docstring's words.** `mantle_flux.py`: the parameterisation was tuned on
+four simultaneous **present-day Earth** constraints — *"the present-day mantle temperature, viscosity
+and heat flux"* — plus densities adopted to match PREM. Eight Earth constants ride along (`ρ_m`,
+`α_m`, `κ_t`, `k_t`, `η₀`, `T₀`, `ζ`, `Ra_c`), and `T_s = 293 K` is *"the one constant here that is
+obviously not the roster's."* **It is a mobile-lid boundary-layer law, and Mars is the archetypal
+stagnant lid.**
+
+⚠ **A source already on our own ladder falsifies it outright.** `implied_flux` gives Mars
+**85.7 mW/m²** at `T_m = 1700 K`. Reese+ 1998's ceiling for Mars is **15–30 mW/m²** — the very number
+that is the bottom of the C46 ladder. So **our own ladder says this law hands Mars 2.9–5.7× more heat
+than its lid can conduct without widespread melting.** Meanwhile Parro's measured-model 19 mW/m² =
+2.74 TW sits **inside** Reese's 2.17–4.33 TW. The stagnant-lid law and the measurement agree with each
+other; the mobile-lid law agrees with neither.
+
+⚠ **A hard blocker on the (i)/(ii) route independent of all of the above.** Only
+`engine/bodies/earth.yaml` declares `core_initial_temperature` and
+`mantle_initial_potential_temperature`. **C20 cannot run on Mars at all**, so the two-body condition
+cannot be scored through the integrator even if the physics were right.
+
+**⚠ And the loop closes on C46.** The right surface flow needs the **regime** — mobile-lid bodies take
+Nimmo eqs 34–36, stagnant-lid bodies need a stagnant-lid law — while C46 needs the surface flow to
+place the cell. C46 already recorded that flux cannot supply the regime, and that Lourenço's
+discriminants are mobility and plateness, both outputs of a 4.5 Gyr simulation. **So C47 is not
+blocked on writing code. It is blocked on the same circularity C46 named, and closing one closes the
+other.**
+
+**What would actually unblock it, stated as a request rather than a build.** The stagnant-lid
+scaling is Reese, Solomatov & Moresi 1998's own subject — *"thermal boundary layer analyses as well as
+finite element simulations of stagnant lid convection with non-Newtonian viscosity"* — and ⚠ **we hold
+only its abstract; every AGU and ADS scan returns 403.** The abstract prints the two ceilings and not
+the scaling law. **Nothing is built here because the half of the physics that Mars needs is in a paper
+we do not have.**
+
+**Nothing was changed in the engine by this section.** No node, no edge, no value. Item B of the
+brief — no regime name is emitted while this stands — is already the state of the code: `solve_mode`
+emits `regime_candidates` and refuses a single regime whenever more than one stands.
 
 ## What closing all of these does not do
 
