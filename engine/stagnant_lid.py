@@ -112,3 +112,147 @@ if __name__ == "__main__":
     print(f"\nrms {table2_rms():.2f} %  — 논문이 **Table 1** 에 대해 적은 적합 rms 는 ~1.2 %")
     print(f"eq. 44  Ra_crit: n=1 {ra_crit(1):.0f} (본문 ~450) · n=2 {ra_crit(2):.0f} (~134, ⚠ 7 % 차) "
           f"· n=3 {ra_crit(3):.0f} (~104)")
+
+
+# ── C47 (g), brief 148 단계 3 — eq. 42·43 의 국소 안정해석과 용융 보정 ──────────
+#: ⚠ **여기부터는 n = 1 전용이다.** eq. 46 의 `η* = (τ*)^{1−n} Z(z*) exp(−θT*)` 에서 응력항
+#: `(τ*)^{1−n}` 이 n=1 에서만 정확히 1 이고, 아래 유도는 그 항을 빼고 있다. 확인: 이 유도가
+#: 내는 계수가 n=1 에서 논문 적합 `a = 0.55` 를 0.7 % 로 재현하는데(0.5539), n=2·3 에서는
+#: 0.274·0.187 대 0.80·1.05 로 안 맞는다. 논문 자신도 §4.1 을 n=1 로 하고 Table 2 도 n=1 이다.
+#:
+#: 기하(eq. 42 · Fig. 5): 경계층은 위쪽에 있고 `z*` 는 위로 증가한다(Table 2 각주의 `z* > 0.75`
+#: 가 굳은 탈수층이라는 것이 그 방향을 정한다). 부층은 **경계층 밑에서 위로** 재고, `η*` 는
+#: `η(T_i)` 기준이라(`Ra_i` 가 이미 `exp[E/(nRT_i)]` 를 품는다) `⟨1−T*⟩ = u/2` 에서
+#: `η*_eff = exp(θu/2)`. 그러면 최대가 `u* = 4(n+1)/(nθ)` 에 내부점으로 서고, δ 를 소거하면
+#: `Nu ∝ θ^{−(2n+2)/(n+2)} Ra_i^β` — 그리고 `(2n+2)/(n+2) = 1+β` 가 정확히 성립해 eq. 30 의
+#: 꼴이 된다. 즉 논문의 *"the boundary-layer stability approach reproduces exactly the
+#: asymptotic heat-flow scaling"* 가 검증된다.
+Z_D_TABLE2 = 0.75              # Table 2·3 각주: *"Viscosity contrast for z* > 0.75"*
+#: eq. 50 — `(dρ/dF) ≈ −1.2 kg m⁻³ per cent` (Korenaga 2006). ⚠ 단위가 **퍼센트당**이다.
+D_RHO_D_F = -1.2
+#: §5: *"Melt productivity (dF/dP)_S is assumed to be 15 per cent/GPa (Korenaga 2006), and for
+#: simplicity, the final pressure of melting P_f is set to zero."*
+D_F_D_P_PERCENT_PER_GPA = 15.0
+P_F_GPA = 0.0
+#: §4: *"To calculate melting-related parameters such as P₀ and Δρ, ρ₀ of 3300 kg m⁻³ is used."*
+RHO_0_MELT = 3300.0
+#: ⚠ **논문이 자기 α 를 반증한다 — 결함 #24.** §4 의 상수 목록은 `α = 2 × 10⁻³ K⁻¹` 를 인쇄하지만
+#: §3.2 는 자기 워크드 예제로 *"The factor αΔT is ∼0.05, so Δρ of 0.99 corresponds to ΔT*_ρ of
+#: ∼0.2"* 라 적는다. 논문 자신의 `ΔT = 1350 K` 에서 §4 값은 `αΔT = 2.7`·`ΔT*_ρ = 0.0037` 로
+#: **두 수 다 못 맞히고**, `3.7 × 10⁻⁵` 는 `0.0499`·`0.2002` 로 **둘 다 0.2 % 안에서 맞힌다.**
+#: 그래서 §3.2 쪽을 쓰되 ⚠ **두 값을 다 들고 다니고 결과를 양쪽으로 보고한다**(C47 (g) 사전등록).
+ALPHA_SECTION_3_2 = 3.7e-5     # §3.2 의 워크드 예제가 못 박는 값
+ALPHA_SECTION_4_PRINTED = 2.0e-3   # §4 가 인쇄한 값 — 자기 §3.2 를 재현하지 못한다
+DELTA_T_PAPER_K = 1350.0       # §4 의 지구 조건
+
+
+def solidus_p0_gpa(t_p_celsius: float) -> float:
+    """eq. 45 — `P₀ = (T_p − 1150)/100` [GPa], Takahashi & Kushiro 1983 의 건조 솔리더스.
+
+    ⚠ 우리 `eos.silicate_solidus` 로 갈아끼우지 않는다: 그것은 다른 출처(Andrault+ 2011)의
+    **역함수**(압력의 함수인 융해 온도)이고, 섞으면 논문 자신의 고갈층 깊이가 움직인다."""
+    return max(0.0, (t_p_celsius - 1150.0) / 100.0)
+
+
+def mean_melt_fraction_percent(t_p_celsius: float) -> float:
+    """eq. 51 — `F̄ = 0.5 (P₀ − P_f) (dF/dP)_S` [퍼센트]."""
+    return 0.5 * (solidus_p0_gpa(t_p_celsius) - P_F_GPA) * D_F_D_P_PERCENT_PER_GPA
+
+
+def delta_rho(t_p_celsius: float) -> float:
+    """eq. 53 — `Δρ = 1 + (F̄/ρ₀)(dρ/dF)`.
+
+    ⚠ **Fig. 11 을 읽지 않는다.** §4 가 *"compositional buoyancy is calculated based on Fig. 11"*
+    이라 적지만, eq. 51 과 §5 의 인쇄 상수로 전부 계산되므로 그 그림은 결과의 그림일 뿐이다."""
+    return 1.0 + mean_melt_fraction_percent(t_p_celsius) * D_RHO_D_F / RHO_0_MELT
+
+
+def delta_t_rho(t_p_celsius: float, alpha: float = ALPHA_SECTION_3_2,
+                delta_t_k: float = DELTA_T_PAPER_K) -> float:
+    """eq. 54 의 등가 온도차 `ΔT*_ρ ≈ (1 − Δρ)/(αΔT)`.
+
+    논문 자기 예제로 대조: `Δρ = 0.99`, `αΔT ≈ 0.05` → `ΔT*_ρ ≈ 0.2`."""
+    return (1.0 - delta_rho(t_p_celsius)) / (alpha * delta_t_k)
+
+
+def _ra_local_max(delta: float, theta: float, d_eta: float, z_d: float,
+                  dt_rho: float, samples: int = 4000) -> float:
+    """eq. 42 의 `max[ δ_eff^{(n+2)/n} ΔT*_eff / η*_eff ]`, n = 1.
+
+    `Δη` 는 eq. 46·47 의 계단으로 `η*_eff` 에 로그평균으로 들어가고, `ΔT*_ρ` 는 §3.2 끝문장대로
+    `ΔT*_eff` 에서 빠진다 — *"This can be done if ΔT*_ρ is incorporated when calculating
+    ΔT*_eff in eq. (42)."* 둘 다 **부층 중 `z*_D` 위쪽 몫에만** 걸린다."""
+    best = 0.0
+    for i in range(1, samples + 1):
+        u = i / samples
+        d_eff = u * delta
+        top = 1.0 - delta + d_eff
+        above = max(0.0, min(top, 1.0) - max(1.0 - delta, z_d))
+        frac = above / d_eff if d_eff > 0.0 else 0.0
+        eta_eff = d_eta ** frac * math.exp(theta * u / 2.0)
+        dt_eff = u - frac * dt_rho
+        if dt_eff <= 0.0:
+            continue
+        v = d_eff ** 3.0 * dt_eff / eta_eff
+        if v > best:
+            best = v
+    return best
+
+
+def nu_stability(theta: float, ra_i: float, d_eta: float = 1.0, z_d: float = Z_D_TABLE2,
+                 dt_rho: float = 0.0) -> float:
+    """eq. 43 — `Ra_l(δ) = Ra_crit(n)` 를 δ 로 풀고 `Nu = δ⁻¹`. n = 1 전용."""
+    target = ra_crit(1)
+    lo, hi = 1e-6, 0.999
+    for _ in range(90):
+        mid = 0.5 * (lo + hi)
+        if ra_i * _ra_local_max(mid, theta, d_eta, z_d, dt_rho) < target:
+            lo = mid
+        else:
+            hi = mid
+    return 1.0 / (0.5 * (lo + hi))
+
+
+def nu_full(theta: float, ra_i: float, d_eta: float = 1.0, z_d: float = Z_D_TABLE2,
+            dt_rho: float = 0.0, a_rh: float | None = None) -> float:
+    """안정해석(eq. 43)에 eq. 29 의 사전점근 브래킷을 얹은 `Nu`.
+
+    ⚠ 안정해석은 **점근형**을 낸다(eq. 30 과 행마다 1.0071 배로 일치). Table 2 의 `Nu` 3–7 은
+    점근이 아니므로, eq. 43 의 결과를 eq. 29 의 우변으로 받아 `Nu` 를 다시 푼다. `Δη = 1` 에서
+    이것이 정확히 eq. 29 가 되고, `Δη ≠ 1` 로의 확장은 **우리 것**이라 여기 적어 둔다."""
+    rhs = nu_stability(theta, ra_i, d_eta, z_d, dt_rho)
+    if a_rh is None:
+        a_rh = A_RH_LINEAR_EXP[1]
+    c = 2.0 * (1.0 - a_rh / theta)
+    lo, hi = max(c, 0.0) + 1e-9, 1.0e4
+    for _ in range(200):
+        mid = 0.5 * (lo + hi)
+        if mid * max(1.0 - c / mid, 0.0) ** 0.5 < rhs:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+#: Table 2 의 `Δη = 3` · `Δη = 10` 블록. ⚠ **이 20행은 `a`·`a_rh` 적합에 쓰이지 않았다** —
+#: 논문의 적합은 Table 1 에 대한 것이므로, 이 행들은 탈수경화 기제에 대한 **독립 앵커**다.
+TABLE2_DETA3 = (
+    (16.16, 3.38e6, 3.09), (15.29, 3.99e6, 3.27), (14.36, 4.97e6, 3.48),
+    (13.60, 6.61e6, 3.68), (12.85, 9.75e6, 3.89), (12.10, 1.31e7, 4.13),
+    (10.98, 1.28e7, 4.56), (10.03, 1.37e7, 4.98), (8.95, 1.39e7, 5.58),
+    (7.96, 1.37e7, 6.28),
+)
+TABLE2_DETA10 = (
+    (16.14, 3.31e6, 3.10), (15.31, 4.11e6, 3.26), (14.44, 5.38e6, 3.46),
+    (13.74, 7.65e6, 3.64), (13.10, 1.28e7, 3.82), (12.59, 2.21e7, 3.97),
+    (12.05, 4.12e7, 4.15), (11.12, 4.52e7, 4.50), (10.06, 4.69e7, 4.97),
+    (8.99, 4.34e7, 5.56),
+)
+TABLE2_BLOCKS = {1.0: TABLE2_DETA1, 3.0: TABLE2_DETA3, 10.0: TABLE2_DETA10}
+
+
+def table2_block_rms(d_eta: float) -> tuple[float, float, float]:
+    """한 블록의 (rms %, 편향 %p, 최악 %) — `nu_full` 대 인쇄 `Nu`."""
+    errs = [(nu_full(t, r, d_eta) / n - 1.0) * 100.0 for t, r, n in TABLE2_BLOCKS[d_eta]]
+    return (math.sqrt(sum(e * e for e in errs) / len(errs)),
+            sum(errs) / len(errs), max(abs(e) for e in errs))

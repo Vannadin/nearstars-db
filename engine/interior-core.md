@@ -4551,6 +4551,153 @@ pins that**: if refitting ever buys more than 0.5 %p, it fires, because that wou
 emits nothing into the chain. The melting correction (eqs 41–56), the `b` sensitivity measurement, and
 the Earth-vs-Mars direction test are steps 2–4.
 
+### C47 (f2) 2026-09-08 — step 3's dehydration half passes 30 rows with zero tuned parameters
+
+**Built into `engine/stagnant_lid.py`: eq. 42's local Rayleigh number, eq. 43's stability criterion,
+eqs 45/50/51/53/54's melting parameters.** ⚠ **n = 1 only** — eq. 46's stress term `(τ*)^{1−n}` is
+exactly 1 there and the derivation below drops it. The paper's own §4.1 and Table 2 are both n = 1.
+
+**⚠ The geometry was derived, not guessed, and the derivation reproduces the paper's own fitted
+coefficient.** Sublayers are measured **upward from the boundary layer's base**, and `η*` is relative
+to `η(T_i)` because `Ra_i` already carries `exp[E/(nRT_i)]`, so `⟨1−T*⟩ = u/2` and
+`η*_eff = exp(θu/2)`. The maximum in eq. 42 then falls at an interior point `u* = 4(n+1)/(nθ)`, and
+eliminating `δ` gives `Nu ∝ θ^{−(2n+2)/(n+2)} Ra_i^β` — where **`(2n+2)/(n+2) = 1+β` exactly**, which
+is eq. 30's form. The coefficient that falls out is
+
+    a = [4(n+1)/n]^{1+β} exp(−2(n+1)β/n) / Ra_crit^β  =  **0.5539**  at n = 1
+
+against the paper's regression result **`a = 0.55`** — **0.7 %.** ⚠ **That is not a transcription
+check; it is an independent reproduction of the paper's own claim** that *"the boundary-layer stability
+approach reproduces exactly the asymptotic heat-flow scaling"*. Confirmed numerically too: eq. 43's
+numerics sit at **1.0071×** eq. 30 on every row, and 1.0071 is exactly 0.5539/0.55.
+
+⚠ **And the same derivation fails at n ≥ 2** (0.274 and 0.187 against 0.80 and 1.05), which is the
+dropped stress term showing itself. Diagnosed rather than patched, and the scope is recorded as n = 1.
+
+**Table 2, all three blocks, `nu_full` = eq. 43 + eq. 29's pre-asymptotic bracket:**
+
+| `Δη` | rms | bias | worst | rows used in the paper's fit? |
+|---|---|---|---|---|
+| 1 | **2.16 %** | −0.01 %p | 4.22 % | no — the fit was to Table 1 |
+| 3 | **2.84 %** | +1.68 %p | 6.10 % | ⚠ **no. independent anchor** |
+| 10 | **3.35 %** | +1.95 %p | 8.24 % | ⚠ **no. independent anchor** |
+| **all 30** | **2.83 %** | +1.21 %p | | |
+
+**Zero free parameters**: `Ra_crit` from eq. 44, `a_rh` = 2.5 from §2.2's text, `z*_D` = 0.75 from
+Table 2's footnote, `Δη` from the table's own column. **So the twenty `Δη = 3` and `Δη = 10` rows are
+an independent anchor for the dehydration-stiffening mechanism**, and a test comment says so, so that
+nobody later reads all thirty as fitted.
+
+⚠ **One construction here is ours and is labelled in the code.** The stability analysis returns the
+**asymptotic** `Nu`; Table 2's `Nu` of 3–7 is not asymptotic. So eq. 43's result is fed as the
+right-hand side of eq. 29 and `Nu` re-solved. At `Δη = 1` that is exactly eq. 29; extending it to
+`Δη ≠ 1` is our step, not the paper's.
+
+**Two claims this seat made to the directing seat were wrong, and reading fixed both — in the
+favourable direction this time.**
+
+1. ⚠ **`Δρ` needs no figure read.** C47 (e) called it *"an input read off a graph"*. Eqs 51 and 53
+   with §5's printed `(dF/dP)_S = 15 %/GPa` and `P_f = 0`, eq. 50's `dρ/dF`, §4's `ρ₀ = 3300` and
+   eq. 45's solidus compute it outright. **Fig. 11 is a plot of the result.**
+2. ⚠ **The paper contradicts its own `α`, and the contradiction is load-bearing.** §4's constant list
+   prints `α = 2 × 10⁻³ K⁻¹`; §3.2's worked example says *"The factor αΔT is ∼0.05, so Δρ of 0.99
+   corresponds to ΔT*_ρ of ∼0.2"*. At the paper's own `ΔT = 1350 K`, §4's value gives `αΔT = 2.70` and
+   `ΔT*_ρ = 0.0037` — **missing both numbers** — while `3.7 × 10⁻⁵` gives `0.0499` and `0.2002`,
+   **hitting both inside 0.2 %.** And ⚠ **this seat's earlier "harmless inside the paper" verdict on
+   defect #24 was wrong**: `b` absorbs `α` inside `Ra_i`, but `α` **also** sets `ΔT*_ρ` in eq. 54,
+   where nothing absorbs it. Using the printed value switches compositional buoyancy **off** rather
+   than weakening it.
+
+
+### C47 (g) 2026-09-08 — pre-registration for step 4, written before the test was run
+
+⚠ **This section was written and committed BEFORE the direction test was computed.** That is the
+point of it. The `α` choice below feeds the one mechanism that could produce the Earth-vs-Mars
+asymmetry step 4 measures, and the two candidate values differ by **54×**, so the choice has to be
+justified on grounds that cannot know the answer.
+
+**The choice: `α = 3.7 × 10⁻⁵ K⁻¹`, from Korenaga 2009 §3.2, not the `2 × 10⁻³ K⁻¹` printed in §4.**
+
+**The grounds, which are independent of step 4's outcome.** §3.2 states its own worked example:
+
+> *"The factor **αΔT is ∼0.05**, so Δρ of 0.99 corresponds to `ΔT*_ρ` of ∼0.2."*
+
+With the paper's own `ΔT = 1350 K`:
+
+| `α` | `αΔT` | `ΔT*_ρ` at `Δρ = 0.99` | reproduces §3.2? |
+|---|---|---|---|
+| **2 × 10⁻³** — printed in §4's constant list | 2.700 | 0.0037 | ✗ off by 54× |
+| **3.7 × 10⁻⁵** | **0.0499** | **0.2002** | ✅ both numbers, to 0.2 % |
+
+**The paper contradicts itself, and only one of the two readings reproduces the paper's own worked
+example.** That is the whole argument, and it is settled by arithmetic on two printed sentences —
+nothing in it looks at Earth, Mars, or a Urey ratio.
+
+⚠ **Why this is a place where a reader should be suspicious, stated by us rather than left to be
+found.** `α` sets `ΔT*_ρ` (eq. 54), `ΔT*_ρ` enters `ΔT*_eff` in eq. 42, and compositional buoyancy is
+**the candidate mechanism for the very asymmetry step 4 is about to measure**. Choosing the value that
+makes that mechanism 54× stronger, immediately before measuring whether the mechanism is strong
+enough, is a sequence that looks like knob-turning from the outside however sound the argument is.
+
+**So step 4 is run BOTH ways and both lines are reported, side by side, whichever passes.** The
+dependence is published, not resolved: a reader must be able to see at a glance that the conclusion
+rests on which half of the paper's self-contradiction is taken.
+
+**What is already fixed and cannot move**, so that step 4 has nothing left to tune:
+
+| quantity | value | source |
+|---|---|---|
+| `Ra_crit(n)` | `exp(3.84 + 2.25/n)` | eq. 44 |
+| `a_rh` (n = 1, linear-exponential) | 2.5 | §2.2 text, and refitting buys 0.08 %p — C47 (f) |
+| `(dF/dP)_S` | 15 %/GPa | §5, printed (Korenaga 2006) |
+| `P_f` | 0 | §5, *"for simplicity"* |
+| `dρ/dF` | −1.2 kg m⁻³ per per cent | eq. 50 |
+| `ρ₀` for melting parameters | 3300 kg m⁻³ | §4 |
+| `b` | re-fitted on the paper's own printed Earth condition, one global declaration | C47 (d), and C47 (f) measured the ratio's sensitivity at 3.7 % per decade against the absolute flux's 115 %, bounded above at 1.384 |
+| `Δη` | **a band, 10² (§4) and ∼10³ (§3)** — not elected | §3, §4 |
+
+**The target step 4 must hit, fixed in C47 (f) before this section:** `q_Earth/q_Mars` must reach
+**3.68** (against our own 0.454 denominator) or **4.78** (against Korenaga's 0.35), from the
+no-melting value of **1.372**. So the melting correction must suppress Mars's flux **2.7–3.5× more
+than Earth's**.
+
+**⚠ Pre-registered verdict rule — all four cells, written before the run.** The fourth was missing
+from the first draft of this section and was filled on the directing seat's catch, still before the
+computation. A rule invented after seeing which cell you landed in is not a rule.
+
+| outcome | verdict |
+|---|---|
+| **neither `α` reaches the target** | the **fourth** law family to fail in the same direction. C47 closes as *named, not filled* — the recorded answer becomes "no single untuned law in this literature reproduces both Urey ratios", and the three-families-same-direction note in C47 (c) closes with it |
+| **both reach it** | the choice did not matter; the result stands on its own and `α` is recorded as a non-issue for this test |
+| **only §3.2's `α = 3.7 × 10⁻⁵` reaches it** | reported as **conditional on the paper's self-contradiction**, and **not** presented as a pass. The arithmetic favours §3.2, but a result that exists only under one half of a contradiction is a result with a footnote, not a closed item |
+| **only §4's printed `α = 2 × 10⁻³` reaches it** | ⚠ **also not a pass, and for a sharper reason than "wrong for the right reason".** At `αΔT = 2.7` the equivalent temperature contrast is `ΔT*_ρ ≈ 0.004` — compositional buoyancy is *switched off*, not merely weakened. So this cell would mean **the asymmetry is carried by dehydration stiffening alone, and adding compositional buoyancy destroys it** — i.e. the paper's two melting mechanisms push in opposite directions on the very quantity being tested. That is a finding about the mechanisms and it gets its own item; it is not evidence that the law reproduces the Urey ratios, because the `α` producing it fails the paper's own worked example |
+
+**⚠ The point of the eight fixed values above is that step 4 has nothing left to tune.** That sentence
+matters more than the table: every quantity the direction test touches was pinned by a printed source
+before the test ran, so a failure cannot be argued away and a pass cannot be manufactured.
+
+**⚠ Registered decomposition — the test is run three ways per `α`, six runs in all.** The insight
+behind the fourth cell is that **dehydration stiffening and compositional buoyancy push in opposite
+directions on the asymmetry.** If that is true it is true whichever cell lands, so it must be measured
+in the main test rather than invoked only where it becomes extreme:
+
+| run | mechanisms on | what it answers |
+|---|---|---|
+| **(a)** | dehydration stiffening only (`Δη`, `z*_D`) | how much of the asymmetry the stiff dehydrated lid carries alone |
+| **(b)** | compositional buoyancy only (`ΔT*_ρ`) | how much the density contrast carries alone, and **with what sign** |
+| **(c)** | both — **this is the test** | whether the target 3.68 / 4.78 is reached |
+
+⚠ **Registered before the computation, and the reason matters:** with a single number the result is
+uninterpretable either way — reaching the target would not say what carried it, and missing it would
+not say what was short. A decomposition added *after* seeing where (c) landed would be a
+decomposition built to explain the answer. Registered now, it also puts the opposite-directions claim
+at risk: if (a) and (b) turn out to push the **same** way, the fourth cell's reasoning is wrong and
+that gets recorded as this seat's error.
+
+**Sign convention fixed now, so it cannot be reinterpreted later:** the asymmetry is `q_Earth/q_Mars`,
+and a mechanism *helps* if turning it on **raises** that ratio above the no-melting 1.372. A mechanism
+that lowers it pushes against the test.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line

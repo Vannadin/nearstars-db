@@ -73,6 +73,49 @@ def main() -> int:
        f"θ 범위 {min(thetas):.2f}–{max(thetas):.2f} 안에 들어야 한다 — 독립 전사된 두 모듈의 "
        f"무료 정합 검사")
 
+    # ── 6. eq. 42·43 의 안정해석이 eq. 30 을 재현하는가 (논문 주장의 독립 재현) ──────────
+    ratios = [sl.nu_stability(t, r) / sl.nu_asymptotic(t, r, 1) for t, r, _n in sl.TABLE2_DETA1[:9]]
+    ok(all(abs(x - 1.0) < 0.02 for x in ratios),
+       f"6: 논문은 *'the boundary-layer stability approach reproduces exactly the asymptotic "
+       f"heat-flow scaling'* 이라 적는다 — eq. 43 수치가 eq. 30 해석형과 2 % 안에서 같아야 한다; "
+       f"{min(ratios):.4f}–{max(ratios):.4f}")
+    a_derived = (4.0 * 2 / 1) ** (1.0 + sl.beta(1)) * math.exp(-2.0 * 2 * sl.beta(1) / 1) / sl.ra_crit(1) ** sl.beta(1)
+    ok(abs(a_derived / sl.a_of_n(1) - 1) < 0.01,
+       f"6: ⚠ 안정해석에서 **유도된** 계수가 논문이 **적합한** 계수를 재현해야 한다 — 전사 검증이 "
+       f"아니라 논문 주장 자체의 독립 재현이다; 유도 {a_derived:.4f} 대 논문 {sl.a_of_n(1):.2f}")
+
+    # ── 7. Table 2 의 Δη=3·10 — ⚠ 논문 적합에 안 쓰인 독립 20행 ────────────────────────
+    blocks = {d: sl.table2_block_rms(d) for d in (1.0, 3.0, 10.0)}
+    for d, (r, b, w) in blocks.items():
+        ok(r < 4.0,
+           f"7: Δη={d:g} 블록이 rms 4 % 안이어야 한다 — ⚠ Δη=3·10 의 20행은 논문의 `a`·`a_rh` "
+           f"적합(Table 1 에 대한 것)에 **쓰이지 않았으므로 독립 앵커**다; {r:.2f} %")
+    ok(abs(blocks[1.0][1]) < 1.0 and all(abs(blocks[d][1]) < 3.0 for d in (3.0, 10.0)),
+       f"7: 편향이 Δη 와 함께 커지되 3 %p 안에 머물러야 한다 — 커지면 탈수경화 처리가 "
+       f"계통적으로 어긋난다는 뜻; {[round(blocks[d][1], 2) for d in (1.0, 3.0, 10.0)]}")
+
+    # ── 8. ⚠ 논문이 자기 α 를 반증한다 (결함 #24) — 양쪽을 다 들고 다니는지 ─────────────
+    dt = sl.DELTA_T_PAPER_K
+    ok(abs(sl.ALPHA_SECTION_3_2 * dt / 0.05 - 1) < 0.05,
+       f"8: §3.2 의 *'the factor αΔT is ∼0.05'* 를 α=3.7e-5 가 맞혀야 한다; "
+       f"{sl.ALPHA_SECTION_3_2 * dt:.4f}")
+    ok(abs(sl.ALPHA_SECTION_4_PRINTED * dt / 0.05 - 1) > 10.0,
+       f"8: ⚠ §4 가 인쇄한 α=2e-3 는 자기 §3.2 를 **못 맞힌다**(αΔT {sl.ALPHA_SECTION_4_PRINTED * dt:.2f} "
+       f"대 ∼0.05). 이 시험은 그 모순이 사라지면 알려 준다 — 논문 내부 모순이지 우리 판독이 아니다")
+    dtr = (1.0 - 0.99) / (sl.ALPHA_SECTION_3_2 * dt)
+    ok(abs(dtr / 0.2 - 1) < 0.05,
+       f"8: §3.2 의 워크드 예제 *'Δρ of 0.99 corresponds to ΔT*_ρ of ∼0.2'* 도 같은 α 가 "
+       f"맞혀야 한다 — 두 수를 다 맞히는 것이 α 선택의 **유일한** 근거다; {dtr:.4f}")
+
+    # ── 9. Δρ 는 그림 판독 없이 계산된다 ───────────────────────────────────────────────
+    ok(abs(sl.solidus_p0_gpa(1350.0) - 2.0) < 1e-9 and abs(sl.mean_melt_fraction_percent(1350.0) - 15.0) < 1e-9,
+       f"9: eq. 45·51 로 T_p=1350 °C 에서 P₀=2 GPa · F̄=15 % 가 나와야 한다 — ⚠ §4 가 "
+       f"*'based on Fig. 11'* 이라 적지만 인쇄 상수로 전부 계산되므로 **그림을 읽지 않는다**; "
+       f"{sl.solidus_p0_gpa(1350.0):.2f} GPa / {sl.mean_melt_fraction_percent(1350.0):.2f} %")
+    ok(0.98 < sl.delta_rho(1500.0) < 1.0 and sl.delta_rho(1200.0) > sl.delta_rho(1700.0),
+       f"9: Δρ 가 1 아래이고 더 뜨거운 맨틀에서 더 작아야 한다 (고갈이 깊어짐); "
+       f"{sl.delta_rho(1200.0):.5f} → {sl.delta_rho(1700.0):.5f}")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if not fails:
@@ -80,7 +123,10 @@ def main() -> int:
               f"{rms:.2f} % (편향 {bias:+.2f} %p, 최악 {max(abs(e) for e in errs):.2f} %) · "
               f"a_rh 재적합 이득 {rms - best[0]:.2f} %p 뿐 · eq. 30 은 극한(Table 2 규모 {near:.3f} → "
               f"10⁸배 {far:.3f}) · Ra_crit 441/143/98 (n=2 ⚠ 7 % 차 기록) · Nimmo θ "
-              f"{theta_nimmo:.2f} 가 Table 2 범위 안")
+              f"{theta_nimmo:.2f} 가 Table 2 범위 안 · eq.43≡eq.30 ({min(ratios):.4f}–{max(ratios):.4f}) · "
+              f"유도 a {a_derived:.4f} 대 적합 {sl.a_of_n(1):.2f} · Table 2 세 블록 rms "
+              f"{blocks[1.0][0]:.2f}/{blocks[3.0][0]:.2f}/{blocks[10.0][0]:.2f} % (Δη=3·10 은 독립 20행) · "
+              f"⚠ §4 α 가 자기 §3.2 를 못 맞힘 · Δρ 그림 판독 없음")
     return 1 if fails else 0
 
 
