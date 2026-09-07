@@ -88,7 +88,8 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C40** | a fitted value has no seat in the value vocabulary, so it travels as a bare point | **listed 2026-09-06** | C32 gave three words for where a number came from — printed, chosen, engine-filled — and a value solved backwards from a wanted output is none of them. Observed in C39: wiring Dante's declared `k₂/Q` turned `τ` from a band into a point with no width anywhere. Every `tidal_heating` declaration is in the same position |
 | **C41** | `eccentricity` has no supplier, and the recipe answered anyway | **provisional landed 2026-09-06** | `orbit_elements` has no recipe, so no body supplies `eccentricity`; the recipe substituted `0.0` and every body came out **1:1 synchronous** on a value nobody set. Owner chose the provisional pattern: `e = 0.10`, in §4's unprinted gap, so the output now declines to classify. ⚠ **One value decides the whole roster** — no body's own data can outvote it. The boards' `eccentricity_forced` is deliberately **not** read: a resonance's maintained value is not the orbit's actual one |
 | **C42** | guardrail ⑤ watches an event that never happens on a measured node | **listed 2026-09-06** | `recipe_arrived()` releases a placeholder when its node gains a registered recipe. `chain.yaml` marks `orbit_elements` `kind: measured` — it is supplied, not computed, and **that day never comes**. ⚠ Not one placeholder's problem: the same hole opens under any placeholder on any measured node, and the failure it was built to prevent is a placeholder quietly becoming permanent |
-| **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **listed 2026-09-07** | `body_class` decides ice-giant vs gas-giant by pebble isolation, which asks how far a body sits **from its star**. Pandora is a moon and its file carries a **planetocentric** axis; `pebble_isolation_mass` takes `semi_major_axis_au or PEBBLE_ISO_REF_AU`, so today it silently uses 5 AU. ⚠ Converting km→au would flip that boundary BELOW→ABOVE. The emitted class does not move only because the radius valley settles Pandora first |
+| **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **resolved 2026-09-07** | Owner chose route 2: a satellite does not take the pebble-isolation branch, because neither formation path in the literature uses a distance from the star — giant impact or **circumplanetary** disc. The `semi_major_axis_au` / `_km` question closes with it: a moon consumes no stellar distance, so there is nothing to fill. Satellite mass budget recorded, all five exempt, no value changed |
+| **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3015,7 +3016,55 @@ the CPL model would say 1:1. Parking a placeholder there would manufacture C38's
 number nobody measured. **That the gap exists at all is what keeps C38's seam alive** even while the
 item is closed.
 
-⚠ ### If the boards' forced eccentricities were declared — measured, nothing written
+⚠ ### Declared 2026-09-07 — the forced eccentricity IS the orbital eccentricity
+
+**Owner**: *"이심률은 실제값 줘야하지 않나? 공명에 의한 강제 이심률은 시뮬 돌려서 나온거니까 그대로 써야지."*
+
+⚠ **The engine's doubt was about the field's name, and the name was the only evidence for it.** This
+item and brief 127 both argued that a *forced* eccentricity — what a resonance maintains — might not
+be the *orbital* eccentricity the despin formula wants. **The boards say where the numbers came from,
+and nobody had looked**: Dante's row reads *"가정한 평균이 아니라 안정성 시계열에서 측정한 e_rms
+0.0186"* — an assumed mean was replaced by one measured from the stability run — and Pandora's reads
+*"at the simulated e ≈ 0.005"*. These are measurements of the orbit in a simulation, not a theoretical
+forcing term. **A resonance maintaining an eccentricity does not make it something other than that
+orbit's eccentricity; it is what keeps it there.**
+
+`bodies/pandora.yaml` now declares `eccentricity: 0.005` beside the existing `eccentricity_forced`,
+each with its own source anchor. Measured through the recipe, before and after:
+
+| | before | after |
+|---|---|---|
+| `rotation_state` | `unclassified` | **`1:1 synchronous`** |
+| `locked` | True | True |
+| `τ` | 99.35 yr | 99.35 yr (`e` is not in the despin formula) |
+| `eccentricity_pick` | `provisional` | — |
+| `refuse_emit` | *cannot emit: eccentricity is provisional* | **clear** |
+
+**Nothing moved except the classification and the guardrail.** The placeholder is released for this
+body — guardrail ③ no longer blocks its emit — which is the outcome C42 was worried about arriving by
+a route that cannot fire.
+
+⚠ **The point is not that 0.005 lands below the threshold; it is that the whole oscillation does.**
+The sim's `e` for Pandora runs 0.00016–0.0072 and Dante's runs 0.0002–0.031, against §4's 1:1 ceiling
+of 0.055. **Dante's maximum is 0.15 of our pseudo-synchronous threshold**, so 1:1 holds across the
+excursion rather than at a point that happens to sit low.
+
+⚠ **A caveat that belongs next to the declaration, not in a footnote.** The eccentricities are measured
+— **in a run whose masses are not the ones the board ships**:
+
+| body | sim mass | board mass | ratio | sim R | board R |
+|---|---|---|---|---|---|
+| Pandora | 4.300×10²⁴ kg | 3.850×10²⁴ kg | 1.12× | 5724 km | 5724 km |
+| Dante | 8.000×10²¹ kg | 1.552×10²¹ kg | **5.15×** | 900 km | 521 km |
+| Hades | 5.000×10²¹ kg | 5.000×10²¹ kg | 1.00× | 750 km | 750 km |
+
+Dante was five times heavier in the run that produced these numbers. **It does not overturn the
+decision** — a measured eccentricity from a nearby configuration beats a placeholder chosen for
+saying nothing — and the verdict is robust, since even Dante's excursion maximum sits at 0.15 of the
+threshold. **But "measured" without "measured in which configuration" is the failure this repository
+recorded today under a different name**, so it is written here rather than left to be rediscovered.
+
+### What that decision looked like before it was made — the overnight measurement
 
 Asked overnight, with the owner asleep and nothing declared: what would each roster body's rotation
 state become if `eccentricity` were taken from the `eccentricity_forced` already on the boards?
@@ -3150,15 +3199,25 @@ file.
 
 ⚠ **What the attempted conversion would have done**, measured before anything was edited:
 
-| `semi_major_axis_au` | pebble isolation mass | Pandora at 0.6447 M⊕ |
+| `semi_major_axis_au` | pebble isolation mass | boundary verdict for Pandora at 0.6447 M⊕ |
 |---|---|---|
-| absent → 5 AU default | 20.000 M⊕ | BELOW |
-| 252 393 km → 0.001687 AU | 0.00215 M⊕ | ⚠ **ABOVE** |
+| absent → 5 AU default | 20.000 M⊕ | `BELOW` [analog] |
+| 252 393 km → 0.001687 AU | 0.00215 M⊕ | ⚠ `INSIDE` [judgment] — stops narrowing |
+| moon, boundary skipped (the fix) | — | `INSIDE` [judgment], and it says why |
 
-The ice-giant/gas-giant boundary flips. **The emitted class does not move** — both readings give
-`rocky`, `decided_by=radius valley`, because that boundary settles Pandora before this one is
-consulted. **That is luck, not safety**: a slightly larger moon surfaces it, and even here the flipped
-boundary would sit underneath a correct answer.
+⚠ **Correction to this row, made after the fix was written.** An earlier draft of this section, and the
+message that reported it, called the converted case `ABOVE`. **It is `INSIDE`.** The mass does clear
+the isolation mass, but the next gate asks whether it also exceeds twice the maximum core mass
+(50 M⊕), and 0.6447 does not — so the boundary returns "no published criterion separates this range"
+rather than the opposite verdict. **The error was computing `m_iso` by hand and inferring the branch
+from it instead of calling the function**, which is the same defect this file records elsewhere under
+a different name. The direction of the finding is unchanged and its size is smaller: the boundary stops
+narrowing and its grade drops from `analog` to `judgment`.
+
+**The emitted class does not move** in any of the three — all give `rocky`, `decided_by=radius valley`,
+`grade=calibrated`, because that boundary settles Pandora first. **That is luck, not safety**: a
+slightly larger moon surfaces it, and even here the wrong reading would sit underneath a correct
+answer.
 
 ⚠ **The bigger finding is not the naming.** Strip the conversion away and the code still applies a
 disc-formation criterion to a moon — and, lacking the distance, fills it in:
@@ -3174,7 +3233,98 @@ it is the wrong question for this body, answered from a quiet 5 AU that nobody w
 3. Split the names, so the frame is in the name: planetocentric axis versus stellar distance. The most
    honest, and a rename, which is why it was not started at night.
 
+### Resolved 2026-09-07 — route 2, and the naming question dissolves with it
+
+**Owner decision: a satellite does not take the pebble-isolation branch.** Inheriting the parent's
+distance was rejected because it still applies a *stellar*-disc criterion to a body that did not form
+in the stellar disc.
+
+**What the literature gives, and neither path uses a distance from the star.** Earth's Moon comes from
+a giant impact — Canup & Asphaug 2001,
+[`2001Natur.412..708C`](https://ui.adsabs.harvard.edu/abs/2001Natur.412..708C) — and the Galilean and
+Saturnian systems accrete in a **circumplanetary** disc fed during the giant's own gas accretion —
+Canup & Ward 2002, [`2002AJ....124.3404C`](https://ui.adsabs.harvard.edu/abs/2002AJ....124.3404C),
+now held. **The disc that matters is the planet's, not the star's.**
+
+`_ice_giant_vs_gas_giant` now returns `INSIDE` with that reason for a satellite, and the recipe passes
+`is_satellite=(state.kind == "moon")`. A declared `gas_mass_fraction` still answers the boundary, since
+that is a statement about composition and carries no frame.
+
+⚠ **And the `semi_major_axis_au` / `_km` question closes with it.** If a moon never consumes a stellar
+distance, there is nothing to fill that key with, and the "which spelling is canonical" question has
+no subject. It was never an independent decision.
+
+### The satellite mass budget — recorded, nothing changed
+
+Canup & Ward 2006, [`2006Natur.441..834C`](https://ui.adsabs.harvard.edu/abs/2006Natur.441..834C):
+a gas planet's satellite system holds *"a similar fraction of their respective planet's mass
+(~10⁻⁴)"*. ⚠ **Read from the ADS abstract, not the paper** — it is not held.
+
+Against Polyphemus at 120 M⊕, from the board's own masses:
+
+| body | board mass | M⊕ | fraction of planet | vs 10⁻⁴ |
+|---|---|---|---|---|
+| Pandora | 3.850×10²⁴ kg | 0.6447 | 5.37×10⁻³ | **53.7×** |
+| Cassandra | 9.000×10²³ kg | 0.1507 | 1.26×10⁻³ | **12.6×** |
+| Hades | 5.000×10²¹ kg | 0.0008 | 6.98×10⁻⁶ | 0.1× |
+| Dante | 1.552×10²¹ kg | 0.0003 | 2.17×10⁻⁶ | 0.02× |
+| Chaos | 5.400×10²⁰ kg | 0.0001 | 7.53×10⁻⁷ | 0.008× |
+| **system** | 4.757×10²⁴ kg | 0.7965 | 6.64×10⁻³ | **66.4×** |
+
+**All five are exempt and no value changes**, and the reasons are not the same for all five:
+
+- **Pandora** — the source material fixes it. *"아바타는 설정이 그러니 그대로 두고 기록만"* (owner).
+- **Cassandra** — **owner decision, 2026-09-07**: *"카산드라도 면제 및 기록."* A 13× reduction would
+  falsify already-approved prose about its surface gravity and density.
+- **Hades, Dante, Chaos** — already inside the convention. **There was never anything to exempt.**
+
+⚠ **Two things this table must not be read as saying.**
+
+1. **10⁻⁴ is a budget for the whole system, not a cap per moon.** Singling Pandora out as the body
+   that breaks it is **our construction** and appears nowhere in the paper; what the paper constrains
+   is the 66.4× on the bottom row.
+2. **The scaling is stated for gaseous planets**, and the same abstract says the fraction is *"two to
+   three orders of magnitude smaller than that of the largest satellites of the solid planets (such as
+   the Earth's Moon)"*. It applies here because Polyphemus is a gas giant — which the engine derives
+   independently — and would not apply around a rocky primary.
+
+⚠ **The abstract also names our case directly**: the mechanism *"could limit the largest moons of
+extrasolar Jupiter-mass planets to Moon-to-Mars size."* Pandora at 0.6447 M⊕ is well past Mars. **The
+exemption is a decision made against a stated expectation, not in the absence of one**, and that is
+why it is recorded rather than quietly allowed.
+
+**Going forward**: newly invented moons follow the scaling. The existing five are not revisited.
+
 **Nothing was changed.** The measurement above is the whole of the work.
+
+### C44 — a name that argued against its own value — **listed 2026-09-07, not started**
+
+`eccentricity_forced` carries, for every roster moon, an eccentricity **measured from the stability
+simulation**. Dante's board row says so in as many words: *"가정한 평균이 아니라 안정성 시계열에서
+측정한 e_rms 0.0186"* — an assumed mean was replaced by a measured one. Pandora's says *"at the
+simulated e ≈ 0.005"*.
+
+⚠ **The name says something else, and it won.** Across brief 127 and this file, two seats reasoned that
+a *forced* eccentricity is what a resonance maintains and therefore might not be the *orbital*
+eccentricity the despin formula wants — a real distinction, argued carefully, and **built entirely on
+the field's name.** Neither opened the board row that says where the number came from. The owner did,
+in one sentence: *"공명에 의한 강제 이심률은 시뮬 돌려서 나온거니까 그대로 써야지."*
+
+**This is C37's class — a name that does not match its value — with something C37 did not have: a
+record of the name actually misleading someone.** C37's `rotation_period` spellings caused a node to
+refuse; this one caused two seats to withhold a correct value for a day and to build a placeholder,
+an item and a guardrail discussion on top of the withholding.
+
+⚠ **What makes it worth an item rather than a rename**: the fix is not obvious. `eccentricity_forced`
+is read by `tidal_heating`, where *forced* is doing real work — it distinguishes an eccentricity
+sustained against damping from a free one, which is exactly what a tidal-heating calculation needs to
+know. **The name is not wrong for its original consumer.** It became wrong when a second consumer read
+it for a different purpose. Whether that resolves by renaming, by aliasing, or by leaving both keys
+declared side by side as `bodies/pandora.yaml` now does, is not decided here.
+
+**The general shape, which is the part worth keeping**: *a name is evidence about intent, not about
+provenance.* When a value's origin decides how it may be used, the origin has to be read, and it lives
+on the board and not in the key.
 
 ## What closing all of these does not do
 
