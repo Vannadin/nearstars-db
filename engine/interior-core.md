@@ -2341,8 +2341,11 @@ the two apart or the record teaches that big bodies are safe from the pulse, whi
 say.
 
 ⚠ **Branch B has no roster body, and one anchor.** The engine holds five bodies — two planets, two
-brown dwarfs, one moon — and no belt object; `phase4/alpha_centauri.yaml` mentions belts **144 times
-across 112 lines** without a single `- body:` entry for one. **But `bodies/earth.yaml` is branch B**
+brown dwarfs, one moon — and no belt object. `phase4/alpha_centauri.yaml` discusses belts at length and
+declares **no `- body:` entry** for one. ⚠ **An occurrence count stood here and is removed**: three
+seats counted it three ways (144, 185, 139) under three definitions, and **no claim in this paragraph
+rests on the number.** The fact is that belts are discussed and not instantiated; the count adds
+precision the question never asked for. **But `bodies/earth.yaml` is branch B**
 (`kind: planet`, `parent: Sun`), and it is an anchor rather than a roster body. At 100 % rock the table
 puts it well past melting, which is the direction the Earth actually went — a weak check, and worth
 noting because branch B currently has nothing else in it. **A belt is the first candidate that would

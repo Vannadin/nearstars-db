@@ -1222,3 +1222,26 @@ it was one multiplication away the whole time.
 **The check**: when a missing term is named, either evaluate it or say only that it is missing.
 **Saying it might overturn the result is a claim about its size**, and if you can make that claim you
 can compute it.
+
+## An absence claim also fails by reading the query for the shape you wanted (2026-09-07)
+
+This file already carries two faces of the same rule — *an absence claim about the literature is a
+search result, not an inference*, and its inward form for `grep`. **Here is the third, and it is the
+one no amount of searching fixes.**
+
+Branch B of C21 is "a body that orbits a star directly". The directing seat reported that the roster
+had no such body. It had run the query. **`bodies/earth.yaml` — `kind: planet`, `parent: Sun` — was in
+its own output**, and was read past while looking for a *small* body.
+
+⚠ **This is not the failure of not searching.** The search ran, returned the right rows, and the answer
+was still wrong. **The filter was in the reading**: a mental picture of what branch B would look like —
+an asteroid, a belt object — and Earth did not match the picture even while matching the definition.
+
+**Why it is the hardest of the three.** Not searching is fixable by a rule you can follow; this one
+happens *inside* the step that is supposed to catch it, and it leaves the same evidence as success — a
+query was run, output was read, a conclusion was drawn.
+
+**The check that would have caught it**: state the criterion in the query's own terms and apply it to
+every row mechanically. Branch B's criterion is `parent` is a star. Five rows, five checks, no picture
+required. **When a definition exists, match rows against the definition and not against the example you
+have in mind** — the example is what the definition was written to generalise past.
