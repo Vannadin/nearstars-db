@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **listed, not started** | nothing blocks it; it has never been scheduled |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | ⚠ The pre-registered expectation (does not reach) was wrong: at `t₀ = 0` the pulse is **12.2×** the whole long-lived budget and **3.93×** the sensible heat to the silicate solidus. But it decays with `τ ≈ 1.03 Myr`, so **the answer is `t₀`**, which no body declares. The refusal is renamed, not lifted |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -90,6 +90,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C42** | guardrail ⑤ watches an event that never happens on a measured node | **listed 2026-09-06** | `recipe_arrived()` releases a placeholder when its node gains a registered recipe. `chain.yaml` marks `orbit_elements` `kind: measured` — it is supplied, not computed, and **that day never comes**. ⚠ Not one placeholder's problem: the same hole opens under any placeholder on any measured node, and the failure it was built to prevent is a placeholder quietly becoming permanent |
 | **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **resolved 2026-09-07** | Owner chose route 2: a satellite does not take the pebble-isolation branch, because neither formation path in the literature uses a distance from the star — giant impact or **circumplanetary** disc. The `semi_major_axis_au` / `_km` question closes with it: a moon consumes no stellar distance, so there is nothing to fill. Satellite mass budget recorded, all five exempt, no value changed |
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
+| **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -2105,6 +2106,93 @@ continuous spectrum**. Following C11 ("the grid is the answer, no pair is electe
 *"this body may or may not have differentiated, depending on t₀"* — **whether that product is worth having
 is the owner's decision**, not settled here.
 
+### (b) measured 2026-09-07 — the answer is `t₀`, and the refusal is renamed rather than lifted
+
+⚠ **The pre-registered expectation was that the pulse does not reach, and it was wrong.** Recorded
+before measuring, and recorded here because a result that contradicts its own pre-registration is the
+one to probe hardest.
+
+⚠ **The recipe this section wrote for itself was not executable.** It said *"the two held half-lives
+plus a solar initial ratio give each body's pulse energy"* — they do not. A half-life and an isotopic
+ratio give a decay rate, not an energy: the decay energy per atom and the aluminium content of the rock
+are both needed, and **Monteux prints neither.** Monteux gives only the two half-lives (attributed to
+Carlson & Lugmair 2000), and its *"major role … for 10 to 100 km size objects"* is itself a citation to
+**Yoshino et al. 2003**, not a Monteux result. **The premise this item has been quoting belongs to a
+paper we do not hold.**
+
+**The constants come from Neumann+ 2019**
+([`2019ApJ...882...47N`](https://ui.adsabs.harvard.edu/abs/2019ApJ...882...47N), held), Table 2, which
+prints all four: decay energy `6.416×10⁻¹³ J`, half-life `7.17×10⁵ a`, stable-isotope mass fraction
+`8.86×10⁻³`, initial ratio `5.25×10⁻⁵`. ⚠ **Read from the publisher's HTML table cells, not from a page
+image** — the cache holds no PDF for this paper. Cell boundaries remove the layout guessing that a PDF
+text extraction requires, which is the failure mode that cost a factor of 4.4 on 2026-09-06.
+
+**Three axes, because the three ask different questions.** The pulse's energy per kilogram does not
+depend on body size; size enters only by changing what it is compared against.
+
+| what the pulse is compared with | J/kg | pulse ÷ it, at `t₀ = 0` |
+|---|---|---|
+| long-lived K·Th·U, integrated over 4.5 Gyr | 5.461×10⁵ | **12.2×** |
+| sensible heat to the surface solidus | 1.693×10⁶ | **3.93×** |
+| gravitational binding, Chaos (400 km) | 5.405×10⁴ | 123× |
+| gravitational binding, Dante (521 km) | 1.193×10⁵ | 55.8× |
+| gravitational binding, Hades (750 km) | 2.669×10⁵ | 25.0× |
+| gravitational binding, Cassandra (3400 km) | 1.060×10⁷ | 0.628× |
+| gravitational binding, Pandora (5724 km) | 2.693×10⁷ | 0.247× |
+
+The first axis is the one this section specified. **The second is the question Yoshino's claim actually
+makes** — differentiation — built from engine materials: `C_PM` 1200 J/(kg·K) (`mantle_flux.py`, eq. 32)
+across 250 K → 1661 K, the peridotitic solidus at surface pressure from `eos.silicate_solidus`.
+⚠ **Latent heat is excluded because no held source gives one for silicate**, so the requirement is a
+**lower bound** and every ratio against it is an **upper bound**. The third axis was added here to make
+the size dependence visible, and it does: the pulse dominates the small three and is dominated by the
+large two.
+
+**But none of that is the answer, because the pulse decays with `τ ≈ 1.03 Myr`.**
+
+| `t₀` [Myr] | remaining pulse [J/kg] | ÷ long-lived | ÷ solidus requirement |
+|---|---|---|---|
+| 0 | 6.661×10⁶ | 12.2× | 3.93× |
+| 1 | 2.534×10⁶ | 4.64× | 1.50× |
+| 2 | 9.637×10⁵ | 1.76× | 0.569× |
+| 3 | 3.665×10⁵ | 0.671× | 0.216× |
+| 5 | 5.301×10⁴ | 0.097× | 0.031× |
+
+⚠ **An independent closure, and it is the reason to trust this at all.** The `t₀` at which the pulse
+exactly meets the melting requirement comes out at **1.42–1.44 Myr**, and C9's paragraph — already in
+this file, from a different paper and a different method — prints *"wet olivine succeeds only for
+t₀ ≈ 1.3–1.9 Ma"*. **The number lands inside a published band this measurement did not use.**
+
+**The three printed half-lives do not matter.** 0.73 My (Monteux), ≈0.72 Myr (Kimura), 7.17×10⁵ a
+(Neumann) move that threshold 1.4424 → 1.4226 → 1.4167 Myr — **1.8 % across the whole spread.** Per
+this engine's convention, all three are carried and none is elected.
+
+⚠ **Composition does matter, and our moons have ice.** The pulse scales with the rock fraction, since
+aluminium rides in the silicate:
+
+| rock mass fraction | pulse [J/kg] | ÷ solidus requirement |
+|---|---|---|
+| 1.0 | 6.661×10⁶ | 3.93× |
+| 0.7 | 4.663×10⁶ | 2.75× |
+| 0.5 | 3.331×10⁶ | 1.97× |
+| 0.3 | 1.998×10⁶ | 1.18× |
+
+At 30 % rock the margin is 18 %, which the excluded latent heat could erase on its own.
+
+⚠ **Two numbers in the source disagree with each other.** Neumann defines `f_i` as *"the number of
+atoms of **the stable isotope** per 1 kg"* and then prints `f_i = 10³ x_i N_A / m_{a,i}` *"with the
+relative mass fraction x_i of the stable isotope, the molar mass of **the radioactive** isotope"*.
+Counting ²⁷Al atoms requires dividing by 26.98, not 26. The tables above use **26.98**; the printed
+formula gives **6.912×10⁶ J/kg**, 3.77 % higher. **Neither reading is elected here** — the paper prints
+no initial heat-production rate to close against. The discriminant is recorded so the next person who
+meets an ordinary-chondrite ²⁶Al figure can settle it without going looking: **`H₀ = 2.041×10⁻⁷ W/kg`
+for 26.98, `2.118×10⁻⁷ W/kg` for 26.**
+
+**What this changes.** ⚠ **The refusal is not lifted; it is renamed.** It was *"we have no input"*. It is
+now *"the input has narrowed to one: `t₀`"* — the formation time after CAIs, which no body declares and
+which C21 was holding out for all along. No `t₀` is elected here, following C11: the grid is the
+answer.
+
 **Start condition.** Not now. Order still P3 → C14.
 
 ### C22 — ammonia fraction in the ice-giant mantle — **listed 2026-09-03; step 1 blocked pending a survey**
@@ -3366,6 +3454,44 @@ Only `inputs` moves, from `None` to 31.999 h.
 own evidence for every body it ever judged, and the first person to reconstruct a verdict from that
 record would have been reading a lie. **A test now fails if the lookup regresses**, since nothing else
 would notice: verified by reverting the key and watching it go red.
+
+### C45 — the check compares labels, not lookups — **listed 2026-09-07, not started**
+
+`check_contracts` is this engine's structural check: it holds each methodology document's `Needs` and
+`Returns` against what the recipe actually uses. **It reads `set(candidate.inputs)`** — the keys of the
+dict the recipe builds for its own evidence — and those keys are strings the author typed. **The string
+handed to `state.get(...)` is never examined.**
+
+⚠ **So a recipe can look up a key nobody supplies and stay green indefinitely**, provided it files the
+resulting `None` under a name the contract recognises. That is not a hypothetical: it is exactly how
+C37 survived. `dynamo_rocky` looked up `rotation_period`, labelled the `None` `"rotation_period"`, the
+contract said `rotation_period`, and the check passed on every run while the value was never once
+supplied.
+
+**This is the widest of the blind checks found on 2026-09-06/07**, and the others were narrower by
+comparison: a skip list that never reached its directory; guardrail ⑤ watching an event a measured node
+cannot have; a citation checker that did not recognise one citation form. Those were single checks with
+single blind spots. **This one is the structural check at the centre, and it applies to every recipe.**
+
+**The detection is static, and the principle is proven.** Extract the literal in every
+`state.get("…")` / `state["…"]` with `ast`, and require that set to agree with **both** the evidence
+keys and the contract's `Needs` — three sets, one vocabulary, where today only two are compared.
+Prototyped read-only against all 13 recipe modules: the extraction works on every one, and run against
+`ce7aff2d^` it finds `rotation_period` among `dynamo_rocky`'s lookups — **it would have caught C37**.
+
+⚠ **What the prototype's current output is not.** It reports mismatches on seven nodes, and **they are
+not triaged findings.** At least five come from the prototype itself: `tidal-heating-methodology.md`
+holds **two** contract blocks, and the sketch assumed one node and one `Needs` per file, so it paired
+`tidal_heating`'s node with the wrong Needs list — the contract does declare `k2_over_q` and the rest.
+**The sketch fell into a trap this repository had already written down**, under *"two tables in one
+file make the first match unusable"*. Whoever builds this must key on the block, not the file.
+
+⚠ **Some of the remainder may be real and are the same question restated**: `body_class` looks up
+`state.get("body_class")` for a value its contract calls `declared_class`, and several recipes look up
+`radius` where the contract says `radius_earth`. Whether those are aliases the loader resolves or C37
+repeated is **exactly what this check exists to answer**, and it is not answered here.
+
+**Not built now**: it is a new gate check and needs a full lane. The item comes first; the tool follows.
 
 ## What closing all of these does not do
 
