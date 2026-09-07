@@ -213,13 +213,27 @@ def _sub_neptune_vs_ice_giant(radius_earth):
         "가르는 것은 조성이다")
 
 
-def _ice_giant_vs_gas_giant(mass_earth, gas_mass_fraction, semi_major_axis_au):
+def _ice_giant_vs_gas_giant(mass_earth, gas_mass_fraction, semi_major_axis_au,
+                            is_satellite=False):
     if gas_mass_fraction is not None:
         v = ABOVE if gas_mass_fraction >= GAS_DOMINATED_FRACTION else BELOW
         return v, "analog", (
             f"가스질량분율 {gas_mass_fraction:.2f} 이 선언돼 있다 — 질량의 절반 "
             f"{'이상' if v > 0 else '미만'}이 수소-헬륨이다. 이 경계가 원래 묻는 것이 "
             "그것이라(Lambrechts & Johansen 2014) 선언이 먼저다")
+    # ⚠ 위성은 이 갈래를 타지 않는다 (C43, 오너 결정 2026-09-07). 페블 고립질량은
+    # **원시행성계 원반에서 별로부터 얼마나 먼가**를 묻는데, 위성은 그 원반에서 자라지
+    # 않았다. 문헌이 주는 두 경로 어느 쪽도 항성 거리를 쓰지 않는다 — 지구 달은 거대충돌
+    # (Canup & Asphaug 2001, [`2001Natur.412..708C`](https://ui.adsabs.harvard.edu/abs/2001Natur.412..708C)),
+    # 목성·토성계는 **주위행성 원반**(Canup & Ward 2002,
+    # [`2002AJ....124.3404C`](https://ui.adsabs.harvard.edu/abs/2002AJ....124.3404C)).
+    # 그전에는 위성 파일의 행성중심 장반경이 없어 `or PEBBLE_ISO_REF_AU` 로 **조용히 5 AU**
+    # 가 들어갔고, km→au 로 채웠다면 판도라의 이 경계가 BELOW→ABOVE 로 뒤집혔을 것이다.
+    if is_satellite:
+        return INSIDE, "judgment", (
+            "위성이라 페블 고립 경계를 적용하지 않는다 — 그 기준은 원시행성계 원반에서 "
+            "별까지의 거리를 묻는데, 위성은 그 원반에서 자라지 않았다(거대충돌 또는 "
+            "주위행성 원반). 이 경계를 답하려면 `gas_mass_fraction` 을 선언해야 한다")
     m_iso = pebble_isolation_mass(semi_major_axis_au)
     if mass_earth < m_iso:
         where = (f"{semi_major_axis_au:.2f} AU" if semi_major_axis_au
@@ -262,7 +276,8 @@ def solve(mass_earth: float,
           declared_class: str | None = None,
           composition_intent: str | None = None,
           gas_mass_fraction: float | None = None,
-          semi_major_axis_au: float | None = None) -> Result:
+          semi_major_axis_au: float | None = None,
+          is_satellite: bool = False) -> Result:
     """질량과 반지름에서 클래스를 좁힌다. 하나로 못 좁히면 좁히지 않는다.
 
     `declared_class` 는 계산에 **쓰이지 않는다** — 대조 상대다. 어긋나면 그 사실을
@@ -271,7 +286,8 @@ def solve(mass_earth: float,
               "declared_class": declared_class,
               "composition_intent": composition_intent,
               "gas_mass_fraction": gas_mass_fraction,
-              "semi_major_axis_au": semi_major_axis_au}
+              "semi_major_axis_au": semi_major_axis_au,
+              "is_satellite": is_satellite}
 
     if mass_earth is None or mass_earth <= 0:
         return out_of_domain(RECIPE, VERSION, "질량이 양수가 아니다",
@@ -311,7 +327,7 @@ def solve(mass_earth: float,
     verdicts = [
         _rocky_vs_sub_neptune(mass_earth, radius_earth),
         _sub_neptune_vs_ice_giant(radius_earth),
-        _ice_giant_vs_gas_giant(mass_earth, gmf, semi_major_axis_au),
+        _ice_giant_vs_gas_giant(mass_earth, gmf, semi_major_axis_au, is_satellite),
         _gas_giant_vs_brown_dwarf(mass_earth),
         _brown_dwarf_vs_star(mass_earth),
     ]
@@ -404,4 +420,5 @@ def _from_state(state):
         composition_intent=state.get("composition_intent"),
         gas_mass_fraction=state.get("gas_mass_fraction"),
         semi_major_axis_au=state.get("semi_major_axis_au"),
+        is_satellite=(state.kind == "moon"),
     )
