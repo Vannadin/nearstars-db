@@ -66,7 +66,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C18 | `body_class → dynamo_rocky via sub_neptune` | closed 2026-09-04 as a named refusal (corrected the same night) | the existence question it spawned is C23 |
 | C19 | the giant dynamo's cooling luminosity | closed 2026-09-04 — the `cooling_luminosity` gap edge is gone (no edge into `dynamo_giant` carries `status: gap`, and no edge anywhere uses that `via`) | — leftover is downstream and belongs elsewhere: `magnetosphere_geometry` has no recipe, and `internal_heat_nontidal` for giants still waits |
 | C20 | the thermal-history integrator | built 2026-09-04 | — |
-| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | At `t₀ = 0` the pulse is **9.59×** the whole long-lived budget and **3.09×** the sensible heat to the silicate solidus, decaying with `τ ≈ 1.03 Myr`, so **the answer is `t₀`** — which no body declares. ⚠ At **30 % rock it reaches only 0.928×**, so an ice-rich moon is not melted at all, before latent heat is counted. Energies are heat-effective (`E_H`, neutrino subtracted); an earlier version used the total `Q` and ran 1.271× high |
+| **C21** | the short-lived radiogenic pulse (²⁶Al · ⁶⁰Fe) | **dominance measured 2026-09-07** | At `t₀ = 0` the pulse is **9.59×** the whole long-lived budget, decaying with `τ ≈ 1.03 Myr`, so **the answer is `t₀`** — which no body declares. ⚠ **An ice-rich body (rock ≲ 35 %) is not melted at all**, under either reading. Energies are heat-effective (`E_H`); an earlier version used the total `Q` and ran 1.271× high, and twice claimed a latent heat was unheld that `eos.py` carries |
 | **C22** | ammonia fraction in the ice-giant mantle | **blocked** | step 1 waits on a survey; Bethkenhagen+ 2017's grid was never published, so only an author enquiry would open it (owner's call) |
 | **C23** | does a sub-Neptune's iron core run a dynamo? | **existence judged 2026-09-06; strength is not available** | see the row below the table |
 | C24 | water-rich rocky body does not converge | diagnosed and fixed 2026-09-04 | — |
@@ -2175,13 +2175,23 @@ depend on body size; size enters only by changing what it is compared against.
 | gravitational binding, Cassandra (3400 km) | 1.060×10⁷ | 0.494× |
 | gravitational binding, Pandora (5724 km) | 2.693×10⁷ | 0.195× |
 
-The first axis is the one this section specified. **The second is the question Yoshino's claim actually
-makes** — differentiation — built from engine materials: `C_PM` 1200 J/(kg·K) (`mantle_flux.py`, eq. 32)
-across 250 K → 1661 K, the peridotitic solidus at surface pressure from `eos.silicate_solidus`.
-⚠ **Latent heat is excluded because no held source gives one for silicate**, so the requirement is a
-**lower bound** and every ratio against it is an **upper bound**. The third axis was added here to make
-the size dependence visible, and it does: the pulse dominates the small three and is dominated by the
-large two.
+The first axis is the one this section specified. The second is built from engine materials: `C_PM`
+1200 J/(kg·K) (`mantle_flux.py`, eq. 32) across 250 K → 1661 K, the peridotitic solidus at surface
+pressure from `eos.silicate_solidus`. The third was added here to make the size dependence visible, and
+it does: the pulse dominates the small three and is dominated by the large two.
+
+⚠ **The second axis is two questions, not one incomplete one.** An earlier version of this section said
+twice that latent heat was excluded *"because no held source gives one for silicate"*, making the
+requirement a lower bound. **Both statements were wrong.** `eos.py` carries
+`SILICATE_MELT_DH = 4.0e5 J/kg`, cited to Monteux+ 2016 Table 1 — *"Specific enthalpy change ΔH
+4 × 10⁵ J/kg (Ghosh and McSween, 1998)"* — **in the same file whose solidus function this measurement
+calls.** And latent heat is not a missing piece of one number: it is spent *after* the solidus is
+reached, so the sensible-heat figure was the correct answer to a different question.
+
+| | requirement [J/kg] | what it answers |
+|---|---|---|
+| `C_p ΔT` | 1.693×10⁶ | heat enough to **begin** melting |
+| `C_p ΔT + ΔH` | 2.093×10⁶ | heat enough to melt **completely** |
 
 **But none of that is the answer, because the pulse decays with `τ ≈ 1.03 Myr`.**
 
@@ -2194,7 +2204,8 @@ large two.
 | 5 | 4.170×10⁴ | 0.076× | 0.025× |
 
 **A closure, and ⚠ a correction to how it was first described.** The `t₀` at which the pulse exactly
-meets the melting requirement comes out at **1.17–1.19 Myr**, and C9's paragraph prints *"for the wet
+meets the onset-of-melting requirement comes out at **1.17–1.19 Myr** (**0.95 Myr** for complete
+melting), and C9's paragraph prints *"for the wet
 olivine rheology successful models live in t₀ ≈ 1.3–1.9 Ma (§3.3)"*. The threshold lands inside that
 band.
 
@@ -2234,17 +2245,21 @@ Per this engine's convention, all are carried and none is elected.
 ⚠ **Composition does matter, and our moons have ice.** The pulse scales with the rock fraction, since
 aluminium rides in the silicate:
 
-| rock mass fraction | pulse [J/kg] | ÷ solidus requirement |
-|---|---|---|
-| 1.0 | 5.240×10⁶ | 3.09× |
-| 0.7 | 3.668×10⁶ | 2.17× |
-| 0.5 | 2.620×10⁶ | 1.55× |
-| 0.3 | 1.572×10⁶ | ⚠ **0.928×** |
+| rock mass fraction | pulse [J/kg] | ÷ begin melting | ÷ melt completely |
+|---|---|---|---|
+| 1.0 | 5.240×10⁶ | 3.09× | 2.50× |
+| 0.7 | 3.668×10⁶ | 2.17× | 1.75× |
+| 0.5 | 2.620×10⁶ | 1.55× | 1.25× |
+| 0.3 | 1.572×10⁶ | ⚠ **0.928×** | ⚠ **0.751×** |
 
-⚠ **At 30 % rock the pulse no longer melts the body at all — and that is before latent heat is added.**
-On the earlier `Q`-based numbers this row read 1.18×, an 18 % margin. It is now short by 7 %. Adding
-the missing latent heat puts the 50 % row in the same position. **Our moons carry ice**, so this is not
-a corner case of the table; it is the part of the table that describes them.
+**At 30 % rock the pulse does not melt the body under either reading.** That row is not a corner of the
+table — our moons carry ice, so it is the part that describes them.
+
+⚠ **And the 50 % row survives, which both seats predicted it would not.** Working and directing seat
+each expected latent heat to sink it; it comes out at **1.25×**. `ΔH` is **24 % of the sensible heat**,
+not a comparable term. **Both guesses ran the same way** — an unquantified term assumed large enough to
+overturn the result. **A term nobody has evaluated is not evidence for either side**, and estimating
+its size in advance is how a table gets read before it is computed.
 
 ⚠ **Two numbers in the source disagree with each other.** Neumann defines `f_i` as *"the number of
 atoms of **the stable isotope** per 1 kg"* and then prints `f_i = 10³ x_i N_A / m_{a,i}` *"with the
@@ -2255,12 +2270,17 @@ no initial heat-production rate to close against. The discriminant is recorded s
 meets an ordinary-chondrite ²⁶Al figure can settle it without going looking: **`H₀ = 2.041×10⁻⁷ W/kg`
 for 26.98, `2.118×10⁻⁷ W/kg` for 26.**
 
-⚠ **The limit that now decides an outcome, kept beside the conclusion.** The melting requirement still
-**excludes latent heat** — no held source gives one for silicate — so it is a lower bound and every
-ratio against it is an upper bound. **With the energy corrected to `E_H`, that no longer only bounds
-the result; it settles a row.** At 30 % rock the pulse reaches **0.928×** the requirement, so an
-ice-rich moon is not melted by the formation pulse **before latent heat is even counted**, and adding
-it puts the 50 % row in the same place. Our moons carry ice.
+⚠ **What the two readings still do not answer, named so the next person knows where to start.**
+Yoshino's *"major role for 10–100 km objects"* is a claim about **differentiation** — iron sinking —
+and neither reading is that. **Onset is too little** (a trace of melt separates nothing) and **complete
+melting is too much** (nothing has to melt entirely). The real criterion is a **melt-fraction
+threshold**, and our two numbers bracket it rather than being it. ⚠ **The material is already in the
+engine**: `eos.silicate_melt_fraction(p, t, variant)`, which its own docstring calls the single source
+of truth for `φ`. **Not built here** — this item's job was the dominance question — but the bracket and
+the tool are recorded together so the next step is a step, not a restart.
+
+**What stands after both corrections**: an ice-rich body — rock fraction below roughly 35 % — is not
+melted by the formation pulse under either reading, and above that the answer turns on `t₀`.
 
 **What this changes.** ⚠ **The refusal is not lifted; it is renamed.** It was *"we have no input"*. It is
 now *"the input has narrowed to one: `t₀`"* — the formation time after CAIs, which no body declares and
