@@ -201,6 +201,16 @@ def solve_mode(surface_flux: float | None, radiogenic_power: float | None, radiu
     if surface_flux is None and radiogenic_power is None:
         return out_of_domain(RECIPE, VERSION, "cannot-say (no heat source): tidal_heating 도 internal_heat_nontidal 도 값을 내지 않았다",
                              inputs, refs)
+    # ⚠ C34, 오너 결정 2026-09-07 — **먹이는 양은 조석 + 방사성 총 플럭스**다. 고른 것이 아니라
+    # 문서 자신의 §6.2 앵커가 판별했다: 지구 기준 후보 넷(0.0418 엔진 · 0.0769 implied ·
+    # 0.08 §6.1 · 0.0921 측정 표면열류)이 **2.203× 폭**으로 벌어져 있고, 저단은 앵커 라벨 4개 중
+    # **3개**를 재현하고 고단은 **1개**(지구뿐)만 재현한다. 수성 0.01575 · 화성 0.01587 이 정체뚜껑
+    # 경계 0.030 까지 **1.90× · 1.89× 여유**뿐이라, 먹이는 양을 1.9× 넘게 올리면 둘이 판구조로
+    # 넘어간다 — 문서는 둘 다 정체뚜껑으로 적는다. 즉 **밴드는 판정 중립이 아니었다.**
+    # ⚠ 이 줄의 값은 안 바뀌었다. 바뀐 것은 근거다 — 전에는 이 레시피 자기 계약 블록이 "총 플럭스"
+    # 라 적은 것이 유일한 출처였고(b29b556e), 이제는 앵커 3/4 재현이다.
+    # ⚠ 안 고쳐진 것 둘: 금성은 양쪽 끝에서 다 안 맞고(문서 정체뚜껑, 엔진 37.75 → 판구조),
+    # 판구조 천장 0.135 는 여전히 authored 다. 이 결정은 **먹이는 양**에 대한 것이지 문턱이 아니다.
     area = 4.0 * math.pi * (radius_earth * R_EARTH_M) ** 2
     radiogenic_flux = (radiogenic_power or 0.0) / area
     total = (surface_flux or 0.0) + radiogenic_flux

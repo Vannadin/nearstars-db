@@ -71,6 +71,29 @@ def main() -> int:
     ok(th.transport_mode(0.01587, 0.010) == th.MODE_PLATE,
        "4b: below the ceiling the table has no 'neither' — the low end calls Mars plate tectonics")
 
+    # ── 4c. C34: 먹이는 양의 후보 넷은 판정 중립이 아니다 (오너 결정 2026-09-07, 저단 채택) ──
+    # ⚠ 이것이 결정의 근거다. 지구 기준 후보 넷이 2.203× 폭인데, 수성·화성은 정체뚜껑 경계까지
+    # 1.9× 여유뿐이다. 그래서 먹이는 양을 위로 재는 선택은 그 둘을 판구조로 넘기고, 문서는 둘 다
+    # 정체뚜껑으로 적는다. **고른 것이 아니라 문서 앵커가 판별했다** — 이 시험이 그 판별을 고정한다.
+    C34_LOW, C34_HIGH = 0.0418, 0.0921
+    docs = {"Mercury": (0.01575, th.MODE_STAGNANT), "Venus": (0.03775, th.MODE_STAGNANT),
+            "Earth": (0.04180, th.MODE_PLATE), "Mars": (0.01587, th.MODE_STAGNANT)}
+    span = C34_HIGH / C34_LOW
+    agree_low = sum(th.transport_mode(f) == want for f, want in docs.values())
+    agree_high = sum(th.transport_mode(f * span) == want for f, want in docs.values())
+    ok((agree_low, agree_high) == (3, 1),
+       f"4c/C34: the low end must reproduce 3 of the document's 4 anchor labels and the high end 1; "
+       f"got {agree_low} and {agree_high}. If this moves, the grounds for feeding the total flux moved")
+    ok(abs(span - 2.203) < 0.002, f"4c/C34: the candidate spread is 2.203×, got {span:.4f}")
+    for name, margin in (("Mercury", 0.030 / 0.01575), ("Mars", 0.030 / 0.01587)):
+        ok(margin < span,
+           f"4c/C34: {name} sits {margin:.2f}× below the boundary, inside the {span:.2f}× spread — "
+           f"that is why the band was not neutral")
+    # ⚠ 안 고쳐진 것: 금성은 양쪽 끝에서 다 어긋난다. 3/4 이지 4/4 가 아니다.
+    ok(th.transport_mode(0.03775) != th.MODE_STAGNANT and
+       th.transport_mode(0.03775 * span) != th.MODE_STAGNANT,
+       "4c/C34: Venus disagrees with the document at both ends — the decision does not repair it")
+
     # 5. refusals
     ok(not th.solve(1.0, 1.0, None, None, None, 0.01).applicable and "no orbit" in th.solve(1.0, 1.0, None, None, None, 0.01).reason, "5: no orbit refuses by name")
     ok("no k2_over_q" in th.solve(1.0, 1.0, 3.8e5, 1.0, 0.05, None).reason, "5: no k₂/Q refuses by name")
