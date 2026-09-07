@@ -1270,3 +1270,31 @@ run it anyway.
 a recipe *looks up* — it compares the labels a recipe puts on its evidence. **The `Returns` side it does
 see**, and it caught both of these. The blind spot is the input side only, which makes the working half
 worth using deliberately rather than waiting for the gate to use it.
+
+## Every anchor we scored with defined the cell it was scored against (2026-09-07)
+
+C46's ladder was checked against four solar-system bodies and reported 3 of 4, then 2 of 2 under a
+different form. ⚠ **All four bodies are where the rungs came from.** §6.2's plate rung *is* Earth, its
+stagnant rung *is* the Venus–Mars pair, its heat-pipe rung *is* Io. **The score measured arithmetic:
+does a number exceed the rung it was used to set?**
+
+**Both seats did this for two days without seeing it**, and the working seat had already written the
+narrow version of the observation — *Mercury and Mars cannot be scored, because the 10–30 mW/m² the
+document attaches to them is the stagnant rung itself.* ⚠ **The same sentence covers Earth and Io, and
+neither seat extended it.** A correct observation was made about two bodies and stopped there.
+
+**What broke it was fetching a body that is in no rung.** The Moon: undisputed one-plate, *in situ*
+measurement, absent from every rung. It passes, and **that pass is the first one carrying information.**
+
+**The rule**: when a scale's rungs are values from known bodies, **a body that supplied a rung cannot
+test the scale.** List the rungs, list the scored bodies, and strike the intersection. What is left is
+the test — and here it was one body out of five.
+
+⚠ **Report the halves separately.** "Independent 1/1, self-scored 4/4" is honest; "5/5" is a tautology
+wearing a score. **Adding them is the whole error**, because the large number comes from the part that
+could not have failed.
+
+⚠ **And a second thing fell out of the same look.** The stagnant rung's Venus half — 10–20 mW/m², from
+a 1998 paper we do not hold — is superseded by Smrekar+ 2023's measured **78**, four to eight times
+higher. **The rung has not moved.** Checking who set a rung also tells you when they set it, and a
+twenty-five-year-old rung deserves that question asked out loud.

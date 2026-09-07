@@ -91,7 +91,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **resolved 2026-09-07** | Owner chose route 2: a satellite does not take the pebble-isolation branch, because neither formation path in the literature uses a distance from the star — giant impact or **circumplanetary** disc. The `semi_major_axis_au` / `_km` question closes with it: a moon consumes no stellar distance, so there is nothing to fill. Satellite mass budget recorded, all five exempt, no value changed |
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
-| **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07; rows still absent** | The flux now fixes **one** cell by the highest rung it passes (0.010 · 0.09 · 2.5 W/m², plus a named state below), with the band kept beside it. ⚠ **The rungs are bodies, not boundaries** — origin `analogy-rung`, our rule and not the literature's verdict, so Earth reading `plate tectonics` is a tautology. ⚠ Venus's 78±69 mW/m² spans three cells, and the ladder **inverts C34's grounds** — reported, not acted on |
+| **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07; rows still absent** | The flux now fixes **one** cell by the highest rung it passes (0.010 · 0.09 · 2.5 W/m², plus a named state below), with the band kept beside it. ⚠ **The rungs are bodies, not boundaries** — origin `analogy-rung`, our rule and not the literature's verdict, so Earth reading `plate tectonics` is a tautology. ⚠ Venus's 78±69 mW/m² spans three cells, the ladder **inverts C34's grounds**, and re-scoring with the Moon — the only body in no rung — gives **independent 1/1 beside self-scored 4/4**, not added. ⚠ And the stagnant rung's Venus half (10–20 mW/m², 1998, not held) is superseded by Smrekar's 78 while the rung has not moved |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3902,6 +3902,47 @@ tautology recorded so nobody reads it as a verdict.
 stagnant rung, and on the Earth rung depending on where in its own uncertainty you read it. **The
 one-cell answer is that thin**, which is why the band travels beside it in the same output rather than
 being replaced by it.
+
+### Re-scored 2026-09-07 with a body that is not one of our rungs
+
+⚠ **Every anchor this project had been scoring with defines the cell it is scored against.** The plate
+rung *is* Earth, the stagnant rung *is* the Venus–Mars pair, the heat-pipe rung *is* Io. **So 3 of 4 or
+2 of 2 measured arithmetic, not the ladder.** Two papers were fetched to break that:
+
+**The Moon — the only body in no rung.** Langseth, Keihm & Peters 1976
+([`1976LPSC....7.3143L`](https://ui.adsabs.harvard.edu/abs/1976LPSC....7.3143L)) ⚠ **read from page
+images; the text layer is 609 bytes of ADS stamps.** Apollo 15 Hadley Rille **2.1 μW/cm²**, which the
+paper calls *"representative of the regional value"*; Apollo 17 **1.6**, corrected to **1.4** as the
+best regional estimate; and a global average of **1.8 μW/cm² = 18 mW/m²** from measured surface thorium
+and inferred crustal thickness. ⚠ This paper exists to **replace** Langseth+ 1972/1973 — the
+conductivities are 30–50 % lower — so the older values must not be cited. And it says of its own global
+figure that *"the need is emphasized for extended areal coverage"*.
+
+**Mars — an independent method on a rung body.** Parro+ 2017
+([`2017NatSR...745629P`](https://ui.adsabs.harvard.edu/abs/2017NatSR...745629P), open access): preferred
+model **14–25 mW/m², average 19**, and *"we propose an upper limit of 20 ± 1 mW m⁻² for the present-day
+global average"*. The method — crustal and mantle radiogenic production scaled by crustal thickness and
+topography, anchored on polar elastic thickness — has nothing to do with a stagnant-lid flux conversion.
+
+| body | flux | cell | | what the score is worth |
+|---|---|---|---|---|
+| **Moon** | 18 mW/m² | stagnant lid | ✓ | **independent** — in no rung, undisputed one-plate body, *in situ* measurement |
+| Mars | 19 mW/m² | stagnant lid | ✓ | rung body, but this value comes from a method unrelated to the rung |
+| Venus | 78 mW/m² | stagnant lid | ✓ | same — and see below |
+| Earth | 0.0902 W/m² | plate tectonics | ✓ | **circular**: that rung is Earth |
+| Io | 2.5 W/m² | heat pipe | ✓ | **circular**: that rung is Io |
+
+**Independent 1 of 1. Self-scored 4 of 4** — ⚠ **and the scores are not added**, because summing them
+counts a tautology as evidence. Mercury has no measured surface heat flow at all and is scored nowhere.
+
+⚠ **A rung is superseded, and the ladder still stands on the old value.** The stagnant rung's 10–30
+mW/m² comes from [`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)
+(**not held**), whose Venus half is **10–20 mW/m²**. Smrekar+ 2023 measures Venus at **78**, four to
+eight times that. **The measurement that sets half of our lowest rung was replaced twenty-five years
+later, and the rung did not move.** ⚠ This is not repaired here — the 1998 paper is not held, so what
+exactly it claimed for Mars is unread, and moving a rung is the owner's call. **But the Moon's 18 and
+Mars's 19 sit near the old value while Venus's measurement does not**, which is the shape of the
+problem: the rung may be right for two bodies and wrong for the one it was named after.
 
 ### C34, re-measured under the ladder — the argument inverts
 
