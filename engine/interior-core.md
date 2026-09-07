@@ -4698,6 +4698,82 @@ that gets recorded as this seat's error.
 and a mechanism *helps* if turning it on **raises** that ratio above the no-melting 1.372. A mechanism
 that lowers it pushes against the test.
 
+### C47 (h) 2026-09-08 — step 4's verdict is held, and step 0's threshold is written before the measurement
+
+**Step 4 ran, its numbers are final, and its verdict is held.** The numbers are in C47 (g)'s
+pre-registration and are not revised here. What is recorded here is why the verdict cannot be read off
+them yet.
+
+**⚠ The pre-registration had a hole, and the directing seat found it, not this seat.** The eight
+quantities pinned before step 4 do not include `T_p`. The direction test was run at a **common
+potential temperature** for Earth and Mars — a decision made while implementing, on the mistaken
+ground that C47 (c) had already settled it. **C47 (c) settled something else**: it forbade *choosing*
+Mars's `T_m` so that `Ur` comes out. **Reading `T_p` off a thermal history is not choosing.** Those two
+were collapsed into one, and the collapse is this seat's.
+
+⚠ **The omission is shared and is recorded as shared.** This seat pinned eight values and published
+the table; the directing seat approved it. Neither noticed the ninth. It is not the work seat's alone.
+
+**Why it matters, in one sentence:** Mars's higher Urey ratio is explained in the literature by Mars
+having *cooled more* — so running the test at a common `T_p` may have removed the very physics being
+tested, in which case the failure is the setup's and not Korenaga's.
+
+**And route (ii) is not hypothetical.** `core_history` already emits
+`mantle_potential_temperature_present`, and on Earth it returns **1525 K** against the 1623 K this
+seat fed step 4 from Korenaga's own §4 condition — a 98 K difference between two non-arbitrary
+sources. It cannot run on Mars because `earth.yaml` is the only body declaring the two initial
+temperatures.
+
+**⚠ Route (i) is closed, and not for want of looking.** Monders, Médard & Grove 2007
+([`2007M&PS...42..131M`](https://ui.adsabs.harvard.edu/abs/2007M%26PS...42..131M)) states
+*"the persistence of high mantle potential temperatures on Mars, **similar to those on the modern
+Earth**, until at least the very latest Noachian (**3.7 Ga**)"*. **Mars has no present volcanism, so
+no erupted melt records a present `T_p`** — every "present Martian potential temperature" in the
+literature is a thermal-model output, not a measurement. ⚠ And the paper's `1320 °C` is the multiple
+saturation temperature of **one Gusev basalt at 1.0 GPa**, not a mantle potential temperature; it is
+not transcribed. Baratoux+ 2011 ([`2011Natur.472..338B`](https://ui.adsabs.harvard.edu/abs/2011Natur.472..338B))
+is the canonical `T_p`-versus-time curve and is **not held** (Nature) — a known hole.
+
+**What Mars needs, which is more than the brief supposed.** There is no `mars.yaml` at all; the five
+body files are Earth, Alpha Centauri A b, Pandora and the two Luhman 16 components. So this is a new
+control body, on `earth.yaml`'s own stated footing — *"a specimen for checking the engine against
+published values, not a board body"* — and **it does not go on the board.** Of its inputs, mass,
+radius, age and core mass fraction are published and `stagnant_lid: true` is a fact, but **three
+declarations have no Martian source**: `potential_temperature` and the two initial temperatures.
+
+**Two of the three cost nothing, and one is the whole question.**
+
+- **The initial temperatures transfer unchanged from Nimmo+ 2004's printed starting condition** —
+  Fig. 2's caption, *"starting temperature of both mantle and core was 4800 K"*, which is where
+  Earth's own 4800 K / 3040 K come from. That is this engine's established pattern for an Earth number
+  declared on every rocky body (`MANTLE_SHARE = 0.70`, `T_s = 293 K`), and its value here is precisely
+  that **it leaves nothing for this seat to pick.** The 3.7 Ga checkpoint then validates or refutes the
+  transfer.
+- ⚠ **`potential_temperature` is different, and transferring Earth's 1600 K would re-introduce the
+  defect this section exists to fix — with a citation attached.** It also steers the trajectory:
+  `core_history` sets `r_b = cmb_temperature / potential_temperature` and divides the mantle cooling
+  rate by `√r_b`.
+
+**So step 0's question, stated the way the directing seat put it, which is sharper than this seat's
+first framing:** not *"is route (ii) circular"* but **"may Earth's `potential_temperature` be
+transferred to Mars at all?"**
+
+**⚠ Threshold and sweep width, fixed here before the measurement.** Naming "weak" and "strong" after
+seeing the numbers would be inventing a rule to fit the cell it landed in — the error this seat
+blocked in C47 (g)'s fourth cell and would otherwise repeat one section later.
+
+| item | value | ground |
+|---|---|---|
+| **sweep** | declared Mars `potential_temperature` over **1400–1800 K** | Earth's declared value is 1600 K (Unterborn+ 2019) and Monders has Mars *"similar to modern Earth"* until 3.7 Ga, so ±200 K brackets it without being chosen for an outcome |
+| **criterion A** | `abs(d output T_p / d declared T_pot) < 0.5` | at a slope of 1 the declaration **is** the output; at 0 the trajectory has forgotten it. Half is the point where the body's own mass, radius and age stop dominating |
+| **criterion B** | the 3.7 Ga checkpoint verdict must be **the same at both sweep ends** | if sweeping our declaration flips the checkpoint, the checkpoint is testing the declaration and not the trajectory |
+| **rule** | **both** must hold to proceed. Either failing stops step 0 and the transfer is refused | — |
+
+⚠ **And the checkpoint's own limit, recorded beside it so a pass is not over-read:** Monders gives a
+**qualitative** statement, not a number. The checkpoint can only catch a badly wrong trajectory. **A
+pass is not a precision validation of the Martian thermal history**, and nothing downstream may cite
+it as one.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
