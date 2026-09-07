@@ -82,7 +82,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C34** | what the transport table is fed, and where its thresholds come from | **half answered** | the thresholds half is answered — none is published, they are conversions, and the 0.03 became a C32 band on 2026-09-06. **What quantity to feed the table is still the owner's**, and Earth alone has four candidates spanning 2.20× |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **landed 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
-| **C37** | `rotation_period` is spelled three ways | **listed 2026-09-06, one-line bug** | `dynamo_rocky` reads `rotation_period`, bodies declare `rotation_period_h`, `chain.yaml` labels the output `rotation_period`. The sibling `dynamo.py` already reads the right one, so there is no schema question — only the fix, and the graph label |
+| **C37** | `rotation_period` is spelled two ways, and the contract check cannot see it | **closed 2026-09-07** | ⚠ **Two spellings, not three** — `rotation_period_days` is a comment recording a pre-converted DB value, read by nothing. `dynamo_rocky` looked up `rotation_period` while every supplier writes `rotation_period_h`, so it received **None on every body** and recorded that as evidence. Unified across code, contract (en+ko), chain label and the evidence key; no verdict moves, because the value was never in a branch |
 | **C38** | `tidal_locking` stands on two tidal models at once | **closed by record 2026-09-06** | `τ_lock` is constant-phase-lag (Goldreich & Soter, per Barnes §2.1); `ω_eq/n` is Hut 1981, which Barnes cites for constant-**time**-lag. They agree only under an assumption neither our document nor our code states, and Hut is held as an unreadable scan |
 | **C39** | the same `Q/k₂` is a per-body declaration in one node and a class band in another | **closed 2026-09-06** | Unified: **a declaration wins, the class band is the fallback**, inverted at one named place (`q_over_k2_from_declaration`) and named in the output. No roster verdict moved — Dante and Hades read 1:1 before and after, the a⁶ gate deciding them by nine orders of magnitude. The class band still fails to describe them, which is now C39's finding rather than its blocker |
 | **C40** | a fitted value has no seat in the value vocabulary, so it travels as a bare point | **listed 2026-09-06** | C32 gave three words for where a number came from — printed, chosen, engine-filled — and a value solved backwards from a wanted output is none of them. Observed in C39: wiring Dante's declared `k₂/Q` turned `τ` from a band into a point with no width anywhere. Every `tidal_heating` declaration is in the same position |
@@ -3325,6 +3325,47 @@ declared side by side as `bodies/pandora.yaml` now does, is not decided here.
 **The general shape, which is the part worth keeping**: *a name is evidence about intent, not about
 provenance.* When a value's origin decides how it may be used, the origin has to be read, and it lives
 on the board and not in the key.
+
+### C37 — one lookup, four names, and a contract check that could not see it — **closed 2026-09-07**
+
+⚠ **First, a correction: there were two spellings, not three.** This file previously counted
+`rotation_period_days` among them. It is not a declaration — `bodies/luhman_16_a.yaml` reads
+`rotation_period_h: 6.94    # DB rotation_period_days 0.2892`, a comment preserving the source value
+next to the converted one, and **no code reads it**. The 24× hazard that name implied never existed.
+
+**The real defect was one lookup.** `dynamo_rocky` read `state.get("rotation_period")`; every supplier
+writes `rotation_period_h` — three body files, the sibling `dynamo.py`, and `tidal_locking`'s own
+output. So the recipe received `None` **on every body, always**, and wrote that `None` into its
+evidence record.
+
+⚠ **Why nothing noticed, which is the part worth keeping.** `check_contracts` compares the document's
+`Needs` against `set(result.inputs)` — **the labels a recipe attaches to its evidence, not the keys it
+looked up.** `dynamo_rocky` labelled the value `"rotation_period"`, the contract said
+`rotation_period`, they matched, and the lookup string was never examined. **A recipe can read a key
+nobody supplies and stay green indefinitely, as long as it files the resulting `None` under a name the
+contract knows.** That is the mechanism, and it is not specific to this node.
+
+**So the repair is four sites, not one** — otherwise the same trap stays open for whoever reads the
+contract next:
+
+| site | was | now |
+|---|---|---|
+| `dynamo_rocky` lookup | `state.get("rotation_period")` | `state.get("rotation_period_h")` |
+| its evidence label | `"rotation_period"` | `"rotation_period_h"` |
+| contract Needs (en + ko) | `rotation_period` [h] | `rotation_period_h` [h] |
+| `chain.yaml` outputs label | `rotation_period` | `rotation_period_h` |
+
+With label and lookup now one string, `check_contracts` actually covers this node.
+
+**What changed in the answers: nothing.** Measured on Pandora, the only roster body that both reaches
+the rocky ladder and has a rotation period to give (32 h, from `tidal_locking`): every emitted value is
+identical — `b_eq` 41.3725 µT, `ladder_regime` 1, `dynamo_alive` alive, the same `rossby_verdict`.
+Only `inputs` moves, from `None` to 31.999 h.
+
+⚠ **That is not a reason to call the repair empty.** The engine wrote `"rotation_period": None` into its
+own evidence for every body it ever judged, and the first person to reconstruct a verdict from that
+record would have been reading a lie. **A test now fails if the lookup regresses**, since nothing else
+would notice: verified by reverting the key and watching it go red.
 
 ## What closing all of these does not do
 
