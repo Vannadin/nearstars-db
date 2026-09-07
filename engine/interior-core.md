@@ -91,7 +91,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C43** | a disc-formation criterion is applied to a moon, on an input that defaults silently | **resolved 2026-09-07** | Owner chose route 2: a satellite does not take the pebble-isolation branch, because neither formation path in the literature uses a distance from the star — giant impact or **circumplanetary** disc. The `semi_major_axis_au` / `_km` question closes with it: a moon consumes no stellar distance, so there is nothing to fill. Satellite mass budget recorded, all five exempt, no value changed |
 | **C44** | a field name that misled the engine into doubting its own data | **listed 2026-09-07** | `eccentricity_forced` holds a **measured** orbital eccentricity — Dante's row says an assumed mean was replaced by an `e_rms` from the stability run — but the name reads as a theoretical forcing term. ⚠ Two seats argued from the name alone that it might not be the quantity the despin formula wants, and neither opened the board. C37's class with a documented instance of misleading |
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
-| **C46** | the transport table is missing rows **and** discriminates on a different axis | **listed 2026-09-07** | The literature's regime set is **five** (Lourenço+ 2020, held): mobile lid · stagnant lid · **heat pipe, nested inside stagnant lid** · plutonic-squishy lid · episodic lid. We have three, ordered by flux; theirs are cut by **mobility and plateness** — surface kinematics, not W/m². ⚠ And their discriminators are **unobservable for an exoplanet**, so adopting their axis is not available either. Venus gets two different literature answers |
+| **C46** | the transport table is missing rows **and** discriminates on a different axis | **band built 2026-09-07; rows still absent** | The recipe now emits the **set** of literature regimes a flux is compatible with, excluding only outside a printed range. ⚠ **Fed real measurements it excludes nothing** — Earth at 46 TW is compatible with stagnant lid, and the one exclusion (mobile lid for Venus) appears only on our own estimate and vanishes on Smrekar's measurement. `mode` is relabelled a ladder cell, not a regime |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -3795,6 +3795,58 @@ without method or errors), and Turcotte 1989's heat-pipe proposal for Venus with
 and 200 km³/yr requirement. ⚠ **Smrekar+ 2018 and Turcotte 1989 are not held** — the first is
 paywalled, the second failed at the gateway. **No statement here rests on them beyond what an abstract
 supports.**
+
+### C46 (b) built 2026-09-07 — the flux is a sieve, and it sieves almost nothing
+
+**Owner**: *"B로 해보자. 금성/지구 어떻게 나오나 예시가 좀 궁금하네."* So the recipe stops choosing a
+regime and emits **the set the flux is compatible with**.
+
+⚠ **No threshold was invented, because inventing one is the disease this item names.** The only honest
+relation available is: collect the heat-flow values the literature **actually prints** per regime, and
+exclude a regime **only** where our number falls outside a printed range. Lourenço+ 2020 §4.3 prints
+them, for an Earth-sized model, averaged over the last 2 Gyr:
+
+| regime | printed | kind |
+|---|---|---|
+| mobile lid | conductive **35–45 TW**; magmatic "low" | one numeric range |
+| stagnant lid | magmatic **up to 30–35 TW**; conductive "generally low" | one bound, one word |
+| episodic lid | magmatic **up to 20 TW**; conductive "intermediate" | one bound, one word |
+| plutonic-squishy lid | magmatic **up to ~10 TW**; conductive "intermediate", "very high compared to a stagnant lid" | one bound, one word |
+| heat pipe | **nothing** — it is stagnant lid at 100 % eruption efficiency, defined by eruption, not flux | none |
+
+⚠ **The TW → W/m² conversion is ours** (Lourenço §2: *"realistic parameter values and physics
+descriptive of planet Earth"*), and **the printed values are per component.** Where one component is a
+number and the other is a word, **the total has no printed ceiling** — so that regime cannot be
+excluded from above at all. That single fact is why the sieve barely sieves.
+
+**The output, run rather than written** (`solve_mode`, engine values):
+
+| body fed | total | ladder cell | compatible | excluded |
+|---|---|---|---|---|
+| Earth, measured **46 TW** (Korenaga 2008) | 0.0902 W/m² | plate tectonics | **4** — mobile, stagnant, episodic, squishy | **none** |
+| Venus, our own scaled estimate | 0.03775 W/m² = 17.4 TW | plate tectonics | 3 | **mobile lid** |
+| Venus, Smrekar+ 2023 **measured 78 mW/m²** | 0.078 W/m² = 35.9 TW | plate tectonics | **4** | **none** |
+| Venus, that value's upper error, 147 mW/m² | 0.147 W/m² = 67.7 TW | ⚠ *unclassified* | **4** | **none** |
+
+⚠ **The pre-registration said Earth and Venus would not separate on this axis. They separate — and the
+separation is an artefact of our own number.** The one exclusion the sieve ever makes is mobile lid for
+Venus, and it appears **only** when Venus is fed our mass-scaled estimate of 17.4 TW. Fed Smrekar's
+**measurement**, the exclusion vanishes. And Smrekar's argument is precisely that models predicting
+Venus at about half of Earth's flux are wrong — **so the exclusion rests on the assumption that paper
+exists to refute.**
+
+**Fed real measurements, this axis excludes nothing for either body.** Earth — the textbook mobile lid —
+comes out compatible with stagnant lid. **That is the result.** A test pins it, including that the
+candidate set never falls below three across four decades of flux.
+
+⚠ **And the ladder cell is no longer called a regime.** `mode` stays in the output because eight
+consumers read it, but the note beside it now says what it is: **the §6.2 flux-ladder cell, not a
+tectonic regime.** The two were the same word before, which is how a flux threshold came to look like a
+classification.
+
+**The sentence that was a footnote is now the finding.** Our own document already said it: *"there is no
+published W/m² boundary between the modes, because the real criterion is melt fraction and any flux
+threshold is a conversion, not a citation."* This section is that sentence with the measurement attached.
 
 ## What closing all of these does not do
 
