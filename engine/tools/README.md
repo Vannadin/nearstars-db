@@ -1155,5 +1155,17 @@ draft.
 ⚠ **And the direction matters for whoever reads a brief next.** A shape arriving as an instruction is
 easy to build as given; measuring it first can feel like doubting the sender. **Neither of the two
 above would have worked as sent**, and each was cheap to check — one `grep -c`, one small script.
-Measure, then build, and say what the measurement was in the checker's own header so the dead end stays
-marked rather than merely avoided.
+**At that price, whether checking counts as doubt cannot be the question.** Measure, then build, and
+put the measurement in the checker's own header so the dead end stays marked rather than merely
+avoided.
+
+⚠ **A count offered against oneself still needs checking.** The "three times" above came from the
+directing seat as self-criticism, and self-criticism is the form of claim least likely to be audited —
+disagreeing with it feels like arguing for someone's comfort rather than for accuracy. It was still
+**counted from memory, and the record supports two.**
+
+The seat reports the mirror image from earlier the same day: a `main` commit count given as 2 where the
+true number was 7. ⚠ **That earlier case is their account and is not in this record**, so it is written
+here as reported rather than as verified. **If both hold, the pair is the useful part** — one
+undercount, one overcount, opposite directions, and **the same cause: a number recalled instead of
+queried.** Whether the recollection flatters or accuses changes nothing about which one it is.
