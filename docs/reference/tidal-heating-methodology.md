@@ -289,7 +289,25 @@ designs.
 
 Note that tidal heating is one heat source among several (radiogenic, accretional,
 primordial). For an Earth-mass body radiogenic heating alone is ~0.08 W/m²; tidal
-heating matters when it *exceeds* that. For small icy moons radiogenic heat is
+heating matters when it *exceeds* that.
+> ⚠ **`~0.08 W/m²` has NO SOURCE — flagged 2026-09-07, deliberately not changed.** It carries no
+> citation and never has: it entered with this document's first commit (`98774764`, 2026-06-23) and a
+> `git log -S` over the whole history finds no version where it was cited. It is **2.1× both held
+> estimates** of Earth's radiogenic production — Korenaga 2008's 16–20 TW is 0.031–0.039 W/m², and this
+> repo's own `radiogenic.py` gives 0.0415 W/m² on its default set — while being **87 % of Earth's
+> measured total surface flux**, 0.0921 W/m². It sits with the totals, not with the components, so
+> "radiogenic heating alone" may be the wrong label for it.
+>
+> ⚠ **And this document already uses the same number under the other label.** §5's Io entry calls
+> 2 W/m² *"an order of magnitude above **Earth's** ~0.08 W/m²"* — unqualified, meaning Earth's flux,
+> which is the total. **So 0.08 appears twice here: once as a component and once as a total.** The
+> comparison in §5 only works against the total (0.0921), which is what 0.08 nearly is; the label in
+> this paragraph is the one that does not fit.
+>
+> ⚠ It is also **one of the four candidates C34 is choosing between**, so a value with no source, used
+> under two labels, is standing in that choice. Not corrected here: a figure whose provenance is
+> unknown must not be replaced by a guess. See C47 in
+> [`engine/interior-core.md`](../../engine/interior-core.md). For small icy moons radiogenic heat is
 negligible and tides are essentially the only knob, which is why the distance gate
 is so decisive for them.
 
