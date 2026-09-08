@@ -4714,7 +4714,11 @@ that lowers it pushes against the test.
 ### C47 (h) 2026-09-08 — step 4's verdict is held, and step 0's threshold is written before the measurement
 
 **Step 4 ran, its numbers are final, and its verdict is held.** The numbers are in C47 (g)'s
-pre-registration and are not revised here. What is recorded here is why the verdict cannot be read off
+pre-registration and are not revised here. ⚠ *Corrected 2026-09-08 (Brief 160): **that run's outputs are
+not in this repo.** (g) holds the pre-registration — the four cells, the eight fixed values, the target
+3.68 / 4.78 and the no-melting 1.372 — and no `q_Earth/q_Mars` from a run appears in any document,
+module, test or scratch directory. The run lived in the 09-07/08 seats' transcripts and its numbers went
+with them. Step 4 is therefore a **build**, not a re-run — counted in C47 (j).* What is recorded here is why the verdict cannot be read off
 them yet.
 
 **⚠ The pre-registration had a hole, and the directing seat found it, not this seat.** The eight
@@ -4843,9 +4847,9 @@ the owner picked the first:
 
 | candidate | window, K | grade | note |
 |---|---|---|---|
-| **Herzberg+ 2007** [`2007GGG.....8.2006H`](https://ui.adsabs.harvard.edu/abs/2007GGG.....8.2006H) — ✅ **owner's choice, the verdict line** | **[1553.15, 1673.15]** | ⚠ **held** since 2026-09-08 (owner-supplied PDF, cache) — upgraded from *abstract only*, and the label re-read in the body: *"Our preferred `T_P` range for ambient mantle is 1280–1400 °C (Figure 5)"*, computed by the **McKenzie & Bickle 1988** potential-temperature method for *"MORB magmas with 10–13 % MgO"*, and in the concluding paragraph *"ambient mantle temperatures at normal oceanic ridges are 1280–1400 °C (ΔT_P = 120 °C)"* | a potential temperature of the ambient mantle, so it does not repeat the Monders defect below. The body also warns its Iceland values *"should not be used as a high `T_P` anchor for ambient mantle"* — we do not |
+| **Herzberg+ 2007** [`2007GGG.....8.2006H`](https://ui.adsabs.harvard.edu/abs/2007GGG.....8.2006H) — ✅ **owner's choice, the verdict line** | **[1553.15, 1673.15]** | ⚠ **held** since 2026-09-08 (owner-supplied PDF, cache) — upgraded from *abstract only*, and the label re-read in the body: *"Our preferred `T_P` range for ambient mantle is 1280–1400 °C (Figure 5)"*, computed by the **McKenzie & Bickle 1988** potential-temperature method for *"MORB magmas with 10–13 % MgO"*, and again where the paper states its result — *"Our work shows that ambient mantle temperatures at normal oceanic ridges are 1280–1400°C"*, `ΔT_P` = 120 °C — the sentence pinning the location rather than a paragraph number | a potential temperature of the ambient mantle, so it does not repeat the Monders defect below. The body also warns its Iceland values *"should not be used as a high `T_P` anchor for ambient mantle"* — we do not |
 | Katsura+ 2010 [`2010PEPI..183..212K`](https://ui.adsabs.harvard.edu/abs/2010PEPI..183..212K) — record column | [1575, 1645] from the abstract; **[1560, 1640] from the body** | ⚠ **held** since 2026-09-08 | mineral-physics route (410-km discontinuity + adiabat), no solidus anywhere in it. ⚠ **The abstract and the body disagree**: abstract *"the mantle potential temperature is found to be 1610 ± 35 K"*, body §4 *"1600 ± 40 K"* — and the divergence is systematic, not only in `T_p` (transition-zone base 2010 ± 40 vs 1990 ± 50 K, 2700 km 2730 ± 50 vs 2630 ± 60 K). **Neither is elected**, both are recorded, and **Mars's 1668 K is outside both**, so the record column's verdict does not move |
-| Putirka 2016 `2016AmMin.101..819P` — record column | [1603.15, 1723.15] | abstract only | 1330–1450 °C, modern ambient MORB, olivine–liquid Fe–Mg re-calibration |
+| Putirka 2016 [`2016AmMin.101..819P`](https://ui.adsabs.harvard.edu/abs/2016AmMin.101..819P) — record column | [1603.15, 1723.15] | abstract only | 1330–1450 °C, modern ambient MORB, olivine–liquid Fe–Mg re-calibration |
 | union of the three | [1553.15, 1723.15] | — | widest reading |
 | ⚠ **Monders+ 2007 cannot supply one** | — | held | its 1280–1475 °C is Earth's **basaltic magmatism** range (Kinzler & Grove 1992, McKenzie & Bickle 1988), not a potential temperature. Using it would put a magmatism range in a `T_p` slot — the same class of error C47 was opened for |
 | record only | Herzberg+ 2010 [`2010E&PSL.292...79H`](https://ui.adsabs.harvard.edu/abs/2010E%26PSL.292...79H) 1623 K (the point of rule ②) — ⚠ **held** since 2026-09-08, and the body §3 does print a **band**: *"a mantle potential temperature (i.e., `T_P`) of **1350 ± 50 °C** is required to produce primary basaltic magmas having 10–13 % MgO"* = **[1573.15, 1673.15] K**, which Mars's 1668 K is **inside**. ⚠ **Rule ②'s "point candidate, excluded" was a decision taken on the abstract**, which prints no ±; recorded here as an after-the-fact column, and **the agreement test is not recomputed** — re-running a test on evidence that arrived after its verdict is the thing pre-registration exists to prevent. Also record-only: Sarafian+ 2017's **+60 °C** | — | so the apparent agreement of the two routes is not independent of whether that correction is applied |
@@ -4923,9 +4927,11 @@ pending` becomes a validation.
   1668.4–1669.2 K, so the headroom is **4.0–4.7 K**. **A 5 K error anywhere in the trajectory flips this
   cell**, so the pass may not be cited as a comfortable one — and C48 has already shown this integrator
   calling its flux law far outside the law's expansion point.
-- ⚠ **The three banded candidates do not agree, and the verdict rests on which one the owner picked.**
-  Putirka 2016 and the union say *in*; **Katsura+ 2010 `[1575, 1645]` puts both ends OUT** — because
-  1668 K is above its top edge. So under the mineral-physics reading of modern Earth this checkpoint
+- ⚠ **The four banded candidates do not agree, and the verdict rests on which one the owner picked.**
+  *(Four, not three: Herzberg+ 2010's body band arrived after the verdict and is recorded above — the
+  count moves, the verdict is not recomputed.)* Herzberg+ 2007, Putirka 2016, Herzberg+ 2010's
+  `[1573.15, 1673.15]` and the union all say *in*; **Katsura+ 2010 `[1575, 1645]` puts both ends OUT** —
+  because 1668 K is above its top edge. So under the mineral-physics reading of modern Earth this checkpoint
   fails. **The dependence is published, not resolved**, exactly as C47 (g) published step 4's dependence
   on `α`: the owner chose the paper before the column was opened, which is why this is recorded rather
   than re-litigated.
@@ -4992,8 +4998,8 @@ sound and only the digit is corrected here.
 
 **4. Route (i) is not closed the way (h) says.** (h) states *"Route (i) is closed, and not for want of
 looking"* on the ground that no present Martian `T_p` is published. **Re-cited present-day values do
-exist** — Yoshizaki & McDonough 2020 (`2020GeCoA.273..137Y`, §5.1, held) assumes **~1500 K** as a
-present-day areotherm input; Dong+ 2022 (`2022Icar..38515113D`, held) uses **1600 K** for *"the average
+exist** — Yoshizaki & McDonough 2020 ([`2020GeCoA.273..137Y`](https://ui.adsabs.harvard.edu/abs/2020GeCoA.273..137Y), §5.1, held) assumes **~1500 K** as a
+present-day areotherm input; Dong+ 2022 ([`2022Icar..38515113D`](https://ui.adsabs.harvard.edu/abs/2022Icar..38515113D), held) uses **1600 K** for *"the average
 Martian mantle today"* and the Baratoux curve by epoch (Amazonian ~1600–1650 K, Hesperian ~1650–1700 K).
 Both are **model inputs, 100 K apart, and both trace to Baratoux+ 2011**, which Parro+ 2017 warns are
 *"volcanic (non-average) regions"*. ⚠ **Baratoux+ 2011 is held since 2026-09-08** (owner-supplied PDF) and
@@ -5081,6 +5087,79 @@ message — **−4.8 %**, inside load variation, and reported because
 |---|---|---|
 | ~~criterion B's verdict line~~ | **answered 2026-09-08 17:35: Herzberg+ 2007 [1553.15, 1673.15] K**, the other three record-only | the 3.7 Ga in/out, hence whether the transfer is allowed |
 | ~~Mars's declared `potential_temperature`~~ | **answered 2026-09-08 17:52: Earth's 1600 K, transferred (Unterborn+ 2019), in Brief 153's transfer-record form.** The two re-citations (Yoshizaki & McDonough 2020 ~1500 K; Dong+ 2022 1600 K, which agrees) are record columns | ⚠ **nothing in the Mars result** — criterion A's 0.0017 slope means the whole 400 K sweep moves the answer 0.34 K. It was a provenance choice, not an accuracy one |
+
+### C47 (j) 2026-09-08 — step 4 is a build, not a re-run, and this is the head written before anything is computed
+
+**Written at 18:44 KST, before any step-4 quantity was computed.** Brief 160 asked for step 4 to be
+re-run with the ninth fixed value (`T_p`) supplied. ⚠ **There is nothing to re-run.** The search was
+`step 4` / `단계 4` and `q_Earth/q_Mars` across `engine/` and `docs/reference/`, plus every earlier
+seat's scratch directory for a runner or a log:
+
+| what exists | where |
+|---|---|
+| the pre-registration — four verdict cells, eight fixed values, the target **3.68 / 4.78** from the no-melting **1.372**, the sign convention, the (a)(b)(c) decomposition | C47 (g), committed before the run |
+| **step 1** — eq. 29/30/42/43/44 transcribed and checked row by row against Table 2's three `Δη` blocks | `engine/stagnant_lid.py`, `engine/test_stagnant_lid.py` (in the gate) |
+| **step 3's dehydration half** — eqs 45/50/51/53/54, 30 rows, no tuned parameter | C47 (f2), same module |
+| **step 4's outputs** | ⚠ **nowhere.** No number, no script, no log, in any document, module, test or scratch directory |
+
+⚠ **So C47 (h)'s opening — *"Step 4 ran, its numbers are final"* — points at an artifact this repo does
+not hold.** It ran inside the 09-07/08 seats' transcripts and the numbers went with them. That sentence
+is marked in (h) rather than deleted, and this section exists so the next run has a head that predates
+it.
+
+**What the build must add, counted before it is started** (`engine/stagnant_lid.py`'s own docstring
+already says *"차원화는 단계 3–4"* — the module deliberately stops short of a flux):
+
+| # | missing piece | what pins it |
+|---|---|---|
+| 1 | the fixed-point iteration **`z*_D = Nu⁻¹`** (eq. 56) — `nu_full` today takes `z_d` as an argument and does not iterate it | Korenaga 2009 eq. 56, *"iterated by setting `z*_D = Nu⁻¹` when `Nu > 1/z*_D`"* (C47 (e)) |
+| 2 | per-body **`θ`** and **`Ra_i`** from `E`, `T_s`, `ΔT`, `g`, `D`, `κ`, `ρ`, `C_p` | the paper's §4 constant list; ⚠ and the `α` in it is the one the paper contradicts itself on (C47 (g)) |
+| 3 | the **`b` normalization** — one global declaration, re-fitted on the paper's own printed Earth condition | C47 (d): *"take Korenaga 2009's own `b`, re-fitted on the paper's own printed Earth condition … as one global declaration for every body"*. ⚠ Width unquantified by the paper, and `q ∝ b^{−β/n}` — a decade of grain size is 2.15× in flux |
+| 4 | **`Nu → q`** dimensionalization | `q = Nu · k ΔT / D`, with the absolute scale carried by 3 |
+
+**⚠ The pre-registration is not touched.** (g)'s four cells, eight fixed values, target, sign
+convention and decomposition stand **verbatim** — no re-registration, no widening, and **whichever cell
+the result lands in, that cell's sentence is the verdict.** If it lands outside all four, the table is
+recorded and the verdict is left to the owner rather than invented here.
+
+**The ninth fixed value, which is why (h) held the verdict — both bodies, with their labels:**
+
+| body | `T_p` | provenance |
+|---|---|---|
+| Earth | **1600 K** | declared, Unterborn+ 2019 §2 (`engine/eos.py@«EARTH_POTENTIAL_T = 1600.0»`) |
+| Mars | **1600 K** | Earth's value **transferred**, `engine/bodies/mars.yaml` at `4ad07b07`; step 0 passed (criterion A max \|slope\| 0.0017, criterion B in at both ends) and the owner chose the transfer over the ~1500 K re-citation at **17:52** |
+
+⚠ **The two being equal is the thing (h) warned about, and it is now a measured choice rather than an
+implementation accident.** Criterion A measured that Mars's trajectory forgets this declaration —
+0.0017 K of output per K of declaration — so a common `T_p` is no longer removing the physics the test
+measures **by assumption**; it is doing so, if at all, at a rate step 0 bounded.
+
+**How the build gets verified before it is run.** Four anchors, three of them named in C47 (e) before
+any of this:
+
+| anchor | what it checks |
+|---|---|
+| `Ra_i` over `T_i` = 1200–1800 °C against §4.1's printed *"∼10⁹ to ∼10¹³"* | the `θ`/`Ra_i` chain |
+| `Ra_crit(n)` against the text's *"∼450 (n = 1), ∼134 (n = 2), ∼104 (n = 3)"* | eq. 44, already passing at n = 1 and 3 |
+| Table 2's three `Δη` blocks, row by row | the stability solve, already in the gate |
+| **`b` reproducing 50 mW/m² at the Earth condition** — by construction, so a miss means the dimensionalization is wrong | the new piece, and the only anchor the absolute scale has |
+
+**⚠ And there is no absolute-scale anchor beyond that one, by the paper's own doing:** §4's planetary
+results are **Figs 12–14 only**, with no printed dimensional flux. That was C47 (e)'s size verdict and
+it has not changed.
+
+**Carried in the same commit, because they touch the same file: the audit seat's three findings on
+C47 (i).** Three bibcodes that carried no clickable link now have one (Putirka 2016, Yoshizaki &
+McDonough 2020, Dong+ 2022); the banded-candidate count moves from three to **four**, since Herzberg+
+2010's body band is now recorded — ⚠ *the count moves, the agreement test is still not recomputed*; and
+Herzberg+ 2007's citation is pinned by its own sentence rather than by the words *"concluding
+paragraph"*. ⚠ **One count is worth keeping beside them: the audit seat counted twelve distinct edits in
+`8d83b03d` where this seat's report grouped them as seven.** Same work, but the smaller number is the
+one that would leave a reader thinking less had changed — a report's grouping is not a count.
+
+**This section is the head. The build is Brief 162**, and it starts either from the dead seats' runner
+if the directing seat recovers it from their transcripts — in which case it is re-run and re-verified
+against the four anchors rather than trusted — or from nothing, with those four registered first.
 
 ### C48 — the integrator was validated on Earth, and Earth survived by not blowing up rather than by being right — **closed 2026-09-08: domain (Brief 155) + step (Briefs 156–157)**
 
