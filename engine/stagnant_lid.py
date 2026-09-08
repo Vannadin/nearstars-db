@@ -331,9 +331,14 @@ def flux_wm2(nu: float, delta_t_k: float, d_m: float) -> float:
 def fit_b_eq30() -> float:
     """`b` — 논문 자기 지구 조건(q = 50 mW/m²)에 맞춘 **하나의 전역 선언**.
 
-    ⚠ **eq. 30(`nu_asymptotic`)으로 적합하는데 실행은 eq. 29 + 안정해석(`nu_full`)으로 한다.**
-    그래서 이 `b` 로 돌린 지구 플럭스가 50 이 아니라 52.02 mW/m² 로 나온다 — 커밋 2 의 대상.
-    09-07 의 이분법(기하평균, 400회)을 그대로 옮긴 것이다."""
+    ⚠ **eq. 30(`nu_asymptotic`)으로, 용융 없이 적합하는 것이 논문의 인쇄된 정의다** — §4:
+    *"b … is determined so that the surface heat flux is 50 mW m⁻² at the present-day Earth condition
+    … **without the effects of mantle melting (i.e. Δη = 1 and Δρ = 1)**"*, 그리고 Fig. 12 캡션의
+    *"**conventional scaling** predicts surface heat flux of 50 mW m⁻²"* (본문이 conventional scaling
+    을 eq. 30 이라 지칭한다). **그래서 이것은 결함이 아니다.** 이 `b` 로 eq. 30 을 평가하면 지구는
+    구성상 정확히 50.0000 mW/m² 이고, 실행이 쓰는 eq. 29 + 안정해석에서는 51.99 로 +3.98 % 높다 —
+    그 차는 두 식의 차이이고 적합의 잘못이 아니다 (C47 (k) 커밋 3). 09-07 의 이분법(기하평균,
+    400회)을 그대로 옮긴 것이다."""
     lo, hi = 1e-40, 1e40
     for _ in range(400):
         mid = math.sqrt(lo * hi)

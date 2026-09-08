@@ -5163,7 +5163,7 @@ any of this:
 | `Ra_i` over `T_i` = 1200–1800 °C against §4.1's printed *"∼10⁹ to ∼10¹³"* | the `θ`/`Ra_i` chain |
 | `Ra_crit(n)` against the text's *"∼450 (n = 1), ∼134 (n = 2), ∼104 (n = 3)"* | eq. 44, already passing at n = 1 and 3 |
 | Table 2's three `Δη` blocks, row by row | the stability solve, already in the gate |
-| **`b` reproducing 50 mW/m² at the Earth condition** — by construction, so a miss means the dimensionalization is wrong | the new piece, and the only anchor the absolute scale has |
+| **`b` reproducing 50 mW/m² at the Earth condition** — by construction, so a miss means the dimensionalization is wrong | the new piece, and the only anchor the absolute scale has. ⚠ *Sharpened in (k) commit 3: the paper defines this on **eq. 30 without melting**, so the anchor reads `q_E` = 50.000 ± 10⁻³ **evaluated that way** — not on the eq. 29 path the runs use, which sits 3.98 % higher by construction* |
 
 **⚠ And there is no absolute-scale anchor beyond that one, by the paper's own doing:** §4's planetary
 results are **Figs 12–14 only**, with no printed dimensional flux. That was C47 (e)'s size verdict and
@@ -5183,7 +5183,8 @@ inline runner is promoted to engine code, re-verified against the four anchors a
 trusted, and re-run at the two `T_p` labels. ⚠ **Three things in the recovered runner are questions for
 that brief, named here before it starts** — it fits `b` with eq. 30 (`nu_asymptotic`) while every run
 uses eq. 29 with the stability solve (`nu_full`), which is why its Earth flux comes out at 52 rather
-than the 50 mW/m² it was fitted to; it hardcodes `α = 2 × 10⁻³` inside `Ra_i` while sweeping `α` only
+than the 50 mW/m² it was fitted to — ⚠ *withdrawn in (k) commit 3: that fit is the paper's own printed
+definition, and the 52 is the eq. 29 − eq. 30 difference*; it hardcodes `α = 2 × 10⁻³` inside `Ra_i` while sweeping `α` only
 in the buoyancy term, so the paper's self-contradiction is resolved *two ways at once inside one run*;
 and it sets `z*_D` from the melting-onset depth instead of iterating eq. 56's `z*_D = Nu⁻¹`, which is
 missing piece 1 above. **None of these is a reason to discard it** — it is the fastest route to a
@@ -5200,8 +5201,10 @@ six constants plus `engine/tools/c47_step4.py`, and the tool checks every printe
 ⚠ **What this reproduction is, and what it is not.** *It confirms that the same code produces the same
 numbers — that promotion did not damage anything.* **It is not a physical anchor.** The independent
 legs are the four anchors C47 (j) named, and the load-bearing one is **`b` reproducing 50 mW/m² at the
-paper's own Earth condition**, which the promoted code **fails** (52.02, below). Commits 2–5 repair one
-defect each; the physics is tested there, not here.
+paper's own Earth condition** — ⚠ *which the promoted code passes exactly, once the anchor is read the
+way §4 defines it (eq. 30, no melting): 50.0000 mW/m². The 52.02 in the runs is the eq. 29 − eq. 30
+difference, not a missed fit — commit 3 below.* Commits 2–5 repair one defect each; the physics is
+tested there, not here.
 
 ⚠ **And the blinding scope, stated as in (j):** this seat read the recovered numbers before writing the
 runner, so they are a **reproduction anchor, not a blind target.** (g)'s four verdict cells predate all
@@ -5262,7 +5265,15 @@ nearly invisible.** That is a finding about the mechanisms, and it is not a verd
 
 **Registered before the run: Earth's flux moves by ≪ 1 %.** With `T_s` unified to a single 273.15 K —
 so `ΔT` = `T_p` exactly and the `b` fit sits on the same condition the runs do — the twelve runs move
-like this:
+like this.
+
+⚠ **Why 273.15 and not the paper's printed 273, stated because the paper is the source of the
+ambiguity.** §4 prints the Earth condition as `T_s` = **273 K**, `ΔT` = **1350 K**, `T_i` = **1350 °C** —
+mutually inconsistent by 0.15 K (1623.15 − 273 = 1350.15). Two resolutions exist: `T_s` = 273.15 makes
+`ΔT` = `T_p` exactly and so reproduces **the paper's `ΔT` = 1350 K** exactly, while `T_s` = 273.0
+reproduces the paper's printed `T_s` and leaves `ΔT` at 1350.15. **We take the first**, because `ΔT` is
+the quantity the equations evaluate. Either way the fit and the runs now share one condition, which is
+what defect ④ was about.
 
 | what | before (09-07) | after | move |
 |---|---|---|---|
@@ -5281,21 +5292,56 @@ subsection reports one change's size and nothing else.
 `rc=1` here, which is `docs/reference/derivation-discipline.md@«A check must prove it can pass and can fail before its result is written down»`
 applied to the tool that guards the rest of this brief.
 
+#### Commit 3 — defect ① is withdrawn: the eq. 30 fit is what the paper prints
+
+**Read before repairing, and the repair turned out to be the mistake.** §4, printed:
+
+> *"the pre-exponential factor `b` in eq. (1) is determined so that the surface heat flux is
+> **50 mW m⁻²** at the present-day Earth condition (`D` = 2900 × 10³ m, `g` = 9.8 m s⁻², `T_s` = 273 K,
+> and `ΔT` = 1350 K) **without the effects of mantle melting (i.e. Δη = 1 and Δρ = 1)**"*
+
+and Fig. 12's caption — *"Reference viscosity is chosen so that **conventional scaling** predicts
+surface heat flux of 50 mW m⁻² at `T_i` = 1350 °C"* — with the body naming *"the conventional scaling of
+`Ra_i` (**eq. 30**)"*. **So fitting `b` on eq. 30 with melting off is the paper's own definition, and the
+09-07 runner did what the paper says.**
+
+| what | value |
+|---|---|
+| `q_E` at the paper's Earth condition **evaluated on eq. 30** (the definition) | **50.0000 mW/m²** — by construction |
+| `q_E` on **eq. 29 + the stability solve**, melting off, same `b` | **51.9919 mW/m²** — **+3.98 %** |
+| `b` if it were re-fitted on the eq. 29 path instead | 4.7452 × 10¹⁰ (**×1.1288** of 4.2038 × 10¹⁰) |
+| what eq. 30 would then read — the departure from the paper's normalization | **48.0211 mW/m²** |
+| effect on the verdict quantity (`q_E/q_M`, 1350 °C, (c), §3.2) | 1.7823 → **1.7311**, −2.9 %, **away from the 3.68 / 4.78 target** |
+
+**So the choice is about faithfulness, not about the verdict**: `b` is one global declaration entering
+both bodies, so the ratio barely moves — C47 (f) had already measured that at 3.7 % per decade of `b`
+against 115 % for the absolute flux. **The paper's definition is kept, the alternative is recorded, and
+nothing is re-fitted.**
+
+⚠ **Whose error this was, recorded where the others are.** The pass line *"`b` reproduces 50 mW/m²"* was
+set as an anchor in C47 (j) without checking which equation the paper normalizes on; **that was the
+directing seat's**, and it is written here rather than left in a message. The anchor is not deleted but
+sharpened: **`q_E` = 50.000 ± 10⁻³ evaluated on eq. 30**, which the code passes.
+
+⚠ **And this is the ninth time today that reading the thing before building it changed the build** —
+after existing code four times, a declared limit, a paper's own sentence, our own rule, and the recovery
+that turned "build from nothing" into "promote and reproduce". **None of the nine was caught by the
+gate.**
+
 #### The four defects, named before any of them is repaired
 
 | # | defect | why it matters | repaired in |
 |---|---|---|---|
-| ① | `b` is fitted with **eq. 30** (`nu_asymptotic`) while every run uses **eq. 29 + the stability solve** (`nu_full`) | it is why Earth comes out at **52.02** rather than the **50.00** it was fitted to — the one anchor the absolute scale has, missed by 4 % | commit **3** |
+| ~~①~~ | `b` is fitted with **eq. 30** (`nu_asymptotic`) while every run uses **eq. 29 + the stability solve** (`nu_full`) | ⚠ **withdrawn — not a defect.** §4 defines the normalization exactly this way, and the 52 is the two equations' difference. Commit 3 records it instead of repairing it | ⚠ **no repair** |
 | ② | `Ra_i` hardcodes **`α = 2 × 10⁻³`** (§4's printed value) while `α` is swept only in the buoyancy term | one run then takes **both halves of the paper's self-contradiction at once**, which is not what (g) registered — (g) asked for the two `α` read side by side, not mixed inside one run | commit **4** |
 | ③ | `z*_D` is set from the **melting-onset depth**, not iterated as **eq. 56**'s `z*_D = Nu⁻¹` | the paper's outer solve is a fixed point; ours is a single geometric guess | commit **5** |
 | ④ | `T_s` is **mixed inside one run**: `T_i = T_p + 273.15` but `ΔT = T_i − 273.0`, so `ΔT` = 1350.15 K at `T_p` = 1350 °C — while the `b` fit line uses the literals **1350.0 / 1623.0** | the fit condition and the run condition differ by **0.15 K** | commit **2**, and it goes first |
 
-⚠ **④ is repaired before ①, and the order is not cosmetic.** A fit's fixed point is exact only at the
-condition it was fitted on: re-fitting `b` with `nu_full` while the fit line still reads 1350.0 / 1623.0
-and the runs read 1350.15 / 1623.15 would still miss 50.000 mW/m², and the miss would then be blamed on
-the equation change. **So `T_s` is unified first (one 273.15 K, fit and run on the same condition), and
-only then is `b` re-fitted** — with the pass line `|q_E − 50.000| ≤ 10⁻³ mW/m²`. Each commit reports how
-far its own change moved the twelve runs, and no commit reports two changes at once.
+⚠ **④ was repaired first, and the reasoning that put it there survives its neighbour's withdrawal.** A
+fit's fixed point is exact only at the condition it was fitted on, so a `T_s` mixed between the fit line
+and the runs would have contaminated any statement about the normalization. It was unified first (one
+273.15 K), and the normalization then turned out to need **no repair at all**. **Each commit reports how
+far its own change moved the twelve runs, and no commit reports two changes at once.**
 
 **⚠ What is promoted is the second block (16:39:56), and the difference from the first is `θ`'s
 definition — this matters enough to state where a reader will trip over it.** The first block (16:39:22)
