@@ -30,6 +30,17 @@ inputs:
   # 여기 적힌 1600 K 는 지구 선언값(Unterborn+ 2019 §2)을 옮긴 것이고, **옮겨도 되는지가
   # 바로 0단계의 질문이다.** 0단계가 기준 A·B 를 통과하기 전에는 이 수를 근거로 아무것도
   # 주장하지 말 것. 통과하면 근거를 여기 다시 적고, 실패하면 이 바디는 C20 을 못 돌린다.
+  #
+  # ✅ **0단계 통과 (2026-09-08, C47 (i) · 커밋 2fb2bba4 규칙 · 286c004a 판정).** 근거는 둘이다.
+  #  · 기준 A — 이 선언을 1400–1800 K 로 쓸어도 출력 T_p 가 1382.56–1382.90 K 안에 머문다.
+  #    최대 |기울기| 0.0017 (문턱 0.5), 즉 400 K 를 흔들어 답이 0.34 K 움직인다. 궤적이 이
+  #    선언을 거의 잊는다는 뜻이고, 그래서 옮긴 값이 답을 만들지 않는다.
+  #  · 기준 B — 3.7 Ga 검문소(Monders+ 2007: 그때까지 "현대 지구와 비슷")를 스윕 양단에서
+  #    똑같이 통과한다. T_p@3.7 Ga = 1668.86 K (1400 K) · 1668.41 K (1800 K), 둘 다 오너가
+  #    고른 판정선 Herzberg+ 2007 [1553.15, 1673.15] K 안.
+  # ⚠ **통과가 정밀검증은 아니다.** Monders 의 진술은 정성적이고, 여유는 밴드 위끝까지 4.0–4.7 K
+  #   뿐이다. 그리고 기록열 Katsura+ 2010 [1575, 1645] 로 재면 양단 모두 밴드 밖이다 — 판정은
+  #   오너가 고른 논문에 딸려 있다. 화성의 현재 T_p 가 측정된 적 없다는 사실은 그대로다.
   potential_temperature: 1600.0
   # C20 열진화의 초기온도 — 지구와 **같은 인쇄값을 그대로 전이**한다. Nimmo+ 2004 Fig. 2
   # 캡션의 *"starting temperature of both mantle and core was 4800 K"*, 실온도로 읽음.
@@ -63,7 +74,11 @@ transfers:
     kind: state
     grade: analog
     anchor: "earth.yaml@«potential_temperature: 1600.0»"
-    validated: pending      # C47 (h) stage 0 — whether Earth's T_p may travel at all
+    # C47 (h) stage 0 asked whether Earth's T_p may travel at all; C47 (i) answered it.
+    validated: "C47 stage 0, 2026-09-08: criterion A max |slope| 0.0017 (threshold 0.5) and the 3.7 Ga
+      checkpoint in at both sweep ends (1668.86 / 1668.41 K in Herzberg+ 2007's [1553.15, 1673.15] K).
+      ⚠ 4.0-4.7 K of headroom, and Katsura+ 2010's band would say out — see C47 (i)"
+
   - field: core_initial_temperature
     from_body: Earth
     form: printed
