@@ -4810,9 +4810,10 @@ it as one.
 ### C47 (i) 2026-09-08 — step 0's numbers, the criterion-B rule fixed before the unblinding, and four corrections
 
 **Step 0 asked one question — `engine/interior-core.md@«be transferred to Mars at all?»` — and this section carries its numbers.** Criterion A's are below and
-final. ⚠ **Criterion B's are not read yet, on purpose**: the rule that decides it — including the
-verdict-line paper, which was the owner's to pick — is written and committed here **before** the
-3.7 Ga column is opened. The table lands in the commit after this one.
+final, and criterion B's are below. ⚠ **The rule that decides criterion B was committed at `2fb2bba4`
+with the 3.7 Ga column still unread** — including the verdict-line paper, which was the owner's to pick.
+The table was computed afterwards and added in the commit that follows it, so **git testifies to the
+order** rather than this sentence doing it.
 
 #### The criterion-B rule, fixed before the numbers were read
 
@@ -4875,14 +4876,56 @@ Threshold `|d T_p,out / d T_pot,declared| < 0.5`, pre-registered in C47 (h).**
   distinct values in both variants, so the sweep is not a constant — `engine/test_interior.py@«늘 발화하면 상수다»`
   applied to a scratch script whose numbers get reported.
 
-#### Criterion B — computed under the rule above once the band is chosen
+#### Criterion B — passes, and ⚠ by 4 K
 
-**Reported per the rule above: `T_p@3.7 Ga`, `q_M` and `q_C` at all five points × both variants, in/out
-against Herzberg+ 2007's `[1553.15, 1673.15]` K, with Katsura+ 2010, Putirka 2016, the union and
-Herzberg+ 2010's point distance as record columns.** The values were written blind to
-`/tmp/c47_stage0_full.json` (keys `mars["<T>|<variant>"]`, `earth`) by the run that ended
-`C47 STAGE0 END rc=0 16:40:01`, and copied out of `/tmp` before being opened. ⚠ **This section's rule
-subsection is committed before the table is read; the table lands in the next commit.**
+**Unblinded under the rule at `2fb2bba4`, from the values the 16:40 run wrote blind
+(`C47 STAGE0 END rc=0 16:40:01`).** Verdict line **Herzberg+ 2007 `[1553.15, 1673.15]` K**, verdict
+variant `T_m0`-fixed, verdict points the two ends.
+
+| declared `T_pot` | variant | `T_p@3.7 Ga` | row's actual t, Gyr | `q_M`, TW | `q_C`, TW | **Herzberg 07** | Katsura 10 | Putirka 16 | union | − 1623 K |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **1400** | **`T_m0`-fixed** | **1668.86** | −3.7007 | 3.057 | 0.405 | **in** | out | in | in | +45.86 |
+| 1400 | `r_b`-point | 1668.65 | −3.6995 | 3.057 | 0.405 | in | out | in | in | +45.65 |
+| 1500 | `T_m0`-fixed | 1669.04 | −3.7006 | 3.058 | 0.405 | in | out | in | in | +46.04 |
+| 1500 | `r_b`-point | 1668.57 | −3.6981 | 3.058 | 0.405 | in | out | in | in | +45.57 |
+| 1600 | `T_m0`-fixed | 1669.22 | −3.7006 | 3.059 | 0.405 | in | out | in | in | +46.22 |
+| 1600 | `r_b`-point | 1669.22 | −3.7006 | 3.059 | 0.405 | in | out | in | in | +46.22 |
+| 1700 | `T_m0`-fixed | 1668.81 | −3.7007 | 3.056 | 0.405 | in | out | in | in | +45.81 |
+| 1700 | `r_b`-point | 1668.74 | −3.7003 | 3.056 | 0.405 | in | out | in | in | +45.74 |
+| **1800** | **`T_m0`-fixed** | **1668.41** | −3.7008 | 3.054 | 0.406 | **in** | out | in | in | +45.41 |
+| 1800 | `r_b`-point | 1668.27 | −3.7000 | 3.054 | 0.406 | in | out | in | in | +45.27 |
+
+**Verdict: 1400 K → 1668.86 K in · 1800 K → 1668.41 K in — the same verdict at both ends, and the
+verdict is *in*. Criterion B passes.** With criterion A, **step 0 passes: Earth's declared
+`potential_temperature` may be transferred to Mars**, and `engine/bodies/mars.yaml`'s `validated:
+pending` becomes a validation.
+
+**Four things that must be read with it.**
+
+- ⚠ **The margin is 4 K on a 120 K band.** The band's top edge is 1673.15 K and the trajectory lands at
+  1668.4–1669.2 K, so the headroom is **4.0–4.7 K**. **A 5 K error anywhere in the trajectory flips this
+  cell**, so the pass may not be cited as a comfortable one — and C48 has already shown this integrator
+  calling its flux law far outside the law's expansion point.
+- ⚠ **The three banded candidates do not agree, and the verdict rests on which one the owner picked.**
+  Putirka 2016 and the union say *in*; **Katsura+ 2010 `[1575, 1645]` puts both ends OUT** — because
+  1668 K is above its top edge. So under the mineral-physics reading of modern Earth this checkpoint
+  fails. **The dependence is published, not resolved**, exactly as C47 (g) published step 4's dependence
+  on `α`: the owner chose the paper before the column was opened, which is why this is recorded rather
+  than re-litigated.
+- **The declaration barely moves the checkpoint**: 0.81 K of spread in `T_p@3.7 Ga` across the whole
+  400 K sweep, and the two variants agree to ~0.5 K. That is criterion A's 0.0017 slope seen at the
+  checkpoint instead of at the present.
+- **Earth, in the same run, is at 1824.70 K at 3.7 Ga** (present 1525.46 K, 1152 steps). So Mars at
+  3.7 Ga sits ~156 K **below Earth-at-3.7-Ga** while inside **modern** Earth's band. ⚠ That is what
+  Monders' sentence says — *similar to those on the **modern** Earth* — and it is what the rule
+  implemented; a checkpoint against Earth's own 3.7 Ga state would be a different test and would fail.
+
+**Sampling:** the checkpoint reads the nearest adaptive row, which lands within **0.8 Myr** of −3.7 Ga
+at every point (−3.6981 … −3.7008 Gyr).
+
+⚠ **And the ceiling, restated because the pass is thin:** Monders+ 2007's statement is **qualitative**.
+It can catch a badly wrong trajectory and nothing finer. **A pass is not a precision validation of the
+Martian thermal history**, and at 4 K of headroom it is not even a comfortable qualitative one.
 
 ⚠ **And the checkpoint's ceiling, restated so a pass is not over-read** (C47 (h) put it first):
 Monders+ 2007's statement is **qualitative** — high `T_p`, *"similar to those on the modern Earth"*,
