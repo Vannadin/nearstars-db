@@ -4718,7 +4718,10 @@ pre-registration and are not revised here. ⚠ *Corrected 2026-09-08 (Brief 160)
 not in this repo.** (g) holds the pre-registration — the four cells, the eight fixed values, the target
 3.68 / 4.78 and the no-melting 1.372 — and no `q_Earth/q_Mars` from a run appears in any document,
 module, test or scratch directory. The run lived in the 09-07/08 seats' transcripts and its numbers went
-with them. Step 4 is therefore a **build**, not a re-run — counted in C47 (j).* What is recorded here is why the verdict cannot be read off
+with them. Step 4 is therefore a **build**, not a re-run — counted in C47 (j).* ⚠ *And that marker is
+itself superseded within the day: the run **was recovered** from the 09-07 transcript at `f3f068ea`, so
+"in no scratch directory", "went with them" and "a build, not a re-run" are each no longer true as
+written — see C47 (j) and (k).* What is recorded here is why the verdict cannot be read off
 them yet.
 
 **⚠ The pre-registration had a hole, and the directing seat found it, not this seat.** The eight
@@ -4850,7 +4853,7 @@ the owner picked the first:
 | **Herzberg+ 2007** [`2007GGG.....8.2006H`](https://ui.adsabs.harvard.edu/abs/2007GGG.....8.2006H) — ✅ **owner's choice, the verdict line** | **[1553.15, 1673.15]** | ⚠ **held** since 2026-09-08 (owner-supplied PDF, cache) — upgraded from *abstract only*, and the label re-read in the body: *"Our preferred `T_P` range for ambient mantle is 1280–1400 °C (Figure 5)"*, computed by the **McKenzie & Bickle 1988** potential-temperature method for *"MORB magmas with 10–13 % MgO"*, and again where the paper states its result — *"Our work shows that ambient mantle temperatures at normal oceanic ridges are 1280–1400°C"*, `ΔT_P` = 120 °C — the sentence pinning the location rather than a paragraph number | a potential temperature of the ambient mantle, so it does not repeat the Monders defect below. The body also warns its Iceland values *"should not be used as a high `T_P` anchor for ambient mantle"* — we do not |
 | Katsura+ 2010 [`2010PEPI..183..212K`](https://ui.adsabs.harvard.edu/abs/2010PEPI..183..212K) — record column | [1575, 1645] from the abstract; **[1560, 1640] from the body** | ⚠ **held** since 2026-09-08 | mineral-physics route (410-km discontinuity + adiabat), no solidus anywhere in it. ⚠ **The abstract and the body disagree**: abstract *"the mantle potential temperature is found to be 1610 ± 35 K"*, body §4 *"1600 ± 40 K"* — and the divergence is systematic, not only in `T_p` (transition-zone base 2010 ± 40 vs 1990 ± 50 K, 2700 km 2730 ± 50 vs 2630 ± 60 K). **Neither is elected**, both are recorded, and **Mars's 1668 K is outside both**, so the record column's verdict does not move |
 | Putirka 2016 [`2016AmMin.101..819P`](https://ui.adsabs.harvard.edu/abs/2016AmMin.101..819P) — record column | [1603.15, 1723.15] | abstract only | 1330–1450 °C, modern ambient MORB, olivine–liquid Fe–Mg re-calibration |
-| union of the three | [1553.15, 1723.15] | — | widest reading |
+| union of the four | [1553.15, 1723.15] | — | widest reading, **unchanged** by Herzberg+ 2010's band, which lies inside it |
 | ⚠ **Monders+ 2007 cannot supply one** | — | held | its 1280–1475 °C is Earth's **basaltic magmatism** range (Kinzler & Grove 1992, McKenzie & Bickle 1988), not a potential temperature. Using it would put a magmatism range in a `T_p` slot — the same class of error C47 was opened for |
 | record only | Herzberg+ 2010 [`2010E&PSL.292...79H`](https://ui.adsabs.harvard.edu/abs/2010E%26PSL.292...79H) 1623 K (the point of rule ②) — ⚠ **held** since 2026-09-08, and the body §3 does print a **band**: *"a mantle potential temperature (i.e., `T_P`) of **1350 ± 50 °C** is required to produce primary basaltic magmas having 10–13 % MgO"* = **[1573.15, 1673.15] K**, which Mars's 1668 K is **inside**. ⚠ **Rule ②'s "point candidate, excluded" was a decision taken on the abstract**, which prints no ±; recorded here as an after-the-fact column, and **the agreement test is not recomputed** — re-running a test on evidence that arrived after its verdict is the thing pre-registration exists to prevent. Also record-only: Sarafian+ 2017's **+60 °C** | — | so the apparent agreement of the two routes is not independent of whether that correction is applied |
 
@@ -5043,7 +5046,11 @@ pre-registered:
 - ⚠ **The Mars row is labelled by its initial mantle temperature, because two defensible runs differ in
   the fourth decimal.** This row uses `engine/bodies/mars.yaml`'s **printed 4021.0 K**; test ⑥ and step 0
   use **4800/r_b = 4021.0474 K**, and at the window's edge that run gives **0.905921 Ma** against this one's
-  **0.906071 Ma** (window count 56 and the cap count 1123/1197 identical in both). ⚠ **So the audit seat's
+  **0.906071 Ma** (window count 56 and the cap count 1123/1197 identical in both). ⚠ *And what the label
+  does **not** move, measured: the present `T_p` and `T_c` are identical to four decimals (1382.8969 K,
+  3893.0083 K) and the step count is 1197 either way — but **the 3.7 Ga column does move, by 0.0014 K**
+  (1669.2199 against 1669.2213), so "the label only changes the step size" would be wrong. Both round to
+  the 1669.22 the criterion-B table prints, against 4.29 K of headroom.* ⚠ **So the audit seat's
   0.905921 and this table's 0.906071 were never a transcription error — they are two runs 0.047 K apart in
   `T_m0`**, which is `docs/reference/derivation-discipline.md@«A number cannot enter without its label»` in
   its smallest possible form.
@@ -5061,7 +5068,11 @@ arithmetic with a number, so that whoever opens C21 re-weighs the premise instea
 
 **Found while correcting the stale step strings, and it is not a step string.** Pre-registered branch ⑤ is a
 **step**-halving convergence test (`engine/core-thermal-history-context-notes.md@«Run the full history at **h, h/2, h/4**»`,
-recorded 2026-09-04 as width 0.001 % at **1135 / 2270 / 4540** steps). After Brief 157 `core_history.sweep`
+recorded 2026-09-04 as width 0.001 % at **1135 / 2270 / 4540** steps). ⚠ *Two widths appear in these
+documents and they are the same test on two days: **0.001 % is the 2026-09-04 record** (the figure the
+code and the test carry) and **0.0006 % is the 2026-09-08 re-run** after the restoration, on the same
+three step counts. Both are far inside the pre-registered 10 % pass line, so the branch's verdict never
+moved.* After Brief 157 `core_history.sweep`
 went on passing only `step_myr`, which is now the **cap** in `h = min(cap, 0.1·τ)` — so halving it changed
 only the steps where the cap binds, and the recorded counts could not be reproduced. ⚠ **A pre-registered
 branch had quietly become a different test, and nothing failed**: the gate does not run `--sweep`, and the
@@ -5100,7 +5111,8 @@ seat's scratch directory for a runner or a log:
 | the pre-registration — four verdict cells, eight fixed values, the target **3.68 / 4.78** from the no-melting **1.372**, the sign convention, the (a)(b)(c) decomposition | C47 (g), committed before the run |
 | **step 1** — eq. 29/30/42/43/44 transcribed and checked row by row against Table 2's three `Δη` blocks | `engine/stagnant_lid.py`, `engine/test_stagnant_lid.py` (in the gate) |
 | **step 3's dehydration half** — eqs 45/50/51/53/54, 30 rows, no tuned parameter | C47 (f2), same module |
-| **step 4's outputs** | ⚠ **not in this repo** — and ⚠ *recovered 2026-09-08 ~21:00 from the 09-07 work seat's transcript (`a0402cc0`) by the directing seat, verbatim with per-block timestamps and tool ids, into `…/2ce6256b-…/scratchpad/c47_step4_recovered.md`.* The runner was **two inline `python3 -c` blocks** (16:39:22, which raised `OverflowError`, and 16:39:56, which ran), so nothing of it was ever committed |
+| **step 4's outputs** | ⚠ **not in this repo** — and ⚠ *recovered 2026-09-08 ~21:00 from the 09-07 work seat's transcript (`a0402cc0`) by the directing seat, verbatim with per-block timestamps and tool ids, into `/Users/vana/Desktop/NearStars-artifacts/2026-09-08-c47-step4/c47_step4_recovered.md` (md5
+`ce35dc0ad7d084a475b7242af75605d5`) — a durable path, since a scratch directory belongs to one session.* The runner was **two inline `python3 -c` blocks** (16:39:22, which raised `OverflowError`, and 16:39:56, which ran), so nothing of it was ever committed |
 
 ⚠ **So C47 (h)'s opening — *"Step 4 ran, its numbers are final"* — points at an artifact this repo does
 not hold.** It ran inside the 09-07 seat's transcript, and that transcript — not the repo — is where the
@@ -5109,8 +5121,10 @@ has a head that predates it.
 
 ⚠ **What the recovery changes, and what it does not.** The 09-07 outputs now exist as a recovered
 artifact, so Brief 162 is *promote the inline runner and reproduce those numbers bit-for-bit*, not
-*build from nothing*. **But this seat has now read them**, so they are a **reproduction anchor, not a
-blind target** — the head's ordering claim above covers this seat's own computation, which has not
+*build from nothing*. ⚠ **And reproducing them proves only that the same code gives the same numbers — it is not a physical
+anchor.** The independent legs are the four anchors below, and the load-bearing one is `b` reproducing
+50 mW/m² at the paper's Earth condition. **But this seat has now read them**, so they are a
+**reproduction anchor, not a blind target** — the head's ordering claim above covers this seat's own computation, which has not
 happened, and it may not be read as a claim that the re-run was blind to the recovered values. The
 verdict cells in (g) are what they always were: written before any of it.
 
@@ -5174,6 +5188,108 @@ in the buoyancy term, so the paper's self-contradiction is resolved *two ways at
 and it sets `z*_D` from the melting-onset depth instead of iterating eq. 56's `z*_D = Nu⁻¹`, which is
 missing piece 1 above. **None of these is a reason to discard it** — it is the fastest route to a
 reproducible step 4 — but each must be decided in the open rather than inherited.
+
+### C47 (k) 2026-09-08 — step 4's runner is promoted with its defects, and the 09-07 numbers reproduce
+
+**Brief 162 commit 1. What is promoted is the 09-07 work seat's second inline block, arithmetic
+unchanged**, from the recovery in C47 (j)
+(`/Users/vana/Desktop/NearStars-artifacts/2026-09-08-c47-step4/c47_step4_recovered.md`, md5
+`ce35dc0ad7d084a475b7242af75605d5`). It now lives in `engine/stagnant_lid.py` as four functions and
+six constants plus `engine/tools/c47_step4.py`, and the tool checks every printed number of that run.
+
+⚠ **What this reproduction is, and what it is not.** *It confirms that the same code produces the same
+numbers — that promotion did not damage anything.* **It is not a physical anchor.** The independent
+legs are the four anchors C47 (j) named, and the load-bearing one is **`b` reproducing 50 mW/m² at the
+paper's own Earth condition**, which the promoted code **fails** (52.02, below). Commits 2–5 repair one
+defect each; the physics is tested there, not here.
+
+⚠ **And the blinding scope, stated as in (j):** this seat read the recovered numbers before writing the
+runner, so they are a **reproduction anchor, not a blind target.** (g)'s four verdict cells predate all
+of it, and the verdict is not written in this section.
+
+#### The 09-07 numbers, reproduced
+
+`b` = **4.1921 × 10¹⁰** (one global declaration, re-fit on the paper's Earth condition). Target
+`q_Earth/q_Mars` = **3.68** (against our 0.454) or **4.78** (against Korenaga's 0.35), from the
+no-melting baseline **1.372** — all three fixed in C47 (f)/(g) before any of this.
+
+| `T_p` | body | depleted layer | as % of mantle | `z*_D` |
+|---|---|---|---|---|
+| 1350 °C | Earth | 61.8 km | 2.13 % | 0.9787 |
+| 1350 °C | Mars | 163.8 km | 9.10 % | 0.9090 |
+| 1500 °C | Earth | 108.2 km | 3.73 % | 0.9627 |
+| 1500 °C | Mars | 286.7 km | 15.93 % | 0.8407 |
+
+| `T_p` | `α` | run | `q_E` | `q_M` | **`q_E/q_M`** | `Ur_E` | `Ur_M` | `Ur_M/Ur_E` |
+|---|---|---|---|---|---|---|---|---|
+| 1350 °C | §3.2 `3.7e-5` | (a) dehydration only | 52.02 | 29.17 | **1.7832** | 0.803 | 0.612 | 0.762 |
+| 1350 °C | §3.2 | (b) buoyancy only | 52.02 | 35.90 | **1.4492** | 0.803 | 0.498 | 0.619 |
+| 1350 °C | §3.2 | **(c) both** | 52.02 | 29.17 | **1.7832** | 0.803 | 0.612 | 0.762 |
+| 1350 °C | §4 `2.0e-3` | (a) | 52.02 | 29.17 | **1.7832** | 0.803 | 0.612 | 0.762 |
+| 1350 °C | §4 | (b) | 52.04 | 39.06 | **1.3323** | 0.803 | 0.457 | 0.569 |
+| 1350 °C | §4 | **(c)** | 52.02 | 29.17 | **1.7832** | 0.803 | 0.612 | 0.762 |
+| 1500 °C | §3.2 | (a) | 51.04 | 23.42 | **2.1791** | 0.819 | 0.763 | 0.931 |
+| 1500 °C | §3.2 | (b) | 105.33 | 77.74 | **1.3549** | 0.397 | 0.230 | 0.579 |
+| 1500 °C | §3.2 | **(c) both** | 51.04 | 22.79 | **2.2396** | 0.819 | 0.784 | 0.957 |
+| 1500 °C | §4 | (a) | 51.04 | 23.42 | **2.1791** | 0.819 | 0.763 | 0.931 |
+| 1500 °C | §4 | (b) | 120.93 | 89.01 | **1.3586** | 0.346 | 0.201 | 0.581 |
+| 1500 °C | §4 | **(c)** | 51.04 | 23.41 | **2.1800** | 0.819 | 0.763 | 0.932 |
+
+**Seventeen anchors — twelve run cells, four depleted layers and `b` — all reproduce at the printed
+precision** (`✅ 09-07 앵커 17/17 일치`, `rc=0`), and `engine/tools/c47_step4.py` exits `rc=1` if any of them moves. ⚠ **No verdict is read
+off this table**, because four defects sit between it and the physics.
+
+#### ⚠ The (g) fourth cell's premise is falsified, and (g) registered how to record that
+
+C47 (g) reasoned that dehydration stiffening and compositional buoyancy *"push in opposite directions
+on the asymmetry"*, and registered the consequence in advance: *"if (a) and (b) turn out to push the
+**same** way, the fourth cell's reasoning is wrong and that gets recorded as this seat's error."*
+
+**They push the same way.** Against the no-melting **1.372**, dehydration alone gives **1.7832** and
+buoyancy alone **1.4492** — both **above** it, so by (g)'s own sign convention both mechanisms *help*.
+**So the reasoning behind the fourth cell was wrong, and it is recorded here as the 09-07 seat's error,
+in the form that seat registered for it.**
+
+⚠ **What is true instead is stranger, and it is visible in the same rows.** At 1350 °C, **(c) equals
+(a) to four decimals** (1.7832): with dehydration on, buoyancy adds *nothing at all*. At 1500 °C it
+adds a little (2.2396 against 2.1791) under §3.2's `α` and almost nothing (2.1800) under §4's. And
+(b)'s own absolute fluxes are the loudest thing in the table — 105.33 and 120.93 mW/m² on Earth, twice
+the other rows — because with `Δη = 1` the dehydrated lid is not stiff and the flux is not suppressed.
+**So the mechanisms do not oppose; the stiff lid dominates, and once it is on the density contrast is
+nearly invisible.** That is a finding about the mechanisms, and it is not a verdict on the target.
+
+#### The four defects, named before any of them is repaired
+
+| # | defect | why it matters | repaired in |
+|---|---|---|---|
+| ① | `b` is fitted with **eq. 30** (`nu_asymptotic`) while every run uses **eq. 29 + the stability solve** (`nu_full`) | it is why Earth comes out at **52.02** rather than the **50.00** it was fitted to — the one anchor the absolute scale has, missed by 4 % | commit **3** |
+| ② | `Ra_i` hardcodes **`α = 2 × 10⁻³`** (§4's printed value) while `α` is swept only in the buoyancy term | one run then takes **both halves of the paper's self-contradiction at once**, which is not what (g) registered — (g) asked for the two `α` read side by side, not mixed inside one run | commit **4** |
+| ③ | `z*_D` is set from the **melting-onset depth**, not iterated as **eq. 56**'s `z*_D = Nu⁻¹` | the paper's outer solve is a fixed point; ours is a single geometric guess | commit **5** |
+| ④ | `T_s` is **mixed inside one run**: `T_i = T_p + 273.15` but `ΔT = T_i − 273.0`, so `ΔT` = 1350.15 K at `T_p` = 1350 °C — while the `b` fit line uses the literals **1350.0 / 1623.0** | the fit condition and the run condition differ by **0.15 K** | commit **2**, and it goes first |
+
+⚠ **④ is repaired before ①, and the order is not cosmetic.** A fit's fixed point is exact only at the
+condition it was fitted on: re-fitting `b` with `nu_full` while the fit line still reads 1350.0 / 1623.0
+and the runs read 1350.15 / 1623.15 would still miss 50.000 mW/m², and the miss would then be blamed on
+the equation change. **So `T_s` is unified first (one 273.15 K, fit and run on the same condition), and
+only then is `b` re-fitted** — with the pass line `|q_E − 50.000| ≤ 10⁻³ mW/m²`. Each commit reports how
+far its own change moved the twelve runs, and no commit reports two changes at once.
+
+**⚠ What is promoted is the second block (16:39:56), and the difference from the first is `θ`'s
+definition — this matters enough to state where a reader will trip over it.** The first block (16:39:22)
+used `θ = E ΔT / (R T_i)` and died with `OverflowError` inside `_ra_local_max`'s
+`d_eta ** frac * exp(θu/2)`; the second uses **`θ = E ΔT / (R T_i²)`**, the Frank-Kamenetskii form, and
+runs. **Run the `T_i` form and `b` comes out at `6.0416 × 10⁻³` — a factor `6.94 × 10¹²`, 12.8 orders
+of magnitude, from `4.1921 × 10¹⁰` — and none of the twelve rows reproduces.** Both figures were
+re-derived at this tree before this section was written, and both match what the recovered blocks
+printed. ⚠ **The overflow has a one-line cause:** at `ΔT` = 1350 K and `T_i` = 1623 K the `T_i` form
+gives `θ` = **30 014** against the Frank-Kamenetskii **18.49**, and `_ra_local_max` evaluates
+`exp(θu/2)` — `exp(15 007)` is not a float. ⚠ **The promoted code is the `T_i²` form**, and
+`engine/stagnant_lid.py@«실행된 것은 이 정의다»` says so where a reader will look.
+
+⚠ **`b` is re-fitted rather than pinned to the printed digits.** The 09-07 run printed `4.1921e+10` to
+four significant figures and used the bisection's full precision; declaring the printed value as the
+constant would not reproduce the run. So `fit_b_eq30()` solves the same bisection and
+`B_GRAIN_RECORDED` carries the printed value **for comparison only**.
 
 ### C48 — the integrator was validated on Earth, and Earth survived by not blowing up rather than by being right — **closed 2026-09-08: domain (Brief 155) + step (Briefs 156–157)**
 

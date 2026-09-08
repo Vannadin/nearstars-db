@@ -256,3 +256,103 @@ def table2_block_rms(d_eta: float) -> tuple[float, float, float]:
     errs = [(nu_full(t, r, d_eta) / n - 1.0) * 100.0 for t, r, n in TABLE2_BLOCKS[d_eta]]
     return (math.sqrt(sum(e * e for e in errs) / len(errs)),
             sum(errs) / len(errs), max(abs(e) for e in errs))
+
+
+# ── C47 (k), brief 162 커밋 1 — 4단계 차원화. 09-07 인라인 러너를 고치지 않고 승격 ──────────
+#
+# ⚠ **이 절의 산수는 09-07 작업석의 두 번째 인라인 블록(16:39:56)과 한 글자도 다르지 않다.**
+# 그 블록은 커밋된 적이 없고 트랜스크립트에서 복구됐다(C47 (j)). 알려진 결함 셋(b 를 eq. 30 으로
+# 적합하고 실행은 eq. 29 로 함 · `Ra_i` 안의 α 하드코딩 · eq. 56 고정점 없음)은 **여기서 고치지
+# 않는다** — 커밋 2·3·4 가 하나씩 고치고 각 변화를 따로 보고한다. 먼저 재현 앵커를 박는 것이 목적.
+
+#: §4 의 상수 목록에서. ⚠ `ALPHA_IN_RA` 는 §4 가 인쇄한 `2 × 10⁻³` 이고, 이 값이 `Ra_i` 에
+#: 들어간다 — 그런데 부력항의 α 는 C47 (g) 가 양쪽으로 보고하도록 등록한 값이다. 즉 한 실행이
+#: 논문의 자기모순을 **양쪽으로 동시에** 채택한다. 커밋 3 이 이것만 고친다.
+K_THERMAL_W_MK = 4.0            # 열전도도
+KAPPA_M2_S = 1.0e-6             # 열확산율
+RHO_MANTLE_KG_M3 = 4000.0       # 맨틀 밀도 (Ra_i 용; 용융 파라미터의 ρ₀ = 3300 과 다른 값이다)
+E_ACTIVATION_J_MOL = 300.0e3    # 활성화 에너지
+R_GAS_J_MOL_K = 8.314
+ALPHA_IN_RA = 2.0e-3            # §4 인쇄값 — Ra_i 안에서만 쓰인다 (위 주석)
+
+#: 두 대조 천체. ⚠ 여기 `D` 는 맨틀 두께이고 `cmf` 는 핵질량비다 — `radiogenic.budget` 이
+#: 맨틀 질량을 받으므로 둘이 함께 필요하다. 값은 09-07 러너가 쓴 것 그대로.
+STEP4_BODIES = {
+    "Earth": {"g": 9.8, "D": 2900e3, "r_p": 6.371e6, "mass": 5.972e24, "cmf": 0.325},
+    "Mars": {"g": 3.7, "D": 1800e3, "r_p": 3.3895e6, "mass": 6.417e23, "cmf": 0.24},
+}
+
+#: ⚠ **기록된 값이고 계산에 쓰지 않는다.** 09-07 실행이 인쇄한 `b` 는 유효숫자 넷(`4.1921e+10`)
+#: 이라, 이 숫자를 그대로 쓰면 그 실행을 비트로 재현할 수 없다. `fit_b_eq30()` 이 같은 적합을
+#: 다시 풀고, 러너가 그 값을 쓴다. 아래 상수는 대조용이다.
+B_GRAIN_RECORDED = 4.1921e10
+
+#: b 적합이 쓰는 지구 조건. ⚠ 09-07 러너는 적합에서 `ΔT = 1350.0`·`T_i = 1623.0` 을 쓰고,
+#: 실행에서는 `T_i = T_p + 273.15`·`ΔT = T_i − 273.0` (1350.15·1623.15) 를 쓴다 — 0.15 K 어긋나
+#: 있다. **그대로 보존한다**: 재현이 먼저이고, 이 어긋남도 (k) 에 기록된다.
+B_FIT_EARTH_DT_K = 1350.0
+B_FIT_EARTH_TI_K = 1623.0
+B_FIT_EARTH_Q_W_M2 = 0.050      # §4 의 인쇄된 지구 조건 50 mW/m²
+
+
+def theta_fk(delta_t_k: float, t_i_k: float) -> float:
+    """Frank-Kamenetskii 파라미터 `θ = E ΔT / (R T_i²)`.
+
+    ⚠ 09-07 의 **첫** 인라인 블록은 `E ΔT / (R T_i)` 를 썼고 `OverflowError` 로 죽었다(C47 (k)).
+    실행된 것은 이 정의다."""
+    return E_ACTIVATION_J_MOL * delta_t_k / (R_GAS_J_MOL_K * t_i_k ** 2)
+
+
+def ra_internal(g: float, d_m: float, delta_t_k: float, t_i_k: float, b_grain: float) -> float:
+    """내부 가열 Rayleigh 수 `Ra_i = α ρ g ΔT D³ / (b κ exp[E/(R T_i)])`, n = 1.
+
+    ⚠ 여기의 α 는 `ALPHA_IN_RA`(§4 인쇄값)로 고정돼 있다 — 커밋 3 의 대상."""
+    return (ALPHA_IN_RA * RHO_MANTLE_KG_M3 * g * delta_t_k * d_m ** 3
+            / (b_grain * KAPPA_M2_S * math.exp(E_ACTIVATION_J_MOL / (R_GAS_J_MOL_K * t_i_k))))
+
+
+def z_d_from_solidus(g: float, d_m: float, t_p_celsius: float) -> tuple[float, float]:
+    """`(z*_D, 고갈층 두께 [m])` — eq. 45 의 용융 개시 압력을 `ρ₀ g` 로 깊이로 바꾼 것.
+
+    ⚠ eq. 56 의 고정점 `z*_D = Nu⁻¹` 이 아니다. 09-07 러너가 이렇게 잡았고 커밋 4 가 고친다."""
+    depth = solidus_p0_gpa(t_p_celsius) * 1e9 / (RHO_0_MELT * g)
+    return max(0.0, 1.0 - depth / d_m), depth
+
+
+def flux_wm2(nu: float, delta_t_k: float, d_m: float) -> float:
+    """`q = Nu k ΔT / D` [W/m²]."""
+    return nu * K_THERMAL_W_MK * delta_t_k / d_m
+
+
+def fit_b_eq30() -> float:
+    """`b` — 논문 자기 지구 조건(q = 50 mW/m²)에 맞춘 **하나의 전역 선언**.
+
+    ⚠ **eq. 30(`nu_asymptotic`)으로 적합하는데 실행은 eq. 29 + 안정해석(`nu_full`)으로 한다.**
+    그래서 이 `b` 로 돌린 지구 플럭스가 50 이 아니라 52.02 mW/m² 로 나온다 — 커밋 2 의 대상.
+    09-07 의 이분법(기하평균, 400회)을 그대로 옮긴 것이다."""
+    lo, hi = 1e-40, 1e40
+    for _ in range(400):
+        mid = math.sqrt(lo * hi)
+        nu = nu_asymptotic(theta_fk(B_FIT_EARTH_DT_K, B_FIT_EARTH_TI_K),
+                           ra_internal(STEP4_BODIES["Earth"]["g"], STEP4_BODIES["Earth"]["D"],
+                                       B_FIT_EARTH_DT_K, B_FIT_EARTH_TI_K, mid), 1)
+        if flux_wm2(nu, B_FIT_EARTH_DT_K, STEP4_BODIES["Earth"]["D"]) > B_FIT_EARTH_Q_W_M2:
+            lo = mid
+        else:
+            hi = mid
+    return math.sqrt(lo * hi)
+
+
+def step4_run(body: str, t_p_celsius: float, alpha: float, d_eta: float, buoyancy: bool,
+              b_grain: float) -> dict:
+    """한 런 — `q` [W/m²] 와 그 안의 중간값들. 09-07 러너의 `run()` 과 같은 산수."""
+    b = STEP4_BODIES[body]
+    t_i = t_p_celsius + 273.15
+    delta_t = t_i - 273.0
+    z_d, depth = z_d_from_solidus(b["g"], b["D"], t_p_celsius)
+    dt_rho = delta_t_rho(t_p_celsius, alpha, delta_t) if buoyancy else 0.0
+    theta = theta_fk(delta_t, t_i)
+    ra = ra_internal(b["g"], b["D"], delta_t, t_i, b_grain)
+    nu = nu_full(theta, ra, d_eta, z_d, dt_rho)
+    return {"q_w_m2": flux_wm2(nu, delta_t, b["D"]), "nu": nu, "theta": theta, "ra_i": ra,
+            "z_d": z_d, "depleted_m": depth, "dt_rho": dt_rho, "t_i_k": t_i, "delta_t_k": delta_t}
