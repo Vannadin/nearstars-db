@@ -265,171 +265,12 @@ sentence, so the stale claim was reachable from inside the parked section.)*
 
 ## Standing rules — each exists because something got through
 
-- **Anchors bit-identical.** If a solved number moves, it is reported with its cause, never
-  absorbed. `test_ice_giant.py --refresh` goes in the same commit whenever a path-fingerprint
-  function or its constants change.
-- **Gate FAIL 0**, and say what your work adds to its time.
-- **A number cannot enter without its label** — the quantity's name, its location, its
-  condition, checked at that place in the source. Not "5500–6300 K" but "central temperature
-  5500–6300 K, Scheibe Table 1". **This disease is independent of role**: it fired once in each
-  of the three seats.
-- **False provenance** (subspecies 7): a number carrying a label that is *false* is worse than
-  one carrying none, because the label stops the checking. Sender: quote only what is in
-  quotation marks; if you filled a number in, say you filled it in. **Receiver: a number
-  attributed to you is checked against what you actually sent before you accept it.**
-- **A number in a brief carries its condition AND a commit anchor** (added 2026-09-02, after
-  four directing-seat errors in one day, every one caught by someone else). *Condition* means
-  which pressure, which curve, which range, which basis — three of the four were **right numbers
-  wrongly paired**: a rejected draft's flux married to the adopted radius, a separation lifted
-  from a grid point *outside* the adopted range, a 500 GPa comparison quoted as a 200 GPa seam.
-  The fourth was an **inverted inequality** — an upper bound read as "certainly not molten" when
-  it means "certainly molten above" — so **push an inequality through to its conclusion before
-  writing it down**. *Anchor* means the commit or note the value came from (`11,500 W/m² @
-  eddd3a6b`), because a condition alone does not reveal that **the condition itself was
-  superseded** — that is the half the first error slips through, and the anchor makes staleness
-  mechanically checkable. This is the directing seat's version of the work seat's pair gate, and
-  the audit proposed it. **A brief arriving with an unanchored number is worth a question back.**
-- **A narrow instrument's output is not a general fact, and this seat reported it as one twice in
-  one day.** Added 2026-09-03. (i) A **first-page title scan** of the paper cache returned zero
-  hits for viscosity, and that was reported as *"no source exists"*. Full-text extraction over the
-  same 58 files then found **five** papers carrying printed viscosity constants, two of them
-  transcribable dimensional laws — none is *about* viscosity, which is exactly why titles missed
-  them. (ii) **One** cache file was found without a PROVENANCE record and the rule proposed from it
-  was *"a cached paper without a PROVENANCE file is not a cached paper"* — measurement says only
-  **8 of 57** carry one, so that rule would have declared 49 real papers unheld, including the
-  three transcribed from that same day. **Both times the instrument was fit for what it measured
-  and unfit for what was concluded**, and both times the hedge was stated when the scan ran and
-  dropped from the conclusion written about it. **State the instrument beside the finding, and if
-  the finding is a negative, say what the instrument cannot see.**
-- **The ± is part of the number, and so is the composition.** Added 2026-09-03 after this seat
-  stripped a different qualifier three times in one day, each caught by someone else: a σ value
-  relayed with **no (P,T) condition** (the work seat refused to transcribe it and was right); a
-  conductivity relayed to the owner as "14.65 against 9.0 ± 1.6" with **no composition label**,
-  where the two are pure Pv and the same seat's own brief had labelled them correctly; and
-  `18.9 / 15.4` relayed **bare** when the source prints `18.9 ± 1.6 / 15.4 ± 1.4`. This is *not*
-  covered by "carry the condition" — that rule was in force all three times and the digits were
-  right all three times. **A relay that keeps the digits and drops the ±, the composition or the
-  condition has not relayed the number**, and the loss is invisible downstream because what
-  arrives looks complete. It leaks worst in *summaries*: twice the qualifier was present in the
-  brief and absent in the one-paragraph version.
-- **When a value sits inside a declared window, say which edge the number is measured from.**
-  Brief 36's notes gave a seam step against the pure-mineral centre while the line above it gave
-  one against the implemented solidus — both true, exactly the declared half-width apart, and
-  **indistinguishable by eye because the three candidate bases are evenly spaced**. Prefer the
-  curve the code actually evaluates, so a reader can reproduce it.
-- **Verification without relay, both ways**: downward, no unlabelled numbers in briefs; upward,
-  **judgment-changing numbers are reproduced by the directing seat before being reported on**.
-  Triggers: (a) a number that changes a row's open/closed/reopened state, (b) a claim that a
-  published value is matched or reproduced, (c) a number that moves an anchor, (d) a number
-  that changes a grade. **The directing seat's reproduction does not replace the audit's** —
-  the point is three legs, not a relocated one.
-- **Prose that carries a number carries the duty to update it.** So does prose carrying a
-  condition, and a row carrying a prediction carries the duty to correct it.
-- **Bake a source only after sweeping its claimed range against pre-registered physicality
-  criteria, and record the effective ceiling with the table.** SeaFreeze's `water2` returns
-  negative density inside its own knot box; the printed validity range is not the executed one.
-- **A regenerated table that differs**: which side is right is settled by a separate trace.
-  Do not correct the table to the code, or the code to the table, on the name alone.
-- **A discriminating test states the assumption beside each prediction**, and registers "all
-  predictions miss = the test itself failed, and the product is the name of the wrong
-  assumption" as an ending.
-- **A check whose own error exceeds its criterion cannot raise a grade** — and its mirror: a
-  check can be precise while the thing being checked is simply wrong.
-- **Do not tune a declaration until the answer comes out right.** Declare, integrate, report.
-  Three items in a row declined to write the value that would have closed their gap, once by
-  0.0012.
-- **Pre-register outcomes before running**, and register the *kind* of unregistered result
-  afterwards so the classification learns. Five branches are now standard for any retrial,
-  including "the source does not reach the deciding region" and "the source disagrees with both
-  candidates".
-- **"Not found" is a legitimate ending.** Say what was searched and how.
-- Papers through `ADS_API_TOKEN` and the `docs/phase3/_papers/` cache (gitignored). **No
-  WebSearch.** Identifiers read, not made, checked **by title**; where one file cites two
-  papers, the label carries the paper's name.
-- **A file in the paper cache is held only once it is shown to be a PDF.** Found 2026-09-03: a
-  772-byte anti-bot HTML challenge (aanda.org DataDome, *"Please enable JS and disable any ad
-  blocker"*) sat in `docs/phase3/_papers/` under a bibcode filename with a `.pdf` extension for
-  eight days (Ni 2018, `2018A&A...613A..32N`). Nothing consumed it — the methodology doc already
-  recorded the paper as unreachable — but a bibcode sweep would have counted it as held. It is
-  now `*.FAILED-FETCH.html` with a `.NOT-OBTAINED.txt` beside it, kept as evidence. **Before
-  recording a paper as held, run `file` on it; before reading a cached paper, check that the
-  text layer opens.** A `.PROVENANCE.txt` beside the file is the record of *how* it was
-  obtained and should exist for every new fetch — but its absence is **not** the check: as of
-  this writing only 8 of the 58 cached PDFs carry one, and the other 50 are real papers.
-- No new runtime dependency in `engine/` — `check.sh` runs on system Python.
-- Commits in English, one logical change each, identity `VaNnadin <vannadin00@gmail.com>`.
-- **Clear the work session's context at item boundaries** (`/clear`, which the owner types —
-  a session cannot clear itself), after confirming the notes carry what the next session needs,
-  especially the approaches that were tried and rejected.
+Rules moved to `derivation-discipline.md@«10. What a seat owes a claim»` (commit d38d8e2c); the original text of this section is readable at `2269a8d5`, the last sha it lived in.
 
 ## What 2026-09-01 added to the rules — read these, they are new
 
-Every one is in `interior-core.md`'s rules section with its case. The short forms:
-
-- **A process listing is an instant, not a state**, and a serial chain shows nothing between
-  its steps. This seat reported "the run never started" from one `ps` and caused a duplicate
-  heavy run. Report process state with its sampling; **a session about to relaunch checks for
-  itself**, whatever the report says.
-- **A runtime estimate belongs to the commit it was measured on.** "~15 minutes" was honest
-  when taken and false when quoted, because the code had changed between.
-- **The `.md` render is regenerated from the cached `.html`, and the extractor used to lose tables — fixed
-  2026-09-03 (Brief 49).** History, kept because it is the evidence: the section walker reached only direct
-  children of `ltx_section/subsection/subsubsection`, so **article-level floats** (Seager+ 2007, `0707.2895`,
-  the source of `eos.py`'s `fe_eps`/`mgsio3_en` fits — eight of eleven values absent from the `.md`, present
-  in the `.html`, transcription correct) and **appendix floats** (RM22 Tables 7–10, the ladder's Table 8)
-  never reached the `.md`; and **table captions were never emitted anywhere** (11 of 729 `.md` carried
-  "Table N:", all prose), which made a caption-based check see losses that were not there (Zhang & Rogers'
-  five tables were always present). The walker now walks appendices, sweeps unreached floats, and emits
-  captions; every ar5iv-rendered `.md` was regenerated (`fetch_arxiv_texts.py --regenerate-md`, idempotent).
-  **Fallback rule**: for a table the `.md` does not show, read the `.html` and record the render; three
-  residual shapes exist (a table not marked as a float, an empty float, a density-signal false positive —
-  `scripts/check_paper_tables.py`, 46 → 3 rows on the cited set).
-- **Regeneration overwrites hand-made `.md` files unless guarded.** 61 cached `.html` files are not ar5iv
-  renders (arxiv.org abstract pages, search pages, a bot-block page) and five of their `.md` files had been
-  made by hand from the PDF ("PDF-extracted text (ar5iv render failed …)"); the first regeneration pass
-  turned those five into a title line. Restored from the same-session backup; `--regenerate-md` now skips
-  non-ar5iv `.html` and any `.md` whose head carries a manual signature — and, after the audit, the
-  invariant is **positive**: the generator stamps its first line (`<!-- generated by fetch_arxiv_texts.py
-  from <id>.html, <date> -->`) and **only stamped files are ever overwritten**; an unstamped file is stamped
-  without content change only when it is byte-identical to the extractor's output, otherwise skipped and
-  counted. **Back up before a bulk rewrite, and check what a shrinking file was before accepting the
-  shrink** — a file can be right and smaller (bibliography dropped by design) or a person's work destroyed.
-  The backup taken before Brief 49's first pass is why five hand-made files were a near-miss, not a loss.
-- **Check ADS `esources` before asking the owner for a paper.** The field names the free routes —
-  `EPRINT_PDF` is arXiv, `ADS_PDF`/`ADS_SCAN` is ADS's own copy. Measured 2026-09-03: of seven papers the
-  directing seat asked the owner to fetch, **three had a free route visible in a field the seat had already
-  queried** (Pozzo 2012 and Nimmo & Primack 2020 on arXiv, Nimmo+ 2004 hosted by ADS). The habit, not the
-  access, was missing. Query it; escalate only what is genuinely publisher-only.
-- **A truncated view of a correct query is a wrong answer that looks right.** `head`, `tail`, `cut`
-  and column limits clip *silently* — nothing marks where the output stopped, so a negative reads as
-  absence and a partial list reads as complete. **Before reporting a negative or a count from a
-  filtered command, re-run it unfiltered, or make the truncation visible** (`wc -l`, a trailing
-  marker, `--color` on the match). Two instances 2026-09-03, two seats: the directing seat's
-  `grep … | head -30` stopped at line 385 and produced a five-edge count from an eleven-edge list;
-  the work seat's `grep … | cut -c1-220` clipped line 261 before the number and produced "38.2 is
-  not in the source" for a number on the matched line.
-- **A number whose source was not stated is quoted without one** — do not supply the
-  provenance. An invented source is harder to catch than a missing one, because a reader who
-  sees one stops looking.
-- **A sentinel carried in a variable something else re-arms is not a contract.** State that
-  encodes a promise gets its own variable.
-- **The cold flank has a second form: the climb hid the wall from the controller.** Brief 22
-  taught trial refusals to steer the bracket; this says the steering must also be able to
-  **conclude**, or the loop cycles instead of refusing by name.
-- **A third party checks a solver by closure, not by A/B against a harness whose brackets it
-  does not own.** The audit's own instrument was wrong twice and it judged the instrument, not
-  the solver.
-- **An unreachable boundary condition closes as a named refusal**, not as a failure to
-  converge. That is what let C13 close.
-- **A new number is carried back to the old ones before it is used to clear them.**
-- **Stage what you wrote, not what the file holds** — `git diff --stat` before `git add`, in a
-  worktree two seats are editing.
-- **When machine-extracting a numeric table, check against a different rendering**, not
-  against check values that rode the same extraction — they can be self-consistently wrong.
-  The IF97 PDF's text layer dropped every power of ten.
-- **`check.sh` is ~20 minutes and the foreground tool limit is 10.** Run it backgrounded and
-  watch the log tail; twice it was killed and read as an owner signal. **An external signal's
-  sender candidates include the harness itself.**
+Rules moved to `derivation-discipline.md@«10. What a seat owes a claim»` (commit d38d8e2c); the original text of this section is readable at `2269a8d5`, the last sha it lived in.
+Its two chronicle entries (the `.md` render regeneration, and the hand-made-file overwrite) moved to the end of the 2026-09-03 section below.
 
 ## Traps worth knowing before you step on them
 
@@ -1015,6 +856,32 @@ places were quiet because nothing was checking them.
   **Owner, 2026-09-03: "둘 다 지금은 안 한다" — neither, for now.** Nothing was drafted and
   nothing was sent. Carbon's closure above follows from this half.
 
+### Moved here from the rules section 2026-09-08 (chronicle, not rules)
+
+- **The `.md` render is regenerated from the cached `.html`, and the extractor used to lose tables — fixed
+  2026-09-03 (Brief 49).** History, kept because it is the evidence: the section walker reached only direct
+  children of `ltx_section/subsection/subsubsection`, so **article-level floats** (Seager+ 2007, `0707.2895`,
+  the source of `eos.py`'s `fe_eps`/`mgsio3_en` fits — eight of eleven values absent from the `.md`, present
+  in the `.html`, transcription correct) and **appendix floats** (RM22 Tables 7–10, the ladder's Table 8)
+  never reached the `.md`; and **table captions were never emitted anywhere** (11 of 729 `.md` carried
+  "Table N:", all prose), which made a caption-based check see losses that were not there (Zhang & Rogers'
+  five tables were always present). The walker now walks appendices, sweeps unreached floats, and emits
+  captions; every ar5iv-rendered `.md` was regenerated (`fetch_arxiv_texts.py --regenerate-md`, idempotent).
+  **Fallback rule**: for a table the `.md` does not show, read the `.html` and record the render; three
+  residual shapes exist (a table not marked as a float, an empty float, a density-signal false positive —
+  `scripts/check_paper_tables.py`, 46 → 3 rows on the cited set).
+- **Regeneration overwrites hand-made `.md` files unless guarded.** 61 cached `.html` files are not ar5iv
+  renders (arxiv.org abstract pages, search pages, a bot-block page) and five of their `.md` files had been
+  made by hand from the PDF ("PDF-extracted text (ar5iv render failed …)"); the first regeneration pass
+  turned those five into a title line. Restored from the same-session backup; `--regenerate-md` now skips
+  non-ar5iv `.html` and any `.md` whose head carries a manual signature — and, after the audit, the
+  invariant is **positive**: the generator stamps its first line (`<!-- generated by fetch_arxiv_texts.py
+  from <id>.html, <date> -->`) and **only stamped files are ever overwritten**; an unstamped file is stamped
+  without content change only when it is byte-identical to the extractor's output, otherwise skipped and
+  counted. **Back up before a bulk rewrite, and check what a shrinking file was before accepting the
+  shrink** — a file can be right and smaller (bibliography dropped by design) or a person's work destroyed.
+  The backup taken before Brief 49's first pass is why five hand-made files were a near-miss, not a loss.
+
 ## 2026-09-04 evening — the magnetic-wiring day, written by the work seat at close
 
 **Seats (owner's assignment after the terminal crash, ~17:50):** `nearstars-77` directs · **`nearstars-b2` (this
@@ -1442,56 +1309,12 @@ through `7e47c957`.
 
 ## The rules this stretch produced
 
-- **A commit that closes a hole brings the test that reproduces it.** Broken the same day it was
-  written; five holes were closed with no test and two of the fixes opened new silent passes.
-- **Run a diagnostic before writing it down.** Three checks read correctly and were wrong when run —
-  `pgrep -x python3` (the interpreter's comm is `Python`), `pgrep -P` (the child is another idle
-  shell), `git diff --quiet` (exits 0 when there is *no* change). Two healthy gates were killed by
-  the first. Point a check at the case you expect to **pass**, not only the one you expect to fail.
-- **Do not widen the detector; write the data in the shape it already reads.** Four decisions went
-  that way, and the fourth was measured: widening the denial vocabulary still missed its target and
-  added nine false hits, while putting a bibcode on one line made the existing check reach it.
-- **A count is only as true as the sentence under it.** The number said one seat while the sentence
-  said ten, and a reader believes the sentence.
-- **When you re-aim an anchor, re-read the sentence around it.** A dead pointer fails a gate; a live
-  pointer wrapped in a claim that stopped being true passes every check we own. Three of those in one
-  day, and one was holding up a work item.
-- **The name was the evidence, and the name was wrong.** Four cases: a process called python is
-  `python3`; a child is one level down; a quiet diff means nothing happened; a list called
-  `CORELESS_CLASSES` holds bodies without cores — while its own reason said the iron core sits under
-  the envelope. Three were tools; **the fourth was data**, which is the point.
+Rules moved to `derivation-discipline.md@«10. What a seat owes a claim»` (commit d38d8e2c); the original text of this section is readable at `2269a8d5`, the last sha it lived in.
 
 ## Where the directing seat's own mistakes were
 
-**2026-09-08 — proposing a band whose width came from our own failure boundary.** After the work
-seat measured that the output moves 1.07 % across a 2000 K span of initial temperature, the directing
-seat proposed carrying 2000–4000 K as a band rather than picking a point, on the C34 precedent. ⚠ **The
-width was the interval over which our integrator happened not to diverge** — a property of our code,
-not of Mars. Carrying it would have shipped a numerical failure boundary as if it were a physical
-range, and it would have become a ghost the moment C48 was repaired. **A band is the opposite of a
-knob only when its width comes from the physics**; that condition was missing from the proposal. The
-work seat declined it and gave that reason. Third of the night on this side of the ledger.
-
-**2026-09-08 — approving a transfer without separating the printed value from the derived one.** Brief
-149 approved carrying Nimmo+ 2004's 4800 K initial temperature to Mars, and the approval covered both
-of Earth's initial temperatures. ⚠ **Only one of them is Nimmo's.** Earth's mantle figure, 3040 K, is
-`4800 / r_b` with `r_b = 1.579` — **Earth's own adiabat ratio**, reproduced by the interior solve to
-1.5789. Mars's is 1.1937, so the same transfer is `4800 / 1.1937 = 4021 K`. **Carrying 3040 K would
-have smuggled Earth's compression into Mars.** The work seat caught the distinction while writing the
-body file. The rule it leaves: **when transferring an Earth number, check whether it is the printed one
-or something derived from it — only the printed one travels.**
-
-
-Recorded by that seat's own request, so the next one does not repeat them. **Four times it relayed a
-report without opening the file or the code**: the mass-loss host list (40 Eri A has none, Barnard's
-Star does, and α Cen A's value is the combined A+B astrosphere); "13 appears under no count" (it was
-two spellings summed in one grep, and the two figures were from different versions of the same
-paper); "the gate died" (it was alive, and the liveness test could never have matched); and C34
-called resolved when only its thresholds half was.
-
-**All four were caught downstream, none by the seat itself.** The relay is a place where a claim
-gains confidence without gaining evidence — which is the same defect as a citation that resolves
-while its sentence lies, one layer up in the org chart.
+Rules moved to `derivation-discipline.md@«10. What a seat owes a claim»` (commit d38d8e2c); the original text of this section is readable at `2269a8d5`, the last sha it lived in.
+Its chronicle paragraph (four relays without opening the file or the code) moved to the end of the 2026-09-08 directing-seat handover section below.
 
 ## 2026-09-07 — the day the tidal-locking build turned into a naming audit, written by the work seat at close
 
@@ -1747,3 +1570,16 @@ only) · `2017NatSR...745629P` (Mars) · `2009GeoJI.179..154K` (the stagnant-lid
 it was **a right value carrying a status it had not earned.** Of the day's fourteen errors the gate
 caught **zero**, and the gate is good at structure. **That distinction is what should decide brief
 151's category (a).**
+
+### Moved here from "Where the directing seat's own mistakes were" 2026-09-08 (chronicle, not a rule)
+
+Recorded by that seat's own request, so the next one does not repeat them. **Four times it relayed a
+report without opening the file or the code**: the mass-loss host list (40 Eri A has none, Barnard's
+Star does, and α Cen A's value is the combined A+B astrosphere); "13 appears under no count" (it was
+two spellings summed in one grep, and the two figures were from different versions of the same
+paper); "the gate died" (it was alive, and the liveness test could never have matched); and C34
+called resolved when only its thresholds half was.
+
+**All four were caught downstream, none by the seat itself.** The relay is a place where a claim
+gains confidence without gaining evidence — which is the same defect as a citation that resolves
+while its sentence lies, one layer up in the org chart.
