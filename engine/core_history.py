@@ -235,10 +235,16 @@ def window_summary(rows: list[dict], window_gyr: float = WINDOW_GYR) -> dict:
 
 
 def sweep(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float = STEP_MYR) -> dict:
-    """h, h/2, h/4 — the pre-registered convergence test on ΔE_min (nominal corner) and the inner-core case."""
+    """h, h/2, h/4 — the pre-registered convergence test on ΔE_min (nominal corner) and the inner-core case.
+
+    ⚠ **Fixed step, deliberately** (`adaptive=False`). Branch ⑤ was registered before the adaptive step
+    existed (`core-thermal-history-context-notes.md@«⑤ Step convergence — *declare the test before the first run*»`),
+    and it halves the STEP. Left adaptive, halving `step_myr` only lowers the CAP in `h = min(cap, 0.1·τ)`
+    and changes nothing where τ binds — a different question, and one nobody registered. Restoring the
+    original meaning was Brief 161's first item; **an adaptive-cap sweep is not built here** (C47 (i))."""
     out = {}
     for label, s in (("h", step_myr), ("h/2", step_myr / 2.0), ("h/4", step_myr / 4.0)):
-        hist = integrate(params, t_c0, t_m0, age_gyr, s)
+        hist = integrate(params, t_c0, t_m0, age_gyr, s, adaptive=False)
         if "refused" in hist:
             return {"refused": hist["refused"], "h/4": {"hist": hist}}
         ws = window_summary(hist["rows"])

@@ -8,10 +8,11 @@
 The sweep is on demand because it costs ~400 s (each time step builds four core profiles for RK4); the gate
 carries the single run and the recorded sweep result (2026-09-04: width 0.001 %, same inner-core case at
 1135 / 2270 / 4540 steps). ③ is read last, and only because ⑤ passed on record.
-⚠ Those three counts are the **fixed-step** sweep of 2026-09-04 and `--sweep` no longer reproduces them:
-since Brief 157 `sweep` varies the CAP in `h = min(cap, 0.1·τ)`, so halving it changes only the steps where
-the cap binds. **Re-running ⑤ under the adaptive stepper — or passing `adaptive=False` to keep its original
-meaning — is an open decision, recorded in C47 (i) and not taken here.**
+⚠ Those three counts are the **fixed-step** sweep of 2026-09-04, and between Briefs 157 and 161 `--sweep`
+did not reproduce them: `sweep` had gone on varying the CAP in `h = min(cap, 0.1·τ)`, where halving changes
+only the steps the cap binds. **Brief 161 restored ⑤'s registered meaning — `sweep` runs `adaptive=False`**,
+because a branch registered before the adaptive step exists is not re-written afterwards to match the code.
+An adaptive-cap sweep would be a different question and is deliberately not built (C47 (i)).
 """
 from __future__ import annotations
 
@@ -57,7 +58,7 @@ if "--sweep" in sys.argv:
     hist = sw["h/4"]["hist"]
 else:
     print("      (온디맨드 — `--sweep`. 기록 2026-09-04, 고정걸음: 폭 0.001 %, 1135/2270/4540 걸음 모두 '내핵 없음' — 통과)")
-    print("      ⚠ 브리프 157 이후 --sweep 은 걸음이 아니라 상한을 쓴다 — 위 세 걸음 수는 재현되지 않는다 (C47 (i))")
+    print("      ⑤ 는 걸음을 반씩 줄이는 시험이므로 --sweep 은 고정걸음으로 돈다 (adaptive=False, 브리프 161) — 위 세 걸음 수가 그대로 재현된다")
     t0 = time.perf_counter()
     hist = ch.integrate(PARAMS, T_C0, T_M0, AGE)
     # Brief 157: the step is adaptive (h = min(4 Myr, 0.1·τ)); Earth takes 1152 steps (fixed: 1135 — the 17 extra are the hot
