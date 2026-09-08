@@ -307,11 +307,17 @@ def theta_fk(delta_t_k: float, t_i_k: float) -> float:
     return E_ACTIVATION_J_MOL * delta_t_k / (R_GAS_J_MOL_K * t_i_k ** 2)
 
 
-def ra_internal(g: float, d_m: float, delta_t_k: float, t_i_k: float, b_grain: float) -> float:
+def ra_internal(g: float, d_m: float, delta_t_k: float, t_i_k: float, b_grain: float,
+                alpha: float = ALPHA_IN_RA) -> float:
     """내부 가열 Rayleigh 수 `Ra_i = α ρ g ΔT D³ / (b κ exp[E/(R T_i)])`, n = 1.
 
-    ⚠ 여기의 α 는 `ALPHA_IN_RA`(§4 인쇄값)로 고정돼 있다 — 커밋 3 의 대상."""
-    return (ALPHA_IN_RA * RHO_MANTLE_KG_M3 * g * delta_t_k * d_m ** 3
+    ⚠ **브리프 162 커밋 4 (결함 ②) — α 를 인수로 받는다.** 09-07 러너는 여기에 §4 의 `2 × 10⁻³` 을
+    박아 두고 부력항에서만 α 를 쓸었다. 이제 스윕하는 α 가 양쪽에 같이 들어간다. ⚠ **그리고 그
+    결과는 "아무 일도 일어나지 않는다" 이고, 그것이 발견이다**: `Ra_i ∝ α/b` 이고 `b` 는 지구
+    조건에 적합되므로 α 는 `b` 에 그대로 흡수된다 — α 를 54배 줄이면 `b` 도 정확히 같은 비로
+    줄고 `Ra_i` 는 소수 전부까지 같다. **논문의 α 자기모순은 `Ra_i` 를 통해서는 작용할 수 없고,
+    `ΔT*_ρ` 를 통해서만 작용한다** (C47 (k) 커밋 4)."""
+    return (alpha * RHO_MANTLE_KG_M3 * g * delta_t_k * d_m ** 3
             / (b_grain * KAPPA_M2_S * math.exp(E_ACTIVATION_J_MOL / (R_GAS_J_MOL_K * t_i_k))))
 
 
@@ -328,7 +334,7 @@ def flux_wm2(nu: float, delta_t_k: float, d_m: float) -> float:
     return nu * K_THERMAL_W_MK * delta_t_k / d_m
 
 
-def fit_b_eq30() -> float:
+def fit_b_eq30(alpha: float = ALPHA_IN_RA) -> float:
     """`b` — 논문 자기 지구 조건(q = 50 mW/m²)에 맞춘 **하나의 전역 선언**.
 
     ⚠ **eq. 30(`nu_asymptotic`)으로, 용융 없이 적합하는 것이 논문의 인쇄된 정의다** — §4:
@@ -344,7 +350,7 @@ def fit_b_eq30() -> float:
         mid = math.sqrt(lo * hi)
         nu = nu_asymptotic(theta_fk(B_FIT_EARTH_DT_K, B_FIT_EARTH_TI_K),
                            ra_internal(STEP4_BODIES["Earth"]["g"], STEP4_BODIES["Earth"]["D"],
-                                       B_FIT_EARTH_DT_K, B_FIT_EARTH_TI_K, mid), 1)
+                                       B_FIT_EARTH_DT_K, B_FIT_EARTH_TI_K, mid, alpha), 1)
         if flux_wm2(nu, B_FIT_EARTH_DT_K, STEP4_BODIES["Earth"]["D"]) > B_FIT_EARTH_Q_W_M2:
             lo = mid
         else:
@@ -361,7 +367,7 @@ def step4_run(body: str, t_p_celsius: float, alpha: float, d_eta: float, buoyanc
     z_d, depth = z_d_from_solidus(b["g"], b["D"], t_p_celsius)
     dt_rho = delta_t_rho(t_p_celsius, alpha, delta_t) if buoyancy else 0.0
     theta = theta_fk(delta_t, t_i)
-    ra = ra_internal(b["g"], b["D"], delta_t, t_i, b_grain)
+    ra = ra_internal(b["g"], b["D"], delta_t, t_i, b_grain, alpha)
     nu = nu_full(theta, ra, d_eta, z_d, dt_rho)
     return {"q_w_m2": flux_wm2(nu, delta_t, b["D"]), "nu": nu, "theta": theta, "ra_i": ra,
             "z_d": z_d, "depleted_m": depth, "dt_rho": dt_rho, "t_i_k": t_i, "delta_t_k": delta_t}

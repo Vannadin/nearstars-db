@@ -5320,20 +5320,71 @@ nothing is re-fitted.**
 
 ⚠ **Whose error this was, recorded where the others are.** The pass line *"`b` reproduces 50 mW/m²"* was
 set as an anchor in C47 (j) without checking which equation the paper normalizes on; **that was the
-directing seat's**, and it is written here rather than left in a message. The anchor is not deleted but
-sharpened: **`q_E` = 50.000 ± 10⁻³ evaluated on eq. 30**, which the code passes.
+directing seat's — and the audit seat approved the same pass line, so two of the three legs were wrong
+together**, which is the failure mode three separate legs exist to prevent. It is written here rather
+than left in a message. The anchor is not deleted but sharpened: **`q_E` = 50.000 ± 10⁻³ evaluated on
+eq. 30**, which the code passes.
+
+⚠ **And the reclassification costs us an anchor, which has to be said plainly.** If `b` is *defined* by
+"eq. 30, no melting, Earth = 50 mW/m²", then reproducing 50.000 at that condition is **a definition, not
+a verification** — C47 (e)'s fourth anchor was never an anchor. **So the absolute scale has no
+independent check at all**, exactly as (e) said when it noted that §4's planetary results are Figs 12–14
+with no printed dimensional flux. The independent legs are **three**: `Ra_i`'s printed range over
+`T_i` = 1200–1800 °C, `Ra_crit`'s ∼450 / 134 / 104, and Table 2's three `Δη` blocks row by row.
+
+**That weakness does not reach the verdict, and the reason is structural.** The verdict cells read
+`q_Earth/q_Mars` and `Ur_M/Ur_E` — **ratios** — and `b` is one global constant entering both bodies
+identically, so it cancels to first order: C47 (f) measured the ratio's sensitivity at **3.7 % per decade
+of `b`** against **115 %** for the absolute flux. **An unanchored absolute scale is a real limit on any
+flux we would emit, and not a limit on the direction test.**
 
 ⚠ **And this is the ninth time today that reading the thing before building it changed the build** —
 after existing code four times, a declared limit, a paper's own sentence, our own rule, and the recovery
 that turned "build from nothing" into "promote and reproduce". **None of the nine was caught by the
 gate.**
 
+#### Commit 4 — defect ② repaired, and the repair proves the defect could not have mattered
+
+**`α` now enters `Ra_i` as an argument, and `b` is fitted with the same `α`** — self-consistently, which
+is the only way a normalization and the constant it normalizes can be read together. **The result is
+that nothing moves, and that is the finding:**
+
+| `α` | `b`, fitted with that `α` | `Ra_i` at the Earth condition | `q_E` (c), 1350 °C | `q_E/q_M` |
+|---|---|---|---|---|
+| §4's `2.0 × 10⁻³` | 4.203785 × 10¹⁰ | 1.360020 × 10¹⁰ | 51.9758 | 1.782288 |
+| §3.2's `3.7 × 10⁻⁵` | **7.777002 × 10⁸** | **1.360020 × 10¹⁰** | **51.9758** | **1.782288** |
+| ratio | **1.850000 × 10⁻²** | identical to every digit | identical | identical |
+
+⚠ **`Ra_i ∝ α/b`, and `b` is fitted at the Earth condition, so `α` is absorbed by `b` exactly.** The `b`
+ratio equals the `α` ratio to six digits (1.85 × 10⁻²), `Ra_i` is unchanged to every printed digit, and
+all twelve runs are bit-identical to commit 3's. **So the paper's `α` self-contradiction cannot act
+through `Ra_i` at all — it can only act through `ΔT*_ρ`**, which is where C47 (g) put it. `α` and `b` are
+not separately identifiable, and the paper itself calls its normalization *"(arbitrary)"*.
+
+⚠ **This means the split the audit seat proposed as commit 4's pass line — §3.2 and §4 giving different
+`q_E` in the (a) rows — cannot happen, and its absence is not evidence that the argument was left
+unwired.** The wiring is visible in the `b` column instead: two `α` values now produce two `b` values in
+the ratio 1.85 × 10⁻², where before commit 4 there was one `b` for both.
+
+**The counterfactual, recorded because it is the only way `α` in `Ra_i` bites.** If `b` were held at the
+paper's value (fitted at `α` = 2 × 10⁻³) while `α` in `Ra_i` were changed to §3.2's, `Ra_i` would fall
+54×:
+
+| case, `α` in `Ra_i` only | `q_E` 1350 °C | `q_M` | `q_E/q_M` | `Ra_i` (Earth) |
+|---|---|---|---|---|
+| 2.0 × 10⁻³ (paper's `b` and `α` together) | 51.9758 | 29.1624 | 1.7823 | 1.360 × 10¹⁰ |
+| 3.7 × 10⁻⁵ with the paper's `b` kept | **15.0253** | 12.5636 | **1.1959** | 2.516 × 10⁸ |
+
+⚠ **And that case falls *below* the no-melting 1.372**, so even the mixed reading moves away from the
+target. It is recorded, not adopted: mixing a `b` fitted at one `α` with runs at another is the thing
+commit 4 exists to stop.
+
 #### The four defects, named before any of them is repaired
 
 | # | defect | why it matters | repaired in |
 |---|---|---|---|
 | ~~①~~ | `b` is fitted with **eq. 30** (`nu_asymptotic`) while every run uses **eq. 29 + the stability solve** (`nu_full`) | ⚠ **withdrawn — not a defect.** §4 defines the normalization exactly this way, and the 52 is the two equations' difference. Commit 3 records it instead of repairing it | ⚠ **no repair** |
-| ② | `Ra_i` hardcodes **`α = 2 × 10⁻³`** (§4's printed value) while `α` is swept only in the buoyancy term | one run then takes **both halves of the paper's self-contradiction at once**, which is not what (g) registered — (g) asked for the two `α` read side by side, not mixed inside one run | commit **4** |
+| ② | `Ra_i` hardcodes **`α = 2 × 10⁻³`** (§4's printed value) while `α` is swept only in the buoyancy term | one run then takes **both halves of the paper's self-contradiction at once**, which is not what (g) registered — (g) asked for the two `α` read side by side, not mixed inside one run | commit **4** — repaired, and ⚠ *it moved nothing: `α` is absorbed by `b`* |
 | ③ | `z*_D` is set from the **melting-onset depth**, not iterated as **eq. 56**'s `z*_D = Nu⁻¹` | the paper's outer solve is a fixed point; ours is a single geometric guess | commit **5** |
 | ④ | `T_s` is **mixed inside one run**: `T_i = T_p + 273.15` but `ΔT = T_i − 273.0`, so `ΔT` = 1350.15 K at `T_p` = 1350 °C — while the `b` fit line uses the literals **1350.0 / 1623.0** | the fit condition and the run condition differ by **0.15 K** | commit **2**, and it goes first |
 

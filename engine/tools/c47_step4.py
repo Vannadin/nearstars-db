@@ -64,13 +64,21 @@ def urey(body: str, q_w_m2: float) -> float:
 def main() -> int:
     quiet = "--quiet" in sys.argv
     strict = "--anchors" in sys.argv
-    b_grain = sl.fit_b_eq30()
+    # 커밋 4: α 는 Ra_i 에도 들어가고, b 는 **같은 α 로** 적합된다 (자기일관). 그래서 α 는 b 에
+    # 흡수되고 두 α 의 결과가 소수 전부까지 같다 — 그 사실이 아래 표에서 확인된다.
+    b_by_alpha = {label: sl.fit_b_eq30(alpha) for label, alpha in ALPHAS}
+    b_grain = b_by_alpha[ALPHAS[1][0]]      # §4 = 논문 인쇄값 α 로 적합한 b, 앵커 대조용
     fails = []
     if f"{b_grain:.4e}" != f"{B_ANCHOR:.4e}":
         fails.append(f"b {b_grain:.4e} ≠ 앵커 {B_ANCHOR:.4e}")
     if not quiet:
-        print(f"b (하나의 전역 선언, 논문 자기 지구 조건 재적합) = {b_grain:.4e} · 앵커 {B_ANCHOR:.4e} "
-              f"{'✓' if not fails else '✗'}")
+        for label, alpha in ALPHAS:
+            print(f"b (α {label} 로 적합, 하나의 전역 선언) = {b_by_alpha[label]:.6e}")
+        r_b = b_by_alpha[ALPHAS[0][0]] / b_by_alpha[ALPHAS[1][0]]
+        r_a = ALPHAS[0][1] / ALPHAS[1][1]
+        print(f"    b 비 {r_b:.6e} 대 α 비 {r_a:.6e} → "
+              f"{'α 가 b 에 흡수된다 (Ra_i 동일)' if abs(r_b / r_a - 1) < 1e-6 else '⚠ 흡수되지 않는다'}")
+        print(f"    앵커 대조는 §4 쪽 b: {b_grain:.4e} · 앵커 {B_ANCHOR:.4e} {'✓' if not fails else '✗'}")
         print("목표 q_E/q_M : 3.68 (우리 0.454) / 4.78 (Korenaga 0.35) · 무용융 기준선 1.372 — C47 (g)")
         # Ur 열의 분자는 앵커 표에 없다 — 추적 가능하게 함께 인쇄한다 (radiogenic.budget total_w).
         for body in ("Earth", "Mars"):
@@ -92,8 +100,9 @@ def main() -> int:
                       f"{(1 - z_d) * 100:5.2f} %   z*_D {z_d:.4f}  {'✓' if ok else '✗'}")
         for a_label, alpha in ALPHAS:
             for r_label, d_eta, buoy in RUNS:
-                e = sl.step4_run("Earth", t_p, alpha, d_eta, buoy, b_grain)
-                m = sl.step4_run("Mars", t_p, alpha, d_eta, buoy, b_grain)
+                b_a = b_by_alpha[a_label]
+                e = sl.step4_run("Earth", t_p, alpha, d_eta, buoy, b_a)
+                m = sl.step4_run("Mars", t_p, alpha, d_eta, buoy, b_a)
                 q_e, q_m = e["q_w_m2"] * 1e3, m["q_w_m2"] * 1e3
                 ratio = e["q_w_m2"] / m["q_w_m2"]
                 ur_e, ur_m = urey("Earth", e["q_w_m2"]), urey("Mars", m["q_w_m2"])
