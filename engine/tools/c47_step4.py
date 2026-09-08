@@ -1,8 +1,13 @@
 # C47 4단계 방향 시험 러너 — 09-07 복구 실행을 앵커로 재현하고 여섯 런을 인쇄한다
 """C47 step 4 — the Earth/Mars direction test, six runs per potential temperature.
 
-    python3 engine/tools/c47_step4.py            # 여섯 런 × 두 T_p, 09-07 앵커 대조까지
-    python3 engine/tools/c47_step4.py --quiet     # 앵커 대조 판정만
+    python3 engine/tools/c47_step4.py            # 여섯 런 × 두 T_p, 09-07 기준값과의 차까지
+    python3 engine/tools/c47_step4.py --anchors   # 09-07 재현을 **요구**한다 (어긋나면 rc=1)
+    python3 engine/tools/c47_step4.py --quiet     # 표 없이 판정만
+
+⚠ **`--anchors` 는 `aea75984` 에서만 통과한다.** 그 커밋이 09-07 산수를 결함까지 그대로 승격한
+지점이고, 이후 커밋들은 결함을 하나씩 고치므로 숫자가 **움직여야 한다.** 그래서 기본 모드는
+09-07 값과의 차를 인쇄하고 `rc=0` 으로 끝난다 — 앵커를 커밋마다 갱신하면 그것은 앵커가 아니다.
 
 ⚠ **This reproduces, it does not decide.** The pre-registration is `engine/interior-core.md` C47 (g) —
 four verdict cells, eight fixed values, the target `q_Earth/q_Mars` = 3.68 / 4.78 from the no-melting
@@ -58,6 +63,7 @@ def urey(body: str, q_w_m2: float) -> float:
 
 def main() -> int:
     quiet = "--quiet" in sys.argv
+    strict = "--anchors" in sys.argv
     b_grain = sl.fit_b_eq30()
     fails = []
     if f"{b_grain:.4e}" != f"{B_ANCHOR:.4e}":
@@ -97,16 +103,19 @@ def main() -> int:
                     fails.append(f"{t_p:.0f} α {a_label} {r_label}: "
                                  f"{q_e:.2f}/{q_m:.2f}/{ratio:.4f} ≠ {a_qe}/{a_qm}/{a_r}")
                 if not quiet:
+                    mark = ("✓" if ok else
+                            f"Δ q_E {q_e - a_qe:+.2f} · q_M {q_m - a_qm:+.2f} · 비 {ratio - a_r:+.4f}")
                     print(f"    α {a_label} {r_label:18s} q_E {q_e:7.2f} q_M {q_m:7.2f} mW/m² · "
                           f"q_E/q_M {ratio:7.4f} · Ur_E {ur_e:6.3f} Ur_M {ur_m:6.3f} "
-                          f"Ur_M/Ur_E {ur_m / ur_e:6.3f}  {'✓' if ok else '✗'}")
+                          f"Ur_M/Ur_E {ur_m / ur_e:6.3f}  {mark}")
 
     n = len(ANCHORS) + len(DEPLETED_ANCHORS) + 1
     if fails:
-        print(f"\n✗ 09-07 앵커 {len(fails)}/{n} 불일치 — 재현 실패, 진행 금지")
+        head = "✗ 09-07 앵커" if strict else "· 09-07 기준값과 다른 칸"
+        print(f"\n{head} {len(fails)}/{n}" + (" — 재현 실패, 진행 금지" if strict else " (결함 수정의 효과)"))
         for f in fails:
             print(f"    {f}")
-        return 1
+        return 1 if strict else 0
     print(f"\n✅ 09-07 앵커 {n}/{n} 일치 — 승격된 산수가 복구된 실행을 재현한다 (판정은 C47 (g) 의 칸)")
     return 0
 

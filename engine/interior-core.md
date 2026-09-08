@@ -5258,6 +5258,29 @@ the other rows — because with `Δη = 1` the dehydrated lid is not stiff and t
 **So the mechanisms do not oppose; the stiff lid dominates, and once it is on the density contrast is
 nearly invisible.** That is a finding about the mechanisms, and it is not a verdict on the target.
 
+#### Commit 2 — defect ④ repaired: one surface temperature, and the prediction held
+
+**Registered before the run: Earth's flux moves by ≪ 1 %.** With `T_s` unified to a single 273.15 K —
+so `ΔT` = `T_p` exactly and the `b` fit sits on the same condition the runs do — the twelve runs move
+like this:
+
+| what | before (09-07) | after | move |
+|---|---|---|---|
+| `b` | 4.1921 × 10¹⁰ | **4.2038 × 10¹⁰** | +0.28 % |
+| `q_E` at 1350 °C | 52.02 | **51.98** | −0.04 mW/m² = **−0.08 %** |
+| `q_E` at 1500 °C | 51.04 | **51.03** | −0.01 mW/m² = **−0.02 %** |
+| `q_E/q_M` (c), 1350 °C | 1.7832 | **1.7823** | −0.0009 |
+| `q_E/q_M` (c), 1500 °C | 2.2396 | **2.2398** | +0.0002 |
+| depleted layers, all four | 61.8 / 163.8 / 108.2 / 286.7 km | **unchanged** | `z*_D` does not read `T_s` |
+
+**The prediction held**, and the largest move anywhere in the table is `q_E` in the buoyancy-only rows
+(105.33 → 105.23 and 120.93 → 120.81 mW/m², −0.1 %). ⚠ **No verdict is read here either** — this
+subsection reports one change's size and nothing else.
+
+⚠ **And the runner proved it can fail as well as pass**: `--anchors` returned `rc=0` at `aea75984` and
+`rc=1` here, which is `docs/reference/derivation-discipline.md@«A check must prove it can pass and can fail before its result is written down»`
+applied to the tool that guards the rest of this brief.
+
 #### The four defects, named before any of them is repaired
 
 | # | defect | why it matters | repaired in |

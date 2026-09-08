@@ -287,11 +287,15 @@ STEP4_BODIES = {
 #: 다시 풀고, 러너가 그 값을 쓴다. 아래 상수는 대조용이다.
 B_GRAIN_RECORDED = 4.1921e10
 
-#: b 적합이 쓰는 지구 조건. ⚠ 09-07 러너는 적합에서 `ΔT = 1350.0`·`T_i = 1623.0` 을 쓰고,
-#: 실행에서는 `T_i = T_p + 273.15`·`ΔT = T_i − 273.0` (1350.15·1623.15) 를 쓴다 — 0.15 K 어긋나
-#: 있다. **그대로 보존한다**: 재현이 먼저이고, 이 어긋남도 (k) 에 기록된다.
+#: 표면온도. ⚠ **브리프 162 커밋 2 (결함 ④) — 하나로 통일했다.** 09-07 러너는 한 실행 안에서
+#: `T_i = T_p + 273.15` 와 `ΔT = T_i − 273.0` 을 섞어 써서 `T_p = 1350 °C` 에서 `ΔT = 1350.15 K`
+#: 였고, `b` 적합 줄은 리터럴 `1350.0`·`1623.0` 이었다 — 적합 조건과 실행 조건이 **0.15 K** 달랐다.
+#: 적합의 부동점은 적합 조건에서만 정확하므로, 이 통일이 `b` 재적합(커밋 3)보다 **먼저** 와야 한다.
+T_S_K = 273.15
+
+#: b 적합이 쓰는 지구 조건 — 논문 자신의 `ΔT = 1350 K`, 그리고 같은 `T_s` 로 만든 `T_i`.
 B_FIT_EARTH_DT_K = 1350.0
-B_FIT_EARTH_TI_K = 1623.0
+B_FIT_EARTH_TI_K = B_FIT_EARTH_DT_K + T_S_K
 B_FIT_EARTH_Q_W_M2 = 0.050      # §4 의 인쇄된 지구 조건 50 mW/m²
 
 
@@ -347,8 +351,8 @@ def step4_run(body: str, t_p_celsius: float, alpha: float, d_eta: float, buoyanc
               b_grain: float) -> dict:
     """한 런 — `q` [W/m²] 와 그 안의 중간값들. 09-07 러너의 `run()` 과 같은 산수."""
     b = STEP4_BODIES[body]
-    t_i = t_p_celsius + 273.15
-    delta_t = t_i - 273.0
+    t_i = t_p_celsius + T_S_K
+    delta_t = t_i - T_S_K            # = t_p_celsius. 커밋 2 이전에는 273.0 을 빼서 0.15 K 컸다
     z_d, depth = z_d_from_solidus(b["g"], b["D"], t_p_celsius)
     dt_rho = delta_t_rho(t_p_celsius, alpha, delta_t) if buoyancy else 0.0
     theta = theta_fk(delta_t, t_i)
