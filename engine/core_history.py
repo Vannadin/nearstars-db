@@ -109,19 +109,52 @@ def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float) -> dict:
             "extrapolation_notes": tuple(notes)}
 
 
-def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float = STEP_MYR) -> dict:
-    """RK4 from t = −age to 0. Returns the sampled history (one row per step) and the entropy corners per row."""
-    n = max(1, int(round(age_gyr * 1000.0 / step_myr)))
-    h = age_gyr * GYR_S / n
+MYR_S = GYR_S / 1000.0
+STEP_FRACTION = 0.1                 # F in h = min(STEP_MYR, F·τ) — Brief 157, tools/adaptive-step-prereg.md: 1/28 of RK4's
+                                    # real-axis limit 2.78, 1/10 of the h/τ ≈ 1.02 Earth's first fixed step already passed
+
+
+def mantle_time_constant_s(params: dict, t_m: float) -> float | None:
+    """τ = C_eff / (dQ_m/dT_m) at the current mantle state [s] — the linearised relaxation time of eq. 32's
+    stiff term. C_eff is dT_m/dt's own denominator (m_mantle·C_pm·√r_b); dQ_m/dT_m is a ±1 K central
+    difference of eqs 34–36. None when the law refuses on either side (the caller then uses the cap)."""
+    hi = mf.implied_flux(t_m + 1.0, params["g"], params["r_p"])
+    lo = mf.implied_flux(t_m - 1.0, params["g"], params["r_p"])
+    if hi["q_m_w"] is None or lo["q_m_w"] is None:
+        return None
+    dq = (hi["q_m_w"] - lo["q_m_w"]) / 2.0
+    if dq <= 0.0:
+        return None
+    return params["m_mantle"] * mf.C_PM * math.sqrt(params["r_b"]) / dq
+
+
+def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float = STEP_MYR,
+              adaptive: bool = True) -> dict:
+    """RK4 from t = −age to 0. Returns the sampled history (one row per step) and the entropy corners per row.
+
+    Brief 157: the step is `h = min(step_myr, STEP_FRACTION · τ(state))`, τ recomputed at the start of every
+    step from `mantle_time_constant_s`; `step_myr` is the CAP (Nimmo's constant 4 Myr, their line 419).
+    `adaptive=False` reproduces the fixed-step integrator bit for bit (Earth anchor 1525.46 K, 1135 steps) and
+    is what the Mars divergence test uses. The result carries `n_steps`, `h_min_myr` and `max_h_over_tau`."""
+    n_fixed = max(1, int(round(age_gyr * 1000.0 / step_myr)))
+    h_fixed = age_gyr * GYR_S / n_fixed
+    cap_s = step_myr * MYR_S
     t_c, t_m = float(t_c0), float(t_m0)
+    t_now = -age_gyr                                  # Gyr from present (≤ 0)
     rows = []
     extrapolated = {"eqs 34–36": 0, "eqs 37–39": 0}
-    for i in range(n + 1):
-        t_now = -age_gyr + i * age_gyr / n            # Gyr from present (≤ 0)
+    n = 0
+    h_min = None
+    max_ratio = 0.0
+
+    def refused(reason: str) -> dict:
+        return {"refused": reason, "rows": rows, "n_steps": n, "step_myr": step_myr,
+                "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
+
+    while True:
         r1 = rates(t_c, t_m, params, t_now)
         if "refused" in r1:
-            return {"refused": r1["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
-                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
+            return refused(r1["refused"])
         for note in r1["extrapolation_notes"]:
             extrapolated["eqs 34–36" if "eqs 34–36" in note else "eqs 37–39"] += 1
         side = r1["side"]
@@ -136,28 +169,44 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
                      "r_i_km": (ic["r_i"] / 1e3) if ic else 0.0, "core_status": side["core_status"],
                      "delta_e_corners": corners,
                      "delta_e_min_corner": min(corners.values()), "delta_e_max_corner": max(corners.values())})
-        if i == n:
-            break
+        if adaptive:
+            remaining = -t_now * GYR_S
+            if remaining <= 1e-9 * GYR_S:
+                break
+            tau = mantle_time_constant_s(params, t_m)
+            h = cap_s if tau is None else min(cap_s, STEP_FRACTION * tau)
+            if tau is not None:
+                max_ratio = max(max_ratio, h / tau)
+            if h >= remaining:
+                h = remaining                          # land exactly on the present
+            t_next = 0.0 if h == remaining else t_now + h / GYR_S
+        else:
+            if n == n_fixed:
+                break
+            h = h_fixed
+            t_next = -age_gyr + (n + 1) * age_gyr / n_fixed
+        h_min = h if h_min is None else min(h_min, h)
         # classical RK4 on (T_c, T_m)
         k1 = (r1["dtc"], r1["dtm"])
         r2 = rates(t_c + 0.5 * h * k1[0], t_m + 0.5 * h * k1[1], params, t_now + 0.5 * h / GYR_S)
         if "refused" in r2:
-            return {"refused": r2["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
-                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
+            return refused(r2["refused"])
         k2 = (r2["dtc"], r2["dtm"])
         r3 = rates(t_c + 0.5 * h * k2[0], t_m + 0.5 * h * k2[1], params, t_now + 0.5 * h / GYR_S)
         if "refused" in r3:
-            return {"refused": r3["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
-                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
+            return refused(r3["refused"])
         k3 = (r3["dtc"], r3["dtm"])
         r4 = rates(t_c + h * k3[0], t_m + h * k3[1], params, t_now + h / GYR_S)
         if "refused" in r4:
-            return {"refused": r4["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
-                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
+            return refused(r4["refused"])
         k4 = (r4["dtc"], r4["dtm"])
         t_c += h * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]) / 6.0
         t_m += h * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) / 6.0
-    return {"rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n, "extrapolated_steps": extrapolated}
+        t_now = t_next
+        n += 1
+    return {"rows": rows, "n_steps": n, "step_myr": step_myr, "adaptive": adaptive,
+            "h_min_myr": (h_min / MYR_S) if h_min is not None else None,
+            "max_h_over_tau": max_ratio if adaptive else None, "extrapolated_steps": extrapolated}
 
 
 def window_summary(rows: list[dict], window_gyr: float = WINDOW_GYR) -> dict:
@@ -222,7 +271,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               "core_initial_temperature": core_initial_temperature,
               "mantle_initial_potential_temperature": mantle_initial_potential_temperature,
               "core_material": core_material, "body_class": body_class,
-              "step_myr": STEP_MYR, "core_h_w_per_kg": ce.H_CORE}
+              "step_myr": STEP_MYR, "step_fraction": STEP_FRACTION, "core_h_w_per_kg": ce.H_CORE}
     if body_class in ROCKY_ONLY:
         return out_of_domain(RECIPE, VERSION, f"'{body_class}' 에는 규산염 맨틀·금속 핵의 결합 열진화가 뜻이 없다 — 암석체의 것이다.",
                              inputs=inputs, refs=REFS)
@@ -291,7 +340,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         values["history_converged"] = None   # the sweep is on demand (test_core_history.py --sweep); record: 2026-09-04 width 0.001 %
     mw = 1e6
     nuc = "" if ws["nucleation_t_gyr"] is None else f" ({-ws['nucleation_t_gyr']:.2f} Gyr 전)"
-    reason = (f"Nimmo 식 30·32 를 {age_gyr:.2f} Gyr 동안 RK4 로 적분 (h = {best['hist']['step_myr']:.2f} Myr, "
+    reason = (f"Nimmo 식 30·32 를 {age_gyr:.2f} Gyr 동안 RK4 로 적분 (h = min({best['hist']['step_myr']:.2f} Myr, {STEP_FRACTION:g}·τ), "
               f"{best['hist']['n_steps']} 걸음{'' if converged is None else ', 수렴 폭 ' + format(width, '.1%')}). "
               f"현재 T_c {last['t_c']:.0f} K · T_m {last['t_m']:.0f} K · dT_c/dt {last['dtc_dt_k_gyr']:+.0f} K/Gyr · "
               f"Q_C {last['q_c_w']/1e12:.2f} TW · Q_M {last['q_m_w']/1e12:.1f} TW · 내핵 {ws['inner_core_case']}"
@@ -305,8 +354,12 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                    f"T_a below T_1 = {cf.T_1:.0f} K on {ex.get('eqs 37–39', 0)} of {n_steps}. Both laws' printed domain "
                    f"edge is 4800 K above and open below ({mf.EQ35_DOMAIN.anchor}); below the expansion point the paper "
                    "prints no limit, so the call is allowed and counted here rather than refused.")
+    hist_ = best["hist"]
+    step_note = (f"step (Brief 157): h = min({hist_['step_myr']:g} Myr, {STEP_FRACTION:g}·τ) with τ = C_eff/(dQ_m/dT_m) recomputed "
+                 f"every step — {hist_['n_steps']} steps, smallest h {hist_['h_min_myr']:.4g} Myr, largest h/τ met "
+                 f"{hist_['max_h_over_tau']:.3g} (must be ≤ {STEP_FRACTION:g}); tools/adaptive-step-prereg.md")
     return Result(recipe=RECIPE, version=VERSION, regime="thermal-history", reason=reason, grade="analog",
-                  inputs=inputs, values=values, units=units, refs=REFS, notes=(CONDITION, extrap_note))
+                  inputs=inputs, values=values, units=units, refs=REFS, notes=(CONDITION, extrap_note, step_note))
 
 
 from registry import recipe  # noqa: E402

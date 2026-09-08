@@ -1,6 +1,13 @@
 # C48 진단용 — C20 의 적분 스텝을 실제로 바꿔 가며 화성 발산이 스텝 탓인지 가르는 일회성 측정 스크립트 (사전등록 포함)
 """Does C20's fixed 4 Myr step follow Mars's mantle time constant, or is the Mars result an integrator artefact?
 
+⚠ Brief 157 (2026-09-08): `core_history.integrate` now sets its own step from the mantle time constant
+(h = min(cap, 0.1·τ)); `step_myr` is the CAP. This sweep therefore became an upper-bound sweep — it still
+runs, but "4 Myr" no longer means a fixed 4 Myr step. The fixed-step result it measured on 2026-09-08
+(4/2/1 Myr diverge, 0.5/0.25 agree within 1.3 K) is recorded in interior-core.md's C48 and in test_core_history
+(`adaptive=False` reproduces the divergence). The "τ ≈ 0.717 Myr" that stood in older comments here was the
+²⁶Al half-life, not a mantle time constant; the derived values are in tools/adaptive-step-prereg.md.
+
     nohup python3 engine/tools/mars_step_sweep.py > /tmp/mars_sweep.log 2>&1 &
 
 ═══ PRE-REGISTRATION (Brief 156, 2026-09-08) — committed BEFORE the first run; nothing below it was known ═══

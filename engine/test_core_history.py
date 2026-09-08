@@ -54,7 +54,13 @@ else:
     print("      (온디맨드 — `--sweep`. 기록 2026-09-04: 폭 0.001 %, 1135/2270/4540 걸음 모두 '내핵 없음' — 통과)")
     t0 = time.perf_counter()
     hist = ch.integrate(PARAMS, T_C0, T_M0, AGE)
-    row(hist["n_steps"] == 1135 and abs(hist["step_myr"] - 4.0) < 0.01, f"단일 실행 h = {hist['step_myr']:.2f} Myr · {hist['n_steps']} 걸음 ({time.perf_counter()-t0:.0f} s)")
+    # Brief 157: the step is adaptive (h = min(4 Myr, 0.1·τ)); Earth takes 1152 steps (fixed: 1135 — the 17 extra are the hot
+    # first ~50 Myr) and its anchors do not move at two decimals (T_p 1525.46, T_c 4027.43). Recorded, not absorbed (rule 1).
+    row(hist["n_steps"] == 1152 and abs(hist["step_myr"] - 4.0) < 0.01 and abs(hist["max_h_over_tau"] - 0.1) < 1e-9,
+        f"단일 실행 h ≤ {hist['step_myr']:.2f} Myr (적응, 최대 h/τ {hist['max_h_over_tau']:.3f}) · {hist['n_steps']} 걸음 · 최소 h {hist['h_min_myr']:.3f} Myr ({time.perf_counter()-t0:.0f} s)")
+    fixed = ch.integrate(PARAMS, T_C0, T_M0, AGE, adaptive=False)
+    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1525.46) < 0.005 and abs(fixed["rows"][-1]["t_m"] - hist["rows"][-1]["t_m"]) < 0.01,
+        f"고정 4 Myr 재현: 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1525.46) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
 ws = ch.window_summary(hist["rows"])
 last = hist["rows"][-1]
 
@@ -90,6 +96,28 @@ row(not r2.applicable and "initial" in r2.reason, "초기온도 미선언 → �
 r3 = ch.solve(1.0, 0.325, v["core_radius"], v["cmb_pressure"], v["cmb_temperature"], 1600.0, 1.0, AGE, T_C0, T_M0,
               body_class="giant")
 row(not r3.applicable, "거대행성 → 거절")
+
+# ── Brief 157 / C48 — the Mars divergence was the step, both ways ─────────────────────────────────
+print("⑥ C48 — 화성: 고정 4 Myr 이면 발산, 적응이면 0.25 Myr 스윕값(1382.90 · 3893.07 · 1669.12) 5 K 안")
+vm = interior_solve(0.1074, core_mass_fraction=0.24, potential_temperature=1600.0).values
+MM = 0.1074 * M
+RPM = 0.5320 * RP
+R_BM = vm["cmb_temperature"] / 1600.0
+PARAMS_M = {"material": "fe_prem", "p_cmb": vm["cmb_pressure"] * 1e9, "r_cmb": vm["core_radius"] * RP,
+            "m_core": 0.24 * MM, "m_mantle": 0.76 * MM, "r_b": R_BM, "g": cf.G_NEWTON * MM / RPM ** 2, "r_p": RPM,
+            "h_core": ce.H_CORE, "h_m_present_w": rg.budget(0.76 * MM)["mantle_w"]}
+try:
+    ch.integrate(PARAMS_M, 4800.0, 4800.0 / R_BM, AGE, adaptive=False)
+    row(False, "고정 4 Myr 화성이 발산하지 않았다 — C48 의 기록(T_m −6244 K)과 어긋남")
+except ValueError as e:
+    row("표면온도" in str(e), f"고정 4 Myr 화성 → 발산 (ValueError: {str(e)[:60]}…)")
+t0 = time.perf_counter()
+hm = ch.integrate(PARAMS_M, 4800.0, 4800.0 / R_BM, AGE)
+lastm = hm["rows"][-1]
+nearm = min(hm["rows"], key=lambda r: abs(r["t_gyr"] + 3.7))
+row(abs(lastm["t_m"] - 1382.90) < 5.0 and abs(lastm["t_c"] - 3893.07) < 5.0 and abs(nearm["t_m"] - 1669.12) < 5.0,
+    f"적응 화성 → T_p {lastm['t_m']:.2f} · T_c {lastm['t_c']:.2f} · T_p@3.7Ga {nearm['t_m']:.2f} K · {hm['n_steps']} 걸음 · 최소 h {hm['h_min_myr']:.4f} Myr "
+    f"(스윕 0.25 Myr 대비 {lastm['t_m']-1382.90:+.2f} / {lastm['t_c']-3893.07:+.2f} / {nearm['t_m']-1669.12:+.2f} K, {time.perf_counter()-t0:.0f} s)")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
