@@ -5399,12 +5399,29 @@ unstable, that is, `Nu > 1/z*_D`, we can modify the depth-dependent viscosity"*,
 *"eq. (56) is solved iteratively by setting `z*_D = Nu⁻¹` when `Nu > 1/z*_D`, to have a self-consistent
 pair of the surface heat flux and the assumed viscosity and density structure."*
 
-⚠ **One reading had to be chosen, and the choice is ours, so it is written down.** We read `z*_D` in that
-condition as the **dehydrated layer's thickness** `d/D`, not as the boundary coordinate `1 − d/D` that
-`nu_full` takes. Under the thickness reading the condition asks *"is the dehydrated layer thicker than
-the thermal boundary layer?"* and fires in four of twelve cells. Under the other reading `1/z*_D ≈ 1.02`,
-so **every cell fires always** and the update would make the top 90 % of the mantle the stiff layer —
-physically impossible, so that reading is excluded.
+⚠ **The paper uses `z*_D` in two senses, and its own numbers say which sense the trigger takes.** This
+was first written up as *our* reading justified by the alternative being implausible. Korenaga 2009 is
+**held**, so it was read, and the grade improves: **the prose defines a coordinate, the numbers require a
+thickness.**
+
+| | |
+|---|---|
+| **the prose is coordinate** | eq. 47 — `Z(z*)` is 1 below and `Δη` above `z*_D`, *"and `z*_D` marks the base of dehydrated mantle"*; eq. 52 the same for density; Table 2's runs set `z*_D` = **0.75** with the footnote *"Viscosity contrast for `z* > 0.75`"* — a lid over the top 25 % |
+| **the numbers are thickness** | eq. 56 assigns **`z*_D = Nu⁻¹`** and `Nu = δ⁻¹`, so the assigned quantity is a length. Read as a coordinate, `1/z*_D` = **1.333**, and the two candidate thresholds fall on opposite sides of the paper's own table. Counted on our 30 transcribed Table 2 rows (`Δη` = 1, 3, 10; `Nu` **3.09–7.22**): the coordinate threshold has **0 rows below it and 30 above**, so the trigger would be permanently true and §3.1's two regimes, *"reduces surface heat flux even when the dehydrated lid is thinner"* versus *"eventually destabilized"*, could not both exist. The thickness threshold `1/(1 − 0.75)` = **4.0** has **15 rows below and 15 above**, and the boundary layer `δ = 1/Nu` (**0.139–0.324**) straddles the lid thickness 0.25 **15/15** — both regimes present, which is what §3.1 describes. Fig. 8(a)'s caption puts its horizontal line `Nu = 1/z*_D` in the middle of the figure, not off its bottom edge |
+
+**So the overload is the paper's**, and it belongs beside its `α` self-contradiction (defect #24) rather
+than in our list of reading choices. The implementation uses the thickness sense for the trigger and the
+update, and the boundary-coordinate sense for `nu_full`'s geometry, which is what Table 2 fixes;
+`nu_eq56` converts (`1 − thickness`).
+
+**The third possibility, checked and closed:** the `Nu` in the trigger could have been a different
+normalization from the one `nu_full` returns, which would dissolve the "always fires" objection. It is
+not — the paper defines `Nu` as `δ⁻¹`, and `nu_stability` solves eq. 43 for `δ` and returns `δ⁻¹`.
+
+**Under the thickness sense the trigger fires in 10 of the 24 body-cells** — two at 1350 °C (Mars's
+buoyancy-only rows) and eight at 1500 °C (all three Mars runs plus Earth's buoyancy-only, both `α`).
+⚠ *Corrected on the audit's count: "four of twelve" had mixed this up with the number of **cells that hit
+the 50-iteration cap**, which was also four.*
 
 | where it fires | initial `d/D` | `1/(d/D)` | `Nu` before | fires? |
 |---|---|---|---|---|
@@ -5427,6 +5444,13 @@ physically impossible, so that reading is excluded.
 | **1500 °C** | **(c) §4** | 2.1800 | **1.5838** | −0.5962 |
 | 1500 °C | (b) §3.2 / §4 | 1.3549 / 1.3586 | 1.3467 / 1.3584 | −0.0082 / −0.0002 |
 
+⚠ **And at the verdict temperature eq. 56 never fires — so commit 5 moved the exploratory column and
+left the verdict cells untouched.** At the declared 1600 K (1326.85 °C) the dehydrated layer is thinner
+than the boundary layer on both bodies: Earth `1/(d/D)` = **53.03** against `Nu` = **24.67**, Mars
+**12.43** against **10.13**, and the recursion exits at zero iterations in all 24 declared-`T_p` cells.
+**Commit 6's 1.5114 is the same number before and after this repair**, which is worth knowing before
+anyone reads the verdict as resting on eq. 56.
+
 ⚠ **The self-consistent lid is thinner, so Mars leaks more**: at 1500 °C Mars's dehydrated layer falls
 from 15.93 % of the mantle to **10.35 %** and its flux rises **22.79 → 32.22 mW/m²**, while Earth's is
 untouched at (a)/(c). **The 1500 °C column, which had been the best case for the test, loses most of its
@@ -5435,10 +5459,23 @@ asymmetry.** The largest `q_E/q_M` anywhere in the table is now **1.7823**, at 1
 
 ⚠ **And the paper's "a few iterations" is not our experience, which is worth recording as a limit of the
 transcription rather than of the paper.** The `(b)` rows converge in **4–14** iterations, as advertised.
-The `Δη = 100` rows at 1500 °C take **117–129**: `Nu·z*_D − 1` falls by only ≈ 0.7× per step, a linear
-rate, so 10⁻¹⁰ needs ~60 steps and the tolerance is reached at ~120. **The cap was 50 and four cells hit
-it**; it was raised to **400** after the rate was measured, and `nu_eq56` reports `converged: False`
+The `Δη = 100` rows at 1500 °C take **117–129**, and the rate is linear with a ratio that **drifts
+upward**: `Nu·z*_D − 1` falls by ≈ 0.66× per step early, ≈ 0.82× through the middle and **≈ 0.847× at the
+tail** (measured on Mars 1500 °C (a): residuals 1.187 × 10⁻¹ → 7.892 × 10⁻² → 5.404 × 10⁻² …, the last six
+ratios 0.8465–0.8466). At the tail rate 10⁻¹⁰ needs **~125** steps, which is what the observed 117–129
+are. ⚠ *Corrected on the audit's measurement: "≈ 0.7× and ~60 steps" read the early rate as if it were
+the asymptotic one.* **The cap was 50 and four cells hit it**; it was raised to **400** after the rate was measured, and `nu_eq56` reports `converged: False`
 rather than returning a number if it is ever hit. **The runner now takes ~61 s.**
+
+⚠ **And the reason the paper's "few iterations" does not describe our runs is that the recursion is
+running outside the region the paper exercised** — the same shape of finding as C48, where two of one
+paper's numbers failed to compose on a second body. The paper's claim of *"trivial differences (< 0.1 per
+cent)"* is made for `Δη` ≤ 10 with Table 2's `Nu` of **3.09–7.22** (our 30 transcribed rows). **We run
+`Δη` = 100 at `Nu` = 9.67–27.9** — **10× outside in `Δη`, 1.3–3.9× outside in `Nu`** — and there the recursion is not trivial: Mars at 1500 °C moves its
+dehydrated layer from **15.93 % to 10.35 %** of the mantle and its flux by **+41 %**. **That is an
+extrapolation, and it is a limit on the 1500 °C exploration rather than on the verdict** — at the
+declared 1600 K the trigger never fires (above), so the verdict cells contain no extrapolated
+recursion.
 
 #### Commit 6 — the verdict: neither `α` reaches the target, which is C47 (g)'s first cell
 
@@ -5467,10 +5504,11 @@ one.* In °C, which is what eq. 45 takes: **1326.85 °C** for both.
 `q_E/q_M` ≥ **3.68** (against our own `Ur_Earth` 0.454) or **4.78** (against Korenaga's 0.35), from the
 no-melting **1.372**. The best cell is **1.5114**, both `α`, so:
 
-> **neither `α` reaches the target** → *"the **fourth** law family to fail in the same direction. C47
-> closes as **named, not filled** — the recorded answer becomes «no single untuned law in this
-> literature reproduces both Urey ratios», and the three-families-same-direction note in C47 (c) closes
-> with it."*
+> **neither `α` reaches the target** → the **fourth** law family to fail in the same direction. C47
+> closes as *named, not filled* — the recorded answer becomes "no single untuned law in this literature
+> reproduces both Urey ratios", and the three-families-same-direction note in C47 (c) closes with it
+
+*(quoted in C47 (g)'s own formatting; the words are unchanged from that cell.)*
 
 **Said in Urey terms, which is where the failure is legible.** The law hands Earth `Ur` = **0.926**
 against a literature 0.35–0.454, and Mars **0.598** against 0.68–0.75 — so it makes **Earth** look like
@@ -5505,8 +5543,15 @@ faithful. And having no current table at all is the hole this commit closes: **a
 
 | mode | reference | cells | verdict at this commit |
 |---|---|---|---|
-| default (in the gate) | `EXPECTED`, current | 24 | **`rc=0`**, `[PASS] … 24 칸 일치` |
-| `--anchors` | `ANCHORS`, 09-07, frozen | 17 | **`rc=1`** — 13 cells moved, as commits 2–6 intended |
+| default (in the gate) | `EXPECTED` + `DEPLETED_EXPECTED`, current | **26** | **`rc=0`** |
+| `--anchors` | `ANCHORS` + `DEPLETED_ANCHORS`, 09-07, frozen | **17** | **`rc=1`** — 13 cells moved, as commits 2–6 intended |
+
+⚠ **Two holes in the first version of this check, found by the audit seat.** The depleted-layer
+comparison sat **inside the `if not quiet:` block**, so the gate — which runs `--quiet` — never evaluated
+it: printing and checking were one statement, and silencing one silenced the other. And the
+**declared-`T_p` depleted layers were in no table at all** (Earth 54.7 km / 1.89 %, Mars 144.8 km /
+8.05 %), so the verdict set's geometry was unguarded. Both are now checked in both modes, which is why
+the default count is **26** and not the 24 first reported here.
 
 **Cost, stated because the discipline asks for it: ~62 s added to the gate**, which is eq. 56's fixed
 point iterating 117–129 times in the four `Δη = 100` rows at 1500 °C. `scripts/check.sh@«C47 4단계 방향 시험 (브리프 162)»`

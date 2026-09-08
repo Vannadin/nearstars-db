@@ -48,8 +48,14 @@ ANCHORS = {
     (1500.0, "§4   2.0e-3", "(c) both"): (51.04, 23.41, 2.1800),
 }
 ANCHOR_B = 4.1921e10
+#: 09-07 이 인쇄한 고갈층 `(두께 km, z*_D 초기값)`. **고정.**
 DEPLETED_ANCHORS = {(1350.0, "Earth"): (61.8, 0.9787), (1350.0, "Mars"): (163.8, 0.9090),
                     (1500.0, "Earth"): (108.2, 0.9627), (1500.0, "Mars"): (286.7, 0.8407)}
+#: 현재 커밋의 고갈층 — 09-07 네 칸(용융 식이 안 바뀌었으니 같다) + 판정 벌 두 칸. ⚠ 판정 온도의
+#: 고갈층은 09-07 실행에 없던 칸이라 앵커가 아니라 **기대표** 쪽에만 있다.
+DEPLETED_EXPECTED = dict(DEPLETED_ANCHORS)
+DEPLETED_EXPECTED[("declared", "Earth")] = (54.7, 0.9811)
+DEPLETED_EXPECTED[("declared", "Mars")] = (144.8, 0.9195)
 
 #: 현재 커밋의 값 — 브리프 162 커밋 6(`e34f2425`) 이후. 결함 수정마다 여기를 갱신한다.
 EXPECTED = {
@@ -133,18 +139,22 @@ def main() -> int:
             print(f"    H_{body} = {rg.budget(bb['mass'] * (1.0 - bb['cmf']))['total_w']:.6e} W · "
                   f"A = {4.0 * math.pi * bb['r_p'] ** 2:.6e} m²")
 
+    got_dep: dict = {}
+
+    def depleted(key, t_p_c: float, body: str) -> None:
+        """고갈층을 재서 `got_dep` 에 담는다. ⚠ **인쇄만 조용해지고 대조는 항상 돈다** — 이 블록이
+        `if not quiet:` 안에 있던 동안 게이트(`--quiet`)는 고갈층 앵커를 한 번도 평가하지 않았다."""
+        z_d, depth = sl.z_d_from_solidus(sl.STEP4_BODIES[body]["g"], sl.STEP4_BODIES[body]["D"], t_p_c)
+        got_dep[(key, body)] = (round(depth / 1e3, 1), round(z_d, 4))
+        if not quiet:
+            print(f"    {body:6s} 고갈층 {depth / 1e3:6.1f} km = 맨틀의 "
+                  f"{(1 - z_d) * 100:5.2f} %   z*_D(초기) {z_d:.4f}")
+
     for t_p in T_P_CELSIUS:
         if not quiet:
             print(f"\n=== 공통 T_p = {t_p:.0f} °C = {t_p + 273.15:.2f} K, 천체별 조정 없음 ===")
-            for body in ("Earth", "Mars"):
-                z_d, depth = sl.z_d_from_solidus(sl.STEP4_BODIES[body]["g"],
-                                                 sl.STEP4_BODIES[body]["D"], t_p)
-                a_km, a_z = DEPLETED_ANCHORS[(t_p, body)]
-                ok = round(depth / 1e3, 1) == a_km and round(z_d, 4) == a_z
-                if not ok:
-                    fails.append(f"{body} {t_p:.0f} 고갈층 {depth / 1e3:.1f}/{z_d:.4f} ≠ {a_km}/{a_z}")
-                print(f"    {body:6s} 고갈층 {depth / 1e3:6.1f} km = 맨틀의 "
-                      f"{(1 - z_d) * 100:5.2f} %   z*_D(초기) {z_d:.4f}  {'✓' if ok else '✗'}")
+        for body in ("Earth", "Mars"):
+            depleted(t_p, t_p, body)
         got.update(one_set(t_p, t_p, t_p, b_by_alpha, quiet))
 
     t_k = {b: declared_t_p_k(b) for b in ("Earth", "Mars")}
@@ -154,13 +164,16 @@ def main() -> int:
         if abs(t_k["Earth"] - t_k["Mars"]) < 1e-9:
             print("    ⚠ 두 선언이 같은 값이라 이 벌은 공통 T_p 케이스와 같다 — 화성이 지구값을 "
                   "이전받았기 때문이고(0단계 통과, 오너 2026-09-08 17:52), 물리적 우연이 아니다.")
+    for body in ("Earth", "Mars"):
+        depleted("declared", t_k[body] - 273.15, body)
     got.update(one_set("declared", t_k["Earth"] - 273.15, t_k["Mars"] - 273.15, b_by_alpha, quiet))
 
     for key, (q_e, q_m, ratio, converged) in got.items():
         if not converged:
             fails.append(f"{key}: eq. 56 미수렴")
-    ref, ref_b, name = ((ANCHORS, {ALPHAS[1][0]: ANCHOR_B}, "09-07 앵커") if strict
-                        else (EXPECTED, EXPECTED_B, "현재 기대표"))
+    ref, ref_b, ref_dep, name = ((ANCHORS, {ALPHAS[1][0]: ANCHOR_B}, DEPLETED_ANCHORS, "09-07 앵커")
+                                 if strict else
+                                 (EXPECTED, EXPECTED_B, DEPLETED_EXPECTED, "현재 기대표"))
     for key, expect in ref.items():
         if key not in got:
             fails.append(f"{key}: {name} 에 있는 칸이 실행되지 않았다")
@@ -171,7 +184,13 @@ def main() -> int:
     for label, expect_b in ref_b.items():
         if f"{b_by_alpha[label]:.6e}" != f"{expect_b:.6e}":
             fails.append(f"b(α {label}) {b_by_alpha[label]:.6e} ≠ {name} {expect_b:.6e}")
-    n = len(ref) + len(ref_b) + (len(DEPLETED_ANCHORS) if not quiet else 0)
+    for key, expect in ref_dep.items():
+        if key not in got_dep:
+            fails.append(f"고갈층 {key}: {name} 에 있는 칸이 실행되지 않았다")
+        elif got_dep[key] != tuple(expect):
+            fails.append(f"고갈층 {key}: {got_dep[key][0]} km/{got_dep[key][1]} ≠ "
+                         f"{name} {expect[0]} km/{expect[1]}")
+    n = len(ref) + len(ref_b) + len(ref_dep)
 
     if fails:
         print(f"\n[FAIL] C47 4단계 — {name} 와 {len(fails)} 칸 어긋남 (기준 {n} 칸)")
