@@ -5489,6 +5489,29 @@ dropped:** the absolute scale has **no independent anchor** (commit 3), so these
 prediction of anyone's heat flow — the verdict rests on the **ratio**, which is what the pre-registration
 put the threshold on.
 
+#### Commit 7 — the gate now checks step 4, and the two references are kept apart
+
+**Two reference tables, and the distinction is the point.** `ANCHORS` holds the 09-07 run's printed
+numbers and is **frozen** — it passes only at `aea75984`, because commits 2–6 repaired defects and the
+numbers were *supposed* to move. `EXPECTED` holds **this commit's** numbers and is updated whenever a
+change is justified. **`--anchors` demands the first; the default mode demands the second, and the gate
+runs the default.**
+
+⚠ **Why both are needed, stated as the failure each one prevents.** Keeping only the frozen anchors
+means every commit after the first reports a red herring, so the check gets ignored. Updating the
+anchors each commit means they stop being anchors — there is then nothing that says the promotion was
+faithful. And having no current table at all is the hole this commit closes: **a regression in
+`stagnant_lid.py` would have passed the gate silently**, since nothing in the gate evaluated step 4.
+
+| mode | reference | cells | verdict at this commit |
+|---|---|---|---|
+| default (in the gate) | `EXPECTED`, current | 24 | **`rc=0`**, `[PASS] … 24 칸 일치` |
+| `--anchors` | `ANCHORS`, 09-07, frozen | 17 | **`rc=1`** — 13 cells moved, as commits 2–6 intended |
+
+**Cost, stated because the discipline asks for it: ~62 s added to the gate**, which is eq. 56's fixed
+point iterating 117–129 times in the four `Δη = 100` rows at 1500 °C. `scripts/check.sh@«C47 4단계 방향 시험 (브리프 162)»`
+carries the same number beside the call.
+
 #### The four defects, named before any of them is repaired
 
 | # | defect | why it matters | repaired in |
