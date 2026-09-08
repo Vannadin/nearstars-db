@@ -186,19 +186,19 @@ NearStars는 숫자를 많이 도출합니다. 천체의 쌍극자 자기장, �
 
 **함께 보기** — 이미 다른 곳에 사는 규칙은 포인터 한 줄씩, 그 아래 합쳐진 사례
 
-- 앵커는 비트 단위로 동일하게, 움직인 숫자는 원인과 함께 보고, `--refresh` 는 같은 커밋에 → `engine/test_ice_giant.py @«--refresh»` 가 강제합니다. 원칙은 위 §3.
-- 게이트 FAIL 0 → `CLAUDE.md @«8. Run Tests Before Marking Complete»`. 넓힌 부분은 내 작업이 게이트 시간에 얼마를 더하는지 말하는 것.
+- 앵커는 비트 단위로 동일하게, 움직인 숫자는 원인과 함께 보고, `--refresh` 는 같은 커밋에 → `engine/test_ice_giant.py@«--refresh»` 가 강제합니다. 원칙은 위 §3.
+- 게이트 FAIL 0 → `CLAUDE.md@«8. Run Tests Before Marking Complete»`. 넓힌 부분은 내 작업이 게이트 시간에 얼마를 더하는지 말하는 것.
   - ↳ *실행 시간 추정은 그것을 잰 커밋에 속합니다.* (373줄)
   - ↳ *`check.sh` 는 약 20분이고 전경 툴 한도는 10분입니다. 백그라운드로 돌리고 로그 꼬리를 봅니다. 외부 신호의 발신자 후보에는 하네스 자체도 들어갑니다.* (430줄)
-- 논문은 `ADS_API_TOKEN` 과 캐시로, WebSearch 금지, 식별자는 읽어서 제목으로 확인 → `CONVENTIONS.md @«3.2 ADS paper discipline»`, `CONVENTIONS.md @«3.3 Paper references are links»`.
+- 논문은 `ADS_API_TOKEN` 과 캐시로, WebSearch 금지, 식별자는 읽어서 제목으로 확인 → `CONVENTIONS.md@«3.2 ADS paper discipline»`, `CONVENTIONS.md@«3.3 Paper references are links»`.
   - ↳ *캐시 파일은 PDF 임이 보인 뒤에만 보유한 것입니다. `file` 을 돌립니다. `.PROVENANCE.txt` 는 어떻게 얻었는지의 기록이지, 그 부재가 검사는 아닙니다.* (349줄)
   - ↳ *오너에게 논문을 청하기 전에 ADS `esources` 를 봅니다. 일곱 요청 중 셋은 이미 질의한 필드에 무료 경로가 있었습니다.* (398줄)
-- 커밋은 영어로, 논리 단위 하나, 고정 identity → `CONVENTIONS.md @«1.8 Git commit language»`, `CONVENTIONS.md @«1.9 Git identity»`, `CLAUDE.md @«9. Semantic Commits»`.
-- 구멍을 닫는 커밋은 그 구멍을 재현하는 시험을 가져옵니다 → `CLAUDE.md @«4. Goal-Driven Execution»`.
-- 프로세스 목록은 상태가 아니라 순간입니다. 다시 띄우려는 세션은 스스로 확인합니다 → `engine/tools/README.md @«Telling a busy gate from a dead one»`, `engine/tools/README.md @«A gate is a process group»`.
-- 다른 것이 다시 켜는 변수에 실린 센티널은 계약이 아닙니다 → `engine/interior-core.md @«A sentinel carried in a variable something else re-arms is not a contract»`.
-- 차가운 측면의 둘째 형태. 조향은 결론도 낼 수 있어야 합니다 → `engine/interior-core.md @«the climb hid the wall from the controller»`.
-- 제3자는 솔버를 A/B 가 아니라 폐합으로 검사합니다 → `engine/interior-core.md @«A third party checks a solver by closure»`.
+- 커밋은 영어로, 논리 단위 하나, 고정 identity → `CONVENTIONS.md@«1.8 Git commit language»`, `CONVENTIONS.md@«1.9 Git identity»`, `CLAUDE.md@«9. Semantic Commits»`.
+- 구멍을 닫는 커밋은 그 구멍을 재현하는 시험을 가져옵니다 → `CLAUDE.md@«4. Goal-Driven Execution»`.
+- 프로세스 목록은 상태가 아니라 순간입니다. 다시 띄우려는 세션은 스스로 확인합니다 → `engine/tools/README.md@«Telling a busy gate from a dead one»`, `engine/tools/README.md@«A gate is a process group»`.
+- 다른 것이 다시 켜는 변수에 실린 센티널은 계약이 아닙니다 → `engine/interior-core.md@«A sentinel carried in a variable something else re-arms is not a contract»`.
+- 차가운 측면의 둘째 형태. 조향은 결론도 낼 수 있어야 합니다 → `engine/interior-core.md@«the climb hid the wall from the controller»`.
+- 제3자는 솔버를 A/B 가 아니라 폐합으로 검사합니다 → `engine/interior-core.md@«A third party checks a solver by closure»`.
 - 닿을 수 없는 경계 조건은 이름 붙은 거절로 닫습니다 → 위 §2.
   - ↳ *출처를 굽는 것은 그 주장 범위를 사전 등록한 물리성 기준으로 훑은 뒤에, 그리고 실효 상한을 표와 함께 기록한 뒤에. 인쇄된 유효 범위는 실행된 범위가 아닙니다.* (328줄)
 - 새 숫자는 옛 숫자들을 지우는 데 쓰이기 전에 그들에게로 되돌려 대조합니다 → 위 §5, §6 (`chain.py affects`, 역류).
@@ -206,11 +206,11 @@ NearStars는 숫자를 많이 도출합니다. 천체의 쌍극자 자기장, �
 - 표와 추출 → 위 §4.
   - ↳ *재생성한 표가 다르면 별도 추적으로 가립니다. 이름만으로 표를 코드에, 코드를 표에 맞추지 않습니다.* (331줄)
   - ↳ *숫자 표를 기계로 추출할 때는 다른 렌더링과 대조합니다. 같은 추출에 실려 온 검사값과는 대조가 아닙니다.* (427줄)
-- 파일이 든 것이 아니라 내가 쓴 것을 스테이징합니다. 공유 worktree 에서는 `git add` 전에 `git diff --stat` → `engine/tools/README.md @«reading `git diff --stat`»` (이 규칙의 다른 집은 repo 밖 오너의 세션 메모리입니다).
-- 탐지기를 넓히지 않고, 탐지기가 이미 읽는 모양으로 데이터를 씁니다 → 위 §7, `engine/tools/README.md @«Four times the answer was to reshape the input»`.
-- 개수는 그 밑의 문장만큼만 참입니다 → `engine/tools/README.md @«Counts and quotations are both only as true as the sentence over them»`.
-- 앵커를 다시 겨누면 그 주위 문장을 다시 읽습니다 → `engine/tools/README.md @«Re-aiming an anchor is not the whole repair»`.
-- 이름이 증거였고, 이름이 틀렸습니다 → `engine/tools/README.md @«Four names that read correctly and were wrong when checked»`.
+- 파일이 든 것이 아니라 내가 쓴 것을 스테이징합니다. 공유 worktree 에서는 `git add` 전에 `git diff --stat` → `engine/tools/README.md@«reading `git diff --stat`»` (이 규칙의 다른 집은 repo 밖 오너의 세션 메모리입니다).
+- 탐지기를 넓히지 않고, 탐지기가 이미 읽는 모양으로 데이터를 씁니다 → 위 §7, `engine/tools/README.md@«Four times the answer was to reshape the input»`.
+- 개수는 그 밑의 문장만큼만 참입니다 → `engine/tools/README.md@«Counts and quotations are both only as true as the sentence over them»`.
+- 앵커를 다시 겨누면 그 주위 문장을 다시 읽습니다 → `engine/tools/README.md@«Re-aiming an anchor is not the whole repair»`.
+- 이름이 증거였고, 이름이 틀렸습니다 → `engine/tools/README.md@«Four names that read correctly and were wrong when checked»`.
 
 ---
 

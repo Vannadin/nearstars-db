@@ -194,19 +194,19 @@ evidence, with the line they came from in `engine/SESSION-HANDOFF.md` at `2269a8
 
 **See also** — rules that already live elsewhere, one pointer each, with the cases merged under them
 
-- Anchors bit-identical, a moved number reported with its cause, `--refresh` in the same commit → enforced by `engine/test_ice_giant.py @«--refresh»`; the principle is §3 above.
-- Gate FAIL 0 → `CLAUDE.md @«8. Run Tests Before Marking Complete»`, widened to: say what your work adds to the gate's time.
+- Anchors bit-identical, a moved number reported with its cause, `--refresh` in the same commit → enforced by `engine/test_ice_giant.py@«--refresh»`; the principle is §3 above.
+- Gate FAIL 0 → `CLAUDE.md@«8. Run Tests Before Marking Complete»`, widened to: say what your work adds to the gate's time.
   - ↳ *A runtime estimate belongs to the commit it was measured on.* (line 373)
   - ↳ *`check.sh` is ~20 minutes and the foreground tool limit is 10; run it backgrounded and watch the tail. An external signal's sender candidates include the harness itself.* (line 430)
-- Papers through `ADS_API_TOKEN` and the cache, no WebSearch, identifiers read and checked by title → `CONVENTIONS.md @«3.2 ADS paper discipline»`, `CONVENTIONS.md @«3.3 Paper references are links»`.
+- Papers through `ADS_API_TOKEN` and the cache, no WebSearch, identifiers read and checked by title → `CONVENTIONS.md@«3.2 ADS paper discipline»`, `CONVENTIONS.md@«3.3 Paper references are links»`.
   - ↳ *A cache file is held only once shown to be a PDF — run `file` on it; a `.PROVENANCE.txt` records how it was obtained but its absence is not the check.* (line 349)
   - ↳ *Check ADS `esources` before asking the owner for a paper; three of seven requests had a free route in a field already queried.* (line 398)
-- Commits in English, one logical change, fixed identity → `CONVENTIONS.md @«1.8 Git commit language»`, `CONVENTIONS.md @«1.9 Git identity»`, `CLAUDE.md @«9. Semantic Commits»`.
-- A commit that closes a hole brings the test that reproduces it → `CLAUDE.md @«4. Goal-Driven Execution»`.
-- A process listing is an instant, not a state; a session about to relaunch checks for itself → `engine/tools/README.md @«Telling a busy gate from a dead one»`, `engine/tools/README.md @«A gate is a process group»`.
-- A sentinel carried in a variable something else re-arms is not a contract → `engine/interior-core.md @«A sentinel carried in a variable something else re-arms is not a contract»`.
-- The cold flank's second form: the steering must be able to conclude → `engine/interior-core.md @«the climb hid the wall from the controller»`.
-- A third party checks a solver by closure, not by A/B → `engine/interior-core.md @«A third party checks a solver by closure»`.
+- Commits in English, one logical change, fixed identity → `CONVENTIONS.md@«1.8 Git commit language»`, `CONVENTIONS.md@«1.9 Git identity»`, `CLAUDE.md@«9. Semantic Commits»`.
+- A commit that closes a hole brings the test that reproduces it → `CLAUDE.md@«4. Goal-Driven Execution»`.
+- A process listing is an instant, not a state; a session about to relaunch checks for itself → `engine/tools/README.md@«Telling a busy gate from a dead one»`, `engine/tools/README.md@«A gate is a process group»`.
+- A sentinel carried in a variable something else re-arms is not a contract → `engine/interior-core.md@«A sentinel carried in a variable something else re-arms is not a contract»`.
+- The cold flank's second form: the steering must be able to conclude → `engine/interior-core.md@«the climb hid the wall from the controller»`.
+- A third party checks a solver by closure, not by A/B → `engine/interior-core.md@«A third party checks a solver by closure»`.
 - An unreachable boundary condition closes as a named refusal → §2 above.
   - ↳ *Bake a source only after sweeping its claimed range against pre-registered physicality criteria, and record the effective ceiling with the table; the printed validity range is not the executed one.* (line 328)
 - A new number is carried back to the old ones before it is used to clear them → §5 and §6 above (`chain.py affects`, backflow).
@@ -214,11 +214,11 @@ evidence, with the line they came from in `engine/SESSION-HANDOFF.md` at `2269a8
 - Tables and extractions → §4 above.
   - ↳ *A regenerated table that differs is settled by a separate trace; do not correct the table to the code or the code to the table on the name alone.* (line 331)
   - ↳ *When machine-extracting a numeric table, check against a different rendering, not against check values that rode the same extraction.* (line 427)
-- Stage what you wrote, not what the file holds: `git diff --stat` before `git add` in a shared worktree → `engine/tools/README.md @«reading `git diff --stat`»` (the rule's other home is the owner's session memory, outside the repo).
-- Do not widen the detector; write the data in the shape it already reads → §7 above; `engine/tools/README.md @«Four times the answer was to reshape the input»`.
-- A count is only as true as the sentence under it → `engine/tools/README.md @«Counts and quotations are both only as true as the sentence over them»`.
-- When you re-aim an anchor, re-read the sentence around it → `engine/tools/README.md @«Re-aiming an anchor is not the whole repair»`.
-- The name was the evidence, and the name was wrong → `engine/tools/README.md @«Four names that read correctly and were wrong when checked»`.
+- Stage what you wrote, not what the file holds: `git diff --stat` before `git add` in a shared worktree → `engine/tools/README.md@«reading `git diff --stat`»` (the rule's other home is the owner's session memory, outside the repo).
+- Do not widen the detector; write the data in the shape it already reads → §7 above; `engine/tools/README.md@«Four times the answer was to reshape the input»`.
+- A count is only as true as the sentence under it → `engine/tools/README.md@«Counts and quotations are both only as true as the sentence over them»`.
+- When you re-aim an anchor, re-read the sentence around it → `engine/tools/README.md@«Re-aiming an anchor is not the whole repair»`.
+- The name was the evidence, and the name was wrong → `engine/tools/README.md@«Four names that read correctly and were wrong when checked»`.
 
 ---
 
