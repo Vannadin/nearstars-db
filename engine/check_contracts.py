@@ -36,7 +36,7 @@ BODIES = HERE / "bodies"
 
 #: C45 (b)/C50 의 클래스 ③ 기준선 — (노드 수, 고유 키 수). 2026-09-09 첫 측정.
 #: ⚠ FAIL 이 아니다. 수리 뒤 0 이 되면 그때 FAIL 로 승격한다 (D 와 같은 경로).
-CLASS3_BASELINE = (8, 8)
+CLASS3_BASELINE = (8, 8, 13)          # (노드, 고유 키, (노드,키) 쌍) — 발생은 13곳이다
 
 #: 클래스 ① (C37 의 서명) 의 **알려진 기존 사례** — 2026-09-09 첫 측정, C50 에 등재.
 #: ⚠ **이 집합 밖의 사례는 FAIL 이다.** 기존 넷을 지금 고치는 것은 값을 움직일 수 있어 다음
@@ -251,10 +251,13 @@ def main() -> int:
     if gone:
         print(f"  [클래스 ① · 사라짐] {', '.join(f'{n}.{k}' for n, k in gone)} — "
               f"고쳐졌으면 CLASS1_KNOWN 에서 지울 것")
-    n3_nodes, n3_keys = len(class3), len({k for v in class3.values() for k in v})
-    print(f"  [클래스 ③ 합계] {n3_nodes} 노드 · 고유 키 {n3_keys}개 "
-          f"(기준선 {CLASS3_BASELINE[0]} 노드 · {CLASS3_BASELINE[1]}개, C50) — "
-          f"{'변화 없음' if (n3_nodes, n3_keys) == CLASS3_BASELINE else '⚠ 기준선과 다르다'}")
+    n3_nodes = len(class3)
+    n3_keys = len({k for v in class3.values() for k in v})
+    n3_pairs = sum(len(v) for v in class3.values())
+    got3 = (n3_nodes, n3_keys, n3_pairs)
+    print(f"  [클래스 ③ 합계] {n3_nodes} 노드 · 고유 키 {n3_keys} · 쌍 {n3_pairs} "
+          f"(기준선 {CLASS3_BASELINE[0]} · {CLASS3_BASELINE[1]} · {CLASS3_BASELINE[2]}, C50) — "
+          f"{'변화 없음' if got3 == CLASS3_BASELINE else '⚠ 기준선과 다르다'}")
 
     total = sum(1 for d in g["nodes"].values() if d.get("kind") == "computed")
     for f in fails:

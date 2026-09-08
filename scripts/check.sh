@@ -186,8 +186,9 @@ echo "── 12b. 계약 · 인용 앵커 · 밴드 (문서가 깨뜨릴 수 있
 # 문서 한 줄이 앵커나 계약을 깨뜨렸을 때 **24분 뒤가 아니라 2분 안에** 보이기 때문이다.
 # 로컬로 미리 돌리는 습관이 없는 사람에게는 옛 순서가 곧 24분이었다. 이 블록은 약 80초이고
 # 그중 77초가 check_contracts 다 (표본 천체로 레시피를 실제로 돌리므로 싼 검사가 아니다).
-# ⚠ 2026-09-09: 이 77초와 오늘 측정한 136–141 s 가 어긋난다 — 조회 로그(C45 (b)) 유무만 다른 두 실행이
-#   각각 136·141 s 라 로그 탓이 아니고, 격차는 설명되지 않았다. 조용한 머신에서 다시 재야 한다 (C45 (c)).
+# ⚠ 2026-09-09: 이 77초는 낡았다 — 오늘 세 실행이 136 · 141 · 136.22 s 로 같은 자리에 떨어졌다(셋째는
+#   감사석). 조회 로그(C45 (b)) 탓이 아니다: 끄면 5 s 더 걸렸다. 77 은 09-06 순서 변경 때의 수이고 그 뒤로
+#   부하가 늘었다 — 지금 레시피 14 · 계산 노드 35 를 표본 천체마다 돈다. 조정하지 않고 후보 원인만 적는다.
 # chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
 python3 engine/check_via.py --gate || { echo "  [FAIL] check_via"; fail=1; }
 (cd engine && python3 check_contracts.py) || fail=1
@@ -208,6 +209,9 @@ python3 engine/check_via.py --gate || { echo "  [FAIL] check_via"; fail=1; }
 (cd engine && python3 test_domain.py) || fail=1
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
+# 논문 인용 규약 (C33 (b), 브리프 165). ⚠ **판정 아님 — 세기만 한다**: bibcode 없는 절의 "저자+연도"
+# 인용 수를 인쇄한다(규칙 A, 첫 판 27 절 · 124 건). 0 이 되면 FAIL 로 승격. 비용 ~0.1 s.
+python3 engine/tools/check_citations.py --quiet || fail=1
 
 if [ "$lane" = "wiring" ]; then
   echo ""

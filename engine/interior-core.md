@@ -3323,6 +3323,44 @@ blame traces). And the contract-heading anchors are loosely aimed by the shared-
 tightening them to a unique Need item where one exists (`` `mantle_radiogenic_power` [W] `` is unique;
 `core_cmb_temperature_solved` occurs 5×, `t_body` 0×) is the next pass.
 
+### C33 (b) 2026-09-09 — a second citation rule, counted and not judged: papers cited without a bibcode
+
+**C33 made every anchor citation carry its own test.** This is the other half of the same habit: a
+**paper** cited as *"author + year"* with no bibcode anywhere in its section — where a reader cannot
+check the claim and, when the section also states a paper **grade**, cannot check the grade either.
+
+⚠ **The first version counts and does not judge**, because the count is not a property of the tree but
+of the rule. The audit seat's three implementations gave **160 · 193 · 185** for this one file (856–1008
+across the tree), which is why `engine/tools/check_citations.py` carries **the rule's text and its known
+false-positive classes beside the number** — a number copied without its rule is re-measured differently
+by the next reader.
+
+**Rule A, as implemented:** split the document on `### `; count citations **only in sections that contain
+no bibcode at all**; accept a bibcode in backticks, ⚠ *including one wrapped in a markdown link, which
+the first implementation missed and which inflated its count*; count `Author+ 2019`, `Author & Author
+2002`, `Author et al. 2013`. **Rejected as false positives:** date prose (`Corrected 2026-09-08` — a year
+followed by `-\d`), participle-plus-year heads (`Measured 2026`, a list in the tool), and the possessive
+`Nimmo's` without a year — while *"Nimmo's 2004 Table 4"* **is** a citation and is counted.
+
+**Rule A's first measurement, 2026-09-09: `engine/interior-core.md` has 27 sections with no bibcode and
+124 citations in them.** The largest are C38 (15), C13 (13), C47 (10) and C9 (9).
+
+⚠ **So the habit was the norm and the exception was the section that carried bibcodes** — C47 (i). One
+confirmed count from before this brief: **C25 (d) held 28 author-plus-year mentions, 15 of them distinct,
+and 0 bibcodes**; commit A of Brief 165 gave all fifteen a bibcode and an ADS URL. **The reason was not
+that a regression had to be undone**, but that a section which states grades must carry the identifiers
+that let those grades be checked.
+
+⚠ **And the rule catches its own documentation.** This section quotes citation *examples* while carrying
+no bibcode, so rule A counts **4** in it: the file went from **27 sections · 124 citations** to **28 ·
+128** the moment this subsection was written. **No syntax for "this is an example, not a citation" was
+invented** — it is recorded as a false-positive class in the tool instead, and it is one of the reasons
+the first version only counts.
+
+**Fixing the other 27 sections is out of this brief's scope**, and the promotion path is the one C45 (b)
+class ③ uses: the count is printed on every run, and when it reaches zero the rule becomes a `FAIL`. **New
+sections are expected to keep it from today.**
+
 ### C34 — what the heat-transport table is fed, and where its thresholds come from — **thresholds half answered 2026-09-06: none is published, and the 0.03 became a C32 band. What the table is fed is still the owner's**
 
 Three facts, named and not repaired. The code's verdicts are unchanged by this entry.
@@ -4210,9 +4248,12 @@ quietly while the four wait.
 
 ⚠ **So both FAIL classes are shown to fire and the clean tree is shown to pass** — the two halves of
 `engine/test_interior.py@«늘 발화하면 상수다»`. **And the timing is the surprise**: `check.sh`'s comment
-still says this check costs 77 s, while both runs today took 136–141 s. **That gap is not measured by
-these two runs** (they differ only in the log) and is not adjusted here; it wants a quiet machine, which
-this one is not tonight.
+still says this check costs 77 s, while **three** runs today landed at **136, 141 and 136.22 s** (the
+last by the audit seat). ⚠ *Three measurements in the same place is not a machine having a bad night —
+**the comment is stale.** The log is not the cause: with it off the run took 5 s **longer**. The 77 s
+dates from the 09-06 reordering, and the workload has grown since — the check now runs **14 recipes over
+35 computed nodes** on every sample body. Not adjusted here; the candidate cause is recorded instead of
+a guess about the machine.*
 
 ⚠ **And ⓒ was not run as registered.** It asked for `ce7aff2d^`, where C37 was live; reaching it means
 grafting today's `state.py` and checker onto that tree, which is a build of its own. **What stands in its
@@ -6260,7 +6301,7 @@ contract check saw a name and reported agreement:
 | `interior_layers` | `porosity_cap` |
 
 **Class ③ — a `Needs` item no roster body supplies, where the call site copes** (a default, or the
-evidence filed under another name). **8 nodes, 8 distinct keys:**
+evidence filed under another name). **8 nodes · 8 distinct keys · 13 (node, key) occurrences:**
 
 | key | nodes that declare it in `Needs` |
 |---|---|
@@ -6278,7 +6319,8 @@ and the repair can move values** — which is why this is listed rather than don
 
 **What holds the line meanwhile.** The four class-① instances are named in
 `engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and **anything outside that set fails the gate**; the class-③
-count is recorded as a baseline (`CLASS3_BASELINE`) and printed on every run. ⚠ **So the disease is
+count is recorded as a baseline (`CLASS3_BASELINE` = 8 nodes · 8 keys · **13 pairs**) and printed on
+every run. ⚠ **So the disease is
 frozen at its measured size rather than fixed** — new instances of either class are caught immediately,
 and the existing ones are visible in the gate's own output on every run.
 
