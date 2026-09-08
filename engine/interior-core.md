@@ -2697,6 +2697,91 @@ lower), so the three rows bracket that rather than centring on it.
 | ② | **how `k_core` is carried** | Nimmo's 50 ± 20 band as now · elect Konôpková+ 2016's 40 · elect Pozzo+ 2012's 100 · unify with the sub-Neptune path, which already declares 40 and 100 (C49) |
 | ③ | **whether `ΔE` > 0 is our threshold** | the paper's own `ΔE` > 0, which it calls a threshold-avoidance · the printed required excess **0.1–1 000 MW/K**, whose upper end no corner reaches |
 
+### C25 (c) 2026-09-09 — the option table, computed; and the pre-registered `Q_C` column had to become three
+
+⚠ **First, a correction to C25 (b)'s own column list, made visible rather than quietly fixed.** That
+subsection defined one column — *"`Q_C` | `core_terms`' `q_total` [TW] — **the quantity C25's tension is
+about**"*. **It is not.** Running it against C25's recorded sentence (*"2.75 → 7.69 TW over
+3 760 → 4 155 K"*) reproduced neither the values nor the direction, and the reason is that this engine has
+**three different CMB heat flows**, all legitimately called `Q_C` somewhere:
+
+| | what it is | direction in `T_c` |
+|---|---|---|
+| **① mantle-side `Q_CMB`** | `cmb_flux.bottom_layer`, Nimmo eqs 37–39 — the flow the mantle's basal boundary layer can carry | **rises** with `T_c` (the jump across the CMB grows) |
+| **② core-side adiabat `Q_ad`** | `cmb_flux.adiabatic_flow` — `4π r² k |dT/dr|_ad`, the flow conduction alone carries, **∝ k** | rises slowly |
+| **③ core-side supply `q_total`** | `core_energy.core_terms` — `Q_s + Q_L + Q_g + Q_R` at a declared cooling rate; **what the entropy budget uses** | **falls** across the inner core's disappearance |
+
+**C25's tension is about ①**, the published 4.5–9.0 TW range is ①'s, and the entropy corners are ③'s.
+⚠ **One column could not have carried both**, and the pre-registration said it did. **The rows and the
+`k` axis stand as registered; the flow column is split, and the split is recorded here rather than
+edited into (b).**
+
+**① reproduces C25's sentence exactly**, which is how the mislabel was caught:
+
+| `T_c` | ① mantle-side `Q_CMB` | ② core-side adiabat `Q_ad` (k 30 · 50 · 70) | ③ core-side supply |
+|---|---|---|---|
+| **3 760 K** (measured) | **2.750 TW** — below the published 4.5–9.0 | 4.07 · 6.79 · 9.50 | 6.465 |
+| **3 978 K** (C14's root) | **4.913** | 4.31 · 7.18 · 10.05 | **4.912** |
+| **4 155 K** | **7.693** — inside the range | 4.50 · 7.50 · 10.50 | 4.912 |
+
+⚠ **At 3 978 K, ① = 4.913 and ③ = 4.912 — that equality *is* C14's closure**, which is why the root
+lands there and not somewhere else. Reading the two flows side by side makes the closure visible as an
+identity rather than as a number someone chose.
+
+⚠ **And the same `k` decides whether the core convects at all.** At C14's closure the CMB carries
+**4.91 TW** against an adiabat of **7.18 TW at k = 50** — *sub-adiabatic*, no thermal convection — while
+at **k = 30** the adiabat is **4.31 TW** and the same closure is *super-adiabatic*. **So `k` is not only
+the entropy band's dominant axis; it decides the prior question.** Owner decision ② therefore carries
+more than the band's width.
+
+#### The option table, filled
+
+**Fixed as registered: `dT_c/dt` = −33 K/Gyr, present-epoch `ΔE` [MW/K], `k` 30 and 70 as the verdict
+corners, `k` 20 · 40 · 100 as record.** No cell is a pass or a fail.
+
+| `T_c` | `H` | inner core | ① `Q_CMB` | ③ supply | **`ΔE` k 30** | **`ΔE` k 70** | k 20 | k 40 | k 100 |
+|---|---|---|---|---|---|---|---|---|---|
+| **3 760 K** | 1.5 pW/kg | **572.2 km** | 2.750 | 6.465 | **+221.5** | **+28.1** | +269.9 | +173.2 | −117.0 |
+| 3 760 | 0.9 | 572.2 km | 2.750 | 5.300 | **+179.8** | −13.7 | +228.1 | +131.4 | −158.7 |
+| 3 760 | 0.14 | 572.2 km | 2.750 | 3.825 | **+126.9** | −66.6 | +175.2 | +78.5 | −211.6 |
+| **4 155 K** | 1.5 | **none** | 7.693 | 4.912 | **+20.6** | −172.8 | +69.0 | −27.8 | −317.9 |
+| 4 155 | 0.9 | none | 7.693 | 3.747 | −17.2 | −210.6 | +31.2 | −65.6 | −355.7 |
+| 4 155 | 0.14 | none | 7.693 | 2.272 | −65.1 | −258.5 | −16.7 | −113.4 | −403.6 |
+| *ref* 3 978 | 1.5 | none | 4.913 | 4.912 | +28.0 | −165.5 | +76.3 | −20.4 | −310.5 |
+| *ref* 3 978 | 0.9 | none | 4.913 | 3.747 | −11.5 | −204.9 | +36.9 | −59.9 | −350.0 |
+| *ref* 3 978 | 0.14 | none | 4.913 | 2.272 | −61.5 | −254.9 | −13.1 | −109.9 | −400.0 |
+
+**What the table shows, stated as measurement and not as choice.**
+
+- **The inner core is the whole difference.** At 3 760 K it is **572.2 km** and the two largest positive
+  entropy terms exist; at 3 978 and 4 155 K it is gone and they are zero. **Every `ΔE` in the 3 760 rows
+  is positive at `k` = 30 — including at the newest 40 ppm potassium cap** — and at 4 155 K only the
+  richest potassium cap is positive there.
+- **`k` = 100 makes every row negative.** The high-conductivity camp closes the budget on its own,
+  regardless of the horn or the potassium.
+- **`k` = 70, our own upper corner, is negative in eight of nine rows** — positive only in the wettest
+  cell (3 760 K with 400 ppm K, +28.1).
+- **The cooling-rate choice is small next to these.** Repeating rows at C20's computed 36 K/Gyr moves
+  `ΔE` by **+6.5 … +6.8 MW/K** (3 760/1.5: +221.5 → +245.4 at k 30; 4 155/1.5: +20.6 → +27.1), i.e. the
+  registered −33 K/Gyr does not decide any sign that the other axes do not already decide.
+
+**The parallel seat's H-ladder prediction is reproduced, and that is all it is.** P4 predicted the
+descent +32 → ≈ −7 → ≈ −57 across the three potassium caps at `k` = 30; the reference row at C20's own
+rate gives **+34.7 → −4.7 → −54.7**. The ~2–3 MW/K offset is C20's present `T_c` (4 027 K) against
+C14's root (3 978 K), not a disagreement. ⚠ **So the ladder is a reproduction, not a new finding.**
+
+**Each horn's cost, in one line each, and nothing is chosen.**
+
+- **3 760 K** — the measurement wins: an Earth-like inner core, every `k` = 30 cell positive, and
+  ⚠ **`Q_CMB` = 2.750 TW, below Nimmo's printed 4.5–9.0**, so the published flux range is contradicted.
+- **4 155 K** — the published range wins: `Q_CMB` = 7.693 TW inside it, and ⚠ **no inner core**, so
+  `e_l` = `e_g` = 0 and the band is negative everywhere except one cell.
+- **3 978 K** — C14's own closure, where ① and ③ balance; ⚠ it inherits the second horn's cost (no inner
+  core) without gaining the first's flux agreement.
+
+⚠ **Nothing in the engine changed, and no value moved.** The table is a measurement of what the existing
+code says at three declared temperatures. **The choice is owner decision ①, and it is not made here.**
+
 ### C26 — the superionic-ice representation above ice_x's 1 800 K ceiling — **listed 2026-09-04, not started**
 
 ⚠ *(2026-09-04, evening — owner's question, `superionic-ceiling-context-notes.md` §5)* **The 1800 K ceiling is the
