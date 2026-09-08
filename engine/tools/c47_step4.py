@@ -54,6 +54,17 @@ DEPLETED_ANCHORS = {(1350.0, "Earth"): (61.8, 0.9787), (1350.0, "Mars"): (163.8,
 B_ANCHOR = 4.1921e10
 
 
+#: 커밋 6 — 천체별 선언 `T_p`. 값은 바디 파일에서 읽는다(타이핑하지 않는다), 단위는 K.
+BODY_FILES = {"Earth": "earth.yaml", "Mars": "mars.yaml"}
+
+
+def declared_t_p_k(body: str) -> float:
+    """바디 파일의 `potential_temperature` [K]. `engine/bodies/<body>.yaml` 이 유일한 출처."""
+    import yaml
+    path = Path(__file__).resolve().parent.parent / "bodies" / BODY_FILES[body]
+    return float(yaml.safe_load(path.read_text(encoding="utf-8"))["inputs"]["potential_temperature"])
+
+
 def urey(body: str, q_w_m2: float) -> float:
     b = sl.STEP4_BODIES[body]
     area = 4.0 * math.pi * b["r_p"] ** 2
@@ -117,6 +128,33 @@ def main() -> int:
                     print(f"    α {a_label} {r_label:18s} q_E {q_e:7.2f} q_M {q_m:7.2f} mW/m² · "
                           f"q_E/q_M {ratio:7.4f} · Ur_E {ur_e:6.3f} Ur_M {ur_m:6.3f} "
                           f"Ur_M/Ur_E {ur_m / ur_e:6.3f}  {mark}")
+
+    # ── 커밋 6 — 천체별 선언 T_p 로 한 벌 더. ⚠ 러너는 T_p 를 °C 로 받고 선언은 K 이다.
+    if not quiet:
+        tp_k = {b: declared_t_p_k(b) for b in ("Earth", "Mars")}
+        print(f"\n=== 천체별 선언 T_p — 지구 {tp_k['Earth']:.1f} K · 화성 {tp_k['Mars']:.1f} K "
+              f"(= {tp_k['Earth'] - 273.15:.2f} · {tp_k['Mars'] - 273.15:.2f} °C) ===")
+        if abs(tp_k["Earth"] - tp_k["Mars"]) < 1e-9:
+            print("    ⚠ 지금 두 선언이 같은 값이라 이 벌은 공통 T_p 케이스와 같다 — 화성이 지구값을"
+                  " 이전받았기 때문이고(0단계 통과, 오너 2026-09-08 17:52), 물리적 우연이 아니다.")
+        for body in ("Earth", "Mars"):
+            z_d, depth = sl.z_d_from_solidus(sl.STEP4_BODIES[body]["g"], sl.STEP4_BODIES[body]["D"],
+                                             tp_k[body] - 273.15)
+            print(f"    {body:6s} 고갈층 {depth / 1e3:6.1f} km = 맨틀의 {(1 - z_d) * 100:5.2f} %   "
+                  f"z*_D {z_d:.4f}")
+        for a_label, alpha in ALPHAS:
+            for r_label, d_eta, buoy in RUNS:
+                b_a = b_by_alpha[a_label]
+                e = sl.step4_run("Earth", tp_k["Earth"] - 273.15, alpha, d_eta, buoy, b_a)
+                m = sl.step4_run("Mars", tp_k["Mars"] - 273.15, alpha, d_eta, buoy, b_a)
+                if not (e["eq56_converged"] and m["eq56_converged"]):
+                    fails.append(f"천체별 α {a_label} {r_label}: eq. 56 미수렴")
+                ratio = e["q_w_m2"] / m["q_w_m2"]
+                ur_e, ur_m = urey("Earth", e["q_w_m2"]), urey("Mars", m["q_w_m2"])
+                print(f"    α {a_label} {r_label:18s} q_E {e['q_w_m2'] * 1e3:7.2f} "
+                      f"q_M {m['q_w_m2'] * 1e3:7.2f} mW/m² · q_E/q_M {ratio:7.4f} · "
+                      f"Ur_E {ur_e:6.3f} Ur_M {ur_m:6.3f} Ur_M/Ur_E {ur_m / ur_e:6.3f} · "
+                      f"목표 3.68 의 {ratio / 3.68 * 100:4.1f} % · 4.78 의 {ratio / 4.78 * 100:4.1f} %")
 
     n = len(ANCHORS) + len(DEPLETED_ANCHORS) + 1
     if fails:

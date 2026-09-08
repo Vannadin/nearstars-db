@@ -5440,6 +5440,55 @@ rate, so 10⁻¹⁰ needs ~60 steps and the tolerance is reached at ~120. **The 
 it**; it was raised to **400** after the rate was measured, and `nu_eq56` reports `converged: False`
 rather than returning a number if it is ever hit. **The runner now takes ~61 s.**
 
+#### Commit 6 — the verdict: neither `α` reaches the target, which is C47 (g)'s first cell
+
+**Run at the declared potential temperatures, read from the body files rather than typed in: Earth
+1600 K (Unterborn+ 2019, `engine/eos.py@«EARTH_POTENTIAL_T = 1600.0»`) and Mars 1600 K (transferred,
+step 0 passed, owner 2026-09-08 17:52).** ⚠ *Both declarations are the same number today, so this set
+coincides with a common-`T_p` case — **because Mars carries Earth's value, which is a provenance fact,
+not a physical coincidence.** The moment Mars gets a Martian `T_p`, this set separates from the common
+one.* In °C, which is what eq. 45 takes: **1326.85 °C** for both.
+
+| body | depleted layer | as % of mantle | `z*_D` |
+|---|---|---|---|
+| Earth | 54.7 km | 1.89 % | 0.9811 |
+| Mars | 144.8 km | 8.05 % | 0.9195 |
+
+| `α` | run | `q_E` | `q_M` | **`q_E/q_M`** | of 3.68 | of 4.78 | `Ur_E` | `Ur_M` | `Ur_M/Ur_E` |
+|---|---|---|---|---|---|---|---|---|---|
+| §3.2 `3.7e-5` | (a) dehydration only | 45.15 | 29.87 | **1.5114** | 41.1 % | 31.6 % | 0.926 | 0.598 | 0.646 |
+| §3.2 | (b) buoyancy only | 45.15 | 32.67 | **1.3818** | 37.5 % | 28.9 % | 0.926 | 0.547 | 0.591 |
+| §3.2 | **(c) both — the test** | 45.15 | 29.87 | **1.5114** | **41.1 %** | **31.6 %** | 0.926 | 0.598 | 0.646 |
+| §4 `2.0e-3` | (a) | 45.15 | 29.87 | **1.5114** | 41.1 % | 31.6 % | 0.926 | 0.598 | 0.646 |
+| §4 | (b) | 45.15 | 34.09 | **1.3243** | 36.0 % | 27.7 % | 0.926 | 0.524 | 0.566 |
+| §4 | **(c) both** | 45.15 | 29.87 | **1.5114** | **41.1 %** | **31.6 %** | 0.926 | 0.598 | 0.646 |
+
+**The verdict, read off C47 (g)'s pre-registered table and not composed here.** The target was
+`q_E/q_M` ≥ **3.68** (against our own `Ur_Earth` 0.454) or **4.78** (against Korenaga's 0.35), from the
+no-melting **1.372**. The best cell is **1.5114**, both `α`, so:
+
+> **neither `α` reaches the target** → *"the **fourth** law family to fail in the same direction. C47
+> closes as **named, not filled** — the recorded answer becomes «no single untuned law in this
+> literature reproduces both Urey ratios», and the three-families-same-direction note in C47 (c) closes
+> with it."*
+
+**Said in Urey terms, which is where the failure is legible.** The law hands Earth `Ur` = **0.926**
+against a literature 0.35–0.454, and Mars **0.598** against 0.68–0.75 — so it makes **Earth** look like
+the body that retains its heat and **Mars** the one that has cooled, `Ur_M/Ur_E` = **0.646** where the
+literature wants roughly 1.5–2.1. ⚠ **The melting correction moved the ratio the right way** (1.372 →
+1.5114, +10 %) **and by nowhere near enough**, and eq. 56's self-consistency took back most of what the
+1500 °C case had appeared to offer.
+
+**What this closes and what it does not.** It closes step 4, and with it C47 as *named, not filled*.
+⚠ **C34 and C46 are not touched here** — the candidate set C34 waits on is re-drawn by this result, and
+that is the next brief's work, not this section's. **Nothing in `db/`, no board row and no emitted value
+depends on any number above**; the step-4 path has never had a consumer.
+
+⚠ **And the honest limit on all of it, restated because a closing section is where it would be
+dropped:** the absolute scale has **no independent anchor** (commit 3), so these fluxes are not a
+prediction of anyone's heat flow — the verdict rests on the **ratio**, which is what the pre-registration
+put the threshold on.
+
 #### The four defects, named before any of them is repaired
 
 | # | defect | why it matters | repaired in |
