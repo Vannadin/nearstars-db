@@ -2641,6 +2641,62 @@ picks T_c (C14's energy balance / C20's history), the mantle-base adiabat ratio 
 Q_C at his inputs), and the depression factor's hypersensitivity (C20 §5). Excluded: the boundary-layer law's
 constants, the melting-curve source, the mantle conventions. **Listed only; start is the owner's decision.**
 
+### C25 (b) 2026-09-09 — the option table's shape, committed before the numbers are computed
+
+⚠ **This subsection is the table's columns and nothing else. It is committed before any of the cells is
+computed**, so that the shape cannot be chosen to suit a result. **It is not a verdict table**: it is the
+last column of an owner choice, and C25's own entry already says *"start is the owner's decision"*.
+
+**Why the table exists.** C15's entropy band straddles zero — `ΔE` −69 MW/K with a band −264…+238 and
+1 of 4 corners positive once C20's computed cooling rate collapses the third axis. Reading the chain
+(brief 164) put the cause one step upstream of `k`: **C14's closure solves `T_c` = 3 978 K, at which the
+core is entirely liquid, so `e_l` and `e_g` — the budget's two largest positive terms — are exactly
+zero** (`engine/core_entropy.py@«e_l = e_g = e_h = 0.0»`). Whether they are zero is decided by which horn
+of C25 is taken, and that is a declaration, not a measurement.
+
+**Rows — the two horns, each at three potassium caps.** ⚠ The `H` axis is a *cap*, not a measurement:
+the literature runs in one direction (Nimmo's model needs 400 ppm K; later work puts the upper bound
+lower), so the three rows bracket that rather than centring on it.
+
+| row | `T_c` present | `H` cap | what it declares |
+|---|---|---|---|
+| 1 | **3 760 K** — the measured CMB temperature | 1.5 pW/kg (400 ppm K, Nimmo Table 4) | the measurement wins; `Q_C` may fall below the published range |
+| 2 | 3 760 K | 0.9 (250 ppm) | ditto, with the mid cap |
+| 3 | 3 760 K | 0.14 (40 ppm) | ditto, with the newest cap |
+| 4 | **4 155 K** — the temperature at which `Q_C` enters Nimmo's printed 4.5–9.0 TW | 1.5 | the published flux range wins; the inner core is gone |
+| 5 | 4 155 K | 0.9 | ditto |
+| 6 | 4 155 K | 0.14 | ditto |
+| ref | **3 978 K** — C14's own root, what the engine has today | 1.5 · 0.9 · 0.14 | the baseline the other rows are read against |
+
+**Columns.**
+
+| column | what it is |
+|---|---|
+| inner-core radius | `core_energy.inner_core`'s `r_i`, or **none** |
+| `Q_C` | `core_terms`' `q_total` [TW] — the quantity C25's tension is about |
+| **`ΔE` at `k` = 30 · 70** | the verdict corners as `cmb_flux.K_CORE_RANGE` declares them (50 ± 20, Nimmo Table 1) |
+| record: `ΔE` at `k` = 20 · 40 · 100 | the literature's camps — Hsieh 2020 ≈20, Konôpková+ 2016 40, Pozzo+ 2012 100 — ⚠ **record only**, since electing one is owner decision ② |
+
+**Fixed before the run, so nothing in the table is chosen afterwards.**
+
+- **`dT_c/dt` = −33 K/Gyr**, Nimmo Table 4's nominal (`core_energy.DTC_DT`). ⚠ `Q_s`, `Q_L` and `Q_g` are
+  linear in it and `Q_R` is not, so the choice matters and is stated: C20's own trajectory computes
+  **36 K/Gyr** at its own `T_c`, and one row of the table is repeated at that rate to show the size of
+  the difference.
+- **The entropy is the present-epoch `ΔE`**, computed at a declared `T_c` — **not** C20's window minimum
+  `ΔE_min`. ⚠ They are comparable but not the same quantity, and the reason they are readable side by
+  side is measured: in the four corners C20 reported, the window minimum **sits at the present**
+  (`min … (t +0.00 Gyr)` in all four).
+- **No cell in this table is a pass or a fail.** The threshold is owner decision ③ below.
+
+**The three owner decisions this table serves, with candidates and no selection.**
+
+| # | decision | candidates |
+|---|---|---|
+| ① | **which horn of C25** | measured `T_c` 3 760 K (inner core present, `Q_C` below the published range) · `T_c` 4 155 K (`Q_C` inside it, no inner core) · keep C14's root 3 978 K and accept that `e_l` = `e_g` = 0 |
+| ② | **how `k_core` is carried** | Nimmo's 50 ± 20 band as now · elect Konôpková+ 2016's 40 · elect Pozzo+ 2012's 100 · unify with the sub-Neptune path, which already declares 40 and 100 (C49) |
+| ③ | **whether `ΔE` > 0 is our threshold** | the paper's own `ΔE` > 0, which it calls a threshold-avoidance · the printed required excess **0.1–1 000 MW/K**, whose upper end no corner reaches |
+
 ### C26 — the superionic-ice representation above ice_x's 1 800 K ceiling — **listed 2026-09-04, not started**
 
 ⚠ *(2026-09-04, evening — owner's question, `superionic-ceiling-context-notes.md` §5)* **The 1800 K ceiling is the
