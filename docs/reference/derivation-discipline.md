@@ -166,6 +166,7 @@ evidence, with the line they came from in `engine/SESSION-HANDOFF.md` at `2269a8
   - ↳ *The ± is part of the number, and so is the composition; a relay that keeps the digits and drops either has not relayed the number, worst in summaries.* (line 304)
   - ↳ *Inside a declared window, say which edge the number is measured from; prefer the curve the code evaluates.* (line 315)
   - ↳ *A number whose source was not stated is quoted without one; an invented source is harder to catch than a missing one.* (line 411)
+  - ↳ *0.717 Myr entered two briefs as a time constant with no source; it is the ²⁶Al half-life, coincidentally the same digits.* (Brief 156–157)
 - **Only the printed value travels.** Before carrying a number from one body to another, check whether it is what the source prints or something derived from it with the first body's own state — Earth's 3040 K is 4800 K over Earth's adiabat ratio, and Mars has its own.
 - **A band is the opposite of a knob only when its width comes from the physics.** A width that is the interval over which our code happened not to fail is a numerical boundary, and carrying it ships the failure as a range.
 - **Judgment-changing numbers are reproduced before they are reported on.** Downward, no unlabelled number in a brief; upward, a number that opens or closes a row, claims a match, moves an anchor or a grade is re-derived by the directing seat — and the audit's leg stays separate, three legs not one.
