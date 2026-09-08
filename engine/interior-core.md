@@ -4102,6 +4102,62 @@ repeated is **exactly what this check exists to answer**, and it is not answered
 
 **Not built now**: it is a new gate check and needs a full lane. The item comes first; the tool follows.
 
+### C45 (b) 2026-09-09 — the instrument, pre-registered before it is built
+
+⚠ **Written and committed before a line of the check exists**, so that what counts as a finding cannot
+be chosen after seeing what the tool prints.
+
+**The instrument, and why it is not the AST route C45 sketched.** `engine/state.py` is 113 lines and
+every read funnels through **one** place — `BodyState.__getitem__`, with `get` wrapping it — which looks
+in `inputs`, then in every applicable `Result.values`, then raises `Missing`. ⚠ **There is no alias
+resolution anywhere in it.** So the actual lookup key can be captured at runtime: `run.solve` marks the
+node it is about to run, and the two readers append `(node, key, hit | miss)` to a list on the state.
+**The failure C45 names — a lookup nobody supplies, filed under a name the contract recognises — is a
+`miss`, and a miss log reports it exactly**, including keys built at runtime that no `ast` pass can see.
+
+**The AST pass stays, as the backstop.** A lookup on a branch the sample bodies never take leaves no
+runtime record, so the literal keys are extracted too and the check compares **three** sets per contract
+block: **runtime misses · AST literals · the document's `Needs`**. C45 asked for three sets and one
+vocabulary; the change is that the first set is now what the code *did*, not what its author typed.
+
+**Keyed on the block, not the file** — `tidal-heating-methodology.md` carries **two** `## Contract` blocks
+and `parse_contract` already selects by node name; the sketch that ignored this produced five of its
+seven "mismatches".
+
+⚠ **`state.get_optional(...)` is added, and this is the one design decision in the brief.** Some misses
+are legitimate: the engine already contains **five** preference lookups —
+`engine/core_history.py@«state.get("radius") or state.get("radius_earth")»` is the pattern — plus
+`dynamo_rocky.ice_fraction_from_state`, where a declared value wins and a preset is the fallback. **A
+miss there is the design working.** Rather than an allowlist, those call sites move to a named entry
+point, so the intent is visible to the next reader and to the checker at once. **Whether a lookup is
+optional becomes a statement in the code, not a judgement in the tool.**
+
+**Pre-registered outcomes — the check must prove it can fail before its result is written down.**
+
+| # | test | required |
+|---|---|---|
+| ⓐ | the clean tree | **passes** — 13 recipe modules, every miss either declared optional or matching a `Needs` item |
+| ⓑ | a scratch copy with one letter changed: `dynamo_rocky`'s `rotation_period` → `rotation_period_` | **fails**, naming that key |
+| ⓒ | `ce7aff2d^`, where C37 was live | **fails**, naming `rotation_period` — the historical case this instrument exists for |
+
+⚠ **ⓑ is this brief's form of *"if it always fires it is a constant"***
+(`engine/test_interior.py@«늘 발화하면 상수다»`): a checker that cannot be made to fail has not been shown
+to check anything.
+
+**What is a finding and what is not, fixed now.** A finding is a key that is **missed at the end of a
+full graph run** (not merely missed early and supplied later by a downstream node), is **not** declared
+optional, and is **not** in the contract's `Needs` — or the reverse, a `Needs` item that no lookup ever
+requests. ⚠ **Everything else is the tool's own noise**, and the two candidates C45 already named
+(`body_class` vs `declared_class`; `radius` vs `radius_earth`) are expected to resolve as *precedence*
+rather than as C37 repeated — `radius` is supplied by `mass_radius`'s Result, and `earth.yaml`'s own
+`radius:` sits under `expected:`, which the engine reads only for comparison.
+
+**Cost, and what this brief does with what it finds.** The check runs inside `check_contracts.py`, which
+**already** calls `run.solve` on every body file, so the runtime log is one append per lookup and the AST
+pass is a parse of 13 modules — the expectation is **no measurable gate time**, and the measured number
+goes in the implementing commit. ⚠ **Findings are reported in a table in C45 and repaired in a later
+brief**: a repair may move a value, and this brief is the instrument.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the
