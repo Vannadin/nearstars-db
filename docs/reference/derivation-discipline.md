@@ -147,6 +147,79 @@ with a unit, or a declared dimensionless or categorical state?"* A description i
 quantity. The adapter is bounded by a schema we do not own and that does not grow with our
 ambition. Neither bound pushes on the other.
 
+### 10. What a seat owes a claim
+
+The nine disciplines above are what the machine owes a value. This one is what a person owes a
+claim while relaying it — in a brief, a report, a note. Every line was written after it fired, and
+of the fourteen errors on the day this section was compiled the gate caught zero: what got through
+was never a wrong value, it was **a right value carrying a status it had not earned**. Each rule is
+one line; the indented lines under a rule are the cases that were merged into it, kept for their
+evidence, with the line they came from in `engine/SESSION-HANDOFF.md` at `2269a8d5`.
+
+**없다 · 몇 개다 · 누구 탓이다 — 이 셋은 조회를 붙이지 않으면 말하지 않는다.** *Absent, how many, whose fault: none of the three is said without the query that produced it.*
+
+**What a relayed number carries**
+
+- **A number cannot enter without its label** — the quantity's name, its location, its condition, checked at that place in the source. Not "5500–6300 K" but "central temperature 5500–6300 K, Scheibe Table 1". Three seats, one disease.
+  - ↳ *False provenance: a false label is worse than none, because the label stops the checking. Sender quotes only what is in quotation marks; receiver checks a number attributed to it against what it actually sent.* (line 276)
+  - ↳ *A brief's number carries its condition AND a commit anchor; three of four errors in one day were right numbers wrongly paired, the fourth an inequality not pushed to its conclusion.* (line 280)
+  - ↳ *The ± is part of the number, and so is the composition; a relay that keeps the digits and drops either has not relayed the number, worst in summaries.* (line 304)
+  - ↳ *Inside a declared window, say which edge the number is measured from; prefer the curve the code evaluates.* (line 315)
+  - ↳ *A number whose source was not stated is quoted without one; an invented source is harder to catch than a missing one.* (line 411)
+- **Only the printed value travels.** Before carrying a number from one body to another, check whether it is what the source prints or something derived from it with the first body's own state — Earth's 3040 K is 4800 K over Earth's adiabat ratio, and Mars has its own.
+- **A band is the opposite of a knob only when its width comes from the physics.** A width that is the interval over which our code happened not to fail is a numerical boundary, and carrying it ships the failure as a range.
+- **Judgment-changing numbers are reproduced before they are reported on.** Downward, no unlabelled number in a brief; upward, a number that opens or closes a row, claims a match, moves an anchor or a grade is re-derived by the directing seat — and the audit's leg stays separate, three legs not one.
+- **Numbers first, interpretation second, as separate messages.** Two seats then read the numbers independently; mixed together, the reading is not a check.
+
+**A negative carries its instrument**
+
+- **A narrow instrument's output is not a general fact.** State the instrument beside the finding, and if the finding is a negative, say what the instrument cannot see — a title scan found no viscosity source where full text found five.
+  - ↳ *"Not found" is a legitimate ending; say what was searched and how.* (line 345)
+  - ↳ *A truncated view of a correct query is a wrong answer that looks right: `head`, `tail`, `cut` clip silently, so re-run unfiltered or make the truncation visible before reporting a negative or a count.* (line 403)
+
+**Pre-registration**
+
+- **Pre-register outcomes before running, and register the kind of unregistered result afterwards** so the classification learns. Five branches are standard for a retrial, including "the source does not reach the deciding region" and "the source disagrees with both candidates".
+  - ↳ *A discriminating test states the assumption beside each prediction, and registers "all predictions miss" as the test itself failing, its product being the name of the wrong assumption.* (line 333)
+- **Do not tune a declaration until the answer comes out right.** Declare, integrate, report; three items in a row declined to write the value that would have closed their gap, once by 0.0012.
+- **A check whose own error exceeds its criterion cannot raise a grade** — and its mirror: a check can be precise while the thing it checks is simply wrong.
+- **A check must prove it can pass and can fail before its result is written down.** A check that always fires is a constant; this holds for a test, for a scratch script whose numbers get reported, and for a shell one-liner.
+  - ↳ *Three checks read correctly and were wrong when run — `pgrep -x python3`, `pgrep -P`, `git diff --quiet` — and two healthy gates died of the first; point a check at the case you expect to pass, not only the one you expect to fail.* (line 1447)
+- **Read what the brief names before building it** — existing code, a declared limit, the paper's own sentence, our own rule. Seven of seven times in one day, reading changed the build.
+
+**Two operating rules**, in no cluster, kept because they are written nowhere else
+
+- **No new runtime dependency in `engine/`**; `check.sh` runs on system Python.
+- **Clear the work session's context at item boundaries**, after confirming the notes carry what the next session needs, especially the approaches tried and rejected. The owner types `/clear`; a session cannot clear itself.
+
+**See also** — rules that already live elsewhere, one pointer each, with the cases merged under them
+
+- Anchors bit-identical, a moved number reported with its cause, `--refresh` in the same commit → enforced by `engine/test_ice_giant.py @«--refresh»`; the principle is §3 above.
+- Gate FAIL 0 → `CLAUDE.md @«8. Run Tests Before Marking Complete»`, widened to: say what your work adds to the gate's time.
+  - ↳ *A runtime estimate belongs to the commit it was measured on.* (line 373)
+  - ↳ *`check.sh` is ~20 minutes and the foreground tool limit is 10; run it backgrounded and watch the tail. An external signal's sender candidates include the harness itself.* (line 430)
+- Papers through `ADS_API_TOKEN` and the cache, no WebSearch, identifiers read and checked by title → `CONVENTIONS.md @«3.2 ADS paper discipline»`, `CONVENTIONS.md @«3.3 Paper references are links»`.
+  - ↳ *A cache file is held only once shown to be a PDF — run `file` on it; a `.PROVENANCE.txt` records how it was obtained but its absence is not the check.* (line 349)
+  - ↳ *Check ADS `esources` before asking the owner for a paper; three of seven requests had a free route in a field already queried.* (line 398)
+- Commits in English, one logical change, fixed identity → `CONVENTIONS.md @«1.8 Git commit language»`, `CONVENTIONS.md @«1.9 Git identity»`, `CLAUDE.md @«9. Semantic Commits»`.
+- A commit that closes a hole brings the test that reproduces it → `CLAUDE.md @«4. Goal-Driven Execution»`.
+- A process listing is an instant, not a state; a session about to relaunch checks for itself → `engine/tools/README.md @«Telling a busy gate from a dead one»`, `engine/tools/README.md @«A gate is a process group»`.
+- A sentinel carried in a variable something else re-arms is not a contract → `engine/interior-core.md @«A sentinel carried in a variable something else re-arms is not a contract»`.
+- The cold flank's second form: the steering must be able to conclude → `engine/interior-core.md @«the climb hid the wall from the controller»`.
+- A third party checks a solver by closure, not by A/B → `engine/interior-core.md @«A third party checks a solver by closure»`.
+- An unreachable boundary condition closes as a named refusal → §2 above.
+  - ↳ *Bake a source only after sweeping its claimed range against pre-registered physicality criteria, and record the effective ceiling with the table; the printed validity range is not the executed one.* (line 328)
+- A new number is carried back to the old ones before it is used to clear them → §5 and §6 above (`chain.py affects`, backflow).
+  - ↳ *Prose that carries a number carries the duty to update it; so does prose carrying a condition, and a row carrying a prediction.* (line 326)
+- Tables and extractions → §4 above.
+  - ↳ *A regenerated table that differs is settled by a separate trace; do not correct the table to the code or the code to the table on the name alone.* (line 331)
+  - ↳ *When machine-extracting a numeric table, check against a different rendering, not against check values that rode the same extraction.* (line 427)
+- Stage what you wrote, not what the file holds: `git diff --stat` before `git add` in a shared worktree → `engine/tools/README.md @«reading `git diff --stat`»` (the rule's other home is the owner's session memory, outside the repo).
+- Do not widen the detector; write the data in the shape it already reads → §7 above; `engine/tools/README.md @«Four times the answer was to reshape the input»`.
+- A count is only as true as the sentence under it → `engine/tools/README.md @«Counts and quotations are both only as true as the sentence over them»`.
+- When you re-aim an anchor, re-read the sentence around it → `engine/tools/README.md @«Re-aiming an anchor is not the whole repair»`.
+- The name was the evidence, and the name was wrong → `engine/tools/README.md @«Four names that read correctly and were wrong when checked»`.
+
 ---
 
 ## What this does not fix
