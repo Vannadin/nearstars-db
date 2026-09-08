@@ -292,7 +292,7 @@ def _from_state(state):
                  core_mass_fraction=state.get("core_mass_fraction"),
                  # 브리프 46 후속 ③: 반지름은 **선언된** radius_earth 가 먼저다 (mass_or_radius 엣지, via radius);
                  # 미선언이면 interior_layers 의 도출 반지름으로 대체한다 — 그 엣지도 chain.yaml 에 선언돼 있다.
-                 radius_earth=state.get("radius_earth", state.get("radius")),
+                 radius_earth=state.get_optional("radius_earth", state.get_optional("radius")),   # C45 (b)
                  body_class=state.get("body_class"),
                  age_gyr=state.get("age_gyr"),
                  ice_mass_fraction=state.get("ice_mass_fraction", 0.0),

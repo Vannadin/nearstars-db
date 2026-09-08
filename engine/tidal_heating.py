@@ -454,7 +454,7 @@ from registry import recipe  # noqa: E402
 @recipe("tidal_heating")
 def _from_state(state):
     return solve(mass_earth=state["mass_earth"],
-                 radius_earth=state.get("radius_earth", state.get("radius")),
+                 radius_earth=state.get_optional("radius_earth", state.get_optional("radius")),   # C45 (b)
                  semi_major_axis_km=state.get("semi_major_axis_km"),
                  perturber_mass_earth=state.get("perturber_mass_earth"),
                  eccentricity_forced=state.get("eccentricity_forced"),
@@ -465,4 +465,4 @@ def _from_state(state):
 def _mode_from_state(state):
     return solve_mode(surface_flux=state.get("surface_flux"),
                       radiogenic_power=state.get("radiogenic_power"),
-                      radius_earth=state.get("radius_earth", state.get("radius")))
+                      radius_earth=state.get_optional("radius_earth", state.get_optional("radius")))

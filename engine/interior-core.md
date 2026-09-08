@@ -95,6 +95,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C47** | the transport table is fed radiogenic production, and its thresholds are defined on surface heat flow | **closed 2026-09-08 — named, not filled (C47 (k))**; earlier status kept: *measured 2026-09-07, not fixed* | Verdict: **a different quantity**, not an inaccurate one. The low feed reproduces radiogenic production on two bodies (Earth 1.07–1.33× of Korenaga 2008's 16–20 TW; Mars 1.11× of Parro+ 2017's 14.3 mW/m²) and misses surface heat flow by **body-dependent** factors (Earth 0.45×, Mars 0.84×). ⚠ **That factor is the Urey ratio** — 0.35 for Earth, 0.68–0.75 for Mars — so `1/Ur` would be 2.2–2.9 against 1.3–1.5 and **no correction constant can serve both.** The missing term is secular cooling, which our own §6 already names (*"radiogenic, accretional, primordial"*) and no node emits. ⚠ Consequence for C34: Mars passing and Earth failing at the low feed measured **how close each body's Urey ratio is to 1**, not whether the feed is right. ⚠ **Attempted 2026-09-07 (C47 (b)) and it does not close by code.** The quantity already exists — C20's `q_mantle_present` **is** `Q_M`, from Nimmo eqs 34–36, and it reads no measured flux — but one law cannot serve both bodies: at a common `T_m` Earth lands on 0.35 while Mars reads **0.209 against 0.68–0.75**, and `Ur` **falls** ×1.69 toward smaller bodies where the literature has it **rise** ×2.0. ⚠ **The ordering is wrong, so no `T_m` fixes it** — `implied_flux` is a mobile-lid law (our own docstring says it was tuned on four present-day Earth constraints) and Mars is the archetypal stagnant lid; it hands Mars 85.7 mW/m² against Reese's own 15–30 ceiling, **2.9–5.7× what C46's own bottom rung allows.** ⚠ Also blocked outright: only `earth.yaml` declares C20's two initial temperatures, so **C20 cannot run on Mars**. **The block is C46's circularity** (the flow needs the regime, the regime needs the flow) plus a paper we do not hold — Reese+ 1998's stagnant-lid scaling, abstract only |
 | **C48** | the thermal-history integrator was validated on Earth alone, and calls its flux law far outside that law's expansion point | **closed 2026-09-08 in two halves — domain (Brief 155) and step (Briefs 156–157): the fixed 4 Myr step was h/τ ≈ 75 on Mars's first step and 1.02 on Earth's; the step is now h = min(4 Myr, 0.1·τ) and Mars integrates (1382.90 / 3893.01 / 1669.22 K, within 0.1 K of the 0.25 Myr sweep) while Earth's anchors hold to two decimals (1152 steps, was 1135). Earlier text of this cell:** renamed and half-repaired 2026-09-08 (Brief 155): the inversion bracket had stood in for a domain nobody declared — eqs 34–36's domain is now declared from the paper (upper edge 4800 K, §3; «<8 per cent» caveat, §6; open below), eqs 37–39's for the first time (D5), and the callee keeps both. The Mars step sweep (h/τ) stays open as its own item** | C20 diverges on Mars at every pre-registered `T_pot` (`T_m` → −6244 … −8208 K). ⚠ **The divergence is not the finding** — the flux law is called at **719,546 mW/m² on Mars and 25,144 on Earth**, against measured 19 and 92.1, because Nimmo's eq. 35 is a linearisation about `T₀ = 1573 K` and C20 feeds it **+1467 K (Earth) and +2448 K (Mars)**, giving mantle viscosities of `η₀`÷2.35 M and ÷42.8 G. **Earth's own outputs come from the same out-of-range call and survive only on heat capacity.** ⚠ No published range was violated — **none is printed**; our `BRACKET_K` is a Brief 57 bisection aid. **Two values from one paper fail to compose on a second body**, which is the failure mode of this engine's Earth-number-on-every-body pattern. Blast radius counted: **one consuming edge** (`core_entropy_production`), no board row, no `db/`. Next: a usable flux law, or a grounded starting epoch — ⚠ **never a starting value chosen because it integrates**. ⚠ **The diagnosis above predates Briefs 155 and 157 and is superseded on the cause of the divergence** (kept, not deleted, as this cell's second column keeps its earlier text): the out-of-domain call is real and is still counted on every result, but Mars diverged because of the step — the fixed 4 Myr was h/τ ≈ 75 on the first step — and at h = min(4 Myr, 0.1·τ) Mars integrates |
 | **C49** | one engine, two `k_core` declarations — and one file's stated ground forbids the number the other consumes | **listed 2026-09-09, not started** | Rocky: `cmb_flux.py@«K_CORE = 50.0»`, a single declared midpoint ± 20, consumed as the corners (30, 70) by `core_entropy.K_RANGE` and `core_history.K_CORNERS` and as the `q_ad` band. Sub-Neptune: `sub_neptune_dynamo.py@«CORE_CONDUCTIVITY = Band(»`, midpoint **None**, ends **40 and 100** from two papers Tang+ 2025 runs both ways, grade *calibrated*, with an unmade `Choice`. ⚠ **And the comment above it says «70 W/m/K 는 두 논문 중 어느 쪽도 말하지 않은 수다» — that very 70 is the upper corner the rocky path feeds to the entropy band.** So one file's stated ground disqualifies a number the other file uses. Two shapes as well as two values: one paper's ± against two papers' ends. Unification is part of owner decision ② (C25 (b)); listed only |
+| **C50** | contracts list `Needs` that no roster body supplies — and four are C37's exact signature | **listed 2026-09-09, not started** | Measured by C45's new lookup check: **class ① (C37's signature — the lookup misses everywhere and the `None` is filed under that name) is live in 3 nodes / 4 keys** (`body_class` `gas_mass_fraction`·`semi_major_axis_au`, `dynamo_rocky` `dynamo_regime`, `interior_layers` `porosity_cap`), and **class ③ (a `Needs` no body supplies, the call site coping) in 8 nodes / 8 keys** (`core_material` ×4, `ice_mass_fraction` ×3, `differentiated`, `envelope_z`, `gas_mass_fraction`, `initial_porosity`, `tidal_heating`, `permanent_quadrupole`). Each is one of two faults — the contract is wrong, or the body declarations are missing — and which is not decidable from the count. Held at measured size meanwhile: the four are named in `engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and anything outside fails the gate; class ③ has a printed baseline. Repair can move values, so it is a later brief. No owner decision |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -4126,7 +4127,7 @@ seven "mismatches".
 
 ⚠ **`state.get_optional(...)` is added, and this is the one design decision in the brief.** Some misses
 are legitimate: the engine already contains **five** preference lookups —
-`engine/core_history.py@«state.get("radius") or state.get("radius_earth")»` is the pattern — plus
+`engine/core_history.py@«state.get_optional("radius") or state.get_optional("radius_earth")»` is the pattern — plus
 `dynamo_rocky.ice_fraction_from_state`, where a declared value wins and a preset is the fallback. **A
 miss there is the design working.** Rather than an allowlist, those call sites move to a named entry
 point, so the intent is visible to the next reader and to the checker at once. **Whether a lookup is
@@ -4157,6 +4158,63 @@ rather than as C37 repeated — `radius` is supplied by `mass_radius`'s Result, 
 pass is a parse of 13 modules — the expectation is **no measurable gate time**, and the measured number
 goes in the implementing commit. ⚠ **Findings are reported in a table in C45 and repaired in a later
 brief**: a repair may move a value, and this brief is the instrument.
+
+### C45 (c) 2026-09-09 — the instrument runs, ⓐ failed as registered, and the disease is live in four places
+
+⚠ **The pre-registration's first outcome failed, and the cause is the pre-registration, not the tree.**
+C45 (b) required *"the clean tree **passes** — every miss either declared optional or matching a `Needs`
+item"* **and** required ⓒ, that C37 — whose `rotation_period` **was** a `Needs` item — **fail**. **Those
+two cannot both hold.** The implementation followed ⓒ, so ⓐ broke on the first run: 9 nodes flagged.
+**Recorded as a failure of the registration**, in the words it was registered in, with (b) left as
+written.
+
+⚠ **And the repair is not to narrow the rule — that is what pre-registration exists to prevent.** The
+verdict is **split into three classes, all of them printed on every run**, so nothing is hidden by being
+reclassified:
+
+| class | signature | verdict |
+|---|---|---|
+| **①** | the lookup misses on **every** sample body **and** the resulting `None` is filed in `Result.inputs` **under the same name** — *value absent, name present*, which is exactly how C37 stayed green | **FAIL**, outside a named baseline of the four existing instances |
+| **②** | a non-optional lookup that misses everywhere and is **not** in `Needs` — the misspelling shape | **FAIL** |
+| **③** | a `Needs` item that no roster body supplies, where the call site copes (a default, or the evidence filed under another name) | **counted, printed, baseline recorded — not a FAIL yet** (C50) |
+
+**What the first run found.**
+
+| class | count | where |
+|---|---|---|
+| **①** | **3 nodes · 4 keys** | `body_class` — `gas_mass_fraction`, `semi_major_axis_au` · `dynamo_rocky` — `dynamo_regime` · `interior_layers` — `porosity_cap` |
+| ② | **none** | — |
+| ③ | **8 nodes · 8 keys** | `core_material` in `cmb_heat_flux`, `core_energy_balance`, `core_entropy_production`, `core_thermal_history` · `ice_mass_fraction` in `dynamo_rocky`, `internal_heat_nontidal`, `interior_layers` · `interior_layers` also `differentiated`, `envelope_z`, `gas_mass_fraction`, `initial_porosity`, `tidal_heating` · `tidal_locking` — `permanent_quadrupole` |
+| record | 10 nodes | `Needs` items never looked up at all (they may arrive as another node's output) |
+| record | 2 nodes | lookups in the source that no sample body exercises — `heat_transport_mode` (5 keys), `tidal_heating` (2) |
+
+⚠ **So C37 was not one historical accident: its exact signature is live in four places today.** Those
+four are entered in the `CLASS1_KNOWN` baseline and **listed as C50** — repairing them can move values,
+which is a separate brief. **Anything outside that set fails the gate**, so the disease cannot spread
+quietly while the four wait.
+
+**How the classification was justified rather than assumed.** Four runs, each a full
+`check_contracts.py`:
+
+| # | run | result |
+|---|---|---|
+| ⓐ′ | the clean tree, log on | **`rc=0`, 136 s** — no `FAIL`, class ③ at its baseline (8 nodes · 8 keys), **1 182 lookups** compared against `Needs` and the AST literals |
+| — | the same tree, log **off** (`NEARSTARS_LOOKUP_LOG=0`) | **141 s** — ⚠ *five seconds **slower** than with the log, i.e. the log's cost is below this machine's run-to-run variance.* No opt-in is needed; the gate keeps it on |
+| **① fires** | one pair removed from `CLASS1_KNOWN` | **`rc=1`**, naming `dynamo_rocky: … dynamo_regime (C37 의 서명, 클래스 ①)` |
+| **② fires** | one letter changed in a live lookup (`age_gyr` → `age_gyr_zz`, reverted) | **`rc=1`**, naming `dynamo_rocky: 아무도 공급하지 않는 조회이고 Needs 에도 없다 — age_gyr_zz` |
+
+⚠ **So both FAIL classes are shown to fire and the clean tree is shown to pass** — the two halves of
+`engine/test_interior.py@«늘 발화하면 상수다»`. **And the timing is the surprise**: `check.sh`'s comment
+still says this check costs 77 s, while both runs today took 136–141 s. **That gap is not measured by
+these two runs** (they differ only in the log) and is not adjusted here; it wants a quiet machine, which
+this one is not tonight.
+
+⚠ **And ⓒ was not run as registered.** It asked for `ce7aff2d^`, where C37 was live; reaching it means
+grafting today's `state.py` and checker onto that tree, which is a build of its own. **What stands in its
+place is stronger in one way and weaker in another**: stronger because class ① fires on **today's** tree,
+in three nodes, so the signature is demonstrated on live code rather than on a reconstruction; weaker
+because the historical case itself is still unverified by this instrument. **Recorded as not run, with
+the substitute named.**
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
@@ -6180,6 +6238,47 @@ happening to the seat that quotes that rule.
 
 ⚠ **Otherwise nothing moved.** Both `k` declarations stand exactly as they were; this entry is the record
 that they cannot both be right about 70.
+
+### C50 — contracts list `Needs` that no body on the roster supplies, and four of them are C37's exact signature — **listed 2026-09-09, not started**
+
+**Found by the instrument C45 (b) registered and C45 (c) ran.** Every number below is a measurement of
+the current tree, not an estimate.
+
+**Class ① — the C37 signature, live in four places.** The recipe looks the key up, **no sample body
+supplies it**, and the resulting `None` is filed in `Result.inputs` **under that same name**, so the
+contract check saw a name and reported agreement:
+
+| node | key |
+|---|---|
+| `body_class` | `gas_mass_fraction` · `semi_major_axis_au` |
+| `dynamo_rocky` | `dynamo_regime` |
+| `interior_layers` | `porosity_cap` |
+
+**Class ③ — a `Needs` item no roster body supplies, where the call site copes** (a default, or the
+evidence filed under another name). **8 nodes, 8 distinct keys:**
+
+| key | nodes that declare it in `Needs` |
+|---|---|
+| `core_material` | `cmb_heat_flux` · `core_energy_balance` · `core_entropy_production` · `core_thermal_history` |
+| `ice_mass_fraction` | `dynamo_rocky` · `internal_heat_nontidal` · `interior_layers` |
+| `differentiated` · `envelope_z` · `gas_mass_fraction` · `initial_porosity` · `tidal_heating` | `interior_layers` |
+| `permanent_quadrupole` | `tidal_locking` |
+
+⚠ **Each of these is one of two different faults, and which one is not decidable from the count.**
+Either **the contract is wrong** — the value arrives from a composition preset or a call-site default,
+so it was never a *need* — or **the body declarations are missing** and the recipe has been running on a
+fallback nobody noticed. `core_material` looks like the first (the call sites pass `"fe_prem"` as a
+default); `permanent_quadrupole` and `envelope_z` look like the second. **Deciding each is the repair,
+and the repair can move values** — which is why this is listed rather than done.
+
+**What holds the line meanwhile.** The four class-① instances are named in
+`engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and **anything outside that set fails the gate**; the class-③
+count is recorded as a baseline (`CLASS3_BASELINE`) and printed on every run. ⚠ **So the disease is
+frozen at its measured size rather than fixed** — new instances of either class are caught immediately,
+and the existing ones are visible in the gate's own output on every run.
+
+⚠ **No owner decision is involved.** This is a repair of the engine's own declarations against its own
+contracts; nothing here is an art or physics choice.
 
 ## What closing all of these does not do
 

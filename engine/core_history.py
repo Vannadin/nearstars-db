@@ -378,7 +378,8 @@ def _from_state(state):
     return solve(mass_earth=state["mass_earth"], core_mass_fraction=state.get("core_mass_fraction"),
                  core_radius_earth=state.get("core_radius"), cmb_pressure_gpa=state.get("cmb_pressure"),
                  cmb_temperature=state.get("cmb_temperature"), potential_temperature=state.get("potential_temperature"),
-                 radius_earth=state.get("radius") or state.get("radius_earth"), age_gyr=state.get("age_gyr"),
+                 radius_earth=state.get_optional("radius") or state.get_optional("radius_earth"),   # C45 (b): 선호-대체
+                 age_gyr=state.get("age_gyr"),
                  core_initial_temperature=state.get("core_initial_temperature"),
                  mantle_initial_potential_temperature=state.get("mantle_initial_potential_temperature"),
                  core_material=state.get("core_material", "fe_prem"), body_class=state.get("body_class"))

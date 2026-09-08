@@ -282,7 +282,7 @@ def ice_fraction_from_state(state) -> tuple[float | None, str]:
     (the composition preset the body already chose with `composition_intent`; tuple slot 1 is the
     ice fraction) — referenced, not copied, so the interior and the dynamo know one number for the
     same body. No preset → (None, reason): the caller refuses by name instead of assuming 0."""
-    if state.get("ice_mass_fraction") is not None:
+    if state.get_optional("ice_mass_fraction") is not None:      # C45 (b): 선언이 이기고 없으면 프리셋
         return float(state["ice_mass_fraction"]), "declared ice_mass_fraction"
     intent = state.get("composition_intent")
     from interior import COMPOSITIONS  # 조회만. dynamo 가 interior 의 표를 복제하지 않는다.
@@ -293,7 +293,7 @@ def ice_fraction_from_state(state) -> tuple[float | None, str]:
 
 def _ladder_from_state(state, imf: float) -> Result:
     return ladder(mass_earth=state["mass_earth"],
-                  radius_earth=state.get("radius_earth", state.get("radius")),
+                  radius_earth=state.get_optional("radius_earth", state.get_optional("radius")),   # C45 (b)
                   conductor_phase=state.get("conductor_phase"),
                   stagnant_lid=state.get("stagnant_lid"),
                   age_gyr=state.get("age_gyr"),

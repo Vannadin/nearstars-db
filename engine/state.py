@@ -16,6 +16,7 @@
 """
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -35,28 +36,59 @@ class BodyState:
     units: dict[str, str] = field(default_factory=dict)
     results: dict[str, Result] = field(default_factory=dict)   # 노드 이름 -> Result
     parent_state: "BodyState | None" = None
+    #: 이 상태에 실제로 요청된 조회들 — `(노드, 키, 결과)`. C45 (b): 계약 검사가
+    #: `Result.inputs`(저자가 타이핑한 이름) 대신 **코드가 실제로 조회한 문자열** 을 보게
+    #: 하는 유일한 관측점이다. 런타임 비용은 append 하나이고 아무도 읽지 않으면 그냥 쌓인다.
+    lookups: list[tuple[str | None, str, str]] = field(default_factory=list)
+    #: 지금 돌고 있는 노드 — `run.solve` 가 레시피를 부르기 직전에 세운다.
+    current_node: str | None = None
 
     # ── 읽기 ────────────────────────────────────────────────────────────
-    def __contains__(self, key: str) -> bool:
-        try:
-            self[key]
-            return True
-        except Missing:
-            return False
-
-    def __getitem__(self, key: str) -> Any:
+    def _find(self, key: str) -> tuple[bool, Any]:
+        """조회 한 번의 순수한 부분 — 기록하지 않는다. 선언된 입력이 먼저, 그 다음 도출값."""
         if key in self.inputs:
-            return self.inputs[key]
+            return True, self.inputs[key]
         for r in self.results.values():
             if r.applicable and key in r.values:
-                return r.values[key]
+                return True, r.values[key]
+        return False, None
+
+    #: 조회 로그는 기본 켜짐 — 게이트가 이것으로 계약을 검사한다. `NEARSTARS_LOOKUP_LOG=0` 으로
+    #: 끄면 append 조차 하지 않는다(측정과 대량 스윕용). C45 (b).
+    _LOG = os.environ.get("NEARSTARS_LOOKUP_LOG", "1") != "0"
+
+    def _note(self, key: str, found: bool, kind: str) -> None:
+        if not BodyState._LOG:
+            return
+        self.lookups.append((self.current_node, key, f"{kind}{'hit' if found else 'miss'}"))
+
+    def __contains__(self, key: str) -> bool:
+        found, _ = self._find(key)
+        # 존재 시험은 그 자체가 "없을 수도 있다" 는 선언이므로 발견 대상이 아니다.
+        self._note(key, found, "contains-")
+        return found
+
+    def __getitem__(self, key: str) -> Any:
+        found, value = self._find(key)
+        self._note(key, found, "")
+        if found:
+            return value
         raise Missing(f"{self.name}: '{key}' 가 아직 없다")
 
     def get(self, key: str, default: Any = None) -> Any:
-        try:
-            return self[key]
-        except Missing:
-            return default
+        found, value = self._find(key)
+        self._note(key, found, "")
+        return value if found else default
+
+    def get_optional(self, key: str, default: Any = None) -> Any:
+        """없어도 되는 조회 — 선호-대체 패턴(선언이 이기고 없으면 프리셋/다른 이름)용.
+
+        ⚠ **`get` 과 동작은 같고 기록만 다르다.** C45 (b): 어떤 미스가 설계이고 어떤 미스가
+        C37 인지는 도구의 판단이 아니라 **호출부의 선언** 이어야 한다. 그래서 계약 검사는
+        여기로 들어온 미스를 발견으로 세지 않는다."""
+        found, value = self._find(key)
+        self._note(key, found, "optional-")
+        return value if found else default
 
     def of_parent(self, key: str) -> Any:
         """부모의 값을 읽는다. scope=parent 엣지가 이 경로를 쓴다."""

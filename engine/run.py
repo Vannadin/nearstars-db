@@ -71,6 +71,7 @@ def solve(body: BodyState, g: dict, verbose: bool = False) -> dict[str, int]:
                     if p == 0 and node not in missing:
                         missing.append(node)
                     continue
+                body.current_node = node        # C45 (b): 조회 로그가 노드를 알 수 있게
                 try:
                     res: Result = fn(body)
                 except Missing as exc:
@@ -81,6 +82,7 @@ def solve(body: BodyState, g: dict, verbose: bool = False) -> dict[str, int]:
                     stalled[node] = str(exc)
                     continue
                 body.record(node, res)
+                body.current_node = None
             if body.resolved == before:
                 break                      # 값이 안 움직인다. 수렴했다.
         stats["not_ready"] += len(stalled)
