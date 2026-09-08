@@ -2807,12 +2807,12 @@ report is at `/Users/vana/Desktop/NearStars-artifacts/2026-09-09-c20-entropy-ban
 
 | camp | printed | grade |
 |---|---|---|
-| **high** | Pozzo+ 2012 Table 1 — `k_CMB` **100** for core mixtures (pure Fe 144/140), `k_ICB` **150**; text *"DAC … 90–130 at the top of the outer core"* | **held** |
-| high | Zhang+ 2022 Results — hcp Fe-9Si *"**∼100 to 110** W m⁻¹ K⁻¹ at ∼140 GPa and 4 000 K … unexpectedly close to that of pure hcp Fe (**100 ± 10**) (Ohta+ 2016)"*; Fe-(4.3–9.0)Si ∼78 at 120–140 GPa, 2 500 K | **held** (Europe PMC mirror) |
-| high | de Koker+ 2012 — ⚠ **no single `k_CMB` in the text**; conductive flux at the top of the core *"**14–20 TW**"*, and Fig. 3 read by eye (±5): liquid Fe ≈130–140, Fe₇Si ≈115–125, Fe₃Si ≈95–105 W/m·K — **figure-read, barred from any board row** | **held** (Europe PMC mirror) |
-| high | Gomi+ 2013 abstract — outermost core *"greater than **90**"* | abstract only |
-| **low** | Hsieh+ 2020 — Fe-15Si *"about **20**"* at ∼132 GPa, Fe-4Si ≈40 saturated, pure Fe ≈120–130 near CMB pressure | **held** |
-| low | Konôpková+ 2016 abstract — *"**18–44** watts per metre per kelvin"*, solid Fe, direct measurement | abstract only |
+| **high** | Pozzo+ 2012 ([`2012Natur.485..355P`](https://ui.adsabs.harvard.edu/abs/2012Natur.485..355P)) Table 1 — `k_CMB` **100** for core mixtures (pure Fe 144/140), `k_ICB` **150**; text *"DAC … 90–130 at the top of the outer core"* | **held** |
+| high | Zhang+ 2022 ([`2022PNAS..11919001Z`](https://ui.adsabs.harvard.edu/abs/2022PNAS..11919001Z)) Results — hcp Fe-9Si *"**∼100 to 110** W m⁻¹ K⁻¹ at ∼140 GPa and 4 000 K … unexpectedly close to that of pure hcp Fe (**100 ± 10**) (Ohta+ 2016 ([`2016Natur.534...95O`](https://ui.adsabs.harvard.edu/abs/2016Natur.534...95O)))"*; Fe-(4.3–9.0)Si ∼78 at 120–140 GPa, 2 500 K | **held** (Europe PMC mirror) |
+| high | de Koker+ 2012 ([`2012PNAS..109.4070D`](https://ui.adsabs.harvard.edu/abs/2012PNAS..109.4070D)) — ⚠ **no single `k_CMB` in the text**; conductive flux at the top of the core *"**14–20 TW**"*, and Fig. 3 read by eye (±5): liquid Fe ≈130–140, Fe₇Si ≈115–125, Fe₃Si ≈95–105 W/m·K — **figure-read, barred from any board row** | **held** (Europe PMC mirror) |
+| high | Gomi+ 2013 ([`2013PEPI..224...88G`](https://ui.adsabs.harvard.edu/abs/2013PEPI..224...88G)) abstract — outermost core *"greater than **90**"* | abstract only |
+| **low** | Hsieh+ 2020 ([`2020NatCo..11.3332H`](https://ui.adsabs.harvard.edu/abs/2020NatCo..11.3332H)) — Fe-15Si *"about **20**"* at ∼132 GPa, Fe-4Si ≈40 saturated, pure Fe ≈120–130 near CMB pressure | **held** |
+| low | Konôpková+ 2016 ([`2016Natur.534...99K`](https://ui.adsabs.harvard.edu/abs/2016Natur.534...99K)) abstract — *"**18–44** watts per metre per kelvin"*, solid Fe, direct measurement | abstract only |
 | re-cited | Ohta+ 2016 prints no number in its abstract; Hsieh+ 2020 re-cites it as **≈226** | abstract only |
 
 ⚠ **The sharpest form of the split is inside one alloy family**: for comparable silicon, Hsieh+ 2020
@@ -2822,22 +2822,23 @@ between camps rather than a measurement.
 
 #### `H_core` — the literature moves one way only
 
-Our ceiling **1.5 pW/kg** is Nimmo+ 2004's own model requirement (*"The core contains 400 ppm
-potassium"*, Table 4), and the partition experiments since then print **ceilings**: Gessmann & Wood 2002
-*"highest possible K content is about **250 ppm**"*, Bouhifd+ 2007 *"∼25 or ∼250 ppm"*, Watanabe+ 2014
-*"less than **40 ppm** … less than 0.17 TW"*, Gaidos+ 2010 §2 *"a few tens of ppm"* — all abstract only
+Our ceiling **1.5 pW/kg** is Nimmo+ 2004 ([`2004GeoJI.156..363N`](https://ui.adsabs.harvard.edu/abs/2004GeoJI.156..363N))'s own model requirement (*"The core contains 400 ppm
+potassium"*, Table 4), and the partition experiments since then print **ceilings**: Gessmann & Wood 2002 ([`2002E&PSL.200...63G`](https://ui.adsabs.harvard.edu/abs/2002E%26PSL.200...63G))
+*"highest possible K content is about **250 ppm**"*, Bouhifd+ 2007 ([`2007PEPI..160...22B`](https://ui.adsabs.harvard.edu/abs/2007PEPI..160...22B)) *"∼25 or ∼250 ppm"*, Watanabe+ 2014 ([`2014PEPI..237...65W`](https://ui.adsabs.harvard.edu/abs/2014PEPI..237...65W))
+*"less than **40 ppm** … less than 0.17 TW"*, Gaidos+ 2010 ([`2010ApJ...718..596G`](https://ui.adsabs.harvard.edu/abs/2010ApJ...718..596G)) §2 *"a few tens of ppm"* — all abstract only
 except Gaidos, which is held. On the textbook conversion (natural K ≈ 3.5 × 10⁻⁹ W/kg) those are
 **≈0.09 · 0.87 · 0.14 pW/kg**. ⚠ **So the axis is not symmetric: every later constraint is below our
 ceiling**, and C25 (c) measured what that costs — the reference row's only positive corner falls
-**+34.7 → −4.7 → −54.7** MW/K across 400 → 250 → 40 ppm.
+**+34.7 → −4.7 → −54.7** MW/K across 400 → 250 → 40 ppm **at C20's own rate (−36 K/Gyr)** — and
+**+28.0 → −11.5 → −61.5** at the registered −33 K/Gyr, which is what C25 (c)'s table prints.
 
 #### `Q_CMB` and the inner core — where our outputs sit against the printed ranges
 
 | quantity | ours | printed |
 |---|---|---|
-| present `Q_CMB` | **5.07 TW** (C20), 4.91 at C14's closure | **5–17 TW** (Hsieh+ 2020 text, held); Nimmo 2007 6–14; Labrosse 2015 isentropic 13.25 at present; Zhang+ 2022 mantle-side ∼10–12 |
+| present `Q_CMB` | **5.07 TW** (C20), 4.91 at C14's closure | **5–17 TW** (Hsieh+ 2020 text, held); Nimmo 2007 ([`2007cody.book...31N`](https://ui.adsabs.harvard.edu/abs/2007cody.book...31N)) 6–14; Labrosse 2015 ([`2015PEPI..247...36L`](https://ui.adsabs.harvard.edu/abs/2015PEPI..247...36L)) isentropic 13.25 at present; Zhang+ 2022 mantle-side ∼10–12 |
 | adiabatic requirement | `Q_ad` 4.31 (k 30) · 7.18 (k 50) · 10.05 (k 70) TW | **15–16 TW** at k 100 (Pozzo+ 2012 Table 2); ≈3 TW at k ≈20 (Hsieh+ 2020) |
-| inner-core age | ⚠ **never nucleates in 4.54 Gyr** | 0.37–1.90 Gy (Nimmo 2007, four studies) · 0.3–1.0 Ga (Pozzo Table 2) · <0.7 Ga (Ohta) · **∼0.5 to >2.5 Ga** (Bono+ 2019, *"span set by k"*) · >2 Ga at k ≈20 (Hsieh) |
+| inner-core age | ⚠ **never nucleates in 4.54 Gyr** | 0.37–1.90 Gy (Nimmo 2007, four studies) · 0.3–1.0 Ga (Pozzo Table 2) · <0.7 Ga (Ohta) · **∼0.5 to >2.5 Ga** (Bono+ 2019 ([`2019NatGe..12..143B`](https://ui.adsabs.harvard.edu/abs/2019NatGe..12..143B)), *"span set by k"*) · >2 Ga at k ≈20 (Hsieh) |
 
 ⚠ **Our `Q_CMB` sits at the floor of the printed range, and the comparison collapses into the `k`
 choice**: high `k` needs 13–16 TW for the adiabat alone — three times what we have — while low `k` needs
@@ -2869,13 +2870,100 @@ depression factor (0.80), which is outside P4's scope and is not touched here.
 
 | # | decision | candidates | what each costs |
 |---|---|---|---|
-| ① | **which horn of C25** | measured `T_c` 3 760 K · `Q_C`-in-range 4 155 K · keep C14's root 3 978 K | inner core and a positive band, at the price of contradicting the published flux · the published flux, at the price of `e_l` = `e_g` = 0 · the closure's own consistency, with the second horn's cost and none of the first's gain |
+| ① | **which horn of C25** — ⚠ *where each number comes from is C25 (e); the two are not the same kind of number* | measured `T_c` 3 760 K · `Q_C`-in-range 4 155 K · keep C14's root 3 978 K | inner core and a positive band, at the price of contradicting the published flux · the published flux, at the price of `e_l` = `e_g` = 0 · the closure's own consistency, with the second horn's cost and none of the first's gain |
 | ② | **how `k_core` is carried** | keep Nimmo's 50 ± 20 (30–70) · elect the low camp (Hsieh ≈20 / Konôpková 18–44) · elect the high camp (Pozzo · Zhang · de Koker, 95–140) · widen to the printed span 18–226 · unify with the sub-Neptune declaration (C49) | our current band is a subset nothing narrows · low `k` makes the budget positive nearly everywhere and needs no potassium (Nimmo Table 6) · high `k` closes the budget on its own (every row negative at k 100) · widening makes the answer a surer *cannot-say* · unification is a housekeeping decision with a physics consequence |
 | ③ | **whether `ΔE` > 0 is our threshold** | the paper's own `ΔE` > 0, which it calls a threshold-avoidance · the printed required excess **0.1–1 000 MW/K** | the first is reachable in the 3 760 rows · ⚠ **no cell in C25 (c) reaches the upper end of the second**, so under that reading the answer is *fails* everywhere |
 
 ⚠ **Nothing here is chosen, and nothing in the engine moved.** This subsection is the literature laid
 beside our numbers so that the three decisions can be made on printed values rather than on our own
 outputs.
+
+### C25 (e) 2026-09-09 — where each horn's number comes from, and they are not the same kind of number
+
+**Read by the parallel seat (P5), transcribed with labels and grades.** Report:
+`/Users/vana/Desktop/NearStars-artifacts/2026-09-09-c20-entropy-band/P5-c25-two-horns-sources.md`.
+⚠ **Nothing is selected here**, and the two horns turn out to be different *kinds* of quantity — which
+is itself the reason the choice cannot be made by comparing them.
+
+#### Horn 1 — the declared 3 760 K is an **upper bound**, from a melting anchor
+
+`engine/bodies/earth.yaml`'s `core_cmb_temperature: 3760.0` comes from Sinmyo, Hirose & Ohishi 2019
+([`2019E&PSL.510...45S`](https://ui.adsabs.harvard.edu/abs/2019E%26PSL.510...45S), **abstract only**),
+whose abstract prints it in these words:
+
+> *"A small extrapolation of the present experimental results yields a melting point of **5500 ± 220 K
+> at the ICB** … Accounting for the melting temperature depression due to core-alloying elements, **the
+> upper bounds** for the temperature at the ICB and the core-mantle boundary (CMB) **are estimated to be
+> 5120 ± 390 K and 3760 ± 290 K**, respectively. Such low present-day CMB temperature suggests that the
+> lowermost mantle has avoided global melting."*
+
+**What kind of number that is:** a pure-iron melting curve measured to 290 GPa in a resistance-heated
+DAC, extrapolated to 330 GPa, reduced by an alloy depression, then carried down the core adiabat — a
+**mineral-physics upper bound**, not a seismological or heat-flow measurement.
+
+⚠ **And our own text labels it the other way round.** `engine/cmb_flux.py@«Q_CMB 는 하한이다»` calls the
+declared core-side temperature a **lower** bound. **The engine's argument for that is about the engine's
+own biases** — the D″ jump is set by a CMB flux this repository does not derive, and two named biases
+point down — **and it stands**; what does not stand is applying "lower bound" to *Sinmyo's* number,
+which the paper prints as an upper bound. The module keeps its own reasoning, with the paper's label
+recorded beside it.
+
+**Every printed alternative is higher, and the mantle solidus brackets exactly this gap:**
+
+| core-side `T_CMB` | source | grade |
+|---|---|---|
+| **3 760 ± 290** — *upper bound* | Sinmyo+ 2019 | abstract only |
+| 3 820 | Yukutake 2000 ([`2000PEPI..121..103Y`](https://ui.adsabs.harvard.edu/abs/2000PEPI..121..103Y)), thermal history | abstract only |
+| **4 100 ± 300** assumed · **4 155** solved · 4 161 adiabat at CMB | Nimmo+ 2004 Table 1 · Table 4 · Fig. 1 | **held** |
+| ≈4 050 implied | Anzellini+ 2013 ([`2013Sci...340..464A`](https://ui.adsabs.harvard.edu/abs/2013Sci...340..464A))'s ICB 6 230 ± 500 K carried down an adiabat — **the reader's arithmetic, not printed** | abstract only |
+| *ceiling* pyrolite solidus **3 570 ± 200** | Nomura+ 2014 ([`2014Sci...343..522N`](https://ui.adsabs.harvard.edu/abs/2014Sci...343..522N)) | abstract only |
+| *ceiling* chondritic solidus **4 150 ± 150** | Andrault+ 2011 ([`2011E&PSL.304..251A`](https://ui.adsabs.harvard.edu/abs/2011E%26PSL.304..251A)) | **held** |
+| *ceiling* peridotite solidus **4 180 ± 150** | Fiquet+ 2010 ([`2010Sci...329.1516F`](https://ui.adsabs.harvard.edu/abs/2010Sci...329.1516F)) | abstract only |
+
+⚠ **So the horn is also a choice about whether the lowermost mantle is molten:** 3 760 K stays below
+every solidus above; 4 100–4 160 K crosses Nomura's and touches Andrault's and Fiquet's. **Sinmyo's own
+closing sentence is that argument**, and it is the one place where the two horns argue with each other
+through a third quantity rather than directly.
+
+#### Horn 2 — the 4.5–9 TW range is Anderson 2002's, re-cited, and it is the oldest number in the set
+
+Nimmo+ 2004 §5.1, verbatim (**held**):
+
+> *"The total current heat flux from the core is 9 TW, which lies just within the **4.5–9 TW range
+> recently proposed by Anderson (2002)** … This total heat flux exceeds that carried by the adiabat,
+> 6.2 TW, so that the outer core is likely to be convecting."*
+
+**So the range is a re-citation** of Anderson 2002
+([`2002PEPI..131....1A`](https://ui.adsabs.harvard.edu/abs/2002PEPI..131....1A), **abstract only**,
+whose abstract prints *"about 8 TW"* and *"P(conduction) = 6.8 TW"* — the 4.5–9 span is in the body we
+do not hold). **Every later review keeps the floor near 5 and raises the ceiling:**
+
+| range | who | grade | relation to 4.5–9 |
+|---|---|---|---|
+| **4.5–9** | Anderson 2002 via Nimmo+ 2004 | Nimmo held, Anderson abstract only | the horn |
+| 6–14 | Nimmo 2007 | abstract only | same author, three years later |
+| 5–15 | Lay+ 2008 ([`2008NatGe...1...25L`](https://ui.adsabs.harvard.edu/abs/2008NatGe...1...25L)) | abstract only | ceiling +6 |
+| **5–17** | Hsieh+ 2020 | **held** | widest |
+| **10–12** | Zhang+ 2022 | **held** | ⚠ **entirely above 9** |
+| ≈3 (floor at k ≈ 20) · 13.25 · 15–16 (isentropic at high k) | Hsieh+ 2020 · Labrosse 2015 · Pozzo+ 2012 | held · abstract only · held | these are *adiabatic floors*, not measurements |
+
+⚠ **Our engine's 2.75 TW is below every floor in that table**, so *"outside the range"* does not change
+whichever range is adopted — the ceiling choice is not what decides our verdict.
+
+#### The coupling, which is why this is one decision and not two
+
+In Nimmo's model the two horns are **one balance**: the bottom-boundary-layer flux of eqs 37–39 *is*
+`Q_C`. A lower `T_c` shrinks the CMB jump that drives `F_b` — which is exactly why C25 (c) measures
+**2.750 TW at 3 760 K and 7.693 TW at 4 155 K**. ⚠ **So the owner is not choosing between a temperature
+and a flux; they are choosing which of Nimmo's two anchors to keep and which to override with Sinmyo.**
+
+**The two beliefs, in the owner's own terms (P5 §(c), transcribed):**
+
+- **Horn 1** — *"I believe the 2019 iron melting curve plus an alloy depression, carried down the
+  adiabat, gives an upper limit on the core-side CMB temperature, and I take that limit as the value —
+  which keeps the lowermost mantle unmelted and makes our boundary-layer heat flux small."*
+- **Horn 2** — *"I believe the 2002 heat-flow synthesis Nimmo re-cites, whose 9 TW ceiling every later
+  review has raised to 14–17, is the range a present-day Earth core flux must fall inside."*
 
 ### C26 — the superionic-ice representation above ice_x's 1 800 K ceiling — **listed 2026-09-04, not started**
 
