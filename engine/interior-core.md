@@ -79,7 +79,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C31 | Dante's tidal and dependent board rows | built 2026-09-05 (main) | — |
 | **C32** | band output and handoff choices | **structure built 2026-09-05; instances landing one at a time** | built: albedo, stagnant-lid ceiling, greenhouse cases, `k_c`. Open: whoever picks the ten unchosen options that `engine/tools/unchosen_defaults.py` counts |
 | C33 | citations resolved against the document | built 2026-09-05 | — |
-| **C34** | what the transport table is fed, and where its thresholds come from | ⚠ **does not close by choosing — waiting on C47** (2026-09-07) | The four candidates span 2.203× and are **not verdict-neutral**. On `transport_mode`, unchanged, the low end (tidal + radiogenic, already fed) still reproduces **3 of 4** of the document's anchor labels to the high end's 1. ⚠ On the **C46 ladder cell** it reverses — low **2 of 4**, high **2 of 3 scored plus the Moon 1 of 1 independent** — because naming the gap between the stagnant ceiling and the plate rung took away a free pass Earth's low feed had been collecting. ⚠ **And the four candidates are not four readings of one quantity — they are four quantities, two of them disqualified** (0.0418 is radiogenic production, the wrong quantity; 0.08 has no source in any version of the document and is used there under two labels). Of the two survivors the measured 0.0921 exists for no body in this project, and the computable 0.0769 is a mobile-lid law that C47 (b) shows failing on Mars. **So this is not a choice among candidates any more, and putting one to the owner would be asking them to pick among things that are all disqualified.** Held until C47 closes, which will re-draw the candidate set. Still open with it: Venus fails under both feeds, and the plate ceiling 0.135 remains authored |
+| **C34** | what the transport table is fed, and where its thresholds come from | ⚠ **re-drawn 2026-09-09 by C47's closing — the question is what the table is *declared* to be fed, and the options are the owner's** (earlier status kept: *does not close by choosing — waiting on C47*, 2026-09-07) | The four candidates span 2.203× and are **not verdict-neutral**. On `transport_mode`, unchanged, the low end (tidal + radiogenic, already fed) still reproduces **3 of 4** of the document's anchor labels to the high end's 1. ⚠ On the **C46 ladder cell** it reverses — low **2 of 4**, high **2 of 3 scored plus the Moon 1 of 1 independent** — because naming the gap between the stagnant ceiling and the plate rung took away a free pass Earth's low feed had been collecting. ⚠ **And the four candidates are not four readings of one quantity — they are four quantities, two of them disqualified** (0.0418 is radiogenic production, the wrong quantity; 0.08 has no source in any version of the document and is used there under two labels). Of the two survivors the measured 0.0921 exists for no body in this project, and the computable 0.0769 is a mobile-lid law that C47 (b) shows failing on Mars. **So this is not a choice among candidates any more, and putting one to the owner would be asking them to pick among things that are all disqualified.** Held until C47 closes, which will re-draw the candidate set. Still open with it: Venus fails under both feeds, and the plate ceiling 0.135 remains authored |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **landed 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled two ways, and the contract check cannot see it | **closed 2026-09-07** | ⚠ **Two spellings, not three** — `rotation_period_days` is a comment recording a pre-converted DB value, read by nothing. `dynamo_rocky` looked up `rotation_period` while every supplier writes `rotation_period_h`, so it received **None on every body** and recorded that as evidence. Unified across code, contract (en+ko), chain label and the evidence key; no verdict moves, because the value was never in a branch |
@@ -3060,6 +3060,43 @@ verdict is carried by one declaration, not by its mass and radius** — `composi
 (ice 0.00) gives 197.38 µT against `water` (ice 0.50) giving 0.3948 µT, a factor 500, and the board's own
 9.0e23 kg / 3400 km is 5 467 kg/m³ = 0.991 ρ⊕, rocky, which runs opposite to declaring the ice-rich
 preset (real Ganymede is 1 936 kg/m³). Both are in `c32-d-e-epseri-cassandra-notes.ko.md`.
+
+### C34 re-drawn 2026-09-09 — C47 closed without filling, so the question is what the table is *declared* to be fed
+
+⚠ **The computable survivor did not survive.** C34 had narrowed to **0.0769 W/m²** —
+`mantle_flux.implied_flux`, the only candidate that is both the right quantity and computable for our
+bodies — with one defect recorded against it: it is a **mobile-lid** law and C47 (b) measured it handing
+Mars **85.7 mW/m²** against Reese's own **15–30** ceiling. **The stagnant-lid law that would have
+replaced it is now closed as *named, not filled*** (C47 (k): `q_E/q_M` = 1.5114 against the 3.68 / 4.78
+the Urey ratios need). **So there is no computed surface-flux candidate that reproduces Mars**, and
+waiting for one is no longer a plan.
+
+**That changes the question rather than answering it.** C34 was *"which of four candidates is right"*;
+with two disqualified, one uncomputable and one wrong-lid, it becomes **"what does this engine declare
+it feeds the §6.2 thresholds, and with what label"** — the same shape as `MANTLE_SHARE = 0.70` or
+`T_s = 293 K`, which are declarations rather than measurements. ⚠ **A declaration is the owner's, so the
+options are laid out and none is chosen here.**
+
+| option | what it declares | grade of the source | where it is verified, where it fails | what the table then returns | the cost |
+|---|---|---|---|---|---|
+| **(a) keep the current feed** — tidal + radiogenic, **0.0418** on Earth | *"the thresholds are read against the body's internal production, not its surface flow"* | measured radiogenic sets (`radiogenic.py`), **analog** | reproduces **2 of 4** §6.2 anchor labels (Mercury 15.75 ✓, Mars 15.87 ✓); **fails Earth 41.80** and Venus 37.75 | the labels the engine emits today | ⚠ C47's finding stands against it: **it is a different quantity from the one the thresholds are defined on**, and on the C46 ladder Earth reads *plutonic-squishy lid* |
+| **(b) declare `implied_flux`** — **0.0769** on Earth | *"the thresholds are read against a modelled surface flow"* | Nimmo+ 2004 eqs 34–36, **analog**, reads no measurement | right quantity; **fails Mars** at 2.9–5.7× Reese's ceiling (C47 (b)) | a surface flow for every body, Mars included | ⚠ a **mobile-lid** law on the archetypal stagnant lid, and C47 (k) closed the stagnant-lid alternative without filling it |
+| **(c) declare the measured flow, and refuse where it does not exist** — **0.0921** on Earth | *"only a measured surface heat flow may be fed"* | Davies & Davies 2010, **measured** | exists for **three solar-system bodies and none of ours** | `regime_candidates` and **no single regime** for every NearStars body | ⚠ the table would never place any body this project actually ships |
+| **(d) refuse to feed it at all** until a law reproduces Mars | *"no regime is emitted while no law reproduces both bodies"* | — | — | what `solve_mode` already does when more than one regime stands | ⚠ C46's ladder and `dynamo_rocky`'s regime gate both lose an input that exists today |
+| ~~0.08~~ | — | ⚠ **disqualified**, no source in any version of the document and the same number used under two labels | — | — | — |
+
+**Two things that ride on the choice, so it is not only C34's.**
+
+- **C46's ladder reads the same input.** Its rungs are scored on the fed quantity, and C46 (b)'s measured
+  finding — *the flux is a sieve, and it sieves almost nothing* — was measured on the current feed. **A
+  different declaration re-scores the ladder**, which is why this row and C46's move together.
+- **`dynamo_rocky`'s regime gate** takes `heat_transport_mode` through a `status: gap` edge
+  (`engine/chain.yaml@«mode 는 라벨이고 열류는 수다»`), so option (d) removes a value that a downstream
+  consumer is already declared to want, even though it does not read it yet.
+
+⚠ **Nothing in the engine changed with this entry, and no value moved.** The current feed is unchanged
+and still emits what it emitted yesterday; what changed is that **the item is no longer waiting on C47**,
+and what it waits on now is a declaration.
 
 ### C35 — `stellar_wind` computes, and has no document to be a recipe in — **listed 2026-09-06, deliberately not registered**
 
