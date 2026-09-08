@@ -329,7 +329,7 @@ svg{display:block}
 
 <div class="top">
   <h1>의존 사슬 탐색기</h1>
-  <p class="sub">노드 __NN__개, 연결 __NE__개 전부. 값 하나에 올려두면 그 값이 무엇에 기대고 무엇을 흔드는지, 그리고 <b>이미 내보낸 값 중 무엇이 다시 열리는지</b> 보인다. 눌러서 고정.</p>
+  <p class="sub">노드 __NN__개, 연결 __NE__개 전부. 값 하나에 올려두면 그 값이 무엇에 기대고 무엇을 흔드는지, 그리고 <b>이미 내보낸 값 중 무엇이 다시 열리는지</b> 보인다. 눌러서 고정 — 고정된 동안은 다른 노드를 지나도 바뀌지 않고, 같은 노드를 다시 누르면 풀린다.</p>
   <div class="bar">
     <span class="tg requires" data-k="requires" data-on="1"><span class="dot"></span>값을 넘긴다 __CR__</span>
     <span class="tg selects" data-k="selects" data-on="1"><span class="dot"></span>방식을 고른다 __CS__</span>
@@ -405,8 +405,8 @@ for (const id in D.nodes) {
   }
   const t = mk('text', { x: n.x + NW / 2, y: n.y + NH / 2 + 4.5, 'text-anchor': 'middle' });
   t.textContent = n.label; g.appendChild(t);
-  g.addEventListener('mouseenter', () => show(id));
-  g.addEventListener('focus', () => show(id));
+  g.addEventListener('mouseenter', () => { if (!pinned) show(id); });
+  g.addEventListener('focus', () => { if (!pinned) show(id); });
   g.addEventListener('click', () => { pinned = pinned === id ? null : id; show(id); });
   gN.appendChild(g); nEls[id] = g;
 }
