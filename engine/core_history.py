@@ -85,13 +85,28 @@ def rates(t_c: float, t_m: float, p: dict, t_gyr_from_present: float) -> dict:
     side = _core_side(p["material"], p["p_cmb"], t_c, p["r_cmb"], p["m_core"])
     # Nimmo starts both at 4800 K (Fig. 2 caption): zero jump at t = 0. F_b ∝ ΔT^(4/3) → 0 continuously (eqs 37–38),
     # so Q_C = 0 for ΔT ≤ 0 is the continuous limit, not a patch. The mantle cools first; the core follows.
-    q_c = cf.bottom_layer(t_c, t_m_base, p["r_cmb"])["q_c_w"] if t_c > t_m_base else 0.0
+    notes = []
+    if t_c > t_m_base:
+        bl = cf.bottom_layer(t_c, t_m_base, p["r_cmb"])
+        if bl["domain_refusal"] is not None:      # Brief 155: the callee refused; the integrator stops here by name
+            return {"refused": bl["domain_refusal"]}
+        q_c = bl["q_c_w"]
+        if bl["extrapolation_note"]:
+            notes.append(bl["extrapolation_note"])
+    else:
+        q_c = 0.0
     q_r = side["m_core"] * p["h_core"]
     dtc = -(q_c - q_r) / side["q_tilde"]          # K/s; negative = cooling
-    q_m = mf.implied_flux(t_m, p["g"], p["r_p"])["q_m_w"]
+    top = mf.implied_flux(t_m, p["g"], p["r_p"])
+    if top["domain_refusal"] is not None:
+        return {"refused": top["domain_refusal"]}
+    q_m = top["q_m_w"]
+    if top["extrapolation_note"]:
+        notes.append(top["extrapolation_note"])
     h_m = p["h_m_present_w"] * rg.history_factor(t_gyr_from_present)
     dtm = (h_m - q_m + q_c) / (p["m_mantle"] * mf.C_PM * math.sqrt(p["r_b"]))
-    return {"dtc": dtc, "dtm": dtm, "q_c": q_c, "q_m": q_m, "h_m": h_m, "q_r": q_r, "side": side}
+    return {"dtc": dtc, "dtm": dtm, "q_c": q_c, "q_m": q_m, "h_m": h_m, "q_r": q_r, "side": side,
+            "extrapolation_notes": tuple(notes)}
 
 
 def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: float = STEP_MYR) -> dict:
@@ -100,9 +115,15 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
     h = age_gyr * GYR_S / n
     t_c, t_m = float(t_c0), float(t_m0)
     rows = []
+    extrapolated = {"eqs 34–36": 0, "eqs 37–39": 0}
     for i in range(n + 1):
         t_now = -age_gyr + i * age_gyr / n            # Gyr from present (≤ 0)
         r1 = rates(t_c, t_m, params, t_now)
+        if "refused" in r1:
+            return {"refused": r1["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
+                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
+        for note in r1["extrapolation_notes"]:
+            extrapolated["eqs 34–36" if "eqs 34–36" in note else "eqs 37–39"] += 1
         side = r1["side"]
         corners = {}
         for k in K_CORNERS:
@@ -120,14 +141,23 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
         # classical RK4 on (T_c, T_m)
         k1 = (r1["dtc"], r1["dtm"])
         r2 = rates(t_c + 0.5 * h * k1[0], t_m + 0.5 * h * k1[1], params, t_now + 0.5 * h / GYR_S)
+        if "refused" in r2:
+            return {"refused": r2["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
+                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
         k2 = (r2["dtc"], r2["dtm"])
         r3 = rates(t_c + 0.5 * h * k2[0], t_m + 0.5 * h * k2[1], params, t_now + 0.5 * h / GYR_S)
+        if "refused" in r3:
+            return {"refused": r3["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
+                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
         k3 = (r3["dtc"], r3["dtm"])
         r4 = rates(t_c + h * k3[0], t_m + h * k3[1], params, t_now + h / GYR_S)
+        if "refused" in r4:
+            return {"refused": r4["refused"], "rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n,
+                    "refused_at": {"t_gyr": t_now, "t_c": t_c, "t_m": t_m}}
         k4 = (r4["dtc"], r4["dtm"])
         t_c += h * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]) / 6.0
         t_m += h * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) / 6.0
-    return {"rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n}
+    return {"rows": rows, "n_steps": n, "step_myr": age_gyr * 1000.0 / n, "extrapolated_steps": extrapolated}
 
 
 def window_summary(rows: list[dict], window_gyr: float = WINDOW_GYR) -> dict:
@@ -158,6 +188,8 @@ def sweep(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: floa
     out = {}
     for label, s in (("h", step_myr), ("h/2", step_myr / 2.0), ("h/4", step_myr / 4.0)):
         hist = integrate(params, t_c0, t_m0, age_gyr, s)
+        if "refused" in hist:
+            return {"refused": hist["refused"], "h/4": {"hist": hist}}
         ws = window_summary(hist["rows"])
         nominal = (cf.K_CORE, ce.H_CORE)
         vals = [r["delta_e_corners"][nominal] if nominal in r["delta_e_corners"] else None for r in hist["rows"]]
@@ -211,10 +243,16 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
     try:
         if run_sweep:
             sw = sweep(params, core_initial_temperature, mantle_initial_potential_temperature, age_gyr)
+            if "refused" in sw:
+                return out_of_domain(RECIPE, VERSION, f"적분이 법칙의 선언 정의역 밖에서 시작하거나 그리로 갔다 — {sw['refused']}",
+                                     inputs=inputs, refs=REFS)
             best = sw["h/4"]
             converged, width = sw["converged"], sw["convergence_width"]
         else:
             hist = integrate(params, core_initial_temperature, mantle_initial_potential_temperature, age_gyr)
+            if "refused" in hist:
+                return out_of_domain(RECIPE, VERSION, f"적분이 법칙의 선언 정의역 밖에서 시작하거나 그리로 갔다 — {hist['refused']}",
+                                     inputs=inputs, refs=REFS)
             ws = window_summary(hist["rows"])
             best = {"hist": hist, "summary": ws, "t_c_present": hist["rows"][-1]["t_c"],
                     "t_m_present": hist["rows"][-1]["t_m"], "case": ws["inner_core_case"]}
@@ -260,8 +298,15 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
               f"{nuc} · "
               f"ΔE_min(3.1 Gyr) 네 모서리 {ws['delta_e_min_band'][0]/mw:+.0f}…{ws['delta_e_min_band'][1]/mw:+.0f} MW/K → "
               f"{values['entropy_history_verdict']}. 지구 보정 모형과의 일관성이지 이 천체의 실제 값이 아니다")
+    ex = best["hist"].get("extrapolated_steps", {})
+    n_steps = best["hist"]["n_steps"] + 1
+    extrap_note = (f"⚠ declared extrapolation below the laws' expansion points (Brief 155): eqs 34–36 evaluated below "
+                   f"T_0 = {mf.T_0:.0f} K on {ex.get('eqs 34–36', 0)} of {n_steps} sampled steps; eqs 37–39 evaluated at "
+                   f"T_a below T_1 = {cf.T_1:.0f} K on {ex.get('eqs 37–39', 0)} of {n_steps}. Both laws' printed domain "
+                   f"edge is 4800 K above and open below ({mf.EQ35_DOMAIN.anchor}); below the expansion point the paper "
+                   "prints no limit, so the call is allowed and counted here rather than refused.")
     return Result(recipe=RECIPE, version=VERSION, regime="thermal-history", reason=reason, grade="analog",
-                  inputs=inputs, values=values, units=units, refs=REFS, notes=(CONDITION,))
+                  inputs=inputs, values=values, units=units, refs=REFS, notes=(CONDITION, extrap_note))
 
 
 from registry import recipe  # noqa: E402

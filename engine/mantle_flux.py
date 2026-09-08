@@ -45,6 +45,8 @@ from __future__ import annotations
 
 import math
 
+from domain import Domain
+
 # ── Nimmo+ 2004 Table 2, top-layer constants (layout extraction) ────────────────────
 RA_C = 600.0                 # critical Rayleigh number (eq. 34) — originates here, deferred to Nimmo & Stevenson 2000
 KAPPA_T = 6.0e-7             # m²/s, mantle thermal diffusivity (eq. 34)
@@ -94,16 +96,39 @@ def implied_flux(t_m_k: float, g: float, r_m: float, zeta: float = ZETA, t_s: fl
     measure the width that declaration carries."""
     if t_m_k <= t_s:
         raise ValueError(f"T_m {t_m_k} K 가 표면온도 {t_s} K 아래 — 경계층이 정의되지 않는다")
+    refusal = EQ35_DOMAIN.refusal(t_m_k)
+    if refusal is not None:     # the callee keeps the domain, so no consumer can walk past it (Brief 155, C48)
+        return {"delta_t_m": None, "f_t_w_m2": None, "q_m_w": None,
+                "domain_refusal": refusal, "extrapolation_note": None}
     d_t = (RA_C * KAPPA_T * viscosity(t_m_k, zeta) / (RHO_M * g * ALPHA_M * (t_m_k - t_s))) ** (1.0 / 3.0)
     f_t = K_T * (t_m_k - t_s) / d_t
-    return {"delta_t_m": d_t, "f_t_w_m2": f_t, "q_m_w": f_t * 4.0 * math.pi * r_m ** 2}
+    return {"delta_t_m": d_t, "f_t_w_m2": f_t, "q_m_w": f_t * 4.0 * math.pi * r_m ** 2,
+            "domain_refusal": None, "extrapolation_note": EQ35_DOMAIN.extrapolation_note(t_m_k)}
 
 
-BRACKET_K = (1000.0, 2500.0)     # the bisection bracket — declared, and refused by name outside it
+# ── The law's declared domain (Brief 155). Upper edge PRINTED: the paper integrates eqs 34–36 from its own
+# initial condition T_m = 4800 K (§3). Lower edge OPEN: the paper prints no lower usage limit — T_0 = 1573 K is
+# the expansion point of eq. 35, not a limit, and the present-day 1603 K is a value, not a limit. Below T_0 a
+# call is allowed and NOTED as declared extrapolation; above 4800 K the callee refuses by name (domain.py).
+NIMMO_TXT = "2004GeoJI.156..363N.txt"      # gitignored cache text layer (pdftotext -layout, 2026-09-08)
+EQ35_DOMAIN = Domain(
+    quantity="T_m [K] (eqs 34–36)", lo=None, hi=4800.0, expansion=T_0,
+    anchor=f"{NIMMO_TXT}@«conditions are that T c = T m = 4800 K»",
+    caveat=("paper prints no lower usage limit; expansion point T_0 = 1573 K "
+            f"({NIMMO_TXT}@«1573 K for T 0»); the paper's own lowest use is present-day 1603 K "
+            f"({NIMMO_TXT}@«the present-day mantle potential temperature is 1330◦ C»); at the upper edge "
+            "«+1000 K results in changes of less than 8 per cent in E» "
+            f"({NIMMO_TXT}@«is due to the short mantle time constant at high temperatures»)"))
+NO_DOMAIN = "cannot-say (declared potential temperature outside eqs 34–36's declared domain)"
+
+# The bisection bracket of `invert_for_flow` — declared, OURS, and NOT a domain edge (Brief 155: until
+# 2026-09-08 this was named BRACKET_K and stood in for the domain nobody had declared; C48). Its floor
+# 1000 K is below the expansion point, so inversions down there carry the extrapolation note.
+INVERSION_BRACKET_K = (1000.0, 2500.0)
 
 
 def invert_for_flow(q_w: float, g: float = EARTH_G, r_m: float = EARTH_R_P,
-                    zeta: float = ZETA, lo: float = BRACKET_K[0], hi: float = BRACKET_K[1],
+                    zeta: float = ZETA, lo: float = INVERSION_BRACKET_K[0], hi: float = INVERSION_BRACKET_K[1],
                     t_s: float = T_S) -> float | None:
     """T_m [K] whose implied Q_M equals q_w — the transcription check (42 TW → 1614 K).
     **None when the root is outside [lo, hi]** (Brief 57): the bisection used to return the bracket
@@ -125,10 +150,10 @@ def invert_for_flow(q_w: float, g: float = EARTH_G, r_m: float = EARTH_R_P,
 # power. Secular cooling adds to the flow, never subtracts, so the body's mantle is at least this
 # warm if the parameterisation transports. Four named widths, none folded in; no elected point.
 BAND_T_S_ALT = 200.0          # K — the surface the module already documents as +10 % on the flow
-BELOW_BRACKET = f"cannot-say (radiogenic budget below what the mantle sheds at the {BRACKET_K[0]:.0f} K bracket floor)"
-ABOVE_BRACKET = f"cannot-say (radiogenic budget above what the mantle sheds at the {BRACKET_K[1]:.0f} K bracket ceiling)"
+BELOW_BRACKET = f"cannot-say (radiogenic budget below what the mantle sheds at the {INVERSION_BRACKET_K[0]:.0f} K bracket floor)"
+ABOVE_BRACKET = f"cannot-say (radiogenic budget above what the mantle sheds at the {INVERSION_BRACKET_K[1]:.0f} K bracket ceiling)"
 BAND_OK = "band (radiogenic-only floor on the mantle potential temperature)"
-BAND_OPEN_BELOW = (f"band, open below (part of the family falls under the {BRACKET_K[0]:.0f} K bracket floor; "
+BAND_OPEN_BELOW = (f"band, open below (part of the family falls under the {INVERSION_BRACKET_K[0]:.0f} K bracket floor; "
                    "the low end is not a number)")
 
 
@@ -155,7 +180,7 @@ def radiogenic_temperature_band(budgets: dict[str, dict[str, float]], g: float, 
     if all(v is None for v in base_all.values()):
         # which side: every None is on one side, because Q_M(T) is monotone in T
         k0 = next(iter(base_all))
-        side = BELOW_BRACKET if implied_flux(BRACKET_K[0], g, r_m, k0[2])["q_m_w"] > budgets[k0[0]][k0[1]] else ABOVE_BRACKET
+        side = BELOW_BRACKET if implied_flux(INVERSION_BRACKET_K[0], g, r_m, k0[2])["q_m_w"] > budgets[k0[0]][k0[1]] else ABOVE_BRACKET
         return {"verdict": side, "t_min": None, "t_max": None, "widths": {}, "grid": grid}
     base = {k: v for k, v in base_all.items() if v is not None}
     open_below = len(base) < len(base_all)     # a corner of the family is under the floor
@@ -187,9 +212,14 @@ def consistency(t_m_k: float | None, radiogenic_w: float | None, g: float, r_m: 
                 "ratio": None, "notes": ("heat-flow consistency: cannot say — no potential temperature declared "
                                         "(nothing to imply a flux from).",)}
     core = implied_flux(t_m_k, g, r_m)
+    if core["domain_refusal"] is not None:
+        return {"verdict": NO_DOMAIN, "delta_t_km": None, "f_t_w_m2": None, "q_m_w": None,
+                "ratio": None, "notes": (f"heat-flow consistency: {core['domain_refusal']}",)}
     band = [implied_flux(t_m_k, g, r_m, z)["q_m_w"] for z in ZETA_RANGE]
     out = {"delta_t_km": core["delta_t_m"] / 1e3, "f_t_w_m2": core["f_t_w_m2"], "q_m_w": core["q_m_w"],
            "ratio": None}
+    if core["extrapolation_note"]:
+        out["extrapolation_note"] = core["extrapolation_note"]
     if not radiogenic_w or radiogenic_w <= 0.0:
         out["verdict"] = NO_BUDGET
         out["notes"] = (f"heat-flow consistency: the declared T_m {t_m_k:.0f} K implies δ_t {out['delta_t_km']:.1f} km, "

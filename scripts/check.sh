@@ -202,6 +202,8 @@ python3 engine/check_via.py --gate || { echo "  [FAIL] check_via"; fail=1; }
 (cd engine && python3 test_provisional.py) || fail=1
 # 전이 기록 (Brief 153). 다른 천체의 값은 기록 없이 못 들어오고, state 인데 derived 면(3040 K 모양) 거절.
 (cd engine && python3 test_transfers.py) || fail=1
+# 정의역·방향 (Brief 155, C48). 법칙의 정의역은 callee 가 지켜 소비자가 우회 못 하고, 한계의 방향은 필드에서 부호가 난다.
+(cd engine && python3 test_domain.py) || fail=1
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
 

@@ -33,6 +33,8 @@ from __future__ import annotations
 
 import math
 
+from domain import Domain
+
 import mantle_flux as mf
 from eos import MATERIALS
 from payload import Result, out_of_domain
@@ -50,6 +52,17 @@ KAPPA_B = 10.0e-7                 # m²/s, ± 2 (eq. 37)
 KAPPA_B_RANGE = (8.0e-7, 12.0e-7)
 F_DEEP = 10.0                     # —, "allows the deep mantle a higher viscosity" (eq. 39)
 T_1 = 3400.0                      # K, reference temperature appropriate for the deep mantle (eq. 39)
+# ── eq. 39's declared domain, on the temperature it is evaluated at, T_a = (T_c + T̃_m)/2 (Brief 155, D5: first
+# declaration — until 2026-09-08 this law had no domain at all). Upper edge PRINTED: the paper starts both
+# temperatures at 4800 K (§3), so T_a reaches 4800 exactly there. Lower edge OPEN: no printed lower usage limit;
+# T_1 = 3400 K is the expansion point, and the paper's own lowest use is present-day T_a ≈ 3428 K. Below T_1 a
+# call is allowed and noted as declared extrapolation — Mars's deep mantle lives there (C48 observation).
+EQ39_DOMAIN = Domain(
+    quantity="T_a [K] (eqs 37–39)", lo=None, hi=4800.0, expansion=T_1,
+    anchor=f"{mf.NIMMO_TXT}@«conditions are that T c = T m = 4800 K»",
+    caveat=("paper prints no lower usage limit; expansion point T_1 = 3400 K "
+            f"({mf.NIMMO_TXT}@«above is about 3400 K. We adopt this value for T 1»); the paper's own lowest use "
+            "is the present-day T_a ≈ 3428 K (T_c 4161, T̃_m 2694)"))
 K_B = KAPPA_B * mf.RHO_M * mf.C_PM   # 5.76 W/(m·K), derived as k_t was
 # ── Nimmo+ 2004 Table 1 — the core's thermal conductivity, DECLARED ──────────────
 K_CORE = 50.0                     # W/(m·K), ± 20 (eq. 25)
@@ -80,11 +93,16 @@ def bottom_layer(t_c: float, t_m_base: float, r_cmb: float,
     if t_c <= t_m_base:
         raise ValueError(f"T_c {t_c} K ≤ T̃_m {t_m_base} K — no superadiabatic jump, eq. 37 undefined")
     t_a = 0.5 * (t_c + t_m_base)
+    refusal = EQ39_DOMAIN.refusal(t_a)
+    if refusal is not None:     # the callee keeps the domain (Brief 155, D5)
+        return {"delta_b_m": None, "eta_b": None, "f_b_w_m2": None, "q_c_w": None,
+                "domain_refusal": refusal, "extrapolation_note": None}
     eta = eta_b(t_a, zeta)
     d_b = (mf.RA_C * kappa_b * eta / (mf.RHO_M * g * mf.ALPHA_M * (t_c - t_m_base))) ** (1.0 / 3.0)
     k_b = kappa_b * mf.RHO_M * mf.C_PM
     f_b = k_b * (t_c - t_m_base) / d_b
-    return {"delta_b_m": d_b, "eta_b": eta, "f_b_w_m2": f_b, "q_c_w": f_b * 4.0 * math.pi * r_cmb ** 2}
+    return {"delta_b_m": d_b, "eta_b": eta, "f_b_w_m2": f_b, "q_c_w": f_b * 4.0 * math.pi * r_cmb ** 2,
+            "domain_refusal": None, "extrapolation_note": EQ39_DOMAIN.extrapolation_note(t_a)}
 
 
 def adiabatic_flow(material_name: str, p_cmb: float, t_c: float, r_cmb: float, m_core: float,
@@ -126,6 +144,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
     r_cmb = core_radius_earth * R_EARTH_M
     m_core = mass_earth * M_EARTH_KG * core_mass_fraction
     core = bottom_layer(t_c, t_m, r_cmb)
+    if core["domain_refusal"] is not None:
+        return out_of_domain(RECIPE, VERSION, core["domain_refusal"], inputs=inputs, refs=REFS)
     band = [bottom_layer(t_c, t_m, r_cmb, z, kb)["q_c_w"]
             for z in (mf.ZETA_RANGE[0], mf.ZETA, mf.ZETA_RANGE[1]) for kb in (KAPPA_B_RANGE[0], KAPPA_B, KAPPA_B_RANGE[1])]
     ad = adiabatic_flow(core_material, cmb_pressure_gpa * 1e9, t_c, r_cmb, m_core)
@@ -161,6 +181,8 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         f"판정 {verdict}. ⚠ γ = 1.5 는 h.c.p. 고체값이고 액체는 1.51–1.52 (Alfè+ 2002) — core_state 의 조건이 열류에 실려 온다. "
         + CONDITION + ".",
     )
+    if core["extrapolation_note"]:
+        notes = notes + (f"⚠ {core['extrapolation_note']}",)
     return Result(recipe=RECIPE, version=VERSION, regime="cmb_bottom_boundary_layer",
                   reason=f"Nimmo+ 2004 하단 경계층: 점프 {t_c - t_m:.0f} K → Q_CMB {core['q_c_w'] / 1e12:.2f} TW; 단열 {ad['q_ad_w'] / 1e12:.2f} TW ({verdict}).",
                   grade="analog", inputs=inputs, values=values, units=units, refs=REFS, notes=notes)

@@ -34,6 +34,7 @@ import math
 import cmb_flux as cf
 import core_state as cs
 from eos import MATERIALS, PhaseGap
+from domain import DomainRefusal
 from payload import Result, out_of_domain
 
 RECIPE = "internal-heat-luminosity-methodology"
@@ -176,6 +177,8 @@ def balance(t_c: float, t_m_base: float, material_name: str, p_cmb: float, r_cmb
             dtc_dt: float = DTC_DT, h: float = H_CORE) -> tuple[float, dict, dict]:
     """f(T_c) = Q_C(T_c) − [Q_s + Q_L + Q_g + Q_R](T_c). Returns (f, boundary-layer dict, terms dict)."""
     bl = cf.bottom_layer(t_c, t_m_base, r_cmb)
+    if bl["domain_refusal"] is not None:
+        raise DomainRefusal(bl["domain_refusal"])       # solve() turns it into out_of_domain (Brief 155)
     prof = core_profile(material_name, p_cmb, t_c, r_cmb, m_core)
     terms = core_terms(prof, dtc_dt, h)
     return bl["q_c_w"] - terms["q_total"], bl, terms
@@ -186,7 +189,8 @@ def find_root(t_m_base: float, material_name: str, p_cmb: float, r_cmb: float, m
     """Bisection on the physical bracket [T_lo, T_hi]. T_lo = max(T̃_m + 1 K, T_melt(P_cmb) + 1 K): below the
     mantle base there is no jump (eq. 37 undefined), and below the CMB melting temperature the core is solid at
     the CMB and eq. 30's outer-core terms do not apply. T_hi = 3 T̃_m, or lower where the core material
-    refuses (PhaseGap) first — the cap is named, not physical. An all-liquid core is **not** a bracket end: it
+    refuses (PhaseGap) first, or lower where eq. 39's declared domain ends (T_a = (T_c + T̃_m)/2 ≤ 4800 K,
+    Brief 155) — the cap is named, not physical, and a search bracket may not probe outside the law. An all-liquid core is **not** a bracket end: it
     is the Q_L = Q_g = 0 regime (registered branch ⑤) and f is continuous across it. Returns None if f keeps
     one sign on the bracket — the bracket is NOT widened to make a root."""
     mat = MATERIALS[material_name]
@@ -202,6 +206,8 @@ def find_root(t_m_base: float, material_name: str, p_cmb: float, r_cmb: float, m
             except PhaseGap:
                 t_hi = t_probe / 1.05
                 break
+    if cf.EQ39_DOMAIN.hi is not None:
+        t_hi = min(t_hi, 2.0 * cf.EQ39_DOMAIN.hi - t_m_base)     # keep T_a inside eqs 37–39's declared domain
     f_lo = balance(lo, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)[0]
     f_hi = balance(t_hi, t_m_base, material_name, p_cmb, r_cmb, m_core, dtc_dt, h)[0]
     if (f_lo > 0.0) == (f_hi > 0.0):
@@ -247,7 +253,7 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
         for d in DTC_DT_RANGE:
             for hh in H_CORE_RANGE:
                 roots[(d, hh)] = find_root(t_m, core_material, p_cmb, r_cmb, m_core, d, hh)
-    except PhaseGap as e:
+    except (PhaseGap, DomainRefusal) as e:
         return out_of_domain(RECIPE, VERSION, f"핵 프로파일이 재료 도메인 밖으로 나갔다 — {e}", inputs=inputs, refs=REFS)
     band = [t for t in roots.values() if t is not None]
     prof = core_profile(core_material, p_cmb, t_root, r_cmb, m_core)
