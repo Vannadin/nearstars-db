@@ -5355,7 +5355,10 @@ that nothing moves, and that is the finding:**
 | §3.2's `3.7 × 10⁻⁵` | **7.777002 × 10⁸** | **1.360020 × 10¹⁰** | **51.9758** | **1.782288** |
 | ratio | **1.850000 × 10⁻²** | identical to every digit | identical | identical |
 
-⚠ **`Ra_i ∝ α/b`, and `b` is fitted at the Earth condition, so `α` is absorbed by `b` exactly.** The `b`
+⚠ **`Ra_i ∝ α/b`, and `b` is fitted at the Earth condition, so `α` is absorbed by `b` exactly.** ⚠ *And
+the claim holds only under that condition: **`α` is invisible through `Ra_i` while `b` is obtained by
+fitting a fixed Earth condition.** Take `b` any other way — a literature value, a per-body grain size —
+and the `Ra_i` path opens again silently. The sentence must never be written without that clause.* The `b`
 ratio equals the `α` ratio to six digits (1.85 × 10⁻²), `Ra_i` is unchanged to every printed digit, and
 all twelve runs are bit-identical to commit 3's. **So the paper's `α` self-contradiction cannot act
 through `Ra_i` at all — it can only act through `ΔT*_ρ`**, which is where C47 (g) put it. `α` and `b` are
@@ -5366,9 +5369,12 @@ not separately identifiable, and the paper itself calls its normalization *"(arb
 unwired.** The wiring is visible in the `b` column instead: two `α` values now produce two `b` values in
 the ratio 1.85 × 10⁻², where before commit 4 there was one `b` for both.
 
-**The counterfactual, recorded because it is the only way `α` in `Ra_i` bites.** If `b` were held at the
-paper's value (fitted at `α` = 2 × 10⁻³) while `α` in `Ra_i` were changed to §3.2's, `Ra_i` would fall
-54×:
+**The counterfactual, recorded because it is the only way `α` in `Ra_i` bites.** ⚠ *Label first, because
+"the paper's `b`" would be false: `b` is **not** printed anywhere in Korenaga 2009 — it is **our** global
+declaration, fitted to the paper's Earth condition (C47 (d)). What is held fixed below is therefore
+`b` = 4.203785 × 10¹⁰, the value fitted with §4's `α`. And the two rows were measured in scratch: **the
+shipped code has no `b`-freeze mode**, by design, since freezing it is the mixing commit 4 exists to
+prevent.* With that `b` held and `α` in `Ra_i` moved to §3.2's, `Ra_i` falls 54×:
 
 | case, `α` in `Ra_i` only | `q_E` 1350 °C | `q_M` | `q_E/q_M` | `Ra_i` (Earth) |
 |---|---|---|---|---|
@@ -5379,13 +5385,68 @@ paper's value (fitted at `α` = 2 × 10⁻³) while `α` in `Ra_i` were changed 
 target. It is recorded, not adopted: mixing a `b` fitted at one `α` with runs at another is the thing
 commit 4 exists to stop.
 
+**One thing this settles in the good direction.** The `α` ambiguity's blast radius is now bounded: with
+`b` fitted per `α` and eq. 56 solved, the two `α` values give **identical `q_E`, `q_M` and ratios in the
+(a) and (c) rows to four decimals**, and differ **only in the buoyancy-alone (b) rows**. **So C47 (g) was
+right, after the fact, to put `α` on the buoyancy axis** — the axis it registered as the one `α` could
+move is the only axis `α` moves.
+
+#### Commit 5 — defect ③ repaired: eq. 56's fixed point, and it takes the 1500 °C asymmetry away
+
+**The recursion, as the paper states it.** §3.1: *"when the dehydrated layer becomes dynamically
+unstable, that is, `Nu > 1/z*_D`, we can modify the depth-dependent viscosity"*, solved
+*"recursively … until `Nu` converges. The convergence is usually achieved within a few iterations"*; §4:
+*"eq. (56) is solved iteratively by setting `z*_D = Nu⁻¹` when `Nu > 1/z*_D`, to have a self-consistent
+pair of the surface heat flux and the assumed viscosity and density structure."*
+
+⚠ **One reading had to be chosen, and the choice is ours, so it is written down.** We read `z*_D` in that
+condition as the **dehydrated layer's thickness** `d/D`, not as the boundary coordinate `1 − d/D` that
+`nu_full` takes. Under the thickness reading the condition asks *"is the dehydrated layer thicker than
+the thermal boundary layer?"* and fires in four of twelve cells. Under the other reading `1/z*_D ≈ 1.02`,
+so **every cell fires always** and the update would make the top 90 % of the mantle the stiff layer —
+physically impossible, so that reading is excluded.
+
+| where it fires | initial `d/D` | `1/(d/D)` | `Nu` before | fires? |
+|---|---|---|---|---|
+| Earth, 1350 °C, (a)/(c) | 0.0213 | 46.89 | 27.91 | no |
+| Mars, 1350 °C, (a)/(c) | 0.0910 | 10.99 | 9.72 | no |
+| Mars, 1350 °C, (b) | 0.0910 | 10.99 | — | **yes** |
+| Earth, 1500 °C, (a)/(c) | 0.0373 | 26.80 | 24.66 | no |
+| **Mars, 1500 °C, all three** | 0.1593 | 6.28 | 6.83–7.02 | **yes** |
+| Earth, 1500 °C, (b) | 0.0373 | 26.80 | — | **yes** |
+
+**What it does to the twelve runs:**
+
+| `T_p` | run | `q_E/q_M` before | after | move |
+|---|---|---|---|---|
+| 1350 °C | (a), (c), both `α` | 1.7823 | **1.7823** | unchanged — does not fire |
+| 1350 °C | (b) §3.2 | 1.4492 | **1.4276** | −0.0216 |
+| 1350 °C | (b) §4 | 1.3323 | **1.3319** | −0.0004 |
+| **1500 °C** | **(a), both `α`** | 2.1791 | **1.5838** | **−0.5953** |
+| **1500 °C** | **(c) §3.2** | 2.2396 | **1.5838** | **−0.6558** |
+| **1500 °C** | **(c) §4** | 2.1800 | **1.5838** | −0.5962 |
+| 1500 °C | (b) §3.2 / §4 | 1.3549 / 1.3586 | 1.3467 / 1.3584 | −0.0082 / −0.0002 |
+
+⚠ **The self-consistent lid is thinner, so Mars leaks more**: at 1500 °C Mars's dehydrated layer falls
+from 15.93 % of the mantle to **10.35 %** and its flux rises **22.79 → 32.22 mW/m²**, while Earth's is
+untouched at (a)/(c). **The 1500 °C column, which had been the best case for the test, loses most of its
+asymmetry.** The largest `q_E/q_M` anywhere in the table is now **1.7823**, at 1350 °C — **48 % of the
+3.68 target and 37 % of the 4.78 one.**
+
+⚠ **And the paper's "a few iterations" is not our experience, which is worth recording as a limit of the
+transcription rather than of the paper.** The `(b)` rows converge in **4–14** iterations, as advertised.
+The `Δη = 100` rows at 1500 °C take **117–129**: `Nu·z*_D − 1` falls by only ≈ 0.7× per step, a linear
+rate, so 10⁻¹⁰ needs ~60 steps and the tolerance is reached at ~120. **The cap was 50 and four cells hit
+it**; it was raised to **400** after the rate was measured, and `nu_eq56` reports `converged: False`
+rather than returning a number if it is ever hit. **The runner now takes ~61 s.**
+
 #### The four defects, named before any of them is repaired
 
 | # | defect | why it matters | repaired in |
 |---|---|---|---|
 | ~~①~~ | `b` is fitted with **eq. 30** (`nu_asymptotic`) while every run uses **eq. 29 + the stability solve** (`nu_full`) | ⚠ **withdrawn — not a defect.** §4 defines the normalization exactly this way, and the 52 is the two equations' difference. Commit 3 records it instead of repairing it | ⚠ **no repair** |
 | ② | `Ra_i` hardcodes **`α = 2 × 10⁻³`** (§4's printed value) while `α` is swept only in the buoyancy term | one run then takes **both halves of the paper's self-contradiction at once**, which is not what (g) registered — (g) asked for the two `α` read side by side, not mixed inside one run | commit **4** — repaired, and ⚠ *it moved nothing: `α` is absorbed by `b`* |
-| ③ | `z*_D` is set from the **melting-onset depth**, not iterated as **eq. 56**'s `z*_D = Nu⁻¹` | the paper's outer solve is a fixed point; ours is a single geometric guess | commit **5** |
+| ③ | `z*_D` is set from the **melting-onset depth**, not iterated as **eq. 56**'s `z*_D = Nu⁻¹` | the paper's outer solve is a fixed point; ours is a single geometric guess | commit **5** — repaired, and ⚠ *it removed most of the 1500 °C asymmetry: (c) 2.2396 → 1.5838* |
 | ④ | `T_s` is **mixed inside one run**: `T_i = T_p + 273.15` but `ΔT = T_i − 273.0`, so `ΔT` = 1350.15 K at `T_p` = 1350 °C — while the `b` fit line uses the literals **1350.0 / 1623.0** | the fit condition and the run condition differ by **0.15 K** | commit **2**, and it goes first |
 
 ⚠ **④ was repaired first, and the reasoning that put it there survives its neighbour's withdrawal.** A

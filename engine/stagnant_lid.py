@@ -358,6 +358,42 @@ def fit_b_eq30(alpha: float = ALPHA_IN_RA) -> float:
     return math.sqrt(lo * hi)
 
 
+#: eq. 56 재귀의 수렴 기준과 상한. 논문 §3.1 은 *"until Nu converges. The convergence is usually
+#: achieved within a few iterations."* 라 적는데, ⚠ **우리 경우는 "usually" 쪽이 아니다**: `Δη = 100`
+#: 이 걸린 행에서 `Nu·z*_D − 1` 이 매 반복 약 0.7배로만 줄어드는 선형 수렴이라 1e-10 까지 60여 회가
+#: 필요하다(측정: 화성 1500 °C 는 62–64회). 상한 50 으로는 못 닿아서 400 으로 둔다 — 한 반복은
+#: `nu_full` 한 번이라 비용이 작다. 도달하면 실패로 보고하고 진행하지 않는다 (C47 (k) 커밋 5).
+EQ56_REL_TOL = 1.0e-10
+EQ56_MAX_ITER = 400
+
+
+def nu_eq56(theta: float, ra_i: float, d_eta: float, z_thickness: float,
+            dt_rho: float = 0.0) -> dict:
+    """eq. 56 의 재귀 — `Nu = F_Nu(n, θ, Ra_i, Δη, z*_D)` 를 `z*_D = Nu⁻¹` 로 갱신하며 푼다.
+
+    논문 §3.1·§4: *"eq. (56) is solved iteratively by setting `z*_D = Nu⁻¹` when `Nu > 1/z*_D`, to have
+    a self-consistent pair of the surface heat flux and the assumed viscosity and density structure"*,
+    그 조건은 §3.1 이 *"when the dehydrated layer becomes dynamically unstable, that is, `Nu > 1/z*_D`"*
+    라 적은 것이다.
+
+    ⚠ **`z*_D` 를 여기서는 탈수층의 두께 `d/D` 로 읽는다** — `1 − z*_D`(우리 `nu_full` 의 인수)가
+    아니다. 두께로 읽으면 조건이 "탈수층이 경계층보다 두꺼운가"가 되고 지구는 안 걸리고 화성
+    1500 °C 만 걸린다. 다른 읽기(경계 좌표 0.9787 을 그대로 `z*_D` 로)에서는 `1/z*_D ≈ 1.02` 라
+    **모든 경우가 항상 걸리고** 갱신이 맨틀 상부 90 % 를 굳은 층으로 만든다 — 물리적으로 불가능한
+    결과라 그 읽기는 배제했다. 이 판독은 우리 것이고, 그래서 여기 적는다 (C47 (k) 커밋 5).
+
+    반환: `nu` · `z_thickness`(최종) · `iters` · `fired`(갱신이 한 번이라도 걸렸는가) · `converged`."""
+    z = z_thickness
+    for i in range(EQ56_MAX_ITER):
+        nu = nu_full(theta, ra_i, d_eta, 1.0 - z, dt_rho)
+        if nu * z <= 1.0 + EQ56_REL_TOL:
+            return {"nu": nu, "z_thickness": z, "iters": i, "fired": z != z_thickness,
+                    "converged": True}
+        z = 1.0 / nu
+    return {"nu": nu_full(theta, ra_i, d_eta, 1.0 - z, dt_rho), "z_thickness": z,
+            "iters": EQ56_MAX_ITER, "fired": True, "converged": False}
+
+
 def step4_run(body: str, t_p_celsius: float, alpha: float, d_eta: float, buoyancy: bool,
               b_grain: float) -> dict:
     """한 런 — `q` [W/m²] 와 그 안의 중간값들. 09-07 러너의 `run()` 과 같은 산수."""
@@ -368,6 +404,10 @@ def step4_run(body: str, t_p_celsius: float, alpha: float, d_eta: float, buoyanc
     dt_rho = delta_t_rho(t_p_celsius, alpha, delta_t) if buoyancy else 0.0
     theta = theta_fk(delta_t, t_i)
     ra = ra_internal(b["g"], b["D"], delta_t, t_i, b_grain, alpha)
-    nu = nu_full(theta, ra, d_eta, z_d, dt_rho)
+    sol = nu_eq56(theta, ra, d_eta, 1.0 - z_d, dt_rho)      # 커밋 5: eq. 56 의 고정점
+    nu = sol["nu"]
     return {"q_w_m2": flux_wm2(nu, delta_t, b["D"]), "nu": nu, "theta": theta, "ra_i": ra,
-            "z_d": z_d, "depleted_m": depth, "dt_rho": dt_rho, "t_i_k": t_i, "delta_t_k": delta_t}
+            "z_d": 1.0 - sol["z_thickness"], "z_d_initial": z_d, "depleted_m": depth,
+            "eq56_iters": sol["iters"], "eq56_fired": sol["fired"],
+            "eq56_converged": sol["converged"], "dt_rho": dt_rho, "t_i_k": t_i,
+            "delta_t_k": delta_t}
