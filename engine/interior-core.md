@@ -5410,11 +5410,35 @@ was first written up as *our* reading justified by the alternative being implaus
 **held**, so it was read, and the grade improves: **the prose defines a coordinate, the numbers require a
 thickness.**
 
-| | |
-|---|---|
-| **the prose is coordinate** | eq. 47 — `Z(z*)` is 1 below and `Δη` above `z*_D`, *"and `z*_D` marks the base of dehydrated mantle"*; eq. 52 the same for density; Table 2's runs set `z*_D` = **0.75** with the footnote *"Viscosity contrast for `z* > 0.75`"* — a lid over the top 25 % |
-| **the printed definition is thickness** | ⚠ **§2.1, under eq. 20, in the paper's own words:** *"where **δ = Nu⁻¹** = (T_i − T_s)/ΔT_H. **The non-dimensionalized thickness of the top thermal boundary layer is the reciprocal of the Nusselt number**"* — and eq. 20 integrates from **0 to 1 − δ**, so `z*` increases upward, the surface is at `z*` = 1, and **the top layer's base coordinate is `1 − δ` while its thickness is `δ`**. That one sentence prints both senses and their relation. Then **eq. 49 puts `Nu⁻¹` directly into eq. 48's `z*_D` slot** — `Nu = F_Nu(n, θ, Ra_i, Δη, Nu⁻¹)` — so the quantity eq. 56 assigns is the thickness, by print rather than by inference |
-| the counting agrees | `Nu = δ⁻¹` also fixes the trigger's normalization, and the paper's own table confirms which sense makes it discriminate, because the two candidate thresholds fall on opposite sides of it. Counted on our 30 transcribed Table 2 rows (`Δη` = 1, 3, 10; `Nu` **3.09–7.22**): the coordinate threshold has **0 rows below it and 30 above**, so the trigger would be permanently true and §3.1's two regimes, *"reduces surface heat flux even when the dehydrated lid is thinner"* versus *"eventually destabilized"*, could not both exist. The thickness threshold `1/(1 − 0.75)` = **4.0** has **15 rows below and 15 above**, and the boundary layer `δ = 1/Nu` (**0.139–0.324**) straddles the lid thickness 0.25 **15/15** — both regimes present, which is what §3.1 describes. Fig. 8(a)'s caption puts its horizontal line `Nu = 1/z*_D` in the middle of the figure, not off its bottom edge |
+**The chain, four printed steps and one confirmation.**
+
+1. ⚠ **`δ` is a thickness, and `z*` increases upward — printed under eq. 20.** *"`T_i − T_s` =
+   `1/(1−δ) ∫₀^{1−δ} T dz*`"*, and then: *"where **δ = Nu⁻¹** = (T_i − T_s)/ΔT_H. **The
+   non-dimensionalized thickness of the top thermal boundary layer is the reciprocal of the Nusselt
+   number**, and the internal temperature is defined as the average of temperature below the boundary
+   layer."* The integral runs **0 → 1−δ** with prefactor `1/(1−δ)`, so the interior is `z* ∈ [0, 1−δ]`
+   and **the boundary layer is the top slab `z* ∈ [1−δ, 1]`**.
+2. **Eq. 47 puts the dehydrated layer at `z* > z*_D`** — `Z(z*)` is 1 below and `Δη` above — so there
+   `z*_D` is a **coordinate** and the layer's **thickness is `1 − z*_D`** (Table 2's 0.75 → a lid 0.25
+   thick).
+3. **Eq. 49 substitutes a length into that slot**: *"self-consistent and solve the following equation
+   recursively: `Nu = F_Nu(n, θ, Ra_i, Δη, Nu⁻¹)`, until `Nu` converges."* Eq. 48's fifth argument is
+   `z*_D`; eq. 49's is `Nu⁻¹` = `δ`.
+4. **So the trigger's `z*_D` is a thickness, by arithmetic on 1–3.** *"Is the dehydrated layer thicker
+   than the boundary layer?"* is `1 − z*_D > δ`, i.e. `Nu > 1/(1 − z*_D)` — and the paper writes that
+   condition as **`Nu > 1/z*_D`**. ⚠ **The symbol carries both senses in the paper's own text**, which
+   is why the overload is the paper's and not our reading.
+5. **Table 2 confirms which sense discriminates.** On our 30 transcribed rows (`Δη` = 1, 3, 10; `Nu`
+   **3.09–7.22**): the coordinate threshold `1/0.75` = **1.333** has **0 rows below, 30 above** — the
+   trigger would be permanently true and §3.1's two regimes, *"reduces surface heat flux even when the
+   dehydrated lid is thinner"* versus *"eventually destabilized"*, could not both exist. The thickness
+   threshold `1/(1 − 0.75)` = **4.0** has **15 below, 15 above**, and `δ = 1/Nu` (**0.1385–0.3236**)
+   straddles the lid thickness 0.25 **15/15**. Fig. 8(a)'s caption puts its horizontal line
+   `Nu = 1/z*_D` in the middle of the figure, not off its bottom edge.
+
+**And the code already carries step 1's geometry:** `engine/stagnant_lid.py@«above = max(0.0, min(top, 1.0) - max(1.0 - delta, z_d))»`
+measures the stiff share of a sublayer as the part above `z_d`, with the boundary layer occupying the
+top `δ` — the same convention, written before any of this was read.
 
 **So the overload is the paper's**, and it belongs beside its `α` self-contradiction (defect #24) rather
 than in our list of reading choices. The implementation uses the thickness sense for the trigger and the
