@@ -4748,10 +4748,14 @@ no erupted melt records a present `T_p`** — every "present Martian potential t
 literature is a thermal-model output, not a measurement. ⚠ And the paper's `1320 °C` is the multiple
 saturation temperature of **one Gusev basalt at 1.0 GPa**, not a mantle potential temperature; it is
 not transcribed. Baratoux+ 2011 ([`2011Natur.472..338B`](https://ui.adsabs.harvard.edu/abs/2011Natur.472..338B))
-is the canonical `T_p`-versus-time curve and is **not held** (Nature) — a known hole.
+is the canonical `T_p`-versus-time curve and was **not held** (Nature) — ⚠ *held since 2026-09-08
+(owner-supplied PDF). Reading it closed the hole and narrowed the claim: the paper prints the epoch
+**difference** (80 ± 20 °C) but no absolute `T_p` anywhere in its text — the levels everyone re-cites are
+contour labels on its Fig. 3/4. See C47 (i).*
 ⚠ **2026-09-08 — re-cited present-day values found, the original still unheld.** Yoshizaki & McDonough
 2020 (~1500 K) and Dong+ 2022 (1600 K "today") both print present-day Martian `T_p` **as model inputs**,
-100 K apart, both tracing to the unheld Baratoux+ 2011. **So "closed" above is wrong as written** — what
+100 K apart, both tracing to Baratoux+ 2011 — held since 2026-09-08, and its absolute levels are
+figure-read, not printed (C47 (i)). **So "closed" above is wrong as written** — what
 survives is that no Mars `T_p` is *measured*. Corrected in full in C47 (i).
 
 **What Mars needs, which is more than the brief supposed.** ⚠ *Stale since Brief 149 (`2d1bb397`), which
@@ -4839,12 +4843,12 @@ the owner picked the first:
 
 | candidate | window, K | grade | note |
 |---|---|---|---|
-| **Herzberg+ 2007** `2007GGG.....8.2006H` — ✅ **owner's choice, the verdict line** | **[1553.15, 1673.15]** | abstract only | 1280–1400 °C, *ambient* mantle below oceanic ridges, from MORB + ocean-island primary magmas — a potential temperature, so it does not repeat the Monders defect below |
-| Katsura+ 2010 `2010PEPI..183..212K` — record column | [1575, 1645] | abstract only | 1610 ± 35 K, mineral-physics route (410-km discontinuity + adiabat), no solidus anywhere in it |
+| **Herzberg+ 2007** [`2007GGG.....8.2006H`](https://ui.adsabs.harvard.edu/abs/2007GGG.....8.2006H) — ✅ **owner's choice, the verdict line** | **[1553.15, 1673.15]** | ⚠ **held** since 2026-09-08 (owner-supplied PDF, cache) — upgraded from *abstract only*, and the label re-read in the body: *"Our preferred `T_P` range for ambient mantle is 1280–1400 °C (Figure 5)"*, computed by the **McKenzie & Bickle 1988** potential-temperature method for *"MORB magmas with 10–13 % MgO"*, and in the concluding paragraph *"ambient mantle temperatures at normal oceanic ridges are 1280–1400 °C (ΔT_P = 120 °C)"* | a potential temperature of the ambient mantle, so it does not repeat the Monders defect below. The body also warns its Iceland values *"should not be used as a high `T_P` anchor for ambient mantle"* — we do not |
+| Katsura+ 2010 [`2010PEPI..183..212K`](https://ui.adsabs.harvard.edu/abs/2010PEPI..183..212K) — record column | [1575, 1645] from the abstract; **[1560, 1640] from the body** | ⚠ **held** since 2026-09-08 | mineral-physics route (410-km discontinuity + adiabat), no solidus anywhere in it. ⚠ **The abstract and the body disagree**: abstract *"the mantle potential temperature is found to be 1610 ± 35 K"*, body §4 *"1600 ± 40 K"* — and the divergence is systematic, not only in `T_p` (transition-zone base 2010 ± 40 vs 1990 ± 50 K, 2700 km 2730 ± 50 vs 2630 ± 60 K). **Neither is elected**, both are recorded, and **Mars's 1668 K is outside both**, so the record column's verdict does not move |
 | Putirka 2016 `2016AmMin.101..819P` — record column | [1603.15, 1723.15] | abstract only | 1330–1450 °C, modern ambient MORB, olivine–liquid Fe–Mg re-calibration |
 | union of the three | [1553.15, 1723.15] | — | widest reading |
 | ⚠ **Monders+ 2007 cannot supply one** | — | held | its 1280–1475 °C is Earth's **basaltic magmatism** range (Kinzler & Grove 1992, McKenzie & Bickle 1988), not a potential temperature. Using it would put a magmatism range in a `T_p` slot — the same class of error C47 was opened for |
-| record only | Herzberg+ 2010 1623 K (point, ②); Sarafian+ 2017's **+60 °C** correction, which moves the two petrological candidates and leaves Katsura's untouched | — | so the apparent agreement of the two routes is not independent of whether that correction is applied |
+| record only | Herzberg+ 2010 [`2010E&PSL.292...79H`](https://ui.adsabs.harvard.edu/abs/2010E%26PSL.292...79H) 1623 K (the point of rule ②) — ⚠ **held** since 2026-09-08, and the body §3 does print a **band**: *"a mantle potential temperature (i.e., `T_P`) of **1350 ± 50 °C** is required to produce primary basaltic magmas having 10–13 % MgO"* = **[1573.15, 1673.15] K**, which Mars's 1668 K is **inside**. ⚠ **Rule ②'s "point candidate, excluded" was a decision taken on the abstract**, which prints no ±; recorded here as an after-the-fact column, and **the agreement test is not recomputed** — re-running a test on evidence that arrived after its verdict is the thing pre-registration exists to prevent. Also record-only: Sarafian+ 2017's **+60 °C** | — | so the apparent agreement of the two routes is not independent of whether that correction is applied |
 
 #### Criterion A — passes, and by three orders of magnitude
 
@@ -4878,9 +4882,22 @@ Threshold `|d T_p,out / d T_pot,declared| < 0.5`, pre-registered in C47 (h).**
 
 #### Criterion B — passes, and ⚠ by 4 K
 
-**Unblinded under the rule at `2fb2bba4`, from the values the 16:40 run wrote blind
-(`C47 STAGE0 END rc=0 16:40:01`).** Verdict line **Herzberg+ 2007 `[1553.15, 1673.15]` K**, verdict
-variant `T_m0`-fixed, verdict points the two ends.
+**Unblinded at 17:44:58 under the rule at `2fb2bba4`, from the values the 16:40 run wrote blind
+(`C47 STAGE0 END rc=0 16:40:01`).** Verdict line **Herzberg+ 2007 `[1553.15, 1673.15]` K** (owner, 17:35 —
+before the unblinding), verdict variant `T_m0`-fixed, verdict points the two ends.
+
+⚠ **The seal held for nine of the ten columns, not ten.** The `1600 K` point's `T_p@3.7 Ga` was **already
+public**: `engine/test_core_history.py` prints it as test ⑥'s third value (`T_p@3.7Ga`, the nearest adaptive
+row) and `engine/interior-core.md@«within 0.1 K of the 0.25 Myr sweep»`'s C48 cell has carried **1669.22 K**
+since `20ed09d7`. **What was public was the value, not the verdict** — 1600 K is an interior point and the
+verdict is read at the two ends, so no cell could be anticipated from it. *(The same label, run two ways, is
+0.10 K apart: 1669.22 adaptive against the 0.25 Myr sweep's 1669.12, which is test ⑥'s ±5 K comparand.)*
+
+⚠ **And the pre-registered hold branch never fired, which is different from being skipped.** The rule said
+*if the candidates disagree the verdict is held and the owner picks the paper* — and they do disagree. But
+the owner picked at **17:35**, before the disagreement was visible at 17:44:58, so the branch was
+**pre-empted by an earlier choice** rather than passed over. Its purpose — that a seat must not elect the
+width — was served by the route the choice actually took.
 
 | declared `T_pot` | variant | `T_p@3.7 Ga` | row's actual t, Gyr | `q_M`, TW | `q_C`, TW | **Herzberg 07** | Katsura 10 | Putirka 16 | union | − 1623 K |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -4920,8 +4937,12 @@ pending` becomes a validation.
   Monders' sentence says — *similar to those on the **modern** Earth* — and it is what the rule
   implemented; a checkpoint against Earth's own 3.7 Ga state would be a different test and would fail.
 
-**Sampling:** the checkpoint reads the nearest adaptive row, which lands within **0.8 Myr** of −3.7 Ga
-at every point (−3.6981 … −3.7008 Gyr).
+**Sampling:** the checkpoint reads the nearest adaptive row. ⚠ *Corrected on the audit seat's
+reproduction: the row lands within **0.79 Myr** of −3.7 Ga on the **verdict variant** (`T_m0`-fixed, all five
+points), which is what the verdict rests on — but the widest **record** row, `1500 | r_b`-point, is
+**1.91 Myr** away (−3.6981 Gyr). "Within 0.8 Myr at every point" was wrong as written; the table's own t
+column carried the counter-example.* The sampling gap does not move a cell here — the sweep's whole spread
+in `T_p@3.7 Ga` is 0.81 K — but the claim had a scope it did not state.
 
 ⚠ **And the ceiling, restated because the pass is thin:** Monders+ 2007's statement is **qualitative**.
 It can catch a badly wrong trajectory and nothing finer. **A pass is not a precision validation of the
@@ -4934,7 +4955,12 @@ validation of the Martian thermal history.**
 
 #### Four corrections carried by this section
 
-**1. Where 1623 K comes from — the C47 (h) attribution was wrong.** (h) called it *"Korenaga's own
+**1. Where 1623 K comes from — the C47 (h) attribution was wrong, and the chain is one link longer.**
+⚠ *Settled 2026-09-08 with both papers held:* **1623 K is Herzberg+ 2010's `1350 ± 50 °C`** — itself a
+consensus value, carrying seven citations in that sentence (McKenzie & Bickle 1988, Langmuir+ 1992, Kinzler
+1997, Herzberg+ 2007, Courtier+ 2007, Lee+ 2009, Gregg+) — **and the range under it is Herzberg+ 2007's
+1280–1400 °C**. So Korenaga 2010 §5's attribution to *2007* skips a step: the digits are 2010's, the
+supporting range is 2007's. The paragraph below is the trace as it stood before the papers were held. (h) called it *"Korenaga's own
 §4 condition"*. Traced: Korenaga 2010 §5 prints *"The reference temperature is set to 1623 K (1350 °C),
 which corresponds to the present-day potential temperature of the ambient mantle"* and attributes it to
 **Herzberg et al. 2007** — but Herzberg+ 2007's own abstract prints **1280–1400 °C**, and the **1350 °C
@@ -4950,8 +4976,8 @@ ratio is taken before the truncation). **On Earth the reported minimum IS the la
 
 | what | value | where |
 |---|---|---|
-| `h_min_myr` as `integrate` reports it | **0.2493 Myr** | step **1151 of 1152** — the last one |
-| the four steps before it | 4.0000 Myr each | the cap, binding |
+| `h_min_myr` as `integrate` reports it | **0.249252 Myr** | step **#1152 of 1152**, 1-based — the last one |
+| the four steps before it | 4.0000 Myr each | the cap, binding — and **1125 of the 1152** steps run at the cap |
 | the actual stiffest step | **0.3929 Myr** | step 0, the first |
 
 ⚠ **And that closes an open label.** `engine/tools/adaptive-step-prereg.md@«first steps shrink from 4 Myr to ≈ 0.39 Myr»`
@@ -4969,8 +4995,20 @@ looking"* on the ground that no present Martian `T_p` is published. **Re-cited p
 exist** — Yoshizaki & McDonough 2020 (`2020GeCoA.273..137Y`, §5.1, held) assumes **~1500 K** as a
 present-day areotherm input; Dong+ 2022 (`2022Icar..38515113D`, held) uses **1600 K** for *"the average
 Martian mantle today"* and the Baratoux curve by epoch (Amazonian ~1600–1650 K, Hesperian ~1650–1700 K).
-Both are **model inputs, 100 K apart, and both trace to Baratoux+ 2011** (Nature, unobtainable), which
-Parro+ 2017 warns are *"volcanic (non-average) regions"*. ⚠ **The original claim's core survives — no
+Both are **model inputs, 100 K apart, and both trace to Baratoux+ 2011**, which Parro+ 2017 warns are
+*"volcanic (non-average) regions"*. ⚠ **Baratoux+ 2011 is held since 2026-09-08** (owner-supplied PDF) and
+it changes the grade of everything downstream of it:
+
+| what Baratoux+ 2011 gives | value | grade |
+|---|---|---|
+| epoch-to-epoch **difference** — printed in the text and Methods | *"a total spread of ~80 K"*, and *"a temperature decrease of **80 ± 20 °C**"* | **printed** |
+| absolute `T_p` by epoch — **only as contour labels on Fig. 3/4**, never in the text | Amazonian **1611–1678 K**, Hesperian **1649–1673 K**, read off the figures by eye (±10 °C) | ⚠ **figure-read — not a printed value, and it may not enter a board row** |
+
+So the paper's own numeric claim is a **difference**, not a level, and the levels every re-citation quotes
+are figure readings. Against those figures **Yoshizaki & McDonough's ~1500 K is more than 100 K below any
+contour**, while **Dong+ 2022's 1600 K is an Amazonian volcanic-province value**. ⚠ Baratoux's own
+corrigendum (*Nature* **475**, 254) touches only the heat-flow numbers, and this repo cites none of them —
+checked. ⚠ **The original claim's core survives — no
 Mars `T_p` is measured, because Mars has no present volcanism to record one — but "does not exist in
 the literature" is wrong as written**, and the sentence is marked rather than replaced.
 
@@ -4984,7 +5022,7 @@ pre-registered:
 | body | steps inside the first 10 Ma | `h` at the first step | `h` at t ≈ 1.4 Ma (C21's ²⁶Al threshold) | `h` at the window's edge | steps with `h` < 0.1 Ma |
 |---|---|---|---|---|---|
 | **Earth** | **14** | 0.3929 Ma | 0.5201 Ma | 1.3041 Ma | **0 / 14** |
-| **Mars** | **56** | 0.0053 Ma | 0.1431 Ma | 0.9061 Ma | **32 / 56** |
+| **Mars** | **56** | 0.005279 Ma | 0.1431 Ma | **0.906071 Ma** | **32 / 56** |
 
 - **C21's 0.1 Ma sampling is still needed, and Earth is why.** At t ≈ 1.4 Ma one Earth step is 0.520 Ma —
   about **1.4 samples per ²⁶Al half-life** (0.73 My, Monteux+ 2016). The adaptive step does not stand in
@@ -4996,6 +5034,13 @@ pre-registered:
 - ⚠ **The premise's truth is body-dependent, which is itself new.** Mars, whose start is far stiffer, already
   takes **56** steps in the window with **32** of them under 0.1 Ma — so on Mars the adaptive step nearly
   does what C21 proposed to add, while on Earth it does not.
+- ⚠ **The Mars row is labelled by its initial mantle temperature, because two defensible runs differ in
+  the fourth decimal.** This row uses `engine/bodies/mars.yaml`'s **printed 4021.0 K**; test ⑥ and step 0
+  use **4800/r_b = 4021.0474 K**, and at the window's edge that run gives **0.905921 Ma** against this one's
+  **0.906071 Ma** (window count 56 and the cap count 1123/1197 identical in both). ⚠ **So the audit seat's
+  0.905921 and this table's 0.906071 were never a transcription error — they are two runs 0.047 K apart in
+  `T_m0`**, which is `docs/reference/derivation-discipline.md@«A number cannot enter without its label»` in
+  its smallest possible form.
 - **Method, so this is not mistaken for a new model or for a second measurement of step 0.** The two
   integrations were **re-run** at this tree (~57 s each; the stage-0 JSON carries per-run scalars only, no
   rows), and `h` between consecutive rows *is* the step the integrator took
@@ -5005,6 +5050,21 @@ pre-registered:
 
 **C21 is still not started, and this does not re-judge its design** — it replaces a claim that was
 arithmetic with a number, so that whoever opens C21 re-weighs the premise instead of inheriting it.
+
+#### Recorded only — the convergence branch ⑤ had stopped testing what it registered
+
+**Found while correcting the stale step strings, and it is not a step string.** Pre-registered branch ⑤ is a
+**step**-halving convergence test (`engine/core-thermal-history-context-notes.md@«Run the full history at **h, h/2, h/4**»`,
+recorded 2026-09-04 as width 0.001 % at **1135 / 2270 / 4540** steps). After Brief 157 `core_history.sweep`
+went on passing only `step_myr`, which is now the **cap** in `h = min(cap, 0.1·τ)` — so halving it changed
+only the steps where the cap binds, and the recorded counts could not be reproduced. ⚠ **A pre-registered
+branch had quietly become a different test, and nothing failed**: the gate does not run `--sweep`, and the
+docstring still described the old one.
+
+**Brief 161 restored the registered meaning** — `sweep` runs `adaptive=False` — rather than re-writing ⑤ to
+match the code, because *"a branch registered before the adaptive step exists is not re-written afterwards"*.
+An adaptive-**cap** sweep is a real question and is **deliberately not built**; it would need its own
+registration.
 
 #### The audit seat's independent run, at the same tree
 
@@ -5020,7 +5080,7 @@ message — **−4.8 %**, inside load variation, and reported because
 | decision | the two candidates | what turns on it |
 |---|---|---|
 | ~~criterion B's verdict line~~ | **answered 2026-09-08 17:35: Herzberg+ 2007 [1553.15, 1673.15] K**, the other three record-only | the 3.7 Ga in/out, hence whether the transfer is allowed |
-| **Mars's declared `potential_temperature`** | 1600 K transferred from Earth (Unterborn+ 2019) vs ~1500 K re-cited (Yoshizaki & McDonough 2020) | ⚠ **nothing in the Mars result** — criterion A's 0.0017 slope means the whole 400 K sweep moves the answer 0.34 K. It is a provenance choice, not an accuracy one |
+| ~~Mars's declared `potential_temperature`~~ | **answered 2026-09-08 17:52: Earth's 1600 K, transferred (Unterborn+ 2019), in Brief 153's transfer-record form.** The two re-citations (Yoshizaki & McDonough 2020 ~1500 K; Dong+ 2022 1600 K, which agrees) are record columns | ⚠ **nothing in the Mars result** — criterion A's 0.0017 slope means the whole 400 K sweep moves the answer 0.34 K. It was a provenance choice, not an accuracy one |
 
 ### C48 — the integrator was validated on Earth, and Earth survived by not blowing up rather than by being right — **closed 2026-09-08: domain (Brief 155) + step (Briefs 156–157)**
 
