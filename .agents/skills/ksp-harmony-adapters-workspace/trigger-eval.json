@@ -1,0 +1,22 @@
+[
+  {"query": "ok so kerbalism has no api for changing how fast crew eats food. i need my mod to make consumption slower for a specific vessel. how do i actually hook into their resource sim", "should_trigger": true},
+  {"query": "my mechjeb adapter compiles and the log says 'patched' but the burn time it displays never changes. VesselState.ThrustAvailable is what i'm postfixing. what am i missing", "should_trigger": true},
+  {"query": "I want every reaction wheel in the game, including modded ones, to have its torque scaled by a factor my mod computes. Not just the stock ModuleReactionWheel — anything that provides torque. Whats the cleanest way", "should_trigger": true},
+  {"query": "need to intercept Part.CheckPartG in KSP so parts see a different g value during my mod's burn, then put it back afterwards", "should_trigger": true},
+  {"query": "setting up src/MyMod.csproj with KSPBuildTools — how do i reference 0Harmony properly and what do i put in the netkan so ckan pulls it in", "should_trigger": true},
+  {"query": "Persistent Thrust applies dv to unloaded vessels. I traced it and there's OrbitExtensions.Perturb plus two callers in VesselData.cs and PersistentEngine.cs. Should I patch all three or just Perturb?", "should_trigger": true},
+  {"query": "writing a KSP plugin that needs to read a private field off KerbalHealth's HealthRecord without adding an assembly reference (dont want a hard dep). also need to postfix the hp change getter", "should_trigger": true},
+  {"query": "my prefix on kerbalism's Rule.Execute is throwing NREs every frame and now the whole life support sim is dead. how should this be structured so my bug cant nuke their mod", "should_trigger": true},
+  {"query": "how do the __0 __1 numbers work when the method im patching is static vs an instance method? i have two targets with basically the same signature and id rather write one prefix", "should_trigger": true},
+  {"query": "KSP.log is 700MB after a 2 hour flight, its all my own [MyMod] debug lines from a harmony prefix. i already gate it to every 200th call", "should_trigger": true},
+  {"query": "i want engines in my parts pack to have 20% more thrust at high altitude. writing the ModuleManager patch now, whats the right :FOR / :NEEDS syntax", "should_trigger": false},
+  {"query": "how do i use Harmony to patch a Unity game thats not KSP — its a roguelike on steam and i want to add a modding hook to the save system", "should_trigger": false},
+  {"query": "trying to figure out what class handles staging in KSP 1.12. is it StageManager or Vessel? just need to know where the stock api lives", "should_trigger": false},
+  {"query": "kopernicus config for adding a binary star to my planet pack, the second star isnt lighting anything up", "should_trigger": false},
+  {"query": "my KSP mod DLL wont load at all, KSP.log says TypeLoadException on startup and the mod folder is definitely in GameData", "should_trigger": false},
+  {"query": "how do i attach visual studio's debugger to a running KSP instance so i can set breakpoints in my plugin", "should_trigger": false},
+  {"query": "need help with a C# reflection question — iterating AppDomain.CurrentDomain.GetAssemblies() in a dotnet 8 web api and GetTypes() keeps throwing", "should_trigger": false},
+  {"query": "publishing my first KSP mod. do i need both a spacedock listing and a netkan PR, and whats the minimum for the ckan metadata", "should_trigger": false},
+  {"query": "what does gamma equal at 0.9c and how much does that slow a clock down. doing the math for a ship in my save", "should_trigger": false},
+  {"query": "make my PartModule show a right-click UI field that the player can drag as a slider between 0 and 100", "should_trigger": false}
+]
