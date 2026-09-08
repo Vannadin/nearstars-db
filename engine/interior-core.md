@@ -1967,8 +1967,8 @@ Order among them is the owner's, brief by brief.
 
 | C | edge (`chain.yaml`) | what the hole is |
 |---|---|---|
-| **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` (`:639`) | whether the core is *still* convecting needs thermal evolution, not only decay history; Brief 62 step 1 measured that the present-epoch closure is a root-find in T_c with the cooling rate declared. **Built 2026-09-03** (owner *"c14 진행하자"*; `core_energy.py`, node `core_energy_balance`, `core-energy-balance-context-notes.md`): Nimmo's analytic core reproduces Table 4 component by component (all within 10 %, Q_L/Q_g 8 % low and left low) and the root lands at 4 152 K vs printed 4 155; on the engine's Earth the solved T_c is **3 978 K (band 3 750–4 284), +218 K over the declared lower bound**, Q_C 4.91 TW — inside Nimmo's 4.5–9 on this model's terms. **Finding (corrected 2026-09-04 after a convergence bug the directing seat caught — the first evening's "two codes disagree" was an Euler artefact)**: at the declared 3 760 K both codes find an inner core (566 km, ICB 351.3 GPa); **at the solved 3 978 K the core is all liquid** — closing the loop removes Earth's inner core, so Q_L = Q_g = 0 on the solved Earth and C15's entropy budget loses its two largest terms. Nothing moved; not fed back. The edge itself stays `gap` — the *consumer* (dynamo) is C15. |
-| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` (`:638`) | the supplier `cmb_heat_flux` exists (Brief 60); the consumer wiring is φ, core entropy production. **φ built 2026-09-04** (`core_entropy.py`, node `core_entropy_production`, `core-entropy-context-notes.md`): Nimmo eq. 43's six terms on C14's profile; Table 4's entropy components reproduced within 10 % each (ΔE 328 vs 351); the engine's Earth at the solved 3 978 K gives **ΔE −69 MW/K, band −264…+238, 4/8 corners positive, H = 0 → −167** — C14's vanished inner core arriving at the budget. **A band, not a verdict** (the required excess is 0.1–1 000 MW/K; `ΔE > 0` is the paper's own threshold-avoidance), **not wired into `dynamo_rocky`** (edge kept `gap` on purpose), and the 3-Gyr statement is refused by name — **C20 is this node's first real consumer.** |
+| **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` (`:639`) | whether the core is *still* convecting needs thermal evolution, not only decay history; Brief 62 step 1 measured that the present-epoch closure is a root-find in T_c with the cooling rate declared. **Built 2026-09-03** (owner *"c14 진행하자"*; `core_energy.py`, node `core_energy_balance`, `core-energy-balance-context-notes.md`): Nimmo's analytic core reproduces Table 4 component by component (all within 10 %, Q_L/Q_g 8 % low and left low) and the root lands at 4 152 K vs printed 4 155; on the engine's Earth the solved T_c is **3 978 K (band 3 750–4 284), +218 K over the declared lower bound**, Q_C 4.91 TW — inside Nimmo's 4.5–9 on this model's terms. **Finding (corrected 2026-09-04 after a convergence bug the directing seat caught — the first evening's "two codes disagree" was an Euler artefact)**: at the declared 3 760 K both codes find an inner core (566 km, ICB 351.3 GPa); **at the solved 3 978 K the core is all liquid** — closing the loop removes Earth's inner core, so Q_L = Q_g = 0 on the solved Earth and C15's entropy budget loses its two largest terms. Nothing moved; not fed back. The edge itself stays `gap` — the *consumer* (dynamo) is C15. ⚠ *2026-09-09 (C25 (c)): this root is where the mantle-side flow and the core-side supply are the same number — 4.913 against 4.912 TW — which is what the closure **is**. And "never nucleates" fits no camp in the printed inner-core-age literature, 0.37 – >2.5 Ga (C25 (d)); that is the depression factor's, not this row's.* |
+| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` (`:638`) | the supplier `cmb_heat_flux` exists (Brief 60); the consumer wiring is φ, core entropy production. **φ built 2026-09-04** (`core_entropy.py`, node `core_entropy_production`, `core-entropy-context-notes.md`): Nimmo eq. 43's six terms on C14's profile; Table 4's entropy components reproduced within 10 % each (ΔE 328 vs 351); the engine's Earth at the solved 3 978 K gives **ΔE −69 MW/K, band −264…+238, 4/8 corners positive, H = 0 → −167** — C14's vanished inner core arriving at the budget. **A band, not a verdict** (the required excess is 0.1–1 000 MW/K; `ΔE > 0` is the paper's own threshold-avoidance), **not wired into `dynamo_rocky`** (edge kept `gap` on purpose), and the 3-Gyr statement is refused by name — **C20 is this node's first real consumer.** ⚠ *2026-09-09: the band's two axes are laid against the printed literature in C25 (d) — `k` 18–226 and every later potassium constraint below our ceiling — and C25 (c) measures what each horn of C25 does to this budget: the inner core is the whole difference. Three owner decisions are collected there; none is made.* |
 | **C16** | `tidal_locking → dynamo_rocky via rossby` (`:635`) | *(the first line here — "not derivable from a rotation period" — was wrong: Ω is exactly what `rotation_period` supplies)*. **Built as a partial build 2026-09-04** (`regime-gate-context-notes.md`): RM22's branch structure — free rotator → dipolar by rule (eq. 20, no Ro_ℓ); locked → Ro_ℓ **refused by three names** (ν has no value in RM22; q_conv is undefined; the printed equation misses the paper's own Table 8 by 4–5×, a table that is itself a fit of k = 60); key absent → `cannot-say (no tidal_locking)`. **The key `locked` is `tidal_locking`'s output and that node has no recipe** (34 computed nodes, 10 registered), so today every body gets the last answer — the correct state. Measured with a positive control: the thrice-corrected `MULTIPOLAR_FACTORS` has **no consumer that elects it** on the roster (0 of 3 primary; Earth's beside-pair only, read by nothing downstream) — a C5 question for the owner, not judged. |
 | **C17** | `ocean_fraction → dynamo_rocky` (`:636`), `→ cassini_state` (`:552`), `→ surface_albedo` (`:781`) | three consumers, no supplier of an ocean fraction. **Measured 2026-09-04** (`ocean-fraction-context-notes.md`): `f_ocean` means three different things to its three consumers (surface inventory · subsurface ocean · the dynamo doc's "water-rich" bulk class), and the dynamo edge's real payload is `ice_mass_fraction`, which reaches `dynamo_rocky` today by the ladder (regime 4, ℳ_base 0.002 — confirmed to fire). The structural half — water fraction → interior → `cmb_heat_flux` — **could not be tested: the interior does not converge at 0.1 / 0.3 water on an Earth-mass rocky body** (branch ③), and the unconverged trials put the CMB *hotter* (2 526 → ~4 400 K), not cooler as the doc says, so at Earth's declared 3 760 K there is no jump and `cmb_flux` refuses. **Superseded the same day by C24's fix**: the column now converges — ice 0.1 → T_cmb **3 105 K**, ice 0.3 → **3 050 K** (dry 2 526) — still hotter than dry, opposite to the doc, but a converged size; C17's structural half is measurable now, start separate. **Stays open, two reasons named**: (1) the interior does not converge on a water-rich rocky body — **C24**; (2) the doc's mechanism sentence (item 4) carries **no citation** (item 3 beside it cites Gaidos 2010) and its temperature direction is the opposite of what our unconverged column shows — so the mechanism is both ungrounded and untested. Nothing wired. The Ganymede anchor 2×10⁻³ is RM22's relayed *observed* value (its ref. 3), not its computed 0.003 — both now written. **Opened by the owner and closed the same day, 2026-09-04 — ③b** (`ocean-fraction-context-notes.md` §5): the −55 K is a real turnover (noise floor 0.7 K; converged points 2 526 → 3 105 → 3 065 → 3 050 K at 0 / 0.1 / 0.25 / 0.3), its maximum unbracketed below 0.1 because 0.05 / 0.15 / 0.20 do not converge (a C24-adjacent coverage finding, recorded, not repaired); with Earth's declared 3 760 K the boundary-layer Q_C *rises* 2.75 → 3.11 → 3.20 TW (eq. 39 viscosity beats the smaller jump), C14's T_c falls ~90 K, C15's band moves (−69 → −68 → −82 MW/K) and still straddles zero — **the mechanism is real and measured; C15 cannot use it.** Item 4 corrected (en + ko) as a correction of our own uncited sentence. Nothing wired. |
 | **C18** | `body_class → dynamo_rocky via sub_neptune` (`:623`) | a sub-Neptune integrates (C1) and has no dynamo path. **Closed 2026-09-04 as a named refusal — corrected the same night after the parallel seat found the paper the first wording said did not exist.** The refusal, in its final form: **the on/off criterion for a sub-Neptune iron-core dynamo *is* published** — Tang, Fortney, Nimmo, Thorngren, Ohno & Murray-Clay 2025 (`2025ApJ...989...28T`, owner-obtained, cached) §4.2: `Rm = μ₀σUD` (eq. 46), critical 50, `U` from Christensen 2010's scaling (eq. 47), `F_conv = F_CMB − F_cond` (eq. 48); abstract: *"Dynamo action in sub-Neptune iron cores persists as long as the mantle surface remains molten, often exceeding 10 Gyr"*. **The moment / field-strength scaling is not published** — in 37 pages *magnetic moment*, *field strength*, *Gauss*, *Rossby*, *dipole* and *field* itself occur zero times (reproduced). `dynamo_rocky` needs ℳ, so **this edge closes**; what opens instead is the *existence* question, listed as **C23**. *(The first wording — "no held paper prints a scaling" — was true of the cache and false of the literature; it is withdrawn.)* Two things recorded for the next seat: (i) **the three refusals are not one statement and they form a round trip** — `dynamo_rocky` sends the class to `dynamo_giant` (*"거대행성·서브넵튠은 dynamo_giant 의 몫"*), `dynamo_giant` sends it back by mass (`GIANT_M_MIN` 0.3 M_J = 95 M⊕, and its ground is helium rain, nothing to do with an iron core), and only `core_state` states the actual question (*"그 핵을 받는 다이나모 갈래가 아직 없다"*) — with the cause written as *no consumer*, not *no published scaling*; (ii) **`sub_neptune` sits in `CORELESS_CLASSES` (`core_state.py@«NOT_THIS_NODES_QUESTION = ("giant", "gas_giant", "ice_giant", "sub_neptune",»`; the constant was named `CORELESS_CLASSES` when this was written and was renamed by C23 on 2026-09-06 — that rename is the repair this line records as outstanding) while its own refusal says the iron core is there under the envelope** — the constant's name and its reason disagree; recorded, not repaired. The edge stays `status: gap` — a real coupling with no supplier. |
@@ -2713,6 +2713,10 @@ about**"*. **It is not.** Running it against C25's recorded sentence (*"2.75 →
 | **③ core-side supply `q_total`** | `core_energy.core_terms` — `Q_s + Q_L + Q_g + Q_R` at a declared cooling rate; **what the entropy budget uses** | **falls** across the inner core's disappearance |
 
 **C25's tension is about ①**, the published 4.5–9.0 TW range is ①'s, and the entropy corners are ③'s.
+⚠ **This is what pinning the columns first bought:** the wrong column was **findable** because it had
+been written down before the numbers existed, and it was found by the first cell that disagreed with a
+sentence already in the document. Had the table been built and labelled in one pass, ① and ③ would have
+been one column called `Q_C` and nothing would have contradicted anything.
 ⚠ **One column could not have carried both**, and the pre-registration said it did. **The rows and the
 `k` axis stand as registered; the flow column is split, and the split is recorded here rather than
 edited into (b).**
@@ -2762,9 +2766,19 @@ corners, `k` 20 · 40 · 100 as record.** No cell is a pass or a fail.
   regardless of the horn or the potassium.
 - **`k` = 70, our own upper corner, is negative in eight of nine rows** — positive only in the wettest
   cell (3 760 K with 400 ppm K, +28.1).
-- **The cooling-rate choice is small next to these.** Repeating rows at C20's computed 36 K/Gyr moves
-  `ΔE` by **+6.5 … +6.8 MW/K** (3 760/1.5: +221.5 → +245.4 at k 30; 4 155/1.5: +20.6 → +27.1), i.e. the
-  registered −33 K/Gyr does not decide any sign that the other axes do not already decide.
+- ⚠ **The cooling-rate choice is small on the horns without an inner core and 3.6× larger on the one
+  with it, and the first draft of this line missed that.** Repeating every cell at C20's computed
+  36 K/Gyr moves `ΔE` by **+6.5 MW/K at 4 155 K** and **+6.8 at 3 978 K** — but by **+23.8 at 3 760 K**,
+  because `Q_L` and `Q_g` are linear in the rate too and they exist only there. *(The parenthetical in
+  the draft, 3 760/1.5: +221.5 → +245.4, already showed the +23.9 and the sentence generalised the wrong
+  number; corrected on the audit's sweep of all 45 cells.)*
+- ⚠ **And it does decide one sign: exactly one cell of 45 flips, `3 760 · H 0.9 · k 70`, from −13.7 to
+  +10.2 MW/K** — and that is a **verdict corner**, not a record column. **44 of 45 cells keep their
+  sign; the cooling rate is the deciding variable in that one.**
+- ⚠ **So owner decision ① and the cooling rate are not independent.** The flipping cell sits on the
+  **inner-core horn**: choose 3 760 K and the cooling rate becomes a new decision axis for that cell;
+  choose 4 155 or 3 978 K and it is harmless. This is the shape `engine/bands.py`'s `Choice` calls an
+  `only_when` dependence, and it is recorded here rather than left for whoever reads the table next.
 
 **The parallel seat's H-ladder prediction is reproduced, and that is all it is.** P4 predicted the
 descent +32 → ≈ −7 → ≈ −57 across the three potassium caps at `k` = 30; the reference row at C20's own
@@ -2782,6 +2796,86 @@ C14's root (3 978 K), not a disagreement. ⚠ **So the ladder is a reproduction,
 
 ⚠ **Nothing in the engine changed, and no value moved.** The table is a measurement of what the existing
 code says at three declared temperatures. **The choice is owner decision ①, and it is not made here.**
+
+### C25 (d) 2026-09-09 — what the literature prints behind the band's two axes, and the three decisions in one place
+
+**Read by the parallel seat (P4), transcribed here with labels and grades, and no value selected.** The
+report is at `/Users/vana/Desktop/NearStars-artifacts/2026-09-09-c20-entropy-band/P4-core-entropy-band-inputs.md`;
+**held 6 · abstract only 14** for this task.
+
+#### `k_core` — the printed span is **18–226**, and it has been two camps since 2012
+
+| camp | printed | grade |
+|---|---|---|
+| **high** | Pozzo+ 2012 Table 1 — `k_CMB` **100** for core mixtures (pure Fe 144/140), `k_ICB` **150**; text *"DAC … 90–130 at the top of the outer core"* | **held** |
+| high | Zhang+ 2022 Results — hcp Fe-9Si *"**∼100 to 110** W m⁻¹ K⁻¹ at ∼140 GPa and 4 000 K … unexpectedly close to that of pure hcp Fe (**100 ± 10**) (Ohta+ 2016)"*; Fe-(4.3–9.0)Si ∼78 at 120–140 GPa, 2 500 K | **held** (Europe PMC mirror) |
+| high | de Koker+ 2012 — ⚠ **no single `k_CMB` in the text**; conductive flux at the top of the core *"**14–20 TW**"*, and Fig. 3 read by eye (±5): liquid Fe ≈130–140, Fe₇Si ≈115–125, Fe₃Si ≈95–105 W/m·K — **figure-read, barred from any board row** | **held** (Europe PMC mirror) |
+| high | Gomi+ 2013 abstract — outermost core *"greater than **90**"* | abstract only |
+| **low** | Hsieh+ 2020 — Fe-15Si *"about **20**"* at ∼132 GPa, Fe-4Si ≈40 saturated, pure Fe ≈120–130 near CMB pressure | **held** |
+| low | Konôpková+ 2016 abstract — *"**18–44** watts per metre per kelvin"*, solid Fe, direct measurement | abstract only |
+| re-cited | Ohta+ 2016 prints no number in its abstract; Hsieh+ 2020 re-cites it as **≈226** | abstract only |
+
+⚠ **The sharpest form of the split is inside one alloy family**: for comparable silicon, Hsieh+ 2020
+reads **≈20** and Zhang+ 2022 reads **∼100–110**. **Our 30–70 is a low-to-middle subset of 18–226, and
+nothing in this literature narrows it** — which is why C49 exists and why owner decision ② is a choice
+between camps rather than a measurement.
+
+#### `H_core` — the literature moves one way only
+
+Our ceiling **1.5 pW/kg** is Nimmo+ 2004's own model requirement (*"The core contains 400 ppm
+potassium"*, Table 4), and the partition experiments since then print **ceilings**: Gessmann & Wood 2002
+*"highest possible K content is about **250 ppm**"*, Bouhifd+ 2007 *"∼25 or ∼250 ppm"*, Watanabe+ 2014
+*"less than **40 ppm** … less than 0.17 TW"*, Gaidos+ 2010 §2 *"a few tens of ppm"* — all abstract only
+except Gaidos, which is held. On the textbook conversion (natural K ≈ 3.5 × 10⁻⁹ W/kg) those are
+**≈0.09 · 0.87 · 0.14 pW/kg**. ⚠ **So the axis is not symmetric: every later constraint is below our
+ceiling**, and C25 (c) measured what that costs — the reference row's only positive corner falls
+**+34.7 → −4.7 → −54.7** MW/K across 400 → 250 → 40 ppm.
+
+#### `Q_CMB` and the inner core — where our outputs sit against the printed ranges
+
+| quantity | ours | printed |
+|---|---|---|
+| present `Q_CMB` | **5.07 TW** (C20), 4.91 at C14's closure | **5–17 TW** (Hsieh+ 2020 text, held); Nimmo 2007 6–14; Labrosse 2015 isentropic 13.25 at present; Zhang+ 2022 mantle-side ∼10–12 |
+| adiabatic requirement | `Q_ad` 4.31 (k 30) · 7.18 (k 50) · 10.05 (k 70) TW | **15–16 TW** at k 100 (Pozzo+ 2012 Table 2); ≈3 TW at k ≈20 (Hsieh+ 2020) |
+| inner-core age | ⚠ **never nucleates in 4.54 Gyr** | 0.37–1.90 Gy (Nimmo 2007, four studies) · 0.3–1.0 Ga (Pozzo Table 2) · <0.7 Ga (Ohta) · **∼0.5 to >2.5 Ga** (Bono+ 2019, *"span set by k"*) · >2 Ga at k ≈20 (Hsieh) |
+
+⚠ **Our `Q_CMB` sits at the floor of the printed range, and the comparison collapses into the `k`
+choice**: high `k` needs 13–16 TW for the adiabat alone — three times what we have — while low `k` needs
+≈3 TW, which we clear. ⚠ **And "never nucleates" fits no camp at all**; that is C14's melting-curve
+depression factor (0.80), which is outside P4's scope and is not touched here.
+
+#### The papers say `k` is the deciding variable, and so does our own run
+
+- **Nimmo+ 2004 §6.1 (held), printed:** *"Reducing the core thermal conductivity … increases the
+  available entropy production, but has no effect on the rate of inner core growth. … Reducing the
+  conductivity to **20 W m⁻¹ K⁻¹ results in positive entropy production throughout** (because `E_k` is
+  reduced)."* ⚠ **C25 (c)'s `k` = 20 record column agrees except at the lowest potassium** (+269.9 …
+  +76.3, but −13.1 and −16.7 in the two 40 ppm rows) — the paper's *"throughout"* is inside its own model,
+  which carries 400 ppm K.
+- **Nimmo Table 6** (k 20, `η₀` 2 × 10²² Pa s): `E_min` **+74** MW/K, inner-core age 1 400 Myr, **no
+  potassium needed** — a printed anchor for the low-`k` case.
+- **Nimmo Table 5**: every other parameter needs a multiple of its own error to close the budget and
+  still gives negative `E_min`; only `ζ` reaches positive (**+54**), and its error is ±50 %.
+- **Pozzo+ 2012 (held)**: high `k` *"approximately doubling the heat conducted down the adiabatic
+  gradient … and halving the power to drive a dynamo"*; their Model 1 gives `E_J` **−111** MW/K.
+- **Hsieh+ 2020 (held)**: *"the key role played by thermal conductivity on core evolution"*, with Fig. 3
+  giving maximum inner-core age and minimum initial CMB temperature **as functions of `k` alone**.
+- **Bono+ 2019 (abstract only)**: *"Plausible yet contrasting core thermal conductivity values lead to
+  inner core growth initiation ages that span 2 billion years."*
+- **Ours**: the `k` axis moves `ΔE_min` by **193** MW/K against `H`'s **98** — 2:1, measured on our own
+  run.
+
+#### The three owner decisions, in one place, with candidates and no selection
+
+| # | decision | candidates | what each costs |
+|---|---|---|---|
+| ① | **which horn of C25** | measured `T_c` 3 760 K · `Q_C`-in-range 4 155 K · keep C14's root 3 978 K | inner core and a positive band, at the price of contradicting the published flux · the published flux, at the price of `e_l` = `e_g` = 0 · the closure's own consistency, with the second horn's cost and none of the first's gain |
+| ② | **how `k_core` is carried** | keep Nimmo's 50 ± 20 (30–70) · elect the low camp (Hsieh ≈20 / Konôpková 18–44) · elect the high camp (Pozzo · Zhang · de Koker, 95–140) · widen to the printed span 18–226 · unify with the sub-Neptune declaration (C49) | our current band is a subset nothing narrows · low `k` makes the budget positive nearly everywhere and needs no potassium (Nimmo Table 6) · high `k` closes the budget on its own (every row negative at k 100) · widening makes the answer a surer *cannot-say* · unification is a housekeeping decision with a physics consequence |
+| ③ | **whether `ΔE` > 0 is our threshold** | the paper's own `ΔE` > 0, which it calls a threshold-avoidance · the printed required excess **0.1–1 000 MW/K** | the first is reachable in the 3 760 rows · ⚠ **no cell in C25 (c) reaches the upper end of the second**, so under that reading the answer is *fails* everywhere |
+
+⚠ **Nothing here is chosen, and nothing in the engine moved.** This subsection is the literature laid
+beside our numbers so that the three decisions can be made on printed values rather than on our own
+outputs.
 
 ### C26 — the superionic-ice representation above ice_x's 1 800 K ceiling — **listed 2026-09-04, not started**
 
@@ -5913,7 +6007,7 @@ test pass.**
 |---|---|---|
 | where | `engine/cmb_flux.py@«K_CORE = 50.0»` | `engine/sub_neptune_dynamo.py@«CORE_CONDUCTIVITY = Band(»` |
 | shape | **one declared midpoint, 50, ± 20** → `K_CORE_RANGE` = (30, 70) | **midpoint `None`**, ends **40** and **100**, plus an unmade `Choice` with both candidates |
-| source | Nimmo+ 2004 Table 1's own ±, one paper | **two** papers, as Tang+ 2025 runs them both — Konôpková+ 2016 (`2016ApJ...817..107K`) 40, Pozzo+ 2012 (`2012Natur.485..355P`) 100 |
+| source | Nimmo+ 2004 Table 1's own ±, one paper | **two** papers, as Tang+ 2025 runs them both — Konôpková+ 2016 ([`2016Natur.534...99K`](https://ui.adsabs.harvard.edu/abs/2016Natur.534...99K)) 40, Pozzo+ 2012 ([`2012Natur.485..355P`](https://ui.adsabs.harvard.edu/abs/2012Natur.485..355P)) 100. ⚠ **And the module's own bibcode for Konôpková was `2016ApJ...817..107K`, which resolves to nothing in ADS** (`numFound` 0) — corrected 2026-09-09; this seat had copied it into this row before checking |
 | grade | declared | calibrated |
 | consumed by | `core_entropy.K_RANGE`, `core_history.K_CORNERS`, and `cmb_flux`'s `q_ad` band | the sub-Neptune dynamo verdict, which **refuses to run until the `Choice` is made** |
 
@@ -5930,8 +6024,18 @@ the same physical quantity in two shapes with two grades, and the newer one's re
 older one's arithmetic.** Deciding it is part of **owner decision ②** in C25 (b) — keep the ±, elect a
 camp, or unify on the two-paper form — and no value is changed by listing it.
 
-⚠ **Nothing moved.** Both declarations stand exactly as they were; this entry is the record that they
-cannot both be right about 70.
+⚠ **One thing did move, and it is a citation rather than a value.** The sub-Neptune module attributed its
+40 W/m/K to Konôpková+ 2016 under the bibcode **`2016ApJ...817..107K`**, and that bibcode **resolves to
+nothing in ADS** — `numFound` 0, checked 2026-09-09 through `ADS_API_TOKEN`. The paper is *"Direct
+measurement of thermal conductivity in solid iron"*, **Nature 534, 99**,
+[`2016Natur.534...99K`](https://ui.adsabs.harvard.edu/abs/2016Natur.534...99K), 253 citations. The value
+is unchanged — Tang+ 2025 is what runs 40 and 100 — and only the pointer is fixed. ⚠ **This seat had
+already copied the dead bibcode into the row above before checking it**, which is
+`docs/reference/derivation-discipline.md@«A number whose source was not stated is quoted without one; an invented source is harder to catch than a missing one.»`
+happening to the seat that quotes that rule.
+
+⚠ **Otherwise nothing moved.** Both `k` declarations stand exactly as they were; this entry is the record
+that they cannot both be right about 70.
 
 ## What closing all of these does not do
 

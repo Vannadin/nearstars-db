@@ -30,8 +30,12 @@ sub-Neptune that is the difference between a body with aurorae and one without.
 
 Anchors (C33) — the paper, not our summary of it:
   Tang+ 2025 `2025ApJ...989...28T` (cached PDF), abstract · Figure 19 caption · §Rm discussion
-  the two conductivities are Konôpková+ 2016 `2016ApJ...817..107K` and Pozzo+ 2012 `2012Natur.485..355P`,
+  the two conductivities are Konôpková+ 2016 `2016Natur.534...99K` and Pozzo+ 2012 `2012Natur.485..355P`,
   cited by Tang; neither is read here, so both are carried as "Tang attributes it to them"
+  ⚠ 2026-09-09 (C49): 이 줄의 Konôpková 비브코드는 `2016ApJ...817..107K` 였고 **ADS 에서 아무것도
+  아닙니다**(numFound 0). 실제 논문은 Nature 534, 99 — *"Direct measurement of thermal conductivity in
+  solid iron"*, `2016Natur.534...99K`, ADS 인용 253회. 값(40 W/m/K)은 Tang 이 그렇게 돌린 것이므로
+  바뀌지 않고, 가리키는 논문만 고쳤다
 """
 from __future__ import annotations
 
