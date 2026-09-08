@@ -1583,3 +1583,64 @@ called resolved when only its thresholds half was.
 **All four were caught downstream, none by the seat itself.** The relay is a place where a claim
 gains confidence without gaining evidence — which is the same defect as a citation that resolves
 while its sentence lies, one layer up in the org chart.
+
+## 2026-09-08 afternoon — two Terminal crashes, C48 closed, C47 step 0 half-passed, written by the recovery seat
+
+*Written at ~17:00 by the session that came up after the second crash, from the four dead seats' transcripts
+and the gate logs. Nothing below is from memory; each fact names where it was read.*
+
+### What happened to the seats
+
+- **15:54 and 16:34 — all seats died twice.** Both were macOS Terminal.app itself (uncaught exception in
+  view drawing → SIGTRAP; `~/Library/Logs/DiagnosticReports/Terminal-2026-09-08-{155443,163420}.ips`),
+  not Claude Code. The same crash type is on record for 09-03 and 09-04. ⚠ **Expect it again on the same
+  terminal app.** RAM was not the cause — browser tabs held ~6 GB, each `claude` process ~0.4 GB.
+- After the first crash `nearstars-33` retook the directing seat, re-read the four dead transcripts via
+  seven subagents, and re-seated: work = `nearstars-6c` (Opus 5 1M), parallel = `nearstars-d0` (Opus 5
+  1M), audit = `nearstars-ee` (Fable 5.1). Brief counter continued from 158. All four died again at 16:34
+  while the second seat set was mid-flight. **Nothing was lost**: every commit landed before the crash, the
+  tree was clean both times, and the two nohup'd jobs (gate187, the C47 step-0 sweep) survived and finished.
+- `main` was pushed to `b92ad07b` at ~16:23 on the owner's word ("ㅇㅇ 밀어"). The standing note that `main`
+  carried one unpushed commit is stale.
+
+### Where each item stands now
+
+| item | state |
+|---|---|
+| **C48** | **closed 2026-09-08 in two halves.** Domain half: Brief 155 (`e6b10ac2`, `f2443fb6`, `0dc23b14`) — the Nimmo laws' domains declared from the paper as fields, `Limit` records, a ceilinged point, the operator re-read by a test. Step half: Brief 156 pre-registered the Mars step sweep (`9c7b6796`), Brief 157 pre-registered (`69245e42`, 15:26) then implemented (`7674988b`, 15:36) **`h = min(4 Myr, 0.1·τ)`**. ⚠ **The measurement chose the candidate the directing seat did not favour**: with the step following τ, Mars integrates to 4.5 Ga (1197 steps, h_min 0.0053 Myr; τ at start 0.0528 Myr, so the fixed step was 75.8×τ) and Earth does not move (1152 steps, T_p 1525.46 K, max h/τ 0.100). |
+| **C48 framing** | The "called outside its expansion point" sentence in row col 3 was replaced at `20ed09d7` with the old text preserved beside it. Nimmo §5.3's own mechanism is the short high-T time constant. |
+| **Brief 158** | three commits on top of 157: `d229e695` (contract Needs was missing `step_fraction` — the one thing gate185 caught, rc=1), `b818ccbf` (0.717 Myr mislabel — it is the ²⁶Al half-life, not a time constant — recorded as a case under §10's label rule, en+ko), `20ed09d7` (four stale "Nimmo's 4 Myr step" strings incl. the `CONDITION` string that rides in every Result's notes; C48 row col 3). Audit seat reproduced all six pre-registered τ values, both step counts and the temperatures independently before these were written. ⚠ `scripts/check.sh@«Nimmo 4 Myr 걸음»`'s comment still describes the integrator as fixed-step; `engine/chain.yaml@«Nimmo 의 4 Myr 걸음»` and `engine/interior-core.md@«in ~4 Myr steps»` are dated chronicle and borderline. Next brief. |
+| **gate187** | `GATE START sha=20ed09d7 pid=78379 at=16:27:07 lane=full`, **`GATE END sha=20ed09d7 pid=78379 at=16:56:13 lane=full rc=0`**, 0 `[FAIL]`. `engine/prototype` pushed to `20ed09d7` at 16:56:48 on that line. |
+| **C47 step 0 (Brief 159)** | pre-registered in C47 (h) before the run. **Criterion A passes**: Mars `T_pot` transfer sweep 1400–1800 K, both variants (`r_b`-point, `T_m0`-fixed), max \|slope\| **0.0017 ≪ 0.5**; Earth anchor reproduced inside the sweep (1525.46 K, 1152 steps). Ran nohup, survived the crash, `C47 STAGE0 END rc=0 16:40:01`. **Criterion B is not yet computed**: the 3.7 Ga T_p and q_M/q_C columns were written blind to `/tmp/c47_stage0_full.json` (keys `mars["<T>|<variant>"]`, `earth`) and never printed; log `/tmp/c47_stage0.log`; script `…/dbc9e96f-…/scratchpad/c47_stage0_tpot_sweep.py`. ⚠ Both are in `/tmp` — copy them somewhere durable before a reboot. |
+| **Criterion B — rule, set 16:25–16:31** | comparand = Earth's **declared** `potential_temperature` 1600 K (Unterborn+ 2019), not the engine's 1525 K output. Width by pre-set paper priority: rank 1 **Monders+ 2007 is empty** — its 1280–1475 °C is basaltic-magmatism temperature (cites 1992JGR/1988JPet), not T_p; so rank 2 **Herzberg+ 2007 (`2007GGG.....8.2006H`, abstract only) 1280–1400 °C = [1553.15, 1673.15] K** is the verdict line; pass requires the same verdict at both sweep ends. Record-only columns: Herzberg+ 2010 1623 K, Katsura+ 2010 [1575, 1645], Putirka 2016 [1603.15, 1723.15], union [1553.15, 1723.15]; Sarafian+ 2017's +60 °C noted, not applied. ⚠ **If the four candidates disagree the verdict is held and the owner picks the paper.** |
+| **1623 K provenance** | found: Korenaga 2010 (`2010JGRB..11511405K`, held, §5) attributes it to Herzberg+ 2007, but the 1350 °C is printed by Herzberg+ **2010**; Korenaga 2009 §4's ΔT = 1350 K + T_s = 273 K is a third path to the same digits. C47 (h)'s "Korenaga's own §4 condition" is the 2009 ΔT, a different quantity. Correction due in a C47 (i) section that does not exist yet. |
+| **Mars T_p — direction change** | ⚠ **"a present Martian T_p does not exist in the literature" (C47 (h), the 09-08 morning handoff) is wrong as written.** Re-cited values exist: Yoshizaki & McDonough 2020 (`2020GeCoA.273..137Y`, §5.1) assumes ~1500 K; Dong+ 2022 (`2022Icar..38515113D`) uses 1600 K today and the Baratoux curve by epoch (Amazonian ~1600–1650, Hesperian ~1650–1700 K). Both are model inputs, 100 K apart, both trace to Baratoux 2011 (Nature, unobtainable); Parro+ 2017 warns they are volcanic-province values, not an average. Both papers installed in the cache from arXiv with PROVENANCE + CAUTION sidecars (tree unaffected). C47 (h)'s "route (i) closed" needs a *"2026-09-08 re-cited values found, original unheld"* marker. **The owner chooses Mars's declared value (1600 K transfer vs 1500 K re-citation) after the step-0 verdict** — criterion A passing means the choice moves nothing in the Mars result, so it is a provenance choice, not an accuracy one. |
+| **C34** | unchanged — waits on C47. |
+| **P1** | closed by the directing seat 16:31. Report on disk: `…/ce84a539-…/scratchpad/P1-potential-temperature-survey.md` (149 lines). |
+| **stale text** | C47 (h) line ~4746 "There is no mars.yaml at all" — `mars.yaml` exists since Brief 149 (`2d1bb397`). `test_core_history.py` lines 7–9 sweep step counts are stale. Both to be fixed in the Brief 159 commit. |
+
+### Operating facts learned today
+
+- **gate185 printed two `GATE END` lines** (`… pid=43816 lane=full rc=1` then `… rc=0` with no pid). The second is
+  not `check.sh` (its only emitter, line 292, always prints `pid` and `lane`); it is an outer shell wrapper's
+  `echo "… rc=$?"` whose `$(date)` substitution clobbered `$?`. ⚠ **The verdict line is the one with a pid.**
+- A Python default argument binds at definition time: `integrate(step_myr=STEP_MYR)` ignores a later change to
+  the module global. `engine/tools/mars_step_sweep.py` keeps this in its header on purpose (see the morning
+  section). The rule "if it always fires it is a constant" now applies to any script whose numbers get reported.
+- Recorded-only audit items: `h_min_myr` mixes the truncated landing step into the minimum (`max_h_over_tau`
+  does not) → belongs in C47 (i); "Mars's 75" is a truncation of 75.8; test ⑥'s T_p@3.7 Ga uses the nearest
+  adaptive row.
+
+### The queue the directing seat had, in order
+
+1. ~~gate187 `rc=0` → push~~ done 16:56.
+2. Brief 158 audit at `20ed09d7` (four deterministic checks; the audit seat had finished them and not yet sent).
+3. C47 step-0 criterion B: unblind `/tmp/c47_stage0_full.json` against the Herzberg 2007 band (and the three record columns).
+4. Brief 159 commit: C47 (i) section, `mars.yaml` comment only on pass, the two stale-text fixes; gate188.
+5. Brief 160: C47 stage 4 re-run with per-body `T_p`. Then C34, the C46 remainder, C14. Belts last.
+
+### The owner-facing artifacts, refreshed 2026-09-08 ~17:00
+
+- **Board · 09-08:** https://claude.ai/code/artifact/fb15fa65-3049-444b-830d-d3871ee331c4 (daily boards are one artifact each; 09-07 is `f19bb2e3…`, 09-06 is `f5b24dd9…`).
+- **Chain explorer:** https://claude.ai/code/artifact/9a2bfa7f-48aa-47c1-9198-3a8b90c183bc — same URL as 09-04, republished from `engine/chain-explorer.html` plus the four-stage registration overlay (6 registered · 8 registered with gap edges · 14 methodology-only · 7 not started; `tidal_locking` moved from methodology-only to registered since 09-04). ⚠ The overlay is not a repo tool: it is the 09-04 directing seat's heredoc, recovered from its transcript and kept as `…/2ce6256b-…/scratchpad/chain_overlay.py`. Making it `engine/tools/` is a candidate item; until then a fresh seat rebuilds it from that file or the 09-04 transcript.
+- ⚠ Artifact URLs are account-bound (see the account-rotation memory); these were published from the work account.
