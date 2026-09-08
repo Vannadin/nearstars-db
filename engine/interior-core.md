@@ -5100,12 +5100,19 @@ seat's scratch directory for a runner or a log:
 | the pre-registration — four verdict cells, eight fixed values, the target **3.68 / 4.78** from the no-melting **1.372**, the sign convention, the (a)(b)(c) decomposition | C47 (g), committed before the run |
 | **step 1** — eq. 29/30/42/43/44 transcribed and checked row by row against Table 2's three `Δη` blocks | `engine/stagnant_lid.py`, `engine/test_stagnant_lid.py` (in the gate) |
 | **step 3's dehydration half** — eqs 45/50/51/53/54, 30 rows, no tuned parameter | C47 (f2), same module |
-| **step 4's outputs** | ⚠ **nowhere.** No number, no script, no log, in any document, module, test or scratch directory |
+| **step 4's outputs** | ⚠ **not in this repo** — and ⚠ *recovered 2026-09-08 ~21:00 from the 09-07 work seat's transcript (`a0402cc0`) by the directing seat, verbatim with per-block timestamps and tool ids, into `…/2ce6256b-…/scratchpad/c47_step4_recovered.md`.* The runner was **two inline `python3 -c` blocks** (16:39:22, which raised `OverflowError`, and 16:39:56, which ran), so nothing of it was ever committed |
 
 ⚠ **So C47 (h)'s opening — *"Step 4 ran, its numbers are final"* — points at an artifact this repo does
-not hold.** It ran inside the 09-07/08 seats' transcripts and the numbers went with them. That sentence
-is marked in (h) rather than deleted, and this section exists so the next run has a head that predates
-it.
+not hold.** It ran inside the 09-07 seat's transcript, and that transcript — not the repo — is where the
+numbers were. That sentence is marked in (h) rather than deleted, and this section exists so the next run
+has a head that predates it.
+
+⚠ **What the recovery changes, and what it does not.** The 09-07 outputs now exist as a recovered
+artifact, so Brief 162 is *promote the inline runner and reproduce those numbers bit-for-bit*, not
+*build from nothing*. **But this seat has now read them**, so they are a **reproduction anchor, not a
+blind target** — the head's ordering claim above covers this seat's own computation, which has not
+happened, and it may not be read as a claim that the re-run was blind to the recovered values. The
+verdict cells in (g) are what they always were: written before any of it.
 
 **What the build must add, counted before it is started** (`engine/stagnant_lid.py`'s own docstring
 already says *"차원화는 단계 3–4"* — the module deliberately stops short of a flux):
@@ -5157,9 +5164,16 @@ paragraph"*. ⚠ **One count is worth keeping beside them: the audit seat counte
 `8d83b03d` where this seat's report grouped them as seven.** Same work, but the smaller number is the
 one that would leave a reader thinking less had changed — a report's grouping is not a count.
 
-**This section is the head. The build is Brief 162**, and it starts either from the dead seats' runner
-if the directing seat recovers it from their transcripts — in which case it is re-run and re-verified
-against the four anchors rather than trusted — or from nothing, with those four registered first.
+**This section is the head. The build is Brief 162**, and the recovery settles how it starts: the
+inline runner is promoted to engine code, re-verified against the four anchors above rather than
+trusted, and re-run at the two `T_p` labels. ⚠ **Three things in the recovered runner are questions for
+that brief, named here before it starts** — it fits `b` with eq. 30 (`nu_asymptotic`) while every run
+uses eq. 29 with the stability solve (`nu_full`), which is why its Earth flux comes out at 52 rather
+than the 50 mW/m² it was fitted to; it hardcodes `α = 2 × 10⁻³` inside `Ra_i` while sweeping `α` only
+in the buoyancy term, so the paper's self-contradiction is resolved *two ways at once inside one run*;
+and it sets `z*_D` from the melting-onset depth instead of iterating eq. 56's `z*_D = Nu⁻¹`, which is
+missing piece 1 above. **None of these is a reason to discard it** — it is the fastest route to a
+reproducible step 4 — but each must be decided in the open rather than inherited.
 
 ### C48 — the integrator was validated on Earth, and Earth survived by not blowing up rather than by being right — **closed 2026-09-08: domain (Brief 155) + step (Briefs 156–157)**
 
