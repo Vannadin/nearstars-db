@@ -2067,9 +2067,14 @@ opposite for 10–100 km objects, a class the roster may want."* The owner's jud
 1. *"단수명 방사성 원소가 소멸할 때까지의 구간만 촘촘하게 적분하는 식으로 접근하면 안되려나?"* (18:10) →
    **a variable step.** Half-lives ²⁶Al 0.73 My · ⁶⁰Fe 1.5 My (Monteux+ 2016 lines 187–191, held, quoted
    verbatim in `radiogenic-context-notes.md` §3, citing Carlson & Lugmair 2000): integrate the first ~10 Ma
-   finely (0.1 Ma steps ≈ 100 steps), then C20's ~4 Myr steps. ≈100 steps on top of C20's ~1 100 — cost
-   effectively nil, and **there is no other way**: a uniform 4 Myr step cannot see the pulse at all. **C21 is
-   the first ~10 Ma of C20's time axis.**
+   finely (0.1 Ma steps ≈ 100 steps), then C20's steps. **C21 is the first ~10 Ma of C20's time axis.**
+   ⚠ **Restated 2026-09-09 on the measurement, replacing three phrases this seat had written** (the
+   owner's proposal above is verbatim and untouched): the cost is **≈86 additional steps, not ≈100**, on
+   a base of **1 152** rather than ~1 100, because **14 of the window's steps already exist**; the claim
+   *"there is no other way"* is **withdrawn** as unproven; and *"a uniform 4 Myr step cannot see the
+   pulse at all"* becomes **body-dependent** — Earth resolves the ²⁶Al half-life with about **1.4
+   samples** (one step is 0.520 Ma at t ≈ 1.4 Ma), while **Mars already resolves it**, 32 of its 56
+   window steps sitting under 0.1 Ma. **The fine interval is still needed, and Earth is why.**
    ⚠ *2026-09-08: **the step is no longer uniform, so what was arithmetic here is now a measurement.***
    *Measured by re-running the two integrations at this tree and printing one column (C47 (i)) — the stage-0 JSON
    carries per-run scalars only, no rows: the first 10 Ma holds **14** steps on Earth (h 0.393 → 1.304 Ma)
@@ -6279,6 +6284,26 @@ and the existing ones are visible in the gate's own output on every run.
 
 ⚠ **No owner decision is involved.** This is a repair of the engine's own declarations against its own
 contracts; nothing here is an art or physics choice.
+
+**When this closes:** when the four class-① pairs are repaired and
+`engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»`'s set is **empty** — at which point class ① is
+simply a gate rule with nothing grandfathered — and when class ③'s printed baseline reaches **(0, 0)**,
+which promotes that class to a `FAIL` as well.
+
+#### ⚠ A fifth shape, harder to catch than C37, and one instance is already in the list
+
+**`porosity_cap` is in class ① only by luck.** `engine/interior.py@«inputs["porosity_cap"] = P_LAB_MAX»`
+— the inversion branch — **writes the evidence dict directly with a real number that came from no
+lookup at all** (and the line above it does the same for `initial_porosity`, which is in class ③). On a
+body that takes that branch the evidence therefore reads `porosity_cap = 0.3` or whatever `P_LAB_MAX` is,
+**not `None`** — and the checker's class-① test is `inputs[key] is None`. ⚠ **So "the lookup missed and
+the evidence was filled with a constant" is structurally invisible to today's check, and it is worse
+than C37**: C37 left a `None` that a reader might notice, while this leaves a plausible number.
+
+**It shows up here only because some sample body does *not* take the inversion branch**, leaving the
+`None` for the checker to find. **The detection is one line and it is not built here:** *does a key
+whose lookups all missed later appear in `inputs` with a **non-`None`** value?* **Named, with its
+detection and its one known instance, and left for the repair brief.**
 
 ## What closing all of these does not do
 
