@@ -1632,3 +1632,118 @@ equation the paper rejects". **That is the argument for the rule, not a feeling 
 would have *run*, produced numbers, and passed the gate. `tidal_transport.py` is the standing proof:
 verbatim transcription, machine-precision residuals, and its own header saying the numbers may not be
 adopted because the source cannot reproduce its own result.
+
+## 2026-09-08 — where the work seat stopped, written at the model change
+
+**Tree is clean, nothing unpushed, no gate running, HEAD `862ee76e`.** What follows is the state, not
+a summary.
+
+### Two things from this stretch worth carrying, before the item list
+
+- **Self-counted errors, in a form that could be checked.** Eleven of this seat's own mistakes were
+  named on the day, each with what it was and how it was caught. ⚠ **Ten of eleven were caught by
+  reading; the gate caught none** — they were errors of *status*, not of value, and no check in this
+  repo looks at status. That count is the argument for the disciplines below, and it is worth more
+  than any one of them.
+- **Pre-registration committed before the measurement, then gated before the computation.** Step 4's
+  thresholds, its four verdict cells and its fixed inputs went in at `2d77a3e6` and `b4dba01f`, and
+  the numbers were computed only after `rc=0`. ⚠ **The point is that git testifies to the order** — an
+  amended pre-registration would have carried a timestamp after the answer, so the gate wait was not
+  ceremony.
+
+### Where each item stands
+
+| item | state |
+|---|---|
+| **C48** | ⚠ **name undecided — two candidates, and a running measurement decides.** *Step reduced and Mars survives* → "the fixed step cannot follow the mantle time constant". *Step reduced and it still diverges* → "undemonstrated region; the paper never runs Mars", and the step is innocent. ⚠ **The directing seat favours the second and that is not evidence.** The measurement decides |
+| **C47** | verdict held. Step 4's numbers are final; the common `T_p` question is open |
+| **C34** | does not close by choosing; waits on C47 |
+| **brief 151** | rule compression, not started. 38 standing rules counted (the brief says 37). Classification table first, moves only after it is reviewed |
+| owner order | 3 (rules and lookups) → 2 (transfer provenance, `demonstrated_on`) → 1 (direction and domain fields, plus gate) |
+
+⚠ **One thing in C48's current text needs revisiting whichever way the measurement lands.** The
+section is framed as *"called outside its expansion point"*, but Nimmo's own §5.3 says the lack of
+sensitivity to initial conditions *"is due to the **short mantle time constant at high
+temperatures**"* — **the enormous high-`T` flux is the mechanism the paper relies on**, not a misuse.
+That framing may have been wrong from the start.
+
+### The diagnostic script is on disk, deliberately
+
+`engine/tools/mars_step_sweep.py`. ⚠ **Do not rewrite it from memory** — its header exists to stop the
+next seat falling into the trap this one fell into. `core_history.integrate` takes
+`step_myr: float = STEP_MYR`, and **a Python default binds at definition time**, so setting the module
+global changes nothing and `solve` calls it with no argument. Four steps were swept, all four ran at
+4 Myr, and all four printed "diverged" — a result plausible enough to have been written down.
+
+### Two cases brief 151 will need, because its argument rests on them
+
+- **A verification that verified nothing** (above). Same family as C45, where a checker compared labels
+  and never looked at the lookup key. ⚠ **Both were true when they said "it ran and it was green".**
+  What makes this family dangerous is that the output is *plausible*: the conclusion "reducing the step
+  does not help" is physically reasonable, so nothing flags it. And the rule against it **already
+  existed** — `engine/test_interior.py` says an indicator must *"fire above the threshold and stay
+  silent below; **if it always fires it is a constant**"*, and `CLAUDE.md` §4 says write the failing
+  test first. **The rule was attached to tests, and this was a throwaway measurement script**, so it
+  did not apply itself. That is a scope problem, not a missing rule — brief 151's category (b).
+- **The directing seat proposed, as a new rule, one already written in two places.** The owner found
+  it. ⚠ **That is the compression argument in one event: with thirty-eight standing rules, the person
+  proposing a new one cannot tell it is already there.** Adding a thirty-ninth would have made it
+  worse.
+
+⚠ **Reading before building is now seven for seven**, and the seventh had yet another shape: not
+existing code, not a declared limit, not a paper's own sentence, but **our own rule** — found by the
+owner asking whether we already did this.
+
+## 2026-09-08 — the directing seat's own handover, written by it and filed here to avoid a conflict
+
+*Relayed verbatim in substance by the work seat, which had the file open. The content is the directing
+seat's.*
+
+### What a new directing seat needs in its first five minutes
+
+- **The role is briefs, verification-first, and pushing. It does not implement.**
+- **Replies to the owner: Korean, 존댓말, one fact per sentence, plainly.**
+- **Push only on a `GATE END … rc=0` line, and ⚠ push the gate's sha, not `HEAD`.** `engine/prototype`
+  only; **never `main`** without the owner saying so.
+- **Report decisions, changes of direction, and completions.** Small fixes are handled silently, not
+  reported.
+
+### Operating knowledge that is expensive to rediscover
+
+| | |
+|---|---|
+| **ADS** | `link_gateway` failed all day; `articles.adsabs.harvard.edu/pdf/<bibcode>` works. ⚠ **An `&` in a bibcode must be `%26`** (`2007M&PS...42..131M`). The `EPRINT_PDF` route reaches arXiv — that is how `2014GeoJI` arrived |
+| **Blocked** | Nature and Nature Geoscience cannot be fetched on the owner's institutional access |
+| **Paper grades — four, not three** | held · abstract only · unobtainable · ⚠ **in hand but image-only** (`pdftoppm`), which reads like "held" and is not |
+| **Cache** | `docs/phase3/_papers` is gitignored and symlinked, so **installing a paper never dirties the tree** — safe to do while a gate runs |
+
+**Five papers landed today, each with a PROVENANCE saying why**: `1976LPSC....7.3143L` (Moon, image
+only) · `2017NatSR...745629P` (Mars) · `2009GeoJI.179..154K` (the stagnant-lid law) · `2014GeoJI.199..580F`
+(reserve, arXiv eprint) · `2007M&PS...42..131M` (the evidence that a present Martian `T_p` does not exist).
+
+### The directing seat's ledger for the day
+
+1. **Approved transferring 3040 K without noticing it was derived**, not printed. Only the printed
+   number travels.
+2. **Approved a pre-registration of eight fixed values and did not see the ninth was missing** (`T_p`),
+   which is what put C47's verdict on hold.
+3. **Proposed a band whose width came from our own failure boundary.** ⚠ A band is the opposite of a
+   knob **only when its width comes from the physics**.
+4. **Proposed, as a new rule, one already written in two places** (`CLAUDE.md` §4 and
+   `engine/test_interior.py`); the owner found it. ⚠ **That event is itself the argument for brief
+   151** — with thirty-eight standing rules, the person proposing a thirty-ninth cannot tell it is
+   already there.
+
+### The four disciplines that actually caught errors, none of which is in any rule document
+
+| | |
+|---|---|
+| **read before building** | **7/7** — four times existing code, once a declared limit, once the paper's own sentence, once **our own rule** |
+| **register before seeing results** | thresholds, verdict cells and fixed inputs committed before the measurement; **git testifies to the order** |
+| **numbers first, interpretation second** | sent as separate messages so two seats read the numbers independently; mixed, it is not a check |
+| **prove the sweep is live** | ⚠ **merged rather than added** — it is the existing *"if it always fires it is a constant"* widened from tests to any script whose numbers get reported |
+
+⚠ **And the sentence the day is worth summarising with:** what was dangerous was never a wrong value —
+it was **a right value carrying a status it had not earned.** Of the day's fourteen errors the gate
+caught **zero**, and the gate is good at structure. **That distinction is what should decide brief
+151's category (a).**

@@ -1298,3 +1298,45 @@ could not have failed.
 a 1998 paper we do not hold — is superseded by Smrekar+ 2023's measured **78**, four to eight times
 higher. **The rung has not moved.** Checking who set a rung also tells you when they set it, and a
 twenty-five-year-old rung deserves that question asked out loud.
+
+## A sweep that swept nothing, because a default binds at definition time (2026-09-08)
+
+C48 needed one number: does Mars still diverge when C20's integration step is reduced? Four steps were
+run — 4, 1, 0.25 and 0.1 Myr — and all four printed "diverged". The conclusion "the step is not the
+cause" was one keystroke from being written into the item.
+
+**All four ran at 4 Myr.**
+
+```python
+def integrate(params, t_c0, t_m0, age_gyr, step_myr: float = STEP_MYR)   # core_history.py:97
+```
+
+`ch.STEP_MYR = step` rebinds the module global. **The default was already evaluated when the function
+was defined**, so it stays 4.0, and `solve` calls `integrate` with no fifth argument. The knob was not
+connected to anything.
+
+⚠ **What makes this family dangerous is not the bug, it is the plausibility of the output.** "Reducing
+the step does not help" is a physically sensible result. Nothing about four identical answers looks
+wrong; four identical answers are what a real negative result looks like. Same shape as C45, where a
+checker compared labels and never read the lookup key it was supposed to check — **both were honestly
+green, and both had looked at nothing.**
+
+⚠ **And the rule against it was already written, twice.** `engine/test_interior.py`: an indicator must
+*"fire above the threshold and stay silent below — **if it always fires it is a constant**"*. And
+`CLAUDE.md` §4: write the failing test first. **A dead sweep makes its own knob a constant**, which is
+exactly the condition that comment names.
+
+**Why it got through anyway: the rule was attached to *tests*, and this was a throwaway measurement
+script.** Nobody thinks of a scratch script as something that needs proving. So the widening, rather
+than a new rule:
+
+> **A script whose numbers you will report is a test.** Show that changing the input changes the
+> output — if it never changes, that input is a constant, not a knob — and only then run the real
+> thing.
+
+**Applied immediately, and it works**: `prove_live()` runs Earth at 4 and 200 Myr and checks the step
+count differs (1135 steps against a failure). One extra run.
+
+**The script is on disk as [`mars_step_sweep.py`](mars_step_sweep.py), and its header exists to stop
+the next seat rewriting it from memory** — which would mean falling into the same default-argument
+trap. ⚠ It is a diagnostic, not a generator: it bakes nothing and belongs to no table above.
