@@ -154,7 +154,8 @@ claim while relaying it — in a brief, a report, a note. Every line was written
 of the fourteen errors on the day this section was compiled the gate caught zero: what got through
 was never a wrong value, it was **a right value carrying a status it had not earned**. Each rule is
 one line; the indented lines under a rule are the cases that were merged into it, kept for their
-evidence, with the line they came from in `engine/SESSION-HANDOFF.md` at `2269a8d5`.
+evidence, with the line they came from in `engine/SESSION-HANDOFF.md` at `2269a8d5` — or, where a case
+has no such line, the brief number it came from.
 
 **없다 · 몇 개다 · 누구 탓이다 — 이 셋은 조회를 붙이지 않으면 말하지 않는다.** *Absent, how many, whose fault: none of the three is said without the query that produced it.*
 

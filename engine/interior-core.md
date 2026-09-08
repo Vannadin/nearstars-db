@@ -1988,8 +1988,8 @@ for the last ~3 Gyr" — and no present-epoch value answers it. When the owner a
 `1588ff47`, 09-03 11:19, as the directing seat relays it), the entropy route was not closed but *deferred until
 an integrator exists*, and that deferral had no address anywhere in the documents. This row is the address.
 
-**What it is.** The coupled mantle–core energy balance rolled forward over 4.5 Gyr in ~4 Myr steps (≈1 100
-steps). Brief 45 ended at its (c) stop for exactly this reason: `Q_C` depends on `T_c` at every step and the
+**What it is.** The coupled mantle–core energy balance rolled forward over 4.5 Gyr at `h = min(4 Myr, 0.1·τ)`
+— Nimmo's 4 Myr is the cap and τ the mantle time constant (Brief 157); ≈1 150 steps on Earth. Brief 45 ended at its (c) stop for exactly this reason: `Q_C` depends on `T_c` at every step and the
 core's equation is driven by the same `Q_C`, so neither half can be integrated alone. A different kind from the
 spatial integration (shooting, already built) and from C14's root-find (no integration).
 
@@ -2005,7 +2005,11 @@ spatial integration (shooting, already built) and from C14's root-find (no integ
    스텝보다 작으면 구분하는 의미가 없을거같은데"*, and the answer was already in this file: C9's time-axis
    paragraph (2026-08-31, above) puts the star–planet difference at the **Ma** scale — Neumann & Kruse's
    t₀ ≈ 1.3–1.9 Ma (§3.3) and "no differentiation for t₀ ≥ 5.5 Ma" (§3.4), read there from the cached text
-   — which is the size of one ~4 Myr integration step, so a Gyr thermal history cannot resolve it. A printed
+   — which is the size of one ~4 Myr integration step, so a Gyr thermal history cannot resolve it.
+   ⚠ *2026-09-08, after Brief 157 made the step adaptive: **this ground no longer holds.** Earth's first
+   step is 0.393 Ma and Mars's 0.0053 Ma, so a 1.3–1.9 Ma offset is several steps, not one. The
+   decision may still be right for other reasons — **the ground needs restating, and the decision is
+   left standing until it is.*** A printed
    number now stands under that: Lichtenberg+ 2019 (`2019NatAs...3..307L`, preprint, cached), `.tex:216`:
    *"Disk lifetimes are distributed around 5 Myr, which is controlled via the photoevaporation rate"* (their
    ref. `2013A&A...549A..44F`) — planet formation ends within about one step of the star's birth. And the
@@ -2064,6 +2068,14 @@ opposite for 10–100 km objects, a class the roster may want."* The owner's jud
    finely (0.1 Ma steps ≈ 100 steps), then C20's ~4 Myr steps. ≈100 steps on top of C20's ~1 100 — cost
    effectively nil, and **there is no other way**: a uniform 4 Myr step cannot see the pulse at all. **C21 is
    the first ~10 Ma of C20's time axis.**
+   ⚠ *2026-09-08: **the step is no longer uniform, so what was arithmetic here is now a measurement.***
+   *Measured by re-running the two integrations at this tree and printing one column (C47 (i)) — the stage-0 JSON
+   carries per-run scalars only, no rows: the first 10 Ma holds **14** steps on Earth (h 0.393 → 1.304 Ma)
+   and **56** on Mars (h 0.0053 → 0.906 Ma, 32 of them under 0.1 Ma). So C21's fine sampling is still needed
+   on Earth — at t ≈ 1.4 Ma one step is 0.520 Ma, about **1.4 samples per ²⁶Al half-life** — but three
+   phrases above must be restated: «cannot see the pulse at all» (14 steps land in the window, not none),
+   «there is no other way» (unproven), and «≈100 steps on top of C20's ~1 100». **Re-judging the design
+   belongs to C21's start, not here.***
 2. *"초기비의 경우에는 계 단위로 그냥 랜덤한 시드값을 넣는게 어떨까?"* (18:17) → **a system-level seeded value**,
    with two conditions attached together: **the system is the right unit physically** — ²⁶Al enrichment is a
    property of the star-forming environment, so the bodies of one system share it; drawing per body is wrong.
@@ -4737,8 +4749,13 @@ literature is a thermal-model output, not a measurement. ⚠ And the paper's `13
 saturation temperature of **one Gusev basalt at 1.0 GPa**, not a mantle potential temperature; it is
 not transcribed. Baratoux+ 2011 ([`2011Natur.472..338B`](https://ui.adsabs.harvard.edu/abs/2011Natur.472..338B))
 is the canonical `T_p`-versus-time curve and is **not held** (Nature) — a known hole.
+⚠ **2026-09-08 — re-cited present-day values found, the original still unheld.** Yoshizaki & McDonough
+2020 (~1500 K) and Dong+ 2022 (1600 K "today") both print present-day Martian `T_p` **as model inputs**,
+100 K apart, both tracing to the unheld Baratoux+ 2011. **So "closed" above is wrong as written** — what
+survives is that no Mars `T_p` is *measured*. Corrected in full in C47 (i).
 
-**What Mars needs, which is more than the brief supposed.** There is no `mars.yaml` at all; the five
+**What Mars needs, which is more than the brief supposed.** ⚠ *Stale since Brief 149 (`2d1bb397`), which
+created it: `engine/bodies/mars.yaml` exists, with the two declarations below written into it.* There is no `mars.yaml` at all; the five
 body files are Earth, Alpha Centauri A b, Pandora and the two Luhman 16 components. So this is a new
 control body, on `earth.yaml`'s own stated footing — *"a specimen for checking the engine against
 published values, not a board body"* — and **it does not go on the board.** Of its inputs, mass,
@@ -4789,6 +4806,178 @@ down. Order buys both.
 **qualitative** statement, not a number. The checkpoint can only catch a badly wrong trajectory. **A
 pass is not a precision validation of the Martian thermal history**, and nothing downstream may cite
 it as one.
+
+### C47 (i) 2026-09-08 — step 0's numbers, the criterion-B rule fixed before the unblinding, and four corrections
+
+**Step 0 asked one question — `engine/interior-core.md@«be transferred to Mars at all?»` — and this section carries its numbers.** Criterion A's are below and
+final. ⚠ **Criterion B's are not read yet, on purpose**: the rule that decides it — including the
+verdict-line paper, which was the owner's to pick — is written and committed here **before** the
+3.7 Ga column is opened. The table lands in the commit after this one.
+
+#### The criterion-B rule, fixed before the numbers were read
+
+C47 (h) pre-registered criterion B as one sentence — *the 3.7 Ga checkpoint verdict must be the same
+at both sweep ends*. That sentence plus a paper band did not compose into one window, and the work
+seat refused to unblind until the directing seat closed the four gaps. ⚠ **The refusal is the reason
+this subsection exists: the rule below was fixed while the answer was still unread, and the commit
+carrying it is dated before the commit carrying the table.**
+
+| # | question the sentence did not answer | decided 2026-09-08 | why this and not the other reading |
+|---|---|---|---|
+| ① | is the window the paper's **absolute** band, or the paper's width **centred on** Earth's declared 1600 K? | **absolute band.** Pass = `T_p@3.7 Ga ∈ [band]`. The declared 1600 K does **not** enter the arithmetic; it stays as the guard that the window is never built from the engine's own 1525 K output | centring would invent a `±` no paper prints (Herzberg 2007's band is not symmetric about 1600 K), which is `docs/reference/derivation-discipline.md@«A band is the opposite of a knob only when its width comes from the physics»`. ⚠ The two readings differ by 13.15 K at each edge, so this is not cosmetic |
+| ② | one of the four candidate papers prints a **point** (Herzberg+ 2010, 1350 °C = 1623 K, no `±` in the abstract) — what is its in/out? | **excluded from the agreement test**, kept as a record column reporting the distance in K | a zero-width window admits nothing, so its cell is undefined under either reading of ①. The agreement test runs on the three candidates that print a band |
+| ③ | "the same verdict at both ends" — is **both ends out** "the same"? | **failure.** Both ends out means no declared value passes the checkpoint, which is a refutation, not stability. Step 0 fails and the transfer is refused | the checkpoint asks whether the declaration puts Mars near modern Earth at 3.7 Ga; "stable and wrong at every point" answers that with no |
+| ④ | which variant, and do the interior sweep points count? | **verdict on `T_m0-fixed`** (the variant that uses `engine/bodies/mars.yaml@«mantle_initial_potential_temperature: 4021.0»`, the file's printed value), **at the two ends only**. `r_b-point` and the three interior points are record columns | (h) says *both sweep ends*, and the variants are an implementation choice that (h) never registered, so the file's own printed state is the one under test |
+
+**The verdict line is the owner's, and it is chosen: Herzberg+ 2007, `[1553.15, 1673.15]` K
+(2026-09-08 17:35, from the four candidates below).** ⚠ The rank order that would have picked it
+— rank 1 Monders+ 2007, rank 2 Herzberg+ 2007 — **was a seat's, is in no commit, and collided with
+the parallel seat's own finding** that *the choice of paper is the choice of width, so it is an
+owner-facing choice*. So the rank order is chronicle only; the four candidates went to the owner and
+the owner picked the first:
+
+| candidate | window, K | grade | note |
+|---|---|---|---|
+| **Herzberg+ 2007** `2007GGG.....8.2006H` — ✅ **owner's choice, the verdict line** | **[1553.15, 1673.15]** | abstract only | 1280–1400 °C, *ambient* mantle below oceanic ridges, from MORB + ocean-island primary magmas — a potential temperature, so it does not repeat the Monders defect below |
+| Katsura+ 2010 `2010PEPI..183..212K` — record column | [1575, 1645] | abstract only | 1610 ± 35 K, mineral-physics route (410-km discontinuity + adiabat), no solidus anywhere in it |
+| Putirka 2016 `2016AmMin.101..819P` — record column | [1603.15, 1723.15] | abstract only | 1330–1450 °C, modern ambient MORB, olivine–liquid Fe–Mg re-calibration |
+| union of the three | [1553.15, 1723.15] | — | widest reading |
+| ⚠ **Monders+ 2007 cannot supply one** | — | held | its 1280–1475 °C is Earth's **basaltic magmatism** range (Kinzler & Grove 1992, McKenzie & Bickle 1988), not a potential temperature. Using it would put a magmatism range in a `T_p` slot — the same class of error C47 was opened for |
+| record only | Herzberg+ 2010 1623 K (point, ②); Sarafian+ 2017's **+60 °C** correction, which moves the two petrological candidates and leaves Katsura's untouched | — | so the apparent agreement of the two routes is not independent of whether that correction is applied |
+
+#### Criterion A — passes, and by three orders of magnitude
+
+**Sweep: Mars's declared `potential_temperature` over 1400–1800 K, five points, both variants.
+Threshold `|d T_p,out / d T_pot,declared| < 0.5`, pre-registered in C47 (h).**
+
+| declared `T_pot` | `r_b` | `T_m0` (`r_b`-point) | steps | output `T_p` | output `T_c` | `h_min` Myr | max `h/τ` |
+|---|---|---|---|---|---|---|---|
+| 1400 | 1.1882 | 4039.58 | 1197 | **1382.74** | 3897.09 | 0.0049 | 0.100 |
+| 1500 | 1.1909 | 4030.44 | 1197 | **1382.82** | 3895.08 | 0.0051 | 0.100 |
+| 1600 | 1.1937 | 4021.05 | 1197 | **1382.90** | 3893.01 | 0.0053 | 0.100 |
+| 1700 | 1.1868 | 4044.41 | 1198 | **1382.73** | 3897.84 | 0.0048 | 0.100 |
+| 1800 | 1.1799 | 4067.99 | 1199 | **1382.56** | 3902.68 | 0.0044 | 0.100 |
+
+| variant | end-to-end slope | adjacent slopes | max \|slope\| | verdict |
+|---|---|---|---|---|
+| `r_b`-point | −0.0004 | +0.0008 +0.0008 −0.0017 −0.0017 | **0.0017** | ✅ ≪ 0.5 |
+| `T_m0`-fixed | −0.0004 | +0.0008 +0.0008 −0.0017 −0.0017 | **0.0017** | ✅ ≪ 0.5 |
+
+**Three things the table says beyond the threshold.**
+
+- **The two variants agree to the printed digit at every point.** So ④'s choice of verdict variant
+  moves nothing in the output; it is a provenance choice, not an accuracy one.
+- ⚠ **The slope changes sign at 1600 K**, because `r_b` is itself non-monotonic in the declaration
+  (1.1882 · 1.1909 · **1.1937** · 1.1868 · 1.1799 — a 1.2 % spread with its maximum at 1600 K). The
+  400 K sweep moves the answer by **0.34 K**: the trajectory has all but forgotten the declaration.
+- **Liveness, both parts, before any slope was read.** Earth's anchor reproduced inside the same run
+  (`T_p` 1525.46 K against the anchor 1525.46, 1152 steps, `r_b` 1.5789) and the five outputs are five
+  distinct values in both variants, so the sweep is not a constant — `engine/test_interior.py@«늘 발화하면 상수다»`
+  applied to a scratch script whose numbers get reported.
+
+#### Criterion B — computed under the rule above once the band is chosen
+
+**Reported per the rule above: `T_p@3.7 Ga`, `q_M` and `q_C` at all five points × both variants, in/out
+against Herzberg+ 2007's `[1553.15, 1673.15]` K, with Katsura+ 2010, Putirka 2016, the union and
+Herzberg+ 2010's point distance as record columns.** The values were written blind to
+`/tmp/c47_stage0_full.json` (keys `mars["<T>|<variant>"]`, `earth`) by the run that ended
+`C47 STAGE0 END rc=0 16:40:01`, and copied out of `/tmp` before being opened. ⚠ **This section's rule
+subsection is committed before the table is read; the table lands in the next commit.**
+
+⚠ **And the checkpoint's ceiling, restated so a pass is not over-read** (C47 (h) put it first):
+Monders+ 2007's statement is **qualitative** — high `T_p`, *"similar to those on the modern Earth"*,
+until 3.7 Ga. It can catch a badly wrong trajectory and nothing finer. **A pass is not a precision
+validation of the Martian thermal history.**
+
+#### Four corrections carried by this section
+
+**1. Where 1623 K comes from — the C47 (h) attribution was wrong.** (h) called it *"Korenaga's own
+§4 condition"*. Traced: Korenaga 2010 §5 prints *"The reference temperature is set to 1623 K (1350 °C),
+which corresponds to the present-day potential temperature of the ambient mantle"* and attributes it to
+**Herzberg et al. 2007** — but Herzberg+ 2007's own abstract prints **1280–1400 °C**, and the **1350 °C
+at the present** is printed by Herzberg+ **2010**. Korenaga **2009** §4's `ΔT` = 1350 K with `T_s` = 273 K
+is a **third** path to the same digits and is a different quantity (a contrast, not a potential
+temperature). ⚠ **So three readings in two papers land on 1623 K, and which one step 4 used is not
+decidable from the number** — which is exactly `docs/reference/derivation-discipline.md@«A number cannot enter without its label»`.
+
+**2. `h_min_myr` mixes the landing step into the minimum — measured, not argued.**
+`engine/core_history.py@«# land exactly on the present»` truncates the final step so the history ends on
+t = 0, and that truncated value competes for the minimum. `max_h_over_tau` does not have the defect (the
+ratio is taken before the truncation). **On Earth the reported minimum IS the landing step:**
+
+| what | value | where |
+|---|---|---|
+| `h_min_myr` as `integrate` reports it | **0.2493 Myr** | step **1151 of 1152** — the last one |
+| the four steps before it | 4.0000 Myr each | the cap, binding |
+| the actual stiffest step | **0.3929 Myr** | step 0, the first |
+
+⚠ **And that closes an open label.** `engine/tools/adaptive-step-prereg.md@«first steps shrink from 4 Myr to ≈ 0.39 Myr»`
+predicted 0.39 Myr and the audit measured a minimum of 0.249 Myr — **two different quantities, not a wrong
+prediction.** The prediction is right to three digits (0.3929 Myr); the 0.249 is the landing step. The
+pre-registration stays verbatim; the comparison lives here. So Mars's `h_min` 0.0044–0.0053 Myr in the
+criterion-A table is read with the same caveat, and nothing downstream uses `h_min` as a physical quantity.
+
+**3. "Mars's 75" is a truncation of 75.8.** The fixed 4 Myr step was `h/τ` = **75.8** on Mars's first
+step (τ = 0.0528 Myr at the start), not 75. The three places that print it carry `≈`, so the label is
+sound and only the digit is corrected here.
+
+**4. Route (i) is not closed the way (h) says.** (h) states *"Route (i) is closed, and not for want of
+looking"* on the ground that no present Martian `T_p` is published. **Re-cited present-day values do
+exist** — Yoshizaki & McDonough 2020 (`2020GeCoA.273..137Y`, §5.1, held) assumes **~1500 K** as a
+present-day areotherm input; Dong+ 2022 (`2022Icar..38515113D`, held) uses **1600 K** for *"the average
+Martian mantle today"* and the Baratoux curve by epoch (Amazonian ~1600–1650 K, Hesperian ~1650–1700 K).
+Both are **model inputs, 100 K apart, and both trace to Baratoux+ 2011** (Nature, unobtainable), which
+Parro+ 2017 warns are *"volcanic (non-average) regions"*. ⚠ **The original claim's core survives — no
+Mars `T_p` is measured, because Mars has no present volcanism to record one — but "does not exist in
+the literature" is wrong as written**, and the sentence is marked rather than replaced.
+
+#### The C21 premise, re-measured — what was arithmetic is now a measurement
+
+C21's design says *"a uniform 4 Myr step cannot see the pulse at all"* and proposes 0.1 Ma steps for
+the first ~10 Ma. ⚠ **The step is no longer uniform** (Brief 157), so that sentence's arithmetic no
+longer decides anything. One column of the existing runs, printed — no new model and nothing
+pre-registered:
+
+| body | steps inside the first 10 Ma | `h` at the first step | `h` at t ≈ 1.4 Ma (C21's ²⁶Al threshold) | `h` at the window's edge | steps with `h` < 0.1 Ma |
+|---|---|---|---|---|---|
+| **Earth** | **14** | 0.3929 Ma | 0.5201 Ma | 1.3041 Ma | **0 / 14** |
+| **Mars** | **56** | 0.0053 Ma | 0.1431 Ma | 0.9061 Ma | **32 / 56** |
+
+- **C21's 0.1 Ma sampling is still needed, and Earth is why.** At t ≈ 1.4 Ma one Earth step is 0.520 Ma —
+  about **1.4 samples per ²⁶Al half-life** (0.73 My, Monteux+ 2016). The adaptive step does not stand in
+  for C21.
+- ⚠ **But three phrases in C21's design are now wrong or unproven and must be restated at its start:**
+  *«a uniform 4 Myr step cannot see the pulse at all»* — 14 steps land inside the window, not none;
+  *«there is no other way»* — unproven; *«≈100 steps on top of C20's ~1 100»* — the base is 1 152 and 14 of
+  the 100 already exist.
+- ⚠ **The premise's truth is body-dependent, which is itself new.** Mars, whose start is far stiffer, already
+  takes **56** steps in the window with **32** of them under 0.1 Ma — so on Mars the adaptive step nearly
+  does what C21 proposed to add, while on Earth it does not.
+- **Method, so this is not mistaken for a new model or for a second measurement of step 0.** The two
+  integrations were **re-run** at this tree (~57 s each; the stage-0 JSON carries per-run scalars only, no
+  rows), and `h` between consecutive rows *is* the step the integrator took
+  (`engine/core_history.py@«t_next = 0.0 if h == remaining else t_now + h / GYR_S»`). ⚠ **Only `t_gyr` was
+  read out of the rows and no temperature was**, so criterion B's blinding held while this was measured —
+  which is also why this table can sit in the commit that fixes the rule.
+
+**C21 is still not started, and this does not re-judge its design** — it replaces a claim that was
+arithmetic with a number, so that whoever opens C21 re-weighs the premise instead of inheriting it.
+
+#### The audit seat's independent run, at the same tree
+
+**`test_core_history.py` re-run by a third seat, `rc=0`, digit-for-digit against the C48 row:** Earth
+adaptive **1152** steps, max `h/τ` **0.100**, reported minimum `h` **0.249** Myr (the landing step, above);
+Earth fixed-step **1135** steps, `T_p` **1525.46** K; Mars adaptive **1382.90 / 3893.01 / 1669.22** K,
+**1197** steps, `h_min` **0.0053** Myr. **Runtime 223.66 s** against the ~235 s stated in the commit
+message — **−4.8 %**, inside load variation, and reported because
+`docs/reference/derivation-discipline.md@«say what your work adds to the gate's time»` asks for it.
+
+#### Waiting on the owner, recorded so neither is decided by a seat
+
+| decision | the two candidates | what turns on it |
+|---|---|---|
+| ~~criterion B's verdict line~~ | **answered 2026-09-08 17:35: Herzberg+ 2007 [1553.15, 1673.15] K**, the other three record-only | the 3.7 Ga in/out, hence whether the transfer is allowed |
+| **Mars's declared `potential_temperature`** | 1600 K transferred from Earth (Unterborn+ 2019) vs ~1500 K re-cited (Yoshizaki & McDonough 2020) | ⚠ **nothing in the Mars result** — criterion A's 0.0017 slope means the whole 400 K sweep moves the answer 0.34 K. It is a provenance choice, not an accuracy one |
 
 ### C48 — the integrator was validated on Earth, and Earth survived by not blowing up rather than by being right — **closed 2026-09-08: domain (Brief 155) + step (Briefs 156–157)**
 

@@ -184,7 +184,9 @@ easily produced by an unconverged run. **Do not read ③ off a run that has not 
   the current T_c; the inner core is whatever `inner_core(prof)` says at each step (② is read off that).
 - **dT_c/dt = (Q_R − Q_C) / (Q̃_s + Q̃_L + Q̃_g)** (eq. 30 rearranged); **dT_m/dt = (H_m M_m − Q_M + Q_C) /
   (M_m C_pm r_b^½)** (eq. 32 with dT_h = r_b^½ dT_m).
-- **Stepper**: classical RK4 in time, h = 4 Myr nominal (Nimmo's), sweep h, h/2, h/4 (⑤). Cost measured:
+- **Stepper**: classical RK4 in time, h = 4 Myr nominal (Nimmo's), sweep h, h/2, h/4 (⑤). ⚠ *2026-09-08,
+  Brief 157: `h = min(4 Myr, 0.1·τ)` — Nimmo's 4 Myr is now the **cap**, not the step. The design line is
+  kept as written; the change is recorded beside it.* Cost measured:
   one balance evaluation 11 ms → ~12 s per history at h, ~85 s for the sweep. **The test runs the sweep**
   (adds ~90 s to the gate; stated in the commit).
 - **Initial condition**: T_c(0) and T_m(0) are **declarations** (2 new). Nimmo: *"increasing the initial
