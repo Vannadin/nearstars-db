@@ -46,6 +46,32 @@ inputs:
   core_initial_temperature: 4800.0
   mantle_initial_potential_temperature: 4021.0
 
+# 다른 천체에서 정해진 값이 이 파일에 들어온 기록. engine/transfers.py 가 로드 시 검사한다 — 기록 없는
+# 전이, state 인데 derived 인 전이(지구의 3040 K 가 그 모양), 풀리지 않는 앵커는 로드를 거절한다.
+# `validated` 는 별도 축이다: 옮겨도 되는지는 form 이 아니라 C47 0단계가 답한다.
+transfers:
+  - field: age_gyr
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«age_gyr: 4.54»"
+    validated: "same fact — the system's age, not a Mars-only dating"
+  - field: potential_temperature
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«potential_temperature: 1600.0»"
+    validated: pending      # C47 (h) stage 0 — whether Earth's T_p may travel at all
+  - field: core_initial_temperature
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«core_initial_temperature: 4800.0»"
+    validated: "the 3.7 Ga checkpoint verifies or refutes it (Monders+ 2007)"
+
 units:
   mass_earth: M_earth
   radius_earth: R_earth

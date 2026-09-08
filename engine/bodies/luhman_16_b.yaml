@@ -14,6 +14,38 @@ inputs:
   rotation_period_h: 4.87    # DB rotation_period_days 0.2029
   isolated: true             # 모항성 없음·핵융합 없음 → 관측 L_bol = 내부 냉각광도. 이 가지의 전제 조건 (선언)
 
+# 전이 기록 (engine/transfers.py, Brief 153). 두 성분의 반지름 선언이 같은 수라서 기록이 요구된다 —
+# 어느 쪽에서 다른 쪽으로 옮긴 게 아니라 DB 가 두 성분에 같은 진화모형 값을 준 것이다.
+transfers:
+  - field: radius_rj
+    from_body: Luhman 16 A
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "luhman_16_a.yaml@«radius_rj: 0.876»"
+    validated: "same DB declaration 0.09 ± 0.01 R☉ for both components — no measured radius exists for either"
+  - field: radius_rj_min
+    from_body: Luhman 16 A
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "luhman_16_a.yaml@«radius_rj_min: 0.778»"
+    validated: "the DB band's lower edge, same for both components"
+  - field: radius_rj_max
+    from_body: Luhman 16 A
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "luhman_16_a.yaml@«radius_rj_max: 0.973»"
+    validated: "the DB band's upper edge, same for both components"
+  - field: age_gyr
+    from_body: Luhman 16 A
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "luhman_16_a.yaml@«age_gyr: 0.5»"
+    validated: "same fact — one binary, one moving-group age (Gagné 2023); this branch does not read it"
+
 units:
   mass_earth: M_earth
   radius_rj: R_jup

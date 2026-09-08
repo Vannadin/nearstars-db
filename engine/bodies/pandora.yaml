@@ -11,6 +11,7 @@ inputs:
   radius_earth: 0.8984     # 보드 5724 km / 6371
   core_mass_fraction: 0.325   # 지구식. composition_intent 가 정할 자리다.
   # source: Earth analog (earth.yaml@«potential_temperature: 1600.0», petrological); grade analog — dry rocky, composition_intent earth_like.
+  # ⚠ this comment is now also a machine record — see the transfers: block at the end of this file (Brief 153).
   # Owner declaration 2026-09-04 (C29). Not scaled — the analogy is the value; the source itself (Unterborn+ 2019 §3.2)
   # relaxes it to 1400–1900 K. Gives core_state a lower-bound verdict only;
   # the core-side CMB temperature (earth.yaml@«# C20 열진화의 초기온도 — Nimmo+ 2004») is a separate, undeclared thing.
@@ -37,6 +38,31 @@ inputs:
   # 진동 구간 0.00016–0.0072 전체가 §4 의 1:1 상한 0.055 아래라, 점이 우연히 아래 있는 것이 아니다.
   eccentricity: 0.005            # source: phase4/alpha_centauri.yaml@«at the simulated e ≈ 0.005»
   k2_over_q: 0.0016              # source: phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it» — declared
+
+# 다른 천체에서 정해진 값의 기록 — engine/transfers.py 가 로드 시 검사한다 (Brief 153). 두 값 모두 지구의
+# 인쇄값을 그대로 옮긴 analog 이고, 도출값은 아니다.
+transfers:
+  - field: potential_temperature
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«potential_temperature: 1600.0»"
+    validated: "owner declaration 2026-09-04 (C29) — the analogy is the value"
+  - field: core_mass_fraction
+    from_body: Earth
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "earth.yaml@«core_mass_fraction: 0.325»"
+    validated: "composition_intent earth_like — the intent's own place to decide"
+  - field: age_gyr
+    from_body: Alpha Centauri A b
+    form: printed
+    kind: state
+    grade: analog
+    anchor: "alpha_centauri_a_b.yaml@«age_gyr: 5.3»"
+    validated: "same fact — a moon shares its primary's system age"
 
 units:
   mass_earth: M_earth

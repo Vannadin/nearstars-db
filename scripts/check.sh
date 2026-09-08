@@ -200,6 +200,8 @@ python3 engine/check_via.py --gate || { echo "  [FAIL] check_via"; fail=1; }
 # 임시값 가드레일 다섯. ⑤ 는 레시피가 도착하면 FAIL — 그 발화를 시험이 오늘 증명한다.
 (cd engine && python3 test_tidal_locking.py) || fail=1
 (cd engine && python3 test_provisional.py) || fail=1
+# 전이 기록 (Brief 153). 다른 천체의 값은 기록 없이 못 들어오고, state 인데 derived 면(3040 K 모양) 거절.
+(cd engine && python3 test_transfers.py) || fail=1
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
 
