@@ -46,6 +46,8 @@ def main() -> int:
     ok(interval.kind == "interval", f"1: both ends printed → interval, got {interval.kind}")
     ok(heat_pipe.kind == "floored point", f"1: one end printed → floored point, got {heat_pipe.kind}")
     ok(plate.kind == "point", f"1: nothing printed → point, got {plate.kind}")
+    lid = Band(0.030, None, 0.030, "Reese+ 1998 prints the ceiling; nothing prints a floor", "calibrated")
+    ok(lid.kind == "ceilinged point", f"1 (Brief 155): a high-only band is a CEILINGED point, not a floored one; got {lid.kind}")
     ok(heat_pipe.floor_grade == "analog",
        "1: a floor keeps its own grade — the heat-pipe floor is one body's computed flux")
 

@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import math
 
+from domain import Limit
 from bands import Band, Choice
 from payload import Result, out_of_domain
 
@@ -169,10 +170,17 @@ ABSTRACT_LEVEL = "abstract-level"
 #: `Venus 10–20, Mars 15–30` 으로 갈라 둔다. 거꾸로 선 것은 문서가 아니라 그 표 **아래 산문 한 줄**
 #: (*"10–30 mW/m² is the Venus and Mars pair"* — 천장이라는 말이 빠지고 두 바디가 뭉쳐 있다) 이고,
 #: 그 줄만 읽고 세운 눈금이 뒤집혔다. 같은 커밋에서 그 산문도 고친다.
+#: Brief 155: the direction is a FIELD now (`Limit.direction == "ceiling"`), not a word in the variable name —
+#: the 2026-09-07 inversion read this dict's numbers as floors, and nothing could compare the word with the
+#: operator. `value` is the end the code stands on (the high end, as `STAGNANT_LID_CEILING_CHOICE` records).
+_REESE = "tidal-heating-methodology.md@«| **Stagnant lid** | conduction through an immobile lid | ceiling **10–30 mW/m²** | Venus 10–20, Mars 15–30»"
 STAGNANT_LID_CEILING_BY_BODY = {
-    "venus": (0.010, 0.020),
-    "mars": (0.015, 0.030),
+    "venus": Limit(0.020, "ceiling", _REESE, low=0.010, high=0.020),
+    "mars": Limit(0.030, "ceiling", _REESE, low=0.015, high=0.030),
 }
+#: The union band's direction, as a field beside the Band (a Band carries a width, not a direction).
+STAGNANT_LID_CEILING_LIMIT = Limit(STAGNANT_LID_CEILING.value, "ceiling", _REESE,
+                                   low=STAGNANT_LID_CEILING.low, high=STAGNANT_LID_CEILING.high)
 
 #: 오름차순 **바닥**. 천체의 총 플럭스가 넘긴 바닥 중 **가장 높은 것**의 칸으로 확정한다 (오너
 #: 결정 2026-09-07). 셋째 항은 그 칸 자신의 출처 등급이다 — 어제는 셋이 한 단어를 공유했다.
@@ -182,13 +190,16 @@ STAGNANT_LID_CEILING_BY_BODY = {
 #: 차가운 천체는 이름 없는 상태가 아니라 정체뚜껑이고, 달과 화성이 실제로 거기 있다.
 #: ⚠ **사다리 규칙은 우리 것이다.** 문헌은 열류로 체제를 가르지 않는다 — 판별자는 mobility 와
 #: plateness 이고(Lourenço §3.1·§3.3) 둘 다 4.5 Gyr 시뮬레이션 출력이라 관측할 수 없다.
+#: Brief 155: each rung's number is a `Limit` with `direction="floor"` — the slot the declaration lacked while
+#: `regime_ladder_cell` returned the word "floor" from its own code path. `.holds(flux)` now makes the comparison.
+_LADDER_DOC = "tidal-heating-methodology.md@«### 6.2 How the heat actually leaves: the three-mode ladder»"
 REGIME_LADDER = (
-    ("plate tectonics", 0.09, "held body text",
+    ("plate tectonics", Limit(0.09, "floor", _LADDER_DOC), "held body text",
      "§6.2 prints 0.09 W/m² for Earth, and Earth's is a measurement — 92.1 mW/m², 47±2 TW from "
      "38,347 observations (2010SolE....1....5D). ⚠ Independently bracketed by body text we hold: "
      "Lourenço+ 2020 §4.3's mobile-lid TOTAL of 40–50 TW is 0.0784–0.0980 W/m² over Earth's area "
      "and 0.09 falls inside it; that paper's own Earth reference is 44.4 TW = 0.0870 W/m²"),
-    ("heat pipe", 2.5, ANALOGY_RUNG,
+    ("heat pipe", Limit(2.5, "floor", _LADDER_DOC), ANALOGY_RUNG,
      "§6.2 prints Io's 2.5 W/m² — Kankanamge & Moore 2019's melt-carried flux for Io's parameters, "
      "one body's model result and not a boundary; the document already calls it a floor. ⚠ This is "
      "the one rung that is still nothing but an analogy to a single body"),
@@ -210,7 +221,8 @@ def stagnant_lid_ceiling_for(body: str | None = None) -> tuple:
     end_high = STAGNANT_LID_CEILING.value == STAGNANT_LID_CEILING.high
     key = (body or "").lower()
     if key in STAGNANT_LID_CEILING_BY_BODY:
-        lo, hi = STAGNANT_LID_CEILING_BY_BODY[key]
+        lim = STAGNANT_LID_CEILING_BY_BODY[key]
+        lo, hi = lim.low, lim.high
         v = hi if end_high else lo
         return (v, f"{body}'s own printed ceiling {lo*1e3:g}–{hi*1e3:g} mW/m² read at the "
                    f"{'high' if end_high else 'low'} end (Reese+ 1998, 1998JGR...10313643R, "
@@ -228,18 +240,19 @@ def regime_ladder_cell(total_flux_w_m2: float, body: str | None = None) -> tuple
 
     위쪽 칸들은 **바닥**으로 확정하고, 밑바닥의 정체뚜껑은 **천장**으로 확정한다 — 그 칸에
     문헌이 인쇄한 것이 천장뿐이기 때문이다. ⚠ 사다리 규칙은 문헌의 판정이 아니라 우리 것이다."""
-    passed = [r for r in REGIME_LADDER if total_flux_w_m2 >= r[1]]
+    passed = [r for r in REGIME_LADDER if r[1].holds(total_flux_w_m2)]
     if passed:
-        name, floor, grade, why = passed[-1]
-        return (name, floor, "floor", f"{why} [rung origin: {grade}]")
+        name, rung, grade, why = passed[-1]
+        return (name, rung.value, rung.direction, f"{why} [rung origin: {grade}]")
     ceiling, ceiling_why = stagnant_lid_ceiling_for(body)
-    if total_flux_w_m2 > ceiling:
-        return (CEILING_EXCEEDED_CELL, ceiling, "ceiling",
+    lid = Limit(ceiling, "ceiling", _REESE)
+    if not lid.holds(total_flux_w_m2):
+        return (CEILING_EXCEEDED_CELL, ceiling, lid.direction,
                 f"{total_flux_w_m2*1e3:.4g} mW/m² is {total_flux_w_m2/ceiling:.3g}× the "
                 f"{ceiling*1e3:g} mW/m² a stagnant lid can conduct away without widespread "
-                f"melting, and it is under the {REGIME_LADDER[0][1]:g} W/m² plate rung — so the "
+                f"melting, and it is under the {REGIME_LADDER[0][1].value:g} W/m² plate rung — so the "
                 f"lid is neither conducting nor recycling. {ceiling_why}")
-    return (STAGNANT_LID_CELL, ceiling, "ceiling",
+    return (STAGNANT_LID_CELL, ceiling, lid.direction,
             f"{total_flux_w_m2*1e3:.4g} mW/m² is within what a stagnant lid conducts away without "
             f"widespread melting. ⚠ There is no floor here and none is wanted — a colder body is "
             f"MORE stagnant, not less. {ceiling_why}")

@@ -156,10 +156,14 @@ class Band:
 
     @property
     def kind(self) -> str:
+        """interval | floored point | ceilinged point | point — which ends are printed. The one-ended kinds
+        name the end that exists, so a ceiling is never reported as a floor (Brief 155, row 3/22)."""
         if self.low is not None and self.high is not None:
             return "interval"
-        if self.low is not None or self.high is not None:
+        if self.low is not None:
             return "floored point"
+        if self.high is not None:
+            return "ceilinged point"        # Brief 155: a ceiling-only band used to be called a floor here
         return "point"
 
     @property

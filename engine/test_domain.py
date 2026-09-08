@@ -16,6 +16,8 @@
    gitignored cache is present; absent, the check is reported as skipped, not passed.
 6. Limit — the operator is generated from the word: a floor holds above, a ceiling below; a bad word,
    a one-ended width and a missing anchor are refused at construction.
+7. Direction table — the limit rows Brief 154 read by hand: for each (value, declared direction, the code's
+   own predicate) the test evaluates just above and just below and demands the operator agree with the word.
 """
 from __future__ import annotations
 
@@ -135,6 +137,70 @@ def main() -> int:
     ok(refused(Limit, 1.0, "floor", "d@«x»", low=0.5), "6: a one-ended width is refused")
     ok(refused(Limit, 1.0, "floor", ""), "6: a limit without an anchor is refused")
     ok(refused(Limit, 5.0, "floor", "d@«x»", low=1.0, high=2.0), "6: a value outside its own width is refused")
+
+    # ── 7. Direction table — the 15 rows Brief 154 read by hand, re-read by a machine ──────────
+    # Each row: (name, declared value, declared direction, predicate "the label/domain holds at x"). The test
+    # builds a Limit from the declared word, evaluates the code's own predicate just above and just below the
+    # value, and demands both agree with Limit.holds — i.e. the operator in the code matches the word in the
+    # declaration. Rows without an isolated callable are listed as SKIP with the reason, not silently dropped.
+    import math
+    import body_class as bc
+    import dynamo as dy
+    import dynamo_rocky as dr
+    import mass_radius as mr
+    import porosity as po
+    import tidal_heating as th
+
+    area_e = 4.0 * math.pi * th.R_EARTH_M ** 2
+    q_1600 = mf.implied_flux(1600.0, 9.8, 6.4e6)["q_m_w"]
+
+    def rho_to_radius(rho):      # R⊕ for 1 M⊕ at density rho [kg/m³]
+        return (dr.M_EARTH_KG / (4.0 / 3.0 * math.pi * rho)) ** (1.0 / 3.0) / dr.R_EARTH_M
+
+    table = [
+        ("REGIME_LADDER plate tectonics", 0.09, "floor", lambda x: th.regime_ladder_cell(x)[0] == "plate tectonics"),
+        ("REGIME_LADDER heat pipe", 2.5, "floor", lambda x: th.regime_ladder_cell(x)[0] == "heat pipe"),
+        ("STAGNANT_LID_CEILING_BY_BODY venus", 0.020, "ceiling", lambda x: th.regime_ladder_cell(x, "venus")[0] == th.STAGNANT_LID_CELL),
+        ("STAGNANT_LID_CEILING_BY_BODY mars", 0.030, "ceiling", lambda x: th.regime_ladder_cell(x, "mars")[0] == th.STAGNANT_LID_CELL),
+        ("REGIME_PRINTED_TW mobile lid lo", 40.0, "floor", lambda tw: th.regime_candidates(tw * 1e12 / area_e, 1.0)["mobile lid"][0] == "compatible"),
+        ("REGIME_PRINTED_TW mobile lid hi", 50.0, "ceiling", lambda tw: th.regime_candidates(tw * 1e12 / area_e, 1.0)["mobile lid"][0] == "compatible"),
+        ("SECULAR_RATIO_MAX (ratio)", mf.SECULAR_RATIO_MAX, "ceiling", lambda r: mf.consistency(1600.0, q_1600 / r, 9.8, 6.4e6)["verdict"] != mf.TOO_HOT),
+        ("ratio floor 1 (TOO_COLD below)", 1.0, "floor", lambda r: mf.consistency(1600.0, q_1600 / r, 9.8, 6.4e6)["verdict"] != mf.TOO_COLD),
+        ("INVERSION_BRACKET_K lo", mf.INVERSION_BRACKET_K[0], "lower", lambda tm: mf.invert_for_flow(mf.implied_flux(tm, 9.8, 6.4e6)["q_m_w"], 9.8, 6.4e6) is not None),
+        ("INVERSION_BRACKET_K hi", mf.INVERSION_BRACKET_K[1], "upper", lambda tm: mf.invert_for_flow(mf.implied_flux(tm, 9.8, 6.4e6)["q_m_w"], 9.8, 6.4e6) is not None),
+        ("dynamo GIANT_M_MIN", dy.GIANT_M_MIN, "lower", lambda m: dy.dipole_field(m, 1.0, 4.5).regime == "giant"),
+        ("dynamo GIANT_M_MAX", dy.GIANT_M_MAX, "upper", lambda m: dy.dipole_field(m, 1.0, 4.5).regime == "giant"),
+        ("dynamo GIANT_AGE_MIN", dy.GIANT_AGE_MIN, "lower", lambda a: dy.dipole_field(1.0, 1.0, a).regime == "giant"),
+        ("dynamo BD_M_MAX", dy.BD_M_MAX, "upper", lambda m: dy.dipole_field(m, 1.0, 4.5, luminosity_lsun=1e-4, rotation_period_h=10.0, radius_rj_min=0.9, radius_rj_max=1.1, isolated=True).regime == "brown_dwarf"),
+        ("dynamo SATURATION_PERIOD_MAX_H (evidence upper edge)", dy.SATURATION_PERIOD_MAX_H, "upper", lambda h: dy.dipole_field(20.0, 1.0, 4.5, luminosity_lsun=1e-4, rotation_period_h=h, radius_rj_min=0.9, radius_rj_max=1.1, isolated=True).regime == "brown_dwarf"),
+        ("dynamo_rocky WATER_RICH_IMF", dr.WATER_RICH_IMF, "floor", lambda imf: dr.regime_class(1.0, 1.0, imf) == 4),
+        ("dynamo_rocky LOW_DENSITY_RATIO·ρ⊕ (regime 5 below)", dr.LOW_DENSITY_RATIO * dr.EARTH_DENSITY, "lower", lambda rho: dr.regime_class(1.0, rho_to_radius(rho), 0.0) != 5),
+        ("body_class VALLEY_LO", mr.VALLEY_LO, "lower", lambda r: bc._band(r, mr.VALLEY_LO, mr.VALLEY_HI) >= 0),
+        ("body_class VALLEY_HI", mr.VALLEY_HI, "upper", lambda r: bc._band(r, mr.VALLEY_LO, mr.VALLEY_HI) <= 0),
+        ("mass_radius ROCKY_MASS_MAX", mr.ROCKY_MASS_MAX, "ceiling", lambda m: mr.assign(m).regime != "out-of-domain"),
+    ]
+    eps = 1e-6
+    for name, value, direction, pred in table:
+        lim = Limit(value, direction, f"table@«{name}»")
+        for x in (value * (1.0 + eps), value * (1.0 - eps)):
+            try:
+                got = bool(pred(x))
+            except Exception as e:      # a predicate that cannot be evaluated is a failed row, not a skipped one
+                fails.append(f"7: {name}: predicate raised at {x:g}: {e}")
+                break
+            ok(got == lim.holds(x), f"7: {name}: code says {got} at {x:g} but direction {direction!r} says {lim.holds(x)}")
+    ok(po.porosity("ice", 1.0e9, 0.5) == po.PHI_FLOOR_ICE and po.porosity("ice", 1.0e9, 0.1) == 0.1,
+       "7: porosity PHI_FLOOR_ICE is a floor on the OUTPUT — never below 0.20 (or below φ₀ when φ₀ is smaller)")
+    for name, why in (("interior.FLOOR_EXTRAPOLATION_MAX", "compared inside the shooter, no isolated callable"),
+                      ("interior.UNTERBORN_TCMB_MAX_R", "a note, not a refusal — by design (D11)"),
+                      ("core_energy.H_CORE_RANGE", "corners iterated, no comparison"),
+                      ("stellar_wind.IONOPAUSE_RANGE_R_P", "not used in a comparison"),
+                      ("sub_neptune_dynamo.MOLTEN_FRACTION_FLOOR", "no comparison"),
+                      ("dynamo_rocky 'Rm > 40'", "quoted, never evaluated — by design"),
+                      ("mass_radius.GIANT_M_MIN_MJ", "both sides are out-of-domain at this API; the reason text differs, the regime does not")):
+        skipped.append(f"7: {name} — {why}")
+    direction_rows = len(table) + 1
+    print(f"  direction table: {len(table)} operator rows re-read + 1 output-floor row = {direction_rows}; {len([s for s in skipped if s.startswith('7:')])} rows without an isolated comparison listed as SKIP")
 
     for f in fails:
         print(f"  [FAIL] {f}")

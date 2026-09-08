@@ -181,7 +181,7 @@ def radiogenic_temperature_band(budgets: dict[str, dict[str, float]], g: float, 
         # which side: every None is on one side, because Q_M(T) is monotone in T
         k0 = next(iter(base_all))
         side = BELOW_BRACKET if implied_flux(INVERSION_BRACKET_K[0], g, r_m, k0[2])["q_m_w"] > budgets[k0[0]][k0[1]] else ABOVE_BRACKET
-        return {"verdict": side, "t_min": None, "t_max": None, "widths": {}, "grid": grid}
+        return {"verdict": side, "t_min": None, "t_max": None, "widths": {}, "grid": grid, "direction": "floor"}
     base = {k: v for k, v in base_all.items() if v is not None}
     open_below = len(base) < len(base_all)     # a corner of the family is under the floor
 
@@ -200,6 +200,7 @@ def radiogenic_temperature_band(budgets: dict[str, dict[str, float]], g: float, 
     alt = {k: v for k, v in grid.items() if k[3] == BAND_T_S_ALT and v is not None}
     widths["surface"] = max(abs(alt[k] - base[(k[0], k[1], k[2], T_S)]) for k in alt) if alt else None
     return {"verdict": BAND_OPEN_BELOW if open_below else BAND_OK,
+            "direction": "floor",       # Brief 155 (row 19): the band bounds T_m from BELOW — a field, not a comment
             "t_min": None if open_below else min(base.values()), "t_max": max(base.values()),
             "widths": widths, "grid": grid}
 

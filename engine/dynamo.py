@@ -84,7 +84,10 @@ KG_TO_UT = 1.0e5                           # 1 kG = 0.1 T = 1e5 µT
 B_DYN_PREFACTOR_KG = 4.8                   # RC10 eq. 1, [kG], M·L·R 태양단위
 MJ_PER_MSUN = 1.0 / 9.5459e-4              # IAU 2015 nominal GM_J/GM_sun = 9.5459e-4 (교과서 상수)
 RSUN_PER_RJ = 7.1492e7 / 6.957e8           # IAU 2015 nominal R_J(eq) / R_sun = 0.10276 (교과서 상수)
-SATURATION_PERIOD_MAX_H = 4.0 * 24.0       # RC10 §2.1: "rotation periods up to at least 4 days" 는 포화 (Reiners+ 2009a) — 증거 한계이지 임계값이 아니다
+# RC10 §2.1: "rotation periods up to at least 4 days" 는 포화 (Reiners+ 2009a). ⚠ 방향 = **증거의 위끝(domain upper)**
+# 이지 임계값(ceiling)이 아니다 (Brief 155, 행 9): "up to at least" 는 증거가 닿은 데까지이고, 그 밖은 "포화 아님" 이 아니라
+# cannot-say 다. 아래 solve 의 out_of_domain 반환이 그 뜻이고, 이 주석은 그 부호와 같은 방향을 말한다.
+SATURATION_PERIOD_MAX_H = 4.0 * 24.0
 
 
 def _bd_field(mass_mj, radius_rj, radius_rj_min, radius_rj_max, luminosity_lsun,
@@ -112,9 +115,10 @@ def _bd_field(mass_mj, radius_rj, radius_rj_min, radius_rj_max, luminosity_lsun,
     if rotation_period_h > SATURATION_PERIOD_MAX_H:
         return out_of_domain(
             RECIPE, VERSION,
-            f"자전주기 {rotation_period_h:.3g} h 는 RC10 이 포화 증거로 든 4 d 를 넘는다. 에너지플럭스 "
-            "스케일링은 임계 자전율 위에서만 자전 무관이고, 그 임계값을 RC10 은 '다소 불확실' 하다고 "
-            "적었다 — 증거 한계 밖은 답하지 않는다.",
+            f"자전주기 {rotation_period_h:.3g} h 는 RC10 이 포화 증거로 든 위끝 4 d(«up to at least 4 days») 를 넘는다. "
+            "이것은 증거가 닿은 정의역의 위끝이지 포화가 끝나는 임계값이 아니다 — 에너지플럭스 스케일링은 임계 "
+            "자전율 위에서만 자전 무관이고, 그 임계값을 RC10 은 '다소 불확실' 하다고 적었다. 그래서 밖은 "
+            "'포화 아님' 이 아니라 cannot-say 다.",
             inputs, REFS, ("saturation not established",))
     if not (0 < radius_rj_min <= radius_rj <= radius_rj_max) or luminosity_lsun <= 0:
         return out_of_domain(

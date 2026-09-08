@@ -141,9 +141,13 @@ def main() -> int:
     # 증거가 아니다. 지키는 것은 (1) 바닥이 §6.2 가 인쇄한 천체 값일 것, (2) 정체뚜껑이 바닥
     # 목록에 **없을** 것(그 칸은 천장으로만 잘린다), (3) 바디별 천장이 갈라진 채일 것, (4) 금성
     # 오차가 칸 셋을 가로지른다는 사실, (5) 사다리가 밴드를 지우지 않을 것.
-    ok([f for _n, f, _g, _w in th.REGIME_LADDER] == [0.09, 2.5],
+    ok([f.value for _n, f, _g, _w in th.REGIME_LADDER] == [0.09, 2.5] and all(f.direction == "floor" for _n, f, _g, _w in th.REGIME_LADDER),
        f"4e/C46: the FLOORS are §6.2's printed body values and the stagnant cell is NOT among them — "
        f"a colder body is more stagnant, not less, so that cell has no floor; got {th.REGIME_LADDER}")
+    ok(all(l.direction == "ceiling" for l in th.STAGNANT_LID_CEILING_BY_BODY.values())
+       and th.STAGNANT_LID_CEILING_LIMIT.direction == "ceiling" and th.STAGNANT_LID_CEILING.kind == "interval",
+       "4e/C46 (Brief 155): the per-body ceilings and the union carry direction=ceiling as a FIELD; the union "
+       "Band itself is an interval (both ends printed), and the direction lives beside it in a Limit")
     ok(not hasattr(th, "BELOW_LADDER"),
        "4e/C46: there is no 'below the ladder' state any more — a cold body IS a stagnant lid, and "
        "the Moon and Mars are measured there")
