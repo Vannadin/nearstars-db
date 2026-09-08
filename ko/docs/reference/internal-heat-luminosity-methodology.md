@@ -169,7 +169,8 @@ dT_c/dt 의 여덟 모서리, `_h0` 는 H = 0 모서리 — 우리 H 밴드의 �
 `delta_e_present_hi` [W/K] · `entropy_history_verdict` [—] · `history_converged` [—] · `history_convergence_width` [—] · `history_steps` [—]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] · `cmb_temperature` [K] ·
 `potential_temperature` [K] · `radius_earth` [R_earth] · `age_gyr` [Gyr] · `core_initial_temperature` [K] ·
-`mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] · `core_h_w_per_kg` [W/kg]
+`mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] ·
+`step_fraction` [—] (h = min(step_myr, F·τ) 의 분율 F, τ 는 맨틀 시간상수. 기본 0.1) · `core_h_w_per_kg` [W/kg]
 **Discriminating keys** — `body_class`: 암석체만. 내부구조 해나 초기온도가 없으면 이름 붙여 거절.
 **Grade** — **analog**: Nimmo+ 2004 식 30·32 를 상태 (T_c, T_m) 위에서 시간 앞으로 적분(RK4, Nimmo 의 4 Myr 걸음). 맨틀 바닥
 온도는 내부구조 해의 단열비(식 29 형태), 방사성 열은 장수명 반쪽(K·Th·U)만. 초기온도는 지구에선 Nimmo 의 인쇄값 4 800 K,
