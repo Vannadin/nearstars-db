@@ -1,7 +1,8 @@
 # C20 열진화 적분기 테스트 — 사전등록 분기(⑤ 수렴 · ① 지구 보정 · ② 내핵 · ④ 냉각률 · ③ ΔE_min)를 그 순서로 읽는다
 """Pre-registered checks for the C20 integrator (engine/core-thermal-history-context-notes.md §2–§3).
 
-    python3 engine/test_core_history.py            # the gate: one converged history at Nimmo's 4 Myr step (~60 s)
+    python3 engine/test_core_history.py            # the gate: one converged history at h = min(4 Myr, 0.1·τ),
+                                                   # plus the C48 Mars pair (~235 s measured on b818ccbf; ~60 s before Brief 157)
     python3 engine/test_core_history.py --sweep    # on demand: h, h/2, h/4 (~7 min) — the pre-registered ⑤ test
 
 The sweep is on demand because it costs ~400 s (each time step builds four core profiles for RK4); the gate

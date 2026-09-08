@@ -195,7 +195,7 @@ declaration band, gated at < 10 MW/K. `engine/core-entropy-context-notes.md`.
 `mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] ·
 `step_fraction` [—] (the fraction F in h = min(step_myr, F·τ), τ the mantle time constant; default 0.1) · `core_h_w_per_kg` [W/kg]
 **Discriminating keys** — `body_class`: rocky bodies only. No interior solution or no initial temperatures → refused by name.
-**Grade** — **analog**: Nimmo+ 2004 eqs 30 and 32 integrated forward (RK4, Nimmo's 4 Myr step) on the state (T_c, T_m); the
+**Grade** — **analog**: Nimmo+ 2004 eqs 30 and 32 integrated forward (RK4, h = min(4 Myr, 0.1·τ) with Nimmo's 4 Myr as the cap) on the state (T_c, T_m); the
 mantle base temperature by the interior solve's own adiabat ratio (eq. 29's form); long-lived radiogenic heat only (K·Th·U);
 the initial temperatures are Nimmo's printed 4 800 K on Earth and declarations elsewhere; the result stands on ≈24
 declarations in all and reads "consistent with an Earth-calibrated model". The entropy band is over the four k × H corners —

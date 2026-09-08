@@ -172,7 +172,7 @@ dT_c/dt 의 여덟 모서리, `_h0` 는 H = 0 모서리 — 우리 H 밴드의 �
 `mantle_initial_potential_temperature` [K] · `core_material` [—] · `body_class` [—] · `step_myr` [Myr] ·
 `step_fraction` [—] (h = min(step_myr, F·τ) 의 분율 F, τ 는 맨틀 시간상수. 기본 0.1) · `core_h_w_per_kg` [W/kg]
 **Discriminating keys** — `body_class`: 암석체만. 내부구조 해나 초기온도가 없으면 이름 붙여 거절.
-**Grade** — **analog**: Nimmo+ 2004 식 30·32 를 상태 (T_c, T_m) 위에서 시간 앞으로 적분(RK4, Nimmo 의 4 Myr 걸음). 맨틀 바닥
+**Grade** — **analog**: Nimmo+ 2004 식 30·32 를 상태 (T_c, T_m) 위에서 시간 앞으로 적분(RK4, h = min(4 Myr, 0.1·τ), Nimmo 의 4 Myr 은 상한). 맨틀 바닥
 온도는 내부구조 해의 단열비(식 29 형태), 방사성 열은 장수명 반쪽(K·Th·U)만. 초기온도는 지구에선 Nimmo 의 인쇄값 4 800 K,
 다른 천체에선 선언. 결과는 ≈24개 선언 위에 서고 "지구 보정 모형과의 일관성" 으로 읽는다. 엔트로피 밴드는 k × H 네 모서리 —
 C15 여덟 모서리의 선언 냉각률 축이 이 노드의 계산값이므로 두 밴드는 비교 불가. 걸음 수렴(3.1 Gyr 의 ΔE_min, h·h/2·h/4)이

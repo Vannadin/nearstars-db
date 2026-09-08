@@ -9,7 +9,8 @@ Grounding: `docs/reference/internal-heat-luminosity-methodology.md` and Nimmo+ 2
     Q_C = 4π R_c² F_b  (eqs 37–39, `cmb_flux.bottom_layer`)     Q_M = 4π R_p² F_t  (eqs 34–36, `mantle_flux.implied_flux`)
     T̃_m = r_b · T_m   T_h = r_b^½ · T_m   (eq. 29's form; r_b read from the interior solve at the reference T_pot)
 
-State (T_c, T_m); classical RK4 in time; Nimmo's own 4 Myr step. The Q̃ coefficients come from
+State (T_c, T_m); classical RK4 in time; the step is h = min(4 Myr, 0.1·τ) with Nimmo's own 4 Myr as the cap
+(Brief 157; τ is the mantle time constant). The Q̃ coefficients come from
 `core_energy.core_terms` at unit rate (they are linear in dT_c/dt); the inner core at each step is whatever
 `core_energy.inner_core` finds on that step's profile. Entropy production at each step from
 `core_entropy.entropy_terms` with the COMPUTED rate, on the four (k × H) corners — the declared-rate axis of
@@ -62,7 +63,8 @@ NOT_CONVERGED = "step-not-converged (the step is the result, not the physics —
 CANNOT_SAY_HISTORY = "cannot-say (the four-corner band straddles zero inside the last 3.1 Gyr — C20 built, C15 still cannot say)"
 SUSTAINED = "sustained (ΔE_min > 0 over the last 3.1 Gyr on all four k × H corners)"
 FAILS = "fails (ΔE_min < 0 somewhere in the last 3.1 Gyr on all four corners)"
-CONDITION = ("Earth-calibrated model: Nimmo+ 2004 eqs 30 and 32 integrated with RK4 at Nimmo's 4 Myr step on the state "
+CONDITION = ("Earth-calibrated model: Nimmo+ 2004 eqs 30 and 32 integrated with RK4 at h = min(4 Myr, 0.1·τ) — Nimmo's "
+             "4 Myr is the cap and τ the mantle time constant (Brief 157) — on the state "
              "(T_c, T_m); the mantle base temperature by the interior solve's own adiabat ratio (eq. 29's form); "
              "long-lived radiogenic heat only (K·Th·U, history factor); two new declarations (initial T_c, T_m); "
              "the result stands on ≈24 declarations in all — outputs read 'consistent with an Earth-calibrated model'")
