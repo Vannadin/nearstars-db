@@ -119,7 +119,8 @@ def main() -> int:
 
     # ── 5. anchors resolve in the cache text layer ──────────────────────────
     txt = CACHE / mf.NIMMO_TXT
-    if txt.exists():
+    anchors_checked = txt.exists()          # §5's own flag — the summary line reads this, not the skipped list
+    if anchors_checked:
         body = txt.read_text()
         for rec in (mf.EQ35_DOMAIN, cf.EQ39_DOMAIN):
             for phrase in re.findall(rf"{re.escape(mf.NIMMO_TXT)}@«([^»]+)»", rec.anchor + " " + rec.caveat):
@@ -202,13 +203,16 @@ def main() -> int:
     direction_rows = len(table) + 1
     print(f"  direction table: {len(table)} operator rows re-read + 1 output-floor row = {direction_rows}; {len([s for s in skipped if s.startswith('7:')])} rows without an isolated comparison listed as SKIP")
 
+    summary = ("  [PASS] 정의역·한계 — eqs 34–36 · 37–39 위끝 4800 K 거절 발화 · 전개점 아래는 note · 브리프 57 앵커 5 유지 · "
+               f"core_history 5000 K 시작 거절 · Limit 부호는 단어에서 · 앵커 {'확인' if anchors_checked else '캐시 없음(건너뜀)'}")
+    # a count is only as true as the sentence under it: with the cache present the summary must say 확인
+    ok((not txt.exists()) or ("앵커 확인" in summary), f"8: the summary line must say the anchors were checked when the cache is present; got {summary!r}")
     for f in fails:
         print(f"  [FAIL] {f}")
     for s in skipped:
         print(f"  [SKIP] {s}")
     if not fails:
-        print("  [PASS] 정의역·한계 — eqs 34–36 · 37–39 위끝 4800 K 거절 발화 · 전개점 아래는 note · 브리프 57 앵커 5 유지 · "
-              f"core_history 5000 K 시작 거절 · Limit 부호는 단어에서 · 앵커 {'확인' if not skipped else '캐시 없음(건너뜀)'}")
+        print(summary)
     return 1 if fails else 0
 
 
