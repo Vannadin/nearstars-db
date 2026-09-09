@@ -4619,13 +4619,22 @@ separates them is not a property of the value; it is whether the source is one t
 is why the shape stayed invisible to C45 (b)'s `is None` test and why it cannot be closed by comparing
 numbers.
 
-**What was built, and what it is worth.** The detector ships with the two-layer rule and a baseline of
-**12**, printed with the node, the key, the body, the value and the accepted defaults, plus separate lines
-for inversion-convention hits and for keys whose defaults are not literals. It would catch the original
-instance: `porosity_cap` recorded `P_LAB_MAX` against a declared default of `None`. ⚠ **The 12 are not a
-defect and are not repaired here** — they are a disagreement between the contract («unknown») and the
-evidence («zero»), and closing it means either writing the normalisation into the contract or keeping the
-raw value in the evidence. Both can move an output, so both are a later brief. Counting first.
+**What was built, and what it is worth.** The detector ships with the two-layer rule, printed with the
+node, the key, the body, the value and the accepted defaults, plus separate lines for inversion-convention
+hits and for keys whose defaults are not literals. It would catch the original instance: `porosity_cap`
+recorded `P_LAB_MAX` against a declared default of `None`.
+
+⚠ **171 C closed the 12 by fixing the contract, not the count.** Of the two ways to close the
+disagreement — write the normalisation into the contract, or keep the raw `None` in the evidence — the
+second can move an output, so the first was taken. The two `Declared-optional` entries now *say* it:
+*«absent is recorded as `0.0`, because the recipe normalises it internally»*, and the parser reads that
+sentence. ⚠ **This is not an allowlist and the difference is testable**: a normalisation the contract does
+not state is still class ④, and a new key doing the same thing is caught until someone writes the
+sentence. The baseline is **0** and two rows in `test_check_refs` hold the parser to reading it.
+
+**What is still not decided** is the deeper question this item exposed — a number in the evidence has
+three honest origins and the contract can only name them one sentence at a time. Nothing forces a recipe
+to declare its normalisations; this brief made it *possible* to, and made the omission visible.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 

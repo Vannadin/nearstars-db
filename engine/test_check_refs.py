@@ -390,6 +390,15 @@ def main() -> int:
        "dynamo_rocky 의 `composition_intent` 는 Needs 에 있고 면제에는 없어야 한다 — 산문의 백틱이 "
        "진짜 need 를 면제로 옮긴 적이 있다 (170 E)")
 
+    # ⚠ 계약이 선언한 정규화를 파서가 실제로 읽는지 (171 C). 이 문장이 안 읽히면 클래스 ④ 가 12 로
+    #   돌아가는데, 그 12 는 «기준선과 다르다» 한 줄로만 보이고 원인은 안 보인다.
+    _il = _cc.parse_contract(_cc.DOCS / "interior-structure-methodology.md", "interior_layers") or {}
+    ok(_il.get("normalised") == {"gas_mass_fraction": 0.0, "ice_mass_fraction": 0.0},
+       f"interior_layers 계약이 «없으면 0.0 으로 기록» 을 두 키에 대해 말해야 한다 — "
+       f"{_il.get('normalised')!r}")
+    ok("gas_mass_fraction" in _il.get("declared_optional", set()),
+       "그 문장이 Declared-optional 항목 **안**에 있어야 한다 — 밖이면 면제 목록에서 빠진다")
+
     # ⚠ 클래스 ④ 의 판정 한 줄을 직접 겨눈다 (C45 (d), 171 B). 판정 **앞**이다 — 170 E 참조.
     ok(_cc.explained_by_default(0.0, {0.0}) is True,
        "④: 선언된 기본값 0.0 이 그대로 기록되면 설명된다")
@@ -403,8 +412,8 @@ def main() -> int:
     #   그래서 **여기까지 실제로 실행된 `ok()` 의 수**를 센다. 블록 하나가 도달 불가가 되면 수가
     #   줄어 이 줄이 스스로 FAIL 한다. 단정을 **더할 때** 이 수를 함께 올리는 것이 정상 절차다.
     _ok_calls = _counter["n"]
-    ok(_ok_calls == 37,
-       f"도달한 단정 수가 37 이어야 한다 — {_ok_calls} 다. 줄었다면 어떤 블록이 판정 뒤로 "
+    ok(_ok_calls == 39,
+       f"도달한 단정 수가 39 이어야 한다 — {_ok_calls} 다. 줄었다면 어떤 블록이 판정 뒤로 "
        f"밀려 안 돌고 있다는 뜻이다 (170 E 의 사고)")
 
     for f in fails:

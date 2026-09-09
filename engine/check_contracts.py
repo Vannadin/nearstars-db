@@ -60,7 +60,12 @@ CLASS3_BASELINE = (0, 0, 0)           # (노드, 고유 키, (노드,키) 쌍)
 #: 앉는다. ⚠ 그래서 이 12 는 **결함이 아니라 계약과 증거의 어긋남**이다: 계약은 «모른다»(None)라고
 #: 말하고 증거는 «0» 이라고 말한다. 고치려면 정규화를 계약에 적거나 증거에 원값을 남겨야 하고,
 #: 둘 다 출력을 건드릴 수 있어 이 브리프의 몫이 아니다 — 세어 두는 것이 먼저다 (C45 (d)).
-CLASS4_BASELINE = 12
+#: ⚠ **12 → 0, 브리프 171 C — 계약 쪽을 고쳐서다.** 두 키의 `Declared-optional` 항목이 이제
+#: «없을 때 증거에 `0.0` 이 기록된다» 를 **문장으로 선언**하고 파서가 그 문장을 읽는다. 무이름
+#: 허용목록이 아니다 — 계약이 말하지 않은 정규화는 여전히 클래스 ④ 이고, 새 키가 같은 짓을 하면
+#: 문장을 적기 전까지 걸린다. ⚠ **원값(`None`)을 증거에 남기는 쪽은 고르지 않았다**: 그쪽은 출력을
+#: 건드릴 수 있고, 이 브리프의 약속은 이동 0 이었다.
+CLASS4_BASELINE = 0
 
 #: 클래스 ① (C37 의 서명) 의 **알려진 기존 사례** — 2026-09-09 첫 측정, C50 에 등재.
 #: ⚠ **이 집합 밖의 사례는 FAIL 이다.** 기존 넷을 지금 고치는 것은 값을 움직일 수 있어 다음
@@ -81,6 +86,11 @@ FIELD = re.compile(r"`([a-z0-9_]+)`")
 #: 바로 뒤에 단위 대괄호» 라는 모양으로만 인정한다. Needs 줄은 산문을 섞지 않으므로 그대로 둔다.
 #: 대괄호는 **닫힌 것만** 인정한다 — 열림만 보면 산문 안의 각괄호에 걸릴 수 있다 (감사석 제안).
 OPTIONAL_FIELD = re.compile(r"`([a-z0-9_]+)`\s*\[[^\]]*\]")
+#: ⚠ **계약이 «없을 때 증거에 무엇이 기록되는가» 를 말할 수 있어야 한다** (C45 (d) 의 12건, 171 C).
+#: 레시피가 «없으면 0» 으로 정규화하면 계약은 `None` 이라 말하고 증거는 `0.0` 이라 말한다 — 그 어긋남을
+#: 무이름 허용목록으로 덮지 않고 **계약이 직접 선언**하게 한다. 형식은 Declared-optional 줄 안에서
+#: `` `key` [unit] (absent is recorded as `0.0`, …) `` 이고, 그 문장이 없으면 예전처럼 클래스 ④ 다.
+NORMALISED = re.compile(r"`([a-z0-9_]+)`\s*\[[^\]]*\][^·]*?absent is recorded as `([^`]+)`")
 # 항목이 많으면 줄이 넘어간다. 다음 **항목** 이나 빈 줄까지 이어 읽는다 —
 # 문서를 한 줄에 욱여넣게 만들면 읽기 나빠지고, 그건 이 작업의 목적에 반한다.
 # ⚠ **계약에 세 번째 줄이 생겼다** (C50 (b), 브리프 170 B): `Needs` 한 단어가 두 가지를 가리키고
@@ -104,6 +114,8 @@ def parse_contract(doc: Path, node: str) -> dict[str, set[str]] | None:
     for kind, body in LINE.findall(block):
         key = kind.lower().replace("-", "_")
         out[key] = set((OPTIONAL_FIELD if key == "declared_optional" else FIELD).findall(body))
+        if key == "declared_optional":
+            out["normalised"] = {k: ast.literal_eval(v) for k, v in NORMALISED.findall(body)}
     return out
 
 
@@ -300,6 +312,12 @@ def main() -> int:
         #    그 축의 이름으로 보고하는 것이 이 저장소의 규약이고(170 C), 그 히트도 **인쇄한다**.
         missed_all = sorted(look["asked"] - look["hit"])
         defaults = ast_lookup_defaults(node)
+        # 계약이 «없을 때 이 값이 기록된다» 고 적어 둔 것은 설명된 것이다 (171 C).
+        for _k, _v in (declared.get("normalised") or {}).items():
+            if isinstance(defaults.get(_k), set):
+                defaults[_k].add(_v)
+            elif _k not in defaults:
+                defaults[_k] = {_v}
         for body in bodies:
             res_b = body.results.get(node)
             if res_b is None:

@@ -50,7 +50,7 @@ literature, separate recipes.
 `potential_temperature` [K] ·
 `boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `ammonia_mass_fraction` [—] · `serpentinisation` [—] ·
 `differentiation_front` [—] · `crust_rock_fraction` [—] · `crust_porosity` [—]
-**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `ice_mass_fraction` [—] · `differentiated` [—] (default `True`) · `initial_porosity` [—] and `porosity_cap` [Pa] (the code says the default 0 *«means this recipe does not decide, not that porosity is zero»*) · `gas_mass_fraction` [—] (absent means «not a gas body») · `envelope_z` [—] (*«Z is a declaration: accretion and evolution set it and this recipe has neither»*).
+**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `ice_mass_fraction` [—] (absent is recorded as `0.0`, because the recipe normalises it internally) · `differentiated` [—] (default `True`) · `initial_porosity` [—] and `porosity_cap` [Pa] (the code says the default 0 *«means this recipe does not decide, not that porosity is zero»*) · `gas_mass_fraction` [—] (absent means «not a gas body»; absent is recorded as `0.0`, because the recipe normalises it internally) · `envelope_z` [—] (*«Z is a declaration: accretion and evolution set it and this recipe has neither»*).
 **Discriminating keys** — the material stack chosen by `composition`, and the pressure
 reached at each layer boundary, which decides whether a grounded phase exists there.
 Regimes and their numeric conditions are in [Domain of validity](#domain-of-validity).
