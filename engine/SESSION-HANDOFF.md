@@ -892,7 +892,7 @@ usage limit stopped the audit seat and the work seat for about an hour each toda
 seat hit its limit) — first audit tomorrow, baseline `results_53856339.json`.
 
 **The day's question:** can the interior domain supply what the magnetic side asks for? Answer Ⓢ
-(`interior-dynamo-handoff-context-notes.md`): the methodology's printed Needs (`rocky-planet-dynamo-methodology.md@«**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·»`)
+(`interior-dynamo-handoff-context-notes.md`): the methodology's printed Needs (`rocky-planet-dynamo-methodology.md@«**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] ·»`)
 owe the interior exactly one quantity, `conductor_phase`, and it is supplied; the five interior → dynamo edges the chain draws
 beyond that have no printed Need and no code consumer. Pandora's `conductor_phase` needed a declared potential temperature
 (C29) and then still came out undecided (no core-side CMB temperature), so the owner declared the dynamo on (C29 c): engine

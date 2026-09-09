@@ -49,6 +49,7 @@ from __future__ import annotations
 
 import dataclasses
 
+import tectonic_regime as tect
 from payload import Result, out_of_domain
 
 RECIPE = "rocky-planet-dynamo-methodology"
@@ -142,9 +143,17 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
            stagnant_lid: bool | None, age_gyr: float | None, ice_mass_fraction: float = 0.0,
            body_class: str | None = "rocky", dynamo_regime: str | None = None,
            locked: bool | None = None, rotation_period_h: float | None = None,
-           dynamo_alive: bool | None = None) -> Result:
+           dynamo_alive: bool | None = None, lid_note: str | None = None,
+           tectonic_regime: dict | None = None) -> Result:
+    # ⚠ `stagnant_lid` 는 여전히 세 값(`True`/`False`/`None`) 이지만 **선언이 아니라 파생값**이다 —
+    #   `tectonic_regime` 에서 `tectonic_regime.derived_stagnant_lid` 가 만든다 (C53, 브리프 168).
+    #   이 서명과 이 함수의 분기는 그래서 한 줄도 움직이지 않았고, 그것이 «소비처는 안 바뀐다» 의 뜻이다.
+    #   `lid_note` 는 그 파생이 남긴 한 줄(예: contested → 유도 자기권은 다른 브랜치)을 라벨에 싣는다.
+    # ⚠ 증거 키가 `stagnant_lid` 가 아니라 `tectonic_regime` 인 이유: 계약 검사는 레시피가 `inputs`
+    #   에 붙인 **라벨**을 문서의 Needs 와 대조하고, Needs 에 적힌 이름은 **선언**의 이름이다 (C37 —
+    #   라벨과 조회는 한 문자열이어야 한다). 파생된 불리언은 아래 라벨 줄에 남는다.
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth, "conductor_phase": conductor_phase,
-              "stagnant_lid": stagnant_lid, "age_gyr": age_gyr, "ice_mass_fraction": ice_mass_fraction,
+              "tectonic_regime": tectonic_regime, "age_gyr": age_gyr, "ice_mass_fraction": ice_mass_fraction,
               "body_class": body_class, "dynamo_regime": dynamo_regime,
               "locked": locked, "rotation_period_h": rotation_period_h, "dynamo_alive": dynamo_alive}
     if body_class not in ROCKY_CLASSES or mass_earth > MAX_ROCKY_MASS:
@@ -188,9 +197,10 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
         f"RM22 사다리 (rocky-planet-dynamo-methodology, 실무 절차). 단계 1 regime {reg} "
         f"({'물 풍부' if reg == 4 else '저밀도 건조' if reg == 5 else f'건조 {mass_earth:.2f} M⊕'}; "
         f"얼음질량분율 {ice_mass_fraction or 0.0:.2f}, 문턱 {WATER_RICH_IMF} 는 선언). 단계 2 생존 게이트 = "
-        f"라벨 셋: conductor_phase '{conductor_phase}' (core_state), 정체 암석권 선언 {stagnant_lid}, "
+        f"라벨 셋: conductor_phase '{conductor_phase}' (core_state), 정체 암석권 파생 {stagnant_lid} "
+        f"(tectonic_regime 선언에서, C53), "
         f"클래스별 사멸 연령 선언 {DYNAMO_DEATH_AGE_GYR} → **{alive}**. {RM_NOTE}.",
-    ] + ([alive_note] if alive_note else [])
+    ] + ([alive_note] if alive_note else []) + ([lid_note] if lid_note else [])
     if alive != ALIVE:
         values = {"dipole_moment": 0.0 if alive.startswith("dead") else None, "b_eq": 0.0 if alive.startswith("dead") else None,
                   "b_pol": 0.0 if alive.startswith("dead") else None, "regime": alive, "ladder_regime": reg,
@@ -292,10 +302,22 @@ def ice_fraction_from_state(state) -> tuple[float | None, str]:
 
 
 def _ladder_from_state(state, imf: float) -> Result:
+    # C53: 옛 `stagnant_lid` 대신 `tectonic_regime` 을 읽고 불리언을 파생한다. 옛 키는
+    # `get_optional` 로 읽는다 — 미스가 설계임을 호출부가 선언하는 자리이고(C45 (b)), 히트는
+    # «한 양이 두 곳에 선언되어 있다» 는 뜻이라 이름 붙은 거절이 된다.
+    lid = tect.derived_stagnant_lid(state.get("tectonic_regime"),
+                                    state.get_optional("stagnant_lid"))
+    if lid.refusal:
+        return out_of_domain(RECIPE, VERSION, lid.refusal,
+                             inputs={"mass_earth": state["mass_earth"],
+                                     "tectonic_regime": state.get_optional("tectonic_regime")},
+                             refs=REFS)
     return ladder(mass_earth=state["mass_earth"],
                   radius_earth=state.get_optional("radius_earth", state.get_optional("radius")),   # C45 (b)
                   conductor_phase=state.get("conductor_phase"),
-                  stagnant_lid=state.get("stagnant_lid"),
+                  stagnant_lid=lid.value,                          # C53: 파생값 (선언은 tectonic_regime)
+                  tectonic_regime=state.get("tectonic_regime"),    # 증거 키 = 조회 키 = Needs 의 이름
+                  lid_note=lid.label,                              # contested 만 한 줄을 덧붙인다
                   age_gyr=state.get("age_gyr"),
                   ice_mass_fraction=imf,
                   body_class=state.get("body_class"),

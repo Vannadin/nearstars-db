@@ -99,7 +99,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C49** | one engine, two `k_core` declarations — and one file's stated ground forbids the number the other consumes | **listed 2026-09-09, not started** | Rocky: `cmb_flux.py@«K_CORE = 50.0»`, a single declared midpoint ± 20, consumed as the corners (30, 70) by `core_entropy.K_RANGE` and `core_history.K_CORNERS` and as the `q_ad` band. Sub-Neptune: `sub_neptune_dynamo.py@«CORE_CONDUCTIVITY = Band(»`, midpoint **None**, ends **40 and 100** from two papers Tang+ 2025 runs both ways, grade *calibrated*, with an unmade `Choice`. ⚠ **And the comment above it says «70 W/m/K 는 두 논문 중 어느 쪽도 말하지 않은 수다» — that very 70 is the upper corner the rocky path feeds to the entropy band.** So one file's stated ground disqualifies a number the other file uses. Two shapes as well as two values: one paper's ± against two papers' ends. Unification is part of owner decision ② (C25 (b)); listed only |
 | **C50** | contracts list `Needs` that no roster body supplies — and four are C37's exact signature | **listed 2026-09-09, not started** | Measured by C45's new lookup check: **class ① (C37's signature — the lookup misses everywhere and the `None` is filed under that name) is live in 3 nodes / 4 keys** (`body_class` `gas_mass_fraction`·`semi_major_axis_au`, `dynamo_rocky` `dynamo_regime`, `interior_layers` `porosity_cap`), and **class ③ (a `Needs` no body supplies, the call site coping) in 8 nodes / 8 keys** (`core_material` ×4, `ice_mass_fraction` ×3, `differentiated`, `envelope_z`, `gas_mass_fraction`, `initial_porosity`, `tidal_heating`, `permanent_quadrupole`). Each is one of two faults — the contract is wrong, or the body declarations are missing — and which is not decidable from the count. Held at measured size meanwhile: the four are named in `engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and anything outside fails the gate; class ③ has a printed baseline. Repair can move values, so it is a later brief. No owner decision |
 | **C51** | the engine has no mantle energy budget, so secular cooling is an input nobody supplies rather than an output | **pre-registered 2026-09-09, before the build** | The owner's third path (C25 (f)): build the missing term instead of picking numbers inside the entropy band. ⚠ **The flux law is not what is missing** — Foley 2018's eq. (3) is the Korenaga eq. 30 this engine already transcribed at `n = 1`. What is missing is the budget around it, eqs (1)(2)(4), whose `dT_p/dt` **is** secular cooling. Stage 1 is the present epoch only, with `dT_p/dt` as the unknown, so the gate cost is ~0. Three verdict cells and their failure sentences are fixed in the section below, before any of it exists; `L′` and `(m, p)` go in as bands because the source treats the first as an unknown and prints three disagreeing sets of the second. ⚠ **First anchor measured: one prefactor has five values across two papers (0.528 · 0.53 · 0.55 · 0.57 · 0.5) and Korenaga names the cause — his own definition of `T̄_i`** — which is also the only candidate explanation for the 3.65× absolute-flux gap. Owner decisions on `L′` and `(m, p)` come after commit D's numbers; C34's feed stays held |
-| **C53** | the tectonic regime is declared as a boolean, and no source surveyed uses one | **pre-registered 2026-09-09, before the build** | `stagnant_lid: true/false` is the *“bimodal distribution … that is typically assumed”* which **Foley & Bercovici 2014**'s abstract ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F)) names as its foil, and the parallel seat's P9 survey found **no scheme that is binary** (Mars and Mercury stagnant in all of them, Earth mobile *or* transitional depending on the scheme, Venus genuinely contested across five printed classifications). Registered replacement: a `tectonic_regime` enum {stagnant · mobile · transitional · episodic · heat_pipe · contested} carrying a grade and a source, with the old boolean kept as a **derived** value so that **no consumer moves**. ⚠ **The blast radius was counted before the design and it is one branch**: `dynamo_rocky`'s survival gate is the only place a value reaches an output (truthy → `DEAD_LID`, `dipole_moment` 0), `heat_transport_mode` does **not** read it — it reads the computed flux ladder — and `phase2/`, `phase4/`, `db/` and the SPEC have **zero hits**. Three owner decisions were taken before the build (`contested` → derived `True`; Earth = `mobile` with the grain-damage note; Pandora = `mobile`, owner-declared), and `episodic` · `heat_pipe` are **left unmapped by name** with their candidates recorded — owner-pending. The regression that proves nothing moved is the three roster bodies' derived booleans, bit for bit: Earth `False` · Mars `True` · Pandora `False`. ⚠ The declared-regime-versus-computed-ladder consistency check is **deliberately not built here** — its first report would be that Earth's declaration and Earth's ladder cell already disagree, which is its own item |
+| **C53** | the tectonic regime is declared as a boolean, and no source surveyed uses one | **built 2026-09-09; two owner mappings still pending** | `stagnant_lid: true/false` is the *“bimodal distribution … that is typically assumed”* which **Foley & Bercovici 2014**'s abstract ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F)) names as its foil, and the parallel seat's P9 survey found **no scheme that is binary** (Mars and Mercury stagnant in all of them, Earth mobile *or* transitional depending on the scheme, Venus genuinely contested across five printed classifications). Registered replacement: a `tectonic_regime` enum {stagnant · mobile · transitional · episodic · heat_pipe · contested} carrying a grade and a source, with the old boolean kept as a **derived** value so that **no consumer moves**. ⚠ **The blast radius was counted before the design and it is one branch**: `dynamo_rocky`'s survival gate is the only place a value reaches an output (truthy → `DEAD_LID`, `dipole_moment` 0), `heat_transport_mode` does **not** read it — it reads the computed flux ladder — and `phase2/`, `phase4/`, `db/` and the SPEC have **zero hits**. Three owner decisions were taken before the build (`contested` → derived `True`; Earth = `mobile` with the grain-damage note; Pandora = `mobile`, owner-declared), and `episodic` · `heat_pipe` are **left unmapped by name** with their candidates recorded — owner-pending. The regression that proves nothing moved is the three roster bodies' derived booleans, bit for bit: Earth `False` · Mars `True` · Pandora `False`. ⚠ The declared-regime-versus-computed-ladder consistency check is **deliberately not built here** — its first report would be that Earth's declaration and Earth's ladder cell already disagree, which is its own item. ⚠ **Built and measured (C53 (b)): every emitted value bit-identical for all three bodies** (Earth `False` · Mars `True` · Pandora `False`, Pandora's 41.37252479971432 µT included), and the ordering rule fired as registered — `check_contracts` failed on the **evidence key** until `Result.inputs` carried `tectonic_regime` instead of the derived boolean. Two corrections to the pre-registration are recorded there: Pandora's old declaration *did* carry a reason, and Mars's `True` is not load-bearing because the core gate fires first |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -7005,9 +7005,10 @@ of that paper's own models — `L′`, `μ'_l`, `μ'_i`, `D/(H h'_l)`, `D/(H h'_
 grain-damage, the transition between stagnant lid convection and fully mobile convection is gradual and
 takes place over a large transitional regime, **with plate-tectonics lying within the transitional
 regime**"*, and Venus *"can be explained by convection in the transitional regime, close to the
-fully-stagnant lid regime, with a very slow «plate» speed"*. **Every body in `engine/bodies/` declares
-`stagnant_lid: true` or `false`** (`engine/bodies/earth.yaml@«정체 암석권 판단 — **선언**(사실: 지구는 판구조)»`),
-and `dynamo_rocky`'s survival gate reads it. **This is a two-valued field the source says does not
+fully-stagnant lid regime, with a very slow «plate» speed"*. **Every body in `engine/bodies/` declared
+`stagnant_lid: true` or `false`** and `dynamo_rocky`'s survival gate read it. ⚠ *That is what C53 (b)
+replaced on 2026-09-09* (`engine/bodies/earth.yaml@«판구조 영역 — **선언**. 옛 `stagnant_lid: false` 를 대신하고»`);
+the sentence is kept in its original tense below because it is the finding that opened the item. **This is a two-valued field the source says does not
 describe either Earth or Venus** — and it is the same shape as C46's finding that the ladder always
 lands on one cell.
 
@@ -7353,6 +7354,74 @@ surveyed, **abstract only** — it illustrates the field's shape and is not a de
 Venus authority named in owner decision (a) is **Luhmann 1991**
 ([`1991SSRv...55..201L`](https://ui.adsabs.harvard.edu/abs/1991SSRv...55..201L)), and ⚠ **it is not held** — the label travels with
 that fact, as the paragraph above states.
+
+### C53 (b) 2026-09-09 — built in the registered order, and the three assertions read as registered
+
+The pre-registration above was committed at `e0ae82e0`; this is what the build measured. **The order was
+the registered one** — the methodology's `Needs` first, then the three body files — and the reason it
+matters is in the numbers below.
+
+#### The registered regression: the three bodies' derived booleans, bit for bit
+
+Measured **before** the change by solving each body on `3c5ede48`, and again after:
+
+| body | declared `tectonic_regime` | derived `stagnant_lid` | the node's verdict | `ℳ` · `B_eq` · `B_pol` |
+|---|---|---|---|---|
+| Earth | `mobile` · declared · [`2018AsBio..18..873F`](https://ui.adsabs.harvard.edu/abs/2018AsBio..18..873F) | **`False`** (was `False`) | `undeclared (both emitted)` · alive | 1.0 · 30.0 · 60.0 |
+| Mars | `stagnant` · measured · [`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R) | **`True`** (was `True`) | `cannot-say (conductor_phase undecided)` | None · None · None |
+| Pandora | `mobile` · declared · owner, 2026-09-04 | **`False`** (was `False`) | `undeclared (both emitted)` · alive | 1.0 · 41.37252479971432 · 82.74504959942864 |
+
+**Every emitted value is bit-identical**, Pandora's 17 significant figures included, and the booleans are
+`bool` — the test compares with `is`, so `1` and `0` would fail it. ✓ Assertion 1 as registered.
+
+⚠ **Two things did change, and neither is a value.** The gate's label line said *«정체 암석권 선언»* and
+now says *«정체 암석권 파생 … (tectonic_regime 선언에서)»*, because a derived value must not be labelled
+declared. And the evidence key in `Result.inputs` moved from `stagnant_lid` to `tectonic_regime` —
+required, not cosmetic: see below.
+
+#### Assertions 2 and 3, hung on constants rather than on text
+
+`contested` → `True` → the gate returns **`dynamo_rocky.DEAD_LID`** with `dipole_moment`, `b_eq` and
+`b_pol` all `0.0`, and the label carries the extra line the owner's decision requires (the induced
+magnetosphere is a separate branch). `transitional` → `None` → **`dynamo_rocky.UNDECIDED_LID`**, and
+`dipole_moment` is `None` rather than `0.0` — *not* dead. ✓ Assertion 2. `episodic` and `heat_pipe`
+return the named refusal with their own name inside it and are absent from the derivation table
+altogether. ✓ Assertion 3. ⚠ **The comparisons are identity with the module constants, never the literal
+sentences** — a test that retypes a label keeps passing while the label drifts underneath it.
+
+#### The ordering rule fired, exactly as registered — on the evidence key
+
+⚠ **`check_contracts` failed on the first run after the body files changed**, with both halves of the
+same message: *«문서가 Needs 에 적었는데 코드가 안 쓴다 — tectonic_regime»* and *«코드가 쓰는데 문서
+Needs 에 없다 — stagnant_lid»*. The lookups were already right; what was wrong was the **evidence
+label**. The check compares `Result.inputs`' keys against the printed `Needs`, and the name in `Needs`
+is the name of the **declaration**, so the recipe's evidence has to carry `tectonic_regime` and the
+derived boolean has to live in the label line. That is C37's rule (a label and a lookup are one string)
+arriving through a different door, and **the check found it rather than a body's output being wrong**.
+After the rename: 14 contracts match, class ③ stays at its C50 baseline (8 nodes · 8 keys · 13 pairs),
+and the lookup count went 1182 → **1206**.
+
+#### Two corrections to the pre-registration itself
+
+1. ⚠ **Decision (c)'s stated reason was wrong.** The pre-registration says Pandora's `false` *"carries no
+   recorded reason"*. It did: two comment lines above it anchor the board's own prose (*mobile lid, not
+   stagnant*, from the volcanism and continental-drift rows) and were already citation-checked. So the
+   owner's declaration is a declaration **standing on those anchors**, not one filling a void, and the
+   body file now says so. The decision does not change; its ground does.
+2. ⚠ **Mars's `True` does not support today's verdict.** The survival gate tests `conductor_phase`
+   **before** the lid, and Mars's is `undecided`, so Mars answers `cannot-say (conductor_phase
+   undecided)` and never reaches `DEAD_LID`. Mars's output is the same whether its regime is `stagnant`
+   or `contested`. That is why assertion 2 is tested on the gate function at fixed inputs and not on a
+   body — and it is worth writing down, because *«Mars is stagnant, therefore no dynamo»* is a sentence
+   this engine does not currently execute.
+
+#### What this did not do
+
+The consistency check between the declared regime and C46's computed ladder is **still not built** — its
+first report would be that Earth declares `mobile` while the ladder scores Earth `plutonic-squishy lid`,
+and that belongs in its own item. `episodic` and `heat_pipe` are **still unmapped, owner-pending**; the
+parallel seat's P10 survey of dynamo survival under those two modes arrived while this was being built
+and is not read here. And `heat_transport_mode` was not touched: it reads the computed flux ladder.
 
 ## What closing all of these does not do
 

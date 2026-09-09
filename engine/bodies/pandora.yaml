@@ -23,7 +23,14 @@ inputs:
   dynamo_alive: true
   # source: owner declaration 2026-09-04 (C29 c); board phase4/alpha_centauri.yaml@«Radiogenic plus weak tidal heating (forced e ~0.005), enough to drive volcanism, continental drift and a dynamo»
   # and phase4/alpha_centauri.yaml@«Active volcanic belts and fast continental drift (tidal plus radiogenic)» — mobile lid, not stagnant. grade declared.
-  stagnant_lid: false
+  # 판구조 영역 — 옛 `stagnant_lid: false` 를 대신한다 (C53, 브리프 168). ⚠ 사전등록은 결정 (c) 의
+  # 근거를 «오늘의 false 에는 기록된 이유가 없다» 로 적었는데 **그것이 틀렸다**: 이유는 바로 위 두 줄의
+  # 보드 앵커로 이미 기록되어 있었다. 그래서 오너 선언은 그 앵커를 근거로 유지하는 선언이다.
+  tectonic_regime:
+    value: mobile
+    grade: declared
+    source: "owner declaration 2026-09-04 (C29 c), re-declared as a regime 2026-09-09 (C53 (c)); board anchors two lines above"
+    note: "fiction body — nothing to measure; the board's own prose says mobile lid, not stagnant"
   # ── 이 아래 보드 인용은 값 행 자체를 앵커로 잡는다. 보드가 그 값을 바꾸면 앵커가 썩는데, provenance 인용에서는
   # 그게 옳은 동작이다 — 인용이 가리키던 근거가 실제로 사라진 것이므로 조용히 다른 줄을 가리키는 편보다 낫다.
   # ── tidal inputs (C30, 2026-09-04). e and k₂/Q are declarations; the board fits k₂/Q to its flux, phase4/alpha_centauri.yaml@«The tidal term needs k₂/Q ≈ 0.0016 at the simulated e ≈ 0.005, which is fitted rather than predicted, but it».

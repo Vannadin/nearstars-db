@@ -123,7 +123,9 @@ def main() -> int:
        "5/C28: an explicit declaration overrides the preset")
     none_v, none_why = dr.ice_fraction_from_state(st(composition_intent="carbon_rich"))
     ok(none_v is None and "no composition preset" in none_why, "5/C28: an unknown preset refuses by name, it does not default to 0")
-    wet = dr._from_state(st(mass_earth=1.0, radius_earth=1.0, conductor_phase="liquid_outer_solid_inner", stagnant_lid=False,
+    MOBILE = {"value": "mobile", "grade": "declared", "source": "probe"}      # C53: 옛 stagnant_lid=False
+    wet = dr._from_state(st(mass_earth=1.0, radius_earth=1.0, conductor_phase="liquid_outer_solid_inner",
+                            tectonic_regime=MOBILE,
                             age_gyr=4.5, body_class="rocky", composition_intent="water"))
     ok(wet.applicable and wet.values["ladder_regime"] == 4 and "composition preset: water" in " ".join(wet.notes),
        "5/C28: through _from_state a water body reaches regime 4 with the source printed")
@@ -148,7 +150,7 @@ def main() -> int:
     from state import BodyState as _BS
     probe = _BS(name="probe", kind="planet", inputs={
         "mass_earth": 1.0, "radius_earth": 1.0, "body_class": "rocky",
-        "conductor_phase": "liquid", "stagnant_lid": False, "age_gyr": 4.5,
+        "conductor_phase": "liquid", "tectonic_regime": MOBILE, "age_gyr": 4.5,
         "composition_intent": "earth_like", "rotation_period_h": 24.0})
     got = dr._from_state(probe)
     ok(got.applicable, f"6/C37: 탐침이 도메인 안이어야 이 시험이 뜻을 갖는다 — {got.regime}")

@@ -19,11 +19,11 @@
 **Returns** — `dipole_moment` [M_earth] · `dipole_moment_min` [M_earth] · `dipole_moment_max` [M_earth] ·
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
 `ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
-**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `tectonic_regime` [—] ·
 `age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period_h` [h] ·
 `dynamo_alive` [—]
 **분기키** — 사다리 regime(1 건조 < 2 M⊕ · 2 건조 2–2.5 · 3 건조 > 2.5 · 4 물 풍부 · 5 저밀도 건조), 질량·반지름·
-선언된 얼음 분율로 정함. 생존 게이트는 라벨 셋(`core_state` 의 `conductor_phase`, 선언된 `stagnant_lid`, 클래스별
+선언된 얼음 분율로 정함. 생존 게이트는 라벨 셋(`core_state` 의 `conductor_phase`, 선언된 `tectonic_regime` 에서 파생한 뚜껑 불리언, 클래스별
 선언 사멸 연령)과 인용 하나(`Rm > 40`, 평가하지 않음). 영역 게이트는 선언(`dynamo_regime`) 또는 두 갈래 모두 출력.
 **등급** — 항상 **judgment**. 두 게이트가 라벨이고 ℳ_base·영역·다극자 계수가 선언입니다. regime 2·3(문서에 앵커 없음,
 격자만 출력)과 판정 불가(핵 미판정, 암석권 미선언)에서 `dipole_moment`·`b_eq` 는 `null`이며 `dynamo_alive` 가 이유를 말합니다.
@@ -96,6 +96,19 @@ RM22가 **표로 제시한 모멘트**(태양계 + TESS 표본)에 앵커하고 
 1. **바디 분류**(질량·반지름 → 밀도 → 건조형/함수형. regime 참조).
 2. **살아있나?** 늙고 작음(지구 ~7 Gyr에 화성질량은 사멸), 정체뚜껑(금성형, 판구조 없음
    → 낮은 CMB 열류), `Rm < 40` → `ℳ = 0`, 종료.
+   ⚠ **그 판단은 더 이상 불리언 선언이 아닙니다.** 2026-09-09 까지는 바디마다 `stagnant_lid: true|false`
+   를 들고 있었는데, Foley & Bercovici 2014 의 초록
+   ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F))이 바로 그 모양을
+   자기가 반박하는 대상으로 지목합니다 — *"흔히 가정되는, 완전 이동뚜껑 행성과 정체뚜껑 행성의 이분
+   분포와는 달리"*. 분류 문헌을 훑어도 이분법을 쓰는 체계는 없었습니다. 이제 바디는
+   `tectonic_regime` 을 선언하고(값은 {`stagnant`, `mobile`, `transitional`, `episodic`, `heat_pipe`,
+   `contested`} 중 하나에 등급과 출처가 붙습니다), **이 게이트는 거기서 파생한 불리언을 읽습니다**
+   (`engine/tectonic_regime.py`). `stagnant` 와 `contested` 는 `True`, `mobile` 은 `False`,
+   `transitional` 은 `None` 이라 판정 불가로 가고, `episodic` 과 `heat_pipe` 는 매핑이 선언되지 않아
+   **이름을 대며 거절**합니다. ⚠ `contested` 가 `True` 인 것은 오너 결정입니다 — 그런 바디에서 다이나모는
+   실제로 0 이고, 금성형 행성이 실제로 가지는 장은 **유도 자기권**, 즉 다른 기전이며 그것은
+   `magnetosphere_geometry` 의 몫입니다. 파생 불리언은 `stagnant` 와 `contested` 를 구별하지 못하므로,
+   그 구별이 필요한 소비처는 `tectonic_regime` 자체를 읽습니다.
 3. **기저 모멘트** `ℳ_base`를 질량/CMF 클래스 앵커에서(아래 표).
 4. **Regime** — *(2026-09-04 C16 이후의 실행: 분기 열쇠는 `tidal_locking` 의 `locked`. 잠김이 아니면 RM22 자신의 규칙으로
    쌍극형 — §5.2 "조석 결합이 아니면 자유 자전을 가정해 쌍극 자기모멘트로 … 식 20 을 쓴다" — 이고 Ro_ℓ 은 평가하지 않음;

@@ -21,8 +21,15 @@ inputs:
   age_gyr: 4.54
   body_class: rocky
   composition_intent: earth_like
-  # 사실. 화성은 단일판이고, 그것이 Reese+ 1998 이 화성에 정체뚜껑 천장을 계산한 이유다.
-  stagnant_lid: true
+  # 판구조 영역 — 옛 `stagnant_lid: true` 를 대신한다 (C53, 브리프 168). 화성은 P9 가 훑은 모든
+  # 분류 체계에서 단일판이고, 그것이 Reese+ 1998 이 화성에 정체뚜껑 천장을 계산한 이유다.
+  # 등급이 `measured` 인 것은 우리가 재었다는 뜻이 아니라 **보유한 원전이 이 바디에 대해 그 분류를
+  # 인쇄한다** 는 뜻이다.
+  tectonic_regime:
+    value: stagnant
+    grade: measured
+    source: "1998JGR...10313643R"
+    note: "single plate in every scheme surveyed (P9); Reese, Solomatov & Moresi 1998's abstract prints «Mantle convection on Mars and Venus is likely to occur in the [stagnant lid] regime»"
   # ⚠⚠ **이 값이 C47 (h) 0단계가 시험하는 대상 그 자체다. 확정된 값이 아니다.**
   # 화성의 현재 맨틀 포텐셜 온도는 **발표된 적이 없다** — 화성에 현재 화산활동이 없어
   # 그것을 기록할 분출 용융이 없고, 문헌의 "현재 화성 T_p" 는 전부 열진화 모형의 출력이다

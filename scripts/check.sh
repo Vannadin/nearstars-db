@@ -461,6 +461,10 @@ echo "── CMB 열류 (Nimmo 식 37–39 폐합 · 단열 열류 · 거절 라
 (cd engine && python3 tools/c47_step4.py --quiet) || fail=1
 # C24 (2026-09-04). 물 기둥의 IF97 후보(마지막)·두 이음매 ≤ 0.05 %·얼음 0 양성 대조·물 많은 암석체 0.1/0.3.
 (cd engine && python3 test_water_column_steam.py) || fail=1
+# 판구조 영역 밴드 (C53, 브리프 168 B). 세 로스터 바디의 파생 불리언이 168 B 전 값과 비트 동일하고,
+# contested → DEAD_LID(필드 0) · transitional → UNDECIDED_LID(dead 아님) 를 **상수 동일성**으로 걸고,
+# episodic·heat_pipe 는 이름을 대며 거절한다. 어휘 밖 값·등급·모양도 거절한다. ~0 s.
+(cd engine && python3 test_tectonic_regime.py) || fail=1
 # 암석 다이나모 사다리 (Brief 47). 문서 표 재현·RM22 Table 8 차이·게이트 라벨·격자 미선출이 앵커다.
 (cd engine && python3 test_dynamo_rocky.py) || fail=1
 python3 engine/dynamo_table.py --check || { echo "  [FAIL] dynamo_table"; fail=1; }

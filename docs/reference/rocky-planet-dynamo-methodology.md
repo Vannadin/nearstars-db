@@ -21,12 +21,12 @@ the ad-hoc reasoning in the TRAPPIST-1 / AU Mic decisions.
 **Returns** — `dipole_moment` [M_earth] · `dipole_moment_min` [M_earth] · `dipole_moment_max` [M_earth] ·
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
 `ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
-**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `stagnant_lid` [—] ·
+**Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `tectonic_regime` [—] ·
 `age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period_h` [h] ·
 `dynamo_alive` [—]
 **Discriminating keys** — the ladder regime (1 dry < 2 M⊕ · 2 dry 2–2.5 · 3 dry > 2.5 · 4 water-rich · 5
 low-density dry), from mass, radius and the declared ice fraction; the alive gate, which is three labels
-(`conductor_phase` from `core_state`, the declared `stagnant_lid`, the declared per-class death age) and
+(`conductor_phase` from `core_state`, the lid boolean derived from the declared `tectonic_regime`, the declared per-class death age) and
 one quotation (`Rm > 40`, never evaluated); the regime gate, declared (`dynamo_regime`) or emitted both
 ways.
 **Grade** — **judgment**, always: both gates are labels and ℳ_base, the regime and the multipolar factor
@@ -114,8 +114,20 @@ solver per body. We instead anchor on the **moments RM22 tabulate** (Solar Syste
 2. **Alive?** Old + small (Mars-mass by ~7 Gyr), stagnant-lid (Venus-analog, no
    plate tectonics → low CMB heat flux), or `Rm < 40` → `ℳ = 0`, done. ⚠ **`Rm > 40` is quoted here, never
    evaluated** — this document carries no magnetic-Reynolds formula; the recipe uses `core_state`'s liquid-core
-   verdict and a declared stagnant-lid judgement as the gate and says so on every result (owner condition,
-   2026-09-03). Note also that RM22's own Table 8 *computes* Venus 0.0007 and Mars 0.084 ℳ⊕; the zeros in the
+   verdict and a stagnant-lid judgement as the gate and says so on every result (owner condition,
+   2026-09-03). ⚠ **That judgement is no longer declared as a boolean.** Until 2026-09-09 each body carried
+   `stagnant_lid: true|false`, and Foley & Bercovici 2014's abstract
+   ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F)) names that shape as the
+   thing it argues against — *"as opposed to the bimodal distribution of fully mobile lid planets and stagnant
+   lid planets that is typically assumed"* — and a survey of the classification literature found no scheme
+   that is binary. A body now declares `tectonic_regime` (a value from {`stagnant`, `mobile`, `transitional`,
+   `episodic`, `heat_pipe`, `contested`} with a grade and a source) and **this gate reads a boolean derived
+   from it** (`engine/tectonic_regime.py`): `stagnant` and `contested` → `True`, `mobile` → `False`,
+   `transitional` → `None` → cannot-say, and `episodic` · `heat_pipe` are **refused by name** because no
+   mapping is declared for them. ⚠ `contested` deriving `True` is an owner decision: the dynamo really is zero
+   on such a body, and the field a Venus-like planet does have is the **induced magnetosphere**, a different
+   mechanism carried by `magnetosphere_geometry` and out of this node's scope. The derived boolean cannot tell
+   `stagnant` from `contested`; a consumer that needs that distinction reads `tectonic_regime` itself. Note also that RM22's own Table 8 *computes* Venus 0.0007 and Mars 0.084 ℳ⊕; the zeros in the
    validation table below are this ladder's class judgements, not the model's output.
 3. **Base moment** `ℳ_base` from the mass/CMF class anchor — ⚠ **no per-class anchor table exists in this document**; the "table below" is the *per-body* validation table. The recipe (`engine/dynamo_rocky.py`) declares the anchors: regime 1 → 1.0, regime 4 → 2×10⁻³, regime 5 → 0, and **regimes 2 and 3 carry no printed value** and are emitted as grids without an elected number.
 4. **Regime** — *(as executed since 2026-09-04, C16: the branch key is `tidal_locking`'s `locked`. Not

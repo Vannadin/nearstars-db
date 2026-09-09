@@ -32,8 +32,17 @@ inputs:
   # 로, 그 경계 **2.04 K 아래**다. 그래서 여기 적힌 반지름을 근거로 쓰지 말 것 —
   # 내핵의 유무만 쓸 수 있다. 전체 표는 C25 (f).
   core_cmb_temperature: 3760.0
-  # 정체 암석권 판단 — **선언**(사실: 지구는 판구조). dynamo_rocky 의 생존 게이트가 읽는다 (브리프 47).
-  stagnant_lid: false
+  # 판구조 영역 — **선언**. 옛 `stagnant_lid: false` 를 대신하고, dynamo_rocky 의 생존 게이트는
+  # 여기서 파생한 불리언을 읽는다 (C53, 브리프 168). 등급이 `measured` 가 아닌 이유는 체계마다
+  # 답이 다르기 때문이다 — Foley 2018 의 거친 «이동 대 정체» 에서는 mobile 이지만, 같은 저자의
+  # 입자손상 체계에서는 **transitional** 이다. 오너가 앞의 진술을 택했다 (결정 (b), 2026-09-09):
+  # 우리는 전이 법칙을 평가할 수 없으므로(C51 (d), 선언되지 않은 비차원 입력 일곱) transitional 은
+  # 계산이 뒤에 없는 라벨이 된다.
+  tectonic_regime:
+    value: mobile
+    grade: declared
+    source: "2018AsBio..18..873F, plus owner decision 2026-09-09 (C53 (b))"
+    note: "the grain-damage scheme (2014GeoJI.199..580F) reads Earth as transitional; C46's computed ladder scores Earth plutonic-squishy lid, and that disagreement is its own item"
   # C20 열진화의 초기온도 — Nimmo+ 2004 Fig. 2 캡션의 인쇄값 "starting temperature of both mantle and core was
   # 4800 K", 실온도로 읽음: 핵 4800 K, 맨틀 바닥(실온도) 4800 K → 퍼텐셜 = 4800 / r_b(1.579, interior 단열비) = 3040 K.
   core_initial_temperature: 4800.0
