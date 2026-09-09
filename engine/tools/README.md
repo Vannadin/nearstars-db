@@ -911,9 +911,24 @@ form; `--from <sha>` on its own — full lane — is what a push needs.
   fell back to full has to say *why* it did, or the reason is gone. Alongside them
   `script=<hash> matches_tree=yes|no` records which gate script actually ran: isolation copies the
   running script into the scratch, so a green line has to name the logic that produced it.
-- **The scratch is deleted on `rc=0` and kept on failure**, and a start deletes same-sha leftovers that
-  carry no `GATE-FAILED` marker. ⚠ Brief 169 deleted nothing and four clones (684 MB) accumulated in half
-  a day. Only a failure has something to reproduce.
+- **The scratch is deleted on `rc=0` and kept on failure** with a `GATE-FAILED` marker written at END,
+  and a start deletes leftovers from **any** sha that carry no marker and whose trailing pid is not still
+  alive. ⚠ Brief 169 deleted nothing and four clones (684 MB) accumulated in half a day; 169 D widened the
+  sweep past the same sha and taught it not to delete a running gate's own directory. Only a failure has
+  something to reproduce.
+- **The gate copies its own two files from beside the running script, and stops if it cannot.** ⚠ The
+  first version copied the relative path `scripts/check.sh`, which resolves against whatever tree
+  `git rev-parse --show-toplevel` landed in: invoked from the main checkout it silently put *that* tree's
+  135-line `check.sh` into the clone, which knew none of the flags and printed no `GATE START` or `END`
+  line at all (audit seat, reproduced). The source is now `$(dirname "$0")`, a missing or uncopyable file
+  is `[FAIL] 게이트 논리 복사 실패` and `exit 2`, and the `script=` hash on the START line is taken from
+  the same place.
+- **Three gate steps are not tests, and the targeted lane has a word for each.** `backflow.py check`
+  (bindings consistency), `chain.py check` and `dynamo_table.py --check` belong to no test closure, so a
+  commit touching `engine/backflow.py` used to pass the targeted lane without the step that checks it.
+  They are derived as `gate:backflow`, `gate:chain`, `gate:dynamo_table`. ⚠ The audit named `backflow`;
+  the other two are the same shape and were closed with it, because closing one leaves the next person to
+  rediscover the same thing.
 - **Three ways a narrowing goes quietly wrong, each blocked by name.** All three end in a green
   line, so an unblocked one is invisible. ① the base cannot be resolved. ② the base **is** the target
   sha, which makes the diff empty — and `git merge-base --is-ancestor X X` is *true*, so the ancestor

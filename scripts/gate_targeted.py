@@ -8,7 +8,8 @@ Three lines on stdout, in this order, each possibly empty after the first:
     1. the number of changed paths
     2. the changed code paths this mapping cannot explain (space-separated) — **non-empty means the
        caller must fall back to the full lane**
-    3. the derived work items (space-separated): `test_*.py`, `tools/<tool>.py`, `run:bodies/<b>.yaml`
+    3. the derived work items (space-separated): `test_*.py`, `tools/<tool>.py`, `run:bodies/<b>.yaml`,
+       and `gate:<step>` for the three gate steps that are not tests (backflow, chain, dynamo_table)
 
 ⚠ **Why this is not a hand-written table.** Brief 169's first mapping followed imports **one hop**, and
 a static census of `engine/` (52 modules, 43 tests) found that the transitive test set is much wider for
@@ -45,6 +46,14 @@ ANSWER_BODIES = ("alpha_centauri_a_b", "pandora", "earth")
 #: 로 잡혀 full 로 떨어졌다 (169 C, 실측). ⚠ 이 목록은 `scripts/check.sh` 의 12b 블록과 **손으로
 #: 묶여 있다**: 거기서 무엇이 항상 도는지가 바뀌면 여기도 바뀌어야 한다.
 ALWAYS_RUN = ("check_via", "check_contracts", "check_refs", "check_citations", "test_check_refs")
+
+#: ⚠ **13 블록의 «시험이 아닌» 게이트 단계** — 모듈 이름 → check.sh 가 아는 항목 어휘 (169 D ②).
+#: 이것들이 없으면 `engine/backflow.py` 를 고친 커밋이 **자기를 검사하는 단계 없이** 초록으로 지나간다:
+#: `backflow.py check` 는 bindings 정합성을, `chain.py check` 는 그래프를, `dynamo_table.py --check` 는
+#: 문서 표를 검사하는데 셋 다 `test_*.py` 가 아니라 어떤 시험 폐포에도 안 잡힌다.
+#: ⚠ 감사석은 `backflow` 하나를 지적했고, 같은 모양인 나머지 둘도 함께 닫았다 — 하나만 닫으면
+#: 다음 사람이 같은 자리에서 같은 것을 다시 발견한다.
+GATE_STEPS = {"backflow": "gate:backflow", "chain": "gate:chain", "dynamo_table": "gate:dynamo_table"}
 
 
 def modules() -> dict[str, Path]:
@@ -149,6 +158,8 @@ def main() -> int:
             rel = rel_name(mods, name)
             if name.startswith("test_"):
                 items.add(rel)
+            elif name in GATE_STEPS:
+                items.add(GATE_STEPS[name])      # 시험이 아닌 게이트 단계 — 어휘로 부른다
             elif rel.startswith("tools/") and rel in check_text:
                 items.add(rel)                   # check.sh 가 부르는 도구는 그 자체가 게이트 항목이다
         # ⚠ 씨앗 중 시험이 하나도 안 딸린 것이 있으면 그것은 매핑 구멍이다 — 좁히지 않는다.
@@ -156,7 +167,7 @@ def main() -> int:
             if s in ALWAYS_RUN:
                 continue                     # 12b 가 층과 무관하게 돌린다 — 시험이 없는 것이 구멍이 아니다
             own = dependents_closure({s}, mods)
-            covered = any(n.startswith("test_") for n in own) or \
+            covered = any(n.startswith("test_") for n in own) or any(n in GATE_STEPS for n in own) or \
                 any(rel_name(mods, n).startswith("tools/") and rel_name(mods, n) in check_text for n in own)
             if not covered:
                 gap.append(rel_name(mods, s))

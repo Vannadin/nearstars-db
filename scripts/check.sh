@@ -55,22 +55,35 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   tree_sha=$(git rev-parse --short "$from_sha" 2>/dev/null) || {
     echo "  [FAIL] 그런 sha 가 없다: $from_sha"; exit 2; }
   dest="${TMPDIR:-/tmp}/gate-$tree_sha-$$"     # 같은 sha 를 다시 돌리면 새 디렉토리 (pid)
-  # ⚠ 시작할 때 같은 sha 의 잔재를 지운다 — 단 **실패 표시가 없는 것만**. `GATE-FAILED` 를 든
-  #   디렉토리는 그 실패를 재현하려고 남긴 것이므로 건드리지 않는다 (169 B, ④).
-  for old in "${TMPDIR:-/tmp}"/gate-"$tree_sha"-*; do
+  # ⚠ 시작할 때 **모든** sha 의 잔재를 지운다 (169 D, ③ — 예전엔 같은 sha 만 봤다). 둘은 건너뛴다:
+  #   `GATE-FAILED` 를 든 것(그 실패를 재현하려고 남겼다)과 **아직 도는 pid 의 것**(디렉토리 이름의
+  #   꼬리가 그 게이트의 pid 다 — 살아 있으면 지우는 순간 그 실행을 죽인다).
+  for old in "${TMPDIR:-/tmp}"/gate-*; do
     [ -d "$old" ] || continue
     [ -e "$old/GATE-FAILED" ] && continue
-    echo "  옛 스크래치 정리: $old (실패 표시 없음)"
+    old_pid=${old##*-}
+    case "$old_pid" in
+      ''|*[!0-9]*) ;;                       # pid 로 안 읽히면 지우지 않는다
+      *) kill -0 "$old_pid" 2>/dev/null && continue ;;
+    esac
+    echo "  옛 스크래치 정리: $old (실패 표시 없음 · 도는 게이트 아님)"
     rm -rf "$old"
   done
   git clone -q --shared . "$dest" || { echo "  [FAIL] clone 실패"; exit 2; }
   git -C "$dest" checkout -q --detach "$tree_sha" || { echo "  [FAIL] checkout 실패"; exit 2; }
   # ⚠ 게이트 논리는 **지금 실행 중인 것**을 복사해 넣는다. sha 가 이 층들보다 앞설 수 있어서
   #   트리의 판을 부르면 인자를 모른다. 그래서 스크래치는 한 파일만 sha 와 다르고, 그 사실을 찍는다.
+  # ⚠ **원본은 CWD 가 아니라 실행본 옆이다** (169 D ①). 예전에는 상대경로 `scripts/check.sh` 를
+  #   복사했는데, 그 경로는 `cd "$(git rev-parse --show-toplevel)"` 가 데려간 곳 기준이다. 그래서
+  #   main 체크아웃에서 이 스크립트를 부르면 **main 판 check.sh 가 조용히 클론에 들어가** 인자를
+  #   모른 채 돌고 START/END 줄조차 안 찍혔다. 실패는 조용하지 않아야 한다 — 못 복사하면 멈춘다.
+  self_dir=$(cd "$(dirname "$0")" && pwd)
   self_differs=no
-  for f in scripts/check.sh scripts/gate_targeted.py; do
-    cmp -s "$f" "$dest/$f" || self_differs=yes
-    cp "$f" "$dest/$f"
+  for f in check.sh gate_targeted.py; do
+    [ -f "$self_dir/$f" ] || { echo "  [FAIL] 게이트 논리 복사 실패 — $self_dir/$f 가 없다"; exit 2; }
+    cmp -s "$self_dir/$f" "$dest/scripts/$f" || self_differs=yes
+    cp "$self_dir/$f" "$dest/scripts/$f" || {
+      echo "  [FAIL] 게이트 논리 복사 실패 — $self_dir/$f → $dest/scripts/$f"; exit 2; }
   done
   links=$(find "$dest" -type l -not -path "$dest/.git/*" | wc -l | tr -d " ")
   echo "── 격리 실행: $dest ──"
@@ -171,8 +184,9 @@ iso_field=""
 # ⚠ **어느 게이트 스크립트가 돌았는지도 기록한다.** 격리 모드는 실행본을 스크래치에 복사하므로
 #   트리의 sha 판과 다를 수 있고, 그 사실 없이는 초록 한 줄이 어느 논리의 초록인지 말할 수 없다.
 # ⚠ 게이트 논리는 두 파일이므로 둘 다 대조한다 — 하나라도 트리 판과 다르면 `no` 다.
-self_hash=$(git hash-object scripts/check.sh 2>/dev/null || echo unknown)
-helper_hash=$(git hash-object scripts/gate_targeted.py 2>/dev/null || echo unknown)
+gate_dir=$(cd "$(dirname "$0")" && pwd)
+self_hash=$(git hash-object "$gate_dir/check.sh" 2>/dev/null || echo unknown)
+helper_hash=$(git hash-object "$gate_dir/gate_targeted.py" 2>/dev/null || echo unknown)
 tree_hash=$(git rev-parse "$gate_sha:scripts/check.sh" 2>/dev/null || echo unknown)
 tree_helper=$(git rev-parse "$gate_sha:scripts/gate_targeted.py" 2>/dev/null || echo unknown)
 if [ "$self_hash" = "$tree_hash" ] && [ "$helper_hash" = "$tree_helper" ]; then
@@ -371,6 +385,11 @@ if [ "$lane" = "targeted" ]; then
   for tt in $targeted_tests; do
     case "$tt" in
       run:*) (cd engine && python3 run.py "${tt#run:}") || fail=1 ;;
+      # ⚠ 13 블록에는 `test_*.py` 가 아닌 게이트 단계가 셋 있다 (169 D ②). 그 셋을 부를 어휘가
+      #   없으면 `engine/backflow.py` 를 고친 커밋이 자기를 검사하는 단계 없이 초록으로 지나간다.
+      gate:backflow) python3 engine/backflow.py check >/dev/null 2>&1 || { echo "  [FAIL] backflow"; fail=1; } ;;
+      gate:chain) python3 engine/chain.py check || fail=1 ;;
+      gate:dynamo_table) python3 engine/dynamo_table.py --check || { echo "  [FAIL] dynamo_table"; fail=1; } ;;
       # ⚠ full 층이 `--quiet` 로 부르는 시험은 표적 층도 그렇게 불러야 한다 — 다른 인자는 다른 검사다.
       tools/c47_step4.py) (cd engine && python3 tools/c47_step4.py --quiet) || fail=1 ;;
       *) if [ -f "engine/$tt" ]; then (cd engine && python3 "$tt") || fail=1
