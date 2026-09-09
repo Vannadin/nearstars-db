@@ -48,6 +48,8 @@ T_C0, T_M0 = 4800.0, 4800.0 / R_B     # Nimmo Fig. 2 caption: "starting temperat
 AGE = 4.54
 
 # ⚠ **Brief 166 D — the reproduction anchors carry their own H, the way the Table 4 anchors already do.**
+# (⚠ Brief 166 E, the same day, corrected the declared H again — 0.14 was our textbook conversion, 0.088 is the
+# paper's own; the declared-H anchors below are the 0.088 measurement and the mechanism is unchanged.)
 # Owner decision ⑤ (2026-09-09) lowered the declared core heating from 1.5 to 0.14 pW/kg, and that moved this
 # node's *reproduction* anchors: gate200 failed on 1517.62 K against 1525.46 and on Mars's 1377.23 · 3768.09.
 # Nothing was wrong with the integrator — the anchors had been reading the nominal constant. So C48's anchors
@@ -81,10 +83,10 @@ else:
         f"고정 4 Myr 재현 (H 1.5 pW/kg, Nimmo Table 4 조건): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1525.46) · "
         f"T_c {fx_n['t_c']:.2f} K (앵커 4027.43)")
     fixed = ch.integrate(PARAMS, T_C0, T_M0, AGE, adaptive=False)
-    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1517.62) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3915.75) < 0.005
+    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1517.34) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3911.29) < 0.005
         and abs(fixed["rows"][-1]["t_m"] - hist["rows"][-1]["t_m"]) < 0.01,
-        f"선언 H 0.14 pW/kg (오너 결정 ⑤, 2026-09-09): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1517.62) · "
-        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3915.75) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
+        f"선언 H 0.088 pW/kg (오너 결정 ⑤ · 브리프 166 E 환산 정정): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1517.34) · "
+        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3911.29) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
 ws = ch.window_summary(hist["rows"])
 last = hist["rows"][-1]
 
@@ -145,20 +147,22 @@ row(abs(lastm["t_m"] - 1382.90) < 5.0 and abs(lastm["t_c"] - 3893.07) < 5.0 and 
     f"적응 화성 (H 1.5) → T_p {lastm['t_m']:.2f} · T_c {lastm['t_c']:.2f} · T_p@3.7Ga {nearm['t_m']:.2f} K · {hm['n_steps']} 걸음 · 최소 h {hm['h_min_myr']:.4f} Myr "
     f"(스윕 0.25 Myr 대비 {lastm['t_m']-1382.90:+.2f} / {lastm['t_c']-3893.07:+.2f} / {nearm['t_m']-1669.12:+.2f} K, {time.perf_counter()-t0:.0f} s)")
 # The declared-H row. Same trajectory shape (1197 steps, h_min 0.0053 Myr, inner-core branch 'never'); the answer
-# moves by −5.67 / −124.92 K. ⚠ The 3.7 Ga column's **rule is part of the number**: `min(rows, key=|t_gyr + 3.7|)`
+# moves by −5.87 / −129.91 K. ⚠ The 3.7 Ga column's **rule is part of the number**: `min(rows, key=|t_gyr + 3.7|)`
 # — the nearest *sampled* row, never an interpolation. Here that row is unique (t = −3.700566 Gyr, |Δ| 0.000566 Gyr
-# against the next row's 0.003434) and reads 1668.0452 K, so the anchor is 1668.05. The audit seat's run reported
-# 1668.043744 from a row at −3.700558 Gyr: same trajectory, different row grid. Neither deserves its last digits —
+# against the next row's 0.003434) and reads 1668.0021 K at the declared H, so the anchor is 1668.00. ⚠ Brief 166 E moved the declared H from the
+# mis-converted 0.14 to 0.088 pW/kg, which moved this column by −0.04 K; at 0.14 it read 1668.0452, and the audit
+# seat's run of that condition reported 1668.043744 from a row at −3.700558 Gyr — same trajectory, different row
+# grid. Neither deserves its last digits —
 # the local step is ~4 Myr, so "nearest row" is ±2 Myr, worth ≈0.19 K, against 5.1 K of criterion-B headroom.
 t0 = time.perf_counter()
 hmd = ch.integrate(PARAMS_M, 4800.0, 4800.0 / R_BM, AGE)
 lastd = hmd["rows"][-1]
 neard = min(hmd["rows"], key=lambda r: abs(r["t_gyr"] + 3.7))
-row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1377.23) < 0.05 and abs(lastd["t_c"] - 3768.09) < 0.05
-    and abs(neard["t_m"] - 1668.05) < 0.05,
-    f"선언 H 0.14 화성 → T_p {lastd['t_m']:.2f} · T_c {lastd['t_c']:.2f} · T_p@3.7Ga {neard['t_m']:.2f} K · {hmd['n_steps']} 걸음 "
+row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1377.03) < 0.05 and abs(lastd["t_c"] - 3763.10) < 0.05
+    and abs(neard["t_m"] - 1668.00) < 0.05,
+    f"선언 H 0.088 화성 → T_p {lastd['t_m']:.2f} · T_c {lastd['t_c']:.2f} · T_p@3.7Ga {neard['t_m']:.2f} K · {hmd['n_steps']} 걸음 "
     f"(H 1.5 대비 {lastd['t_m']-lastm['t_m']:+.2f} / {lastd['t_c']-lastm['t_c']:+.2f} / {neard['t_m']-nearm['t_m']:+.2f} K, {time.perf_counter()-t0:.0f} s) "
-    f"— 기준 B: Herzberg [1553.15, 1673.15] K 안 (위끝 여유 {1673.15-neard['t_m']:.1f} K)")
+    f"— 기준 B: Herzberg [1553.15, 1673.15] K 안 (위끝 여유 {1673.15-neard['t_m']:.2f} K)")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)
