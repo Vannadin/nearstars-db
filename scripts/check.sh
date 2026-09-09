@@ -13,13 +13,86 @@ fail=0
 # 정확히 그것인데(문서 깨짐을 24분 뒤가 아니라 1분 안에 본다), gate135 에서 그 이득을 안 썼다 —
 # 인용 링크 실패 두 줄이 로그 앞머리에 찍혀 있는 동안 24분을 기다렸다.
 # ⚠ 단, 앞쪽 실패로 죽이면 뒤쪽 검사 결과는 못 본다. 고치고 다시 돌 때 또 걸릴 수 있음을 알고 하라.
+# ── 인자: `--wiring` · `--from <sha>` · `--targeted` ───────────────────────────────────────
+# 브리프마다 full 층(24분+)을 도는 것이 게이트 비용의 전부였다. 두 축을 나눈다.
+#   `--from <sha>`         격리 실행. 그 sha 를 스크래치에 클론해 **그 안에서** 돈다. 워크트리 무접촉이므로
+#                          ⚠ 이 모드에서는 «게이트 도는 동안 트리 쓰기 금지» 규칙이 해제된다 — 그것이 목적이다.
+#   `--targeted`           표적 층. 13–14 의 물리 시험 중 **바뀐 경로에서 도출된 것만** 돈다.
+#                          비교 base 는 인자가 아니라 도출값이다 (`origin/engine/prototype`).
+# ⚠ **표적 시험을 사람이 고르게 만들지 않았다** (감사석 지적, 169). 위 18–21 줄의 기록된 결정이
+#   «층은 바뀐 경로가 정한다, 사람이 «이번엔 문서만이야» 라고 판단하지 않는다» 이고, `--only <시험>` 은
+#   바로 그 결정을 뒤집는다. 그래서 목록은 **diff 에서 도출**되고, 도출이 비면 full 로 되돌아간다.
+# 운용: 브리프마다 `--from <sha> --targeted`, 푸시 직전(~10커밋)에만 `--from <sha>` full.
+lane_req="full"
+from_sha=""
+# ⚠ base 는 **사람이 넣는 값이 아니다.** 푸시 tip 을 원격 이름으로 지목한다 — 격리 클론은 detached 라
+#   `@{u}` 를 쓸 수 없고, base 를 인자로 열어 두면 "무엇에 대해 좁혔는지" 를 부르는 사람이 정하게 된다.
+#   ⚠ 못 구하면 full 이다. 좁히기는 base 가 푸시 tip 일 때만 뜻이 있다.
+# ⚠ **그 이름은 클론 안에서 다른 것을 가리킨다** (169, 첫 실행에서 잡혔다): 격리 클론의 `origin` 은
+#   로컬 워크트리이므로 `origin/engine/prototype` 이 **푸시 tip 이 아니라 로컬 브랜치 tip** 을 가리킨다 —
+#   즉 방금 커밋한 sha 자신이고, diff 는 0 경로가 되어 층이 조용히 «전부 문서» 로 좁혀진다. 그래서 base 는
+#   진짜 원격이 보이는 **워크트리에서, 클론 전에** 도출해 sha 로 넘긴다 (`GATE_BASE_SHA`).
+base_ref="${GATE_BASE_SHA:-origin/engine/prototype}"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --wiring) lane_req="wiring"; shift ;;
+    --from)
+      from_sha="${2:-}"
+      [ -n "$from_sha" ] || { echo "  [FAIL] --from 에 sha 가 없다"; exit 2; }
+      shift 2 ;;
+    --targeted) lane_req="targeted"; shift ;;   # ⚠ 인자를 받지 않는다 — base 는 도출값이다
+    *) echo "  [FAIL] 모르는 인자: $1 (--wiring | --from <sha> | --targeted)"; exit 2 ;;
+  esac
+done
+
+# ── 격리: sha 를 스크래치에 클론해 거기서 다시 자기를 부른다 ──────────────────────────────
+# `git archive | tar -x` 로는 안 된다. 게이트 본문이 git 을 직접 쓴다 — 첫 줄의 `--show-toplevel`,
+# 5번의 `git grep`, 9a–9e 의 `git ls-files`. 클론이어야 full 층이 격리에서 성립한다 (169, 실측).
+# ⚠ 클론에는 gitignore 된 `docs/phase3/_papers` 심링크가 없다. 게이트가 그 이름을 쓰는 자리는
+#   전부 **제외 목록**이므로(check_language · check_md_tables · check_md_dupes · check_site_links ·
+#   build_sitemap · check_refs — 169 에서 여섯 다 확인) 없는 것이 검사를 바꾸지 않는다.
+if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
+  tree_sha=$(git rev-parse --short "$from_sha" 2>/dev/null) || {
+    echo "  [FAIL] 그런 sha 가 없다: $from_sha"; exit 2; }
+  dest="${TMPDIR:-/tmp}/gate-$tree_sha-$$"     # 같은 sha 를 다시 돌리면 새 디렉토리 (pid)
+  git clone -q --shared . "$dest" || { echo "  [FAIL] clone 실패"; exit 2; }
+  git -C "$dest" checkout -q --detach "$tree_sha" || { echo "  [FAIL] checkout 실패"; exit 2; }
+  # ⚠ 게이트 논리는 **지금 실행 중인 것**을 복사해 넣는다. sha 가 이 층들보다 앞설 수 있어서
+  #   트리의 판을 부르면 인자를 모른다. 그래서 스크래치는 한 파일만 sha 와 다르고, 그 사실을 찍는다.
+  self_differs=no
+  cmp -s "$0" "$dest/scripts/check.sh" || self_differs=yes
+  cp "$0" "$dest/scripts/check.sh"
+  links=$(find "$dest" -type l -not -path "$dest/.git/*" | wc -l | tr -d " ")
+  echo "── 격리 실행: $dest ──"
+  echo "  트리 sha $tree_sha · 심링크 $links · 게이트 스크립트는 실행본 복사 (트리 판과 다름: $self_differs)"
+  echo "  ⚠ 워크트리 무접촉 — 이 판정은 **커밋 sha 의 판정**이고 워크트리 상태의 판정이 아니다"
+  # base 는 여기서 도출한다 — 여기서만 `origin` 이 진짜 원격이다.
+  base_sha=$(git rev-parse --verify -q --short origin/engine/prototype || true)
+  cd "$dest" || exit 2
+  set --
+  [ "$lane_req" = "wiring" ] && set -- --wiring
+  [ "$lane_req" = "targeted" ] && set -- --targeted
+  GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha"     exec bash "$dest/scripts/check.sh" "$@"
+fi
+
 gate_sha=$(git rev-parse --short HEAD)
+# 격리 모드라면 우리가 그 sha 위에 있다는 것이 불변식이다. 아니면 클론이나 checkout 이 어긋난 것이다.
+if [ "${GATE_ISOLATED:-}" = "1" ] && [ "$gate_sha" != "${GATE_TREE_SHA:-}" ]; then
+  echo "  [FAIL] 격리 트리의 HEAD($gate_sha) 가 요청한 sha(${GATE_TREE_SHA:-}) 와 다르다"
+  exit 2
+fi
 
 # ── 층: 무엇이 바뀌었는지가 정한다. 사람이 "이번엔 문서만이야" 라고 판단하지 않는다 ──
 # `--wiring` 은 물리 시험(약 24 분)을 건너뛴다. 언제 그래도 되는지는 바뀐 경로 목록이 답한다.
 # 기본값은 전부 도는 것이다. 애매하면 전부 돈다 — 틀렸을 때 잃는 게 시간뿐인 쪽으로 기운다.
 lane="full"
-if [ "${1:-}" = "--wiring" ]; then
+# ⚠ 격리 클론의 origin 은 로컬 워크트리다 — `@{u}` 가 원격을 가리키지 않으므로 "무엇이 바뀌었는지"
+#   를 말할 수 없다. 그러면 판단을 포기하고 전부 돈다 (기존 upstream-없음 경로와 같은 처분).
+if [ "$lane_req" = "wiring" ] && [ "${GATE_ISOLATED:-}" = "1" ]; then
+  echo "── 층: full (격리 클론에는 원격 upstream 이 없어 무엇이 바뀌었는지 말할 수 없다) ──"
+  lane_req="full"
+fi
+if [ "$lane_req" = "wiring" ]; then
   # 비교 대상은 upstream. 없으면 판단을 포기하고 전부 돈다.
   base=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)
   if [ -n "$base" ]; then
@@ -36,7 +109,79 @@ if [ "${1:-}" = "--wiring" ]; then
   fi
 fi
 
-echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane"
+# ── 표적 층의 도출. 규칙은 여기 한 곳에 있고, 규칙이 비면 층 자체를 포기한다 ──────────────
+#   engine/X.py           → engine/test_X.py (있으면) + 그 모듈을 import 하는 engine/test_*.py 전부
+#   engine/tools/X.py     → engine/test_X.py (있으면) + check.sh 가 그 도구를 부르면 그 도구
+#   engine/bodies/B.yaml  → run.py bodies/B.yaml + 그 파일명을 문자열로 담은 시험 전부
+#   *.md                  → 물리 0 (문서는 답을 바꾸지 않는다)
+# ⚠ **매핑이 비는 바뀐 코드 경로가 하나라도 있으면 full 로 되돌린다** — scripts/ · chain.yaml ·
+#   check.sh 자신처럼 무엇이 그것에 의존하는지 이 규칙이 말할 수 없는 경로가 그렇다. 기존 wiring
+#   층의 거부권과 같은 형이고, 애매하면 전부 도는 쪽으로 기운다.
+# ⚠ **좁히기가 조용히 틀리는 세 길을 각각 막는다** (감사석 독립 재현, 169). 셋 다 «초록 한 줄» 로
+#   끝나므로 막지 않으면 층이 근거 없이 좁아진 것을 아무도 못 본다.
+#   ① base 를 못 구한다 → full.  ② base 가 대상 sha **자신**이다 → diff 0 → full.
+#   ③ base 가 대상의 **자손**이다 (지난 sha 를 다시 게이트하거나 base 가 오래됐다) → full.
+# ⚠ 그리고 diff 는 세 점이 아니라 **트리 대 트리** `git diff --name-only <base> <sha>` 다 — 세 점은
+#   merge-base 를 잡으므로 방향에 속는다.
+targeted_tests=""
+changed_n=0
+base_sha=""
+if [ "$lane_req" = "targeted" ]; then
+  base_sha=$(git rev-parse --verify -q --short "$base_ref" 2>/dev/null || true)
+  head_sha=$(git rev-parse --short HEAD)
+  if [ -z "$base_sha" ]; then
+    echo "── 층: full (base «$base_ref» 를 찾을 수 없어 무엇이 바뀌었는지 말할 수 없다) ──"
+  elif [ "$base_sha" = "$head_sha" ]; then
+    echo "── 층: full (base 가 대상 sha 자신이다 ($base_sha) — 좁힐 근거가 없다) ──"
+  elif ! git merge-base --is-ancestor "$base_sha" "$head_sha"; then
+    echo "── 층: full (base $base_sha 가 대상 $head_sha 의 조상이 아니다 — 좁힐 근거가 없다) ──"
+  else
+    changed=$(git diff --name-only "$base_sha" "$head_sha")
+    changed_n=$(echo "$changed" | grep -c . || true)
+    gap=""
+    add() { case " $targeted_tests " in *" $1 "*) ;; *) targeted_tests="$targeted_tests $1" ;; esac; }
+    importers() {   # $1 = 모듈명 — 그 모듈을 import 하는 시험 파일 전부
+      grep -lE "(^|[[:space:]])(import|from)[[:space:]]+$1([[:space:].]|\$)" engine/test_*.py 2>/dev/null \
+        | while read -r f; do basename "$f"; done
+    }
+    for p in $changed; do
+      case "$p" in
+        *.md) ;;                                   # 문서 → 물리 0
+        engine/test_*.py)
+          [ -f "$p" ] && add "$(basename "$p")" ;;
+        engine/tools/*.py)
+          b=$(basename "$p" .py); hit=""
+          [ -f "engine/test_$b.py" ] && { add "test_$b.py"; hit=1; }
+          grep -q "tools/$b.py" scripts/check.sh && { add "tools/$b.py"; hit=1; }
+          [ -n "$hit" ] || gap="$gap $p" ;;
+        engine/*.py)
+          b=$(basename "$p" .py); hit=""
+          [ -f "engine/test_$b.py" ] && { add "test_$b.py"; hit=1; }
+          for f in $(importers "$b"); do add "$f"; hit=1; done
+          [ -n "$hit" ] || gap="$gap $p" ;;
+        engine/bodies/*.yaml)
+          b=$(basename "$p")
+          add "run:bodies/$b"
+          for f in $(grep -l "$b" engine/test_*.py 2>/dev/null); do add "$(basename "$f")"; done ;;
+        *) gap="$gap $p" ;;
+      esac
+    done
+    if [ -n "$gap" ]; then
+      echo "── 층: full (이 규칙이 무엇을 시험해야 하는지 말할 수 없는 경로가 있다:$gap) ──"
+      targeted_tests=""
+    else
+      lane="targeted"
+      echo "── 층: targeted (바뀐 경로 $changed_n · 도출된 물리 시험:${targeted_tests:- 없음}) ──"
+    fi
+  fi
+fi
+# ⚠ 도출된 목록을 START/END 줄에 적는다. `lane=targeted` 만으로는 **무엇이 검사되지 않았는지** 를
+#   다음 좌석이 알 수 없고, 그러면 초록 한 줄이 full 층의 초록으로 읽힌다.
+tgt_field=""
+[ "$lane" = "targeted" ] && tgt_field=" base=$base_sha changed=$changed_n targeted=\"$(echo $targeted_tests)\""
+iso_field=""
+[ "${GATE_ISOLATED:-}" = "1" ] && iso_field=" isolated=$(pwd)"
+echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field"
 
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 python3 scripts/pipeline/validate.py || fail=1
@@ -217,7 +362,22 @@ python3 engine/check_refs.py || fail=1
 #   "판정한다" 로 잘못 읽힌다 (B2, 감사 지적).
 python3 engine/tools/check_citations.py --quiet
 
-if [ "$lane" = "wiring" ]; then
+if [ "$lane" = "targeted" ]; then
+  echo ""
+  echo "── 13–14 중 도출된 물리 시험만 (targeted 층) ──"
+  if [ -z "$targeted_tests" ]; then
+    echo "  바뀐 것이 전부 문서다 — 물리 시험 0 건. 12b 의 계약·인용 검사는 위에서 전부 돌았다."
+  fi
+  for tt in $targeted_tests; do
+    case "$tt" in
+      run:*) (cd engine && python3 run.py "${tt#run:}") || fail=1 ;;
+      # ⚠ full 층이 `--quiet` 로 부르는 시험은 표적 층도 그렇게 불러야 한다 — 다른 인자는 다른 검사다.
+      tools/c47_step4.py) (cd engine && python3 tools/c47_step4.py --quiet) || fail=1 ;;
+      *) if [ -f "engine/$tt" ]; then (cd engine && python3 "$tt") || fail=1
+         else echo "  [FAIL] 도출된 시험 파일이 없다: engine/$tt"; fail=1; fi ;;
+    esac
+  done
+elif [ "$lane" = "wiring" ]; then
   echo ""
   echo "── 13–14 물리 시험 건너뜀 (wiring 층). 코드가 바뀐 커밋에서는 절대 건너뛰지 않는다 ──"
 else
@@ -313,5 +473,5 @@ if [ $fail -eq 0 ]; then
 else
   echo "──────── 일부 점검 실패 ────────"
 fi
-echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane rc=$fail"
+echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field rc=$fail"
 exit $fail

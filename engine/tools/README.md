@@ -866,6 +866,52 @@ After the citation-link failure this seat picked six checks by hand, got all six
 did the wrong thing**: a correct hand-built list is one correct instance of a judgement that has
 already failed once. The lane makes the same list from the paths every time.
 
+## The gate can judge a sha instead of the tree, and narrow itself from the diff (2026-09-09)
+
+The entry above makes the *list* a function of the paths. Brief 169 makes the *tree* and the *cost* two
+more things nobody chooses by hand. `bash scripts/check.sh --from <sha> --targeted` is the per-brief
+form; `--from <sha>` on its own — full lane — is what a push needs.
+
+- **`--from <sha>` clones that sha into `$TMPDIR/gate-<sha>-<pid>` and runs inside it**, so the working
+  tree is untouched and the "no tree writes while a gate runs" rule is lifted **for that run only**.
+  ⚠ `git archive | tar -x` was the first design and does not work: the gate calls
+  `git rev-parse --show-toplevel` on its first line, `git grep` in step 5 and `git ls-files` in 9a–9e,
+  so the scratch has to be a *repository*. The clone is `--shared` (1.2 s, 171 MB, objects by
+  alternates), which means **do not run `git gc --prune` on the origin while one is alive**, and do not
+  create an upstream-tracking branch inside it — `--wiring` falling back to full in isolation is
+  correct, and `--targeted` is what takes its place there. The scratch is **not deleted** at END; it is
+  the reproduction.
+- **`--targeted` takes no argument.** The base is derived, because a base chosen at the call site puts
+  back exactly the judgement this section exists to remove; if it cannot be resolved the lane reverts to
+  full. ⚠ **And it must be derived before the clone.** Inside the clone `origin` is the local worktree,
+  so `origin/engine/prototype` there names the *local branch tip* — the sha you just committed — and the
+  diff comes out as zero paths, silently narrowing the lane to "all documentation". That fired on the
+  first run of this flag. The base is resolved in the worktree, where `origin` is the real remote, and
+  passed in as a sha (`GATE_BASE_SHA`). Narrowing means something only while the base is the pushed tip.
+- **The mapping lives in one place and has a veto.** `engine/X.py` → `test_X.py` plus every
+  `engine/test_*.py` that imports X; `engine/tools/X.py` → its test, or the `check.sh` line that calls
+  it; `engine/bodies/B.yaml` → `run.py bodies/B.yaml` plus every test naming that file; `.md` → no
+  physics. ⚠ **One changed code path the mapping cannot explain — `scripts/`, `chain.yaml`, `check.sh`
+  itself — and the whole lane reverts to full**, the same veto `--wiring` already had. The derived list
+  is printed on the `GATE START` and `GATE END` lines, because `lane=targeted` on its own does not say
+  what was **not** checked, and a green line that hides that reads as a full-lane green.
+- **Three ways a narrowing goes quietly wrong, each blocked by name.** All three end in a green
+  line, so an unblocked one is invisible. ① the base cannot be resolved. ② the base **is** the target
+  sha, which makes the diff empty — and `git merge-base --is-ancestor X X` is *true*, so the ancestor
+  test does not catch this one. ③ the base is a **descendant** of the target, which is what re-gating
+  an older sha looks like. Each falls back to full and says which one fired. The diff itself is
+  tree-to-tree (`git diff --name-only <base> <sha>`), not three-dot: three-dot takes a merge base and
+  so is not fooled by direction in the way a reader expects, and the base sha is printed on the
+  `GATE START`/`END` lines so the narrowing can be checked after the fact.
+  - ↳ ⚠ *The recommendation to derive the base with `git rev-parse origin/engine/prototype` was itself
+    a broken source* — correct in the worktree, wrong inside the clone, and the audit seat recorded it
+    as its eleventh broken-source correction of the day. The rule it illustrates is §10's: a name is
+    not a value until it has been resolved **in the place it will be read**.
+- **12b never narrows.** The contract, anchor and citation checks (14 lines: `check_via`,
+  `check_contracts`, nine band/label tests, `test_check_refs`, `check_refs`, and the citation counter
+  that counts rather than judges) run in every lane, because a documentation line can break them and
+  the targeted lane is worthless if it can miss that.
+
 ## No value was wrong today, and that is not a property of the mistakes (2026-09-06)
 
 Counting this seat's errors over one day: a threshold read as `1/19` where the page prints `√(1/19)`;

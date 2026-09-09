@@ -200,6 +200,8 @@ has no such line, the brief number it came from.
 - Gate FAIL 0 → `CLAUDE.md@«8. Run Tests Before Marking Complete»`, widened to: say what your work adds to the gate's time.
   - ↳ *A runtime estimate belongs to the commit it was measured on.* (line 373)
   - ↳ *`check.sh` is ~20 minutes and the foreground tool limit is 10; run it backgrounded and watch the tail. An external signal's sender candidates include the harness itself.* (line 430)
+  - ↳ *A pushed sha is the sha that got `rc=0`: the `GATE END` line's `sha=` must be the tip being pushed, not an ancestor of it.* (Brief 169)
+  - ↳ *An isolated gate (`--from <sha>`) judges the commit and never the working tree — it sees committed diffs only, so an uncommitted edit cannot pass it. That is the rule becoming structural, not a defect.* (Brief 169)
 - Papers through `ADS_API_TOKEN` and the cache, no WebSearch, identifiers read and checked by title → `CONVENTIONS.md@«3.2 ADS paper discipline»`, `CONVENTIONS.md@«3.3 Paper references are links»`.
   - ↳ *A cache file is held only once shown to be a PDF — run `file` on it; a `.PROVENANCE.txt` records how it was obtained but its absence is not the check.* (line 349)
   - ↳ *Check ADS `esources` before asking the owner for a paper; three of seven requests had a free route in a field already queried.* (line 398)
