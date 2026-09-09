@@ -152,8 +152,16 @@ def dtp_dt_k_s(t_p_k: float, delta_m: float, q_man_w: float, melt_w: float = 0.0
             "f_man_w_m2": f, "q_surface_w": surface_w, "q_man_w": q_man_w,
             "melt_w": melt_w, "capacity_j_k": capacity_j_k,
             "urey": q_man_w / surface_w if surface_w > 0.0 else None,
-            "t_lid_base_k": t_lid_base_k(t_p_k), "theta": theta_fk(t_p_k),
-            "ra_i": ra_internal(t_p_k), "mu_i_pa_s": viscosity_pa_s(t_p_k)}
+            # ⚠ 진단값은 **답이 쓴 인수 그대로** 다시 계산한다. 브리프 167 E 까지 여기서
+            # `ra_internal(t_p_k)` 를 기본 인수로 불러, 화성 답을 화성 g 로 내면서 화성의 Ra_i 를
+            # **지구 g · Foley d** 로 찍고 있었다 (2.63e5 대신 3.26e6, 12.41배). 답은 안 틀렸지만
+            # 인쇄된 중간값이 다른 인수 집합의 것이었다 — 중간값은 답으로 가는 **경로**이므로
+            # 경로가 답과 같은 인수를 써야 한다 (감사석 발견).
+            "t_lid_base_k": t_lid_base_k(t_p_k),
+            "theta": theta_fk(t_p_k, flux_kw.get("t_s_k", T_S_K)),
+            "ra_i": ra_internal(t_p_k, flux_kw.get("t_s_k", T_S_K),
+                                flux_kw.get("d_m", D_MANTLE_M), flux_kw.get("g", G_M_S2)),
+            "mu_i_pa_s": viscosity_pa_s(t_p_k)}
 
 
 def ddelta_dt_m_s(t_p_k: float, f_man: float, lid_gradient_k_m: float | None) -> dict:

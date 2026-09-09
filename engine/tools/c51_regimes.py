@@ -69,14 +69,20 @@ def geometry(b: dict) -> dict:
     v = isolve(b["mass_earth"], core_mass_fraction=b["cmf"], potential_temperature=1600.0).values
     m_kg = b["mass_earth"] * cf.M_EARTH_KG
     r_p = b["radius_earth"] * cf.R_EARTH_M
-    return {"r_p_m": r_p, "r_c_m": v["core_radius"] * cf.R_EARTH_M,
+    r_c = v["core_radius"] * cf.R_EARTH_M
+    # ⚠ `d_m` is each body's **own** mantle thickness, not Foley's printed 2890 km. It makes no
+    # difference to the answer — C51 (b) measured (3)'s flux to be exactly invariant to `d` — and that
+    # is precisely why passing the right one is free. Until Brief 167 E this was not passed at all, so
+    # the reported `Ra_i` was built on Earth's thickness for Mars (12.41× out) while the answer was
+    # right. **The intermediate is the path to the answer, so it carries the answer's arguments.**
+    return {"r_p_m": r_p, "r_c_m": r_c, "d_m": r_p - r_c,
             "g": cf.G_NEWTON * m_kg / r_p ** 2,
             "q_man_w": rg.budget(m_kg * (1.0 - b["cmf"]))["mantle_w"]}
 
 
 def stagnant(name: str, t_p: float, delta: float, geo: dict) -> dict:
     return mb.secular_cooling(t_p, delta, geo["q_man_w"], r_p_m=geo["r_p_m"], r_c_m=geo["r_c_m"],
-                              g=geo["g"])["at_zero_melt"]
+                              g=geo["g"], d_m=geo["d_m"])["at_zero_melt"]
 
 
 print("=" * 96)

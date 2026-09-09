@@ -7058,15 +7058,44 @@ used, as registered.
 
 | pairing | Urey (Earth) | Urey (Mars) | direction |
 |---|---|---|---|
-| each body at its own C20 temperature | 4.251 | 8.780 | ✓ **as registered** |
+| **each body at its own C20 temperature** — ✅ **the owner's row** | 4.251 | 8.780 | ✓ **as registered** |
 | both at the declared 1600 K | 2.450 | 1.742 | ✗ **reversed** |
 
 ⚠ **The pre-registration named a direction and never fixed which temperature row it is read on**, and
 the two answers disagree. **Electing the row that passes would be a choice made after seeing the
-output**, so it is not made: the defect is filed and the reading is the owner's and the directing seat's.
+output**, so it was not made by a seat: the defect was filed at `85b1d7d2` with both pairings printed.
+
+⚠ **Closed 2026-09-09 by an owner decision taken outside the registration: the cell is read at each
+body's own C20 temperature, so cell ③ passes.** The owner's reason: *a Urey ratio is a quantity built to
+measure the difference between two bodies, so the two bodies cannot be put at one `T_p`.* **The three
+cells therefore read ① ✗ · ② ✓ · ③ ✓** — and ③ carries its own label: *the registration could not decide
+it, the disagreement was committed first, and the owner decided it afterwards.* **That order is the
+whole difference between this and a post-hoc choice**, and git carries it: the both-pairings commit
+precedes the decision.
 *The physical content of the ambiguity is worth stating: Mars's declared 1600 K is a value C47 (i)'s
 stage 0 **transferred from Earth**, so putting both bodies at the same `T_p` erases exactly the
 difference a Urey ratio is built to measure.*
+
+#### ⚠ A reported intermediate was built on another body's arguments — fixed 2026-09-09 (Brief 167 E)
+
+**The audit seat could not reproduce Mars's `Ra_i` and was right not to.** `mantle_budget.dtp_dt_k_s`
+returned its diagnostics as `theta_fk(t_p_k)` and `ra_internal(t_p_k)` — **without `flux_kw`** — so the
+answer used Mars's `g` while the number printed beside it was built on **Earth's `g` and Foley's printed
+`d` = 2890 km**: `3.26409501 × 10⁶` where the answer's arguments give `2.62935029 × 10⁵`, a factor
+**12.4141** = (9.8/3.7262) × (2890/1722.838)³. ⚠ **Earth's row had the same disease** at 0.2 % — the
+answer took the computed `g` = 9.8195 and the diagnostic took Foley's printed 9.8.
+
+**Two repairs, and the second is the one worth naming.** The diagnostics now recompute with the same
+arguments the answer used; and `c51_regimes` now passes **each body's own mantle thickness** instead of
+leaving it at Foley's Earth value. ⚠ *The second was free precisely because of what C51 (b) measured:*
+(3)'s flux is **exactly invariant to `d`**, so passing the right thickness cannot move an answer — and
+every number in this section is **bit-identical** after both repairs (`F_man` 7.1041467231 and
+1.7704573721 mW/m², Urey 4.25068708 and 8.78022345, all six regression rows unchanged).
+
+⚠ **No answer was ever wrong, and that is the whole point.** `F_man` received the right `g` and does
+not read `d`, so the physics was right while the printed path to it was not. **An intermediate value is
+the path to the answer**, and a path built on another body's arguments cannot be checked by anyone —
+which is exactly how the audit seat found it: by trying to walk the path.
 
 #### ⚠ What this evaluation says that is larger than the three cells
 
@@ -7094,7 +7123,12 @@ forbids without a printed ground. **Not done here.**
 |---|---|---|
 | (a) | **`L′`, the plate length** | the source *"treat[s] the plate length, `L′`, as an unknown"* and reads it off its own models; changing the domain aspect ratio 4 × 1 → 16 × 1 moves it **≈1.5 → ≈4**. Carried as that band; ⚠ **no NearStars body can supply it**, so electing a value is electing a number nobody measured |
 | (b) | **`(m, p)`, the grain-damage pair** | three printed rows put one input point at `Nu` **23.69 · 50.46 · 27.05** (**2.1×**), `C₅` spans **7.8×**, and `β_L` **changes sign**. Carried as a band |
-| (c) | ⚠ **new — which temperature row cell ③ means** | the direction flips between the two pairings above. This is the registration's defect, not a physics choice, and it is the one decision this brief created rather than inherited |
+| (c) | ⚠ **new — which temperature row cell ③ means** | **decided 2026-09-09: each body's own C20 temperature.** The direction flips between the two pairings, so this was the registration's defect rather than a physics choice — the one decision this brief created rather than inherited, and the only one already closed |
+
+⚠ **One sensitivity to carry beside (a) and (b): `δ` moves the Urey ratio and nothing anchors `δ`.**
+Mars's Urey goes **8.780 → 9.716** across Breuer & Spohn 2003's printed lid band 350 → 500 km, **+10.7 %**,
+purely through `A_man = 4π(R_p − δ)²` — the flux itself does not read `δ` at all. **So a cell scored on
+Urey inherits the lid-thickness band**, and no printed value picks a point inside it.
 
 ⚠ **Decision ③ (C34's feed) is still held**, exactly as C25 (f) recorded, and nothing in this brief
 changed the transport table's input.
