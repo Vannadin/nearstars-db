@@ -84,6 +84,38 @@ row(fe.fit_state == "solid" and "fe_s" not in eos.MATERIALS,
     "fe_eps 도 그대로이고, **`fe_s` 는 아직 MATERIALS 에 없다** — 지어지지 않았다는 사실이 "
     "레지스트리에서도 참이다")
 
+print("\n⑥ 후보 A — Huang+ 2023 의 인쇄된 조성 도함수로 그 논문의 산수를 그대로 한다")
+# R1·R2 — 순수 액체 Fe 의 두 기준점이 c_S = 0 에서 그대로 나와야 한다 (Table 1).
+for anchor, rho, kt in (("19GPa", 8.083, 156.0), ("35GPa", 8.640, 215.0)):
+    row(eos.huang_fes_density(0.0, anchor) == rho and eos.huang_fes_k_t_gpa(0.0, anchor) == kt,
+        f"R1/R2 {anchor}: c_S = 0 → ρ {eos.huang_fes_density(0.0, anchor):.3f} g/cm³ · "
+        f"K_T {eos.huang_fes_k_t_gpa(0.0, anchor):.0f} GPa — Table 1 인쇄값 그대로")
+
+# R7 — Table S4 의 **독립** AIMD 점. 논문 자신이 NSP/SP 두 값을 인쇄하므로 그 사이가 통과다.
+c4 = eos.HUANG_S4_CS
+r7 = eos.huang_fes_density(c4)
+mid = (eos.HUANG_S4_RHO_NSP + eos.HUANG_S4_RHO_SP) / 2.0
+row(eos.HUANG_S4_RHO_NSP <= r7 <= eos.HUANG_S4_RHO_SP and abs(r7 - mid) / mid <= 0.025,
+    f"R7 Fe₈₄S₂₄ (c_S = {c4:.4f}): 혼합식이 {r7:.4f} g/cm³ — 인쇄된 NSP {eos.HUANG_S4_RHO_NSP} 와 "
+    f"SP {eos.HUANG_S4_RHO_SP} **사이**이고 중점에서 {abs(r7 - mid) / mid * 100:.2f} % (통과선 2.5 %)")
+
+# R8·R9 — 적분이 닫힌 형과 같은가. 여기서 다시 적분해 대조한다(전사가 규칙임을 보이는 자리).
+for anchor in ("19GPa", "35GPa"):
+    a, b = eos.HUANG_S_DRHO[anchor]
+    c = 0.18
+    steps = 20000
+    num = sum((a * (i + 0.5) * c / steps + b) * (c / steps) for i in range(steps))
+    closed = eos.huang_fes_density(c, anchor) - eos.HUANG_FE_ANCHORS[anchor][2]
+    row(abs(num - closed) / abs(closed) <= 0.01,
+        f"R8/R9 {anchor}: c_S = 0.18 에서 수치적분 {num:+.5f} 대 닫힌 형 {closed:+.5f} g/cm³ "
+        f"({abs(num - closed) / abs(closed) * 100:.4f} %, 통과선 1 %)")
+
+row(eos.HUANG_S_DRHO["19GPa"] == (-3.505, -5.362) and eos.HUANG_S_DKT["19GPa"] == (-410.0, -228.0),
+    "Table S5 의 S 열이 인쇄된 계수 그대로다 (19 GPa: ρ −3.505c−5.362 · K_T −410c−228)")
+row("몰분율" in eos.HUANG_FES_SLOT_GAP or "고압 기준 BM2" in eos.HUANG_FES_SLOT_GAP,
+    "⚠ 아직 `Phase` 슬롯에는 안 들어간다 — 이유가 이름을 갖고 있다: 이 재질의 기준점이 "
+    "**19/35 GPa** 인데 `Phase.rho0` 는 영압 기준이다")
+
 print("\n기록 — 재현 앵커 R4–R6 은 오늘 **거절**이 기대 결과다 (판정 아님)")
 print("      Xu+ 2021 의 Fe–S 밀도점들과 대조하려면 ρ₀(X_S) 가 있어야 하는데, 그 논문은 그것을 표로")
 print("      인쇄하지 않고 비이상 용액 모델의 출력으로 낸다 — 슬롯이 아니라 형식이 다르다.")

@@ -1513,6 +1513,57 @@ IRON_MELT_REF_HIGH = ("González-Cataldo & Militzer 2023 (2023PhRvR...5c3194G) �
 MORI_FES_EUTECTIC = (1348.0, 21.0 * GPA, 36.5 * GPA, 1.0 / 2.07)  # (T_ref, P_ref, a, 1/c)
 MORI_FES_P_MEASURED_MAX = 254.0 * GPA   # 측정 상한 (run #11)
 MORI_FES_P_MAX = 350.0 * GPA            # 논문 자신의 외삽 사용처 ("~4100 at the ICB")
+# ── 액체 Fe–S, 후보 A: Huang+ 2023 의 인쇄된 조성 도함수 (C55 1단계, 브리프 178 B) ──────────
+# 출처: Huang, Li, Khan, Sossi, Giardini, Murakami 2023, GRL 50, e2022GL102271
+# (2023GeoRL..5002271H, 본문·SI 모두 보유) — Table 1 의 순수 액체 Fe 기준점 둘과, SI 의 Table S5
+# 가 인쇄하는 **불순물 도함수**다. S 열만 c 에 선형이고("polynomial fit for S") 나머지는 상수다.
+# 혼합은 본문 식 (1)–(2): ρ_mix = ρ_Fe + Σ_i ∫₀^{x_i} (∂ρ/∂x_i) dx_i — S 하나면 닫힌 형이 된다.
+# ⚠ `c_S` 는 **몰분율**이다 (Table S5 캡션: "c_X, in mole fraction"). wt% 밴드를 쓰려면 환산이
+#   필요하고 **그 환산은 우리 산수**이므로 대조로만 쓴다.
+HUANG_FE_ANCHORS = {                     # (P [Pa], T [K]) → (ρ_Fe [g/cm³], K_T,Fe [GPa])
+    "19GPa": (19.0 * GPA, 2100.0, 8.083, 156.0),
+    "35GPa": (35.0 * GPA, 2400.0, 8.640, 215.0),
+}
+#: Table S5 의 S 열: (a, b) 로 ∂ρ/∂c = a·c + b [g/cm³], ∂K_T/∂c = a·c + b [GPa]
+HUANG_S_DRHO = {"19GPa": (-3.505, -5.362), "35GPa": (-1.201, -4.870)}
+HUANG_S_DKT = {"19GPa": (-410.0, -228.0), "35GPa": (-286.0, -148.0)}
+#: Table S4 의 독립 앵커 — Fe₈₄S₂₄ (108원자 셀, c_S = 24/108), 19 GPa · 2100 K
+HUANG_S4_CS = 24.0 / 108.0
+HUANG_S4_RHO_NSP = 6.72
+HUANG_S4_RHO_SP = 6.88
+
+
+def huang_fes_density(c_s: float, anchor: str = "19GPa") -> float:
+    """액체 Fe–S 밀도 [g/cm³] — Huang+ 2023 식 (1) 의 적분, S 항만.
+
+    ∫₀^{c}(a·x + b)dx = b·c + a·c²/2 이므로 닫힌 형이다. **이 함수는 논문의 산수를 그대로 하는
+    것이지 우리 적합이 아니다** — 그래서 앵커 R8·R9 의 통과선이 1 % 로 좁다."""
+    if anchor not in HUANG_FE_ANCHORS:
+        raise ValueError(f"앵커는 {sorted(HUANG_FE_ANCHORS)} 중 하나다: {anchor}")
+    if not 0.0 <= c_s <= 1.0:
+        raise ValueError(f"c_S 는 몰분율이다 (0–1): {c_s}")
+    a, b = HUANG_S_DRHO[anchor]
+    return HUANG_FE_ANCHORS[anchor][2] + b * c_s + a * c_s * c_s / 2.0
+
+
+def huang_fes_k_t_gpa(c_s: float, anchor: str = "19GPa") -> float:
+    """같은 적분을 K_T 에 — Huang+ 2023 Table S5 의 S 열 [GPa]."""
+    if anchor not in HUANG_FE_ANCHORS:
+        raise ValueError(f"앵커는 {sorted(HUANG_FE_ANCHORS)} 중 하나다: {anchor}")
+    if not 0.0 <= c_s <= 1.0:
+        raise ValueError(f"c_S 는 몰분율이다 (0–1): {c_s}")
+    a, b = HUANG_S_DKT[anchor]
+    return HUANG_FE_ANCHORS[anchor][3] + b * c_s + a * c_s * c_s / 2.0
+
+
+HUANG_FES_SLOT_GAP = (
+    "Huang+ 2023 의 Fe–S 는 **19 GPa/2100 K 와 35 GPa/2400 K 에 기준점을 둔 BM2** 다 "
+    "(논문: \"second-order BM EoS, [K₀′] equals 4\"). `eos.Phase` 의 `rho0` 는 **영압** 기준이라 "
+    "이 재질을 그 슬롯에 넣으려면 «고압 기준 BM2» 라는 form 이 하나 필요하고, 그것은 `Phase` 를 "
+    "고치는 일이라 이 브리프의 몫이 아니다 — 여기서는 논문의 혼합 산수를 그대로 재현하는 "
+    "함수까지만 짓는다 (C55 1단계, 브리프 178 B)")
+
+
 # ── 액체 Fe–S 의 부피 상수, Xu+ 2021 이 **인쇄한 규칙 그대로** (C55 1단계, 브리프 178 B) ─────
 # 출처: Xu, Morard, Boulard, Rivoldini, Nishida, Antonangeli 2021, EPSL 563, 116884
 # (2021E&PSL.56316884X, 보유) §2.4, 1 bar · 1900 K 기준의 **등온** 값이다. 논문이 인쇄하는 문장:
