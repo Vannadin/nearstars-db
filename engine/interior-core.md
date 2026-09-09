@@ -7658,10 +7658,18 @@ after, on Pandora, every value of every node this brief could touch:
 **The reason is in the source and it is not an accident.** `interior.py` says of this input:
 *"`tidal_heating` 도 계산에 쓰이지 않는다"* — it is not used in the calculation. It is one of the three
 indicators in `porosity.voids_expected`, all three of which fire **only toward «no porosity left»**, and
-Pandora already trips the first two by a wide margin: its mass is **38 222×** the observed transition mass
-and its central pressure **22 000×** the grain-crushing threshold. The verdict `voids_expected` was
-already `False` and stays `False`. The one thing that changed is the **reason string**, which gained a
-third clause naming the declaration.
+Pandora already trips the first two by a wide margin: its mass is **38 501×** the observed transition mass
+and its central pressure **23 765×** the grain-crushing threshold. The verdict `voids_expected` was
+already `False` and stays `False`.
+
+⚠ **Two corrections to the paragraph above, both from the audit seat.** *(1)* The multipliers first
+reported were **38 222 and 22 000** — hand-computed here from a mass rounded to 0.64 M⊕ and a *guessed*
+central pressure, while the body declares **0.6447** and the solver has its own pressure. The numbers
+above are the ones the recipe **prints**, and the first pair was an instance of the very thing this file
+keeps recording: a number carried without the run that produced it. *(2)* **«Nothing moved» was about the
+values, and the evidence did move** — `inputs["tidal_heating"]` goes `False` → `True`, and the porosity
+note gains a third ground. The declaration is visible in the record and invisible in every answer, and
+those are different sentences.
 
 ⚠ **The registration is left as written and the failure recorded beside it** (the C45 ⓐ format): what
 failed is the prediction, not the code, and rewriting the row to match the outcome would erase the only

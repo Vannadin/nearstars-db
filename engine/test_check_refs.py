@@ -64,7 +64,10 @@ The last paragraph.
 def main() -> int:
     fails: list[str] = []
 
+    _counter = {"n": 0}
+
     def ok(cond: bool, msg: str) -> None:
+        _counter["n"] += 1
         if not cond:
             fails.append(msg)
 
@@ -367,6 +370,21 @@ def main() -> int:
     ok(not _drift,
        f"계약 파서의 Declared-optional 이 등록된 집합과 같아야 한다 (고유 9 · 슬롯 12) — 차이: "
        f"{' '.join(_drift)}")
+
+    # ⚠ **그 비교가 실제로 무는지 여기서 시험한다** (170 F ①). 170 E 는 «심어 봤더니 잡혔다» 를
+    #   커밋 메시지에만 적었고 파일 안에는 잡을 것이 없었다 — 같은 사고(블록이 판정 뒤로 밀리는 것)가
+    #   편집 한 번 거리에 있다. 같은 diff 계산을 가짜 기대집합에 돌려 **차이가 나오는지** 본다.
+    def _diff(want: dict, have: dict) -> list:
+        out = []
+        for _n in sorted(set(want) | set(have)):
+            out += [f"+{_n}.{_k}" for _k in sorted(have.get(_n, set()) - want.get(_n, set()))]
+            out += [f"-{_n}.{_k}" for _k in sorted(want.get(_n, set()) - have.get(_n, set()))]
+        return out
+    ok(_diff(EXEMPT, _got) == _drift,
+       "면제 비교가 위에서 쓴 것과 같은 계산이어야 한다 — 시험이 다른 식을 시험하면 뜻이 없다")
+    _planted = {**EXEMPT, "body_class": EXEMPT["body_class"] | {"zz_bogus"}}
+    ok(_diff(_planted, _got) == ["-body_class.zz_bogus"],
+       "면제 비교가 실제로 문다 — 없는 키를 기대집합에 심으면 그 이름이 차이로 나와야 한다")
     ok("composition_intent" in _dyn.get("needs", set())
        and "composition_intent" not in _dyn.get("declared_optional", set()),
        "dynamo_rocky 의 `composition_intent` 는 Needs 에 있고 면제에는 없어야 한다 — 산문의 백틱이 "
@@ -379,6 +397,15 @@ def main() -> int:
        "④: 기본값이 None 인데 증거에 상수가 앉으면 설명되지 않는다 — 이것이 `porosity_cap` 이었다")
     ok(_cc.explained_by_default(0.0, {False}) is False and _cc.explained_by_default(1, {True}) is False,
        "④: 타입까지 본다 — `False == 0` 이라 타입을 안 보면 불리언 기본값이 0 을 설명해 버린다")
+
+    # ⚠ **도달성 가드이지 기준선이 아니다** (170 F ④). 이 파일의 사고 방식은 «단정이 판정 뒤로
+    #   밀려 조용히 안 돌게 되는 것» 이었다 — 그러면 어떤 단정도 실패하지 않으므로 초록이 늘 나온다.
+    #   그래서 **여기까지 실제로 실행된 `ok()` 의 수**를 센다. 블록 하나가 도달 불가가 되면 수가
+    #   줄어 이 줄이 스스로 FAIL 한다. 단정을 **더할 때** 이 수를 함께 올리는 것이 정상 절차다.
+    _ok_calls = _counter["n"]
+    ok(_ok_calls == 37,
+       f"도달한 단정 수가 37 이어야 한다 — {_ok_calls} 다. 줄었다면 어떤 블록이 판정 뒤로 "
+       f"밀려 안 돌고 있다는 뜻이다 (170 E 의 사고)")
 
     for f in fails:
         print(f"  [FAIL] {f}")
