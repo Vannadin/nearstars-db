@@ -85,8 +85,15 @@ M_BASE = {                     # ℳ/ℳ⊕ — the declared family. None = the 
 }
 ELECTED = {1, 4, 5}            # regimes where the doc prints one value; 2 and 3 emit endpoints only
 MULTIPOLAR_FACTORS = (0.05, 0.10)   # OC06's own two printed statements of ONE quantity (multipolar / the same dynamo's
-                                    # maximum dipolar moment): text "falls by nearly a factor of 20" (≳ 0.05) and abstract
-                                    # "reduced by a factor of 10 or more" (≤ 0.1) — a 2× width, base-heated dynamos only.
+                                    # maximum dipolar moment): §5 "falls by nearly a factor of 20" (≳ 0.05) at the
+                                    # Ro_ℓ ≃ 0.12 transition, and the abstract "reduced by a factor of 10 or more"
+                                    # (≤ 0.1) — a 2× width, base-heated dynamos only.
+                                    # ⚠ Read against the paper 2026-09-09 (Brief 172), because "both printed" had been
+                                    # asserted for six days and never checked. Both are printed, and 0.05 is printed a
+                                    # second time as an explicit ratio beside eq. (24): "with M− ≃ 0.05M+ on the
+                                    # multipolar side". ⚠ **Not** in Table 3 — that table is "Planetary core convection
+                                    # parameters", and the 0.05 standing in it is Ganymede's local Rossby number, a
+                                    # different quantity with the same digits. Locations are written here for that reason.
                                     # (0.15 removed 2026-09-04 — a different quantity; {0.05, 0.06} stood for one hour and
                                     # was not two independent sources: 0.05 is RM22's reading of OC06 — the docstring.)
 MULTIPOLAR_SOLAR_SYSTEM = 0.06      # RM22's Solar-System validation point inside that width ("about 0.06 … ratifies OC06");

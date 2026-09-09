@@ -8,7 +8,10 @@ The owner asked for two things (2026-09-04): *"자기장 세기는 밴드로 출
 that the next recipe does not invent a third one.
 
 **A band needs both of its ends printed.** Measured before this was written: only two places in the
-engine qualify — the multipolar grid {0.05, 0.10}, both printed by OC06, and the brown-dwarf
+engine qualify — the multipolar grid {0.05, 0.10}, both printed by OC06 (checked against the paper
+2026-09-09, Brief 172: 0.10 in the abstract, *"the dipole moment is reduced by a factor of 10 or more"*;
+0.05 twice in §5 — *"falls by nearly a factor of 20"* at the Ro_ℓ ≃ 0.12 transition, and explicitly as a
+ratio beside eq. (24), *"with M− ≃ 0.05M+ on the multipolar side"*), and the brown-dwarf
 radius-driven width, where the range itself is declared. Everything else would be two numbers nobody
 published. So a value has three possible shapes, and `Band.kind` says which:
 
