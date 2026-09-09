@@ -3565,7 +3565,15 @@ Three facts, named and not repaired. The code's verdicts are unchanged by this e
 
 **Venus splits** — ⚠ **and it is C46's, not this item's.** What follows is the measurement; *why* the
 table cannot place Venus is a question about the table's axis, and it moved to C46 on 2026-09-07.
-The §6.2 table prints Venus as its stagnant-lid anchor body at a measured 10–20 mW/m²,
+The §6.2 table prints Venus as its stagnant-lid anchor body at 10–20 mW/m² — ⚠ **corrected 2026-09-09:
+that number is not a measurement of Venus.** It is Reese, Solomatov & Moresi 1998's
+([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R)) **melting ceiling**, read where their
+stagnant-lid curve meets the peridotite solidus at the lid base (their Fig. 4b/c, wet-olivine `n = 3`),
+and the paper prints Mars's as 15–30 in the same sentence. **The only printed measurement of Venus's
+heat flow is 78 ± 69 mW/m²** (Smrekar+ 2023, [`2023NatGe..16...13S`](https://ui.adsabs.harvard.edu/abs/2023NatGe..16...13S),
+from active rifting), beside a **model** global mean of ∼40 (O'Rourke & Smrekar 2018 §2.2) and local
+21–287 at coronae; **there is no global measurement.** The word *measured* stood here through four
+sections and is removed. Earlier text: *"at a measured 10–20 mW/m²"*,
 and the engine computes 37.75 mW/m² for it and returns **plate tectonics**. The arithmetic is Earth's
 21.32 TW scaled by mass to 17.37 TW over 4.6023e14 m². No core-mass fraction in 0.20–0.40 flips it; the
 flip is at 0.4636.
@@ -4982,7 +4990,11 @@ ratio.** Mercury and Venus have no measured surface heat flow, so they cannot ev
 is visible only on Earth and Mars because only they have an independent number beside ours. Filling it
 needs a grounded secular-cooling recipe — a cooling rate times a heat capacity times a mass, of the
 shape Korenaga's own eq. (8) uses (`C dTi/dt = H(t) − Q(t)`, with `C = 7×10²⁷ J K⁻¹` for the whole
-Earth) — not a factor. C20 (`core_thermal_history`) already emits `q_cmb_present` 5.07 TW for Earth,
+Earth) — not a factor. ⚠ *The `eq. (8)` pointer itself is confirmed, not stale: C47 (b) item 1 shows
+C20's mantle equation **is** that equation (`C dT/dt = H − Q` with `C = M_m C_pm`). What was stale here
+is the number beside it.* C20 (`core_thermal_history`) already emits `q_cmb_present` **3.745 TW** for
+Earth (⚠ **5.07 TW until 2026-09-09** — that was the `H` = 1.5 pW/kg value, and owner decision ⑤ moved
+it twice in one day; Briefs 166 D/E),
 but that is the core's contribution across the CMB, not the planet's secular cooling, so it does not
 close this on its own. **The low/high choice in C34 stays the owner's, and this section exists so that
 it is made knowing the low candidate is a different quantity rather than a smaller one.**
@@ -6996,14 +7008,96 @@ fully-stagnant lid regime, with a very slow «plate» speed"*. **Every body in `
 `stagnant_lid: true` or `false`** (`engine/bodies/earth.yaml@«정체 암석권 판단 — **선언**(사실: 지구는 판구조)»`),
 and `dynamo_rocky`'s survival gate reads it. **This is a two-valued field the source says does not
 describe either Earth or Venus** — and it is the same shape as C46's finding that the ladder always
-lands on one cell. ⚠ *Named, not repaired: changing it moves outputs, and the two-regime evaluation is
-commit D's.*
+lands on one cell.
+
+⚠ **And the paper's abstract names our field as the thing it is arguing against**, verbatim:
+
+> *"Contrary to many previous studies, the transitional regime between the stagnant lid and fully
+> mobilized regimes is large, and the transition from stagnant lid to mobile convection is gradual and
+> continuous. Thus planets could exhibit a full range of surface mobility, **as opposed to the bimodal
+> distribution of fully mobile lid planets and stagnant lid planets that is typically assumed.**"*
+
+**`stagnant_lid: true/false` is that bimodal distribution.** So this is not a case of our field being
+coarser than the source — **it is the source's stated foil.** ⚠ *Named, not repaired: changing it moves
+outputs, and it is the same shape as C46 (the ladder always lands on one cell). The transitional law
+cannot replace the field either, because it needs seven inputs no body declares (C51 (d)).*
 
 ⚠ **A fourth printed value for Earth's mantle potential temperature.** F&B §8.1 eq. (68) prints
 *"`T_m,0` = **1650 K** is the Earth's mantle potential temperature"*, beside Foley 2018's `T_r` = 1623 K,
 Korenaga's 1350 °C = 1623.15 K, and our bodies' declared **1600 K** (Unterborn+ 2019). **Four papers,
 four numbers, one quantity** — and unlike the prefactor spread this one is not a definition difference,
 it is four choices of the same declaration. **Recorded where the next seat will read it.**
+
+#### C51 (d) 2026-09-09 — the three cells read: one fails, one passes, one was under-specified
+
+**Built: `engine/tools/c51_regimes.py`, in the gate at ~0 s.** Each regime is scored against **its own**
+anchor and nothing else — the stagnant-lid budget against a stagnant-lid anchor, the mobile-lid law
+against a measured surface flow, the transitional law against nothing because its inputs do not exist
+here. ⚠ **The gate checks reproduction, not the verdicts** (six rows, ±0.06), the way `c47_step4.py`
+does: a verdict left red in the gate becomes the background the next seat reads new regressions against.
+
+| regime | law | Earth | Mars | its anchor |
+|---|---|---|---|---|
+| stagnant lid | Foley 2018 eqs (1)(3) | **counterfactual** | evaluated | Reese ceiling (Earth +700–1500 K; Mars 15–30) · Parro [14, 25] |
+| mobile lid | Nimmo+ 2004 eqs 34–36, already in the engine | evaluated | evaluated | measured global flow (Earth 86 ± 6, Jaupart+ 2007) |
+| transitional | F&B 2014 eqs (54)(58)(59)(60) | ⚠ **refused** | ⚠ **refused** | seven non-dimensional inputs, none declared |
+
+**Cell ① — Mars's stagnant-lid `F_man` inside Parro's [14, 25] mW/m²: FAILS, on every combination.**
+1.770 mW/m² at C20's `T_p` 1377.03 K and 8.923 at the declared 1600 K, at both lid thicknesses (350 and
+500 km — Breuer & Spohn 2003's printed band; `δ` changes the area, not the flux). **The registered
+failure sentence stands as written:** *"the budget does not reproduce the only rocky body with a
+published stagnant-lid flux, and the transcription is suspect before the physics is."* ⚠ Mars would need
+`T_p` ≈ **1673.6 K** — 74 K above the declaration — to reach the band's lower edge.
+
+**Cell ② — Earth's stagnant lid as a counterfactual: PASSES.** `F_man` 12.325 mW/m², loss **6.09 TW**,
+`dT_p/dt` **+65.1 K/Gyr**, Urey **2.450**; the mobile-lid law at the same `T_p` gives **39.22 TW**, a
+factor **6.4** more. The direction is Reese's *"700–1500 K higher"*, and the 46 ± 3 TW anchor was **not**
+used, as registered.
+
+**Cell ③ — the Urey direction: ⚠ UNDER-SPECIFIED, and the registration is what failed.**
+
+| pairing | Urey (Earth) | Urey (Mars) | direction |
+|---|---|---|---|
+| each body at its own C20 temperature | 4.251 | 8.780 | ✓ **as registered** |
+| both at the declared 1600 K | 2.450 | 1.742 | ✗ **reversed** |
+
+⚠ **The pre-registration named a direction and never fixed which temperature row it is read on**, and
+the two answers disagree. **Electing the row that passes would be a choice made after seeing the
+output**, so it is not made: the defect is filed and the reading is the owner's and the directing seat's.
+*The physical content of the ambiguity is worth stating: Mars's declared 1600 K is a value C47 (i)'s
+stage 0 **transferred from Earth**, so putting both bodies at the same `T_p` erases exactly the
+difference a Urey ratio is built to measure.*
+
+#### ⚠ What this evaluation says that is larger than the three cells
+
+**The ratio is right and the absolute scale is wrong by an order of magnitude, and both halves are
+measurements rather than impressions.**
+
+- At equal `T_p` this law's Mars/Earth flux ratio is fixed at **0.724 by gravity alone** — `F_man ∝
+  g^(1/3)` and it reads nothing else (C51 (b)). **The measured ratio is 19/86 = 0.221.** So gravity
+  alone cannot produce the contrast between the two bodies.
+- At each body's **own** C20 temperature the ratio is **0.249**, within **13 %** of the measured 0.221.
+  **Essentially all of the observed contrast is the temperature difference**, and the law reproduces it.
+- ⚠ **And the absolute values miss in the same direction on both bodies** — Earth 86/7.10 = **12.1×**,
+  Mars 19/1.77 = **10.7×**.
+
+⚠ **So C47 (e)'s argument is now a measurement on two bodies with a budget:** *"the absolute scale has no
+anchor."* And the anchor situation is worse than it looks — **Earth's stagnant-lid number is a
+counterfactual and cannot anchor anything**, so the only printed anchor available to fix the scale is
+**Mars's Parro band**, the very cell that fails by a factor of 8–11. **A one-parameter rescale would fit
+it and would be fitting to the single anchor that exists**, which is what `AUTHORED-VALUES-POLICY.md`
+forbids without a printed ground. **Not done here.**
+
+#### Owner decisions this brief hands up, with numbers instead of options
+
+| # | decision | what the numbers say |
+|---|---|---|
+| (a) | **`L′`, the plate length** | the source *"treat[s] the plate length, `L′`, as an unknown"* and reads it off its own models; changing the domain aspect ratio 4 × 1 → 16 × 1 moves it **≈1.5 → ≈4**. Carried as that band; ⚠ **no NearStars body can supply it**, so electing a value is electing a number nobody measured |
+| (b) | **`(m, p)`, the grain-damage pair** | three printed rows put one input point at `Nu` **23.69 · 50.46 · 27.05** (**2.1×**), `C₅` spans **7.8×**, and `β_L` **changes sign**. Carried as a band |
+| (c) | ⚠ **new — which temperature row cell ③ means** | the direction flips between the two pairings above. This is the registration's defect, not a physics choice, and it is the one decision this brief created rather than inherited |
+
+⚠ **Decision ③ (C34's feed) is still held**, exactly as C25 (f) recorded, and nothing in this brief
+changed the transport table's input.
 
 #### ⚠ Earth has three present-day CMB temperatures, and the supplier and the consumer reach opposite verdicts
 

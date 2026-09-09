@@ -138,12 +138,12 @@ def melt_power_w(f_m_m3_s: float, delta_t_m_k: float) -> float:
 
 
 def dtp_dt_k_s(t_p_k: float, delta_m: float, q_man_w: float, melt_w: float = 0.0,
-               **flux_kw) -> dict:
+               r_p_m: float = R_P_M, r_c_m: float = R_C_M, **flux_kw) -> dict:
     """eq. (1), solved for the unknown `dT_p/dt` at the present state.
 
     `V_man ρ c_p dT_p/dt = Q_man − A_man F_man − (melt term)`, so `dT_p/dt` is what falls out. A
     negative value is secular cooling — which is the quantity C51 exists to produce."""
-    v = volumes(delta_m)
+    v = volumes(delta_m, r_p_m, r_c_m)
     f = f_man_w_m2(t_p_k, **flux_kw)
     surface_w = v["a_man_m2"] * f
     capacity_j_k = v["v_man_m3"] * RHO_KG_M3 * C_P_J_KG_K
@@ -177,15 +177,15 @@ def f_man_lid_variables(t_p_k: float, delta_m: float, **flux_kw) -> dict:
 
 
 def secular_cooling(t_p_k: float, delta_m: float, q_man_w: float, probe_fraction: float = 0.10,
-                    **flux_kw) -> dict:
+                    r_p_m: float = R_P_M, r_c_m: float = R_C_M, **flux_kw) -> dict:
     """The stage-1 answer, with the melt gap printed instead of assumed (C51's pre-registration).
 
     Returns the `f_m` = 0 budget, plus the **melt power** that would change `dT_p/dt` by
     `probe_fraction`. The power is reported rather than `f_m` itself because `ΔT_m` has no value
     here — converting one to the other would be inventing a temperature."""
-    zero = dtp_dt_k_s(t_p_k, delta_m, q_man_w, melt_w=0.0, **flux_kw)
+    zero = dtp_dt_k_s(t_p_k, delta_m, q_man_w, melt_w=0.0, r_p_m=r_p_m, r_c_m=r_c_m, **flux_kw)
     probe_w = abs(probe_fraction * zero["dtp_dt_k_s"]) * zero["capacity_j_k"]
-    shifted = dtp_dt_k_s(t_p_k, delta_m, q_man_w, melt_w=probe_w, **flux_kw)
+    shifted = dtp_dt_k_s(t_p_k, delta_m, q_man_w, melt_w=probe_w, r_p_m=r_p_m, r_c_m=r_c_m, **flux_kw)
     return {"at_zero_melt": zero, "probe_melt_w": probe_w, "at_probe_melt": shifted,
             "probe_fraction": probe_fraction,
             "probe_melt_as_fraction_of_surface": probe_w / zero["q_surface_w"]}
