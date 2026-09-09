@@ -98,6 +98,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 0.14 and moved them, so Brief 166 D pins each anchor to its condition instead of to the module constant.** Earlier text of this cell:** renamed and half-repaired 2026-09-08 (Brief 155): the inversion bracket had stood in for a domain nobody declared — eqs 34–36's domain is now declared from the paper (upper edge 4800 K, §3; «<8 per cent» caveat, §6; open below), eqs 37–39's for the first time (D5), and the callee keeps both. The Mars step sweep (h/τ) stays open as its own item** | C20 diverges on Mars at every pre-registered `T_pot` (`T_m` → −6244 … −8208 K). ⚠ **The divergence is not the finding** — the flux law is called at **719,546 mW/m² on Mars and 25,144 on Earth**, against measured 19 and 92.1, because Nimmo's eq. 35 is a linearisation about `T₀ = 1573 K` and C20 feeds it **+1467 K (Earth) and +2448 K (Mars)**, giving mantle viscosities of `η₀`÷2.35 M and ÷42.8 G. **Earth's own outputs come from the same out-of-range call and survive only on heat capacity.** ⚠ No published range was violated — **none is printed**; our `BRACKET_K` is a Brief 57 bisection aid. **Two values from one paper fail to compose on a second body**, which is the failure mode of this engine's Earth-number-on-every-body pattern. Blast radius counted: **one consuming edge** (`core_entropy_production`), no board row, no `db/`. Next: a usable flux law, or a grounded starting epoch — ⚠ **never a starting value chosen because it integrates**. ⚠ **The diagnosis above predates Briefs 155 and 157 and is superseded on the cause of the divergence** (kept, not deleted, as this cell's second column keeps its earlier text): the out-of-domain call is real and is still counted on every result, but Mars diverged because of the step — the fixed 4 Myr was h/τ ≈ 75 on the first step — and at h = min(4 Myr, 0.1·τ) Mars integrates |
 | **C49** | one engine, two `k_core` declarations — and one file's stated ground forbids the number the other consumes | **listed 2026-09-09, not started** | Rocky: `cmb_flux.py@«K_CORE = 50.0»`, a single declared midpoint ± 20, consumed as the corners (30, 70) by `core_entropy.K_RANGE` and `core_history.K_CORNERS` and as the `q_ad` band. Sub-Neptune: `sub_neptune_dynamo.py@«CORE_CONDUCTIVITY = Band(»`, midpoint **None**, ends **40 and 100** from two papers Tang+ 2025 runs both ways, grade *calibrated*, with an unmade `Choice`. ⚠ **And the comment above it says «70 W/m/K 는 두 논문 중 어느 쪽도 말하지 않은 수다» — that very 70 is the upper corner the rocky path feeds to the entropy band.** So one file's stated ground disqualifies a number the other file uses. Two shapes as well as two values: one paper's ± against two papers' ends. Unification is part of owner decision ② (C25 (b)); listed only |
 | **C50** | contracts list `Needs` that no roster body supplies — and four are C37's exact signature | **listed 2026-09-09, not started** | Measured by C45's new lookup check: **class ① (C37's signature — the lookup misses everywhere and the `None` is filed under that name) is live in 3 nodes / 4 keys** (`body_class` `gas_mass_fraction`·`semi_major_axis_au`, `dynamo_rocky` `dynamo_regime`, `interior_layers` `porosity_cap`), and **class ③ (a `Needs` no body supplies, the call site coping) in 8 nodes / 8 keys** (`core_material` ×4, `ice_mass_fraction` ×3, `differentiated`, `envelope_z`, `gas_mass_fraction`, `initial_porosity`, `tidal_heating`, `permanent_quadrupole`). Each is one of two faults — the contract is wrong, or the body declarations are missing — and which is not decidable from the count. Held at measured size meanwhile: the four are named in `engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and anything outside fails the gate; class ③ has a printed baseline. Repair can move values, so it is a later brief. No owner decision |
+| **C51** | the engine has no mantle energy budget, so secular cooling is an input nobody supplies rather than an output | **pre-registered 2026-09-09, before the build** | The owner's third path (C25 (f)): build the missing term instead of picking numbers inside the entropy band. ⚠ **The flux law is not what is missing** — Foley 2018's eq. (3) is the Korenaga eq. 30 this engine already transcribed at `n = 1`. What is missing is the budget around it, eqs (1)(2)(4), whose `dT_p/dt` **is** secular cooling. Stage 1 is the present epoch only, with `dT_p/dt` as the unknown, so the gate cost is ~0. Three verdict cells and their failure sentences are fixed in the section below, before any of it exists; `L′` and `(m, p)` go in as bands because the source treats the first as an unknown and prints three disagreeing sets of the second. ⚠ **First anchor measured: one prefactor has five values across two papers (0.528 · 0.53 · 0.55 · 0.57 · 0.5) and Korenaga names the cause — his own definition of `T̄_i`** — which is also the only candidate explanation for the 3.65× absolute-flux gap. Owner decisions on `L′` and `(m, p)` come after commit D's numbers; C34's feed stays held |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -5399,6 +5400,29 @@ numerics sit at **1.0071×** eq. 30 on every row, and 1.0071 is exactly 0.5539/0
 ⚠ **And the same derivation fails at n ≥ 2** (0.274 and 0.187 against 0.80 and 1.05), which is the
 dropped stress term showing itself. Diagnosed rather than patched, and the scope is recorded as n = 1.
 
+⚠ **Labelled 2026-09-09 (Brief 167 A) — "the paper's regression result" is one of five numbers for this
+one quantity, and Korenaga states the reason for the spread himself.** Read verbatim from the held paper:
+*"Solomatov & Moresi (2000) ([`2000JGR...10521795S`](https://ui.adsabs.harvard.edu/abs/2000JGR...10521795S)) fit eq. (29) to their
+numerical results and obtained **a ≈ 0.31 + 0.22n** by assuming a_rh = 1.2(n + 1). As **my definition of
+T̄_i (eq. 20) results in slightly different values of Nu, Ra_i and a_rh**, I repeated their regression
+analysis and obtained that **a ≈ 0.30 + 0.25n**. The rms error of the fit is ∼1.2 per cent."*
+
+| value at `n = 1` | where it comes from |
+|---|---|
+| **0.528 ± 0.002** | S&M 2000 Table 5's one-parameter fit (`a_rh` 2.4, `β` fixed at the theoretical 0.333, χ²ᵥ 0.3) |
+| **0.53** | the same paper as Korenaga summarises it, `a ≈ 0.31 + 0.22n` under `a_rh = 1.2(n+1)` |
+| **0.55** | **Korenaga's own re-regression**, `a ≈ 0.30 + 0.25n` — *this is the 0.55 above, and the comparison stands* |
+| **0.57** | Korenaga's Fig. 6 caption, a separate per-`n` subgroup fit in the same paper |
+| **0.5** | Foley 2018's printed `c₁`, citing Reese, S&M and Korenaga together |
+
+**So the 0.7 % is a correct statement about the number it names**, and it is a better one than it looked:
+Korenaga's own fit carries an **rms of ∼1.2 per cent**, so our closed form lands **inside the paper's own
+fit error**. ⚠ **What the 0.7 % must not be read as is agreement with the primary fit** — against S&M's
+0.528 ± 0.002 our 0.5539 is **+4.91 %**, thirteen times that fit's stated precision. **And the cause is
+printed, not mysterious: a different definition of the internal temperature `T̄_i`.** That same
+difference is the one candidate explanation for the 3.65× absolute-flux gap between the two papers
+(C51's first anchor), which is why this is labelled here rather than repaired.
+
 **Table 2, all three blocks, `nu_full` = eq. 43 + eq. 29's pre-asymptotic bracket:**
 
 | `Δη` | rms | bias | worst | rows used in the paper's fit? |
@@ -6659,6 +6683,266 @@ candidate at the end of this file** (*Brief 166 D, 2026-09-09*): C45 asks whethe
 declared, and C50 asks whether a declared `Needs` is supplied. **Neither asks how many nodes' recorded
 anchors depend on one shared module constant** — and one of them, `core_energy.H_CORE`, turned out to hold
 up the reproduction anchors of a different node entirely.
+
+### C51 — the missing term: a stagnant-lid energy budget, so that secular cooling is an output — **pre-registered 2026-09-09, before any of it is built**
+
+⚠ **This section is committed before the build.** The owner chose the third path — *build the missing
+term* rather than close the entropy band by picking numbers inside it (C25 (f)) — and this is what that
+means in equations, with what will count as a pass fixed first.
+
+#### What is actually missing, in the sources' own words
+
+`heat_transport_mode` is fed **radiogenic production**, while §6.2's thresholds are defined on **surface
+heat flow** (C47). The term between them is named where C47 quoted it — Korenaga 2008 §2: *"Loss of
+internal energy is balanced primarily by (1) heat production from radiogenic elements and (2) a decrease
+in the primordial heat content of Earth (i.e. **secular cooling**)"*, and *"the present-day internal heat
+production is about 20 TW …, so **the rest of the surface heat flux must be from secular cooling**."*
+
+⚠ **And the flux law is not what is missing.** Foley 2018 ([`2018AsBio..18..873F`](https://ui.adsabs.harvard.edu/abs/2018AsBio..18..873F), **held**)
+writes the stagnant-lid capacity as
+
+> (3) `F_man = c₁ k (T_p − T_s)/d · θ^(−4/3) Ra_i^(1/3)`, with *"We use **c₁ = 0.5** and a_rh = 2.5"*,
+
+citing Reese+ 1998/1999, Solomatov & Moresi 2000 and Korenaga 2009 — **and that is the equation this
+engine already transcribed** as Korenaga's eq. 30, whose `n = 1` exponents are exactly `−1−β = −4/3` and
+`β = 1/3`. **What is missing is the budget around it:**
+
+> (1) `V_man ρ c_p dT_p/dt = Q_man − A_man F_man − f_m ρ_m (c_p ΔT_m + L_m)`
+> (2) `ρ c_p (T_p − T_l) dδ/dt = −F_man − k ∂T/∂z|_{z=R_p−δ}`
+> (4) `T_l = T_p − a_rh R T_p² / E_v`
+
+**`dT_p/dt` in (1) *is* secular cooling**, and this engine has no equation that ties the mantle's heat
+capacity to its radiogenic supply and its surface loss.
+
+⚠ **(1) carries a third term this engine cannot supply, and it is named here rather than dropped
+quietly.** `f_m ρ_m (c_p ΔT_m + L_m)` is volumetric melt production times the heat it removes, and this
+engine has no melt-production node. **Pre-registered handling:** stage 1 evaluates (1) **twice** — at
+`f_m` = 0 and at the melt term needed to change the answer by 10 % — and reports both, so the size of
+the gap is printed rather than assumed small. ⚠ *If the 10 % melt production implied is physically
+absurd for the present epoch, that is itself the finding, and it is a stronger statement than setting
+`f_m` = 0 with a footnote.* **Neither number is a verdict cell**; the cells are below.
+
+#### The design decision, fixed here
+
+⚠ **Stage 1 solves the present epoch only.** (1) and (2) are time evolutions; running them means either
+another integrator beside C20 or a restriction. **The restriction is chosen: `dT_p/dt` is the unknown,
+(1) is solved for it at the present state, and secular cooling comes out as a number rather than as a
+history.** Coupling to C20's time axis is a separate brief. **Gate cost of stage 1 is therefore ~0** — it
+is algebra on state that already exists.
+
+#### The constants, all printed (Foley 2018 Table 1)
+
+`c₁` = **0.5** · `a_rh` = **2.5** · `E_v` = **300 kJ/mol** (Karato & Wu 1993) · `μ_n` = **4 × 10¹⁰ Pa·s**
+(→ `μ_r` ≈ 2 × 10²⁰ at `T_r` = 1623 K) · `ρ` = **4000 kg/m³** · `c_p` = **1250 J/kg/K** · `k` = **5 W/m/K**
+· `κ` = **10⁻⁶ m²/s** · `α` = **3 × 10⁻⁵ /K** · `T_s` = **273 K** · `R_p` = 6378.1 km · `R_c` = 3488.1 km
+· `d` = 2890 km, with `V_man = (4/3)π((R_p−δ)³ − R_c³)` and `A_man = 4π(R_p−δ)²`.
+
+⚠ **The paper's own caveat travels with (3):** it uses `T_p − T_s` and `d` rather than `T_p − T_l` and
+`d − δ`, and states that *"in the heat flux scaling law both the mantle thickness and temperature
+difference **cancel out**, so the equation … is independent of the definition"*. **Transcribed as
+printed; the caveat is the paper's, not ours.**
+
+#### The first anchor — three transcriptions of one fit, and the source sits between them
+
+**The primary source is Solomatov & Moresi 2000 ([`2000JGR...10521795S`](https://ui.adsabs.harvard.edu/abs/2000JGR...10521795S), held).**
+Its eq. (9) is the law both later papers cite — *"All scaling relationships for the Nusselt number in the
+stagnant lid convection regime have the form `Nu = a θ^(−α) Ra_i^β`, where a, α and β are constants
+depending on n"* — and its **Table 5** prints the fits. For `n = 1`, verbatim:
+
+| fit | `a_rh` | `a` | `β` | `χ²ᵥ` |
+|---|---|---|---|---|
+| two-parameter | 2.0 | 0.47 ± 0.05 | 0.342 ± 0.008 | 0.3 |
+| two-parameter | 3.0 | 0.57 ± 0.06 | 0.329 ± 0.008 | 0.3 |
+| **one-parameter** | **2.4** | **0.528 ± 0.002** | **0.333** (theoretical, held fixed) | 0.3 |
+
+⚠ **So the two constants we had been comparing straddle the source, and both miss it by more than an
+order of magnitude beyond its own precision:**
+
+| | value | against 0.528 ± 0.002 | Earth `F_man` at `T_p` 1623 K |
+|---|---|---|---|
+| Foley 2018's printed `c₁` | **0.5** | **−5.30 %** — **14×** the fit's ±0.38 % | **14.233 mW/m²** |
+| S&M 2000's own one-parameter fit | **0.528** | — | **15.030** |
+| our Korenaga refit `a_of_n(1)` | **0.5539** | **+4.91 %** — **13×** it | **15.768** |
+
+*(Same three at `T_p` 1600 K: 12.317 · 13.007 · 13.645 mW/m². The prefactor is linear in (3), so these
+are exact scalings, computed on Foley's own Table 1 parameters: `θ` 18.49, `Ra_i` 2.118 × 10⁸,
+`μ_i` 1.810 × 10²⁰ Pa·s at 1623 K.)*
+
+⚠ **This reframes the anchor twice over, and the second reframing came from reading Korenaga rather than
+our own note.** *"Two independent transcriptions agree to 10.8 %"* was the wrong way to say it — but so
+is *"our 0.5539 is an optimistic comparison against a rounded 0.55"*. **Korenaga 2009 prints its own
+refit and says why it differs**, verbatim: *"Solomatov & Moresi (2000) fit eq. (29) … and obtained
+**a ≈ 0.31 + 0.22n** by assuming a_rh = 1.2(n + 1). As **my definition of T̄_i (eq. 20) results in
+slightly different values of Nu, Ra_i and a_rh**, I repeated their regression analysis and obtained that
+**a ≈ 0.30 + 0.25n**. The rms error of the fit is ∼1.2 per cent."* **So one quantity has five values:**
+
+| `a` at `n = 1` | source | note |
+|---|---|---|
+| **0.528 ± 0.002** | S&M 2000 Table 5, one-parameter fit | the primary fit; `β` fixed at 1/3, `a_rh` 2.4 |
+| **0.53** | S&M as Korenaga summarises it, `0.31 + 0.22n` | assumes `a_rh` = 1.2(n+1) |
+| **0.55** | **Korenaga's own re-regression**, `0.30 + 0.25n` | rms of the fit **∼1.2 %** |
+| **0.57** | Korenaga Fig. 6, per-`n` subgroup fit | a third number in the same paper |
+| **0.5** | Foley 2018's printed `c₁` | cites Reese, S&M and Korenaga together |
+
+⚠ **Which makes our own claim better, not worse.** C47 (f)'s *"0.5539 reproduces a = 0.55 to 0.7 %"*
+names **Korenaga's** refit, and 0.7 % is **inside that fit's own ∼1.2 % rms**. What it must not be read
+as is agreement with the primary fit: against 0.528 ± 0.002 we are **+4.91 %**, thirteen times its stated
+precision, and Foley is **−5.30 %**, fourteen times.
+
+⚠ **And the cause of the spread is printed, which is the useful part.** It is not sloppiness — it is
+**the definition of the internal temperature `T̄_i`**, named by Korenaga in one sentence. That is also the
+**only candidate explanation on the table for the 3.65× absolute-flux gap** below, and it is why the rule
+*"never mix one paper's constants with another's"* is a physics rule here and not tidiness.
+
+⚠ **And the absolute flux still meets nowhere: 3.65×.** Korenaga's normalization puts Earth at **51.99
+mW/m²** (eq. 29; 50.00 by construction on eq. 30) where Foley's printed parameters give **14.23**. The
+difference is the viscosity normalization — a fitted `b` against a printed `μ_n` = 4 × 10¹⁰ Pa·s — not
+the prefactor. **So C47 (e)'s finding survives contact with a second paper**: *"the absolute scale has no
+anchor"*, now measured across two papers instead of argued from one.
+
+⚠ **Two parameter disagreements to carry, not average.** Foley's Table 1 prints `k` = **5 W/m/K** and
+`α` = **3 × 10⁻⁵ /K**; our `stagnant_lid.py` holds Korenaga's `k` = **4** and an `α` of **2 × 10⁻³** in
+the Rayleigh normalization. **The transcription keeps each paper's own set and never mixes them** — this
+is the trap commit `c23e69b0` exists to prevent, and this seat fell into it once already on this very
+comparison (a first pass mixed `α` and produced 1.06× instead of 3.65×).
+
+#### The three verdict cells, written before the numbers
+
+| # | cell | pass |
+|---|---|---|
+| ① | **Mars, stagnant lid** — the budget's `F_man` for Mars | inside **[14, 25] mW/m²** — Parro+ 2017 ([`2017NatSR...745629P`](https://ui.adsabs.harvard.edu/abs/2017NatSR...745629P), held), verbatim: *"Our preferred model finds heat flows varying between **14 and 25 mW m⁻²**, with an average value of **19 mW m⁻²**"* ⚠ *model against model, no in-situ measurement exists* |
+| ② | **Earth, stagnant lid — a counterfactual, and read as one** | ⚠ **not** the 46 ± 3 TW anchor, which belongs to the mobile-lid branch. Pass = the budget puts a stagnant-lid Earth **far below** its observed loss and in the direction the literature gives (Korenaga 2009's ~50 mW/m² by construction; Reese+ 1998 ([`1998JGR...10313643R`](https://ui.adsabs.harvard.edu/abs/1998JGR...10313643R), **now held**), verbatim: *"in the absence of plate tectonics, the mantle temperature on Earth, which is already close to the solidus, would be about **700–1500 K higher** for the present-day value of the surface heat flux"*) |
+| ③ | **Urey direction** | `Ur`(Earth) **<** `Ur`(Mars) — the direction four law families have failed on (C47 (k)) |
+
+**If a cell fails, the sentence is fixed now.** ① outside [14, 25] → *the budget does not reproduce the
+only rocky body with a published stagnant-lid flux, and the transcription is suspect before the physics
+is*. ② in the mobile-lid range → *the budget is not describing a stagnant lid at all*. ③ wrong direction →
+**a fifth law family failing in the same direction**, and C47's closing sentence covers it without
+revision.
+
+#### The transitional law, and what it prints (commit C's target)
+
+**Foley & Bercovici 2014 ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F), held)** reaches its
+transitional-regime law through the grain-damage shear-stress chain — its eq. (9) `τ'_xz = 2C₁ Ra'^(2/3)
+A'_i^(−m/3)`, eq. (10) the steady-state grainsize balance `D τ'²_xz A'_i = H A'_i^p`, eq. (11) `A'_i =
+(D τ'²_xz / H)^(1/(p−m))`, and eq. (12) the combination `τ'_xz = (2C₁)^(3(p−m)/(3p−m)) (D/H)^(−m/(3p−m))
+Ra'^(2(p−m)/(3p−m))` — and closes with the top-boundary-layer scaling, its **eq. (54)**:
+
+> `δ'_l = C₅ L'^βL μ'_l^βμ (D/(H h'_l))^βD (Ra' T'_i)^βRa`
+
+**Its Table 1 prints the constants for three `(m, p)`, verbatim:**
+
+| `m` | `p` | `C₅` | `β_Ra` | `β_D` | `β_μ` | `β_L` |
+|---|---|---|---|---|---|---|
+| 2 | 4 | 20 | −0.6603 | −0.3151 | 0.2484 | **0.1071** |
+| 3 | 4 | 86 | −0.8515 | −0.4919 | 0.2598 | **−0.0218** |
+| 3 | 5 | 11 | −0.6232 | −0.4342 | 0.1931 | **0.0582** |
+
+⚠ **`β_L` changes sign across the three rows**, so *"how does plate length enter"* has no single answer in
+the paper — which matters because the paper also declines to derive `L′`: *"we choose to exploit our
+numerical results and calculate `L′` directly from the models. We therefore **treat the plate length,
+`L′`, as an unknown** in (54)."* **`C₅` also spans 11 to 86 across the same three rows.**
+
+#### What is not chosen here
+
+⚠ **The two unknowns are carried as bands, not values.** `L′` is an unknown in the source's own words,
+and `(m, p)` has three printed combinations whose constants disagree in **sign** as well as magnitude.
+**Both go in as bands; the owner is asked only after the numbers exist (commit D).** And **C34's feed is not changed by this brief** — decision ③ stays
+held, exactly as C25 (f) recorded.
+
+#### Record columns, and the Reese ceiling's label
+
+⚠ **The stagnant-lid "ceiling" our own ladder uses is a melting limit read off a figure, and the label
+travels with it from now on.** Reese, Solomatov & Moresi 1998 (held) prints *"For Venus, the critical
+heat flux which can be removed without widespread melting is only **10–20 mW/m²**. For Mars, it is
+**15–30 mW/m²**"* — obtained by running stagnant-lid scalings to a surface-flux/interior-temperature
+curve and reading where it **meets the peridotite solidus at the lid base**, their Fig. 4b/c, with a
+**wet-olivine `n = 3`** rheology (`E*` 430 kJ/mol, `V*` 15). **Label: melting limit · figure
+intersection · n = 3 wet rheology · model output, two bodies, two numbers.** It is not a heat-flow
+measurement of either planet and must never be cited as one (C34, C46 (c)).
+
+**Mars comparison columns, recorded and not targets** (parallel seat P8, from held papers):
+
+| source | what it prints |
+|---|---|
+| Morschhauser+ 2011 ([`2011Icar..212..541M`](https://ui.adsabs.harvard.edu/abs/2011Icar..212..541M)) | reference model surface heat flow *"about 20 mW m⁻² today"*, mantle heat flow 75 → 10, mantle cooling ∼260 K, permissible models from initial 1650 K with 30 km primordial crust; ⚠ **Urey ratio not printed** |
+| Breuer & Spohn 2003 ([`2003JGRE..108.5072B`](https://ui.adsabs.harvard.edu/abs/2003JGRE..108.5072B)) | present mantle **1800–2100 K**, lid **350–500 km**; ⚠ **no heat-flow number printed** |
+| Parro+ 2017 | the verdict cell above; crustal component 1.3–13.5, average 7.0 mW m⁻² |
+
+⚠ **Only Parro prints a range this budget can be scored against**, which is why cell ① names it alone
+and the other two are columns. **Two of the three print no Urey ratio at all**, so cell ③ is a
+**direction** test and not a value test — as registered.
+
+#### What would make this pre-registration wrong
+
+⚠ Three ways, written now so they cannot be discovered conveniently later.
+1. **If (1) at the present epoch turns out to need a melt production nobody would defend**, stage 1's
+   restriction is the wrong restriction and the honest move is to say so, not to tune `f_m`.
+2. **If the leading-constant spread (0.5 · 0.528 · 0.5539) turns out to matter to a verdict cell**, then
+   the cell was never a test of the budget — it was a test of which paper we copied, and it is withdrawn
+   rather than reported.
+3. **If cell ② cannot be stated without an Earth stagnant-lid number nobody printed**, the cell is
+   recorded as unmeasurable rather than scored against the mobile-lid 46 ± 3 TW, which would be the exact
+   error C47 (b) named.
+
+---
+
+#### ⚠ Earth has three present-day CMB temperatures, and the supplier and the consumer reach opposite verdicts
+
+**Measured 2026-09-09, after Briefs 166 D/E. No verdict is drawn here** — this is the asymmetry the third
+path has to close, written down where the build that closes it is registered.
+
+| `T_c` at the present epoch | where it comes from | who reads it | what the entropy budget says there |
+|---|---|---|---|
+| **3 760 K** | the **owner's declaration** (C25 horn ①, `earth.yaml`) | **C15** (`core_entropy_production`, via `get_optional`) | `ΔE` **+26.5 MW/K**, band **−76.3 … +188.3**, 4/8 corners, inner core → **straddles zero, `cannot-say`** |
+| **3 770.33 K** | **C14's own root** — the temperature at which its energy balance closes | C14, and C15 as a fallback when no declaration exists | inner core **239.3 km**, **2.04 K** below the cliff at ≈3 772.37 K |
+| **3 911.29 K** | **C20's trajectory endpoint** — integrated from the 4 800 K start, fixed and adaptive agreeing | C20 itself; it emits this as `core_cmb_temperature_present` | 3.1 Gyr band **−203.4 … −4.1**, **0/4** corners → **`fails`** |
+
+⚠ **The spread is 151 K and the two ends disagree on the answer.** The declared horn says *cannot-say*;
+C20's own endpoint says *fails*. **Both are "Earth, now, under the same four owner decisions."**
+
+**Why they differ is structural, not numerical.** `core_history` (C20) **never reads**
+`core_cmb_temperature`: its inputs are the mantle-side `cmb_temperature` (the adiabat's boundary value,
+eq. 29's form) plus the two initial temperatures, and it **emits** `core_cmb_temperature_present` as a
+result. ⚠ *So owner decision ① reached the consumer and not the supplier.* C15 was rewired in Brief 166 A
+to prefer the declaration; C20 has no place to put it, because a declared present-day temperature is not
+an input to an initial-value problem — **it is a target the trajectory either hits or misses, and nothing
+in this engine compares the two.**
+
+⚠ **That comparison is the missing measurement, and it is one line: C20 misses the declaration by
++151.29 K.** Whether that is C20's initial conditions, its flux laws, or the declaration itself is
+exactly what the missing term is supposed to arbitrate — which is why it is recorded here and not in a
+verdict. **Recorded consequence for reading C25 (f):** its sentence *"the band still straddles zero"* is
+**true at C15's temperature and false at C20's**, and the section should be read as a statement about the
+declared horn only.
+
+*(Stale numbers this uncovered: `engine/chain.yaml`'s C20 note still says the node emits **4 028 K** and
+**5.07 TW** on Earth — the H 1.5 pW/kg values. Both moved twice on 2026-09-09 and the note did not. ⚠ The
+temperature is now **3 911.29 K**; `q_cmb_present` is **re-measured at commit time rather than scaled by
+hand**, and the note then carries its condition, which is the repair Brief 166 D applied to the test
+anchors. **A third place holding H-conditioned numbers with no label — the C52 candidate's instance
+count is now three.**)*
+
+#### ⚠ One rule out of three mistakes: the paper's own arithmetic wins
+
+**Three defects of the same kind were found on 2026-09-09, all in one day and all ours:**
+
+| what happened | the paper's own number | ours |
+|---|---|---|
+| the potassium cap converted with a textbook constant | *"less than 0.17 TW"* → **0.088 pW/kg** | 0.14 pW/kg (3.5 × 10⁻⁹ W/kg per ppm, **56 % high**) — Brief 166 E |
+| Sinmyo's CMB temperature relabelled | *"the **upper bounds** … are estimated to be … 3760 ± 290 K"* | our module called the same number a **lower** bound — C25 (e) |
+| Earth's present mantle temperature carried three ways | Foley 2018: *"`T_r` = **1623 K** is Earth's present day mantle temperature"*; Korenaga 2009's `T_p` 1350 °C = 1623.15 K | our bodies declare **1600 K** (Unterborn+ 2019 §2), and C47's step-4 tables run **both** |
+
+⚠ **None of these was a physics error and all three were arithmetic or labelling** — the papers had
+already done the work, and we redid it. **The rule, stated once so the next brief inherits it:**
+
+> **Where a paper prints a derived value, that printed value is what we carry. Our own conversion of the
+> paper's inputs is a *check* on it, never a replacement — and where the two disagree, the disagreement
+> is recorded with both numbers rather than resolved by preferring ours.**
+
+⚠ *This is the same rule `feedback_own_docs_are_base_material` states one level up* (our own documents are
+not evidence; go back to the source). **The new part is that it applies to the paper's arithmetic too, not
+only to its prose** — a printed 0.17 TW is a source, and a ppm figure we multiply ourselves is not.
 
 ## What closing all of these does not do
 

@@ -83,6 +83,12 @@ Run: `PYTHONDONTWRITEBYTECODE=1 python3 run.py bodies/earth.yaml` in the worktre
     inner_core_radius_present_km=0 km, inner_core_case=never,
     entropy_history_verdict=cannot-say (the four-corner band straddl…), history_steps=1135
 
+⚠ **That run is at the core heating H = 1.5 pW/kg** — the nominal on the day it was made. Owner decision
+⑤ (2026-09-09, corrected in Brief 166 E) declared **0.088**, and the same node now emits
+`core_cmb_temperature_present` **3911.29 K**, `q_cmb_present` **3.745e+12 W**, `dtc_dt` **−58.96 K/Gyr**
+and `entropy_history_verdict` **fails**. The block above is left exactly as it was measured; only its
+condition is now named.
+
 | quantity | value |
 |---|---|
 | declared `potential_temperature` (`earth.yaml:17`) | **1600 K** |

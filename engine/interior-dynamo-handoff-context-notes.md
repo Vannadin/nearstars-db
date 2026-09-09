@@ -41,7 +41,8 @@ note's own statement only.*
 
 **Supplied by the interior domain and *not* read by any dynamo (Earth, the only body where they exist):**
 `core_radius` 0.547 R⊕ (calibrated) · `q_cmb` 2.75 TW, band 1.54–4.77 (analog) · `core_cmb_temperature_present`
-4 028 K, `q_cmb_present` 5.07 TW (analog, C20) · `entropy_production` −69 MW/K, band −264…+238 (analog, C15) ·
+4 028 K, `q_cmb_present` 5.07 TW (analog, C20 — ⚠ **at H 1.5 pW/kg; now 3 911.29 K / 3.75 TW at the
+declared 0.088**, Brief 166 E) · `entropy_production` −69 MW/K, band −264…+238 (analog, C15) ·
 `l_int` 21.3 TW (analog, radiogenic only).
 
 ## §3 Edge-by-edge verdict (chain.yaml, line numbers at 35d6eead)
@@ -57,7 +58,7 @@ required (status left as is, the mark is a note; a new status word is the owner'
 | `:678` core_state → dynamo_rocky via conductor_phase | Earth `liquid_outer_solid_inner` (analog); Pandora: core_state refuses (no `potential_temperature`) | `rocky:24`, `:28` | **yes** (hook fired, source core_state, Earth) | requires | (가) live. ref :25 → :24 |
 | `:684` composition_intent → dynamo_rocky via layer_fractions | no node emits `layer_fractions`; input `ice_mass_fraction` undeclared on every body → default 0.0 | `rocky:25`, `:27` — the *declared* ice fraction | reads the input (hook fired, source absent → 0.0) | influences · gap | (다) gap, kind **no value** — a declaration, not a solver output. ref :109 → :27 |
 | `:686` heat_transport_mode → dynamo_rocky via cmb_heat_flux | Earth q_cmb 2.75 TW, band 1.54–4.77 (analog) from the `cmb_heat_flux` node (Brief 60); from-node has no recipe | none (`:113–114` is prose: stagnant lid → low CMB flux) | **no** (hook never fired) | selects · gap ("내는 노드가 없다" — **stale** since Brief 60) | (나) drawn, not required; the gap note re-typed: value exists, consumer does not read it. ref :70 → :113 |
-| `:687` internal_heat_nontidal → dynamo_rocky via geotherm | core_thermal_history (C20): Earth T_cmb,present 4 028 K, q_cmb,present 5.07 TW (analog); no value *named* geotherm | none in either dynamo doc | **no** | requires · gap ("열진화 모형이 필요" — **stale** since C20) | (나) drawn, not required; note re-typed: value exists, consumer does not read it. ref kept (ihl:202) |
+| `:687` internal_heat_nontidal → dynamo_rocky via geotherm | core_thermal_history (C20): Earth T_cmb,present 4 028 K, q_cmb,present 5.07 TW (analog — ⚠ H 1.5 pW/kg; **3 911.29 K / 3.75 TW** at the declared 0.088, Brief 166 E); no value *named* geotherm | none in either dynamo doc | **no** | requires · gap ("열진화 모형이 필요" — **stale** since C20) | (나) drawn, not required; note re-typed: value exists, consumer does not read it. ref kept (ihl:202) |
 | `:725` core_entropy_production → dynamo_rocky | Earth φ −69 MW/K, band −264…+238 (analog) | none (`rocky:183` reports the band, as a result, not a Need) | **no** | influences · gap | (나) drawn, not required; kind: value exists, no verdict can be drawn. ref :60 → :183 |
 | `:668` `:669` `:685` `:658` `:660` (dynamo inbound, refs only) | — | Needs on `rocky:24`/`:25`/`:28`, `scaling:27`/`:18` | — | — | refs pointed at Returns lines or blank lines; corrected, old numbers in notes |
 
