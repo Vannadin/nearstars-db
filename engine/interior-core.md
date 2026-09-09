@@ -5047,6 +5047,28 @@ different choice of mantle model rather than a different measurement of the same
 to the radius. **This section takes the layer-free target because 174 already took that family**, and
 that inheritance is the whole of the justification; if the owner moves the family, both move together.
 
+#### Amendment 3 — the density row was wrong, and so was the conclusion drawn from it
+
+⚠ **I put a number in the table above that neither source prints.** The layered family's density is
+**Samuel 2023 6.5** and **Khan 2023 6.65 ± 0.1 g cm⁻³**, not the *"6.0–6.3"* written there — that range is
+what Khan's paper **argues against**, not what it reports. The correct row is `layered … 6.5 · 6.65 ± 0.1`.
+
+⚠ **How it got in is the part worth recording.** The number came from a relayed message and I copied it
+instead of opening the source, which was one `grep` away in the parallel seat's own P11 table — the same
+file the rest of this section is built from. *Carrying a number from a relay is exactly what this file
+keeps finding, and it found me.*
+
+**And the conclusion built on it is withdrawn.** With the real numbers the two families are
+**5.7–6.3** (layer-free) against **6.5–6.75** (layered): a gap of about 0.2 g cm⁻³, so **density separates
+them too**. The sentence above — *"density cannot separate them … density is a pass condition rather than
+a discriminator"* — is wrong and is retracted here rather than edited away. **The verdict cell's meaning
+is therefore stronger, not weaker**: radius and density are **two independent axes**, and the cell asks
+whether they point at the *same* family.
+
+**The density window is narrowed to 5.7–6.3**, the layer-free family, ⚠ inheriting Brief 174's choice
+exactly as the radius window does — directing seat's decision, reversible. **The layered family's
+6.5–6.75 sits outside both axes**, which is what it means for the two to agree.
+
 ⚠ **And none of this is why C55 exists.** Every family puts Mars's core density between **5.7 and 6.5**
 g cm⁻³, while our two irons give **7.6–8.2** and **9.0–9.6**. The families change the *radius target*;
 they do not change the fact that neither of our materials can be Mars's core.

@@ -139,6 +139,12 @@ def compare(body: BodyState, expected: dict, default_tol: float = 0.02) -> int:
         #   열린 항목이 조용히 잊힌다. 이 자리를 닫는 것은 항목이지 이 줄이 아니다.
         #   (인용 계수기가 «세기만 하고 판정하지 않는» 것과 같은 형식이다 — C33 (b).)
         recorded = spec.get("recorded_disagreement")
+        # ⚠ **이 줄은 스스로 닫지 않는다.** 엔진이 언젠가 허용치 안으로 들어오면 위 분기는 조용히
+        #   `[일치]` 로 바뀌고 기록 문구가 사라진다 — 그러면 열린 항목이 «해결됐다» 는 말 없이
+        #   증발한다. 그래서 들어온 것도 인쇄한다: **닫는 것은 사람이고 그 자리는 항목이다.**
+        if ok and recorded:
+            print(f"    [기록·해소?] {key:14} 기록된 어긋남이 허용치 안으로 들어왔다 "
+                  f"({off * 100:.1f}% ≤ {tol * 100:.0f}%) — 항목을 사람이 닫아라 (C59)")
         if not ok and recorded:
             print(f"    [기록·어긋남] {key:14} 엔진 {got:>9.4g} · 보드 {want:>8} "
                   f"{spec.get('unit','')}  ({off * 100:.1f}% / 허용 {tol * 100:.0f}%) "
