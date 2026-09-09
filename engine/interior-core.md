@@ -3000,6 +3000,30 @@ decisions were each defensible and together they do not close the question: lowe
 every corner, and on the horn that keeps the inner core the two largest positive terms survive to hold
 the top corner up. **A decision that does not decide is worth recording as one.**
 
+#### ⚠ Decision ⑤ mostly pre-empted decision ①, and the positive corners sit on a cliff
+
+**The audit seat re-bisected C14's closure with the new cap** (60 iterations): at `H` = 1.5 pW/kg the
+root was **3 977.9 K** (`Q_C` 4.912 TW, **no inner core**); at `H` = 0.14 it is **3 770.9 K** (2.834 TW,
+**inner core 206.2 km**). ⚠ **That is 10.9 K from the declared 3 760 K, and both have an inner core** —
+so the tension C25 was built on, *"the measurement has an inner core and the closure does not"*, is
+**largely dissolved by the potassium cap alone**. **Decisions ① and ⑤ are not independent: ⑤ moved the
+closure onto the same side as ①.**
+
+**And this seat measured what that neighbourhood costs, because the two temperatures are 11 K apart and
+their entropy is not:**
+
+| `T_c` | inner core | `Q_C` | `ΔE` k30·H0 | k30·H0.14 | k70·H0 | k70·H0.14 |
+|---|---|---|---|---|---|---|
+| **3 760.0** — declared (owner ①) | **572.2 km** | 3.825 TW | +117.1 | **+126.9** | −76.3 | −66.6 |
+| **3 770.9** — C14's root at the new cap | **206.2 km** | 2.841 TW | +1.6 | **+11.3** | −191.9 | −182.2 |
+| 3 777.0 — 17 K above the declaration | **none** | 2.272 TW | −66.8 | −57.1 | −260.2 | −250.5 |
+
+⚠ **The inner core loses 366 km over 11 K and vanishes within 17 K**, and because `e_l` and `e_g` ride on
+that radius the top corner falls **+126.9 → +11.3 → −57.1** across the same span. **So "Earth has an
+inner core here" is robust and "572 km" is not**, and neither is the size of the positive margin. **The
+sensitivity sits exactly where C14's melting-point depression factor 0.80 sits** — the same knob C25's
+own scope named — which is why this is recorded as a measurement and nothing is decided from it.
+
 ⚠ **And the two rows now say opposite things, which is the clearest statement of the horn's weight.** P4
 forecast *"lowering `H` makes the band read **fails**"* — that came true **for the reference row**, which
 has no inner core. On the declared 3 760 K horn, `e_l` and `e_g` are alive and the same cap only moves
