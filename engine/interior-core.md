@@ -4286,14 +4286,19 @@ both**, with the reason written at the call site.
 are shown to fire"*; what had been shown was **class ② on one node** (`dynamo_rocky`) and **class ① by
 removing one pair from the baseline**. The corrected record, now with four runs behind it:
 
-| class | fired on | by whom |
-|---|---|---|
-| ② | `dynamo_rocky` — `age_gyr` → `age_gyr_zz` | this seat, in-tree, `rc=1` |
-| ② | `internal_heat_nontidal` — `radiogenic.py`'s `age_gyr` → `age_gyr_zz` | **audit seat**, real-file harness, `rc=1`, 143.76 s — *and independently this seat, in an isolated copy, `rc=1`* |
-| ① | `dynamo_rocky` — `dynamo_regime`, with its pair removed from `CLASS1_KNOWN` | this seat, `rc=1` |
+| class | fired on | checker | run |
+|---|---|---|---|
+| ② | `dynamo_rocky` — `age_gyr` → `age_gyr_zz` | **pre-move** | this seat, in-tree, `rc=1` |
+| ② | `internal_heat_nontidal` — `radiogenic.py`'s `age_gyr` → `age_gyr_zz` | **pre-move** | **audit seat**, real-file harness, `rc=1`, 143.76 s — *and this seat independently, isolated copy, `rc=1`* |
+| ① | `dynamo_rocky` — `dynamo_regime`, its pair removed from `CLASS1_KNOWN` | **pre-move** | this seat, `rc=1` |
+| ② | `internal_heat_nontidal`, same typo | **post-move** | this seat, isolated copy, **`rc=1`, 143 s** |
+| ② | `dynamo_rocky`, same typo | **post-move** | this seat, isolated copy, **`rc=1`, 141 s** |
+| — | the clean tree · the clean copy | **post-move** | `rc=0`, 1 182 lookups, class ③ unchanged · `rc=0`, 143 s, **14 contracts** |
 
-**So class ② is reproduced on two nodes by two seats**, and class ① on one node. **That is the claim the
-commit should have made.**
+**So class ② is reproduced on two nodes by two seats, before and after the move**, and class ① on one
+node. **That is the claim the commit should have made.** ⚠ *The move widened coverage without disturbing
+what already worked: the same two typos fire on the moved checker, and the clean copy still passes at 14
+contracts.*
 
 ⚠ **An operating fact that cost the audit seat a run, worth more than the run.** Its first probe returned
 `rc=0` and looked like a hole in the checker. It was the **harness**: six engine modules do
@@ -4302,6 +4307,31 @@ commit should have made.**
 **original** `radiogenic`, not the edited one, and the planted typo was never in the run. **A symlinked
 scratch tree silently executes the originals.** An isolated tree must hold **real `.py` files**; this
 seat's probes were `rsync` copies with `find -type l` returning nothing, which is why they were valid.
+
+⚠ **And this seat lost five hours to the same family, in its own waiter.** The shell that was to launch
+the post-move probes waited on `until ! pgrep -f "check_contracts"; do sleep …` — **and its own command
+line contains that string**, so the loop matched itself, never exited, and the probes it was guarding
+never started. Nothing said so; the tree simply sat with four uncommitted files until the directing seat
+asked. `engine/tools/README.md@«A gate is a process group»` already holds this family — *a process
+listing is an instant, not a state* — and the new member is: **a waiter that greps for a name is itself
+a process whose command line contains that name.**
+
+#### The pair of runs that is the actual evidence for B2
+
+⚠ **The move's justification is not a line of code; it is two runs of the same planted fault.** The audit
+seat planted `core_initial_temperature` → `core_initial_temperature_zz` in `core_history.py` — a key
+whose absence puts **every sample body out of domain**, which is precisely the case the two early exits
+swallowed:
+
+| checker | result |
+|---|---|
+| **`446a6366`**, block after the exits | **`rc=0`** — and `[PASS] 계약 대조 **13**건` |
+| **`b9f01961`**, block before them | **`rc=1`** — `[FAIL] core_thermal_history … core_initial_temperature_zz` |
+
+with the `[건너뜀]` lines identical in both. ⚠ **So this repair is a guard rather than a regression fix:
+no sample body exercises the hole today.** And the sharpest part is the count — **13 against 14**. **The
+hole was never silent**: the contract check had been reporting one contract fewer, and **nobody read the
+number.** A skipped node is a subtraction from a total that is printed on every gate run.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
