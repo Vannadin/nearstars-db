@@ -61,6 +61,8 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   for old in "${TMPDIR:-/tmp}"/gate-*; do
     [ -d "$old" ] || continue
     [ -e "$old/GATE-FAILED" ] && continue
+    # ⚠ pid 는 재사용된다 — 남의 pid 가 우연히 이 이름과 같으면 지울 수 있는 디렉토리를 건너뛴다.
+    #   그 실패는 **증거를 남기는 쪽**이므로 고치지 않는다 (감사석 판정, 170 F).
     old_pid=${old##*-}
     case "$old_pid" in
       ''|*[!0-9]*) ;;                       # pid 로 안 읽히면 지우지 않는다
