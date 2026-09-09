@@ -12,6 +12,14 @@ inputs:
   body_class: rocky
   composition_intent: earth_like
   core_mass_fraction: 0.325     # PREM 핵 질량 / 지구 질량
+  # 핵 물질 — **선언**. 네 핵 노드(`cmb_heat_flux` · `core_energy_balance` ·
+  # `core_entropy_production` · `core_thermal_history`)가 전부 `"fe_prem"` 을 기본값으로 쓰고 있었고,
+  # 그래서 C50 의 클래스 ③ 에 네 번 세어졌다. 지구에 대해서는 이것이 **전사**다 — `fe_prem` 은
+  # PREM 외핵의 액체 밀도 적합이고(`core_state.py` 의 주석), 그 PREM 이 이 파일의 `nmoi` 와
+  # `cmb_pressure` 가 이미 인용하는 바로 그 원전이다. 값은 기본값과 같으므로 출력은 안 움직인다.
+  # ⚠ 화성·판도라에는 **넣지 않았다**: 지구의 PREM 을 더 가벼운 핵에 주장하는 것은 전사가 아니라
+  # 선택이고, 그 선택은 오너의 것이다 (C50 (b) 표 5행, owner-pending).
+  core_material: fe_prem        # PREM (Dziewonski & Anderson 1981, 1981PEPI...25..297D)
   # 맨틀 포텐셜 온도. **선언** 이다 — Unterborn+ 2019 §2 의 지구형 값이고,
   # 암석-금속 상들의 적합 기준이 이 단열선이라 여기서 열압력이 정확히 0 이다.
   potential_temperature: 1600.0
