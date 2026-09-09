@@ -2837,11 +2837,17 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
         else:
             hi = mid
 
-    # ⚠ **여기서 `inputs` 를 덮어쓰지 않는다** (C50 (b) 표 4·10행, 브리프 170 B). 예전에는
-    #   `inputs["initial_porosity"] = phi` 와 `inputs["porosity_cap"] = P_LAB_MAX` 로 **솔버 자신이
-    #   만든 값과 모듈 상수**를 조회 이름 아래 증거에 써 넣었다 — 조회는 미스인데 증거는 채워지므로
-    #   «값은 없고 이름은 있다» 의 C37 모양이 증거 쪽에 생긴 것이고, `is None` 검사로는 안 보인다.
-    #   두 수는 아래 노트가 그대로 나른다. 증거는 **선언된 값**(없으면 None·0.0)을 유지한다.
+    # ⚠ **둘 중 하나만 지웠다** (C50 (b) 표 4·10행, 브리프 170 B → 정정 170 C).
+    #   `inputs[axis] = 역산값` 은 이 파일의 **규약**이다 — `:3044` 의 일반 축, `:3252`·`:3253` 의
+    #   `core_mass_fraction`·`ice_mass_fraction` 이 같은 일을 하고, `test_interior` 는 `res.regime`
+    #   이 이름 붙인 축을 `res.inputs[axis]` 로 읽어 인쇄한다. 그러니 `initial_porosity` 는 «미스한
+    #   조회를 덮어쓰는 것» 이 아니라 «역산이 무엇을 되읽었는지 그 축의 이름으로 보고하는 것» 이다.
+    #   ⚠ 170 B 는 그 규약을 결함으로 읽고 지웠다가 gate207 에서 `KeyError: 'initial_porosity'` 로
+    #   잡혔다 — 규약을 세 자리 중 한 자리에서만 본 탓이다.
+    #   **`porosity_cap` 은 다르다**: 그것은 역산된 축이 아니라 솔버가 고른 **모듈 상수**이고, 조회
+    #   이름 아래 증거에 앉으면 «값은 없고 이름은 있다» 가 된다. 그래서 예전의 한 줄
+    #   `inputs["porosity_cap"] = P_LAB_MAX` 만 빠졌고, 그 수는 아래 노트가 나른다.
+    inputs["initial_porosity"] = phi
     notes = [f"역산이다 — 초기공극 φ₀ = {phi:.3f} 가 선언된 반지름을 재현한다 "
              f"(공극 상한은 실험 상한 P_LAB_MAX = {P_LAB_MAX:.3g} Pa 를 썼다). "
              f"실험 상한 위를 믿지 않는 보수적 읽기로 풀었으므로, 이 결론은 측정된 "

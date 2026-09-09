@@ -6667,9 +6667,11 @@ which promotes that class to a `FAIL` as well.
 
 #### ⚠ A fifth shape, harder to catch than C37, and one instance is already in the list
 
-**`porosity_cap` is in class ① only by luck.** `engine/interior.py@«inputs["porosity_cap"] = P_LAB_MAX»`
-— the inversion branch — **writes the evidence dict directly with a real number that came from no
-lookup at all** (and the line above it does the same for `initial_porosity`, which is in class ③). On a
+**`porosity_cap` was in class ① only by luck.** `engine/interior.py@«inputs["porosity_cap"] = P_LAB_MAX»`
+— the inversion branch — **wrote the evidence dict directly with a real number that came from no
+lookup at all** (⚠ *removed in Brief 170 B; the line the anchor now lands on is the comment recording
+that removal, and C50 (b)'s correction 170 C says why the neighbouring `initial_porosity` write was a
+convention and stayed*). On a
 body that takes that branch the evidence therefore reads `porosity_cap = 0.3` or whatever `P_LAB_MAX` is,
 **not `None`** — and the checker's class-① test is `inputs[key] is None`. ⚠ **So "the lookup missed and
 the evidence was filled with a constant" is structurally invisible to today's check, and it is worse
@@ -7504,7 +7506,7 @@ repair, so that a movement of zero is a prediction rather than a description.
 | 1 | `body_class` · `gas_mass_fraction` | used **only** inside `_ice_giant_vs_gas_giant`, and that branch already refuses by name: *«이 경계를 답하려면 `gas_mass_fraction` 을 선언해야 한다»* | ⚠ **the contract is wrong** — a *conditional* need is listed unconditionally, so every rocky body files a `None` it never consulted | mark the need conditional in `body-class-methodology.md`; the named refusal stays | **0** — no roster body takes that branch |
 | 2 | `body_class` · `semi_major_axis_au` | same branch; `pebble_isolation_mass(a or PEBBLE_ISO_REF_AU)` falls back to a reference distance | ⚠ **the contract is wrong**, and a second question underneath: the value exists in the system data, so the supplier should be an edge, not a body declaration | conditional in the doc, and record that the supplier is the orbit, not a declaration | **0** |
 | 3 | `dynamo_rocky` · `dynamo_regime` | undeclared is the **designed** state: the recipe emits the dipolar and multipolar branches both, and C11 records that regimes 2 and 3 have no elected number | ⚠ **the contract is wrong** — this is an optional override, and calling it a need makes a deliberate absence look like a hole | move it out of `Needs` into a declared-override line | **0** |
-| 4 | `interior_layers` · `porosity_cap` | ⚠ **neither of C50's two faults.** `interior.py@«inputs["porosity_cap"] = P_LAB_MAX»` writes a **module constant** into the evidence under a `Needs` name while the lookup itself missed | ⚠ **the recipe's evidence is wrong** — a third category this reading found | record it as what it is (the constant the solver used), not as a lookup that succeeded | **0** in values; the evidence line changes |
+| 4 | `interior_layers` · `porosity_cap` | ⚠ **neither of C50's two faults.** `interior.py@«inputs["porosity_cap"] = P_LAB_MAX»` writes a **module constant** into the evidence under a `Needs` name while the lookup itself missed | ⚠ **the recipe's evidence is wrong** — a third category this reading found | record it as what it is (the constant the solver used), not as a lookup that succeeded | **0** in values; the evidence line changes. ✓ *repaired 170 B* |
 
 #### Class ③ — a `Needs` no body supplies, and the call site coping
 
@@ -7515,7 +7517,7 @@ repair, so that a movement of zero is a prediction rather than a description.
 | 7 | `differentiated` · `interior_layers` | `state.get("differentiated", True)` | **the contract is wrong** — optional with a documented default | see the structural note below | **0** |
 | 8 | `envelope_z` · `interior_layers` | `state.get("envelope_z", 0.0)`, and the code says why: *«Z 는 선언이다. 강착과 진화가 정하는 값이고 이 레시피에 그 둘이 없다»* | **the contract is wrong** — optional, and the file already says so in prose | as above | **0** |
 | 9 | `gas_mass_fraction` · `interior_layers` | `state.get("gas_mass_fraction")`, `None` meaning "not a gas body" | **the contract is wrong** — optional | as above | **0** |
-| 10 | `initial_porosity` · `interior_layers` | `state.get("initial_porosity", 0.0)`, whose comment says the default *«means this recipe does not decide, not that porosity is zero»* — **and** the inverse path writes `inputs["initial_porosity"] = phi` | ⚠ **two faults at once**: optional-in-contract *and* row 4's evidence collision | both repairs | **0** |
+| 10 | `initial_porosity` · `interior_layers` | `state.get("initial_porosity", 0.0)`, whose comment says the default *«means this recipe does not decide, not that porosity is zero»* — **and** the inverse path writes `inputs["initial_porosity"] = phi` | ⚠ **one fault, not two** — optional-in-contract only. ⚠ *This row read the second half wrong; see the correction below* | the contract line; **the write stays** | **0** |
 | 11 | `tidal_heating` · `interior_layers` | `bool(state.get("tidal_heating", False))` | **a declaration is missing, and it is not free** — ⚠ Pandora has tidal heating on the board (C30, 45 W/m²), so declaring `true` there **would move the structure solve** | ⚠ **owner-pending**: this is the one row whose repair is a physics decision, not a transcription | ⚠ **non-zero for Pandora** — the only row that is not expected to be silent |
 | 12 | `permanent_quadrupole` · `tidal_locking` | `bool(state.get("permanent_quadrupole", False))` | **the contract is wrong** — optional; electing a non-zero value for any body would move its locking timescale | doc; ⚠ any value is owner territory | **0** while it stays absent |
 
@@ -7542,6 +7544,31 @@ source. And the class ③ baseline `(8, 8, 13)` moves **only with the reason wri
 `CLASS1_KNOWN` becomes empty and the class ③ baseline drops, with each drop attributable to one row above.
 ⚠ **It will not reach zero in this brief**, and that is registered now rather than reported later: rows 5
 (Mars, Pandora) and 11 stay until the owner decides.
+
+#### Correction 170 C — one of the two «evidence defects» was a convention
+
+⚠ **Row 10 was wrong, and the gate said so.** Brief 170 B removed
+`inputs["initial_porosity"] = phi` from the inverse-solve branch as an evidence defect, and gate207 failed
+with `KeyError: 'initial_porosity'` from `test_interior`'s low-density-satellite roster.
+
+**Writing the inferred value back under the axis's own name is this file's convention, not a defect.**
+`interior.py` does the same at three other places — the generic `inputs[axis] = x`, and
+`core_mass_fraction` and `ice_mass_fraction` in the composition inversion — and the test reads it the way
+the convention intends: `res.regime` names the inferred axis and `res.inputs[axis]` is the value the
+inversion read back. So the sentence *«the recipe writes its own solved value into the evidence»* is true
+and is not a fault: an inverse solve **reports what it inferred**, under the name of the thing it inferred.
+
+⚠ **`porosity_cap` is genuinely different and its repair stands.** It is not an inferred axis; it is a
+module constant the solver chose, and a constant sitting in the evidence under a lookup's name is exactly
+*«the value is absent and the name is present»*. Only that one is gone.
+
+⚠ **How the reading went wrong is the part worth keeping.** Two adjacent lines were read as one fault
+because they were adjacent, and the convention they belong to lives **three functions away**. A `grep` for
+the literal `inputs["initial_porosity"]` found the write and could not find its meaning, and the consumer
+that would have shown it reads the key through a **variable** (`res.inputs[axis]`), which no literal search
+returns. The test that covers it costs 459 s and was deferred to the gate rather than run before the
+commit — the gate caught it in the isolated lane, which is what that lane is for, and the scratch was kept
+because `rc=1`.
 
 ## What closing all of these does not do
 
