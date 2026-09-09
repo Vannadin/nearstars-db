@@ -4803,7 +4803,9 @@ only point in the owner's band that (i) infers an **inner core no held paper rep
 *"probable absence of an inner core"* — and (ii) makes `cmb_heat_flux` **undefined**, because 1900 K sits
 below the mantle adiabat's 1910 K. **Keeping a bound's direction is not free: it adds a physical claim.**
 So the declaration is the band's **midpoint, 2000 K** — the point that leans on neither end and contradicts
-nothing held — and it is reversible.
+nothing held. ⚠ **The owner confirmed that midpoint as the decision** once both ends' physics was
+measured and reported (2026-09-09 23:4x); it was written here first as this seat's reversible choice, and
+the record keeps that order rather than back-dating it.
 
 ⚠ **What is not closed.** C20's endpoint for the same body is **3763 K**, about 1700 K above this band.
 Both cannot be right about Mars, and choosing between them is not a declaration — **C58**.

@@ -76,7 +76,13 @@ CLASS4_BASELINE = 0
 #: ⚠ **13 → 20, 브리프 173** — 픽스처 바디가 표본에 들어오면서. 픽스처는 거의 아무 것도 선언하지
 #: 않으므로 «지구는 공급하고 이 바디는 안 한다» 가 그대로 행이 된다. 그것이 이 수의 뜻이다:
 #: **선언의 빈칸을 세는 계기**이고, 늘어난 일곱 행은 결함이 아니라 픽스처가 무엇인지의 결과다.
-PARTIAL_BASELINE = 20
+#: ⚠ **(13 → 20 → 23, 그리고 둘째 수 16 은 처음 세어진 것)**. 20 → 23 은 브리프 174 다: 화성이
+#: 핵 쪽 경계온도를 선언하면서 화성의 핵 노드들이 **답을 내기 시작했고**, 그래서 «지구는 공급하고
+#: 화성은 안 한다» 가 세 행 더 생겼다. ⚠ **그 갱신을 174 가 빠뜨렸다** — 기록 줄이라 rc 는 안
+#: 움직이지만, 다음 게이트가 «기준선과 다르다» 를 찍었을 것이다. 175 가 잡았다.
+#: 둘째 수는 **도메인 밖 바디가 함께 있는 행**이다. 이것이 0 이 아니라 16 인 것이 175 의 요점이다 —
+#: «미선언 3» 이 «표본 일곱 중 셋» 인지 «답을 낸 셋 중 셋» 인지를 그 수가 가른다.
+PARTIAL_BASELINE = (23, 16)   # (공급·미선언이 갈리는 행, 그중 도메인 밖 바디가 함께 있는 행)
 
 #: 클래스 ① (C37 의 서명) 의 **알려진 기존 사례** — 2026-09-09 첫 측정, C50 에 등재.
 #: ⚠ **이 집합 밖의 사례는 FAIL 이다.** 기존 넷을 지금 고치는 것은 값을 움직일 수 있어 다음
@@ -389,17 +395,22 @@ def main() -> int:
         #   있다) 암석 노드의 입력을 선언하지 않는 것이 정상이다 — 그것까지 세면 «미선언» 이 대부분
         #   도메인 밖 잡음이 되어 진짜 비대칭이 묻힌다. 그래서 그 노드가 **답을 낸** 바디만 본다.
         for key in sorted((needs - optional) & look["asked"]):
-            supplied, missing = [], []
+            supplied, missing, outside = [], [], []
             for body in bodies:
                 res_p = body.results.get(node)
-                if res_p is None or not res_p.applicable:
-                    continue
                 seen = [kind for owner, k, kind in body.lookups if owner == node and k == key]
+                if res_p is None or not res_p.applicable:
+                    # ⚠ 이 절은 175 이전에 **죽어 있었다** — 언제나 빈 리스트를 넘겨서 «안 밟음 N»
+                    #   이 한 번도 안 찍혔다. 도메인 밖 바디를 세는 것이 뜻이 있는 이유: «미선언 3»
+                    #   이 «표본 여섯 중 셋» 인지 «답을 낸 셋 중 셋» 인지가 다른 이야기다.
+                    if seen:
+                        outside.append(body.name)
+                    continue
                 if not seen:
                     continue
                 (supplied if supplied_by(seen) else missing).append(body.name)
             if supplied and missing:
-                partial.append((node, key, supplied, missing, []))
+                partial.append((node, key, supplied, missing, outside))
 
         rest = sorted(set(never) - filed)
         if rest:
@@ -476,8 +487,10 @@ def main() -> int:
               f"미선언 {len(missing)} ({', '.join(missing)})"
               + (f" · 이 노드를 안 밟음 {len(untouched)}" if untouched else "")
               + ". 클래스 ③ 은 «어느 표본이든» 을 묻으므로 이 칸은 비어 있다 (172 (a))")
-    print(f"  [기록 · 표본별 공급 합계] {len(partial)}건 (기준선 {PARTIAL_BASELINE}) — "
-          f"{'변화 없음' if len(partial) == PARTIAL_BASELINE else '⚠ 기준선과 다르다'}")
+    n_out = sum(1 for row in partial if row[4])
+    print(f"  [기록 · 표본별 공급 합계] 공급·미선언이 갈리는 {len(partial)}건 · 그중 도메인 밖 바디가 "
+          f"함께 있는 {n_out}건 (기준선 {PARTIAL_BASELINE[0]} · {PARTIAL_BASELINE[1]}) — "
+          f"{'변화 없음' if (len(partial), n_out) == PARTIAL_BASELINE else '⚠ 기준선과 다르다'}")
     for node, key, body, val, reg, dflt in class4_conv:
         print(f"  [클래스 ④ · 규약] {node}: 미스한 '{key}' 가 {body} 의 증거에 {val!r} 로 있다 "
               f"(호출부 기본값 {dflt!r}) — 역산이 자기 축을 보고한 것이다 (regime {reg})")
