@@ -20,8 +20,9 @@ is taken; nobody types the pairs.
 
 ⚠ **The answer runs are unconditional whenever code changed.** `check.sh`'s own recorded decision is
 that *"the answer tests are never skipped on a commit that changed code"*, and those live in
-`run.py bodies/…`, not in a `test_*.py`. So any changed `engine/**.py` or `engine/bodies/*.yaml` adds all
-three answer bodies (~2 min), regardless of what the import graph says.
+`run.py bodies/…`, not in a `test_*.py`. So any changed `engine/**.py` or `engine/bodies/*.yaml` adds
+**every** body in `engine/bodies/` (169 E — the list used to be three names typed twice, and Mars fell
+out of both), regardless of what the import graph says.
 
 ⚠ **A changed path outside the mapping is a veto, not a guess.** `scripts/`, `engine/chain.yaml`,
 `check.sh` itself: nothing here can say what depends on them, so the lane is abandoned rather than
@@ -38,8 +39,15 @@ ROOT = Path(__file__).resolve().parent.parent
 ENGINE = ROOT / "engine"
 CHECK_SH = ROOT / "scripts" / "check.sh"
 
-#: 코드가 바뀌면 언제나 함께 도는 answer 실행 (check.sh 13번의 세 줄과 같은 순서).
-ANSWER_BODIES = ("alpha_centauri_a_b", "pandora", "earth")
+def answer_bodies() -> list[str]:
+    """코드가 바뀌면 언제나 함께 도는 answer 실행 — **디렉토리가 목록이다** (169 E).
+
+    ⚠ 예전에는 `("alpha_centauri_a_b", "pandora", "earth")` 리터럴이었고, `check.sh` 에도 같은 셋이
+    손으로 적혀 있었다. 그래서 `bodies/mars.yaml` 이 두 곳 모두에서 빠진 채 **한 달 가까이 아무
+    게이트도 화성의 출하값 대조를 안 돌렸다**(C59). 리터럴을 고치는 대신 글롭으로 바꾸는 이유는
+    여덟 번째 바디에서 같은 누락이 반복되기 때문이고, `check.sh` 도 같은 글롭을 쓰므로 두 파일이
+    갈릴 수 없다."""
+    return [p.name for p in sorted((ENGINE / "bodies").glob("*.yaml"))]
 
 #: ⚠ **12b 는 어느 층에서도 좁혀지지 않는다** — 이 둘은 그래서 «시험이 없다» 가 구멍이 아니다.
 #: 이것들을 빼기 전에는 `engine/check_contracts.py` 를 고친 커밋이 매번 «매핑이 설명 못 하는 경로»
@@ -176,8 +184,8 @@ def main() -> int:
                 gap.append(rel_name(mods, s))
 
     if code_changed:
-        for body in ANSWER_BODIES:
-            items.add(f"run:bodies/{body}.yaml")
+        for body in answer_bodies():
+            items.add(f"run:bodies/{body}")
 
     print(len(changed))
     print(" ".join(sorted(set(gap))))

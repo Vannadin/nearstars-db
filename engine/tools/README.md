@@ -941,6 +941,17 @@ form; `--from <sha>` on its own — full lane — is what a push needs.
     a broken source* — correct in the worktree, wrong inside the clone, and the audit seat recorded it
     as its eleventh broken-source correction of the day. The rule it illustrates is §10's: a name is
     not a value until it has been resolved **in the place it will be read**.
+- **The answer runs are the whole of `engine/bodies/`, and the list is a glob in both places.** ⚠ It used
+  to be three names typed once in `check.sh` and once in `gate_targeted.py`, and `bodies/mars.yaml` was in
+  neither — so its shipped-value comparison went unrun from 2026-09-08 until the targeted lane's body rule
+  ran it and found an 8.9 % disagreement waiting (C59). **The targeted lane caught a hole in the full
+  lane**, which is the opposite of what a narrowing is supposed to do and worth saying out loud. Seven
+  bodies now run, and the label splits them honestly: **four comparisons** (alpha_centauri_a_b, earth,
+  mars, pandora carry an `expected:` block) and **three smoke runs** (dante_fixture, luhman_16_a/b only
+  prove the body completes). Calling all seven "comparisons" would claim three checks that do not exist.
+- **A non-zero exit prints its step's name.** `gate212` ended `rc=1` with no `[FAIL]` line anywhere: one
+  of five `run.py` invocations returned 1 silently and finding out which took a re-run. One helper owns
+  that marker for the paths that do not print their own failure.
 - **12b never narrows.** The contract, anchor and citation checks (14 lines: `check_via`,
   `check_contracts`, nine band/label tests, `test_check_refs`, `check_refs`, and the citation counter
   that counts rather than judges) run in every lane, because a documentation line can break them and

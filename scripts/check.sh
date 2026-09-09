@@ -3,6 +3,14 @@
 set -u
 cd "$(git rev-parse --show-toplevel)"
 fail=0
+# ⚠ **비0 종료는 이름을 남긴다** (169 E). gate212 가 rc=1 로 끝났는데 로그 어디에도 `[FAIL]` 이
+#   없었다 — 다섯 개의 `run.py` 중 하나가 조용히 1 을 돌려줬고, 어느 바디인지 스크래치를 다시
+#   돌려서야 알았다. 시험 대부분은 자기 실패를 인쇄하지만 **인쇄하지 않는 것이 있고**, 그때
+#   게이트가 «일부 점검 실패» 한 줄만 남기면 다음 사람은 처음부터 다시 찾아야 한다.
+step() {                      # step <이름> <명령...>
+  local name=$1; shift
+  "$@" || { echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"; fail=1; }
+}
 # 게이트 자신만 찍는 시작/종료선. 테스트 파일들이 찍는 "모두 통과" 와 겹칠 수 없는 형식이고,
 # 종료선 없이는 "무엇이 언제 무슨 트리 위에서 끝났는지" 를 말할 수 없다 (2026-09-04, 두 좌석에서 같은 오독).
 #
@@ -386,15 +394,15 @@ if [ "$lane" = "targeted" ]; then
   fi
   for tt in $targeted_tests; do
     case "$tt" in
-      run:*) (cd engine && python3 run.py "${tt#run:}") || fail=1 ;;
+      run:*) step "run.py ${tt#run:}" bash -c 'cd engine && exec python3 run.py "$1"' _ "${tt#run:}" ;;
       # ⚠ 13 블록에는 `test_*.py` 가 아닌 게이트 단계가 셋 있다 (169 D ②). 그 셋을 부를 어휘가
       #   없으면 `engine/backflow.py` 를 고친 커밋이 자기를 검사하는 단계 없이 초록으로 지나간다.
       gate:backflow) python3 engine/backflow.py check >/dev/null 2>&1 || { echo "  [FAIL] backflow"; fail=1; } ;;
       gate:chain) python3 engine/chain.py check || fail=1 ;;
       gate:dynamo_table) python3 engine/dynamo_table.py --check || { echo "  [FAIL] dynamo_table"; fail=1; } ;;
       # ⚠ full 층이 `--quiet` 로 부르는 시험은 표적 층도 그렇게 불러야 한다 — 다른 인자는 다른 검사다.
-      tools/c47_step4.py) (cd engine && python3 tools/c47_step4.py --quiet) || fail=1 ;;
-      *) if [ -f "engine/$tt" ]; then (cd engine && python3 "$tt") || fail=1
+      tools/c47_step4.py) step "tools/c47_step4.py" bash -c 'cd engine && exec python3 tools/c47_step4.py --quiet' ;;
+      *) if [ -f "engine/$tt" ]; then step "$tt" bash -c 'cd engine && exec python3 "$1"' _ "$tt"
          else echo "  [FAIL] 도출된 시험 파일이 없다: engine/$tt"; fail=1; fi ;;
     esac
   done
@@ -412,9 +420,19 @@ python3 engine/backflow.py check 2>&1 | grep -v "^  \[WARN\]" || true
 python3 engine/backflow.py check >/dev/null 2>&1 || fail=1
 (cd engine && python3 test_backflow.py) || fail=1
 (cd engine && python3 test_dynamo.py) || fail=1
-(cd engine && python3 run.py bodies/alpha_centauri_a_b.yaml) || fail=1
-(cd engine && python3 run.py bodies/pandora.yaml) || fail=1
-(cd engine && python3 run.py bodies/earth.yaml) || fail=1
+# ⚠ **바디 목록은 고정 셋이 아니라 디렉토리다** (169 E). 예전에는 셋(alpha·pandora·earth)을 손으로
+#   적어 두었고, 그래서 `bodies/mars.yaml` 의 출하값 대조가 **09-08 이후 한 번도 안 돌았다** —
+#   표적 층의 바디 규칙이 화성을 처음 돌렸을 때 8.9 % 어긋남이 그대로 있었다(C59). 왜 셋이었는지는
+#   기록이 없다. 고정 목록은 여덟 번째 바디에서 같은 일을 반복하므로 글롭으로 바꾼다.
+#   ⚠ 같은 글롭을 `scripts/gate_targeted.py` 의 `answer_bodies()` 도 쓴다 — 두 파일이 갈리지 않게
+#   **디렉토리 자체가 유일한 출처**다.
+#   ⚠ 라벨을 가른다: `expected:` 블록이 있는 바디는 **출하값 대조**, 없는 바디는 **연기 시험**
+#   (완주하는지만 본다). 둘을 한 이름으로 부르면 «일곱 개 대조» 로 읽히는데 그건 사실이 아니다.
+for _b in engine/bodies/*.yaml; do
+  _name=$(basename "$_b")
+  if grep -q '^expected:' "$_b"; then _kind="출하값 대조"; else _kind="연기 시험"; fi
+  step "run.py bodies/$_name ($_kind)" bash -c 'cd engine && exec python3 run.py "bodies/$1"' _ "$_name"
+done
 (cd engine && python3 test_mass_radius.py) || fail=1
 (cd engine && python3 test_fermi.py) || fail=1
 (cd engine && python3 test_water_hot.py) || fail=1
