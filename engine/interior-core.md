@@ -4621,8 +4621,11 @@ numbers.
 
 **What was built, and what it is worth.** The detector ships with the two-layer rule, printed with the
 node, the key, the body, the value and the accepted defaults, plus separate lines for inversion-convention
-hits and for keys whose defaults are not literals. It would catch the original instance: `porosity_cap`
-recorded `P_LAB_MAX` against a declared default of `None`.
+hits and for keys whose defaults are not literals. ⚠ **A unit assertion aims at that verdict** — a value
+against a declared default of `None` is not explained, which is what `porosity_cap` recording `P_LAB_MAX`
+was — **but it is not proven end to end**: no roster body takes an inversion branch, so re-planting the
+original write changes nothing the pipeline can show (audit seat, measured: 0). The detector is proven at
+the predicate and unproven at the body until a body exercises that branch.
 
 ⚠ **171 C closed the 12 by fixing the contract, not the count.** Of the two ways to close the
 disagreement — write the normalisation into the contract, or keep the raw `None` in the evidence — the
@@ -4635,6 +4638,26 @@ sentence. The baseline is **0** and two rows in `test_check_refs` hold the parse
 **What is still not decided** is the deeper question this item exposed — a number in the evidence has
 three honest origins and the contract can only name them one sentence at a time. Nothing forces a recipe
 to declare its normalisations; this brief made it *possible* to, and made the omission visible.
+
+#### C50 (b) addendum, 172 (a) — the asymmetry behind the zero is now a number
+
+Class ③ asks whether **any** sample body supplies a key, so one body's declaration empties the cell for
+all of them. That was written beside the baseline as a sentence; it is now measured. `check_contracts`
+records **per-body supply** — for a `Needs` key that some in-domain body supplies and another does not —
+and prints it as a record, never a verdict, because «one body declares it and another does not» can be
+correct.
+
+**First count: 13.** Two of them are open items wearing a number for the first time:
+
+* `core_thermal_history.core_material` — **supplied by Earth, undeclared on Mars**. That is C50 (b) row
+  5's owner-pending cell, and class ③ reads **0**.
+* `core_state.core_cmb_temperature` — **supplied by Earth, undeclared on Mars and Pandora**. ⚠ That is
+  **C54's root**: Mars's `conductor_phase` is `undecided` because this declaration exists for Earth only,
+  and the lid axis therefore never decides anything on Mars.
+
+⚠ **Only bodies the node actually answered are counted.** Stars and brown dwarfs walk the same lookups —
+the domain gate sits behind the probe — and not declaring a rocky input is right for them; counting those
+would bury the real asymmetry under out-of-domain noise.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 

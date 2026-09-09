@@ -66,6 +66,14 @@ CLASS3_BASELINE = (0, 0, 0)           # (노드, 고유 키, (노드,키) 쌍)
 #: 문장을 적기 전까지 걸린다. ⚠ **원값(`None`)을 증거에 남기는 쪽은 고르지 않았다**: 그쪽은 출력을
 #: 건드릴 수 있고, 이 브리프의 약속은 이동 0 이었다.
 CLASS4_BASELINE = 0
+#: 172 (a) — 표본에 따라 갈리는 공급의 수. **판정이 아니다**: 클래스 ③ 이 0 인데도 어떤 바디는
+#: 여전히 아무 것도 선언하지 않았다는 사실을 수로 보이게 하려고 센다 (170 D 의 «0 은 다 답해졌다가
+#: 아니다» 를 주석에서 계측으로 옮긴 것).
+#: 2026-09-09 첫 측정 = **13**. 눈에 띄는 둘: `core_thermal_history.core_material` (지구만 공급,
+#: 화성 미선언 — C50 (b) 표 5행이 오너 대기로 살아 있는 바로 그 칸이고 클래스 ③ 은 0 이다) 과
+#: `core_state.core_cmb_temperature` (지구만 공급, 화성·판도라 미선언 — **C54 의 뿌리**: 화성의
+#: `conductor_phase` 가 undecided 인 이유가 이 선언이 지구에만 있다는 것이다).
+PARTIAL_BASELINE = 13
 
 #: 클래스 ① (C37 의 서명) 의 **알려진 기존 사례** — 2026-09-09 첫 측정, C50 에 등재.
 #: ⚠ **이 집합 밖의 사례는 FAIL 이다.** 기존 넷을 지금 고치는 것은 값을 움직일 수 있어 다음
@@ -194,6 +202,15 @@ def ast_lookup_defaults(node: str) -> dict[str, object]:
     return out
 
 
+def supplied_by(kinds: list[str]) -> bool:
+    """이 바디가 그 키를 **공급했는가** — 조회 기록의 종류 문자열로 판정한다 (172 (a)).
+
+    ⚠ 종류는 `""` · `"optional-"` · `"contains-"` 접두사에 `hit`/`miss` 가 붙은 꼴이다. **`get_optional`
+    의 미스도 미스다** — 그 접두사는 «이 미스는 설계다» 를 계약 검사에 말하는 것이지 값이 있었다는
+    뜻이 아니다. 순수 함수인 이유는 음성 시험이 이 한 줄을 겨눌 수 있어야 해서다."""
+    return any(k.endswith("hit") for k in kinds)
+
+
 def explained_by_default(got, accepted) -> bool:
     """증거에 앉은 값이 **선언된 기본값 중 하나** 그대로인가 (C45 (d) 의 판정 한 줄).
 
@@ -260,6 +277,8 @@ def main() -> int:
     class4: list[tuple] = []
     class4_conv: list[tuple] = []
     class4_undecided: list[tuple] = []
+    #: 172 (a) — 어떤 표본은 공급하고 어떤 표본은 안 하는 키. 판정이 아니라 기록이다.
+    partial: list[tuple] = []
 
     for node in sorted(registry.registered()):
         nd = g["nodes"][node]
@@ -337,6 +356,28 @@ def main() -> int:
                 (class4_conv if inverted else class4).append(
                     (node, key, body.name, res_b.inputs[key], getattr(res_b, "regime", None), default))
 
+        # ⚠ **표본별 공급** (브리프 172 (a)). 클래스 ③ 은 «어느 표본이든 공급하는가» 를 묻는다 —
+        #   그래서 지구 한 바디가 `core_material` 을 선언하자 **네 노드의 칸이 한꺼번에 비었고**,
+        #   화성은 여전히 아무 것도 선언하지 않은 채로 검사가 초록이 되었다 (170 B/D 의 기준선 옆에
+        #   적어 둔 비대칭). 그 사실이 주석에만 있으면 다음 사람은 0 을 «다 답해졌다» 로 읽는다.
+        #   ⚠ **판정이 아니라 기록이다**: 한 바디가 선언하고 다른 바디가 안 하는 것은 결함이 아닐 수
+        #   있고(도메인 밖일 수도 있다), 어느 쪽인지는 이 검사가 말할 수 없다. 세어서 보이게 한다.
+        #   ⚠ **도메인 안의 바디만 센다.** 별과 갈색왜성도 조회는 밟지만(도메인 게이트가 탐침 뒤에
+        #   있다) 암석 노드의 입력을 선언하지 않는 것이 정상이다 — 그것까지 세면 «미선언» 이 대부분
+        #   도메인 밖 잡음이 되어 진짜 비대칭이 묻힌다. 그래서 그 노드가 **답을 낸** 바디만 본다.
+        for key in sorted((needs - optional) & look["asked"]):
+            supplied, missing = [], []
+            for body in bodies:
+                res_p = body.results.get(node)
+                if res_p is None or not res_p.applicable:
+                    continue
+                seen = [kind for owner, k, kind in body.lookups if owner == node and k == key]
+                if not seen:
+                    continue
+                (supplied if supplied_by(seen) else missing).append(body.name)
+            if supplied and missing:
+                partial.append((node, key, supplied, missing, []))
+
         rest = sorted(set(never) - filed)
         if rest:
             class3[node] = rest
@@ -407,6 +448,13 @@ def main() -> int:
     n3_keys = len({k for v in class3.values() for k in v})
     n3_pairs = sum(len(v) for v in class3.values())
     got3 = (n3_nodes, n3_keys, n3_pairs)
+    for node, key, supplied, missing, untouched in partial:
+        print(f"  [기록 · 표본별 공급] {node}.{key} — 공급 {len(supplied)} ({', '.join(supplied)}) · "
+              f"미선언 {len(missing)} ({', '.join(missing)})"
+              + (f" · 이 노드를 안 밟음 {len(untouched)}" if untouched else "")
+              + ". 클래스 ③ 은 «어느 표본이든» 을 묻으므로 이 칸은 비어 있다 (172 (a))")
+    print(f"  [기록 · 표본별 공급 합계] {len(partial)}건 (기준선 {PARTIAL_BASELINE}) — "
+          f"{'변화 없음' if len(partial) == PARTIAL_BASELINE else '⚠ 기준선과 다르다'}")
     for node, key, body, val, reg, dflt in class4_conv:
         print(f"  [클래스 ④ · 규약] {node}: 미스한 '{key}' 가 {body} 의 증거에 {val!r} 로 있다 "
               f"(호출부 기본값 {dflt!r}) — 역산이 자기 축을 보고한 것이다 (regime {reg})")

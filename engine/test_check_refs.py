@@ -399,6 +399,13 @@ def main() -> int:
     ok("gas_mass_fraction" in _il.get("declared_optional", set()),
        "그 문장이 Declared-optional 항목 **안**에 있어야 한다 — 밖이면 면제 목록에서 빠진다")
 
+    # ⚠ 표본별 공급의 판정 한 줄 (172 (a)). `get_optional` 의 미스를 «공급» 으로 세면 화성의 빈
+    #   선언이 다시 보이지 않게 되므로, 그 한 가지가 이 시험의 요지다.
+    ok(_cc.supplied_by(["hit"]) is True and _cc.supplied_by(["contains-hit"]) is True,
+       "(a): 값이 있었으면 공급이다 — `in` 검사로 찾은 것도 포함")
+    ok(_cc.supplied_by(["optional-miss"]) is False and _cc.supplied_by(["miss"]) is False,
+       "(a): `get_optional` 의 미스도 미스다 — 접두사는 «이 미스는 설계다» 일 뿐 값이 있었다는 뜻이 아니다")
+
     # ⚠ 클래스 ④ 의 판정 한 줄을 직접 겨눈다 (C45 (d), 171 B). 판정 **앞**이다 — 170 E 참조.
     ok(_cc.explained_by_default(0.0, {0.0}) is True,
        "④: 선언된 기본값 0.0 이 그대로 기록되면 설명된다")
@@ -411,9 +418,11 @@ def main() -> int:
     #   밀려 조용히 안 돌게 되는 것» 이었다 — 그러면 어떤 단정도 실패하지 않으므로 초록이 늘 나온다.
     #   그래서 **여기까지 실제로 실행된 `ok()` 의 수**를 센다. 블록 하나가 도달 불가가 되면 수가
     #   줄어 이 줄이 스스로 FAIL 한다. 단정을 **더할 때** 이 수를 함께 올리는 것이 정상 절차다.
+    #   ⚠ **가드는 자기 위쪽만 지킨다** (감사석 관찰): 가드를 **포함한** 구간을 통째로 판정 뒤로
+    #   옮기면 이 줄도 함께 안 돌아 통과한다. 그래서 이 줄의 자리 자체가 계약이다.
     _ok_calls = _counter["n"]
-    ok(_ok_calls == 39,
-       f"도달한 단정 수가 39 이어야 한다 — {_ok_calls} 다. 줄었다면 어떤 블록이 판정 뒤로 "
+    ok(_ok_calls == 41,
+       f"도달한 단정 수가 41 이어야 한다 — {_ok_calls} 다. 줄었다면 어떤 블록이 판정 뒤로 "
        f"밀려 안 돌고 있다는 뜻이다 (170 E 의 사고)")
 
     for f in fails:
