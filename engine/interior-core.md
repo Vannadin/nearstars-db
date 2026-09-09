@@ -5419,7 +5419,10 @@ analysis and obtained that **a ≈ 0.30 + 0.25n**. The rms error of the fit is �
 Korenaga's own fit carries an **rms of ∼1.2 per cent**, so our closed form lands **inside the paper's own
 fit error**. ⚠ **What the 0.7 % must not be read as is agreement with the primary fit** — against S&M's
 0.528 ± 0.002 our 0.5539 is **+4.91 %**, thirteen times that fit's stated precision. **And the cause is
-printed, not mysterious: a different definition of the internal temperature `T̄_i`.** That same
+printed, not mysterious: a different definition of the internal temperature `T̄_i`.** ⚠ *Which also means
+that "+4.91 %, thirteen times" is a **comparison across a definition boundary and not evidence of an
+implementation error** — the within-definition check is the 0.7 % against Korenaga's own refit, and it
+passes inside his fit's rms. The three definitions are laid out verbatim in C51's first-anchor section.* That same
 difference is the one candidate explanation for the 3.65× absolute-flux gap between the two papers
 (C51's first anchor), which is why this is labelled here rather than repaired.
 
@@ -6794,6 +6797,33 @@ precision, and Foley is **−5.30 %**, fourteen times.
 **only candidate explanation on the table for the 3.65× absolute-flux gap** below, and it is why the rule
 *"never mix one paper's constants with another's"* is a physics rule here and not tidiness.
 
+⚠ **Corrected 2026-09-09, later the same day (Brief 167 B's first verification, from the three papers'
+own definitions).** The table above is **not five readings of one quantity** — the quantity itself is
+defined differently in each, and that changes which comparisons mean anything. Verbatim:
+
+| paper | what its `T_i` is | in its own words |
+|---|---|---|
+| S&M 2000 | the **maximum horizontally averaged temperature** in the layer | *"The interior temperature T_i is often defined as the average bottom temperature … Perhaps, a more meaningful (but not much different) definition of T_i is the maximum horizontally averaged temperature in the layer (Figure 2)."* |
+| Korenaga 2009 | the **average below the boundary layer**, solved self-consistently (his eq. 20, `δ = Nu⁻¹`) | *"how to define T̄_i is not very unique. **It is not described by Solomatov & Moresi (2000).** … Here, I choose to rely solely on temperature and define T̄_i in a self-consistent manner"* |
+| Foley 2018 | `T_p`, a **potential temperature** — a thermal-evolution state variable, not a field diagnostic | *"T_p is the potential temperature of the upper mantle"*; `θ` and `Ra_i` are built on `T_p − T_s` with viscosity at `T_p` |
+
+**So the comparisons split into three kinds, and only one of them could ever indicate a defect in our code:**
+
+- **Within one definition — our 0.5539 against Korenaga's 0.55: +0.71 %**, inside his fit's own ∼1.2 %
+  rms. ✓ **This is the consistency check, and it passes.**
+- ⚠ **Across a definition boundary — our 0.5539 against S&M's 0.528: +4.91 %** (13× that fit's ±0.38 %),
+  and **Foley's 0.5 against S&M's 0.528: −5.30 %** (14×). **Both of those "13–14×" figures are
+  comparisons that crossed a definition boundary, and neither is evidence of an implementation error.**
+  They measure how much the definition of `T_i` is worth, not how well anyone transcribed.
+- **Neither, in Foley's case.** Foley does not claim `c₁` is either paper's fitted `a`: it attributes
+  eq. (3) to *"Reese et al. 1998, 1999; Solomatov & Moresi 2000; Korenaga 2009"* together and then says
+  *"We use c₁ = 0.5"*. **It is an adopted round constant under a third temperature definition** — so its
+  −5.30 % from S&M and −9.09 % from Korenaga are not a disagreement between fits at all.
+
+⚠ **This is the second time today that a number's *label* mattered more than its value**, and it is the
+same lesson as C25 (e)'s upper-bound-called-a-lower-bound. **The one comparison that would have caught a
+real defect is the within-definition one, and it is the one that agrees.**
+
 ⚠ **And the absolute flux still meets nowhere: 3.65×.** Korenaga's normalization puts Earth at **51.99
 mW/m²** (eq. 29; 50.00 by construction on eq. 30) where Foley's printed parameters give **14.23**. The
 difference is the viscosity normalization — a fitted `b` against a printed `μ_n` = 4 × 10¹⁰ Pa·s — not
@@ -6886,6 +6916,55 @@ and the other two are columns. **Two of the three print no Urey ratio at all**, 
    error C47 (b) named.
 
 ---
+
+#### C51 (b) 2026-09-09 — the budget is transcribed, and the printed law reads less than it appears to
+
+**Built: `engine/mantle_budget.py` and `engine/test_mantle_budget.py`, wired into the gate at ~0 s** —
+Foley 2018's eqs (1), (2), (3) and (4) with that paper's own Table 1 constants, and nothing else. eq. (3)
+is **called, not retyped**: `stagnant_lid.nu_asymptotic(θ, Ra_i, n=1, a=c₁)` reproduces it bit for bit,
+which is the claim *"the flux law is not what is missing"* turned into code.
+
+**Two printed derived values reproduced, under C51's own printed-value rule:**
+
+| the paper prints | we compute | note |
+|---|---|---|
+| *"μ_r ≈ 2 × 10²⁰"* at `T_r` = 1623 K | **1.810 × 10²⁰ Pa·s** | agrees at the printed significant figure (−9.5 %); **the value we carry is the printed 2 × 10²⁰** |
+| *"P e ≈ 0.6"* from Λ ∼100 km, u ≈ 6 × 10⁻¹² m/s, κ = 10⁻⁶ | **0.600** | exact |
+
+⚠ **And the paper's cancel-out remark is an identity, not an approximation — which says more than the
+paper does.** Foley notes that (3) uses `T_p − T_s` and `d` rather than `T_p − T_l` and `d − δ` because
+*"in the heat flux scaling law both the mantle thickness and temperature difference cancel out"*. Measured:
+the two forms agree to a relative **10⁻¹²**, and so does **any** substitution — `T_s` at 100, 273, 500 and
+737 K, and `d` at 1700, 2890 and 4000 km, all give `F_man` = **14.233339 mW/m²** to a relative
+**2.4 × 10⁻¹⁶**. The exponents make it exact: `1 − 4/3 + 1/3 = 0` and `−1 + 3/3 = 0`.
+
+⚠ **So this law's `F_man` reads exactly two things: `T_p` and `g`** (through `θ ∝ 1/T_p²`, `μ_i(T_p)`, and
+`Ra_i^(1/3) ∝ g^(1/3)`). **Venus's 737 K surface does not change it. Mars's thinner mantle does not change
+it.** ⚠ *That is a fact about the law we are adopting, and it bears directly on C34 and C46*: a ladder
+built on this law cannot discriminate two bodies by surface temperature or mantle depth at all, only by
+interior temperature and gravity. **Recorded, no verdict** — C51's cells are read in commit D.
+
+**What the budget produces, and one number that is a finding rather than a pass.** At `T_p` = 1623 K,
+`δ` = 100 km, and our own radiogenic mantle budget `Q_man` = **14.9 TW**, the stagnant-lid surface loss is
+`A_man F_man` = **7.0 TW**, so eq. (1) solved for the unknown gives `dT_p/dt` = **+57.9 K/Gyr** with a
+Urey ratio of **2.117**. ⚠ **The sign is positive: under this law a stagnant-lid Earth cannot cool, it
+heats.** *That is Reese+ 1998's "700–1500 K higher" written as a budget*, and it is the **counterfactual**
+cell ② registered — not a number to set against Earth's observed ~46 TW.
+
+⚠ **The pre-registration's own assertion was wrong here, and it is recorded rather than adjusted.** This
+seat first wrote the gate row as *"`dT_p/dt` < 0"*, presuming cooling. **It failed, and the honest repair
+was to the row and not to the physics**: the gate now checks that eq. (1) **closes term by term**
+(residual < 10⁻¹² of `Q_man`), and the sign is printed as a record pointed at cell ②. *A stage-1
+transcription cannot own a verdict that stage D registered.*
+
+**The melt gap is printed, not assumed.** Moving `dT_p/dt` by 10 % takes a melt heat loss of **0.79 TW**,
+**11.2 %** of the surface loss. It is reported as a **power** and never converted to `f_m`, because `ΔT_m`
+has no value in this engine and converting would invent a temperature.
+
+**eq. (2) refuses by name.** The lid-base conductive gradient is eq. (5)'s output and eq. (5) is not built
+(it needs `Q_crust`, `δ_c` and the crust/mantle production split), so `ddelta_dt_m_s` returns a named
+refusal rather than a default. Given the steady-state gradient `−F_man/k` it returns `dδ/dt` = 0, which is
+the check that the equation was transcribed the right way round.
 
 #### ⚠ Earth has three present-day CMB temperatures, and the supplier and the consumer reach opposite verdicts
 

@@ -49,10 +49,15 @@ def ra_crit(n: int) -> float:
     return math.exp(3.84 + 2.25 / n)
 
 
-def nu_asymptotic(theta: float, ra_i: float, n: int = 1) -> float:
-    """eq. 30 — `Nu ≈ a θ^(−1−β) Ra_i^β`. **Nu ≫ 1 에서만** eq. 29 의 극한이다."""
+def nu_asymptotic(theta: float, ra_i: float, n: int = 1, a: float | None = None) -> float:
+    """eq. 30 — `Nu ≈ a θ^(−1−β) Ra_i^β`. **Nu ≫ 1 에서만** eq. 29 의 극한이다.
+
+    `a` 를 주면 그 선행 상수로 같은 **꼴**을 쓴다 — Foley 2018 식 (3) 이 n=1 에서 이 식과 같은
+    지수(−4/3, 1/3)를 갖고 `c₁ = 0.5` 를 쓰기 때문이다 (`mantle_budget.py`, C51). ⚠ 꼴만 공유하고
+    **정규화는 공유하지 않는다**: 그쪽 `θ` 와 `Ra_i` 는 퍼텐셜 온도로 세운 것이고 여기 것은
+    Korenaga eq. 20 의 `T̄_i` 다. 두 논문의 상수를 섞으면 안 되는 이유가 그것이다."""
     b = beta(n)
-    return a_of_n(n) * theta ** (-1.0 - b) * ra_i ** b
+    return (a_of_n(n) if a is None else a) * theta ** (-1.0 - b) * ra_i ** b
 
 
 def nu_preasymptotic(theta: float, ra_i: float, n: int = 1, a_rh: float | None = None) -> float:
