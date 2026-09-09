@@ -67,6 +67,12 @@ CLASS3_BASELINE = (0, 0, 0)           # (노드, 고유 키, (노드,키) 쌍)
 CLASS1_KNOWN: set[tuple[str, str]] = set()
 
 FIELD = re.compile(r"`([a-z0-9_]+)`")
+#: ⚠ **`Declared-optional` 은 더 좁게 읽는다** (170 E). 그 줄은 «왜 기본값이 있는가» 를 산문으로
+#: 함께 적으라고 만든 줄이라 백틱이 항목 말고도 나온다 — dynamo 문서의 «the required input is
+#: `composition_intent`» 가 그렇게 **진짜 need 를 면제로** 옮겨 놓았다. 그래서 항목은 «백틱 이름
+#: 바로 뒤에 단위 대괄호» 라는 모양으로만 인정한다. Needs 줄은 산문을 섞지 않으므로 그대로 둔다.
+#: 대괄호는 **닫힌 것만** 인정한다 — 열림만 보면 산문 안의 각괄호에 걸릴 수 있다 (감사석 제안).
+OPTIONAL_FIELD = re.compile(r"`([a-z0-9_]+)`\s*\[[^\]]*\]")
 # 항목이 많으면 줄이 넘어간다. 다음 **항목** 이나 빈 줄까지 이어 읽는다 —
 # 문서를 한 줄에 욱여넣게 만들면 읽기 나빠지고, 그건 이 작업의 목적에 반한다.
 # ⚠ **계약에 세 번째 줄이 생겼다** (C50 (b), 브리프 170 B): `Needs` 한 단어가 두 가지를 가리키고
@@ -88,7 +94,8 @@ def parse_contract(doc: Path, node: str) -> dict[str, set[str]] | None:
     block = rest[:nxt.start()] if nxt else rest
     out: dict[str, set[str]] = {}
     for kind, body in LINE.findall(block):
-        out[kind.lower().replace("-", "_")] = set(FIELD.findall(body))
+        key = kind.lower().replace("-", "_")
+        out[key] = set((OPTIONAL_FIELD if key == "declared_optional" else FIELD).findall(body))
     return out
 
 

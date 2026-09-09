@@ -41,11 +41,14 @@ CHECK_SH = ROOT / "scripts" / "check.sh"
 #: 코드가 바뀌면 언제나 함께 도는 answer 실행 (check.sh 13번의 세 줄과 같은 순서).
 ANSWER_BODIES = ("alpha_centauri_a_b", "pandora", "earth")
 
-#: ⚠ **12b 는 어느 층에서도 좁혀지지 않는다** — 이 다섯은 그래서 «시험이 없다» 가 구멍이 아니다.
+#: ⚠ **12b 는 어느 층에서도 좁혀지지 않는다** — 이 둘은 그래서 «시험이 없다» 가 구멍이 아니다.
 #: 이것들을 빼기 전에는 `engine/check_contracts.py` 를 고친 커밋이 매번 «매핑이 설명 못 하는 경로»
 #: 로 잡혀 full 로 떨어졌다 (169 C, 실측). ⚠ 이 목록은 `scripts/check.sh` 의 12b 블록과 **손으로
 #: 묶여 있다**: 거기서 무엇이 항상 도는지가 바뀌면 여기도 바뀌어야 한다.
-ALWAYS_RUN = ("check_via", "check_contracts", "check_refs", "check_citations", "test_check_refs")
+#: ⚠ **169 C 는 다섯을 적었고 셋은 필요 없었다** (170 E, 실측): `check_refs` 는 `test_check_refs`
+#: 가 덮고, `test_check_refs` 는 그 자신이 시험이며, `check_citations` 는 `tools/` 항목이라 도구
+#: 규칙이 잡는다. 면제는 **다른 규칙이 못 잡는 것에만** 준다 — 넓은 면제는 조용한 면제다.
+ALWAYS_RUN = ("check_via", "check_contracts")
 
 #: ⚠ **13 블록의 «시험이 아닌» 게이트 단계** — 모듈 이름 → check.sh 가 아는 항목 어휘 (169 D ②).
 #: 이것들이 없으면 `engine/backflow.py` 를 고친 커밋이 **자기를 검사하는 단계 없이** 초록으로 지나간다:

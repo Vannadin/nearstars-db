@@ -324,14 +324,63 @@ def main() -> int:
         ok(rc == 0 and "해석 성공 1" in buf.getvalue(),
            f"5: the module's own doc must resolve, got rc={rc}\n{buf.getvalue()}")
 
+    # ⚠ **판정 앞에 둔다.** 처음 넣은 자리는 `if fails: return 1` **뒤**였고, 그래서
+    #   일부러 심은 어긋남이 그대로 통과했다 — 죽은 단정이었다 (170 E, 음성 시험이 잡았다).
+    # ⚠ 계약 파서의 `Declared-optional` 도 여기서 지킨다 (170 E). 이 시험은 12b 에 있어 **어느
+    #   층에서도 돈다** — 면제 목록이 조용히 넓어지는 것을 잡을 수 있는 자리가 그래서 여기다.
+    #   실제 사고: `interior-structure` 의 계약에서 그 줄이 `Needs` 목록의 줄바꿈 **한가운데**
+    #   들어가 뒤따르던 여덟 키가 통째로 면제로 옮겨갔고, dynamo 산문의 «the required input is
+    #   `composition_intent`» 백틱이 **진짜 need 하나**를 면제로 옮겼다 — 고유 9 가 18 이 되었다.
+    import check_contracts as _cc                                      # noqa: E402
+    import registry as _reg                                            # noqa: E402
+    import run as _run                                                 # noqa: E402
+    _reg.load_all()
+    _g = _run.load_chain()
+    #: ⚠ **수가 아니라 집합으로 박는다** — «고유 9» 는 하나가 빠지고 하나가 들어와도 통과한다.
+    EXEMPT = {"body_class": {"gas_mass_fraction", "semi_major_axis_au"},
+              "dynamo_rocky": {"dynamo_regime", "ice_mass_fraction"},
+              "interior_layers": {"differentiated", "envelope_z", "gas_mass_fraction",
+                                  "ice_mass_fraction", "initial_porosity", "porosity_cap"},
+              "internal_heat_nontidal": {"ice_mass_fraction"},
+              "tidal_locking": {"permanent_quadrupole"}}
+    _got, _dyn = {}, {}
+    for _node in sorted(_reg.registered()):
+        _slug = _g["nodes"][_node].get("recipe")
+        if not _slug:
+            continue
+        _doc = _cc.DOCS / f"{_slug}.md"
+        if not _doc.exists():
+            continue
+        _d = _cc.parse_contract(_doc, _node) or {}
+        _o = _d.get("declared_optional", set())
+        if _o:
+            _got[_node] = _o
+        if _node == "dynamo_rocky":
+            _dyn = _d
+    _drift = []
+    for _node in sorted(set(EXEMPT) | set(_got)):
+        _want, _have = EXEMPT.get(_node, set()), _got.get(_node, set())
+        for _k in sorted(_have - _want):
+            _drift.append(f"+{_node}.{_k}")
+        for _k in sorted(_want - _have):
+            _drift.append(f"-{_node}.{_k}")
+    ok(not _drift,
+       f"계약 파서의 Declared-optional 이 등록된 집합과 같아야 한다 (고유 9 · 슬롯 12) — 차이: "
+       f"{' '.join(_drift)}")
+    ok("composition_intent" in _dyn.get("needs", set())
+       and "composition_intent" not in _dyn.get("declared_optional", set()),
+       "dynamo_rocky 의 `composition_intent` 는 Needs 에 있고 면제에는 없어야 한다 — 산문의 백틱이 "
+       "진짜 need 를 면제로 옮긴 적이 있다 (170 E)")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if fails:
         return 1
+
     print("  [PASS] 인용 체커 자기검증 — 고유 1회 통과 · 삭제된 구절 썩음 · 2회 매치 애매 · 남의 계약 블록 착지 · "
           "빈 줄 착지 · 줄번호는 미이행 카운트 · RECIPE 자기문서 해석 · 대문자 파일명 · bodies 스캔 · "
           "비-.md 대상 · 접힌 인용 · 문서명만 계수 · YAML 파싱 실패 FAIL · 키 상실 FAIL · 주석 안 인용 · 하드랩 앵커 · "
-          "알 수 없는 형식 FAIL · 자기 인용 · 모호한 문서 이름 FAIL")
+          "알 수 없는 형식 FAIL · 자기 인용 · 모호한 문서 이름 FAIL · 계약 면제 고유 9·슬롯 12 · composition_intent 는 need")
     return 0
 
 
