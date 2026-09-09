@@ -221,7 +221,10 @@ echo "── 2. 영한 미러 상태 (missing = 실패, stale = 경고) ──"
 # 이 PR 시점에서는 stale 26+ 건이 별도 작업이므로 경고로 강등.
 mirror_out=$(./scripts/check-mirrors.sh 2>&1) || true
 echo "$mirror_out"
-if echo "$mirror_out" | grep -q "Missing Korean mirrors"; then fail=1; fi
+if echo "$mirror_out" | grep -q "Missing Korean mirrors"; then
+  # ⚠ 169 F 가 놓친 자리 — 여기도 `[FAIL]` 없이 fail 만 세웠다 (gate212 와 같은 모양).
+  echo "  [FAIL] 한글 미러 누락 — 위 목록의 파일을 ko/<same-path> 로 만들어라"; fail=1
+fi
 
 echo ""
 echo "── 3. Markdown dead-link 스캔 ──"
@@ -465,6 +468,10 @@ step "test_tidal_transport.py" bash -c 'cd engine && python3 test_tidal_transpor
 step "test_silicate_melt.py" bash -c 'cd engine && python3 test_silicate_melt.py'
 # 도형 완화 판정 (Brief 39). 전사 검산·문턱 가족의 불감성·라벨·지구 판정이 앵커다.
 step "test_rheology.py" bash -c 'cd engine && python3 test_rheology.py'
+# 액체 Fe–S 부피 규칙 전사 (C55 1단계, 브리프 178 B). Xu+ 2021 의 K₀(X_S)·K′(X_S) 끝점과 지수 혼합,
+# 그리고 ⚠ **ρ₀ 가 인쇄되지 않아 재질을 짓지 않는다는 거절**이 앵커다 — R4–R6 은 SI 도착 전까지
+# 거절이 기대 결과다. Mori 공백(19 GPa → None)도 여기서 지킨다. ~0 s.
+step "test_fe_s.py" bash -c 'cd engine && exec python3 test_fe_s.py'
 # 밀도 적합 ↔ 녹는곡선의 조성·물질상 선언 (Brief 41). 다른 조인을 말없이 잇는 상이 생기면 여기서 잡힌다.
 step "test_eos_joins.py" bash -c 'cd engine && python3 test_eos_joins.py'
 # 방사성 예산 (Brief 44). 초안 표의 폐합 세 건·캡션 오독 11.59 TW·과거 방향 3.67 이 앵커다.

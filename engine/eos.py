@@ -1513,6 +1513,60 @@ IRON_MELT_REF_HIGH = ("González-Cataldo & Militzer 2023 (2023PhRvR...5c3194G) �
 MORI_FES_EUTECTIC = (1348.0, 21.0 * GPA, 36.5 * GPA, 1.0 / 2.07)  # (T_ref, P_ref, a, 1/c)
 MORI_FES_P_MEASURED_MAX = 254.0 * GPA   # 측정 상한 (run #11)
 MORI_FES_P_MAX = 350.0 * GPA            # 논문 자신의 외삽 사용처 ("~4100 at the ICB")
+# ── 액체 Fe–S 의 부피 상수, Xu+ 2021 이 **인쇄한 규칙 그대로** (C55 1단계, 브리프 178 B) ─────
+# 출처: Xu, Morard, Boulard, Rivoldini, Nishida, Antonangeli 2021, EPSL 563, 116884
+# (2021E&PSL.56316884X, 보유) §2.4, 1 bar · 1900 K 기준의 **등온** 값이다. 논문이 인쇄하는 문장:
+#   "K₀ = K_Fe^(1−X_S) ∗ K_S^(X_S) … with K_Fe = 76 GPa and K_S = 1.6 GPa"   (Chen+ 2014 따름)
+#   "K′ = K′_Fe + X_S · 3, with K′_Fe = 6.5"                                  (Morard+ 2018)
+# `X_S` 는 **원자분율**이다 (wt% 아님). 온도 의존은 그들이 무시했다("temperature range of
+# interest <500 K") — 우리도 얹지 않는다.
+#
+# ⚠ **ρ₀(X_S) 는 여기 없다. 논문 본문이 인쇄하지 않는다.** 밀도는 Table 1 의 실험 37점을 식 (3)
+#   의 Murnaghan 형으로 7 GPa 에 되맞춘 것이고, 1 bar 의 ρ₀ 는 **Table S1**(SI, 미보유)에 있다.
+#   그 표에서 되짚는 것은 **우리 산수**이므로 하지 않는다 — 이 저장소의 규칙은 «논문이 인쇄한
+#   도출값이 이기고 우리 환산은 대조일 뿐» 이다. 그래서 이 재질은 **아직 지어지지 않는다.**
+#   ⚠ **Table S1 이 도착하면 아래 거절 자리가 수로 바뀐다** (오너가 SI 를 받는 중, B25).
+XU_FES_K_FE_PA = 76.0 * GPA        # K_Fe, 1 bar · 1900 K
+XU_FES_K_S_PA = 1.6 * GPA          # K_S, 같은 기준
+XU_FES_KP_FE = 6.5                 # K′_Fe (Morard+ 2018)
+XU_FES_KP_PER_XS = 3.0             # K′ 의 X_S 계수
+XU_FES_T_REF_K = 1900.0            # 두 규칙이 놓인 온도
+XU_FES_RHO0_MISSING = (
+    "액체 Fe–S 의 ρ₀(X_S) 는 Xu+ 2021 에 **표로 인쇄되지 않는다.** ⚠ 처음에는 «SI 의 Table S1 에 "
+    "있고 도착하면 채운다» 로 적었는데, SI 를 받아 읽어 보니 **그 표가 아니었다** (병렬석 판독, "
+    "2026-09-10): SI 가 담은 것은 l-FeS 끝원소의 EOS 와 Margules 계수이고, 조성별 밀도는 본문 "
+    "식 (4)–(7) 의 **비이상 용액 모델 출력**이다. 즉 이 논문의 조성 의존은 (ρ₀, K₀, K′) 삼중항이 "
+    "아니라 두 끝원소 + 혼합 모델이고, `eos.Phase` 의 슬롯에 애초에 들어가지 않는다. Table 1 의 "
+    "7 GPa 값에서 식 (3) 을 역으로 푸는 것은 **우리 산수**라 하지 않는다. → 후보 B 는 새 form 이 "
+    "필요한 대안으로 문서에 남고, 실제로 지어지는 것은 후보 A(Huang 2023) 다 (C55, 브리프 178 B)")
+
+
+def xu_fes_k0_pa(x_s: float) -> float:
+    """액체 Fe–S 의 1 bar · 1900 K 등온 체적탄성률 [Pa] — Xu+ 2021 §2.4 의 지수 혼합 규칙."""
+    if not 0.0 <= x_s <= 1.0:
+        raise ValueError(f"X_S 는 원자분율이다 (0–1): {x_s}")
+    return XU_FES_K_FE_PA ** (1.0 - x_s) * XU_FES_K_S_PA ** x_s
+
+
+def xu_fes_k0p(x_s: float) -> float:
+    """같은 기준의 K′ — Xu+ 2021 §2.4: K′ = 6.5 + 3·X_S."""
+    if not 0.0 <= x_s <= 1.0:
+        raise ValueError(f"X_S 는 원자분율이다 (0–1): {x_s}")
+    return XU_FES_KP_FE + XU_FES_KP_PER_XS * x_s
+
+
+def iron_fes_phase(x_s: float) -> Phase:
+    """액체 Fe–S 상을 만들려는 시도 — **ρ₀ 가 없으므로 이름을 대며 거절한다** (C55 1단계).
+
+    ⚠ 값을 지어내지 않는다. 두 부피 규칙은 위에 전사되어 있고 융해 바운드도 있지만, 밀도의
+    기준점이 인쇄되지 않아 `Phase` 를 채울 수 없다. `PhaseGap` 을 던지는 이유는 이 파일이 이미
+    «근거 있는 구간 밖에서는 외삽 대신 거절한다» 에 쓰는 예외이기 때문이다.
+
+    ⚠ **이 거절은 «SI 를 기다린다» 가 아니다.** SI 는 도착했고, 그 안에 ρ₀(X_S) 표는 없었다 —
+    이 논문의 조성 의존은 슬롯 밖의 혼합 모델이다. 기다림이 아니라 **형식 불일치**다."""
+    raise PhaseGap("fe_s", 0.0, XU_FES_RHO0_MISSING)
+
+
 IRON_FES_GAP_REASON = ("10–21 GPa 의 Fe–S 융해는 Mori+ 2017(21 GPa 아래는 기준점 밖)도 "
                        "Buono & Walker 2011(1 bar–10 GPa, 조성 다항식)도 덮지 않는다 — "
                        "이 구간의 공정 온도는 적합이 아니라 부재다. 구간 안에 측정점 둘은 있다: "
