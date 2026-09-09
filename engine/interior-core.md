@@ -4689,6 +4689,38 @@ did something a body file must not.
 **not** to be cited anywhere as Dante's properties — the mass–radius pair is exactly the question the
 owner has open, and copying it into a body file does not settle it.
 
+#### C45 (e) built 2026-09-09 — the fixture lands, and the branch it was for is unreachable from the node
+
+| baseline | predicted | measured |
+|---|---|---|
+| inversion-convention line | **≥ 1** | ⚠ **0 — the prediction failed** |
+| class ④ unexplained | 0 | **0** ✓ |
+| class ③ | (0, 0, 0) | **(0, 0, 0)** ✓ |
+| per-body supply | rises, number not predicted | **13 → 20** ✓ |
+| the six existing bodies | bit-identical | ⚠ **0 values moved**, across every node of every body ✓ |
+
+⚠ **The main prediction failed for a structural reason, and that is the brief's finding.** The fixture
+does reach `interior_layers` — lookups go **1215 → 1399** — but it lands on `integrated_fe_prem_silicate`,
+the forward path, on both attempts. The first attempt was my own fault: I declared `composition_intent:
+earth_like`, whose preset supplies a core mass fraction, leaving nothing to infer. Removing it — which is
+also **restoring the copy**, since `test_interior`'s roster calls `infer_composition` with mass, radius,
+ice-permission and tidal heating and nothing else — changed the branch not at all.
+
+**The reason is one line in the adapter**: `interior.py@«composition=state.get("composition_intent", "earth_like")»`.
+The node **always** hands `solve` a composition, falling back to `earth_like`, so the recipe always
+integrates forward. ⚠ **`infer_composition` is not reachable from `interior_layers` under any body
+declaration** — only a direct call reaches it, which is what `test_interior` does.
+
+**So C45 (d)'s inversion exception guards a path the checker cannot make the node take.** It is not
+wrong; it is *unexercised through the node*, and no body file can exercise it. That is a different
+sentence from «no roster body happens to take that branch», which is what 172 (a) recorded, and it means
+adding bodies will never close it. Whether the node should be able to infer a composition is a question
+about the recipe, not about the checker, and it is not decided here.
+
+⚠ **The fixture is kept.** It widened the checker's reach by 184 lookups and seven per-body-supply rows,
+it holds the six published bodies bit-identical, and its label says what it is. What it did *not* do is
+the thing it was added for, and the file says that too.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the

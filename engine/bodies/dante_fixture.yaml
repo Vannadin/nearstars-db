@@ -1,0 +1,36 @@
+# Dante (fixture) — ⚠ **engine fixture body, not a board body and not a claim about Dante.**
+# Values copied from `engine/test_interior.py` 의 다공성 로스터 픽스처 (1.552e21 kg · 521 km).
+# ⚠ **질량-반지름 쌍은 오너가 열어 둔 물음이다** (Dante·Hades 반지름) — 보드 값이 아니고,
+# 이 파일에 옮겨 적었다고 그 물음이 닫히지 않는다. 여기 있는 수를 Dante 의 성질로 인용하지 말 것.
+# ⚠ **보드·phase4 배선 없음, emit 없음.**
+#
+# 왜 있나 (C45 (e), 브리프 173): 계약 검사의 표본이 전부 발표된 천체라, `interior_layers` 의
+# **역산 분기**를 밟는 바디가 하나도 없었다. 그래서 C45 (d) 의 역산 규약 줄이 0 이고, 원 사례를
+# 되심어도 파이프라인이 보여 줄 것이 없었다. 이 파일은 검사기가 그 분기를 걷게 하는 입력이다.
+name: Dante (fixture)
+kind: moon
+parent: Alpha Centauri A b
+
+inputs:
+  # 픽스처 값 그대로. 지구 질량 5.97219e24 kg · 지구 반지름 6371 km 로 나눈 것이다.
+  mass_earth: 0.00025987
+  radius_earth: 0.08178
+  # 얼음 없음 — 픽스처의 `ice_allowed=False` («silicate volcanic (Io-type)»).
+  ice_mass_fraction: 0.0
+  # 조석가열 — 픽스처의 `tidal_heating=True`. 공극 레짐 판정의 세 지표 중 하나다 (C50 (b) 표 11행).
+  tidal_heating: true
+  body_class: rocky
+  # ⚠ **`composition_intent` 를 선언하지 않는다.** 첫 판에서 `earth_like` 를 적었더니 프리셋이
+  # 핵질량비 0.325 를 공급해 `interior_layers` 가 **정방향 분기**(`integrated_fe_prem_silicate`)로
+  # 갔고, 이 파일이 존재하는 이유인 역산 분기를 안 밟았다. 그리고 그 선언은 애초에 픽스처에 없다 —
+  # `test_interior` 의 로스터는 질량·반지름·얼음 허용·조석가열 넷으로만 `infer_composition` 을 부른다.
+  # 그래서 지우는 것이 «원하는 결과가 나오게 입력을 고치는 것» 이 아니라 **복사를 바로잡는 것**이다.
+  # ⚠ 대가: `dynamo_rocky` 가 조성 프리셋이 없다며 이름을 대고 거절한다 (C28). 픽스처는 보드 바디가
+  # 아니므로 그 거절은 손실이 아니라 이 파일이 무엇인지의 결과다.
+  # 판구조 영역 — 픽스처에는 없다. 선언하지 않는 것이 이 파일의 성질이다: 검사기가 «어떤 표본은
+  # 공급하고 어떤 표본은 안 한다» 를 세는 데 이 빈칸이 그대로 쓰인다 (172 (a)).
+
+units:
+  mass_earth: M_earth
+  radius_earth: R_earth
+  ice_mass_fraction: dimensionless
