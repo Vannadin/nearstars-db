@@ -1,7 +1,7 @@
 # C53 테스트 — 영역 밴드가 옛 불리언을 파생하고, 세 로스터 바디의 출력이 비트 동일함을 증명한다
 """The registered regressions for `tectonic_regime.py` (C53, Brief 168 B).
 
-    python3 engine/test_tectonic_regime.py      # the gate; ~0 s, no body is solved here
+    python3 engine/test_tectonic_regime.py      # the gate; ~12 s, of which Pandora's solve is ~8.5 s
 
 ⚠ **These three assertions were written before the code** and are registered at
 `engine/interior-core.md@«**Three assertions, written before the code:**»`:
@@ -116,6 +116,50 @@ row(old_only.refusal is not None and "옛 `stagnant_lid` 만" in old_only.refusa
 absent = tect.derived_stagnant_lid(None, None)
 row(absent.refusal is None and absent.value is None,
     f"둘 다 없음 → 거절이 아니라 판정 불가 ({absent.value!r}) — 오늘 미선언 바디가 받던 처분 그대로")
+
+print("\n⑥ 사다리의 도메인 게이트가 먼저다 (C28 의 불변식, 168 C)")
+# ⚠ 순서가 뒤집히면 300 M⊕ 거대행성이 나쁜 판구조 블록을 들었을 때 «암석 사다리 밖이다» 대신 C53
+#   문구를 받는다 — 이 사다리가 판정하지도 않는 바디에 대해 뚜껑 이야기를 하는 것이다.
+from state import BodyState as _BS                                          # noqa: E402
+BAD = {"value": "nope", "grade": "declared", "source": "probe"}
+giant = dr._from_state(_BS(name="probe-giant", kind="planet", inputs={
+    "mass_earth": 300.0, "radius_earth": 11.2, "body_class": "giant", "age_gyr": 5.0,
+    "tectonic_regime": BAD}))
+row(not giant.applicable and "암석 사다리 밖이다" in giant.reason and "tectonic_regime" not in giant.reason,
+    f"거대행성 300 M⊕ + 나쁜 판구조 블록 → 사다리 밖 문구를 지킨다: «{giant.reason[:60]}…»")
+rocky = dr._from_state(_BS(name="probe-rocky", kind="planet", inputs={
+    "mass_earth": 1.0, "radius_earth": 1.0, "body_class": "rocky", "age_gyr": 4.5,
+    "composition_intent": "earth_like", "tectonic_regime": BAD}))
+row(not rocky.applicable and "이 어휘에 없다" in rocky.reason,
+    f"암석체 + 나쁜 블록 → 그때는 C53 이 말한다: «{rocky.reason[:60]}…»")
+
+print("\n⑦ 판정 불가에 이유가 붙는다 — «선언 없음» 과 «transitional» 이 출력에서 갈린다 (168 C)")
+un_declared = dr._from_state(_BS(name="probe-none", kind="planet", inputs={
+    "mass_earth": 1.0, "radius_earth": 1.0, "body_class": "rocky", "age_gyr": 4.5,
+    "conductor_phase": "liquid", "composition_intent": "earth_like"}))
+un_trans = dr._from_state(_BS(name="probe-trans", kind="planet", inputs={
+    "mass_earth": 1.0, "radius_earth": 1.0, "body_class": "rocky", "age_gyr": 4.5,
+    "conductor_phase": "liquid", "composition_intent": "earth_like",
+    "tectonic_regime": {"value": "transitional", "grade": "declared", "source": "F&B 2014 체계"}}))
+row(un_declared.values["regime"] == dr.UNDECIDED_LID and un_trans.values["regime"] == dr.UNDECIDED_LID,
+    "둘 다 `UNDECIDED_LID` 로 나온다 — 판정 문자열은 168 에서 바뀌지 않는다")
+row(any("선언이 없다" in n for n in un_declared.notes)
+    and any("transitional" in n for n in un_trans.notes),
+    "그러나 이유는 노트에서 갈린다: «tectonic_regime 선언이 없다» 대 «derived … «transitional»»")
+
+print("\n⑧ 바디 회귀 — 판도라를 실제로 풀어 두 필드를 자릿수까지 대조한다 (~8.5 s)")
+# ⚠ 지구는 넣지 않는다: 같은 검사를 71 초에 산다. 판도라가 8.5 초이고 이 두 수는 168 B 전에 측정된 것이다.
+import registry                                                             # noqa: E402
+import run as _run                                                          # noqa: E402
+registry.load_all()
+_g = _run.load_chain()
+_st, _ = _run.load_body(Path(__file__).resolve().parent / "bodies" / "pandora.yaml")
+_run.solve(_st, _g)
+_res = _st.results["dynamo_rocky"]
+row(_res.values["b_eq"] == 41.37252479971432 and _res.values["b_pol"] == 82.74504959942864,
+    f"판도라 B_eq {_res.values['b_eq']!r} · B_pol {_res.values['b_pol']!r} — 168 B 전 값과 자릿수까지 같다")
+row(_res.values["dipole_moment"] == 1.0 and _res.values["regime"] == "undeclared (both emitted)",
+    f"판도라 ℳ {_res.values['dipole_moment']!r} · 판정 «{_res.values['regime']}» — 그대로다")
 
 print("\n기록 — 화성의 True 는 오늘 판정을 지지하지 않는다 (판정 아님, 168 B 측정)")
 print("      화성의 생존 게이트는 `conductor_phase 'undecided'` 에서 먼저 멈춘다 — 뚜껑 분기 앞이다.")

@@ -7414,7 +7414,12 @@ and the lookup count went 1182 → **1206**.
    undecided)` and never reaches `DEAD_LID`. Mars's output is the same whether its regime is `stagnant`
    or `contested`. That is why assertion 2 is tested on the gate function at fixed inputs and not on a
    body — and it is worth writing down, because *«Mars is stagnant, therefore no dynamo»* is a sentence
-   this engine does not currently execute.
+   this engine does not currently execute. **This is now C54.**
+   ⚠ **And it hollows out one third of assertion 1 at the output layer.** All four mapped regime values
+   give Mars the same emitted result, so «Mars's output is bit-identical» would have held even if the
+   mapping were wrong — the Mars leg is carried entirely by the unit test on the derivation, not by the
+   body. Earth's and Pandora's legs are load-bearing at the output layer; Mars's is not, and a later
+   seat reading three green rows would not see that without this sentence.
 
 #### What this did not do
 

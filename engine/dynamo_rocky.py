@@ -144,7 +144,7 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
            body_class: str | None = "rocky", dynamo_regime: str | None = None,
            locked: bool | None = None, rotation_period_h: float | None = None,
            dynamo_alive: bool | None = None, lid_note: str | None = None,
-           tectonic_regime: dict | None = None) -> Result:
+           tectonic_regime: dict | None = None, lid_refusal: str | None = None) -> Result:
     # ⚠ `stagnant_lid` 는 여전히 세 값(`True`/`False`/`None`) 이지만 **선언이 아니라 파생값**이다 —
     #   `tectonic_regime` 에서 `tectonic_regime.derived_stagnant_lid` 가 만든다 (C53, 브리프 168).
     #   이 서명과 이 함수의 분기는 그래서 한 줄도 움직이지 않았고, 그것이 «소비처는 안 바뀐다» 의 뜻이다.
@@ -164,6 +164,11 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
     if not radius_earth or radius_earth <= 0.0:
         return out_of_domain(RECIPE, VERSION, "반지름이 없다 — 밀도 분류도 표면장(R⁻³)도 낼 수 없다.",
                              inputs=inputs, refs=REFS)
+    # ⚠ 판구조 선언의 거절은 **여기**, 사다리 자신의 게이트 뒤다 (C28 의 불변식, 브리프 168 C).
+    #   먼저 두면 300 M⊕ 거대행성이 나쁜 `tectonic_regime` 블록을 들었을 때 «암석 사다리 밖이다» 대신
+    #   C53 문구를 받는다 — 이 사다리가 애초에 판정하지 않는 바디에 대해 뚜껑 이야기를 하는 것이다.
+    if lid_refusal:
+        return out_of_domain(RECIPE, VERSION, lid_refusal, inputs=inputs, refs=REFS)
 
     # step 1 — classify
     reg = regime_class(mass_earth, radius_earth, ice_mass_fraction or 0.0)
@@ -307,17 +312,16 @@ def _ladder_from_state(state, imf: float) -> Result:
     # «한 양이 두 곳에 선언되어 있다» 는 뜻이라 이름 붙은 거절이 된다.
     lid = tect.derived_stagnant_lid(state.get("tectonic_regime"),
                                     state.get_optional("stagnant_lid"))
-    if lid.refusal:
-        return out_of_domain(RECIPE, VERSION, lid.refusal,
-                             inputs={"mass_earth": state["mass_earth"],
-                                     "tectonic_regime": state.get_optional("tectonic_regime")},
-                             refs=REFS)
+    # ⚠ 판정 불가에는 **이유가 붙는다** (브리프 168 C): `UNDECIDED_LID` 문자열 하나로는 «선언이 없다» 와
+    #   «transitional 이라 우리가 못 고른다» 가 출력에서 구별되지 않는다. 문자열은 그대로 두고 노트만 싣는다.
+    lid_label = lid.label if lid.label else (lid.note if lid.value is None else None)
     return ladder(mass_earth=state["mass_earth"],
                   radius_earth=state.get_optional("radius_earth", state.get_optional("radius")),   # C45 (b)
                   conductor_phase=state.get("conductor_phase"),
                   stagnant_lid=lid.value,                          # C53: 파생값 (선언은 tectonic_regime)
                   tectonic_regime=state.get("tectonic_regime"),    # 증거 키 = 조회 키 = Needs 의 이름
-                  lid_note=lid.label,                              # contested 만 한 줄을 덧붙인다
+                  lid_note=lid_label,                              # contested, 그리고 판정 불가의 이유
+                  lid_refusal=lid.refusal,                         # 사다리의 도메인 게이트 **뒤**에 발화한다
                   age_gyr=state.get("age_gyr"),
                   ice_mass_fraction=imf,
                   body_class=state.get("body_class"),
