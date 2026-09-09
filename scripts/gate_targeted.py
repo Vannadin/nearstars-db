@@ -40,6 +40,12 @@ CHECK_SH = ROOT / "scripts" / "check.sh"
 #: 코드가 바뀌면 언제나 함께 도는 answer 실행 (check.sh 13번의 세 줄과 같은 순서).
 ANSWER_BODIES = ("alpha_centauri_a_b", "pandora", "earth")
 
+#: ⚠ **12b 는 어느 층에서도 좁혀지지 않는다** — 이 다섯은 그래서 «시험이 없다» 가 구멍이 아니다.
+#: 이것들을 빼기 전에는 `engine/check_contracts.py` 를 고친 커밋이 매번 «매핑이 설명 못 하는 경로»
+#: 로 잡혀 full 로 떨어졌다 (169 C, 실측). ⚠ 이 목록은 `scripts/check.sh` 의 12b 블록과 **손으로
+#: 묶여 있다**: 거기서 무엇이 항상 도는지가 바뀌면 여기도 바뀌어야 한다.
+ALWAYS_RUN = ("check_via", "check_contracts", "check_refs", "check_citations", "test_check_refs")
+
 
 def modules() -> dict[str, Path]:
     """`engine/` 아래의 로컬 모듈 — 키는 import 될 이름, 값은 파일."""
@@ -147,6 +153,8 @@ def main() -> int:
                 items.add(rel)                   # check.sh 가 부르는 도구는 그 자체가 게이트 항목이다
         # ⚠ 씨앗 중 시험이 하나도 안 딸린 것이 있으면 그것은 매핑 구멍이다 — 좁히지 않는다.
         for s in sorted(seeds):
+            if s in ALWAYS_RUN:
+                continue                     # 12b 가 층과 무관하게 돌린다 — 시험이 없는 것이 구멍이 아니다
             own = dependents_closure({s}, mods)
             covered = any(n.startswith("test_") for n in own) or \
                 any(rel_name(mods, n).startswith("tools/") and rel_name(mods, n) in check_text for n in own)

@@ -900,6 +900,12 @@ form; `--from <sha>` on its own — full lane — is what a push needs.
   tests are never skipped on a commit that changed code, and those live in `run.py bodies/…`, not in a
   `test_*.py`. ⚠ **One changed code path the mapping cannot explain — `scripts/`, `chain.yaml`,
   `check.sh` itself — and the whole lane reverts to full**, the same veto `--wiring` already had.
+  ⚠ *With one exemption, added after it fired:* the five modules 12b runs in **every** lane
+  (`check_via`, `check_contracts`, `check_refs`, `check_citations`, `test_check_refs`) have no tests of
+  their own, so before the exemption a commit that touched `engine/check_contracts.py` was read as an
+  unexplainable path and sent every such brief to full. Having no test is not a hole when the gate runs
+  the file itself in every lane. ⚠ That list is **hand-tied** to check.sh's 12b block: change what always
+  runs there and this must change too.
 - **The narrowing is printed whether or not it happened.** `base=`, `changed=` and, when it fired,
   `gap="…"` and `targeted="…"` go on the `GATE START` and `GATE END` lines in every lane — a run that
   fell back to full has to say *why* it did, or the reason is gone. Alongside them
