@@ -46,7 +46,11 @@ the h/τ ≈ 1.02 Earth's first step already passed under the fixed step. Not a 
    early hot phase is integrated more finely. If `mantle_potential_temperature_present` moves from
    **1525.46 K** (or T_c(0) from 4027–4028 K, or the step count from 1135), the move is reported with its
    cause and size, and the anchor is refreshed in the same commit (standing rule 1: a moved anchor is
-   reported, never absorbed). A move is expected to be small: at h/τ ≈ 1 RK4 is still accurate to
+   reported, never absorbed).
+   *(Label added by C52's closing sweep, 2026-09-09, without touching the registration above: these three
+   numbers are at `H_core` = **1.5 pW/kg**, Nimmo's Table 4 value, which was the module nominal when this
+   was registered and is no longer. At the engine's declared H the same run gives 1517.34 K and 3911.29 K.
+   The registration is right about what it registered; it simply never said under which H.)* A move is expected to be small: at h/τ ≈ 1 RK4 is still accurate to
    O((h/τ)⁵) per step, and the hot phase lasts a few tens of Myr.
 3. **Step count and h/τ**: every result carries the number of steps taken, the smallest h, and the largest
    h/τ met. The largest h/τ must be ≤ F (0.1) by construction; a value above it is a bug, not a result.

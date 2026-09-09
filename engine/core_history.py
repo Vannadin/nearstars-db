@@ -53,7 +53,10 @@ STEP_MYR = 4.0                      # Nimmo's constant timestep ("a constant tim
 WINDOW_GYR = 3.1                    # Nimmo's entropy-criteria window: mean and minimum over the last 3.1 Gyr
 CONVERGENCE_TOL = 0.10              # pre-registered: |ΔE_min(h/4) − ΔE_min(h/2)| / |ΔE_min(h/2)| < 10 %
 K_CORNERS = cf.K_CORE_RANGE         # (30, 70) W/(m K)
-H_CORNERS = ce.H_CORE_RANGE         # (0, 0.14e-12) W/kg — owner decision ⑤ 2026-09-09; was (0, 1.5e-12)
+H_CORNERS = ce.H_CORE_RANGE         # (0, 0.088e-12) W/kg — owner decision ⑤ 2026-09-09 as corrected by
+                                    # Brief 166 E; was (0, 0.14e-12) for one afternoon, (0, 1.5e-12) before that.
+                                    # ⚠ This comment mirrors a constant declared elsewhere and it went stale once
+                                    # already — C52's disease, caught by that item's closing sweep.
 ROCKY_ONLY = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf", "star")
 
 NO_INITIAL = ("cannot-say (no initial temperatures declared — core_initial_temperature and "

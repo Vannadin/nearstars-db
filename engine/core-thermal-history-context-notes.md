@@ -249,7 +249,9 @@ easily produced by an unconverged run. **Do not read ③ off a run that has not 
 **Inputs**: interior solve (1 M⊕, CMF 0.325, T_pot 1 600 K → core_radius 0.5470 R⊕, P_cmb 135.28 GPa, T̃_m 2 526 K,
 r_b 1.579); T_c(0) = 4 800 K, T̃_m(0) = 4 800 K (Nimmo's printed start, read as real temperatures → T_m(0) = 3 040 K);
 age 4.54 Gyr; H_m M_m(0) = 14.9 TW × history factor; H_core 1.5 pW/kg on the nominal path. ⚠ **That 1.5 was the
-nominal on 2026-09-04 and is not the nominal now** — owner decision ⑤ (2026-09-09) declared 0.14 pW/kg. This §4 is
+nominal on 2026-09-04 and is not the nominal now** — owner decision ⑤ (2026-09-09) declared **0.088 pW/kg**
+(this line read 0.14 until C52's closing sweep: 0.14 was our own textbook conversion and Brief 166 E replaced it
+with the paper's printed 0.088 the same day). This §4 is
 the run record of that day and its numbers are left exactly as they were measured; what changed is that the same
 numbers are now reached by naming H, not by reading the module constant (Brief 166 D).
 

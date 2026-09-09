@@ -99,6 +99,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C49** | one engine, two `k_core` declarations — and one file's stated ground forbids the number the other consumes | **listed 2026-09-09, not started** | Rocky: `cmb_flux.py@«K_CORE = 50.0»`, a single declared midpoint ± 20, consumed as the corners (30, 70) by `core_entropy.K_RANGE` and `core_history.K_CORNERS` and as the `q_ad` band. Sub-Neptune: `sub_neptune_dynamo.py@«CORE_CONDUCTIVITY = Band(»`, midpoint **None**, ends **40 and 100** from two papers Tang+ 2025 runs both ways, grade *calibrated*, with an unmade `Choice`. ⚠ **And the comment above it says «70 W/m/K 는 두 논문 중 어느 쪽도 말하지 않은 수다» — that very 70 is the upper corner the rocky path feeds to the entropy band.** So one file's stated ground disqualifies a number the other file uses. Two shapes as well as two values: one paper's ± against two papers' ends. Unification is part of owner decision ② (C25 (b)); listed only |
 | **C50** | contracts list `Needs` that no roster body supplies — and four are C37's exact signature | **listed 2026-09-09, not started** | Measured by C45's new lookup check: **class ① (C37's signature — the lookup misses everywhere and the `None` is filed under that name) is live in 3 nodes / 4 keys** (`body_class` `gas_mass_fraction`·`semi_major_axis_au`, `dynamo_rocky` `dynamo_regime`, `interior_layers` `porosity_cap`), and **class ③ (a `Needs` no body supplies, the call site coping) in 8 nodes / 8 keys** (`core_material` ×4, `ice_mass_fraction` ×3, `differentiated`, `envelope_z`, `gas_mass_fraction`, `initial_porosity`, `tidal_heating`, `permanent_quadrupole`). Each is one of two faults — the contract is wrong, or the body declarations are missing — and which is not decidable from the count. Held at measured size meanwhile: the four are named in `engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and anything outside fails the gate; class ③ has a printed baseline. Repair can move values, so it is a later brief. No owner decision |
 | **C51** | the engine has no mantle energy budget, so secular cooling is an input nobody supplies rather than an output | **pre-registered 2026-09-09, before the build** | The owner's third path (C25 (f)): build the missing term instead of picking numbers inside the entropy band. ⚠ **The flux law is not what is missing** — Foley 2018's eq. (3) is the Korenaga eq. 30 this engine already transcribed at `n = 1`. What is missing is the budget around it, eqs (1)(2)(4), whose `dT_p/dt` **is** secular cooling. Stage 1 is the present epoch only, with `dT_p/dt` as the unknown, so the gate cost is ~0. Three verdict cells and their failure sentences are fixed in the section below, before any of it exists; `L′` and `(m, p)` go in as bands because the source treats the first as an unknown and prints three disagreeing sets of the second. ⚠ **First anchor measured: one prefactor has five values across two papers (0.528 · 0.53 · 0.55 · 0.57 · 0.5) and Korenaga names the cause — his own definition of `T̄_i`** — which is also the only candidate explanation for the 3.65× absolute-flux gap. Owner decisions on `L′` and `(m, p)` come after commit D's numbers; C34's feed stays held |
+| **C52** | how many recorded anchors rest on one shared module constant, and nobody counts | **named and counted 2026-09-09; no checker built** | C45 asks whether a node's lookups are declared, C50 whether a declared `Needs` is supplied; ⚠ **neither asks how many *other* nodes' recorded anchors move when one shared constant moves**, which is what fired twice this week as a gate failure. Instance 1 is `core_energy.H_CORE`, whose value re-defined C20's reproduction anchors from a C14/C15 declaration: six places were repaired in 166 D / 167 A and this item's closing sweep found the real count is **ten**, with three distinct defects left — a comment mirroring `H_CORE_RANGE` that had gone stale at `0.14e-12`, a context note naming 0.14 pW/kg as the declared value after 166 E replaced it with 0.088, and a pre-registration carrying 1525.46 K · 4027–4028 K · 1135 steps with **no condition named at all**. ⚠ **The disease changed shape**: in 166 D the numbers lacked labels, here the labels had gone stale, because the constant moved twice in one day. Instance 2 is `mantle_budget`'s four Earth defaults, where an AST count of 5 and a grep count of 3 were both right about different questions and the number of functions touching them at all is **6**. Closed at named, counted and labelled — **not fixed**: no checker exists, and instance 2 is untouched |
 | **C53** | the tectonic regime is declared as a boolean, and no source surveyed uses one | **built 2026-09-09; two owner mappings still pending** | `stagnant_lid: true/false` is the *“bimodal distribution … that is typically assumed”* which **Foley & Bercovici 2014**'s abstract ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F)) names as its foil, and the parallel seat's P9 survey found **no scheme that is binary** (Mars and Mercury stagnant in all of them, Earth mobile *or* transitional depending on the scheme, Venus genuinely contested across five printed classifications). Registered replacement: a `tectonic_regime` enum {stagnant · mobile · transitional · episodic · heat_pipe · contested} carrying a grade and a source, with the old boolean kept as a **derived** value so that **no consumer moves**. ⚠ **The blast radius was counted before the design and it is one branch**: `dynamo_rocky`'s survival gate is the only place a value reaches an output (truthy → `DEAD_LID`, `dipole_moment` 0), `heat_transport_mode` does **not** read it — it reads the computed flux ladder — and `phase2/`, `phase4/`, `db/` and the SPEC have **zero hits**. Three owner decisions were taken before the build (`contested` → derived `True`; Earth = `mobile` with the grain-damage note; Pandora = `mobile`, owner-declared), and `episodic` · `heat_pipe` are **left unmapped by name** with their candidates recorded — owner-pending. The regression that proves nothing moved is the three roster bodies' derived booleans, bit for bit: Earth `False` · Mars `True` · Pandora `False`. ⚠ The declared-regime-versus-computed-ladder consistency check is **deliberately not built here** — its first report would be that Earth's declaration and Earth's ladder cell already disagree, which is its own item. ⚠ **Built and measured (C53 (b)): every emitted value bit-identical for all three bodies** (Earth `False` · Mars `True` · Pandora `False`, Pandora's 41.37252479971432 µT included), and the ordering rule fired as registered — `check_contracts` failed on the **evidence key** until `Result.inputs` carried `tectonic_regime` instead of the derived boolean. Two corrections to the pre-registration are recorded there: Pandora's old declaration *did* carry a reason, and Mars's `True` is not load-bearing because the core gate fires first |
 | **C54** | `conductor_phase` stands in front of the lid axis, and Mars's is `undecided` | **candidate, listed 2026-09-09** | Opened by a measurement in C53 (b), not by a design opinion: the survival gate tests `conductor_phase` **before** the tectonic regime, and Mars's is `undecided`, so Mars answers `cannot-say (conductor_phase undecided)` and its declared `stagnant` never reaches `DEAD_LID`. ⚠ **Mars's dynamo output is identical whether its regime is `stagnant` or `contested`** — so *«Mars is a single-plate planet, therefore no dynamo»* is a sentence this engine does **not** execute, and the lid axis cannot be exercised on any roster body until the axis in front of it decides. What decides `conductor_phase` is `core_state`, which needs a **core-side** CMB temperature, and that is declared for Earth only (owner decision ①, C25) — which is why Mars is *undecided* rather than wrong. Candidate only: no owner decision is asked for here, and nothing beyond the one measurement C53 (b) recorded has been done |
 
@@ -7428,6 +7429,64 @@ first report would be that Earth declares `mobile` while the ladder scores Earth
 and that belongs in its own item. `episodic` and `heat_pipe` are **still unmapped, owner-pending**; the
 parallel seat's P10 survey of dynamo survival under those two modes arrived while this was being built
 and is not read here. And `heat_transport_mode` was not touched: it reads the computed flux ladder.
+
+### C52 — how many recorded anchors rest on one shared constant, and nobody counts — **named and counted 2026-09-09; no checker built**
+
+C45 asks whether a node's lookups are declared. C50 asks whether a declared `Needs` is supplied. ⚠ **Neither
+asks how many nodes' recorded anchors depend on one shared module constant** — and that question is the one
+that fired twice this week, both times as a gate failure rather than as a check.
+
+#### Instance 1 — `core_energy.H_CORE`, and the sweep that closes the count
+
+Brief 166 D found it: C48's reproduction anchors were reading `core_energy.H_CORE` through
+`params["h_core"]`, so a constant declared for **C14/C15** silently re-defined what **C20** had recorded.
+Six places were repaired then (166 D and 167 A). ⚠ **This item's closing sweep says the number of places is
+not six but ten**, and that the three it had not touched had each gone wrong in a *different* way:
+
+| where | what it holds | what was wrong |
+|---|---|---|
+| `core_history.py`'s `H_CORNERS` comment | mirrors `ce.H_CORE_RANGE` | said `(0, 0.14e-12)` while the constant said `0.088e-12` — ⚠ **the label went stale, not the value** |
+| `core-thermal-history-context-notes.md` §4 | the run record of 2026-09-04 | its labelling sentence named 0.14 pW/kg as *the declared value*, superseded by 166 E the same day |
+| `tools/adaptive-step-prereg.md` | the Brief 157 pre-registration: 1525.46 K · 4027–4028 K · 1135 steps | ⚠ **no condition at all** — the numbers are right for what was registered and never said under which `H` |
+| the other seven | `test_core_history.py` · `tools/mars_step_sweep.py` · `bodies/mars.yaml` · `chain.yaml` · `chain-explorer.html` (generated from it) · `pandora-1600k-analogy-notes.md` · `interior-dynamo-handoff-context-notes.md` | labelled in 166 D / 167 A, still correct |
+
+⚠ **The disease changed shape between the two rounds, and that is the finding.** In 166 D the *numbers* had
+no labels. Here the *labels* had gone stale — because the constant moved **twice in one day**
+(1.5 → 0.14 → 0.088 pW/kg), and a label written after the first move was wrong after the second. A rule that
+says "name the condition" does not survive a condition that moves; what survives is a label that names
+**where the condition is declared**, which is why the repair points at `ce.H_CORE_RANGE` rather than
+retyping the number. The pre-registration was labelled by *appending*, never by editing what it registered.
+
+#### Instance 2 — `mantle_budget`'s four Earth defaults, and why two counts disagreed
+
+The audit seat counted **5** by AST where an earlier grep had said **3**. Both were right about different
+questions, and the AST run that settles it prints this:
+
+| function | Earth default in the signature | Earth constant in the body | forwards `**flux_kw` |
+|---|---|---|---|
+| `ra_internal` | `d_m=D_MANTLE_M`, `g=G_M_S2` | — | no |
+| `f_man_w_m2` | `d_m=D_MANTLE_M`, `g=G_M_S2` | — | no |
+| `volumes` | `r_p_m=R_P_M`, `r_c_m=R_C_M` | — | no |
+| `dtp_dt_k_s` | `r_p_m=R_P_M`, `r_c_m=R_C_M` | `D_MANTLE_M`, `G_M_S2` | **yes** |
+| `f_man_lid_variables` | — | `D_MANTLE_M` | **yes** |
+| `secular_cooling` | `r_p_m=R_P_M`, `r_c_m=R_C_M` | — | **yes** |
+
+**5** is the number of functions whose *signature* carries one of the four; **3** is the number carrying the
+*radius pair* specifically, which is what the grep matched; and **6** is the number that touch any of them at
+all — the fifth and sixth routes being a body-level fallback (`flux_kw.get("d_m", D_MANTLE_M)`) and a
+`**flux_kw` that lets a caller's value arrive without the constant's name appearing anywhere in the callee.
+⚠ **So the earlier «three of them take it indirectly through `**flux_kw`» and the audit's «the defaults are on
+the line after `def`» were both true and neither was the count** — one described the forwarding, the other the
+signatures. This is the item's own lesson arriving on itself: *a count is not a fact until the question it
+answers is written beside it.*
+
+#### What is not built
+
+No checker. What one would have to ask is now stated: **for each module constant, how many other nodes' recorded
+anchors change if it changes** — which is neither C45's question (are the lookups declared) nor C50's (is a
+`Needs` supplied), and would need the anchor tables as data rather than as prose. That is a build, and this item
+is closed at *named, counted, and labelled* rather than at *fixed*. ⚠ Instance 2 is **not** repaired: the four
+Earth defaults stay where they are, and nothing in `mantle_budget` moved for this item.
 
 ## What closing all of these does not do
 
