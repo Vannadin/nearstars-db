@@ -4887,6 +4887,25 @@ here as two candidates, not chosen:**
 | ≥ ~20 (30 mol%) at 19 GPa / ≥ ~30 (40 mol%) at 35 GPa | Huang+ 2023 (held) | what an **Fe–S binary alone** needs to hit the seismic density |
 | 21 | Brennan+ 2020 (held) | EH-chondrite upper limit |
 
+#### The two owner decisions, taken 2026-09-10 after the table above
+
+⚠ **Recorded here, above the candidates, so that what was open and what was decided stay separable.**
+
+1. **Sulphur: the band 13–19 wt%, not a point.** It is the union of the InSight-era estimates in the
+   table (Stähler 10–15, Steenstra 13.5 ± 3.5, Dreibus–Wänke 14, Samuel 15 ± 2, Irving 15.4–16.5,
+   Rivoldini 16 ± 2, Brennan 18–19), and **the engine emits both ends** rather than a chosen middle —
+   the same shape every other band in this file has. ⚠ **No point is elected**, so any single-number
+   answer derived from it is a defect, not a rounding.
+2. **Binary Fe–S first (candidate B, Xu 2021's printed rule); multi-component waits for the SI.** The
+   owner is fetching the supplementary tables now; until they arrive, a multi-component material would
+   have to be built on figure-reads or on our own extrapolation, and the standing rule is that a paper's
+   printed arithmetic wins over ours.
+
+⚠ **What the second decision does not settle** is the disagreement recorded just below: several held
+sources say S alone cannot reach the seismic density (Stähler's *"surpass 25 wt%"*, Huang's 20–30 wt%
+requirement). **Building the binary first is a decision about order, not about sufficiency** — and the
+verdict cell is where that gets tested, on radius 1820–1870 km and density 6–6.2 g cm⁻³.
+
 **Whether S is enough** — the second choice, with the printed reasons on both sides:
 - *"S alone does not match"*: Stähler 2021 ("sulfur contents surpass 25 wt%, … above … EH chondrites");
   Khan 2023 [`2023Natur.622..718K`](https://ui.adsabs.harvard.edu/abs/2023Natur.622..718K) (held): "approximately 27 % lighter than pure liquid iron"; "9–15 wt% light elements, chiefly sulfur, carbon, oxygen and hydrogen"; Huang 2023: 40 mol% "serves as the lower bound for the amount of any LE".
