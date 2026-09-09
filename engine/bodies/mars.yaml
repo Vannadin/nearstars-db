@@ -134,11 +134,23 @@ units:
 
 # 발표된 값. 엔진은 읽지 않고 대조만 한다.
 expected:
+  # ⚠ 아래 두 행은 **기록된 어긋남**이다 (C59, 브리프 177). 값도 허용오차도 안 움직였다 —
+  # 어긋남을 판정에서 빼되 매 실행 인쇄한다. 원인이 하나이므로 이유도 하나다.
   nmoi:
     value: 0.3644
     tol: 0.01
     source: "Konopliv+ 2011 · InSight — engine/test_interior.py 의 ANCHORS 와 같은 값"
+    recorded_disagreement: >
+      엔진 0.3545 (2.7 %). 아래 `core_radius_fraction` 과 **같은 원인의 다른 얼굴**이다 — 관성모멘트는
+      질량을 반지름으로 어떻게 나눠 담느냐이고, 핵이 작으면 그 값이 따라 움직인다. C59.
   core_radius_fraction:
     value: 0.5398
     tol: 0.03
     source: "1830 / 3390 km, 같은 표"
+    recorded_disagreement: >
+      엔진 0.4919 — 핵 반지름으로 약 **1667 km 대 보드 1830 km** (8.9 %). ⚠ 엔진의 1667 km 는
+      화성의 값이 아니라 **`composition_intent: earth_like` 의 핵질량비 0.325 가 낸 수**다. 보드의
+      1830 km 는 층 없는 계열의 앵커(Stähler 2021)이고, 174 에서 오너가 고른 계열과 같다.
+      ⚠ 엔진 수가 층 있는 계열(Khan 2023 의 1675 ± 30 km) 안에 드는 것은 **우연으로 읽는다** —
+      우리는 그 계열을 고른 적이 없고 지구형 조성 이전의 산물일 뿐이다.
+      닫는 것은 C55 (Fe–S 물질) 와 화성 핵질량비 선언이지 이 줄이 아니다. C59.

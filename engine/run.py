@@ -132,6 +132,20 @@ def compare(body: BodyState, expected: dict, default_tol: float = 0.02) -> int:
         tol = spec.get("tol", default_tol)
         off = abs(got - want) / abs(want) if want else abs(got)
         ok = off <= tol
+        # ⚠ **기록된 어긋남** (브리프 177): 허용오차를 넓혀 초록으로 만드는 대신, 어긋남을 **그대로
+        #   두고** 세지 않는다. 허용오차와 보드값은 비트 하나 안 움직인다 — 넓히면 «이만큼은
+        #   맞다» 가 되고, 그건 우리가 재현 못 하는 것을 재현했다고 적는 것이다.
+        #   ⚠ 그리고 rc 가 0 이 된 뒤에도 **매 실행 인쇄한다**: 세지 않는 것이 안 보이는 것이 되면
+        #   열린 항목이 조용히 잊힌다. 이 자리를 닫는 것은 항목이지 이 줄이 아니다.
+        #   (인용 계수기가 «세기만 하고 판정하지 않는» 것과 같은 형식이다 — C33 (b).)
+        recorded = spec.get("recorded_disagreement")
+        if not ok and recorded:
+            print(f"    [기록·어긋남] {key:14} 엔진 {got:>9.4g} · 보드 {want:>8} "
+                  f"{spec.get('unit','')}  ({off * 100:.1f}% / 허용 {tol * 100:.0f}%) "
+                  f"— **판정에 세지 않는다**")
+            print(f"             출처: {spec.get('source','?')}")
+            print(f"             왜 기록으로 두는가: {recorded}")
+            continue
         bad += 0 if ok else 1
         mark = "일치" if ok else "어긋남"
         print(f"    [{mark}] {key:14} 엔진 {got:>9.4g} · 보드 {want:>8} "
