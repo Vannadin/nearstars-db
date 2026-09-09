@@ -5194,6 +5194,53 @@ gap and not a modelling choice we may make; the two measured points inside it (P
 eutectic *composition* that does not match the curve's, which is exactly why the gap was declared rather
 than interpolated.
 
+### C55 (c) 2026-09-10 — the 10–21 GPa melting bound as a bracket, pre-registered before the build
+
+⚠ **Committed before the code.** 178 C's four verdict cells all refused on the Fe–S melting gap between 10
+and 21 GPa, and Mars's core-mantle boundary sits at **20.65 GPa**, inside it. The parallel seat's P16
+surveyed the window (`P16-fe-s-melting-10-21gpa.md`, sha256 `ea4055ff27e7c986…`, **17952 B** at the moment
+of citing). What it found is why this is a **bracket and not a curve**.
+
+#### The window's printed values do not agree
+
+| source | printed | grade |
+|---|---|---|
+| Andrault+ 2009 ([`2009PEPI..174..181A`](https://ui.adsabs.harvard.edu/abs/2009PEPI..174..181A)) | *"the eutectic temperature increases from **1023 K at 15 GPa** to **1123 K at 20.6 GPa**"* | abstract only |
+| Li+ 2001 ([`2001E&PSL.193..509L`](https://ui.adsabs.harvard.edu/abs/2001E&PSL.193..509L)) | phase diagram *"between 7 and 25 GPa and temperatures between **1223 and 1473 K**"* | abstract only |
+| Fei+ 2000 ([`2000AmMin..85.1830F`](https://ui.adsabs.harvard.edu/abs/2000AmMin..85.1830F)) | 21 GPa, 950–1400 °C — the **1348 K** our Mori curve is anchored on | abstract only |
+
+⚠ **Two lineages, about 225 K apart at the same pressure**, and Buono & Walker 2015
+([`2015M&PS...50..547B`](https://ui.adsabs.harvard.edu/abs/2015M&PS...50..547B)) reads the lower ones as hydrogen contamination.
+**This brief takes no side.** ⚠ And a fact that disqualifies a single curve outright: **our own Mori
+anchor is not Mori's measurement** — Mori+ 2017 §3.3 takes its 1348 K at 21 GPa *from Fei 2000*, and
+Mori's own points start at 34 GPa.
+
+#### What gets built
+
+`iron_fes_eutectic_t_melt` keeps its single value **at and above 21 GPa**. Between **10 and 21 GPa** the
+melting bound becomes a **bracket** — the printed low and the printed high — and the consumer compares a
+temperature against **both ends**: below both → solid, above both → liquid, **between them → cannot-say**.
+That is this engine's band rule applied where the literature disagrees, rather than a choice dressed as a
+measurement.
+
+⚠ **Three things this must not do.** (a) Extend Mori's Simon form below its reference point — the form's
+anchor is borrowed and its own data start 13 GPa higher. (c) Fit a line through the printed points — that
+is our arithmetic and the sources draw a **kink**, not a line: Fe₃S₂ stabilises near 14 GPa and Fe₃S near
+21 GPa, and Chen 2008 draws inflections at both. And it must not **elect** a lineage; if a curve is ever
+chosen it is registered as *piecewise*, because a single segment across this window erases that kink.
+
+#### Predicted, before running
+
+1. **Mars's core top reads liquid at both ends.** Its declared `T_c` is **2000 K**, above even the high
+   end 1473 K, so the bracket does not straddle it and the verdict is not `cannot-say`.
+2. **The four verdict cells become evaluable** — the refusal that blocked them was this gap.
+3. **Radius rises from 1667 km toward 1830 km**; direction only, as registered in C55 (b) and still
+   untested.
+4. ⚠ **Every body that is not Mars stays bit-identical**, including the ones using `fe_prem`: this touches
+   a curve no other material names.
+5. ⚠ **A cell may become evaluable and still fail its window.** The core mass fraction is still
+   `earth_like`'s 0.325 and still undeclared — that is C55's test of the *material*, not of the body.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the
