@@ -84,9 +84,11 @@ def entropy_terms(prof: dict, terms: dict, dtc_dt: float = ce.DTC_DT, h: float =
 
 def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth: float | None,
           cmb_pressure_gpa: float | None, core_cmb_temperature_solved: float | None,
-          core_material: str = "fe_prem", body_class: str | None = None) -> Result:
+          core_material: str = "fe_prem", body_class: str | None = None,
+          core_cmb_temperature_declared: float | None = None) -> Result:
     inputs = {"mass_earth": mass_earth, "core_mass_fraction": core_mass_fraction, "core_radius": core_radius_earth,
               "cmb_pressure": cmb_pressure_gpa, "core_cmb_temperature_solved": core_cmb_temperature_solved,
+              "core_cmb_temperature": core_cmb_temperature_declared,
               "core_material": core_material, "body_class": body_class,
               "k_core_w_m_k": cf.K_CORE, "core_h_w_per_kg": ce.H_CORE, "dtc_dt_k_per_gyr": ce.DTC_DT * ce.GYR_S}
     if body_class in ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf", "star"):
@@ -94,9 +96,13 @@ def solve(mass_earth: float, core_mass_fraction: float | None, core_radius_earth
                              inputs=inputs, refs=REFS)
     if not core_radius_earth or not core_mass_fraction or core_mass_fraction <= 0.0:
         return out_of_domain(RECIPE, VERSION, cf.NO_CORE, inputs=inputs, refs=REFS)
-    if core_cmb_temperature_solved is None or cmb_pressure_gpa is None:
+    t_c_source = ("declared core_cmb_temperature (owner 2026-09-09)" if core_cmb_temperature_declared is not None
+                  else "C14's solved core_cmb_temperature_solved")
+    t_c_value = (core_cmb_temperature_declared if core_cmb_temperature_declared is not None
+                 else core_cmb_temperature_solved)
+    if t_c_value is None or cmb_pressure_gpa is None:
         return out_of_domain(RECIPE, VERSION, NO_INPUT, inputs=inputs, refs=REFS)
-    t_c = float(core_cmb_temperature_solved)
+    t_c = float(t_c_value)
     r_cmb = core_radius_earth * cf.R_EARTH_M
     m_core = mass_earth * cf.M_EARTH_KG * core_mass_fraction
     p_cmb = cmb_pressure_gpa * 1e9
@@ -164,7 +170,13 @@ from registry import recipe  # noqa: E402
 
 @recipe("core_entropy_production")
 def _from_state(state):
+    # ⚠ **오너 결정 ① (2026-09-09, C25 뿔 ①)**: 이 예산은 C14 의 닫힘값(지구 3978 K, 내핵 없음)이 아니라
+    # **선언된 핵 쪽 경계온도**(지구 3760 K, Sinmyo 2019 의 상한을 값으로 취함 — 내핵 572 km)를 먼저 쓴다.
+    # 선언이 없는 천체에서는 예전대로 C14 의 해로 떨어진다. 두 값 모두 증거에 기재되므로 어느 쪽이 쓰였는지
+    # 결과만 보고 알 수 있고, C14 의 3978 K 는 그 절의 기록으로 남는다.
+    declared = state.get_optional("core_cmb_temperature")
     return solve(mass_earth=state["mass_earth"], core_mass_fraction=state.get("core_mass_fraction"),
                  core_radius_earth=state.get("core_radius"), cmb_pressure_gpa=state.get("cmb_pressure"),
                  core_cmb_temperature_solved=state.get("core_cmb_temperature_solved"),
+                 core_cmb_temperature_declared=declared,
                  core_material=state.get("core_material", "fe_prem"), body_class=state.get("body_class"))

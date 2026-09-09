@@ -154,10 +154,12 @@ reported, not tuned. `engine/core-energy-balance-context-notes.md`.
 `entropy_positive_present` [—] · `entropy_band_straddles_zero` [—] · `entropy_corners_positive` [—] ·
 `has_inner_core_solved` [—] · `entropy_history_verdict` [—] · `entropy_integration_width` [W/K]
 **Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `core_radius` [R_earth] · `cmb_pressure` [GPa] ·
-`core_cmb_temperature_solved` [K] · `core_material` [—] · `body_class` [—] · `k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] ·
-`dtc_dt_k_per_gyr` [K/Gyr]
-**Discriminating keys** — `body_class`: rocky bodies only. No solved core-side temperature (C14 refused) → refused by
-name. `entropy_history_verdict` is **always** `cannot-say (needs C20)`.
+`core_cmb_temperature_solved` [K] · `core_cmb_temperature` [K] · `core_material` [—] · `body_class` [—] ·
+`k_core_w_m_k` [W/(m K)] · `core_h_w_per_kg` [W/kg] · `dtc_dt_k_per_gyr` [K/Gyr]
+**Discriminating keys** — `body_class`: rocky bodies only. ⚠ **The declared `core_cmb_temperature` wins over C14's
+solved value** (owner decision, 2026-09-09: Sinmyo+ 2019's upper bound taken as the value, which keeps Earth's inner
+core); a body that declares none falls back to C14's root, and both are filed in the evidence so the result says which
+was used. Neither available → refused by name. `entropy_history_verdict` is **always** `cannot-say (needs C20)`.
 **Grade** — **analog**: the same Earth-calibrated model as C14, with the same declared bands (k 50 ± 20, H 0–1.5 pW/kg,
 dT_c/dt 33–126 K/Gyr) and the same γ; E_H's bracket order recovered by closure on the printed −134 MW/K (the text
 layer does not resolve it), E_s's 1/T_c prefactor confirmed by closure on the printed 64 — both *found by working

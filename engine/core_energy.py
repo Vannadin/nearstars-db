@@ -48,8 +48,15 @@ REFS = (
 GYR_S = 3.156e16
 DTC_DT = -33.0 / GYR_S            # K/s, Table 4 nominal (present day)
 DTC_DT_RANGE = (-126.0 / GYR_S, -33.0 / GYR_S)   # Table 3 note (Gubbins, k = 60) … Table 4 — model-to-model
-H_CORE = 1.5e-12                  # W/kg, Table 4 (400 ppm K)
-H_CORE_RANGE = (0.0, 1.5e-12)     # floor: no potassium (§5.3); 2020's 100 ppm K sits inside
+#: ⚠ **오너 결정 ⑤ (2026-09-09)는 값 선택이다** — 40 ppm K, 즉 0.14 pW/kg. 그래서 공칭도 따라 내린다.
+#: 예전 값 1.5e-12(Nimmo Table 4, 400 ppm)은 **논문 재현 테스트가 인수로 직접 넘긴다**(`test_core_energy.H4`),
+#: 그래야 앵커가 공칭에 기대지 않는다. ⚠ 공칭만 1.5 로 두면 선언 상한의 **10.7배**인데도 k 축 상쇄로
+#: 중심값이 우연히 밴드 안에 들어가 아무 경고가 안 난다 — C25 (f) 에 그 사실을 적어 두었다.
+H_CORE = 0.14e-12                 # W/kg, 40 ppm K (Watanabe+ 2014, 오너 결정 ⑤)
+#: ⚠ **오너 선언 2026-09-09 (결정 ⑤)** — 상한이 1.5 → **0.14 pW/kg** 으로 내려왔다. 근거는
+#: Watanabe+ 2014 초록 *"less than **40 ppm** … less than 0.17 TW"* (`2014PEPI..237...65W`,
+#: abstract only), 교과서 환산 40 ppm × 3.5e-9 W/kg = 1.4e-13 W/kg. 바닥은 그대로 무-칼륨(§5.3).
+H_CORE_RANGE = (0.0, 0.14e-12)    # floor: no potassium (§5.3); 상한은 오너 결정 ⑤ (Watanabe 2014)
 C_P = 840.0                       # J/(kg K), Table 1
 ALPHA_C = 1.35e-5                 # 1/K, ± 0.15, Table 1 (used only through the adiabat's γ here — not directly)
 L_H = 750.0e3                     # J/kg, Table 1
