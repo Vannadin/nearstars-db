@@ -888,13 +888,26 @@ form; `--from <sha>` on its own — full lane — is what a push needs.
   diff comes out as zero paths, silently narrowing the lane to "all documentation". That fired on the
   first run of this flag. The base is resolved in the worktree, where `origin` is the real remote, and
   passed in as a sha (`GATE_BASE_SHA`). Narrowing means something only while the base is the pushed tip.
-- **The mapping lives in one place and has a veto.** `engine/X.py` → `test_X.py` plus every
-  `engine/test_*.py` that imports X; `engine/tools/X.py` → its test, or the `check.sh` line that calls
-  it; `engine/bodies/B.yaml` → `run.py bodies/B.yaml` plus every test naming that file; `.md` → no
-  physics. ⚠ **One changed code path the mapping cannot explain — `scripts/`, `chain.yaml`, `check.sh`
-  itself — and the whole lane reverts to full**, the same veto `--wiring` already had. The derived list
-  is printed on the `GATE START` and `GATE END` lines, because `lane=targeted` on its own does not say
-  what was **not** checked, and a green line that hides that reads as a full-lane green.
+- **The mapping is computed, not written down, and it has a veto.** `scripts/gate_targeted.py` builds
+  the `engine/` import graph from the AST and takes the **transitive closure of dependents** of every
+  changed module; bodies map to `run.py` on that body plus every test naming the file, and `.md` maps to
+  no physics. ⚠ **A one-hop mapping was the first design and it was wrong**: a static census found the
+  transitive test set far wider for low-level modules — `fermi` derives 1 test one-hop against **33**
+  transitively, `eos` 1 against 31, `registry` 1 against 25 (169 B; the audit seat's independent count
+  was 32/30/24 on the tree before `test_tectonic_regime.py` existed). A plausible list is exactly what
+  this lane exists to stop, so nobody types the pairs. ⚠ **And whenever any `engine/**.py` or body file
+  changed, all three answer runs go in unconditionally** — `check.sh`'s own decision is that the answer
+  tests are never skipped on a commit that changed code, and those live in `run.py bodies/…`, not in a
+  `test_*.py`. ⚠ **One changed code path the mapping cannot explain — `scripts/`, `chain.yaml`,
+  `check.sh` itself — and the whole lane reverts to full**, the same veto `--wiring` already had.
+- **The narrowing is printed whether or not it happened.** `base=`, `changed=` and, when it fired,
+  `gap="…"` and `targeted="…"` go on the `GATE START` and `GATE END` lines in every lane — a run that
+  fell back to full has to say *why* it did, or the reason is gone. Alongside them
+  `script=<hash> matches_tree=yes|no` records which gate script actually ran: isolation copies the
+  running script into the scratch, so a green line has to name the logic that produced it.
+- **The scratch is deleted on `rc=0` and kept on failure**, and a start deletes same-sha leftovers that
+  carry no `GATE-FAILED` marker. ⚠ Brief 169 deleted nothing and four clones (684 MB) accumulated in half
+  a day. Only a failure has something to reproduce.
 - **Three ways a narrowing goes quietly wrong, each blocked by name.** All three end in a green
   line, so an unblocked one is invisible. ① the base cannot be resolved. ② the base **is** the target
   sha, which makes the diff empty — and `git merge-base --is-ancestor X X` is *true*, so the ancestor

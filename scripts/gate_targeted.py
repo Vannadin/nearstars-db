@@ -1,0 +1,167 @@
+# 게이트의 표적 층이 돌 시험 목록을 바뀐 경로에서 도출한다 — import 그래프의 추이 폐포로 (브리프 169 B)
+"""Derive the targeted lane's test list from a commit range, and say when it cannot.
+
+    python3 scripts/gate_targeted.py <base-sha> <head-sha>
+
+Three lines on stdout, in this order, each possibly empty after the first:
+
+    1. the number of changed paths
+    2. the changed code paths this mapping cannot explain (space-separated) — **non-empty means the
+       caller must fall back to the full lane**
+    3. the derived work items (space-separated): `test_*.py`, `tools/<tool>.py`, `run:bodies/<b>.yaml`
+
+⚠ **Why this is not a hand-written table.** Brief 169's first mapping followed imports **one hop**, and
+a static census of `engine/` (52 modules, 43 tests) found that the transitive test set is much wider for
+low-level modules — `fermi` derived 1 test where its transitive dependents hold 32, `eos` 10 against 30,
+`registry` 1 against 24 (audit seat, 2026-09-09). A one-hop list is a *plausible* list, and a plausible
+list is what the lane exists to stop. So the graph is computed from the AST on every run and the closure
+is taken; nobody types the pairs.
+
+⚠ **The answer runs are unconditional whenever code changed.** `check.sh`'s own recorded decision is
+that *"the answer tests are never skipped on a commit that changed code"*, and those live in
+`run.py bodies/…`, not in a `test_*.py`. So any changed `engine/**.py` or `engine/bodies/*.yaml` adds all
+three answer bodies (~2 min), regardless of what the import graph says.
+
+⚠ **A changed path outside the mapping is a veto, not a guess.** `scripts/`, `engine/chain.yaml`,
+`check.sh` itself: nothing here can say what depends on them, so the lane is abandoned rather than
+narrowed. That is the same veto `--wiring` already had.
+"""
+from __future__ import annotations
+
+import ast
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+ENGINE = ROOT / "engine"
+CHECK_SH = ROOT / "scripts" / "check.sh"
+
+#: 코드가 바뀌면 언제나 함께 도는 answer 실행 (check.sh 13번의 세 줄과 같은 순서).
+ANSWER_BODIES = ("alpha_centauri_a_b", "pandora", "earth")
+
+
+def modules() -> dict[str, Path]:
+    """`engine/` 아래의 로컬 모듈 — 키는 import 될 이름, 값은 파일."""
+    out: dict[str, Path] = {}
+    for p in sorted(ENGINE.glob("*.py")):
+        out[p.stem] = p
+    for p in sorted((ENGINE / "tools").glob("*.py")):
+        out.setdefault(p.stem, p)          # ⚠ 평평한 이름공간: tools 는 sys.path 로 부모를 잡는다
+    return out
+
+
+def imports_of(path: Path, known: set[str]) -> set[str]:
+    """그 파일이 import 하는 **로컬** 모듈 이름. 표준 라이브러리와 서드파티는 버린다."""
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError):
+        return set()
+    found: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for a in node.names:
+                head = a.name.split(".")[0]
+                if head in known:
+                    found.add(head)
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            head = node.module.split(".")[0]
+            if head in known:
+                found.add(head)
+    return found
+
+
+def dependents_closure(seeds: set[str], mods: dict[str, Path]) -> set[str]:
+    """씨앗 모듈들을 (직접·간접으로) import 하는 모든 모듈. 씨앗 자신도 포함한다."""
+    known = set(mods)
+    rev: dict[str, set[str]] = {name: set() for name in known}
+    for name, path in mods.items():
+        for dep in imports_of(path, known):
+            rev.setdefault(dep, set()).add(name)
+    seen = set(seeds)
+    stack = list(seeds)
+    while stack:
+        cur = stack.pop()
+        for user in rev.get(cur, ()):
+            if user not in seen:
+                seen.add(user)
+                stack.append(user)
+    return seen
+
+
+def rel_name(mods: dict[str, Path], name: str) -> str:
+    """`engine/` 기준 상대 이름 — tools 아래면 `tools/x.py`, 아니면 `x.py`."""
+    p = mods[name]
+    return str(p.relative_to(ENGINE))
+
+
+def main() -> int:
+    if len(sys.argv) != 3:
+        print(__doc__)
+        return 2
+    base, head = sys.argv[1], sys.argv[2]
+    diff = subprocess.run(["git", "diff", "--name-only", base, head],
+                          cwd=ROOT, capture_output=True, text=True)
+    if diff.returncode != 0:
+        print("0"); print(f"git-diff-failed:{base}..{head}"); print("")
+        return 0
+    changed = [ln for ln in diff.stdout.splitlines() if ln.strip()]
+
+    mods = modules()
+    check_text = CHECK_SH.read_text(encoding="utf-8") if CHECK_SH.exists() else ""
+    tests = {name for name in mods if name.startswith("test_")}
+
+    seeds: set[str] = set()
+    items: set[str] = set()
+    gap: list[str] = []
+    code_changed = False
+
+    for p in changed:
+        if p.endswith(".md"):
+            continue
+        if p.startswith("engine/bodies/") and p.endswith(".yaml"):
+            code_changed = True
+            body = Path(p).name
+            items.add(f"run:bodies/{body}")
+            for name in sorted(tests):
+                if body in mods[name].read_text(encoding="utf-8"):
+                    items.add(rel_name(mods, name))
+            continue
+        if p.endswith(".py") and (p.startswith("engine/") or p.startswith("engine/tools/")):
+            stem = Path(p).stem
+            if stem not in mods:                 # 지워진 파일 — 무엇이 그것에 기대는지 말할 수 없다
+                gap.append(p)
+                continue
+            code_changed = True
+            seeds.add(stem)
+            continue
+        gap.append(p)
+
+    if seeds:
+        closure = dependents_closure(seeds, mods)
+        for name in sorted(closure):
+            rel = rel_name(mods, name)
+            if name.startswith("test_"):
+                items.add(rel)
+            elif rel.startswith("tools/") and rel in check_text:
+                items.add(rel)                   # check.sh 가 부르는 도구는 그 자체가 게이트 항목이다
+        # ⚠ 씨앗 중 시험이 하나도 안 딸린 것이 있으면 그것은 매핑 구멍이다 — 좁히지 않는다.
+        for s in sorted(seeds):
+            own = dependents_closure({s}, mods)
+            covered = any(n.startswith("test_") for n in own) or \
+                any(rel_name(mods, n).startswith("tools/") and rel_name(mods, n) in check_text for n in own)
+            if not covered:
+                gap.append(rel_name(mods, s))
+
+    if code_changed:
+        for body in ANSWER_BODIES:
+            items.add(f"run:bodies/{body}.yaml")
+
+    print(len(changed))
+    print(" ".join(sorted(set(gap))))
+    print(" ".join(sorted(items)))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -273,6 +273,7 @@ DB 브라우저, 성도, 벨트 뷰어, 색·얼음 계산기가 그렇습니다
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지). `docs/wiki/*.html` 이 생성 원본 markdown 보다 오래됐는지도 확인 — 이 프로젝트는 위키를 **둘** 발행하므로(별도 git 저장소인 GitHub 저장소 위키, 그리고 `build_docs.py` 가 만드는 Pages 미러) 레퍼런스 문서를 고치고 빌더를 안 돌리면 발행된 쪽이 옛 내용을 계속 보여준다.
 - `scripts/build_sitemap.py` — 발행되는 docs/ 표면의 사이트맵 + 연결성 감사. 구획별 페이지 수·용량, 허브, 그리고 결함 세 종류(인바운드 없는 고아, 아웃바운드 없는 막다른 페이지, CDN 의존)를 보고한다. `docs/reference/site-map.md` + ko 미러를 생성하고, `--audit-only`는 쓰기 없이 **신규** 고아가 생기면 1로 종료한다(승인된 집합은 스크립트의 `BASELINE_ORPHANS`)
+- `scripts/gate_targeted.py <base-sha> <head-sha>` — 게이트의 `--targeted` 층이 돌아야 할 물리 시험을 커밋 구간에서 도출합니다. AST 로 `engine/` import 그래프를 만들고 바뀐 모듈의 dependents **추이 폐포**를 잡아 세 줄을 인쇄합니다. 바뀐 경로 수, 이 매핑이 설명할 수 없는 코드 경로(비어 있지 않으면 호출부가 full 로 되돌립니다), 도출된 항목(`test_*.py`, `tools/<도구>.py`, `run:bodies/<바디>.yaml`). `engine/**.py` 나 바디 파일이 하나라도 바뀌면 answer 세 실행이 무조건 들어갑니다. check.sh 가 부르며, 손으로는 구간을 들여다볼 때만 씁니다.
 - `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도 + Phase 4 emit-게이트 (게이트 8, 도구 13). 수동 실행 전용.
 
 ## 12. 3D 성도 뷰어

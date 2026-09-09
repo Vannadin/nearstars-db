@@ -55,13 +55,23 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   tree_sha=$(git rev-parse --short "$from_sha" 2>/dev/null) || {
     echo "  [FAIL] 그런 sha 가 없다: $from_sha"; exit 2; }
   dest="${TMPDIR:-/tmp}/gate-$tree_sha-$$"     # 같은 sha 를 다시 돌리면 새 디렉토리 (pid)
+  # ⚠ 시작할 때 같은 sha 의 잔재를 지운다 — 단 **실패 표시가 없는 것만**. `GATE-FAILED` 를 든
+  #   디렉토리는 그 실패를 재현하려고 남긴 것이므로 건드리지 않는다 (169 B, ④).
+  for old in "${TMPDIR:-/tmp}"/gate-"$tree_sha"-*; do
+    [ -d "$old" ] || continue
+    [ -e "$old/GATE-FAILED" ] && continue
+    echo "  옛 스크래치 정리: $old (실패 표시 없음)"
+    rm -rf "$old"
+  done
   git clone -q --shared . "$dest" || { echo "  [FAIL] clone 실패"; exit 2; }
   git -C "$dest" checkout -q --detach "$tree_sha" || { echo "  [FAIL] checkout 실패"; exit 2; }
   # ⚠ 게이트 논리는 **지금 실행 중인 것**을 복사해 넣는다. sha 가 이 층들보다 앞설 수 있어서
   #   트리의 판을 부르면 인자를 모른다. 그래서 스크래치는 한 파일만 sha 와 다르고, 그 사실을 찍는다.
   self_differs=no
-  cmp -s "$0" "$dest/scripts/check.sh" || self_differs=yes
-  cp "$0" "$dest/scripts/check.sh"
+  for f in scripts/check.sh scripts/gate_targeted.py; do
+    cmp -s "$f" "$dest/$f" || self_differs=yes
+    cp "$f" "$dest/$f"
+  done
   links=$(find "$dest" -type l -not -path "$dest/.git/*" | wc -l | tr -d " ")
   echo "── 격리 실행: $dest ──"
   echo "  트리 sha $tree_sha · 심링크 $links · 게이트 스크립트는 실행본 복사 (트리 판과 다름: $self_differs)"
@@ -72,7 +82,7 @@ if [ -n "$from_sha" ] && [ "${GATE_ISOLATED:-}" != "1" ]; then
   set --
   [ "$lane_req" = "wiring" ] && set -- --wiring
   [ "$lane_req" = "targeted" ] && set -- --targeted
-  GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha"     exec bash "$dest/scripts/check.sh" "$@"
+  GATE_ISOLATED=1 GATE_TREE_SHA="$tree_sha" GATE_BASE_SHA="$base_sha" GATE_SCRATCH="$dest" exec bash "$dest/scripts/check.sh" "$@"
 fi
 
 gate_sha=$(git rev-parse --short HEAD)
@@ -109,79 +119,69 @@ if [ "$lane_req" = "wiring" ]; then
   fi
 fi
 
-# ── 표적 층의 도출. 규칙은 여기 한 곳에 있고, 규칙이 비면 층 자체를 포기한다 ──────────────
-#   engine/X.py           → engine/test_X.py (있으면) + 그 모듈을 import 하는 engine/test_*.py 전부
-#   engine/tools/X.py     → engine/test_X.py (있으면) + check.sh 가 그 도구를 부르면 그 도구
-#   engine/bodies/B.yaml  → run.py bodies/B.yaml + 그 파일명을 문자열로 담은 시험 전부
-#   *.md                  → 물리 0 (문서는 답을 바꾸지 않는다)
-# ⚠ **매핑이 비는 바뀐 코드 경로가 하나라도 있으면 full 로 되돌린다** — scripts/ · chain.yaml ·
-#   check.sh 자신처럼 무엇이 그것에 의존하는지 이 규칙이 말할 수 없는 경로가 그렇다. 기존 wiring
-#   층의 거부권과 같은 형이고, 애매하면 전부 도는 쪽으로 기운다.
+# ── 표적 층의 도출 ─────────────────────────────────────────────────────────────────────────
+# ⚠ **매핑은 손으로 적지 않는다.** 규칙과 그 근거는 `scripts/gate_targeted.py` 의 독스트링에 있고,
+#   import 그래프의 **추이 폐포**를 매 실행 계산한다 — 169 의 첫 판은 한 홉만 따라가서 저수준
+#   모듈의 시험 집합을 크게 놓쳤다(`fermi` 1 대 33 · `eos` 1 대 31 · `registry` 1 대 25, 169 B 실측).
 # ⚠ **좁히기가 조용히 틀리는 세 길을 각각 막는다** (감사석 독립 재현, 169). 셋 다 «초록 한 줄» 로
 #   끝나므로 막지 않으면 층이 근거 없이 좁아진 것을 아무도 못 본다.
 #   ① base 를 못 구한다 → full.  ② base 가 대상 sha **자신**이다 → diff 0 → full.
 #   ③ base 가 대상의 **자손**이다 (지난 sha 를 다시 게이트하거나 base 가 오래됐다) → full.
-# ⚠ 그리고 diff 는 세 점이 아니라 **트리 대 트리** `git diff --name-only <base> <sha>` 다 — 세 점은
-#   merge-base 를 잡으므로 방향에 속는다.
+# ⚠ 그리고 diff 는 세 점이 아니라 **트리 대 트리** 다 — 세 점은 merge-base 를 잡으므로 방향에 속는다.
 targeted_tests=""
-changed_n=0
+changed_n="n/a"        # ⚠ 계산하지 않은 것과 «0 개 바뀌었다» 는 다른 사실이다
 base_sha=""
+gap=""
+head_sha=$(git rev-parse --short HEAD)
 if [ "$lane_req" = "targeted" ]; then
   base_sha=$(git rev-parse --verify -q --short "$base_ref" 2>/dev/null || true)
-  head_sha=$(git rev-parse --short HEAD)
   if [ -z "$base_sha" ]; then
-    echo "── 층: full (base «$base_ref» 를 찾을 수 없어 무엇이 바뀌었는지 말할 수 없다) ──"
+    gap="(base «$base_ref» 를 찾을 수 없다)"
   elif [ "$base_sha" = "$head_sha" ]; then
-    echo "── 층: full (base 가 대상 sha 자신이다 ($base_sha) — 좁힐 근거가 없다) ──"
+    gap="(base 가 대상 sha 자신이다)"
   elif ! git merge-base --is-ancestor "$base_sha" "$head_sha"; then
-    echo "── 층: full (base $base_sha 가 대상 $head_sha 의 조상이 아니다 — 좁힐 근거가 없다) ──"
+    gap="(base 가 대상의 조상이 아니다)"
   else
-    changed=$(git diff --name-only "$base_sha" "$head_sha")
-    changed_n=$(echo "$changed" | grep -c . || true)
-    gap=""
-    add() { case " $targeted_tests " in *" $1 "*) ;; *) targeted_tests="$targeted_tests $1" ;; esac; }
-    importers() {   # $1 = 모듈명 — 그 모듈을 import 하는 시험 파일 전부
-      grep -lE "(^|[[:space:]])(import|from)[[:space:]]+$1([[:space:].]|\$)" engine/test_*.py 2>/dev/null \
-        | while read -r f; do basename "$f"; done
-    }
-    for p in $changed; do
-      case "$p" in
-        *.md) ;;                                   # 문서 → 물리 0
-        engine/test_*.py)
-          [ -f "$p" ] && add "$(basename "$p")" ;;
-        engine/tools/*.py)
-          b=$(basename "$p" .py); hit=""
-          [ -f "engine/test_$b.py" ] && { add "test_$b.py"; hit=1; }
-          grep -q "tools/$b.py" scripts/check.sh && { add "tools/$b.py"; hit=1; }
-          [ -n "$hit" ] || gap="$gap $p" ;;
-        engine/*.py)
-          b=$(basename "$p" .py); hit=""
-          [ -f "engine/test_$b.py" ] && { add "test_$b.py"; hit=1; }
-          for f in $(importers "$b"); do add "$f"; hit=1; done
-          [ -n "$hit" ] || gap="$gap $p" ;;
-        engine/bodies/*.yaml)
-          b=$(basename "$p")
-          add "run:bodies/$b"
-          for f in $(grep -l "$b" engine/test_*.py 2>/dev/null); do add "$(basename "$f")"; done ;;
-        *) gap="$gap $p" ;;
-      esac
-    done
-    if [ -n "$gap" ]; then
-      echo "── 층: full (이 규칙이 무엇을 시험해야 하는지 말할 수 없는 경로가 있다:$gap) ──"
-      targeted_tests=""
+    derived=$(python3 scripts/gate_targeted.py "$base_sha" "$head_sha") || derived=""
+    if [ -z "$derived" ]; then
+      gap="(도출 도구가 실패했다)"
     else
-      lane="targeted"
-      echo "── 층: targeted (바뀐 경로 $changed_n · 도출된 물리 시험:${targeted_tests:- 없음}) ──"
+      changed_n=$(printf '%s\n' "$derived" | sed -n 1p)
+      gap=$(printf '%s\n' "$derived" | sed -n 2p)
+      targeted_tests=$(printf '%s\n' "$derived" | sed -n 3p)
     fi
+  fi
+  if [ -n "$gap" ]; then
+    echo "── 층: full (이 매핑이 무엇을 시험해야 하는지 말할 수 없다: $gap) ──"
+    targeted_tests=""
+  else
+    lane="targeted"
+    echo "── 층: targeted (바뀐 경로 $changed_n · 도출:${targeted_tests:- 없음}) ──"
   fi
 fi
 # ⚠ 도출된 목록을 START/END 줄에 적는다. `lane=targeted` 만으로는 **무엇이 검사되지 않았는지** 를
 #   다음 좌석이 알 수 없고, 그러면 초록 한 줄이 full 층의 초록으로 읽힌다.
-tgt_field=""
-[ "$lane" = "targeted" ] && tgt_field=" base=$base_sha changed=$changed_n targeted=\"$(echo $targeted_tests)\""
+# ⚠ 세 필드는 **층과 무관하게** 찍는다 (감사석, 169 B). full 로 떨어진 실행에서도 base 와 gap 이
+#   보여야 «왜 좁히지 않았는가» 를 나중에 읽을 수 있고, targeted 일 때만 찍으면 그 정보가 사라진다.
+tgt_field=" base=${base_sha:-none} changed=$changed_n"
+[ -n "$gap" ] && tgt_field="$tgt_field gap=\"$(echo $gap)\""
+[ "$lane" = "targeted" ] && tgt_field="$tgt_field targeted=\"$(echo $targeted_tests)\""
 iso_field=""
 [ "${GATE_ISOLATED:-}" = "1" ] && iso_field=" isolated=$(pwd)"
-echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field"
+# ⚠ **어느 게이트 스크립트가 돌았는지도 기록한다.** 격리 모드는 실행본을 스크래치에 복사하므로
+#   트리의 sha 판과 다를 수 있고, 그 사실 없이는 초록 한 줄이 어느 논리의 초록인지 말할 수 없다.
+# ⚠ 게이트 논리는 두 파일이므로 둘 다 대조한다 — 하나라도 트리 판과 다르면 `no` 다.
+self_hash=$(git hash-object scripts/check.sh 2>/dev/null || echo unknown)
+helper_hash=$(git hash-object scripts/gate_targeted.py 2>/dev/null || echo unknown)
+tree_hash=$(git rev-parse "$gate_sha:scripts/check.sh" 2>/dev/null || echo unknown)
+tree_helper=$(git rev-parse "$gate_sha:scripts/gate_targeted.py" 2>/dev/null || echo unknown)
+if [ "$self_hash" = "$tree_hash" ] && [ "$helper_hash" = "$tree_helper" ]; then
+  matches_tree=yes
+else
+  matches_tree=no
+fi
+script_field=" script=${self_hash%"${self_hash#???????}"} matches_tree=$matches_tree"
+echo "GATE START sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field"
 
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 python3 scripts/pipeline/validate.py || fail=1
@@ -477,5 +477,17 @@ if [ $fail -eq 0 ]; then
 else
   echo "──────── 일부 점검 실패 ────────"
 fi
-echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field rc=$fail"
+echo "GATE END sha=$gate_sha pid=$$ at=$(date +%T) lane=$lane$tgt_field$iso_field$script_field rc=$fail"
+
+# ── ④ 스크래치 정리. rc=0 이면 지우고, **실패면 남긴다** — 재현할 것이 있는 쪽만 보관한다 ──
+# ⚠ 169 는 아무것도 지우지 않았고 반나절에 네 벌 684 MB 가 쌓였다 (감사석 관측).
+if [ "${GATE_ISOLATED:-}" = "1" ] && [ -n "${GATE_SCRATCH:-}" ]; then
+  if [ "$fail" -eq 0 ]; then
+    echo "  격리 스크래치 삭제: $GATE_SCRATCH (rc=0 — 재현할 것이 없다)"
+    rm -rf "$GATE_SCRATCH"
+  else
+    date > "$GATE_SCRATCH/GATE-FAILED" 2>/dev/null || true
+    echo "  격리 스크래치 보존: $GATE_SCRATCH (rc=$fail — 여기서 재현한다)"
+  fi
+fi
 exit $fail
