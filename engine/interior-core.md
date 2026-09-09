@@ -79,7 +79,7 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | C31 | Dante's tidal and dependent board rows | built 2026-09-05 (main) | — |
 | **C32** | band output and handoff choices | **structure built 2026-09-05; instances landing one at a time** | built: albedo, stagnant-lid ceiling, greenhouse cases, `k_c`. Open: whoever picks the ten unchosen options that `engine/tools/unchosen_defaults.py` counts |
 | C33 | citations resolved against the document | built 2026-09-05 | — |
-| **C34** | what the transport table is fed, and where its thresholds come from | ⚠ **re-drawn 2026-09-09 by C47's closing — the question is what the table is *declared* to be fed, and the options are the owner's** (earlier status kept: *does not close by choosing — waiting on C47*, 2026-09-07) | The four candidates span 2.203× and are **not verdict-neutral**. On `transport_mode`, unchanged, the low end (tidal + radiogenic, already fed) still reproduces **3 of 4** of the document's anchor labels to the high end's 1. ⚠ On the **C46 ladder cell** it reverses — low **2 of 4**, high **2 of 3 scored plus the Moon 1 of 1 independent** — because naming the gap between the stagnant ceiling and the plate rung took away a free pass Earth's low feed had been collecting. ⚠ **And the four candidates are not four readings of one quantity — they are four quantities, two of them disqualified** (0.0418 is radiogenic production, the wrong quantity; 0.08 has no source in any version of the document and is used there under two labels). Of the two survivors the measured 0.0921 exists for no body in this project, and the computable 0.0769 is a mobile-lid law that C47 (b) shows failing on Mars. **So this is not a choice among candidates any more, and putting one to the owner would be asking them to pick among things that are all disqualified.** Held until C47 closes, which will re-draw the candidate set. Still open with it: Venus fails under both feeds, and the plate ceiling 0.135 remains authored |
+| **C34** | what the transport table is fed, and where its thresholds come from | ⚠ **held 2026-09-09 behind the third path** — the owner adopted building the missing term (C25 (f)), which changes this table's input, so choosing the feed now would be choosing twice. Re-drawn earlier the same day:**the question is what the table is *declared* to be fed, and the options are the owner's** (earlier status kept: *does not close by choosing — waiting on C47*, 2026-09-07) | The four candidates span 2.203× and are **not verdict-neutral**. On `transport_mode`, unchanged, the low end (tidal + radiogenic, already fed) still reproduces **3 of 4** of the document's anchor labels to the high end's 1. ⚠ On the **C46 ladder cell** it reverses — low **2 of 4**, high **2 of 3 scored plus the Moon 1 of 1 independent** — because naming the gap between the stagnant ceiling and the plate rung took away a free pass Earth's low feed had been collecting. ⚠ **And the four candidates are not four readings of one quantity — they are four quantities, two of them disqualified** (0.0418 is radiogenic production, the wrong quantity; 0.08 has no source in any version of the document and is used there under two labels). Of the two survivors the measured 0.0921 exists for no body in this project, and the computable 0.0769 is a mobile-lid law that C47 (b) shows failing on Mars. **So this is not a choice among candidates any more, and putting one to the owner would be asking them to pick among things that are all disqualified.** Held until C47 closes, which will re-draw the candidate set. Still open with it: Venus fails under both feeds, and the plate ceiling 0.135 remains authored |
 | **C35** | `stellar_wind` computes with no document to be a recipe in | **listed 2026-09-06, deliberately not registered** | a stellar-wind methodology document, or a decision that the node does not get one |
 | **C36** | `tidal_locking` has no recipe — the locking timescale | **landed 2026-09-06** | eight consumers wait on `locked`, and it is today a placeholder. Landing it is a controlled A/B: the wiring is already frozen and the pre-registered answers are in `regime-gate-context-notes.md` §7 |
 | **C37** | `rotation_period` is spelled two ways, and the contract check cannot see it | **closed 2026-09-07** | ⚠ **Two spellings, not three** — `rotation_period_days` is a comment recording a pre-converted DB value, read by nothing. `dynamo_rocky` looked up `rotation_period` while every supplier writes `rotation_period_h`, so it received **None on every body** and recorded that as evidence. Unified across code, contract (en+ko), chain label and the evidence key; no verdict moves, because the value was never in a branch |
@@ -1969,7 +1969,7 @@ Order among them is the owner's, brief by brief.
 | C | edge (`chain.yaml`) | what the hole is |
 |---|---|---|
 | **C14** | `internal_heat_nontidal → dynamo_rocky via geotherm` (`:639`) | whether the core is *still* convecting needs thermal evolution, not only decay history; Brief 62 step 1 measured that the present-epoch closure is a root-find in T_c with the cooling rate declared. **Built 2026-09-03** (owner *"c14 진행하자"*; `core_energy.py`, node `core_energy_balance`, `core-energy-balance-context-notes.md`): Nimmo's analytic core reproduces Table 4 component by component (all within 10 %, Q_L/Q_g 8 % low and left low) and the root lands at 4 152 K vs printed 4 155; on the engine's Earth the solved T_c is **3 978 K (band 3 750–4 284), +218 K over the declared lower bound**, Q_C 4.91 TW — inside Nimmo's 4.5–9 on this model's terms. **Finding (corrected 2026-09-04 after a convergence bug the directing seat caught — the first evening's "two codes disagree" was an Euler artefact)**: at the declared 3 760 K both codes find an inner core (566 km, ICB 351.3 GPa); **at the solved 3 978 K the core is all liquid** — closing the loop removes Earth's inner core, so Q_L = Q_g = 0 on the solved Earth and C15's entropy budget loses its two largest terms. Nothing moved; not fed back. The edge itself stays `gap` — the *consumer* (dynamo) is C15. ⚠ *2026-09-09 (C25 (c)): this root is where the mantle-side flow and the core-side supply are the same number — 4.913 against 4.912 TW — which is what the closure **is**. And "never nucleates" fits no camp in the printed inner-core-age literature, 0.37 – >2.5 Ga (C25 (d)); that is the depression factor's, not this row's.* |
-| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` (`:638`) | the supplier `cmb_heat_flux` exists (Brief 60); the consumer wiring is φ, core entropy production. **φ built 2026-09-04** (`core_entropy.py`, node `core_entropy_production`, `core-entropy-context-notes.md`): Nimmo eq. 43's six terms on C14's profile; Table 4's entropy components reproduced within 10 % each (ΔE 328 vs 351); the engine's Earth at the solved 3 978 K gives **ΔE −69 MW/K, band −264…+238, 4/8 corners positive, H = 0 → −167** — C14's vanished inner core arriving at the budget. **A band, not a verdict** (the required excess is 0.1–1 000 MW/K; `ΔE > 0` is the paper's own threshold-avoidance), **not wired into `dynamo_rocky`** (edge kept `gap` on purpose), and the 3-Gyr statement is refused by name — **C20 is this node's first real consumer.** ⚠ *2026-09-09: the band's two axes are laid against the printed literature in C25 (d) — `k` 18–226 and every later potassium constraint below our ceiling — and C25 (c) measures what each horn of C25 does to this budget: the inner core is the whole difference. Three owner decisions are collected there; none is made.* |
+| **C15** | `heat_transport_mode → dynamo_rocky via cmb_heat_flux` (`:638`) | the supplier `cmb_heat_flux` exists (Brief 60); the consumer wiring is φ, core entropy production. **φ built 2026-09-04** (`core_entropy.py`, node `core_entropy_production`, `core-entropy-context-notes.md`): Nimmo eq. 43's six terms on C14's profile; Table 4's entropy components reproduced within 10 % each (ΔE 328 vs 351); the engine's Earth at the solved 3 978 K gives **ΔE −69 MW/K, band −264…+238, 4/8 corners positive, H = 0 → −167** — C14's vanished inner core arriving at the budget. **A band, not a verdict** (the required excess is 0.1–1 000 MW/K; `ΔE > 0` is the paper's own threshold-avoidance), **not wired into `dynamo_rocky`** (edge kept `gap` on purpose), and the 3-Gyr statement is refused by name — **C20 is this node's first real consumer.** ⚠ *2026-09-09 (later): this budget now takes the **declared** core-side temperature — Earth 3 760 K, the owner's horn — rather than C14's root, and `H` is capped at 0.14 pW/kg; the measured result is `ΔE` +30.1 MW/K with the band still straddling zero (C25 (f)). ⚠ And the regime gate's `Ro_ℓ` ≈ 0.12 agrees with Christensen & Aubert 2006, but **the engine declares `locked` and never computes `Ro_ℓ`** — the number we agree with is one we do not calculate.* ⚠ *2026-09-09: the band's two axes are laid against the printed literature in C25 (d) — `k` 18–226 and every later potassium constraint below our ceiling — and C25 (c) measures what each horn of C25 does to this budget: the inner core is the whole difference. Three owner decisions are collected there; none is made.* |
 | **C16** | `tidal_locking → dynamo_rocky via rossby` (`:635`) | *(the first line here — "not derivable from a rotation period" — was wrong: Ω is exactly what `rotation_period` supplies)*. **Built as a partial build 2026-09-04** (`regime-gate-context-notes.md`): RM22's branch structure — free rotator → dipolar by rule (eq. 20, no Ro_ℓ); locked → Ro_ℓ **refused by three names** (ν has no value in RM22; q_conv is undefined; the printed equation misses the paper's own Table 8 by 4–5×, a table that is itself a fit of k = 60); key absent → `cannot-say (no tidal_locking)`. **The key `locked` is `tidal_locking`'s output and that node has no recipe** (34 computed nodes, 10 registered), so today every body gets the last answer — the correct state. Measured with a positive control: the thrice-corrected `MULTIPOLAR_FACTORS` has **no consumer that elects it** on the roster (0 of 3 primary; Earth's beside-pair only, read by nothing downstream) — a C5 question for the owner, not judged. |
 | **C17** | `ocean_fraction → dynamo_rocky` (`:636`), `→ cassini_state` (`:552`), `→ surface_albedo` (`:781`) | three consumers, no supplier of an ocean fraction. **Measured 2026-09-04** (`ocean-fraction-context-notes.md`): `f_ocean` means three different things to its three consumers (surface inventory · subsurface ocean · the dynamo doc's "water-rich" bulk class), and the dynamo edge's real payload is `ice_mass_fraction`, which reaches `dynamo_rocky` today by the ladder (regime 4, ℳ_base 0.002 — confirmed to fire). The structural half — water fraction → interior → `cmb_heat_flux` — **could not be tested: the interior does not converge at 0.1 / 0.3 water on an Earth-mass rocky body** (branch ③), and the unconverged trials put the CMB *hotter* (2 526 → ~4 400 K), not cooler as the doc says, so at Earth's declared 3 760 K there is no jump and `cmb_flux` refuses. **Superseded the same day by C24's fix**: the column now converges — ice 0.1 → T_cmb **3 105 K**, ice 0.3 → **3 050 K** (dry 2 526) — still hotter than dry, opposite to the doc, but a converged size; C17's structural half is measurable now, start separate. **Stays open, two reasons named**: (1) the interior does not converge on a water-rich rocky body — **C24**; (2) the doc's mechanism sentence (item 4) carries **no citation** (item 3 beside it cites Gaidos 2010) and its temperature direction is the opposite of what our unconverged column shows — so the mechanism is both ungrounded and untested. Nothing wired. The Ganymede anchor 2×10⁻³ is RM22's relayed *observed* value (its ref. 3), not its computed 0.003 — both now written. **Opened by the owner and closed the same day, 2026-09-04 — ③b** (`ocean-fraction-context-notes.md` §5): the −55 K is a real turnover (noise floor 0.7 K; converged points 2 526 → 3 105 → 3 065 → 3 050 K at 0 / 0.1 / 0.25 / 0.3), its maximum unbracketed below 0.1 because 0.05 / 0.15 / 0.20 do not converge (a C24-adjacent coverage finding, recorded, not repaired); with Earth's declared 3 760 K the boundary-layer Q_C *rises* 2.75 → 3.11 → 3.20 TW (eq. 39 viscosity beats the smaller jump), C14's T_c falls ~90 K, C15's band moves (−69 → −68 → −82 MW/K) and still straddles zero — **the mechanism is real and measured; C15 cannot use it.** Item 4 corrected (en + ko) as a correction of our own uncited sentence. Nothing wired. |
 | **C18** | `body_class → dynamo_rocky via sub_neptune` (`:623`) | a sub-Neptune integrates (C1) and has no dynamo path. **Closed 2026-09-04 as a named refusal — corrected the same night after the parallel seat found the paper the first wording said did not exist.** The refusal, in its final form: **the on/off criterion for a sub-Neptune iron-core dynamo *is* published** — Tang, Fortney, Nimmo, Thorngren, Ohno & Murray-Clay 2025 (`2025ApJ...989...28T`, owner-obtained, cached) §4.2: `Rm = μ₀σUD` (eq. 46), critical 50, `U` from Christensen 2010's scaling (eq. 47), `F_conv = F_CMB − F_cond` (eq. 48); abstract: *"Dynamo action in sub-Neptune iron cores persists as long as the mantle surface remains molten, often exceeding 10 Gyr"*. **The moment / field-strength scaling is not published** — in 37 pages *magnetic moment*, *field strength*, *Gauss*, *Rossby*, *dipole* and *field* itself occur zero times (reproduced). `dynamo_rocky` needs ℳ, so **this edge closes**; what opens instead is the *existence* question, listed as **C23**. *(The first wording — "no held paper prints a scaling" — was true of the cache and false of the literature; it is withdrawn.)* Two things recorded for the next seat: (i) **the three refusals are not one statement and they form a round trip** — `dynamo_rocky` sends the class to `dynamo_giant` (*"거대행성·서브넵튠은 dynamo_giant 의 몫"*), `dynamo_giant` sends it back by mass (`GIANT_M_MIN` 0.3 M_J = 95 M⊕, and its ground is helium rain, nothing to do with an iron core), and only `core_state` states the actual question (*"그 핵을 받는 다이나모 갈래가 아직 없다"*) — with the cause written as *no consumer*, not *no published scaling*; (ii) **`sub_neptune` sits in `CORELESS_CLASSES` (`core_state.py@«NOT_THIS_NODES_QUESTION = ("giant", "gas_giant", "ice_giant", "sub_neptune",»`; the constant was named `CORELESS_CLASSES` when this was written and was renamed by C23 on 2026-09-06 — that rename is the repair this line records as outstanding) while its own refusal says the iron core is there under the envelope** — the constant's name and its reason disagree; recorded, not repaired. The edge stays `status: gap` — a real coupling with no supplier. |
@@ -2970,6 +2970,78 @@ and a flux; they are choosing which of Nimmo's two anchors to keep and which to 
   which keeps the lowermost mantle unmelted and makes our boundary-layer heat flux small."*
 - **Horn 2** — *"I believe the 2002 heat-flow synthesis Nimmo re-cites, whose 9 TW ceiling every later
   review has raised to 14–17, is the range a present-day Earth core flux must fall inside."*
+
+### C25 (f) 2026-09-09 — the owner's decisions, wired; the band still straddles zero, and that is the answer
+
+**Five decisions were put to the owner in C25 (b). Four are made, one is held, and a fifth thing was
+decided that none of them asked about: what to do next.**
+
+| # | decision | outcome |
+|---|---|---|
+| ① | which horn of C25 | **3 760 K** — Sinmyo+ 2019's *upper bound* taken as the value, with the inner core it implies and the sub-range `Q_CMB` it implies |
+| ② | how `k_core` is carried | **unchanged** — Nimmo's 50 ± 20, corners 30 / 70. C49's unification stays open |
+| ④ | the on/off threshold | **`ΔE` > 0**, with the label below and two record columns |
+| ⑤ | the potassium cap | **0.14 pW/kg** — Watanabe+ 2014's under-40 ppm |
+| ③ | what the transport table is fed (C34) | ⚠ **held** — the third path changes that table's input, so choosing now would be choosing twice |
+| — | **the third path** | ⚠ **adopted: build the missing term** — stagnant-lid capacity and long-term cooling, the two-regime law family C47 (e) named. **The band is not to be closed by picking numbers inside it** |
+
+#### What the decisions did to the numbers, measured
+
+| quantity | before | after |
+|---|---|---|
+| Earth `ΔE` (centre) | — | **+30.1 MW/K** at the declared 3 760 K |
+| eight-corner band (`k` × `H` × rate) | — | **−76.3 … +191.9**, **4 of 8** positive, inner core present |
+| four corners at the fixed −33 K/Gyr | — | **+117.1 · +126.9 · −76.3 · −66.6** |
+| C20's own reference row (4 027 K, no inner core) | −259 … +32, 1/4 positive | ⚠ **−259 … −57, 0 of 4, verdict `fails`** |
+| C14's root | 3 978 K | ⚠ **3 770.9 K** — the lower `H` moved the closure by 207 K |
+
+⚠ **So the band still straddles zero on the chosen horn, and it is the honest result.** The owner's four
+decisions were each defensible and together they do not close the question: lowering `H` subtracts from
+every corner, and on the horn that keeps the inner core the two largest positive terms survive to hold
+the top corner up. **A decision that does not decide is worth recording as one.**
+
+⚠ **And the two rows now say opposite things, which is the clearest statement of the horn's weight.** P4
+forecast *"lowering `H` makes the band read **fails**"* — that came true **for the reference row**, which
+has no inner core. On the declared 3 760 K horn, `e_l` and `e_g` are alive and the same cap only moves
+the positive corners down. **The same decision reads *fails* on one temperature and *cannot-say* on the
+other.**
+
+#### Decision ④'s label, and what the literature actually prints
+
+**The threshold is `ΔE` > 0, and the label is that it is inherited, not derived:** *Nimmo+ 2004 §4's
+assumption, taken as ours; the paper itself calls it a threshold-avoidance.* The parallel seat's P6
+survey (`/Users/vana/Desktop/NearStars-artifacts/2026-09-09-c20-entropy-band/P6-dynamo-criterion-literature.md`)
+puts the label on firm ground:
+
+- ⚠ **No paper prints "`ΔE` > 0" as a claim about nature.** The one paper that *uses* it says both
+  *"a **necessary (though not sufficient) condition** … may be obtained by simply considering the energy
+  or entropy production"* and *"any positive `E` is **assumed** sufficient to drive the geodynamo, **an
+  assumption** which is discussed later"*.
+- **The required excess is unknown by two orders of magnitude**, in the same paper's words — *"the excess
+  entropy production rate required to power it is unclear"*, and *"the 2 TW Ohmic heating estimate of
+  Roberts et al."* is the other end.
+- **Other criteria in print, none of them ours:** `Φ` > 0 as *"permitted"* (Gaidos+ 2010); a minimum
+  Ohmic power of **0.2–0.5 TW** (Christensen & Tilgner 2004), against estimates spanning **0.1–3.5 TW**;
+  a critical magnetic Reynolds number **≈ 50** (Christensen & Aubert 2006) or **> 40** as used on
+  exoplanets (Gaidos+ 2010); and cooling-rate thresholds of **35 / 69 K/Gyr** (Gubbins+ 2004).
+
+**So the two record columns beside the verdict, neither of them the threshold:**
+
+| record | value | where the 3 760 horn's top corner (+126.9) stands |
+|---|---|---|
+| Nimmo §5.1's estimate of the required excess | **≈ 100 MW/K** | ⚠ **clears it** |
+| Roberts+ 2003's 2 TW Ohmic estimate, via §6.3 | **≈ 400 MW/K** | ⚠ **does not** |
+
+⚠ **The verdict is therefore "positive on part of the band, and short of the stricter published
+requirement" — which is exactly why the third path exists.**
+
+#### One line the same survey settles about the regime gate
+
+P6 (b): the dipolar/multipolar transition is printed at **`Ro_ℓ` ≈ 0.12** (Christensen & Aubert 2006's
+*"narrow interval around `Ro_l` ≃ 0.12"*), with Earth at **0.09** — and **our gate's 0.12 agrees with the
+paper**. ⚠ **But the engine does not compute `Ro_ℓ`**: `dynamo_rocky` branches on a **declared**
+`locked`, and the Rossby number is never evaluated. **The number we agree with is one we do not
+calculate**, which belongs in C16's record and not in a claim about our dynamo regimes.
 
 ### C26 — the superionic-ice representation above ice_x's 1 800 K ceiling — **listed 2026-09-04, not started**
 
@@ -4295,10 +4367,20 @@ removing one pair from the baseline**. The corrected record, now with four runs 
 | ② | `dynamo_rocky`, same typo | **post-move** | this seat, isolated copy, **`rc=1`, 141 s** |
 | — | the clean tree · the clean copy | **post-move** | `rc=0`, 1 182 lookups, class ③ unchanged · `rc=0`, 143 s, **14 contracts** |
 
-**So class ② is reproduced on two nodes by two seats, before and after the move**, and class ① on one
-node. **That is the claim the commit should have made.** ⚠ *The move widened coverage without disturbing
-what already worked: the same two typos fire on the moved checker, and the clean copy still passes at 14
-contracts.*
+**Read as three statements, because they have three different supports:**
+
+- **Pre-move, class ② is reproduced on two nodes by two seats** — `dynamo_rocky` here, `internal_heat_nontidal`
+  by the audit seat and again here.
+- **Post-move, the same two nodes fire — but all three of those runs are this seat's.** No second seat has
+  re-run them on the moved checker.
+- **The audit seat's post-move leg is a different fault**: the `core_initial_temperature_zz` pair below,
+  which is the one that distinguishes the two checkers at all.
+
+**And class ① fired on one node.** ⚠ *The sentence this replaces said "two nodes by two seats, before and
+after the move", which stretched the two-seat part across the post-move rows — **an overclaim written
+inside the paragraph that exists to correct an overclaim**, and caught by the audit seat rather than by
+this one.* ⚠ *The move widened coverage without disturbing what already worked: the same two typos fire on
+the moved checker, and the clean copy still passes at 14 contracts.*
 
 ⚠ **An operating fact that cost the audit seat a run, worth more than the run.** Its first probe returned
 `rc=0` and looked like a hole in the checker. It was the **harness**: six engine modules do
@@ -4315,6 +4397,13 @@ never started. Nothing said so; the tree simply sat with four uncommitted files 
 asked. `engine/tools/README.md@«A gate is a process group»` already holds this family — *a process
 listing is an instant, not a state* — and the new member is: **a waiter that greps for a name is itself
 a process whose command line contains that name.**
+
+⚠ **And today's two isolation failures are one shape.** The symlinked scratch tree let `.resolve()` walk
+back to the original directory; the waiting shell matched its own command line. **In both, the device
+built to isolate something contained the thing it was isolating from** — a tree of links pointing at the
+source it was meant to stand apart from, and a process whose text is the pattern it was meant to watch
+from outside. **Neither failed loudly; both simply reported the state of the thing they were supposed to
+be separate from.**
 
 #### The pair of runs that is the actual evidence for B2
 
