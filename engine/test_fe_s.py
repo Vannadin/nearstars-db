@@ -116,6 +116,42 @@ row("몰분율" in eos.HUANG_FES_SLOT_GAP or "고압 기준 BM2" in eos.HUANG_FE
     "⚠ 아직 `Phase` 슬롯에는 안 들어간다 — 이유가 이름을 갖고 있다: 이 재질의 기준점이 "
     "**19/35 GPa** 인데 `Phase.rho0` 는 영압 기준이다")
 
+print("\n⑦ 고압 기준 BM2 — 새 form (브리프 179). ⚠ **아래 둘은 항등식이지 시험이 아니다**")
+# ⚠ 감사석이 먼저 짚었다: BM2 는 정의상 자기 기준점에서 ρ_ref 를 돌려주므로, 앵커마다 상을 하나씩
+#   만들어 «Table 1 의 두 점을 재현했다» 고 말하면 아무 것도 시험하지 않은 것이다. 그래서 여기서는
+#   **form 이 기준을 옳은 자리에 놓았는지**(항등식이 실제로 성립하는지)만 보고, 진짜 시험은 위 ⑥ 의
+#   **R7 — 독립 AIMD 점** 하나뿐임을 적어 둔다.
+ph = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa")
+row(ph.form == "bm2_ref" and ph.p_ref == 19.0 * eos.GPA and ph.k0p == 4.0,
+    f"상이 만들어진다: form {ph.form} · p_ref {ph.p_ref / eos.GPA:.0f} GPa · K′ {ph.k0p} "
+    "(논문: «second-order BM … K₀′ equals 4»)")
+row(abs(ph.pressure(ph.rho0) - ph.p_ref) < 1.0,
+    f"기준점의 항등식: P(ρ_ref) = {ph.pressure(ph.rho0) / eos.GPA:.6f} GPa = p_ref — "
+    "고압 기준이 실제로 그 자리에 놓였다는 뜻이다")
+row(abs(ph.density(19.0e9) - ph.rho0) < 1e-6,
+    f"뒤집기도 같은 자리로 돌아온다: ρ(19 GPa) = {ph.density(19.0e9):.4f} = ρ_ref")
+row(repr(ph.rho0 / 1e3) == "6.804901234567901",
+    f"슬롯을 지난 R7 이 함수와 **마지막 자리까지** 같다: {ph.rho0 / 1e3!r} g/cm³ "
+    "(c_S = 24/108 을 반올림하면 여기가 갈린다 — 실제로 첫 판이 0.222 로 갈렸다)")
+row(ph.melt == "iron_fes_eutectic" and ph.fit_state == "liquid" and ph.melt_scale == 1.0,
+    "융해는 Mori 공정 **바운드**이고 `melt_scale` 은 쓰지 않는다 (내림폭이 곧 공정선이다)")
+
+# 기존 상은 이 form 을 안 쓰므로 비트까지 그대로여야 한다.
+row(repr(eos.MATERIALS["fe_prem"].phases[0].density(136.0e9)) == "9916.93698295698",
+    f"fe_prem ρ(136 GPa) = {eos.MATERIALS['fe_prem'].phases[0].density(136.0e9)!r} — 비트 동일")
+# ⚠ `MATERIALS` 에는 `phases` 가 없는 항목도 있다 (수소-헬륨 표) — 있는 것만 본다.
+row(all(ph2.p_ref == 0.0 for m in eos.MATERIALS.values()
+        for ph2 in getattr(m, "phases", ())),
+    "기존 모든 상의 `p_ref` 가 0 이다 — 새 필드가 옛 경로를 지나가지 않는다")
+
+print("\n기록 — 두 앵커를 서로에게 외삽하면 2.9 % 벌어진다 (판정 아님, 179 측정)")
+a19, a35 = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa"), eos.huang_fes_phase(eos.HUANG_S4_CS, "35GPa")
+print(f"      19 GPa 앵커를 35 GPa 로 밀면 {a19.density(35.0e9):.1f} kg/m³, "
+      f"35 GPa 앵커 자신은 {a35.rho0:.1f} — {abs(a19.density(35.0e9) - a35.rho0) / a35.rho0 * 100:.1f} %.")
+print("      ⚠ 이것은 **우리 오차가 아니라 논문 자신의 두 적합 사이의 폭**이다. 어느 쪽이 맞는지는")
+print("      이 파일이 말하지 않는다 — 화성 CMB 압력대(19–40 GPa)가 두 앵커를 다 지나므로, 어느")
+print("      앵커로 푸느냐가 곧 선택이고 그 선택은 판정 칸에서 재야 한다 (C55).")
+
 print("\n기록 — 재현 앵커 R4–R6 은 오늘 **거절**이 기대 결과다 (판정 아님)")
 print("      Xu+ 2021 의 Fe–S 밀도점들과 대조하려면 ρ₀(X_S) 가 있어야 하는데, 그 논문은 그것을 표로")
 print("      인쇄하지 않고 비이상 용액 모델의 출력으로 낸다 — 슬롯이 아니라 형식이 다르다.")

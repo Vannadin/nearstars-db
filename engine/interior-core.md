@@ -5070,6 +5070,22 @@ whether they point at the *same* family.
 exactly as the radius window does — directing seat's decision, reversible. **The layered family's
 6.5–6.75 sits outside both axes**, which is what it means for the two to agree.
 
+#### Amendment 4 — where R7–R9 were registered, and the rule that follows from it
+
+⚠ **R7–R9 are not in this section's original registration** — they were added by the parallel seat to
+**P13's Amendment 1** after Huang's supplement arrived, *before* the implementation, and the ledger only
+caught up afterwards. The order was right; the record was late. R7's pass line, *"≤ 2.5 % of the NSP–SP
+midpoint 6.80 (the paper's own spread)"*, is that amendment's wording and its width comes from the two
+values Huang prints (NSP 6.72, SP 6.88), not from anywhere else. **Achieved: 0.07 %.** The implementation
+also requires the value to lie *between* those two printed numbers, which is **stricter than what was
+registered** — recorded here rather than folded in silently.
+
+⚠ **The rule this exposes.** P-files live in the shared folder, outside git, so a later reader cannot
+check what they said when they were cited. **From now on, when this ledger cites a P-file it records that
+file's sha256 and byte count at the moment of citing.** For this citation: `P13-c55-fe-s-material-prereg.md`,
+sha256 `903413d84a02f8bb…`, 27258 B. ⚠ And the ordering rule: *a P-file amendment is moved into the ledger
+before it is implemented*, not after — this one went the other way and the amendment above is the repair.
+
 ⚠ **And none of this is why C55 exists.** Every family puts Mars's core density between **5.7 and 6.5**
 g cm⁻³, while our two irons give **7.6–8.2** and **9.0–9.6**. The families change the *radius target*;
 they do not change the fact that neither of our materials can be Mars's core.

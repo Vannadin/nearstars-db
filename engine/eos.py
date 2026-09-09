@@ -96,6 +96,10 @@ class Phase:
     p_max: float              # Pa. 이 상이 유효한 상한
     ref: str                  # 어느 논문 어느 표에서 왔는가
     p_min: float = 0.0        # Pa. 앞 상에서 넘어오는 전이압
+    # ⚠ `bm2_ref` 전용 (브리프 179). **영압이 아닌 기준점**에 놓인 적합의 기준 압력이다 —
+    #   그런 적합에서 `rho0`·`k0` 는 «영압의 ρ₀·K₀» 가 아니라 «P_ref 에서의 ρ·K_T» 를 뜻한다.
+    #   다른 form 은 이 값을 안 읽고 기본값 0 이라, 기존 상들의 계산 경로는 한 글자도 안 바뀐다.
+    p_ref: float = 0.0        # Pa
     k0pp: float = 0.0         # Pa⁻¹. K₀″. bme4 만 쓴다 — 다른 형태는 무시한다
     # ── 열 항 ──────────────────────────────────────────────────────────
     # alpha_k 가 0 이면 **이 상에는 발표된 열 상수가 없다** 는 뜻이고, 그러면 이 상은
@@ -247,6 +251,14 @@ class Phase:
             e = x ** (-1.0 / 3.0)
             return (3.0 * self.k0 * x ** (2.0 / 3.0) * (1.0 - e)
                     * math.exp(1.5 * (self.k0p - 1.0) * (1.0 - e)))
+        if self.form == "bm2_ref":
+            # **고압 기준 BM2** (브리프 179). 2차 BM 을 영압이 아니라 `p_ref` 에 놓은 것이고,
+            # 그 자리의 ρ·K_T 가 `rho0`·`k0` 다. `p_ref = 0` 이면 위 `bm2` 와 같은 식이 된다 —
+            # 그래서 이 가지는 기존 상의 값을 바꿀 수 없다(기존 상은 이 form 을 안 쓴다).
+            # 왜 필요한가: Huang+ 2023 의 액체 Fe–S 는 19 GPa·35 GPa 의 두 앵커에 대해
+            # "second-order BM EoS, [K₀′] equals 4" 로 적합돼 있고, 그 기준을 영압으로 옮기는
+            # 것은 **우리 산수**다 (C55, `HUANG_FES_SLOT_GAP`).
+            return self.p_ref + 1.5 * self.k0 * (x ** (7.0 / 3.0) - x ** (5.0 / 3.0))
         raise ValueError(f"모르는 EOS 형태 '{self.form}'")
 
     def density(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
@@ -1554,6 +1566,26 @@ def huang_fes_k_t_gpa(c_s: float, anchor: str = "19GPa") -> float:
         raise ValueError(f"c_S 는 몰분율이다 (0–1): {c_s}")
     a, b = HUANG_S_DKT[anchor]
     return HUANG_FE_ANCHORS[anchor][3] + b * c_s + a * c_s * c_s / 2.0
+
+
+def huang_fes_phase(c_s: float, anchor: str = "19GPa") -> "Phase":
+    """주어진 몰분율에서 액체 Fe–S 의 `Phase` 를 만든다 — **고압 기준 BM2** (브리프 179).
+
+    ⚠ **정적 재질로 등록하지 않는다.** 황은 오너가 **밴드**로 결정했고(13–19 wt%, 점 미선출),
+    `MATERIALS` 에 하나를 박으려면 그 안에서 한 점을 골라야 한다. 그래서 조성이 인수로 들어오는
+    빌더로 두고, 밴드의 양끝을 쓰는 쪽은 부르는 곳이 정한다."""
+    p_ref, t_ref, _rho, _kt = HUANG_FE_ANCHORS[anchor]
+    rho = huang_fes_density(c_s, anchor) * 1e3          # g/cm³ → kg/m³
+    k_t = huang_fes_k_t_gpa(c_s, anchor) * GPA
+    return Phase(
+        name=f"fe_s_{anchor}_c{c_s:.4f}", form="bm2_ref",
+        rho0=rho, k0=k_t, k0p=4.0,                      # 논문: "second-order BM … K₀′ equals 4"
+        p_max=MORI_FES_P_MAX, p_min=p_ref, p_ref=p_ref,
+        ref=f"Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, {anchor} 기준",
+        melt="iron_fes_eutectic", melt_ref="Mori+ 2017 Fe–Fe₃S 공정 (바운드)",
+        join="Fe–S 액체", fit_state="liquid",
+        join_note=f"밀도 적합은 c_S = {c_s:.4f} 의 액체 Fe–S, 융해는 Fe–Fe₃S 공정 바운드 — "
+                  f"조성이 다르고 후자는 바닥이다 (21 GPa 아래는 IRON_FES_GAP_REASON)")
 
 
 HUANG_FES_SLOT_GAP = (
