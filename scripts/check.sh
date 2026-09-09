@@ -210,8 +210,12 @@ python3 engine/check_via.py --gate || { echo "  [FAIL] check_via"; fail=1; }
 (cd engine && python3 test_check_refs.py) || fail=1
 python3 engine/check_refs.py || fail=1
 # 논문 인용 규약 (C33 (b), 브리프 165). ⚠ **판정 아님 — 세기만 한다**: bibcode 없는 절의 "저자+연도"
-# 인용 수를 인쇄한다(규칙 A, 첫 판 27 절 · 124 건). 0 이 되면 FAIL 로 승격. 비용 ~0.1 s.
-python3 engine/tools/check_citations.py --quiet || fail=1
+# 인용 수를 인쇄하고 기준선(28 절 · 128 건)과 비교한다. 0 이 되면 FAIL 로 승격. 비용 ~0.1 s.
+# ⚠ 기준선이 27·124 가 아니라 28·128 인 이유: 이 규칙을 설명하는 절(C33 (b))이 인용 **예시** 를 적어
+#   스스로 4건 걸린다 — 오검출 종류로 도구 독스트링에 적혀 있다.
+# ⚠ `|| fail=1` 을 붙이지 않는다: 이 도구는 항상 0 을 돌려주므로 붙여도 불발이고, 붙은 채 두면
+#   "판정한다" 로 잘못 읽힌다 (B2, 감사 지적).
+python3 engine/tools/check_citations.py --quiet
 
 if [ "$lane" = "wiring" ]; then
   echo ""

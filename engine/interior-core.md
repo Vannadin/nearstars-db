@@ -3357,6 +3357,15 @@ no bibcode, so rule A counts **4** in it: the file went from **27 sections · 12
 invented** — it is recorded as a false-positive class in the tool instead, and it is one of the reasons
 the first version only counts.
 
+⚠ **Three defects in the first version of this tool, found by the audit seat and fixed in B2.** Its
+`BASELINE` was **dead code** — never read, never written — so the count was printed with nothing to
+compare against and **forty new citations tomorrow would have passed unnoticed**; it now holds
+`(28, 128)` and prints *"⚠ 기준선과 다르다"* when the count moves (still no `FAIL`). Its gate line carried
+`|| fail=1`, which **cannot fire** because `main()` always returns 0 — removed, with the reason written
+beside the call so nobody reads it as judging. And `check.sh`'s comment said *"27 sections · 124"* while
+the tool prints **28 · 128**; the four extra are this section's own examples, and the comment now says
+so.
+
 **Fixing the other 27 sections is out of this brief's scope**, and the promotion path is the one C45 (b)
 class ③ uses: the count is printed on every run, and when it reaches zero the rule becomes a `FAIL`. **New
 sections are expected to keep it from today.**
@@ -4261,6 +4270,38 @@ place is stronger in one way and weaker in another**: stronger because class ①
 in three nodes, so the signature is demonstrated on live code rather than on a reconstruction; weaker
 because the historical case itself is still unverified by this instrument. **Recorded as not run, with
 the substitute named.**
+
+#### B2 2026-09-09 — the check was standing behind two early exits, and one claim in its commit was too wide
+
+⚠ **The lookup check sat *after* `check_contracts`'s two early exits** — `res is None` (no sample body
+produced a `Result` for the node) and `not res.applicable` (every sample out of domain). **The lookup log
+does not depend on either**, so a typo in a key whose absence stops the node from running at all would
+have been invisible: the node would be skipped before the three sets were ever compared. **Moved above
+both**, with the reason written at the call site.
+
+**After the move, the tree still passes** — `rc=0`, 1 182 lookups compared, class ③ unchanged at 8 nodes
+· 8 keys · 13 pairs.
+
+⚠ **And one sentence in `446a6366`'s message was wider than the evidence.** It said *"both FAIL classes
+are shown to fire"*; what had been shown was **class ② on one node** (`dynamo_rocky`) and **class ① by
+removing one pair from the baseline**. The corrected record, now with four runs behind it:
+
+| class | fired on | by whom |
+|---|---|---|
+| ② | `dynamo_rocky` — `age_gyr` → `age_gyr_zz` | this seat, in-tree, `rc=1` |
+| ② | `internal_heat_nontidal` — `radiogenic.py`'s `age_gyr` → `age_gyr_zz` | **audit seat**, real-file harness, `rc=1`, 143.76 s — *and independently this seat, in an isolated copy, `rc=1`* |
+| ① | `dynamo_rocky` — `dynamo_regime`, with its pair removed from `CLASS1_KNOWN` | this seat, `rc=1` |
+
+**So class ② is reproduced on two nodes by two seats**, and class ① on one node. **That is the claim the
+commit should have made.**
+
+⚠ **An operating fact that cost the audit seat a run, worth more than the run.** Its first probe returned
+`rc=0` and looked like a hole in the checker. It was the **harness**: six engine modules do
+`sys.path.insert(0, Path(__file__).resolve().parent)`, and in a scratch tree made of **symlinks** that
+`resolve()` walks back to the repository's own directory — so `registry`'s first import pulled the
+**original** `radiogenic`, not the edited one, and the planted typo was never in the run. **A symlinked
+scratch tree silently executes the originals.** An isolated tree must hold **real `.py` files**; this
+seat's probes were `rsync` copies with `find -type l` returning nothing, which is why they were valid.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
@@ -6344,8 +6385,24 @@ than C37**: C37 left a `None` that a reader might notice, while this leaves a pl
 
 **It shows up here only because some sample body does *not* take the inversion branch**, leaving the
 `None` for the checker to find. **The detection is one line and it is not built here:** *does a key
-whose lookups all missed later appear in `inputs` with a **non-`None`** value?* **Named, with its
-detection and its one known instance, and left for the repair brief.**
+whose lookups all missed later appear in `inputs` with a **non-`None`** value?*
+
+**Two instances are known, both in the same two lines of `interior.py`:**
+
+| key | where it lands in class ① / ③ | what the branch writes |
+|---|---|---|
+| `porosity_cap` | class ① (only because some body skips the branch) | `P_LAB_MAX` |
+| `initial_porosity` | class ③ | `phi`, the inverted value |
+
+⚠ **`initial_porosity` is the cleaner example of the shape**: its evidence is the number the inversion
+*solved for*, so the contract check sees a plausible value that no body declared and no lookup returned.
+**Named, with its detection and both instances, and left for the repair brief.**
+
+⚠ **And the two instances land in *different* classes — `porosity_cap` in ①, `initial_porosity` in ③ —
+which settles where the detection belongs: outside the class split.** It is a **fourth test**, run on
+every node regardless of which class its keys fall into: *does a key whose lookups all missed later
+appear in `inputs` with a non-`None` value?* **Building it inside either class would catch one instance
+and miss the other**, and the shape is the same shape in both.
 
 ## What closing all of these does not do
 

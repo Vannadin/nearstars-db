@@ -49,8 +49,10 @@ CITE = re.compile(
 NOT_AUTHOR = {"Corrected", "Registered", "Revisited", "Measured", "Listed", "Built", "Closed",
               "Written", "Recorded", "Added", "Restated", "Withdrawn", "Found", "Since", "By",
               "Brief", "Table", "Figure", "Fig", "Section", "Until", "In", "On", "At", "The"}
-#: 2026-09-09 첫 측정, 규칙 A. ⚠ FAIL 이 아니다.
-BASELINE = {"interior-core.md": (0, 0)}      # (bibcode 없는 절 수, 그 절들의 인용 수) — main() 이 채운다
+#: 2026-09-09 첫 측정, 규칙 A — (bibcode 없는 절 수, 그 절들의 인용 수). ⚠ **FAIL 이 아니다**: 다르면
+#: 그 사실만 찍는다. ⚠ 첫 판이 (27, 124) 가 아니라 (28, 128) 인 이유는 이 도구를 들여온 절(C33 (b))이
+#: 인용 예시를 적어 스스로 4건 걸리기 때문이다 — 오검출 종류로 위에 적어 두었다.
+BASELINE = (28, 128)
 
 
 def scan(path: Path) -> tuple[list[tuple[str, int]], int, int]:
@@ -78,8 +80,11 @@ def main() -> int:
             print(f"  {path.name} — bibcode 없는 절 {n_secs}개 · 그 절들의 인용 {n_cites}건 (규칙 A)")
             for head, n in sorted(rows, key=lambda r: -r[1])[:12]:
                 print(f"      {n:3d}  {head}")
-    print(f"  [기록] 인용 규약 (규칙 A, 첫 판): 절 {total_secs} · 인용 {total_cites} — "
-          f"판정 아님. 규칙 본문과 오검출 종류는 이 파일의 독스트링에 있다")
+    same = (total_secs, total_cites) == BASELINE
+    print(f"  [기록] 인용 규약 (규칙 A): 절 {total_secs} · 인용 {total_cites} "
+          f"(기준선 {BASELINE[0]} · {BASELINE[1]}) — "
+          f"{'변화 없음' if same else '⚠ 기준선과 다르다'}. 판정 아님 — 규칙 본문과 오검출 종류는 "
+          f"이 파일의 독스트링에 있다")
     return 0
 
 

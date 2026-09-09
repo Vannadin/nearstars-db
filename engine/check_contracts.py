@@ -163,6 +163,50 @@ def main() -> int:
             fails.append(f"{node}: {doc.name} 에 '## Contract — `{node}`' 블록이 없다")
             continue
 
+        # ⚠ **두 `continue` 위에 있어야 한다** (B2, 2026-09-09): 조회 로그는 노드가 도메인
+        # 밖이든 Result 를 못 내든 무관하게 쌓이는데, 아래의 `res is None` · `not res.applicable`
+        # 조기 이탈 뒤에 두면 **조회 부재가 그 노드를 못 돌게 만드는 오타는 영원히 안 잡힌다.**
+        # ── C45 (b): 문서 Needs · 실제 조회 · AST 리터럴, 세 집합 ────────────────────────
+        look = lookup_sets(node, bodies)
+        needs = declared.get("needs", set())
+        literals = ast_lookup_literals(node)
+        # ① C37 의 정확한 형태 — 조회가 어느 표본에서도 미스인데 그 `None` 이 **같은 이름으로
+        # 증거에 기재**된다. C37 이 초록으로 남은 방식이 바로 이것이다: 값은 없고 이름은 있다.
+        never = sorted((needs & look["asked"]) - look["hit"])
+        filed = set()
+        for body in bodies:
+            res_b = body.results.get(node)
+            if res_b is None:
+                continue
+            for key in never:
+                if key in res_b.inputs and res_b.inputs[key] is None:
+                    filed.add(key)
+        new_filed = sorted(k for k in filed if (node, k) not in CLASS1_KNOWN)
+        known_filed = sorted(k for k in filed if (node, k) in CLASS1_KNOWN)
+        if new_filed:
+            fails.append(f"{node}: 조회가 전부 미스인데 그 None 이 증거에 같은 이름으로 기재된다 — "
+                         f"{', '.join(new_filed)} (C37 의 서명, 클래스 ①)")
+        if known_filed:
+            print(f"  [클래스 ① · 기존] {node}: {', '.join(known_filed)} — C50 에 등재된 사례")
+        class1_seen.update((node, k) for k in filed)
+        rest = sorted(set(never) - filed)
+        if rest:
+            class3[node] = rest
+            print(f"  [클래스 ③] {node}: Needs 인데 어느 표본에서도 공급되지 않는다 — {', '.join(rest)}")
+        # ② 철자 오류의 형태 — 선택적이라고 선언되지 않은 조회가 전부 미스이고 Needs 에도 없다.
+        #    (클래스 나누기는 C45 (b) 정정 참조: 좁힌 것이 아니라 판정을 셋으로 나눈 것이다.)
+        stray = sorted((look["miss"] & look["hard"]) - needs)
+        if stray:
+            fails.append(f"{node}: 아무도 공급하지 않는 조회이고 Needs 에도 없다 — {', '.join(stray)}")
+        # ③ 보고만 — 소스에는 있는데 어느 표본도 밟지 않은 조회, 그리고 아무도 조회하지 않는 Needs.
+        unexercised = sorted(literals - look["asked"])
+        unread = sorted(needs - look["asked"])
+        if unexercised:
+            print(f"  [기록] {node}: 소스에 있으나 표본이 밟지 않은 조회 — {', '.join(unexercised)}")
+        if unread:
+            print(f"  [기록] {node}: Needs 인데 조회되지 않는다 — {', '.join(unread)} "
+                  f"(다른 노드의 출력으로 들어올 수 있다)")
+
         res = None
 
         union_in = union_out = union_units = None
@@ -206,46 +250,6 @@ def main() -> int:
             if name not in union_units:
                 fails.append(f"{node}: 출력 '{name}' 에 단위가 없다")
 
-        # ── C45 (b): 문서 Needs · 실제 조회 · AST 리터럴, 세 집합 ────────────────────────
-        look = lookup_sets(node, bodies)
-        needs = declared.get("needs", set())
-        literals = ast_lookup_literals(node)
-        # ① C37 의 정확한 형태 — 조회가 어느 표본에서도 미스인데 그 `None` 이 **같은 이름으로
-        # 증거에 기재**된다. C37 이 초록으로 남은 방식이 바로 이것이다: 값은 없고 이름은 있다.
-        never = sorted((needs & look["asked"]) - look["hit"])
-        filed = set()
-        for body in bodies:
-            res_b = body.results.get(node)
-            if res_b is None:
-                continue
-            for key in never:
-                if key in res_b.inputs and res_b.inputs[key] is None:
-                    filed.add(key)
-        new_filed = sorted(k for k in filed if (node, k) not in CLASS1_KNOWN)
-        known_filed = sorted(k for k in filed if (node, k) in CLASS1_KNOWN)
-        if new_filed:
-            fails.append(f"{node}: 조회가 전부 미스인데 그 None 이 증거에 같은 이름으로 기재된다 — "
-                         f"{', '.join(new_filed)} (C37 의 서명, 클래스 ①)")
-        if known_filed:
-            print(f"  [클래스 ① · 기존] {node}: {', '.join(known_filed)} — C50 에 등재된 사례")
-        class1_seen.update((node, k) for k in filed)
-        rest = sorted(set(never) - filed)
-        if rest:
-            class3[node] = rest
-            print(f"  [클래스 ③] {node}: Needs 인데 어느 표본에서도 공급되지 않는다 — {', '.join(rest)}")
-        # ② 철자 오류의 형태 — 선택적이라고 선언되지 않은 조회가 전부 미스이고 Needs 에도 없다.
-        #    (클래스 나누기는 C45 (b) 정정 참조: 좁힌 것이 아니라 판정을 셋으로 나눈 것이다.)
-        stray = sorted((look["miss"] & look["hard"]) - needs)
-        if stray:
-            fails.append(f"{node}: 아무도 공급하지 않는 조회이고 Needs 에도 없다 — {', '.join(stray)}")
-        # ③ 보고만 — 소스에는 있는데 어느 표본도 밟지 않은 조회, 그리고 아무도 조회하지 않는 Needs.
-        unexercised = sorted(literals - look["asked"])
-        unread = sorted(needs - look["asked"])
-        if unexercised:
-            print(f"  [기록] {node}: 소스에 있으나 표본이 밟지 않은 조회 — {', '.join(unexercised)}")
-        if unread:
-            print(f"  [기록] {node}: Needs 인데 조회되지 않는다 — {', '.join(unread)} "
-                  f"(다른 노드의 출력으로 들어올 수 있다)")
 
     gone = sorted(CLASS1_KNOWN - class1_seen)
     if gone:
