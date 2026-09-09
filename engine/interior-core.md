@@ -4721,6 +4721,46 @@ about the recipe, not about the checker, and it is not decided here.
 it holds the six published bodies bit-identical, and its label says what it is. What it did *not* do is
 the thing it was added for, and the file says that too.
 
+### C54 (b) 2026-09-09 — Mars gets a declared core-side CMB temperature, pre-registered before the run
+
+⚠ **Committed before the declaration.** 172 (a) measured C54's root: `core_state.core_cmb_temperature` is
+supplied by Earth and undeclared on Mars and Pandora, so Mars's `conductor_phase` is `undecided` and the
+lid axis in front of it never decides anything. **Owner decision, 2026-09-09: declare the literature band
+1900–2100 K for Mars.**
+
+**The band and its source.** Durán+ 2022 ([`2022PEPI..32506851D`](https://ui.adsabs.harvard.edu/abs/2022PEPI..32506851D), held) prints
+a CMB temperature of **1900–2100 K** with a potential temperature of 1650–1750 K, *"implying an entirely
+liquid core at present"*; Stähler+ 2021 ([`2021Sci...373..443S`](https://ui.adsabs.harvard.edu/abs/2021Sci...373..443S), held) reaches
+the same phase from seismology — *"the observation of ScS … rules out a solid outer core"*. ⚠ **The
+layered-model family is deliberately outside the band**: Khan+ 2023
+([`2023Natur.622..718K`](https://ui.adsabs.harvard.edu/abs/2023Natur.622..718K), held) puts a fully molten silicate layer over a
+smaller, denser core, which is *a different choice of mantle model*, not a different measurement of the
+same one. Mixing the two would give a width that is a modelling disagreement wearing the shape of an
+uncertainty.
+
+⚠ **One judgement is mine and it is flagged, not hidden.** The engine's input is a **scalar** and this
+band has two ends. `cmb_flux`'s own note says a declared core-side temperature acts as a **lower bound**
+on `Q_CMB`, so the band's **low end, 1900 K**, is what keeps that direction honest. **Both ends are
+measured and reported**; if they give the same verdicts the choice does not matter today, and if they do
+not, the owner has a real decision instead of my quiet one.
+
+#### What is predicted, before running it
+
+1. `conductor_phase` **undecided → decided**. Which value is *not* predicted with confidence, and here is
+   why: Mars's melting comparison today already reads `cmb_melt_temperature` **2714.25 K** against a
+   fallback `core_cmb_temperature_used` of **2346.73 K** — a margin of **−367.51 K**, i.e. *below*
+   melting. Declaring **1900 K** moves the input **further below** that curve. ⚠ **So the arithmetic
+   points at `solid`, while every held observation says liquid.**
+2. ⚠ **If it reads `solid`, that is the finding and nothing is tuned.** It would mean our melting-curve
+   comparison disagrees with the Mars literature, and the disagreement gets an item, not a patch.
+3. **The lid axis decides for the first time, or it does not get the chance.** If the phase reads
+   `liquid`, Mars is `stagnant` → `DEAD_LID`; if it reads `solid`, the core branch fires first and the lid
+   axis stays untested — which would leave C54 open on a *different* leg than the one being closed.
+4. **Earth and Pandora bit-identical**, every node, every value.
+5. **C20's endpoint is 3763 K for the same body.** That is ~1700 K above this band, and it is **not
+   reconciled here** — listed as a candidate instead, because one of the two is wrong about Mars and
+   choosing which is not a declaration.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the
