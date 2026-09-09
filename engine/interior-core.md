@@ -99,6 +99,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C49** | one engine, two `k_core` declarations — and one file's stated ground forbids the number the other consumes | **listed 2026-09-09, not started** | Rocky: `cmb_flux.py@«K_CORE = 50.0»`, a single declared midpoint ± 20, consumed as the corners (30, 70) by `core_entropy.K_RANGE` and `core_history.K_CORNERS` and as the `q_ad` band. Sub-Neptune: `sub_neptune_dynamo.py@«CORE_CONDUCTIVITY = Band(»`, midpoint **None**, ends **40 and 100** from two papers Tang+ 2025 runs both ways, grade *calibrated*, with an unmade `Choice`. ⚠ **And the comment above it says «70 W/m/K 는 두 논문 중 어느 쪽도 말하지 않은 수다» — that very 70 is the upper corner the rocky path feeds to the entropy band.** So one file's stated ground disqualifies a number the other file uses. Two shapes as well as two values: one paper's ± against two papers' ends. Unification is part of owner decision ② (C25 (b)); listed only |
 | **C50** | contracts list `Needs` that no roster body supplies — and four are C37's exact signature | **listed 2026-09-09, not started** | Measured by C45's new lookup check: **class ① (C37's signature — the lookup misses everywhere and the `None` is filed under that name) is live in 3 nodes / 4 keys** (`body_class` `gas_mass_fraction`·`semi_major_axis_au`, `dynamo_rocky` `dynamo_regime`, `interior_layers` `porosity_cap`), and **class ③ (a `Needs` no body supplies, the call site coping) in 8 nodes / 8 keys** (`core_material` ×4, `ice_mass_fraction` ×3, `differentiated`, `envelope_z`, `gas_mass_fraction`, `initial_porosity`, `tidal_heating`, `permanent_quadrupole`). Each is one of two faults — the contract is wrong, or the body declarations are missing — and which is not decidable from the count. Held at measured size meanwhile: the four are named in `engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and anything outside fails the gate; class ③ has a printed baseline. Repair can move values, so it is a later brief. No owner decision |
 | **C51** | the engine has no mantle energy budget, so secular cooling is an input nobody supplies rather than an output | **pre-registered 2026-09-09, before the build** | The owner's third path (C25 (f)): build the missing term instead of picking numbers inside the entropy band. ⚠ **The flux law is not what is missing** — Foley 2018's eq. (3) is the Korenaga eq. 30 this engine already transcribed at `n = 1`. What is missing is the budget around it, eqs (1)(2)(4), whose `dT_p/dt` **is** secular cooling. Stage 1 is the present epoch only, with `dT_p/dt` as the unknown, so the gate cost is ~0. Three verdict cells and their failure sentences are fixed in the section below, before any of it exists; `L′` and `(m, p)` go in as bands because the source treats the first as an unknown and prints three disagreeing sets of the second. ⚠ **First anchor measured: one prefactor has five values across two papers (0.528 · 0.53 · 0.55 · 0.57 · 0.5) and Korenaga names the cause — his own definition of `T̄_i`** — which is also the only candidate explanation for the 3.65× absolute-flux gap. Owner decisions on `L′` and `(m, p)` come after commit D's numbers; C34's feed stays held |
+| **C53** | the tectonic regime is declared as a boolean, and no source surveyed uses one | **pre-registered 2026-09-09, before the build** | `stagnant_lid: true/false` is the *“bimodal distribution … that is typically assumed”* which **Foley & Bercovici 2014**'s abstract ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F)) names as its foil, and the parallel seat's P9 survey found **no scheme that is binary** (Mars and Mercury stagnant in all of them, Earth mobile *or* transitional depending on the scheme, Venus genuinely contested across five printed classifications). Registered replacement: a `tectonic_regime` enum {stagnant · mobile · transitional · episodic · heat_pipe · contested} carrying a grade and a source, with the old boolean kept as a **derived** value so that **no consumer moves**. ⚠ **The blast radius was counted before the design and it is one branch**: `dynamo_rocky`'s survival gate is the only place a value reaches an output (truthy → `DEAD_LID`, `dipole_moment` 0), `heat_transport_mode` does **not** read it — it reads the computed flux ladder — and `phase2/`, `phase4/`, `db/` and the SPEC have **zero hits**. Three owner decisions were taken before the build (`contested` → derived `True`; Earth = `mobile` with the grain-damage note; Pandora = `mobile`, owner-declared), and `episodic` · `heat_pipe` are **left unmapped by name** with their candidates recorded — owner-pending. The regression that proves nothing moved is the three roster bodies' derived booleans, bit for bit: Earth `False` · Mars `True` · Pandora `False`. ⚠ The declared-regime-versus-computed-ladder consistency check is **deliberately not built here** — its first report would be that Earth's declaration and Earth's ladder cell already disagree, which is its own item |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -7205,6 +7206,153 @@ already done the work, and we redid it. **The rule, stated once so the next brie
 ⚠ *This is the same rule `feedback_own_docs_are_base_material` states one level up* (our own documents are
 not evidence; go back to the source). **The new part is that it applies to the paper's arithmetic too, not
 only to its prose** — a printed 0.17 TW is a source, and a ppm figure we multiply ourselves is not.
+
+### C53 — the tectonic regime is declared as a boolean the sources say does not exist — **pre-registered 2026-09-09, before the build**
+
+⚠ **This section is committed before the change.** C51 (c) found that `stagnant_lid: true/false` is the
+*"bimodal distribution … that is typically assumed"* which Foley & Bercovici 2014's abstract names as its
+foil, and the parallel seat's P9 survey found **no source that uses a binary**. This registers what
+replaces it, what must not move, and the three owner decisions that were taken before any of it was built.
+
+#### The blast radius, counted before the design
+
+| where | what it does | moves? |
+|---|---|---|
+| `engine/dynamo_rocky.py@«elif stagnant_lid:»` | the **survival gate**: `None` → `cannot-say`; truthy → **`dead (stagnant lid)`**, and `dipole_moment`, `b_eq`, `b_pol` all emit **0** | ⚠ **the only place a value reaches an output** |
+| `engine/bodies/earth.yaml` · `mars.yaml` · `pandora.yaml` | the three declarations (`false` · `true` · `false`) | the data |
+| `engine/chain.yaml` one edge ref · `test_dynamo_rocky.py` two call sites · the dynamo methodology's `Needs` | text and test inputs | text |
+
+**And two non-consumers, which is the useful half.** ⚠ `heat_transport_mode` **does not read it** —
+`engine/tidal_heating.py@«def _mode_from_state(state):»` reads `surface_flux`, `radiogenic_power` and
+`radius` only, and the emitted `tectonics` field comes from that computed ladder. ⚠ And **nothing in
+`phase2/`, `phase4/`, `db/` or the SPEC mentions it** (grep: 0 hits) — no board row, no curation
+contract, no writer. **One live consumer, one branch, three declarations.**
+
+⚠ **A declared boolean and a computed ladder on the same quantity, with no check between them.** Earth
+declares `stagnant_lid: false` while the C46 ladder scores Earth **`plutonic-squishy lid`**. **The
+consistency check is deliberately not built here** — see *what this must not do*.
+
+#### The data shape
+
+```yaml
+tectonic_regime:
+  value: stagnant       # stagnant | mobile | transitional | episodic | heat_pipe | contested
+  grade: measured       # measured | analog | declared | contested
+  source: "2004PEPI..142..225S"     # bibcode, or a list when contested
+  note: "single plate in every scheme surveyed (P9)"
+```
+
+**The old boolean stays as a derived value, so no consumer changes in this brief:**
+
+| `tectonic_regime.value` | derived `stagnant_lid` | what the survival gate then says |
+|---|---|---|
+| `stagnant` | **True** | `dead (stagnant lid)` — unchanged from today |
+| `mobile` | **False** | dynamo permitted — unchanged from today |
+| `contested` | **True** | `dead` — ⚠ **owner decision (a)**, below |
+| `transitional` | **None** | `cannot-say (undeclared lid)` — refused by name |
+| `episodic` · `heat_pipe` | ⚠ **no mapping declared** | ⚠ **refuse by name**: *"no derived-boolean mapping is declared for regime «X» — owner pending"* |
+
+⚠ **`episodic` and `heat_pipe` are left unmapped on purpose.** No roster body takes either value today,
+and guessing would be a seat deciding whether an episodically-mobilising planet gets a dynamo. **The
+candidates are recorded and not chosen:** `episodic` → `False` (it mobilises, so a dynamo is permitted)
+or `None` (it is stagnant for most of its history); `heat_pipe` → `True` (Lenardic 2018 files heat pipe
+as a *hot stagnant lid* sub-mode) or `None`. **Registered as owner-pending.**
+
+⚠ **And the derived boolean erases what the enum was built to carry.** With `contested` → `True`, the
+boolean cannot tell `stagnant` from `contested`, which is exactly the distinction P9 measured. **That is
+accepted deliberately** — the enum keeps the distinction for any consumer that needs it, and the boolean
+keeps today's outputs bit-identical. *A consumer that needs to know Venus is contested must read
+`tectonic_regime`, never the derived boolean.*
+
+#### The three owner decisions, taken 2026-09-09 before the build
+
+| # | decision | the owner's reason |
+|---|---|---|
+| **(a)** | **`contested` → derived `True` → `dead`, field 0** | *"0보다 크면 있다인데 아예 0인 거잖아? 실제 금성 자기장도 대기 상층부의 이온화로 생긴다고 나왔었고. 기전이 아예 다르니까 다이나모가 0이어도 괜찮을 것 같아"* — the dynamo really is zero on such a body, and the field a Venus-like planet does have comes from a **different mechanism** |
+| **(b)** | Earth = **`mobile`**, with the note *"the grain-damage scheme (F&B 2014) reads it as transitional"* | our own transitional law cannot be evaluated (C51 (d): seven undeclared non-dimensional inputs), so `transitional` would be a label with no computation behind it |
+| **(c)** | Pandora = **`mobile`**, labelled *"owner-declared 2026-09-09 (fiction body, no measurement)"* | a created body has nothing to measure; today's `false` carries no recorded reason |
+| (d) | whether the regime reaches a board row | **deferred** — a Phase 4 facet choice |
+
+⚠ **Decision (a)'s label is mandatory and it points at a branch that already exists.** The ionospheric
+field the owner names is the **induced magnetosphere**, and `magnetosphere_geometry` already carries that
+branch — `engine/induced-magnetosphere-source-check-notes.md` source-checked it on 2026-09-05. ⚠ *But the
+authority for the **Venus** statement specifically, Luhmann 1991 (`1991SSRv...55..201L`), is **not
+held*** (that note's own table records it), so the label travels as: **a dynamo of 0 does not mean no
+magnetosphere; the induced branch is a different mechanism, out of this node's scope, and its Venus
+source is uncached.** **Nothing about the induced branch is built or changed in this brief.**
+
+#### The registered regression — the thing that proves no consumer moved
+
+**Three assertions, written before the code:**
+1. **The three roster bodies' derived booleans equal today's values bit for bit** — Earth `False`,
+   Mars `True`, Pandora `False`. *If any of the three moves, the mapping is wrong, not the data.*
+2. `contested` → `True` → the gate returns `dead (stagnant lid)` with `dipole_moment == 0.0`; and
+   `transitional` → `None` → the gate returns the **`cannot-say`** string, **not** `dead`.
+3. `episodic` and `heat_pipe` raise the named refusal rather than defaulting to anything.
+
+⚠ **The order of operations is fixed here because `check_contracts` will catch it otherwise:** the new
+key goes into the dynamo methodology's `Needs` table **first**, then the body files. Reversed, the check
+fails class ② (*"a lookup nobody supplies and it is not in Needs"*) — **and that failure would be the
+check working**, so it is registered as the expected outcome of doing it in the wrong order rather than
+as a risk.
+
+#### What this brief must not do
+
+1. ⚠ **It must not decide Earth's or Venus's regime as a matter of physics.** (b) elects a *statement*
+   under a named scheme; the schemes still disagree and P9 records both.
+2. ⚠ **It must not touch the computed ladders** — `heat_transport_mode` or C46's five rungs. They read
+   flux, not this field, and C51 (d) evaluated them separately.
+3. ⚠ **It must not add a consistency check between the declared regime and the computed ladder.** That
+   check is worth its own item, because **the first thing it would report is that Earth's declaration and
+   Earth's ladder cell already disagree** — and reporting that inside a data-shape change would mix two
+   findings in one commit.
+
+**Size:** ~60 lines of code, three body files, three doc edits, gate ~0 s.
+
+#### Amendment 18:14, written before B, from the audit seat's reading
+
+⚠ **The 101 lines above are left exactly as they were approved.** These four items are *appended*, not
+merged into them, so that what was registered and what was corrected stay separable in the diff.
+
+**1. Assertion 2's two strings were abbreviations.** The constants are
+`dead (stagnant lid, declared)` and `cannot-say (stagnant-lid judgement undeclared)`. ⚠ **So the
+regression is hung on identity with `dynamo_rocky.DEAD_LID` and `dynamo_rocky.UNDECIDED_LID`, not on the
+literal text** — a test that retypes the sentence would keep passing while the label drifted underneath
+it. **Neither constant's string changes in Brief 168.** The three lines, measured **before** the change
+(audit seat, at `ccda2d50`), which is what the bit-identity claim compares against:
+
+| `stagnant_lid` today | the gate's label | `dipole_moment` · `b_eq` · `b_pol` |
+|---|---|---|
+| `True` | `dead (stagnant lid, declared)` = `DEAD_LID` | 0.0 · 0.0 · 0.0 |
+| `False` | `undeclared (both emitted)` | 1.0 · 30.0 · 60.0 |
+| `None` | `cannot-say (stagnant-lid judgement undeclared)` = `UNDECIDED_LID` | all three **None** |
+
+⚠ **`contested` rides that existing `DEAD_LID` branch and adds one line to the label** — *«contested →
+declared-dead; induced magnetosphere is a separate branch (`magnetosphere_geometry`)»* — and
+`transitional` reuses the existing `UNDECIDED_LID` path verbatim. *A second cannot-say string would make
+the enum look as though it had changed a consumer, which is the one thing this brief registers it must
+not do.*
+
+**2. The derived boolean is typed `bool`, and the regression asserts `is True` · `is False` · `is None`.**
+`1` and `0` are refused. *An `int` passes every truthiness branch in the gate and is still the wrong type
+at the one place a consumer would compare identity — the failure would surface somewhere else, later.*
+
+**3. The transitional collision** (directing seat's decision, reversible). A body file carrying **both**
+`tectonic_regime` and the old `stagnant_lid` raises a **named refusal** that says both are declared and
+elects neither. A body carrying **only** the old key makes `check_contracts` fire **class ②** — `Needs`
+asks for `tectonic_regime` by then — ⚠ **and that firing is the expected outcome, not a risk**, the same
+registration the ordering paragraph above already makes. In 168 B the three body files **drop the old key
+and keep only the new one**, and the derived boolean is computed inside the node and **never written back
+to a body file**. *Two declarations of one quantity is the shape C49 is open for; this brief does not
+create a fourth instance of it.*
+
+**4. What the two bibcodes in this section are** — both already confirmed elsewhere, neither re-queried
+for this brief. The example `source` is **Stein, Schmalzl & Hansen 2004**
+([`2004PEPI..142..225S`](https://ui.adsabs.harvard.edu/abs/2004PEPI..142..225S)), the yield-stress scheme the parallel seat's P9
+surveyed, **abstract only** — it illustrates the field's shape and is not a declaration for any body. The
+Venus authority named in owner decision (a) is **Luhmann 1991**
+([`1991SSRv...55..201L`](https://ui.adsabs.harvard.edu/abs/1991SSRv...55..201L)), and ⚠ **it is not held** — the label travels with
+that fact, as the paragraph above states.
 
 ## What closing all of these does not do
 
