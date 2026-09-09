@@ -279,6 +279,9 @@ echo "── CMB 열류 (Nimmo 식 37–39 폐합 · 단열 열류 · 거절 라
 # 정체뚜껑 맨틀 수지 (C51 1단계). Foley 2018 식 (1)–(4) 전사가 논문 인쇄 도출값(μ_r, Pe)을 재현하고, «cancel out» 이
 # 항등식임을 재고, 식 (2) 는 없는 입력을 이름 대며 거절한다. 판정 칸 셋은 여기서 읽지 않는다 (커밋 D). ~0 s.
 (cd engine && python3 test_mantle_budget.py) || fail=1
+# 전이 영역 스케일링 (C51 커밋 C). F&B 2014 Table 1 세 행·식 (54)(58)(59)(60) 전사. 폐합이 위·아래 열류를 맞추고,
+# 논문 자기 반올림의 값어치와 (m,p) 세 행의 벌어짐을 재고, 바디 경로는 비차원 입력 일곱을 대며 거절한다. ~0 s.
+(cd engine && python3 test_transitional_lid.py) || fail=1
 # 페이로드 등급 계약 (2026-09-04 오너 결정). authored 는 두 표지(gap:, consistent-with:) 없이는 생성되지 않는다.
 (cd engine && python3 test_payload.py) || fail=1
 # 상 곁표 (2026-09-04, 오너 채택 패턴). 키 집합 = eos 가 내는 상, 채운 칸은 등급·출처, authored 는 두 표지, 채움/전체를 출력한다.

@@ -9,6 +9,15 @@ output (C51). This transcribes the budget. ⚠ **Stage 1 is the present epoch on
 unknown, (1) is solved for it at a state that already exists, and secular cooling comes out as a
 number rather than as a history. Coupling to C20's time axis is a separate brief.
 
+⚠ **Which set of constants this file carries, said once so nobody has to infer it.** This module is
+**Foley 2018's set throughout** — `c₁` = 0.5, `k` = 5 W/m/K, `α` = 3 × 10⁻⁵ /K, `μ_n` = 4 × 10¹⁰ Pa·s,
+and a **potential** temperature `T_p` in both `θ` and `Ra_i`. `stagnant_lid.py` is **Korenaga 2009's
+set** — `a` = 0.30 + 0.25n (0.55 at n = 1, our closed form 0.5539), `k` = 4 W/m/K, and the internal
+temperature of his eq. 20. **The two are never mixed**, and only the *shape* of eq. 30 crosses between
+them (via `nu_asymptotic`'s `a` argument). ⚠ *And the five values of that prefactor (0.528 · 0.53 ·
+0.55 · 0.57 · 0.5) are fits of quantities **defined differently**, so choosing among them is a choice
+of definition system, not a choice of accuracy — there is no "more accurate" one to pick.*
+
 **What is transcribed, in the paper's own numbering.**
 
     (1)  V_man ρ c_p dT_p/dt = Q_man − A_man F_man − f_m ρ_m (c_p ΔT_m + L_m)

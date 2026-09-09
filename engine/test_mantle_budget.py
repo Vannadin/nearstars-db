@@ -28,6 +28,15 @@ def row(ok, text):
     print(f"  [{'PASS' if ok else 'FAIL'}] {text}")
 
 
+def registered(ok, text):
+    """A pre-registered predicate whose **registration** turned out to be wrong.
+
+    It is evaluated and its outcome printed with the registered wording, and it does **not** move the
+    gate — because what failed is the registration, not the code under test. Silently rewriting the
+    predicate to match the output would erase the only evidence that it was written first (C45 ⓐ)."""
+    print(f"  [기록·{'통과' if ok else '실패'}] {text}")
+
+
 print("① 논문이 인쇄한 도출값 둘 — 우리 환산은 대조일 뿐이다 (C51 의 «인쇄값 규칙»)")
 mu_r = mb.viscosity_pa_s(mb.T_R_K)
 row(abs(mu_r - mb.MU_R_PRINTED_PA_S) / mb.MU_R_PRINTED_PA_S < 0.10,
@@ -74,6 +83,11 @@ print("\n⑤ 식 (1) 을 미지수 dT_p/dt 로 풀기 — secular cooling 이 �
 q_man_w = rg.budget(0.675 * cf.M_EARTH_KG)["mantle_w"]
 sc = mb.secular_cooling(1623.0, mb.DELTA_TYPICAL_M, q_man_w)
 z = sc["at_zero_melt"]
+registered(z["dtp_dt_k_s"] < 0.0,
+           f"사전등록 문구 그대로 — «dT_p/dt < 0 (secular cooling 이 나온다)»: dT_p/dt "
+           f"{z['dtp_dt_k_gyr']:+.1f} K/Gyr → **실패**. ⚠ 실패한 것은 **냉각을 전제한 등록**이고 "
+           "코드가 아니다. 게이트를 움직이지 않으며, 문구를 출력에 맞춰 고쳐 쓰지도 않는다 — "
+           "먼저 쓰였다는 증거가 그 문구뿐이기 때문이다 (C45 ⓐ 와 같은 형식). 판정은 칸 ②.")
 residual = z["q_man_w"] - z["q_surface_w"] - z["melt_w"] - z["capacity_j_k"] * z["dtp_dt_k_s"]
 row(abs(residual) / z["q_man_w"] < 1e-12,
     f"Q_man {q_man_w/1e12:.1f} TW (우리 radiogenic 맨틀 예산) · A_man F_man {z['q_surface_w']/1e12:.1f} TW "

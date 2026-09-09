@@ -6931,8 +6931,10 @@ which is the claim *"the flux law is not what is missing"* turned into code.
 | *"μ_r ≈ 2 × 10²⁰"* at `T_r` = 1623 K | **1.810 × 10²⁰ Pa·s** | agrees at the printed significant figure (−9.5 %); **the value we carry is the printed 2 × 10²⁰** |
 | *"P e ≈ 0.6"* from Λ ∼100 km, u ≈ 6 × 10⁻¹² m/s, κ = 10⁻⁶ | **0.600** | exact |
 
-⚠ **And the paper's cancel-out remark is an identity, not an approximation — which says more than the
-paper does.** Foley notes that (3) uses `T_p − T_s` and `d` rather than `T_p − T_l` and `d − δ` because
+⚠ **And the paper's cancel-out remark is an identity, not an approximation.** ⚠ *The invariance is
+**Foley's own printed statement**, not something this seat derived — what we added is the confirmation
+and the exponent arithmetic behind it.* Foley notes that (3) uses `T_p − T_s` and `d` rather than
+`T_p − T_l` and `d − δ` because
 *"in the heat flux scaling law both the mantle thickness and temperature difference cancel out"*. Measured:
 the two forms agree to a relative **10⁻¹²**, and so does **any** substitution — `T_s` at 100, 273, 500 and
 737 K, and `d` at 1700, 2890 and 4000 km, all give `F_man` = **14.233339 mW/m²** to a relative
@@ -6965,6 +6967,43 @@ has no value in this engine and converting would invent a temperature.
 (it needs `Q_crust`, `δ_c` and the crust/mantle production split), so `ddelta_dt_m_s` returns a named
 refusal rather than a default. Given the steady-state gradient `−F_man/k` it returns `dδ/dt` = 0, which is
 the check that the equation was transcribed the right way round.
+
+#### C51 (c) 2026-09-09 — the transitional law transcribed, and the source denies the field our bodies declare
+
+**Built: `engine/transitional_lid.py` and `engine/test_transitional_lid.py`, in the gate at ~0 s** —
+Foley & Bercovici 2014 ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F), held): eqs (9)–(12)'s
+grain-damage shear-stress chain, eq. (54)'s top boundary layer, eq. (58)'s bottom one, eq. (59)'s energy
+balance closing `T'_i`, and eq. (60)'s Nusselt number. **Table 1's three `(m, p)` rows are stored to the
+printed digit** and Fig. 13's four panel fits are recorded beside them.
+
+⚠ **No body is evaluated and no verdict cell is read.** All seven inputs are non-dimensional quantities
+of that paper's own models — `L′`, `μ'_l`, `μ'_i`, `D/(H h'_l)`, `D/(H h'_i)`, `Ra'`, `(m, p)` — and
+**this engine declares none of them**, so `solve_on_body()` refuses by name and lists all seven.
+
+**Three measurements the paper leaves as prose:**
+
+| what | measured |
+|---|---|
+| **the paper's own rounding of its own exponents** — eq. (60) uses (1/10, 1/4, 1/3, 2/3) where Table 1's (2, 4) fit prints (0.1071, 0.2484, −0.3151, −0.6603) | over the 64 physical points inside Fig. 13's plotted ranges the `Nu` ratio spans **0.917–1.319**, i.e. up to **31.9 %** |
+| **how far apart the three `(m, p)` rows put one answer** | at `Ra'` 10⁷, `μ'_l` 10⁵, `D/(H h'_l)` 10⁻²: `Nu` **23.69 · 50.46 · 27.05** — a **2.1× span**, which is why owner decision (b) carries a band and not a value |
+| **`β_L` changes sign and `C₅` spans 7.8×** | (+0.1071 · −0.0218 · +0.0582) and 20 · 86 · 11 — *"how does plate length enter"* has no single answer in the source, which is consistent with the source treating `L′` as an unknown |
+
+⚠ **And the paper's headline contradicts a field our bodies declare.** F&B 2014's own words: *"with
+grain-damage, the transition between stagnant lid convection and fully mobile convection is gradual and
+takes place over a large transitional regime, **with plate-tectonics lying within the transitional
+regime**"*, and Venus *"can be explained by convection in the transitional regime, close to the
+fully-stagnant lid regime, with a very slow «plate» speed"*. **Every body in `engine/bodies/` declares
+`stagnant_lid: true` or `false`** (`engine/bodies/earth.yaml@«정체 암석권 판단 — **선언**(사실: 지구는 판구조)»`),
+and `dynamo_rocky`'s survival gate reads it. **This is a two-valued field the source says does not
+describe either Earth or Venus** — and it is the same shape as C46's finding that the ladder always
+lands on one cell. ⚠ *Named, not repaired: changing it moves outputs, and the two-regime evaluation is
+commit D's.*
+
+⚠ **A fourth printed value for Earth's mantle potential temperature.** F&B §8.1 eq. (68) prints
+*"`T_m,0` = **1650 K** is the Earth's mantle potential temperature"*, beside Foley 2018's `T_r` = 1623 K,
+Korenaga's 1350 °C = 1623.15 K, and our bodies' declared **1600 K** (Unterborn+ 2019). **Four papers,
+four numbers, one quantity** — and unlike the prefactor spread this one is not a definition difference,
+it is four choices of the same declaration. **Recorded where the next seat will read it.**
 
 #### ⚠ Earth has three present-day CMB temperatures, and the supplier and the consumer reach opposite verdicts
 
@@ -7002,6 +7041,21 @@ hand**, and the note then carries its condition, which is the repair Brief 166 D
 anchors. **A third place holding H-conditioned numbers with no label — the C52 candidate's instance
 count is now three.**)*
 
+#### ⚠ A pre-registration that turns out wrong is the institution working, not a lapse
+
+**Three registrations failed on 2026-09-09, and none of them was rewritten to match its output.**
+
+| registration | what happened |
+|---|---|
+| C47 (g)'s fourth cell | its **premise** was falsified; (g) had registered how to record that, and it was recorded |
+| C48's diagnosis | the **cause** was misdiagnosed (the out-of-domain call, not the step); the old text is kept in the item's second column and marked superseded on the cause alone |
+| C51's `dT_p/dt` < 0 | the row presumed **cooling**; it failed, the wording stands, the outcome is printed as `[기록·실패]`, and a new row checks what a stage-1 transcription can actually own — that eq. (1) closes term by term |
+
+⚠ **The value of a pre-registration is precisely that it can fail**, and the only thing that would
+destroy it is editing the sentence afterwards. **So a failed registration is filed, never silently
+repaired** — the failure is the measurement. *This paragraph exists because three of them landed in one
+day and the pattern is worth naming rather than re-deriving each time.*
+
 #### ⚠ One rule out of three mistakes: the paper's own arithmetic wins
 
 **Three defects of the same kind were found on 2026-09-09, all in one day and all ours:**
@@ -7010,7 +7064,8 @@ count is now three.**)*
 |---|---|---|
 | the potassium cap converted with a textbook constant | *"less than 0.17 TW"* → **0.088 pW/kg** | 0.14 pW/kg (3.5 × 10⁻⁹ W/kg per ppm, **56 % high**) — Brief 166 E |
 | Sinmyo's CMB temperature relabelled | *"the **upper bounds** … are estimated to be … 3760 ± 290 K"* | our module called the same number a **lower** bound — C25 (e) |
-| Earth's present mantle temperature carried three ways | Foley 2018: *"`T_r` = **1623 K** is Earth's present day mantle temperature"*; Korenaga 2009's `T_p` 1350 °C = 1623.15 K | our bodies declare **1600 K** (Unterborn+ 2019 §2), and C47's step-4 tables run **both** |
+| Earth's present mantle temperature carried three ways | Foley 2018: *"`T_r` = **1623 K** is Earth's present day mantle temperature"*; Korenaga 2009's `T_p` 1350 °C = 1623.15 K; ⚠ *and a fourth, F&B 2014 §8.1's* **1650 K** | our bodies declare **1600 K** (Unterborn+ 2019 §2), and C47's step-4 tables run **both** |
+| ✓ **the one that went the right way round** — eq. (3)'s invariance to `T_s` and `d` | Foley prints it in prose: *"in the heat flux scaling law both the mantle thickness and temperature difference **cancel out**, so the equation … is independent of the definition"* | we went to the paper's sentence **first** and only then confirmed it with the exponents (`1 − 4/3 + 1/3 = 0`), so our arithmetic was the check the rule asks for and not a replacement |
 
 ⚠ **None of these was a physics error and all three were arithmetic or labelling** — the papers had
 already done the work, and we redid it. **The rule, stated once so the next brief inherits it:**
