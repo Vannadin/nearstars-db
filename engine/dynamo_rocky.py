@@ -144,7 +144,8 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
            body_class: str | None = "rocky", dynamo_regime: str | None = None,
            locked: bool | None = None, rotation_period_h: float | None = None,
            dynamo_alive: bool | None = None, lid_note: str | None = None,
-           tectonic_regime: dict | None = None, lid_refusal: str | None = None) -> Result:
+           tectonic_regime: dict | None = None, lid_refusal: str | None = None,
+           composition_intent: str | None = None) -> Result:
     # ⚠ `stagnant_lid` 는 여전히 세 값(`True`/`False`/`None`) 이지만 **선언이 아니라 파생값**이다 —
     #   `tectonic_regime` 에서 `tectonic_regime.derived_stagnant_lid` 가 만든다 (C53, 브리프 168).
     #   이 서명과 이 함수의 분기는 그래서 한 줄도 움직이지 않았고, 그것이 «소비처는 안 바뀐다» 의 뜻이다.
@@ -155,6 +156,9 @@ def ladder(mass_earth: float, radius_earth: float | None, conductor_phase: str |
     inputs = {"mass_earth": mass_earth, "radius_earth": radius_earth, "conductor_phase": conductor_phase,
               "tectonic_regime": tectonic_regime, "age_gyr": age_gyr, "ice_mass_fraction": ice_mass_fraction,
               "body_class": body_class, "dynamo_regime": dynamo_regime,
+              # C50 (b) 6행: 얼음 분율의 **진짜** 입력은 이 프리셋이다 (C28). 선언이 이기고,
+              # 없으면 여기서 온다 — 그러니 증거가 그 이름을 들고 있어야 한다.
+              "composition_intent": composition_intent,
               "locked": locked, "rotation_period_h": rotation_period_h, "dynamo_alive": dynamo_alive}
     if body_class not in ROCKY_CLASSES or mass_earth > MAX_ROCKY_MASS:
         return out_of_domain(RECIPE, VERSION,
@@ -320,6 +324,7 @@ def _ladder_from_state(state, imf: float) -> Result:
                   conductor_phase=state.get("conductor_phase"),
                   stagnant_lid=lid.value,                          # C53: 파생값 (선언은 tectonic_regime)
                   tectonic_regime=state.get("tectonic_regime"),    # 증거 키 = 조회 키 = Needs 의 이름
+                  composition_intent=state.get("composition_intent"),
                   lid_note=lid_label,                              # contested, 그리고 판정 불가의 이유
                   lid_refusal=lid.refusal,                         # 사다리의 도메인 게이트 **뒤**에 발화한다
                   age_gyr=state.get("age_gyr"),

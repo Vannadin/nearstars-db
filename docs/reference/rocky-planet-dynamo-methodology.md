@@ -22,8 +22,9 @@ the ad-hoc reasoning in the TRAPPIST-1 / AU Mic decisions.
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
 `ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `tectonic_regime` [—] ·
-`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period_h` [h] ·
+`age_gyr` [Gyr] · `body_class` [—] · `composition_intent` [—] · `locked` [—] · `rotation_period_h` [h] ·
 `dynamo_alive` [—]
+**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `ice_mass_fraction` [—] — the required input is `composition_intent`, whose preset supplies the fraction; a declaration overrides it (C28). `dynamo_regime` [—] — undeclared is the **designed** state: both the dipolar and the multipolar branch are emitted (C11).
 **Discriminating keys** — the ladder regime (1 dry < 2 M⊕ · 2 dry 2–2.5 · 3 dry > 2.5 · 4 water-rich · 5
 low-density dry), from mass, radius and the declared ice fraction; the alive gate, which is three labels
 (`conductor_phase` from `core_state`, the lid boolean derived from the declared `tectonic_regime`, the declared per-class death age) and

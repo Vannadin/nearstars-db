@@ -45,7 +45,8 @@
 `q_over_k2_min` [—] · `q_over_k2_max` [—] · `q_over_k2_source` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_km` [km] ·
 `perturber_mass_earth` [M_earth] · `age_gyr` [Gyr] · `eccentricity` [—] ·
-`permanent_quadrupole` [—] · `nmoi` [—] · `k2_over_q` [—, 선택]
+`nmoi` [—] · `k2_over_q` [—, 선택]
+**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `permanent_quadrupole` [—] — 기본값 `False` 인 선언입니다. 감속한 뒤 §4 의 상태를 고를 뿐, 감속 여부에는 영향을 주지 않습니다.
 **분기 키** — `eccentricity` 와 `permanent_quadrupole` 은 감속한 뒤 §4 의 상태를 고를 뿐, 감속 여부에는
 관여하지 않는다. `permanent_quadrupole` 은 선언값이다.
 **등급** — analog. ⚠ **despin 식 자신의 출처는 미보유다**(Goldreich & Soter 1966 · Murray & Dermott 1999).

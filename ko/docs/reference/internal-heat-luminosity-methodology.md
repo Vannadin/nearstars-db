@@ -41,8 +41,9 @@
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
 `mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
 `mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
-**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
+**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] — 방사성 예산이 건조 바디에 0.0 을 기본값으로 씁니다.
 **상태 키 주의** — `tidal_power` 는 상태 키 `power` 로 들어온다. tidal_heating 이 Ė 를 그 이름으로 내기
 때문이다(chain.yaml 의 tidal_heating → internal_heat_nontidal 간선, via power). 이 이름은 총칭이다.
 지금은 tidal_heating 이 유일한 emitter 이지만, power 를 내는 노드가 둘이 되면 여기서 조용히 합산된다.

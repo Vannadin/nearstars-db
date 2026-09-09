@@ -49,10 +49,10 @@ J₂로, Cassini 세차상수로, 경사각으로, 거기서 조석 소산까지
 `silicate_melt_state` [—] · `silicate_melt_fraction_max` [—] ·
 `ocean_thickness` [km] · `ice_shell_thickness` [km] · `bulk_porosity` [—] · `voids_expected` [—] ·
 `figure_relaxation` [—] · `maxwell_time_mantle_top` [yr] · `relaxation_threshold_max` [K]
-**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
-`composition` [—] · `differentiated` [—] · `body_class` [—] · `radius_earth` [R_earth] ·
-`initial_porosity` [—] · `porosity_cap` [Pa] · `gas_mass_fraction` [—] · `age_gyr` [Gyr] ·
-`tidal_heating` [—] · `envelope_z` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
+`composition` [—] · `body_class` [—] · `radius_earth` [R_earth] · `age_gyr` [Gyr] ·
+`tidal_heating` [—] · `envelope_z_rock_fraction` [—] · `envelope_z_profile` [—] ·
+**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] · `differentiated` [—] (기본값 `True`) · `initial_porosity` [—] 와 `porosity_cap` [Pa] (코드가 «기본값 0 은 공극이 없다가 아니라 이 레시피가 판정하지 않는다는 뜻» 이라고 적어 둡니다) · `gas_mass_fraction` [—] (없으면 «가스 바디가 아니다») · `envelope_z` [—] («Z 는 선언입니다. 강착과 진화가 정하는 값이고 이 레시피에 그 둘이 없습니다»).
 `potential_temperature` [K] ·
 `boundary_temperature_jump` [K] · `mantle_rock_fraction` [—] · `ammonia_mass_fraction` [—] · `serpentinisation` [—] ·
 `differentiation_front` [—] · `crust_rock_fraction` [—] · `crust_porosity` [—]

@@ -2837,9 +2837,13 @@ def _porous_rock_verdict(mass_earth: float, radius_earth: float,
         else:
             hi = mid
 
-    inputs["initial_porosity"] = phi
-    inputs["porosity_cap"] = P_LAB_MAX
-    notes = [f"역산이다 — 초기공극 φ₀ = {phi:.3f} 가 선언된 반지름을 재현한다. "
+    # ⚠ **여기서 `inputs` 를 덮어쓰지 않는다** (C50 (b) 표 4·10행, 브리프 170 B). 예전에는
+    #   `inputs["initial_porosity"] = phi` 와 `inputs["porosity_cap"] = P_LAB_MAX` 로 **솔버 자신이
+    #   만든 값과 모듈 상수**를 조회 이름 아래 증거에 써 넣었다 — 조회는 미스인데 증거는 채워지므로
+    #   «값은 없고 이름은 있다» 의 C37 모양이 증거 쪽에 생긴 것이고, `is None` 검사로는 안 보인다.
+    #   두 수는 아래 노트가 그대로 나른다. 증거는 **선언된 값**(없으면 None·0.0)을 유지한다.
+    notes = [f"역산이다 — 초기공극 φ₀ = {phi:.3f} 가 선언된 반지름을 재현한다 "
+             f"(공극 상한은 실험 상한 P_LAB_MAX = {P_LAB_MAX:.3g} Pa 를 썼다). "
              f"실험 상한 위를 믿지 않는 보수적 읽기로 풀었으므로, 이 결론은 측정된 "
              f"구간에만 기댄다. {envelope}"]
     notes += list(best.notes)

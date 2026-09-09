@@ -17,8 +17,8 @@
 
 **Returns** — `class` [—] · `classes` [—] · `decided_by` [—] · `agrees_with_declared` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `declared_class` [—] ·
-`composition_intent` [—] · `gas_mass_fraction` [—] · `semi_major_axis_au` [au] ·
-`is_satellite` [—]
+`composition_intent` [—] · `is_satellite` [—]
+**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `gas_mass_fraction` [—] · `semi_major_axis_au` [au] — 둘 다 얼음거대행성 대 가스거대행성 분기 **안에서만** 읽히고, 그 분기는 없으면 이름을 대며 거절합니다. 다른 바디는 한 번도 안 본 `None` 을 증거에 남길 뿐입니다.
 **분기키** — 반지름이 있는가(사다리의 아래쪽 절반을 읽을 수 있는지가 여기서 갈립니다),
 그리고 봉투 조성이 선언됐는가(가스거대행성과 얼음거대행성을 관례가 아니라 근거로 가르는
 유일한 것입니다).

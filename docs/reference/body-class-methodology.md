@@ -19,8 +19,8 @@ with both neighbours alive.
 
 **Returns** — `class` [—] · `classes` [—] · `decided_by` [—] · `agrees_with_declared` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `declared_class` [—] ·
-`composition_intent` [—] · `gas_mass_fraction` [—] · `semi_major_axis_au` [au] ·
-`is_satellite` [—]
+`composition_intent` [—] · `is_satellite` [—]
+**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `gas_mass_fraction` [—] · `semi_major_axis_au` [au] — both are read **only** inside the ice-giant-versus-gas-giant branch, which refuses by name when they are absent; every other body files a `None` it never consults.
 **Discriminating keys** — whether a radius is available, which decides if the lower half of
 the ladder can be read at all; and whether an envelope composition is declared, which is the
 only thing that separates a gas giant from an ice giant on evidence rather than convention.

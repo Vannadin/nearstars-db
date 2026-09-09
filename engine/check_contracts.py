@@ -36,22 +36,36 @@ BODIES = HERE / "bodies"
 
 #: C45 (b)/C50 의 클래스 ③ 기준선 — (노드 수, 고유 키 수). 2026-09-09 첫 측정.
 #: ⚠ FAIL 이 아니다. 수리 뒤 0 이 되면 그때 FAIL 로 승격한다 (D 와 같은 경로).
-CLASS3_BASELINE = (8, 8, 13)          # (노드, 고유 키, (노드,키) 쌍) — 발생은 13곳이다
+#: ⚠ **(8, 8, 13) → (5, 2, 5), 브리프 170 B.** 왜 내려갔는지 없이는 갱신하지 않는다 — 조용히 덮으면
+#: 어제의 죽은 기준선과 같아진다. 내려간 여덟은 전부 **한 결함**이었다: 계약의 `Needs` 한 단어가
+#: «없으면 답을 못 낸다» 와 «레시피가 기본값을 선언하고 이유까지 적었다» 를 함께 가리켰고, 후자는
+#: 구멍이 아니다. `Declared-optional` 줄이 그 여덟을 닫았고 출력은 하나도 안 움직였다.
+#: ⚠ **남은 다섯은 진짜다**: `core_material` ×4 (네 노드가 `"fe_prem"` 기본값을 쓴다 — 지구는 전사로
+#: 선언 가능, 화성·판도라는 «지구의 PREM 을 더 가벼운 핵에 주장하는 것» 이라 **오너 대기**) 와
+#: `interior_layers.tidal_heating` ×1 (판도라는 보드에 조석가열이 있어 선언이 **구조 풀이를 움직인다**
+#: — 역시 오너 대기). 그래서 이 항목은 0 으로 안 내려가고, 그 사실이 C50 (b) 에 등록되어 있다.
+CLASS3_BASELINE = (5, 2, 5)           # (노드, 고유 키, (노드,키) 쌍)
 
 #: 클래스 ① (C37 의 서명) 의 **알려진 기존 사례** — 2026-09-09 첫 측정, C50 에 등재.
 #: ⚠ **이 집합 밖의 사례는 FAIL 이다.** 기존 넷을 지금 고치는 것은 값을 움직일 수 있어 다음
 #: 브리프의 몫이고, 그때 이 집합에서 지운다. 집합을 늘리는 것은 병을 늘리는 것이다.
-CLASS1_KNOWN = {
-    ("body_class", "gas_mass_fraction"),
-    ("body_class", "semi_major_axis_au"),
-    ("dynamo_rocky", "dynamo_regime"),
-    ("interior_layers", "porosity_cap"),
-}
+#: ⚠ **비었다 — 브리프 170 B (C50 (b)) 에서 넷이 다 사라졌다.** 이 집합은 «알려진 클래스 ① 사례»
+#: 이고, 여기 없는 클래스 ① 은 FAIL 이다. 넷이 어떻게 나갔는지는 각각 다르다:
+#:   `body_class.gas_mass_fraction` · `.semi_major_axis_au` — 조건부 need 였다. 얼음거대행성 대
+#:     가스거대행성 분기 안에서만 읽히고 그 분기는 없으면 이름을 대며 거절한다 → Declared-optional.
+#:   `dynamo_rocky.dynamo_regime` — 미선언이 **설계된** 상태다(두 분기를 다 낸다, C11) → 같은 줄.
+#:   `interior_layers.porosity_cap` — ⚠ 다른 이유다. 계약이 아니라 **증거**가 틀렸다: 역산 분기가
+#:     모듈 상수를 조회 이름 아래 `inputs` 에 써 넣고 있었다. 그 덮어쓰기를 지웠다 (`interior.py`).
+CLASS1_KNOWN: set[tuple[str, str]] = set()
 
 FIELD = re.compile(r"`([a-z0-9_]+)`")
 # 항목이 많으면 줄이 넘어간다. 다음 **항목** 이나 빈 줄까지 이어 읽는다 —
 # 문서를 한 줄에 욱여넣게 만들면 읽기 나빠지고, 그건 이 작업의 목적에 반한다.
-LINE = re.compile(r"^\*\*(Returns|Needs)\*\*\s*[—-]\s*(.+?)(?=\n\s*\n|\n\*\*|\Z)",
+# ⚠ **계약에 세 번째 줄이 생겼다** (C50 (b), 브리프 170 B): `Needs` 한 단어가 두 가지를 가리키고
+#   있었다 — 없으면 답을 못 내는 입력과, 레시피가 **기본값을 선언하고 그 이유를 산문으로 적어 둔**
+#   입력. 후자는 구멍이 아닌데 클래스 ③ 이 여덟 건을 구멍으로 세고 있었다. `Declared-optional` 은
+#   그 여덟을 위한 줄이고, **새 기본값을 만드는 자리가 아니다** — 이미 코드에 있는 기본값만 옮긴다.
+LINE = re.compile(r"^\*\*(Returns|Needs|Declared-optional)\*\*\s*[—-]\s*(.+?)(?=\n\s*\n|\n\*\*|\Z)",
                   re.M | re.S)
 
 
@@ -66,7 +80,7 @@ def parse_contract(doc: Path, node: str) -> dict[str, set[str]] | None:
     block = rest[:nxt.start()] if nxt else rest
     out: dict[str, set[str]] = {}
     for kind, body in LINE.findall(block):
-        out[kind.lower()] = set(FIELD.findall(body))
+        out[kind.lower().replace("-", "_")] = set(FIELD.findall(body))
     return out
 
 
@@ -169,10 +183,12 @@ def main() -> int:
         # ── C45 (b): 문서 Needs · 실제 조회 · AST 리터럴, 세 집합 ────────────────────────
         look = lookup_sets(node, bodies)
         needs = declared.get("needs", set())
+        # 선언된 선택적 입력은 «공급되지 않음» 이 정상 상태다 — 클래스 ①·③ 과 오타 검사에서 뺀다.
+        optional = declared.get("declared_optional", set())
         literals = ast_lookup_literals(node)
         # ① C37 의 정확한 형태 — 조회가 어느 표본에서도 미스인데 그 `None` 이 **같은 이름으로
         # 증거에 기재**된다. C37 이 초록으로 남은 방식이 바로 이것이다: 값은 없고 이름은 있다.
-        never = sorted((needs & look["asked"]) - look["hit"])
+        never = sorted(((needs - optional) & look["asked"]) - look["hit"])
         filed = set()
         for body in bodies:
             res_b = body.results.get(node)
@@ -195,7 +211,7 @@ def main() -> int:
             print(f"  [클래스 ③] {node}: Needs 인데 어느 표본에서도 공급되지 않는다 — {', '.join(rest)}")
         # ② 철자 오류의 형태 — 선택적이라고 선언되지 않은 조회가 전부 미스이고 Needs 에도 없다.
         #    (클래스 나누기는 C45 (b) 정정 참조: 좁힌 것이 아니라 판정을 셋으로 나눈 것이다.)
-        stray = sorted((look["miss"] & look["hard"]) - needs)
+        stray = sorted((look["miss"] & look["hard"]) - needs - optional)
         if stray:
             fails.append(f"{node}: 아무도 공급하지 않는 조회이고 Needs 에도 없다 — {', '.join(stray)}")
         # ③ 보고만 — 소스에는 있는데 어느 표본도 밟지 않은 조회, 그리고 아무도 조회하지 않는 Needs.
@@ -236,7 +252,7 @@ def main() -> int:
         actual_out = union_out
         checked += 1
 
-        for label, want, got in (("Needs", declared.get("needs", set()), actual_in),
+        for label, want, got in (("Needs", declared.get("needs", set()) | optional, actual_in),
                                  ("Returns", declared.get("returns", set()), actual_out)):
             if want - got:
                 fails.append(f"{node}: 문서가 {label} 에 적었는데 코드가 안 쓴다 — "

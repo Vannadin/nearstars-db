@@ -20,8 +20,9 @@
 `b_eq` [uT] · `b_pol` [uT] · `b_eq_multipolar_min` [uT] · `b_eq_multipolar_max` [uT] · `regime` [—] ·
 `ladder_regime` [—] · `dynamo_alive` [—] · `rossby_verdict` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `conductor_phase` [—] · `tectonic_regime` [—] ·
-`age_gyr` [Gyr] · `ice_mass_fraction` [—] · `body_class` [—] · `dynamo_regime` [—] · `locked` [—] · `rotation_period_h` [h] ·
+`age_gyr` [Gyr] · `body_class` [—] · `composition_intent` [—] · `locked` [—] · `rotation_period_h` [h] ·
 `dynamo_alive` [—]
+**Declared-optional** — 이 레시피가 코드와 위 산문에서 **기본값을 선언한** 입력입니다. 없는 것이 정상 상태이지 구멍이 아닙니다 (C50 (b), 브리프 170 B). `ice_mass_fraction` [—] — 실제로 필요한 입력은 `composition_intent` 이고 그 프리셋이 얼음 분율을 공급합니다. 선언이 있으면 그것이 이깁니다 (C28). `dynamo_regime` [—] — 미선언이 **설계된** 상태입니다. 쌍극·다극 두 분기를 다 냅니다 (C11).
 **분기키** — 사다리 regime(1 건조 < 2 M⊕ · 2 건조 2–2.5 · 3 건조 > 2.5 · 4 물 풍부 · 5 저밀도 건조), 질량·반지름·
 선언된 얼음 분율로 정함. 생존 게이트는 라벨 셋(`core_state` 의 `conductor_phase`, 선언된 `tectonic_regime` 에서 파생한 뚜껑 불리언, 클래스별
 선언 사멸 연령)과 인용 하나(`Rm > 40`, 평가하지 않음). 영역 게이트는 선언(`dynamo_regime`) 또는 두 갈래 모두 출력.

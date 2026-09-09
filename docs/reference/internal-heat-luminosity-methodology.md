@@ -44,8 +44,9 @@ non-negligible, see that doc).
 `mantle_temperature_width_zeta` [K] · `mantle_temperature_width_set` [K] · `mantle_temperature_width_denominator` [K] ·
 `mantle_temperature_width_surface` [K] · `l_int_total` [W] · `t_int_total` [K] · `mantle_temperature_floor_total_min` [K] ·
 `mantle_temperature_floor_total_max` [K] · `mantle_temperature_floor_total_verdict` [—]
-**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] · `ice_mass_fraction` [—] ·
+**Needs** — `mass_earth` [M_earth] · `core_mass_fraction` [—] ·
 `radius_earth` [R_earth] · `body_class` [—] · `age_gyr` [Gyr] · `potential_temperature` [K] · `tidal_power` [W]
+**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `ice_mass_fraction` [—] — the radiogenic budget defaults it to 0.0 for a dry body.
 **State-key note** — `tidal_power` reaches this recipe under the state key `power`, which is the name
 `tidal_heating` emits its Ė under (chain.yaml, the tidal_heating to internal_heat_nontidal edge, via power).
 That name is generic: today tidal_heating is its only emitter, and a second node emitting power would be

@@ -50,7 +50,8 @@ there `a⁻⁷·⁵`).
 `q_over_k2_min` [—] · `q_over_k2_max` [—] · `q_over_k2_source` [—]
 **Needs** — `mass_earth` [M_earth] · `radius_earth` [R_earth] · `semi_major_axis_km` [km] ·
 `perturber_mass_earth` [M_earth] · `age_gyr` [Gyr] · `eccentricity` [—] ·
-`permanent_quadrupole` [—] · `nmoi` [—] · `k2_over_q` [—, optional]
+`nmoi` [—] · `k2_over_q` [—, optional]
+**Declared-optional** — inputs this recipe declares a default for, in the code and in prose above; absent is a normal state, not a hole (C50 (b), Brief 170 B). `permanent_quadrupole` [—] — a declaration with a default of `False`; it selects among §4's states once a body has despun and does not affect whether it despun.
 **Discriminating keys** — `eccentricity` and `permanent_quadrupole` choose among §4's states once the
 body has despun; neither affects whether it despun. `permanent_quadrupole` is a declaration.
 **Grade** — analog. ⚠ **The despin formula's own sources are not held** (Goldreich & Soter 1966;
