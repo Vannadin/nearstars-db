@@ -104,6 +104,8 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C54** | `conductor_phase` stands in front of the lid axis, and Mars's is `undecided` | **candidate, listed 2026-09-09** | Opened by a measurement in C53 (b), not by a design opinion: the survival gate tests `conductor_phase` **before** the tectonic regime, and Mars's is `undecided`, so Mars answers `cannot-say (conductor_phase undecided)` and its declared `stagnant` never reaches `DEAD_LID`. ⚠ **Mars's dynamo output is identical whether its regime is `stagnant` or `contested`** — so *«Mars is a single-plate planet, therefore no dynamo»* is a sentence this engine does **not** execute, and the lid axis cannot be exercised on any roster body until the axis in front of it decides. What decides `conductor_phase` is `core_state`, which needs a **core-side** CMB temperature, and that is declared for Earth only (owner decision ①, C25) — which is why Mars is *undecided* rather than wrong. Candidate only: no owner decision is asked for here, and nothing beyond the one measurement C53 (b) recorded has been done. ⚠ **The root is now measured (172 (a)): `core_state.core_cmb_temperature` is supplied by Earth and undeclared on Mars and Pandora.** The core-side CMB temperature is what decides `conductor_phase`, it exists for Earth only (owner decision ①, C25), and that single asymmetry is why the axis in front of the lid never decides on Mars. Candidates for a declared Martian `T_c` are the parallel seat's |
 | **C55** | the engine has two irons and Mars's core is between them | **listed 2026-09-09 by owner decision; pre-registration is P13's** | Opened by C50 (b) row 5's owner-pending cell: Mars cannot declare a `core_material` because neither of our two irons covers it. The printed Martian core density is **5.7–6.65 g/cm³** (S 13–19 wt%), while `fe_prem` sits at 7.6–8.2 and `fe_eps` at 9.0–9.6 — ⚠ **the body is outside both, so declaring either would be asserting a density we know is wrong**, which is why the cell stayed empty rather than taking the default. The owner's decision is to **build a third material, Fe–S**. Source order for the equation of state, held first: Huang 2023 (AIMD) → Xu 2021 (liquid Fe–S mixing) → Morard 2018 → Nishida 2020 → Sanloup 2000; the melting bound stays Mori 2017 with its **declared 10–21 GPa gap**. No number is elected here and nothing is built — the pre-registration is the parallel seat's P13, and this row exists so the owner decision has a place before the work does |
 | **C56** | `fe_prem` looks temperature-blind, and it is the reference that makes it so | **checked 2026-09-09 — not a defect; recorded so the next reader does not re-open it** | Observed: `fe_prem.density(p, T, 0.0)` returns the same number at 300 K and at 2100 K while `fe_eps` moves. ⚠ **Measured and explained rather than filed as a bug.** The two phases carry different reference kinds — `fe_eps` is `isotherm` at 300 K (laboratory ε-iron), `fe_prem` is **`adiabat` at 1600 K**, because PREM is a fit to *the hot real Earth* and its geotherm is already inside the effective ρ₀. So `Phase.delta_t` returns `t · (1 − t_ref/t_pot)`: it is **keyed on the declared potential temperature, not on T**, and it is exactly 0 whenever `t_pot` equals 1600 K — an identity, not a tolerance, and the stated reason Earth does not move. Measured at 136 GPa: `t_pot` 1600 gives ΔT 0.0 K at both 2100 K and 4000 K (ρ 9916.9370 either way), `t_pot` 2000 gives 420.0 / 800.0 K (ρ 9908.4176 / 9898.9401), `t_pot` 3040 gives 994.7 / 1894.7 K (ρ 9893.4281 / 9862.1307). ⚠ The call that raised the question passed `t_pot = 0.0`, which the same function reads as «no declared potential temperature» and returns 0 by design — heating a PREM fit from a 300 K baseline would heat Earth twice, which `eos.py` names as the trap it is avoiding. No brief; no change |
+| **C57** | the inversion branch is not on the node's path at all | **listed 2026-09-09; not decided** | ⚠ **Corrected from the first reading.** 173 reported this as an adapter default — `state.get("composition_intent", "earth_like")` always handing `solve` a composition — but the audit's call-graph read is sharper: `_from_state → _solve_from_state → solve` contains **no call** to `infer_composition`, `infer_three_layer` or `_porous_rock_verdict` at all, and the only callers are `rocky_roster.py` and `test_interior.py`. **Removing the default would not route the node to the inversion; there is no route.** So the four `inferred_*` regimes are dead code on the chain's path, C45 (d)'s inversion-convention exception guards something the checker can never make the node produce, and no body file will ever change that (173 measured it: 0). The question — should a recipe be able to infer a composition — is left open, and this row exists so the next reader does not re-derive the answer from the adapter line |
+| **C58** | two of our own numbers for Mars's core-mantle boundary are 1700 K apart | **candidate, listed 2026-09-09** | C54 (b) declared Mars's core-side CMB temperature from the literature band **1900–2100 K** (Durán+ 2022, held). C20's thermal-history integrator ends the same body at **3763 K**. ⚠ **Both are ours and both are labelled**, and they disagree by roughly **1700 K** on one quantity of one body. The declaration is an observation-constrained band; the endpoint is the output of an integration whose Mars run has never been checked against Mars literature — but «the integrator is wrong» is a conclusion, not an observation, and it is not drawn here. Candidate only |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -4717,9 +4719,21 @@ sentence from «no roster body happens to take that branch», which is what 172 
 adding bodies will never close it. Whether the node should be able to infer a composition is a question
 about the recipe, not about the checker, and it is not decided here.
 
-⚠ **The fixture is kept.** It widened the checker's reach by 184 lookups and seven per-body-supply rows,
-it holds the six published bodies bit-identical, and its label says what it is. What it did *not* do is
-the thing it was added for, and the file says that too.
+⚠ **The fixture is kept**, for what it *did* do rather than what it was for: the checker's samples were
+six published bodies, and a body that declares almost nothing is the only way the per-body-supply count
+sees an empty declaration at all — seven of its twenty rows are the fixture's. It widened the reach by 184
+lookups and holds the six published bodies bit-identical.
+
+⚠ **The recommendation that produced this brief predicted three things and got two wrong** — that the
+inversion line would fire, and that a body file could make it fire — and both predictions were made
+before anyone read the call graph. The audit seat recorded that as its thirteenth correction of the day;
+**the directing seat passed the same prediction through without checking it, and the work seat built on
+it**. The failure is not that a prediction was wrong. It is that three seats agreed about a code path
+none of them had read, and the reading took one `grep`.
+
+⚠ **And the inversion convention's consumers are named now**, since 170 C's record made it sound like a
+property of the chain: `test_interior` and `rocky_roster` call the inverse solvers directly. **The chain
+does not.** The convention is real and its scope is those two callers — see C57.
 
 ### C54 (b) 2026-09-09 — Mars gets a declared core-side CMB temperature, pre-registered before the run
 
@@ -4760,6 +4774,39 @@ not, the owner has a real decision instead of my quiet one.
 5. **C20's endpoint is 3763 K for the same body.** That is ~1700 K above this band, and it is **not
    reconciled here** — listed as a candidate instead, because one of the two is wrong about Mars and
    choosing which is not a declaration.
+
+#### C54 (b) built 2026-09-09 — the lid axis decides on Mars, and my own end-choice reasoning lost to the measurement
+
+| | 1900 K (low end) | 2000 K (midpoint) | 2100 K (high end) |
+|---|---|---|---|
+| `conductor_phase` | ⚠ `liquid_outer_solid_inner` | **`liquid`** | `liquid` |
+| CMB margin above melting | +116.76 K | +216.76 K | +316.76 K |
+| `cmb_heat_flux` | ⚠ **refuses by name** — *«핵 쪽 1900 K 가 맨틀 단열선 밑 1910 K 이하 — 초단열 점프가 없다»* | computes | computes |
+| `dynamo_rocky` | `dead (stagnant lid, declared)` · ℳ 0 · B_eq 0 | **same** | **same** |
+
+**Prediction 3 holds: the lid axis decides on Mars for the first time**, and it decides the same way at
+every point of the band. Prediction 4 holds: Earth, Pandora and the rest are **bit-identical, 0 values
+moved**; Mars gains 63 values where its core nodes previously produced none.
+
+⚠ **Predictions 1 and 2 were wrong, and the way they were wrong is the finding.** I reasoned that
+declaring 1900 K would push Mars *further below* its melting curve toward `solid`, because the fallback
+comparison read 2346.73 K against a melt temperature of 2714.25 K. Both numbers move when the
+declaration arrives — the melt temperature is **1783.24 K** once the interior solves on the declared
+temperature — so the margin is **positive** at every point of the band and the core reads liquid, which
+is what the literature says. The arithmetic I did was on two numbers that do not survive the change I was
+predicting.
+
+⚠ **And the end-choice reasoning lost too.** The pre-registration argued for the **low end** because
+`cmb_flux`'s own note says a declared `T_c` acts as a lower bound on `Q_CMB`. Measured, the low end is the
+only point in the owner's band that (i) infers an **inner core no held paper reports** — Helffrich 2017
+([`2017PEPS....4...24H`](https://ui.adsabs.harvard.edu/abs/2017PEPS....4...24H)) writes of Mars's
+*"probable absence of an inner core"* — and (ii) makes `cmb_heat_flux` **undefined**, because 1900 K sits
+below the mantle adiabat's 1910 K. **Keeping a bound's direction is not free: it adds a physical claim.**
+So the declaration is the band's **midpoint, 2000 K** — the point that leans on neither end and contradicts
+nothing held — and it is reversible.
+
+⚠ **What is not closed.** C20's endpoint for the same body is **3763 K**, about 1700 K above this band.
+Both cannot be right about Mars, and choosing between them is not a declaration — **C58**.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
