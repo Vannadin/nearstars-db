@@ -2,7 +2,8 @@
 """Pre-registered checks for the C20 integrator (engine/core-thermal-history-context-notes.md §2–§3).
 
     python3 engine/test_core_history.py            # the gate: one converged history at h = min(4 Myr, 0.1·τ),
-                                                   # plus the C48 Mars pair (~235 s measured on b818ccbf; ~60 s before Brief 157)
+                                                   # plus the C48 Mars pair, each under both H conditions
+                                                   # (~360 s measured 2026-09-09 after Brief 166 D; 235 s before it, ~60 s before Brief 157)
     python3 engine/test_core_history.py --sweep    # on demand: h, h/2, h/4 (~7 min) — the pre-registered ⑤ test
 
 The sweep is on demand because it costs ~400 s (each time step builds four core profiles for RK4); the gate
@@ -46,6 +47,15 @@ PARAMS = {"material": "fe_prem", "p_cmb": v["cmb_pressure"] * 1e9, "r_cmb": v["c
 T_C0, T_M0 = 4800.0, 4800.0 / R_B     # Nimmo Fig. 2 caption: "starting temperature of both mantle and core was 4800 K" (real)
 AGE = 4.54
 
+# ⚠ **Brief 166 D — the reproduction anchors carry their own H, the way the Table 4 anchors already do.**
+# Owner decision ⑤ (2026-09-09) lowered the declared core heating from 1.5 to 0.14 pW/kg, and that moved this
+# node's *reproduction* anchors: gate200 failed on 1517.62 K against 1525.46 and on Mars's 1377.23 · 3768.09.
+# Nothing was wrong with the integrator — the anchors had been reading the nominal constant. So C48's anchors
+# now name their condition (`H_NIMMO`, the same 1.5e-12 as `test_core_energy.H4`, Nimmo+ 2004 Table 4's 400 ppm K),
+# and the engine's declared H gets rows of its own, measured 2026-09-09 and pinned here as anchors in turn.
+H_NIMMO = 1.5e-12                     # W/kg — Nimmo Table 4; = test_core_energy.H4. NOT the engine's declared H.
+PARAMS_NIMMO = {**PARAMS, "h_core": H_NIMMO}
+
 print("⑤ 수렴 — 판정선은 종점 T_c 가 아니라 3.1 Gyr 창의 ΔE_min (h/4 대 h/2 < 10 %), 내핵 갈래 동일")
 if "--sweep" in sys.argv:
     t0 = time.perf_counter()
@@ -65,9 +75,16 @@ else:
     # first ~50 Myr) and its anchors do not move at two decimals (T_p 1525.46, T_c 4027.43). Recorded, not absorbed (rule 1).
     row(hist["n_steps"] == 1152 and abs(hist["step_myr"] - 4.0) < 0.01 and abs(hist["max_h_over_tau"] - 0.1) < 1e-9,
         f"단일 실행 h ≤ {hist['step_myr']:.2f} Myr (적응, 최대 h/τ {hist['max_h_over_tau']:.3f}) · {hist['n_steps']} 걸음 · 최소 h {hist['h_min_myr']:.3f} Myr ({time.perf_counter()-t0:.0f} s)")
+    fixed_n = ch.integrate(PARAMS_NIMMO, T_C0, T_M0, AGE, adaptive=False)
+    fx_n = fixed_n["rows"][-1]
+    row(fixed_n["n_steps"] == 1135 and abs(fx_n["t_m"] - 1525.46) < 0.005 and abs(fx_n["t_c"] - 4027.43) < 0.005,
+        f"고정 4 Myr 재현 (H 1.5 pW/kg, Nimmo Table 4 조건): {fixed_n['n_steps']} 걸음 (앵커 1135) · T_p {fx_n['t_m']:.2f} K (앵커 1525.46) · "
+        f"T_c {fx_n['t_c']:.2f} K (앵커 4027.43)")
     fixed = ch.integrate(PARAMS, T_C0, T_M0, AGE, adaptive=False)
-    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1525.46) < 0.005 and abs(fixed["rows"][-1]["t_m"] - hist["rows"][-1]["t_m"]) < 0.01,
-        f"고정 4 Myr 재현: 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1525.46) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
+    row(fixed["n_steps"] == 1135 and abs(fixed["rows"][-1]["t_m"] - 1517.62) < 0.005 and abs(fixed["rows"][-1]["t_c"] - 3915.75) < 0.005
+        and abs(fixed["rows"][-1]["t_m"] - hist["rows"][-1]["t_m"]) < 0.01,
+        f"선언 H 0.14 pW/kg (오너 결정 ⑤, 2026-09-09): 1135 걸음 · T_p {fixed['rows'][-1]['t_m']:.2f} K (앵커 1517.62) · "
+        f"T_c {fixed['rows'][-1]['t_c']:.2f} K (앵커 3915.75) · 적응과의 차 {hist['rows'][-1]['t_m'] - fixed['rows'][-1]['t_m']:+.4f} K")
 ws = ch.window_summary(hist["rows"])
 last = hist["rows"][-1]
 
@@ -105,7 +122,8 @@ r3 = ch.solve(1.0, 0.325, v["core_radius"], v["cmb_pressure"], v["cmb_temperatur
 row(not r3.applicable, "거대행성 → 거절")
 
 # ── Brief 157 / C48 — the Mars divergence was the step, both ways ─────────────────────────────────
-print("⑥ C48 — 화성: 고정 4 Myr 이면 발산, 적응이면 0.25 Myr 스윕값(1382.90 · 3893.07 · 1669.12) 5 K 안")
+print("⑥ C48 — 화성: 고정 4 Myr 이면 발산, 적응이면 0.25 Myr 스윕값(1382.90 · 3893.07 · 1669.12) 5 K 안 "
+      "— 스윕도 재현도 H 1.5 pW/kg 조건이다 (Brief 166 D)")
 vm = interior_solve(0.1074, core_mass_fraction=0.24, potential_temperature=1600.0).values
 MM = 0.1074 * M
 RPM = 0.5320 * RP
@@ -113,18 +131,34 @@ R_BM = vm["cmb_temperature"] / 1600.0
 PARAMS_M = {"material": "fe_prem", "p_cmb": vm["cmb_pressure"] * 1e9, "r_cmb": vm["core_radius"] * RP,
             "m_core": 0.24 * MM, "m_mantle": 0.76 * MM, "r_b": R_BM, "g": cf.G_NEWTON * MM / RPM ** 2, "r_p": RPM,
             "h_core": ce.H_CORE, "h_m_present_w": rg.budget(0.76 * MM)["mantle_w"]}
+PARAMS_M_NIMMO = {**PARAMS_M, "h_core": H_NIMMO}
 try:
-    ch.integrate(PARAMS_M, 4800.0, 4800.0 / R_BM, AGE, adaptive=False)
+    ch.integrate(PARAMS_M_NIMMO, 4800.0, 4800.0 / R_BM, AGE, adaptive=False)
     row(False, "고정 4 Myr 화성이 발산하지 않았다 — C48 의 기록(T_m −6244 K)과 어긋남")
 except ValueError as e:
     row("표면온도" in str(e), f"고정 4 Myr 화성 → 발산 (ValueError: {str(e)[:60]}…)")
 t0 = time.perf_counter()
-hm = ch.integrate(PARAMS_M, 4800.0, 4800.0 / R_BM, AGE)
+hm = ch.integrate(PARAMS_M_NIMMO, 4800.0, 4800.0 / R_BM, AGE)
 lastm = hm["rows"][-1]
 nearm = min(hm["rows"], key=lambda r: abs(r["t_gyr"] + 3.7))
 row(abs(lastm["t_m"] - 1382.90) < 5.0 and abs(lastm["t_c"] - 3893.07) < 5.0 and abs(nearm["t_m"] - 1669.12) < 5.0,
-    f"적응 화성 → T_p {lastm['t_m']:.2f} · T_c {lastm['t_c']:.2f} · T_p@3.7Ga {nearm['t_m']:.2f} K · {hm['n_steps']} 걸음 · 최소 h {hm['h_min_myr']:.4f} Myr "
+    f"적응 화성 (H 1.5) → T_p {lastm['t_m']:.2f} · T_c {lastm['t_c']:.2f} · T_p@3.7Ga {nearm['t_m']:.2f} K · {hm['n_steps']} 걸음 · 최소 h {hm['h_min_myr']:.4f} Myr "
     f"(스윕 0.25 Myr 대비 {lastm['t_m']-1382.90:+.2f} / {lastm['t_c']-3893.07:+.2f} / {nearm['t_m']-1669.12:+.2f} K, {time.perf_counter()-t0:.0f} s)")
+# The declared-H row. Same trajectory shape (1197 steps, h_min 0.0053 Myr, inner-core branch 'never'); the answer
+# moves by −5.67 / −124.92 K. ⚠ The 3.7 Ga column's **rule is part of the number**: `min(rows, key=|t_gyr + 3.7|)`
+# — the nearest *sampled* row, never an interpolation. Here that row is unique (t = −3.700566 Gyr, |Δ| 0.000566 Gyr
+# against the next row's 0.003434) and reads 1668.0452 K, so the anchor is 1668.05. The audit seat's run reported
+# 1668.043744 from a row at −3.700558 Gyr: same trajectory, different row grid. Neither deserves its last digits —
+# the local step is ~4 Myr, so "nearest row" is ±2 Myr, worth ≈0.19 K, against 5.1 K of criterion-B headroom.
+t0 = time.perf_counter()
+hmd = ch.integrate(PARAMS_M, 4800.0, 4800.0 / R_BM, AGE)
+lastd = hmd["rows"][-1]
+neard = min(hmd["rows"], key=lambda r: abs(r["t_gyr"] + 3.7))
+row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1377.23) < 0.05 and abs(lastd["t_c"] - 3768.09) < 0.05
+    and abs(neard["t_m"] - 1668.05) < 0.05,
+    f"선언 H 0.14 화성 → T_p {lastd['t_m']:.2f} · T_c {lastd['t_c']:.2f} · T_p@3.7Ga {neard['t_m']:.2f} K · {hmd['n_steps']} 걸음 "
+    f"(H 1.5 대비 {lastd['t_m']-lastm['t_m']:+.2f} / {lastd['t_c']-lastm['t_c']:+.2f} / {neard['t_m']-nearm['t_m']:+.2f} K, {time.perf_counter()-t0:.0f} s) "
+    f"— 기준 B: Herzberg [1553.15, 1673.15] K 안 (위끝 여유 {1673.15-neard['t_m']:.1f} K)")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)

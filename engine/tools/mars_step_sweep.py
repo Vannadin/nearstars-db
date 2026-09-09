@@ -56,7 +56,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import cmb_flux as cf                 # noqa: E402
-import core_energy as ce              # noqa: E402
 import core_history as ch             # noqa: E402
 import radiogenic as rg               # noqa: E402
 from interior import solve as isolve  # noqa: E402
@@ -65,6 +64,13 @@ STEPS_MYR = (4.0, 2.0, 1.0, 0.5, 0.25)
 TOL_K = 5.0
 CHECKPOINT_GYR = -3.7
 EARTH_ANCHOR_T_P = 1525.46
+# ⚠ **Brief 166 D.** Every number this file prints or compares — the liveness anchor 1525.46, the 0.25 Myr
+# row 1382.90 / 3893.07 / 1669.12 — was measured with the core heating at **1.5 pW/kg**, which was the engine's
+# nominal until owner decision ⑤ (2026-09-09) lowered it to 0.14. The sweep keeps its own condition explicitly
+# so that a later change of the nominal cannot silently move a recorded sweep: `EARTH_ANCHOR_T_P` tests the
+# integrator, not `core_energy.H_CORE`. Re-running under the declared H is a different sweep and would be
+# recorded as one. (Same H as `test_core_energy.H4`, Nimmo+ 2004 Table 4's 400 ppm K.)
+H_NIMMO = 1.5e-12
 MARS = dict(mass_earth=0.1074, core_mass_fraction=0.24, radius_earth=0.5320, age_gyr=4.54)
 EARTH = dict(mass_earth=1.0, core_mass_fraction=0.325, radius_earth=1.0, age_gyr=4.54)
 
@@ -84,7 +90,7 @@ def build(body: dict, t_pot: float, core_init: float) -> tuple[dict, float, floa
     params = {"material": "fe_prem", "p_cmb": v["cmb_pressure"] * 1e9, "r_cmb": v["core_radius"] * cf.R_EARTH_M,
               "m_core": m_kg * cmf, "m_mantle": m_kg * (1.0 - cmf),
               "r_b": v["cmb_temperature"] / t_pot,
-              "g": cf.G_NEWTON * m_kg / r_p ** 2, "r_p": r_p, "h_core": ce.H_CORE,
+              "g": cf.G_NEWTON * m_kg / r_p ** 2, "r_p": r_p, "h_core": H_NIMMO,
               "h_m_present_w": rg.budget(m_kg * (1.0 - cmf))["mantle_w"]}
     return params, core_init, core_init / params["r_b"]
 

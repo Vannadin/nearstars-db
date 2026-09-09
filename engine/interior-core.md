@@ -93,7 +93,9 @@ its body on 2026-09-06; where one over-claimed it was rewritten rather than left
 | **C45** | the contract check compares labels, never the keys a recipe looked up | **listed 2026-09-07** | `check_contracts` matches the document's `Needs` against `set(Result.inputs)` — names the author typed — and never reads the string in `state.get(...)`. ⚠ **A recipe can read a key nobody supplies and stay green forever**, as long as it files the resulting `None` under a name the contract knows. C37 is one instance; the hole is in the checker and applies to every recipe |
 | **C46** | the transport table is missing rows **and** discriminates on a different axis | **ladder built 2026-09-07, then corrected the same day; rows still absent** | The flux fixes **one** cell: **floors** at 0.09 (Earth) and 2.5 W/m² (Io), and below them a stagnant cell bounded by a **ceiling** — Venus 10–20, Mars 15–30, union 10–30 transferred to anything else — with a `plutonic-squishy lid` cell for exceeding it. The band travels beside the cell. ⚠ **The first build of this ladder stood that ceiling up as a floor at 0.010** and put every cold body one cell too high; our own §6.2 table already said `ceiling`, and one bullet under it did not — C46 (c). ⚠ Three cells, three provenances: `analogy-rung` (Io), held body text (Earth), `abstract-level` (the ceiling, body not held). ⚠ Venus's 78 is **3.9× its own ceiling**, so the ladder now contradicts our anchor column and agrees with the paper it cites; the Moon stays **independent 1/1** only because the stagnant cell was given no floor. Not added to self-scored 3/4 |
 | **C47** | the transport table is fed radiogenic production, and its thresholds are defined on surface heat flow | **closed 2026-09-08 — named, not filled (C47 (k))**; earlier status kept: *measured 2026-09-07, not fixed* | Verdict: **a different quantity**, not an inaccurate one. The low feed reproduces radiogenic production on two bodies (Earth 1.07–1.33× of Korenaga 2008's 16–20 TW; Mars 1.11× of Parro+ 2017's 14.3 mW/m²) and misses surface heat flow by **body-dependent** factors (Earth 0.45×, Mars 0.84×). ⚠ **That factor is the Urey ratio** — 0.35 for Earth, 0.68–0.75 for Mars — so `1/Ur` would be 2.2–2.9 against 1.3–1.5 and **no correction constant can serve both.** The missing term is secular cooling, which our own §6 already names (*"radiogenic, accretional, primordial"*) and no node emits. ⚠ Consequence for C34: Mars passing and Earth failing at the low feed measured **how close each body's Urey ratio is to 1**, not whether the feed is right. ⚠ **Attempted 2026-09-07 (C47 (b)) and it does not close by code.** The quantity already exists — C20's `q_mantle_present` **is** `Q_M`, from Nimmo eqs 34–36, and it reads no measured flux — but one law cannot serve both bodies: at a common `T_m` Earth lands on 0.35 while Mars reads **0.209 against 0.68–0.75**, and `Ur` **falls** ×1.69 toward smaller bodies where the literature has it **rise** ×2.0. ⚠ **The ordering is wrong, so no `T_m` fixes it** — `implied_flux` is a mobile-lid law (our own docstring says it was tuned on four present-day Earth constraints) and Mars is the archetypal stagnant lid; it hands Mars 85.7 mW/m² against Reese's own 15–30 ceiling, **2.9–5.7× what C46's own bottom rung allows.** ⚠ Also blocked outright: only `earth.yaml` declares C20's two initial temperatures, so **C20 cannot run on Mars**. **The block is C46's circularity** (the flow needs the regime, the regime needs the flow) plus a paper we do not hold — Reese+ 1998's stagnant-lid scaling, abstract only |
-| **C48** | the thermal-history integrator was validated on Earth alone, and calls its flux law far outside that law's expansion point | **closed 2026-09-08 in two halves — domain (Brief 155) and step (Briefs 156–157): the fixed 4 Myr step was h/τ ≈ 75 on Mars's first step and 1.02 on Earth's; the step is now h = min(4 Myr, 0.1·τ) and Mars integrates (1382.90 / 3893.01 / 1669.22 K, within 0.1 K of the 0.25 Myr sweep) while Earth's anchors hold to two decimals (1152 steps, was 1135). Earlier text of this cell:** renamed and half-repaired 2026-09-08 (Brief 155): the inversion bracket had stood in for a domain nobody declared — eqs 34–36's domain is now declared from the paper (upper edge 4800 K, §3; «<8 per cent» caveat, §6; open below), eqs 37–39's for the first time (D5), and the callee keeps both. The Mars step sweep (h/τ) stays open as its own item** | C20 diverges on Mars at every pre-registered `T_pot` (`T_m` → −6244 … −8208 K). ⚠ **The divergence is not the finding** — the flux law is called at **719,546 mW/m² on Mars and 25,144 on Earth**, against measured 19 and 92.1, because Nimmo's eq. 35 is a linearisation about `T₀ = 1573 K` and C20 feeds it **+1467 K (Earth) and +2448 K (Mars)**, giving mantle viscosities of `η₀`÷2.35 M and ÷42.8 G. **Earth's own outputs come from the same out-of-range call and survive only on heat capacity.** ⚠ No published range was violated — **none is printed**; our `BRACKET_K` is a Brief 57 bisection aid. **Two values from one paper fail to compose on a second body**, which is the failure mode of this engine's Earth-number-on-every-body pattern. Blast radius counted: **one consuming edge** (`core_entropy_production`), no board row, no `db/`. Next: a usable flux law, or a grounded starting epoch — ⚠ **never a starting value chosen because it integrates**. ⚠ **The diagnosis above predates Briefs 155 and 157 and is superseded on the cause of the divergence** (kept, not deleted, as this cell's second column keeps its earlier text): the out-of-domain call is real and is still counted on every result, but Mars diverged because of the step — the fixed 4 Myr was h/τ ≈ 75 on the first step — and at h = min(4 Myr, 0.1·τ) Mars integrates |
+| **C48** | the thermal-history integrator was validated on Earth alone, and calls its flux law far outside that law's expansion point | **closed 2026-09-08 in two halves — domain (Brief 155) and step (Briefs 156–157): the fixed 4 Myr step was h/τ ≈ 75 on Mars's first step and 1.02 on Earth's; the step is now h = min(4 Myr, 0.1·τ) and Mars integrates (1382.90 / 3893.01 / 1669.22 K, within 0.1 K of the 0.25 Myr sweep) while Earth's anchors hold to two decimals (1152 steps, was 1135) — ⚠ **every one of those numbers is at the
+core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner decision ⑤ (2026-09-09) declared
+0.14 and moved them, so Brief 166 D pins each anchor to its condition instead of to the module constant.** Earlier text of this cell:** renamed and half-repaired 2026-09-08 (Brief 155): the inversion bracket had stood in for a domain nobody declared — eqs 34–36's domain is now declared from the paper (upper edge 4800 K, §3; «<8 per cent» caveat, §6; open below), eqs 37–39's for the first time (D5), and the callee keeps both. The Mars step sweep (h/τ) stays open as its own item** | C20 diverges on Mars at every pre-registered `T_pot` (`T_m` → −6244 … −8208 K). ⚠ **The divergence is not the finding** — the flux law is called at **719,546 mW/m² on Mars and 25,144 on Earth**, against measured 19 and 92.1, because Nimmo's eq. 35 is a linearisation about `T₀ = 1573 K` and C20 feeds it **+1467 K (Earth) and +2448 K (Mars)**, giving mantle viscosities of `η₀`÷2.35 M and ÷42.8 G. **Earth's own outputs come from the same out-of-range call and survive only on heat capacity.** ⚠ No published range was violated — **none is printed**; our `BRACKET_K` is a Brief 57 bisection aid. **Two values from one paper fail to compose on a second body**, which is the failure mode of this engine's Earth-number-on-every-body pattern. Blast radius counted: **one consuming edge** (`core_entropy_production`), no board row, no `db/`. Next: a usable flux law, or a grounded starting epoch — ⚠ **never a starting value chosen because it integrates**. ⚠ **The diagnosis above predates Briefs 155 and 157 and is superseded on the cause of the divergence** (kept, not deleted, as this cell's second column keeps its earlier text): the out-of-domain call is real and is still counted on every result, but Mars diverged because of the step — the fixed 4 Myr was h/τ ≈ 75 on the first step — and at h = min(4 Myr, 0.1·τ) Mars integrates |
 | **C49** | one engine, two `k_core` declarations — and one file's stated ground forbids the number the other consumes | **listed 2026-09-09, not started** | Rocky: `cmb_flux.py@«K_CORE = 50.0»`, a single declared midpoint ± 20, consumed as the corners (30, 70) by `core_entropy.K_RANGE` and `core_history.K_CORNERS` and as the `q_ad` band. Sub-Neptune: `sub_neptune_dynamo.py@«CORE_CONDUCTIVITY = Band(»`, midpoint **None**, ends **40 and 100** from two papers Tang+ 2025 runs both ways, grade *calibrated*, with an unmade `Choice`. ⚠ **And the comment above it says «70 W/m/K 는 두 논문 중 어느 쪽도 말하지 않은 수다» — that very 70 is the upper corner the rocky path feeds to the entropy band.** So one file's stated ground disqualifies a number the other file uses. Two shapes as well as two values: one paper's ± against two papers' ends. Unification is part of owner decision ② (C25 (b)); listed only |
 | **C50** | contracts list `Needs` that no roster body supplies — and four are C37's exact signature | **listed 2026-09-09, not started** | Measured by C45's new lookup check: **class ① (C37's signature — the lookup misses everywhere and the `None` is filed under that name) is live in 3 nodes / 4 keys** (`body_class` `gas_mass_fraction`·`semi_major_axis_au`, `dynamo_rocky` `dynamo_regime`, `interior_layers` `porosity_cap`), and **class ③ (a `Needs` no body supplies, the call site coping) in 8 nodes / 8 keys** (`core_material` ×4, `ice_mass_fraction` ×3, `differentiated`, `envelope_z`, `gas_mass_fraction`, `initial_porosity`, `tidal_heating`, `permanent_quadrupole`). Each is one of two faults — the contract is wrong, or the body declarations are missing — and which is not decidable from the count. Held at measured size meanwhile: the four are named in `engine/check_contracts.py@«이 집합 밖의 사례는 FAIL 이다»` and anything outside fails the gate; class ③ has a printed baseline. Repair can move values, so it is a later brief. No owner decision |
 
@@ -3030,6 +3032,15 @@ has no inner core. On the declared 3 760 K horn, `e_l` and `e_g` are alive and t
 the positive corners down. **The same decision reads *fails* on one temperature and *cannot-say* on the
 other.**
 
+**What decision ⑤ cost, which was not in front of the owner when it was made.** Lowering the nominal H is a
+one-line declaration, and it **broke two C20 reproduction anchors in the next gate** — `test_core_history` had
+been reading `core_energy.H_CORE`, so C48's recorded Earth and Mars numbers were measured under a condition the
+decision changed. The repair (Brief 166 D, at the end of this file) pins each anchor to its own H and adds the
+declared-H rows beside them: **the gate grows by +114 s**, 235 → 360 s on that node. ⚠ *No result moved that
+should not have moved, and Mars's criterion B still passes with more headroom (5.1 K) than before — but "a
+declaration in C14 re-defines what C20's recorded anchors mean" was not on the decision sheet, and it is the
+kind of coupling nobody has counted (C52 candidate).*
+
 #### Decision ④'s label, and what the literature actually prints
 
 **The threshold is `ΔE` > 0, and the label is that it is inherited, not derived:** *Nimmo+ 2004 §4's
@@ -5537,6 +5548,12 @@ with the 3.7 Ga column still unread** — including the verdict-line paper, whic
 The table was computed afterwards and added in the commit that follows it, so **git testifies to the
 order** rather than this sentence doing it.
 
+⚠ **Every number in this section is at the core heating H = 1.5 pW/kg** (`core_energy.H_CORE` as it stood on
+2026-09-08). Owner decision ⑤ lowered the declared H to 0.14 on 2026-09-09, and at the declared H the same
+trajectory ends at **T_p 1377.23 K** with **T_p@3.7 Ga 1668.05 K** — criterion B still passes, with the upper-end
+headroom **5.1 K** instead of 4.0–4.7 K. Criterion A's 1400–1800 K sweep has **not** been re-run at the declared H.
+The numbers below are left exactly as measured; the label is what Brief 166 D adds.
+
 #### The criterion-B rule, fixed before the numbers were read
 
 C47 (h) pre-registered criterion B as one sentence — *the 3.7 Ga checkpoint verdict must be the same
@@ -6547,6 +6564,12 @@ every node regardless of which class its keys fall into: *does a key whose looku
 appear in `inputs` with a non-`None` value?* **Building it inside either class would catch one instance
 and miss the other**, and the shape is the same shape in both.
 
+⚠ **A neighbouring gap, found the same week by a gate failure rather than by a checker — named as a C52
+candidate at the end of this file** (*Brief 166 D, 2026-09-09*): C45 asks whether a node's lookups are
+declared, and C50 asks whether a declared `Needs` is supplied. **Neither asks how many nodes' recorded
+anchors depend on one shared module constant** — and one of them, `core_energy.H_CORE`, turned out to hold
+up the reproduction anchors of a different node entirely.
+
 ## What closing all of these does not do
 
 It does not make the solver answer every body. Brown dwarfs and stars stay out by the line
@@ -6654,9 +6677,74 @@ is τ = C_eff / (dQ_m/dT_m) (`engine/tools/adaptive-step-prereg.md`): **Earth's 
 1.02, Mars's 75** — Earth survived at the stability edge. (iii) The rule is now the step itself:
 `core_history.integrate` takes `h = min(4 Myr, 0.1·τ)` recomputed every step (F = 0.1: 1/28 of RK4's
 real-axis limit, 1/10 of what Earth already passed). Mars integrates in 1197 steps (smallest h 0.0053 Myr,
-largest h/τ 0.100) to **1382.90 / 3893.01 / 1669.22 K** — within 0.00 / 0.06 / 0.10 K of the 0.25 Myr sweep,
+largest h/τ 0.100) to **1382.90 / 3893.01 / 1669.22 K** (at H 1.5 pW/kg) — within 0.00 / 0.06 / 0.10 K of the 0.25 Myr sweep,
 inside the pre-registered 5 K. Earth: 1152 steps (was 1135), T_p 1525.46 and T_c 4027.43 unchanged at two
 decimals, T_p at 3.7 Ga +0.05 K; the step count is the one anchor that moved and `test_core_history` records
 both the new count and the fixed-step reproduction. **What the closed item leaves for C47:** a converged
 Mars history from the transferred 4800 K start — present T_p 1383 K against the declared 1600 K, 3.7 Ga T_p
 1669 K — consistent with an Earth-calibrated model, not Mars's actual values.
+
+**Brief 166 D, 2026-09-09 — one nominal constant moved another node's reproduction anchors, and the repair is
+to name the condition.** Owner decision ⑤ lowered the declared core heating from **1.5 to 0.14 pW/kg**
+(`engine/core_energy.py@«40 ppm K (Watanabe+ 2014, 오너 결정 ⑤)»`). That is a C14/C15 declaration; it was not
+a C20 change, and nobody predicted it would touch C20. **gate200 failed on two C48 anchors**, both in
+`test_core_history.py`: Earth's fixed-step `T_p` came out **1517.62 K against the anchor 1525.46**, and the
+Mars pair came out **1377.23 · 3768.09 · 1668.05 against 1382.90 · 3893.01 · 1669.22**. Nothing was wrong with
+the integrator — **the anchors had been reading the module constant** through `params["h_core"]`, so a
+declaration in one node re-defined the condition another node's recorded numbers were measured under.
+
+**The repair, and what it deliberately is not.** Each reproduction anchor now names its own H, the way
+`test_core_energy.H4` already named Nimmo's Table 4 condition: `H_NIMMO = 1.5e-12` is passed as an argument
+and the C48 numbers reproduce **exactly** (Earth 1135 steps, `T_p` 1525.46, `T_c` 4027.43; Mars 1197 steps,
+1382.90 / 3893.01 / 1669.22). The declared H gets **gate rows of its own**, measured 2026-09-09 and pinned as
+anchors in turn: Earth 1135 steps `T_p` **1517.62** `T_c` **3915.75** (adaptive minus fixed **+0.0004 K**), Mars
+1197 steps **1377.23 / 3768.09 / 1668.05**. ⚠ **This does not decouple anything.** C14, C15 and C20 still share
+one constant; what changed is that the sharing is now written where the numbers are, and a future move of the
+nominal will fail the gate on the *declared* rows — which is the correct place to fail — instead of on the
+reproduction ones.
+
+⚠ **A second breakage was found by the repair, in a tool the gate never runs.** `tools/mars_step_sweep.py`
+proves itself live before printing anything — it re-runs Earth and checks the anchor 1525.46 K
+(`engine/test_interior.py@«늘 발화하면 상수다»`). It built its `params` from `ce.H_CORE` too, so after decision ⑤
+that proof would have **failed on its own anchor** the next time anyone ran the sweep, and nothing in the gate
+would have said so beforehand. It now names `H_NIMMO` and the proof reproduces 1525.46 K again. **This is the
+argument against moving the declared-H rows out of the gate**: what a lane does not recompute, nobody re-measures.
+
+**The integrator's own reference row moves with it, and it is not the row C15 reads.** At the declared H the
+Earth history ends at `T_c` **3915.75 K** (inside C14's 3750–4284 K band), inner-core branch **`never`**,
+−d`T_c`/d`t` **58 K/Gyr**, and the four-corner ΔE_min band **−205.7 … −2.9 MW/K, 0 of 4 corners positive →
+`fails`**. ⚠ **That is the C20 reference row, and it is a different row from C25 (f)'s declared 3 760 K horn,
+which has an inner core and a band that straddles zero.** The two are not in conflict and neither supersedes
+the other: one integrates from a 4800 K start to whatever `T_c` it reaches, the other is evaluated at the
+owner's declared `T_c`.
+
+**Criterion B, re-read at the declared H — recorded, verdict unchanged.** Mars's 3.7 Ga checkpoint reads
+**1668.05 K**, still inside the owner's Herzberg+ 2007 `[1553.15, 1673.15]` K line, with **5.1 K** of upper-end
+headroom (it was 4.0–4.7 K at H 1.5, so the margin grew). ⚠ **The row-selection rule is part of the number**:
+`min(rows, key=|t_gyr + 3.7|)` — the nearest **sampled** row, no interpolation. Here that row is unique
+(t = −3.700566 Gyr, |Δ| 0.000566 Gyr against the next row's 0.003434) and its value is **1668.0452 K**. The audit
+seat's independent run reported 1668.043744 from a row at −3.700558 Gyr; the trajectories agree to the printed
+digit, so the 0.0014 K is the two seats' *row grids*, not the physics. ⚠ **And neither number is worth its last
+digits**: the local step is ~4 Myr, so "nearest row" is itself ±2 Myr, worth **≈0.19 K** here — three orders of
+magnitude more than the disagreement. One rule, one number: **1668.05**.
+
+**The cost, measured, and one claim withdrawn.** The gate grows by **+114 s** (`test_core_history` 235 → 360 s)
+for the two added integrations. ⚠ *An earlier audit measurement put the declared-H Mars run at **843 s**, a
+15.6× per-step blow-up, and the directing seat had provisionally moved the declared rows to an on-demand lane
+because of it.* **It did not reproduce** — three sequential runs on this tree took **59.6 / 58.9 / 59.9 s**, the
+audit seat's re-measurement took **57.9 / 57.7 / 58.7 s**, and the proposed cause (an inner core nucleating at
+the colder declared `T_c` and making every step search for it) is **false**: the declared-H Mars branch is
+`never`, present `r_i` **0.0 km**. Since the two runs agree to the printed digit they execute the same path, and
+the same path cannot cost 15×. The 843 s was environment. The rows stay in the gate, because an on-demand lane
+would have created exactly one more *"number the gate does not recompute"* — the kind of gap that produced this
+brief.
+
+**What this brief names and does not fix — C52 candidate.** `_core_side` was reading `ce.H_CORE` directly and
+throwing the result away (`core_terms`' `h` feeds only `Q_R`, and `Q̃` is `Q_s + Q_L + Q_g`); it is now passed
+`h = 0.0` with the reason written down, so the one path that reaches an answer is `params["h_core"]`. That is a
+tidy-up, not the finding. **The finding is that nobody has counted which shared constants hold up which nodes'
+anchors.** C45 checks that a node's lookups are declared; C50 checks that a declared `Needs` is supplied;
+**neither of them can see that `core_energy.H_CORE` is load-bearing for `test_core_history`, `mars_step_sweep`
+and `mars.yaml`'s stage-0 verdict at once.** The detection is countable — for each module constant, which
+recorded anchors change when it changes — and it is **not built here**. ⚠ *And it was a gate, not a checker,
+that found this one, which is the same lesson as C45: the hole was never silent, it was simply never counted.*

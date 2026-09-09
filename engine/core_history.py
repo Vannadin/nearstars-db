@@ -53,7 +53,7 @@ STEP_MYR = 4.0                      # Nimmo's constant timestep ("a constant tim
 WINDOW_GYR = 3.1                    # Nimmo's entropy-criteria window: mean and minimum over the last 3.1 Gyr
 CONVERGENCE_TOL = 0.10              # pre-registered: |ΔE_min(h/4) − ΔE_min(h/2)| / |ΔE_min(h/2)| < 10 %
 K_CORNERS = cf.K_CORE_RANGE         # (30, 70) W/(m K)
-H_CORNERS = ce.H_CORE_RANGE         # (0, 1.5e-12) W/kg
+H_CORNERS = ce.H_CORE_RANGE         # (0, 0.14e-12) W/kg — owner decision ⑤ 2026-09-09; was (0, 1.5e-12)
 ROCKY_ONLY = ("giant", "gas_giant", "ice_giant", "sub_neptune", "brown_dwarf", "star")
 
 NO_INITIAL = ("cannot-say (no initial temperatures declared — core_initial_temperature and "
@@ -73,7 +73,10 @@ CONDITION = ("Earth-calibrated model: Nimmo+ 2004 eqs 30 and 32 integrated with 
 def _core_side(material: str, p_cmb: float, t_c: float, r_cmb: float, m_core: float) -> dict:
     """Profile and rate coefficients at T_c. Q̃ = Q(dT_c/dt = −1 K/s) since Q_s, Q_L, Q_g are linear in the rate."""
     prof = ce.core_profile(material, p_cmb, t_c, r_cmb, m_core)
-    unit = ce.core_terms(prof, dtc_dt=-1.0, h=ce.H_CORE)
+    # h = 0 deliberately: `core_terms`' h feeds Q_R only, and Q̃ below is Q_s + Q_L + Q_g. Until Brief 166 D this
+    # read `ce.H_CORE` and threw the result away — inert, but it read as a second place the integrator takes H from.
+    # The one path that reaches the answer is `params["h_core"]` in `rates`, which is why the caller can set it.
+    unit = ce.core_terms(prof, dtc_dt=-1.0, h=0.0)
     # Heat released per unit cooling rate, positive: Q_s + Q_L + Q_g evaluated at dT_c/dt = −1 K/s.
     # (Nimmo's Q̃ carries the opposite sign; the physics is Q_C − Q_R = −Q̃_abs · dT_c/dt, cooling when Q_C > Q_R.)
     q_tilde = unit["q_s"] + unit["q_l"] + unit["q_g"]
@@ -136,7 +139,8 @@ def integrate(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: 
 
     Brief 157: the step is `h = min(step_myr, STEP_FRACTION · τ(state))`, τ recomputed at the start of every
     step from `mantle_time_constant_s`; `step_myr` is the CAP (Nimmo's constant 4 Myr, their line 419).
-    `adaptive=False` reproduces the fixed-step integrator bit for bit (Earth anchor 1525.46 K, 1135 steps) and
+    `adaptive=False` reproduces the fixed-step integrator bit for bit (Earth anchor 1525.46 K, 1135 steps, **at
+    Nimmo's H 1.5 pW/kg** — `params["h_core"]`, not a constant of this module, Brief 166 D) and
     is what the Mars divergence test uses. The result carries `n_steps`, `h_min_myr` and `max_h_over_tau`."""
     n_fixed = max(1, int(round(age_gyr * 1000.0 / step_myr)))
     h_fixed = age_gyr * GYR_S / n_fixed
@@ -250,7 +254,7 @@ def sweep(params: dict, t_c0: float, t_m0: float, age_gyr: float, step_myr: floa
         ws = window_summary(hist["rows"])
         nominal = (cf.K_CORE, ce.H_CORE)
         vals = [r["delta_e_corners"][nominal] if nominal in r["delta_e_corners"] else None for r in hist["rows"]]
-        # the nominal (k 50, H 1.5) point is not a corner; use the k=70,H=1.5 corner's ΔE_min as the convergence quantity
+        # the nominal (k 50, H 0.14) point is not a corner; use the k = 70, H 0.14 corner's ΔE_min as the convergence quantity
         # and the band ends, all three must move together
         out[label] = {"hist": hist, "summary": ws,
                       "delta_e_min_lo": ws["delta_e_min_band"][0], "delta_e_min_hi": ws["delta_e_min_band"][1],
