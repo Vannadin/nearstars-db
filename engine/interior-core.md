@@ -5090,6 +5090,66 @@ before it is implemented*, not after — this one went the other way and the ame
 g cm⁻³, while our two irons give **7.6–8.2** and **9.0–9.6**. The families change the *radius target*;
 they do not change the fact that neither of our materials can be Mars's core.
 
+### C55 (b) 2026-09-10 — wiring Mars to the Fe–S material, pre-registered before the run
+
+⚠ **Committed before the implementation.** 178 B transcribed Huang's printed mixing and 179 gave it a
+`Phase` through the high-pressure-referenced BM2. This registers what happens when Mars is actually wired
+to it, and what must not.
+
+#### The composition conversion, and why it is allowed
+
+The owner's sulphur band is **13–19 wt%**; Huang's derivatives take a **mole fraction**. The conversion is
+`c_S = (w/M_S) / (w/M_S + (1−w)/M_Fe)` with **M_Fe = 55.845** and **M_S = 32.06** g/mol:
+
+| band end | wt% S | **c_S** |
+|---|---|---|
+| low | 13 | **0.206527** |
+| high | 19 | **0.290071** |
+
+⚠ **This is our arithmetic and it is allowed** — it is textbook stoichiometry, the one exception the
+derived-value rule names, and the label travels with the numbers so a reader can redo it. Nothing about
+the *physics* is converted; only the unit the paper's table demands.
+
+#### ⚠ What the reading found before any code was written
+
+**A body-level `core_material` declaration does not move the radius.** The four core nodes read
+`core_material` from the state, but `interior_layers` — which is where `core_radius_fraction` and the mean
+density come from — takes its core material from the **composition preset**:
+`interior.py@«COMPOSITIONS: dict[str, tuple[float, float, float, str]] = {»` supplies `fe_prem` for
+`earth_like`, and the adapter hands `solve` a composition, never the body's `core_material`.
+
+**So wiring Mars in the obvious way would change the four core nodes and leave C59's two rows exactly
+where they are.** The implementation therefore needs the material to reach `_stack`, and `_stack` looks
+its material up in `MATERIALS` by name — which means **registering** it, which the sulphur band forbids
+doing at a single point.
+
+**The shape that satisfies both:** register the band's **two ends** as two named materials, not a
+midpoint. Both ends emitted is what every other band in this engine does.
+
+#### The four cells to be measured, and the two axes that make them
+
+| | 19 GPa anchor | 35 GPa anchor |
+|---|---|---|
+| **c_S 0.206527** (13 wt%) | radius · mean core density | radius · mean core density |
+| **c_S 0.290071** (19 wt%) | radius · mean core density | radius · mean core density |
+
+⚠ **The anchor axis is not a free choice and not a preference** — 179 measured the two anchors as **2.9 %
+apart** when extrapolated onto each other, and Mars's core spans both (19–40 GPa). Each cell is scored
+against the verdict windows **radius 1820–1870 km** and **density 5.7–6.3 g cm⁻³**, and ⚠ **whichever
+cells pass or fail, no value is adjusted to make them pass.**
+
+#### Predicted, before running
+
+1. **Radius rises from 1667 km toward 1830.** Direction only: the same core mass fraction in a lighter
+   material must occupy more volume. **How far is the measurement**, and it is the point of C55.
+2. **C59's two recorded disagreements move.** If either comes inside its tolerance, the
+   `[기록·해소?]` line must appear — that mechanism was built in 177 for exactly this moment and has
+   never fired on a real change.
+3. **Earth, Pandora and the rest stay bit-identical.** Mars is the only body wired.
+4. ⚠ **Prediction 1 may be right about direction and still fail both windows**, because the core mass
+   fraction is `earth_like`'s 0.325 and **is deliberately left undeclared** — C55 tests the *material*,
+   and letting a second unknown move at the same time would make the result unattributable.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the
