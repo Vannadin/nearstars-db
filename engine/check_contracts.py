@@ -123,7 +123,20 @@ def parse_contract(doc: Path, node: str) -> dict[str, set[str]] | None:
         key = kind.lower().replace("-", "_")
         out[key] = set((OPTIONAL_FIELD if key == "declared_optional" else FIELD).findall(body))
         if key == "declared_optional":
-            out["normalised"] = {k: ast.literal_eval(v) for k, v in NORMALISED.findall(body)}
+            # ⚠ **문서의 오타가 검사 전체를 죽이지 않게** (171 D). 여기서 `literal_eval` 이 던지면
+            #   트레이스백 하나로 계약 검사가 끝나고, 어느 문서 어느 줄인지 아무 데도 안 나온다.
+            #   이름 붙은 실패로 바꾼다 — 그 항목만 실패하고 나머지 검사는 계속 돈다.
+            norm, errs = {}, []
+            for m in NORMALISED.finditer(body):
+                raw = m.group(2)
+                line = text[:head.end() + block.index(body) + m.start(2)].count("\n") + 1
+                try:
+                    norm[m.group(1)] = ast.literal_eval(raw)
+                except (ValueError, SyntaxError):
+                    errs.append((doc.name, line, m.group(1), raw))
+            out["normalised"] = norm
+            if errs:
+                out["normalised_errors"] = errs
     return out
 
 
@@ -291,6 +304,10 @@ def main() -> int:
             fails.append(f"{node}: 문서 {doc.name} 가 없다")
             continue
         declared = parse_contract(doc, node)
+        if declared is not None:
+            for _f, _l, _k, _raw in declared.get("normalised_errors", []):
+                fails.append(f"정규화 값이 리터럴이 아니다 — {_f}:{_l} `{_k}` 의 «{_raw}» "
+                             f"(형식: absent is recorded as `<파이썬 리터럴>`)")
         if declared is None:
             fails.append(f"{node}: {doc.name} 에 '## Contract — `{node}`' 블록이 없다")
             continue
