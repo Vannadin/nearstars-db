@@ -5150,6 +5150,43 @@ cells pass or fail, no value is adjusted to make them pass.**
    fraction is `earth_like`'s 0.325 and **is deliberately left undeclared** — C55 tests the *material*,
    and letting a second unknown move at the same time would make the result unattributable.
 
+#### C55 (b) built 2026-09-10 — all four cells refuse, and the reason was already named
+
+| c_S (wt% S) | 19 GPa anchor | 35 GPa anchor |
+|---|---|---|
+| 0.206527 (13) | ⚠ **refused** | ⚠ **refused** |
+| 0.290071 (19) | ⚠ **refused** | ⚠ **refused** |
+
+**All four, with one reason, and it is not this brief's:** `IRON_FES_GAP_REASON` — *the Fe–S melting
+between 10 and 21 GPa is covered neither by Mori+ 2017 ([`2017E&PSL.464..135M`](https://ui.adsabs.harvard.edu/abs/2017E%26PSL.464..135M), below its reference point) nor by Buono & Walker
+2011*. ⚠ **Mars's core-mantle boundary is 20.65 GPa in this engine**, so the top of its core sits **inside
+that gap**, and a material whose melting bound is undefined there cannot be solved.
+
+**So the registered predictions are not resolved, and they are not being called wrong either.**
+Prediction 1 (radius rises from 1667 km toward 1830) is **untestable today** — the direction argument
+still stands and no number tests it. Prediction 2 (C59's rows move, possibly firing 177's resolution
+notice) **does not occur**. Prediction 3 holds, trivially: Mars is **not wired**, so every body is
+bit-identical. ⚠ **Mars is deliberately left on `fe_prem`**: declaring the new material would replace the
+answers it has with a refusal, and trading answers for a refusal is not what C55 is for.
+
+**What was built and stands.** The band's two ends are registered as materials — `fe_s_13wt_19gpa` and
+`fe_s_19wt_19gpa`, ⚠ **with the anchor in the name**, because the two anchors differ by 2.9 % (179) and
+any evidence carrying the material name should carry which anchor produced it. The engine's Mars CMB of
+20.65 GPa makes the 19 GPa anchor *the nearer one*, and that is recorded as a fact rather than used as a
+choice.
+
+⚠ **A second gate caught something the first did not.** `test_eos_joins` (Brief 41's discipline) refused
+both new materials because their melting curve had no registered composition: a phase must be able to say
+how its **density fit's composition** differs from its **melting curve's**, and `iron_fes_eutectic` was
+not in `MELT_CURVE_JOIN` at all — so there was **nowhere to write the difference down**. It is registered
+now, and both phases carry the `join_note` saying the density is an arbitrary-`c_S` liquid while the
+melting bound is at the fixed eutectic composition.
+
+**What would unblock the cells** is a melting bound between 10 and 21 GPa, which is C55's own recorded
+gap and not a modelling choice we may make; the two measured points inside it (Pommier+ 2018, [`2018Icar..306..150P`](https://ui.adsabs.harvard.edu/abs/2018Icar..306..150P)) print a
+eutectic *composition* that does not match the curve's, which is exactly why the gap was declared rather
+than interpolated.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the

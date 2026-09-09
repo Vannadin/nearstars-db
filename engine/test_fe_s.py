@@ -128,10 +128,14 @@ row(ph.form == "bm2_ref" and ph.p_ref == 19.0 * eos.GPA and ph.k0p == 4.0,
 row(abs(ph.pressure(ph.rho0) - ph.p_ref) < 1.0,
     f"기준점의 항등식: P(ρ_ref) = {ph.pressure(ph.rho0) / eos.GPA:.6f} GPa = p_ref — "
     "고압 기준이 실제로 그 자리에 놓였다는 뜻이다")
-row(abs(ph.density(19.0e9) - ph.rho0) < 1e-6,
-    f"뒤집기도 같은 자리로 돌아온다: ρ(19 GPa) = {ph.density(19.0e9):.4f} = ρ_ref")
+# ⚠ 저장값과 평가값은 **다른 단정**이다: 앞은 비트 동일, 뒤는 Newton 이 기준점을 다시 푸는
+#   잔차라 3 ulp 가 남는다. 한 줄로 뭉치면 form 이 잘못 풀어도 «같다» 로 통과할 수 있다.
+rel = abs(ph.density(19.0e9) - ph.rho0) / ph.rho0
+row(rel <= 1e-12,
+    f"평가값도 기준점으로 돌아온다: ρ(19 GPa) 상대잔차 {rel:.2e} ≤ 1e-12 (3 ulp 수준) — "
+    "수치 역산이 기준을 다시 찾는다는 뜻이지 저장값이 같다는 뜻이 아니다")
 row(repr(ph.rho0 / 1e3) == "6.804901234567901",
-    f"슬롯을 지난 R7 이 함수와 **마지막 자리까지** 같다: {ph.rho0 / 1e3!r} g/cm³ "
+    f"슬롯에 **들어간** R7 이 함수와 마지막 자리까지 같다: {ph.rho0 / 1e3!r} g/cm³ "
     "(c_S = 24/108 을 반올림하면 여기가 갈린다 — 실제로 첫 판이 0.222 로 갈렸다)")
 row(ph.melt == "iron_fes_eutectic" and ph.fit_state == "liquid" and ph.melt_scale == 1.0,
     "융해는 Mori 공정 **바운드**이고 `melt_scale` 은 쓰지 않는다 (내림폭이 곧 공정선이다)")
@@ -140,9 +144,15 @@ row(ph.melt == "iron_fes_eutectic" and ph.fit_state == "liquid" and ph.melt_scal
 row(repr(eos.MATERIALS["fe_prem"].phases[0].density(136.0e9)) == "9916.93698295698",
     f"fe_prem ρ(136 GPa) = {eos.MATERIALS['fe_prem'].phases[0].density(136.0e9)!r} — 비트 동일")
 # ⚠ `MATERIALS` 에는 `phases` 가 없는 항목도 있다 (수소-헬륨 표) — 있는 것만 본다.
-row(all(ph2.p_ref == 0.0 for m in eos.MATERIALS.values()
+# ⚠ 그리고 «전부 0» 은 이제 거짓이다: 178 C 가 Fe–S 두 끝을 등록했고 그것들이 19 GPa 기준이다.
+#   그래서 **이름으로 갈라** 본다 — 새 재질만 기준압을 갖고, 나머지는 전부 0 이어야 한다.
+newref = sorted(k for k, m in eos.MATERIALS.items()
+                if any(ph2.p_ref for ph2 in getattr(m, "phases", ())))
+row(newref == ["fe_s_13wt_19gpa", "fe_s_19wt_19gpa"],
+    f"기준압을 가진 재질은 Fe–S 두 끝뿐이다: {newref}")
+row(all(ph2.p_ref == 0.0 for k, m in eos.MATERIALS.items() if not k.startswith("fe_s_")
         for ph2 in getattr(m, "phases", ())),
-    "기존 모든 상의 `p_ref` 가 0 이다 — 새 필드가 옛 경로를 지나가지 않는다")
+    "그 둘 말고는 모든 상의 `p_ref` 가 0 이다 — 새 필드가 옛 경로를 지나가지 않는다")
 
 print("\n기록 — 두 앵커를 서로에게 외삽하면 2.9 % 벌어진다 (판정 아님, 179 측정)")
 a19, a35 = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa"), eos.huang_fes_phase(eos.HUANG_S4_CS, "35GPa")

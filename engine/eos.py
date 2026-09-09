@@ -81,6 +81,12 @@ MELT_CURVE_JOIN = {
     "water": "H2O",
     "iron": "Fe (pure)",                       # iron_t_melt — 순철 두 적합의 이어붙임
     "silicate": "mantle rock (peridotitic / A-chondrite solidus)",   # silicate_solidus
+    # ⚠ Fe–Fe₃S 공정선 (Mori+ 2017). **바운드**로만 쓰는 곡선이고 21 GPa 아래는 부재다
+    #   (`IRON_FES_GAP_REASON`). 여기 등재하는 이유는 브리프 41 의 규율 때문이다 — 밀도 적합의
+    #   조성과 녹는곡선의 조성이 다르면 상 옆에 `join_note` 로 그 차이를 적어야 하고, 그 대조가
+    #   이 표를 읽는다. Fe–S 액체 밀도(임의 c_S)와 공정선(고정 공정 조성)은 실제로 다르므로,
+    #   등재하지 않으면 그 차이를 **적을 자리조차 없다** (브리프 178 C).
+    "iron_fes_eutectic": "Fe–Fe₃S eutectic (fixed eutectic composition)",
 }
 FIT_STATES = ("solid", "liquid")
 
@@ -1582,6 +1588,10 @@ def huang_fes_phase(c_s: float, anchor: str = "19GPa") -> "Phase":
         rho0=rho, k0=k_t, k0p=4.0,                      # 논문: "second-order BM … K₀′ equals 4"
         p_max=MORI_FES_P_MAX, p_min=p_ref, p_ref=p_ref,
         ref=f"Huang+ 2023 (2023GeoRL..5002271H) Table 1 + SI Table S5, {anchor} 기준",
+        # ⚠ **이 상에는 열항이 없다** — `alpha_k = 0` 이라 `has_thermal` 이 False 이고 `t_ref` 는
+        #   읽히지 않는다. 논문의 두 앵커가 각자 자기 온도(2100·2400 K)에 놓여 있어서, 그 온도를
+        #   `t_ref` 로 적고 α 를 붙이면 `delta_t` 가 **절대영도부터 데우는 모양**이 된다 — C56 이
+        #   기록한 바로 그 함정이다. 열은 앵커 안에 이미 들어 있고, 밖에서 또 얹지 않는다.
         melt="iron_fes_eutectic", melt_ref="Mori+ 2017 Fe–Fe₃S 공정 (바운드)",
         join="Fe–S 액체", fit_state="liquid",
         join_note=f"밀도 적합은 c_S = {c_s:.4f} 의 액체 Fe–S, 융해는 Fe–Fe₃S 공정 바운드 — "
@@ -2805,7 +2815,37 @@ class _HydrogenHeliumSlope:
 
 H_HE = HydrogenHelium()
 
+# ── 황 밴드의 **양끝**을 재질로 등록한다 (C55 (b), 브리프 178 C) ─────────────────────────────
+# ⚠ 중점을 고르지 않는다. 오너가 결정한 것은 **밴드 13–19 wt%** 이고, 이 엔진의 다른 모든 밴드처럼
+#   양끝을 낸다. 등록이 필요한 이유는 `interior._stack` 이 `MATERIALS[core_material]` 로 이름을
+#   찾기 때문이고, 그래서 «점을 안 고른다» 와 «구조 풀이에 닿는다» 를 동시에 만족하는 형태가
+#   **끝 두 개를 각각 등록하는 것**이다.
+# ⚠ 몰분율 환산은 교과서 화학량론이다: c_S = (w/M_S)/(w/M_S + (1−w)/M_Fe),
+#   M_Fe = 55.845 · M_S = 32.06 g/mol → 13 wt% = 0.206527 · 19 wt% = 0.290071.
+#   그 환산은 **우리 산수**이고(교과서 공식 예외), 여기 적어 두어 다시 계산할 수 있게 한다.
+# ⚠ 두 재질 모두 **19 GPa 앵커**로 만든다. 35 GPa 앵커와는 2.9 % 벌어지고(브리프 179), 어느 앵커로
+#   풀지는 아직 고르지 않았다. 화성 CMB 는 이 엔진에서 **20.65 GPa** 라 19 GPa 앵커가 «가까운 쪽»
+#   이라는 **사실만** 적고 고르지 않는다 — 그래서 앵커를 **재질 이름에 박는다**. 증거에 재질
+#   이름이 실리면 앵커도 함께 실리고, 두 앵커가 2.9 % 벌어지는 이상 그 라벨은 값의 일부다.
+FE_S_MOLAR_MASS = (55.845, 32.06)          # (M_Fe, M_S) g/mol — 교과서 값
+FE_S_BAND_WT = (0.13, 0.19)                # 오너 결정 2026-09-10
+
+
+def fe_s_mole_fraction(w_s: float) -> float:
+    """S 무게분율 → 몰분율. **교과서 화학량론**이고 다른 규칙은 쓰지 않는다."""
+    m_fe, m_s = FE_S_MOLAR_MASS
+    n_s, n_fe = w_s / m_s, (1.0 - w_s) / m_fe
+    return n_s / (n_s + n_fe)
+
+
+FE_S_13WT = Material("fe_s_13wt_19gpa", "액체 Fe–S 핵 · 13 wt% S (밴드 아래끝, 19 GPa 기준)",
+                     (huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa"),),
+                     gap_reason=IRON_FES_GAP_REASON)
+FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 위끝, 19 GPa 기준)",
+                     (huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa"),),
+                     gap_reason=IRON_FES_GAP_REASON)
+
 MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseLiquidWater | Ammonia] = {
-    m.name: m for m in (FE_PREM, FE_EPS, SILICATE, SILICATE_CHONDRITIC, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,
+    m.name: m for m in (FE_PREM, FE_EPS, FE_S_13WT, FE_S_19WT, SILICATE, SILICATE_CHONDRITIC, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,
                         H2O_LIQUID_DENSE, NH3)
 }
