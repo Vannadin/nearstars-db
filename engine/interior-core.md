@@ -4598,6 +4598,35 @@ and a non-inversion writing the same key is still caught.
 
 The baseline goes into `check_contracts.py` beside the others, with the reason, and moves only with one.
 
+#### C45 (d) built 2026-09-09 — both registered expectations failed, and the shape resists a clean test
+
+**Registered expectation 1 — «unexplained class ④ = 0» — failed: it measures 12.**
+**Registered expectation 2 — «the convention line fires on `interior_layers`, or on nothing» — also
+failed**, in the second way: it fires on nothing, because no roster body takes an inversion branch. Both
+registrations are left as written.
+
+⚠ **The rule as registered could not be shipped, and finding that out was the work.** «Missed lookup,
+non-`None` in the evidence» fires on **every declared default**: the recipe records the value it used, and
+for a declared-optional key that value *is* the default. Refining it to «different from the call-site
+default» still fired, because a recipe's own **parameter default** is a second legitimate layer
+(`ladder(..., ice_mass_fraction: float = 0.0)`). Accepting both layers left **12**, all of one kind:
+`interior_layers` records `0.0` for `gas_mass_fraction` and `ice_mass_fraction` on all six sample bodies,
+where both declared defaults are `None` and the recipe normalises «absent» to zero internally.
+
+**So a number in the evidence has at least three honest origins** — the call-site default, the callee's
+signature default, and the recipe's own normalisation — and only a fourth is the defect. ⚠ **What
+separates them is not a property of the value; it is whether the source is one the contract names.** That
+is why the shape stayed invisible to C45 (b)'s `is None` test and why it cannot be closed by comparing
+numbers.
+
+**What was built, and what it is worth.** The detector ships with the two-layer rule and a baseline of
+**12**, printed with the node, the key, the body, the value and the accepted defaults, plus separate lines
+for inversion-convention hits and for keys whose defaults are not literals. It would catch the original
+instance: `porosity_cap` recorded `P_LAB_MAX` against a declared default of `None`. ⚠ **The 12 are not a
+defect and are not repaired here** — they are a disagreement between the contract («unknown») and the
+evidence («zero»), and closing it means either writing the normalisation into the contract or keeping the
+raw value in the evidence. Both can move an output, so both are a later brief. Counting first.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the

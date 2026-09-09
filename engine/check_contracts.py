@@ -53,6 +53,14 @@ BODIES = HERE / "bodies"
 #: 공급하니 칸이 비었을 뿐이다. 화성 행은 C50 (b) 표 5행에서 오너 대기로 살아 있다 (가벼운 원소가
 #: 섞인 철 후보 조사 뒤 결정, 병렬석 P12).
 CLASS3_BASELINE = (0, 0, 0)           # (노드, 고유 키, (노드,키) 쌍)
+#: C45 (d) 클래스 ④ 기준선 — **선언된 기본값 어느 것과도 다른** 값이 미스한 조회 이름 아래 앉은 수.
+#: ⚠ **사전등록은 0 을 예측했고 측정은 12 다** (171 B). 실패한 것은 코드가 아니라 등록이고, 12 는
+#: 전부 `interior_layers` 의 `gas_mass_fraction`·`ice_mass_fraction` 이 표본 여섯 바디에서 `0.0` 으로
+#: 기록된 것이다 — 선언된 기본값은 **`None`** 인데 레시피가 «없으면 0» 으로 정규화해 쓴 값이 증거에
+#: 앉는다. ⚠ 그래서 이 12 는 **결함이 아니라 계약과 증거의 어긋남**이다: 계약은 «모른다»(None)라고
+#: 말하고 증거는 «0» 이라고 말한다. 고치려면 정규화를 계약에 적거나 증거에 원값을 남겨야 하고,
+#: 둘 다 출력을 건드릴 수 있어 이 브리프의 몫이 아니다 — 세어 두는 것이 먼저다 (C45 (d)).
+CLASS4_BASELINE = 12
 
 #: 클래스 ① (C37 의 서명) 의 **알려진 기존 사례** — 2026-09-09 첫 측정, C50 에 등재.
 #: ⚠ **이 집합 밖의 사례는 FAIL 이다.** 기존 넷을 지금 고치는 것은 값을 움직일 수 있어 다음
@@ -123,6 +131,65 @@ def ast_lookup_literals(node: str) -> set[str]:
     return keys
 
 
+_NO_DEFAULT = object()
+
+
+def ast_lookup_defaults(node: str) -> dict[str, object]:
+    """`state.get("k", <상수>)` 의 **호출부 기본값** — 리터럴일 때만 (C45 (d)).
+
+    ⚠ 이것이 다섯째 모양의 판정축이다. «미스했는데 증거에 수가 있다» 만으로는 **선언된 기본값**과
+    **솔버 안에서 몰래 들어온 상수**를 못 가른다 — 전자는 `Declared-optional` 이 이름 붙인 정상이고
+    후자가 C45 (c) 가 찾던 것이다. 둘의 차이는 기록된 값이 **그 기본값과 같은가** 이다.
+    같은 키가 여러 번 다른 기본값으로 조회되면 판정하지 않는다(`_NO_DEFAULT`)."""
+    fn = registry.get(node)
+    if fn is None:
+        return {}
+    src = Path(sys.modules[fn.__module__].__file__).read_text(encoding="utf-8")
+    out: dict[str, object] = {}
+    for n in ast.walk(ast.parse(src)):
+        if (isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+                and n.func.attr in ("get", "get_optional")
+                and isinstance(n.func.value, ast.Name) and n.func.value.id == "state"
+                and n.args and isinstance(n.args[0], ast.Constant)
+                and isinstance(n.args[0].value, str)):
+            key = n.args[0].value
+            if len(n.args) >= 2 and isinstance(n.args[1], ast.Constant):
+                val = n.args[1].value
+            elif len(n.args) == 1:
+                val = None                      # `state.get(k)` 의 기본값은 None 이다
+            else:
+                val = _NO_DEFAULT               # 리터럴이 아니다 — 판정하지 않는다
+            if val is _NO_DEFAULT:
+                out[key] = _NO_DEFAULT
+            elif out.get(key) is not _NO_DEFAULT:
+                out.setdefault(key, set()).add(val) if isinstance(out.get(key), set) else out.__setitem__(key, {val})
+    # ⚠ **기본값은 두 층이다** (171 B, 측정으로 배웠다). 어댑터의 `state.get(k, d)` 가 첫 층이고,
+    #   레시피 함수의 **파라미터 기본값**이 둘째 층이다 — `ladder(..., ice_mass_fraction: float = 0.0)`
+    #   처럼. 증거에 앉은 수가 둘 중 어느 것과도 같지 않을 때에만 «다른 데서 왔다» 고 말할 수 있다.
+    #   ⚠ 같은 모듈의 **모든** 함수 파라미터를 이름으로 모으므로 이 쪽은 거칠다 — 거친 쪽이 안전한
+    #   방향이다(놓치는 것이 아니라 봐 주는 쪽으로 틀린다). 그 거칢을 여기 적어 둔다.
+    for n in ast.walk(ast.parse(src)):
+        if not isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        args = n.args
+        pairs = list(zip(args.args[len(args.args) - len(args.defaults):], args.defaults))
+        pairs += [(a, d) for a, d in zip(args.kwonlyargs, args.kw_defaults) if d is not None]
+        for arg, d in pairs:
+            if isinstance(d, ast.Constant) and out.get(arg.arg) is not _NO_DEFAULT:
+                out.setdefault(arg.arg, set())
+                if isinstance(out[arg.arg], set):
+                    out[arg.arg].add(d.value)
+    return out
+
+
+def explained_by_default(got, accepted) -> bool:
+    """증거에 앉은 값이 **선언된 기본값 중 하나** 그대로인가 (C45 (d) 의 판정 한 줄).
+
+    ⚠ 타입까지 본다: `False == 0` 이고 `True == 1` 이라, 타입을 안 보면 불리언 기본값이 0 이나 1 을
+    설명해 버린다. 순수 함수로 떼어 둔 이유는 **음성 시험이 이 한 줄을 직접 겨눌 수 있어야** 해서다."""
+    return any(got == a and type(got) is type(a) for a in accepted)
+
+
 def lookup_sets(node: str, bodies: list[BodyState]) -> dict[str, set[str]]:
     """이 노드가 **실제로** 조회한 키들을 표본 전체에서 모은다 (C45 (b)).
 
@@ -176,6 +243,11 @@ def main() -> int:
     #: 계약이 틀렸는지 천체 선언이 빠졌는지가 아직 안 갈렸다(C50). 기준선보다 늘면 그 줄이 찍힌다.
     class3: dict[str, list[str]] = {}
     class1_seen: set[tuple[str, str]] = set()
+    #: C45 (d) 클래스 ④ — 미스한 조회가 증거에 non-None 으로 나타난다. `class4_conv` 는 역산 규약이
+    #: 설명하는 히트이고 **판정에서 빼되 인쇄한다** (허용목록이 아니라 결과가 스스로 밝힌 성질이다).
+    class4: list[tuple] = []
+    class4_conv: list[tuple] = []
+    class4_undecided: list[tuple] = []
 
     for node in sorted(registry.registered()):
         nd = g["nodes"][node]
@@ -220,6 +292,33 @@ def main() -> int:
         if known_filed:
             print(f"  [클래스 ① · 기존] {node}: {', '.join(known_filed)} — C50 에 등재된 사례")
         class1_seen.update((node, k) for k in filed)
+        # ④ 다섯째 모양 (C45 (d)) — **조회가 전부 미스인데 증거에 진짜 수가 들어 있다.** 클래스 ①
+        #    은 `is None` 을 보므로 상수나 솔버의 중간값이 앉으면 안 보인다. ⚠ 범위가 `Needs` 가
+        #    아니라 **조회된 키 전부**다: `porosity_cap` 은 이제 Declared-optional 이라 `never` 에
+        #    안 들어오고, 그러면 첫 사례를 자기 검출기가 못 보게 된다.
+        #    ⚠ 예외는 **키가 아니라 regime 에** 건다 — 역산 결과(`inferred_…`)는 자기가 되읽은 축을
+        #    그 축의 이름으로 보고하는 것이 이 저장소의 규약이고(170 C), 그 히트도 **인쇄한다**.
+        missed_all = sorted(look["asked"] - look["hit"])
+        defaults = ast_lookup_defaults(node)
+        for body in bodies:
+            res_b = body.results.get(node)
+            if res_b is None:
+                continue
+            inverted = str(getattr(res_b, "regime", "") or "").startswith("inferred_")
+            for key in missed_all:
+                if key not in res_b.inputs or res_b.inputs[key] is None:
+                    continue
+                accepted = defaults.get(key, _NO_DEFAULT)
+                if accepted is _NO_DEFAULT or not isinstance(accepted, set):
+                    class4_undecided.append((node, key, body.name, res_b.inputs[key]))
+                    continue
+                got = res_b.inputs[key]
+                if explained_by_default(got, accepted):
+                    continue                    # 선언된 기본값 중 하나가 그대로 기록됐다 — 정상이다
+                default = sorted(accepted, key=repr)
+                (class4_conv if inverted else class4).append(
+                    (node, key, body.name, res_b.inputs[key], getattr(res_b, "regime", None), default))
+
         rest = sorted(set(never) - filed)
         if rest:
             class3[node] = rest
@@ -290,6 +389,20 @@ def main() -> int:
     n3_keys = len({k for v in class3.values() for k in v})
     n3_pairs = sum(len(v) for v in class3.values())
     got3 = (n3_nodes, n3_keys, n3_pairs)
+    for node, key, body, val, reg, dflt in class4_conv:
+        print(f"  [클래스 ④ · 규약] {node}: 미스한 '{key}' 가 {body} 의 증거에 {val!r} 로 있다 "
+              f"(호출부 기본값 {dflt!r}) — 역산이 자기 축을 보고한 것이다 (regime {reg})")
+    for node, key, body, val in class4_undecided:
+        print(f"  [클래스 ④ · 판정 불가] {node}: '{key}' 의 호출부 기본값이 리터럴이 아니다 "
+              f"({body} 의 증거는 {val!r}) — 이 검사가 판정하지 않는다")
+    for node, key, body, val, reg, dflt in class4:
+        print(f"  [클래스 ④] {node}: 조회가 전부 미스인데 증거에 {val!r} 가 있다 — '{key}' ({body}, "
+              f"regime {reg}). 호출부 기본값은 {dflt!r} 이므로 그 수는 **다른 데서 왔다** (C45 (d))")
+    got4 = len(class4)
+    print(f"  [클래스 ④ 합계] 설명되지 않은 {got4}건 · 역산 규약 {len(class4_conv)}건 · "
+          f"판정 불가 {len(class4_undecided)}건 "
+          f"(기준선 {CLASS4_BASELINE}) — "
+          f"{'변화 없음' if got4 == CLASS4_BASELINE else '⚠ 기준선과 다르다'}")
     print(f"  [클래스 ③ 합계] {n3_nodes} 노드 · 고유 키 {n3_keys} · 쌍 {n3_pairs} "
           f"(기준선 {CLASS3_BASELINE[0]} · {CLASS3_BASELINE[1]} · {CLASS3_BASELINE[2]}, C50) — "
           f"{'변화 없음' if got3 == CLASS3_BASELINE else '⚠ 기준선과 다르다'}")

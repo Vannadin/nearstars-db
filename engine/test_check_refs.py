@@ -372,6 +372,14 @@ def main() -> int:
        "dynamo_rocky 의 `composition_intent` 는 Needs 에 있고 면제에는 없어야 한다 — 산문의 백틱이 "
        "진짜 need 를 면제로 옮긴 적이 있다 (170 E)")
 
+    # ⚠ 클래스 ④ 의 판정 한 줄을 직접 겨눈다 (C45 (d), 171 B). 판정 **앞**이다 — 170 E 참조.
+    ok(_cc.explained_by_default(0.0, {0.0}) is True,
+       "④: 선언된 기본값 0.0 이 그대로 기록되면 설명된다")
+    ok(_cc.explained_by_default(1.5e8, {None}) is False,
+       "④: 기본값이 None 인데 증거에 상수가 앉으면 설명되지 않는다 — 이것이 `porosity_cap` 이었다")
+    ok(_cc.explained_by_default(0.0, {False}) is False and _cc.explained_by_default(1, {True}) is False,
+       "④: 타입까지 본다 — `False == 0` 이라 타입을 안 보면 불리언 기본값이 0 을 설명해 버린다")
+
     for f in fails:
         print(f"  [FAIL] {f}")
     if fails:
