@@ -4561,6 +4561,43 @@ no sample body exercises the hole today.** And the sharpest part is the count �
 hole was never silent**: the contract check had been reporting one contract fewer, and **nobody read the
 number.** A skipped node is a subtraction from a total that is printed on every gate run.
 
+### C45 (d) 2026-09-09 — the fifth shape gets a detector, pre-registered before it is built
+
+⚠ **This section is committed before the code.** C45 (c) named a shape the instrument cannot see and
+C50 (b) hit it twice: **a key whose lookups all missed, appearing later in `Result.inputs` with a real
+number.** Class ① tests `inputs[key] is None`, so a *plausible value* written from a constant or from the
+solver's own working is invisible to it — worse than C37, which at least leaves a `None` a reader might
+notice.
+
+**The rule, stated before the measurement:** for each node, take the keys whose lookups were asked and
+**missed on every sample body**, then look at that body's `Result.inputs`. A key that is present there
+with a value that is not `None` is **class ④**.
+
+#### The one exception, named rather than listed
+
+⚠ **An inverse solve legitimately reports what it inferred, under the name of the thing it inferred.**
+`interior.py` does this at four places and `test_interior` reads it that way — `res.regime` names the
+axis and `res.inputs[axis]` holds the value read back. 170 B mistook that convention for a defect,
+removed one of the four, and `gate207` failed on it (C50 (b), correction 170 C).
+
+So the exception is **on the regime, not on the key**: a `Result` whose `regime` begins with `inferred_`
+is an inversion and may report its axes. ⚠ **It is not an allowlist** — no key name is exempted anywhere,
+the exception is a property the result declares about itself, and those hits are still **printed**, on
+their own line, so that nothing disappears. A future inversion gets the same treatment without an edit,
+and a non-inversion writing the same key is still caught.
+
+#### Registered expectations, before running it
+
+1. **Unexplained class ④ = 0.** The only instance anyone has found — `porosity_cap` — was removed in
+   170 B, and nothing else is known.
+2. **The convention line fires on `interior_layers`, or on nothing.** The four writes all live in that
+   recipe's inversion branches. ⚠ Whether any *roster* body takes one of those branches is **not known
+   to this seat before the measurement**, so the count is deliberately not predicted — only the node is.
+3. ⚠ **If (1) is wrong, that is the finding**, and the instance is reported before it is repaired: the
+   count is the point of the item, not a number to get to zero.
+
+The baseline goes into `check_contracts.py` beside the others, with the reason, and moves only with one.
+
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
 C34 settled *which quantity* is fed to the §6.2 transport table. This is the other half: **what the
