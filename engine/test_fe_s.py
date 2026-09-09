@@ -154,6 +154,47 @@ row(all(ph2.p_ref == 0.0 for k, m in eos.MATERIALS.items() if not k.startswith("
         for ph2 in getattr(m, "phases", ())),
     "그 둘 말고는 모든 상의 `p_ref` 가 0 이다 — 새 필드가 옛 경로를 지나가지 않는다")
 
+print("\n⑧ 융해곡선이 **분기까지** 있는가 — 라벨만 있으면 순수 철로 떨어진다 (브리프 178 C′)")
+# ⚠ 178 C 는 `melt="iron_fes_eutectic"` 라벨을 붙였고 `MELT_CURVE_JOIN` 에도 등재했지만,
+#   `Material.t_melt` 의 분기는 water/silicate/**나머지 → iron** 이라 그 라벨이 **순수 철의
+#   융해온도**로 떨어지고 있었다. 오늘 값이 아무 데도 안 쓰였을 뿐 C37 의 모양 그대로다.
+#   그래서 이 시험은 **라벨이 아니라 `Material.t_melt` 를 부른다.**
+mat = eos.MATERIALS["fe_s_13wt_19gpa"]
+for p_gpa, want in ((19.0, None), (20.65, None),
+                    (25.0, 1417.448733427824), (35.0, 1576.9034966680556)):
+    got = mat.t_melt(p_gpa * eos.GPA)
+    ok = (got is None) if want is None else (got is not None and repr(got) == repr(want))
+    row(ok, f"{p_gpa:>5} GPa → {got!r} (기대 {want!r})"
+        + ("  — 공백이라 None, 그 None 이 거절로 이어진다" if want is None else ""))
+
+# ⚠ 그리고 **등재된 곡선 이름 전부**가 실제 분기를 갖는지 본다. 분기가 없으면 순수 철로 떨어지므로,
+#   철이 아닌 이름이 25 GPa 에서 `iron_t_melt` 와 같은 값을 내면 그것은 «분기 없음» 의 서명이다.
+p25 = 25.0 * eos.GPA
+iron25 = eos.iron_t_melt(p25)
+unwired = []
+for key in sorted(eos.MELT_CURVE_JOIN):
+    if key == "iron":
+        continue
+    probe = eos.Material(f"probe_{key}", key,
+                         (eos.Phase(f"probe_{key}", "bm2", 7000.0, 100.0 * eos.GPA, 4.0,
+                                    400.0 * eos.GPA, "probe", melt=key),))
+    v = probe.t_melt(p25)
+    if v is not None and iron25 is not None and abs(v - iron25) < 1e-9:
+        unwired.append(key)
+row(not unwired,
+    f"`MELT_CURVE_JOIN` 의 이름 {len(eos.MELT_CURVE_JOIN)}개가 전부 자기 분기를 갖는다 "
+    f"(순수 철로 떨어지는 이름: {unwired or '없음'})")
+
+# ⚠ 그리고 분기 없는 이름은 **이름을 대며 멈춘다** — 조용히 철로 떨어지지 않는다는 것을 직접 건다.
+ghost = eos.Material("probe_ghost", "probe",
+                     (eos.Phase("probe_ghost", "bm2", 7000.0, 100.0 * eos.GPA, 4.0,
+                                400.0 * eos.GPA, "probe", melt="zz_no_branch"),))
+try:
+    ghost.t_melt(p25)
+    row(False, "분기 없는 곡선 이름이 값을 냈다 — 그게 이 브리프가 고친 결함이다")
+except eos.PhaseGap as e:
+    row("분기가 없다" in str(e), f"분기 없는 이름 → 이름 대며 거절: «{str(e)[:66]}…»")
+
 print("\n기록 — 두 앵커를 서로에게 외삽하면 2.9 % 벌어진다 (판정 아님, 179 측정)")
 a19, a35 = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa"), eos.huang_fes_phase(eos.HUANG_S4_CS, "35GPa")
 print(f"      19 GPa 앵커를 35 GPa 로 밀면 {a19.density(35.0e9):.1f} kg/m³, "

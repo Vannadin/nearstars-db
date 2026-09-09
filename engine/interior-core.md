@@ -5182,6 +5182,13 @@ not in `MELT_CURVE_JOIN` at all — so there was **nowhere to write the differen
 now, and both phases carry the `join_note` saying the density is an arbitrary-`c_S` liquid while the
 melting bound is at the fixed eutectic composition.
 
+⚠ **And a limit worth stating plainly, because it looks like a bug and is not:** this material *does*
+return a density at 20.65 GPa — the density path never calls the melting curve — but it **cannot say
+whether the core is liquid there**. The separation is correct (a density fit and a melting curve are
+different measurements, which is the whole of Brief 41's discipline), and it is also a limit: the phase
+verdict for Mars's core top stays unavailable while the melting gap stands, even though the structure
+solve would have a number.
+
 **What would unblock the cells** is a melting bound between 10 and 21 GPa, which is C55's own recorded
 gap and not a modelling choice we may make; the two measured points inside it (Pommier+ 2018, [`2018Icar..306..150P`](https://ui.adsabs.harvard.edu/abs/2018Icar..306..150P)) print a
 eutectic *composition* that does not match the curve's, which is exactly why the gap was declared rather

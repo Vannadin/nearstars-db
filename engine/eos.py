@@ -173,8 +173,28 @@ class Phase:
             # silicate_melt_fraction 이 단일 진리원으로 낸다. 500 GPa 위는 None
             # (silicate_melt_refusal 이 이유를 말한다).
             base = silicate_solidus(p, self.melt_variant)
+        elif self.melt == "water":
+            base = water_t_melt(p)
+        elif self.melt == "iron_fes_eutectic":
+            # ⚠ **분기가 없으면 라벨은 거짓말이 된다** (브리프 178 C′). 이 가지가 생기기 전에는
+            #   `iron_fes_eutectic` 이 아래 `iron_t_melt` 로 떨어져 **순수 철의 융해온도**를
+            #   돌려주고 있었다 — 19 GPa 에서 None 이어야 할 자리에 2198 K, 25 GPa 에서는 공정선
+            #   1417 K 대신 2309 K (+63 %). 값이 오늘 아무 데도 안 쓰였을 뿐, C37 의 모양 그대로다:
+            #   이름은 있고 뒤에 아무 것도 없다. 공정선은 21–350 GPa 밖에서 None 이고, 그 None 이
+            #   `IRON_FES_GAP_REASON` 의 거절로 이어진다.
+            base = iron_fes_eutectic_t_melt(p)
+        elif self.melt == "iron":
+            base = iron_t_melt(p)
         else:
-            base = water_t_melt(p) if self.melt == "water" else iron_t_melt(p)
+            # ⚠ **조용히 철로 떨어지지 않는다** (브리프 178 C′). 예전에는 여기가 `else:
+            #   iron_t_melt(p)` 였고, 그래서 **등재만 되고 분기가 없는 이름**은 순수 철의 융해온도를
+            #   받아 갔다 — 이름은 맞고 값은 남의 것인 C37 의 모양이다. 이름을 대며 멈추는 편이
+            #   틀린 수를 조용히 내는 것보다 낫고, 그 판단은 이 파일이 이미 `PhaseGap` 으로 한다.
+            known = "등재됨" if self.melt in MELT_CURVE_JOIN else "등재도 안 됨"
+            raise PhaseGap(self.name, p,
+                           f"녹는곡선 '{self.melt}' 에 분기가 없다 ({known}). `Material.t_melt` 가 "
+                           f"이 이름을 어느 곡선으로 풀어야 하는지 모른다 — 조용히 순수 철로 "
+                           f"떨어뜨리지 않는다 (브리프 178 C′)")
         return None if base is None else base * self.melt_scale
 
     @property
