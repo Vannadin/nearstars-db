@@ -1,11 +1,11 @@
 {
  "python": "3.9.6",
- "path_fingerprint": "e45e3dc8c479cfff",
- "frozen_at": "2026-09-10",
+ "path_fingerprint": "599684df3e9fa137",
+ "frozen_at": "2026-09-11",
  "steps": 1500,
  "bodies": {
   "Uranus": {
-   "seconds": 23.8,
+   "seconds": 22.3,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -28,7 +28,9 @@
     "radius": "4.198853465500676",
     "core_pressure": "1220.0435043191865",
     "bulk_porosity": "0.0",
-    "voids_expected": false
+    "voids_expected": false,
+    "integrator_core_gamma_verdict": null,
+    "integrator_red_gamma_used": null
    },
    "standalone": {
     "p_center_pa": "1220043504319.1865",
@@ -43,7 +45,7 @@
    "standalone_reproduces_solve": true
   },
   "Neptune": {
-   "seconds": 55.9,
+   "seconds": 51.6,
    "regime": "integrated_silicate_h2o_hot_h_he",
    "applicable": true,
    "converged": true,
@@ -66,7 +68,9 @@
     "radius": "4.210086210275766",
     "core_pressure": "1533.207948855248",
     "bulk_porosity": "0.0",
-    "voids_expected": false
+    "voids_expected": false,
+    "integrator_core_gamma_verdict": null,
+    "integrator_red_gamma_used": null
    },
    "standalone": {
     "p_center_pa": "1533207948855.248",

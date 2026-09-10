@@ -114,6 +114,11 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C64** | one value key, two producers — and the engine's two read paths answer differently | **listed 2026-09-11; widened by measurement from one key to six** | Found while writing C15 (a). `entropy_history_verdict` is a **literal refusal** in `core_entropy` (*"needs C20"* — C20 was built 2026-09-04) and a **computed verdict** in `core_history`, and `engine/test_core_entropy.py@«2: the history verdict must refuse by name»` pins the literal. ⚠ **The family signature is one sentence: there was a check, and the check agreed.** The contract layer says it too — both `Returns` lists carry the key and `check_contracts` compares each node only against **its own**, so nothing counts a key claimed twice; the contract prose even asserts the literal, so a repair moves **three** places and each needs a name. Audit-seat census: **168** contract `Returns` keys, **six** claimed by two nodes (`dipole_moment`·`b_eq`·`b_pol` — the dynamo pair, expected harmless by class exclusivity but **counted, not argued**; `entropy_history_verdict`; `has_inner_core_solved`; `radius`). ⚠ **Direction must be read from `graph.order`'s execution order, not `chain.yaml`'s declaration order** — the two disagree, and for `radius` they disagree *oppositely*: `interior_layers` runs first, so `state.get` returns it and `resolved` returns `mass_radius_relation`. ⚠ *An earlier draft of this row said `resolved` is what emit, the evidence dump and the board comparison read. Measured (audit seat, 2026-09-11): `resolved` is read by `run.py`'s convergence comparison and `state.py`'s summary count — **and by nothing that ships**. So the condition for «latent» is countable: **the number of shipping consumers that receive the losing value is zero.*** **`radius` leaves this item as C65 if the run-side count says it is live.** **Measured 2026-09-11 (audit seat, `audit_dupkeys.py`)**: the dynamo trio is **closed at zero** — no roster body has both ladders applicable, so the class exclusivity holds by measurement rather than by argument; `has_inner_core_solved` is **a duplicated computation whose two values agree**, so it is untidiness rather than a defect; `entropy_history_verdict` **disagrees on earth and mars**, which confirms this item; and `radius` disagrees on **two of the four bodies where both producers run** (`mars` −1.87 %, `dante_fixture` −12.51 %) — that one leaves as **C65** |
 | **C66** | constants that are stored and read by nothing | **listed 2026-09-11 — candidate, disposal is per-item** | Audit value-trace over 63 constants: **12 are stored only** — 7 read by nothing at all, 5 read only by a test — and **1 was cited but not implemented** (Dorogokupets, filled by 180 C). ⚠ **A stored constant that nothing reads tells the next reader «a decision lives here» when none does**, and that is C45 (f)'s shape without a call site. The seven: `MORI_FES_P_MEASURED_MAX` · `IRON_FES_WINDOW_HIGH_POINTS` · `XU_FES_T_REF_K` · `ALPHA_C` · `NH3_REF` · `FE_S_BAND_WT` and the remainder after tidying, plus `core_energy.py`'s twin of the dead `GAMMA` alias 180 C removed from `cmb_flux.py`. ⚠ **Disposal is not a sweep**: brief 185 is about to *read* `IRON_FES_WINDOW_HIGH_POINTS`, so each name is decided by the brief that owns its physics — deleting them together would delete the ones that are early rather than dead |
 | **C67** | the core adiabat carries one exponent where the material now has two | **listed 2026-09-11 — candidate, outside 180 C** | `core_state._adiabat` raises the centre temperature as **T ∝ ρ^γ with a single γ**, asked at one pressure. That was exact while γ was a constant. ⚠ **180 C made γ a function of pressure inside one core**: Mars's γ is **2.8718** at its CMB and the fallback **1.5** at its centre, so the closed form integrates a γ the material does not have over most of the interval. The structure integrator already does this correctly — it asks per step — so the repair is to make the declared branch integrate γ(P) the same way, or to state the exponent it uses and why. **Not built here**: it moves `core_temperature` and `center_margin` on every body with a core, which is a verdict-moving change of its own |
+| **C68** | nothing decides who wins when two nodes emit one name | **listed 2026-09-11 — the rule C64 and C65 both need, and neither builds** | Today the winner is a side effect: `state.get` returns the first applicable node in `graph.order`'s topological order and `state.resolved` the last, so **moving a node in `chain.yaml` silently changes which value five consumers of `radius` receive.** The rule to build has **three states**, and the third is the point of it. ① **an owner is declared** → only the owner's value enters `resolved` (`radius` → `interior_layers`; ⚠ `has_inner_core_solved`'s owner is an **owner decision** — the two values agree today, so it is a duplicated *computation*, and «which computation is right» is a separate question this rule does not answer). ② **the claimants are class-exclusive** (`dynamo_giant` / `dynamo_rocky` on `b_eq`·`b_pol`·`dipole_moment`) → passes **without** an owner, but the contract check **measures and records «zero same-run co-occurrences» every run** — ⚠ *an allow-list would let the exclusivity rot silently; a measurement fails the day it stops being true.* ③ **neither** → **FAIL**. Built by neither C64 nor C65: those two supply the owner declarations this rule reads |
+| **C69** | the temperature loop's update rule oscillates, and the budget cannot buy convergence | **listed 2026-09-11 — candidate, pre-registration first** | 180 D measured it: the proportional update `T_c ← T_c·(T_pot/T_surf)` **overshoots the root** for water-rich rocky bodies under 180 C's steeper core adiabat, and the oscillation damps by only **0.878 a step**, flattening near **1 %**. ⚠ **Extending the pass budget is not the answer** — measured: `imf 0.3` converges with two extra batches, `imf 0.1` does not even with **+28 passes**, and the failing path costs **123 → 334 s**. The remedy is an under-relaxation factor **α < 1** on the update, ⚠ *which is a change to the update rule rather than to trial machinery, so it moves the path of bodies that already converge* — C60's rule says that needs its own pre-registration with a bit-identity table, not a fix folded into another brief |
+| **C70** | the path fingerprint watches seven functions, and the ones this work changes are not among them | **listed 2026-09-11 — candidate** | `test_ice_giant`'s `PATH_FUNCTIONS` covers `solve`·`shoot`·`_shoot_pressure`·`_narrow_bracket`·`_surface_temperature_met`·`_stack`·`integrate` plus thirteen constants, and `_feed_code` **does not follow calls** — so a change inside a function the watched ones *call* is invisible. Measured: 180 C/D changed `_adiabatic_dtdp` and added `_core_or_own_gamma`, and the fingerprint stayed silent about both while catching `shoot`. ⚠ **That silence was not a miss** — those edits move values, and the value assertion caught them (Mars's three thermal-history anchors); on the ice giants they are a no-op because those bodies use no core material. **The residual risk is the thin case: a path-only edit to `_adiabatic_dtdp` that leaves the frozen values alone.** ⚠ *The danger is not the gap itself but reading the gap as agreement* — «21 items, 1 changed» invites «the path barely moved». Widening the list is not a one-liner: it re-freezes the stored fingerprint, which then has to be justified by the value assertions again, so it needs its own commit and its own before/after table. The rule that says «answer an interpreter-version change with `--refresh` rather than by widening the fingerprint» is about **versions**, not coverage, so it does not forbid this. ⚠ **And the cheap half is not the list
+but the count**: the fingerprint should **print how many functions it does not watch** — a watch list that
+says nothing about its own coverage is what let «1 of 21» read as reassurance |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -6331,7 +6336,8 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   `core_gamma(material, P, T)`. It returns the material's γ(P, T) when that material's
   `thermal_source_state` check is **green**, and when the check is **red** it returns the **declared
   constant 1.5** — labelled *"hcp-solid in origin, standing in while no liquid set is adopted"* — which is
-  **printed and counted every run** and **emits both numbers as values** — `core_gamma_used` and
+  **printed and counted every run** and **emits both numbers as values** — `core_gamma_used`
+  (⚠ renamed `core_gamma_cmb` by 180 C, once the same node started asking γ at two pressures) and
   `core_gamma_material`, with `core_gamma_fallback` as the counter. ⚠ *An earlier draft of this line said
   the pair travels in a `recorded_disagreement`; that is a **spec field** read from a body file
   (`engine/run.py@«recorded = spec.get("recorded_disagreement")»`, 177's board comparisons) and **not a
@@ -6369,8 +6375,45 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
   γ from `core_state` and so agree with it by construction today; moving three onto a value we have just
   judged untrustworthy would replace one disagreement with a three-against-one.
 
-  ⚠ **Three sites, not four.** `core_state`, `core_energy` and `cmb_flux` read the function; **the
-  structure integrator is left on its own path for now**, because routing it through the fallback would
+  ⚠ **Three sites read the function, and the integrator asks the material directly — a decision now,
+  not a delay** (revised 2026-09-11 after 180 C measured what the fourth site costs; owner review pending,
+  the revert is one function). `core_state`, `core_energy` and `cmb_flux` take the named fallback when the
+  label is red; the **structure integrator uses the material's own γ(P, T) and prints and counts the red
+  label** — `integrator_red_gamma_used`.
+
+  ⚠ **Two policies, because the two sites ask different questions.** The integrator asks for a **local**
+  γ(P, T) at every step, and a constant there **flattens a quantity that varies** — the material's own γ
+  runs **0.9178 → 1.1498** across one core (358 → 118 GPa at 3000 K), and 1.5 everywhere is not a better
+  description of that, only a labelled one. The core nodes need **one number at one point** for a
+  closed-form adiabat, and there a declared constant with a counter is the honest object. *They become one
+  answer the day a liquid set is adopted.*
+
+  ⚠ **Bit-identity with `fbfe6b2a` is impossible for the three bodies that moved, by construction.**
+  ⓐ reverts the *wiring* — the integrator asks the material again — but ① changed **the material**:
+  `fe_prem`'s phase now carries interval sets, so `Material.gruneisen` is a **different function** than it
+  was. At Earth's core-mantle boundary it answers **1.1267** (Dorogokupets, graded) where it used to answer
+  **0.2735** (the solid constant). *No wiring choice returns the old core temperatures; the only way back
+  would be removing the sets, which is removing the brief.* So the verdict line for ⓐ′ is «the three
+  bodies move, each movement named with the set that caused it», not bit-identity.
+
+  ⚠ **What the gap between the integrator and the core nodes became.** It was **5.5×** — the constant 1.5
+  against an **unlabelled** 0.2735 — and it is now **1.33×**, 1.5 against **1.1267**, *with both sources
+  named* (the declared hcp-solid constant against Dorogokupets+ 2017's liquid equations). **The
+  disagreement did not shrink because anything was reconciled**; its nature changed, from «a labelled
+  constant against an unlabelled solid value» to «two papers». What remains closes only when a liquid set
+  is adopted.
+
+  ⚠ **And at one and the same point, one consumer refuses what the other uses.** `core_state` asks
+  `core_gamma` at Earth's boundary, gets `graded-disagreement`, and takes the fallback **1.5**; the
+  integrator asks the material at that same pressure and **uses Dorogokupets's 1.1267**. *That is the state
+  the counters record: one side declines the number, the other spends it.* Recorded, not resolved.
+
+  ⚠ **And the two counters mean opposite things, by design.** `integrator_red_gamma_used` says *"the label
+  was red and that γ was used anyway"*; `core_gamma_fallback` says *"the label was red so it was not"*.
+  **Both are 1 on every `fe_prem` body today**, and one counter would have hidden which happened.
+
+  *The 180 B text, kept because its measurement still stands:* three sites, not four, **the structure
+  integrator left on its own path for now**, because routing it through the fallback would
   move the core rise from **+51 K** to about **+237 K**, and that shifts the lower-bound input
   `core_state` receives for the **five bodies with no declared T_cmb** by roughly **+186 K** — enough to
   flip a phase verdict, with the owner away. *The reason is time, not design*: the day the label turns
@@ -6451,7 +6494,7 @@ hcp thermal set; making it liquid would put it wrong **in the other direction**.
 
   ⚠ **Measured after the build, by the audit seat (2026-09-10): all four hold.** The material grids are
   **byte-identical**, **no existing key moved**, and `core_state` gained **exactly three keys** —
-  `core_gamma_used`, `core_gamma_material`, `core_gamma_fallback` — whose printing, counting and
+  `core_gamma_used` (now `core_gamma_cmb`), `core_gamma_material`, `core_gamma_fallback` — whose printing, counting and
   both-distances lines were confirmed from run output rather than from this file. The post-build
   fingerprint is `audit/thermal_eec846df.json`, sha256 `74595510730d816c…`, **14287 B**.
 
@@ -6617,6 +6660,83 @@ integration step — one `core_state` run went past **two minutes**. *The answer
 Newton with a bisection safety net: **2000 evaluations in 0.04 s**, values identical to the last printed
 digit (γ 1.3987 · ρ 8598.9 at 35 GPa/2400 K).
 
+#### ⚠ The liquid set's γ does not respond to temperature
+
+Measured while explaining the thermal-history movement: `core_gamma(fe_prem, 20.649 GPa, T)` returns
+**2.8718195876825363 at 2000, 3763 and 3900 K** — the same number. Two reasons stack. Huang's Table 1
+prints **no `(∂αK/∂T)_V`**, so `alpha_k_dt` is 0 where the solid set had a second-order term that
+*dominates* in a metal (180 B measured `fe_eps` moving 0.2976 → 0.6275 between 300 K and 2000 K); and
+`core_gamma` takes ρ at **`t_pot = 0`**, which for a phase referenced to an adiabat is the cold density,
+so the density in the denominator does not move with T either.
+
+⚠ **So the repaired γ is a constant per pressure, not a function of state** — better than the solid
+set's value but flat where the physics is not. *That is the same shape as C67* (a single exponent where
+the material now has structure), one layer down: the material's γ varies with **P** and not with **T**,
+and both facts come from what the paper printed rather than from a modelling choice. Recorded here so
+the next reader does not mistake the flatness for a claim.
+
+#### ⚠ Refreshing a fingerprint erases the check that just fired — so the refresh is measured
+
+`test_ice_giant` failed exactly one row after 180 D: **the path fingerprint**, with every value row
+passing — *"Neptune — the whole solve in 60 s (56 s when frozen): radius, C/MR², central temperature and
+central pressure identical to the bit"*, and the same for Uranus, plus the grid-phase, grid-refinement and
+perturbation-invariance rows. **That is the direct evidence for C60's rule**: the bracket and the pass
+count are trial machinery, and changing them did not move an answer.
+
+⚠ **But re-freezing the fingerprint deletes the only signal that a path changed**, so the moment of
+refreshing is the only chance to look (audit seat, 2026-09-11). Measured per item — the fingerprint is one
+hash over **7 functions + 13 constants + the interpreter version**, so each was hashed separately in a
+clone of `61374a86` and in this tree:
+
+**21 items · 2 changed** — `fn:shoot` `2ec97ee94d80` → `0fe6809abf52` (the pass-budget extension and the named refusal) and `fn:solve` `92976fff9143` → `50219a4d45e2` (the two new counter values). *Both are functions this brief edited.*
+
+⚠ *Nothing else on the watch list moved*: not `_shoot_pressure`,
+`_narrow_bracket`, `_surface_temperature_met`, `_stack` or `integrate`, and not one of the thirteen
+constants — `T_PASSES` included, because the extension refills the budget at run time rather than raising
+the constant.
+
+⚠ **But "21 items · 2 changed" is a statement about the watch list, not about the code** (audit seat,
+2026-09-11, reproduced independently). `PATH_FUNCTIONS` holds **seven** names, and the two functions this
+brief actually changed are **not among them** — `interior._adiabatic_dtdp` (edited: it now routes core
+materials through `core_gamma` and passes `p` to `dpdt_v`) and `interior._core_or_own_gamma` (**new**).
+And `_feed_code` hashes `co_code`, `co_names` and nested code objects — *it does not follow calls*, so
+`integrate` calling `_adiabatic_dtdp` puts the **name** in the hash but not the body.
+
+⚠ **That gap is narrower than it first looks, and the reason is worth stating** (the audit seat raised the
+gap, then narrowed it itself). **The fingerprint's job is the path change that does *not* move a value**;
+the net for changes that *do* move values is the test's **assertion 1** — *"the whole solve is identical to
+the frozen values to the bit; a change in the equation of state, the Fermi integral, the integrator, the
+stacking, the shooting or the temperature loop is caught here"*. 180 C/D's γ edits are the value-moving
+kind, and they **were** caught — by `test_core_history`'s three Mars anchors and by the three moved bodies
+in the ⓓ table. On the ice giants nothing moved because those bodies use no `role='core'` material, so the
+γ change is a **no-op for them**: there was nothing to detect, which is different from failing to detect.
+
+**The licence to re-freeze therefore comes from the value assertions** — two bodies bit-identical in
+radius, C/MR², central temperature and central pressure, plus grid refinement and perturbation
+invariance — **and the two nets overlap**, so "21 items · 2 changed" is a statement about the watch list
+sitting beside a statement about the values. ⚠ *The residual risk C70 keeps is the thin one: an edit to
+`_adiabatic_dtdp` that leaves the frozen convergence point's values untouched and changes only the path.
+That is the only shape that slips both nets — and it is exactly the shape a fingerprint exists for.*
+
+#### ⚠ And the gate caught what my test choice did not — 180 D
+
+`gate235` (pool 2, on `61374a86`) failed one step: **`test_ice_giant.py`**, with
+`TypeError: dpdt_v() takes from 2 to 3 positional arguments but 4 were given` inside Uranus's solve.
+**The cause is this brief.** `interior._adiabatic_dtdp` now calls `ph.dpdt_v(t, t_pot, p)`, and the ice
+giants' phases are **not `eos.Phase`** — the four table-backed phases take `(t, t_pot)` only.
+
+⚠ **The four core tests could not have caught it**: every material they touch is a `Phase`. *A consumer
+that calls without knowing which phase it holds is a place where adding an argument must be tried on
+every phase kind*, and the test that does that lives only in the gate (`test_ice_giant`, `test_giant`) —
+because **the roster has no ice-giant or sub-Neptune body**, so nothing in the fast path exercises those
+phases.
+
+**Repaired in 180 D** by giving the four table phases the same signature, with the argument **named
+`_p_unused`** rather than commented: the day an interval set is attached to one of them, a name that says
+"not read" is what stops it becoming a quiet fallback. **`61374a86` is not pushed** — the gate's verdict
+belongs to the sha it ran on, and the repair is its own commit so that «the gate caught this» stays in
+the history rather than being amended away.
+
 #### Housekeeping folded in
 
 - `cmb_flux.py`'s `GAMMA = CORE_GAMMA_FALLBACK` was a **dead alias** 180 B left as *"a name for
@@ -6634,20 +6754,31 @@ the two mechanisms are different** — one is the repair, the other is the unifi
 
 | body | key | before (`fbfe6b2a`) | after | mechanism |
 |---|---|---|---|---|
-| **mars** | `core_gamma_used` | 1.5 | **2.8718195876825363** | ⚠ **the repair** — its CMB (20.649 GPa) is inside Huang's measured 19–35 GPa |
-| mars | `core_gamma_fallback` | 1 | **0** | the counter says the fallback is no longer used there |
+| **mars** | `core_gamma_used` → **`core_gamma_cmb`** | 1.5 | **2.8718195876825363** | ⚠ **the repair** — its CMB (20.649 GPa) is inside Huang's measured 19–35 GPa. ⚠ *The key is **renamed** by this same brief: `core_gamma_used` no longer exists, because a name meaning "the one that was used" became false the moment two sites could disagree* |
+| mars | `core_gamma_center` | *(key did not exist)* | **1.5** | ⚠ **new key** — the centre 45.9002 GPa is in the graded interval, so the **fallback** is what the adiabat integrated |
+| mars | `core_gamma_verdict_center` | *(key did not exist)* | **`graded-disagreement`** | new key — the verdict at the site that made the verdict |
+| mars | `core_gamma_split` | *(key did not exist)* | **1** | new key — the two sites disagree, and the disagreement is counted rather than hidden |
+| mars | `core_gamma_fallback` | 1 | **1** | ⚠ **the counter does not move, and an earlier draft of this row said it went to 0.** That draft was written from the CMB alone and was **refuted by this brief's own repair**: the fallback *is* used, at the centre, so «either site fell back» keeps the counter at 1. *A table that had shipped with the 0 would have said the opposite of the code* |
 | mars | `core_gamma_material` | 0.3524492201745824 | 2.8718195876825363 | the material's own value is now the liquid set's |
 | mars | `core_temperature` | 1960.9323053004 | **2225.6515648290306** | +264.7 K |
 | mars | `entropy_production` | −8401236.288184777 | **−37726881.15867804** | ⚠ **4.49×** more negative — C15's φ reads this γ |
 | mars | `cmb_temperature` | 1909.9501164449248 | 1909.950123378215 | +6.9e-6 K (K_S now asks the set) |
 | mars | `q_cmb` | 365535766.62836087 | 365535733.32694596 | −9.1e-8 relative |
-| **earth** | `core_temperature` | 2671.0924780458163 | **3516.979769959853** | ⚠ **+845.9 K — the unification**, not the repair |
-| earth | `core_gamma_material` | 0.2734673094085167 | 1.1266901789032773 | the candidate column now shows Dorogokupets |
+| **earth** | `core_temperature` | 2671.0924780458163 | **3169.5267230925806** | ⚠ **+498.4 K, and the cause is the graded set — not the unification.** *An earlier version of this row read +845.9 K and blamed the fallback; that was measured while the integrator went through `core_gamma` (the join, reverted on 2026-09-11). With the integrator asking the material again, the number it gets at Earth's boundary is **Dorogokupets's 1.1267**, not the old solid **0.2735** — **4.1×** — because ① changed the material itself* |
+| earth | `core_gamma_material` | 0.2734673094085167 | 1.1266901786462618 | the material's own γ **is** the graded set now, above 35 GPa |
 | earth | `cmb_temperature` | 2526.2085475146446 | 2526.2086058586447 | +5.8e-5 K |
 | earth | `q_cmb` | 2749973604443.4155 | 2749973698461.779 | +3.4e-8 relative |
-| **pandora** | `core_temperature` | 2474.3298155983525 | **3123.266265522309** | +648.9 K, same mechanism as Earth |
-| pandora | `center_margin` | −1772.3694996941963 | **−1123.43304977024** | +648.9 K — ⚠ **a verdict margin moved by 649 K** |
-| pandora | `core_gamma_material` | 0.2944463614060906 | 1.2125984256125824 | candidate column |
+| **pandora** | `core_temperature` | 2474.3298155983525 | **2902.1981495526247** | +427.9 K, same cause as Earth (the graded set at its boundary, γ **1.2126**) |
+| pandora | `center_margin` | −1772.3694996941963 | **−1344.501165739924** | +427.9 K — ⚠ a verdict margin moved by 428 K, and it moved **toward** the melting curve |
+| **mars** (`core_thermal_history`) | `t_c` at present, adaptive H 1.5 | 3893.07 | **3905.34** | ⚠ **+12.27 K — found by the gate, not by this table.** `core_history` does **not** pass through the structure integrator; it calls `cmb_flux` and `core_energy`, and **those ask `core_gamma` at p_cmb**, which for Mars is inside the measured interval — so ① moved this trajectory directly |
+| mars (`core_thermal_history`) | `t_c` at present, declared H 0.088 | 3763.10 | **3780.60** | +17.50 K, same cause; step count **1197 unchanged** |
+| mars (`core_thermal_history`) | `t_m` at present (both branches) | 1382.90 · 1377.03 | 1383.78 · 1377.96 | +0.88 · +0.93 K |
+| mars (`core_thermal_history`) | `t_m` at 3.7 Ga, declared H | 1668.00 | **1668.79** | ⚠ **+0.79 K, and it eats headroom**: criterion B's distance to Herzberg's 1673.15 K upper edge goes **5.15 → 4.36 K**. C20 already recorded that band as *"a 5 K error anywhere in the trajectory flips this"*, so this movement is **toward the edge** and is named for that reason, not for its size |
+| pandora | `core_gamma_material` | 0.2944463614060906 | 1.2125984260169187 | the graded set |
+| **sub-Neptune `GJ 1214 b`** (test body) | `converged` · `radius` | **True** · **2.7674024618153776** | **True** · **2.7791897274983373** | ⚠ **Two sentences, both true.** *The answer came back* — 180 C's first cut lost it to a wall refusal (14682 K · 2.65 R⊕ · 246 K), and reverting the join returned it. *And the agreement got slightly worse*: against the published **2.733** the distance goes **+1.26 % → +1.69 %** (the radius itself moved **+0.43 %**). **Recovering an answer is not the same as improving it**, and the label on the γ that produced it is still `graded-disagreement` |
+| **water-rich rocky, `imf 0.3`** | `converged` · `radius` | **True** · **1.258513071917607** | **True** · **1.25852361765906** | recovered (**+0.00084 %**), ⚠ **but only with the extended pass budget** — under 180 C's wiring, and under the revert alone, it did not converge. *So the budget really was short; it was not the only thing short* |
+| **water-rich rocky, `imf 0.1`** | `converged` · `radius` | **True** · **1.1312792111770278** | ⚠ **a named refusal** | *"the surface-temperature condition did not close inside the budget — last deviation **3.09 %** (tolerance 0.1 %), **28** passes, **1** extension"*. ⚠ **The cause is the graded set, not the unification and not the liquid set in general**: this body's core runs **p_cmb 132 · p_c 354 GPa**, entirely above 35 GPa, so **Huang's measured set never reaches it** and Dorogokupets answers — 1.1267 against the old 0.2735, **4.1×**, which steepens the core adiabat until the proportional update oscillates about a root it cannot reach. ⚠ **And the same set is refused by `core_state` (graded → fallback 1.5) while the integrator spends it.** The value that would have been shipped is the **last trial**, which moves when the budget moves (+0.0033 % when passes were added), so it is not shipped. Tracked as **C69** |
+| **water-rich rocky, `imf 0.0`** (control) | `converged` · `radius` | True · **1.0029682364205592** | True · **1.0029682364205592** | ⚠ **bit-identical** — the control that says the pass-budget extension is trial machinery and does not move a converged answer |
 | **alpha_centauri_a_b · dante_fixture · luhman_16_a · luhman_16_b** | — | — | — | **no key moved** |
 
 ⚠ **Earth's and Pandora's movement is the integrator taking the named fallback where it used to take an
@@ -8317,6 +8448,14 @@ order** rather than this sentence doing it.
 trajectory ends at **T_p 1377.23 K** with **T_p@3.7 Ga 1668.05 K** — criterion B still passes, with the upper-end
 headroom **5.1 K** instead of 4.0–4.7 K. Criterion A's 1400–1800 K sweep has **not** been re-run at the declared H.
 The numbers below are left exactly as measured; the label is what Brief 166 D adds.
+
+⚠ **And 180 C spent some of that headroom** (2026-09-11). The pressure split gives Mars's core γ **2.8718**
+instead of 1.5 at its core-mantle boundary, and `core_history` reads that through `cmb_flux` and
+`core_energy` — so the declared-H trajectory's 3.7 Ga checkpoint moved **1668.00 → 1668.79 K** and the
+distance to Herzberg's upper edge **1673.15 K** went **5.15 → 4.36 K**. Criterion B still passes.
+*It is named here because the direction matters more than the size:* this section's own sentence is that
+**a 5 K error anywhere in the trajectory flips this checkpoint**, and 180 C moved it 0.79 K toward the
+edge for a reason that is a **measured liquid thermal set**, not a modelling choice.
 
 #### The criterion-B rule, fixed before the numbers were read
 

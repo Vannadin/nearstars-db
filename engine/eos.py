@@ -1085,7 +1085,11 @@ class _HotWaterSlope:
     """`_adiabatic_dtdp` 가 K_S 를 만들 때 쓰는 (∂P/∂T)_V. 유한차분이다."""
     p: float
 
-    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+    def dpdt_v(self, t: float, t_pot: float = 0.0, _p_unused: float | None = None) -> float:
+        # ⚠ **이름이 `_p_unused` 인 것이 이 인자의 문서다** — 이 상은 구간별 열 세트를 들지
+        #   않으므로 압력을 **안 읽는다**. 소비처(`interior._adiabatic_dtdp`)가 어느 상인지
+        #   모르고 부르니 서명은 같아야 하고, 세트가 이 상에 붙는 날 이름이 «조용한 폴백» 을
+        #   막는다. 첫 판은 `Phase` 에만 인자를 더했고, 얼음거대행성이 게이트에서 터졌다.
         if t <= 0.0:
             return 0.0
         rho = water_hot.density(self.p, t)
@@ -1254,7 +1258,11 @@ class _AmmoniaSlope:
     """`_adiabatic_dtdp` 가 K_S 를 만들 때 쓰는 (∂P/∂T)_V. 표의 유한차분이다."""
     p: float
 
-    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+    def dpdt_v(self, t: float, t_pot: float = 0.0, _p_unused: float | None = None) -> float:
+        # ⚠ **이름이 `_p_unused` 인 것이 이 인자의 문서다** — 이 상은 구간별 열 세트를 들지
+        #   않으므로 압력을 **안 읽는다**. 소비처(`interior._adiabatic_dtdp`)가 어느 상인지
+        #   모르고 부르니 서명은 같아야 하고, 세트가 이 상에 붙는 날 이름이 «조용한 폴백» 을
+        #   막는다. 첫 판은 `Phase` 에만 인자를 더했고, 얼음거대행성이 게이트에서 터졌다.
         if t <= 0.0:
             return 0.0
         return NH3._thermal(self.p, t)[1]
@@ -1404,7 +1412,11 @@ class _LiquidWaterSlope:
     name: str = "h2o_liquid"
     t_max: float = 0.0
 
-    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+    def dpdt_v(self, t: float, t_pot: float = 0.0, _p_unused: float | None = None) -> float:
+        # ⚠ **이름이 `_p_unused` 인 것이 이 인자의 문서다** — 이 상은 구간별 열 세트를 들지
+        #   않으므로 압력을 **안 읽는다**. 소비처(`interior._adiabatic_dtdp`)가 어느 상인지
+        #   모르고 부르니 서명은 같아야 하고, 세트가 이 상에 붙는 날 이름이 «조용한 폴백» 을
+        #   막는다. 첫 판은 `Phase` 에만 인자를 더했고, 얼음거대행성이 게이트에서 터졌다.
         return 0.0
 
 
@@ -3236,7 +3248,11 @@ class _HydrogenHeliumSlope:
     name: str = "h_he"
     t_max: float = 0.0
 
-    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
+    def dpdt_v(self, t: float, t_pot: float = 0.0, _p_unused: float | None = None) -> float:
+        # ⚠ **이름이 `_p_unused` 인 것이 이 인자의 문서다** — 이 상은 구간별 열 세트를 들지
+        #   않으므로 압력을 **안 읽는다**. 소비처(`interior._adiabatic_dtdp`)가 어느 상인지
+        #   모르고 부르니 서명은 같아야 하고, 세트가 이 상에 붙는 날 이름이 «조용한 폴백» 을
+        #   막는다. 첫 판은 `Phase` 에만 인자를 더했고, 얼음거대행성이 게이트에서 터졌다.
         return 0.0 if t <= 0.0 else hhe_table.dpdt_v(self.p, t)
 
 

@@ -51,7 +51,12 @@ for imf in (0.1, 0.3):
         row(r.converged, f"ice {imf}: 수렴 (등급 {r.grade} 은 규칙, 판정 아님)")
     else:
         print(f"      ice {imf}: REFUSED — {r.reason[:140]} ({dt:.0f} s)")
-        row("IF97" in r.reason or "표현" in r.reason or "PhaseGap" in r.reason, f"ice {imf}: 이름 있는 거절 (다음 벽) — 기록만")
+        # ⚠ **거절의 이름 목록에 «표면온도» 가 들어왔다** (브리프 180 D). 물 많은 암석체는 급한 핵
+        #   단열선(180 C) 아래에서 표면 온도 경계조건이 1 % 근처 진동 바닥에 걸리고, 그때 노드는
+        #   `converged=False` 를 조용히 내지 않고 **예산 소진·개선 중**을 이름 대며 거절한다.
+        row("IF97" in r.reason or "표현" in r.reason or "PhaseGap" in r.reason
+            or "표면온도" in r.reason,
+            f"ice {imf}: 이름 있는 거절 (다음 벽) — 기록만")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)

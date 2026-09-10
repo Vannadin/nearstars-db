@@ -405,6 +405,36 @@ def _cold_phases(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fract
     return out
 
 
+def _integrator_gamma_values(core_material: str, st) -> dict:
+    """적분기가 쓴 핵 γ 의 **판정**을 값으로 낸다 (2026-09-11, 결정 ⓐ).
+
+    ⚠ 값은 `_core_or_own_gamma` 가 재질에게 직접 물어 쓰지만, 그 γ 의 출처 라벨이 빨강일 수 있다 —
+    `fe_prem` 이 오늘 그렇다(액체 적합에 고체 열 매개변수). **그 사실을 인쇄만 하면 셀 수 없으므로**
+    판정과 카운터를 값으로 낸다. 핵 노드 셋은 같은 라벨을 보고 **폴백 1.5** 를 쓰므로, 두 카운터가
+    다른 답을 세는 것이 이 엔진의 현재 상태이고 그것이 ⓑ 격차(4.64 배)의 자리다.
+
+    ⚠ 라벨은 **핵-맨틀 경계 압력**에서 묻는다 — 적분기는 걸음마다 묻지만 그 판정이 압력 구간에 따라
+    갈릴 수 있으므로(180 C 의 구간 세트), 한 천체에 한 줄을 남기려면 자리를 고정해야 한다. 그 자리를
+    CMB 로 두는 이유는 핵의 위 끝이고 `core_state` 가 같은 자리를 쓰기 때문이다."""
+    if not core_material or not st.p_cmb:
+        return {"integrator_core_gamma_verdict": None, "integrator_red_gamma_used": None}
+    mat = MATERIALS.get(core_material)
+    if mat is None or getattr(mat, "role", "") != "core":
+        return {"integrator_core_gamma_verdict": None, "integrator_red_gamma_used": None}
+    try:
+        ph = mat.phase_at(st.p_cmb)
+        verdict, _density_side = ph.thermal_label(getattr(mat, "fit_composition", ""), st.p_cmb)
+    except PhaseGap:
+        return {"integrator_core_gamma_verdict": None, "integrator_red_gamma_used": None}
+    # ⚠ **이름이 행위를 말한다** (지휘석·감사 2026-09-11): `integrator_red_gamma_used` 는 «라벨이
+    #   빨간데 그 γ 를 **썼다**» 이고, 핵 노드의 `core_gamma_fallback` 은 «빨간 라벨이라 **안 썼다**»
+    #   다 — **뜻이 반대**다. 그리고 **같은 천체에서 둘 다 1 이 될 수 있다**: 오늘 `fe_prem` 천체가
+    #   그렇다(적분기는 빨간 γ 를 쓰고, 핵 노드 셋은 같은 라벨을 보고 폴백을 쓴다). 두 카운터가 다른
+    #   답을 세는 것이 지금의 사실이고, 이름이 그것을 숨기지 않아야 한다.
+    return {"integrator_core_gamma_verdict": verdict,
+            "integrator_red_gamma_used": 0 if verdict in ("ok", "composition-substitute") else 1}
+
+
 def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     """핵 재질의 γ 는 **`eos.core_gamma` 를 지난다** — 적분기가 네 번째 소비처다 (C58, 브리프 180 C).
 
@@ -416,14 +446,16 @@ def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> flo
     ⚠ **핵이 아닌 재질은 한 글자도 지나지 않는다** — `role` 이 `core` 가 아니면 예전 호출 그대로다.
     ⚠ 그리고 **이 자리의 ρ 를 넘긴다**: γ ∝ 1/ρ 이라 여기서 냉각 밀도를 다시 재면 같은 지점에서
     두 γ 가 생긴다."""
-    if getattr(mat, "role", "") == "core":
-        used, verdict, own, _dens = core_gamma(mat, p, t, t_pot, rho)
-        # ⚠ **열 세트가 아예 없는 재질에는 폴백을 쓰지 않는다** (브리프 180 C, 실측으로 걸린 자리).
-        #   폴백 1.5 는 «세트는 있는데 이 적합과 어긋난다» 를 메우는 수다. 세트가 **없는** 재질
-        #   (이원계 Fe–S: 인쇄된 c_p 가 없다)에 그것을 쓰면 이 함수의 첫 규칙 — «기울기를
-        #   지어내지 않는다» — 를 깬다. 실제로 깼다: 첫 판이 이원계 핵을 등온에서 단열로 바꿔
-        #   C55 2단계의 사격 판정 둘을 움직였다. `no-thermal-set` 이 그 구분을 위해 있는 이름이다.
-        return own if verdict == "no-thermal-set" else used
+    # ⚠ **적분기는 재질에게 직접 묻는다 — 폴백을 쓰지 않는다** (2026-09-11, 지휘석 결정 ⓐ;
+    #   오너 검토 대기, 되돌리기는 이 함수 하나). 180 C 의 첫 판은 핵 재질을 `core_gamma` 로
+    #   보내 판정이 빨강이면 선언 상수 1.5 를 받게 했는데, **실측으로 답 둘을 잃었다**:
+    #   서브넵튠 GJ 1214 b(R 2.7674 R⊕, 발표 2.733 의 1.3 % 안 → 벽 거절)와 물 많은 암석체
+    #   `imf 0.1`(R 1.13128, 수렴 → 미수렴). 그리고 폴백 1.5 가 그 압력대의 재질 자신의
+    #   γ(0.92–1.15)보다 **물리적으로 낫다는 근거는 없다** — 나아진 것은 라벨이고 수가 아니다.
+    #   ⚠ 그래서 **값은 재질의 것을 쓰고, 판정은 인쇄·카운트한다**: 빨간 라벨의 γ 를 쓰고 있다는
+    #   사실이 조용해지지 않는 것이 이 결정의 조건이다 (`solve` 가 그 카운터를 낸다). 핵 노드
+    #   셋(`core_state`·`core_energy`·`cmb_flux`)은 `core_gamma` 의 폴백을 그대로 쓰고, 넷이
+    #   함께 움직이는 것은 액체 세트가 채택되는 날이다.
     return mat.gruneisen(p, rho, t, t_pot)
 
 
@@ -1598,7 +1630,7 @@ def shoot(mass_kg: float, cmf: float, imf: float,
     lo = hi = None               # (log T_c, log T_surf/T_pot): 아래쪽(차다) · 위쪽(뜨겁다)
     devs: list[float] = []
     bracketed = False
-    extended = False             # 연장은 한 번만 — devs 검사가 bracketed 를 매 통과 재무장하므로
+    extensions = 0               # 연장 횟수. 좁히는 갈래는 한 번, 진동이 **줄고 있을 때**는 두 번까지
                                  # bracketed 값으로는 못 지킨다 (2026-09-01, 무한 사이클의 원인)
     passes = T_PASSES
     # 가장 잘 붙은 시험값. 1 bar 온도는 중심 온도에 대해 격자 위상의 잔여 요철(해왕성에서 ±0.02 K,
@@ -1673,10 +1705,23 @@ def shoot(mass_kg: float, cmf: float, imf: float,
         remember(st, converged, t_c)
         if stuck:
             break            # 괄호가 표의 온도 벽에서 같은 온도로 되돌렸다. 더 갈 데가 없다
-        if (not extended and bracketed and passes == 0
-                and not _surface_temperature_met(st, t_pot)):
-            passes = T_PASSES    # 좁히는 갈래에는 한 벌 더, **한 번만** 준다
-            extended = True
+        # ⚠ **통과 예산이 모자란 조성이 있다** (브리프 180 D, gate235 가 물 기둥에서 잡음). 물 많은
+        #   암석체는 **등급 세트**의 γ(35 GPa 위 Dorogokupets, 지구 경계 1.1267 = 옛 0.2735 의 4.1 배)로
+        #   급해진 핵 단열선 아래에서
+        #   비례 갱신이 뿌리를 넘나드는 **줄어드는 진동**을 하는데, 수축이 걸음마다 ×0.65 쯤이라 14
+        #   통과로는 1e-3 에 못 닿는다 — 계측: 0.291 → 0.143 → 0.116 → 0.068 → 0.049 … 로 줄다가
+        #   예산이 끝나 나갔다. 그래서 **줄고 있을 때만** 한 벌 더 준다. 이미 붙은 천체는 `done` 으로
+        #   먼저 빠져나가므로 이 갈래를 지나지 않고, 그것이 «괄호·통과는 시행 걸음이라 답을 바꾸지
+        #   않는다»(C60) 를 지키는 방식이다.
+        # ⚠ **한 걸음이 아니라 창으로 본다.** 감쇠가 매끄럽지 않아서(마지막 다섯이 3.10 → 3.14 →
+        #   1.81 → 1.24 → **1.93 %**) 한 걸음만 보면 «커졌다» 가 되어 연장이 발화하지 않는다 — 첫 판이
+        #   그랬고 그 수리는 no-op 였다.
+        contracting = len(devs) >= 4 and min(devs[-3:]) < devs[-4]
+        if (passes == 0 and not _surface_temperature_met(st, t_pot)
+                and extensions < (1 if bracketed else 2)
+                and (bracketed or contracting)):
+            passes = T_PASSES    # 좁히는 갈래에는 한 벌, 줄어드는 진동에는 두 벌까지
+            extensions += 1
         if done:
             break
     if (best is not None and not _surface_temperature_met(st, t_pot)
@@ -1693,6 +1738,25 @@ def shoot(mass_kg: float, cmf: float, imf: float,
             "1 bar 에서 출발한 단열선이 이 질량이 묶을 수 있는 것보다 뜨겁다는 뜻이다 — 실제 "
             "서브넵튠은 복사층이 깊은 단열선을 더 차게 두는데 이 레시피에는 복사층이 없으므로, "
             "선언을 낮추거나(복사-대류 경계의 온도) 그 층이 들어와야 한다.")
+    # ⚠ **예산을 다 쓰고도 못 닿았으면 이름 대며 거절한다** (브리프 180 D). `converged=False` 를 조용히
+    #   내면 그 수가 답처럼 기록되는데, 그것은 **마지막 시행**이고 예산을 바꾸면 함께 움직인다 —
+    #   실제로 연장을 넣자 `imf 0.1` 의 반지름이 +0.0033 % 움직였다. 답이 아닌 것은 답의 자리에 두지
+    #   않는다. **위의 지각 벽 거절이 먼저다** — 자기 물리를 이미 이름 댄 거절이 일반 거절보다 앞선다.
+    # ⚠ **연장이 주어졌다는 것 자체가 «개선 중이었다» 의 증거다** — 연장은 창 검사가 참일 때만 나가므로
+    #   여기서 그 검사를 다시 묻지 않는다. 첫 판이 그것을 다시 물어 거절이 **발화하지 않았다**.
+    if extensions and not _surface_temperature_met(st, t_pot):
+        raise ValueError(
+            f"표면온도 경계조건이 예산 안에 닫히지 않았다 — 마지막 어긋남 {devs[-1] * 100:.2f} % "
+            f"(허용 {T_SURFACE_TOL * 100:.1f} %), 통과 {len(devs)} 걸음, 연장 {extensions} 벌. "
+            "⚠ 어긋남은 **아직 줄고 있었다** — 비례 갱신이 뿌리를 넘나드는 진동의 감쇠가 1 % 근처에서 "
+            "바닥에 눕는다. 원인은 **등급 세트의 γ** 다 — 이 조성의 핵은 p_cmb 132 GPa · p_c 354 GPa 로 "
+            "**전부 35 GPa 위**라서 Huang 실측 세트가 닿지 않고 Dorogokupets 가 답한다: 지구 경계에서 "
+            "**1.1267**, 예전 고체 상수 **0.2735** 의 **4.1 배**다. ⚠ 그리고 **같은 세트를 `core_state` 는 "
+            "거절하고(등급 → 폴백 1.5) 적분기는 쓴다** — 한쪽은 그 수를 안 받고 한쪽은 그것으로 적분한다. "
+            "폴백 통합이 아니라 오너 결정 ① 의 직접 결과다. 마지막 시행의 수는 "
+            "답이 아니므로 내보내지 않는다. ⚠ **예산을 더 주는 것은 답이 아니다** — 감쇠율 0.878 에서 "
+            "+28 걸음으로도 못 닿았다. 감쇠를 빠르게 하려면 비례 갱신에 완화계수 α < 1 이 필요하고, "
+            "그것은 시행 걸음이 아니라 **갱신 규칙 변경**이라 붙는 천체의 경로도 바꾼다 — **C69 후보**다.")
     _refuse_if_below_floor(st, core_material)
     return st, converged and _surface_temperature_met(st, t_pot)
 
@@ -2875,7 +2939,13 @@ def solve(mass_earth: float,
                 "radius": radius,
                 "core_pressure": st.p_center / 1e9,
                 "bulk_porosity": st.phi_bulk,
-                "voids_expected": voids_ok},
+                "voids_expected": voids_ok,
+                # ⚠ **적분기가 빨간 라벨의 γ 를 쓰고 있다는 사실을 세는 칸** (2026-09-11, 결정 ⓐ).
+                #   값은 재질의 것을 쓰기로 했으므로(폴백보다 나을 근거가 없다), 그 대신 **판정이
+                #   조용해지지 않는 것**이 그 결정의 조건이다. 핵 노드 셋의 `core_gamma_fallback` 과
+                #   짝이고, 둘이 다른 답을 세는 것이 지금의 사실이다 — 넷이 함께 움직이는 것은
+                #   액체 세트가 채택되는 날이다.
+                **_integrator_gamma_values(core_material, st)},
         units={"nmoi": "dimensionless",
                "core_temperature": "K",
                "cmb_temperature": "K",
@@ -2891,6 +2961,8 @@ def solve(mass_earth: float,
                "radius": "R_earth",
                "core_pressure": "GPa",
                "bulk_porosity": "dimensionless",
+               "integrator_core_gamma_verdict": "",
+               "integrator_red_gamma_used": "",
                "voids_expected": ""},
         refs=REFS,
         notes=tuple(notes),

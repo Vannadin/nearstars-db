@@ -143,9 +143,14 @@ t0 = time.perf_counter()
 hm = ch.integrate(PARAMS_M_NIMMO, 4800.0, 4800.0 / R_BM, AGE)
 lastm = hm["rows"][-1]
 nearm = min(hm["rows"], key=lambda r: abs(r["t_gyr"] + 3.7))
-row(abs(lastm["t_m"] - 1382.90) < 5.0 and abs(lastm["t_c"] - 3893.07) < 5.0 and abs(nearm["t_m"] - 1669.12) < 5.0,
+# ⚠ **앵커 셋이 180 C 에서 움직였다** (`61374a86`, 재고정은 180 D). 원인은 ① **압력 분할**이다 —
+# 이 노드는 구조 적분기를 지나지 않고 `cmb_flux`·`core_energy` 를 부르는데, 그 둘이
+# `core_gamma(mat, p_cmb, t_c)` 를 묻고 **화성의 p_cmb 20.649 GPa 가 Huang 실측 구간(19–35 GPa) 안**
+# 이라 γ 가 **1.5 → 2.8718** 로 바뀌었다. 전/후: T_p 1382.90 → 1383.78 · **T_c 3893.07 → 3905.34**
+# (+12.27) · T_p@3.7Ga 1669.12 → 1669.99. 허용오차는 그대로 두고 앵커만 옮긴다.
+row(abs(lastm["t_m"] - 1383.78) < 5.0 and abs(lastm["t_c"] - 3905.34) < 5.0 and abs(nearm["t_m"] - 1669.99) < 5.0,
     f"적응 화성 (H 1.5) → T_p {lastm['t_m']:.2f} · T_c {lastm['t_c']:.2f} · T_p@3.7Ga {nearm['t_m']:.2f} K · {hm['n_steps']} 걸음 · 최소 h {hm['h_min_myr']:.4f} Myr "
-    f"(스윕 0.25 Myr 대비 {lastm['t_m']-1382.90:+.2f} / {lastm['t_c']-3893.07:+.2f} / {nearm['t_m']-1669.12:+.2f} K, {time.perf_counter()-t0:.0f} s)")
+    f"(180 C 전 대비 {lastm['t_m']-1382.90:+.2f} / {lastm['t_c']-3893.07:+.2f} / {nearm['t_m']-1669.12:+.2f} K, {time.perf_counter()-t0:.0f} s)")
 # The declared-H row. Same trajectory shape (1197 steps, h_min 0.0053 Myr, inner-core branch 'never'); the answer
 # moves by −5.87 / −129.91 K. ⚠ The 3.7 Ga column's **rule is part of the number**: `min(rows, key=|t_gyr + 3.7|)`
 # — the nearest *sampled* row, never an interpolation. Here that row is unique (t = −3.700566 Gyr, |Δ| 0.000566 Gyr
@@ -158,8 +163,12 @@ t0 = time.perf_counter()
 hmd = ch.integrate(PARAMS_M, 4800.0, 4800.0 / R_BM, AGE)
 lastd = hmd["rows"][-1]
 neard = min(hmd["rows"], key=lambda r: abs(r["t_gyr"] + 3.7))
-row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1377.03) < 0.05 and abs(lastd["t_c"] - 3763.10) < 0.05
-    and abs(neard["t_m"] - 1668.00) < 0.05,
+# ⚠ **같은 원인으로 이 갈래도 움직였다** (180 C → 180 D 재고정): T_p 1377.03 → 1377.96 ·
+# **T_c 3763.10 → 3780.60**(+17.50) · T_p@3.7Ga **1668.00 → 1668.79**. 걸음 수 1197 은 불변이다.
+# ⚠ **그리고 마지막 수가 기준 B 의 여유를 먹는다** — Herzberg 상한 1673.15 K 까지 **5.15 → 4.36 K**.
+# 판정은 여전히 통과지만 C20 이 «5 K 오차면 뒤집힌다» 고 적어 둔 자리라, 방향이 크기보다 중요하다.
+row(hmd["n_steps"] == 1197 and abs(lastd["t_m"] - 1377.96) < 0.05 and abs(lastd["t_c"] - 3780.60) < 0.05
+    and abs(neard["t_m"] - 1668.79) < 0.05,
     f"선언 H 0.088 화성 → T_p {lastd['t_m']:.2f} · T_c {lastd['t_c']:.2f} · T_p@3.7Ga {neard['t_m']:.2f} K · {hmd['n_steps']} 걸음 "
     f"(H 1.5 대비 {lastd['t_m']-lastm['t_m']:+.2f} / {lastd['t_c']-lastm['t_c']:+.2f} / {neard['t_m']-nearm['t_m']:+.2f} K, {time.perf_counter()-t0:.0f} s) "
     f"— 기준 B: Herzberg [1553.15, 1673.15] K 안 (위끝 여유 {1673.15-neard['t_m']:.2f} K)")
