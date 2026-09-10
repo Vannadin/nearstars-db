@@ -30,8 +30,11 @@ RHO_WINDOW = (5.7, 6.3)
 DECLARED_CMF = interior.COMPOSITIONS["earth_like"][0]
 
 
+PROBE = "_c55_probe"          # 아래 `consumer_cell` 이 잠깐 등록했다 지우는 조성 이름
+
+
 def cell(material: str, cmf: float) -> str:
-    """한 칸. 풀리면 두 수와 창 판정, 안 풀리면 거절의 첫 문장."""
+    """사격 층(`shoot`)의 한 칸. 풀리면 두 수와 창 판정, 안 풀리면 거절의 첫 문장."""
     try:
         # ⚠ `shoot` 로 부른다. `_shoot_pressure` 를 직접 부르면 «답이 적합 밖이면 거절» 하는
         # 자리(C60 (c))를 건너뛰어, 엔진이 안 내놓을 수를 이 표만 인쇄하게 된다.
@@ -40,7 +43,7 @@ def cell(material: str, cmf: float) -> str:
             potential_temperature=T_POT)
     except eos.PhaseGap as gap:
         return (f"거절 @ {gap.pressure_pa / 1e9:.4f} GPa · "
-                f"{gap.reason.splitlines()[0][:88]}")
+                f"{gap.reason.splitlines()[0][:76]}")
     if not st.core_radius_m:
         return "핵 없음 (cmf = 0)"
     r_km = st.core_radius_m / 1e3
@@ -50,7 +53,27 @@ def cell(material: str, cmf: float) -> str:
     rho_in = RHO_WINDOW[0] <= rho <= RHO_WINDOW[1]
     return (f"R_core {r_km:7.1f} km [{'창 안' if r_in else '창 밖'}] · "
             f"rho_core {rho:5.3f} g/cm3 [{'창 안' if rho_in else '창 밖'}] · "
-            f"p_cmb {st.p_cmb / 1e9:6.3f} GPa · 수렴 {ok}")
+            f"p_cmb {st.p_cmb / 1e9:8.5f} GPa · 수렴 {ok}")
+
+
+def consumer_cell(material: str, cmf: float) -> str:
+    """**소비 경로**(`interior.solve`)의 같은 칸 — 노드가 실제로 받는 층이다.
+
+    ⚠ 두 층의 수가 같지 않다. 기록되는 핵-맨틀 경계가 약 **0.5 kPa** 어긋나고, 그 폭이
+    19 GPa 바닥 바로 위에서 판정을 가른다 (감사석 2026-09-10, 브리프 181 B). 그래서 이 표는
+    두 층을 **나란히** 인쇄한다 — 어느 층의 수인지 안 적으면 다음 사람이 둘을 섞는다.
+
+    `solve` 는 `core_material` 을 인자로 받지 않고 조성 프리셋에서 읽으므로, 여기서 이름 하나를
+    잠깐 등록했다 지운다. 프리셋 표 자체는 안 바뀐다."""
+    interior.COMPOSITIONS[PROBE] = (cmf, 0.0, 0.0, material)
+    try:
+        res = interior.solve(MARS_MASS_EARTH, composition=PROBE,
+                             potential_temperature=T_POT, body_class="rocky")
+    finally:
+        interior.COMPOSITIONS.pop(PROBE, None)
+    if not res.applicable:
+        return f"거절 · {res.reason.splitlines()[0][:76]}"
+    return f"p_cmb {res.values['cmb_pressure']:8.5f} GPa · 수렴 {res.converged}"
 
 
 def main(argv: list[str]) -> int:
@@ -62,7 +85,8 @@ def main(argv: list[str]) -> int:
         tag = " ← 선언된 composition_intent: earth_like" if cmf == DECLARED_CMF else ""
         print(f"\ncmf = {cmf:.3f}{tag}")
         for m in MATERIALS:
-            print(f"  {m:18} {cell(m, cmf)}")
+            print(f"  {m:18} 사격층 {cell(m, cmf)}")
+            print(f"  {'':18} 소비층 {consumer_cell(m, cmf)}")
     return 0
 
 

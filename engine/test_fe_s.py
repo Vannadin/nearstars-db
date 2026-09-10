@@ -57,6 +57,20 @@ def _shoot_ok(cmf: float, material: str, mass_kg: float = 0.1074 * 5.97219e24) -
     return _shoot_gap(cmf, material, mass_kg) is None
 
 
+def _consumer_ok(cmf: float, material: str = "fe_s_13wt_19gpa") -> bool:
+    """노드가 실제로 받는 층(`interior.solve`)이 이 조성을 답으로 내는가.
+
+    `solve` 는 `core_material` 을 인자로 안 받고 조성 프리셋에서 읽으므로 이름 하나를 잠깐
+    등록했다 지운다. 프리셋 표 자체는 안 바뀐다."""
+    interior.COMPOSITIONS["_c55_probe"] = (cmf, 0.0, 0.0, material)
+    try:
+        res = interior.solve(0.1074, composition="_c55_probe",
+                             potential_temperature=1600.0, body_class="rocky")
+    finally:
+        interior.COMPOSITIONS.pop("_c55_probe", None)
+    return bool(res.applicable)
+
+
 def row(ok, text):
     global fails
     fails += 0 if ok else 1
@@ -269,13 +283,17 @@ row(isinstance(eos.MATERIALS["fe_prem"].t_melt(_p), float)
 
 _MARS_KG = 0.1074 * 5.97219e24
 row(all(_shoot_ok(c, "fe_s_13wt_19gpa") for c in (0.24, 0.27, 0.29, 0.295, 0.30, 0.303)),
-    "ⓑ cmf 0.24–0.303 에서 Fe–S 가 중심에서 CMB 까지 걸어 나온다 — 걸음 **안**의 자리는 바닥 값으로 "
+    "ⓑ cmf 0.24–0.303 에서 Fe–S 가 중심에서 CMB 까지 걸어 나온다 (사격층) — 걸음 **안**의 자리는 바닥 값으로 "
     "읽고, 판정은 **프로파일에 적히는 것**에 대고 한다 (181 B)")
-_cut_ok = _shoot_ok(0.303, "fe_s_13wt_19gpa")
+_cut_ok = _shoot_ok(0.302, "fe_s_13wt_19gpa")
 _cut_gap = _shoot_gap(0.305, "fe_s_13wt_19gpa")
 row(_cut_ok and _cut_gap is not None,
-    "⚠ 자르는 자리가 **CMB 가 19 GPa 를 지나는 지점**이다 — 0.303 은 P_cmb 19.0005 GPa 로 풀리고 "
+    "⚠ 자르는 자리가 **CMB 가 19 GPa 를 지나는 지점**이다 — 0.302 는 P_cmb 19.01809 GPa 로 풀리고 "
     "0.305 부터 거절한다. 클램프 자리가 아니라 경계 자리다 (C60 (c) 의 정정)")
+row(_consumer_ok(0.302) and not _consumer_ok(0.303),
+    "⚠ **소비 경로(`solve`)의 자르는 자리는 한 칸 앞이다** — 두 층이 기록하는 CMB 가 약 0.5 kPa "
+    "어긋나고 19 GPa 바로 위에서 그 폭이 판정을 가른다. 살아남는 마지막 cmf 는 **0.302** 이고, "
+    "0.303 은 사격층에서만 풀린다 (감사석 실측, 181 B)")
 _gap325 = _shoot_gap(0.325, "fe_s_13wt_19gpa")
 row(_gap325 is not None and "수렴한 답" in _gap325.reason,
     f"⚠ earth_like 의 cmf 0.325 는 거절한다 — **핵이 제 질량 몫을 채우고도 기록된 경계가** "
@@ -293,7 +311,7 @@ row(_gap30 is not None and "30.0000 GPa" in _gap30.reason,
 print("\n기록 — 178 D 의 정정을 181 이 다시 정정한다")
 print("      178 D 는 «괄호로는 아무 칸도 안 열린다, 막는 것은 압력 바닥이다» 로 끝났고 그것은 맞았다.")
 print("      181 이 그 바닥을 다뤘고, 칸에 처음으로 수가 들어왔다. 181 B 가 그 표를 **밴드로** 다시 쟀다 —")
-print("      cmf 0.30·0.303 에서 13 wt% 의 핵 반지름 1828.0·1834.0 km 는 **창 안**(1820–1870)이고,")
+print("      cmf 0.30·0.302 에서 13 wt% 의 핵 반지름 1828.0·1832.0 km 는 **창 안**(1820–1870)이고,")
 print("      밀도 7.52 는 창(5.7–6.3) **밖**이다. ⚠ 축이 하나였다면 이 재질이 화성 핵을 맞춘다고")
 print("      읽혔을 자리다 — C55 가 두 축을 다 들고 다니기로 한 이유가 이것이다.")
 print("      밀도가 창 위로 벗어나는 방향은 Huang+ 2023 자신이 적은 «19 GPa 에서 이 결손을 메우려면")

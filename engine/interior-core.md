@@ -102,7 +102,7 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C52** | how many recorded anchors rest on one shared module constant, and nobody counts | **named and counted 2026-09-09; no checker built** | C45 asks whether a node's lookups are declared, C50 whether a declared `Needs` is supplied; ⚠ **neither asks how many *other* nodes' recorded anchors move when one shared constant moves**, which is what fired twice this week as a gate failure. Instance 1 is `core_energy.H_CORE`, whose value re-defined C20's reproduction anchors from a C14/C15 declaration: six places were repaired in 166 D / 167 A and this item's closing sweep found the real count is **ten**, with three distinct defects left — a comment mirroring `H_CORE_RANGE` that had gone stale at `0.14e-12`, a context note naming 0.14 pW/kg as the declared value after 166 E replaced it with 0.088, and a pre-registration carrying 1525.46 K · 4027–4028 K · 1135 steps with **no condition named at all**. ⚠ **The disease changed shape**: in 166 D the numbers lacked labels, here the labels had gone stale, because the constant moved twice in one day. Instance 2 is `mantle_budget`'s four Earth defaults, where an AST count of 5 and a grep count of 3 were both right about different questions and the number of functions touching them at all is **6**. Closed at named, counted and labelled — **not fixed**: no checker exists, and instance 2 is untouched |
 | **C53** | the tectonic regime is declared as a boolean, and no source surveyed uses one | **built 2026-09-09; two owner mappings still pending** | `stagnant_lid: true/false` is the *“bimodal distribution … that is typically assumed”* which **Foley & Bercovici 2014**'s abstract ([`2014GeoJI.199..580F`](https://ui.adsabs.harvard.edu/abs/2014GeoJI.199..580F)) names as its foil, and the parallel seat's P9 survey found **no scheme that is binary** (Mars and Mercury stagnant in all of them, Earth mobile *or* transitional depending on the scheme, Venus genuinely contested across five printed classifications). Registered replacement: a `tectonic_regime` enum {stagnant · mobile · transitional · episodic · heat_pipe · contested} carrying a grade and a source, with the old boolean kept as a **derived** value so that **no consumer moves**. ⚠ **The blast radius was counted before the design and it is one branch**: `dynamo_rocky`'s survival gate is the only place a value reaches an output (truthy → `DEAD_LID`, `dipole_moment` 0), `heat_transport_mode` does **not** read it — it reads the computed flux ladder — and `phase2/`, `phase4/`, `db/` and the SPEC have **zero hits**. Three owner decisions were taken before the build (`contested` → derived `True`; Earth = `mobile` with the grain-damage note; Pandora = `mobile`, owner-declared), and `episodic` · `heat_pipe` are **left unmapped by name** with their candidates recorded — owner-pending. The regression that proves nothing moved is the three roster bodies' derived booleans, bit for bit: Earth `False` · Mars `True` · Pandora `False`. ⚠ The declared-regime-versus-computed-ladder consistency check is **deliberately not built here** — its first report would be that Earth's declaration and Earth's ladder cell already disagree, which is its own item. ⚠ **Built and measured (C53 (b)): every emitted value bit-identical for all three bodies** (Earth `False` · Mars `True` · Pandora `False`, Pandora's 41.37252479971432 µT included), and the ordering rule fired as registered — `check_contracts` failed on the **evidence key** until `Result.inputs` carried `tectonic_regime` instead of the derived boolean. Two corrections to the pre-registration are recorded there: Pandora's old declaration *did* carry a reason, and Mars's `True` is not load-bearing because the core gate fires first |
 | **C54** | `conductor_phase` stands in front of the lid axis, and Mars's is `undecided` | **candidate, listed 2026-09-09** | Opened by a measurement in C53 (b), not by a design opinion: the survival gate tests `conductor_phase` **before** the tectonic regime, and Mars's is `undecided`, so Mars answers `cannot-say (conductor_phase undecided)` and its declared `stagnant` never reaches `DEAD_LID`. ⚠ **Mars's dynamo output is identical whether its regime is `stagnant` or `contested`** — so *«Mars is a single-plate planet, therefore no dynamo»* is a sentence this engine does **not** execute, and the lid axis cannot be exercised on any roster body until the axis in front of it decides. What decides `conductor_phase` is `core_state`, which needs a **core-side** CMB temperature, and that is declared for Earth only (owner decision ①, C25) — which is why Mars is *undecided* rather than wrong. Candidate only: no owner decision is asked for here, and nothing beyond the one measurement C53 (b) recorded has been done. ⚠ **The root is now measured (172 (a)): `core_state.core_cmb_temperature` is supplied by Earth and undeclared on Mars and Pandora.** The core-side CMB temperature is what decides `conductor_phase`, it exists for Earth only (owner decision ①, C25), and that single asymmetry is why the axis in front of the lid never decides on Mars. Candidates for a declared Martian `T_c` are the parallel seat's |
-| **C55** | the engine has two irons and Mars's core is between them | **stage 1 built 2026-09-10; the verdict cells are blocked on a melting gap** | Opened by C50 (b) row 5's owner-pending cell: Mars cannot declare a `core_material` because neither of our two irons covers it. The printed Martian core density is **5.7–6.65 g/cm³** (S 13–19 wt%), while `fe_prem` sits at 7.6–8.2 and `fe_eps` at 9.0–9.6 — ⚠ **the body is outside both, so declaring either would be asserting a density we know is wrong**, which is why the cell stayed empty rather than taking the default. The owner's decision is to **build a third material, Fe–S**. Source order for the equation of state, held first: Huang 2023 (AIMD) → Xu 2021 (liquid Fe–S mixing) → Morard 2018 → Nishida 2020 → Sanloup 2000; the melting bound stays Mori 2017 with its **declared 10–21 GPa gap**. No number is elected here and nothing is built **at listing time**. **The pre-registration is the section below** (drafted as P13, moved in 2026-09-10 with its anchors resolved). ⚠ **Since then, stage 1 is built**: Huang's printed mixing reproduces its own independent anchor to 0.07 % (178 B), a high-pressure-referenced BM2 gives it a `Phase` without moving any existing material (179), and the sulphur band's **two ends are registered** with the pressure anchor in their names (178 C). ⚠ **The four verdict cells all refuse**, on the 10–21 GPa Fe–S melting gap that predates this item, and **Mars is deliberately not wired** — declaring the material would replace the answers it has with a refusal. Unblocking needs a melting bound in that interval, which is a literature question, not a modelling choice. ⚠ Two owner cells stay open — the sulphur band, and binary Fe–S versus multi-component — and **both candidate EOS anchorings need supplementary tables we do not hold** (B24 Huang Table S5, B25 Xu Table S1). ⚠ **The verdict target does not wait for them**: Durán 2022's printed core radius 1820–1870 km and density 6–6.2 g cm⁻³ anchor the cell today, and **radius and density are two independent axes that each separate the two mantle families** — layer-free 1790–1870 km and 5.7–6.3 g cm⁻³ against layered 1630–1705 km and 6.5–6.75, with gaps of about 120 km and 0.2 g cm⁻³. ⚠ *An earlier version of this row said density could not discriminate; that was built on a density for Khan 2023 which the paper argues against rather than reports, and the retraction is in the section's third amendment* |
+| **C55** | the engine has two irons and Mars's core is between them | **stage 1 built 2026-09-10; the cells now carry numbers (C60 (c)) and fail on density; stage 2 = multi-component, owner-approved** | Opened by C50 (b) row 5's owner-pending cell: Mars cannot declare a `core_material` because neither of our two irons covers it. The printed Martian core density is **5.7–6.65 g/cm³** (S 13–19 wt%), while `fe_prem` sits at 7.6–8.2 and `fe_eps` at 9.0–9.6 — ⚠ **the body is outside both, so declaring either would be asserting a density we know is wrong**, which is why the cell stayed empty rather than taking the default. The owner's decision is to **build a third material, Fe–S**. Source order for the equation of state, held first: Huang 2023 (AIMD) → Xu 2021 (liquid Fe–S mixing) → Morard 2018 → Nishida 2020 → Sanloup 2000; the melting bound stays Mori 2017 with its **declared 10–21 GPa gap**. No number is elected here and nothing is built **at listing time**. **The pre-registration is the section below** (drafted as P13, moved in 2026-09-10 with its anchors resolved). ⚠ **Since then, stage 1 is built**: Huang's printed mixing reproduces its own independent anchor to 0.07 % (178 B), a high-pressure-referenced BM2 gives it a `Phase` without moving any existing material (179), and the sulphur band's **two ends are registered** with the pressure anchor in their names (178 C). ⚠ **The four verdict cells all refuse**, on the 10–21 GPa Fe–S melting gap that predates this item, and **Mars is deliberately not wired** — declaring the material would replace the answers it has with a refusal. Unblocking needs a melting bound in that interval, which is a literature question, not a modelling choice. ⚠ Two owner cells stay open — the sulphur band, and binary Fe–S versus multi-component — and **both candidate EOS anchorings need supplementary tables we do not hold** (B24 Huang Table S5, B25 Xu Table S1). ⚠ **The verdict target does not wait for them**: Durán 2022's printed core radius 1820–1870 km and density 6–6.2 g cm⁻³ anchor the cell today, and **radius and density are two independent axes that each separate the two mantle families** — layer-free 1790–1870 km and 5.7–6.3 g cm⁻³ against layered 1630–1705 km and 6.5–6.75, with gaps of about 120 km and 0.2 g cm⁻³. ⚠ *An earlier version of this row said density could not discriminate; that was built on a density for Khan 2023 which the paper argues against rather than reports, and the retraction is in the section's third amendment* |
 | **C56** | `fe_prem` looks temperature-blind, and it is the reference that makes it so | **checked 2026-09-09 — not a defect; recorded so the next reader does not re-open it** | Observed: `fe_prem.density(p, T, 0.0)` returns the same number at 300 K and at 2100 K while `fe_eps` moves. ⚠ **Measured and explained rather than filed as a bug.** The two phases carry different reference kinds — `fe_eps` is `isotherm` at 300 K (laboratory ε-iron), `fe_prem` is **`adiabat` at 1600 K**, because PREM is a fit to *the hot real Earth* and its geotherm is already inside the effective ρ₀. So `Phase.delta_t` returns `t · (1 − t_ref/t_pot)`: it is **keyed on the declared potential temperature, not on T**, and it is exactly 0 whenever `t_pot` equals 1600 K — an identity, not a tolerance, and the stated reason Earth does not move. Measured at 136 GPa: `t_pot` 1600 gives ΔT 0.0 K at both 2100 K and 4000 K (ρ 9916.9370 either way), `t_pot` 2000 gives 420.0 / 800.0 K (ρ 9908.4176 / 9898.9401), `t_pot` 3040 gives 994.7 / 1894.7 K (ρ 9893.4281 / 9862.1307). ⚠ The call that raised the question passed `t_pot = 0.0`, which the same function reads as «no declared potential temperature» and returns 0 by design — heating a PREM fit from a 300 K baseline would heat Earth twice, which `eos.py` names as the trap it is avoiding. No brief; no change |
 | **C57** | the inversion branch is not on the node's path at all | **listed 2026-09-09; not decided** | ⚠ **Corrected from the first reading.** 173 reported this as an adapter default — `state.get("composition_intent", "earth_like")` always handing `solve` a composition — but the audit's call-graph read is sharper: `_from_state → _solve_from_state → solve` contains **no call** to `infer_composition`, `infer_three_layer` or `_porous_rock_verdict` at all, and the only callers are `rocky_roster.py` and `test_interior.py`. **Removing the default would not route the node to the inversion; there is no route.** So the four `inferred_*` regimes are dead code on the chain's path, C45 (d)'s inversion-convention exception guards something the checker can never make the node produce, and no body file will ever change that (173 measured it: 0). The question — should a recipe be able to infer a composition — is left open, and this row exists so the next reader does not re-derive the answer from the adapter line |
 | **C58** | two of our own numbers for Mars's core-mantle boundary are 1700 K apart | **candidate, listed 2026-09-09** | C54 (b) declared Mars's core-side CMB temperature from the literature band **1900–2100 K** (Durán+ 2022, held). C20's thermal-history integrator ends the same body at **3763 K**. ⚠ **Both are ours and both are labelled**, and they disagree by roughly **1700 K** on one quantity of one body. The declaration is an observation-constrained band; the endpoint is the output of an integration whose Mars run has never been checked against Mars literature — but «the integrator is wrong» is a conclusion, not an observation, and it is not drawn here. Candidate only |
@@ -5553,12 +5553,30 @@ at the floor. Intermediate stages are machinery; they do not appear in any profi
 the layer stopped, not where the boundary is** — the boundary is below what this fit answers for, so the
 engine does not have it and does not guess it.
 
-#### The cut lands where the physics puts it
+#### The cut lands where the physics puts it — and the two layers do not cut at the same place
 
-Converges at **cmf ≤ 0.303**, refuses from **0.305**. The crossing is where Mars's core-mantle boundary
-passes 19 GPa: at 0.303 the answer's P_cmb is **19.0005 GPa**. ⚠ *And the audit's independent extrapolation
-of `fe_prem`'s slope predicted 19.57 GPa at 0.27; the built engine gives **19.5636**.* Two seats, two
-methods, 0.007 GPa apart.
+⚠ **Which layer produced a number has to be written down, because the answer differs.** `shoot` and the
+node's own consumer `solve` record core-mantle boundaries about **0.5 kPa** apart, and 19 GPa is close
+enough to the cut that this decides one cmf value:
+
+| cmf | `shoot` P_cmb | `solve` P_cmb (the consumer) |
+|---|---|---|
+| 0.24 | 20.04157 ✅ | 20.04106 ✅ |
+| 0.27 | 19.56360 ✅ | 19.56310 ✅ |
+| 0.30 | 19.05322 ✅ | 19.05273 ✅ |
+| **0.302** | 19.01809 ✅ | **19.01760 ✅ — the last one that survives** |
+| **0.303** | 19.00047 ✅ | ❌ refused (19.0000, below 19.0000) |
+| 0.305 | ❌ 18.96514 | ❌ 18.9647 |
+
+**The last core mass fraction this material carries is 0.302 at the layer that matters**, and the crossing
+is where Mars's core-mantle boundary passes the fit's 19 GPa reference. ⚠ *The audit's independent
+extrapolation of `fe_prem`'s slope predicted 19.57 GPa at cmf 0.27; the built engine gives **19.5636**.*
+Two seats, two methods, 0.007 GPa apart.
+
+⚠ **This is what closes C60.** The floor sets an **upper bound on the core mass fraction**, that bound
+comes from physics — the boundary reaching the fit's reference pressure — and it is decided on the
+**converged answer**, never on a trial. A trial that walks out of the domain is a bracket point; only an
+answer refuses.
 
 **The mass axis does not misfire.** A 0.5 M⊕ body converges at every core mass fraction from 0.20 to 0.40,
 with P_cmb from **86.9 down to 72.5 GPa** — nowhere near the floor, and no rule fires.
@@ -5571,13 +5589,14 @@ material grids are byte-identical, and `t_melt` does not move at any of the 182 
 ⚠ **0.24 was never "the maximum the clamp allowed" — it was simply the first value tried.** Measured
 properly (`tools/c55_cells.py`, now calling `shoot` so it cannot print a number the engine would refuse):
 
-| cmf | `fe_s_13wt_19gpa` | `fe_s_19wt_19gpa` |
-|---|---|---|
-| 0.24 | R 1698.6 km · ρ 7.499 | R 1736.8 km · ρ 7.015 |
-| 0.27 | R 1765.6 · ρ 7.512 | refused (answer's P_cmb 18.988) |
-| 0.30 | **R 1828.0 — inside the window** · ρ 7.521 | refused |
-| 0.303 | **R 1834.0 — inside** · ρ 7.522 | refused |
-| 0.325 | refused (P_cmb 18.968) | refused (18.962) |
+| cmf | `fe_s_13wt_19gpa` (`shoot` layer) | `fe_s_19wt_19gpa` | consumer (`solve`) |
+|---|---|---|---|
+| 0.24 | R 1698.6 km · ρ 7.499 | R 1736.8 km · ρ 7.015 | both ✅ |
+| 0.27 | R 1765.6 · ρ 7.512 | refused (P_cmb 18.988) | 13 wt% ✅ |
+| 0.30 | **R 1828.0 — inside the window** · ρ 7.521 | refused | 13 wt% ✅ |
+| **0.302** | **R 1832.0 — inside** · ρ 7.521 | refused | **13 wt% ✅ — the last one** |
+| 0.303 | R 1834.0 · ρ 7.522 | refused | ❌ refused |
+| 0.325 | refused (P_cmb 18.968) | refused (18.962) | both ❌ |
 
 ⚠ **The radius axis passes and the density axis fails**, which is the exact case C55 registered as the
 reason for carrying two axes: *"the one place this cell can pass on density and fail on radius, which is
@@ -5586,7 +5605,98 @@ only one axis were carried. **The density is 7.5 against a ceiling of 6.3 and do
 core mass fraction**, because the density of the core is set by the material, not by how big the core is.
 
 ⚠ *And the tool itself had this defect until now*: it called `_shoot_pressure` directly, below the layer
-that refuses out-of-domain answers, so it printed numbers the engine would not have released.
+that refuses out-of-domain answers, so it printed numbers the engine would not have released. **It now
+prints both layers side by side with the layer named**, because a table that does not say which layer a
+number came from invites the next reader to mix them — and at 0.303 the two layers disagree.
+
+⚠ **The sulphur band cannot reach the density window on this anchor.** At **19 wt%, the band's own top
+end**, the core density is **7.015 g cm⁻³** against a ceiling of 6.3 — and the density barely moves with
+core mass fraction, because it is set by the material. **So more sulphur is not the lever**; the next one
+is the multi-component core (stage 2), which is the owner's decision of 2026-09-10.
+
+### C55 (d) 2026-09-10 — the window's third source, the shelf above 21 GPa, and the one published curve that spans it
+
+⚠ **No constant moves in this section.** Everything here is recorded because it is now *held as a body*,
+and because two of the three findings would each be a reason to change `MORI_FES_EUTECTIC` if this
+engine were in the business of electing a lineage. It is not. Sources: the parallel seat's
+`P16-fe-s-melting-10-21gpa.md` (sha256 `31e03997df756426…`, **41260 B**) and
+`P12-mars-core-material-candidates.md` (sha256 `b932c70929c9386b…`, **21970 B**), hashed at the moment of
+citing; the arithmetic below was re-done at this seat from the printed coefficients.
+
+#### A third body inside the window, and one that is not a eutectic temperature at all
+
+**Fei, Bertka & Finger 1997** ([`1997Sci...275.1621F`](https://ui.adsabs.harvard.edu/abs/1997Sci...275.1621F), held) prints, as a result, *"The eutectic T linearly
+decreased with increasing P, from **988°C at 1 bar to 860°C at 14 GPa**"* and *"At T = 875°C and P = 14 GPa,
+Fe₃S₂ coexisted with a eutectic liquid composition (**18.2 ± 0.3% S**)"*. So **1133 K at 14 GPa** is a third
+in-window point, and it agrees with Andrault 2009's low lineage to about 100 K — Morard 2007 says so in its
+own words (*"With a systematic difference of approximately 100 K, we have a reasonable agreement … with the
+study of Fei et al. (1997)"*).
+
+⚠ **Morard+ 2007's Table 2 must not be read as a eutectic curve**, and this is the kind of mistake this
+file exists to prevent. Its P–T rows are *"in-situ conditions at which the liquid was measured"* with a
+stated uncertainty of **170 K** — measurement conditions, not bracketed melting points. It enters this
+record as **qualitative agreement only**: *"Our observations are compatible with a decrease of eutectic
+temperature with increasing pressure."*
+
+**The bracket's low end does not move.** Fei 1997's 1133 K at 14 GPa sits *above* Andrault's 1023 K at
+15 GPa, so the printed minimum inside 10–21 GPa is unchanged.
+
+#### The shelf immediately above 21 GPa, now held as bodies
+
+| P | T_eutectic | source |
+|---|---|---|
+| 21.9 GPa | **1512 ± 19 K** (in situ, liquid present) | Chudinovskikh & Boehler 2007 ([`2007E&PSL.257...97C`](https://ui.adsabs.harvard.edu/abs/2007E&PSL.257...97C)) |
+| 23.0 GPa | **1450 ± 30 K** (liquid + Fe + FeS) | same, run eu30 |
+| 26.4–28.4 GPa | **1380–1410 ± 80 K** (first melt by XRD) | Kamada+ 2010 ([`2010E&PSL.294...94K`](https://ui.adsabs.harvard.edu/abs/2010E&PSL.294...94K)) |
+| 29 → 65 GPa | **1450 ± 150 → 1980 ± 150 K**, slope 15 K/GPa | Morard+ 2008 ([`2008E&PSL.272..620M`](https://ui.adsabs.harvard.edu/abs/2008E&PSL.272..620M)) |
+| 40 GPa | **1520 K** | Stewart+ 2007 ([`2007Sci...316.1323S`](https://ui.adsabs.harvard.edu/abs/2007Sci...316.1323S)) |
+
+⚠ **These bracket the 21 GPa value our curve is anchored on from *above*** — Fei 2000's 1348 K as Mori 2017
+reads it, or **1380 K as Morard 2007 reads the same paper** — and they sit **250–400 K above** Andrault's
+1123 K at 20.6 GPa. **The 20.6 → 21.9 GPa step is printed as a kink by the sources themselves**: Stewart
+2007 writes *"Eutectic temperature inflections around 14 and 20 GPa are due to the stabilization of Fe₃S₂
+and Fe₃S above these pressures."* ⚠ Whether that step is the phase change or a between-laboratory offset
+**cannot be settled without Fei 2000's body**, which did not arrive. **`MORI_FES_EUTECTIC` keeps 1348 K**;
+that the same paper is read as 1380 K elsewhere is recorded next to it, not averaged into it.
+
+#### Candidate (f): the only published curve that crosses the window continuously — and it disagrees with itself
+
+**Rivoldini+ 2011** ([`2011Icar..213..451R`](https://ui.adsabs.harvard.edu/abs/2011Icar..213..451R), held) parameterises the eutectic as three linear segments,
+eq. (4) `T_e(P) = T_e,0 + b₁(P − P_e,0)`, Table 4:
+
+| interval | P_e,0 | T_e,0 | b₁ |
+|---|---|---|---|
+| 3 ≤ P < 14 GPa | 3 | 1268 K | −11 K/GPa |
+| **14 ≤ P < 21 GPa** | 14 | **1144 K** | **+29 K/GPa** |
+| 21 ≤ P < 60 GPa | 21 | 1255 K | +13 K/GPa |
+
+Recomputed here from those coefficients: **T_e(20.65 GPa) = 1336.8 K**, which is **inside our bracket
+(1023–1473 K)**. ⚠ *So the one published continuous curve does not open or close a single verdict cell* —
+Mars's declared 2000 K is above it exactly as it is above both bracket ends.
+
+⚠ **And the paper does not agree with itself in four places, recomputed here rather than taken on report:**
+
+| # | as printed | what it gives | the reading that fits the paper's own figures |
+|---|---|---|---|
+| A | Table 3 `a₁ = −0.32 K/GPa`, `a₂ = 28.95 K/GPa²` | T_m,Fe(20.65) = **14161 K** | swap them → **2283.8 K**, matching its Fig. 1 range |
+| B | eq. (5) `c₂ = −0.065 GPa⁻¹` | x_e(20 GPa) = **0.796** | read as decreasing → **0.161** (≈16 wt% S) |
+| C | Table 4 middle segment | T_e(21⁻) = **1347 K** vs the third segment's start **1255 K** | joining them needs b₁ = **15.857**, not 29 |
+| D | Table 4 first segment at its own upper end | T_e(14) = **1147 K** vs the middle segment's declared start **1144 K** | a **3 K** discontinuity where the text says the segments were *joined* |
+
+⚠ **C is the interesting one**: with the printed b₁ = 29 the middle segment lands on **1347 K at 21 GPa**,
+one kelvin from the 1348 K Mori 2017 attributes to Fei 2000 — so the fit's middle segment appears to be
+aimed at the very value the low-lineage bodies contradict. **None of A–D is resolved here.** Candidate (f)
+is listed with the note that it is usable only with a *declared* reading of each, and a declared reading is
+an owner decision, not a transcription.
+
+#### One printed sulphur value from outside the owner's band
+
+**Terasaki+ 2019** ([`2019JGRE..124.2272T`](https://ui.adsabs.harvard.edu/abs/2019JGRE..124.2272T), body held) prints, adopting Rivoldini's core radius: *"For R_C =
+1,794 ± 65 km … we find that the core contains either **32.4 +1.8/−2.4 wt% of S** or 30.3 +2.4/−2.8 wt% of
+Si."* ⚠ That is **far above the owner's 13–19 wt% band**, and the paper says why in its own sentence — at
+that composition *"the liquidus phase … is either (Fe,Ni)₃₋ₓS₂ … because the S or Si content in the core is
+richer than the eutectic composition (S = 16 wt% …) at the Martian CMB."* Recorded as a printed value from
+a different modelling family, **not as a candidate for the band**, and not averaged with anything.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
