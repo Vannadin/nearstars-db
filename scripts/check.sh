@@ -11,9 +11,26 @@ fail=0
 #   검사들)만 남기고, `|| fail=1` 로 조용히 끝나던 자리는 모두 이 헬퍼를 지난다. 불변식은 **세기가
 #   아니라 «불리는 명령의 순서 있는 목록»** 이다 — 감싸면 `|| fail=1` 의 개수는 0 에 가까워지므로
 #   그 수로는 아무 것도 못 지킨다. 이 커밋은 그 목록을 74 항목·같은 순서로 유지한다.
+exec 3>&2                     # step() 이 자식의 stderr 를 여기로 빼낸다 (아래 주석)
+
 step() {                      # step <이름> <명령...>
+  # ⚠ **벽시계를 상시로 찍는다** (브리프 183 C). 게이트가 32 분인데 그중 어느 단계가 얼마인지
+  #   말할 수 없었다 — 로그에 시간이 하나도 없어서 «미상 24 분» 이 어디 있는지 셀 수가 없다.
+  #   측정 없이 층을 가르면 빠른 층에 느린 시험이 들어간다. 그래서 먼저 재고, 가르는 것은 그
+  #   수가 나온 뒤의 별도 브리프다. `SECONDS` 는 bash 내장이라 이 줄이 게이트를 안 늦춘다.
+  # ⚠ **최대 RSS 도 함께 찍는다** — 게이트를 둘 동시에 돌려도 되는지를 이 수로 정한다 (예전에
+  #   메모리 부족으로 시험 묶음이 두 번 죽었다). `/usr/bin/time -l` 의 통계는 **자기 stderr** 로
+  #   나가므로, 자식의 stderr 는 fd 3(진짜 stderr)으로 따로 빼서 진단 출력을 잃지 않는다 —
+  #   그 둘을 한 파일에 섞으면 실패한 단계의 오류 문장이 통계 스무 줄에 묻힌다.
   local name=$1; shift
-  "$@" || { echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"; fail=1; }
+  local _t0=$SECONDS _c0 _tf _rss
+  _c0=$(date "+%H:%M:%S")
+  _tf=$(mktemp "${TMPDIR:-/tmp}/gate-step.XXXXXX")
+  /usr/bin/time -l bash -c '"$@" 2>&3' _ "$@" 2>"$_tf" \
+    || { echo "  [FAIL] $name — 비0 종료 (이 단계가 fail=1 을 세웠다)"; fail=1; }
+  _rss=$(awk '/maximum resident set size/ {printf "%.0f", $1/1048576}' "$_tf")
+  rm -f "$_tf"
+  echo "  [TIME] $name — $_c0 → $(date "+%H:%M:%S") · $((SECONDS - _t0)) s · RSS ${_rss:-?} MB"
 }
 # 게이트 자신만 찍는 시작/종료선. 테스트 파일들이 찍는 "모두 통과" 와 겹칠 수 없는 형식이고,
 # 종료선 없이는 "무엇이 언제 무슨 트리 위에서 끝났는지" 를 말할 수 없다 (2026-09-04, 두 좌석에서 같은 오독).
@@ -347,7 +364,7 @@ step "scripts/check_pipeline_flow.py" bash -c 'python3 scripts/check_pipeline_fl
 echo ""
 echo "── 11. 사이트맵 연결성 게이트 (신규 고아 페이지 감지) ──"
 if [ -f docs/index.html ]; then
-  python3 scripts/build_sitemap.py --audit-only || { echo "  [FAIL] build_sitemap"; fail=1; }
+  step "build_sitemap" python3 scripts/build_sitemap.py --audit-only
 else
   echo "  [SKIP] 사이트가 빌드되지 않은 트리"
 fi
@@ -366,7 +383,7 @@ echo "── 12b. 계약 · 인용 앵커 · 밴드 (문서가 깨뜨릴 수 있
 #   감사석). 조회 로그(C45 (b)) 탓이 아니다: 끄면 5 s 더 걸렸다. 77 은 09-06 순서 변경 때의 수이고 그 뒤로
 #   부하가 늘었다 — 지금 레시피 14 · 계산 노드 35 를 표본 천체마다 돈다. 조정하지 않고 후보 원인만 적는다.
 # chain.yaml 의 via 가 공급자 outputs 에 있는가 (Brief 43). 허용목록(도출 8) · status:gap 밖의 via 는 실패다.
-python3 engine/check_via.py --gate || { echo "  [FAIL] check_via"; fail=1; }
+step "check_via" python3 engine/check_via.py --gate
 step "check_contracts.py" bash -c 'cd engine && python3 check_contracts.py'
 # 인용 앵커 (C33). 앵커 구절이 대상 문서에서 정확히 1회 매치돼야 한다 — 0회는 썩음, 2회 이상은 애매.
 # 줄번호 인용은 아직 실패시키지 않고 미이행으로 센다(배치 이행 중). 체커 자기검증은 test_check_refs.py.
@@ -404,9 +421,9 @@ if [ "$lane" = "targeted" ]; then
       run:*) step "run.py ${tt#run:}" bash -c 'cd engine && exec python3 run.py "$1"' _ "${tt#run:}" ;;
       # ⚠ 13 블록에는 `test_*.py` 가 아닌 게이트 단계가 셋 있다 (169 D ②). 그 셋을 부를 어휘가
       #   없으면 `engine/backflow.py` 를 고친 커밋이 자기를 검사하는 단계 없이 초록으로 지나간다.
-      gate:backflow) python3 engine/backflow.py check >/dev/null 2>&1 || { echo "  [FAIL] backflow"; fail=1; } ;;
+      gate:backflow) step "backflow" bash -c 'python3 engine/backflow.py check >/dev/null 2>&1' ;;
       gate:chain) step "engine/chain.py check" bash -c 'python3 engine/chain.py check' ;;
-      gate:dynamo_table) python3 engine/dynamo_table.py --check || { echo "  [FAIL] dynamo_table"; fail=1; } ;;
+      gate:dynamo_table) step "dynamo_table" python3 engine/dynamo_table.py --check ;;
       # ⚠ full 층이 `--quiet` 로 부르는 시험은 표적 층도 그렇게 불러야 한다 — 다른 인자는 다른 검사다.
       tools/c47_step4.py) step "tools/c47_step4.py" bash -c 'cd engine && exec python3 tools/c47_step4.py --quiet' ;;
       *) if [ -f "engine/$tt" ]; then step "$tt" bash -c 'cd engine && exec python3 "$1"' _ "$tt"
@@ -524,7 +541,7 @@ step "test_water_column_steam.py" bash -c 'cd engine && python3 test_water_colum
 step "test_tectonic_regime.py" bash -c 'cd engine && python3 test_tectonic_regime.py'
 # 암석 다이나모 사다리 (Brief 47). 문서 표 재현·RM22 Table 8 차이·게이트 라벨·격자 미선출이 앵커다.
 step "test_dynamo_rocky.py" bash -c 'cd engine && python3 test_dynamo_rocky.py'
-python3 engine/dynamo_table.py --check || { echo "  [FAIL] dynamo_table"; fail=1; }
+step "dynamo_table" python3 engine/dynamo_table.py --check
 
 fi   # lane
 

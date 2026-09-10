@@ -6152,7 +6152,7 @@ existing binary materials are **not touched** — they keep `has_thermal = False
 only in the new builder.
 
 ⚠ **And the mixture's adiabatic gradient is large.** At **Mars's core-mantle boundary, 20.65 GPa**, the
-eight corners give ∇_ad **0.3101–0.3614** where `fe_prem` **at the same pressure** gives **0.02588** — about
+eight corners give ∇_ad **0.3101–0.3615** where `fe_prem` **at the same pressure** gives **0.02588** — about
 **twelve to fourteen times**. *(An earlier line here compared against 0.055, which is `fe_prem` at 136 GPa;
 a gradient must be compared at one pressure.)* Higher up it reaches **0.386**. It is not a mistake — it is
 Huang's own derivative doing its work: the light elements soften the alloy so much that K_T falls from
@@ -6176,10 +6176,10 @@ on a 0.01 grid:
 
 | | best radius | its `nmoi` | where |
 |---|---|---|---|
-| unconstrained | **3.83 %** | 2.46 % | `S 13 · O 1 · C 0.5`, cmf 0.26 |
+| unconstrained | **3.82 %** | 2.46 % | `S 13 · O 1 · C 0.5`, cmf 0.26 |
 | with `nmoi` ≤ 1 % | **6.76 %** | 0.93 % | `S 13 · O 4 · C 1.4`, cmf 0.23 |
 
-So the radius **can** come within 3.83 %, and the moment of inertia is easy on its own (0.11 % at the right
+So the radius **can** come within 3.82 %, and the moment of inertia is easy on its own (0.11 % at the right
 cmf) — **the two are simply not satisfied by the same body**, and the cmf range where the radius would keep
 improving is above the cut.
 
@@ -6206,13 +6206,17 @@ Measured: **19.0000 – 19.0019 GPa raise `PhaseGap`, 19.0020 GPa returns a numb
 it manufactures is not a judgement about that pressure. The stencil is clamped to the material's own floor,
 which makes it one-sided there — symmetric with what the ceiling already did.
 
-⚠ **And the repair verifies itself.** At exactly 19 GPa the one-sided difference returns
-**K_T = 49.10 GPa** for `S 19 · O 4 · C 0.5` — which is that composition's **printed** 49.1. *The fix
-recovers the fit's own bulk modulus at its own reference*, which is the strongest check available for a
-numerical stencil.
+⚠ **The repair recovers the fit's own bulk modulus**, though the check is weaker than it first looked:
+at exactly 19 GPa the one-sided difference returns **K_T = 49.10 GPa** for `S 19 · O 4 · C 0.5`, against the
+**49.09** that the same Huang derivatives give analytically. ⚠ *That 49.09 is **our** arithmetic, not a
+number the paper prints* — so this says the stencil agrees with the closed form it differentiates, which is
+the right thing to check but is not agreement with a publication.
 
-**Materials whose floor is zero are untouched**: all thirteen original grids stay byte-identical, and
-`fe_prem`'s ρ(136 GPa) is pinned unchanged in `test_fe_s`.
+⚠ **"The thirteen original grids stay byte-identical" is true of the density grid only.** The clamp does
+not fire where the floor is zero — eleven materials — but the **two Fe–S binaries share the same 19 GPa
+floor**, and their `k_t` at exactly 19.0 GPa changed from `PhaseGap` to a number: **100.1707 GPa** (13 wt%)
+and **72.6177** (19 wt%). **That is the intended repair, not a side effect**, and `fe_prem`'s ρ(136 GPa) is
+pinned unchanged in `test_fe_s`.
 
 ### C46 — the table is short of rows, and cut on a different axis — **listed 2026-09-07, not started**
 
