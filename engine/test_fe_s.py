@@ -214,6 +214,17 @@ row(grades == {"본문 · Si 2 at% 장입", "본문 · Si 없음"},
 row([g for _p, _t, g in eos.IRON_FES_WINDOW_LOW_POINTS][1] == "본문 · Si 없음",
     "⚠ Si 없는 점은 **가운데**(18.5 GPa) 하나뿐이다 — 괄호의 양끝은 둘 다 Si 장입이다")
 
+print("\n⑩ 하한 미만 거절이 자기 문구를 갖는다 (브리프 178 E)")
+try:
+    eos.MATERIALS["fe_s_13wt_19gpa"].phase_at(5.0 * eos.GPA)
+    row(False, "기준 아래에서 값을 냈다")
+except eos.PhaseGap as e:
+    msg = str(e)
+    row("기준압 19 GPa 아래" in msg and "융해" not in msg.split("⚠")[0],
+        f"5 GPa → 압력 바닥을 말한다 (융해가 아니라): «{msg[:70]}…»")
+row(eos.Material.under_reason is not eos.Material.gap_reason,
+    "`under_reason` 과 `gap_reason` 은 다른 문구다 — 바닥 아래와 상 **사이** 는 다른 사실이다")
+
 print("\n기록 — 이 괄호로 판정 칸이 열리지는 않는다 (178 D 정정)")
 print("      네 칸을 막는 것은 융해가 아니라 **압력 바닥**이다: 구조 솔버가 0.098 GPa 에서 이 재질에")
 print("      밀도를 묻고, Huang 적합은 19 GPa 기준이라 그 아래에 뿌리가 없다. 괄호는 그 자체로 옳고")

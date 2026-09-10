@@ -339,6 +339,11 @@ class Material:
     phases: tuple[Phase, ...]
     gap_reason: str = ""      # 상 사이 빈 구간에 붙일 설명
     over_reason: str = ("{p_gpa:.1f} GPa 는 근거 있는 상의 상한({max_gpa:.1f} GPa) 위다")
+    # ⚠ **아래쪽에도 자기 문구가 있어야 한다** (브리프 178 E). 예전에는 하한 미만 거절이 `gap_reason`
+    #   (상 **사이** 빈 구간의 문구)을 빌려 썼다 — 40일 동안 아무도 안 밟은 것은 기존 재질이 전부
+    #   `p_min = 0` 이었기 때문이고, 첫 `p_min > 0` 재질이 들어오자 융해 공백 문구가 압력 바닥에서
+    #   인쇄되어 기작을 잘못 읽게 만들었다 (C55 의 178 D 정정).
+    under_reason: str = ("{p_gpa:.4f} GPa 는 이 적합의 기준 아래({min_gpa:.4f} GPa) — 그 아래에는 뿌리가 없다")
     t_over_reason: str = ("{t_k:.0f} K 는 '{phase}' 적합의 상한({t_max:.0f} K) 위다")
 
     @property
@@ -369,7 +374,11 @@ class Material:
         """이 압력에서 유효한 상. 없으면 왜 없는지를 들고 던진다."""
         for ph in self.phases:
             if p < ph.p_min:
-                raise PhaseGap(self.name, p, self.gap_reason.format(p_gpa=p / 1e9))
+                # 첫 상의 바닥 아래면 «기준 아래» 이고, 상들 **사이** 면 사다리의 빈 구간이다.
+                # 둘은 다른 사실이라 문구도 다르다 (178 E).
+                reason = (self.under_reason.format(p_gpa=p / 1e9, min_gpa=ph.p_min / 1e9)
+                          if ph is self.phases[0] else self.gap_reason.format(p_gpa=p / 1e9))
+                raise PhaseGap(self.name, p, reason)
             if p <= ph.p_max:
                 return ph
         raise PhaseGap(self.name, p, self.over_reason.format(
@@ -2923,10 +2932,12 @@ def fe_s_mole_fraction(w_s: float) -> float:
 
 FE_S_13WT = Material("fe_s_13wt_19gpa", "액체 Fe–S 핵 · 13 wt% S (밴드 아래끝, 19 GPa 기준)",
                      (huang_fes_phase(fe_s_mole_fraction(0.13), "19GPa"),),
-                     gap_reason=FE_S_BELOW_REF_REASON)
+                     gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
+                     under_reason=FE_S_BELOW_REF_REASON)
 FE_S_19WT = Material("fe_s_19wt_19gpa", "액체 Fe–S 핵 · 19 wt% S (밴드 위끝, 19 GPa 기준)",
                      (huang_fes_phase(fe_s_mole_fraction(0.19), "19GPa"),),
-                     gap_reason=FE_S_BELOW_REF_REASON)
+                     gap_reason="이 재질은 상이 하나라 상 **사이** 빈 구간이 없다 — 여기 도달하면 그것이 결함이다",
+                     under_reason=FE_S_BELOW_REF_REASON)
 
 MATERIALS: dict[str, Material | HotWater | HydrogenHelium | LiquidWater | DenseLiquidWater | Ammonia] = {
     m.name: m for m in (FE_PREM, FE_EPS, FE_S_13WT, FE_S_19WT, SILICATE, SILICATE_CHONDRITIC, ANTIGORITE, H2O, H_HE, H2O_HOT, H2O_LIQUID,
