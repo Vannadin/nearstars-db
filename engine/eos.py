@@ -355,6 +355,19 @@ class Material:
     def p_max(self) -> float:
         return self.phases[-1].p_max
 
+    @property
+    def shoot_lo(self) -> float:
+        """사격 괄호의 **아래끝** — 이 재료가 가장 안쪽일 때 시험 중심압이 내려갈 수 있는 바닥.
+
+        중심압은 그 천체의 **최대** 압력이다. 그러니 중심압이 핵 재료의 적합 바닥보다 낮다는
+        것은 천체 전체가 그 적합 밖이라는 뜻이고, 그런 시험값은 **해가 될 수 없다** — 빼는 것이
+        물리를 줄이는 게 아니라 해가 아닌 것을 후보에서 빼는 것이다 (C60 (a), 브리프 181).
+
+        ⚠ **`p_floor` 를 재사용하지 않는다.** 그것은 적분이 **멈추는** 압력이고 **가장 바깥**
+        재료가 말하는 것이다 (h_he 의 1 bar). 핵 재료에 그걸 걸면 천체를 자기 바닥에서 자른다.
+        이름이 셋인 이유는 셋이 다른 사실이라서다."""
+        return min((ph.p_min for ph in self.phases), default=0.0)
+
     def rho_seed(self, mass_kg: float) -> float:
         """사격의 괄호를 잡을 때만 쓰는 밀도 척도. 계산 결과에는 들어가지 않는다.
 
@@ -400,6 +413,25 @@ class Material:
     def t_melt(self, p: float) -> float | None:
         """압력 p 에서 이 재료가 녹는 온도 [K]. 곡선이 없으면 None."""
         return self.phase_at(p).t_melt(p)
+
+    def t_melt_band(self, p: float) -> tuple[float, float] | None:
+        """융해 바운드가 이 압력에서 **괄호로만** 있으면 그 양끝 [K]. 아니면 None.
+
+        ⚠ **`t_melt` 의 반환형은 건드리지 않는다** (C60 (a), 브리프 181). 그 함수를
+        «값 또는 밴드» 로 넓히면 **소비자 열 자리(호출 열하나)** 가 하나를 위해 고쳐 쓰인다
+        — `core_state` 다섯 · `core_energy` 셋(호출 넷) · `interior` 둘, 그리고 이 파일 안의
+        위임 둘은 그 밖이다. (감사석 셈, 181 에서 대조; 사전등록의 «여덟» 은 세어 보기 전의
+        수였고 여기서 바로잡는다.) 178 D 가 등록한
+        것은 «소비자가 온도를 **양끝 모두** 와 비교한다» 이지 «t_melt 가 밴드를 돌려준다»
+        가 아니므로, 밴드는 자기 이름을 갖고 부르는 쪽이 하나다 (`core_state`).
+
+        오늘 괄호를 가진 곡선은 10–21 GPa 의 Fe–S 공정 하나뿐이다 — 문헌이 그 창에서
+        갈리고, 어느 계보를 고르는 것이 이 엔진의 일이 아니라서 폭으로 남긴 것이다."""
+        ph = self.phase_at(p)
+        if ph.melt != "iron_fes_eutectic":
+            return None
+        band = iron_fes_eutectic_bracket(p)
+        return None if band is None else (band[0] * ph.melt_scale, band[1] * ph.melt_scale)
 
     def liquid_at(self, p: float, t: float) -> bool | None:
         """이 (P, T) 에서 이 재료가 액체인가. 곡선이 없거나 닿지 않으면 None.
@@ -672,6 +704,12 @@ class Mixture:
         """성분 중 하나라도 압력 바닥을 말하면 혼합도 거기서 멈춘다. 중원소가 녹아
         있어도 외피는 여전히 기체이고, P = 0 인 표면이 없는 것은 그대로다."""
         return max((getattr(m, "p_floor", 0.0)
+                    for m, w in self.parts if w > 0.0), default=0.0)
+
+    @property
+    def shoot_lo(self) -> float:
+        """성분 중 **가장 높은** 바닥이 혼합의 바닥이다 — 하나라도 밖이면 혼합이 밖이다."""
+        return max((getattr(m, "shoot_lo", 0.0)
                     for m, w in self.parts if w > 0.0), default=0.0)
 
     def in_domain(self, p: float, t: float) -> bool:

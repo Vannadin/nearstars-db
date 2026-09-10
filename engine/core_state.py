@@ -36,7 +36,7 @@ from dataclasses import replace as _dc_replace
 
 import eos
 from eos import (IRON_LIGHT_ELEMENT_FACTOR, IRON_MELT_MAX, IRON_MELT_SPLICE,
-                 MATERIALS, PhaseGap, iron_t_melt)
+                 MATERIALS, PhaseGap, iron_fes_phase_verdict, iron_t_melt)
 from payload import Result, out_of_domain
 from registry import recipe
 
@@ -106,6 +106,9 @@ GAMMA_SPAN = (min(GAMMA_CORE, GAMMA_LIQUID_RANGE[0]), GAMMA_LIQUID_RANGE[1])
 MARGIN_THIN = "thin"
 MARGIN_COMFORTABLE = "comfortable"
 MARGIN_NOT_COMPUTABLE = "not-computable (lower bound, no core adiabat)"
+# 융해 바운드가 **괄호로만** 있는 압력에서는 여유도 뒤집힘점도 낼 수 없다 — 둘 다 곡선 하나를
+# 미분하거나 뿌리를 찾는 값이라 폭에는 정의가 없다 (C60 (a), 브리프 181). 판정은 낼 수 있다.
+MARGIN_BRACKETED = "not-computable (melting bound is a bracket, not a curve)"
 K0_FLIP_SPAN = (0.5, 2.0)           # K₀ 뒤집힘점을 찾는 이분법의 배율 범위
 
 
@@ -277,6 +280,76 @@ def solve(core_pressure: float,
         rho_cmb = material.density(p_cmb, cmb_temperature, 0.0)
     except PhaseGap as gap:
         return out_of_domain(RECIPE, VERSION, gap.reason, inputs=inputs, refs=REFS)
+
+    # ── 갈래 0: 융해 바운드가 이 압력에서 **괄호** 다 (178 D 의 괄호, 181 의 배선) ──
+    #
+    # 10–21 GPa 의 Fe–S 공정은 문헌이 갈려서 곡선이 아니라 폭으로 등록돼 있다. 그 폭에는
+    # 여유(단열선 − 융해온도)도 뒤집힘점도 정의가 없지만 **판정은 있다** — 온도를 양끝
+    # 모두와 대면 액체·고체·못-말함 셋 중 하나가 나온다. 배선하기 전에는 이 자리가
+    # `t_melt` 의 None 을 들고 아래 문장으로 내려가 터졌고, 그 전에는 «분기 없는 이름» 의
+    # 거절이 나갔다 (178 C′). 어느 쪽도 이 창에 대해 우리가 아는 것을 말하지 않는다.
+    band_cmb = material.t_melt_band(p_cmb)
+    band_c = material.t_melt_band(p_c)
+    if band_cmb is not None or band_c is not None:
+        band = band_cmb or band_c
+        band_str = f"{band[0]:.0f}–{band[1]:.0f} K"
+        t_top = float(core_cmb_temperature) if core_cmb_temperature else cmb_temperature
+        # 중심은 단열선을 타고 경계보다 뜨겁다. 경계 온도로 두 자리를 다 판정하는 것은
+        # **보수적** 이다 — 중심이 액체가 아니라고 말할 위험만 있고 그 반대는 없다.
+        verdict_cmb = iron_fes_phase_verdict(t_top, p_cmb)
+        verdict_c = iron_fes_phase_verdict(t_top, p_c)
+        if verdict_cmb == CONDUCTOR_LIQUID and verdict_c == CONDUCTOR_LIQUID:
+            phase, grade = CONDUCTOR_LIQUID, "analog"
+            reason = (
+                f"핵 전체가 액체다. 융해 바운드가 이 압력대에서 **괄호**({band_str})인데 "
+                f"{t_top:.0f} K 는 그 **양끝 모두** 위라, 문헌이 어느 계보를 택하든 판정이 "
+                "안 바뀐다 — 걸치지 않는 것이 이 괄호를 쓰는 이유다.")
+        elif verdict_cmb == CONDUCTOR_SOLID and verdict_c == CONDUCTOR_SOLID:
+            phase, grade = CONDUCTOR_SOLID, "analog"
+            reason = (f"핵 전체가 고체다. {t_top:.0f} K 는 괄호({band_str})의 "
+                      "**양끝 모두** 아래다.")
+        else:
+            phase, grade = CONDUCTOR_UNDECIDED, "judgment"
+            reason = (
+                f"판정하지 않는다 — {t_top:.0f} K 가 융해 바운드의 괄호({band_str})를 "
+                "**걸친다**. 이 창(10–21 GPa)에서 인쇄된 공정온도들이 약 225 K 갈리고 "
+                "(Andrault+ 2009 의 낮은 계보 대 Li+ 2001·Fei+ 2000 의 높은 계보), 어느 쪽을 "
+                "택하는 것이 이 엔진의 일이 아니다. 걸침을 한쪽으로 밀지 않는 것이 괄호의 존재 이유다.")
+        return Result(
+            recipe=RECIPE, version=VERSION, regime="melt_bracket", reason=reason,
+            grade=grade, inputs=inputs, refs=REFS,
+            values={"conductor_phase": phase,
+                    "cmb_melt_temperature": None,
+                    "center_melt_temperature": None,
+                    "cmb_melt_bracket_low": band[0],
+                    "cmb_melt_bracket_high": band[1],
+                    "core_cmb_temperature_used": t_top,
+                    "core_center_temperature_used": t_top,
+                    "icb_pressure": 0.0,
+                    "center_margin": None, "cmb_margin": None,
+                    "center_margin_fraction": None,
+                    "gamma_flip": None, "gamma_flip_in_alfe_range": None,
+                    "k0_flip": None,
+                    "melt_splice_disagreement": melt_splice_disagreement(p_c),
+                    "margin_condition": MARGIN_BRACKETED},
+            units={"conductor_phase": "", "cmb_melt_temperature": "K",
+                   "center_melt_temperature": "K",
+                   "cmb_melt_bracket_low": "K", "cmb_melt_bracket_high": "K",
+                   "core_cmb_temperature_used": "K",
+                   "core_center_temperature_used": "K",
+                   "icb_pressure": "GPa",
+                   "center_margin": "K", "cmb_margin": "K",
+                   "center_margin_fraction": "dimensionless",
+                   "gamma_flip": "dimensionless", "gamma_flip_in_alfe_range": "",
+                   "k0_flip": "GPa", "melt_splice_disagreement": "dimensionless",
+                   "margin_condition": ""},
+            notes=(
+                f"융해 바운드: {material.phases[0].melt_ref}. 10–21 GPa 는 그 곡선이 "
+                "빌려온 기준점 아래라 **괄호**로 등록돼 있다 (브리프 178 D) — 폭의 "
+                "양끝이 서로 다른 등급이다: 낮은 끝은 Andrault+ 2009 Table 1 의 본문 "
+                "값이고, 높은 끝은 초록만 있는 Li+ 2001·Fei+ 2000 이다.",
+                "⚠ **여유와 뒤집힘점은 내지 않는다.** 둘 다 곡선 하나에 정의된 값이라 "
+                "폭에는 없다. 판정은 양끝 비교로 나오고, 그것이 이 갈래가 내는 전부다."))
 
     depressed = abs(material.phases[0].melt_scale - 1.0) > 1e-12
     notes = [

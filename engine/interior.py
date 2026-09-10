@@ -109,6 +109,11 @@ FLOOR_EXTRAPOLATION_MAX = 100.0
 MAX_STEPS = 40000
 SHOOT_ITERS = 200
 SHOOT_TOL = 1e-8            # 겉질량의 상대오차
+# 괄호의 **아래쪽** 시험점이 재료의 적합 도메인 밖이라 거절할 때 위로 좁혀 보는 횟수 (C60 (a),
+# 브리프 181). 매번 로그 좌표의 중점으로 올리므로 열두 번이면 아래끝과 위끝의 로그 간격을
+# 4000 분의 1 로 줄인다 — 그래도 못 찾으면 괄호 전체가 도메인 밖이고, 그때는 재료가 이름을
+# 대며 거절한다. 바닥이 0 인 재료는 첫 시도에서 붙으므로 이 고리를 한 번도 돌지 않는다.
+SHOOT_LO_TRIES = 12
 
 
 class Structure:
@@ -783,6 +788,8 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
         if grad:
             last_grad = grad
 
+        boundary_clamp = 0.0     # k1 뒤에 정해진다 (아래 주석). 여기서 0 이라 k1 은 예전 경로다.
+
         def deriv(rr, mm, pp):
             if rr <= 0.0:
                 return 0.0, 0.0, 0.0, 0.0
@@ -799,7 +806,7 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                 # 고르므로, 이 반 걸음만 IF97 로 잇는다. 오늘까지 이 갈래는 거절이었으니 앵커는 비트 그대로다.
                 rr_rho = COLUMN_STEAM.density(pp, t)
             else:
-                rr_rho = (mat.density(max(pp, p_stop), t, t_pot) if pp > 0.0
+                rr_rho = (mat.density(max(pp, p_stop, boundary_clamp), t, t_pot) if pp > 0.0
                           else mat.rho0)
             phi = porosity_at(mat, pp, phi0, p_cap)
             rr_rho *= 1.0 - phi
@@ -809,6 +816,14 @@ def integrate(p_center: float, mass_kg: float, cmf: float, imf: float,
                     4.0 * math.pi * rr * rr * phi)
 
         k1 = deriv(r, m, p)
+        # **걸음 안의 자리가 재료 자신의 적합 바닥을 스치는 것은 거절이 아니다** (C60 (a), 브리프 181).
+        # RK4 의 뒤 세 자리는 출발점보다 최대 한 걸음 아래이고, 그 한 걸음은 바깥으로 한 번 딛으면
+        # 버려지는 자리다 — 최종 프로파일에 안 들어간다. 그러니 **바닥이 이 걸음 안에 들어왔을 때만**
+        # (p − 바닥 ≤ 걸음 폭) 그 자리를 바닥의 값으로 둔다. 위 `p_stop` 클램프와 같은 규율이고,
+        # 다른 점은 그것이 적분 정지 압력(가장 바깥)이고 이것이 적합 바닥(이 층의 재료)이라는 것뿐이다.
+        # 바닥이 걸음보다 멀리 아래면 클램프는 0 이고 재료가 예전처럼 이름을 대며 거절한다.
+        _lo_mat = getattr(mat, "shoot_lo", 0.0)
+        boundary_clamp = _lo_mat if (_lo_mat and p - _lo_mat <= abs(dr * k1[1])) else 0.0
         k2 = deriv(r + dr / 2, m + dr / 2 * k1[0], p + dr / 2 * k1[1])
         k3 = deriv(r + dr / 2, m + dr / 2 * k2[0], p + dr / 2 * k2[1])
         k4 = deriv(r + dr, m + dr * k3[0], p + dr * k3[1])
@@ -1130,8 +1145,50 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
     # 중심압의 아래 끝. 바깥 재료가 압력 바닥을 말하면 중심압이 그보다 낮을 수 없다 —
     # 기체 외피에서 실제로 걸린다. 할선의 두 번째 시험점이 그 아래로 내려가면 표 밖이라
     # 거절이 나고, 그건 물리가 아니라 시험값이다.
-    lo = max(1.0e2, p_stop)
+    # **핵 재료의 적합 바닥도 아래끝이다** (C60 (a), 브리프 181). 중심압은 천체의 최대 압력이라
+    # 가장 안쪽 재료의 바닥보다 낮은 시험 중심압은 해가 될 수 없다. 이걸 안 걸면 할선의 둘째
+    # 점(hi × 10⁻³)이 그 바닥 한참 아래로 떨어지고, `integrate` 가 첫 줄에서 중심 밀도를 물으며
+    # 죽는다 — 화성 규모에서 0.0981 GPa, 19 GPa 바닥보다 19 GPa 아래다. 그 거절은 이 천체에
+    # 대한 판정이 아니라 **버려질 시험값** 이다. `p_floor` 와 다른 이름인 이유는 eos 의
+    # `shoot_lo` 주석에 있다. `max` 라서 바닥이 0 인 재료(오늘의 11 중 9)는 예전 값 그대로다.
+    lo = max(1.0e2, p_stop, getattr(stack[0][1], "shoot_lo", 0.0))
     hi = min(3.0 * G / (8.0 * math.pi) * mass_kg ** 2 / r0 ** 4 * 4.0, p_ceiling)
+
+    def p_try(x: float) -> float:
+        """로그 좌표의 시험점을 압력으로 되돌린다. **아래끝 밑으로는 안 내려간다.**
+
+        `exp(log(x))` 는 x 를 그대로 돌려주지 않는다 — 19 GPa 가 18.9999 GPa 로 돌아온다.
+        아래끝이 그냥 숫자였을 때는 상관없었지만 이제 그것이 **재료의 적합 바닥** 이라
+        (C60 (a)) 한 자리 밑이 곧 거절이다. 아래끝이 100 Pa 인 천체에서는 시험점이 늘
+        그보다 자릿수로 위라 이 `max` 가 한 번도 걸리지 않는다 — 앵커는 비트 그대로다."""
+        return max(math.exp(x), lo)
+
+    def lower_point(x1: float) -> tuple["Structure", float]:
+        """괄호의 아래쪽 시험점을 잡는다. **거절하면 아래끝을 위로 좁힌다** (C60 (a), 브리프 181).
+
+        중심압이 낮을수록 천체가 작으므로, 낮은 시험 중심압에서 **가장 안쪽 재료가 자기 적합
+        도메인을 벗어난다** 는 것은 그 아래에 해가 없다는 뜻이지 이 천체가 안 풀린다는 뜻이
+        아니다. 위의 사다리가 **위쪽** 끝에 대해 이미 하는 말과 같은 말을, 아래쪽 끝에 대고
+        한다 — 버려질 시험값을 물리인 척 내보내지 않는다.
+
+        정적 바닥(`shoot_lo`)이 «이 재료가 값을 내는 압력» 을 말한다면, 이 고리는 «이 **천체**
+        가 그 재료로 풀리는 압력» 을 말한다. 둘은 다르다: 19 GPa 기준 Fe–S 는 19 GPa 에서
+        값을 내지만, 화성 질량의 핵이 그 위에 담기려면 중심압이 40 GPa 대여야 한다.
+
+        ⚠ **괄호를 다 올려도 거절하면 그때는 진짜 거절** 이고, 마지막 거절을 그대로 올려
+        보낸다 — 이름과 압력이 붙어 있는 그 문장이 답이다."""
+        nonlocal lo
+        gap: PhaseGap | None = None
+        for _ in range(SHOOT_LO_TRIES):
+            p1 = p_try(x1)
+            try:
+                return at(p1), x1
+            except PhaseGap as g:
+                gap = g
+                lo = p1              # 이 아래에는 해가 없다. 괄호에서 뺀다
+                x1 = 0.5 * (x1 + math.log(hi))
+        assert gap is not None
+        raise gap
 
     def at(p: float):
         return integrate(p, mass_kg, cmf, imf, core_material, phi0, p_cap, gmf,
@@ -1278,12 +1335,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
         # 응축상. 표면이 P = 0 이라 질량이 중심압에 단조이고, 아래끝이 어디든 뿌리가
         # 하나다. 예전 경로를 그대로 둬서 앵커가 비트까지 같게 유지한다.
         x1 = math.log(max(lo, hi * 1e-3))
-        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
-                        gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
-                        boundary_temperature_jump, mantle_rock_fraction,
-                        serpentinisation, differentiation_front, crust_rock_fraction,
-                        crust_porosity, envelope_z_profile,
-                        ammonia_mass_fraction=ammonia_mass_fraction)
+        st, x1 = lower_point(x1)
         y1 = math.log(st.mass_kg / mass_kg)
     last_short = None            # 질량이 모자란 마지막 구조 (외피 없는 암석)
     for _ in range(SHOOT_ITERS):
@@ -1317,7 +1369,7 @@ def _shoot_pressure(mass_kg: float, cmf: float, imf: float,
             return st, False
         x0, y0 = x1, y1
         x1 = x2
-        st = integrate(math.exp(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
+        st = integrate(p_try(x1), mass_kg, cmf, imf, core_material, phi0, p_cap,
                     gmf, envelope_z, envelope_z_rock_fraction, differentiated, t_center, t_pot,
                     boundary_temperature_jump, mantle_rock_fraction,
                     serpentinisation, differentiation_front, crust_rock_fraction,

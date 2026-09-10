@@ -36,7 +36,7 @@ table's emptiness."* A default that would fill a phase cell is refused by the ph
 
 **Grade propagation — the most dangerous gap, added before ② is built (directing seat's code read, reproduced):**
 no recipe reads the grade of its inputs — `cmb_flux.py@«grade="analog", inputs=inputs, values=values, units=units, refs=REFS, notes=notes)»` and `core_energy.py@«grade="analog", inputs=inputs, values=values, units=units, refs=REFS, notes=notes)»` write `grade="analog"` as
-literals, `core_state.py@«grade=grade, inputs=inputs, refs=REFS,»` sets its own — so once ② supplies an `authored` default to a recipe whose grade is
+literals, `core_state.py@«grade = "analog"»` sets its own (the anchor moved from the `Result(...)` line to the assignment in 181, when a second branch made that line ambiguous — the claim is unchanged) — so once ② supplies an `authored` default to a recipe whose grade is
 a literal `calibrated`, the output still says `calibrated`. Over a five-step chain each step can absorb one
 authored input and the final value still carries the literal grade: **false provenance manufactured by the
 system itself**, at volume. So ② ships with:
