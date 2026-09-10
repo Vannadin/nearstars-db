@@ -195,6 +195,30 @@ try:
 except eos.PhaseGap as e:
     row("분기가 없다" in str(e), f"분기 없는 이름 → 이름 대며 거절: «{str(e)[:66]}…»")
 
+print("\n⑨ 10–21 GPa 는 곡선이 아니라 **괄호**다 (브리프 178 D)")
+row(eos.iron_fes_eutectic_bracket(20.65 * eos.GPA) == (1023.0, 1473.0),
+    f"20.65 GPa (화성 CMB) → 괄호 {eos.iron_fes_eutectic_bracket(20.65 * eos.GPA)} K — "
+    "창 안 인쇄값의 최저·최고이고 압력으로 보간하지 않는다")
+row(eos.iron_fes_eutectic_bracket(25.0 * eos.GPA) is None
+    and eos.iron_fes_eutectic_bracket(5.0 * eos.GPA) is None,
+    "창 밖(25 · 5 GPa)에는 괄호가 없다 — 21 GPa 위는 단일 곡선이 답하고 10 GPa 아래는 아무도 안 답한다")
+row(eos.iron_fes_phase_verdict(2000.0, 20.65 * eos.GPA) == "liquid",
+    "화성의 선언 T_c 2000 K 는 괄호 위끝 1473 K 보다 높다 → **liquid**, 걸치지 않는다 (등록된 예측)")
+row(eos.iron_fes_phase_verdict(900.0, 15.0 * eos.GPA) == "solid",
+    "양끝 아래면 solid")
+row(eos.iron_fes_phase_verdict(1100.0, 15.0 * eos.GPA).startswith("cannot-say"),
+    "⚠ 괄호를 걸치면 **cannot-say** — 걸침을 한쪽으로 밀지 않는 것이 이 괄호의 존재 이유다")
+grades = {g for _p, _t, g in eos.IRON_FES_WINDOW_LOW_POINTS}
+row(grades == {"본문 · Si 2 at% 장입", "본문 · Si 없음"},
+    f"하한 세 점이 장입까지 구별해 등급을 든다: {sorted(grades)}")
+row([g for _p, _t, g in eos.IRON_FES_WINDOW_LOW_POINTS][1] == "본문 · Si 없음",
+    "⚠ Si 없는 점은 **가운데**(18.5 GPa) 하나뿐이다 — 괄호의 양끝은 둘 다 Si 장입이다")
+
+print("\n기록 — 이 괄호로 판정 칸이 열리지는 않는다 (178 D 정정)")
+print("      네 칸을 막는 것은 융해가 아니라 **압력 바닥**이다: 구조 솔버가 0.098 GPa 에서 이 재질에")
+print("      밀도를 묻고, Huang 적합은 19 GPa 기준이라 그 아래에 뿌리가 없다. 괄호는 그 자체로 옳고")
+print("      나중에 필요하지만, 오늘 아무 칸도 열지 않는다 — 그것은 C60 이다.")
+
 print("\n기록 — 두 앵커를 서로에게 외삽하면 2.9 % 벌어진다 (판정 아님, 179 측정)")
 a19, a35 = eos.huang_fes_phase(eos.HUANG_S4_CS, "19GPa"), eos.huang_fes_phase(eos.HUANG_S4_CS, "35GPa")
 print(f"      19 GPa 앵커를 35 GPa 로 밀면 {a19.density(35.0e9):.1f} kg/m³, "

@@ -1689,6 +1689,58 @@ IRON_FES_GAP_REASON = ("10–21 GPa 의 Fe–S 융해는 Mori+ 2017(21 GPa 아�
                        "1·5 wt.% S, 공정 아래), 점 둘은 구간이 아니다. 공백은 남는다.")
 
 
+#: 10–21 GPa 창의 **인쇄된** 공정 온도들. 곡선이 아니라 점이고, 이어 붙이지 않는다 (브리프 178 D).
+#: 하한 계열 — Andrault+ 2009 (2009PEPI..174..181A) Table 1 의 T_Sol («완전 재결정»), **본문 등급**.
+#:   ⚠ 15 · 20.6 GPa 두 점은 2 at% Si 를 넣은 장입이고 그 둘이 **괄호의 양끝**이다. Si 없는 점은
+#:   18.5 GPa 하나로 구간 안쪽에 있다. 논문은 셋을 같은 Fe–S 계로 다룬다.
+#: 상한 계열 — Fei+ 2000 (2000AmMin..85.1830F) 21 GPa 1348 K, Li+ 2001 (2001E&PSL.193..509L)
+#:   7–25 GPa 를 1223–1473 K 로. **초록 등급**.
+#: ⚠ 두 계열이 같은 압력에서 약 225 K 어긋나고 Buono & Walker 2015 는 낮은 쪽을 수소 오염으로 읽는다.
+#:   **어느 쪽도 고르지 않는다** — 그래서 곡선이 아니라 괄호다.
+IRON_FES_WINDOW_PA = (10.0 * GPA, 21.0 * GPA)
+#: 점마다 등급을 따로 단다 — 새 어휘를 만들지 않고 «본문» 안에서 장입을 구별한다.
+IRON_FES_WINDOW_LOW_POINTS = (
+    (15.0 * GPA, 1023.0, "본문 · Si 2 at% 장입"),
+    (18.5 * GPA, 1073.0, "본문 · Si 없음"),
+    (20.6 * GPA, 1123.0, "본문 · Si 2 at% 장입"),
+)
+#: ⚠ **공백을 좁히는 다음 길**: 15–20.6 GPa 구간의 **Si 없는** 공정 측정 하나, 그리고 Fei+ 2000 ·
+#:   Li+ 2001 의 전문(지금은 초록만). 앞의 것이 오면 괄호의 하한이 Si 없는 점들로만 서고, 뒤의 것이
+#:   오면 상한이 초록 등급을 벗는다. 둘 다 조달 문제이지 모형 선택이 아니다.
+IRON_FES_WINDOW_HIGH_POINTS = ((21.0 * GPA, 1348.0), (25.0 * GPA, 1473.0))
+IRON_FES_BRACKET_K = (1023.0, 1473.0)      # 창 안 인쇄값의 최저·최고
+
+
+def iron_fes_eutectic_bracket(p: float) -> tuple[float, float] | None:
+    """10–21 GPa 에서 Fe–S 공정 온도의 **괄호** [K] — 곡선이 없으므로 점들의 폭을 돌려준다.
+
+    ⚠ 압력에 따라 보간하지 **않는다**. 창 안 인쇄값의 최저(1023 K)와 최고(1473 K)를 그대로 주고,
+    소비자가 온도를 **양끝 모두**와 비교한다. 보간은 우리 산수이고, 게다가 원전들은 이 구간을
+    직선이 아니라 **꺾인 선**으로 그린다 — Fe₃S₂ 가 14 GPa 근처, Fe₃S 가 21 GPa 근처에서 안정해진다.
+    창 밖은 None 이고, 21 GPa 위는 `iron_fes_eutectic_t_melt` 의 단일값이 답한다."""
+    lo_p, hi_p = IRON_FES_WINDOW_PA
+    return IRON_FES_BRACKET_K if lo_p <= p < hi_p else None
+
+
+def iron_fes_phase_verdict(t_k: float, p: float) -> str:
+    """이 (T, P) 에서 Fe–S 가 액체인가 — 괄호를 쓰는 소비자 쪽 판정 (브리프 178 D).
+
+    양끝 **모두** 아래면 `solid`, 모두 위면 `liquid`, 걸치면 `cannot-say`. 걸침을 한쪽으로 밀지
+    않는 것이 이 괄호의 존재 이유다."""
+    band = iron_fes_eutectic_bracket(p)
+    if band is None:
+        single = iron_fes_eutectic_t_melt(p)
+        if single is None:
+            return "cannot-say (창 밖이고 곡선도 없다)"
+        return "liquid" if t_k > single else "solid"
+    lo, hi = band
+    if t_k > hi:
+        return "liquid"
+    if t_k < lo:
+        return "solid"
+    return "cannot-say (괄호를 걸친다 — 문헌이 갈린다)"
+
+
 def iron_fes_eutectic_t_melt(p: float) -> float | None:
     """Fe–Fe₃S 공정 융해온도 [K] — 융해 바운드(바닥). 21–350 GPa 밖은 None.
 
