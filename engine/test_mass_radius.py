@@ -47,7 +47,10 @@ def main() -> int:
             fails.append(f"{name}: 값이 나와야 하는데 거절했다 — {r.reason[:70]}")
             print(f"  [FAIL] {name:14} 거절됨")
             continue
-        got = r.values["radius"]
+        # ⚠ 출력 이름이 `radius` → `radius_mr_screen` 으로 바뀌었다 (C65, 브리프 2026-09-11):
+        #   이 노드의 반지름은 **질량·조성만으로** 부른 선별용 추정이고, 천체의 해는
+        #   `interior_layers` 의 `radius` 다. 두 수가 한 이름을 쓰던 것이 그 항목이다.
+        got = r.values["radius_mr_screen"]
         off = abs(got - want) / want
         ok = off <= TOL
         if not ok:
@@ -59,7 +62,7 @@ def main() -> int:
     for name, mass, r_real, note in (
             ("Mercury", 0.055, 0.383, "규산염 맨틀이 있으니 순철보다 커야 한다"),
             ("Earth", 1.000, 1.000, "핵질량분율 0.325 이니 더 커야 한다")):
-        iron_r = assign(mass, "iron").values["radius"]
+        iron_r = assign(mass, "iron").values["radius_mr_screen"]
         ok = iron_r < r_real
         if not ok:
             fails.append(f"순철 곡선이 {name} 보다 크다 — {iron_r:.3f} vs {r_real}")
@@ -112,7 +115,7 @@ def main() -> int:
     # 1.2 ρ⊕ 는 그물 한참 안쪽이므로 "초수성이라 기각" 은 틀린 이유였다. 기각이라는
     # 결론 자체는 다른 근거(표면중력 목표)로 여전히 설 수 있다.
     doc_claim = density_gate(mass_earth=1.2 * 0.8984 ** 3, radius_earth=0.8984)
-    iron_limit = assign(1.2 * 0.8984 ** 3, "iron").values["radius"]
+    iron_limit = assign(1.2 * 0.8984 ** 3, "iron").values["radius_mr_screen"]
     limit_rho = (1.2 * 0.8984 ** 3) / iron_limit ** 3
     print(f"  [알림] 문서 §7 의 1.2 ρ⊕ 기각 근거: 이 게이트는 "
           f"{'기각' if not doc_claim.applicable else '통과'}시킨다 "

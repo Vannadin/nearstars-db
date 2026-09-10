@@ -112,12 +112,13 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C62** | `tidal_response` does not exist, and the two bodies that need k₂ declare it fitted to our own output | **pre-registered 2026-09-10 before the build (C62 (a)); nothing built** | P28 moved into this file verbatim (parallel seat, sha256 `92b95059014d03db…`, 9211 B). A layered viscoelastic propagator (Beuthe 2015 eqs 13–18) with three rheologies (Bagheri+ 2022 §2.3–2.7) emitted as a **band**, k₂·h₂·Q. ⚠ **The engine has no shear modulus anywhere today**, so μ is a gap the node names rather than a quantity it fills — C58 (a)'s shape, one layer out. ⚠ **A liquid core is the membrane limit and says so** (Beuthe eq. 27); Saito 1974's general liquid-layer condition is paywalled and **not held**, and every output carries that label. Owner-pending: the liquid-layer treatment · μ declared per layer or printed per material · whether a body ever elects a rheology · whether this node's k₂/Q ever replaces the **declared** value C39 unified. **The standing default for the first build is emitter-only**, so C39's seam is kept and no shipped τ moves |
 | **C63** | the cold φ(P) slot has no law over our own pressure range | **closed 2026-09-10 as a named refusal — no code, no constant, no board changed** | The seven compaction papers held on 09-10 do not print a cold, unsintered φ(P) law over 1–764 MPa (P29, sha256 `8884e29ae2832870…`, 16563 B). Four saturate **at or below 1 MPa** — where our rock law begins; two are φ(P, T, t) rate laws needing a thermal history; one is shock. ⚠ **And five of the seven close a 100–170 km body's pores by ²⁶Al heating above ≈ 700 K**, while our three `voids_expected` indicators fire on mass, grain-fracture pressure and a declared tidal bool — *"tidal" appears 0 times in all seven*. So the indicator set is indexed on a different cause than the literature uses at this body scale. Dante's centre is **317 MPa**, above every cold law held and above the 150 MPa lab range of the law we ship. Owner-pending (a)–(e), none urgent |
 | **C64** | one value key, two producers — and the engine's two read paths answer differently | **listed 2026-09-11; widened by measurement from one key to six** | Found while writing C15 (a). `entropy_history_verdict` is a **literal refusal** in `core_entropy` (*"needs C20"* — C20 was built 2026-09-04) and a **computed verdict** in `core_history`, and `engine/test_core_entropy.py@«2: the history verdict must refuse by name»` pins the literal. ⚠ **The family signature is one sentence: there was a check, and the check agreed.** The contract layer says it too — both `Returns` lists carry the key and `check_contracts` compares each node only against **its own**, so nothing counts a key claimed twice; the contract prose even asserts the literal, so a repair moves **three** places and each needs a name. Audit-seat census: **168** contract `Returns` keys, **six** claimed by two nodes (`dipole_moment`·`b_eq`·`b_pol` — the dynamo pair, expected harmless by class exclusivity but **counted, not argued**; `entropy_history_verdict`; `has_inner_core_solved`; `radius`). ⚠ **Direction must be read from `graph.order`'s execution order, not `chain.yaml`'s declaration order** — the two disagree, and for `radius` they disagree *oppositely*: `interior_layers` runs first, so `state.get` returns it and `resolved` returns `mass_radius_relation`. ⚠ *An earlier draft of this row said `resolved` is what emit, the evidence dump and the board comparison read. Measured (audit seat, 2026-09-11): `resolved` is read by `run.py`'s convergence comparison and `state.py`'s summary count — **and by nothing that ships**. So the condition for «latent» is countable: **the number of shipping consumers that receive the losing value is zero.*** **`radius` leaves this item as C65 if the run-side count says it is live.** **Measured 2026-09-11 (audit seat, `audit_dupkeys.py`)**: the dynamo trio is **closed at zero** — no roster body has both ladders applicable, so the class exclusivity holds by measurement rather than by argument; `has_inner_core_solved` is **a duplicated computation whose two values agree**, so it is untidiness rather than a defect; `entropy_history_verdict` **disagrees on earth and mars**, which confirms this item; and `radius` disagrees on **two of the four bodies where both producers run** (`mars` −1.87 %, `dante_fixture` −12.51 %) — that one leaves as **C65** |
+| **C65** | two nodes emitted `radius`, and they were the same solver run on different inputs | **built 2026-09-11 — the name is split; the merge rule is C68** | `mass_radius_relation` does not solve for a radius: it calls `interior.solve` with **mass and a composition preset only** (`engine/mass_radius.py@«structure = solve(mass_earth, composition=composition)»`), while `interior_layers` calls the same function with **everything the body declares**. ⚠ **So the pair was never two methods disagreeing — it was one integrator asked two questions.** The screening output is renamed **`radius_mr_screen`** and its contract says it is not an independent check. ⚠ **And the two measured gaps have two different causes, which the first draft of this row ran together** (audit seat, 2026-09-11). **(a) `mars` −1.87 % is the preset overriding a declaration**: the call site carried a C45 (f) literal, `state.get("composition_intent", "earth_like")`, so Mars solved at the preset's cmf **0.325** instead of its declared **0.24** — *the very number C59 spent a day on*, and the C45 (f)/C59 link belongs to this half only. The default stays (changing it moves values, and that is C59's owner-pending cell) but it is no longer silent: `composition_preset_used` is emitted and counted, so **one of C45 (f)'s sites is now named**. ⚠ *How many remain is left blank until it is measured: this ledger's C45 (f) section says **nineteen**, the sixteen relayed to this seat was a stale figure (the directing seat records it as its own error), and **nothing in the gate counts them at all** — so the next printed number comes from the audit seat re-running its own parser on a committed sha, expected 19 → 18. **Putting that count in the gate is a follow-up candidate under C45 (f)**, the same shape as today's census of constants nothing reads.* **(b) `dante_fixture` −12.51 % is inverse against forward**: that body declares neither `composition_intent` nor a core mass fraction, so `interior_layers` **inverts** to match its declared radius (0.08175 R⊕, −0.034 %) while the screening node runs a preset **forward** without knowing that radius. ⚠ *Fixing the preset would not narrow that one at all* — it is the case the rename exists for. ⚠ *And the counter is 1 today, on `dante_fixture` — the same body as the larger gap, for an unrelated reason. The label says so, because a counter and a gap pointing at one body invites reading them as one fact.* Two `chain.yaml` edges that declared `via: radius` from the screening node are moved to `interior_layers`, which is where all five shipping consumers already read |
 | **C66** | constants that are stored and read by nothing | **listed 2026-09-11 — candidate, disposal is per-item** | Audit value-trace over 63 constants: **12 are stored only** — 7 read by nothing at all, 5 read only by a test — and **1 was cited but not implemented** (Dorogokupets, filled by 180 C). ⚠ **A stored constant that nothing reads tells the next reader «a decision lives here» when none does**, and that is C45 (f)'s shape without a call site. The seven: `MORI_FES_P_MEASURED_MAX` · `IRON_FES_WINDOW_HIGH_POINTS` · `XU_FES_T_REF_K` · `ALPHA_C` · `NH3_REF` · `FE_S_BAND_WT` and the remainder after tidying, plus `core_energy.py`'s twin of the dead `GAMMA` alias 180 C removed from `cmb_flux.py`. ⚠ **Disposal is not a sweep**: brief 185 is about to *read* `IRON_FES_WINDOW_HIGH_POINTS`, so each name is decided by the brief that owns its physics — deleting them together would delete the ones that are early rather than dead |
 | **C67** | the core adiabat carries one exponent where the material now has two | **listed 2026-09-11 — candidate, outside 180 C** | `core_state._adiabat` raises the centre temperature as **T ∝ ρ^γ with a single γ**, asked at one pressure. That was exact while γ was a constant. ⚠ **180 C made γ a function of pressure inside one core**: Mars's γ is **2.8718** at its CMB and the fallback **1.5** at its centre, so the closed form integrates a γ the material does not have over most of the interval. The structure integrator already does this correctly — it asks per step — so the repair is to make the declared branch integrate γ(P) the same way, or to state the exponent it uses and why. **Not built here**: it moves `core_temperature` and `center_margin` on every body with a core, which is a verdict-moving change of its own |
 | **C68** | nothing decides who wins when two nodes emit one name | **listed 2026-09-11 — the rule C64 and C65 both need, and neither builds** | Today the winner is a side effect: `state.get` returns the first applicable node in `graph.order`'s topological order and `state.resolved` the last, so **moving a node in `chain.yaml` silently changes which value five consumers of `radius` receive.** The rule to build has **three states**, and the third is the point of it. ① **an owner is declared** → only the owner's value enters `resolved` (`radius` → `interior_layers`; ⚠ `has_inner_core_solved`'s owner is an **owner decision** — the two values agree today, so it is a duplicated *computation*, and «which computation is right» is a separate question this rule does not answer). ② **the claimants are class-exclusive** (`dynamo_giant` / `dynamo_rocky` on `b_eq`·`b_pol`·`dipole_moment`) → passes **without** an owner, but the contract check **measures and records «zero same-run co-occurrences» every run** — ⚠ *an allow-list would let the exclusivity rot silently; a measurement fails the day it stops being true.* ③ **neither** → **FAIL**. Built by neither C64 nor C65: those two supply the owner declarations this rule reads |
 | **C69** | the temperature loop's update rule oscillates, and the budget cannot buy convergence | **listed 2026-09-11 — candidate, pre-registration first** | 180 D measured it: the proportional update `T_c ← T_c·(T_pot/T_surf)` **overshoots the root** for water-rich rocky bodies under 180 C's steeper core adiabat, and the oscillation damps by only **0.878 a step**, flattening near **1 %**. ⚠ **Extending the pass budget is not the answer** — measured: `imf 0.3` converges with two extra batches, `imf 0.1` does not even with **+28 passes**, and the failing path costs **123 → 334 s**. The remedy is an under-relaxation factor **α < 1** on the update, ⚠ *which is a change to the update rule rather than to trial machinery, so it moves the path of bodies that already converge* — C60's rule says that needs its own pre-registration with a bit-identity table, not a fix folded into another brief |
 | **C70** | the path fingerprint watches seven functions, and the ones this work changes are not among them | **listed 2026-09-11 — candidate** | `test_ice_giant`'s `PATH_FUNCTIONS` covers `solve`·`shoot`·`_shoot_pressure`·`_narrow_bracket`·`_surface_temperature_met`·`_stack`·`integrate` plus thirteen constants, and `_feed_code` **does not follow calls** — so a change inside a function the watched ones *call* is invisible. Measured: 180 C/D changed `_adiabatic_dtdp` and added `_core_or_own_gamma`, and the fingerprint stayed silent about both while catching `shoot`. ⚠ **That silence was not a miss** — those edits move values, and the value assertion caught them (Mars's three thermal-history anchors); on the ice giants they are a no-op because those bodies use no core material. **The residual risk is the thin case: a path-only edit to `_adiabatic_dtdp` that leaves the frozen values alone.** ⚠ *The danger is not the gap itself but reading the gap as agreement* — «21 items, 1 changed» invites «the path barely moved». Widening the list is not a one-liner: it re-freezes the stored fingerprint, which then has to be justified by the value assertions again, so it needs its own commit and its own before/after table. The rule that says «answer an interpreter-version change with `--refresh` rather than by widening the fingerprint» is about **versions**, not coverage, so it does not forbid this. ⚠ **And the cheap half is not the list but the count**: the fingerprint should **print how many functions it does not watch** — a watch list that says nothing about its own coverage is what let «1 of 21» read as reassurance |
-| **C71** | a solution that did not converge still hands back its numbers | **listed 2026-09-11 — candidate** | `interior.solve` returns `applicable True` with a full `values` dict when the shooting loop ends unconverged; only `converged` says otherwise, and **a consumer that does not read it uses the number**. ⚠ **Sampled, not argued**: in the audit seat's isolated clone without 180 D's budget extension, the water-rich body `imf 0.1` returns **R 1.130250786008135** with `converged False` — a radius that is not a solution, sitting in the value slot. 180 D closed that one case by refusing when the extended budget runs out, but **the shape is general**: every non-converged solve in the engine still ships numbers. Candidate rules: a non-converged solve returns a **named refusal instead of values**, or **every consumer reads `converged`** and the contract check counts the ones that do not. ⚠ *The second is cheaper to verify and the first is what this ledger has chosen everywhere else* |
+| **C71** | the non-convergence warning is prose, so no consumer can read it | **listed 2026-09-11 — candidate, narrowed by measurement** | `interior.solve` returns a full `values` dict when the shooting loop ends unconverged, and the only warning is a sentence in `engine/payload.py@«line += " ⚠ 미수렴 1차 통과값"»` — **`evidence()` prose, not a value**. ⚠ **And `converged` is structurally out of reach**: it is a `Result` field, `state._find` looks only at declared `inputs` and each result's `values`, and **no computing node touches `state.results`** (only `check_contracts` does). So the five consumers of `radius` cannot see it — **0 of 5, by construction rather than by oversight**. Sampled: the audit seat's clone without 180 D's budget extension returns **R 1.130250786008135** with `converged False` for the water-rich body `imf 0.1`, a radius that is not a solution sitting in the value slot. ⚠ *This is C58 (a)'s registered line — «prose can be grepped but only a value can be counted» — one layer down, in the object every node returns.* Repair shape: emit it as a **value** the way `core_gamma_fallback` is emitted. Verdict-line candidate: does `interior_layers`'s result carry the non-convergence as a value, and can all five consumers read it |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -7010,7 +7011,7 @@ window: Fei falls from 988 °C at 1 bar to 860 °C (1133 K) at 14 GPa, while Li 
 interval is a bracket and not a curve.* (i)'s 1348 K stays in the
 code as the recorded alternative; (ii)'s 1273 K stays as the in-window primary ceiling, printed
 alongside. The bracket becomes **(1023, 1423)** at Mars's 20.65 GPa, the verdict-flip band narrows to
-**(1423, 1473) K**, and Mars is `liquid` on both sides of the change.
+**(1423, 1473] K**, and Mars is `liquid` on both sides of the change.
 
 *(The paragraph below is the earlier draft's reasoning for (iii); it is kept because the decision above
 rests on the same principle — do not throw a printed number away — and because the revert path is this
@@ -7080,6 +7081,96 @@ one tuple.**
    pressure range, different sources, and the 25 GPa point's removal does not change what that function
    answers. *Contradicted by:* that function's output differing before and after on a grid above 21 GPa
    (bit-identity is the check).
+
+### C65 — two nodes emit `radius`, and the winner is decided by nothing anyone declared — **pre-registration draft, 2026-09-11**
+
+⚠ **Split out of C64 by the directing seat** because a key the whole engine reads is a different item
+from a verdict key nothing consumes. Draft only; no code written.
+
+#### The verdict line, in the form that can be contradicted
+
+**Not** *"the two values differ"* — they sometimes do and that is a symptom. The line is:
+⚠ **is one key emitted by two nodes allowed at all, and if it is, what decides the winner?** Today the
+answer is *nothing declared*: `state.results` fills in `graph.order`'s topological order, so
+`state.get("radius")` returns whichever node the sort happens to run first (`interior_layers`, #24) and
+`state.resolved` returns the last (`mass_radius_relation`, #26). **Move one node in `chain.yaml` and five
+consumers silently receive a different radius.** *Contradicted by:* a declared owner for the key, or a
+check that fails when two nodes claim one name.
+
+#### What the audit seat measured (2026-09-11, `audit_dupkeys.py`)
+
+| fact | number |
+|---|---|
+| bodies where **both** producers are applicable | **4 of 7** |
+| bodies where the two values **differ** | **2** — `mars` **−1.87 %**, `dante_fixture` **−12.51 %** |
+| shipped consumers of `radius` | **5** (`core_history`, `dynamo_rocky`, `radiogenic`, `tidal_heating` ×2) — **all receive `interior_layers`'s value** |
+| what reads the *other* value | `run.py`'s convergence comparison and `state.py`'s summary count — **nothing that ships** |
+
+⚠ **So today's shipped output is unaffected, and that is exactly what makes it dangerous**: the
+convergence verdict is computed on a value **no consumer reads**, and the 12.51 % disagreement on
+`dante_fixture` sits inside the loop that decides whether the chain converged.
+
+#### ⚠ What the two producers actually are — measured before writing the repair
+
+`mass_radius_relation` **does not solve for a radius of its own**: it calls the same solver
+(`engine/mass_radius.py@«structure = solve(mass_earth, composition=composition)»`) — and that call
+carries **mass and composition only**. No ice mass fraction, no gas mass fraction, no potential
+temperature, no porosity. `interior_layers` calls the same function with **everything the body
+declares**.
+
+⚠ **So the two numbers are not two models disagreeing; they are one solver run twice on different
+inputs.** That also explains the size of the gap where the audit seat measured it — `mars` **−1.87 %**,
+`dante_fixture` **−12.51 %** — the more a body declares, the further the screening call sits from the
+body's own solve.
+
+**This changes what the repair is about.** Before asking *who owns the name*, the question is *what each
+number is*: one is a **screening estimate from mass and composition**, the other is the **body's full
+structure**. The rename should say that (`radius_mr_screen` or similar), because a name that says
+"radius" twice is what let them be read as the same quantity.
+
+⚠ **And two declared edges are already false.** `chain.yaml` carries `mass_radius_relation → body_figure`
+and `→ tidal_heating`, both `via: radius`, yet all five shipping consumers receive `interior_layers`'s
+value (audit seat's measurement). Renaming does not create that problem — **it exposes it**. Where those
+edges should point is a declaration decision, not a code one, and it is listed for the owner rather than
+taken here.
+
+#### The repair, registered before it is written
+
+1. **`radius` gets a declared owner: `interior_layers`.** The owner is written where a reader looks —
+   in `chain.yaml` beside the node, not in prose.
+2. **`mass_radius_relation`'s output is renamed** (candidate: `radius_mr_scaling`) **or demoted to
+   comparison-only**. Its number stays available; what goes away is the collision on the name.
+3. **The owner declaration is data, and the rule that reads it is not this item.** ⚠ *Scoped after the
+   audit seat's objection and the directing seat's call (2026-09-11)*: making `state.resolved`'s **merge
+   rule** owner-aware would reach **all six** duplicated keys — including C64's, which prohibition 3
+   forbids this brief to touch. So the merge rule is **C68**, and it has **three states**: ① an owner is
+   declared → only the owner's value enters `resolved`; ② the claimants are **class-exclusive** → it
+   passes without an owner, but the contract check **measures «zero same-run co-occurrences» every run**
+   rather than carrying an allow-list; ③ neither → **FAIL**. C65's job is to **declare `radius`'s owner and rename the other output**, which is the
+   material C68's rule will read. *Contradicted by:* this brief changing what `resolved` does for any
+   key, `radius` included.
+4. **A check fails when one key is claimed by two contracts** — the cheap version, a document scan, is
+   C64's; this item consumes it rather than building a second one.
+
+**Registered expectations:** the seven bodies' shipped values are **bit-identical** (the five consumers
+already read the owner's value); the count of emitted phases and the convergence verdict may move, and
+**every such movement is named**; `dante_fixture`'s 12.51 % becomes a printed comparison rather than a
+hidden branch. *Contradicted by:* any shipped value moving, or a convergence verdict changing without a
+name.
+
+#### What this must not do
+
+1. ⚠ **It must not delete the second number.** Two ways of getting a radius disagreeing by 12.51 % on a
+   fixture is a finding; the repair removes the ambiguity, not the measurement. *The property:*
+   `mass_radius_relation`'s value still appears in the output under some name. *Contradicted by:* a run
+   whose output contains no radius from that node at all.
+2. ⚠ **It must not rename the key consumers read.** `radius` stays `radius` for the five consumers.
+   *The property:* all five lookups resolve to the same name before and after. *Contradicted by:* a
+   consumer reading a differently-named key, or a `Missing` raised where none was raised before.
+3. ⚠ **It must not fix C64's key** — different item, different owner decision. *The property:*
+   `entropy_history_verdict` is byte-identical across this brief's commit, and **the check already
+   exists**: `engine/test_core_entropy.py@«2: the history verdict must refuse by name»`.
+   *Contradicted by:* that key's value differing before and after.
 
 ### C61 — a step that was never tallied reads as a step that passed — **listed 2026-09-10, hardened the same day**
 

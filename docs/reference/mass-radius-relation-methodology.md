@@ -51,7 +51,9 @@ classification, each with a stated composition assumption.
 
 ## Contract — `mass_radius_relation`
 
-**Returns** — `radius` [R_earth] · `density` [g/cm3]
+**Returns** — `radius_mr_screen` [R_earth] · `density` [g/cm3] · `composition_preset_used` [—]
+
+⚠ **`radius_mr_screen` is a screening estimate, not this body's solution** (C65, 2026-09-11). This recipe reaches its radius by calling **the same structure integrator** with **mass and a composition preset only** — so it is *not* an independent check on `interior_layers`, it is that node's solver run without the body's declarations — no declared ice or gas mass fraction, no potential temperature, no porosity — so it answers *"what would a body of this mass and composition be"*, not *"what is this body"*. The number a consumer should read is **`interior_layers`'s `radius`**, which is the same solver run with everything the body declares. The two used to share the name `radius` and differed by **1.87 %** on Mars and **12.51 %** on the Dante fixture.
 **Needs** — `mass_earth` [M_earth] · `composition` [—]
 **Discriminating keys** — mass (≲ 8 M⊕ rocky / > 8 M⊕ volatile / ≥ 0.1 M_J degenerate),
 the rocky radius against the valley (1.5–1.8 R⊕), and composition.

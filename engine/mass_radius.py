@@ -93,6 +93,12 @@ def assign(mass_earth: float, composition: str = "earth_like") -> Result:
     # §3 의 레짐 선택보다 *먼저* 돈다고 못박는다. 이제 그 반지름은 거듭제곱 근사가
     # 아니라 층 적분의 결과다.
     comp_ko = COMPOSITION_KO[composition]
+    # ⚠ **이 호출은 질량과 조성만 넘긴다** (C65, 2026-09-11). 천체가 선언한 얼음질량분율·가스질량분율·
+    #   포텐셜 온도·공극률은 **안 들어간다** — 그래서 여기서 나오는 반지름은 «이 천체의 해» 가 아니라
+    #   **선별용 추정**이고, 출력 이름이 `radius_mr_screen` 인 이유가 그것이다. 예전 이름은 `radius` 였고
+    #   `interior_layers` 도 같은 이름을 내서, **같은 풀이를 다른 입력으로 두 번 부른 두 수**가 한 이름을
+    #   갖고 있었다 (화성 −1.87 % · dante_fixture −12.51 %). 소비처가 읽어야 하는 것은
+    #   `interior_layers` 의 `radius` 다.
     structure = solve(mass_earth, composition=composition)
     if not structure.applicable:
         return out_of_domain(
@@ -129,8 +135,8 @@ def assign(mass_earth: float, composition: str = "earth_like") -> Result:
                     "암석과 휘발성 외피 양쪽이 다 가능하다 — 하나로 고르지 않고 표시한다."),
             grade="judgment",
             inputs=inputs,
-            values={"radius": rocky_radius, "density": density},
-            units={"radius": "R_earth", "density": "g/cm3"},
+            values={"radius_mr_screen": rocky_radius, "density": density},
+            units={"radius_mr_screen": "R_earth", "density": "g/cm3"},
             refs=REFS,
             notes=("밸리 거주자다. 대기·표면 가정을 확정하기 전에 오너 판단이 필요하다.",
                    "휘발성 외피를 택하면 이 반지름은 하한이 된다."),
@@ -144,8 +150,8 @@ def assign(mass_earth: float, composition: str = "earth_like") -> Result:
                 "자기압축이 그 안에 들어 있다."),
         grade="calibrated",
         inputs=inputs,
-        values={"radius": rocky_radius, "density": density},
-        units={"radius": "R_earth", "density": "g/cm3"},
+        values={"radius_mr_screen": rocky_radius, "density": density},
+        units={"radius_mr_screen": "R_earth", "density": "g/cm3"},
         refs=REFS,
         notes=(structure.notes[0],),
     )
@@ -193,12 +199,32 @@ def density_gate(mass_earth: float, radius_earth: float) -> Result:
 
 
 # ── 그래프에 붙이기 ─────────────────────────────────────────────────────
+from dataclasses import replace  # noqa: E402
 from registry import recipe  # noqa: E402
 
 
 @recipe("mass_radius_relation")
 def _from_state(state):
-    return assign(
+    """⚠ **조성 프리셋의 기본값을 이름 붙여 내보낸다** (C65, 2026-09-11).
+
+    이 자리는 C45 (f) 의 열여섯 중 하나였다 — `state.get("composition_intent", "earth_like")` 로
+    **호출부 리터럴**이 계약의 빈칸을 메우고, 아무도 그것을 세지 않았다. 그리고 그 조용한 기본값이
+    **C59 가 하루를 쓴 수**의 출처다: 화성이 `core_mass_fraction` **0.24** 를 선언하는데 이 노드는
+    프리셋 `earth_like`(cmf **0.325**)로 풀어서, 두 반지름이 **1.87 %** 어긋났다.
+
+    ⚠ **여전히 프리셋을 쓰지만 조용하지 않다.** 선언이 있으면 선언을, 없으면 프리셋을 쓰되
+    `composition_preset_used` 를 값으로 내보내 **셀 수 있게** 한다 — 「산문은 grep 할 수 있지만 세는
+    것은 값이어야 한다」(C58 (a) 등록 2). 기본값 자체를 바꾸는 것은 이 브리프의 일이 아니다: 그것은
+    이 노드가 내는 수를 움직이고, C59 의 오너 대기 칸이다."""
+    declared = state.get_optional("composition_intent")
+    res = assign(
         mass_earth=state["mass_earth"],
-        composition=state.get("composition_intent", "earth_like"),
+        composition=declared or "earth_like",
+    )
+    if not res.applicable:
+        return res
+    return replace(
+        res,
+        values={**res.values, "composition_preset_used": 0 if declared else 1},
+        units={**res.units, "composition_preset_used": ""},
     )
