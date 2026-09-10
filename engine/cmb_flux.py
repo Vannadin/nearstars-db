@@ -36,7 +36,7 @@ import math
 from domain import Domain
 
 import mantle_flux as mf
-from eos import CORE_GAMMA_FALLBACK, MATERIALS, core_gamma
+from eos import MATERIALS, core_gamma
 from payload import Result, out_of_domain
 
 RECIPE = "internal-heat-luminosity-methodology"
@@ -69,8 +69,12 @@ K_CORE = 50.0                     # W/(m·K), ± 20 (eq. 25)
 K_CORE_RANGE = (30.0, 70.0)
 # ⚠ **세 번째 사본이었다** (C58, 180 B). 같은 1.5 가 `core_state`·`core_energy` 와 여기
 #   셋에 각각 적혀 있어서, 셋이 «구성상 일치» 했고 그래서 함께 틀려도 아무 검사가 울지
-#   않았다. 계산은 `eos.core_gamma` 한 함수가 하고, 이 이름은 인쇄용으로만 남는다.
-GAMMA = CORE_GAMMA_FALLBACK       # 인쇄용 이름 — 계산은 core_gamma 가 한다
+#   않았다. 계산은 `eos.core_gamma` 한 함수가 한다.
+# ⚠ **그리고 180 B 는 그 자리에 `GAMMA = CORE_GAMMA_FALLBACK` 을 «인쇄용 이름» 으로 남겼는데,
+#   아무것도 그것을 인쇄하지 않았다** — 감사 추적표가 «저장만, 읽는 곳 0» 으로 잡았다 (2026-09-11).
+#   죽은 별칭은 다음 사람에게 «여기 상수가 하나 산다» 고 거짓말하므로 지운다. 폴백 값을 이 모듈에서
+#   보고 싶으면 `eos.CORE_GAMMA_FALLBACK` 을 직접 부른다. `core_energy.py` 에 같은 모양의 쌍둥이가
+#   하나 더 있고, 그것은 C66 후보로 등재만 해 둔다 (이 브리프에서 손대는 코드는 이 한 줄이다).
 G_NEWTON = 6.674e-11
 M_EARTH_KG = 5.972e24
 R_EARTH_M = 6.371e6

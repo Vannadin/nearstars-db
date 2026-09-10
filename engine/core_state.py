@@ -193,27 +193,57 @@ _NOT_ASKED_WHY = {
 }
 
 
-def _gamma_values(material, p_cmb: float, t: float) -> dict:
+def _gamma_values(material, p_cmb: float, t: float, p_c: float | None = None) -> dict:
     """폴백을 **세고 나란히 적을 수 있게** 값으로 낸다 (C58, 브리프 180 B, 판정선 ②③).
 
     ⚠ 인쇄만으로는 «몇 천체가 폴백을 쓰는가» 를 셀 수 없다 — 산문은 grep 할 수 있지만 세는 것은
-    값이어야 한다. `core_gamma_fallback` 이 그 카운터이고, 나머지 둘이 recorded_disagreement 의
-    두 수(쓴 값·재질이 말한 값)다. 기준선: 로스터에서 `fe_prem` 을 쓰는 천체 수 — 오늘 일곱 중
-    다섯이 `core_state` 에 닿고 그중 `core_cmb_temperature` 를 **선언한 것은 지구·화성 둘**이다."""
+    값이어야 한다. `core_gamma_fallback` 이 그 카운터이고, 그 옆 둘이 두 수(쓴 값·재질이 말한 값)다.
+    기준선: 로스터에서 `fe_prem` 을 쓰는 천체 수 — 오늘 일곱 중 다섯이 `core_state` 에 닿고 그중
+    `core_cmb_temperature` 를 **선언한 것은 지구·화성 둘**이다.
+
+    ⚠ **`core_gamma_density_path` 가 180 C 의 부분 수리를 세는 칸이다** (결정 (A), 2026-09-11).
+    γ·c_p 는 구간 세트(액체)에서 오는데 밀도 경로는 상 자신의 상수(고체)에 남으므로, 한 재질이 두
+    판정을 갖는다. 그 둘이 다른 천체를 **세지 않으면** 부분 수리가 완전 수리로 읽힌다."""
     try:
-        used, verdict, own = core_gamma(material, p_cmb, t)
+        used, verdict, own, density_verdict = core_gamma(material, p_cmb, t)
+        # ⚠ **판정을 만든 γ 는 중심에서 물은 γ 다** (감사 지적, 2026-09-11). `_adiabat` 는
+        #   `core_gamma(material, p_pa, …)` 를 부르고 `_center_temperature` 가 그 `p_pa` 로
+        #   **중심압**을 넘긴다. 구간 세트가 생긴 뒤로 두 자리가 갈릴 수 있고, 화성이 실제로
+        #   갈렸다 — CMB 20.65 GPa 는 실측 구간이라 2.8718 을 배달하는데 중심 45.90 GPa 는 등급
+        #   구간이라 **폴백 1.5** 를 쓴다. 그래서 «폴백이 쓰였는데 카운터가 0» 이었다. 이 항목의
+        #   존재 이유가 «폴백이 조용해지지 않게» 인데 그 반대를 인쇄하고 있었다.
+        used_c, verdict_c = (None, None)
+        if p_c is not None:
+            used_c, verdict_c, _own_c, _dv_c = core_gamma(material, p_c, t)
     except CoreGammaMisuse:
         # ⚠ **핵 재질이 아닌 것이 핵 노드에 온다** — `test_core_state` 가 `silicate` 로 실제로
         #   그렇게 부른다. 그때 철의 γ 를 돌려주는 것도, 터지는 것도 답이 아니다: 값을 비우고
         #   그 사실을 `notes` 가 이름 대며 말한다.
-        return {"core_gamma_used": None, "core_gamma_material": None,
-                "core_gamma_fallback": None}
-    return {"core_gamma_used": used, "core_gamma_material": own,
-            "core_gamma_fallback": 1 if verdict not in ("ok", "composition-substitute") else 0}
+        return {"core_gamma_cmb": None, "core_gamma_material": None,
+                "core_gamma_fallback": None, "core_gamma_verdict": None,
+                "core_gamma_density_path": None, "core_gamma_partial_repair": None,
+                "core_gamma_center": None, "core_gamma_verdict_center": None,
+                "core_gamma_split": None}
+    green = ("ok", "composition-substitute")
+    fell_back = verdict not in green or (verdict_c is not None and verdict_c not in green)
+    return {"core_gamma_cmb": used, "core_gamma_material": own,
+            # ⚠ **둘 중 하나라도 폴백이면 1 이다.** 경계 온도의 γ 만 보고 세면 중심에서 쓰인
+            #   폴백을 놓친다 (감사 지적, 2026-09-11).
+            "core_gamma_fallback": 1 if fell_back else 0,
+            "core_gamma_verdict": verdict, "core_gamma_density_path": density_verdict,
+            "core_gamma_partial_repair": 1 if (verdict in green
+                                               and density_verdict not in green) else 0,
+            "core_gamma_center": used_c, "core_gamma_verdict_center": verdict_c,
+            # 갈림 자체를 값으로 낸다 — 숨기지 않고 센다.
+            "core_gamma_split": (None if verdict_c is None
+                                 else (1 if verdict_c != verdict else 0))}
 
 
-_GAMMA_UNITS = {"core_gamma_used": "dimensionless", "core_gamma_material": "dimensionless",
-                "core_gamma_fallback": ""}
+_GAMMA_UNITS = {"core_gamma_cmb": "dimensionless", "core_gamma_material": "dimensionless",
+                "core_gamma_fallback": "", "core_gamma_verdict": "",
+                "core_gamma_density_path": "", "core_gamma_partial_repair": "",
+                "core_gamma_center": "dimensionless", "core_gamma_verdict_center": "",
+                "core_gamma_split": ""}
 
 
 def _gamma_note(material, p_c: float, p_cmb: float, t_mantle: float,
@@ -225,14 +255,31 @@ def _gamma_note(material, p_c: float, p_cmb: float, t_mantle: float,
     **지금 화성 핵을 액체로 붙들고 있는 것이 그 상수**이고, 재질 자신의 γ 를 쓰면 중심이 언다.
     그 사실이 판정 옆에 인쇄되지 않으면 다음 사람은 판정만 읽는다."""
     try:
-        used, verdict, own = core_gamma(material, p_cmb, t_mantle)
+        used, verdict, own, density_verdict = core_gamma(material, p_cmb, t_mantle)
+        used_c, verdict_c, own_c, _dv_c = core_gamma(material, p_c, t_mantle)
     except CoreGammaMisuse as misuse:
         return (f"⚠ **핵 단열선의 γ 가 없다** — '{material.name}' 은 핵 재질이 아니다. "
                 f"{str(misuse).split('—')[0].strip()} 이 노드가 그 재질을 받은 것 자체가 "
                 "선언의 문제이고, 여기서 철의 수를 빌려 쓰지 않는다 (C58, 브리프 180 B).")
-    if verdict == "ok":
-        return (f"핵 단열선의 γ = {used:.4f} — 재질 '{material.name}' 이 (P, T) 에서 낸 값이고 "
-                f"열 매개변수의 출처 라벨이 이 적합과 맞다 (`{verdict}`).")
+    split = ""
+    if verdict_c != verdict:
+        # ⚠ **두 자리가 갈린다** (감사 지적, 2026-09-11). 인쇄가 경계의 γ 만 말하면, 중심에서
+        #   쓰인 폴백이 인쇄에서 사라지고 카운터도 0 이라고 말한다 — 이 항목이 막으려던 바로 그
+        #   모양이다. 그래서 **두 수와 두 판정을 함께** 적는다.
+        split = (f" ⚠ **경계와 중심이 갈린다** — 경계 {p_cmb / 1e9:.4f} GPa 에서 γ {used:.4f} "
+                 f"(`{verdict}`), 중심 {p_c / 1e9:.4f} GPa 에서 γ {used_c:.4f} (`{verdict_c}`, "
+                 f"재질 후보 {own_c:.4f}). **판정을 만든 단열선은 중심의 γ 를 쓴다**, 그리고 "
+                 "폴백 카운터는 둘 중 하나라도 폴백이면 1 이다.")
+    if verdict in ("ok", "composition-substitute"):
+        tail = split
+        if density_verdict != verdict:
+            # ⚠ **부분 수리를 여기서 말한다** (180 C 결정 (A)). γ 쪽이 초록인데 밀도 경로가 빨간
+            #   재질은 «고쳐졌다» 가 아니라 «한쪽만 고쳐졌다» 다.
+            tail += (f" ⚠ **밀도 경로는 아직 `{density_verdict}`** — 이 상의 열압력은 상 자신의 "
+                     "상수(고체 기원)를 계속 쓰고, 구간 세트는 γ·c_p 만 먹인다 (결정 (A), 오너 "
+                     "검토 대기). 되돌리기는 배선 한 줄이고 그때는 밀도 표를 사전등록한다.")
+        return (f"핵 단열선의 γ = {used:.4f} — 재질 '{material.name}' 이 경계의 (P, T) 에서 낸 "
+                f"값이고 열 매개변수의 출처 라벨은 `{verdict}` 다.{tail}")
     t_top = float(declared) if declared else t_mantle
     flip = gamma_flip(material, p_c, p_cmb, t_top) if declared else None
     dist = ""
@@ -240,10 +287,19 @@ def _gamma_note(material, p_c: float, p_cmb: float, t_mantle: float,
         dist = (f" 뒤집힘점 γ = {flip:.4f} 에서 선언값은 {(used / flip - 1) * 100:+.2f} %, "
                 f"재질값은 {(own / flip - 1) * 100:+.2f} % 다 — "
                 f"{'재질값을 쓰면 중심이 언다' if own < flip < used else '두 값이 같은 쪽에 있다'}.")
+    why = ""
+    if verdict == "graded-disagreement":
+        # ⚠ **왜 미배달인지 이름을 댄다** (2026-09-11): 등급 세트는 상·조성이 맞는데도 값을 내지
+        #   않는다. 그 이유가 인쇄되지 않으면 다음 사람은 «라벨이 맞는데 왜 폴백인가» 를 코드에서
+        #   찾아야 한다.
+        why = (" ⚠ **이 압력의 세트는 등급이 내려간 세트다** — 상·조성은 맞지만 대조가 가능한 "
+               "유일한 압력(Huang+ 2023 의 35 GPa 점)에서 γ 가 47 % 어긋나고, 그 세트로 지구의 "
+               "문헌 검사 셋이 빨갛게 됐다(Sinmyo 10.95 % · 내핵 경계 −27 % · k0_flip 소멸). "
+               "그래서 값은 «재질이 말한 값» 칸으로만 인쇄된다 (2026-09-11, 오너 검토 대기).")
     return (f"⚠ **핵 단열선의 γ 는 선언 상수 {used:.4f} 다** — 재질 '{material.name}' 의 열 "
             f"매개변수 출처 라벨이 이 적합과 어긋나(`{verdict}`) 그 재질의 γ({own:.4f})를 쓰지 "
             f"않았다. 상수는 h.c.p. **고체** 기원이고, 액체 열 세트가 채택될 때까지의 **이름 "
-            f"붙은 대체**다 (C58).{dist} 두 수를 나란히 적는 것이 이 줄의 목적이다.")
+            f"붙은 대체**다 (C58).{why}{split}{dist} 두 수를 나란히 적는 것이 이 줄의 목적이다.")
 
 
 def _adiabat(material, p_pa: float, p_cmb: float, t_cmb: float,
@@ -385,7 +441,7 @@ def solve(core_pressure: float,
         return Result(
             recipe=RECIPE, version=VERSION, regime="melt_bracket", reason=reason,
             grade=grade, inputs=inputs, refs=REFS,
-            values={**_gamma_values(material, p_cmb, cmb_temperature), "conductor_phase": phase,
+            values={**_gamma_values(material, p_cmb, cmb_temperature, p_c), "conductor_phase": phase,
                     "cmb_melt_temperature": None,
                     "center_melt_temperature": None,
                     "cmb_melt_bracket_low": band[0],
@@ -474,7 +530,7 @@ def solve(core_pressure: float,
         return Result(
             recipe=RECIPE, version=VERSION, regime="lower_bound", reason=reason,
             grade=grade, inputs=inputs, refs=REFS,
-            values={**_gamma_values(material, p_cmb, cmb_temperature), "conductor_phase": phase,
+            values={**_gamma_values(material, p_cmb, cmb_temperature, p_c), "conductor_phase": phase,
                     "cmb_melt_temperature": t_melt_cmb,
                     "center_melt_temperature": t_melt_c,
                     "core_cmb_temperature_used": cmb_temperature,
@@ -609,7 +665,7 @@ def solve(core_pressure: float,
         recipe=RECIPE, version=VERSION, regime="declared_core_adiabat", reason=reason,
         grade="judgment" if phase == CONDUCTOR_UNDECIDED else "analog",
         inputs=inputs, refs=REFS,
-        values={**_gamma_values(material, p_cmb, cmb_temperature), "conductor_phase": phase,
+        values={**_gamma_values(material, p_cmb, cmb_temperature, p_c), "conductor_phase": phase,
                 "cmb_melt_temperature": t_melt_cmb,
                 "center_melt_temperature": t_melt_c,
                 "core_cmb_temperature_used": t_cmb_core,

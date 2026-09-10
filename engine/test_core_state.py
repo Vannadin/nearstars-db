@@ -178,12 +178,19 @@ def main() -> int:
     print(f"  [{'PASS' if ok4 else 'FAIL'}] 다상 재료 k0_flip → {kf} (이름 붙인 계산 불가)")
     print(f"  [{'PASS' if ok else 'FAIL'}] 지구 중심 여유 {mv['center_margin']:+.1f} K "
           f"({mv['center_margin_fraction'] * 100:+.2f} %) → {mv['margin_condition']}")
-    ok = abs(mv["gamma_flip"] - 1.5145) < 0.002 and abs(mv["k0_flip"] - 194.0) < 1.0
+    # ⚠ **수 → None 도 이동이다** (C58 (a) 수정, 2026-09-11). 예전 판은 `None - 194.0` 으로
+    #   터졌고, 터지는 것은 이동을 **보고하지 않는 것**과 같다 — 기준선 시험은 그 자리에서
+    #   «무엇이 어디로 갔는지» 를 인쇄해야 한다.
+    _kf, _gf = mv["k0_flip"], mv["gamma_flip"]
+    ok = (_gf is not None and abs(_gf - 1.5145) < 0.002
+          and _kf is not None and abs(_kf - 194.0) < 1.0)
     if not ok:
-        fails.append(f"뒤집힘점이 움직였다 — γ {mv['gamma_flip']:.4f} (1.5145), "
-                     f"K₀ {mv['k0_flip']:.1f} GPa (194.0)")
-    print(f"  [{'PASS' if ok else 'FAIL'}] 중심 판정 뒤집힘: γ {mv['gamma_flip']:.4f} "
-          f"(선언 {GAMMA_CORE}) · K₀ {mv['k0_flip']:.1f} GPa (fe_prem {ph.k0 / 1e9:.0f})")
+        fails.append(f"뒤집힘점이 움직였다 — γ {_gf} (1.5145), K₀ {_kf} GPa (194.0)"
+                     + ("  ⚠ 수에서 None 으로 갔다" if _kf is None else ""))
+    print(f"  [{'PASS' if ok else 'FAIL'}] 중심 판정 뒤집힘: γ "
+          f"{'None' if _gf is None else format(_gf, '.4f')} (선언 {GAMMA_CORE}) · K₀ "
+          f"{'None ⚠ 수에서 사라졌다' if _kf is None else format(_kf, '.1f') + ' GPa'} "
+          f"(fe_prem {ph.k0 / 1e9:.0f})")
     ok = (b.values["margin_condition"] == cs.MARGIN_NOT_COMPUTABLE
           and b.values["gamma_flip"] is None and b.values["k0_flip"] is None)
     if not ok:

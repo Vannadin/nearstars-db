@@ -21,6 +21,7 @@ derivatives at two Mars-core anchors).
 from __future__ import annotations
 
 import sys
+from dataclasses import replace as _dc_replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -371,15 +372,18 @@ row(len(_CORE_NAMES) == 12
     and all(getattr(eos.MATERIALS[_n], "role", "") == "core" for _n in _CORE_NAMES),
     "`role='core'` 재질 12 — 철 둘 · 이원계 둘 · 상자 여덟. ⚠ **이름 목록이 아니라 속성이다**: "
     "`CORE_MATERIALS = (…)` 였을 때 178 C 의 이원계 둘이 빠져 «핵 재질이 아니다» 로 거절됐다")
-_g, _v, _own = eos.core_gamma(eos.MATERIALS["fe_prem"], 20.649 * eos.GPA, 2000.0)
-row(_g == eos.CORE_GAMMA_FALLBACK and _v == "phase-mismatch" and abs(_own - 0.3524) < 5e-4,
-    f"fe_prem: 판정 `{_v}` → 폴백 {_g} 을 쓰고 재질의 γ {_own:.4f} 를 **함께 들고 온다**. "
-    "⚠ 지금 화성 핵을 액체로 붙들고 있는 것이 그 폴백이다")
-_g2, _v2, _own2 = eos.core_gamma(eos.MATERIALS["fe_s_19wt_19gpa"], 25.0 * eos.GPA, 2000.0)
+_g, _v, _own, _dens = eos.core_gamma(eos.MATERIALS["fe_prem"], 20.649 * eos.GPA, 2000.0)
+row(_v == "composition-substitute" and _g == _own and abs(_own - 2.8718) < 5e-4
+    and _dens == "phase-mismatch",
+    f"fe_prem @ 화성 CMB: γ 쪽 판정 `{_v}` → **재질의 γ {_own:.4f} 를 배달**하고, 밀도 경로는 "
+    f"여전히 `{_dens}` 다. ⚠ **기준선 이동** (브리프 180 C): 이 자리는 180 B 에서 "
+    "`phase-mismatch` · 폴백 1.5 · 재질값 0.3524 였다 — 압력 분할이 19–35 GPa 에 Huang 의 "
+    "**실측 액체 세트**를 넣었고, 그 구간이 화성의 CMB 를 덮는다")
+_g2, _v2, _own2, _dens2 = eos.core_gamma(eos.MATERIALS["fe_s_19wt_19gpa"], 25.0 * eos.GPA, 2000.0)
 row(_v2 == "no-thermal-set" and _g2 == eos.CORE_GAMMA_FALLBACK,
     "⚠ 이원계는 열 상수가 없으니 `no-thermal-set` 이고 **폴백으로 간다** — 그 자리가 `ok` 였을 때는 "
     "**초록 판정으로 γ = 0** 을 배달했고, 그것은 §1b 가 금지한 모양이 한 층 위에서 재현된 것이다")
-_g3, _v3, _own3 = eos.core_gamma(eos.MATERIALS["fe_s19_o4_c5permil_19gpa"], 25.0 * eos.GPA, 2000.0)
+_g3, _v3, _own3, _dens3 = eos.core_gamma(eos.MATERIALS["fe_s19_o4_c5permil_19gpa"], 25.0 * eos.GPA, 2000.0)
 row(_v3 == "composition-substitute" and _g3 == _own3 > 0.0,
     f"상자 재질은 `{_v3}` — 상은 맞고 조성만 대체이므로 **자기 γ {_g3:.4f} 를 쓰되 등급이 내려간다**")
 for _bad in ("silicate", "h_he", "h2o"):
@@ -426,6 +430,56 @@ print("      인쇄하지 않고 비이상 용액 모델의 출력으로 낸다 
 print("      순수 Fe 쪽 앵커(Huang+ 2023 의 19 GPa/2100 K ρ 8083 · K_T 156)는 **다른 기준점**에")
 print("      놓여 있어 이 두 규칙(1 bar · 1900 K)과 직접 비교되지 않는다 — 비교하려면 둘 중 하나를")
 print("      옮겨야 하고 그 옮김이 곧 우리 산수다. 그래서 여기서도 수로 만들지 않는다.")
+
+print("\n⑭ 압력 분할 — 한 상 안의 구간별 열 세트 (C58 (a) ①, 브리프 180 C)")
+_fe = eos.MATERIALS["fe_prem"]
+_ph = _fe.phases[0]
+row(len(_ph.gamma_sets) == 2 and len(_fe.phases) == 1,
+    "⚠ **상은 하나, 세트는 둘이다** — 상 둘로 가르면 `k0_flip_gpa` 가 «상이 둘 이상이면 None» "
+    "이라 지구의 194.0 GPa 가 조용히 사라진다. 분할은 상 **안**에 있다")
+_a19, _cv19, _printed = eos.HUANG_FE_THERMAL["19GPa"]
+_p19, _t19, _rho19, _kt19 = eos.HUANG_FE_ANCHORS["19GPa"]
+_identity = _a19 * _kt19 * eos.GPA / (_rho19 * 1e3 * _cv19)
+row(abs(_identity / _printed - 1.0) < 0.01,
+    f"⚠ **인쇄된 γ 가 항등식으로 되돌아온다** — α·K_T/(ρ c_V) = {_identity:.4f} 대 Table 1 의 "
+    f"인쇄값 {_printed} ({(_identity / _printed - 1) * 100:+.1f} %). 새 상수를 만들지 않았다는 "
+    "뜻이고, 이 대조가 세트를 붙이는 근거다")
+_cells = {}
+for _tag, _pg in (("below", 10.0), ("measured", 20.649), ("graded", 50.0)):
+    _cells[_tag] = eos.core_gamma(_fe, _pg * eos.GPA, 2000.0)
+row(_cells["below"][1] == "phase-mismatch" and _cells["below"][0] == eos.CORE_GAMMA_FALLBACK,
+    "⚠ **19 GPa 아래에는 액체 세트가 없고, 외삽으로 덮지 않는다** — 상 자신의 (고체) 상수로 "
+    f"떨어져 판정이 `{_cells['below'][1]}` 이고 이름 붙은 폴백이 잡는다 (② 의 «저압은 비워 둔다»)")
+row(_cells["measured"][1] == "composition-substitute"
+    and _cells["measured"][0] == _cells["measured"][2],
+    f"19–35 GPa: 실측 세트가 **값을 배달**한다 (γ {_cells['measured'][0]:.4f})")
+row(_cells["graded"][1] == "graded-disagreement"
+    and _cells["graded"][0] == eos.CORE_GAMMA_FALLBACK
+    and _cells["graded"][2] != eos.CORE_GAMMA_FALLBACK,
+    f"⚠ 35 GPa 위: 등급 세트는 **값을 배달하지 않는다** — 폴백 {_cells['graded'][0]} 을 쓰고 그 "
+    f"세트의 값 {_cells['graded'][2]:.4f} 는 «재질이 말한 값» 칸으로만 나간다. 배달했을 때 "
+    "지구의 문헌 검사 셋이 빨갛게 됐다(Sinmyo 10.95 % · 내핵 경계 −27 % · k0_flip 소멸)")
+_jump = eos.gamma_set_boundary_jump(_fe, 2400.0)
+row(len(_jump) == 1 and abs(_jump[0]["jump_pct"] + 45.3) < 0.5
+    and abs(_jump[0]["jump_pct_sets"] + 49.0) < 0.5,
+    f"⚠ **경계의 불연속을 두 수로 인쇄한다** — 소비처가 보는 것은 γ {_jump[0]['below']:.4f} → "
+    f"{_jump[0]['above']:.4f} ({_jump[0]['jump_pct']:+.1f} %, 등급 세트가 미배달이라 위쪽이 폴백), "
+    f"두 **논문** 사이는 {_jump[0]['below_set']:.4f} → {_jump[0]['above_set']:.4f} "
+    f"({_jump[0]['jump_pct_sets']:+.1f} %). 매끄럽게 잇지 않는 이유는 그 이음이 **어느 논문에도 "
+    "없는 값**을 구간 사이에 만들기 때문이고, 두 수를 함께 두는 이유는 되돌리기의 크기가 "
+    "둘째 수이기 때문이다")
+try:
+    _ph.gruneisen(7000.0, 2000.0)
+    row(False, "세트를 든 상이 압력 없이 γ 를 내줬다")
+except eos.ThermalSetAmbiguous:
+    row(True, "⚠ 세트를 든 상에 **압력 없이** 물으면 이름 대며 거절한다 — 낮은 구간을 조용히 "
+              "돌려주면 «초록인데 다른 구간의 수» 가 배달된다")
+_bare = _dc_replace(_ph, gamma_sets=())
+row(all(_ph.density(_pg * eos.GPA, 3000.0, 1600.0)
+        == _bare.density(_pg * eos.GPA, 3000.0, 1600.0)
+        for _pg in (5.0, 20.0, 34.9, 35.0, 60.0, 135.0, 360.0)),
+    "⚠ **밀도 경로는 세트를 읽지 않는다** (결정 (A)) — 세트를 지운 사본과 밀도가 비트까지 같다. "
+    "부분 수리라는 뜻이고, 그 사실은 `thermal_label` 의 둘째 칸이 매 실행 말한다")
 
 print("\n" + ("모두 통과" if not fails else f"{fails}건 실패"))
 sys.exit(1 if fails else 0)

@@ -111,7 +111,9 @@ core heating H = 1.5 pW/kg, which was the nominal when they were measured; owner
 | **C61** | a step that was never tallied reads as a step that passed | **built 2026-09-10 (184 B) — the tally is part of the gate's own rc** | The third of the 169 E / C60 family: *"did not run" and "passed" were not distinguishable to the gate's own count.* gate229 printed **`[STEP]` 71 · `[TIME]` 19 · rc=0** with **52 steps never judged**, because the pool's spool directory was deleted mid-run and the children had nowhere to write their status. Hardened four ways: the spool is probed for existence **and writability** before each launch and a failure **demotes that step to serial** rather than skipping it; launches are counted in the parent's memory against completions read from the children's **exit-status files**, ⚠ *two independent sources, because a count taken twice from the same log cannot catch the log itself going missing*; `pool_incomplete` names every launched step and sets `fail=1`; and children exit quietly when the spool is gone so the real sentence is not buried. Proved by injection in an isolated harness, which is also where the `«$var»` brace defect and the attribution-losing `step_flush` guard were found |
 | **C62** | `tidal_response` does not exist, and the two bodies that need k₂ declare it fitted to our own output | **pre-registered 2026-09-10 before the build (C62 (a)); nothing built** | P28 moved into this file verbatim (parallel seat, sha256 `92b95059014d03db…`, 9211 B). A layered viscoelastic propagator (Beuthe 2015 eqs 13–18) with three rheologies (Bagheri+ 2022 §2.3–2.7) emitted as a **band**, k₂·h₂·Q. ⚠ **The engine has no shear modulus anywhere today**, so μ is a gap the node names rather than a quantity it fills — C58 (a)'s shape, one layer out. ⚠ **A liquid core is the membrane limit and says so** (Beuthe eq. 27); Saito 1974's general liquid-layer condition is paywalled and **not held**, and every output carries that label. Owner-pending: the liquid-layer treatment · μ declared per layer or printed per material · whether a body ever elects a rheology · whether this node's k₂/Q ever replaces the **declared** value C39 unified. **The standing default for the first build is emitter-only**, so C39's seam is kept and no shipped τ moves |
 | **C63** | the cold φ(P) slot has no law over our own pressure range | **closed 2026-09-10 as a named refusal — no code, no constant, no board changed** | The seven compaction papers held on 09-10 do not print a cold, unsintered φ(P) law over 1–764 MPa (P29, sha256 `8884e29ae2832870…`, 16563 B). Four saturate **at or below 1 MPa** — where our rock law begins; two are φ(P, T, t) rate laws needing a thermal history; one is shock. ⚠ **And five of the seven close a 100–170 km body's pores by ²⁶Al heating above ≈ 700 K**, while our three `voids_expected` indicators fire on mass, grain-fracture pressure and a declared tidal bool — *"tidal" appears 0 times in all seven*. So the indicator set is indexed on a different cause than the literature uses at this body scale. Dante's centre is **317 MPa**, above every cold law held and above the 150 MPa lab range of the law we ship. Owner-pending (a)–(e), none urgent |
-| **C64** | one value key, two producers — and the engine's two read paths answer differently | **listed 2026-09-11; widened by measurement from one key to six** | Found while writing C15 (a). `entropy_history_verdict` is a **literal refusal** in `core_entropy` (*"needs C20"* — C20 was built 2026-09-04) and a **computed verdict** in `core_history`, and `engine/test_core_entropy.py@«2: the history verdict must refuse by name»` pins the literal. ⚠ **The family signature is one sentence: there was a check, and the check agreed.** The contract layer says it too — both `Returns` lists carry the key and `check_contracts` compares each node only against **its own**, so nothing counts a key claimed twice; the contract prose even asserts the literal, so a repair moves **three** places and each needs a name. Audit-seat census: **168** contract `Returns` keys, **six** claimed by two nodes (`dipole_moment`·`b_eq`·`b_pol` — the dynamo pair, expected harmless by class exclusivity but **counted, not argued**; `entropy_history_verdict`; `has_inner_core_solved`; `radius`). ⚠ **Direction must be read from `graph.order`'s execution order, not `chain.yaml`'s declaration order** — the two disagree, and for `radius` they disagree *oppositely*: `interior_layers` runs first, so `state.get` returns it and `resolved` (emit, evidence, board comparison) returns `mass_radius_relation`. **`radius` leaves this item as C65 if the run-side count says it is live.** Open: how many roster bodies have both claimants applicable in the same run |
+| **C64** | one value key, two producers — and the engine's two read paths answer differently | **listed 2026-09-11; widened by measurement from one key to six** | Found while writing C15 (a). `entropy_history_verdict` is a **literal refusal** in `core_entropy` (*"needs C20"* — C20 was built 2026-09-04) and a **computed verdict** in `core_history`, and `engine/test_core_entropy.py@«2: the history verdict must refuse by name»` pins the literal. ⚠ **The family signature is one sentence: there was a check, and the check agreed.** The contract layer says it too — both `Returns` lists carry the key and `check_contracts` compares each node only against **its own**, so nothing counts a key claimed twice; the contract prose even asserts the literal, so a repair moves **three** places and each needs a name. Audit-seat census: **168** contract `Returns` keys, **six** claimed by two nodes (`dipole_moment`·`b_eq`·`b_pol` — the dynamo pair, expected harmless by class exclusivity but **counted, not argued**; `entropy_history_verdict`; `has_inner_core_solved`; `radius`). ⚠ **Direction must be read from `graph.order`'s execution order, not `chain.yaml`'s declaration order** — the two disagree, and for `radius` they disagree *oppositely*: `interior_layers` runs first, so `state.get` returns it and `resolved` returns `mass_radius_relation`. ⚠ *An earlier draft of this row said `resolved` is what emit, the evidence dump and the board comparison read. Measured (audit seat, 2026-09-11): `resolved` is read by `run.py`'s convergence comparison and `state.py`'s summary count — **and by nothing that ships**. So the condition for «latent» is countable: **the number of shipping consumers that receive the losing value is zero.*** **`radius` leaves this item as C65 if the run-side count says it is live.** **Measured 2026-09-11 (audit seat, `audit_dupkeys.py`)**: the dynamo trio is **closed at zero** — no roster body has both ladders applicable, so the class exclusivity holds by measurement rather than by argument; `has_inner_core_solved` is **a duplicated computation whose two values agree**, so it is untidiness rather than a defect; `entropy_history_verdict` **disagrees on earth and mars**, which confirms this item; and `radius` disagrees on **two of the four bodies where both producers run** (`mars` −1.87 %, `dante_fixture` −12.51 %) — that one leaves as **C65** |
+| **C66** | constants that are stored and read by nothing | **listed 2026-09-11 — candidate, disposal is per-item** | Audit value-trace over 63 constants: **12 are stored only** — 7 read by nothing at all, 5 read only by a test — and **1 was cited but not implemented** (Dorogokupets, filled by 180 C). ⚠ **A stored constant that nothing reads tells the next reader «a decision lives here» when none does**, and that is C45 (f)'s shape without a call site. The seven: `MORI_FES_P_MEASURED_MAX` · `IRON_FES_WINDOW_HIGH_POINTS` · `XU_FES_T_REF_K` · `ALPHA_C` · `NH3_REF` · `FE_S_BAND_WT` and the remainder after tidying, plus `core_energy.py`'s twin of the dead `GAMMA` alias 180 C removed from `cmb_flux.py`. ⚠ **Disposal is not a sweep**: brief 185 is about to *read* `IRON_FES_WINDOW_HIGH_POINTS`, so each name is decided by the brief that owns its physics — deleting them together would delete the ones that are early rather than dead |
+| **C67** | the core adiabat carries one exponent where the material now has two | **listed 2026-09-11 — candidate, outside 180 C** | `core_state._adiabat` raises the centre temperature as **T ∝ ρ^γ with a single γ**, asked at one pressure. That was exact while γ was a constant. ⚠ **180 C made γ a function of pressure inside one core**: Mars's γ is **2.8718** at its CMB and the fallback **1.5** at its centre, so the closed form integrates a γ the material does not have over most of the interval. The structure integrator already does this correctly — it asks per step — so the repair is to make the declared branch integrate γ(P) the same way, or to state the exponent it uses and why. **Not built here**: it moves `core_temperature` and `center_margin` on every body with a core, which is a verdict-moving change of its own |
 
 ⚠ **C23 does not say "closed", and the wording is deliberate.** The existence gate is built and judges;
 the **field strength is not available and this item cannot produce it** — Tang's 37 pages contain
@@ -6280,7 +6282,7 @@ name is a decision line, not a detail.
 | `engine/core_energy.py@«ALPHA_C = 1.35e-5»` | core thermal expansion | ✅ from `Phase.alpha_k / k_t` |
 | `engine/core_energy.py@«L_H = 750.0e3»` | latent heat of inner-core freezing | ❌ no printed per-material value → stays a declaration |
 | `engine/core_state.py@«GAMMA_CORE = 1.5 는 h.c.p. **고체** 의»` | the core adiabat's γ | ✅ derivable from `Phase` constants — and the comment itself says it is the **solid** value |
-| `engine/cmb_flux.py@«GAMMA = CORE_GAMMA_FALLBACK       # 인쇄용 이름 — 계산은 core_gamma 가 한다»` | was **a second copy** of the literal; 180 B left the name for printing and moved the calculation into the one function | ✅ wired |
+| `engine/cmb_flux.py@«아무것도 그것을 인쇄하지 않았다** — 감사 추적표가 «저장만, 읽는 곳 0» 으로 잡았다»` | was **a second copy** of the literal; 180 B left the name for printing and moved the calculation into the one function | ✅ wired ⚠ **The line this row used to cite no longer exists** — 180 C removed the alias after the audit value-trace found that «the name for printing» printed nowhere (C66). The anchor now points at the comment recording the removal, so the history is here rather than in a dead pointer. |
 | `engine/core_energy.py@«GAMMA = cs.GAMMA_CORE»` | a third reference | — |
 | `engine/core_state.py@«GAMMA_LIQUID_RANGE = (1.51, 1.52)»` | the **liquid** γ band | ✅ — ⚠ a different value from the 1.5 above, and which one a consumer reads varies |
 | `engine/core_state.py@«GAMMA_SPAN = (min(GAMMA_CORE, GAMMA_LIQUID_RANGE[0]), GAMMA_LIQUID_RANGE[1])»` | **mixes those two into one span** | ⚠ one solid value and one liquid band inside a single interval |
@@ -6540,6 +6542,173 @@ it as an empty cell.*
 `conductor_phase` changes without appearing in the named list; a fingerprint that does **not** move
 (which would mean the integrator did not in fact join).
 
+### C58 (b) 2026-09-11 — 180 C built: the liquid set arrives as a pressure split, and it reaches exactly the interval it was measured in
+
+Built against **C58 (a) as amended 2026-09-11**. ⚠ **Decision lines: ① built with one change of effect
+(below) · ② built as «nothing» by decision · ⓐ built with one measured exception · ⓓ is the table at the
+end.**
+
+#### ① The split lives inside one phase, and the reason is a number
+
+`fe_prem`'s single phase now carries **two `ThermalSet`s for γ and c_p** — `[19, 35)` GPa from Huang+
+2023 Table 1's measured liquid Fe, and `[35, ∞)` from Dorogokupets+ 2017's liquid equations
+(`engine/fe_liquid.py`, new). **The density path does not read them** (decision (A)): the phase keeps its
+PREM adiabat reference, so no density, radius or moment of inertia moves. That asymmetry is a **partial
+repair** and `Phase.thermal_label` now returns **two cells** — γ side and density side — which
+`core_state` emits as `core_gamma_verdict` and `core_gamma_density_path`, with
+`core_gamma_partial_repair` counting the bodies where they disagree.
+
+⚠ **It is not two phases, and the cost of getting that wrong is a number**:
+`engine/core_state.py@«if len(material.phases) != 1:»` makes `k0_flip_gpa` answer `None` for a
+multi-phase material, so a two-phase split would have turned Earth's flip point **194.005586674557 GPa**
+into a silent refusal.
+
+**The identity closes on the paper's own printed value** — α·K_T/(ρ c_V) at the 19 GPa anchor gives
+**2.7309** against Table 1's printed γ **2.74** (−0.3 %). *That is the check that licensed attaching the
+set: no new constant was invented, the file's own identity reproduces what Huang printed.*
+
+#### ② The low-pressure Fe–S slot: nothing built, by decision
+
+Owner decision (c): leave it empty and wait for Balog+ 2003. **Lines of code changed: zero.** The refusal
+below 19 GPa keeps naming itself, and — measured — that is also where `fe_prem` falls back to its own
+solid constants, so **no extrapolation covers the gap in either material**.
+
+#### ⚠ The effect of the owner's (iv) is narrower than (iv) reads, and this is the difference
+
+Owner decision ① chose candidate (iv): *the measured set below 35 GPa, Dorogokupets above it with a
+grade label.* Built and measured, the graded set **turned three of Earth's registered literature checks
+red**: T_c 4559 K against Sinmyo+ 2019's 5120 ± 390 K (**10.95 %**), inner-core boundary **240 GPa against
+PREM's 328.85 (−27.0 %)**, and ⚠ **`k0_flip` 194.0056 GPa → `None`** — the cell C58 (a) had pre-listed as
+*expected unchanged*, contradicted within the hour by the rule the same amendment added.
+
+**Why:** evaluated at Huang's **own** 35 GPa point, Dorogokupets's γ is **1.3987** against Huang's printed
+**2.66** (**−47.4 %**) while density agrees to 0.5 %. ⚠ *The set is 47 % off at the only pressure where a
+comparison exists, and Earth's entire core lies above that pressure.*
+
+**So the directing seat decided (2), owner review pending:** `graded-disagreement` **does not deliver a
+value**. It is printed as the candidate in `core_gamma_material`, counted by
+`core_gamma_fallback`, and `_gamma_note` prints **why** it did not deliver. The effect of ① is therefore
+**«repair inside the measured interval, candidate outside it»** rather than (iv) as written.
+⚠ **Reverting is one line** — the verdict tuple in `eos.core_gamma`; and then the three Earth cells above
+are what ⓓ must carry.
+
+**The discontinuity at the boundary is printed as two numbers** (`eos.gamma_set_boundary_jump`): what a
+consumer sees, γ **2.7402 → 1.5000 (−45.3 %)**, and what the two papers say, **2.7402 → 1.3987
+(−49.0 %)**. *The second is the size of the revert.* Nothing smooths the join, because smoothing invents a
+value that appears in neither paper.
+
+#### ⓐ Four sites — and one exception that only measuring found
+
+The structure integrator joined: `interior._core_or_own_gamma` routes a `role='core'` material through
+`eos.core_gamma`, passing **its own local ρ** (γ ∝ 1/ρ, so re-measuring the cold density there would give
+two γ at one point).
+
+⚠ **The exception: a material with no thermal set keeps the integrator's own rule.** The first cut sent
+`no-thermal-set` materials to the fallback 1.5, and that **broke the integrator's first sentence — «do not
+invent a slope».** The two binary Fe–S materials have no printed c_p, so they had been **isothermal**
+inside the integrator (γ = 0); the fallback turned them adiabatic and **moved two of C55 stage-2's shoot
+verdicts.** The tests caught it. `no-thermal-set` is exactly the name that distinguishes «a set exists but
+mismatches this fit» (fallback) from «there is no set» (invent nothing), and it now decides which.
+
+#### A performance defect made and fixed inside this brief
+
+`fe_liquid.volume_at`'s first version inverted P(V) with **200 bisection steps**, and γ is asked once per
+integration step — one `core_state` run went past **two minutes**. *The answer was right and unusable.*
+Newton with a bisection safety net: **2000 evaluations in 0.04 s**, values identical to the last printed
+digit (γ 1.3987 · ρ 8598.9 at 35 GPa/2400 K).
+
+#### Housekeeping folded in
+
+- `cmb_flux.py`'s `GAMMA = CORE_GAMMA_FALLBACK` was a **dead alias** 180 B left as *"a name for
+  printing"* that nothing printed (audit value-trace, 2026-09-11). Removed. Its twin in
+  `core_energy.py` is **listed as C66**, not touched.
+- Gate pool: `GATE_POOL` default **8**. Measured on one commit, three ways: **serial 34.5–44.7 min ·
+  pool 2 20–22 min · pool 8 12 min 8 s** (gate234, 71 steps, PASS 682, peak RSS 57 MB). The floor is
+  `test_giant`; quiet mode is `GATE_POOL=2` in the environment.
+
+#### ⓓ The table — what moved, on which body, and by which mechanism
+
+Measured by running the whole chain on all seven body files in this tree and in a scratch clone of
+`fbfe6b2a` (the commit 180 C is built on), and diffing eleven keys. ⚠ **Three of seven bodies move, and
+the two mechanisms are different** — one is the repair, the other is the unification.
+
+| body | key | before (`fbfe6b2a`) | after | mechanism |
+|---|---|---|---|---|
+| **mars** | `core_gamma_used` | 1.5 | **2.8718195876825363** | ⚠ **the repair** — its CMB (20.649 GPa) is inside Huang's measured 19–35 GPa |
+| mars | `core_gamma_fallback` | 1 | **0** | the counter says the fallback is no longer used there |
+| mars | `core_gamma_material` | 0.3524492201745824 | 2.8718195876825363 | the material's own value is now the liquid set's |
+| mars | `core_temperature` | 1960.9323053004 | **2225.6515648290306** | +264.7 K |
+| mars | `entropy_production` | −8401236.288184777 | **−37726881.15867804** | ⚠ **4.49×** more negative — C15's φ reads this γ |
+| mars | `cmb_temperature` | 1909.9501164449248 | 1909.950123378215 | +6.9e-6 K (K_S now asks the set) |
+| mars | `q_cmb` | 365535766.62836087 | 365535733.32694596 | −9.1e-8 relative |
+| **earth** | `core_temperature` | 2671.0924780458163 | **3516.979769959853** | ⚠ **+845.9 K — the unification**, not the repair |
+| earth | `core_gamma_material` | 0.2734673094085167 | 1.1266901789032773 | the candidate column now shows Dorogokupets |
+| earth | `cmb_temperature` | 2526.2085475146446 | 2526.2086058586447 | +5.8e-5 K |
+| earth | `q_cmb` | 2749973604443.4155 | 2749973698461.779 | +3.4e-8 relative |
+| **pandora** | `core_temperature` | 2474.3298155983525 | **3123.266265522309** | +648.9 K, same mechanism as Earth |
+| pandora | `center_margin` | −1772.3694996941963 | **−1123.43304977024** | +648.9 K — ⚠ **a verdict margin moved by 649 K** |
+| pandora | `core_gamma_material` | 0.2944463614060906 | 1.2125984256125824 | candidate column |
+| **alpha_centauri_a_b · dante_fixture · luhman_16_a · luhman_16_b** | — | — | — | **no key moved** |
+
+⚠ **Earth's and Pandora's movement is the integrator taking the named fallback where it used to take an
+unlabelled red value.** Before this brief the structure integrator asked the material directly and got
+**0.2735** (Earth) and **0.2944** (Pandora) — the *solid* hcp constants on a liquid fit, the very mismatch
+C58 exists to name — and it used them without a label or a count. Now `role='core'` materials go through
+`core_gamma`, the verdict is red, and the **declared 1.5** arrives instead. *That is a 846 K and 649 K
+movement produced by labelling, not by new physics*, and it is what 180 B deferred when it held the
+integrator back.
+
+⚠ **Earth's core temperature moved toward its own declaration** (2671 → 3517 K against the declared
+3760 K), and this is **not** read as a verification: the lower-bound branch is not the declared branch,
+and no literature number was consulted in producing it.
+
+⚠ **Mars's φ moved 4.49×** and stays negative, so C15's band still straddles zero and the item's verdict
+is unchanged — but the number a future consumer would read changed by a factor of four and a half, from
+one γ label to another.
+
+⚠ **`conductor_phase` moved on no body**, and neither did `center_margin` on Earth or Mars — the declared
+branch asks γ at the **centre** pressure, and the centres that reach this node are all above 35 GPa where
+the graded set does not deliver. **So the shipped liquid/solid verdicts are all unchanged**, which is why
+this brief could land with the owner away.
+
+⚠ *And the reason has to be stated per body, because one body breaks the short version.* Measured central
+pressures: earth **358.4580952308751** · pandora **237.64826743155024** · mars **45.90016599537648** ·
+**dante_fixture 0.31717986058738007 GPa** · alpha_centauri_a_b · luhman_16_a · luhman_16_b **None**. So
+"every roster centre is above 35 GPa" is **false for `dante_fixture`**; that body is unchanged because
+`core_state` is out of domain for it, not because of its pressure (audit seat, 2026-09-11). *The day a
+low-pressure core reaches this node, the sentence as first written would not have protected it.*
+
+#### ⚠ The defect the audit found in the printing, and what it says about the counter
+
+`core_state` asks for γ **twice at different pressures** and only printed one of them:
+`_gamma_values` asked at **p_cmb**, while `_adiabat` — through `_center_temperature` — asks at **p_c**.
+Before the pressure split those were always the same verdict, so nothing showed. **Mars split them**: its
+CMB 20.6486 GPa is inside the measured interval (γ **2.8718**, `composition-substitute`) while its centre
+45.9002 GPa is in the graded interval (γ **1.5**, `graded-disagreement`, candidate 1.3587).
+
+⚠ **So the fallback was used and the counter said 0, and the note's first line said the material's own
+value was used.** That is the exact failure this whole item exists to prevent — *a fallback going quiet* —
+reproduced inside the brief that was built to prevent it, on the one body the brief was for.
+
+Repaired by **naming the split rather than hiding it**: `core_state` now emits `core_gamma_cmb` and
+`core_gamma_center` with a verdict label each, `core_gamma_split` is **1** when the two verdicts differ,
+and `core_gamma_fallback` is **1 if either site fell back**. The note prints both numbers, both verdicts,
+and the sentence *"the adiabat that made the verdict used the centre's γ"*. ⚠ *The key `core_gamma_used`
+from 180 B is renamed `core_gamma_cmb` — one commit old, and the name was wrong the moment two sites could
+disagree.*
+
+**Registered against C58 (a) ⓓ:** the pre-listed cells hold — Earth's `k0_flip` is
+**194.005586674557** at the declared horn and **`None`** at the structure's own T_cmb, and **both are
+unchanged before and after**; the thermal-history fingerprint moves, as registered, because the
+integrator joined.
+
+⚠ **And the same rounding trap appeared again in the same cell.** Feeding `k0_flip_gpa` the pressures
+**as printed** (`358.458095` / `135.275636` GPa) gives **194.0055846744**, not 194.005586674557 — a
+difference in the seventh digit, from re-typing a console line instead of passing the solve's own floats.
+*That is yesterday's 0.8722/0.8723 in a different cell, one day later, in a number this brief
+pre-registered.* Both trees were measured with the same rounded literals, so the «unchanged» verdict
+stands; the full-precision figure is the one printed here.
+
 ### C61 — a step that was never tallied reads as a step that passed — **listed 2026-09-10, hardened the same day**
 
 ⚠ **The third of a family.** 169 E was *a body the full lane never ran* (Mars's shipped-value comparison
@@ -6576,6 +6745,14 @@ a harness whose green depends on nobody tidying is not a harness.)*
 
 ⚠ **The rule this bought, beyond the code**: gate scratch and spool directories are cleaned **only after
 `GATE END`**, and **never for a live pid** — by any seat.
+
+**184's own verdict line, measured on one commit three ways (2026-09-11).** The pool exists to buy
+wall-clock, so the number is the verdict: **serial 34.5–44.7 min · pool 2 20–22 min · pool 8 **12 min
+8 s**** (gate234 on `fbfe6b2a`, full lane, 71 steps launched and 71 tallied, PASS 682, peak RSS 57 MB).
+⚠ **The floor is one step**: `test_giant` alone is 311 s at pool 8, so no pool size takes the full lane
+below ~6 min without splitting that step. The default is now **8**, and quiet mode is `GATE_POOL=2` in
+the environment — *the three values pass through the same code path, and the pool size is the only thing
+that differs between them.*
 
 ### C62 (a) 2026-09-10 — `tidal_response`, a layered viscoelastic Love-number node (k₂, h₂, Q as a rheology band) — pre-registered before the build
 

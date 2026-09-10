@@ -37,7 +37,8 @@ import water2_table
 import steam_if97
 from eos import (EARTH_POTENTIAL_T, IAPWS_VII_END, ICE_VII_TO_X,
                  ICE_VII_X_T_MAX, MATERIALS, REINHARDT_P_MAX, SILICATE_PREM_TO_PV,
-                 Mixture, PhaseGap, mix, water_phase_name, water_vii1_vii2_boundary)
+                 Mixture, PhaseGap, core_gamma, mix, water_phase_name,
+                 water_vii1_vii2_boundary)
 from payload import Result, out_of_domain
 from porosity import (MASS_COMPACT_KG, PHI0_NOMINAL, P_GRAIN_FRACTURE, P_LAB_MAX,
                       malamud_ice_porosity, malamud_rock_porosity,
@@ -404,6 +405,28 @@ def _cold_phases(cmf, imf, core_material, gmf, envelope_z, envelope_z_rock_fract
     return out
 
 
+def _core_or_own_gamma(mat, p: float, rho: float, t: float, t_pot: float) -> float:
+    """핵 재질의 γ 는 **`eos.core_gamma` 를 지난다** — 적분기가 네 번째 소비처다 (C58, 브리프 180 C).
+
+    180 B 는 소비처 셋(`core_state`·`core_energy`·`cmb_flux`)만 그 함수에 붙이고 적분기를 자기
+    경로에 남겼다. 이유는 시간이었다 — 폴백으로 돌리면 핵의 온도 상승이 +51 K 에서 약 +237 K 로
+    움직여 선언 없는 다섯 천체의 판정이 흔들리는데, 오너가 없었다. ① 이 결정된 지금은 라벨이
+    구간 안에서 초록이므로 **재질 자신의 γ** 가 들어오고, 그 이동은 이 브리프가 이름 대는 표다.
+
+    ⚠ **핵이 아닌 재질은 한 글자도 지나지 않는다** — `role` 이 `core` 가 아니면 예전 호출 그대로다.
+    ⚠ 그리고 **이 자리의 ρ 를 넘긴다**: γ ∝ 1/ρ 이라 여기서 냉각 밀도를 다시 재면 같은 지점에서
+    두 γ 가 생긴다."""
+    if getattr(mat, "role", "") == "core":
+        used, verdict, own, _dens = core_gamma(mat, p, t, t_pot, rho)
+        # ⚠ **열 세트가 아예 없는 재질에는 폴백을 쓰지 않는다** (브리프 180 C, 실측으로 걸린 자리).
+        #   폴백 1.5 는 «세트는 있는데 이 적합과 어긋난다» 를 메우는 수다. 세트가 **없는** 재질
+        #   (이원계 Fe–S: 인쇄된 c_p 가 없다)에 그것을 쓰면 이 함수의 첫 규칙 — «기울기를
+        #   지어내지 않는다» — 를 깬다. 실제로 깼다: 첫 판이 이원계 핵을 등온에서 단열로 바꿔
+        #   C55 2단계의 사격 판정 둘을 움직였다. `no-thermal-set` 이 그 구분을 위해 있는 이름이다.
+        return own if verdict == "no-thermal-set" else used
+    return mat.gruneisen(p, rho, t, t_pot)
+
+
 def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     """단열 기울기 dT/dP = γ T / K_S [K/Pa].
 
@@ -421,7 +444,7 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     own = getattr(mat, "dtdp_adiabat", None)
     if own is not None:
         return own(p, t, t_pot)
-    gamma = mat.gruneisen(p, rho, t, t_pot)
+    gamma = _core_or_own_gamma(mat, p, rho, t, t_pot)
     if gamma <= 0.0 or t <= 0.0:
         return 0.0
     h = p * 1e-4
@@ -444,7 +467,7 @@ def _adiabatic_dtdp(mat, p: float, rho: float, t: float, t_pot: float) -> float:
     k_t = rho * (p_hi - p_lo) / (d_hi - d_lo)
     # αK_T·γ·T = K_T·αγT 이므로 K_S 가 새 상수 없이 닫힌다.
     ph = mat.phase_at(p) if hasattr(mat, "phase_at") else None
-    k_s = k_t + (ph.dpdt_v(t, t_pot) * gamma * t if ph is not None else 0.0)
+    k_s = k_t + (ph.dpdt_v(t, t_pot, p) * gamma * t if ph is not None else 0.0)
     return gamma * t / max(k_s, 1.0)
 
 

@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import math
 
+import fe_liquid
 import hhe_table
 import ice_melt_table
 import water_hot
@@ -91,6 +92,54 @@ MELT_CURVE_JOIN = {
 FIT_STATES = ("solid", "liquid")
 
 
+class ThermalSetAmbiguous(Exception):
+    """구간별 열 세트를 든 상에 **압력 없이** 열 값을 물었다 (C58, 브리프 180 C).
+
+    구간이 둘이면 «어느 구간의 값인가» 가 압력으로만 정해진다. 압력을 안 받았을 때 낮은 쪽을
+    조용히 돌려주면 «초록인데 다른 구간의 수» 가 배달된다 — 180 B 가 `no-thermal-set` 으로
+    막은 것과 같은 모양이라, 여기서는 이름을 대고 거절한다."""
+
+
+@dataclass(frozen=True)
+class ThermalSet:
+    """γ·c_p 를 공급하는 **한 압력 구간**의 열 세트 (C58, 브리프 180 C, 결정 (A)).
+
+    ⚠ **밀도 경로는 이것을 읽지 않는다.** `Phase.thermal_pressure` 는 상 자신의 `alpha_k`·
+    `t_ref` 에 남아 있고, 그것이 결정 (A) 의 내용이다 — 액체 세트를 밀도에까지 얹으면 등온에서
+    잰 열압력이 이미 뜨거운 PREM 적합에 더해져 지구를 두 번 데운다. 그래서 이 브리프의 수리는
+    **부분 수리**이고, `Phase.thermal_label` 이 그 사실을 두 칸으로 돌려준다 (오너 검토 대기;
+    되돌리기는 배선 한 줄 + 밀도 표 사전등록).
+
+    두 종류가 있다. **상수 세트**는 논문이 한 앵커에서 인쇄한 α·C_V 를 그대로 들고(그 앵커의
+    온도를 `t_ref` 로 **함께** 든다 — 안 들면 `delta_t` 가 절대영도부터 데운다), **평가자 세트**는
+    `evaluator` 이름으로 모듈 함수를 불러 (P, T) 마다 계산한다. 후자가 필요한 이유는 인쇄된 것이
+    수 넷이 아니라 식 열둘인 경우가 있기 때문이다 (Dorogokupets+ 2017).
+    """
+    p_min: float                      # Pa. 이 구간의 아래 끝 (포함)
+    p_max: float                      # Pa. 위 끝 (미포함)
+    ref: str                          # 어느 논문 어느 표·식에서 왔는가
+    source_state: str                 # "liquid" | "solid" | "table"
+    source_composition: str           # 예: "pure-Fe-liquid"
+    alpha_k: float = 0.0              # Pa/K
+    alpha_k_dt: float = 0.0           # Pa/K²
+    t_ref: float = 0.0                # K
+    t_ref_kind: str = "isotherm"
+    c_v_ref: float = 0.0              # J kg⁻¹ K⁻¹
+    evaluator: str = ""               # 비면 위 상수, 아니면 THERMAL_EVALUATORS 의 이름
+    grade_note: str = ""              # 있으면 판정이 `graded-disagreement` 로 나간다
+
+    def covers(self, p: float) -> bool:
+        return self.p_min <= p < self.p_max
+
+
+#: `ThermalSet.evaluator` 가 가리키는 함수들. (P, T) → dict(dpdt_v, c_v, gruneisen, …).
+#: 이름으로 두는 이유는 `Phase` 가 frozen dataclass 라 함수를 필드로 들면 해시·표현이 지저분해지고,
+#: 무엇보다 **어느 논문의 세트인지가 이름으로 인쇄되어야** 하기 때문이다.
+THERMAL_EVALUATORS = {
+    "dorogokupets2017_liquid_fe": fe_liquid.thermal_at,
+}
+
+
 @dataclass(frozen=True)
 class Phase:
     """한 상의 냉각 등온 상태방정식."""
@@ -122,6 +171,11 @@ class Phase:
     #   «0 을 조용히 배달하지 마라» 와 같은 규칙이다 (오너 결정 (가), 2026-09-10).
     thermal_source_state: str = ""        # "liquid" | "solid" | "table" | "" (미선언)
     thermal_source_composition: str = ""  # 예: "pure-Fe-hcp" · "pure-Fe-liquid" · "peridotite"
+    # ── γ·c_p 전용 구간별 열 세트 (C58, 브리프 180 C, 결정 (A)) ────────────────────────
+    # ⚠ 비어 있으면 예전과 한 글자도 다르지 않다. 들어 있으면 **γ 와 c_p 만** 이 세트에서 오고
+    #   밀도 경로(`thermal_pressure`)는 위 `alpha_k`·`t_ref` 에 남는다 — 그 비대칭이 결정 (A) 이고,
+    #   `thermal_label` 이 두 칸으로 그것을 말한다. 세트를 든 상은 **압력 없이 물으면 거절한다**.
+    gamma_sets: tuple[ThermalSet, ...] = ()
     # ── 녹는곡선 ───────────────────────────────────────────────────────
     # melt 가 빈 문자열이면 **이 상에는 발표된 녹는곡선이 없다** 는 뜻이고, 그러면
     # 이 상에서는 고체·액체를 판정하지 않는다. alpha_k = 0 과 같은 규율이다.
@@ -209,7 +263,32 @@ class Phase:
         """이 상에 발표된 열 상수가 있는가. 없으면 등온으로 남는다."""
         return self.alpha_k > 0.0 and self.c_v_ref > 0.0
 
-    def thermal_label(self, fit_composition: str = "") -> str:
+    def gamma_set_at(self, p: float | None) -> "ThermalSet | None":
+        """이 압력의 γ·c_p 세트. 세트가 없으면 `None` — 그때는 상 자신의 상수를 쓴다.
+
+        ⚠ **세트를 들고 있는데 압력을 안 받았으면 이름을 대고 거절한다** (`ThermalSetAmbiguous`).
+        낮은 구간을 조용히 돌려주는 것이 «초록인데 다른 구간의 수» 이고, 180 B 가 한 층 아래에서
+        막은 것과 같은 모양이다."""
+        if not self.gamma_sets:
+            return None
+        if p is None:
+            raise ThermalSetAmbiguous(
+                f"{self.name}: γ·c_p 세트가 {len(self.gamma_sets)} 구간인데 압력 없이 물었다 — "
+                "어느 구간의 값인지 정할 수 없다 (C58, 브리프 180 C)")
+        for ts in self.gamma_sets:
+            if ts.covers(p):
+                return ts
+        return None
+
+    def _set_delta_t(self, ts: "ThermalSet", t: float, t_pot: float) -> float:
+        """세트 자신의 기준에서의 ΔT. 상의 `delta_t` 와 같은 규칙을 세트 필드로 돈다."""
+        if t is None or t <= 0.0:
+            return 0.0
+        if ts.t_ref_kind == "adiabat":
+            return 0.0 if t_pot <= 0.0 else t * (1.0 - ts.t_ref / t_pot)
+        return t - ts.t_ref
+
+    def thermal_label(self, fit_composition: str = "", p: float | None = None) -> tuple[str, str]:
         """열 매개변수의 출처가 이 적합과 맞는가 — **네 답 중 하나** (C58, 브리프 180 B).
 
         `ok` · `undeclared` · `phase-mismatch` · `composition-substitute`.
@@ -219,19 +298,36 @@ class Phase:
         ⚠ **조성만 어긋나면 채택은 되되 등급이 내려간다** — 액체 합금의 인쇄 열 세트가 보유 문헌에
         없으므로 순수 액체 철은 «없음» 보다 나은 **이름 붙은 대체**다. 조용히 통과하지만 않으면 된다.
         """
-        if not self.has_thermal:
+        density_cell = self._verdict(self.has_thermal, self.thermal_source_state,
+                                     self.thermal_source_composition, fit_composition, "")
+        ts = self.gamma_set_at(p)
+        if ts is None:
+            return density_cell, density_cell
+        gamma_cell = self._verdict(ts.alpha_k > 0.0 or bool(ts.evaluator),
+                                   ts.source_state, ts.source_composition,
+                                   fit_composition, ts.grade_note)
+        return gamma_cell, density_cell
+
+    def _verdict(self, has_set: bool, source_state: str, source_composition: str,
+                 fit_composition: str, grade_note: str) -> str:
+        """한 세트의 판정 — 여섯 답 중 하나. 상 자신의 상수와 구간 세트가 같은 규칙을 돈다."""
+        if not has_set:
             # ⚠ **여기서 `ok` 를 돌려주면 «초록 판정으로 γ = 0» 이 배달된다** (감사 지적, 180 B).
             #   `core_gamma` 의 `own` 은 열 상수가 없으면 0.0 이고, γ = 0 은 평평한 단열선이다 —
             #   이 브리프가 §1b 에서 금지한 «0 을 조용히 배달하지 마라» 가 한 층 위에서 그대로
             #   재현되는 자리였다. 자기 판정을 주고 **폴백으로 보낸다**: 그러면 이원계도 1.5 를
             #   받고 카운트에 잡히며, «인쇄된 c_p 가 이 계열에 하나뿐» 이라는 사실이 판정에 뜬다.
             return "no-thermal-set"
-        if not self.thermal_source_state:
+        if not source_state:
             return "undeclared"
-        if self.fit_state and self.thermal_source_state != self.fit_state:
+        if self.fit_state and source_state != self.fit_state:
             return "phase-mismatch"
-        if (fit_composition and self.thermal_source_composition
-                and fit_composition != self.thermal_source_composition):
+        if grade_note:
+            # ⚠ 상·조성이 맞아도 **다른 논문의 실측과 어긋나는** 세트는 초록이 아니다. 값은 배달하되
+            #   등급을 내리고 이름을 남긴다 (오너 결정 ①, 2026-09-11: 35 GPa 위 Dorogokupets).
+            return "graded-disagreement"
+        if (fit_composition and source_composition
+                and fit_composition != source_composition):
             return "composition-substitute"
         return "ok"
 
@@ -269,20 +365,43 @@ class Phase:
         dt = self.delta_t(t, t_pot)
         return self.alpha_k * dt + 0.5 * self.alpha_k_dt * dt * dt
 
-    def dpdt_v(self, t: float, t_pot: float = 0.0) -> float:
-        """(∂P/∂T)_V. 열압력의 기울기이고, 그뤼나이젠 계수가 이걸 먹는다."""
-        return self.alpha_k + self.alpha_k_dt * self.delta_t(t, t_pot)
+    def dpdt_v(self, t: float, t_pot: float = 0.0, p: float | None = None) -> float:
+        """(∂P/∂T)_V. 열압력의 기울기이고, 그뤼나이젠 계수가 이걸 먹는다.
 
-    def gruneisen(self, rho: float, t: float, t_pot: float = 0.0) -> float:
+        ⚠ **압력을 주면 구간 세트가 이긴다** (C58 (a) 결정 (A)) — γ·c_p 를 계산하는 자리는 이
+        값을 세트에서 받고, 밀도 경로(`thermal_pressure`)는 상 자신의 상수를 계속 쓴다."""
+        ts = self.gamma_set_at(p)
+        if ts is None:
+            return self.alpha_k + self.alpha_k_dt * self.delta_t(t, t_pot)
+        if ts.evaluator:
+            return THERMAL_EVALUATORS[ts.evaluator](p, t)["dpdt_v"]
+        return ts.alpha_k + ts.alpha_k_dt * self._set_delta_t(ts, t, t_pot)
+
+    def c_v_at(self, p: float | None = None) -> float:
+        """이 압력에서 쓰는 정적비열 [J kg⁻¹ K⁻¹]. 세트가 있으면 세트의 것이다."""
+        ts = self.gamma_set_at(p)
+        return self.c_v_ref if ts is None else ts.c_v_ref
+
+    def gruneisen(self, rho: float, t: float, t_pot: float = 0.0,
+                  p: float | None = None) -> float:
         """그뤼나이젠 계수 γ = (∂P/∂T)_V / (ρ c_V). 단열 기울기가 이걸 먹는다.
 
         **새 상수가 아니라 항등식이다.** 열압력에 이미 있는 (∂P/∂T)_V 와 Dulong-Petit
         c_V 로 닫힌다. 이 항등식이 맞는지는 얼음 III·V·VI 에서 확인된다 — SeaFreeze 가
         자기 γ 를 따로 들고 있고, 여기 식으로 계산한 값과 소수 넷째 자리까지 같다.
         test_interior.py 가 그 대조를 돌린다."""
+        ts = self.gamma_set_at(p)
+        if ts is not None:
+            if ts.evaluator:
+                return THERMAL_EVALUATORS[ts.evaluator](p, t)["gruneisen"]
+            if ts.c_v_ref <= 0.0 or rho <= 0.0:
+                return 0.0
+            return self.dpdt_v(t, t_pot, p) / (rho * ts.c_v_ref)
         if not self.has_thermal or rho <= 0.0:
             return 0.0
-        return self.dpdt_v(t, t_pot) / (rho * self.c_v_ref)
+        # ⚠ p 를 그대로 넘긴다 — 세트를 든 상에서 `p` 를 빼면 `gamma_set_at(None)` 이 거절한다.
+        #   이 갈래는 «이 압력에 세트가 없다» 로 이미 판정된 자리이므로 상 자신의 상수로 돈다.
+        return self.dpdt_v(t, t_pot, p) / (rho * self.c_v_ref)
 
     def pressure(self, rho: float) -> float:
         """ρ 에서 P. 정방향은 닫힌 형태라 이쪽이 값싸다."""
@@ -499,7 +618,7 @@ class Material:
         return self.phase_at(p).density(p, t, t_pot)
 
     def gruneisen(self, p: float, rho: float, t: float, t_pot: float = 0.0) -> float:
-        return self.phase_at(p).gruneisen(rho, t, t_pot)
+        return self.phase_at(p).gruneisen(rho, t, t_pot, p)
 
     def k_t(self, p: float, t: float = 0.0, t_pot: float = 0.0) -> float:
         """등온 체적탄성률 K_T [Pa]. 냉각 곡선의 수치 미분이다.
@@ -534,11 +653,12 @@ class Material:
         rho = self.density(p, t, t_pot)
         k_t = self.k_t(p, t, t_pot)
         if k_t <= 0.0 or rho <= 0.0:
-            return ph.c_v_ref + self._latent_cp(ph, p, t)
-        dpdt = ph.dpdt_v(t, t_pot)
-        gamma = dpdt / (rho * ph.c_v_ref)
+            return ph.c_v_at(p) + self._latent_cp(ph, p, t)
+        dpdt = ph.dpdt_v(t, t_pot, p)
+        c_v = ph.c_v_at(p)
+        gamma = dpdt / (rho * c_v)
         alpha = dpdt / k_t
-        return ph.c_v_ref * (1.0 + alpha * gamma * t) + self._latent_cp(ph, p, t)
+        return c_v * (1.0 + alpha * gamma * t) + self._latent_cp(ph, p, t)
 
     @staticmethod
     def _latent_cp(ph, p: float, t: float) -> float:
@@ -574,7 +694,7 @@ class Material:
         gamma = self.gruneisen(p, rho, t, t_pot)
         if gamma <= 0.0:
             return 0.0
-        k_s = self.k_t(p, t, t_pot) + self.phase_at(p).dpdt_v(t, t_pot) * gamma * t
+        k_s = self.k_t(p, t, t_pot) + self.phase_at(p).dpdt_v(t, t_pot, p) * gamma * t
         if k_s <= 0.0:
             return 0.0
         grad = gamma * p / k_s
@@ -2200,6 +2320,40 @@ def iron_t_melt(p: float) -> float | None:
 # `fe_eps` 는 실험실의 순수한 ε-철이다 (Seager+ 2007 Table 1, Anderson+ 2001 데이터의
 # Vinet 적합). 가벼운 원소도 열도 없다. 순철 곡선 — 즉 "이보다 밀할 수 없다" 는
 # 한계를 그을 때 쓴다.
+def _fe_prem_gamma_sets() -> tuple[ThermalSet, ...]:
+    """`fe_prem` 의 γ·c_p 구간 세트 — 오너 결정 ① (2026-09-11), 압력 분할.
+
+    **19–35 GPa**: Huang+ 2023 Table 1 의 **순수 액체 Fe** 실측. 두 점(19 GPa/2100 K,
+    35 GPa/2400 K)이 인쇄되어 있고, 아래 점을 그 구간에 **구간상수로** 든다 — 두 점 사이를 잇는
+    것은 우리 산수이므로 하지 않고, 위 점은 경계에서의 **검산**으로 쓴다 (`boundary_jump`).
+    `alpha_k = α × K_T` 는 이 파일의 항등식이고, 그것으로 논문이 인쇄한 γ 가 되돌아온다 —
+    6.99e-5 × 156 GPa / (8083 × 494) = **2.73** 대 인쇄값 **2.74**. 그 대조가 시험에 있다.
+
+    **35 GPa 위**: Dorogokupets+ 2017 액체 세트를 식으로 평가한다 (`fe_liquid`). ⚠ 그 세트는
+    Huang 의 저압 실측과 **40 % 규모로 어긋나므로** 등급 라벨을 달고 나가고, 판정은
+    `graded-disagreement` 다 — 값은 배달하되 초록이 아니다.
+
+    ⚠ **19 GPa 아래에는 세트가 없다.** 액체 열 세트가 없는 구간이라 상 자신의 (고체) 상수로
+    떨어지고, 그러면 판정이 `phase-mismatch` 라 `core_gamma` 의 **이름 붙은 폴백**이 잡는다 —
+    없는 구간을 외삽으로 덮지 않는 것이 이 브리프의 규율이고, ② 의 «저압 Fe–S 는 비워 둔다» 와
+    같은 결정이다."""
+    alpha, c_v, _printed_gamma = HUANG_FE_THERMAL["19GPa"]
+    _p, t_anchor, _rho, k_t_gpa = HUANG_FE_ANCHORS["19GPa"]
+    return (
+        ThermalSet(p_min=19.0 * GPA, p_max=35.0 * GPA,
+                   ref="Huang+ 2023 GRL 50 e2022GL102271 (2023GeoRL..5002271H) Table 1, "
+                       "pure liquid Fe at 19 GPa / 2100 K",
+                   source_state="liquid", source_composition="pure-Fe-liquid",
+                   alpha_k=alpha * k_t_gpa * GPA, c_v_ref=c_v,
+                   t_ref=t_anchor, t_ref_kind="isotherm"),
+        ThermalSet(p_min=35.0 * GPA, p_max=float("inf"), ref=fe_liquid.REF,
+                   source_state="liquid", source_composition="pure-Fe-liquid",
+                   evaluator="dorogokupets2017_liquid_fe",
+                   grade_note="disagrees with Huang+ 2023's measured 19/35 GPa points by ~40 % "
+                              "in C_V, α and γ while agreeing on density to 0.5 % (C58 (a) ⓐ′)"),
+    )
+
+
 FE_PREM = Material(
     "fe_prem", "철 핵 (PREM 외핵 외삽)",
     (Phase("fe_prem", "bm2", 7050.0, 201.0 * GPA, 4.0, 12e3 * GPA,
@@ -2214,6 +2368,7 @@ FE_PREM = Material(
                     f"{(1 - IRON_LIGHT_ELEMENT_FACTOR) * 100:.0f} % (Stevenson+ 1983 관례)",
            join="Fe alloy — PREM outer core, ~10 wt% light elements (Zeng+ 2016 §II)",
            fit_state="liquid",
+           gamma_sets=_fe_prem_gamma_sets(),
            join_note="밀도는 합금(PREM 외핵 액체), 곡선은 순철 — 그 차이를 melt_scale = "
                      f"{IRON_LIGHT_ELEMENT_FACTOR} 이 잇는다 (브리프 38, 라벨된 관례). 일곱 다리 중 "
                      "측정이 뒤에 있는 유일한 다리: Sinmyo+ 2019 ICB 검산 −0.12 σ (브리프 38 §0)"),),
@@ -3130,10 +3285,38 @@ class CoreGammaMisuse(Exception):
 
 
 
-def core_gamma(material, p: float, t: float, t_pot: float = 0.0) -> tuple[float, str, float]:
-    """핵 단열선의 γ — **네 소비처가 읽는 한 함수** (C58, 브리프 180 B).
+def gamma_set_boundary_jump(material, t: float, eps: float = 1.0) -> list[dict]:
+    """구간 세트의 **경계마다** γ 가 얼마나 튀는가 — 수로 보고한다 (오너 결정 ①, 2026-09-11).
 
-    돌려주는 것은 `(γ, 판정, 재질의 γ)` 셋이다. 판정이 `ok` 면 첫째가 **재질의 γ(P,T)** 이고,
+    분할은 매끄럽게 잇지 않는다. 두 세트는 서로 다른 논문의 것이고, 그 둘을 잇는 함수를 우리가
+    만들면 **어느 논문에도 없는 값**이 구간 사이에 생긴다. 그래서 불연속을 남기고 **그 크기를
+    인쇄한다** — 이 함수가 그 인쇄를 만든다.
+
+    돌려주는 것은 경계마다 `{p, below, above, jump, jump_pct}` 다. `below` 는 경계에서 `eps` [Pa]
+    만큼 아래, `above` 는 경계 자신 — 세트의 구간이 `[p_min, p_max)` 이므로 경계는 위 세트의 것이다."""
+    ph = material.phases[0]
+    out = []
+    for ts in ph.gamma_sets[1:]:
+        lo_used, _lv, lo_own, _ld = core_gamma(material, ts.p_min - eps, t)
+        hi_used, _hv, hi_own, _hd = core_gamma(material, ts.p_min, t)
+        # ⚠ **두 수를 함께 낸다.** `delivered` 는 소비처가 실제로 보는 불연속이고, `sets` 는 두
+        #   논문 사이의 불연속이다 — 등급 세트가 미배달인 동안 그 둘이 다르고, 배달로 되돌리면
+        #   같아진다. 하나만 인쇄하면 «되돌리기의 크기» 를 다음 사람이 다시 재야 한다.
+        out.append({"p": ts.p_min, "below": lo_used, "above": hi_used,
+                    "jump": hi_used - lo_used,
+                    "jump_pct": (hi_used / lo_used - 1.0) * 100.0 if lo_used else float("nan"),
+                    "below_set": lo_own, "above_set": hi_own,
+                    "jump_pct_sets": (hi_own / lo_own - 1.0) * 100.0 if lo_own else float("nan")})
+    return out
+
+
+def core_gamma(material, p: float, t: float, t_pot: float = 0.0,
+               rho: float | None = None) -> tuple[float, str, float, str]:
+    """핵 단열선의 γ — **네 소비처가 읽는 한 함수** (C58, 브리프 180 B·180 C).
+
+    돌려주는 것은 `(γ, 판정, 재질의 γ, 밀도 경로 판정)` **넷**이다 — 넷째가 180 C 의 결정 (A) 를
+    드러내는 칸이다: γ·c_p 는 구간 세트(액체)에서 오고 밀도 경로는 상 자신의 상수(고체)에 남으므로,
+    **한 재질이 두 판정을 갖는다.** 그 둘을 나란히 인쇄하지 않으면 부분 수리가 완전 수리로 읽힌다. 판정이 `ok` 면 첫째가 **재질의 γ(P,T)** 이고,
     아니면 **이름 붙은 폴백** `CORE_GAMMA_FALLBACK` 이다 — 그리고 셋째가 «그때 재질은 무엇을
     말했나» 를 늘 들고 온다. 소비처가 그 둘을 나란히 인쇄할 수 있어야 폴백이 **조용해지지 않는다.**
 
@@ -3148,17 +3331,28 @@ def core_gamma(material, p: float, t: float, t_pot: float = 0.0) -> tuple[float,
             f"그것을 돌려주면 남의 값을 조용히 쓰게 된다 — 이 층의 γ 가 필요하면 재질에게 "
             f"`grad_ad`/`gruneisen` 으로 직접 물어라.")
     ph = material.phase_at(p)
-    verdict = ph.thermal_label(getattr(material, "fit_composition", ""))
-    rho = material.density(p, t, 0.0)
+    verdict, density_verdict = ph.thermal_label(getattr(material, "fit_composition", ""), p)
+    # ⚠ **ρ 는 호출부가 줄 수 있다** (브리프 180 C). γ ∝ 1/ρ 이므로 적분기가 자기 자리의 밀도를
+    #   들고 있는데 여기서 냉각 밀도를 다시 재면 **같은 지점에서 두 γ** 가 생긴다 — 적분기가 네 번째
+    #   소비처로 합류하는 이 브리프에서 그 불일치가 처음 실제로 문제가 된다. 기본값은 예전과 같다.
+    if rho is None:
+        rho = material.density(p, t, 0.0)
     # ⚠ **`alpha_k` 를 그대로 쓰면 기준 등온선의 γ 가 나온다** (감사 지적, 180 B 안에서).
     #   (∂P/∂T)_V 는 `alpha_k + alpha_k_dt·ΔT` 이고, 금속은 그 2차 항이 크다 — `fe_eps` 는
     #   300 K 에서 0.2976 이지만 화성 CMB(2000 K)에서 **0.6275** 다. 첫 판이 0.2994 를 «핵의 γ»
     #   라고 인쇄했고 그것은 **어느 소비처도 묻지 않는 온도의 값**이었다. 이 파일이 이미 들고
     #   있는 항등식(`gruneisen`)을 부른다 — 새 산수를 여기서 만들지 않는다.
-    own = material.gruneisen(p, rho, t, t_pot) if (ph.has_thermal and rho > 0.0) else 0.0
+    has_set = ph.gamma_set_at(p) is not None or ph.has_thermal
+    own = material.gruneisen(p, rho, t, t_pot) if (has_set and rho > 0.0) else 0.0
+    # ⚠ **`graded-disagreement` 는 값을 배달하지 않는다 — 후보로만 인쇄된다** (2026-09-11, 실측
+    #   뒤 결정 (2); 오너 검토 대기). 처음에는 «등급이 내려간 값도 값» 으로 배달했는데, 재 보니
+    #   그 세트(35 GPa 위 Dorogokupets)가 **대조가 가능한 유일한 압력에서 47 % 어긋나면서**
+    #   지구의 문헌 검사 셋을 빨갛게 만들었다: Sinmyo+ 2019 대비 10.95 %, 내핵 경계 −27 %,
+    #   그리고 `k0_flip` 이 194.0 GPa 에서 **None** 으로 사라졌다. 실측이 있는 구간(19–35 GPa,
+    #   화성)에서만 수리하고, 등급 구간은 «재질이 말한 값» 칸으로 남긴다 — 되돌리기는 이 줄이다.
     if verdict in ("ok", "composition-substitute"):
-        return own, verdict, own
-    return CORE_GAMMA_FALLBACK, verdict, own
+        return own, verdict, own, density_verdict
+    return CORE_GAMMA_FALLBACK, verdict, own, density_verdict
 
 
 def fe_s_mole_fraction(w_s: float) -> float:
